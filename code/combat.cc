@@ -1759,7 +1759,7 @@ static int getMonkWeaponDam(const TBeing *ch, const TBeing *v, primaryTypeT ispr
   else {
     // somewhat a clumsy way to do this, but realize that player could be
     // partially learned in KUBO but have some learning in the advanced spec.
-    double value = 3.0 * ch->getSkillValue(SKILL_KUBO) / 10.0;
+    double value = 3.0 * double(ch->getSkillValue(SKILL_KUBO)) / 10.0;
 
     // in general, we ought to be adding 20 levs for max specialization
     // however, review the balance docs and realize we add a penalty
@@ -1786,7 +1786,12 @@ static int getMonkWeaponDam(const TBeing *ch, const TBeing *v, primaryTypeT ispr
 
     // small randomization around value
     int flux = wepDam/10;
-    wepDam = ::number(wepDam-flux, wepDam+flux);
+
+    // force an equivalence to ::number(1,2) for low damages
+    if (flux < 1)
+      wepDam = ::number(max(1, wepDam-1), wepDam+1);
+    else
+      wepDam = ::number(wepDam-flux, wepDam+flux);
 
     wepDam = max(1, wepDam);
   }

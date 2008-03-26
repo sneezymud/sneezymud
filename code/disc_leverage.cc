@@ -241,10 +241,6 @@ int hurl(TBeing *caster, TBeing *victim, char *direction)
     caster->sendTo("You can't hurl from your present position.\n\r");
     return FALSE;
   }
-  if (caster->isSwimming()) {
-    caster->sendTo("You can't focus while swimming!\n\r");
-    return FALSE;
-  }
   if (victim->isFlying()) {
     caster->sendTo("You can't hurl someone that is flying.\n\r");
     return FALSE;
@@ -473,10 +469,6 @@ int shoulderThrow(TBeing *caster, TBeing *victim)
     caster->sendTo("You can't shoulder throw from your present position.\n\r");
     return FALSE;
   }
-  if (caster->isSwimming()) {
-    caster->sendTo("You can't focus while swimming!\n\r");
-    return FALSE;
-  }
   if (victim->isFlying()) {
     caster->sendTo("You can't shoulder throw someone that is flying.\n\r");
     return FALSE;
@@ -702,10 +694,6 @@ int defenestrate(TBeing *caster, TBeing *victim, sstring direction)
   if (caster->getPosition() != POSITION_STANDING)  {
     // deny to mounted and crawling, allow standing and fighting
     caster->sendTo("You can't defenestrate from your present position.\n\r");
-    return FALSE;
-  }
-  if (caster->isSwimming()) {
-    caster->sendTo("You can't focus while swimming!\n\r");
     return FALSE;
   }
   if (victim->isFlying()) {

@@ -70,11 +70,6 @@ static int doorbash(TBeing * caster, dirTypeT dir)
     return FALSE;
   }
 
-  if (caster->isSwimming()) {
-    caster->sendTo("While swimming?\n\r");
-    return FALSE;
-  }
-
   rp = real_roomp(exitp->to_room);
 
   if (dir == DIR_UP) {

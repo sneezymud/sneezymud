@@ -215,7 +215,7 @@ void TThing::setRoom(int room)
 
 void TThing::setMaterial(ubyte num)
 {
-  material_type = num;
+  material_type = convertV9MaterialToV10(num);
 }
 
 ubyte TThing::getMaterial() const

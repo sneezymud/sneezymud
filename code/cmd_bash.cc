@@ -77,11 +77,6 @@ bool TBeing::canBash(TBeing *victim, silentTypeT silent)
       sendTo(COLOR_MOBS, fmt("You are unable to bash %s off of %s!\n\r") % victim->getName() % victim->riding->getName());
     return FALSE;
   }
-  if (isSwimming()) {
-    if (!silent)
-      sendTo("It's near impossible to bash while in water.\n\r");
-    return FALSE;
-  }
   if (victim == this) {
     if (!silent)
       sendTo("Aren't we funny today...\n\r");
@@ -200,7 +195,7 @@ static int bash(TBeing *c, TBeing *victim, spellNumT skill)
     // make it hard for non-tanks to successfully bash
     percent -= 35;
   }
-  if (victim->riding) 
+  if (victim->riding || c->isSwimming())
     percent -= 33;
 
   percent += (int) shieldWtBonus;

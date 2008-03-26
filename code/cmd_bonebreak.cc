@@ -172,10 +172,6 @@ int bonebreak(TBeing *caster, TBeing *victim)
     return FALSE;
   }
 
-  if (caster->isSwimming()) {
-    caster->sendTo("You can't bone break while swimming.\n\r");
-    return FALSE;
-  }
   if (victim->isFlying()) {
     caster->sendTo("You can't get ahold of something that is flying.\n\r");
     return FALSE;

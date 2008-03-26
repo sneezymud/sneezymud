@@ -335,6 +335,8 @@ int TPerson::manaGain()
     gain >>= 2;
 //  if (affectedBySpell(SPELL_ENLIVEN))
 //    gain *= 2;
+  if (isAquatic())
+    gain = int(gain * (affectedBySpell(AFFECT_WET) ? 1 : 0.5));
 
   stats.mana_gained_attempts++;
   stats.mana_gained += gain;
@@ -455,6 +457,9 @@ int TPerson::hitGain()
   if (affectedBySpell(SPELL_ENLIVEN))
     gain *= 2;
 
+  if (isAquatic())
+    gain = int(gain * (affectedBySpell(AFFECT_WET) ? 1.25 : 0.5));
+
   stats.hit_gained_attempts++;
   stats.hit_gained += gain;
   return (gain);
@@ -486,6 +491,8 @@ int TBeing::moveGain()
   }
   if (affectedBySpell(SPELL_ENLIVEN))
     gain *= 2;
+  if (isAquatic())
+    gain = int(gain * (affectedBySpell(AFFECT_WET) ? 1.25 : 0.5));
 
   if (roomp && roomp->isRoomFlag(ROOM_NO_HEAL))
     gain /= 3;

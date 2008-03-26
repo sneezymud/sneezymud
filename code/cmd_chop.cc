@@ -195,10 +195,6 @@ static int chop(TBeing *c, TBeing *v)
     c->sendTo("You can't chop at them while they are flying unless you are flying as well!\n\r");
     return FALSE;
   }
-  if (c->isSwimming()) {
-    c->sendTo("You can't focus while swimming!\n\r");
-    return FALSE;
-  }
   if (c->equipment[HOLD_RIGHT] ||
       c->equipment[HOLD_LEFT]) {
     c->sendTo("You can't chop while holding things!\n\r");

@@ -615,7 +615,6 @@ int TBeing::pourWaterOnMe(TBeing *ch, TObj *sObj)
   char Buf[256];
   TBaseCup *dContainer;
 
-
   if (!(dContainer = dynamic_cast<TBaseCup *>(sObj)))
     return false; // let doPour continue its run, we don't do this.
 
@@ -680,6 +679,7 @@ int TBeing::pourWaterOnMe(TBeing *ch, TObj *sObj)
         TRUE, ch, 0, this, TO_NOTVICT);
 
       rc = reconcileDamage(this, -(::number(5, max(6, min(25, 15+drunk)))), DAMAGE_FIRE);
+      size = 0;
     } else {
       act("$N dies down a little, $E does Not look happy!",
         TRUE, ch, 0, this, TO_CHAR);
@@ -701,6 +701,7 @@ int TBeing::pourWaterOnMe(TBeing *ch, TObj *sObj)
     rc = reconcileDamage(this, ::number(5, max(6, min(15, (int) (size/20)))), DAMAGE_DISRUPTION);
   } else if (roomp && roomp->isArcticSector() && type != LIQ_WARM_MEAD &&
       getMaterial(WEAR_BODY) != MAT_ICE) {
+
     act("$N looks very cold now, I think your going to have a bad day...",
         TRUE, ch, 0, this, TO_CHAR);
     act("BRRRRR!  That doesn't help much, now your REALLY cold!",
@@ -715,7 +716,7 @@ int TBeing::pourWaterOnMe(TBeing *ch, TObj *sObj)
     TThing *t;
     TObj *obj = NULL;
     int i;
-    
+
     for (i = MIN_WEAR;i < MAX_WEAR;i++) {
       if (!(t = equipment[i]) || !(obj = dynamic_cast<TObj *>(t)) ||
 	  !obj->isObjStat(ITEM_BURNING) || ::number(0,3))
@@ -724,6 +725,13 @@ int TBeing::pourWaterOnMe(TBeing *ch, TObj *sObj)
       act("Your $p is extinguished.", FALSE, this, obj, 0, TO_CHAR);
       act("$n's $p is extinguished.", FALSE, this, obj, 0, TO_ROOM);
     }
+  }
+
+  // add wetness affect
+  if (size > 0)
+  {
+    addWetness(this, size); // we never expect this to return 0
+    ch->sendTo(fmt("You feel %s.\n\r") % describeWet(this));
   }
 
   dContainer->setDrinkUnits(0);  

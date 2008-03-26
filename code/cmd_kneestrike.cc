@@ -72,11 +72,6 @@ bool TBeing::canKneestrike(TBeing *victim, silentTypeT silent)
     return FALSE;
   }
 
-  if (isSwimming()) {
-    if (!silent)
-      sendTo("You can't kneestrike while swimming.\n\r");
-    return FALSE;
-  }
   if (victim->isFlying()) {
     if (!silent)
       sendTo("You can't kneestrike something that is flying.\n\r");

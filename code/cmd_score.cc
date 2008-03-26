@@ -255,6 +255,9 @@ void TBeing::doScore()
     }
   }
 
+  if (affectedBySpell(AFFECT_WET))
+    sendTo(fmt("You feel %s.\n\r") % describeWet(this));
+
   sendTo(fmt("You are in %s%s%s attack mode.\n\r") %         cyan() % attack_modes[getCombatMode()] % norm());
 
   if (getWimpy())

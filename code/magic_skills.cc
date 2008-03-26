@@ -148,7 +148,7 @@ int TBeing::doTurn(const char *argument, TBeing *vict)
 
 void TBeing::doPenance()
 {
-  if (roomp->isWaterSector() || roomp->isUnderwaterSector()) {
+  if ((roomp->isWaterSector() || roomp->isUnderwaterSector()) && !isAquatic()) {
     sendTo("Trying to tread water really messes up your ability to repent.\n\r");
     return;
   }
@@ -201,7 +201,7 @@ void TBeing::doPenance()
 
 void TBeing::doMeditate()
 {
-  if (roomp->isWaterSector() || roomp->isUnderwaterSector()) {
+  if ((roomp->isWaterSector() || roomp->isUnderwaterSector()) && !isAquatic()) {
     sendTo("Trying to tread water really messes up your ability to meditate.\n\r");
     return;
   }
@@ -257,7 +257,7 @@ void TBeing::doMeditate()
 
 void TBeing::doYoginsa()
 {
-  if (roomp->isWaterSector() || roomp->isUnderwaterSector()) {
+  if ((roomp->isWaterSector() || roomp->isUnderwaterSector()) && !isAquatic()) {
     sendTo("Trying to tread water really messes up your ability to meditate.\n\r");
     return;
   }

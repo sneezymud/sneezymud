@@ -3592,9 +3592,9 @@ int TMonster::mobileActivity(int pulse)
   if(parent || !roomp)
     return 0;
   
-  if (isAquatic() && (specials.zone != 1) && (mobVnum() >= 0) &&
-     !(roomp->isWaterSector() || roomp->isUnderwaterSector()) &&
-     !inImperia()) {
+  if (isAquatic() && !IS_SET(specials.act, ACT_IMMORTAL) && (specials.zone != 1) && (mobVnum() >= 0) &&
+     !roomp->isWaterSector() && !roomp->isUnderwaterSector() &&
+     !inImperia() && getRace() != RACE_FISHMAN) {
     vlogf(LOG_MISC, fmt("Fish (%s), found out of water in %s (%d)! Destroying!") %  
            getName() % roomp->getName() % in_room);
     return DELETE_THIS;

@@ -75,7 +75,7 @@ int TBeing::getGarbles(TBeing *to) const
 
   if ((roomp->isUnderwaterSector() || hasDisease(DISEASE_DROWNING)) &&
       !isImmortal() && !isShopkeeper() && !isAffected(AFF_WATERBREATH) &&
-      (!to || !to->isImmortal()))
+      getImmunity(IMMUNE_SUFFOCATION) < 100 && (!to || !to->isImmortal()))
   {
     garbleFlags |= GARBLE_FLAG_GLUBGLUB;
   }

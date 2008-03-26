@@ -409,10 +409,6 @@ void TBeing::doTranceOfBlades(const char *newarg) {
     sendTo("You can't enter the defensive trance with a useless arm.\n\r");
     return;
   }
-  if (isSwimming()) {
-    sendTo("You can't enter the defensive trance while in water.\n\r");
-    return;
-  }
   if (riding) {
     sendTo("You can't enter the defensive trance while mounted.\n\r");
     return;

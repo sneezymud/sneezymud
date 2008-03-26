@@ -977,3 +977,234 @@ sstring hmtAsString(int hmt)
     ((hour >= 12) ? "PM" : "AM");
   return buf;
 }
+
+// true if we're getting wet from stepping on the ground
+bool isGroundWater(sectorTypeT sector)
+{
+  return TerrainInfo[sector] > 0 &&
+     (sector == SECT_ARCTIC_MARSH ||
+      sector == SECT_ARCTIC_RIVER_SURFACE ||
+      sector == SECT_ICEFLOW ||
+      sector == SECT_COLD_BEACH ||
+      sector == SECT_TEMPERATE_SWAMP ||
+      sector == SECT_TEMPERATE_OCEAN ||
+      sector == SECT_TEMPERATE_RIVER_SURFACE ||
+      sector == SECT_TEMPERATE_BEACH ||
+      sector == SECT_TROPICAL_SWAMP ||
+      sector == SECT_TROPICAL_OCEAN ||
+      sector == SECT_TROPICAL_RIVER_SURFACE ||
+      sector == SECT_TROPICAL_BEACH);
+}
+
+int getRoomWetness(TBeing *ch, TRoom* room, sstring & better,  sstring & worse)
+{
+  // get wetness
+  int wetness = TerrainInfo[room->getSectorType()]->wetness;
+
+  if (wetness > 0 && ch && isGroundWater(room->getSectorType()))
+  {
+    if (ch->hasBoat())
+    {
+      wetness = -10;
+      better = "you were using your boat";
+    }
+    // if youre not touching the ground, no wet feet!
+    else if (ch->isLevitating() || ch->getPosition() >= POSITION_MOUNTED)
+    {
+      wetness = -10;
+      better = "you aren't touching the ground";
+    }
+    // if youre sitting, resting or lower you end up getting more wet with groundwater
+    else if ((ch->getPosition() <= POSITION_SITTING || ch->getPosition() == POSITION_CRAWLING) && !ch->riding)
+    {
+      wetness *= 2;
+      worse = "you are not standing";
+    }
+  }
+
+  // burning obj in room
+  unsigned int beforeFireLen = better.length();
+  for(TThing *t = room->getStuff(); t; t = t->nextThing)
+  {
+    TObj *o = dynamic_cast<TObj *>(t);
+    if (o && o->isObjStat(ITEM_BURNING))
+    {
+      wetness -= int(100 * (o->getVolume() / (ROOM_FIRE_THRESHOLD * 3)));
+      if (better.length() != beforeFireLen)
+        continue;
+      if (!better.empty())
+        better += " and ";
+      better = fmt("%s dries you") % o->getName();
+    }
+  }
+
+  // flaming flesh
+  if (ch && ch->affectedBySpell(SPELL_FLAMING_FLESH))
+  {
+    wetness -= 10;
+    if (!better.empty())
+      better += " and ";
+    better = fmt("your fire magic dries you");
+  }
+
+  // weather
+  if (room->getWeather() == WEATHER_LIGHTNING)
+  {
+    wetness += 20;
+    if (!worse.empty())
+      worse += " and ";
+    worse += "it is raining";
+  }
+  else if (room->getWeather() == WEATHER_RAINY)
+  {
+    wetness += 30;
+    if (!worse.empty())
+      worse += " and ";
+    worse += "it is pouring rain";
+  }
+  else if (weather_info.sunlight == SUN_LIGHT && room->getWeather() == WEATHER_CLOUDLESS)
+  {
+    wetness -= 10;
+    if (!better.empty())
+      better += " and ";
+    better += "it is sunny";
+  }
+
+  return min(wetness, WET_MAXIMUM);
+}
+
+// returns wetness for a room
+int getRoomWetness(TRoom* room)
+{
+  sstring a, b;
+  return getRoomWetness(NULL, room, a, b);
+}
+
+// returns how wet you are
+int getWetness(const TBeing *ch)
+{
+  affectedData *wetAffect = NULL;
+  for (wetAffect = ch->affected; wetAffect; wetAffect = wetAffect->next)
+    if (wetAffect->type == AFFECT_WET)
+      return max(0L, min(wetAffect->modifier, long(WET_MAXIMUM)));
+  return 0;
+}
+
+
+// apply wetness code here
+// we either add more wetness, or we 'dry' the character out (remove wetness)
+int getWet(TBeing *ch, TRoom* room, silentTypeT silent)
+{
+  sstring better, worse;
+  int maxWet = getRoomWetness(ch, room, better, worse);
+  int wetness = maxWet / 5; // the delta
+  int oldWet = getWetness(ch);
+
+  // even though its wet out, we are wetter and will dry off some
+  if (oldWet > maxWet && wetness > 0)
+    wetness = -wetness;
+
+  // add new wetness affect
+  if (wetness != 0 && oldWet != maxWet && (wetness > 0 || oldWet > 0))
+  {
+    int newWet = addWetness(ch, wetness);
+    if (newWet == oldWet)
+      return 0;
+
+    if (silent == SILENT_NO)
+    {
+      sstring wetShow;
+        
+      if (wetness > 0 && oldWet <= 0)
+        wetShow = fmt("You begin to get wet from staying %s %s") %
+          TerrainInfo[room->getSectorType()]->prep %
+          sstring(TerrainInfo[room->getSectorType()]->name).lower();
+      else if (newWet == 0)
+        wetShow = "You feel completely dried off now";
+      else
+        wetShow = fmt("Your time %s %s means you %s") %
+          TerrainInfo[room->getSectorType()]->prep %
+          sstring(TerrainInfo[room->getSectorType()]->name).lower() %
+          (wetness > 0 ? "get wetter" : "dry off some");
+
+      if (!better.empty())
+      {
+        wetShow += (wetness < 0) ? ", in part because " : " even though ";
+        wetShow += better;
+      }
+      if (!worse.empty())
+      {
+        wetShow += (wetness > 0) ? ", in part because " : " even though ";
+        wetShow += worse;
+      }
+      wetShow += ".\n\r";
+      ch->sendTo(wetShow);
+    }
+  }
+
+  return 0;
+}
+
+// describes wetness for a char
+const sstring describeWet(const TBeing *ch)
+{
+  int wetness = getWetness(ch);
+  const char * color = wetness > WET_MAXIMUM/2 ? ch->blue() : ch->cyan();
+  return fmt("%s%s%s") % color % describeWet(wetness) % ch->norm();
+}
+
+// generically describes wetness (room eval)
+const sstring describeWet(int wetness)
+{
+  static const sstring DescribeDry[] = {
+    "normal humidity",
+    "slightly dry",
+    "dry",
+    "arid",
+    "very arid",
+    "parched",
+     };
+  static const sstring DescribeWet[] = {
+    "slightly damp",
+    "damp",
+    "slightly wet",
+    "wet",
+    "dripping wet",
+    "sopping wet",
+    "drenched",
+    "completely soaked",
+    "waterlogged" };
+
+  if (wetness <= 0)
+    return DescribeDry[max(min((int)cElements(DescribeDry)-1, -(wetness/10)), 0)];
+  return DescribeWet[max(min((int)cElements(DescribeWet)-1, (wetness/10)-1), 0)];
+}
+
+// adds (or removes) wetness from the character
+int addWetness(TBeing *ch, int diffWet)
+{
+  affectedData *wetAffect = NULL;
+
+  for (wetAffect = ch->affected; wetAffect; wetAffect = wetAffect->next)
+    if (wetAffect->type == AFFECT_WET)
+      break;
+
+  if (!wetAffect && diffWet > 0)
+  {
+    affectedData aff;
+    aff.type = AFFECT_WET;
+    aff.modifier = diffWet;
+    aff.duration = PERMANENT_DURATION;
+    ch->affectJoin(ch, &aff, AVG_DUR_NO, AVG_EFF_YES, FALSE);
+    return diffWet;
+  }
+  else if (wetAffect)
+  {
+    diffWet = wetAffect->modifier = max(0, min(WET_MAXIMUM, int(wetAffect->modifier) + diffWet));
+    if (diffWet <= 0)
+      wetAffect->duration = 0;
+    return diffWet;
+  }
+
+  return 0;
+}

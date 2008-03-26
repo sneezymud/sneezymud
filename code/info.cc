@@ -1754,130 +1754,132 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
         break;
 
       case SKILL_MIND_FOCUS:
-	if(show){
-	  str+=fmt("Affected: mind focus.  Approx. duration : %s\n\r") %
-		  describeDuration(this, aff->duration);
-	}
-	break;
-
+        if(show){
+          str+=fmt("Affected: mind focus.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
       case SKILL_PSI_BLAST:
-	if(show && aff->shouldGenerateText()){
-	  str+=fmt("Affected: psionic blast.  Approx. duration : %s\n\r") %
-		  describeDuration(this, aff->duration);
-	}
-	break;
+        if(show && aff->shouldGenerateText()){
+          str+=fmt("Affected: psionic blast.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
       case AFFECT_IMMORTAL_BLESSING:
         if(show){
-	  str+=fmt("Affected: Immortal's Blessing.  Approx. duration : %s\n\r") %
-	    describeDuration(this, aff->duration);
-	}
-	break;
+          str+=fmt("Affected: Immortal's Blessing.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
       case AFFECT_PEEL_BLESSING:
         if(show){
-	  str+=fmt("Affected: Peel's Blessing.  Approx. duration : %s\n\r") %
-	    describeDuration(this, aff->duration);
-	}
-	break;
+          str+=fmt("Affected: Peel's Blessing.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
       case AFFECT_VASCO_BLESSING:
         if(show){
-	  str+=fmt("Affected: Vasco's Blessing.  Approx. duration : %s\n\r") %
-	    describeDuration(this, aff->duration);
-	}
-	break;
+          str+=fmt("Affected: Vasco's Blessing.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
       case AFFECT_CORAL_BLESSING:
         if(show){
-	  str+=fmt("Affected: Coral's Blessing.  Approx. duration : %s\n\r") %
-	    describeDuration(this, aff->duration);
-	}
-	break;
+          str+=fmt("Affected: Coral's Blessing.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
       case AFFECT_ANGUS_BLESSING:
         if(show){
-	  str+=fmt("Affected: Angus's Blessing.  Approx. duration : %s\n\r") %
-	    describeDuration(this, aff->duration);
-	}
-	break;
+          str+=fmt("Affected: Angus's Blessing.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
       case AFFECT_JESUS_BLESSING:
         if(show){
-	  str+=fmt("Affected: Jesus's Blessing.  Approx. duration : %s\n\r") %
-	    describeDuration(this, aff->duration);
-	}
-	break;
+          str+=fmt("Affected: Jesus's Blessing.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
       case AFFECT_DAMESCENA_BLESSING:
         if(show){
-	  str+=fmt("Affected: Damescena's Blessing.  Approx. duration : %s\n\r") %
-	    describeDuration(this, aff->duration);
-	}
-	break;
+          str+=fmt("Affected: Damescena's Blessing.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
       case AFFECT_BUMP_BLESSING:
         if(show){
-	  str+=fmt("Affected: Bump's Blessing.  Approx. duration : %s\n\r") %
-	    describeDuration(this, aff->duration);
-	}
-	break;
+          str+=fmt("Affected: Bump's Blessing.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
       case AFFECT_MAROR_BLESSING:
         if(show){
-	  str+=fmt("Affected: Maror's Blessing.  Approx. duration : %s\n\r") %
-	    describeDuration(this, aff->duration);
-	}
-	break;
-    case AFFECT_DASH_BLESSING:
-      if(show){
-	str+=fmt("Affected: Dash's Blessing.  Approx. duration : %s\n\r") %
-	  describeDuration(this, aff->duration);
-      }
-      break;
+          str+=fmt("Affected: Maror's Blessing.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
+      case AFFECT_DASH_BLESSING:
+        if(show){
+          str+=fmt("Affected: Dash's Blessing.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
+      case AFFECT_DEIRDRE_BLESSING:
+        if(show){
+          str+=fmt("Affected: Deirdre's Blessing.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
+      case AFFECT_GARTHAGK_BLESSING:
+        if(show){
+          str+=fmt("Affected: Garthagk's Blessing.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
+      case AFFECT_MERCURY_BLESSING:
+        if(show){
+          str+=fmt("Affected: Mercury's Blessing.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
+      case AFFECT_METROHEP_BLESSING:
+        if(show){
+          str+=fmt("Affected: Metrohep's Blessing.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
+      case AFFECT_MAGDALENA_BLESSING:
+        if(show){
+          str+=fmt("Affected: Magdalena's Blessing.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
+      case AFFECT_MACROSS_BLESSING:
+        if(show){
+          str+=fmt("Affected: Macross's Blessing.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
+      case AFFECT_PAPPY_BLESSING:
+        if(show){
+          str+=fmt("Affected: Pappy's Blessing.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
 
-    case AFFECT_DEIRDRE_BLESSING:
-      if(show){
-	str+=fmt("Affected: Deirdre's Blessing.  Approx. duration : %s\n\r") %
-	  describeDuration(this, aff->duration);
-      }
-      break;
-    case AFFECT_GARTHAGK_BLESSING:
-      if(show){
-	str+=fmt("Affected: Garthagk's Blessing.  Approx. duration : %s\n\r") %
-	  describeDuration(this, aff->duration);
-      }
-      break;
-    case AFFECT_MERCURY_BLESSING:
-      if(show){
-	str+=fmt("Affected: Mercury's Blessing.  Approx. duration : %s\n\r") %
-	  describeDuration(this, aff->duration);
-      }
-      break;
-    case AFFECT_METROHEP_BLESSING:
-      if(show){
-	str+=fmt("Affected: Metrohep's Blessing.  Approx. duration : %s\n\r") %
-	  describeDuration(this, aff->duration);
-      }
-      break;
-    case AFFECT_MAGDALENA_BLESSING:
-      if(show){
-	str+=fmt("Affected: Magdalena's Blessing.  Approx. duration : %s\n\r") %
-	  describeDuration(this, aff->duration);
-      }
-      break;
-    case AFFECT_MACROSS_BLESSING:
-      if(show){
-        str+=fmt("Affected: Macross's Blessing.  Approx. duration : %s\n\r") %
-          describeDuration(this, aff->duration);
-      }
-    case AFFECT_PAPPY_BLESSING:
-      if(show){
-        str+=fmt("Affected: Pappy's Blessing.  Approx. duration : %s\n\r") %
-          describeDuration(this, aff->duration);
-      }
-      break;
- 
-	  
       case AFFECT_BITTEN_BY_VAMPIRE:
-	// secret!
-	break;
+        // secret!
+        break;
 
-    case AFFECT_PREENED:
-      if(show)
-        str+=fmt("Affected : 'Preened'\t: Time Left : %s\n\r") % describeDuration(this, aff->duration);
-      break;
+      case AFFECT_PREENED:
+        if(show)
+          str+=fmt("Affected: 'Preened'\t: Time Left : %s\n\r") % describeDuration(this, aff->duration);
+        break;
+
+      case AFFECT_WET:
+        // we show this in score
+        break;
 
       // cases beyond here are considered BOGUs
       case LAST_ODDBALL_AFFECT:
@@ -4259,6 +4261,10 @@ void TBeing::doEvaluate(const char *argument)
     if (roomp->isRoomFlag(ROOM_FLOODED))
       sendTo("The room is flooded with water.\n\r");
     
+    int wetness = getRoomWetness(roomp);
+    if (wetness != 0) // show wetness
+      sendTo(fmt("The room is %s.\n\r") % describeWet(wetness));
+
     // advanced adventuring conditions
     // should probably make a more modular isGreatOutdoorsSector() check or something...
     if (doesKnowSkill(SKILL_ENCAMP)) {

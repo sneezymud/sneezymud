@@ -86,11 +86,6 @@ bool TBeing::canKick(TBeing *victim, silentTypeT silent)
       sendTo("You can't kick while mounted!\n\r");
     return FALSE;
   }
-  if (isSwimming()) {
-    if (!silent)
-      sendTo("It's near impossible to kick while swimming.\n\r");
-    return FALSE;
-  }
   if (roomp && roomp->isUnderwaterSector()) {
     if (!silent)
       sendTo("The water around you totally impedes your kick!\n\r");

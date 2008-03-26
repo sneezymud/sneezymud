@@ -71,7 +71,13 @@ enum sunTimeT {
   SUN_TIME_NIGHT,
 };
 
+#define WET_MAXIMUM 100
+
 extern int sunTime(sunTimeT);
 extern bool sunIsUp();
-
+extern int getWet(TBeing *ch, TRoom* room, silentTypeT silent);
+extern int getRoomWetness(TRoom* room);
+extern const sstring describeWet(int wetness);
+extern const sstring describeWet(const TBeing *ch);
+extern int addWetness(TBeing *ch, int diffWet);
 #endif

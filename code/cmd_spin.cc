@@ -43,11 +43,6 @@ bool TBeing::canSpin(TBeing *victim, silentTypeT silent)
     return FALSE;
   }
 
-  if (isSwimming()) {
-    if (!silent)
-      sendTo("It's impossible to spin someone while in water.\n\r");
-    return FALSE;
-  }
   if (victim->isFlying() && (victim->fight() != this)) {
     if (!silent)
       sendTo("You can only spin fliers that are fighting you.\n\r");

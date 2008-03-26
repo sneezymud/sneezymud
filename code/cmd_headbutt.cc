@@ -75,11 +75,6 @@ bool TBeing::canHeadbutt(TBeing *victim, silentTypeT silent)
     }
     return FALSE;
   }
-  if (isSwimming()) {
-    if (!silent)
-      sendTo("You can't headbutt while swimming.\n\r");
-    return FALSE;
-  }
   if (victim->isFlying()) {
     if (!silent)
       sendTo("You can't headbutt something that is flying.\n\r");

@@ -732,7 +732,7 @@ static bool canFleeThisWay(TBeing *ch, dirTypeT dir)
     return false;
 #endif
 
-  if (ch->isAquatic() && 
+  if (ch->isAquatic() && !ch->isPc() &&
       !(rp2->isWaterSector() || rp2->isUnderwaterSector()))
     return false;
 
@@ -1429,6 +1429,14 @@ int TBeing::flameEngulfed()
     }
     if (IS_SET_DELETE(res, DELETE_VICT))
       return DELETE_THIS;
+  }
+
+  if (affectedBySpell(AFFECT_WET))
+  {
+    if (0 == addWetness(this, -50))
+      sendTo("You feel completely dried off now.\n\r");
+    else
+      sendTo(fmt("You dry out a bit from the flames!  You feel %s.\n\r") % describeWet(this));
   }
 
   if (hasQuestBit(TOG_HAS_PYROPHOBIA))

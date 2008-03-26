@@ -38,11 +38,6 @@ bool TBeing::canBodyslam(TBeing *victim, silentTypeT silent)
     return FALSE;
   }
 
-  if (isSwimming()) {
-    if (!silent)
-      sendTo("It's impossible to bodyslam while in water.\n\r");
-    return FALSE;
-  }
   if (victim->isFlying() && (victim->fight() != this)) {
     if (!silent)
       sendTo("You can only bodyslam fliers that are fighting you.\n\r");

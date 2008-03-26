@@ -63,16 +63,6 @@ int task_trance_of_blades(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRo
       ch->cantHit += ch->loseRound(1);
       return FALSE;
     }   
-    if (ch->isSwimming()) {
-      act("Sudden immersion causes you to snap out of your trance.",
-          FALSE, ch, 0, 0, TO_CHAR, ANSI_RED);
-      act("Sudden immersion causes $n to snap out of $s trance.",
-          FALSE, ch, 0, 0, TO_ROOM);
-      ch->stopTask();
-      ch->addToWait(combatRound(2));
-      ch->cantHit += ch->loseRound(1);
-      return FALSE;
-    }
     if (!ch->canUseArm(HAND_PRIMARY)) {
       act("Your injured arm causes you to snap out of your trance.",
           FALSE, ch, 0, 0, TO_CHAR);

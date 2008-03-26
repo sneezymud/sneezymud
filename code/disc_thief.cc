@@ -84,10 +84,6 @@ int sneak(TBeing *thief, spellNumT skill)
     thief->sendTo("It is impossible to sneak while flying.\n\r");
     return FALSE;
   }
-  if (thief->isSwimming()) {
-    thief->sendTo("It is impossible to sneak while swimming.\n\r");
-    return FALSE;
-  }
   if (thief->getMove() < SNEAK_COST) {
     thief->sendTo("You don't have the vitality to do that.\n\r");
     return FALSE;

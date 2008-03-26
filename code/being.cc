@@ -1809,6 +1809,14 @@ int TBeing::chiMe(TBeing *tLunatic)
       act("You close your eyes and concentrate for a moment, then begin radiating an intense <R>heat<1> from your body.", TRUE, this, NULL, NULL, TO_CHAR);
       act("$n closes $s eyes in concentration, then begins radiating an intense <R>heat<1> from $s body.", TRUE, this, NULL, NULL, TO_ROOM);
 
+      if (affectedBySpell(AFFECT_WET))
+      {
+        if (0 == addWetness(this, -15))
+          sendTo("You feel completely dried off now.\n\r");
+        else
+          sendTo(fmt("The heat dries you a bit.  You feel %s.\n\r") % describeWet(this));
+      }
+
       aff.type      = SKILL_CHI;
       aff.level     = bKnown;
       aff.duration  = (3 + (bKnown / 2)) * UPDATES_PER_MUDHOUR;

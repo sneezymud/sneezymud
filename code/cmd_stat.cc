@@ -2144,6 +2144,11 @@ void TBeing::statBeing(TBeing *k)
           sprintbit_64(aff->bitvector, affected_bits);
         str += fmt("     Expires in %6d updates.\n\r") % aff->duration;
       break;
+      case AFFECT_WET:
+        str += "Wet.\n\r";
+        str += fmt("     Covered by %d fluid ounces of water.\n\r") % aff->modifier;
+      break;
+
       case LAST_ODDBALL_AFFECT:
       case LAST_TRANSFORMED_LIMB:
       case LAST_BREATH_WEAPON:

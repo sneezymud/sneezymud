@@ -8,6 +8,10 @@
 #ifndef __ROOM_H
 #define __ROOM_H
 
+// cubic inches of burning material where room itself burns
+const int ROOM_FIRE_THRESHOLD=20000;
+const int ROOM_FLOOD_THRESHOLD=30000;
+
 extern TRoom *room_db[];
 extern TRoom *real_roomp(int);
 extern int top_of_world;
@@ -153,15 +157,31 @@ class TTerrainInfo {
   int thirst;
   int drunk;
   int heat;
-  int humidity;
+  int wetness;
   const char * const name;
-  TTerrainInfo(int, int, int, int, int, int, int, const char *);
+  const char * const prep;
+  TTerrainInfo(int, int, int, int, int, int, int, const char *,const char *);
   ~TTerrainInfo();
   private:
   //    TTerrainInfo() {} // prevent use
 };
 
 extern TTerrainInfo *TerrainInfo[MAX_SECTOR_TYPES];
+
+// wetness factor.  Positive makes you more wet, negative less wet
+// this compares with the number of fluid ounces that you have in water over you
+// a typical waterskin holds 70 fl ounces, so pouring it overf your head is +70 wetness
+// a 0 means you dont dry or get any wetter.
+// a general rating system:
+//   100 - underwater
+//   50 - most river surfaces (standing only. This number is doubled if you sit/rest)
+//   20 - wet.  a muddy swamp, puddles/mud etc.
+//   10 - damp.  foggy, a steamy jungle, etc
+//   0 - what we would consider "damp". overcast day, wet air
+//  -10 - what we could consider a 'regular' day.  most zones, dry cold, or cool semi-humid
+//  -20 - a warm day in a temperate zone (most cities/indoors)
+//  -40 - a desert
+// ignore weather - this is added later
 
 #if 0
 class WeatherStuff {

@@ -48,10 +48,6 @@ static int grapple(TBeing *c, TBeing *victim, spellNumT skill)
     c->sendTo("You can't grapple someone that is flying.\n\r");
     return FALSE;
   }
-  if (c->isSwimming()) {
-    c->sendTo("You can't grapple with all this water around.\n\r");
-    return FALSE;
-  }
 
   if (c->getMove() < grapple_move) {
     c->sendTo("You lack the vitality to grapple.\n\r");

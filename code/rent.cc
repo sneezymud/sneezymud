@@ -894,12 +894,13 @@ TObj *ItemLoad::raw_read_item()
   }
 
   // update the item's material type
-  if (CURRENT_RENT_VERSION > 9 &&
+  // this is noe done always - just checking at this load was circumvented by some DB loads
+  /*if (CURRENT_RENT_VERSION > 9 &&
     convertV9MaterialToV10(o->getMaterial()) != o->getMaterial())
   {
     vlogf(LOG_OBJ, fmt("Object %s converting from material type %d to %d") %  o->getName() % o->getMaterial() % convertV9MaterialToV10(o->getMaterial()));
     o->setMaterial(convertV9MaterialToV10(o->getMaterial()));
-  }
+  }*/
 
   return o;
 }

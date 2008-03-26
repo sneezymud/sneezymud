@@ -154,8 +154,11 @@ int task_preen(TBeing *ch, cmdTypeT cmd, const char *arg, int pulse, TRoom *rp, 
   "$n stops preening $Ns feathers.", // to room STOP
   };
   const sstring * preenAct = otherPreen;
+  int preenChance = 1;
   if (target == ch)
     preenAct = selfPreen;
+  if (ch->affectedBySpell(AFFECT_WET))
+    preenChance = 2;
 
   switch (cmd) {
     case CMD_TASK_CONTINUE:
@@ -229,7 +232,7 @@ int task_preen(TBeing *ch, cmdTypeT cmd, const char *arg, int pulse, TRoom *rp, 
 
         ch->stopTask();
       }
-      else if (ch->task->timeLeft > 0 && ::number(0,1))
+      else if (ch->task->timeLeft > 0 && ::number(0,preenChance))
         ch->task->timeLeft--;
       break;
     case CMD_ABORT:

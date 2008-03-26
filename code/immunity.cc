@@ -92,114 +92,79 @@ byte Immunities::getImmunity(immuneTypeT whichImmunity) const
 
 byte TBeing::getImmunity(immuneTypeT type) const
 {
-  int amount, imm=0;
+  int amount, imm;
+
+  imm = immunities.immune_arr[type];
 
   if(doesKnowSkill(SKILL_DUFALI)) {
-    amount = getSkillValue(SKILL_DUFALI);
-    amount = max(amount, 0);
+    amount = max((int)getSkillValue(SKILL_DUFALI), 0);
     switch(type){
       case IMMUNE_PARALYSIS: 
-	imm=immunities.immune_arr[type]+(amount/3);
-	break;
+        imm += (amount/3);
+        break;
       case IMMUNE_CHARM:
-	imm=immunities.immune_arr[type]+amount;
-	break;
+        imm += amount;
+        break;
       case IMMUNE_POISON:
-	imm=immunities.immune_arr[type]+(amount/2);
-	break;
+        imm += (amount/2);
+        break;
       default:
-	break;
-    }
-    
-    if(imm){
-      if (imm < -100)
-	imm=-100;
-      if (imm > 100)
-	imm=100;
-      
-      return imm;
+        break;
     }
   }
   
   if(doesKnowSkill(SKILL_IRON_SKIN)){
-    amount = getSkillValue(SKILL_IRON_SKIN);
-    amount = max(amount, 0);
-    
+    amount = max((int)getSkillValue(SKILL_IRON_SKIN), 0);
     switch(type){
       case IMMUNE_SKIN_COND:
-	imm=immunities.immune_arr[type]+(amount/2);
-	break;
+        imm += (amount/2);
+        break;
       case IMMUNE_BLEED:
-	imm=immunities.immune_arr[type]+(int)(amount/1.5);
-	break;
+        imm += (int)(amount/1.5);
+        break;
       default:
-	break;
-    }
-    
-    if(imm){
-      if (imm < -100)
-	imm=-100;
-      if (imm > 100)
-	imm=100;
-      
-      return imm;
-    }
-  }
-  if(doesKnowSkill(SKILL_IRON_BONES)){
-    amount = getSkillValue(SKILL_IRON_BONES);
-    amount = max(amount, 0);
-    
-    switch(type){
-      case IMMUNE_BONE_COND:
-	imm=immunities.immune_arr[type]+(amount/2);
-	break;
-      default:
-	break;
-    }
-    
-    if(imm){
-      if (imm < -100)
-	imm=-100;
-      if (imm > 100)
-	imm=100;
-      
-      return imm;
-    }
-  }
-  if(doesKnowSkill(SKILL_IRON_WILL)){
-    amount = getSkillValue(SKILL_IRON_WILL);
-    amount = max(amount, 0);
-    
-    switch(type){
-      case IMMUNE_NONMAGIC:
-	imm=immunities.immune_arr[type]+(amount/30);
-	break;
-      default:
-	break;
-    }
-    
-    if(imm){
-      if (imm < -100)
-	imm=-100;
-      if (imm > 100)
-	imm=100;
-      
-      return imm;
-    }
-  }
-  if(hasQuestBit(TOG_IS_HEALTHY) && type==IMMUNE_DISEASE){
-    imm=immunities.immune_arr[type]+75;
-    if(imm){
-      if (imm < -100)
-	imm=-100;
-      if (imm > 100)
-	imm=100;
-      
-      return imm;
+        break;
     }
   }
 
-  return immunities.immune_arr[type];
+  if(doesKnowSkill(SKILL_IRON_BONES) && type == IMMUNE_BONE_COND){
+    amount = max((int)getSkillValue(SKILL_IRON_BONES), 0);
+    imm += (amount/2);
+  }
+
+  if(doesKnowSkill(SKILL_IRON_WILL) && type == IMMUNE_NONMAGIC){
+    amount = max((int)getSkillValue(SKILL_IRON_WILL), 0);
+    imm += (amount/30);
+  }
+
+  if(hasQuestBit(TOG_IS_HEALTHY) && type == IMMUNE_DISEASE){
+    imm += 75;
+  }
+
+  if(affectedBySpell(AFFECT_WET)) {
+    amount = 0;
+    for (affectedData *wetAffect = affected; wetAffect; wetAffect = wetAffect->next)
+      if (wetAffect->type == AFFECT_WET) {
+        amount = wetAffect->level;
+        break;
+      }
+    switch(type){
+      case IMMUNE_HEAT: 
+        imm += (amount/3);
+        break;
+      case IMMUNE_ELECTRICITY:
+        imm += -(amount/5);
+        break;
+      case IMMUNE_COLD:
+        imm += -(amount/5);
+        break;
+      default:
+        break;
+    }
+  }
+
+  imm = max(-100, min(100, imm));
+  return imm;
 }
 
 void TBeing::setImmunity(immuneTypeT type, byte amt)
@@ -855,6 +820,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case AFFECT_MACROSS_BLESSING:
     case AFFECT_PAPPY_BLESSING:
     case AFFECT_PREENED:
+    case AFFECT_WET:
     case ABSOLUTE_MAX_SKILL:
 #if 1
     case SPELL_EARTHMAW:

@@ -12,7 +12,6 @@
 #include "spec_objs.h"
 #endif
 
-
 class objCost { 
   public:
     int total_cost;

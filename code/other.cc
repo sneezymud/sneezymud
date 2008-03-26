@@ -2734,6 +2734,7 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
 
   // check noharm - otherwise players can use this item to get around noharm checks
   if (victim && SPELL_GUST <= spell && spell <= MAX_SKILL &&
+    (spell != SPELL_SLUMBER || !toggleInfo[TOG_SLEEP]->toggle) &&
     discArray[spell]->targets & TAR_VIOLENT && caster->noHarmCheck(victim))
     return 0;
 
@@ -4100,10 +4101,6 @@ void TBeing::doDrag(const sstring &arg)
       sendTo("Drag something with your hands full!?!\n\r");
       return;
     }
-    if (isSwimming()) {
-      sendTo("You can't drag while swimming.\n\r");
-      return;
-    }
   } 
 
   exitp = exitDir(tdir);
@@ -4636,10 +4633,6 @@ void TBeing::doRoll(const sstring &arg)
     }
     if (equipment[HOLD_LEFT] || equipment[HOLD_RIGHT]) {
       sendTo("Roll something with your hands full!?!\n\r");
-      return;
-    }
-    if (isSwimming()) {
-      sendTo("You can't roll while swimming.\n\r");
       return;
     }
   } 

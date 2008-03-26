@@ -2477,6 +2477,9 @@ void factoryProduction(int shop_nr)
   TMonster *keeper=tso.getKeeper();
   bool ready=false;
 
+  if (!keeper) // keeper is null on test ports
+    return;
+
   db_vnum.query("select fp.vnum from factoryproducing fp where shop_nr=%i", shop_nr);
 
   while(db_vnum.fetchRow()){

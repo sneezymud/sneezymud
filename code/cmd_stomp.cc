@@ -67,12 +67,6 @@ bool TBeing::canStomp(TBeing *victim, silentTypeT silent)
     return FALSE;
   }
 
-  if (isSwimming()) {
-    if (!silent)
-      sendTo("You can't stomp while swimming.\n\r");
-    return FALSE;
-  }
-
   return TRUE;
 }
 

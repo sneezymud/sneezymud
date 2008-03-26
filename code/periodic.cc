@@ -24,10 +24,6 @@
 #include "database.h"
 #include "obj_light.h"
 
-// cubic inches of burning material where room itself burns
-const int ROOM_FIRE_THRESHOLD=20000;
-const int ROOM_FLOOD_THRESHOLD=30000;
-
 // procGlobalRoomStuff
 procGlobalRoomStuff::procGlobalRoomStuff(const int &p)
 {
@@ -669,7 +665,8 @@ int TBeing::updateAffects()
            (af->type == AFFECT_PET) ||
            (af->type == AFFECT_THRALL) ||
            (af->type == SPELL_SANCTUARY) ||
-           (af->type == SKILL_BERSERK))) {
+           (af->type == SKILL_BERSERK) ||
+           (af->type == AFFECT_WET) )) {
       continue;
     }
     if ((af->type == SPELL_POLYMORPH) ||
@@ -2101,6 +2098,7 @@ int TBeing::terrainSpecial()
     disease_start(this, &af);
   }
 
+  getWet(this, roomp, SILENT_NO);
 
   return FALSE;
 }
