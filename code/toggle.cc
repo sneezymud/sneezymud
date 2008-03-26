@@ -1049,10 +1049,10 @@ void TBeing::doToggle(const char *arg2)
     }
   } else if (is_abbrev(arg, "hunt") ) {
     if (IS_SET(desc->autobits, AUTO_HUNT)) {
-      sendTo("You will no longer head toward things you are hunting.\n\r");
+      sendTo("You will no longer head toward things you are tracking.\n\r");
       REMOVE_BIT(desc->autobits, AUTO_HUNT);
     } else {
-      sendTo("You will now head automatically toward things you are hunting.\n\r");
+      sendTo("You will now head automatically toward things you are tracking.\n\r");
       SET_BIT(desc->autobits, AUTO_HUNT);
     }
   } else if (is_abbrev(arg, "no-hero-sprites") || is_abbrev(arg, "hero-sprites") || is_abbrev(arg, "sprites") ) {
@@ -1099,9 +1099,9 @@ void TBeing::doToggle(const char *arg2)
 	return;
       }
     }
-    sendTo("Unrecognized toggle.  Try toggle with no arguments for a list.\n\r");
+    sendTo("Unrecognized toggle.  Type HELP TOGGLE to see valid toggles.\n\r");
   } else {
-    sendTo("Unrecognized toggle.  Try toggle with no arguments for a list.\n\r");
+    sendTo("Unrecognized toggle.  Type HELP TOGGLE to see valid toggles.\n\r");
     return;
   }
 }
