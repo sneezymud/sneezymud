@@ -1256,7 +1256,7 @@ int CheckStorageChar (TBeing *ch, TBeing *other)
 float TBeing::carryWeightLimit() const
 {
   float num;
-  num = plotStat(STAT_CURRENT, STAT_STR, (float) 10.0, (float) 640.0, (float) 165.0);
+  num = plotStat(STAT_CURRENT, STAT_STR, (float) 30.0, (float) 1920.0, (float) 495.0);
   if (isFourLegged())
     num *= 2.0;
 
@@ -1265,7 +1265,7 @@ float TBeing::carryWeightLimit() const
 
 int TBeing::carryVolumeLimit() const
 {
-  int vol = plotStat(STAT_CURRENT, STAT_DEX, 15000, 150000, 45000);
+  int vol = plotStat(STAT_CURRENT, STAT_DEX, 45000, 450000, 135000);
 
   // flat racial modifiers
 
