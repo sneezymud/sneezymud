@@ -2028,15 +2028,15 @@ const char* const home_terrains[MAX_HOME_TERS] =
   "HOME_TER_FROGMAN_FOREST",
   "HOME_TER_FROGMAN_MARINER",
 
-  // fishman
-  "schooler fishman",
-  "reefer fishman",
+  // kalysian
+  "schooler kalysian",
+  "reefer kalysian",
   "UNUSED",
-  "hermit fishman",
+  "hermit kalysian",
   "UNUSED",
-  "trencher fishman",
-  "kelper fishman",
-  "nomad fishman",
+  "trencher kalysian",
+  "kelper kalysian",
+  "nomad kalysian",
 
   // aarakocra
   "colony aarakocra",

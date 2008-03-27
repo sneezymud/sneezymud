@@ -117,7 +117,7 @@ TPlayerRace nannyRaces[] = {
 
   // advanced races
   { RACE_FROGMAN, "Frogman", 1, frogmanTerr, cElements(frogmanTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, ", 0}, // add stin
-  { RACE_FISHMAN, "Kalysian", 1, fishmanTerr, cElements(fishmanTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, talsbane, matthaas, ", 0},
+  { RACE_FISHMAN, "Kalysian", 1, fishmanTerr, cElements(fishmanTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, talsbane, matthaas, stu, ", 0},
   { RACE_BIRDMAN, "Aarakocra", 1, birdmanTerr, cElements(birdmanTerr), ROOM_AERIE_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, hairbear, jamil, ", 0},
   { RACE_TROLL, "Troll", 1, trollTerr, cElements(trollTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, remoh, ", 0},
 };

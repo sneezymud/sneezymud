@@ -99,7 +99,32 @@ void TPerson::doInvis(const char *)
     return;
   }
 
-  if (!affectedBySpell(SPELL_INVISIBILITY) && !isVampire()) {
+  // cowards can turn invis for a short time 1/day
+  if (!affectedBySpell(SPELL_INVISIBILITY) && !checkForSkillAttempt(SPELL_INVISIBILITY) &&
+    hasQuestBit(TOG_IS_CRAVEN)) {
+
+    // add short-term invisibility
+    affectedData invisAff;
+    invisAff.type = SPELL_INVISIBILITY;
+    invisAff.level = 5;
+    invisAff.duration = 16 * ONE_SECOND; // about 12 seconds after the below duration loss
+    invisAff.modifier = 0;
+    invisAff.location = APPLY_ARMOR;
+    invisAff.bitvector = AFF_INVISIBLE;
+    affectTo(&invisAff);
+
+    // add 1-day cooldown
+    invisAff.type = AFFECT_SKILL_ATTEMPT;
+    invisAff.level = 0;
+    invisAff.duration = 24 * UPDATES_PER_MUDHOUR;
+    invisAff.modifier = SPELL_INVISIBILITY;
+    invisAff.location = APPLY_NONE;
+    invisAff.bitvector = 0;
+    affectTo(&invisAff);
+
+    sendTo("You use your innate cowardly abilities to disappear!\n\r");
+  }
+  else if (!affectedBySpell(SPELL_INVISIBILITY) && !isVampire()) {
     sendTo("I'm afraid you can not do this.\n\r");
     return;
   }
