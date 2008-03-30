@@ -515,13 +515,13 @@ const int TOG_GAVE_BALLOON1                    = 326;
 const int TOG_GAVE_BALLOON2                    = 327;
 const int TOG_GAVE_BALLOON3                    = 328;
 const int TOG_GAVE_BALLOON4                    = 329;
-const int TOG_GAVE_BALLOON5                    = 330;
+const int TOG_NOOB_FOUND_YUN                   = 330;
 
 const int TOG_GAVE_TEDDY_BEAR1                 = 331;
 const int TOG_GAVE_TEDDY_BEAR2                 = 332;
 const int TOG_GAVE_TEDDY_BEAR3                 = 333;
 const int TOG_GAVE_TEDDY_BEAR4                 = 334;
-const int TOG_GAVE_TEDDY_BEAR5                 = 335;
+const int TOG_NOOB_FOUND_SURPLUS               = 335;
 
 const int TOG_GAVE_BOTTLE_PORT1                = 336;
 const int TOG_GAVE_BOTTLE_PORT2                = 337;

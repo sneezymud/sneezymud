@@ -343,12 +343,12 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"February Quest: Gave 2 balloons", MOB_MIME_ANIMATED},
   {"February Quest: Gave 3 balloons", MOB_MIME_ANIMATED},
   {"February Quest: Gave 4 balloons", MOB_MIME_ANIMATED},
-  {"February Quest: Gave 5 balloons", MOB_MIME_ANIMATED}, //330
+  {"Newbie: Found Yun the Grocer", MOB_ANY}, //330
   {"February Quest: Gave 1 teddy bear", MOB_GUY_LAZY},
   {"February Quest: Gave 2 teddy bears", MOB_GUY_LAZY},
   {"February Quest: Gave 3 teddy bears", MOB_GUY_LAZY},
   {"February Quest: Gave 4 teddy bears", MOB_GUY_LAZY},
-  {"February Quest: Gave 5 teddy bears", MOB_GUY_LAZY}, //335
+  {"Newbie: Found Surplus", MOB_ANY}, //335
   {"February Quest: Gave 1 bottle of port", MOB_DRUNK_TRADER_RICH},
   {"February Quest: Gave 2 bottles of port", MOB_DRUNK_TRADER_RICH},//337
   {"October Quest: Participant", MOB_NONE}, //338
