@@ -109,14 +109,22 @@ int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       if((commod=dynamic_cast<TCommodity *>(t))){
 	price=commod->sellPrice(commod->numUnits(), 
 				commod_shop_nr[*target_shop_idx], -1, myself);
-	homebase.doBuyTransaction(price, 
-		     fmt("%s x %i") % commod->getName() % commod->numUnits(), 
-				   TX_SELLING, commod);
-	commod->sellMe(myself, tso.getKeeper(), 
-		       commod_shop_nr[*target_shop_idx], 1);
-	sstring buf = fmt("%s/%d") % SHOPFILE_PATH % 250;
-	homebase.getKeeper()->saveItems(buf);
-	cart->roomp->saveItems("");
+	int rc;
+	if(rc=commod->sellMe(myself, tso.getKeeper(), 
+			  commod_shop_nr[*target_shop_idx], 1)){
+	  homebase.doBuyTransaction(price, fmt("%s x %i") % 
+				    commod->getName() % commod->numUnits(), 
+				    TX_SELLING, commod);
+
+	  if(IS_SET_DELETE(rc, DELETE_THIS))
+	    delete commod;
+
+	  sstring buf = fmt("%s/%d") % SHOPFILE_PATH % 250;
+	  homebase.getKeeper()->saveItems(buf);
+	  cart->roomp->saveItems("");
+
+	}
+	
       }
     }
 

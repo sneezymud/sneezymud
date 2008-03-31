@@ -33,7 +33,7 @@ class TCommodity : public TMergeable {
     virtual void lowCheck();
     virtual void logMe(const TBeing *, const char *) const {}
     virtual int buyMe(TBeing *, TMonster *, int, int);
-    virtual void sellMe(TBeing *, TMonster *, int, int);
+    virtual int sellMe(TBeing *, TMonster *, int, int);
     virtual bool sellMeCheck(TBeing *, TMonster *, int) const;
     virtual int sellCommod(TBeing *, TMonster *, int, TThing *);
     virtual void valueMe(TBeing *, TMonster *, int, int);

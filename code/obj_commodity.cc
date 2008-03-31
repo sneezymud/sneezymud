@@ -399,7 +399,7 @@ bool TCommodity::sellMeCheck(TBeing *ch, TMonster *keeper, int num) const
 }
 
 
-void TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
+int TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
 {
   TThing *t;
   TCommodity *obj2 = NULL;
@@ -411,25 +411,25 @@ void TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
 
   if (isObjStat(ITEM_NODROP)) {
     ch->sendTo("You can't let go of it, it must be CURSED!\n\r");
-    return;
+    return false;
   }
   if (isObjStat(ITEM_PROTOTYPE)) {
     ch->sendTo("That's a prototype, no selling that!\n\r");
-    return;
+    return false;
   }
   if (will_not_buy(ch, keeper, this, shop_nr))
-    return;
+    return false;
 
   if (sellMeCheck(ch, keeper, numUnits()))
-    return;
+    return false;
 
   if (!shop_index[shop_nr].willBuy(this)) {
     keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
-    return;
+    return false;
   }
   if (keeper->getMoney() < price) {
     keeper->doTell(ch->getName(), shop_index[shop_nr].missing_cash1);
-    return;
+    return false;
   }
   for (t = keeper->getStuff(); t; t = t->nextThing) {
     obj2 = dynamic_cast<TCommodity *>(t);
@@ -467,13 +467,13 @@ void TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
       sprintf(buf, "%d", price);
       ch->doSplit(buf, false);
     }
-    delete this;
+    return DELETE_THIS;
   }
   if (!ch->delaySave)
     ch->doSave(SILENT_YES);
   sprintf(buf, "%s/%d", SHOPFILE_PATH, shop_nr);
   keeper->saveItems(buf);
-  return;
+  return true;
 }
 
 int TCommodity::sellCommod(TBeing *ch, TMonster *keeper, int shop_nr, TThing *bag)
@@ -504,7 +504,10 @@ int TCommodity::sellCommod(TBeing *ch, TMonster *keeper, int shop_nr, TThing *ba
     }
   }
 
-  sellMe(ch, keeper, shop_nr, 1);
+  rc=sellMe(ch, keeper, shop_nr, 1);
+  if(IS_SET_DELETE(rc, DELETE_THIS))
+    return DELETE_THIS;
+
   return FALSE;
 }
 

@@ -30,7 +30,7 @@ class TOrganic : public TObj {
     virtual int  sellPrice(int, int, float, const TBeing *);
     virtual int  shopPrice(int, int, float, const TBeing *) const;
     virtual int buyMe(TBeing *, TMonster *, int, int);
-    virtual void sellMe(TBeing *ch, TMonster *, int, int);
+    virtual int sellMe(TBeing *ch, TMonster *, int, int);
     virtual void valueMe(TBeing *, TMonster *, int, int);
     virtual const sstring shopList(const TBeing *, const sstring &, int, int, int, int, int, unsigned long int) const;
     virtual int sellHidenSkin(TBeing *, TMonster *, int, TThing *);

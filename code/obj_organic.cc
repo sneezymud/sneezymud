@@ -296,7 +296,7 @@ static void sellReducePrice(const TBeing *ch, TBeing *keeper, const TOrganic *ob
 }
 
 // This function deals with the selling of TOrganic stuff.
-void TOrganic::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
+int TOrganic::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
 {
   TThing   *t;
   TOrganic *obj2 = NULL;
@@ -312,25 +312,25 @@ void TOrganic::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
 
   if (isObjStat(ITEM_NODROP)) {
     ch->sendTo("You can't let go of it, it must be CURSED!\n\r");
-    return;
+    return false;
   }
   if (isObjStat(ITEM_PROTOTYPE)) {
     ch->sendTo("That's a prototype, no selling that!\n\r");
-    return;
+    return false;
   }
   if (objVnum() <= 0) {
     ch->sendTo("You shouldn't try selling that, bad bad builder.\n\r");
-    return;
+    return false;
   }
   if (will_not_buy(ch, keeper, this, shop_nr))
-    return;
+    return false;
   if (!shop_index[shop_nr].willBuy(this)) {
     keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
-    return;
+    return false;
   }
   if (keeper->getMoney() < price) {
     keeper->doTell(ch->getName(), shop_index[shop_nr].missing_cash1);
-    return;
+    return false;
   }
   // See if the shop keeper already has one of these items.
   // This is mainly for 'unit' code.
@@ -347,7 +347,7 @@ void TOrganic::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   }
   if (found >= 20) {
     keeper->doTell(ch->getName(), "I'm afraid I already have too many of those, sorry.");
-    return;
+    return false;
   }
   if (getUnits() > 0) {
     if (!obj2) {
@@ -404,7 +404,10 @@ void TOrganic::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
     }
     if (getUnits() > 0) {
       *keeper += *obj2;
-      delete this;
+      ch->doSave(SILENT_YES);
+      sprintf(Buf, "%s/%d", SHOPFILE_PATH, shop_nr);
+      keeper->saveItems(Buf);
+      return DELETE_THIS;
     } else 
       *keeper += *this;
   }
@@ -412,7 +415,7 @@ void TOrganic::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   ch->doSave(SILENT_YES);
   sprintf(Buf, "%s/%d", SHOPFILE_PATH, shop_nr);
   keeper->saveItems(Buf);
-  return;
+  return true;
 }
 
 // Used by the value command

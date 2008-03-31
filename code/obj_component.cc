@@ -3146,29 +3146,24 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
   return tCost;
 }
 
-void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num)
+int TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num)
 {
-  if (false) {
-    TObj::sellMe(ch, tKeeper, tShop, 1);
-    return;
-  }
-
   sstring buf;
   float  tChr;
   int     tCost;
 
   if (!shop_index[tShop].profit_sell) {
     tKeeper->doTell(ch->getName(), shop_index[tShop].do_not_buy);
-    return;
+    return false;
   }
 
   if (obj_flags.cost <= 1 || isObjStat(ITEM_NEWBIE)) {
     tKeeper->doTell(ch->getName(), "I'm sorry, I don't buy valueless items.");
-    return;
+    return false;
   }
 
   if (sellMeCheck(ch, tKeeper, num))
-    return;
+    return false;
 
   TShopOwned tso(tShop, tKeeper, ch);
   int max_num = 50;
@@ -3198,7 +3193,7 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num)
 
   if (tKeeper->getMoney() < tCost) {
     tKeeper->doTell(ch->name, shop_index[tShop].missing_cash1);
-    return;
+    return false;
   }
 
   if (obj_index[getItemIndex()].max_exist <= 10) {
@@ -3234,7 +3229,7 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num)
     if ((tValue = real_object(objVnum())) < 0 || tValue > (signed) obj_index.size() ||
         !(tComponent = dynamic_cast<TComponent *>(read_object(tValue, REAL)))) {
       ch->sendTo(COLOR_OBJECTS, fmt("For some reason %s resists being partially sold.\n\r") % getName());
-      return;
+      return false;
     }
     int cost_per = 0;
 
@@ -3262,6 +3257,8 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num)
   tKeeper->saveItems(buf);
   if (!ch->delaySave)
     ch->doSave(SILENT_YES);
+
+  return true;
 }
 
 int TComponent::sellPrice(int num, int shop_nr, float, const TBeing *ch)

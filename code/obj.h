@@ -702,7 +702,7 @@ private:
     virtual void changeBedValue1(TBeing *, const char *, editorEnterTypeT) {}
     virtual void changeMagicItemValue1(TBeing *, const char *, editorEnterTypeT) {}
     virtual int buyMe(TBeing *, TMonster *, int, int);
-    virtual void sellMe(TBeing *, TMonster *, int, int);
+    virtual int sellMe(TBeing *, TMonster *, int, int);
     virtual void valueMe(TBeing *, TMonster *, int, int);
     virtual const sstring shopList(const TBeing *, const sstring &, int, int, int, int, int, unsigned long int) const;
     virtual int damageItem(sh_int);

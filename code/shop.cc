@@ -660,10 +660,15 @@ void generic_num_sell(TBeing *ch, TMonster *keeper, TObj *obj, int shop_nr, int 
   if (will_not_buy(ch, keeper, obj, shop_nr)) 
     return;
   
+  int rc;
   if (tComp) {
-    tComp->sellMe(ch, keeper, shop_nr, num);
+    rc=tComp->sellMe(ch, keeper, shop_nr, num);
+    if(IS_SET_DELETE(rc, DELETE_THIS))
+      delete tComp;
   } else {
-    obj->sellMe(ch, keeper, shop_nr, 1);
+    rc=obj->sellMe(ch, keeper, shop_nr, 1);
+    if(IS_SET_DELETE(rc, DELETE_THIS))
+      delete obj;
   }
   // obj may be invalid here
 }
@@ -687,15 +692,20 @@ void generic_sell(TBeing *ch, TMonster *keeper, TObj *obj, int shop_nr)
   if (will_not_buy(ch, keeper, obj, shop_nr)) 
     return;
   
+  int rc;
   if (tComp) {
-    tComp->sellMe(ch, keeper, shop_nr, 1);
+    rc=tComp->sellMe(ch, keeper, shop_nr, 1);
+    if(IS_SET_DELETE(rc, DELETE_THIS))
+      delete obj;
   } else {
-    obj->sellMe(ch, keeper, shop_nr, 1);
+    rc=obj->sellMe(ch, keeper, shop_nr, 1);
+    if(IS_SET_DELETE(rc, DELETE_THIS))
+      delete obj;
   }
   // obj may be invalid here
 }
 
-void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
+int TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
 {
   int cost;
   sstring buf;
@@ -703,16 +713,16 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
 
   if (!shop_index[shop_nr].profit_sell) {
     keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
-    return;
+    return false;
   }
   
   
   if (getValue() <= 1 || isObjStat(ITEM_NEWBIE)) {
     keeper->doTell(ch->getName(), "I'm sorry, I don't buy valueless items.");
-    return;
+    return false;
   }
   if (sellMeCheck(ch, keeper, num))
-    return;
+    return false;
   
   chr = ch->getChaShopPenalty() - ch->getSwindleBonus();
   chr = max((float)1.0,chr);
@@ -734,7 +744,7 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   max(cost, 1);   // at least 1 talen 
   if (keeper->getMoney() < cost) {
     keeper->doTell(ch->getName(), shop_index[shop_nr].missing_cash1);
-    return;
+    return false;
   }
   if (obj_index[getItemIndex()].max_exist <= 10) {
     keeper->doTell(ch->name, "Wow!  This is one of those limited items.");
@@ -762,7 +772,10 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
 #if NO_DAMAGED_ITEMS_SHOP
   else if (getStructPoints() != getMaxStructPoints()) {
     // delete it as its "scrap"
-    delete this;
+    buf = fmt("%s/%d") % SHOPFILE_PATH % shop_nr;
+    keeper->saveItems(buf);
+    ch->doSave(SILENT_YES);
+    return DELETE_THIS;
   }
 #endif
 
@@ -770,6 +783,7 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   buf = fmt("%s/%d") % SHOPFILE_PATH % shop_nr;
   keeper->saveItems(buf);
   ch->doSave(SILENT_YES);
+  return true;
 }
 
 int TThing::componentSell(TBeing *ch, TMonster *keeper, int shop_nr, TThing *)
