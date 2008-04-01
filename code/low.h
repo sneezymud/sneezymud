@@ -50,6 +50,7 @@ const int ROOM_SLEEPTAG_CONTROL  = 23599;
 const int ROOM_GUILD_BUREAU      = 395;
 const int ROOM_TROLLEY           = 15344;
 const int ROOM_AERIE_INN         = 44853;
+const int ROOM_NEWBIE            = 584;
 // ------------------------- OBJS
 
 const int DEITY_TOKEN          = 2;

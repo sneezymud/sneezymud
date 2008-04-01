@@ -102,12 +102,12 @@ typedef struct _TPlayerRace
 // our list of playable races
 TPlayerRace nannyRaces[] = {
   // base races
-  { RACE_HUMAN, "Human", 0, humanTerr, cElements(humanTerr), ROOM_GH_INN, "help/territory help human", "", 0},
-  { RACE_GNOME, "Gnome", 0, gnomeTerr, cElements(gnomeTerr), ROOM_GH_INN, "help/territory help gnome", "", 0},
-  { RACE_ELVEN, "Elf", 0, elfTerr, cElements(elfTerr), ROOM_GH_INN, "help/territory help elf", "", 0},
-  { RACE_OGRE, "Ogre", 0, ogreTerr, cElements(ogreTerr), ROOM_GH_INN, "help/territory help ogre", "", 0},
-  { RACE_DWARF, "Dwarf", 0, dwarfTerr, cElements(dwarfTerr), ROOM_GH_INN, "help/territory help dwarf", "", 0},
-  { RACE_HOBBIT, "Hobbit", 0, hobbitTerr, cElements(hobbitTerr), ROOM_GH_INN, "help/territory help hobbit", "", 0},
+  { RACE_HUMAN, "Human", 0, humanTerr, cElements(humanTerr), ROOM_NEWBIE, "help/territory help human", "", 0},
+  { RACE_GNOME, "Gnome", 0, gnomeTerr, cElements(gnomeTerr), ROOM_NEWBIE, "help/territory help gnome", "", 0},
+  { RACE_ELVEN, "Elf", 0, elfTerr, cElements(elfTerr), ROOM_NEWBIE, "help/territory help elf", "", 0},
+  { RACE_OGRE, "Ogre", 0, ogreTerr, cElements(ogreTerr), ROOM_NEWBIE, "help/territory help ogre", "", 0},
+  { RACE_DWARF, "Dwarf", 0, dwarfTerr, cElements(dwarfTerr), ROOM_NEWBIE, "help/territory help dwarf", "", 0},
+  { RACE_HOBBIT, "Hobbit", 0, hobbitTerr, cElements(hobbitTerr), ROOM_NEWBIE, "help/territory help hobbit", "", 0},
 
   // extended races
   { RACE_GOBLIN, "Goblin", 0, goblinTerr, cElements(goblinTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, ", 1},

@@ -22,7 +22,7 @@ playerData::playerData() :
   sex(SEX_NEUTER),
   max_level(0),
   Class(0),
-  hometown(ROOM_GH_INN),
+  hometown(ROOM_NEWBIE),
   hometerrain(HOME_TER_NONE)
 {
   classIndT i;

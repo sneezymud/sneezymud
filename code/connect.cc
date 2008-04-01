@@ -1439,7 +1439,7 @@ int TPerson::genericLoadPC()
         rp = real_roomp(player.hometown);
         if (!rp) {
           vlogf(LOG_LOW, fmt("Player (%s) had non-existant hometown (%d)") %  getName() % player.hometown);
-          rp = real_roomp(ROOM_GH_INN);
+          rp = real_roomp(ROOM_NEWBIE);
         }
 
         if (!rp) {
@@ -1449,7 +1449,7 @@ int TPerson::genericLoadPC()
 
         *rp += *this;
       } else {
-        rp = real_roomp(ROOM_GH_INN);
+        rp = real_roomp(ROOM_NEWBIE);
 
         if (!rp) {
           vlogf(LOG_LOW, fmt("Was unable to read center square!  Player being disconnected!  (%s) [2]") % getName());
@@ -1457,7 +1457,7 @@ int TPerson::genericLoadPC()
         }
 
         *rp += *this;
-        player.hometown = ROOM_GH_INN;
+        player.hometown = ROOM_NEWBIE;
       }
     } else {
       wizFileRead(); // Needed for office
@@ -1508,7 +1508,7 @@ int TPerson::genericLoadPC()
         *rp += *this;
         player.hometown = in_room;
       } else {
-        rp = real_roomp(ROOM_GH_INN);
+        rp = real_roomp(ROOM_NEWBIE);
 
         if (!rp) {
           vlogf(LOG_LOW, fmt("Was unable to read center square!  Player being disconnected!  (%s) [4]") % getName());
@@ -1517,7 +1517,7 @@ int TPerson::genericLoadPC()
 
         in_room = ROOM_NOWHERE;  // change it so it doesn't error in +=
         *rp += *this;
-        player.hometown = ROOM_GH_INN;
+        player.hometown = ROOM_NEWBIE;
       }
     } else {
       rp = real_roomp(ROOM_HELL);
