@@ -823,7 +823,7 @@ int TBeing::updateTickStuff()
     if(hasQuestBit(TOG_IS_COMBUSTIBLE) && !::number(0,99)){
       rc = flameEngulfed();
       if (IS_SET_DELETE(rc, DELETE_THIS))
-	return DELETE_THIS;
+        return DELETE_THIS;
     }
 
 
@@ -838,12 +838,12 @@ int TBeing::updateTickStuff()
       affectJoin(NULL, &af, AVG_DUR_NO, AVG_EFF_NO);
       
       if (getPosition() > POSITION_SLEEPING) {
-	if (riding) {
-	  rc = fallOffMount(riding, POSITION_STANDING);
-	  if (IS_SET_DELETE(rc, DELETE_THIS))
-	    return DELETE_THIS;
-	}
-	doSleep("");
+        if (riding) {
+          rc = fallOffMount(riding, POSITION_STANDING);
+          if (IS_SET_DELETE(rc, DELETE_THIS))
+            return DELETE_THIS;
+        }
+        doSleep("");
       }
     }
 
@@ -854,10 +854,30 @@ int TBeing::updateTickStuff()
       doPoop();
     }
 
+    // some races can automatically regrow limbs if missing
+    if (getMyRace()->hasTalent(TALENT_LIMB_REGROWTH))
+    {
+      wearSlotT possibles[MAX_WEAR-MIN_WEAR];
+      int cPoss = 0;
+      for (wearSlotT p = MIN_WEAR; p < MAX_WEAR; p++)
+        if (!isCritPart(p) && !notBleedSlot(p) && isLimbFlags(p, PART_MISSING))
+          possibles[cPoss++] = p;
+      wearSlotT slot = cPoss > 0 ? possibles[::number(0, cPoss - 1)] : WEAR_NOWHERE;
+      if (slot != WEAR_NOWHERE && limbConnections(slot))
+      {
+        act(fmt("Your %s itches slighty.  It seems to finally be growing back!") % describeBodySlot(slot), FALSE, this, 0, 0, TO_CHAR);
+        act(fmt("$n's %s begins to grow back!") % describeBodySlot(slot), FALSE, this, 0, 0, TO_ROOM);
+        setLimbFlags(slot, 0);
+        if (slot == WEAR_HAND_R || slot == WEAR_HAND_L)
+          setLimbFlags(wearSlotT(slot+9), 0);
+        setCurLimbHealth(slot, 1);
+      }
+    }
+
     if (desc && (desc->character != this))
       vlogf(LOG_BUG, fmt("bad desc in updateTickStuff() (%s)(%s)") %
-	    (name ? getName() : "unknown") % 
-	    (desc->character ? desc->character->name ? desc->character->getName() : "unknown" : "no char"));
+            (name ? getName() : "unknown") % 
+            (desc->character ? desc->character->name ? desc->character->getName() : "unknown" : "no char"));
     if (desc && vt100())
       desc->updateScreenVt100(CHANGED_MUD);
     else if (desc && ansi())
@@ -1127,18 +1147,25 @@ int TBeing::updateHalfTickStuff()
   }
 
   // player is scared of flame (exempt or lessen for mobs?)
-  if(hasQuestBit(TOG_HAS_PYROPHOBIA) && (getPosition() > POSITION_SLEEPING) && !::number(0,2)){
-    bool flee = false;
+  if(hasQuestBit(TOG_HAS_PYROPHOBIA) && (getPosition() > POSITION_SLEEPING) && !::number(0,1)){
+    TThing *fleeing = NULL;
+    TBeing *tBeing = NULL;
+    bool flee = roomp->getSectorType() == SECT_VOLCANO_LAVA ||
+                  roomp->getSectorType() == SECT_FIRE ||
+                  roomp->getSectorType() == SECT_FIRE_ATMOSPHERE;
 
     for(TThing *t=roomp->getStuff();!flee && t;t=t->nextThing){
-      TThing *fleeing = t;
       TObj *tObj = dynamic_cast<TObj *>(t);
       TLight *tLight = dynamic_cast<TLight *>(t);
-      TBeing *tBeing = dynamic_cast<TBeing *>(t);
+      tBeing = dynamic_cast<TBeing *>(t);
+      fleeing = t;
 
       // check for burning/lit objects in room
       // perhaps later check for objects made of flame (flares)
       flee = ((tObj && tObj->isObjStat(ITEM_BURNING)) || (tLight && tLight->isLit()));
+
+      if (!flee && tBeing)
+        flee = tBeing->getMaterial(WEAR_BODY) == MAT_FIRE;
 
       // check for burning/lit objects on being
       if (!flee && tBeing)
@@ -1152,18 +1179,19 @@ int TBeing::updateHalfTickStuff()
           flee = ((tObj && tObj->isObjStat(ITEM_BURNING)) || (tLight && tLight->isLit()));
         }
       }
+    }
 
-      if (flee)
-      {
-        if (tBeing && tBeing != this)
-          sendTo(fmt("You lose your cool at the sight of %s's %s and freak out!\n\r")% tBeing->getName() % fleeing->getName());
-        else
-          sendTo(fmt("You lose your cool at the sight of %s and freak out!\n\r")% fleeing->getName());
-        doFlee("");
-        addCommandToQue("flee");
-        addCommandToQue("flee");
-        break;
-      }
+    if (flee)
+    {
+      if (tBeing && tBeing != this && fleeing)
+        sendTo(fmt("You lose your cool at the sight of %s's %s and freak out!\n\r")% tBeing->getName() % fleeing->getName());
+      else if (fleeing)
+        sendTo(fmt("You lose your cool at the sight of %s and freak out!\n\r")% fleeing->getName());
+      else
+        sendTo("You lose your cool in this fiery place and freak out!\n\r");
+      doFlee("");
+      addCommandToQue("flee");
+      addCommandToQue("flee");
     }
   }
 

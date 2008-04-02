@@ -135,8 +135,11 @@ const unsigned int TALENT_FISHEATER  = (1<<1);
 const unsigned int TALENT_MEATEATER  = (1<<2);
 const unsigned int TALENT_TATTOOED   = (1<<3);
 const unsigned int TALENT_GARBAGEEATER = (1<<4);
+const unsigned int TALENT_LIMB_REGROWTH = (1<<5);
+const unsigned int TALENT_INSECT_EATER = (1<<6);
+const unsigned int TALENT_FROGSLIME_SKIN = (1<<7);
 
-const unsigned int MAX_TALENTS = 5;  // move and change
+const unsigned int MAX_TALENTS = 8;  // move and change
 
 extern const char * const talents[MAX_TALENTS];
 

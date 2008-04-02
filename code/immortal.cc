@@ -3014,7 +3014,10 @@ void TPerson::doStart()
     WEAR_EX_FOOT_L,
   };
 
-  doToggle("term none");
+  if (desc->account->term == TERM_VT100) 
+    doToggle("term vt100");
+  else
+    doToggle("term none");
   doCls(false);
   // I'm leaving rooms off this list intentionally - bat
   // I'm using = here (rather than set_bit) since I want to know
@@ -3025,9 +3028,6 @@ void TPerson::doStart()
   addPlayerAction(PLR_COLOR);
   SET_BIT(desc->prompt_d.type, PROMPT_COLOR);
   
-  if (!desc->m_bIsClient)
-    sendTo(COLOR_BASIC, "<R>Initializing your Character<1> ...\n\r");
-
   if (!discs)
     assignDisciplinesClass();
 
@@ -3057,11 +3057,19 @@ void TPerson::doStart()
       applyTattoo(location, tattoo, SILENT_YES);
   }
 
-  if (desc->account->term == TERM_VT100) 
-    doToggle("term vt100");
-  
-  if (desc && !desc->m_bIsClient && !ansi() && !vt100()) 
-    doPrompt("all");
+  static const char * prompts[MAX_CLASSES] = { "mana", "piety", "", "", "lifeforce", "piety", "mana", "", "" };
+  if (desc && !desc->m_bIsClient) {
+    doPrompt("hit");
+    doPrompt("move");
+    doPrompt("exp");
+    doPrompt("opponent");
+    doPrompt("tank");
+    for(int iClass = MIN_CLASS_IND; iClass < MAX_CLASSES;iClass++)
+      if (1 << iClass & getClass() && prompts[iClass] && prompts[iClass] != '\0')
+        doPrompt(prompts[iClass]);
+  }
+  else if (desc) // desc->m_bIsClient true
+    doPrompt("tank-other");
 
   desc->autobits = 0;
   SET_BIT(desc->autobits, (unsigned int) (AUTO_EAT | AUTO_AFK |

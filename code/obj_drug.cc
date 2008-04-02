@@ -495,11 +495,73 @@ void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
       }
 
       break;
+    case DRUG_FROGSLIME:
+      {
+        const static sstring buzzes[6] = {
+          "You notice that the edges of the room are sharper.  You can see minute details.", // 0
+          "You notice that the edges of the room are sharper.  You can see minute details.", // 1
+          "Your tongue feels numb.", // 2
+          "With your tongue you can taste all of the colors in the room.  Your vision is unsurpassed!", // 3
+          "You notice all of the colors in the room are pulsing and throbbing in rhythm.", // 4
+          "You feel like you can hear the throbbing of the colors in this room!" // 5
+          };
+
+        mud_assert(consumed >= 0 && consumed < cElements(buzzes), "consumed or potency of DRUG_FROGSLIME is set wrong!");
+
+        // we are using the drug right now
+        if (!istick && consumed > 0)
+        {
+          const static applyTypeT locations[5] = { APPLY_NONE, APPLY_GARBLE, APPLY_GARBLE, APPLY_GARBLE, APPLY_GARBLE };
+          const static long modifiers[5] = { 0, GARBLE_FROGTALK, GARBLE_FROGTALK, GARBLE_FROGTALK, GARBLE_FROGTALK };
+          const static uint64_t bitvectors[5] = { 0, 0, AFF_SENSE_LIFE, AFF_SENSE_LIFE, AFF_SENSE_LIFE };
+
+          applyTypeT location = locations[consumed-1];
+          long modifier = modifiers[consumed-1];
+          uint64_t bitvector = bitvectors[consumed-1];
+
+          if (ch->desc->drugs[drug].current_consumed > potency * 2 &&
+            !ch->isImmune(IMMUNE_SLEEP, WEAR_BODY) && !ch->isImmortal())
+          {
+            // add sleep
+            location = APPLY_NONE;
+            modifier = 0;
+            bitvector = AFF_SLEEP;
+            act("Your vision turns all sorts of colors and then everything goes white!", TRUE, ch, 0, 0, TO_CHAR);
+          }
+          else if (ch->desc->drugs[drug].current_consumed > potency)
+          {
+            // add sick affect (super garble)
+            ch->doAction("", CMD_PUKE);
+            ch->dropPool(7, LIQ_VOMIT);
+            location = APPLY_GARBLE;
+            modifier = GARBLE_CRAZYFROG;
+            bitvector = 0;
+            act("Woah!  You feel a bit sick.", TRUE, ch, 0, 0, TO_CHAR);
+          }
+
+          // remove all previous similar drug affect
+          for (int iLoc = 0; iLoc < (int)cElements(locations); iLoc++)
+          {
+            affectedData *oldAff = findDrugAffect(ch, drug, locations[iLoc]);
+            if (oldAff)
+              ch->affectRemove(oldAff, SILENT_YES);
+          }
+
+          // add new affect
+          aff.modifier = modifier;
+          aff.bitvector = bitvector;
+          aff.location = location;
+          aff.duration = duration1hit * consumed;
+          ch->affectTo(&aff);
+        }
+
+        act(buzzes[consumed], TRUE, ch, 0, 0, TO_CHAR);
+      }
+      break;
     case DRUG_NONE:
     case MAX_DRUG:
       break;
-  }  
-
+  }
 }
 
 // severity is overall average use of the drug per hour * number of hours
@@ -592,6 +654,7 @@ void applyAddictionAffects(TBeing *ch, drugTypeT drug, int severity){
 	}
       }
       break;
+    case DRUG_FROGSLIME:
     case DRUG_OPIUM:
     case DRUG_NONE:
     case MAX_DRUG:
@@ -702,4 +765,5 @@ void assign_drug_info(void)
   drugTypes.push_back(TDrugInfo("pipeweed", 10, 1));
   drugTypes.push_back(TDrugInfo("opium", 0, 0));
   drugTypes.push_back(TDrugInfo("marijuana", 7, 1));
+  drugTypes.push_back(TDrugInfo("bullywug slime", 5, 1));
 }

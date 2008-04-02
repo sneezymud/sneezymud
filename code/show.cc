@@ -1086,7 +1086,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
     }
 
     if (affectedBySpell(AFFECT_WET))
-      act(fmt("$e looks %s.") % describeWet(this), FALSE, this, NULL, 0, TO_CHAR);
+      act(fmt("$e looks %s.") % describeWet(this), FALSE, this, NULL, ch, TO_VICT);
 
     if (curStats.get(STAT_STR) > 190)
       strcpy(buffer,"$e is unhumanly muscular, ");

@@ -12,6 +12,7 @@
 #include "disc_sorcery.h"
 #include "liquids.h"
 #include "obj_drinkcon.h"
+#include "obj_drug.h"
 
 class socialMessg {
   public:
@@ -488,6 +489,20 @@ int TBeing::doAction(const sstring & argument, cmdTypeT cmd)
     act(action.char_found, 0, this, 0, tvict, TO_CHAR);
     act(action.others_found, action.hide, this, 0, tvict, TO_NOTVICT);
   }    
+
+  if (cmd == CMD_LICK && vict && dynamic_cast<TBeing*>(vict) &&
+      dynamic_cast<TBeing*>(vict)->getMyRace()->hasTalent(TALENT_FROGSLIME_SKIN) &&
+      !getMyRace()->hasTalent(TALENT_FROGSLIME_SKIN))
+  {
+    if(!desc->drugs[DRUG_FROGSLIME].total_consumed)
+      desc->drugs[DRUG_FROGSLIME].first_use = time_info;
+    desc->drugs[DRUG_FROGSLIME].last_use = time_info;
+    desc->drugs[DRUG_FROGSLIME].total_consumed++;
+    desc->drugs[DRUG_FROGSLIME].current_consumed++;
+
+    saveDrugStats();
+    applyDrugAffects(this, DRUG_FROGSLIME, false);
+  }
 
   return FALSE;
 }

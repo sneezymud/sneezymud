@@ -1388,6 +1388,14 @@ int Descriptor::nanny(sstring arg)
         character->wimpy=character->maxWimpy()/2 + character->maxWimpy()%2;
       }
 
+      // called to trigger responses etc
+      rc = character->genericMovedIntoRoom(character->roomp, -1);
+      if (IS_SET_DELETE(rc, DELETE_THIS)) {
+        vlogf(LOG_BUG, fmt("Response trigger in %s caused %s to be deleted and drop eq.") % character->roomp->getName() % character->getName());
+        dynamic_cast<TPerson *>(character)->dropItemsToRoom(SAFE_YES, NUKE_ITEMS);
+        return DELETE_THIS;
+      }
+
       break;
     default:
       vlogf(LOG_BUG, "Nanny: illegal state of con'ness");

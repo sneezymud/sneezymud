@@ -65,6 +65,9 @@ const char * const talents[MAX_TALENTS] =
   "meat_eater",
   "tattooed",
   "garbage_eater",
+  "limb_regrowth",
+  "insect_eater",
+  "frogslime_skin",
 };
 
 Race *Races[MAX_RACIAL_TYPES];
@@ -1340,7 +1343,9 @@ body_t Race::getBodyType() const
 
 bool Race::isHumanoid() const
 {
-  return bodyType == BODY_HUMANOID;
+  return bodyType == BODY_HUMANOID ||
+         bodyType == BODY_FROGMAN ||
+         bodyType == BODY_FISHMAN;
 }
 
 bool Race::isLycanthrope() const

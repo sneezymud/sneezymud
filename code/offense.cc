@@ -504,6 +504,8 @@ int TBeing::doKill(const char *argument, TBeing *vict)
           FALSE, v, 0, this, TO_CHAR);
       act(msgVariables(MSG_SLAY, v), 
           FALSE, this, 0, v, TO_NOTVICT);
+      if (dynamic_cast<TMonster*>(v))
+        dynamic_cast<TMonster*>(v)->checkResponses(this, 0, "", CMD_RESP_KILLED);
       v->rawKill(DAMAGE_NORMAL, this);
       if (vict)
         return DELETE_VICT;

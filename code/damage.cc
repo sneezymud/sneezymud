@@ -459,6 +459,13 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
     }
   }
 
+  if (dynamic_cast<TMonster*>(v))
+  {
+    positionTypeT pos = v->getPosition();
+    v->setPosition(POSITION_STANDING); // temporarily set to allow scripts to drop items, etc
+    rc = dynamic_cast<TMonster*>(v)->checkResponses(this, 0, "", CMD_RESP_KILLED);
+    v->setPosition(pos);
+  }
 
   ///// pkill stuff
   // catch linkdead player killers
@@ -1023,8 +1030,6 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
       }
 
       // more quest stuff
-      if (dynamic_cast<TMonster*>(v))
-        rc = dynamic_cast<TMonster*>(v)->checkResponses(this, 0, "", CMD_RESP_KILLED);
       if (!rc)
       {
 

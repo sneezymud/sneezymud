@@ -60,6 +60,7 @@ TGarble GarbleData[GARBLE_MAX] = {
   { "birdtalk", "Makes the character talk like an aarakocra to non-aarakocra", false, GARBLE_SCOPE_INDIVIDUAL, garble_birdtalk, SPEECH_FLAG_VERBALEM },
   { "gutter", "Makes the character talk a bit cockney (used for goblins and orcs)", false, GARBLE_SCOPE_INDIVIDUAL, garble_gutter, SPEECH_FLAG_VERBALEM },
   { "trogtalk", "Makes the character talk like a troglodyte to non-trogs", false, GARBLE_SCOPE_INDIVIDUAL, garble_trogtalk, SPEECH_FLAG_VERBALEM },
+  { "crazyfrog", "Like frogtalk, except it effects rooms as well", false, GARBLE_SCOPE_EVERYONEANDSELF, garble_frogtalk, SPEECH_FLAG_VERBALEM | SPEECH_FLAG_ROOMDESC},
 };
 
 // gets the garbles that will apply to this character (adds automatic ones)
@@ -1266,7 +1267,11 @@ sstring garble_frogtalk(const TBeing *from, const TBeing *to, const sstring &arg
   sstring out = " ";
   out += arg.lower();
   out += " ";
-  int chance = from ? 100 - from->plotStat(STAT_CURRENT, STAT_INT, 0, 100, 50) : 25;
+  int chance = from ? 100 - from->plotStat(STAT_CURRENT, STAT_INT, 0, 100, 50) : 75;
+
+  // non-native frogtalkers must have gotten this via some drug or enchantment.  100% messup chance
+  if (from && !(from->getMyRace()->getGarbles() & GARBLE_FLAG_FROGTALK))
+    chance = 100;
 
   for(int i=0;i < (int)cElements(replace);i++)
   {
@@ -1345,13 +1350,13 @@ sstring garble_gutter(const TBeing *from, const TBeing *to, const sstring &arg, 
 {
   static const sstring replace[][2] = {
     { " this ", " dis " },
-    { " that", " dat" },
+    { " that", " dats" },
     { " their ", " deys " },
     { " theirs ", " deys " },
-    { " they", " dey" },
-    { " them", " dem" },
-    { " the ", " de " },
-    { " there ", " dere " },
+    { " they", " deys" },
+    { " them", " dems" },
+    { " the ", " dah " },
+    { " there ", " ders " },
     { " are ", " is " },
     { "yre ", "'s " },
     { "'re ", "'s " },
@@ -1365,7 +1370,6 @@ sstring garble_gutter(const TBeing *from, const TBeing *to, const sstring &arg, 
     { " it's ", " s'/* " },
     { "nd", "n'" },
     { " h", " '" },
-    { "er ", "a " },
     { "ing ", "in' " },
     { "ool ", "oo' " },
     { "oll ", "oe " },

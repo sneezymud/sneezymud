@@ -68,6 +68,7 @@ private:
 
     void forage(TBeing *);
     int forage(TBeing *, byte);
+    int forage_insect(TBeing *caster);
 
     void divine(TBeing *, TThing *);
     int divine(TBeing *, int, byte, TThing *);

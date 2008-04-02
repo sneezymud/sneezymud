@@ -1337,6 +1337,8 @@ int mapDrugToFile(drugTypeT d)
       return 2;
     case DRUG_POT:
       return 3;
+    case DRUG_FROGSLIME:
+      return 4;
     case MAX_DRUG:
       break;
   }
@@ -1355,6 +1357,8 @@ drugTypeT mapFileToDrug(int d)
       return DRUG_OPIUM;
     case 3:
       return DRUG_POT;
+    case 4:
+      return DRUG_FROGSLIME;
     default:
       break;
   }

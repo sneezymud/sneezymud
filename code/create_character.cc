@@ -116,10 +116,10 @@ TPlayerRace nannyRaces[] = {
   { RACE_ORC, "Orc", 0, orcTerr, cElements(orcTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, jbabcock, ", 1},
 
   // advanced races
-  { RACE_FROGMAN, "Frogman", 1, frogmanTerr, cElements(frogmanTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, ", 0}, // add stin
-  { RACE_FISHMAN, "Kalysian", 1, fishmanTerr, cElements(fishmanTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, talsbane, matthaas, stu, ", 0},
+  { RACE_FROGMAN, "Frogman", 1, frogmanTerr, cElements(frogmanTerr), ROOM_BULLYWUG_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, ", 0}, // add stin
+  { RACE_FISHMAN, "Kalysian", 1, fishmanTerr, cElements(fishmanTerr), ROOM_KALYSIA_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, talsbane, matthaas, stu, ", 0},
   { RACE_BIRDMAN, "Aarakocra", 1, birdmanTerr, cElements(birdmanTerr), ROOM_AERIE_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, hairbear, jamil, ", 0},
-  { RACE_TROLL, "Troll", 1, trollTerr, cElements(trollTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, remoh, ", 0},
+  { RACE_TROLL, "Troll", 1, trollTerr, cElements(trollTerr), ROOM_TROLL_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, remoh, blaez, ", 0},
 };
 
 // a struct for holding data about customizable stats

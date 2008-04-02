@@ -731,7 +731,7 @@ int TBeing::pourWaterOnMe(TBeing *ch, TObj *sObj)
   if (size > 0)
   {
     addWetness(this, size); // we never expect this to return 0
-    ch->sendTo(fmt("You feel %s.\n\r") % describeWet(this));
+    sendTo(fmt("You feel %s.\n\r") % describeWet(this));
   }
 
   dContainer->setDrinkUnits(0);  

@@ -8,16 +8,22 @@
 #include "obj_portal.h"
 #include "obj_drinkcon.h"
 #include "pathfinder.h"
+#include "obj_trash.h"
+#include "obj_food.h"
 
 void forage(TBeing * caster)
 {
-  forage(caster, caster->getSkillValue(SKILL_FORAGE));
+  if (caster->getMyRace()->hasTalent(TALENT_INSECT_EATER))
+    forage_insect(caster);
+  else
+    forage(caster, caster->getSkillValue(SKILL_FORAGE));
 }
 
 static const int FORAGE_BEGIN = 276, FORAGE_END = 281;
 static const int FORAGE_ARCTIC_BEGIN = 37130, FORAGE_ARCTIC_END = 37133;
 static const int FORAGE_CAVE_BEGIN = 37134, FORAGE_CAVE_END = 37136;
 static const int FORAGE_DESERT_BEGIN = 37137, FORAGE_DESERT_END = 37140;
+static const int FORAGE_INSECT_FOOD = 6;
 
 int forage(TBeing *caster, byte bKnown)
 {
@@ -132,6 +138,160 @@ int forage(TBeing *caster, byte bKnown)
     return SPELL_FAIL;
   }
 }
+
+typedef struct _insectForage
+{
+  double baseFood;
+  int cBugs;
+  const sstring bugs[3];
+} insectForage;
+
+static const insectForage terrain_insects[MAX_SECTOR_TYPES] = {
+  { .25, 2, { "snow beetle", "ice spider" }},        //SECT_SUBARCTIC,
+  { .25, 2, { "snow beetle", "tundra cricket" }},    //SECT_ARCTIC_WASTE,
+  { .25, 2, { "gadfly", "march fly" }},              //SECT_ARCTIC_CITY,
+  { .25, 2, { "white wasp", "frost scorpion" }},     //SECT_ARCTIC_ROAD,
+  { .30, 2, { "frost scorpion", "tundra cricket" }}, //SECT_TUNDRA,
+  { .25, 2, { "ice beetle", "avalanche moth" }},     //SECT_ARCTIC_MOUNTAINS,
+  { .25, 2, { "white wasp", "ice spider"  }},        //SECT_ARCTIC_FOREST,
+  {  .5, 2, { "peat beetle", "water skimmer" }},     //SECT_ARCTIC_MARSH,
+  { .30, 2, { "ice beetle", "water skimmer" }},      //SECT_ARCTIC_RIVER_SURFACE,
+  {   0, 0, { "" }},                                 //SECT_ICEFLOW,
+  { .25, 1, { "ice beetle" }},                       //SECT_COLD_BEACH,
+  {   0, 0, { "" }},                                 //SECT_SOLID_ICE,
+  { .25, 2, { "gadfly", "march fly" }},              //SECT_ARCTIC_BUILDING,
+  { .50, 2, { "armadillo bug", "white moth" }},      //SECT_ARCTIC_CAVE,
+  { .25, 2, { "gadfly", "march fly" }},              //SECT_ARCTIC_ATMOSPHERE,
+  { .25, 2, { "gadfly", "march fly" }},              //SECT_ARCTIC_CLIMBING,
+  { .25, 2, { "white wasp", "ice spider" }},         //SECT_ARCTIC_FOREST_ROAD,
+  {   1, 2, { "butterfly", "locust" }},              //SECT_PLAINS,
+  { .75, 3, { "black fly", "moth", "ant" }},         //SECT_TEMPERATE_CITY,
+  {   1, 3, { "wasp", "ladybug", "ant" }},           //SECT_TEMPERATE_ROAD,
+  {   1, 2, { "grasshopper", "ladybug" }},           //SECT_GRASSLANDS,
+  {   1, 2, { "junebug", "grasshopper" }},           //SECT_TEMPERATE_HILLS,
+  {   1, 2, { "butterfly", "junebug" }},             //SECT_TEMPERATE_MOUNTAINS,
+  {   1, 3, { "bumblebee", "spider", "earwig" }},    //SECT_TEMPERATE_FOREST,
+  {   2, 2, { "dragonfly", "mosquito" }},            //SECT_TEMPERATE_SWAMP,
+  {   0, 0, { "" }},                                 //SECT_TEMPERATE_OCEAN,
+  {1.25, 2, { "water beetle", "cranefly" }},         //SECT_TEMPERATE_RIVER_SURFACE,
+  {   0, 0, { "" }},                                 //SECT_TEMPERATE_UNDERWATER,
+  { .50, 2, { "noseum", "sandflea" }},               //SECT_TEMPERATE_BEACH,
+  { .75, 3, { "black fly", "horsefly", "ant" }},     //SECT_TEMPERATE_BUILDING,
+  { .75, 3, { "armadillo bug", "spider", "moth" }},  //SECT_TEMPERATE_CAVE,
+  {   1, 2, { "midge", "gnat" }},                    //SECT_TEMPERATE_ATMOSPHERE,
+  {   1, 2, { "midge", "gnat" }},                    //SECT_TEMPERATE_CLIMBING,
+  {   1, 2, { "bumblebee", "ladybug" }},             //SECT_TEMPERATE_FOREST_ROAD,
+  { .50, 2, { "black scarab", "scorpion" }},         //SECT_DESERT,
+  {   1, 3, { "cicada", "locust", "termite" }},      //SECT_SAVANNAH,
+  {   1, 2, { "cicada", "veld hopper" }},            //SECT_VELDT,
+  {   1, 2, { "cockroach", "jungle fly" }},          //SECT_TROPICAL_CITY,
+  { 1.5, 2, { "jungle fly", "red wasp" }},           //SECT_TROPICAL_ROAD,
+  {   2, 2, { "jungle nymph", "botfly" }},           //SECT_JUNGLE,
+  {   2, 2, { "mantis", "peacock butterfly" }},      //SECT_RAINFOREST,
+  { 1.5, 2, { "blood spider", "stickbug" }},         //SECT_TROPICAL_HILLS,
+  { 1.5, 2, { "blood spider", "fruit beetle" }},     //SECT_TROPICAL_MOUNTAINS,
+  {   0, 0, { "" }},                                 //SECT_VOLCANO_LAVA,
+  { 2.5, 2, { "water cricket", "hoary mosquito" }},  //SECT_TROPICAL_SWAMP,
+  {   0, 0, { "" }},                                 //SECT_TROPICAL_OCEAN,
+  {1.75, 2, { "daddy long legs", "hoary mosquito" }},//SECT_TROPICAL_RIVER_SURFACE,
+  {   0, 0, { "" }},                                 //SECT_TROPICAL_UNDERWATER,
+  {   1, 2, { "sandflea", "tiger beetle" }},         //SECT_TROPICAL_BEACH,
+  {   1, 3, { "cockroach", "weevil", "jungle fly" }},//SECT_TROPICAL_BUILDING,
+  {   1, 2, { "cockroach", "spotted moth" }},        //SECT_TROPICAL_CAVE,
+  {   1, 2, { "jungle fly", "hoary mosquito" }},     //SECT_TROPICAL_ATMOSPHERE,
+  {   1, 2, { "jungle fly", "hoary mosquito" }},     //SECT_TROPICAL_CLIMBING,
+  {   1, 2, { "red wasp", "vibrant butterfly" }},    //SECT_RAINFOREST_ROAD,
+  {   0, 0, { "" }},                                 //SECT_ASTRAL_ETHREAL,
+  {   0, 0, { "" }},                                 //SECT_SOLID_ROCK,
+  {   0, 0, { "" }},                                 //SECT_FIRE,
+  {   0, 0, { "" }},                                 //SECT_INSIDE_MOB,
+  {   0, 0, { "" }},                                 //SECT_FIRE_ATMOSPHERE,
+  {   0, 0, { "" }},                                 //SECT_MAKE_FLY,
+  {   1, 3, { "white moth", "grey moth", "black moth" }}, //SECT_DEAD_WOODS,
+};
+
+int forage_insect(TBeing *caster)
+{
+  affectedData aff;
+  double food = 1;
+  sstring bug;
+
+  if (caster->getCond(FULL) <= -1 || caster->getCond(FULL) > 20)
+  {
+    act("You are too full to consider eating right now.", FALSE, caster, NULL, NULL, TO_CHAR);
+    return SPELL_FAIL;
+  }
+  if (!caster->roomp)
+  {
+    vlogf(LOG_BUG, fmt("Forage called without room pointer: %s") % caster->name);
+    return SPELL_FAIL;
+  }
+  if (caster->checkForSkillAttempt(SKILL_FORAGE))
+  {
+    act("You tried foraging insects recently and are not prepared to try again so soon.", FALSE, caster, NULL, NULL, TO_CHAR);
+    return SPELL_FAIL;
+  }
+
+  // start out with random number
+  food *= (::number(5,20)/10);
+
+  // if you know foraging, this will work much better (up to +50%)
+  if (caster->doesKnowSkill(caster->getSkillNum(SKILL_FORAGE)) && caster->bSuccess(SKILL_FORAGE))
+    food *= (int(caster->getSkillValue(caster->getSkillNum(SKILL_FORAGE)) + 50) / 50);
+
+  // choose base food and bug on terrain
+  const insectForage *forage = &terrain_insects[caster->roomp->getSectorType()];
+  food *= forage->baseFood;
+  if (forage->cBugs)
+    bug = forage->bugs[::number(0,forage->cBugs-1)];
+
+  // increase chance if there is spoiled food or trash
+  for(TThing *thing = caster->roomp->getStuff();food > 0 && thing; thing = thing->nextThing)
+  {
+    if (dynamic_cast<TTrash*>(thing) || (dynamic_cast<TFood*>(thing) && dynamic_cast<TFood*>(thing)->isFoodFlag(FOOD_SPOILED)))
+    {
+      food += 0.5;
+      break;
+    }
+  }
+
+  // the amount of food we find base is FORAGE_INSECT_FOOD
+  food *= FORAGE_INSECT_FOOD;
+
+  aff.type = AFFECT_SKILL_ATTEMPT;
+  aff.location = APPLY_NONE;
+  aff.duration = UPDATES_PER_MUDHOUR;
+  aff.bitvector = 0;
+  aff.modifier = SKILL_FORAGE;
+  caster->affectTo(&aff, -1);
+
+  if (int(food) <= 0)
+  {
+    act("You can't seem to find any insects to eat here.", FALSE, caster, NULL, NULL, TO_CHAR);
+    return SPELL_FAIL;
+  }
+
+  static const sstring bugsizes[] = { "miniscule", "tiny", "juicy", "fat", "giant", "gargantuan", "HUMONGOUS" };
+  static const sstring actions[] = { "quickly gobbles up a %s", "crunches down a %s", "swallows a %s in a single gulp", "tears up a %s and eats it" };
+
+  sstring bugname = bugsizes[min(max(0, int(food * int(cElements(bugsizes)-1) / (3*FORAGE_INSECT_FOOD))), int(cElements(bugsizes)-1))];
+  bugname += " ";
+  bugname += bug;
+  sstring action = actions[::number(0, cElements(actions)-1)];
+  action = fmt(action) % bugname;
+
+  act(fmt("You flick your tongue out and snag a %s!") % bugname, false, caster, NULL, NULL, TO_CHAR);
+  act(fmt("$n flicks $s tongue out and snags a %s!") % bugname, false, caster, NULL, NULL, TO_ROOM);
+  act(fmt("You eat a %s.") % bugname, false, caster, NULL, NULL, TO_CHAR);
+  act(fmt("$n %s!") % action, false, caster, NULL, NULL, TO_ROOM);
+
+  caster->gainCondition(FULL, int(food));
+  if (caster->getCond(FULL) > 20)
+    act("You are full.", FALSE, caster, 0, 0, TO_CHAR);
+
+  return SPELL_SUCCESS;
+}
+
 
 void TBeing::doForage()
 {

@@ -464,6 +464,11 @@ void foodSpoiled(TFood *food, TBeing *ch, int dur)
 
 void TFood::eatMe(TBeing *ch)
 {
+  if (ch->getMyRace()->hasTalent(TALENT_INSECT_EATER) &&
+      objVnum() != 34732) {
+    ch->sendTo("You can't eat that!  It's not an insect!\n\r");
+    return;
+  }
   if ((ch->getCond(FULL) > 20) && !ch->isImmortal()) {
     ch->sendTo("You try to stuff more food into your mouth, but alas, you are full!\n\r");
     return;
