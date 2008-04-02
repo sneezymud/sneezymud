@@ -141,5 +141,23 @@ class ItemSaveDB {
 };
 
 
+class ItemLoadDB {
+  sstring owner_type;
+  int owner;
+
+ public:
+#if 0
+  bool objsFromStore(TObj *, int *, TBeing *, TRoom *, bool);
+  bool objToParent(signed char, TObj *, TObj *, TRoom *, TBeing *);
+  bool objToEquipChar(unsigned char, TBeing *, TObj *, TRoom *);
+  bool objToTarg(unsigned char, TBeing *, TObj *, TRoom *);
+#endif
+
+  TObj *raw_read_item(int, int &);
+
+  ItemLoadDB(sstring, int);
+  ~ItemLoadDB();
+};
+
 
 #endif

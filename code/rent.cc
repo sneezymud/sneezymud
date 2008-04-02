@@ -509,6 +509,17 @@ ItemLoad::~ItemLoad()
   fp=NULL;
 }
 
+ItemLoadDB::ItemLoadDB(sstring ot, int o) :
+  owner_type(ot),
+  owner(o)
+{
+}
+
+ItemLoadDB::~ItemLoadDB()
+{
+}
+
+
 bool ItemLoad::readVersion()
 {
   if (fread(&version, sizeof(version), 1, fp) != 1)
@@ -904,6 +915,108 @@ TObj *ItemLoad::raw_read_item()
 
   return o;
 }
+
+TObj *ItemLoadDB::raw_read_item(int rent_id, int &slot)
+{
+  TDatabase db(DB_SNEEZY);
+  TObj *o;
+  
+  db.query("select owner_type, owner, vnum, slot, container, val0, val1, val2, val3, extra_flags, weight, bitvector, decay, cur_struct, max_struct, material, volume, price, depreciation from rent where rent_id=%i", rent_id);
+
+  if(!db.fetchRow()){
+    vlogf(LOG_DB, fmt("rent object %i not found! Owner %i (%s)") % 
+	  rent_id % owner % owner_type);
+    return NULL;
+  }
+
+  if (!(o = read_object(convertTo<int>(db["vnum"]), VIRTUAL))) {
+    vlogf(LOG_BUG, fmt("read_object failed on rent object %s. Owner %i (5s)") %
+	  db["vnum"] % owner % owner_type);
+    return NULL;
+  }
+
+  o->setObjStat(convertTo<int>(db["extra_flags"]));
+  o->setWeight((float) convertTo<float>(db["weight"]));
+  o->weightCorrection();
+  
+  o->setVolume(convertTo<int>(db["volume"]));
+  o->obj_flags.bitvector = convertTo<int>(db["bitvector"]);
+  o->obj_flags.struct_points = convertTo<int>(db["cur_struct"]);
+  o->obj_flags.max_struct_points = convertTo<int>(db["max_struct"]);
+  o->obj_flags.decay_time = convertTo<int>(db["decay"]);
+  o->setMaterial(convertTo<int>(db["material"]));
+  o->setDepreciation(convertTo<int>(db["depreciation"]));
+  o->assignFourValues(convertTo<int>(db["val0"]),
+		      convertTo<int>(db["val1"]),
+		      convertTo<int>(db["val2"]),
+		      convertTo<int>(db["val3"]));
+  
+  o->obj_flags.cost = convertTo<int>(db["price"]);
+  
+  o->updateDesc();
+  
+  db.query("select type, level, duration, renew, modifier, location, modifier2, bitvector from rent_obj_aff where rent_id=%i", rent_id);
+
+  for(int j=0;db.fetchRow() && j < MAX_OBJ_AFFECT; j++){
+    o->affected[j].type = mapFileToSpellnum(convertTo<int>(db["type"]));
+    o->affected[j].level = convertTo<int>(db["level"]);
+    o->affected[j].duration = convertTo<int>(db["duration"]);
+    o->affected[j].renew = convertTo<int>(db["renew"]);
+    o->affected[j].location = mapFileToApply(convertTo<int>(db["location"]));
+    
+    if (applyTypeShouldBeSpellnum(o->affected[j].location))
+      o->affected[j].modifier = mapFileToSpellnum(convertTo<int>(db["modifier"]));
+    else
+      o->affected[j].modifier = convertTo<int>(db["modifier"]);
+    
+    o->affected[j].modifier2 = convertTo<int>(db["modifier2"]);
+    o->affected[j].bitvector = convertTo<int>(db["bitvector"]);
+  }
+  
+  db.query("select name, short_desc, long_desc, action_desc from rent_strung where rent_id=%i", rent_id);
+
+  if (o->isObjStat(ITEM_STRUNG) && db.fetchRow()) {
+    if (!db["name"].empty())
+      o->name = mud_str_dup(db["name"]);
+    else
+      o->name = mud_str_dup(obj_index[o->getItemIndex()].name);
+    
+    if (!db["shortDescr"].empty())
+      o->shortDescr = mud_str_dup(db["shortDescr"]);
+    else
+      o->shortDescr = mud_str_dup(obj_index[o->getItemIndex()].short_desc);
+    
+    if (!db["description"].empty())
+      o->setDescr(mud_str_dup(db["description"]));
+    else
+      o->setDescr(mud_str_dup(obj_index[o->getItemIndex()].long_desc));
+    
+    if (!db["action_description"].empty()) 
+      o->action_description = mud_str_dup(db["action_description"]);
+    else if (obj_index[o->getItemIndex()].description) 
+      o->action_description = mud_str_dup(obj_index[o->getItemIndex()].description);
+    else 
+      o->action_description = NULL;
+    
+    if (obj_index[o->getItemIndex()].ex_description)
+      o->ex_description = new extraDescription(*obj_index[o->getItemIndex()].ex_description);
+    else
+      o->ex_description = NULL;
+  }
+
+
+  // if they had a lantern lit, set light appropriately
+  o->adjustLight();
+
+  int tmpcost;
+  if((tmpcost = o->suggestedPrice())){
+    o->obj_flags.cost = tmpcost;
+  }
+
+  return o;
+}
+
+
   
 static bool shouldRecycle(int robj)
 {
@@ -955,6 +1068,29 @@ bool ItemLoad::objToParent(signed char slot, TObj *parent, TObj *new_obj, TRoom 
   return true;
 }
 
+#if 0
+
+bool ItemLoadDB::objToParent(signed char slot, TObj *parent, TObj *new_obj, TRoom *r, TBeing *ch)
+{
+  //  vlogf(LOG_PEEL, fmt("objToParent: %s") % new_obj->name);
+
+  if(slot != NORMAL_SLOT){
+    if (r)
+      vlogf(LOG_BUG, fmt("Room %d.  Invalid Slot %d.") %
+	    r->number % slot);
+    else if (ch)
+      vlogf(LOG_BUG, fmt("%s's objects.  Invalid slot %d.") %
+	    ch->getName() % slot);
+    vlogf(LOG_BUG, "Error in objsFromStore (3)");
+    return false;
+  }
+  
+  *parent += *new_obj;
+
+  return true;
+}
+#endif
+
 
 bool ItemLoad::objToEquipChar(unsigned char slot, TBeing *ch, TObj *new_obj, TRoom *r)
 {
@@ -974,6 +1110,25 @@ bool ItemLoad::objToEquipChar(unsigned char slot, TBeing *ch, TObj *new_obj, TRo
   return true;
 }
 
+#if 0
+bool ItemLoadDB::objToEquipChar(unsigned char slot, TBeing *ch, TObj *new_obj, TRoom *r)
+{
+  //  vlogf(LOG_PEEL, fmt("objToEquipChar: %s") % new_obj->name);
+
+  if (ch) {
+    wearSlotT mapped_slot = mapFileToSlot( slot);
+    if (!ch->canUseLimb(mapped_slot))
+      *ch += *new_obj;
+    else
+      ch->equipChar(new_obj, mapped_slot, SILENT_YES);
+  } else {
+    vlogf(LOG_BUG, fmt("Room %d has invalid slot #.") %  
+	  ((r) ? r->number : -99));
+    return false;
+  }
+  return true;
+}
+#endif
 
 bool ItemLoad::objToTarg(unsigned char slot, TBeing *ch, TObj *new_obj, TRoom *r)
 {
@@ -990,8 +1145,24 @@ bool ItemLoad::objToTarg(unsigned char slot, TBeing *ch, TObj *new_obj, TRoom *r
 
   return true;
 }
-    
 
+#if 0    
+bool ItemLoadDB::objToTarg(unsigned char slot, TBeing *ch, TObj *new_obj, TRoom *r)
+{
+  //  vlogf(LOG_PEEL, fmt("objToTarg: %s") % new_obj->name);
+
+  if (ch)
+    *ch += *new_obj;
+  else if (r)
+    thing_to_room(new_obj, r->number);
+  else {
+    vlogf(LOG_BUG, "Yikes!  An object was read with no destination in objsFromStore()!");
+    return false;
+  }
+
+  return true;
+}
+#endif    
 
 // read a list of items and their contents from storage 
 bool ItemLoad::objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r, bool corpse)
@@ -1065,6 +1236,76 @@ bool ItemLoad::objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r, b
 
   return false;
 }
+
+#if 0
+// read a list of items and their contents from storage 
+bool ItemLoadDB::objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r, bool corpse)
+{
+  signed char slot;
+  int container, rent_id;
+  TObj *new_obj;
+  TDatabase db(DB_SNEEZY);
+
+  db.query("select rent_id, owner_type, owner, vnum, slot, container, val0, val1, val2,val3, extra_flags, weight, bitvector, decay, cur_struct, max_struct, material, volume, price, depreciation from rent where owner_type='%s' and owner=%i order by rent_id", owner_type, owner);
+
+  while(db.fetchRow()){
+    slot=convertTo<int>(db["slot"]);
+    container=convertTo<int>(db["container"]);
+    rent_id=convertTo<int>(db["rent_id"]);
+
+    if (slot >= MAX_WEAR) {
+      if (ch)
+	vlogf(LOG_BUG, fmt("%s's objects.  Slot %d > MAX_WEAR.") %
+	      ch->getName() % slot);
+      else if (r)
+	vlogf(LOG_BUG, fmt("Room %d's objects.  Slot %d > MAX_WEAR.") %
+	      r->number % slot);
+      vlogf(LOG_BUG, "Error in objsFromStore (4)");
+      return true;
+    }
+    
+    if (slot == CONTENTS_END)
+      return false;
+
+
+    //// load the object
+    if(!(new_obj = raw_read_item())){
+      vlogf(LOG_BUG, "Error in objsFromStore (raw_read_item)");
+      return true;
+    }
+
+    (*numread)++;
+    if(ch)
+      ch->logItem(new_obj, CMD_WEST); // rent in
+    obj_index[new_obj->number].addToNumber(-1);
+
+    //// place the object
+    if(container && parent){
+      if(!objToParent(slot, parent, new_obj, r, ch))
+	return true;
+    } else {
+      if(slot == NORMAL_SLOT){
+	if(!objToTarg(slot, ch, new_obj, r))
+	  return true;
+      } else {
+	if(!objToEquipChar(slot, ch, new_obj, r))
+	  return true;
+      }
+    }
+
+    
+    if (immortalityNukeCheck(ch, new_obj, corpse))
+      continue;  // new_obj invalid if this was true
+    
+    repoCheckForRent(ch, new_obj, corpse);
+
+    if(!container)
+      parent=new_obj;
+  }
+
+  return false;
+}
+#endif
 
 void ItemSave::setFile(FILE *f)
 {
@@ -1602,6 +1843,32 @@ void TMonster::saveItems(const sstring &filepath)
   }
 }
 
+
+// returns rent_id in database
+int TMonster::saveItem(int shop_nr, TObj *obj, int container)
+{
+  ItemSaveDB is("shop", shop_nr);
+
+  return is.raw_write_item(obj, NORMAL_SLOT, container);
+}
+
+TObj *TMonster::loadItem(int shop_nr, int rent_id)
+{
+  ItemLoadDB il("shop", shop_nr);
+  int slot=-1;
+
+  return il.raw_read_item(rent_id, slot);
+}
+
+void TMonster::deleteItem(int shop_nr, int rent_id)
+{
+  TDatabase db(DB_SNEEZY);
+
+  db.query("delete from rent where rent_id=%i", rent_id);
+  db.query("delete from rent_obj_aff where rent_id=%i", rent_id);
+  db.query("delete from rent_strung where rent_id=%i", rent_id);
+
+}
 
 void TMonster::saveItems(int shop_nr)
 {

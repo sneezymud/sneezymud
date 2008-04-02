@@ -527,7 +527,10 @@ class TMonster : public TBeing {
     void quickieDefend();
     void saveItems(const sstring &);
     void saveItems(int);
+    int saveItem(int, TObj *, int=0);
     void loadItems(const sstring &);
+    TObj *loadItem(int, int);
+    void deleteItem(int, int);
     bool isSmartMob(int) const;
     bool aiLoveNonHumanoid(TBeing *, aiTarg);
     double getRealLevel() const;
