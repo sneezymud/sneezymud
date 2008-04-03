@@ -22,7 +22,7 @@ bool findFairFight::isTarget(int room) const
     if (!tmon)
       continue;
 
-    vlogf(LOG_PEEL, fmt("level %f %i") % tmon->getRealLevel() % myself->GetMaxLevel());
+    //    vlogf(LOG_PEEL, fmt("level %f %i") % tmon->getRealLevel() % myself->GetMaxLevel());
 
     if((int)((tmon->getRealLevel()+0.5)-myself->GetMaxLevel()))
       return false;
