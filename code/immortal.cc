@@ -2358,7 +2358,7 @@ void TPerson::doLoad(const char *argument)
         return;
       }
       if (mob_index[numx].getNumber() > 0) {
-        sendTo("Trying to create that mob when one already exists could create problems.\n\r");
+        sendTo(fmt("Trying to create that mob when one already exists could create problems (%s).\n\r") % mob_index[numx].name);
         return;
       }
     }
