@@ -1101,11 +1101,11 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
       }
 
       // fun with smoke
-      TSmoke *smoke=dynamic_cast<TSmoke *>(obj);
-      if(smoke){
-	smoke->doMerge();
-	smoke->doDrift();
-	smoke->doChoke();
+      TGas *gas=dynamic_cast<TGas *>(obj);
+      if (gas){
+        gas->doMerge();
+        gas->doDrift();
+        gas->doSpecials();
       }
 
       // trash piles

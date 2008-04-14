@@ -20,6 +20,7 @@
 #include "shopowned.h"
 #include "corporation.h"
 #include "liquids.h"
+#include "obj_player_corpse.h"
 
 #define DRINK_DEBUG 0
 
@@ -388,21 +389,24 @@ void TObj::eatMe(TBeing *ch)
     } else if (getStuff()) {
       ch->sendTo("You can't eat that - its full of something!\n\r");
       return;
-    } else if (isObjStat(ITEM_NODROP)) {
-      ch->sendTo("You can't eat that - its been cursed!\n\r");
-      return;
     } else if (isObjStat(ITEM_NOJUNK_PLAYER)) {
       ch->sendTo("You can't eat an object that's been marked no-junk.\n\r");
       return;
     } else if (isObjStat(ITEM_BURNING) || isObjStat(ITEM_PROTOTYPE) ||
-              isObjStat(ITEM_NOPURGE) || isObjStat(ITEM_NORENT)) {
+              isObjStat(ITEM_NOPURGE) || isObjStat(ITEM_NORENT) || getLocked() ||
+              stuckIn || equippedBy || tied_to || riding) {
       ch->sendTo("You can't eat that, it just wouldn't be right!\n\r");
       return;
+    } else if (isObjStat(ITEM_NODROP)) {
+      ch->sendTo("You can't eat that - its been cursed!\n\r");
+      return;
+    } else if (getStructPoints() > 20 || getVolume() > 1728) {
+      ch->sendTo("There is simply too much of that to eat in one bite.\n\r");
+      return;
+    } else if (dynamic_cast<const TPCorpse*>(this)) {
+      ch->sendTo("You probably shouldn't be eating player corpses.\n\r");
+      return;
     }
-
-    ch->gainCondition(FULL, getStructPoints());
-    if (ch->getCond(FULL) > 20)
-      act("You are full.", FALSE, ch, 0, 0, TO_CHAR);
 
   } else if (!ch->isImmortal()) {
     ch->sendTo("That item is impossible to eat!\n\r");
@@ -410,6 +414,14 @@ void TObj::eatMe(TBeing *ch)
   }
   act("$n eats $p.", TRUE, ch, this, 0, TO_ROOM);
   act("You eat the $o.", FALSE, ch, this, 0, TO_CHAR);
+
+  if (ch->getMyRace()->hasTalent(TALENT_GARBAGEEATER))
+  {
+    int foodValue = max(0, max(int(getStructPoints()), getVolume()/(1728/20)));
+    ch->gainCondition(FULL, foodValue);
+    if (ch->getCond(FULL) > 20)
+      act("You are full.", FALSE, ch, 0, 0, TO_CHAR);
+  }
 
   delete this;
   return;
@@ -534,7 +546,7 @@ void TBeing::doEat(const char *argument)
     return;
   }
   
-  TThing *temp = generic_find_obj(buf, FIND_OBJ_INV | FIND_OBJ_EQUIP, this);
+  TThing *temp = generic_find_obj(buf, FIND_OBJ_INV | FIND_OBJ_HELD, this);
 
   if(!temp)
     temp = generic_find_obj(buf, FIND_OBJ_ROOM, this);
@@ -794,18 +806,7 @@ void TBeing::doSip(const char *argument)
 void TObj::tasteMe(TBeing *ch)
 {
   if (ch->getMyRace()->hasTalent(TALENT_GARBAGEEATER) && isOrganic()) {
-    if (isMonogrammed()) {
-        act("Taste that?!? It's monogrammed!", FALSE, ch, 0, 0, TO_CHAR);
-        return;
-    }
-    act("You take a bite out of the $o, damaging it.", FALSE, ch, this, NULL, TO_CHAR);
-    act("$n takes a bite from the $o, damaging it.", TRUE, ch, this, 0, TO_ROOM);
-    ch->gainCondition(FULL, 1);
-    setStructPoints(getStructPoints()-2);
-    if (getStructPoints() <= 0) {
-      act("There is nothing left now.", FALSE, ch, 0, 0, TO_CHAR);
-      delete this;
-    }
+    act("That looks edible, but you'd rather eat it in one big bite.", FALSE, ch, 0, 0, TO_CHAR);
     return;
   }
   act("Taste that?!? Your stomach refuses!", FALSE, ch, 0, 0, TO_CHAR);

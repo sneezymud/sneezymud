@@ -2302,6 +2302,17 @@ int generic_find(const char *arg, int bv, TBeing *ch, TBeing **tar_ch, TObj **ob
       }
     }
   }
+  if (bv & FIND_OBJ_HELD) {
+    wearSlotT primary = ch->isRightHanded() ? HOLD_RIGHT : HOLD_LEFT;
+    wearSlotT secondary = ch->isRightHanded() ? HOLD_LEFT : HOLD_RIGHT;
+    t = ch->equipment[primary];
+    if (t && ch->canSee(t) && isname(arg, t->name))
+      *obj = dynamic_cast<TObj *>(t);
+    if (!*obj && (t = ch->equipment[secondary]) && ch->canSee(t) && isname(arg, t->name))
+      *obj = dynamic_cast<TObj *>(t);
+    if (*obj)
+      return FIND_OBJ_HELD;
+  }
   if (bv & FIND_OBJ_EQUIP) {
     wearSlotT j;
     if ((t = get_thing_in_equip(ch, name, ch->equipment, &j, TRUE, &count))) {

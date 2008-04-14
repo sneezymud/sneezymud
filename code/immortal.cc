@@ -2949,6 +2949,7 @@ void TPerson::doStart()
   // these tattoos are mostly used for Orcs, and should reflect 'badass meanness'
   static const sstring tattoo_adj[] = {
     // really really generic adjectives that could describe ANY object tattood
+    "<W>white",
     "<p>pink",
     "<k>black",
     "<r>red",
@@ -2965,11 +2966,10 @@ void TPerson::doStart()
   };
   static const sstring tattoo_noun[] = {
     // random objects that you'd tattoo to yourself
+    "rabbit",
     "dagger",
     "fang",
     "skull",
-    //"flames", fiery flames?
-    //"snake", faction reference?
     "fist",
     "sword",
     "axe",
@@ -2994,6 +2994,8 @@ void TPerson::doStart()
     "falling meteor",
     "bolt of lightning",
     "withered corpse",
+    "pair of horns",
+    "eyeball",
   };
   static const wearSlotT tattoo_slot[] = {
     WEAR_BODY,
@@ -3053,7 +3055,7 @@ void TPerson::doStart()
       tattoo = fmt("A tattoo of a %s %s<1>.") % adj % noun;
     else
       tattoo = fmt("A tattoo of a %s.") % noun;
-    if (cBodypartCheck < 15)
+    if (cBodypartCheck < 15 && hasPart(location))
       applyTattoo(location, tattoo, SILENT_YES);
   }
 

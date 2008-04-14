@@ -1104,6 +1104,12 @@ int getWet(TBeing *ch, TRoom* room, silentTypeT silent)
   if (oldWet > maxWet && wetness > 0)
     wetness = -wetness;
 
+  // if we'd overshoot the maxWet, when just go up to maxWet OR
+  // if we'd undershoot the maxWet (drying in a wet room), just stop at maxWet
+  if ((wetness > 0 && wetness + oldWet > maxWet) ||
+    (wetness < 0 && maxWet > 0 && oldWet + wetness < maxWet))
+    wetness = maxWet-oldWet;
+
   // add new wetness affect
   if (wetness != 0 && oldWet != maxWet && (wetness > 0 || oldWet > 0))
   {
@@ -1138,7 +1144,7 @@ int getWet(TBeing *ch, TRoom* room, silentTypeT silent)
         wetShow += worse;
       }
       wetShow += ".\n\r";
-      ch->sendTo(wetShow);
+      act(wetShow, false, ch, NULL, NULL, TO_CHAR);
     }
   }
 

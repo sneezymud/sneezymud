@@ -68,6 +68,7 @@ const char * const talents[MAX_TALENTS] =
   "limb_regrowth",
   "insect_eater",
   "frogslime_skin",
+  "musk",
 };
 
 Race *Races[MAX_RACIAL_TYPES];

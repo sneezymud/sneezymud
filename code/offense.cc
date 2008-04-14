@@ -1020,9 +1020,15 @@ int TBeing::doFlee(const char *arg)
               hasClass(CLASS_DEIKHAN) || hasClass(CLASS_RANGER))
             addToExp(-min(lose, getExp()));
         }
-        if (panic)
+        if (panic) {
           sendTo(fmt("Panic-stricken, you flee %s.\n\r") % dirs[attempt]);
-        else
+          if (!::number(0,1) && getMyRace()->hasTalent(TALENT_MUSK) && getCond(FULL) > 5) {
+            act("In your panic you release some musk scent to cover your tracks.", FALSE, this, 0, NULL, TO_CHAR);
+            act("$n releases some musk into the room!", FALSE, this, 0, NULL, TO_ROOM);
+            dropGas(::number(1,3), GAS_MUSK);
+            setCond(FULL, getCond(FULL)-5);
+          }
+        } else
           sendTo(fmt("You retreat skillfully %s.\n\r") % dirs[attempt]);
 
         // do this before lookForEngaged to get attackers check to work OK
@@ -1062,6 +1068,13 @@ int TBeing::doFlee(const char *arg)
     }
   }                                // for 
   sendTo("PANIC! You couldn't escape!\n\r");
+  if (!::number(0,1) && getMyRace()->hasTalent(TALENT_MUSK) && getCond(FULL) > 5) {
+    act("In your panic you release some musk scent to cover your tracks.", FALSE, this, 0, NULL, TO_CHAR);
+    act("$n releases some musk into the room!", FALSE, this, 0, NULL, TO_ROOM);
+    dropGas(::number(1,3), GAS_MUSK);
+    setCond(FULL, getCond(FULL)-5);
+  }
+
   return FALSE;
 }
 

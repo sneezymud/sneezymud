@@ -229,6 +229,17 @@ int belimus(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     return TRUE;
   }
 
+  if (vict->getMyRace()->hasTalent(TALENT_FROGSLIME_SKIN) && ::number(0,1))
+  {
+    act("Your skin-poison defenses activate in the panic!", TRUE, vict, 0, myself, TO_CHAR);
+    act("$N starts to choke on you and spits you out!", TRUE, vict, 0, myself, TO_CHAR);
+    act("Oh wait!  That creature's skin tastes horrible!", TRUE, vict, 0, myself, TO_VICT);
+    act("You spit out the little blighter.", TRUE, vict, 0, myself, TO_VICT);
+    act("$N looks sick.", TRUE, vict, 0, myself, TO_ROOM);
+    act("$N spits out $n in disgust.", TRUE, vict, 0, myself, TO_ROOM);
+    return TRUE;
+  }
+
   if (myself->fight())
     myself->stopFighting();
   if (vict->fight())

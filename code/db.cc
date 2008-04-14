@@ -3525,8 +3525,8 @@ TObj * makeNewObj(itemTypeT tmp)
       return new TFFlame();
     case ITEM_APPLIED_SUB:
       return new TASubstance();
-    case ITEM_SMOKE:
-      return new TSmoke();
+    case ITEM_GAS:
+      return new TGas();
     case ITEM_ARMOR_WAND:
       return new TArmorWand();
     case ITEM_DRUG_CONTAINER:

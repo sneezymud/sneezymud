@@ -1410,11 +1410,54 @@ sstring garble_gutter(const TBeing *from, const TBeing *to, const sstring &arg, 
   return out.trim().matchCase(arg);
 }
 
-
+// troglodytes talk in broken seperate phonics.  So the words are hyphe-na-ted out.
 sstring garble_trogtalk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
 {
+  int iWord = 0;
+  sstring out = arg;
+  sstring word = out.word(iWord);
+  int chance = from ? 100 - from->plotStat(STAT_CURRENT, STAT_INT, 0, 100, 50) : 25;
+  unsigned int iReplace = 0;
 
-  return arg;
+  for(; !word.empty(); word = out.word(++iWord))
+  {
+    sstring original = word;
+    size_t end = word.length()-1;
+    int state = 0;
+
+    if (chance*1.3 <= number(0, 100))
+      continue;
+
+    while(end > 2)
+    {
+      if (state == 0 && word[end] == '>')
+        state = 1;
+      else if (state == 1 && word[end] == '<')
+        state = 0;
+      else if (state == 0 && !isvowel(word[end]))
+        state = 2;
+      else if (state == 0 && isvowel(word[end]))
+        state = 3;
+      else if (state == 2 && isvowel(word[end]))
+        state = 3;
+      else if (state == 3 && !isvowel(word[end]))
+      {
+        word.insert(end--, "-");
+        state = 2;
+      }
+      end--;
+    }
+
+    unsigned int iFound = out.find(original, iReplace);
+    if(iFound != sstring::npos)
+    {
+      out.erase(iFound, original.length());
+      out.insert(iFound, word);
+      iReplace += word.length();
+    }
+  }
+
+  return out;
 }
 
 

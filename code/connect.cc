@@ -3369,6 +3369,9 @@ int Descriptor::doAccountStuff(char *arg)
       delete trophy;
       db.query("delete from player where lower(name)=lower('%s')", delname);
 
+      // delete tats!
+      db.query("delete from tattoos where lower(name)=lower('%s')", delname);
+
       wipePlayerFile(delname);  // handles corpses too
       wipeRentFile(delname);
       wipeFollowersFile(delname);

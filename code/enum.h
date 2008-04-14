@@ -676,4 +676,13 @@ enum walkPathT
   WALK_PATH_LOST
 };
 
+enum gasTypeT
+{
+  GAS_UNDEFINED = 0,
+  GAS_SMOKE,
+  GAS_MUSK,
+
+  GAS_MAX
+};
+
 #endif  // __ENUM_H inclusion sandwich

@@ -146,7 +146,7 @@ int TCannon::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT d
 	    dirs[dir]);
     act(buf, FALSE, ch, this, bullet, TO_ROOM);
 
-    ch->dropSmoke(::number(5,15));
+    ch->dropGas(::number(5,15), GAS_SMOKE);
     
     // put the bullet in the room and then "throw" it
     *ch->roomp += *bullet;    

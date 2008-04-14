@@ -32,7 +32,7 @@ class TOpal;
 class TPortal;
 class TOrganic;
 class TFFlame;
-class TSmoke;
+class TGas;
 class TASubstance;
 class TTrap;
 class TKey;

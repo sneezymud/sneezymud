@@ -24,7 +24,7 @@
 #include "obj_general_weapon.h"
 #include "obj_base_weapon.h"
 #include "obj_base_clothing.h"
-
+#include "obj_smoke.h"
 
 // returns DELETE_THIS if this has to be deleted
 int TMonster::mobileGuardian()
@@ -486,6 +486,12 @@ int TMonster::hunt()
       if (persist <= 0)
         return TRUE;
       persist -= 1;
+      // rooms with musk are double hard for mobs to track through
+      for(TThing *musk = roomp->getStuff(); musk; musk = musk->nextThing)
+        if (dynamic_cast<TGas*>(musk) && dynamic_cast<TGas*>(musk)->getType() == GAS_MUSK) {
+          count++;
+          break;
+        }
       res = dirTrack(hunted);
       int next_room;
       if (spec == SPEC_ARCHER && (next_room = clearpath(in_room, res)) &&

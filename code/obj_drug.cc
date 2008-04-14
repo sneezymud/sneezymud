@@ -701,7 +701,7 @@ int TBeing::doSmoke(const char *argument)
 	  drugTypes[tdc->getDrugType()].name, tdc->getName());
   act(buf,TRUE,this,0,0,TO_ROOM);
 
-  dropSmoke(::number(1,5));
+  dropGas(::number(1,5), GAS_SMOKE);
 
   // Update drug stats
   tdc->addToCurBurn(-1);

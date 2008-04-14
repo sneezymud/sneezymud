@@ -6107,7 +6107,7 @@ int dwarfPower(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
           // spirit killed the vict
           act("<o>The<1> <k>wrathful spirit<1> <o>high-fives you and bursts into a swirl of<1> <Y>fiery<1> <r>cinders<1><o>.<1>", FALSE, ch, o, 0, TO_CHAR, NULL);
           act("<o>The<1> <k>wrathful spirit<1> <o>high-fives $n<1><o> and bursts into a swirl of<1> <Y>fiery<1> <r>cinders<1><o>.<1>", FALSE, ch, o, 0, TO_ROOM, NULL);
-          ch->dropSmoke(6);
+          ch->dropGas(6, GAS_SMOKE);
           return DELETE_VICT;
         }
 	  } else {
@@ -6123,14 +6123,14 @@ int dwarfPower(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
           // spirit killed the vict
           act("<o>The<1> <k>wrathful spirit<1> <o>high-fives you and bursts into a swirl of<1> <Y>fiery<1> <r>cinders<1><o>.<1>", FALSE, ch, o, 0, TO_CHAR, NULL);
           act("<o>The<1> <k>wrathful spirit<1> <o>high-fives $n<1><o> and bursts into a swirl of<1> <Y>fiery<1> <r>cinders<1><o>.<1>", FALSE, ch, o, 0, TO_ROOM, NULL);
-          ch->dropSmoke(6);
+          ch->dropGas(6, GAS_SMOKE);
           return DELETE_VICT;
         }
       }
       vict->addToDistracted(1, FALSE);
       act("<o>The<1> <k>wrathful spirit<1> <o>flips its beard at $n<1><o> and bursts into a swirl of<1> <Y>fiery<1> <r>cinders<1><o>.<1>", FALSE, vict, o, 0, TO_ROOM, NULL);
       act("<o>The<1> <k>wrathful spirit<1> <o>flips its beard at you and bursts into a swirl of<1> <Y>fiery<1> <r>cinders<1><o>.<1>", FALSE, ch, o, vict, TO_VICT, NULL);
-      vict->dropSmoke(6);
+      vict->dropGas(6, GAS_SMOKE);
       
     } else {
       // spirit missed
@@ -6144,7 +6144,7 @@ int dwarfPower(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
         act("<o>The<1> <k>wrathful spirit<1> <o>caroms off you and dissolves into a plume of<1> <k>smoke<1><o>.<1>", FALSE, ch, o, vict, TO_VICT, NULL);
       }
       vict->addToDistracted(1, FALSE);
-      vict->dropSmoke(12);
+      vict->dropGas(12, GAS_SMOKE);
     }
     return TRUE;
   }
@@ -6663,7 +6663,7 @@ int ieComputer(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 			act("$p gives you a <o>note<1>.", FALSE, ch, o, 0, TO_CHAR);
 			*ch += *note;
 			act("$p belches a puff of <k>smoke<1>.", FALSE, o, o, 0, TO_ROOM);
-			o->dropSmoke(1);
+			o->dropGas(1, GAS_SMOKE);
 			return TRUE;
 		}
 	}

@@ -240,7 +240,7 @@ itemTypeT mapFileToItemType(int num)
     case 52:
       return ITEM_APPLIED_SUB;
     case 53:
-      return ITEM_SMOKE;
+      return ITEM_GAS;
     case 54:
       return ITEM_ARMOR_WAND;
     case 55:
@@ -397,7 +397,7 @@ int mapItemTypeToFile(itemTypeT itt)
       return 51;
     case ITEM_APPLIED_SUB:
       return 52;
-    case ITEM_SMOKE:
+    case ITEM_GAS:
       return 53;
     case ITEM_ARMOR_WAND:
       return 54;

@@ -79,18 +79,25 @@ void commodLoader(TMonster *tmons, TObj *bag)
 
   int max_units=20;
   int initial_wealth=wealth;
+  float commodValue = 0;
 
   for(unsigned int i=0;i<base_mats.size();++i){
+
+    commodValue = TCommodity::demandCurvePrice(1,0,commod_index[base_mats[i]]);
+    // skip buying 'cheap' commods.
+    if (commodValue < 1.0)
+      continue;
+
     // amount of current commod we can afford
-    int n_afford=min(max_units, (int)(wealth / TCommodity::demandCurvePrice(1,0,commod_index[base_mats[i]])));
+    int n_afford=min(max_units, (int)(wealth / commodValue));
     // probability of loading is based on initial wealth
-    int probability=min(max_units, (int)(initial_wealth /  TCommodity::demandCurvePrice(1,0,commod_index[base_mats[i]])));
+    int probability=min(max_units, (int)(initial_wealth / commodValue));
 
     // if we can afford LESS, then there is a higher chance we'll buy it
     // the idea being we prefer to buy expensive commods
     // very wealthy mobs prefer to have cash
-    if(probability <= ::number(0, max_units) && n_afford > 0){
-      treasureCreate(::number(n_afford/2, n_afford), base_mats[i],
+    if(n_afford > 0 && probability <= ::number(0, max_units)){
+      treasureCreate(max(1, ::number(n_afford/2, n_afford)), base_mats[i],
 		     wealth, bag, tmons);
     }
   }

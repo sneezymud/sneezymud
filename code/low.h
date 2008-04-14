@@ -51,7 +51,7 @@ const int ROOM_GUILD_BUREAU      = 395;
 const int ROOM_TROLLEY           = 15344;
 const int ROOM_AERIE_INN         = 44853;
 const int ROOM_TROLL_INN         = 557;
-const int ROOM_KALYSIA_INN       = 557;
+const int ROOM_KALYSIA_INN       = 14233;
 const int ROOM_BULLYWUG_INN      = 557;
 const int ROOM_NEWBIE            = 584;
 // ------------------------- OBJS
@@ -144,7 +144,7 @@ const int ITEM_RAINBOW_BRIDGE1 = 10041;
 const int ITEM_RAINBOW_BRIDGE2 = 10042;
 const int OBJ_HERALD          = 10543;
 const int GENERIC_POOL        = 10559;
-const int GENERIC_SMOKE       = 10560;
+const int GENERIC_GAS         = 10560;
 const int OBJ_INERT_STICK     = 10561;
 const int OBJ_MONK_QUEST_DOG_COLLAR = 12468;
 const int OBJ_FLAMING_PORTAL  = 16157;

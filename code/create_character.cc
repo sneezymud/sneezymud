@@ -74,10 +74,11 @@ territoryT goblinTerr[] = { HOME_TER_GOBLIN_URBAN, HOME_TER_GOBLIN_VILLAGER, HOM
                             HOME_TER_GOBLIN_MOUNTAIN, HOME_TER_GOBLIN_FOREST };
 territoryT gnollTerr[] = {   HOME_TER_GNOLL_VILLAGER, HOME_TER_GNOLL_PLAINS, HOME_TER_GNOLL_HILL,
                             HOME_TER_GNOLL_FOREST, HOME_TER_GNOLL_MARINER };
-territoryT troglodyteTerr[] = { HOME_TER_TROG_URBAN };
+territoryT troglodyteTerr[] = { HOME_TER_TROG_VILLAGER, HOME_TER_TROG_PLAINS, HOME_TER_TROG_HILL, HOME_TER_TROG_MOUNTAIN };
 territoryT orcTerr[] = { HOME_TER_ORC_URBAN, HOME_TER_ORC_VILLAGER, HOME_TER_ORC_RECLUSE, HOME_TER_ORC_MOUNTAIN,
                           HOME_TER_ORC_FOREST };
-territoryT frogmanTerr[] = { HOME_TER_FROGMAN_URBAN };
+territoryT frogmanTerr[] = { HOME_TER_FROGMAN_VILLAGER, HOME_TER_FROGMAN_PLAINS, HOME_TER_FROGMAN_MOUNTAIN,
+                              HOME_TER_FROGMAN_FOREST };
 territoryT fishmanTerr[] = { HOME_TER_FISHMAN_URBAN, HOME_TER_FISHMAN_VILLAGER, HOME_TER_FISHMAN_RECLUSE,
                         HOME_TER_FISHMAN_MOUNTAIN, HOME_TER_FISHMAN_FOREST, HOME_TER_FISHMAN_MARINER };
 territoryT birdmanTerr[] = { HOME_TER_BIRDMAN_URBAN, HOME_TER_BIRDMAN_VILLAGER, HOME_TER_BIRDMAN_MOUNTAIN, 
@@ -110,13 +111,13 @@ TPlayerRace nannyRaces[] = {
   { RACE_HOBBIT, "Hobbit", 0, hobbitTerr, cElements(hobbitTerr), ROOM_NEWBIE, "help/territory help hobbit", "", 0},
 
   // extended races
-  { RACE_GOBLIN, "Goblin", 0, goblinTerr, cElements(goblinTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, ", 1},
+  { RACE_GOBLIN, "Goblin", 0, goblinTerr, cElements(goblinTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, thark, ", 1},
   { RACE_GNOLL, "Gnoll", 0, gnollTerr, cElements(gnollTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, ", 0},
   { RACE_TROG, "Troglodyte", 0, troglodyteTerr, cElements(troglodyteTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, ", 0},
   { RACE_ORC, "Orc", 0, orcTerr, cElements(orcTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, jbabcock, ", 1},
 
   // advanced races
-  { RACE_FROGMAN, "Frogman", 1, frogmanTerr, cElements(frogmanTerr), ROOM_BULLYWUG_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, ", 0}, // add stin
+  { RACE_FROGMAN, "Bullywug", 1, frogmanTerr, cElements(frogmanTerr), ROOM_BULLYWUG_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, stin, ", 0},
   { RACE_FISHMAN, "Kalysian", 1, fishmanTerr, cElements(fishmanTerr), ROOM_KALYSIA_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, talsbane, matthaas, stu, ", 0},
   { RACE_BIRDMAN, "Aarakocra", 1, birdmanTerr, cElements(birdmanTerr), ROOM_AERIE_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, hairbear, jamil, ", 0},
   { RACE_TROLL, "Troll", 1, trollTerr, cElements(trollTerr), ROOM_TROLL_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, remoh, blaez, ", 0},

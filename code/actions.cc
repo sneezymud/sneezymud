@@ -417,6 +417,13 @@ int TBeing::doAction(const sstring & argument, cmdTypeT cmd)
         return DELETE_THIS;
     }
 
+    if (cmd == CMD_BLUSH && !::number(0,1) && getMyRace()->hasTalent(TALENT_MUSK) && getCond(FULL) > 5) {
+      act("In your excitement you release some musk scent into the room.", FALSE, this, 0, NULL, TO_CHAR);
+      act("$n releases some musk into the room!", FALSE, this, 0, NULL, TO_ROOM);
+      dropGas(::number(1,3), GAS_MUSK);
+      setCond(FULL, getCond(FULL)-5);
+    }
+
     return FALSE;
   }
 

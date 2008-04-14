@@ -201,22 +201,7 @@ const bool sstring::startsVowel() const
   for(unsigned int i=0;i<size();++i){
     if(isspace((*this)[i]))
       continue;
-    
-    switch ((*this)[i]) {
-      case 'A':
-      case 'E':
-      case 'I':
-      case 'O':
-      case 'U':
-      case 'a':
-      case 'e':
-      case 'i':
-      case 'o':
-      case 'u':
-	return true;
-      default:
-	return false;
-    }
+    return isvowel((*this)[i]);
   }
   return false;
 } 
@@ -333,5 +318,25 @@ const sstring sstring::matchCase(const sstring match) const
   }
 
   return out;
+}
+
+
+bool isvowel(const char c)
+{
+  switch (c) {
+    case 'A':
+    case 'E':
+    case 'I':
+    case 'O':
+    case 'U':
+    case 'a':
+    case 'e':
+    case 'i':
+    case 'o':
+    case 'u':
+      return true;
+    default:
+      return false;
+    }
 }
 

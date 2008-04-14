@@ -148,7 +148,7 @@ int THandgonne::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirType
 	    dirs[dir]);
     act(buf, FALSE, ch, this, bullet, TO_ROOM);
 
-    ch->dropSmoke(::number(1,5));
+    ch->dropGas(::number(1,5), GAS_SMOKE);
     
     // put the bullet in the room and then "throw" it
     *ch->roomp += *bullet;    

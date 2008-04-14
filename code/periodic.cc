@@ -1920,7 +1920,7 @@ int TObj::updateBurning(void)
     } else
       ch = NULL;
 
-    dropSmoke(::number(1,5));
+    dropGas(::number(1,5), GAS_SMOKE);
 
     switch(::number(0, 5)){
       case 0:

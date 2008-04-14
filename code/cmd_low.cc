@@ -892,7 +892,7 @@ void TObj::checkObjStats()
   // these are all classes that implement updateDesc()
   if (isObjStat(ITEM_STRUNG) && 
       !dynamic_cast<TPool *>(this) && 
-      !dynamic_cast<TSmoke *>(this) &&
+      !dynamic_cast<TGas *>(this) &&
       !dynamic_cast<TCommodity *>(this) &&
       !dynamic_cast<TBaseCup *>(this) &&
       !dynamic_cast<TTrashPile *>(this) &&

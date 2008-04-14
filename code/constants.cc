@@ -543,7 +543,7 @@ void assign_item_info()
      "Apply Method.  See HELP APPLY METHODS", 10, 1,
      "Level", 50, 1,
      "Spell/Skillnum", MAX_SKILL - 1, 0);
-  ItemInfo[ITEM_SMOKE] = new itemInfo("Smoke", "smoke",
+  ItemInfo[ITEM_GAS] = new itemInfo("Gas", "a gas",
       "Unused", 0, 0,
       "Unused", 0, 0,
       "Unused", 0, 0,
@@ -1999,14 +1999,14 @@ const char* const home_terrains[MAX_HOME_TERS] =
   "warf gnoll",
 
   // troglodyte
-  "HOME_TER_TROG_URBAN",
-  "HOME_TER_TROG_VILLAGER",
-  "HOME_TER_TROG_PLAINS",
-  "HOME_TER_TROG_RECLUSE",
-  "HOME_TER_TROG_HILL",
-  "HOME_TER_TROG_MOUNTAIN",
-  "HOME_TER_TROG_FOREST",
-  "HOME_TER_TROG_MARINER",
+  "UNUSED",
+  "lounge troglodyte",
+  "cavern troglodyte",
+  "UNUSED",
+  "tunnel troglodyte",
+  "labyrinth troglodyte",
+  "UNUSED",
+  "UNUSED",
 
   // orc
   "streetwise orc",
@@ -2019,14 +2019,14 @@ const char* const home_terrains[MAX_HOME_TERS] =
   "UNUSED",
 
   // frogman
-  "HOME_TER_FROGMAN_URBAN",
-  "HOME_TER_FROGMAN_VILLAGER",
-  "HOME_TER_FROGMAN_PLAINS",
-  "HOME_TER_FROGMAN_RECLUSE",
-  "HOME_TER_FROGMAN_HILL",
-  "HOME_TER_FROGMAN_MOUNTAIN",
-  "HOME_TER_FROGMAN_FOREST",
-  "HOME_TER_FROGMAN_MARINER",
+  "UNUSED",
+  "tribal bullywug",
+  "lillypad bullywug",
+  "muck-burrower bullywug",
+  "UNUSED",
+  "jungle bullywug",
+  "deep-bog bullywug",
+  "salt-water bullywug",
 
   // kalysian
   "schooler kalysian",

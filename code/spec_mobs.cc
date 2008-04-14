@@ -1735,6 +1735,17 @@ int Tyrannosaurus_swallower(TBeing *ch, cmdTypeT cmd, const char *, TMonster *my
 
           ch->roomp->playsound(SOUND_CHEWED_UP, SOUND_TYPE_NOISE);
 
+          if (targ->getMyRace()->hasTalent(TALENT_FROGSLIME_SKIN) && ::number(0,1))
+          {
+            act("Your skin-poison defenses activate in the panic!", TRUE, targ, 0, ch, TO_CHAR);
+            act("$N starts to choke on you and spits you out!", TRUE, targ, 0, ch, TO_CHAR);
+            act("Oh wait!  That creature's skin tastes horrible!", TRUE, targ, 0, ch, TO_VICT);
+            act("You spit out the little blighter.", TRUE, targ, 0, ch, TO_VICT);
+            act("$N looks sick.", TRUE, targ, 0, ch, TO_ROOM);
+            act("$N spits out $n in disgust.", TRUE, targ, 0, ch, TO_ROOM);
+            return TRUE;
+          }
+
           vlogf(LOG_PROC, fmt("%s killed by being swallowed at %s (%d)") % 
               targ->getName() % targ->roomp->getName() % targ->inRoom());
           rc = targ->die(DAMAGE_EATTEN);
