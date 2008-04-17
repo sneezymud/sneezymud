@@ -1205,17 +1205,18 @@ bool ItemLoad::objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r, b
     }
 
     //// place the object
-    if(parent){
-      if(!objToParent(slot, parent, new_obj, r, ch))
-	return true;
-    } else {
-      if(slot == NORMAL_SLOT){
-	if(!objToTarg(slot, ch, new_obj, r))
-	  return true;
-      } else {
-	if(!objToEquipChar(slot, ch, new_obj, r))
-	  return true;
-      }
+    bool failedToParent = false;
+    if (parent)
+      failedToParent = !objToParent(slot, parent, new_obj, r, ch);
+    else if (slot == NORMAL_SLOT)
+      failedToParent = !objToTarg(slot, ch, new_obj, r);
+    else
+      failedToParent = !objToEquipChar(slot, ch, new_obj, r);
+
+    if (failedToParent) {
+      delete new_obj;
+      vlogf(LOG_BUG, "Error parenting in objesFromStore");
+      return true;
     }
 
     // recursively load any contained objects
