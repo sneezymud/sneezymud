@@ -294,14 +294,15 @@ void nannyName_output(Descriptor * desc)
 // reads our disclaimers for a char
 void nannyDisclaimer_output(Descriptor * desc)
 {
-  const static sstring disclaimers[] = { "objdata/books/1458.28", "objdata/books/1458.29", "objdata/books/1458.30" };
+  const static sstring disclaimers[] = { "objdata/books/disclaimer.1", "objdata/books/disclaimer.2", "objdata/books/disclaimer.3" };
   int whichDis = desc->connected - CON_CREATION_DISCLAIM1;
   sstring str;
 
   if (whichDis < 0 || whichDis > (int)cElements(disclaimers))
     return;
 
-  file_to_sstring(disclaimers[whichDis].c_str(), str);
+  if (!file_to_sstring(disclaimers[whichDis].c_str(), str))
+    str = fmt("Error: failed to load file %s.  Please contact an admin.") % disclaimers[whichDis];
 
   // swap color sstrings
   str = colorString(desc->character, desc, str, NULL, COLOR_BASIC,  false);

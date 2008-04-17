@@ -969,7 +969,7 @@ TThing& TThing::operator -- ()
 
   } else {
     // guaranteed crash
-    vlogf(LOG_BUG, fmt("Bogus call to TThing operator--, %s") %  getName());
+    vlogf_trace(LOG_BUG, fmt("Bogus call to TThing operator--, %s") %  getName());
   }
 
   // set the obj 

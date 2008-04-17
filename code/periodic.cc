@@ -1184,11 +1184,11 @@ int TBeing::updateHalfTickStuff()
     if (flee)
     {
       if (tBeing && tBeing != this && fleeing)
-        sendTo(fmt("You lose your cool at the sight of %s's %s and freak out!\n\r")% tBeing->getName() % fleeing->getName());
+        act("You lose your cool at the sight of $N's $o and freak out!", false, this, fleeing, tBeing, TO_CHAR);
       else if (fleeing)
-        sendTo(fmt("You lose your cool at the sight of %s and freak out!\n\r")% fleeing->getName());
+        act("You lose your cool at the sight of $N and freak out!", false, this, NULL, fleeing, TO_CHAR);
       else
-        sendTo("You lose your cool in this fiery place and freak out!\n\r");
+        act("You lose your cool in this fiery place and freak out!", false, this, NULL, NULL, TO_CHAR);
       doFlee("");
       addCommandToQue("flee");
       addCommandToQue("flee");

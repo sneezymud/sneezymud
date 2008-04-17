@@ -2017,29 +2017,29 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       // count how many shopkeeper has
       count=0;
       for(TThing *t=myself->getStuff();t;t=t->nextThing){
-	if(dynamic_cast<TObj *>(t) &&
-	   dynamic_cast<TObj *>(t)->number == *iter){
-	  count++;
-	}
+        if(dynamic_cast<TObj *>(t) && dynamic_cast<TObj *>(t)->number == *iter){
+          count++;
+        }
       }
       if(count >= tso.getMaxNum(o)){
-	delete o;
-	continue;
+        delete o;
+        continue;
       }
-
 
       int cost=o->getValue();
 
       // obviously we shouldn't have to pay a million talens to create a
       // million talen casino chip
       if(dynamic_cast<TCasinoChip *>(o))
-	cost=1;
+        cost=1;
 
-      if(myself->getMoney() < cost)
-	continue;
+      if(myself->getMoney() < cost) {
+        delete o;
+        continue;
+      }
 
       //      vlogf(LOG_LOW, fmt("%s loading produced object %s") %
-      //	    myself->getName() % o->getName());
+      //      myself->getName() % o->getName());
 
       *myself += *o;
 

@@ -97,7 +97,7 @@ bool sysLootBoot()
           isLegalLoot(obj_index[tOIndex].name)) ||
           isSpecialLegalLoot(tOIndex)) &&
         obj_index[tOIndex].max_exist == 9999) {
-      vlogf(LOG_BUG, fmt("Loot Object Debug, reading object: %d") %  tOIndex);
+      //vlogf(LOG_BUG, fmt("Loot Object Debug, reading object: %d") %  tOIndex);
       tObj = read_object(tOIndex, REAL);
 
       switch (obj_index[tOIndex].itemtype) { // Set tLevel
@@ -129,7 +129,7 @@ bool sysLootBoot()
       }
 
       if (tObj) {
-        vlogf(LOG_BUG, fmt("Adding New Loot Object: %s") %  tObj->name);
+        //vlogf(LOG_BUG, fmt("Adding New Loot Object: %s") %  tObj->name);
         TLootStructure *tNLoot;
 
         if (!(tNLoot = new TLootStructure))
