@@ -1792,9 +1792,9 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
     price=convertTo<float>(db["price"]);
 
     // modify price for structure damage
-    price *= ((convertTo<int>(db["max_struct"]) <= 0) ? 1 :
-	      (convertTo<int>(db["cur_struct"]) /
-	       convertTo<int>(db["max_struct"])));
+    price *= ((convertTo<float>(db["max_struct"]) <= 0) ? 1 :
+	      (convertTo<float>(db["cur_struct"]) /
+	       convertTo<float>(db["max_struct"])));
 
     // modify price for the shop profit ratio
     price *= shop_index[shop_nr].getProfitBuy(NULL, ch);
