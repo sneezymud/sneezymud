@@ -922,7 +922,7 @@ void TBeing::doPractice(const char *argument)
       if (!strcmp(discNames[i].properName, "unused")) 
         continue;
       if (!strcmp(discNames[i].properName, "Psionic Abilities"))
-	continue;
+        continue;
       if (!(cd = getDiscipline(i))) {
         vlogf(LOG_BUG, fmt("Somehow %s was not assigned a discipline (%d), used prac class (%d).") % getName() % i % which);
       }

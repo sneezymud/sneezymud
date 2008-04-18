@@ -2849,7 +2849,7 @@ static void change_mob_sstring_enter(TBeing *ch, TMonster *tMob, const char *tSt
       tExDesc->keyword = mud_str_dup(tMobStringShorts[tType]);
       tExDesc->description = mud_str_dup(tStString);
       break;
-    } else if (tExDesc && !strcmp(tExDesc->keyword, tMobStringShorts[tType]))
+    } else if (tExDesc && !strcmp(tExDesc->keyword, tMobStringShorts[tType])) {
       if (*tString == '`') {
         if (tExLast)
           tExLast->next = tExDesc->next;
@@ -2864,6 +2864,10 @@ static void change_mob_sstring_enter(TBeing *ch, TMonster *tMob, const char *tSt
         tExDesc->description = mud_str_dup(tStString);
         break;
       }
+    }
+    else if (!tExDesc) {
+      break; // occurs if deleting when all entries are empty
+    }
 
     if ((tExLast = tExDesc)) {
       vlogf(LOG_EDIT, "Fell off end of mobile sstring entry.");

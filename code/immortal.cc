@@ -3192,14 +3192,6 @@ void TPerson::doStart()
     if (getLevel(cit))
       doHPGainForLev(cit);
   }
-  setHit(21);
-
-  wearSlotT iw;
-  for (iw = MIN_WEAR; iw < MAX_WEAR; iw++) {
-    setLimbFlags(iw, 0);
-    setStuckIn(iw, NULL);
-    setCurLimbHealth(iw, getMaxLimbHealth(iw));
-  }
 
   setFaction(FACT_NONE);
 #if FACTIONS_IN_USE

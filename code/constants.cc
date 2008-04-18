@@ -1832,7 +1832,7 @@ const struct disc_names_data discNames[MAX_DISCS] =
   {DISC_RANGER, CLASS_RANGER, "ranger abilities", 
    "Ranger Abilities"},
   {DISC_BOGUS1, 0, "bogus1", 
-   "Bogus1 (Tell a god)"},  //20
+   "unused"},  //20
   {DISC_SHAMAN_ARMADILLO, CLASS_SHAMAN, "armadillo abilities", 
    "Armadillo Abilities"},
   {DISC_ANIMAL, CLASS_RANGER, "animals", 
@@ -1840,7 +1840,7 @@ const struct disc_names_data discNames[MAX_DISCS] =
   {DISC_PLANTS, CLASS_RANGER, "plants", 
    "Plant Abilities"},
   {DISC_BOGUS2, 0, "bogus2", 
-   "Bogus2 (Tell a god)"}, 
+   "unused"}, 
   {DISC_DEIKHAN, CLASS_DEIKHAN, "deikhan abilities", 
    "Deikhan Abilities"},   // 25
   {DISC_DEIKHAN_FIGHT, CLASS_DEIKHAN, "fighting skills", 

@@ -1097,12 +1097,16 @@ int getWet(TBeing *ch, TRoom* room, silentTypeT silent)
 {
   sstring better, worse;
   int maxWet = getRoomWetness(ch, room, better, worse);
-  int wetness = maxWet / 5; // the delta
+  int wetness = maxWet / 3; // the delta
   int oldWet = getWetness(ch);
 
   // even though its wet out, we are wetter and will dry off some
   if (oldWet > maxWet && wetness > 0)
     wetness = -wetness;
+
+  // the min amount of wetness change should be +/- 10
+  if (wetness != 0 && abs(wetness) < 10)
+    wetness = wetness > 0 ? 10 : -10;
 
   // if we'd overshoot the maxWet, when just go up to maxWet OR
   // if we'd undershoot the maxWet (drying in a wet room), just stop at maxWet

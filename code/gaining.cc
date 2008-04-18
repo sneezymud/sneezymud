@@ -1501,7 +1501,8 @@ int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline,
   }
 
 
-  if ((combat >= 100) || 
+  if ((combat >= 100) ||
+      (ch->getLevel(accclass) < 3) ||
       (combat >= (((35*ch->getLevel(accclass)) /10) - 4))) {
     combatLearn = TRUE;
   }

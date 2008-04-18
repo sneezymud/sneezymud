@@ -1388,6 +1388,15 @@ int Descriptor::nanny(sstring arg)
         character->wimpy=character->maxWimpy()/2 + character->maxWimpy()%2;
       }
 
+      // we set hitpoints last, since we need to load known skills first (else our maxHp is low)
+      character->setHit(character->hitLimit());
+      wearSlotT iw;
+      for (iw = MIN_WEAR; iw < MAX_WEAR; iw++) {
+        character->setLimbFlags(iw, 0);
+        character->setStuckIn(iw, NULL);
+        character->setCurLimbHealth(iw, character->getMaxLimbHealth(iw));
+      }
+
       // called to trigger responses etc
       rc = character->genericMovedIntoRoom(character->roomp, -1);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
