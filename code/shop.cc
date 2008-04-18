@@ -1736,7 +1736,7 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
                 ((rs.name is not null and rs.name like '%s%s%s') or \
                 (o.name like '%s%s%s')) \
                 %s \
-              group by o.vnum \
+              group by o.vnum, rs.short_desc \
             union \
               select r.rent_id as rent_id, r.weight*10 as count, \
                 rs.short_desc as short_desc, r.price/(r.weight*10) as price, \
