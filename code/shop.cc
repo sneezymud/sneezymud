@@ -2279,14 +2279,15 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       //      vlogf(LOG_LOW, fmt("%s loading produced object %s") %
       //      myself->getName() % o->getName());
 
+      // money goes to sba
+      tso.doSellTransaction(cost, o->getName(), TX_PRODUCING, o);
+      shoplog(sba_nr, myself, sba, o->getName(), cost, "producing");
+
       myself->saveItem(shop_nr, o);
       delete o;
 
       //      *myself += *o;
 
-      // money goes to sba
-      tso.doSellTransaction(cost, o->getName(), TX_PRODUCING, o);
-      shoplog(sba_nr, myself, sba, o->getName(), cost, "producing");
     }
 
     return FALSE;
