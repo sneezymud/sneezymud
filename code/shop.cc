@@ -1922,8 +1922,10 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
 	(max((float)1.0, price));
     } else if(type==ITEM_COMPONENT){
       sstring spell="";
-      if(ch->doesKnowSkill(mapFileToSpellnum(convertTo<int>(db["val2"]))))
-	spell=discArray[mapFileToSpellnum(convertTo<int>(db["val2"]))]->name;
+      if(mapFileToSpellnum(convertTo<int>(db["val2"])) > -1){
+	if(ch->doesKnowSkill(mapFileToSpellnum(convertTo<int>(db["val2"]))))
+	  spell=discArray[mapFileToSpellnum(convertTo<int>(db["val2"]))]->name;
+      }
       buf+=fmt("[%8i] %s %s [%6i] %7i\n\r") %
 	convertTo<int>(db["rent_id"]) %
 	list_string(db["short_desc"], 30) % 
