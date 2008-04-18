@@ -418,6 +418,7 @@ extern void perform_violence(int pulse);
 extern const sstring getSectorNameColor(sectorTypeT, TRoom *);
 extern const sstring getSectorDescrColor(sectorTypeT, TRoom *);
 extern spellNumT mapWeaponT(weaponT w);
+extern spellNumT getWtype_kluge(weaponT t);
 }
 
 // these needs C++ linkage to avoid conflict with functions in stdlib

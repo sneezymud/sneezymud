@@ -11,6 +11,7 @@
 #include "shop.h"
 #include "obj_commodity.h"
 #include "shopowned.h"
+#include "database.h"
 
 // maximum number of units shop will hold. price=0 at this quantity
 const int shop_capacity = 100000;
@@ -227,11 +228,8 @@ int TCommodity::sellPrice(int num, int shop_nr, float, const TBeing *ch)
 
   price=demandCurvePrice(-num, price, total_units);
 
-  if (obj_flags.cost <= 1) {
-    price = max(0,(int) price);
-  } else {
-    price = max(1, (int) price);
-  }
+  if(price < 1)
+    price=0;
 
   return (int)price;
 }
@@ -260,7 +258,7 @@ float TCommodity::shopPriceFloat(int num, int shop_nr, float, const TBeing *ch) 
 
 int TCommodity::shopPrice(int num, int shop_nr, float, const TBeing *ch) const
 {
-  return (int)shopPriceFloat(num, shop_nr, 0, ch);
+  return max(1, (int)shopPriceFloat(num, shop_nr, 0, ch));
 }
 
 int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
@@ -320,13 +318,11 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   strcpy(buf2, fname(name).c_str());
   --(*this);
   int num2 = (int) (numUnits()) - num;
+  
   if (num2) {
     setWeight(num2/10.0);
-    *keeper += *this;
   } else {
     setWeight(0);
-    *keeper += *this;
-    //    delete this;
   }
 
   if (num) {
@@ -349,13 +345,14 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   sprintf(buf, "%s/%d", SHOPFILE_PATH, shop_nr);
   keeper->saveItems(buf);
   ch->doSave(SILENT_YES);
+  keeper->saveItem(shop_nr, this);
+  delete this;
   return price;
 }
 
 bool TCommodity::sellMeCheck(TBeing *ch, TMonster *keeper, int num) const
 {
   int total = 0;
-  TThing *t;
   sstring buf;
   unsigned int shop_nr;
 
@@ -365,6 +362,8 @@ bool TCommodity::sellMeCheck(TBeing *ch, TMonster *keeper, int num) const
     vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  mob_index[keeper->number].virt);
     return FALSE;
   }
+
+
   
   TShopOwned tso(shop_nr, keeper, ch);
   int max_num=shop_capacity;
@@ -377,16 +376,17 @@ bool TCommodity::sellMeCheck(TBeing *ch, TMonster *keeper, int num) const
     return TRUE;
   }
 
-  for (t = keeper->getStuff(); t; t = t->nextThing) {
-    if ((t->number == number) &&
-	(t->getName() && getName() &&
-	 !strcmp(t->getName(), getName()))) {
-      if (TCommodity *c = dynamic_cast<TCommodity *>(t)) {
-        total += c->numUnits();
-        break;
-      }
-    }
+  TDatabase db(DB_SNEEZY);
+
+  db.query("select weight from rent where owner_type='shop' and owner=%i and material=%i and vnum=%i",
+	   shop_nr, getMaterial(), GENERIC_COMMODITY);
+
+  if(db.fetchRow()){
+    total = (int)(convertTo<float>(db["weight"])*10.0);
+  } else {
+    total=0;
   }
+
   if (total >= max_num) {
     keeper->doTell(ch->getName(), fmt("I already have plenty of %s.") % getName());
     return TRUE;
@@ -401,10 +401,26 @@ bool TCommodity::sellMeCheck(TBeing *ch, TMonster *keeper, int num) const
 
 int TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
 {
-  TThing *t;
   TCommodity *obj2 = NULL;
   int num, price;
   char buf[256], buf2[80];
+  TDatabase db(DB_SNEEZY);
+  TObj *to;
+
+  db.query("select rent_id from rent where owner_type='shop' and owner=%i and material=%i and vnum=%i",
+	   shop_nr, getMaterial(), GENERIC_COMMODITY);
+
+  if(db.fetchRow()){
+    to=keeper->loadItem(shop_nr, convertTo<int>(db["rent_id"]));
+    obj2 = dynamic_cast<TCommodity *>(to);
+    keeper->deleteItem(shop_nr, convertTo<int>(db["rent_id"]));
+  } else {
+    to = read_object(objVnum(), VIRTUAL);
+    obj2 = dynamic_cast<TCommodity *>(to);
+    obj2->setWeight(0.0);
+    obj2->setMaterial(getMaterial());
+  }
+  *keeper += *obj2;
 
   strcpy(buf2, fname(name).c_str());
   price = sellPrice(numUnits(), shop_nr, -1, ch);
@@ -431,33 +447,16 @@ int TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
     keeper->doTell(ch->getName(), shop_index[shop_nr].missing_cash1);
     return false;
   }
-  for (t = keeper->getStuff(); t; t = t->nextThing) {
-    obj2 = dynamic_cast<TCommodity *>(t);
-    if (!obj2)
-      continue;
 
-    if (obj2->getMaterial() == getMaterial())
-      break;
-  }
-
-  if (!t) {
-    TObj *to = read_object(objVnum(), VIRTUAL);
-    obj2 = dynamic_cast<TCommodity *>(to);
-    obj2->setWeight(0.0);
-    obj2->setMaterial(getMaterial());
-  } else
-    --(*obj2);
   num = obj2->numUnits() + numUnits();
 
   if (num) {
     obj2->setWeight(num/10.0);
     obj2->setMaterial(getMaterial());
-    *keeper += *obj2;
     --(*this);
 
     TShopOwned tso(shop_nr, keeper, ch);
     tso.doSellTransaction(price, obj2->getName(), TX_SELLING, obj2);
-
 
     keeper->doTell(ch->getName(), fmt("Thanks, here's your %d talens.") % price);
     act("$n sells $p.", TRUE, ch, this, 0, TO_ROOM);
@@ -467,13 +466,17 @@ int TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
       sprintf(buf, "%d", price);
       ch->doSplit(buf, false);
     }
+    keeper->saveItem(shop_nr, obj2);
+    delete obj2;
     return DELETE_THIS;
   }
   if (!ch->delaySave)
     ch->doSave(SILENT_YES);
   sprintf(buf, "%s/%d", SHOPFILE_PATH, shop_nr);
   keeper->saveItems(buf);
-  return true;
+  keeper->saveItem(shop_nr, obj2);
+  delete obj2;
+  return DELETE_THIS;
 }
 
 int TCommodity::sellCommod(TBeing *ch, TMonster *keeper, int shop_nr, TThing *bag)
@@ -515,6 +518,22 @@ void TCommodity::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
 {
   int price;
   char buf2[80];
+  TDatabase db(DB_SNEEZY);
+  TObj *obj2;
+
+  db.query("select rent_id from rent where owner_type='shop' and owner=%i and material=%i and vnum=%i",
+	   shop_nr, getMaterial(), GENERIC_COMMODITY);
+
+  if(db.fetchRow()){
+    TObj *to=keeper->loadItem(shop_nr, convertTo<int>(db["rent_id"]));
+    obj2 = dynamic_cast<TCommodity *>(to);
+  } else {
+    TObj *to = read_object(objVnum(), VIRTUAL);
+    obj2 = dynamic_cast<TCommodity *>(to);
+    obj2->setWeight(0.0);
+    obj2->setMaterial(getMaterial());
+  }
+  *keeper += *obj2;
 
   strcpy(buf2, fname(name).c_str());
   price = sellPrice(numUnits(), shop_nr, -1, ch);
@@ -525,6 +544,8 @@ void TCommodity::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
   }
 
   keeper->doTell(ch->getName(), fmt("Hmm, I'd give you %d talens for your %i units of that.") % price % numUnits());
+
+  delete obj2;
   return;
 }
 

@@ -6,6 +6,7 @@ create table rent (
   rent_id integer primary key auto_increment,
   owner_type ENUM('player', 'shop', 'room'),
   owner integer DEFAULT '0' NOT NULL,
+  list_price integer DEFAULT '0' NOT NULL,
   slot integer DEFAULT '0' NOT NULL,
   vnum integer DEFAULT '0' NOT NULL,
   container integer DEFAULT '-1' NOT NULL,

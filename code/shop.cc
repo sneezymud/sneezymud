@@ -394,12 +394,14 @@ static int number_objects_in_list(const TObj *item, const TObj *list)
   return (count);
 }
 
+
 void shopping_buy(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
 {
   char argm[MAX_INPUT_LENGTH], newarg[MAX_INPUT_LENGTH];
-  int num = 1;
+  int num = 1, rent_id;
   TObj *temp1 = NULL;
-  TThing *tt;
+  TDatabase db(DB_SNEEZY);
+  char buf[256];
 
   *argm = '\0';
 
@@ -417,12 +419,52 @@ void shopping_buy(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
   if (!num)
     num = 1;
 
-  tt = searchLinkedListVis(ch, argm, keeper->getStuff());
-  if (!tt || !(temp1 = dynamic_cast<TObj *>(tt))) {
-    if (!(temp1 = get_num_obj_in_list(ch, convertTo<int>(argm), keeper->getStuff(), shop_nr))) {
-      keeper->doTell(ch->name, shop_index[shop_nr].no_such_item1);
-      return;
+  vector<int>objects;
+  vector<TObj *>objects_p;
+
+  if(!(rent_id=convertTo<int>(argm))){
+    sstring query="select r.rent_id from obj o, rent r left outer join rent_strung rs on (rs.rent_id=r.rent_id) where r.vnum=o.vnum and r.owner_type='shop' and r.owner=%i ";
+    sstring arg_words=argm;
+    arg_words=arg_words.replaceString("-"," ");
+
+    for(int i=0;!arg_words.word(i).empty();++i){
+      mysql_escape_string(buf, arg_words.word(i).c_str(), arg_words.word(i).length());
+
+      query += fmt("and ((rs.name is not null and rs.name like '%s%s%s') or (o.name like '%s%s%s'))") % 
+	"%%" % buf % "%%" %
+	"%%" % buf % "%%";
     }
+
+    db.query(query.c_str(), shop_nr);
+    db.fetchRow();
+    for(int i=0;i<num && db.fetchRow();++i){
+      rent_id=convertTo<int>(db["rent_id"]);
+      temp1=keeper->loadItem(shop_nr, rent_id);
+      *keeper += *temp1;
+      objects.push_back(rent_id);
+      objects_p.push_back(temp1);
+    }
+  } else if(num > 1){
+    db.query("select rent_id from rent where vnum in (select vnum from rent where rent_id=%i) and owner_type='shop' and owner=%i", rent_id, shop_nr);
+
+    for(int i=0;i<num && db.fetchRow();++i){
+      rent_id=convertTo<int>(db["rent_id"]);
+      temp1=keeper->loadItem(shop_nr, rent_id);
+      *keeper += *temp1;
+      objects.push_back(rent_id);
+      objects_p.push_back(temp1);
+    }
+  } else {
+    if((temp1=keeper->loadItem(shop_nr, rent_id))){
+      *keeper += *temp1;
+      objects.push_back(rent_id);
+      objects_p.push_back(temp1);      
+    }
+  }
+
+  if(!temp1){
+    keeper->doTell(ch->name, shop_index[shop_nr].no_such_item1);
+    return;
   }
 
   if (temp1->getValue() <= 0) {
@@ -438,8 +480,17 @@ void shopping_buy(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
     return;
   }
 
-  temp1->buyMe(ch, keeper, num, shop_nr);
+  if(temp1->buyMe(ch, keeper, num, shop_nr) != -1){
+    for(unsigned int i=0;i<objects.size();++i)
+      keeper->deleteItem(shop_nr, objects[i]);
+  } else {
+    for(unsigned int i=0;i<objects_p.size();++i){
+      delete objects_p[i];
+    }
+  }
+
 }
+
 
 int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
 {
@@ -450,6 +501,7 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   int tmp;
   float chr;
   int i;
+  float swindle;
 
   if ((ch->getCarriedVolume() + (num * getTotalVolume())) > ch->carryVolumeLimit()) {
     ch->sendTo(fmt("%s: You can't carry that much volume.\n\r") % fname(name));
@@ -472,7 +524,8 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   strcpy(argm, name);
   
   strcpy(argm, add_bars(argm).c_str());
-  chr = ch->getChaShopPenalty() - ch->getSwindleBonus();
+  swindle=ch->getSwindleBonus();
+  chr = ch->getChaShopPenalty() - swindle;
   chr = max((float)1.0,chr);
   
   cost = shopPrice(1, shop_nr, chr, ch);
@@ -480,7 +533,7 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   for (i = 0; i < tmp; i++) {
     TThing *t_temp1 = searchLinkedListVis(ch, argm, keeper->getStuff());
     TObj *temp1 = dynamic_cast<TObj *>(t_temp1);
-      
+
 #if !(NO_DAMAGED_ITEMS_SHOP)
     while (!temp1->isShopSimilar(this)) {
       // it's the same item, but in a different condition
@@ -531,6 +584,7 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   if (!count)
     return -1;
 
+  //  ch->sendTo(fmt("You manage to swindle the shopkeeper into a %i%s discount.\n\r") % (int)(swindle*100) % "%");
   keeper->doTell(ch->name, fmt(shop_index[shop_nr].message_buy) %
 		 (cost * count));
 
@@ -545,6 +599,7 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   ch->doSave(SILENT_YES);
   return cost;
 }
+
 
 bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int shop_nr)
 {
@@ -705,6 +760,7 @@ void generic_sell(TBeing *ch, TMonster *keeper, TObj *obj, int shop_nr)
   // obj may be invalid here
 }
 
+
 int TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
 {
   int cost;
@@ -758,7 +814,7 @@ int TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   ch->logItem(this, CMD_SELL);
 
   --(*this);
-  *keeper += *this;
+  keeper->saveItem(shop_nr, this);
 
   sellMeMoney(ch, keeper, cost, shop_nr);
 
@@ -769,22 +825,13 @@ int TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
     ch->doSplit(buf.c_str(), false);
   }
 
-#if NO_DAMAGED_ITEMS_SHOP
-  else if (getStructPoints() != getMaxStructPoints()) {
-    // delete it as its "scrap"
-    buf = fmt("%s/%d") % SHOPFILE_PATH % shop_nr;
-    keeper->saveItems(buf);
-    ch->doSave(SILENT_YES);
-    return DELETE_THIS;
-  }
-#endif
 
-
-  buf = fmt("%s/%d") % SHOPFILE_PATH % shop_nr;
-  keeper->saveItems(buf);
+  //  buf = fmt("%s/%d") % SHOPFILE_PATH % shop_nr;
+  //  keeper->saveItems(buf);
   ch->doSave(SILENT_YES);
-  return true;
+  return DELETE_THIS;
 }
+
 
 int TThing::componentSell(TBeing *ch, TMonster *keeper, int shop_nr, TThing *)
 {
@@ -950,6 +997,7 @@ bool TObj::fitsSellType(tObjectManipT tObjectManip,
 
   return false;
 }
+
 
 int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_nr)
 {
@@ -1248,6 +1296,7 @@ void shopping_value(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
   }
 }
 
+
 void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
 {
   float chr;
@@ -1524,41 +1573,93 @@ const sstring TObj::shopList(const TBeing *ch, const sstring &arg, int iMin, int
     return "";
 }
 
+
+sstring equip_cond(int cur_str, int max_str)
+{
+  double p = ((double) cur_str) / ((double) max_str);
+
+  if(p > 1.0){
+    // shouldn't happen theoretically
+    sstring a("<W>better than new<1>");
+    return a;
+  } else if (p == 1) {
+    sstring a("<C>brand new<1>");
+    return a;
+  } else if (p > .9) {
+    sstring a("<c>like new<1>");
+    return a;
+  } else if (p > .8) {
+    sstring a("<B>excellent<1>");
+    return a;
+  } else if (p > .7) {
+    sstring a("<b>very good<1>");
+    return a;
+  } else if (p > .6) {
+    sstring a("<P>good<1>");
+    return a;
+  } else if (p > .5) {
+    sstring a("<p>fine<1>");
+    return a;
+  } else if (p > .4) {
+    sstring a("<G>fair<1>");
+    return a;
+  } else if (p > .3) {
+    sstring a("<g>poor<1>");
+    return a;
+  } else if (p > .2) {
+    sstring a("<y>very poor<1>");
+    return a;
+  } else if (p > .1) {
+    sstring a("<o>bad<1>");
+    return a;
+  } else if (p > .001) {
+    sstring a("<R>very bad<1>");
+    return a;
+  } else {
+    sstring a("<r>destroyed<1>");
+    return a;
+  }
+}
+
+// truncate string to len without counting color codes,
+// and with a terminating <1>, and pad with blanks
+// eg, if len is "7", then "<b>a shirt<1>" is acceptable
+sstring list_string(sstring buf, int len)
+{
+  sstring obuf="";
+
+  for(unsigned int i=0;i<buf.length() && len;++i){
+    if(buf[i]=='<'){
+      obuf+=buf[i++];
+      obuf+=buf[i++];
+      obuf+=buf[i];
+      continue;
+    }
+    obuf+=buf[i];    
+    --len;
+  }
+
+  while(len>0){
+    obuf+=" ";
+    --len;
+  }
+
+  obuf += "<1>";
+  
+  return obuf;
+}
+
 void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
 {
-  vector<TObj *>cond_obj_vec;
-  vector<int>cond_tot_vec;
-  TObj *i = NULL;
-  unsigned int k;
+  TDatabase db(DB_SNEEZY);
+  sstring buf, keyword="";
+  float price, perc;
+  bool fit=true;
+  int extra_flags, volume, type;
+  wearSlotT slot;
   unsigned long int FitT = 0;
-  int iMin = 999999, iMax = 0;
-  int found_obj, counter, rc;
-  bool found = FALSE;
-  vector <sstring> args;
-  sstring buf, sb, arg;
-  bool hasComponents = false;
-  bool owned=shop_index[shop_nr].isOwned();
+  bool isPierce=false, isBlunt=false, isSlash=false;
 
-#if 0
-  if (gamePort != PROD_GAMEPORT) {
-    if (ch->desc && ch->desc->m_bIsClient)
-      desc->clientShoppingList(arg, keeper, shop_nr);
-  }
-#endif
-
-  if (!shop_index[shop_nr].willTradeWith(keeper, ch))
-    return;
-
-  if (!ch->desc)
-    return;
-
-  // Here we rip apart what they might have passed.  We do it
-  // this way to allow them to form it in any fashion they want.
-  // For numbers.  First number found is givin to iMax.  Second
-  // number found is givin to iMax and iMin is givin the old iMax
-  // value.  So:
-  //   1 number : No floor value, value is considered max.
-  //   2 numbers: First is floor, 2nd is max.
   for(int i=0;!argument.word(i).empty();++i){
          if (is_abbrev(argument.word(i), "fit")    ) FitT |= (1 <<  0);
     else if (is_abbrev(argument.word(i), "slash")  ) FitT |= (1 <<  1);
@@ -1575,149 +1676,274 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
     else if (is_abbrev(argument.word(i), "head")   ) FitT |= (1 << 12);
     else if (is_abbrev(argument.word(i), "back")   ) FitT |= (1 << 13);
     else if (is_abbrev(argument.word(i), "waist")  ) FitT |= (1 << 14);
-    else if (is_abbrev(argument.word(i), "glowing")) FitT |= (1 << 15);
-    else if (is_abbrev(argument.word(i), "shadowy")) FitT |= (1 << 16);
-    else if (is_abbrev(argument.word(i), "paired") ) FitT |= (1 << 17);
     else if (is_abbrev(argument.word(i), "stab")) {
       if ((ch->doesKnowSkill(SKILL_STABBING)) || ch->isImmortal()) {
-        FitT |= (1 << 18);
+        FitT |= (1 << 15);
         FitT |= (1 <<  2);
       }
     } else if (is_abbrev(argument.word(i), "cudgel")) {
       if ((ch->doesKnowSkill(SKILL_CUDGEL)) || ch->isImmortal()) {
-        FitT |= (1 << 19);
+        FitT |= (1 << 16);
         FitT |= (1 <<  3);
       }
     } else if (is_abbrev(argument.word(i), "backstab")) {
       if ((ch->doesKnowSkill(SKILL_BACKSTAB)) || ch->isImmortal()) {
-        FitT |= (1 << 20);
+        FitT |= (1 << 17);
         FitT |= (1 <<  2);
       }
     } else if (is_abbrev(argument.word(i), "slit")) {
       if ((ch->doesKnowSkill(SKILL_THROATSLIT)) || ch->isImmortal()) {
-        FitT |= (1 << 20);
+        FitT |= (1 << 17);
         FitT |= (1 <<  2);
       }
-    } else if (is_number(argument.word(i))) {
-      if (iMin == 999999) {
-        iMin = 0;
-        iMax = convertTo<int>(argument.word(i));
-      } else if (iMin == 0) {
-        iMin = iMax;
-        iMax = convertTo<int>(argument.word(i));
-      }
     } else if (!argument.word(i).empty()) {
-      arg=argument.word(i);
-    }
+      keyword=argument.word(i);
+    } else if (is_number(argument.word(i)))
+      buf=fmt("and r.rent_id=%s") % argument;
+
     if (argument.empty())
       break;
   }
 
-  int max_trade=0;
-  max_trade=shop_index[shop_nr].type.size()-1;
+
+  // big scary monster query
+  db.query("select * from \
+              (select r.rent_id as rent_id, count(*) as count, \
+                o.short_desc as short_desc, r.price as price, \
+                r.cur_struct as cur_struct, r.max_struct as max_struct, \
+                r.volume as volume, r.extra_flags as extra_flags, \
+                o.wear_flag as wear_flag, o.vnum as vnum, o.type as type, \
+                r.val0 as val0, r.val1 as val1, r.val2 as val2, r.val3 as val3\
+              from rent r left outer join rent_strung rs on \
+                (rs.rent_id=r.rent_id), obj o \
+              where o.vnum=r.vnum and owner_type='shop' and owner=%i and \
+                r.rent_id not in (select rent_id from rent_strung) and \
+                o.type!=%i and o.type!=%i and \
+                ((rs.name is not null and rs.name like '%s%s%s') or \
+                (o.name like '%s%s%s')) \
+                %s \
+              group by o.vnum \
+            union \
+              select r.rent_id as rent_id, count(*) as count, \
+                rs.short_desc as short_desc, r.price as price, \
+                r.cur_struct as cur_struct, r.max_struct as max_struct, \
+                r.volume as volume, r.extra_flags as extra_flags, \
+                o.wear_flag as wear_flag, o.vnum as vnum, o.type as type, \
+                r.val0 as val0, r.val1 as val1, r.val2 as val2, r.val3 as val3\
+              from rent r, rent_strung rs, obj o \
+              where owner_type='shop' and owner=%i and o.vnum=r.vnum and \
+                r.rent_id=rs.rent_id and o.type!=%i and o.type!=%i and \
+                ((rs.name is not null and rs.name like '%s%s%s') or \
+                (o.name like '%s%s%s')) \
+                %s \
+              group by o.vnum \
+            union \
+              select r.rent_id as rent_id, r.weight*10 as count, \
+                rs.short_desc as short_desc, r.price/(r.weight*10) as price, \
+                r.cur_struct as cur_struct, r.max_struct as max_struct, \
+                r.volume as volume, r.extra_flags as extra_flags, \
+                o.wear_flag as wear_flag, o.vnum as vnum, o.type as type, \
+                r.val0 as val0, r.val1 as val1, r.val2 as val2, r.val3 as val3\
+              from rent r, rent_strung rs, obj o \
+              where owner_type='shop' and owner=%i and o.vnum=r.vnum and \
+                r.rent_id=rs.rent_id and o.type=%i and o.type!=%i and \
+                ((rs.name is not null and rs.name like '%s%s%s') or \
+                (o.name like '%s%s%s')) \
+                %s \
+              group by r.material \
+            union \
+              select r.rent_id as rent_id, r.val0 as count, \
+                o.short_desc as short_desc, r.price/r.val0 as price, \
+                r.cur_struct as cur_struct, r.max_struct as max_struct, \
+                r.volume as volume, r.extra_flags as extra_flags, \
+                o.wear_flag as wear_flag, o.vnum as vnum, o.type as type, \
+                r.val0 as val0, r.val1 as val1, r.val2 as val2, r.val3 as val3\
+              from rent r left outer join rent_strung rs on \
+                (rs.rent_id=r.rent_id), obj o \
+              where o.vnum=r.vnum and owner_type='shop' and owner=%i and \
+                r.rent_id not in (select rent_id from rent_strung) and \
+                o.type!=%i and o.type=%i and \
+                ((rs.name is not null and rs.name like '%s%s%s') or \
+                (o.name like '%s%s%s')) \
+                %s \
+              group by o.vnum \
+            ) as foo order by rent_id", 
+	   shop_nr, ITEM_RAW_MATERIAL, ITEM_COMPONENT,
+	   "%", keyword.c_str(), "%",
+	   "%", keyword.c_str(), "%",
+	   buf.c_str(), 
+	   shop_nr, ITEM_RAW_MATERIAL, ITEM_COMPONENT, 
+	   "%", keyword.c_str(), "%",
+	   "%", keyword.c_str(), "%",
+	   buf.c_str(),
+	   shop_nr, ITEM_RAW_MATERIAL, ITEM_COMPONENT, 
+	   "%", keyword.c_str(), "%",
+	   "%", keyword.c_str(), "%",
+	   buf.c_str(),
+           shop_nr, ITEM_RAW_MATERIAL, ITEM_COMPONENT,
+	   "%", keyword.c_str(), "%",
+	   "%", keyword.c_str(), "%",
+	   buf.c_str());
 
   keeper->doTell(ch->getName(), "You can buy:");
-  for (counter = 0; counter < max_trade; counter++) {
-    if (shop_index[shop_nr].type[counter] == ITEM_COMPONENT)
-      hasComponents = true;
+  buf="";
+  while(db.fetchRow()){
+    // base price
+    price=convertTo<float>(db["price"]);
 
-    if (shop_index[shop_nr].type[counter] == ITEM_WORN || 
-        shop_index[shop_nr].type[counter] == ITEM_ARMOR || 
-        shop_index[shop_nr].type[counter] == ITEM_JEWELRY || 
-        shop_index[shop_nr].type[counter] == ITEM_WEAPON || 
-        shop_index[shop_nr].type[counter] == ITEM_MARTIAL_WEAPON || 
-        shop_index[shop_nr].type[counter] == ITEM_HOLY_SYM || 
-        shop_index[shop_nr].type[counter] == ITEM_BOW) {
-      sb += "     Item Name                          Condition Price    Number      Fit?\n\r";
-      found = TRUE;
-      break;
-    }
-  }
-  if (!found)
-    if (!hasComponents || gamePort == PROD_GAMEPORT)
-      sb += "     Item Name                            Condition Price     Number\n\r";
-    else
-      sb += "     Item Name                            Condition Price     Number\n\r";
+    // modify price for structure damage
+    price *= ((convertTo<int>(db["max_struct"]) <= 0) ? 1 :
+	      (convertTo<int>(db["cur_struct"]) /
+	       convertTo<int>(db["max_struct"])));
 
-  found = FALSE;
-  sb += "-------------------------------------------------------------------------------\n\r";
+    // modify price for the shop profit ratio
+    price *= shop_index[shop_nr].getProfitBuy(NULL, ch);
 
-  found_obj = FALSE;
+    // modify price for charisma bonus/penalty
+    price *= max((float)1.0, ch->getChaShopPenalty());
 
-  TThing *t, *t2;
-  for (t = keeper->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
-    i = dynamic_cast<TObj *>(t);
-    if (!i)
-      continue;
-    if (ch->canSee(i)) {
-      if ((i->getValue() > 1) &&
-          !i->isObjStat(ITEM_NEWBIE) &&
-#if NO_DAMAGED_ITEMS_SHOP
-          (i->getMaxStructPoints() == i->getStructPoints()) &&
-#endif
-          shop_index[shop_nr].willBuy(i)) {
-        found = FALSE;
-        for (k = 0; (k < cond_obj_vec.size() && !found); k++) {
-          if (cond_obj_vec.size() > 0) {
-            if (i->isShopSimilar(cond_obj_vec[k])) {
-	      cond_tot_vec[k] += 1;
-	      found = TRUE;
-            }
-          }
-        }
-        if (!i)
-          continue;
+    // check class restriction
+    extra_flags = convertTo<int>(db["extra_flags"]);
+    type=convertTo<int>(db["type"]);
+    if(type==ITEM_ARMOR || type==ITEM_ARMOR_WAND ||
+       type==ITEM_WEAPON || type==ITEM_WORN){
+      
+      fit=true;
+      if(ch->hasClass(CLASS_MAGE) && (extra_flags & ITEM_ANTI_MAGE))
+	fit=false;
+      if(ch->hasClass(CLASS_CLERIC) && (extra_flags & ITEM_ANTI_CLERIC))
+	fit=false;
+      if(ch->hasClass(CLASS_WARRIOR) && (extra_flags & ITEM_ANTI_WARRIOR))
+	fit=false;
+      if(ch->hasClass(CLASS_THIEF) && (extra_flags & ITEM_ANTI_THIEF))
+	fit=false;
+      if(ch->hasClass(CLASS_SHAMAN) && (extra_flags & ITEM_ANTI_SHAMAN))
+	fit=false;
+      if(ch->hasClass(CLASS_DEIKHAN) && (extra_flags & ITEM_ANTI_DEIKHAN))
+	fit=false;
+      if(ch->hasClass(CLASS_MONK) && (extra_flags & ITEM_ANTI_MONK))
+	fit=false;
+    }      
 
-        if (!found) {
-          cond_obj_vec.push_back(i);
-          cond_tot_vec.push_back(1);
-        }
-      } else {
-        if (i->isPersonalized()) {
-          keeper->doSay("Hmmm, I didn't notice this monogram before...");
-          keeper->doSay("Well, no one's going to buy it now.");
-          // emote the junk since doJunk aborts on monogram
-          act("$n junks $p.", FALSE, keeper, i, 0, TO_ROOM);
-          delete i;
-          i = NULL;
-          continue;
-        }
-        // pawn shop shouldn't junk
-        if (shop_index[shop_nr].in_room != 562 || owned) {
-          keeper->doSay("How did I get this piece of junk?!?!");
-          rc = keeper->doJunk("", i);
-          // doJunk might fail (cursed, etc), delete regardless
-          delete i;
-          i = NULL;
-          continue;
-        }
+    volume=convertTo<int>(db["volume"]);
+    slot = slot_from_bit(convertTo<int>(db["wear_flag"]));
+    if(type==ITEM_ARMOR || type==ITEM_ARMOR_WAND || type==ITEM_WORN){
+      // check size restriction      
+      perc=(((double) ch->getHeight()) * 
+	    (double) race_vol_constants[mapSlotToFile(slot)]);
+      if(extra_flags & ITEM_PAIRED)
+	perc *= 2;
+      
+      
+      if ((slot != WEAR_NECK) && (slot != WEAR_FINGER_R) && 
+	  (slot != WEAR_FINGER_L) && (slot != WEAR_NOWHERE)) {
+	if (volume > (int) (perc/0.85) ||
+	    volume < (int) (perc/1.15))
+	  fit=false;
       }
     }
-  }                             // for loop 
-  if (cond_obj_vec.size()) {
-    found_obj = TRUE;
-    for (k = 0; k < cond_obj_vec.size(); k++) 
-      sb += cond_obj_vec[k]->shopList(ch, arg, iMin, iMax, cond_tot_vec[k], shop_nr, k, FitT);
-  }
-  if (!found_obj) {
-    buf = "Nothing!\n\r";
-    sb += buf;
 
-    if (ch->desc)
-      ch->desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
+    // class restrictions
+    if((ch->hasClass(CLASS_MONK) || ch->hasClass(CLASS_SHAMAN)) &&
+       (type==ITEM_ARMOR || type==ITEM_ARMOR_WAND))
+      fit=false;
+    
+    
+    // determine damage type for weapons
+    isPierce=isBlunt=isSlash=false;
+    if(type==ITEM_WEAPON){
+      int x3=convertTo<int>(db["val2"]);
+      int x4=convertTo<int>(db["val3"]);
+      
+      weaponT damage_type[3];
+      int damage_freq[3];
+      
+      damage_type[0]=(weaponT)GET_BITS(x3, 7, 8);
+      damage_freq[0]=GET_BITS(x3, 15, 8);
+      damage_type[1]=(weaponT)GET_BITS(x3, 23, 8);
+      damage_freq[1]=GET_BITS(x3, 31, 8);
+      damage_type[2]=(weaponT)GET_BITS(x4, 7, 8);
+      damage_freq[2]=GET_BITS(x4, 15, 8);
+      
+      int count_pierce=0, count_blunt=0, count_slash=0, total=0;
+      
+      for(int i=0;i<3;++i){
+	if(pierceType(getWtype_kluge(damage_type[i])))
+	  count_pierce+=damage_freq[i];
+	if(bluntType(getWtype_kluge(damage_type[i])))
+	  count_blunt+=damage_freq[i];      
+	if(slashType(getWtype_kluge(damage_type[i])))
+	  count_slash+=damage_freq[i];      
+	total+=damage_freq[i];
+      }
+      
+      if(count_pierce > (total/3.0*2.0))
+	isPierce=true;
+      if(count_blunt > (total/3.0*2.0))
+	isBlunt=true;
+      if(count_slash > (total/3.0*2.0))
+	isSlash=true;
+    }
 
-    keeper->autoCreateShop(shop_nr);
-    buf = fmt("%s/%d") % SHOPFILE_PATH % shop_nr;
-    keeper->saveItems(buf);
-    return;
+    // check restrictions
+    if(((FitT & (1 << 0)) && !fit) ||
+       ((FitT & (1 << 1)) && !isSlash) ||
+       ((FitT & (1 << 2)) && !isPierce) ||
+       ((FitT & (1 << 3)) && !isBlunt) ||
+       ((FitT & (1 << 4)) && slot != WEAR_BODY) ||
+       ((FitT & (1 << 5)) && slot != WEAR_FINGER_L && 
+                             slot != WEAR_FINGER_R) ||
+       ((FitT & (1 << 6)) && slot != WEAR_WRIST_L &&
+                             slot != WEAR_WRIST_R) ||
+       ((FitT & (1 << 7)) && slot != WEAR_LEG_L &&
+                             slot != WEAR_LEG_R) ||
+       ((FitT & (1 << 8)) && slot != WEAR_ARM_L &&
+                             slot != WEAR_ARM_R) ||
+       ((FitT & (1 << 9)) && slot != WEAR_NECK) ||
+       ((FitT & (1 << 10)) && slot != WEAR_FOOT_L &&
+                              slot != WEAR_FOOT_R) ||
+       ((FitT & (1 << 11)) && slot != WEAR_HAND_L &&
+                              slot != WEAR_HAND_R) ||
+       ((FitT & (1 << 12)) && slot != WEAR_HEAD) ||
+       ((FitT & (1 << 13)) && slot != WEAR_BACK) ||
+       ((FitT & (1 << 14)) && slot != WEAR_WAIST) ||
+       ((FitT & (1 << 15)) && volume > 2000) ||
+       ((FitT & (1 << 16)) && volume > 1500) ||
+       ((FitT & (1 << 17)) && volume > 1500))
+      continue;
+
+
+    // buffer output
+    if(type==ITEM_RAW_MATERIAL){
+      buf+=fmt("[%8i] %s COMMODITY  [%6i] %7.3f\n\r") %
+	convertTo<int>(db["rent_id"]) %
+	list_string(db["short_desc"], 40) % 
+	convertTo<int>(db["count"]) %
+	(max((float)1.0, price));
+    } else if(type==ITEM_COMPONENT){
+      sstring spell="";
+      if(ch->doesKnowSkill(mapFileToSpellnum(convertTo<int>(db["val2"]))))
+	spell=discArray[mapFileToSpellnum(convertTo<int>(db["val2"]))]->name;
+      buf+=fmt("[%8i] %s %s [%6i] %7i\n\r") %
+	convertTo<int>(db["rent_id"]) %
+	list_string(db["short_desc"], 30) % 
+	list_string(spell, 20) %
+	convertTo<int>(db["count"]) %
+	(int)(max((float)1.0, price));      
+    } else {
+      buf+=fmt("[%8i] %s %s [%6i] %7i\n\r") %
+	convertTo<int>(db["rent_id"]) %
+	list_string(db["short_desc"], 40) % 
+	list_string(equip_cond(convertTo<int>(db["cur_struct"]),
+			       convertTo<int>(db["max_struct"])), 10) %
+	convertTo<int>(db["count"]) %
+	(int)(max((float)1.0, price));
+    }
   }
-  if (ch->desc) {
-    if (!ch->desc->m_bIsClient)
-      ch->desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
-    else 
-      ch->desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
-  }
+  
+  if(ch->desc)
+    ch->desc->page_string(buf, SHOWNOW_NO, ALLOWREP_YES);
+
   return;
 }
 
@@ -1757,8 +1983,10 @@ void TMonster::autoCreateShop(int shop_nr)
 static bool shopping_look(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
 {
   const char *tmp_desc;
-  int value;
   TObj *temp1;
+  int rent_id;
+  TDatabase db(DB_SNEEZY);
+  char buf[256];
 
   if (!*arg) 
     return FALSE;   // generic: look
@@ -1766,23 +1994,34 @@ static bool shopping_look(const char *arg, TBeing *ch, TMonster *keeper, int sho
   if (!(shop_index[shop_nr].willTradeWith(keeper, ch)) || !ch->desc)
     return FALSE;
 
-  TThing *t_temp1 = searchLinkedListVis(ch, arg, keeper->getStuff());
-  temp1 = dynamic_cast<TObj *>(t_temp1);
-  if (!temp1) {
-    // check for 4.xxx syntax, we already know anything like that is NOT
-    // in shopkeepers possession
-    if (strchr(arg, '.'))
-      return FALSE;
-    value = convertTo<int>(arg);
-    if (!value || 
-    !(temp1 = get_num_obj_in_list(ch, value, keeper->getStuff(), shop_nr))) {
-      // it's not one of my objects so see if the look thing is in room
-      return FALSE;
+  if(!(rent_id=convertTo<int>(arg))){
+    sstring query="select r.rent_id from obj o, rent r left outer join rent_strung rs on (rs.rent_id=r.rent_id) where r.vnum=o.vnum and r.owner_type='shop' and r.owner=%i ";
+    sstring arg_words=arg;
+    arg_words=arg_words.replaceString("-"," ");
+
+    for(int i=0;!arg_words.word(i).empty();++i){
+      mysql_escape_string(buf, arg_words.word(i).c_str(), arg_words.word(i).length());
+
+      query += fmt("and ((rs.name is not null and rs.name like '%s%s%s') or (o.name like '%s%s%s'))") % 
+	"%%" % buf % "%%" %
+	"%%" % buf % "%%";
     }
+
+    db.query(query.c_str(), shop_nr);
+    db.fetchRow();
+    rent_id=convertTo<int>(db["rent_id"]);
   }
+
+  temp1=keeper->loadItem(shop_nr, rent_id);
+
+  if (!temp1) 
+    return FALSE;
+
   sstring str = "You examine ";
   str += temp1->getName();
-  str += " sold by $N.";
+  str += " sold by $N.\n\r";
+
+  str += temp1->shopList(ch, "", 0, 999999, 0, shop_nr, rent_id-1, 0);
 
   act(str, FALSE, ch, temp1, keeper, TO_CHAR);
 
@@ -1794,6 +2033,8 @@ static bool shopping_look(const char *arg, TBeing *ch, TMonster *keeper, int sho
   }
   ch->describeObject(temp1);
   ch->showTo(temp1, SHOW_MODE_PLUS);  // tack on glowing, humming, etc
+
+  delete temp1;
   return TRUE;
 }
 
@@ -1804,6 +2045,9 @@ static bool shopping_evaluate(const char *arg, TBeing *ch, TMonster *keeper, int
   char newarg[100];
   int num;
   TObj *temp1;
+  char buf[256];
+  int rent_id;
+  TDatabase db(DB_SNEEZY);
 
   if (!*arg) 
     return FALSE;   // generic: look
@@ -1817,17 +2061,34 @@ static bool shopping_evaluate(const char *arg, TBeing *ch, TMonster *keeper, int
   if (!num)
     num = 1;
 
-  TThing *t_temp1 = searchLinkedListVis(ch, newarg, keeper->getStuff());
-  temp1 = dynamic_cast<TObj *>(t_temp1);
-  if (!temp1) {
-    if (!(temp1 = get_num_obj_in_list(ch, convertTo<int>(newarg), keeper->getStuff(), shop_nr))) {
-      // it's not one of my objects so see if the look thing is in room
-      return FALSE;
+  if(!(rent_id=convertTo<int>(arg))){
+    sstring query="select r.rent_id from obj o, rent r left outer join rent_strung rs on (rs.rent_id=r.rent_id) where r.vnum=o.vnum and r.owner_type='shop' and r.owner=%i ";
+    sstring arg_words=arg;
+    arg_words=arg_words.replaceString("-"," ");
+
+    for(int i=0;!arg_words.word(i).empty();++i){
+      mysql_escape_string(buf, arg_words.word(i).c_str(), arg_words.word(i).length());
+
+      query += fmt("and ((rs.name is not null and rs.name like '%s%s%s') or (o.name like '%s%s%s'))") % 
+	"%%" % buf % "%%" %
+	"%%" % buf % "%%";
     }
+
+    db.query(query.c_str(), shop_nr);
+    db.fetchRow();
+    rent_id=convertTo<int>(db["rent_id"]);
   }
+
+  temp1=keeper->loadItem(shop_nr, rent_id);
+
+  if (!temp1) 
+    return FALSE;
+
   act("You evaluate $p sold by $N.", FALSE, ch, temp1, keeper, TO_CHAR);
 
   ch->genericEvaluateItem(temp1);
+
+  delete temp1;
   return TRUE;
 }
 
@@ -1890,6 +2151,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 		FALSE, myself, 0, tbt, TO_VICT);
 	    act("$n throws $N from $s shop.",
 		FALSE, myself, 0, tbt, TO_NOTVICT);
+
 	    myself->throwChar(tbt, dir, FALSE, SILENT_NO, true);
 	    return TRUE;
 	  }
@@ -1900,12 +2162,8 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
   }  
 
   // determine shop_nr here to avoid overhead before CMD_GENERIc_PULSE
-  for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != (myself)->number); shop_nr++);
+  shop_nr=find_shop_nr(myself->number);
 
-  if (shop_nr >= shop_index.size()) {
-    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  mob_index[myself->number].virt);
-    return FALSE;
-  }
 
   if (cmd == CMD_GENERIC_INIT) {
     if (!myself->isUnique()) {
@@ -1913,14 +2171,17 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       return TRUE;
     } else
       return FALSE;
-  } else if (cmd == CMD_GENERIC_CREATED) {
-    // Little kludge I put in to set pawnman is set for rent stuff - Russ 
-    if (myself->mobVnum() == MOB_PAWNGUY) {
-      vlogf(LOG_MISC, "Setting Pawn Broker pointer for rent functions!");
-      pawnman = myself;
-    }
+  } else if(cmd == CMD_GENERIC_CREATED && 0){
+    // this is for conversion to new shop code, only will be run once
     myself->loadItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
 
+    TThing *t, *t2;
+    for (t = myself->getStuff(); t; t = t2) {
+      t2 = t->nextThing;
+      --(*t);
+      myself->saveItem(shop_nr, dynamic_cast<TObj *>(t));
+      delete t;
+    }      
     return FALSE;
   } else if (cmd == CMD_MOB_VIOLENCE_PEACEFUL) {
     myself->doSay("Hey!  Take it outside.");
@@ -1956,32 +2217,9 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
   } else if (cmd == CMD_MOB_ALIGN_PULSE) {
     // called on a long period....
-    TThing *t, *t2;
 
     if (::number(0,10))
       return FALSE;
-
-
-    for (t = myself->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
-      TObj * obj = dynamic_cast<TObj *>(t);
-      if (!obj)
-        continue;
-
-      if(IS_SET(shop_index[shop_nr].flags, SHOP_FLAG_RECYCLE) &&
-	 !shop_index[shop_nr].isProducing(obj) && !::number(0,499) ){
-	// resolution 220, the fun restoration initiative
-	int val=(int)(obj->getValue() * 0.25);
-
-	TShopOwned tso(shop_nr, myself, myself);
-	tso.doBuyTransaction(val, obj->getName(), TX_RECYCLING);
-
-	vlogf(LOG_OBJ, fmt("shop %s (%i) recycling %s for %i talens") %  myself->getName() % shop_nr % obj->getName() % (int)(obj->getValue() * shop_index[shop_nr].profit_sell));
-
-	delete obj;
-	continue;
-      }
-    }
 
     // produce new items
     
@@ -2041,12 +2279,14 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       //      vlogf(LOG_LOW, fmt("%s loading produced object %s") %
       //      myself->getName() % o->getName());
 
-      *myself += *o;
+      myself->saveItem(shop_nr, o);
+      delete o;
+
+      //      *myself += *o;
 
       // money goes to sba
       tso.doSellTransaction(cost, o->getName(), TX_PRODUCING, o);
       shoplog(sba_nr, myself, sba, o->getName(), cost, "producing");
-      sba->saveItems(fmt("%s/%d") % SHOPFILE_PATH % sba_nr);
     }
 
     return FALSE;
@@ -2124,6 +2364,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
   return FALSE;
 }
+
 
 void shoplog(int shop_nr, TBeing *ch, TMonster *keeper, const sstring &name, int cost, const sstring &action){
   int value=0, count=0;

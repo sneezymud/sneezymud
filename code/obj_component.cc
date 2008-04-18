@@ -2294,7 +2294,6 @@ void TComponent::changeObjValue4(TBeing *ch)
 bool TComponent::sellMeCheck(TBeing *ch, TMonster *keeper, int num) const
 {
   int total = 0;
-  TThing *t;
   sstring buf;
   unsigned int shop_nr;
 
@@ -2316,17 +2315,17 @@ bool TComponent::sellMeCheck(TBeing *ch, TMonster *keeper, int num) const
     return TRUE;
   }
 
+  TDatabase db(DB_SNEEZY);
 
-  for (t = keeper->getStuff(); t; t = t->nextThing) {
-    if ((t->number == number) &&
-	(t->getName() && getName() &&
-	 !strcmp(t->getName(), getName()))) {
-      if (TComponent *c = dynamic_cast<TComponent *>(t)) {
-        total += c->getComponentCharges();
-        break;
-      }
-    }
+  db.query("select val0 from rent where owner_type='shop' and owner=%i and vnum=%i",
+	   shop_nr, objVnum());
+
+  if(db.fetchRow()){
+    total = (int)(convertTo<int>(db["val0"]));
+  } else {
+    total=0;
   }
+
   if (total >= max_num) {
     keeper->doTell(ch->getName(), fmt("I already have plenty of %s.") % getName());
     return TRUE;
@@ -3143,6 +3142,8 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
 
   ch->doSave(SILENT_YES);
 
+  tKeeper->saveItem(tShop, this);
+  delete this;
   return tCost;
 }
 
@@ -3151,7 +3152,13 @@ int TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num)
   sstring buf;
   float  tChr;
   int     tCost;
+  TDatabase db(DB_SNEEZY);
 
+  db.query("select rent_id from rent where owner_type='shop' and owner=%i and vnum=%i",
+	   tShop, objVnum());
+  TComponent *obj2;
+  TObj *to;
+  
   if (!shop_index[tShop].profit_sell) {
     tKeeper->doTell(ch->getName(), shop_index[tShop].do_not_buy);
     return false;
@@ -3164,6 +3171,19 @@ int TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num)
 
   if (sellMeCheck(ch, tKeeper, num))
     return false;
+
+  if(db.fetchRow()){
+    to=tKeeper->loadItem(tShop, convertTo<int>(db["rent_id"]));
+    obj2 = dynamic_cast<TComponent*>(to);
+    tKeeper->deleteItem(tShop, convertTo<int>(db["rent_id"]));
+  } else {
+    to = read_object(objVnum(), VIRTUAL);
+    obj2 = dynamic_cast<TComponent *>(to);
+    obj2->setWeight(0.0);
+    obj2->setMaterial(getMaterial());
+  }
+  *tKeeper += *obj2;
+
 
   TShopOwned tso(tShop, tKeeper, ch);
   int max_num = 50;
@@ -3193,6 +3213,8 @@ int TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num)
 
   if (tKeeper->getMoney() < tCost) {
     tKeeper->doTell(ch->name, shop_index[tShop].missing_cash1);
+    tKeeper->saveItem(tShop, obj2);
+    delete obj2;
     return false;
   }
 
@@ -3217,47 +3239,20 @@ int TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num)
     ch->doSplit(buf.c_str(), false);
   }
 
-  if (num == getComponentCharges()) {
-    --(*this);
-
-    *tKeeper += *this;
-  } else {
-    int tValue = 0;
-    // double tCost = 0.0;
-    TComponent *tComponent;
-
-    if ((tValue = real_object(objVnum())) < 0 || tValue > (signed) obj_index.size() ||
-        !(tComponent = dynamic_cast<TComponent *>(read_object(tValue, REAL)))) {
-      ch->sendTo(COLOR_OBJECTS, fmt("For some reason %s resists being partially sold.\n\r") % getName());
-      return false;
-    }
-    int cost_per = 0;
-
-    cost_per = tComponent->pricePerUnit();
-    tComponent->setComponentCharges(num);
-    addToComponentCharges(-num);
-
-    tComponent->obj_flags.cost = num * cost_per;
-    obj_flags.cost = getComponentCharges() * cost_per;
-
-    /*
-    tCost = ((double) (num / (double) getComponentCharges()));
-
-    tComponent->setComponentCharges(num);
-    addToComponentCharges(-num);
-
-    tComponent->obj_flags.cost = (int) ((double) obj_flags.cost * tCost + 0.5);
-    obj_flags.cost -= tComponent->obj_flags.cost;
-    */
-
-    *tKeeper += *tComponent;
-  }
+  obj2->addToComponentCharges(num);
+  addToComponentCharges(-num);
+  obj2->obj_flags.cost = num * pricePerUnit();
+  obj_flags.cost = getComponentCharges() * pricePerUnit();
 
   buf = fmt("%s/%d") % SHOPFILE_PATH % tShop;
   tKeeper->saveItems(buf);
   if (!ch->delaySave)
     ch->doSave(SILENT_YES);
-
+  
+  tKeeper->saveItem(tShop, obj2);
+  delete obj2;
+  if(getComponentCharges()==0)
+    delete this;
   return true;
 }
 
