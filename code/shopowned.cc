@@ -661,8 +661,6 @@ bool TShopOwned::hasAccess(int perm){
 
 void TShopOwned::showInfo()
 {
-  TThing *tt;
-  TObj *o;
   int count=0, value=0, tmp=0;
   unsigned int i=0;
   sstring buf;
@@ -671,14 +669,11 @@ void TShopOwned::showInfo()
 
   // if not owned, or owned and has "owner" or "info"
   if(!isOwned() || hasAccess(SHOPACCESS_INFO)){
-    for(tt=keeper->getStuff();tt;tt=tt->nextThing){
-      o=dynamic_cast<TObj *>(tt);
-      ++count;
-      //      volume+=o->getVolume();
-      value+=o->obj_flags.cost;
-      // shopPrice does db queries, it tends to be too slow here
-      //      price+=o->shopPrice(1, shop_nr, -1, ch);
-    }
+    db.query("select count(*) as count, sum(price) as value from rent where owner_type='shop' and owner=%i", shop_nr);
+    db.fetchRow();
+    value=convertTo<int>(db["value"]);
+    count=convertTo<int>(db["count"]);
+
     keeper->doTell(ch->getName(),
 		   fmt("I have %i talens and %i items worth %i talens and selling for approximately %i talens.") %
 		   keeper->getMoney() % count % value %
