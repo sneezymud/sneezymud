@@ -927,7 +927,7 @@ TObj *ItemLoadDB::raw_read_item(int rent_id, int &slot)
   TDatabase db(DB_SNEEZY);
   TObj *o;
 
-  db.query("select owner_type, owner, vnum, slot, container, val0, val1, val2, val3, extra_flags, weight, bitvector, decay, cur_struct, max_struct, material, volume, price, depreciation from rent where rent_id=%i", rent_id);
+  db.query("select owner_type, owner, vnum, slot, container, val0, val1, val2, val3, extra_flags, weight, bitvector, decay, cur_struct, max_struct, material, volume, price, depreciation from rent where rent_id=%i and owner_type='%s' and owner=%i", rent_id, owner_type.c_str(), owner);
 
   if(!db.fetchRow()){
     vlogf(LOG_DB, fmt("rent object %i not found! Owner %i (%s)") % 
