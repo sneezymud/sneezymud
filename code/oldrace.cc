@@ -901,10 +901,8 @@ const sstring TBeing::describeBodySlot2(wearSlotT i) const
       }
     case BODY_FISHMAN:
       switch (i) {
-        case HOLD_LEFT:
         case WEAR_HAND_L:
           return "finned, left hand";
-        case HOLD_RIGHT:
         case WEAR_HAND_R:
           return "finned, right hand";
         case WEAR_FOOT_L:
@@ -2088,10 +2086,6 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
       }
     case BODY_FISHMAN:
       switch (i) {
-        case HOLD_LEFT:
-          return "Held in finned, left hand";
-        case HOLD_RIGHT:
-          return "Held in finned, right hand";
         case WEAR_HAND_L:
           return "Worn on finned, left hand";
         case WEAR_HAND_R:
@@ -3988,11 +3982,6 @@ spellNumT TBeing::getFormType() const
     case RACE_ORB:
     case RACE_MIMIC:
       return TYPE_POUND;
-    case RACE_TROG:
-      if (num <= 80)
-        return TYPE_CLAW;
-      else
-        return TYPE_BITE;
     case RACE_NORACE:
     case RACE_HUMAN:
     case RACE_ELVEN:
@@ -4022,6 +4011,7 @@ spellNumT TBeing::getFormType() const
     case RACE_ORC:
     case RACE_FROGMAN:
     case RACE_GOBLIN:
+    case RACE_TROG:
     case RACE_ANGEL:
     case RACE_DROW:
     case RACE_MERMAID:

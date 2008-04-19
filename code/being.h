@@ -1378,7 +1378,7 @@ class TBeing : public TThing {
     void rawUnlockDoor(roomDirData *, dirTypeT);
     void notLegalMove() const;
     void putOutLightsInWater();
-    spellNumT monkDamType() const;
+    spellNumT monkDamType(spellNumT orig) const;
     void openUniqueDoor(dirTypeT, doorUniqueT, const char *, const char *, const char *, const char *, const char *, const char *, const char *, const char *);
     int doDonate(int);
     int doMorgue();

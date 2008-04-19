@@ -3192,6 +3192,7 @@ void TPerson::doStart()
     if (getLevel(cit))
       doHPGainForLev(cit);
   }
+  setHit(21);
 
   setFaction(FACT_NONE);
 #if FACTIONS_IN_USE

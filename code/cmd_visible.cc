@@ -107,7 +107,7 @@ void TPerson::doInvis(const char *)
     affectedData invisAff;
     invisAff.type = SPELL_INVISIBILITY;
     invisAff.level = 5;
-    invisAff.duration = PULSE_UPDATE / ONE_SECOND;
+    invisAff.duration = PULSE_UPDATE / (3*ONE_SECOND);
     invisAff.modifier = 0;
     invisAff.location = APPLY_ARMOR;
     invisAff.bitvector = AFF_INVISIBLE;

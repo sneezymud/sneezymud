@@ -65,9 +65,9 @@ void TBeing::doNewbieEqLoad(race_t num, ush_int num2, bool initNum)
   for(int iGear = 0; myGear[iGear]; iGear++)
   {
     // rings never loaded for monks
-    if ((myGear[iGear] == 1009 || myGear[iGear] == 30926) &&
-      (((classNum & CLASS_MONK) && initNum) || hasClass(CLASS_MONK)))
-      continue;
+    //if ((myGear[iGear] == 1009 || myGear[iGear] == 30926) &&
+    //  (((classNum & CLASS_MONK) && initNum) || hasClass(CLASS_MONK)))
+    //  continue;
 
     int realNum = real_object(myGear[iGear]);
     if (realNum <= 0)

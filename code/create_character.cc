@@ -24,11 +24,11 @@ TTraits traits[MAX_TRAITS+1] = {
   {TOG_IS_COWARD, 10,       "cowardice", 
    "You flee combat if you get below 1/2 hit points.", 0,0},
   {TOG_IS_BLIND, 6,         "blindness",
-   "Your vision has been damaged and you are permanently blind.", 0,0},
+   "Your vision has been damaged and you are permanently blind.", 0,1},
   {TOG_IS_ASTHMATIC, 6,     "asthma",
    "You have asthma and thus are easily winded.", 0,0},
   {TOG_IS_MUTE, 6,          "mute",
-   "Your throatbox has been damaged and you are unable to speak.", 0,0},
+   "Your throatbox has been damaged and you are unable to speak.", 0,1},
   {TOG_IS_NARCOLEPTIC, 3,   "narcolepsy",
    "You have narcolepsy and fall asleep uncontrollably.", 0,0},
   {TOG_IS_COMBUSTIBLE, 3,   "combustible",
@@ -40,11 +40,11 @@ TTraits traits[MAX_TRAITS+1] = {
   {TOG_IS_ALCOHOLIC, 3,     "alcoholism",
    "You are an alcoholic and feel a constant urge to drink booze.", 0,0},
   {TOG_HAS_TOURETTES, 1,    "tourettes",
-   "You involuntarily insult other people.", 0,0},
+   "You involuntarily insult other people.", 0,1},
   {TOG_PERMA_DEATH_CHAR, 0, "perma-death",
    "You only have one life to live and if you die your game is over.", 0,0},
   {TOG_REAL_AGING, 0,       "real aging",
-   "You will suffer the affects of old age as you get older.", 0,0},
+   "You will suffer the affects of old age as you get older.", 0,1},
   {TOG_IS_HEALTHY, -3,      "healthy",
    "You are particularly healthy and resistant to disease.", 0,0},
   {TOG_IS_AMBIDEXTROUS, -6, "ambidextrous",
@@ -52,7 +52,7 @@ TTraits traits[MAX_TRAITS+1] = {
   {TOG_HAS_NIGHTVISION, -10,"nightvision",
    "You have excellent nightvision.", 0,0},
   {TOG_PSIONICIST, -200,    "psionics",
-   "You have innate psionic abilities.", 0,0},
+   "You have innate psionic abilities.", 0,1},
   {TOG_FAE_TOUCHED, 0,    "fae-touched",
    "You gain random bonus stats, but gain experience at half speed.\n\r        (requires one level 50 character of your current race)", 1,1}
 };
@@ -118,7 +118,7 @@ TPlayerRace nannyRaces[] = {
 
   // advanced races
   { RACE_FROGMAN, "Bullywug", 1, frogmanTerr, cElements(frogmanTerr), ROOM_BULLYWUG_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, stin, ", 0},
-  { RACE_FISHMAN, "Kalysian", 1, fishmanTerr, cElements(fishmanTerr), ROOM_KALYSIA_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, talsbane, matthaas, stu, ", 0},
+  { RACE_FISHMAN, "Kalysian", 1, fishmanTerr, cElements(fishmanTerr), ROOM_KALYSIA_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, talsbane, matthaas, stu, dreq", 0},
   { RACE_BIRDMAN, "Aarakocra", 1, birdmanTerr, cElements(birdmanTerr), ROOM_AERIE_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, hairbear, jamil, ", 0},
   { RACE_TROLL, "Troll", 1, trollTerr, cElements(trollTerr), ROOM_TROLL_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, remoh, blaez, ", 0},
 };
@@ -927,13 +927,13 @@ void nannyStats_output(Descriptor * desc)
   if (!canLeave)
     desc->writeToQ(fmt("\n\rYou cannot finish customizing %s until you have spent your %d points.") % statsName % (bonusPoints[iGroup]-totalStats));
   desc->writeToQ(fmt("\n\rType %s?%s to see a help file for help on this choice.") % desc->red() % desc->norm());
-  if (canLeave && desc->connected > CON_CREATION_CUSTOMIZE_COMBAT)
-    desc->writeToQ(fmt("\n\rType %sC%s to continue on to the next menu.") % desc->red() % desc->norm());
-  if (canLeave && desc->connected == CON_CREATION_CUSTOMIZE_COMBAT)
-    desc->writeToQ(fmt("\n\rType %sC%s to finish and go to the main character menu.") % desc->red() % desc->norm());
   if (canLeave && desc->connected < CON_CREATION_CUSTOMIZE_UTIL)
+    desc->writeToQ(fmt("\n\rType %sC%s to continue on to the next menu.") % desc->red() % desc->norm());
+  if (canLeave && desc->connected >= CON_CREATION_CUSTOMIZE_UTIL)
+    desc->writeToQ(fmt("\n\rType %sC%s to finish and go to the main character menu.") % desc->red() % desc->norm());
+  if (canLeave && desc->connected > CON_CREATION_CUSTOMIZE_COMBAT)
     desc->writeToQ(fmt("\n\rType %s/%s to go back to the previous menu.") % desc->red() % desc->norm());
-  if (canLeave && desc->connected == CON_CREATION_CUSTOMIZE_UTIL)
+  if (canLeave && desc->connected <= CON_CREATION_CUSTOMIZE_COMBAT)
     desc->writeToQ(fmt("\n\rType %s/%s to go back to the main character menu.") % desc->red() % desc->norm());
 }
 

@@ -4724,10 +4724,9 @@ spellNumT TBeing::getAttackType(const TThing *wielded, primaryTypeT prim) const
   else
     dtype=getFormType();
 
-  // use custom monk messages only if they are using default damage type
-  // in other words, if they have claws for example, let them claw
-  if(dtype==TYPE_HIT && doesKnowSkill(SKILL_KUBO))
-    dtype=monkDamType();
+  // use custom monk messages if they know kubo
+  if(doesKnowSkill(SKILL_KUBO))
+    dtype=monkDamType(dtype);
 
   return dtype;
 }
@@ -5455,10 +5454,10 @@ bool pierceType(spellNumT wtype)
   return FALSE;
 }
 
-spellNumT TBeing::monkDamType() const
+spellNumT TBeing::monkDamType(spellNumT orig) const
 {
   if (!doesKnowSkill(SKILL_KUBO))
-    return TYPE_HIT;
+    return orig;
 
   double value;
   value = 3 * getSkillValue(SKILL_KUBO);
@@ -5466,24 +5465,60 @@ spellNumT TBeing::monkDamType() const
   value += getLevel(MONK_LEVEL_IND);
   value /= 4;  // 1-50 based 
 
-  if(value<1) return TYPE_POUND;
+  static spellNumT poundDamage[51] = { TYPE_POUND,
+                                TYPE_POUND, TYPE_POUND, TYPE_POUND,
+                                TYPE_BLUDGEON, TYPE_BLUDGEON, TYPE_BLUDGEON,
+                                TYPE_FLAIL, TYPE_FLAIL, TYPE_FLAIL,
+                                TYPE_BEAT, TYPE_BEAT, TYPE_BEAT, TYPE_BEAT, TYPE_BEAT,
+                                TYPE_SMASH, TYPE_SMASH, TYPE_SMASH, TYPE_SMASH, TYPE_SMASH,
+                                TYPE_PUMMEL, TYPE_PUMMEL, TYPE_PUMMEL, TYPE_PUMMEL, TYPE_PUMMEL,
+                                TYPE_THUMP, TYPE_THUMP, TYPE_THUMP, TYPE_THUMP, TYPE_THUMP,
+                                TYPE_THRASH, TYPE_THRASH, TYPE_THRASH, TYPE_THRASH, TYPE_THRASH,
+                                TYPE_BATTER, TYPE_BATTER, TYPE_BATTER,
+                                TYPE_SMITE, TYPE_SMITE, TYPE_SMITE,
+                                TYPE_CRUSH, TYPE_CRUSH, TYPE_CRUSH,
+                                TYPE_STRIKE, TYPE_STRIKE, TYPE_STRIKE,
+                                TYPE_WALLOP, TYPE_WALLOP, TYPE_WALLOP,
+                                TYPE_MAUL };
+  static spellNumT beakDamage[51] = { TYPE_BEAK,
+                                TYPE_BEAK, TYPE_BEAK, TYPE_BEAK,
+                                TYPE_BEAK, TYPE_BEAK, TYPE_BEAK,
+                                TYPE_PIERCE, TYPE_PIERCE, TYPE_PIERCE,
+                                TYPE_PIERCE, TYPE_PIERCE, TYPE_PIERCE, TYPE_PIERCE, TYPE_PIERCE,
+                                TYPE_STING, TYPE_STING, TYPE_STING, TYPE_STING, TYPE_STING,
+                                TYPE_STING, TYPE_STING, TYPE_STING, TYPE_STING, TYPE_STING,
+                                TYPE_STING, TYPE_STING, TYPE_STING, TYPE_STING, TYPE_STING,
+                                TYPE_STAB, TYPE_STAB, TYPE_STAB, TYPE_STAB, TYPE_STAB,
+                                TYPE_STAB, TYPE_STAB, TYPE_STAB,
+                                TYPE_STAB, TYPE_STAB, TYPE_STAB,
+                                TYPE_THRUST, TYPE_THRUST, TYPE_THRUST,
+                                TYPE_THRUST, TYPE_THRUST, TYPE_THRUST,
+                                TYPE_THRUST, TYPE_THRUST, TYPE_THRUST,
+                                TYPE_SPEAR };
+  static spellNumT clawDamage[51] = { TYPE_CLAW,
+                                TYPE_CLAW, TYPE_CLAW, TYPE_CLAW,
+                                TYPE_CLAW, TYPE_CLAW, TYPE_CLAW,
+                                TYPE_CLAW, TYPE_CLAW, TYPE_CLAW,
+                                TYPE_CLAW, TYPE_CLAW, TYPE_CLAW, TYPE_CLAW, TYPE_CLAW,
+                                TYPE_SLASH, TYPE_SLASH, TYPE_SLASH, TYPE_SLASH, TYPE_SLASH,
+                                TYPE_SLASH, TYPE_SLASH, TYPE_SLASH, TYPE_SLASH, TYPE_SLASH,
+                                TYPE_SLASH, TYPE_SLASH, TYPE_SLASH, TYPE_SLASH, TYPE_SLASH,
+                                TYPE_SLICE, TYPE_SLICE, TYPE_SLICE, TYPE_SLICE, TYPE_SLICE,
+                                TYPE_SLICE, TYPE_SLICE, TYPE_SLICE,
+                                TYPE_SLICE, TYPE_SLICE, TYPE_SLICE,
+                                TYPE_CLEAVE, TYPE_CLEAVE, TYPE_CLEAVE,
+                                TYPE_CLEAVE, TYPE_CLEAVE, TYPE_CLEAVE,
+                                TYPE_CLEAVE, TYPE_CLEAVE, TYPE_CLEAVE,
+                                TYPE_CLEAVE };
 
-  switch((int) value){
-    case 1:  case 2:  case 3:                    return TYPE_POUND;
-    case 4:  case 5:  case 6:                    return TYPE_BLUDGEON;
-    case 7:  case 8:  case 9:                    return TYPE_FLAIL;
-    case 10: case 11: case 12: case 13: case 14: return TYPE_BEAT;
-    case 15: case 16: case 17: case 18: case 19: return TYPE_SMASH;
-    case 20: case 21: case 22: case 23: case 24: return TYPE_PUMMEL;
-    case 25: case 26: case 27: case 28: case 29: return TYPE_THUMP;
-    case 30: case 31: case 32: case 33: case 34: return TYPE_THRASH;
-    case 35: case 36: case 37:                   return TYPE_BATTER;
-    case 38: case 39: case 40:                   return TYPE_SMITE;
-    case 41: case 42: case 43:                   return TYPE_CRUSH;
-    case 44: case 45: case 46:                   return TYPE_STRIKE;
-    case 47: case 48: case 49:                   return TYPE_WALLOP;
-    case 50: default:                            return TYPE_MAUL;
-  }
+  int index = max(0, min(int(value), 50));
+
+  if (TYPE_BEAK == orig)
+    return beakDamage[index];
+  else if (TYPE_CLAW == orig)
+    return clawDamage[index];
+  else
+    return poundDamage[index];
 }
 
 
