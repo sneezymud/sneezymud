@@ -2253,14 +2253,12 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	      shop_nr);
         return FALSE;
       }
+
+      TDatabase db(DB_SNEEZY);
+      db.query("select count(*) as count from rent where owner_type='shop' and owner=%i and vnum=%i", shop_nr, o->objVnum());
+      db.fetchRow();
+      count=convertTo<int>(db["count"]);
       
-      // count how many shopkeeper has
-      count=0;
-      for(TThing *t=myself->getStuff();t;t=t->nextThing){
-        if(dynamic_cast<TObj *>(t) && dynamic_cast<TObj *>(t)->number == *iter){
-          count++;
-        }
-      }
       if(count >= tso.getMaxNum(o)){
         delete o;
         continue;
