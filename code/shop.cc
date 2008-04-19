@@ -1707,6 +1707,11 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
 
 
   // big scary monster query
+  // this is 4 queries unioned together:
+  // 1) normal unstrung objects
+  // 2) strung objects
+  // 3) commodities
+  // 4) components
   db.query("select * from \
               (select r.rent_id as rent_id, count(*) as count, \
                 o.short_desc as short_desc, r.price as price, \
@@ -1786,7 +1791,9 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
 	   buf.c_str());
 
   keeper->doTell(ch->getName(), "You can buy:");
-  buf="";
+
+  buf="Item #     Item Name                                Info       Number     Price\n\r";
+  buf+="-------------------------------------------------------------------------------\n\r";
   while(db.fetchRow()){
     // base price
     price=convertTo<float>(db["price"]);
