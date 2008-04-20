@@ -535,20 +535,14 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     TObj *temp1 = dynamic_cast<TObj *>(t_temp1);
 
 #if !(NO_DAMAGED_ITEMS_SHOP)
-    while (!temp1->isShopSimilar(this)) {
+    while (temp1 && !temp1->isShopSimilar(this)) {
       // it's the same item, but in a different condition
       // keep scrolling through list
-      if (temp1->nextThing) {
-	t_temp1 = searchLinkedListVis(ch, argm, temp1->nextThing);
-	temp1 = dynamic_cast<TObj *>(t_temp1);
-	if (!temp1) {
-	  vlogf(LOG_BUG, "Error (2) in buyMe()");
-	  break;
-	}
-      } else {
-	vlogf(LOG_BUG, "Error (1) in buyMe()");
-	break;
-      }
+      if (!temp1->nextThing)
+        break;
+
+      t_temp1 = searchLinkedListVis(ch, argm, temp1->nextThing);
+      temp1 = dynamic_cast<TObj *>(t_temp1);
     }
 #endif
       
@@ -569,7 +563,7 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
       break;
     }
 
-    if (!temp1 || !temp1) break;
+    if (!temp1) break;
     --(*temp1);
     *ch += *temp1;
 
