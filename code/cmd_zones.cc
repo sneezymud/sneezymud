@@ -297,7 +297,7 @@ void TBeing::doZonesSingle(sstring tStString)
 
 void TBeing::doZones(sstring tStString)
 {
-  if (!tStString.empty()) {
+  if (!tStString.empty() && tStString != "mid" && tStString != "median") {
     doZonesSingle(tStString);
     return;
   }
@@ -352,50 +352,78 @@ void TBeing::doZones(sstring tStString)
 
     // buf is now the builder name, s is the zone name
     float  avg    = (zd.num_mobs ? zd.mob_levels / zd.num_mobs : 0);
-    double x,
+    double //x,
            total  = 0,
            dev,
            minlev = 1000,
            maxlev = -1;
     int    virt,
-           count  = 0;
+           count  = 0,
+           median = 0;
+    int    levels[129];
 
-    for(unsigned int mobnum=0;mobnum<mob_index.size();mobnum++){
+    memset(levels, 0, sizeof(levels));
+
+    for(unsigned int mobnum = 0;mobnum < mob_index.size(); mobnum++)
+    {
+      int mobLevel = mob_index[mobnum].level;
+      int mobCount = mob_index[mobnum].getMaxNumber();
+      double mean = (mobLevel*mobCount)-avg;
+      virt = mob_index[mobnum].virt;
+      if (!mob_index[mobnum].doesLoad)
+        continue;
+      if (!(virt > zone_table[zone-1].top && virt <=  zone_table[zone].top))
+        continue;
+      if (mobLevel < 0 || mobLevel > (int)cElements(levels)) // sanity
+        continue;
+      levels[mobLevel] += mobCount;
+      maxlev = max(double(mob_index[mobnum].level), maxlev);
+      minlev = min(double(mob_index[mobnum].level), minlev);
+      total += (mean * mean);
+      count += mobCount;
+    }
+
+    /*for(unsigned int mobnum=0;mobnum<mob_index.size();mobnum++){
       virt=mob_index[mobnum].virt;
 
       if (virt > zone_table[zone-1].top && virt <=  zone_table[zone].top && mob_index[mobnum].doesLoad) {
-	count += mob_index[mobnum].getMaxNumber();
-	x      = (mob_index[mobnum].level * mob_index[mobnum].getMaxNumber());
-	
-	if (mob_index[mobnum].level>maxlev)
-	  maxlev = mob_index[mobnum].level;
+        count += mob_index[mobnum].getMaxNumber();
+        x      = (mob_index[mobnum].level * mob_index[mobnum].getMaxNumber());
 
-	if (mob_index[mobnum].level<minlev)
-	  minlev = mob_index[mobnum].level;
+        if (mob_index[mobnum].level>maxlev)
+          maxlev = mob_index[mobnum].level;
 
-	x     -= avg;
-	x     *= x;
-	total += x;
+        if (mob_index[mobnum].level<minlev)
+          minlev = mob_index[mobnum].level;
+
+        x     -= avg;
+        x     *= x;
+        total += x;
 
       }
-    }
+    }*/
 
     total /= (count-1);
     dev    = sqrt(total);
     total  = count = 0;
+
+    // find the median
+    for(unsigned int iMed = 0;iMed < cElements(levels); iMed++)
+      if (levels[iMed] > levels[median])
+        median = iMed;
 
     // now go through the mobs again and average up only a few
     for (unsigned int mobnum = 0; mobnum < mob_index.size(); mobnum++) {
       virt = mob_index[mobnum].virt;
 
       if (virt > zone_table[zone-1].top && virt <= zone_table[zone].top && mob_index[mobnum].doesLoad) {
-	if (mob_index[mobnum].level < avg+dev && mob_index[mobnum].level > avg-dev) {
-	  total += (mob_index[mobnum].level * mob_index[mobnum].getMaxNumber());
-	  count += mob_index[mobnum].getMaxNumber();
-	}
+        if (mob_index[mobnum].level < avg+dev && mob_index[mobnum].level > avg-dev) {
+          total += (mob_index[mobnum].level * mob_index[mobnum].getMaxNumber());
+          count += mob_index[mobnum].getMaxNumber();
+        }
       }
     }
-    
+
     if(count > 0 && total > 0)
       avg = total / count;
 
@@ -405,9 +433,13 @@ void TBeing::doZones(sstring tStString)
     if(maxlev == -1)
       maxlev = zd.max_mob_level;
 
-    sprintf(buf2, "%-25.25s : %-10.10s : Level: avg: %i, min: %3.0f, max %3.0f\n\r", s, (n ? n : ""), (int)avg, minlev, maxlev);
+    bool usingMedian = (tStString == "median" || tStString == "mid");
+    float sortVal = usingMedian ? float(median) : avg;
 
-    sortZoneVec.push_back(zoneSorter(avg, buf2));
+    sprintf(buf2, "%-25.25s : %-10.10s : Level: %s:%3i, min:%3.0f, max:%3.0f\n\r", s, (n ? n : ""),
+      (usingMedian ? "mid" : "ave"), (int)sortVal, minlev, maxlev);
+
+    sortZoneVec.push_back(zoneSorter(sortVal, buf2));
   }
 
   // sort the vector
@@ -421,12 +453,12 @@ void TBeing::doZones(sstring tStString)
 
     if ((int)(sortZoneVec[zone].avgLevel) != lastavg) {
       if (++cIndex == 8)
-	cIndex = 0;
+        cIndex = 0;
 
       lastavg = (int)(sortZoneVec[zone].avgLevel);
     }
     
-    sprintf(tString, "%d. %s%s<z>", (zone + 1), colorStrings[cIndex], sortZoneVec[zone].zoneName.c_str());
+    sprintf(tString, "%3d. %s%s<z>", (zone + 1), colorStrings[cIndex], sortZoneVec[zone].zoneName.c_str());
     str += tString;
   }
 
