@@ -1058,11 +1058,19 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
       delete obj;
       continue;
     }
-    rc = obj->riverFlow(realpulse);
+    if (pl.teleport)
+      rc = obj->riverFlow(realpulse);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       delete obj;
       continue;
     }
+    if (pl.teleport)
+      rc = obj->teleportRoomFlow(realpulse);
+    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+      delete obj;
+      continue;
+    }
+
     if (obj->spec) {
       rc = obj->checkSpec(NULL, CMD_GENERIC_QUICK_PULSE, "", NULL);
       if (IS_SET_DELETE(rc, DELETE_ITEM)) {

@@ -632,6 +632,7 @@ private:
     bool willTear(int);
     bool willPuncture(int);
     virtual int riverFlow(int);
+    int teleportRoomFlow(int);
     virtual bool isTrash();
     virtual bool joinTrash();
     virtual void onObjLoad();

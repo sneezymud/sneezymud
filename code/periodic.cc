@@ -596,6 +596,44 @@ int TBeing::teleportRoomFlow(int pulse)
   return TRUE;
 }
 
+
+// returns DELETE_THIS
+int TObj::teleportRoomFlow(int pulse)
+{
+  TRoom *dest, *tmprp;
+  int rc;
+
+  if (!roomp || roomp->getTeleTarg() <= 0 || roomp->getTeleTime() <= 0)
+    return FALSE;
+
+  // pulse will be a multiple of PULSE_TELEPORT
+  if (pulse % roomp->getTeleTime())
+    return FALSE;
+
+  if (isTasked || isLocked)
+    return FALSE;
+
+  if (isObjStat(ITEM_NOPURGE) || isObjStat(ITEM_ATTACHED))
+    return FALSE;
+
+  if (!(dest = real_roomp(roomp->getTeleTarg()))) {
+    vlogf(LOG_BUG, fmt("Invalid teleTarg room (%d) to room (%d)") % inRoom() % roomp->getTeleTarg());
+    return FALSE;
+  }
+
+  act("$n disappears from the room.", false, this, 0, 0, TO_ROOM);
+
+  tmprp = roomp; // save old room
+  --(*this);
+  thing_to_room(this, tmprp->getTeleTarg());
+  rc = genericMovedIntoRoom(dest, -1);
+
+  act("$n appears in the room.", false, this, 0, 0, TO_ROOM);
+
+  return rc & DELETE_THIS;
+}
+
+
 void TMonster::makeNoise()
 {
   char buffer[100];
