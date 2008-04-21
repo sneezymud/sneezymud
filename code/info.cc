@@ -3487,7 +3487,9 @@ void TBeing::doWorld()
       str += buf;
     }
   }
-
+  
+  db.query("select count(*) as count from rent");
+  db.fetchRow();
 
   str += fmt("Total number of rooms in world:               %ld\n\r") %
     roomCount;
@@ -3497,6 +3499,8 @@ void TBeing::doWorld()
     green() % obj_index.size() % norm();
   str += fmt("Total number of objects in game:%s              %ld%s\n\r") %
         green() % objCount % norm();
+  str += fmt("Total number of objects in shops:%s             %ld%s\n\r") %
+    green() % convertTo<int>(db["count"]) % norm();
   str += fmt("Total number of registered accounts:%s          %d%s\n\r") %
     blue() % accStat.account_number % norm();
   str += fmt("Total number of registered players:%s           %d%s\n\r") % 
