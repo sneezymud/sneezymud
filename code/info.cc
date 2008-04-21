@@ -3160,7 +3160,6 @@ void TBeing::doWhere(const char *argument)
       }
     }
 
-
     // if it's a repair guy check his saved inventory
     if(i->spec==SPEC_REPAIRMAN){
       struct dirent *dp;
@@ -3271,6 +3270,26 @@ void TBeing::doWhere(const char *argument)
       sb += fmt("(%i) ") % tcount;
     sb += last_sb;
   }
+
+
+  TDatabase db(DB_SNEEZY);
+  
+  db.query("select coalesce(rs.name, o.name) as objkeywords, coalesce(rs.short_desc, o.short_desc) as objname, s.shop_nr as shop_nr, m.short_desc as mobname from obj o, mob m, rent r left outer join rent_strung rs using (rent_id), shop s where o.vnum=r.vnum and m.vnum=s.keeper and s.shop_nr=r.owner and r.owner_type='shop'");
+  
+  while(db.fetchRow()){
+    if (isname(namebuf, db["objkeywords"])) {
+      sb += fmt("[%2d] ") % ++count;
+      if (++tot_found > 500) {
+	sb += "Too many objects found.\n\r";
+	break;
+      }
+      
+      sb += fmt("%s\n\r      -  in the shop of %s (%i)\n\r") % 
+	db["objname"] % db["mobname"] % convertTo<int>(db["shop_nr"]);
+      
+    }
+  }
+
 
   if (sb.empty())
     sendTo("Couldn't find any such thing.\n\r");
