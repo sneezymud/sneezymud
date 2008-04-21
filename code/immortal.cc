@@ -4247,8 +4247,16 @@ void TBeing::doInfo(const char *arg)
 	unsigned int shop_nr=convertTo<int>(db["shop_nr"]);
 	TShopOwned tso(shop_nr, this);
 	TCommodity *commod=NULL;
+	TDatabase db2(DB_SNEEZY);
 
-	for(TThing *t=tso.getStuff();t;t=t->nextThing){
+	db2.query("select r.rent_id as rent_id from rent r, rent_strung rs, obj o where owner_type='shop' and owner=%i and r.rent_id=rs.rent_id and o.vnum=r.vnum and o.type=%i and rs.name like '%s%s%s'", shop_nr, ITEM_RAW_MATERIAL, "%", arg2, "%");
+
+	while(db2.fetchRow()){
+	  if(!tso.getKeeper())
+	    continue;
+	  TObj *t=tso.getKeeper()->loadItem(shop_nr, convertTo<int>(db2["rent_id"]));
+	  *tso.getKeeper() += *t;
+
 	  if((commod=dynamic_cast<TCommodity *>(t)) &&
 	     isname(arg2, commod->name)){
 	    sendTo(fmt("Shop %i: %i units of %s at %i talens per unit.\n\r")%
@@ -4258,6 +4266,8 @@ void TBeing::doInfo(const char *arg)
 	    total+=commod->numUnits();
 	    name=material_nums[commod->getMaterial()].mat_name;
 	  }
+	  --*t;
+	  delete t;
 	}
       }
       sendTo(fmt("-- Total amount of %s available: %i units.\n\r") %
