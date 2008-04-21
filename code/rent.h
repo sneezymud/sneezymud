@@ -121,7 +121,7 @@ class ItemSave {
   void writeFooter();
 
   bool raw_write_item(TObj *);
-  void objsToStore(signed char, TObj *, TBeing *, bool, bool);
+  void objsToStore(signed char, TThing *, TBeing *, bool, bool);
 
   ItemSave();
   ~ItemSave();
@@ -134,7 +134,7 @@ class ItemSaveDB {
  public:
   void clearRent();
   int raw_write_item(TObj *, int, int);
-  void objsToStore(signed char, TObj *, TBeing *, bool, bool, int);
+  void objsToStore(signed char, TThing *, TBeing *, bool, bool, int);
 
   ItemSaveDB(sstring, int);
   ~ItemSaveDB();
