@@ -183,44 +183,16 @@ struct reset_q_type
 
 void update_commod_index()
 {
-  TCommodity *comm;
   TDatabase db(DB_SNEEZY);
-  TMonster *keeper, *tm;
-  TBeing *tb;
-  int count=0;
 
   for(int i=0;i<200;++i)
     commod_index[i]=0;
 
-  // we want to use this at boot time, and the shop tables aren't setup yet
-  db.query("select s.keeper as keeper from shoptype st, shop s where st.type=42 and s.shop_nr=st.shop_nr");
+  db.query("select r.material as material, sum(r.weight*10)/(select count(*) from shoptype st where st.type=%i) as units from rent r, obj o where o.vnum=r.vnum and r.owner_type='shop' and o.type=%i group by material", ITEM_RAW_MATERIAL, ITEM_RAW_MATERIAL);
 
   while(db.fetchRow()){
-    count++;
-    keeper=NULL;
-    for(tb=character_list;tb;tb=tb->next){
-
-      if((tm=dynamic_cast<TMonster *>(tb))){
-	if(tm->mobVnum()==convertTo<int>(db["keeper"])){
-	  keeper=tm;
-	  break;
-	}
-      }
-    }
-
-    if(!keeper)
-      continue;
-
-    for(TThing *t=keeper->getStuff();t;t=t->nextThing){
-      if((comm=dynamic_cast<TCommodity *>(t))){
-	commod_index[comm->getMaterial()]+=comm->numUnits();
-      }
-    }
+    commod_index[convertTo<int>(db["material"])]+=convertTo<int>(db["units"]);
   }
-
-  for(int i=0;i<200;++i)
-    commod_index[i]/=count;
-
 }
 
 int getObjLoadPotential(const int obj_num)
@@ -1835,97 +1807,86 @@ TObj *read_object_buy_build(TBeing *buyer, int nr, readFileTypeT type)
   }
 
   int material=convertTo<int>(db["material"]);
-  unsigned int item_type=convertTo<int>(db["type"]);
   float weight=convertTo<float>(db["weight"]);
   sstring name=db["short_desc"];
   int indexed_cost=convertTo<int>(db["price"]);
 
-  // check shops for item available < basePrice
-  vector <shopData>::iterator iter;
-  TThing *t;
-  TObj *o, *cheapest=NULL;
-  TCommodity *commod, *cheapest_commod=NULL;
-  int price, cheapest_price=0, shop_nr=0;
-  int basePrice=0;
-  int commod_price=0, commod_shop_nr=0;
-  bool is_commod_shop=false, is_ok_shop=false;
+  int price, shop_nr, rent_id=0;
+  int commod_price=0, commod_shop_nr=0, commod_rent_id=0;
+  TObj *o=NULL;
+  TObj *commod=NULL;
 
-  for(iter=shop_index.begin();iter!=shop_index.end();++iter){
-    TShopOwned tso((*iter).shop_nr, buyer);
+  db.query("select r.weight as weight, r.owner as shop_nr, r.rent_id as rent_id from rent r, shopowned so where r.owner=so.shop_nr and r.owner_type='shop' and r.vnum=%i order by profit_buy asc, (r.cur_struct/r.max_struct) asc, price asc", obj_index[nr].virt);
 
-    // check shop type
-    is_commod_shop=is_ok_shop=false;
-    for(unsigned int i=0;i<shop_index[(*iter).shop_nr].type.size();++i){
-      if(shop_index[(*iter).shop_nr].type[i] == ITEM_RAW_MATERIAL)
-	is_commod_shop=true;
-      if(shop_index[(*iter).shop_nr].type[i] == item_type)
-	is_ok_shop=true;
-    }
+  if(db.fetchRow()){
+    shop_nr=convertTo<int>(db["shop_nr"]);
+    rent_id=convertTo<int>(db["rent_id"]);
+    TShopOwned tso(shop_nr, buyer);
 
-    // doesn't deal in commods or the item type we want, so skip it
-    if(!is_commod_shop && !is_ok_shop)
-      continue;
+    o=tso.getKeeper()->loadItem(shop_nr, convertTo<int>(db["rent_id"]));
+    *tso.getKeeper() += *o;
 
-    // go through the shop inventory
-    for(t=tso.getStuff();t;t=t->nextThing){
-      if(!(o=dynamic_cast<TObj *>(t)))
-	continue;
-      
-      // check if this object is one we can buy
-      if(o->objVnum() == obj_index[nr].virt && is_ok_shop){
-	price = o->shopPrice(1, (*iter).shop_nr, -1, buyer);
-	basePrice=o->suggestedPrice();
-
-	if(/*price <= basePrice &&*/
-	   (price <= cheapest_price || cheapest_price==0)){
-	  cheapest_price=price;
-	  cheapest=o;
-	  shop_nr=(*iter).shop_nr;
-	}
-      }
-
-      // check if this object is a commod we can use to make our object
-      if((commod=dynamic_cast<TCommodity *>(t)) && is_commod_shop){
-	price=commod->shopPrice((int)(weight*10), 
-				       (*iter).shop_nr, -1, buyer);
-	if(commod->getMaterial() == material &&
-	   commod->getWeight() >= weight &&
-	   (price <= commod_price || commod_price==0)){
-	  commod_shop_nr=(*iter).shop_nr;
-	  commod_price=price;
-	  cheapest_commod=commod;
-	}
-      }
-    }
+    price = o->shopPrice(1, shop_nr, -1, buyer);
   }
+
+  // ok, we now have a cheap object (o) selling for price at shop_nr
+  // let's see if we can find a cheaper commod
+
+  db.query("select r.owner as shop_nr, r.rent_id as rent_id, r.material as material, r.weight*10 as units from rent r, obj o where o.type=%i and r.vnum=o.vnum and r.material=%i and owner_type='shop' and r.weight>=%f order by units desc", ITEM_RAW_MATERIAL, material, weight);
+
+  if(db.fetchRow()){
+    commod_shop_nr=convertTo<int>(db["shop_nr"]);
+    commod_rent_id=convertTo<int>(db["rent_id"]);
+    TShopOwned tso(commod_shop_nr, buyer);
+
+    TObj *obj=tso.getKeeper()->loadItem(commod_shop_nr, convertTo<int>(db["rent_id"]));
+
+    if(!(commod=dynamic_cast<TCommodity *>(obj)))
+      return read_object(nr, type);
+    
+    *tso.getKeeper() += *commod;
+
+    commod_price = commod->shopPrice((int)(weight*10), commod_shop_nr, 
+				     -1, buyer);
+  }
+
 
   // if we have a cheap item, and no commodity to consider, OR
   // we do have a commod and it's more expensive...
-  if(cheapest && (!cheapest_commod || 
-		  (cheapest_price <= (commod_price+indexed_cost)))){
+  if(o && (!commod || 
+	   (price <= (commod_price+indexed_cost)))){
     TShopOwned tso(shop_nr, buyer);
-    --(*cheapest);
-    buyer->addToMoney(cheapest_price, GOLD_XFER); // this is to offset cost
-    tso.doBuyTransaction(cheapest_price, cheapest->getName(), TX_BUYING, cheapest);
+    --(*o);
+    buyer->addToMoney(price, GOLD_XFER); // this is to offset cost
+    tso.doBuyTransaction(price, o->getName(), TX_BUYING, o);
     vlogf(LOG_PEEL, fmt("%s purchased %s from shop %i for %i talens.") %
-	  buyer->getName() % cheapest->getName() % shop_nr % cheapest_price);
+	  buyer->getName() % o->getName() % shop_nr % price);
 
-    return cheapest;
+    tso.getKeeper()->deleteItem(shop_nr, rent_id);
+    delete commod;
+    return o;
   // otherwise buy the commod if it is available
-  } else if(cheapest_commod){
+  } else if(commod){
     TShopOwned tso(commod_shop_nr, buyer);
     buyer->addToMoney(commod_price, GOLD_XFER); // this is to offset cost
-    tso.doBuyTransaction(commod_price, cheapest_commod->getName(), 
-			 TX_BUYING, cheapest_commod);
+    tso.doBuyTransaction(commod_price, commod->getName(), 
+			 TX_BUYING, commod);
 
-    cheapest_commod->setWeight(cheapest_commod->getWeight() - weight);
+    commod->setWeight(commod->getWeight() - weight);
     vlogf(LOG_PEEL, fmt("%s purchased %s (%i) from shop %i for %i talens.") %
-	  buyer->getName() % cheapest_commod->getName() % (int)(weight*10) %
+	  buyer->getName() %commod->getName() % (int)(weight*10) %
 	  commod_shop_nr % commod_price);
-    return read_object(nr, REAL);    
+
+    tso.getKeeper()->deleteItem(commod_shop_nr, commod_rent_id);
+    if(commod->getWeight() > 0)
+      tso.getKeeper()->saveItem(commod_shop_nr, commod);
   }
 
+  delete commod;    
+  delete o;
 
+  // we either purchased commod, or there was nothing to purchase so
+  // load the item
   return read_object(nr, REAL);
 }
 
