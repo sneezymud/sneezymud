@@ -18,6 +18,7 @@
 #include "obj_component.h"
 #include "obj_potion.h"
 #include "spec_rooms.h"
+#include "obj_commodity.h"
 
 extern int kick_mobs_from_shop(TMonster *myself, TBeing *ch, int from_room);
 
@@ -1789,8 +1790,13 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
   buf="Item #     Item Name                                Info       Number     Price\n\r";
   buf+="-------------------------------------------------------------------------------\n\r";
   while(db.fetchRow()){
+    type=convertTo<int>(db["type"]);
+
     // base price
     price=convertTo<float>(db["price"]);
+
+    if(type==ITEM_RAW_MATERIAL)
+      price=TCommodity::demandCurvePrice(1, 0, convertTo<int>(db["count"]));
 
     // modify price for structure damage
     price *= ((convertTo<float>(db["max_struct"]) <= 0) ? 1 :
@@ -1805,7 +1811,6 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
 
     // check class restriction
     extra_flags = convertTo<int>(db["extra_flags"]);
-    type=convertTo<int>(db["type"]);
     if(type==ITEM_ARMOR || type==ITEM_ARMOR_WAND ||
        type==ITEM_WEAPON || type==ITEM_WORN){
       
