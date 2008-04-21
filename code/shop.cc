@@ -19,6 +19,7 @@
 #include "obj_potion.h"
 #include "spec_rooms.h"
 #include "obj_commodity.h"
+#include "liquids.h"
 
 extern int kick_mobs_from_shop(TMonster *myself, TBeing *ch, int from_room);
 
@@ -528,7 +529,7 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   swindle=ch->getSwindleBonus();
   chr = ch->getChaShopPenalty() - swindle;
   chr = max((float)1.0,chr);
-  
+
   cost = shopPrice(1, shop_nr, chr, ch);
   
   for (i = 0; i < tmp; i++) {
@@ -1802,6 +1803,9 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
     price *= ((convertTo<float>(db["max_struct"]) <= 0) ? 1 :
 	      (convertTo<float>(db["cur_struct"]) /
 	       convertTo<float>(db["max_struct"])));
+
+    if(type==ITEM_POTION)
+      price=liquidInfo[(liqTypeT)convertTo<int>(db["val2"])]->price * convertTo<int>(db["val1"]);
 
     // modify price for the shop profit ratio
     price *= shop_index[shop_nr].getProfitBuy(NULL, ch);
