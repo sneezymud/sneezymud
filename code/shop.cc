@@ -1701,16 +1701,15 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
       break;
   }
 
-
-  // big scary monster query
-  // this is 4 queries unioned together:
-  // 1) normal unstrung objects
-  // 2) strung objects
-  // 3) commodities
-  // 4) components
   db.query("select * from \
-              (select r.rent_id as rent_id, count(*) as count, \
-                o.short_desc as short_desc, r.price as price, \
+              (select r.rent_id as rent_id, \
+                case o.type when %i then r.weight*10 \
+                            when %i then r.val0 \
+                            else count(*) end as count, \
+                coalesce(rs.short_desc, o.short_desc) as short_desc, \
+                case o.type when %i then r.price/(r.weight*10) \
+                            when %i then r.price/r.val0  \
+                            else r.price end as price, \
                 r.cur_struct as cur_struct, r.max_struct as max_struct, \
                 r.volume as volume, r.extra_flags as extra_flags, \
                 o.wear_flag as wear_flag, o.vnum as vnum, o.type as type, \
@@ -1718,70 +1717,14 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
               from rent r left outer join rent_strung rs on \
                 (rs.rent_id=r.rent_id), obj o \
               where o.vnum=r.vnum and owner_type='shop' and owner=%i and \
-                r.rent_id not in (select rent_id from rent_strung) and \
-                o.type!=%i and o.type!=%i and \
                 ((rs.name is not null and rs.name like '%s%s%s') or \
                 (o.name like '%s%s%s')) \
                 %s \
-              group by o.vnum \
-            union \
-              select r.rent_id as rent_id, count(*) as count, \
-                rs.short_desc as short_desc, r.price as price, \
-                r.cur_struct as cur_struct, r.max_struct as max_struct, \
-                r.volume as volume, r.extra_flags as extra_flags, \
-                o.wear_flag as wear_flag, o.vnum as vnum, o.type as type, \
-                r.val0 as val0, r.val1 as val1, r.val2 as val2, r.val3 as val3\
-              from rent r, rent_strung rs, obj o \
-              where owner_type='shop' and owner=%i and o.vnum=r.vnum and \
-                r.rent_id=rs.rent_id and o.type!=%i and o.type!=%i and \
-                ((rs.name is not null and rs.name like '%s%s%s') or \
-                (o.name like '%s%s%s')) \
-                %s \
-              group by o.vnum, rs.short_desc \
-            union \
-              select r.rent_id as rent_id, r.weight*10 as count, \
-                rs.short_desc as short_desc, r.price/(r.weight*10) as price, \
-                r.cur_struct as cur_struct, r.max_struct as max_struct, \
-                r.volume as volume, r.extra_flags as extra_flags, \
-                o.wear_flag as wear_flag, o.vnum as vnum, o.type as type, \
-                r.val0 as val0, r.val1 as val1, r.val2 as val2, r.val3 as val3\
-              from rent r, rent_strung rs, obj o \
-              where owner_type='shop' and owner=%i and o.vnum=r.vnum and \
-                r.rent_id=rs.rent_id and o.type=%i and o.type!=%i and \
-                ((rs.name is not null and rs.name like '%s%s%s') or \
-                (o.name like '%s%s%s')) \
-                %s \
-              group by r.material \
-            union \
-              select r.rent_id as rent_id, r.val0 as count, \
-                o.short_desc as short_desc, r.price/r.val0 as price, \
-                r.cur_struct as cur_struct, r.max_struct as max_struct, \
-                r.volume as volume, r.extra_flags as extra_flags, \
-                o.wear_flag as wear_flag, o.vnum as vnum, o.type as type, \
-                r.val0 as val0, r.val1 as val1, r.val2 as val2, r.val3 as val3\
-              from rent r left outer join rent_strung rs on \
-                (rs.rent_id=r.rent_id), obj o \
-              where o.vnum=r.vnum and owner_type='shop' and owner=%i and \
-                r.rent_id not in (select rent_id from rent_strung) and \
-                o.type!=%i and o.type=%i and \
-                ((rs.name is not null and rs.name like '%s%s%s') or \
-                (o.name like '%s%s%s')) \
-                %s \
-              group by o.vnum \
+              group by o.vnum, short_desc \
             ) as foo order by rent_id", 
-	   shop_nr, ITEM_RAW_MATERIAL, ITEM_COMPONENT,
-	   "%", keyword.c_str(), "%",
-	   "%", keyword.c_str(), "%",
-	   buf.c_str(), 
-	   shop_nr, ITEM_RAW_MATERIAL, ITEM_COMPONENT, 
-	   "%", keyword.c_str(), "%",
-	   "%", keyword.c_str(), "%",
-	   buf.c_str(),
-	   shop_nr, ITEM_RAW_MATERIAL, ITEM_COMPONENT, 
-	   "%", keyword.c_str(), "%",
-	   "%", keyword.c_str(), "%",
-	   buf.c_str(),
-           shop_nr, ITEM_RAW_MATERIAL, ITEM_COMPONENT,
+	   ITEM_RAW_MATERIAL, ITEM_COMPONENT,
+	   ITEM_RAW_MATERIAL, ITEM_COMPONENT,
+	   shop_nr,
 	   "%", keyword.c_str(), "%",
 	   "%", keyword.c_str(), "%",
 	   buf.c_str());
