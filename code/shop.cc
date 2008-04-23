@@ -1758,25 +1758,22 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
 
     // check class restriction
     extra_flags = convertTo<int>(db["extra_flags"]);
-    if(type==ITEM_ARMOR || type==ITEM_ARMOR_WAND ||
-       type==ITEM_WEAPON || type==ITEM_WORN || type==ITEM_JEWELRY){
       
-      fit=true;
-      if(ch->hasClass(CLASS_MAGE) && (extra_flags & ITEM_ANTI_MAGE))
-	fit=false;
-      if(ch->hasClass(CLASS_CLERIC) && (extra_flags & ITEM_ANTI_CLERIC))
-	fit=false;
-      if(ch->hasClass(CLASS_WARRIOR) && (extra_flags & ITEM_ANTI_WARRIOR))
-	fit=false;
-      if(ch->hasClass(CLASS_THIEF) && (extra_flags & ITEM_ANTI_THIEF))
-	fit=false;
-      if(ch->hasClass(CLASS_SHAMAN) && (extra_flags & ITEM_ANTI_SHAMAN))
-	fit=false;
-      if(ch->hasClass(CLASS_DEIKHAN) && (extra_flags & ITEM_ANTI_DEIKHAN))
-	fit=false;
-      if(ch->hasClass(CLASS_MONK) && (extra_flags & ITEM_ANTI_MONK))
-	fit=false;
-    }      
+    fit=true;
+    if(ch->hasClass(CLASS_MAGE) && (extra_flags & ITEM_ANTI_MAGE))
+      fit=false;
+    if(ch->hasClass(CLASS_CLERIC) && (extra_flags & ITEM_ANTI_CLERIC))
+      fit=false;
+    if(ch->hasClass(CLASS_WARRIOR) && (extra_flags & ITEM_ANTI_WARRIOR))
+      fit=false;
+    if(ch->hasClass(CLASS_THIEF) && (extra_flags & ITEM_ANTI_THIEF))
+      fit=false;
+    if(ch->hasClass(CLASS_SHAMAN) && (extra_flags & ITEM_ANTI_SHAMAN))
+      fit=false;
+    if(ch->hasClass(CLASS_DEIKHAN) && (extra_flags & ITEM_ANTI_DEIKHAN))
+      fit=false;
+    if(ch->hasClass(CLASS_MONK) && (extra_flags & ITEM_ANTI_MONK))
+      fit=false;
 
     volume=convertTo<int>(db["volume"]);
     slot = slot_from_bit(convertTo<int>(db["wear_flag"]));
