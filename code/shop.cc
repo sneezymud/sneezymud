@@ -1759,7 +1759,7 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
     // check class restriction
     extra_flags = convertTo<int>(db["extra_flags"]);
     if(type==ITEM_ARMOR || type==ITEM_ARMOR_WAND ||
-       type==ITEM_WEAPON || type==ITEM_WORN){
+       type==ITEM_WEAPON || type==ITEM_WORN || type==ITEM_JEWELRY){
       
       fit=true;
       if(ch->hasClass(CLASS_MAGE) && (extra_flags & ITEM_ANTI_MAGE))
@@ -1821,15 +1821,23 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
       int count_pierce=0, count_blunt=0, count_slash=0, total=0;
       
       for(int i=0;i<3;++i){
-	if(pierceType(getWtype_kluge(damage_type[i])))
+	// we have a lot of weapons with one damage type and frequency of 0
+	if(!i && !damage_freq[0] && !damage_freq[1] && !damage_freq[2]){
+	  damage_freq[0]=100;
+	}
+
+	if(pierceType(getWtype_kluge(damage_type[i]))){
 	  count_pierce+=damage_freq[i];
-	if(bluntType(getWtype_kluge(damage_type[i])))
-	  count_blunt+=damage_freq[i];      
-	if(slashType(getWtype_kluge(damage_type[i])))
-	  count_slash+=damage_freq[i];      
+	}
+	if(bluntType(getWtype_kluge(damage_type[i]))){
+	  count_blunt+=damage_freq[i];
+	}
+	if(slashType(getWtype_kluge(damage_type[i]))){
+	  count_slash+=damage_freq[i];
+	}
 	total+=damage_freq[i];
       }
-      
+
       if(count_pierce > (total/3.0*2.0))
 	isPierce=true;
       if(count_blunt > (total/3.0*2.0))

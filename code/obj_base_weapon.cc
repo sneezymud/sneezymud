@@ -612,9 +612,13 @@ bool TBaseWeapon::isBluntWeapon() const
 
   if((tgw=dynamic_cast<const TGenWeapon *>(this))){
     for(int i=0;i<3;++i){
-      if(bluntType(getWtype_kluge(tgw->getWeaponType(0))))
-	count+=tgw->getWeaponFreq(0);
-      total+=tgw->getWeaponFreq(0);
+      if(bluntType(getWtype_kluge(tgw->getWeaponType(i)))){
+	if(!i && !tgw->getWeaponFreq(1) && !tgw->getWeaponFreq(2))
+	  count+=100;
+	else
+	  count+=tgw->getWeaponFreq(i);
+      }
+      total+=tgw->getWeaponFreq(i);
     }
     // need at least 2/3 blunt types, for TGenWeapons
 
@@ -634,9 +638,13 @@ bool TBaseWeapon::isSlashWeapon() const
 
   if((tgw=dynamic_cast<const TGenWeapon *>(this))){
     for(int i=0;i<3;++i){
-      if(slashType(getWtype_kluge(tgw->getWeaponType(0))))
-	count+=tgw->getWeaponFreq(0);
-      total+=tgw->getWeaponFreq(0);
+      if(slashType(getWtype_kluge(tgw->getWeaponType(i)))){
+	if(!i && !tgw->getWeaponFreq(1) && !tgw->getWeaponFreq(2))
+	  count+=100;
+	else
+	  count+=tgw->getWeaponFreq(i);
+      }
+      total+=tgw->getWeaponFreq(i);
     }
     // need at least 2/3 type, for TGenWeapons
 
@@ -656,9 +664,13 @@ bool TBaseWeapon::isPierceWeapon() const
 
   if((tgw=dynamic_cast<const TGenWeapon *>(this))){
     for(int i=0;i<3;++i){
-      if(pierceType(getWtype_kluge(tgw->getWeaponType(0))))
-	count+=tgw->getWeaponFreq(0);
-      total+=tgw->getWeaponFreq(0);
+      if(pierceType(getWtype_kluge(tgw->getWeaponType(i)))){
+	if(!i && !tgw->getWeaponFreq(1) && !tgw->getWeaponFreq(2))
+	  count+=100;
+	else
+	  count+=tgw->getWeaponFreq(i);
+      }
+      total+=tgw->getWeaponFreq(i);
     }
     // need at least 2/3 type, for TGenWeapons
 
