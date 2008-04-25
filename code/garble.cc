@@ -788,7 +788,7 @@ sstring garble_fishtalk(const TBeing *from, const TBeing *to, const sstring &arg
     if (!out.empty())
       out += ' ';
     // replace randomly a word
-    if (chance/2 > number(0, 100))
+    if (chance/3 > number(0, 100))
     {
       char punct = word[word.length()-1];
       word = watery[number(0, cElements(watery)-1)].matchCase(word);
@@ -796,7 +796,7 @@ sstring garble_fishtalk(const TBeing *from, const TBeing *to, const sstring &arg
       if (ispunct(punct))
         word += punct;
     }
-    else if (chance*1.3 > number(0, 100))
+    else if (chance > number(0, 100))
     {
       for(int i=0;i < (int)cElements(replace);i++)
       {
@@ -1236,7 +1236,7 @@ sstring garble_trolltalk(const TBeing *from, const TBeing *to, const sstring &ar
 
   for(int i=0;i < (int)cElements(replace);i++)
   {
-    if (!(chance*1.3 > number(0, 100)))
+    if (!(chance > number(0, 100)))
       continue;
     out.inlineReplaceString(replace[i][0], replace[i][1]);
   }
@@ -1275,7 +1275,7 @@ sstring garble_frogtalk(const TBeing *from, const TBeing *to, const sstring &arg
 
   for(int i=0;i < (int)cElements(replace);i++)
   {
-    if (!(chance*1.3 > number(0, 100)))
+    if (!(chance > number(0, 100)))
       continue;
     out.inlineReplaceString(replace[i][0], replace[i][1]);
   }
@@ -1320,7 +1320,7 @@ sstring garble_birdtalk(const TBeing *from, const TBeing *to, const sstring &arg
     if (!out.empty())
       out += ' ';
     // replace randomly a word
-    if (chance/2 > number(0, 100))
+    if (chance/3 > number(0, 100))
     {
       char punct = word[word.length()-1];
       word = sstring(birdsquak_prefix[number(0, cElements(birdsquak_prefix)-1)] +
@@ -1329,7 +1329,7 @@ sstring garble_birdtalk(const TBeing *from, const TBeing *to, const sstring &arg
       if (ispunct(punct))
         word += punct;
     }
-    else if (chance*1.3 > number(0, 100))
+    else if (chance > number(0, 100))
     {
       for(int i=0;i < (int)cElements(replace);i++)
       {
@@ -1401,7 +1401,7 @@ sstring garble_gutter(const TBeing *from, const TBeing *to, const sstring &arg, 
 
   for(int i=0;i < (int)cElements(replace);i++)
   {
-    if (i > 9 && !(chance*1.3 > number(0, 100)))
+    if (i > 9 && !(chance > number(0, 100)))
       continue;
     out.inlineReplaceString(replace[i][0], replace[i][1]);
   }
@@ -1425,7 +1425,7 @@ sstring garble_trogtalk(const TBeing *from, const TBeing *to, const sstring &arg
     size_t end = word.length()-1;
     int state = 0;
 
-    if (chance*1.3 <= number(0, 100))
+    if (chance <= number(0, 100))
       continue;
 
     while(end > 2)

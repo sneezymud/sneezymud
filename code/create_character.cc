@@ -42,7 +42,7 @@ TTraits traits[MAX_TRAITS+1] = {
   {TOG_HAS_TOURETTES, 1,    "tourettes",
    "You involuntarily insult other people.", 0,1},
   {TOG_PERMA_DEATH_CHAR, 0, "perma-death",
-   "You only have one life to live and if you die your game is over.", 0,0},
+   "You only have one life to live and if you die your game is over.", 0,1},
   {TOG_REAL_AGING, 0,       "real aging",
    "You will suffer the affects of old age as you get older.", 0,1},
   {TOG_IS_HEALTHY, -3,      "healthy",
@@ -118,7 +118,7 @@ TPlayerRace nannyRaces[] = {
 
   // advanced races
   { RACE_FROGMAN, "Bullywug", 1, frogmanTerr, cElements(frogmanTerr), ROOM_BULLYWUG_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, stin, ", 0},
-  { RACE_FISHMAN, "Kalysian", 1, fishmanTerr, cElements(fishmanTerr), ROOM_KALYSIA_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, talsbane, matthaas, stu, dreq", 0},
+  { RACE_FISHMAN, "Kalysian", 1, fishmanTerr, cElements(fishmanTerr), ROOM_KALYSIA_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, talsbane, matthaas, stu, dreq, ", 0},
   { RACE_BIRDMAN, "Aarakocra", 1, birdmanTerr, cElements(birdmanTerr), ROOM_AERIE_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, hairbear, jamil, ", 0},
   { RACE_TROLL, "Troll", 1, trollTerr, cElements(trollTerr), ROOM_TROLL_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, remoh, blaez, ", 0},
 };

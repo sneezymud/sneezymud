@@ -912,6 +912,24 @@ int TBeing::updateTickStuff()
       }
     }
 
+    if (getMyRace()->hasTalent(TALENT_GARBAGEEATER) && getCond(FULL) < 19 && !::number(0,2))
+    {
+      act("You feel your stomach rumbling.  Perhaps a snack will make you feel better.", FALSE, this, 0, 0, TO_CHAR);
+      act("$n's stomach emits a loud rumble.", FALSE, this, 0, 0, TO_ROOM);
+      if (getCond(FULL) > 0)
+        setCond(FULL, max(sbyte(0), sbyte(getCond(FULL)- sbyte(::number(1,5)))));
+      else if (getMove() > 0)
+      {
+        act("Your hunger makes you feel tired and listless.", FALSE, this, 0, 0, TO_CHAR);
+        addToMove(-::number(4, 8));
+      }
+      else
+      {
+        act("Your hunger makes you feel weak.", FALSE, this, 0, 0, TO_CHAR);
+        addToHit(-1);
+      }
+    }
+
     if (desc && (desc->character != this))
       vlogf(LOG_BUG, fmt("bad desc in updateTickStuff() (%s)(%s)") %
             (name ? getName() : "unknown") % 
