@@ -28,7 +28,6 @@
 
 static const char ROOM_SAVE_PATH[] = "roomdata/saved";
 static const int NORMAL_SLOT   = -1;
-static const int RIDER_SLOT  = -4;
 static const int CONTENTS_END  = -2;
 static const int CORPSE_END  = -3;
 
@@ -1061,12 +1060,7 @@ bool ItemLoad::objToParent(signed char slot, TObj *parent, TObj *new_obj, TRoom 
 {
   //  vlogf(LOG_PEEL, fmt("objToParent: %s") % new_obj->name);
 
-  if(slot == RIDER_SLOT){
-    new_obj->nextRider = parent->rider;
-    parent->rider = new_obj;
-    new_obj->riding = parent;
-    return true;
-  } else if(slot != NORMAL_SLOT){
+  if(slot != NORMAL_SLOT){
     if (r)
       vlogf(LOG_BUG, fmt("Room %d.  Invalid Slot %d.") %
 	    r->number % slot);
@@ -1348,22 +1342,18 @@ void ItemLoad::setVersion(unsigned char v)
 // ch = character that is saving items
 // d = delete the item after saving (for renting)
 // corpse = indicate if pcorpse saving items
-void ItemSave::objsToStore(signed char slot, TThing *ttt, 
+void ItemSave::objsToStore(signed char slot, TObj *o, 
 			   TBeing *ch, bool d, bool corpse = FALSE)
 {
-  if (!ttt)
-    return;
-
-  TObj *o = dynamic_cast<TObj *>(ttt);
   if (!o)
     return;
 
   // ignore beings
-  TThing *next = (slot == RIDER_SLOT) ? o->nextRider : o->nextThing;
+  TThing *ttt = o;
   if (dynamic_cast<TBeing *>(ttt)) {
     // TRoom::saveItems  calls this, we don't want to save beings that might
     // be hanging out in the room
-    objsToStore(NORMAL_SLOT, next, ch, d, corpse);
+    objsToStore(NORMAL_SLOT, (TObj *) o->nextThing, ch, d, corpse);
 
     // with persistent rooms, we don't need pcorpse saving
 #if 0
@@ -1399,9 +1389,9 @@ void ItemSave::objsToStore(signed char slot, TThing *ttt,
     // if it's not rentable, save what it contains and
     // move on to the next item in the list
   } else if (!o->isRentable()) {
-    objsToStore(NORMAL_SLOT, o->getStuff(), ch, d, corpse);
-    objsToStore(RIDER_SLOT, o->rider, ch, d, corpse);
-    objsToStore(NORMAL_SLOT, next, ch, d, corpse);
+    objsToStore(NORMAL_SLOT, (TObj *) o->getStuff(), ch, d, corpse);
+    objsToStore(NORMAL_SLOT, (TObj *) o->nextThing, ch, d, corpse);
+
 
     // normal item, save it
   } else {
@@ -1420,8 +1410,7 @@ void ItemSave::objsToStore(signed char slot, TThing *ttt,
 	    (ch?ch->getName():"UNKNOWN"));
 
     // save the contents
-    objsToStore(NORMAL_SLOT, o->getStuff(), ch, d, corpse);
-    objsToStore(RIDER_SLOT, o->rider, ch, d, corpse);
+    objsToStore(NORMAL_SLOT, (TObj *) o->getStuff(), ch, d, corpse);
 
     // write the contents footer
     slot = CONTENTS_END;
@@ -1432,10 +1421,10 @@ void ItemSave::objsToStore(signed char slot, TThing *ttt,
     }
 
     // if there's something else in the list
-    if (next) {
+    if (o->nextThing) {
       // and it has a name, store it
-      if (next->getName()) {
-        objsToStore(NORMAL_SLOT, next, ch, d, corpse);
+      if (o->nextThing->getName()) {
+        objsToStore(NORMAL_SLOT, (TObj *) o->nextThing, ch, d, corpse);
       } else {
         o->nextThing = NULL;
         vlogf(LOG_BUG, fmt("Error saving %s's objects -- nextThing.") % 
@@ -1462,47 +1451,40 @@ void ItemSave::objsToStore(signed char slot, TThing *ttt,
 }
 
 
-void ItemSaveDB::objsToStore(signed char slot, TThing *ttt, 
+void ItemSaveDB::objsToStore(signed char slot, TObj *o, 
 			   TBeing *ch, bool d, bool corpse = FALSE,
 			     int container=0)
 {
-  if (!ttt)
-    return;
-
-  TObj *o = dynamic_cast<TObj *>(ttt);
   if (!o)
     return;
 
-  TThing *next = (slot == RIDER_SLOT) ? o->nextRider : o->nextThing;
-
   // ignore beings
+  TThing *ttt = o;
   int rent_id=0;
   if (dynamic_cast<TBeing *>(ttt)) {
     // TRoom::saveItems  calls this, we don't want to save beings that might
     // be hanging out in the room
-    objsToStore(NORMAL_SLOT, next, ch, d, corpse, container);
+    objsToStore(NORMAL_SLOT, (TObj *) o->nextThing, ch, d, corpse, container);
     // if it's not rentable, save what it contains and
     // move on to the next item in the list
   } else if (!o->isRentable()) {
-    objsToStore(NORMAL_SLOT, o->getStuff(), ch, d, corpse, container);
-    objsToStore(RIDER_SLOT, o->rider, ch, d, corpse, container);
-    objsToStore(NORMAL_SLOT, next, ch, d, corpse, container);
+    objsToStore(NORMAL_SLOT, (TObj *) o->getStuff(), ch, d, corpse, container);
+    objsToStore(NORMAL_SLOT, (TObj *) o->nextThing, ch, d, corpse, container);
     // normal item, save it
   } else {
     // write out the item
     rent_id=raw_write_item(o, slot, container);
 
     // save the contents
-    objsToStore(NORMAL_SLOT, o->getStuff(), ch, d, corpse, rent_id);
-    objsToStore(RIDER_SLOT, o->rider, ch, d, corpse, rent_id);
+    objsToStore(NORMAL_SLOT, (TObj *) o->getStuff(), ch, d, corpse, rent_id);
 
     // if there's something else in the list
-    if (next) {
+    if (o->nextThing) {
       // and it has a name, store it
-      if (next->getName()) {
-        objsToStore(NORMAL_SLOT, next, ch, d, corpse, container);
+      if (o->nextThing->getName()) {
+        objsToStore(NORMAL_SLOT, (TObj *) o->nextThing, ch, d, corpse, container);
       } else {
-        next = NULL;
+        o->nextThing = NULL;
         vlogf(LOG_BUG, fmt("Error saving %s's objects -- nextThing.") % 
           ((ch) ? ch->getName() : "UNKNOWN"));
       }
@@ -1947,7 +1929,7 @@ void TRoom::saveItems(const sstring &)
   }
   is.writeVersion();
 
-  is.objsToStore(NORMAL_SLOT, getStuff(), NULL, FALSE);
+  is.objsToStore(NORMAL_SLOT, (TObj *) getStuff(), NULL, FALSE);
   is.writeFooter();
 }
 
@@ -2554,7 +2536,7 @@ void TPCorpse::saveCorpseToFile()
   }
   is.writeFooter();
 #else
-  is.objsToStore(NORMAL_SLOT, tmpCorpse, NULL, FALSE, TRUE);
+  is.objsToStore(NORMAL_SLOT, (TObj *) tmpCorpse, NULL, FALSE, TRUE);
   is.writeFooter();
 #endif
 
@@ -2612,7 +2594,7 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
       }
     }
   }
-  is.objsToStore(NORMAL_SLOT, getStuff(), this, d);
+  is.objsToStore(NORMAL_SLOT, (TObj *) getStuff(), this, d);
   is.writeFooter();
 
   if (d)
