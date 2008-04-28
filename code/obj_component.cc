@@ -3240,9 +3240,10 @@ int TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num)
   }
 
   obj2->addToComponentCharges(num);
+  obj2->obj_flags.cost = obj2->getComponentCharges() * pricePerUnit();
+
   addToComponentCharges(-num);
-  obj2->obj_flags.cost = num * pricePerUnit();
-  obj_flags.cost = getComponentCharges() * pricePerUnit();
+  obj_flags.cost = getComponentCharges() * obj2->pricePerUnit();
 
   buf = fmt("%s/%d") % SHOPFILE_PATH % tShop;
   tKeeper->saveItems(buf);

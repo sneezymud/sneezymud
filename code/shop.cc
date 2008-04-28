@@ -1710,7 +1710,7 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
               where o.vnum=r.vnum and owner_type='shop' and owner=%i \
                 %s \
               group by o.vnum, short_desc \
-              order by short_desc",
+              order by o.vnum",
 	   ITEM_RAW_MATERIAL, ITEM_COMPONENT,
 	   ITEM_RAW_MATERIAL,
 	   ITEM_RAW_MATERIAL, ITEM_COMPONENT,
