@@ -376,15 +376,13 @@ bool TCommodity::sellMeCheck(TBeing *ch, TMonster *keeper, int num) const
     return TRUE;
   }
 
-  TDatabase db(DB_SNEEZY);
-
-  db.query("select weight from rent where owner_type='shop' and owner=%i and material=%i and vnum=%i",
-	   shop_nr, getMaterial(), GENERIC_COMMODITY);
-
-  if(db.fetchRow()){
-    total = (int)(convertTo<float>(db["weight"])*10.0);
-  } else {
-    total=0;
+  TCommodity *commod;
+  for(TThing *t=keeper->getStuff();t;t=t->nextThing){
+    if((commod=dynamic_cast<TCommodity *>(t)) && 
+       commod->getMaterial()==getMaterial()){
+      total=commod->numUnits();
+      break;
+    }
   }
 
   if (total >= max_num) {

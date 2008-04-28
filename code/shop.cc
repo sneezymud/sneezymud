@@ -1636,7 +1636,7 @@ sstring list_string(sstring buf, int len)
 void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
 {
   TDatabase db(DB_SNEEZY);
-  sstring buf, keyword="";
+  sstring buf, keyword="", short_desc;
   float price, perc;
   bool fit=true;
   int extra_flags, volume, type;
@@ -1690,12 +1690,13 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
       break;
   }
 
-  db.query("select * from \
-              (select r.rent_id as rent_id, \
+  db.query("select r.rent_id as rent_id, \
                 case o.type when %i then r.weight*10 \
                             when %i then r.val0 \
                             else count(*) end as count, \
-                coalesce(rs.short_desc, o.short_desc) as short_desc, \
+                case o.type when %i then r.material \
+                  else coalesce(rs.short_desc, o.short_desc) end \
+                  as short_desc, \
                 coalesce(rs.name, o.name) as name, \
                 case o.type when %i then r.price/(r.weight*10) \
                             when %i then r.price/r.val0  \
@@ -1709,8 +1710,9 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
               where o.vnum=r.vnum and owner_type='shop' and owner=%i \
                 %s \
               group by o.vnum, short_desc \
-            ) as foo order by rent_id", 
+              order by short_desc",
 	   ITEM_RAW_MATERIAL, ITEM_COMPONENT,
+	   ITEM_RAW_MATERIAL,
 	   ITEM_RAW_MATERIAL, ITEM_COMPONENT,
 	   shop_nr,
 	   buf.c_str());
@@ -1724,12 +1726,16 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
       continue;
 
     type=convertTo<int>(db["type"]);
+    short_desc=db["short_desc"];
 
     // base price
     price=convertTo<float>(db["price"]);
 
-    if(type==ITEM_RAW_MATERIAL)
+    if(type==ITEM_RAW_MATERIAL){
       price=TCommodity::demandCurvePrice(1, 0, convertTo<int>(db["count"]));
+      short_desc=fmt("COMMODITY: %s") %
+	material_nums[convertTo<int>(db["short_desc"])].mat_name;
+    }
 
     // modify price for structure damage
     price *= ((convertTo<float>(db["max_struct"]) <= 0) ? 1 :
@@ -1865,7 +1871,7 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
     if(type==ITEM_RAW_MATERIAL){
       buf+=fmt("[%8i] %s COMMODITY  [%6i] %7.3f\n\r") %
 	convertTo<int>(db["rent_id"]) %
-	list_string(db["short_desc"], 40) % 
+	list_string(short_desc, 40) % 
 	convertTo<int>(db["count"]) %
 	(max((float)1.0, price));
     } else if(type==ITEM_COMPONENT){
@@ -1876,14 +1882,14 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
       }
       buf+=fmt("[%8i] %s %s [%6i] %7i\n\r") %
 	convertTo<int>(db["rent_id"]) %
-	list_string(db["short_desc"], 30) % 
+	list_string(short_desc, 30) % 
 	list_string(spell, 20) %
 	convertTo<int>(db["count"]) %
 	(int)(max((float)1.0, price));      
     } else {
       buf+=fmt("[%8i] %s %s [%6i] %7i\n\r") %
 	convertTo<int>(db["rent_id"]) %
-	list_string(db["short_desc"], 40) % 
+	list_string(short_desc, 40) % 
 	list_string(equip_cond(convertTo<int>(db["cur_struct"]),
 			       convertTo<int>(db["max_struct"])), 10) %
 	convertTo<int>(db["count"]) %
