@@ -380,7 +380,7 @@ void assign_item_info()
      "1 = Poisoned, 2 = Spoiled, 4 = Fished, 8 = Butchered. (can be added)", 3, 0);
   ItemInfo[ITEM_MONEY] = new itemInfo("Money","a pile of money",
      "Number of talens in money pile", 50000, 0,
-     "Unused", 0, 0,
+				      "Currency type", MAX_CURRENCY, 0,
      "Unused", 0, 0,
      "Unused", 0, 0);
   ItemInfo[ITEM_PEN] = new itemInfo("Pen","a writing implement",

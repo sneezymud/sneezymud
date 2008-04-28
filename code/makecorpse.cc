@@ -964,11 +964,11 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
   }
 
   if (getMoney() > 0) {
-    if (pcorpse)
+    if (pcorpse){
       money = create_money(getMoney() + ::number(GetMaxLevel(), 2*GetMaxLevel()));
-
-    else
-      money = create_money(getMoney());
+    } else {
+      money = create_money(getMoney(), getFaction());
+    }
 
     addToMoney(-getMoney(), GOLD_INCOME);
     *gen_corpse += *money;

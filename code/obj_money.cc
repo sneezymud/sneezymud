@@ -9,13 +9,62 @@
 #include "obj_player_corpse.h"
 #include "obj_money.h"
 
+currencyEntry *currencyInfoT::operator[] (const currencyTypeT i)
+{
+  if(currencies.find(i) == currencies.end()){
+    vlogf(LOG_BUG, fmt("invalid currency detected: %i") % i);
+    return currencies[CURRENCY_GRIMHAVEN];
+  } else {
+    return currencies[i];
+  }
+}
+
+currencyInfoT::~currencyInfoT()
+{
+}
+
+currencyInfoT::currencyInfoT()
+{
+  currencies[CURRENCY_GRIMHAVEN] = new currencyEntry("talen", "Grimhaven");
+  currencies[CURRENCY_LOGRUS] = new currencyEntry("dinar", "Logrus");
+  currencies[CURRENCY_BRIGHTMOON] = new currencyEntry("krone", "Brightmoon");
+  currencies[CURRENCY_AMBER] = new currencyEntry("guilder", "Amber");
+}
+
+
+float currencyEntry::getExchangeRate(currencyTypeT c)
+{
+  return 1.0; // no exchange rates... yet
+}
+
+currencyEntry::currencyEntry(sstring n, sstring a) :
+  name(n),
+  affiliation(a)
+{
+}
+
+currencyEntry & currencyEntry::operator = (const currencyEntry &a) 
+{
+  if (this == &a) return *this;
+
+  name = a.name;
+  affiliation = a.affiliation;
+
+  return *this;
+}
+
+currencyEntry::~currencyEntry()
+{
+}
+
 
 bool TMoney::willMerge(TMergeable *tm)
 {
   TMoney *tMoney;
 
   if(!(tMoney=dynamic_cast<TMoney *>(tm)) ||
-     this==tMoney)
+     this==tMoney ||
+     tMoney->getCurrency()!=getCurrency())
     return false;
 
   return true;
@@ -34,6 +83,11 @@ void TMoney::doMerge(TMergeable *tm)
   // ditch the pile we picked up
   --(*tMoney);
   delete tMoney;
+}
+
+currencyTypeT TMoney::getCurrency() const
+{
+  return type;
 }
 
 TMoney::TMoney() :
@@ -60,35 +114,64 @@ TMoney::~TMoney()
 {
 }
 
-void TMoney::assignFourValues(int x1, int, int, int)
+void TMoney::assignFourValues(int x1, int x2, int, int)
 {
   setMoney(x1);
+  setCurrency((currencyTypeT)x2);
 }
 
 void TMoney::getFourValues(int *x1, int *x2, int *x3, int *x4) const
 {
   *x1 = getMoney();
-  *x2 = 0;
+  *x2 = getCurrency();
   *x3 = 0;
   *x4 = 0;
 }
 
 sstring TMoney::statObjInfo() const
 {
-  char buf[256];
+  sstring buf;
 
-  sprintf(buf, "Talens in pile: %d", getMoney());
+  buf=fmt("%s in pile: %i") % currencyInfo[getCurrency()]->getName().cap() %
+    getMoney();
 
-  sstring a(buf);
-  return a;
+  return buf;
 }
 
-TMoney *create_money(int amount)
+sstring TMoney::getCurrencyName() const
+{
+  return currencyInfo[getCurrency()]->getName();
+}
+
+TMoney *create_money(int amount, factionTypeT fact)
+{
+  currencyTypeT currency=CURRENCY_GRIMHAVEN;
+
+  switch(fact){
+    case FACT_NONE:
+    case FACT_UNDEFINED:
+    case MAX_FACTIONS:
+      currency=CURRENCY_GRIMHAVEN;
+      break;
+    case FACT_BROTHERHOOD:
+      currency=CURRENCY_BRIGHTMOON;
+      break;
+    case FACT_CULT:
+      currency=CURRENCY_LOGRUS;
+      break;
+    case FACT_SNAKE:
+      currency=CURRENCY_AMBER;
+      break;
+  }
+
+  return create_money(amount, currency);
+}
+
+TMoney *create_money(int amount, currencyTypeT currency)
 {
   TObj *obj;
   TMoney *money;
 
-  
   if(amount<0){
     vlogf(LOG_BUG, fmt("ERROR: Try to create negative money (%i).") %  amount);
     amount=1;
@@ -99,9 +182,10 @@ TMoney *create_money(int amount)
   mud_assert(money != NULL, "create_money created something that was not TMoney.  obj was: %s", obj ? obj->getName() : "NO OBJECT");
 
   extraDescription *new_descr;
-  char buf[80];
+  sstring buf;
 
   money->swapToStrung();
+  money->setCurrency(currency);
 
   // clean off any descriptions that came through from the tinyworld file
   while ((new_descr = money->ex_description)) {
@@ -115,46 +199,46 @@ TMoney *create_money(int amount)
   delete [] money->shortDescr;
   delete [] money->getDescr();
   if (amount == 1) {
-    money->name = mud_str_dup("talens money");
-    money->shortDescr = mud_str_dup("a talen");
-    money->setDescr(mud_str_dup("One miserable talen lies here."));
+    money->name = mud_str_dup(money->getCurrencyName() + " money");
+    money->shortDescr = mud_str_dup("a "+money->getCurrencyName());
+    money->setDescr(mud_str_dup(fmt("One miserable %s lies here.") % money->getCurrencyName()));
 
-    new_descr->keyword = mud_str_dup("talen money");
-    new_descr->description = mud_str_dup("One miserable talen.\n\r");
+    new_descr->keyword = mud_str_dup(money->getCurrencyName() + " money");
+    new_descr->description = mud_str_dup(fmt("One miserable %s.\n\r") % money->getCurrencyName());
 
   } else {
-    money->name = mud_str_dup("talens money");
-    money->shortDescr = mud_str_dup("some talens");
+    money->name = mud_str_dup(money->getCurrencyName()+"s money");
+    money->shortDescr = mud_str_dup(fmt("some %ss") % money->getCurrencyName());
     if (amount > 100000)
-      sprintf(buf, "A tremendously HUGE pile of talens lies here.");
+      buf=fmt("A tremendously HUGE pile of %ss lies here.") % money->getCurrencyName();
     else if (amount > 50000)
-      sprintf(buf, "A HUGE pile of talens lies here.");
+      buf=fmt("A HUGE pile of %ss lies here.") % money->getCurrencyName();
     else if (amount > 10000)
-      sprintf(buf, "A LARGE pile of talens lies here.");
+      buf=fmt("A LARGE pile of %ss lies here.") % money->getCurrencyName();
     else if (amount > 1000)
-      sprintf(buf, "A nice-sized pile of talens lies here.");
+      buf=fmt("A nice-sized pile of %ss lies here.") % money->getCurrencyName();
     else if (amount > 500)
-      sprintf(buf, "A pile of talens lies here.");
+      buf=fmt("A pile of %ss lies here.") % money->getCurrencyName();
     else if (amount > 100)
-      sprintf(buf, "A small pile of talens lies here.");
+      buf=fmt("A small pile of %ss lies here.") % money->getCurrencyName();
     else if (amount > 50)
-      sprintf(buf, "A tiny pile of talens lies here.");
+      buf=fmt("A tiny pile of %ss lies here.") % money->getCurrencyName();
     else
-      sprintf(buf, "A few talens have been left in a pile here.");
+      buf=fmt("A few %ss have been left in a pile here.") % money->getCurrencyName();
 
     money->setDescr(mud_str_dup(buf));
-    new_descr->keyword = mud_str_dup("talens money");
+    new_descr->keyword = mud_str_dup(money->getCurrencyName()+"s money");
     if (amount < 10) {
-      sprintf(buf, "There are %d talens.\n\r", amount);
+      buf=fmt("There are %i %ss.\n\r") % amount % money->getCurrencyName();
       new_descr->description = mud_str_dup(buf);
     } else if (amount < 100) {
-      sprintf(buf, "There are about %d talens.\n\r", 10 * (amount / 10));
+      buf=fmt("There are about %i %ss.\n\r") % (10 * (amount / 10)) % money->getCurrencyName();
       new_descr->description = mud_str_dup(buf);
     } else if (amount < 10000) {
-      sprintf(buf, "You guess there are %d talens.\n\r", 100 * (amount / 100));
+      buf=fmt("You guess there are %i %ss.\n\r") % (100 * (amount / 100)) % money->getCurrencyName();
       new_descr->description = mud_str_dup(buf);
     } else
-      new_descr->description = mud_str_dup("There are a LOT of talens.\n\r");
+      new_descr->description = mud_str_dup(fmt("There are a LOT of %ss.\n\r") % money->getCurrencyName());
   }
   new_descr->next = NULL;
   money->ex_description = new_descr;
@@ -195,6 +279,11 @@ void TMoney::setMoney(int n)
   money = n;
 }
 
+void TMoney::setCurrency(currencyTypeT c)
+{
+  type = c;
+}
+
 int TMoney::moneyMeMoney(TBeing *ch, TThing *sub)
 {
   int amount;
@@ -208,9 +297,9 @@ int TMoney::moneyMeMoney(TBeing *ch, TThing *sub)
   (*this)--;
   amount = getMoney();
   if (amount == 1) {
-    ch->sendTo("There was one talen.\n\r");
+    ch->sendTo(fmt("There was one %s.\n\r") % getCurrencyName());
   } else {
-    ch->sendTo(fmt("There were %d talens.\n\r") % amount);
+    ch->sendTo(fmt("There were %d %ss.\n\r") % amount % getCurrencyName());
     /*int amt2 = 0;
     if (!isMyCorpse && !ch->isImmortal())
       amt2 = (int) (amount * FactionInfo[ch->getFaction()].faction_tithe / 100.0);
@@ -225,7 +314,7 @@ int TMoney::moneyMeMoney(TBeing *ch, TThing *sub)
   }
 
   if (ch->getMoney() > 500000 && (amount > 100000))
-    vlogf(LOG_MISC, fmt("%s just got %d talens") %  ch->getName() % amount);
+    vlogf(LOG_MISC, fmt("%s just got %d %ss") %  ch->getName() % amount % getCurrencyName());
 
   for (t = ch->roomp->getStuff(); t; t = t->nextThing) {
     TBeing *tb = dynamic_cast<TBeing *>(t);
@@ -284,7 +373,7 @@ void TMoney::onObjLoad()
 sstring TMoney::getNameForShow(bool useColor, bool useName, const TBeing *ch) const
 {
   char buf2[256];
-  sprintf(buf2, "%s [%d talens]", useName ? name : (useColor ? getName() : getNameNOC(ch).c_str()), 
-      getMoney());
+  sprintf(buf2, "%s [%d %ss]", useName ? name : (useColor ? getName() : getNameNOC(ch).c_str()), 
+      getMoney(), getCurrencyName().c_str());
   return buf2;
 }

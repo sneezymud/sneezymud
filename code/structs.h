@@ -54,6 +54,7 @@ class TOpenContainer;
 class TSuitcase;
 class TBoard;
 class liqInfoT;
+class currencyInfoT;
 
 const int MAX_BUF_LENGTH              = 240;
 

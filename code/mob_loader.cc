@@ -1215,7 +1215,7 @@ void TMonster::genericMobLoader(TOpenContainer **bag)
   (*bag)->setObjStat(ITEM_NEWBIE);
 
   *this += **bag;
-  **bag += *create_money(amount);
+  **bag += *create_money(amount, getFaction());
   setMoney(wealth-amount);
 
   return;

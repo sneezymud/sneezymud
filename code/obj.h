@@ -38,7 +38,7 @@ extern TObj *read_object(int nr, readFileTypeT type);
 extern void log_object(TObj *obj);
 
 extern liqInfoT liquidInfo;
-
+extern currencyInfoT currencyInfo;
 
 // weight of 1 sip/unit of drink
 // 128 fl.oz = 1 gallon = 8.337 lb. (for water)

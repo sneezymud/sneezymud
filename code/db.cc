@@ -116,6 +116,7 @@ TPCorpse *pc_corpse_list = NULL;
 vector<zoneData>zone_table(0);
 
 liqInfoT liquidInfo;
+currencyInfoT currencyInfo;
 
 int top_of_script = 0;
 

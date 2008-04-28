@@ -10,9 +10,20 @@
 
 #include "obj.h"
 
+
+enum currencyTypeT {
+  CURRENCY_GRIMHAVEN=0,
+  CURRENCY_LOGRUS,
+  CURRENCY_BRIGHTMOON,
+  CURRENCY_AMBER,
+  MAX_CURRENCY
+};
+
+
 class TMoney : public TMergeable {
   private:
     int money;
+    currencyTypeT type;
   public:
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
@@ -32,6 +43,10 @@ class TMoney : public TMergeable {
     virtual bool isPluralItem() const;
     virtual void onObjLoad();
     virtual sstring getNameForShow(bool, bool, const TBeing *) const;
+    
+    currencyTypeT getCurrency() const;
+    void setCurrency(currencyTypeT);
+    sstring getCurrencyName() const;
 
     int getMoney() const;
     void setMoney(int n);
@@ -42,6 +57,35 @@ class TMoney : public TMergeable {
     virtual ~TMoney();
 };
 
+
+class currencyEntry {
+  sstring name;         // eg, "talen"
+  sstring affiliation;  // eg, "Grimhaven"
+
+ public:  
+  sstring getName(){return name;}
+  sstring getAffiliation(){return affiliation;}
+  float getExchangeRate(currencyTypeT);
+
+
+  currencyEntry(sstring, sstring);
+  currencyEntry & operator=(const currencyEntry &a);
+  ~currencyEntry();
+  
+ private:
+  currencyEntry();  // deny usage in this format
+};
+
+
+class currencyInfoT {
+  map<currencyTypeT, currencyEntry *>currencies;
+
+ public:
+  currencyEntry *operator[] (const currencyTypeT);
+
+  currencyInfoT();
+  ~currencyInfoT();  
+};
 
 
 

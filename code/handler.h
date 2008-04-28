@@ -11,7 +11,8 @@
 
 #include "obj_money.h"
 
-TMoney *create_money( int amount );
+TMoney *create_money( int amount, currencyTypeT =CURRENCY_GRIMHAVEN);
+TMoney *create_money( int amount, factionTypeT);
 
 /* ******** objects *********** */
 
