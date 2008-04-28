@@ -230,7 +230,7 @@ float shopData::getProfitBuy(int vnum, sstring name, const TBeing *ch)
 
 float shopData::getProfitBuy(const TObj *obj, const TBeing *ch)
 {
-  return getProfitBuy(obj->objVnum(), obj->name, ch);
+  return getProfitBuy(obj?obj->objVnum():-1, obj?obj->name:"", ch);
 }
 
 
