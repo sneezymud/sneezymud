@@ -27,7 +27,7 @@ currencyInfoT::currencyInfoT()
 {
   currencies[CURRENCY_GRIMHAVEN] = new currencyEntry("talen", "Grimhaven");
   currencies[CURRENCY_LOGRUS] = new currencyEntry("dinar", "Logrus");
-  currencies[CURRENCY_BRIGHTMOON] = new currencyEntry("krone", "Brightmoon");
+  currencies[CURRENCY_BRIGHTMOON] = new currencyEntry("kroner", "Brightmoon");
   currencies[CURRENCY_AMBER] = new currencyEntry("guilder", "Amber");
 }
 

@@ -30,6 +30,7 @@
 #include "obj_card_deck.h"
 #include "obj_suitcase.h"
 #include "obj_bed.h"
+#include "obj_moneypouch.h"
 
 // watches rent in, rent out, dropped, etc
 #define VERBOSE_LOGS   1
@@ -515,6 +516,11 @@ int TThing::putMeInto(TBeing *ch, TOpenContainer *sub)
     act("Sorry, $p can only hold keys.",
 	FALSE, ch, sub, this, TO_CHAR);
     return TRUE;
+  }
+  if (dynamic_cast<TMoneypouch *>(sub)) {
+    act("Sorry, $p can only hold money.",
+	FALSE, ch, sub, this, TO_CHAR);
+    return TRUE;    
   }
   if (dynamic_cast<TQuiver *>(sub)) {
     act("Sorry, $p can only hold arrows.",

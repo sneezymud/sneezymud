@@ -132,6 +132,7 @@ enum itemTypeT {
     ITEM_HARNESS,
     ITEM_SADDLEBAG,
     ITEM_WAGON,
+    ITEM_MONEYPOUCH,
     MAX_OBJ_TYPES
 };
 const itemTypeT MIN_OBJ_TYPE = itemTypeT(0);

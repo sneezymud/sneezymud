@@ -230,7 +230,8 @@ LIBOBJ =obj_armor.o		obj_light.o		\
 	obj_trash_pile.o	obj_card_deck.o		\
 	obj_suitcase.o		obj_saddle.o		\
 	obj_harness.o		obj_saddlebag.o		\
-	obj_wagon.o		obj_mergeable.o
+	obj_wagon.o		obj_mergeable.o         \
+	obj_moneypouch.o
 
 LIBOBJ := $(sort $(addprefix $(OBJDIR), $(LIBOBJ)))
 

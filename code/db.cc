@@ -100,6 +100,7 @@
 #include "obj_saddlebag.h"
 #include "obj_wagon.h"
 #include "timing.h"
+#include "obj_moneypouch.h"
 
 int top_of_world = 0;         // ref to the top element of world 
 
@@ -3531,6 +3532,8 @@ TObj * makeNewObj(itemTypeT tmp)
       return new TSaddlebag();
     case ITEM_WAGON:
       return new TWagon();
+    case ITEM_MONEYPOUCH:
+      return new TMoneypouch();
     case ITEM_UNDEFINED:
     case ITEM_MARTIAL_WEAPON:
     case MAX_OBJ_TYPES:
