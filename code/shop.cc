@@ -408,7 +408,6 @@ void shopping_buy(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
   int num = 1, rent_id;
   TObj *temp1 = NULL;
   TDatabase db(DB_SNEEZY);
-  char buf[256];
 
   *argm = '\0';
 
@@ -430,42 +429,32 @@ void shopping_buy(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
   vector<TObj *>objects_p;
 
   if(!(rent_id=convertTo<int>(argm))){
-    sstring query="select r.rent_id from obj o, rent r left outer join rent_strung rs on (rs.rent_id=r.rent_id) where r.vnum=o.vnum and r.owner_type='shop' and r.owner=%i ";
-    sstring arg_words=argm;
-    arg_words=arg_words.replaceString("-"," ");
+    db.query("select r.rent_id as rent_id, coalesce(rs.name, o.name) as name\
+                from rent r left outer join rent_strung rs \
+                on (r.rent_id=rs.rent_id), obj o \
+              where r.vnum=o.vnum and r.owner_type='shop' and r.owner=%i",
+             shop_nr);
 
-    for(int i=0;!arg_words.word(i).empty();++i){
-      mysql_escape_string(buf, arg_words.word(i).c_str(), arg_words.word(i).length());
-
-      query += fmt("and ((rs.name is not null and rs.name like '%s%s%s') or (o.name like '%s%s%s'))") % 
-	"%%" % buf % "%%" %
-	"%%" % buf % "%%";
-    }
-
-    db.query(query.c_str(), shop_nr);
-    db.fetchRow();
-    for(int i=0;i<num && db.fetchRow();++i){
+    for(int i=0;i<num && db.fetchRow();){
+      if(!isname(argm, db["name"]))
+	continue;
+      
       rent_id=convertTo<int>(db["rent_id"]);
       temp1=keeper->loadItem(shop_nr, rent_id);
       *keeper += *temp1;
       objects.push_back(rent_id);
       objects_p.push_back(temp1);
-    }
-  } else if(num > 1){
-    db.query("select rent_id from rent where vnum in (select vnum from rent where rent_id=%i) and owner_type='shop' and owner=%i", rent_id, shop_nr);
-
-    for(int i=0;i<num && db.fetchRow();++i){
-      rent_id=convertTo<int>(db["rent_id"]);
-      temp1=keeper->loadItem(shop_nr, rent_id);
-      *keeper += *temp1;
-      objects.push_back(rent_id);
-      objects_p.push_back(temp1);
+      ++i;
     }
   } else {
-    if((temp1=keeper->loadItem(shop_nr, rent_id))){
+    db.query("select r1.rent_id from rent r1 left outer join rent_strung rs1 on (r1.rent_id=rs1.rent_id), obj o1, rent r2 left outer join rent_strung rs2 on (r2.rent_id=rs2.rent_id), obj o2 where r1.vnum=r2.vnum and coalesce(rs1.short_desc, o1.short_desc)=coalesce(rs2.short_desc, o2.short_desc) and r1.owner_type='shop' and r1.owner=%i and o1.vnum=r1.vnum and r2.vnum=o2.vnum and r2.rent_id=%i", shop_nr, rent_id);
+
+    for(int i=0;i<num && db.fetchRow();++i){
+      rent_id=convertTo<int>(db["rent_id"]);
+      temp1=keeper->loadItem(shop_nr, rent_id);
       *keeper += *temp1;
       objects.push_back(rent_id);
-      objects_p.push_back(temp1);      
+      objects_p.push_back(temp1);
     }
   }
 
