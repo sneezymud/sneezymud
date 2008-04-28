@@ -113,7 +113,7 @@ bool shopData::isRepairShop()
   return false;
 }
 
-float shopData::getProfitBuy(const TObj *obj, const TBeing *ch)
+float shopData::getProfitBuy(int vnum, sstring name, const TBeing *ch)
 {
   float profit_buy=-1;
   map <sstring,float>::iterator iter;
@@ -150,12 +150,12 @@ float shopData::getProfitBuy(const TObj *obj, const TBeing *ch)
 
 
   // if the shop is player owned, we check custom pricing
-  if(shop_index[shop_nr].isOwned() && obj){  
+  if(shop_index[shop_nr].isOwned()){  
     if(cached_shop_nr==shop_nr){
-      if(ratios_cache.count(obj->objVnum()))
-	profit_buy=ratios_cache[obj->objVnum()];
+      if(ratios_cache.count(vnum))
+	profit_buy=ratios_cache[vnum];
     } else {
-      db.query("select profit_buy from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, obj->objVnum());
+      db.query("select profit_buy from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, vnum);
       if(db.fetchRow())
 	profit_buy=convertTo<float>(db["profit_buy"]);
     }
@@ -165,7 +165,7 @@ float shopData::getProfitBuy(const TObj *obj, const TBeing *ch)
       // so check keywords
       if(cached_shop_nr==shop_nr){
 	for(iter=matches_cache.begin();iter!=matches_cache.end();++iter){
-	  if(isname((*iter).first, obj->name)){
+	  if(isname((*iter).first, name)){
 	    profit_buy=(*iter).second;
 	    break;
 	  }
@@ -174,7 +174,7 @@ float shopData::getProfitBuy(const TObj *obj, const TBeing *ch)
 	db.query("select match_str, profit_buy from shopownedmatch where shop_nr=%i", shop_nr);
 	
 	while(db.fetchRow()){
-	  if(isname(db["match_str"], obj->name)){
+	  if(isname(db["match_str"], name)){
 	    profit_buy=convertTo<float>(db["profit_buy"]);
 	    break;
 	  }
@@ -225,7 +225,12 @@ float shopData::getProfitBuy(const TObj *obj, const TBeing *ch)
   ///
   
 
-  return profit_buy;
+  return profit_buy;  
+}
+
+float shopData::getProfitBuy(const TObj *obj, const TBeing *ch)
+{
+  return getProfitBuy(obj->objVnum(), obj->name, ch);
 }
 
 
@@ -1746,7 +1751,8 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
       price=liquidInfo[(liqTypeT)convertTo<int>(db["val2"])]->price * convertTo<int>(db["val1"]);
 
     // modify price for the shop profit ratio
-    price *= shop_index[shop_nr].getProfitBuy(NULL, ch);
+    price *= shop_index[shop_nr].getProfitBuy(convertTo<int>(db["vnum"]),
+					      db["name"], ch);
 
     // modify price for charisma bonus/penalty
     price *= max((float)1.0, ch->getChaShopPenalty());

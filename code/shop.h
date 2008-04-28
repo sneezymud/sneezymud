@@ -85,6 +85,7 @@ class shopData {
     bool isOwned();
     bool willTradeWith(TMonster *keeper, TBeing *ch);
     bool willBuy(const TObj *item);
+    float getProfitBuy(int vnum, sstring name, const TBeing *);
     float getProfitBuy(const TObj *, const TBeing *);
     float getProfitSell(const TObj *, const TBeing *);
     bool isRepairShop();
