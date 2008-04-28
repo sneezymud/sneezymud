@@ -640,17 +640,16 @@ bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int shop_nr)
   }
 
 
-  unsigned int counter=0;
-  for(TThing *tt=keeper->getStuff();tt;tt=tt->nextThing)
-    ++counter;
+  TDatabase db(DB_SNEEZY);
+  db.query("select count(*) as count from rent where owner_type='shop' and owner=%i",
+	   shop_nr);
+  db.fetchRow();
+  unsigned int counter=convertTo<int>(db["count"]);
 
   if(counter >= MAX_SHOP_INVENTORY){
     keeper->doTell(ch->getName(), "My inventory is full, I can't buy anything!");
     return TRUE;
   }
-
-
-
 
   return FALSE;
 }
@@ -659,7 +658,6 @@ bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int shop_nr)
 bool TObj::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
 {
   int total = 0;
-  TThing *t;
   sstring buf;
   unsigned int shop_nr;
 
@@ -678,17 +676,13 @@ bool TObj::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
     return TRUE;
   }
 
-  for (t = keeper->getStuff(); t; t = t->nextThing) {
-    if ((t->number == number) &&
-        (t->getName() && getName() &&
-         !strcmp(t->getName(), getName()))) {
-      total += 1;
-      if (total >= max_num && !shop_index[shop_nr].isProducing(this)) {
-        keeper->doTell(ch->name, "I already have plenty of those.");
-        return TRUE;
-      }
-    }
+  total=tso.getInventoryCount(objVnum());
+
+  if (total >= max_num && !shop_index[shop_nr].isProducing(this)) {
+    keeper->doTell(ch->name, "I already have plenty of those.");
+    return TRUE;
   }
+
   return FALSE;
 }
 

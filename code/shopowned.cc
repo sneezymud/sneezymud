@@ -64,6 +64,17 @@ sstring transactionToString(transactionTypeT action)
 }
 
 
+int TShopOwned::getInventoryCount(int vnum)
+{
+  TDatabase db(DB_SNEEZY);
+
+  db.query("select count(*) as count from rent where vnum=%i and owner_type='shop' and owner=%i group by (extra_flags & %i)", vnum, shop_nr, ITEM_STRUNG);
+  db.fetchRow();
+  int count=convertTo<int>(db["count"]);
+
+  return count;
+}
+
 TThing *TShopOwned::getStuff()
 {
   if(keeper)

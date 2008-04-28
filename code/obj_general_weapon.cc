@@ -169,7 +169,6 @@ void TGenWeapon::lowCheck()
 bool TGenWeapon::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
 {
   int total = 0;
-  TThing *t;
   unsigned int shop_nr;
 
   for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != (keeper)->number); shop_nr++);
@@ -190,17 +189,11 @@ bool TGenWeapon::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
     return TRUE;
   }
 
+  total=tso.getInventoryCount(objVnum());
 
-  for (t = keeper->getStuff(); t; t = t->nextThing) {
-    if ((t->number == number) &&
-        (t->getName() && getName() &&
-         !strcmp(t->getName(), getName()))) {
-      total += 1;
-      if (total >= max_num) {
-        keeper->doTell(ch->name, "I already have plenty of those.");
-        return TRUE;
-      }
-    }
+  if (total >= max_num) {
+    keeper->doTell(ch->name, "I already have plenty of those.");
+    return TRUE;
   }
   return FALSE;
 }
