@@ -1686,10 +1686,11 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
         FitT |= (1 << 17);
         FitT |= (1 <<  2);
       }
+    } else if (is_number(argument.word(i))){
+      buf=fmt("and r.rent_id=%s") % argument;
     } else if (!argument.word(i).empty()) {
       keyword=argument.word(i);
-    } else if (is_number(argument.word(i)))
-      buf=fmt("and r.rent_id=%s") % argument;
+    }
 
     if (argument.empty())
       break;
@@ -1701,6 +1702,7 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
                             when %i then r.val0 \
                             else count(*) end as count, \
                 coalesce(rs.short_desc, o.short_desc) as short_desc, \
+                coalesce(rs.name, o.name) as name, \
                 case o.type when %i then r.price/(r.weight*10) \
                             when %i then r.price/r.val0  \
                             else r.price end as price, \
@@ -1710,17 +1712,13 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
                 r.val0 as val0, r.val1 as val1, r.val2 as val2, r.val3 as val3\
               from rent r left outer join rent_strung rs on \
                 (rs.rent_id=r.rent_id), obj o \
-              where o.vnum=r.vnum and owner_type='shop' and owner=%i and \
-                ((rs.name is not null and rs.name like '%s%s%s') or \
-                (o.name like '%s%s%s')) \
+              where o.vnum=r.vnum and owner_type='shop' and owner=%i \
                 %s \
               group by o.vnum, short_desc \
             ) as foo order by rent_id", 
 	   ITEM_RAW_MATERIAL, ITEM_COMPONENT,
 	   ITEM_RAW_MATERIAL, ITEM_COMPONENT,
 	   shop_nr,
-	   "%", keyword.c_str(), "%",
-	   "%", keyword.c_str(), "%",
 	   buf.c_str());
 
   keeper->doTell(ch->getName(), "You can buy:");
@@ -1728,6 +1726,9 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
   buf="Item #     Item Name                                Info       Number     Price\n\r";
   buf+="-------------------------------------------------------------------------------\n\r";
   while(db.fetchRow()){
+    if(!keyword.empty() && !isname(keyword, db["name"]))
+      continue;
+
     type=convertTo<int>(db["type"]);
 
     // base price
