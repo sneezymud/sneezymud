@@ -64,11 +64,11 @@ sstring transactionToString(transactionTypeT action)
 }
 
 
-int TShopOwned::getInventoryCount(int vnum)
+int TShopOwned::getInventoryCount(int vnum, sstring short_desc)
 {
   TDatabase db(DB_SNEEZY);
 
-  db.query("select count(*) as count from rent where vnum=%i and owner_type='shop' and owner=%i group by (extra_flags & %i)", vnum, shop_nr, ITEM_STRUNG);
+  db.query("select count(*) as count from rent r left outer join rent_strung rs on (r.rent_id=rs.rent_id) where r.vnum=%i and o.vnum=r.vnum and coalesce(rs.short_desc, o.short_desc)='%s' and owner_type='shop' and owner=%i group by (extra_flags & %i)", vnum, short_desc.c_str(), shop_nr, ITEM_STRUNG);
   db.fetchRow();
   int count=convertTo<int>(db["count"]);
 

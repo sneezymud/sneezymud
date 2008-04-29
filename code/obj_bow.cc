@@ -206,7 +206,8 @@ bool TBow::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
     return TRUE;
   }
 
-  total=tso.getInventoryCount(objVnum());
+  total=tso.getInventoryCount(objVnum(), shortDescr);
+
   if (total >= max_num) {
     keeper->doTell(ch->name, "I already have plenty of those.");
     return TRUE;
