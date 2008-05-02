@@ -382,7 +382,7 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
           description[tMarker++] = tExDescr->description[tPos];
       description[tMarker] = '\0';
       */
-      db.query("insert into mob_imm (owner, vnum, keyword, description) values ('%s', %i, '%s', '%i')", ch->name, vnum, tExDescr->keyword, tExDescr->description);
+      db.query("insert into mob_extra (owner, vnum, keyword, description) values ('%s', %i, '%s', '%i')", ch->name, vnum, tExDescr->keyword, tExDescr->description);
     }
   }
 }
