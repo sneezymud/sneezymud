@@ -616,45 +616,73 @@ void applyAddictionAffects(TBeing *ch, drugTypeT drug, int severity){
       break;
     case DRUG_POT:
       if(ch->desc->drugs[DRUG_POT].current_consumed > (unsigned)(severity/2))
-	break;
+        break;
 
       if(severity<20){
-	ch->sendTo(fmt("Smoking some %s right now seems appealing.\n\r") % drugTypes[drug].name);
+        ch->sendTo(fmt("Smoking some %s right now seems appealing.\n\r") % drugTypes[drug].name);
       } else if(severity<40){
-	ch->sendTo(fmt("You sure would like to smoke some %s.\n\r") % drugTypes[drug].name);
+        ch->sendTo(fmt("You sure would like to smoke some %s.\n\r") % drugTypes[drug].name);
 
-	aff.type = AFFECT_DRUG;
-	aff.bitvector = 0;
-	aff.modifier2 = drug;
-	aff.modifier = -severity;
-	aff.duration = PULSE_MUDHOUR;
-	aff.location = APPLY_FOC;
+        aff.type = AFFECT_DRUG;
+        aff.bitvector = 0;
+        aff.modifier2 = drug;
+        aff.modifier = -severity;
+        aff.duration = PULSE_MUDHOUR;
+        aff.location = APPLY_FOC;
 
-	if(!(affptr=findDrugAffect(ch, DRUG_POT, APPLY_FOC))){
-	  ch->affectTo(&aff, -1);
-	} else {
-	  reapplyDrugAffect(ch, affptr, aff.modifier, aff.duration);
-	}
+        if(!(affptr=findDrugAffect(ch, DRUG_POT, APPLY_FOC))){
+          ch->affectTo(&aff, -1);
+        } else {
+          reapplyDrugAffect(ch, affptr, aff.modifier, aff.duration);
+        }
       } else {
-	ch->sendTo(fmt("You really want to smoke some %s.\n\r") % drugTypes[drug].name);
-	ch->sendTo("You've got a splitting headache and you feel very very tired.\n\r");
-	ch->setMove(max((ch->getMove() - 50), 0));
-	
-	aff.type = AFFECT_DRUG;
-	aff.bitvector = 0;
-	aff.modifier2 = drug;
-	aff.modifier = -10;
-	aff.duration = PULSE_MUDHOUR;
-	aff.location = APPLY_FOC;
+        ch->sendTo(fmt("You really want to smoke some %s.\n\r") % drugTypes[drug].name);
+        ch->sendTo("You've got a splitting headache and you feel very very tired.\n\r");
+        ch->setMove(max((ch->getMove() - 50), 0));
 
-	if(!(affptr=findDrugAffect(ch, DRUG_POT, APPLY_FOC))){
-	  ch->affectTo(&aff, -1);
-	} else {
-	  reapplyDrugAffect(ch, affptr, aff.modifier, aff.duration);
-	}
+        aff.type = AFFECT_DRUG;
+        aff.bitvector = 0;
+        aff.modifier2 = drug;
+        aff.modifier = -10;
+        aff.duration = PULSE_MUDHOUR;
+        aff.location = APPLY_FOC;
+
+        if(!(affptr=findDrugAffect(ch, DRUG_POT, APPLY_FOC))){
+          ch->affectTo(&aff, -1);
+        } else {
+          reapplyDrugAffect(ch, affptr, aff.modifier, aff.duration);
+        }
       }
       break;
     case DRUG_FROGSLIME:
+      {
+        const static sstring ticks[] = {
+          "Your tongue feels hot.  Some bullywug slime would cool it off.\n\r",
+          "You have the sudden impulse to lick something.\n\r",
+          "You begin salivating for no apparent reason.\n\r",
+          };
+        TThing *target = NULL;
+        if(ch->desc->drugs[DRUG_FROGSLIME].current_consumed > (unsigned)(severity/2))
+          break;
+
+        if (severity < 3)
+        {
+          if (!::number(0, 1))
+            ch->sendTo(ticks[::number(0, cElements(ticks)-1)]);
+          break;
+        }
+
+        if (::number(0, 3))
+          break;
+
+        ch->sendTo("The urge to lick something becomes overwhelming!\n\r");
+        for(target = ch->roomp->getStuff(); target && ::number(0,9); target = target->nextThing);
+        if (!target)
+          target = ch;
+        ch->doAction(fname(target->name), CMD_LICK);
+
+        break;
+      }
     case DRUG_OPIUM:
     case DRUG_NONE:
     case MAX_DRUG:
