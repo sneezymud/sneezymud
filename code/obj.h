@@ -696,7 +696,7 @@ private:
     virtual void changeComponentValue4(TBeing *, const char *, editorEnterTypeT) {}
     virtual void boottimeInit() {}
     virtual void decayMe();
-    virtual bool sellMeCheck(TBeing *, TMonster *, int) const;
+    virtual bool sellMeCheck(TBeing *, TMonster *, int num, int defaultMax) const;
     virtual bool fitsSellType(tObjectManipT, TBeing *, TMonster *, sstring, itemTypeT, int &, int);
     virtual int treeMe(TBeing *, const char *, int, int*);
     virtual bool canGetMeDeny(const TBeing *, silentTypeT) const;

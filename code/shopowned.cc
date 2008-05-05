@@ -64,15 +64,18 @@ sstring transactionToString(transactionTypeT action)
 }
 
 
-int TShopOwned::getInventoryCount(int vnum, sstring short_desc)
+int TShopOwned::getInventoryCount(const TObj *obj)
 {
   TDatabase db(DB_SNEEZY);
 
-  db.query("select count(*) as count from rent r left outer join rent_strung rs on (r.rent_id=rs.rent_id) where r.vnum=%i and o.vnum=r.vnum and coalesce(rs.short_desc, o.short_desc)='%s' and owner_type='shop' and owner=%i group by (extra_flags & %i)", vnum, short_desc.c_str(), shop_nr, ITEM_STRUNG);
-  db.fetchRow();
-  int count=convertTo<int>(db["count"]);
-
-  return count;
+  if (obj->isObjStat(ITEM_STRUNG))
+    db.query("select count(*) as count from rent r left outer join rent_strung rs on (r.rent_id=rs.rent_id) where r.vnum=%i and rs.short_desc='%s' and r.owner_type='shop' and r.owner=%i and (r.extra_flags & 4) = 4", obj->objVnum(), sstring(obj->shortDescr).trim().c_str(), shop_nr);
+  else
+    db.query("select count(*) as count from rent where vnum=%i and owner_type='shop' and owner=%i", obj->objVnum(), shop_nr);
+  
+  if (db.fetchRow());
+    return convertTo<int>(db["count"]);
+  return 0;
 }
 
 TThing *TShopOwned::getStuff()
@@ -778,7 +781,7 @@ void TShopOwned::showInfo()
 		   shop_index[shop_nr].profit_buy %
 		   shop_index[shop_nr].profit_sell);
     keeper->doTell(ch->getName(),fmt("My maximum inventory per item is %i.") %
-		   getMaxNum(NULL));
+		   getMaxNum(NULL, 9));
   }
 
 
@@ -1491,8 +1494,11 @@ int TShopOwned::doLogs(sstring arg)
 
 
 
-int TShopOwned::getMaxNum(const TObj *o)
+int TShopOwned::getMaxNum(const TObj *o, int defaultMax)
 {
+  if (!isOwned())
+    return defaultMax;
+
   TDatabase db(DB_SNEEZY);
   
   if(o){
@@ -1516,6 +1522,6 @@ int TShopOwned::getMaxNum(const TObj *o)
     return convertTo<int>(db["max_num"]);
 
   // this is non-owned shop default
-  return 9;
+  return defaultMax;
 }
 

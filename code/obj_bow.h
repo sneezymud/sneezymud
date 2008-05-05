@@ -28,7 +28,7 @@ class TBow : public TObj {
     virtual void evaluateMe(TBeing *) const;
     virtual int shootMeBow(TBeing *ch, TBeing *, unsigned int, dirTypeT, int);
     virtual void bloadArrowBow(TBeing *, TArrow *);
-    virtual bool sellMeCheck(TBeing *, TMonster *, int) const;
+    virtual bool sellMeCheck(TBeing *, TMonster *, int, int) const;
     virtual sstring compareMeAgainst(TBeing *, TObj *);
     virtual void dropMe(TBeing *, showMeT, showRoomT);
 

@@ -350,52 +350,10 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   return price;
 }
 
-bool TCommodity::sellMeCheck(TBeing *ch, TMonster *keeper, int num) const
+bool TCommodity::sellMeCheck(TBeing *ch, TMonster *keeper, int num, int) const
 {
-  int total = 0;
-  sstring buf;
-  unsigned int shop_nr;
-
-  for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != (keeper)->number); shop_nr++);
-
-  if (shop_nr >= shop_index.size()) {
-    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  mob_index[keeper->number].virt);
-    return FALSE;
-  }
-
-
-  
-  TShopOwned tso(shop_nr, keeper, ch);
-  int max_num=shop_capacity;
-
-  if(tso.isOwned())
-    max_num=tso.getMaxNum(this);
-
-  if(max_num == 0){
-    keeper->doTell(ch->name, "I don't wish to buy any of those right now.");
-    return TRUE;
-  }
-
-  TCommodity *commod;
-  for(TThing *t=keeper->getStuff();t;t=t->nextThing){
-    if((commod=dynamic_cast<TCommodity *>(t)) && 
-       commod->getMaterial()==getMaterial()){
-      total=commod->numUnits();
-      break;
-    }
-  }
-
-  if (total >= max_num) {
-    keeper->doTell(ch->getName(), fmt("I already have plenty of %s.") % getName());
-    return TRUE;
-  } else if (total + num > max_num) {
-    keeper->doTell(ch->getName(), fmt("I'll buy no more than %d unit%s of %s.") % (max_num - total) % (max_num - total > 1 ? "s" : "") % getName());
-    return FALSE;
-  }
-
-  return FALSE;
+  return false;
 }
-
 
 int TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
 {
@@ -434,7 +392,7 @@ int TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
   if (will_not_buy(ch, keeper, this, shop_nr))
     return false;
 
-  if (sellMeCheck(ch, keeper, numUnits()))
+  if (sellMeCheck(ch, keeper, numUnits(), -1))
     return false;
 
   if (!shop_index[shop_nr].willBuy(this)) {

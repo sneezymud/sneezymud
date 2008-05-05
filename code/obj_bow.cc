@@ -183,36 +183,9 @@ void TBow::sstringMeBow(TBeing *ch, TThing *sstring)
   sstring->sstringMeString(ch, this);
 }
 
-bool TBow::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
+bool TBow::sellMeCheck(TBeing *ch, TMonster *keeper, int, int) const
 {
-  int total = 0;
-  unsigned int shop_nr;
-
-  for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != (keeper)->number); shop_nr++);
-
-  if (shop_nr >= shop_index.size()) {
-    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  mob_index[keeper->number].virt);
-    return FALSE;
-  }
-  
-  TShopOwned tso(shop_nr, keeper, ch);
-  int max_num=10;
-
-  if(tso.isOwned())
-    max_num=tso.getMaxNum(this);
-
-  if(max_num == 0){
-    keeper->doTell(ch->name, "I don't wish to buy any of those right now.");
-    return TRUE;
-  }
-
-  total=tso.getInventoryCount(objVnum(), shortDescr);
-
-  if (total >= max_num) {
-    keeper->doTell(ch->name, "I already have plenty of those.");
-    return TRUE;
-  }
-  return FALSE;
+  return TObj::sellMeCheck(ch, keeper, 1, 10);
 }
 
 void TBow::bloadArrowBow(TBeing *ch, TArrow *the_arrow)

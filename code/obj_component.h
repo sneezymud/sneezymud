@@ -314,7 +314,7 @@ class TComponent : public TMergeable {
     virtual void findComp(TComponent **, spellNumT);
     virtual void decayMe();
     virtual int objectSell(TBeing *, TMonster *);
-    virtual bool sellMeCheck(TBeing *, TMonster *, int) const;
+    virtual bool sellMeCheck(TBeing *, TMonster *, int, int) const;
     virtual int componentSell(TBeing *, TMonster *, int, TThing *);
     virtual int componentNumSell(TBeing *, TMonster *, int, TThing *, int);
     virtual int componentValue(TBeing*, TMonster *, int, TThing *);

@@ -314,8 +314,9 @@ bool shopData::willBuy(const TObj *item)
 {
   int counter, max_trade;
   bool mat_ok=FALSE;
+  bool is_commod = dynamic_cast<const TCommodity*>(item) != NULL;
 
-  if (item->getValue() < 1 || 
+  if ((!is_commod && item->getValue() < 1) || 
       item->isObjStat(ITEM_NEWBIE) ||
       item->isObjStat(ITEM_PROTOTYPE))
     return FALSE;
@@ -499,15 +500,18 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   int i;
   float swindle;
 
-  if ((ch->getCarriedVolume() + (num * getTotalVolume())) > ch->carryVolumeLimit()) {
-    ch->sendTo(fmt("%s: You can't carry that much volume.\n\r") % fname(name));
-    return -1;
-  }
-  // obj-weight > free ch limit
-  if (compareWeights(getTotalWeight(TRUE),
-       ((ch->carryWeightLimit() - ch->getCarriedWeight())/num)) == -1) {
-    ch->sendTo(fmt("%s: You can't carry that much weight.\n\r") % fname(name));
-    return -1;
+  if (!ch->isImmortal())
+  {
+    if ((ch->getCarriedVolume() + (num * getTotalVolume())) > ch->carryVolumeLimit()) {
+      ch->sendTo(fmt("%s: You can't carry that much volume.\n\r") % fname(name));
+      return -1;
+    }
+    // obj-weight > free ch limit
+    if (compareWeights(getTotalWeight(TRUE),
+         ((ch->carryWeightLimit() - ch->getCarriedWeight())/num)) == -1) {
+      ch->sendTo(fmt("%s: You can't carry that much weight.\n\r") % fname(name));
+      return -1;
+    }
   }
   
   tmp = number_objects_in_list(this, (TObj *) keeper->getStuff());
@@ -628,11 +632,13 @@ bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int shop_nr)
     return TRUE;
   }
 
+  if (dynamic_cast<TCommodity *>(temp1))
+    return FALSE;
+
   if(temp1->sellPrice(1, shop_nr, -1, ch) < 0){
     keeper->doTell(ch->getName(), "You'd have to pay me to buy that!");
     return TRUE;
   }
-
 
   TDatabase db(DB_SNEEZY);
   db.query("select count(*) as count from rent where owner_type='shop' and owner=%i",
@@ -649,7 +655,7 @@ bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int shop_nr)
 }
 
 
-bool TObj::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
+bool TObj::sellMeCheck(TBeing *ch, TMonster *keeper, int, int defaultMax) const
 {
   int total = 0;
   sstring buf;
@@ -663,14 +669,14 @@ bool TObj::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
   }
   
   TShopOwned tso(shop_nr, keeper, ch);
-  int max_num=tso.getMaxNum(this);
+  int max_num=tso.getMaxNum(this, defaultMax);
 
   if(max_num == 0){
     keeper->doTell(ch->name, "I don't wish to buy any of those right now.");
     return TRUE;
   }
 
-  total=tso.getInventoryCount(objVnum(), shortDescr);
+  total=tso.getInventoryCount(this);
 
   if (total >= max_num && !shop_index[shop_nr].isProducing(this)) {
     keeper->doTell(ch->name, "I already have plenty of those.");
@@ -761,7 +767,7 @@ int TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
     keeper->doTell(ch->getName(), "I'm sorry, I don't buy valueless items.");
     return false;
   }
-  if (sellMeCheck(ch, keeper, num))
+  if (sellMeCheck(ch, keeper, num, 9))
     return false;
   
   chr = ch->getChaShopPenalty() - ch->getSwindleBonus();
@@ -1288,12 +1294,7 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   sstring buf;
   int willbuy=0;
   
-#if 0
-  if (sellMeCheck(ch, keeper, num))
-    return;
-#else
-  willbuy=!sellMeCheck(ch, keeper, num);
-#endif
+  willbuy=!sellMeCheck(ch, keeper, num, 9);
 
   if (!shop_index[shop_nr].willBuy(this)) {
     keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
@@ -2213,7 +2214,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       db.fetchRow();
       count=convertTo<int>(db["count"]);
       
-      if(count >= tso.getMaxNum(o)){
+      if(count >= tso.getMaxNum(o, 10)){
         delete o;
         continue;
       }
@@ -2718,7 +2719,7 @@ void factoryProduction(int shop_nr)
       continue;
     }
 
-    if(count >= tso.getMaxNum(obj)){
+    if(count >= tso.getMaxNum(obj, 10)){
       delete obj;
       continue;
     }

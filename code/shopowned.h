@@ -55,8 +55,8 @@ class TShopOwned {
   double getSpeed();
   void setSpeed(sstring);
 
-  int getMaxNum(const TObj *);
-  int getInventoryCount(int, sstring);
+  int getMaxNum(const TObj *, int defaultMax);
+  int getInventoryCount(const TObj *);
 
   void showInfo();
   int setRates(sstring);

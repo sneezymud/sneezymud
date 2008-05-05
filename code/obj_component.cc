@@ -2291,7 +2291,7 @@ void TComponent::changeObjValue4(TBeing *ch)
   return;
 }
 
-bool TComponent::sellMeCheck(TBeing *ch, TMonster *keeper, int num) const
+bool TComponent::sellMeCheck(TBeing *ch, TMonster *keeper, int num, int defaultMax) const
 {
   int total = 0;
   sstring buf;
@@ -2305,10 +2305,7 @@ bool TComponent::sellMeCheck(TBeing *ch, TMonster *keeper, int num) const
   }
   
   TShopOwned tso(shop_nr, keeper, ch);
-  int max_num=50;
-
-  if(tso.isOwned())
-    max_num=tso.getMaxNum(this);
+  int max_num = tso.getMaxNum(this, defaultMax);
 
   if(max_num == 0){
     keeper->doTell(ch->name, "I don't wish to buy any of those right now.");
@@ -3169,7 +3166,7 @@ int TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num)
     return false;
   }
 
-  if (sellMeCheck(ch, tKeeper, num))
+  if (sellMeCheck(ch, tKeeper, num, 50))
     return false;
 
   if(db.fetchRow()){
@@ -3186,11 +3183,8 @@ int TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num)
 
 
   TShopOwned tso(tShop, tKeeper, ch);
-  int max_num = 50;
+  int max_num = tso.getMaxNum(this, 50);
   int total = 0;
-
-  if(tso.isOwned())
-    max_num=tso.getMaxNum(this);
 
   for (TThing *t = tKeeper->getStuff(); t; t = t->nextThing) {
     if ((t->number == number) &&
@@ -3305,7 +3299,7 @@ void TComponent::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num)
   sstring buf;
   int willbuy = 0;
 
-  willbuy=!sellMeCheck(ch, keeper, num);
+  willbuy=!sellMeCheck(ch, keeper, num, 50);
   price = sellPrice(num, shop_nr, -1, ch);
 
   if (!shop_index[shop_nr].willBuy(this)) {

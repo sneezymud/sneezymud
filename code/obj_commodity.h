@@ -34,7 +34,7 @@ class TCommodity : public TMergeable {
     virtual void logMe(const TBeing *, const char *) const {}
     virtual int buyMe(TBeing *, TMonster *, int, int);
     virtual int sellMe(TBeing *, TMonster *, int, int);
-    virtual bool sellMeCheck(TBeing *, TMonster *, int) const;
+    virtual bool sellMeCheck(TBeing *, TMonster *, int, int) const;
     virtual int sellCommod(TBeing *, TMonster *, int, TThing *);
     virtual void valueMe(TBeing *, TMonster *, int, int);
     virtual const sstring shopList(const TBeing *, const sstring &, int, int, int, int, int, unsigned long int) const;
