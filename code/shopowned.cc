@@ -138,8 +138,8 @@ void TShopOwned::doBuyTransaction(int cashCost, const sstring &name,
     corp_cash+=doDividend(cashCost, name);
     corp_cash+=doReserve();
 
-    if(action != TX_DEPOSIT ||
-       action != TX_RECYCLING) // don't tax bank deposits
+    if(action == TX_BUYING ||
+       action == TX_BUYING_SERVICE)
       tax=chargeTax(cashCost, name, obj);
 
     journalize(ch->getName(), name, action, cashCost, tax, 
