@@ -376,17 +376,17 @@ void TPerson::saveWizPowers()
 {
   if (GetMaxLevel() <= MAX_MORT)
     return;
-  wizPowerT num;
 
   TDatabase db(DB_SNEEZY);
 
-  db.query("delete from wizpower where player_id=%i", getPlayerID());
-
-  for (num = MIN_POWER_INDEX; num < MAX_POWER_INDEX; num++) {
-    if (hasWizPower(num)) {
-      db.query("insert into wizpower (player_id, wizpower) values (%i, %i)",
-	       getPlayerID(), mapWizPowerToFile(num));
+  for (wizPowerT num = MIN_POWER_INDEX; num < MAX_POWER_INDEX; num++) {
+    if (wizPowers[num] != wizPowersOriginal[num]) {
+      if (!wizPowersOriginal[num])
+        db.query("insert into wizpower (player_id, wizpower) values (%i, %i)", getPlayerID(), mapWizPowerToFile(num));
+      else
+        db.query("delete from wizpower where player_id=%i and wizpower=%i", getPlayerID(), mapWizPowerToFile(num));
     }
+    wizPowersOriginal[num] = wizPowers[num];
   }
 }
 
@@ -394,15 +394,17 @@ void TPerson::loadWizPowers()
 {
   if (GetMaxLevel() <= MAX_MORT)
     return;
+  memset(&wizPowersOriginal, 0, sizeof(wizPowersOriginal));
 
   TDatabase db(DB_SNEEZY);
 
   db.query("select wizpower from wizpower where player_id=%i",
 	   getPlayerID());
   
-  while(db.fetchRow())
+  while(db.fetchRow()) {
     setWizPower(mapFileToWizPower(convertTo<int>(db["wizpower"])));
-
+    wizPowersOriginal[mapFileToWizPower(convertTo<int>(db["wizpower"]))] |= 0x1;
+  }
 }
 
 void TBeing::doPowers(const sstring &) const

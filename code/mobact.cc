@@ -817,6 +817,34 @@ int TMonster::senseWimps()
   if (rider)
     return FALSE;
 
+  // if we are being used as a cheap tank (by exploiting zombie/leprosy/cityguard), lets turn the tables
+  // we don't want this to happen if you're helping defend a city though, so skip if in cities
+  if (isAffected(AFF_AGGRESSOR) && !inGrimhaven() && !inAmber() && !inLogrus() && !inBrightmoon() &&
+    !fight()->isPet(PETTYPE_PET|PETTYPE_CHARM|PETTYPE_THRALL) && !fight()->isPc()) {
+    bool beingUsed = false;
+    // if a PC using me to tank?
+    for(t = roomp->getStuff(); !beingUsed && t; t = t->nextThing)
+      if (wimp = dynamic_cast<TBeing*>(t))
+        beingUsed = (wimp != this && wimp->isPc() && wimp->fight() &&
+                      (wimp->fight() == this || wimp->fight() == fight()));
+
+    if (beingUsed) {
+      if (!isDumbAnimal()) 
+        doSay("I think I'll just take care of you first!");
+      act("$n <R>switches to $N<Z>.", TRUE, this, 0, wimp, TO_NOTVICT);
+      act("$n <R>switches to you<Z>.", TRUE, this, 0, wimp, TO_VICT);
+
+      if (fight()->fight() == this)
+        fight()->stopFighting();
+      stopFighting();
+      addHated(wimp);
+      setCharFighting(wimp);
+      return TRUE;
+    }
+    wimp = NULL;
+    t = NULL;
+  }
+
   // first lets see if there are tons of attackers and break out if so */
   if (!::number(0,4) && ::number(0,attackers)) {
 
@@ -3243,6 +3271,9 @@ int TMonster::takeFirstHit(TBeing &vict)
 
   if (cantHit > 0)
     return FALSE;
+
+  if (!vict.isAffected(AFF_AGGRESSOR))
+    SET_BIT(specials.affectedBy, AFF_AGGRESSOR);
 
   if (hasClass(CLASS_THIEF) && !riding) {
     if ((stabber = heldInPrimHand())) {

@@ -25,6 +25,7 @@ class TPerson : public TBeing {
     int last_rent;
     //    bool toggles[MAX_TOG_INDEX];
     bool wizPowers[MAX_POWER_INDEX];
+    bool wizPowersOriginal[MAX_POWER_INDEX];
     unsigned int timer;
 
     TPerson(Descriptor *);

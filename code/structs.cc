@@ -994,6 +994,7 @@ TPerson::TPerson(Descriptor *thedesc) :
   *lastHost = '\0';
   memset(toggles, 0, sizeof(toggles));
   memset(wizPowers, 0, sizeof(wizPowers));
+  memset(wizPowersOriginal, 0, sizeof(wizPowersOriginal));
 
   desc = thedesc;
 
@@ -1022,6 +1023,7 @@ TPerson::TPerson(const TPerson &a) :
   strcpy(lastHost, a.lastHost);
   memcpy(toggles, a.toggles, sizeof(toggles));
   memcpy(wizPowers, a.wizPowers, sizeof(wizPowers));
+  memcpy(wizPowersOriginal, a.wizPowers, sizeof(wizPowersOriginal));
 
   accStat.player_num++;
   accStat.max_player_since_reboot = max(accStat.max_player_since_reboot, accStat.player_num);
@@ -1041,6 +1043,7 @@ TPerson & TPerson::operator=(const TPerson &a)
   strcpy(lastHost, a.lastHost);
   memcpy(toggles, a.toggles, sizeof(toggles));
   memcpy(wizPowers, a.wizPowers, sizeof(wizPowers));
+  memcpy(wizPowersOriginal, a.wizPowers, sizeof(wizPowersOriginal));
   return *this;
 }
 

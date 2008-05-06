@@ -329,9 +329,7 @@ int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
   TBeing *tch = NULL;
   TThing *t1 = NULL, *t2 = NULL;
   TTrap *trap;
-  char buf[256], buf2[256], buf3[256];
   int rc = 0, num = 0, num2 = 0;
-  sstring s;
 
   if ((cmd != CMD_GENERIC_PULSE) || !ch->awake())
     return FALSE;
@@ -345,16 +343,12 @@ int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
     if (::number(0,99) < 65)
       return FALSE;   // have them shout a bit less 
 
-    s=guardShout(ch);
-    strcpy(buf, s.c_str());
-
+    sstring shout = guardShout(ch).cap();
     if (!number(0, 20))
-      ch->doShout(sstring(buf).cap());
+      ch->doShout(shout);
     else if (::number(0,2)) {
-      sprintf(buf2, "$n rears back %s head and shouts loudly.", ch->hshr());
-      sprintf(buf3, "$n shouts, \"%s\"", sstring(buf).cap().c_str());
-      act(buf2, TRUE, ch, 0, 0, TO_ROOM);
-      act(buf3, TRUE, ch, 0, 0, TO_ROOM);
+      act(fmt("$n rears back %s head and shouts loudly.") % ch->hshr(), TRUE, ch, 0, 0, TO_ROOM);
+      act(fmt("$n shouts, \"%s\"") % shout.c_str(), TRUE, ch, 0, 0, TO_ROOM);
     }
    
     if (ch->fight() && ch->roomp) {
@@ -378,8 +372,8 @@ int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
         if(!tbt)
           continue;
         if (ch == tbt)
-	  continue;
-	if (tbt->isAffected(AFF_STUNNED))
+          continue;
+        if (tbt->isAffected(AFF_STUNNED))
           continue;
         if (tbt->spec != SPEC_CITYGUARD)
           continue;
@@ -450,7 +444,7 @@ int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
         if (!hasWandered) {
           if (!ch->checkSoundproof())
             act("$n screams 'Get thee back to the underworld that spawned you!!!!'", FALSE, ch, 0, 0, TO_ROOM);
-  
+
           rc = ch->takeFirstHit(*tch);
           if (IS_SET_DELETE(rc, DELETE_VICT)) {
             delete tch;
@@ -465,10 +459,10 @@ int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
         
       } else if ((tch->hasDisease(DISEASE_LEPROSY) || tch->spec==SPEC_LEPER) && !tch->isPc()) {
         if (!hasWandered) {
-        	if(!ch->checkSoundproof())
-        	  act("$n screams 'There is no mercy for your kind, leper!'", FALSE, ch, 0, 0, TO_ROOM);
-  
-        	rc=ch->takeFirstHit(*tch);
+          if(!ch->checkSoundproof())
+            act("$n screams 'There is no mercy for your kind, leper!'", FALSE, ch, 0, 0, TO_ROOM);
+
+          rc=ch->takeFirstHit(*tch);
           if (IS_SET_DELETE(rc, DELETE_VICT)) {
             delete tch;
             tch = NULL;
@@ -487,7 +481,7 @@ int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
         if (!hasWandered) {
           if (!ch->checkSoundproof())
             act("$n screams 'This place belongs to the UnLiving!!!!'", FALSE, ch, 0, 0, TO_ROOM);
-  
+
           if ((rc = ch->takeFirstHit(*tch)) == DELETE_VICT) {
             delete tch;
             tch = NULL;
@@ -507,6 +501,7 @@ int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
       if (!hasWandered) {
         if (!ch->checkSoundproof())
           act("$n screams 'Protect the innocent!!!'",FALSE,ch,0,0,TO_ROOM);
+
         if ((rc = ch->takeFirstHit(*tch)) == DELETE_VICT) {
           delete tch;
           tch = NULL;
