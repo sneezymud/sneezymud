@@ -41,14 +41,9 @@ int TObj::maxFix(const TBeing *keeper, depreciationTypeT dep_done) const
     }
     
     if(shop_index[shop_nr].isOwned()){
-      db.query("select quality from shopownedrepair where shop_nr=%i", shop_nr);
-      
-      if(db.fetchRow()){
-	float quality=convertTo<float>(db["quality"]);
-	
-	if(quality<=1.0 && quality>0)
-	  amount = (int)((float) amount * quality);
-      }
+      float quality = shop_index[shop_nr].getRepairQuality();
+      if(quality<=1.0 && quality>0)
+        amount = (int)((float) amount * quality);
     }
   }
 
@@ -201,14 +196,9 @@ static int repair_time(TBeing *keeper, const TObj *o)
   }
 
   if(shop_index[shop_nr].isOwned()){
-    db.query("select speed from shopownedrepair where shop_nr=%i", shop_nr);
-    
-    if(db.fetchRow()){
-      speed=convertTo<float>(db["speed"]);
-
-//      if(speed <= 5.0 && speed > 0)
-//	MINS_AT_60TH=(int)((float)MINS_AT_60TH * speed);
-    }
+    float rep_speed = shop_index[shop_nr].getRepairSpeed();
+    if (rep_speed > 0)
+      speed = rep_speed;
   }
 
 

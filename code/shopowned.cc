@@ -493,26 +493,12 @@ int TShopOwned::doReserve()
 
 double TShopOwned::getQuality()
 {
-  TDatabase db(DB_SNEEZY);
-
-  db.query("select quality from shopownedrepair where shop_nr=%i", shop_nr);
-
-  if(db.fetchRow())
-    return convertTo<double>(db["quality"]);
-
-  return -1;
+  return shop_index[shop_nr].getRepairQuality();
 }
 
 double TShopOwned::getSpeed()
 {
-  TDatabase db(DB_SNEEZY);
-
-  db.query("select speed from shopownedrepair where shop_nr=%i", shop_nr);
-
-  if(db.fetchRow())
-    return convertTo<double>(db["speed"]);
-
-  return -1;
+  return shop_index[shop_nr].getRepairSpeed();
 }
 
 
@@ -537,6 +523,7 @@ void TShopOwned::setQuality(sstring arg)
   keeper->doTell(ch->getName(), fmt("Ok, the quality percentage has been set to %f.") % f);
 
   shoplog(shop_nr, ch, keeper, fmt("%f") % f, 0, "set quality");
+  shop_index[shop_nr].clearCache();
 }
 
 
@@ -562,7 +549,7 @@ void TShopOwned::setSpeed(sstring arg)
   keeper->doTell(ch->getName(), fmt("Ok, the speed modifier has been set to %f.") % f);
 
   shoplog(shop_nr, ch, keeper, fmt("%f") % f, 0, "set speed");
-
+  shop_index[shop_nr].clearCache();
 }
 
 
@@ -781,7 +768,7 @@ void TShopOwned::showInfo()
 		   shop_index[shop_nr].profit_buy %
 		   shop_index[shop_nr].profit_sell);
     keeper->doTell(ch->getName(),fmt("My maximum inventory per item is %i.") %
-		   getMaxNum(NULL, 9));
+		   getMaxNum(NULL, NULL, 9));
   }
 
 
@@ -812,14 +799,12 @@ int TShopOwned::setRates(sstring arg)
     return FALSE;
   }
 
-  // reset the price cache
-  cached_shop_nr=-1;
+  shop_index[shop_nr].clearCache();
 
   arg = one_argument(arg, buf);
   profit_buy = convertTo<float>(buf);
   if(buf != "")
     argc++;
-
 
   if(buf == "clear"){ /////////////////////////////////////////////
     arg = one_argument(arg, buf);
@@ -1051,7 +1036,7 @@ int TShopOwned::setRates(sstring arg)
 	    o->getName() % profit_buy % profit_sell % max_num, 
 	    0, "set setrates");
   }
-  
+
   return TRUE;
 }
 
@@ -1228,6 +1213,8 @@ int TShopOwned::sellShop(){
 
   shoplog(shop_nr, ch, keeper, fmt("%i") % value, 0, "sold shop");
   
+  shop_index[shop_nr].clearCache();
+
   return TRUE;
 }
 
@@ -1494,34 +1481,8 @@ int TShopOwned::doLogs(sstring arg)
 
 
 
-int TShopOwned::getMaxNum(const TObj *o, int defaultMax)
+int TShopOwned::getMaxNum(const TBeing *ch, const TObj *o, int defaultMax)
 {
-  if (!isOwned())
-    return defaultMax;
-
-  TDatabase db(DB_SNEEZY);
-  
-  if(o){
-    db.query("select match_str, max_num from shopownedmatch where shop_nr=%i", shop_nr);
-    
-    while(db.fetchRow()){
-      if(isname(db["match_str"], o->name))
-	return convertTo<int>(db["max_num"]);
-    }
-    
-    db.query("select max_num from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, o->objVnum());
-    
-    if(db.fetchRow())
-      return convertTo<int>(db["max_num"]);
-  }
-
-
-  db.query("select max_num from shopowned where shop_nr=%i", shop_nr);
-  
-  if(db.fetchRow())
-    return convertTo<int>(db["max_num"]);
-
-  // this is non-owned shop default
-  return defaultMax;
+  return shop_index[shop_nr].getMaxNum(ch, o, defaultMax);
 }
 

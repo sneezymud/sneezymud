@@ -2108,7 +2108,7 @@ devotionLevelT TBeing::getDevotionLevel() const
     return DEV_LEV_SYMB_PRIM_OTHER_FREE;
   else if (skill < 30)
     return DEV_LEV_SYMB_EITHER_OTHER_FREE;
-  else if (skill < 40)
+  else if (skill < 40 && !isAmbidextrous())
     return DEV_LEV_SYMB_PRIM_OTHER_EQUIP;
   else if (skill < 50)
     return DEV_LEV_SYMB_EITHER_OTHER_EQUIP;

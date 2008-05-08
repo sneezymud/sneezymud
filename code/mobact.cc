@@ -3869,15 +3869,16 @@ int TMonster::mobileActivity(int pulse)
 
       
       if(getMoney()<0){
-	TDatabase db(DB_SNEEZY);
+        TDatabase db(DB_SNEEZY);
 
-	db.query("delete from shopowned where shop_nr=%i", shop_nr);
-	db.query("delete from shopownedaccess where shop_nr=%i", shop_nr);
+        db.query("delete from shopowned where shop_nr=%i", shop_nr);
+        db.query("delete from shopownedaccess where shop_nr=%i", shop_nr);
+        shop_index[shop_nr].clearCache();
 
-	vlogf(LOG_PEEL, fmt("shop_nr %i, ran out of money and was reclaimed") %  shop_nr);
+        vlogf(LOG_PEEL, fmt("shop_nr %i, ran out of money and was reclaimed") %  shop_nr);
 
-	if(getMoney()<0)
-	  setMoney(0);
+        if(getMoney()<0)
+          setMoney(0);
       }
 
     }

@@ -3797,7 +3797,7 @@ void TBeing::doHistory()
 
   sendTo("\n\rYour tell history :\n\r\n\r");
 
-  db.query("select tellfrom, tell from tellhistory where tellto='%s' order by telltime desc", getName());
+  db.query("select tellfrom, tell from tellhistory where tellto='%s' order by telltime desc limit 25", getName());
 
   for(i=0;i<25 && db.fetchRow();i++){
     sendTo(COLOR_BASIC, fmt("[%d] <p>%s<1> told you, \"<c>%s<1>\"\n\r") %

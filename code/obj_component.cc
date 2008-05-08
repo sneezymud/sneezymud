@@ -2305,7 +2305,7 @@ bool TComponent::sellMeCheck(TBeing *ch, TMonster *keeper, int num, int defaultM
   }
   
   TShopOwned tso(shop_nr, keeper, ch);
-  int max_num = tso.getMaxNum(this, defaultMax);
+  int max_num = tso.getMaxNum(ch, this, defaultMax);
 
   if(max_num == 0){
     keeper->doTell(ch->name, "I don't wish to buy any of those right now.");
@@ -3183,7 +3183,7 @@ int TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num)
 
 
   TShopOwned tso(tShop, tKeeper, ch);
-  int max_num = tso.getMaxNum(this, 50);
+  int max_num = tso.getMaxNum(ch, this, 50);
   int total = 0;
 
   for (TThing *t = tKeeper->getStuff(); t; t = t->nextThing) {

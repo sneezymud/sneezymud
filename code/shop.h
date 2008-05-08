@@ -46,9 +46,6 @@ extern vector<shop_pricing>ShopPriceIndex;
 #endif
 
 extern vector<shopData>shop_index;
-extern int cached_shop_nr;
-extern map <int,float> ratios_cache;
-extern map <sstring,float> matches_cache;
 
 extern TObj *loadRepairItem(TBeing *, int, long &, int &, unsigned char &);
 
@@ -89,11 +86,32 @@ class shopData {
     float getProfitBuy(const TObj *, const TBeing *);
     float getProfitSell(const TObj *, const TBeing *);
     bool isRepairShop();
+    int getMaxNum(const TBeing* ch, const TObj* o, int defaultMax);
+    float getRepairSpeed() { return ensureCache() ? repair_speed : -1; }
+    float getRepairQuality() { return ensureCache() ? repair_quality : -1; }
 
     shopData();
     ~shopData();
     shopData(const shopData &t);
     shopData & operator =(const shopData &t);
+
+    void clearCache();
+    bool ensureCache();
+
+private:
+    bool isCached;
+    map<int,float> buy_ratios_cache;
+    map<sstring,float> buy_matches_cache;
+    map<sstring,float> buy_player_cache;
+    map<int,float> sell_ratios_cache;
+    map<sstring,float> sell_matches_cache;
+    map<sstring,float> sell_player_cache;
+    map<int,int> max_ratios_cache;
+    map<sstring,int> max_matches_cache;
+    map<sstring,int> max_player_cache;
+    int max_num;
+    float repair_speed;
+    float repair_quality;
 };
 
 extern bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int);

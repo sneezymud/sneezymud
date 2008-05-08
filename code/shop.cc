@@ -24,10 +24,6 @@
 extern int kick_mobs_from_shop(TMonster *myself, TBeing *ch, int from_room);
 
 vector<shopData>shop_index(0);
-int cached_shop_nr;
-map <int,float> ratios_cache;
-map <sstring,float> matches_cache;
-map <sstring,float> player_cache;
 
 const unsigned int SHOP_DUMP = 124;
 
@@ -70,39 +66,47 @@ unsigned int find_shop_nr(int mobvnum)
 
 float shopData::getProfitSell(const TObj *obj, const TBeing *ch)
 {
-  float profit_sell=shop_index[shop_nr].profit_sell;
+  map <sstring,float>::iterator iter;
+  float profit=profit_sell;
 
   // if the shop is player owned, we check custom pricing
-  if(shop_index[shop_nr].isOwned()){
-    TDatabase db(DB_SNEEZY);
+  if(!isOwned() || !ensureCache())
+    return profit;
 
-    if(obj){
-      db.query("select profit_sell from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, obj->objVnum());
-      
-      if(db.fetchRow())
-	profit_sell=convertTo<float>(db["profit_sell"]);
-      else {
-	// ok, shop is owned and there is no ratio set for this specific object
-	// so check keywords
-	db.query("select match_str, profit_sell from shopownedmatch where shop_nr=%i", shop_nr);
-	
-	while(db.fetchRow()){
-	  if(isname(db["match_str"], obj->name)){
-	    profit_sell=convertTo<float>(db["profit_sell"]);
-	    break;
-	  }
-	}
+  if(obj)
+  {
+    int vnum = obj->objVnum();
+
+    if(sell_ratios_cache.count(vnum))
+    {
+      profit=sell_ratios_cache[vnum];
+    }
+    else
+    {
+      // ok, shop is owned and there is no ratio set for this specific object
+      // so check keywords
+      for(iter=sell_matches_cache.begin();iter!=sell_matches_cache.end();++iter)
+      {
+        if(isname((*iter).first, obj->name))
+        {
+          profit=(*iter).second;
+          break;
+        }
       }
     }
-
-    db.query("select profit_sell from shopownedplayer where shop_nr=%i and lower(player)=lower('%s')", shop_nr, ch->name);
-    
-    if(db.fetchRow())
-      profit_sell = convertTo<float>(db["profit_sell"]);
-
   }
 
-  return profit_sell;
+  // check pricing for player
+  for(iter=sell_player_cache.begin();ch && iter!=sell_player_cache.end();++iter)
+  {
+    if((*iter).first == (sstring) ch->name)
+    {
+      profit = ((*iter).second);
+      break;
+    }
+  }
+
+  return profit;
 }
 
 bool shopData::isRepairShop()
@@ -113,119 +117,151 @@ bool shopData::isRepairShop()
   return false;
 }
 
-float shopData::getProfitBuy(int vnum, sstring name, const TBeing *ch)
+void shopData::clearCache()
 {
-  float profit_buy=-1;
-  map <sstring,float>::iterator iter;
+  buy_ratios_cache.clear();
+  buy_matches_cache.clear();
+  buy_player_cache.clear();
+  sell_ratios_cache.clear();
+  sell_matches_cache.clear();
+  sell_player_cache.clear();
+  max_ratios_cache.clear();
+  max_matches_cache.clear();
+  max_player_cache.clear();
+  max_num = -1;
+  repair_speed = -1;
+  repair_quality = -1;
+  isCached = false;
+}
+
+bool shopData::ensureCache()
+{
+  if (isCached)
+    return true;
+
   TDatabase db(DB_SNEEZY);
-
-  // we do this caching so that if we get the shopPrice on many items at once
-  // (list) it doesn't have to query for each one
-  // overhead is that with one at a time shopPrices (value/sell/buy) we may
-  // rebuild the cache needlessly.  On the upside, when you've got someone
-  // doing value/buy/sell in a shop, they're likely to do a list pretty soon
-  // as well, and then we'll have the cache ready.
-  if(cached_shop_nr != shop_nr){
-    cached_shop_nr=shop_nr;
-    ratios_cache.clear();
-    matches_cache.clear();
-    player_cache.clear();
-
-    db.query("select obj_nr, profit_buy from shopownedratios where shop_nr=%i",
-	     shop_nr);
-    while(db.fetchRow())
-      ratios_cache[convertTo<int>(db["obj_nr"])]=convertTo<float>(db["profit_buy"]);
-
-    db.query("select match_str, profit_buy from shopownedmatch where shop_nr=%i",
-	     shop_nr);
-    while(db.fetchRow())
-      matches_cache[db["match_str"]]=convertTo<float>(db["profit_buy"]);
-
-    db.query("select player, profit_buy from shopownedplayer where shop_nr=%i",
-	     shop_nr);
-    while(db.fetchRow())
-      player_cache[db["player"]]=convertTo<float>(db["profit_buy"]);
-    
+  db.query("select obj_nr, profit_buy, profit_sell, max_num from shopownedratios where shop_nr=%i", shop_nr);
+  while(db.fetchRow())
+  {
+    buy_ratios_cache[convertTo<int>(db["obj_nr"])]=convertTo<float>(db["profit_buy"]);
+    sell_ratios_cache[convertTo<int>(db["obj_nr"])]=convertTo<float>(db["profit_sell"]);
+    max_ratios_cache[convertTo<int>(db["obj_nr"])]=convertTo<int>(db["max_num"]);
   }
 
+  db.query("select match_str, profit_buy, profit_sell, max_num from shopownedmatch where shop_nr=%i", shop_nr);
+  while(db.fetchRow())
+  {
+    buy_matches_cache[db["match_str"]]=convertTo<float>(db["profit_buy"]);
+    sell_matches_cache[db["match_str"]]=convertTo<float>(db["profit_sell"]);
+    max_matches_cache[db["match_str"]]=convertTo<int>(db["max_num"]);
+  }
+
+  db.query("select player, profit_buy, profit_sell, max_num from shopownedplayer where shop_nr=%i", shop_nr);
+  while(db.fetchRow())
+  {
+    buy_player_cache[db["player"]]=convertTo<float>(db["profit_buy"]);
+    sell_player_cache[db["player"]]=convertTo<float>(db["profit_sell"]);
+    max_player_cache[db["player"]]=convertTo<int>(db["max_num"]);
+  }
+
+  max_num = -1;
+  db.query("select max_num from shopowned where shop_nr=%i", shop_nr);
+  if(db.fetchRow())
+    max_num = convertTo<int>(db["max_num"]);
+
+  if (isRepairShop())
+  {
+    db.query("select speed, quality from shopownedrepair where shop_nr=%i", shop_nr);
+    if(db.fetchRow())
+    {
+      repair_speed=convertTo<float>(db["speed"]);
+      repair_quality=convertTo<float>(db["quality"]);
+    }
+  }
+
+  isCached = true;
+  return true;
+}
+
+
+int shopData::getMaxNum(const TBeing* ch, const TObj* o, int defaultMax)
+{
+  map <sstring,int>::iterator iter;
+
+  if (!isOwned() || !ensureCache())
+    return defaultMax;
+
+  for(iter=max_matches_cache.begin();o && iter!=max_matches_cache.end();++iter)
+    if(isname((*iter).first, o->name))
+      return (*iter).second;
+
+  if(o && buy_ratios_cache.count(o->objVnum()))
+    return max_ratios_cache[o->objVnum()];
+
+  for(iter=max_player_cache.begin();ch && iter!=max_player_cache.end();++iter)
+    if((*iter).first == (sstring) ch->name)
+      return (*iter).second;
+
+  return max_num >= 0 ? max_num : defaultMax;
+}
+
+
+float shopData::getProfitBuy(int vnum, sstring name, const TBeing *ch)
+{
+  float profit=-1;
+  map <sstring,float>::iterator iter;
+
+  if (!ensureCache())
+    return profit_buy;
 
   // if the shop is player owned, we check custom pricing
-  if(shop_index[shop_nr].isOwned()){  
-    if(cached_shop_nr==shop_nr){
-      if(ratios_cache.count(vnum))
-	profit_buy=ratios_cache[vnum];
-    } else {
-      db.query("select profit_buy from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, vnum);
-      if(db.fetchRow())
-	profit_buy=convertTo<float>(db["profit_buy"]);
-    }
-    
-    if(profit_buy==-1){
+  if(isOwned())
+  {  
+    if(buy_ratios_cache.count(vnum))
+      profit=buy_ratios_cache[vnum];
+
+    if(profit==-1)
+    {
       // ok, shop is owned and there is no ratio set for this specific object
       // so check keywords
-      if(cached_shop_nr==shop_nr){
-	for(iter=matches_cache.begin();iter!=matches_cache.end();++iter){
-	  if(isname((*iter).first, name)){
-	    profit_buy=(*iter).second;
-	    break;
-	  }
-	}
-      } else {
-	db.query("select match_str, profit_buy from shopownedmatch where shop_nr=%i", shop_nr);
-	
-	while(db.fetchRow()){
-	  if(isname(db["match_str"], name)){
-	    profit_buy=convertTo<float>(db["profit_buy"]);
-	    break;
-	  }
-	}
+      for(iter=buy_matches_cache.begin();iter!=buy_matches_cache.end();++iter)
+      {
+        if(isname((*iter).first, name))
+        {
+          profit=(*iter).second;
+          break;
+        }
       }
     }
   }
 
   // no custom price found, so use the normal shop pricing
-  if(profit_buy == -1)
-    profit_buy=shop_index[shop_nr].profit_buy;
-
+  if(profit == -1)
+    profit=profit_buy;
 
   // check for player specific modifiers
-  if(shop_index[shop_nr].isOwned() && ch){
-    if(cached_shop_nr==shop_nr){
-      for(iter=player_cache.begin();iter!=player_cache.end();++iter){
-	if((*iter).first == (sstring) ch->name){
-	  profit_buy = ((*iter).second);
-	  break;
-	}
-      }
-    } else {
-      db.query("select profit_buy from shopownedplayer where shop_nr=%i and lower(player)=lower('%s')", shop_nr, ch->name);
-      
-      if(db.fetchRow()){
-	profit_buy = convertTo<float>(db["profit_buy"]);
+  if(isOwned() && ch)
+  {
+    for(iter=buy_player_cache.begin();iter!=buy_player_cache.end();++iter)
+    {
+      if((*iter).first == (sstring) ch->name)
+      {
+        profit = ((*iter).second);
+        break;
       }
     }
   }
 
   // check for speed and quality for repair shops
-  if(isRepairShop()){
-    db.query("select speed, quality from shopownedrepair where shop_nr=%i",
-	     shop_nr);
-    
-    if(db.fetchRow()){
-      float speed=convertTo<float>(db["speed"]);
-      float quality=convertTo<float>(db["quality"]);
-      
-      if(speed>0)
-	profit_buy /= speed;
-      
-      if(quality>0)
-	profit_buy *= quality;
-    }
+  if(isRepairShop())
+  {
+    if(repair_speed>0)
+      profit /= repair_speed;
+    if(repair_quality>0)
+      profit *= repair_quality;
   }
-  ///
-  
 
-  return profit_buy;  
+  return profit;
 }
 
 float shopData::getProfitBuy(const TObj *obj, const TBeing *ch)
@@ -669,7 +705,7 @@ bool TObj::sellMeCheck(TBeing *ch, TMonster *keeper, int, int defaultMax) const
   }
   
   TShopOwned tso(shop_nr, keeper, ch);
-  int max_num=tso.getMaxNum(this, defaultMax);
+  int max_num=tso.getMaxNum(ch, this, defaultMax);
 
   if(max_num == 0){
     keeper->doTell(ch->name, "I don't wish to buy any of those right now.");
@@ -2214,7 +2250,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       db.fetchRow();
       count=convertTo<int>(db["count"]);
       
-      if(count >= tso.getMaxNum(o, 10)){
+      if(count >= tso.getMaxNum(ch, o, 10)){
         delete o;
         continue;
       }
@@ -2570,7 +2606,8 @@ shopData::shopData() :
   open1(0),
   open2(0),
   close1(0),
-  close2(0)
+  close2(0),
+  isCached(false)
 {
 }
 
@@ -2602,7 +2639,8 @@ shopData::shopData(const shopData &t) :
   open1(t.open1),
   open2(t.open2),
   close1(t.close1),
-  close2(t.close2)
+  close2(t.close2),
+  isCached(false)
 {
   unsigned int i;
   unsigned int max_prod=t.producing.size();
@@ -2627,7 +2665,6 @@ shopData::shopData(const shopData &t) :
   do_not_buy = mud_str_dup(t.do_not_buy);
   message_buy = mud_str_dup(t.message_buy);
   message_sell = mud_str_dup(t.message_sell);
-
 }
 
 shopData & shopData::operator =(const shopData &t)
@@ -2674,6 +2711,8 @@ shopData & shopData::operator =(const shopData &t)
   close2 = t.close2;
   shop_nr = t.shop_nr;
 
+  clearCache();
+
   return *this;
 }
 
@@ -2719,7 +2758,7 @@ void factoryProduction(int shop_nr)
       continue;
     }
 
-    if(count >= tso.getMaxNum(obj, 10)){
+    if(count >= tso.getMaxNum(NULL, obj, 10)){
       delete obj;
       continue;
     }
