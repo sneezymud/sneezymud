@@ -1756,7 +1756,7 @@ void TObjectCache::preload()
 {
   TDatabase db(DB_SNEEZY);
 
-  db.query("select vnum, type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist from obj");
+  db.query("select vnum, short_desc, type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist from obj");
 
   while(db.fetchRow()){
     cached_object *c=new cached_object;
@@ -1791,33 +1791,27 @@ void TObjectCache::preload()
 TObj *read_object_buy_build(TBeing *buyer, int nr, readFileTypeT type)
 {
 
-  if(bootTime){
-    //    vlogf(LOG_BUG, "read_object_buy_build() called during bootTime");
-    return read_object(nr, type);
-  }
-
   if (type == VIRTUAL)
     nr = real_object(nr);
 
-  TDatabase db(DB_SNEEZY);
-
-  db.query("select material, weight, short_desc, type, price from obj where vnum=%i",
-	   obj_index[nr].virt);
-  if(!db.fetchRow()){
-    vlogf(LOG_BUG, fmt("didn't find object %i in query") % obj_index[nr].virt);
-    return read_object(nr, type);
+  if(bootTime || !obj_cache[nr]){
+    //    vlogf(LOG_BUG, "read_object_buy_build() called during bootTime");
+    return read_object(nr, REAL);
   }
 
-  int material=convertTo<int>(db["material"]);
-  float weight=convertTo<float>(db["weight"]);
-  sstring name=db["short_desc"];
-  int indexed_cost=convertTo<int>(db["price"]);
+  int material=convertTo<int>(obj_cache[nr]->s["material"]);
+  float weight=convertTo<float>(obj_cache[nr]->s["weight"]);
+  sstring name=obj_index[nr].short_desc;
+  int indexed_cost=convertTo<int>(obj_cache[nr]->s["price"]);
 
   int price, shop_nr, rent_id=0;
   int commod_price=0, commod_shop_nr=0, commod_rent_id=0;
   TObj *o=NULL;
   TObj *commod=NULL;
 
+  TDatabase db(DB_SNEEZY);
+
+  // look for the object in a shop
   db.query("select r.weight as weight, r.owner as shop_nr, r.rent_id as rent_id from rent r, shopowned so where r.owner=so.shop_nr and r.owner_type='shop' and r.vnum=%i order by profit_buy asc, (r.cur_struct/r.max_struct) asc, price asc", obj_index[nr].virt);
 
   if(db.fetchRow()){
@@ -1833,7 +1827,6 @@ TObj *read_object_buy_build(TBeing *buyer, int nr, readFileTypeT type)
 
   // ok, we now have a cheap object (o) selling for price at shop_nr
   // let's see if we can find a cheaper commod
-
   db.query("select r.owner as shop_nr, r.rent_id as rent_id, r.material as material, r.weight*10 as units from rent r, obj o where o.type=%i and r.vnum=o.vnum and r.material=%i and owner_type='shop' and r.weight>=%f order by units desc", ITEM_RAW_MATERIAL, material, weight);
 
   if(db.fetchRow()){
@@ -2884,9 +2877,9 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
           }
           mud_assert(rs.arg1 >= 0 && rs.arg1 < (signed int) obj_index.size(), "Range error (%d not in obj_index)  G command #%d in %s", rs.arg1, cmd_no, this->name);
           if (obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist &&
-              (obj = read_object(rs.arg1, REAL))) {
+	      //              (obj = read_object(rs.arg1, REAL))) {
 
-	    //              (obj = read_object_buy_build(mob, rs.arg1, REAL))) {
+	                  (obj = read_object_buy_build(mob, rs.arg1, REAL))) {
 
             *mob += *obj;
             obj->onObjLoad();
