@@ -118,13 +118,7 @@ int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 
 	  if(IS_SET_DELETE(rc, DELETE_THIS))
 	    delete commod;
-
-	  sstring buf = fmt("%s/%d") % SHOPFILE_PATH % 250;
-	  homebase.getKeeper()->saveItems(buf);
-	  cart->roomp->saveItems("");
-
 	}
-	
       }
     }
 
@@ -157,11 +151,13 @@ int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 		 commod->getMaterial()==buy_mat){
 		price=commod->shopPrice(diff/2, 
 			  commod_shop_nr[*target_shop_idx], -1, myself);
-		homebase.doSellTransaction(price, 
-				fmt("%s x %i") % commod->getName() % (diff/2), 
-					  TX_BUYING, commod);
-		commod->buyMe(myself, tso.getKeeper(), diff/2, 
-			      commod_shop_nr[*target_shop_idx]);
+		if((commod->buyMe(myself, tso.getKeeper(), diff/2, 
+				  commod_shop_nr[*target_shop_idx])) != -1){
+		  homebase.doSellTransaction(price, 
+			   fmt("%s x %i") % commod->getName() % (diff/2), 
+			   TX_BUYING, commod);
+		}
+
 		*target_shop_idx=i;
 
 		TThing *ttt2;
@@ -172,9 +168,6 @@ int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 		    *cart += *ttt;
 		  }
 		}
-		sstring buf = fmt("%s/%d") % SHOPFILE_PATH % 250;
-		homebase.getKeeper()->saveItems(buf);
-		cart->roomp->saveItems("");
 		return TRUE;
 	      }
 	    }
