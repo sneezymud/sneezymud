@@ -618,8 +618,9 @@ void TBeing::statObj(const TObj *j)
     j->obj_flags.decay_time % j->getMaxStructPoints() %
     j->getStructPoints() % j->getDepreciation();
 
-  str += fmt("Light: %3d          Material Type: %s\n\r") %
-    j->getLight() % material_nums[j->getMaterial()].mat_name;
+  str += fmt("Light: %3d          Material Type: %s (%i)\n\r") %
+    j->getLight() % material_nums[j->getMaterial()].mat_name %
+    j->getMaterial();
 
   if (j->inRoom() != ROOM_NOWHERE)
     str += fmt("In Room: %d\n\r") % j->inRoom();
