@@ -87,8 +87,16 @@ class shopData {
     float getProfitSell(const TObj *, const TBeing *);
     bool isRepairShop();
     int getMaxNum(const TBeing* ch, const TObj* o, int defaultMax);
+    int getMinReserve();
+    int getMaxReserve();
     float getRepairSpeed() { return ensureCache() ? repair_speed : -1; }
     float getRepairQuality() { return ensureCache() ? repair_quality : -1; }
+    int getCorpID() { return ensureCache() ? corp_id : 0; }
+    double getDividend() { return ensureCache() ? dividend : 0; }
+    int getTaxShopNr() { return ensureCache() ? tax_nr : -1; }
+    double getExpenseRatio() { return ensureCache() ? expense_ratio : 0; }
+    int getInventoryCount() { return ensureCache() ? inventory_count : 0; }
+    void addToInventoryCount(int add) { ensureCache(); inventory_count += add; }
 
     shopData();
     ~shopData();
@@ -110,8 +118,18 @@ private:
     map<sstring,int> max_matches_cache;
     map<sstring,int> max_player_cache;
     int max_num;
+    int corp_id;
+    double dividend;
+    int tax_nr;
+    double expense_ratio;
+    int reserve_min;
+    int reserve_max;
     float repair_speed;
     float repair_quality;
+    bool hasCentralBank;
+    int centralbank;
+    int bank_reserve_min;
+    int inventory_count;
 };
 
 extern bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int);

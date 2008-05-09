@@ -21,7 +21,6 @@ class TShopOwned {
   TMonster *keeper;
   TBeing *ch;
   bool owned;
-  int access;
 
  public:
   bool isOwned();

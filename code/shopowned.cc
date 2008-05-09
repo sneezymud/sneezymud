@@ -189,15 +189,7 @@ int TShopOwned::doExpenses(int cashCost, TObj *obj)
 
 double TShopOwned::getExpenseRatio()
 {
-  double ratio=0;
-  TDatabase db(DB_SNEEZY);
-
-  db.query("select expense_ratio from shop where shop_nr=%i", shop_nr);
-  
-  if(db.fetchRow())
-    ratio=convertTo<double>(db["expense_ratio"]);
-
-  return ratio;
+  return shop_index[shop_nr].getExpenseRatio();
 }
 
 
@@ -239,7 +231,6 @@ TShopOwned::TShopOwned(int shop_nr, TMonster *keeper, TBeing *ch) :
   ch(ch)
 {
   owned=shop_index[shop_nr].isOwned();
-  access=getShopAccess(shop_nr, ch);
 }
 
 TShopOwned::TShopOwned(int shop_nr, TBeing *ch)
@@ -285,14 +276,7 @@ TShopOwned::TShopOwned(TMonster *keeper, TBeing *ch)
 
 int TShopOwned::getTaxShopNr()
 {
-  TDatabase db(DB_SNEEZY);
-
-  db.query("select tax_nr from shopowned where shop_nr=%i", shop_nr);
-
-  if(!db.fetchRow())
-    return -1;
-
-  return convertTo<int>(db["tax_nr"]);
+  return shop_index[shop_nr].getTaxShopNr();
 }
 
 int TShopOwned::chargeTax(int cost, const sstring &name, TObj *o)
@@ -374,54 +358,17 @@ void TShopOwned::setReserve(sstring arg)
   keeper->doTell(ch->getName(), fmt("Ok, the minimum reserve is now %i and the maximum reserve is %i.") % min % max);
 
   shoplog(shop_nr, ch, keeper, fmt("%i-%i") % min % max, 0, "set reserve");
-
+  shop_index[shop_nr].clearCache();
 }
 
 int TShopOwned::getMinReserve()
 {
-  TDatabase db(DB_SNEEZY);
-
-  db.query("select centralbank from shopownedcentralbank where bank=%i", shop_nr);
-  
-  // works with a central bank, so check reserve requirement
-  if(db.fetchRow()){
-    float reserve=shop_index[convertTo<int>(db["centralbank"])].getProfitBuy(NULL, NULL);
-    
-    // so we want the total of deposits * the reserver
-    db.query("select ((sb.t+sbc.t)*%f) as t from (select count(*) as c, sum(talens) as t from shopownedbank where shop_nr=%i) sb, (select count(*) as c, sum(talens) as t from shopownedcorpbank where shop_nr=%i) sbc", reserve, shop_nr, shop_nr);
-
-    db.fetchRow();
-    
-    return convertTo<int>(db["t"]);
-  }
-
-  db.query("select reserve_min from shopowned where shop_nr=%i", shop_nr);
-
-  if(db.fetchRow())
-    return convertTo<int>(db["reserve_min"]);
-  
-  return 0;  
+  return shop_index[shop_nr].getMinReserve();
 }
 
 int TShopOwned::getMaxReserve()
 {
-  TDatabase db(DB_SNEEZY);
-
-  db.query("select centralbank from shopownedcentralbank where bank=%i", shop_nr);
-
-  // if they are part of a centralbank, then we will take reserve_max
-  // as the reserve ABOVE the required min reserve
-  int centralbank_min=0;
-  if(db.fetchRow()){
-    centralbank_min=getMinReserve();
-  }
-
-  db.query("select reserve_max from shopowned where shop_nr=%i", shop_nr);
-
-  if(db.fetchRow())
-    return centralbank_min + convertTo<int>(db["reserve_max"]);
-  
-  return 0;  
+  return shop_index[shop_nr].getMaxReserve();
 }
 
 int TShopOwned::doReserve()
@@ -611,31 +558,18 @@ void TShopOwned::setDividend(sstring arg)
   keeper->doTell(ch->getName(), fmt("Ok, the dividend percentage has been set to %f.") % f);
 
   shoplog(shop_nr, ch, keeper, fmt("%f") % f, 0, "set dividend");
+  shop_index[shop_nr].clearCache();
 }
 
 double TShopOwned::getDividend()
 {
-  TDatabase db(DB_SNEEZY);
-  db.query("select dividend from shopowned where shop_nr=%i", shop_nr);
-  
-  if(db.fetchRow())
-    return convertTo<double>(db["dividend"]);
-  
-  return 0.0;
+  return shop_index[shop_nr].getDividend();
 }
-
 
 
 int TShopOwned::getCorpID()
 {
-  TDatabase db(DB_SNEEZY);
-
-  db.query("select corp_id from shopowned where shop_nr=%i", shop_nr);
-
-  if(db.fetchRow()){
-    return convertTo<int>(db["corp_id"]);
-  }
-  return 0;
+  return shop_index[shop_nr].getCorpID();
 }
 
 
@@ -647,6 +581,9 @@ bool TShopOwned::isOwned(){
 }
 
 bool TShopOwned::hasAccess(int perm){
+  int access = 0;
+  if (ch)
+    access = getShopAccess(shop_nr, ch);
   if(getCorpID()){
     TCorporation corp(getCorpID());
     access = access | corp.getAccess(ch);

@@ -128,9 +128,6 @@ void shopData::clearCache()
   max_ratios_cache.clear();
   max_matches_cache.clear();
   max_player_cache.clear();
-  max_num = -1;
-  repair_speed = -1;
-  repair_quality = -1;
   isCached = false;
 }
 
@@ -164,11 +161,35 @@ bool shopData::ensureCache()
     max_player_cache[db["player"]]=convertTo<int>(db["max_num"]);
   }
 
+  // clear all regular shopowned values to defaults (set only if query returns)
   max_num = -1;
-  db.query("select max_num from shopowned where shop_nr=%i", shop_nr);
-  if(db.fetchRow())
-    max_num = convertTo<int>(db["max_num"]);
+  corp_id = 0;
+  dividend = 0;
+  tax_nr = -1;
+  repair_speed = -1;
+  repair_quality = -1;
+  reserve_min = 0;
+  reserve_max = 0;
 
+  db.query("select max_num, corp_id, dividend, tax_nr, reserve_min, reserve_max from shopowned where shop_nr=%i", shop_nr);
+  if(db.fetchRow())
+  {
+    max_num = convertTo<int>(db["max_num"]);
+    corp_id = convertTo<int>(db["corp_id"]);
+    dividend = convertTo<double>(db["dividend"]);
+    tax_nr = convertTo<int>(db["tax_nr"]);
+    reserve_min = convertTo<int>(db["reserve_min"]);
+    reserve_max = convertTo<int>(db["reserve_max"]);
+  }
+
+  // inventory
+  inventory_count = 0;
+
+  db.query("select count(*) as count from rent where owner_type='shop' and owner=%i", shop_nr);
+  if (db.fetchRow())
+    inventory_count =convertTo<int>(db["count"]);
+
+  // repair data
   if (isRepairShop())
   {
     db.query("select speed, quality from shopownedrepair where shop_nr=%i", shop_nr);
@@ -177,6 +198,33 @@ bool shopData::ensureCache()
       repair_speed=convertTo<float>(db["speed"]);
       repair_quality=convertTo<float>(db["quality"]);
     }
+  }
+
+  // initialize bank data
+  hasCentralBank = false;
+  centralbank = 4;
+  bank_reserve_min = -1;
+
+  db.query("select centralbank from shopownedcentralbank where bank=%i", shop_nr);
+  if (db.fetchRow())
+  {
+    hasCentralBank = true;
+    centralbank = convertTo<int>(db["centralbank"]);
+    float reserve = shop_index[centralbank].getProfitBuy(NULL, NULL);
+
+    // so we want the total of deposits * the reserver
+    db.query("select ((sb.t+sbc.t)*%f) as t from (select count(*) as c, sum(talens) as t from shopownedbank where shop_nr=%i) sb, (select count(*) as c, sum(talens) as t from shopownedcorpbank where shop_nr=%i) sbc", reserve, shop_nr, shop_nr);
+    if (db.fetchRow())
+      bank_reserve_min = convertTo<int>(db["t"]);
+  }
+
+  // clear all regular shop values to defaults (expected to return)
+  expense_ratio = 0;
+
+  db.query("select expense_ratio from shop where shop_nr=%i", shop_nr);
+  if(db.fetchRow())
+  {
+    expense_ratio = convertTo<double>(db["expense_ratio"]);
   }
 
   isCached = true;
@@ -270,6 +318,28 @@ float shopData::getProfitBuy(const TObj *obj, const TBeing *ch)
 }
 
 
+int shopData::getMinReserve()
+{
+  if (!ensureCache())
+    return 0;
+
+  if (bank_reserve_min > -1)
+    return bank_reserve_min;
+
+  return reserve_min;
+}
+
+int shopData::getMaxReserve()
+{
+  if (!ensureCache())
+    return 0;
+
+  if (hasCentralBank)
+    return reserve_max + getMinReserve();
+  return reserve_max;
+}
+
+
 // this is the price the shop will buy an item for
 int TObj::sellPrice(int, int shop_nr, float chr, const TBeing *ch)
 {
@@ -312,9 +382,6 @@ int TObj::shopPrice(int num, int shop_nr, float chr, const TBeing *ch) const
   // we do this last so that the actual price is the same as the single-object quoted price * num 
   return singleCost * num;
 }
-
-
-
 
 bool shopData::willTradeWith(TMonster *keeper, TBeing *ch)
 {
@@ -676,13 +743,7 @@ bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int shop_nr)
     return TRUE;
   }
 
-  TDatabase db(DB_SNEEZY);
-  db.query("select count(*) as count from rent where owner_type='shop' and owner=%i",
-	   shop_nr);
-  db.fetchRow();
-  unsigned int counter=convertTo<int>(db["count"]);
-
-  if(counter >= MAX_SHOP_INVENTORY){
+  if(shop_index[shop_nr].getInventoryCount() >= (int)MAX_SHOP_INVENTORY){
     keeper->doTell(ch->getName(), "My inventory is full, I can't buy anything!");
     return TRUE;
   }

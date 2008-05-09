@@ -1859,6 +1859,7 @@ int TMonster::saveItem(int shop_nr, TObj *obj, int container)
 {
   ItemSaveDB is("shop", shop_nr);
 
+  shop_index[shop_nr].addToInventoryCount(1);
   return is.raw_write_item(obj, NORMAL_SLOT, container);
 }
 
@@ -1878,6 +1879,7 @@ void TMonster::deleteItem(int shop_nr, int rent_id)
   db.query("delete from rent_obj_aff where rent_id=%i", rent_id);
   db.query("delete from rent_strung where rent_id=%i", rent_id);
 
+  shop_index[shop_nr].addToInventoryCount(-1);
 }
 
 void TMonster::saveItems(int shop_nr)
