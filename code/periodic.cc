@@ -606,6 +606,10 @@ int TObj::teleportRoomFlow(int pulse)
   if (!roomp || roomp->getTeleTarg() <= 0 || roomp->getTeleTime() <= 0)
     return FALSE;
 
+  // it's room echo type teleport, so don't move objects
+  if(roomp->number == roomp->getTeleTarg())
+    return FALSE;
+
   // pulse will be a multiple of PULSE_TELEPORT
   if (pulse % roomp->getTeleTime())
     return FALSE;
