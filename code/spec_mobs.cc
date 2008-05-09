@@ -6839,7 +6839,7 @@ int rationFactory(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj 
 {
   TDatabase db(DB_SNEEZY);
   int factory_shop=251;
-  TShopOwned tso(factory_shop, me, ch);
+  TShopOwned tso(factory_shop, ch);
   TFood *food;
   int maxsupply=36*1000;
 
