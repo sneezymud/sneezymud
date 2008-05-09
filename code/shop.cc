@@ -2791,10 +2791,11 @@ void factoryProduction(int shop_nr)
   if (!keeper) // keeper is null on test ports
     return;
 
-  db_vnum.query("select fp.vnum from factoryproducing fp where shop_nr=%i", shop_nr);
+  db_vnum.query("select fp.vnum as vnum, count(r.vnum) as count from factoryproducing fp left outer join rent r on (fp.vnum=r.vnum and r.owner_type='shop' and r.owner=fp.shop_nr) where fp.shop_nr=%i group by fp.vnum", shop_nr);
 
   while(db_vnum.fetchRow()){
     vnum=convertTo<int>(db_vnum["vnum"]);
+    count=convertTo<int>(db_vnum["count"]);
 
     db.query("select fb.supplyamt as required, fs.supplyamt as avail from factoryblueprint fb, factorysupplies fs where fb.vnum=%i and fs.shop_nr=%i and fs.supplytype=fb.supplytype", vnum, shop_nr);
 
@@ -2806,12 +2807,6 @@ void factoryProduction(int shop_nr)
      
     if(!ready)
       continue;
-    
-    count=0;
-    for(TThing *t=tso.getStuff();t;t=t->nextThing){
-      if((obj=dynamic_cast<TObj *>(t)) && obj->objVnum()==vnum)
-	++count;
-    }
 
     // read object
     if (!(obj = read_object(vnum, VIRTUAL))) {
@@ -2825,18 +2820,17 @@ void factoryProduction(int shop_nr)
     }
 
     // place in shop
-    *keeper += *obj;
-
+    keeper->saveItem(shop_nr, obj);
     keeper->setMoney(keeper->getMoney()-obj->productionPrice());
     tso.doSellTransaction(obj->productionPrice(),
 			  obj->getName(), TX_FACTORY, obj);
+    delete obj;
 
     // save avail amt
     db.query("update factorysupplies, factoryblueprint set factorysupplies.supplyamt=factorysupplies.supplyamt-factoryblueprint.supplyamt where factorysupplies.shop_nr=%i and factoryblueprint.vnum=%i and factorysupplies.supplytype=factoryblueprint.supplytype", shop_nr, vnum);
 
   }
-  
-}
+  }
 
 
 
