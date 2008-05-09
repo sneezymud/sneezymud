@@ -6841,7 +6841,7 @@ int rationFactory(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj 
   int factory_shop=251;
   TShopOwned tso(factory_shop, me, ch);
   TFood *food;
-  int maxsupply=36*100;
+  int maxsupply=36*1000;
 
   // the cost of the foodstuff for rations and provs is 1.85 and 2.5
   // respectively.  i precalculated this on current prices (cheating).
