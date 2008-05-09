@@ -6852,14 +6852,14 @@ int rationFactory(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj 
   if(cmd != CMD_MOB_GIVEN_ITEM)
     return FALSE;
 
-  db.query("select supplyamt from factory where shop_nr=%i", factory_shop);
+  db.query("select supplyamt from factorysupplies where shop_nr=%i", factory_shop);
   
   if(!db.fetchRow()){
     vlogf(LOG_BUG, "ration factory missing db entry");
     return FALSE;
   }
 	
-  if(convertTo<int>(db["supplyamr"]) >= maxsupply){
+  if(convertTo<int>(db["supplyamt"]) >= maxsupply){
     me->doSay("I have enough meat right now.");
     me->doDrop("", o);
     return FALSE;
@@ -6882,7 +6882,7 @@ int rationFactory(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj 
 			fmt("%s x %i") % o->getName() % food->getFoodFill(), 
 			TX_SELLING, o);
 
-  db.query("update factory set supplyamt=supplyamt+%i where shop_nr=%i", food->getFoodFill(), factory_shop);
+  db.query("update factorysupplies set supplyamt=supplyamt+%i where shop_nr=%i", food->getFoodFill(), factory_shop);
 
   return TRUE;
 }
