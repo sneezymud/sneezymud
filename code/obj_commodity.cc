@@ -350,8 +350,40 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   return price;
 }
 
-bool TCommodity::sellMeCheck(TBeing *ch, TMonster *keeper, int num, int) const
+bool TCommodity::sellMeCheck(TBeing *ch, TMonster *keeper, int num, int defaultMax) const
 {
+  int total = 0;
+  sstring buf;
+
+  TShopOwned tso(keeper, ch);
+  int max_num=shop_capacity;
+  
+  if(tso.isOwned())
+    max_num=tso.getMaxNum(ch, this, defaultMax);
+
+  if(max_num == 0){
+    keeper->doTell(ch->name, "I don't wish to buy any of those right now.");
+    return TRUE;
+  }
+
+  TCommodity *commod;
+  for(TThing *t=keeper->getStuff();t;t=t->nextThing){
+    if((commod=dynamic_cast<TCommodity *>(t)) &&
+       commod->getMaterial()==getMaterial()){
+      total=commod->numUnits();
+      break;
+    }
+  }
+  
+  if (total >= max_num) {
+    keeper->doTell(ch->getName(), fmt("I already have plenty of %s.") % 
+		   getName());
+    return TRUE;
+  } else if (total + num > max_num) {
+    keeper->doTell(ch->getName(), fmt("I'll buy no more than %d unit%s of %s.") % (max_num - total) % (max_num - total > 1 ? "s" : "") % getName());
+    return TRUE;
+  }
+  
   return false;
 }
 
@@ -383,24 +415,38 @@ int TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
 
   if (isObjStat(ITEM_NODROP)) {
     ch->sendTo("You can't let go of it, it must be CURSED!\n\r");
+    keeper->saveItem(shop_nr, obj2);
+    delete obj2;
     return false;
   }
   if (isObjStat(ITEM_PROTOTYPE)) {
     ch->sendTo("That's a prototype, no selling that!\n\r");
+    keeper->saveItem(shop_nr, obj2);
+    delete obj2;
     return false;
   }
-  if (will_not_buy(ch, keeper, this, shop_nr))
+  if (will_not_buy(ch, keeper, this, shop_nr)){
+    keeper->saveItem(shop_nr, obj2);
+    delete obj2;
     return false;
+  }
 
-  if (sellMeCheck(ch, keeper, numUnits(), -1))
+  if (sellMeCheck(ch, keeper, numUnits(), -1)){
+    keeper->saveItem(shop_nr, obj2);
+    delete obj2;
     return false;
+  }
 
   if (!shop_index[shop_nr].willBuy(this)) {
     keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
+    keeper->saveItem(shop_nr, obj2);
+    delete obj2;
     return false;
   }
   if (keeper->getMoney() < price) {
     keeper->doTell(ch->getName(), shop_index[shop_nr].missing_cash1);
+    keeper->saveItem(shop_nr, obj2);
+    delete obj2;
     return false;
   }
 
