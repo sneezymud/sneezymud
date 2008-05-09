@@ -6011,6 +6011,7 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
     value *= 0.90; // subtract some for wastage
     amt=(int)value;
     value *= (float) material_nums[o->getMaterial()].price;
+    value = max((float)1.0,value);
 
     me->doTell(ch->getName(), fmt("I can turn that into %i units of %s.") %
 	       amt % material_nums[o->getMaterial()].mat_name);
