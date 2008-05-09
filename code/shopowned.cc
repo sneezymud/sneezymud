@@ -774,7 +774,7 @@ int TShopOwned::setRates(sstring arg)
     } else {
       // find item in inventory matching keywords in arg
       // get vnum, then store in db
-      TThing *tt = searchLinkedListVis(ch, buf, keeper->getStuff());
+      TThing *tt = searchLinkedListVis(ch, buf, ch->getStuff());
       
       if(!tt){
 	keeper->doTell(ch->getName(), "I don't have that item.");
