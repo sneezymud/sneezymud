@@ -127,7 +127,7 @@ int bankWithdraw(TBeing *ch, TMonster *myself, TMonster *teller, int shop_nr, in
 
   teller->doTell(ch->getName(), "Thank you.");
 
-  TShopOwned tso(shop_nr, teller, ch);
+  TShopOwned tso(shop_nr, myself, ch);
   tso.doSellTransaction(money, "talens", TX_WITHDRAWAL);
 
   db.query("update shopownedbank set talens=talens-%i where player_id=%i and shop_nr=%i", money, ch->getPlayerID(), shop_nr);
@@ -165,7 +165,7 @@ int bankDeposit(TBeing *ch, TMonster *myself, TMonster *teller, int shop_nr, int
   
   teller->doTell(ch->getName(), "Thank you.");
 
-  TShopOwned tso(shop_nr, teller, ch);
+  TShopOwned tso(shop_nr, myself, ch);
   tso.doBuyTransaction(money, "talens", TX_DEPOSIT);
   
   db.query("update shopownedbank set talens=talens+%i where player_id=%i and shop_nr=%i", money, ch->getPlayerID(), shop_nr);
