@@ -95,7 +95,7 @@ liqInfoT::liqInfoT()
   liquids[LIQ_POT_SHIELD_OF_MISTS]           = new liqEntry(-1, -1, 1, true, false, "<g>dark green<1>", "<g>dark green potion<1>", 3696);
   liquids[LIQ_POT_SENSE_PRESENCE]           = new liqEntry(-1, -1, 1, true, false, "translucent", "translucent potion", 3696);
   liquids[LIQ_POT_CHEVAL]           = new liqEntry(-1, -1, 1, true, false, "<W>pale white<1>", "<W>pale white potion<1>", 3696);
-  liquids[LIQ_POT_DJALLAS_PROTECTION]           = new liqEntry(-1, -1, 1, true, false, "<k>steal grey<1>", "<k>steel grey potion<1>", 3696);
+  liquids[LIQ_POT_DJALLAS_PROTECTION]           = new liqEntry(-1, -1, 1, true, false, "<k>steel grey<1>", "<k>steel grey potion<1>", 3696);
   liquids[LIQ_POT_LEGBAS_GUIDANCE]           = new liqEntry(-1, -1, 1, true, false, "<k>slate grey<1>", "<k>slate grey potion<1>", 3696);
   liquids[LIQ_POT_DETECT_SHADOW]           = new liqEntry(-1, -1, 1, true, false, "<o>sparkling amber<1>", "<o>sparkling amber potion<1>", 3696);
   liquids[LIQ_POT_CELERITE]           = new liqEntry(-1, -1, 1, true, false, "<r>rusty<1>", "<r>rusty potion<1>", 3696);
