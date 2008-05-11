@@ -73,6 +73,9 @@ void TBeing::lookDir(int keyword_no)
 
   if (keyword_no >= 10)  // adjust cause of our whacky array
     keyword_no -= 4;
+  
+  sendTo(fmt("You look %swards.\n\r") % dirs[keyword_no]);
+  act(fmt("$n looks %swards.") % dirs[keyword_no], TRUE, this, 0, 0, TO_ROOM);
 
   if (!(exitp = exitDir(dirTypeT(keyword_no)))) {
     if (roomp && roomp->ex_description &&
@@ -83,9 +86,6 @@ void TBeing::lookDir(int keyword_no)
 
     return;
   } else {
-    sendTo(fmt("You look %swards.\n\r") % dirs[keyword_no]);
-    act(fmt("$n looks %swards.") % dirs[keyword_no], TRUE, this, 0, 0, TO_ROOM);
-
     if (canSeeThruDoor(exitp)) {
       if (exitp->description)
 	sendTo(COLOR_ROOMS, exitp->description);
