@@ -390,7 +390,7 @@ bool TCommodity::sellMeCheck(TBeing *ch, TMonster *keeper, int num, int defaultM
 int TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
 {
   TCommodity *obj2 = NULL;
-  int num, price;
+  int num, price, rent_id;
   char buf[256], buf2[80];
   TDatabase db(DB_SNEEZY);
   TObj *to;
@@ -399,10 +399,12 @@ int TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
 	   shop_nr, getMaterial(), GENERIC_COMMODITY);
 
   if(db.fetchRow()){
-    to=keeper->loadItem(shop_nr, convertTo<int>(db["rent_id"]));
+    rent_id=convertTo<int>(db["rent_id"]);
+    to=keeper->loadItem(shop_nr, rent_id);
     obj2 = dynamic_cast<TCommodity *>(to);
-    keeper->deleteItem(shop_nr, convertTo<int>(db["rent_id"]));
+    keeper->deleteItem(shop_nr, rent_id);
   } else {
+    rent_id=-1;
     to = read_object(objVnum(), VIRTUAL);
     obj2 = dynamic_cast<TCommodity *>(to);
     obj2->setWeight(0.0);
@@ -415,37 +417,37 @@ int TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
 
   if (isObjStat(ITEM_NODROP)) {
     ch->sendTo("You can't let go of it, it must be CURSED!\n\r");
-    keeper->saveItem(shop_nr, obj2);
+    keeper->saveItem(shop_nr, rent_id, obj2);
     delete obj2;
     return false;
   }
   if (isObjStat(ITEM_PROTOTYPE)) {
     ch->sendTo("That's a prototype, no selling that!\n\r");
-    keeper->saveItem(shop_nr, obj2);
+    keeper->saveItem(shop_nr, rent_id, obj2);
     delete obj2;
     return false;
   }
   if (will_not_buy(ch, keeper, this, shop_nr)){
-    keeper->saveItem(shop_nr, obj2);
+    keeper->saveItem(shop_nr, rent_id, obj2);
     delete obj2;
     return false;
   }
 
   if (sellMeCheck(ch, keeper, numUnits(), -1)){
-    keeper->saveItem(shop_nr, obj2);
+    keeper->saveItem(shop_nr, rent_id, obj2);
     delete obj2;
     return false;
   }
 
   if (!shop_index[shop_nr].willBuy(this)) {
     keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
-    keeper->saveItem(shop_nr, obj2);
+    keeper->saveItem(shop_nr, rent_id, obj2);
     delete obj2;
     return false;
   }
   if (keeper->getMoney() < price) {
     keeper->doTell(ch->getName(), shop_index[shop_nr].missing_cash1);
-    keeper->saveItem(shop_nr, obj2);
+    keeper->saveItem(shop_nr, rent_id, obj2);
     delete obj2;
     return false;
   }
@@ -468,7 +470,7 @@ int TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
       sprintf(buf, "%d", price);
       ch->doSplit(buf, false);
     }
-    keeper->saveItem(shop_nr, obj2);
+    keeper->saveItem(shop_nr, rent_id, obj2);
     delete obj2;
     return DELETE_THIS;
   }
@@ -476,7 +478,7 @@ int TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
     ch->doSave(SILENT_YES);
   sprintf(buf, "%s/%d", SHOPFILE_PATH, shop_nr);
   keeper->saveItems(buf);
-  keeper->saveItem(shop_nr, obj2);
+  keeper->saveItem(shop_nr, rent_id, obj2);
   delete obj2;
   return DELETE_THIS;
 }
@@ -542,6 +544,7 @@ void TCommodity::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
 
   if (!shop_index[shop_nr].willBuy(this)) {
     keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
+    delete obj2;
     return;
   }
 

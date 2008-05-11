@@ -133,7 +133,8 @@ class ItemSaveDB {
 
  public:
   void clearRent();
-  int raw_write_item(TObj *, int, int);
+  int raw_write_item(TObj *, int, int, int=-1);
+
   void objsToStore(signed char, TObj *, TBeing *, bool, bool, int);
 
   ItemSaveDB(sstring, int);

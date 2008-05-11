@@ -672,28 +672,40 @@ bool ItemSave::raw_write_item(TObj *o)
   return TRUE;
 }
 
-int ItemSaveDB::raw_write_item(TObj *o, int slot, int container)
+int ItemSaveDB::raw_write_item(TObj *o, int slot, int container, int rent_id)
 {
   TDatabase db(DB_SNEEZY);
   int a0, a1, a2,a3;
   o->getFourValues(&a0, &a1, &a2, &a3);
 
-  db.query("insert into rent (owner_type, owner, vnum, slot, container, val0, val1, val2, val3, extra_flags, weight, bitvector, decay, cur_struct, max_struct, material, volume, price, depreciation) values ('%s', %i, %i, %i, %i, %i, %i, %i, %i, %i, %f, %i, %i, %i, %i, %i, %i, %i, %i)",
-	   owner_type.c_str(), owner, 
-	   obj_index[o->getItemIndex()].virt, slot,
-	   container,
-	   a0, a1, a2, a3, o->getObjStat(), (float) o->getWeight(),
-	   o->obj_flags.bitvector, o->obj_flags.decay_time,
-	   o->obj_flags.struct_points, o->obj_flags.max_struct_points,
-	   o->getMaterial(), o->obj_flags.volume, o->obj_flags.cost,
-	   o->getDepreciation());
-  
-  db.query("select last_insert_id() as rent_id from rent");
-  db.fetchRow();
-  int rent_id=convertTo<int>(db["rent_id"]);
-  int modifier=0;
+  if(rent_id==-1){
+    db.query("insert into rent (owner_type, owner, vnum, slot, container, val0, val1, val2, val3, extra_flags, weight, bitvector, decay, cur_struct, max_struct, material, volume, price, depreciation) values ('%s', %i, %i, %i, %i, %i, %i, %i, %i, %i, %f, %i, %i, %i, %i, %i, %i, %i, %i)",
+	     owner_type.c_str(), owner, 
+	     obj_index[o->getItemIndex()].virt, slot,
+	     container,
+	     a0, a1, a2, a3, o->getObjStat(), (float) o->getWeight(),
+	     o->obj_flags.bitvector, o->obj_flags.decay_time,
+	     o->obj_flags.struct_points, o->obj_flags.max_struct_points,
+	     o->getMaterial(), o->obj_flags.volume, o->obj_flags.cost,
+	     o->getDepreciation());
+    
+    db.query("select last_insert_id() as rent_id from rent");
+    db.fetchRow();
 
-  
+    rent_id=convertTo<int>(db["rent_id"]);
+  } else {
+    db.query("insert into rent (rent_id, owner_type, owner, vnum, slot, container, val0, val1, val2, val3, extra_flags, weight, bitvector, decay, cur_struct, max_struct, material, volume, price, depreciation) values (%i, '%s', %i, %i, %i, %i, %i, %i, %i, %i, %i, %f, %i, %i, %i, %i, %i, %i, %i, %i)",
+	     rent_id, owner_type.c_str(), owner, 
+	     obj_index[o->getItemIndex()].virt, slot,
+	     container,
+	     a0, a1, a2, a3, o->getObjStat(), (float) o->getWeight(),
+	     o->obj_flags.bitvector, o->obj_flags.decay_time,
+	     o->obj_flags.struct_points, o->obj_flags.max_struct_points,
+	     o->getMaterial(), o->obj_flags.volume, o->obj_flags.cost,
+	     o->getDepreciation());
+  }
+
+  int modifier=0;
 
   for (int j = 0; j < MAX_OBJ_AFFECT; j++) {
     if (applyTypeShouldBeSpellnum(o->affected[j].location))
@@ -1862,6 +1874,16 @@ int TMonster::saveItem(int shop_nr, TObj *obj, int container)
   shop_index[shop_nr].addToInventoryCount(1);
   return is.raw_write_item(obj, NORMAL_SLOT, container);
 }
+
+// saves over an old rent_id, use with caution
+int TMonster::saveItem(int shop_nr, int rent_id, TObj *obj, int container)
+{
+  ItemSaveDB is("shop", shop_nr);
+
+  shop_index[shop_nr].addToInventoryCount(1);
+  return is.raw_write_item(obj, NORMAL_SLOT, container, rent_id);
+}
+
 
 TObj *TMonster::loadItem(int shop_nr, int rent_id)
 {
