@@ -406,6 +406,7 @@ static int getRepairItem(TBeing *repair, TBeing *buyer, int ticket, TNote *obj)
 
   obj_index[fixed_obj->getItemIndex()].addToNumber(-1);
   fixed_obj->setStructPoints(fixed_obj->maxFix(repair, DEPRECIATION_YES));
+  fixed_obj->remObjStat(ITEM_RUSTY);
   
   *buyer += *fixed_obj;
   buyer->doSave(SILENT_YES);
