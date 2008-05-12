@@ -1980,6 +1980,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case TYPE_SHOOT:
       case TYPE_CANNON:
       case TYPE_UNDEFINED:
+      case TYPE_SHRED:
       case TYPE_MAX_HIT:
       case SKILL_ALCOHOLISM:
       case SKILL_FISHING:

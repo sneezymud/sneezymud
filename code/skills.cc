@@ -1306,6 +1306,7 @@ CSkill *TBeing::getSkill(spellNumT skill) const
     case TYPE_MAUL:
     case TYPE_SHOOT:
     case TYPE_CANNON:
+    case TYPE_SHRED:
     case TYPE_MAX_HIT:
     case AFFECT_DISEASE:
     case AFFECT_COMBAT:

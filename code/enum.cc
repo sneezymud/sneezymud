@@ -1522,6 +1522,8 @@ spellNumT mapWeaponT(weaponT w)
       return TYPE_SHOOT;
     case WEAPON_TYPE_CANNON:
       return TYPE_CANNON;
+    case WEAPON_TYPE_SHRED:
+      return TYPE_SHRED;
     default:
       return TYPE_HIT;
   }

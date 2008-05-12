@@ -1463,7 +1463,7 @@ const struct material_type_numbers material_nums[200] =
   {0, 75, 0, 20, 45, 101, 101, 0, 20, 1, 1, 0, 70,   0.5,   repairMetal,"copper"},
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   NULL,""},
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   NULL,""},
-  {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   NULL,""},
+  {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   NULL,""},	
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   NULL,""},
   {0, 70, 0, 10, 50, 101, 101, 0, 25, 1, 1, 0, 70,   9.1,    repairMetal,"bronze"},
   {0, 79, 0, 5,  50, 101, 101, 0, 25, 1, 1, 0, 70,   3.334,   repairMetal,"brass"},
@@ -1494,19 +1494,12 @@ const struct material_type_numbers material_nums[200] =
 };
 
 // this is how blunt/sharp/pointy weapon is
-const byte sharpness[] =
+const byte sharpness[TYPE_MAX_HIT - TYPE_MIN_HIT] =
 {
   20,         // TYPE_HIT
   50,         // TYPE_BLUDGEON
-  70,         // TYPE_PIERCE
-  50,         // TYPE_SLASH
   20,         // TYPE_WHIP
-  40,         // TYPE_CLAW
-  35,         // TYPE_BITE
-  65,         // TYPE_STING
   60,         // TYPE_CRUSH
-  60,         // TYPE_CLEAVE
-  70,         // TYPE_STAB
   60,         // TYPE_SMASH
   40,         // TYPE_SMITE
   30,         // TYPE_PUMMEL
@@ -1518,9 +1511,33 @@ const byte sharpness[] =
   75,         // TYPE_BATTER
   55,         // TYPE_STRIKE
   45,         // TYPE_CLUB
-  70,         // TYPE_SLICE
   50,         // TYPE_POUND
-};     
+
+  70,         // TYPE_PIERCE
+  35,         // TYPE_BITE
+  65,         // TYPE_STING
+  70,         // TYPE_STAB
+  55,         // TYPE_THRUST
+  60,         // TYPE_SPEAR
+  50,         // TYPE_BEAK
+
+
+  50,         // TYPE_SLASH
+  40,         // TYPE_CLAW
+  60,         // TYPE_CLEAVE
+  70,         // TYPE_SLICE
+
+  50,         // TYPE_AIR
+  50,         //TYPE_EARTH
+  50,         //TYPE_FIRE
+  50,         //TYPE_WATER
+  50,         //TYPE_BEAR_CLAW
+  50,         //TYPE_KICK
+  50,         //TYPE_MAUL
+  50,         //TYPE_SHOOT
+  50,         //TYPE_CANNON
+  65,         //TYPE_SHRED
+};
 
 const char * const body_flags[] =
 {

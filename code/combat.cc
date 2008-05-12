@@ -81,6 +81,7 @@ struct attack_hit_type attack_hit_text[TYPE_MAX_HIT - TYPE_MIN_HIT] = {
   {"maul", "mauls", "mauling"},
   {"shoot", "shoots", "shooting"},
   {"fire", "fires", "firing"},
+  {"shred", "shreds", "shredding"},
 };
 
 struct attack_hit_type attack_hit_text_twink[TYPE_MAX_HIT - TYPE_MIN_HIT] = {
@@ -120,6 +121,7 @@ struct attack_hit_type attack_hit_text_twink[TYPE_MAX_HIT - TYPE_MIN_HIT] = {
   {"MAUL", "MAULZ", "MAULING"},
   {"SHOOT", "SHOOTS", "SHOOTING"},
   {"FIRE", "FIRES", "FIRING"},
+  {"SHRED", "SHREDS", "SHREDDING"},
 };
 
 // isTanking() checks to see if I am tanking.  Conditions are if someone in
@@ -4721,12 +4723,11 @@ spellNumT TBeing::getAttackType(const TThing *wielded, primaryTypeT prim) const
   else if ((hasQuestBit(TOG_HOOK_HAND_R) && prim==HAND_PRIMARY) ||
 	   (hasQuestBit(TOG_HOOK_HAND_L) && prim==HAND_SECONDARY))
     dtype=TYPE_PIERCE;
+  // use custom monk messages if they know kubo
+  else if (doesKnowSkill(SKILL_KUBO))
+    dtype=monkDamType(getFormType());
   else
     dtype=getFormType();
-
-  // use custom monk messages if they know kubo
-  if(doesKnowSkill(SKILL_KUBO))
-    dtype=monkDamType(dtype);
 
   return dtype;
 }
@@ -5429,6 +5430,7 @@ bool slashType(spellNumT wtype)
     case TYPE_CLEAVE:
     case TYPE_SLICE:
     case TYPE_BEAR_CLAW:
+    case TYPE_SHRED:
       return TRUE;
     default:
       return FALSE;
@@ -5509,7 +5511,7 @@ spellNumT TBeing::monkDamType(spellNumT orig) const
                                 TYPE_CLEAVE, TYPE_CLEAVE, TYPE_CLEAVE,
                                 TYPE_CLEAVE, TYPE_CLEAVE, TYPE_CLEAVE,
                                 TYPE_CLEAVE, TYPE_CLEAVE, TYPE_CLEAVE,
-                                TYPE_CLEAVE };
+                                TYPE_SHRED };
 
   int index = max(0, min(int(value), 50));
 

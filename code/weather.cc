@@ -1100,6 +1100,10 @@ int getWet(TBeing *ch, TRoom* room, silentTypeT silent)
   int wetness = maxWet / 3; // the delta
   int oldWet = getWetness(ch);
 
+  // getting wetter goes faster than getting dry
+  if (maxWet < 0)
+    wetness = maxWet / 5;
+
   // even though its wet out, we are wetter and will dry off some
   if (oldWet > maxWet && wetness > 0)
     wetness = -wetness;

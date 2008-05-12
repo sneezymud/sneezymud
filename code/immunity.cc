@@ -309,6 +309,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case TYPE_CLAW:
     case TYPE_BEAR_CLAW:
     case DAMAGE_TRAP_SLASH:
+    case TYPE_SHRED:
       bit = IMMUNE_SLASH;
       break;
     case TYPE_BLUDGEON:

@@ -511,13 +511,13 @@ void TFood::eatMe(TBeing *ch)
     adjust = 2;
   } else if (ch->getMyRace()->hasTalent(TALENT_FISHEATER) && !isFoodFlag(FOOD_FISHED)) {
     msg = "This food tastes bland and unappetizing.  You miss the raw and wriggly texture of fish.\n\r";
-    adjust = 0.5;
+    adjust = 0.05;
   } else if (ch->getMyRace()->hasTalent(TALENT_MEATEATER) && isFoodFlag(FOOD_BUTCHERED)) {
     msg = "Mmmmhhh!  Finally, some raw meat!\n\r";
     adjust = 2;
   } else if (ch->getMyRace()->hasTalent(TALENT_MEATEATER) && !isFoodFlag(FOOD_BUTCHERED)) {
     msg = "Pfwah!  This food tastes horrible!\n\r";
-    adjust = 0.5;
+    adjust = 0.05;
   }
 
   if (!msg.empty())
@@ -716,14 +716,19 @@ void TBaseCup::sipMe(TBeing *ch)
   act("$n sips from the $o.", TRUE, ch, this, 0, TO_ROOM);
   ch->sendTo(COLOR_OBJECTS, fmt("It tastes like %s.\n\r") % liquidInfo[getDrinkType()]->name);
 
+  bool noFood = ch->getMyRace()->hasTalent(TALENT_FISHEATER) || ch->getMyRace()->hasTalent(TALENT_MEATEATER) ||
+                ch->getMyRace()->hasTalent(TALENT_INSECT_EATER);
+
   if(ch->isVampire()){
     ch->sendTo("You drink the mortal food, but it has no affect on you.\n\r");
+  } else if (noFood) {
+    act("You drink the $o but it doesn't seem very nourishing.", FALSE, ch, this, NULL, TO_CHAR);
   } else {
     if (getLiqDrunk()) {
       ch->gainCondition(DRUNK, (getLiqDrunk() / 10));
       // use leftover as chance to go 1 more unit up/down
       if (::number(0,9) < (abs(getLiqDrunk()) % 10))
-	ch->gainCondition(DRUNK, (getLiqDrunk() > 0 ? 1 : -1));
+        ch->gainCondition(DRUNK, (getLiqDrunk() > 0 ? 1 : -1));
     }
     
     ch->gainCondition(FULL, (getLiqHunger() / 10));

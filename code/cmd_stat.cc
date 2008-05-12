@@ -2247,6 +2247,7 @@ void TBeing::statBeing(TBeing *k)
       case TYPE_BITE:
       case TYPE_SHOOT:
       case TYPE_CANNON:
+      case TYPE_SHRED:
       case TYPE_UNDEFINED:
       case TYPE_MAX_HIT:
       case ABSOLUTE_MAX_SKILL:

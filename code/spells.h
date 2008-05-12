@@ -609,6 +609,7 @@ enum spellNumT {
      TYPE_MAUL,   // yet another blunt type
      TYPE_SHOOT,
      TYPE_CANNON,
+     TYPE_SHRED,
 
      // keep this as the last of the "weapon" damage types
      TYPE_MAX_HIT,  

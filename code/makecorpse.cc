@@ -382,6 +382,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
       case TYPE_CLEAVE:
       case TYPE_SLICE:
       case DAMAGE_TRAP_SLASH:
+      case TYPE_SHRED:
         sprintf(buf, "%s's corpse lies here, slashed in many places.",getName());
          break;
       case TYPE_BEAR_CLAW:
