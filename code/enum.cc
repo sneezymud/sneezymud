@@ -181,6 +181,11 @@ applyTypeT mapFileToApply(int att)
   return APPLY_NONE;
 }
 
+currencyTypeT & operator++(currencyTypeT &c, int)
+{
+  return c = (c == MAX_CURRENCY) ? CURRENCY_GRIMHAVEN : currencyTypeT(c+1);
+}
+
 territoryT & operator++(territoryT &c, int)
 {
   return c = (c == MAX_HOME_TERS) ? HOME_TER_NONE : territoryT(c+1);

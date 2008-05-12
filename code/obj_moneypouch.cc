@@ -7,14 +7,27 @@
 #include "stdsneezy.h"
 #include "obj_moneypouch.h"
 
-int TMoneypouch::getMoney() const
+int TMoneypouch::getMoney(currencyTypeT c) const
 {
   TMoney *money;
+  int currency[MAX_CURRENCY];
   int total=0;
+
+  for(int i=0;i<MAX_CURRENCY;++i)
+    currency[i]=0;
 
   for(TThing *t=getStuff();t;t=t->nextThing){
     if((money=dynamic_cast<TMoney *>(t)))
-      total=money->getMoney();
+      currency[money->getCurrency()]+=money->getMoney();
+  }
+  
+  // MAX_CURRENCY specified, so return total amounted converted to talens
+  if(c==MAX_CURRENCY){
+    for(int i=0;i<MAX_CURRENCY;++i)
+      total = (int)((float)currency[i] * 
+	 currencyInfo[(currencyTypeT)i]->getExchangeRate(CURRENCY_GRIMHAVEN));
+  } else {
+    total=currency[c];
   }
 
   return total;
@@ -51,9 +64,25 @@ void TMoneypouch::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   TExpandableContainer::getFourValues(x1, x2, x3, x4);
 }
 
+
 sstring TMoneypouch::statObjInfo() const
 {
-  return TExpandableContainer::statObjInfo();
+  sstring buf;
+  int total=0;
+
+  for(currencyTypeT c=MIN_CURRENCY;c<MAX_CURRENCY;c++){
+    if(getMoney(c) > 0){
+      buf += fmt("%ss inside: %i\n\r") % currencyInfo[c]->getName().cap() % 
+	getMoney(c);
+      total += (int)((float)getMoney(c) * currencyInfo[c]->getExchangeRate(CURRENCY_GRIMHAVEN));
+    }
+  }
+  
+  buf += fmt("Total (in talens): %i\n\r") % total;
+
+  buf = buf + TExpandableContainer::statObjInfo();
+
+  return buf;
 }
 
 bool TMoneypouch::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)

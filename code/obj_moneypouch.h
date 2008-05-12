@@ -19,7 +19,7 @@ class TMoneypouch : public TExpandableContainer {
     virtual itemTypeT itemType() const { return ITEM_MONEYPOUCH; }
     virtual bool objectRepair(TBeing *, TMonster *, silentTypeT);
 
-    int getMoney() const;
+    int getMoney(currencyTypeT c=MAX_CURRENCY) const;
 
     TMoneypouch();
     TMoneypouch(const TMoneypouch &a);

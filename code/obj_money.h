@@ -12,6 +12,7 @@
 
 
 enum currencyTypeT {
+  MIN_CURRENCY=0,
   CURRENCY_GRIMHAVEN=0,
   CURRENCY_LOGRUS,
   CURRENCY_BRIGHTMOON,
@@ -87,6 +88,7 @@ class currencyInfoT {
   ~currencyInfoT();  
 };
 
+extern currencyTypeT & operator++(currencyTypeT &c, int);
 
 
 #endif
