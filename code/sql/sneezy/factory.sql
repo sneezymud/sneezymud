@@ -1,7 +1,7 @@
 CREATE TABLE factorysupplies (
   shop_nr int,
   supplytype int,
-  supplyname int,
+  supplyname varchar(16),
   supplyamt int  
 );
 
