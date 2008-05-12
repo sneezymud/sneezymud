@@ -1,6 +1,7 @@
 CREATE TABLE factorysupplies (
   shop_nr int,
   supplytype int,
+  supplyname int,
   supplyamt int  
 );
 
