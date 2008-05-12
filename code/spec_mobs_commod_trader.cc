@@ -155,7 +155,7 @@ int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 				  commod_shop_nr[*target_shop_idx])) != -1){
 		  homebase.doSellTransaction(price, 
 			   fmt("%s x %i") % commod->getName() % (diff/2), 
-			   TX_BUYING, commod);
+			   TX_BUYING);
 		}
 
 		*target_shop_idx=i;

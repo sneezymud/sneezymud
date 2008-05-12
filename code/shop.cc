@@ -2332,7 +2332,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       //      myself->getName() % o->getName());
 
       // money goes to sba
-      tso.doSellTransaction(cost, o->getName(), TX_PRODUCING, o);
+      tso.doSellTransaction(cost, o->getName(), TX_PRODUCING);
       shoplog(sba_nr, myself, sba, o->getName(), cost, "producing");
 
       myself->saveItem(shop_nr, o);
@@ -2823,7 +2823,7 @@ void factoryProduction(int shop_nr)
     keeper->saveItem(shop_nr, obj);
     keeper->setMoney(keeper->getMoney()-obj->productionPrice());
     tso.doSellTransaction(obj->productionPrice(),
-			  obj->getName(), TX_FACTORY, obj);
+			  obj->getName(), TX_FACTORY);
     delete obj;
 
     // save avail amt

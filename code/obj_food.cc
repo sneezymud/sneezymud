@@ -1196,7 +1196,7 @@ void TFood::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
 void TFood::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
 {
   TShopOwned tso(shop_nr, keeper, ch);
-  tso.doSellTransaction(cost, getName(), TX_SELLING, this);
+  tso.doSellTransaction(cost, getName(), TX_SELLING);
 }
 
 int TFood::chiMe(TBeing *tLunatic)

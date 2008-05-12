@@ -460,7 +460,7 @@ int TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
     --(*this);
 
     TShopOwned tso(shop_nr, keeper, ch);
-    tso.doSellTransaction(price, obj2->getName(), TX_SELLING, obj2);
+    tso.doSellTransaction(price, obj2->getName(), TX_SELLING);
 
     keeper->doTell(ch->getName(), fmt("Thanks, here's your %d talens.") % price);
     act("$n sells $p.", TRUE, ch, this, 0, TO_ROOM);

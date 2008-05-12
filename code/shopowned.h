@@ -29,7 +29,7 @@ class TShopOwned {
   int getCorpID();
 
   void doBuyTransaction(int, const sstring &, transactionTypeT, TObj *obj=NULL);
-  void doSellTransaction(int, const sstring &, transactionTypeT, TObj *obj=NULL);
+  void doSellTransaction(int, const sstring &, transactionTypeT, int num=1);
 
   double getExpenseRatio();
   int doExpenses(int, TObj *);
@@ -69,13 +69,13 @@ class TShopOwned {
   // accounting stuff
   void giveStatements(sstring);
   void journalize(const sstring &, const sstring &, transactionTypeT, 
-		  int, int, int, int);
+		  int, int, int, int, int num=1);
   void journalize_debit(int post_ref, const sstring &customer,
 			const sstring &name, int amt, bool new_id=false);
   void journalize_credit(int post_ref, const sstring &customer,
 			 const sstring &name, int amt, bool new_id=false);
-  void COGS_add(const sstring &name, int amt);
-  void COGS_remove(const sstring &name);
+  void COGS_add(const sstring &name, int amt, int num);
+  void COGS_remove(const sstring &name, int num);
   int COGS_get(const sstring &name);
 
 

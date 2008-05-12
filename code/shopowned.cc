@@ -94,8 +94,9 @@ TMonster *TShopOwned::getKeeper()
 
 
 // player selling to shop (receiving money from shop)
+// num is the number of items, but cashCost is the TOTAL cost
 void TShopOwned::doSellTransaction(int cashCost, const sstring &name,
-				   transactionTypeT action, TObj *obj)
+				   transactionTypeT action, int num)
 {
   // sell gives money to the buyer
   keeper->giveMoney(ch, cashCost, GOLD_SHOP);
@@ -105,7 +106,7 @@ void TShopOwned::doSellTransaction(int cashCost, const sstring &name,
 
   if(owned){
     int corp_cash=doReserve();
-    journalize(ch->getName(), name, action, cashCost, 0, corp_cash, 0);
+    journalize(ch->getName(), name, action, cashCost, 0, corp_cash, 0, num);
   }
 
   // save

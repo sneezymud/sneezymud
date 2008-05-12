@@ -6878,9 +6878,8 @@ int rationFactory(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj 
   me->doSay("Now that's a nice cut of steak!  Here you go.");
   me->doEmote(fmt("hands you %i talens.") % (int)price);
   
-  tso.doSellTransaction((int)price, 
-			fmt("%s x %i") % o->getName() % food->getFoodFill(), 
-			TX_SELLING, o);
+  tso.doSellTransaction((int)price, "meat",
+			TX_SELLING,  food->getFoodFill());
 
   db.query("update factorysupplies set supplyamt=supplyamt+%i where shop_nr=%i", food->getFoodFill(), factory_shop);
 
