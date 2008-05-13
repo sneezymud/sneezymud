@@ -170,7 +170,7 @@ void TShopOwned::COGS_remove(const sstring &name, int num)
 {
   TDatabase db(DB_SNEEZY);
 
-  db.query("update shoplogcogs set total_cost=total_cost-(total_cost/count), count=count-%i where obj_name='%s' and shop_nr=%i", num, name.c_str(), shop_nr);
+  db.query("update shoplogcogs set total_cost=total_cost-((total_cost/count)*%i), count=count-%i where obj_name='%s' and shop_nr=%i", num, num, name.c_str(), shop_nr);
 }
 
 int TShopOwned::COGS_get(const sstring &name)
@@ -191,6 +191,7 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
 			    int expenses, int num)
 {
   TDatabase db(DB_SNEEZY);
+  int COGS=0;
 
   switch(action){
     case TX_RECEIVING_TALENS:
@@ -229,9 +230,10 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
       // cash
       journalize_credit(100, customer, name, amt);      
       break;
+    case TX_FACTORY:
+      break;
     case TX_SELLING:
     case TX_PRODUCING:
-    case TX_FACTORY:
       // player selling something, so shop is buying inventory
       // inventory
       journalize_debit(130, customer, name, amt, true);
@@ -252,8 +254,6 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
 	journalize_credit(510, customer, name, amt);
       else
 	journalize_credit(500, customer, name, amt);
-      
-      int COGS=0;
       
       if(action == TX_BUYING_SERVICE){
       } else if(action == TX_BUYING || action == TX_RECYCLING){

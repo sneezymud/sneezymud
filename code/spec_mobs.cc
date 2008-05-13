@@ -6852,7 +6852,7 @@ int rationFactory(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj 
   if(cmd != CMD_MOB_GIVEN_ITEM)
     return FALSE;
 
-  db.query("select supplyamt from factorysupplies where shop_nr=%i", factory_shop);
+  db.query("select supplyamt from factorysupplies where shop_nr=%i and supplyname='meat'", factory_shop);
   
   if(!db.fetchRow()){
     vlogf(LOG_BUG, "ration factory missing db entry");
@@ -6881,7 +6881,7 @@ int rationFactory(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj 
   tso.doSellTransaction((int)price, "meat",
 			TX_SELLING,  food->getFoodFill());
 
-  db.query("update factorysupplies set supplyamt=supplyamt+%i where shop_nr=%i", food->getFoodFill(), factory_shop);
+  db.query("update factorysupplies set supplyamt=supplyamt+%i where shop_nr=%i and supplyname='meat'", food->getFoodFill(), factory_shop);
 
   return TRUE;
 }

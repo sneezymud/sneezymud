@@ -2787,6 +2787,8 @@ void factoryProduction(int shop_nr)
   TObj *obj;
   TMonster *keeper=tso.getKeeper();
   bool ready=false;
+  map<sstring, int>supplies;
+  map<sstring, int>::iterator iter;
 
   if (!keeper) // keeper is null on test ports
     return;
@@ -2797,12 +2799,13 @@ void factoryProduction(int shop_nr)
     vnum=convertTo<int>(db_vnum["vnum"]);
     count=convertTo<int>(db_vnum["count"]);
 
-    db.query("select fb.supplyamt as required, fs.supplyamt as avail from factoryblueprint fb, factorysupplies fs where fb.vnum=%i and fs.shop_nr=%i and fs.supplytype=fb.supplytype", vnum, shop_nr);
+    db.query("select fb.supplyamt as required, fs.supplyamt as avail, fs.supplyname as name from factoryblueprint fb, factorysupplies fs where fb.vnum=%i and fs.shop_nr=%i and fs.supplytype=fb.supplytype", vnum, shop_nr);
 
     ready=true;
     while(db.fetchRow() && ready){
       if(convertTo<int>(db["required"]) > convertTo<int>(db["avail"]))
 	ready=false;
+      supplies[db["name"]]=convertTo<int>(db["required"]);
     }
      
     if(!ready)
@@ -2822,15 +2825,44 @@ void factoryProduction(int shop_nr)
     // place in shop
     keeper->saveItem(shop_nr, obj);
     keeper->setMoney(keeper->getMoney()-obj->productionPrice());
-    tso.doSellTransaction(obj->productionPrice(),
-			  obj->getName(), TX_FACTORY);
+    
+    // subtract raw materials
+    int COGS=0, total_cogs=0;
+    bool first_time=true;
+    for(iter=supplies.begin();iter!=supplies.end();++iter){
+      sstring name=(*iter).first;
+      int num=(*iter).second;
+
+      // COGS of this material
+      COGS=tso.COGS_get(name)*num;
+      total_cogs+=COGS;
+      
+      // inventory - remove this material
+      tso.journalize_credit(130, keeper->getName(), name, COGS, first_time);
+      first_time=false;
+
+      // record COGS
+      tso.COGS_remove(name, num);
+    }
+
+    // cash - labor costs for production
+    tso.journalize_credit(100, keeper->getName(), 
+			  obj->getName(), obj->productionPrice());
+    
+    // inventory - add the value of the newly produced item
+    tso.journalize_debit(130, keeper->getName(), obj->getName(), 
+		     obj->productionPrice()+total_cogs);
+    
+    // record COGS
+    tso.COGS_add(obj->getName(), obj->productionPrice()+total_cogs, 1);
+
+    // log the sale
+    shoplog(shop_nr, keeper, keeper, obj->getName(), -(obj->productionPrice()), "factory production");
+
     delete obj;
 
     // save avail amt
     db.query("update factorysupplies, factoryblueprint set factorysupplies.supplyamt=factorysupplies.supplyamt-factoryblueprint.supplyamt where factorysupplies.shop_nr=%i and factoryblueprint.vnum=%i and factorysupplies.supplytype=factoryblueprint.supplytype", shop_nr, vnum);
 
   }
-  }
-
-
-
+}
