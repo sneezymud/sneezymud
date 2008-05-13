@@ -5,6 +5,7 @@
 #include "corporation.h"
 #include "obj_note.h"
 #include "shopaccounting.h"
+#include "obj_commodity.h"
 
 // this function relies on the fact that the db will return rows in the order
 // that they were created, chronologically.  I'm not sure if this is defined
@@ -291,6 +292,10 @@ int TShopOwned::chargeTax(int cost, const sstring &name, TObj *o)
 
   // due to the small profit margins, casino can't pay tax
   if(shop_nr==122)
+    return 0;
+
+  // ditto commod shops
+  if(dynamic_cast<TCommodity *>(o))
     return 0;
 
   tax_office=getTaxShopNr();
