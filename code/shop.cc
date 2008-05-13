@@ -2793,6 +2793,19 @@ void factoryProduction(int shop_nr)
   if (!keeper) // keeper is null on test ports
     return;
 
+    // find the sba shopkeeper
+    TMonster *sba=NULL;
+    int sba_nr=160;
+    for(TBeing *t=character_list;t;t=t->next){
+      if(t->number==shop_index[sba_nr].keeper){
+	sba=dynamic_cast<TMonster *>(t);
+	break;
+      }
+    }
+    if(!sba)
+      return;
+
+
   db_vnum.query("select fp.vnum as vnum, count(r.vnum) as count from factoryproducing fp left outer join rent r on (fp.vnum=r.vnum and r.owner_type='shop' and r.owner=fp.shop_nr) where fp.shop_nr=%i group by fp.vnum", shop_nr);
 
   while(db_vnum.fetchRow()){
@@ -2825,6 +2838,10 @@ void factoryProduction(int shop_nr)
     // place in shop
     keeper->saveItem(shop_nr, obj);
     keeper->setMoney(keeper->getMoney()-obj->productionPrice());
+
+    // money goes to sba
+    shoplog(sba_nr, keeper, sba, obj->getName(), 
+	    obj->productionPrice(), "producing");
     
     // subtract raw materials
     int COGS=0, total_cogs=0;
