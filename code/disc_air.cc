@@ -633,8 +633,13 @@ int tornado(TBeing * caster, int level, byte bKnown, int adv_learn)
           caster->setCharFighting((TBeing *)tb);
           caster->setVictFighting((TBeing *)tb);
 
+          // no teleport if the room doesnt allow it
+          if (caster->roomp->isRoomFlag(ROOM_HAVE_TO_WALK|ROOM_NO_FLEE|ROOM_NO_ESCAPE))
+            continue;
+
+          // teleport them away
           if (!caster->isNotPowerful(tb, level, SPELL_TORNADO, SILENT_YES))
- {
+          {
             act("Uhoh, Toto...", FALSE, tb, NULL, NULL, TO_CHAR);
             act("$n is swept away...", FALSE, tb, NULL, NULL, TO_ROOM);
 
@@ -697,6 +702,10 @@ int tornado(TBeing * caster, int level, byte bKnown, int adv_learn)
               tb = NULL;
               continue;
             }
+
+            if (caster->roomp->isRoomFlag(ROOM_HAVE_TO_WALK|ROOM_NO_FLEE|ROOM_NO_ESCAPE))
+              continue;
+
             act("Uhoh, Toto...", FALSE, tb, NULL, NULL, TO_CHAR);
             act("$n is swept away...", FALSE, tb, NULL, NULL, TO_ROOM);
 
