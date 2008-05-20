@@ -24,7 +24,7 @@ int TMoneypouch::getMoney(currencyTypeT c) const
   // MAX_CURRENCY specified, so return total amounted converted to talens
   if(c==MAX_CURRENCY){
     for(int i=0;i<MAX_CURRENCY;++i)
-      total = (int)((float)currency[i] * 
+      total += (int)((float)currency[i] * 
 	 currencyInfo[(currencyTypeT)i]->getExchangeRate(CURRENCY_GRIMHAVEN));
   } else {
     total=currency[c];
