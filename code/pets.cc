@@ -6,6 +6,7 @@
 
 
 #include "stdsneezy.h"
+#include "database.h"
 
 /* **********************************************************************
 Every mob that follows a PC should be classified as one of the following:
@@ -38,6 +39,51 @@ The effects of being a thrall trump the effects of being a charm, and in turn
 a pet.  That is, if I charm a pet, its a charm (not a pet).
 
 ********************************************************************** */
+
+void TBeing::petSave()
+{
+  TDatabase db(DB_SNEEZY);
+  affectedData *aff = NULL, *an = NULL;
+  char *owner;
+  int owner_id;
+
+  // don't save non-named pets
+  if(!(specials.act & ACT_STRINGS_CHANGED))
+    return;
+  // get the owner name
+  for (an = affected; an; an = an->next) {
+    if (an->type == AFFECT_PET) {
+      aff = an;
+      break;
+    }
+  }
+  if(!aff)
+    return;
+
+  owner=(char *)aff->be;
+  
+  // get the owner player_id
+  db.query("select id from player where name='%s'", owner);
+  if(!db.fetchRow())
+    return;
+  owner_id=convertTo<int>(db["id"]);
+
+  // get the pet name
+  sstring short_desc=name;
+  sstring name="";
+  if((specials.act & ACT_STRINGS_CHANGED)){
+    for(int i=0;!short_desc.word(i).empty();++i){
+      name=short_desc.word(i);
+    }
+  }
+  
+  // save
+  db.query("delete from pet where player_id=%i and vnum=%i and name='%s'",
+	   owner_id, mobVnum(), name.c_str());
+  db.query("insert into pet (player_id, vnum, name, exp) values (%i, %i, '%s', %f)", owner_id, mobVnum(), name.c_str(), getExp());
+
+  return;
+}
 
 // bv is one of: the PETTYPES constants
 bool TBeing::isPet(const unsigned int bv) const

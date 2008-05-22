@@ -2736,28 +2736,39 @@ int beggar(TBeing *ch, cmdTypeT cmd, const char *, TMonster *me, TObj *o)
   return FALSE;
 }
 
+int petPriceL(int level)
+{
+  int price;
+  if (level <= 5) {                 // 175
+    price = (((level)*15) + 100);
+  } else if (level <= 12)  {        // 3600
+    price = (level*level*25);
+  } else if (level <= 17) {         // 10115
+    price = (level*level*35);
+  } else if (level <= 21) {         // 19845
+    price = (level*level*45);
+  } else if (level <= 28) {
+    price = (level*level*60);
+  } else  {
+    price = (level*level*90);
+  }
+
+  return price;
+}
+
 int TMonster::petPrice() const
 {
   int price;
-  if (GetMaxLevel() <= 5) {
-    price = (((GetMaxLevel())*15) + 100);
-  } else if (GetMaxLevel() <= 12)  {
-    price = (GetMaxLevel()*GetMaxLevel()*25);
-  } else if (GetMaxLevel() <= 17) {
-    price = (GetMaxLevel()*GetMaxLevel()*35);
-  } else if (GetMaxLevel() <= 21) {
-    price = (GetMaxLevel()*GetMaxLevel()*45);
-  } else if (GetMaxLevel() <= 28) {
-    price = (GetMaxLevel()*GetMaxLevel()*60);
-  } else  {
-    price = (GetMaxLevel()*GetMaxLevel()*90);
-  }
+  price=petPriceL(GetMaxLevel());
+
   // they make great tanks
   if (canFly())
     price *= 3;
 
   return price;
 }
+
+
 
 static TWindow * getFirstWindowInRoom(TMonster *myself)
 {
@@ -2770,6 +2781,172 @@ static TWindow * getFirstWindowInRoom(TMonster *myself)
   }
   return NULL;
 }
+
+int petVeterinarian(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
+{
+  TDatabase db(DB_SNEEZY);
+  int vnum, num;
+  sstring short_desc;
+  char new_name[80], buf[80];
+  char tmpbuf2[160];
+  sstring tmpbuf;
+
+
+  if(cmd != CMD_LIST &&
+     cmd != CMD_BUY)
+    return FALSE;
+
+  db.query("select vnum, name, exp from pet where player_id=%i order by name", ch->getPlayerID());
+    
+
+  if(cmd == CMD_LIST){
+    for(int i=1;db.fetchRow();++i){
+      if(i==1){
+	me->doTell(ch->getName(), "Yeah, your pet dragged himself in here, half dead, and I fixed him up.");
+	me->doTell(ch->getName(), "You'll have to pay the bill if you want the cuddly little thing back.");
+      }
+      
+      vnum=convertTo<int>(db["vnum"]);
+      short_desc=mob_index[real_mobile(vnum)].short_desc;
+      int level=1;
+
+      for(;level<127;++level){
+	if(getExpClassLevel(WARRIOR_LEVEL_IND, level) >
+	   convertTo<int>(db["exp"]))
+	  break;
+      }
+
+
+      if(!db["name"].empty()){
+	if(short_desc.word(0) != "a" &&
+	   short_desc.word(0) != "an")
+	  short_desc=fmt("\"%s\", the %s") % db["name"].cap() % short_desc;
+	else
+	  short_desc=fmt("\"%s\", %s") % db["name"].cap() % short_desc;
+	me->doTell(ch->getName(), fmt("%i) %s - %i talens") %
+		   i % short_desc % petPriceL(level));
+      } else {
+	me->doTell(ch->getName(), fmt("%i) %s - %i talens") %
+		   i % short_desc % petPriceL(level));
+      }
+    }
+
+    return TRUE;
+  } else if(cmd == CMD_BUY){
+    num=convertTo<int>(arg);
+
+    for(int i=1;db.fetchRow();++i){
+      if(i == num)
+	break;
+    }
+
+    vnum=convertTo<int>(db["vnum"]);
+    affectedData *aff = NULL, *an = NULL;
+    char *owner=NULL;
+
+    // search the world for the pet
+    for(TBeing *t=character_list;t;t=t->next){
+      if(t->mobVnum() == vnum && t->isPet(PETTYPE_PET)){
+	// get the owner name
+	for (an = t->affected; an; an = an->next) {
+	  if (an->type == AFFECT_PET) {
+	    aff = an;
+	    break;
+	  }
+	}
+
+	if(aff){
+	  owner=(char *)aff->be;
+	  
+	  if(!strcmp(owner, ch->getName())){
+	    // get the pet name
+	    sstring short_desc=t->name;
+	    sstring name="";
+	    if((t->specials.act & ACT_STRINGS_CHANGED)){
+	      for(int i=0;!short_desc.word(i).empty();++i){
+		name=short_desc.word(i);
+	      }
+	    }
+	    
+	    if(name == db["name"]){
+	      me->doTell(ch->getName(), "Hmm my mistake, I thought that guy wandered in here but looks like it wandered out again...");
+	      return TRUE;
+	    }
+	  }
+	}
+      }
+    }
+
+
+    TMonster *pet;    
+    if (!(pet = read_mobile(vnum, VIRTUAL))) {
+      vlogf(LOG_PROC, "Whoa!  No pet in pet_keeper");
+      return TRUE;
+    }
+
+    if(!db["name"].empty()){
+      pet->swapToStrung();
+      
+      //  Remake the pet's name.  
+      strcpy(new_name, db["name"].c_str());
+      tmpbuf = fmt("%s %s") % pet->name % new_name;
+      delete [] pet->name;
+      pet->name = mud_str_dup(tmpbuf);
+      
+      // remake the short desc
+      //      sprintf(tmpbuf2, stripColorCodes(pet->getName()).c_str());
+      sprintf(tmpbuf2, pet->getName());
+      one_argument(tmpbuf2, buf, cElements(buf));
+      if (!strcmp(buf, "a") || !strcmp(buf, "an"))
+	tmpbuf=fmt("\"%s\", the %s") % sstring(new_name).cap() %
+	  one_argument(tmpbuf2, buf, cElements(buf));
+      else
+	tmpbuf = fmt("\"%s\", %s") % sstring(new_name).cap() % pet->getName();
+      
+      delete [] pet->shortDescr;
+      pet->shortDescr = mud_str_dup(tmpbuf);
+      
+      // remake the long desc
+      tmpbuf += " is here.\n\r";
+      delete [] pet->player.longDescr;
+      pet->player.longDescr = mud_str_dup(tmpbuf);
+    }
+    
+    pet->setExp(convertTo<float>(db["exp"]));
+    SET_BIT(pet->specials.affectedBy, AFF_CHARM);
+
+    pet->balanceMakeNPCLikePC();
+
+    int price=petPriceL(pet->GetMaxLevel());
+
+    if(ch->getMoney() < price){
+      me->doTell(ch->getName(), "You can't afford it!");
+      return TRUE;
+    }
+
+    ch->giveMoney(me, price, GOLD_SHOP_PET);
+
+    *ch->roomp += *pet;
+    ch->addFollower(pet);
+
+    affectedData aff2;
+
+    aff2.type = AFFECT_PET;
+    aff2.level = 0;
+    aff2.duration  = PERMANENT_DURATION;
+    aff2.location = APPLY_NONE;
+    aff2.modifier = 0;   // to be used for elemental skill level
+    aff2.bitvector = 0;
+
+    char * tmp = mud_str_dup(ch->name);
+    aff2.be = (TThing *) tmp;
+
+    pet->affectTo(&aff2, -1);
+  }
+
+  return FALSE;
+}
+
 
 int pet_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 {
@@ -7181,6 +7358,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {TRUE, "fruit scavenger", fruitScavenger}, // 215
   {FALSE, "commodity trader", commodTrader},
   {FALSE, "ration factory", rationFactory},
+  {FALSE, "pet veterinarian", petVeterinarian},
 // replace non-zero, bogus_mob_procs above before adding
 };
 

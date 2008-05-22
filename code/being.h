@@ -712,7 +712,8 @@ class TBeing : public TThing {
     int getPetAge();
     bool doRetrainPet(const char *, TBeing *);
     bool restorePetToPc(TBeing *tBeing);
-    
+    virtual void petSave();
+
     sstring getInsult(TBeing *);
     
     ubyte getMaterial(wearSlotT) const;

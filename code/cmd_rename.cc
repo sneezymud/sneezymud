@@ -111,7 +111,8 @@ void TBeing::doNameChange(const char *argument)
     mons->name = mud_str_dup(tmpbuf);
 
     // remake the short desc
-    sprintf(tmpbuf2, stripColorCodes(mons->getName()).c_str());
+    //    sprintf(tmpbuf2, stripColorCodes(mons->getName()).c_str());
+    sprintf(tmpbuf2, mons->getName());
     one_argument(tmpbuf2, arg, cElements(arg));
     if (!strcmp(arg, "a") || !strcmp(arg, "an"))
       tmpbuf=fmt("\"%s\", the %s") % sstring(new_name).cap() %

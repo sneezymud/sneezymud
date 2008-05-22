@@ -96,8 +96,12 @@ void TBeing::doSave(silentTypeT silent, const char *tArg)
 
   verifyWeightVolume();
 
-  if (!isPc())
+  if(isPet(PETTYPE_PET))
+    petSave();
+
+  if (!isPc()){
     return;
+  }
 
 #if 0
   if (!desc) {
