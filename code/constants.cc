@@ -941,7 +941,7 @@ const char * const action_bits[] =
   "Scavenger",
   "Disguised",
   "Nice-thief",
-  "Aggresive",
+  "Aggressive",
   "Stay-zone",
   "Wimpy",
   "Annoying",
