@@ -4621,7 +4621,8 @@ bool TMonster::isFriend(TBeing &myfriend)
 
   // only if they are no more than 5 levels less than me
   // or we're both over level 50
-  if (isSameRace(&myfriend) && isSameFaction(&myfriend) &&
+  if (!myfriend.isPc() &&
+      isSameRace(&myfriend) && isSameFaction(&myfriend) &&
       (((myfriend.GetMaxLevel()+5) > GetMaxLevel()) ||
        (GetMaxLevel() > 50 && myfriend.GetMaxLevel() > 50)))
     return TRUE;
