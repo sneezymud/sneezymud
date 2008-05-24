@@ -330,13 +330,21 @@ bool findLeper::isTarget(int room) const
 
 TPathFinder::~TPathFinder()
 {
-  deque<pathData *>::iterator it;
-  for(it=path.begin();it!=path.end();++it){
-    delete *it;
-  }
+  Clear();
 }
 
 TPathFinder::TPathFinder()
+{
+  Clear();
+}
+
+TPathFinder::TPathFinder(int depth)
+{
+  Clear();
+  setRange(depth);
+}
+
+void TPathFinder::Clear()
 {
   thru_doors=true;
   use_portals=true;
@@ -345,12 +353,12 @@ TPathFinder::TPathFinder()
   no_mob=true;
   ship_only=false;
   dest=ROOM_NOWHERE;
-}
+  dist = 0;
 
-TPathFinder::TPathFinder(int depth)
-{
-  TPathFinder();
-  setRange(depth);
+  deque<pathData *>::iterator it;
+  for(it=path.begin();it!=path.end();++it){
+    delete *it;
+  }
 }
 
 void TPathFinder::setRange(int d){ 

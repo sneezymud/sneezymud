@@ -184,6 +184,8 @@ class TPathFinder {
   TPathFinder(int depth);
 
   ~TPathFinder();
+
+  void Clear();
 };
 
 
