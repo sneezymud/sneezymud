@@ -70,6 +70,8 @@ sstring guardShout(TBeing *ch){
       }
     case 30:
     case 31:
+      s = "Help, help!  I'm being repressed!";
+      break;
     case 32:
     case 33:
     case 34:
@@ -346,7 +348,7 @@ int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
     sstring shout = guardShout(ch).cap();
     if (!number(0, 20))
       ch->doShout(shout);
-    else if (::number(0,2)) {
+    else /*if (::number(0,2))*/ {
       act(fmt("$n rears back %s head and shouts loudly.") % ch->hshr(), TRUE, ch, 0, 0, TO_ROOM);
       act(fmt("$n shouts, \"%s\"") % shout.c_str(), TRUE, ch, 0, 0, TO_ROOM);
     }
