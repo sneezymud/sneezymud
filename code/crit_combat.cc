@@ -16,6 +16,49 @@
 #include "obj_drinkcon.h"
 #include "database.h"
 
+
+// adjust the crit table for fighting barehand.  All crit types are not equal,
+// but for barehand we want them to appear so.  This means nerfing slash barehand crits.
+// The crit table for pierce is slightly worse than blunt, so shouldn't need any changing
+int adjustCritRollForBarehand(int roll, TBeing *me, spellNumT w_type)
+{
+  static bool inited = false;
+  static int slash_adjust[33];
+
+  if (bluntType(w_type) || pierceType(w_type) || roll <= 66 || roll > 100)
+    return roll;
+
+  // adjust to the roll table base (special crits start at 67)
+  int index = roll - 67;
+
+  if (!inited)
+  {
+    memset(slash_adjust, 0, sizeof(slash_adjust));
+    slash_adjust[69 -67] = true;
+    slash_adjust[70 -67] = true;
+    slash_adjust[72 -67] = true;
+    slash_adjust[73 -67] = true;
+    slash_adjust[76 -67] = true;
+    slash_adjust[78 -67] = true;
+    slash_adjust[80 -67] = true;
+    slash_adjust[82 -67] = true;
+    slash_adjust[85 -67] = true;
+    slash_adjust[86 -67] = true;
+    slash_adjust[87 -67] = true;
+    slash_adjust[88 -67] = true;
+    slash_adjust[89 -67] = true;
+    slash_adjust[90 -67] = true;
+    inited = true;
+  }
+
+  if (slashType(w_type) && slash_adjust[index] != 0)
+    return slash_adjust[index];
+
+  // wierd case
+  return roll;
+}
+
+
 // returns DELETE_THIS
 // return ONEHIT_MESS_CRIT_S if oneHit should abort and no further oneHits should occur
 int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
@@ -456,23 +499,17 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
     return FALSE;
   }
 
-#if 1
   if (mod == -1 && v->affectedBySpell(AFFECT_DUMMY)) {
-    affectedData *an = NULL;
-
-
-    for (an = v->affected; an; an = an->next) {
+    for (affectedData *an = v->affected; an; an = an->next) {
       if (an->type == AFFECT_DUMMY && an->level == 60) {
-	mod = an->modifier2;
+        mod = an->modifier2;
       }
     }
     v->affectFrom(AFFECT_DUMMY);
   }
-#endif
 
   // get wtype back so it fits in array  
   new_wtype = wtype - TYPE_HIT;
-
 
   stats.combat_crit_suc++;
 
@@ -488,6 +525,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
     dicenum = dice(1, 100000);    // This was 10k under 3.x - Bat
   }
 
+  // adjust for immorts being awesome
   if (isImmortal())
     dicenum /= 10;
 
@@ -527,13 +565,6 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
     if(dicenum > crit_chance)
       return FALSE;
     
-    // update crit stats
-    stats.combat_crit_suc_pass++;
-    if (desc)
-      desc->career.crit_hits++;
-    if (v->desc)
-      v->desc->career.crit_hits_suff++;
-
     // if there is greater than 10 levels of different in either direction
     // then either make the crits better, or worse
     int level_mod=(GetMaxLevel() - v->GetMaxLevel());
@@ -544,6 +575,21 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
     crit_num = ::number(1, 100) + ::number(0, level_mod);
     crit_num = max(1, crit_num);
     crit_num = min(100, crit_num);
+
+    // if we are fighting barehand, adjust the crit based on type
+    if (isPc() && !weapon) {
+      crit_num = adjustCritRollForBarehand(crit_num, this, wtype);
+      if (crit_num == 0)
+        return 0;
+    }
+
+    // update crit stats
+    stats.combat_crit_suc_pass++;
+    if (desc)
+      desc->career.crit_hits++;
+    if (v->desc)
+      v->desc->career.crit_hits_suff++;
+
   } else {
     // specified crit
     crit_num = mod;
@@ -570,6 +616,34 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
   return FALSE;
 }
 
+/* ------------------------------------------------------------
+
+====Blunt crit table====
+
+0-33: double damage
+34-66: triple damage
+67,68: crush finger
+69,70: break hand right
+71,72: break hand left
+73,74: break arm (primary)
+75,76: crush nerves arm (useless)
+77,78: break bones left leg
+79,80: crush muscles left leg (useless)
+81,82: head blow (stun 10 rounds)
+83,84: head blow (stun 5 rounds)
+85,86: shatter rib
+87,88: shatter rib + internal bleeding
+96,97: break tooth
+98,99,100: crush skull/rip heart
+
+total:
+  double damage: 33%
+  triple damage: 33%
+  minor break/ailment: 12%
+  major break/ailment: 12%
+  death: 3%
+
+------------------------------------------------------------ */
 int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 		       spellNumT wtype, int *dam, int crit_num)
 {
@@ -1215,6 +1289,39 @@ buf=fmt("$n's %s crushes $N's skull.  Brains ooze out as $E crumples!") %
   return 0;
 }
 
+
+/* ------------------------------------------------------------
+
+====Slash crit table====
+
+0-33: double damage
+34-66: triple damage
+67: sever finger left
+68: sever finger right
+69,70: sever hand right
+71: sever wrist right
+72,73: sever hand left
+74: sever wrist left
+75,76: sever arm right
+77,78: sever arm left
+79,80: sever foot right + right leg useless
+81,82: sever foot left + left leg useless
+83,84: impale (not if cleaving)
+85,86: cleave in two if ! waist gear(kill)
+87,88: cleave in two if and destroy waist (kill)
+89,90: gullet to groin slice
+91,92: sever genitalia
+98,99,100 - decap if no neck armor
+
+total:
+  double damage: 33%
+  triple damage: 33%
+  impale: 2%
+  minor sever: 4%
+  major sever: 14%
+  death: 9%
+
+------------------------------------------------------------ */
 int TBeing::critSlash(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 		       spellNumT wtype, int *dam, int crit_num)
 {
@@ -1760,6 +1867,33 @@ buf=fmt("$n attempts to decapitate $N with $s %s!  Luckily, $p saves $M!") %
   return 0;
 }
 
+/* ------------------------------------------------------------
+
+====Pierce crit table====
+
+0-33: double damage
+34-66: triple damage
+67,68: pierced larynx
+69,70: gouged out eye
+71,72: sever tendon
+73,74: stab back (impale)
+75,76: pierce cranium
+77,78: shatter elbow
+79,80: sever hand
+81,82: punctured lung (impale)
+83,84,85: punctured kindey infect (impale)
+86,87: punctured stomach
+100: crit kill (death)
+
+total:
+  double damage: 33%
+  triple damage: 33%
+  impale: 7%
+  minor sever/ailment: 11%
+  major sever/ailment: 8%
+  death: 3%
+
+------------------------------------------------------------ */
 int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 		       spellNumT wtype, int *dam, int crit_num)
 {
