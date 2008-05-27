@@ -33,25 +33,28 @@ int adjustCritRollForBarehand(int roll, TBeing *me, spellNumT w_type)
 
   if (!inited)
   {
-    memset(slash_adjust, 0, sizeof(slash_adjust));
-    slash_adjust[69 -67] = true;
-    slash_adjust[70 -67] = true;
-    slash_adjust[72 -67] = true;
-    slash_adjust[73 -67] = true;
-    slash_adjust[76 -67] = true;
-    slash_adjust[78 -67] = true;
-    slash_adjust[80 -67] = true;
-    slash_adjust[82 -67] = true;
-    slash_adjust[85 -67] = true;
-    slash_adjust[86 -67] = true;
-    slash_adjust[87 -67] = true;
-    slash_adjust[88 -67] = true;
-    slash_adjust[89 -67] = true;
-    slash_adjust[90 -67] = true;
+    memset(slash_adjust, 1, sizeof(slash_adjust));
+    for(unsigned int i=0;i < cElements(slash_adjust);i++)
+      slash_adjust[i] = i + 67;
+
+    slash_adjust[69 -67] = 0;
+    slash_adjust[70 -67] = 0;
+    slash_adjust[72 -67] = 0;
+    slash_adjust[73 -67] = 0;
+    slash_adjust[76 -67] = 0;
+    slash_adjust[78 -67] = 0;
+    slash_adjust[80 -67] = 0;
+    slash_adjust[82 -67] = 0;
+    slash_adjust[85 -67] = 0;
+    slash_adjust[86 -67] = 0;
+    slash_adjust[87 -67] = 0;
+    slash_adjust[88 -67] = 0;
+    slash_adjust[89 -67] = 0;
+    slash_adjust[90 -67] = 0;
     inited = true;
   }
 
-  if (slashType(w_type) && slash_adjust[index] != 0)
+  if (slashType(w_type) && slash_adjust[index] != 1)
     return slash_adjust[index];
 
   // wierd case
