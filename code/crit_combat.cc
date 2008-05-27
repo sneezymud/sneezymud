@@ -23,7 +23,7 @@
 int adjustCritRollForBarehand(int roll, TBeing *me, spellNumT w_type)
 {
   static bool inited = false;
-  static int slash_adjust[33];
+  static int slash_adjust[100 -67];
 
   if (bluntType(w_type) || pierceType(w_type) || roll <= 66 || roll > 100)
     return roll;
@@ -33,7 +33,6 @@ int adjustCritRollForBarehand(int roll, TBeing *me, spellNumT w_type)
 
   if (!inited)
   {
-    memset(slash_adjust, 1, sizeof(slash_adjust));
     for(unsigned int i=0;i < cElements(slash_adjust);i++)
       slash_adjust[i] = i + 67;
 
@@ -54,7 +53,7 @@ int adjustCritRollForBarehand(int roll, TBeing *me, spellNumT w_type)
     inited = true;
   }
 
-  if (slashType(w_type) && slash_adjust[index] != 1)
+  if (slashType(w_type))
     return slash_adjust[index];
 
   // wierd case
