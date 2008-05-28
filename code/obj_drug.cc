@@ -523,10 +523,18 @@ void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
             !ch->isImmune(IMMUNE_SLEEP, WEAR_BODY) && !ch->isImmortal())
           {
             // add sleep
-            location = APPLY_NONE;
-            modifier = 0;
-            bitvector = AFF_SLEEP;
+            affectedData sleep;
+            sleep.type = SPELL_SLUMBER;
+            sleep.location = APPLY_NONE;
+            sleep.modifier = 0;
+            sleep.bitvector = AFF_SLEEP;
             act("Your vision turns all sorts of colors and then everything goes white!", TRUE, ch, 0, 0, TO_CHAR);
+            ch->affectTo(&aff);
+
+            // keep the sick affect
+            location = APPLY_GARBLE;
+            modifier = GARBLE_CRAZYFROG;
+            bitvector = 0;
           }
           else if (ch->desc->drugs[drug].current_consumed > potency)
           {

@@ -2247,8 +2247,8 @@ void TBeing::doUnlock(const char *argument)
 {
   dirTypeT door;
   char type[256], dir[256];
-  const char *tmpdesc;
-  roomDirData *back, *exitp;
+  const char *tmpdesc = NULL;
+  roomDirData *back = NULL, *exitp = NULL;
   TObj *obj;
   TRoom *rp;
 
@@ -2268,7 +2268,7 @@ void TBeing::doUnlock(const char *argument)
   } else if ((door = findDoor(type, dir, DOOR_INTENT_UNLOCK, SILENT_NO)) >= MIN_DIR) {
     exitp = exitDir(door);
 
-    if (exitp->door_type == DOOR_NONE) {
+    if (exitp == NULL || exitp->door_type == DOOR_NONE) {
       sendTo("That's impossible, I'm afraid.\n\r");
       return;
     }
@@ -2294,9 +2294,12 @@ void TBeing::doUnlock(const char *argument)
         cantHit += loseRound(5);
       }
       char buf[256];
-      sprintf(buf, "$n unlocks the $T with %s.", obj_index[real_object(exitp->key)].short_desc);
+      int realObj = real_object(exitp->key);
+      if (realObj == < 0)
+        return;
+      snprintf(buf, cElements(buf), "$n unlocks the $T with %s.", obj_index[realObj].short_desc);
       act(buf, TRUE, this, 0, (const TThing *) (exitp->getName().c_str()), TO_ROOM);
-      sprintf(buf, "You unlock the $T with %s.", obj_index[real_object(exitp->key)].short_desc);
+      snprintf(buf, cElements(buf), "You unlock the $T with %s.", obj_index[realObj].short_desc);
       act(buf, TRUE, this, 0, (const TThing *) (exitp->getName().c_str()), TO_CHAR);
      
       REMOVE_BIT(exitp->condition, EX_LOCKED);
