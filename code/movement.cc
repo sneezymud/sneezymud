@@ -2295,7 +2295,7 @@ void TBeing::doUnlock(const char *argument)
       }
       char buf[256];
       int realObj = real_object(exitp->key);
-      if (realObj == < 0)
+      if (realObj < 0)
         return;
       snprintf(buf, cElements(buf), "$n unlocks the $T with %s.", obj_index[realObj].short_desc);
       act(buf, TRUE, this, 0, (const TThing *) (exitp->getName().c_str()), TO_ROOM);

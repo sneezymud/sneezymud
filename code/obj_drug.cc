@@ -528,8 +528,9 @@ void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
             sleep.location = APPLY_NONE;
             sleep.modifier = 0;
             sleep.bitvector = AFF_SLEEP;
+            sleep.duration = UPDATES_PER_MUDHOUR;
             act("Your vision turns all sorts of colors and then everything goes white!", TRUE, ch, 0, 0, TO_CHAR);
-            ch->affectTo(&aff);
+            ch->affectTo(&sleep);
 
             // keep the sick affect
             location = APPLY_GARBLE;
