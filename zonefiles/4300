@@ -10,28 +10,40 @@ M 0 4309 1 4300       Young Bullywug
 M 0 4300 1 4300  ; Toddler Bullywug
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
+M 0 44839 0 4306  mosquito larv
 M 0 4309 1 4306     young bullywug
+M 0 44838 0 4306  mosquito
 M 0 4300 1 4306  ; Toddler Bullywug
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
+M 0 44838 0 4303  mosquito
+M 0 44839 0 4303  mosquito larv
 M 0 4309 1 4303     young bullywug
 M 0 4300 1 4303  ; Toddler  Bullywug
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
+M 0 44838 0 4342  mosquito
+M 0 44838 0 4342  mosquito
 M 0 4309 1 4342     young bullywug
 M 0 4300 1 4342  ; Toddler Bullywug
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
+M 0 44838 0 4348  mosquito
+M 0 44838 0 4348  mosquito
 M 0 4309 1 4348     young bullywug
 M 0 4300 1 4348  ; child Bullywug
 Y O 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
+M 0 44838 0 4330  mosquito
+M 0 44839 0 4330  mosquito
 M 0 4309 1 4330     young bullywug
 M 0 4300 1 4330  ; child Bullywug
 Y O 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
+M 0 44838 0 4377  mosquito
+M 0 44838 0 4377  mosquito
 M 0 4309 1 4377     young bullywug
 M 0 4300 1 4377  ; child Bullywug
 Y O 22 5 frogskin
@@ -131,6 +143,14 @@ E 1 4300 50 8         swamp boot
 M 0 4305 1 4397  ; Bullywug Tracker
 ? 0 15 0 E
 E 1 4305 50 18        bullywug shield
+M 0 44839 0 4350  mosquito larv
+M 0 44839 0 4350  mosquito larv
+M 0 44839 0 4350  mosquito larv
+M 0 44839 0 4350  mosquito larv
+M 0 44839 0 4350  mosquito larv
+M 0 44838 0 4350  mosquito
+M 0 44838 0 4350  mosquito
+M 0 44838 0 4350  mosquito
 M 0 4306 1 4398  ; Bullywug Chieftain
 ? 0 13 0 E
 E 1 4302 50 5         chieftain headdress
