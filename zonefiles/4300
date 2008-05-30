@@ -6,92 +6,134 @@ D 0 4377 5 1	Door to Repo Swamp 5050
 
 O 0 4307 1 4300 
 
-M 0 4300 1 4300  ; Young Bullywug
+M 0 4309 1 4300       Young Bullywug
+M 0 4300 1 4300  ; Toddler Bullywug
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
-M 0 4300 1 4306  ; Young Bullywug
+M 0 4309 1 4306     young bullywug
+M 0 4300 1 4306  ; Toddler Bullywug
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
-M 0 4300 1 4303  ; Young Bullywug
+M 0 4309 1 4303     young bullywug
+M 0 4300 1 4303  ; Toddler  Bullywug
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
-M 0 4300 1 4342  ; Young Bullywug
+M 0 4309 1 4342     young bullywug
+M 0 4300 1 4342  ; Toddler Bullywug
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
-M 0 4300 1 4348  ; Young Bullywug
+M 0 4309 1 4348     young bullywug
+M 0 4300 1 4348  ; child Bullywug
+Y O 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
-M 0 4300 1 4330  ; Young Bullywug
+M 0 4309 1 4330     young bullywug
+M 0 4300 1 4330  ; child Bullywug
+Y O 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
-M 0 4300 1 4377  ; Young Bullywug
+M 0 4309 1 4377     young bullywug
+M 0 4300 1 4377  ; child Bullywug
+Y O 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
-M 0 4300 1 4334  ; Young Bullywug
+M 0 4309 1 4334     young bullywug
+M 0 4300 1 4334  ; child Bullywug
+Y O 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
-M 0 4300 1 4356  ; Young Bullywug
+M 0 4309 1 4356     young bullywug
+M 0 4300 1 4356  ; child Bullywug
+Y O 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
-M 0 4300 1 4332  ; Young Bullywug
+M 0 4309 1 4332     young bullywug
+M 0 4300 1 4332  ; child Bullywug
+Y O 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
-M 0 4301 1 4310  ; Green Bullywug
+M 0 4310 1 4310     Green bullywug
+M 0 4301 1 4310  ; child Bullywug
+Y O 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
-M 0 4301 1 4370  ; Green Bullywug
+M 0 4310 1 4370     green bullywug
+M 0 4301 1 4370  ; child Bullywug
+Y O 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
-M 0 4301 1 4328  ; Green Bullywug
+M 0 4310 1 4328     green bullywug
+M 0 4301 1 4328  ; child Bullywug
+Y O 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
-M 0 4301 1 4326  ; Green Bullywug
+M 0 4310 1 4326     green bullywug
+M 0 4301 1 4326  ; child Bullywug
+Y O 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
-M 0 4301 1 4308  ; Green Bullywug
+M 0 4310 1 4308     green bullywug
+M 0 4301 1 4308  ; child Bullywug
+Y O 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
-M 0 4301 1 4367  ; Green Bullywug
+M 0 4310 1 4367     green bullywug
+M 0 4301 1 4367  ; child Bullywug
+Y O 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
-M 0 4301 1 4374  ; Green Bullywug
+M 0 4310 1 4374     green bullywug
+M 0 4301 1 4374  ; child Bullywug
+Y O 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
-M 0 4301 1 4339  ; Green Bullywug
+M 0 4310 1 4339     green bullywug
+M 0 4301 1 4339  ; child Bullywug
+Y O 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
-M 0 4301 1 4315  ; Green Bullywug
+M 0 4310 1 4315     green bullywug
+M 0 4301 1 4315  ; child Bullywug
+Y O 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
-M 0 4301 1 4349  ; Green Bullywug
+M 0 4310 1 4349     green bullywug
+M 0 4301 1 4349  ; child  Bullywug
+Y O 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
-M 0 4302 1 4379  ; Large Bullywug
+M 0 4310 1 4379     green bullywug
+Y O 22 5 frogskin
+M 0 4302 1 4379  ; child bullywug
 Y 0 22 5              frogskin
-M 0 4302 1 4381  ; Large Bullywug
+M 0 4311 0 4381    large bullywug
+M 0 4302 1 4381  ; child Bullywug
 Y 0 22 5              frogskin
+M 0 4311 0 4336    large bullywug
 M 0 4302 1 4336  ; Large Bullywug
 Y 0 22 5              frogskin
+M 0 4311 0 4393    large bullywug
 M 0 4302 1 4393  ; Large Bullywug
 Y 0 22 5              frogskin
+M 0 4311 0 4378    large bullywug
 M 0 4302 1 4378  ; Large Bullywug
 Y 0 22 5              frogskin
+M 0 4311 0 4311    large bullywug
 M 0 4302 1 4311  ; Large Bullywug
 Y 0 22 5              frogskin
+M 0 4311 0 4395    large bullywug
 M 0 4302 1 4395  ; Large Bullywug
 Y 0 22 5              frogskin
+M 0 4311 0 4396    large bullywug
 M 0 4304 1 4396  ; Bullywug Shamen
 ? 0 15 0 E
-E 1 4300 50 8         swamp boots
-Y 0 22 5              frogskin
+E 1 4300 50 8         swamp boot
 M 0 4305 1 4397  ; Bullywug Tracker
 ? 0 15 0 E
 E 1 4305 50 18        bullywug shield
-Y 0 22 5              frogskin
 M 0 4306 1 4398  ; Bullywug Chieftain
 ? 0 13 0 E
 E 1 4302 50 5         chieftain headdress
-Y 0 22 5              frogskin
 ? 0 99 0 G
 G 1 4301 9999         bullywug bait to sastify K load
 C 1 7818 1 4398       large chameleon pet
