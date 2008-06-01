@@ -48,11 +48,13 @@ void TBeing::doNewbieEqLoad(race_t num, ush_int num2, bool initNum)
   // advanced races
   int trollGear[] = {30924, 30925, 30926, 30926, 30927, 30927, 30928, 30928, 30929, 30930, 30931, 30931, 30932, 30932, 30933, 30934, 30935, 0};
   int birdGear[] = {44825, 44828, 44828, 44829, 44830, 44830, 44831, 44832, 44832, 44833, 44833, 44834, 44836, 1001, 1009, 1009, 1010, 105, 0};
+  int bullyGear[] = {4320, 4321, 4321, 4322, 4323, 4323, 4324, 4325, 4325, 4326, 4326, 4327, 4328, 1001, 1009, 1009, 1010, 105, 0};
+  int fishGear[] = {44768, 44768, 44769, 44770, 44770, 44771, 44772, 44772, 44773, 44773, 44774, 44775, 44776, 44777, 44777, 44778, 44779, 105, 0};
 
   int races[] = { RACE_HUMAN, RACE_HOBBIT, RACE_DWARF, RACE_OGRE, RACE_GNOME, RACE_ELVEN,
                   RACE_GOBLIN, RACE_ORC, RACE_TROG, RACE_GNOLL, RACE_FISHMAN, RACE_FROGMAN, RACE_BIRDMAN, RACE_TROLL };
   int *gear[] = { humanGear, hobbitGear, dwarfGear, ogreGear, gnomeGear, elvenGear,
-                  gnomeGear, humanGear, hobbitGear, ogreGear, dwarfGear, elvenGear, birdGear, trollGear };
+                  gnomeGear, humanGear, hobbitGear, ogreGear, fishGear, bullyGear, birdGear, trollGear };
   int *myGear = humanGear; // default to humans
 
   for(unsigned int iRace = 0;iRace < cElements(races); iRace++)
