@@ -266,6 +266,7 @@ void updateUsagelogs(int count)
     lastlog = ct;
     db.query("insert into usagelogs (time, players, port) VALUES(%i, %i, %i)", logtime, count, gamePort);
     // delete logs older than two months
+    db.query("insert into usagelogsarchive select * from usagelogs where port=%i and time>%i", gamePort, logtime + 5184000);
     db.query("delete from usagelogs where port=%i and time>%i", gamePort, logtime + 5184000);
   }
 }
