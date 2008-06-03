@@ -82,24 +82,24 @@ A 0 5000 5049
 M 0 5001 3  -99		hunter nomad ogre
 ? 0 3 0 E
 E 1 5011 9999 19			hunting knife
-*? 0 99 0 E
-*E 1 5010 9999 19 			rough hunting knife [prop weapon]
+? 0 99 0 E
+E 1 5010 9999 19 			rough hunting knife [prop weapon]
 Y 0 156 3				grizzled set
 
 A 0 5000 5049
 M 0 5001 3  -99		hunter nomad ogre
 ? 0 3 0 E
 E 1 5011 9999 19			hunting knife
-*? 0 99 0 E
-*E 1 5010 9999 19 			rough hunting knife [prop weapon]
+? 0 99 0 E
+E 1 5010 9999 19 			rough hunting knife [prop weapon]
 Y 0 156 3				grizzled set
 
 A 0 5000 5049
 M 0 5001 3  -99		hunter nomad ogre
 ? 0 3 0 E
 E 1 5011 9999 19			hunting knife
-*? 0 99 0 E
-*E 1 5010 9999 19 			rough hunting knife [prop weapon]
+? 0 99 0 E
+E 1 5010 9999 19 			rough hunting knife [prop weapon]
 Y 0 156 3				grizzled set
 
 A 0 5000 5049
@@ -130,24 +130,24 @@ A 0 5000 5049
 M 0 5004 3  -99		hunter nomad ogress
 ? 0 3 0 E
 E 1 5011 9999 19			hunting knife
-*? 0 99 0 E
-*E 1 5010 9999 19 			rough hunting knife [prop weapon]
+? 0 99 0 E
+E 1 5010 9999 19 			rough hunting knife [prop weapon]
 Y 0 156 3				grizzled set
 
 A 0 5000 5049
 M 0 5004 3  -99		hunter nomad ogress
 ? 0 3 0 E
 E 1 5011 9999 19			hunting knife
-*? 0 99 0 E
-*E 1 5010 9999 19 			rough hunting knife [prop weapon]
+? 0 99 0 E
+E 1 5010 9999 19 			rough hunting knife [prop weapon]
 Y 0 156 3				grizzled set
 
 A 0 5000 5049
 M 0 5004 3  -99		hunter nomad ogress
 ? 0 3 0 E
 E 1 5011 9999 19			hunting knife
-*? 0 99 0 E
-*E 1 5010 9999 19 			rough hunting knife [prop weapon]
+? 0 99 0 E
+E 1 5010 9999 19 			rough hunting knife [prop weapon]
 Y 0 156 3				grizzled set
 
 A 0 5000 5049
