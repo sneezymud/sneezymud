@@ -19,5 +19,10 @@ M 0 15379 1 15379       a viking mage
 M 0 15380 1 15380       an intimidating viking drummer
 M 0 15381 25 15381       an oarsman
 
+
+D 0 15376 5 2        Mid Deck -> Oarsmen Hull
+D 0 15381 4 2        Oarsmen Hull -> Mid Deck
+
+M 0 15375 1 15377       a bearded norseman
 S
 
