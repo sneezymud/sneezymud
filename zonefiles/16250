@@ -319,7 +319,8 @@ M 0 16282 2 16293 customer market
 M 0 16279 1 16295 guard market
 M 0 16280 1 16295 thief stealthy
 M 0 16282 2 16295 customer market
-M 0 16283 1 16297 guard giant 
+M 0 16283 1 16297 guard giant
+*G 1 7492  99999   gold key
 M 0 16252 1 16299 Grellid
 S
 
