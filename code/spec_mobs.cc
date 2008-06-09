@@ -2796,7 +2796,7 @@ int petVeterinarian(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TOb
      cmd != CMD_BUY)
     return FALSE;
 
-  db.query("select vnum, name, exp from pet where player_id=%i order by name", ch->getPlayerID());
+  db.query("select vnum, name, exp, level from pet where player_id=%i order by name", ch->getPlayerID());
     
 
   if(cmd == CMD_LIST){
@@ -2808,14 +2808,7 @@ int petVeterinarian(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TOb
       
       vnum=convertTo<int>(db["vnum"]);
       short_desc=mob_index[real_mobile(vnum)].short_desc;
-      int level=1;
-
-      for(;level<127;++level){
-	if(getExpClassLevel(WARRIOR_LEVEL_IND, level) >
-	   convertTo<int>(db["exp"]))
-	  break;
-      }
-
+      int level=convertTo<int>(db["level"]);
 
       if(!db["name"].empty()){
 	if(short_desc.word(0) != "a" &&
@@ -2841,6 +2834,7 @@ int petVeterinarian(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TOb
     }
 
     vnum=convertTo<int>(db["vnum"]);
+    int level=convertTo<int>(db["level"]);
     affectedData *aff = NULL, *an = NULL;
     char *owner=NULL;
 
@@ -2877,6 +2871,13 @@ int petVeterinarian(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TOb
       }
     }
 
+    int price=petPriceL(level);
+
+    if(ch->getMoney() < price){
+      me->doTell(ch->getName(), "You can't afford it!");
+      return TRUE;
+    }
+
 
     TMonster *pet;    
     if (!(pet = read_mobile(vnum, VIRTUAL))) {
@@ -2911,18 +2912,18 @@ int petVeterinarian(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TOb
       delete [] pet->player.longDescr;
       pet->player.longDescr = mud_str_dup(tmpbuf);
     }
-    
-    pet->setExp(convertTo<float>(db["exp"]));
-    SET_BIT(pet->specials.affectedBy, AFF_CHARM);
 
     pet->balanceMakeNPCLikePC();
 
-    int price=petPriceL(pet->GetMaxLevel());
+    // raiseLevel() aborts if there isn't enough exp, so...
+    pet->setExp(getExpClassLevel(pet->bestClass(),level));
 
-    if(ch->getMoney() < price){
-      me->doTell(ch->getName(), "You can't afford it!");
-      return TRUE;
-    }
+    for(int i=pet->GetMaxLevel();i<level;++i)
+      pet->raiseLevel(pet->bestClass());
+    
+    // now set the actual exp
+    pet->setExp(convertTo<float>(db["exp"]));
+    SET_BIT(pet->specials.affectedBy, AFF_CHARM);
 
     ch->giveMoney(me, price, GOLD_SHOP_PET);
 
