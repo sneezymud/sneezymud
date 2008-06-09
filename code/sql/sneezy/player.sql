@@ -9,3 +9,5 @@ CREATE TABLE player (
     load_room integer,
     last_logon integer
 );
+
+create unique index player_unq_name on player (name);
