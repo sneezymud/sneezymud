@@ -30,6 +30,7 @@ class TBaseContainer : public TObj {
     virtual void findSomeFood(TFood **, TBaseContainer **, TBaseContainer *);
     virtual bool engraveMe(TBeing *, TMonster *, bool);
     virtual int getReducedVolume(const TThing *) const;
+    virtual int getCarriedVolume() const;
     virtual void powerstoneCheck(TOpal **);
     virtual void powerstoneCheckCharged(TOpal **);
     virtual void powerstoneMostMana(int *);

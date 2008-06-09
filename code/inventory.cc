@@ -1595,7 +1595,7 @@ int TThing::putSomethingIntoContainer(TBeing *ch, TOpenContainer *cont)
   if (compareWeights(getWeight(), (cont->carryWeightLimit() - cont->getCarriedWeight())) == -1) {
     act("$p isn't strong enough to hold $N.", FALSE, ch, cont, this, TO_CHAR);
     return FALSE;
-  } else if (getReducedVolume(this) > (cont->carryVolumeLimit() - cont->getCarriedVolume())) {
+  } else if (getReducedVolume(cont) > (cont->carryVolumeLimit() - cont->getCarriedVolume())) {
     act("$p isn't big enough to hold $N.", FALSE, ch, cont, this, TO_CHAR);
     return FALSE;
   }

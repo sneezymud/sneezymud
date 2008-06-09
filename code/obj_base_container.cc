@@ -15,6 +15,7 @@
 #include "obj_food.h"
 #include "obj_opal.h"
 #include "obj_saddlebag.h"
+#include "obj_component.h"
 
 TBaseContainer::TBaseContainer() :
   TObj()
@@ -61,6 +62,29 @@ int TBaseContainer::stealModifier()
 int TBaseContainer::getReducedVolume(const TThing *) const
 {
   return getTotalVolume();
+}
+
+int TBaseContainer::getCarriedVolume() const
+{
+  TThing *t;
+  int total=0;
+
+  for(t=rider;t;t=t->nextRider){
+    total+=t->getTotalVolume();
+  }
+
+  // since we're already dealing with container contents, we don't need
+  // to worry about subcontainers (unsupported on sneezy), so we don't
+  // need to use getTotalVolume() here
+  for(t=getStuff();t;t=t->nextThing){
+    if(dynamic_cast<TComponent *>(t))
+      total+=(int)(t->getReducedVolume(this)*0.10);
+    else {
+      total+=t->getReducedVolume(this);
+    }
+  }
+
+  return total;
 }
 
 sstring TBaseContainer::showModifier(showModeT tMode, const TBeing *tBeing) const

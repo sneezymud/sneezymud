@@ -167,7 +167,7 @@ class TThing {
     virtual void setWeight(const float w);
     void addToWeight(const float w);
     float getCarriedWeight() const;
-    int getCarriedVolume() const;
+    virtual int getCarriedVolume() const;
     void setCarriedWeight(float num);
     void setCarriedVolume(int num);
     bool isSpiked() const;
