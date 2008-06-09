@@ -281,7 +281,10 @@ void TPlant::updateDesc()
       ++count;
     }
     
-    if(count<=4){
+    if(count<=4 && 
+       (obj_index[real_object(plantfruits[getType()])].getNumber() < 
+       obj_index[real_object(plantfruits[getType()])].max_exist) &&
+       obj_index[real_object(plantfruits[getType()])].max_exist < 9999){
       t=read_object(plantfruits[getType()], VIRTUAL);
       *this += *t;
       setYield(getYield() + 1);
