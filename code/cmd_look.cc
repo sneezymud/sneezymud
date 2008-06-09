@@ -36,8 +36,10 @@ void TBaseCup::lookObj(TBeing *ch, int) const
     act("It is empty.", FALSE, ch, 0, 0, TO_CHAR);
   else {
     temp = ((getDrinkUnits() * 3) / getMaxDrinkUnits());
-    ch->sendTo(COLOR_OBJECTS, fmt("It's %sfull of a %s liquid.\n\r") %
-          fullness[temp] % liquidInfo[getDrinkType()]->color);
+    ch->sendTo(COLOR_OBJECTS, fmt("It's %sfull of a %s%s liquid.\n\r") %
+	       fullness[temp] %
+	       (isDrinkConFlag(DRINK_FROZEN)?"<C>frozen<1> ":"") %
+	       liquidInfo[getDrinkType()]->color);
   }
 }
 
