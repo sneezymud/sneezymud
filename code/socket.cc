@@ -1117,6 +1117,13 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
         gas->doSpecials();
       }
 
+      // fun with pools
+      TPool *pool=dynamic_cast<TPool *>(obj);
+      if(pool){
+	pool->doMerge();
+	pool->overFlow();
+      }
+
       // trash piles
       if(!::number(0,999))
 	obj->joinTrash();
@@ -1135,9 +1142,6 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
 	  pile->doDecay();
 	}
       }
-
-	
-
     }
 
     if(pl.pulse_tick){

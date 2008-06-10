@@ -25,6 +25,9 @@ class TPool : public TBaseCup {
     virtual int thawObject(TBeing *, int);
     virtual bool isPluralItem() const;
     virtual itemTypeT itemType() const { return ITEM_POOL; }
+    void doMerge();
+    void overFlow();
+
 
     void initPool(int, liqTypeT);
 

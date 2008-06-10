@@ -9,6 +9,98 @@
 #include "obj_pool.h"
 #include "liquids.h"
 
+
+void TPool::overFlow()
+{
+  int index=getDrinkIndex(), total=0;
+  TRoom *rp=NULL;
+  TPool *pool;
+  vector<TRoom *>rooms;
+  vector<dirTypeT>roomdirs;
+  bool valid;
+
+  if(!roomp)
+    return;
+
+  if(index>=9){
+    // check every exit
+    for(dirTypeT dir=MIN_DIR;dir<MAX_DIR;dir++){
+      // liquid doesn't flow up
+      if(dir==DIR_UP)
+	continue;
+      
+      // eligible exit
+      if(exitDir(dir) && real_roomp(exitDir(dir)->to_room) &&
+	 !(exitDir(dir)->condition & EX_CLOSED) &&
+	 (rp = real_roomp(roomp->exitDir(dir)->to_room))){
+	// check each item
+	valid=true;
+	for(TThing *t=rp->getStuff();t;t=t->nextThing){
+	  // check pools that are the same type and less than half my size
+	  if((pool=dynamic_cast<TPool *>(t)) && 
+	     pool->getDrinkType()==getDrinkType()){
+	    if(pool->getDrinkUnits() >= (getDrinkUnits()/2)){
+	      valid=false;
+	    } else {
+	      total+=pool->getDrinkUnits();
+	    }
+	  }
+	}
+	if(valid){
+	  rooms.push_back(rp);
+	  roomdirs.push_back(dir);
+	}
+      }
+    }
+
+    // no rooms to flow into, we're the smallest pool
+    if(!rooms.size())
+      return;
+
+    total+=(int)((float)getDrinkUnits() * 0.60);
+    setDrinkUnits((int)((float)getDrinkUnits() * 0.40));
+
+    total/=rooms.size();
+
+    sendrpf(COLOR_BASIC, roomp, 
+	    "Some %s flows outward into surrounding rooms.\n\r",
+	    liquidInfo[getDrinkType()]->name);
+
+    for(unsigned int i=0;i<rooms.size();++i){
+      rooms[i]->dropPool(total, getDrinkType());
+      sendrpf(COLOR_BASIC, rooms[i], 
+	      "Some %s flows in from the %s.\n\r",
+	      liquidInfo[getDrinkType()]->name,
+	      dirs[rev_dir[roomdirs[i]]]);
+    }
+
+    roomp->saveItems("");
+    rp->saveItems("");
+  }
+}
+
+
+void TPool::doMerge()
+{
+  TPool *pool;
+  TThing *t, *t2;
+
+  if(!roomp)
+    return;
+
+  for(t=roomp->getStuff();t;t=t2){
+    t2=t->nextThing;
+    
+    if((pool=dynamic_cast<TPool *>(t)) && pool != this && 
+       pool->getDrinkType()==getDrinkType()){
+      // merge!
+      addToDrinkUnits(pool->getDrinkUnits());
+      --(*pool);
+      delete pool;
+    }
+  }
+}
+
 void TPool::setDrinkUnits(int n)
 {
   setMaxDrinkUnits(n);
