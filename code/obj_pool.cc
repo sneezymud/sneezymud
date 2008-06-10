@@ -12,12 +12,15 @@
 
 void TPool::overFlow()
 {
-  int index=getDrinkIndex(), total=0;
+  int index=getDrinkIndex(), total=0, amt=0;
   TRoom *rp=NULL;
   TPool *pool;
+  bool valid;
+
+  // should make a structure for this but I'm in a hurry
   vector<TRoom *>rooms;
   vector<dirTypeT>roomdirs;
-  bool valid;
+  vector<int>roomamts;
 
   if(!roomp)
     return;
@@ -35,6 +38,7 @@ void TPool::overFlow()
 	 (rp = real_roomp(roomp->exitDir(dir)->to_room))){
 	// check each item
 	valid=true;
+	amt=0;
 	for(TThing *t=rp->getStuff();t;t=t->nextThing){
 	  // check pools that are the same type and less than half my size
 	  if((pool=dynamic_cast<TPool *>(t)) && 
@@ -43,12 +47,14 @@ void TPool::overFlow()
 	      valid=false;
 	    } else {
 	      total+=pool->getDrinkUnits();
+	      amt=pool->getDrinkUnits();
 	    }
 	  }
 	}
 	if(valid){
 	  rooms.push_back(rp);
 	  roomdirs.push_back(dir);
+	  roomamts.push_back(amt);
 	}
       }
     }
@@ -67,7 +73,7 @@ void TPool::overFlow()
 	    liquidInfo[getDrinkType()]->name);
 
     for(unsigned int i=0;i<rooms.size();++i){
-      rooms[i]->dropPool(total, getDrinkType());
+      rooms[i]->dropPool(total-roomamts[i], getDrinkType());
       sendrpf(COLOR_BASIC, rooms[i], 
 	      "Some %s flows in from the %s.\n\r",
 	      liquidInfo[getDrinkType()]->name,
