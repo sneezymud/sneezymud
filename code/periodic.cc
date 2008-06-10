@@ -40,12 +40,42 @@ void procGlobalRoomStuff::run(int pulse) const
   int trash_count=0, fire_count=0, water_count=0;
   TObj *o;
   TPool *pool;
-
+  
   for (i = 0; i < WORLD_SIZE; i++) {
     rp = real_roomp(i);
     if (!rp)
       continue;
+
+    // ocean waves if there is an adjacent ocean room
+    bool isbeach=false;
     
+    if(rp->isRoomFlag(ROOM_FLOODED)){
+      rp->removeRoomFlagBit(ROOM_FLOODED);
+      isbeach=rp->isBeachSector();
+      rp->setRoomFlagBit(ROOM_FLOODED);
+    } else {
+      isbeach=rp->isBeachSector();
+    }
+    
+    if(isbeach){
+      for(dirTypeT dir=MIN_DIR;dir<MAX_DIR;dir++){
+	if(rp->exitDir(dir) && real_roomp(rp->exitDir(dir)->to_room) &&
+	   !(rp->exitDir(dir)->condition & EX_CLOSED) &&
+	   (real_roomp(rp->exitDir(dir)->to_room)->isOceanSector())){
+	  
+	  if(rp->isRoomFlag(ROOM_FLOODED)){
+	    rp->removeRoomFlagBit(ROOM_FLOODED);
+	    sendrpf(COLOR_BASIC, rp, "A wave recedes back into the ocean.\n\r");
+	  } else {
+	    rp->setRoomFlagBit(ROOM_FLOODED);
+	    sendrpf(COLOR_BASIC, rp, "A wave rolls in from the ocean.\n\r");
+	  }
+	  break;
+	}
+      }
+    }
+    // end ocean waves
+	   
     if(::number(0,3)){
       if(rp->isRoomFlag(ROOM_ON_FIRE)){
 	// alert firemen if needed
@@ -121,7 +151,6 @@ void procGlobalRoomStuff::run(int pulse) const
 	  *rp += *pile;
 	}
       }
-
     }
     
     // weather noise
