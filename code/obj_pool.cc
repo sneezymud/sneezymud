@@ -25,7 +25,7 @@ void TPool::overFlow()
   if(!roomp)
     return;
 
-  if(index>=9){
+  if(index>=8){
     // check every exit
     for(dirTypeT dir=MIN_DIR;dir<MAX_DIR;dir++){
       // liquid doesn't flow up
