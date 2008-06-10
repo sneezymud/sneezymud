@@ -6602,6 +6602,34 @@ int rubiksCube(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
   return false;
 }
 
+
+int liquidSource(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+  if(cmd!=CMD_GENERIC_PULSE)
+    return false;
+  
+  TDrinkCon *tdc;
+
+  if(!(tdc=dynamic_cast<TDrinkCon *>(o)))
+    return false;
+
+  if(!tdc->roomp)
+    return false;
+
+  if(::number(0,9))
+    return false;
+
+
+  sendrpf(COLOR_BASIC, tdc->roomp,
+	  (fmt("Some %s flows out of %s.\n\r") % 
+	   liquidInfo[tdc->getDrinkType()]->name %
+	   tdc->getName()).c_str());
+
+  tdc->roomp->dropPool(tdc->getDrinkUnits(), tdc->getDrinkType());
+
+  return false;
+}
+
 int ieComputer(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 {
 	// immortal exchange computer
@@ -6901,5 +6929,6 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Mob Spawn Grab", mobSpawnGrab}, 
   {FALSE, "rubik's cube", rubiksCube},
   {FALSE, "Immortal Exchange Computer", ieComputer}, 
+  {FALSE, "liquid source", liquidSource}, // 155
   {FALSE, "last proc", bogusObjProc}
 };
