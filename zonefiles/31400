@@ -100,13 +100,13 @@ M 0 31416 1 31416 Hail Stone
 ? 0 5 0 E
 E 1 31416 9999 1 Bauble Gaudy
 M 0 31447 1 31416 Pony Frozen
-M 0 31417 3 31417 Sentinel
+M 0 31417 1 31417 Sentinel
 ? 0 2 0 E
 E 1 31417 9999 19 Whip Chaos
-M 0 31417 3 31418 Sentinel
+M 0 31417 1 31418 Sentinel
 ? 0 2 0 E
 E 1 31417 9999 19 Whip Chaos
-M 0 31417 3 31420 Sentinel
+M 0 31417 1 31420 Sentinel
 ? 0 2 0 E
 E 1 31417 9999 19 Whip Chaos
 M 0 31418 3 31417 Slave
@@ -191,7 +191,7 @@ E 1 31442 9999 2 claw Dragon
 E 1 31443 9999 5 Crown Lich Queen
 M 0 31438 1 31443
 M 0 31439 1 31444 Scientist Cult
-M 0 31440 2 31445 Sentinel Cult
+M 0 31440 1 31445 Sentinel Cult
 M 0 31441 1 31445 Astrologist Cult
 M 0 31442 1 31446 Tobin
 M 0 31443 1 31447 Priest Undead
