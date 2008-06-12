@@ -43,7 +43,7 @@ O 0 31444 1 31437 Speculum Cowardice
 O 0 31444 1 31444 Speculum Cowardice	
 B 0 31407 1 31406 Shell spindly		
 M 0 31400 1 31400 Gatekeeper
-*dissect fleshy key 7403*
+G 1 7403 9999     Fleshy Key   
 M 0 31401 1 31401 Necromancer Fire
 G 1 805 9999 Potion Cyan
 ? 0 5 0 E
@@ -82,7 +82,7 @@ E 1 31411 9999 14 Cape Infernal
 E 1 7465 9999 5 Cap Infernal
 M 0 31410 1 31411 Belphegor
 ? 0 5 0 E
-E 1 31412 9999 3 Heart Devil.s
+E 1 31412 9999 3 Heart Devils
 M 0 31412 1 31412 Merapi
 ? 0 5 0 E
 E 1 31413 9999 18 Shield Igneous
@@ -147,16 +147,12 @@ M 0 31428 1 31428 Digger Grave
 E 1 31429 9999 5 Mask Grave Digger
 M 0 31429 1 31429 Gabriele Amorth
 M 0 31430 1 31431 Elemental Black Water
-*dissect black shirt 31431*
 M 0 31430 1 31432 Elemental Black Water
-*dissect black shirt 31431*		
 M 0 31431 1 31433 Inuyasha water lich
 ? 0 5 0 E
 E 1 31432 9999 1 Bane Water Lich
 M 0 31432 1 31434 Elemental Volcanic Ash
-*dissect ash shirt 31433*
 M 0 31432 1 31436 Elemental Volcanic Ash
-*dissect ash shirt 31433*		
 M 0 31433 1 31435 Wegial
 ? 0 5 0 E
 E 1 31434 9999 16 String Dragon Flesh
