@@ -63,7 +63,7 @@ E 1 31403 9999 18 Shield Granite Flecks
 E 1 7463 9999 17 bracer granite
 M 0 31405 1 31404 Vrtira 
 ? 0 5 0 E
-G 1 31404 9999 Shard Phylactery 
+G 1 31404 1 Shard Phylactery 
 M 0 31406 1 31405 Chartones
 ? 0 5 0 E
 E 1 31406 9999 18 Shield Smoke
@@ -129,7 +129,7 @@ M 0 31424 1 31424 Lethe
 ? 0 5 0 E 
 E 1 31424 9999 4 Breastplate Ceremonial
 M 0 31425 1 31425 Caretaker Deadwood
- ? 0 5 0 E
+? 0 5 0 E
 E 1 31426 9999 19 Staff Deadwood
 ? 0 5 0 E
 G 1 31427 9999 Acorn Deadwood
@@ -147,16 +147,20 @@ M 0 31428 1 31428 Digger Grave
 E 1 31429 9999 5 Mask Grave Digger
 M 0 31429 1 31429 Gabriele Amorth
 M 0 31430 1 31431 Elemental Black Water
-*dissects black water shirt 31431*
+? 0 3 0 G
+G 1 31431 9999     Black Water Shirt
 M 0 31430 1 31432 Elemental Black Water
-*dissects black water shirt 31431*
+? 0 3 0 G
+G 1 31431 9999     Black Water Shirt
 M 0 31431 1 31433 Inuyasha water lich
 ? 0 5 0 E
 E 1 31432 9999 1 Bane Water Lich
 M 0 31432 1 31434 Elemental Volcanic Ash
-*dissects volcanic ash cloak 31433*
+? 0 3 0 G
+G 1 31433 9999    Volcanic Ash Cloak
 M 0 31432 1 31436 Elemental Volcanic Ash
-*dissects volcanic ash cloak 31433*
+? 0 3 0 G
+G 1 31433 9999    Volcanic Ash Cloak
 M 0 31433 1 31435 Wegial
 ? 0 5 0 E
 E 1 31434 9999 16 String Dragon Flesh
