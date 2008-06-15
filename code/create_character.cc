@@ -96,31 +96,30 @@ typedef struct _TPlayerRace
   int cTerritories;
   short hometown;
   const sstring terrHelp;
-  const sstring accounts;
   int disableTrait; // change to array if more are needed
 } TPlayerRace;
 
 // our list of playable races
 TPlayerRace nannyRaces[] = {
   // base races
-  { RACE_HUMAN, "Human", 0, humanTerr, cElements(humanTerr), ROOM_NEWBIE, "help/territory help human", "", 0},
-  { RACE_GNOME, "Gnome", 0, gnomeTerr, cElements(gnomeTerr), ROOM_NEWBIE, "help/territory help gnome", "", 0},
-  { RACE_ELVEN, "Elf", 0, elfTerr, cElements(elfTerr), ROOM_NEWBIE, "help/territory help elf", "", 0},
-  { RACE_OGRE, "Ogre", 0, ogreTerr, cElements(ogreTerr), ROOM_NEWBIE, "help/territory help ogre", "", 0},
-  { RACE_DWARF, "Dwarf", 0, dwarfTerr, cElements(dwarfTerr), ROOM_NEWBIE, "help/territory help dwarf", "", 0},
-  { RACE_HOBBIT, "Hobbit", 0, hobbitTerr, cElements(hobbitTerr), ROOM_NEWBIE, "help/territory help hobbit", "", 0},
+  { RACE_HUMAN, "Human", 0, humanTerr, cElements(humanTerr), ROOM_NEWBIE, "help/territory help human", 0},
+  { RACE_GNOME, "Gnome", 0, gnomeTerr, cElements(gnomeTerr), ROOM_NEWBIE, "help/territory help gnome", 0},
+  { RACE_ELVEN, "Elf", 0, elfTerr, cElements(elfTerr), ROOM_NEWBIE, "help/territory help elf", 0},
+  { RACE_OGRE, "Ogre", 0, ogreTerr, cElements(ogreTerr), ROOM_NEWBIE, "help/territory help ogre", 0},
+  { RACE_DWARF, "Dwarf", 0, dwarfTerr, cElements(dwarfTerr), ROOM_NEWBIE, "help/territory help dwarf", 0},
+  { RACE_HOBBIT, "Hobbit", 0, hobbitTerr, cElements(hobbitTerr), ROOM_NEWBIE, "help/territory help hobbit", 0},
 
   // extended races
-  { RACE_GOBLIN, "Goblin", 0, goblinTerr, cElements(goblinTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, thark, ", 1},
-  { RACE_GNOLL, "Gnoll", 0, gnollTerr, cElements(gnollTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, ", 0},
-  { RACE_TROG, "Troglodyte", 0, troglodyteTerr, cElements(troglodyteTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, ", 0},
-  { RACE_ORC, "Orc", 0, orcTerr, cElements(orcTerr), ROOM_GH_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, jbabcock, ", 1},
+  { RACE_GOBLIN, "Goblin", 0, goblinTerr, cElements(goblinTerr), ROOM_GH_INN, "help/territory help goblin", 1},
+  { RACE_GNOLL, "Gnoll", 0, gnollTerr, cElements(gnollTerr), ROOM_GH_INN, "help/territory help gnoll", 0},
+  { RACE_TROG, "Troglodyte", 0, troglodyteTerr, cElements(troglodyteTerr), ROOM_GH_INN, "help/territory help troglodyte", 0},
+  { RACE_ORC, "Orc", 0, orcTerr, cElements(orcTerr), ROOM_GH_INN, "help/territory help orc", 1},
 
   // advanced races
-  { RACE_FROGMAN, "Bullywug", 1, frogmanTerr, cElements(frogmanTerr), ROOM_BULLYWUG_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, stin, ", 0},
-  { RACE_FISHMAN, "Kalysian", 1, fishmanTerr, cElements(fishmanTerr), ROOM_KALYSIA_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, talsbane, matthaas, stu, dreq, ", 0},
-  { RACE_BIRDMAN, "Aarakocra", 1, birdmanTerr, cElements(birdmanTerr), ROOM_AERIE_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, hairbear, jamil, ", 0},
-  { RACE_TROLL, "Troll", 1, trollTerr, cElements(trollTerr), ROOM_TROLL_INN, "", "gabehall, kellyjs, laren, muck, christine, trav, remoh, blaez, ", 0},
+  { RACE_FROGMAN, "Bullywug", 1, frogmanTerr, cElements(frogmanTerr), ROOM_BULLYWUG_INN, "help/territory help bullywug", 0},
+  { RACE_FISHMAN, "Kalysian", 1, fishmanTerr, cElements(fishmanTerr), ROOM_KALYSIA_INN, "help/territory help kalysian", 0},
+  { RACE_BIRDMAN, "Aarakocra", 1, birdmanTerr, cElements(birdmanTerr), ROOM_AERIE_INN, "help/territory help aarakocra", 0},
+  { RACE_TROLL, "Troll", 1, trollTerr, cElements(trollTerr), ROOM_TROLL_INN, "help/territory help troll", 0},
 };
 
 // a struct for holding data about customizable stats
@@ -490,9 +489,7 @@ int setNannyRaces(int *races, int cRaces, int num50s, Descriptor * desc)
 {
   int cOut = 0;
   for(int iRace = 0; iRace < (int)cElements(nannyRaces) && cOut < cRaces; iRace++)
-    if (num50s >= nannyRaces[iRace].num50any && 
-      (nannyRaces[iRace].accounts.empty() ||
-      (desc->account && sstring::npos != nannyRaces[iRace].accounts.find(desc->account->name + ","))))
+    if (num50s >= nannyRaces[iRace].num50any)
       races[cOut++] = iRace;
   return cOut;
 }

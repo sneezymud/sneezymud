@@ -623,6 +623,7 @@ private:
       isLocked = l;
     }
 
+    bool canBeMailed() const;
     void releaseObject(TBeing *);
     virtual int checkFalling();
     void checkObjStats();

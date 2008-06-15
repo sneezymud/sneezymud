@@ -200,8 +200,8 @@ void loadRepairItems(TMonster *tmons)
     { 572, 576, 580, 582, 584 }, // Mage
     // brush, resin
     { 2347, 2349, 0, 0, 0 }, // Cleric
-    // hammer, whetstone, file, tongs
-    { 150, 156, 157, 560, 0 }, // Warrior
+    // whetstone, file, tongs
+    { 156, 157, 560, 0, 0 }, // Warrior
     // loupe, pliers
     { 587, 589, 0, 0, 0 }, // Thief
     // scalpel, forceps

@@ -876,7 +876,8 @@ int TBeing::getPlayerID() const
     playerID=convertTo<int>(db["id"]);
   } else {
     // this might be where the null account_id's are coming from...
-    vlogf(LOG_BUG, fmt("Couldn't find a player_id for '%s', creating a new one.") % myname);
+    // This error occurs every character creation - not interesting
+    //vlogf(LOG_BUG, fmt("Couldn't find a player_id for '%s', creating a new one.") % myname);
 
     db.query("insert into player (name) values (lower('%s'))", myname.c_str());
     db.query("select id from player where lower(name)=('%s')", myname.c_str());

@@ -454,6 +454,7 @@ class Descriptor
     Descriptor *next;             // link to next descriptor    
     char *pagedfile;              // what file is getting paged 
     char name[20];                // dummy field (idea, bug, mail use it)
+    int amount;                   // dummy field (mail uses it)
     TObj *obj;                    // for object editor
     TMonster *mob;                // for monster editor 
     aliasData alias[16];          // aliases for players

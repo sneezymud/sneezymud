@@ -19,13 +19,13 @@ void procCheckMail::run(int pulse) const
   for (d = descriptor_list; d; d = d->next) {
     TBeing *ch = d->character;
     if (!no_mail && !d->connected && ch) {
-      char recipient[100], *tmp;
+      sstring recipient;
 
-      _parse_name(ch->getName(), recipient);
-      for (tmp = recipient; *tmp; tmp++)
-        if (isupper(*tmp))
-          *tmp = tolower(*tmp);
-      if (has_mail(recipient))
+      if (parse_name_sstring(ch->getName(), recipient)) {
+        vlogf(LOG_BUG, fmt("Unexpected name retrieval for name: %s in procCheckMail::run!") % ch->getName());
+        continue;
+      }
+      if (has_mail(recipient.lower()))
         ch->sendTo(fmt("You have %sMAIL!%s\n\r") % ch->cyan() % ch->norm());
     }
   }

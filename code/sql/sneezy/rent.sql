@@ -4,7 +4,7 @@ drop table rent_strung;
 
 create table rent (
   rent_id integer primary key auto_increment,
-  owner_type ENUM('player', 'shop', 'room'),
+  owner_type ENUM('player', 'shop', 'room', 'mail'),
   owner integer DEFAULT '0' NOT NULL,
   slot integer DEFAULT '0' NOT NULL,
   vnum integer DEFAULT '0' NOT NULL,

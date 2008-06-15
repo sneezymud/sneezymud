@@ -15,7 +15,7 @@ const int MAX_MAIL_SIZE=4000;
 const int NAME_SIZE =15;
 
 
-extern bool has_mail(const char *);
+extern bool has_mail(const sstring);
 extern bool no_mail;
 
 extern void autoMail(TBeing *, const char *, const char *);

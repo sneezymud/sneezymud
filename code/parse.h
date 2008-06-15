@@ -684,6 +684,7 @@ extern void half_chop_safe(const char *sstring, char *arg1, unsigned int arg1Len
 #define half_chop(s, a1, a2) half_chop_safe(s, a1, cElements(a1), a2, cElements(a2))
 extern bool _parse_name_safe(const char *arg, char *name, unsigned int nameLen);
 #define _parse_name(a, n) _parse_name_safe(a, n, cElements(n))
+extern bool parse_name_sstring(const sstring arg, sstring & name);
 extern bool is_abbrev(const char *, const char *, multipleTypeT multiple = MULTIPLE_NO, exactTypeT exact = EXACT_NO);
 extern bool is_abbrev(const sstring &, const sstring &, multipleTypeT multiple = MULTIPLE_NO, exactTypeT exact = EXACT_NO);
 extern char *fread_string(FILE *);

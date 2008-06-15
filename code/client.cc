@@ -19,6 +19,8 @@
 #include "statistics.h"
 #include "combat.h"
 #include "database.h"
+#include "rent.h"
+#include "shop.h"
 
 const int  CURRENT_VERSION = 19990615;
 const int  BAD_VERSION = 19990614;
@@ -435,6 +437,7 @@ int Descriptor::read_client(char *str2)
       char name[256];
       const char *tc;
       int j;
+      int rent_id = 0;
  
       strcpy(name, nextToken('|', 255, str2).c_str());
 
@@ -449,7 +452,29 @@ int Descriptor::read_client(char *str2)
           buffer[j] = *tc;
       }
       buffer[j] = '\0';
-      store_mail(name, character->getName(), buffer);
+
+      if (obj && obj->canBeMailed())
+      {
+        ItemSaveDB is("mail", GH_MAIL_SHOP);
+        rent_id = is.raw_write_item(obj, -1 /*NORMAL_SLOT*/, 0);
+        vlogf(LOG_OBJ, fmt("Mail: %s mailing %s (vnum:%i) to %s rented as rent_id:%i") %
+          character->getName() % obj->getName() % obj->objVnum() % name % rent_id);
+        delete obj;
+      }
+      if (amount > 0)
+      {
+        vlogf(LOG_OBJ, fmt("Mail: %s mailing %i talens to %s") %
+          character->getName() % amount % name);
+        character->addToMoney(min(0, -amount), GOLD_XFER);
+      }
+
+      store_mail(name, character->getName(), buffer, amount, rent_id);
+
+      // clear amount, object, name
+      obj = NULL;
+      *(name) = '\0';
+      amount = 0;
+
       break;
     }
     case CLIENT_WHO:

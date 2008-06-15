@@ -27,6 +27,8 @@ const unsigned int SHOP_FLAG_MAT_RESTRICTED      = (1<<1);
 
 const unsigned int MAX_SHOP_INVENTORY = 2500;
 
+const unsigned int GH_MAIL_SHOP = 161;
+
 struct shop_pricing {
   int obj_vnum;
   int num_sold;

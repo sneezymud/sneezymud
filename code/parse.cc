@@ -2954,6 +2954,47 @@ bool _parse_name_safe(const char *arg, char *name, unsigned int nameLen)
   return FALSE;
 }
 
+// return TRUE if this is an illegal name
+bool is_illegal_name(const char *check)
+{
+  sstring lower = sstring(check);
+  for (int i = 0; *illegalnames[i] != '\n'; i++)
+  {
+    if (*illegalnames[i] == '*' && strstr(lower.c_str(), illegalnames[i] + 1))
+        return true;
+    else if (!strcasecmp(illegalnames[i], check))
+        return true;
+  }
+  if (!toggleInfo[TOG_MOBNAMES]->toggle) {
+    for (unsigned int i= 0; i < mob_index.size(); i++) {
+      if (!strcasecmp(fname(mob_index[i].name).c_str(), check))
+        return true;
+    }
+  }
+  return false;
+}
+
+
+// return TRUE if no name was found (error)
+bool parse_name_sstring(const sstring arg, sstring &name)
+{
+  name = arg.trim().word(0);
+
+  if (name.length() < 3 || name.length() > 15)
+    return TRUE;
+
+  if (is_illegal_name(name.c_str()))
+    return TRUE;
+  
+  for(unsigned int i = 0; i < name.length(); i++)
+    if (!isalpha(name[i]))
+      return TRUE;
+
+  return FALSE;
+}
+
+
+
 #if 0
 int min_stat(race_t race, statTypeT iStat)
 {

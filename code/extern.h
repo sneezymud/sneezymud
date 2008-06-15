@@ -195,7 +195,7 @@ extern void wipeRentFile(const char *);
 extern void wipeFollowersFile(const char *);
 extern void wipePlayerFile(const char *);
 extern void handleCorrupted(const char *, char *);
-extern void store_mail(const char *, const char *, const char *);
+extern void store_mail(const char *, const char *, const char *, int, int);
 extern void setup_dir(FILE * fl, int room, dirTypeT dir, TRoom * = NULL);
 extern char hostLogList[MAX_BAN_HOSTS][40];
 extern int numberLogHosts;
