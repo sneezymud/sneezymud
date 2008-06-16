@@ -364,9 +364,9 @@ void TBeing::postmasterReceiveMail(TMonster *me)
     if (talens >= 1000 || rent_id > 0)
       env_vnum = 6600; // crate
 
-    int env_robj = real_object(GENERIC_NOTE);
-    if (robj < 0 || robj >= (signed int) obj_index.size() ||
-      !(envelope = read_object(env_robj, VIRTUAL))) {
+    int env_robj = real_object(env_vnum);
+    if (env_robj < 0 || env_robj >= (signed int) obj_index.size() ||
+      !(envelope = read_object(env_robj, REAL))) {
       vlogf(LOG_BUG, "Couldn't load envelope object!");
       return;
     }
