@@ -571,94 +571,37 @@ TThing& TTable::operator += (TThing& t)
 // list.  This is primarly used to catch portal cheaters.
 bool TObj::checkOwnersList(const TPerson *ch, bool tPreserve)
 {
-#if 0
-  // this is only practical if NO multiplay is allowed ever
-  // otherwise it simply triggers way too often.
-  return = false;
-#endif
-
-  /*
-  if (gamePort != PROD_GAMEPORT)
-    return false;
-  */
 
   const char * tmpbuf = owners;
   char indiv[256];
   bool iHaveOwned = false,
        isCheat = false;
 
-  if (!ch->hasWizPower(POWER_WIZARD))
-    while (tmpbuf && *tmpbuf) {
-      tmpbuf = one_argument(tmpbuf, indiv, cElements(indiv));
-      if (!indiv || !*indiv)
-        continue;
-
-      // don't bother to check if it got given to myself
-      if (!strcmp(indiv, ch->getName())) {
-        iHaveOwned = true;
-        continue;
-      }
-
-      charFile st;
-      if (!load_char(indiv, &st))
-        continue;
-
-      if (ch->desc && ch->desc->account && !strcmp(ch->desc->account->name.c_str(), st.aname)) {
-        TMoney *tTalens;
-        isCheat = true;
-
-        // Don't nuke these.  Is usually a 'special case' scenario.
-        if (tPreserve)
-          continue;
-
-        if ((tTalens = dynamic_cast<TMoney *>(this))) {
-          // This is basic 'drop -- talens'|'get -- talens'
-          TBeing *tPerson = (ch->desc ? ch->desc->character : NULL);
-
-          // Here is where we nail them to the wall.
-          // We strike them for the total value of the talens 2x over.
-          // This sets the pile of money value to 0 and
-          // Removes the same amount from them (on-person/bank).
-
-          if (!tPerson) // Seriously bad
-            break;
-
-          int tLose = tTalens->getMoney(),
-              tLost,
-              tHave;
-
-          tLost = tHave = min(ch->getMoney(), tLose);
-          tPerson->setMoney(ch->getMoney() - tHave);
-          tLose -= tHave;
-
-          if (tLose > 0) {
-            tHave = min(ch->getBank(), tLose);
-            tPerson->setBank(ch->getBank() - tHave);
-            tLost += tHave;
-          }
-
-          vlogf(LOG_CHEAT, fmt("CHEATING!  Money (%d) being picked up by %s when dropped by %s.  Lost:%d") % 
-                tTalens->getMoney() % ch->getName() % indiv % tLost);
-
-          tTalens->setMoney(0);
-        } else {
-          // transferred betwen 2 chars in same account!
-
-          // don't spam us with silly "quill transferred!" logs
-          // Let's also ditch the "lantern" and key logs  -Lapsos
-          if (obj_flags.cost > 100 || isRentable())
-            vlogf(LOG_CHEAT, fmt("CHEATING!  Item (%s:%d) transferred to %s when previously owned by %s.   owners=[%s %s]") %  getName() % objVnum() % ch->getName() % indiv % owners % ch->getName());
-
-          // because of where this gets called (operator+=), deleting would be
-          // bad due to requirements to check for it occuring all over the place.
-          // lets set the decay instead and let ticktimer handle it...
-
-          obj_flags.decay_time = 0;  // decay next pulse
-        }
-      }
+  while (tmpbuf && *tmpbuf) {
+    tmpbuf = one_argument(tmpbuf, indiv, cElements(indiv));
+    if (!indiv || !*indiv)
+      continue;
+    
+    // don't bother to check if it got given to myself
+    if (!strcmp(indiv, ch->getName())) {
+      iHaveOwned = true;
+      continue;
     }
 
-  if (!tPreserve && !iHaveOwned && !ch->hasWizPower(POWER_WIZARD)) {
+    if (ch->hasWizPower(POWER_WIZARD))
+      continue;
+    
+    charFile st;
+    if (!load_char(indiv, &st))
+      continue;
+    
+    if (ch->desc && ch->desc->account && 
+	!strcmp(ch->desc->account->name.c_str(), st.aname)) {
+      isCheat = true;      
+    }
+  }
+
+  if (!tPreserve && !iHaveOwned) {
     sstring tmp("");
 
     if (owners) {
@@ -687,6 +630,10 @@ TThing& TPerson::operator += (TThing& t)
   // make recursive
   TBeing::operator += (t);
 
+  TObj *obj=dynamic_cast<TObj *>(&t);
+  if(obj)
+    obj->checkOwnersList(this);
+
   return *this;
 }
 
@@ -706,7 +653,6 @@ TThing& TBeing::operator += (TThing& t)
   t.nextThing = getStuff();
   setStuff(&t);
   t.parent = this;
-
 
   return *this;
 }
