@@ -176,7 +176,7 @@ void TBeing::doWho(const char *argument)
               buf += "   (Seeking Group)";
             if (p->isPlayerAction(PLR_NEWBIEHELP))
               buf += "   (Newbie-Helper)";
-            if ((time(0)-p->player.time.birth) < NEWBIE_PURGATORY_LENGTH)
+            if (p->desc && (time(0)-p->desc->account->birth) < NEWBIE_PURGATORY_LENGTH)
               buf += "   (Newbie)";
             buf += "\n\r";
 
@@ -389,7 +389,7 @@ void TBeing::doWho(const char *argument)
                       buf += "   (Seeking Group)";
                     if (p->isPlayerAction(PLR_NEWBIEHELP))
                       buf += "   (Newbie-Helper)";
-                    if ((time(0)-p->player.time.birth) < NEWBIE_PURGATORY_LENGTH)
+                    if (p->desc && (time(0)-p->desc->account->birth) < NEWBIE_PURGATORY_LENGTH)
                       buf += "   (Newbie)";
                   }
                   level = TRUE;
@@ -529,7 +529,7 @@ void TBeing::doWho(const char *argument)
           buf += "   (switched)";
         if (k->isPlayerAction(PLR_NEWBIEHELP))
           buf += "   (Newbie-Helper)";
-        if ((time(0)-k->player.time.birth) < NEWBIE_PURGATORY_LENGTH)
+        if (k->desc && (time(0)-k->desc->account->birth) < NEWBIE_PURGATORY_LENGTH)
           buf += "   (Newbie)";
         buf += "\n\r";
         sb += buf;
