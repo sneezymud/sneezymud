@@ -3705,6 +3705,8 @@ void Descriptor::deleteAccount()
   struct dirent *dp;
   char buf[256];
 
+  vlogf(LOG_PIO, fmt("Account %s self-deleted.") % account->name);
+
   sprintf(buf, "account/%c/%s", LOWER(account->name[0]), sstring(account->name).lower().c_str());
   if (!(dfd = opendir(buf))) {
     vlogf(LOG_FILE, fmt("Unable to walk directory for delete account (%s account)") %  account->name);

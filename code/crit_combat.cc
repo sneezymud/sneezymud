@@ -23,7 +23,7 @@
 int adjustCritRollForBarehand(int roll, TBeing *me, spellNumT w_type)
 {
   static bool inited = false;
-  static int slash_adjust[100 -67];
+  static int slash_adjust[101 -67];
 
   if (bluntType(w_type) || pierceType(w_type) || roll <= 66 || roll > 100)
     return roll;
@@ -51,6 +51,12 @@ int adjustCritRollForBarehand(int roll, TBeing *me, spellNumT w_type)
     slash_adjust[89 -67] = 0;
     slash_adjust[90 -67] = 0;
     inited = true;
+  }
+
+  if (index < 0 || index >= (int)cElements(slash_adjust))
+  {
+    vlogf(LOG_BUG, "Error in adjustCritRollForBarehand, bad index!");
+    return 0;
   }
 
   if (slashType(w_type))
@@ -480,7 +486,7 @@ void TBeing::critHitEqDamage(TBeing *v, TThing *obj, int eqdam)
 // mod is -1 from generic combat, mod == crit desired from immortal command.
 int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, spellNumT wtype, int *dam, int mod)
 {
-  int crit_num, dicenum, crit_chance, new_wtype;
+  int crit_num = 0, dicenum, crit_chance, new_wtype;
   affectedData *adp;
 
   if (isAffected(AFF_ENGAGER))

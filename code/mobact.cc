@@ -479,9 +479,15 @@ int TMonster::hunt()
   } else if (hunted && hunted->roomp && canSee(hunted, INFRA_YES)) {
     // canSee needs to have hunted->roomp
     int count;
-    int amt = 1 + GetMaxLevel()/10;
-    if (::number(0, 10) < GetMaxLevel()%10)
+
+    // amt is the number of rooms we track in a single 'tick'
+    // this used to be 1 + GetMaxLevel()/10
+    // adjusted to be less linear 6/15/08 - Pappy
+    float moves = cbrt(GetMaxLevel());
+    int amt = int(moves);
+    if (::number(0, 10) < int((moves-amt)*10))
       amt++;
+
     for (count = 0; count < amt; count++) {
       if (persist <= 0)
         return TRUE;
@@ -819,7 +825,7 @@ int TMonster::senseWimps()
 
   // if we are being used as a cheap tank (by exploiting zombie/leprosy/cityguard), lets turn the tables
   // we don't want this to happen if you're helping defend a city though, so skip if in cities
-  if (isAffected(AFF_AGGRESSOR) && !inGrimhaven() && !inAmber() && !inLogrus() && !inBrightmoon() &&
+  if (roomp && isAffected(AFF_AGGRESSOR) && !inGrimhaven() && !inAmber() && !inLogrus() && !inBrightmoon() &&
     !fight()->isPet(PETTYPE_PET|PETTYPE_CHARM|PETTYPE_THRALL) && !fight()->isPc()) {
     bool beingUsed = false;
     // if a PC using me to tank?
@@ -1030,7 +1036,7 @@ int TMonster::senseWimps()
       act("You feel nudged but you stay focused on your task.",
           TRUE, this, NULL, wimp, TO_VICT);
       return FALSE;
-    } else if (!wimp->isPc() && ::number(1, 100) < min(99, max(GetMaxLevel(), wimp->GetMaxLevel()) - 1)) {
+    } else if (!wimp->isPc() && ::number(1, 65) < max(int(GetMaxLevel()), wimp->GetMaxLevel() - 1)) {
         // added to reduce chance of brawling as mob level increases
         // % chance of avoiding brawl is equal to brawler or brawlee level (whichever is higher)
         return FALSE;

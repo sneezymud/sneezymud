@@ -11,6 +11,8 @@
 #include "games.h"
 #include "database.h"
 
+#define NEWBIE_PURGATORY_LENGTH 7257600
+
 sstring TBeing::parseTitle(Descriptor *)
 {
   return getName();
@@ -168,25 +170,16 @@ void TBeing::doWho(const char *argument)
 
             buf=p->parseTitle(desc);
 
-            if (!*argument) {
-              if (p->isPlayerAction(PLR_SEEKSGROUP))
-		buf += "   (Seeking Group)";
+            if (*argument)
+              buf += "   " + getWhoLevel(this, p);
+            if (p->isPlayerAction(PLR_SEEKSGROUP))
+              buf += "   (Seeking Group)";
+            if (p->isPlayerAction(PLR_NEWBIEHELP))
+              buf += "   (Newbie-Helper)";
+            if ((time(0)-p->player.time.birth) < NEWBIE_PURGATORY_LENGTH)
+              buf += "   (Newbie)";
+            buf += "\n\r";
 
-              if (p->isPlayerAction(PLR_NEWBIEHELP))
-		buf += "   (Newbie-Helper)";
-
-	      buf += "\n\r";
-            } else {
-	      buf += "   " + getWhoLevel(this, p);
-
-              if (p->isPlayerAction(PLR_SEEKSGROUP))
-		buf += "   (Seeking Group)";
-
-              if (p->isPlayerAction(PLR_NEWBIEHELP))
-		buf += "   (Newbie-Helper)";
-
-	      buf += "\n\r";
-            }
             if (isImmortal() && p->isLinkdead()) {
             } else {
 	      sb += (p->polyed == POLY_TYPE_SWITCH ?  "(switched) " : "") + buf;
@@ -391,13 +384,13 @@ void TBeing::doWho(const char *argument)
                 case 'l':
                 case 'y':
                   if (!level) {
-		    buf += getWhoLevel(this, p);
-
+                    buf += getWhoLevel(this, p);
                     if (p->isPlayerAction(PLR_SEEKSGROUP))
-		      buf += "   (Seeking Group)";
-
+                      buf += "   (Seeking Group)";
                     if (p->isPlayerAction(PLR_NEWBIEHELP))
-		      buf += "   (Newbie-Helper)";
+                      buf += "   (Newbie-Helper)";
+                    if ((time(0)-p->player.time.birth) < NEWBIE_PURGATORY_LENGTH)
+                      buf += "   (Newbie)";
                   }
                   level = TRUE;
                   break;
@@ -526,21 +519,19 @@ void TBeing::doWho(const char *argument)
  
         c++;
         buf=k->parseTitle(desc);
-	buf += "    ";
-	buf += getWhoLevel(this, k);
+        buf += "    ";
+        buf += getWhoLevel(this, k);
         if (k->isPlayerAction(PLR_SEEKSGROUP))
-	  buf += "   (Seeking Group)";
-
+          buf += "   (Seeking Group)";
         if (k->isLinkdead() && isImmortal())
-	  buf += "   (link-dead)";
-
+          buf += "   (link-dead)";
         if (k->polyed == POLY_TYPE_SWITCH && isImmortal())
-	  buf += "   (switched)";
-
+          buf += "   (switched)";
         if (k->isPlayerAction(PLR_NEWBIEHELP))
-	  buf += "   (Newbie-Helper)";
-
-	buf += "\n\r";
+          buf += "   (Newbie-Helper)";
+        if ((time(0)-k->player.time.birth) < NEWBIE_PURGATORY_LENGTH)
+          buf += "   (Newbie)";
+        buf += "\n\r";
         sb += buf;
       }
       if (!c)
