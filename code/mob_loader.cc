@@ -222,7 +222,7 @@ void loadRepairItems(TMonster *tmons)
   for (int iTool = 0; iTool < 5 && myTools[iTool]; iTool++)
   {
     TObj * obj;
-    if (!::number(0,49) && (obj = read_object(myTools[iTool], VIRTUAL)))
+    if (!::number(0,49) && (obj = read_object_buy_build(tmons, myTools[iTool], VIRTUAL)))
     {
       *tmons += *obj;
       tmons->logItem(obj, CMD_LOAD);
@@ -253,7 +253,7 @@ void TMonster::thiefLootLoader()
   vnum=loot[::number(0, loot.size()-1)];
   
   // load it
-  if (!(obj = read_object(vnum,VIRTUAL))){
+  if (!(obj = read_object_buy_build(this,vnum,VIRTUAL))){
     vlogf(LOG_BUG, fmt("couldn't load object %i") %  vnum);
     return;
   }
@@ -507,7 +507,7 @@ void TMonster::mageComponentLoader(void)
   } else 
     bag_num = 321;
 
-  if (!(bag = read_object(bag_num, VIRTUAL)))
+  if (!(bag = read_object_buy_build(this,bag_num, VIRTUAL)))
     return;
 
   while (::number(0,3) && (wealth > 10)) { 
@@ -679,7 +679,7 @@ void TMonster::rangerComponentLoader(void)
   } else 
     bag_num = 330;
 
-  if (!(bag = read_object(bag_num, VIRTUAL)))
+  if (!(bag = read_object_buy_build(this,bag_num, VIRTUAL)))
     return;
 
   while (::number(0,3) && (wealth > 10)) { 
@@ -786,7 +786,7 @@ void TMonster::shamanComponentLoader(void)
   } else 
     bag_num = 31317;
 
-  if (!(bag = read_object(bag_num, VIRTUAL)))
+  if (!(bag = read_object_buy_build(this,bag_num, VIRTUAL)))
     return;
 
 
@@ -975,7 +975,7 @@ void TMonster::clericSymbolLoader(void)
     value = obj_index[real_object(syms[i])].value / div;
     
     if(wealth>value){
-      if (!(obj = read_object(syms[i], VIRTUAL))) {
+      if (!(obj = read_object_buy_build(this,syms[i], VIRTUAL))) {
 	vlogf(LOG_BUG, "Error in cleric Component Loader");
 	return;
       }
@@ -1203,7 +1203,7 @@ void TMonster::genericMobLoader(TOpenContainer **bag)
     return;
  
   TObj *obj;
-  if (!(obj = read_object(GENERIC_MONEYPOUCH, VIRTUAL)) ||
+  if (!(obj = read_object_buy_build(this,GENERIC_MONEYPOUCH, VIRTUAL)) ||
       !(*bag = dynamic_cast<TOpenContainer *>(obj)))
     return;
 
