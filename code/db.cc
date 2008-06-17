@@ -45,7 +45,7 @@
 #include "obj_opal.h"
 #include "obj_organic.h"
 #include "obj_pen.h"
-#include "obj_smoke.h"
+#include "obj_gas.h"
 #include "obj_statue.h"
 #include "obj_trash.h"
 #include "obj_treasure.h"

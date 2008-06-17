@@ -13,7 +13,7 @@
 
 
 
-class TBaseCup : public TObj {
+class TBaseCup : public virtual TObj {
   private:
     int maxDrinks;
     int curDrinks;

@@ -79,8 +79,7 @@ void TMoney::doMerge(TMergeable *tm)
 
   // set m to the full amount
   setMoney(getMoney() + tMoney->getMoney());
-  
-  // ditch the pile we picked up
+
   --(*tMoney);
   delete tMoney;
 }

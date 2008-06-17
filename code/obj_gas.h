@@ -5,16 +5,17 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_SMOKE_H
-#define __OBJ_SMOKE_H
+#ifndef __OBJ_GAS_H
+#define __OBJ_GAS_H
 
 #include "obj.h"
 
-// All gasses operate the same way somewhat.  They behavior is differentiated by their
-// gasTypeT.  All sorts of data can be stored on a TGas mostly withour worrying about serialization,
-// since the TGas object is never stored in the database.
+// All gasses operate the same way somewhat.  They behavior is
+// differentiated by their gasTypeT.  All sorts of data can be stored
+// on a TGas mostly withour worrying about serialization, since the
+// TGas object is never stored in the database.
 
-class TGas : public TObj {
+class TGas : public TMergeable {
   public:    
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
@@ -30,7 +31,9 @@ class TGas : public TObj {
     void doSpecials();
     void updateDesc();
     void doDrift();
-    void doMerge();
+
+    virtual bool willMerge(TMergeable *);
+    virtual void doMerge(TMergeable *);
 
     TGas(gasTypeT gasType = GAS_UNDEFINED);
     TGas(const TGas &a);

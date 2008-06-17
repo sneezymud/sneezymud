@@ -86,25 +86,30 @@ void TPool::overFlow()
 }
 
 
-void TPool::doMerge()
+bool TPool::willMerge(TMergeable *tm)
 {
   TPool *pool;
-  TThing *t, *t2;
+  
+  if(!(pool=dynamic_cast<TPool *>(tm)) ||
+     pool==this ||
+     pool->getDrinkType()!=getDrinkType()){
+    return false;
+  }
 
-  if(!roomp)
+  return true;
+}
+
+void TPool::doMerge(TMergeable *tm)
+{
+  TPool *pool;
+
+  if(!(pool=dynamic_cast<TPool *>(tm)))
     return;
 
-  for(t=roomp->getStuff();t;t=t2){
-    t2=t->nextThing;
-    
-    if((pool=dynamic_cast<TPool *>(t)) && pool != this && 
-       pool->getDrinkType()==getDrinkType()){
-      // merge!
-      addToDrinkUnits(pool->getDrinkUnits());
-      --(*pool);
-      delete pool;
-    }
-  }
+  addToDrinkUnits(pool->getDrinkUnits());
+
+  --(*pool);
+  delete pool;
 }
 
 void TPool::setDrinkUnits(int n)

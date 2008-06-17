@@ -1,20 +1,14 @@
 #include "stdsneezy.h"
-#include "obj_smoke.h"
+#include "obj_gas.h"
 #include "pathfinder.h"
 #include "obj_portal.h"
 #include "obj_plant.h"
 
-/* todo
-light reduction
-drifting
-coughing etc
-rain put out fire
- */
 
-// TGas uses function pointers to get a virtual-class like affect, without having to have
-// multiple objects and object types for each gas type created in makeNewObj
-// it also makes gasses able to change their type and behavior on the fly, which can be
-// useful if decaying
+// TGas uses function pointers to get a virtual-class like affect,
+// without having to have multiple objects and object types for each
+// gas type created in makeNewObj it also makes gasses able to change
+// their type and behavior on the fly, which can be useful if decaying
 typedef void (*specialsFunction)(TGas *myself);
 typedef const char * (*nameFunction)(const TGas *myself);
 
@@ -216,26 +210,31 @@ void TGas::doSpecials()
 }
 
 // merge with other gas clouds in the room
-void TGas::doMerge()
+void TGas::doMerge(TMergeable *tm)
 {
   TGas *tGas;
-  TThing *t, *t2;
 
-  if(!roomp)
+  if(!(tGas=dynamic_cast<TGas *>(tm)))
     return;
-  
-  for(t=roomp->getStuff();t;t=t2){
-    t2=t->nextThing;
-    
-    if((tGas=dynamic_cast<TGas *>(t)) && tGas != this && tGas->type == type){
-      // merge!
-      addCreator(tGas->creator.c_str());
-      addToVolume(tGas->getVolume());
-      --(*tGas);
-      delete tGas;
-    }
-  }
+
+  addCreator(tGas->creator.c_str());
+  addToVolume(tGas->getVolume());
+
+  --(*tGas);
+  delete tGas;
 }
+
+bool TGas::willMerge(TMergeable *tm)
+{
+  TGas *tGas;
+
+  if(!(tGas=dynamic_cast<TGas *>(tm)) ||
+     tGas==this || tGas->type != type)
+    return false;
+
+  return true;
+}
+
 
 // drift upwards, or towards the closest outdoor room
 void TGas::doDrift()
@@ -325,7 +324,7 @@ void TGas::addToVolume(int n)
 {
   TObj::addToVolume(n);
   updateDesc();
-  if(roomp->isIndoorSector()){
+  if(roomp && roomp->isIndoorSector()){
     obj_flags.decay_time=getVolume()/2;
   } else {
     obj_flags.decay_time=0;

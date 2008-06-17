@@ -5,7 +5,7 @@
 // ex, components, commodities, talens, etc
 
 
-class TMergeable : public TObj {
+class TMergeable : public virtual TObj {
  private:
 
  public:

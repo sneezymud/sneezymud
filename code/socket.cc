@@ -40,7 +40,7 @@ int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 #include "systemtask.h"
 #include "socket.h"
 #include "weather.h"
-#include "obj_smoke.h"
+#include "obj_gas.h"
 #include "obj_vehicle.h"
 #include "obj_trash_pile.h"
 #include "obj_base_cup.h"
@@ -1112,7 +1112,6 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
       // fun with smoke
       TGas *gas=dynamic_cast<TGas *>(obj);
       if (gas){
-        gas->doMerge();
         gas->doDrift();
         gas->doSpecials();
       }
@@ -1120,7 +1119,6 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
       // fun with pools
       TPool *pool=dynamic_cast<TPool *>(obj);
       if(pool){
-	pool->doMerge();
 	pool->overFlow();
       }
 
@@ -1136,7 +1134,6 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
 	  obj = NULL;
 	  continue;
 	} else {
-	  pile->doMerge();
 	  pile->overFlow();
 	  pile->updateDesc();
 	  pile->doDecay();

@@ -301,27 +301,33 @@ void TTrashPile::doDecay()
 }
 
 
-void TTrashPile::doMerge()
+bool TTrashPile::willMerge(TMergeable *tm)
 {
   TTrashPile *pile;
-  TThing *t, *t2;
+
+  if(!(pile=dynamic_cast<TTrashPile *>(tm)) ||
+     pile==this)
+    return false;
+  
+  return true;
+}
+
+void TTrashPile::doMerge(TMergeable *tm)
+{
+  TTrashPile *pile;
   TThing *pt, *pt2;
 
-  if(!roomp)
+  if(!(pile=dynamic_cast<TTrashPile *>(tm)))
     return;
 
-  for(t=roomp->getStuff();t;t=t2){
-    t2=t->nextThing;
-
-    if((pile=dynamic_cast<TTrashPile *>(t)) && pile!=this){
-      for(pt=pile->getStuff();pt;pt=pt2){
-	pt2=pt->nextThing;
-	--(*pt);
-	*this += *pt;
-      }
-
-      --(*pile);
-      delete pile;
-    }
+  for(pt=pile->getStuff();pt;pt=pt2){
+    pt2=pt->nextThing;
+    --(*pt);
+    *this += *pt;
   }
+
+  updateDesc();
+
+  --(*pile);
+  delete pile;
 }

@@ -679,15 +679,12 @@ TThing& TThing::operator += (TThing& t)
               (t.inRoom() == ROOM_AUTO_RENT)),
       "TThing += with t.inRoom()");
 
-  TThing *i;
-
-
   TMergeable *tm=dynamic_cast<TMergeable *>(&t);
   if(tm){
-    for(i=getStuff();i;i=i->nextThing){
+    for(TThing *i=getStuff();i;i=i->nextThing){
       TMergeable *tMerge=dynamic_cast<TMergeable *>(i);
       
-      if(tMerge && tm->willMerge(tMerge)){
+      if(tMerge && tm!=tMerge && tm->willMerge(tMerge)){
 	tm->doMerge(tMerge);
 	break;
       }

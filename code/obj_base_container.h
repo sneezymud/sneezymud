@@ -11,7 +11,7 @@
 #include "obj.h"
 
 // Things can be in a base container (but people can't put things into it)
-class TBaseContainer : public TObj {
+class TBaseContainer : public virtual TObj {
   private:
   public:
     virtual void assignFourValues(int, int, int, int) = 0;

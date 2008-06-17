@@ -10,7 +10,7 @@
 
 #include "obj_base_cup.h"
 
-class TPool : public TBaseCup {
+class TPool : public TBaseCup, public TMergeable {
   public:    
     void fillMeAmount(int, liqTypeT);
     void updateDesc();
@@ -25,9 +25,10 @@ class TPool : public TBaseCup {
     virtual int thawObject(TBeing *, int);
     virtual bool isPluralItem() const;
     virtual itemTypeT itemType() const { return ITEM_POOL; }
-    void doMerge();
     void overFlow();
 
+    virtual bool willMerge(TMergeable *);
+    virtual void doMerge(TMergeable *);
 
     void initPool(int, liqTypeT);
 
