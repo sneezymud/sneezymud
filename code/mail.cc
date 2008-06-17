@@ -371,8 +371,8 @@ void TBeing::postmasterReceiveMail(TMonster *me)
       return;
     }
     
-    envelope->setObjStat(ITEM_NEWBIE);
-    envelope->setObjStat(ITEM_NORENT);
+    envelope->addObjStat(ITEM_NEWBIE);
+    envelope->addObjStat(ITEM_NORENT);
 
     *envelope += *note;
 
