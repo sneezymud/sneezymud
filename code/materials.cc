@@ -322,10 +322,6 @@ bool TObj::canRust()
 {
   ubyte mat = convertV9MaterialToV10(getMaterial());
 
-  if (getMaxStructPoints() < 0)
-    return FALSE;
-  if (getStructPoints() < 0)
-    return FALSE;
   if (material_nums[mat].acid_susc <= 0)
     return FALSE;
   if (!isMetal())

@@ -1142,6 +1142,26 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
     }
 
     if(pl.pulse_tick){
+      // rust
+      if(!::number(0,99) && obj->canRust()){
+	TRoom *rp=NULL;
+	
+	if(obj->equippedBy)
+	  rp=obj->equippedBy->roomp;
+
+	if(dynamic_cast<TBeing *>(obj->parent))
+	  rp=obj->parent->roomp;
+
+	if(obj->roomp)
+	  rp=obj->roomp;
+
+	if(rp && ((weather_info.sky==SKY_RAINING && !rp->isIndoorSector()) ||
+		  rp->isWaterSector())){
+	  obj->addObjStat(ITEM_RUSTY);
+	}
+      }
+      
+
       // freezing
       // find base cups that are either in an arctic room, or in the inventory
       // of a being in an arctic room, with < 10 drunk
