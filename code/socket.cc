@@ -986,6 +986,33 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
 }
 
 
+int TMainSocket::roomPulse(TPulseList &pl, int realpulse)
+{
+  int count=0;
+
+  for(int i=0;i<WORLD_SIZE;i++){
+    TRoom *rp = real_roomp(i);
+    
+    if(!rp)
+      continue;
+
+    //    ++count;
+
+    // rain
+    if(pl.mobstuff){
+      if((rp->getWeather()==WEATHER_RAINY ||
+	  rp->getWeather()==WEATHER_LIGHTNING) &&
+	 !::number(0,999)){
+	rp->dropPool(::number(2,5), LIQ_WATER);
+	++count;
+      }
+    }
+  }
+
+
+  return count;
+}
+
 int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
 {
   TVehicle *vehicle;
@@ -1155,7 +1182,8 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
 	if(obj->roomp)
 	  rp=obj->roomp;
 
-	if(rp && ((weather_info.sky==SKY_RAINING && !rp->isIndoorSector()) ||
+	if(rp && (rp->getWeather()==WEATHER_RAINY ||
+		  rp->getWeather()==WEATHER_LIGHTNING ||
 		  rp->isWaterSector())){
 	  obj->addObjStat(ITEM_RUSTY);
 	}
@@ -1602,6 +1630,15 @@ int TMainSocket::gameLoop()
       vlogf(LOG_MISC, fmt("%i %i) characterPulse: %i, %i chars") %
 	    (oldpulse % 2400) % (oldpulse%12) % 
 	    (int)(t.getElapsedReset()*1000000) % count);
+
+    // handle pulse stuff for rooms
+    count=roomPulse(pl, (pulse % 2400));
+
+    if(toggleInfo[TOG_GAMELOOP]->toggle)
+      vlogf(LOG_MISC, fmt("%i %i) roomPulse: %i, %i rooms") %
+	    (oldpulse % 2400) % (oldpulse%12) % 
+	    (int)(t.getElapsedReset()*1000000) % count);
+
 
     // reset the old values from the artifical pulse
     pulse=oldpulse;
