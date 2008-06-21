@@ -4,6 +4,8 @@
 #include "shop.h"
 #include "shopowned.h"
 #include "rent.h"
+#include "obj_trap.h"
+#include "obj_open_container.h"
 
 // may not exceed NAME_SIZE (15) chars
 static const char * const SNEEZY_ADMIN = "SneezyMUD Administration";
@@ -22,7 +24,10 @@ bool TObj::canBeMailed() const
   return !isObjStat(ITEM_ATTACHED) && !isObjStat(ITEM_NORENT) &&
           !isObjStat(ITEM_BURNING) && !isObjStat(ITEM_PROTOTYPE) &&
           !isObjStat(ITEM_NOPURGE) && !isObjStat(ITEM_NEWBIE) &&
-          !isObjStat(ITEM_NODROP) && !isMonogrammed() && getStuff() == NULL;
+          !isObjStat(ITEM_NODROP) && !isMonogrammed() && getStuff() == NULL &&
+          !dynamic_cast<const TTrap*>(this) &&
+          (!dynamic_cast<const TOpenContainer*>(this) ||
+          !dynamic_cast<const TOpenContainer*>(this)->isContainerFlag(CONT_TRAPPED));
 }
 
 bool has_mail(const sstring recipient)

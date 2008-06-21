@@ -3003,7 +3003,8 @@ void TBeing::setPosition(positionTypeT pos)
   if (dynamic_cast<TBeing *>(riding) && 
       (pos != POSITION_FIGHTING) && (pos != POSITION_MOUNTED)) {
     // for debug
-    vlogf(LOG_BUG, fmt("Mounted person (%s) set to new position (%s:%d).") %  getName() % position_types[pos] % pos);
+    // vlogf(LOG_BUG, fmt("Mounted person (%s) set to new position (%s:%d).") %  getName() % position_types[pos] % pos);
+    // this is called whenever a mob falls off a mount - dismount them first
     dismount(POSITION_STANDING);
   }
   if (!hasLegs()) {
