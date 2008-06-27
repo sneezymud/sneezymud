@@ -95,6 +95,7 @@ enum connectStateT {
        CON_CREATION_CUSTOMIZE_LEARN,
        CON_CREATION_CUSTOMIZE_UTIL,
        CON_CREATION_DONE,
+       CON_CREATION_CONFIG_CODE,
        CON_CREATION_MAX,
 
        // if adding more here, update connected_types array as well

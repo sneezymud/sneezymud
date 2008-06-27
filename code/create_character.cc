@@ -484,6 +484,7 @@ void nannySex_output(Descriptor * desc)
   desc->writeToQ("1. Male\n\r2. Female\n\r");
 }
 
+
 // simple function to ensure menu choices are consistient
 int setNannyRaces(int *races, int cRaces, int num50s, Descriptor * desc)
 {
@@ -667,6 +668,8 @@ connectStateT nannyLaunchpad_input(Descriptor * desc, sstring & output, const ss
     return CON_CREATION_TRAITS1;
   else if (input == "7")
     return CON_CREATION_CUSTOMIZE_START;
+  else if (input == "C")
+    return CON_CREATION_CONFIG_CODE;
   else if (input.upper() == "R")
     return CON_CREATION_RESET;
   else if (input.upper() == "D" && nannyLaunchpad_allowdone(desc, output))
@@ -766,13 +769,14 @@ void nannyLaunchpad_output(Descriptor * desc)
   else if (!desc->isDefaultChosenStats())
     output = "Customized";
   desc->writeToQ(fmt("7. Stats              : %-24s\n\r") % output);
-  
+
   // check if we can be done
   if (nannyLaunchpad_allowdone(desc, output))
       desc->writeToQ(fmt("\n\rChoose %sD%s to complete character creation and enter the game.") % desc->red() % desc->norm());
   else
       desc->writeToQ(fmt("\n\r%s") % output);
   desc->writeToQ(fmt("\n\rChoose %sR%s to reset your customizations.\n\r") % desc->red() % desc->norm());
+  desc->writeToQ(fmt("Choose %sC%s to enter a creation code.\n\r") % desc->red() % desc->norm());
 }
 
 // print out all of the traits for this trate page
@@ -1017,6 +1021,88 @@ connectStateT nannyDone_input(Descriptor * desc, sstring & output, const sstring
   return CON_RMOTD;
 }
 
+
+
+
+int rbits(int a, int b)
+{
+  int ret=0;
+
+  for(int i=0;i<b;++i){
+    if(a & 1<<i){
+      ret = ret | 1<<((b-1)-i);
+    }
+  }
+  return ret;
+}
+
+connectStateT nannyCode_input(Descriptor * desc, sstring & output, const sstring input)
+{
+  if(!input.empty()){
+    sstring buf="";
+    unsigned long stats3=strtoul(input.substr(0,6).c_str(), NULL, 36);
+    unsigned long stats2=strtoul(input.substr(6,6).c_str(), NULL, 36);
+    unsigned long stats1=strtoul(input.substr(12,6).c_str(), NULL, 36);
+    unsigned long other=strtoul(input.substr(18,6).c_str(), NULL, 36);
+
+
+    nannyRace_input(desc, buf, fmt("%i") % GET_BITS(other, 3, 4));
+    output += buf + "\n\r";
+    buf="";
+
+    nannyTerritory_input(desc, buf, fmt("%i") % GET_BITS(other, 6, 3));
+    output += buf + "\n\r";
+    buf="";
+    
+    nannyClass_input(desc, buf, fmt("%i") % GET_BITS(other, 9, 3));
+    output += buf + "\n\r";
+    buf="";
+
+    nannySex_input(desc, buf, fmt("%i") % (GET_BITS(other, 10, 1)+1));
+    output += buf + "\n\r";
+    buf="";
+
+    nannyHand_input(desc, buf, fmt("%i") % (GET_BITS(other, 11, 1)+1));
+    output += buf + "\n\r";
+    buf="";    
+    
+    for(int i=12;i<28;++i){
+      if(GET_BITS(other, i, 1)){
+	nannyTraits_input(desc, buf, fmt("%i") % (i-11));
+	output += buf + "\n\r";
+	buf="";
+      }
+    }
+
+    desc->connected=CON_CREATION_CUSTOMIZE_COMBAT;
+    nannyStats_input(desc, buf, fmt("%+is") % (GET_BITS(stats1, 5, 6)-25));
+    nannyStats_input(desc, buf, fmt("%+ib") % (GET_BITS(stats1, 11, 6)-25));
+    nannyStats_input(desc, buf, fmt("%+ic") % (GET_BITS(stats1, 17, 6)-25));
+
+    desc->connected=CON_CREATION_CUSTOMIZE_COMBAT2;
+    nannyStats_input(desc, buf, fmt("%+id") % (GET_BITS(stats1, 23, 6)-25));
+    nannyStats_input(desc, buf, fmt("%+ia") % (GET_BITS(stats2, 5, 6)-25));
+    nannyStats_input(desc, buf, fmt("%+is") % (GET_BITS(stats3, 23, 6)-25));
+
+    desc->connected=CON_CREATION_CUSTOMIZE_LEARN;
+    nannyStats_input(desc, buf, fmt("%+ii") % (GET_BITS(stats2, 11, 6)-25));
+    nannyStats_input(desc, buf, fmt("%+iw") % (GET_BITS(stats2, 17, 6)-25));
+    nannyStats_input(desc, buf, fmt("%+if") % (GET_BITS(stats2, 23, 6)-25));
+
+    desc->connected=CON_CREATION_CUSTOMIZE_UTIL;
+    nannyStats_input(desc, buf, fmt("%+ip") % (GET_BITS(stats3, 5, 6)-25));
+    nannyStats_input(desc, buf, fmt("%+ic") % (GET_BITS(stats3, 11, 6)-25));
+    nannyStats_input(desc, buf, fmt("%+ik") % (GET_BITS(stats3, 17, 6)-25));
+  }
+  return CON_CREATION_LAUNCHPAD;
+}
+
+void nannyCode_output(Descriptor * desc)
+{
+  desc->writeToQ("Please enter your creation code.\n\r");
+}
+
+
 // common menu options for all of our character creation menus
 void nannyCommonMenu(Descriptor * desc, int menu)
 {
@@ -1087,6 +1173,7 @@ TNannyState creationNannyData[CON_CREATION_MAX-CON_CREATION_START] = {
   // finally done
   { CON_CREATION_DONE, NANNY_MENU_NONE, nannyDone_input, nannyDone_output, "" },
 
+  { CON_CREATION_CONFIG_CODE, NANNY_MENU_BASE, nannyCode_input, nannyCode_output, "" },
 };
 
 
