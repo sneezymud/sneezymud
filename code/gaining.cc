@@ -1969,7 +1969,8 @@ int GenericGuildMaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, 
   if (generic_trainer_stuff(me, ch))
     return TRUE;
 
-  if (ch->getLevel(cit) < (me->GetMaxLevel()/2)){
+  if (ch->getLevel(cit) < (me->GetMaxLevel()/2) ||
+    (MAX_MORT == ch->getLevel(cit) && MAX_MORT <= me->GetMaxLevel()/2)){
     TPerson *tp;
 
     // the specific quest required for a reset, given the guildmaster level
@@ -2002,8 +2003,12 @@ int GenericGuildMaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, 
     if ((tp = dynamic_cast<TPerson *>(ch)))
       tp->setSelectToggles(me, cit, SILENT_NO);
 
-    me->doSay("Let me give you a little advice...");
-    ch->pracPath(me, cit);
+    if (MAX_MORT == ch->getLevel(cit)) {
+      act("$n beams, \"No one can teach you anymore in this, $N\"", FALSE, me, NULL, ch, TO_ROOM);
+    } else {
+      me->doSay("Let me give you a little advice...");
+      ch->pracPath(me, cit);
+    }
 
     if (practices > 0) {
       me->doSay(fmt("I could also reset all of your %d spent practices for you.") % practices);
@@ -2012,18 +2017,9 @@ int GenericGuildMaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, 
         me->doSay("But first, I will require that you do me a small favor.");
     }
 
-  } else if (ch->getLevel(cit) < MAX_MORT)
+  } else if (ch->getLevel(cit) < MAX_MORT) {
     act("$n sighs, \"I cannot teach you, $N.  You MUST find your next guildmaster.\"", FALSE, me, 0, ch, TO_ROOM);
-
-  else {
-    TPerson *tp;
-
-    act("$n beams, \"No one can teach you anymore in this, $N\"", FALSE, me, NULL, ch, TO_ROOM);
-
-    if ((tp = dynamic_cast<TPerson *>(ch)))
-      tp->setSelectToggles(me, cit, SILENT_NO);
   }
-
   return TRUE;
 }
 

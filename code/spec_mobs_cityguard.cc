@@ -333,6 +333,9 @@ int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
   TTrap *trap;
   int rc = 0, num = 0, num2 = 0;
 
+  if (cmd == CMD_GENERIC_DESTROYED)
+    ch->act_ptr = NULL;
+
   if ((cmd != CMD_GENERIC_PULSE) || !ch->awake())
     return FALSE;
 

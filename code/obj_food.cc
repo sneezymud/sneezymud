@@ -130,9 +130,9 @@ int TObj::drinkMe(TBeing *ch)
 
 int TBaseCup::drinkMe(TBeing *ch)
 { 
-  char buf[256];
   int amount;
   affectedData af, aff2, aff3;
+  sstring drinkName;
 
   if (ch->hasDisease(DISEASE_FOODPOISON)) {
     ch->sendTo("Uggh, your stomach is queasy and the thought of doing that is unappetizing.\n\r");
@@ -157,8 +157,8 @@ int TBaseCup::drinkMe(TBeing *ch)
     act("Your stomach can't contain anymore!", FALSE, ch, 0, 0, TO_CHAR);
     return FALSE;
   }
-  sprintf(buf, "$n drinks %s from $p.", liquidInfo[getDrinkType()]->name);
-  act(buf, TRUE, ch, this, 0, TO_ROOM);
+
+  act(fmt("$n drinks %s from $p.") % liquidInfo[getDrinkType()]->name, TRUE, ch, this, 0, TO_ROOM);
   ch->sendTo(COLOR_OBJECTS, fmt("You drink the %s.\n\r") % liquidInfo[getDrinkType()]->name);
 
   // a single drink "should" average about 8 oz.
@@ -201,16 +201,16 @@ int TBaseCup::drinkMe(TBeing *ch)
       
       // use leftover as chance to go 1 more unit up/down
       if (::number(0,9) < ((abs(getLiqHunger()) * amount) % 10))
-	ch->gainCondition(FULL, (getLiqHunger() > 0 ? 1 : -1));
+        ch->gainCondition(FULL, (getLiqHunger() > 0 ? 1 : -1));
     }
 
     
     if(ch->hasQuestBit(TOG_IS_ALCOHOLIC) && !getLiqDrunk() && 
        ch->getCond(THIRST) > 3){
-      ch->sendTo("Only sweet, sweet alcohol can quench your thirst any further.\n\r");
+        ch->sendTo("Only sweet, sweet alcohol can quench your thirst any further.\n\r");
     } else {
       if (ch->getCond(THIRST) >= 0) {
-	ch->gainCondition(THIRST, (getLiqThirst() * amount) / 10);
+        ch->gainCondition(THIRST, (getLiqThirst() * amount) / 10);
 	
 	// use leftover as chance to go 1 more unit up/down
 	if (::number(0,9) < ((abs(getLiqThirst()) * amount) % 10))
@@ -278,7 +278,9 @@ int TBaseCup::drinkMe(TBeing *ch)
   
   if(liquidInfo[liquidType]->potion)
     doLiqSpell(ch, ch, getDrinkType(), amount);
-  
+
+  // save this before the call to updatedesc from addToDrinkUnits
+  drinkName = sstring(ch->objs(this)).cap();
 
   if (!isDrinkConFlag(DRINK_PERM))
     addToDrinkUnits(-amount);
@@ -305,7 +307,7 @@ int TBaseCup::drinkMe(TBeing *ch)
   }
   if (getDrinkUnits() <= 0) {
     if (!tPool) {
-      act("$p is completely empty.", FALSE, ch, this, 0, TO_CHAR);
+      act(fmt("%s is completely empty.") % drinkName, FALSE, ch, this, 0, TO_CHAR);
       remDrinkConFlags(DRINK_POISON);
     } else {
       act("You finish licking up $p from the $g.", FALSE, ch, this, 0, TO_CHAR);
@@ -319,20 +321,18 @@ int TBaseCup::drinkMe(TBeing *ch)
 // DELETE_THIS means this must die
 int TBeing::doDrink(const char *argument)
 {
-  char buf[255];
   TObj *temp;
   int rc;
 
-  strcpy(buf, argument);
   if (fight()) {
     sendTo("You are too busy fending off your foes!\n\r");
     return FALSE;
   }
-  if (!buf || !*buf) {
+  if (!argument || !*argument) {
     sendTo("Drink from what?\n\r");
     return FALSE;
   }
-  if (!(temp = get_obj_vis_accessible(this, buf))) {
+  if (!(temp = get_obj_vis_accessible(this, argument))) {
     if (roomp->isWaterSector()) {
       sendTo("You drink from the surroundings.\n\r");
       if (roomp->isRiverSector()) {
@@ -692,6 +692,7 @@ void TObj::sipMe(TBeing *ch)
 
 void TBaseCup::sipMe(TBeing *ch)
 {
+  sstring drinkName;
   affectedData af;
 
   if (ch->getCond(DRUNK) > 10) {    /* The pig is drunk ! */
@@ -771,6 +772,9 @@ void TBaseCup::sipMe(TBeing *ch)
   if(liquidInfo[liquidType]->potion)
     doLiqSpell(ch, ch, getDrinkType(), 1);
 
+  // save this before the call to updatedesc from addToDrinkUnits
+  drinkName = sstring(ch->objs(this)).cap();
+
   if (!isDrinkConFlag(DRINK_PERM))
     addToDrinkUnits(-1);
 
@@ -778,7 +782,7 @@ void TBaseCup::sipMe(TBeing *ch)
     TPool * tPool = dynamic_cast<TPool *>(this);
 
     if (!tPool) {
-      act("$p is completely empty.", FALSE, ch, this, 0, TO_CHAR);
+      act(fmt("%s is completely empty.") % drinkName, FALSE, ch, this, 0, TO_CHAR);
       remDrinkConFlags(DRINK_POISON);
     } else {
       act("You finish licking up $p from the $g.", FALSE, ch, this, 0, TO_CHAR);

@@ -1819,10 +1819,12 @@ TObj *read_object_buy_build(TBeing *buyer, int nr, readFileTypeT type)
     rent_id=convertTo<int>(db["rent_id"]);
     TShopOwned tso(shop_nr, buyer);
 
-    o=tso.getKeeper()->loadItem(shop_nr, convertTo<int>(db["rent_id"]));
-    *tso.getKeeper() += *o;
-
-    price = o->shopPrice(1, shop_nr, -1, buyer);
+    if (tso.getKeeper())
+      o=tso.getKeeper()->loadItem(shop_nr, convertTo<int>(db["rent_id"]));
+    if (o) {
+      *tso.getKeeper() += *o;
+      price = o->shopPrice(1, shop_nr, -1, buyer);
+    }
   }
 
   // ok, we now have a cheap object (o) selling for price at shop_nr
@@ -1833,16 +1835,19 @@ TObj *read_object_buy_build(TBeing *buyer, int nr, readFileTypeT type)
     commod_shop_nr=convertTo<int>(db["shop_nr"]);
     commod_rent_id=convertTo<int>(db["rent_id"]);
     TShopOwned tso(commod_shop_nr, buyer);
+    TObj *obj = NULL;
 
-    TObj *obj=tso.getKeeper()->loadItem(commod_shop_nr, convertTo<int>(db["rent_id"]));
+    if (tso.getKeeper())
+      obj=tso.getKeeper()->loadItem(commod_shop_nr, convertTo<int>(db["rent_id"]));
+    if (obj) {
+      if(!(commod=dynamic_cast<TCommodity *>(obj)))
+        return read_object(nr, type);
+      
+      *tso.getKeeper() += *commod;
 
-    if(!(commod=dynamic_cast<TCommodity *>(obj)))
-      return read_object(nr, type);
-    
-    *tso.getKeeper() += *commod;
-
-    commod_price = commod->shopPrice((int)(weight*10), commod_shop_nr, 
-				     -1, buyer);
+      commod_price = commod->shopPrice((int)(weight*10), commod_shop_nr, 
+				       -1, buyer);
+    }
   }
 
 
@@ -1857,7 +1862,8 @@ TObj *read_object_buy_build(TBeing *buyer, int nr, readFileTypeT type)
     vlogf(LOG_PEEL, fmt("%s purchased %s from shop %i for %i talens.") %
 	  buyer->getName() % o->getName() % shop_nr % price);
 
-    tso.getKeeper()->deleteItem(shop_nr, rent_id);
+    if (tso.getKeeper())
+      tso.getKeeper()->deleteItem(shop_nr, rent_id);
     delete commod;
     return o;
   // otherwise buy the commod if it is available
@@ -1872,13 +1878,17 @@ TObj *read_object_buy_build(TBeing *buyer, int nr, readFileTypeT type)
 	  buyer->getName() %commod->getName() % (int)(weight*10) %
 	  commod_shop_nr % commod_price);
 
-    tso.getKeeper()->deleteItem(commod_shop_nr, commod_rent_id);
-    if(commod->getWeight() > 0)
-      tso.getKeeper()->saveItem(commod_shop_nr, commod);
+    if (tso.getKeeper()) {
+      tso.getKeeper()->deleteItem(commod_shop_nr, commod_rent_id);
+      if(commod->getWeight() > 0)
+        tso.getKeeper()->saveItem(commod_shop_nr, commod);
+    }
   }
 
-  delete commod;    
-  delete o;
+  if (commod)
+    delete commod;
+  if (o)
+    delete o;
 
   // we either purchased commod, or there was nothing to purchase so
   // load the item

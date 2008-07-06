@@ -2611,11 +2611,12 @@ void CallForGuard(TBeing *ch, TBeing *vict, int lev)
       continue;
 
     if (!IS_SET(tmons->specials.act, ACT_HUNTING)) {
-      if (vict) {
-        tmons->setHunting(vict);
-        i++;
-      }
+      tmons->setHunting(vict);
+      i++;
+      tmons->act_ptr = ch;
     }
+    else if (tmons->act_ptr == ch)
+      i++;
   }
 }
 
