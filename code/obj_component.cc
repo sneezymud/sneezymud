@@ -3058,6 +3058,7 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
           tValue = 0;
   sstring tString;
   TObj   *tObj;
+  bool deleteThis = true;
 
   if ((ch->getCarriedVolume() + getTotalVolume()) > ch->carryVolumeLimit()) {
     ch->sendTo(fmt("%s: You can not carry that much volume.\n\r") % fname(name));
@@ -3101,12 +3102,13 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
   if (charges == tNum) {
     tObj = this;
     --(*tObj);
+    deleteThis = false;
   } else {
     if (!(tObj = read_object(number, REAL))) {
       vlogf(LOG_MISC, fmt("Shop with item not in db!  [%d]") %  number);
       return -1;
     }
-    
+
     if (TComponent *tComponent = dynamic_cast<TComponent *>(tObj)) {
       int cost_per;
       
@@ -3138,23 +3140,22 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
 
   ch->doSave(SILENT_YES);
 
-  tKeeper->saveItem(tShop, this);
-  delete this;
+  if (deleteThis) {
+    tKeeper->saveItem(tShop, this);
+    delete this;
+  }
   return tCost;
 }
 
 int TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num)
 {
-  sstring buf;
   float  tChr;
   int     tCost;
+  int rent_id = 0, charges = 0, totalInv = 0;
+  TObj *remove = NULL;
   TDatabase db(DB_SNEEZY);
+  TShopOwned tso(tShop, tKeeper, ch);
 
-  db.query("select rent_id from rent where owner_type='shop' and owner=%i and vnum=%i",
-	   tShop, objVnum());
-  TComponent *obj2;
-  TObj *to;
-  
   if (!shop_index[tShop].profit_sell) {
     tKeeper->doTell(ch->getName(), shop_index[tShop].do_not_buy);
     return false;
@@ -3165,49 +3166,47 @@ int TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num)
     return false;
   }
 
-  if (sellMeCheck(ch, tKeeper, num, 50))
-    return false;
-
-  if(db.fetchRow()){
-    to=tKeeper->loadItem(tShop, convertTo<int>(db["rent_id"]));
-    obj2 = dynamic_cast<TComponent*>(to);
-    tKeeper->deleteItem(tShop, convertTo<int>(db["rent_id"]));
-  } else {
-    to = read_object(objVnum(), VIRTUAL);
-    obj2 = dynamic_cast<TComponent *>(to);
-    obj2->setWeight(0.0);
-    obj2->setMaterial(getMaterial());
+  db.query("select rent_id, val0 from rent where owner_type='shop' and owner=%i and vnum=%i", tShop, objVnum());
+  if (db.fetchRow()) {
+    rent_id = convertTo<int>(db["rent_id"]);
+    charges = convertTo<int>(db["val0"]);
   }
-  *tKeeper += *obj2;
 
-
-  TShopOwned tso(tShop, tKeeper, ch);
+  // bypass sellMeCheck, since we already have the val0 we can save a DB op
   int max_num = tso.getMaxNum(ch, this, 50);
-  int total = 0;
+  if (max_num == 0){
+    tKeeper->doTell(ch->name, "I don't wish to buy any of those right now.");
+    return false;
+  } else if (charges >= max_num) {
+    tKeeper->doTell(ch->getName(), fmt("I already have plenty of %s.") % getName());
+    return false;
+  } else if (charges + num > max_num) {
+    tKeeper->doTell(ch->getName(), fmt("I'll buy no more than %d charge%s of %s.") % (max_num - charges) % (max_num - charges > 1 ? "s" : "") % getName());
+    return false;
+  }
 
+  // check for existing given item
+  // review: possibly place this higher and given commods to act like inventory for max?
   for (TThing *t = tKeeper->getStuff(); t; t = t->nextThing) {
-    if ((t->number == number) &&
-	(t->getName() && getName() &&
-	 !strcmp(t->getName(), getName()))) {
+    if ((t->number == number) && (t->getName() && getName() && !strcmp(t->getName(), getName()))) {
       if (TComponent *c = dynamic_cast<TComponent *>(t)) {
-        total += c->getComponentCharges();
+        totalInv += c->getComponentCharges();
+        remove = c;
         break;
       }
     }
   }
-  if (total + num > max_num) {
-    num = max_num - total;
-  }
 
-  num = min(num, getComponentCharges());
+  if (totalInv + num > max_num)
+    num = max_num - totalInv;
+
+  num = max(0, min(num, getComponentCharges()));
   tChr = ch->getChaShopPenalty() - ch->getSwindleBonus();
   tChr   = max((float)1.0, tChr);
   tCost  = max(1, sellPrice(num, tShop, tChr, ch));
 
   if (tKeeper->getMoney() < tCost) {
     tKeeper->doTell(ch->name, shop_index[tShop].missing_cash1);
-    tKeeper->saveItem(tShop, obj2);
-    delete obj2;
     return false;
   }
 
@@ -3217,36 +3216,44 @@ int TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num)
   }
 
   act("$n sells $p.", FALSE, ch, this, 0, TO_ROOM);
-
   tKeeper->doTell(ch->getName(), fmt(shop_index[tShop].message_sell) % tCost);
-
   ch->sendTo(COLOR_OBJECTS, fmt("The shopkeeper now has %s.\n\r") % sstring(getName()).uncap());
   ch->logItem(this, CMD_SELL);
 
+  // this saves objs and money on the keeper - no need to do this later
   sellMeMoney(ch, tKeeper, tCost, tShop);
 
   if (ch->isAffected(AFF_GROUP) && ch->desc &&
            IS_SET(ch->desc->autobits, AUTO_SPLIT) &&
           (ch->master || ch->followers)) {
-    buf = fmt("%d") % tCost;
+    sstring buf = fmt("%d") % tCost;
     ch->doSplit(buf.c_str(), false);
   }
 
-  obj2->addToComponentCharges(num);
-  obj2->obj_flags.cost = obj2->getComponentCharges() * pricePerUnit();
-
+  int ppu = pricePerUnit();
   addToComponentCharges(-num);
-  obj_flags.cost = getComponentCharges() * obj2->pricePerUnit();
+  obj_flags.cost = getComponentCharges() * ppu; // why doesn't addToComponentCharges do this?
 
-  buf = fmt("%s/%d") % SHOPFILE_PATH % tShop;
-  tKeeper->saveItems(buf);
-  if (!ch->delaySave)
-    ch->doSave(SILENT_YES);
-  
-  tKeeper->saveItem(tShop, obj2);
-  delete obj2;
+  if (!rent_id) {
+    TObj *to = read_object(objVnum(), VIRTUAL);
+    TComponent *obj2 = dynamic_cast<TComponent *>(to);
+    obj2->obj_flags.cost = (charges+num+totalInv) * pricePerUnit();
+    obj2->setComponentCharges(charges+num+totalInv);
+    tKeeper->saveItem(tShop, obj2);
+    delete obj2;
+  } else {
+    db.query("update rent set val0=%i where rent_id=%i and owner_type='shop' and owner=%i and vnum=%i",
+      charges+num+totalInv, rent_id, tShop, objVnum());
+  }
+
+  if (remove)
+    delete remove;
   if(getComponentCharges()==0)
     delete this;
+
+  if (!ch->delaySave)
+    ch->doSave(SILENT_YES);
+
   return true;
 }
 
