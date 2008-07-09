@@ -1038,61 +1038,60 @@ int rbits(int a, int b)
 
 connectStateT nannyCode_input(Descriptor * desc, sstring & output, const sstring input)
 {
-  if(!input.empty()){
+  if(input.length()==24){
     sstring buf="";
     unsigned long stats3=strtoul(input.substr(0,6).c_str(), NULL, 36);
     unsigned long stats2=strtoul(input.substr(6,6).c_str(), NULL, 36);
     unsigned long stats1=strtoul(input.substr(12,6).c_str(), NULL, 36);
     unsigned long other=strtoul(input.substr(18,6).c_str(), NULL, 36);
 
-
-    nannyRace_input(desc, buf, fmt("%i") % GET_BITS(other, 3, 4));
+    nannyRace_input(desc, buf, fmt("%i") % GET_BITS_CORRECT(other, 3, 4));
     output += buf + "\n\r";
     buf="";
 
-    nannyTerritory_input(desc, buf, fmt("%i") % GET_BITS(other, 6, 3));
+    nannyTerritory_input(desc, buf, fmt("%i") % GET_BITS_CORRECT(other, 6, 3));
     output += buf + "\n\r";
     buf="";
     
-    nannyClass_input(desc, buf, fmt("%i") % GET_BITS(other, 9, 3));
+    nannyClass_input(desc, buf, fmt("%i") % GET_BITS_CORRECT(other, 9, 3));
     output += buf + "\n\r";
     buf="";
 
-    nannySex_input(desc, buf, fmt("%i") % (GET_BITS(other, 10, 1)+1));
+    nannySex_input(desc, buf, fmt("%i") % (GET_BITS_CORRECT(other, 10, 1)+1));
     output += buf + "\n\r";
     buf="";
 
-    nannyHand_input(desc, buf, fmt("%i") % (GET_BITS(other, 11, 1)+1));
+    nannyHand_input(desc, buf, fmt("%i") % (GET_BITS_CORRECT(other, 11, 1)+1));
     output += buf + "\n\r";
     buf="";    
     
     for(int i=12;i<28;++i){
-      if(GET_BITS(other, i, 1)){
-	nannyTraits_input(desc, buf, fmt("%i") % (i-11));
-	output += buf + "\n\r";
-	buf="";
+      if(GET_BITS_CORRECT(other, i, 1)){
+        nannyTraits_input(desc, buf, fmt("%i") % (i-11));
+	      output += buf + "\n\r";
+	      buf="";
       }
     }
 
     desc->connected=CON_CREATION_CUSTOMIZE_COMBAT;
-    nannyStats_input(desc, buf, fmt("%+is") % (GET_BITS(stats1, 5, 6)-25));
-    nannyStats_input(desc, buf, fmt("%+ib") % (GET_BITS(stats1, 11, 6)-25));
-    nannyStats_input(desc, buf, fmt("%+ic") % (GET_BITS(stats1, 17, 6)-25));
+    nannyStats_input(desc, buf, fmt("%+is") % (GET_BITS_CORRECT(stats1, 5, 6)-25));
+    nannyStats_input(desc, buf, fmt("%+ib") % (GET_BITS_CORRECT(stats1, 11, 6)-25));
+    nannyStats_input(desc, buf, fmt("%+ic") % (GET_BITS_CORRECT(stats1, 17, 6)-25));
 
     desc->connected=CON_CREATION_CUSTOMIZE_COMBAT2;
-    nannyStats_input(desc, buf, fmt("%+id") % (GET_BITS(stats1, 23, 6)-25));
-    nannyStats_input(desc, buf, fmt("%+ia") % (GET_BITS(stats2, 5, 6)-25));
-    nannyStats_input(desc, buf, fmt("%+is") % (GET_BITS(stats3, 23, 6)-25));
+    nannyStats_input(desc, buf, fmt("%+id") % (GET_BITS_CORRECT(stats1, 23, 6)-25));
+    nannyStats_input(desc, buf, fmt("%+ia") % (GET_BITS_CORRECT(stats2, 5, 6)-25));
+    nannyStats_input(desc, buf, fmt("%+is") % (GET_BITS_CORRECT(stats3, 23, 6)-25));
 
     desc->connected=CON_CREATION_CUSTOMIZE_LEARN;
-    nannyStats_input(desc, buf, fmt("%+ii") % (GET_BITS(stats2, 11, 6)-25));
-    nannyStats_input(desc, buf, fmt("%+iw") % (GET_BITS(stats2, 17, 6)-25));
-    nannyStats_input(desc, buf, fmt("%+if") % (GET_BITS(stats2, 23, 6)-25));
+    nannyStats_input(desc, buf, fmt("%+ii") % (GET_BITS_CORRECT(stats2, 11, 6)-25));
+    nannyStats_input(desc, buf, fmt("%+iw") % (GET_BITS_CORRECT(stats2, 17, 6)-25));
+    nannyStats_input(desc, buf, fmt("%+if") % (GET_BITS_CORRECT(stats2, 23, 6)-25));
 
     desc->connected=CON_CREATION_CUSTOMIZE_UTIL;
-    nannyStats_input(desc, buf, fmt("%+ip") % (GET_BITS(stats3, 5, 6)-25));
-    nannyStats_input(desc, buf, fmt("%+ic") % (GET_BITS(stats3, 11, 6)-25));
-    nannyStats_input(desc, buf, fmt("%+ik") % (GET_BITS(stats3, 17, 6)-25));
+    nannyStats_input(desc, buf, fmt("%+ip") % (GET_BITS_CORRECT(stats3, 5, 6)-25));
+    nannyStats_input(desc, buf, fmt("%+ic") % (GET_BITS_CORRECT(stats3, 11, 6)-25));
+    nannyStats_input(desc, buf, fmt("%+ik") % (GET_BITS_CORRECT(stats3, 17, 6)-25));
   }
   return CON_CREATION_LAUNCHPAD;
 }

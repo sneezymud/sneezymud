@@ -4200,12 +4200,12 @@ int symbolBlindingLight(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj
 
 
 
-int blizzardRing(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+int blizzardRing(TBeing *being, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 {
   int rc;
 
   TBeing *ch;
-  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+  if (!o || !(ch = dynamic_cast<TBeing *>(o->equippedBy)))
     return FALSE;
 
   if (cmd == CMD_SAY || cmd == CMD_SAY2) {
@@ -4258,14 +4258,14 @@ int blizzardRing(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
         act("The blast of <c>fro<b>zen <c>air<1> from $n's $o slams you into the $g, stunning you!",
             TRUE,ch,o,vict,TO_VICT,NULL);
 
-	int dam = ::number(10,60);
-	rc = ch->reconcileDamage(vict, dam, DAMAGE_FROST);
-	if (IS_SET_DELETE(rc, DELETE_VICT)) {
-	  vict->reformGroup();
-	  delete vict;
-	  vict = NULL;
-	}
-
+	      int dam = ::number(10,60);
+	      rc = ch->reconcileDamage(vict, dam, DAMAGE_FROST);
+	      if (IS_SET_DELETE(rc, DELETE_VICT)) {
+	        vict->reformGroup();
+	        delete vict;
+	        vict = NULL;
+	        continue;
+	      }
 
         affectedData aff;
 
