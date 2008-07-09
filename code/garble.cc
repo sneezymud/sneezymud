@@ -146,7 +146,7 @@ sstring TBeing::garble(TBeing *to, const sstring &arg, SPEECHTYPE speechType, GA
 
   // run all of my applied garbles, in order
   // check if garble applies to this speechtype
-  for(int iGarble = 0;iGarble < GARBLE_MAX;iGarble++)
+  for(int iGarble = 0;!garbled.empty() && iGarble < GARBLE_MAX;iGarble++)
   {
     // skip if this garble isnt included from the flags
     if (!(1<<iGarble & garbleFlags))
