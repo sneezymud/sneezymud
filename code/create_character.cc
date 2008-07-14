@@ -668,7 +668,7 @@ connectStateT nannyLaunchpad_input(Descriptor * desc, sstring & output, const ss
     return CON_CREATION_TRAITS1;
   else if (input == "7")
     return CON_CREATION_CUSTOMIZE_START;
-  else if (input == "C")
+  else if (input.upper() == "C")
     return CON_CREATION_CONFIG_CODE;
   else if (input.upper() == "R")
     return CON_CREATION_RESET;
