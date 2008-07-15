@@ -10,11 +10,11 @@ O 0 15380 1 15380       a viking war drum
 O 0 8721 1 15381        a sconced torch
 O 0 8721 1 15382        a sconced torch
 O 0 15380 1 15382       a viking war drum
-O 0 15382 2 15381       a weathered bench
+O 0 15382 3 15381       a weathered bench
 
 *M 0 15376 1 15375       Hjarrand
 M 0 15375 1 15377       a bearded norseman captain
-G 1 15376 9999          an ear horn
+G 1 15376 9999          an ear spoon
 *M 0 15378 1 15378       Leif
 *M 0 15379 1 15379       a viking mage
 M 0 15380 1 15380       an intimidating viking drummer butler
