@@ -241,16 +241,15 @@ sstring garble_PG13filter(const TBeing *from, const TBeing *to, const sstring &a
       for(int k=0; k < (int)word.size(); k++)
       {
         const static char* redact[] = { "!", "@", "#", "$", "%", "^", "&", "*", "|", "?" };
-        unsigned int random = ::number(cElements(redact)-1, 0);
-        random %= cElements(redact); // not sure why this is needed?
+        unsigned int random = ::number(0, cElements(redact)-1);
         word.replace(k, 1, redact[random]);
       }
       break;
     }
+    if (!output.empty())
+      output += ' ';
     output += word;
-    output += ' ';
   }
-  output.erase((output.length()-1), 1);
   return (output);
 }
 
