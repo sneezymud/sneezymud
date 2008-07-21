@@ -77,7 +77,7 @@ int trolleyBoatCaptain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, T
 
     return TRUE;
   }
-  
+
   int j;
   for(j=0;trolley_path[j].cur_room!=trolley->in_room;++j){
     if(trolley_path[j].cur_room==-1){
@@ -111,7 +111,7 @@ int trolleyBoatCaptain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, T
       myself->doEmote("hums a sea shanty.");
       break;
   }
-	
+
 
   if(vehicle->getDir() != i)
     myself->doDrive(dirs[i]);
@@ -245,7 +245,7 @@ int fishingBoatCaptain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, T
       myself->doEmote("hums a sea shanty.");
       break;
   }
-	
+
 
   if(vehicle->getDir() != i)
     myself->doDrive(dirs[i]);
@@ -354,7 +354,7 @@ int casinoElevatorGuard(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself
 {
   if(cmd != CMD_ENTER && cmd != CMD_MOB_GIVEN_ITEM)
     return false;
-  
+
 
   if(cmd == CMD_ENTER){
     myself->doSay("Entering the elevator requires a 100 talen chip.");
@@ -387,9 +387,29 @@ int casinoElevatorGuard(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself
   return false;
 }
 
-// this function can be easily adapted for multiple use
-// you just need to add a mechanism to store mobvnum, boatnum and owners
-// for each use. database already stores by mobvnum.
+class ship_masters {
+	/* class to handle ship captains and methods to see who can control them */
+public:
+	map<int, int> captains;
+	ship_masters () {
+		// captain vnum, ship vnum
+	  captains.insert(make_pair(19000, 19077)); // captain matho & the tequila sunrise
+	  captains.insert(make_pair(15375, 15375)); // viking norseman & the viking ship of shopping
+	}
+	bool may_control (TMonster *captain, TBeing *ersatz_master) {
+		if (!ersatz_master)
+			return FALSE;
+		TDatabase db(DB_SNEEZY);
+		db.query("select captain_vnum from ship_master where captain_vnum = %i and (account_id = %i or player_id = %i)", captain->mobVnum(), ersatz_master->desc->account->account_id, ersatz_master->desc->playerID);
+		if(!db.fetchRow()){
+		  return FALSE;
+		}
+		return TRUE;
+	}
+};
+
+ship_masters captains_and_masters; // singleton instance
+
 int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
 {
   TObj *boat=NULL;
@@ -402,21 +422,25 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
   path.setShipOnly(true);
   sstring argument=arg;
   TDatabase db(DB_SNEEZY);
-  const int boatnum=19077;
-  
-  if(cmd != CMD_GENERIC_PULSE &&
-     !((cmd == CMD_SAY || cmd == CMD_SAY2) && 
-       (argument.word(0).lower()=="captain,") && ch &&
-       (ch->desc->account->name == "trav" ||
-	ch->desc->account->name == "scout" ||
-	ch->desc->account->name == "laren" ||
-	ch->desc->account->name == "ekeron")))
-    return FALSE;
 
+  map<int, int>::iterator ship;
+  ship = captains_and_masters.captains.find(myself->mobVnum());
+  if (ship == captains_and_masters.captains.end())
+  	return FALSE;
+
+  if (
+			  cmd != CMD_GENERIC_PULSE
+			  && !(
+			  		(cmd == CMD_SAY || cmd == CMD_SAY2)
+			  		&& (argument.word(0).lower()=="captain,")
+			  		&& captains_and_masters.may_control(myself, ch)
+			  )
+		)
+    return FALSE;
 
   // find the boat
   for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
-    if((*iter)->objVnum() == boatnum){
+    if((*iter)->objVnum() == ship->second){
       boat=(*iter);
       break;
     }
@@ -433,8 +457,8 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     int room[10];
     int cur;
     bool cruise;
+    sstring speed;
   } *job;
-
 
   // first, get our action pointer, which tells us which way to go
   if (!myself->act_ptr) {
@@ -447,84 +471,130 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       job->room[i]=0;
     job->cur=-1;
     job->cruise=false;
+    job->speed="medium";
   } else {
     job = static_cast<struct sail_data *>(myself->act_ptr);
   }
 
-
   //// commands
   if(cmd == CMD_SAY || cmd == CMD_SAY2){
-    if(argument.word(1) == "destination"){
-      myself->doSay(fmt("Aye aye, this 'ere be %s") % argument.word(2));
-      db.query("delete from ship_destinations where vnum=%i and name='%s'",
-	       myself->mobVnum(), argument.word(2).c_str());
-      db.query("insert into ship_destinations (vnum, name, room) values (%i, '%s', %i)", myself->mobVnum(), argument.word(2).c_str(), vehicle->in_room);
-    } else if(argument.word(1) == "forget"){
-      myself->doSay(fmt("Arr like I never even heard of it!"));
-      db.query("delete from ship_destinations where vnum=%i and name='%s'",
-	       myself->mobVnum(), argument.word(2).c_str());
-    } else if(argument.word(1) == "sail" ||
-	      argument.word(1) == "cruise"){
-      if(argument.word(2).empty()){
-	myself->doSay("Where ye be wantin' to sail?");
-	
-	db.query("select name from ship_destinations where vnum=%i", myself->mobVnum());
-
-	sstring buf;
-	while(db.fetchRow()){
-	  if(buf.empty())
-	    buf=db["name"];
-	  else
-	    buf=fmt("%s, %s") % buf % db["name"];
-	}
-
-	myself->doSay(fmt("I think I knows the way to %s") % buf);
-      } else {
-	myself->doSay(fmt("Aye aye, settin' sail for %s") % argument.word(2));
-
-	// parse list of destnations and add to buf in sql format
-	sstring buf;
-	for(int i=2;i<12;++i){
-	  if(!argument.word(i).empty() && argument.word(i).isWord()){
-	    if(buf.empty())
-	      buf=fmt("'%s'") % argument.word(i);
-	    else
-	      buf=fmt("%s, '%s'") % buf % argument.word(i);
-	  }
-	}
-
-	// %r should be save here because we used isWord() above
-	db.query("select room from ship_destinations where vnum=%i and name in (%r)", myself->mobVnum(), buf.c_str());
-	if(!db.fetchRow()){
-	  myself->doSay("What the..?!  I've never 'eard of that!");
-	  return TRUE;
-	}
-
-	int i=0;
-	do {
-	  job->room[i++] = convertTo<int>(db["room"]);
-	} while(db.fetchRow());
-	job->cur=0;
-	if(argument.word(1)=="cruise")
-	  job->cruise=true;
-	else
-	  job->cruise=false;
-      }
-    } else if(argument.word(1) == "stop"){
-      myself->doSay("Sail here, sail there, stop here, for the love o' me beard make up yer mind!");
-      myself->doDrive("stop");
-      for(int i=0;i<10;++i)
-	job->room[i]=0;
-      job->cur=0;
-    } else if(argument.word(1) == "take" &&
-	      argument.word(2) == "five"){
-      myself->doSay("Take care of 'er.");
-      myself->doGive(fmt("gilt %s") % ch->getName());
-      myself->doEmote("begins untangling his salt encrusted beard.");
-    } else {
-      myself->doSay("Arr what are ye talkin' about?");
+    if(!has_key(myself, vehicle->getPortalKey())){
+    	myself->doSay("If I were 'captain' I'd have command of the ship, wouldn't I?");
+      return TRUE;
     }
-    return TRUE;
+    if (argument.word(1) == "destination"){
+    	if (argument.word(2).empty()) {
+    		// what is our current destination?
+  			if (!job || job->cur == -1) {
+  				myself->doSay("A destination is a thing we don't 'ave!");
+  				return TRUE;
+  			}
+      	db.query("select d1.name, r1.name as aka from ship_destinations d1 left join room r1 on r1.vnum = d1.room where d1.vnum = %i and d1.room = %i", myself->mobVnum(), job->room[job->cur]);
+      	sstring buf = "a";
+      	if (job->speed == "fast" || job->speed == "slow") {
+      		buf = fmt("a %s") % job->speed;
+      	}
+  			while (db.fetchRow()){
+  				myself->doSay(fmt("We arr on %s course for <W>%s<1> - a/k/a %s.") %buf % db["name"] % db["aka"]);
+  				return TRUE;
+  			}
+    	} else {
+				// save a new destination
+				myself->doSay(fmt("Aye aye, this 'ere be <W>%s<1>.") % argument.word(2));
+				db.query("delete from ship_destinations where vnum=%i and name='%s'", myself->mobVnum(), argument.word(2).c_str());
+				db.query("insert into ship_destinations (vnum, name, room) values (%i, '%s', %i)", myself->mobVnum(), argument.word(2).c_str(), vehicle->in_room);
+    	}
+    } else if (argument.word(1) == "forget" && !argument.word(2).empty()){
+    	// forget a destination
+      myself->doSay(fmt("Arr like I never even heard of it!"));
+      db.query("delete from ship_destinations where vnum=%i and name='%s'", myself->mobVnum(), argument.word(2).c_str());
+    } else if (argument.word(1) == "sail" || argument.word(1) == "cruise"){
+    	// make for a destination
+      if(argument.word(2).empty()){
+      	// unless no destination supplied, then list out known destinations
+      	db.query("select d1.name, r1.name as aka from ship_destinations d1 left join room r1 on r1.vnum = d1.room where d1.vnum = %i", myself->mobVnum());
+				if(!db.fetchRow()){
+					myself->doSay("I ain't a mind reader today!");
+					return TRUE;
+				}
+				myself->doSay("Where ye be wantin' to sail?");
+				do {
+					myself->doSay(fmt("I knows the way to <W>%s<1> - a/k/a %s.") % db["name"] % db["aka"]);
+				} while(db.fetchRow());
+      } else {
+      	myself->doSay(fmt("Aye aye, settin' sail for <W>%s<1>.") % argument.word(2));
+      	// parse list of destnations and add to buf in sql format
+				sstring buf;
+				for(int i=2;i<12;++i){
+					if(!argument.word(i).empty() && argument.word(i).isWord()){
+						if(buf.empty())
+							buf=fmt("'%s'") % argument.word(i);
+						else
+							buf=fmt("%s, '%s'") % buf % argument.word(i);
+					}
+				}
+				// %r should be safe here because we used isWord() above
+				db.query("select room from ship_destinations where vnum=%i and name in (%r)", myself->mobVnum(), buf.c_str());
+				if(!db.fetchRow()){
+					myself->doSay("What the...?!  I've never 'eard of that!");
+					return TRUE;
+				}
+
+				int i=0;
+				do {
+					job->room[i++] = convertTo<int>(db["room"]);
+				} while(db.fetchRow());
+				job->cur=0;
+				if(argument.word(1)=="cruise" && db.rowCount() > 1)
+					job->cruise=true;
+				else
+					job->cruise=false;
+			}
+		} else if(argument.word(1) == "stop") {
+			myself->doSay("Sail here, sail there, stop here, for the love o' me beard make up yer mind!");
+			myself->doDrive("stop");
+			for(int i=0;i<10;++i)
+				job->room[i]=0;
+			job->cur=-1;
+		} else if (argument.word(1) == "take" && argument.word(2) == "five"){
+			myself->doSay("Enough of that, then.");
+			myself->doDrive("stop");
+			for(int i=0;i<10;++i)
+				job->room[i]=0;
+			job->cur=-1;
+			myself->doSay("Take care of 'er.");
+			myself->doGive(fmt("shipkey %s") % ch->getName());
+			myself->doEmote(fmt("begins untangling %s salt encrusted beard.") % myself->hshr()); // a female captain would, of course, untangle HER beard
+		} else if (argument.word(1) == "go"){
+			if (!job || job->cur == -1) {
+				myself->doSay("Where to?");
+				return TRUE;
+			}
+			if (argument.word(2) == "slow") {
+			  myself->doSay("If ye say slow...");
+			  job->speed = "slow";
+			} else if (argument.word(2) == "medium") {
+				 myself->doSay("We ain't chasin' anyone then?");
+				 job->speed = "medium";
+			} else if (argument.word(2) == "fast") {
+				 myself->doSay("Best to give these louts a thing to do!");
+				 job->speed = "fast";
+			} else {
+				 myself->doSay("Arr ye plannin' on finishin' that thought?");
+		  }
+		/*
+		} else if (argument.word(1) == "obey"){
+			// delegate command to specific player (limited command set?)
+			// use player_id column in ship_master
+			// if no second arg, show list of delegates
+		} else if (argument.word(1) == "ignore"){
+			// remove a player's command (given via "obey")
+			// use player_id column in ship_master
+		*/
+		} else {
+				myself->doSay("Arr what are ye talkin' about?");
+		}
+		return TRUE;
   }
 
   //// sailing
@@ -538,7 +608,6 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
   // ok, let's sail
 
-
   // no destination
   if(!job || job->cur==-1)
     return FALSE;
@@ -547,12 +616,11 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     myself->doDrive("stop");
     myself->doSay("Avast!  We have reached arrr destination.");
 
-
     if(job->cur==9 || !job->room[job->cur+1]){
       if(job->cruise)
-	job->cur=0;
+      	job->cur=0;
       else
-	job->cur=-1;
+      	job->cur=-1;
     } else {
       ++job->cur;
     }
@@ -567,7 +635,7 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     return FALSE;
   }
 
-  switch(::number(0,99)){
+  switch(::number(0, 200)){
     case 0:
       myself->doSay("Bother someone else, ye drivelswigger!");
       break;
@@ -596,12 +664,11 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       myself->doEmote("hums a sea shanty.");
       break;
   }
-	
 
   if(vehicle->getDir() != i)
     myself->doDrive(dirs[i]);
 
-  myself->doDrive("50");
+  myself->doDrive(job->speed);
 
   return TRUE;
 }
