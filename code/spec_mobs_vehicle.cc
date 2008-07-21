@@ -485,20 +485,15 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     }
     if (argument.word(1) == "destination"){
     	if (argument.word(2).empty()) {
-    		// what is our current destination?
-  			if (!job || job->cur == -1) {
-  				myself->doSay("A destination is a thing we don't 'ave!");
-  				return TRUE;
-  			}
-      	db.query("select d1.name, r1.name as aka from ship_destinations d1 left join room r1 on r1.vnum = d1.room where d1.vnum = %i and d1.room = %i", myself->mobVnum(), job->room[job->cur]);
-      	sstring buf = "a";
-      	if (job->speed == "fast" || job->speed == "slow") {
-      		buf = fmt("a %s") % job->speed;
-      	}
-  			while (db.fetchRow()){
-  				myself->doSay(fmt("We arr on %s course for <W>%s<1> - a/k/a %s.") %buf % db["name"] % db["aka"]);
-  				return TRUE;
-  			}
+      	// if no destination supplied, list out known destinations
+      	db.query("select d1.name, r1.name as aka from ship_destinations d1 left join room r1 on r1.vnum = d1.room where d1.vnum = %i", myself->mobVnum());
+				if(!db.fetchRow()){
+					myself->doSay("We've no known destinations!");
+					return TRUE;
+				}
+				do {
+					myself->doSay(fmt("I know the way to <W>%s<1> - a/k/a %s.") % db["name"] % db["aka"]);
+				} while(db.fetchRow());
     	} else if (privileges == 2) {
 				// save a new destination
 				myself->doSay(fmt("Aye aye, this 'ere be <W>%s<1>.") % argument.word(2));
@@ -518,16 +513,20 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     } else if (argument.word(1) == "sail" || argument.word(1) == "cruise"){
     	// make for a destination
       if(argument.word(2).empty()){
-      	// unless no destination supplied, then list out known destinations
-      	db.query("select d1.name, r1.name as aka from ship_destinations d1 left join room r1 on r1.vnum = d1.room where d1.vnum = %i", myself->mobVnum());
-				if(!db.fetchRow()){
-					myself->doSay("I ain't a mind reader today!");
-					return TRUE;
-				}
-				myself->doSay("Where ye be wantin' to sail?");
-				do {
-					myself->doSay(fmt("I know the way to <W>%s<1> - a/k/a %s.") % db["name"] % db["aka"]);
-				} while(db.fetchRow());
+    		// what is our current destination?
+  			if (!job || job->cur == -1) {
+  				myself->doSay("We 'ave no destination!");
+  				return TRUE;
+  			}
+      	db.query("select d1.name, r1.name as aka from ship_destinations d1 left join room r1 on r1.vnum = d1.room where d1.vnum = %i and d1.room = %i", myself->mobVnum(), job->room[job->cur]);
+      	sstring buf = "a";
+      	if (job->speed == "fast" || job->speed == "slow") {
+      		buf = fmt("a %s") % job->speed;
+      	}
+  			while (db.fetchRow()){
+  				myself->doSay(fmt("We arr on %s course for <W>%s<1> - a/k/a %s.") %buf % db["name"] % db["aka"]);
+  				return TRUE;
+  			}
       } else {
       	myself->doSay(fmt("Aye aye, settin' sail for <W>%s<1>.") % argument.word(2));
       	// parse list of destnations and add to buf in sql format
@@ -636,11 +635,13 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 						return TRUE;
 					}
 				}
-				db.query("delete from ship_master where captain_vnum = %i and player_id = %i and account_id is null", myself->mobVnum(), delegate->desc->playerID);
-				if (db.rowCount() == 0)
-					myself->doSay("I am already ignorin' that shrunken weevil!");
-				else
-					myself->doSay("'Twas a mistake ever allowin' them aboard!");
+				if (delegate->desc) {
+					db.query("delete from ship_master where captain_vnum = %i and player_id = %i and account_id is null", myself->mobVnum(), delegate->desc->playerID);
+					if (db.rowCount() == 0)
+						myself->doSay("I am already ignorin' that shrunken weevil!");
+					else
+						myself->doSay("'Twas a mistake ever allowin' them aboard!");
+				}
 			}
 		} else {
 				myself->doSay("Arr what are ye talkin' about?");
