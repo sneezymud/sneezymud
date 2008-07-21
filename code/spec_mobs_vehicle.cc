@@ -480,7 +480,7 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
   //// commands
   if(cmd == CMD_SAY || cmd == CMD_SAY2){
     if(!has_key(myself, vehicle->getPortalKey())){
-    	myself->doSay("If I were 'captain' I'd have command of the ship, wouldn't I?");
+    	myself->doSay("If I were 'captain' I'd have control of the ship, wouldn't I?");
       return TRUE;
     }
     if (argument.word(1) == "destination"){
