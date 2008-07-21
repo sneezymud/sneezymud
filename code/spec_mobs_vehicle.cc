@@ -396,15 +396,16 @@ public:
 	  captains.insert(make_pair(19000, 19077)); // captain matho & the tequila sunrise
 	  captains.insert(make_pair(15375, 15375)); // viking norseman & the viking ship of shopping
 	}
-	bool may_control (TMonster *captain, TBeing *ersatz_master) {
+	int may_control (TMonster *captain, TBeing *ersatz_master) {
 		if (!ersatz_master)
 			return FALSE;
 		TDatabase db(DB_SNEEZY);
-		db.query("select captain_vnum from ship_master where captain_vnum = %i and (account_id = %i or player_id = %i)", captain->mobVnum(), ersatz_master->desc->account->account_id, ersatz_master->desc->playerID);
+		db.query("select case when account_id = %i then 2 when player_id = %i then 1 else 0 end as privileges from ship_master where captain_vnum =  %i and (account_id = %i or player_id = %i)", ersatz_master->desc->account->account_id, ersatz_master->desc->playerID, captain->mobVnum(), ersatz_master->desc->account->account_id, ersatz_master->desc->playerID);
 		if(!db.fetchRow()){
-		  return FALSE;
+		  return 0;
+		} else {
+			return convertTo<int>(db["privileges"]);
 		}
-		return TRUE;
 	}
 };
 
@@ -422,21 +423,21 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
   path.setShipOnly(true);
   sstring argument=arg;
   TDatabase db(DB_SNEEZY);
-
+  int privileges = 0; // 0 = none, 1 = delegated (minimal control), 2 = full control of captain
   map<int, int>::iterator ship;
   ship = captains_and_masters.captains.find(myself->mobVnum());
   if (ship == captains_and_masters.captains.end())
   	return FALSE;
 
-  if (
-			  cmd != CMD_GENERIC_PULSE
-			  && !(
-			  		(cmd == CMD_SAY || cmd == CMD_SAY2)
-			  		&& (argument.word(0).lower()=="captain,")
-			  		&& captains_and_masters.may_control(myself, ch)
-			  )
-		)
-    return FALSE;
+  if (cmd != CMD_GENERIC_PULSE) {
+  	if ((cmd == CMD_SAY || cmd == CMD_SAY2) && argument.word(0).lower() == "captain,") {
+  		privileges = captains_and_masters.may_control(myself, ch);
+  		if (privileges == 0)
+  			return FALSE;
+  	} else {
+  		return FALSE;
+  	}
+  }
 
   // find the boat
   for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
@@ -498,16 +499,22 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
   				myself->doSay(fmt("We arr on %s course for <W>%s<1> - a/k/a %s.") %buf % db["name"] % db["aka"]);
   				return TRUE;
   			}
-    	} else {
+    	} else if (privileges == 2) {
 				// save a new destination
 				myself->doSay(fmt("Aye aye, this 'ere be <W>%s<1>.") % argument.word(2));
 				db.query("delete from ship_destinations where vnum=%i and name='%s'", myself->mobVnum(), argument.word(2).c_str());
 				db.query("insert into ship_destinations (vnum, name, room) values (%i, '%s', %i)", myself->mobVnum(), argument.word(2).c_str(), vehicle->in_room);
+    	} else {
+    		myself->doSay("I shall not alter the charts for the likes of ye, missy.");
     	}
     } else if (argument.word(1) == "forget" && !argument.word(2).empty()){
     	// forget a destination
-      myself->doSay(fmt("Arr like I never even heard of it!"));
-      db.query("delete from ship_destinations where vnum=%i and name='%s'", myself->mobVnum(), argument.word(2).c_str());
+    	if (privileges == 2) {
+    		myself->doSay(fmt("Arr like I never even heard of it!"));
+    		db.query("delete from ship_destinations where vnum=%i and name='%s'", myself->mobVnum(), argument.word(2).c_str());
+    	} else {
+    		myself->doSay("I shall not alter the charts for the likes of ye, missy.");
+    	}
     } else if (argument.word(1) == "sail" || argument.word(1) == "cruise"){
     	// make for a destination
       if(argument.word(2).empty()){
@@ -519,7 +526,7 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 				}
 				myself->doSay("Where ye be wantin' to sail?");
 				do {
-					myself->doSay(fmt("I knows the way to <W>%s<1> - a/k/a %s.") % db["name"] % db["aka"]);
+					myself->doSay(fmt("I know the way to <W>%s<1> - a/k/a %s.") % db["name"] % db["aka"]);
 				} while(db.fetchRow());
       } else {
       	myself->doSay(fmt("Aye aye, settin' sail for <W>%s<1>.") % argument.word(2));
@@ -534,7 +541,7 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 					}
 				}
 				// %r should be safe here because we used isWord() above
-				db.query("select room from ship_destinations where vnum=%i and name in (%r)", myself->mobVnum(), buf.c_str());
+				db.query("select room from ship_destinations where vnum = %i and name in (%r)", myself->mobVnum(), buf.c_str());
 				if(!db.fetchRow()){
 					myself->doSay("What the...?!  I've never 'eard of that!");
 					return TRUE;
@@ -557,14 +564,18 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 				job->room[i]=0;
 			job->cur=-1;
 		} else if (argument.word(1) == "take" && argument.word(2) == "five"){
-			myself->doSay("Enough of that, then.");
-			myself->doDrive("stop");
-			for(int i=0;i<10;++i)
-				job->room[i]=0;
-			job->cur=-1;
-			myself->doSay("Take care of 'er.");
-			myself->doGive(fmt("shipkey %s") % ch->getName());
-			myself->doEmote(fmt("begins untangling %s salt encrusted beard.") % myself->hshr()); // a female captain would, of course, untangle HER beard
+			if (privileges == 2) {
+				myself->doSay("Enough of that, then.");
+				myself->doDrive("stop");
+				for(int i=0;i<10;++i)
+					job->room[i]=0;
+				job->cur=-1;
+				myself->doSay("Take care of 'er.");
+				myself->doGive(fmt("shipkey %s") % ch->getName());
+				myself->doEmote(fmt("begins untangling %s salt encrusted beard.") % myself->hshr()); // a female captain would, of course, untangle HER beard
+			} else {
+				myself->doSay("Arr de arr arr!");
+			}
 		} else if (argument.word(1) == "go"){
 			if (!job || job->cur == -1) {
 				myself->doSay("Where to?");
@@ -582,15 +593,55 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 			} else {
 				 myself->doSay("Arr ye plannin' on finishin' that thought?");
 		  }
-		/*
-		} else if (argument.word(1) == "obey"){
-			// delegate command to specific player (limited command set?)
+		} else if (argument.word(1) == "obey" && privileges == 2) {
+			// delegate command to specific player (limited command set)
 			// use player_id column in ship_master
 			// if no second arg, show list of delegates
-		} else if (argument.word(1) == "ignore"){
-			// remove a player's command (given via "obey")
+			TBeing *delegate = NULL;
+			if (!argument.word(2).empty()) {
+				if (!(delegate = get_pc_world(myself, argument.word(2), EXACT_YES))) {
+					if (!(delegate = get_pc_world(myself, argument.word(2), EXACT_NO))) {
+						myself->doSay("I 'aven't the foggiest as to who that be.");
+						myself->doSay("Per'aps ye can point 'em out to me some time...");
+						return TRUE;
+					}
+				}
+				if (delegate->desc) {
+					db.query("delete from ship_master where captain_vnum = %i and player_id = %i and account_id is null", myself->mobVnum(), delegate->desc->playerID);
+					db.query("insert into ship_master (captain_vnum, player_id) select %i, %i", myself->mobVnum(), delegate->desc->playerID);
+					myself->doSay(fmt("Aye, <W>%s<1> may set us upon any known course.") % delegate->name);
+				} else {
+					myself->doSay("That layabout?!");
+				}
+
+			} else {
+				// list delegates
+				db.query("select p1.name from ship_master s1 join player p1 on s1.player_id = p1.id and captain_vnum = %i and s1.player_id is not null", myself->mobVnum());
+				if(!db.fetchRow()){
+					myself->doSay("Ye've wisely shown me no pretenders to your authority!");
+					return TRUE;
+				}
+				do {
+					myself->doSay(fmt("<W>%s<1> may bid for passage to any of our fine destinations.") % db["name"].cap());
+				} while(db.fetchRow());
+			}
+		} else if (argument.word(1) == "ignore" && privileges == 2) {
+			// remove a player's command (added via "obey")
 			// use player_id column in ship_master
-		*/
+			TBeing *delegate = NULL;
+			if (!argument.word(2).empty()) {
+				if (!(delegate = get_pc_world(myself, argument.word(2), EXACT_YES))) {
+					if (!(delegate = get_pc_world(myself, argument.word(2), EXACT_NO))) {
+						myself->doSay("Never 'eard of 'em!");
+						return TRUE;
+					}
+				}
+				db.query("delete from ship_master where captain_vnum = %i and player_id = %i and account_id is null", myself->mobVnum(), delegate->desc->playerID);
+				if (db.rowCount() == 0)
+					myself->doSay("I am already ignorin' that shrunken weevil!");
+				else
+					myself->doSay("'Twas a mistake ever allowin' them aboard!");
+			}
 		} else {
 				myself->doSay("Arr what are ye talkin' about?");
 		}
