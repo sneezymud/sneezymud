@@ -3138,7 +3138,7 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
   if (!tValue)
     return -1;
 
-  ch->doSave(SILENT_YES);
+  ch->doQueueSave();
 
   if (deleteThis) {
     tKeeper->saveItem(tShop, this);
@@ -3251,8 +3251,7 @@ int TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num)
   if(getComponentCharges()==0)
     delete this;
 
-  if (!ch->delaySave)
-    ch->doSave(SILENT_YES);
+  ch->doQueueSave();
 
   return true;
 }

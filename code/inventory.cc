@@ -323,7 +323,7 @@ int TBeing::doDrop(const sstring &argument, TThing *tng, bool forcedDrop)
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       return DELETE_THIS;
     }
-    doSave(SILENT_YES);
+    doQueueSave();
 
     return FALSE;
   }
@@ -356,7 +356,7 @@ int TBeing::doDrop(const sstring &argument, TThing *tng, bool forcedDrop)
     if (!test) {
       sendTo("You do not seem to have anything.\n\r");
     }
-    doSave(SILENT_YES);
+    doQueueSave();
     return FALSE;
   } else {
     if (getall(arg.c_str(), newarg)) {
@@ -490,7 +490,7 @@ int TBeing::doDrop(const sstring &argument, TThing *tng, bool forcedDrop)
         num--;
     }
     if (test)
-      doSave(SILENT_YES);
+      doQueueSave();
     return FALSE;
   }
 }
@@ -761,7 +761,7 @@ int TBeing::doPut(const char *argument)
   } else
     sendTo("Put what in what?\n\r");
 
-  doSave(SILENT_YES);
+  doQueueSave();
   if (horse && horse != this)
     horse->doSave(SILENT_YES);
 
@@ -959,10 +959,10 @@ int TBeing::doGive(const sstring &oarg, giveTypeT flags)
         // item was something i wanted, default is to get rid of the item
         delete obj;
         obj = NULL;
-        doSave(SILENT_YES);
+	doQueueSave();
 
         if (vict)
-          vict->doSave(SILENT_YES);
+	  vict->doQueueSave();
 
         REM_DELETE(rc, DELETE_ITEM);
         return rc;
@@ -1145,9 +1145,9 @@ int TBeing::doGive(const sstring &oarg, giveTypeT flags)
         } else 
           vlogf(LOG_BUG, fmt("Bad flags in doGive (%s)") %  getName());
         
-        doSave(SILENT_YES);
+	doQueueSave();
         if (vict)
-          vict->doSave(SILENT_YES);
+          vict->doQueueSave();
       }
       if (!isImmortal() && isPc() && 
           !vict->isImmortal() && vict->isPc()) {
@@ -1180,9 +1180,9 @@ int TBeing::doGive(const sstring &oarg, giveTypeT flags)
           // item was something i wanted, default is to get rid of the item
           delete obj;
           obj = NULL;
-          doSave(SILENT_YES);
+          doQueueSave();
           if (vict)
-            vict->doSave(SILENT_YES);
+            vict->doQueueSave();
           REM_DELETE(rc, DELETE_ITEM);
           return rc;
         }
@@ -1226,8 +1226,8 @@ int TBeing::doGive(const sstring &oarg, giveTypeT flags)
         }
       }
     }
-    doSave(SILENT_YES);
-    vict->doSave(SILENT_YES);
+    doQueueSave();
+    vict->doQueueSave();
   }
   return TRUE;
 }

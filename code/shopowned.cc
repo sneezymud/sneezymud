@@ -112,8 +112,7 @@ void TShopOwned::doSellTransaction(int cashCost, const sstring &name,
 
   // save
   keeper->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
-  if (!ch->delaySave)
-    ch->doSave(SILENT_YES);
+  ch->doQueueSave();
 }
 
 // player buying from shop (giving money to shop)
@@ -150,7 +149,7 @@ void TShopOwned::doBuyTransaction(int cashCost, const sstring &name,
   
   // save
   keeper->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
-  ch->doSave(SILENT_YES);
+  ch->doQueueSave();
 }
 
 // returns amount of expenses, or -1 if shopkeeper can't afford it
