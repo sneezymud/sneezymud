@@ -1521,7 +1521,6 @@ int TMainSocket::gameLoop()
   scheduler.add(new procSetZoneEmpty(PULSE_EVERY));
   scheduler.add(new procCallRoomSpec(PULSE_EVERY));
   scheduler.add(new procDoRoomSaves(PULSE_EVERY));
-  scheduler.add(new procDoPlayerSaves(PULSE_EVERY));
 
   // pulse combat  (1.2 seconds)
   scheduler.add(new procPerformViolence(PULSE_COMBAT));

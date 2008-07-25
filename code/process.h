@@ -72,12 +72,6 @@ class procGlobalRoomStuff : public TProcess {
   procGlobalRoomStuff(const int &);
 };
 
-class procDoPlayerSaves : public TProcess {
- public:
-  void run(int) const;
-  procDoPlayerSaves(const int &);
-};
-
 class procDoRoomSaves : public TProcess {
  public:
   void run(int) const;

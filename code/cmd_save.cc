@@ -90,11 +90,6 @@ void doSaveMOEdit(TBeing *ch, const char *tArg)
   }
 }
 
-void TBeing::doQueueSave()
-{
-  addPlayerAction(PLR_SAVE_QUEUED);
-}
-
 void TBeing::doSave(silentTypeT silent, const char *tArg)
 {
   objCost  tCost;
