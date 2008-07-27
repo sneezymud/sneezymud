@@ -148,11 +148,11 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
             rc = ch->checkForAnyTrap(o);
             if (IS_SET_ONLY(rc, DELETE_THIS)) {
               ch->stopTask();
-              ch->doSave(SILENT_YES);
+              ch->doQueueSave();
               return DELETE_THIS;
             } else if (rc) {
               ch->stopTask();
-              ch->doSave(SILENT_YES);
+              ch->doQueueSave();
               return FALSE;
             }
             if (!ch->canGet(o, SILENT_NO))
@@ -166,13 +166,13 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
               }
               if (IS_SET_DELETE(rc, DELETE_THIS)) {
                 ch->stopTask();
-                ch->doSave(SILENT_YES);
+                ch->doQueueSave();
                 return DELETE_THIS;
               }
               if (IS_SET_DELETE(rc, DELETE_ITEM) ||
                   !rc) {
                 ch->stopTask();
-                ch->doSave(SILENT_YES);
+                ch->doQueueSave();
                 return FALSE;  // stop further checks
               }
             }
@@ -187,18 +187,18 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
 	    }
 	    if (IS_SET_DELETE(rc, DELETE_THIS)) {
                 ch->stopTask();
-                ch->doSave(SILENT_YES);
+                ch->doQueueSave();
                 return DELETE_THIS;
 	    }
               if (IS_SET_DELETE(rc, DELETE_ITEM) ||
                   !rc) {
                 ch->stopTask();
-                ch->doSave(SILENT_YES);
+                ch->doQueueSave();
                 return FALSE;  // stop further checks
               }
           }
           ch->stopTask();
-          ch->doSave(SILENT_YES);
+          ch->doQueueSave();
           return FALSE;
         } else {
           // get 6*item   ?
@@ -211,31 +211,31 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
               }
               if (IS_SET_DELETE(rc, DELETE_THIS)) {
                 ch->stopTask();
-                ch->doSave(SILENT_YES);
+                ch->doQueueSave();
                 return DELETE_THIS;
               }
               if (IS_SET_DELETE(rc, DELETE_ITEM) ||
                   !rc) {
                 ch->stopTask();
-                ch->doSave(SILENT_YES);
+                ch->doQueueSave();
                 return FALSE;  // stop further checks
               }
             } else {
               ch->sendTo("You've picked up the specified number of items.\n\r");
               ch->stopTask();
-              ch->doSave(SILENT_YES);
+              ch->doQueueSave();
               return FALSE;
             }
           }
           ch->stopTask();
-          ch->doSave(SILENT_YES);
+          ch->doQueueSave();
           return FALSE;
         }
         // If we got here we couldn't pick anything up.
         // Or either there was nothing left to get
         ch->sendTo("There is nothing more to get here!\n\r");
         ch->stopTask();
-        ch->doSave(SILENT_YES);
+        ch->doQueueSave();
         return TRUE;
       } else {
         // get all bag
@@ -254,7 +254,7 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
 	if (!sub) {
 	  ch->sendTo(fmt("The %s is no longer accessible.\n\r") % buf2);
 	  ch->stopTask();
-	  ch->doSave(SILENT_YES);
+	  ch->doQueueSave();
 	  return FALSE;
 	}
         
@@ -263,7 +263,7 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
             act("You can get no more from $p", TRUE, ch, sub, NULL, TO_CHAR);
             ch->stopTask();
             getTaskStop(sub);
-            ch->doSave(SILENT_YES);
+            ch->doQueueSave();
             return FALSE;
           }
           while ((t = get_thing_in_list_getable(ch, buf1.c_str(), sub->getStuff()))) {
@@ -280,7 +280,7 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
               if (IS_SET_DELETE(rc, DELETE_THIS)) {
                 ch->stopTask();
                 getTaskStop(sub);
-                ch->doSave(SILENT_YES);
+                ch->doQueueSave();
                 return DELETE_THIS;
               }
               if (IS_SET_DELETE(rc, DELETE_ITEM) ||
@@ -288,14 +288,14 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
                   !rc) {
                 ch->stopTask();
                 getTaskStop(sub);
-                ch->doSave(SILENT_YES);
+                ch->doQueueSave();
                 return FALSE;  // stop further checks
               }
             } else {
               ch->sendTo("You've gotten the specified number of items.\n\r");
               ch->stopTask();
               getTaskStop(sub);
-              ch->doSave(SILENT_YES);
+              ch->doQueueSave();
               return FALSE;
             }
           }
@@ -312,20 +312,20 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
               }
               if (IS_SET_DELETE(rc, DELETE_THIS)) {
                 ch->stopTask();
-                ch->doSave(SILENT_YES);
+                ch->doQueueSave();
                 return DELETE_THIS;
               }
               if (IS_SET_DELETE(rc, DELETE_ITEM) ||
                   IS_SET_DELETE(rc, DELETE_VICT) ||
                   !rc) {
                 ch->stopTask();
-                ch->doSave(SILENT_YES);
+                ch->doQueueSave();
                 return FALSE;  // stop further checks
               }
             } else {
               ch->sendTo("You've gotten the specified number of items.\n\r");
               ch->stopTask();
-              ch->doSave(SILENT_YES);
+              ch->doQueueSave();
               return FALSE;
             }
           }
@@ -334,7 +334,7 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
             act("You can get no more from $p", TRUE, ch, sub, NULL, TO_CHAR);
             ch->stopTask();
             getTaskStop(sub);
-            ch->doSave(SILENT_YES);
+            ch->doQueueSave();
             return FALSE;
           }
         } else {
@@ -352,7 +352,7 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
               if (IS_SET_DELETE(rc, DELETE_THIS)) {
                 ch->stopTask();
                 getTaskStop(sub);
-                ch->doSave(SILENT_YES);
+                ch->doQueueSave();
                 return DELETE_THIS;
               }
               if (IS_SET_DELETE(rc, DELETE_ITEM) ||
@@ -360,7 +360,7 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
                   !rc) {
                 ch->stopTask();
                 getTaskStop(sub);
-                ch->doSave(SILENT_YES);
+                ch->doQueueSave();
                 return FALSE;  // stop further checks
               }
             }
@@ -377,27 +377,27 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
               }
               if (IS_SET_DELETE(rc, DELETE_THIS)) {
                 ch->stopTask();
-                ch->doSave(SILENT_YES);
+                ch->doQueueSave();
                 return DELETE_THIS;
               }
               if (IS_SET_DELETE(rc, DELETE_ITEM) ||
                   IS_SET_DELETE(rc, DELETE_VICT) ||
                   !rc) {
                 ch->stopTask();
-                ch->doSave(SILENT_YES);
+                ch->doQueueSave();
                 return FALSE;  // stop further checks
               }
             }
             ch->stopTask();
             getTaskStop(sub);
-            ch->doSave(SILENT_YES);
+            ch->doQueueSave();
             return FALSE;
           } else {
             if (!ch->anythingGetable(sub, "")) {
               act("You can get nothing more from $p!", TRUE, ch, sub, NULL, TO_CHAR);
               ch->stopTask();
               getTaskStop(sub);
-              ch->doSave(SILENT_YES);
+              ch->doQueueSave();
               return FALSE;
             }
             for (t = sub->getStuff(); t; t = t2) {
@@ -406,12 +406,12 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
               if (IS_SET_ONLY(rc, DELETE_THIS)) {
                 ch->stopTask();
                 getTaskStop(sub);
-                ch->doSave(SILENT_YES);
+                ch->doQueueSave();
                 return DELETE_THIS;
               } else if (rc) {
                 ch->stopTask();
                 getTaskStop(sub);
-                ch->doSave(SILENT_YES);
+                ch->doQueueSave();
                 return FALSE;
               }
               if (!ch->canGet(t, SILENT_NO))
@@ -432,7 +432,7 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
                 if (IS_SET_DELETE(rc, DELETE_THIS)) {
                   ch->stopTask();
                   getTaskStop(sub);
-                  ch->doSave(SILENT_YES);
+                  ch->doQueueSave();
                   return DELETE_THIS;
                 }
                 if (IS_SET_DELETE(rc, DELETE_ITEM) ||
@@ -440,7 +440,7 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
                     !rc) {
                   ch->stopTask();
                   getTaskStop(sub);
-                  ch->doSave(SILENT_YES);
+                  ch->doQueueSave();
                   return FALSE;  // stop further checks
                 }
               }
@@ -450,11 +450,11 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
               rc = ch->checkForInsideTrap(sub);
               if (IS_SET_ONLY(rc, DELETE_THIS)) {
                 ch->stopTask();
-                ch->doSave(SILENT_YES);
+                ch->doQueueSave();
                 return DELETE_THIS;
               } else if (rc) {
                 ch->stopTask();
-                ch->doSave(SILENT_YES);
+                ch->doQueueSave();
                 return FALSE;
               }
               if (!ch->canGet(t, SILENT_NO))
@@ -472,14 +472,14 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
                 }
                 if (IS_SET_DELETE(rc, DELETE_THIS)) {
                   ch->stopTask();
-                  ch->doSave(SILENT_YES);
+                  ch->doQueueSave();
                   return DELETE_THIS;
                 }
                 if (IS_SET_DELETE(rc, DELETE_ITEM) ||
                     IS_SET_DELETE(rc, DELETE_VICT) ||
                     !rc) {
                   ch->stopTask();
-                  ch->doSave(SILENT_YES);
+                  ch->doQueueSave();
                   return FALSE;  // stop further checks
                 }
               }
@@ -488,7 +488,7 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
               act("You can get nothing more from $p!", TRUE, ch, sub, NULL, TO_CHAR);
               ch->stopTask();
               getTaskStop(sub);
-              ch->doSave(SILENT_YES);
+              ch->doQueueSave();
               return FALSE;
             }
           }
@@ -511,6 +511,6 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
       break;
   }
   getTaskStop(sub);
-  ch->doSave(SILENT_YES);
+  ch->doQueueSave();
   return TRUE;
 }

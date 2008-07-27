@@ -181,7 +181,7 @@ const unsigned long PLR_NOSNOOP    = (1<<23);     // no way to toggle
 const unsigned long PLR_PING       = (1<<24);
 const unsigned long PLR_GODNOSHOUT = (1<<25);
 const unsigned long PLR_NODIMD     = (1<<26);
-const unsigned long PLR_UNUSED5    = (1<<27);
+const unsigned long PLR_SAVE_QUEUED= (1<<27);
 const unsigned long PLR_KILLABLE   = (1<<28);   // switch off newbie pro
 const unsigned long PLR_ANONYMOUS  = (1<<29);
 const unsigned long PLR_SHOW_SAVES = (1<<30);
@@ -2026,6 +2026,7 @@ class TBeing : public TThing {
     int doAction(const sstring &, cmdTypeT);
     void doCls(bool);
     int doRemove(const sstring &, TThing *);
+    void doQueueSave();
     void doSave(silentTypeT, const char * = NULL);
     void doZonefile(const sstring &);
     void doLoot(const sstring &);

@@ -90,6 +90,15 @@ void doSaveMOEdit(TBeing *ch, const char *tArg)
   }
 }
 
+void TBeing::doQueueSave()
+{  
+  if(toggleInfo[TOG_TESTCODE1]->toggle){
+    addPlayerAction(PLR_SAVE_QUEUED);
+  } else {
+    doSave(SILENT_YES);
+  }
+}
+
 void TBeing::doSave(silentTypeT silent, const char *tArg)
 {
   objCost  tCost;

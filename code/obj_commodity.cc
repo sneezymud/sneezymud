@@ -344,7 +344,7 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
 
   sprintf(buf, "%s/%d", SHOPFILE_PATH, shop_nr);
   keeper->saveItems(buf);
-  ch->doSave(SILENT_YES);
+  ch->doQueueSave();
   keeper->saveItem(shop_nr, this);
   delete this;
   return price;
@@ -474,8 +474,7 @@ int TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
     delete obj2;
     return DELETE_THIS;
   }
-  if (!ch->delaySave)
-    ch->doSave(SILENT_YES);
+  ch->doQueueSave();
   sprintf(buf, "%s/%d", SHOPFILE_PATH, shop_nr);
   keeper->saveItems(buf);
   keeper->saveItem(shop_nr, rent_id, obj2);

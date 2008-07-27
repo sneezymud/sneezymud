@@ -1073,6 +1073,15 @@ void TBeing::doToggle(const char *arg2)
     for (zone = 1; zone < zone_table.size(); zone++) {
       zone_table[zone].zone_value = (nuke_inactive_mobs ? 1 : -1);
     }
+  } else if(is_abbrev(arg, "list") && hasWizPower(POWER_TOGGLE)){
+    for(togTypeT t=TOG_NONE;t<MAX_TOG_TYPES;t++){
+     if(t==TOG_NONE)
+	continue;
+      
+      sendTo(COLOR_BASIC, fmt("%-17s : %s\n\r") %
+	     toggleInfo[t]->name %
+	     toggleInfo[t]->descr);
+    }
   } else if(hasWizPower(POWER_TOGGLE)){  // check global toggles
     for(togTypeT t=TOG_NONE;t<MAX_TOG_TYPES;t++){
       unsigned int len=toggleInfo[t]->name.length();

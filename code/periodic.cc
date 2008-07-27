@@ -290,6 +290,31 @@ void procCallRoomSpec::run(int pulse) const
   }
 }
 
+// procDoPlayerSaves
+procDoPlayerSaves::procDoPlayerSaves(const int &p)
+{
+  trigger_pulse=p;
+  name="procDoPlayerSaves";
+}
+
+void procDoPlayerSaves::run(int pulse) const
+{
+  Descriptor *d;
+
+  if(!toggleInfo[TOG_TESTCODE1]->toggle)
+    return;
+
+  for (d = descriptor_list; d ; d = d->next){
+    if(d->connected==CON_PLYNG &&
+       d->character && d->character->isPlayerAction(PLR_SAVE_QUEUED)){
+      d->character->doSave(SILENT_YES);
+      d->character->remPlayerAction(PLR_SAVE_QUEUED);
+    }
+  }
+}
+
+
+
 // procDoRoomSaves
 procDoRoomSaves::procDoRoomSaves(const int &p)
 {
