@@ -2428,7 +2428,7 @@ void shoplog(int shop_nr, TBeing *ch, TMonster *keeper, const sstring &name, int
 
   //  db.query("insert into shoplog values (%i, '%s', '%s', '%s', %i, %i, %i, now(), %i)", shop_nr, ch?ch->getName():"unknown", action.c_str(), name.c_str(), cost, keeper->getMoney(), value, count);
 
-  queryqueue.push(fmt("insert into shoplog values (%i, '%s', '%s', '%s', %i, %i, %i, now(), %i)") % shop_nr % (ch?ch->getName():"unknown") % action % name % cost % keeper->getMoney() % value % count);
+  queryqueue.push(fmt("insert into shoplog values (%i, '%q', '%q', '%q', %i, %i, %i, now(), %i)") % shop_nr % (ch?ch->getName():"unknown") % action % name % cost % keeper->getMoney() % value % count);
 
 
 }

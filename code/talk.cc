@@ -787,7 +787,7 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
 
   TDatabase db(DB_SNEEZY);
   //  db.query("insert into tellhistory (tellfrom, tellto, tell, telltime) values ('%s', '%s', '%s', now())", capbuf.cap().c_str(), vict->getName(), garbed.c_str());
-  queryqueue.push(fmt("insert into tellhistory (tellfrom, tellto, tell, telltime) values ('%s', '%s', '%s', now())") % capbuf.cap() % vict->getName() % garbed);
+  queryqueue.push(fmt("insert into tellhistory (tellfrom, tellto, tell, telltime) values ('%q', '%q', '%q', now())") % capbuf.cap() % vict->getName() % garbed);
 
   // this is probably too slow, cron job or something would be better
   //  db.query("delete from tellhistory where tellto='%s' and telltime not in (select telltime from tellhistory where tellto='%s' order by telltime desc limit 25)", vict->getName(), vict->getName());

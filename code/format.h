@@ -12,6 +12,7 @@ class fmt : public sstring {
   template <class T> sstring doFormat(const sstring &, const T &);
   sstring doFormat(const sstring &, const sstring &);
   sstring doFormat(const sstring &, const string &);
+  sstring doFormat(const sstring &, const char *);
 
   template <class T> fmt & operator%(const T &s);
 };
