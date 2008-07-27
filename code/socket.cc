@@ -1526,6 +1526,7 @@ int TMainSocket::gameLoop()
   // pulse combat  (1.2 seconds)
   scheduler.add(new procPerformViolence(PULSE_COMBAT));
   scheduler.add(new procWeightVolumeFumble(PULSE_COMBAT));
+  scheduler.add(new procQueryQueue(PULSE_COMBAT));
 
   // pulse update  (36 seconds)
   scheduler.add(new procGlobalRoomStuff(PULSE_UPDATE));

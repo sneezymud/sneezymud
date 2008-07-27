@@ -21,5 +21,4 @@ class TShopJournal {
   TShopJournal(int,int);
 };
 
-
 #endif

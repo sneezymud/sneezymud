@@ -230,7 +230,7 @@ class TDatabaseConnection
   
 };
 
-
+extern queue<sstring> queryqueue;
 
 #endif
 

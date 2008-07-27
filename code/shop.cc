@@ -20,6 +20,7 @@
 #include "spec_rooms.h"
 #include "obj_commodity.h"
 #include "liquids.h"
+#include "shopaccounting.h"
 
 extern int kick_mobs_from_shop(TMonster *myself, TBeing *ch, int from_room);
 
@@ -2425,7 +2426,10 @@ void shoplog(int shop_nr, TBeing *ch, TMonster *keeper, const sstring &name, int
   
   TDatabase db(DB_SNEEZY);
 
-  db.query("insert into shoplog values (%i, '%s', '%s', '%s', %i, %i, %i, now(), %i)", shop_nr, ch?ch->getName():"unknown", action.c_str(), name.c_str(), cost, keeper->getMoney(), value, count);
+  //  db.query("insert into shoplog values (%i, '%s', '%s', '%s', %i, %i, %i, now(), %i)", shop_nr, ch?ch->getName():"unknown", action.c_str(), name.c_str(), cost, keeper->getMoney(), value, count);
+
+  queryqueue.push(fmt("insert into shoplog values (%i, '%s', '%s', '%s', %i, %i, %i, now(), %i)") % shop_nr % (ch?ch->getName():"unknown") % action % name % cost % keeper->getMoney() % value % count);
+
 
 }
 

@@ -23,6 +23,8 @@
 #include "obj_pool.h"
 #include "database.h"
 #include "obj_light.h"
+#include "timing.h"
+#include "shopaccounting.h"
 
 // procGlobalRoomStuff
 procGlobalRoomStuff::procGlobalRoomStuff(const int &p)
@@ -290,6 +292,8 @@ void procCallRoomSpec::run(int pulse) const
   }
 }
 
+
+
 // procDoPlayerSaves
 procDoPlayerSaves::procDoPlayerSaves(const int &p)
 {
@@ -313,6 +317,27 @@ void procDoPlayerSaves::run(int pulse) const
   }
 }
 
+
+
+// procQueryQueue
+procQueryQueue::procQueryQueue(const int &p)
+{
+  trigger_pulse=p;
+  name="procQueryQueue";
+}
+
+void procQueryQueue::run(int pulse) const
+{
+  TDatabase db(DB_SNEEZY);
+  TTiming t;
+
+  t.start();
+
+  while(!queryqueue.empty() && t.getElapsed() < 0.10){
+    db.query(queryqueue.front().c_str());
+    queryqueue.pop();
+  }
+}
 
 
 // procDoRoomSaves

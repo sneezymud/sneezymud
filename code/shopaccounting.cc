@@ -95,6 +95,12 @@ void TShopJournal::closeTheBooks()
   // we have to assume here that all of the journal entries for the
   // specified year exist in the shoplogjournal table
 
+  // have to clear out any cached shop logs first
+  //  while(!queryqueue.empty()){
+    //    db.query(queryqueue.front().c_str());
+    //    queryqueue.pop();
+  //  }
+
   if(year == time_info.year){
     vlogf(LOG_BUG, "closeTheBooks() called for current year!");
     return;
@@ -141,7 +147,9 @@ void TShopOwned::journalize_debit(int post_ref, const sstring &customer,
 {
   TDatabase db(DB_SNEEZY);
 
-  db.query("insert into shoplogjournal (shop_nr, journal_id, customer_name, obj_name, sneezy_year, logtime, post_ref, debit, credit) values (%i, %s, '%s', '%s', %i, now(), %i, %i, 0)", shop_nr, (new_id?"NULL":"LAST_INSERT_ID()"), customer.c_str(), name.c_str(), time_info.year, post_ref, amt);
+  //    db.query("insert into shoplogjournal (shop_nr, journal_id, customer_name, obj_name, sneezy_year, logtime, post_ref, debit, credit) values (%i, %s, '%s', '%s', %i, now(), %i, %i, 0)", shop_nr, (new_id?"NULL":"LAST_INSERT_ID()"), customer.c_str(), name.c_str(), time_info.year, post_ref, amt);
+
+  queryqueue.push(fmt("insert into shoplogjournal (shop_nr, journal_id, customer_name, obj_name, sneezy_year, logtime, post_ref, debit, credit) values (%i, %s, '%s', '%s', %i, now(), %i, %i, 0)") % shop_nr % (new_id?"NULL":"LAST_INSERT_ID()") % customer % name % time_info.year % post_ref % amt);
 }
 				  
 void TShopOwned::journalize_credit(int post_ref, const sstring &customer,
@@ -149,7 +157,7 @@ void TShopOwned::journalize_credit(int post_ref, const sstring &customer,
 {
   TDatabase db(DB_SNEEZY);
 
-  db.query("insert into shoplogjournal (shop_nr, journal_id, customer_name, obj_name, sneezy_year, logtime, post_ref, debit, credit)values (%i, %s, '%s', '%s', %i, now(), %i, 0, %i)", shop_nr, (new_id?"NULL":"LAST_INSERT_ID()"), customer.c_str(), name.c_str(), time_info.year, post_ref, amt);
+  queryqueue.push(fmt("insert into shoplogjournal (shop_nr, journal_id, customer_name, obj_name, sneezy_year, logtime, post_ref, debit, credit)values (%i, %s, '%s', '%s', %i, now(), %i, 0, %i)") % shop_nr % (new_id?"NULL":"LAST_INSERT_ID()") % customer % name % time_info.year % post_ref % amt);
 }
 
 void TShopOwned::COGS_add(const sstring &name, int amt, int num)
@@ -160,9 +168,10 @@ void TShopOwned::COGS_add(const sstring &name, int amt, int num)
   db.query("select 1 from shoplogcogs where obj_name='%s' and shop_nr=%i", name.c_str(), shop_nr);
 
   if(!db.fetchRow()){
-    db.query("insert into shoplogcogs (shop_nr, obj_name, count, total_cost) values (%i, '%s', %i, %i)", shop_nr, name.c_str(), num, amt);
+    //    db.query("insert into shoplogcogs (shop_nr, obj_name, count, total_cost) values (%i, '%s', %i, %i)", shop_nr, name.c_str(), num, amt);
+    queryqueue.push(fmt("insert into shoplogcogs (shop_nr, obj_name, count, total_cost) values (%i, '%s', %i, %i)") % shop_nr % name % num % amt);
   } else {
-    db.query("update shoplogcogs set count=count+%i, total_cost=total_cost+%i where obj_name='%s' and shop_nr=%i", num, amt, name.c_str(), shop_nr);
+    queryqueue.push(fmt("update shoplogcogs set count=count+%i, total_cost=total_cost+%i where obj_name='%s' and shop_nr=%i") % num % amt % name % shop_nr);
   }
 }
 
@@ -170,7 +179,9 @@ void TShopOwned::COGS_remove(const sstring &name, int num)
 {
   TDatabase db(DB_SNEEZY);
 
-  db.query("update shoplogcogs set total_cost=total_cost-((total_cost/count)*%i), count=count-%i where obj_name='%s' and shop_nr=%i", num, num, name.c_str(), shop_nr);
+  //  db.query("update shoplogcogs set total_cost=total_cost-((total_cost/count)*%i), count=count-%i where obj_name='%s' and shop_nr=%i", num, num, name.c_str(), shop_nr);
+
+  queryqueue.push(fmt("update shoplogcogs set total_cost=total_cost-((total_cost/count)*%i), count=count-%i where obj_name='%s' and shop_nr=%i") % num % num % name % shop_nr);
 }
 
 int TShopOwned::COGS_get(const sstring &name)

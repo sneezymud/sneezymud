@@ -146,6 +146,7 @@ int fixed_chance = 1;
 
 vector<TRoom *>roomspec_db(0);
 vector<TRoom *>roomsave_db(0);
+queue<sstring>queryqueue;
 
 
 struct cached_object { int number;map <sstring, sstring> s; };

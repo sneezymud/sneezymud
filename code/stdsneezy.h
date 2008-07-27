@@ -31,6 +31,7 @@
 #include <map>
 #include <list>
 #include <deque>
+#include <queue>
 
 #include <iostream>
 #include <sstream>

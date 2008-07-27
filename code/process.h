@@ -72,6 +72,12 @@ class procGlobalRoomStuff : public TProcess {
   procGlobalRoomStuff(const int &);
 };
 
+class procQueryQueue : public TProcess {
+ public:
+  void run(int) const;
+  procQueryQueue(const int &);
+};
+
 class procDoPlayerSaves : public TProcess {
  public:
   void run(int) const;
