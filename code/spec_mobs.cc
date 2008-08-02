@@ -6143,15 +6143,72 @@ int barmaid(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 }
 
 
+bool okForCommodMaker(TObj *o, sstring &ret)
+{
+    if(material_nums[o->getMaterial()].price <= 0){
+      ret="That isn't a valuable - I can't convert that.";
+      return false;
+    }
+    
+    if(dynamic_cast<TCommodity *>(o)){
+      ret="That's already a commodity.";
+      return false;
+    }
+    
+    if(!o->isRentable()){
+      ret="That isn't rentable so I can't convert it.";
+      return false;
+    }
+    
+    if(dynamic_cast<TComponent *>(o)){
+      ret="Sorry, I cannot convert magical components.";
+      return false;
+    }
+
+    TBaseCup *tbc;
+    if((tbc=dynamic_cast<TBaseCup *>(o)) && tbc->getDrinkUnits()){
+      ret="Sorry, I can't convert liquid containers unless they are empty.";
+      return false;
+    }
+
+    
+    return true;
+}
+
+
+map <ubyte,int> commodMakerValue(TObj *o, float &value)
+{
+  map <ubyte,int> mat_list;
+  const float wastage=0.90;
+  value=0;
+  int amt=0;
+  TObj *obj;
+
+  amt=(int)(o->getWeight() * 10.0 * wastage);
+  mat_list[o->getMaterial()]+=amt;
+  value += max((float)1.0, amt * (float)material_nums[o->getMaterial()].price);
+
+  for(TThing *t=o->getStuff();t;t=t->nextThing){
+    if(!(obj=dynamic_cast<TObj *>(t)))
+      continue;
+
+    amt=(int)(obj->getWeight() * 10.0 * wastage);
+    mat_list[obj->getMaterial()]+=amt;
+    value += max((float)1.0, amt * (float)material_nums[obj->getMaterial()].price);
+  }
+
+  return mat_list;
+}
 
 int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 {
   float value;
-  int amt;
   sstring buf;
   TObj *commod=NULL;
   int shop_nr=find_shop_nr(me->number);
   TThing *ts = NULL;
+  map <ubyte,int> mat_list;
+  map <ubyte,int>::iterator iter;
 
   if(cmd == CMD_WHISPER)
     return shopWhisper(ch, me, shop_nr, arg);
@@ -6166,34 +6223,18 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
       return TRUE;
     }
 
-    if(material_nums[o->getMaterial()].price <= 0){
-      me->doTell(ch->getName(), "That isn't a valuable - I can't convert that.");
-      return TRUE;
-    }
-    
-    if(dynamic_cast<TCommodity *>(ts)){
-      me->doTell(ch->getName(), "That's already a commodity.");
+    if(!okForCommodMaker(o, buf)){
+      me->doTell(ch->getName(), buf);
       return TRUE;
     }
 
-    if(!ts->isRentable()){
-      me->doTell(ch->getName(), "That isn't rentable so I can't convert it.");
-      return TRUE;
+    mat_list=commodMakerValue(o, value);
+
+    me->doTell(ch->getName(), fmt("I can turn that into:"));
+    for(iter=mat_list.begin();iter!=mat_list.end();++iter){
+      me->doTell(ch->getName(), fmt("%i units of %s.") %
+		 (*iter).second % material_nums[(*iter).first].mat_name);
     }
-
-    if(dynamic_cast<TComponent *>(o)){
-      me->doTell(ch->getName(), "Sorry, I cannot convert magical components.");
-      return TRUE;
-    }
-
-    value = o->getWeight() * 10.0; // convert to units
-    value *= 0.90; // subtract some for wastage
-    amt=(int)value;
-    value *= (float) material_nums[o->getMaterial()].price;
-    value = max((float)1.0,value);
-
-    me->doTell(ch->getName(), fmt("I can turn that into %i units of %s.") %
-	       amt % material_nums[o->getMaterial()].mat_name);
     me->doTell(ch->getName(), fmt("My fee for this is %i talens.") %
 	       (int)(shop_index[shop_nr].getProfitBuy(o, ch) * value));
 
@@ -6204,28 +6245,15 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
       me->doGive(ch,o, GIVE_FLAG_DROP_ON_FAIL);
       return TRUE;
     }
-    
-    if(dynamic_cast<TCommodity *>(o)){
-      me->doTell(ch->getName(), "That's already a commodity.");
+
+    if(!okForCommodMaker(o,buf)){
+      me->doTell(ch->getName(), buf);
       me->doGive(ch,o, GIVE_FLAG_DROP_ON_FAIL);
       return TRUE;
     }
-
-    if(!o->isRentable()){
-      me->doTell(ch->getName(), "That isn't rentable so I can't convert it.");
-      return TRUE;
-    }
-
-    if(dynamic_cast<TComponent *>(o)){
-      me->doTell(ch->getName(), "Sorry, I cannot convert magical components.");
-      return TRUE;
-    }
-
-    value = o->getWeight() * 10.0; // convert to units
-    value *= 0.90; // subtract some for wastage
-    amt=(int)value;
-    value *= (float) material_nums[o->getMaterial()].price;
-    value *= shop_index[shop_nr].getProfitBuy(o, ch);
+    
+    mat_list=commodMakerValue(o, value);
+    value *= (int)(shop_index[shop_nr].getProfitBuy(o, ch) * value);
 
     if(ch->getMoney() < (int)value){
       me->doTell(ch->getName(), "You can't afford it!");
@@ -6234,23 +6262,26 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
     }
 
 
-    TShopOwned tso(shop_nr, me, ch);
-    tso.doBuyTransaction((int)value, fmt("deconstructing %s") % 
-			 o->getName(),
-			 TX_BUYING_SERVICE);
-
-    commod = read_object(GENERIC_COMMODITY, VIRTUAL);
-    
-    commod->setWeight(amt/10.0);
-    commod->setMaterial(o->getMaterial());
-
-    me->doTell(ch->getName(), "Alright, here you go!");
-
-    *me += *commod;
-    me->doGive(ch,commod, GIVE_FLAG_DROP_ON_FAIL);
+    for(iter=mat_list.begin();iter!=mat_list.end();++iter){
+      TShopOwned tso(shop_nr, me, ch);
+      tso.doBuyTransaction((int)value, fmt("deconstructing %s (%s)") % 
+			   o->getName() % 
+			   material_nums[(*iter).first].mat_name,
+			   TX_BUYING_SERVICE);
+      
+      commod = read_object(GENERIC_COMMODITY, VIRTUAL);
+      
+      commod->setWeight((*iter).second/10.0);
+      commod->setMaterial((*iter).first);
+      
+      me->doTell(ch->getName(), "Alright, here you go!");
+      
+      *me += *commod;
+      me->doGive(ch,commod, GIVE_FLAG_DROP_ON_FAIL);
+    }
+  
     delete o;
   }
-
 
   return FALSE;
 }
