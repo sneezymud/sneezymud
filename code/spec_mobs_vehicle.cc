@@ -510,9 +510,9 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     	} else {
     		myself->doSay("I shall not alter the charts for the likes of ye, missy.");
     	}
-    } else if (argument.word(1) == "sail" || argument.word(1) == "cruise"){
+    } else if (argument.word(1) == "sail" || argument.word(1) == "cruise") {
     	// make for a destination
-      if(argument.word(2).empty()){
+      if (argument.word(2).empty()) {
     		// what is our current destination?
   			if (!job || job->cur == -1) {
   				myself->doSay("We 'ave no destination!");
@@ -523,7 +523,7 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       	if (job->speed == "fast" || job->speed == "slow") {
       		buf = fmt("a %s") % job->speed;
       	}
-  			while (db.fetchRow()){
+  			while (db.fetchRow()) {
   				myself->doSay(fmt("We arr on %s course for <W>%s<1> - a/k/a %s.") %buf % db["name"] % db["aka"]);
   				return TRUE;
   			}
@@ -532,29 +532,35 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       	// parse list of destnations and add to buf in sql format
 				sstring buf;
 				for(int i=2;i<12;++i){
-					if(!argument.word(i).empty() && argument.word(i).isWord()){
-						if(buf.empty())
-							buf=fmt("'%s'") % argument.word(i);
+					if (!argument.word(i).empty()) {
+						// use %q here to escape input because query() won't check with %r
+						if (buf.empty())
+							buf = fmt("'%q'") % argument.word(i);
 						else
-							buf=fmt("%s, '%s'") % buf % argument.word(i);
+							buf = fmt("%s, '%q'") % buf % argument.word(i);
 					}
 				}
-				// %r should be safe here because we used isWord() above
-				db.query("select room from ship_destinations where vnum = %i and name in (%r)", myself->mobVnum(), buf.c_str());
-				if(!db.fetchRow()){
-					myself->doSay("What the...?!  I've never 'eard of that!");
-					return TRUE;
-				}
+				if (!buf.empty()) {
+					// %r should be safe here because we escaped in fmt above
+					db.query("select room from ship_destinations where vnum = %i and name in (%r)", myself->mobVnum(), buf.c_str());
+					if(!db.fetchRow()){
+						myself->doSay("What the...?!  I've never 'eard of that!");
+						return TRUE;
+					}
+					// first clear out existing route
+					for(int i=0;i<10;++i)
+						job->room[i]=0;
 
-				int i=0;
-				do {
-					job->room[i++] = convertTo<int>(db["room"]);
-				} while(db.fetchRow());
-				job->cur=0;
-				if(argument.word(1)=="cruise" && db.rowCount() > 1)
-					job->cruise=true;
-				else
-					job->cruise=false;
+					int i=0;
+					do {
+						job->room[i++] = convertTo<int>(db["room"]);
+					} while (db.fetchRow());
+					job->cur=0;
+					if (argument.word(1)=="cruise" && db.rowCount() > 1)
+						job->cruise=true;
+					else
+						job->cruise=false;
+				}
 			}
 		} else if(argument.word(1) == "stop") {
 			myself->doSay("Sail here, sail there, stop here, for the love o' me beard make up yer mind!");
@@ -665,14 +671,19 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     return FALSE;
 
   if(boat->in_room == job->room[job->cur]){
+  	// destination acheived
+  	// move onto next location or stop if none specified (or restart loop if "cruising")
     myself->doDrive("stop");
     myself->doSay("Avast!  We have reached arrr destination.");
 
     if(job->cur==9 || !job->room[job->cur+1]){
-      if(job->cruise)
+      if(job->cruise) {
       	job->cur=0;
-      else
+      } else {
+				for(int i=0;i<10;++i)
+					job->room[i]=0;
       	job->cur=-1;
+      }
     } else {
       ++job->cur;
     }
