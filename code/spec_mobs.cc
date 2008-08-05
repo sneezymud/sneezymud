@@ -6172,10 +6172,10 @@ bool okForCommodMaker(TObj *o, sstring &ret)
     }
 
     // temporary until bugs like high conversion cost, talens converting to gold, other bugs are fixed
-    if(o->getStuff() != NULL){
-      ret="Sorry, I can't convert containers unless they are empty.";
-      return false;
-    }
+    //    if(o->getStuff() != NULL){
+    //      ret="Sorry, I can't convert containers unless they are empty.";
+    //      return false;
+    //    }
 
     return true;
 }
@@ -6192,6 +6192,7 @@ map <ubyte,int> commodMakerValue(TObj *o, float &value)
   amt=(int)(o->getWeight() * 10.0 * wastage);
   mat_list[o->getMaterial()]+=amt;
   value += max((float)1.0, amt * (float)material_nums[o->getMaterial()].price);
+
 
   for(TThing *t=o->getStuff();t;t=t->nextThing){
     if(!(obj=dynamic_cast<TObj *>(t)))
@@ -6258,7 +6259,7 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
     }
     
     mat_list=commodMakerValue(o, value);
-    value *= (int)(shop_index[shop_nr].getProfitBuy(o, ch) * value);
+    value = (int)(shop_index[shop_nr].getProfitBuy(o, ch) * value);
 
     if(ch->getMoney() < (int)value){
       me->doTell(ch->getName(), "You can't afford it!");
