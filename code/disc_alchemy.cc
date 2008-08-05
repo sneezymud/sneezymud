@@ -2096,6 +2096,11 @@ int castEthrealGate(TBeing *caster, TObj *obj)
 
 void TBeing::doScribe(const char *arg)
 {
+  if (!isImmortal(GOD_LEVEL1+4)) {
+    sendTo("Scribe has been temporarily disabled.  Sorry for the inconvenience.\n\r");
+    return;
+  }
+
   char argm[MAX_INPUT_LENGTH], newarg[MAX_INPUT_LENGTH];
   sstring buf;
   TComponent *comp_gen, *comp_spell, *comp_scribe;

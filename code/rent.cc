@@ -1580,6 +1580,9 @@ void TBeing::addObjCost(TBeing *re, TObj *obj, objCost *cost, sstring &str)
 
 bool TBeing::recepOffer(TBeing *recep, objCost *cost)
 {
+  act("$n tells you \"The 'offer' command is currently disabled.  Feel free to just 'rent'.\"", FALSE, recep, 0, this, TO_VICT);
+  return TRUE;
+
   char buf[256];
   int i, actual_cost;
   unsigned int credit;

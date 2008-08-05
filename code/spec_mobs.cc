@@ -6171,7 +6171,12 @@ bool okForCommodMaker(TObj *o, sstring &ret)
       return false;
     }
 
-    
+    // temporary until bugs like high conversion cost, talens converting to gold, other bugs are fixed
+    if(o->getStuff() != NULL){
+      ret="Sorry, I can't convert containers unless they are empty.";
+      return false;
+    }
+
     return true;
 }
 
