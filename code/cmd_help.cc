@@ -374,7 +374,7 @@ sstring wiki_to_text(const Descriptor *desc, sstring titleIn, const sstring modi
 
   // print title
   sstring textOut = fmt("%s%-30.30s (Last Updated: %s/%s, %s)%s\n\r") % desc->green() %
-    titleIn % modified.substr(4,2) % modified.substr(5,2) % modified.substr(0,4) % desc->norm();
+    titleIn % modified.substr(4,2) % modified.substr(6,2) % modified.substr(0,4) % desc->norm();
   textOut += textIn;
 
   // remove markup which has no relevance to text (and category)

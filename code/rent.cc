@@ -1580,9 +1580,6 @@ void TBeing::addObjCost(TBeing *re, TObj *obj, objCost *cost, sstring &str)
 
 bool TBeing::recepOffer(TBeing *recep, objCost *cost)
 {
-  act("$n tells you \"The 'offer' command is currently disabled.  Feel free to just 'rent'.\"", FALSE, recep, 0, this, TO_VICT);
-  return TRUE;
-
   char buf[256];
   int i, actual_cost;
   unsigned int credit;
@@ -1598,6 +1595,9 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
   cost->total_cost = 0;
   cost->ok = TRUE;
   cost->no_carried = 0;
+
+  //act("$n tells you \"The 'offer' command is currently disabled.  Feel free to just 'rent'.\"", FALSE, recep, 0, this, TO_VICT);
+  return TRUE;
 
   // add up cost for the player
   addObjCost(recep, (TObj *) getStuff(), cost, str);
@@ -3506,8 +3506,8 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
     if (ch->isImmortal() && *buf) {
       TBeing *vict = get_pc_world(ch, buf, EXACT_NO);
       if (vict) {
-        vict->makeRentNote(ch);
-        recep->doTell(ch->getName(), fmt("Here is a note with %s's items listed.") % vict->getName());
+        //vict->makeRentNote(ch);
+        //recep->doTell(ch->getName(), fmt("Here is a note with %s's items listed.") % vict->getName());
 	TShopOwned tso(shop_nr, recep, vict);	
 	float multiplier = (shop_index[shop_nr].getProfitBuy(NULL, vict));
 	int tax = (int)((float) vict->GetMaxLevel() * multiplier);
@@ -3520,8 +3520,8 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
     float multiplier = (shop_index[shop_nr].getProfitBuy(NULL, ch));
     int tax = (int)((float) ch->GetMaxLevel() * multiplier);
 
-    ch->makeRentNote(ch);
-    recep->doTell(ch->getName(), "Here is a note with your items listed.");
+    //ch->makeRentNote(ch);
+    //recep->doTell(ch->getName(), "Here is a note with your items listed.");
     recep->doTell(ch->getName(), fmt("In addition to any fees listed on that note, there is a tax of %i talens.") % tax);
   }
   return TRUE;
