@@ -11,12 +11,39 @@ extern "C" {
 #include "obj_component.h"
 #include "statistics.h"
 #include "systemtask.h"
+#include "database.h"
+
+#define ARTICLE_LIST_WIDTH 80
 
 static vector<sstring>helpIndex(0);
 static vector<char *>immortalIndex(0);
 static vector<char *>builderIndex(0);
 static vector<char *>skillIndex(0);
 static vector<char *>spellIndex(0);
+
+static const char* helpCategory[DB_MAX] = {
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  "Help_files", // mortal
+  "Help_files", // builder
+  "Help_files", // admin
+};
+
+static const char* defaultPage[DB_MAX] = {
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  "Help", // mortal
+  "Help", // builder
+  "Help", // admin
+};
 
 #if 0
 static const char *start_name(byte num)
@@ -40,6 +67,196 @@ static const char *start_name(byte num)
 }
 #endif
 
+wizPowerT wizPowerFromCmd(cmdTypeT cmd)
+{
+  switch (cmd) {
+    case CMD_CHANGE:
+      return POWER_CHANGE;
+      break;
+    case CMD_ECHO:
+      return POWER_ECHO;
+      break;
+    case CMD_FORCE:
+      return POWER_FORCE;
+      break;
+    case CMD_TRANSFER:
+      return POWER_TRANSFER;
+      break;
+    case CMD_STAT:
+      return POWER_STAT;
+      break;
+    case CMD_LOAD:
+      return POWER_LOAD;
+      break;
+    case CMD_PURGE:
+      return POWER_PURGE;
+      break;
+    case CMD_AT:
+      return POWER_AT;
+      break;
+    case CMD_SNOOP:
+      return POWER_SNOOP;
+      break;
+    case CMD_AS:
+    case CMD_SWITCH:
+      return POWER_SWITCH;
+      break;
+    case CMD_SNOWBALL:
+      return POWER_SNOWBALL;
+      break;
+    case CMD_INFO:
+      return POWER_INFO;
+      break;
+    case CMD_WHERE:
+      return POWER_WHERE;
+      break;
+    case CMD_PEE:
+      return POWER_PEE;
+      break;
+    case CMD_WIZNET:
+      return POWER_WIZNET;
+      break;
+    case CMD_RESTORE:
+      return POWER_RESTORE;
+      break;
+    case CMD_USERS:
+      return POWER_USERS;
+      break;
+    case CMD_SYSTEM:
+      return POWER_SYSTEM;
+      break;
+    case CMD_BESTOW:
+    case CMD_SET:
+      return POWER_SET;
+      break;
+    case CMD_RSAVE:
+      return POWER_RSAVE;
+      break;
+    case CMD_RLOAD:
+      return POWER_RLOAD;
+      break;
+    case CMD_WIZLOCK:
+      return POWER_WIZLOCK;
+      break;
+    case CMD_SHOW:
+      return POWER_SHOW;
+      break;
+    case CMD_TOGGLE:
+      return POWER_TOGGLE;
+      break;
+    case CMD_BREATH:
+      return POWER_BREATHE;
+      break;
+    case CMD_LOG:
+      return POWER_LOG;
+      break;
+    case CMD_WIPE:
+      return POWER_WIPE;
+      break;
+    case CMD_CUTLINK:
+      return POWER_CUTLINK;
+      break;
+    case CMD_CHECKLOG:
+      return POWER_CHECKLOG;
+      break;
+    case CMD_OFFICE:
+      return POWER_GOTO;
+      break;
+    case CMD_LOGLIST:
+      return POWER_LOGLIST;
+      break;
+    case CMD_DEATHCHECK:
+      return POWER_DEATHCHECK;
+      break;
+    case CMD_REDIT:
+      return POWER_REDIT;
+      break;
+    case CMD_OEDIT:
+      return POWER_OEDIT;
+      break;
+    case CMD_MEDIT:
+      return POWER_MEDIT;
+      break;
+    case CMD_CLONE:
+    case CMD_ACCESS:
+      return POWER_ACCESS;
+      break;
+    case CMD_REPLACE:
+      return POWER_REPLACE;
+      break;
+    case CMD_GAMESTATS:
+      return POWER_GAMESTATS;
+      break;
+    case CMD_HOSTLOG:
+      return POWER_HOSTLOG;
+      break;
+    case CMD_TRACEROUTE:
+      return POWER_TRACEROUTE;
+      break;
+    case CMD_LOW:
+      return POWER_LOW;
+      break;
+    case CMD_RESIZE:
+      return POWER_RESIZE;
+      break;
+    case CMD_HEAVEN:
+      return POWER_HEAVEN;
+      break;
+    case CMD_ACCOUNT:
+      return POWER_ACCOUNT;
+      break;
+    case CMD_CLIENTS:
+      return POWER_CLIENTS;
+      break;
+    case CMD_FINDEMAIL:
+      return POWER_FINDEMAIL;
+      break;
+    case CMD_COMMENT:
+      return POWER_COMMENT;
+      break;
+    case CMD_EGOTRIP:
+      return POWER_EGOTRIP;
+      break;
+    case CMD_POWERS:
+      return POWER_POWERS;
+      break;
+    case CMD_SEDIT:
+      return POWER_SEDIT;
+      break;
+    case CMD_SHUTDOWN:
+    case CMD_SHUTDOW:
+      return POWER_SHUTDOWN;
+      break;
+    case CMD_RESET:
+      return POWER_RESET;
+      break;
+    case CMD_SLAY:
+      return POWER_SLAY;
+      break;
+    case CMD_TIMESHIFT:
+      return POWER_TIMESHIFT;
+      break;
+    case CMD_CRIT:
+      return POWER_CRIT;
+      break;
+    case CMD_RELEASE: // ???
+    case CMD_CAPTURE: // ???
+    case CMD_CREATE:  // Lapsos
+    case CMD_TASKS:
+    case CMD_TEST_FIGHT:
+    case CMD_PEELPK:
+    case CMD_TESTCODE:
+    case CMD_BRUTTEST:
+      return POWER_WIZARD;
+      break;
+    break;
+    default:
+      break;
+  }
+
+  return MAX_POWER_INDEX;
+}
+
 static const char *learn_name(byte num)
 {
   if (num <= 1)
@@ -58,7 +275,311 @@ static const char *learn_name(byte num)
     return "very fast";
 }
 
-void TBeing::displayHelpFile(char *helppath, char *namebuf){
+
+// sucks the data out of wiki tables and re-gens them for text
+void replaceWikiTable(sstring &data)
+{
+  size_t tablePos = data.find("{|");
+  size_t tableEnd = data.find("|}", tablePos+1);
+  while(tablePos != sstring::npos && tableEnd != sstring::npos)
+  {
+    static const char * colColorHdr[] = { "<p>", "", "<g>", "", "<c>" };
+    static const char * colColorFtr[] = { "<z>", "", "<z>", "", "<z>" };
+    sstring table = data.substr(tablePos, tableEnd-tablePos+2);
+    sstring *rgTableData;
+    sstring tableReplace;
+    int cData = 0;
+    int cRows = table.countSubstr("|-\n!");
+    int cCols = 0;
+
+    if (cRows <= 0)
+      return;
+
+    // normalize table into simple delimited
+    table.inlineRemoveBetween("{|", "|-", true);
+    table.inlineRemoveBetween("!", "|", true);
+    table.inlineReplaceString("\n", "");
+    table.inlineReplaceString("\r", ""); // not really used in wikitext
+    table.inlineReplaceString("|}", "");
+    table.inlineReplaceString("|-", "\255");
+    table.inlineReplaceString("||", "\255");
+
+    // remove all data parts from table
+    cData = table.split('\255', NULL);
+    if (cData <= 0)
+      return;
+    rgTableData = new sstring[cData];
+    cData = table.split('\255', rgTableData);
+    cCols = cData / cRows;
+
+    // re-generate table as text into tableReplace
+    // find the width of each column
+    int sumWidth = 0;
+    int *rgWidth = new int[cCols];
+    for(int iCol = 0; iCol < cCols; iCol++)
+    {
+      rgWidth[iCol] = 0;
+      for(int iRow = 0; iRow < cRows && ((iRow*cCols)+iCol) < cData; iRow++)
+        rgWidth[iCol] = max(rgWidth[iCol], int(rgTableData[(iRow*cCols)+iCol].trim().length()));
+      sumWidth += rgWidth[iCol];
+    }
+    // add row delimiter padding
+    sumWidth += (cCols - 1) * 3;
+
+    // get the column format (different for each colum)
+    sstring *rgRowFmt = new sstring[cCols];
+    for(int iFmt = 0; iFmt < cCols; iFmt++)
+    {
+      rgRowFmt[iFmt] = colColorHdr[iFmt%cElements(colColorHdr)];
+      rgRowFmt[iFmt] += "%-" + (fmt("%i.%i") % rgWidth[iFmt] % rgWidth[iFmt]) + "s";
+      rgRowFmt[iFmt] += colColorFtr[iFmt%cElements(colColorFtr)];
+    }
+
+    // write the table
+    for(int iData = 0;iData < cData; iData++)
+    {
+      tableReplace += fmt(rgRowFmt[iData % cCols]) % rgTableData[iData].trim();
+      if (iData % cCols == cCols-1)
+        tableReplace += "\n\r";
+      else
+        tableReplace += " : ";
+    }
+
+    // cleanup, replace
+    delete[] rgTableData;
+    delete[] rgWidth;
+    delete[] rgRowFmt;
+    data.replace(tablePos, tableEnd-tablePos+2, tableReplace.c_str(), tableReplace.length());
+
+    tablePos = data.find("{|", tablePos + tableReplace.length());
+    tableEnd = data.find("|}", tablePos+1);
+  }
+}
+
+
+sstring wiki_to_text(const Descriptor *desc, sstring titleIn, const sstring modified, const sstring textIn)
+{
+  // look for spoiler, return "spoiler warning"
+  if (textIn.findBetween("{{", "SPOILER", "}}") != sstring::npos)
+    return fmt("The topic '%s' could not be read: Spoiler warning found!\n\r") % titleIn;
+
+  sstring bold = desc->whiteBold();
+  sstring blue = desc->blueBold();
+  sstring norm = desc->norm();
+
+  // unescape title
+  titleIn.inlineReplaceString("\\_", "\255");
+  titleIn.inlineReplaceString("_", " ");
+  titleIn.inlineReplaceString("\255", "_");
+
+  // print title
+  sstring textOut = fmt("%s%-30.30s (Last Updated: %s/%s, %s)%s\n\r") % desc->green() %
+    titleIn % modified.substr(4,2) % modified.substr(5,2) % modified.substr(0,4) % desc->norm();
+  textOut += textIn;
+
+  // remove markup which has no relevance to text (and category)
+  textOut.inlineRemoveBetween("[[Category:", "]]", true, true);
+  textOut.inlineRemoveBetween("{{", "}}", true, true);
+  textOut.inlineRemoveBetween("[[Media:", "]]", true, true);
+  textOut.inlineRemoveBetween("[http:", "]", true, true);
+  textOut.inlineRemoveBetween("[[Image:", "]]", true, true);
+  textOut.inlineRemoveBetween("[[Math:", "]]", true, true);
+  textOut.inlineReplaceString("--~~~~", "");
+  textOut.inlineReplaceString("</pre>", "");
+  textOut.inlineReplaceString("<pre>", "");
+  textOut.inlineReplaceString("</nowiki>", "");
+  textOut.inlineReplaceString("<nowiki>", "");
+  textOut.inlineReplaceString("[[:Category:", "[[");
+
+  // fixup tables
+  replaceWikiTable(textOut);
+
+  // fixup internal links with color
+  textOut.inlineReplaceString("]]", "}}]]");
+  textOut.inlineRemoveBetween("|", "}}", true, true);
+  textOut.inlineReplaceString("}}", "");
+  textOut.inlineReplaceString("[[", blue);
+  textOut.inlineReplaceString("]]", norm);
+
+  // fixup header and bold with emphasis
+  textOut.inlineReplaceMarkup("==", "==", bold, norm);
+  textOut.inlineReplaceMarkup("'''", "'''", bold, norm);
+
+  // remove italics
+  textOut.inlineReplaceString("''", "");
+
+  // trim whitespace-only lines
+  textOut.inlineTrimWhiteLines();
+
+  // normalize linefeeds
+  textOut.inlineReplaceString("\n\n\n", "\n\n");
+  textOut.inlineReplaceString("\n", "\n\r");
+
+  // append footer?
+  return textOut;
+}
+
+// given an argIn of a name of a title, find the best match for an article
+// you can use '.' at the end of the arg to denote an exact match (not substring)
+// empty arg will give you the "help files" page if it exists
+void wiki_findTitle(const TBeing *ch, dbTypeT type, const sstring argIn)
+{
+  sstring arg = argIn.trim();
+  TDatabase db(type);
+  const char* queryFmt = "SELECT old_text, page_title, rev_timestamp, page_namespace FROM mw_text, mw_revision, mw_page, mw_categorylinks " \
+                         "WHERE page_latest = rev_id and old_id = rev_text_id AND cl_from = page_id AND " \
+                         "cl_to = '%s' AND upper(page_title) %s upper('%s%s') LIMIT 1;";
+
+  arg.inlineReplaceString(";", "");
+  arg.inlineReplaceString("'", "");
+  arg.inlineReplaceString("\"", "");
+  arg.inlineReplaceString("%", "");
+  arg.inlineReplaceString(")", "");
+  arg.inlineReplaceString("(", "");
+  arg.inlineReplaceString("+", "");
+  arg.inlineReplaceString("-", "");
+  arg.inlineReplaceString(">", "");
+  arg.inlineReplaceString("<", "");
+  arg.inlineReplaceString("~", "");
+  arg.inlineReplaceString("*", "");
+
+  if (arg.empty())
+    arg = defaultPage[type];
+  while (arg.find("  ") != sstring::npos)
+    arg.inlineReplaceString("  ", " ");
+  arg.inlineReplaceString(" ", "_");
+  arg.inlineReplaceString("_", "\\_");
+
+  if (arg.length() > 1 && arg[arg.length()-1] == '.')
+  {
+    arg[arg.length()-1] = '\0';
+    db.query(queryFmt, helpCategory[type], "=", arg.c_str(), "");
+  }
+  else
+    db.query(queryFmt, helpCategory[type], "LIKE", arg.c_str(), "%");
+
+  if (!db.fetchRow())
+  {
+    ch->sendTo("Sorry, there is no help article of that name.\n\r");
+    return;
+  }
+
+  // the article is retrieved
+  sstring title = db["page_title"];
+  sstring lastModified = db["rev_timestamp"];
+  sstring article = db["old_text"];
+  int cArticles = 0, cCategories = 0;
+  sstring subCategories;
+  sstring childArticles;
+
+  // All categories are articles too, so there is a chance we have a categ.
+  // We should query all pages which may be part of this category
+  if (title.length() > 0 && convertTo<int>(db["page_namespace"]) > 0)
+  {
+    int categWidth = 0;
+    int childWidth = 0;
+
+    db.query("SELECT cl_sortkey, page_namespace FROM mw_page, mw_categorylinks WHERE cl_from = page_id AND \
+                cl_to = '%s' ORDER BY cl_sortkey LIMIT 201;", title.c_str());
+    while (db.fetchRow())
+    {
+      int page_namespace = convertTo<int>(db["page_namespace"]);
+      sstring add = db["cl_sortkey"];
+      int *pWidth = &childWidth;
+      sstring *pList = &childArticles;
+
+      if (page_namespace != 0) // subcateg
+      {
+        cCategories++;
+        pWidth = &categWidth;
+        pList = &subCategories;
+      }
+      else
+        cArticles++;
+
+      if (*pWidth && *pWidth + add.length() + 2 > ARTICLE_LIST_WIDTH)
+      {
+        (*pList) += "\n\r";
+        *pWidth = add.length();
+      }
+      else if (*pWidth > 0)
+        (*pList) += ", ";
+
+      (*pList) += add;
+      *pWidth += add.length() + 2;
+    }
+  }
+
+  // modify the article text
+  article = wiki_to_text(ch->desc, title, lastModified, article);
+
+  if (cCategories > 0)
+    article += fmt("\n\r%sThere are %i subcategories under the category '%s':%s\n\r\%s\n\r") % ch->desc->orangeBold() %
+                    cCategories % title % ch->desc->norm() % subCategories;
+  if (cArticles > 0)
+    article += fmt("\n\r%sThere are %i articles under the category '%s':%s\n\r\%s\n\r") % ch->desc->orangeBold() %
+                    cArticles % title % ch->desc->norm() % childArticles;
+
+  // display the article finally
+  ch->desc->page_string(article);
+}
+
+void wiki_searchText(const TBeing *ch, dbTypeT type, const sstring argIn)
+{
+  sstring arg = argIn.trim();
+  arg.inlineReplaceString(";", "");
+  arg.inlineReplaceString("'", "");
+  arg.inlineReplaceString("\"", "");
+  arg.inlineReplaceString("%", "");
+  arg.inlineReplaceString(")", "");
+  arg.inlineReplaceString("(", "");
+  arg.inlineReplaceString("+", "");
+  arg.inlineReplaceString("-", "");
+  arg.inlineReplaceString(">", "");
+  arg.inlineReplaceString("<", "");
+  arg.inlineReplaceString("~", "");
+  arg.inlineReplaceString("*", "");
+
+  if (arg.length() <= 0)
+  {
+    ch->sendTo("Please provide some help text to search for.\n\r");
+    return;
+  }
+
+  TDatabase db(type);
+  db.query("SELECT si_title, MATCH (si_text) AGAINST ('+%s' IN BOOLEAN MODE) AS relevance \
+            FROM mw_searchindex, mw_categorylinks WHERE MATCH (si_text) AGAINST ('+%s' IN BOOLEAN MODE) \
+            AND cl_from = si_page AND cl_to = '%s' ORDER BY relevance, si_title LIMIT 100;", arg.c_str(), arg.c_str(), helpCategory[type]);
+  if (!db.fetchRow())
+  {
+    ch->sendTo(fmt("Sorry, there are no help articles which contain '%s'.\n\r") % arg);
+    return;
+  }
+
+  sstring results = "The following articles were found to contain '" + arg +"':\n\r";
+  int width = 0;
+  do
+  {
+    sstring title = db["si_title"];
+
+    if (width && width + title.length() + 2 > ARTICLE_LIST_WIDTH)
+    {
+      results += "\n\r";
+      width = title.length();
+    }
+    else if (width > 0)
+      results += ", ";
+
+    results += title;
+    width += title.length() + 2;
+  }
+  while(db.fetchRow());
+
+  ch->desc->page_string(results);
+}
+
+
+void /*TBeing::*/displayHelpFile(TBeing *ch, char *helppath, char *namebuf){
   int j;
   struct stat timestat;
   char timebuf[1024], buf2[1024];
@@ -72,13 +593,13 @@ void TBeing::displayHelpFile(char *helppath, char *namebuf){
   if (stat(helppath, &timestat)) {
     vlogf(LOG_BUG,fmt("bad call to help function %s, rebuilding indices") %  namebuf);
     buildHelpIndex();
-    sendTo("There was an error, try again.\n\r");
+    ch->sendTo("There was an error, try again.\n\r");
     return;
   }
   strcpy(timebuf, ctime(&(timestat.st_mtime)));
   timebuf[strlen(timebuf) - 1] = '\0';
-  sprintf(buf2,"%s%-30.30s (Last Updated: %s)%s\n\r\n\r", green(),
-	  namebuf,timebuf, norm());
+  sprintf(buf2,"%s%-30.30s (Last Updated: %s)%s\n\r\n\r", ch->green(),
+	  namebuf,timebuf, ch->norm());
   str = buf2;
   
   
@@ -93,7 +614,7 @@ void TBeing::displayHelpFile(char *helppath, char *namebuf){
   // now print the file
   file_to_sstring(helppath, str, CONCAT_YES);
   str += "\n\r";
-  desc->page_string(str);
+  ch->desc->page_string(str);
   return;
 
 }
@@ -121,6 +642,16 @@ void TBeing::doHelp(const char *arg)
 
   if (!strncmp(searchBuf, "-l", 2)) {
     sendTo(COLOR_BASIC, "<r>Help search functionality currently disabled.<1>\n\r");
+    return;
+  } 
+
+  if (isImmortal() && !strncmp(searchBuf, "-w", 2)) {
+    wiki_findTitle(this, DB_WIKI_MORTAL, arg+2);
+    return;
+  } 
+
+  if (isImmortal() && !strncmp(searchBuf, "-s", 2)) {
+    wiki_searchText(this, DB_WIKI_MORTAL, arg+2);
     return;
   } 
 
@@ -261,7 +792,7 @@ void TBeing::doHelp(const char *arg)
   }
   if (found) {
     strcpy(namebuf, helpIndex[helpnum].c_str());
-    displayHelpFile(helppath, namebuf);
+    displayHelpFile(this, helppath, namebuf);
     return;
   }
   for (i = 0; i < spellIndex.size(); i++) {
@@ -716,6 +1247,94 @@ void TBeing::doHelp(const char *arg)
   sendTo("No such help file available.\n\r");
 }
 
+void TBeing::doBuildhelp(const char* arg)
+{
+  if (!desc)
+    return;
+  for (; isspace(*arg); arg++);
+
+  if (!isImmortal() || GetMaxLevel() < GOD_LEVEL1 || !hasWizPower(POWER_BUILDER))
+  {
+    sendTo("Sorry, only builders may access build help files.\n\r");
+    return;
+  }
+
+  if (!strncmp(arg, "-s ", 3))
+    wiki_searchText(this, DB_WIKI_BUILDER, arg+3);
+  else
+    wiki_findTitle(this, DB_WIKI_BUILDER, arg);
+}
+
+void TBeing::doWizhelp(const char *arg)
+{
+  sstring sbuf, buf, tString;
+  int       no,
+            tLength = 2;
+  unsigned int i;
+  wizPowerT tPower;
+
+  if (!isImmortal())
+    return;
+
+  if (!desc)
+    return;
+  for (; isspace(*arg); arg++);
+
+  if (hasWizPower(POWER_WIZARD) && !strncmp(arg, "-s ", 3))
+  {
+    wiki_searchText(this, DB_WIKI_ADMIN, arg+3);
+    return;
+  }
+  if (hasWizPower(POWER_WIZARD) && !strncmp(arg, "-w ", 3))
+  {
+    wiki_findTitle(this, DB_WIKI_ADMIN, arg+3);
+    return;
+  }
+
+  for (i = 0; i < MAX_CMD_LIST; i++) {
+    if (!commandArray[i])
+      continue;
+
+    if ((GetMaxLevel() >= commandArray[i]->minLevel) &&
+        (commandArray[i]->minLevel > MAX_MORT) &&
+        ((tPower = wizPowerFromCmd(cmdTypeT(i))) == MAX_POWER_INDEX ||
+         hasWizPower(tPower)))
+      tLength = max(strlen(commandArray[i]->name), (unsigned) tLength);
+  }
+
+  tString = fmt("%c-%ds") % '%' % (tLength + 1);
+  tLength = (79 / tLength);
+
+  sendTo("The following privileged commands are available:\n\r\n\r");
+
+  if ((tPower = wizPowerFromCmd(CMD_AS)) == MAX_POWER_INDEX ||
+      hasWizPower(tPower))
+    buf = fmt(tString) % "as";
+
+  for (no = 2, i = 0; i < MAX_CMD_LIST; i++) {
+    if (!commandArray[i])
+      continue;
+
+    if ((GetMaxLevel() >= commandArray[i]->minLevel) &&
+        (commandArray[i]->minLevel > MAX_MORT) &&
+        ((tPower = wizPowerFromCmd(cmdTypeT(i))) == MAX_POWER_INDEX ||
+         hasWizPower(tPower))) {
+
+      sbuf = fmt(tString) % commandArray[i]->name;
+      buf += sbuf;
+
+      if (!(no % (tLength - 1)))
+	buf += "\n\r";
+
+      no++;
+    }
+  }
+
+  buf += "\n\r      Check out HELP GODS (or HELP BUILDERS) for an index of help files.\n\r";
+  desc->page_string(buf);
+}
+
+
 void buildHelpIndex()
 {
   DIR *dfd;
@@ -814,6 +1433,7 @@ void buildHelpIndex()
   }
   closedir(dfd);
 }
+
 
 void cleanUpHelp()
 {

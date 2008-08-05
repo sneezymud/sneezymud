@@ -5,13 +5,80 @@
 
 static TDatabaseConnection database_connection;
 
+// we return this instead of null if they try to fetch an invalid column
+const sstring empty="";
+
+const char * db_hosts[DB_MAX] = {
+  "192.168.100.103",
+  "192.168.100.103",
+  "192.168.100.103",
+  "192.168.100.103",
+  "192.168.100.103",
+  "192.168.100.103",
+  "192.168.100.112",
+  "192.168.100.112",
+  "192.168.100.112",
+  };
+
+const char * db_connect[DB_MAX] = {
+  NULL, // depends on game port
+  "sneezybeta",
+  "immortal",
+  "sneezyglobal",
+  "sneezy", 
+  "sneezybuilder",
+  "wikidb",
+  "builder_wikidb",
+  "mudadmin_wikidb",
+  };
+
+
+TDatabaseConnection::TDatabaseConnection()
+{
+  memset(databases, 0, sizeof(databases));
+}
+
+
+const char *TDatabaseConnection::getConnectParam(dbTypeT type)
+{
+  const char *ret = db_connect[type];
+  if (ret)
+    return ret;
+  if (gamePort == PROD_GAMEPORT)
+    return db_connect[DB_SNEEZYPROD];
+  if (gamePort == BUILDER_GAMEPORT)
+    return db_connect[DB_SNEEZYBUILDER];
+  return db_connect[DB_SNEEZYBETA];
+}
+
+
+MYSQL *TDatabaseConnection::getDB(dbTypeT type)
+{
+  if (type < 0 || type > DB_MAX)
+    return NULL;
+  if (!databases[type] || mysql_ping(databases[type]))
+  {
+    vlogf(LOG_DB, fmt("Initializing database '%s'.") % getConnectParam(type));
+    databases[type] = mysql_init(NULL);
+    
+    vlogf(LOG_DB, "Connecting to database.");
+    if(!mysql_real_connect(databases[type], db_hosts[type], "sneezy", NULL, getConnectParam(type), 0, NULL, 0))
+    {
+      vlogf(LOG_DB, fmt("Could not connect to database '%s'.") % getConnectParam(type));
+      vlogf(LOG_DB, fmt("%s") % mysql_error(databases[type]));
+      return NULL;
+    }
+  }
+  return databases[type];
+}
+
+
 TDatabase::TDatabase() : 
   res(NULL), 
   row(NULL),
   db(NULL)
 {
   row_count = 0;
-  //  vlogf(LOG_DB, "constructor");
 }
 
 TDatabase::TDatabase(dbTypeT tdb) :
@@ -21,35 +88,14 @@ TDatabase::TDatabase(dbTypeT tdb) :
 {
   setDB(tdb);
   row_count = 0;
-  //  vlogf(LOG_DB, "constructor setDB");
 }
 
 TDatabase::~TDatabase(){
   mysql_free_result(res);
-  //    vlogf(LOG_DB, "query results freed");
 }
 
 void TDatabase::setDB(dbTypeT tdb){
-  switch(tdb){
-    case DB_SNEEZY:
-      db=database_connection.getSneezyDB();
-      break;
-    case DB_SNEEZYBETA:
-      db=database_connection.getSneezyBetaDB();
-      break;
-    case DB_IMMORTAL:
-      db=database_connection.getImmoDB();
-      break;
-    case DB_SNEEZYGLOBAL:
-      db=database_connection.getSneezyGlobalDB();
-      break;
-    case DB_SNEEZYPROD:
-      db=database_connection.getSneezyProdDB();
-      break;
-    default:
-      vlogf(LOG_DB, fmt("Unknown database dbTypeT %i") %  tdb);
-      db=NULL;
-  }
+  db = database_connection.getDB(tdb);
 }
 
 // advance to the next row of the current query
@@ -202,7 +248,7 @@ bool TDatabase::query(const char *query,...)
     // escape ' and %
     while(*query){
       if(*query == '\'' || *query == '%'){
-	buf += "\\";
+        buf += "\\";
       }
       buf += *query++;
     }

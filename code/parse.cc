@@ -956,7 +956,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
   addToLifeforce(1);
   break;
       case CMD_WIZHELP:
-  doWizhelp();
+  doWizhelp(newarg.c_str());
   break;
       case CMD_WIZLIST:
   doWizlist();
@@ -1763,6 +1763,9 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
   break;
       case CMD_PREEN:
     doPreen(newarg);
+  break;
+      case CMD_BUILDHELP:
+    doBuildhelp(newarg.c_str());
   break;
       case MAX_CMD_LIST:
       case CMD_RESP_TOGGLE:
@@ -2908,7 +2911,7 @@ void buildCommandArray(void)
   commandArray[CMD_TOAST] = new commandInfo("toast", POSITION_RESTING, 0);
   commandArray[CMD_BESTOW] = new commandInfo("bestow", POSITION_SLEEPING, GOD_LEVEL1);
   commandArray[CMD_PREEN] = new commandInfo("preen", POSITION_RESTING, 0);
-
+  commandArray[CMD_BUILDHELP] = new commandInfo("buildhelp", POSITION_DEAD, 0);
 }
 
 bool _parse_name_safe(const char *arg, char *name, unsigned int nameLen)

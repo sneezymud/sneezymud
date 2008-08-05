@@ -42,6 +42,7 @@ const sstring fname(const char *namelist)
 }
 
 // split up "str", using delimiters "sep" and place resulting sstrings in "argv"
+// TODO: move into sstring class
 int split_string(const sstring &str, const sstring &sep, vector<sstring> &argv)
 {
   unsigned int pos=0, last=0;

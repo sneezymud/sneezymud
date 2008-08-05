@@ -1127,7 +1127,7 @@ class TBeing : public TThing {
     bool nobrainerTaskCommand(cmdTypeT);
     void listExits(const TRoom *) const;
     virtual bool listThingRoomMe(const TBeing *) const;
-    void displayHelpFile(char *, char *);
+    //void displayHelpFile(char *, char *);
     void genericKillFix();
     virtual int genericMovedIntoRoom(TRoom *, int, checkFallingT = CHECK_FALL_YES);
     int genericItemCheck(TThing *);
@@ -2089,7 +2089,8 @@ class TBeing : public TThing {
     void doWhozone();
     void doWho(const char *);
     void doTime(const char *);
-    void doWizhelp();
+    void doBuildhelp(const char *);
+    void doWizhelp(const char *);
     virtual void raiseLevel(classIndT);
     virtual void doUsers(const sstring &);
     void doInventory(const char *);

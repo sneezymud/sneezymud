@@ -3015,6 +3015,8 @@ void TPerson::doStart()
     WEAR_EX_FOOT_R,
     WEAR_EX_FOOT_L,
   };
+  static unsigned int defaultPrompt = PROMPT_HIT | PROMPT_MOVE | PROMPT_EXP | PROMPT_OPPONENT | PROMPT_TANK;
+  static unsigned int prompts[MAX_CLASSES] = { PROMPT_MANA, PROMPT_PIETY, 0, 0, PROMPT_LIFEFORCE, PROMPT_PIETY, PROMPT_MANA, 0, 0 };
 
   if (desc->account->term == TERM_VT100) 
     doToggle("term vt100");
@@ -3059,19 +3061,15 @@ void TPerson::doStart()
       applyTattoo(location, tattoo, SILENT_YES);
   }
 
-  static const char * prompts[MAX_CLASSES] = { "mana", "piety", "", "", "lifeforce", "piety", "mana", "", "" };
-  if (desc && !desc->m_bIsClient) {
-    doPrompt("hit");
-    doPrompt("move");
-    doPrompt("exp");
-    doPrompt("opponent");
-    doPrompt("tank");
+  desc->prompt_d.type = desc->prompt_d.type & (PROMPT_CLASSIC_ANSIBAR | PROMPT_CLIENT_PROMPT);
+  if (!desc->m_bIsClient) {
+    desc->prompt_d.type = defaultPrompt;
     for(int iClass = MIN_CLASS_IND; iClass < MAX_CLASSES;iClass++)
-      if (1 << iClass & getClass() && prompts[iClass] && prompts[iClass] != '\0')
-        doPrompt(prompts[iClass]);
+      if (1 << iClass & getClass())
+         SET_BIT(desc->prompt_d.type, prompts[iClass]);
   }
-  else if (desc) // desc->m_bIsClient true
-    doPrompt("tank-other");
+  else // desc->m_bIsClient true
+    SET_BIT(desc->prompt_d.type, PROMPT_TANK_OTHER);
 
   desc->autobits = 0;
   SET_BIT(desc->autobits, (unsigned int) (AUTO_EAT | AUTO_AFK |

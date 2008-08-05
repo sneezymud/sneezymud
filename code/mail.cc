@@ -237,7 +237,7 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
   // sending item
   } else if (item.length() > 0) {
 
-    TThing *thing = get_thing_on_list_vis(this, item.c_str(), getStuff());
+    TThing *thing = searchLinkedListVis(this, item.c_str(), getStuff(), NULL, TYPEOBJ);
     TObj *obj = thing ? dynamic_cast<TObj*>(thing) : NULL;
     if (obj == NULL) {
       me->doTell(fname(name), "I don't see that item on you.");

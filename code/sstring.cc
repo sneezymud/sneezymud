@@ -270,14 +270,23 @@ int sstring::split(const char delimit, sstring *data) const
 
   while(sstring::npos != (iPos = find(delimit, iPos)))
   {
-    if (data)
-      data[iFound] = substr(iPosLast, iPos);
-    iFound++;
+    size_t len = iPos-iPosLast;
+    if (len)
+    {
+      if (data)
+        data[iFound] = substr(iPosLast, len);
+      iFound++;
+    }
     iPosLast = ++iPos;
   }
-  if (data)
-    data[iFound] = substr(iPosLast, length());
-  return iFound + 1;
+  if (iPosLast < length())
+  {
+    if (data)
+      data[iFound] = substr(iPosLast, length());
+    iFound++;
+  }
+
+  return iFound;
 }
 
 // given a sentence, try to match to the same case structure
@@ -320,6 +329,35 @@ const sstring sstring::matchCase(const sstring match) const
   return out;
 }
 
+// finds toFind and returns its offset as long as its inbetween start and end
+size_t sstring::findBetween(const sstring start, const sstring toFind, const sstring end) const
+{
+  sstring data = upper();
+  size_t iStart = 0;
+  while(1)
+  {
+    iStart = data.find(start.upper().c_str(), iStart);
+    if (iStart == sstring::npos)
+      return sstring::npos;
+    size_t iEnd = data.find(end.upper().c_str(), iStart);
+    if (iEnd == sstring::npos)
+      return sstring::npos;
+    size_t iFind = data.find(toFind.upper().c_str(), iStart);
+    if (iFind != sstring::npos && iFind < iEnd)
+      return iFind;
+    iStart = iEnd + end.length();
+  }
+  return sstring::npos;
+}
+
+// returns the number of times the substring appears in this string
+int sstring::countSubstr(const sstring sub) const
+{
+  int c = 0;
+  for(size_t pos = find(sub); pos != sstring::npos; pos = find(sub, pos+1))
+    c++;
+  return c;
+}
 
 bool isvowel(const char c)
 {

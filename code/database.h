@@ -89,12 +89,13 @@ enum dbTypeT {
   DB_IMMORTAL,
   DB_SNEEZYGLOBAL,
   DB_SNEEZYPROD,
+  DB_SNEEZYBUILDER,
+  DB_WIKI_MORTAL,
+  DB_WIKI_BUILDER,
+  DB_WIKI_ADMIN,
+
+  DB_MAX,
 };
-
-// we return this instead of null if they try to fetch an invalid column
-const sstring empty="";
-const sstring dbhost="192.168.100.103";
-
 
 class TDatabase
 {
@@ -119,115 +120,21 @@ class TDatabase
 // maintain instances of sneezydb and immodb
 class TDatabaseConnection
 {
-  MYSQL *immodb;
-  MYSQL *sneezyglobaldb;
-  MYSQL *sneezybetadb;
-  MYSQL *sneezyproddb;
-  MYSQL *sneezydb;
+  MYSQL *databases[DB_MAX];
 
  public:
-  MYSQL *getSneezyDB(){
-    int res=0;
+  TDatabaseConnection();
 
-    if(!sneezydb || (res=mysql_ping(sneezydb))){
-      const char * dbconnectstr = NULL;
-      
-      if(res){
-	vlogf(LOG_DB, "mysql_ping() returned non-zero");
-	vlogf(LOG_DB, fmt("mysql_error(): %s") % mysql_error(sneezydb));
-      }
+  const char *getConnectParam(dbTypeT type);
+  MYSQL *getDB(dbTypeT type);
 
-      if(gamePort == PROD_GAMEPORT){
-	dbconnectstr="sneezy";
-      } else if(gamePort == BUILDER_GAMEPORT){
-	dbconnectstr="sneezybuilder";
-      } else {
-	dbconnectstr="sneezybeta";
-      }
-            
-      vlogf(LOG_DB, fmt("Initializing database '%s'.") % 
-	    dbconnectstr);
-      sneezydb=mysql_init(NULL);
-      
-      vlogf(LOG_DB, "Connecting to database.");
-      if(!mysql_real_connect(sneezydb, dbhost.c_str(), "sneezy", NULL, 
-			     dbconnectstr, 0, NULL, 0)){
-	vlogf(LOG_DB, fmt("Could not connect to database '%s'.") %
-	      dbconnectstr);
-	vlogf(LOG_DB, fmt("%s") % mysql_error(sneezydb));
+  // shortcuts - not sure if they are really needed...
+  MYSQL *getSneezyDB() { return getDB(DB_SNEEZY); }
+  MYSQL *getSneezyProdDB() { return getDB(DB_SNEEZYPROD); }
+  MYSQL *getSneezyBetaDB() { return getDB(DB_SNEEZYBETA); }
+  MYSQL *getImmoDB() { return getDB(DB_IMMORTAL); }
+  MYSQL *getSneezyGlobalDB() { return getDB(DB_SNEEZYGLOBAL); }
 
-	return NULL;
-      }
-    }
-      
-    return sneezydb;
-  }
-
-  MYSQL *getSneezyProdDB(){
-    if(!sneezyproddb || mysql_ping(sneezyproddb)){
-      vlogf(LOG_DB, "Initializing database 'sneezy'.");
-      sneezyproddb=mysql_init(NULL);
-
-      vlogf(LOG_DB, "Connecting to database.");
-      if(!mysql_real_connect(sneezyproddb, dbhost.c_str(), "sneezy", NULL,
-                             "sneezy", 0, NULL, 0)){
-	vlogf(LOG_DB, "Could not connect to database 'sneezy'.");
-	return NULL;
-      }
-    }
-    
-    return sneezyproddb;
-  }
-
-  MYSQL *getSneezyBetaDB(){
-    if(!sneezybetadb || mysql_ping(sneezybetadb)){
-      vlogf(LOG_DB, "Initializing database 'sneezybeta'.");
-      sneezybetadb=mysql_init(NULL);
-      
-      vlogf(LOG_DB, "Connecting to database.");
-      if(!mysql_real_connect(sneezybetadb, dbhost.c_str(), "sneezy", NULL,
-                             "sneezybeta", 0, NULL, 0)){
-      	vlogf(LOG_DB, "Could not connect to database 'sneezybeta'.");
-	return NULL;
-      }
-    }
-    
-    return sneezybetadb;
-  }
-
-
-  MYSQL *getImmoDB(){
-    if(!immodb || mysql_ping(immodb)){
-      vlogf(LOG_DB, "Initializing database 'immortal'.");
-      immodb=mysql_init(NULL);
-
-      vlogf(LOG_DB, "Connecting to database.");
-      if(!mysql_real_connect(immodb, dbhost.c_str(), "sneezy", NULL,
-                             "immortal", 0, NULL, 0)){
-	vlogf(LOG_DB, "Could not connect to database 'immortal'.");
-	return NULL;
-      }
-    }
-    
-    return immodb;
-  }
-
-  MYSQL *getSneezyGlobalDB(){
-    if(!sneezyglobaldb || mysql_ping(sneezyglobaldb)){
-      vlogf(LOG_DB, "Initializing database 'sneezyglobal'.");
-      sneezyglobaldb=mysql_init(NULL);
-      
-      vlogf(LOG_DB, "Connecting to database.");
-      if(!mysql_real_connect(sneezyglobaldb, dbhost.c_str(), "sneezy", NULL,
-                             "sneezyglobal", 0, NULL, 0)){
-	vlogf(LOG_DB, "Could not connect to database 'sneezyglobal'.");
-	return NULL;
-      }
-    }
-    
-    return sneezyglobaldb;
-  }
-  
 };
 
 extern queue<sstring> queryqueue;
