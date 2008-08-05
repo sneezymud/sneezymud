@@ -247,8 +247,8 @@ TMoney *create_money(int amount, currencyTypeT currency)
   money->setMoney(amount);
   money->obj_flags.cost = amount;
 
-  money->setVolume(amount/2 + amount%2);
-  money->setWeight(amount/75.0);
+  money->setVolume(max(1, (int)(amount * 0.0048))); // 0.078 cm3
+  money->setWeight(amount/303.0); // 1.5 grams
 
   return money;
 }
