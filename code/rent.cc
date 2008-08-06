@@ -1596,8 +1596,15 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
   cost->ok = TRUE;
   cost->no_carried = 0;
 
-  if (recep)
+  if (recep) {
     act("$n tells you \"Have a nice stay!\"", FALSE, recep, 0, this, TO_VICT);
+    if (client) {
+      desc->clientf(fmt("%d") % CLIENT_RENT);
+      sendTo("Rent is free!");
+      desc->clientf(fmt("%d") % CLIENT_RENT_END);
+    }
+  }
+
   return TRUE;
 
   // add up cost for the player
