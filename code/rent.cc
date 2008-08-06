@@ -1596,7 +1596,8 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
   cost->ok = TRUE;
   cost->no_carried = 0;
 
-  //act("$n tells you \"The 'offer' command is currently disabled.  Feel free to just 'rent'.\"", FALSE, recep, 0, this, TO_VICT);
+  if (recep)
+    act("$n tells you \"Have a nice stay!\"", FALSE, recep, 0, this, TO_VICT);
   return TRUE;
 
   // add up cost for the player
@@ -3512,7 +3513,7 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
 	float multiplier = (shop_index[shop_nr].getProfitBuy(NULL, vict));
 	int tax = (int)((float) vict->GetMaxLevel() * multiplier);
 
-	recep->doTell(ch->getName(), fmt("In addition to any fees listed on that note, there is a tax of %i talens.") % tax);
+	recep->doTell(ch->getName(), fmt("In addition to any fees"/* listed on that note*/", there is a tax of %i talens.") % tax);
 	return TRUE;
       }
     }
@@ -3522,7 +3523,7 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
 
     //ch->makeRentNote(ch);
     //recep->doTell(ch->getName(), "Here is a note with your items listed.");
-    recep->doTell(ch->getName(), fmt("In addition to any fees listed on that note, there is a tax of %i talens.") % tax);
+    recep->doTell(ch->getName(), fmt("In addition to any fees"/* listed on that note*/", there is a tax of %i talens.") % tax);
   }
   return TRUE;
 }

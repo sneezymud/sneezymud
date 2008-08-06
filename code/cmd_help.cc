@@ -340,7 +340,7 @@ void replaceWikiTable(sstring &data)
     {
       tableReplace += fmt(rgRowFmt[iData % cCols]) % rgTableData[iData].trim();
       if (iData % cCols == cCols-1)
-        tableReplace += "\n\r";
+        tableReplace += "\n";
       else
         tableReplace += " : ";
     }
@@ -412,6 +412,7 @@ sstring wiki_to_text(const Descriptor *desc, sstring titleIn, const sstring modi
   textOut.inlineTrimWhiteLines();
 
   // normalize linefeeds
+  textOut.inlineReplaceString("<br>", "\n");
   textOut.inlineReplaceString("\n\n\n", "\n\n");
   textOut.inlineReplaceString("\n", "\n\r");
 
