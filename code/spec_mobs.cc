@@ -6146,37 +6146,63 @@ int barmaid(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 bool okForCommodMaker(TObj *o, sstring &ret)
 {
     if(material_nums[o->getMaterial()].price <= 0){
-      ret="That isn't a valuable - I can't convert that.";
+      ret=fmt("%s: That isn't a valuable - I can't convert that.") % o->getName();
       return false;
     }
     
     if(dynamic_cast<TCommodity *>(o)){
-      ret="That's already a commodity.";
+      ret=fmt("%s: That's already a commodity.") % o->getName();
       return false;
     }
     
     if(!o->isRentable()){
-      ret="That isn't rentable so I can't convert it.";
+      ret=fmt("%s: That isn't rentable so I can't convert it.") % o->getName();
       return false;
     }
     
     if(dynamic_cast<TComponent *>(o)){
-      ret="Sorry, I cannot convert magical components.";
+      ret=fmt("%s: Sorry, I cannot convert magical components.") % o->getName();
       return false;
     }
 
     TBaseCup *tbc;
     if((tbc=dynamic_cast<TBaseCup *>(o)) && tbc->getDrinkUnits()){
-      ret="Sorry, I can't convert liquid containers unless they are empty.";
+      ret=fmt("%s: Sorry, I can't convert liquid containers unless they are empty.") % o->getName();
       return false;
     }
 
-    // temporary until bugs like high conversion cost, talens converting to gold, other bugs are fixed
-    //    if(o->getStuff() != NULL){
-    //      ret="Sorry, I can't convert containers unless they are empty.";
-    //      return false;
-    //    }
+    TObj *obj;
+    for(TThing *t=o->getStuff();t;t=t->nextThing){
+      if(!(obj=dynamic_cast<TObj *>(t)))
+	continue;
 
+      if(material_nums[obj->getMaterial()].price <= 0){
+	ret=fmt("%s: That isn't a valuable - I can't convert that.") % obj->getName();
+	return false;
+      }
+      
+      if(dynamic_cast<TCommodity *>(obj)){
+	ret=fmt("%s: That's already a commodity.") % obj->getName();
+	return false;
+      }
+      
+      if(!obj->isRentable()){
+	ret=fmt("%s: That isn't rentable so I can't convert it.") % obj->getName();
+	return false;
+      }
+      
+      if(dynamic_cast<TComponent *>(obj)){
+	ret=fmt("%s: Sorry, I cannot convert magical components.") % obj->getName();
+	return false;
+      }
+      
+      TBaseCup *tbc;
+      if((tbc=dynamic_cast<TBaseCup *>(obj)) && tbc->getDrinkUnits()){
+	ret=fmt("%s: Sorry, I can't convert liquid containers unless they are empty.") % obj->getName();
+	return false;
+      }
+    }
+    
     return true;
 }
 
