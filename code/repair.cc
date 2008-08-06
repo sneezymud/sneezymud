@@ -367,8 +367,8 @@ static int getRepairItem(TBeing *repair, TBeing *buyer, int ticket, TNote *obj)
 
   // load the item
   if(!(fixed_obj=loadRepairItem(repair, ticket, tmp, tmp_cost, version))){
-    repair->doSay("Whoa, serious problems, tell a god.");
-    vlogf(LOG_BUG, "Bogus load of repair item problem!!!!!!");
+    repair->doSay(fmt("Either that item has been lost or I must have considered the item abandoned and got rid of it, sorry.") % ticket);
+    vlogf(LOG_FILE, fmt("Player (%s) tried to load deleted/expired repair object: %i") % buyer->name % ticket);
     return TRUE;
   }
 
@@ -605,7 +605,7 @@ void repairman_value(const char *arg, TMonster *repair, TBeing *buyer)
 
   when_ready = ct + repair_time(repair, valued);
   ready = asctime(localtime(&when_ready));
-  *(ready + strlen(ready) - 9) = '\0';
+  ready[19] = '\0'; // remove the year
   repair->doTell(fname(buyer->name), fmt("I can have it ready by %s.") % ready);
   repair->doTell(fname(buyer->name), fmt("That's %s.") % secsToString(when_ready-ct));
 }
@@ -743,7 +743,7 @@ void TObj::giveToRepair(TMonster *repair, TBeing *buyer, int *found)
 
   when_ready = ct + repair_time(repair, this);
   ready = asctime(localtime(&when_ready));
-  *(ready + strlen(ready) - 9) = '\0';
+  ready[19] = '\0'; // remove the year
   repair->doTell(fname(buyer->name), fmt("It will be ready %s.") % ready);
   repair->doTell( fname(buyer->name), fmt("That's %s.") % secsToString(when_ready-ct));
   repair_number++;
@@ -992,32 +992,27 @@ int repairman(TBeing *buyer, cmdTypeT cmd, const char *arg, TMonster *repair, TO
 
 void TNote::noteMe(TMonster *repair, TBeing *buyer, TObj *repaired, time_t when_ready, int tick_num)
 {
-  char buf[512];
-  char *ready;
+  sstring buf;
 
   swapToStrung();
 
-  sprintf(buf, "A receipt ticket from %s's shop lies here.", repair->getName());
   delete [] getDescr();
-  setDescr(mud_str_dup(buf));
+  setDescr(mud_str_dup((fmt("A receipt ticket from %s's shop lies here.") % repair->getName()).c_str()));
 
-  sprintf(buf, "a small ticket marked number %d", tick_num);
   delete [] shortDescr;
-  shortDescr = mud_str_dup(buf);
+  shortDescr = mud_str_dup((fmt("a small ticket marked number %d") % tick_num).c_str());
 
   delete [] name;
   name = mud_str_dup("ticket");
 
-  sprintf(buf, "Ticket number %d from %s's shop:\n\r\n\r", tick_num, repair->getName());
-  sprintf(buf + strlen(buf), "Item being repaired : %s\n\r", repaired->shortDescr);
-  sprintf(buf + strlen(buf), "Estimated cost : %d talens.\n\r", repaired->repairPrice(repair, buyer, DEPRECIATION_YES, false, NULL));
-  sprintf(buf + strlen(buf), "Condition after repair : %s.\n\r", 
-          repaired->equip_condition(repaired->maxFix(repair, DEPRECIATION_YES)).c_str());
+  buf = fmt("Ticket number %d from %s's shop:\n\r\n\r") % tick_num % repair->getName();
+  buf += fmt("Item being repaired : %s\n\r") % repaired->shortDescr;
+  buf += fmt("Estimated cost : %d talens.\n\r") % repaired->repairPrice(repair, buyer, DEPRECIATION_YES, false, NULL);
+  buf += fmt("Condition after repair : %s.\n\r") % repaired->equip_condition(repaired->maxFix(repair, DEPRECIATION_YES)).c_str();
   
-  ready = asctime(localtime(&when_ready));
-
-  *(ready + strlen(ready) - 9) = '\0';
-  sprintf(buf + strlen(buf), "Estimated time of finish : %s.\n\r", ready);
+  char *ready = asctime(localtime(&when_ready));
+  ready[24] = '\0'; // removes the trailing '\n'
+  buf += fmt("Estimated time of finish : %s.\n\r") % ready;
   delete [] action_description;
   action_description = mud_str_dup(buf);
 
