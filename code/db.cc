@@ -2310,6 +2310,10 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
   }
 
   if(!bootTime)
+    vlogf(LOG_MISC, fmt("Resetting zone '%s' (rooms %d-%d).") % 
+	  name % bottom % top);
+
+  if(!bootTime)
      update_commod_index();
 
   storageRoom = real_roomp(ROOM_NOCTURNAL_STORAGE);
