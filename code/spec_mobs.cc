@@ -6174,32 +6174,32 @@ bool okForCommodMaker(TObj *o, sstring &ret)
     TObj *obj;
     for(TThing *t=o->getStuff();t;t=t->nextThing){
       if(!(obj=dynamic_cast<TObj *>(t)))
-	continue;
+	      continue;
 
       if(material_nums[obj->getMaterial()].price <= 0){
-	ret=fmt("%s: That isn't a valuable - I can't convert that.") % obj->getName();
-	return false;
+        ret=fmt("%s: That isn't a valuable - I can't convert that.") % obj->getName();
+        return false;
       }
       
       if(dynamic_cast<TCommodity *>(obj)){
-	ret=fmt("%s: That's already a commodity.") % obj->getName();
-	return false;
+        ret=fmt("%s: That's already a commodity.") % obj->getName();
+        return false;
       }
       
       if(!obj->isRentable()){
-	ret=fmt("%s: That isn't rentable so I can't convert it.") % obj->getName();
-	return false;
+        ret=fmt("%s: That isn't rentable so I can't convert it.") % obj->getName();
+        return false;
       }
       
       if(dynamic_cast<TComponent *>(obj)){
-	ret=fmt("%s: Sorry, I cannot convert magical components.") % obj->getName();
-	return false;
+        ret=fmt("%s: Sorry, I cannot convert magical components.") % obj->getName();
+        return false;
       }
       
       TBaseCup *tbc;
       if((tbc=dynamic_cast<TBaseCup *>(obj)) && tbc->getDrinkUnits()){
-	ret=fmt("%s: Sorry, I can't convert liquid containers unless they are empty.") % obj->getName();
-	return false;
+        ret=fmt("%s: Sorry, I can't convert liquid containers unless they are empty.") % obj->getName();
+        return false;
       }
     }
     
@@ -6264,7 +6264,7 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
 
     me->doTell(ch->getName(), fmt("I can turn that into:"));
     for(iter=mat_list.begin();iter!=mat_list.end();++iter){
-      me->doTell(ch->getName(), fmt("%i units of %s.") %
+       me->doTell(ch->getName(), fmt("%i units of %s.") %
 		 (*iter).second % material_nums[(*iter).first].mat_name);
     }
     me->doTell(ch->getName(), fmt("My fee for this is %i talens.") %
