@@ -29,8 +29,8 @@ static const char* helpCategory[DB_MAX] = {
   NULL,
   NULL,
   "Help_files", // mortal
-  "Help_files", // builder
-  "Help_files", // admin
+  "Buildhelp", // builder
+  "Wikihelp", // admin
 };
 
 static const char* defaultPage[DB_MAX] = {
@@ -41,8 +41,8 @@ static const char* defaultPage[DB_MAX] = {
   NULL,
   NULL,
   "Help", // mortal
-  "Help", // builder
-  "Help", // admin
+  "Buildhelp", // builder
+  "Wikihelp", // admin
 };
 
 #if 0
