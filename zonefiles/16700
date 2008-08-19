@@ -4,6 +4,7 @@ Deirdre - Player Homes~
 D 0 16700 5 2        Cramped Attic (Sage's house) -> Tanni's Jewelry Store
 D 0 16701 5 2        Galek Armory (Sage's house) -> Magical Nexus
 D 0 16702 5 2        Gon's House -> Barracks
+D 0 16710 1 2        TheSaint's Door -> Gon's House
 D 0 16705 5 2        Raven's Nest -> Above a Treetop
 D 0 16708 5 2        Unfinished Bungalow On Stilts -> The Grimhaven City Dump
 
@@ -45,7 +46,7 @@ P 1 16738 1 23171       vase on a small table
 O 0 16740 1 16702       wastebasket
 
 * Gon's house, Bedroom
-O 0 16723 6 16703       a walnut wood wardrobe with lapis lazuli inlay
+O 0 16723 9 16703       a walnut wood wardrobe with lapis lazuli inlay
 O 0 16712 6 16703       an equipment rack
 O 0 16722 1 16703       a wall-mounted lantern
 O 0 9057 1 16703        a plush oak chair
@@ -95,6 +96,15 @@ P 1 19080 12 16745      a paper cup in the ice chest up to 12
 P 1 19080 12 16745      a paper cup in the ice chest up to 12
 P 1 19080 12 16745      a paper cup in the ice chest up to 12
 O 0 10209 1 16704       a fireplace
+
+* Gon's house (TheSaint's Room)
+O 0 16723 1 16710       a walnut lapis wardrobe
+O 0 16712 1 16710       an equipment rack
+O 0 22 1 16710          a bed
+O 0 23 1 16710          a table
+O 0 20 1 16710          a chair
+O 0 16730 1 16710       a small wooden chest
+O 0 16722 1 16710       a wall mounted lantern
 
 * Raven's nest (in Grimhaven Park)
 O 0 16744 1 16705       a large bird bath
