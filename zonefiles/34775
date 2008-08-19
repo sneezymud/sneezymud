@@ -23,13 +23,13 @@ O 0 34775 1 34788
 O 0 34775 1 34789
 O 0 34775 1 34790
 O 0 34775 1 34791
-O 0 34775 6 34792
+O 0 34775 1 34792
 O 0 34775 1 34793
 O 0 34775 1 34794
 O 0 34775 1 34796
 
-O 0 34776 3 34777    3-wick Candle
-O 0 34777 2 34777    Slabs of stone
+O 0 34776 1 34777    3-wick Candle
+O 0 34777 1 34777    Slabs of stone
 O 0 34789 1 34789    Chest of Heavy Granite
 ? 0 5 0 P
 P 1 34788 1 34789         A human skull in a Chest of Heavy Granite
