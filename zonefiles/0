@@ -340,7 +340,6 @@ M 0 599 1 1177        butler
 M 0 33550 1 33565     Farmer's wife
 M 0 9725 1 9725       lava golem - private apartment's butler
 M 0 33294 1 33294	governess for the serpant hall
-M 0 44845 1 44853     The Nestkeeper for the birdman zone
 *O 0 0 1 13	END INNKEEPER LOADS
 
 *O 0 0 1 13	BEGIN REPAIRSHOP LOADS
