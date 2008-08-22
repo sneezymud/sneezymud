@@ -24,16 +24,16 @@
 
 extern int task_bogus         (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_sharpening    (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
-extern int task_blacksmithing        (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
+extern int task_blacksmithing (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_repair_dead   (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_repair_organic(TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_repair_wood   (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_repair_magical(TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_repair_rock   (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
-extern int task_blacksmithing_advanced(TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
+extern int task_repair_gem    (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_mend_hide     (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_mend          (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
-extern int task_repair_spiritual(TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
+extern int task_repair_spirit (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_trap_door     (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_get           (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_spell_friends (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
@@ -50,7 +50,7 @@ extern int task_scribe        (TBeing *, cmdTypeT, const char *, int, TRoom *, T
 extern int task_trap_container(TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_trap_mine     (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_trap_grenade  (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
-extern int task_trap_arrow  (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
+extern int task_trap_arrow    (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_yoginsa       (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_attuning      (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_tracking      (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);

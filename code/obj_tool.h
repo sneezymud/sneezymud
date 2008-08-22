@@ -36,8 +36,6 @@ class TTool : public TObj {
     virtual void unequipMe(TBeing *);
     virtual void describeCondition(const TBeing *) const;
     virtual void describeObjectSpecifics(const TBeing *) const;
-    virtual void findBlacksmithingTools(TTool **, TTool**);
-    virtual void blacksmithingPulse(TBeing *, TObj *);
     virtual void pickPulse(TBeing *);
     virtual int  skinPulse(TBeing *, TBaseCorpse *);
     virtual int  butcherPulse(TBeing *, TBaseCorpse *);
@@ -48,7 +46,7 @@ class TTool : public TObj {
     void setToolType(toolTypeT r);
     int getToolUses() const;
     void setToolUses(int r);
-    void addToToolUses(int r);
+    bool addToToolUses(int r);
     int getToolMaxUses() const;
     void setToolMaxUses(int r);
     void addToToolMaxUses(int r);

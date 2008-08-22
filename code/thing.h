@@ -314,7 +314,7 @@ class TThing {
     virtual int ChargePulse(TBeing *);
     virtual void unequipMe(TBeing *) {}
     virtual void findBlacksmithingTools(TTool **, TTool **) {}
-    virtual void blacksmithingPulse(TBeing *, TObj *);
+    //virtual void blacksmithingPulse(TBeing *, TObj *);
     virtual void attunePulse(TBeing *);
     virtual void pickPulse(TBeing *);
     virtual int  skinPulse(TBeing *, TBaseCorpse *);

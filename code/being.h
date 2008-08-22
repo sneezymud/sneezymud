@@ -2149,22 +2149,6 @@ class TBeing : public TThing {
     int genericRestore(restoreTypeT);
     void makeOutputPaged();
     TThing * findArrow(const char *, silentTypeT) const;
-    
-    TCommodity *getRepairMaterial(ubyte);
-    int get_metal_tools(TTool **, TTool **, TTool **, TTool **);
-    int get_dead_tools(TTool **, TTool **, TTool **);
-    int get_wood_tools(TTool **, TTool **);
-    int get_shell_tools(TTool **, TTool **);
-    int get_magic_tools(TTool **, TTool **, TTool **);
-    int get_rock_tools(TTool **, TTool **, TTool **);
-    int get_gemmed_tools(TTool **, TTool **, TTool **);
-    int get_leather_tools(TTool **, TTool **);
-    int get_paper_tools(TTool **);
-    int get_melt_tools(TTool **);
-    int get_weave_tools(TTool **);
-    int get_sew_tools(TTool **, TTool **);
-    int get_ceramic_tools(TTool **);
-    int get_spirit_tools(TTool **, TTool **, TTool **);
 
     void addToRandomStat(int);
 

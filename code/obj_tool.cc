@@ -53,9 +53,10 @@ void TTool::setToolUses(int r)
   tool_uses = r;
 }
 
-void TTool::addToToolUses(int r)
+bool TTool::addToToolUses(int r)
 {
   tool_uses += r;
+  return tool_uses > 0;
 }
 
 int TTool::getToolMaxUses() const
