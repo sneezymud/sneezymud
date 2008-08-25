@@ -2310,7 +2310,7 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
   }
 
   if(!bootTime)
-    vlogf(LOG_MISC, fmt("Resetting zone '%s' (rooms %d-%d).") % 
+    vlogf(LOG_SILENT, fmt("Resetting zone '%s' (rooms %d-%d).") % 
 	  name % bottom % top);
 
   if(!bootTime)
