@@ -709,8 +709,7 @@ private:
     virtual void valueMe(TBeing *, TMonster *, int, int);
     virtual const sstring shopList(const TBeing *, const sstring &, int, int, int, int, int, unsigned long int) const;
     virtual int damageItem(sh_int);
-    virtual void scrapMonogrammed();
-    virtual void makeScraps();
+    virtual bool makeScraps();
     virtual int shopPrice(int, int, float, const TBeing *) const;
     virtual int sellPrice(int ,int, float, const TBeing *);
     virtual void divinateMe(TBeing *) const;

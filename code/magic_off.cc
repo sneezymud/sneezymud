@@ -55,17 +55,17 @@ void TBeing::shatterWeapon(wearSlotT slot, int scrap_it)
       act(buf, FALSE, this, shattered, NULL, TO_ROOM);
 
       if (scrap_it) {
-	shattered->makeScraps();
-        delete shattered;
+        if (shattered->makeScraps())
+          delete shattered;
         shattered = NULL;
       } else {
-	shattered->addToStructPoints(-dice(3, 10));
-	if (shattered->getStructPoints() < 0) {
-	  shattered->makeScraps();
-          delete shattered;
+	      shattered->addToStructPoints(-dice(3, 10));
+	      if (shattered->getStructPoints() < 0) {
+          if (shattered->makeScraps())
+            delete shattered;
           shattered = NULL;
-	} else
-	  act("$p seems to be okay, though you can tell it took a lot of damage.", FALSE, this, shattered, NULL, TO_CHAR);
+	      } else
+	        act("$p seems to be okay, though you can tell it took a lot of damage.", FALSE, this, shattered, NULL, TO_CHAR);
       }
     }
   }

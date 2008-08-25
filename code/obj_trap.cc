@@ -193,8 +193,8 @@ int TTrap::detonateGrenade()
       act("$n is utterly torn apart by the concussion of $p.",
            FALSE, tobj, this, 0, TO_ROOM, ANSI_RED);
     }
-    tobj->makeScraps();
-    delete tobj;
+    if (tobj->makeScraps())
+      delete tobj;
     tobj = NULL;
   }
 

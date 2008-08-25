@@ -40,7 +40,7 @@ void TBeing::doPreen(sstring &argument)
   }
   if (!getMyRace()->isFeathered())
   {
-    sendTo("You don't know the first thing about preeing those feathers!\n\r");
+    sendTo("You don't know the first thing about preening those feathers!\n\r");
     return;
   }
   else if (isFlying())

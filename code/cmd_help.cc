@@ -30,7 +30,7 @@ static const char* helpCategory[DB_MAX] = {
   NULL,
   "Help_files", // mortal
   "Buildhelp", // builder
-  "Wikihelp", // admin
+  "Wizhelp", // admin
 };
 
 static const char* defaultPage[DB_MAX] = {
@@ -42,7 +42,7 @@ static const char* defaultPage[DB_MAX] = {
   NULL,
   "Help", // mortal
   "Buildhelp", // builder
-  "Wikihelp", // admin
+  "Wizhelp", // admin
 };
 
 #if 0
@@ -293,11 +293,15 @@ void replaceWikiTable(sstring &data)
     int cCols = 0;
 
     if (cRows <= 0)
+      cRows = table.countSubstr("|-\n|");
+
+    if (cRows <= 0)
       return;
 
     // normalize table into simple delimited
     table.inlineRemoveBetween("{|", "|-", true);
-    table.inlineRemoveBetween("!", "|", true);
+    table.inlineRemoveBetween("!", "|", false);
+    table.inlineReplaceString("!|", "||");
     table.inlineReplaceString("\n", "");
     table.inlineReplaceString("\r", ""); // not really used in wikitext
     table.inlineReplaceString("|}", "");
@@ -367,11 +371,6 @@ sstring wiki_to_text(const Descriptor *desc, sstring titleIn, const sstring modi
   sstring blue = desc->blueBold();
   sstring norm = desc->norm();
 
-  // unescape title
-  titleIn.inlineReplaceString("\\_", "\255");
-  titleIn.inlineReplaceString("_", " ");
-  titleIn.inlineReplaceString("\255", "_");
-
   // print title
   sstring textOut = fmt("%s%-30.30s (Last Updated: %s/%s, %s)%s\n\r") % desc->green() %
     titleIn % modified.substr(4,2) % modified.substr(6,2) % modified.substr(0,4) % desc->norm();
@@ -379,10 +378,14 @@ sstring wiki_to_text(const Descriptor *desc, sstring titleIn, const sstring modi
 
   // remove markup which has no relevance to text (and category)
   textOut.inlineRemoveBetween("[[Category:", "]]", true, true);
+  textOut.inlineRemoveBetween("[[category:", "]]", true, true);
   textOut.inlineRemoveBetween("{{", "}}", true, true);
   textOut.inlineRemoveBetween("[[Media:", "]]", true, true);
+  textOut.inlineRemoveBetween("[[media:", "]]", true, true);
+  textOut.inlineRemoveBetween("[Http:", "]", true, true);
   textOut.inlineRemoveBetween("[http:", "]", true, true);
   textOut.inlineRemoveBetween("[[Image:", "]]", true, true);
+  textOut.inlineRemoveBetween("[[image:", "]]", true, true);
   textOut.inlineRemoveBetween("[[Math:", "]]", true, true);
   textOut.inlineReplaceString("--~~~~", "");
   textOut.inlineReplaceString("</pre>", "");
@@ -390,6 +393,7 @@ sstring wiki_to_text(const Descriptor *desc, sstring titleIn, const sstring modi
   textOut.inlineReplaceString("</nowiki>", "");
   textOut.inlineReplaceString("<nowiki>", "");
   textOut.inlineReplaceString("[[:Category:", "[[");
+  textOut.inlineReplaceString("[[:category:", "[[");
 
   // fixup tables
   replaceWikiTable(textOut);
@@ -408,6 +412,9 @@ sstring wiki_to_text(const Descriptor *desc, sstring titleIn, const sstring modi
   // remove italics
   textOut.inlineReplaceString("''", "");
 
+  // replace html quote with ascii
+  textOut.ascify();
+
   // trim whitespace-only lines
   textOut.inlineTrimWhiteLines();
 
@@ -423,7 +430,7 @@ sstring wiki_to_text(const Descriptor *desc, sstring titleIn, const sstring modi
 // given an argIn of a name of a title, find the best match for an article
 // you can use '.' at the end of the arg to denote an exact match (not substring)
 // empty arg will give you the "help files" page if it exists
-void wiki_findTitle(const TBeing *ch, dbTypeT type, const sstring argIn)
+void wiki_findTitle(const TBeing *ch, dbTypeT type, const sstring argIn, bool listArticles)
 {
   sstring arg = argIn.trim();
   TDatabase db(type);
@@ -481,7 +488,7 @@ void wiki_findTitle(const TBeing *ch, dbTypeT type, const sstring argIn)
     int childWidth = 0;
 
     db.query("SELECT cl_sortkey, page_namespace FROM mw_page, mw_categorylinks WHERE cl_from = page_id AND \
-                cl_to = '%s' ORDER BY cl_sortkey LIMIT 201;", title.c_str());
+                cl_to = '%s' and page_title != '%s' ORDER BY cl_sortkey LIMIT 201;", title.c_str(), title.c_str());
     while (db.fetchRow())
     {
       int page_namespace = convertTo<int>(db["page_namespace"]);
@@ -498,6 +505,9 @@ void wiki_findTitle(const TBeing *ch, dbTypeT type, const sstring argIn)
       else
         cArticles++;
 
+      // replace html quotes with ascii
+      add.ascify();
+
       if (*pWidth && *pWidth + add.length() + 2 > ARTICLE_LIST_WIDTH)
       {
         (*pList) += "\n\r";
@@ -511,13 +521,19 @@ void wiki_findTitle(const TBeing *ch, dbTypeT type, const sstring argIn)
     }
   }
 
+  // unescape title
+  title.inlineReplaceString("\\_", "\255");
+  title.inlineReplaceString("_", " ");
+  title.inlineReplaceString("\255", "_");
+  title.ascify();
+
   // modify the article text
   article = wiki_to_text(ch->desc, title, lastModified, article);
 
   if (cCategories > 0)
     article += fmt("\n\r%sThere are %i subcategories under the category '%s':%s\n\r\%s\n\r") % ch->desc->orangeBold() %
                     cCategories % title % ch->desc->norm() % subCategories;
-  if (cArticles > 0)
+  if (listArticles && cArticles > 0)
     article += fmt("\n\r%sThere are %i articles under the category '%s':%s\n\r\%s\n\r") % ch->desc->orangeBold() %
                     cArticles % title % ch->desc->norm() % childArticles;
 
@@ -641,13 +657,13 @@ void TBeing::doHelp(const char *arg)
 
   one_argument(arg, searchBuf, cElements(searchBuf));
 
-  if (!strncmp(searchBuf, "-l", 2)) {
-    sendTo(COLOR_BASIC, "<r>Help search functionality currently disabled.<1>\n\r");
+  if (isImmortal() && !strncmp(searchBuf, "-l", 2)) {
+    wiki_findTitle(this, DB_WIKI_MORTAL, arg+2, true);
     return;
   } 
 
   if (isImmortal() && !strncmp(searchBuf, "-w", 2)) {
-    wiki_findTitle(this, DB_WIKI_MORTAL, arg+2);
+    wiki_findTitle(this, DB_WIKI_MORTAL, arg+2, false);
     return;
   } 
 
@@ -1260,10 +1276,12 @@ void TBeing::doBuildhelp(const char* arg)
     return;
   }
 
-  if (!strncmp(arg, "-s ", 3))
-    wiki_searchText(this, DB_WIKI_BUILDER, arg+3);
+  if (!strncmp(arg, "-s", 2))
+    wiki_searchText(this, DB_WIKI_BUILDER, arg+2);
+  else if (!strncmp(arg, "-l", 2))
+    wiki_findTitle(this, DB_WIKI_BUILDER, arg+2, true);
   else
-    wiki_findTitle(this, DB_WIKI_BUILDER, arg);
+    wiki_findTitle(this, DB_WIKI_BUILDER, arg, false);
 }
 
 void TBeing::doWizhelp(const char *arg)
@@ -1281,14 +1299,19 @@ void TBeing::doWizhelp(const char *arg)
     return;
   for (; isspace(*arg); arg++);
 
-  if (hasWizPower(POWER_WIZARD) && !strncmp(arg, "-s ", 3))
+  if (hasWizPower(POWER_WIZARD) && !strncmp(arg, "-s", 2))
   {
-    wiki_searchText(this, DB_WIKI_ADMIN, arg+3);
+    wiki_searchText(this, DB_WIKI_ADMIN, arg+2);
     return;
   }
-  if (hasWizPower(POWER_WIZARD) && !strncmp(arg, "-w ", 3))
+  if (hasWizPower(POWER_WIZARD) && !strncmp(arg, "-w", 2))
   {
-    wiki_findTitle(this, DB_WIKI_ADMIN, arg+3);
+    wiki_findTitle(this, DB_WIKI_ADMIN, arg+2, false);
+    return;
+  }
+  if (hasWizPower(POWER_WIZARD) && !strncmp(arg, "-l", 2))
+  {
+    wiki_findTitle(this, DB_WIKI_ADMIN, arg+2, true);
     return;
   }
 

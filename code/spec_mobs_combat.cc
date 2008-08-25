@@ -517,8 +517,8 @@ int rust_monster(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
               act("$p is decayed by $N's rust!", FALSE, tmp_ch, eq, me, TO_CHAR);
               eq->addToStructPoints(-1);
               if (eq->getStructPoints() <= 0) {
-                eq->makeScraps();
-                delete eq;
+                if (eq->makeScraps())
+                  delete eq;
                 eq = NULL;
               }
 

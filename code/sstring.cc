@@ -359,6 +359,31 @@ int sstring::countSubstr(const sstring sub) const
   return c;
 }
 
+// removes characters which are now allowable in ascii
+void sstring::ascify()
+{
+  size_t remove = sstring::npos;
+  for(size_t i = 0; i < length(); i++)
+  {
+    int c = (*this)[i];
+    bool nonAscii = (c < 0 || c > 127);
+
+    if (remove == sstring::npos && nonAscii)
+      remove = i;
+    else if (remove != sstring::npos && !nonAscii)
+    {
+      replace(remove, i-remove, "", 0);
+      i = remove;
+      remove = sstring::npos;
+    }
+  }
+  if (remove != sstring::npos)
+  {
+    replace(remove, length()-remove, "", 0);
+  }
+}
+
+
 bool isvowel(const char c)
 {
   switch (c) {

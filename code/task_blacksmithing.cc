@@ -128,15 +128,13 @@ TTool* BaseRepair::GetRoomTool(int vnum)
 bool BaseRepair::DamageTool(bool primary, TObj *o, bool makeScraps)
 {
   TTool *tool = primary ? GetPrimaryTool() : GetSecondaryTool();
-  tool->addToToolUses(-1);
-  if (tool->getToolUses() <= 0)
+  if (!tool->addToToolUses(-1))
   {
     act(primary ? DiePToolMsgC() : DieSToolMsgC(), FALSE, m_ch, o, tool, TO_CHAR);
     act(primary ? DiePToolMsgR() : DieSToolMsgR(), FALSE, m_ch, o, tool, TO_ROOM);
-    if (makeScraps)
-      tool->makeScraps();
+    if (!makeScraps || tool->makeScraps())
+      delete tool;
     m_ch->stopTask();
-    delete tool;
     return true;
   }
   return false;
@@ -166,6 +164,9 @@ bool BaseRepair::ConsumeRepairMats(TObj *o)
 {
     int mats_needed=(int)((o->getWeight() / (float)o->getMaxStructPoints()) * 10.0);	
     mats_needed = (int)(repair_mats_ratio * mats_needed);
+    // monogrammed items take 25% of normal mats to repair
+    if (o->isMonogrammed())
+      mats_needed = mats_needed / 4;
     if(mats_needed)
     {
       TCommodity *mat;
@@ -309,19 +310,11 @@ int BaseRepair::PumpMessage(cmdTypeT cmd, int pulse)
 
       if (o->getStructPoints() <= 1)
       {
-        if (!o->isMonogrammed())
-        {
-          act("$n screws up repairing $p and utterly destroys it.", FALSE, m_ch, o, NULL, TO_ROOM);
-          act("You screw up repairing $p and utterly destroy it.", FALSE, m_ch, o, NULL, TO_CHAR);
-          o->makeScraps();
+        act("$n screws up repairing $p and wrecks it.", FALSE, m_ch, o, NULL, TO_ROOM);
+        act("You screw up your job by dropping $p and wrecking it.", FALSE, m_ch, o, NULL, TO_CHAR);
+        if (o->makeScraps())
           delete o;
-        }
-        else
-        {
-          act("$n screws up repairing $p and wrecks it, good thing it was monogrammed.", FALSE, m_ch, o, NULL, TO_ROOM);
-          act("You screw up your job by dropping $p and wrecking it.  Good thing it was monogrammed.", FALSE, m_ch, o, NULL, TO_CHAR);
-          o->scrapMonogrammed();
-        }
+
         m_ch->stopTask();
         return FALSE;
       } // (o->getStructPoints() <= 1)

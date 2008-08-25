@@ -37,6 +37,9 @@ public:
   const bool isWord() const;
   const bool startsVowel() const;
 
+  // string mungers
+  void ascify();
+
   // inlines
   void inlineReplaceString(const string f, const string r) {
     string::size_type start = 0;
@@ -128,7 +131,6 @@ public:
   {
     resize(length()+num, pad);
   }
-
 };
 
 extern bool isvowel(const char c);

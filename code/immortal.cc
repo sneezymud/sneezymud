@@ -1849,8 +1849,8 @@ void TBeing::doTransformDrop(wearSlotT slot)
                TRUE,this,0,0,TO_CHAR);
           act("You hear a loud wrending sound coming from $n's limbs.",
                TRUE,this,0,0,TO_ROOM);
-          tmp->makeScraps();
-          delete tmp;
+          if (tmp->makeScraps())
+            delete tmp;
           tmp = NULL;
           return;
         default:
@@ -1861,8 +1861,8 @@ void TBeing::doTransformDrop(wearSlotT slot)
                  TRUE,this,0,0,TO_CHAR);
             act("You hear a loud wrending sound coming from $n's limbs.",
                  TRUE,this,0,0,TO_ROOM);
-            tmp->makeScraps();
-            delete tmp;
+            if (tmp->makeScraps())
+              delete tmp;
             tmp = NULL;
           } else {
             act("You hear a small grinding sound coming from your new limb as something drops to the $g.", TRUE,this,0,0,TO_CHAR);

@@ -313,8 +313,6 @@ class TThing {
     virtual int garottePulse(TBeing *, affectedData *);
     virtual int ChargePulse(TBeing *);
     virtual void unequipMe(TBeing *) {}
-    virtual void findBlacksmithingTools(TTool **, TTool **) {}
-    //virtual void blacksmithingPulse(TBeing *, TObj *);
     virtual void attunePulse(TBeing *);
     virtual void pickPulse(TBeing *);
     virtual int  skinPulse(TBeing *, TBaseCorpse *);
@@ -324,7 +322,7 @@ class TThing {
     virtual void findSym(TSymbol **) {}
     const sstring getNameNOC(const TBeing *) const;
     virtual int sellCommod(TBeing *, TMonster *, int, TThing *);
-    virtual void makeScraps() {}
+    virtual bool makeScraps() { return true; }
     virtual void attunerValue(TBeing *, TMonster *);
     virtual void attunerGiven(TBeing *, TMonster *);
     virtual int reciteMe(TBeing *, const char *);

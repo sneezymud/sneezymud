@@ -1374,13 +1374,9 @@ int TObj::burnObject(TBeing *ch, int perc)
         }
       }
     }
-    if (isMonogrammed()){
-      scrapMonogrammed();
-      return TRUE;
-    } else {
-      makeScraps();
+    if (makeScraps())
       return DELETE_THIS;
-    }
+    return TRUE;
   } else {
     setStructPoints(getStructPoints()-burndam);
     
@@ -1663,8 +1659,9 @@ int TObj::freezeObject(TBeing *ch, int perc)
       } else {
         act("The chill freezes $n and it shatters.",TRUE,this,0,0,TO_ROOM);
       }
-      makeScraps();
-      return DELETE_THIS;
+      if (makeScraps())
+        return DELETE_THIS;
+      return TRUE;
     case MAT_MICA:
     case MAT_AMETHYST:
     case MAT_QUARTZ:
@@ -1680,7 +1677,6 @@ int TObj::freezeObject(TBeing *ch, int perc)
         } else {
           act("   $n $r destroyed.",TRUE,this,0,0,TO_ROOM); 
         }
-        return DELETE_THIS;
       }
       return TRUE;
     default:
@@ -2091,7 +2087,8 @@ int TBeing::shieldAbsorbDamage(int dam)
     act("$p partially blocks the blast but is utterly destroyed at the same time.",TRUE,
          this,shield, 0,TO_ROOM);
     unequip(slot);
-    delete shield;
+    if (shield->makeScraps())
+      delete shield;
     shield = NULL;
   } else {
     act("$p partially blocks the blast but is seriously damaged at the same time.",TRUE,

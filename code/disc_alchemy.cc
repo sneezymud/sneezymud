@@ -2047,8 +2047,9 @@ int castGalvanize(TBeing *caster, TObj *obj)
              FALSE, caster, obj, 0, TO_CHAR);
     act("Brown goo seeps from $p.", 
              FALSE, caster, obj, 0, TO_ROOM);
-    obj->makeScraps();
-    return DELETE_ITEM;
+    if (obj->makeScraps())
+      return DELETE_ITEM;
+    return FALSE;
   }
   if (IS_SET(ret, SPELL_CRIT_FAIL)) {
     act("Brown goo seeps from $p.  Ooops, that didn't go quite right.", 
@@ -2057,8 +2058,9 @@ int castGalvanize(TBeing *caster, TObj *obj)
              FALSE, caster, obj, 0, TO_ROOM);
     if (obj->getStructPoints() <= 0 &&
         obj->getMaxStructPoints() >= 0) {
-      obj->makeScraps();
-      return DELETE_ITEM;
+      if (obj->makeScraps())
+        return DELETE_ITEM;
+      return FALSE;
     }
   }
   return FALSE;

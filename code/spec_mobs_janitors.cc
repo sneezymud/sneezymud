@@ -15,7 +15,7 @@ bool okForJanitor(TMonster *myself, TObj *obj)
   if (!myself->canSee(obj) || (obj->in_room == ROOM_DONATION))
     return false;
   // monogrammed valuables have important owners - leave them alone
-  if (obj->isMonogrammed() && obj->getValue() > 1000)
+  if (obj->isMonogrammed())
     return false;
 
   // don't let them pick up 3000 pound wagons because that's retarded

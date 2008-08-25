@@ -145,6 +145,10 @@ int TObj::repairPrice(TBeing *repair, TBeing *buyer, depreciationTypeT dep_done,
   int mats_needed=(int)(getWeight()* 10.0 * perc_repaired);
   mats_needed = (int)(repair_mats_ratio * mats_needed);
 
+  // monogrammed items take 25% of normal mats to repair
+  if (isMonogrammed())
+    mats_needed = mats_needed / 4;
+
   // add in the price of the raw material
   mat_price+=findRepairMaterials(shop_nr, repair, buyer, getMaterial(), mats_needed, purchase);
 

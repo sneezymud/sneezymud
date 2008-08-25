@@ -466,7 +466,9 @@ int TObj::checkFalling()
               else
                 act("With a loud CLUNK, $n smacks into the $g and is utterly destroyed.",
                   FALSE, this, 0, 0, TO_ROOM);
-              return DELETE_THIS;
+              if (makeScraps())
+                return DELETE_THIS;
+              return TRUE;
             }
           }
       if (damaged) {

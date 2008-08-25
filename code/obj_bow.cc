@@ -297,12 +297,13 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
     if (!::number(0, getStructPoints()) &&
         ch->roomp && !ch->roomp->isRoomFlag(ROOM_ARENA)) {
       ch->sendTo("As you try to shoot, your bow is shattered!\n\r");
-      makeScraps();
       act("$p falls to the $g harmlessly.", FALSE, ch, the_arrow, NULL, TO_CHAR);
       act("$p falls to the $g harmlessly.", FALSE, ch, the_arrow, NULL, TO_ROOM);
       --(*the_arrow);
       *ch->roomp += *the_arrow;
-      return DELETE_THIS;
+      if (makeScraps())
+        return DELETE_THIS;
+      return FALSE;
     } else {
       ch->sendTo("Your bowstring snaps! It will need repair before further use!\n\r");
       addToStructPoints(-1);

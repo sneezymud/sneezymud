@@ -1087,121 +1087,84 @@ int TObj::damageItem(sh_int amt)
   addToStructPoints(max(-amt, -getStructPoints()));
 
   if(getStructPoints() <= 0){
-    if(isMonogrammed()){
-      scrapMonogrammed();
-      return TRUE;
-    } else {
-      makeScraps();
+    if (makeScraps())
       return DELETE_THIS;
-    }
+    return TRUE;
   }
 
   return FALSE;
 }
 
-void TObj::scrapMonogrammed()
+bool scrapMonogrammed(TObj *o)
 {
   TThing *x = NULL, *tmp = NULL, *ch = NULL;
-  TBaseCup *tbc=dynamic_cast<TBaseCup *>(this);
-  TBeing *cht;
-  
-  // make sure it gets snuffed out
-  if (isObjStat(ITEM_BURNING))
-    remBurning(NULL);
-  
-  // if it's a liquid container, drop the liquid in the room
-  if(tbc){
-    if((ch = parent) && (cht=dynamic_cast<TBeing *>(parent))){
-      cht->dropPool(tbc->getDrinkUnits(), tbc->getDrinkType());
-    } else if(roomp){
-      roomp->dropPool(tbc->getDrinkUnits(), tbc->getDrinkType());
-    }
-    tbc->setDrinkUnits(0);
-  }
 
-
-  if (getStuff()) {
-    if ((ch = parent)) {
-      while ((x = getStuff())) {
-        --(*x);
-        *ch += *x;
-      }
-    } else if ((ch = equippedBy)) {
-      while ((x = getStuff())) {
-        --(*x);
-        if (ch->roomp)
-          *ch->roomp += *x;
-        else
-          vlogf(LOG_COMBAT,fmt("EquippedBy without a roomp %s") % ch->getName());
-      }
-    }
-  }
-
-  if (((ch = parent) && parent->roomp) || 
-      (ch = equippedBy) || (ch = stuckIn)) {
-    act("$p falls to the $g.", TRUE, ch, this, NULL, TO_ROOM);
-    act("Your $o falls to the $g.", FALSE, ch, this, NULL, TO_CHAR, ANSI_RED);
+  if (((ch = o->parent) && o->parent->roomp) || 
+      (ch = o->equippedBy) || (ch = o->stuckIn)) {
+    act("$p falls to the $g.", TRUE, ch, o, NULL, TO_ROOM);
+    act("Your $o falls to the $g.", FALSE, ch, o, NULL, TO_CHAR, ANSI_RED);
 
     vlogf(LOG_COMBAT, fmt("%s's (monogrammed) %s just scrapped.") %
-	  ch->getName() % getName());
+	  ch->getName() % o->getName());
   } else {
-    if ((parent && (tmp = parent->equippedBy)) || (tmp = parent))  {
+    if ((o->parent && (tmp = o->parent->equippedBy)) || (tmp = o->parent))  {
       while (tmp) {
         if (tmp->roomp) {
-          act("Your $o falls to the $g.", TRUE, tmp, this, NULL, TO_CHAR, ANSI_RED);
-          act("$p falls to the $g.", TRUE, tmp, this, NULL, TO_ROOM);
+          act("Your $o falls to the $g.", TRUE, tmp, o, NULL, TO_CHAR, ANSI_RED);
+          act("$p falls to the $g.", TRUE, tmp, o, NULL, TO_ROOM);
           break;
         }
         tmp = tmp->parent;
       }
-    } else if (roomp) {
-      act("$n is destroyed.", TRUE, this, NULL, NULL, TO_ROOM);
+    } else if (o->roomp) {
+      act("$n is destroyed.", TRUE, o, NULL, NULL, TO_ROOM);
     } else 
-      vlogf(LOG_COMBAT, fmt("Something in scrapMonogrammed isn't in a room %s.") %  getName());
+      vlogf(LOG_COMBAT, fmt("Something in scrapMonogrammed isn't in a room %s.") %  o->getName());
   }
 
   TBeing *chb;
-  if ((ch = parent)) {
-    --(*this);
+  if ((ch = o->parent)) {
+    --(*o);
     if (ch->roomp)
-      *ch->roomp += *this;
+      *ch->roomp += *o;
     else
-      *ch += *this;
-    return;
-  } else if ((chb = stuckIn)) {
-    chb->setStuckIn(eq_stuck, NULL);
+      *ch += *o;
+    return false;
+  } else if ((chb = o->stuckIn)) {
+    chb->setStuckIn(o->eq_stuck, NULL);
     if (chb->roomp)
-      *chb->roomp += *this;
+      *chb->roomp += *o;
     else 
-      *chb += *this;
-    return;
-  } else if ((ch = equippedBy)) {
+      *chb += *o;
+    return false;
+  } else if ((ch = o->equippedBy)) {
     TBeing * tbt = dynamic_cast<TBeing *>(ch);
-    scrapMe(tbt);
+    o->scrapMe(tbt);
     TThing *o2 = NULL;
-    o2 = tbt->unequip(eq_pos);
+    o2 = tbt->unequip(o->eq_pos);
     // unequip deletes bandages
     if (!o2)
-      return;
+      return false;
 
     if (tbt->roomp) 
-      *tbt->roomp += *this;
+      *tbt->roomp += *o;
     else 
-      *tbt += *this;
+      *tbt += *o;
     
-    return;
+    return false;
   }
   // at this point, "this" is guaranteed to be in roomp
 
-  while (getStuff()) {
-    x = getStuff();
+  while (o->getStuff()) {
+    x = o->getStuff();
     --(*x);
-    *roomp += *x;
+    *o->roomp += *x;
   }
+  return false;
 }
 
 // all calls to this function should delete obj afterwards
-void TObj::makeScraps()
+bool TObj::makeScraps()
 {
   TTrash *o = NULL;
   TThing *x = NULL, *tmp = NULL, *ch = NULL;
@@ -1211,6 +1174,9 @@ void TObj::makeScraps()
   TBeing *cht;
   TBeing *owner = NULL;
 
+  if (isObjStat(ITEM_BURNING))
+    remBurning(NULL);
+
   // if it's a liquid container, drop the liquid in the room
   if(tbc){
     if((ch = parent) && (cht=dynamic_cast<TBeing *>(parent))){
@@ -1218,8 +1184,8 @@ void TObj::makeScraps()
     } else if(roomp){
       roomp->dropPool(tbc->getDrinkUnits(), tbc->getDrinkType());
     }
+    tbc->setDrinkUnits(0);
   }
-
 
   if (getStuff()) {
     if ((ch = parent)) {
@@ -1237,6 +1203,9 @@ void TObj::makeScraps()
       }
     }
   }
+
+  if (isMonogrammed())
+    return scrapMonogrammed(this);
 
   // get owner name
   owner = dynamic_cast<TBeing *>(parent); // inventory
@@ -1318,14 +1287,14 @@ void TObj::makeScraps()
       *ch->roomp += *o;
     else
       *ch += *o;
-    return;
+    return false;
   } else if ((chb = stuckIn)) {
     chb->setStuckIn(eq_stuck, NULL);
     if (chb->roomp)
       *chb->roomp += *o;
     else 
       *chb += *o;
-    return;
+    return false;
   } else if ((ch = equippedBy)) {
     TBeing * tbt = dynamic_cast<TBeing *>(ch);
     scrapMe(tbt);
@@ -1333,14 +1302,14 @@ void TObj::makeScraps()
     o2 = tbt->unequip(eq_pos);
     // unequip deletes bandages
     if (!o2)
-      return;
+      return false;
 
     if (tbt->roomp) 
       *tbt->roomp += *o;
     else 
       *tbt += *o;
     
-    return;
+    return false;
   }
   // at this point, "this" is guaranteed to be in roomp
 
@@ -1351,6 +1320,7 @@ void TObj::makeScraps()
   }
   if (roomp)
     *roomp += *o;
+  return false;
 }
 
 static void absorb_damage(TBeing *v, wearSlotT part_hit, int *dam)

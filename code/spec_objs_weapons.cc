@@ -279,8 +279,8 @@ int blazeOfGlory(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
       o->addToStructPoints(-5);
       o->setDepreciation(o->getDepreciation() + 5);
       if (o->getStructPoints() <= 0) {
-	o->makeScraps();
-	delete o;
+	      if (o->makeScraps())
+          delete o;
       }
       int rc2 = ch->reconcileDamage(ch, dam, DAMAGE_FIRE);
       act("<R>KA-BOOOOOOOOOOM! You explode in a <O>blaze of glory<R> as you crash into $N<R>!!!<1>",TRUE,ch,o,vict,TO_CHAR,NULL);

@@ -119,8 +119,8 @@ int graffitiMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   if (tool->getToolUses() <= 0) {
     act("Your $p is all used up.", FALSE, ch, o, NULL, TO_CHAR);
     act("$n uses up the last of $s $p.", FALSE, ch, o, NULL, TO_ROOM);
-    tool->makeScraps();
-    delete tool;
+    if (tool->makeScraps())
+      delete tool;
     tool = NULL;
   }
   return TRUE;

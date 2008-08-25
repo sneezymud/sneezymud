@@ -1951,6 +1951,7 @@ int TObj::objectTickUpdate(int pulse)
   // damage things in water
   // portals,windows get a pass on this
   if ((getStructPoints() != -1) &&
+      !isMonogrammed() &&
       roomp && roomp->isWaterSector() &&
       !dynamic_cast<TSeeThru *>(this)) {
     if (dice(1, 10) <= (material_nums[getMaterial()].water_susc % 10)) {
