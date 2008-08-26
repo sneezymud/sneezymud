@@ -437,7 +437,7 @@ void TBeing::doZones(sstring tStString)
     float sortVal = usingMedian ? float(median) : avg;
 
     sprintf(buf2, "%-25.25s : %-10.10s : Level: %s:%3i, min:%3.0f, max:%3.0f\n\r", s, (n ? n : ""),
-      (usingMedian ? "mid" : "ave"), (int)sortVal, minlev, maxlev);
+      (usingMedian ? "mid" : "avg"), (int)sortVal, minlev, maxlev);
 
     sortZoneVec.push_back(zoneSorter(sortVal, buf2));
   }
