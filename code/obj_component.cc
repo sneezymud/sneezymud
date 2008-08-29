@@ -72,6 +72,7 @@ void TComponent::doMerge(TMergeable *tm)
   obj_flags.cost += tComp->obj_flags.cost;
   obj_flags.decay_time = c_decay;
   --(*tComp);
+  delete tComp;
 }
 
 
