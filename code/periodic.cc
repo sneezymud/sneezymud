@@ -976,7 +976,7 @@ int TBeing::updateTickStuff()
     }
 
     // some races can automatically regrow limbs if missing
-    if (getMyRace()->hasTalent(TALENT_LIMB_REGROWTH))
+    if (roomp && !roomp->isRoomFlag(ROOM_NO_HEAL) && getMyRace()->hasTalent(TALENT_LIMB_REGROWTH))
     {
       wearSlotT possibles[MAX_WEAR-MIN_WEAR];
       int cPoss = 0;

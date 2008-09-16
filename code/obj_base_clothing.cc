@@ -10,6 +10,7 @@
 #include "obj_suitcase.h"
 #include "obj_saddle.h"
 #include "obj_harness.h"
+#include "obj_low.h"
 
 TBaseClothing::TBaseClothing() :
   TObj()
@@ -140,9 +141,14 @@ void TBaseClothing::evaluateMe(TBeing *ch) const
     ch->describeArmor(this, learn);
 
   if (ch->isImmortal()) {
-    ch->sendTo(COLOR_OBJECTS, fmt("IMMORTAL EVAL: %s overall is rated as %.2f gear.\n\r") % getName() % armorLevel(ARMOR_LEV_REAL));
+    ch->sendTo(COLOR_OBJECTS, fmt("IMMORTAL EVAL: %s originally rates as %.2f gear.\n\r") % getName() % armorLevel(ARMOR_LEV_REAL));
     ch->sendTo(COLOR_OBJECTS, fmt("IMMORTAL EVAL: %s has structure of %.2f gear.\n\r") % getName() % armorLevel(ARMOR_LEV_STR));
     ch->sendTo(COLOR_OBJECTS, fmt("IMMORTAL EVAL: %s has armor of %.2f gear.\n\r") % getName() % armorLevel(ARMOR_LEV_AC));
+
+    ArmorEvaluator ae(this);
+    ch->sendTo(COLOR_OBJECTS, fmt("IMMORTAL EVAL (new): %s is considered '%s'.\n\r") % getName() % ae.getTierString());
+    ch->sendTo(COLOR_OBJECTS, fmt("IMMORTAL EVAL (new): %s is using %i armor, %i stat points (%i total).\n\r") % getName() % ae.getPointValue(PointType_Main) % ae.getPointValue(PointType_Stats) % ae.getPointValue(PointType_All));
+    ch->sendTo(COLOR_OBJECTS, fmt("IMMORTAL EVAL (new): %s should load on level %.2f or lower mobs.\n\r") % getName() % ae.getLoadLevel());
   }
 }
 

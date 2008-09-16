@@ -24,6 +24,7 @@
 #include "obj_plant.h"
 #include "obj_tooth_necklace.h"
 #include "obj_trash_pile.h"
+#include "obj_jewelry.h"
 
 double balanceCorrectionForLevel(double level)
 {

@@ -1053,8 +1053,17 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
   }
       }
       }
-      //
-      if ((getPosition() != POSITION_MOUNTED) &&
+      // make mob-killed corpses un-dissectable
+      if (!isPc() && !isAffected(AFF_CHARM)) {
+        TBaseCorpse *corpse = NULL;
+	      sprintf(buf, "%s-corpse", buf2);
+        if ((t2 = searchLinkedList((fmt("%s-corpse") % buf2).c_str(), roomp->getStuff())) &&
+            (corpse = dynamic_cast<TBaseCorpse *>(t2)))
+        {
+          corpse->addCorpseFlag(CORPSE_NO_DISSECT|CORPSE_NO_SKIN);
+        }
+
+      } else if ((getPosition() != POSITION_MOUNTED) &&
           desc && (desc->autobits & AUTO_DISSECT)) {
         char msg[256], gl[256];
         int comp, amt;

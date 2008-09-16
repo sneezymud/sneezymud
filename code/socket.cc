@@ -714,7 +714,8 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
       } else if (rc == ALREADY_DELETED) continue;
 
       // this was in hit(), makes more sense here I think
-      if (tmp_ch->getMyRace()->hasTalent(TALENT_FAST_REGEN) &&
+      if (tmp_ch->roomp && !tmp_ch->roomp->isRoomFlag(ROOM_NO_HEAL) && 
+          tmp_ch->getMyRace()->hasTalent(TALENT_FAST_REGEN) &&
           tmp_ch->getHit() < tmp_ch->hitLimit() &&
           tmp_ch->getCond(FULL) && tmp_ch->getCond(THIRST) &&
           !::number(0, 10)){

@@ -2098,11 +2098,6 @@ int castEthrealGate(TBeing *caster, TObj *obj)
 
 void TBeing::doScribe(const char *arg)
 {
-  if (!isImmortal(GOD_LEVEL1+4)) {
-    sendTo("Scribe has been temporarily disabled.  Sorry for the inconvenience.\n\r");
-    return;
-  }
-
   char argm[MAX_INPUT_LENGTH], newarg[MAX_INPUT_LENGTH];
   sstring buf;
   TComponent *comp_gen, *comp_spell, *comp_scribe;
@@ -2154,15 +2149,15 @@ void TBeing::doScribe(const char *arg)
     t->findSomeComponent(&comp_gen, &comp_spell, &comp_scribe, which, 2);
   }
 
-  if (!comp_gen) {
+  if (!comp_gen && !isImmortal()) {
     sendTo("You seem to be lacking a parchment.\n\r");
     return;
   }
-  if (!comp_spell) {
+  if (!comp_spell && !isImmortal()) {
     sendTo("You seem to be lacking the spell component.\n\r");
     return;
   }
-  if (!comp_scribe) {
+  if (!comp_scribe && !isImmortal()) {
     sendTo("You seem to be lacking the scribe component.\n\r");
     return;
   }
@@ -2178,14 +2173,17 @@ void TBeing::doScribe(const char *arg)
     return;
   }
   if (riding) {
-    sendTo("You can't brew while riding.\n\r");
+    sendTo("You can't scribe while riding.\n\r");
     return;
   }
 
   // trash all items first
-  int how_many = comp_scribe->getComponentCharges();
-  how_many = min(how_many, comp_spell->getComponentCharges());
-  how_many = min(how_many, comp_gen->getComponentCharges());
+  int how_many = want_num;
+  if (!isImmortal()) {
+    how_many = comp_scribe->getComponentCharges();
+    how_many = min(how_many, comp_spell->getComponentCharges());
+    how_many = min(how_many, comp_gen->getComponentCharges());
+  }
 
   if (how_many >= want_num) {
     how_many = want_num;
@@ -2205,37 +2203,40 @@ void TBeing::doScribe(const char *arg)
     act(buf, FALSE, this, 0, 0, TO_ROOM);
   }
 
-  buf = fmt("You use up %d charge%s of $p.") %
-    how_many % (how_many == 1 ? "" : "s");
-  act(buf, FALSE, this, comp_gen, 0, TO_CHAR);
-  comp_gen->addToComponentCharges(-how_many);
-  if (comp_gen->getComponentCharges() <= 0) {
-    buf = fmt("$p is consumed in the process.");
+  // use up charges for mortals
+  if (!isImmortal()) {
+    buf = fmt("You use up %d charge%s of $p.") %
+      how_many % (how_many == 1 ? "" : "s");
     act(buf, FALSE, this, comp_gen, 0, TO_CHAR);
-    delete comp_gen;
-    comp_gen = NULL;
-  }
+    comp_gen->addToComponentCharges(-how_many);
+    if (comp_gen->getComponentCharges() <= 0) {
+      buf = fmt("$p is consumed in the process.");
+      act(buf, FALSE, this, comp_gen, 0, TO_CHAR);
+      delete comp_gen;
+      comp_gen = NULL;
+    }
 
-  buf = fmt("You use up %d charge%s of $p.") %
-    how_many % (how_many == 1 ? "" : "s");
-  act(buf, FALSE, this, comp_scribe, 0, TO_CHAR);
-  comp_scribe->addToComponentCharges(-how_many);
-  if (comp_scribe->getComponentCharges() <= 0) {
-    buf = fmt("$p is consumed in the process.");
+    buf = fmt("You use up %d charge%s of $p.") %
+      how_many % (how_many == 1 ? "" : "s");
     act(buf, FALSE, this, comp_scribe, 0, TO_CHAR);
-    delete comp_scribe;
-    comp_scribe = NULL;
-  }
-  
-  buf = fmt("You use up %d charge%s of $p.") %
-          how_many % (how_many == 1 ? "" : "s");
-  act(buf, FALSE, this, comp_spell, 0, TO_CHAR);
-  comp_spell->addToComponentCharges(-how_many);
-  if (comp_spell->getComponentCharges() <= 0) {
-    buf = fmt("$p is consumed in the process.");
+    comp_scribe->addToComponentCharges(-how_many);
+    if (comp_scribe->getComponentCharges() <= 0) {
+      buf = fmt("$p is consumed in the process.");
+      act(buf, FALSE, this, comp_scribe, 0, TO_CHAR);
+      delete comp_scribe;
+      comp_scribe = NULL;
+    }
+    
+    buf = fmt("You use up %d charge%s of $p.") %
+            how_many % (how_many == 1 ? "" : "s");
     act(buf, FALSE, this, comp_spell, 0, TO_CHAR);
-    delete comp_spell;
-    comp_spell = NULL;
+    comp_spell->addToComponentCharges(-how_many);
+    if (comp_spell->getComponentCharges() <= 0) {
+      buf = fmt("$p is consumed in the process.");
+      act(buf, FALSE, this, comp_spell, 0, TO_CHAR);
+      delete comp_spell;
+      comp_spell = NULL;
+    }
   }
 
   if(task){

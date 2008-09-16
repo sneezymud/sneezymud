@@ -991,38 +991,54 @@ TObj *ItemLoadDB::raw_read_item(int rent_id, int &slot)
     o->affected[j].bitvector = convertTo<int>(db["bitvector"]);
   }
 
-  
-  db.query("select name, short_desc, long_desc, action_desc from rent_strung where rent_id=%i", rent_id);
+  // NULL it all out
+  o->name = NULL;
+  o->shortDescr = NULL;
+  o->setDescr(NULL);
+  o->action_description = NULL;
+  o->ex_description = NULL;
 
-  if (o->isObjStat(ITEM_STRUNG) && db.fetchRow()) {
-    if (!db["name"].empty())
-      o->name = mud_str_dup(db["name"]);
-    else
-      o->name = mud_str_dup(obj_index[o->getItemIndex()].name);
-    
-    if (!db["short_desc"].empty())
-      o->shortDescr = mud_str_dup(db["short_desc"]);
-    else
-      o->shortDescr = mud_str_dup(obj_index[o->getItemIndex()].short_desc);
-    
-    if (!db["long_desc"].empty())
-      o->setDescr(mud_str_dup(db["long_desc"]));
-    else
-      o->setDescr(mud_str_dup(obj_index[o->getItemIndex()].long_desc));
-    
-    if (!db["action_desc"].empty()) 
-      o->action_description = mud_str_dup(db["action_desc"]);
-    else if (obj_index[o->getItemIndex()].description) 
-      o->action_description = mud_str_dup(obj_index[o->getItemIndex()].description);
-    else 
-      o->action_description = NULL;
-    
+  // override defaults from table
+  if (o->isObjStat(ITEM_STRUNG)) {
+
+    // get defaults
+    sstring name = obj_index[o->getItemIndex()].name;
+    sstring shortDesc = obj_index[o->getItemIndex()].short_desc;
+    sstring longDesc = obj_index[o->getItemIndex()].long_desc;
+    sstring actionDesc = obj_index[o->getItemIndex()].description;
+
+    db.query("select name, short_desc, long_desc, action_desc from rent_strung where rent_id=%i", rent_id);
+    if (db.fetchRow()) {
+      if (!db["name"].empty())
+        name = db["name"];   
+      if (!db["short_desc"].empty())
+        shortDesc = db["short_desc"];
+      if (!db["long_desc"].empty())
+        longDesc = db["long_desc"];
+      if (!db["action_desc"].empty()) 
+        actionDesc = db["action_desc"];
+    }
+
+    // set defaults on obj
+    if (!name.empty())
+      o->name = mud_str_dup(name.c_str());
+    if (!shortDesc.empty())
+      o->shortDescr = mud_str_dup(shortDesc.c_str());
+    if (!longDesc.empty())
+      o->setDescr(mud_str_dup(longDesc.c_str()));
+    if (!actionDesc.empty())
+      o->action_description = mud_str_dup(actionDesc.c_str());
+
     if (obj_index[o->getItemIndex()].ex_description)
       o->ex_description = new extraDescription(*obj_index[o->getItemIndex()].ex_description);
-    else
-      o->ex_description = NULL;
-  }
 
+  } else {
+    // un-strung object - these pointers just point to static memory
+    o->name = obj_index[o->getItemIndex()].name;
+    o->shortDescr = obj_index[o->getItemIndex()].short_desc;
+    o->setDescr(obj_index[o->getItemIndex()].long_desc);
+    o->action_description = obj_index[o->getItemIndex()].description;
+  }
 
   // if they had a lantern lit, set light appropriately
   o->adjustLight();

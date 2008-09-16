@@ -509,23 +509,22 @@ static int number_objects_in_list(const TObj *item, const TObj *list)
 
 void shopping_buy(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
 {
-  char argm[MAX_INPUT_LENGTH], newarg[MAX_INPUT_LENGTH];
+  char newarg[MAX_INPUT_LENGTH];
+  sstring argm;
   int num = 1, rent_id;
   TObj *temp1 = NULL;
   TDatabase db(DB_SNEEZY);
 
-  *argm = '\0';
-
   if (!(shop_index[shop_nr].willTradeWith(keeper, ch)))
     return;
 
-  strcpy(argm, arg);
-  if (!*argm) {
+  argm = sstring(arg).trim();
+  if (argm.empty()) {
     keeper->doTell(ch->name, "What do you want to buy??");
     return;
   }
-  if ((num = getabunch(argm, newarg)))
-    strcpy(argm, newarg);
+  if ((num = getabunch(argm.c_str(), newarg)))
+    argm = newarg;
 
   if (!num)
     num = 1;
@@ -542,7 +541,7 @@ void shopping_buy(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
 
     for(int i=0;i<num && db.fetchRow();){
       if(!isname(argm, db["name"]))
-	continue;
+        continue;
       
       rent_id=convertTo<int>(db["rent_id"]);
       temp1=keeper->loadItem(shop_nr, rent_id);
@@ -581,15 +580,23 @@ void shopping_buy(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
     return;
   }
 
-  if(temp1->buyMe(ch, keeper, num, shop_nr) != -1){
-    for(unsigned int i=0;i<objects.size();++i)
-      keeper->deleteItem(shop_nr, objects[i]);
-  } else {
-    for(unsigned int i=0;i<objects_p.size();++i){
+  // sell/purchase the object, if that fails destroy all in-memory stuff
+  if (temp1->buyMe(ch, keeper, num, shop_nr) == -1) {
+    for(unsigned int i=0;i<objects_p.size();++i)
       delete objects_p[i];
-    }
+    return;
   }
 
+  // delete objects left on keeper, remove objects sold from db
+  for(unsigned int i=0;i<objects_p.size();++i) {
+    TObj *cleanupObj = objects_p[i];
+    if (!cleanupObj)
+      continue;
+    if (cleanupObj->parent == keeper)
+      delete objects_p[i];
+    else
+      keeper->deleteItem(shop_nr, objects[i]);
+  }
 }
 
 

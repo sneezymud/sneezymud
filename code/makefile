@@ -231,7 +231,7 @@ LIBOBJ =obj_armor.o		obj_light.o		\
 	obj_suitcase.o		obj_saddle.o		\
 	obj_harness.o		obj_saddlebag.o		\
 	obj_wagon.o		obj_mergeable.o         \
-	obj_moneypouch.o
+	obj_moneypouch.o	obj_low.o
 
 LIBOBJ := $(sort $(addprefix $(OBJDIR), $(LIBOBJ)))
 
@@ -632,6 +632,8 @@ objs/actions.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/actions.o: /usr/include/c++/3.3.4/deque
 objs/actions.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/actions.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/actions.o: /usr/include/c++/3.3.4/queue
+objs/actions.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/actions.o: /usr/include/c++/3.3.4/iostream
 objs/actions.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/actions.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -766,6 +768,8 @@ objs/ai_assignskills.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/ai_assignskills.o: /usr/include/c++/3.3.4/deque
 objs/ai_assignskills.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/ai_assignskills.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/ai_assignskills.o: /usr/include/c++/3.3.4/queue
+objs/ai_assignskills.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/ai_assignskills.o: /usr/include/c++/3.3.4/iostream
 objs/ai_assignskills.o: /usr/include/c++/3.3.4/ostream
 objs/ai_assignskills.o: /usr/include/c++/3.3.4/ios
@@ -898,6 +902,8 @@ objs/ai_commands.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/ai_commands.o: /usr/include/c++/3.3.4/deque
 objs/ai_commands.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/ai_commands.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/ai_commands.o: /usr/include/c++/3.3.4/queue
+objs/ai_commands.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/ai_commands.o: /usr/include/c++/3.3.4/iostream
 objs/ai_commands.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/ai_commands.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -1027,6 +1033,8 @@ objs/ai_reactions.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/ai_reactions.o: /usr/include/c++/3.3.4/deque
 objs/ai_reactions.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/ai_reactions.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/ai_reactions.o: /usr/include/c++/3.3.4/queue
+objs/ai_reactions.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/ai_reactions.o: /usr/include/c++/3.3.4/iostream
 objs/ai_reactions.o: /usr/include/c++/3.3.4/ostream
 objs/ai_reactions.o: /usr/include/c++/3.3.4/ios
@@ -1158,6 +1166,8 @@ objs/ai_responses.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/ai_responses.o: /usr/include/c++/3.3.4/deque
 objs/ai_responses.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/ai_responses.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/ai_responses.o: /usr/include/c++/3.3.4/queue
+objs/ai_responses.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/ai_responses.o: /usr/include/c++/3.3.4/iostream
 objs/ai_responses.o: /usr/include/c++/3.3.4/ostream
 objs/ai_responses.o: /usr/include/c++/3.3.4/ios
@@ -1296,6 +1306,8 @@ objs/ai_utility.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/ai_utility.o: /usr/include/c++/3.3.4/deque
 objs/ai_utility.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/ai_utility.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/ai_utility.o: /usr/include/c++/3.3.4/queue
+objs/ai_utility.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/ai_utility.o: /usr/include/c++/3.3.4/iostream
 objs/ai_utility.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/ai_utility.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -1428,6 +1440,8 @@ objs/alignment_deity.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/alignment_deity.o: /usr/include/c++/3.3.4/deque
 objs/alignment_deity.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/alignment_deity.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/alignment_deity.o: /usr/include/c++/3.3.4/queue
+objs/alignment_deity.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/alignment_deity.o: /usr/include/c++/3.3.4/iostream
 objs/alignment_deity.o: /usr/include/c++/3.3.4/ostream
 objs/alignment_deity.o: /usr/include/c++/3.3.4/ios
@@ -1562,6 +1576,8 @@ objs/amap.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/amap.o: /usr/include/c++/3.3.4/deque
 objs/amap.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/amap.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/amap.o: /usr/include/c++/3.3.4/queue
+objs/amap.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/amap.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/amap.o: /usr/include/c++/3.3.4/ios
 objs/amap.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -1687,6 +1703,8 @@ objs/ansi.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/ansi.o: /usr/include/c++/3.3.4/deque
 objs/ansi.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/ansi.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/ansi.o: /usr/include/c++/3.3.4/queue
+objs/ansi.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/ansi.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/ansi.o: /usr/include/c++/3.3.4/ios
 objs/ansi.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -1809,6 +1827,8 @@ objs/being.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/being.o: /usr/include/c++/3.3.4/deque
 objs/being.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/being.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/being.o: /usr/include/c++/3.3.4/queue
+objs/being.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/being.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/being.o: /usr/include/c++/3.3.4/ios
 objs/being.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -1935,6 +1955,8 @@ objs/body.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/body.o: /usr/include/c++/3.3.4/deque
 objs/body.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/body.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/body.o: /usr/include/c++/3.3.4/queue
+objs/body.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/body.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/body.o: /usr/include/c++/3.3.4/ios
 objs/body.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -2057,6 +2079,8 @@ objs/breath.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/breath.o: /usr/include/c++/3.3.4/deque
 objs/breath.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/breath.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/breath.o: /usr/include/c++/3.3.4/queue
+objs/breath.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/breath.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/breath.o: /usr/include/c++/3.3.4/ios
 objs/breath.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -2182,6 +2206,8 @@ objs/client.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/client.o: /usr/include/c++/3.3.4/deque
 objs/client.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/client.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/client.o: /usr/include/c++/3.3.4/queue
+objs/client.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/client.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/client.o: /usr/include/c++/3.3.4/ios
 objs/client.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -2315,6 +2341,8 @@ objs/cmd_attribute.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_attribute.o: /usr/include/c++/3.3.4/deque
 objs/cmd_attribute.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_attribute.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_attribute.o: /usr/include/c++/3.3.4/queue
+objs/cmd_attribute.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_attribute.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_attribute.o: /usr/include/c++/3.3.4/ostream
 objs/cmd_attribute.o: /usr/include/c++/3.3.4/ios
@@ -2443,6 +2471,8 @@ objs/cmd_bash.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_bash.o: /usr/include/c++/3.3.4/deque
 objs/cmd_bash.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_bash.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_bash.o: /usr/include/c++/3.3.4/queue
+objs/cmd_bash.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_bash.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_bash.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_bash.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -2573,6 +2603,8 @@ objs/cmd_bodyslam.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_bodyslam.o: /usr/include/c++/3.3.4/deque
 objs/cmd_bodyslam.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_bodyslam.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_bodyslam.o: /usr/include/c++/3.3.4/queue
+objs/cmd_bodyslam.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_bodyslam.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_bodyslam.o: /usr/include/c++/3.3.4/ostream
 objs/cmd_bodyslam.o: /usr/include/c++/3.3.4/ios
@@ -2705,6 +2737,8 @@ objs/cmd_bonebreak.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_bonebreak.o: /usr/include/c++/3.3.4/deque
 objs/cmd_bonebreak.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_bonebreak.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_bonebreak.o: /usr/include/c++/3.3.4/queue
+objs/cmd_bonebreak.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_bonebreak.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_bonebreak.o: /usr/include/c++/3.3.4/ostream
 objs/cmd_bonebreak.o: /usr/include/c++/3.3.4/ios
@@ -2836,6 +2870,8 @@ objs/cmd_charge.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_charge.o: /usr/include/c++/3.3.4/deque
 objs/cmd_charge.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_charge.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_charge.o: /usr/include/c++/3.3.4/queue
+objs/cmd_charge.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_charge.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_charge.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_charge.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -2962,6 +2998,8 @@ objs/cmd_chop.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_chop.o: /usr/include/c++/3.3.4/deque
 objs/cmd_chop.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_chop.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_chop.o: /usr/include/c++/3.3.4/queue
+objs/cmd_chop.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_chop.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_chop.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_chop.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -3091,6 +3129,8 @@ objs/cmd_compare.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_compare.o: /usr/include/c++/3.3.4/deque
 objs/cmd_compare.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_compare.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_compare.o: /usr/include/c++/3.3.4/queue
+objs/cmd_compare.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_compare.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_compare.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_compare.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -3223,6 +3263,8 @@ objs/cmd_consider.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_consider.o: /usr/include/c++/3.3.4/deque
 objs/cmd_consider.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_consider.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_consider.o: /usr/include/c++/3.3.4/queue
+objs/cmd_consider.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_consider.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_consider.o: /usr/include/c++/3.3.4/ostream
 objs/cmd_consider.o: /usr/include/c++/3.3.4/ios
@@ -3357,6 +3399,8 @@ objs/cmd_deathstroke.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_deathstroke.o: /usr/include/c++/3.3.4/deque
 objs/cmd_deathstroke.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_deathstroke.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_deathstroke.o: /usr/include/c++/3.3.4/queue
+objs/cmd_deathstroke.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_deathstroke.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_deathstroke.o: /usr/include/c++/3.3.4/ostream
 objs/cmd_deathstroke.o: /usr/include/c++/3.3.4/ios
@@ -3488,6 +3532,8 @@ objs/cmd_disarm.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_disarm.o: /usr/include/c++/3.3.4/deque
 objs/cmd_disarm.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_disarm.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_disarm.o: /usr/include/c++/3.3.4/queue
+objs/cmd_disarm.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_disarm.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_disarm.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_disarm.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -3618,6 +3664,8 @@ objs/cmd_dissect.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_dissect.o: /usr/include/c++/3.3.4/deque
 objs/cmd_dissect.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_dissect.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_dissect.o: /usr/include/c++/3.3.4/queue
+objs/cmd_dissect.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_dissect.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_dissect.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_dissect.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -3749,6 +3797,8 @@ objs/cmd_doorbash.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_doorbash.o: /usr/include/c++/3.3.4/deque
 objs/cmd_doorbash.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_doorbash.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_doorbash.o: /usr/include/c++/3.3.4/queue
+objs/cmd_doorbash.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_doorbash.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_doorbash.o: /usr/include/c++/3.3.4/ostream
 objs/cmd_doorbash.o: /usr/include/c++/3.3.4/ios
@@ -3877,6 +3927,8 @@ objs/cmd_drive.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_drive.o: /usr/include/c++/3.3.4/deque
 objs/cmd_drive.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_drive.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_drive.o: /usr/include/c++/3.3.4/queue
+objs/cmd_drive.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_drive.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_drive.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_drive.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -4007,6 +4059,8 @@ objs/cmd_egotrip.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_egotrip.o: /usr/include/c++/3.3.4/deque
 objs/cmd_egotrip.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_egotrip.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_egotrip.o: /usr/include/c++/3.3.4/queue
+objs/cmd_egotrip.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_egotrip.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_egotrip.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_egotrip.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -4141,6 +4195,8 @@ objs/cmd_feigndeath.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_feigndeath.o: /usr/include/c++/3.3.4/deque
 objs/cmd_feigndeath.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_feigndeath.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_feigndeath.o: /usr/include/c++/3.3.4/queue
+objs/cmd_feigndeath.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_feigndeath.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_feigndeath.o: /usr/include/c++/3.3.4/ostream
 objs/cmd_feigndeath.o: /usr/include/c++/3.3.4/ios
@@ -4269,6 +4325,8 @@ objs/cmd_get.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_get.o: /usr/include/c++/3.3.4/deque
 objs/cmd_get.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_get.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_get.o: /usr/include/c++/3.3.4/queue
+objs/cmd_get.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_get.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_get.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_get.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -4400,6 +4458,8 @@ objs/cmd_grapple.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_grapple.o: /usr/include/c++/3.3.4/deque
 objs/cmd_grapple.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_grapple.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_grapple.o: /usr/include/c++/3.3.4/queue
+objs/cmd_grapple.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_grapple.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_grapple.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_grapple.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -4530,6 +4590,8 @@ objs/cmd_headbutt.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_headbutt.o: /usr/include/c++/3.3.4/deque
 objs/cmd_headbutt.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_headbutt.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_headbutt.o: /usr/include/c++/3.3.4/queue
+objs/cmd_headbutt.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_headbutt.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_headbutt.o: /usr/include/c++/3.3.4/ostream
 objs/cmd_headbutt.o: /usr/include/c++/3.3.4/ios
@@ -4658,6 +4720,8 @@ objs/cmd_help.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_help.o: /usr/include/c++/3.3.4/deque
 objs/cmd_help.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_help.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_help.o: /usr/include/c++/3.3.4/queue
+objs/cmd_help.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_help.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_help.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_help.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -4705,7 +4769,12 @@ objs/cmd_help.o: /usr/include/bits/uio.h /usr/include/bits/socket.h
 objs/cmd_help.o: /usr/include/bits/sockaddr.h /usr/include/asm/socket.h
 objs/cmd_help.o: /usr/include/asm/sockios.h /usr/include/dirent.h
 objs/cmd_help.o: /usr/include/bits/dirent.h help.h obj_component.h
-objs/cmd_help.o: statistics.h systemtask.h
+objs/cmd_help.o: statistics.h systemtask.h database.h
+objs/cmd_help.o: /usr/include/mysql/mysql.h /usr/include/mysql/mysql_com.h
+objs/cmd_help.o: /usr/include/mysql/mysql_time.h
+objs/cmd_help.o: /usr/include/mysql/mysql_version.h
+objs/cmd_help.o: /usr/include/mysql/typelib.h /usr/include/mysql/my_list.h
+objs/cmd_help.o: /usr/include/mysql/my_alloc.h
 objs/cmd_jump.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/cmd_jump.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/cmd_jump.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -4792,6 +4861,8 @@ objs/cmd_jump.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_jump.o: /usr/include/c++/3.3.4/deque
 objs/cmd_jump.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_jump.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_jump.o: /usr/include/c++/3.3.4/queue
+objs/cmd_jump.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_jump.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_jump.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_jump.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -4918,6 +4989,8 @@ objs/cmd_kick.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_kick.o: /usr/include/c++/3.3.4/deque
 objs/cmd_kick.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_kick.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_kick.o: /usr/include/c++/3.3.4/queue
+objs/cmd_kick.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_kick.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_kick.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_kick.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -5049,6 +5122,8 @@ objs/cmd_kneestrike.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_kneestrike.o: /usr/include/c++/3.3.4/deque
 objs/cmd_kneestrike.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_kneestrike.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_kneestrike.o: /usr/include/c++/3.3.4/queue
+objs/cmd_kneestrike.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_kneestrike.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_kneestrike.o: /usr/include/c++/3.3.4/ostream
 objs/cmd_kneestrike.o: /usr/include/c++/3.3.4/ios
@@ -5177,6 +5252,8 @@ objs/cmd_look.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_look.o: /usr/include/c++/3.3.4/deque
 objs/cmd_look.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_look.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_look.o: /usr/include/c++/3.3.4/queue
+objs/cmd_look.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_look.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_look.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_look.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -5305,6 +5382,8 @@ objs/cmd_low.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_low.o: /usr/include/c++/3.3.4/deque
 objs/cmd_low.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_low.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_low.o: /usr/include/c++/3.3.4/queue
+objs/cmd_low.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_low.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_low.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_low.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -5354,7 +5433,7 @@ objs/cmd_low.o: obj_base_corpse.h obj_base_container.h obj_gas.h obj_arrow.h
 objs/cmd_low.o: obj_base_weapon.h obj_pool.h obj_base_cup.h
 objs/cmd_low.o: obj_base_clothing.h obj_worn.h pathfinder.h obj_commodity.h
 objs/cmd_low.o: obj_plant.h obj_expandable_container.h obj_open_container.h
-objs/cmd_low.o: obj_tooth_necklace.h obj_trash_pile.h
+objs/cmd_low.o: obj_tooth_necklace.h obj_trash_pile.h obj_jewelry.h
 objs/cmd_mend_limb.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/cmd_mend_limb.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/cmd_mend_limb.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -5445,6 +5524,8 @@ objs/cmd_mend_limb.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_mend_limb.o: /usr/include/c++/3.3.4/deque
 objs/cmd_mend_limb.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_mend_limb.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_mend_limb.o: /usr/include/c++/3.3.4/queue
+objs/cmd_mend_limb.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_mend_limb.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_mend_limb.o: /usr/include/c++/3.3.4/ostream
 objs/cmd_mend_limb.o: /usr/include/c++/3.3.4/ios
@@ -5579,6 +5660,8 @@ objs/cmd_message.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_message.o: /usr/include/c++/3.3.4/deque
 objs/cmd_message.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_message.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_message.o: /usr/include/c++/3.3.4/queue
+objs/cmd_message.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_message.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_message.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_message.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -5707,6 +5790,8 @@ objs/cmd_news.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_news.o: /usr/include/c++/3.3.4/deque
 objs/cmd_news.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_news.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_news.o: /usr/include/c++/3.3.4/queue
+objs/cmd_news.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_news.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_news.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_news.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -5836,6 +5921,8 @@ objs/cmd_pracInfo.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_pracInfo.o: /usr/include/c++/3.3.4/deque
 objs/cmd_pracInfo.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_pracInfo.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_pracInfo.o: /usr/include/c++/3.3.4/queue
+objs/cmd_pracInfo.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_pracInfo.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_pracInfo.o: /usr/include/c++/3.3.4/ostream
 objs/cmd_pracInfo.o: /usr/include/c++/3.3.4/ios
@@ -5964,6 +6051,8 @@ objs/cmd_quest.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_quest.o: /usr/include/c++/3.3.4/deque
 objs/cmd_quest.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_quest.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_quest.o: /usr/include/c++/3.3.4/queue
+objs/cmd_quest.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_quest.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_quest.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_quest.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -6093,6 +6182,8 @@ objs/cmd_quivpalm.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_quivpalm.o: /usr/include/c++/3.3.4/deque
 objs/cmd_quivpalm.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_quivpalm.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_quivpalm.o: /usr/include/c++/3.3.4/queue
+objs/cmd_quivpalm.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_quivpalm.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_quivpalm.o: /usr/include/c++/3.3.4/ostream
 objs/cmd_quivpalm.o: /usr/include/c++/3.3.4/ios
@@ -6225,6 +6316,8 @@ objs/cmd_rename.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_rename.o: /usr/include/c++/3.3.4/deque
 objs/cmd_rename.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_rename.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_rename.o: /usr/include/c++/3.3.4/queue
+objs/cmd_rename.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_rename.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_rename.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_rename.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -6358,6 +6451,8 @@ objs/cmd_rescue.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_rescue.o: /usr/include/c++/3.3.4/deque
 objs/cmd_rescue.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_rescue.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_rescue.o: /usr/include/c++/3.3.4/queue
+objs/cmd_rescue.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_rescue.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_rescue.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_rescue.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -6484,6 +6579,8 @@ objs/cmd_save.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_save.o: /usr/include/c++/3.3.4/deque
 objs/cmd_save.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_save.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_save.o: /usr/include/c++/3.3.4/queue
+objs/cmd_save.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_save.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_save.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_save.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -6610,6 +6707,8 @@ objs/cmd_score.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_score.o: /usr/include/c++/3.3.4/deque
 objs/cmd_score.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_score.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_score.o: /usr/include/c++/3.3.4/queue
+objs/cmd_score.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_score.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_score.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_score.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -6740,6 +6839,8 @@ objs/cmd_sedit.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_sedit.o: /usr/include/c++/3.3.4/deque
 objs/cmd_sedit.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_sedit.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_sedit.o: /usr/include/c++/3.3.4/queue
+objs/cmd_sedit.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_sedit.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_sedit.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_sedit.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -6865,6 +6966,8 @@ objs/cmd_set.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_set.o: /usr/include/c++/3.3.4/deque
 objs/cmd_set.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_set.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_set.o: /usr/include/c++/3.3.4/queue
+objs/cmd_set.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_set.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_set.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_set.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -6992,6 +7095,8 @@ objs/cmd_show.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_show.o: /usr/include/c++/3.3.4/deque
 objs/cmd_show.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_show.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_show.o: /usr/include/c++/3.3.4/queue
+objs/cmd_show.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_show.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_show.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_show.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -7125,6 +7230,8 @@ objs/cmd_spin.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_spin.o: /usr/include/c++/3.3.4/deque
 objs/cmd_spin.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_spin.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_spin.o: /usr/include/c++/3.3.4/queue
+objs/cmd_spin.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_spin.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_spin.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_spin.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -7251,6 +7358,8 @@ objs/cmd_stab.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_stab.o: /usr/include/c++/3.3.4/deque
 objs/cmd_stab.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_stab.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_stab.o: /usr/include/c++/3.3.4/queue
+objs/cmd_stab.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_stab.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_stab.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_stab.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -7378,6 +7487,8 @@ objs/cmd_stat.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_stat.o: /usr/include/c++/3.3.4/deque
 objs/cmd_stat.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_stat.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_stat.o: /usr/include/c++/3.3.4/queue
+objs/cmd_stat.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_stat.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_stat.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_stat.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -7504,6 +7615,8 @@ objs/cmd_steal.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_steal.o: /usr/include/c++/3.3.4/deque
 objs/cmd_steal.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_steal.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_steal.o: /usr/include/c++/3.3.4/queue
+objs/cmd_steal.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_steal.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_steal.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_steal.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -7631,6 +7744,8 @@ objs/cmd_stomp.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_stomp.o: /usr/include/c++/3.3.4/deque
 objs/cmd_stomp.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_stomp.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_stomp.o: /usr/include/c++/3.3.4/queue
+objs/cmd_stomp.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_stomp.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_stomp.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_stomp.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -7760,6 +7875,8 @@ objs/cmd_testcode.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_testcode.o: /usr/include/c++/3.3.4/deque
 objs/cmd_testcode.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_testcode.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_testcode.o: /usr/include/c++/3.3.4/queue
+objs/cmd_testcode.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_testcode.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_testcode.o: /usr/include/c++/3.3.4/ostream
 objs/cmd_testcode.o: /usr/include/c++/3.3.4/ios
@@ -7892,6 +8009,8 @@ objs/cmd_testfight.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_testfight.o: /usr/include/c++/3.3.4/deque
 objs/cmd_testfight.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_testfight.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_testfight.o: /usr/include/c++/3.3.4/queue
+objs/cmd_testfight.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_testfight.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_testfight.o: /usr/include/c++/3.3.4/ostream
 objs/cmd_testfight.o: /usr/include/c++/3.3.4/ios
@@ -8020,6 +8139,8 @@ objs/cmd_trip.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_trip.o: /usr/include/c++/3.3.4/deque
 objs/cmd_trip.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_trip.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_trip.o: /usr/include/c++/3.3.4/queue
+objs/cmd_trip.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_trip.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_trip.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_trip.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -8149,6 +8270,8 @@ objs/cmd_trophy.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_trophy.o: /usr/include/c++/3.3.4/deque
 objs/cmd_trophy.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_trophy.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_trophy.o: /usr/include/c++/3.3.4/queue
+objs/cmd_trophy.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_trophy.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_trophy.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_trophy.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -8284,6 +8407,8 @@ objs/cmd_visible.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_visible.o: /usr/include/c++/3.3.4/deque
 objs/cmd_visible.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_visible.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_visible.o: /usr/include/c++/3.3.4/queue
+objs/cmd_visible.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_visible.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_visible.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_visible.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -8409,6 +8534,8 @@ objs/cmd_who.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_who.o: /usr/include/c++/3.3.4/deque
 objs/cmd_who.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_who.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_who.o: /usr/include/c++/3.3.4/queue
+objs/cmd_who.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_who.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_who.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_who.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -8544,6 +8671,8 @@ objs/cmd_zonefile.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_zonefile.o: /usr/include/c++/3.3.4/deque
 objs/cmd_zonefile.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_zonefile.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_zonefile.o: /usr/include/c++/3.3.4/queue
+objs/cmd_zonefile.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_zonefile.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_zonefile.o: /usr/include/c++/3.3.4/ostream
 objs/cmd_zonefile.o: /usr/include/c++/3.3.4/ios
@@ -8671,6 +8800,8 @@ objs/cmd_zones.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/cmd_zones.o: /usr/include/c++/3.3.4/deque
 objs/cmd_zones.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/cmd_zones.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/cmd_zones.o: /usr/include/c++/3.3.4/queue
+objs/cmd_zones.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/cmd_zones.o: /usr/include/c++/3.3.4/iostream
 objs/cmd_zones.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/cmd_zones.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -8800,6 +8931,8 @@ objs/color.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/color.o: /usr/include/c++/3.3.4/deque
 objs/color.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/color.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/color.o: /usr/include/c++/3.3.4/queue
+objs/color.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/color.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/color.o: /usr/include/c++/3.3.4/ios
 objs/color.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -8927,6 +9060,8 @@ objs/colorstring.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/colorstring.o: /usr/include/c++/3.3.4/deque
 objs/colorstring.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/colorstring.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/colorstring.o: /usr/include/c++/3.3.4/queue
+objs/colorstring.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/colorstring.o: /usr/include/c++/3.3.4/iostream
 objs/colorstring.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/colorstring.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -9051,6 +9186,8 @@ objs/combat.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/combat.o: /usr/include/c++/3.3.4/deque
 objs/combat.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/combat.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/combat.o: /usr/include/c++/3.3.4/queue
+objs/combat.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/combat.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/combat.o: /usr/include/c++/3.3.4/ios
 objs/combat.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -9181,6 +9318,8 @@ objs/comm.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/comm.o: /usr/include/c++/3.3.4/deque
 objs/comm.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/comm.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/comm.o: /usr/include/c++/3.3.4/queue
+objs/comm.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/comm.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/comm.o: /usr/include/c++/3.3.4/ios
 objs/comm.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -9342,6 +9481,8 @@ objs/connect.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/connect.o: /usr/include/c++/3.3.4/deque
 objs/connect.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/connect.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/connect.o: /usr/include/c++/3.3.4/queue
+objs/connect.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/connect.o: /usr/include/c++/3.3.4/iostream
 objs/connect.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/connect.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -9474,6 +9615,8 @@ objs/constants.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/constants.o: /usr/include/c++/3.3.4/deque
 objs/constants.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/constants.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/constants.o: /usr/include/c++/3.3.4/queue
+objs/constants.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/constants.o: /usr/include/c++/3.3.4/iostream
 objs/constants.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/constants.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -9604,6 +9747,8 @@ objs/corpinfo.cgi.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/corpinfo.cgi.o: /usr/include/c++/3.3.4/deque
 objs/corpinfo.cgi.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/corpinfo.cgi.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/corpinfo.cgi.o: /usr/include/c++/3.3.4/queue
+objs/corpinfo.cgi.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/corpinfo.cgi.o: /usr/include/c++/3.3.4/iostream
 objs/corpinfo.cgi.o: /usr/include/c++/3.3.4/ostream
 objs/corpinfo.cgi.o: /usr/include/c++/3.3.4/ios
@@ -9761,6 +9906,8 @@ objs/corporation.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/corporation.o: /usr/include/c++/3.3.4/deque
 objs/corporation.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/corporation.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/corporation.o: /usr/include/c++/3.3.4/queue
+objs/corporation.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/corporation.o: /usr/include/c++/3.3.4/iostream
 objs/corporation.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/corporation.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -9898,6 +10045,8 @@ objs/create_character.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/create_character.o: /usr/include/c++/3.3.4/deque
 objs/create_character.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/create_character.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/create_character.o: /usr/include/c++/3.3.4/queue
+objs/create_character.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/create_character.o: /usr/include/c++/3.3.4/iostream
 objs/create_character.o: /usr/include/c++/3.3.4/ostream
 objs/create_character.o: /usr/include/c++/3.3.4/ios
@@ -10039,6 +10188,8 @@ objs/create_engine.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/create_engine.o: /usr/include/c++/3.3.4/deque
 objs/create_engine.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/create_engine.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/create_engine.o: /usr/include/c++/3.3.4/queue
+objs/create_engine.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/create_engine.o: /usr/include/c++/3.3.4/iostream
 objs/create_engine.o: /usr/include/c++/3.3.4/ostream
 objs/create_engine.o: /usr/include/c++/3.3.4/ios
@@ -10174,6 +10325,8 @@ objs/create_mobs.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/create_mobs.o: /usr/include/c++/3.3.4/deque
 objs/create_mobs.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/create_mobs.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/create_mobs.o: /usr/include/c++/3.3.4/queue
+objs/create_mobs.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/create_mobs.o: /usr/include/c++/3.3.4/iostream
 objs/create_mobs.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/create_mobs.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -10314,6 +10467,8 @@ objs/create_objs.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/create_objs.o: /usr/include/c++/3.3.4/deque
 objs/create_objs.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/create_objs.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/create_objs.o: /usr/include/c++/3.3.4/queue
+objs/create_objs.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/create_objs.o: /usr/include/c++/3.3.4/iostream
 objs/create_objs.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/create_objs.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -10454,6 +10609,8 @@ objs/create_rooms.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/create_rooms.o: /usr/include/c++/3.3.4/deque
 objs/create_rooms.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/create_rooms.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/create_rooms.o: /usr/include/c++/3.3.4/queue
+objs/create_rooms.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/create_rooms.o: /usr/include/c++/3.3.4/iostream
 objs/create_rooms.o: /usr/include/c++/3.3.4/ostream
 objs/create_rooms.o: /usr/include/c++/3.3.4/ios
@@ -10592,6 +10749,8 @@ objs/crit_combat.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/crit_combat.o: /usr/include/c++/3.3.4/deque
 objs/crit_combat.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/crit_combat.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/crit_combat.o: /usr/include/c++/3.3.4/queue
+objs/crit_combat.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/crit_combat.o: /usr/include/c++/3.3.4/iostream
 objs/crit_combat.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/crit_combat.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -10725,6 +10884,8 @@ objs/damage.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/damage.o: /usr/include/c++/3.3.4/deque
 objs/damage.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/damage.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/damage.o: /usr/include/c++/3.3.4/queue
+objs/damage.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/damage.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/damage.o: /usr/include/c++/3.3.4/ios
 objs/damage.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -10855,6 +11016,8 @@ objs/database.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/database.o: /usr/include/c++/3.3.4/deque
 objs/database.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/database.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/database.o: /usr/include/c++/3.3.4/queue
+objs/database.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/database.o: /usr/include/c++/3.3.4/iostream
 objs/database.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/database.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -10980,7 +11143,8 @@ objs/db.o: /usr/include/c++/3.3.4/bits/stl_multimap.h
 objs/db.o: /usr/include/c++/3.3.4/list /usr/include/c++/3.3.4/bits/stl_list.h
 objs/db.o: /usr/include/c++/3.3.4/bits/list.tcc /usr/include/c++/3.3.4/deque
 objs/db.o: /usr/include/c++/3.3.4/bits/stl_deque.h
-objs/db.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/db.o: /usr/include/c++/3.3.4/bits/deque.tcc /usr/include/c++/3.3.4/queue
+objs/db.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/db.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/db.o: /usr/include/c++/3.3.4/ios /usr/include/c++/3.3.4/bits/localefwd.h
 objs/db.o: /usr/include/c++/3.3.4/bits/ios_base.h
@@ -11144,6 +11308,8 @@ objs/disc_adv_adventuring.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_adv_adventuring.o: /usr/include/c++/3.3.4/deque
 objs/disc_adv_adventuring.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_adv_adventuring.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_adv_adventuring.o: /usr/include/c++/3.3.4/queue
+objs/disc_adv_adventuring.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_adv_adventuring.o: /usr/include/c++/3.3.4/iostream
 objs/disc_adv_adventuring.o: /usr/include/c++/3.3.4/ostream
 objs/disc_adv_adventuring.o: /usr/include/c++/3.3.4/ios
@@ -11285,6 +11451,8 @@ objs/disc_adventuring.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_adventuring.o: /usr/include/c++/3.3.4/deque
 objs/disc_adventuring.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_adventuring.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_adventuring.o: /usr/include/c++/3.3.4/queue
+objs/disc_adventuring.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_adventuring.o: /usr/include/c++/3.3.4/iostream
 objs/disc_adventuring.o: /usr/include/c++/3.3.4/ostream
 objs/disc_adventuring.o: /usr/include/c++/3.3.4/ios
@@ -11419,6 +11587,8 @@ objs/disc_aegis.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_aegis.o: /usr/include/c++/3.3.4/deque
 objs/disc_aegis.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_aegis.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_aegis.o: /usr/include/c++/3.3.4/queue
+objs/disc_aegis.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_aegis.o: /usr/include/c++/3.3.4/iostream
 objs/disc_aegis.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/disc_aegis.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -11553,6 +11723,8 @@ objs/disc_afflictions.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_afflictions.o: /usr/include/c++/3.3.4/deque
 objs/disc_afflictions.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_afflictions.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_afflictions.o: /usr/include/c++/3.3.4/queue
+objs/disc_afflictions.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_afflictions.o: /usr/include/c++/3.3.4/iostream
 objs/disc_afflictions.o: /usr/include/c++/3.3.4/ostream
 objs/disc_afflictions.o: /usr/include/c++/3.3.4/ios
@@ -11683,6 +11855,8 @@ objs/disc_air.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_air.o: /usr/include/c++/3.3.4/deque
 objs/disc_air.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_air.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_air.o: /usr/include/c++/3.3.4/queue
+objs/disc_air.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_air.o: /usr/include/c++/3.3.4/iostream
 objs/disc_air.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/disc_air.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -11813,6 +11987,8 @@ objs/disc_alchemy.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_alchemy.o: /usr/include/c++/3.3.4/deque
 objs/disc_alchemy.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_alchemy.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_alchemy.o: /usr/include/c++/3.3.4/queue
+objs/disc_alchemy.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_alchemy.o: /usr/include/c++/3.3.4/iostream
 objs/disc_alchemy.o: /usr/include/c++/3.3.4/ostream
 objs/disc_alchemy.o: /usr/include/c++/3.3.4/ios
@@ -11945,6 +12121,8 @@ objs/disc_animal.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_animal.o: /usr/include/c++/3.3.4/deque
 objs/disc_animal.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_animal.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_animal.o: /usr/include/c++/3.3.4/queue
+objs/disc_animal.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_animal.o: /usr/include/c++/3.3.4/iostream
 objs/disc_animal.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/disc_animal.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -12081,6 +12259,8 @@ objs/disc_blacksmithing.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_blacksmithing.o: /usr/include/c++/3.3.4/deque
 objs/disc_blacksmithing.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_blacksmithing.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_blacksmithing.o: /usr/include/c++/3.3.4/queue
+objs/disc_blacksmithing.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_blacksmithing.o: /usr/include/c++/3.3.4/iostream
 objs/disc_blacksmithing.o: /usr/include/c++/3.3.4/ostream
 objs/disc_blacksmithing.o: /usr/include/c++/3.3.4/ios
@@ -12213,6 +12393,8 @@ objs/disc_blunt.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_blunt.o: /usr/include/c++/3.3.4/deque
 objs/disc_blunt.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_blunt.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_blunt.o: /usr/include/c++/3.3.4/queue
+objs/disc_blunt.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_blunt.o: /usr/include/c++/3.3.4/iostream
 objs/disc_blunt.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/disc_blunt.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -12344,6 +12526,8 @@ objs/disc_brawling.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_brawling.o: /usr/include/c++/3.3.4/deque
 objs/disc_brawling.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_brawling.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_brawling.o: /usr/include/c++/3.3.4/queue
+objs/disc_brawling.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_brawling.o: /usr/include/c++/3.3.4/iostream
 objs/disc_brawling.o: /usr/include/c++/3.3.4/ostream
 objs/disc_brawling.o: /usr/include/c++/3.3.4/ios
@@ -12475,6 +12659,8 @@ objs/disc_cleric.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_cleric.o: /usr/include/c++/3.3.4/deque
 objs/disc_cleric.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_cleric.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_cleric.o: /usr/include/c++/3.3.4/queue
+objs/disc_cleric.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_cleric.o: /usr/include/c++/3.3.4/iostream
 objs/disc_cleric.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/disc_cleric.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -12605,6 +12791,8 @@ objs/disc_combat.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_combat.o: /usr/include/c++/3.3.4/deque
 objs/disc_combat.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_combat.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_combat.o: /usr/include/c++/3.3.4/queue
+objs/disc_combat.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_combat.o: /usr/include/c++/3.3.4/iostream
 objs/disc_combat.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/disc_combat.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -12732,6 +12920,8 @@ objs/disc_cure.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_cure.o: /usr/include/c++/3.3.4/deque
 objs/disc_cure.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_cure.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_cure.o: /usr/include/c++/3.3.4/queue
+objs/disc_cure.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_cure.o: /usr/include/c++/3.3.4/iostream
 objs/disc_cure.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/disc_cure.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -12862,6 +13052,8 @@ objs/disc_defense.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_defense.o: /usr/include/c++/3.3.4/deque
 objs/disc_defense.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_defense.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_defense.o: /usr/include/c++/3.3.4/queue
+objs/disc_defense.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_defense.o: /usr/include/c++/3.3.4/iostream
 objs/disc_defense.o: /usr/include/c++/3.3.4/ostream
 objs/disc_defense.o: /usr/include/c++/3.3.4/ios
@@ -12993,6 +13185,8 @@ objs/disc_deikhan.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_deikhan.o: /usr/include/c++/3.3.4/deque
 objs/disc_deikhan.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_deikhan.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_deikhan.o: /usr/include/c++/3.3.4/queue
+objs/disc_deikhan.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_deikhan.o: /usr/include/c++/3.3.4/iostream
 objs/disc_deikhan.o: /usr/include/c++/3.3.4/ostream
 objs/disc_deikhan.o: /usr/include/c++/3.3.4/ios
@@ -13124,6 +13318,8 @@ objs/disc_dueling.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_dueling.o: /usr/include/c++/3.3.4/deque
 objs/disc_dueling.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_dueling.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_dueling.o: /usr/include/c++/3.3.4/queue
+objs/disc_dueling.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_dueling.o: /usr/include/c++/3.3.4/iostream
 objs/disc_dueling.o: /usr/include/c++/3.3.4/ostream
 objs/disc_dueling.o: /usr/include/c++/3.3.4/ios
@@ -13255,6 +13451,8 @@ objs/disc_earth.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_earth.o: /usr/include/c++/3.3.4/deque
 objs/disc_earth.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_earth.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_earth.o: /usr/include/c++/3.3.4/queue
+objs/disc_earth.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_earth.o: /usr/include/c++/3.3.4/iostream
 objs/disc_earth.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/disc_earth.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -13386,6 +13584,8 @@ objs/disc_fattacks.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_fattacks.o: /usr/include/c++/3.3.4/deque
 objs/disc_fattacks.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_fattacks.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_fattacks.o: /usr/include/c++/3.3.4/queue
+objs/disc_fattacks.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_fattacks.o: /usr/include/c++/3.3.4/iostream
 objs/disc_fattacks.o: /usr/include/c++/3.3.4/ostream
 objs/disc_fattacks.o: /usr/include/c++/3.3.4/ios
@@ -13514,6 +13714,8 @@ objs/disc_fire.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_fire.o: /usr/include/c++/3.3.4/deque
 objs/disc_fire.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_fire.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_fire.o: /usr/include/c++/3.3.4/queue
+objs/disc_fire.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_fire.o: /usr/include/c++/3.3.4/iostream
 objs/disc_fire.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/disc_fire.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -13647,6 +13849,8 @@ objs/disc_hand_of_god.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_hand_of_god.o: /usr/include/c++/3.3.4/deque
 objs/disc_hand_of_god.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_hand_of_god.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_hand_of_god.o: /usr/include/c++/3.3.4/queue
+objs/disc_hand_of_god.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_hand_of_god.o: /usr/include/c++/3.3.4/iostream
 objs/disc_hand_of_god.o: /usr/include/c++/3.3.4/ostream
 objs/disc_hand_of_god.o: /usr/include/c++/3.3.4/ios
@@ -13782,6 +13986,8 @@ objs/disc_leverage.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_leverage.o: /usr/include/c++/3.3.4/deque
 objs/disc_leverage.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_leverage.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_leverage.o: /usr/include/c++/3.3.4/queue
+objs/disc_leverage.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_leverage.o: /usr/include/c++/3.3.4/iostream
 objs/disc_leverage.o: /usr/include/c++/3.3.4/ostream
 objs/disc_leverage.o: /usr/include/c++/3.3.4/ios
@@ -13915,6 +14121,8 @@ objs/disc_looting.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_looting.o: /usr/include/c++/3.3.4/deque
 objs/disc_looting.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_looting.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_looting.o: /usr/include/c++/3.3.4/queue
+objs/disc_looting.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_looting.o: /usr/include/c++/3.3.4/iostream
 objs/disc_looting.o: /usr/include/c++/3.3.4/ostream
 objs/disc_looting.o: /usr/include/c++/3.3.4/ios
@@ -14044,6 +14252,8 @@ objs/disc_mage.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_mage.o: /usr/include/c++/3.3.4/deque
 objs/disc_mage.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_mage.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_mage.o: /usr/include/c++/3.3.4/queue
+objs/disc_mage.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_mage.o: /usr/include/c++/3.3.4/iostream
 objs/disc_mage.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/disc_mage.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -14176,6 +14386,8 @@ objs/disc_meditation.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_meditation.o: /usr/include/c++/3.3.4/deque
 objs/disc_meditation.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_meditation.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_meditation.o: /usr/include/c++/3.3.4/queue
+objs/disc_meditation.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_meditation.o: /usr/include/c++/3.3.4/iostream
 objs/disc_meditation.o: /usr/include/c++/3.3.4/ostream
 objs/disc_meditation.o: /usr/include/c++/3.3.4/ios
@@ -14309,6 +14521,8 @@ objs/disc_mindbody.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_mindbody.o: /usr/include/c++/3.3.4/deque
 objs/disc_mindbody.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_mindbody.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_mindbody.o: /usr/include/c++/3.3.4/queue
+objs/disc_mindbody.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_mindbody.o: /usr/include/c++/3.3.4/iostream
 objs/disc_mindbody.o: /usr/include/c++/3.3.4/ostream
 objs/disc_mindbody.o: /usr/include/c++/3.3.4/ios
@@ -14437,6 +14651,8 @@ objs/disc_monk.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_monk.o: /usr/include/c++/3.3.4/deque
 objs/disc_monk.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_monk.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_monk.o: /usr/include/c++/3.3.4/queue
+objs/disc_monk.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_monk.o: /usr/include/c++/3.3.4/iostream
 objs/disc_monk.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/disc_monk.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -14567,6 +14783,8 @@ objs/disc_mounted.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_mounted.o: /usr/include/c++/3.3.4/deque
 objs/disc_mounted.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_mounted.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_mounted.o: /usr/include/c++/3.3.4/queue
+objs/disc_mounted.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_mounted.o: /usr/include/c++/3.3.4/iostream
 objs/disc_mounted.o: /usr/include/c++/3.3.4/ostream
 objs/disc_mounted.o: /usr/include/c++/3.3.4/ios
@@ -14698,6 +14916,8 @@ objs/disc_murder.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_murder.o: /usr/include/c++/3.3.4/deque
 objs/disc_murder.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_murder.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_murder.o: /usr/include/c++/3.3.4/queue
+objs/disc_murder.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_murder.o: /usr/include/c++/3.3.4/iostream
 objs/disc_murder.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/disc_murder.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -14829,6 +15049,8 @@ objs/disc_nature.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_nature.o: /usr/include/c++/3.3.4/deque
 objs/disc_nature.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_nature.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_nature.o: /usr/include/c++/3.3.4/queue
+objs/disc_nature.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_nature.o: /usr/include/c++/3.3.4/iostream
 objs/disc_nature.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/disc_nature.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -14959,6 +15181,8 @@ objs/disc_pierce.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_pierce.o: /usr/include/c++/3.3.4/deque
 objs/disc_pierce.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_pierce.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_pierce.o: /usr/include/c++/3.3.4/queue
+objs/disc_pierce.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_pierce.o: /usr/include/c++/3.3.4/iostream
 objs/disc_pierce.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/disc_pierce.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -15090,6 +15314,8 @@ objs/disc_psionics.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_psionics.o: /usr/include/c++/3.3.4/deque
 objs/disc_psionics.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_psionics.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_psionics.o: /usr/include/c++/3.3.4/queue
+objs/disc_psionics.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_psionics.o: /usr/include/c++/3.3.4/iostream
 objs/disc_psionics.o: /usr/include/c++/3.3.4/ostream
 objs/disc_psionics.o: /usr/include/c++/3.3.4/ios
@@ -15221,6 +15447,8 @@ objs/disc_ranged.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_ranged.o: /usr/include/c++/3.3.4/deque
 objs/disc_ranged.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_ranged.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_ranged.o: /usr/include/c++/3.3.4/queue
+objs/disc_ranged.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_ranged.o: /usr/include/c++/3.3.4/iostream
 objs/disc_ranged.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/disc_ranged.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -15351,6 +15579,8 @@ objs/disc_shaman.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_shaman.o: /usr/include/c++/3.3.4/deque
 objs/disc_shaman.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_shaman.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_shaman.o: /usr/include/c++/3.3.4/queue
+objs/disc_shaman.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_shaman.o: /usr/include/c++/3.3.4/iostream
 objs/disc_shaman.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/disc_shaman.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -15491,6 +15721,8 @@ objs/disc_shaman_alchemy.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_shaman_alchemy.o: /usr/include/c++/3.3.4/deque
 objs/disc_shaman_alchemy.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_shaman_alchemy.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_shaman_alchemy.o: /usr/include/c++/3.3.4/queue
+objs/disc_shaman_alchemy.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_shaman_alchemy.o: /usr/include/c++/3.3.4/iostream
 objs/disc_shaman_alchemy.o: /usr/include/c++/3.3.4/ostream
 objs/disc_shaman_alchemy.o: /usr/include/c++/3.3.4/ios
@@ -15640,6 +15872,8 @@ objs/disc_shaman_armadillo.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_shaman_armadillo.o: /usr/include/c++/3.3.4/deque
 objs/disc_shaman_armadillo.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_shaman_armadillo.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_shaman_armadillo.o: /usr/include/c++/3.3.4/queue
+objs/disc_shaman_armadillo.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_shaman_armadillo.o: /usr/include/c++/3.3.4/iostream
 objs/disc_shaman_armadillo.o: /usr/include/c++/3.3.4/ostream
 objs/disc_shaman_armadillo.o: /usr/include/c++/3.3.4/ios
@@ -15784,6 +16018,8 @@ objs/disc_shaman_control.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_shaman_control.o: /usr/include/c++/3.3.4/deque
 objs/disc_shaman_control.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_shaman_control.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_shaman_control.o: /usr/include/c++/3.3.4/queue
+objs/disc_shaman_control.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_shaman_control.o: /usr/include/c++/3.3.4/iostream
 objs/disc_shaman_control.o: /usr/include/c++/3.3.4/ostream
 objs/disc_shaman_control.o: /usr/include/c++/3.3.4/ios
@@ -15923,6 +16159,8 @@ objs/disc_shaman_frog.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_shaman_frog.o: /usr/include/c++/3.3.4/deque
 objs/disc_shaman_frog.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_shaman_frog.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_shaman_frog.o: /usr/include/c++/3.3.4/queue
+objs/disc_shaman_frog.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_shaman_frog.o: /usr/include/c++/3.3.4/iostream
 objs/disc_shaman_frog.o: /usr/include/c++/3.3.4/ostream
 objs/disc_shaman_frog.o: /usr/include/c++/3.3.4/ios
@@ -16065,6 +16303,8 @@ objs/disc_shaman_healing.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_shaman_healing.o: /usr/include/c++/3.3.4/deque
 objs/disc_shaman_healing.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_shaman_healing.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_shaman_healing.o: /usr/include/c++/3.3.4/queue
+objs/disc_shaman_healing.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_shaman_healing.o: /usr/include/c++/3.3.4/iostream
 objs/disc_shaman_healing.o: /usr/include/c++/3.3.4/ostream
 objs/disc_shaman_healing.o: /usr/include/c++/3.3.4/ios
@@ -16205,6 +16445,8 @@ objs/disc_shaman_skunk.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_shaman_skunk.o: /usr/include/c++/3.3.4/deque
 objs/disc_shaman_skunk.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_shaman_skunk.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_shaman_skunk.o: /usr/include/c++/3.3.4/queue
+objs/disc_shaman_skunk.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_shaman_skunk.o: /usr/include/c++/3.3.4/iostream
 objs/disc_shaman_skunk.o: /usr/include/c++/3.3.4/ostream
 objs/disc_shaman_skunk.o: /usr/include/c++/3.3.4/ios
@@ -16345,6 +16587,8 @@ objs/disc_shaman_spider.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_shaman_spider.o: /usr/include/c++/3.3.4/deque
 objs/disc_shaman_spider.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_shaman_spider.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_shaman_spider.o: /usr/include/c++/3.3.4/queue
+objs/disc_shaman_spider.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_shaman_spider.o: /usr/include/c++/3.3.4/iostream
 objs/disc_shaman_spider.o: /usr/include/c++/3.3.4/ostream
 objs/disc_shaman_spider.o: /usr/include/c++/3.3.4/ios
@@ -16478,6 +16722,8 @@ objs/disc_slash.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_slash.o: /usr/include/c++/3.3.4/deque
 objs/disc_slash.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_slash.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_slash.o: /usr/include/c++/3.3.4/queue
+objs/disc_slash.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_slash.o: /usr/include/c++/3.3.4/iostream
 objs/disc_slash.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/disc_slash.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -16611,6 +16857,8 @@ objs/disc_soldiering.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_soldiering.o: /usr/include/c++/3.3.4/deque
 objs/disc_soldiering.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_soldiering.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_soldiering.o: /usr/include/c++/3.3.4/queue
+objs/disc_soldiering.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_soldiering.o: /usr/include/c++/3.3.4/iostream
 objs/disc_soldiering.o: /usr/include/c++/3.3.4/ostream
 objs/disc_soldiering.o: /usr/include/c++/3.3.4/ios
@@ -16744,6 +16992,8 @@ objs/disc_sorcery.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_sorcery.o: /usr/include/c++/3.3.4/deque
 objs/disc_sorcery.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_sorcery.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_sorcery.o: /usr/include/c++/3.3.4/queue
+objs/disc_sorcery.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_sorcery.o: /usr/include/c++/3.3.4/iostream
 objs/disc_sorcery.o: /usr/include/c++/3.3.4/ostream
 objs/disc_sorcery.o: /usr/include/c++/3.3.4/ios
@@ -16876,6 +17126,8 @@ objs/disc_spirit.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_spirit.o: /usr/include/c++/3.3.4/deque
 objs/disc_spirit.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_spirit.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_spirit.o: /usr/include/c++/3.3.4/queue
+objs/disc_spirit.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_spirit.o: /usr/include/c++/3.3.4/iostream
 objs/disc_spirit.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/disc_spirit.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -17006,6 +17258,8 @@ objs/disc_stealth.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_stealth.o: /usr/include/c++/3.3.4/deque
 objs/disc_stealth.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_stealth.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_stealth.o: /usr/include/c++/3.3.4/queue
+objs/disc_stealth.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_stealth.o: /usr/include/c++/3.3.4/iostream
 objs/disc_stealth.o: /usr/include/c++/3.3.4/ostream
 objs/disc_stealth.o: /usr/include/c++/3.3.4/ios
@@ -17139,6 +17393,8 @@ objs/disc_theology.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_theology.o: /usr/include/c++/3.3.4/deque
 objs/disc_theology.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_theology.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_theology.o: /usr/include/c++/3.3.4/queue
+objs/disc_theology.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_theology.o: /usr/include/c++/3.3.4/iostream
 objs/disc_theology.o: /usr/include/c++/3.3.4/ostream
 objs/disc_theology.o: /usr/include/c++/3.3.4/ios
@@ -17270,6 +17526,8 @@ objs/disc_thief.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_thief.o: /usr/include/c++/3.3.4/deque
 objs/disc_thief.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_thief.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_thief.o: /usr/include/c++/3.3.4/queue
+objs/disc_thief.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_thief.o: /usr/include/c++/3.3.4/iostream
 objs/disc_thief.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/disc_thief.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -17401,6 +17659,8 @@ objs/disc_warrior.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_warrior.o: /usr/include/c++/3.3.4/deque
 objs/disc_warrior.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_warrior.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_warrior.o: /usr/include/c++/3.3.4/queue
+objs/disc_warrior.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_warrior.o: /usr/include/c++/3.3.4/iostream
 objs/disc_warrior.o: /usr/include/c++/3.3.4/ostream
 objs/disc_warrior.o: /usr/include/c++/3.3.4/ios
@@ -17531,6 +17791,8 @@ objs/disc_water.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_water.o: /usr/include/c++/3.3.4/deque
 objs/disc_water.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_water.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_water.o: /usr/include/c++/3.3.4/queue
+objs/disc_water.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_water.o: /usr/include/c++/3.3.4/iostream
 objs/disc_water.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/disc_water.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -17661,6 +17923,8 @@ objs/disc_wrath.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disc_wrath.o: /usr/include/c++/3.3.4/deque
 objs/disc_wrath.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disc_wrath.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disc_wrath.o: /usr/include/c++/3.3.4/queue
+objs/disc_wrath.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disc_wrath.o: /usr/include/c++/3.3.4/iostream
 objs/disc_wrath.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/disc_wrath.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -17791,6 +18055,8 @@ objs/discipline.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/discipline.o: /usr/include/c++/3.3.4/deque
 objs/discipline.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/discipline.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/discipline.o: /usr/include/c++/3.3.4/queue
+objs/discipline.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/discipline.o: /usr/include/c++/3.3.4/iostream
 objs/discipline.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/discipline.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -17939,6 +18205,8 @@ objs/disease.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/disease.o: /usr/include/c++/3.3.4/deque
 objs/disease.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/disease.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/disease.o: /usr/include/c++/3.3.4/queue
+objs/disease.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/disease.o: /usr/include/c++/3.3.4/iostream
 objs/disease.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/disease.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -18064,6 +18332,8 @@ objs/doors.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/doors.o: /usr/include/c++/3.3.4/deque
 objs/doors.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/doors.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/doors.o: /usr/include/c++/3.3.4/queue
+objs/doors.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/doors.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/doors.o: /usr/include/c++/3.3.4/ios
 objs/doors.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -18185,6 +18455,8 @@ objs/edit.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/edit.o: /usr/include/c++/3.3.4/deque
 objs/edit.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/edit.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/edit.o: /usr/include/c++/3.3.4/queue
+objs/edit.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/edit.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/edit.o: /usr/include/c++/3.3.4/ios
 objs/edit.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -18318,6 +18590,8 @@ objs/enum.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/enum.o: /usr/include/c++/3.3.4/deque
 objs/enum.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/enum.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/enum.o: /usr/include/c++/3.3.4/queue
+objs/enum.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/enum.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/enum.o: /usr/include/c++/3.3.4/ios
 objs/enum.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -18444,6 +18718,8 @@ objs/eqcalc.cgi.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/eqcalc.cgi.o: /usr/include/c++/3.3.4/deque
 objs/eqcalc.cgi.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/eqcalc.cgi.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/eqcalc.cgi.o: /usr/include/c++/3.3.4/queue
+objs/eqcalc.cgi.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/eqcalc.cgi.o: /usr/include/c++/3.3.4/iostream
 objs/eqcalc.cgi.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/eqcalc.cgi.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -18597,6 +18873,8 @@ objs/equip.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/equip.o: /usr/include/c++/3.3.4/deque
 objs/equip.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/equip.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/equip.o: /usr/include/c++/3.3.4/queue
+objs/equip.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/equip.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/equip.o: /usr/include/c++/3.3.4/ios
 objs/equip.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -18726,6 +19004,8 @@ objs/faction.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/faction.o: /usr/include/c++/3.3.4/deque
 objs/faction.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/faction.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/faction.o: /usr/include/c++/3.3.4/queue
+objs/faction.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/faction.o: /usr/include/c++/3.3.4/iostream
 objs/faction.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/faction.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -18855,6 +19135,8 @@ objs/format.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/format.o: /usr/include/c++/3.3.4/deque
 objs/format.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/format.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/format.o: /usr/include/c++/3.3.4/queue
+objs/format.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/format.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/format.o: /usr/include/c++/3.3.4/ios
 objs/format.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -18893,6 +19175,11 @@ objs/format.o: create.h thing.h obj.h spec_objs.h obj_mergeable.h room.h
 objs/format.o: connect.h obj_drug.h charfile.h being.h garble.h guild.h
 objs/format.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/format.o: obj_money.h spec_mobs.h materials.h colorstring.h format.h
+objs/format.o: /usr/include/mysql/mysql.h /usr/include/mysql/mysql_com.h
+objs/format.o: /usr/include/mysql/mysql_time.h
+objs/format.o: /usr/include/mysql/mysql_version.h
+objs/format.o: /usr/include/mysql/typelib.h /usr/include/mysql/my_list.h
+objs/format.o: /usr/include/mysql/my_alloc.h
 objs/gaining.o: /usr/include/c++/3.3.4/cmath
 objs/gaining.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/gaining.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -18978,6 +19265,8 @@ objs/gaining.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/gaining.o: /usr/include/c++/3.3.4/deque
 objs/gaining.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/gaining.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/gaining.o: /usr/include/c++/3.3.4/queue
+objs/gaining.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/gaining.o: /usr/include/c++/3.3.4/iostream
 objs/gaining.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/gaining.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -19114,6 +19403,8 @@ objs/game_baccarat.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/game_baccarat.o: /usr/include/c++/3.3.4/deque
 objs/game_baccarat.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/game_baccarat.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/game_baccarat.o: /usr/include/c++/3.3.4/queue
+objs/game_baccarat.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/game_baccarat.o: /usr/include/c++/3.3.4/iostream
 objs/game_baccarat.o: /usr/include/c++/3.3.4/ostream
 objs/game_baccarat.o: /usr/include/c++/3.3.4/ios
@@ -19248,6 +19539,8 @@ objs/game_blackjack.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/game_blackjack.o: /usr/include/c++/3.3.4/deque
 objs/game_blackjack.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/game_blackjack.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/game_blackjack.o: /usr/include/c++/3.3.4/queue
+objs/game_blackjack.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/game_blackjack.o: /usr/include/c++/3.3.4/iostream
 objs/game_blackjack.o: /usr/include/c++/3.3.4/ostream
 objs/game_blackjack.o: /usr/include/c++/3.3.4/ios
@@ -19379,6 +19672,8 @@ objs/game_cards.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/game_cards.o: /usr/include/c++/3.3.4/deque
 objs/game_cards.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/game_cards.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/game_cards.o: /usr/include/c++/3.3.4/queue
+objs/game_cards.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/game_cards.o: /usr/include/c++/3.3.4/iostream
 objs/game_cards.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/game_cards.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -19508,6 +19803,8 @@ objs/game_craps.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/game_craps.o: /usr/include/c++/3.3.4/deque
 objs/game_craps.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/game_craps.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/game_craps.o: /usr/include/c++/3.3.4/queue
+objs/game_craps.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/game_craps.o: /usr/include/c++/3.3.4/iostream
 objs/game_craps.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/game_craps.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -19641,6 +19938,8 @@ objs/game_crazyeights.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/game_crazyeights.o: /usr/include/c++/3.3.4/deque
 objs/game_crazyeights.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/game_crazyeights.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/game_crazyeights.o: /usr/include/c++/3.3.4/queue
+objs/game_crazyeights.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/game_crazyeights.o: /usr/include/c++/3.3.4/iostream
 objs/game_crazyeights.o: /usr/include/c++/3.3.4/ostream
 objs/game_crazyeights.o: /usr/include/c++/3.3.4/ios
@@ -19775,6 +20074,8 @@ objs/game_drawpoker.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/game_drawpoker.o: /usr/include/c++/3.3.4/deque
 objs/game_drawpoker.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/game_drawpoker.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/game_drawpoker.o: /usr/include/c++/3.3.4/queue
+objs/game_drawpoker.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/game_drawpoker.o: /usr/include/c++/3.3.4/iostream
 objs/game_drawpoker.o: /usr/include/c++/3.3.4/ostream
 objs/game_drawpoker.o: /usr/include/c++/3.3.4/ios
@@ -19904,6 +20205,8 @@ objs/game_gin.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/game_gin.o: /usr/include/c++/3.3.4/deque
 objs/game_gin.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/game_gin.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/game_gin.o: /usr/include/c++/3.3.4/queue
+objs/game_gin.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/game_gin.o: /usr/include/c++/3.3.4/iostream
 objs/game_gin.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/game_gin.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -20034,6 +20337,8 @@ objs/game_hearts.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/game_hearts.o: /usr/include/c++/3.3.4/deque
 objs/game_hearts.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/game_hearts.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/game_hearts.o: /usr/include/c++/3.3.4/queue
+objs/game_hearts.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/game_hearts.o: /usr/include/c++/3.3.4/iostream
 objs/game_hearts.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/game_hearts.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -20161,6 +20466,8 @@ objs/game_hilo.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/game_hilo.o: /usr/include/c++/3.3.4/deque
 objs/game_hilo.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/game_hilo.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/game_hilo.o: /usr/include/c++/3.3.4/queue
+objs/game_hilo.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/game_hilo.o: /usr/include/c++/3.3.4/iostream
 objs/game_hilo.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/game_hilo.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -20291,6 +20598,8 @@ objs/game_holdem.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/game_holdem.o: /usr/include/c++/3.3.4/deque
 objs/game_holdem.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/game_holdem.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/game_holdem.o: /usr/include/c++/3.3.4/queue
+objs/game_holdem.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/game_holdem.o: /usr/include/c++/3.3.4/iostream
 objs/game_holdem.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/game_holdem.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -20420,6 +20729,8 @@ objs/game_poker.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/game_poker.o: /usr/include/c++/3.3.4/deque
 objs/game_poker.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/game_poker.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/game_poker.o: /usr/include/c++/3.3.4/queue
+objs/game_poker.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/game_poker.o: /usr/include/c++/3.3.4/iostream
 objs/game_poker.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/game_poker.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -20549,6 +20860,8 @@ objs/game_slots.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/game_slots.o: /usr/include/c++/3.3.4/deque
 objs/game_slots.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/game_slots.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/game_slots.o: /usr/include/c++/3.3.4/queue
+objs/game_slots.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/game_slots.o: /usr/include/c++/3.3.4/iostream
 objs/game_slots.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/game_slots.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -20674,6 +20987,8 @@ objs/games.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/games.o: /usr/include/c++/3.3.4/deque
 objs/games.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/games.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/games.o: /usr/include/c++/3.3.4/queue
+objs/games.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/games.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/games.o: /usr/include/c++/3.3.4/ios
 objs/games.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -20797,6 +21112,8 @@ objs/garble.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/garble.o: /usr/include/c++/3.3.4/deque
 objs/garble.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/garble.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/garble.o: /usr/include/c++/3.3.4/queue
+objs/garble.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/garble.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/garble.o: /usr/include/c++/3.3.4/ios
 objs/garble.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -20919,6 +21236,8 @@ objs/guild.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/guild.o: /usr/include/c++/3.3.4/deque
 objs/guild.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/guild.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/guild.o: /usr/include/c++/3.3.4/queue
+objs/guild.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/guild.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/guild.o: /usr/include/c++/3.3.4/ios
 objs/guild.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -21050,6 +21369,8 @@ objs/handler.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/handler.o: /usr/include/c++/3.3.4/deque
 objs/handler.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/handler.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/handler.o: /usr/include/c++/3.3.4/queue
+objs/handler.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/handler.o: /usr/include/c++/3.3.4/iostream
 objs/handler.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/handler.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -21179,6 +21500,8 @@ objs/hospital.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/hospital.o: /usr/include/c++/3.3.4/deque
 objs/hospital.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/hospital.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/hospital.o: /usr/include/c++/3.3.4/queue
+objs/hospital.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/hospital.o: /usr/include/c++/3.3.4/iostream
 objs/hospital.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/hospital.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -21306,6 +21629,8 @@ objs/immortal.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/immortal.o: /usr/include/c++/3.3.4/deque
 objs/immortal.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/immortal.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/immortal.o: /usr/include/c++/3.3.4/queue
+objs/immortal.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/immortal.o: /usr/include/c++/3.3.4/iostream
 objs/immortal.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/immortal.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -21456,6 +21781,8 @@ objs/immunity.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/immunity.o: /usr/include/c++/3.3.4/deque
 objs/immunity.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/immunity.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/immunity.o: /usr/include/c++/3.3.4/queue
+objs/immunity.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/immunity.o: /usr/include/c++/3.3.4/iostream
 objs/immunity.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/immunity.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -21582,6 +21909,8 @@ objs/indexdata.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/indexdata.o: /usr/include/c++/3.3.4/deque
 objs/indexdata.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/indexdata.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/indexdata.o: /usr/include/c++/3.3.4/queue
+objs/indexdata.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/indexdata.o: /usr/include/c++/3.3.4/iostream
 objs/indexdata.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/indexdata.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -21710,6 +22039,8 @@ objs/info.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/info.o: /usr/include/c++/3.3.4/deque
 objs/info.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/info.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/info.o: /usr/include/c++/3.3.4/queue
+objs/info.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/info.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/info.o: /usr/include/c++/3.3.4/ios
 objs/info.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -21846,6 +22177,8 @@ objs/inventory.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/inventory.o: /usr/include/c++/3.3.4/deque
 objs/inventory.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/inventory.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/inventory.o: /usr/include/c++/3.3.4/queue
+objs/inventory.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/inventory.o: /usr/include/c++/3.3.4/iostream
 objs/inventory.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/inventory.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -21986,6 +22319,8 @@ objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/deque
 objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/queue
+objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/iostream
 objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/ostream
 objs/limb_quest.cgi.o: /usr/include/c++/3.3.4/ios
@@ -22140,6 +22475,8 @@ objs/limbs.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/limbs.o: /usr/include/c++/3.3.4/deque
 objs/limbs.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/limbs.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/limbs.o: /usr/include/c++/3.3.4/queue
+objs/limbs.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/limbs.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/limbs.o: /usr/include/c++/3.3.4/ios
 objs/limbs.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -22263,6 +22600,8 @@ objs/limits.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/limits.o: /usr/include/c++/3.3.4/deque
 objs/limits.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/limits.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/limits.o: /usr/include/c++/3.3.4/queue
+objs/limits.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/limits.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/limits.o: /usr/include/c++/3.3.4/ios
 objs/limits.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -22389,6 +22728,8 @@ objs/liquids.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/liquids.o: /usr/include/c++/3.3.4/deque
 objs/liquids.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/liquids.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/liquids.o: /usr/include/c++/3.3.4/queue
+objs/liquids.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/liquids.o: /usr/include/c++/3.3.4/iostream
 objs/liquids.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/liquids.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -22514,6 +22855,8 @@ objs/loadset.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/loadset.o: /usr/include/c++/3.3.4/deque
 objs/loadset.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/loadset.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/loadset.o: /usr/include/c++/3.3.4/queue
+objs/loadset.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/loadset.o: /usr/include/c++/3.3.4/iostream
 objs/loadset.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/loadset.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -22641,6 +22984,8 @@ objs/lowtools.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/lowtools.o: /usr/include/c++/3.3.4/deque
 objs/lowtools.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/lowtools.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/lowtools.o: /usr/include/c++/3.3.4/queue
+objs/lowtools.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/lowtools.o: /usr/include/c++/3.3.4/iostream
 objs/lowtools.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/lowtools.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -22769,6 +23114,8 @@ objs/luck.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/luck.o: /usr/include/c++/3.3.4/deque
 objs/luck.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/luck.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/luck.o: /usr/include/c++/3.3.4/queue
+objs/luck.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/luck.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/luck.o: /usr/include/c++/3.3.4/ios
 objs/luck.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -22893,6 +23240,8 @@ objs/magic_off.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/magic_off.o: /usr/include/c++/3.3.4/deque
 objs/magic_off.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/magic_off.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/magic_off.o: /usr/include/c++/3.3.4/queue
+objs/magic_off.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/magic_off.o: /usr/include/c++/3.3.4/iostream
 objs/magic_off.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/magic_off.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -23022,6 +23371,8 @@ objs/magic_skills.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/magic_skills.o: /usr/include/c++/3.3.4/deque
 objs/magic_skills.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/magic_skills.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/magic_skills.o: /usr/include/c++/3.3.4/queue
+objs/magic_skills.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/magic_skills.o: /usr/include/c++/3.3.4/iostream
 objs/magic_skills.o: /usr/include/c++/3.3.4/ostream
 objs/magic_skills.o: /usr/include/c++/3.3.4/ios
@@ -23152,6 +23503,8 @@ objs/magicutils.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/magicutils.o: /usr/include/c++/3.3.4/deque
 objs/magicutils.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/magicutils.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/magicutils.o: /usr/include/c++/3.3.4/queue
+objs/magicutils.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/magicutils.o: /usr/include/c++/3.3.4/iostream
 objs/magicutils.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/magicutils.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -23277,6 +23630,8 @@ objs/mail.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/mail.o: /usr/include/c++/3.3.4/deque
 objs/mail.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/mail.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/mail.o: /usr/include/c++/3.3.4/queue
+objs/mail.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/mail.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/mail.o: /usr/include/c++/3.3.4/ios
 objs/mail.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -23319,7 +23674,8 @@ objs/mail.o: mail.h database.h /usr/include/mysql/mysql.h
 objs/mail.o: /usr/include/mysql/mysql_com.h /usr/include/mysql/mysql_time.h
 objs/mail.o: /usr/include/mysql/mysql_version.h /usr/include/mysql/typelib.h
 objs/mail.o: /usr/include/mysql/my_list.h /usr/include/mysql/my_alloc.h
-objs/mail.o: shop.h shopowned.h rent.h
+objs/mail.o: shop.h shopowned.h rent.h obj_trap.h obj_open_container.h
+objs/mail.o: obj_base_container.h
 objs/main.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/main.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/main.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -23403,6 +23759,8 @@ objs/main.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/main.o: /usr/include/c++/3.3.4/deque
 objs/main.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/main.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/main.o: /usr/include/c++/3.3.4/queue
+objs/main.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/main.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/main.o: /usr/include/c++/3.3.4/ios
 objs/main.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -23531,6 +23889,8 @@ objs/makecorpse.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/makecorpse.o: /usr/include/c++/3.3.4/deque
 objs/makecorpse.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/makecorpse.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/makecorpse.o: /usr/include/c++/3.3.4/queue
+objs/makecorpse.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/makecorpse.o: /usr/include/c++/3.3.4/iostream
 objs/makecorpse.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/makecorpse.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -23659,6 +24019,8 @@ objs/materials.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/materials.o: /usr/include/c++/3.3.4/deque
 objs/materials.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/materials.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/materials.o: /usr/include/c++/3.3.4/queue
+objs/materials.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/materials.o: /usr/include/c++/3.3.4/iostream
 objs/materials.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/materials.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -23785,6 +24147,8 @@ objs/meeting.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/meeting.o: /usr/include/c++/3.3.4/deque
 objs/meeting.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/meeting.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/meeting.o: /usr/include/c++/3.3.4/queue
+objs/meeting.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/meeting.o: /usr/include/c++/3.3.4/iostream
 objs/meeting.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/meeting.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -23913,6 +24277,8 @@ objs/mob_loader.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/mob_loader.o: /usr/include/c++/3.3.4/deque
 objs/mob_loader.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/mob_loader.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/mob_loader.o: /usr/include/c++/3.3.4/queue
+objs/mob_loader.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/mob_loader.o: /usr/include/c++/3.3.4/iostream
 objs/mob_loader.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/mob_loader.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -24039,6 +24405,8 @@ objs/mobact.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/mobact.o: /usr/include/c++/3.3.4/deque
 objs/mobact.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/mobact.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/mobact.o: /usr/include/c++/3.3.4/queue
+objs/mobact.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/mobact.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/mobact.o: /usr/include/c++/3.3.4/ios
 objs/mobact.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -24173,6 +24541,8 @@ objs/monster.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/monster.o: /usr/include/c++/3.3.4/deque
 objs/monster.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/monster.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/monster.o: /usr/include/c++/3.3.4/queue
+objs/monster.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/monster.o: /usr/include/c++/3.3.4/iostream
 objs/monster.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/monster.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -24304,6 +24674,8 @@ objs/movement.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/movement.o: /usr/include/c++/3.3.4/deque
 objs/movement.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/movement.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/movement.o: /usr/include/c++/3.3.4/queue
+objs/movement.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/movement.o: /usr/include/c++/3.3.4/iostream
 objs/movement.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/movement.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -24438,6 +24810,8 @@ objs/mudmail.cgi.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/mudmail.cgi.o: /usr/include/c++/3.3.4/deque
 objs/mudmail.cgi.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/mudmail.cgi.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/mudmail.cgi.o: /usr/include/c++/3.3.4/queue
+objs/mudmail.cgi.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/mudmail.cgi.o: /usr/include/c++/3.3.4/iostream
 objs/mudmail.cgi.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/mudmail.cgi.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -24592,6 +24966,8 @@ objs/multiclass.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/multiclass.o: /usr/include/c++/3.3.4/deque
 objs/multiclass.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/multiclass.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/multiclass.o: /usr/include/c++/3.3.4/queue
+objs/multiclass.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/multiclass.o: /usr/include/c++/3.3.4/iostream
 objs/multiclass.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/multiclass.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -24716,6 +25092,8 @@ objs/newbie.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/newbie.o: /usr/include/c++/3.3.4/deque
 objs/newbie.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/newbie.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/newbie.o: /usr/include/c++/3.3.4/queue
+objs/newbie.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/newbie.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/newbie.o: /usr/include/c++/3.3.4/ios
 objs/newbie.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -24835,6 +25213,8 @@ objs/obj.o: /usr/include/c++/3.3.4/bits/stl_list.h
 objs/obj.o: /usr/include/c++/3.3.4/bits/list.tcc /usr/include/c++/3.3.4/deque
 objs/obj.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj.o: /usr/include/c++/3.3.4/queue
+objs/obj.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/obj.o: /usr/include/c++/3.3.4/ios
 objs/obj.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -24965,6 +25345,8 @@ objs/obj_appliedsub.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_appliedsub.o: /usr/include/c++/3.3.4/deque
 objs/obj_appliedsub.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_appliedsub.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_appliedsub.o: /usr/include/c++/3.3.4/queue
+objs/obj_appliedsub.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_appliedsub.o: /usr/include/c++/3.3.4/iostream
 objs/obj_appliedsub.o: /usr/include/c++/3.3.4/ostream
 objs/obj_appliedsub.o: /usr/include/c++/3.3.4/ios
@@ -25097,6 +25479,8 @@ objs/obj_armor.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_armor.o: /usr/include/c++/3.3.4/deque
 objs/obj_armor.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_armor.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_armor.o: /usr/include/c++/3.3.4/queue
+objs/obj_armor.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_armor.o: /usr/include/c++/3.3.4/iostream
 objs/obj_armor.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_armor.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -25229,6 +25613,8 @@ objs/obj_armor_wand.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_armor_wand.o: /usr/include/c++/3.3.4/deque
 objs/obj_armor_wand.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_armor_wand.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_armor_wand.o: /usr/include/c++/3.3.4/queue
+objs/obj_armor_wand.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_armor_wand.o: /usr/include/c++/3.3.4/iostream
 objs/obj_armor_wand.o: /usr/include/c++/3.3.4/ostream
 objs/obj_armor_wand.o: /usr/include/c++/3.3.4/ios
@@ -25359,6 +25745,8 @@ objs/obj_arrow.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_arrow.o: /usr/include/c++/3.3.4/deque
 objs/obj_arrow.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_arrow.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_arrow.o: /usr/include/c++/3.3.4/queue
+objs/obj_arrow.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_arrow.o: /usr/include/c++/3.3.4/iostream
 objs/obj_arrow.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_arrow.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -25487,6 +25875,8 @@ objs/obj_audio.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_audio.o: /usr/include/c++/3.3.4/deque
 objs/obj_audio.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_audio.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_audio.o: /usr/include/c++/3.3.4/queue
+objs/obj_audio.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_audio.o: /usr/include/c++/3.3.4/iostream
 objs/obj_audio.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_audio.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -25612,6 +26002,8 @@ objs/obj_bag.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_bag.o: /usr/include/c++/3.3.4/deque
 objs/obj_bag.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_bag.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_bag.o: /usr/include/c++/3.3.4/queue
+objs/obj_bag.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_bag.o: /usr/include/c++/3.3.4/iostream
 objs/obj_bag.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_bag.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -25742,6 +26134,8 @@ objs/obj_bandaid.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_bandaid.o: /usr/include/c++/3.3.4/deque
 objs/obj_bandaid.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_bandaid.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_bandaid.o: /usr/include/c++/3.3.4/queue
+objs/obj_bandaid.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_bandaid.o: /usr/include/c++/3.3.4/iostream
 objs/obj_bandaid.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_bandaid.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -25877,6 +26271,8 @@ objs/obj_base_clothing.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_base_clothing.o: /usr/include/c++/3.3.4/deque
 objs/obj_base_clothing.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_base_clothing.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_base_clothing.o: /usr/include/c++/3.3.4/queue
+objs/obj_base_clothing.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_base_clothing.o: /usr/include/c++/3.3.4/iostream
 objs/obj_base_clothing.o: /usr/include/c++/3.3.4/ostream
 objs/obj_base_clothing.o: /usr/include/c++/3.3.4/ios
@@ -25924,6 +26320,7 @@ objs/obj_base_clothing.o: format.h shop.h obj_base_clothing.h shopowned.h
 objs/obj_base_clothing.o: corporation.h obj_suitcase.h
 objs/obj_base_clothing.o: obj_expandable_container.h obj_open_container.h
 objs/obj_base_clothing.o: obj_base_container.h obj_saddle.h obj_harness.h
+objs/obj_base_clothing.o: obj_low.h
 objs/obj_base_container.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/obj_base_container.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/obj_base_container.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -26019,6 +26416,8 @@ objs/obj_base_container.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_base_container.o: /usr/include/c++/3.3.4/deque
 objs/obj_base_container.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_base_container.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_base_container.o: /usr/include/c++/3.3.4/queue
+objs/obj_base_container.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_base_container.o: /usr/include/c++/3.3.4/iostream
 objs/obj_base_container.o: /usr/include/c++/3.3.4/ostream
 objs/obj_base_container.o: /usr/include/c++/3.3.4/ios
@@ -26158,6 +26557,8 @@ objs/obj_base_corpse.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_base_corpse.o: /usr/include/c++/3.3.4/deque
 objs/obj_base_corpse.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_base_corpse.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_base_corpse.o: /usr/include/c++/3.3.4/queue
+objs/obj_base_corpse.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_base_corpse.o: /usr/include/c++/3.3.4/iostream
 objs/obj_base_corpse.o: /usr/include/c++/3.3.4/ostream
 objs/obj_base_corpse.o: /usr/include/c++/3.3.4/ios
@@ -26293,6 +26694,8 @@ objs/obj_base_cup.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_base_cup.o: /usr/include/c++/3.3.4/deque
 objs/obj_base_cup.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_base_cup.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_base_cup.o: /usr/include/c++/3.3.4/queue
+objs/obj_base_cup.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_base_cup.o: /usr/include/c++/3.3.4/iostream
 objs/obj_base_cup.o: /usr/include/c++/3.3.4/ostream
 objs/obj_base_cup.o: /usr/include/c++/3.3.4/ios
@@ -26426,6 +26829,8 @@ objs/obj_base_light.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_base_light.o: /usr/include/c++/3.3.4/deque
 objs/obj_base_light.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_base_light.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_base_light.o: /usr/include/c++/3.3.4/queue
+objs/obj_base_light.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_base_light.o: /usr/include/c++/3.3.4/iostream
 objs/obj_base_light.o: /usr/include/c++/3.3.4/ostream
 objs/obj_base_light.o: /usr/include/c++/3.3.4/ios
@@ -26560,6 +26965,8 @@ objs/obj_base_weapon.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_base_weapon.o: /usr/include/c++/3.3.4/deque
 objs/obj_base_weapon.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_base_weapon.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_base_weapon.o: /usr/include/c++/3.3.4/queue
+objs/obj_base_weapon.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_base_weapon.o: /usr/include/c++/3.3.4/iostream
 objs/obj_base_weapon.o: /usr/include/c++/3.3.4/ostream
 objs/obj_base_weapon.o: /usr/include/c++/3.3.4/ios
@@ -26690,6 +27097,8 @@ objs/obj_bed.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_bed.o: /usr/include/c++/3.3.4/deque
 objs/obj_bed.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_bed.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_bed.o: /usr/include/c++/3.3.4/queue
+objs/obj_bed.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_bed.o: /usr/include/c++/3.3.4/iostream
 objs/obj_bed.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_bed.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -26818,6 +27227,8 @@ objs/obj_board.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_board.o: /usr/include/c++/3.3.4/deque
 objs/obj_board.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_board.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_board.o: /usr/include/c++/3.3.4/queue
+objs/obj_board.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_board.o: /usr/include/c++/3.3.4/iostream
 objs/obj_board.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_board.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -26950,6 +27361,8 @@ objs/obj_boat.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_boat.o: /usr/include/c++/3.3.4/deque
 objs/obj_boat.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_boat.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_boat.o: /usr/include/c++/3.3.4/queue
+objs/obj_boat.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_boat.o: /usr/include/c++/3.3.4/iostream
 objs/obj_boat.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_boat.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -27077,6 +27490,8 @@ objs/obj_book.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_book.o: /usr/include/c++/3.3.4/deque
 objs/obj_book.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_book.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_book.o: /usr/include/c++/3.3.4/queue
+objs/obj_book.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_book.o: /usr/include/c++/3.3.4/iostream
 objs/obj_book.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_book.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -27202,6 +27617,8 @@ objs/obj_bow.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_bow.o: /usr/include/c++/3.3.4/deque
 objs/obj_bow.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_bow.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_bow.o: /usr/include/c++/3.3.4/queue
+objs/obj_bow.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_bow.o: /usr/include/c++/3.3.4/iostream
 objs/obj_bow.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_bow.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -27331,6 +27748,8 @@ objs/obj_cannon.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_cannon.o: /usr/include/c++/3.3.4/deque
 objs/obj_cannon.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_cannon.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_cannon.o: /usr/include/c++/3.3.4/queue
+objs/obj_cannon.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_cannon.o: /usr/include/c++/3.3.4/iostream
 objs/obj_cannon.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_cannon.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -27463,6 +27882,8 @@ objs/obj_card_deck.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_card_deck.o: /usr/include/c++/3.3.4/deque
 objs/obj_card_deck.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_card_deck.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_card_deck.o: /usr/include/c++/3.3.4/queue
+objs/obj_card_deck.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_card_deck.o: /usr/include/c++/3.3.4/iostream
 objs/obj_card_deck.o: /usr/include/c++/3.3.4/ostream
 objs/obj_card_deck.o: /usr/include/c++/3.3.4/ios
@@ -27599,6 +28020,8 @@ objs/obj_casino_chip.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_casino_chip.o: /usr/include/c++/3.3.4/deque
 objs/obj_casino_chip.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_casino_chip.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_casino_chip.o: /usr/include/c++/3.3.4/queue
+objs/obj_casino_chip.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_casino_chip.o: /usr/include/c++/3.3.4/iostream
 objs/obj_casino_chip.o: /usr/include/c++/3.3.4/ostream
 objs/obj_casino_chip.o: /usr/include/c++/3.3.4/ios
@@ -27728,6 +28151,8 @@ objs/obj_chest.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_chest.o: /usr/include/c++/3.3.4/deque
 objs/obj_chest.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_chest.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_chest.o: /usr/include/c++/3.3.4/queue
+objs/obj_chest.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_chest.o: /usr/include/c++/3.3.4/iostream
 objs/obj_chest.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_chest.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -27859,6 +28284,8 @@ objs/obj_commodity.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_commodity.o: /usr/include/c++/3.3.4/deque
 objs/obj_commodity.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_commodity.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_commodity.o: /usr/include/c++/3.3.4/queue
+objs/obj_commodity.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_commodity.o: /usr/include/c++/3.3.4/iostream
 objs/obj_commodity.o: /usr/include/c++/3.3.4/ostream
 objs/obj_commodity.o: /usr/include/c++/3.3.4/ios
@@ -27999,6 +28426,8 @@ objs/obj_component.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_component.o: /usr/include/c++/3.3.4/deque
 objs/obj_component.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_component.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_component.o: /usr/include/c++/3.3.4/queue
+objs/obj_component.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_component.o: /usr/include/c++/3.3.4/iostream
 objs/obj_component.o: /usr/include/c++/3.3.4/ostream
 objs/obj_component.o: /usr/include/c++/3.3.4/ios
@@ -28140,6 +28569,8 @@ objs/obj_cookware.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_cookware.o: /usr/include/c++/3.3.4/deque
 objs/obj_cookware.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_cookware.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_cookware.o: /usr/include/c++/3.3.4/queue
+objs/obj_cookware.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_cookware.o: /usr/include/c++/3.3.4/iostream
 objs/obj_cookware.o: /usr/include/c++/3.3.4/ostream
 objs/obj_cookware.o: /usr/include/c++/3.3.4/ios
@@ -28271,6 +28702,8 @@ objs/obj_corpse.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_corpse.o: /usr/include/c++/3.3.4/deque
 objs/obj_corpse.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_corpse.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_corpse.o: /usr/include/c++/3.3.4/queue
+objs/obj_corpse.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_corpse.o: /usr/include/c++/3.3.4/iostream
 objs/obj_corpse.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_corpse.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -28401,6 +28834,8 @@ objs/obj_drinkcon.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_drinkcon.o: /usr/include/c++/3.3.4/deque
 objs/obj_drinkcon.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_drinkcon.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_drinkcon.o: /usr/include/c++/3.3.4/queue
+objs/obj_drinkcon.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_drinkcon.o: /usr/include/c++/3.3.4/iostream
 objs/obj_drinkcon.o: /usr/include/c++/3.3.4/ostream
 objs/obj_drinkcon.o: /usr/include/c++/3.3.4/ios
@@ -28530,6 +28965,8 @@ objs/obj_drug.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_drug.o: /usr/include/c++/3.3.4/deque
 objs/obj_drug.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_drug.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_drug.o: /usr/include/c++/3.3.4/queue
+objs/obj_drug.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_drug.o: /usr/include/c++/3.3.4/iostream
 objs/obj_drug.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_drug.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -28665,6 +29102,8 @@ objs/obj_drug_container.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_drug_container.o: /usr/include/c++/3.3.4/deque
 objs/obj_drug_container.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_drug_container.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_drug_container.o: /usr/include/c++/3.3.4/queue
+objs/obj_drug_container.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_drug_container.o: /usr/include/c++/3.3.4/iostream
 objs/obj_drug_container.o: /usr/include/c++/3.3.4/ostream
 objs/obj_drug_container.o: /usr/include/c++/3.3.4/ios
@@ -28794,6 +29233,8 @@ objs/obj_egg.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_egg.o: /usr/include/c++/3.3.4/deque
 objs/obj_egg.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_egg.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_egg.o: /usr/include/c++/3.3.4/queue
+objs/obj_egg.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_egg.o: /usr/include/c++/3.3.4/iostream
 objs/obj_egg.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_egg.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -28943,6 +29384,8 @@ objs/obj_expandable_container.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_expandable_container.o: /usr/include/c++/3.3.4/deque
 objs/obj_expandable_container.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_expandable_container.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_expandable_container.o: /usr/include/c++/3.3.4/queue
+objs/obj_expandable_container.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_expandable_container.o: /usr/include/c++/3.3.4/iostream
 objs/obj_expandable_container.o: /usr/include/c++/3.3.4/ostream
 objs/obj_expandable_container.o: /usr/include/c++/3.3.4/ios
@@ -29076,6 +29519,8 @@ objs/obj_flame.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_flame.o: /usr/include/c++/3.3.4/deque
 objs/obj_flame.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_flame.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_flame.o: /usr/include/c++/3.3.4/queue
+objs/obj_flame.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_flame.o: /usr/include/c++/3.3.4/iostream
 objs/obj_flame.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_flame.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -29204,6 +29649,8 @@ objs/obj_food.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_food.o: /usr/include/c++/3.3.4/deque
 objs/obj_food.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_food.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_food.o: /usr/include/c++/3.3.4/queue
+objs/obj_food.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_food.o: /usr/include/c++/3.3.4/iostream
 objs/obj_food.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_food.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -29333,6 +29780,8 @@ objs/obj_fuel.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_fuel.o: /usr/include/c++/3.3.4/deque
 objs/obj_fuel.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_fuel.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_fuel.o: /usr/include/c++/3.3.4/queue
+objs/obj_fuel.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_fuel.o: /usr/include/c++/3.3.4/iostream
 objs/obj_fuel.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_fuel.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -29459,6 +29908,8 @@ objs/obj_gas.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_gas.o: /usr/include/c++/3.3.4/deque
 objs/obj_gas.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_gas.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_gas.o: /usr/include/c++/3.3.4/queue
+objs/obj_gas.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_gas.o: /usr/include/c++/3.3.4/iostream
 objs/obj_gas.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_gas.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -29590,6 +30041,8 @@ objs/obj_gemstone.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_gemstone.o: /usr/include/c++/3.3.4/deque
 objs/obj_gemstone.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_gemstone.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_gemstone.o: /usr/include/c++/3.3.4/queue
+objs/obj_gemstone.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_gemstone.o: /usr/include/c++/3.3.4/iostream
 objs/obj_gemstone.o: /usr/include/c++/3.3.4/ostream
 objs/obj_gemstone.o: /usr/include/c++/3.3.4/ios
@@ -29727,6 +30180,8 @@ objs/obj_general_weapon.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_general_weapon.o: /usr/include/c++/3.3.4/deque
 objs/obj_general_weapon.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_general_weapon.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_general_weapon.o: /usr/include/c++/3.3.4/queue
+objs/obj_general_weapon.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_general_weapon.o: /usr/include/c++/3.3.4/iostream
 objs/obj_general_weapon.o: /usr/include/c++/3.3.4/ostream
 objs/obj_general_weapon.o: /usr/include/c++/3.3.4/ios
@@ -29857,6 +30312,8 @@ objs/obj_gun.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_gun.o: /usr/include/c++/3.3.4/deque
 objs/obj_gun.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_gun.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_gun.o: /usr/include/c++/3.3.4/queue
+objs/obj_gun.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_gun.o: /usr/include/c++/3.3.4/iostream
 objs/obj_gun.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_gun.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -29988,6 +30445,8 @@ objs/obj_handgonne.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_handgonne.o: /usr/include/c++/3.3.4/deque
 objs/obj_handgonne.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_handgonne.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_handgonne.o: /usr/include/c++/3.3.4/queue
+objs/obj_handgonne.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_handgonne.o: /usr/include/c++/3.3.4/iostream
 objs/obj_handgonne.o: /usr/include/c++/3.3.4/ostream
 objs/obj_handgonne.o: /usr/include/c++/3.3.4/ios
@@ -30121,6 +30580,8 @@ objs/obj_harness.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_harness.o: /usr/include/c++/3.3.4/deque
 objs/obj_harness.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_harness.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_harness.o: /usr/include/c++/3.3.4/queue
+objs/obj_harness.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_harness.o: /usr/include/c++/3.3.4/iostream
 objs/obj_harness.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_harness.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -30251,6 +30712,8 @@ objs/obj_jewelry.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_jewelry.o: /usr/include/c++/3.3.4/deque
 objs/obj_jewelry.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_jewelry.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_jewelry.o: /usr/include/c++/3.3.4/queue
+objs/obj_jewelry.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_jewelry.o: /usr/include/c++/3.3.4/iostream
 objs/obj_jewelry.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_jewelry.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -30377,6 +30840,8 @@ objs/obj_key.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_key.o: /usr/include/c++/3.3.4/deque
 objs/obj_key.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_key.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_key.o: /usr/include/c++/3.3.4/queue
+objs/obj_key.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_key.o: /usr/include/c++/3.3.4/iostream
 objs/obj_key.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_key.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -30513,6 +30978,8 @@ objs/obj_keyring.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_keyring.o: /usr/include/c++/3.3.4/deque
 objs/obj_keyring.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_keyring.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_keyring.o: /usr/include/c++/3.3.4/queue
+objs/obj_keyring.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_keyring.o: /usr/include/c++/3.3.4/iostream
 objs/obj_keyring.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_keyring.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -30641,6 +31108,8 @@ objs/obj_light.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_light.o: /usr/include/c++/3.3.4/deque
 objs/obj_light.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_light.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_light.o: /usr/include/c++/3.3.4/queue
+objs/obj_light.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_light.o: /usr/include/c++/3.3.4/iostream
 objs/obj_light.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_light.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -30682,6 +31151,135 @@ objs/obj_light.o: being.h garble.h guild.h person.h monster.h paths.h
 objs/obj_light.o: account.h extern.h handler.h obj_money.h spec_mobs.h
 objs/obj_light.o: materials.h colorstring.h format.h obj_light.h
 objs/obj_light.o: obj_base_light.h
+objs/obj_low.o: /usr/include/c++/3.3.4/cmath
+objs/obj_low.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
+objs/obj_low.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
+objs/obj_low.o: /usr/include/features.h /usr/include/sys/cdefs.h
+objs/obj_low.o: /usr/include/gnu/stubs.h /usr/include/math.h
+objs/obj_low.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+objs/obj_low.o: /usr/include/bits/mathcalls.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/cmath.tcc
+objs/obj_low.o: /usr/include/c++/3.3.4/algorithm
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/stl_algobase.h
+objs/obj_low.o: /usr/include/c++/3.3.4/cstring /usr/include/c++/3.3.4/cstddef
+objs/obj_low.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stddef.h
+objs/obj_low.o: /usr/include/string.h /usr/include/c++/3.3.4/climits
+objs/obj_low.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/limits.h
+objs/obj_low.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/syslimits.h
+objs/obj_low.o: /usr/include/limits.h /usr/include/c++/3.3.4/cstdlib
+objs/obj_low.o: /usr/include/stdlib.h /usr/include/c++/3.3.4/new
+objs/obj_low.o: /usr/include/c++/3.3.4/exception
+objs/obj_low.o: /usr/include/c++/3.3.4/iosfwd
+objs/obj_low.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++locale.h
+objs/obj_low.o: /usr/include/c++/3.3.4/clocale /usr/include/locale.h
+objs/obj_low.o: /usr/include/bits/locale.h /usr/include/langinfo.h
+objs/obj_low.o: /usr/include/nl_types.h /usr/include/iconv.h
+objs/obj_low.o: /usr/include/libintl.h /usr/include/c++/3.3.4/cctype
+objs/obj_low.o: /usr/include/ctype.h /usr/include/bits/types.h
+objs/obj_low.o: /usr/include/bits/wordsize.h /usr/include/bits/typesizes.h
+objs/obj_low.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/stringfwd.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/fpos.h
+objs/obj_low.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++io.h
+objs/obj_low.o: /usr/include/c++/3.3.4/cstdio /usr/include/stdio.h
+objs/obj_low.o: /usr/include/libio.h /usr/include/_G_config.h
+objs/obj_low.o: /usr/include/wchar.h /usr/include/bits/wchar.h
+objs/obj_low.o: /usr/include/gconv.h
+objs/obj_low.o: /usr/lib/gcc/i386-redhat-linux/3.4.3/include/stdarg.h
+objs/obj_low.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+objs/obj_low.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr.h
+objs/obj_low.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/gthr-default.h
+objs/obj_low.o: /usr/include/pthread.h /usr/include/sched.h
+objs/obj_low.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_low.o: /usr/include/bits/sched.h /usr/include/signal.h
+objs/obj_low.o: /usr/include/bits/sigset.h /usr/include/bits/pthreadtypes.h
+objs/obj_low.o: /usr/include/bits/initspin.h /usr/include/bits/sigthread.h
+objs/obj_low.o: /usr/include/c++/3.3.4/cwchar /usr/include/c++/3.3.4/ctime
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/functexcept.h
+objs/obj_low.o: /usr/include/c++/3.3.4/exception_defines.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/stl_pair.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/type_traits.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_types.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/stl_iterator_base_funcs.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/concept_check.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/stl_iterator.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/stl_construct.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/stl_uninitialized.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/stl_algo.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/stl_heap.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/stl_tempbuf.h stdsneezy.h
+objs/obj_low.o: /usr/include/sys/types.h /usr/include/c++/3.3.4/cassert
+objs/obj_low.o: /usr/include/assert.h /usr/include/c++/3.3.4/cerrno
+objs/obj_low.o: /usr/include/errno.h /usr/include/bits/errno.h
+objs/obj_low.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+objs/obj_low.o: /usr/include/c++/3.3.4/string
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/char_traits.h
+objs/obj_low.o: /usr/include/c++/3.3.4/memory
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/stl_alloc.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/stl_threads.h
+objs/obj_low.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/atomicity.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/stl_raw_storage_iter.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/stl_function.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/basic_string.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/basic_string.tcc
+objs/obj_low.o: /usr/include/c++/3.3.4/vector
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/stl_vector.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/stl_bvector.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/vector.tcc
+objs/obj_low.o: /usr/include/c++/3.3.4/map
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/stl_tree.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/stl_map.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/stl_multimap.h
+objs/obj_low.o: /usr/include/c++/3.3.4/list
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/stl_list.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/list.tcc
+objs/obj_low.o: /usr/include/c++/3.3.4/deque
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/stl_deque.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_low.o: /usr/include/c++/3.3.4/queue
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/stl_queue.h
+objs/obj_low.o: /usr/include/c++/3.3.4/iostream
+objs/obj_low.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/localefwd.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/ios_base.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/locale_classes.h
+objs/obj_low.o: /usr/include/c++/3.3.4/streambuf
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/streambuf.tcc
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/basic_ios.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/streambuf_iterator.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/locale_facets.h
+objs/obj_low.o: /usr/include/c++/3.3.4/cwctype /usr/include/wctype.h
+objs/obj_low.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_base.h
+objs/obj_low.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/ctype_inline.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/codecvt.h
+objs/obj_low.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/codecvt_specializations.h
+objs/obj_low.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/time_members.h
+objs/obj_low.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/messages_members.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/basic_ios.tcc
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/ostream.tcc
+objs/obj_low.o: /usr/include/c++/3.3.4/locale
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/locale_facets.tcc
+objs/obj_low.o: /usr/include/c++/3.3.4/limits
+objs/obj_low.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/cpu_limits.h
+objs/obj_low.o: /usr/include/c++/3.3.4/typeinfo
+objs/obj_low.o: /usr/include/c++/3.3.4/istream
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/istream.tcc
+objs/obj_low.o: /usr/include/c++/3.3.4/sstream
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/sstream.tcc
+objs/obj_low.o: /usr/include/c++/3.3.4/fstream
+objs/obj_low.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/basic_file.h
+objs/obj_low.o: /usr/include/c++/3.3.4/bits/fstream.tcc sstring.h low.h
+objs/obj_low.o: enum.h spells.h structs.h parse.h immunity.h discipline.h
+objs/obj_low.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/obj_low.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h stats.h
+objs/obj_low.o: limbs.h body.h race.h skills.h disease.h trap.h task.h
+objs/obj_low.o: weather.h sound.h create.h thing.h obj.h spec_objs.h
+objs/obj_low.o: obj_mergeable.h room.h connect.h obj_drug.h charfile.h
+objs/obj_low.o: being.h garble.h guild.h person.h monster.h paths.h account.h
+objs/obj_low.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
+objs/obj_low.o: colorstring.h format.h statistics.h combat.h
+objs/obj_low.o: obj_base_weapon.h obj_base_clothing.h obj_worn.h
+objs/obj_low.o: obj_jewelry.h obj_low.h
 objs/obj_magic_item.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/obj_magic_item.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/obj_magic_item.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -30773,6 +31371,8 @@ objs/obj_magic_item.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_magic_item.o: /usr/include/c++/3.3.4/deque
 objs/obj_magic_item.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_magic_item.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_magic_item.o: /usr/include/c++/3.3.4/queue
+objs/obj_magic_item.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_magic_item.o: /usr/include/c++/3.3.4/iostream
 objs/obj_magic_item.o: /usr/include/c++/3.3.4/ostream
 objs/obj_magic_item.o: /usr/include/c++/3.3.4/ios
@@ -30905,6 +31505,8 @@ objs/obj_mergeable.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_mergeable.o: /usr/include/c++/3.3.4/deque
 objs/obj_mergeable.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_mergeable.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_mergeable.o: /usr/include/c++/3.3.4/queue
+objs/obj_mergeable.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_mergeable.o: /usr/include/c++/3.3.4/iostream
 objs/obj_mergeable.o: /usr/include/c++/3.3.4/ostream
 objs/obj_mergeable.o: /usr/include/c++/3.3.4/ios
@@ -31033,6 +31635,8 @@ objs/obj_money.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_money.o: /usr/include/c++/3.3.4/deque
 objs/obj_money.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_money.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_money.o: /usr/include/c++/3.3.4/queue
+objs/obj_money.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_money.o: /usr/include/c++/3.3.4/iostream
 objs/obj_money.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_money.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -31165,6 +31769,8 @@ objs/obj_moneypouch.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_moneypouch.o: /usr/include/c++/3.3.4/deque
 objs/obj_moneypouch.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_moneypouch.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_moneypouch.o: /usr/include/c++/3.3.4/queue
+objs/obj_moneypouch.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_moneypouch.o: /usr/include/c++/3.3.4/iostream
 objs/obj_moneypouch.o: /usr/include/c++/3.3.4/ostream
 objs/obj_moneypouch.o: /usr/include/c++/3.3.4/ios
@@ -31295,6 +31901,8 @@ objs/obj_note.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_note.o: /usr/include/c++/3.3.4/deque
 objs/obj_note.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_note.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_note.o: /usr/include/c++/3.3.4/queue
+objs/obj_note.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_note.o: /usr/include/c++/3.3.4/iostream
 objs/obj_note.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_note.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -31423,6 +32031,8 @@ objs/obj_opal.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_opal.o: /usr/include/c++/3.3.4/deque
 objs/obj_opal.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_opal.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_opal.o: /usr/include/c++/3.3.4/queue
+objs/obj_opal.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_opal.o: /usr/include/c++/3.3.4/iostream
 objs/obj_opal.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_opal.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -31558,6 +32168,8 @@ objs/obj_open_container.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_open_container.o: /usr/include/c++/3.3.4/deque
 objs/obj_open_container.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_open_container.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_open_container.o: /usr/include/c++/3.3.4/queue
+objs/obj_open_container.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_open_container.o: /usr/include/c++/3.3.4/iostream
 objs/obj_open_container.o: /usr/include/c++/3.3.4/ostream
 objs/obj_open_container.o: /usr/include/c++/3.3.4/ios
@@ -31692,6 +32304,8 @@ objs/obj_organic.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_organic.o: /usr/include/c++/3.3.4/deque
 objs/obj_organic.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_organic.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_organic.o: /usr/include/c++/3.3.4/queue
+objs/obj_organic.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_organic.o: /usr/include/c++/3.3.4/iostream
 objs/obj_organic.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_organic.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -31823,6 +32437,8 @@ objs/obj_other_obj.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_other_obj.o: /usr/include/c++/3.3.4/deque
 objs/obj_other_obj.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_other_obj.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_other_obj.o: /usr/include/c++/3.3.4/queue
+objs/obj_other_obj.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_other_obj.o: /usr/include/c++/3.3.4/iostream
 objs/obj_other_obj.o: /usr/include/c++/3.3.4/ostream
 objs/obj_other_obj.o: /usr/include/c++/3.3.4/ios
@@ -31950,6 +32566,8 @@ objs/obj_pen.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_pen.o: /usr/include/c++/3.3.4/deque
 objs/obj_pen.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_pen.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_pen.o: /usr/include/c++/3.3.4/queue
+objs/obj_pen.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_pen.o: /usr/include/c++/3.3.4/iostream
 objs/obj_pen.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_pen.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -32076,6 +32694,8 @@ objs/obj_plant.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_plant.o: /usr/include/c++/3.3.4/deque
 objs/obj_plant.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_plant.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_plant.o: /usr/include/c++/3.3.4/queue
+objs/obj_plant.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_plant.o: /usr/include/c++/3.3.4/iostream
 objs/obj_plant.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_plant.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -32212,6 +32832,8 @@ objs/obj_player_corpse.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_player_corpse.o: /usr/include/c++/3.3.4/deque
 objs/obj_player_corpse.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_player_corpse.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_player_corpse.o: /usr/include/c++/3.3.4/queue
+objs/obj_player_corpse.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_player_corpse.o: /usr/include/c++/3.3.4/iostream
 objs/obj_player_corpse.o: /usr/include/c++/3.3.4/ostream
 objs/obj_player_corpse.o: /usr/include/c++/3.3.4/ios
@@ -32345,6 +32967,8 @@ objs/obj_poison.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_poison.o: /usr/include/c++/3.3.4/deque
 objs/obj_poison.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_poison.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_poison.o: /usr/include/c++/3.3.4/queue
+objs/obj_poison.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_poison.o: /usr/include/c++/3.3.4/iostream
 objs/obj_poison.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_poison.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -32473,6 +33097,8 @@ objs/obj_pool.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_pool.o: /usr/include/c++/3.3.4/deque
 objs/obj_pool.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_pool.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_pool.o: /usr/include/c++/3.3.4/queue
+objs/obj_pool.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_pool.o: /usr/include/c++/3.3.4/iostream
 objs/obj_pool.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_pool.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -32602,6 +33228,8 @@ objs/obj_portal.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_portal.o: /usr/include/c++/3.3.4/deque
 objs/obj_portal.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_portal.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_portal.o: /usr/include/c++/3.3.4/queue
+objs/obj_portal.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_portal.o: /usr/include/c++/3.3.4/iostream
 objs/obj_portal.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_portal.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -32731,6 +33359,8 @@ objs/obj_potion.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_potion.o: /usr/include/c++/3.3.4/deque
 objs/obj_potion.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_potion.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_potion.o: /usr/include/c++/3.3.4/queue
+objs/obj_potion.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_potion.o: /usr/include/c++/3.3.4/iostream
 objs/obj_potion.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_potion.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -32866,6 +33496,8 @@ objs/obj_quiver.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_quiver.o: /usr/include/c++/3.3.4/deque
 objs/obj_quiver.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_quiver.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_quiver.o: /usr/include/c++/3.3.4/queue
+objs/obj_quiver.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_quiver.o: /usr/include/c++/3.3.4/iostream
 objs/obj_quiver.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_quiver.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -32996,6 +33628,8 @@ objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_saddle.o: /usr/include/c++/3.3.4/deque
 objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_saddle.o: /usr/include/c++/3.3.4/queue
+objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_saddle.o: /usr/include/c++/3.3.4/iostream
 objs/obj_saddle.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_saddle.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -33127,6 +33761,8 @@ objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_saddlebag.o: /usr/include/c++/3.3.4/deque
 objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/queue
+objs/obj_saddlebag.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_saddlebag.o: /usr/include/c++/3.3.4/iostream
 objs/obj_saddlebag.o: /usr/include/c++/3.3.4/ostream
 objs/obj_saddlebag.o: /usr/include/c++/3.3.4/ios
@@ -33259,6 +33895,8 @@ objs/obj_scroll.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_scroll.o: /usr/include/c++/3.3.4/deque
 objs/obj_scroll.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_scroll.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_scroll.o: /usr/include/c++/3.3.4/queue
+objs/obj_scroll.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_scroll.o: /usr/include/c++/3.3.4/iostream
 objs/obj_scroll.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_scroll.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -33389,6 +34027,8 @@ objs/obj_seethru.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_seethru.o: /usr/include/c++/3.3.4/deque
 objs/obj_seethru.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_seethru.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_seethru.o: /usr/include/c++/3.3.4/queue
+objs/obj_seethru.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_seethru.o: /usr/include/c++/3.3.4/iostream
 objs/obj_seethru.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_seethru.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -33519,6 +34159,8 @@ objs/obj_spellbag.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_spellbag.o: /usr/include/c++/3.3.4/deque
 objs/obj_spellbag.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_spellbag.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_spellbag.o: /usr/include/c++/3.3.4/queue
+objs/obj_spellbag.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_spellbag.o: /usr/include/c++/3.3.4/iostream
 objs/obj_spellbag.o: /usr/include/c++/3.3.4/ostream
 objs/obj_spellbag.o: /usr/include/c++/3.3.4/ios
@@ -33649,6 +34291,8 @@ objs/obj_staff.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_staff.o: /usr/include/c++/3.3.4/deque
 objs/obj_staff.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_staff.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_staff.o: /usr/include/c++/3.3.4/queue
+objs/obj_staff.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_staff.o: /usr/include/c++/3.3.4/iostream
 objs/obj_staff.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_staff.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -33778,6 +34422,8 @@ objs/obj_statue.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_statue.o: /usr/include/c++/3.3.4/deque
 objs/obj_statue.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_statue.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_statue.o: /usr/include/c++/3.3.4/queue
+objs/obj_statue.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_statue.o: /usr/include/c++/3.3.4/iostream
 objs/obj_statue.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_statue.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -33908,6 +34554,8 @@ objs/obj_suitcase.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_suitcase.o: /usr/include/c++/3.3.4/deque
 objs/obj_suitcase.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_suitcase.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_suitcase.o: /usr/include/c++/3.3.4/queue
+objs/obj_suitcase.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_suitcase.o: /usr/include/c++/3.3.4/iostream
 objs/obj_suitcase.o: /usr/include/c++/3.3.4/ostream
 objs/obj_suitcase.o: /usr/include/c++/3.3.4/ios
@@ -34039,6 +34687,8 @@ objs/obj_symbol.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_symbol.o: /usr/include/c++/3.3.4/deque
 objs/obj_symbol.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_symbol.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_symbol.o: /usr/include/c++/3.3.4/queue
+objs/obj_symbol.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_symbol.o: /usr/include/c++/3.3.4/iostream
 objs/obj_symbol.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_symbol.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -34166,6 +34816,8 @@ objs/obj_table.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_table.o: /usr/include/c++/3.3.4/deque
 objs/obj_table.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_table.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_table.o: /usr/include/c++/3.3.4/queue
+objs/obj_table.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_table.o: /usr/include/c++/3.3.4/iostream
 objs/obj_table.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_table.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -34292,6 +34944,8 @@ objs/obj_tool.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_tool.o: /usr/include/c++/3.3.4/deque
 objs/obj_tool.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_tool.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_tool.o: /usr/include/c++/3.3.4/queue
+objs/obj_tool.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_tool.o: /usr/include/c++/3.3.4/iostream
 objs/obj_tool.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_tool.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -34427,6 +35081,8 @@ objs/obj_tooth_necklace.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_tooth_necklace.o: /usr/include/c++/3.3.4/deque
 objs/obj_tooth_necklace.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_tooth_necklace.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_tooth_necklace.o: /usr/include/c++/3.3.4/queue
+objs/obj_tooth_necklace.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_tooth_necklace.o: /usr/include/c++/3.3.4/iostream
 objs/obj_tooth_necklace.o: /usr/include/c++/3.3.4/ostream
 objs/obj_tooth_necklace.o: /usr/include/c++/3.3.4/ios
@@ -34559,6 +35215,8 @@ objs/obj_trap.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_trap.o: /usr/include/c++/3.3.4/deque
 objs/obj_trap.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_trap.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_trap.o: /usr/include/c++/3.3.4/queue
+objs/obj_trap.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_trap.o: /usr/include/c++/3.3.4/iostream
 objs/obj_trap.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_trap.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -34685,6 +35343,8 @@ objs/obj_trash.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_trash.o: /usr/include/c++/3.3.4/deque
 objs/obj_trash.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_trash.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_trash.o: /usr/include/c++/3.3.4/queue
+objs/obj_trash.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_trash.o: /usr/include/c++/3.3.4/iostream
 objs/obj_trash.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_trash.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -34816,6 +35476,8 @@ objs/obj_trash_pile.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_trash_pile.o: /usr/include/c++/3.3.4/deque
 objs/obj_trash_pile.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_trash_pile.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_trash_pile.o: /usr/include/c++/3.3.4/queue
+objs/obj_trash_pile.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_trash_pile.o: /usr/include/c++/3.3.4/iostream
 objs/obj_trash_pile.o: /usr/include/c++/3.3.4/ostream
 objs/obj_trash_pile.o: /usr/include/c++/3.3.4/ios
@@ -34949,6 +35611,8 @@ objs/obj_treasure.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_treasure.o: /usr/include/c++/3.3.4/deque
 objs/obj_treasure.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_treasure.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_treasure.o: /usr/include/c++/3.3.4/queue
+objs/obj_treasure.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_treasure.o: /usr/include/c++/3.3.4/iostream
 objs/obj_treasure.o: /usr/include/c++/3.3.4/ostream
 objs/obj_treasure.o: /usr/include/c++/3.3.4/ios
@@ -35084,6 +35748,8 @@ objs/obj_tree.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_tree.o: /usr/include/c++/3.3.4/deque
 objs/obj_tree.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_tree.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_tree.o: /usr/include/c++/3.3.4/queue
+objs/obj_tree.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_tree.o: /usr/include/c++/3.3.4/iostream
 objs/obj_tree.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_tree.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -35213,6 +35879,8 @@ objs/obj_vehicle.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_vehicle.o: /usr/include/c++/3.3.4/deque
 objs/obj_vehicle.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_vehicle.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_vehicle.o: /usr/include/c++/3.3.4/queue
+objs/obj_vehicle.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_vehicle.o: /usr/include/c++/3.3.4/iostream
 objs/obj_vehicle.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_vehicle.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -35340,6 +36008,8 @@ objs/obj_vial.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_vial.o: /usr/include/c++/3.3.4/deque
 objs/obj_vial.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_vial.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_vial.o: /usr/include/c++/3.3.4/queue
+objs/obj_vial.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_vial.o: /usr/include/c++/3.3.4/iostream
 objs/obj_vial.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_vial.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -35466,6 +36136,8 @@ objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_wagon.o: /usr/include/c++/3.3.4/deque
 objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_wagon.o: /usr/include/c++/3.3.4/queue
+objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_wagon.o: /usr/include/c++/3.3.4/iostream
 objs/obj_wagon.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_wagon.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -35593,6 +36265,8 @@ objs/obj_wand.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_wand.o: /usr/include/c++/3.3.4/deque
 objs/obj_wand.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_wand.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_wand.o: /usr/include/c++/3.3.4/queue
+objs/obj_wand.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_wand.o: /usr/include/c++/3.3.4/iostream
 objs/obj_wand.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_wand.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -35722,6 +36396,8 @@ objs/obj_window.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_window.o: /usr/include/c++/3.3.4/deque
 objs/obj_window.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_window.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_window.o: /usr/include/c++/3.3.4/queue
+objs/obj_window.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_window.o: /usr/include/c++/3.3.4/iostream
 objs/obj_window.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_window.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -35849,6 +36525,8 @@ objs/obj_worn.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/obj_worn.o: /usr/include/c++/3.3.4/deque
 objs/obj_worn.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/obj_worn.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/obj_worn.o: /usr/include/c++/3.3.4/queue
+objs/obj_worn.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/obj_worn.o: /usr/include/c++/3.3.4/iostream
 objs/obj_worn.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/obj_worn.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -35980,6 +36658,8 @@ objs/objeditor.cgi.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/objeditor.cgi.o: /usr/include/c++/3.3.4/deque
 objs/objeditor.cgi.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/objeditor.cgi.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/objeditor.cgi.o: /usr/include/c++/3.3.4/queue
+objs/objeditor.cgi.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/objeditor.cgi.o: /usr/include/c++/3.3.4/iostream
 objs/objeditor.cgi.o: /usr/include/c++/3.3.4/ostream
 objs/objeditor.cgi.o: /usr/include/c++/3.3.4/ios
@@ -36139,6 +36819,8 @@ objs/objlog.cgi.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/objlog.cgi.o: /usr/include/c++/3.3.4/deque
 objs/objlog.cgi.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/objlog.cgi.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/objlog.cgi.o: /usr/include/c++/3.3.4/queue
+objs/objlog.cgi.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/objlog.cgi.o: /usr/include/c++/3.3.4/iostream
 objs/objlog.cgi.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/objlog.cgi.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -36289,6 +36971,8 @@ objs/offense.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/offense.o: /usr/include/c++/3.3.4/deque
 objs/offense.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/offense.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/offense.o: /usr/include/c++/3.3.4/queue
+objs/offense.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/offense.o: /usr/include/c++/3.3.4/iostream
 objs/offense.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/offense.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -36420,6 +37104,8 @@ objs/oldlimbs.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/oldlimbs.o: /usr/include/c++/3.3.4/deque
 objs/oldlimbs.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/oldlimbs.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/oldlimbs.o: /usr/include/c++/3.3.4/queue
+objs/oldlimbs.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/oldlimbs.o: /usr/include/c++/3.3.4/iostream
 objs/oldlimbs.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/oldlimbs.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -36546,6 +37232,8 @@ objs/oldrace.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/oldrace.o: /usr/include/c++/3.3.4/deque
 objs/oldrace.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/oldrace.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/oldrace.o: /usr/include/c++/3.3.4/queue
+objs/oldrace.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/oldrace.o: /usr/include/c++/3.3.4/iostream
 objs/oldrace.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/oldrace.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -36671,6 +37359,8 @@ objs/opinion.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/opinion.o: /usr/include/c++/3.3.4/deque
 objs/opinion.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/opinion.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/opinion.o: /usr/include/c++/3.3.4/queue
+objs/opinion.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/opinion.o: /usr/include/c++/3.3.4/iostream
 objs/opinion.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/opinion.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -36796,6 +37486,8 @@ objs/other.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/other.o: /usr/include/c++/3.3.4/deque
 objs/other.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/other.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/other.o: /usr/include/c++/3.3.4/queue
+objs/other.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/other.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/other.o: /usr/include/c++/3.3.4/ios
 objs/other.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -36941,6 +37633,8 @@ objs/parse.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/parse.o: /usr/include/c++/3.3.4/deque
 objs/parse.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/parse.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/parse.o: /usr/include/c++/3.3.4/queue
+objs/parse.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/parse.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/parse.o: /usr/include/c++/3.3.4/ios
 objs/parse.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -37068,6 +37762,8 @@ objs/pathfinder.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/pathfinder.o: /usr/include/c++/3.3.4/deque
 objs/pathfinder.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/pathfinder.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/pathfinder.o: /usr/include/c++/3.3.4/queue
+objs/pathfinder.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/pathfinder.o: /usr/include/c++/3.3.4/iostream
 objs/pathfinder.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/pathfinder.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -37193,6 +37889,8 @@ objs/peelpk.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/peelpk.o: /usr/include/c++/3.3.4/deque
 objs/peelpk.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/peelpk.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/peelpk.o: /usr/include/c++/3.3.4/queue
+objs/peelpk.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/peelpk.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/peelpk.o: /usr/include/c++/3.3.4/ios
 objs/peelpk.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -37318,6 +38016,8 @@ objs/periodic.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/periodic.o: /usr/include/c++/3.3.4/deque
 objs/periodic.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/periodic.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/periodic.o: /usr/include/c++/3.3.4/queue
+objs/periodic.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/periodic.o: /usr/include/c++/3.3.4/iostream
 objs/periodic.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/periodic.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -37368,6 +38068,8 @@ objs/periodic.o: /usr/include/mysql/mysql_time.h
 objs/periodic.o: /usr/include/mysql/mysql_version.h
 objs/periodic.o: /usr/include/mysql/typelib.h /usr/include/mysql/my_list.h
 objs/periodic.o: /usr/include/mysql/my_alloc.h obj_light.h obj_base_light.h
+objs/periodic.o: timing.h /usr/include/sys/time.h /usr/include/sys/select.h
+objs/periodic.o: /usr/include/bits/select.h shopaccounting.h
 objs/pets.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/pets.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/pets.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -37451,6 +38153,8 @@ objs/pets.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/pets.o: /usr/include/c++/3.3.4/deque
 objs/pets.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/pets.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/pets.o: /usr/include/c++/3.3.4/queue
+objs/pets.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/pets.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/pets.o: /usr/include/c++/3.3.4/ios
 objs/pets.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -37578,6 +38282,8 @@ objs/physics.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/physics.o: /usr/include/c++/3.3.4/deque
 objs/physics.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/physics.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/physics.o: /usr/include/c++/3.3.4/queue
+objs/physics.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/physics.o: /usr/include/c++/3.3.4/iostream
 objs/physics.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/physics.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -37711,6 +38417,8 @@ objs/player_data.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/player_data.o: /usr/include/c++/3.3.4/deque
 objs/player_data.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/player_data.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/player_data.o: /usr/include/c++/3.3.4/queue
+objs/player_data.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/player_data.o: /usr/include/c++/3.3.4/iostream
 objs/player_data.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/player_data.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -37849,6 +38557,8 @@ objs/proc_check_mail.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/proc_check_mail.o: /usr/include/c++/3.3.4/deque
 objs/proc_check_mail.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/proc_check_mail.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/proc_check_mail.o: /usr/include/c++/3.3.4/queue
+objs/proc_check_mail.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/proc_check_mail.o: /usr/include/c++/3.3.4/iostream
 objs/proc_check_mail.o: /usr/include/c++/3.3.4/ostream
 objs/proc_check_mail.o: /usr/include/c++/3.3.4/ios
@@ -37984,6 +38694,8 @@ objs/proc_check_repo.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/proc_check_repo.o: /usr/include/c++/3.3.4/deque
 objs/proc_check_repo.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/proc_check_repo.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/proc_check_repo.o: /usr/include/c++/3.3.4/queue
+objs/proc_check_repo.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/proc_check_repo.o: /usr/include/c++/3.3.4/iostream
 objs/proc_check_repo.o: /usr/include/c++/3.3.4/ostream
 objs/proc_check_repo.o: /usr/include/c++/3.3.4/ios
@@ -38112,6 +38824,8 @@ objs/process.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/process.o: /usr/include/c++/3.3.4/deque
 objs/process.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/process.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/process.o: /usr/include/c++/3.3.4/queue
+objs/process.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/process.o: /usr/include/c++/3.3.4/iostream
 objs/process.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/process.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -38242,6 +38956,8 @@ objs/race.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/race.o: /usr/include/c++/3.3.4/deque
 objs/race.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/race.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/race.o: /usr/include/c++/3.3.4/queue
+objs/race.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/race.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/race.o: /usr/include/c++/3.3.4/ios
 objs/race.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -38366,6 +39082,8 @@ objs/range.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/range.o: /usr/include/c++/3.3.4/deque
 objs/range.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/range.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/range.o: /usr/include/c++/3.3.4/queue
+objs/range.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/range.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/range.o: /usr/include/c++/3.3.4/ios
 objs/range.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -38495,6 +39213,8 @@ objs/rent.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/rent.o: /usr/include/c++/3.3.4/deque
 objs/rent.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/rent.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/rent.o: /usr/include/c++/3.3.4/queue
+objs/rent.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/rent.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/rent.o: /usr/include/c++/3.3.4/ios
 objs/rent.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -38632,6 +39352,8 @@ objs/repair.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/repair.o: /usr/include/c++/3.3.4/deque
 objs/repair.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/repair.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/repair.o: /usr/include/c++/3.3.4/queue
+objs/repair.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/repair.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/repair.o: /usr/include/c++/3.3.4/ios
 objs/repair.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -38768,6 +39490,8 @@ objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/respeditor.cgi.o: /usr/include/c++/3.3.4/deque
 objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/queue
+objs/respeditor.cgi.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/respeditor.cgi.o: /usr/include/c++/3.3.4/iostream
 objs/respeditor.cgi.o: /usr/include/c++/3.3.4/ostream
 objs/respeditor.cgi.o: /usr/include/c++/3.3.4/ios
@@ -38926,6 +39650,8 @@ objs/response.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/response.o: /usr/include/c++/3.3.4/deque
 objs/response.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/response.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/response.o: /usr/include/c++/3.3.4/queue
+objs/response.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/response.o: /usr/include/c++/3.3.4/iostream
 objs/response.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/response.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -39058,6 +39784,8 @@ objs/rewrite_obj_file.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/rewrite_obj_file.o: /usr/include/c++/3.3.4/deque
 objs/rewrite_obj_file.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/rewrite_obj_file.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/rewrite_obj_file.o: /usr/include/c++/3.3.4/queue
+objs/rewrite_obj_file.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/rewrite_obj_file.o: /usr/include/c++/3.3.4/iostream
 objs/rewrite_obj_file.o: /usr/include/c++/3.3.4/ostream
 objs/rewrite_obj_file.o: /usr/include/c++/3.3.4/ios
@@ -39185,6 +39913,8 @@ objs/riding.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/riding.o: /usr/include/c++/3.3.4/deque
 objs/riding.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/riding.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/riding.o: /usr/include/c++/3.3.4/queue
+objs/riding.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/riding.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/riding.o: /usr/include/c++/3.3.4/ios
 objs/riding.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -39307,6 +40037,8 @@ objs/room.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/room.o: /usr/include/c++/3.3.4/deque
 objs/room.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/room.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/room.o: /usr/include/c++/3.3.4/queue
+objs/room.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/room.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/room.o: /usr/include/c++/3.3.4/ios
 objs/room.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -39436,6 +40168,8 @@ objs/roomeditor.cgi.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/roomeditor.cgi.o: /usr/include/c++/3.3.4/deque
 objs/roomeditor.cgi.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/roomeditor.cgi.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/roomeditor.cgi.o: /usr/include/c++/3.3.4/queue
+objs/roomeditor.cgi.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/roomeditor.cgi.o: /usr/include/c++/3.3.4/iostream
 objs/roomeditor.cgi.o: /usr/include/c++/3.3.4/ostream
 objs/roomeditor.cgi.o: /usr/include/c++/3.3.4/ios
@@ -39597,6 +40331,8 @@ objs/session.cgi.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/session.cgi.o: /usr/include/c++/3.3.4/deque
 objs/session.cgi.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/session.cgi.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/session.cgi.o: /usr/include/c++/3.3.4/queue
+objs/session.cgi.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/session.cgi.o: /usr/include/c++/3.3.4/iostream
 objs/session.cgi.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/session.cgi.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -39755,6 +40491,8 @@ objs/shop.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/shop.o: /usr/include/c++/3.3.4/deque
 objs/shop.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/shop.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/shop.o: /usr/include/c++/3.3.4/queue
+objs/shop.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/shop.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/shop.o: /usr/include/c++/3.3.4/ios
 objs/shop.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -39802,7 +40540,7 @@ objs/shop.o: obj_base_container.h obj_symbol.h obj_general_weapon.h
 objs/shop.o: obj_base_weapon.h obj_base_clothing.h obj_magic_item.h
 objs/shop.o: shopowned.h obj_casino_chip.h spec_objs_lottery_ticket.h
 objs/shop.o: obj_component.h obj_potion.h obj_base_cup.h spec_rooms.h
-objs/shop.o: obj_commodity.h liquids.h
+objs/shop.o: obj_commodity.h liquids.h shopaccounting.h
 objs/shopaccounting.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/shopaccounting.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/shopaccounting.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -39894,6 +40632,8 @@ objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/shopaccounting.o: /usr/include/c++/3.3.4/deque
 objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/shopaccounting.o: /usr/include/c++/3.3.4/queue
+objs/shopaccounting.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/shopaccounting.o: /usr/include/c++/3.3.4/iostream
 objs/shopaccounting.o: /usr/include/c++/3.3.4/ostream
 objs/shopaccounting.o: /usr/include/c++/3.3.4/ios
@@ -40033,6 +40773,8 @@ objs/shopinfo.cgi.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/shopinfo.cgi.o: /usr/include/c++/3.3.4/deque
 objs/shopinfo.cgi.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/shopinfo.cgi.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/shopinfo.cgi.o: /usr/include/c++/3.3.4/queue
+objs/shopinfo.cgi.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/shopinfo.cgi.o: /usr/include/c++/3.3.4/iostream
 objs/shopinfo.cgi.o: /usr/include/c++/3.3.4/ostream
 objs/shopinfo.cgi.o: /usr/include/c++/3.3.4/ios
@@ -40189,6 +40931,8 @@ objs/shopowned.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/shopowned.o: /usr/include/c++/3.3.4/deque
 objs/shopowned.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/shopowned.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/shopowned.o: /usr/include/c++/3.3.4/queue
+objs/shopowned.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/shopowned.o: /usr/include/c++/3.3.4/iostream
 objs/shopowned.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/shopowned.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -40319,6 +41063,8 @@ objs/show.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/show.o: /usr/include/c++/3.3.4/deque
 objs/show.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/show.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/show.o: /usr/include/c++/3.3.4/queue
+objs/show.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/show.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/show.o: /usr/include/c++/3.3.4/ios
 objs/show.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -40453,6 +41199,8 @@ objs/signals.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/signals.o: /usr/include/c++/3.3.4/deque
 objs/signals.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/signals.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/signals.o: /usr/include/c++/3.3.4/queue
+objs/signals.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/signals.o: /usr/include/c++/3.3.4/iostream
 objs/signals.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/signals.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -40579,6 +41327,8 @@ objs/skill_dam.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/skill_dam.o: /usr/include/c++/3.3.4/deque
 objs/skill_dam.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/skill_dam.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/skill_dam.o: /usr/include/c++/3.3.4/queue
+objs/skill_dam.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/skill_dam.o: /usr/include/c++/3.3.4/iostream
 objs/skill_dam.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/skill_dam.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -40703,6 +41453,8 @@ objs/skills.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/skills.o: /usr/include/c++/3.3.4/deque
 objs/skills.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/skills.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/skills.o: /usr/include/c++/3.3.4/queue
+objs/skills.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/skills.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/skills.o: /usr/include/c++/3.3.4/ios
 objs/skills.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -40862,6 +41614,8 @@ objs/socket.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/socket.o: /usr/include/c++/3.3.4/deque
 objs/socket.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/socket.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/socket.o: /usr/include/c++/3.3.4/queue
+objs/socket.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/socket.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/socket.o: /usr/include/c++/3.3.4/ios
 objs/socket.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -40994,6 +41748,8 @@ objs/sound.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/sound.o: /usr/include/c++/3.3.4/deque
 objs/sound.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/sound.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/sound.o: /usr/include/c++/3.3.4/queue
+objs/sound.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/sound.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/sound.o: /usr/include/c++/3.3.4/ios
 objs/sound.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -41118,6 +41874,8 @@ objs/spec_mobs.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/spec_mobs.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -41263,6 +42021,8 @@ objs/spec_mobs_archer.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_archer.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_archer.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_archer.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_archer.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_archer.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_archer.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_archer.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_archer.o: /usr/include/c++/3.3.4/ios
@@ -41407,6 +42167,8 @@ objs/spec_mobs_auctioneer.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_auctioneer.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_auctioneer.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_auctioneer.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_auctioneer.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_auctioneer.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_auctioneer.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_auctioneer.o: /usr/include/c++/3.3.4/ios
@@ -41552,6 +42314,8 @@ objs/spec_mobs_banker.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_banker.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_banker.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_banker.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_banker.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_banker.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_banker.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_banker.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_banker.o: /usr/include/c++/3.3.4/ios
@@ -41710,6 +42474,8 @@ objs/spec_mobs_bounty_hunter.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_bounty_hunter.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_bounty_hunter.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_bounty_hunter.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_bounty_hunter.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_bounty_hunter.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_bounty_hunter.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_bounty_hunter.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_bounty_hunter.o: /usr/include/c++/3.3.4/ios
@@ -41854,6 +42620,8 @@ objs/spec_mobs_cityguard.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_cityguard.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_cityguard.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_cityguard.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_cityguard.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_cityguard.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_cityguard.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_cityguard.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_cityguard.o: /usr/include/c++/3.3.4/ios
@@ -41990,6 +42758,8 @@ objs/spec_mobs_combat.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_combat.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_combat.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_combat.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_combat.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_combat.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_combat.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_combat.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_combat.o: /usr/include/c++/3.3.4/ios
@@ -42142,6 +42912,8 @@ objs/spec_mobs_commod_trader.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_commod_trader.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_commod_trader.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_commod_trader.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_commod_trader.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_commod_trader.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_commod_trader.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_commod_trader.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_commod_trader.o: /usr/include/c++/3.3.4/ios
@@ -42189,6 +42961,13 @@ objs/spec_mobs_commod_trader.o: handler.h obj_money.h spec_mobs.h materials.h
 objs/spec_mobs_commod_trader.o: colorstring.h format.h pathfinder.h
 objs/spec_mobs_commod_trader.o: obj_commodity.h shop.h shopowned.h
 objs/spec_mobs_commod_trader.o: obj_open_container.h obj_base_container.h
+objs/spec_mobs_commod_trader.o: database.h /usr/include/mysql/mysql.h
+objs/spec_mobs_commod_trader.o: /usr/include/mysql/mysql_com.h
+objs/spec_mobs_commod_trader.o: /usr/include/mysql/mysql_time.h
+objs/spec_mobs_commod_trader.o: /usr/include/mysql/mysql_version.h
+objs/spec_mobs_commod_trader.o: /usr/include/mysql/typelib.h
+objs/spec_mobs_commod_trader.o: /usr/include/mysql/my_list.h
+objs/spec_mobs_commod_trader.o: /usr/include/mysql/my_alloc.h
 objs/spec_mobs_coroner.o: stdsneezy.h /usr/include/c++/3.3.4/cstdio
 objs/spec_mobs_coroner.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/c++config.h
 objs/spec_mobs_coroner.o: /usr/include/c++/3.3.4/i386-redhat-linux/bits/os_defines.h
@@ -42283,6 +43062,8 @@ objs/spec_mobs_coroner.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_coroner.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_coroner.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_coroner.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_coroner.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_coroner.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_coroner.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_coroner.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_coroner.o: /usr/include/c++/3.3.4/ios
@@ -42442,6 +43223,8 @@ objs/spec_mobs_corporate_assistant.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_corporate_assistant.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_corporate_assistant.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_corporate_assistant.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_corporate_assistant.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_corporate_assistant.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_corporate_assistant.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_corporate_assistant.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_corporate_assistant.o: /usr/include/c++/3.3.4/ios
@@ -42602,6 +43385,8 @@ objs/spec_mobs_doppleganger.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_doppleganger.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_doppleganger.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_doppleganger.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_doppleganger.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_doppleganger.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_doppleganger.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_doppleganger.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_doppleganger.o: /usr/include/c++/3.3.4/ios
@@ -42760,6 +43545,8 @@ objs/spec_mobs_earthquake_digger.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_earthquake_digger.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_earthquake_digger.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_earthquake_digger.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_earthquake_digger.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_earthquake_digger.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_earthquake_digger.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_earthquake_digger.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_earthquake_digger.o: /usr/include/c++/3.3.4/ios
@@ -42900,6 +43687,8 @@ objs/spec_mobs_fireman.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_fireman.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_fireman.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_fireman.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_fireman.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_fireman.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_fireman.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_fireman.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_fireman.o: /usr/include/c++/3.3.4/ios
@@ -43050,6 +43839,8 @@ objs/spec_mobs_flaskPeddler.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_flaskPeddler.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_flaskPeddler.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_flaskPeddler.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_flaskPeddler.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_flaskPeddler.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_flaskPeddler.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_flaskPeddler.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_flaskPeddler.o: /usr/include/c++/3.3.4/ios
@@ -43187,6 +43978,8 @@ objs/spec_mobs_goring.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_goring.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_goring.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_goring.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_goring.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_goring.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_goring.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_goring.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_goring.o: /usr/include/c++/3.3.4/ios
@@ -43333,6 +44126,8 @@ objs/spec_mobs_herofaeries.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_herofaeries.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_herofaeries.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_herofaeries.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_herofaeries.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_herofaeries.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_herofaeries.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_herofaeries.o: /usr/include/c++/3.3.4/ios
@@ -43493,6 +44288,8 @@ objs/spec_mobs_holdem_player.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_holdem_player.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_holdem_player.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_holdem_player.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_holdem_player.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_holdem_player.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_holdem_player.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_holdem_player.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_holdem_player.o: /usr/include/c++/3.3.4/ios
@@ -43634,6 +44431,8 @@ objs/spec_mobs_janitors.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_janitors.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_janitors.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_janitors.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_janitors.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_janitors.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_janitors.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_janitors.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_janitors.o: /usr/include/c++/3.3.4/ios
@@ -43786,6 +44585,8 @@ objs/spec_mobs_leper_hunter.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_leper_hunter.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_leper_hunter.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_leper_hunter.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_leper_hunter.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_leper_hunter.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_leper_hunter.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_leper_hunter.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_leper_hunter.o: /usr/include/c++/3.3.4/ios
@@ -43930,6 +44731,8 @@ objs/spec_mobs_limbDispo.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_limbDispo.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_limbDispo.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_limbDispo.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_limbDispo.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_limbDispo.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_limbDispo.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_limbDispo.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_limbDispo.o: /usr/include/c++/3.3.4/ios
@@ -44088,6 +44891,8 @@ objs/spec_mobs_loan_manager.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_loan_manager.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_loan_manager.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_loan_manager.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_loan_manager.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_loan_manager.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_loan_manager.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_loan_manager.o: /usr/include/c++/3.3.4/ios
@@ -44239,6 +45044,8 @@ objs/spec_mobs_loanshark.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_loanshark.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_loanshark.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_loanshark.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_loanshark.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_loanshark.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_loanshark.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_loanshark.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_loanshark.o: /usr/include/c++/3.3.4/ios
@@ -44402,6 +45209,8 @@ objs/spec_mobs_lottery_redeemer.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_lottery_redeemer.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_lottery_redeemer.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_lottery_redeemer.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_lottery_redeemer.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_lottery_redeemer.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_lottery_redeemer.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_lottery_redeemer.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_lottery_redeemer.o: /usr/include/c++/3.3.4/ios
@@ -44552,6 +45361,8 @@ objs/spec_mobs_money_train.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_money_train.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_money_train.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_money_train.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_money_train.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_money_train.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_money_train.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_money_train.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_money_train.o: /usr/include/c++/3.3.4/ios
@@ -44706,6 +45517,8 @@ objs/spec_mobs_paladin_patrol.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_paladin_patrol.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_paladin_patrol.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_paladin_patrol.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_paladin_patrol.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_paladin_patrol.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_paladin_patrol.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_paladin_patrol.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_paladin_patrol.o: /usr/include/c++/3.3.4/ios
@@ -44844,6 +45657,8 @@ objs/spec_mobs_posse.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_posse.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_posse.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_posse.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_posse.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_posse.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_posse.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_posse.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_posse.o: /usr/include/c++/3.3.4/ios
@@ -44981,6 +45796,8 @@ objs/spec_mobs_postman.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_postman.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_postman.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_postman.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_postman.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_postman.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_postman.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_postman.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_postman.o: /usr/include/c++/3.3.4/ios
@@ -45134,6 +45951,8 @@ objs/spec_mobs_property_clerk.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_property_clerk.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_property_clerk.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_property_clerk.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_property_clerk.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_property_clerk.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_property_clerk.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_property_clerk.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_property_clerk.o: /usr/include/c++/3.3.4/ios
@@ -45285,6 +46104,8 @@ objs/spec_mobs_signmaker.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_signmaker.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_signmaker.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_signmaker.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_signmaker.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_signmaker.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_signmaker.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_signmaker.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_signmaker.o: /usr/include/c++/3.3.4/ios
@@ -45433,6 +46254,8 @@ objs/spec_mobs_statSurgeon.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_statSurgeon.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_statSurgeon.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_statSurgeon.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_statSurgeon.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_statSurgeon.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_statSurgeon.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_statSurgeon.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_statSurgeon.o: /usr/include/c++/3.3.4/ios
@@ -45586,6 +46409,8 @@ objs/spec_mobs_tattoo_artist.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_tattoo_artist.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_tattoo_artist.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_tattoo_artist.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_tattoo_artist.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_tattoo_artist.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_tattoo_artist.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_tattoo_artist.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_tattoo_artist.o: /usr/include/c++/3.3.4/ios
@@ -45730,6 +46555,8 @@ objs/spec_mobs_taxman.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_taxman.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_taxman.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_taxman.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_taxman.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_taxman.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_taxman.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_taxman.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_taxman.o: /usr/include/c++/3.3.4/ios
@@ -45871,6 +46698,8 @@ objs/spec_mobs_tudy.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_tudy.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_tudy.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_tudy.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_tudy.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_tudy.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_tudy.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_tudy.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_tudy.o: /usr/include/c++/3.3.4/ios
@@ -46007,6 +46836,8 @@ objs/spec_mobs_vehicle.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_mobs_vehicle.o: /usr/include/c++/3.3.4/deque
 objs/spec_mobs_vehicle.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_mobs_vehicle.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_mobs_vehicle.o: /usr/include/c++/3.3.4/queue
+objs/spec_mobs_vehicle.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_mobs_vehicle.o: /usr/include/c++/3.3.4/iostream
 objs/spec_mobs_vehicle.o: /usr/include/c++/3.3.4/ostream
 objs/spec_mobs_vehicle.o: /usr/include/c++/3.3.4/ios
@@ -46146,6 +46977,8 @@ objs/spec_objs.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_objs.o: /usr/include/c++/3.3.4/deque
 objs/spec_objs.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_objs.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_objs.o: /usr/include/c++/3.3.4/queue
+objs/spec_objs.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_objs.o: /usr/include/c++/3.3.4/iostream
 objs/spec_objs.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/spec_objs.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -46296,6 +47129,8 @@ objs/spec_objs_ballot_box.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_objs_ballot_box.o: /usr/include/c++/3.3.4/deque
 objs/spec_objs_ballot_box.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_objs_ballot_box.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_objs_ballot_box.o: /usr/include/c++/3.3.4/queue
+objs/spec_objs_ballot_box.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_objs_ballot_box.o: /usr/include/c++/3.3.4/iostream
 objs/spec_objs_ballot_box.o: /usr/include/c++/3.3.4/ostream
 objs/spec_objs_ballot_box.o: /usr/include/c++/3.3.4/ios
@@ -46446,6 +47281,8 @@ objs/spec_objs_black_sun.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_objs_black_sun.o: /usr/include/c++/3.3.4/deque
 objs/spec_objs_black_sun.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_objs_black_sun.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_objs_black_sun.o: /usr/include/c++/3.3.4/queue
+objs/spec_objs_black_sun.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_objs_black_sun.o: /usr/include/c++/3.3.4/iostream
 objs/spec_objs_black_sun.o: /usr/include/c++/3.3.4/ostream
 objs/spec_objs_black_sun.o: /usr/include/c++/3.3.4/ios
@@ -46582,6 +47419,8 @@ objs/spec_objs_blind.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_objs_blind.o: /usr/include/c++/3.3.4/deque
 objs/spec_objs_blind.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_objs_blind.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_objs_blind.o: /usr/include/c++/3.3.4/queue
+objs/spec_objs_blind.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_objs_blind.o: /usr/include/c++/3.3.4/iostream
 objs/spec_objs_blind.o: /usr/include/c++/3.3.4/ostream
 objs/spec_objs_blind.o: /usr/include/c++/3.3.4/ios
@@ -46719,6 +47558,8 @@ objs/spec_objs_casting.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_objs_casting.o: /usr/include/c++/3.3.4/deque
 objs/spec_objs_casting.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_objs_casting.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_objs_casting.o: /usr/include/c++/3.3.4/queue
+objs/spec_objs_casting.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_objs_casting.o: /usr/include/c++/3.3.4/iostream
 objs/spec_objs_casting.o: /usr/include/c++/3.3.4/ostream
 objs/spec_objs_casting.o: /usr/include/c++/3.3.4/ios
@@ -46871,6 +47712,8 @@ objs/spec_objs_deikhan_sword.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_objs_deikhan_sword.o: /usr/include/c++/3.3.4/deque
 objs/spec_objs_deikhan_sword.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_objs_deikhan_sword.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_objs_deikhan_sword.o: /usr/include/c++/3.3.4/queue
+objs/spec_objs_deikhan_sword.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_objs_deikhan_sword.o: /usr/include/c++/3.3.4/iostream
 objs/spec_objs_deikhan_sword.o: /usr/include/c++/3.3.4/ostream
 objs/spec_objs_deikhan_sword.o: /usr/include/c++/3.3.4/ios
@@ -47024,6 +47867,8 @@ objs/spec_objs_graffitiMaker.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_objs_graffitiMaker.o: /usr/include/c++/3.3.4/deque
 objs/spec_objs_graffitiMaker.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_objs_graffitiMaker.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_objs_graffitiMaker.o: /usr/include/c++/3.3.4/queue
+objs/spec_objs_graffitiMaker.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_objs_graffitiMaker.o: /usr/include/c++/3.3.4/iostream
 objs/spec_objs_graffitiMaker.o: /usr/include/c++/3.3.4/ostream
 objs/spec_objs_graffitiMaker.o: /usr/include/c++/3.3.4/ios
@@ -47172,6 +48017,8 @@ objs/spec_objs_graffitiObj.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_objs_graffitiObj.o: /usr/include/c++/3.3.4/deque
 objs/spec_objs_graffitiObj.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_objs_graffitiObj.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_objs_graffitiObj.o: /usr/include/c++/3.3.4/queue
+objs/spec_objs_graffitiObj.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_objs_graffitiObj.o: /usr/include/c++/3.3.4/iostream
 objs/spec_objs_graffitiObj.o: /usr/include/c++/3.3.4/ostream
 objs/spec_objs_graffitiObj.o: /usr/include/c++/3.3.4/ios
@@ -47311,6 +48158,8 @@ objs/spec_objs_jambiya.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_objs_jambiya.o: /usr/include/c++/3.3.4/deque
 objs/spec_objs_jambiya.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_objs_jambiya.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_objs_jambiya.o: /usr/include/c++/3.3.4/queue
+objs/spec_objs_jambiya.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_objs_jambiya.o: /usr/include/c++/3.3.4/iostream
 objs/spec_objs_jambiya.o: /usr/include/c++/3.3.4/ostream
 objs/spec_objs_jambiya.o: /usr/include/c++/3.3.4/ios
@@ -47463,6 +48312,8 @@ objs/spec_objs_lightning_rod.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_objs_lightning_rod.o: /usr/include/c++/3.3.4/deque
 objs/spec_objs_lightning_rod.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_objs_lightning_rod.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_objs_lightning_rod.o: /usr/include/c++/3.3.4/queue
+objs/spec_objs_lightning_rod.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_objs_lightning_rod.o: /usr/include/c++/3.3.4/iostream
 objs/spec_objs_lightning_rod.o: /usr/include/c++/3.3.4/ostream
 objs/spec_objs_lightning_rod.o: /usr/include/c++/3.3.4/ios
@@ -47618,6 +48469,8 @@ objs/spec_objs_lottery_ticket.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_objs_lottery_ticket.o: /usr/include/c++/3.3.4/deque
 objs/spec_objs_lottery_ticket.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_objs_lottery_ticket.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_objs_lottery_ticket.o: /usr/include/c++/3.3.4/queue
+objs/spec_objs_lottery_ticket.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_objs_lottery_ticket.o: /usr/include/c++/3.3.4/iostream
 objs/spec_objs_lottery_ticket.o: /usr/include/c++/3.3.4/ostream
 objs/spec_objs_lottery_ticket.o: /usr/include/c++/3.3.4/ios
@@ -47762,6 +48615,8 @@ objs/spec_objs_manadrain.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_objs_manadrain.o: /usr/include/c++/3.3.4/deque
 objs/spec_objs_manadrain.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_objs_manadrain.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_objs_manadrain.o: /usr/include/c++/3.3.4/queue
+objs/spec_objs_manadrain.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_objs_manadrain.o: /usr/include/c++/3.3.4/iostream
 objs/spec_objs_manadrain.o: /usr/include/c++/3.3.4/ostream
 objs/spec_objs_manadrain.o: /usr/include/c++/3.3.4/ios
@@ -47916,6 +48771,8 @@ objs/spec_objs_poison_cutlass.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_objs_poison_cutlass.o: /usr/include/c++/3.3.4/deque
 objs/spec_objs_poison_cutlass.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_objs_poison_cutlass.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_objs_poison_cutlass.o: /usr/include/c++/3.3.4/queue
+objs/spec_objs_poison_cutlass.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_objs_poison_cutlass.o: /usr/include/c++/3.3.4/iostream
 objs/spec_objs_poison_cutlass.o: /usr/include/c++/3.3.4/ostream
 objs/spec_objs_poison_cutlass.o: /usr/include/c++/3.3.4/ios
@@ -48057,6 +48914,8 @@ objs/spec_objs_setcasts.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_objs_setcasts.o: /usr/include/c++/3.3.4/deque
 objs/spec_objs_setcasts.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_objs_setcasts.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_objs_setcasts.o: /usr/include/c++/3.3.4/queue
+objs/spec_objs_setcasts.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_objs_setcasts.o: /usr/include/c++/3.3.4/iostream
 objs/spec_objs_setcasts.o: /usr/include/c++/3.3.4/ostream
 objs/spec_objs_setcasts.o: /usr/include/c++/3.3.4/ios
@@ -48193,6 +49052,8 @@ objs/spec_objs_sweeps.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_objs_sweeps.o: /usr/include/c++/3.3.4/deque
 objs/spec_objs_sweeps.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_objs_sweeps.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_objs_sweeps.o: /usr/include/c++/3.3.4/queue
+objs/spec_objs_sweeps.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_objs_sweeps.o: /usr/include/c++/3.3.4/iostream
 objs/spec_objs_sweeps.o: /usr/include/c++/3.3.4/ostream
 objs/spec_objs_sweeps.o: /usr/include/c++/3.3.4/ios
@@ -48346,6 +49207,8 @@ objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/deque
 objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/queue
+objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/iostream
 objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/ostream
 objs/spec_objs_tequila_cutlass.o: /usr/include/c++/3.3.4/ios
@@ -48501,6 +49364,8 @@ objs/spec_objs_unholy_cutlass.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_objs_unholy_cutlass.o: /usr/include/c++/3.3.4/deque
 objs/spec_objs_unholy_cutlass.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_objs_unholy_cutlass.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_objs_unholy_cutlass.o: /usr/include/c++/3.3.4/queue
+objs/spec_objs_unholy_cutlass.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_objs_unholy_cutlass.o: /usr/include/c++/3.3.4/iostream
 objs/spec_objs_unholy_cutlass.o: /usr/include/c++/3.3.4/ostream
 objs/spec_objs_unholy_cutlass.o: /usr/include/c++/3.3.4/ios
@@ -48641,6 +49506,8 @@ objs/spec_objs_weapons.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_objs_weapons.o: /usr/include/c++/3.3.4/deque
 objs/spec_objs_weapons.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_objs_weapons.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_objs_weapons.o: /usr/include/c++/3.3.4/queue
+objs/spec_objs_weapons.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_objs_weapons.o: /usr/include/c++/3.3.4/iostream
 objs/spec_objs_weapons.o: /usr/include/c++/3.3.4/ostream
 objs/spec_objs_weapons.o: /usr/include/c++/3.3.4/ios
@@ -48775,6 +49642,8 @@ objs/spec_rooms.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_rooms.o: /usr/include/c++/3.3.4/deque
 objs/spec_rooms.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_rooms.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_rooms.o: /usr/include/c++/3.3.4/queue
+objs/spec_rooms.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_rooms.o: /usr/include/c++/3.3.4/iostream
 objs/spec_rooms.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/spec_rooms.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -48915,6 +49784,8 @@ objs/spec_rooms_sleeptag.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spec_rooms_sleeptag.o: /usr/include/c++/3.3.4/deque
 objs/spec_rooms_sleeptag.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spec_rooms_sleeptag.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spec_rooms_sleeptag.o: /usr/include/c++/3.3.4/queue
+objs/spec_rooms_sleeptag.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spec_rooms_sleeptag.o: /usr/include/c++/3.3.4/iostream
 objs/spec_rooms_sleeptag.o: /usr/include/c++/3.3.4/ostream
 objs/spec_rooms_sleeptag.o: /usr/include/c++/3.3.4/ios
@@ -49048,6 +49919,8 @@ objs/spell_info.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spell_info.o: /usr/include/c++/3.3.4/deque
 objs/spell_info.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spell_info.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spell_info.o: /usr/include/c++/3.3.4/queue
+objs/spell_info.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spell_info.o: /usr/include/c++/3.3.4/iostream
 objs/spell_info.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/spell_info.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -49174,6 +50047,8 @@ objs/spell_num.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spell_num.o: /usr/include/c++/3.3.4/deque
 objs/spell_num.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spell_num.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spell_num.o: /usr/include/c++/3.3.4/queue
+objs/spell_num.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spell_num.o: /usr/include/c++/3.3.4/iostream
 objs/spell_num.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/spell_num.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -49303,6 +50178,8 @@ objs/spell_parser.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spell_parser.o: /usr/include/c++/3.3.4/deque
 objs/spell_parser.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spell_parser.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spell_parser.o: /usr/include/c++/3.3.4/queue
+objs/spell_parser.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spell_parser.o: /usr/include/c++/3.3.4/iostream
 objs/spell_parser.o: /usr/include/c++/3.3.4/ostream
 objs/spell_parser.o: /usr/include/c++/3.3.4/ios
@@ -49441,6 +50318,8 @@ objs/spellstore.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spellstore.o: /usr/include/c++/3.3.4/deque
 objs/spellstore.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spellstore.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spellstore.o: /usr/include/c++/3.3.4/queue
+objs/spellstore.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spellstore.o: /usr/include/c++/3.3.4/iostream
 objs/spellstore.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/spellstore.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -49567,6 +50446,8 @@ objs/spelltask.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/spelltask.o: /usr/include/c++/3.3.4/deque
 objs/spelltask.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/spelltask.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/spelltask.o: /usr/include/c++/3.3.4/queue
+objs/spelltask.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/spelltask.o: /usr/include/c++/3.3.4/iostream
 objs/spelltask.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/spelltask.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -49703,6 +50584,8 @@ objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/sqladdmobs.o: /usr/include/c++/3.3.4/deque
 objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/queue
+objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/sqladdmobs.o: /usr/include/c++/3.3.4/iostream
 objs/sqladdmobs.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/sqladdmobs.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -49836,6 +50719,8 @@ objs/sqladdobjs.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/sqladdobjs.o: /usr/include/c++/3.3.4/deque
 objs/sqladdobjs.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/sqladdobjs.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/sqladdobjs.o: /usr/include/c++/3.3.4/queue
+objs/sqladdobjs.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/sqladdobjs.o: /usr/include/c++/3.3.4/iostream
 objs/sqladdobjs.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/sqladdobjs.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -49969,6 +50854,8 @@ objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/sqladdresp.o: /usr/include/c++/3.3.4/deque
 objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/sqladdresp.o: /usr/include/c++/3.3.4/queue
+objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/sqladdresp.o: /usr/include/c++/3.3.4/iostream
 objs/sqladdresp.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/sqladdresp.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -50100,6 +50987,8 @@ objs/sqladdwld.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/sqladdwld.o: /usr/include/c++/3.3.4/deque
 objs/sqladdwld.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/sqladdwld.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/sqladdwld.o: /usr/include/c++/3.3.4/queue
+objs/sqladdwld.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/sqladdwld.o: /usr/include/c++/3.3.4/iostream
 objs/sqladdwld.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/sqladdwld.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -50234,6 +51123,8 @@ objs/sqledimmobj.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/sqledimmobj.o: /usr/include/c++/3.3.4/deque
 objs/sqledimmobj.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/sqledimmobj.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/sqledimmobj.o: /usr/include/c++/3.3.4/queue
+objs/sqledimmobj.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/sqledimmobj.o: /usr/include/c++/3.3.4/iostream
 objs/sqledimmobj.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/sqledimmobj.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -50367,6 +51258,8 @@ objs/sqledmob.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/sqledmob.o: /usr/include/c++/3.3.4/deque
 objs/sqledmob.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/sqledmob.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/sqledmob.o: /usr/include/c++/3.3.4/queue
+objs/sqledmob.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/sqledmob.o: /usr/include/c++/3.3.4/iostream
 objs/sqledmob.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/sqledmob.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -50500,6 +51393,8 @@ objs/sqledobj.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/sqledobj.o: /usr/include/c++/3.3.4/deque
 objs/sqledobj.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/sqledobj.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/sqledobj.o: /usr/include/c++/3.3.4/queue
+objs/sqledobj.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/sqledobj.o: /usr/include/c++/3.3.4/iostream
 objs/sqledobj.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/sqledobj.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -50633,6 +51528,8 @@ objs/sqledresp.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/sqledresp.o: /usr/include/c++/3.3.4/deque
 objs/sqledresp.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/sqledresp.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/sqledresp.o: /usr/include/c++/3.3.4/queue
+objs/sqledresp.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/sqledresp.o: /usr/include/c++/3.3.4/iostream
 objs/sqledresp.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/sqledresp.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -50766,6 +51663,8 @@ objs/sqledshop.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/sqledshop.o: /usr/include/c++/3.3.4/deque
 objs/sqledshop.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/sqledshop.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/sqledshop.o: /usr/include/c++/3.3.4/queue
+objs/sqledshop.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/sqledshop.o: /usr/include/c++/3.3.4/iostream
 objs/sqledshop.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/sqledshop.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -50899,6 +51798,8 @@ objs/sqledwld.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/sqledwld.o: /usr/include/c++/3.3.4/deque
 objs/sqledwld.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/sqledwld.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/sqledwld.o: /usr/include/c++/3.3.4/queue
+objs/sqledwld.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/sqledwld.o: /usr/include/c++/3.3.4/iostream
 objs/sqledwld.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/sqledwld.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -51031,6 +51932,8 @@ objs/sstring.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/sstring.o: /usr/include/c++/3.3.4/deque
 objs/sstring.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/sstring.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/sstring.o: /usr/include/c++/3.3.4/queue
+objs/sstring.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/sstring.o: /usr/include/c++/3.3.4/iostream
 objs/sstring.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/sstring.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -51159,6 +52062,8 @@ objs/statistics.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/statistics.o: /usr/include/c++/3.3.4/deque
 objs/statistics.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/statistics.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/statistics.o: /usr/include/c++/3.3.4/queue
+objs/statistics.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/statistics.o: /usr/include/c++/3.3.4/iostream
 objs/statistics.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/statistics.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -51284,6 +52189,8 @@ objs/stats.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/stats.o: /usr/include/c++/3.3.4/deque
 objs/stats.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/stats.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/stats.o: /usr/include/c++/3.3.4/queue
+objs/stats.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/stats.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/stats.o: /usr/include/c++/3.3.4/ios
 objs/stats.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -51407,6 +52314,8 @@ objs/structs.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/structs.o: /usr/include/c++/3.3.4/deque
 objs/structs.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/structs.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/structs.o: /usr/include/c++/3.3.4/queue
+objs/structs.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/structs.o: /usr/include/c++/3.3.4/iostream
 objs/structs.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/structs.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -51539,6 +52448,8 @@ objs/sys_loot.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/sys_loot.o: /usr/include/c++/3.3.4/deque
 objs/sys_loot.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/sys_loot.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/sys_loot.o: /usr/include/c++/3.3.4/queue
+objs/sys_loot.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/sys_loot.o: /usr/include/c++/3.3.4/iostream
 objs/sys_loot.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/sys_loot.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -51673,6 +52584,8 @@ objs/systemtask.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/systemtask.o: /usr/include/c++/3.3.4/deque
 objs/systemtask.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/systemtask.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/systemtask.o: /usr/include/c++/3.3.4/queue
+objs/systemtask.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/systemtask.o: /usr/include/c++/3.3.4/iostream
 objs/systemtask.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/systemtask.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -51797,6 +52710,8 @@ objs/talk.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/talk.o: /usr/include/c++/3.3.4/deque
 objs/talk.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/talk.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/talk.o: /usr/include/c++/3.3.4/queue
+objs/talk.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/talk.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/talk.o: /usr/include/c++/3.3.4/ios
 objs/talk.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -51922,6 +52837,8 @@ objs/task.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task.o: /usr/include/c++/3.3.4/deque
 objs/task.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task.o: /usr/include/c++/3.3.4/queue
+objs/task.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/task.o: /usr/include/c++/3.3.4/ios
 objs/task.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -52049,6 +52966,8 @@ objs/task_attune.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_attune.o: /usr/include/c++/3.3.4/deque
 objs/task_attune.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_attune.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_attune.o: /usr/include/c++/3.3.4/queue
+objs/task_attune.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_attune.o: /usr/include/c++/3.3.4/iostream
 objs/task_attune.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/task_attune.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -52185,6 +53104,8 @@ objs/task_blacksmithing.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_blacksmithing.o: /usr/include/c++/3.3.4/deque
 objs/task_blacksmithing.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_blacksmithing.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_blacksmithing.o: /usr/include/c++/3.3.4/queue
+objs/task_blacksmithing.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_blacksmithing.o: /usr/include/c++/3.3.4/iostream
 objs/task_blacksmithing.o: /usr/include/c++/3.3.4/ostream
 objs/task_blacksmithing.o: /usr/include/c++/3.3.4/ios
@@ -52315,6 +53236,8 @@ objs/task_brew.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_brew.o: /usr/include/c++/3.3.4/deque
 objs/task_brew.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_brew.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_brew.o: /usr/include/c++/3.3.4/queue
+objs/task_brew.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_brew.o: /usr/include/c++/3.3.4/iostream
 objs/task_brew.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/task_brew.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -52445,6 +53368,8 @@ objs/task_butcher.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_butcher.o: /usr/include/c++/3.3.4/deque
 objs/task_butcher.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_butcher.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_butcher.o: /usr/include/c++/3.3.4/queue
+objs/task_butcher.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_butcher.o: /usr/include/c++/3.3.4/iostream
 objs/task_butcher.o: /usr/include/c++/3.3.4/ostream
 objs/task_butcher.o: /usr/include/c++/3.3.4/ios
@@ -52578,6 +53503,8 @@ objs/task_charge.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_charge.o: /usr/include/c++/3.3.4/deque
 objs/task_charge.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_charge.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_charge.o: /usr/include/c++/3.3.4/queue
+objs/task_charge.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_charge.o: /usr/include/c++/3.3.4/iostream
 objs/task_charge.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/task_charge.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -52704,6 +53631,8 @@ objs/task_cook.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_cook.o: /usr/include/c++/3.3.4/deque
 objs/task_cook.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_cook.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_cook.o: /usr/include/c++/3.3.4/queue
+objs/task_cook.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_cook.o: /usr/include/c++/3.3.4/iostream
 objs/task_cook.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/task_cook.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -52833,6 +53762,8 @@ objs/task_dull.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_dull.o: /usr/include/c++/3.3.4/deque
 objs/task_dull.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_dull.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_dull.o: /usr/include/c++/3.3.4/queue
+objs/task_dull.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_dull.o: /usr/include/c++/3.3.4/iostream
 objs/task_dull.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/task_dull.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -52978,6 +53909,8 @@ objs/task_extinguish_my_ass.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_extinguish_my_ass.o: /usr/include/c++/3.3.4/deque
 objs/task_extinguish_my_ass.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_extinguish_my_ass.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_extinguish_my_ass.o: /usr/include/c++/3.3.4/queue
+objs/task_extinguish_my_ass.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_extinguish_my_ass.o: /usr/include/c++/3.3.4/iostream
 objs/task_extinguish_my_ass.o: /usr/include/c++/3.3.4/ostream
 objs/task_extinguish_my_ass.o: /usr/include/c++/3.3.4/ios
@@ -53112,6 +54045,8 @@ objs/task_fishing.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_fishing.o: /usr/include/c++/3.3.4/deque
 objs/task_fishing.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_fishing.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_fishing.o: /usr/include/c++/3.3.4/queue
+objs/task_fishing.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_fishing.o: /usr/include/c++/3.3.4/iostream
 objs/task_fishing.o: /usr/include/c++/3.3.4/ostream
 objs/task_fishing.o: /usr/include/c++/3.3.4/ios
@@ -53247,6 +54182,8 @@ objs/task_get.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_get.o: /usr/include/c++/3.3.4/deque
 objs/task_get.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_get.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_get.o: /usr/include/c++/3.3.4/queue
+objs/task_get.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_get.o: /usr/include/c++/3.3.4/iostream
 objs/task_get.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/task_get.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -53379,6 +54316,8 @@ objs/task_lightfire.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_lightfire.o: /usr/include/c++/3.3.4/deque
 objs/task_lightfire.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_lightfire.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_lightfire.o: /usr/include/c++/3.3.4/queue
+objs/task_lightfire.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_lightfire.o: /usr/include/c++/3.3.4/iostream
 objs/task_lightfire.o: /usr/include/c++/3.3.4/ostream
 objs/task_lightfire.o: /usr/include/c++/3.3.4/ios
@@ -53510,6 +54449,8 @@ objs/task_logging.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_logging.o: /usr/include/c++/3.3.4/deque
 objs/task_logging.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_logging.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_logging.o: /usr/include/c++/3.3.4/queue
+objs/task_logging.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_logging.o: /usr/include/c++/3.3.4/iostream
 objs/task_logging.o: /usr/include/c++/3.3.4/ostream
 objs/task_logging.o: /usr/include/c++/3.3.4/ios
@@ -53642,6 +54583,8 @@ objs/task_meditate.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_meditate.o: /usr/include/c++/3.3.4/deque
 objs/task_meditate.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_meditate.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_meditate.o: /usr/include/c++/3.3.4/queue
+objs/task_meditate.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_meditate.o: /usr/include/c++/3.3.4/iostream
 objs/task_meditate.o: /usr/include/c++/3.3.4/ostream
 objs/task_meditate.o: /usr/include/c++/3.3.4/ios
@@ -53774,6 +54717,8 @@ objs/task_painting.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_painting.o: /usr/include/c++/3.3.4/deque
 objs/task_painting.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_painting.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_painting.o: /usr/include/c++/3.3.4/queue
+objs/task_painting.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_painting.o: /usr/include/c++/3.3.4/iostream
 objs/task_painting.o: /usr/include/c++/3.3.4/ostream
 objs/task_painting.o: /usr/include/c++/3.3.4/ios
@@ -53905,6 +54850,8 @@ objs/task_penance.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_penance.o: /usr/include/c++/3.3.4/deque
 objs/task_penance.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_penance.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_penance.o: /usr/include/c++/3.3.4/queue
+objs/task_penance.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_penance.o: /usr/include/c++/3.3.4/iostream
 objs/task_penance.o: /usr/include/c++/3.3.4/ostream
 objs/task_penance.o: /usr/include/c++/3.3.4/ios
@@ -54037,6 +54984,8 @@ objs/task_picklock.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_picklock.o: /usr/include/c++/3.3.4/deque
 objs/task_picklock.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_picklock.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_picklock.o: /usr/include/c++/3.3.4/queue
+objs/task_picklock.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_picklock.o: /usr/include/c++/3.3.4/iostream
 objs/task_picklock.o: /usr/include/c++/3.3.4/ostream
 objs/task_picklock.o: /usr/include/c++/3.3.4/ios
@@ -54167,6 +55116,8 @@ objs/task_plant.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_plant.o: /usr/include/c++/3.3.4/deque
 objs/task_plant.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_plant.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_plant.o: /usr/include/c++/3.3.4/queue
+objs/task_plant.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_plant.o: /usr/include/c++/3.3.4/iostream
 objs/task_plant.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/task_plant.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -54297,6 +55248,8 @@ objs/task_preen.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_preen.o: /usr/include/c++/3.3.4/deque
 objs/task_preen.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_preen.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_preen.o: /usr/include/c++/3.3.4/queue
+objs/task_preen.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_preen.o: /usr/include/c++/3.3.4/iostream
 objs/task_preen.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/task_preen.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -54423,6 +55376,8 @@ objs/task_rest.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_rest.o: /usr/include/c++/3.3.4/deque
 objs/task_rest.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_rest.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_rest.o: /usr/include/c++/3.3.4/queue
+objs/task_rest.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_rest.o: /usr/include/c++/3.3.4/iostream
 objs/task_rest.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/task_rest.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -54549,6 +55504,8 @@ objs/task_ride.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_ride.o: /usr/include/c++/3.3.4/deque
 objs/task_ride.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_ride.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_ride.o: /usr/include/c++/3.3.4/queue
+objs/task_ride.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_ride.o: /usr/include/c++/3.3.4/iostream
 objs/task_ride.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/task_ride.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -54680,6 +55637,8 @@ objs/task_sacrifice.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_sacrifice.o: /usr/include/c++/3.3.4/deque
 objs/task_sacrifice.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_sacrifice.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_sacrifice.o: /usr/include/c++/3.3.4/queue
+objs/task_sacrifice.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_sacrifice.o: /usr/include/c++/3.3.4/iostream
 objs/task_sacrifice.o: /usr/include/c++/3.3.4/ostream
 objs/task_sacrifice.o: /usr/include/c++/3.3.4/ios
@@ -54812,6 +55771,8 @@ objs/task_scribe.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_scribe.o: /usr/include/c++/3.3.4/deque
 objs/task_scribe.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_scribe.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_scribe.o: /usr/include/c++/3.3.4/queue
+objs/task_scribe.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_scribe.o: /usr/include/c++/3.3.4/iostream
 objs/task_scribe.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/task_scribe.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -54942,6 +55903,8 @@ objs/task_search.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_search.o: /usr/include/c++/3.3.4/deque
 objs/task_search.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_search.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_search.o: /usr/include/c++/3.3.4/queue
+objs/task_search.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_search.o: /usr/include/c++/3.3.4/iostream
 objs/task_search.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/task_search.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -55073,6 +56036,8 @@ objs/task_seekwater.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_seekwater.o: /usr/include/c++/3.3.4/deque
 objs/task_seekwater.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_seekwater.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_seekwater.o: /usr/include/c++/3.3.4/queue
+objs/task_seekwater.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_seekwater.o: /usr/include/c++/3.3.4/iostream
 objs/task_seekwater.o: /usr/include/c++/3.3.4/ostream
 objs/task_seekwater.o: /usr/include/c++/3.3.4/ios
@@ -55204,6 +56169,8 @@ objs/task_sharpen.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_sharpen.o: /usr/include/c++/3.3.4/deque
 objs/task_sharpen.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_sharpen.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_sharpen.o: /usr/include/c++/3.3.4/queue
+objs/task_sharpen.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_sharpen.o: /usr/include/c++/3.3.4/iostream
 objs/task_sharpen.o: /usr/include/c++/3.3.4/ostream
 objs/task_sharpen.o: /usr/include/c++/3.3.4/ios
@@ -55332,6 +56299,8 @@ objs/task_sit.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_sit.o: /usr/include/c++/3.3.4/deque
 objs/task_sit.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_sit.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_sit.o: /usr/include/c++/3.3.4/queue
+objs/task_sit.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_sit.o: /usr/include/c++/3.3.4/iostream
 objs/task_sit.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/task_sit.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -55458,6 +56427,8 @@ objs/task_skin.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_skin.o: /usr/include/c++/3.3.4/deque
 objs/task_skin.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_skin.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_skin.o: /usr/include/c++/3.3.4/queue
+objs/task_skin.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_skin.o: /usr/include/c++/3.3.4/iostream
 objs/task_skin.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/task_skin.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -55588,6 +56559,8 @@ objs/task_sleep.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_sleep.o: /usr/include/c++/3.3.4/deque
 objs/task_sleep.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_sleep.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_sleep.o: /usr/include/c++/3.3.4/queue
+objs/task_sleep.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_sleep.o: /usr/include/c++/3.3.4/iostream
 objs/task_sleep.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/task_sleep.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -55723,6 +56696,8 @@ objs/task_spell_friends.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_spell_friends.o: /usr/include/c++/3.3.4/deque
 objs/task_spell_friends.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_spell_friends.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_spell_friends.o: /usr/include/c++/3.3.4/queue
+objs/task_spell_friends.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_spell_friends.o: /usr/include/c++/3.3.4/iostream
 objs/task_spell_friends.o: /usr/include/c++/3.3.4/ostream
 objs/task_spell_friends.o: /usr/include/c++/3.3.4/ios
@@ -55859,6 +56834,8 @@ objs/task_stavecharge.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_stavecharge.o: /usr/include/c++/3.3.4/deque
 objs/task_stavecharge.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_stavecharge.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_stavecharge.o: /usr/include/c++/3.3.4/queue
+objs/task_stavecharge.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_stavecharge.o: /usr/include/c++/3.3.4/iostream
 objs/task_stavecharge.o: /usr/include/c++/3.3.4/ostream
 objs/task_stavecharge.o: /usr/include/c++/3.3.4/ios
@@ -55991,6 +56968,8 @@ objs/task_track.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_track.o: /usr/include/c++/3.3.4/deque
 objs/task_track.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_track.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_track.o: /usr/include/c++/3.3.4/queue
+objs/task_track.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_track.o: /usr/include/c++/3.3.4/iostream
 objs/task_track.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/task_track.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -56135,6 +57114,8 @@ objs/task_trance_of_blades.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_trance_of_blades.o: /usr/include/c++/3.3.4/deque
 objs/task_trance_of_blades.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_trance_of_blades.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_trance_of_blades.o: /usr/include/c++/3.3.4/queue
+objs/task_trance_of_blades.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_trance_of_blades.o: /usr/include/c++/3.3.4/iostream
 objs/task_trance_of_blades.o: /usr/include/c++/3.3.4/ostream
 objs/task_trance_of_blades.o: /usr/include/c++/3.3.4/ios
@@ -56266,6 +57247,8 @@ objs/task_trap.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_trap.o: /usr/include/c++/3.3.4/deque
 objs/task_trap.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_trap.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_trap.o: /usr/include/c++/3.3.4/queue
+objs/task_trap.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_trap.o: /usr/include/c++/3.3.4/iostream
 objs/task_trap.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/task_trap.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -56397,6 +57380,8 @@ objs/task_whittle.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/task_whittle.o: /usr/include/c++/3.3.4/deque
 objs/task_whittle.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/task_whittle.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/task_whittle.o: /usr/include/c++/3.3.4/queue
+objs/task_whittle.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/task_whittle.o: /usr/include/c++/3.3.4/iostream
 objs/task_whittle.o: /usr/include/c++/3.3.4/ostream
 objs/task_whittle.o: /usr/include/c++/3.3.4/ios
@@ -56524,6 +57509,8 @@ objs/thing.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/thing.o: /usr/include/c++/3.3.4/deque
 objs/thing.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/thing.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/thing.o: /usr/include/c++/3.3.4/queue
+objs/thing.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/thing.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/thing.o: /usr/include/c++/3.3.4/ios
 objs/thing.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -56655,6 +57642,8 @@ objs/toggle.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/toggle.o: /usr/include/c++/3.3.4/deque
 objs/toggle.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/toggle.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/toggle.o: /usr/include/c++/3.3.4/queue
+objs/toggle.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/toggle.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/toggle.o: /usr/include/c++/3.3.4/ios
 objs/toggle.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -56777,6 +57766,8 @@ objs/trap.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/trap.o: /usr/include/c++/3.3.4/deque
 objs/trap.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/trap.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/trap.o: /usr/include/c++/3.3.4/queue
+objs/trap.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/trap.o: /usr/include/c++/3.3.4/iostream /usr/include/c++/3.3.4/ostream
 objs/trap.o: /usr/include/c++/3.3.4/ios
 objs/trap.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -56903,6 +57894,8 @@ objs/utility.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/utility.o: /usr/include/c++/3.3.4/deque
 objs/utility.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/utility.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/utility.o: /usr/include/c++/3.3.4/queue
+objs/utility.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/utility.o: /usr/include/c++/3.3.4/iostream
 objs/utility.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/utility.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -57053,6 +58046,8 @@ objs/weather.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/weather.o: /usr/include/c++/3.3.4/deque
 objs/weather.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/weather.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/weather.o: /usr/include/c++/3.3.4/queue
+objs/weather.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/weather.o: /usr/include/c++/3.3.4/iostream
 objs/weather.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/weather.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -57184,6 +58179,8 @@ objs/wiz_data.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/wiz_data.o: /usr/include/c++/3.3.4/deque
 objs/wiz_data.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/wiz_data.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/wiz_data.o: /usr/include/c++/3.3.4/queue
+objs/wiz_data.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/wiz_data.o: /usr/include/c++/3.3.4/iostream
 objs/wiz_data.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/wiz_data.o: /usr/include/c++/3.3.4/bits/localefwd.h
@@ -57314,6 +58311,8 @@ objs/wiz_powers.o: /usr/include/c++/3.3.4/bits/list.tcc
 objs/wiz_powers.o: /usr/include/c++/3.3.4/deque
 objs/wiz_powers.o: /usr/include/c++/3.3.4/bits/stl_deque.h
 objs/wiz_powers.o: /usr/include/c++/3.3.4/bits/deque.tcc
+objs/wiz_powers.o: /usr/include/c++/3.3.4/queue
+objs/wiz_powers.o: /usr/include/c++/3.3.4/bits/stl_queue.h
 objs/wiz_powers.o: /usr/include/c++/3.3.4/iostream
 objs/wiz_powers.o: /usr/include/c++/3.3.4/ostream /usr/include/c++/3.3.4/ios
 objs/wiz_powers.o: /usr/include/c++/3.3.4/bits/localefwd.h
