@@ -2407,7 +2407,7 @@ void lightSaberExtend(TBeing *ch, TGenWeapon *weapon)
     return;
 
   weapon->setWeaponType(WEAPON_TYPE_SLICE);
-  weapon->setWeapDamLvl(38);
+  weapon->setWeapDamLvl(38 * 4);
   weapon->setWeapDamDev(8);
   weapon->swapToStrung();
 
@@ -2434,13 +2434,6 @@ void lightSaberRetract(TBeing *ch, TGenWeapon *weapon)
   sstring colorcodes[]={"<r>", "<Y>", "<g>", "<b>", "<p>", "<W>"};
   int which_color=0;
 
-  // this is just a way to get a random but consistent color
-  buf=ch->getName();
-  for(unsigned int i=0;i<buf.length();++i){
-    which_color += (int) buf[i];
-  }
-  which_color=which_color % 6;
-
   if(weapon->getWeaponType(0)==WEAPON_TYPE_BLUDGEON)
     return;
 
@@ -2454,13 +2447,23 @@ void lightSaberRetract(TBeing *ch, TGenWeapon *weapon)
   delete weapon->shortDescr;
   weapon->shortDescr = mud_str_dup(buf);
 
-  buf=fmt("A brilliant blade of %s%s<o> light retracts into $p.") %
-    colorcodes[which_color] % colornames[which_color];
-  act(buf, false, ch, weapon, NULL, TO_CHAR, ANSI_ORANGE);
+  if(ch){
+    // this is just a way to get a random but consistent color
+    buf=ch->getName();
+    for(unsigned int i=0;i<buf.length();++i){
+      which_color += (int) buf[i];
+    }
+    which_color=which_color % 6;
+    
+    buf=fmt("A brilliant blade of %s%s<o> light retracts into $p.") %
+      colorcodes[which_color] % colornames[which_color];
+    act(buf, false, ch, weapon, NULL, TO_CHAR, ANSI_ORANGE);
+    
+    buf=fmt("A brilliant blade of %s%s<o> light retracts into $n's $o.") %
+      colorcodes[which_color] % colornames[which_color];
+    act(buf, false, ch, weapon, NULL, TO_ROOM, ANSI_ORANGE);
+  }
 
-  buf=fmt("A brilliant blade of %s%s<o> light retracts into $n's $o.") %
-    colorcodes[which_color] % colornames[which_color];
-  act(buf, false, ch, weapon, NULL, TO_ROOM, ANSI_ORANGE);
 }  
 
 
@@ -2473,14 +2476,17 @@ int lightSaber(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   int dam, rc=0;
   spellNumT wtype;
 
-  if(!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
-    return FALSE;
-
   if(!o)
     return FALSE;
   
   if(!(weapon = dynamic_cast<TGenWeapon *>(o)))
     return FALSE;
+
+  if(!(ch = dynamic_cast<TBeing *>(o->equippedBy))){
+    lightSaberRetract(NULL, weapon);
+    return FALSE;
+  }
+
 
   if(cmd==CMD_OBJ_USED && ch && ch->hasQuestBit(TOG_PSIONICIST)){
     if(weapon->getWeaponType(0)==WEAPON_TYPE_SLICE){
@@ -2501,7 +2507,7 @@ int lightSaber(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
     lightSaberExtend(ch, weapon);
     return FALSE;
   } else if(cmd==CMD_OBJ_HIT && ch && ch->hasQuestBit(TOG_PSIONICIST)){
-    if(::number(0,10000))
+    if(::number(0,1000))
       return FALSE;
 
     act("$p <W>flashes brightly!<1>", 0, vict, o, 0, TO_ROOM);
