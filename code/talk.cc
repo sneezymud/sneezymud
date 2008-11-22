@@ -695,6 +695,12 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
     return FALSE;
   }
 
+  // if a player doesnt want tells, only allow the person they last talked to directly to tell back
+  if (!isImmortal() && vict->desc && IS_SET(vict->desc->autobits, AUTO_NOTELL) && strcmp(vict->desc->last_told, this->name) != 0) {
+    sendTo("That person is not receiving tells. Try again later.\n\r");
+    return FALSE;
+  }
+
   if(hasQuestBit(TOG_IS_MUTE) && (!vict->isImmortal() || !vict->isPc())){
     sendTo("You're mute, you can't talk.\n\r");
     return FALSE;
@@ -806,6 +812,10 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
   // If it becomes a "someone tells you", ignore
   if (vict->desc && vict->canSee(this, INFRA_YES) && isPc())
     strncpy(vict->desc->last_teller, this->name, cElements(vict->desc->last_teller));
+
+  // if you told to someone, remember who you last told to for use later
+  if (desc && vict->desc && isPc() && vict->isPc())
+    strncpy(desc->last_told, vict->name, cElements(desc->last_told));
 
   if (desc && inGroup(*vict))
     desc->talkCount = time(0);

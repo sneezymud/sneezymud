@@ -10,6 +10,7 @@
 #include "statistics.h"
 #include "games.h"
 #include "database.h"
+#include "cmd_message.h"
 
 #define NEWBIE_PURGATORY_LENGTH 7257600
 
@@ -178,6 +179,8 @@ void TBeing::doWho(const char *argument)
               buf += "   (Newbie-Helper)";
             if (p->desc && (time(0)-p->desc->account->birth) < NEWBIE_PURGATORY_LENGTH)
               buf += "   (Newbie)";
+            if (!p->msgVariables(MSG_NOTE).empty())
+              buf += fmt("   (%s)") % p->msgVariables(MSG_NOTE);
             buf += "\n\r";
 
             if (isImmortal() && p->isLinkdead()) {
@@ -391,6 +394,8 @@ void TBeing::doWho(const char *argument)
                       buf += "   (Newbie-Helper)";
                     if (p->desc && (time(0)-p->desc->account->birth) < NEWBIE_PURGATORY_LENGTH)
                       buf += "   (Newbie)";
+                    if (!p->msgVariables(MSG_NOTE).empty())
+                      buf += fmt("   (%s)") % p->msgVariables(MSG_NOTE);
                   }
                   level = TRUE;
                   break;
@@ -531,6 +536,8 @@ void TBeing::doWho(const char *argument)
           buf += "   (Newbie-Helper)";
         if (k->desc && (time(0)-k->desc->account->birth) < NEWBIE_PURGATORY_LENGTH)
           buf += "   (Newbie)";
+        if (!k->msgVariables(MSG_NOTE).empty())
+          buf += fmt("   (%s)") % k->msgVariables(MSG_NOTE);
         buf += "\n\r";
         sb += buf;
       }

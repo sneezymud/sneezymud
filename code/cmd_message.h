@@ -50,6 +50,7 @@ enum messageTypeT
   MSG_BAMFIN,
   MSG_BAMFOUT,
   MSG_LONGDESCR,
+  MSG_NOTE,
   MSG_MAX
 };
 
@@ -77,7 +78,8 @@ struct messageBuffer
        *msgForce,
        *msgBamfin,
        *msgBamfout,
-       *msgLongDescr;
+       *msgLongDescr,
+       *msgNote;
 };
 
 class TMessages

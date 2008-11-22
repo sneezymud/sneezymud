@@ -1063,6 +1063,14 @@ void TBeing::doToggle(const char *arg2)
       sendTo("Hero sprites will no longer follow you.\n\r");
       SET_BIT(desc->autobits, AUTO_NOSPRITE);
     }
+  } else if (is_abbrev(arg, "notell") || is_abbrev(arg, "tell")) {
+    if (IS_SET(desc->autobits, AUTO_NOTELL)) {
+      sendTo("People can now initiate tells to you.\n\r");
+      REMOVE_BIT(desc->autobits, AUTO_NOTELL);
+    } else {
+      sendTo("From now on, people will be unable to initiate tells to you.\n\r");
+      SET_BIT(desc->autobits, AUTO_NOTELL);
+    }
   } else if (is_abbrev(arg, "nuke") && hasWizPower(POWER_TOGGLE)) {
     nuke_inactive_mobs = !nuke_inactive_mobs;
     sendTo(fmt("Mobs in inactive zones are now %s.\n\r") % 
@@ -1076,7 +1084,7 @@ void TBeing::doToggle(const char *arg2)
   } else if(is_abbrev(arg, "list") && hasWizPower(POWER_TOGGLE)){
     for(togTypeT t=TOG_NONE;t<MAX_TOG_TYPES;t++){
      if(t==TOG_NONE)
-	continue;
+	    continue;
       
       sendTo(COLOR_BASIC, fmt("%-17s : %s\n\r") %
 	     toggleInfo[t]->name %
@@ -1087,25 +1095,25 @@ void TBeing::doToggle(const char *arg2)
       unsigned int len=toggleInfo[t]->name.length();
       sstring buf="";
       for(unsigned int i=0;i<len;++i){
-	if(toggleInfo[t]->name[i] == ' ')
-	  continue;
+	      if(toggleInfo[t]->name[i] == ' ')
+	        continue;
 
-	buf += toggleInfo[t]->name[i];
+	      buf += toggleInfo[t]->name[i];
       }
       
       if(is_abbrev(arg, buf)){
-	toggleInfo[t]->toggle = !toggleInfo[t]->toggle;
+	      toggleInfo[t]->toggle = !toggleInfo[t]->toggle;
 
-	sendTo(fmt("%s is now %s.\n\r") % 
+	      sendTo(fmt("%s is now %s.\n\r") % 
 	       toggleInfo[t]->name %
 	       (toggleInfo[t]->toggle ? "on" : "off"));
-	vlogf(LOG_MISC, fmt("%s has turned %s %s") % getName() %
-	      toggleInfo[t]->name % on_or_off(toggleInfo[t]->toggle));
-	vlogf(LOG_MISC, fmt("- %s") % toggleInfo[t]->descr);
+	      vlogf(LOG_MISC, fmt("%s has turned %s %s") % getName() %
+	            toggleInfo[t]->name % on_or_off(toggleInfo[t]->toggle));
+	      vlogf(LOG_MISC, fmt("- %s") % toggleInfo[t]->descr);
 
-	if(t==TOG_CLIENTS)
-	  closeClientConnections(this);
-	return;
+	      if(t==TOG_CLIENTS)
+	        closeClientConnections(this);
+	      return;
       }
     }
     sendTo("Unrecognized toggle.  Type HELP TOGGLE to see valid toggles.\n\r");

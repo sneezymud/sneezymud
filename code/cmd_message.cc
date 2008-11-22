@@ -47,6 +47,7 @@ const unsigned short int messageCommandSwitches[][3] =
   {200, (0                             ), POWER_GOTO},
   {200, (0                             ), POWER_GOTO},
   {200, (0                             ), POWER_LONGDESC},
+  { 12, (0                             ), POWER_WIZARD},
 };
 
 const char * messageCommandTypes[] =
@@ -68,6 +69,7 @@ const char * messageCommandTypes[] =
   "bamfin",        // 15
   "bamfout",       // 16
   "longdescr",     // 17
+  "note",          // 18
   "\n"
 };
 
@@ -134,9 +136,9 @@ void TBeing::doMessage(const char *tArg)
         return;
       }
 
-      if (tValue == MSG_IMM_TITLE &&
+      if ((tValue == MSG_IMM_TITLE || tValue == MSG_NOTE) &&
           (tStString.find("~R") != sstring::npos)) {
-        sendTo("You Can NOT use newlines in the god title, Bad Bad.\n\r");
+        sendTo("You Can NOT use newlines in that message, Bad Bad.\n\r");
         return;
       }
 
@@ -279,6 +281,9 @@ sstring TMessages::getDefaultMessage(messageTypeT tValue, TBeing *tChar)
     case MSG_LONGDESCR: // Long Description
       return "<n> is here.";
       break;
+    case MSG_NOTE: // Extra note in who list
+      return "";
+      break;
     default:
       return "ERROR";
       break;
@@ -405,6 +410,12 @@ void TMessages::operator()(messageTypeT tValue, sstring tStString)
       tMessages.msgLongDescr = NULL;
       tMessages.msgLongDescr = new char[tStString.length() + 1];
       strcpy(tMessages.msgLongDescr, tStString.c_str());
+      break;
+    case MSG_NOTE: // who list note
+      delete [] tMessages.msgNote;
+      tMessages.msgNote = NULL;
+      tMessages.msgNote = new char[tStString.length() + 1];
+      strcpy(tMessages.msgNote, tStString.c_str());
       break;
     case MSG_ERROR:
     case MSG_MAX:
@@ -543,6 +554,9 @@ sstring TMessages::operator[](messageTypeT tValue) const
       break;
     case MSG_LONGDESCR: // Long Description
       return tMessages.msgLongDescr;
+      break;
+    case MSG_NOTE: // Who list note
+      return tMessages.msgNote;
       break;
     default:
       vlogf(LOG_BUG, fmt("TMessages::operator[](int) got invalid tValue.  [%d]") % 

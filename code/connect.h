@@ -448,6 +448,7 @@ class Descriptor
     unsigned int best_rent_credit;
     int playerID;
     char last_teller[128];
+    char last_told[128];
     TBeing *character;            // linked to char (might be a poly)
     TAccount *account;            // linked to account
     TPerson *original;            // original char (always a person)

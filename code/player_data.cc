@@ -92,6 +92,7 @@ void TPerson::resetChar()
     setMaterial(MAT_HUMAN_FLESH);
 
   *desc->last_teller = '\0';
+  *desc->last_told = '\0';
 
   desc->playerID=0;
 
