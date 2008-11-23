@@ -12,34 +12,6 @@
 #include "obj_note.h"
 #include "database.h"
 
-// many of the talk features colorize the says/tells/etc for easier viewing
-// If I do "say this <r>color<z> is cool", I would expect to see color in
-// red, and "this ", " is cool" be the 'normal' say color.
-// unfortunately, turning off red (<z>) makes everything go back to
-// normal, and we lose the 'normal' color.
-// To get around this, we parse the say statement, and convert any <z>, <Z>,
-// or <1> to a 'replacement' color sstring and then send it out.
-// unfortunately, we also need to "unbold", so we need to send both the
-// normal <z> as well as the replacement
-static void convertStringColor(const sstring replacement, sstring & str)
-{
-  // we use <tmpi> to represent a dummy placeholder which we convert to
-  // <z> at the end
-  sstring repl = "<tmpi>";
-  repl += replacement;
- 
-  while (str.find("<z>") != sstring::npos)  
-    str.replace(str.find("<z>"), 3, repl);
-
-  while (str.find("<Z>") != sstring::npos)  
-    str.replace(str.find("<Z>"), 3, repl);
-
-  while (str.find("<1>") != sstring::npos)  
-    str.replace(str.find("<1>"), 3, repl);
-
-  while (str.find("<tmpi>") != sstring::npos)  
-    str.replace(str.find("<tmpi>"), 6, "<z>");
-}
 
 void TBeing::disturbMeditation(TBeing *vict) const
 {
@@ -418,7 +390,7 @@ void TBeing::doGrouptell(const sstring &arg)
 
     garbled = garble(NULL, arg, SPEECH_GROUPTELL, GARBLE_SCOPE_EVERYONE);
 
-    convertStringColor("<r>", garbled);
+    garbled.convertStringColor("<r>");
 
     sendTo(fmt("You tell your group: %s%s%s\n\r") % red() % colorString(this, desc, garbled, NULL, COLOR_BASIC, FALSE) % norm());
   }
@@ -513,7 +485,7 @@ void TBeing::doCommune(const sstring &arg)
 
       if (!levnum) {
         str = colorString(this, i, arg, NULL, COLOR_COMM, FALSE);
-        convertStringColor("<c>", str);
+        str.convertStringColor("<c>");
         if (critter->GetMaxLevel() >= GOD_LEVEL1 && 
       toggleInfo[TOG_WIZBUILD]->toggle) {
           buf = fmt ("%s$n: %s%s%s") %
@@ -536,7 +508,7 @@ void TBeing::doCommune(const sstring &arg)
         str = colorString(this, i, 
           arg.substr(arg.find_first_of(" "), arg.length()-1),
           NULL, COLOR_COMM, FALSE);
-        convertStringColor("<c>", str);
+        str.convertStringColor("<c>");
         
         if (critter->GetMaxLevel() >= GOD_LEVEL1 && 
       toggleInfo[TOG_WIZBUILD]->toggle &&
@@ -781,7 +753,7 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
 
   // we only color the sstring to the victim, so leave this AFTER
   // the stuff we send to the teller.
-  convertStringColor("<c>", garbed);
+  garbed.convertStringColor("<c>");
 
   if(vict->isImmortal() && drunkNum>0){
     vict->sendTo(COLOR_COMM, fmt("%s drunkenly tells you, \"<c>%s<z>\"\n\r") %

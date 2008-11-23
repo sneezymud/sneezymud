@@ -39,6 +39,7 @@ public:
 
   // string mungers
   void ascify();
+  void convertStringColor(const sstring replacement);
 
   // inlines
   void inlineReplaceString(const string f, const string r) {

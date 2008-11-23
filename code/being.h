@@ -2072,6 +2072,7 @@ class TBeing : public TThing {
     int doAsk(const sstring &);
     int doSign(const sstring &);
     void doGrouptell(const sstring &);
+    void doNewbie(const sstring &arg);
     void doWrite(const char *);
     void doExamine(const char *, TThing *specific = NULL);
     void doRead(const char *);

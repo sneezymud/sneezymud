@@ -383,6 +383,35 @@ void sstring::ascify()
   }
 }
 
+// many of the talk features colorize the says/tells/etc for easier viewing
+// If I do "say this <r>color<z> is cool", I would expect to see color in
+// red, and "this ", " is cool" be the 'normal' say color.
+// unfortunately, turning off red (<z>) makes everything go back to
+// normal, and we lose the 'normal' color.
+// To get around this, we parse the say statement, and convert any <z>, <Z>,
+// or <1> to a 'replacement' color sstring and then send it out.
+// unfortunately, we also need to "unbold", so we need to send both the
+// normal <z> as well as the replacement
+void sstring::convertStringColor(const sstring replacement)
+{
+  // we use <tmpi> to represent a dummy placeholder which we convert to
+  // <z> at the end
+  sstring repl = "<tmpi>";
+  repl += replacement;
+ 
+  while (find("<z>") != sstring::npos)  
+    replace(find("<z>"), 3, repl);
+
+  while (find("<Z>") != sstring::npos)  
+    replace(find("<Z>"), 3, repl);
+
+  while (find("<1>") != sstring::npos)  
+    replace(find("<1>"), 3, repl);
+
+  while (find("<tmpi>") != sstring::npos)  
+    replace(find("<tmpi>"), 6, "<z>");
+}
+
 
 bool isvowel(const char c)
 {

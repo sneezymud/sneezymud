@@ -12,7 +12,6 @@
 #include "database.h"
 #include "cmd_message.h"
 
-#define NEWBIE_PURGATORY_LENGTH 7257600
 
 sstring TBeing::parseTitle(Descriptor *)
 {

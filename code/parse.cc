@@ -1767,6 +1767,9 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
       case CMD_BUILDHELP:
     doBuildhelp(newarg.c_str());
   break;
+      case CMD_NEWBIE:
+    doNewbie(argument.c_str());
+  break;
       case MAX_CMD_LIST:
       case CMD_RESP_TOGGLE:
       case CMD_RESP_UNTOGGLE:
@@ -2912,6 +2915,7 @@ void buildCommandArray(void)
   commandArray[CMD_BESTOW] = new commandInfo("bestow", POSITION_SLEEPING, GOD_LEVEL1);
   commandArray[CMD_PREEN] = new commandInfo("preen", POSITION_RESTING, 0);
   commandArray[CMD_BUILDHELP] = new commandInfo("buildhelp", POSITION_DEAD, 0);
+  commandArray[CMD_NEWBIE] = new commandInfo("newbie", POSITION_RESTING, 0);
 }
 
 bool _parse_name_safe(const char *arg, char *name, unsigned int nameLen)

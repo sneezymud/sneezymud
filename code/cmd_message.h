@@ -29,6 +29,8 @@
 #ifndef __CMD_MESSAGE_H
 #define __CMD_MESSAGE_H
 
+#define NEWBIE_PURGATORY_LENGTH 7257600
+
 enum messageTypeT
 {
   MSG_ERROR     = 0,

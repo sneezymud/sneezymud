@@ -7,6 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "cmd_message.h"
 
 void TBeing::doNewbieEqLoad(race_t num, ush_int num2, bool initNum)
 {
@@ -84,5 +85,67 @@ void TBeing::doNewbieEqLoad(race_t num, ush_int num2, bool initNum)
       *this += *newbieObj;
   }
 
+  return;
+}
+
+// ask a newbie question (or reply with answer)
+// intended for newbies to get help, without having to use shout or direct tells to gods
+void TBeing::doNewbie(const sstring &arg)
+{
+  sstring message = arg.trim();
+  bool isNewbieHelper = isImmortal() || isPlayerAction(PLR_NEWBIEHELP);
+  bool isNewbie = (!isNewbieHelper && desc && (time(0)-desc->account->birth) < NEWBIE_PURGATORY_LENGTH);
+
+  if (!isNewbieHelper && !isNewbie)
+  {
+    sendTo("You cannot use the newbie help channel unless you are a newbie or a newbie helper.\n\r");
+    return;
+  }
+
+  if (!isImmortal() && !canSpeak())
+  {
+    sendTo("You are unable to speak at this time and cannot ask newbie questions.\n\r");
+    return;
+  }
+
+  if (message.empty())
+  {
+    sendTo("What is your newbie question?\n\r");
+    return;
+  }
+
+  // trim the string down to 200 chars
+  if (message.length() > 200)
+  {
+    sendTo("Your newbie chat was too long and has been truncated for brevity.\n\r");
+    message.resize(200);
+  }
+
+  const char *header = isNewbie ? "You ask the experts: %s" : "You advise to newbies: %s";
+  const char *title = isNewbie ? "Newbie" : "Expert";
+  sendTo(fmt(header) % colorString(this, desc, message, NULL, COLOR_BASIC, TRUE, TRUE));
+
+  for (Descriptor *d = descriptor_list; d; d = d->next)
+  {
+    if (d->character == this || d->connected != CON_PLYNG)
+      continue;
+    
+    TBeing *person = (dynamic_cast<TMonster *>(d->character) && d->original) ? d->original : d->character;
+    if (!person)
+      continue;
+    bool newbieHelper = person->isImmortal() || person->isPlayerAction(PLR_NEWBIEHELP);
+    bool newbie = (!newbieHelper && (time(0)-d->account->birth) < NEWBIE_PURGATORY_LENGTH);
+
+    if (!newbieHelper && !newbie)
+      continue;
+
+    sstring str = colorString(this, d, message, NULL, COLOR_COMM, FALSE);
+    str.convertStringColor("<c>");
+    act((fmt("%s%s $n: %s%s%s") % d->purple() % title % d->cyan() % str % d->norm()), 0, this, 0, person, TO_VICT);
+
+    // hack: newbie channel looks like a telepathy chat for sneezyclient
+    if (!d->m_bIsClient && IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT))
+      d->clientf(fmt("%d|%s|%s") % CLIENT_TELEPATHY % colorString(person, d, (fmt("%s %s") % title % getName()), NULL, COLOR_NONE, FALSE) % str);
+  }
   return;
 }
