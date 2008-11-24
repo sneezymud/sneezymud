@@ -166,7 +166,8 @@ int TBeing::doBackstab(const char *argument, TBeing *vict)
 {
   TBeing *victim=NULL, *GLeader=NULL;
   followData *FDt;
-  char namebuf[256] = "\0";
+  sstring namebuf;
+  sstring arg = argument;
   int rc;
 
   if (!doesKnowSkill(SKILL_BACKSTAB)) {
@@ -191,7 +192,7 @@ int TBeing::doBackstab(const char *argument, TBeing *vict)
           continue;
 
         if (FDt->follower == this)
-	  continue;
+          continue;
 
         if (!FDt->follower->isAffected(AFF_GROUP))
           continue;
@@ -206,8 +207,7 @@ int TBeing::doBackstab(const char *argument, TBeing *vict)
   }
 
   if (!vict && !victim) {
-    if (*argument)
-      strcpy(namebuf, argument);
+      arg = one_argument(arg, namebuf);
 
     if (!(victim = get_char_room_vis(this, namebuf))) {
       sendTo("Backstab whom?\n\r");
@@ -464,7 +464,7 @@ int TBeing::throatSlitHit(TBeing *victim, TThing *obj)
             FALSE, this, obj, victim, TO_VICT);
       } else {
         playThroatSlit(roomp);
-	victim->dropPool(20, LIQ_BLOOD);
+        victim->dropPool(20, LIQ_BLOOD);
 
         if (victim->isUndead()) {
           act("$N coughs and shivers as you slit $S throat.",
@@ -486,12 +486,10 @@ int TBeing::throatSlitHit(TBeing *victim, TThing *obj)
         act("$n sneaks up behind you and cuts your throat!",
             FALSE, this, obj, victim, TO_VICT);
 
-      // poison
-	TBaseWeapon *tow;
-	if(obj && (tow = dynamic_cast<TBaseWeapon *>(obj)) && 
-	   tow->isPoisoned())
-	  tow->applyPoison(victim);
-	
+        // poison
+	      TBaseWeapon *tow;
+	      if(obj && (tow = dynamic_cast<TBaseWeapon *>(obj)) && tow->isPoisoned())
+	        tow->applyPoison(victim);
       }
     }
   } else {
@@ -518,7 +516,8 @@ int TBeing::doThroatSlit(const char *argument, TBeing *vict)
 {
   TBeing *victim=NULL, *GLeader=NULL;
   followData *FDt;
-  char namebuf[256] = "\0";
+  sstring namebuf;
+  sstring arg = argument;
   int rc;
 
   if (!doesKnowSkill(SKILL_THROATSLIT)) {
@@ -543,7 +542,7 @@ int TBeing::doThroatSlit(const char *argument, TBeing *vict)
           continue;
 
         if (FDt->follower == this)
-	  continue;
+          continue;
 
         if (!FDt->follower->isAffected(AFF_GROUP))
           continue;
@@ -558,8 +557,7 @@ int TBeing::doThroatSlit(const char *argument, TBeing *vict)
   }
 
   if (!vict && !victim) {
-    if (*argument)
-      strcpy(namebuf, argument);
+    arg = one_argument(arg, namebuf);
 
     if (!(victim = get_char_room_vis(this, namebuf))) {
       sendTo("Slit who's throat?\n\r");
@@ -993,7 +991,8 @@ int TThing::poisonWeaponWeapon(TBeing *ch, TThing *)
 int TBeing::doGarrotte(const char * argument, TBeing *vict)
 {
   TBeing *victim;
-  char namebuf[256];
+  sstring arg = argument;
+  sstring namebuf;
   int rc;
 
   if (!doesKnowSkill(SKILL_GARROTTE)) {
@@ -1003,7 +1002,7 @@ int TBeing::doGarrotte(const char * argument, TBeing *vict)
   if (checkBusy()) {
     return FALSE;
   }
-  strcpy(namebuf, argument);
+  arg = one_argument(arg, namebuf);
 
   if (!(victim = vict)) {
     if (!(victim = get_char_room_vis(this, namebuf))) {
@@ -1156,7 +1155,8 @@ int garrotte(TBeing *thief, TBeing * victim)
 int TBeing::doCudgel(const char * argument, TBeing *vict)
 {
   TBeing *victim;
-  char namebuf[256];
+  sstring arg = argument;
+  sstring namebuf;
   int rc;
 
   if (!doesKnowSkill(SKILL_CUDGEL)) {
@@ -1167,7 +1167,7 @@ int TBeing::doCudgel(const char * argument, TBeing *vict)
   if (checkBusy()) {
     return FALSE;
   }
-  strcpy(namebuf, argument);
+    arg = one_argument(arg, namebuf);
 
   if (!(victim = vict)) {
     if (!(victim = get_char_room_vis(this, namebuf))) {
@@ -1289,10 +1289,10 @@ int cudgel(TBeing *thief, TBeing *victim)
       act("All you can see are stars.", FALSE, thief, obj, victim, TO_VICT);
       victim->setPosition(POSITION_STUNNED);
       if (victim->task) {
-	victim->stopTask();
+        victim->stopTask();
       }
       if (victim->spelltask) {
-	victim->stopCast(STOP_CAST_NONE);
+        victim->stopCast(STOP_CAST_NONE);
       }
 
       // erm, they snuck up on them, so no idea who did it
