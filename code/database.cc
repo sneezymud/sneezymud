@@ -18,6 +18,7 @@ const char * db_hosts[DB_MAX] = {
   "192.168.100.112",
   "192.168.100.112",
   "192.168.100.112",
+  "db",
   };
 
 const char * db_connect[DB_MAX] = {
@@ -30,6 +31,7 @@ const char * db_connect[DB_MAX] = {
   "wikidb",
   "builder_wikidb",
   "mudadmin_wikidb",
+  "smf",
   };
 
 

@@ -1896,9 +1896,7 @@ class TBeing : public TThing {
     void doPrayers(const sstring &);
     void sendSkillsList(discNumT);
     void doPractice(const char *);
-    virtual void doIdea(const sstring &);
-    virtual void doBug(const sstring &);
-    virtual void doTypo(const sstring &);
+    virtual void doFeedback(const sstring &type, int clientCmd, const sstring &arg);
     virtual void doColor(const char *);
     void setColor(setColorFieldT, setColorKolorT);
     int doQuaff(sstring);
@@ -2090,6 +2088,7 @@ class TBeing : public TThing {
     void doTrophy(const sstring &);
     void doWhozone();
     void doWho(const char *);
+    void doIgnore(const sstring &);
     void doTime(const char *);
     void doBuildhelp(const char *);
     void doWizhelp(const char *);

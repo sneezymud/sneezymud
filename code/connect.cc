@@ -48,7 +48,8 @@ static const char * const WELC_MESSG = "\n\rWelcome to SneezyMUD 5.2! May your j
 
 Descriptor::Descriptor() :
   output(true),
-  input(false)
+  input(false),
+  ignored(this)
 {
   // this guy is private to prevent being called
   // just need to init member vars that are appropriate
@@ -101,7 +102,8 @@ Descriptor::Descriptor(TSocket *s) :
   plr_act(0),
   plr_color(0),
   plr_colorSub(COLOR_SUB_NONE),
-  plr_colorOff(0)
+  plr_colorOff(0),
+  ignored(this)
 {
   int i;
 
@@ -158,7 +160,8 @@ Descriptor::Descriptor(const Descriptor &a) :
   plr_act(a.plr_act),
   plr_color(a.plr_color),
   plr_colorSub(a.plr_colorSub),
-  plr_colorOff(a.plr_colorOff)
+  plr_colorOff(a.plr_colorOff),
+  ignored(this)
 {
   int i;
 
@@ -2109,12 +2112,12 @@ void Descriptor::sstring_add(char *s)
     } else {
       if (character->isPlayerAction(PLR_BUGGING)) {
         if (!**str) {
-          // we are on the subject line
+          // we are on the first line
           const char *t = s;
           for (;*t && isspace(*t); t++);
     
           if (!*t) {
-            writeToQ("Blank subject entered.  Ignoring!\n\r");
+            writeToQ("Blank lines entered.  Ignoring!\n\r");
             *(name) = '\0';
     
             delete [] *str;
@@ -2133,31 +2136,19 @@ void Descriptor::sstring_add(char *s)
 
             return;
           }
-          sprintf(buf, "Write your %s, use ~ when done, or ` to cancel.\n\r",
-                sstring(name).uncap().c_str());
+          sprintf(buf, "Write your %s, use ~ when done, or ` to cancel.\n\r", sstring(name).uncap().c_str());
           writeToQ(buf);
           t = *str;
-          if (strcmp(name, "Comment")) {
-            // bugs, ideas, typos in here
-	    strcpy(buf, t);
-	    strcat(buf, "Subject: [");
-	    strcat(buf, name);
-	    strcat(buf, "] ");
-	    strcat(buf, s);
-	    *str=mud_str_dup(buf);
-          } else {
-            // comments in here
-	    strcpy(buf, t);
-	    strcat(buf, s);
-	    *str=mud_str_dup(buf);
-          }
+          strncpy(buf, t, cElements(buf));
+          strncat(buf, s, cElements(buf));
+          *str=mud_str_dup(buf);
           delete [] t;
         } else {
           // body of idea
           const char *t = *str;
-	  strcpy(buf, t);
-	  strcat(buf, s);
-	  *str=mud_str_dup(buf);
+	        strncpy(buf, t, cElements(buf));
+	        strncat(buf, s, cElements(buf));
+	        *str=mud_str_dup(buf);
           if (!m_bIsClient)
             delete [] t;
         }
@@ -2224,7 +2215,7 @@ void Descriptor::sstring_add(char *s)
         if (obj && obj->canBeMailed())
         {
           ItemSaveDB is("mail", GH_MAIL_SHOP);
-          rent_id = is.raw_write_item(obj, -1 /*NORMAL_SLOT*/, 0);
+          rent_id = is.raw_write_item(obj, -1 , 0);
           vlogf(LOG_OBJ, fmt("Mail: %s mailing %s (vnum:%i) to %s rented as rent_id:%i") %
             character->getName() % obj->getName() % obj->objVnum() % name % rent_id);
           delete obj;
@@ -2263,7 +2254,7 @@ void Descriptor::sstring_add(char *s)
           if (!strcmp(name, "Comment"))
             add_comment(delname, t);
           else
-            send_bug(name, t);
+            send_feedback(name, t);
           writeToQ(name);
           writeToQ(" sent!\n\r");
         }
@@ -2392,14 +2383,7 @@ void setPrompts(fd_set out)
       }
 
       if (d->str && (d->prompt_mode != DONT_SEND)) {
-        if (ch && ch->isPlayerAction(PLR_BUGGING) && !*d->str &&
-            strcmp(d->name, "Comment")) {
-          // ideas, bugs, typos
-          d->output.putInQ("Subject: ");
-        } else {
-          // comments
           d->output.putInQ("-> ");
-        }
       } else if (d->pagedfile && (d->prompt_mode != DONT_SEND)) {
         sprintf(promptbuf, "\n\r[ %sReturn%s to continue, %s(r)%sefresh, %s(b)%sack, page %s(%d/%d)%s, or %sany other key%s to quit ]\n\r", 
             d->green(),  d->norm(),
@@ -3398,6 +3382,11 @@ int Descriptor::doAccountStuff(char *arg)
       trophy=new TTrophy(delname);
       trophy->wipe();
       delete trophy;
+
+      // delete ignore list
+      db.query("delete from blockedlist where player_id=%i", playerID);
+
+      // delete player entry
       db.query("delete from player where lower(name)=lower('%s')", delname);
 
       // delete tats!

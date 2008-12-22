@@ -1491,96 +1491,44 @@ void TBeing::doPracDisc(const char *arg, int classNum)
 }
 
 
-void TBeing::doIdea(const sstring &)
+void TBeing::doFeedback(const sstring &type, int clientCmd, const sstring &arg)
 {
-  sendTo("Monsters can't have ideas - Go away.\n\r");
-  return;
+  sendTo("This command is unavailable for you.\n\r");
 }
 
-void TPerson::doIdea(const sstring &arg)
+// sends bugs, etc via mail feedback using Descriptor::send_feedback
+void TPerson::doFeedback(const sstring &type, int clientCmd, const sstring &arg)
 {
-  if (fight())  {
+  sstring subject = arg;
+
+  if (fight())
+  {
     sendTo("You cannot perform that action while fighting!\n\r");
     return;
   }
-  if (hasWizPower(POWER_SEE_COMMENTARY) && isImmortal() && !arg.empty()) {
-    desc->start_page_file(IDEA_FILE, "Players aint saying nothin\'.\n\r");
-    return;
+
+  // if the subject is standard (they didnt pass an arg), add in something to identify it
+  if (subject.length() <= 0)
+  {
+    time_t now = time(0);
+    subject = fmt("%s at %s") % getName() % ctime(&now);
   }
-  idea_used_num++;
+
+  subject.inlineReplaceString("\n", "");
+  subject.inlineReplaceString("\r", "");
+  strncpy(desc->name, (fmt("%s: %s") % type % subject).c_str(), cElements(desc->name));
+
   if (!desc->m_bIsClient)
-    sendTo("Write the subject of your idea then hit return.\n\r");
-
-  if (!desc->m_bIsClient) {
+  {
     addPlayerAction(PLR_BUGGING);
     desc->connected = CON_WRITING;
-    strcpy(desc->name, "Idea");
     desc->str = new const char *('\0');
     desc->max_str = MAX_MAIL_SIZE;
-  } else
-    desc->clientf(fmt("%d") % CLIENT_IDEA);
-}
-
-void TBeing::doTypo(const sstring &)
-{
-  sendTo("Monsters can't spell - leave me alone.\n\r");
-  return;
-}
-
-void TPerson::doTypo(const sstring &arg)
-{
-  if (fight())  {
-    sendTo("You cannot perform that action while fighting!\n\r");
-    return;
   }
-  if (hasWizPower(POWER_SEE_COMMENTARY) && isImmortal() && !arg.empty()) {
-    desc->start_page_file(TYPO_FILE, "Players can't spell worth nothin\'.\n\r");
-    return;
+  else
+  {
+    desc->clientf(fmt("%d") % clientCmd);
   }
-
-  typo_used_num++;
-  if (!desc->m_bIsClient)
-    sendTo("Write the subject of your typo then hit return.\n\r");
-
-  if (!desc->m_bIsClient) {
-    addPlayerAction(PLR_BUGGING);
-    desc->connected = CON_WRITING;
-    strcpy(desc->name, "Typo");
-    desc->str = new const char *('\0');
-    desc->max_str = MAX_MAIL_SIZE;
-  } else
-    desc->clientf(fmt("%d") % CLIENT_TYPO);
-}
-
-void TBeing::doBug(const sstring &)
-{
-  sendTo("You are a monster! Bug off!\n\r");
-  return;
-}
-
-void TPerson::doBug(const sstring &arg)
-{
-  if (fight())  {
-    sendTo("You cannot perform that action while fighting!\n\r");
-    return;
-  }
-  if (hasWizPower(POWER_SEE_COMMENTARY) && isImmortal() && !arg.empty()) {
-    desc->start_page_file(BUG_FILE, "Players aren't saying anything.\n\r");
-    return;
-  }
-
-  bug_used_num++;
-  if (!desc->m_bIsClient) 
-    sendTo("Write the subject of your bug then hit return.\n\r");
-  
-  if (!desc->m_bIsClient) {
-    addPlayerAction(PLR_BUGGING);
-    desc->connected = CON_WRITING;
-    strcpy(desc->name, "Bug");
-    desc->str = new const char *('\0');
-    desc->max_str = MAX_MAIL_SIZE;
-  } else
-    desc->clientf(fmt("%d") % CLIENT_BUG);
 }
 
 void TBeing::doGroup(const char *argument)
@@ -4224,94 +4172,123 @@ void Descriptor::add_comment(const char *who, const char *msg)
 
 }
 
-void Descriptor::send_bug(const char *type, const char *msg) 
+const char * g_smfPrefix = "smf_a_";
+const int g_smfboardId = 11;
+
+// send feedback directly to SMF forum
+// TODO move this into a single txn?
+void Descriptor::send_feedback(const char *subject, const char *msg)
 {
-  char buf[MAX_STRING_LENGTH];
-  char buf2[MAX_STRING_LENGTH];
-  char buf3[MAX_STRING_LENGTH];
-  time_t ct;
-  char *tmstr;
-  FILE *fp;
-  int i, j, k;
-  const char * const  BUG_TEMP_FILE = "bug.temp";
-  struct tm * lt;
+  // params = prefix (str), boardid (int), subject (str), body (str), poster (str), email (str), time (int)
+  static const char * addPostQuery = "INSERT INTO %smessages (ID_BOARD, ID_TOPIC, subject, body, \
+                                     posterName, posterEmail, posterIP, posterTime, modifiedName) \
+                                     VALUES (%i, -1, '%s', '%s',  '%s', '%s', '', %i, '')";
 
-  // first off, write the "Subject: " information
-  for (i=0, k=0; msg[i] && msg[i] != '\n';i++) {
-    if (msg[i] != '\r') {
-      // all \r skipped
-      buf2[k++] = msg[i];
-    }
-  }
-  buf2[k] = '\0';  // clean terminate
+  // params = prefix (str), boardid (int), postId (int), postId (int)
+  static const char * addTopicQuery = "INSERT INTO %stopics (ID_BOARD, ID_FIRST_MSG, ID_LAST_MSG) VALUES (%i, %i, %i)";
 
-  strcat(buf2, "\n");
-  if (msg[i] == '\n')
-    i++;
+  TBeing *player = (dynamic_cast<TMonster *>(character) && original) ? original : character;
+  sstring message;
+  time_t now = time(0);
+  TDatabase db(DB_FORUMS_ADMIN);
+  int postId = 0, topicId = 0;
 
-  ct = time(0);
-  lt = localtime(&ct);
-  tmstr = asctime(lt);
-  *(tmstr + strlen(tmstr) - 1) = '\0';
+  // standard info
+  message += fmt("Account Name: %s\n") % account->name;
+  message += fmt("Character Name: %s\n") % player->getName();
+  message += fmt("Account Email: %s\n") % account->email;
+  message += fmt("Time: %s") % ctime(&now); // ctime adds a \n
+  message += fmt("Room: %i\n") % (player->roomp ? player->roomp->number : -1);
+  message += fmt("%s\n") % subject;
 
-  sprintf(buf3, "****** %s from %s in room %d %s%son %s:\n",
-       type,
-       character->getName(),
-       character->inRoom(), 
-       (gamePort == PROD_GAMEPORT ? "" : (gamePort == 7901 ? "(gamma) " : "(beta) ")), 
-       (!m_bIsClient ? "" : "(client) "), 
-       tmstr);
-  strcpy(buf, buf3);
-  strcat(buf, buf2);
-  strcat(buf2, buf3);
+  // actual message from user to appear in the forum
+  message += fmt("\n[quote]%s[/quote]\n") % msg;
 
-  // this is advanced over teh subject line (i initted from above)
-  for (j=strlen(buf), k=strlen(buf2); msg[i];i++) {
-    if ((strlen(buf) < (MAX_STRING_LENGTH - 1)) && msg[i] != '\r') {
-      // all \r skipped
-      buf[j++] = ((msg[i] == '\n') ? ' ' : msg[i]);
-      buf2[k++] = msg[i];
-    }
-  }
-  buf[j] = '\0';
-  buf2[k] = '\0';
+  // clean up the message to remove any badness
+  message.ascify();
+  message.inlineReplaceString("\r\n", "\n");
 
-  if (!strcmp(type, "Idea")) {
-    if (!(fp = fopen(IDEA_FILE, "a"))) {
-      perror("doIdea");
-      character->sendTo("Could not open the idea-file.\n\r");
-      return;
-    }
-  } else if (!strcmp(type, "Bug")) {
-    if (!(fp = fopen(BUG_FILE, "a"))) {
-      perror("doBug");
-      character->sendTo("Could not open the bug-file.\n\r");
-      return;
-    }
-  } else if (!strcmp(type, "Typo")) {
-    if (!(fp = fopen(TYPO_FILE, "a"))) {
-      perror("doTypo");
-      character->sendTo("Could not open the typo-file.\n\r");
-      return;
-    }
-  } else {
-    vlogf(LOG_BUG, fmt("Bogus type (%s) in send_bug.") %  type);
+  // add post
+  if (!db.query(addPostQuery, g_smfPrefix, g_smfboardId, subject, message.c_str(), player->getName(), account->email.c_str(), (int)now) ||
+      !db.query("select last_insert_id() as postId") ||
+      !db.fetchRow())
+  {
+    // sendto?? log??
     return;
   }
-  fputs(buf, fp);
-  fputs("\n", fp);
-  fclose(fp);
+  postId = convertTo<int>(db["postId"]);
 
-//  ----------
-
-  if (!(fp = fopen(BUG_TEMP_FILE, "w"))) {
-    vlogf(LOG_FILE, "Error opening dummy file for bug mailing.");
+  // add topic
+  if (!db.query(addTopicQuery, g_smfPrefix, g_smfboardId, postId, postId) ||
+      !db.query("select last_insert_id() as topicId") ||
+      !db.fetchRow())
+  {
+    // sendto??  log??
+    db.query("DELETE FROM %smessages WHERE ID_MSG = %i LIMIT 1", g_smfPrefix, postId);
     return;
   }
-  fputs(buf2, fp);
-  fclose(fp);
+  topicId = convertTo<int>(db["topicId"]);
 
+	// join msg to topic
+	db.query("UPDATE %smessages SET ID_TOPIC = %i, ID_MSG_MODIFIED = %i WHERE ID_MSG = %i LIMIT 1", g_smfPrefix, topicId, postId, postId);
+
+	// update post count for the board
+	db.query("UPDATE %sboards SET numPosts = numPosts + 1, numTopics = numTopics + 1 WHERE ID_BOARD = %i LIMIT 1", g_smfPrefix, g_smfboardId);
+
+  // message all gods that someone has submitted a feedback
+  vlogf(LOG_MISC, fmt("FEEDBACK from player %s has been submitted with the subject '%s'.") % player->getName() % subject);
+
+	return;
 }
+
+
+#ifdef UNUSED
+#define FEEDBACK_FROM_ADDRESS "feedback@sneezymud.com"
+#define FEEDBACK_SENDTO_ADDRESS "mudadmin@sneezymud.com"
+// sends appropriate feedback (help, bugs, typos) via email to a feedback forum
+void Descriptor::send_feedbackMail(const char *subject, const char *msg)
+{
+  static int tempInc = 0;
+  TBeing *player = (dynamic_cast<TMonster *>(character) && original) ? original : character;
+  sstring message;
+  time_t now = time(0);
+
+  // standard mail header:
+  message += "from: "FEEDBACK_FROM_ADDRESS"\n";
+  message += "to: "FEEDBACK_SENDTO_ADDRESS"\n";
+  message += fmt("subject: %s (%s)\n") % subject % player->getName();
+  message += "\n";
+
+  // standard feedback header
+  message += fmt("Account Name: %s\n") % account->name;
+  message += fmt("Character Name: %s\n") % player->getName();
+  message += fmt("Account Email: %s\n") % account->email;
+  message += fmt("Time: %s") % ctime(&now); // ctime adds a \n
+  message += fmt("Room: %d\n") % (player->roomp ? player->roomp->number : -1);
+
+  // actual message from user to appear in mail
+  message += "\n";
+  message += msg;
+  message.ascify();
+  message.inlineReplaceString("\r\n", "\n");
+  message += "\n";
+
+  // could use vsystem, but we want the file i/o outside this thread as well
+  if (0 != vfork())
+  {
+    FILE *fp;
+    sstring tempfile = fmt("/usr/tmp/feedback%d.tmp") % tempInc++;
+    if (fp = fopen(tempfile.c_str(), "w"))
+    {
+        fputs(message.c_str(), fp);
+        fclose(fp);
+        system((fmt("/usr/sbin/sendmail -t < %s") % tempfile).c_str());
+        remove(tempfile.c_str());
+    }
+    exit(-1);
+  }
+}
+#endif
 
 void TBeing::doAfk()
 {
@@ -4686,6 +4663,421 @@ void TBeing::addToRandomStat(int extra_points) {
     } else amt = max(1,::number(0,extra_points)/2);
     addToStat(STAT_CHOSEN, whichStat, amt);
     extra_points -= amt;
+  }
+}
+
+/* ----------------------------------------------------------
+  ignoreList - class used to manage a list of people/accounts to ignore
+  by descriptor.  stored on the descriptor class
+  ---------------------------------------------------------- */
+ignoreList::ignoreList(Descriptor *desc) :
+  m_initialized(false),
+  m_useStatic(false),
+  m_desc(desc),
+  m_ignored(NULL),
+  m_count(0)
+{
+}
+
+ignoreList::~ignoreList()
+{
+  if (m_ignored)
+    delete [] m_ignored;
+}
+
+// statics used by this class
+bool ignoreList::m_staticUseStatic = false;
+int ignoreList::m_staticIds[cMax];
+sstring ignoreList::m_staticIgnored[cMax];
+unsigned int ignoreList::m_staticCount = 0;
+
+// lazy init
+void ignoreList::initialize()
+{
+  static bool isStaticInitialized = false;
+
+  if (m_initialized)
+    return;
+
+  if (!isStaticInitialized)
+  {
+    isStaticInitialized = true;
+    TDatabase db(DB_SNEEZY);
+    db.query("select count(*) as size from blockedlist");
+
+    // init statics
+    m_staticCount = 0;
+    m_staticUseStatic = db.fetchRow() && convertTo<unsigned int>(db["size"]) < cMax;
+
+    // init static array from DB
+    if (m_staticUseStatic)
+    {
+      db.query("select player_id, blocked from blockedlist");
+      while(db.fetchRow())
+      {
+        m_staticIds[m_staticCount] = convertTo<int>(db["player_id"]);
+        m_staticIgnored[m_staticCount++] = db["blocked"].lower();
+      }
+    }
+  }
+
+  m_useStatic = m_staticUseStatic;
+
+  // init individual array if not using statics
+  if (!m_useStatic)
+  {
+    TDatabase db(DB_SNEEZY);
+    int myId = m_desc->playerID;
+    m_ignored = new sstring[cMax];
+    m_count = 0;
+
+    db.query("select blocked from blockedlist where player_id=%i limit %i", myId, cMax);
+    while(db.fetchRow())
+      m_ignored[m_count++] = db["blocked"].lower();
+  }
+
+  m_initialized = true;
+}
+
+// simple function to add to database
+void ignoreList::addDB(int playerId, const sstring ignored)
+{
+  TDatabase db(DB_SNEEZY);
+  db.query("insert into blockedlist (player_id, blocked) values (%i, '%s')", playerId, ignored.c_str());
+}
+
+// ismple function to remove from database
+void ignoreList::removeDB(int playerId, const sstring ignored)
+{
+  TDatabase db(DB_SNEEZY);
+  db.query("delete from blockedlist where player_id = %i and blocked = '%s'", playerId, ignored.c_str());
+}
+
+
+// this function allows us to, if we are operating agianst the static list (for small ignore lists),
+// convert to a non-static list when the list gets too large
+void ignoreList::convertFromStatic()
+{
+  mud_assert(m_initialized, "Bad codepath - only convert from static if you have initialized first!");
+
+  if (!m_useStatic)
+    return;
+
+  m_ignored = new sstring[cMax];
+  m_count = 0;
+  int myId = m_desc->playerID;
+
+  for(int iStatic = int(m_staticCount-1);iStatic >= 0; iStatic--)
+    if (m_staticIds[iStatic] == myId)
+    {
+      m_ignored[m_count++] = m_staticIgnored[iStatic].lower();
+      m_staticIds[iStatic] = 0;
+      m_staticIgnored[iStatic].clear();
+    }
+
+  while(m_staticCount > 0 && m_staticIgnored[m_staticCount-1].length() <= 0)
+    m_staticCount--;
+
+  m_useStatic = false;
+}
+
+// returns the count of entries for just this desc if using the static list
+unsigned int ignoreList::getCount()
+{
+  initialize();
+
+  if (!shouldUseStatic())
+    return m_count;
+
+  int myCount = 0;
+  for(unsigned int i=0;i < m_staticCount; i++)
+    if (m_staticIds[i] == m_desc->playerID)
+      myCount++;
+  return myCount;
+}
+
+// returns if this player is being ignored by this desc
+bool ignoreList::isIgnored(Descriptor *desc)
+{
+  initialize();
+  TBeing *player = (dynamic_cast<TMonster *>(desc->character) && desc->original) ? desc->original : desc->character;
+
+  if (isIgnored("~" + desc->account->name.lower()))
+    return true;
+  return isIgnored(player->getName());
+}
+
+// returns if this string name is ignored
+bool ignoreList::isIgnored(const sstring ignored)
+{
+  initialize();
+  sstring name = ignored.lower();
+
+  if (shouldUseStatic())
+  {
+    int myId = m_desc->playerID;
+    for(unsigned int iStatic = 0;iStatic < cMax && iStatic < m_staticCount; iStatic++)
+      if (m_staticIds[iStatic] == myId && m_staticIgnored[iStatic] == name)
+        return true;
+    return false;
+  }
+
+  for(unsigned int i = 0;i < cMax && i < m_count; i++)
+    if (m_ignored[i] == name)
+      return true;
+  return false;
+}
+
+// private function used for low-size list performance
+// returns true if the name was added, false if over max capacity
+bool ignoreList::staticAdd(const sstring name)
+{
+  int myId = m_desc->playerID;
+  unsigned int iAdded = 0;
+  
+  // finds the first usable ignore slot
+  for(;iAdded < cMax && iAdded < m_staticCount && !m_staticIgnored[iAdded].empty(); iAdded++);
+
+  if (iAdded >= cMax)
+    return false;
+
+  m_staticIds[iAdded] = myId;
+  m_staticIgnored[iAdded] = name.lower();
+  addDB(myId, name);
+
+  if (iAdded >= m_staticCount)
+    m_staticCount++;
+  return true;
+}
+
+// adds to the ignore list
+// returns true if the name was added, false if over max capacity
+bool ignoreList::add(Descriptor *desc)
+{
+  initialize();
+
+  if (isIgnored(desc))
+    return true;
+
+  TBeing *player = (dynamic_cast<TMonster *>(desc->character) && desc->original) ? desc->original : desc->character;
+  return add(player->getName());
+}
+
+// ignores the whole account
+bool ignoreList::add(const TAccount &acct)
+{
+  return addAccount(acct.name);
+}
+
+// ignores the whole account
+bool ignoreList::addAccount(const sstring name)
+{
+  return add("~" + name.lower());
+}
+
+// adds to the ignore list
+// returns true if the name was added, false if over max capacity
+bool ignoreList::add(const sstring name)
+{
+  initialize();
+
+  if (isIgnored(name))
+    return true;
+
+  if (shouldUseStatic())
+  {
+    if (staticAdd(name))
+      return true;
+    convertFromStatic(); // if returned false from here, we need to switch to non-static operation
+  }
+
+  unsigned int iAdded = 0;
+  
+  // finds the first usable ignore slot
+  for(;iAdded < cMax && iAdded < m_count && !m_ignored[iAdded].empty(); iAdded++);
+
+  if (iAdded >= cMax)
+    return false;
+
+  m_ignored[iAdded] = name.lower();
+  addDB(m_desc->playerID, name);
+
+  if (iAdded >= m_count)
+    m_count++;
+  return true;
+}
+
+// private function used for low-size list performance
+// returns true if the name was removed, false it not
+bool ignoreList::staticRemove(const sstring ignored)
+{
+  int myId = m_desc->playerID;
+  unsigned int iRemoved = 0;
+  sstring name = ignored.lower();
+  
+  // finds the matching ignore slot
+  for(;iRemoved < cMax && iRemoved < m_staticCount && m_staticIds[iRemoved] != myId && m_staticIgnored[iRemoved] != name; iRemoved++);
+
+  if (iRemoved >= cMax)
+    return false;
+
+  m_staticIds[iRemoved] = 0;
+  m_staticIgnored[iRemoved].clear();
+  removeDB(myId, name);
+
+  while(m_staticCount > 0 && m_staticIgnored[m_staticCount-1].length() <= 0)
+    m_staticCount--;
+  return true;
+}
+
+// removed from the ignore list
+// returns true if the name was removed, false it not
+bool ignoreList::remove(Descriptor *desc)
+{
+  initialize();
+
+  TBeing *player = (dynamic_cast<TMonster *>(desc->character) && desc->original) ? desc->original : desc->character;
+
+  return remove(player->getName());
+}
+
+bool ignoreList::removeAccount(const sstring name)
+{
+  return remove("~" + name);
+}
+
+// removed from the ignore list
+// returns true if the name was removed, false it not
+bool ignoreList::remove(const sstring ignored)
+{
+  initialize();
+
+  if (shouldUseStatic())
+    return staticRemove(ignored);
+
+  unsigned int iRemoved = 0;
+  sstring name = ignored.lower();
+  
+  // finds the matching ignore slot
+  for(;iRemoved < cMax && iRemoved < m_count && m_ignored[iRemoved] != name; iRemoved++);
+
+  if (iRemoved >= cMax)
+    return false;
+
+  m_ignored[iRemoved].clear();
+  removeDB(m_desc->playerID, name);
+
+  while(m_count > 0 && m_ignored[m_count-1].length() <= 0)
+    m_count--;
+  return true;
+}
+
+// used to list and index ignored peeps
+sstring ignoreList::operator[](int i)
+{
+  initialize();
+
+  if (i < 0 || unsigned(i) > cMax)
+    return "";
+
+  if (shouldUseStatic())
+  {
+    for(unsigned int iCheck = 0;iCheck < m_staticCount; iCheck++)
+    {
+      if (m_staticIds[iCheck] != m_desc->playerID)
+        continue;
+      if (i > 0)
+        i--;
+      else
+        return m_staticIgnored[iCheck];
+    }
+    return "";
+  }
+
+  if (unsigned(i) >= m_count)
+    return "";
+  return m_ignored[i];
+}
+
+
+// used to toggle ignoring other characters
+void TBeing::doIgnore(const sstring &args)
+{
+  if (!desc)
+    return;
+
+  bool canBlockAccounts = hasWizPower(POWER_ACCESS) || hasWizPower(POWER_ACCOUNT);
+  sstring arg1 = args.word(0).lower();
+  sstring arg2 = args.word(1).lower();
+  int arg1Len = arg1.length();
+  int arg2Len = arg2.length();
+
+  // default to add
+  if (!arg2Len && arg1Len)
+  {
+    arg2 = arg1;
+    arg1 = "add";
+    arg1Len = arg1.length();
+    arg2Len = arg2.length();
+  }
+  // remove illegal character
+  arg2.inlineReplaceString("~", "");
+
+  // big ugly block of 'if's
+  if (arg2Len && sstringncmp("add", arg1, arg1Len) == 0)
+  {
+    if (desc->ignored.add(arg2))
+      sendTo(fmt("Player '%s' is now ignored.\n\r") % arg2);
+    else
+      sendTo(fmt("Could not ignore player '%s'.  You may have reached the max of %d ignore entries.\n\r") % arg2 % desc->ignored.getMax());
+  }
+  else if (arg2Len && sstringncmp("remove", arg1, arg1Len) == 0)
+  {
+    if (desc->ignored.remove(arg2))
+      sendTo(fmt("Player '%s' is no longer ignored.\n\r") % arg2);
+    else
+      sendTo(fmt("Could not remove player '%s' from your ignore list.\n\r") % arg2);
+  }
+  else if (arg2Len && canBlockAccounts && sstringncmp("addall", arg1, arg1Len) == 0)
+  {
+    if (desc->ignored.addAccount(arg2))
+      sendTo(fmt("Account '%s' is now ignored.\n\r") % arg2);
+    else
+      sendTo(fmt("Could not ignore account '%s'.  You may have reached the max of %d ignore entries.\n\r") % arg2 % desc->ignored.getMax());
+  }
+  else if (arg2Len && canBlockAccounts && sstringncmp("removeall", arg1, arg1Len) == 0)
+  {
+    if (desc->ignored.removeAccount(arg2))
+      sendTo(fmt("Account '%s' is no longer ignored.\n\r") % arg2);
+    else
+      sendTo(fmt("Could not remove account '%s' from your ignore list.\n\r") % arg2);
+  }
+  else
+  {
+    // print syntax
+    sendTo("Syntax: ignore - lists your ignore list.\n\r");
+    sendTo("Syntax: ignore add <player> - adds a player to your ignore list.\n\r");
+    sendTo("Syntax: ignore remove <player> - removes a player from your ignore list.\n\r");
+    if (canBlockAccounts)
+    {
+      sendTo("Syntax: ignore addall <account> - adds all players in that account to your ignore list.\n\r");
+      sendTo("Syntax: ignore removeall <account> - removes all players in that account from your ignore list.\n\r");
+    }
+  }
+
+  // print list
+  if (desc->ignored.getCount() > 0)
+  {
+    sendTo("You are currently ignoring:\n\r");
+    for(unsigned int i=0; i < desc->ignored.getCount(); i++)
+    {
+      if (desc->ignored[i].length() <= 0)
+        continue;
+      if (desc->ignored[i][0] == '~')
+        sendTo(fmt("The account: %s\n\r") % desc->ignored[i].substr(1, desc->ignored[i].length()-1));
+      else
+        sendTo(fmt("%s\n\r") % desc->ignored[i]);
+    }
   }
 }
 

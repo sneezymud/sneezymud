@@ -131,6 +131,9 @@ bool willBreakHide(cmdTypeT tCmd, bool isPre)
     case CMD_SPELLS:
     case CMD_COMPARE:
     case CMD_ZONES:
+    case CMD_NEWBIE:
+    case CMD_REQUEST:
+    case CMD_IGNORE:
     case MAX_CMD_LIST:
       return false;
 
@@ -438,15 +441,15 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
   addToLifeforce(1);
   break;
       case CMD_BUG:
-  doBug(newarg);
+  doFeedback("BUG", CLIENT_BUG, newarg);
   addToLifeforce(1);
   break;
       case CMD_IDEA:
-  doIdea(newarg);
+  doFeedback("IDEA", CLIENT_IDEA, newarg);
   addToLifeforce(1);
   break;
       case CMD_TYPO:
-  doTypo(newarg);
+  doFeedback("TYPO", CLIENT_TYPO, newarg);
   addToLifeforce(1);
   break;
       case CMD_NORTH:
@@ -1770,6 +1773,12 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
       case CMD_NEWBIE:
     doNewbie(argument.c_str());
   break;
+      case CMD_REQUEST:
+    doFeedback("HELP", CLIENT_STARTEDIT, argument);
+  break;
+      case CMD_IGNORE:
+    doIgnore(argument);
+  break;
       case MAX_CMD_LIST:
       case CMD_RESP_TOGGLE:
       case CMD_RESP_UNTOGGLE:
@@ -2916,6 +2925,8 @@ void buildCommandArray(void)
   commandArray[CMD_PREEN] = new commandInfo("preen", POSITION_RESTING, 0);
   commandArray[CMD_BUILDHELP] = new commandInfo("buildhelp", POSITION_DEAD, 0);
   commandArray[CMD_NEWBIE] = new commandInfo("newbie", POSITION_RESTING, 0);
+  commandArray[CMD_REQUEST] = new commandInfo("request", POSITION_DEAD, 0);
+  commandArray[CMD_IGNORE] = new commandInfo("ignore", POSITION_DEAD, GOD_LEVEL1);
 }
 
 bool _parse_name_safe(const char *arg, char *name, unsigned int nameLen)

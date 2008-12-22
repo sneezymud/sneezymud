@@ -93,6 +93,7 @@ enum dbTypeT {
   DB_WIKI_MORTAL,
   DB_WIKI_BUILDER,
   DB_WIKI_ADMIN,
+  DB_FORUMS_ADMIN,
 
   DB_MAX,
 };

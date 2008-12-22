@@ -396,6 +396,13 @@ const char *on_or_off(bool tog){
     return "<R>off<1>";
 }
 
+sstring int_on_or_off(bool tog, int i){
+  if(tog)
+    return fmt("<G>%-4i<1>") % i;
+  else
+    return "<R>off <1>";
+}
+
 void updateCorpseLootFlags(const sstring &name, bool lootable)
 {
   TPCorpse *pcorpse;
@@ -454,113 +461,81 @@ void TBeing::doToggle(const char *arg2)
     sendTo(COLOR_BASIC, "\n\r<c>Player Toggles<1>\n\r");
     sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------------------------<1>\n\r");
     
-    for (int i = 0;i < MAX_AUTO;i++) {
-      if (((unsigned int) (1<<i) == AUTO_SUCCESS))
-        ++i;
-      if (i<MAX_AUTO && *auto_name[i]) {
-        sendTo(COLOR_BASIC, fmt("%-17s : %s  | ") %
-               (((unsigned int) (1 << i) == AUTO_TIPS && isImmortal()) ? "Advanced Menus" : auto_name[i]) %
-               on_or_off(IS_SET(desc->autobits, (unsigned) (1<<i))));
-      }
-      ++i;
-      if (((unsigned int) (1<<i) == AUTO_SUCCESS))
-        ++i;
-      if (i<MAX_AUTO && *auto_name[i]) {
-        sendTo(COLOR_BASIC, fmt("%-17s : %s  | ") %
-               (((unsigned int) (1 << i) == AUTO_TIPS && isImmortal()) ? "Advanced Menus" : auto_name[i]) %
-               on_or_off(IS_SET(desc->autobits, (unsigned) (1<<i))));
-      }
-      ++i;
-      if (((unsigned int) (1<<i) == AUTO_SUCCESS))
-        ++i;
-      if (i<MAX_AUTO && *auto_name[i]) {
-        sendTo(COLOR_BASIC, fmt("%-17s : %s\n\r") %
-               (((unsigned int) (1 << i) == AUTO_TIPS && isImmortal()) ? "Advanced Menus" : auto_name[i]) %
-               on_or_off(IS_SET(desc->autobits, (unsigned) (1<<i))));
-      }
+    const int width = 3;
+    int printed = 0;
+    
+    // print regular toggles from MAX_AUTO
+    for (int iAuto = 0; iAuto < MAX_AUTO; iAuto++)
+    {
+      if (!*auto_name[iAuto])
+        continue;
+      sendTo(COLOR_BASIC, fmt("%-17s : %s%s") % auto_name[iAuto] % on_or_off(IS_SET(desc->autobits, (unsigned)(1<<iAuto))) % ((++printed % width) ? "  | " : "\n\r"));
     }
-    
 
-    if(getWimpy())
-      sendTo(COLOR_BASIC, fmt("Wimpy             : <G>%-4i<1> | ") %
-	     getWimpy());
-    else
-      sendTo(COLOR_BASIC, "Wimpy             : <R>off <1> | ");
-
-    sendTo(COLOR_BASIC, fmt("Deny Corpse Loot  : %s\n\r") % on_or_off(isPlayerAction(PLR_DENY_LOOT)));
-    
-    sendTo(COLOR_BASIC, fmt("Newbie Helper     : %s  | ") % on_or_off(isPlayerAction(PLR_NEWBIEHELP)));
-
+    // toggles not represented by MAX_AUTO
+    sendTo(COLOR_BASIC, fmt("Wimpy             : %s%s") % int_on_or_off(getWimpy(), getWimpy()).c_str() % ((++printed % width) ? " | " : "\n\r"));   
+    sendTo(COLOR_BASIC, fmt("Deny Corpse Loot  : %s%s") % on_or_off(isPlayerAction(PLR_DENY_LOOT)) % ((++printed % width) ? "  | " : "\n\r"));
+    sendTo(COLOR_BASIC, fmt("Newbie Helper     : %s%s") % on_or_off(isPlayerAction(PLR_NEWBIEHELP)) % ((++printed % width) ? "  | " : "\n\r"));
     sendTo(COLOR_BASIC, fmt("Anonymous         : %s\n\r") % on_or_off(isPlayerAction(PLR_ANONYMOUS)));
 
+    // terminal toggles
+    static const char* termnames[TERM_MAX] = { "none ", "vt100", "ansi "};
+    int playerTerm = ansi() ? TERM_ANSI : vt100() ? TERM_VT100 : TERM_NONE;
     sendTo(COLOR_BASIC, "\n\r<c>Terminal Toggles<1>\n\r");
     sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------------------------<1>\n\r");
     sendTo(COLOR_BASIC, fmt("Screensize        : <G>%-3i<1>  | ") % desc->screen_size);
-    sendTo(COLOR_BASIC, fmt("Terminal          : <G>%-5s<1>| ") %
-	   (ansi()?"ansi":(vt100()?"vt100":"none")));
+    sendTo(COLOR_BASIC, fmt("Terminal          : <G>%-5s<1>| ") % termnames[playerTerm]);
     sendTo(COLOR_BASIC, fmt("Boss Mode         : %s\n\r") % on_or_off(IS_SET(desc->account->flags, ACCOUNT_BOSS)));
     sendTo(COLOR_BASIC, fmt("MSP Sound         : %s  | ") % on_or_off(IS_SET(desc->account->flags, ACCOUNT_MSP)));
-    sendTo(COLOR_BASIC, fmt("Account Terminal  : <G>%-5s<1>| ") % 
-	   ((desc->account->term == TERM_ANSI)?"ansi ":
-	   ((desc->account->term == TERM_VT100)?"vt100":"none ")));
+    sendTo(COLOR_BASIC, fmt("Account Terminal  : <G>%-5s<1>| ") % termnames[desc->account->term]);
     sendTo(COLOR_BASIC, fmt("Allow Pinging     : %s\n\r") % on_or_off(isPlayerAction(PLR_PING)));
     sendTo(COLOR_BASIC, fmt("Brief             : %s  | ") % on_or_off(isPlayerAction(PLR_BRIEF)));
     sendTo(COLOR_BASIC, fmt("Compact           : %s  | ") % on_or_off(isPlayerAction(PLR_COMPACT)));
     sendTo(COLOR_BASIC, fmt("Show Saves        : %s\n\r") % on_or_off(isPlayerAction(PLR_SHOW_SAVES)));
 
-    
+    // immortal toggles
     if(isImmortal() || GetMaxLevel() >= GOD_LEVEL1){
       sendTo(COLOR_BASIC, "\n\r<c>Immortal Toggles<1>\n\r");
       sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------------------------<1>\n\r");
       
-      if(getInvisLevel())
-	sendTo(COLOR_BASIC, fmt("Invisibility      : <G>%-4i<1> | ") % getInvisLevel());
-      else
-	sendTo(COLOR_BASIC, "Invisibility      : <R>off <1> | ");
-      
+	    sendTo(COLOR_BASIC, fmt("Invisibility      : %s | ") % int_on_or_off(getInvisLevel(), getInvisLevel()).c_str());    
       sendTo(COLOR_BASIC, fmt("Auto Success      : %s  | ") % on_or_off(IS_SET(desc->autobits, AUTO_SUCCESS)));
-      
       sendTo(COLOR_BASIC, fmt("Stealth Mode      : %s\n\r") % on_or_off(isPlayerAction(PLR_STEALTH)));
-      
       sendTo(COLOR_BASIC, fmt("No Hassle         : %s  | ") % on_or_off(isPlayerAction(PLR_NOHASSLE)));
-      
       sendTo(COLOR_BASIC, fmt("Immortality       : %s\n\r") % on_or_off(isPlayerAction(PLR_IMMORTAL)));
     }
-    
-
 
     if (hasWizPower(POWER_TOGGLE)){
       sendTo(COLOR_BASIC, "\n\r<c>Global Toggles<1>\n\r");
       sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------------------------<1>\n\r");
       int i=0;
       for(togTypeT t=TOG_NONE;t<MAX_TOG_TYPES;t++){
-	if(toggleInfo[t]->testcode || t==TOG_NONE)
-	  continue;
+	      if(toggleInfo[t]->testcode || t==TOG_NONE)
+	        continue;
 
-	sendTo(COLOR_BASIC, fmt("%-17s : %s%s") %
+	      sendTo(COLOR_BASIC, fmt("%-17s : %s%s") %
 	       toggleInfo[t]->name %
 	       on_or_off(toggleInfo[t]->toggle) %
-	       ((++i%3) ? "  | " : "\n\r"));
+	       ((++i%width) ? "  | " : "\n\r"));
       }
-      if(i%3)
-	sendTo("\n\r");
-
+      if(i%width)
+	      sendTo("\n\r");
 
       sendTo(COLOR_BASIC, "\n\r<c>Test Code Toggles<1>\n\r");
       sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------------------------<1>\n\r");
       
       i=0;
       for(togTypeT t=TOG_NONE;t<MAX_TOG_TYPES;t++){
-	if(!toggleInfo[t]->testcode || t==TOG_NONE)
-	  continue;
+	      if(!toggleInfo[t]->testcode || t==TOG_NONE)
+	        continue;
 
-	sendTo(COLOR_BASIC, fmt("%-17s : %s%s") %
+	      sendTo(COLOR_BASIC, fmt("%-17s : %s%s") %
 	       toggleInfo[t]->name %
 	       on_or_off(toggleInfo[t]->toggle) %
-	       ((++i%3) ? "  | " : "\n\r"));
+	       ((++i%width) ? "  | " : "\n\r"));
       }
-      if(i%3)
-	sendTo("\n\r");
+      if(i%width)
+	      sendTo("\n\r");
 
     } else {
       // mortals are always asking if double exp is on, so just let them see it

@@ -37,9 +37,11 @@ struct TTraits {
 };
 
 enum termTypeT {
-     TERM_NONE,  //         = 0;
+     TERM_NONE = 0,  //         = 0;
      TERM_VT100,  //        = 1;
-     TERM_ANSI   //         = 2;
+     TERM_ANSI,   //         = 2;
+
+     TERM_MAX
 };
 
 enum connectStateT {
@@ -419,6 +421,62 @@ class bonusStatPoints {
 
 
 
+// The ignore list is for checking if actions from one player are 'ignored' by another
+// This class actually maintains an internal static list as well as its per-descriptor list
+// the asumption is that the ignore list is almost always really small, so we optimize for that
+// implimented in other.cc
+class ignoreList
+{
+private:
+  const static unsigned int cMax = 20;
+  bool m_initialized;
+  bool m_useStatic;
+  Descriptor *m_desc;
+  sstring *m_ignored;
+  unsigned int m_count;
+
+  // statics
+  static bool m_staticUseStatic;
+  static int m_staticIds[cMax];
+  static sstring m_staticIgnored[cMax];
+  static unsigned int m_staticCount;
+  static void addDB(int playerId, const sstring ignored);
+  static void removeDB(int playerId, const sstring ignored);
+
+  // hidden methods for interacting with the static list
+  bool shouldUseStatic() { return m_useStatic; }
+  void convertFromStatic();
+  bool staticAdd(const sstring name);
+  bool staticRemove(const sstring name);
+
+  // hide default ctor
+  ignoreList() {}
+
+protected:
+  void initialize();
+
+public:
+  ignoreList(Descriptor *desc);
+  ~ignoreList();
+
+  unsigned int getCount();
+  unsigned int getMax() { return cMax; }
+
+  sstring operator[](int i);
+
+  bool isIgnored(Descriptor *desc);
+  bool isIgnored(const sstring ignored);
+
+  bool add(Descriptor *desc);
+  bool add(const sstring name);
+  bool add(const TAccount &acct);
+  bool addAccount(const sstring name);
+  bool remove(Descriptor *desc);
+  bool remove(const sstring name);
+  bool removeAccount(const sstring name);
+};
+
+
 // Descriptor class
 class Descriptor
 {
@@ -455,7 +513,7 @@ class Descriptor
     snoopData snoop;              // to snoop people           
     Descriptor *next;             // link to next descriptor    
     char *pagedfile;              // what file is getting paged 
-    char name[20];                // dummy field (idea, bug, mail use it)
+    char name[80];                // dummy field (idea, bug, mail use it)
     int amount;                   // dummy field (mail uses it)
     TObj *obj;                    // for object editor
     TMonster *mob;                // for monster editor 
@@ -482,6 +540,7 @@ class Descriptor
     unsigned int plr_color;
     colorSubT plr_colorSub;
     unsigned int plr_colorOff;
+    ignoreList ignored;
 
     // Functions
   private:
@@ -538,8 +597,8 @@ class Descriptor
     void updateScreenAnsi(unsigned int update);
     void updateScreenVt100(unsigned int update);
     int move(int, int);
-    void send_bug(const char *, const char *);
     void add_comment(const char *, const char *);
+    void send_feedback(const char *subject, const char *msg);
     void cleanUpStr();
     bool getHostResolved();
     void setHostResolved(bool, const sstring &);

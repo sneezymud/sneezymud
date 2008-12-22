@@ -55,6 +55,8 @@ class TSuitcase;
 class TBoard;
 class liqInfoT;
 class currencyInfoT;
+class ignoreList;
+
 
 const int MAX_BUF_LENGTH              = 240;
 

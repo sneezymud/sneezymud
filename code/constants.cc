@@ -1674,6 +1674,10 @@ const char * const illegalnames[] =
   "brutus",
   "fatopr",
   "batoper",
+  
+  // NEWBIE PROTECTION
+  "*admin",
+  "root",
 
   // BASIC OBJECTS
   "*shield",

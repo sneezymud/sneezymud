@@ -404,31 +404,13 @@ int Descriptor::read_client(char *str2)
     case CLIENT_IDEA:
     case CLIENT_TYPO:
     case CLIENT_BUG: {
-      char buffer[10000];
-      const char *tc;
-      int j;
 
-      for (j = 0, tc = str2; *tc; tc++, j++) {
-        if (j > 9995)
-          break;
+      sstring buffer = str2;
+      buffer.inlineReplaceString("^", "\r\n");
+      send_feedback(name, buffer.c_str());
 
-        if (*tc == '^') {
-          buffer[j++] = '\r';
-          buffer[j] = '\n';
-        } else
-          buffer[j] = *tc;
-      }
-      buffer[j] = '\0';
-      if (type == CLIENT_BUG) {
-        send_bug("Bug", buffer);
-        character->sendTo("Thanks for the bug report. It will be looked at soon!\n\r");
-        character->sendTo("If necessary, a mudmail will be sent to you to inform you of any changes or possible explanations.\n\r");
-      }
-      if (type == CLIENT_IDEA)
-        send_bug("Idea", buffer);
-      if (type == CLIENT_TYPO)
-        send_bug("Typo", buffer);
-
+      character->sendTo("Thanks for the report. It will be looked at soon!\n\r");
+      character->sendTo("If necessary, a mudmail will be sent to you to inform you of any changes or possible explanations.\n\r");
       break;
     }
 

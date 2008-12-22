@@ -582,6 +582,8 @@ enum cmdTypeT {
      CMD_PREEN,
      CMD_BUILDHELP,
      CMD_NEWBIE,
+     CMD_REQUEST,
+     CMD_IGNORE,
      MAX_CMD_LIST,  // Keep this as last command in regular list
 
        // a variety of "fake" commands used for a variety of purpsoses follow
