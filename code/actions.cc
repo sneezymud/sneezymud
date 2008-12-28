@@ -430,9 +430,9 @@ int TBeing::doAction(const sstring & argument, cmdTypeT cmd)
   if (!(vict = get_char_room_vis(this, buf, NULL, EXACT_YES))) {
     if (!(vict = get_char_room_vis(this, buf))) {
       if (!(tvict = get_obj_vis_accessible(this, buf))) {
-	sendTo(action.not_found);
-	sendTo("\n\r");
-	return FALSE;
+	      sendTo(action.not_found);
+	      sendTo("\n\r");
+	      return FALSE;
       }
     }
   }
@@ -469,7 +469,8 @@ int TBeing::doAction(const sstring & argument, cmdTypeT cmd)
 
       act(action.char_found, 0, this, 0, vict, TO_CHAR);
       act(action.others_found, action.hide, this, 0, vict, TO_NOTVICT);
-      act(action.vict_found, action.hide, this, 0, vict, TO_VICT);
+      if (!vict->desc || !vict->desc->ignored.isIgnored(desc))
+        act(action.vict_found, action.hide, this, 0, vict, TO_VICT);
 
       for (t = roomp->getStuff(); t; t = t2) {
         t2 = t->nextThing;

@@ -620,7 +620,8 @@ int TBeing::doOrder(const char *argument)
   }
   if (v) {
     sprintf(buf, "$N orders you to '%s'", message);
-    act(buf, FALSE, v, 0, this, TO_CHAR);
+    if (!v->desc || !v->desc->ignored.isIgnored(desc))
+      act(buf, FALSE, v, 0, this, TO_CHAR);
     act("$n gives $N an order.", FALSE, this, 0, v, TO_NOTVICT);
 
     for (i = 0; message[i] && message[i] != ' '; i++)
@@ -680,8 +681,7 @@ int TBeing::doOrder(const char *argument)
     }
   } else {
     // This is order "followers" 
-    sprintf(buf, "$n issues the order '%s'.", message);
-    act(buf, FALSE, this, 0, v, TO_ROOM);
+    sstring garbled = garble(NULL, fmt("$n issues the order '%s'.") % message, SPEECH_SAY);
 
     // there is a possibility that the order would change our room
     // which might have drastic consequences, so we do this check
@@ -690,19 +690,25 @@ int TBeing::doOrder(const char *argument)
     // compare to specific-mob order above
     // horses are skipped (intentional) due to !AFF_CHARM
     // captives also skipped
-    followData *k, *k2;
-    for (k = followers; k; k = k2) {
-      k2 = k->next;
-      TBeing *kfol = k->follower;
-      if (kfol && org_room == kfol->inRoom()) {
-        if (kfol->isAffected(AFF_CHARM)) {
-          found = TRUE;
-          rc = applyOrder(this, kfol, message, SILENT_YES);
-          if (IS_SET_DELETE(rc, DELETE_VICT)) {
-            delete kfol;
-            kfol = NULL;
-          }
-        }
+    // we enumerate per room and message individually to avoid players issung 'orders' to subvert speech
+    for (TThing *t = roomp->getStuff(); t; t = t->nextThing) {
+
+      TBeing *kfol = dynamic_cast<TBeing *>(t);
+      if (!kfol || kfol == this || org_room != kfol->inRoom())
+        continue;
+      if (kfol->desc && kfol->desc->ignored.isIgnored(desc))
+        continue;
+      if (!kfol->isAffected(AFF_CHARM)) {
+        act(garbled.c_str(), FALSE, this, 0, kfol, TO_VICT);
+        continue;
+      }
+
+      found = TRUE;
+      rc = applyOrder(this, kfol, message, SILENT_YES);
+      if (IS_SET_DELETE(rc, DELETE_VICT)) {
+        delete kfol;
+        kfol = NULL;
+        break;
       }
     }
     if (found)

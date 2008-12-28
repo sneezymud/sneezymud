@@ -1520,6 +1520,7 @@ void TPerson::doFeedback(const sstring &type, int clientCmd, const sstring &arg)
 
   if (!desc->m_bIsClient)
   {
+    sendTo(fmt("Write your %s report. Use ~ when done, or ` to cancel.\n\r") % type.lower());
     addPlayerAction(PLR_BUGGING);
     desc->connected = CON_WRITING;
     desc->str = new const char *('\0');
@@ -4712,7 +4713,7 @@ void ignoreList::initialize()
     // init static array from DB
     if (m_staticUseStatic)
     {
-      db.query("select player_id, blocked from blockedlist");
+      db.query("select player_id, blocked from blockedlist order by player_id, blocked;");
       while(db.fetchRow())
       {
         m_staticIds[m_staticCount] = convertTo<int>(db["player_id"]);
@@ -4731,7 +4732,7 @@ void ignoreList::initialize()
     m_ignored = new sstring[cMax];
     m_count = 0;
 
-    db.query("select blocked from blockedlist where player_id=%i limit %i", myId, cMax);
+    db.query("select blocked from blockedlist where player_id=%i order by blocked limit %i", myId, cMax);
     while(db.fetchRow())
       m_ignored[m_count++] = db["blocked"].lower();
   }
@@ -4799,6 +4800,9 @@ unsigned int ignoreList::getCount()
 // returns if this player is being ignored by this desc
 bool ignoreList::isIgnored(Descriptor *desc)
 {
+  if (!desc)
+    return false;
+
   initialize();
   TBeing *player = (dynamic_cast<TMonster *>(desc->character) && desc->original) ? desc->original : desc->character;
 
@@ -4827,6 +4831,20 @@ bool ignoreList::isIgnored(const sstring ignored)
       return true;
   return false;
 }
+
+// returns true if this descriptor is being ignored by that name for mudmail purposes (use sparingly)
+bool ignoreList::isMailIgnored(Descriptor *desc, const sstring ignored)
+{
+  TBeing *player = (dynamic_cast<TMonster *>(desc->character) && desc->original) ? desc->original : desc->character;
+  TDatabase db(DB_SNEEZY);
+  db.query("select count(*) as c from (player as p, blockedlist as b) where lower(p.name) = '%s' and b.player_id = p.id and (b.blocked = '~%s' or b.blocked = '%s')",
+    ignored.lower().c_str(), desc->account->name.lower().c_str(), sstring(player->getName()).lower().c_str());
+
+  if (db.fetchRow() && convertTo<int>(db["c"]) > 0)
+    return true;
+  return false;
+}
+
 
 // private function used for low-size list performance
 // returns true if the name was added, false if over max capacity
@@ -5020,6 +5038,14 @@ void TBeing::doIgnore(const sstring &args)
     arg1Len = arg1.length();
     arg2Len = arg2.length();
   }
+  
+  // simple length check - drop overlong commands for safety and simplicity (although technically its safe)
+  if (arg1Len > 20 || arg2Len > 32)
+  {
+    sendTo("Sorry, that name is too long to be ignored.\n\r");
+    return;
+  }
+
   // remove illegal character
   arg2.inlineReplaceString("~", "");
 

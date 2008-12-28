@@ -611,6 +611,8 @@ int TBeing::doEmote(const sstring &argument)
       TBeing *ch = dynamic_cast<TBeing *>(t);
       if (!ch || ch == this)
         continue;
+      if (ch->desc && ch->desc->ignored.isIgnored(desc))
+        continue;
       if (roomp && ch->desc && 
                       (ch->canSee(this)) && ch->awake() && 
                       (ch->desc->connected <= 20) && 

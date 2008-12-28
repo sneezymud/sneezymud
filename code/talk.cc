@@ -111,6 +111,9 @@ int TBeing::doSay(const sstring &arg)
     
     if (mob->isPc()) {
 
+      if (mob->desc && mob->desc->ignored.isIgnored(desc))
+        continue;
+
       // note: this means only PCs get individualed garbles in a 'say'
       sstring garbleTo = garble(mob, garbleRoom, SPEECH_SAY, GARBLE_SCOPE_INDIVIDUAL);
 
@@ -199,6 +202,8 @@ void Descriptor::sendShout(TBeing *ch, const sstring &arg)
     if (b->checkSoundproof())
       continue;
     if (b->isPlayerAction(PLR_MAILING | PLR_BUGGING))
+      continue;
+    if (i->ignored.isIgnored(ch->desc))
       continue;
 
     // don't use awake(), paralyzed should hear, asleep should not
@@ -395,17 +400,22 @@ void TBeing::doGrouptell(const sstring &arg)
     sendTo(fmt("You tell your group: %s%s%s\n\r") % red() % colorString(this, desc, garbled, NULL, COLOR_BASIC, FALSE) % norm());
   }
   if (k->isAffected(AFF_GROUP) && !k->checkSoundproof()) {
-    if (k->desc && (k->desc->m_bIsClient || IS_SET(k->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)) && (k != this)) {
+    if (k->desc && !k->desc->ignored.isIgnored(desc) && (k->desc->m_bIsClient || IS_SET(k->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)) && (k != this)) {
       k->desc->clientf(fmt("%d|%s|%s") % CLIENT_GROUPTELL % colorString(this, k->desc, getName(), NULL, COLOR_NONE, FALSE) % colorString(this, k->desc, garbled, NULL, COLOR_NONE, FALSE));
     }
     // a crash bug lies here....cut and paste from windows notepad
     // plays with the next few lines for some reason
-    garbledTo = garble(k, garbled, SPEECH_GROUPTELL, GARBLE_SCOPE_INDIVIDUAL);
-    buf = fmt("$n: %s%s%s") % k->red() % colorString(this, k->desc, garbledTo, NULL, COLOR_COMM, FALSE) % k->norm();
-    act(buf, 0, this, 0, k, TO_VICT);
+    if (!k->desc || !k->desc->ignored.isIgnored(desc)) {
+      garbledTo = garble(k, garbled, SPEECH_GROUPTELL, GARBLE_SCOPE_INDIVIDUAL);
+      buf = fmt("$n: %s%s%s") % k->red() % colorString(this, k->desc, garbledTo, NULL, COLOR_COMM, FALSE) % k->norm();
+      act(buf, 0, this, 0, k, TO_VICT);
+    }
   }
   for (f = k->followers; f; f = f->next) {
     if ((f->follower != this) && f->follower->isAffected(AFF_GROUP) && !f->follower->checkSoundproof()) {
+
+      if (f->follower->desc && f->follower->desc->ignored.isIgnored(desc))
+        continue;
 
       // garble this string for the individual recipient
       garbledTo = garble(f->follower, garbled, SPEECH_GROUPTELL, GARBLE_SCOPE_INDIVIDUAL);
@@ -586,6 +596,8 @@ int TBeing::doSign(const sstring &arg)
       continue;
     if (!ch->awake())
       continue;
+    if (ch->desc && ch->desc->ignored.isIgnored(desc))
+      continue;
     if (ch != this && ch->doesKnowSkill(SKILL_SIGN)) {
       if (bSuccess(SKILL_SIGN))
       {
@@ -750,6 +762,11 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
 
   sendTo(COLOR_COMM, fmt("<G>You tell %s<z>, \"%s\"\n\r") % vict->getName() % colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE));
 
+  Descriptor *d = vict->desc;
+
+  // if the person is ignoring, just break off the tell now - they won't know
+  if (d && d->ignored.isIgnored(desc))
+    return FALSE;
 
   // we only color the sstring to the victim, so leave this AFTER
   // the stuff we send to the teller.
@@ -770,9 +787,6 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
   // this is probably too slow, cron job or something would be better
   //  db.query("delete from tellhistory where tellto='%s' and telltime not in (select telltime from tellhistory where tellto='%s' order by telltime desc limit 25)", vict->getName(), vict->getName());
 
-
-
-  Descriptor *d = vict->desc;
   if (d && d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
     garbedBuf = fmt("<c>%s<z>") % garbed;
     d->clientf(fmt("%d|%s|%s") % CLIENT_TELL %
@@ -851,7 +865,8 @@ int TBeing::doWhisper(const sstring &arg)
   if (vict->desc && !vict->desc->m_bIsClient && IS_SET(vict->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))
     vict->desc->clientf(fmt("%d|%s|%s") % CLIENT_WHISPER % colorString(this, vict->desc, getName(), NULL, COLOR_NONE, FALSE) % colorString(this, vict->desc, garbed, NULL, COLOR_NONE, FALSE));
 
-  act(buf, TRUE, this, 0, vict, TO_VICT);
+  if (!vict->desc || !vict->desc->ignored.isIgnored(desc))
+    act(buf, TRUE, this, 0, vict, TO_VICT);
   sendTo(COLOR_MOBS, fmt("You whisper to %s, \"%s\"\n\r") % vict->getName() % colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE));
   act("$n whispers something to $N.", TRUE, this, 0, vict, TO_NOTVICT);
 
@@ -873,7 +888,8 @@ int TBeing::doWhisper(const sstring &arg)
     }
   }
 
-  disturbMeditation(vict);
+  if (!vict->desc || !vict->desc->ignored.isIgnored(desc))
+    disturbMeditation(vict);
 
   if (!vict->isPc()) {
     rc = dynamic_cast<TMonster *>(vict)->checkResponses( this, NULL, garbed, CMD_WHISPER);
@@ -926,7 +942,8 @@ int TBeing::doAsk(const sstring &arg)
     garbled=garble(vict, message, SPEECH_ASK);
 
     buf = fmt("$n asks you, \"%s\"") % garbled;
-    act(buf, TRUE, this, 0, vict, TO_VICT);
+    if (!vict->desc || !vict->desc->ignored.isIgnored(desc))
+      act(buf, TRUE, this, 0, vict, TO_VICT);
     sendTo(COLOR_MOBS, fmt("You ask %s, \"%s\"\n\r") %
      vict->getName() % garbled);
 
@@ -934,7 +951,8 @@ int TBeing::doAsk(const sstring &arg)
       vict->desc->clientf(fmt("%d|%s|%s") % CLIENT_ASK % colorString(this, vict->desc, getName(), NULL, COLOR_NONE, FALSE) % colorString(this, vict->desc, garbled, NULL, COLOR_NONE, FALSE));
 
     act("$n asks $N a question.", TRUE, this, 0, vict, TO_NOTVICT);
-    disturbMeditation(vict);
+    if (!vict->desc || !vict->desc->ignored.isIgnored(desc))
+      disturbMeditation(vict);
     if (!vict->isPc()) {
       rc = dynamic_cast<TMonster *>(vict)->checkResponses( this, NULL, garbled, CMD_ASK);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -967,7 +985,7 @@ void TNote::writeMeNote(TBeing *ch, TPen *)
     return;
   } else {
     // we can write - hooray! (This hooray is a ghee Stargazerism. - Russ)
-    ch->sendTo("Ok...go ahead and write. End the note with a ~.\n\r");
+    ch->sendTo("Ok...go ahead and write. End the note with a ~ or cancel with `.\n\r");
 
     // New memory stuff. Set up with its own sstrings, and set it strung - Russ 
     if (objVnum() >= 0) {

@@ -2926,7 +2926,7 @@ void buildCommandArray(void)
   commandArray[CMD_BUILDHELP] = new commandInfo("buildhelp", POSITION_DEAD, 0);
   commandArray[CMD_NEWBIE] = new commandInfo("newbie", POSITION_RESTING, 0);
   commandArray[CMD_REQUEST] = new commandInfo("request", POSITION_DEAD, 0);
-  commandArray[CMD_IGNORE] = new commandInfo("ignore", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_IGNORE] = new commandInfo("ignore", POSITION_DEAD, 0);
 }
 
 bool _parse_name_safe(const char *arg, char *name, unsigned int nameLen)

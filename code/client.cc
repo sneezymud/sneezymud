@@ -420,8 +420,14 @@ int Descriptor::read_client(char *str2)
       const char *tc;
       int j;
       int rent_id = 0;
- 
+
       strcpy(name, nextToken('|', 255, str2).c_str());
+
+      if (ignored.isMailIgnored(this, name))
+      {
+        vlogf(LOG_OBJ, fmt("Mail: mail sent by %s was ignored by %s.") % character->getName() % name);
+        break;
+      }
 
       for (j = 0, tc = str2; *tc; tc++, j++) {
         if (j > 9995)

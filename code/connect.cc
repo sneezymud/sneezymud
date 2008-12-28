@@ -2057,7 +2057,7 @@ void Descriptor::sstring_add(char *s)
   }
   if (!*str) {
     if (strlen(s) > (unsigned) max_str) {
-      writeToQ("String too long - Truncated.\n\r");
+      writeToQ("Message too long - Truncated.\n\r");
       *(s + max_str) = '\0';
       terminator = 1;
     }
@@ -2107,7 +2107,7 @@ void Descriptor::sstring_add(char *s)
   } else {
     // preexisting *str
     if (strlen(s) + strlen(*str) > (unsigned) max_str) {
-      writeToQ("String too long. Last line skipped.\n\r");
+      writeToQ("Message too long. Last line skipped.\n\r");
       terminator = 1;
     } else {
       if (character->isPlayerAction(PLR_BUGGING)) {
@@ -2209,7 +2209,11 @@ void Descriptor::sstring_add(char *s)
   }
   if (terminator || t2) {
     if (character->isPlayerAction(PLR_MAILING)) {
-      if (terminator)
+      if (ignored.isMailIgnored(this, name))
+      {
+        vlogf(LOG_OBJ, fmt("Mail: mail sent by %s was ignored by %s.") % character->getName() % name);
+      }
+      else if (terminator)
       {
         int rent_id = 0;
         if (obj && obj->canBeMailed())
@@ -2249,7 +2253,7 @@ void Descriptor::sstring_add(char *s)
         for (;*t && isspace(*t); t++);
 
         if (!*t) 
-          writeToQ("Blank sstring entered.  Ignoring!\n\r");
+          writeToQ("Blank message entered.  Ignoring!\n\r");
         else {
           if (!strcmp(name, "Comment"))
             add_comment(delname, t);

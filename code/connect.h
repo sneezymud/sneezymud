@@ -466,6 +466,7 @@ public:
 
   bool isIgnored(Descriptor *desc);
   bool isIgnored(const sstring ignored);
+  static bool isMailIgnored(Descriptor *desc, const sstring ignored);
 
   bool add(Descriptor *desc);
   bool add(const sstring name);
