@@ -152,7 +152,7 @@ extern void save_game_stats();
 extern void fixup_players(void);
 extern void bootSocialMessages(void);
 extern void bootTheShops();
-extern void processShopFiles(void);
+//extern void processShopFiles(void);
 extern void processCorpseFiles(void);
 extern void processRepairFiles(void);
 extern void updateSavedRoomItems(void);

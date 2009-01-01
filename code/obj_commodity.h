@@ -22,6 +22,7 @@ class TCommodity : public TMergeable {
     virtual bool willMerge(TMergeable *);
     virtual void doMerge(TMergeable *);
     static float demandCurvePrice(int, float, int);
+    static float demandCurvePrice(int, float, int, int);
 
     virtual void updateDesc();
     int getSizeIndex() const;

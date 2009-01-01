@@ -19,7 +19,7 @@ const unsigned int SHOPACCESS_LOGS    = (1<<6);
 const unsigned int SHOPACCESS_DIVIDEND= (1<<7);
 
 const char * const SHOP_FILE =     "tinyworld.shp";
-const char * const SHOPFILE_PATH = "mobdata/shops";
+//const char * const SHOPFILE_PATH = "mobdata/shops";
 const char * const SHOP_PRICING  = "shop_pricing.dat";
 
 const unsigned int SHOP_FLAG_RECYCLE             = (1<<0);
@@ -135,5 +135,5 @@ private:
 };
 
 extern bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int);
-extern void waste_shop_file(int shop_nr);
+//extern void waste_shop_file(int shop_nr);
 #endif

@@ -79,6 +79,7 @@ int findRepairMaterials(unsigned int shop_nr, TBeing *repair, TBeing *buyer, uby
   TShopOwned tso(commod_shop, repair);
 
   // look through the commod shop inventory
+  // REVIEW: this won't work - we should be using database for this not inventory
   for(t=tso.getStuff();t;t=t->nextThing){
     // find the appropriate commodity
     if((commod=dynamic_cast<TCommodity *>(t)) && commod->getMaterial() == mat){

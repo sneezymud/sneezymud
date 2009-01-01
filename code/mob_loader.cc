@@ -14,7 +14,7 @@
 
 static void treasureCreate(int num, int mat, int &wealth, TObj *bag, TMonster *ch)
 {
-  float cost=TCommodity::demandCurvePrice(1,0,commod_index[mat]);
+  float cost=TCommodity::demandCurvePrice(1,0,mat);
 
   // make sure they can afford it
   if(wealth < cost)
@@ -43,8 +43,8 @@ struct mat_sort
 {
   bool operator()(const int &a, const int &b)
   {
-    float pa=TCommodity::demandCurvePrice(1,0,commod_index[a]) - material_nums[a].price;
-    float pb=TCommodity::demandCurvePrice(1,0,commod_index[b]) - material_nums[b].price;
+    float pa=TCommodity::demandCurvePrice(1,0,a);// - material_nums[a].price;
+    float pb=TCommodity::demandCurvePrice(1,0,b);// - material_nums[b].price;
 
 
     // we're sorting on the difference between the average price based on
@@ -55,6 +55,8 @@ struct mat_sort
     // sort of, like diamond should usually be higher priced than cat fur,
     // because mobs will ignore diamond and load cat fur until they reach
     // their base prices
+    // PAPPY: this ends up with lots of mobs using cat fur as their commodity of value,
+    // which turns out to be unintuitave for players - so now we sort on value alone
 
     return pa > pb;
     
@@ -81,7 +83,7 @@ void commodLoader(TMonster *tmons, TObj *bag)
   float commodValue = 0;
 
   for(unsigned int i=0;i<base_mats.size();++i){
-    commodValue = TCommodity::demandCurvePrice(1,0,commod_index[base_mats[i]]);
+    commodValue = TCommodity::demandCurvePrice(1,0,base_mats[i]);
     // skip buying 'cheap' commods.
     if (commodValue < 1.0)
       continue;
@@ -171,7 +173,7 @@ void potionLoader(TMonster *tmons)
 }
 
 // Note: this doesn't load multi-tools for multi-class mobs.
-void loadRepairItems(TMonster *tmons)
+/*void loadRepairItems(TMonster *tmons)
 {
   if (tmons->GetMaxLevel() <= 15 || tmons->bestClass() >= MAX_CLASSES)
     return;
@@ -228,7 +230,7 @@ void loadRepairItems(TMonster *tmons)
       tmons->logItem(obj, CMD_LOAD);
     }
   }
-}
+}*/
 
 void TMonster::thiefLootLoader()
 {
@@ -309,7 +311,7 @@ void TMonster::createWealth(void)
 
 
   // load specialty items
-  loadRepairItems(this);
+  //loadRepairItems(this);
   buffMobLoader();
   genericMobLoader(&bag);
   potionLoader(this);

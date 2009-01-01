@@ -561,7 +561,7 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost)
       vlogf(LOG_MISC, fmt("Warning... shop # for mobile %d (real nr) not found.") % mob_index[number].virt);
     else {
       vlogf(LOG_COMBAT, fmt("Deleting shopkeeper file for shop #%d.") %  shop_nr);
-      waste_shop_file(shop_nr);
+      // REVIEW: should we destroy this shop's database data at all?  money, objects, etc
     }
   }
   return DELETE_THIS;

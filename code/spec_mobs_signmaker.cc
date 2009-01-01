@@ -48,7 +48,7 @@ int signMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
     TShopOwned *tso=new TShopOwned(shop_nr, me, ch);
     tso->doReserve();
     delete tso;
-    me->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+    me->saveItems(shop_nr);
   } else {
     me->doSay("This isn't a free service.");
     me->doAction(fname(me->name), CMD_PEER);

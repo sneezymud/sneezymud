@@ -3133,8 +3133,7 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
   ch->logItem(tObj, CMD_BUY);
   tValue++;
   
-  tString = fmt("%s/%d") % SHOPFILE_PATH % tShop;
-  tKeeper->saveItems(tString);
+  tKeeper->saveItems(tShop);
 
   if (!tValue)
     return -1;
@@ -3187,7 +3186,7 @@ int TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num)
   }
 
   // check for existing given item
-  // review: possibly place this higher and given commods to act like inventory for max?
+  // review: this should not be needed - shops cant be given objs, and shops dont use inventory
   for (TThing *t = tKeeper->getStuff(); t; t = t->nextThing) {
     if ((t->number == number) && (t->getName() && getName() && !strcmp(t->getName(), getName()))) {
       if (TComponent *c = dynamic_cast<TComponent *>(t)) {

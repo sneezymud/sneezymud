@@ -249,8 +249,7 @@ int TOrganic::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     vlogf(LOG_BUG, fmt("Bogus num %d in buyMe component at %d.  wgt=%.2f") %  num % ch->in_room % getWeight());
   }
 
-  sprintf(Buf[0], "%s/%d", SHOPFILE_PATH, shop_nr);
-  keeper->saveItems(Buf[0]);
+  keeper->saveItems(shop_nr);
   ch->doSave(SILENT_YES);
   return price;
 }
@@ -405,16 +404,14 @@ int TOrganic::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
     if (getUnits() > 0) {
       *keeper += *obj2;
       ch->doSave(SILENT_YES);
-      sprintf(Buf, "%s/%d", SHOPFILE_PATH, shop_nr);
-      keeper->saveItems(Buf);
+      keeper->saveItems(shop_nr);
       return DELETE_THIS;
     } else 
       *keeper += *this;
   }
 
   ch->doSave(SILENT_YES);
-  sprintf(Buf, "%s/%d", SHOPFILE_PATH, shop_nr);
-  keeper->saveItems(Buf);
+  keeper->saveItems(shop_nr);
   return true;
 }
 

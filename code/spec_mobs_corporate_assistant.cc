@@ -266,7 +266,7 @@ void corpDeposit(TBeing *ch, TMonster *me, int gold, sstring arg)
   corp.corpLog(ch->getName(), "deposit", gold);
   
   // save
-  dynamic_cast<TMonster *>(banker)->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+  dynamic_cast<TMonster *>(banker)->saveItems(shop_nr);
 
   // log
   shoplog(shop_nr, ch, dynamic_cast<TMonster *>(banker), "talens", gold, "corporate deposit");
@@ -348,7 +348,7 @@ void corpWithdraw(TBeing *ch, TMonster *me, int gold, sstring arg)
 
   banker->giveMoney(ch, gold, GOLD_XFER);
 
-  dynamic_cast<TMonster *>(banker)->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+  dynamic_cast<TMonster *>(banker)->saveItems(shop_nr);
 
   me->doTell(ch->getName(), fmt("Ok, here is %i talens.") % gold);
   me->doTell(ch->getName(), fmt("Your balance is %i.") % (tmp-gold));

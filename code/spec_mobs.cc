@@ -3047,7 +3047,7 @@ int pet_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
     }
     if (!ch->isImmortal()){
       ch->giveMoney(me, price, GOLD_SHOP_PET);
-      me->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+      me->saveItems(shop_nr);
       shoplog(shop_nr, ch, me, pet->getName(), price, "buying");
     }
     pet->setExp(0);

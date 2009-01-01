@@ -840,9 +840,8 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
 
               // if repo'd from a shopkeeper, make sure we save this fact
               if (shop_nr < shop_index.size()) {
-                sprintf(buf, "%s/%d", SHOPFILE_PATH, shop_nr);
-                tmtarg->saveItems(buf);
-		shoplog(shop_nr, myself, dynamic_cast<TMonster *>(targ), temp_obj->getName(), 0, "repoing");
+                tmtarg->saveItems(shop_nr);
+		            shoplog(shop_nr, myself, dynamic_cast<TMonster *>(targ), temp_obj->getName(), 0, "repoing");
               }
 
             } else if (targ->isLinkdead()) {

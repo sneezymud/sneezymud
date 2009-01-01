@@ -68,8 +68,10 @@ sstring transactionToString(transactionTypeT action)
 int TShopOwned::getInventoryCount(const TObj *obj)
 {
   TDatabase db(DB_SNEEZY);
-
-  if (obj->isObjStat(ITEM_STRUNG))
+  
+  if (obj->objVnum() == GENERIC_COMMODITY)
+    db.query("select weight*10 as count from rent where vnum=%i and material=%i and owner_type='shop' and owner=%i", GENERIC_COMMODITY, obj->getMaterial(), shop_nr);
+    else if (obj->isObjStat(ITEM_STRUNG))
     db.query("select count(*) as count from rent r left outer join rent_strung rs on (r.rent_id=rs.rent_id) where r.vnum=%i and rs.short_desc='%s' and r.owner_type='shop' and r.owner=%i and (r.extra_flags & 4) = 4", obj->objVnum(), sstring(obj->shortDescr).trim().c_str(), shop_nr);
   else
     db.query("select count(*) as count from rent where vnum=%i and owner_type='shop' and owner=%i", obj->objVnum(), shop_nr);
@@ -111,7 +113,7 @@ void TShopOwned::doSellTransaction(int cashCost, const sstring &name,
   }
 
   // save
-  keeper->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+  keeper->saveItems(shop_nr);
   ch->doQueueSave();
 }
 
@@ -148,7 +150,7 @@ void TShopOwned::doBuyTransaction(int cashCost, const sstring &name,
   }
   
   // save
-  keeper->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+  keeper->saveItems(shop_nr);
   ch->doQueueSave();
 }
 
@@ -180,7 +182,7 @@ int TShopOwned::doExpenses(int cashCost, TObj *obj)
     keeper->giveMoney(sba, (int)value, GOLD_SHOP);
     shoplog(shop_nr, sba, keeper, "talens", (int)-value, "expenses");
     shoplog(sba_nr, keeper, sba, "talens", (int)value, "expenses");
-    sba->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+    sba->saveItems(shop_nr);
     return (int)value;
   }
 
@@ -246,6 +248,7 @@ TShopOwned::TShopOwned(int shop_nr, TBeing *ch)
       break;
     }
   }
+  this->owned=shop_index[shop_nr].isOwned();
 }
 
 TShopOwned::TShopOwned(int shop_nr)
@@ -261,17 +264,16 @@ TShopOwned::TShopOwned(int shop_nr)
   }
 
   this->ch=keeper;
+  this->owned=shop_index[shop_nr].isOwned();
 }
 
 
 TShopOwned::TShopOwned(TMonster *keeper, TBeing *ch)
 {
-  for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != (keeper)->number); shop_nr++);
-  
-  if (shop_nr >= shop_index.size()) {
-    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  mob_index[keeper->number].virt);
-    shop_nr=0;
-  }
+  this->shop_nr = find_shop_nr(keeper->number);
+  this->keeper = keeper;
+  this->ch = ch;
+  this->owned=shop_index[shop_nr].isOwned();
 }
 
 
@@ -321,9 +323,8 @@ int TShopOwned::chargeTax(int cost, const sstring &name, TObj *o)
   }
 
   keeper->giveMoney(taxman, cost, GOLD_SHOP);
-  keeper->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
-  dynamic_cast<TMonster *>(taxman)->saveItems(fmt("%s/%d") % 
-					      SHOPFILE_PATH % tax_office);
+  keeper->saveItems(shop_nr);
+  dynamic_cast<TMonster *>(taxman)->saveItems(tax_office);
 
   shoplog(shop_nr, keeper, keeper, name, 
 	  -cost, "paying tax");
@@ -413,8 +414,8 @@ int TShopOwned::doReserve()
 
     banker->giveMoney(keeper, amt, GOLD_SHOP);
 
-    keeper->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
-    dynamic_cast<TMonster *>(banker)->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+    keeper->saveItems(shop_nr);
+    dynamic_cast<TMonster *>(banker)->saveItems(shop_nr);
     shoplog(bank_nr, keeper, dynamic_cast<TMonster *>(banker), "talens", -amt, "reserve");
 
     shoplog(shop_nr, keeper, keeper, "talens", amt, "reserve");
@@ -431,8 +432,8 @@ int TShopOwned::doReserve()
 
     keeper->giveMoney(banker, amt, GOLD_SHOP);
 
-    keeper->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
-    dynamic_cast<TMonster *>(banker)->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+    keeper->saveItems(shop_nr);
+    dynamic_cast<TMonster *>(banker)->saveItems(shop_nr);
     
     shoplog(bank_nr, keeper,  dynamic_cast<TMonster *>(banker), "talens", amt, "reserve");
 
@@ -526,10 +527,10 @@ int TShopOwned::doDividend(int cost, const sstring &name)
     }
 
     keeper->giveMoney(banker, div, GOLD_SHOP);
-    dynamic_cast<TMonster *>(banker)->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+    dynamic_cast<TMonster *>(banker)->saveItems(shop_nr);
     shoplog(bank_nr, keeper,  dynamic_cast<TMonster *>(banker), "talens", div, "dividend");
 
-    keeper->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+    keeper->saveItems(shop_nr);
     shoplog(shop_nr, ch, keeper, name, -div, "dividend");
     
 
@@ -1042,8 +1043,7 @@ int TShopOwned::buyShop(sstring arg){
   
   db.query("insert into shopowned (shop_nr, profit_buy, profit_sell, corp_id) values (%i, %f, %f, %i)", shop_nr, shop_index[shop_nr].profit_buy, shop_index[shop_nr].profit_sell, corp_id);
   
-  buf = fmt("%s/%d") % SHOPFILE_PATH % shop_nr;
-  keeper->saveItems(buf);
+  keeper->saveItems(shop_nr);
   
   keeper->doTell(ch->getName(), "Congratulations, you now own this shop.");
   shop_index[shop_nr].owned=true;

@@ -1855,6 +1855,8 @@ void ItemSaveDB::clearRent()
 
 void TMonster::saveItems(const sstring &filepath)
 {
+  mud_assert(0, "Should be using TMonster::saveItems(int) to save to database!");
+#ifdef UNUSED
   TObj *obj;
   ItemSave is;
 
@@ -1890,6 +1892,7 @@ void TMonster::saveItems(const sstring &filepath)
     db.query("update shopowned set gold=%i where shop_nr=%i",
 	     getMoney(), find_shop_nr(number));
   }
+#endif
 }
 
 
@@ -1933,9 +1936,8 @@ void TMonster::deleteItem(int shop_nr, int rent_id)
 
 void TMonster::saveItems(int shop_nr)
 {
+  /*ItemSaveDB is("shop", shop_nr);
   TObj *obj;
-  ItemSaveDB is("shop", shop_nr);
-
   is.clearRent();
 
   // store worn objects
@@ -1952,7 +1954,7 @@ void TMonster::saveItems(int shop_nr)
   }
 
   // store inventory objects
-  is.objsToStore(NORMAL_SLOT, (TObj *) getStuff(), this, FALSE);
+  is.objsToStore(NORMAL_SLOT, (TObj *) getStuff(), this, FALSE);*/
 
   // shopkeeper specific stuff - save gold
   if(isShopkeeper()){
@@ -2676,6 +2678,8 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
 // this is used to load the items a shopkeeper has
 void TMonster::loadItems(const sstring &filepath)
 {
+  mud_assert(0, "Should be using TMonster::loadItems(int) to load from database!");
+#ifdef UNUSED
   int num_read = 0;
   ItemLoad il;
 
@@ -2690,6 +2694,7 @@ void TMonster::loadItems(const sstring &filepath)
   }
 
   il.objsFromStore(NULL, &num_read, this, NULL, FALSE);
+#endif
 }
 
 TObj *TBeing::findMostExpensiveItem()

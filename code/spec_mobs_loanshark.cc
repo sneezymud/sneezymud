@@ -218,8 +218,8 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       db.query("select amt, granted_time, term, rate, default_charge from shopownedloans, player where player_id=id and lower(name)=lower('%s')", sstring(arg).word(2).c_str());
       
       if(!db.fetchRow()){
-	me->doTell(ch->getName(), "I can't find a loan for that player.");
-	return true;
+	      me->doTell(ch->getName(), "I can't find a loan for that player.");
+	      return true;
       }
 
       // repo stuff here
@@ -230,22 +230,22 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       db.query("select 1 from shopownedloans where player_id=%i", 
 	       ch->getPlayerID());
       if(db.fetchRow()){
-	me->doTell(ch->getName(), "You already have a loan!");
-	return true;
+	      me->doTell(ch->getName(), "You already have a loan!");
+	      return true;
       }
 
       int loanamt=convertTo<int>(sstring(arg).word(1));
     
       if(loanamt > amt || loanamt <= 0){
-	me->doTell(ch->getName(), fmt("You can't take out a loan for that much.  The most I can give you is %i.") % amt);
-	return true;
+	      me->doTell(ch->getName(), fmt("You can't take out a loan for that much.  The most I can give you is %i.") % amt);
+	      return true;
       }
 
       amt=loanamt;
 
       if(amt > me->getMoney()){
-	me->doTell(ch->getName(), "At the moment, I don't have the necessary capital to extend a loan to you.");
-	return true;
+	      me->doTell(ch->getName(), "At the moment, I don't have the necessary capital to extend a loan to you.");
+	      return true;
       }
 
       db.query("insert into shopownedloans values (%i, %i, %i, %i, %i, %f, %f)",
@@ -255,8 +255,7 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 
 
       me->giveMoney(ch, amt, GOLD_SHOP);
-      buf = fmt("%s/%d") % SHOPFILE_PATH % shop_nr;
-      me->saveItems(buf);
+      me->saveItems(shop_nr);
 
 
       me->doTell(ch->getName(), fmt("There you go.  Remember, I need the money back, plus interest, within %i years.") % term);
@@ -284,29 +283,27 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 		       convertTo<float>(db["default_charge"]));
 
       if(coins>=amt){
-	me->doTell(ch->getName(), "Alright, everything appears to be in order here.  Consider your loan paid off!");
-	db.query("delete from shopownedloans where player_id=%i", ch->getPlayerID());
-	shoplog(shop_nr, ch, me, "talens", coins, "giving");
+	      me->doTell(ch->getName(), "Alright, everything appears to be in order here.  Consider your loan paid off!");
+	      db.query("delete from shopownedloans where player_id=%i", ch->getPlayerID());
+	      shoplog(shop_nr, ch, me, "talens", coins, "giving");
       } else {
 	// how much of the amount owed is the principle
-	float perc=(float)principle / (float)amt;
-	principle -= (int)(perc*coins);
+	      float perc=(float)principle / (float)amt;
+	      principle -= (int)(perc*coins);
 
-	db.query("update shopownedloans set amt=%i where player_id=%i",
-		 principle, ch->getPlayerID());
+	      db.query("update shopownedloans set amt=%i where player_id=%i",
+		       principle, ch->getPlayerID());
 
-	me->doTell(ch->getName(), fmt("Thanks for the payment.  You paid down the principle by %i talens, the rest went to interest.") % (int)(perc*coins));
+	      me->doTell(ch->getName(), fmt("Thanks for the payment.  You paid down the principle by %i talens, the rest went to interest.") % (int)(perc*coins));
 
-	shoplog(shop_nr, ch, me, "talens", coins, "giving");
+	      shoplog(shop_nr, ch, me, "talens", coins, "giving");
       }
     } else {
       me->doTell(ch->getName(), "Uhh... thanks!");
     }
   }
 
-
-  buf = fmt("%s/%d") % SHOPFILE_PATH % shop_nr;
-  me->saveItems(buf);
+  me->saveItems(shop_nr);
 
   return false;
 }

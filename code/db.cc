@@ -439,8 +439,8 @@ void bootDb(void)
 
   bootPulse("Updating characters with saved items:", false);
   updateRentFiles();
-  bootPulse("Processing shop-save files.");
-  processShopFiles();
+  //bootPulse("Processing shop-save files.");
+  //processShopFiles();
   bootPulse("Processing repair-save files.");
   processRepairFiles();
   bootPulse("Processing saved-room files.");

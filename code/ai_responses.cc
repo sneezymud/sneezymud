@@ -724,7 +724,7 @@ void responseTransaction(TBeing *speaker, TMonster *tm, int value)
     keeper->addToMoney(value, GOLD_SHOP);
     shoplog(shop_nr, speaker, keeper, tm->getName(), 
 	    value, "giving");
-    keeper->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+    keeper->saveItems(shop_nr);
   }
 }
 

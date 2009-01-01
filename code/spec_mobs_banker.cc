@@ -226,7 +226,7 @@ int bankBuyAccount(TBeing *ch, TMonster *myself, TMonster *teller, int shop_nr, 
   db.query("insert into shopownedbank (player_id, shop_nr, talens) values (%i, %i, 0)", ch->getPlayerID(), shop_nr);
   ch->giveMoney(myself, 100, GOLD_XFER);
   shoplog(shop_nr, ch, myself, "talens", 100, "new account");
-  myself->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+  myself->saveItems(shop_nr);
   
   teller->doTell(ch->getName(), "Your account is now open and ready for use.");
   

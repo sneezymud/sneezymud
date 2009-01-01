@@ -925,8 +925,8 @@ void TPerson::doShow(const sstring &argument)
 	  sb += fmt("%-8i %-18s %-8i %-10f %-9i %i\n\r") % i %
 	    sstring(material_nums[i].mat_name).uncap() % 
 	    commod_index[i] % material_nums[i].price %
-	    (int)TCommodity::demandCurvePrice(1,0,commod_index[i]) %
-	    (int)(TCommodity::demandCurvePrice(1,0,commod_index[i])-material_nums[i].price);
+	    (int)TCommodity::demandCurvePrice(1,0,i) %
+	    (int)(TCommodity::demandCurvePrice(1,0,i)-material_nums[i].price);
 	}
       }
     } else if (!buf2.empty()) {  

@@ -158,12 +158,14 @@ void TCommodity::lowCheck()
   TObj::lowCheck();
 }
 
-float TCommodity::demandCurvePrice(int num, float price, int total_units)
+float TCommodity::demandCurvePrice(int num, float price, int mat)
 {
-  if(!total_units)
-    total_units=1;
-  if(total_units > shop_capacity)
-    total_units=shop_capacity;
+  return demandCurvePrice(num, price, mat, commod_index[mat]);
+}
+
+float TCommodity::demandCurvePrice(int num, float price, int mat, int total_units)
+{
+  total_units = max(1, min(shop_capacity, total_units));
 
   float multiplier=-(max_commod_price / log(shop_capacity));
 
@@ -174,19 +176,23 @@ float TCommodity::demandCurvePrice(int num, float price, int total_units)
     // positive num means we're selling commodities, so our total units
     // goes DOWN with each one sold.  negative num means the opposite.
     if(num >= 0){
-      if(!(total_units-i))
-	total_price+=max_commod_price;
+      if((total_units-i) <= 0) // edge case: small values of total_units, large values of num can return infinite
+	      total_price+=max_commod_price;
       else
-	total_price+=(multiplier * log(total_units-i) + max_commod_price);
+	      total_price+=(multiplier * log(total_units-i) + max_commod_price);
     } else {
-      if(!(total_units-i))
-	total_price+=0;
-      else
-	total_price+=(multiplier * log(total_units+i) + max_commod_price);
+      //if(!(total_units-i))
+	    //  total_price+=0; // Don't set price floor - this causes edge cases when total_units == 1 and num == -1
+      //else
+	      total_price+=(multiplier * log(total_units+i) + max_commod_price);
     }
   }
 
-  return total_price;
+  // commod fluctuations are capped which makes them slightly more predictable
+  // ideally, we'd adjust the entire curve and not just trim the edges like this
+  float max_price = abs(num)*material_nums[mat].price*10;
+  float min_price = abs(num)*material_nums[mat].price/10;
+  return max(min_price, min(max_price, total_price));
 
   // p = desired price
   // e = 2.718281828
@@ -209,24 +215,19 @@ float TCommodity::demandCurvePrice(int num, float price, int total_units)
 
 }
 
-int TCommodity::sellPrice(int num, int shop_nr, float, const TBeing *ch)
+int TCommodity::sellPrice(int num, int shop_nr, float total_units /*hack to save db lookups*/, const TBeing *ch)
 {
   float price;
 
   price = (pricePerUnit() * shop_index[shop_nr].getProfitSell(this,ch));
 
-  TShopOwned tso(shop_nr, NULL);
-  TCommodity *tc;
-  
-  int total_units=0;
-  for(TThing *t=tso.getStuff();t;t=t->nextThing){
-    if((tc=dynamic_cast<TCommodity *>(t)) && 
-       tc->getMaterial()==getMaterial()){
-      total_units+=tc->numUnits();
-    }
+  if (total_units < 0)
+  {
+    TShopOwned tso(shop_nr, NULL);
+    total_units = tso.getInventoryCount(this);
   }
 
-  price=demandCurvePrice(-num, price, total_units);
+  price=demandCurvePrice(-num, price, getMaterial(), int(total_units));
 
   if(price < 1)
     price=0;
@@ -241,17 +242,10 @@ float TCommodity::shopPriceFloat(int num, int shop_nr, float, const TBeing *ch) 
   price = (pricePerUnit() * shop_index[shop_nr].getProfitBuy(this, ch));
 
   TShopOwned tso(shop_nr, NULL);
-  TCommodity *tc;
 
-  int total_units=0;
-  for(TThing *t=tso.getStuff();t;t=t->nextThing){
-    if((tc=dynamic_cast<TCommodity *>(t)) && 
-       tc->getMaterial()==getMaterial()){
-      total_units+=tc->numUnits();
-    }
-  }
+  int total_units = tso.getInventoryCount(this);;
 
-  price=demandCurvePrice(num, price, total_units);
+  price=demandCurvePrice(num, price, getMaterial(), total_units);
 
   return price;
 }
@@ -263,8 +257,6 @@ int TCommodity::shopPrice(int num, int shop_nr, float, const TBeing *ch) const
 
 int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
 {
-  char buf[256];
-  char buf2[80];
   int price, vnum;
   float cost_per;
   TObj *obj2;
@@ -315,7 +307,7 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
         return -1;
     }
   }
-  strcpy(buf2, fname(name).c_str());
+
   --(*this);
   int num2 = (int) (numUnits()) - num;
   
@@ -339,48 +331,40 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
 
   } else {
     // this happens with sub zero weight components
-    vlogf(LOG_BUG, fmt("Bogus num %d in buyMe component at %d.  wgt=%.2f") %  num % ch->in_room % getWeight());
+    vlogf(LOG_BUG, fmt("Bogus num %d in buyMe commodity at %d.  wgt=%.2f") %  num % ch->in_room % getWeight());
   }
 
-  sprintf(buf, "%s/%d", SHOPFILE_PATH, shop_nr);
-  keeper->saveItems(buf);
+  keeper->saveItems(shop_nr);
   ch->doQueueSave();
-  keeper->saveItem(shop_nr, this);
+  if (numUnits() > 0)
+    keeper->saveItem(shop_nr, this);
   delete this;
   return price;
 }
 
-bool TCommodity::sellMeCheck(TBeing *ch, TMonster *keeper, int num, int defaultMax) const
+bool TCommodity::sellMeCheck(TBeing *ch, TMonster *keeper, int num, int total_inventory /* hack to save db lookups*/) const
 {
-  int total = 0;
   sstring buf;
-
   TShopOwned tso(keeper, ch);
   int max_num=shop_capacity;
   
   if(tso.isOwned())
-    max_num=tso.getMaxNum(ch, this, defaultMax);
+    max_num=tso.getMaxNum(ch, this, shop_capacity);
 
   if(max_num == 0){
     keeper->doTell(ch->name, "I don't wish to buy any of those right now.");
     return TRUE;
   }
 
-  TCommodity *commod;
-  for(TThing *t=keeper->getStuff();t;t=t->nextThing){
-    if((commod=dynamic_cast<TCommodity *>(t)) &&
-       commod->getMaterial()==getMaterial()){
-      total=commod->numUnits();
-      break;
-    }
-  }
+  if (total_inventory < 0)
+    total_inventory = tso.getInventoryCount(this);
   
-  if (total >= max_num) {
+  if (total_inventory >= max_num) {
     keeper->doTell(ch->getName(), fmt("I already have plenty of %s.") % 
 		   getName());
     return TRUE;
-  } else if (total + num > max_num) {
-    keeper->doTell(ch->getName(), fmt("I'll buy no more than %d unit%s of %s.") % (max_num - total) % (max_num - total > 1 ? "s" : "") % getName());
+  } else if (total_inventory + num > max_num) {
+    keeper->doTell(ch->getName(), fmt("I'll buy no more than %d unit%s of %s.") % (max_num - total_inventory) % (max_num - total_inventory > 1 ? "s" : "") % getName());
     return TRUE;
   }
   
@@ -389,78 +373,51 @@ bool TCommodity::sellMeCheck(TBeing *ch, TMonster *keeper, int num, int defaultM
 
 int TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
 {
-  TCommodity *obj2 = NULL;
-  int num, price, rent_id;
-  char buf[256], buf2[80];
+  int num, price, rent_id = -1, units = 0;
+  char buf[256];
   TDatabase db(DB_SNEEZY);
-  TObj *to;
 
-  db.query("select rent_id from rent where owner_type='shop' and owner=%i and material=%i and vnum=%i",
+  db.query("select rent_id, weight*10 as units from rent where owner_type='shop' and owner=%i and material=%i and vnum=%i",
 	   shop_nr, getMaterial(), GENERIC_COMMODITY);
 
   if(db.fetchRow()){
     rent_id=convertTo<int>(db["rent_id"]);
-    to=keeper->loadItem(shop_nr, rent_id);
-    obj2 = dynamic_cast<TCommodity *>(to);
-    keeper->deleteItem(shop_nr, rent_id);
-  } else {
-    rent_id=-1;
-    to = read_object(objVnum(), VIRTUAL);
-    obj2 = dynamic_cast<TCommodity *>(to);
-    obj2->setWeight(0.0);
-    obj2->setMaterial(getMaterial());
+    units=convertTo<int>(db["units"]);
   }
-  *keeper += *obj2;
 
-  strcpy(buf2, fname(name).c_str());
-  price = sellPrice(numUnits(), shop_nr, -1, ch);
+  price = sellPrice(numUnits(), shop_nr, float(units), ch);
 
   if (isObjStat(ITEM_NODROP)) {
     ch->sendTo("You can't let go of it, it must be CURSED!\n\r");
-    keeper->saveItem(shop_nr, rent_id, obj2);
-    delete obj2;
     return false;
   }
   if (isObjStat(ITEM_PROTOTYPE)) {
     ch->sendTo("That's a prototype, no selling that!\n\r");
-    keeper->saveItem(shop_nr, rent_id, obj2);
-    delete obj2;
     return false;
   }
   if (will_not_buy(ch, keeper, this, shop_nr)){
-    keeper->saveItem(shop_nr, rent_id, obj2);
-    delete obj2;
     return false;
   }
-
-  if (sellMeCheck(ch, keeper, numUnits(), -1)){
-    keeper->saveItem(shop_nr, rent_id, obj2);
-    delete obj2;
+  if (sellMeCheck(ch, keeper, numUnits(), units)){
     return false;
   }
-
   if (!shop_index[shop_nr].willBuy(this)) {
     keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
-    keeper->saveItem(shop_nr, rent_id, obj2);
-    delete obj2;
     return false;
   }
   if (keeper->getMoney() < price) {
     keeper->doTell(ch->getName(), shop_index[shop_nr].missing_cash1);
-    keeper->saveItem(shop_nr, rent_id, obj2);
-    delete obj2;
     return false;
   }
 
-  num = obj2->numUnits() + numUnits();
+  num = units + numUnits();
 
-  if (num) {
-    obj2->setWeight(num/10.0);
-    obj2->setMaterial(getMaterial());
+  if (num > 0) {
+
     --(*this);
 
     TShopOwned tso(shop_nr, keeper, ch);
-    tso.doSellTransaction(price, obj2->getName(), TX_SELLING);
+    tso.doSellTransaction(price, getName(), TX_SELLING);
 
     keeper->doTell(ch->getName(), fmt("Thanks, here's your %d talens.") % price);
     act("$n sells $p.", TRUE, ch, this, 0, TO_ROOM);
@@ -470,15 +427,24 @@ int TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
       sprintf(buf, "%d", price);
       ch->doSplit(buf, false);
     }
-    keeper->saveItem(shop_nr, rent_id, obj2);
-    delete obj2;
-    return DELETE_THIS;
+    if (rent_id < 0)
+    {
+      TObj *to = read_object(objVnum(), VIRTUAL);
+      TCommodity *obj2 = dynamic_cast<TCommodity *>(to);
+      obj2->setWeight(num/10.0);
+      obj2->setMaterial(getMaterial());
+      keeper->saveItem(shop_nr, rent_id, obj2);
+      delete obj2;
+    }
+    else
+    {
+      db.query("update rent set weight=(%i/10) where rent_id=%i", num, rent_id);
+    }
   }
+  else
+    keeper->saveItems(shop_nr);
+
   ch->doQueueSave();
-  sprintf(buf, "%s/%d", SHOPFILE_PATH, shop_nr);
-  keeper->saveItems(buf);
-  keeper->saveItem(shop_nr, rent_id, obj2);
-  delete obj2;
   return DELETE_THIS;
 }
 
@@ -520,7 +486,7 @@ int TCommodity::sellCommod(TBeing *ch, TMonster *keeper, int shop_nr, TThing *ba
 void TCommodity::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
 {
   int price;
-  char buf2[80];
+  /*char buf2[80];
   TDatabase db(DB_SNEEZY);
   TObj *obj2;
 
@@ -537,19 +503,19 @@ void TCommodity::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
     obj2->setMaterial(getMaterial());
   }
   *keeper += *obj2;
-
-  strcpy(buf2, fname(name).c_str());
-  price = sellPrice(numUnits(), shop_nr, -1, ch);
+  strcpy(buf2, fname(name).c_str());*/
 
   if (!shop_index[shop_nr].willBuy(this)) {
     keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
-    delete obj2;
+    //delete obj2;
     return;
   }
 
+  price = sellPrice(numUnits(), shop_nr, -1, ch);
+
   keeper->doTell(ch->getName(), fmt("Hmm, I'd give you %d talens for your %i units of that.") % price % numUnits());
 
-  delete obj2;
+  //delete obj2;
   return;
 }
 

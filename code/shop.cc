@@ -683,8 +683,8 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     ch->logItem(temp1, CMD_BUY);
     count++;
   }
-  buf = fmt("%s/%d") % SHOPFILE_PATH % shop_nr;
-  keeper->saveItems(buf);
+
+  keeper->saveItems(shop_nr);
 
   if (!count)
     return -1;
@@ -920,9 +920,6 @@ int TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
     ch->doSplit(buf.c_str(), false);
   }
 
-
-  //  buf = fmt("%s/%d") % SHOPFILE_PATH % shop_nr;
-  //  keeper->saveItems(buf);
   ch->doQueueSave();
   return DELETE_THIS;
 }
@@ -1831,9 +1828,9 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
     price=convertTo<float>(db["price"]);
 
     if(type==ITEM_RAW_MATERIAL){
-      price=TCommodity::demandCurvePrice(1, 0, convertTo<int>(db["count"]));
-      short_desc=fmt("COMMODITY: %s") %
-	material_nums[convertTo<int>(db["short_desc"])].mat_name;
+      int mat = convertTo<int>(db["short_desc"]);
+      price=TCommodity::demandCurvePrice(1, 0, mat, convertTo<int>(db["count"]));
+      short_desc=fmt("COMMODITY: %s") % material_nums[mat].mat_name;
     }
 
     // modify price for structure damage
@@ -2164,14 +2161,6 @@ void shopping_kill(const char *, TBeing *ch, TBeing *keeper, int shop_nr)
   }
 }
 
-void waste_shop_file(int shop_nr)
-{
-  sstring buf;
-
-  buf = fmt("%s/%d") % SHOPFILE_PATH % shop_nr;
-  unlink(buf.c_str());
-}
-
 
 int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *o)
 {
@@ -2226,6 +2215,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       return TRUE;
     } else
       return FALSE;
+#ifdef UNUSED
   } else if(cmd == CMD_GENERIC_CREATED && 0){
     // this is for conversion to new shop code, only will be run once
     myself->loadItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
@@ -2238,6 +2228,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       delete t;
     }      
     return FALSE;
+#endif
   } else if (cmd == CMD_MOB_VIOLENCE_PEACEFUL) {
     myself->doSay("Hey!  Take it outside.");
     // o is really a being, so downcast, and then bring it back up
@@ -2353,6 +2344,14 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
     shopping_buy(arg, ch, myself, shop_nr);
     return TRUE;
+  }
+  // if given something, make this act as a sale (write to database, not inventory)
+  // if given talens, act as normal (talens handed over)
+  if (cmd == CMD_GIVE) {
+    sstring arg1, arg2;
+    argument_interpreter(arg, arg1, arg2);
+    if (!is_number(arg1) || !is_abbrev(arg2, "talens"))
+      cmd = CMD_SELL;
   }
   if ((cmd == CMD_SELL) && (ch->in_room == shop_index[shop_nr].in_room)) {
     if (!safe_to_save_shop_stuff(myself))
@@ -2606,7 +2605,7 @@ bool safe_to_save_shop_stuff(TMonster *ch)
 }
 
 
-void processShopFile(const char *cFname)
+/*void processShopFile(const char *cFname)
 {
   char fileName[128];
   FILE *fp;
@@ -2636,7 +2635,7 @@ void processShopFile(const char *cFname)
 void processShopFiles(void)
 {
    dirwalk(SHOPFILE_PATH, processShopFile);
-}
+}*/
 
 
 // adjusts the shop price based on structure

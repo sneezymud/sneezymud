@@ -1618,8 +1618,7 @@ void TBeing::doReset(sstring arg)
           delete tmp;
         }
         keeper->autoCreateShop(isi);
-        buf = fmt("%s/%d") % SHOPFILE_PATH % isi;
-        keeper->saveItems(buf);
+        keeper->saveItems(isi);
       }
     }
     sendTo("Shops reset.\n\r");

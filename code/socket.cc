@@ -1462,6 +1462,7 @@ void procRecordCommodPrices::run(int) const
     TShopOwned tso(shop_nr, NULL);
     TCommodity *commod;
     
+    // REVIEW: getStuff() should be returning NULL, since all shop objs are in database
     for(TThing *t=tso.getStuff();t;t=t->nextThing){
       if((commod=dynamic_cast<TCommodity *>(t))){
 	db.query("insert into commodprices values (now(), %i, %i, %f)",
