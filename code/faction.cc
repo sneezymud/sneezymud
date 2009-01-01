@@ -510,6 +510,8 @@ void sendToFaction(factionTypeT fnum, const TBeing *who, const char *arg)
     d_next = d->next;
     if (d->connected)
       continue;
+    if (d->ignored.isIgnored(who->desc))
+      continue;
 
     tmpch = (d->original ? d->original : d->character);
 

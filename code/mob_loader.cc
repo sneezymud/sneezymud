@@ -652,7 +652,7 @@ void TMonster::mageComponentLoader(void)
       obj = NULL;
     }
   }
-  if (found || ::number(0,2))
+  if (found)
     *this += *bag;
   else {
     delete bag;
@@ -1196,7 +1196,7 @@ void TMonster::genericMobLoader(TOpenContainer **bag)
     return;
   if (!isHumanoid())
     return;
-  if (::number(0,9) <= 5)
+  if (::number(0,9) <= 8)
     return;
 
   if (wealth > 5) {

@@ -129,7 +129,9 @@ void TBeing::doNewbie(const sstring &arg)
   {
     if (d->character == this || d->connected != CON_PLYNG)
       continue;
-    
+    if (d->ignored.isIgnored(desc))
+      continue;
+
     TBeing *person = (dynamic_cast<TMonster *>(d->character) && d->original) ? d->original : d->character;
     if (!person)
       continue;

@@ -529,7 +529,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
   doSave(SILENT_YES);
 
 
-  if(v->isPc() && v->hasQuestBit(TOG_BITTEN_BY_VAMPIRE) &&
+  if(v->isPc() && v->hasQuestBit(TOG_BITTEN_BY_VAMPIRE) && v->isHumanoid() &&
      v->getPosition() == POSITION_DEAD){
     v->sendTo(COLOR_BASIC, "<r>An unbelievable pain wracks your body as your mortal self dies.<r>\n\r");
     v->sendTo(COLOR_BASIC, "<r>The blood in your veins runs hot, hot as the sun.<r>\n\r");
