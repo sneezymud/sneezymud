@@ -2287,10 +2287,9 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     
     TShopOwned tso(shop_nr, myself, sba);
 
-    for(iter=shop_index[shop_nr].producing.begin();
-	iter!=shop_index[shop_nr].producing.end();++iter){
+    for(iter=shop_index[shop_nr].producing.begin();iter!=shop_index[shop_nr].producing.end();++iter){
       if(*iter <= -1)
-	continue;
+        continue;
 
       if (!(o = read_object(*iter, REAL))) {
         vlogf(LOG_BUG, fmt("Shopkeeper %d couldn't load produced item.") %  
