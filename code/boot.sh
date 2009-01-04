@@ -45,6 +45,9 @@ case $USER in
   pappy)
     PORT=1337
     ;;
+  staffa)
+    PORT=6900
+    ;;
 
 esac
 
