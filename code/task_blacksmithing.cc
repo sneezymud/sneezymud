@@ -1139,7 +1139,7 @@ public:
   virtual const sstring NoSToolMsg() { return "You need to have some cording in your secondary hand.\n\r"; }
 
   virtual const sstring DiePToolMsgC() { return "The tip of your $O breaks with a *SNAP*, rendering it useless!"; }
-  virtual const sstring DiePToolMsgR() { return "The tip of %n's $O breaks with a *SNAP*, rendering it useless!"; }
+  virtual const sstring DiePToolMsgR() { return "The tip of $n's $O breaks with a *SNAP*, rendering it useless!"; }
   virtual const sstring DieSToolMsgC() { return "$P is completely used up.  You'll need more to continue."; }
   virtual const sstring DieSToolMsgR() { return "$n uses $P up completely."; }
 

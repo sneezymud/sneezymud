@@ -2281,6 +2281,157 @@ static void mobRepop(TMonster *mob, int zone, int tRPNum = 0)
   mob->quickieDefend();
 }
 
+// runs the resetCom command for command = 'G'
+//return false = last_cmd = 0, objload = 0;
+//return true = last_cmd = 1, objload = 1
+bool runResetComG(resetCom &rs, TMonster *mob, TObj *&obj)
+{
+  if (!(obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist &&
+      (obj = read_object_buy_build(mob, rs.arg1, REAL))))
+  {
+    repoCheck(mob, rs.arg1);
+    return false;
+  }
+
+  *mob += *obj;
+  obj->onObjLoad();
+  mob->logItem(obj, CMD_LOAD);
+  return true;
+}
+
+
+// runs the resetCom command for command = 'E'
+//return false = last_cmd = 0, objload = 0;
+//return true = last_cmd = 1;
+bool runResetComE(resetCom &rs, TMonster *mob, TObj *&obj)
+{
+  if (!mob)
+  {
+    vlogf(LOG_LOW, fmt("no mob for 'E' command.  Obj (%i)") %  rs.arg1);
+    return false;
+  }
+
+  int obj_lp = getObjLoadPotential(obj_index[rs.arg1].virt);
+  if (obj_lp == 0) {
+    vlogf(LOG_MISC, fmt("Didn't find load potential of %s [%d].  rs.arg1=%d") % obj_index[rs.arg1].short_desc % obj_index[rs.arg1].virt % rs.arg1);
+    obj_lp = 1;
+  }
+
+  // 1-e**((ln(1-0.01n**1/3)/n)) = normalized load rate
+  // adj_obj_lp_ratio = 1 - pow(exp(1), ((log(1 - 0.01*cbrt((double)obj_lp))/(double)obj_lp)));
+  // 1 - ((1-0.01*n**1/3)^(1/n)) = normalized load rate, less math
+  double adj_obj_lp_ratio = 1 - pow((1 - cbrt((double)obj_lp)/100), 1/(double)obj_lp);
+
+  // obj_lp_ratio = 1 - pow((1 - (double)fixed_chance/100), (double)obj_lp);
+  double obj_lp_ratio = (double)fixed_chance/100;
+
+  // getting to this point means we've already beat the fixed_chance%
+  // chance of loading an object.  This has to be taken into account
+  // when computing the odds of the normalized load potential.
+  // vlogf(LOG_MISC, fmt("(10000000 * adj_obj_lp_ratio / obj_lp_ratio * stats.equip) = %d") % (int) (10000000 * adj_obj_lp_ratio / obj_lp_ratio * stats.equip));
+  if(!((obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist) &&
+     (::number(0, 9999999) < (int)(10000000*adj_obj_lp_ratio / obj_lp_ratio*stats.equip)) &&
+	   (obj = read_object_buy_build(mob, rs.arg1, REAL))))
+  {
+    repoCheck(mob, rs.arg1);
+    return false;
+  }
+
+  // so now we've loaded the item, lets place it
+  wearSlotT realslot = wearSlotT(rs.arg3);
+  mud_assert(realslot >= MIN_WEAR && realslot < MAX_WEAR, "bad slot");
+
+  // check for double-equip
+  if (mob->equipment[realslot])
+  {
+    vlogf(LOG_LOW, fmt("'E' command operating on already equipped slot.  %s, %s slot %d\n\rpre-equipped with %s, is_same: %s") %  
+          mob->getName() % obj->getName() % realslot %
+          mob->equipment[realslot]->getName() %
+          ((mob->equipment[realslot] == obj) ? "true" : "false"));
+    delete obj;
+    return false;
+  }
+
+  // these are just safety logs, equipping will be done regardless
+  if (!mob->canUseEquipment(obj, SILENT_YES))
+    vlogf(LOG_LOW, fmt("'E' command equipping unusable item (%s:%d) on (%s:%d).") % obj->getName() % obj->objVnum() % mob->getName() % mob->mobVnum());
+  TBaseClothing *tbc = dynamic_cast<TBaseClothing *>(obj);
+  if (tbc && tbc->canWear(ITEM_WEAR_FINGERS) && gamePort != PROD_GAMEPORT) {
+    vlogf(LOG_LOW, fmt("RINGLOAD: [%s][%-6.2f] loading on [%s][%d]") % 
+          obj->getName() % tbc->armorLevel(ARMOR_LEV_REAL) %
+          mob->getName() % mob->GetMaxLevel());
+  }
+  if (tbc && !mob->validEquipSlot(realslot) && !tbc->isSaddle())
+    vlogf(LOG_LOW, fmt("'E' command for %s equipping item (%s) on nonvalid slot %d.") % mob->getName() % tbc->getName() % realslot);
+  if (!check_size_restrictions(mob, obj, realslot, mob) &&
+      realslot != HOLD_RIGHT && realslot != HOLD_LEFT)
+  {
+    int size_per = 100;
+    if (race_vol_constants[mapSlotToFile(realslot)])
+    {
+      size_per = (int)(100.0 * obj->getVolume() / race_vol_constants[mapSlotToFile( realslot)]);
+      if (obj->isPaired())
+        size_per /= 2;
+    }
+    vlogf(LOG_LOW, fmt("'E' for (%s:%d) equipping (%s:%d) with bad fit. (m:%d%%/o:%d%%) change vol to %d, or height to %d.") %  
+        mob->getName() % mob->mobVnum() % obj->getName() % obj->objVnum() % (mob->getHeight() * 100) %
+        size_per % (mob->getHeight() * (obj->isPaired() ? 2 : 1) * race_vol_constants[mapSlotToFile( realslot)]) %
+        (size_per / 100));
+  }
+  // end sanity checks
+
+  // OK, actually do the equip
+  mob->equipChar(obj, realslot);
+  mob->logItem(obj, CMD_LOAD);
+  log_object(obj);
+
+  // run some sanity checks after load
+  // for items without levels, objLevel = 0 so this logic is OK
+  double al = obj->objLevel();
+  double grl = mob->getRealLevel();
+  if (al > (grl + 1))
+    vlogf(LOG_LOW, fmt("Mob (%s:%d) of level %.1f loading item (%s:%d) thought to be level %.1f.") %  mob->getName() % mob->mobVnum() % grl % obj->getName() % obj->objVnum() % al);
+  if (!mob->equipment[realslot])
+    vlogf(LOG_LOW, fmt("Zone-file %s (%d) failed to equip %s (%d)") % mob->getName() % mob->mobVnum() % obj->getName() % obj->objVnum());
+
+  return true;
+}
+
+bool runResetComY(resetCom rs, TMonster *mob)
+{
+  mob->loadSetEquipment(rs.arg1, NULL, (rs.arg2 >= 98) ? rs.arg2 : fixed_chance);
+
+  if (mob->hasClass(CLASS_MAGE)) {
+    TSpellBag *tBagA = NULL,
+              *tBagB = NULL;
+    TThing    *tThing;
+
+    // Find Held Spellbag
+    for (tThing = mob->getStuff(); tThing; tThing = tThing->nextThing)
+      if ((tBagA = dynamic_cast<TSpellBag *>(tThing)))
+        break;
+
+    // Find Worn Spellbag
+    for (wearSlotT tWear = MIN_WEAR; tWear < MAX_WEAR; tWear++)
+      if (mob->equipment[tWear] &&
+          (tBagB = dynamic_cast<TSpellBag *>(mob->equipment[tWear])))
+        break;
+
+    if (tBagA && tBagB) {
+      while ((tThing = tBagA->getStuff())) {
+        --(*tThing);
+        *tBagB += *tThing;
+      }
+
+      --(*tBagA);
+      delete tBagA;
+      tBagA = NULL;
+    }
+  }
+  return true;
+}
+
+
 void zoneData::resetZone(bool bootTime, bool findLoadPotential)
 {
   int cmd_no;
@@ -2289,14 +2440,11 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
   bool objload = FALSE;
   TMonster *mob = NULL;
   TMonster *old_mob = NULL;
-  TObj *obj = NULL, *newobj = NULL;
+  TObj *obj = NULL;
   TRoom *rp = NULL, *storageRoom = NULL;
   TRoom *random_room = NULL;
   TThing *t;
   int count;
-  wearSlotT realslot;
-  int obj_lp = 0;
-  double obj_lp_ratio, adj_obj_lp_ratio;
 
   struct armor_set_struct {
     int slots[MAX_WEAR];
@@ -2309,868 +2457,625 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
     return;
   }
 
-  if(!bootTime)
-    vlogf(LOG_SILENT, fmt("Resetting zone '%s' (rooms %d-%d).") % 
-	  name % bottom % top);
-
-  if(!bootTime)
-     update_commod_index();
+  if(!bootTime) {
+    vlogf(LOG_SILENT, fmt("Resetting zone '%s' (rooms %d-%d).") % name % bottom % top);
+    update_commod_index();
+  }
 
   storageRoom = real_roomp(ROOM_NOCTURNAL_STORAGE);
   for (cmd_no = 0;; cmd_no++) {
     resetCom &rs = this->cmd[cmd_no];
+
     if (rs.command == 'S')
       break;
+  
+    //!(last_cmd || !rs.if_flag)
+    if (!last_cmd && rs.if_flag)
+    {
+      last_cmd = 0;
+      continue;
+    }
 
-    if (last_cmd || !rs.if_flag) {
-      switch (rs.command) {
-        case 'A':
-          if (findLoadPotential) {
+    // skip non-load commands when checking load potentials
+    if (findLoadPotential && rs.command != 'E' && rs.command != 'G' &&
+      rs.command != 'Y' && rs.command != 'Z'  && rs.command != '?')
+    {
+      continue;
+    }
+
+    switch (rs.command) {
+
+      case 'A':
+        for (count = 0; count < 10; count++) {
+          if ((random_room = real_roomp(::number(rs.arg1, rs.arg2))))
             break;
+        }
+        if (!random_room) {
+          vlogf(LOG_LOW, fmt("Unable to detect room in 'A' %d %d") %  
+               rs.arg1 % rs.arg2);
+        }
+        break;
+
+      case 'M':
+        // check if zone is disabled or if mob exceeds absolute max
+        if (rs.arg1 < 0 || rs.arg1 >= (signed int) mob_index.size()) {
+          vlogf(LOG_LOW, fmt("Detected bogus mob number (%d) on read_mobile call for resetZone (load room %d).") %  rs.arg1 % rs.arg3);
+          last_cmd = 0;
+          mobload = 0;
+          continue;
+        }
+
+        if(this->zone_value != 0 && bootTime){
+          mob_index[rs.arg1].doesLoad=true;
+          mob_index[rs.arg1].numberLoad++;
+        }
+
+        if ((this->zone_value != 0) &&
+            mob_index[rs.arg1].getNumber() < mob_index[rs.arg1].max_exist) {
+          if (rs.arg3 != ZONE_ROOM_RANDOM) {
+            rp = real_roomp(rs.arg3);
+          } else {
+            rp = random_room;
+            random_room = NULL;
           }
-          for (count = 0; count < 10; count++) {
-            if ((random_room = real_roomp(::number(rs.arg1, rs.arg2))))
-              break;
+          if (!rp) {
+            vlogf(LOG_LOW, fmt("No room (%d) in M command (%d)") %  
+                rs.arg3 % rs.arg1);
+            last_cmd = 0;
+            mobload = 0;
+            continue;
           }
-          if (!random_room) {
-            vlogf(LOG_LOW, fmt("Unable to detect room in 'A' %d %d") %  
-                 rs.arg1 % rs.arg2);
+          count = 0;
+
+          for (t = rp->tBornInsideMe; t; t = t->nextBorn) {
+            TMonster *tMonster = dynamic_cast<TMonster *>(t);
+
+            if (tMonster && tMonster->mobVnum() == mob_index[rs.arg1].virt)
+              count++;
           }
-          break;
-        case 'M':
-          if (findLoadPotential) {
-            break;
+
+          if (count >= rs.arg2) {
+            // mob exceeds max for room
+            last_cmd = 0;
+            mobload = 0;
+            continue;
           }
-          // check if zone is disabled or if mob exceeds absolute max
-          if (rs.arg1 < 0 || rs.arg1 >= (signed int) mob_index.size()) {
-            vlogf(LOG_LOW, fmt("Detected bogus mob number (%d) on read_mobile call for resetZone (load room %d).") %  rs.arg1 % rs.arg3);
+          if (!(mob = read_mobile(rs.arg1, REAL))) {
+            vlogf(LOG_BUG, fmt("Error reading mobile (%d).  You suck.") %  rs.arg1);
             last_cmd = 0;
             mobload = 0;
             continue;
           }
 
+          mob->createWealth();
+
+          if ((mob->isNocturnal() || mob->isDiurnal()) && storageRoom)
+            *storageRoom += *mob;
+          else
+            *rp += *mob;
+
+          // Slap the mob on the born list.
+          *rp << *mob;
+
+          last_cmd = 1;
+          mobload = 1;
+          mob->brtRoom = (rp ? rp->number : ROOM_NOWHERE);
+          mobRepop(mob, zone_nr, (rp ? rp->number : ROOM_NOWHERE));
+        } else {
+          if(bootTime && mob_index[rs.arg1].getNumber() >= mob_index[rs.arg1].max_exist)
+            vlogf(LOG_LOW, fmt("Mob %s (%i) tried to load but hit max_exist") % 
+                mob_index[rs.arg1].short_desc % mob_index[rs.arg1].virt);
+
+          last_cmd = 0;
+          mobload = 0;
+        }
+        break;
+
+      case 'C':
+        // a charmed follower of the previous mob
+        // check if zone is disabled or if mob exceeds absolute max
+        if ((this->zone_value != 0) && mobload &&
+            mob_index[rs.arg1].getNumber() < mob_index[rs.arg1].max_exist) {
+          if (!(old_mob = mob)) {
+            vlogf(LOG_BUG, "Lack of master mob in 'C' command.");
+            continue;
+          }
+          if (rs.arg3 != ZONE_ROOM_RANDOM) {
+            rp = real_roomp(rs.arg3);
+          } else {
+            rp = random_room;
+            random_room = NULL;
+          }
+          if (!rp) {
+            vlogf(LOG_LOW, fmt("No room (%d) in C command (%d)") % 
+                rs.arg3 % rs.arg1);
+            last_cmd = 0;
+            mobload = 0;
+            continue;
+          }
+
+          count = 0;
+
+          for (t = rp->tBornInsideMe; t; t = t->nextBorn) {
+            TMonster *tMonster = dynamic_cast<TMonster *>(t);
+
+            if (tMonster && tMonster->mobVnum() == mob_index[rs.arg1].virt)
+              count++;
+          }
+
+          if (count >= rs.arg2) {
+            // mob exceeds max for room
+            last_cmd = 0;
+            mobload = 0;
+            continue;
+          }
+          if (!(mob = read_mobile(rs.arg1, REAL))) {
+            vlogf(LOG_BUG, "Error reading mobile.  You suck.");
+            continue;
+          }
+          *rp += *mob;
+          mob->brtRoom = (rp ? rp->number : ROOM_NOWHERE);
+          mobRepop(mob, zone_nr);
+
+          // Slap the mob on the born list.
+          *rp << *mob;
+
+          old_mob->addFollower(mob);
+          SET_BIT(mob->specials.affectedBy, AFF_CHARM);
+          last_cmd = 1;
+        } else {
+          last_cmd = 0;
+          mobload = 0;
+        }
+        break;
+
+      case 'K':
+        // a grouped follower of the previous mob
+        // check if zone is disabled or if mob exceeds absolute max
+        if ((this->zone_value != 0) && mobload &&
+            mob_index[rs.arg1].getNumber() < mob_index[rs.arg1].max_exist) {
+          if (!(old_mob = mob)) {
+            vlogf(LOG_BUG, "Lack of master mob in 'K' command.");
+            continue;
+          }
+          if (rs.arg3 != ZONE_ROOM_RANDOM) {
+            rp = real_roomp(rs.arg3);
+          } else {
+            rp = random_room;
+            random_room = NULL;
+          }
+          if (!rp) {
+            vlogf(LOG_LOW, fmt("No room (%d) in K command (%d)") % 
+                rs.arg3 % rs.arg1);
+            last_cmd = 0;
+            mobload = 0;
+            continue;
+          }
+
+          count = 0;
+
+          for (t = rp->tBornInsideMe; t; t = t->nextBorn) {
+            TMonster *tMonster = dynamic_cast<TMonster *>(t);
+
+            if (tMonster && tMonster->mobVnum() == mob_index[rs.arg1].virt)
+              count++;
+          }
+
+          if (count >= rs.arg2) {
+            // mob exceeds max for room
+            last_cmd = 0;
+            mobload = 0;
+            continue;
+          }
+          if (!(mob = read_mobile(rs.arg1, REAL))) {
+            vlogf(LOG_BUG, "Error reading mobile.  You suck.");
+            continue;
+          }
+          *rp += *mob;
+          mob->brtRoom = (rp ? rp->number : ROOM_NOWHERE);
+          mobRepop(mob, zone_nr);
+
+          // Slap the mob on the born list.
+          *rp << *mob;
+
+          old_mob->addFollower(mob);
+          SET_BIT(old_mob->specials.affectedBy, AFF_GROUP);
+          SET_BIT(mob->specials.affectedBy, AFF_GROUP);
+          last_cmd = 1;
+        } else {
+          last_cmd = 0;
+          mobload = 0;
+        }
+        break;
+
+      case '?':
+        // BUG: lots of zonefiles use '?' followed by 'E' however neither '?' nor 'E' actually work together
+        if (rs.character) {
+          if ((rs.character == 'M') ||
+              (rs.character == 'O') ||
+              (rs.character == 'B') ||
+              (rs.character == 'L') ||
+              (objload && (rs.character == 'P')) ||
+              (mobload && (rs.character != 'P'))) {
+
+            // If we are putting certain objects into the world or
+            // giving certain objects to mobs, follow the chance defined
+            // in the zonefile.  Otherwise, set the chance to fixed_chance.
+            int roll = findLoadPotential ? 1 : dice(1, 100);
+            bool useArgs = (objload && rs.character == 'P') || (mobload && rs.character == 'G');
+            int my_chance = useArgs ? rs.arg1 : fixed_chance;
+
+            last_cmd = (rs.arg1 >= 98 || roll <= my_chance || gamePort == BETA_GAMEPORT);
+            if (!last_cmd) {
+              if (rs.character == 'M')
+                mobload = 0;
+              else if (rs.character == 'O' || rs.character == 'B')
+                objload = 0;
+            }
+          }
+        } else
+          vlogf(LOG_BUG, "No rs. character in ? command");
+        break;
+
+      case 'R':
+        // check if zone is disabled or if mob exceeds absolute max
+        if ((this->zone_value != 0) && mobload &&
+            mob_index[rs.arg1].getNumber() < mob_index[rs.arg1].max_exist) {
+          if (rs.arg3 != ZONE_ROOM_RANDOM) {
+            rp = real_roomp(rs.arg3);
+          } else {
+            rp = random_room;
+            random_room = NULL;
+          }
+          if (!rp) {
+            vlogf(LOG_LOW, fmt("No room (%d) in R command (%d)") % 
+                rs.arg3 % rs.arg1);
+            last_cmd = 0;
+            mobload = 0;
+            continue;
+          }
+    
           if(this->zone_value != 0 && bootTime){
             mob_index[rs.arg1].doesLoad=true;
             mob_index[rs.arg1].numberLoad++;
           }
 
-          if ((this->zone_value != 0) &&
-              mob_index[rs.arg1].getNumber() < mob_index[rs.arg1].max_exist) {
-            if (rs.arg3 != ZONE_ROOM_RANDOM) {
-              rp = real_roomp(rs.arg3);
-            } else {
-              rp = random_room;
-              random_room = NULL;
-            }
-            if (!rp) {
-              vlogf(LOG_LOW, fmt("No room (%d) in M command (%d)") %  
-                  rs.arg3 % rs.arg1);
-              last_cmd = 0;
-              mobload = 0;
-              continue;
-            }
-            count = 0;
+          count = 0;
 
-#if 1
-            for (t = rp->tBornInsideMe; t; t = t->nextBorn) {
-              TMonster *tMonster = dynamic_cast<TMonster *>(t);
+          for (t = rp->tBornInsideMe; t; t = t->nextBorn) {
+            TMonster *tMonster = dynamic_cast<TMonster *>(t);
 
-              if (tMonster && tMonster->mobVnum() == mob_index[rs.arg1].virt)
-                count++;
-            }
-#else
-            for (t = rp->getStuff(); t; t = t->nextThing) {
-              TMonster * tmon = dynamic_cast<TMonster *>(t);
+            if (tMonster && tMonster->mobVnum() == mob_index[rs.arg1].virt)
+              count++;
+          }
 
-              if (tmon && tmon->mobVnum() == mob_index[rs.arg1].virt)
-                count++;
-            }
-#endif
-            if (count >= rs.arg2) {
-              // mob exceeds max for room
-              last_cmd = 0;
-              mobload = 0;
-              continue;
-            }
-            if (!(mob = read_mobile(rs.arg1, REAL))) {
-              vlogf(LOG_BUG, fmt("Error reading mobile (%d).  You suck.") %  rs.arg1);
-              last_cmd = 0;
-              mobload = 0;
-              continue;
-            }
-
-            mob->createWealth();
-
-            if ((mob->isNocturnal() || mob->isDiurnal()) && storageRoom)
-              *storageRoom += *mob;
-            else
-              *rp += *mob;
-
-#if 1
-            // Slap the mob on the born list.
-            *rp << *mob;
-#endif
-
-            last_cmd = 1;
-            mobload = 1;
-            mob->brtRoom = (rp ? rp->number : ROOM_NOWHERE);
-            mobRepop(mob, zone_nr, (rp ? rp->number : ROOM_NOWHERE));
-          } else {
-            if(bootTime && mob_index[rs.arg1].getNumber() >= mob_index[rs.arg1].max_exist)
-              vlogf(LOG_LOW, fmt("Mob %s (%i) tried to load but hit max_exist") % 
-                  mob_index[rs.arg1].short_desc % mob_index[rs.arg1].virt);
-
+          if (count >= rs.arg2) {
+            // mob exceeds max for room
             last_cmd = 0;
             mobload = 0;
+            continue;
           }
-          break;
-        case 'C':
-          if (findLoadPotential) {
-            break;
+          if (!(old_mob = mob)) {
+            vlogf(LOG_BUG, "Lack of master mob in 'R' command.");
+            continue;
           }
-          // a charmed follower of the previous mob
-
-          // check if zone is disabled or if mob exceeds absolute max
-          if ((this->zone_value != 0) && mobload &&
-              mob_index[rs.arg1].getNumber() < mob_index[rs.arg1].max_exist) {
-            if (!(old_mob = mob)) {
-              vlogf(LOG_BUG, "Lack of master mob in 'C' command.");
-              continue;
-            }
-            if (rs.arg3 != ZONE_ROOM_RANDOM) {
-              rp = real_roomp(rs.arg3);
-            } else {
-              rp = random_room;
-              random_room = NULL;
-            }
-            if (!rp) {
-              vlogf(LOG_LOW, fmt("No room (%d) in C command (%d)") % 
-                  rs.arg3 % rs.arg1);
-              last_cmd = 0;
-              mobload = 0;
-              continue;
-            }
-
-            count = 0;
-#if 1
-            for (t = rp->tBornInsideMe; t; t = t->nextBorn) {
-              TMonster *tMonster = dynamic_cast<TMonster *>(t);
-
-              if (tMonster && tMonster->mobVnum() == mob_index[rs.arg1].virt)
-                count++;
-            }
-#else
-            for (t = rp->getStuff(); t; t = t->nextThing) {
-              TMonster * tmon = dynamic_cast<TMonster *>(t);
-              if (tmon && tmon->mobVnum() == mob_index[rs.arg1].virt)
-                count++;
-            }
-#endif
-            if (count >= rs.arg2) {
-              // mob exceeds max for room
-              last_cmd = 0;
-              mobload = 0;
-              continue;
-            }
-            if (!(mob = read_mobile(rs.arg1, REAL))) {
-              vlogf(LOG_BUG, "Error reading mobile.  You suck.");
-              continue;
-            }
-            *rp += *mob;
-            mob->brtRoom = (rp ? rp->number : ROOM_NOWHERE);
-            mobRepop(mob, zone_nr);
-
-
-#if 1
-            // Slap the mob on the born list.
-            *rp << *mob;
-#endif
-
-            old_mob->addFollower(mob);
-            SET_BIT(mob->specials.affectedBy, AFF_CHARM);
-            last_cmd = 1;
-          } else {
-            last_cmd = 0;
-            mobload = 0;
+          if (!(mob = read_mobile(rs.arg1, REAL))) {
+            vlogf(LOG_BUG, "Error reading mobile.  You suck.");
+            continue;
           }
-          break;
-        case 'K':
-          if (findLoadPotential) {
-            break;
-          }
-          // a grouped follower of the previous mob
+          rp = real_roomp(rs.arg3);
+          *rp += *mob;
 
-          // check if zone is disabled or if mob exceeds absolute max
-          if ((this->zone_value != 0) && mobload &&
-              mob_index[rs.arg1].getNumber() < mob_index[rs.arg1].max_exist) {
-            if (!(old_mob = mob)) {
-              vlogf(LOG_BUG, "Lack of master mob in 'K' command.");
-              continue;
-            }
-            if (rs.arg3 != ZONE_ROOM_RANDOM) {
-              rp = real_roomp(rs.arg3);
-            } else {
-              rp = random_room;
-              random_room = NULL;
-            }
-            if (!rp) {
-              vlogf(LOG_LOW, fmt("No room (%d) in K command (%d)") % 
-                  rs.arg3 % rs.arg1);
-              last_cmd = 0;
-              mobload = 0;
-              continue;
-            }
+          // Slap the mob on the born list.
+          *rp << *mob;
 
-            count = 0;
-#if 1
-            for (t = rp->tBornInsideMe; t; t = t->nextBorn) {
-              TMonster *tMonster = dynamic_cast<TMonster *>(t);
+          if (old_mob->getHeight() <= (6 * mob->getHeight() / 10))
+            vlogf(LOG_LOW, fmt("Mob mounting mount that is too small.  [%s] [%s]") % 
+                  mob->getName() % old_mob->getName());
 
-              if (tMonster && tMonster->mobVnum() == mob_index[rs.arg1].virt)
-                count++;
-            }
-#else
-            for (t = rp->getStuff(); t; t = t->nextThing) {
-              TMonster * tmon = dynamic_cast<TMonster *>(t);
-              if (tmon && tmon->mobVnum() == mob_index[rs.arg1].virt)
-                count++;
-            }
-#endif
-            if (count >= rs.arg2) {
-              // mob exceeds max for room
-              last_cmd = 0;
-              mobload = 0;
-              continue;
-            }
-            if (!(mob = read_mobile(rs.arg1, REAL))) {
-              vlogf(LOG_BUG, "Error reading mobile.  You suck.");
-              continue;
-            }
-            *rp += *mob;
-            mob->brtRoom = (rp ? rp->number : ROOM_NOWHERE);
-            mobRepop(mob, zone_nr);
+          if (old_mob->getHeight() >= (5 * mob->getHeight() / 2))
+            vlogf(LOG_LOW, fmt("Mob mounting mount that is too big.  [%s] [%s]") % 
+                  mob->getName() % old_mob->getName());
 
-#if 1
-            // Slap the mob on the born list.
-            *rp << *mob;
-#endif
+          if (compareWeights(mob->getTotalWeight(TRUE),
+                             (old_mob->carryWeightLimit() -
+                              old_mob->getCarriedWeight())) == -1)
+            vlogf(LOG_LOW, fmt("Mob mounting mount that is too weak.  [%s] [%s]") % 
+                  mob->getName() % old_mob->getName());
 
-            old_mob->addFollower(mob);
-            SET_BIT(old_mob->specials.affectedBy, AFF_GROUP);
-            SET_BIT(mob->specials.affectedBy, AFF_GROUP);
-            last_cmd = 1;
-          } else {
-            last_cmd = 0;
-            mobload = 0;
-          }
-          break;
-        case '?':
-          if (rs.character) {
-            if ((rs.character == 'M') ||
-                (rs.character == 'O') ||
-                (rs.character == 'B') ||
-                (rs.character == 'L') ||
-                (objload && (rs.character == 'P')) ||
-                (mobload && (rs.character != 'P'))) {
+          if (old_mob->GetMaxLevel() > mob->GetMaxLevel())
+            vlogf(LOG_LOW, fmt("Mob mounting mount that is too strong.  [%s:%d] [%s:%d]") % 
+                  mob->getName() % mob->GetMaxLevel() %
+                  old_mob->getName() % old_mob->GetMaxLevel());
 
-              int tmp, my_chance;
-              if (findLoadPotential) {
-                tmp = 1;
-              } else {
-                tmp = dice(1, 100);
-              }
+          mob->mount(old_mob);
+          mob->setPosition(POSITION_MOUNTED);
+          if (old_mob->master && old_mob->master != mob && !old_mob->rider)
+            old_mob->stopFollower(TRUE);
+          if (!old_mob->master)
+            mob->addFollower(old_mob);
 
-              // If we are putting certain objects into the world or
-              // giving certain objects to mobs, follow the chance defined
-              // in the zonefile.  Otherwise, set the chance to fixed_chance.
-              if ((objload && (rs.character == 'P')) ||
-                 (mobload && (rs.character == 'G'))) {
-                my_chance = rs.arg1;
-              } else {
-                my_chance = fixed_chance;
-              }
-              if (rs.arg1 >= 98 || tmp <= my_chance ||
-                  gamePort == BETA_GAMEPORT) {
-                last_cmd = 1;
-              } else {
-                last_cmd = 0;
-                if (rs.character == 'M')
-                  mobload = 0;
-                else if (rs.character == 'O' || rs.character == 'B')
-                  objload = 0;
-              }
-            }
-          } else
-            vlogf(LOG_BUG, "No rs. character in ? command");
-          break;
-        case 'R':
-          if (findLoadPotential) {
-            break;
-          }
-          // check if zone is disabled or if mob exceeds absolute max
-          if ((this->zone_value != 0) && mobload &&
-              mob_index[rs.arg1].getNumber() < mob_index[rs.arg1].max_exist) {
-            if (rs.arg3 != ZONE_ROOM_RANDOM) {
-              rp = real_roomp(rs.arg3);
-            } else {
-              rp = random_room;
-              random_room = NULL;
-            }
-            if (!rp) {
-              vlogf(LOG_LOW, fmt("No room (%d) in R command (%d)") % 
-                  rs.arg3 % rs.arg1);
-              last_cmd = 0;
-              mobload = 0;
-              continue;
-            }
-      
-            if(this->zone_value != 0 && bootTime){
-              mob_index[rs.arg1].doesLoad=true;
-              mob_index[rs.arg1].numberLoad++;
-            }
+          // needs to be after we are set riding
+          mob->brtRoom = (rp ? rp->number : ROOM_NOWHERE);
+          mobRepop(mob, zone_nr);
 
-            count = 0;
-#if 1
-            for (t = rp->tBornInsideMe; t; t = t->nextBorn) {
-              TMonster *tMonster = dynamic_cast<TMonster *>(t);
-
-              if (tMonster && tMonster->mobVnum() == mob_index[rs.arg1].virt)
-                count++;
-            }
-#else
-            for (t = rp->getStuff(); t; t = t->nextThing) {
-              TMonster * tmon = dynamic_cast<TMonster *>(t);
-              if (tmon && tmon->mobVnum() == mob_index[rs.arg1].virt)
-                count++;
-            }
-#endif
-            if (count >= rs.arg2) {
-              // mob exceeds max for room
-              last_cmd = 0;
-              mobload = 0;
-              continue;
-            }
-            if (!(old_mob = mob)) {
-              vlogf(LOG_BUG, "Lack of master mob in 'R' command.");
-              continue;
-            }
-            if (!(mob = read_mobile(rs.arg1, REAL))) {
-              vlogf(LOG_BUG, "Error reading mobile.  You suck.");
-              continue;
-            }
-            rp = real_roomp(rs.arg3);
-            *rp += *mob;
-            
-
-#if 1
-            // Slap the mob on the born list.
-            *rp << *mob;
-#endif
-
-            if (old_mob->getHeight() <= (6 * mob->getHeight() / 10))
-              vlogf(LOG_LOW, fmt("Mob mounting mount that is too small.  [%s] [%s]") % 
-                    mob->getName() % old_mob->getName());
-
-            if (old_mob->getHeight() >= (5 * mob->getHeight() / 2))
-              vlogf(LOG_LOW, fmt("Mob mounting mount that is too big.  [%s] [%s]") % 
-                    mob->getName() % old_mob->getName());
-
-            if (compareWeights(mob->getTotalWeight(TRUE),
-                               (old_mob->carryWeightLimit() -
-                                old_mob->getCarriedWeight())) == -1)
-              vlogf(LOG_LOW, fmt("Mob mounting mount that is too weak.  [%s] [%s]") % 
-                    mob->getName() % old_mob->getName());
-
-            if (old_mob->GetMaxLevel() > mob->GetMaxLevel())
-              vlogf(LOG_LOW, fmt("Mob mounting mount that is too strong.  [%s:%d] [%s:%d]") % 
-                    mob->getName() % mob->GetMaxLevel() %
-                    old_mob->getName() % old_mob->GetMaxLevel());
-
-            mob->mount(old_mob);
-            mob->setPosition(POSITION_MOUNTED);
-            if (old_mob->master && old_mob->master != mob && !old_mob->rider)
-              old_mob->stopFollower(TRUE);
-            if (!old_mob->master)
-              mob->addFollower(old_mob);
-
-            // needs to be after we are set riding
-            mob->brtRoom = (rp ? rp->number : ROOM_NOWHERE);
-            mobRepop(mob, zone_nr);
-
-            last_cmd = 1;
-          } else {
-            last_cmd = 0;
-            mobload = 0;
-          }
-          break;
-
-        case 'O':                
-          if (findLoadPotential) {
-            break;
-          }
-          if(bootTime){
-            // check conditions
-            if (rs.arg3 != ZONE_ROOM_RANDOM) 
-              rp = real_roomp(rs.arg3);
-            else {
-              rp = random_room;
-              random_room = NULL;
-            }
-    
-            if (!rp) {
-              vlogf(LOG_LOW, fmt("No room (%d) in O command (%d).  cmd=%d, zone=%d") %  rs.arg3 % rs.arg1 % cmd_no % zone_nr);
-              last_cmd = 0;
-              objload = 0;
-              continue;
-            }
-            
-            count=0;
-            for(t=rp->getStuff();t;t=t->nextThing){
-              obj = dynamic_cast<TObj *>(t);
-              if(obj && obj->objVnum() == obj_index[rs.arg1].virt)
-                count++;
-            }
-
-            if (count >= rs.arg2) {
-              last_cmd = 1;
-              objload = TRUE;
-              continue;
-            }
-
-            // load the objects
-            for(;count<rs.arg2;++count){
-              if(obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist){
-                obj = read_object(rs.arg1, REAL);
-
-                if (obj != NULL) {
-                  *rp += *obj;
-                  obj->onObjLoad();
-                  last_cmd = 1;
-                  objload = TRUE;
-                } else {
-                  vlogf(LOG_LOW, fmt("No obj (%d) in O command (room=%d).  cmd=%d, zone=%d") %  rs.arg1 % rs.arg3 % cmd_no % zone_nr);
-                  objload = FALSE;
-                  last_cmd = 0;
-                }
-              }
-            }
-          } else {
-            objload = FALSE;
-            last_cmd = 0;
-          }
-          break;
-        case 'B':               
-          if (findLoadPotential) {
-            break;
-          }
-          if (obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist) {
-            if (rs.arg3 != ZONE_ROOM_RANDOM) {
-              rp = real_roomp(rs.arg3);
-            } else {
-              rp = random_room;
-              random_room = NULL;
-            }
-            if (!rp) {
-              vlogf(LOG_LOW, fmt("No room (%d) in B command (%d)") % 
-                  rs.arg3 % rs.arg1);
-              last_cmd = 0;
-              objload = 0;
-              continue;
-            }
-
-            count=0;
-            for(t=rp->getStuff();t;t=t->nextThing){
-              TObj *o = dynamic_cast<TObj *>(t);
-              if(o && o->objVnum() == obj_index[rs.arg1].virt)
-                count++;
-            }
-  
-            if (count >= rs.arg2) {
-              last_cmd = 0;
-              objload = 0;
-              continue;
-            }
-
-            for(;count<rs.arg2;++count){
-              if(obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist){
-                obj = read_object(rs.arg1, REAL);
-                if (obj != NULL) {
-                  *rp += *obj;
-                  obj->onObjLoad();
-                  last_cmd = 1;
-                  objload = TRUE;
-                } else {
-                  objload = FALSE;
-                  last_cmd = 0;
-                }
-              }
-            }
-          } else {
-            objload = FALSE;
-            last_cmd = 0;
-          }
-          break;
-        case 'P':                
-          if (findLoadPotential) {
-            break;
-          }
-          if (obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist) {
-            newobj = read_object(rs.arg1, REAL);
-      // we're relying on obj being preserved from the previous 'O'
-      //            obj = get_obj_num(rs.arg3);
-            if (obj && newobj && dynamic_cast<TBaseContainer *>(obj)) {
-              *obj += *newobj;
-              newobj->onObjLoad();
-              last_cmd = 1;
-              log_object(newobj);
-            } else if (obj && newobj && dynamic_cast<TTable *>(obj)) {
-              newobj->mount(obj);
-              newobj->onObjLoad();
-              last_cmd = 1;
-              log_object(newobj);
-            } else {
-	      delete newobj;
-              last_cmd = 0;
-            }
-          } else
-            last_cmd = 0;
-          break;
-        case 'V':    // Change ONE value of the four values upon reset- Russ 
-          if (findLoadPotential) {
-            break;
-          }
-          if (obj) {
-            int tmp, tmp2, tmp3, tmp4;
-            obj->getFourValues(&tmp, &tmp2, &tmp3, &tmp4);
-            switch (rs.arg1) {
-              case 0: 
-                obj->assignFourValues(rs.arg2, tmp2, tmp3, tmp4);
-                break;
-              case 1: 
-                obj->assignFourValues(tmp, rs.arg2, tmp3, tmp4);
-                break;
-              case 2: 
-                obj->assignFourValues(tmp, tmp2, rs.arg2, tmp4);
-                break;
-              case 3: 
-                obj->assignFourValues(tmp, tmp2, tmp3, rs.arg2);
-                break;
-              default:
-                vlogf(LOG_LOW, fmt("Bad slot (%d) for V command (%d)") % 
-                                    rs.arg1 % rs.arg2);
-            }
-            last_cmd = 1;
-          } else
-            last_cmd = 0;
-          break;
-        case 'T':        // Set traps for doors and containers - Russ 
-          if (findLoadPotential) {
-            break;
-          }
-          // if_flag-->0 : trap door, else trap previous object 
-          if (!rs.if_flag) {
-            rp = real_roomp(rs.arg1);
-            if (rp && rp->dir_option[rs.arg2]) {
-              SET_BIT(rp->dir_option[rs.arg2]->condition, EX_TRAPPED);
-              rp->dir_option[rs.arg2]->trap_info = rs.arg3;
-              rp->dir_option[rs.arg2]->trap_dam = rs.arg4;
-            }
-          } else {
-            TOpenContainer *trc = dynamic_cast<TOpenContainer *>(obj);
-            if (trc) {
-              trc->addContainerFlag(CONT_TRAPPED);
-              trc->setContainerTrapType(mapFileToDoorTrap(rs.arg1));
-              trc->setContainerTrapDam(rs.arg2);
-            }
-          }
           last_cmd = 1;
-          break;
-        case 'G':        
-          if (findLoadPotential) {
-            tallyObjLoadPotential(obj_index[rs.arg1].virt);
-            break;
-          }
-          mud_assert(rs.arg1 >= 0 && rs.arg1 < (signed int) obj_index.size(), "Range error (%d not in obj_index)  G command #%d in %s", rs.arg1, cmd_no, this->name);
-          if (obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist &&
-	      //              (obj = read_object(rs.arg1, REAL))) {
-
-	                  (obj = read_object_buy_build(mob, rs.arg1, REAL))) {
-
-            *mob += *obj;
-            obj->onObjLoad();
-            mob->logItem(obj, CMD_LOAD);
-            objload = 1;
-            last_cmd = 1;
-          } else {
-            repoCheck(mob, rs.arg1);
-            last_cmd = 0;
-            objload = 0;
-          }
-          break;
-        case 'H':                
-          if (findLoadPotential) {
-            break;
-          }
-          if (mob->addHatred(zoneHateT(rs.arg1), rs.arg2))
-            last_cmd = 1;
-          else
-            last_cmd = 0;
-          break;
-        case 'X': // X <set num>3 <slot>1 <vnum>2
-          if (rs.arg3 >= 0 && rs.arg3 < 16 && 
-              rs.arg1 >= MIN_WEAR && rs.arg1 < MAX_WEAR) {
-            local_armor[rs.arg3].slots[rs.arg1] = rs.arg2;
-          }
-          break;
-        case 'Z': // Z <if flag> <set num> <perc chance>
-          if (findLoadPotential) {
-            wearSlotT i;
-            for (i = MIN_WEAR; i < MAX_WEAR; i++) {
-              if (local_armor[rs.arg1].slots[i]) {
-                      tallyObjLoadPotential(local_armor[rs.arg1].slots[i]);
-              }
-            }
-            break;
-          }
-          if (mob && mobload && rs.arg1 >=0) {
-            wearSlotT i;
-            for (i = MIN_WEAR; i < MAX_WEAR; i++) {
-              if (local_armor[rs.arg1].slots[i]) {
-                      // loadsetCheck(mob, local_armor[rs.arg1].slots[i], rs.arg2, 
-                      //   i, "(null... for now)");
-          if(rs.arg2 >= 98){
-            loadsetCheck(mob, local_armor[rs.arg1].slots[i], 
-                   rs.arg2, i, "(null... for now)");
-          } else {
-            loadsetCheck(mob, local_armor[rs.arg1].slots[i], 
-                   fixed_chance, i, "(null... for now)");
-          }
+        } else {
+          last_cmd = 0;
+          mobload = 0;
         }
-      }
-    }
-    break;
-        case 'Y':
-          if (findLoadPotential) {
-            if(rs.arg2 >= 98){
-              mob->loadSetEquipment(rs.arg1, NULL, rs.arg2, true);
-            } else {
-              mob->loadSetEquipment(rs.arg1, NULL, fixed_chance, true);
-            }
-            break;
+        break;
+
+      case 'O':                
+        if(bootTime){
+          // check conditions
+          if (rs.arg3 != ZONE_ROOM_RANDOM) 
+            rp = real_roomp(rs.arg3);
+          else {
+            rp = random_room;
+            random_room = NULL;
           }
-          if (mob && mobload) {
-            // mob->loadSetEquipment(rs.arg1, NULL, rs.arg2);
-            if(rs.arg2 >= 98){
-              mob->loadSetEquipment(rs.arg1, NULL, rs.arg2);
-            } else {
-              mob->loadSetEquipment(rs.arg1, NULL, fixed_chance);
-            }
-
-            if (mob->hasClass(CLASS_MAGE)) {
-              TSpellBag *tBagA = NULL,
-                        *tBagB = NULL;
-              TThing    *tThing;
-
-              // Find Held Spellbag
-              for (tThing = mob->getStuff(); tThing; tThing = tThing->nextThing)
-                if ((tBagA = dynamic_cast<TSpellBag *>(tThing)))
-                  break;
-
-              // Find Worn Spellbag
-              for (wearSlotT tWear = MIN_WEAR; tWear < MAX_WEAR; tWear++)
-                if (mob->equipment[tWear] &&
-                    (tBagB = dynamic_cast<TSpellBag *>(mob->equipment[tWear])))
-                  break;
-
-              if (tBagA && tBagB) {
-                while ((tThing = tBagA->getStuff())) {
-                  --(*tThing);
-                  *tBagB += *tThing;
-                }
-
-                --(*tBagA);
-                delete tBagA;
-                tBagA = NULL;
-              }
-            }
-          }
-          break;
-        case 'F':                
-          if (findLoadPotential) {
-            break;
-          }
-          if (mob->addFears(zoneHateT(rs.arg1), rs.arg2))
-            last_cmd = 1;
-          else
-            last_cmd = 0;
-          break;
-        case 'E':                
-          if (findLoadPotential) {
-            tallyObjLoadPotential(obj_index[rs.arg1].virt);
-            break;
-          }
-          obj_lp = getObjLoadPotential(obj_index[rs.arg1].virt);
-          if (obj_lp == 0) {
-            vlogf(LOG_MISC, fmt("Didn't find load potential of %s [%d].  rs.arg1=%d") % obj_index[rs.arg1].short_desc % obj_index[rs.arg1].virt % rs.arg1);
-            obj_lp = 1;
-          }
-          // 1-e**((ln(1-0.01n**1/3)/n)) = normalized load rate
-          // adj_obj_lp_ratio = 1 - pow(exp(1), ((log(1 - 0.01*cbrt((double)obj_lp))/(double)obj_lp)));
-          // 1 - ((1-0.01*n**1/3)^(1/n)) = normalized load rate, less math
-          adj_obj_lp_ratio = 1 - pow((1 - cbrt((double)obj_lp)/100), 1/(double)obj_lp);
-          // obj_lp_ratio = 1 - pow((1 - (double)fixed_chance/100), (double)obj_lp);
-          obj_lp_ratio = (double)fixed_chance/100;
-          // getting to this point means we've already beat the fixed_chance%
-          // chance of loading an object.  This has to be taken into account
-          // when computing the odds of the normalized load potential.
-          // vlogf(LOG_MISC, fmt("(10000000 * adj_obj_lp_ratio / obj_lp_ratio * stats.equip) = %d") % (int) (10000000 * adj_obj_lp_ratio / obj_lp_ratio * stats.equip));
-          if((obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist) &&
-              (::number(0, 9999999) < 
-	       (int)(10000000*adj_obj_lp_ratio / obj_lp_ratio*stats.equip)) &&
-	     (obj = read_object_buy_build(mob, rs.arg1, REAL))) {
-            // vlogf(LOG_MISC, fmt("Adjusted probability for load of %s [%d]: %lf -> %lf") % obj_index[rs.arg1].short_desc % obj_index[rs.arg1].virt % obj_lp_ratio % adj_obj_lp_ratio);
-            if (!mob) {
-              vlogf(LOG_LOW, fmt("no mob for 'E' command.  Obj (%s)") %  obj->getName());
-              delete obj;
-              obj = NULL;
-              last_cmd = 0;
-              objload = 0;
-              continue;
-            }
-            realslot = wearSlotT(rs.arg3);
-            mud_assert(realslot >= MIN_WEAR && realslot < MAX_WEAR, "bad slot");
-
-            if (!mob->equipment[realslot]) {
-              // these are just safety logs, equipping will be done regardless
-              if (!mob->canUseEquipment(obj, SILENT_YES)) {
-                vlogf(LOG_LOW, fmt("'E' command equipping unusable item (%s:%d) on (%s:%d).") % obj->getName() % obj->objVnum() % mob->getName() % mob->mobVnum());
-              }
-              TBaseClothing *tbc = dynamic_cast<TBaseClothing *>(obj);
-              if (tbc && tbc->canWear(ITEM_WEAR_FINGERS) && gamePort != PROD_GAMEPORT) {
-                vlogf(LOG_LOW, fmt("RINGLOAD: [%s][%-6.2f] loading on [%s][%d]") % 
-                      obj->getName() % tbc->armorLevel(ARMOR_LEV_REAL) %
-                      mob->getName() % mob->GetMaxLevel());
-
-              }
-              if (tbc && !mob->validEquipSlot(realslot) && !tbc->isSaddle()) {
-                vlogf(LOG_LOW, fmt("'E' command for %s equipping item (%s) on nonvalid slot %d.") % mob->getName() % tbc->getName() % realslot);
-              }
-              if (!check_size_restrictions(mob, obj, realslot, mob) &&
-                  realslot != HOLD_RIGHT && realslot != HOLD_LEFT) {
-                int size_per = 100;
-                if (race_vol_constants[mapSlotToFile(realslot)]) {
-                  size_per = (int)(100.0 * obj->getVolume() / race_vol_constants[mapSlotToFile( realslot)]);
-                  if (obj->isPaired())
-                    size_per /= 2;
-                }
-                vlogf(LOG_LOW, fmt("'E' for (%s:%d) equipping (%s:%d) with bad fit. (m:%d%%/o:%d%%) change vol to %d, or height to %d.") %  
-                    mob->getName() % mob->mobVnum() % 
-                    obj->getName() % obj->objVnum() %
-                    (mob->getHeight() * 100) %
-                    size_per % 
-                    (mob->getHeight() * (obj->isPaired() ? 2 : 1) *
-                                 race_vol_constants[mapSlotToFile( realslot)]) %
-                    (size_per / 100));
-              }
-              // OK, actually do the equip
-              mob->equipChar(obj, realslot);
-              mob->logItem(obj, CMD_LOAD);
-              log_object(obj);
-
-              // for items without levels, objLevel = 0 so this logic is OK
-              double al = obj->objLevel();
-              double grl = mob->getRealLevel();
-              if (al > (grl + 1)) {
-                vlogf(LOG_LOW, fmt("Mob (%s:%d) of level %.1f loading item (%s:%d) thought to be level %.1f.") %  mob->getName() % mob->mobVnum() % grl % obj->getName() % obj->objVnum() % al);
-              }
-
-            } else {
-              vlogf(LOG_LOW, fmt("'E' command operating on already equipped slot.  %s, %s slot %d\n\rpre-equipped with %s, is_same: %s") %  
-                    mob->getName() % obj->getName() % realslot %
-                    mob->equipment[realslot]->getName() %
-                    ((mob->equipment[realslot] == obj) ? "true" : "false"));
-              delete obj;
-              obj = NULL;
-              last_cmd = 0;
-              objload = 0;
-              continue;
-            }
-            if (!mob->equipment[realslot])
-              vlogf(LOG_LOW, fmt("Zone-file %s (%d) failed to equip %s (%d)") % 
-                   mob->getName() % mob->mobVnum() % obj->getName() % obj->objVnum());
-            last_cmd = 1;
-          } else {
-            repoCheck(mob, rs.arg1);
+  
+          if (!rp) {
+            vlogf(LOG_LOW, fmt("No room (%d) in O command (%d).  cmd=%d, zone=%d") %  rs.arg3 % rs.arg1 % cmd_no % zone_nr);
             last_cmd = 0;
             objload = 0;
+            continue;
           }
           
-          break;
-        case 'D':                
-          if (findLoadPotential) {
-            break;
+          count=0;
+          for(t=rp->getStuff();t;t=t->nextThing){
+            obj = dynamic_cast<TObj *>(t);
+            if(obj && obj->objVnum() == obj_index[rs.arg1].virt)
+              count++;
           }
-          rp = real_roomp(rs.arg1);
-          if (rp) {
-            roomDirData * exitp = rp->dir_option[rs.arg2];
-            if (exitp &&
-               !IS_SET(exitp->condition, EX_DESTROYED) &&
-               !IS_SET(exitp->condition, EX_CAVED_IN)) {
-              if (exitp->door_type != DOOR_NONE) {
-                switch (rs.arg3) {
-                  case 0:
-                    if (IS_SET(exitp->condition, EX_CLOSED))
-                      sendrpf(rp, "The %s opens.\n\r", 
-            exitp->getName().uncap().c_str());
-                    REMOVE_BIT(exitp->condition, EX_LOCKED);
-                    REMOVE_BIT(exitp->condition, EX_CLOSED);
-                    break;
-                  case 1:
-                    if (!IS_SET(exitp->condition, EX_CLOSED))
-                      sendrpf(rp, "The %s closes.\n\r",
-            exitp->getName().uncap().c_str());
-                    SET_BIT(exitp->condition, EX_CLOSED);
-                    REMOVE_BIT(exitp->condition, EX_LOCKED);
-                    break;
-                  case 2:
-                    if (exitp->key < 0) 
-                      vlogf(LOG_LOW, 
-                        fmt("Door with key < 0 set to lock in room %d.")
-                        % rp->number);
-                    if (!IS_SET(exitp->condition, EX_CLOSED))
-                      sendrpf(rp, "The %s closes.\n\r",
-                          exitp->getName().uncap().c_str());
-                    SET_BIT(exitp->condition, EX_LOCKED);
-                    SET_BIT(exitp->condition, EX_CLOSED);
-                    break;
-                }
+
+          if (count >= rs.arg2) {
+            last_cmd = 1;
+            objload = TRUE;
+            continue;
+          }
+
+          // load the objects
+          for(;count<rs.arg2;++count){
+            if(obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist){
+              obj = read_object(rs.arg1, REAL);
+
+              if (obj != NULL) {
+                *rp += *obj;
+                obj->onObjLoad();
                 last_cmd = 1;
+                objload = TRUE;
               } else {
-                vlogf(LOG_LOW, fmt("'D' command operating on DOOR_NONE in rm %d") %  rp->number); 
+                vlogf(LOG_LOW, fmt("No obj (%d) in O command (room=%d).  cmd=%d, zone=%d") %  rs.arg1 % rs.arg3 % cmd_no % zone_nr);
+                objload = FALSE;
+                last_cmd = 0;
               }
-            } // check for valid,legal exit
-          }  // check for dest room
-          break;
-        case 'L':
-          if (findLoadPotential) {
-            break;
+            }
           }
-          if (bootTime)
-            last_cmd = sysLootLoad(rs, mob, obj, false);
-          else
+        } else {
+          objload = FALSE;
+          last_cmd = 0;
+        }
+        break;
+
+      case 'B':               
+        if (obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist) {
+          if (rs.arg3 != ZONE_ROOM_RANDOM) {
+            rp = real_roomp(rs.arg3);
+          } else {
+            rp = random_room;
+            random_room = NULL;
+          }
+          if (!rp) {
+            vlogf(LOG_LOW, fmt("No room (%d) in B command (%d)") % 
+                rs.arg3 % rs.arg1);
             last_cmd = 0;
+            objload = 0;
+            continue;
+          }
+
+          count=0;
+          for(t=rp->getStuff();t;t=t->nextThing){
+            TObj *o = dynamic_cast<TObj *>(t);
+            if(o && o->objVnum() == obj_index[rs.arg1].virt)
+              count++;
+          }
+
+          if (count >= rs.arg2) {
+            last_cmd = 0;
+            objload = 0;
+            continue;
+          }
+
+          for(;count<rs.arg2;++count){
+            if(obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist){
+              obj = read_object(rs.arg1, REAL);
+              if (obj != NULL) {
+                *rp += *obj;
+                obj->onObjLoad();
+                last_cmd = 1;
+                objload = TRUE;
+              } else {
+                objload = FALSE;
+                last_cmd = 0;
+              }
+            }
+          }
+        } else {
+          objload = FALSE;
+          last_cmd = 0;
+        }
+        break;
+
+      case 'P':                
+        if (obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist) {
+          TObj *newobj = read_object(rs.arg1, REAL);
+          // we're relying on obj being preserved from the previous 'O'
+          //            obj = get_obj_num(rs.arg3);
+          if (obj && newobj && dynamic_cast<TBaseContainer *>(obj)) {
+            *obj += *newobj;
+            newobj->onObjLoad();
+            last_cmd = 1;
+            log_object(newobj);
+          } else if (obj && newobj && dynamic_cast<TTable *>(obj)) {
+            newobj->mount(obj);
+            newobj->onObjLoad();
+            last_cmd = 1;
+            log_object(newobj);
+          } else {
+            delete newobj;
+            last_cmd = 0;
+          }
+        } else
+          last_cmd = 0;
+        break;
+
+      case 'V':    // Change ONE value of the four values upon reset- Russ 
+        if (obj) {
+          int values[4];
+          obj->getFourValues(&values[0], &values[1], &values[2], &values[3]);
+          if (rs.arg1 < 0 && rs.arg1 >= 4)
+            vlogf(LOG_LOW, fmt("Bad slot (%d) for V command (%d)") % rs.arg1 % rs.arg2);
+          else
+            values[rs.arg1] = rs.arg2;
+          obj->assignFourValues(values[0], values[1], values[2], values[3]);
+          last_cmd = 1;
+        } else
+          last_cmd = 0;
+        break;
+
+      case 'T':        // Set traps for doors and containers - Russ 
+        // if_flag-->0 : trap door, else trap previous object 
+        if (!rs.if_flag) {
+          rp = real_roomp(rs.arg1);
+          if (rp && rp->dir_option[rs.arg2]) {
+            SET_BIT(rp->dir_option[rs.arg2]->condition, EX_TRAPPED);
+            rp->dir_option[rs.arg2]->trap_info = rs.arg3;
+            rp->dir_option[rs.arg2]->trap_dam = rs.arg4;
+          }
+        } else {
+          TOpenContainer *trc = dynamic_cast<TOpenContainer *>(obj);
+          if (trc) {
+            trc->addContainerFlag(CONT_TRAPPED);
+            trc->setContainerTrapType(mapFileToDoorTrap(rs.arg1));
+            trc->setContainerTrapDam(rs.arg2);
+          }
+        }
+        last_cmd = 1;
+        break;
+
+      case 'G':        
+        mud_assert(rs.arg1 >= 0 && rs.arg1 < (signed int) obj_index.size(), "Range error (%d not in obj_index)  G command #%d in %s", rs.arg1, cmd_no, this->name);
+        if (findLoadPotential)
+          tallyObjLoadPotential(obj_index[rs.arg1].virt);
+        else
+          objload = last_cmd = runResetComG(rs, mob, obj);
+        break;
+
+      case 'H':                
+        last_cmd = mob ? mob->addHatred(zoneHateT(rs.arg1), rs.arg2) : 0;
+        break;
+
+      case 'X': // X <set num>3 <slot>1 <vnum>2
+        if (rs.arg3 >= 0 && rs.arg3 < 16 && 
+            rs.arg1 >= MIN_WEAR && rs.arg1 < MAX_WEAR) {
+          local_armor[rs.arg3].slots[rs.arg1] = rs.arg2;
+        }
+        break;
+
+      case 'Z': // Z <if flag> <set num> <perc chance>
+        if (findLoadPotential) {
+          for (wearSlotT i = MIN_WEAR; i < MAX_WEAR; i++) {
+            if (local_armor[rs.arg1].slots[i]) {
+                    tallyObjLoadPotential(local_armor[rs.arg1].slots[i]);
+            }
+          }
           break;
-        default:
-          vlogf(LOG_BUG, fmt("Undefd cmd in reset table; zone %d cmd %d.\n\r") %  zone_nr % cmd_no);
-          break;
-      }
-    } else {
-      last_cmd = 0;
-    }
-  }
-  if (!findLoadPotential) {
+        }
+        if (mob && mobload && rs.arg1 >=0) {
+          for (wearSlotT i = MIN_WEAR; i < MAX_WEAR; i++) {
+            if (local_armor[rs.arg1].slots[i]) {
+              loadsetCheck(mob, local_armor[rs.arg1].slots[i],(rs.arg2 >= 98) ? rs.arg2 : fixed_chance, i, "(null... for now)");
+            }
+          }
+        }
+        break;
+
+      case 'Y':
+        if (findLoadPotential)
+          mob->loadSetEquipment(rs.arg1, NULL, (rs.arg2 >= 98) ? rs.arg2 : fixed_chance, true);
+        else if (mob && mobload)
+          runResetComY(rs, mob);
+        break;
+
+      case 'F':                
+        last_cmd = mob ? mob->addFears(zoneHateT(rs.arg1), rs.arg2) : 0;
+        break;
+
+      case 'E':                
+        if (findLoadPotential)
+          tallyObjLoadPotential(obj_index[rs.arg1].virt);
+        else if (!runResetComE(rs, mob, obj))
+          last_cmd = objload = 0;
+        else
+          last_cmd = 1;
+        
+        break;
+      case 'D':                
+        rp = real_roomp(rs.arg1);
+        if (rp) {
+          roomDirData * exitp = rp->dir_option[rs.arg2];
+          if (exitp &&
+             !IS_SET(exitp->condition, EX_DESTROYED) &&
+             !IS_SET(exitp->condition, EX_CAVED_IN)) {
+            if (exitp->door_type != DOOR_NONE) {
+              switch (rs.arg3) {
+                case 0:
+                  if (IS_SET(exitp->condition, EX_CLOSED))
+                    sendrpf(rp, "The %s opens.\n\r", exitp->getName().uncap().c_str());
+                  REMOVE_BIT(exitp->condition, EX_LOCKED);
+                  REMOVE_BIT(exitp->condition, EX_CLOSED);
+                  break;
+                case 1:
+                  if (!IS_SET(exitp->condition, EX_CLOSED))
+                    sendrpf(rp, "The %s closes.\n\r", exitp->getName().uncap().c_str());
+                  SET_BIT(exitp->condition, EX_CLOSED);
+                  REMOVE_BIT(exitp->condition, EX_LOCKED);
+                  break;
+                case 2:
+                  if (exitp->key < 0) 
+                    vlogf(LOG_LOW, fmt("Door with key < 0 set to lock in room %d.") % rp->number);
+                  if (!IS_SET(exitp->condition, EX_CLOSED))
+                    sendrpf(rp, "The %s closes.\n\r", exitp->getName().uncap().c_str());
+                  SET_BIT(exitp->condition, EX_LOCKED);
+                  SET_BIT(exitp->condition, EX_CLOSED);
+                  break;
+              }
+              last_cmd = 1;
+            } else {
+              vlogf(LOG_LOW, fmt("'D' command operating on DOOR_NONE in rm %d") %  rp->number); 
+            }
+          } // check for valid,legal exit
+        }  // check for dest room
+        break;
+
+      case 'L':
+        if (bootTime)
+          last_cmd = sysLootLoad(rs, mob, obj, false);
+        else
+          last_cmd = 0;
+        break;
+
+      default:
+        vlogf(LOG_BUG, fmt("Undefd cmd in reset table; zone %d cmd %d.\n\r") %  zone_nr % cmd_no);
+        break;
+    } // switch
+  } // for cmd
+
+  if (!findLoadPotential)
     doGenericReset(); // sends CMD_GENERIC_RESET to all objects in zone
-  }
+
   this->age = 0;
 }
 

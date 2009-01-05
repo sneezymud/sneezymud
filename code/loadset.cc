@@ -180,6 +180,7 @@ void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstrin
       vlogf(LOG_MISC, fmt("Adjusted probability for suitset load of %s [%d]: %lf -> %lf") % obj_index[rob].short_desc % vnum % obj_lp_ratio % adj_obj_lp_ratio);
     }
     */
+    // NOTE: this should be using read_object_buy_build if (chance < 101)
     TObj *obj = read_object(rob, REAL);
     if (obj) {
       ch->logItem(obj, CMD_LOAD);
@@ -187,21 +188,22 @@ void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstrin
         log_object(obj);
       }
       if (obj->isPaired() && slot == WEAR_LEG_L)
+      {
         delete obj;  // avoid double loads of pants
-      else if (chance == 101)
+        return;
+      } else if (chance == 101)
         *ch += *obj;
       else if (ch->equipment[slot]){
-	delete obj;
-	return;
+	      delete obj;
+	      return;
       } else
         ch->equipChar(obj, slot);
 
       // Most likely an immortal loading through loadset.
       // If they cannot load with no proto then they cannot load set
       //   with no proto.
-      if (chance > 100)
-        if (!ch->hasWizPower(POWER_LOAD_NOPROTOS))
-          obj->addObjStat(ITEM_PROTOTYPE);
+      if (chance > 100 && !ch->hasWizPower(POWER_LOAD_NOPROTOS))
+        obj->addObjStat(ITEM_PROTOTYPE);
     } else if (chance > 100)
       ch->sendTo(fmt("The %s was listed but not found, not in db yet?\n\r") % slotname);
   }

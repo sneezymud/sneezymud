@@ -1364,14 +1364,13 @@ static void sstringTranslate(char *buf)
          price = 0;
           vlogf(LOG_LOW, fmt("Error casting object as potion in response script: %s(%d)" ) % obj->getName() % robj);
        }
-        delete obj;
-        obj = NULL;
         pot = NULL;
       } else {
         price = 0;
         vlogf(LOG_LOW, fmt("Error loading potion object in response script: %d" ) % robj);
       }
-
+      delete obj;
+      obj = NULL;
     } else {
       price = obj_index[robj].value;
     }
