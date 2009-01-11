@@ -21,9 +21,9 @@ O 0 1447 1 9080
 O 0 9054 1 9082              a flickering torch
 O 0 9054 1 9092              a flickering torch
 
-? 0 35 0 O
-O 1 9090 1 9095         chance of portal going to Noctagon
+O 0 9090 1 9095         default to Noctagon in case all others fail
 V 1 0 -16765332
+
 ? 0 5 0 O
 O 1 9090 1 9095         chance of portal going to Medusa
 V 1 0 -16765382
@@ -58,8 +58,6 @@ V 1 0 -16773978
 O 1 9090 1 9095         chance of portal going to Sewage
 V 1 0 -16761916
 
-O 0 9090 1 9095         default to Noctagon in case all others fail
-V 1 0 -16765332
 
 O 0 9054 1 9096              a flickering torch
 O 0 9054 1 9097              a flickering torch
