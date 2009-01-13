@@ -1,6 +1,585 @@
 
 #45365
 Staffa - Troll Excavation Site~
-45464 30 2 0
-S
+45464 35 2 1
 
+*********************************************************************************
+* doors - Note a door/gate will need to be added (45447 to 22595) to connect zone
+*********************************************************************************
+D 0 45369 5 1        Muddy Supply Room -> Sunken Hollow
+D 0 45370 1 1        Guard's Common Area -> Aspergillus's Quarters
+D 0 45370 3 1        Guard's Common Area -> Jalashzach's Quarters
+D 0 45371 0 1        Troll Barracks -> Reinforced Tunnel
+D 0 45371 3 1        Troll Barracks -> Guard Quarters
+D 0 45372 2 1        Reinforced Tunnel -> Troll Barracks
+D 0 45380 3 1        Dimly Lit Cave -> Collapsed Cave-In
+D 0 45381 1 1        Jalashzach's Quarters -> Guard's Common Area
+D 0 45382 1 1        Guard Quarters -> Troll Barracks
+D 0 45387 1 1        Collapsed Cave-In -> Dimly Lit Cave
+D 0 45399 3 1        Fusarium's Operating Room -> Waiting Room
+D 0 45405 1 1        Waiting Room -> Fusarium's Operating Room
+D 0 45406 3 1        Fusarium's Health Clinic -> Recovery Room
+D 0 45407 0 1        Behind an Altar -> Small Altar
+D 0 45408 0 1        Small Altar -> Recovery Room
+D 0 45408 2 1        Small Altar -> Behind an Altar
+D 0 45409 1 1        Recovery Room -> Fusarium's Health Clinic
+D 0 45409 2 1        Recovery Room -> Small Altar
+D 0 45420 4 1        Sunken Hollow -> Muddy Supply Room
+D 0 45428 3 2        Overseer's Private Quarters -> Overseer's Study
+D 0 45430 1 2        Overseer's Study -> Overseer's Private Quarters
+D 0 45436 3 1        Escape Tunnel -> Secret Redoubt
+D 0 45437 1 1        Secret Redoubt -> Escape Tunnel
+D 0 45437 3 1        Secret Redoubt -> Resistance Headquarters
+D 0 45438 1 1        Resistance Headquarters -> Secret Redoubt
+D 0 45438 7 1        Resistance Headquarters -> Slave Pen
+D 0 45439 8 1        Slave Pen -> Resistance Headquarters
+D 0 45447 0 1        Excavation Tunnel Entrance -> A Damp, East-west Tunnel
+D 0 45457 3 1        Foreman's Hidden Trove -> Foreman's Hovel
+D 0 45458 1 1        Foreman's Hovel -> Foreman's Hidden Trove
+D 0 45458 7 1        Foreman's Hovel -> Reinforced Tunnel
+D 0 45459 8 1        Reinforced Tunnel -> Foreman's Hovel
+D 0 45463 0 1        Sadistic Chamber -> Aspergillus's Quarters
+D 0 45464 2 1        Aspergillus's Quarters -> Sadistic Chamber
+D 0 45464 3 1        Aspergillus's Quarters -> Guard's Common Area
+
+************
+* Local sets
+************
+
+** - Jalashzach the Feared
+X 0 12 45424         a woven armband of spores [arm-right]
+X 0 13 45424         a woven armband of spores [arm-left]
+X 0 16 45426         a woven bracelet of spores [wrist-right]
+X 0 17 45426         a woven bracelet of spores [wrist-left]
+X 0 10 45427         a hand drape of spores [hand-right]
+X 0 11 45427         a hand drape of spores [hand-left]
+X 0 8 45420          a sandal of spores [foot-right]
+X 0 9 45420          a sandal of spores [foot-left]
+X 0 19 45462         a telescopic baton [hold-left]
+
+** - a troll oracle
+X 1 5 45401          a rune etched hood [head]
+X 1 3 45400          a rune etched choker [neck]
+X 1 4 45399          a rune etched gown [body]
+X 1 14 45392         a rune etched shawl [back]
+X 1 12 45398         a rune etched brassard [arm-right]
+X 1 13 45398         a rune etched brassard [arm-left]
+X 1 16 45395         a rune etched wrist cuff [wrist-right]
+X 1 17 45395         a rune etched wrist cuff [wrist-left]
+X 1 10 45397         a rune etched hand guard [hand-right]
+X 1 11 45397         a rune etched hand guard [hand-left]
+X 1 1 45402          a rune etched ring [finger-right]
+X 1 2 45402          a rune etched ring [finger-left]
+X 1 15 45396         a rune etched buckle belt [waist]
+X 1 6 45394          a soft pair of rune etched breeches [leg-right]
+X 1 7 45394          a soft pair of rune etched breeches [leg-left]
+X 1 8 45393          a rune etched boot [foot-right]
+X 1 9 45393          a rune etched boot [foot-left]
+X 1 18 45403         an etched Shield of the Oracle [hold-right]
+X 1 19 45460         a rune etched shard [hold-left]
+
+** - Fusarium the Shunned
+X 2 5 45444          a thorny circlet of living fungus [head]
+X 2 3 45445          a thorny collar of living fungus [neck]
+X 2 4 45446          a thorny robe of living fungus [body]
+X 2 14 45448         a thorny mantle of living fungus [back]
+X 2 12 45447         a thorny sleeve of living fungus [arm-right]
+X 2 13 45447         a thorny sleeve of living fungus [arm-left]
+X 2 16 45449         a thorny  wristband of living fungus [wrist-right]
+X 2 17 45449         a thorny  wristband of living fungus [wrist-left]
+X 2 10 45450         a thorny glove of living fungus [hand-right]
+X 2 11 45450         a thorny glove of living fungus [hand-left]
+X 2 1 45454          a thorny ring of living fungus [finger-right]
+X 2 2 45454          a thorny ring of living fungus [finger-left]
+X 2 15 45451         a thorny skirt of living fungus [waist]
+X 2 6 45452          a pair of rhinegraves made of living fungus [leg-right]
+X 2 7 45452          a pair of rhinegraves made of living fungus [leg-left]
+X 2 8 45453          a thorny boot of living fungus [foot-right]
+X 2 9 45453          a thorny boot of living fungus [foot-left]
+X 2 18 45455         a thorny bulwark shield of living fungus [hold-right]
+X 2 19 45459         a double skull mace [hold-left]
+
+** - Cladosporium the exiled overseer [Nocturnal]
+X 3 5 45441          a facemask of effervescent spores [head]
+X 3 3 45432          a necklace of  woven effervescent spores [neck]
+X 3 4 45433          a robe of effervescent spores [body]
+X 3 14 45435         a cloak of effervescent spores [back]
+X 3 13 45434         a woven armband of effervescent spores [arm-left]
+X 3 17 45436         a woven bracelet of effervescent spores [wrist-left]
+X 3 11 45437         a hand drape of effervescent spores [hand-left]
+X 3 2 45442          a ring of effervescent spores [finger-left]
+X 3 15 45438         a woven cinch of effervescent spores [waist]
+X 3 7 45439          a leg wrap of effervescent spores [leg-left]
+X 3 9 45440          a sandal of effervescent spores [foot-left]
+X 3 19 45409         a skull-tipped effervescent staff [hold-left]
+X 3 18 45443         a shield of effervescent spores [hold-right]
+
+** - Cladosporium the exiled overseer [Diurnal]
+X 4 5 45421          a facemask of spores [head]
+X 4 3 45422          a necklace of woven spores [neck]
+X 4 4 45423          a robe of spores [body]
+X 4 14 45425         a cloak of spore [back]
+X 4 13 45424         a woven armband of spores [arm-left]
+X 4 17 45426         a woven bracelet of spores [wrist-left]
+X 4 11 45427         a hand drape of spores [hand-left]
+X 4 2 45430          a ring of spores [finger-left]
+X 4 15 45428         a woven cinch of spores [waist]
+X 4 7 45429          a leg wrap of spores [leg-left]
+X 4 9 45420          a sandal of spores [foot-left]
+X 4 19 45458         a skull-tipped staff [hold-left]
+X 4 18 45431         a shield of spores [hold-right]
+
+** - an overseer's bodyguard
+X 5 5 45372          a head band of stitched gingham [head]
+X 5 3 45380          a neck guard of stitched gingham [neck]
+X 5 4 45379          a raiment of stitched gingham [body]
+X 5 14 45371         a vesture of stitched gingham [back]
+X 5 12 45378         a armlet of stitched gingham [arm-right]
+X 5 13 45378         a armlet of stitched gingham [arm-left]
+X 5 16 45375         a bracer of stitched gingham [wrist-right]
+X 5 17 45375         a bracer of stitched gingham [wrist-left]
+X 5 10 45377         a handwrap of stitched gingham [hand-right]
+X 5 11 45377         a handwrap of stitched gingham [hand-left]
+X 5 15 45376         a sash of stitched gingham [waist]
+X 5 6 45374          a legwrap of stitched gingham [leg-right]
+X 5 7 45374          a legwrap of stitched gingham [leg-left]
+X 5 8 45373          a sandal of stitched gingham [foot-right]
+X 5 9 45373          a sandal of stitched gingham [foot-left]
+
+** - Mycotox, the Deformed
+X 6 5 45391          a mold infested leather cap [head]
+X 6 3 45390          a mold infested leather gorget [neck]
+X 6 4 45389          a mold infested leather vest [body]
+X 6 14 45382         a mold infested leather cloak [back]
+X 6 13 45388         a mold infested leather sleeve [arm-left]
+X 6 17 45385         a mold infested leather wristband [wrist-left]
+X 6 11 45387         a mold infested leather glove [hand-left]
+X 6 15 45386         a mold infested leather belt [waist]
+X 6 7 45384          a mold infested leather legging [leg-left]
+X 6 9 45383          a mold infested leather boot [foot-left]
+X 6 19 45404         a boot dagger [hold-left]
+X 6 18 45381         a mold infested leather buckler [hold-right]
+
+** - an angry foreman
+X 7 12 45388         a mold infested leather sleeve [arm-right]
+X 7 13 45388         a mold infested leather sleeve [arm-left]
+X 7 16 45385         a mold infested leather wristband [wrist-right]
+X 7 17 45385         a mold infested leather wristband [wrist-left]
+X 7 10 45387         a mold infested leather glove [hand-right]
+X 7 11 45387         a mold infested leather glove [hand-left]
+X 7 19 45405         a dragon bone push dagger [hold-left]
+
+** - Aspergillus the Cruel
+X 8 14 45448         a thorny mantle of living fungus [back]
+X 8 12 45447         a thorny sleeve of living fungus [arm-right]
+X 8 13 45447         a thorny sleeve of living fungus [arm-left]
+X 8 16 45449         a thorny  wristband of living fungus [wrist-right]
+X 8 17 45449         a thorny  wristband of living fungus [wrist-left]
+X 8 10 45450         a thorny glove of living fungus [hand-right]
+X 8 11 45450         a thorny glove of living fungus [hand-left]
+X 8 8 45453          a thorny boot of living fungus [foot-right]
+X 8 9 45453          a thorny boot of living fungus [foot-left]
+X 8 19 45461         a leg chopper [hold-left]
+X 8 18 45456         a thorny shield of living fungus [hold-right]
+
+*************************************************
+* Area Randomizer - Dig Site and Offshoot Tunnels
+*************************************************
+** 45443-45448 **
+
+A 0 45443 45448
+M 0 45418 1 -99       a troll guard on patrol
+? 0 2 0 E
+E 1 45406 9999 19         a guard's truncheon [hold-left]
+
+A 0 45443 45448
+M 0 45428 1 -99       a haugtroll worker
+
+A 0 45443 45448
+M 0 45413 1 -99       a dwarven slave miner
+
+** 45452-45456 **
+
+A 0 45452 45456
+M 0 45418 1 -99       a troll guard on patrol
+? 0 2 0 E
+E 1 45406 9999 19         a guard's truncheon [hold-left]
+
+A 0 45452 45456
+M 0 45414 1 -99       a dwarven slave worker
+
+A 0 45452 45456
+M 0 45427 1 -99       a bergtroll worker
+
+** 45459-45462 **
+
+A 0 45459 45462
+M 0 45418 1 -99       a troll guard on patrol
+? 0 2 0 E
+E 1 45406 9999 19         a guard's truncheon [hold-left]
+
+A 0 45459 45462
+M 0 45427 1 -99       a bergtroll worker
+
+A 0 45459 45462
+M 0 45421 1 -99       a dwarven slave miner [sentinel]
+
+A 0 45459 45462
+M 0 45428 1 -99       a haugtroll worker
+
+** 45365-45378 **
+
+A 0 45365 45378
+M 0 45418 1 -99       a troll guard on patrol
+? 0 2 0 E
+E 1 45406 9999 19         a guard's truncheon [hold-left]
+
+A 0 45365 45378
+M 0 45418 1 -99       a troll guard on patrol
+? 0 2 0 E
+E 1 45406 9999 19         a guard's truncheon [hold-left]
+
+A 0 45365 45378
+M 0 45413 1 -99       a dwarven slave miner
+
+A 0 45365 45378
+M 0 45421 1 -99       a dwarven slave miner [sentinel]
+
+A 0 45365 45378
+M 0 45427 1 -99       a bergtroll worker
+
+A 0 45365 45378
+M 0 45427 1 -99       a bergtroll worker
+
+A 0 45365 45378
+M 0 45428 1 -99       a haugtroll worker
+
+A 0 45365 45378
+M 0 45428 1 -99       a haugtroll worker
+
+A 0 45365 45378
+M 0 45422 1 -99       a dwarven slave worker [sentinel]
+
+A 0 45365 45378
+M 0 45414 1 -99       a dwarven slave worker
+
+** 45383-45398 **
+
+A 0 45383 45398
+M 0 45418 1 -99       a troll guard on patrol
+? 0 2 0 E
+E 1 45406 9999 19         a guard's truncheon [hold-left]
+
+A 0 45383 45398
+M 0 45418 1 -99       a troll guard on patrol
+? 0 2 0 E
+E 1 45406 9999 19         a guard's truncheon [hold-left]
+
+A 0 45383 45398
+M 0 45418 1 -99       a troll guard on patrol
+? 0 2 0 E
+E 1 45406 9999 19         a guard's truncheon [hold-left]
+
+A 0 45383 45398
+M 0 45414 1 -99       a dwarven slave worker
+
+A 0 45383 45398
+M 0 45422 1 -99       a dwarven slave worker [sentinel]
+
+A 0 45383 45398
+M 0 45422 1 -99       a dwarven slave worker [sentinel]
+
+A 0 45383 45398
+M 0 45427 1 -99       a bergtroll worker
+
+A 0 45383 45398
+M 0 45427 1 -99       a bergtroll worker
+
+A 0 45383 45398
+M 0 45427 1 -99       a bergtroll worker
+
+A 0 45383 45398
+M 0 45421 1 -99       a dwarven slave miner [sentinel]
+
+A 0 45383 45398
+M 0 45421 1 -99       a dwarven slave miner [sentinel]
+
+A 0 45383 45398
+M 0 45413 1 -99       a dwarven slave miner
+
+A 0 45383 45398
+M 0 45428 1 -99       a haugtroll worker
+
+A 0 45383 45398
+M 0 45428 1 -99       a haugtroll worker
+
+A 0 45383 45398
+M 0 45428 1 -99       a haugtroll worker
+
+** 45401-45404 **
+
+A 0 45401 45404
+M 0 45418 1 -99       a troll guard on patrol
+? 0 2 0 E
+E 1 45406 9999 19         a guard's truncheon [hold-left]
+
+A 0 45401 45404
+M 0 45428 1 -99       a haugtroll worker
+
+A 0 45401 45404
+M 0 45414 1 -99       a dwarven slave worker
+
+A 0 45401 45404
+M 0 45413 1 -99       a dwarven slave miner
+
+******************
+* Dig Site Objects
+******************
+O 0 45410 1 45365       a rusty shovel
+O 0 45410 1 45375       a rusty shovel
+O 0 45413 1 45380       a broken mining pick
+O 0 45410 1 45380       a rusty shovel
+O 0 18663 1 45383       a firepit
+O 0 151 1 45383         a large black anvil
+O 0 152 1 45383         a large forge
+O 0 45413 1 45385       a broken mining pick
+O 0 45411 1 45386       a massive pile of rock and debris
+O 0 45419 1 45386       A large rattling contraption [portal to 45465 - troll extension]
+O 0 45418 1 45388       a hole in the makeshift barrier [window to sinkhole]
+O 0 45413 2 45388       a broken mining pick
+O 0 45410 1 45391       a rusty shovel
+O 0 45413 1 45394       a broken mining pick
+O 0 45410 2 45394       a rusty shovel
+O 0 45413 1 45398       a broken mining pick
+O 0 45410 1 45403       a rusty shovel
+O 0 45410 1 45443       a rusty shovel
+O 0 45413 1 45448       a broken mining pick
+O 0 45413 1 45461       a broken mining pick
+
+****************
+*Underwater Area
+****************
+M 0 45410 1 45411       an albino eel [sentinel]
+M 0 45368 1 45412       an albino eel
+M 0 45410 1 45413       an albino eel [sentinel]
+M 0 45368 1 45416       an albino eel
+M 0 45368 1 45417       an albino eel
+M 0 45410 1 45421       an albino eel [sentinel]
+
+*********************
+* ADMINISTRATION AREA
+*********************
+O 0 16200 2 45399       an operating table
+O 0 45463 1 45399       a fair sized puddle of vomit
+O 0 27307 2 45405       a broken chair
+O 0 45414 1 45408       a small altar
+O 0 4200 1 45427        a gravestone
+O 0 45368 1 45427       a sign
+O 0 45408 1 45428       a frozen solid chest
+P 1 45367 1 45408         an oddly shaped trinket
+O 0 11402 1 45429       a desk made of stone
+
+**Note - I am trying to get the journal to rest on top of the rock outcropping
+**Note - I am not sure if this is proper way of doing it or not
+
+O 0 18683 1 45430       an outcropping of rock
+P 1 45416 1 18683        a leather journal covered in spores
+O 0 9018 1 45430        a padded onyx chair
+O 0 7707 1 45431        a colorful tapestry
+O 0 10940 1 45432       a drafting table
+O 0 11402 1 45433       a desk made of stone
+O 0 15300 1 45433       crude wooden shelves
+P 1 1487 1 15300          a blank parchment
+B 0 16230 1 45399       a corpse of a patient
+B 0 571 1 45432         a small bag of chalk
+B 0 572 1 45432         a thick stick of chalk
+
+M 0 45401 1 45399       a creepy troll witchdoctor
+
+M 0 45417 2 45400       a well trained troll guard
+? 0 2 0 E
+E 1 45406 9999 19         a guard's truncheon [hold-left]
+
+M 0 45417 2 45400       a well trained troll guard
+? 0 2 0 E
+E 1 45406 9999 19         a guard's truncheon [hold-left]
+
+M 0 45432 1 45408       a troll oracle
+? 0 2 0 E
+Z 0 1 2                   rune etched set [full set]
+
+M 0 45367 1 45409       a sick dwarven slave worker
+
+M 0 45398 1 45410       Fusarium the Shunned
+G 1 45417 1               a spare key [opens cladosporiums room]
+? 0 2 0 E
+Z 0 2 2                   thorny fungus set [full set]
+
+M 0 45395 1 45424       Cladosporium the exiled overseer [Nocturnal]
+G 1 45412 1               a frozen key [opens frozen chest in cladosporiums room]
+? 0 2 0 E
+Z 0 3 2                   effervescent spore set [full set]
+
+M 0 45394 1 45428       Cladosporium the exiled overseer [Diurnal]
+? 0 2 0 E
+Z 0 4 2                   spore set [full set]
+
+M 0 45380 2 45428       an overseer's bodyguard
+? 0 2 0 E
+Z 0 5 2                   stitched gingham set [full set]
+
+M 0 45380 2 45428       an overseer's bodyguard
+? 0 2 0 E
+Z 0 5 2                   stitched gingham set [full set]
+
+M 0 45380 2 45430       an overseer's bodyguard
+? 0 2 0 E
+Z 0 5 2                   stitched gingham set [full set]
+
+M 0 45380 2 45430       an overseer's bodyguard
+? 0 2 0 E
+Z 0 5 2                   stitched gingham set [full set]
+
+M 0 45380 2 45431       an overseer's bodyguard
+? 0 2 0 E
+Z 0 5 2                   stitched gingham set [full set]
+
+M 0 45380 2 45431       an overseer's bodyguard
+? 0 2 0 E
+Z 0 5 2                   stitched gingham set [full set]
+
+M 0 45365 1 45433  	a sniveling sycophant
+M 0 45424 1 45433       a gibbering clerk
+M 0 45411 1 45433       a rock gnome advisor
+
+*****************
+* RESISTANCE AREA
+*****************
+O 0 35719 1 45437       a wide rickety wooden table
+O 0 45366 1 45438       a filthy mattress
+O 0 18683 1 45438       an outcropping of rock
+
+M 0 45431 3 45437       a resistance member
+M 0 45431 3 45437       a resistance member
+M 0 45431 3 45437       a resistance member
+
+M 0 45408 1 45437       Mycotox, the Deformed
+? 0 2 0 E
+Z 0 6 2                   mold infested set [full set]
+
+M 0 45431 4 45438       a resistance member
+M 0 45431 4 45438       a resistance member
+M 0 45431 4 45438       a resistance member
+M 0 45431 4 45438       a resistance member
+
+****************
+* SLAVE PEN AREA
+****************
+O 0 45366 1 45439       a filthy mattress
+M 0 45419 1 45439       a human slave
+M 0 45425 1 45439       an elven slave
+M 0 45425 1 45440       an elven slave
+M 0 45419 2 45440       a human slave
+M 0 45415 1 45440       a gnomish slave
+M 0 45419 1 45441       a human slave
+M 0 45415 2 45441       a gnomish slave
+M 0 45425 1 45442       an elven slave
+M 0 45415 2 45442       a gnomish slave
+
+****************************************************************
+* Sinking Tunnel, Supply Room, Sinkhole, Sunken Hole, Corpse Pit
+****************************************************************
+O 0 27319 1 45369       an old wooden crate
+P 1 581 1 27319           an iron chisel
+P 1 150 1 27319           a black ball-pein hammer
+P 1 588 1 27319           a pair of iron pliers
+P 1 4152 1 27319          a huge pile of wood
+O 0 27309 2 45369       some broken crate remnants
+O 0 6610 1 45369        a large wooden crate
+O 0 45407 1 45420       an algae coated chest
+P 1 37 1 45407            a large pile of talens
+P 1 45464 1 45407         Yellowfang's horn
+O 0 45365 1 45445       the corpse of a dead dwarf
+O 0 45369 1 45445       a mangled mound of rotted bits of corpses
+
+M 0 45416 1 45369       an exhausted supply worker
+M 0 45462 1 45379       a vampire bat
+M 0 45396 1 45420       an ancient guardian
+M 0 45420 2 45449       an inland cave bat
+M 0 45420 2 45449       an inland cave bat
+M 0 45420 2 45450       an inland cave bat
+M 0 45420 2 45450       an inland cave bat
+M 0 45420 2 45451       an inland cave bat
+M 0 45420 2 45451       an inland cave bat
+
+****************
+* LIVESTOCK AREA
+****************
+B 0 31483 1 45456       a bale of hay
+
+M 0 45430 1 45456       a livestock butcher
+? 0 2 0 E
+E 1 33824 9999 19         a heavily notched butcher's knife [hold-left]
+
+M 0 45429 4 45456       a filthy sow
+M 0 45429 4 45456       a filthy sow
+M 0 45429 4 45456       a filthy sow
+M 0 45429 4 45456       a filthy sow
+
+***************
+* FOREMANS AREA *Note - The key 45481 is from zone 2 as i ran out of vnums
+***************
+O 0 45370 1 45457       a sturdy stone chest
+P 1 45457 1 45370         The Elemental Reaver
+P 1 9751 1 45370          a pile of talens
+
+M 0 45412 1 45458       an angry foreman
+G 1 45481 1              key [elevator_mine_shaft_portal]
+? 0 2 0 E
+Z 0 7 2                  mold infested set [limited pieces]
+
+*****************
+* GUARD POST AREA
+*****************
+O 0 18663 1 45370       a firepit
+O 0 34758 3 45370       a large boulder
+O 0 19010 6 45382       an ironbound footlocker
+P 1 153 1 19010           a small grey whetstone
+P 1 33517 2 19010         some rotting food scraps
+O 0 19010 6 45382       an ironbound footlocker
+O 0 19010 6 45382       an ironbound footlocker
+P 1 33517 1 19010         some rotting food scraps
+O 0 19010 6 45382       an ironbound footlocker
+P 1 153 1 19010           a small grey whetstone
+O 0 19010 6 45382       an ironbound footlocker
+O 0 19010 6 45382       an ironbound footlocker
+P 1 33517 1 19010         some rotting food scraps
+
+M 0 45417 2 45370       a well trained troll guard
+? 0 2 0 E
+E 1 45406 9999 19         a guard's truncheon [hold-left]
+
+M 0 45417 2 45370       a well trained troll guard
+? 0 2 0 E
+E 1 45406 9999 19         a guard's truncheon [hold-left]
+
+M 0 45417 1 45371       a well trained troll guard
+? 0 2 0 E
+E 1 45406 9999 19         a guard's truncheon [hold-left]
+
+M 0 45400 1 45381       Jalashzach the Feared
+? 0 2 0 E
+Z 0 0 2                   spore set [limited pieces]
+
+M 0 45417 2 45382       a well trained troll guard
+? 0 2 0 E
+E 1 45406 9999 19         a guard's truncheon [hold-left]
+
+M 0 45417 2 45382       a well trained troll guard
+? 0 2 0 E
+E 1 45406 9999 19         a guard's truncheon [hold-left]
+
+M 0 45399 1 45464       Aspergillus the Cruel
+? 0 2 0 E
+Z 0 8 2                   thorny fungus set [limited pieces]
+S
