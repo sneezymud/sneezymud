@@ -129,7 +129,6 @@ LDFLAGS +=-lares
 ##                        Actual Compiling Starts Here                       ##
 ###############################################################################
 
-
 # this is a list of objects to be compiled and linked
 # just add new ones to the bottom
 LIBMISC=actions.o		ai_commands.o 		ai_reactions.o     \
@@ -390,6 +389,20 @@ rebooter:
 	@echo \*\*\* Installing rebooter \*\*\*
 	@cp -f rebooter.sh /mud/prod/rebooter.sh.2
 	@cp -f rebooter.cfg rebooter-watchdog.sh /mud/prod
+
+# unit tests
+include tests/testlist.mk
+
+test:	$(LIBS) runner
+	@echo \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*
+	@tests/runner/runner 2> tests/runner/runner.out
+
+runner:
+	@echo Generating runner.
+	@tests/cxxtest/cxxtestgen.py -o tests/runner/runner.cpp --error-printer $(TESTS)
+	@echo Building runner.
+	@$(CC) -I. -Itests/cxxtest -o tests/runner/runner tests/runner/runner.cpp $(LIBS) $(LDFLAGS)
+
 
 # low tool
 sqladdwld: $(LIBS) objs/sqladdwld.o objs/lowtools.o
