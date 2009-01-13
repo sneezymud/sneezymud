@@ -114,7 +114,7 @@ O 0 45465 1 45465       a crude and dangerous conveyor belt
 O 0 45468 1 45466       a safety notice
 O 0 45483 1 45466       a mine shaft elevator [to contraption room]
 O 0 45465 1 45466       a crude and dangerous conveyor belt
-O 0 45465 1 45484       a portal door [contraption_room_to_troll_dig_site]
+O 0 45484 1 45465       a portal door [contraption_room_to_troll_dig_site]
 
 ***********
 * Boss Lair
