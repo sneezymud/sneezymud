@@ -1,0 +1,14 @@
+To make a new test:
+
+1) Copy template.h to a new file for your test (eg, "cp template.h myTest.h")
+2) Edit the class name in your new file (eg, "template" -> "myTest")
+3) Add your test to testlist.mk
+4) Start adding tests and stuff.
+
+Documentation on the testing facilities here:
+http://cxxtest.com/guide.html
+
+- To run tests, do "make test" in the code directory.
+- If you need to see the mud output from your tests (what would
+normally end up in the mud log), check runner/runner.out.
+
