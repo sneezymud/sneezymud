@@ -1,4 +1,150 @@
+
 #45465
-Staffa - Troll Dig Extension~ 
-45489 25 2 0
+Staffa - Troll Excavation Extension~
+45489 35 2 1
+
+*******
+*Doors
+*******
+
+D 0 45485 0 1        Flooded Tunnel -> Flooded Breach
+D 0 45487 2 1        Flooded Breach -> Flooded Tunnel
+
+*************************************************
+* Area Randomizer - Dig Site and Offshoot Tunnels
+*************************************************
+A 0 45467 45480
+M 0 45484 1 -99       a troll guard on patrol
+? 0 2 0 E
+E 1 45406 9999 19         a guard's truncheon [hold-left]
+
+A 0 45467 45480
+M 0 45484 1 -99       a troll guard on patrol
+? 0 2 0 E
+E 1 45406 9999 19         a guard's truncheon [hold-left]
+
+A 0 45467 45480
+M 0 45484 1 -99       a troll guard on patrol
+? 0 2 0 E
+E 1 45406 9999 19         a guard's truncheon [hold-left]
+
+A 0 45467 45480
+M 0 45484 1 -99       a troll guard on patrol
+? 0 2 0 E
+E 1 45406 9999 19         a guard's truncheon [hold-left]
+
+A 0 45467 45480
+M 0 45484 1 -99       a troll guard on patrol
+? 0 2 0 E
+E 1 45406 9999 19         a guard's truncheon [hold-left]
+
+A 0 45467 45480
+M 0 45485 1 -99       a dwarven slave miner
+
+A 0 45467 45480
+M 0 45485 1 -99       a dwarven slave miner
+
+A 0 45467 45480
+M 0 45485 1 -99       a dwarven slave miner
+
+A 0 45467 45480
+M 0 45485 1 -99       a dwarven slave miner
+
+A 0 45467 45480
+M 0 45485 1 -99       a dwarven slave miner
+
+A 0 45467 45480
+M 0 45485 1 -99       a dwarven slave miner
+
+A 0 45467 45480
+M 0 45485 1 -99       a dwarven slave miner
+
+A 0 45467 45480
+M 0 45485 1 -99       a dwarven slave miner
+
+A 0 45467 45480
+M 0 45486 1 -99       a dwarven slave worker
+
+A 0 45467 45480
+M 0 45486 1 -99       a dwarven slave worker
+
+A 0 45467 45480
+M 0 45486 1 -99       a dwarven slave worker
+
+A 0 45467 45480
+M 0 45486 1 -99       a dwarven slave worker
+
+A 0 45467 45480
+M 0 45486 1 -99       a dwarven slave worker
+
+A 0 45467 45480
+M 0 45486 1 -99       a dwarven slave worker
+
+A 0 45467 45480
+M 0 45486 1 -99       a dwarven slave worker
+
+A 0 45467 45480
+M 0 45486 1 -99       a dwarven slave worker
+
+A 0 45482 45486
+M 0 45487 1 -99       a large albino eel
+
+A 0 45482 45486
+M 0 45487 1 -99       a large albino eel
+
+A 0 45482 45486
+M 0 45487 1 -99       a large albino eel
+
+A 0 45482 45486
+M 0 45487 1 -99       a large albino eel
+
+A 0 45482 45486
+M 0 45487 1 -99       a large albino eel
+
+A 0 45482 45486
+M 0 45487 1 -99       a large albino eel
+
+
+*********
+* Objects
+*********
+O 0 45467 1 45465       a mine shaft elevator [contraption room]
+O 0 45466 1 45465       a massive iron furnace
+O 0 45465 1 45465       a crude and dangerous conveyor belt
+O 0 45468 1 45466       a safety notice
+O 0 45483 1 45466       a mine shaft elevator [to contraption room]
+O 0 45465 1 45466       a crude and dangerous conveyor belt
+O 0 45465 1 45484       a portal door [contraption_room_to_troll_dig_site]
+
+***********
+* Boss Lair
+***********
+M 0 45487 1 45487       a large albino eel
+M 0 45489 2 45488       an ancient guardian
+M 0 45489 2 45488       an ancient guardian
+M 0 45489 1 45489       an ancient guardian
+
+M 0 45488 1 45489       Ixeidine Yellowfang
+G 1 45415 9999               an algae-coated key
+G 1 45480 9999               a guardian's intestinal tract
+? 0 2 0 P
+P 1 45470 1 45480         	a guardian scaled boot
+? 0 2 0 P
+P 1 45473 1 45480         	a guardian scaled wrist band
+? 0 2 0 P
+P 1 45474 1 45480         	a guardian scaled belt
+? 0 2 0 P
+P 1 45475 1 45480         	a guardian scaled gauntlet
+? 0 2 0 P
+P 1 45476 1 45480         	a guardian scaled armband
+? 0 2 0 P
+P 1 45478 1 45480         	a guardian scaled helmet
+? 0 2 0 P
+P 1 45477 1 45480         	a guardian scaled harness
+? 0 2 0 P
+P 1 45469 1 45480         	a guardian scaled backplate
+? 0 2 0 P
+P 1 45472 1 45480         	a guardian scaled legging
 S
+
+**Note - Should it be 9999 after the P commands instead of 1 for the guardian scaled armor?
