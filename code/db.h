@@ -78,11 +78,31 @@ class resetCom {
     int arg3; 
     int arg4;
     char character;
+
+  public:
     resetCom();
     resetCom(const resetCom &t);
     ~resetCom();
     resetCom & operator =(const resetCom &t);
+
+    bool hasLoadPotential();
+    bool usesRandomRoom();
+    bool setsState();
 };
+
+class armorSetLoad
+{
+private:
+  struct armor_set_struct {
+    int slots[24]; // should be MAX_WEAR
+  } local_armor[16];
+public:
+  armorSetLoad();
+  void resetArmor();
+  void setArmor(int set, int slot, int value);
+  int getArmor(int set, int slot);
+};
+
 
 class zoneData
 {
@@ -112,6 +132,8 @@ class zoneData
     int stat_mobs_unique;    // unique # of mobs loading in the zonefile
     int stat_objs_unique;    // unique # of objects loading in the zonefile
     
+    armorSetLoad armorSets;
+
     bool isEmpty(void);
     void resetZone(bool bootTime, bool findLoadPotential=false);
     void closeDoors(void);
