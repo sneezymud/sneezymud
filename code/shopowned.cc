@@ -7,6 +7,8 @@
 #include "shopaccounting.h"
 #include "obj_commodity.h"
 
+#define GRIMHAVEN_TAX_OFFICE 14
+
 // this function relies on the fact that the db will return rows in the order
 // that they were created, chronologically.  I'm not sure if this is defined
 // behavior or not, so if it stops working, you need to put a timestamp value
@@ -301,11 +303,9 @@ int TShopOwned::chargeTax(int cost, const sstring &name, TObj *o)
 
   tax_office=getTaxShopNr();
 
-  // no tax office, don't charge tax
-  if(tax_office<=0){
-    vlogf(LOG_BUG, fmt("shop (%i) has no tax entry") % shop_nr);
-    return 0;
-  }
+  // no tax office, charge it to grimhaven
+  if(tax_office<=0)
+    tax_office = GRIMHAVEN_TAX_OFFICE;
 
   cost = (int)((float)cost * shop_index[tax_office].getProfitBuy(o, ch));
 
