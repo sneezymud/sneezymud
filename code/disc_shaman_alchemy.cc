@@ -42,9 +42,9 @@ void TBeing::doBrew(const char *arg)
       t->findSomeComponent(&invalid, &comp_spell, &comp_brew, which_spell, 1);
       
       if(!comp_gen){
-	if((comp_gen=dynamic_cast<TPotion *>(t)) && 
-	   comp_gen->getDrinkType() != LIQ_MAGICAL_ELIXIR)
-	  comp_gen=NULL;
+	      if((comp_gen=dynamic_cast<TPotion *>(t)) && 
+	         comp_gen->getDrinkType() != LIQ_MAGICAL_ELIXIR)
+	        comp_gen=NULL;
       }
     }
   }
@@ -53,8 +53,8 @@ void TBeing::doBrew(const char *arg)
 
     if(!comp_gen){
       if((comp_gen=dynamic_cast<TPotion *>(t)) && 
-	 comp_gen->getDrinkType() != LIQ_MAGICAL_ELIXIR)
-	comp_gen=NULL;
+	       comp_gen->getDrinkType() != LIQ_MAGICAL_ELIXIR)
+	      comp_gen=NULL;
     }
   }
 
@@ -89,6 +89,15 @@ void TBeing::doBrew(const char *arg)
   // trash all items first
   int how_many = comp_gen->getDrinkUnits();
 
+  if (comp_brew->getComponentCharges() < how_many) {
+    act("You don't have enough charges of $p to brew this potion.", FALSE, this, comp_brew, 0, TO_CHAR);
+    return;
+  }
+  if (comp_spell->getComponentCharges() < how_many) {
+    act("You don't have enough charges of $p to brew this potion.", FALSE, this, comp_spell, 0, TO_CHAR);
+    return;
+  }
+
   buf=fmt("You begin to brew %d ounces of %s.") %
     how_many % discArray[which_spell]->name;
   act(buf, FALSE, this, 0, 0, TO_CHAR);
@@ -97,7 +106,7 @@ void TBeing::doBrew(const char *arg)
 
   comp_gen->setDrinkUnits(0);
 
-  comp_brew->addToComponentCharges(-1);
+  comp_brew->addToComponentCharges(-how_many);
   if(comp_brew->getComponentCharges() <= 0) {
     buf="$p is consumed in the process.";
     act(buf, FALSE, this, comp_brew, 0, TO_CHAR);
@@ -105,9 +114,9 @@ void TBeing::doBrew(const char *arg)
     comp_brew = NULL;
   }
 
-  buf="You use up one charge of $p.";
+  buf=fmt("You use up %i charge%s of $p.") % how_many % (how_many > 1 ? "s" : "");
   act(buf, FALSE, this, comp_spell, 0, TO_CHAR);
-  comp_spell->addToComponentCharges(-1);
+  comp_spell->addToComponentCharges(-how_many);
   if (comp_spell->getComponentCharges() <= 0) {
     buf="$p is consumed in the process.";
     act(buf, FALSE, this, comp_spell, 0, TO_CHAR);
