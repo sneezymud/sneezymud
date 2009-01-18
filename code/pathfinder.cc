@@ -21,6 +21,8 @@ bool findFairFight::isTarget(int room) const
     TMonster *tmon=dynamic_cast<TMonster *>(t);
     if (!tmon)
       continue;
+    if (tmon->isImmortal())
+      continue;
 
     //    vlogf(LOG_PEEL, fmt("level %f %i") % tmon->getRealLevel() % myself->GetMaxLevel());
 
