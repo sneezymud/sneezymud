@@ -3404,7 +3404,7 @@ resetCom & resetCom::operator =(const resetCom &t)
 bool resetCom::hasLoadPotential()
 {
   return command == 'E' || command == 'G' || command == 'Y' ||
-    command == 'Z' || command == '?';
+    command == 'Z' || command == 'X' || command == '?';
 }
 
 // returns if this command uses the last set random room
