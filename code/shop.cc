@@ -642,7 +642,7 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   cost = shopPrice(1, shop_nr, chr, ch);
   
   for (i = 0; i < tmp; i++) {
-    TThing *t_temp1 = searchLinkedListVis(ch, argm, keeper->getStuff());
+    TThing *t_temp1 = searchLinkedList(argm, keeper->getStuff());
     TObj *temp1 = dynamic_cast<TObj *>(t_temp1);
 
 #if !(NO_DAMAGED_ITEMS_SHOP)
@@ -686,8 +686,10 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
 
   keeper->saveItems(shop_nr);
 
-  if (!count)
+  if (!count) {
+    keeper->doTell(ch->name, "I can't seem to find any of those!");
     return -1;
+  }
 
   //  ch->sendTo(fmt("You manage to swindle the shopkeeper into a %i%s discount.\n\r") % (int)(swindle*100) % "%");
   keeper->doTell(ch->name, fmt(shop_index[shop_nr].message_buy) %
@@ -2343,14 +2345,6 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
     shopping_buy(arg, ch, myself, shop_nr);
     return TRUE;
-  }
-  // if given something, make this act as a sale (write to database, not inventory)
-  // if given talens, act as normal (talens handed over)
-  if (cmd == CMD_GIVE) {
-    sstring arg1, arg2;
-    argument_interpreter(arg, arg1, arg2);
-    if (!is_number(arg1) || !is_abbrev(arg2, "talens"))
-      cmd = CMD_SELL;
   }
   if ((cmd == CMD_SELL) && (ch->in_room == shop_index[shop_nr].in_room)) {
     if (!safe_to_save_shop_stuff(myself))
