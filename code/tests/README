@@ -7,6 +7,7 @@ To make a new test:
 
 Documentation on the testing facilities here:
 http://cxxtest.com/guide.html
+alternate: http://cxxtest.sourceforge.net/guide.html
 
 - To run tests, do "make test" in the code directory.
 - If you need to see the mud output from your tests (what would
