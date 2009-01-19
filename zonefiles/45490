@@ -1,4 +1,101 @@
 #45490
 Amberbock - Parnithian Tomb~
-45519 25 2 0
+45519 25 2 1
+
+X 0 5  45492 	veil frost-lined
+X 0 3  45498 	necklace delicate icicles
+X 0 4  45494 	vest frost-lined
+X 0 14 45491 	shroud frost-lined
+X 0 12 45490 	sleeve frost-lined
+X 0 13 45490 	sleeve frost-lined
+X 0 16 45495 	bracelet delicate icicle 
+X 0 17 45495 	bracelet delicate icicle 
+X 0 10 45493 	glove frost-lined
+X 0 11 45493 	glove frost-lined
+X 0 1  45500 	band ice
+X 0 2  45500 	band ice
+X 0 15 45496 	codpiece frost covered
+X 0 6  45499 	legging frost-lined
+X 0 7  45499 	legging frost-lined
+X 0 8  45497 	shoe frost-lined
+X 0 9  45497 	shoe frost-lined
+
+X 1 5  45501 	veil mystic
+X 1 3  45508 	necklace mystical pulsating
+X 1 4  45502 	robe mystic
+X 1 14 45503 	cloak mystic
+X 1 12 45504 	sleeve mystic
+X 1 13 45504    sleeve mystic
+X 1 10 45506 	glove mystic
+X 1 11 45506	glove mystic
+X 1 15 45505 	belt mystical woven pouches
+X 1 6  45509 	legging mystic
+X 1 7  45509	legging mystic
+X 1 8  45507 	boot mystic adorned runes
+X 1 9  45507	boot mystic adorned runes
+
+O 0 45510 45490			wall sconce
+O 0 45510 45491
+O 0 45510 45492
+O 0 45510 45493
+O 0 45510 45494
+O 0 45510 45495
+O 0 45510 45496
+O 0 45510 45497
+O 0 45510 45498
+O 0 45510 45499
+O 0 45510 45500
+O 0 45510 45501
+O 0 45510 45502
+O 0 45510 45503
+O 0 45510 45504
+O 0 45510 45505
+O 0 45510 45506
+O 0 45510 45507
+O 0 45510 45508
+O 0 45510 45509
+O 0 45510 45510
+O 0 45510 45511
+O 0 45510 45512
+O 0 45510 45513
+O 0 45510 45514
+O 0 45510 45515
+O 0 45510 45516
+O 0 45510 45517
+O 0 45510 45518
+O 0 45510 45519
+
+O 0 45511 45508			plain altar
+
+M 0 45490 2 45491		transparent monk
+M 0 45490 2 45494
+M 0 45490 2 45412
+
+M 0 45491 1 45496		Charn
+
+M 0 45492 1 45511		lingering spirit
+
+M 0 45493 3 45498		mystic
+Z 0 1 2
+
+M 0 45494 1 45504		muxor
+
+M 0 45495 1 45512		ghost of a fallen hero
+M 0 45495 1 45513
+
+M 0 45496 1 45506		mourning champion
+K 1 45497 1 45506		watchful squire
+
+M 0 45498 1 45514		sinful ghost
+M 0 45498 1 45515
+
+M 0 45499 1 45508		solemn priest
+
+M 0 45500 1 45509		ice assassin
+Z 0 0 2
+M 0 45500 1 45510
+Z 0 0 2
+
+M 0 45501 1 45516		ghost of purity and hope
+M 0 45501 1 45517
 S
