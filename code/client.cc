@@ -36,7 +36,7 @@ void Descriptor::clientf(const sstring &msg)
 
   // This is the last sanity check.
   if (!msg.empty() && (m_bIsClient || IS_SET(prompt_d.type, PROMPT_CLIENT_PROMPT)))
-    output.putInQ(fmt("\200%s\n") % msg);
+    output.putInQ(new UncategorizedComm(fmt("\200%s\n") % msg));
 }
 
 void TRoom::clientf(const sstring &msg)
@@ -279,8 +279,7 @@ int Descriptor::read_client(char *str2)
         outputProcessing();
       }
 
-      char dummy[MAX_STRING_LENGTH];
-      while ((&output)->takeFromQ(dummy, sizeof(dummy)));
+      output.clear();
       if (account) {
         if (IS_SET(account->flags, ACCOUNT_IMMORTAL)) 
           vlogf(LOG_PIO, "Client Connection from *****Masked*****");

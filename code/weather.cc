@@ -432,7 +432,7 @@ static void sendWeatherMessage(weatherMessT num)
         }
 
         sstring buf = colorString(ch, i, text, NULL, COLOR_BASIC, FALSE);
-        i->output.putInQ(buf);
+        i->output.putInQ(new UncategorizedComm(buf));
       }
     }
   }

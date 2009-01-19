@@ -143,7 +143,27 @@ class commText
     ~commText();
 };
 
-class textQ
+
+class outputQ
+{
+ private:
+  deque <Comm *> queue;
+  
+ public:
+  Comm *getBegin();
+  Comm *getEnd();
+  void clear(){
+    queue.clear();
+  }
+
+  outputQ() {};
+  ~outputQ();
+  
+  Comm *takeFromQ();
+  void putInQ(Comm *);
+};
+
+class inputQ
 {
   private:
     commText *begin;
@@ -164,12 +184,12 @@ class textQ
     }
 
   private:
-    textQ() {} // prevent use
+    inputQ() {} // prevent use
   public:
-    textQ(bool);
-    textQ(const textQ &a);
-    textQ & operator=(const textQ &a);
-    ~textQ();
+    inputQ(bool);
+    inputQ(const inputQ &a);
+    inputQ & operator=(const inputQ &a);
+    ~inputQ();
 
     bool takeFromQ(char *dest, int destsize);
     void putInQ(const sstring &txt);
@@ -497,8 +517,8 @@ class Descriptor
     int max_str;
     int prompt_mode;              // control of prompt-printing 
     char m_raw[4096];               // buffer for raw input    
-    textQ output;                 // q of sstrings to send    
-    textQ input;                  // q of unprocessed input  
+    outputQ output;                 // q of sstrings to send    
+    inputQ input;                  // q of unprocessed input  
     sessionData session;          // data for this session
     careerData career;            // data for career
     bonusStatPoints bonus_points;

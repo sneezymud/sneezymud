@@ -143,7 +143,7 @@ void TBeing::sendTo(colorTypeT lev, const sstring &msg) const
     return;
 
   sstring messageBuffer = colorString(this, desc, msg, NULL, lev, FALSE);
-  desc->output.putInQ(messageBuffer);
+  desc->output.putInQ(new UncategorizedComm(messageBuffer));
 }
 
 void TRoom::sendTo(colorTypeT lev, const sstring &text) const
@@ -156,7 +156,7 @@ void TRoom::sendTo(colorTypeT lev, const sstring &text) const
       if ((lev == COLOR_NEVER) || (lev == COLOR_NONE)) {
       } else {
         sstring messageBuffer = colorString(tbt, i->desc, text, NULL, lev, TRUE);
-        tbt->desc->output.putInQ(messageBuffer);
+        tbt->desc->output.putInQ(new UncategorizedComm(messageBuffer));
       }
     }
   }
@@ -175,7 +175,7 @@ void TBeing::sendTo(const sstring &msg) const
   if (desc->connected == CON_WRITING)
     return;
 
-  desc->output.putInQ(msg);
+  desc->output.putInQ(new UncategorizedComm(msg));
 }
 
 void save_all()
@@ -195,9 +195,9 @@ void sendToOutdoor(colorTypeT lev, const sstring &text, const sstring &text_trop
               !(ch->isPlayerAction(PLR_MAILING | PLR_BUGGING))) {
           if ((lev == COLOR_NEVER) || (lev == COLOR_NONE)) {
             if (ch->roomp->isTropicalSector()) {
-              i->output.putInQ(text_tropic);
+              i->output.putInQ(new UncategorizedComm(text_tropic));
             } else {
-              i->output.putInQ(text);
+              i->output.putInQ(new UncategorizedComm(text));
             }
           } else {
             sstring buf;
@@ -206,7 +206,7 @@ void sendToOutdoor(colorTypeT lev, const sstring &text, const sstring &text_trop
             } else {
               buf = colorString(ch, i, text, NULL, lev, FALSE);
             }
-            i->output.putInQ(buf);
+            i->output.putInQ(new UncategorizedComm(buf));
           }
         }
       }
@@ -222,7 +222,7 @@ void sendToExcept(char *text, TBeing *ch)
   if (text)
     for (i = descriptor_list; i; i = i->next)
       if (ch->desc != i && !i->connected)
-        i->output.putInQ(text);
+        i->output.putInQ(new UncategorizedComm(text));
 }
 
 void sendToRoom(colorTypeT color, const char *text, int room)
@@ -238,7 +238,7 @@ void sendToRoom(colorTypeT color, const char *text, int room)
       TBeing *tbt = dynamic_cast<TBeing *>(i);
       if (tbt && tbt->desc && !tbt->desc->connected && tbt->awake()) {
         sstring buf = colorString(tbt, tbt->desc, text, NULL, color, FALSE);
-        tbt->desc->output.putInQ(buf);
+        tbt->desc->output.putInQ(new UncategorizedComm(buf));
       }
     }
   }
@@ -258,7 +258,7 @@ void sendToRoom(const char *text, int room)
       if (!tbt)
         continue;
       if (tbt->desc && !tbt->desc->connected && tbt->awake())
-        tbt->desc->output.putInQ(text);
+        tbt->desc->output.putInQ(new UncategorizedComm(text));
     }
   }
 }
@@ -291,7 +291,7 @@ void sendrpf(int tslevel, colorTypeT color, TRoom *rp, const char *msg,...)
       TBeing *tbt = dynamic_cast<TBeing *>(i);
       if (tbt && tbt->desc && !tbt->desc->connected && tbt->awake() &&
           tbt->GetMaxLevel() > tslevel)
-        tbt->desc->output.putInQ(colorString(tbt, tbt->desc, messageBuffer, NULL, color, TRUE));
+        tbt->desc->output.putInQ(new UncategorizedComm(colorString(tbt, tbt->desc, messageBuffer, NULL, color, TRUE)));
     }
   }
 }
@@ -324,7 +324,7 @@ void sendrpf(int tslevel, TRoom *rp, const char *msg,...)
       TBeing *tbt = dynamic_cast<TBeing *>(i);
       if (tbt && tbt->desc && !tbt->desc->connected && tbt->awake() &&
           tbt->GetMaxLevel() > tslevel)
-        tbt->desc->output.putInQ(colorString(tbt, tbt->desc, messageBuffer, NULL, COLOR_NONE, TRUE));
+        tbt->desc->output.putInQ(new UncategorizedComm(colorString(tbt, tbt->desc, messageBuffer, NULL, COLOR_NONE, TRUE)));
 
     }
   }
@@ -344,7 +344,7 @@ void sendrp_exceptf(TRoom *rp, TBeing *ch, const char *msg,...)
     for (i = rp->getStuff(); i; i = i->nextThing) {
       TBeing *tbt = dynamic_cast<TBeing *>(i);
       if (tbt && tbt->desc && !tbt->desc->connected && (tbt != ch) && tbt->awake())
-        tbt->desc->output.putInQ(messageBuffer);
+        tbt->desc->output.putInQ(new UncategorizedComm(messageBuffer));
     }
   }
 }
@@ -355,7 +355,7 @@ void TRoom::sendTo(const sstring &text) const
 
   for (i = getStuff(); i; i = i->nextThing) {
     if (i->desc && !i->desc->connected)
-      i->desc->output.putInQ(text);
+      i->desc->output.putInQ(new UncategorizedComm(text));
   }
 }
 
@@ -855,18 +855,18 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
       }
 
       if (!color) {
-        to->desc->output.putInQ(sstring(buf).cap().c_str());
+        to->desc->output.putInQ(new UncategorizedComm(sstring(buf).cap()));
       } else {
         sstring str = to->ansi_color(color);
         if (str.empty())
-          to->desc->output.putInQ(sstring(buf).cap().c_str());
+          to->desc->output.putInQ(new UncategorizedComm(sstring(buf).cap()));
         else {
-          to->desc->output.putInQ(str);
-          to->desc->output.putInQ(sstring(buf).cap().c_str());
-          to->desc->output.putInQ(to->norm());
+          to->desc->output.putInQ(new UncategorizedComm(str));
+          to->desc->output.putInQ(new UncategorizedComm(sstring(buf).cap()));
+          to->desc->output.putInQ(new UncategorizedComm(to->norm()));
         } 
       }
-      to->desc->output.putInQ("\n\r");
+      to->desc->output.putInQ(new UncategorizedComm("\n\r"));
     }
     if ((type == TO_VICT) || (type == TO_CHAR))
       return;
@@ -1587,3 +1587,45 @@ void Descriptor::updateScreenAnsi(unsigned int update)
   if ((update == CHANGED_TIME) || (update == CHANGED_MUD))
     prompt_mode = PROMPT_DONT_SEND;
 }
+
+
+// base class
+sstring Comm::getComm(commTypeT comm){
+  switch(comm){
+    case COMM_TEXT:
+      return getText();
+      break;
+  }
+
+  return "";
+}
+
+// UncategorizedComm
+UncategorizedComm::UncategorizedComm(const sstring &t){
+  text=t;
+}
+
+sstring UncategorizedComm::getText(){
+  return text;
+}
+
+// CmdErrorComm
+CmdErrorComm::CmdErrorComm(cmdTypeT c, const sstring &t){
+  cmd=c;
+  text=t;
+}
+
+sstring CmdErrorComm::getText(){
+  return text;
+}
+
+// TellComm
+TellComm::TellComm(const sstring &f, const sstring &t){
+  from=f;
+  text=t;
+}
+
+sstring TellComm::getText(){
+  return fmt("%s tells you, \"<c>%s<z>\"") % from % text;
+}
+

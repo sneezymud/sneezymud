@@ -47,7 +47,6 @@ const char * const MUD_NAME_VERS = "SneezyMUD v5.2";
 static const char * const WELC_MESSG = "\n\rWelcome to SneezyMUD 5.2! May your journeys be enjoyable!\n\r\n\r";
 
 Descriptor::Descriptor() :
-  output(true),
   input(false),
   ignored(this)
 {
@@ -67,7 +66,7 @@ Descriptor::Descriptor(TSocket *s) :
   str(NULL),
   max_str(0),
   prompt_mode(0),
-  output(false),
+  output(),
   input(true),
   session(),
   career(),
@@ -446,25 +445,16 @@ int Descriptor::outputProcessing()
   char i[MAX_STRING_LENGTH + MAX_STRING_LENGTH];
   int counter = 0;
   char buf[MAX_STRING_LENGTH + MAX_STRING_LENGTH];
+  Comm *c;
 
   if (!prompt_mode && !connected && !m_bIsClient)
     if (socket->writeToSocket("\n\r") < 0)
       return -1;
 
-  if (output.getEnd() && !output.getBegin()) {
-    if (character && character->name)
-      vlogf(LOG_BUG, fmt("%s's output has end and no begin (client: %d).") %
-	    character->getName() % (m_bIsClient ? 1 : 0));
-    else
-      vlogf(LOG_BUG, "output has end and no begin.");
-// kludge, seems like it may lead to memory leaks but better than
-// leaving an end in here cos -4/2/98
-    output.setEnd(NULL);
-  }
-  
   memset(i, '\0', sizeof(i));
   // Take everything from queued output
-  while (output.takeFromQ(i, sizeof(i))) {
+  while (c=output.takeFromQ()) {
+    strncpy(i, c->getComm(COMM_TEXT).c_str(), MAX_STRING_LENGTH + MAX_STRING_LENGTH);
     counter++;
 
     // I bumped this from 500 to 1000 - Batopr
@@ -477,8 +467,7 @@ int Descriptor::outputProcessing()
       vlogf(LOG_BUG, fmt("i = %s, last i= %s") %  buf2 % buf); 
       // Set everything to NULL, might lose memory but we dont wanna try
       // a delete cause it might crash/ - Russ
-      output.setBegin(NULL);
-      output.setEnd(NULL);
+      output.clear();
       break;
     } 
     // recall that in inputProcessing we have mangaled any '$' character into
@@ -499,8 +488,8 @@ int Descriptor::outputProcessing()
     }
     strcpy(buf, i);
     if (snoop.snoop_by && snoop.snoop_by->desc) {
-      snoop.snoop_by->desc->output.putInQ("% ");
-      snoop.snoop_by->desc->output.putInQ(i);
+      snoop.snoop_by->desc->output.putInQ(new UncategorizedComm("% "));
+      snoop.snoop_by->desc->output.putInQ(new UncategorizedComm(i));
     }
     if (socket->writeToSocket(i))
       return -1;
@@ -726,7 +715,7 @@ void Descriptor::flush()
 {
   char dummy[MAX_STRING_LENGTH];
 
-  while (output.takeFromQ(dummy, sizeof(dummy)));
+  output.clear();
   while (input.takeFromQ(dummy, sizeof(dummy)));
 }
 
@@ -2039,7 +2028,7 @@ void Descriptor::show_string(const char *the_input, showNowT showNow, allowRepla
 
 void Descriptor::writeToQ(const sstring &arg)
 {
-  output.putInQ(arg);
+  output.putInQ(new UncategorizedComm(arg));
 }
 
 
@@ -2337,27 +2326,27 @@ void setPrompts(fd_set out)
 
       if (!d->connected && ch && ch->isPc() &&
           !(ch->isPlayerAction(PLR_COMPACT)))
-        d->output.putInQ("\n\r");
+        d->output.putInQ(new UncategorizedComm("\n\r"));
 
       if (ch && ch->task) {
         if (ch->task->task == TASK_PENANCE) {
           sprintf(promptbuf, "\n\rPIETY : %5.2f > ", ch->getPiety());
-          d->output.putInQ(sstring(promptbuf).cap().c_str());
+          d->output.putInQ(new UncategorizedComm(sstring(promptbuf).cap()));
         } else
 
         if (ch->task->task == TASK_MEDITATE) {
           sprintf(promptbuf, "\n\rMANA : %d > ", ch->getMana());
-          d->output.putInQ(sstring(promptbuf).cap().c_str());
+          d->output.putInQ(new UncategorizedComm(sstring(promptbuf).cap()));
         } else
 
         if (ch->task->task == TASK_SACRIFICE) {
           sprintf(promptbuf, "\n\rLIFEFORCE : %d > ", ch->getLifeforce());
-          d->output.putInQ(sstring(promptbuf).cap().c_str());
+          d->output.putInQ(new UncategorizedComm(sstring(promptbuf).cap()));
         } else
 
         if (((ch->task->task == TASK_SHARPEN) || (ch->task->task == TASK_DULL)) && (obj = ch->heldInPrimHand())) {
           sprintf(promptbuf, "\n\r%s > ", ch->describeSharpness(obj).c_str());
-          d->output.putInQ(promptbuf);
+          d->output.putInQ(new UncategorizedComm(promptbuf));
         } else
 
         if ((ch->task->task == TASK_BLACKSMITHING)            || (ch->task->task == TASK_REPAIR_DEAD)     ||
@@ -2377,17 +2366,17 @@ void setPrompts(fd_set out)
 
           if (tObj) {
             sprintf(promptbuf, "\n\r%s (%s) > ", sstring(tObj->getName()).cap().c_str(), tObj->equip_condition(-1).c_str());
-            d->output.putInQ(colorString(ch, d, promptbuf, NULL, COLOR_BASIC, FALSE));
+            d->output.putInQ(new UncategorizedComm(colorString(ch, d, promptbuf, NULL, COLOR_BASIC, FALSE)));
           } else {
             strcat(promptbuf, "\n\rERROR!  Unable to find repair target! > ");
-            d->output.putInQ(promptbuf);
+            d->output.putInQ(new UncategorizedComm(promptbuf));
             vlogf(LOG_OBJ, fmt("Unable to find repair item for (%s) for prompt report (%s)") % ch->getName() % ch->task->orig_arg);
           }
 	}
       }
 
       if (d->str && (d->prompt_mode != DONT_SEND)) {
-          d->output.putInQ("-> ");
+          d->output.putInQ(new UncategorizedComm("-> "));
       } else if (d->pagedfile && (d->prompt_mode != DONT_SEND)) {
         sprintf(promptbuf, "\n\r[ %sReturn%s to continue, %s(r)%sefresh, %s(b)%sack, page %s(%d/%d)%s, or %sany other key%s to quit ]\n\r", 
             d->green(),  d->norm(),
@@ -2396,7 +2385,7 @@ void setPrompts(fd_set out)
             d->green(),  
             d->cur_page, d->tot_pages, d->norm(),
             d->green(),  d->norm());
-        d->output.putInQ(promptbuf);
+        d->output.putInQ(new UncategorizedComm(promptbuf));
       } else if (!d->connected) {
         if (!ch) {
           vlogf(LOG_BUG, "Descriptor in connected mode with NULL desc->character.");
@@ -2410,7 +2399,7 @@ void setPrompts(fd_set out)
             d->green(),  
             d->cur_page, d->tot_pages, d->norm(),
             d->green(),  d->norm());
-          d->output.putInQ(promptbuf);
+          d->output.putInQ(new UncategorizedComm(promptbuf));
         } else {
           if (((d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) ||
                (ch->isPlayerAction(PLR_VT100 | PLR_ANSI) && IS_SET(d->prompt_d.type, PROMPT_VTANSI_BAR)))) {
@@ -2657,7 +2646,7 @@ void setPrompts(fd_set out)
             }
 
             strcat(promptbuf, "> ");
-            d->output.putInQ(promptbuf);
+            d->output.putInQ(new UncategorizedComm(promptbuf));
           }
         }
       }
@@ -2696,7 +2685,7 @@ void Descriptor::worldSend(const sstring &text, TBeing *ch)
 
   for (d = descriptor_list; d; d = d->next) {
     if (!d->connected)
-      d->output.putInQ(colorString(ch, d, text, NULL, COLOR_BASIC, TRUE));
+      d->output.putInQ(new UncategorizedComm(colorString(ch, d, text, NULL, COLOR_BASIC, TRUE)));
   }
 }
 
@@ -2723,7 +2712,7 @@ void processAllInput()
 
     // this is where PC wait gets handled
     if (!d->getHostResolved()) {
-      d->output.putInQ("\n\rWaiting for DNS resolution...\n\r");
+      d->output.putInQ(new UncategorizedComm("\n\rWaiting for DNS resolution...\n\r"));
       continue;
     }
     if ((--(d->wait) <= 0) && (&d->input)->takeFromQ(comm, sizeof(comm))){
@@ -2918,7 +2907,7 @@ int Descriptor::sendLogin(const sstring &arg)
     sprintf(buf2 + strlen(buf2), "Please type NEW (case sensitive) for a new account, or ? for help.\n\r");
     sprintf(buf2 + strlen(buf2), "If you need assistance you may email %s.\n\r\n\r", MUDADMIN_EMAIL);
     sprintf(buf2 + strlen(buf2), "\n\rLogin: ");
-    output.putInQ(buf2);
+    output.putInQ(new UncategorizedComm(buf2));
     return FALSE;
   } else if (my_arg == "NEW") {
     if (WizLock) {
@@ -2941,7 +2930,7 @@ int Descriptor::sendLogin(const sstring &arg)
       connected = CON_WIZLOCKNEW;
     } else {
       account = new TAccount();
-      output.putInQ("Enter a login name for your account -> ");
+      output.putInQ(new UncategorizedComm("Enter a login name for your account -> "));
       connected = CON_NEWLOG;
     }
     return FALSE;
@@ -2951,7 +2940,7 @@ int Descriptor::sendLogin(const sstring &arg)
       my_arg = my_arg.substr(1);
 
     if (bogusAccountName(my_arg.c_str())) {
-      output.putInQ("Illegal account name.\n\r");
+      output.putInQ(new UncategorizedComm("Illegal account name.\n\r"));
       delete account;
       account = NULL;
       return (sendLogin("1"));
@@ -2964,7 +2953,7 @@ int Descriptor::sendLogin(const sstring &arg)
     } else 
       *pwd = '\0';
  
-    output.putInQ("Password: ");
+    output.putInQ(new UncategorizedComm("Password: "));
     EchoOff();
     connected = CON_ACTPWD;
   }
@@ -3036,16 +3025,16 @@ int Descriptor::doAccountStuff(char *arg)
         return DELETE_THIS;
       
       if (checkForAccount(arg)) {
-        output.putInQ("Please enter a login name -> ");
+        output.putInQ(new UncategorizedComm("Please enter a login name -> "));
         return FALSE;
       } 
       if (strlen(arg) >= 10) {
-        output.putInQ("Account names must be 9 characters or less.\n\r");
-        output.putInQ("Please enter a login name -> ");
+        output.putInQ(new UncategorizedComm("Account names must be 9 characters or less.\n\r"));
+        output.putInQ(new UncategorizedComm("Please enter a login name -> "));
         return FALSE;
       }
       account->name=arg;
-      output.putInQ("Now enter a password for your new account\n\r-> ");
+      output.putInQ(new UncategorizedComm("Now enter a password for your new account\n\r-> "));
       EchoOff();
 
       connected = CON_NEWACTPWD;
@@ -3147,7 +3136,7 @@ int Descriptor::doAccountStuff(char *arg)
 
       vlogf(LOG_MISC, "Person making new character after entering wizlock password.");
 
-      output.putInQ("Enter a login name for your account -> ");
+      output.putInQ(new UncategorizedComm("Enter a login name for your account -> "));
       connected = CON_NEWLOG;
       break;
     case CON_WIZLOCK:
@@ -3824,9 +3813,9 @@ int Descriptor::inputProcessing()
       input.putInQ(tmp);
 
       if (snoop.snoop_by && snoop.snoop_by->desc) {
-        snoop.snoop_by->desc->output.putInQ("% ");
-        snoop.snoop_by->desc->output.putInQ(tmp);
-        snoop.snoop_by->desc->output.putInQ("\n\r");
+        snoop.snoop_by->desc->output.putInQ(new UncategorizedComm("% "));
+        snoop.snoop_by->desc->output.putInQ(new UncategorizedComm(tmp));
+        snoop.snoop_by->desc->output.putInQ(new UncategorizedComm("\n\r"));
       }
       if (flag) {
         sprintf(buffer, "Line too long. Truncated to:\n\r%s\n\r", tmp);
@@ -3911,7 +3900,43 @@ void Descriptor::sendMotd(int wiz)
   }
 }
 
-bool textQ::takeFromQ(char *dest, int destsize)
+Comm *outputQ::getBegin()
+{
+  if(!queue.empty()){
+    return queue.front();
+  }
+
+  return NULL;
+}
+
+Comm *outputQ::getEnd()
+{
+  if(!queue.empty()){
+    return queue.back();
+  }
+
+  return NULL;
+}
+
+
+Comm *outputQ::takeFromQ()
+{
+  Comm *c=NULL;
+
+  if(!queue.empty()){
+    c=queue.front();
+    queue.pop_front();
+  }
+
+  return c;
+}
+
+void outputQ::putInQ(Comm *c)
+{
+  queue.push_back(c);
+}
+
+bool inputQ::takeFromQ(char *dest, int destsize)
 {
   commText *tmp = NULL;
 
@@ -3947,7 +3972,7 @@ bool textQ::takeFromQ(char *dest, int destsize)
   return (1);
 }
 
-void textQ::putInQ(const sstring &txt)
+void inputQ::putInQ(const sstring &txt)
 {
   commText *n;
  
@@ -4189,13 +4214,13 @@ commText::~commText()
   }
 }
 
-textQ::textQ(bool n) :
+inputQ::inputQ(bool n) :
   begin(NULL),
   end(NULL)
 {
 }
 
-textQ::textQ(const textQ &a) :
+inputQ::inputQ(const inputQ &a) :
   begin(NULL),
   end(NULL)
 {
@@ -4212,7 +4237,7 @@ textQ::textQ(const textQ &a) :
     end = NULL;
 }
 
-textQ & textQ::operator=(const textQ &a)
+inputQ & inputQ::operator=(const inputQ &a)
 {
   if (this == &a) return *this;
   commText *ct, *ct2;
@@ -4234,13 +4259,18 @@ textQ & textQ::operator=(const textQ &a)
   return *this;
 }
 
-textQ::~textQ()
+inputQ::~inputQ()
 {
   commText *ct, *ct2;
   for (ct = begin; ct; ct = ct2) {
     ct2 = ct->getNext();
     delete ct;
   }
+}
+
+outputQ::~outputQ()
+{
+  queue.clear();
 }
 
 editStuff::editStuff()

@@ -3393,12 +3393,10 @@ void TBeing::makeOutputPaged()
     return;
 
   sstring str;
-  char buf[MAX_STRING_LENGTH];
+  Comm *c;
 
-  memset(buf, '\0', sizeof(buf));
-  while (desc->output.takeFromQ(buf, sizeof(buf))) {
-    str += buf;
-    memset(buf, '\0', sizeof(buf));
+  while(c=desc->output.takeFromQ()){
+    str += c->getComm(COMM_TEXT);
   }
 
   desc->page_string(str);

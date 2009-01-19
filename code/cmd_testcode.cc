@@ -97,7 +97,7 @@ void TBeing::doTestCode(const char *arg)
        enforceHolySym(this, spell, true);
        iters++;
        // flush
-       while (desc->output.takeFromQ(dummy, sizeof(dummy)));
+       desc->output.clear();
     } while (heldInPrimHand() && iters < 10000000); 
     breaks++;
 
