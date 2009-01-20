@@ -596,65 +596,58 @@ void vlogf_trace(logTypeT tError, const sstring &errorMsg)
   free(trace_symbols);
 }
 
-
-void vlogf(logTypeT tError, const sstring &errorMsg)
+sstring getLogType(logTypeT tError)
 {
   sstring buf, name;
-  Descriptor *i;
-  time_t lt;
-  struct tm *this_time;
 
-  lt = time(0);
-  this_time = localtime(&lt);
-
-  switch (tError) {
-  case LOG_LOW:
-    buf = "L.O.W. Error: ";
-    break;
-  case LOG_MISC: 
-    buf = "Misc: ";
-    break;
-  case LOG_FILE:
-    buf = "File I/O: ";
-    break; 
-  case LOG_BUG:
-    buf = "BUG: ";
-    break;  
-  case LOG_PROC:
-    buf = "Proc: ";
-    break; 
-  case LOG_PIO:
-    buf = "Player I/O: ";
-    break;  
-  case LOG_IIO:
-    buf = "Imm I/O: ";
-    break;   
-  case LOG_CLIENT:
-    buf = "Client: ";
-    break;
-  case LOG_COMBAT:
-    buf = "Combat: ";
-    break;
-  case LOG_FACT:
-    buf = "Faction: ";
-    break;  
-  case LOG_MOB:
-    buf = "Mob: ";
-    break;   
-  case LOG_MOB_AI:
-    buf = "Mob AI: ";
-    break;
-  case LOG_MOB_RS:
-    buf = "Mob Response: ";
-    break;
-  case LOG_OBJ:
-    buf = "Object: ";
-    break;   
-  case LOG_EDIT:
-    buf = "Editor: ";
-    break;  
-  case LOG_CHEAT:
-    buf = "Cheating: ";
+  switch(tError){
+    case LOG_LOW:
+      buf = "L.O.W. Error: ";
+      break;
+    case LOG_MISC: 
+      buf = "Misc: ";
+      break;
+    case LOG_FILE:
+      buf = "File I/O: ";
+      break; 
+    case LOG_BUG:
+      buf = "BUG: ";
+      break;  
+    case LOG_PROC:
+      buf = "Proc: ";
+      break; 
+    case LOG_PIO:
+      buf = "Player I/O: ";
+      break;  
+    case LOG_IIO:
+      buf = "Imm I/O: ";
+      break;   
+    case LOG_CLIENT:
+      buf = "Client: ";
+      break;
+    case LOG_COMBAT:
+      buf = "Combat: ";
+      break;
+    case LOG_FACT:
+      buf = "Faction: ";
+      break;  
+    case LOG_MOB:
+      buf = "Mob: ";
+      break;   
+    case LOG_MOB_AI:
+      buf = "Mob AI: ";
+      break;
+    case LOG_MOB_RS:
+      buf = "Mob Response: ";
+      break;
+    case LOG_OBJ:
+      buf = "Object: ";
+      break;   
+    case LOG_EDIT:
+      buf = "Editor: ";
+      break;  
+    case LOG_CHEAT:
+      buf = "Cheating: ";
       break;
     case LOG_BATOPR:
       name = "Batopr";
@@ -697,17 +690,133 @@ void vlogf(logTypeT tError, const sstring &errorMsg)
       buf = fmt("%s: ") % name;
       break;
     default:
-      buf[0] = '\0';
-      name[0] = '\0';
       break;
   }
+
+  return buf;
+}
+
+sstring getLogPlayer(logTypeT tError)
+{
+  sstring buf, name;
+
+  switch(tError){
+    case LOG_LOW:
+      buf = "L.O.W. Error: ";
+      break;
+    case LOG_MISC: 
+      buf = "Misc: ";
+      break;
+    case LOG_FILE:
+      buf = "File I/O: ";
+      break; 
+    case LOG_BUG:
+      buf = "BUG: ";
+      break;  
+    case LOG_PROC:
+      buf = "Proc: ";
+      break; 
+    case LOG_PIO:
+      buf = "Player I/O: ";
+      break;  
+    case LOG_IIO:
+      buf = "Imm I/O: ";
+      break;   
+    case LOG_CLIENT:
+      buf = "Client: ";
+      break;
+    case LOG_COMBAT:
+      buf = "Combat: ";
+      break;
+    case LOG_FACT:
+      buf = "Faction: ";
+      break;  
+    case LOG_MOB:
+      buf = "Mob: ";
+      break;   
+    case LOG_MOB_AI:
+      buf = "Mob AI: ";
+      break;
+    case LOG_MOB_RS:
+      buf = "Mob Response: ";
+      break;
+    case LOG_OBJ:
+      buf = "Object: ";
+      break;   
+    case LOG_EDIT:
+      buf = "Editor: ";
+      break;  
+    case LOG_CHEAT:
+      buf = "Cheating: ";
+      break;
+    case LOG_BATOPR:
+      name = "Batopr";
+      buf = fmt("%s: ") % name;
+      break;
+    case LOG_BRUTIUS:
+      name = "Brutius";
+      buf = fmt("%s: ") % name;
+      break;
+    case LOG_COSMO:
+      name = "Cosmo";
+      buf = fmt("%s: ") % name;
+      break;
+    case LOG_LAPSOS:
+      name = "Lapsos";
+      buf = fmt("%s: ") % name;
+      break;
+    case LOG_PEEL:
+      name = "Peel";
+      buf = fmt("%s: ") % name;
+      break;
+    case LOG_JESUS:
+      name = "Jesus";
+      buf = fmt("%s: ") % name;
+      break;
+    case LOG_DASH:
+      name = "Dash";
+      buf = fmt("%s: ") % name;
+      break;
+    case LOG_ANGUS:
+      name = "Angus: ";
+      buf = fmt("%s: ") % name;
+      break;
+    case LOG_MAROR:
+      name = "Maror";
+      buf = fmt("%s: ") % name;
+      break;
+    case LOG_DB:
+      name = "Database";
+      buf = fmt("%s: ") % name;
+      break;
+    default:
+      break;
+  }
+
+  return name;
+}
+
+
+
+void vlogf(logTypeT tError, const sstring &errorMsg)
+{
+  sstring buf, name;
+  Descriptor *i;
+  time_t lt;
+  struct tm *this_time;
+
+  lt = time(0);
+  this_time = localtime(&lt);
+
+  buf=getLogType(tError);
+  name=getLogPlayer(tError);
 
   buf += errorMsg;
 
   fprintf(stderr, "%4.4d|%2.2d%2.2d|%2.2d:%2.2d:%2.2d :: %s\n",
           this_time->tm_year + 1900, this_time->tm_mon + 1, this_time->tm_mday,
           this_time->tm_hour, this_time->tm_min, this_time->tm_sec, buf.c_str());
-
+  
   if (tError >= 0) {
     for (i = descriptor_list; i; i = i->next) {
       if (i->connected)
@@ -731,13 +840,20 @@ void vlogf(logTypeT tError, const sstring &errorMsg)
       if (i->character->isPlayerAction(PLR_MAILING | PLR_BUGGING))
         continue;
  
-      if (i->m_bIsClient)
-        i->clientf(fmt("%d|%d|%s") % CLIENT_LOG % tError % buf);
-      else
-        i->character->sendTo(COLOR_LOGS, fmt("// %s\n\r") % buf);
+      i->output.putInQ(new SystemLogComm(lt, tError, errorMsg));
     }
   }
 }
+
+sstring SystemLogComm::getText(){
+  return fmt("// %s%s\n\r") % getLogType(logtype) % text;
+}
+
+sstring SystemLogComm::getClientText(){
+  return fmt("%d|%d|%s%s") % CLIENT_LOG % logtype % 
+    getLogType(logtype) % text;
+}
+
 
 void dirwalk(const sstring &dir, void (*fcn) (const char *))
 {

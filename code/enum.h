@@ -14,6 +14,11 @@
 #ifndef __ENUM_H
 #define __ENUM_H
 
+enum commTypeT {
+  COMM_TEXT,
+  COMM_CLIENT,
+};
+
 enum aiTarg { TARGET_NONE, TARGET_SELF, TARGET_MOB, TARGET_OTHER };
 
 enum getTypeT {

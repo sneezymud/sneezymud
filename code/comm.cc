@@ -1595,6 +1595,9 @@ sstring Comm::getComm(commTypeT comm){
     case COMM_TEXT:
       return getText();
       break;
+    case COMM_CLIENT:
+      return getClientText();
+      break;
   }
 
   return "";
@@ -1609,23 +1612,20 @@ sstring UncategorizedComm::getText(){
   return text;
 }
 
-// CmdErrorComm
-CmdErrorComm::CmdErrorComm(cmdTypeT c, const sstring &t){
-  cmd=c;
+sstring UncategorizedComm::getClientText(){
+  return getText();
+}
+
+
+// SnoopComm
+SnoopComm::SnoopComm(const sstring &v, const sstring &t){
+  vict=v;
   text=t;
 }
 
-sstring CmdErrorComm::getText(){
-  return text;
+// SystemLogComm
+SystemLogComm::SystemLogComm(time_t t, logTypeT l, const sstring &txt){
+  logtime=t;
+  logtype=l;
+  text=txt;
 }
-
-// TellComm
-TellComm::TellComm(const sstring &f, const sstring &t){
-  from=f;
-  text=t;
-}
-
-sstring TellComm::getText(){
-  return fmt("%s tells you, \"<c>%s<z>\"") % from % text;
-}
-

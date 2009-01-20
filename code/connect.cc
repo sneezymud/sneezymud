@@ -434,6 +434,14 @@ bool Descriptor::checkForMultiplay()
   return FALSE;
 }
 
+sstring SnoopComm::getText(){
+  return "<r>%<z> " + text;
+}
+
+sstring SnoopComm::getClientText(){
+  return getText();
+}
+
 int Descriptor::outputProcessing()
 {
   // seems silly, but we sometimes do descriptor_list->outputProcessing()
@@ -446,6 +454,8 @@ int Descriptor::outputProcessing()
   int counter = 0;
   char buf[MAX_STRING_LENGTH + MAX_STRING_LENGTH];
   Comm *c;
+  commTypeT commtype;
+  TBeing *ch = original ? original : character;
 
   if (!prompt_mode && !connected && !m_bIsClient)
     if (socket->writeToSocket("\n\r") < 0)
@@ -454,7 +464,13 @@ int Descriptor::outputProcessing()
   memset(i, '\0', sizeof(i));
   // Take everything from queued output
   while (c=output.takeFromQ()) {
-    strncpy(i, c->getComm(COMM_TEXT).c_str(), MAX_STRING_LENGTH + MAX_STRING_LENGTH);
+    if(m_bIsClient){
+      commtype=COMM_CLIENT;
+    } else {
+      commtype=COMM_TEXT;
+    }
+
+    strncpy(i, c->getComm(commtype).c_str(), MAX_STRING_LENGTH + MAX_STRING_LENGTH);
     counter++;
 
     // I bumped this from 500 to 1000 - Batopr
@@ -488,12 +504,11 @@ int Descriptor::outputProcessing()
     }
     strcpy(buf, i);
     if (snoop.snoop_by && snoop.snoop_by->desc) {
-      snoop.snoop_by->desc->output.putInQ(new UncategorizedComm("% "));
-      snoop.snoop_by->desc->output.putInQ(new UncategorizedComm(i));
+      snoop.snoop_by->desc->output.putInQ(new SnoopComm(ch->getName(), i));
     }
 
     // color processing
-    sstring colorBuf=colorString(original, this, i, NULL, COLOR_BASIC, FALSE);
+    sstring colorBuf=colorString(ch, this, i, NULL, COLOR_BASIC, FALSE);
 
     if (socket->writeToSocket(colorBuf.c_str()))
       return -1;
@@ -3734,6 +3749,7 @@ int Descriptor::inputProcessing()
   char tmp[20000], buffer[20000];
   int which = -1, total = 0, count = 0;
   char *s, *s2;
+  TBeing *ch = original ? original : character;
 
   sofar = 0;
   flag = 0;
@@ -3818,9 +3834,9 @@ int Descriptor::inputProcessing()
       input.putInQ(tmp);
 
       if (snoop.snoop_by && snoop.snoop_by->desc) {
-        snoop.snoop_by->desc->output.putInQ(new UncategorizedComm("% "));
-        snoop.snoop_by->desc->output.putInQ(new UncategorizedComm(tmp));
-        snoop.snoop_by->desc->output.putInQ(new UncategorizedComm("\n\r"));
+	sstring outputBuf=tmp;
+	outputBuf+="\n\r";
+	snoop.snoop_by->desc->output.putInQ(new SnoopComm(ch->getName(), outputBuf));
       }
       if (flag) {
         sprintf(buffer, "Line too long. Truncated to:\n\r%s\n\r", tmp);

@@ -3394,9 +3394,16 @@ void TBeing::makeOutputPaged()
 
   sstring str;
   Comm *c;
+  commTypeT commtype;
+  
+  if(desc->m_bIsClient){
+    commtype=COMM_CLIENT;
+  } else {
+    commtype=COMM_TEXT;
+  }
 
   while(c=desc->output.takeFromQ()){
-    str += c->getComm(COMM_TEXT);
+    str += c->getComm(commtype);
     delete c;
   }
 

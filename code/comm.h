@@ -97,9 +97,6 @@ extern int noSpecials;
 
 ////
 
-enum commTypeT {
-  COMM_TEXT,
-};
 
 // this is the (abstract) base class for output messages
 class Comm
@@ -110,6 +107,7 @@ class Comm
   virtual ~Comm(){}
  private:
   virtual sstring getText() = 0;
+  virtual sstring getClientText() = 0;
 };
 
 // This is for conversion only.  It just passes the string directly.
@@ -121,41 +119,43 @@ class UncategorizedComm : public Comm {
   sstring text;
   
   virtual sstring getText();
+  virtual sstring getClientText();
 };
 
-// for errors in player commands - incorrect usage etc
-// ex: CmdErrorComm(CMD_TELL, "You are a dumb animal; you can't talk!");
-class CmdErrorComm : public Comm {
+// for snoop output
+class SnoopComm : public Comm {
  public:
-  CmdErrorComm(cmdTypeT, const sstring &);
-  
+  SnoopComm(const sstring &, const sstring &);
+
  private:
-  cmdTypeT cmd;
+  sstring vict;
   sstring text;
 
   virtual sstring getText();
+  virtual sstring getClientText();
 };
 
-// for tells
-// ex: TellComm("Brutius", "You suck!");
-class TellComm : public Comm {
+// for vlogf output
+class SystemLogComm : public Comm {
  public:
-  //  TellComm();
-  TellComm(const sstring &, const sstring &);
+  SystemLogComm(time_t, logTypeT, const sstring &);
 
  private:
-  sstring from;
+  time_t logtime;
+  logTypeT logtype;
   sstring text;
 
   virtual sstring getText();
+  virtual sstring getClientText();
 };
+
+
+
+
+
+
 
 
 
 
 #endif
-
-
-
-
-

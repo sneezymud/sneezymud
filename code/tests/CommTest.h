@@ -66,18 +66,12 @@ class CommTest : public CxxTest::TestSuite
 		     (sstring)"this is <r>a<1> test");
   }
 
-
-  void testTellComm(){
-    TellComm comm("Peel", "this is a test");
-    
-    TS_ASSERT_EQUALS(comm.getComm(COMM_TEXT), 
-		     (sstring)"Peel tells you, \"<c>this is a test<z>\"");
-  }
-
-  void testCmdErrorComm(){
-    CmdErrorComm comm(CMD_TELL, "You are a dumb animal; you can't talk!");
+  void testSystemLogComm(){
+    SystemLogComm comm(time(0), LOG_PIO, "Loading Oldman's equipment");
 
     TS_ASSERT_EQUALS(comm.getComm(COMM_TEXT),
-		     (sstring)"You are a dumb animal; you can't talk!");
+		     (sstring)"// Player I/O: Loading Oldman's equipment\n\r");
+
   }
+
 };
