@@ -442,6 +442,10 @@ sstring SnoopComm::getClientText(){
   return getText();
 }
 
+sstring SnoopComm::getXML(){
+  return fmt("<snoop victim=\"%s\">%s</snoop>") % vict % text;
+}
+
 int Descriptor::outputProcessing()
 {
   // seems silly, but we sometimes do descriptor_list->outputProcessing()
@@ -466,6 +470,8 @@ int Descriptor::outputProcessing()
   while (c=output.takeFromQ()) {
     if(m_bIsClient){
       commtype=COMM_CLIENT;
+    } else if(socket->port==PROD_XMLPORT){
+      commtype=COMM_XML;
     } else {
       commtype=COMM_TEXT;
     }

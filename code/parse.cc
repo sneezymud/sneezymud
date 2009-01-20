@@ -12,6 +12,7 @@ extern "C" {
 }
 
 #include "stdsneezy.h"
+#include "socket.h"
 #include "mail.h"
 
 sstring lockmess;
@@ -3398,6 +3399,8 @@ void TBeing::makeOutputPaged()
   
   if(desc->m_bIsClient){
     commtype=COMM_CLIENT;
+  } else if(desc->socket->port==PROD_XMLPORT){
+    commtype=COMM_XML;
   } else {
     commtype=COMM_TEXT;
   }

@@ -76,6 +76,9 @@ int run_the_game()
   gSocket = new TMainSocket();
   gSocket->initSocket(gamePort);
 
+  if(gamePort == PROD_GAMEPORT)
+    gSocket->initSocket(PROD_XMLPORT);
+
   // doh this doesn't work because 23 is a privileged port
   //  if(gamePort == PROD_GAMEPORT)
   //    gSocket->initSocket(23); // listen on telnet port too
@@ -1598,6 +1601,9 @@ sstring Comm::getComm(commTypeT comm){
     case COMM_CLIENT:
       return getClientText();
       break;
+    case COMM_XML:
+      return getXML();
+      break;
   }
 
   return "";
@@ -1616,6 +1622,9 @@ sstring UncategorizedComm::getClientText(){
   return getText();
 }
 
+sstring UncategorizedComm::getXML(){
+  return fmt("<uncategorized>%s</uncategorized>") % text;
+}
 
 // SnoopComm
 SnoopComm::SnoopComm(const sstring &v, const sstring &t){

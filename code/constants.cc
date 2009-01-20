@@ -2231,6 +2231,7 @@ const char * heraldcolors[] =
 
 // some factors from stdsneezy.h
 const int PROD_GAMEPORT = 7900;
+const int PROD_XMLPORT = 7901;
 const int BETA_GAMEPORT = 5678;
 const int ALPHA_GAMEPORT = 6969;
 const int BUILDER_GAMEPORT = 8900;

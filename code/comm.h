@@ -105,9 +105,14 @@ class Comm
   sstring getComm(commTypeT);
 
   virtual ~Comm(){}
+
+ protected:
+  sstring text;
+
  private:
   virtual sstring getText() = 0;
   virtual sstring getClientText() = 0;
+  virtual sstring getXML() = 0;
 };
 
 // This is for conversion only.  It just passes the string directly.
@@ -116,10 +121,9 @@ class UncategorizedComm : public Comm {
   UncategorizedComm(const sstring &);
 
  private:
-  sstring text;
-  
   virtual sstring getText();
   virtual sstring getClientText();
+  virtual sstring getXML();
 };
 
 // for snoop output
@@ -129,10 +133,10 @@ class SnoopComm : public Comm {
 
  private:
   sstring vict;
-  sstring text;
 
   virtual sstring getText();
   virtual sstring getClientText();
+  virtual sstring getXML();
 };
 
 // for vlogf output
@@ -143,16 +147,11 @@ class SystemLogComm : public Comm {
  private:
   time_t logtime;
   logTypeT logtype;
-  sstring text;
 
   virtual sstring getText();
   virtual sstring getClientText();
+  virtual sstring getXML();
 };
-
-
-
-
-
 
 
 

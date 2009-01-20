@@ -602,92 +602,92 @@ sstring getLogType(logTypeT tError)
 
   switch(tError){
     case LOG_LOW:
-      buf = "L.O.W. Error: ";
+      buf = "L.O.W. Error";
       break;
     case LOG_MISC: 
-      buf = "Misc: ";
+      buf = "Misc";
       break;
     case LOG_FILE:
-      buf = "File I/O: ";
+      buf = "File I/O";
       break; 
     case LOG_BUG:
-      buf = "BUG: ";
+      buf = "BUG";
       break;  
     case LOG_PROC:
-      buf = "Proc: ";
+      buf = "Proc";
       break; 
     case LOG_PIO:
-      buf = "Player I/O: ";
+      buf = "Player I/O";
       break;  
     case LOG_IIO:
-      buf = "Imm I/O: ";
+      buf = "Imm I/O";
       break;   
     case LOG_CLIENT:
-      buf = "Client: ";
+      buf = "Client";
       break;
     case LOG_COMBAT:
-      buf = "Combat: ";
+      buf = "Combat";
       break;
     case LOG_FACT:
-      buf = "Faction: ";
+      buf = "Faction";
       break;  
     case LOG_MOB:
-      buf = "Mob: ";
+      buf = "Mob";
       break;   
     case LOG_MOB_AI:
-      buf = "Mob AI: ";
+      buf = "Mob AI";
       break;
     case LOG_MOB_RS:
-      buf = "Mob Response: ";
+      buf = "Mob Response";
       break;
     case LOG_OBJ:
-      buf = "Object: ";
+      buf = "Object";
       break;   
     case LOG_EDIT:
-      buf = "Editor: ";
+      buf = "Editor";
       break;  
     case LOG_CHEAT:
-      buf = "Cheating: ";
+      buf = "Cheating";
       break;
     case LOG_BATOPR:
       name = "Batopr";
-      buf = fmt("%s: ") % name;
+      buf = fmt("%s") % name;
       break;
     case LOG_BRUTIUS:
       name = "Brutius";
-      buf = fmt("%s: ") % name;
+      buf = fmt("%s") % name;
       break;
     case LOG_COSMO:
       name = "Cosmo";
-      buf = fmt("%s: ") % name;
+      buf = fmt("%s") % name;
       break;
     case LOG_LAPSOS:
       name = "Lapsos";
-      buf = fmt("%s: ") % name;
+      buf = fmt("%s") % name;
       break;
     case LOG_PEEL:
       name = "Peel";
-      buf = fmt("%s: ") % name;
+      buf = fmt("%s") % name;
       break;
     case LOG_JESUS:
       name = "Jesus";
-      buf = fmt("%s: ") % name;
+      buf = fmt("%s") % name;
       break;
     case LOG_DASH:
       name = "Dash";
-      buf = fmt("%s: ") % name;
+      buf = fmt("%s") % name;
       break;
     case LOG_ANGUS:
-      name = "Angus: ";
-      buf = fmt("%s: ") % name;
+      name = "Angus";
+      buf = fmt("%s") % name;
       break;
     case LOG_MAROR:
       name = "Maror";
-      buf = fmt("%s: ") % name;
+      buf = fmt("%s") % name;
       break;
     case LOG_DB:
       name = "Database";
-      buf = fmt("%s: ") % name;
+      buf = fmt("%s") % name;
       break;
     default:
       break;
@@ -702,92 +702,92 @@ sstring getLogPlayer(logTypeT tError)
 
   switch(tError){
     case LOG_LOW:
-      buf = "L.O.W. Error: ";
+      buf = "L.O.W. Error";
       break;
     case LOG_MISC: 
-      buf = "Misc: ";
+      buf = "Misc";
       break;
     case LOG_FILE:
-      buf = "File I/O: ";
+      buf = "File I/O";
       break; 
     case LOG_BUG:
-      buf = "BUG: ";
+      buf = "BUG";
       break;  
     case LOG_PROC:
-      buf = "Proc: ";
+      buf = "Proc";
       break; 
     case LOG_PIO:
-      buf = "Player I/O: ";
+      buf = "Player I/O";
       break;  
     case LOG_IIO:
-      buf = "Imm I/O: ";
+      buf = "Imm I/O";
       break;   
     case LOG_CLIENT:
-      buf = "Client: ";
+      buf = "Client";
       break;
     case LOG_COMBAT:
-      buf = "Combat: ";
+      buf = "Combat";
       break;
     case LOG_FACT:
-      buf = "Faction: ";
+      buf = "Faction";
       break;  
     case LOG_MOB:
-      buf = "Mob: ";
+      buf = "Mob";
       break;   
     case LOG_MOB_AI:
-      buf = "Mob AI: ";
+      buf = "Mob AI";
       break;
     case LOG_MOB_RS:
-      buf = "Mob Response: ";
+      buf = "Mob Response";
       break;
     case LOG_OBJ:
-      buf = "Object: ";
+      buf = "Object";
       break;   
     case LOG_EDIT:
-      buf = "Editor: ";
+      buf = "Editor";
       break;  
     case LOG_CHEAT:
-      buf = "Cheating: ";
+      buf = "Cheating";
       break;
     case LOG_BATOPR:
       name = "Batopr";
-      buf = fmt("%s: ") % name;
+      buf = fmt("%s") % name;
       break;
     case LOG_BRUTIUS:
       name = "Brutius";
-      buf = fmt("%s: ") % name;
+      buf = fmt("%s") % name;
       break;
     case LOG_COSMO:
       name = "Cosmo";
-      buf = fmt("%s: ") % name;
+      buf = fmt("%s") % name;
       break;
     case LOG_LAPSOS:
       name = "Lapsos";
-      buf = fmt("%s: ") % name;
+      buf = fmt("%s") % name;
       break;
     case LOG_PEEL:
       name = "Peel";
-      buf = fmt("%s: ") % name;
+      buf = fmt("%s") % name;
       break;
     case LOG_JESUS:
       name = "Jesus";
-      buf = fmt("%s: ") % name;
+      buf = fmt("%s") % name;
       break;
     case LOG_DASH:
       name = "Dash";
-      buf = fmt("%s: ") % name;
+      buf = fmt("%s") % name;
       break;
     case LOG_ANGUS:
-      name = "Angus: ";
-      buf = fmt("%s: ") % name;
+      name = "Angus";
+      buf = fmt("%s") % name;
       break;
     case LOG_MAROR:
       name = "Maror";
-      buf = fmt("%s: ") % name;
+      buf = fmt("%s") % name;
       break;
     case LOG_DB:
       name = "Database";
-      buf = fmt("%s: ") % name;
+      buf = fmt("%s") % name;
       break;
     default:
       break;
@@ -811,7 +811,7 @@ void vlogf(logTypeT tError, const sstring &errorMsg)
   buf=getLogType(tError);
   name=getLogPlayer(tError);
 
-  buf += errorMsg;
+  buf = fmt("%s: %s") % buf % errorMsg;
 
   fprintf(stderr, "%4.4d|%2.2d%2.2d|%2.2d:%2.2d:%2.2d :: %s\n",
           this_time->tm_year + 1900, this_time->tm_mon + 1, this_time->tm_mday,
@@ -846,14 +846,18 @@ void vlogf(logTypeT tError, const sstring &errorMsg)
 }
 
 sstring SystemLogComm::getText(){
-  return fmt("// %s%s\n\r") % getLogType(logtype) % text;
+  return fmt("// %s: %s\n\r") % getLogType(logtype) % text;
 }
 
 sstring SystemLogComm::getClientText(){
-  return fmt("%d|%d|%s%s") % CLIENT_LOG % logtype % 
+  return fmt("%d|%d|%s: %s") % CLIENT_LOG % logtype % 
     getLogType(logtype) % text;
 }
 
+sstring SystemLogComm::getXML(){
+  return fmt("<log time=\"%i\" type=\"%s\">%s</log>") %
+    logtime % getLogType(logtype) % text;
+}
 
 void dirwalk(const sstring &dir, void (*fcn) (const char *))
 {
