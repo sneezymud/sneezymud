@@ -753,9 +753,7 @@ TObj *ItemLoad::raw_read_item()
       // rabbit foot on a chain, component for defunct comp, Bat 7/13/99
       (item.item_number == 245) ||
       // soul of lost pet, component for defunct comp, Bat 7/13/99
-      (item.item_number == 1413) ||
-      // gravestones - we need to clear these out from all rooms (only do this once)
-      (item.item_number == OBJ_GENERIC_GRAVE)
+      (item.item_number == 1413)
      ) {
     // these items are to be retired
     // its bad to return NULL here, so instead we will have it load a
