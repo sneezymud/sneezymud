@@ -151,7 +151,7 @@ void TMainSocket::addNewDescriptorsDuringBoot(sstring tStString)
     if (FD_ISSET(m_sock[i], &input_set)) {
       int tFd;
       
-      if ((tFd = newDescriptor(m_sock[i])) < 0)
+      if ((tFd = newDescriptor(m_sock[i], m_port[i])) < 0)
 	perror("New connection");
       else if (!tStString.empty() && tFd)
 	descriptor_list->writeToQ(tStString);
@@ -467,7 +467,7 @@ struct timeval TMainSocket::handleTimeAndSockets()
   ////////////////////////////////////////////
   for(unsigned int i=0;i<m_sock.size();++i){
     if (FD_ISSET(m_sock[i], &input_set)) {
-      int rc = newDescriptor(m_sock[i]);
+      int rc = newDescriptor(m_sock[i], m_port[i]);
       if (rc < 0)
 	perror("New connection");
       else if (rc) {
@@ -1674,7 +1674,7 @@ int TMainSocket::gameLoop()
 }
 
 
-TSocket *TMainSocket::newConnection(int t_sock)
+TSocket *TMainSocket::newConnection(int t_sock, int port)
 {
   struct sockaddr_in isa;
 #if defined(LINUX)
@@ -1695,6 +1695,7 @@ TSocket *TMainSocket::newConnection(int t_sock)
     return NULL;
   }
   s->nonBlock();
+  s->port=port;
   return (s);
 }
 
@@ -1797,7 +1798,7 @@ void gethostbyaddr_cb(void *arg, int status, struct hostent *host_ent)
   delete (char *)arg;
 }      
 
-int TMainSocket::newDescriptor(int t_sock)
+int TMainSocket::newDescriptor(int t_sock, int port)
 {
 #if defined(LINUX)
   unsigned int size;
@@ -1809,7 +1810,7 @@ int TMainSocket::newDescriptor(int t_sock)
   TSocket *s = NULL;
   char *ip_cstr;
 
-  if (!(s = newConnection(t_sock))) 
+  if (!(s = newConnection(t_sock, port))) 
     return 0;
 
   if ((maxdesc + 1) >= avail_descs) {
@@ -1902,7 +1903,7 @@ void TSocket::nonBlock()
   }
 }
 
-void TMainSocket::initSocket(int m_port)
+void TMainSocket::initSocket(int t_port)
 {
   const char *opt = "1";
   char hostname[MAXHOSTNAMELEN];
@@ -1928,7 +1929,7 @@ void TMainSocket::initSocket(int m_port)
     exit(1);
   }
   sa.sin_family = hp->h_addrtype;
-  sa.sin_port = htons(m_port);
+  sa.sin_port = htons(t_port);
   if ((t_sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
     perror("Init-socket");
     exit(1);
@@ -1956,6 +1957,7 @@ void TMainSocket::initSocket(int m_port)
   listen(t_sock, 3);
 
   m_sock.push_back(t_sock);
+  m_port.push_back(t_port);
 }
 
 TSocket::TSocket()

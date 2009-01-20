@@ -69,6 +69,7 @@ public:
 class TMainSocket {
  private:
   vector <int> m_sock;
+  vector <int> m_port;
   TBeing *tmp_ch;
   TObj *placeholder;
   TObjIter iter;
@@ -76,8 +77,8 @@ class TMainSocket {
 
   struct timeval handleTimeAndSockets();
   bool handleShutdown();
-  TSocket *newConnection(int);
-  int newDescriptor(int);
+  TSocket *newConnection(int, int);
+  int newDescriptor(int, int);
 
  public:
   void addNewDescriptorsDuringBoot(sstring);
@@ -101,6 +102,7 @@ class TSocket {
 
  public:
   int m_sock;
+  int port;
   int writeToSocket(const char *);
 
   TSocket();
