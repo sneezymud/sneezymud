@@ -900,12 +900,9 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
   
             graveDesc += "by ";
             graveDesc += getName();
-            char buf[256];
-            sprintf(buf, " this %s day of %s, Year %d P.S.\n\r", 
-                   numberAsString(time_info.day+1).c_str(),
-                   month_name[time_info.month], time_info.year);
-
-            graveDesc += buf;
+            graveDesc += fmt(" this %s day of %s, Year %d P.S.\n\r") %
+                   numberAsString(time_info.day+1) %
+                   month_name[time_info.month] %  time_info.year;
 
             grave->swapToStrung();
             extraDescription *ed;
@@ -914,6 +911,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
             grave->ex_description = ed;
             ed->keyword = mud_str_dup(grave->name);
             ed->description = mud_str_dup(graveDesc);
+            grave->obj_flags.decay_time = v->GetMaxLevel() * MAX_NPC_CORPSE_TIME;
 
             *v->roomp += *grave;
           }
