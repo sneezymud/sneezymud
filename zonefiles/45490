@@ -71,8 +71,8 @@ M 0 45490 2 45491		transparent monk
 M 0 45490 2 45491		transparent monk
 M 0 45490 2 45494
 M 0 45490 2 45494
-M 0 45490 2 45412
-M 0 45490 2 45412
+M 0 45490 2 45512
+M 0 45490 2 45512
 
 M 0 45491 1 45496		Charn
 
@@ -94,6 +94,9 @@ M 0 45495 1 45513
 
 M 0 45496 1 45506		mourning champion
 K 1 45497 1 45506		watchful squire
+
+M 0 45496 1 45507		mourning champion
+K 1 45497 1 45507		watchful squire
 
 M 0 45498 1 45514		sinful ghost
 M 0 45498 1 45515
