@@ -491,9 +491,14 @@ int Descriptor::outputProcessing()
       snoop.snoop_by->desc->output.putInQ(new UncategorizedComm("% "));
       snoop.snoop_by->desc->output.putInQ(new UncategorizedComm(i));
     }
-    if (socket->writeToSocket(i))
+
+    // color processing
+    sstring colorBuf=colorString(original, this, i, NULL, COLOR_BASIC, FALSE);
+
+    if (socket->writeToSocket(colorBuf.c_str()))
       return -1;
     memset(i, '\0', sizeof(i));
+    delete c;
   }
   return (1);
 }
