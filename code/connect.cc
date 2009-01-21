@@ -518,6 +518,10 @@ int Descriptor::outputProcessing()
 
     if (socket->writeToSocket(colorBuf.c_str()))
       return -1;
+
+    if(commtype == COMM_XML)
+      socket->writeNull();
+
     memset(i, '\0', sizeof(i));
     delete c;
   }

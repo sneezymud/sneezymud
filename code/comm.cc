@@ -1602,7 +1602,7 @@ sstring Comm::getComm(commTypeT comm){
       return getClientText();
       break;
     case COMM_XML:
-      return getXML()+"\0";
+      return getXML();
       break;
   }
 

@@ -1858,6 +1858,21 @@ void TMainSocket::dequeueBeing(TBeing* being)
     tmp_ch = being->next;
 }
 
+int TSocket::writeNull()
+{
+  char txt='\0';
+
+  if (write(m_sock, &txt, 1) < 0){
+    if (errno == EWOULDBLOCK)
+      return 0;
+    
+    perror("TSocket::writeToSocket(char *)");
+    return (-1);
+  }
+  
+  return 0;
+}
+
 int TSocket::writeToSocket(const char *txt)
 {
   int sofar, thisround, total;

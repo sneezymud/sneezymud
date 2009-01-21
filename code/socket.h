@@ -104,6 +104,7 @@ class TSocket {
   int m_sock;
   int port;
   int writeToSocket(const char *);
+  int writeNull();
 
   TSocket();
   ~TSocket();
