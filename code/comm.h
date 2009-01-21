@@ -153,7 +153,17 @@ class SystemLogComm : public Comm {
   virtual sstring getXML();
 };
 
+class LoginComm : public Comm {
+ public:
+  LoginComm(const sstring &, const sstring &);
 
+ private:
+  sstring prompt;
+
+  virtual sstring getText();
+  virtual sstring getClientText();
+  virtual sstring getXML();
+};
 
 
 

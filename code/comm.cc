@@ -1638,3 +1638,10 @@ SystemLogComm::SystemLogComm(time_t t, logTypeT l, const sstring &txt){
   logtype=l;
   text=txt;
 }
+
+// LoginComm
+
+LoginComm::LoginComm(const sstring &p, const sstring &t){
+  prompt=p;
+  text=t;
+}

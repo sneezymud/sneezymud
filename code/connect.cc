@@ -2875,11 +2875,25 @@ int bogusAccountName(const char *arg)
   return FALSE;
 }
 
+
+sstring LoginComm::getText(){
+  return text;
+}
+
+sstring LoginComm::getClientText(){
+  return getText();
+}
+
+sstring LoginComm::getXML(){
+  return fmt("<login prompt=\"%s\">%s</login>") % prompt % text;
+}
+
 // return DELETE_THIS
 int Descriptor::sendLogin(const sstring &arg)
 {
   char buf[160], buf2[4096] = "\0\0\0";
   sstring my_arg = arg.substr(0,20);
+  sstring outputBuf;
 
   if (arg.length() > 20) {
     vlogf(LOG_MISC, fmt("Buffer overflow attempt from [%s]") % host);
@@ -2903,8 +2917,8 @@ int Descriptor::sendLogin(const sstring &arg)
     writeToQ("to inform you if a serious problem occurs with your account.\n\r\n\r");
     writeToQ("Note that the only password protection is at the account level.  Do not\n\r");
     writeToQ("reveal your password to others or they have access to ALL of your characters.\n\r\n\r");
-    writeToQ("Type NEW to generate a new account.\n\r");
-    writeToQ("Login:");
+
+    output.putInQ(new LoginComm("user", "Type NEW to generate a new account.\n\rLogin: "));
     return FALSE;
   } else if (my_arg == "1") {
     FILE * fp = fopen("txt/version", "r");
@@ -2915,7 +2929,8 @@ int Descriptor::sendLogin(const sstring &arg)
       // strip off the terminating newline char
       buf[strlen(buf) - 1] = '\0';
 
-      sprintf(buf2 + strlen(buf2), "\n\r\n\rWelcome to %s:\n\r%s:\n\r", MUD_NAME_VERS, buf);
+      sprintf(buf2 + strlen(buf2), "\n\r\n\rWelcome to %s:\n\r%s:\n\r", 
+	      MUD_NAME_VERS, buf);
       fclose(fp);
     }
 	
@@ -2930,10 +2945,12 @@ int Descriptor::sendLogin(const sstring &arg)
       years_of_service -=  92;
     }
     sprintf(buf2 + strlen(buf2), "Celebrating %d years of quality mudding (est. 1 May 1992)\n\r\n\r", years_of_service);
-    sprintf(buf2 + strlen(buf2), "Please type NEW (case sensitive) for a new account, or ? for help.\n\r");
-    sprintf(buf2 + strlen(buf2), "If you need assistance you may email %s.\n\r\n\r", MUDADMIN_EMAIL);
-    sprintf(buf2 + strlen(buf2), "\n\rLogin: ");
     output.putInQ(new UncategorizedComm(buf2));
+
+    outputBuf="Please type NEW (case sensitive) for a new account, or ? for help.\n\r";
+    outputBuf+=fmt("If you need assistance you may email %s.\n\r\n\r") % MUDADMIN_EMAIL;
+    outputBuf+="\n\rLogin: ";
+    output.putInQ(new LoginComm("user", outputBuf));
     return FALSE;
   } else if (my_arg == "NEW") {
     if (WizLock) {
@@ -2950,7 +2967,7 @@ int Descriptor::sendLogin(const sstring &arg)
           page_string(iosstring, SHOWNOW_YES);
         }
       }
-      writeToQ("Wiz-Lock password: ");
+      output.putInQ(new LoginComm("wizlock", "Wiz-Lock password: "));
 
       account = new TAccount();
       connected = CON_WIZLOCKNEW;
@@ -2979,7 +2996,7 @@ int Descriptor::sendLogin(const sstring &arg)
     } else 
       *pwd = '\0';
  
-    output.putInQ(new UncategorizedComm("Password: "));
+    output.putInQ(new LoginComm("pass", "Password: "));
     EchoOff();
     connected = CON_ACTPWD;
   }
