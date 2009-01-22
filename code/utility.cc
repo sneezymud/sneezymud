@@ -855,7 +855,7 @@ sstring SystemLogComm::getClientText(){
 }
 
 sstring SystemLogComm::getXML(){
-  return fmt("<log time=\"%i\" type=\"%s\">%s</log>") %
+  return fmt("<log time=\"%i\" type=\"%x\">%x</log>") %
     logtime % getLogType(logtype) % text;
 }
 

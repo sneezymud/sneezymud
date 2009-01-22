@@ -443,7 +443,7 @@ sstring SnoopComm::getClientText(){
 }
 
 sstring SnoopComm::getXML(){
-  return fmt("<snoop victim=\"%s\">%s</snoop>") % vict % text;
+  return fmt("<snoop victim=\"%x\">%x</snoop>") % vict % text;
 }
 
 int Descriptor::outputProcessing()
@@ -2889,7 +2889,7 @@ sstring LoginComm::getClientText(){
 }
 
 sstring LoginComm::getXML(){
-  return fmt("<login prompt=\"%s\">%s</login>") % prompt % text;
+  return fmt("<login prompt=\"%x\">%x</login>") % prompt % text;
 }
 
 // return DELETE_THIS

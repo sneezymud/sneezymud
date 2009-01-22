@@ -1623,7 +1623,7 @@ sstring UncategorizedComm::getClientText(){
 }
 
 sstring UncategorizedComm::getXML(){
-  return fmt("<uncategorized>%s</uncategorized>") % text;
+  return fmt("<uncategorized>%x</uncategorized>") % text;
 }
 
 // SnoopComm
