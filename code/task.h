@@ -83,7 +83,7 @@ typedef struct _tasks_entry {
 } TaskEntry;
 
 enum taskTypeT {
-     TASK_BOGUS,
+     TASK_BOGUS = 0,
      TASK_SHARPEN,
      TASK_BLACKSMITHING,
      TASK_REPAIR_DEAD,
