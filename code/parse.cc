@@ -2323,8 +2323,8 @@ int TBeing::triggerSpecial(TThing *ch, cmdTypeT cmd, const char *arg)
   TThing *t, *t2;
 
   // is the player busy doing something else? 
-  if (task && ((*(tasks[task->task].taskf)) 
-            (this, cmd, arg, 0, roomp, task->obj)))
+  if (task && task->task >= TASK_BOGUS && task->task < NUM_TASKS && tasks[task->task].taskf &&
+        ((*(tasks[task->task].taskf))(this, cmd, arg, 0, roomp, task->obj)))
     return TRUE;
 
   // is the player busy doing something else?
