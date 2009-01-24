@@ -932,6 +932,8 @@ bool TBeing::affectedBySpell(spellNumT skill) const
       return TRUE;
     if(skill==SPELL_INFRAVISION && hjp->type == AFFECT_PAPPY_BLESSING)
       return TRUE;
+    if(skill==SPELL_DETECT_INVISIBLE && hjp->type == AFFECT_STAFFA_BLESSING)
+      return TRUE;
   }
   return FALSE;
 }

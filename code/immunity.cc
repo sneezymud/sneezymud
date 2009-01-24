@@ -820,6 +820,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case AFFECT_MAGDALENA_BLESSING:
     case AFFECT_MACROSS_BLESSING:
     case AFFECT_PAPPY_BLESSING:
+    case AFFECT_STAFFA_BLESSING:
     case AFFECT_PREENED:
     case AFFECT_WET:
     case ABSOLUTE_MAX_SKILL:

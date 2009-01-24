@@ -144,6 +144,11 @@ map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
         AFFECT_PAPPY_BLESSING,
         APPLY_VISION,
         "<O>the mole<1>");
+  blessings[AFFECT_STAFFA_BLESSING]=
+    ego_imm_blessing("Staffa",
+        AFFECT_STAFFA_BLESSING,
+        APPLY_DEX,
+        "<k>the bat<1>");
 
   return blessings;
 }
