@@ -69,7 +69,7 @@ sstring fmt::doFormat(const sstring &fmt, const char *x)
     oBuf=oBuf.replaceString(ANSI_WH_ON_OR, 
 			    "<font bgcolor=\"orange\" color=\"white\" />");
     oBuf=oBuf.replaceString(ANSI_WH_ON_PR, 
-			    "<font bgcolor=\"purple\" color=white />");
+			    "<font bgcolor=\"purple\" color=\"white\" />");
     oBuf=oBuf.replaceString(ANSI_WH_ON_RD, 
 			    "<font bgcolor=\"red\" color=\"white\" />");
 
