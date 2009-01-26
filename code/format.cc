@@ -15,12 +15,65 @@ sstring fmt::doFormat(const sstring &fmt, const char *x)
     snprintf(buf, MY_MAX_STRING_LENGTH, fmtq.c_str(), to);
   } else if(fmt[1] == 'x'){
     fmtq[1]='s';
-    sstring outputBuf=x;
-    outputBuf=outputBuf.replaceString("&", "&#38;");
-    outputBuf=outputBuf.replaceString("<", "&#60;");
-    outputBuf=outputBuf.replaceString(">", "&#62;");
+    sstring oBuf=x;
+    oBuf=oBuf.replaceString("&", "&#38;");
+    oBuf=oBuf.replaceString("<", "&#60;");
+    oBuf=oBuf.replaceString(">", "&#62;");
 
-    snprintf(buf, MY_MAX_STRING_LENGTH, fmtq.c_str(), outputBuf.c_str());
+    // styles
+    oBuf=oBuf.replaceString(VT_BOLDTEX, "<font style=bold />");
+    oBuf=oBuf.replaceString(ANSI_UNDER, "<font style=under />");
+    oBuf=oBuf.replaceString(VT_INVERTT, "<font style=invert />");
+    oBuf=oBuf.replaceString(ANSI_FLASH, "<font style=flash />");
+
+    // colors
+    oBuf=oBuf.replaceString(ANSI_WHITE, "<font color=white />");
+    oBuf=oBuf.replaceString(ANSI_BLACK, "<font color=black />");
+    oBuf=oBuf.replaceString(ANSI_RED, "<font color=red />");
+    oBuf=oBuf.replaceString(ANSI_NORMAL, "<font color=norm />");
+    oBuf=oBuf.replaceString(ANSI_BLUE, "<font color=blue />");
+    oBuf=oBuf.replaceString(ANSI_CYAN, "<font color=cyan />");
+    oBuf=oBuf.replaceString(ANSI_GREEN, "<font color=green />");
+    oBuf=oBuf.replaceString(ANSI_ORANGE, "<font color=orange />");
+    oBuf=oBuf.replaceString(ANSI_PURPLE, "<font color=purple />");
+
+    // colors with styles
+    oBuf=oBuf.replaceString(ANSI_RED_BOLD, 
+			    "<font style=bold color=red />");
+    oBuf=oBuf.replaceString(ANSI_GREEN_BOLD, 
+			    "<font style=bold color=green />");
+    oBuf=oBuf.replaceString(ANSI_ORANGE_BOLD, 
+			    "<font style=bold color=orange />");
+    oBuf=oBuf.replaceString(ANSI_YELLOW_BOLD, 
+			    "<font style=bold color=yellow />");
+    oBuf=oBuf.replaceString(ANSI_BLUE_BOLD, 
+			    "<font style=bold color=blue />");
+    oBuf=oBuf.replaceString(ANSI_PURPLE_BOLD, 
+			    "<font style=bold color=purple />");
+    oBuf=oBuf.replaceString(ANSI_CYAN_BOLD, 
+			    "<font style=bold color=cyan />");
+    oBuf=oBuf.replaceString(ANSI_WHITE_BOLD, 
+			    "<font style=bold color=white />");
+
+    // colors with background
+    oBuf=oBuf.replaceString(ANSI_BK_ON_BK, 
+			    "<font bgcolor=black color=black />");
+    oBuf=oBuf.replaceString(ANSI_BK_ON_WH, 
+			    "<font bgcolor=white color=black />");
+    oBuf=oBuf.replaceString(ANSI_WH_ON_BL, 
+			    "<font bgcolor=blue color=white />");
+    oBuf=oBuf.replaceString(ANSI_WH_ON_CY, 
+			    "<font bgcolor=cyan color=white />");
+    oBuf=oBuf.replaceString(ANSI_WH_ON_GR, 
+			    "<font bgcolor=green color=white />");
+    oBuf=oBuf.replaceString(ANSI_WH_ON_OR, 
+			    "<font bgcolor=orange color=white />");
+    oBuf=oBuf.replaceString(ANSI_WH_ON_PR, 
+			    "<font bgcolor=purple color=white />");
+    oBuf=oBuf.replaceString(ANSI_WH_ON_RD, 
+			    "<font background=red color=white />");
+
+    snprintf(buf, MY_MAX_STRING_LENGTH, fmtq.c_str(), oBuf.c_str());
   } else {
     snprintf(buf, MY_MAX_STRING_LENGTH, fmt.c_str(), x);
   }
