@@ -71,7 +71,7 @@ class CommTest : public CxxTest::TestSuite
     UncategorizedComm comm(fmt("this is %sa%s test") % ANSI_RED % ANSI_NORMAL);
 
     TS_ASSERT_EQUALS(comm.getComm(COMM_XML),
-		     (sstring)"<uncategorized>this is <font color=red />a<font color=norm /> test</uncategorized>");
+		     (string)"<uncategorized>this is <font color=\"red\" />a<font color=\"norm\" /> test</uncategorized>");
   }
 
   void testSystemLogComm(){
