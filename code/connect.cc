@@ -2338,6 +2338,147 @@ void Descriptor::fdSocketClose(int desc)
   return;
 }
 
+const char *StPrompts[] =
+  {
+    "[Z:%d Pr:%s L:%d H:%d C:%d S:%s]\n\r", // Builder Assistant
+    "%sH:%d%s ",           // Hit Points
+    "%sP:%.1f%s ",         // Piety
+    "%sM:%d%s ",           // Mana
+    "%sV:%d%s ",           // Moves
+    "%sT:%d%s ",           // Talens
+    "%sR:%d%s ",           // Room
+    "%sE:%s%s ",           // Exp
+    "%sN:%s%s ",           // Exp Tnl
+    "%s%s<%s%s=%s>%s ",    // Opponent
+    "%s%s<%s/tank=%s>%s ", // Tank / Tank-Other
+    "%s<%.1f%s> ",         // Lockout
+    "%sLF:%d%s ",          // Lifeforce
+    "%s%02i:%02i:%02i%s "            // time
+  };
+
+
+sstring getPietyPrompt(TBeing *ch, Descriptor *d, float piety){
+  sstring promptbuf="";
+
+  if (IS_SET(d->prompt_d.type, PROMPT_PIETY)) {	    
+    promptbuf=fmt(StPrompts[2]) %
+      (IS_SET(d->prompt_d.type, PROMPT_COLOR) ? d->prompt_d.pietyColor : "") %
+      piety %
+      ch->norm();
+  }
+
+  return promptbuf;
+}
+sstring getLFPrompt(TBeing *ch, Descriptor *d, int lf){
+  sstring promptbuf="";
+  
+  if (IS_SET(d->prompt_d.type, PROMPT_LIFEFORCE)) {	    
+    promptbuf=fmt(StPrompts[12]) %
+      (IS_SET(d->prompt_d.type, PROMPT_COLOR) ? d->prompt_d.lifeforceColor : "") %
+      lf %
+      ch->norm();
+  }
+
+  return promptbuf;
+}
+sstring getMovesPrompt(TBeing *ch, Descriptor *d, int moves){
+  sstring promptbuf="";
+  
+  if (IS_SET(d->prompt_d.type, PROMPT_MOVE))
+    promptbuf=fmt(StPrompts[4]) %
+      (IS_SET(d->prompt_d.type, PROMPT_COLOR) ? d->prompt_d.moveColor : "") %
+      moves %
+      ch->norm();
+
+  return promptbuf;
+}
+sstring getMoneyPrompt(TBeing *ch, Descriptor *d, int money){
+  sstring promptbuf="";
+  
+  if (IS_SET(d->prompt_d.type, PROMPT_GOLD))
+    promptbuf=fmt(StPrompts[5]) %
+      (IS_SET(d->prompt_d.type, PROMPT_COLOR) ? d->prompt_d.moneyColor : "") %
+      money %
+      ch->norm();
+
+  return promptbuf;
+}
+sstring getRoomPrompt(TBeing *ch, Descriptor *d, int room){
+  sstring promptbuf="";
+
+  if (IS_SET(d->prompt_d.type, PROMPT_ROOM))
+    promptbuf=fmt(StPrompts[6]) %
+      (IS_SET(d->prompt_d.type, PROMPT_COLOR) ? d->prompt_d.roomColor : "") %
+      room %
+      ch->norm();
+
+  return promptbuf;
+}
+
+sstring getManaPrompt(TBeing *ch, Descriptor *d, int mana){
+  sstring promptbuf="";
+
+  if (IS_SET(d->prompt_d.type, PROMPT_MANA)) {
+    promptbuf=fmt(StPrompts[3]) %
+      (IS_SET(d->prompt_d.type, PROMPT_COLOR) ? d->prompt_d.manaColor : "") %
+      mana %
+      ch->norm();
+  }
+
+  return promptbuf;
+}
+
+sstring getHitPointsPrompt(TBeing *ch, Descriptor *d, int hp){
+  sstring promptbuf="";
+
+  if (IS_SET(d->prompt_d.type, PROMPT_HIT))
+    promptbuf=fmt(StPrompts[1]) % 
+      (IS_SET(d->prompt_d.type, PROMPT_COLOR) ? d->prompt_d.hpColor : "") %
+      hp %
+      ch->norm();
+
+  return promptbuf;
+}
+
+
+time_t getTimePromptData(TBeing *ch){
+  time_t ct;
+  if (ch->desc->account)
+    ct = time(0) + 3600 * ch->desc->account->time_adjust;
+  else
+    ct = time(0);
+
+  return ct;
+}
+
+sstring getTimePrompt(TBeing *ch, Descriptor *d, time_t ct){
+  sstring promptbuf="";
+  struct tm *tm=localtime(&ct);
+  
+  if (IS_SET(d->prompt_d.type, PROMPT_TIME)){
+    promptbuf=fmt(StPrompts[13]) % 
+      (IS_SET(d->prompt_d.type, PROMPT_COLOR) ? d->prompt_d.timeColor : "") %
+      tm->tm_hour % tm->tm_min % tm->tm_sec %
+      ch->norm();
+  }
+  return promptbuf;
+}
+
+sstring PromptComm::getText(){
+  return text;
+}
+
+sstring PromptComm::getClientText(){
+  return text;
+}
+
+sstring PromptComm::getXML(){
+  return fmt("<prompt time=\"%i\" hp=\"%i\" mana=\"%i\" piety=\"%f\" lifeforce=\"%i\" moves=\"%i\" money=\"%i\" room=\"%i\">%x</prompt>") %
+    time % hp % mana % piety % lifeforce % moves % money % room % text;
+}
+
+
+
 void setPrompts(fd_set out)
 {
   Descriptor *d, *nextd;
@@ -2357,6 +2498,7 @@ void setPrompts(fd_set out)
       if (!d->connected && ch && ch->isPc() &&
           !(ch->isPlayerAction(PLR_COMPACT)))
         d->output.putInQ(new UncategorizedComm("\n\r"));
+
 
       if (ch && ch->task) {
         if (ch->task->task == TASK_PENANCE) {
@@ -2510,23 +2652,6 @@ void setPrompts(fd_set out)
             bool hasColor = IS_SET(d->prompt_d.type, PROMPT_COLOR);
             *promptbuf = '\0';
 
-            const char *StPrompts[] =
-            {
-              "[Z:%d Pr:%s L:%d H:%d C:%d S:%s]\n\r", // Builder Assistant
-              "%sH:%d%s ",           // Hit Points
-              "%sP:%.1f%s ",         // Piety
-              "%sM:%d%s ",           // Mana
-              "%sV:%d%s ",           // Moves
-              "%sT:%d%s ",           // Talens
-              "%sR:%d%s ",           // Room
-              "%sE:%s%s ",           // Exp
-              "%sN:%s%s ",           // Exp Tnl
-              "%s%s<%s%s=%s>%s ",    // Opponent
-              "%s%s<%s/tank=%s>%s ", // Tank / Tank-Other
-              "%s<%.1f%s> ",         // Lockout
-              "%sLF:%d%s ",          // Lifeforce
-	      "%s%02i:%02i:%02i%s "            // time
-            };
 
             if (ch->isImmortal() && IS_SET(d->prompt_d.type, PROMPT_BUILDER_ASSISTANT)) {
               sprintf(promptbuf + strlen(promptbuf),
@@ -2538,74 +2663,42 @@ void setPrompts(fd_set out)
                       ch->roomp->getMoblim(),
                       TerrainInfo[ch->roomp->getSectorType()]->name);
             }
-	    
-	    time_t ct;
-	    if (ch->desc->account)
-	      ct = time(0) + 3600 * ch->desc->account->time_adjust;
-	    else
-	      ct = time(0);
-	    struct tm *tm=localtime(&ct);
-	    
-	    if (IS_SET(d->prompt_d.type, PROMPT_TIME))
-	      sprintf(promptbuf + strlen(promptbuf),
-		      StPrompts[13],
-		      (hasColor ? d->prompt_d.timeColor : ""),
-		      tm->tm_hour, tm->tm_min, tm->tm_sec,
-		      ch->norm());
 
-            if (IS_SET(d->prompt_d.type, PROMPT_HIT))
-              sprintf(promptbuf + strlen(promptbuf),
-                      StPrompts[1],
-                      (hasColor ? d->prompt_d.hpColor : ""),
-                      ch->getHit(),
-                      ch->norm());
-            if (IS_SET(d->prompt_d.type, PROMPT_MANA)) {
-                sprintf(promptbuf + strlen(promptbuf),
-                        StPrompts[3],
-                        (hasColor ? d->prompt_d.manaColor : ""),
-                        ch->getMana(),
-                        ch->norm());
+
+	    time_t ct=getTimePromptData(ch);
+	    int hp=ch->getHit();
+	    int mana=ch->getMana();
+	    float piety=ch->getPiety();
+	    int lifeforce=ch->getLifeforce();
+	    int moves=ch->getMove();
+	    int gold=ch->getMoney();
+	    int room=ch->roomp->number;
+
+	    sprintf(promptbuf + strlen(promptbuf), 
+		    getTimePrompt(ch, d, ct).c_str());
+	    sprintf(promptbuf + strlen(promptbuf),
+		    getHitPointsPrompt(ch, d, hp).c_str());
+	    sprintf(promptbuf + strlen(promptbuf),
+		    getManaPrompt(ch, d, mana).c_str());
+	    sprintf(promptbuf + strlen(promptbuf),
+		    getPietyPrompt(ch, d, piety).c_str());
+	    sprintf(promptbuf + strlen(promptbuf),
+		    getLFPrompt(ch, d, lifeforce).c_str());
+	    sprintf(promptbuf + strlen(promptbuf),
+		    getMovesPrompt(ch, d, moves).c_str());
+	    sprintf(promptbuf + strlen(promptbuf),
+		    getMoneyPrompt(ch, d, gold).c_str());
+	    sprintf(promptbuf + strlen(promptbuf),
+		    getRoomPrompt(ch, d, room).c_str());
+
+	    if (IS_SET(d->prompt_d.type, PROMPT_EXP)) {
+	      strcpy(tString, ch->displayExp().comify().c_str());
+	      sprintf(promptbuf + strlen(promptbuf),
+		      StPrompts[7],
+		      (hasColor ? d->prompt_d.expColor : ""),
+		      tString,
+		      ch->norm());
 	    }
-            if (IS_SET(d->prompt_d.type, PROMPT_PIETY)) {	    
-                sprintf(promptbuf + strlen(promptbuf),
-                        StPrompts[2],
-                        (hasColor ? d->prompt_d.pietyColor : ""),
-                        ch->getPiety(),
-                        ch->norm());
-	    }
-            if (IS_SET(d->prompt_d.type, PROMPT_LIFEFORCE)) {	    
-                sprintf(promptbuf + strlen(promptbuf),
-                        StPrompts[12],
-                        (hasColor ? d->prompt_d.lifeforceColor : ""),
-                        ch->getLifeforce(),
-                        ch->norm());
-	    }
-            if (IS_SET(d->prompt_d.type, PROMPT_MOVE))
-              sprintf(promptbuf + strlen(promptbuf),
-                      StPrompts[4],
-                      (hasColor ? d->prompt_d.moveColor : ""),
-                      ch->getMove(),
-                      ch->norm());
-            if (IS_SET(d->prompt_d.type, PROMPT_GOLD))
-              sprintf(promptbuf + strlen(promptbuf),
-                      StPrompts[5],
-                      (hasColor ? d->prompt_d.moneyColor : ""),
-                      ch->getMoney(),
-                      ch->norm());
-            if (IS_SET(d->prompt_d.type, PROMPT_ROOM))
-              sprintf(promptbuf + strlen(promptbuf),
-                      StPrompts[6],
-                      (hasColor ? d->prompt_d.roomColor : ""),
-                      ch->roomp->number,
-                      ch->norm());
-            if (IS_SET(d->prompt_d.type, PROMPT_EXP)) {
-              strcpy(tString, ch->displayExp().comify().c_str());
-              sprintf(promptbuf + strlen(promptbuf),
-                      StPrompts[7],
-                      (hasColor ? d->prompt_d.expColor : ""),
-                      tString,
-                      ch->norm());
-            }
             if (IS_SET(d->prompt_d.type, PROMPT_EXPTONEXT_LEVEL)) {
               classIndT i;
 
@@ -2676,7 +2769,8 @@ void setPrompts(fd_set out)
             }
 
             strcat(promptbuf, "> ");
-            d->output.putInQ(new UncategorizedComm(promptbuf));
+
+            d->output.putInQ(new PromptComm(ct, hp, mana, piety, lifeforce, moves, gold, room, promptbuf));
           }
         }
       }

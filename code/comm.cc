@@ -1645,3 +1645,15 @@ LoginComm::LoginComm(const sstring &p, const sstring &t){
   prompt=p;
   text=t;
 }
+
+PromptComm::PromptComm(time_t t, int h, int m, float p, int l, int mv, int g, int r, const sstring &txt){
+  time=t;
+  hp=h;
+  mana=h;
+  piety=p;
+  lifeforce=l;
+  moves=mv;
+  money=g;
+  room=r;
+  text=txt;
+}

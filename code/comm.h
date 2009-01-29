@@ -165,6 +165,24 @@ class LoginComm : public Comm {
   virtual sstring getXML();
 };
 
+class PromptComm : public Comm {
+ public:
+  PromptComm(time_t, int, int, float, int, int, int, int, const sstring &);
+
+ private:
+  time_t time;
+  int hp;
+  int mana;
+  float piety;
+  int lifeforce;
+  int moves;
+  int money;
+  int room;
+
+  virtual sstring getText();
+  virtual sstring getClientText();
+  virtual sstring getXML();
+};
 
 
 #endif
