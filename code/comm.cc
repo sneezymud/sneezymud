@@ -857,19 +857,20 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
         snprintf(buf, cElements(buf), "%s", colorString(to, to->desc, buf, NULL, COLOR_BASIC, FALSE).c_str());
       }
 
+      sstring s=buf;
+
       if (!color) {
-        to->desc->output.putInQ(new UncategorizedComm(sstring(buf).cap()));
+        to->desc->output.putInQ(new UncategorizedComm(fmt("%s\n\r") %s.cap()));
       } else {
         sstring str = to->ansi_color(color);
         if (str.empty())
-          to->desc->output.putInQ(new UncategorizedComm(sstring(buf).cap()));
+          to->desc->output.putInQ(new UncategorizedComm(fmt("%s\n\r") %s.cap()));
         else {
-          to->desc->output.putInQ(new UncategorizedComm(str));
-          to->desc->output.putInQ(new UncategorizedComm(sstring(buf).cap()));
-          to->desc->output.putInQ(new UncategorizedComm(to->norm()));
+	  to->desc->output.putInQ(new UncategorizedComm(fmt("%s%s%s\n\r") %
+							str % s.cap() % 
+							to->norm()));
         } 
       }
-      to->desc->output.putInQ(new UncategorizedComm("\n\r"));
     }
     if ((type == TO_VICT) || (type == TO_CHAR))
       return;
