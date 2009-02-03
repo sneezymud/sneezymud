@@ -1642,7 +1642,7 @@ sstring CmdMsgComm::getClientText(){
 }
 
 sstring CmdMsgComm::getXML(){
-  return fmt("<cmdmsg cmd=\"%x\">%x</uncategorized>") % cmd % text;
+  return fmt("<cmdmsg cmd=\"%x\">%x</cmdmsg>") % cmd % text;
 }
 
 
