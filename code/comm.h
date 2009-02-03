@@ -126,6 +126,44 @@ class UncategorizedComm : public Comm {
   virtual sstring getXML();
 };
 
+class TellFromComm : public Comm {
+ public:
+  TellFromComm(const sstring &, const sstring &, bool);
+
+ private:
+  sstring from;
+  bool drunk;
+
+  virtual sstring getText();
+  virtual sstring getClientText();
+  virtual sstring getXML();
+};
+
+class TellToComm : public Comm {
+ public:
+  TellToComm(const sstring &, const sstring &);
+
+ private:
+  sstring to;
+
+  virtual sstring getText();
+  virtual sstring getClientText();
+  virtual sstring getXML();
+};
+
+class CmdMsgComm : public Comm {
+ public:
+  CmdMsgComm(const sstring &, const sstring &);
+
+ private:
+  sstring cmd;
+
+  virtual sstring getText();
+  virtual sstring getClientText();
+  virtual sstring getXML();
+};
+
+
 // for snoop output
 class SnoopComm : public Comm {
  public:
@@ -183,6 +221,7 @@ class PromptComm : public Comm {
   virtual sstring getClientText();
   virtual sstring getXML();
 };
+
 
 
 #endif

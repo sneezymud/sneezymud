@@ -1627,6 +1627,37 @@ sstring UncategorizedComm::getXML(){
   return fmt("<uncategorized>%x</uncategorized>") % text;
 }
 
+// CmdMsgComm
+CmdMsgComm::CmdMsgComm(const sstring &c, const sstring &t){
+  cmd=c;
+  text=t;
+}
+
+sstring CmdMsgComm::getText(){
+  return text;
+}
+
+sstring CmdMsgComm::getClientText(){
+  return getText();
+}
+
+sstring CmdMsgComm::getXML(){
+  return fmt("<cmdmsg cmd=\"%x\">%x</uncategorized>") % cmd % text;
+}
+
+
+// TellComm
+TellFromComm::TellFromComm(const sstring &f, const sstring &t, bool d){
+  from=f;
+  text=t;
+  drunk=d;
+}
+TellToComm::TellToComm(const sstring &f, const sstring &t){
+  to=f;
+  text=t;
+}
+
+
 // SnoopComm
 SnoopComm::SnoopComm(const sstring &v, const sstring &t){
   vict=v;
