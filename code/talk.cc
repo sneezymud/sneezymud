@@ -641,8 +641,8 @@ sstring TellFromComm::getClientText(){
 }
 
 sstring TellFromComm::getXML(){
-  return fmt("<tellfrom to=\"%x\" from=\"%x\" drunk=\"%s\">%x</tell>") % to %
-    from % (drunk ? "true" : "false") % text;
+  return fmt("<tellfrom to=\"%x\" from=\"%x\" drunk=\"%s\" mob=\"%s\">%x</tell>") % to %
+    from % (drunk ? "true" : "false") % (mob ? "true" : "false") % text;
 }
 
 
@@ -814,9 +814,9 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
   garbed.convertStringColor("<c>");
 
   if(vict->isImmortal() && drunkNum>0)
-    d->output.putInQ(new TellFromComm(vict->getName(), capbuf, garbed, true));
+    d->output.putInQ(new TellFromComm(vict->getName(), capbuf, garbed, true, !isPc()));
   else
-    d->output.putInQ(new TellFromComm(vict->getName(), capbuf, garbed, false));
+    d->output.putInQ(new TellFromComm(vict->getName(), capbuf, garbed, false, !isPc()));
 
   TDatabase db(DB_SNEEZY);
   queryqueue.push(fmt("insert into tellhistory (tellfrom, tellto, tell, telltime) values ('%q', '%q', '%q', now())") % capbuf.cap() % vict->getName() % garbed);
