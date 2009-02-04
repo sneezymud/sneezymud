@@ -128,9 +128,10 @@ class UncategorizedComm : public Comm {
 
 class TellFromComm : public Comm {
  public:
-  TellFromComm(const sstring &, const sstring &, bool);
+  TellFromComm(const sstring &, const sstring &, const sstring &, bool);
 
  private:
+  sstring to;
   sstring from;
   bool drunk;
 
@@ -141,10 +142,11 @@ class TellFromComm : public Comm {
 
 class TellToComm : public Comm {
  public:
-  TellToComm(const sstring &, const sstring &);
+  TellToComm(const sstring &, const sstring &, const sstring &);
 
  private:
   sstring to;
+  sstring from;
 
   virtual sstring getText();
   virtual sstring getClientText();

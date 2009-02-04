@@ -1647,13 +1647,15 @@ sstring CmdMsgComm::getXML(){
 
 
 // TellComm
-TellFromComm::TellFromComm(const sstring &f, const sstring &t, bool d){
+TellFromComm::TellFromComm(const sstring &tt, const sstring &f, const sstring &t, bool d){
+  to=tt;
   from=f;
   text=t;
   drunk=d;
 }
-TellToComm::TellToComm(const sstring &f, const sstring &t){
-  to=f;
+TellToComm::TellToComm(const sstring &tt, const sstring &f, const sstring &t){
+  to=tt;
+  from=f;
   text=t;
 }
 

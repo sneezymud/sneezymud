@@ -641,8 +641,8 @@ sstring TellFromComm::getClientText(){
 }
 
 sstring TellFromComm::getXML(){
-  return fmt("<tell from=\"%x\" drunk=\"%s\">%x</tell>") % from %
-    (drunk ? "true" : "false") % text;
+  return fmt("<tellfrom to=\"%x\" from=\"%x\" drunk=\"%s\">%x</tell>") % to %
+    from % (drunk ? "true" : "false") % text;
 }
 
 
@@ -655,7 +655,7 @@ sstring TellToComm::getClientText(){
 }
 
 sstring TellToComm::getXML(){
-  return fmt("<tell to=\"%x\">%x</tell>") % to % text;
+  return fmt("<tellto to=\"%x\" from=\"%x\">%x</tell>") % to % from % text;
 }
 
 
@@ -800,7 +800,7 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
   sstring garbedBuf, nameBuf;
 
   if(desc)
-    desc->output.putInQ(new TellToComm(vict->getName(), garbed));
+    desc->output.putInQ(new TellToComm(vict->getName(), capbuf, garbed));
 
 
   Descriptor *d = vict->desc;
@@ -814,9 +814,9 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
   garbed.convertStringColor("<c>");
 
   if(vict->isImmortal() && drunkNum>0)
-    d->output.putInQ(new TellFromComm(capbuf, garbed, true));
+    d->output.putInQ(new TellFromComm(vict->getName(), capbuf, garbed, true));
   else
-    d->output.putInQ(new TellFromComm(capbuf, garbed, false));
+    d->output.putInQ(new TellFromComm(vict->getName(), capbuf, garbed, false));
 
   TDatabase db(DB_SNEEZY);
   queryqueue.push(fmt("insert into tellhistory (tellfrom, tellto, tell, telltime) values ('%q', '%q', '%q', now())") % capbuf.cap() % vict->getName() % garbed);
