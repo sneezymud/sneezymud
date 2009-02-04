@@ -1236,34 +1236,65 @@ int Descriptor::client_nanny(char *arg)
   return TRUE;
 }
 
+
+sstring WhoListComm::getText(){
+  return "";
+}
+
+sstring WhoListComm::getClientText(){
+  sstring buf;
+  if(online){
+    buf=fmt("\200%d|%s|%d|%d|1\n") % CLIENT_WHO % who % ADD % 
+      ((level==-1)?0:level);
+  } else {
+    buf=fmt("\200%d|%s|%d|0\n") % CLIENT_WHO % who % DELETE;
+    buf=fmt("\200%d|[%s]|%d|0\n") % CLIENT_WHO % who % DELETE;
+  }
+  return buf;
+}
+
+sstring WhoListComm::getXML(){
+  sstring buf=fmt("<wholist online=\"%s\"") % (online ? "true" : "false");
+
+  if(level != -1)
+    buf+=fmt(" level=\"%i\"") % level;
+  if(idle != -1)
+    buf+=fmt(" idle=\"%i\"") % idle;
+  
+  buf+=fmt(" linkdead=\"%s\"") % (linkdead ? "true" : "false");
+  buf+=fmt(">%x</wholist>") % who;
+
+  return buf;
+}
+
+
 void TBeing::fixClientPlayerLists(bool lost)
 {
   Descriptor *d;
-  char buf[256] = "\0";
 
   for (d = descriptor_list; d; d = d->next) {
-    if (d->character && (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT))) {
-      if (isLinkdead() && d->character->isImmortal()) 
-        sprintf(buf, "[%s]", getName());
-      else
-        strcpy(buf, getName() ? getName() : "UNKNOWN NAME");
+    if (d->character){
+      // delete the entry first
+      d->output.putInQ(new WhoListComm(getName(), false));
 
-      if (lost) {
-        if (!d->character->canSeeWho(this)) {
-          d->prompt_mode = -1;
-          d->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % buf % DELETE);
-          d->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % getName() % DELETE);
-        }
-      } else {
-        if (d->character->canSeeWho(this)) {
-          d->prompt_mode = -1;
-          d->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % buf % DELETE);
-          d->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % getName() % DELETE);
-          if (isPlayerAction(PLR_ANONYMOUS) && !d->character->isImmortal())
-            d->clientf(fmt("%d|%s|%d|0|1") % CLIENT_WHO % buf % ADD);
-          else
-            d->clientf(fmt("%d|%s|%d|%d|1") % CLIENT_WHO % buf % ADD % GetMaxLevel());
-        }
+      d->prompt_mode = -1;
+
+      if (!lost) {
+	if(d->character->isImmortal()){
+	  // immortals get all info
+	  d->output.putInQ(new WhoListComm(getName(), true, GetMaxLevel(),
+					   getTimer(), isLinkdead()));
+	} else {
+	  // mortals get filtered info
+	  if (d->character->canSeeWho(this)) {
+	    if (isPlayerAction(PLR_ANONYMOUS)){
+	      d->output.putInQ(new WhoListComm(getName(), true, -1, -1, false));
+	    } else {
+	      d->output.putInQ(new WhoListComm(getName(), true, GetMaxLevel(), 
+					       -1, false));
+	    }
+	  }
+	}
       }
     }
   }

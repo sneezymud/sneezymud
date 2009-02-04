@@ -1168,30 +1168,16 @@ int Descriptor::nanny(sstring arg)
           
           tmp_ch->fixClientPlayerLists(FALSE);
 
-          if (tmp_ch->desc && !tmp_ch->desc->m_bIsClient && IS_SET(tmp_ch->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
+          if (tmp_ch->desc && !tmp_ch->desc->m_bIsClient){
 	    Descriptor *d;
 	    sstring buf2;
 
-	    tmp_ch->desc->send_client_prompt(TRUE, 16383);
+	    if(IS_SET(tmp_ch->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))
+	      tmp_ch->desc->send_client_prompt(TRUE, 16383);
 
 	    for (d = descriptor_list; d; d = d->next) {
-	      if (d->character) {
-		if (d->character->isLinkdead() && tmp_ch->isImmortal())
-		  buf2 = fmt("[%s]") % d->character->getName();
-		else
-		  buf2 = (d->character->getName() ? d->character->getName() : "UNKNOWN NAME");
-
-		if (tmp_ch->canSeeWho(d->character)) {
-		  tmp_ch->desc->prompt_mode = -1;
-		  tmp_ch->desc->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % buf2 % DELETE);
-		  tmp_ch->desc->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % d->character->getName() % DELETE);
-
-		  if (d->character->isPlayerAction(PLR_ANONYMOUS) && !tmp_ch->isImmortal())
-		    tmp_ch->desc->clientf(fmt("%d|%s|%d|0|1") % CLIENT_WHO % buf2 % ADD);
-		  else
-		    tmp_ch->desc->clientf(fmt("%d|%s|%d|%d|1") % CLIENT_WHO % buf2 % ADD % d->character->GetMaxLevel());
-		}
-	      }
+	      if (d->character)
+		d->character->fixClientPlayerLists(false);
 	    }
           }
 
@@ -1310,30 +1296,16 @@ int Descriptor::nanny(sstring arg)
               
               tmp_ch->fixClientPlayerLists(FALSE);
 
-	      if (tmp_ch->desc && !tmp_ch->desc->m_bIsClient && IS_SET(tmp_ch->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
+	      if (tmp_ch->desc && !tmp_ch->desc->m_bIsClient) {
 		Descriptor *d;
 		sstring buf2;  
 
-		tmp_ch->desc->send_client_prompt(TRUE, 16383);
+		if(IS_SET(tmp_ch->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))
+		  tmp_ch->desc->send_client_prompt(TRUE, 16383);
 
 		for (d = descriptor_list; d; d = d->next) {
-		  if (d->character) {
-		    if (d->character->isLinkdead() && tmp_ch->isImmortal())
-		      buf2 = fmt("[%s]") % d->character->getName();
-		    else
-		      buf2 = (d->character->getName() ? d->character->getName() : "UNKNOWN NAME");
-
-		    if (tmp_ch->canSeeWho(d->character)) {
-		      tmp_ch->desc->prompt_mode = -1;
-		      tmp_ch->desc->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % buf2 % DELETE);                    
-		      tmp_ch->desc->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % d->character->getName() % DELETE);
-
-		      if (d->character->isPlayerAction(PLR_ANONYMOUS) && !tmp_ch->isImmortal())
-			tmp_ch->desc->clientf(fmt("%d|%s|%d|0|1") % CLIENT_WHO % buf2 % ADD);
-		      else
-			tmp_ch->desc->clientf(fmt("%d|%s|%d|%d|1") % CLIENT_WHO % buf2 % ADD % d->character->GetMaxLevel());
-		    }
-		  }
+		  if (d->character)
+		    d->character->fixClientPlayerLists(false);
 		}
 	      }
 
@@ -1378,30 +1350,16 @@ int Descriptor::nanny(sstring arg)
       character->doSave(SILENT_YES);
       character->desc->saveAccount();
 
-      if (character->desc && !character->desc->m_bIsClient && IS_SET(character->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
+      if (character->desc && !character->desc->m_bIsClient) {
 	Descriptor *d;
 	sstring buf2;  
 
-	character->desc->send_client_prompt(TRUE, 16383);
+	if(IS_SET(character->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))
+	  character->desc->send_client_prompt(TRUE, 16383);
 
 	for (d = descriptor_list; d; d = d->next) {
-	  if (d->character) {
-	    if (d->character->isLinkdead() && character->isImmortal())
-	      buf2 = fmt("[%s]") % d->character->getName();
-	    else
-	      buf2 = (d->character->getName() ? d->character->getName() : "UNKNOWN NAME");
-
-	    if (character->canSeeWho(d->character)) {
-	      character->desc->prompt_mode = -1;
-	      character->desc->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % buf2 % DELETE);                    
-	      character->desc->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % d->character->getName() % DELETE);
-
-	      if (d->character->isPlayerAction(PLR_ANONYMOUS) && !character->isImmortal())
-		character->desc->clientf(fmt("%d|%s|%d|0|1") % CLIENT_WHO % buf2 % ADD);
-	      else
-		character->desc->clientf(fmt("%d|%s|%d|%d|1") % CLIENT_WHO % buf2 % ADD % d->character->GetMaxLevel());
-	    }
-	  }
+	  if (d->character)
+	    d->character->fixClientPlayerLists(false);
 	}
       }
 

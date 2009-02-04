@@ -1627,6 +1627,22 @@ sstring UncategorizedComm::getXML(){
   return fmt("<uncategorized>%x</uncategorized>") % text;
 }
 
+// WhoListComm
+WhoListComm::WhoListComm(const sstring &w, bool o, int l, int i, bool ld){
+  who=w;
+  online=o;
+  level=l;
+  idle=i;
+  linkdead=ld;
+}
+// shorter constructor for removals
+WhoListComm::WhoListComm(const sstring &w, bool o){
+  who=w;
+  online=o;
+  level=-1;
+  idle=-1;
+  linkdead=false;
+}
 // CmdMsgComm
 CmdMsgComm::CmdMsgComm(const sstring &c, const sstring &t){
   cmd=c;

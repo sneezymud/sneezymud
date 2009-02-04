@@ -115,10 +115,27 @@ class Comm
   virtual sstring getXML() = 0;
 };
 
-// This is for conversion only.  It just passes the string directly.
+
 class UncategorizedComm : public Comm {
  public:
   UncategorizedComm(const sstring &);
+
+ private:
+  virtual sstring getText();
+  virtual sstring getClientText();
+  virtual sstring getXML();
+};
+
+
+class WhoListComm : public Comm {
+ public:
+  WhoListComm(const sstring &, bool);
+  WhoListComm(const sstring &, bool, int, int, bool);
+  sstring who;
+  bool online;
+  int level;
+  int idle;
+  bool linkdead;
 
  private:
   virtual sstring getText();
