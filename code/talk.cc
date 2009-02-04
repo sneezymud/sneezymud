@@ -800,7 +800,7 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
   sstring garbedBuf, nameBuf;
 
   if(desc)
-    desc->output.putInQ(new TellToComm(vict->getName(), capbuf, garbed));
+    desc->output.putInQ(new TellToComm(vict->getName(), capbuf.cap(), garbed));
 
 
   Descriptor *d = vict->desc;
@@ -814,9 +814,9 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
   garbed.convertStringColor("<c>");
 
   if(vict->isImmortal() && drunkNum>0)
-    d->output.putInQ(new TellFromComm(vict->getName(), capbuf, garbed, true, !isPc()));
+    d->output.putInQ(new TellFromComm(vict->getName(), capbuf.cap(), garbed, true, !isPc()));
   else
-    d->output.putInQ(new TellFromComm(vict->getName(), capbuf, garbed, false, !isPc()));
+    d->output.putInQ(new TellFromComm(vict->getName(), capbuf.cap(), garbed, false, !isPc()));
 
   TDatabase db(DB_SNEEZY);
   queryqueue.push(fmt("insert into tellhistory (tellfrom, tellto, tell, telltime) values ('%q', '%q', '%q', now())") % capbuf.cap() % vict->getName() % garbed);
