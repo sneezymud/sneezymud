@@ -641,7 +641,7 @@ sstring TellFromComm::getClientText(){
 }
 
 sstring TellFromComm::getXML(){
-  return fmt("<tellfrom to=\"%x\" from=\"%x\" drunk=\"%s\" mob=\"%s\">%x</tell>") % to %
+  return fmt("<tellfrom to=\"%x\" from=\"%x\" drunk=\"%s\" mob=\"%s\">%x</tellfrom>") % to %
     from % (drunk ? "true" : "false") % (mob ? "true" : "false") % text;
 }
 
@@ -655,7 +655,7 @@ sstring TellToComm::getClientText(){
 }
 
 sstring TellToComm::getXML(){
-  return fmt("<tellto to=\"%x\" from=\"%x\">%x</tell>") % to % from % text;
+  return fmt("<tellto to=\"%x\" from=\"%x\">%x</tellto>") % to % from % text;
 }
 
 
