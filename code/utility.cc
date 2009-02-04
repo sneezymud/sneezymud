@@ -850,7 +850,7 @@ sstring SystemLogComm::getText(){
 }
 
 sstring SystemLogComm::getClientText(){
-  return fmt("%d|%d|%s: %s") % CLIENT_LOG % logtype % 
+  return fmt("\200%d|%d|%s: %s\n") % CLIENT_LOG % logtype % 
     getLogType(logtype) % text;
 }
 
