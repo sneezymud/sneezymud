@@ -2454,7 +2454,7 @@ void setPrompts(fd_set out)
       ch = d->character;
 
       if (!d->connected && ch && ch->isPc() &&
-          !(ch->isPlayerAction(PLR_COMPACT)))
+          !(ch->isPlayerAction(PLR_COMPACT)) && d->prompt_mode != DONT_SEND)
         d->output.putInQ(new UncategorizedComm("\n\r"));
 
 
