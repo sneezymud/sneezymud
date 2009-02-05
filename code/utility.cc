@@ -858,8 +858,15 @@ sstring SystemLogComm::getClientText(){
 }
 
 sstring SystemLogComm::getXML(){
-  return fmt("<log time=\"%i\" type=\"%x\">%x</log>") %
-    logtime % getLogType(logtype) % text;
+  sstring buf="";
+
+  buf+=fmt("<log>\n");
+  buf+=fmt("  <time>%i</time>\n") % logtime;
+  buf+=fmt("  <type>%x</type>\n") % getLogType(logtype);
+  buf+=fmt("  <msg>%x</msg>\n") % text;
+  buf+=fmt("</log>\n");
+
+  return buf;
 }
 
 void dirwalk(const sstring &dir, void (*fcn) (const char *))

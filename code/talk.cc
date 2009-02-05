@@ -641,8 +641,17 @@ sstring TellFromComm::getClientText(){
 }
 
 sstring TellFromComm::getXML(){
-  return fmt("<tellfrom to=\"%x\" from=\"%x\" drunk=\"%s\" mob=\"%s\">%x</tellfrom>") % to %
-    from % (drunk ? "true" : "false") % (mob ? "true" : "false") % text;
+  sstring buf="";
+  
+  buf+=fmt("<tellfrom>\n");
+  buf+=fmt("  <to>%x</to>\n") % to;
+  buf+=fmt("  <from>%x</from>\n") % from;
+  buf+=fmt("  <drunk>%s</drunk>\n") % (drunk ? "true" : "false");
+  buf+=fmt("  <mob>%s</mob>\n") % (mob ? "true" : "false");
+  buf+=fmt("  <tell>%x</tell>\n") % text;
+  buf+=fmt("</tellfrom>\n");
+
+  return buf;
 }
 
 
@@ -655,7 +664,15 @@ sstring TellToComm::getClientText(){
 }
 
 sstring TellToComm::getXML(){
-  return fmt("<tellto to=\"%x\" from=\"%x\">%x</tellto>") % to % from % text;
+  sstring buf="";
+  
+  buf+=fmt("<tellto>\n");
+  buf+=fmt("  <to>%x</to>\n") % to;
+  buf+=fmt("  <from>%x</from>\n") % from;
+  buf+=fmt("  <tell>%x</from>\n") % text;
+  buf+=fmt("</tellto>\n");
+
+  return buf;
 }
 
 

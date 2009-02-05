@@ -1254,15 +1254,19 @@ sstring WhoListComm::getClientText(){
 }
 
 sstring WhoListComm::getXML(){
-  sstring buf=fmt("<wholist online=\"%s\"") % (online ? "true" : "false");
+  sstring buf="";
 
-  if(level != -1)
-    buf+=fmt(" level=\"%i\"") % level;
-  if(idle != -1)
-    buf+=fmt(" idle=\"%i\"") % idle;
+  buf+=fmt("<wholist>\n");
+  buf+=fmt("  <online>%s</online>\n") % (online ? "true" : "false");
   
-  buf+=fmt(" linkdead=\"%s\"") % (linkdead ? "true" : "false");
-  buf+=fmt(">%x</wholist>") % who;
+  if(level!=-1)
+    buf+=fmt("  <level>%i</level>\n") % level;
+  if(idle!=-1)
+    buf+=fmt("  <idle>%i</idle>\n") % idle;
+  
+  buf+=fmt("  <linkdead>%s</linkdead>\n") % (linkdead ? "true" : "false");
+  buf+=fmt("  <name>%x</name>\n") % who;
+  buf+=fmt("</wholist>\n");
 
   return buf;
 }
