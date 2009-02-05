@@ -1277,7 +1277,8 @@ void TBeing::fixClientPlayerLists(bool lost)
       // delete the entry first
       d->output.putInQ(new WhoListComm(getName(), false));
 
-      d->prompt_mode = -1;
+      if(d->m_bIsClient)
+	d->prompt_mode = -1;
 
       if (!lost) {
 	if(d->character->isImmortal()){
