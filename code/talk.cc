@@ -669,7 +669,7 @@ sstring TellToComm::getXML(){
   buf+=fmt("<tellto>\n");
   buf+=fmt("  <to>%x</to>\n") % to;
   buf+=fmt("  <from>%x</from>\n") % from;
-  buf+=fmt("  <tell>%x</from>\n") % text;
+  buf+=fmt("  <tell>%x</tell>\n") % text;
   buf+=fmt("</tellto>\n");
 
   return buf;

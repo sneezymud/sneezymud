@@ -91,7 +91,7 @@ class CommTest : public CxxTest::TestSuite
 		     fmt("<log>\n  <time>%i</time>\n  <type>Player I/O</type>\n  <msg>%s</msg>\n</log>\n") % time(0) % testString[1]);
   }
 
-  void testTellComm(){
+  void testTellFromComm(){
     TellFromComm comm("Deirdre", "Peel", fmt("%s, %s, %s") %
 		      testString[0] % testString[1] % testString[2], 
 		      true, false);
@@ -101,7 +101,20 @@ class CommTest : public CxxTest::TestSuite
     		     testString[0] % testString[1] % testString[2]);
     TS_ASSERT_EQUALS(comm.getComm(COMM_XML),
 		     fmt("<tellfrom>\n  <to>Deirdre</to>\n  <from>Peel</from>\n  <drunk>true</drunk>\n  <mob>false</mob>\n  <tell>%s, %s, %s</tell>\n</tellfrom>\n") % testString[0] % testString[1] % testString[2]);
+  }
+
+  void testTellToComm(){
+    TellToComm comm("Deirdre", "Peel", fmt("%s, %s, %s") %
+		    testString[0] % testString[1] % testString[2]);
+
+    TS_ASSERT_EQUALS(comm.getComm(COMM_TEXT),
+		     fmt("<G>You tell Deirdre<z>, \"%s, %s, %s\"\n\r") %
+    		     testString[0] % testString[1] % testString[2]);
+    TS_ASSERT_EQUALS(comm.getComm(COMM_XML),
+		     fmt("<tellto>\n  <to>Deirdre</to>\n  <from>Peel</from>\n  <tell>%s, %s, %s</tell>\n</tellto>\n") % testString[0] % testString[1] % testString[2]);
+
 
   }
+
 
 };
