@@ -1,11 +1,20 @@
 #include <cxxtest/TestSuite.h>
-
 #include "stdsneezy.h"
 #include "connect.h"
+#include "tests/ValueTraits.h"
+
 
 class CommTest : public CxxTest::TestSuite
 {
  public:
+  sstring testString[4];
+
+  void setUp(){
+    testString[0]="holding up my";
+    testString[1]="purring cat to the moon";
+    testString[2]="I sighed.";
+    testString[3]="C-C-C-C-C-Combo breaker!";
+  }
 
   void testOutputQ(){
     outputQ q;
@@ -20,24 +29,24 @@ class CommTest : public CxxTest::TestSuite
 
     // basic queue test
     {
-      q.putInQ(new UncategorizedComm("holding up my"));
-      q.putInQ(new UncategorizedComm("purring cat to the moon"));
-      q.putInQ(new UncategorizedComm("I sighed."));
+      q.putInQ(new UncategorizedComm(testString[0]));
+      q.putInQ(new UncategorizedComm(testString[1]));
+      q.putInQ(new UncategorizedComm(testString[2]));
       
       c=q.takeFromQ();
-      TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), (sstring)"holding up my");
+      TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), testString[0]);
       
       // stick something in out of order
-      q.putInQ(new UncategorizedComm("C-C-C-C-C-Combo breaker!"));
+      q.putInQ(new UncategorizedComm(testString[3]));
       
       c=q.takeFromQ();
-      TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), (sstring)"purring cat to the moon");
+      TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), testString[1]);
       
       c=q.takeFromQ();
-      TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), (sstring)"I sighed.");
+      TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), testString[2]);
       
       c=q.takeFromQ();
-      TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), (sstring)"C-C-C-C-C-Combo breaker!");
+      TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), testString[3]);
     }
 
     // queue should be empty now (after operations)
@@ -45,12 +54,12 @@ class CommTest : public CxxTest::TestSuite
 
     // check if clear() works
     {
-      q.putInQ(new UncategorizedComm("holding up my"));
-      q.putInQ(new UncategorizedComm("purring cat to the moon"));
-      q.putInQ(new UncategorizedComm("I sighed."));
+      q.putInQ(new UncategorizedComm(testString[0]));
+      q.putInQ(new UncategorizedComm(testString[1]));
+      q.putInQ(new UncategorizedComm(testString[2]));
       
       c=q.takeFromQ();
-      TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), (sstring)"holding up my");
+      TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), testString[0]);
       
       q.clear();
       TS_ASSERT(q.takeFromQ()==NULL);
@@ -60,25 +69,38 @@ class CommTest : public CxxTest::TestSuite
   }
 
   void testUncategorizedComm(){
-    UncategorizedComm comm("this is <r>a<1> test");
+    UncategorizedComm comm(testString[0]);
     
-    TS_ASSERT_EQUALS(comm.getComm(COMM_TEXT),
-		     (sstring)"this is <r>a<1> test");
+    TS_ASSERT_EQUALS(comm.getComm(COMM_TEXT), testString[0]);
 
   }
 
   void testColoredComm(){
-    UncategorizedComm comm(fmt("this is %sa%s test") % ANSI_RED % ANSI_NORMAL);
+    UncategorizedComm comm("this is <r>a<1> test");
 
     TS_ASSERT_EQUALS(comm.getComm(COMM_XML),
-		     (string)"<uncategorized>this is <font color=\"red\" />a<font color=\"norm\" /> test</uncategorized>");
+		     "<uncategorized>this is <font color=\"norm\" /><font color=\"red\" />a<font color=\"norm\" /> test</uncategorized>");
   }
 
   void testSystemLogComm(){
-    SystemLogComm comm(time(0), LOG_PIO, "Loading Oldman's equipment");
+    SystemLogComm comm(time(0), LOG_PIO, testString[1]);
 
     TS_ASSERT_EQUALS(comm.getComm(COMM_TEXT),
-		     (sstring)"// Player I/O: Loading Oldman's equipment\n\r");
+		     fmt("// Player I/O: %s\n\r") % testString[1]);
+    TS_ASSERT_EQUALS(comm.getComm(COMM_XML),
+		     fmt("<log>\n  <time>%i</time>\n  <type>Player I/O</type>\n  <msg>%s</msg>\n</log>\n") % time(0) % testString[1]);
+  }
+
+  void testTellComm(){
+    TellFromComm comm("Deirdre", "Peel", fmt("%s, %s, %s") %
+		      testString[0] % testString[1] % testString[2], 
+		      true, false);
+    
+    TS_ASSERT_EQUALS(comm.getComm(COMM_TEXT),
+		     fmt("<p>Peel<z> tells you, \"<c>%s, %s, %s<z>\"\n\r") %
+    		     testString[0] % testString[1] % testString[2]);
+    TS_ASSERT_EQUALS(comm.getComm(COMM_XML),
+		     fmt("<tellfrom>\n  <to>Deirdre</to>\n  <from>Peel</from>\n  <drunk>true</drunk>\n  <mob>false</mob>\n  <tell>%s, %s, %s</tell>\n</tellfrom>\n") % testString[0] % testString[1] % testString[2]);
 
   }
 
