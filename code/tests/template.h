@@ -1,6 +1,7 @@
 #include <cxxtest/TestSuite.h>
 
 #include "stdsneezy.h"
+#include "tests/ValueTraits.h"
 
 class template : public CxxTest::TestSuite
 {
