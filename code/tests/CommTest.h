@@ -53,18 +53,15 @@ class CommTest : public CxxTest::TestSuite
     TS_ASSERT(q.takeFromQ()==NULL);
 
     // check if clear() works
-    {
-      q.putInQ(new UncategorizedComm(testString[0]));
-      q.putInQ(new UncategorizedComm(testString[1]));
-      q.putInQ(new UncategorizedComm(testString[2]));
-      
-      c=q.takeFromQ();
-      TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), testString[0]);
-      
-      q.clear();
-      TS_ASSERT(q.takeFromQ()==NULL);
-    }
+    q.putInQ(new UncategorizedComm(testString[0]));
+    q.putInQ(new UncategorizedComm(testString[1]));
+    q.putInQ(new UncategorizedComm(testString[2]));
     
+    c=q.takeFromQ();
+    TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), testString[0]);
+    
+    q.clear();
+    TS_ASSERT(q.takeFromQ()==NULL);
 
   }
 
@@ -72,15 +69,27 @@ class CommTest : public CxxTest::TestSuite
     UncategorizedComm comm(testString[0]);
     
     TS_ASSERT_EQUALS(comm.getComm(COMM_TEXT), testString[0]);
-
+    TS_ASSERT_EQUALS(comm.getComm(COMM_XML), fmt("<uncategorized>%s</uncategorized>") % testString[0]);
   }
 
   void testColoredComm(){
     UncategorizedComm comm("this is <r>a<1> test");
 
+    TS_ASSERT_EQUALS(comm.getComm(COMM_TEXT),
+		     fmt("this is <r>a<1> test"));
     TS_ASSERT_EQUALS(comm.getComm(COMM_XML),
 		     "<uncategorized>this is <font color=\"norm\" /><font color=\"red\" />a<font color=\"norm\" /> test</uncategorized>");
   }
+
+  void testAnsiColoredComm(){
+    UncategorizedComm comm(fmt("this is %sa%s test") % ANSI_RED % ANSI_NORMAL);
+
+    TS_ASSERT_EQUALS(comm.getComm(COMM_TEXT),
+		     fmt("this is %sa%s test") % ANSI_RED % ANSI_NORMAL);
+    TS_ASSERT_EQUALS(comm.getComm(COMM_XML),
+		     "<uncategorized>this is <font color=\"red\" />a<font color=\"norm\" /> test</uncategorized>");
+  }
+
 
   void testSystemLogComm(){
     SystemLogComm comm(time(0), LOG_PIO, testString[1]);
@@ -112,7 +121,23 @@ class CommTest : public CxxTest::TestSuite
     		     testString[0] % testString[1] % testString[2]);
     TS_ASSERT_EQUALS(comm.getComm(COMM_XML),
 		     fmt("<tellto>\n  <to>Deirdre</to>\n  <from>Peel</from>\n  <tell>%s, %s, %s</tell>\n</tellto>\n") % testString[0] % testString[1] % testString[2]);
+  }
 
+  void testWhoListRemoveComm(){
+    WhoListComm comm("Peel", false, 60, 100, true, "The Freshmaker", "Peel keeps her warm but they never kiss.");
+
+    TS_ASSERT_EQUALS(comm.getComm(COMM_TEXT), "");
+    TS_ASSERT_EQUALS(comm.getComm(COMM_XML), 
+		     "<wholist>\n  <online>false</online>\n  <level>60</level>\n  <idle>100</idle>\n  <linkdead>true</linkdead>\n  <name>Peel</name>\n  <prof>The Freshmaker</prof>\n  <title>Peel keeps her warm but they never kiss.</title>\n</wholist>\n");
+
+  }
+
+  void testWhoListAddComm(){
+    WhoListComm comm("Peel", false, 60, 100, false, "The Freshmaker", "Peel keeps her warm but they never kiss.");
+
+    TS_ASSERT_EQUALS(comm.getComm(COMM_TEXT), "");
+    TS_ASSERT_EQUALS(comm.getComm(COMM_XML), 
+		     "<wholist>\n  <online>false</online>\n  <level>60</level>\n  <idle>100</idle>\n  <linkdead>false</linkdead>\n  <name>Peel</name>\n  <prof>The Freshmaker</prof>\n  <title>Peel keeps her warm but they never kiss.</title>\n</wholist>\n");
 
   }
 

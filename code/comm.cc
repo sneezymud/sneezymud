@@ -1628,20 +1628,15 @@ sstring UncategorizedComm::getXML(){
 }
 
 // WhoListComm
-WhoListComm::WhoListComm(const sstring &w, bool o, int l, int i, bool ld){
+WhoListComm::WhoListComm(const sstring &w, bool o, int l, int i, bool ld, 
+			 const sstring &p, const sstring &t){
   who=w;
   online=o;
   level=l;
   idle=i;
   linkdead=ld;
-}
-// shorter constructor for removals
-WhoListComm::WhoListComm(const sstring &w, bool o){
-  who=w;
-  online=o;
-  level=-1;
-  idle=-1;
-  linkdead=false;
+  prof=p;
+  title=t;
 }
 // CmdMsgComm
 CmdMsgComm::CmdMsgComm(const sstring &c, const sstring &t){
@@ -1663,7 +1658,8 @@ sstring CmdMsgComm::getXML(){
 
 
 // TellComm
-TellFromComm::TellFromComm(const sstring &tt, const sstring &f, const sstring &t, bool d, bool m){
+TellFromComm::TellFromComm(const sstring &tt, const sstring &f, 
+			   const sstring &t, bool d, bool m){
   to=tt;
   from=f;
   text=t;

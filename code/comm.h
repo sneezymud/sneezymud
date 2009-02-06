@@ -129,13 +129,14 @@ class UncategorizedComm : public Comm {
 
 class WhoListComm : public Comm {
  public:
-  WhoListComm(const sstring &, bool);
-  WhoListComm(const sstring &, bool, int, int, bool);
+  WhoListComm(const sstring &, bool, int, int, bool, const sstring &, const sstring &);
   sstring who;
   bool online;
   int level;
   int idle;
   bool linkdead;
+  sstring prof;
+  sstring title;
 
  private:
   virtual sstring getText();

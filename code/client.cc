@@ -1266,6 +1266,8 @@ sstring WhoListComm::getXML(){
   
   buf+=fmt("  <linkdead>%s</linkdead>\n") % (linkdead ? "true" : "false");
   buf+=fmt("  <name>%x</name>\n") % who;
+  buf+=fmt("  <prof>%x</prof>\n") % prof;
+  buf+=fmt("  <title>%x</title>\n") % title;
   buf+=fmt("</wholist>\n");
 
   return buf;
@@ -1275,11 +1277,26 @@ sstring WhoListComm::getXML(){
 void TBeing::fixClientPlayerLists(bool lost)
 {
   Descriptor *d;
+  sstring prof, title;
 
   for (d = descriptor_list; d; d = d->next) {
     if (d->character){
+      if(isImmortal())
+	prof=msgVariables(MSG_IMM_TITLE);
+      else
+	prof=getProfName();
+
+      title=parseTitle(d);
+
+
       // delete the entry first
-      d->output.putInQ(new WhoListComm(getName(), false));
+      if(d->character->isImmortal())
+	d->output.putInQ(new WhoListComm(getName(), false, GetMaxLevel(),
+					 getTimer(), isLinkdead(), prof, 
+					 title));
+      else 
+	d->output.putInQ(new WhoListComm(getName(), false, -1, -1, false, 
+					 prof, title));
 
       d->prompt_mode = -1;
 
@@ -1287,15 +1304,17 @@ void TBeing::fixClientPlayerLists(bool lost)
 	if(d->character->isImmortal()){
 	  // immortals get all info
 	  d->output.putInQ(new WhoListComm(getName(), true, GetMaxLevel(),
-					   getTimer(), isLinkdead()));
+					   getTimer(), isLinkdead(), prof,
+					   title));
 	} else {
 	  // mortals get filtered info
 	  if (d->character->canSeeWho(this)) {
 	    if (isPlayerAction(PLR_ANONYMOUS)){
-	      d->output.putInQ(new WhoListComm(getName(), true, -1, -1, false));
+	      d->output.putInQ(new WhoListComm(getName(), true, -1, -1, false,
+					       prof, title));
 	    } else {
 	      d->output.putInQ(new WhoListComm(getName(), true, GetMaxLevel(), 
-					       -1, false));
+					       -1, false, prof, title));
 	    }
 	  }
 	}
