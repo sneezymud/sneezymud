@@ -401,7 +401,7 @@ runner:
 	@echo Generating runner.
 	@tests/cxxtest/cxxtestgen.py -o tests/runner/runner.cpp --error-printer $(TESTS)
 	@echo Building runner.
-	@$(CC) -I. -Itests/cxxtest -o tests/runner/runner tests/runner/runner.cpp $(LIBS) $(LDFLAGS)
+	@$(CC) -g -I. -Itests/cxxtest -o tests/runner/runner tests/runner/runner.cpp $(LIBS) $(LDFLAGS)
 
 
 # low tool
