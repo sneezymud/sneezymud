@@ -1,67 +1,78 @@
 #include <cxxtest/TestSuite.h>
+#include "tests/ValueTraits.h"
 #include "stdsneezy.h"
 #include "connect.h"
-#include "tests/ValueTraits.h"
-
+#include "socket.h"
 
 class CommTest : public CxxTest::TestSuite
 {
  public:
   sstring testString[4];
+  TSocket *testSocket;
+  Descriptor *testDesc;
+  TPerson *testPerson;
 
   void setUp(){
     testString[0]="holding up my";
     testString[1]="purring cat to the moon";
     testString[2]="I sighed.";
     testString[3]="C-C-C-C-C-Combo breaker!";
+
+    // setup a fake socket.
+    testSocket=new TSocket();
+    testDesc=new Descriptor(testSocket);
+    testPerson=new TPerson(testDesc);
+  }
+
+  void tearDown(){
   }
 
   void testOutputQ(){
-    outputQ q;
+    //    outputQ q;
     Comm *c;
 
     // make sure the basic functions work on an empty queue
     {
-      TS_ASSERT(q.takeFromQ()==NULL);
-      TS_ASSERT(q.getBegin()==NULL);
-      TS_ASSERT(q.getEnd()==NULL);
+      TS_ASSERT(testPerson->desc->output.takeFromQ()==NULL);
+      TS_ASSERT(testPerson->desc->output.getBegin()==NULL);
+      TS_ASSERT(testPerson->desc->output.getEnd()==NULL);
     }
 
     // basic queue test
     {
-      q.putInQ(new UncategorizedComm(testString[0]));
-      q.putInQ(new UncategorizedComm(testString[1]));
-      q.putInQ(new UncategorizedComm(testString[2]));
+      testPerson->desc->output.putInQ(new UncategorizedComm(testString[0]));
+      testPerson->desc->output.putInQ(new UncategorizedComm(testString[1]));
+      testPerson->desc->output.putInQ(new UncategorizedComm(testString[2]));
       
-      c=q.takeFromQ();
+      c=testPerson->desc->output.takeFromQ();
       TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), testString[0]);
       
       // stick something in out of order
-      q.putInQ(new UncategorizedComm(testString[3]));
+      testPerson->desc->output.putInQ(new UncategorizedComm(testString[3]));
       
-      c=q.takeFromQ();
+      c=testPerson->desc->output.takeFromQ();
       TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), testString[1]);
       
-      c=q.takeFromQ();
+      c=testPerson->desc->output.takeFromQ();
       TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), testString[2]);
       
-      c=q.takeFromQ();
+      c=testPerson->desc->output.takeFromQ();
       TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), testString[3]);
     }
 
     // queue should be empty now (after operations)
-    TS_ASSERT(q.takeFromQ()==NULL);
+    TS_ASSERT(testPerson->desc->output.takeFromQ()==NULL);
 
     // check if clear() works
-    q.putInQ(new UncategorizedComm(testString[0]));
-    q.putInQ(new UncategorizedComm(testString[1]));
-    q.putInQ(new UncategorizedComm(testString[2]));
+    testPerson->desc->output.putInQ(new UncategorizedComm(testString[0]));
+    testPerson->desc->output.putInQ(new UncategorizedComm(testString[1]));
+    testPerson->desc->output.putInQ(new UncategorizedComm(testString[2]));
     
-    c=q.takeFromQ();
+    c=testPerson->desc->output.takeFromQ();
     TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), testString[0]);
     
-    q.clear();
-    TS_ASSERT(q.takeFromQ()==NULL);
+    testPerson->desc->output.clear();
+    TS_ASSERT(testPerson->desc->output.takeFromQ()==NULL);
 
   }
 
@@ -141,5 +152,39 @@ class CommTest : public CxxTest::TestSuite
 
   }
 
+  void testPagedOutput(){
+    Comm *c;
+    
+
+    testPerson->desc->output.putInQ(new UncategorizedComm(testString[0]));
+    testPerson->desc->output.putInQ(new UncategorizedComm(testString[1]));
+    testPerson->desc->output.putInQ(new UncategorizedComm(testString[2]));
+    
+    testSocket->port=PROD_XMLPORT; // makeOutputPaged checks this
+    testPerson->makeOutputPaged();
+
+    // for XML mode it shouldn't do anything
+    c=testPerson->desc->output.takeFromQ();
+    TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), testString[0]);
+    
+    c=testPerson->desc->output.takeFromQ();
+    TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), testString[1]);
+    
+    c=testPerson->desc->output.takeFromQ();
+    TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), testString[2]);
+
+
+    testPerson->desc->output.putInQ(new UncategorizedComm(testString[0]));
+    testPerson->desc->output.putInQ(new UncategorizedComm(testString[1]));
+    testPerson->desc->output.putInQ(new UncategorizedComm(testString[2]));
+
+    testSocket->port=PROD_GAMEPORT; // makeOutputPaged checks this
+    testPerson->makeOutputPaged();
+    
+    c=testPerson->desc->output.takeFromQ();
+    TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), fmt("%s%s%s") %
+		     testString[0] % testString[1] % testString[2]);
+
+  }
 
 };

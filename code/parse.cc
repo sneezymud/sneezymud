@@ -3395,18 +3395,13 @@ void TBeing::makeOutputPaged()
 
   sstring str;
   Comm *c;
-  commTypeT commtype;
-  
-  if(desc->m_bIsClient){
-    commtype=COMM_CLIENT;
-  } else if(desc->socket->port==PROD_XMLPORT){
-    commtype=COMM_XML;
-  } else {
-    commtype=COMM_TEXT;
-  }
+
+  // don't try to page xml
+  if(desc->socket->port==PROD_XMLPORT)
+    return;
 
   while(c=desc->output.takeFromQ()){
-    str += c->getComm(commtype);
+    str += c->getComm(COMM_TEXT);
     delete c;
   }
 
