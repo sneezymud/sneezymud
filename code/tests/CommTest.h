@@ -18,7 +18,6 @@ class CommTest : public CxxTest::TestSuite
     testString[2]="I sighed.";
     testString[3]="C-C-C-C-C-Combo breaker!";
 
-    // setup a fake socket.
     testSocket=new TSocket();
     testDesc=new Descriptor(testSocket);
     testPerson=new TPerson(testDesc);
@@ -77,84 +76,96 @@ class CommTest : public CxxTest::TestSuite
   }
 
   void testUncategorizedComm(){
-    UncategorizedComm comm(testString[0]);
-    
-    TS_ASSERT_EQUALS(comm.getComm(COMM_TEXT), testString[0]);
-    TS_ASSERT_EQUALS(comm.getComm(COMM_XML), fmt("<uncategorized>%s</uncategorized>") % testString[0]);
+    testPerson->desc->output.putInQ(new UncategorizedComm(testString[0]));
+    Comm *comm=testPerson->desc->output.takeFromQ();
+
+    TS_ASSERT_EQUALS(comm->getComm(COMM_TEXT), testString[0]);
+    TS_ASSERT_EQUALS(comm->getComm(COMM_XML), 
+		     fmt("<uncategorized>%s</uncategorized>") % testString[0]);
   }
 
   void testColoredComm(){
-    UncategorizedComm comm("this is <r>a<1> test");
+    testPerson->desc->output.putInQ(new UncategorizedComm("this is <r>a<1> test"));
+    Comm *comm=testPerson->desc->output.takeFromQ();
 
-    TS_ASSERT_EQUALS(comm.getComm(COMM_TEXT),
+    TS_ASSERT_EQUALS(comm->getComm(COMM_TEXT),
 		     fmt("this is <r>a<1> test"));
-    TS_ASSERT_EQUALS(comm.getComm(COMM_XML),
+    TS_ASSERT_EQUALS(comm->getComm(COMM_XML),
 		     "<uncategorized>this is <font color=\"norm\" /><font color=\"red\" />a<font color=\"norm\" /> test</uncategorized>");
   }
 
   void testAnsiColoredComm(){
-    UncategorizedComm comm(fmt("this is %sa%s test") % ANSI_RED % ANSI_NORMAL);
+    testPerson->desc->output.putInQ(new UncategorizedComm(fmt("this is %sa%s test") % ANSI_RED % ANSI_NORMAL));
+    Comm *comm=testPerson->desc->output.takeFromQ();
 
-    TS_ASSERT_EQUALS(comm.getComm(COMM_TEXT),
+    TS_ASSERT_EQUALS(comm->getComm(COMM_TEXT),
 		     fmt("this is %sa%s test") % ANSI_RED % ANSI_NORMAL);
-    TS_ASSERT_EQUALS(comm.getComm(COMM_XML),
+    TS_ASSERT_EQUALS(comm->getComm(COMM_XML),
 		     "<uncategorized>this is <font color=\"red\" />a<font color=\"norm\" /> test</uncategorized>");
   }
 
 
   void testSystemLogComm(){
-    SystemLogComm comm(time(0), LOG_PIO, testString[1]);
+    testPerson->desc->output.putInQ(new SystemLogComm(time(0), LOG_PIO, testString[1]));
+    Comm *comm=testPerson->desc->output.takeFromQ();
 
-    TS_ASSERT_EQUALS(comm.getComm(COMM_TEXT),
+    TS_ASSERT_EQUALS(comm->getComm(COMM_TEXT),
 		     fmt("// Player I/O: %s\n\r") % testString[1]);
-    TS_ASSERT_EQUALS(comm.getComm(COMM_XML),
+    TS_ASSERT_EQUALS(comm->getComm(COMM_XML),
 		     fmt("<log>\n  <time>%i</time>\n  <type>Player I/O</type>\n  <msg>%s</msg>\n</log>\n") % time(0) % testString[1]);
   }
 
   void testTellFromComm(){
-    TellFromComm comm("Deirdre", "Peel", fmt("%s, %s, %s") %
-		      testString[0] % testString[1] % testString[2], 
-		      true, false);
+    testPerson->desc->output.putInQ(new TellFromComm("Deirdre", "Peel",
+						     fmt("%s, %s, %s") %
+			    testString[0] % testString[1] % testString[2],
+						     true, false));
+    Comm *comm=testPerson->desc->output.takeFromQ();
     
-    TS_ASSERT_EQUALS(comm.getComm(COMM_TEXT),
+    TS_ASSERT_EQUALS(comm->getComm(COMM_TEXT),
 		     fmt("<p>Peel<z> tells you, \"<c>%s, %s, %s<z>\"\n\r") %
     		     testString[0] % testString[1] % testString[2]);
-    TS_ASSERT_EQUALS(comm.getComm(COMM_XML),
+    TS_ASSERT_EQUALS(comm->getComm(COMM_XML),
 		     fmt("<tellfrom>\n  <to>Deirdre</to>\n  <from>Peel</from>\n  <drunk>true</drunk>\n  <mob>false</mob>\n  <tell>%s, %s, %s</tell>\n</tellfrom>\n") % testString[0] % testString[1] % testString[2]);
   }
 
   void testTellToComm(){
-    TellToComm comm("Deirdre", "Peel", fmt("%s, %s, %s") %
-		    testString[0] % testString[1] % testString[2]);
+    testPerson->desc->output.putInQ(new TellToComm("Deirdre", "Peel",
+						   fmt("%s, %s, %s") %
+		       testString[0] % testString[1] % testString[2]));
+    Comm *comm=testPerson->desc->output.takeFromQ();
 
-    TS_ASSERT_EQUALS(comm.getComm(COMM_TEXT),
+    TS_ASSERT_EQUALS(comm->getComm(COMM_TEXT),
 		     fmt("<G>You tell Deirdre<z>, \"%s, %s, %s\"\n\r") %
     		     testString[0] % testString[1] % testString[2]);
-    TS_ASSERT_EQUALS(comm.getComm(COMM_XML),
+    TS_ASSERT_EQUALS(comm->getComm(COMM_XML),
 		     fmt("<tellto>\n  <to>Deirdre</to>\n  <from>Peel</from>\n  <tell>%s, %s, %s</tell>\n</tellto>\n") % testString[0] % testString[1] % testString[2]);
   }
 
   void testWhoListRemoveComm(){
-    WhoListComm comm("Peel", false, 60, 100, true, "The Freshmaker", "Peel keeps her warm but they never kiss.");
+    testPerson->desc->output.putInQ(new WhoListComm("Peel", false, 60, 100,
+	 true, "The Freshmaker", "Peel keeps her warm but they never kiss."));
+    Comm *comm=testPerson->desc->output.takeFromQ();
 
-    TS_ASSERT_EQUALS(comm.getComm(COMM_TEXT), "");
-    TS_ASSERT_EQUALS(comm.getComm(COMM_XML), 
+    TS_ASSERT_EQUALS(comm->getComm(COMM_TEXT), "");
+    TS_ASSERT_EQUALS(comm->getComm(COMM_XML), 
 		     "<wholist>\n  <online>false</online>\n  <level>60</level>\n  <idle>100</idle>\n  <linkdead>true</linkdead>\n  <name>Peel</name>\n  <prof>The Freshmaker</prof>\n  <title>Peel keeps her warm but they never kiss.</title>\n</wholist>\n");
 
   }
 
   void testWhoListAddComm(){
-    WhoListComm comm("Peel", false, 60, 100, false, "The Freshmaker", "Peel keeps her warm but they never kiss.");
+    testPerson->desc->output.putInQ(new WhoListComm("Peel", false, 60, 100,
+	false, "The Freshmaker", "Peel keeps her warm but they never kiss."));
+    Comm *comm=testPerson->desc->output.takeFromQ();
 
-    TS_ASSERT_EQUALS(comm.getComm(COMM_TEXT), "");
-    TS_ASSERT_EQUALS(comm.getComm(COMM_XML), 
+    TS_ASSERT_EQUALS(comm->getComm(COMM_TEXT), "");
+    TS_ASSERT_EQUALS(comm->getComm(COMM_XML), 
 		     "<wholist>\n  <online>false</online>\n  <level>60</level>\n  <idle>100</idle>\n  <linkdead>false</linkdead>\n  <name>Peel</name>\n  <prof>The Freshmaker</prof>\n  <title>Peel keeps her warm but they never kiss.</title>\n</wholist>\n");
 
   }
 
   void testPagedOutput(){
     Comm *c;
-    
 
     testPerson->desc->output.putInQ(new UncategorizedComm(testString[0]));
     testPerson->desc->output.putInQ(new UncategorizedComm(testString[1]));
