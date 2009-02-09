@@ -138,6 +138,14 @@ void zoneData::nukeMobs()
   }
 }
 
+void TBeing::sendTo(Comm *c) const 
+{
+  if (!desc)
+    return;
+
+  desc->output.putInQ(c);
+}
+
 void TBeing::sendTo(colorTypeT lev, const sstring &msg) const
 {
   if (!desc)

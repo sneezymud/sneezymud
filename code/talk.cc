@@ -685,8 +685,7 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
   int rc;
 
   if (isAffected(AFF_SILENT)) {
-    if(desc)
-      desc->output.putInQ(new CmdMsgComm("tell", "You can't make a sound!\n\r"));
+    sendTo(new CmdMsgComm("tell", "You can't make a sound!\n\r"));
     act("$n waves $s hands and points silently toward $s mouth.", TRUE, this, 0, 0, TO_ROOM);
     return FALSE;
   }
@@ -726,8 +725,7 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
     return FALSE;
   }
   if (this == vict) {
-    if(desc)
-      desc->output.putInQ(new CmdMsgComm("tell", "You try to tell yourself something.\n\r"));
+    sendTo(new CmdMsgComm("tell", "You try to tell yourself something.\n\r"));
     return FALSE;
   }
 
@@ -816,9 +814,7 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
 
   sstring garbedBuf, nameBuf;
 
-  if(desc)
-    desc->output.putInQ(new TellToComm(vict->getName(), capbuf.cap(), garbed));
-
+  sendTo(new TellToComm(vict->getName(), capbuf.cap(), garbed));
 
   Descriptor *d = vict->desc;
 
