@@ -1635,6 +1635,11 @@ sstring UncategorizedComm::getXML(){
   return fmt("<uncategorized>%x</uncategorized>") % text;
 }
 
+// RoomExitComm
+RoomExitComm::RoomExitComm(){
+}
+
+
 // WhoListComm
 WhoListComm::WhoListComm(const sstring &w, bool o, int l, int i, bool ld, 
 			 const sstring &p, const sstring &t){

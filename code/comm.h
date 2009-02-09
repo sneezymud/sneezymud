@@ -106,8 +106,9 @@ class Comm
 
   virtual ~Comm(){}
 
- protected:
   sstring text;
+
+ protected:
 
  private:
   virtual sstring getText() = 0;
@@ -224,11 +225,26 @@ class LoginComm : public Comm {
   virtual sstring getXML();
 };
 
+struct RoomExitData {
+  bool exit;
+  bool door;
+  bool open;
+};
+
+class RoomExitComm : public Comm {
+ public:
+  RoomExitComm();
+  RoomExitData exits[MAX_DIR];
+  
+ private:
+  virtual sstring getText();
+  virtual sstring getClientText();
+  virtual sstring getXML();
+};
+
 class PromptComm : public Comm {
  public:
   PromptComm(time_t, int, int, float, int, int, int, int, const sstring &);
-
- private:
   time_t time;
   int hp;
   int mana;
@@ -238,6 +254,7 @@ class PromptComm : public Comm {
   int money;
   int room;
 
+ private:
   virtual sstring getText();
   virtual sstring getClientText();
   virtual sstring getXML();

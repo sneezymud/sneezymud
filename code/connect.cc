@@ -2436,6 +2436,37 @@ sstring PromptComm::getXML(){
 }
 
 
+sstring RoomExitComm::getText(){
+  return "";
+}
+
+sstring RoomExitComm::getClientText(){
+  return "";
+}
+
+sstring RoomExitComm::getXML(){
+  sstring buf="";
+
+  buf+=fmt("<roomexits>\n");
+
+  for(dirTypeT dir=MIN_DIR;dir<MAX_DIR;dir++){
+    if(exits[dir].exit){
+      buf+=fmt("  <exit>\n");
+      buf+=fmt("    <direction>%s</direction>\n") % dirs[dir];
+      if(exits[dir].door){
+	buf+=fmt("    <door>\n");
+	buf+=fmt("      <open>%s</open>\n") % (exits[dir].open?"true":"false");
+	buf+=fmt("    </door>\n");
+      }
+      buf+=fmt("  </exit>\n");
+    }
+  }
+
+  buf+=fmt("</roomexits>\n");
+
+  return buf;
+}
+
 
 void setPrompts(fd_set out)
 {
@@ -2728,7 +2759,27 @@ void setPrompts(fd_set out)
 
             strcat(promptbuf, "> ");
 
-            d->output.putInQ(new PromptComm(ct, hp, mana, piety, lifeforce, moves, gold, room, promptbuf));
+	    RoomExitComm *comm=new RoomExitComm();
+	    roomDirData *exitData;
+
+	    for (dirTypeT door = MIN_DIR; door < MAX_DIR; door++) {
+	      if((exitData = ch->roomp->exitDir(door))){
+		comm->exits[door].exit=true;
+		if(exitData->door_type != DOOR_NONE)
+		  comm->exits[door].door=true;
+		else
+		  comm->exits[door].door=false;
+
+		comm->exits[door].open=!IS_SET(exitData->condition, EX_CLOSED);
+	      } else {
+		comm->exits[door].exit=false;
+	      }
+	    }
+	    
+
+            d->output.putInQ(new PromptComm(ct, hp, mana, piety, lifeforce,
+					    moves, gold, room, promptbuf));
+	    d->output.putInQ(comm);
           }
         }
       }

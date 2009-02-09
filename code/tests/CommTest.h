@@ -198,4 +198,37 @@ class CommTest : public CxxTest::TestSuite
 
   }
 
+
+  void testPromptComm(){
+    Comm *c;
+    PromptComm *pc=new PromptComm(time(0), 100, 100, 100, 100, 100, 100, 100, "prompt> ");
+
+    testPerson->sendTo(pc);
+
+    c=testPerson->desc->output.takeFromQ();
+
+    TS_ASSERT_EQUALS(c->getComm(COMM_XML), fmt("<prompt time=\"%i\" hp=\"100\" mana=\"100\" piety=\"100.000000\" lifeforce=\"100\" moves=\"100\" money=\"100\" room=\"100\">prompt&#62; </prompt>") % time(0));
+
+  }
+
+  void testRoomExitComm(){
+    Comm *c;
+    RoomExitComm *rec=new RoomExitComm();
+
+    for(dirTypeT dir=MIN_DIR;dir<MAX_DIR;dir++){
+      rec->exits[dir].exit=false;
+    }
+
+    rec->exits[DIR_NORTH].exit=true;
+    rec->exits[DIR_NORTH].open=true;
+
+    testPerson->sendTo(rec);
+    
+    c=testPerson->desc->output.takeFromQ();
+
+    TS_ASSERT_EQUALS(c->getComm(COMM_XML), "<roomexits>\n  <exit>\n    <direction>north</direction>\n    <door>\n      <open>true</open>\n    </door>\n  </exit>\n</roomexits>\n");
+    
+  }
+  
+
 };

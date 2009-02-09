@@ -372,11 +372,11 @@ void TBeing::rawOpenDoor(dirTypeT dir)
     }
     TThing *t;
     for (t = roomp->getStuff(); t; t = t->nextThing) {
-      if (t->desc && (t->desc->m_bIsClient || IS_SET(t->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
+      if (t->desc)
         t->desc->send_client_exits();
     }
     for (t = rp2->getStuff(); t; t = t->nextThing) {
-      if (t->desc && (t->desc->m_bIsClient || IS_SET(t->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
+      if (t->desc)
         t->desc->send_client_exits();
     }
   }
@@ -611,11 +611,11 @@ void TBeing::rawCloseDoor(dirTypeT dir)
     }
     TThing *t;
     for (t = roomp->getStuff(); t; t = t->nextThing) {
-      if (t->desc && (t->desc->m_bIsClient || IS_SET(t->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
+      if (t->desc)
         t->desc->send_client_exits();
     }
     for (t = rp2->getStuff(); t; t = t->nextThing) {
-      if (t->desc && (t->desc->m_bIsClient || IS_SET(t->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
+      if (t->desc)
         t->desc->send_client_exits();
     }
   }

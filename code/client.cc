@@ -213,17 +213,32 @@ void Descriptor::send_client_exits()
       cbits = 0;
   roomDirData *exitdata;
   dirTypeT door;
+  RoomExitComm *comm=new RoomExitComm();
 
   if (!(ch = character))
     return;
 
   for (door = MIN_DIR; door < MAX_DIR; door++) {
-    if ((exitdata = ch->exitDir(door)))
+    if ((exitdata = ch->exitDir(door))){
       if ((exitdata->to_room != ROOM_NOWHERE) && (!(exitdata->condition & EX_CLOSED) || ch->isImmortal()))
         SET_BIT(bits, (1 << door));
       else
         SET_BIT(cbits, (1 << door));
+
+      
+      comm->exits[door].exit=true;
+      if(exitdata->door_type != DOOR_NONE)
+	comm->exits[door].door=true;
+      else
+	comm->exits[door].door=false;
+      
+      comm->exits[door].open=!IS_SET(exitdata->condition, EX_CLOSED);
+    } else {
+      comm->exits[door].exit=false;
+    }
   }
+
+  ch->sendTo(comm);
 
   if (m_bIsClient)
     clientf(fmt("%d|%d|%d") % CLIENT_EXITS % bits % ch->isImmortal());
