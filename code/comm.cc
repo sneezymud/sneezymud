@@ -1717,3 +1717,15 @@ PromptComm::PromptComm(time_t t, int h, int m, float p, int l, int mv, int g, in
   room=r;
   text=txt;
 }
+
+// SoundComm
+SoundComm::SoundComm(const sstring &st, const sstring &u, const sstring &s, const sstring &t, int v, int p, int r, int c){
+  soundtype=st;
+  url=u;
+  text=s;
+  type=t;
+  volume=v;
+  priority=p;
+  repeats=r;
+  cont=c;
+}

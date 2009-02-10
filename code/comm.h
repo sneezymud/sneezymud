@@ -127,6 +127,24 @@ class UncategorizedComm : public Comm {
   virtual sstring getXML();
 };
 
+class SoundComm : public Comm {
+ public:
+  SoundComm(const sstring &, const sstring &, const sstring &, const sstring &, int, int, int, int);
+
+ private:
+  sstring soundtype;
+  int volume;
+  int priority;
+  int cont;
+  int repeats;
+  sstring type;
+  sstring url;
+
+  virtual sstring getText();
+  virtual sstring getClientText();
+  virtual sstring getXML();
+};
+
 
 class WhoListComm : public Comm {
  public:

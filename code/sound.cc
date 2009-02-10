@@ -193,8 +193,8 @@ void TBeing::stopmusic()
       // the U= command for MSP is supposed to set a default download
       // directory, so it oonly needs to be sent once, prior to all downloads
       // we will send a stopsound() when they enable MSP
-      sstring url = "http://sneezy.saw.net/sounds/";
-      sendTo(fmt("!!MUSIC(Off U=%s)\n\r") % url);
+      sendTo(new SoundComm("music", "Off", "http://sneezymud.com/sounds/",
+			   "", -1, -1, -1, -1));
     }
   }
 }
@@ -221,23 +221,10 @@ void TBeing::playmusic(musicNumT music, const sstring &type, int vol, int cont, 
       // the U is only needed the first time, hence I put it in stopmusic()
       // the other options should only get sent if they differ from the
       // defaults (to lessen spam)
-      sstring argString = "";
-      char buf[160];
-      if (vol != 100) {
-        sprintf(buf, " V=%d", vol);
-        argString += buf;
-      }
-      if (cont != 1) {
-        sprintf(buf, " C=%d", cont);
-        argString += buf;
-      }
-      if (loop != 1) {
-        sprintf(buf, " L=%d", loop);
-        argString += buf;
-      }
-      sendTo(fmt("!!MUSIC(%s T=%s%s)\n\r") %
-            musicStruct[music] % 
-            type % argString);
+
+      sendTo(new SoundComm("music", "", musicStruct[music], type,
+			   vol, -1, loop, cont));
+      
     }
   }
 }
@@ -249,8 +236,8 @@ void TBeing::stopsound()
       // the U= command for MSP is supposed to set a default download
       // directory, so it oonly needs to be sent once, prior to all downloads
       // we will send a stopsound() when they enable MSP
-      sstring url = "http://sneezy.saw.net/sounds/";
-      sendTo(fmt("!!SOUND(Off U=%s)\n\r") % url);
+      sendTo(new SoundComm("sound", "http://sneezymud.com/sounds/", "Off", 
+			   "", -1,-1,-1, -1));
     }
   }
 }
@@ -465,24 +452,72 @@ void TBeing::playsound(soundNumT sound, const sstring &type, int vol, int prior,
       // with other text and missed by the client interpreter - Russ 061299
       desc->outputProcessing();
 
-      sstring argString = "";
-      char buf[160];
-      if (vol != 100) {
-        sprintf(buf, " V=%d", vol);
-        argString += buf;
-      }
-      if (prior != 50) {
-        sprintf(buf, " P=%d", prior);
-        argString += buf;
-      }
-      if (loop != 1) {
-        sprintf(buf, " L=%d", loop);
-        argString += buf;
-      }
-      sendTo(fmt("!!SOUND(%s T=%s%s)\n\r") %
-            soundStruct[sound] % 
-            type % argString);
+      sendTo(new SoundComm("sound", "", soundStruct[sound], type,
+			   vol, prior, loop, -1));
     }
   }
+}
+
+sstring SoundComm::getXML(){
+  sstring buf="";
+
+  buf+=fmt("<sound type=\"%s\">\n") % soundtype;
+
+  buf+=fmt("  <file>%s</file>\n") % text;
+
+  if(type!="")
+    buf+=fmt("  <type>%s</type>\n") % type;
+
+  if(url!="")
+    buf+=fmt("  <url>%s</url>\n") % url;
+
+  if(volume!=-1)
+    buf+=fmt("  <volume>%i</volume>\n") % volume;
+
+  if(priority!=-1)
+    buf+=fmt("  <priority>%i</priority>\n") % priority;
+
+  if(cont!=-1)
+    buf+=fmt("  <continue>%i</continue>\n") % (cont?"true":"false");
+
+  if(repeats!=-1)
+    buf+=fmt("  <loop>%i</loop>\n") % repeats;
+
+  buf+=fmt("</sound>\n");
+
+  return buf;
+}
+
+sstring SoundComm::getText(){
+  sstring buf="";
+
+  buf+=fmt("!!%s(%s") % soundtype.upper()% text;
+  
+  if(type!="")
+    buf+=fmt(" T=%s") % type;
+
+  if(url!="")
+    buf+=fmt(" U=%s") % url;
+
+  if(volume!=-1)
+    buf+=fmt(" V=%i") % volume;
+
+  if(priority!=-1)
+    buf+=fmt(" P=%i") % priority;
+
+  if(repeats!=-1)
+    buf+=fmt(" L=%i") % repeats;
+
+  if(cont!=-1)
+    buf+=fmt(" C=%i") % cont;
+
+
+  buf+=fmt(")\n\r");
+
+  return buf;
+}
+
+sstring SoundComm::getClientText(){
+  return getText();
 }
 

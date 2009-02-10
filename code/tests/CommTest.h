@@ -229,6 +229,25 @@ class CommTest : public CxxTest::TestSuite
     TS_ASSERT_EQUALS(c->getComm(COMM_XML), "<roomexits>\n  <exit>\n    <direction>north</direction>\n    <door>\n      <open>true</open>\n    </door>\n  </exit>\n</roomexits>\n");
     
   }
+
+  void testSoundComm(){
+    Comm *c;
+    SoundComm *sound=new SoundComm("sound", "", "cackle.wav", "socials", -1, -1, -1, -1);
+
+    testPerson->sendTo(sound);
+    c=testPerson->desc->output.takeFromQ();
+
+    TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), "!!SOUND(cackle.wav T=socials)\n\r");
+    TS_ASSERT_EQUALS(c->getComm(COMM_XML), "<sound type=\"sound\">\n  <file>cackle.wav</file>\n  <type>socials</type>\n</sound>\n");
+
+    sound=new SoundComm("sound", "http://sneezymud.com/sounds/", "Off", "", -1,-1,-1, -1);
+    testPerson->sendTo(sound);
+    c=testPerson->desc->output.takeFromQ();
+
+    TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), "!!SOUND(Off U=http://sneezymud.com/sounds/)\n\r");
+    TS_ASSERT_EQUALS(c->getComm(COMM_XML), "<sound type=\"sound\">\n  <file>Off</file>\n  <url>http://sneezymud.com/sounds/</url>\n</sound>\n");
+
+  }
   
 
 };
