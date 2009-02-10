@@ -222,7 +222,7 @@ void Descriptor::send_client_exits()
     if ((exitdata = ch->exitDir(door))){
       if ((exitdata->to_room != ROOM_NOWHERE) && (!(exitdata->condition & EX_CLOSED) || ch->isImmortal()))
         SET_BIT(bits, (1 << door));
-      else
+      else if(!(exitdata->condition & EX_SECRET))
         SET_BIT(cbits, (1 << door));
 
       

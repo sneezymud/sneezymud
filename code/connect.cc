@@ -2763,7 +2763,9 @@ void setPrompts(fd_set out)
 	    roomDirData *exitData;
 
 	    for (dirTypeT door = MIN_DIR; door < MAX_DIR; door++) {
-	      if((exitData = ch->roomp->exitDir(door))){
+	      if((exitData = ch->roomp->exitDir(door)) &&
+		 (!IS_SET(exitData->condition, EX_SECRET) ||
+		  !IS_SET(exitData->condition, EX_CLOSED))){
 		comm->exits[door].exit=true;
 		if(exitData->door_type != DOOR_NONE)
 		  comm->exits[door].door=true;
