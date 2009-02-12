@@ -1163,6 +1163,7 @@ int Descriptor::nanny(sstring arg)
 	  tmp_ch->loadDrugStats();
 	  tmp_ch->loadGuildStats();
 	  tmp_ch->loadTitle();
+	  tmp_ch->stopsound();
           if (tmp_ch->getHit() < 0) 
             dynamic_cast<TPerson *>(tmp_ch)->autoDeath();
           
@@ -1291,6 +1292,7 @@ int Descriptor::nanny(sstring arg)
               tmp_ch->loadDrugStats();
 	      tmp_ch->loadGuildStats();
 	      tmp_ch->loadTitle();
+	      tmp_ch->stopsound();
               if (tmp_ch->getHit() < 0) 
                 dynamic_cast<TPerson *>(tmp_ch)->autoDeath();
               
