@@ -1546,6 +1546,8 @@ int TPerson::genericLoadPC()
   loadGuildStats();
   loadTitle();
 
+  stopsound();
+
   stats.logins++;
   save_game_stats();
  
