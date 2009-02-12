@@ -1,5 +1,6 @@
 #include "stdsneezy.h"
 #include <mysql/mysql.h>
+#include <boost/regex.hpp>
 
 sstring fmt::doFormat(const sstring &fmt, const char *x)
 {
@@ -17,73 +18,105 @@ sstring fmt::doFormat(const sstring &fmt, const char *x)
     fmtq[1]='s';
     sstring oBuf=x;
 
-    // escaping of <<
-    oBuf.inlineReplaceString("<<", "&#60;");
-
     // process mud color codes
-    oBuf.inlineReplaceString("<h>", MUD_NAME);
-    oBuf.inlineReplaceString("<H>", MUD_NAME_VERS);
-    oBuf.inlineReplaceString("<R>", ANSI_RED_BOLD);
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<h>"), 
+		       ("$1"+(sstring)MUD_NAME));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<H>"), 
+		       ("$1"+(sstring)MUD_NAME_VERS));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<R>"), 
+		       ("$1"+(sstring)ANSI_RED_BOLD));
 
-    oBuf.inlineReplaceString("<r>",
-			     (sstring)(ANSI_NORMAL)+(sstring)(ANSI_RED));
-    oBuf.inlineReplaceString("<G>", ANSI_GREEN_BOLD);
-    oBuf.inlineReplaceString("<g>", 
-			     (sstring)(ANSI_NORMAL)+(sstring)(ANSI_GREEN));
-    oBuf.inlineReplaceString("<y>", ANSI_ORANGE_BOLD);
-    oBuf.inlineReplaceString("<Y>", ANSI_ORANGE_BOLD);
-    oBuf.inlineReplaceString("<o>", 
-			     (sstring)(ANSI_NORMAL)+(sstring)(ANSI_ORANGE));
-    oBuf.inlineReplaceString("<O>", 
-			     (sstring)(ANSI_NORMAL)+(sstring)(ANSI_ORANGE));
-    oBuf.inlineReplaceString("<B>", ANSI_BLUE_BOLD);
-    oBuf.inlineReplaceString("<b>", 
-			     (sstring)(ANSI_NORMAL)+(sstring)(ANSI_BLUE));
-    oBuf.inlineReplaceString("<P>", ANSI_PURPLE_BOLD);
-    oBuf.inlineReplaceString("<p>", 
-			     (sstring)(ANSI_NORMAL)+(sstring)(ANSI_PURPLE));
-    oBuf.inlineReplaceString("<C>", ANSI_CYAN_BOLD);
-    oBuf.inlineReplaceString("<c>", 
-			     (sstring)(ANSI_NORMAL)+(sstring)(ANSI_CYAN));
-    oBuf.inlineReplaceString("<W>", ANSI_WHITE_BOLD);
-    oBuf.inlineReplaceString("<w>", 
-			     (sstring)(ANSI_NORMAL)+(sstring)(ANSI_WHITE));
-    oBuf.inlineReplaceString("<k>", 
-			     (sstring)(VT_BOLDTEX)+(sstring)(ANSI_BLACK));
-    oBuf.inlineReplaceString("<K>", 
-			     (sstring)(ANSI_NORMAL)+(sstring)(ANSI_BLACK));
-    oBuf.inlineReplaceString("<A>", 
-			     (sstring)(VT_BOLDTEX)+(sstring)(ANSI_UNDER));
-    oBuf.inlineReplaceString("<a>", ANSI_UNDER);
-    oBuf.inlineReplaceString("<D>", VT_BOLDTEX);
-    oBuf.inlineReplaceString("<d>", VT_BOLDTEX);
-    oBuf.inlineReplaceString("<F>", ANSI_FLASH);
-    oBuf.inlineReplaceString("<f>", ANSI_FLASH);
-    oBuf.inlineReplaceString("<i>", VT_INVERTT);
-    oBuf.inlineReplaceString("<I>", VT_INVERTT);
-    oBuf.inlineReplaceString("<e>", ANSI_BK_ON_WH);
-    oBuf.inlineReplaceString("<E>", ANSI_BK_ON_WH);
-    oBuf.inlineReplaceString("<j>", ANSI_BK_ON_BK);
-    oBuf.inlineReplaceString("<J>", ANSI_BK_ON_BK);
-    oBuf.inlineReplaceString("<l>", ANSI_WH_ON_RD);
-    oBuf.inlineReplaceString("<L>", ANSI_WH_ON_RD);
-    oBuf.inlineReplaceString("<q>", ANSI_WH_ON_GR);
-    oBuf.inlineReplaceString("<Q>", ANSI_WH_ON_GR);
-    oBuf.inlineReplaceString("<t>", ANSI_WH_ON_OR);
-    oBuf.inlineReplaceString("<T>", ANSI_WH_ON_OR);
-    oBuf.inlineReplaceString("<u>", ANSI_WH_ON_BL);
-    oBuf.inlineReplaceString("<U>", ANSI_WH_ON_BL);
-    oBuf.inlineReplaceString("<v>", ANSI_WH_ON_PR);
-    oBuf.inlineReplaceString("<V>", ANSI_WH_ON_PR);
-    oBuf.inlineReplaceString("<x>", ANSI_WH_ON_CY);
-    oBuf.inlineReplaceString("<X>", ANSI_WH_ON_CY);
-    oBuf.inlineReplaceString("<z>", ANSI_NORMAL);
-    oBuf.inlineReplaceString("<Z>", ANSI_NORMAL);
-    oBuf.inlineReplaceString("<1>", ANSI_NORMAL);    
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<r>"), 
+		       ("$1"+(sstring)(ANSI_NORMAL)+(sstring)(ANSI_RED)));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<G>"), 
+		       ("$1"+(sstring)ANSI_GREEN_BOLD));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<g>"), 
+		       ("$1"+(string)(ANSI_NORMAL)+(sstring)(ANSI_GREEN)));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<y>"), 
+		       ("$1"+(sstring)ANSI_ORANGE_BOLD));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<Y>"), 
+		       ("$1"+(sstring)ANSI_ORANGE_BOLD));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<o>"), 
+		       ("$1"+(sstring)(ANSI_NORMAL)+(sstring)(ANSI_ORANGE)));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<O>"), 
+		       ("$1"+(sstring)(ANSI_NORMAL)+(sstring)(ANSI_ORANGE)));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<B>"), 
+		       ("$1"+(sstring)ANSI_BLUE_BOLD));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<b>"), 
+		       ("$1"+(sstring)(ANSI_NORMAL)+(sstring)(ANSI_BLUE)));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<P>"), 
+		       ("$1"+(sstring)ANSI_PURPLE_BOLD));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<p>"), 
+		       ("$1"+(sstring)(ANSI_NORMAL)+(sstring)(ANSI_PURPLE)));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<C>"), 
+		       ("$1"+(sstring)ANSI_CYAN_BOLD));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<c>"), 
+		       ("$1"+(sstring)(ANSI_NORMAL)+(sstring)(ANSI_CYAN)));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<W>"), 
+		       ("$1"+(sstring)ANSI_WHITE_BOLD));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<w>"), 
+		       ("$1"+(sstring)(ANSI_NORMAL)+(sstring)(ANSI_WHITE)));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<k>"), 
+		       ("$1"+(sstring)(VT_BOLDTEX)+(sstring)(ANSI_BLACK)));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<K>"), 
+		       ("$1"+(sstring)(ANSI_NORMAL)+(sstring)(ANSI_BLACK)));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<A>"), 
+		       ("$1"+(sstring)(VT_BOLDTEX)+(sstring)(ANSI_UNDER)));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<a>"), 
+		       ("$1"+(sstring)ANSI_UNDER));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<D>"), 
+		       ("$1"+(sstring)VT_BOLDTEX));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<d>"), 
+		       ("$1"+(sstring)VT_BOLDTEX));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<F>"), 
+		       ("$1"+(sstring)ANSI_FLASH));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<f>"), 
+		       ("$1"+(sstring)ANSI_FLASH));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<i>"), 
+		       ("$1"+(sstring)VT_INVERTT));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<I>"), 
+		       ("$1"+(sstring)VT_INVERTT));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<e>"), 
+		       ("$1"+(sstring)ANSI_BK_ON_WH));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<E>"), 
+		       ("$1"+(sstring)ANSI_BK_ON_WH));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<j>"), 
+		       ("$1"+(sstring)ANSI_BK_ON_BK));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<J>"), 
+		       ("$1"+(sstring)ANSI_BK_ON_BK));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<l>"), 
+		       ("$1"+(sstring)ANSI_WH_ON_RD));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<L>"), 
+		       ("$1"+(sstring)ANSI_WH_ON_RD));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<q>"), 
+		       ("$1"+(sstring)ANSI_WH_ON_GR));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<Q>"), 
+		       ("$1"+(sstring)ANSI_WH_ON_GR));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<t>"), 
+		       ("$1"+(sstring)ANSI_WH_ON_OR));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<T>"), 
+		       ("$1"+(sstring)ANSI_WH_ON_OR));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<u>"), 
+		       ("$1"+(sstring)ANSI_WH_ON_BL));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<U>"), 
+		       ("$1"+(sstring)ANSI_WH_ON_BL));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<v>"), 
+		       ("$1"+(sstring)ANSI_WH_ON_PR));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<V>"), 
+		       ("$1"+(sstring)ANSI_WH_ON_PR));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<x>"), 
+		       ("$1"+(sstring)ANSI_WH_ON_CY));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<X>"), 
+		       ("$1"+(sstring)ANSI_WH_ON_CY));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<z>"), 
+		       ("$1"+(sstring)ANSI_NORMAL));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<Z>"), 
+		       ("$1"+(sstring)ANSI_NORMAL));
+    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<1>"), 
+		       ("$1"+(sstring)ANSI_NORMAL));    
+
+    oBuf.inlineReplaceString("<<", "<");
     
-    // unescape << and translate to single bracket (so it isn't double escaped)
-    oBuf.inlineReplaceString("&#60;", "<");
-
     // escape for xml
     oBuf.inlineReplaceString("&", "&#38;");
     oBuf.inlineReplaceString("<", "&#60;");

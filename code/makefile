@@ -125,6 +125,8 @@ LDFLAGS += -L/usr/local/lib
 LDFLAGS += -lmysqlclient
 
 LDFLAGS +=-lares
+
+LDFLAGS += -lboost_regex
 ###############################################################################
 ##                        Actual Compiling Starts Here                       ##
 ###############################################################################
