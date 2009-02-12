@@ -17,6 +17,9 @@ sstring fmt::doFormat(const sstring &fmt, const char *x)
     fmtq[1]='s';
     sstring oBuf=x;
 
+    // escaping of <<
+    oBuf.inlineReplaceString("<<", "&#60;");
+
     // process mud color codes
     oBuf.inlineReplaceString("<h>", MUD_NAME);
     oBuf.inlineReplaceString("<H>", MUD_NAME_VERS);
@@ -78,6 +81,8 @@ sstring fmt::doFormat(const sstring &fmt, const char *x)
     oBuf.inlineReplaceString("<Z>", ANSI_NORMAL);
     oBuf.inlineReplaceString("<1>", ANSI_NORMAL);    
     
+    // unescape << and translate to single bracket (so it isn't double escaped)
+    oBuf.inlineReplaceString("&#60;", "<");
 
     // escape for xml
     oBuf.inlineReplaceString("&", "&#38;");
