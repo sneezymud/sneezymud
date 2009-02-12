@@ -3802,13 +3802,13 @@ int Descriptor::doAccountMenu(const char *arg)
       } else {
         char buf[256];
 
-        writeToQ("<C>onnect an existing character       <A>dd a new character\n\r");
-        writeToQ("<D>elete account or character         <M>essage of the day\n\r");
-        sprintf(buf, "<N>ews of %-25.25s   <F>inger an account\n\r", MUD_NAME);
+        writeToQ("<<C>onnect an existing character       <<A>dd a new character\n\r");
+        writeToQ("<<D>elete account or character         <<M>essage of the day\n\r");
+        sprintf(buf, "<<N>ews of %-25.25s   <<F>inger an account\n\r", MUD_NAME);
         writeToQ(buf);
-        writeToQ("<W>ho is in the game                  <P>assword change\n\r");
-        writeToQ("<L>ist characters in account          <H>elp\n\r");
-        sprintf(buf, "<E>xit %s\n\r", MUD_NAME);
+        writeToQ("<<W>ho is in the game                  <<P>assword change\n\r");
+        writeToQ("<<L>ist characters in account          <<H>elp\n\r");
+        sprintf(buf, "<<E>xit %s\n\r", MUD_NAME);
         writeToQ(buf);
         writeToQ("\n\r-> ");
       }
