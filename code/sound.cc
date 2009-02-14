@@ -193,7 +193,7 @@ void TBeing::stopmusic()
       // the U= command for MSP is supposed to set a default download
       // directory, so it oonly needs to be sent once, prior to all downloads
       // we will send a stopsound() when they enable MSP
-      sendTo(new SoundComm("music", "Off", "http://sneezymud.com/sounds/",
+      sendTo(new SoundComm("music", "http://sneezymud.com/sounds/", "Off",
 			   "", -1, -1, -1, -1));
     }
   }
@@ -207,9 +207,9 @@ void TBeing::playmusic(musicNumT music, const sstring &type, int vol, int cont, 
 {
   const sstring musicStruct[MAX_MUSIC_NUM] = {
     "Off",
-    "combat_01.mid",
-    "combat_02.mid",
-    "combat_03.mid",
+    "combat_01",
+    "combat_02",
+    "combat_03",
   };
 
   if (desc) {
