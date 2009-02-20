@@ -95,6 +95,7 @@ D 0 4662 0 1         Warehouse -> Loading Dock
 D 0 4668 2 1         Warehouse Road -> New Warehouse
 D 0 4669 4 2         Warehouse -> Warehouse Loft
 D 0 4677 0 1         New Warehouse -> Warehouse Road
+D 0 4507 4 2         Jem and Perry's Self Defense Studio -> A Simple Apartment - Cronus Apartment
 O 0 4500 1 4496       a bed
 O 0 4499 1 4497       a bed of nails
 O 0 4500 1 4498       a bed
