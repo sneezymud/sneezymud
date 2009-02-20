@@ -7,6 +7,7 @@ D 0 16702 5 2        Gon's House -> Barracks
 D 0 16710 1 2        TheSaint's Door -> Gon's House
 D 0 16705 5 2        Raven's Nest -> Above a Treetop
 D 0 16708 5 2        Unfinished Bungalow On Stilts -> The Grimhaven City Dump
+D 0 16711 5 2        A Simple Apartment -> Jem and Perry's Self Defense Studio
 
 * Sage's house in Grimhaven, above Tanni's
 O 0 16703 1 16700       a bright blue portal
@@ -146,6 +147,16 @@ O 0 16718 1 16709      a curio cabinet
 O 0 16757 1 16709      a metal weapons rack
 O 0 16719 1 16709      a metal wastebasket
 
+*Cronus's house above Self Defense Studio outside east gate
+O 0 1200 1 16711        a lamp light_10
+O 0 9058 1 16711        a stiff bed
+O 0 21 1 16711          a couch
+O 0 16730 3 16711       a solid wooden chest
+O 0 16757 1 16711       a metal weapons rack
+O 0 16717 1 16711       a magic dispenser
+O 0 16718 1 16711       a shiny curio cabinet
+O 0 16715 1 16711       a medicine cabinet
+
 ***********
 * Butlers *
 ***********
@@ -166,3 +177,5 @@ M 0 16705 1 16708       a greasy garbageman
 M 0 16706 1 16709       Duncan
 
 S
+
+*I put Cronus slacker butler in zonefile 0 with mob vnum of 16707
