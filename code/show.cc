@@ -94,9 +94,8 @@ void TObj::show_me_to_char(TBeing *ch, showModeT mode) const
   } else if (mode == SHOW_MODE_TYPE) {
     showMe(ch);
     return;
-  } else 
-    buffer[0] = '\0';// we need this before we start doing strcat
-  
+  }  
+
   // this is an item-type-specific modifier
   buffer += showModifier(mode, ch);
 
