@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include "stdsneezy.h"
 #include "sstring.h"
 #include "format.h"
@@ -7,7 +8,7 @@
 const sstring sstring::comify() const
 {
   sstring tString=*this;
-  int  strCount, charIndex = 0;
+  unsigned int  strCount, charIndex = 0;
 
   tString=fmt("%.0f") % convertTo<float>(*this);
   strCount = tString.length();
@@ -24,7 +25,7 @@ const sstring sstring::comify() const
     tString += (*this)[charIndex];
   }
 
-  for (; (*this)[charIndex]; charIndex++)
+  for (; charIndex != this->length(); charIndex++)
     tString += (*this)[charIndex];
 
   return tString;
@@ -213,10 +214,32 @@ const sstring sstring::replaceString(sstring find, sstring replace) const
   return str;
 }
 
+
+const char *sstring::c_str() const
+{
+  // we say greater than here, because a string might have nulls in it, which
+  // cause strlen to come up short. we're only interested if std::string::c_str
+  // gives us a too-long string.
+  if(strlen(string::c_str()) > length())
+    throw std::runtime_error(fmt("corruption in sstring::c_str"));
+
+  return string::c_str();
+}
+
 const sstring & sstring::operator=(fmt &a)
 {
   this->assign(a);
   return *this;
+}
+
+const char & sstring::operator[](unsigned int i) const
+{
+    return this->at(i);
+}
+
+char & sstring::operator[](unsigned int i)
+{
+    return this->at(i);
 }
 
 // removes leading and trailing whitespace

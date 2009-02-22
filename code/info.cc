@@ -547,7 +547,7 @@ sstring TBeing::dynColorRoom(TRoom * rp, int title, bool) const
 //  }
 
   int len, letter;
-  sstring argument, buf2, buf3;
+  sstring argument, buf2="   ", buf3="   ";
 
   if (title == 1) {
     if (rp->getName()) {

@@ -972,7 +972,7 @@ int Descriptor::nanny(sstring arg)
   int rc;//, which;
   TRoom *rp;
   sstring aw = arg.word(0); // first word of argument, space delimited
-  char ac = aw[0];
+  char ac = ((aw.length() >= 1) ? aw[0] : '\0');
 
   switch (connected) {
     case CON_CONN:

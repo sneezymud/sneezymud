@@ -3,7 +3,6 @@
 
 class fmt;
 
-
 class sstring : public string {
 public:
   // constructors
@@ -12,6 +11,10 @@ public:
   sstring(const string &str) : string(str) {}
 
   const sstring & operator=(fmt &a);
+  char &operator[](unsigned int i);
+  const char &operator[](unsigned int i) const;
+
+  const char *c_str() const;
 
   // these functions return modified copies of the string
   const sstring toCRLF() const;
