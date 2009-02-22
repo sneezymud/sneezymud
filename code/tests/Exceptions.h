@@ -36,6 +36,10 @@ class Exceptions : public CxxTest::TestSuite
 
     TS_ASSERT_THROWS_NOTHING(foo.toCRLF());
 
-  }
+    foo="xxx\n";
 
+    TS_ASSERT_THROWS_NOTHING(foo.toCRLF());
+
+
+  }
 };

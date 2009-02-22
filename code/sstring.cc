@@ -45,7 +45,7 @@ const sstring sstring::toCRLF() const
   for (unsigned int loc=0; loc < len; ++loc){
     dosstr += (*this)[loc];
     if (loc>0 && (*this)[loc] == '\n' && (*this)[loc-1] != '\r' &&
-      (loc+1) <= len && (*this)[loc+1] != '\r') {
+      (loc+1) < len && (*this)[loc+1] != '\r') {
       dosstr += '\r';
     }
   }
