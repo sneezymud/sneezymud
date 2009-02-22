@@ -833,11 +833,11 @@ void vlogf(logTypeT tError, const sstring &errorMsg)
 
       // if (tError == LOG_LOW && !i->character->hasWizPower(POWER_SETSEV_IMM))
       //   continue;
-
+      
       if (!IS_SET(i->severity, 1<<tError))
         continue;
 
-      if (name != i->character->name)
+      if (!name.empty() && name != i->character->name)
         continue;
 
       if (i->character->isPlayerAction(PLR_MAILING | PLR_BUGGING))
