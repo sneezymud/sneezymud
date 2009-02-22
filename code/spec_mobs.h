@@ -328,4 +328,7 @@ class sharp_struct {
     }
 };
 
+extern sstring randommessage(sstring);
+
+
 #endif

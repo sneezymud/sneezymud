@@ -44,7 +44,7 @@ sstring randommessage(sstring from)
   sbuf=msg;
   msg="";
   int c=0;
-  for(unsigned int i=0;i<sbuf.length();msg+=sbuf[i++]){
+  for(unsigned int i=0;i<sbuf.length()-1;msg+=sbuf[i++]){
     ++c;
     if(c>70 && sbuf[i]==' '){
       msg+="\n";
