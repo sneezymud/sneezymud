@@ -17,6 +17,9 @@ class Exceptions : public CxxTest::TestSuite
     testPerson2=new TPerson(testDesc);
   }
 
+  // I added an exception throw to out of range access of sstrings,
+  // so these tests were originally added to test bug fixes for that
+
 
  public:
   void testGarble(){
@@ -26,6 +29,13 @@ class Exceptions : public CxxTest::TestSuite
   void testRandomMessage(){
     for(int i=0;i<100;++i)
       TS_ASSERT_THROWS_NOTHING(randommessage("Peel"));
+  }
+
+  void testToCRLF(){
+    sstring foo="\n";
+
+    TS_ASSERT_THROWS_NOTHING(foo.toCRLF());
+
   }
 
 };
