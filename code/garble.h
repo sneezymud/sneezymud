@@ -153,5 +153,7 @@ extern const sstring RandomWord();
 extern const sstring RandomVerb();
 
 
+// Make drunk people garble their words!
+extern sstring garble_olddrunk(const TBeing *, const TBeing *, const sstring &, SPEECHTYPE);
 
 #endif // __GARBLE_H

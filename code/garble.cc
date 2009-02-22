@@ -321,7 +321,7 @@ sstring garble_olddrunk(const TBeing *from, const TBeing *to, const sstring &arg
   for(unsigned int i=0;i<buf.length()-1;++i)
   {
     // skip color codes
-    if(buf[i-1]=='<' && buf[i+1]=='>')
+    if(i>0 && buf[i-1]=='<' && buf[i+1]=='>')
       continue;
 
     if (::number(0, chance) >= 18)
