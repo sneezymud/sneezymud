@@ -187,7 +187,7 @@ spellNumT doStabMsg(TBeing *tThief, TBeing *tSucker, TGenWeapon *tWeapon, wearSl
     act(tStringVict, FALSE, tThief, tWeapon, tSucker, TO_VICT);
     act(tStringOthr, FALSE, tThief, tWeapon, tSucker, TO_NOTVICT);
 
-    if (tStringMess[0] != '\0') {
+    if(!tStringMess.empty()){
       act(tStringMess, FALSE, tThief, tWeapon, tSucker, TO_CHAR);
       act(tStringMess, FALSE, tThief, tWeapon, tSucker, TO_ROOM);
     }
