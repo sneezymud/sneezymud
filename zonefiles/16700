@@ -8,6 +8,9 @@ D 0 16710 1 2        TheSaint's Door -> Gon's House
 D 0 16705 5 2        Raven's Nest -> Above a Treetop
 D 0 16708 5 2        Unfinished Bungalow On Stilts -> The Grimhaven City Dump
 D 0 16711 5 2        A Simple Apartment -> Jem and Perry's Self Defense Studio
+D 0 16712 5 2        Lord Deslok's Chamber -> Short Hallway
+D 0 16712 3 1        Lord Deslok's Chamber -> Spine's Chamber
+D 0 16713 1 1        Spine's Chamber -> Lord Deslok's Chamber
 
 * Sage's house in Grimhaven, above Tanni's
 O 0 16703 1 16700       a bright blue portal
@@ -164,6 +167,23 @@ O 0 16717 1 16711       a magic dispenser
 O 0 16718 1 16711       a shiny curio cabinet
 O 0 16715 1 16711       a medicine cabinet
 
+*Rock's Serpent Faction house above Janica's Exotic Imports
+O 0 16706 1 16714       a sturdy workbench
+O 0 16707 1 16714       a large black anvil
+O 0 16720 1 16714       a large forge
+O 0 16730 3 16712       a solid wooden chest
+O 0 16730 3 16713       a solid wooden chest
+O 0 16730 3 16714       a solid wooden chest
+O 0 21 1 16713          a couch
+O 0 9058 1 16712        a stiff bed
+O 0 9058 1 16713        a stiff bed
+O 0 16722 1 16712       a wall mounted lantern
+O 0 16722 1 16713       a wall mounted lantern
+O 0 16722 1 16714       a wall mounted lantern
+O 0 16704 1 16714       an obsidian toolbox
+O 0 16769 2 16712       a coil bound serpents chest
+O 0 16769 1 16713       a coil bound serpents chest
+M 0 16709 1 16712       a coiled serpent
 ***********
 * Butlers *
 ***********
@@ -184,5 +204,7 @@ M 0 16705 1 16708       a greasy garbageman
 M 0 16706 1 16709       Duncan
 * Cronus's Butler
 M 0 16707 1 16711       slacker roommate butler
+* Rock's Butler
+M 0 16708 1 16712       a serpent spy
 
 S
