@@ -837,7 +837,7 @@ void vlogf(logTypeT tError, const sstring &errorMsg)
       if (!IS_SET(i->severity, 1<<tError))
         continue;
 
-      if (name[0] && name != i->character->name)
+      if (name != i->character->name)
         continue;
 
       if (i->character->isPlayerAction(PLR_MAILING | PLR_BUGGING))
