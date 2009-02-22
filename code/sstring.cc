@@ -88,7 +88,7 @@ const sstring sstring::cap() const
   int counter = 0;
   sstring s=*this;
 
-  if(s[0] != '<'){
+  if(s.length()>0 && s[0] != '<'){
     s[0]=toupper(s[0]);
   } else {
 // Accounting for Items with color strings and % as first character

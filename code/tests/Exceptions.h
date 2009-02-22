@@ -39,7 +39,11 @@ class Exceptions : public CxxTest::TestSuite
     foo="xxx\n";
 
     TS_ASSERT_THROWS_NOTHING(foo.toCRLF());
+  }
 
-
+  void testCap(){
+    sstring foo;
+    
+    TS_ASSERT_THROWS_NOTHING(foo.cap());
   }
 };
