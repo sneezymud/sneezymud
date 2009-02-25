@@ -954,7 +954,7 @@ connectStateT nannyStats_input(Descriptor * desc, sstring & output, const sstrin
     output = fmt("\n\rYou cannot finish customizing %s until you have spent your %d points.") % statsName % (bonusPoints[iGroup]-totalStats);
 
   if (!input.empty() && input.length() < 7 && // 7 randomly chosen for sanity
-    input[0] == '+' || input[0] == '-')
+    (input[0] == '+' || input[0] == '-'))
   {
     TStatGroup *stats = statGroups[iGroup];
     int amount = convertTo<int>(input);
