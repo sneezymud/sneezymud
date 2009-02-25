@@ -120,7 +120,7 @@ map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
     ego_imm_blessing("Mercury",
         AFFECT_MERCURY_BLESSING,
         APPLY_BRA,
-        "<r>resilience<1>");
+        "<b>the pigeon<1>");
   blessings[AFFECT_METROHEP_BLESSING]=
     ego_imm_blessing("Metrohep",
         AFFECT_METROHEP_BLESSING,
