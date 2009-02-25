@@ -40,18 +40,15 @@ E 1 44838 9999 14         a backplate of woven reeds [back]
 ? 0 5 0 E
 E 1 44844 9999 13         a sleeve of woven reeds [arm-left]
 ? 0 5 0 E
-E 1 44841 9999 17         a bracelet of woven reeds 
-[wrist-left]
+E 1 44841 9999 17         a bracelet of woven reeds [wrist-left]
 ? 0 5 0 E
 E 1 44843 9999 11         a glove of woven reeds [hand-left]
 ? 0 5 0 E
 E 1 44842 9999 15         a belt of woven reeds [waist]
 ? 0 5 0 E
-E 1 44840 9999 6          a pair of pants woven from reeds 
-[leg-right]
+E 1 44840 9999 6          a pair of pants woven from reeds [leg-right]
 ? 0 5 0 E
-E 1 44840 9999 7          a pair of pants woven from reeds 
-[leg-left]
+E 1 44840 9999 7          a pair of pants woven from reeds [leg-left]
 ? 0 5 0 E
 E 1 44839 9999 9          a boot of woven reeds [foot-left]
 ? 0 5 0 E
