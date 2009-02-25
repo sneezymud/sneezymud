@@ -2434,7 +2434,7 @@ void runResetCmdM(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
     return;
 
   // catch cases where builder used global max over zonefile max
-  if (rs.arg2 > mob_index[rs.arg1].max_exist && gamePort != BETA_GAMEPORT)
+  if (rs.arg2 > mob_index[rs.arg1].max_exist && gamePort != BETA_GAMEPORT && rs.arg3 != zone.random_room)
   {
     vlogf(LOG_LOW, fmt("Mob %s (%i) tried has improper load max (%i) compared to global (%i) in zonefile") %
       mob_index[rs.arg1].short_desc % mob_index[rs.arg1].virt % rs.arg2 % mob_index[rs.arg1].max_exist);
