@@ -1974,7 +1974,7 @@ int GenericGuildMaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, 
     TPerson *tp;
 
     // the specific quest required for a reset, given the guildmaster level
-    int resetQuest = TOG_RESET_PRAC_LEVEL50;
+    int resetQuest = 0; // TOG_RESET_PRAC_LEVEL50 - no quest exists for this yet
     int myTrainerLevel = (me->GetMaxLevel()/2);
     if (myTrainerLevel < 50)
       resetQuest--;
@@ -1982,18 +1982,18 @@ int GenericGuildMaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, 
       resetQuest--;
 
     ch->resetPractices(cit, practices, false);
+    int cost = practices * REPRAC_COST_PER_PRAC;
+    if (resetQuest && ch->hasQuestBit(resetQuest))
+      cost = cost / 2;
 
     if (is_abbrev(arg, "reset")) {
-      int cost = practices * REPRAC_COST_PER_PRAC;
-
-      if (!ch->hasQuestBit(resetQuest)) {
-        me->doSay("I'm sorry, you're going to have to do me a small <c>favor<1> before I help you retrain all of your learning.");
-      } else if (ch->getMoney() < cost) {
+      if (ch->getMoney() < cost) {
         me->doSay(fmt("I'm sorry, you don't have enough money for me to reset your spent practices.  The cost is %d talens.") % cost);
       } else if (ch->resetPractices(cit, practices, true)) {
         me->doSay(fmt("I have reset %d practices for you.  You will now have to visit your trainers to relearn your disciplines.") % practices);
         ch->giveMoney(me, cost, GOLD_SHOP_RESPONSES);
-        ch->remQuestBit(resetQuest);
+        if (resetQuest)
+          ch->remQuestBit(resetQuest);
       } else
         me->doSay("I cannot reset any of your practices at this time.");
 
@@ -2012,9 +2012,9 @@ int GenericGuildMaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, 
 
     if (practices > 0) {
       me->doSay(fmt("I could also reset all of your %d spent practices for you.") % practices);
-      me->doSay(fmt("To do so, type 'gain reset'.  There will be a fee of %d talens.") % (practices * REPRAC_COST_PER_PRAC));
-      if (!ch->hasQuestBit(resetQuest))
-        me->doSay("But first, I will require that you do me a small favor.");
+      me->doSay(fmt("To do so, type 'gain reset'.  There will be a fee of %d talens.") % cost);
+      if (resetQuest && !ch->hasQuestBit(resetQuest))
+         me->doSay(fmt("I'll help you for only %d talens if you do me a small <c>favor<1> first.") % (cost / 2));
     }
 
   } else if (ch->getLevel(cit) < MAX_MORT) {
