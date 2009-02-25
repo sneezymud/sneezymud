@@ -464,6 +464,8 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
     positionTypeT pos = v->getPosition();
     v->setPosition(POSITION_STANDING); // temporarily set to allow scripts to drop items, etc
     rc = dynamic_cast<TMonster*>(v)->checkResponses(this, 0, "", CMD_RESP_KILLED);
+    if (loadOnDeath)
+      dynamic_cast<TMonster*>(v)->createWealth();
     v->setPosition(pos);
   }
 

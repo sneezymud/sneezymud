@@ -66,7 +66,8 @@ int oft_frequented_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
           if (::number(0,10))
             continue;
           int rmob = real_mobile(::number(0,1) ? MOB_MALE_HOPPER : MOB_FEMALE_HOPPER);  
-          if (mob_index[rmob].getNumber() >= mob_index[rmob].max_exist)
+          int maxMob = (gamePort == BETA_GAMEPORT) ? 25 : mob_index[rmob].max_exist; // beta port sets max_exist to 9999
+          if (mob_index[rmob].getNumber() >= maxMob)
              continue;
           mob = read_mobile(rmob, REAL);
           *rp += *mob;
@@ -84,8 +85,9 @@ int oft_frequented_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
         for (i = 1; i <= 8; i++) {
           if (::number(0,9))
             continue;
-          int rmob = real_mobile(::number(0,1) ? MOB_MALE_CHURCH_GOER : MOB_FEMALE_CHURCH_GOER);  
-          if (mob_index[rmob].getNumber() >= mob_index[rmob].max_exist)
+          int rmob = real_mobile(::number(0,1) ? MOB_MALE_CHURCH_GOER : MOB_FEMALE_CHURCH_GOER);
+          int maxMob = (gamePort == BETA_GAMEPORT) ? 25 : mob_index[rmob].max_exist; // beta port sets max_exist to 9999
+          if (mob_index[rmob].getNumber() >= maxMob)
              continue;
           mob = read_mobile(rmob, REAL);
           *rp += *mob;

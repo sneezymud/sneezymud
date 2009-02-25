@@ -288,6 +288,21 @@ void TMonster::createWealth(void)
       setMoney(10 * getMoney());
   }
 
+  // execute our post-load commands
+  if (loadOnDeath && loadCom.size() > 0) {
+    bool last_cmd = true;
+    bool objload = false;
+    bool mobload = false;
+    TObj *obj = NULL;
+    TMonster *myself = this;
+    TRoom *birthRoom = real_roomp(brtRoom);
+    zoneData *zone = birthRoom ? birthRoom->getZone() : NULL;
+
+    for(unsigned int iLoad = 0; zone && iLoad < loadCom.size(); iLoad++)
+      if (!loadCom[iLoad].execute(*zone, resetFlagNone, mobload, myself, objload, obj, last_cmd))
+        break;
+  }
+
   // class based loading
   if (hasClass(CLASS_THIEF))
     thiefLootLoader();

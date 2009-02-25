@@ -191,7 +191,7 @@ void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstrin
       {
         delete obj;  // avoid double loads of pants
         return;
-      } else if (chance == 101)
+      } else if (loadOnDeath || chance == 101)
         *ch += *obj;
       else if (ch->equipment[slot]){
 	      delete obj;

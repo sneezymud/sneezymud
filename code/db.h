@@ -24,6 +24,9 @@ extern const char * const MUD_NAME;
 extern const char * const MUD_NAME_VERS;
 extern bool bootTime;
 
+// true if we should load eq for mobs when they die, instead of at zone load
+const bool loadOnDeath = false;
+
 const int MAX_OBJ_AFFECT = 5;
 
 const char * const SIGN_MESS = "/mud/sign/currentMess";
@@ -56,6 +59,9 @@ const char * const WIZLIST_FILE     ="txt/wizlist";   /* for WIZLIST   */
 const char * const MUDADMIN_EMAIL   ="mudadmin@sneezymud.com";
 const char * const CODERS_EMAIL     ="mudadmin@sneezymud.com";
 
+const int WORLD_SIZE = 50000;
+const int ZONE_ROOM_RANDOM = -99;
+
 /* public procedures in db.c */
 
 void bootDb(void);
@@ -64,10 +70,27 @@ void zone_update(void);
 int real_object(int);
 int real_mobile(int);
 
+// forward class decl
+class resetCom;
+class armorSetLoad;
+class zoneData;
+class extraDescription;
+class indexData;
+class objIndexData;
+class mobIndexData;
+class resetQElement;
+
 enum readFileTypeT {
      REAL,
      VIRTUAL
 };
+
+typedef unsigned int resetFlag;
+const resetFlag resetFlagNone = 0;
+const resetFlag resetFlagBootTime = 1<<0;
+const resetFlag resetFlagFindLoadPotential = 1<<1;
+const resetFlag resetFlagMax = 1<<2;
+const resetFlag resetFlagCount = 2;
 
 class resetCom {
   public:
@@ -78,6 +101,7 @@ class resetCom {
     int arg3; 
     int arg4;
     char character;
+    int cmd_no;
 
   public:
     resetCom();
@@ -87,7 +111,43 @@ class resetCom {
 
     bool hasLoadPotential();
     bool usesRandomRoom();
-    bool setsState();
+    bool shouldStickToMob(bool &lastComStuck);
+
+    // returns false to stop execution (critical fail or stop command)
+    bool execute(zoneData &zone, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd);
+
+  private:
+
+    enum resetCommandId
+    {
+      cmd_Stop = 0, // S
+      cmd_LoadMob, // M
+      cmd_LoadMobGrouped, // K
+      cmd_LoadMobCharmed, // C
+      cmd_LoadMobRidden, // R
+      cmd_SetRandomRoom, // A
+      cmd_LoadChance, // ?
+      cmd_LoadObjGround, // B
+      cmd_LoadObjGroundBoot, // O
+      cmd_LoadObjPlaced, // P
+      cmd_LoadObjInventory, // G
+      cmd_LoadObjEquipped, // E
+      cmd_CreateLocalSet, // X
+      cmd_LoadObjSetLocal, // Z
+      cmd_LoadObjSet, // Y
+      cmd_ChangeFourValues, // V
+      cmd_SetTrap, // T
+      cmd_SetHate, // H
+      cmd_SetFear, // F
+      cmd_SetDoor, // D
+      cmd_LoadLoot, // L
+
+      cmd_Max
+    };
+    typedef void exec_fn(zoneData &, resetCom &, resetFlag, bool &, TMonster *&, bool &, TObj *&, bool &);
+    static exec_fn *executeMethods[cmd_Max];
+
+    resetCommandId getCommandId();
 };
 
 class armorSetLoad
@@ -120,6 +180,7 @@ class zoneData
     double mob_levels;
     double min_mob_level;
     double max_mob_level;
+    int random_room;
 
     // the following stat_* variables are intended to be used for zone reporting in the stat zone command
     // they are not air-tight counts and should not be treated as such
@@ -152,7 +213,6 @@ class zoneData
     zoneData & operator= (const zoneData &t);
 };
 
-class extraDescription;
 
 class indexData {
  public:
@@ -241,8 +301,5 @@ class resetQElement
   {
   }
 };
-
-const int WORLD_SIZE = 50000;
-const int ZONE_ROOM_RANDOM = -99;
 
 #endif

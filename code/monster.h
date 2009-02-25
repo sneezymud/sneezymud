@@ -100,6 +100,8 @@ class TMonster : public TBeing {
 
     positionTypeT default_pos;
 
+    vector<resetCom> loadCom;
+
     TMonster();
     TMonster(const TMonster &);
     TMonster & operator=(const TMonster &);
