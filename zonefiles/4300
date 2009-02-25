@@ -32,90 +32,90 @@ M 0 44838 0 4348  mosquito
 M 0 44838 0 4348  mosquito
 M 0 4309 1 4348     young bullywug
 M 0 4300 1 4348  ; child Bullywug
-Y O 22 5 frogskin
+Y 0 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
 M 0 44838 0 4330  mosquito
 M 0 44839 0 4330  mosquito
 M 0 4309 1 4330     young bullywug
 M 0 4300 1 4330  ; child Bullywug
-Y O 22 5 frogskin
+Y 0 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
 M 0 44838 0 4377  mosquito
 M 0 44838 0 4377  mosquito
 M 0 4309 1 4377     young bullywug
 M 0 4300 1 4377  ; child Bullywug
-Y O 22 5 frogskin
+Y 0 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
 M 0 4309 1 4334     young bullywug
 M 0 4300 1 4334  ; child Bullywug
-Y O 22 5 frogskin
+Y 0 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
 M 0 4309 1 4356     young bullywug
 M 0 4300 1 4356  ; child Bullywug
-Y O 22 5 frogskin
+Y 0 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
 M 0 4309 1 4332     young bullywug
 M 0 4300 1 4332  ; child Bullywug
-Y O 22 5 frogskin
+Y 0 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
 M 0 4310 1 4310     Green bullywug
 M 0 4301 1 4310  ; child Bullywug
-Y O 22 5 frogskin
+Y 0 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
 M 0 4310 1 4370     green bullywug
 M 0 4301 1 4370  ; child Bullywug
-Y O 22 5 frogskin
+Y 0 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
 M 0 4310 1 4328     green bullywug
 M 0 4301 1 4328  ; child Bullywug
-Y O 22 5 frogskin
+Y 0 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
 M 0 4310 1 4326     green bullywug
 M 0 4301 1 4326  ; child Bullywug
-Y O 22 5 frogskin
+Y 0 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
 M 0 4310 1 4308     green bullywug
 M 0 4301 1 4308  ; child Bullywug
-Y O 22 5 frogskin
+Y 0 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
 M 0 4310 1 4367     green bullywug
 M 0 4301 1 4367  ; child Bullywug
-Y O 22 5 frogskin
+Y 0 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
 M 0 4310 1 4374     green bullywug
 M 0 4301 1 4374  ; child Bullywug
-Y O 22 5 frogskin
+Y 0 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
 M 0 4310 1 4339     green bullywug
 M 0 4301 1 4339  ; child Bullywug
-Y O 22 5 frogskin
+Y 0 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
 M 0 4310 1 4315     green bullywug
 M 0 4301 1 4315  ; child Bullywug
-Y O 22 5 frogskin
+Y 0 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
 M 0 4310 1 4349     green bullywug
 M 0 4301 1 4349  ; child  Bullywug
-Y O 22 5 frogskin
+Y 0 22 5 frogskin
 ? 0 30 0 G
 G 1 4306 9999	    Swamp Root
 M 0 4310 1 4379     green bullywug
-Y O 22 5 frogskin
+Y 0 22 5 frogskin
 M 0 4302 1 4379  ; child bullywug
 Y 0 22 5              frogskin
 M 0 4311 0 4381    large bullywug
