@@ -15,6 +15,7 @@ class Exceptions : public CxxTest::TestSuite
     testDesc=new Descriptor(testSocket);
     testPerson1=new TPerson(testDesc);
     testPerson2=new TPerson(testDesc);
+    gamePort=BETA_GAMEPORT;
   }
 
   // I added an exception throw to out of range access of sstrings,
@@ -22,6 +23,17 @@ class Exceptions : public CxxTest::TestSuite
 
 
  public:
+  void testProdVSBeta(){
+    sstring foo;
+
+    gamePort=PROD_GAMEPORT;
+    TS_ASSERT_THROWS_NOTHING(foo[0]);
+
+    gamePort=BETA_GAMEPORT;
+    TS_ASSERT_THROWS_ANYTHING(foo[0]);
+
+  }
+
   void testGarble(){
     TS_ASSERT_THROWS_NOTHING(garble_olddrunk(testPerson1, testPerson2, "some test string", SPEECH_WHISPER));
   }
