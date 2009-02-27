@@ -674,7 +674,7 @@ sstring TObj::wear_flags_to_sentence() const
         } else {
           msg_wear_flag += " and";
         }
-        msg_wear_flag += " " + convertTo<sstring>(wear_bits[x]).uncap();
+        msg_wear_flag += " " + ((sstring)(wear_bits[x])).uncap();
       }
     }
   } else if (IS_SET(wf, 1<<14)) {
@@ -692,7 +692,7 @@ sstring TObj::wear_flags_to_sentence() const
         } else {
           msg_wear_flag += " and";
         }
-        msg_wear_flag += " " + convertTo<sstring>(wear_bits[x]).uncap();
+        msg_wear_flag += " " + ((sstring)wear_bits[x]).uncap();
       }
     }
   } else if (IS_SET(wf, 1<<15)) {
@@ -706,7 +706,7 @@ sstring TObj::wear_flags_to_sentence() const
         } else {
           msg_wear_flag += " and";
         }
-        msg_wear_flag += " " + convertTo<sstring>(wear_bits[x]).uncap();
+        msg_wear_flag += " " + ((sstring)wear_bits[x]).uncap();
       }
     }
   } else {
@@ -719,7 +719,7 @@ sstring TObj::wear_flags_to_sentence() const
         } else {
           msg_wear_flag += " and";
         }
-        msg_wear_flag += " " + convertTo<sstring>(wear_bits[x]).uncap();
+        msg_wear_flag += " " + ((sstring)wear_bits[x]).uncap();
       }
     }
   }

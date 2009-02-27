@@ -2620,7 +2620,7 @@ void TPerson::doStat(const sstring &argument)
           sendTo("No skill by that name found.\n\r");
           return;
         }
-        sendTo(COLOR_MOBS, fmt("<c>%s<1> is skill number <c>%d<1>.\n\r") % convertTo<sstring>(discArray[snt]->name ? discArray[snt]->name : "unknown").cap() % snt);
+        sendTo(COLOR_MOBS, fmt("<c>%s<1> is skill number <c>%d<1>.\n\r") % ((sstring)(discArray[snt]->name ? discArray[snt]->name : "unknown")).cap() % snt);
       }
       
       if (!k->doesKnowSkill(snt)) {
