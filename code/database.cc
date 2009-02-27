@@ -133,7 +133,7 @@ const sstring TDatabase::operator[] (const sstring &s) const
   unsigned int i;
 
   for(i=0;i<num_fields;++i){
-    if(s==(sstring)fields[i].name){
+    if(s.lower()==((sstring)fields[i].name).lower()){
       break;
     }
   }
