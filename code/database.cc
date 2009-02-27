@@ -113,6 +113,16 @@ bool TDatabase::fetchRow(){
   return TRUE;
 }
 
+const sstring TDatabase::operator[] (unsigned int i) const
+{
+  if(res && i > (mysql_num_fields(res)-1)){
+    vlogf(LOG_DB, fmt("TDatabase::operator[%i] - invalid column index") % i);
+    return empty;
+  } else {
+    return row[i];
+  }
+}
+
 const sstring TDatabase::operator[] (const sstring &s) const
 {
   if(!res || !row)
@@ -121,11 +131,9 @@ const sstring TDatabase::operator[] (const sstring &s) const
   unsigned int num_fields=mysql_num_fields(res);
   MYSQL_FIELD *fields=mysql_fetch_fields(res);
   unsigned int i;
-  sstring fieldname;
 
   for(i=0;i<num_fields;++i){
-    fieldname=fields[i].name;
-    if(s.lower()==fieldname.lower()){
+    if(s==(sstring)fields[i].name){
       break;
     }
   }

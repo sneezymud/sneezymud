@@ -627,7 +627,7 @@ void bootWorld(void)
   character_list = NULL;
 
   db.query("select * from room order by vnum asc");
-  db_exits.query("select * from roomexit order by vnum asc");
+  db_exits.query("select vnum, direction, name, description, type, condition_flag, lock_difficulty, weight, key_num, destination from roomexit order by vnum asc");
   db_exits.fetchRow();
   db_extras.query("select * from roomextra order by vnum asc");  
   db_extras.fetchRow();
@@ -708,27 +708,27 @@ void bootWorld(void)
       rp->dir_option[dir] = 0;
 
     // in case there are exits with no associated room, we need this
-    while(convertTo<int>(db_exits["vnum"]) < rp->number)
+    while(convertTo<int>(db_exits[0]) < rp->number)
       if(!db_exits.fetchRow())
         break;
 
 
-    while(convertTo<int>(db_exits["vnum"]) == rp->number){
-      dir=mapFileToDir(convertTo<int>(db_exits["direction"]));
+    while(convertTo<int>(db_exits[0]) == rp->number){
+      dir=mapFileToDir(convertTo<int>(db_exits[1]));
 
       rp->dir_option[dir] = new roomDirData();
 
-      if(!db_exits["name"].empty())
-        rp->dir_option[dir]->keyword = mud_str_dup(db_exits["name"]);
+      if(!db_exits[2].empty())
+        rp->dir_option[dir]->keyword = mud_str_dup(db_exits[2]);
       else
         rp->dir_option[dir]->keyword = NULL;
 
-      if(!db_exits["description"].empty())
-        rp->dir_option[dir]->description = mud_str_dup(db_exits["description"]);
+      if(!db_exits[3].empty())
+        rp->dir_option[dir]->description = mud_str_dup(db_exits[3]);
       else
         rp->dir_option[dir]->description = NULL;
 
-      tmp=convertTo<int>(db_exits["type"]);
+      tmp=convertTo<int>(db_exits[4]);
       if (tmp < 0 || tmp >= MAX_DOOR_TYPES) {
         vlogf(LOG_LOW,fmt("bogus door type (%d) in room (%d) dir %d.") % 
             tmp % rp->number % dir);
@@ -743,12 +743,12 @@ void bootWorld(void)
         vlogf(LOG_LOW,fmt("door with no name in room %d") % rp->number);
       }
 
-      rp->dir_option[dir]->condition = convertTo<int>(db_exits["condition_flag"]);
-      rp->dir_option[dir]->lock_difficulty= convertTo<int>(db_exits["lock_difficulty"]);;
-      rp->dir_option[dir]->weight= convertTo<int>(db_exits["weight"]);
-      rp->dir_option[dir]->key = convertTo<int>(db_exits["key_num"]);
+      rp->dir_option[dir]->condition = convertTo<int>(db_exits[5]);
+      rp->dir_option[dir]->lock_difficulty= convertTo<int>(db_exits[6]);;
+      rp->dir_option[dir]->weight= convertTo<int>(db_exits[7]);
+      rp->dir_option[dir]->key = convertTo<int>(db_exits[8]);
 
-      rp->dir_option[dir]->to_room = convertTo<int>(db_exits["destination"]);
+      rp->dir_option[dir]->to_room = convertTo<int>(db_exits[9]);
 
       if (IS_SET(rp->dir_option[dir]->condition, EX_SECRET) && 
           canSeeThruDoor(rp->dir_option[dir])) {

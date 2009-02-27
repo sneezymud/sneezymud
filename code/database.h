@@ -110,6 +110,7 @@ class TDatabase
   bool query(const char *,...);
   bool fetchRow();
   const sstring operator[] (const sstring &) const;
+  const sstring operator[] (unsigned int) const;
   bool isResults();
   long rowCount();
 
