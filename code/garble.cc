@@ -779,23 +779,21 @@ sstring garble_fishtalk(const TBeing *from, const TBeing *to, const sstring &arg
   };
   sstring out;
   int iWord = 0;
-  sstring word = arg.word(iWord);
   int chance = from ? 100 - from->plotStat(STAT_CURRENT, STAT_INT, 0, 100, 50) : 25;
 
-  for(; !word.empty(); word = arg.word(++iWord))
+  for(sstring word = arg.word(iWord); !word.empty(); word = arg.word(++iWord))
   {
     if (!out.empty())
       out += ' ';
-    // replace randomly a word
-    if (chance/3 > number(0, 100))
+
+    // add randomly a word
+    if (chance/4 > number(0, 100))
     {
-      char punct = word[word.length()-1];
-      word = watery[number(0, cElements(watery)-1)].matchCase(word);
-      // sad hack to keep trailing , ? ! . on this word
-      if (ispunct(punct))
-        word += punct;
+      out += watery[number(0, cElements(watery)-1)].matchCase(word);
+      out += ' ';
     }
-    else if (chance > number(0, 100))
+    
+    if (chance > number(0, 100))
     {
       for(int i=0;i < (int)cElements(replace);i++)
       {
@@ -881,10 +879,9 @@ sstring garble_lolcats(const TBeing *from, const TBeing *to, const sstring &arg,
 
   sstring out;
   int iWord = 0;
-  sstring word = arg.word(iWord);
   int chance = from ? 100 - from->plotStat(STAT_CURRENT, STAT_INT, 0, 100, 50) : 25;
 
-  for(; !word.empty(); word = arg.word(++iWord))
+  for(sstring word = arg.word(iWord); !word.empty(); word = arg.word(++iWord))
   {
     if (!out.empty())
       out += ' ';
@@ -947,7 +944,6 @@ sstring garble_drunk(const TBeing *from, const TBeing *to, const sstring &arg, S
 
   sstring out = arg;
   int iWord = 0;
-  sstring word = out.word(iWord);
   int chance = from->getCond(DRUNK);
   TBeing * tFrom = const_cast<TBeing *>(from);
   bool emoted = false;
@@ -966,7 +962,7 @@ sstring garble_drunk(const TBeing *from, const TBeing *to, const sstring &arg, S
     return out;
   }
 
-  for(; !word.empty(); word = arg.word(++iWord))
+  for(sstring word = out.word(iWord); !word.empty(); word = arg.word(++iWord))
   {
     // set this is we expect word to be modified
     bool modified = false;
@@ -1311,24 +1307,22 @@ sstring garble_birdtalk(const TBeing *from, const TBeing *to, const sstring &arg
 
   sstring out;
   int iWord = 0;
-  sstring word = arg.word(iWord);
   int chance = from ? 100 - from->plotStat(STAT_CURRENT, STAT_INT, 0, 100, 50) : 25;
 
-  for(; !word.empty(); word = arg.word(++iWord))
+  for(sstring word = arg.word(iWord); !word.empty(); word = arg.word(++iWord))
   {
     if (!out.empty())
       out += ' ';
-    // replace randomly a word
-    if (chance/3 > number(0, 100))
+
+    // add randomly a word
+    if (chance/4 > number(0, 100))
     {
-      char punct = word[word.length()-1];
-      word = sstring(birdsquak_prefix[number(0, cElements(birdsquak_prefix)-1)] +
+      out += sstring(birdsquak_prefix[number(0, cElements(birdsquak_prefix)-1)] +
               birdsquak_suffix[number(0, cElements(birdsquak_suffix)-1)]).matchCase(word);
-      // sad hack to keep trailing , ? ! . on this word
-      if (ispunct(punct))
-        word += punct;
+      out += ' ';
     }
-    else if (chance > number(0, 100))
+
+    if (chance > number(0, 100))
     {
       for(int i=0;i < (int)cElements(replace);i++)
       {
@@ -1732,7 +1726,7 @@ const sstring RandomPhrase(bool allowPhrase)
     "Oh man...  {phrase}",
     "Yo!  {phrase}",
     "Oh!  {phrase}",
-    "Hey, {phrase}",
+    "{phrase}  I really mean it this time!",
     "Uh Oh.  {phrase}",
     "Hehehe.  You said \"{phrase}\"",
     "At first I was like, \"{phrase}\" but now I'm like \"{phrase2}\"",
