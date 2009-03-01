@@ -128,22 +128,14 @@ const sstring TDatabase::operator[] (const sstring &s) const
   if(!res || !row)
     return NULL;
 
-  unsigned int num_fields=mysql_num_fields(res);
-  MYSQL_FIELD *fields=mysql_fetch_fields(res);
-  unsigned int i;
+  map<const char*, int, ltstr>::const_iterator cur=column_names.find(s.lower().c_str());
 
-  for(i=0;i<num_fields;++i){
-    if(s.lower()==((sstring)fields[i].name).lower()){
-      break;
-    }
-  }
-
-  if(i > (mysql_num_fields(res)-1) || i < 0){
+  if(cur == column_names.end()){
     vlogf(LOG_DB, fmt("TDatabase::operator[%s] - invalid column name") %  s);
     return empty;
-  } else {
-    return row[i];
   }
+
+  return row[(*cur).second];
 }
 
 
@@ -239,8 +231,19 @@ bool TDatabase::query(const char *query,...)
     res=restmp;
   }
   
-  // capture rowcount here, because the db pointer state changes when db timing is on
+  // capture rowcount here, because the db pointer state changes when
+  // db timing is on
   row_count = (long) mysql_affected_rows(db);
+
+  // store the column names and offsets
+  if(res){
+    unsigned int num_fields=mysql_num_fields(res);
+    MYSQL_FIELD *fields=mysql_fetch_fields(res);
+    
+    for(unsigned int i=0;i<num_fields;++i)
+      column_names[fields[i].name]=i;
+  }
+
 
   t.end();
 

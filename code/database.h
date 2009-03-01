@@ -98,12 +98,21 @@ enum dbTypeT {
   DB_MAX,
 };
 
+struct ltstr
+{
+  bool operator()(const char* s1, const char* s2) const
+  {
+    return strcmp(s1, s2) < 0;
+  }
+};
+
 class TDatabase
 {
   MYSQL_RES *res;
   MYSQL_ROW row;
   MYSQL *db;
   long row_count;
+  map <const char *, int, ltstr> column_names;
   
  public:
   void setDB(dbTypeT);
