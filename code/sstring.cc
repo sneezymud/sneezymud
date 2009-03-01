@@ -55,32 +55,24 @@ const sstring sstring::toCRLF() const
 // converts A-Z to lower case a-z
 const sstring sstring::lower() const
 {
-  sstring::size_type iter;
   sstring s=*this;
 
-  do {
-    iter = s.find_first_of("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-    if (iter != sstring::npos)
-      s[iter]=tolower(s[iter]);
-  } while (iter != sstring::npos);
+  std::transform(s.begin(), s.end(), s.begin(), ::tolower);
 
   return s;
 }
+
 
 // converts a-z to upper case A-Z
 const sstring sstring::upper() const
 {
-  sstring::size_type iter;
   sstring s=*this;
 
-  do {
-    iter = s.find_first_of("abcdefghijklmnopqrstuvwxyz");
-    if (iter != sstring::npos)
-      s[iter]=toupper(s[iter]);
-  } while (iter != sstring::npos);
+  std::transform(s.begin(), s.end(), s.begin(), ::toupper);
 
   return s;
 }
+
 
 // capitalizes first letter, skipping color codes
 const sstring sstring::cap() const
