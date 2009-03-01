@@ -27,6 +27,7 @@ class Exceptions : public CxxTest::TestSuite
     sstring foo;
 
     gamePort=PROD_GAMEPORT;
+    vlogf(LOG_BUG, "(Exceptions.h) Out-of-range error expected here:");
     TS_ASSERT_THROWS_NOTHING(foo[0]);
 
     gamePort=BETA_GAMEPORT;
