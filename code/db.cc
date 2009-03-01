@@ -149,6 +149,9 @@ queue<sstring>queryqueue;
 
 
 struct cached_object { int number;map <sstring, sstring> s; };
+struct cached_mob_extra { int number;sstring keyword; sstring description; };
+struct cached_mob_imm { int number;int type; int amt; };
+
 
 class TObjectCache {
 public:
@@ -158,6 +161,16 @@ public:
   cached_object *operator[](int);
 
 } obj_cache;
+
+class TMobileCache {
+public:
+  map<int, cached_object *>cache;
+  map<int, vector <cached_mob_extra *> >extra;
+  map<int, vector <cached_mob_imm *> >imm;
+
+  void preload(void);
+  cached_object *operator[](int);
+} mob_cache;
 
 
 bool bootTime=false;
@@ -374,6 +387,12 @@ void bootDb(void)
   obj_cache.preload();
 
   vlogf(LOG_MISC, fmt("Boot timing: obj cache: %.2f seconds") % (t.getElapsedReset()));
+
+  bootPulse("Pre-loading mobile cache.");
+  mob_cache.preload();
+
+  vlogf(LOG_MISC, fmt("Boot timing: mob cache: %.2f seconds") % (t.getElapsedReset()));
+
 
   bootPulse("Building suitset information.");
   suitSets.SetupLoadSetSuits();
@@ -1585,6 +1604,9 @@ void bootZones(void)
   db.query("delete from zone where util_flag = 0");
 }
 
+
+
+
 TMonster *read_mobile(int nr, readFileTypeT type)
 {
   int i, rc, virt=nr;
@@ -1718,6 +1740,21 @@ cached_object *TObjectCache::operator[](int nr)
   return ret;
 }
 
+cached_object *TMobileCache::operator[](int nr)
+{
+  map<int, cached_object *>::iterator tIter;
+  cached_object *ret;
+
+  tIter = cache.find(nr);
+  if (tIter != cache.end()) {
+    ret = tIter->second;
+  } else {
+    ret = NULL;
+  }
+  return ret;
+}
+
+
 void log_object(TObj *obj)
 {
   // Don't log objects that are flagged as newbie
@@ -1782,6 +1819,87 @@ void TObjectCache::preload()
     cache[c->number]=c;
   }
 }
+
+void TMobileCache::preload()
+{
+  TDatabase db(DB_SNEEZY);
+
+  db.query("select vnum, name, short_desc, long_desc, description, actions, affects, faction, fact_perc, letter, attacks, class, level, tohit, ac, hpbonus, damage_level, damage_precision, gold, race, weight, height, str, bra, con, dex, agi, intel, wis, foc, per, cha, kar, spe, pos, def_position, sex, spec_proc, skin, vision, can_be_seen, max_exist, local_sound, adjacent_sound from mob");
+
+  while(db.fetchRow()){
+    cached_object *c=new cached_object;
+    c->number=real_mobile(convertTo<int>(db["vnum"]));
+    c->s["vnum"]=db["vnum"];
+    c->s["name"]=db["name"];
+    c->s["short_desc"]=db["short_desc"];
+    c->s["long_desc"]=db["long_desc"];
+    c->s["description"]=db["description"];
+    c->s["actions"]=db["actions"];
+    c->s["affects"]=db["affects"];
+    c->s["faction"]=db["faction"];
+    c->s["fact_perc"]=db["fact_perc"];
+    c->s["letter"]=db["letter"];
+    c->s["attacks"]=db["attacks"];
+    c->s["class"]=db["class"];
+    c->s["level"]=db["level"];
+    c->s["tohit"]=db["tohit"];
+    c->s["ac"]=db["ac"];
+    c->s["hpbonus"]=db["hpbonus"];
+    c->s["damage_level"]=db["damage_level"];
+    c->s["damage_precision"]=db["damage_precision"];
+    c->s["gold"]=db["gold"];
+    c->s["race"]=db["race"];
+    c->s["weight"]=db["weight"];
+    c->s["height"]=db["height"];
+    c->s["str"]=db["str"];
+    c->s["bra"]=db["bra"];
+    c->s["con"]=db["con"];
+    c->s["dex"]=db["dex"];
+    c->s["agi"]=db["agi"];
+    c->s["intel"]=db["intel"];
+    c->s["wis"]=db["wis"];
+    c->s["foc"]=db["foc"];
+    c->s["per"]=db["per"];
+    c->s["cha"]=db["cha"];
+    c->s["kar"]=db["kar"];
+    c->s["spe"]=db["spe"];
+    c->s["pos"]=db["pos"];
+    c->s["def_position"]=db["def_position"];
+    c->s["sex"]=db["sex"];
+    c->s["spec_proc"]=db["spec_proc"];
+    c->s["skin"]=db["skin"];
+    c->s["vision"]=db["vision"];
+    c->s["can_be_seen"]=db["can_be_seen"];
+    c->s["max_exist"]=db["max_exist"];
+    c->s["local_sound"]=db["local_sound"];
+    c->s["adjacent_sound"]=db["adjacent_sound"];
+    
+    cache[c->number]=c;
+  }
+
+  db.query("select vnum, keyword, description from mob_extra");
+
+  while(db.fetchRow()){
+    cached_mob_extra *c=new cached_mob_extra;
+    c->number=real_mobile(convertTo<int>(db["vnum"]));
+    c->keyword=db["keyword"];
+    c->description=db["description"];
+
+    extra[c->number].push_back(c);
+  }
+
+  db.query("select vnum, type, amt from mob_imm");
+
+  while(db.fetchRow()){
+    cached_mob_imm *c=new cached_mob_imm;
+    c->number=real_mobile(convertTo<int>(db["vnum"]));
+    c->type=convertTo<int>(db["type"]);
+    c->amt=convertTo<int>(db["amt"]);
+
+    imm[c->number].push_back(c);
+  }
+}
+
 
 
 // the idea here is to search all shops for the object we want to load
@@ -1894,6 +2012,363 @@ TObj *read_object_buy_build(TBeing *buyer, int nr, readFileTypeT type)
   // load the item
   return read_object(nr, REAL);
 }
+
+int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing *ch)
+{
+  long tmp; //, tmp2;
+  int calc_level; // tmp3, 
+  // float att;
+  int rc;
+  char letter;
+  TDatabase db;
+
+  int nr = real_mobile(virt);
+
+  if(!(ch && should_alloc) && mob_cache[nr]!=NULL){
+    name = mob_index[number].name;
+    shortDescr = mob_index[number].short_desc;
+    player.longDescr = mob_index[number].long_desc;
+    setDescr(mob_index[number].description);
+    
+    setMult(1.0);
+    
+    specials.act = convertTo<int>(mob_cache[nr]->s["actions"]);
+    if (should_alloc)
+      SET_BIT(specials.act, ACT_STRINGS_CHANGED);
+    
+    specials.affectedBy = convertTo<int>(mob_cache[nr]->s["affects"]);
+    
+    if (isAffected(AFF_SANCTUARY)) {
+      REMOVE_BIT(this->specials.affectedBy, AFF_SANCTUARY);
+      
+      affectedData aff;
+      
+      aff.type = SPELL_SANCTUARY;
+      aff.level = 50;
+      aff.duration = PERMANENT_DURATION;
+      aff.location = APPLY_PROTECTION;
+      aff.modifier = 50;
+      aff.bitvector = AFF_SANCTUARY;
+      affectJoin(this, &aff, AVG_DUR_NO, AVG_EFF_YES);
+      // setProtection(50);
+    }
+    
+    tmp=convertTo<int>(mob_cache[nr]->s["faction"]);
+    mud_assert(tmp >= MIN_FACTION && tmp < MAX_FACTIONS, "Bad faction value");
+    setFaction(factionTypeT(tmp));
+    
+    setPerc((double) convertTo<double>(mob_cache[nr]->s["fact_perc"]));
+    
+    letter=convertTo<char>(mob_cache[nr]->s["letter"]);
+    
+    if ((letter == 'A') || (letter == 'L')) {
+      setMult((double) convertTo<double>(mob_cache[nr]->s["attacks"]));
+      
+      setClass(convertTo<int>(mob_cache[nr]->s["class"]));
+      fixLevels(convertTo<int>(mob_cache[nr]->s["level"]));
+      // int lvl = convertTo<int>(mob_cache[nr]->s["level"]);
+      
+      setHitroll(convertTo<int>(mob_cache[nr]->s["tohit"]));
+      
+      setACLevel(convertTo<float>(mob_cache[nr]->s["ac"]));
+      setACFromACLevel();
+      
+      setHPLevel(convertTo<float>(mob_cache[nr]->s["hpbonus"]));
+      setHPFromHPLevel();
+      
+      setDamLevel(convertTo<float>(mob_cache[nr]->s["damage_level"]));
+      setDamPrecision(convertTo<int>(mob_cache[nr]->s["damage_precision"]));
+      
+      calc_level = (int) (getHPLevel() + getACLevel() + getDamLevel())/3;
+      
+      setMana(10);
+      setMaxMana(10);
+      setLifeforce(9000);
+      setMaxMove(50 + 10*GetMaxLevel());
+      setMove(moveLimit());
+      
+      moneyConst = (ubyte) convertTo<int>(mob_cache[nr]->s["gold"]);
+      
+      setExp(0);
+      
+      setRace(race_t(convertTo<int>(mob_cache[nr]->s["race"])));
+      setWeight(convertTo<float>(mob_cache[nr]->s["weight"]));
+      setHeight(convertTo<int>(mob_cache[nr]->s["height"]));
+      
+      // statTypeT local_stat;
+      
+      setStat(STAT_CHOSEN, STAT_STR, convertTo<int>(mob_cache[nr]->s["str"]));
+      setStat(STAT_CHOSEN, STAT_BRA, convertTo<int>(mob_cache[nr]->s["bra"]));
+      setStat(STAT_CHOSEN, STAT_CON, convertTo<int>(mob_cache[nr]->s["con"]));
+      setStat(STAT_CHOSEN, STAT_DEX, convertTo<int>(mob_cache[nr]->s["dex"]));
+      setStat(STAT_CHOSEN, STAT_AGI, convertTo<int>(mob_cache[nr]->s["agi"]));
+      setStat(STAT_CHOSEN, STAT_INT, convertTo<int>(mob_cache[nr]->s["intel"]));
+      setStat(STAT_CHOSEN, STAT_WIS, convertTo<int>(mob_cache[nr]->s["wis"]));
+      setStat(STAT_CHOSEN, STAT_FOC, convertTo<int>(mob_cache[nr]->s["foc"]));
+      setStat(STAT_CHOSEN, STAT_PER, convertTo<int>(mob_cache[nr]->s["per"]));
+      setStat(STAT_CHOSEN, STAT_CHA, convertTo<int>(mob_cache[nr]->s["cha"]));
+      setStat(STAT_CHOSEN, STAT_KAR, convertTo<int>(mob_cache[nr]->s["kar"]));
+      setStat(STAT_CHOSEN, STAT_SPE, convertTo<int>(mob_cache[nr]->s["spe"]));
+      
+      setPosition(mapFileToPos(convertTo<int>(mob_cache[nr]->s["pos"])));
+      
+      if (getPosition() == POSITION_DEAD) {
+	// can happen.  no legs and trying to set resting, etc
+	vlogf(LOG_LOW, fmt("Mob (%s) put in dead position during creation.") % 
+	      getName());
+      }
+      
+      default_pos = mapFileToPos(convertTo<int>(mob_cache[nr]->s["def_position"]));
+      
+      setSexUnsafe(convertTo<int>(mob_cache[nr]->s["sex"]));
+      
+      spec = convertTo<int>(mob_cache[nr]->s["spec_proc"]);
+      
+      if (!UtilProcs(spec) && !GuildProcs(spec) && !isTestmob()) 
+	//    if !(is_abbrev(name, "trainer") || is_abbrev(name, "guildmaster"))
+	{
+	  tmp = (int)((getHPLevel() + getACLevel() + getDamLevel())/3);
+	  fixLevels(tmp);
+	  
+	  //    reallvl = tmp;
+	}
+      
+      // don't set the xp until here, since a lot of things factor in
+      // gold isn't calculated until here either...
+      addToExp(determineExp());
+      
+      setMaterial(convertTo<int>(mob_cache[nr]->s["skin"]));
+      
+      canBeSeen = convertTo<int>(mob_cache[nr]->s["can_be_seen"]);
+      
+      visionBonus = convertTo<int>(mob_cache[nr]->s["vision"]);
+      
+      max_exist = convertTo<int>(mob_cache[nr]->s["max_exist"]);
+      
+      if (!should_alloc) {
+	rc = checkSpec(this, CMD_GENERIC_INIT, "", NULL);
+	if (IS_SET_DELETE(rc, DELETE_THIS) ||
+	    IS_SET_DELETE(rc, DELETE_VICT)) {
+	  return DELETE_THIS;
+	}
+      }
+      if (mob_cache[nr]->s["local_sound"].length() > 0)
+	sounds=mud_str_dup(mob_cache[nr]->s["local_sound"]);
+      if (mob_cache[nr]->s["adjacent_sound"].length() > 0)
+	distantSnds=mud_str_dup(mob_cache[nr]->s["adjacent_sound"]);
+    }
+
+    for(unsigned int i=0;i<mob_cache.imm[nr].size();++i){
+      setImmunity((immuneTypeT) mob_cache.imm[nr][i]->type, mob_cache.imm[nr][i]->amt);
+    }
+    
+    extraDescription *tExDescr;
+    for(unsigned int i=0;i<mob_cache.extra[nr].size();++i){
+      tExDescr              = new extraDescription();
+      tExDescr->keyword     = mud_str_dup(mob_cache.extra[nr][i]->keyword);
+      tExDescr->description = mud_str_dup(mob_cache.extra[nr][i]->description);
+      tExDescr->next        = ex_description;
+      ex_description        = tExDescr;
+    }
+
+
+  } else {
+    if (ch && should_alloc) {
+      db = DB_IMMORTAL;
+      db.query("select * from mob where owner = '%s' and vnum = %i", ch->name, virt);
+    } else {
+      db = DB_SNEEZY;
+      db.query("select * from mob where vnum = %i", virt);
+    }
+    if (!db.fetchRow()) {
+      if (!should_alloc) {
+	vlogf(LOG_LOW, fmt("Failure to load mob vnum %d from database.") % virt);
+      }
+      return FALSE;
+    }
+    
+    if (should_alloc) {
+      number = -1;
+      name = mud_str_dup(db["name"]);
+      shortDescr = mud_str_dup(db["short_desc"]);
+      player.longDescr = mud_str_dup(db["long_desc"]);
+      setDescr(mud_str_dup(db["description"]));
+    } else {
+      name = mob_index[number].name;
+      shortDescr = mob_index[number].short_desc;
+      player.longDescr = mob_index[number].long_desc;
+      setDescr(mob_index[number].description);
+    }
+    
+    setMult(1.0);
+    
+    specials.act = convertTo<int>(db["actions"]);
+    if (should_alloc)
+      SET_BIT(specials.act, ACT_STRINGS_CHANGED);
+    
+    specials.affectedBy = convertTo<int>(db["affects"]);
+    
+    if (isAffected(AFF_SANCTUARY)) {
+      REMOVE_BIT(this->specials.affectedBy, AFF_SANCTUARY);
+      
+      affectedData aff;
+      
+      aff.type = SPELL_SANCTUARY;
+      aff.level = 50;
+      aff.duration = PERMANENT_DURATION;
+      aff.location = APPLY_PROTECTION;
+      aff.modifier = 50;
+      aff.bitvector = AFF_SANCTUARY;
+      affectJoin(this, &aff, AVG_DUR_NO, AVG_EFF_YES);
+      // setProtection(50);
+    }
+    
+    tmp=convertTo<int>(db["faction"]);
+    mud_assert(tmp >= MIN_FACTION && tmp < MAX_FACTIONS, "Bad faction value");
+    setFaction(factionTypeT(tmp));
+    
+    setPerc((double) convertTo<double>(db["fact_perc"]));
+    
+    letter=convertTo<char>(db["letter"]);
+    
+    if ((letter == 'A') || (letter == 'L')) {
+      setMult((double) convertTo<double>(db["attacks"]));
+      
+      setClass(convertTo<int>(db["class"]));
+      fixLevels(convertTo<int>(db["level"]));
+      // int lvl = convertTo<int>(db["level"]);
+      
+      setHitroll(convertTo<int>(db["tohit"]));
+      
+      setACLevel(convertTo<float>(db["ac"]));
+      setACFromACLevel();
+      
+      setHPLevel(convertTo<float>(db["hpbonus"]));
+      setHPFromHPLevel();
+      
+      setDamLevel(convertTo<float>(db["damage_level"]));
+      setDamPrecision(convertTo<int>(db["damage_precision"]));
+      
+      calc_level = (int) (getHPLevel() + getACLevel() + getDamLevel())/3;
+      
+      setMana(10);
+      setMaxMana(10);
+      setLifeforce(9000);
+      setMaxMove(50 + 10*GetMaxLevel());
+      setMove(moveLimit());
+      
+      moneyConst = (ubyte) convertTo<int>(db["gold"]);
+      
+      setExp(0);
+      
+      setRace(race_t(convertTo<int>(db["race"])));
+      setWeight(convertTo<float>(db["weight"]));
+      setHeight(convertTo<int>(db["height"]));
+      
+      // statTypeT local_stat;
+      
+      setStat(STAT_CHOSEN, STAT_STR, convertTo<int>(db["str"]));
+      setStat(STAT_CHOSEN, STAT_BRA, convertTo<int>(db["bra"]));
+      setStat(STAT_CHOSEN, STAT_CON, convertTo<int>(db["con"]));
+      setStat(STAT_CHOSEN, STAT_DEX, convertTo<int>(db["dex"]));
+      setStat(STAT_CHOSEN, STAT_AGI, convertTo<int>(db["agi"]));
+      setStat(STAT_CHOSEN, STAT_INT, convertTo<int>(db["intel"]));
+      setStat(STAT_CHOSEN, STAT_WIS, convertTo<int>(db["wis"]));
+      setStat(STAT_CHOSEN, STAT_FOC, convertTo<int>(db["foc"]));
+      setStat(STAT_CHOSEN, STAT_PER, convertTo<int>(db["per"]));
+      setStat(STAT_CHOSEN, STAT_CHA, convertTo<int>(db["cha"]));
+      setStat(STAT_CHOSEN, STAT_KAR, convertTo<int>(db["kar"]));
+      setStat(STAT_CHOSEN, STAT_SPE, convertTo<int>(db["spe"]));
+      
+      setPosition(mapFileToPos(convertTo<int>(db["pos"])));
+      
+      if (getPosition() == POSITION_DEAD) {
+	// can happen.  no legs and trying to set resting, etc
+	vlogf(LOG_LOW, fmt("Mob (%s) put in dead position during creation.") % 
+	      getName());
+      }
+      
+      default_pos = mapFileToPos(convertTo<int>(db["def_position"]));
+      
+      setSexUnsafe(convertTo<int>(db["sex"]));
+      
+      spec = convertTo<int>(db["spec_proc"]);
+      
+      if (!UtilProcs(spec) && !GuildProcs(spec) && !isTestmob()) 
+	//    if !(is_abbrev(name, "trainer") || is_abbrev(name, "guildmaster"))
+	{
+	  tmp = (int)((getHPLevel() + getACLevel() + getDamLevel())/3);
+	  fixLevels(tmp);
+	  
+	  //    reallvl = tmp;
+	}
+      
+      // don't set the xp until here, since a lot of things factor in
+      // gold isn't calculated until here either...
+      addToExp(determineExp());
+      
+      setMaterial(convertTo<int>(db["skin"]));
+      
+      canBeSeen = convertTo<int>(db["can_be_seen"]);
+      
+      visionBonus = convertTo<int>(db["vision"]);
+      
+      max_exist = convertTo<int>(db["max_exist"]);
+      
+      if (!should_alloc) {
+	rc = checkSpec(this, CMD_GENERIC_INIT, "", NULL);
+	if (IS_SET_DELETE(rc, DELETE_THIS) ||
+	    IS_SET_DELETE(rc, DELETE_VICT)) {
+	  return DELETE_THIS;
+	}
+      }
+      if (db["local_sound"].length() > 0)
+	sounds=mud_str_dup(db["local_sound"]);
+      if (db["adjacent_sound"].length() > 0)
+	distantSnds=mud_str_dup(db["adjacent_sound"]);
+      
+    }
+    db.query("select * from mob_imm where vnum=%i", virt);
+    while(db.fetchRow()){
+      setImmunity((immuneTypeT) convertTo<int>(db["type"]), convertTo<int>(db["amt"]));
+    }
+    
+    db.query("select * from mob_extra where vnum=%i", virt);
+    extraDescription *tExDescr;
+    while(db.fetchRow()){
+      tExDescr              = new extraDescription();
+      tExDescr->keyword     = mud_str_dup(db["keyword"]);
+      tExDescr->description = mud_str_dup(db["description"]);
+      tExDescr->next        = ex_description;
+      ex_description        = tExDescr;
+    }
+  }
+    
+  
+  player.time.birth = time(0);
+  player.time.played = 0;
+  player.time.logon = time(0);
+  
+  condTypeT ic;
+  for (ic = MIN_COND; ic < MAX_COND_TYPE; ++ic)
+    setCond(ic, -1);
+  
+  aiMobCreation();
+  
+  // have read chosen, must set current stats now
+  // curr stats are needed to properly assign discs (next step)
+  // have to do this AFTER chosen read and AFTER race assigned
+  statTypeT ik;
+  for (ik = MIN_STAT; ik < MAX_STATS_USED; ik++)
+    setStat(STAT_CURRENT, ik, getStat(STAT_NATURAL, ik));
+  
+  // assign disc before anything else
+  // skills are needed by almost everything
+  assignDisciplinesClass();
+
+  return TRUE;
+}
+
 
 TObj *read_object(int nr, readFileTypeT type)
 {
