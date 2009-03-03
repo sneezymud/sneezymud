@@ -35,10 +35,6 @@ class Exceptions : public CxxTest::TestSuite
 
   }
 
-  void testGarble(){
-    TS_ASSERT_THROWS_NOTHING(garble_olddrunk(testPerson1, testPerson2, "some test string", SPEECH_WHISPER));
-  }
-
   void testRandomMessage(){
     for(int i=0;i<100;++i)
       TS_ASSERT_THROWS_NOTHING(randommessage("Peel"));
