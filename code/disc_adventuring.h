@@ -52,7 +52,7 @@ class CDAdventuring : public CDiscipline
     CSkill skRide;
     CSkill skSwim;
     CSkill skClimb;
-    CSkill skSign;         // Do we want this?
+    CSkill skSign;
     CSkill skKnowPeople;
     CSkill skKnowGiant;
     CSkill skKnowVeggie;
@@ -64,14 +64,8 @@ class CDAdventuring : public CDiscipline
     CSkill skReadMagic;
     CSkill skBandage;
     CSkill skFastHeal;
-//    CSkill skSlash;
-//    CSkill skBow;
-//    CSkill skPierce;
-//    CSkill skBlunt;
-//    CSkill skSharpen;
     CSkill skEvaluate;
     CSkill skTactics;
-//    CSkill skDull;
     CSkill skDissect;
     CSkill skOffense;
     CSkill skDefense;
@@ -79,41 +73,77 @@ class CDAdventuring : public CDiscipline
     CSkill skWhittle;
     CSkill skMend;
     CSkill skButcher;
+    CSkill skGutterCant;
+    CSkill skGnollJargon;
+    CSkill skTroglodytePidgin;
 
     CDAdventuring()
       : CDiscipline(),
-        skFishing(), skLogging(), skAlcoholism(), skRide(), skSwim(), skClimb(),
-        skSign(), skKnowPeople(), skKnowGiant(),
-        skKnowVeggie(), skKnowAnimal(), skKnowReptile(),
-        skKnowUndead(), skKnowOther(), skKnowDemon(),
-        skReadMagic(), skBandage(), skFastHeal(),
-//        skSlash(), skBow(), skPierce(),
-//        skBlunt(), skSharpen(),
-        skEvaluate(), skTactics(),
-//        skDull(),
-        skDissect(), skOffense(), skDefense(), 
-        skGenWeapons(), skWhittle(),
-      skMend(),
-      skButcher(){
+        skFishing(),
+        skLogging(),
+        skAlcoholism(),
+        skRide(),
+        skSwim(),
+        skClimb(),
+        skSign(),
+        skKnowPeople(),
+        skKnowGiant(),
+        skKnowVeggie(),
+        skKnowAnimal(),
+        skKnowReptile(),
+        skKnowUndead(),
+        skKnowOther(),
+        skKnowDemon(),
+        skReadMagic(),
+        skBandage(),
+        skFastHeal(),
+        skEvaluate(),
+        skTactics(),
+        skDissect(),
+        skOffense(),
+        skDefense(), 
+        skGenWeapons(),
+        skWhittle(),
+        skMend(),
+        skButcher(),
+        skGutterCant(),
+        skGnollJargon(),
+        skTroglodytePidgin()
+    {
     }
     CDAdventuring(const CDAdventuring &a)
       : CDiscipline(a),
-        skFishing(a.skFishing), skLogging(a.skLogging), skAlcoholism(a.skAlcoholism), skRide(a.skRide), skSwim(a.skSwim), skClimb(a.skClimb),
-        skSign(a.skSign), skKnowPeople(a.skKnowPeople), skKnowGiant(a.skKnowGiant),
-        skKnowVeggie(a.skKnowVeggie), skKnowAnimal(a.skKnowAnimal), 
+        skFishing(a.skFishing),
+        skLogging(a.skLogging),
+        skAlcoholism(a.skAlcoholism),
+        skRide(a.skRide),
+        skSwim(a.skSwim),
+        skClimb(a.skClimb),
+        skSign(a.skSign),
+        skKnowPeople(a.skKnowPeople),
+        skKnowGiant(a.skKnowGiant),
+        skKnowVeggie(a.skKnowVeggie),
+        skKnowAnimal(a.skKnowAnimal), 
         skKnowReptile(a.skKnowReptile),
-        skKnowUndead(a.skKnowUndead), skKnowOther(a.skKnowOther), 
+        skKnowUndead(a.skKnowUndead),
+        skKnowOther(a.skKnowOther), 
         skKnowDemon(a.skKnowDemon),
-        skReadMagic(a.skReadMagic), skBandage(a.skBandage), skFastHeal(a.skFastHeal),
-//        skSlash(a.skSlash), skBow(a.skBow), skPierce(a.skPierce),
-//        skBlunt(a.skBlunt), skSharpen(a.skSharpen),
-        skEvaluate(a.skEvaluate), skTactics(a.skTactics),
-//        skDull(a.skDull),
-        skDissect(a.skDissect), skOffense(a.skOffense),
-        skDefense(a.skDefense), skGenWeapons(a.skGenWeapons),
+        skReadMagic(a.skReadMagic),
+        skBandage(a.skBandage),
+        skFastHeal(a.skFastHeal),
+        skEvaluate(a.skEvaluate),
+        skTactics(a.skTactics),
+        skDissect(a.skDissect),
+        skOffense(a.skOffense),
+        skDefense(a.skDefense),
+        skGenWeapons(a.skGenWeapons),
         skWhittle(a.skWhittle),
-      skMend(a.skMend),
-      skButcher(a.skButcher) {
+        skMend(a.skMend),
+        skButcher(a.skButcher),
+        skGutterCant(a.skGutterCant),
+        skGnollJargon(a.skGnollJargon),
+        skTroglodytePidgin(a.skTroglodytePidgin)
+    {
     }
     CDAdventuring & operator=(const CDAdventuring &a) {
       if (this == &a) return *this;
@@ -136,14 +166,8 @@ class CDAdventuring : public CDiscipline
       skReadMagic = a.skReadMagic;
       skBandage = a.skBandage;
       skFastHeal = a.skFastHeal;
-//      skSlash = a.skSlash;
-//      skBow = a.skBow;
-//      skPierce = a.skPierce;
-//      skBlunt = a.skBlunt;
-//      skSharpen = a.skSharpen;
       skEvaluate = a.skEvaluate;
       skTactics = a.skTactics;
-//      skDull = a.skDull;
       skDissect = a.skDissect;
       skOffense = a.skOffense;
       skDefense = a.skDefense;
@@ -151,6 +175,9 @@ class CDAdventuring : public CDiscipline
       skWhittle = a.skWhittle;
       skMend = a.skMend;
       skButcher = a.skButcher;
+      skGutterCant = a.skGutterCant;
+      skGnollJargon = a.skGnollJargon;
+      skTroglodytePidgin = a.skTroglodytePidgin;
 
       return *this;
     }
@@ -165,8 +192,6 @@ class CDAdventuring : public CDiscipline
 private:
 };
 
-//    void sharpen(TBeing *, TThing *);
-//    void dull(TBeing *, TThing *);
     int dissect(TBeing *, TObj *);
 
 #endif

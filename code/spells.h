@@ -565,6 +565,14 @@ enum spellNumT {
      SKILL_ENCAMP,
      SKILL_HIKING,
      SKILL_FISHLORE,
+     SKILL_GUTTER_CANT,
+     SKILL_GNOLL_JARGON,
+     SKILL_TROGLODYTE_PIDGIN,
+     SKILL_TROLLISH,
+     SKILL_BULLYWUG,
+     SKILL_AVIAN,
+     SKILL_KALYSIAN,
+
      // end of generic
 
      // keep this as the last of the true skills

@@ -1846,6 +1846,13 @@ void TBeing::statBeing(TBeing *k)
       case SKILL_IRON_WILL:
       case SKILL_PLANT:
       case SPELL_EMBALM:
+      case SKILL_GUTTER_CANT:
+      case SKILL_GNOLL_JARGON:
+      case SKILL_TROGLODYTE_PIDGIN:
+      case SKILL_TROLLISH:
+      case SKILL_BULLYWUG:
+      case SKILL_AVIAN:
+      case SKILL_KALYSIAN:
 #if 1
       case SPELL_EARTHMAW:
       case SPELL_CREEPING_DOOM:

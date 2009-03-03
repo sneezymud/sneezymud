@@ -142,7 +142,7 @@ typedef struct _TGarble
   const char * const description; // used by egotrip
   const bool automatic; // used by egotrip
   const GARBLESCOPE scope;
-  sstring (*garbleFunction)(const TBeing *, const TBeing *, const sstring &, SPEECHTYPE);
+  sstring (*garbleFunction)(const TBeing *, TBeing *, const sstring &, SPEECHTYPE);
   const int speechFlags;
 } TGarble;
 

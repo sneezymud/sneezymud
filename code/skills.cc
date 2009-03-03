@@ -1066,8 +1066,15 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDAdvAdventuring *) cd)->skEncamp;
     case SKILL_FISHLORE:
       return &((CDAdvAdventuring *) cd)->skFishlore;
+    case SKILL_TROLLISH:
+      return &((CDAdvAdventuring *) cd)->skTrollish;
+    case SKILL_BULLYWUG:
+      return &((CDAdvAdventuring *) cd)->skBullywug;
+    case SKILL_AVIAN:
+      return &((CDAdvAdventuring *) cd)->skAvian;
+    case SKILL_KALYSIAN:
+      return &((CDAdvAdventuring *) cd)->skKalysian;
 
-      
       // adventuring
     case SKILL_ALCOHOLISM:// 668
       return &((CDAdventuring *) cd)->skAlcoholism;
@@ -1121,6 +1128,12 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDAdventuring *) cd)->skButcher;
     case SKILL_LOGGING:
       return &((CDAdventuring *) cd)->skLogging;
+    case SKILL_GUTTER_CANT:
+      return &((CDAdventuring *) cd)->skGutterCant;
+    case SKILL_GNOLL_JARGON:
+      return &((CDAdventuring *) cd)->skGnollJargon;
+    case SKILL_TROGLODYTE_PIDGIN:
+      return &((CDAdventuring *) cd)->skTroglodytePidgin;
 
   // disc_wizardry
     case SKILL_WIZARDRY: // 960

@@ -13,28 +13,28 @@
 const sstring RandomPhrase(bool allowRecursivePhrase);
 
 // Garble functions - defined here so peeps dont reference them outside of this file
-sstring garble_blahblah(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
-sstring garble_PG13filter(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
-sstring garble_drunk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
-sstring garble_sign(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
-sstring garble_innuendo(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
-sstring garble_excited(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
-sstring garble_glubglub(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
-sstring garble_ghost(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
-sstring garble_wahwah(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
-sstring garble_pirate(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
-sstring garble_freshprince(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
-sstring garble_fishtalk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
-sstring garble_lolcats(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
-sstring garble_vampire(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
-sstring garble_igor(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
-sstring garble_olddrunk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
-sstring garble_irish(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
-sstring garble_trolltalk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
-sstring garble_frogtalk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
-sstring garble_birdtalk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
-sstring garble_gutter(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
-sstring garble_trogtalk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_blahblah(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_PG13filter(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_drunk(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_sign(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_innuendo(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_excited(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_glubglub(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_ghost(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_wahwah(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_pirate(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_freshprince(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_fishtalk(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_lolcats(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_vampire(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_igor(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_olddrunk(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_irish(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_trolltalk(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_frogtalk(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_birdtalk(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_gutter(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType);
+sstring garble_trogtalk(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType);
 
 TGarble GarbleData[GARBLE_MAX] = {
   { "innuendo", "Makes the character end sentences, if you know what I mean", false, GARBLE_SCOPE_EVERYONE, garble_innuendo, SPEECH_FLAG_VERBAL },
@@ -166,8 +166,20 @@ sstring TBeing::garble(TBeing *to, const sstring &arg, SPEECHTYPE speechType, GA
   return garbled;
 }
 
+// adjust the chance of a language garble to activate
+// in the range of 0 to 100, higher being worse at the language
+int getLanguageChance(const TBeing *from, TBeing *to, int length, spellNumT language)
+{
+  int learning = to->getSkillValue(language);
+  int difficulty = max(0, length-learning);
+  int bonus = to && to->bSuccess(difficulty, language) ? learning/5 : 0;
+  int chance = from ? 100 - from->plotStat(STAT_CURRENT, STAT_INT, 0, 100, 50) : 25;
+  return min(100, max(0, chance - bonus));
+}
+
+
 // Deal with whiney bitches
-sstring garble_blahblah(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+sstring garble_blahblah(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType)
 {
   sstring obuf, buf, blah, word;
   unsigned int loc;
@@ -221,7 +233,7 @@ sstring garble_blahblah(const TBeing *from, const TBeing *to, const sstring &arg
 }
 
 // removes swears and bad stuff for the recipient
-sstring garble_PG13filter(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+sstring garble_PG13filter(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType)
 {
   sstring output, word, ilname;
 
@@ -254,7 +266,7 @@ sstring garble_PG13filter(const TBeing *from, const TBeing *to, const sstring &a
 }
 
 // Make drunk people garble their words!
-sstring garble_olddrunk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+sstring garble_olddrunk(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType)
 {
   int chance = from->getCond(DRUNK);
   sstring obuf, buf, latin, word;
@@ -355,7 +367,7 @@ sstring garble_olddrunk(const TBeing *from, const TBeing *to, const sstring &arg
 
 // This garble applied to signing, used to make the sign look worse based on skill
 // returns the garbled string
-sstring garble_sign(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+sstring garble_sign(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType)
 {
   sstring word, garble;
   sstring whitespace = " \f\n\r\t\v";
@@ -383,7 +395,7 @@ sstring garble_sign(const TBeing *from, const TBeing *to, const sstring &arg, SP
 }
 
 // ends sentences with a little innuendo, if you know what I mean.
-sstring garble_innuendo(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+sstring garble_innuendo(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType)
 {
   sstring buf = arg;
   buf.trim();
@@ -405,7 +417,7 @@ sstring garble_innuendo(const TBeing *from, const TBeing *to, const sstring &arg
 }
 
 // ends sentences with exclamation points and randomly ALL CAPS
-sstring garble_excited(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+sstring garble_excited(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType)
 {
   sstring buf = arg;
   byte exclamations = 1;
@@ -428,13 +440,13 @@ sstring garble_excited(const TBeing *from, const TBeing *to, const sstring &arg,
 }
 
 // used when underwater or drowning - the essential glub glub glub!
-sstring garble_glubglub(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+sstring garble_glubglub(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType)
 {
   return "Glub glub glub.";
 }
 
 // makes you talk like a ghost
-sstring garble_ghost(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+sstring garble_ghost(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType)
 {
   sstring buf, word;
   static const sstring whitespace = " \f\n\r\t\v";
@@ -459,7 +471,7 @@ sstring garble_ghost(const TBeing *from, const TBeing *to, const sstring &arg, S
 }
 
 // makes you whine like a baby!
-sstring garble_wahwah(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+sstring garble_wahwah(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType)
 {
   sstring buf, word;
   static const sstring whitespace = " \f\n\r\t\v";
@@ -494,7 +506,7 @@ sstring garble_wahwah(const TBeing *from, const TBeing *to, const sstring &arg, 
 
 // This garble makes the target talk like a pirate
 // returns the garbled string
-sstring garble_pirate(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+sstring garble_pirate(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType)
 {
   static const sstring pirate_replace[][2] = {
     // escape punctuation
@@ -720,7 +732,7 @@ sstring garble_pirate(const TBeing *from, const TBeing *to, const sstring &arg, 
 
 
 // no garble is complete without a fresh prince parody (Brightmoon)
-sstring garble_freshprince(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+sstring garble_freshprince(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType)
 {
   static const sstring lyrics[] =
   {
@@ -759,7 +771,7 @@ sstring garble_freshprince(const TBeing *from, const TBeing *to, const sstring &
 // makes the character talk like a fish - used for the fishman/fishmen race
 // compiled by watching countless hours of He-Man clips for Mer-man speaking parts.
 // Heres a spoiler: there aren't many.
-sstring garble_fishtalk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+sstring garble_fishtalk(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType)
 {
   static const sstring watery[] =
   {
@@ -779,7 +791,7 @@ sstring garble_fishtalk(const TBeing *from, const TBeing *to, const sstring &arg
   };
   sstring out;
   int iWord = 0;
-  int chance = from ? 100 - from->plotStat(STAT_CURRENT, STAT_INT, 0, 100, 50) : 25;
+  int chance = getLanguageChance(from, to, arg.length(), SKILL_KALYSIAN);
 
   for(sstring word = arg.word(iWord); !word.empty(); word = arg.word(++iWord))
   {
@@ -809,7 +821,7 @@ sstring garble_fishtalk(const TBeing *from, const TBeing *to, const sstring &arg
 }
 
 // submitted by Vasco - used by the troll race as its base talk
-sstring garble_lolcats(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+sstring garble_lolcats(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType)
 {
   static const sstring lolcats_replace[][2] = {
     { ",", " *,* " },
@@ -879,7 +891,7 @@ sstring garble_lolcats(const TBeing *from, const TBeing *to, const sstring &arg,
 
   sstring out;
   int iWord = 0;
-  int chance = from ? 100 - from->plotStat(STAT_CURRENT, STAT_INT, 0, 100, 50) : 25;
+  int chance = getLanguageChance(from, to, arg.length(), SKILL_GNOLL_JARGON);
 
   for(sstring word = arg.word(iWord); !word.empty(); word = arg.word(++iWord))
   {
@@ -905,7 +917,7 @@ sstring garble_lolcats(const TBeing *from, const TBeing *to, const sstring &arg,
 }
 
 // talk like the sesamestreet count vampire
-sstring garble_vampire(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+sstring garble_vampire(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType)
 {
   sstring out = " ";
   out += arg.lower();
@@ -918,7 +930,7 @@ sstring garble_vampire(const TBeing *from, const TBeing *to, const sstring &arg,
 }
 
 // talk like an igor henchman : Replace every s and ss with th
-sstring garble_igor(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+sstring garble_igor(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType)
 {
   sstring out = arg.lower();
 
@@ -933,7 +945,7 @@ sstring garble_igor(const TBeing *from, const TBeing *to, const sstring &arg, SP
 // 15 really drunk
 // 20 super drunk
 // 25 wasted
-sstring garble_drunk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+sstring garble_drunk(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType)
 {
   static const sstring replace[][2] = {
     { "ss", "\255s" },
@@ -1080,7 +1092,7 @@ sstring garble_drunk(const TBeing *from, const TBeing *to, const sstring &arg, S
 }
 
 // Irish accent!
-sstring garble_irish(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+sstring garble_irish(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType)
 {
   static const sstring replace[][2] = {
     { ",", " *,* " },
@@ -1199,7 +1211,7 @@ sstring garble_irish(const TBeing *from, const TBeing *to, const sstring &arg, S
 // regular z's, are kz
 // no f's or f sounds
 // no th sound
-sstring garble_trolltalk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+sstring garble_trolltalk(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType)
 {
   static const sstring replace[][2] = {
     { "ph", "'" },
@@ -1227,7 +1239,7 @@ sstring garble_trolltalk(const TBeing *from, const TBeing *to, const sstring &ar
   sstring out = " ";
   out += arg.lower();
   out += " ";
-  int chance = from ? 100 - from->plotStat(STAT_CURRENT, STAT_INT, 0, 100, 50) : 25;
+  int chance = getLanguageChance(from, to, arg.length(), SKILL_TROLLISH);
 
   for(int i=0;i < (int)cElements(replace);i++)
   {
@@ -1240,7 +1252,7 @@ sstring garble_trolltalk(const TBeing *from, const TBeing *to, const sstring &ar
 }
 
 // frogs have a soft pallate, and talk as if they have 2 fingers holding their tounge down
-sstring garble_frogtalk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+sstring garble_frogtalk(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType)
 {
   static const sstring replace[][2] = {
     { "ll", "y" },
@@ -1262,7 +1274,7 @@ sstring garble_frogtalk(const TBeing *from, const TBeing *to, const sstring &arg
   sstring out = " ";
   out += arg.lower();
   out += " ";
-  int chance = from ? 100 - from->plotStat(STAT_CURRENT, STAT_INT, 0, 100, 50) : 75;
+  int chance = getLanguageChance(from, to, arg.length(), SKILL_BULLYWUG);
 
   // non-native frogtalkers must have gotten this via some drug or enchantment.  100% messup chance
   if (from && !(from->getMyRace()->getGarbles() & GARBLE_FLAG_FROGTALK))
@@ -1279,7 +1291,7 @@ sstring garble_frogtalk(const TBeing *from, const TBeing *to, const sstring &arg
 }
 
 
-sstring garble_birdtalk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+sstring garble_birdtalk(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType)
 {
   static const sstring birdsquak_prefix[] = { "mwr","bwr","wr","buk","pwr","squ" };
   static const sstring birdsquak_suffix[] = { "awk","aah","awr","awrk","ak" };
@@ -1307,7 +1319,7 @@ sstring garble_birdtalk(const TBeing *from, const TBeing *to, const sstring &arg
 
   sstring out;
   int iWord = 0;
-  int chance = from ? 100 - from->plotStat(STAT_CURRENT, STAT_INT, 0, 100, 50) : 25;
+  int chance = getLanguageChance(from, to, arg.length(), SKILL_AVIAN);
 
   for(sstring word = arg.word(iWord); !word.empty(); word = arg.word(++iWord))
   {
@@ -1339,7 +1351,7 @@ sstring garble_birdtalk(const TBeing *from, const TBeing *to, const sstring &arg
 }
 
 
-sstring garble_gutter(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+sstring garble_gutter(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType)
 {
   static const sstring replace[][2] = {
     { " this ", " dis " },
@@ -1390,7 +1402,7 @@ sstring garble_gutter(const TBeing *from, const TBeing *to, const sstring &arg, 
   sstring out = " ";
   out += arg.lower();
   out += " ";
-  int chance = from ? 100 - from->plotStat(STAT_CURRENT, STAT_INT, 0, 100, 50) : 25;
+  int chance = getLanguageChance(from, to, arg.length(), SKILL_GUTTER_CANT);
 
   for(int i=0;i < (int)cElements(replace);i++)
   {
@@ -1404,12 +1416,12 @@ sstring garble_gutter(const TBeing *from, const TBeing *to, const sstring &arg, 
 }
 
 // troglodytes talk in broken seperate phonics.  So the words are hyphe-na-ted out.
-sstring garble_trogtalk(const TBeing *from, const TBeing *to, const sstring &arg, SPEECHTYPE speechType)
+sstring garble_trogtalk(const TBeing *from, TBeing *to, const sstring &arg, SPEECHTYPE speechType)
 {
   int iWord = 0;
   sstring out = arg;
   sstring word = out.word(iWord);
-  int chance = from ? 100 - from->plotStat(STAT_CURRENT, STAT_INT, 0, 100, 50) : 25;
+  int chance = getLanguageChance(from, to, arg.length(), SKILL_TROGLODYTE_PIDGIN);
   unsigned int iReplace = 0;
 
   for(; !word.empty(); word = out.word(++iWord))

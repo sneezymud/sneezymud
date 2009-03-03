@@ -19,7 +19,10 @@ class CDAdvAdventuring : public CDiscipline
     CSkill skDivination;
     CSkill skEncamp;
     CSkill skFishlore;
-
+    CSkill skTrollish;
+    CSkill skBullywug;
+    CSkill skAvian;
+    CSkill skKalysian;
 
     CDAdvAdventuring()
       : CDiscipline(),
@@ -29,7 +32,11 @@ class CDAdvAdventuring : public CDiscipline
       skSkin(),
       skDivination(),
       skEncamp(),
-      skFishlore()
+      skFishlore(),
+      skTrollish(),
+      skBullywug(),
+      skAvian(),
+      skKalysian()
       {
       }
     CDAdvAdventuring(const CDAdvAdventuring &a)
@@ -40,7 +47,11 @@ class CDAdvAdventuring : public CDiscipline
       skSkin(a.skSkin),
       skDivination(a.skDivination),
       skEncamp(a.skEncamp),
-      skFishlore(a.skFishlore)
+      skFishlore(a.skFishlore),
+      skTrollish(a.skTrollish),
+      skBullywug(a.skBullywug),
+      skAvian(a.skAvian),
+      skKalysian(a.skKalysian)
       {
       }
     CDAdvAdventuring & operator=(const CDAdvAdventuring &a) {
@@ -53,6 +64,10 @@ class CDAdvAdventuring : public CDiscipline
       skDivination = a.skDivination;
       skEncamp = a.skEncamp;
       skFishlore = a.skFishlore;
+      skTrollish = a.skTrollish;
+      skBullywug = a.skBullywug;
+      skAvian = a.skAvian;
+      skKalysian = a.skKalysian;
       return *this;
     }
     virtual ~CDAdvAdventuring() {};
