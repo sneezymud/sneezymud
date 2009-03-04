@@ -226,24 +226,12 @@ const sstring & sstring::operator=(fmt &a)
 
 const char & sstring::operator[](unsigned int i) const
 {
-  if(gamePort!=PROD_GAMEPORT)
-    return this->at(i);
-  else {
-    if(i<0 || i>=this->length())
-      vlogf_trace(LOG_BUG, fmt("Out-of-range access on sstring: '%s'")% *this);
-    return string::operator[](i);
-  }
+  return this->at(i);
 }
 
 char & sstring::operator[](unsigned int i)
 {
-  if(gamePort!=PROD_GAMEPORT)
-    return this->at(i);
-  else {
-    if(i<0 || i>=this->length())
-      vlogf_trace(LOG_BUG, fmt("Out-of-range access on sstring: '%s'")% *this);
-    return string::operator[](i);
-  }
+  return this->at(i);
 }
 
 // removes leading and trailing whitespace
