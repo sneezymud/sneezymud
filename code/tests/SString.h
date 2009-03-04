@@ -26,5 +26,6 @@ class SString : public CxxTest::TestSuite
     
     sstring baz;
     TS_ASSERT_THROWS(baz.c_str(), std::runtime_error);
+    bar[0]='\0';
   }
 };
