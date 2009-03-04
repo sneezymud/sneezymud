@@ -1046,6 +1046,14 @@ void TBeing::doToggle(const char *arg2)
       sendTo("From now on, people will be unable to initiate tells to you.\n\r");
       SET_BIT(desc->autobits, AUTO_NOTELL);
     }
+  } else if (is_abbrev(arg, "autogroup") || is_abbrev(arg, "group")) {
+    if (IS_SET(desc->autobits, AUTO_AUTOGROUP)) {
+      sendTo("You will no longer automatically group new followers.\n\r");
+      REMOVE_BIT(desc->autobits, AUTO_AUTOGROUP);
+    } else {
+      sendTo("You will now automatically group new followers.\n\r");
+      SET_BIT(desc->autobits, AUTO_AUTOGROUP);
+    }
   } else if (is_abbrev(arg, "nuke") && hasWizPower(POWER_TOGGLE)) {
     nuke_inactive_mobs = !nuke_inactive_mobs;
     sendTo(fmt("Mobs in inactive zones are now %s.\n\r") % 

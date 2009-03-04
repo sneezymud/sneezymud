@@ -261,6 +261,11 @@ void TBeing::addFollower(TBeing *foll, bool textLimits) // default argument
     act("$n starts following you.", TRUE, foll, 0, this, TO_VICT, NULL, levelLimit);
     act("$n now follows $N.", TRUE, foll, 0, this, TO_NOTVICT, NULL, levelLimit);
   }
+  if (desc && IS_SET(desc->autobits, AUTO_AUTOGROUP)){
+    if (!isAffected(AFF_GROUP))
+      SET_BIT(specials.affectedBy, AFF_GROUP);
+    doGroup(foll->name, true);
+  }
 }
 
 void TBeing::saySpell(spellNumT si)

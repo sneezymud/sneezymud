@@ -152,8 +152,9 @@ const unsigned int AUTO_TROPHY         = (1<<20);
 const unsigned int AUTO_PG13           = (1<<21);
 const unsigned int AUTO_NOSPRITE       = (1<<22);
 const unsigned int AUTO_NOTELL         = (1<<23);
+const unsigned int AUTO_AUTOGROUP      = (1<<24);
 
-const int MAX_AUTO        = 24;    // move and change
+const int MAX_AUTO        = 25;    // move and change
 
 const unsigned long PLR_BRIEF      = (1<<0);
 const unsigned long PLR_COMPACT    = (1<<1);
@@ -1902,7 +1903,7 @@ class TBeing : public TThing {
     void setColor(setColorFieldT, setColorKolorT);
     int doQuaff(sstring);
     void reformGroup();
-    void doGroup(const char *);
+    void doGroup(const char *, bool silent = false);
     int doRecite(const char *);
     int doUse(sstring);
     int doUnsaddle(sstring);

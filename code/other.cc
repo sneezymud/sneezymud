@@ -1532,7 +1532,7 @@ void TPerson::doFeedback(const sstring &type, int clientCmd, const sstring &arg)
   }
 }
 
-void TBeing::doGroup(const char *argument)
+void TBeing::doGroup(const char *argument, bool silent)
 {
   char namebuf[256];
   char buf[256];
@@ -1546,14 +1546,12 @@ void TBeing::doGroup(const char *argument)
 
   if (!*namebuf) {
     if (!isAffected(AFF_GROUP))
-      sendTo("But you are a member of no group?!\n\r");
+        sendTo("But you are a member of no group?!\n\r");
     else {
-      if(master && master->desc){
-	sendTo(COLOR_BASIC, fmt("%s consists of:\n\r\n\r") % 
-	       master->desc->session.groupName);
+      if (master && master->desc){
+	      sendTo(COLOR_BASIC, fmt("%s consists of:\n\r\n\r") % master->desc->session.groupName);
       } else {
-	sendTo(COLOR_BASIC, fmt("%s consists of:\n\r\n\r") % 
-	       desc->session.groupName);
+	      sendTo(COLOR_BASIC, fmt("%s consists of:\n\r\n\r") % desc->session.groupName);
       }
 
 
@@ -1657,15 +1655,12 @@ void TBeing::doGroup(const char *argument)
     if(!argument || !*argument){
       sendTo("Syntax: group name <name>\n\r");
       if(isAffected(AFF_GROUP)) {
-	if(master){
-	  sendTo(fmt("Current group name: %s") % 
-		 master->desc->session.groupName);
-	} else {
-	  sendTo(fmt("Current group name: %s") % 
-		 desc->session.groupName);
-	}
+	      if(master){
+	        sendTo(fmt("Current group name: %s") % master->desc->session.groupName);
+	      } else {
+	        sendTo(fmt("Current group name: %s") % desc->session.groupName);
+	      }
       }
-
       return;
     }
     if (!isAffected(AFF_GROUP)) {
@@ -1819,13 +1814,9 @@ void TBeing::doGroup(const char *argument)
         sendTo("You group yourself.\n\r");
         act("$n groups $mself.",TRUE,this,0,0,TO_ROOM);
         SET_BIT(victim->specials.affectedBy, AFF_GROUP);
-	if (hasClass(CLASS_SHAMAN)) {
-          if (desc && (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT))) 
-	    desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(desc->character, desc, getName(), NULL, COLOR_NONE, FALSE) % getHit() % getLifeforce() % attack_modes[getCombatMode()]);
-	} else { 
-          if (desc && (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
-	    desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(desc->character, desc, getName(), NULL, COLOR_NONE, FALSE) % getHit() % getMana() % attack_modes[getCombatMode()]);
-	}       
+        int mana = hasClass(CLASS_SHAMAN) ? getLifeforce() : getMana();
+        if (desc && (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT))) 
+	        desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(desc->character, desc, getName(), NULL, COLOR_NONE, FALSE) % getHit() % mana % attack_modes[getCombatMode()]);
         if (victim->desc)
           victim->desc->session.group_share = 1;
 
@@ -1836,76 +1827,69 @@ void TBeing::doGroup(const char *argument)
         act("$n adds $N to $s group.",TRUE,this,0,victim,TO_NOTVICT);
         victim->sendTo(COLOR_MOBS, fmt("You are now a member of %s's group.\n\r") %getName());
         SET_BIT(victim->specials.affectedBy, AFF_GROUP);
-	if (hasClass(CLASS_SHAMAN)) {
-	  if (desc && (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
-	    desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(desc->character, desc, victim->getName(), NULL, COLOR_NONE, FALSE) % victim->getHit() % victim->getLifeforce() % attack_modes[victim->getCombatMode()]);
-	} else {
-	  if (desc && (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
-	    desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(desc->character, desc, victim->getName(), NULL, COLOR_NONE, FALSE) % victim->getHit() % victim->getMana() % attack_modes[victim->getCombatMode()]);
-	}        
+        int mana = hasClass(CLASS_SHAMAN) ? getLifeforce() : getMana();
+        if (desc && (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT))) 
+	        desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(desc->character, desc, victim->getName(), NULL, COLOR_NONE, FALSE) % victim->getHit() % mana % attack_modes[victim->getCombatMode()]);
+ 
         for (f = followers; f; f = f->next) {
           TBeing *b = f->follower;
-          if (victim->desc && (victim->desc->m_bIsClient || IS_SET(victim->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))  {
-            victim->desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(victim, victim->desc, b->getName(), NULL, COLOR_NONE, FALSE) % b->getHit() % b->getMana() % attack_modes[b->getCombatMode()]);
-          } 
           if (b->desc && (b->desc->m_bIsClient || IS_SET(b->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))) {
-	    if (hasClass(CLASS_SHAMAN)) {
-	      b->desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(b, b->desc, victim->getName(), NULL, COLOR_NONE, FALSE) % victim->getHit() % victim->getLifeforce() % attack_modes[victim->getCombatMode()]);
-	    } else {
-	      b->desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(b, b->desc, victim->getName(), NULL, COLOR_NONE, FALSE) % victim->getHit() % victim->getMana() % attack_modes[victim->getCombatMode()]);
-	    }
+            int folMana = hasClass(CLASS_SHAMAN) ? victim->getLifeforce() : victim->getMana();
+	          b->desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(b, b->desc, victim->getName(), NULL, COLOR_NONE, FALSE) % victim->getHit() % folMana % attack_modes[victim->getCombatMode()]);
           }
         }
         found = TRUE;
         if (victim->desc) {
-	  if (hasClass(CLASS_SHAMAN)) {
-            if (victim->desc->m_bIsClient || IS_SET(victim->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))
-	      victim->desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(victim, victim->desc, getName(), NULL, COLOR_NONE, FALSE) % getHit() % getLifeforce() % attack_modes[getCombatMode()]);
-	    victim->desc->session.group_share = 1;
-	  } else {
-            if (victim->desc->m_bIsClient || IS_SET(victim->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))
-	      victim->desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(victim, victim->desc, getName(), NULL, COLOR_NONE, FALSE) % getHit() % getMana() % attack_modes[getCombatMode()]);
-	    victim->desc->session.group_share = 1;
-	  }
+          int victMana = hasClass(CLASS_SHAMAN) ? getLifeforce() : getMana();
+          if (victim->desc->m_bIsClient || IS_SET(victim->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))
+	          victim->desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(victim, victim->desc, getName(), NULL, COLOR_NONE, FALSE) % getHit() % victMana % attack_modes[getCombatMode()]);
+	        victim->desc->session.group_share = 1;
         }
         continue;
       }
     }
     if (!found)
       sendTo("Sorry, there is no one else here you can group.\n\r");
-  } else if (!(victim = get_char_room_vis(this, namebuf)))
-    sendTo("No one here by that name.\n\r");
-  else {
+  } else if (!(victim = get_char_room_vis(this, namebuf))) {
+    if (!silent)
+      sendTo("No one here by that name.\n\r");
+  } else {
 
     if (IS_SET(victim->specials.act, ACT_IMMORTAL) && !victim->isPc()
           && victim->master == this && this != victim )
     {
-      sendTo(COLOR_MOBS, fmt("%s is immortal and has no need of you.  %s does not join your group.\n\r") % victim->getName() % victim->getName());
+      if (!silent)
+        sendTo(COLOR_MOBS, fmt("%s is immortal and has no need of you.  %s does not join your group.\n\r") % victim->getName() % victim->getName());
       return;
     }
 
     if (victim->isPlayerAction(PLR_SOLOQUEST) && (this != victim)) {
-      sendTo("That person is on a quest! No grouping allowed!\n\r");
+      if (!silent)
+        sendTo("That person is on a quest! No grouping allowed!\n\r");
       return;
     }
     if (victim->isPlayerAction(PLR_GRPQUEST)) {
       if (!isPlayerAction(PLR_GRPQUEST)) {
-        sendTo("That person is on a group quest that you aren't on! You can't group!\n\r");
+        if (!silent)
+          sendTo("That person is on a group quest that you aren't on! You can't group!\n\r");
         return;
       }
     }
     if (isPlayerAction(PLR_GRPQUEST)) {
       if (!victim->isPlayerAction(PLR_GRPQUEST)) {
-        sendTo("You can only group people with the group quest flag!\n\r");
+        if (!silent)
+          sendTo("You can only group people with the group quest flag!\n\r");
         return;
       }
     }
     if (master) {
-      sendTo("You can not enroll group members without being head of a group.\n\r");
+      if (!silent)
+        sendTo("You can not enroll group members without being head of a group.\n\r");
       return;
     }
     if (!isAffected(AFF_GROUP) && (this != victim)) {
-      sendTo("You must first group yourself to group others.\n\r");
+      if (!silent)
+        sendTo("You must first group yourself to group others.\n\r");
       return;
     }
     found = FALSE;
@@ -1977,11 +1961,11 @@ void TBeing::doGroup(const char *argument)
         }
       } else {
         if (fight()) {
-          act("Not while fighting.", FALSE, this, 0, victim, TO_CHAR);
+          if (!silent) act("Not while fighting.", FALSE, this, 0, victim, TO_CHAR);
           return;
         }
         if (victim->fight()) {
-          act("You can't group $N while $E is fighting.", FALSE, this, 0, victim, TO_CHAR);
+          if (!silent) act("You can't group $N while $E is fighting.", FALSE, this, 0, victim, TO_CHAR);
           return;
         }
         act("$n is now a member of $N's group.", FALSE, victim, 0, this, TO_ROOM);

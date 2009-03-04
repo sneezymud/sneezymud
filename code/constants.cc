@@ -1809,7 +1809,8 @@ const char * const auto_name[MAX_AUTO] =
   "Auto Trophy",
   "PG13",
   "No Hero Sprites",
-  "No Tells"
+  "No Tells",
+  "Auto Group"
 };
 
 // disc_num, class_nums, practice
