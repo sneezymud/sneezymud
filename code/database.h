@@ -139,6 +139,8 @@ class TDatabaseConnection
   const char *getConnectParam(dbTypeT type);
   MYSQL *getDB(dbTypeT type);
 
+  void clearConnections(){ for(int i=0;i<DB_MAX;++i) databases[i]=NULL; }
+
   // shortcuts - not sure if they are really needed...
   MYSQL *getSneezyDB() { return getDB(DB_SNEEZY); }
   MYSQL *getSneezyProdDB() { return getDB(DB_SNEEZYPROD); }
@@ -149,6 +151,7 @@ class TDatabaseConnection
 };
 
 extern queue<sstring> queryqueue;
+extern TDatabaseConnection database_connection;
 
 #endif
 

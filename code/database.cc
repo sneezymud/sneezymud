@@ -3,7 +3,7 @@
 #include "timing.h"
 
 
-static TDatabaseConnection database_connection;
+TDatabaseConnection database_connection;
 
 // we return this instead of null if they try to fetch an invalid column
 const sstring empty="";
