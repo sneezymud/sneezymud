@@ -353,7 +353,7 @@ void TShopOwned::setReserve(sstring arg)
   int min=convertTo<int>(arg.word(0));
   int max=convertTo<int>(arg.word(1));
 
-  if(min > max || (max-min) < 100000){
+  if(!(min==0 && max==0) && (min > max || (max-min) < 100000)){
     keeper->doTell(ch->getName(), "The minimum reserve must be less than the maximum reserve.");
     keeper->doTell(ch->getName(), "The two reserve values must be at least 100k apart.");
     return;
