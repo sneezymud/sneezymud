@@ -2561,7 +2561,8 @@ void bootTheShops()
     shop_index.push_back(sd);
   }
 
-  db.query("select shop_nr from shopowned where tax_nr is null");
+  // let kingdoms not tax their own holdings... they get all the profit anyway
+  db.query("select shop_nr from shopowned where tax_nr is null and corp_id not in (21, 27, 29, 28)");
 
   while(db.fetchRow()){
     vlogf(LOG_LOW, fmt("Shop %s is untaxed.") % db["shop_nr"]);
