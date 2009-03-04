@@ -36,7 +36,9 @@ void TPerson::doSet(const char *argument)
   argument = one_argument(argument, namebuf, cElements(namebuf));
   argument = one_argument(argument, parmstr, cElements(parmstr));
 
-  if (!(mob = get_char_vis_world(this, namebuf, NULL, EXACT_YES)) && 
+  if (!(mob = get_char_room_vis(this, namebuf, NULL, EXACT_YES)) &&
+      !(mob = get_char_room_vis(this, namebuf, NULL, EXACT_NO)) &&
+      !(mob = get_char_vis_world(this, namebuf, NULL, EXACT_YES)) && 
       !(mob = get_char_vis_world(this, namebuf, NULL, EXACT_NO))) {
     sendTo(fmt("I don't see '%s' here.\n\r") % namebuf);
     return;
