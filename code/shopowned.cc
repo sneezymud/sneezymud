@@ -400,6 +400,8 @@ int TShopOwned::doReserve()
     return 0;
   }
 
+  TShopOwned tso(bank_nr, dynamic_cast<TMonster *>(banker), keeper);
+
   if(money < min){
     amt=even-money;
 
@@ -417,8 +419,9 @@ int TShopOwned::doReserve()
     keeper->saveItems(shop_nr);
     dynamic_cast<TMonster *>(banker)->saveItems(shop_nr);
     shoplog(bank_nr, keeper, dynamic_cast<TMonster *>(banker), "talens", -amt, "reserve");
-
     shoplog(shop_nr, keeper, keeper, "talens", amt, "reserve");
+
+    tso.journalize(keeper->getName(), "talens", TX_WITHDRAWAL, amt, 0, 0, 0);
 
     return amt;
   } else if(money > max){
@@ -436,8 +439,9 @@ int TShopOwned::doReserve()
     dynamic_cast<TMonster *>(banker)->saveItems(shop_nr);
     
     shoplog(bank_nr, keeper,  dynamic_cast<TMonster *>(banker), "talens", amt, "reserve");
-
     shoplog(shop_nr, keeper, keeper, "talens", -amt, "reserve");
+
+    tso.journalize(keeper->getName(), "talens", TX_DEPOSIT, amt, 0, 0, 0);
 
     return -amt;
   }
@@ -526,6 +530,8 @@ int TShopOwned::doDividend(int cost, const sstring &name)
       return 0;
     }
 
+    TShopOwned tso(bank_nr, dynamic_cast<TMonster *>(banker), keeper);
+
     keeper->giveMoney(banker, div, GOLD_SHOP);
     dynamic_cast<TMonster *>(banker)->saveItems(shop_nr);
     shoplog(bank_nr, keeper,  dynamic_cast<TMonster *>(banker), "talens", div, "dividend");
@@ -533,6 +539,7 @@ int TShopOwned::doDividend(int cost, const sstring &name)
     keeper->saveItems(shop_nr);
     shoplog(shop_nr, ch, keeper, name, -div, "dividend");
     
+    tso.journalize(keeper->getName(), "talens", TX_DEPOSIT, div, 0, 0, 0);
 
     corp.setMoney(corp.getMoney() + div);
     corp.corpLog(keeper->getName(), "dividend", div);
