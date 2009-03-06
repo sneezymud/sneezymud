@@ -322,6 +322,8 @@ int TShopOwned::chargeTax(int cost, const sstring &name, TObj *o)
     return 0;
   }
 
+
+
   keeper->giveMoney(taxman, cost, GOLD_SHOP);
   keeper->saveItems(shop_nr);
   dynamic_cast<TMonster *>(taxman)->saveItems(tax_office);
@@ -333,7 +335,9 @@ int TShopOwned::chargeTax(int cost, const sstring &name, TObj *o)
 
 
   TShopOwned tso(tax_office, dynamic_cast<TMonster *>(taxman), keeper);
+  tso.journalize(keeper->getName(), "tax", TX_BUYING_SERVICE, cost, 0, 0, 0);
   tso.doReserve();
+
 
   return cost;
 }

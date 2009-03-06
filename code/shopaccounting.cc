@@ -277,11 +277,12 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
 	journalize_debit(600, customer, name, COGS);
 	// inventory
 	journalize_credit(130, customer, name, COGS);
+
+	// now update COGS table
+	COGS_remove(name, num);
       }
       
       
-      // now log COGS
-      COGS_remove(name, num);
       break;
   }
 
