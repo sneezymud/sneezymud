@@ -411,11 +411,18 @@ void TShopOwned::giveStatements(sstring arg)
   buf+=fmt("%-36s   %-36s\n\r") % 
     "Assets" % "Liabilities";
   buf+="-----------------------------------------------------------------\n\r";
-  buf+=fmt("%-36s | %-25s\n\r") %
-    "" % "Liabilities";
-  buf+=fmt("%-25s %10i | %-25s %10i\n") %
-    "Cash" % tsj.getValue("Cash") % 
-    "  Deposits" % tsj.getValue("Deposits");
+  
+  if(tsj.getValue("Deposits")){
+    buf+=fmt("%-36s | %-25s\n\r") %
+      "" % "Liabilities";
+    buf+=fmt("%-25s %10i | %-25s %10i\n") %
+      "Cash" % tsj.getValue("Cash") % 
+      "  Deposits" % tsj.getValue("Deposits");
+  } else {
+    buf+=fmt("%-25s %10i |\n") %
+      "Cash" % tsj.getValue("Cash");
+  }
+
   buf+=fmt("%-25s %10i | %-36s\n\r") %
     "Inventory" % tsj.getValue("Inventory") % "";
   buf+=fmt("%-36s | %-36s\n\r") %
