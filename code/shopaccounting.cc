@@ -181,7 +181,10 @@ void TShopOwned::COGS_remove(const sstring &name, int num)
 
   //  db.query("update shoplogcogs set total_cost=total_cost-((total_cost/count)*%i), count=count-%i where obj_name='%s' and shop_nr=%i", num, num, name.c_str(), shop_nr);
 
-  queryqueue.push(fmt("update shoplogcogs set total_cost=total_cost-floor((total_cost/count)*%i), count=count-%i where obj_name='%q' and shop_nr=%i") % num % num % name % shop_nr);
+  db.query("select total_cost, count from shoplogcogs where obj_name='%q' and shop_nr=%i", name.c_str(), shop_nr);
+  db.fetchRow();
+
+  queryqueue.push(fmt("update shoplogcogs set total_cost=total_cost-(floor((total_cost/count))*%i), count=count-%i where obj_name='%q' and shop_nr=%i") % num % num % name % shop_nr);
 }
 
 int TShopOwned::COGS_get(const sstring &name)
