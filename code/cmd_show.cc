@@ -568,7 +568,8 @@ void TPerson::doShow(const sstring &argument)
       zone = convertTo<int>(zonenum);
     } else
       zone = roomp->getZoneNum();
-    if ((zone < 0 || zone >= (signed int) zone_table.size()) && zonenum.empty()) {
+
+    if (zone < 0 || zone >= (signed int) zone_table.size()) {
       sb += "That is not a valid zone_number\n\r";
       if (desc)
         desc->page_string(sb);
