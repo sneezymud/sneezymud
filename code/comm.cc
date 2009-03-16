@@ -546,8 +546,8 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
     return;
   }
   if (!t1->roomp){
-    vlogf(LOG_MISC, "There is no room in act() TOCHAR");
-    vlogf(LOG_MISC, fmt("%s") %  str);
+    //    vlogf(LOG_MISC, "There is no room in act() TOCHAR");
+    //    vlogf(LOG_MISC, fmt("%s") %  str);
     return;
   }
 
@@ -571,8 +571,8 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
     list.push_front(t1);
   } else {
     if (!t1->roomp){
-      vlogf(LOG_MISC, "There is no room in act() TOCHAR 2");
-      vlogf(LOG_MISC, fmt("%s") %  str);
+      //      vlogf(LOG_MISC, "There is no room in act() TOCHAR 2");
+      //      vlogf(LOG_MISC, fmt("%s") %  str);
       return;
     }
 
