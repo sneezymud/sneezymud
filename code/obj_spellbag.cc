@@ -89,10 +89,8 @@ TThing & TSpellBag::operator+= (TThing &t)
 
 void TSpellBag::findSomeComponent(TComponent **comp_gen, TComponent **comp_spell, TComponent **comp_brew, spellNumT which, int type)
 {
-  TThing *t;
-
-  for (t = getStuff(); t; t = t->nextThing)
-    t->findSomeComponent(comp_gen, comp_spell, comp_brew, which, type);
+  for(StuffIter it=stuff.begin();it!=stuff.end();++it)
+    (*it)->findSomeComponent(comp_gen, comp_spell, comp_brew, which, type);
 }
 
 void TSpellBag::getObjFromMeText(TBeing *tBeing, TThing *tThing, getTypeT tType, bool tFirst)

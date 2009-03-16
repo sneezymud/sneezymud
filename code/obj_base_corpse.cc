@@ -53,7 +53,7 @@ TBaseCorpse::~TBaseCorpse()
   // assumption that corpse is not in another container
   // assumption that corpse is also not stuck in someone
   // should handle corpses on ground, chairs/beds, tables, inventory or equipped
-  TThing *t, *t2, *p, *r;
+  TThing *t, *p, *r;
   TTable *ttab;
   int rc;
   
@@ -73,13 +73,14 @@ TBaseCorpse::~TBaseCorpse()
   }
   
   // relocate inventory
-  for (t = this->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=this->stuff.begin();it!=this->stuff.end();){
+    t=*(it++);
     --(*t);
     
     // junk newbie objects
     TObj *o = dynamic_cast<TObj *>(t);
-    if (o && o->isObjStat(ITEM_NEWBIE) && !o->getStuff() && (this->in_room > 80) && (this->in_room != ROOM_DONATION)){
+    if (o && o->isObjStat(ITEM_NEWBIE) && o->stuff.empty() && 
+	(this->in_room > 80) && (this->in_room != ROOM_DONATION)){
       sendrpf(this->roomp, "The %s explodes in a flash of white light!\n\r", fname(o->name).c_str());
       delete o;
       o = NULL;
@@ -128,7 +129,7 @@ int TBaseCorpse::putMeInto(TBeing *ch, TOpenContainer *container)
   TObj *o;
   TThing *t;
   
-  for(t=container->getStuff(); t; t=t->nextThing){
+  for(StuffIter it=container->stuff.begin();it!=container->stuff.end() && (t=*it);++it){
     o = dynamic_cast<TObj *>(t);
 
     if (!o)
@@ -305,19 +306,14 @@ int TBaseCorpse::dissectMe(TBeing *caster)
 
 void TBaseCorpse::update(int use)
 {
-  if (getStuff())
-    getStuff()->update(use);
-
-  if (nextThing) {
-    if (nextThing != this)
-      nextThing->update(use);
-  }
+  for(StuffIter it=stuff.begin();it!=stuff.end();++it)
+    (*it)->update(use);
 }
 
 void TBaseCorpse::lookObj(TBeing *ch, int) const
 {
   act("$p contains:",TRUE, ch, this, 0, TO_CHAR);
-  list_in_heap(getStuff(), ch, 0, 100);
+  list_in_heap(stuff, ch, 0, 100);
   return;
 }
 
@@ -337,9 +333,9 @@ int TBaseCorpse::scavengeMe(TBeing *ch, TObj **)
   char buf[256], buf2[256], buf3[256];
   int rc;
 
-  if (!::number(0, 5) && getStuff()) {
-    for (t = getStuff(); t; t = t->nextThing) {
-      if (!t->getStuff() && (obj = dynamic_cast<TObj *>(t))) {
+  if (!::number(0, 5) && !stuff.empty()) {
+    for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
+      if (t->stuff.empty() && (obj = dynamic_cast<TObj *>(t))) {
         sl = slot_from_bit(obj->obj_flags.wear_flags);
         if (dynamic_cast<TBaseClothing *>(obj)) {
           TObj *tobj = dynamic_cast<TObj *>(ch->equipment[sl]);
@@ -374,7 +370,7 @@ int TBaseCorpse::objectDecay()
 {
   if (parent)
     act("$p disintegrates in your hands.", FALSE, parent, this, 0, TO_CHAR);
-  else if (roomp && roomp->getStuff()) {
+  else if (roomp && !roomp->stuff.empty()) {
     if (getMaterial() == MAT_POWDER) {
       sendrpf(COLOR_OBJECTS, roomp, "A gust of wind scatters %s.\n\r", getName());
     } else {

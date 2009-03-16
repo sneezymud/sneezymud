@@ -180,7 +180,7 @@ void TPerson::doSEdit(const char *tArg)
     tStInit = tString;
     tStArg = one_argument(tStInit, tStMobile);
 
-    if (!(tThing = searchLinkedListVis(this, tStMobile, roomp->getStuff()))) {
+    if (!(tThing = searchLinkedListVis(this, tStMobile, roomp->stuff))) {
       sendTo("I don't see that here, do you?\n\r");
       return;
     } else if (!(tMonster = dynamic_cast<TMonster *>(tThing))) {

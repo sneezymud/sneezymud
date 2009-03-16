@@ -91,7 +91,7 @@ sstring teeth_count_desc(int count)
 void TToothNecklace::updateDesc()
 {
   int count=0;
-  for(TThing *t=getStuff();t;t=t->nextThing){
+  for(StuffIter it=stuff.begin();it!=stuff.end();++it){
     count++;
   }
 
@@ -106,7 +106,7 @@ void TToothNecklace::updateDesc()
 void TToothNecklace::describeObjectSpecifics(const TBeing *ch) const
 {
   int count=0;
-  for(TThing *t=getStuff();t;t=t->nextThing){
+  for(StuffIter it=stuff.begin();it!=stuff.end();++it){
     count++;
   }
 

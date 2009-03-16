@@ -591,7 +591,7 @@ int healCritSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
         break;
     } 
 
-    for (t = caster->roomp->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end() && (t=*it);++it) {
       targ = dynamic_cast<TBeing *>(t);
       if (!targ)
         continue;
@@ -689,7 +689,7 @@ int healSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
         break;
     } 
 
-    for (t = caster->roomp->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end() && (t=*it);++it) {
       targ = dynamic_cast<TBeing *>(t);
       if (!targ)
         continue;
@@ -793,7 +793,7 @@ int healFullSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
           break;
     } 
 
-    for (t = caster->roomp->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end() && (t=*it);++it) {
       targ = dynamic_cast<TBeing *>(t);
       if (!targ)
         continue;

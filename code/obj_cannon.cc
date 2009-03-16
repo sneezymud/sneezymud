@@ -30,14 +30,13 @@ int TCannon::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT d
   // find flint
   TTool *flint;
   TThing *t;
-  TThing *ss=ch->getStuff();
 
-  t=findFlint(ss);
+  t=findFlint(ch->stuff);
   
   int m=WEAR_NOWHERE;
   while(!t && m<MAX_WEAR){
     ++m;
-    t=findFlint(ch->equipment[m]);
+    t=findFlint(ch->equipment[m]->stuff);
   }
 
   flint=dynamic_cast<TTool *>(t);
@@ -181,7 +180,7 @@ int task_cannon_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *r
   TCannon *cannon=dynamic_cast<TCannon *>(o);
   TAmmo *shot;
   TTool *powder;
-  TThing *t, *ss;
+  TThing *t;
   sstring buf;
   int m;
 
@@ -226,14 +225,12 @@ int task_cannon_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *r
 	  cannon->addToFlags(GUN_FLAG_FOULED);
 
 	  // find powder
-	 ss=ch->getStuff();
-	  
-	  t=findPowder(ss, 12);
+	  t=findPowder(ch->stuff, 12);
 	  
 	 m=WEAR_NOWHERE;
 	  while(!t && m<MAX_WEAR){
 	    ++m;
-	    t=findPowder(ch->equipment[m], 12);
+	    t=findPowder(ch->equipment[m]->stuff, 12);
 	  }
 	  
 	  powder=dynamic_cast<TTool *>(t);
@@ -281,14 +278,12 @@ int task_cannon_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *r
 	  // shot
 
 	  // find shot
-	  ss=ch->getStuff();
-	  
-	  t=findShot(ss, AMMO_CANNON_BALL);
+	  t=findShot(ch->stuff, AMMO_CANNON_BALL);
 	  
 	  m=WEAR_NOWHERE;
 	  while(!t && m<MAX_WEAR){
 	    ++m;
-	    t=findShot(ch->equipment[m], AMMO_CANNON_BALL);
+	    t=findShot(ch->equipment[m]->stuff, AMMO_CANNON_BALL);
 	  }
 	  
 	  shot=dynamic_cast<TAmmo *>(t);

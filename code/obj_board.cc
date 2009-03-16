@@ -247,7 +247,7 @@ int TBoard::postToBoard(TBeing *ch, const sstring &argument)
     return TRUE;
   }
 
-  if (!(note = searchLinkedListVis(ch, arg1, ch->getStuff()))){
+  if (!(note = searchLinkedListVis(ch, arg1, ch->stuff))){
     ch->sendTo("You don't have a note to post!\n\r");
     return TRUE;
   }

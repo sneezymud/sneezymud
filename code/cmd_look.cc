@@ -59,11 +59,11 @@ void TBeing::lookDark()
   sendTo("It is very dark in here...\n\r");
   
   // this already handles stuff like infravision, and glowing mobs
-  list_char_in_room(roomp->getStuff(), this);
+  list_char_in_room(roomp->stuff, this);
   
-  for (TThing *t = roomp->getStuff(); t; t = t->nextThing) {
-    if (dynamic_cast<TObj *>(t) && canSee(t))   // glowing objects
-      showTo(t, SHOW_MODE_DESC_PLUS);
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();++it) {
+    if (dynamic_cast<TObj *>(*it) && canSee(*it))   // glowing objects
+      showTo(*it, SHOW_MODE_DESC_PLUS);
   }
 }
 
@@ -123,7 +123,7 @@ void TBeing::lookDir(int keyword_no)
           sendRoomDesc(rp);
 
         listExits(rp);
-        list_thing_in_room(rp->getStuff(), this);
+        list_thing_in_room(rp->stuff, this);
       }
     } else if (!(exitp->condition & EX_SECRET))
       sendTo(fmt("The %s is closed.\n\r") % exitp->getName());
@@ -163,7 +163,7 @@ void TBeing::lookInObj(sstring arg2, TThing *specific, unsigned int bits, const 
     // handle the look in all.corpse special case
     if (is_abbrev(arg2, "all.corpse") && arg2.length() > 6) {
       TThing *t;
-      for (t = roomp->getStuff(); t; t = t->nextThing) {
+      for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
 	TBaseCorpse * tbc = dynamic_cast<TBaseCorpse *>(t);
 	if (tbc) {
 	  // because some corpses are dust piles, we make no name check
@@ -255,7 +255,7 @@ void TBeing::lookRoom()
       }
     }
   }
-  list_thing_in_room(roomp->getStuff(), this);
+  list_thing_in_room(roomp->stuff, this);
 }
 
 void TBeing::lookAtRoom()
@@ -316,7 +316,7 @@ void TBeing::lookAtRoom()
       }
     }
   }
-  list_thing_in_room(roomp->getStuff(), this);
+  list_thing_in_room(roomp->stuff, this);
 }
 
 void TBeing::lookAtBeing(TThing *specific)
@@ -339,7 +339,7 @@ void TBeing::lookAtBeing(TThing *specific)
   } else if (tmpBeing != this && !tmpBeing->isImmortal()) {
     // Thieves in the room will be able to detect spying looks.
     TBeing *bOther;
-    for (t = roomp->getStuff(); t; t = t->nextThing)
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it)
       if ((bOther = dynamic_cast<TBeing *>(t)) &&
 	  (bOther->affectedBySpell(SKILL_SPY) ||
 	   bOther->isAffected(AFF_SCRYING)) &&
@@ -538,7 +538,7 @@ void TBeing::doLook(const sstring &argument, cmdTypeT cmd, TThing *specific)
 	      }
 	      if (!bits) {
 		TThing * tempThing = NULL;
-		for (tempThing = getStuff(); tempThing; tempThing = tempThing->nextThing) {
+		for(StuffIter it=stuff.begin();it!=stuff.end() && (tempThing=*it);++it) {
 		  if (!dynamic_cast<TBook *> (tempThing)) {
 		    continue;
 		  } else {
@@ -592,7 +592,7 @@ void TBeing::doLook(const sstring &argument, cmdTypeT cmd, TThing *specific)
 	  return;
 	}
 	if (!found) {
-	  for (t = roomp->getStuff(); t && !found; t = t->nextThing) {
+	  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
 	    if (!dynamic_cast<TBeing *>(t))
 	      continue;
 	    if (!canSee(t))
@@ -604,7 +604,7 @@ void TBeing::doLook(const sstring &argument, cmdTypeT cmd, TThing *specific)
 	}
 	// In inventory
 	if (!found) {
-	  for (t = getStuff(); t && !found; t = t->nextThing) {
+	  for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
 	    if (!canSee(t))
 	      continue;
 	    if (t->ex_description) {
@@ -689,7 +689,7 @@ void TBeing::doLook(const sstring &argument, cmdTypeT cmd, TThing *specific)
 	}
 	// room objects
 	if (!found) {
-	  for (t = roomp->getStuff(); t && !found; t = t->nextThing) {
+	  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
 	    if (dynamic_cast<TBeing *>(t))
 	      continue;
 	    if (!canSee(t))

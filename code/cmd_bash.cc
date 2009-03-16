@@ -373,7 +373,7 @@ int TBeing::doBash(const char *argument, TBeing *vict)
        
     delete victim;
     victim = NULL;
-    REM_DELETE(rc, DELETE_VICT);;
+    REM_DELETE(rc, DELETE_VICT);
   }
   return rc;
 }

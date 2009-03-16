@@ -140,7 +140,7 @@ int TBeing::doSeedPlant(sstring arg){
   TTool *seeds;
   int found=0, count;  
 
-  if ((t = searchLinkedListVis(this, arg, getStuff(), NULL))){
+  if ((t = searchLinkedListVis(this, arg, stuff, NULL))){
     if((seeds=dynamic_cast<TTool *>(t))){
       if(seeds->getToolType() == TOOL_SEED){
 	found=1;
@@ -158,11 +158,12 @@ int TBeing::doSeedPlant(sstring arg){
     return FALSE;
   }
 
-  TThing *tcount;
-  for(tcount=roomp->getStuff(),count=0;tcount;tcount=tcount->nextThing){
-    if(dynamic_cast<TPlant *>(tcount))
+  count=0;
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();++it){
+    if(dynamic_cast<TPlant *>(*it))
       ++count;
-  }
+  }    
+
   if(count>=8){
     sendTo("There isn't any room for more plants in here.\n\r");
     return FALSE;

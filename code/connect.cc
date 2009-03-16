@@ -598,9 +598,9 @@ Descriptor::~Descriptor()
       // the first save will recreate the followers...
       character->removeFollowers();
 
-      for (th = character->getStuff(); th; th = th->nextThing) {
+      for(StuffIter it=character->stuff.begin();it!=character->stuff.end() && (th=*it);++it) {
         if (th) {
-          for (th2 = th->getStuff(); th2; th2 = th2->nextThing)
+          for(StuffIter it=th->stuff.begin();it!=th->stuff.end() && (th2=*it);++it)
             num++;
           num++;
         }        
@@ -608,7 +608,7 @@ Descriptor::~Descriptor()
 
       for (int i = MIN_WEAR; i < MAX_WEAR; i++) {
         if ((th = character->equipment[i])) {
-          for (th2 = th->getStuff(); th2; th2 = th2->nextThing)
+          for(StuffIter it=th->stuff.begin();it!=th->stuff.end() && (th2=*it);++it)
             num++;
 
           num++;
@@ -2522,7 +2522,7 @@ void setPrompts(fd_set out)
           TThing * tThing = NULL;
           TObj   * tObj   = NULL;
 
-          for (tThing = ch->getStuff(); tThing; tThing = tThing->nextThing) {
+          for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end() && (tThing=*it);++it) {
             if ((tObj = dynamic_cast<TObj *>(tThing)) && isname(ch->task->orig_arg, tThing->name))
               break;
 

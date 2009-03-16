@@ -17,7 +17,7 @@
 TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost)
 {
   TMoney *money;
-  TThing *o, *next_o;
+  TThing *o;
   TRoom *rp;
   char buf[MAX_INPUT_LENGTH], tmpbuf[MAX_NAME_LENGTH], namebuf[MAX_NAME_LENGTH];
   bool specialCorpse = FALSE;
@@ -630,8 +630,8 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
       *gen_corpse += *(read_object(COMP_SHATTER, VIRTUAL));
   } 
 
-  while (getStuff()) {
-    TThing * obo = getStuff();
+  for(StuffIter it=stuff.begin();it!=stuff.end();){
+    TThing *obo=*(it++);
     *gen_corpse += (*obo)--;
     logItem(obo, CMD_SOUTH);
   }
@@ -639,7 +639,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
   if (dynamic_cast<TMonster *>(this)) 
     gen_corpse->obj_flags.decay_time = MAX_NPC_CORPSE_TIME;
   else {
-    if (gen_corpse->getStuff()) 
+    if (!gen_corpse->stuff.empty()) 
       gen_corpse->obj_flags.decay_time = MAX_PC_CORPSE_EQUIPPED_TIME;
     else 
       gen_corpse->obj_flags.decay_time = MAX_PC_CORPSE_EMPTY_TIME;
@@ -656,8 +656,8 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
   }
 
   // make sure we don't have any "corpses in a corpse" 
-  for (o = gen_corpse->getStuff(); o; o = next_o) {
-    next_o = o->nextThing;
+  for(StuffIter it=gen_corpse->stuff.begin();it!=gen_corpse->stuff.end();){
+    o=*(it++);
     TBaseCorpse *tbc = dynamic_cast<TBaseCorpse *>(o);
     if (tbc) {
       --(*tbc);

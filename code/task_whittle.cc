@@ -309,7 +309,7 @@ void task_whittleSetupObject(TBeing *ch, TObj *tObj, TOrganic *tWood, int tIndex
     tObj->shortDescr = mud_str_dup(tString);
 
     tString=fmt("%s %s %s") %
-            tStObject % tStWood % whittleItems[tIndex].getName(false);;
+            tStObject % tStWood % whittleItems[tIndex].getName(false);
     delete [] tObj->name;
     tObj->name = mud_str_dup(tString);
 
@@ -338,24 +338,24 @@ bool task_whittleCreateNew(TBeing *ch, sstring tStWood, int tIndex)
 {
   TOrganic *tWood        = NULL,
            *tOldWood     = NULL;
-  TThing   *tObjTemp     = (ch ? ch->getStuff() : NULL),
-           *tObjTempNext = (ch ? ch->getStuff() : NULL);
   bool      realCreate   = (ch->task ? true : false),
             deleteOld    = false;
   double    totalWood[2] = {0, 0};
 
-  while ((tObjTemp = searchLinkedListVis(ch, tStWood, tObjTemp))) {
-    if ((tWood = dynamic_cast<TOrganic *>(tObjTemp))) {
-      if (tWood->getOType() != ORGANIC_WOOD) {
-        tWood = NULL;
-        continue;
+  if(ch){
+    for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end();++it){
+      if(isname((*it)->name, tStWood)){
+	if ((tWood = dynamic_cast<TOrganic *>(*it))) {
+	  if (tWood->getOType() != ORGANIC_WOOD) {
+	    tWood = NULL;
+	    continue;
+	  }
+	  
+	  totalWood[0] += tWood->getWeight();
+	  totalWood[1] += tWood->getVolume();
+	}
       }
-
-      totalWood[0] += tWood->getWeight();
-      totalWood[1] += tWood->getVolume();
     }
-
-    tObjTemp = tObjTemp->nextThing;
   }
 
   if (!tWood)
@@ -369,10 +369,11 @@ bool task_whittleCreateNew(TBeing *ch, sstring tStWood, int tIndex)
     if (!realCreate)
       return true;
 
-    tObjTemp = ch->getStuff();
+    for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end();){
+      TThing *tObjTemp=*(it++);
 
-    while ((tObjTemp = searchLinkedListVis(ch, tStWood, tObjTempNext))) {
-      tObjTempNext = tObjTemp->nextThing;
+      if(!isname(tObjTemp->name, tStWood))
+	continue;
 
       if ((tWood = dynamic_cast<TOrganic *>(tObjTemp))) {
         if (tWood->getOType() != ORGANIC_WOOD)
@@ -624,7 +625,7 @@ void TBeing::doWhittle(const char *tArg)
   }
 
   if (tStWood.empty()) {
-    if (!(tObj = searchLinkedListVis(this, tStObject, getStuff()))) {
+    if (!(tObj = searchLinkedListVis(this, tStObject, stuff))) {
       sendTo("Do you have that item?  No, so you cannot whittle on it.\n\r");
       return;
     }

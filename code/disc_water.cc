@@ -17,11 +17,11 @@
 int faerieFog(TBeing * caster, int, byte bKnown)
 {
   TBeing *tmp_victim;
-  TThing *t, *t2;
+  TThing *t;
 
   if (caster->bSuccess(bKnown, SPELL_FAERIE_FOG)) {
-    for (t = caster->roomp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end();){
+      t=*(it++);
       tmp_victim = dynamic_cast<TBeing *>(t);
       if (!tmp_victim)
         continue;
@@ -55,7 +55,7 @@ int faerieFog(TBeing * caster, int, byte bKnown)
 
 int faerieFog(TBeing * caster)
 {
-  TThing *t, *t2;
+  TThing *t;
   TBeing *victim;
   taskDiffT diff;
 
@@ -67,8 +67,8 @@ int faerieFog(TBeing * caster)
 
     start_cast(caster, NULL, NULL, caster->roomp, SPELL_FAERIE_FOG, diff, 1, "" , rounds, caster->in_room, 0, 0,TRUE, 0);
 
-  for (t = caster->roomp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end();){
+    t=*(it++);
     victim = dynamic_cast<TBeing *>(t);
     if (!victim)
       continue;
@@ -333,7 +333,7 @@ int arcticBlast(TBeing * caster, int level, byte bKnown, int adv_learn)
 {
   int rc = 0;
   TBeing *tmp_victim = NULL;
-  TThing *t, *t2;
+  TThing *t;
 
   level = min(level, 15);
 
@@ -353,8 +353,8 @@ int arcticBlast(TBeing * caster, int level, byte bKnown, int adv_learn)
         break;
     }
 
-    for (t = caster->roomp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end();){
+      t=*(it++);
       tmp_victim = dynamic_cast<TBeing *>(t);
       if (!tmp_victim)
         continue;
@@ -475,7 +475,7 @@ int iceStorm(TBeing * caster, int level, byte bKnown, int adv_learn)
   int rc;
   int ret = 0;
   TBeing *tmp_victim = NULL;
-  TThing *t, *t2;
+  TThing *t;
 
   level = min(level, 33);
 
@@ -503,8 +503,8 @@ int iceStorm(TBeing * caster, int level, byte bKnown, int adv_learn)
         break;
     }
     caster->freezeRoom();
-    for (t = caster->roomp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end();){
+      t=*(it++);
       tmp_victim = dynamic_cast<TBeing *>(t);
       if (!tmp_victim)
         continue;
@@ -616,7 +616,7 @@ int castIceStorm(TBeing * caster)
 int tsunami(TBeing * caster, int level, byte bKnown, int adv_learn)
 {
   TBeing *tmp_victim = NULL;
-  TThing *t, *t2;
+  TThing *t;
 
   level = min(level, 60);
 
@@ -628,8 +628,8 @@ int tsunami(TBeing * caster, int level, byte bKnown, int adv_learn)
     act("You beckon forth a tidal wave!", 
          FALSE, caster, NULL, NULL, TO_CHAR, ANSI_BLUE);
     caster->dropPool(100, LIQ_WATER);
-    for (t = caster->roomp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end();){
+      t=*(it++);
       tmp_victim = dynamic_cast<TBeing *>(t);
       if (!tmp_victim)
         continue;
@@ -697,8 +697,8 @@ int castTsunami(TBeing * caster)
   int ret,level;
   int rc = 0;
 
-  level = caster->getSkillLevel(SPELL_TSUNAMI);;
-  int bKnown = caster->getSkillLevel(SPELL_TSUNAMI);;
+  level = caster->getSkillLevel(SPELL_TSUNAMI);
+  int bKnown = caster->getSkillLevel(SPELL_TSUNAMI);
 
   ret=tsunami(caster,level,bKnown, caster->getAdvLearning(SPELL_TSUNAMI));
   if (IS_SET(ret, SPELL_SUCCESS)) {
@@ -834,7 +834,7 @@ int conjureElemWater(TBeing * caster)
      caster->roomp->getWeather() == WEATHER_RAINY){
     found=1;
   } else {
-    for(t = caster->roomp->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end() && (t=*it);++it) {
       if ((tp = dynamic_cast<TPool *>(t)) && tp->getDrinkUnits() >= 100 &&
 	  (tp->getDrinkType() == LIQ_WATER ||
 	   tp->getDrinkType() == LIQ_SALTWATER ||
@@ -1004,7 +1004,7 @@ int breathOfSarahage(TBeing * caster, int level, byte bKnown)
     aff.bitvector = AFF_WATERBREATH;
     TThing *t;
     int found = FALSE;
-    for (t = caster->roomp->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end() && (t=*it);++it) {
       tmp_victim = dynamic_cast<TBeing *>(t);
       if (!tmp_victim)
         continue;

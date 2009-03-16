@@ -630,7 +630,7 @@ int berserkerWeap(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 	af.modifier = ::number(ch->getSkillValue(SKILL_BERSERK),
 			       ch->getSkillValue(SKILL_BERSERK)*2);
 	af.level = ch->GetMaxLevel();
-	//      af.duration = ch->getSkillValue(SKILL_BERSERK);;
+	//      af.duration = ch->getSkillValue(SKILL_BERSERK);
 	af.duration = PERMANENT_DURATION;
 	af.location = APPLY_HIT;
 	af.bitvector = 0;
@@ -985,7 +985,7 @@ int weaponUnmaker(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 
   wearSlotT slot;
 
-  bool ok = FALSE;;
+  bool ok = FALSE;
   bool found = FALSE;
 
   for (slot = MIN_WEAR; slot < MAX_WEAR; slot++) {

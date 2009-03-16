@@ -10,7 +10,7 @@
 #include "stdsneezy.h"
 #include "database.h"
 
-// this function gets a bit recursive, be careful
+
 static void renamePersonalizeFix(TThing *t, const char * orig_name, const char * new_name)
 {
   if (!t)
@@ -34,9 +34,17 @@ static void renamePersonalizeFix(TThing *t, const char * orig_name, const char *
     }
   }
 
-  renamePersonalizeFix(t->getStuff(), orig_name, new_name);
-  renamePersonalizeFix(t->nextThing, orig_name, new_name);
 }
+
+void renamePersonalizeFix(StuffList list, const char * orig_name, const char * new_name)
+{
+  for(StuffIter it=list.begin();it!=list.end();++it){
+    renamePersonalizeFix(*it, orig_name, new_name);
+    renamePersonalizeFix((*it)->stuff, orig_name, new_name);
+  }
+
+}
+
 
 void TBeing::doNameChange(const char *argument)
 {
@@ -198,7 +206,7 @@ void TBeing::doNameChange(const char *argument)
     renamePersonalizeFix(vict->equipment[slot], orig_name, tmp_name);
   }
   // and again for inventory
-  renamePersonalizeFix(vict->getStuff(), orig_name, tmp_name);
+  renamePersonalizeFix(vict->stuff, orig_name, tmp_name);
 
   return;
 }

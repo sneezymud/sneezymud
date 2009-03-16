@@ -164,10 +164,11 @@ TBeing::~TBeing()
     desc->snoop.snooping = desc->snoop.snoop_by = 0;
   }
   wearSlotT j;
-  if (getStuff()) {
+  if (!stuff.empty()) {
     // non-immortal pcs have a separate handling for this in ~TPerson
     sendTo("Here, you dropped some stuff, let me help you get rid of that.\n\r");
-    while ((i = getStuff())) {
+    for(StuffIter it=stuff.begin();it!=stuff.end();){
+      i=*(it++);
       --(*i);
       delete i;
       i = NULL;
@@ -365,8 +366,8 @@ TObj::~TObj()
   }
 
   // corpses have had items removed from them in ~TBaseCorpse()
-  for (; getStuff(); ) {
-    t = getStuff();
+  for(StuffIter it=stuff.begin();it!=stuff.end();){
+    t=*(it++);
     --(*t);
     if (t) {
       delete t;
@@ -491,7 +492,7 @@ TRoom::TRoom(int r) :
 
 TRoom::~TRoom()
 {
-  TThing *t, *t2;
+  TThing *t;
 
   // Burn the born list.
   for (t = tBornInsideMe; t; t = t->nextBorn) {
@@ -501,8 +502,8 @@ TRoom::~TRoom()
       tMonster->brtRoom = ROOM_NOWHERE;
   }
 
-  for (t = getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=stuff.begin();it!=stuff.end();){
+    t=*(it++);
     if (t->isPc()) {
       vlogf(LOG_BUG, "~TRoom() with room occupied by PC()");
       continue;
@@ -546,8 +547,7 @@ TThing& TObj::operator += (TThing& t)
   TThing::operator += (t);
 
   // Thing being put in is a TObj
-  t.nextThing = getStuff();
-  setStuff(&t);
+  stuff.push_front(&t);
   t.parent = this;
 
   return *this;
@@ -616,7 +616,7 @@ bool TObj::checkOwnersList(const TPerson *ch, bool tPreserve)
 
   // check contents too
   TThing *t;
-  for (t = getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
     TObj * obj = dynamic_cast<TObj *>(t);
     if (obj)
       obj->checkOwnersList(ch, tPreserve);
@@ -650,8 +650,7 @@ TThing& TBeing::operator += (TThing& t)
   }
 #endif
 
-  t.nextThing = getStuff();
-  setStuff(&t);
+  stuff.push_front(&t);
   t.parent = this;
 
   return *this;
@@ -681,8 +680,8 @@ TThing& TThing::operator += (TThing& t)
 
   TMergeable *tm=dynamic_cast<TMergeable *>(&t);
   if(tm){
-    for(TThing *i=getStuff();i;i=i->nextThing){
-      TMergeable *tMerge=dynamic_cast<TMergeable *>(i);
+    for(StuffIter it=stuff.begin();it!=stuff.end();++it){
+      TMergeable *tMerge=dynamic_cast<TMergeable *>(*it);
       
       if(tMerge && tm!=tMerge && tm->willMerge(tMerge)){
 	tm->doMerge(tMerge);
@@ -703,8 +702,7 @@ TThing& TRoom::operator += (TThing& t)
   // jesus
   // obj to room
   // char to room
-  t.nextThing = getStuff();
-  setStuff(&t);
+  stuff.push_front(&t);
   t.in_room = in_room;
   t.roomp = this;
     
@@ -714,7 +712,7 @@ TThing& TRoom::operator += (TThing& t)
   if (tst && tst->givesOutsideLight()) {
     int best=0, curr = 0;
     TThing *i;
-    for (i = getStuff(); i; i = i->nextThing) {
+    for(StuffIter it=stuff.begin();it!=stuff.end() && (i=*it);++it) {
       TSeeThru *tst2 = dynamic_cast<TSeeThru *>(i);
       if (tst2 && (tst2 != tst) && tst2->givesOutsideLight()) {
         curr = tst2->getLightFromOutside();
@@ -747,13 +745,12 @@ TThing& TRoom::operator += (TThing& t)
 #if 1
     if (zone_table[getZoneNum()].enabled) {
       TThing *tThing   = NULL,
-             *tObj     = NULL,
-             *tObjNext = NULL;
+	*tObj     = NULL;
       TBeing *tBeing   = NULL;
-      TObj   *tObjTemp = NULL;
+      TObj   *tObjTemp, *tObjTemp2 = NULL;
 
-      if ((tBeing = dynamic_cast<TBeing *>((tThing = &t))))
-        for (wearSlotT wearIndex = MIN_WEAR; wearIndex < MAX_WEAR; wearIndex++)
+      if ((tBeing = dynamic_cast<TBeing *>((tThing = &t)))){
+        for (wearSlotT wearIndex = MIN_WEAR; wearIndex < MAX_WEAR; wearIndex++){
           if ((tObjTemp = dynamic_cast<TObj *>(tBeing->equipment[wearIndex]))) {
             if (tObjTemp->isObjStat(ITEM_PROTOTYPE)) {
               tBeing->unequip(wearIndex);
@@ -764,21 +761,23 @@ TThing& TRoom::operator += (TThing& t)
             if (!tObjTemp)
               continue;
 
-            for (tObj = tObjTemp->getStuff(); tObj; tObj = tObjNext) {
-              tObjNext = tObj->nextThing;
+            for(StuffIter it=tObjTemp->stuff.begin();it!=tObjTemp->stuff.end();){
+              tObj=*(it++);
 
-              if ((tObjTemp = dynamic_cast<TObj *>(tObj)) &&
-                  tObjTemp->isObjStat(ITEM_PROTOTYPE)) {
+              if ((tObjTemp2 = dynamic_cast<TObj *>(tObj)) &&
+                  tObjTemp2->isObjStat(ITEM_PROTOTYPE)) {
                 --(*tObj);
                 delete tObj;
                 tObj = NULL;
               }
             }
           }
-
-      for (tObj = t.getStuff(); tObj; tObj = tObjNext) {
-        tObjNext = tObj->nextThing;
-
+	}
+      }
+      
+      for(StuffIter it=t.stuff.begin();it!=t.stuff.end();){
+        tObj=*(it++);
+	
         if ((tObjTemp = dynamic_cast<TObj *>(tObj)) &&
             tObjTemp->isObjStat(ITEM_PROTOTYPE)) {
           --(*tObj);
@@ -789,11 +788,11 @@ TThing& TRoom::operator += (TThing& t)
         if (!tObjTemp)
           continue;
 
-        for (tThing = tObjTemp->getStuff(); tThing; tThing = tObjNext) {
-          tObjNext = tThing->nextThing;
+        for(StuffIter it=tObjTemp->stuff.begin();it!=tObjTemp->stuff.end();){
+          tThing=*(it++);
 
-          if ((tObjTemp = dynamic_cast<TObj *>(tThing)) &&
-              tObjTemp->isObjStat(ITEM_PROTOTYPE)) {
+          if ((tObjTemp2 = dynamic_cast<TObj *>(tThing)) &&
+              tObjTemp2->isObjStat(ITEM_PROTOTYPE)) {
             --(*tThing);
             delete tThing;
             tThing = NULL;
@@ -830,18 +829,15 @@ TThing& TThing::operator -- ()
   if ((t_in = parent)) {
     // obj from char
     // obj from obj
-    mud_assert(t_in->getStuff() != NULL, "TThing -- : parent had no stuff");
+    mud_assert(!t_in->stuff.empty(), "TThing -- : parent had no stuff");
     mud_assert(roomp == NULL, "TThing -- : had roomp and parent simultaneously");
     mud_assert(inRoom() == ROOM_NOWHERE || inRoom() == ROOM_AUTO_RENT, 
             "TThing -- : had parent and in room simultaneously");
 
-    if (t_in->getStuff() == this)       
-      t_in->setStuff(nextThing);
+    if (t_in->stuff.front() == this)       
+      t_in->stuff.pop_front();
     else {
-      // locate previous  
-      for (tmp = t_in->getStuff(); tmp && (tmp->nextThing != this); tmp = tmp->nextThing); 
-      mud_assert(tmp != NULL, "TThing-- : couldn't locate previous TThing in stuff list");
-      tmp->nextThing = nextThing;
+      t_in->stuff.remove(this);
     }
     for (tmp = t_in, light_mod = 0; tmp; tmp = tmp->parent) {
       tmp->addToLight(-light_mod);
@@ -866,12 +862,10 @@ TThing& TThing::operator -- ()
     // obj from room
     // char from room
 
-    if (this == rp->getStuff())   // head of list 
-      rp->setStuff(nextThing);
+    if (this == rp->stuff.front())   // head of list 
+      rp->stuff.pop_front();
     else {
-      for (tmp = rp->getStuff(); tmp && (tmp->nextThing != this); tmp = tmp->nextThing);
-      mud_assert(tmp != NULL, "TThing-- : couldn't locate previous TThing in stuff list (2)");
-      tmp->nextThing = nextThing;
+      rp->stuff.remove(this);
     }
 
     if(tied_to){
@@ -888,7 +882,7 @@ TThing& TThing::operator -- ()
     TSeeThru *tst = dynamic_cast<TSeeThru *>(this);
     if (tst && tst->givesOutsideLight()) {
       int best=0, curr = 0;
-      for (tmp = rp->getStuff(); tmp; tmp = tmp->nextThing) {
+      for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (tmp=*it);++it) {
         TSeeThru *tst2 = dynamic_cast<TSeeThru *>(tmp);
         if (tst2 && tst2->givesOutsideLight()) {
           curr = tst2->getLightFromOutside();
@@ -918,7 +912,6 @@ TThing& TThing::operator -- ()
   // set the obj 
   equippedBy = NULL;
   stuckIn = NULL;
-  nextThing = NULL;
   parent = NULL;
   in_room = ROOM_NOWHERE;
   roomp = NULL;
@@ -1076,7 +1069,6 @@ TThing::TThing() :
   carried_weight(0.0),
   carried_volume(0), 
   the_caster(NULL),
-  stuff(NULL),
   descr(NULL),
   stuckIn(NULL),
   equippedBy(NULL),
@@ -1094,7 +1086,6 @@ TThing::TThing() :
   name(NULL),
   shortDescr(NULL),
   parent(NULL),
-  nextThing(NULL),
   nextBorn(NULL),
   roomp(NULL),
   desc(NULL), 
@@ -1451,7 +1442,7 @@ TThing::TThing(const TThing &a) :
     max_exist(a.max_exist), in_room(a.in_room), spec(a.spec),
     number(a.number), height(a.height),
     canBeSeen(a.canBeSeen), name(a.name), shortDescr(a.shortDescr),
-    parent(a.parent), nextThing(a.nextThing),
+    parent(a.parent), 
     nextBorn(a.nextBorn),
     roomp(a.roomp), desc(a.desc), 
     ex_description(a.ex_description),
@@ -1486,7 +1477,6 @@ TThing & TThing::operator=(const TThing &a)
   stuckIn = a.stuckIn;
   equippedBy = a.equippedBy;
   tied_to = a.tied_to;
-  nextThing = a.nextThing;
   nextBorn = a.nextBorn;
   stuff = a.stuff;
   parent = a.parent;
@@ -1820,7 +1810,7 @@ lastChangeData::lastChangeData()
 {
   time_t t1;
   t1 = time(0);
-  minute = localtime(&t1)->tm_min;;
+  minute = localtime(&t1)->tm_min;
 }
 
 lastChangeData::lastChangeData(const lastChangeData &a)

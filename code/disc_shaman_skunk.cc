@@ -17,7 +17,7 @@
 int deathMist(TBeing *caster, int level, byte bKnown)
 {
   TBeing *tmp_victim;
-  TThing *t, *t2;
+  TThing *t;
   affectedData aff, aff2;
   int found = FALSE;
 
@@ -41,8 +41,8 @@ int deathMist(TBeing *caster, int level, byte bKnown)
     aff2.location = APPLY_NONE;
     aff2.bitvector = AFF_SYPHILIS;
 
-    for (t = caster->roomp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end();){
+      t=*(it++);
       tmp_victim = dynamic_cast<TBeing *>(t);
       if (!tmp_victim)
         continue;

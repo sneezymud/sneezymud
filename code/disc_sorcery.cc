@@ -440,7 +440,7 @@ int castBlastOfFury(TBeing *caster, TBeing *victim)
 int colorSpray(TBeing *caster, int level, byte bKnown, int adv_learn)
 {
   TBeing *tmp_victim = NULL;
-  TThing *t, *t2;
+  TThing *t;
 
   level = min(level, 15);
 
@@ -457,8 +457,8 @@ int colorSpray(TBeing *caster, int level, byte bKnown, int adv_learn)
       case CRIT_S_NONE:
         break;
     }
-    for (t = caster->roomp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end();){
+      t=*(it++);
       tmp_victim = dynamic_cast<TBeing *>(t);
       if (!tmp_victim || (tmp_victim->isPc() && !tmp_victim->desc))
         continue;
@@ -528,7 +528,7 @@ int colorSpray(TBeing *caster, TMagicItem * obj)
 
 int colorSpray(TBeing *caster)
 {
-  TThing *t, *t2;
+  TThing *t;
   TBeing *victim, *vict = NULL;
   taskDiffT diff;
   bool found=FALSE;
@@ -541,8 +541,8 @@ int colorSpray(TBeing *caster)
 
   start_cast(caster, NULL, NULL, caster->roomp, SPELL_COLOR_SPRAY, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 0);
 
-  for (t = caster->roomp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end();){
+    t=*(it++);
     victim = dynamic_cast<TBeing *>(t);
     if (!victim || (victim->isPc() && !victim->desc))
       continue;
@@ -708,7 +708,7 @@ int energyDrain(TBeing *tMaster, TBeing *tSucker, TMagicItem *tMagItem)
 
 int acidBlast(TBeing *caster, int level, byte bKnown, int adv_learn)
 {
-  TThing *t, *temp;
+  TThing *t;
   TBeing *b = NULL;
 
   level = min(level, 33);
@@ -726,8 +726,8 @@ int acidBlast(TBeing *caster, int level, byte bKnown, int adv_learn)
       case CRIT_S_NONE:
         break;
     }
-    for (t = caster->roomp->getStuff(); t; t = temp) {
-      temp = t->nextThing;
+    for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end();){
+      t=*(it++);
       TBeing *tbt = dynamic_cast<TBeing *>(t);
       if (tbt && (caster != tbt) && !tbt->isImmortal()) {
         if (!caster->inGroup(*tbt)) {
@@ -762,8 +762,8 @@ int acidBlast(TBeing *caster, int level, byte bKnown, int adv_learn)
       case CRIT_F_HITSELF:
       case CRIT_F_HITOTHER:
         CF(SPELL_ACID_BLAST);
-          for (t = caster->roomp->getStuff(); t; t = temp) {
-            temp = t->nextThing;
+          for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end();){
+            t=*(it++);
             b = dynamic_cast<TBeing *>(t);
             if (b && (caster != b) && (!b->isImmortal())) {
                if (caster->inGroup(*b)) {
@@ -947,7 +947,7 @@ int animate(TBeing *caster, int level, byte bKnown)
     // you need:  helm, jacket, 2 leggings, 2 sleeves, 2 gloves, 2 boots 
 
     TThing *obj;
-    for (obj = caster->roomp->getStuff(); obj; obj = obj->nextThing) {
+    for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end() && (obj=*it);++it) {
       o = dynamic_cast<TObj *>(obj);
       if (!o)
         continue;

@@ -348,7 +348,7 @@ int TBeing::triggerPortalTrap(TPortal *o)
 {
   int rc;
   int amnt;
-  TThing *t, *t2;
+  TThing *t;
 
   act("You hear a strange noise...", TRUE, this, 0, 0, TO_ROOM);
   act("You hear a strange noise...", TRUE, this, 0, 0, TO_CHAR);
@@ -443,8 +443,8 @@ int TBeing::triggerPortalTrap(TPortal *o)
       amnt = o->getPortalTrapDam();
 
       // fry people in room
-      for (t = roomp->getStuff(); t; t = t2) {
-        t2 = t->nextThing;
+      for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+        t=*(it++);
         TBeing *tbt = dynamic_cast<TBeing *>(t);
         if (tbt && this != tbt && !tbt->isImmortal()) {
           act("You are hit by shrapnel!", TRUE, tbt, 0, 0, TO_CHAR);
@@ -520,7 +520,7 @@ int TBeing::triggerPortalTrap(TPortal *o)
 int TBeing::triggerContTrap(TOpenContainer *obj)
 {
   int rc = 0;
-  TThing *t, *t2;
+  TThing *t;
   int amnt;
 
   act("You hear a strange noise...", TRUE, this, 0, 0, TO_ROOM);
@@ -544,8 +544,8 @@ int TBeing::triggerContTrap(TOpenContainer *obj)
       act("$p bursts into flame.", TRUE, this, obj, 0, TO_CHAR);
 
       // bag explodes, contents go boom
-      for (t = obj->getStuff(); t;t = t2) {
-        t2 = t->nextThing;
+      for(StuffIter it=obj->stuff.begin();it!=obj->stuff.end();){
+        t=*(it++);
         delete t;
         t = NULL;
       }
@@ -561,14 +561,14 @@ int TBeing::triggerContTrap(TOpenContainer *obj)
       amnt = obj->getContainerTrapDam();
 
       // bag explodes, contents go boom
-      for (t = obj->getStuff(); t;t = t2) {
-        t2 = t->nextThing;
+      for(StuffIter it=obj->stuff.begin();it!=obj->stuff.end();){
+        t=*(it++);
         delete t;
         t = NULL;
       }
       // fry people in room
-      for (t = roomp->getStuff(); t; t = t2) {
-        t2 = t->nextThing;
+      for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+        t=*(it++);
         TBeing *tbt = dynamic_cast<TBeing *>(t);
         if (tbt && this != tbt) {
           act("You are hit by shrapnel!", TRUE, tbt, 0, 0, TO_CHAR);
@@ -677,7 +677,7 @@ int TBeing::triggerContTrap(TOpenContainer *obj)
 int TBeing::triggerArrowTrap(TArrow *obj)
 {
   int rc = 0;
-  TThing *t, *t2;
+  TThing *t;
   int amnt;
 
   act("You hear a strange noise...", TRUE, this, 0, 0, TO_ROOM);
@@ -766,8 +766,8 @@ int TBeing::triggerArrowTrap(TArrow *obj)
       amnt = obj->getTrapDamAmount();
 
       // fry people in room
-      for (t = roomp->getStuff(); t; t = t2) {
-        t2 = t->nextThing;
+      for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+        t=*(it++);
         TBeing *tbt = dynamic_cast<TBeing *>(t);
         if (tbt && this != tbt && !tbt->isImmortal()) {
           act("You are hit by shrapnel!", TRUE, tbt, 0, 0, TO_CHAR);
@@ -962,7 +962,7 @@ int TBeing::checkForMoveTrap(dirTypeT dir)
   TThing *t;
   int rc;
 
-  for (t = roomp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
     rc = t->moveTrapCheck(this, dir);
     if (IS_SET_DELETE(rc, DELETE_VICT))
       return DELETE_THIS;
@@ -1004,7 +1004,7 @@ int TBeing::checkForInsideTrap(TThing *i)
   TThing *t;
   int rc;
 
-  for (t = i->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=i->stuff.begin();it!=i->stuff.end() && (t=*it);++it) {
     rc = t->insideTrapCheck(this, i);
     if (IS_SET_DELETE(rc, DELETE_VICT))
       return DELETE_THIS;
@@ -1045,7 +1045,7 @@ int TBeing::checkForGetTrap(TThing *i)
 // returns DELETE_THIS or false
 int TBeing::triggerTrap(TTrap *o)
 {
-  TThing *v, *v2;
+  TThing *v;
   TBeing *tbt;
   int rc;
 
@@ -1059,8 +1059,8 @@ int TBeing::triggerTrap(TTrap *o)
               FALSE, this, o, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
-        for (v = roomp->getStuff(); v; v = v2) {
-          v2 = v->nextThing;
+        for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+          v=*(it++);
           tbt = dynamic_cast<TBeing *>(v);
           if (tbt && tbt->desc && tbt != this) {
             act("You are sprayed with contact poison!",
@@ -1085,8 +1085,8 @@ int TBeing::triggerTrap(TTrap *o)
               FALSE, this, o, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
-        for (v = roomp->getStuff(); v; v = v2) {
-          v2 = v->nextThing;
+        for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+          v=*(it++);
           tbt = dynamic_cast<TBeing *>(v);
           if (tbt && tbt->desc && tbt != this) {
             act("You are surrounded by a noxious mist!",
@@ -1117,8 +1117,8 @@ int TBeing::triggerTrap(TTrap *o)
               FALSE, this, o, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
-        for (v = roomp->getStuff(); v; v = v2) {
-          v2 = v->nextThing;
+        for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+          v=*(it++);
           tbt = dynamic_cast<TBeing *>(v);
           if (tbt && tbt->desc && tbt != this) {
             act("You are burned by the flames!",
@@ -1155,8 +1155,8 @@ int TBeing::triggerTrap(TTrap *o)
               FALSE, this, o, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
-        for (v = roomp->getStuff(); v; v = v2) {
-          v2 = v->nextThing;
+        for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+          v=*(it++);
           tbt = dynamic_cast<TBeing *>(v);
           if (tbt && tbt->desc && tbt != this) {
             act("You find yourself sucked into the vortex!",
@@ -1188,8 +1188,8 @@ int TBeing::triggerTrap(TTrap *o)
               FALSE, this, o, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
-        for (v = roomp->getStuff(); v; v = v2) {
-          v2 = v->nextThing;
+        for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+          v=*(it++);
           tbt = dynamic_cast<TBeing *>(v);
           if (tbt && tbt->desc && tbt != this) {
             act("You are surrounded by the thick cloud!",
@@ -1214,8 +1214,8 @@ int TBeing::triggerTrap(TTrap *o)
               FALSE, this, o, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
-        for (v = roomp->getStuff(); v; v = v2) {
-          v2 = v->nextThing;
+        for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+          v=*(it++);
           tbt = dynamic_cast<TBeing *>(v);
           if (tbt && tbt->desc && tbt != this) {
             act("You are hit by the deadly bolts!",
@@ -1248,8 +1248,8 @@ int TBeing::triggerTrap(TTrap *o)
               FALSE, this, o, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
-        for (v = roomp->getStuff(); v; v = v2) {
-          v2 = v->nextThing;
+        for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+          v=*(it++);
           tbt = dynamic_cast<TBeing *>(v);
           if (tbt && tbt->desc && tbt != this) {
             act("You are hit by the fusillade!",
@@ -1282,8 +1282,8 @@ int TBeing::triggerTrap(TTrap *o)
               FALSE, this, o, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
-        for (v = roomp->getStuff(); v; v = v2) {
-          v2 = v->nextThing;
+        for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+          v=*(it++);
           tbt = dynamic_cast<TBeing *>(v);
           if (tbt && tbt->desc && tbt != this) {
             act("You are hit by the slashing disks!",
@@ -1315,8 +1315,8 @@ int TBeing::triggerTrap(TTrap *o)
               FALSE, this, o, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
-        for (v = roomp->getStuff(); v; v = v2) {
-          v2 = v->nextThing;
+        for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+          v=*(it++);
           tbt = dynamic_cast<TBeing *>(v);
           if (tbt && tbt->desc && tbt != this) {
             act("You are hit by the flak!",
@@ -1348,8 +1348,8 @@ int TBeing::triggerTrap(TTrap *o)
               FALSE, this, o, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
-        for (v = roomp->getStuff(); v; v = v2) {
-          v2 = v->nextThing;
+        for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+          v=*(it++);
           tbt = dynamic_cast<TBeing *>(v);
           if (tbt && tbt->desc && tbt != this) {
             act("You are surrounded by the frosty cloud!",
@@ -1386,8 +1386,8 @@ int TBeing::triggerTrap(TTrap *o)
               FALSE, this, o, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
-        for (v = roomp->getStuff(); v; v = v2) {
-          v2 = v->nextThing;
+        for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+          v=*(it++);
           tbt = dynamic_cast<TBeing *>(v);
           if (tbt && tbt->desc && tbt != this) {
             act("You are blasted by the plasma!",
@@ -1419,8 +1419,8 @@ int TBeing::triggerTrap(TTrap *o)
               FALSE, this, o, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
-        for (v = roomp->getStuff(); v; v = v2) {
-          v2 = v->nextThing;
+        for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+          v=*(it++);
           tbt = dynamic_cast<TBeing *>(v);
           if (tbt && tbt->desc && tbt != this) {
             act("The acid cloud surrounds you!",
@@ -1462,14 +1462,14 @@ int TBeing::triggerTrap(TTrap *o)
 // returns DELETE_THIs or FALSE
 int TBeing::trapDoorTntDamage(int amnt, dirTypeT door)
 {
-  TThing *t, *tmp;
+  TThing *t;
   int rc;
 
   sendToRoom("You hear a loud boom.\n\r", in_room);
   sendToRoom("The door is ripped apart by some sort of explosive.\n\r", in_room);
 
-  for (t = roomp->getStuff(); t; t = tmp) {
-    tmp = t->nextThing;
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+    t=*(it++);
     TBeing *tbt = dynamic_cast<TBeing *>(t);
     if (tbt && this != tbt) {
       rc = tbt->objDamage(DAMAGE_TRAP_TNT, amnt/2, NULL);
@@ -1487,8 +1487,8 @@ int TBeing::trapDoorTntDamage(int amnt, dirTypeT door)
     sendToRoom("The door is ripped apart by some sort of explosive.\n\r", 
              exitDir(door)->to_room);
 
-    for (t = rp->getStuff(); t; t = tmp) {
-      tmp = t->nextThing;
+    for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
+      t=*(it++);
       TBeing *tbt = dynamic_cast<TBeing *>(t);
       if (tbt && this != tbt) {
         rc = tbt->objDamage(DAMAGE_TRAP_TNT, amnt/4, NULL);
@@ -1570,15 +1570,15 @@ int TBeing::trapDoorSlashDamage(int amnt, dirTypeT door)
 // returns DELETE_THIS or FALSE
 int TBeing::trapDoorFrostDamage(int amnt, dirTypeT door)
 { 
-  TThing *t, *tmp;
+  TThing *t;
   int rc;
   char buf[256];
 
   sprintf(buf, "You hear a high pitched whine as a frosty blast rushes out of the %s!\n\r", fname(exitDir(door)->keyword).c_str());
   sendToRoom(buf, in_room);
 
-  for (t = roomp->getStuff(); t; t = tmp) {
-    tmp = t->nextThing;
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+    t=*(it++);
     TBeing *tbt = dynamic_cast<TBeing *>(t);
     if (tbt && this != tbt && !tbt->isImmortal()) {
       act("$n is chilled by the arctic blast.", TRUE, tbt, 0, 0, TO_ROOM);
@@ -1597,8 +1597,8 @@ int TBeing::trapDoorFrostDamage(int amnt, dirTypeT door)
 
     sendToRoom(buf, exitDir(door)->to_room);
 
-    for (t = rp->getStuff(); t; t = tmp) {
-      tmp = t->nextThing;
+    for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
+      t=*(it++);
       TBeing *tbt = dynamic_cast<TBeing *>(t);
       if (tbt && this != tbt) {
         act("$n is chilled by the arctic blast.", TRUE, tbt, 0, 0, TO_ROOM);
@@ -1625,15 +1625,15 @@ int TBeing::trapDoorFrostDamage(int amnt, dirTypeT door)
 // returns DELETE_THIS or FALSE
 int TBeing::trapDoorEnergyDamage(int amnt, dirTypeT door)
 { 
-  TThing *t, *tmp;
+  TThing *t;
   int rc;
   char buf[256];
 
   sprintf(buf, "You hear a powerful humming as bolts of plasma stream out of the %s!\n\r", fname(exitDir(door)->keyword).c_str());
   sendToRoom(buf, in_room);
 
-  for (t = roomp->getStuff(); t; t = tmp) {
-    tmp = t->nextThing;
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+    t=*(it++);
     TBeing *tbt = dynamic_cast<TBeing *>(t);
     if (tbt && this != tbt && !tbt->isImmortal()) {
       act("$n is hit by the plasma bolts.", TRUE, tbt, 0, 0, TO_ROOM);
@@ -1652,8 +1652,8 @@ int TBeing::trapDoorEnergyDamage(int amnt, dirTypeT door)
 
     sendToRoom(buf, exitDir(door)->to_room);
 
-    for (t = rp->getStuff(); t; t = tmp) {
-      tmp = t->nextThing;
+    for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
+      t=*(it++);
       TBeing *tbt = dynamic_cast<TBeing *>(t);
       if (tbt && this != tbt) {
         act("$n is hit by the plasma bolts.", TRUE, tbt, 0, 0, TO_ROOM);
@@ -1696,7 +1696,7 @@ int TBeing::trapDoorFireDamage(int amnt, dirTypeT door)
 // returns DELETE_THIS or FALSE
 int TBeing::trapDoorAcidDamage(int amnt, dirTypeT door)
 {
-  TThing *t, *tmp;
+  TThing *t;
   int rc;
   char buf[256];
 
@@ -1704,8 +1704,8 @@ int TBeing::trapDoorAcidDamage(int amnt, dirTypeT door)
        fname(exitDir(door)->keyword).c_str());
   sendToRoom(buf, in_room);
 
-  for (t = roomp->getStuff(); t; t = tmp) {
-    tmp = t->nextThing;
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+    t=*(it++);
     TBeing *tbt = dynamic_cast<TBeing *>(t);
     if (tbt && this != tbt) {
       rc = tbt->objDamage(DAMAGE_TRAP_ACID, amnt/2, NULL);
@@ -1722,8 +1722,8 @@ int TBeing::trapDoorAcidDamage(int amnt, dirTypeT door)
 
     sendToRoom(buf, exitDir(door)->to_room);
 
-    for (t = rp->getStuff(); t; t = tmp) {
-      tmp = t->nextThing;
+    for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
+      t=*(it++);
       TBeing *tbt = dynamic_cast<TBeing *>(t);
       if (tbt && this != tbt) {
         rc = tbt->objDamage(DAMAGE_TRAP_ACID, amnt/3, NULL);
@@ -2647,16 +2647,16 @@ bool TBeing::hasTrapComps(const char *type, trap_targ_t targ, int amt, int *pric
   if (targ == TRAP_TARG_MINE) {
     item4 = ST_CASE_MINE;
     item4 = real_object(item4);
-    com4 = searchLinkedListVis(this, obj_index[item4].name, getStuff());
+    com4 = searchLinkedListVis(this, obj_index[item4].name, stuff);
   } else if (targ == TRAP_TARG_GRENADE) {
     item4 = ST_CASE_GRENADE;
     item4 = real_object(item4);
-    com4 = searchLinkedListVis(this, obj_index[item4].name, getStuff());
+    com4 = searchLinkedListVis(this, obj_index[item4].name, stuff);
   }
 
-  TThing * com1 = searchLinkedListVis(this, obj_index[item1].name, getStuff());
-  TThing * com2 = searchLinkedListVis(this, obj_index[item2].name, getStuff());
-  TThing * com3 = searchLinkedListVis(this, obj_index[item3].name, getStuff());
+  TThing * com1 = searchLinkedListVis(this, obj_index[item1].name, stuff);
+  TThing * com2 = searchLinkedListVis(this, obj_index[item2].name, stuff);
+  TThing * com3 = searchLinkedListVis(this, obj_index[item3].name, stuff);
 
   if (price) {
     *price = 0;

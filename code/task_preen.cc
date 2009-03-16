@@ -24,7 +24,7 @@ void TBeing::doPreen(sstring &argument)
   if (in_room < 0)
     return;
 
-  TThing *target = !argument.empty() ? searchLinkedListVis(this, argument, roomp->getStuff()) : dynamic_cast<TThing*>(this);
+  TThing *target = !argument.empty() ? searchLinkedListVis(this, argument, roomp->stuff) : dynamic_cast<TThing*>(this);
   bool being = target && dynamic_cast<TBeing*>(target) != NULL;
   bool feathered = being && dynamic_cast<TBeing*>(target)->getMyRace()->isFeathered();
 

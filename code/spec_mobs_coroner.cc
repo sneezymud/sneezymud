@@ -67,7 +67,7 @@ static int findACorpse(TMonster *myself)
 
 int coroner(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 {
-  TThing *t, *t2;
+  TThing *t;
   TObj *obj = NULL;
   int rc;
   char buf[256];  
@@ -81,20 +81,18 @@ int coroner(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   int found=0;
   
   // check if we have any corpses
-  if (myself->getStuff()) {
-    TThing *t;
-    for(t=myself->getStuff();t;t=t->nextThing){
-      if(dynamic_cast<TBaseCorpse *>(t))
+  if (!myself->stuff.empty()){
+    for(StuffIter it=myself->stuff.begin();it!=myself->stuff.end();++it){
+      if(dynamic_cast<TBaseCorpse *>(*it))
 	found++;
     }
   }
   
   // pick up corpses
   if(myself->inRoom() != ROOM_MORGUE && found < 3){
-
     // look for a corpse
-    for (t = myself->roomp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end();){
+      t=*(it++);
       
       obj = dynamic_cast<TObj *>(t);
       if (!obj || !okForJanitor(myself, obj))
@@ -103,10 +101,11 @@ int coroner(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       if (dynamic_cast<TBaseCorpse *>(obj)) {
 	sprintf(buf, "$n gets $p and prepares it for delivery to the morgue.");
 	act(buf, FALSE, myself, obj, 0, TO_ROOM);
-	TThing *t;
-	while ((t = obj->getStuff())) {
-	  (*t)--;
-	  *myself += *t;
+	TThing *tt;
+	for(StuffIter itt=obj->stuff.begin();itt!=obj->stuff.end();){
+	  tt=*(it++);
+	  (*tt)--;
+	  *myself += *tt;
 	}
 	(*obj)--;
 	*myself += *obj;

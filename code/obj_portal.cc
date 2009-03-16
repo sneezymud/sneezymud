@@ -153,7 +153,7 @@ sstring TPortal::statObjInfo() const
           getTarget(), getPortalNumCharges(), getPortalType());
   tStString += tString;
   tStString += "Portal Flags: ";
-  tStString += sprintbit(getPortalFlags(), exit_bits);;
+  tStString += sprintbit(getPortalFlags(), exit_bits);
   sprintf(tString, "\n\rKey: %d, Trap Type: %s, Trap Dam: %d",
           getPortalKey(), trap_types[getPortalTrapType()].c_str(), 
 	  getPortalTrapDam());
@@ -300,7 +300,7 @@ void TPortal::unlockMe(TBeing *ch)
 
 int TPortal::objectDecay()
 {
-  if (roomp && roomp->getStuff()) {
+  if (roomp && !roomp->stuff.empty()) {
 #if 0
     sendrpf(COLOR_OBJECTS, roomp, "%s flickers out of view.\n\r", getName(.cap()).c_str());
 #else
@@ -350,7 +350,7 @@ int TPortal::enterMe(TBeing *ch)
     return FALSE;
   }
   if (rp->getMoblim() &&
-      (MobCountInRoom(rp->getStuff()) >= rp->getMoblim()) && !ch->isImmortal()) {
+      (MobCountInRoom(rp->stuff) >= rp->getMoblim()) && !ch->isImmortal()) {
     act("You attempt to enter $p, but it's like an invisible wall bars your entry.", FALSE, ch, this, NULL, TO_CHAR);
     return FALSE;
   }
@@ -481,7 +481,7 @@ TPortal * TPortal::findMatchingPortal() const
     return NULL;
 
   TThing *t;
-  for (t = rp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
     TPortal *tp = dynamic_cast<TPortal *>(t);
     if (!tp)
       continue;

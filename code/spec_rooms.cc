@@ -173,7 +173,7 @@ void TNote::thingDumped(TBeing *ch, int *)
 
 int grimhavenDump(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 {
-  TThing *t, *t2;
+  TThing *t;
   TRoom *roomp;
 
   if(cmd!=CMD_GENERIC_PULSE)
@@ -185,8 +185,8 @@ int grimhavenDump(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
   }
     
 
-  for (t = rp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
+    t=*(it++);
     
     // Only objs get nuked
     TObj *obj = dynamic_cast<TObj *>(t);
@@ -214,7 +214,7 @@ int grimhavenDump(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 
 int prisonDump(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 {
-  TThing *t, *t2;
+  TThing *t;
   TRoom *roomp;
 
   if(cmd!=CMD_GENERIC_PULSE)
@@ -226,8 +226,8 @@ int prisonDump(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
   }
     
 
-  for (t = rp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
+    t=*(it++);
     
     // Only objs get nuked
     TObj *obj = dynamic_cast<TObj *>(t);
@@ -255,14 +255,14 @@ int prisonDump(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 
 int dump(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 {
-  TThing *t, *t2;
+  TThing *t;
   int value = 0;
   int rc;
   bool wasProp = false;
 
   if (cmd == CMD_GENERIC_PULSE) {
-    for (t = rp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
+      t=*(it++);
 
       // Only objs get nuked
       TObj *obj = dynamic_cast<TObj *>(t);
@@ -302,8 +302,8 @@ int dump(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_VICT;
 
-  for (t = rp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
+    t=*(it++);
 
     if (isname("[prop]", t->getName()))
       wasProp = true;
@@ -474,18 +474,18 @@ int personalHouse(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
 
 int Whirlpool(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
 {
-  TThing *t, *t2;
+  TThing *t;
   TRoom *rp2;
   int new_room;
   int rc;
 
   if (cmd == CMD_GENERIC_PULSE) {
-    if (!rp->getStuff())
+    if (rp->stuff.empty())
       return FALSE;
 
     // transport stuff out of here
-    for (t = rp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
+      t=*(it++);
       TBeing *tch = dynamic_cast<TBeing *>(t);
       if (tch && tch->isImmortal())
         continue;
@@ -561,14 +561,14 @@ int Whirlpool(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
 
 int belimusThroat(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 {
-  TThing *t, *t2;
+  TThing *t;
   TBeing *ch = NULL;
 
   if ((cmd != CMD_GENERIC_PULSE) || ::number(0,9))
    return FALSE;
 
-  for (t = rp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
+    t=*(it++);
     ch = dynamic_cast<TBeing *>(t);
     if (!ch)
       continue;
@@ -621,15 +621,15 @@ int belimusThroat(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 
 int belimusStomach(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 {
-  TThing *t, *t2;
+  TThing *t;
   TBeing *ch = NULL;
   int rc;
 
   if ((cmd != CMD_GENERIC_PULSE) || ::number(0,9))
    return FALSE;
 
-  for (t = rp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
+    t=*(it++);
     ch = dynamic_cast<TBeing *>(t);
     if (!ch)
       continue;
@@ -685,14 +685,14 @@ int belimusStomach(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 
 int belimusLungs(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 {
-  TThing *t, *t2;
+  TThing *t;
   TBeing *ch = NULL;
 
   if ((cmd != CMD_GENERIC_PULSE) || ::number(0,9))
    return FALSE;
 
-  for (t = rp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
+    t=*(it++);
     ch = dynamic_cast<TBeing *>(t);
     if (!ch)
       continue;
@@ -766,15 +766,15 @@ int belimusLungs(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 
 int belimusBlowHole(TBeing *me, cmdTypeT cmd, const char *, TRoom *rp)
 {
-    TThing *t, *t2;
+    TThing *t;
     TBeing *ch = NULL, *mob;
 
   if ((cmd != CMD_UP) && ((cmd != CMD_GENERIC_PULSE) || ::number(0,9)))
     return FALSE;
 
   if (cmd == CMD_GENERIC_PULSE) {
-    for (t = rp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
+      t=*(it++);
       ch = dynamic_cast<TBeing *>(t);
       if (!ch)
         continue;
@@ -871,8 +871,9 @@ int wierdCircle(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
         return FALSE;
       if (!mob->fight()) {
         mob->doSay("Thanks!  You may leave me to my slumber.");
-        while (mob->getStuff()) {
-          delete mob->getStuff();
+	for(StuffIter it=mob->stuff.begin();it!=mob->stuff.end();){
+	  TThing *t=*(it++);
+          delete t;
         }
         delete mob;
         return TRUE;
@@ -1072,14 +1073,14 @@ int genericSlide(TThing *t, TRoom *rp)
 
 int slide(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 {
-  TThing *t, *t2;
+  TThing *t;
   int rc;
 
   if (cmd != CMD_GENERIC_PULSE)
     return FALSE;
 
-  for (t = rp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
+    t=*(it++);
 
     if (t->riding)
       continue;
@@ -1102,7 +1103,6 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
   char buf[255];
   TObj *portal = NULL;
   int found = FALSE;
-  TThing *i;
   TRoom *other_room = NULL;
   TThing * temp = NULL;
   int found_other = FALSE;
@@ -1146,7 +1146,8 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
         temp = NULL;
         found_other = FALSE;
         if (other_room) {
-          for (temp = other_room->getStuff(); temp; temp = temp->nextThing) {
+	  for(StuffIter it=other_room->stuff.begin();it!=other_room->stuff.end();){
+	    temp=*(it++);
             if (!dynamic_cast<TPortal *> (temp))
               continue;
             if (temp->number == real_object(OBJ_MINELIFT_UP)) {
@@ -1235,7 +1236,8 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
         act("$n raises the drawbridge.", false, ch, 0, 0, TO_ROOM);
 
         // remove it from this room
-        for (temp = ch->roomp->getStuff(); temp; temp = temp->nextThing) {
+	for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end();){
+	  temp=*(it++);
           if (!dynamic_cast<TPortal *>(temp))
             continue;
           if (temp->number == rob) {
@@ -1246,7 +1248,8 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
         }
         // remove it from other room
         rob = real_object(7215);
-        for (temp = real_roomp(7265)->getStuff(); temp; temp = temp->nextThing) {
+	for(StuffIter it=real_roomp(7265)->stuff.begin();it!=real_roomp(7265)->stuff.end();){
+	  temp=*(it++);
           if (!dynamic_cast<TPortal *>(temp))
             continue;
           if (temp->number == rob) {
@@ -1291,7 +1294,8 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
         temp = NULL;
         found_other = FALSE;
         if (other_room) {
-          for (temp = other_room->getStuff(); temp; temp = temp->nextThing) {
+	  for(StuffIter it=other_room->stuff.begin();it!=other_room->stuff.end();){
+	    temp=*(it++);
             if (!dynamic_cast<TPortal *> (temp))
               continue;
             if (temp->number == real_object(OBJ_MINELIFT_DOWN)) {
@@ -1311,8 +1315,8 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
     case 15277:
       if (cmd != CMD_PULL && cmd != CMD_TUG)
         return FALSE;
-      for (i = rp->getStuff(); i; i = i->nextThing) {
-        TObj *io = dynamic_cast<TObj *>(i);
+      for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();++it){
+        TObj *io = dynamic_cast<TObj *>(*it);
         if (io && io->objVnum() == ROOM_TREE_BRIDGE)  {
           portal = io;
           found = TRUE;
@@ -1416,7 +1420,6 @@ int randomMobDistribution(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 {
   int exitrnum=0, rc;
   TMonster *tm;
-  TThing *tmp_t;
 
   static int pulse;
   ++pulse;
@@ -1447,13 +1450,12 @@ int randomMobDistribution(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 
   // this zone is inactive, so let's force a wanderAround
   if(zone_table[rp->getZoneNum()].zone_value==1){
-    for(TThing *t=rp->getStuff();t;t=tmp_t){
-      tmp_t = t->nextThing;  // just for safety
+    for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
+      TThing *t=*(it++);  // just for safety
       
       if((tm=dynamic_cast<TMonster *>(t))){
 	rc = tm->mobileActivity(pulse);
 	if (IS_SET_DELETE(rc, DELETE_THIS)) {
-	  tmp_t = t->nextThing;
 	  delete tm;
 	  tm = NULL;
 	}
@@ -1703,7 +1705,6 @@ int monkQuestProcFall(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
 int BankVault(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
 {
   TRoom *rp;
-  TThing *tt;
   TBeing *tb;
   int rc;
 
@@ -1760,8 +1761,8 @@ int BankVault(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
   
 
   // check for player in this room and poison if so
-  for(tt=roomp->getStuff();tt;tt=tt->nextThing){
-    if((tb=dynamic_cast<TBeing *>(tt)) && tb->isPc()){
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();++it){
+    if((tb=dynamic_cast<TBeing *>(*it)) && tb->isPc()){
       tb->sendTo(COLOR_BASIC, "<G>Acidic gas shoots out of small holes in the ceiling.<1>\n\r");
       tb->sendTo(COLOR_BASIC, "<r>It burns your skin and you choke uncontrollably!<1>\n\r");
 
@@ -1889,7 +1890,7 @@ int dayGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 {
   TObj *to = NULL;
   TPortal *obj = NULL;
-  TThing *t = NULL, *t2 = NULL;
+  TThing *t = NULL;
   bool found = false;
 
   if (cmd != CMD_GENERIC_PULSE)
@@ -1897,8 +1898,8 @@ int dayGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 
   
   //  vlogf(LOG_DASH, "daygate proc PULSE");
-  for (t = rp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
+    t=*(it++);
     if(!(to=dynamic_cast<TObj *>(t)))
       continue;
     if(obj_index[to->getItemIndex()].virt == ITEM_DAYGATE) {
@@ -1923,7 +1924,7 @@ int dayGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
       //      vlogf(LOG_DASH, "daygate proc didn't find gate, placing");
       if (!(to = read_object(ITEM_DAYGATE, VIRTUAL))) {
 	vlogf(LOG_LOW, "Error loading daygate");
-	return FALSE;;
+	return FALSE;
       }
       obj = dynamic_cast<TPortal *>(to);
       if(rp->number == 1303)
@@ -1946,7 +1947,7 @@ int moonGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 {
   TObj *to = NULL;
   TPortal *obj = NULL;
-  TThing *t = NULL, *t2 = NULL;
+  TThing *t = NULL;
   bool found = false;
 
   if (cmd != CMD_GENERIC_PULSE)
@@ -1954,8 +1955,8 @@ int moonGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 
 
   
-  for (t = rp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
+    t=*(it++);
     if(!(to=dynamic_cast<TObj *>(t)))
       continue;
     if(obj_index[to->getItemIndex()].virt == ITEM_MOONGATE) {
@@ -1978,7 +1979,7 @@ int moonGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     if (!found) {
         if (!(to = read_object(ITEM_MOONGATE, VIRTUAL))) {
 	vlogf(LOG_LOW, "Error loading moongate");
-	return FALSE;;
+	return FALSE;
       }
       obj = dynamic_cast<TPortal *>(to);
       if(rp->number == 5895)
@@ -2001,14 +2002,14 @@ int moonGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 int waterfallRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 {
   TObj *to = NULL;
-  TThing *t = NULL, *t2 = NULL;
+  TThing *t = NULL;
   bool found = false;
 
   if (cmd != CMD_GENERIC_PULSE)
     return FALSE;
 
-  for (t = rp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
+    t=*(it++);
     if(!(to=dynamic_cast<TObj *>(t)))
       continue;
     if(obj_index[to->getItemIndex()].virt == OBJ_RAINBOW_MIST) {
@@ -2031,7 +2032,7 @@ int waterfallRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
       return FALSE;
     if (!(to = read_object(OBJ_RAINBOW_MIST, VIRTUAL))) {
       vlogf(LOG_LOW, "Error loading rainbow mist object");
-      return FALSE;;
+      return FALSE;
     }
     *rp += *to;
     act("<W>Suddenly, light from the sun strikes the mist, and $p<W> is formed.<1>",
@@ -2047,7 +2048,7 @@ int windGustRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 {
   TPerson *player;
   int rc;
-  TThing *t, *t2;
+  TThing *t;
   static unsigned int pulse;
 
   if(cmd != CMD_GENERIC_PULSE)
@@ -2065,8 +2066,8 @@ int windGustRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 	  "<c>A strong gust of wind swirls into the room kicking up <o>dust<1><c> and knocking the unwary off-guard.<1>\n\r");
 
 
-  for (t = rp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
+    t=*(it++);
   
     if(!(player=dynamic_cast<TPerson *>(t)))
       continue;
@@ -2112,7 +2113,6 @@ int boulderRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
 {
   TRoom *rp;
   TThing *t = NULL;
-  TThing *t2 = NULL;
   TObj *rock;
   int found = 0;
   static unsigned int pulse;
@@ -2124,8 +2124,8 @@ int boulderRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
   if(pulse%150)
     return FALSE;
 
-  for (t = roomp->getStuff();t;t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+    t=*(it++);
     if (!(rock=dynamic_cast<TObj *>(t)))
       continue;
     if (obj_index[rock->getItemIndex()].virt == BOULDER_ITEM) {

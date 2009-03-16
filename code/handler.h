@@ -18,8 +18,7 @@ TMoney *create_money( int amount, factionTypeT);
 
 void thing_to_room(TThing *ch, int room);
 
-TThing *get_thing_in_list_getable(TBeing *ch, const char *name, TThing *list);
-TThing *get_thing_in_list_num(int num, TThing *list);
+TThing *get_thing_in_list_getable(TBeing *ch, const char *name, StuffList list);
 TThing *get_thing_on_list_getable(TBeing *ch, const char *name, TThing *list);
 TThing *get_thing_on_list(const char *name, TThing *list);
 TThing *get_thing_on_list_num(int num, TThing *list);
@@ -29,7 +28,7 @@ TThing *get_thing_stuck_in_vis(TBeing *, const char *, wearSlotT *j, int *count,
 TThing *get_thing_char_using(TBeing *, const char *, int, bool, bool);
 TObj *get_obj(const char *name, exactTypeT);
 TObj *get_obj_num(int nr);
-TObj *get_num_obj_in_list(TBeing *ch, int num, TThing *list, int shop_nr);
+TObj *get_num_obj_in_list(TBeing *ch, int num, StuffList list, int shop_nr);
 TObj *get_obj_vis(TBeing *ch, const char *name, int *count, exactTypeT exact);
 TObj *get_obj_vis_world(TBeing *ch, const char *name, int *count, exactTypeT exact);
 TObj *get_obj_vis_accessible(TBeing *ch, const sstring &name);
@@ -62,9 +61,9 @@ const unsigned int FIND_OBJ_COMM      =(1<<6);
 const unsigned int FIND_ROOM_EXTRA    =(1<<7);
 const unsigned int FIND_OBJ_HELD      =(1<<8);
 
-extern TThing *searchLinkedListVis(const TBeing *ch, sstring name, TThing *list, int *num = NULL, thingTypeT x = TYPETHING);
+extern TThing *searchLinkedListVis(const TBeing *ch, sstring name, StuffList list, int *num = NULL, thingTypeT x = TYPETHING);
 
-extern TThing *searchLinkedList(const char * name, TThing *list, thingTypeT x = TYPETHING);
-extern TThing *searchLinkedList(const sstring & name, TThing *list, thingTypeT x = TYPETHING);
+extern TThing *searchLinkedList(const char * name, StuffList list, thingTypeT x = TYPETHING);
+extern TThing *searchLinkedList(const sstring & name, StuffList list, thingTypeT x = TYPETHING);
 
 #endif

@@ -734,7 +734,7 @@ void TPerson::loadFromSt(charFile *st)
 #if 0
   faction.whichguild = st->whichguild;
   faction.align_ge = st->align_ge;
-  faction.align_lc = st->align_lc;;
+  faction.align_lc = st->align_lc;
 #endif
 
   mud_assert(st->f_type >= MIN_FACTION && st->f_type < MAX_FACTIONS, "bad faction");
@@ -1614,7 +1614,8 @@ void TBeing::doReset(sstring arg)
     for (isi = 0; isi < shop_index.size(); isi++) {
       num = shop_index[isi].keeper;
       if ((keeper = dynamic_cast<TMonster *>(get_char_num(num)))) {
-        while ((tmp = keeper->getStuff())) {
+	for(StuffIter it=keeper->stuff.begin();it!=keeper->stuff.end();){
+	  tmp=*(it++);
           delete tmp;
         }
         keeper->autoCreateShop(isi);

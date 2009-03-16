@@ -439,7 +439,7 @@ void TMonster::mobAI()
   // OK, if we don't have a target, lets see who's in the room 
   // set it to a random PC in the room that we can see 
   if (!targ()) {
-    for (t = roomp->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       if (t->isPc() && canSee(t) && (t != this)) {
         aiTarget(dynamic_cast<TBeing *>(t));
         break;

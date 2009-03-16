@@ -139,12 +139,11 @@ int lightningRodFryRoom(TBaseWeapon *tObj, TRoom *tRoom)
           "<W>A bolt of lightning streaks down and strikes %s<W>!<z>\n\r",
           (tObj->getName() ? sstring(tObj->getName()).uncap().c_str() : "Bogus Object"));
 
-  TThing *tThing,
-         *tThingNext;
+  TThing *tThing;
   TBeing *tBeing;
 
-  for (tThing = tRoom->getStuff(); tThing; tThing = tThingNext) {
-    tThingNext = tThing->nextThing;
+  for(StuffIter it=tRoom->stuff.begin();it!=tRoom->stuff.end();){
+    tThing=*(it++);
 
     if (!(tBeing = dynamic_cast<TBeing *>(tThing)) || !::number(0, 3))
       continue;

@@ -461,12 +461,13 @@ int TFFlame::igniteMessage(TBeing *ch) const
   // Either wasn't a mage/cleric/deikhan or didn't have an appropriate skill,
   // so we revert to the old Flint&Steel tool...But not for immortals.
   if (!sFound) {
-    TThing *cThing;
     TTool *cTool = NULL;
-    for (cThing = ch->getStuff();
-         cThing && (!(cTool=dynamic_cast<TTool *>(cThing)) ||
-                    !cTool->getToolType() != TOOL_FLINTSTEEL);
-         cThing = cThing->nextThing);
+    for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end();++it){
+      if((cTool=dynamic_cast<TTool *>(*it)) &&
+	 (cTool->getToolType() != TOOL_FLINTSTEEL))
+	break;
+    }
+	 
     if ((!cTool || !cTool->getToolType())) {
       ch->sendTo("I'm afraid you need some flint and steel for this.\n\r");
       return -1;
@@ -505,8 +506,8 @@ void TFFlame::addFlameToMe(TBeing *ch, const char *argument, TThing *fObj, bool 
       if (isFirst) delete this;
       return;
     }
-    if (!(woodItem = searchLinkedListVis(ch, argument, ch->getStuff(), &count)) &&
-        !(woodItem = searchLinkedListVis(ch, argument, ch->roomp->getStuff(), &count))) {
+    if (!(woodItem = searchLinkedListVis(ch, argument, ch->stuff, &count)) &&
+        !(woodItem = searchLinkedListVis(ch, argument, ch->roomp->stuff, &count))) {
       ch->sendTo(COLOR_OBJECTS, fmt("You can not seem to find the '%s'.\n\r") % argument);
       if (isFirst) delete this;
       return;
@@ -572,7 +573,6 @@ void TFFlame::addFlameToMe(TBeing *ch, const char *argument, TThing *fObj, bool 
 void TBeing::igniteObject(const char *argument, TThing *fObj)
 {
 
-  TThing *tStuff;
   TFFlame *newFlame = NULL;
 
   if (!roomp) return;
@@ -586,9 +586,10 @@ void TBeing::igniteObject(const char *argument, TThing *fObj)
     return;
   }
   // See if were doing a new flame or adding to an existing one.
-  for (tStuff = roomp->getStuff();
-       tStuff && !(newFlame = dynamic_cast<TFFlame *>(tStuff));
-       tStuff = tStuff->nextThing);
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();++it){
+      if((newFlame=dynamic_cast<TFFlame *>(*it)))
+	break;
+    }
   if (newFlame) {
     if (!newFlame->isObjStat(ITEM_STRUNG)) newFlame->swapToStrung();
     newFlame->addFlameToMe(this, argument, fObj, false);

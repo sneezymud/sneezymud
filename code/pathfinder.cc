@@ -17,7 +17,7 @@ bool findFairFight::isTarget(int room) const
     return false;
 
   TThing *t;
-  for (t = rp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
     TMonster *tmon=dynamic_cast<TMonster *>(t);
     if (!tmon)
       continue;
@@ -63,7 +63,7 @@ bool findClutter::isTarget(int room) const
     return false;
 
   TThing *t;
-  for (t = rp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
     TObj * obj = dynamic_cast<TObj *>(t);
     if (!obj)
       continue;
@@ -89,7 +89,7 @@ bool findClutterPrison::isTarget(int room) const
   TRoom *rp = real_roomp(room);
 
   TThing *t;
-  for (t = rp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
     TObj * obj = dynamic_cast<TObj *>(t);
     if (!obj)
       continue;
@@ -121,7 +121,7 @@ bool findClutterAmber::isTarget(int room) const
   TRoom *rp = real_roomp(room);
 
   TThing *t;
-  for (t = rp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
     TObj * obj = dynamic_cast<TObj *>(t);
     if (!obj)
       continue;
@@ -148,11 +148,11 @@ bool findClutterBrightmoon::isTarget(int room) const
   TRoom *rp = real_roomp(room);
 
   TThing *t;
-  for (t = rp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
     TObj * obj = dynamic_cast<TObj *>(t);
     if (!obj)
       continue;
-    if(obj->objVnum()==OBJ_BM_TRASHCAN && obj->getStuff())
+    if(obj->objVnum()==OBJ_BM_TRASHCAN && !obj->stuff.empty())
       return true;
     if(!okForJanitor((TMonster *) myself, obj))
       continue;
@@ -173,7 +173,7 @@ bool findPolice::isTarget(int room) const
   TThing *t;
   rp = real_roomp(room);
 
-  for (t = rp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
     TBeing *ch = dynamic_cast<TBeing *>(t);
     if (!ch)
       continue;
@@ -223,8 +223,8 @@ bool findCorpse::isTarget(int room) const
     return FALSE;
 
   TThing *t;
-  for (t = rp->getStuff(); t; t = t->nextThing) {
-    if (!dynamic_cast<TBaseCorpse *>(t) || t->getStuff())
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
+    if (!dynamic_cast<TBaseCorpse *>(t) || !t->stuff.empty())
       continue;
     return TRUE;
   }
@@ -249,7 +249,7 @@ bool findFire::isTarget(int room) const
     return TRUE;
 
   TThing *t;
-  for (t = rp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
     if((o=dynamic_cast<TObj *>(t)) && o->isObjStat(ITEM_BURNING))
       return TRUE;
   }
@@ -265,7 +265,7 @@ findBeing::findBeing(sstring n){
 
 bool findBeing::isTarget(int room) const
 {
-  return (searchLinkedList(name, real_roomp(room)->getStuff(), TYPEBEING) != NULL);
+  return (searchLinkedList(name, real_roomp(room)->stuff, TYPEBEING) != NULL);
 }
 
 
@@ -287,7 +287,7 @@ bool findWater::isTarget(int room) const
   if (rp->isRiverSector())
     return TRUE;
 
-  for (t = rp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
     if (t->spec == SPEC_FOUNTAIN)
       return TRUE;
     if (t->waterSource())
@@ -314,7 +314,7 @@ bool findLeper::isTarget(int room) const
   TThing *t;
   rp = real_roomp(room);
 
-  for (t = rp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
     TMonster *leper = dynamic_cast<TMonster *>(t);
     if (!leper)
       continue;
@@ -481,7 +481,7 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
       if (use_portals) {
         dir = dirTypeT(MAX_DIR-1);
         TThing *t;
-        for (t = rp->getStuff(); t; t = t->nextThing) {
+        for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
           TPortal *tp = dynamic_cast<TPortal *>(t);
           if (!tp) 
             continue;

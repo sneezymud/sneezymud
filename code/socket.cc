@@ -1157,7 +1157,7 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
       TTrashPile *pile=dynamic_cast<TTrashPile *>(obj);
       if(pile){
 	// delete empty piles
-	if(!pile->getStuff()){
+	if(pile->stuff.empty()){
 	  delete obj;
 	  obj = NULL;
 	  continue;
@@ -1221,7 +1221,7 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
 	    
 	    // freeze any pools that were dropped
 	    TPool *tp;
-	    for(t=r->getStuff();t;t=t->nextThing){
+	    for(StuffIter it=r->stuff.begin();it!=r->stuff.end() && (t=*it);++it){
 	      if((tp=dynamic_cast<TPool *>(t)) && tp->getLiqDrunk() < 7 &&
 		 !tp->isDrinkConFlag(DRINK_FROZEN))
 		tp->freezeObject(ch, 0);
@@ -1452,6 +1452,7 @@ procRecordCommodPrices::procRecordCommodPrices(const int &p)
 
 void procRecordCommodPrices::run(int) const
 {
+#if 0
   TDatabase db(DB_SNEEZY);
 
   db.query("select shop_nr from shoptype where type=%i", 
@@ -1471,6 +1472,7 @@ void procRecordCommodPrices::run(int) const
       }
     }
   }
+#endif
 }
 
 
@@ -1485,7 +1487,6 @@ void procWeightVolumeFumble::run(int) const
 {
   Descriptor *d;
   TBeing *ch;
-  TThing *t;
 
   for (d = descriptor_list; d; d = d->next) {
     if(!(ch=d->character) || d->connected || 
@@ -1498,8 +1499,7 @@ void procWeightVolumeFumble::run(int) const
 
     while(ch->getCarriedVolume() > ch->carryVolumeLimit() ||
 	  ch->getCarriedWeight() > ch->carryWeightLimit()){
-      t=ch->getStuff();
-      ch->doDrop("", t, true);
+      ch->doDrop("", ch->stuff.front(), true);
     }
   }
 }

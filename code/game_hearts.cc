@@ -483,8 +483,8 @@ void HeartsGame::play(TBeing *ch, const char *arg)
     firstplay = FALSE;
     take_card_from_hand(hands[which], card, 12);
     ch->sendTo(fmt("You play the %s.\n\r") % pretty_card_printout(ch, pile[iplay]));
-    for (TThing *t = ch->roomp->getStuff(); t; t = t->nextThing) {
-      TBeing *tbt = dynamic_cast<TBeing *>(t);
+    for(StuffIter it= ch->roomp->stuff.begin();it!= ch->roomp->stuff.end();++it) {
+      TBeing *tbt = dynamic_cast<TBeing *>(*it);
       if (tbt && (tbt != ch))
         tbt->sendTo(COLOR_MOBS, fmt("%s plays the %s.\n\r") % ch->getName() % pretty_card_printout(tbt, pile[iplay]));
     }

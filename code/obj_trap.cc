@@ -61,7 +61,7 @@ int TTrap::getTrapDamAmount() const
 // returns DELETE_THIS or false
 int TTrap::detonateGrenade()
 {
-  TThing *t, *t2;
+  TThing *t;
   TRoom *rp;
   TRoom *newR;
   int rc;
@@ -198,8 +198,8 @@ int TTrap::detonateGrenade()
     tobj = NULL;
   }
 
-  for (t = roomp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+    t=*(it++);
     if (t == this)
       continue;
     rc = t->grenadeHit(this);
@@ -393,7 +393,7 @@ void TTrap::armGrenade(TBeing *ch)
   TMonster *tm;
 
   if(::number(0,1)){
-    for(t=ch->roomp->getStuff(); t; t=t->nextThing){
+    for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (t=*it);++it){
       if((tm=dynamic_cast<TMonster *>(t))){
 	if(tm->canSee(this))
 	  tm->doFlee("");

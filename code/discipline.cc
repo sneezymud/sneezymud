@@ -1912,7 +1912,7 @@ static bool bSucCounter(TBeing *caster, skillUseClassT skillType, spellNumT spel
         // caster is hitting not engaging at the time
         logSkillAttempts(caster, spell, ATTEMPT_ADD_ENGAGE);
         int boost = caster->plotStat(STAT_CURRENT, STAT_FOC, 60, 10, 40, 1);
-        int num = ::number(1,100);;
+        int num = ::number(1,100);
 
         // if they are not fighting, don't let fighting distract...
         // if my victim is uncon, skip distract too

@@ -122,7 +122,7 @@ void TLight::lightDecay()
       setCurBurn(0);
       putLightOut();
 
-      if (roomp && roomp->getStuff()) {
+      if (roomp && !roomp->stuff.empty()) {
         act("$n flickers a bit, and then burns out.",
                  FALSE, this, 0, 0, TO_ROOM);
         roomp->addToLight(-getLightAmt());
@@ -139,7 +139,7 @@ void TLight::lightDecay()
         equippedBy->roomp->addToLight(-getLightAmt());
       }
     } else if (getCurBurn() < 4) {
-      if (roomp && roomp->getStuff()) 
+      if (roomp && !roomp->stuff.empty()) 
         act("$n flickers a bit.", FALSE, this, 0, 0, TO_ROOM);
       else if (parent) 
         act("$p flickers a bit.", FALSE, parent, this, 0, TO_CHAR);
@@ -335,9 +335,9 @@ int TLight::objectDecay()
 {
   if (roomp) {
     act("$p flickers then fades into insignificance.",
-         TRUE, roomp->getStuff(), this, 0, TO_CHAR);
+         TRUE, roomp->stuff.front(), this, 0, TO_CHAR);
     act("$p flickers then fades into insignificance.",
-         TRUE, roomp->getStuff(), this, 0, TO_ROOM);
+         TRUE, roomp->stuff.front(), this, 0, TO_ROOM);
   } else {
     TThing *t = NULL;
     if (parent)

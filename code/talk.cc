@@ -56,7 +56,7 @@ int TBeing::doSay(const char *fmt, ...)
 int TBeing::doSay(const sstring &arg)
 {
   sstring capbuf, tmpbuf, nameBuf, garbedBuf, garbleRoom;
-  TThing *tmp, *tmp2;
+  TThing *tmp;
   TBeing *mob = NULL;
   int rc;
   Descriptor *d;
@@ -96,8 +96,8 @@ int TBeing::doSay(const sstring &arg)
    norm());
 
   // show everyone in room the say.
-  for (tmp = roomp->getStuff(); tmp; tmp = tmp2) {
-    tmp2 = tmp->nextThing;
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+    tmp=*(it++);
     
     if (!(mob = dynamic_cast<TBeing *>(tmp)))
       continue;
@@ -155,8 +155,8 @@ int TBeing::doSay(const sstring &arg)
   }
   
   // everyone needs to see the say before the response gets triggered
-  for (tmp = roomp->getStuff(); tmp; tmp = tmp2) {
-    tmp2 = tmp->nextThing;
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+    tmp=*(it++);
     mob = dynamic_cast<TBeing *>(tmp);
     if (!mob)
       continue;
@@ -549,7 +549,7 @@ void TBeing::doCommune(const sstring &arg)
 int TBeing::doSign(const sstring &arg)
 {
   sstring word, buf;
-  TThing *t, *t2;
+  TThing *t;
   int rc;
   sstring whitespace=" \f\n\r\t\v";
   
@@ -588,8 +588,8 @@ int TBeing::doSign(const sstring &arg)
 
   buf = fmt("$n signs, \"%s\"") % buf;
 
-  for (t = roomp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+    t=*(it++);
 
     TBeing *ch = dynamic_cast<TBeing *>(t);
     if (!ch)
@@ -922,7 +922,7 @@ int TBeing::doWhisper(const sstring &arg)
   // If it's a pc with spy, then they must be equal/greater than the speaker
   // level or they don't get the message.  And messages to/from immorts are
   // not overheard and immortals won't overhear messages either.
-  for (bThing = roomp->getStuff(); bThing; bThing = bThing->nextThing) {
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (bThing=*it);++it) {
     if ((bOther = dynamic_cast<TPerson *>(bThing)) &&
         bOther->desc && bOther->isPc() &&
         bOther->affectedBySpell(SKILL_SPY) &&
@@ -1066,25 +1066,25 @@ void TBeing::doWrite(const char *arg)
     return;
   }
   if(!*papername){
-    for(paper=getStuff();paper && !dynamic_cast<TNote *>(paper);paper=paper->nextThing);
+    for(StuffIter it=stuff.begin();it!=stuff.end() && (paper=*it);++it);
     if(!paper){
       sendTo("write (on) papername (with) penname.\n\r");
       return;
     }
   }
   if(!*penname){
-    for(pen=getStuff();pen && !dynamic_cast<TPen *>(pen);pen=pen->nextThing);
+    for(StuffIter it=stuff.begin();it!=stuff.end() && (pen=*it);++it);
     if(!pen){
       sendTo("write (on) papername (with) penname.\n\r");
       return;
     }
   }
 
-  if (!paper && !(paper = searchLinkedListVis(this, papername, getStuff()))) {
+  if (!paper && !(paper = searchLinkedListVis(this, papername, stuff))) {
     sendTo(fmt("You have no %s.\n\r") % papername);
     return;
   }
-  if (!pen && !(pen = searchLinkedListVis(this, penname, getStuff()))) {
+  if (!pen && !(pen = searchLinkedListVis(this, penname, stuff))) {
     sendTo(fmt("You have no %s.\n\r") % penname);
     return;
   }

@@ -433,7 +433,7 @@ void TBeing::statRoom(TRoom *rmp)
   }
   str += fmt("%s------- Chars present -------%s\n\r") % cyan() % norm();
   counter = 0;
-  for (t = rmp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=rmp->stuff.begin();it!=rmp->stuff.end() && (t=*it);++it) {
     // canSee prevents seeing invis gods of higher level
     if (dynamic_cast<TBeing *>(t) && canSee(t)) {
       counter++;
@@ -467,7 +467,7 @@ void TBeing::statRoom(TRoom *rmp)
   counter = 0;
   volume = 0;
   buf2="";
-  for (t = rmp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=rmp->stuff.begin();it!=rmp->stuff.end() && (t=*it);++it) {
     if (!dynamic_cast<TBeing *>(t)) {
       volume += t->getVolume();
       counter++;
@@ -642,11 +642,11 @@ void TBeing::statObj(const TObj *j)
 
   str += fmt("\n\rSpecial procedure: %s   ") % (j->spec ? objSpecials[GET_OBJ_SPE_INDEX(j->spec)].name : "none");
 
-  if (!j->getStuff())
+  if(j->stuff.empty())
     str += "Contains : Nothing\n\r";
   else {
     str += "Contains :\n\r";
-    for (t = j->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=j->stuff.begin();it!=j->stuff.end() && (t=*it);++it) {
       //      str += fname(t->name);
       str += t->shortDescr;
       str += " (";
@@ -743,9 +743,9 @@ void TBeing::statObjForDivman(const TObj *j)
     str += "It has not been imbued with with any special traits.\n\r\n\r";
   }
   
-  if (j->getStuff()) { 
+  if(!j->stuff.empty()){
     str += sitem.cap() + " contains:\n\r";
-    for (t = j->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=j->stuff.begin();it!=j->stuff.end() && (t=*it);++it) {
       str += t->shortDescr;
       str += "\n\r";
     }

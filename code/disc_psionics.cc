@@ -201,7 +201,7 @@ int TBeing::doPSay(const char *arg){
   char buf[MAX_INPUT_LENGTH + 40];
   char garbed[256];
   *buf = '\0';
-  TThing *tmp, *tmp2;
+  TThing *tmp;
   TBeing *mob = NULL;
   int rc;
   char capbuf[256];
@@ -237,8 +237,8 @@ int TBeing::doPSay(const char *arg){
 
     sendTo(COLOR_COMM, fmt("<g>You think to the room, <z>\"%s%s\"\n\r") %             colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE) % norm());
     // show everyone in room the say.
-    for (tmp = roomp->getStuff(); tmp; tmp = tmp2) {
-      tmp2 = tmp->nextThing;
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+      tmp=*(it++);
           
       if (!(mob = dynamic_cast<TBeing *>(tmp)))
         continue;
@@ -293,8 +293,8 @@ int TBeing::doPSay(const char *arg){
     }
 
     // everyone needs to see the say before the response gets triggered
-    for (tmp = roomp->getStuff(); tmp; tmp = tmp2) {
-      tmp2 = tmp->nextThing;
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+      tmp=*(it++);
       mob = dynamic_cast<TBeing *>(tmp);
       if (!mob)
         continue;

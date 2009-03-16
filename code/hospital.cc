@@ -615,7 +615,7 @@ int healing_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
   }
 
 
-  for (t = rp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
     healed = dynamic_cast<TBeing *>(t);
     if (!healed)
       continue;

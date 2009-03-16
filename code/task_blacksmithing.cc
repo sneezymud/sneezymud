@@ -115,9 +115,9 @@ TTool* BaseRepair::GetRoomTool(int vnum)
   if (!(rp = real_roomp(m_ch->in_room)))
     return NULL;
 
-  for (TThing *t = rp->getStuff(); t; t = t->nextThing)
+  for(StuffIter it= rp->stuff.begin();it!= rp->stuff.end();++it)
   {
-    TTool *tt = dynamic_cast<TTool *>(t);
+    TTool *tt = dynamic_cast<TTool *>(*it);
     if (tt && tt->getToolType() == vnum)
       return tt;
   }
@@ -150,13 +150,14 @@ bool BaseRepair::HasTools()
   return ret;
 }
 
-TCommodity *getRepairMaterial(TThing *t, ubyte mat)
+TCommodity *getRepairMaterial(StuffList list, ubyte mat)
 {
   TCommodity *tc;
 
-  for(;t;t=t->nextThing)
-    if((tc=dynamic_cast<TCommodity *>(t)) && tc->getMaterial() == mat)
+  for(StuffIter it=list.begin();it!=list.end();++it){
+    if((tc=dynamic_cast<TCommodity *>(*it)) && tc->getMaterial() == mat)
       return tc;
+  }
   return NULL;
 }
 
@@ -171,7 +172,7 @@ bool BaseRepair::ConsumeRepairMats(TObj *o)
     {
       TCommodity *mat;
 
-      if(!(mat = getRepairMaterial(m_ch->getStuff(), o->getMaterial())) || mat->numUnits() < mats_needed)
+      if(!(mat = getRepairMaterial(m_ch->stuff, o->getMaterial())) || mat->numUnits() < mats_needed)
       {
         act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, m_ch, o, 0, TO_CHAR);
         return false;
@@ -212,9 +213,9 @@ int BaseRepair::PumpMessage(cmdTypeT cmd, int pulse)
   bool didSucceed = FALSE;
 
   // get object
-  for(TThing *tInv = m_ch->getStuff();tInv;tInv = tInv->nextThing)
+  for(StuffIter it= m_ch->stuff.begin();it!= m_ch->stuff.end();++it)
   {
-    if((o = dynamic_cast<TObj *>(tInv)) && isname(m_ch->task->orig_arg, o->name))
+    if((o = dynamic_cast<TObj *>(*it)) && isname(m_ch->task->orig_arg, o->name))
       break;
     o = NULL;
   }

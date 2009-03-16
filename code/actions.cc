@@ -188,7 +188,7 @@ int TBeing::doAction(const sstring & argument, cmdTypeT cmd)
   sstring buf;
   TBeing *vict;
   TMonster *tmp = NULL;
-  TThing *t, *t2, *tvict=NULL;
+  TThing *t, *tvict=NULL;
   int rc;
 
   if (fight() || riding) {
@@ -400,8 +400,8 @@ int TBeing::doAction(const sstring & argument, cmdTypeT cmd)
     sendTo("\n\r");
     act(action.others_no_arg, action.hide, this, 0, 0, TO_ROOM);
 
-    for (t = roomp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+      t=*(it++);
       tmp = dynamic_cast<TMonster *>(t);
       if (!tmp)
         continue;
@@ -443,8 +443,8 @@ int TBeing::doAction(const sstring & argument, cmdTypeT cmd)
     sendTo("\n\r");
     act(action.others_auto, action.hide, this, 0, 0, TO_ROOM);
 
-    for (t = roomp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+      t=*(it++);
       tmp = dynamic_cast<TMonster *>(t);
 
       if (!tmp)
@@ -472,8 +472,8 @@ int TBeing::doAction(const sstring & argument, cmdTypeT cmd)
       if (!vict->desc || !vict->desc->ignored.isIgnored(desc))
         act(action.vict_found, action.hide, this, 0, vict, TO_VICT);
 
-      for (t = roomp->getStuff(); t; t = t2) {
-        t2 = t->nextThing;
+      for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+        t=*(it++);
         tmp = dynamic_cast<TMonster *>(t);
 
         if (!tmp)
@@ -770,7 +770,7 @@ void TBeing::doPee(const sstring &argument)
       o->peeMe(this, liquid);
     }
   } else if(!arg.empty()){
-    if(!(t = searchLinkedListVis(this, arg,roomp->getStuff()))){
+    if(!(t = searchLinkedListVis(this, arg,roomp->stuff))){
       sendTo("What do you want to pee on?\n\r");
       return;
     } else {
@@ -795,7 +795,7 @@ void TBeing::doTip(const sstring &arg)
     act(fmt("You tip your %s.") % hat,  FALSE, this, NULL, NULL, TO_CHAR);
     act(fmt("$n tips $s %s.") % hat,  FALSE, this, NULL, NULL, TO_ROOM);
   } else {
-    t=searchLinkedList(arg, roomp->getStuff(), TYPETHING);
+    t=searchLinkedList(arg, roomp->stuff, TYPETHING);
     if (!t)
       sendTo(fmt("Tip your %s to whom?\n\r") % hat);
     else if(t==this){
@@ -838,7 +838,7 @@ void TBeing::doPoke(const sstring &arg)
     return;
   }
   // point at someone
-  for (t = roomp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
     if (isname(arg, t->name)) {
       obj = dynamic_cast<TObj *>(t);
       if (obj) {
@@ -885,7 +885,7 @@ void TBeing::doPunch(const sstring &arg)
   }
   std::random_shuffle(slots.begin(), slots.end());
 
-  for (t = roomp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
     if (isname(arg, t->name)) {
       b = dynamic_cast<TBeing *>(t);
       if (b) {
@@ -945,7 +945,7 @@ void TBeing::doPoint(const sstring &arg)
   }
 
   // point at someone
-  for (t = roomp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
     if (isname(arg, t->name)) {
       obj = dynamic_cast<TObj *>(t);
       if (obj) {
@@ -1148,7 +1148,7 @@ int TBeing::doBite(const sstring &arg)
       return TRUE;
     }
   } else {
-    for (t = roomp->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       if (isname(arg, t->name)) {
 	if((b=dynamic_cast<TBeing *>(t)) && b==this){
 	  sendTo(COLOR_OBJECTS, "You bite yourself. Are you that deranged?\n\r");
@@ -1197,7 +1197,7 @@ void TBeing::doToast(const sstring &arg)
     spill_chance = 7;
   } else {
     // toast with someone
-    for (t = roomp->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       if (isname(arg, t->name)) {
         vict = dynamic_cast<TBeing *>(t);
         if (vict) {
@@ -1332,7 +1332,7 @@ void TBeing::doToast(const sstring &arg)
     }
     
     // trigger TMonster::aiToast...
-    for (t = roomp->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       ai = dynamic_cast<TMonster *>(t);
       if (!ai)
         continue;

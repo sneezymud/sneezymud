@@ -23,28 +23,26 @@ void TThing::findBandage(int *)
 {
 }
 
-int findBandages(TThing *t) 
+int findBandages(StuffList list) 
 {
   int count = 0;
 
-  for (; t; t = t->nextThing) {
-    t->findBandage(&count);
-    if (t->getStuff())
-      count += findBandages(t->getStuff());
+  for(StuffIter it=list.begin();it!=list.end();++it){
+    (*it)->findBandage(&count);
+    count += findBandages((*it)->stuff);
   }
   return(count);
 }
 
-int destroy_bandages(TThing *t, int band)
+int destroy_bandages(StuffList list, int band)
 {
   int count = 0;
-  TThing *t2;
+  TThing *t;
 
-  for (; t && (count < band); t = t2) {
-    t2 = t->nextThing;
-    if (t->getStuff()) {
-      count += destroy_bandages(t->getStuff(), band-count);
-    }
+  for(StuffIter it=list.begin();it!=list.end();){
+    t=(*it++);
+    count += destroy_bandages(t->stuff, band-count);
+
     if (count >= band)
       break;
     t->destroyBandage(&count);
@@ -203,9 +201,9 @@ void TBeing::doBandage(const sstring &arg)
   // adjust for race
   band_num = max(1,(int) (band_num * ((double) getHeight()/(double) 70)));
 
-  count = findBandages(getStuff());
+  count = findBandages(stuff);
   if (count >= band_num) {
-    if (band_num != destroy_bandages(getStuff(), band_num)) {
+    if (band_num != destroy_bandages(stuff, band_num)) {
       vlogf(LOG_BUG, "error in destroy bandage routine!");
       sendTo("code error - tell a god\n\r");
       return;

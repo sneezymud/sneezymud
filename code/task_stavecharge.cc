@@ -91,8 +91,6 @@ int task_staveChargingCompSkim(TBeing *ch, TThing *tThing, bool tDestroy,
   while ((tThing = comp_from_object(tThing, spellNumT(tSpell)))) {
     if ((tComponent = dynamic_cast<TComponent *>(tThing)))
       if (tDestroy) {
-        tThing = tThing->nextThing;
-
         if (!tIteration) {
           act("$p shatters from the charge effect.",
               FALSE, ch, tComponent, NULL, TO_CHAR);
@@ -108,13 +106,10 @@ int task_staveChargingCompSkim(TBeing *ch, TThing *tThing, bool tDestroy,
           delete tComponent;
         }
 
-        if (tCount <= 0 || !tThing)
+        if (tCount <= 0)
           return 0;
       } else {
         tValue += tComponent->getComponentCharges();
-
-        if (!(tThing = tThing->nextThing))
-          break;
       }
   }
 
@@ -148,7 +143,7 @@ int task_staveChargingCompLookup(TBeing *ch, bool tDestroy, int tSpell, int tCou
   if ((tThing = ch->equipment[WEAR_WAIST]) && tCost > 0)
     tValue += task_staveChargingCompSkim(ch, tThing, tDestroy, tSpell, tCost, tIteration);
 
-  if ((tThing = ch->getStuff()) && tCost > 0)
+  if ((tThing = ch->stuff.front()) && tCost > 0)
     tValue += task_staveChargingCompSkim(ch, tThing, tDestroy, tSpell, tCost, tIteration);
 
   if (tDestroy)

@@ -121,7 +121,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
               obj->getName() % obj->objVnum());
       }
       TThing *t;
-      for (t = getStuff(); t; t = t->nextThing) {
+      for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
         TObj *tob = dynamic_cast<TObj *>(t);
         if (!tob)
           continue;
@@ -329,7 +329,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
       tStObj=tStArgument.word(0);
       tStSucker=tStArgument.word(1);
 
-      TThing *tThing = searchLinkedList(tStObj, getStuff(), TYPEOBJ);
+      TThing *tThing = searchLinkedList(tStObj, stuff, TYPEOBJ);
 
       if (!mob || !tThing)
         vlogf(LOG_BUG, fmt("Error in response script junk command:%s%s Mob[%s]") % 
@@ -371,7 +371,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
       tStSucker=tStArgument.word(1);
 
       if (!rc) {
-	TThing *tThing = searchLinkedList(tStObj, getStuff(), TYPEOBJ);
+	TThing *tThing = searchLinkedList(tStObj, stuff, TYPEOBJ);
 	if (tThing && tThing->parent == this && roomp) {
 	  doSay("Well I guess I'll just drop it here...");
 	  --(*tThing);
@@ -474,7 +474,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
     case CMD_RESP_CHECKPERSON:
       TThing *tt;
       TBeing *tb;
-      for(tt=roomp->getStuff();tt;tt=tt->nextThing){
+      for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (tt=*it);++it){
       	if((tb=dynamic_cast<TBeing *>(tt)) && isname(tb->getName(), arg))
 	        return FALSE;
       }
@@ -607,7 +607,7 @@ int handleMobileResponse(TBeing *tBeing, cmdTypeT tCmd, const sstring &tString)
   TMonster *tMonster;
   int       nRc;
 
-  for (tThing = tBeing->roomp->getStuff(); tThing; tThing = tThing->nextThing)
+  for(StuffIter it=tBeing->roomp->stuff.begin();it!=tBeing->roomp->stuff.end() && (tThing=*it);++it)
     if ((tMonster = dynamic_cast<TMonster *>(tThing)) &&
         !tMonster->isPc() && !tMonster->orig) {
       nRc = tMonster->checkResponses(tBeing, NULL, tString, tCmd);

@@ -249,7 +249,7 @@ unsigned int TBeing::numberInGroupInRoom() const
   TThing *t;
   unsigned int count = 0;
 
-  for (t = roomp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
     TBeing *tbt = dynamic_cast<TBeing *>(t);
     if (tbt && inGroup(*tbt))
       count++;
@@ -387,7 +387,7 @@ bool TThing::hasObject(int ob_num)
   if (found > 0)
     return TRUE;
 
-  for (t = getStuff(); t; t = t->nextThing)
+  for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it)
     found += RecCompObjNum(t, ob_num);
 
   if (found > 0)
@@ -440,7 +440,7 @@ int RecCompObjNum(const TObj *o, int obj_num)
   if (obj_index[o->getItemIndex()].virt == obj_num)
     total = 1;
 
-  for (i = o->getStuff(); i; i = i->nextThing) {
+  for(StuffIter it=o->stuff.begin();it!=o->stuff.end() && (i=*it);++it) {
     TObj *to = dynamic_cast<TObj *>(i);
     if (to)
       total += RecCompObjNum(to, obj_num);
@@ -500,13 +500,12 @@ bool TBeing::nomagic(const sstring &msg_ch, const sstring &msg_rm) const
 }
 
 // please note, this ignores riders
-int MobCountInRoom(const TThing *list)
+int MobCountInRoom(const StuffList list)
 {
-  int i;
-  const TThing *t;
-
-  for (i = 0, t = list; t; t = t->nextThing) {
-    if (dynamic_cast<const TBeing *>(t))
+  int i=0;
+  
+  for(StuffIter it=list.begin();it!=list.end();++it){
+    if (dynamic_cast<const TBeing *>(*it))
       i++;
   }
   return i;
@@ -1271,7 +1270,7 @@ bool thingsInRoomVis(TThing *ch, TRoom *rp)
     vlogf(LOG_BUG, "thingsInRoomVis() called with NULL ch, or room!");
     return FALSE;
   }
-  for (o = rp->getStuff(); o; o = o->nextThing) {
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (o=*it);++it) {
     if (ch->canSee(o))
       return TRUE;
   }
@@ -1714,7 +1713,7 @@ void TMonster::addToWait(int amt)
 
 float TBeing::getTotalWeight(bool pweight) const
 {
-  float calc = getCarriedWeight();;
+  float calc = getCarriedWeight();
   int i;
   TThing *t;
 
@@ -1762,7 +1761,7 @@ bool TRoom::roomIsEmpty(bool ignore_imms) const
   TThing *t;
   TBeing *vict;
 
-  for (t = getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
     vict = dynamic_cast<TBeing *>(t);
     if (!vict)
       continue;

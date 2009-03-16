@@ -43,9 +43,9 @@ extern const char *shelldesc [];
 extern const char *shellkeyword [];
 
 
-TThing *findFlint(TThing *stuff);
-TThing *findPowder(TThing *stuff, int uses);
-TThing *findShot(TThing *stuff, ammoTypeT ammotype);
+TThing *findFlint(StuffList);
+TThing *findPowder(StuffList, int uses);
+TThing *findShot(StuffList, ammoTypeT ammotype);
 
 
 
@@ -91,7 +91,7 @@ class TGun : public TGenWeapon {
     void setAmmo(TAmmo *a) { 
       *this += *a;
     }
-    TAmmo *getAmmo() const { return dynamic_cast<TAmmo *>(getStuff()); }
+    TAmmo *getAmmo() const { return dynamic_cast<TAmmo *>(stuff.front()); }
     void setRounds(int);
     int getRounds() const;
     void setFlags(int f) { flags=f; }

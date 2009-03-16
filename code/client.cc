@@ -44,7 +44,7 @@ void TRoom::clientf(const sstring &msg)
   TThing *t;
 
   if (!msg.empty()) {
-    for (t = getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
       if (t->isPc() && t->desc && (t->desc->m_bIsClient || IS_SET(t->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
 	t->sendTo(fmt("\200%s\n") % msg);
     }
@@ -64,7 +64,7 @@ void Descriptor::send_client_inventory()
   if (!(ch = character))
     return;
 
-  for (t = ch->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end() && (t=*it);++it) {
     TObj * tobj = dynamic_cast<TObj *>(t);
     if (!tobj)
       continue;
@@ -80,7 +80,7 @@ void Descriptor::send_client_room_people()
   if (!(ch = character))
     return;
 
-  for (folx = ch->roomp->getStuff(); folx; folx = folx->nextThing)
+  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (folx=*it);++it)
     clientf(fmt("%d|%d|%s") % CLIENT_ROOMFOLX % ADD % folx->getName());
 }
 
@@ -92,7 +92,7 @@ void Descriptor::send_client_room_objects()
   if (!(ch = character))
     return;
 
-  for (t = ch->roomp->getStuff(); t; t = t->nextThing)
+  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (t=*it);++it)
     clientf(fmt("%d|%d|%s") % CLIENT_ROOMOBJS % ADD % t->getName());
 }
 

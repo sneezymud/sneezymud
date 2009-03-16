@@ -37,6 +37,12 @@ class extraDescription {
     const char *findExtraDesc(const char *word);
 };
 
+typedef list <TThing *> StuffList;
+typedef StuffList::const_iterator StuffIter;
+
+typedef list <const TThing *> StuffListConst;
+typedef StuffListConst::const_iterator StuffIterConst;
+
 class TThing {
   private:
     float weight;              // Weight in pounds
@@ -45,8 +51,8 @@ class TThing {
     float carried_weight;
     int carried_volume;
     TBeing * the_caster;
-    TThing *stuff;           // The stuff inside me
   public:
+    StuffList stuff;
     const char *descr;             // Description of thing
     const char *real_descr;        // used with disguise/polymorph
     TBeing *stuckIn;
@@ -55,9 +61,6 @@ class TThing {
     wearSlotT eq_pos;                 // what is the equip. pos?
     wearSlotT eq_stuck;
     void *act_ptr;
-
-    TThing *getStuff() const { return stuff; }
-    void setStuff(TThing *t){ stuff=t; }
 
 
     int max_exist;
@@ -75,7 +78,6 @@ class TThing {
     int disguise_level;
     int disguise_zone;
     TThing *parent;          // Room, Obj, Being etc. that I am inside of.
-    TThing *nextThing;       // The next thing in the list I am inside of
     TThing *nextBorn;        // The next thing born in my room(mobiles)
     TRoom *roomp;
     Descriptor *desc;

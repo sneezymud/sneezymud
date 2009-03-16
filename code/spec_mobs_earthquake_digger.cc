@@ -36,15 +36,14 @@ int tunnelerEarthquake(TBeing *ch, cmdTypeT tCmd, const char *tArg, TMonster *tM
   if (tCmd == CMD_MOB_COMBAT && !::number(0, 1) && tMyself->fight()) {
     int     tFighters = 0,
             tDamage;
-    TThing *tThing,
-           *tThingB;
+    TThing *tThing;
     TBeing *tBeing;
 
     act("$n rises into the air then slams into the ground, vanishing.",
         FALSE, tMyself, NULL, NULL, TO_ROOM);
 
-    for (tThing = tMyself->roomp->getStuff(); tThing; tThing = tThingB) {
-      tThingB = tThing->nextThing;
+    for(StuffIter it=tMyself->roomp->stuff.begin();it!=tMyself->roomp->stuff.end();){
+      tThing=*(it++);
 
       if ((tBeing = dynamic_cast<TBeing *>(tThing)))
         if (tBeing->isFlying())
@@ -83,7 +82,7 @@ int tunnelerEarthquake(TBeing *ch, cmdTypeT tCmd, const char *tArg, TMonster *tM
 
     tFighters = ::number(1, tFighters);
 
-    for (tThing = tMyself->roomp->getStuff(); tThing; tThing = tThing->nextThing)
+    for(StuffIter it=tMyself->roomp->stuff.begin();it!=tMyself->roomp->stuff.end() && (tThing=*it);++it)
       if ((tBeing = dynamic_cast<TBeing *>(tThing)) &&
           tBeing->fight() == tMyself && !(--tFighters)) {
         tMyself->stopFighting();

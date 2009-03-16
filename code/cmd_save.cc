@@ -39,8 +39,8 @@ void doSaveMOEdit(TBeing *ch, const char *tArg)
     return;
   }
 
-  if (!(tThing = searchLinkedList(tStThing, ch->roomp->getStuff())) &&
-      !(tThing = searchLinkedList(tStThing, ch->getStuff()))) {
+  if (!(tThing = searchLinkedList(tStThing, ch->roomp->stuff)) &&
+      !(tThing = searchLinkedList(tStThing, ch->stuff))) {
     ch->sendTo("I don't see that here, do you?\n\r");
     return;
   }
@@ -153,7 +153,8 @@ void TBeing::doSave(silentTypeT silent, const char *tArg)
     // it all back.  Fortunately, the original person shouldn't have anything
     // on them, so we can pretty much blindly dump back and forth.
     TThing * t;
-    while ((t = getStuff())) {
+    for(StuffIter it=stuff.begin();it!=stuff.end();){
+      t=*(it++);
       --(*t);
       *tPerson += *t;
     }
@@ -175,7 +176,8 @@ void TBeing::doSave(silentTypeT silent, const char *tArg)
     saveChar(ROOM_AUTO_RENT);
 
     // now that we've saved, put all equipment back on the poly
-    while ((t = tPerson->getStuff())) {
+    for(StuffIter it=tPerson->stuff.begin();it!=tPerson->stuff.end();){
+      t=*(it++);
       --(*t);
       *this += *t;
     }

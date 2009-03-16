@@ -487,14 +487,13 @@ bool shopData::isProducing(const TObj *item)
 }
 
 
-static int number_objects_in_list(const TObj *item, const TObj *list)
+static int number_objects_in_list(const TObj *item, const StuffList list)
 {
   const TObj *i = NULL;
-  const TThing *t;
   int count = 0;
 
-  for (t = list; t; t = t->nextThing) {
-    if(!(i = dynamic_cast<const TObj *>(t)))
+  for(StuffIter it=list.begin();it!=list.end();++it){
+    if(!(i = dynamic_cast<const TObj *>(*it)))
       continue;
 
     if ((i->number == item->number) &&
@@ -625,7 +624,7 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     }
   }
   
-  tmp = number_objects_in_list(this, (TObj *) keeper->getStuff());
+  tmp = number_objects_in_list(this, keeper->stuff);
   if (num > tmp) {
     keeper->doTell(ch->name, fmt("I don't have %d of that item. Here %s the %d I do have.") %
 		   num  % ((tmp > 1) ? "are" : "is") % tmp);
@@ -642,20 +641,8 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   cost = shopPrice(1, shop_nr, chr, ch);
   
   for (i = 0; i < tmp; i++) {
-    TThing *t_temp1 = searchLinkedList(argm, keeper->getStuff());
+    TThing *t_temp1 = searchLinkedList(argm, keeper->stuff);
     TObj *temp1 = dynamic_cast<TObj *>(t_temp1);
-
-#if !(NO_DAMAGED_ITEMS_SHOP)
-    while (temp1 && !temp1->isShopSimilar(this)) {
-      // it's the same item, but in a different condition
-      // keep scrolling through list
-      if (!temp1->nextThing)
-        break;
-
-      t_temp1 = searchLinkedListVis(ch, argm, temp1->nextThing);
-      temp1 = dynamic_cast<TObj *>(t_temp1);
-    }
-#endif
       
     if ((ch->getMoney() < cost) && !ch->hasWizPower(POWER_GOD)) {
       keeper->doTell(ch->name, shop_index[shop_nr].missing_cash2);
@@ -722,7 +709,7 @@ bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int shop_nr)
     return TRUE;
   }
 #endif
-  if (temp1->getStuff()) {
+  if (!temp1->stuff.empty()) {
     keeper->doTell(ch->getName(), "Sorry, I don't buy items that contain other items.");
     return TRUE;
   }
@@ -946,14 +933,14 @@ int TThing::sellHidenSkin(TBeing *, TMonster *, int, TThing *)
 int TSpellBag::componentValue(TBeing *ch, TMonster *keeper, int shop_nr,
 TThing *)
 {
-  TThing *t, *t2;
+  TThing *t;
   int rc;
 
   if (isClosed()) 
     return TRUE;
   
-  for (t = getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=stuff.begin();it!=stuff.end();){
+    t=*(it++);
     rc = t->componentValue(ch, keeper, shop_nr, this);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       delete t;
@@ -972,15 +959,15 @@ TThing *)
 // returns DELETE_THIS, VICT (ch), ITEM(sub)
 int TSpellBag::componentSell(TBeing *ch, TMonster *keeper, int shop_nr, TThing *)
 {
-  TThing *t, *t2;
+  TThing *t;
   int rc;
 
   if (isClosed()) {
     // ignore closed spellbags
     return TRUE;
   }
-  for (t = getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=stuff.begin();it!=stuff.end();){
+    t=*(it++);
     rc = t->componentSell(ch, keeper, shop_nr, this);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       delete t;
@@ -1098,7 +1085,7 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
   char argm[MAX_INPUT_LENGTH], newarg[MAX_INPUT_LENGTH];
   sstring buf;
   TObj *temp1 = NULL;
-  TThing *t, *t2;
+  TThing *t;
   int rc = 0, i;
   int num = 1;
 
@@ -1124,8 +1111,7 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
     tObjectManipT  tObjectManip;
     int            tCount = 0;
     wearSlotT      tWear;
-    TThing        *tThing,
-                  *tThingTemp;
+    TThing        *tThing;
     TObj          *tObj;
     int            tShop = shop_nr;
 
@@ -1148,8 +1134,8 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
           //generic_sell(ch, tKeeper, tObj, tShop);
       }
 
-    for (tThing = ch->getStuff(); tThing; tThing = tThingTemp) {
-      tThingTemp = tThing->nextThing;
+    for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end();){
+      tThing=*(it++);
 
       if (!ch->sameRoom(*tKeeper) || !ch->awake())
         break;
@@ -1186,8 +1172,8 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
           return DELETE_THIS;
         }
       }
-      for (t = ch->getStuff(); t; t = t2) {
-        t2 = t->nextThing;
+      for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end();){
+        t=*(it++);
         if (!ch->sameRoom(*tKeeper))
           break;
         // check for sleep pouches
@@ -1229,8 +1215,8 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
         if (IS_SET_DELETE(rc, DELETE_VICT)) 
           return DELETE_THIS;
       }
-      for (t = ch->getStuff(); t; t = t2) {
-        t2 = t->nextThing;
+      for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end();){
+        t=*(it++);
         if (!ch->sameRoom(*tKeeper))
           break;
         // check for sleep pouches
@@ -1272,8 +1258,8 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
         if (IS_SET_DELETE(rc, DELETE_VICT))
           return DELETE_THIS;
       }
-      for (t = ch->getStuff(); t; t = t2) {
-        t2 = t->nextThing;
+      for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end();){
+        t=*(it++);
         if (!ch->sameRoom(*tKeeper))
           break;
         // check for sleep pouches
@@ -1291,7 +1277,7 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
       return FALSE;
     }
   }
-  TThing *t_temp1 = searchLinkedListVis(ch, argm, ch->getStuff());
+  TThing *t_temp1 = searchLinkedListVis(ch, argm, ch->stuff);
   temp1 = dynamic_cast<TObj *>(t_temp1);
   TComponent *temp2 = dynamic_cast<TComponent *>(temp1);
 
@@ -1332,7 +1318,7 @@ void shopping_value(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
     num = 1;
 
   if (is_abbrev(argm, "all.components")) {
-    TThing *t, *t2;
+    TThing *t;
     int i;
     for (i = MIN_WEAR; i < MAX_WEAR; i++) {
       if (!(t = ch->equipment[i]))
@@ -1347,8 +1333,8 @@ void shopping_value(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
         }
       }
     }
-    for (t = ch->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end();){
+      t=*(it++);
 
       TComponent *temp2 = dynamic_cast<TComponent *>(t);
       if (temp2) {
@@ -1362,7 +1348,7 @@ void shopping_value(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
     return;
   }
 
-  TThing *t_temp1 = searchLinkedListVis(ch, argm, ch->getStuff());
+  TThing *t_temp1 = searchLinkedListVis(ch, argm, ch->stuff);
   temp1 = dynamic_cast<TObj *>(t_temp1);
   if (!temp1) {
     keeper->doTell(ch->name, shop_index[shop_nr].no_such_item2);
@@ -2011,7 +1997,7 @@ void TMonster::autoCreateShop(int shop_nr)
   if (shop_index[shop_nr].producing[0] == -1)
     return;
 
-  if (getStuff())  // just can't see the shopkeepers inventory so lists nada?
+  if (!stuff.empty())  // just can't see the shopkeepers inventory so lists nada?
     return;
 
   vlogf(LOG_MISC,fmt("Creating a new shopfile for %s (shop #%d)") % getName() %shop_nr);
@@ -2176,7 +2162,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     TBeing *tbt;
 
     // Toss out idlers
-    for(t=myself->roomp->getStuff();t;t=t->nextThing){
+    for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (t=*it);++it){
       if((tbt=dynamic_cast<TBeing *>(t)) && 
 	 tbt->getTimer()>1 && !tbt->isImmortal()){
         if ((tbt->master) && tbt->master->inRoom() == tbt->inRoom()) {
@@ -2223,8 +2209,8 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     myself->loadItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
 
     TThing *t, *t2;
-    for (t = myself->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=myself->stuff.begin();it!=myself->stuff.end();){
+      t=*(it++);
       --(*t);
       myself->saveItem(shop_nr, dynamic_cast<TObj *>(t));
       delete t;
@@ -2417,7 +2403,7 @@ void shoplog(int shop_nr, TBeing *ch, TMonster *keeper, const sstring &name, int
   TThing *tt;
   TObj *o;  
 
-  for(tt=keeper->getStuff();tt;tt=tt->nextThing){
+  for(StuffIter it=keeper->stuff.begin();it!=keeper->stuff.end() && (tt=*it);++it){
     ++count;
     o=dynamic_cast<TObj *>(tt);
     value+=o->getValue();

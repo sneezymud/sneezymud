@@ -1392,7 +1392,7 @@ void TBaseWeapon::specializationCheck(TBeing *ch, float *fx)
 int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int mdist)
 {
   int rc;
-  TThing *c, *c_next;
+  TThing *c;
   bool true_targ;
   int i;
   int resCode = 0;
@@ -1410,8 +1410,8 @@ int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int
   } else
     damtype = getWtype();
 
-  for (c = rp->getStuff(); c; c = c_next) {
-    c_next = c->nextThing;
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
+    c=*(it++);
     if (c == ch)
       continue;
     TBeing *tb = dynamic_cast<TBeing *>(c);

@@ -37,7 +37,6 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
 
   affectedData *aff;
   roomDirData *Eroom=NULL;
-  TThing *t;
   int code=-1;
   int skill;
   int targetRm = -1;
@@ -249,8 +248,9 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
             // It's above 9, so it's a special exit.  Portal or something.
             int count = code - 9,
                 seen  = 0;
-            for (t = ch->roomp->getStuff(); t; t = t->nextThing) {
-              TPortal *tp = dynamic_cast<TPortal *>(t);
+	    TPortal *tp=NULL;
+            for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end();++it) {
+              tp = dynamic_cast<TPortal *>(*it);
               if (tp) {
                 seen++;
                 if (count == seen) {
@@ -261,7 +261,7 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
               }
             }
             // Bad, our special exit is Gone...even tho it was there a second ago.
-            if (!t) {
+            if (!tp) {
               ch->sendTo("Error finding path target!  Tell a god.\n\r");
               vlogf(LOG_BUG, "Error finding path (task_tracking).");
               stop_tracking(ch);
@@ -271,7 +271,7 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
             if (ch->desc && ch->desc->m_bIsClient)
               ch->desc->clientf(fmt("%d|%d") % CLIENT_TRACKING % (1 << code));
             if (ch->desc && (ch->desc->autobits & AUTO_HUNT)) {
-              strcpy(buf, t->name);
+              strcpy(buf, tp->name);
               strcpy(buf, add_bars(buf).c_str());
               sprintf(buf2, "enter %s", buf);
               ch->addCommandToQue(buf2);

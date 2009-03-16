@@ -15,9 +15,9 @@
 // returns true if guard disrupts trap pulse
 static int trapGuardCheck(TBeing *ch)
 {
-  TThing *t, *t2;
-  for (t = ch->roomp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  TThing *t;
+  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end();){
+    t=*(it++);
     TMonster *guard = dynamic_cast<TMonster *>(t);
     if (!guard)
       continue;

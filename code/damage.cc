@@ -414,7 +414,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
   followData *f;
   TThing *t, *t2;
   affectedData *af, *af2;
-  TPerson *tp=NULL;;
+  TPerson *tp=NULL;
 
   if ((v->master == this) && dynamic_cast<TMonster *>(v))
     v->stopFollower(TRUE);
@@ -987,8 +987,8 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
     if (!IS_SET_DELETE(rc, DELETE_THIS))
       return FALSE;
 
-    for (t = roomp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+      t=*(it++);
       TBeing *tbt = dynamic_cast<TBeing *>(t);
       if (!tbt || tbt == this || tbt == v)
         continue;
@@ -1057,7 +1057,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
       if (!isPc() && !isAffected(AFF_CHARM)) {
         TBaseCorpse *corpse = NULL;
 	      sprintf(buf, "%s-corpse", buf2);
-        if ((t2 = searchLinkedList((fmt("%s-corpse") % buf2).c_str(), roomp->getStuff())) &&
+        if ((t2 = searchLinkedList((fmt("%s-corpse") % buf2).c_str(), roomp->stuff)) &&
             (corpse = dynamic_cast<TBaseCorpse *>(t2)))
         {
           corpse->addCorpseFlag(CORPSE_NO_DISSECT|CORPSE_NO_SKIN);
@@ -1071,7 +1071,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 
 	sprintf(buf, "%s-corpse", buf2);
 
-        if ((t2 = searchLinkedListVis(this, buf, roomp->getStuff())) &&
+        if ((t2 = searchLinkedListVis(this, buf, roomp->stuff)) &&
             (corpse = dynamic_cast<TBaseCorpse *>(t2))) {
           if (doesKnowSkill(SKILL_DISSECT)) {
             comp = determineDissectionItem(corpse, &amt, msg, gl, this);

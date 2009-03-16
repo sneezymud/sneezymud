@@ -82,7 +82,7 @@ void spread_affect(TBeing *ch, int chance_to_spread, bool race, bool not_race, a
   if (ch->roomp && ch->roomp->isRoomFlag(ROOM_PEACEFUL))
     return;
 
-  for (t = ch->roomp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (t=*it);++it) {
     TBeing *v = dynamic_cast<TBeing *>(t);
     if (!v || v == ch)
       continue;
@@ -1479,7 +1479,6 @@ int disease_scurvy(TBeing *victim, int message, affectedData *af)
           buf = fmt("A <k>rotten<1> tooth lies here, having fallen from %s's mouth.") % victim->getName();
           corpse->setDescr(mud_str_dup(buf));
 
-          corpse->setStuff(NULL);
           corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
           corpse->obj_flags.decay_time=-1;
           corpse->setWeight(0.1);

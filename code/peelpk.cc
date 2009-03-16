@@ -325,15 +325,16 @@ void TBeing::doPeelPk(const char *argument)
   } 
 } 
 
-void dropAllGunsAndAmmo(TBeing *ch, TThing *stuff){
+void dropAllGunsAndAmmo(TBeing *ch, StuffList list){
   TThing *tt;
 
-  if(!stuff || !ch)
+  if(list.empty() || !ch)
     return;
 
-  for(tt=stuff;tt;tt=tt->nextThing){
-    if(tt->getStuff())
-      dropAllGunsAndAmmo(ch, tt->getStuff());
+  for(StuffIter it=list.begin();it!=list.end();){
+    tt=*(it++);
+
+    dropAllGunsAndAmmo(ch, tt->stuff);
 
     if(dynamic_cast<TGun *>(tt) ||
        dynamic_cast<TAmmo *>(tt)){
@@ -341,7 +342,7 @@ void dropAllGunsAndAmmo(TBeing *ch, TThing *stuff){
       (*tt)--;
       *ch->roomp += *tt;
 
-      dropAllGunsAndAmmo(ch, ch->getStuff());
+      dropAllGunsAndAmmo(ch, ch->stuff);
       break;
     }
   }
@@ -462,7 +463,7 @@ int TBeing::peelPkRespawn(TBeing *killer, spellNumT dmg_type)
   deathCry();
   makeCorpse(dmg_type);
 
-  dropAllGunsAndAmmo(this, getStuff());
+  dropAllGunsAndAmmo(this, stuff);
 
 
 

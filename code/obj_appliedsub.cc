@@ -106,13 +106,13 @@ int TBeing::doApplyHerbs(const sstring &tArg)
   if(tStVict.empty() || tStVict=="self"){
     vict = this;
   } else if (!(vict = get_char_room_vis(this, tStVict))) {
-    if (!(tArrow = searchLinkedListVis(this, tStVict, getStuff()))) {
+    if (!(tArrow = searchLinkedListVis(this, tStVict, stuff))) {
       sendTo("You do not see that here, perhaps you were seeing things?\n\r");
       return FALSE;
     }
   }
 
-  if (!(asHerb = dynamic_cast<TASubstance *>(searchLinkedListVis(this, tStHerb, getStuff())))) {
+  if (!(asHerb = dynamic_cast<TASubstance *>(searchLinkedListVis(this, tStHerb, stuff)))) {
     sendTo("You can not seem to find that herb.\n\r");
     return FALSE;
   }
@@ -237,6 +237,7 @@ int appliedSubstanceCountList(const char *tArg, char **newChList = NULL, int ChM
 bool appliedSubstanceCheckList(TBeing *ch, const char *tArg,
                                char **newChList, TThing **tObjList, int LsSize)
 {
+#if 0
   TThing *tObj,
          *tStObj;
   TExpandableContainer *tCntObj = NULL;
@@ -348,6 +349,7 @@ bool appliedSubstanceCheckList(TBeing *ch, const char *tArg,
   for (curCount[0] = 0; curCount[0] < LsSize; curCount[0]++)
     if (!tObjList[curCount[0]])
       return false;
+#endif
 
   return true;
 }
@@ -402,7 +404,7 @@ bool appliedSubstanceCheckFire(TBeing *ch)
 {
   TThing *tThing;
 
-  for (tThing = ch->roomp->getStuff(); tThing; tThing = tThing->nextThing)
+  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (tThing=*it);++it)
     if (dynamic_cast<TFFlame *>(tThing))
       return true;
 
@@ -414,7 +416,7 @@ bool appliedSubstanceHasInvItem(TBeing *ch, int tVNum)
   TThing *tThing;
   TObj   *tObj;
 
-  for (tThing = ch->getStuff(); tThing; tThing = tThing->nextThing) {
+  for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end() && (tThing=*it);++it) {
     if (!(tObj = dynamic_cast<TObj *>(tThing)))
       continue;
 

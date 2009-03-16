@@ -528,9 +528,9 @@ int TMonster::lookForEngaged(const TBeing *ch)
   if (!isSmartMob(0))
     return FALSE;
 
-  TThing * t, *t2;
-  for (t = roomp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  TThing * t;
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+    t=*(it++);
     if (t == this || (ch && dynamic_cast<const TBeing *>(t) == ch))
       continue;
     TBeing *tbt = dynamic_cast<TBeing *>(t);

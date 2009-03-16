@@ -73,7 +73,7 @@ void TBow::remBowFlags(unsigned int r)
 
 void TBow::describeObjectSpecifics(const TBeing *ch) const
 {
-  if (getStuff())
+  if (!stuff.empty())
     ch->sendTo(COLOR_OBJECTS, fmt("%s is loaded with an arrow.\n\r") % sstring(getName()).cap());
   else
     ch->sendTo(COLOR_OBJECTS, fmt("%s has no arrow ready.\n\r") % sstring(getName()).cap());
@@ -108,7 +108,7 @@ sstring TBow::statObjInfo() const
   char    buf[256];
   TArrow *tArrow;
 
-  tArrow = dynamic_cast<TArrow *>(getStuff());
+  tArrow = dynamic_cast<TArrow *>(stuff.front());
 
   sprintf(buf, "Arrow: %d, flags: %d, type: %d", (tArrow ? tArrow->objVnum() : 0), getBowFlags(), getArrowType());
 
@@ -195,7 +195,7 @@ void TBow::bloadArrowBow(TBeing *ch, TArrow *the_arrow)
     return;
   }
 
-  if (getStuff()) {
+  if (!stuff.empty()) {
     ch->sendTo("That bow has already been loaded, so you hold it.\n\r");
     if (!equippedBy)
     {
@@ -236,12 +236,12 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
   int   str_test, rc;
   char  buf[256];
 
-  if (!getStuff() || !dynamic_cast<TArrow *>(getStuff())) {
+  if (stuff.empty() || !dynamic_cast<TArrow *>(stuff.front())) {
     act("$p isn't loaded with an arrow!", FALSE, ch, this, 0, TO_CHAR);
 
-    if (getStuff() && !dynamic_cast<TArrow *>(getStuff())) {
+    if (!stuff.empty() && !dynamic_cast<TArrow *>(stuff.front())) {
       vlogf(LOG_BUG, fmt("Bow loaded with something not an arrow. [%s]") %  ch->getName());
-      TThing *tThing = getStuff();
+      TThing *tThing = stuff.front();
       --(*tThing);
       delete tThing;
       tThing = NULL;
@@ -271,7 +271,7 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
     return FALSE;
   }
 
-  the_arrow = dynamic_cast<TObj *>(getStuff());
+  the_arrow = dynamic_cast<TObj *>(stuff.front());
 
   ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_RANGED_PROF, 2);
   ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_RANGED_SPEC, 40);
@@ -401,7 +401,7 @@ sstring TBow::showModifier(showModeT mode, const TBeing *ch) const
 {
   sstring a;
 
-  if (getStuff())
+  if (!stuff.empty())
     a = " (loaded)";
   else
     a = " (unloaded)";
@@ -428,8 +428,8 @@ void TBow::dropMe(TBeing *ch, showMeT showme, showRoomT showroom)
 
   // dislodge arrow
   // the text of the drop (above) should be before the dislodge
-  if (getStuff()) {
-    TThing *t = getStuff();
+  if (!stuff.empty()) {
+    TThing *t = stuff.front();
     (*t)--;
     *ch->roomp += *t;
     act("$n falls from $p.", false, t, this, 0, TO_ROOM);

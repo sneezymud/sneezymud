@@ -39,9 +39,9 @@ void TPool::overFlow()
 	// check each item
 	valid=true;
 	amt=0;
-	for(TThing *t=rp->getStuff();t;t=t->nextThing){
+	for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();++it){
 	  // check pools that are the same type and less than half my size
-	  if((pool=dynamic_cast<TPool *>(t)) && 
+	  if((pool=dynamic_cast<TPool *>(*it)) && 
 	     pool->getDrinkType()==getDrinkType()){
 	    if(pool->getDrinkUnits() >= (getDrinkUnits()/2)){
 	      valid=false;
@@ -283,7 +283,7 @@ int TRoom::dropPool(int amt, liqTypeT liq)
     return FALSE;
 
   /* look for preexisting pool */
-  for(t=getStuff();t;t=t->nextThing){
+  for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it){
     TPool *tp = dynamic_cast<TPool *>(t);
     if (tp && (tp->getDrinkType() == liq)){
       pool=tp;
@@ -330,7 +330,7 @@ int TBeing::dropPool(int amt, liqTypeT liq)
     return FALSE;
 
   /* look for preexisting pool */
-  for(t=roomp->getStuff();t;t=t->nextThing){
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it){
     TPool *tp = dynamic_cast<TPool *>(t);
     if (tp && (tp->getDrinkType() == liq)){
       pool=tp;

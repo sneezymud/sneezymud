@@ -57,7 +57,7 @@ void TBeing::doRestring(const sstring &argument)
   }
 #if 1
   TThing *t;
-  for (t = getStuff(); t && !(bow && bstr); t = t->nextThing) {
+  for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
     if (!bow) {
       bow = dynamic_cast<TBow *>(t);
       if (bow && !isname(arg1, bow->name))
@@ -81,12 +81,12 @@ void TBeing::doRestring(const sstring &argument)
   }
 #else
   // works, but gets confused since "bow" is an abbrev for "bowsstring"
-  if (!(bow = searchLinkedListVis(this, arg1, getStuff()))) {
+  if (!(bow = searchLinkedListVis(this, arg1, stuff))) {
     sendTo(fmt("You don't seem to have '%s' in your inventory.\n\r") % arg1);
     sendTo("Syntax : restring <bow> <string>\n\r");
     return;
   }
-  if (!(bstr = searchLinkedListVis(this, arg2, getStuff()))) {
+  if (!(bstr = searchLinkedListVis(this, arg2, stuff))) {
     sendTo(fmt("You don't seem to have '%s' in your inventory.\n\r") % arg2);
     sendTo("Syntax : restring <bow> <string>\n\r");
     return;

@@ -763,7 +763,7 @@ void bootWorld(void)
       }
 
       rp->dir_option[dir]->condition = convertTo<int>(db_exits[5]);
-      rp->dir_option[dir]->lock_difficulty= convertTo<int>(db_exits[6]);;
+      rp->dir_option[dir]->lock_difficulty= convertTo<int>(db_exits[6]);
       rp->dir_option[dir]->weight= convertTo<int>(db_exits[7]);
       rp->dir_option[dir]->key = convertTo<int>(db_exits[8]);
 
@@ -1357,7 +1357,7 @@ void zoneData::renumCmd(void)
 void TBeing::doBoot(const sstring &arg)
 {
   int z=0;
-  TThing *t, *t2;
+  TThing *t;
   TMonster *mob;
   TObj *obj;
   bool found=true;
@@ -1403,8 +1403,8 @@ void TBeing::doBoot(const sstring &arg)
     found=false;
     for(int r=zone_table[z].bottom;r<=zone_table[z].top;++r){
       if(real_roomp(r)){
-        for(t=real_roomp(r)->getStuff();t;t = t2){
-          t2 = t->nextThing;
+        for(StuffIter it=real_roomp(r)->stuff.begin();it!=real_roomp(r)->stuff.end();){
+          t=*(it++);
           
           if((obj=dynamic_cast<TObj *>(t))){
             if(obj->objVnum() >= zone_table[z].bottom ||
@@ -1438,7 +1438,7 @@ bool zoneData::bootZone(int zone_nr)
 {
   int tmp;
   char *check, buf[256];
-  int i1 = 0, i2, i3, i4;;
+  int i1 = 0, i2, i3, i4;
   int rc;
   FILE *fl=fopen((fmt("zonefiles/%i") % zone_nr).c_str(), "r");
 
@@ -3116,9 +3116,9 @@ void runResetCmdB(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   // count all of the objects
   int count = 0;
   TObj *found = NULL;
-  for(TThing *t = rp->getStuff(); t; t = t->nextThing)
+  for(StuffIter it= rp->stuff.begin();it!= rp->stuff.end();++it)
   {
-    TObj *objScan = dynamic_cast<TObj *>(t);
+    TObj *objScan = dynamic_cast<TObj *>(*it);
     if(objScan && objScan->objVnum() == obj_index[rs.arg1].virt)
     {
       found = objScan;
@@ -3337,7 +3337,7 @@ void runResetCmdY(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
     TThing    *tThing;
 
     // Find Held Spellbag
-    for (tThing = mob->getStuff(); tThing; tThing = tThing->nextThing)
+    for(StuffIter it=mob->stuff.begin();it!=mob->stuff.end() && (tThing=*it);++it)
       if ((tBagA = dynamic_cast<TSpellBag *>(tThing)))
         break;
 
@@ -3348,7 +3348,8 @@ void runResetCmdY(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
         break;
 
     if (tBagA && tBagB) {
-      while ((tThing = tBagA->getStuff())) {
+      for(StuffIter itt=tBagA->stuff.begin();itt!=tBagA->stuff.end();){
+	tThing=*(itt++);
         --(*tThing);
         *tBagB += *tThing;
       }

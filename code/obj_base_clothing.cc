@@ -667,7 +667,7 @@ int TBaseClothing::putMeInto(TBeing *ch, TOpenContainer *container)
   if(!dynamic_cast<TSuitcase *>(container))
     return FALSE;
 
-  for(t=container->getStuff(); t; t=t->nextThing){
+  for(StuffIter it=container->stuff.begin();it!=container->stuff.end() && (t=*it);++it){
     o = dynamic_cast<TBaseClothing *>(t);
 
     if (!o)

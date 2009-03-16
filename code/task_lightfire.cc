@@ -9,7 +9,7 @@
 
 int task_lightfire(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *obj)
 {
-  TThing *t, *t2;
+  TThing *t;
   TMonster *guard;
   TTool *flintsteel=NULL;
   int found=0;
@@ -29,8 +29,8 @@ int task_lightfire(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
 
   // make sure the thing we're trying to burn is still around
   if((obj != ch->heldInPrimHand()) && (obj != ch->heldInSecHand())){
-    for (t = ch->roomp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end();){
+      t=*(it++);
       if(obj==dynamic_cast<TObj *>(t))
         found=1;
     }
@@ -53,8 +53,8 @@ int task_lightfire(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
   }
 
   // check for guards that prevent
-  for (t = ch->roomp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end();){
+    t=*(it++);
     guard = dynamic_cast<TMonster *>(t);
     if (!guard)
       continue;

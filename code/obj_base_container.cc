@@ -76,7 +76,7 @@ int TBaseContainer::getCarriedVolume() const
   // since we're already dealing with container contents, we don't need
   // to worry about subcontainers (unsupported on sneezy), so we don't
   // need to use getTotalVolume() here
-  for(t=getStuff();t;t=t->nextThing){
+  for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it){
     if(dynamic_cast<TComponent *>(t))
       total+=(int)(t->getReducedVolume(this)*0.10);
     else {
@@ -133,12 +133,13 @@ void TBaseContainer::logMe(const TBeing *ch, const char *cmdbuf) const
   TObj::logMe(ch, cmdbuf);
 
   const char *last = NULL;
-  if(getStuff())
-    last=getStuff()->getName();
+  if(!stuff.empty())
+    last=stuff.front()->getName();
   int runcount=1;
   TThing *t;
-  for (t = getStuff(); t; t = t->nextThing, ++runcount) {
-    if(!t->nextThing || strcmp(last, t->nextThing->getName())){
+  for(StuffIter it=stuff.begin();it!=stuff.end(); ++runcount){
+    t=*(it++);
+    if(it==stuff.end() || strcmp(last, (*it)->getName())){
       if(runcount>1){
         vlogf(LOG_SILENT, fmt("%s%s%s %s containing %s [%i].") %     
               (ch ? ch->getName() : "") %                      
@@ -150,8 +151,8 @@ void TBaseContainer::logMe(const TBeing *ch, const char *cmdbuf) const
           (ch ? " " : "") %                                    
           cmdbuf % getName() % t->getName());                   
       runcount=0;                                             
-      if(t->nextThing)
-        last=t->nextThing->getName();
+      if(it!=stuff.end())
+        last=(*it)->getName();
       else
         last=t->getName();
     } else
@@ -180,7 +181,7 @@ int TBaseContainer::getAllFrom(TBeing *ch, const char *argument)
 
   act("You start getting items from $p.", TRUE, ch, this, NULL, TO_CHAR);
   act("$n starts getting items from $p.", TRUE, ch, this, NULL, TO_ROOM);
-  start_task(ch, ch->roomp->getStuff(), ch->roomp, TASK_GET_ALL, argument, 
+  start_task(ch, NULL, ch->roomp, TASK_GET_ALL, argument, 
             350, ch->in_room, 0, 0, 0);
 
 
@@ -216,7 +217,7 @@ int TBaseContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
   TBaseCorpse *corpse;
 
   if (getall(arg1, newarg)) {                                 
-    if (!searchLinkedListVis(ch, newarg, getStuff())) {            
+    if (!searchLinkedListVis(ch, newarg, stuff)) {            
       ch->sendTo(COLOR_OBJECTS, fmt("There are no \"%s\"'s visible in %s.\n\r") %
                newarg % getName());
       return TRUE;                                            
@@ -266,7 +267,7 @@ int TBaseContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
     }
     */
 
-    start_task(ch, ch->roomp->getStuff(), ch->roomp, TASK_GET_ALL, capbuf, 
+    start_task(ch, NULL, ch->roomp, TASK_GET_ALL, capbuf, 
             350, ch->in_room, 1, 0, 0);
     // this is a kludge, task_get still has a tiny delay on it
     // this dumps around it and goes right to the guts
@@ -277,7 +278,7 @@ int TBaseContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
     }
     return TRUE;
   } else if ((p = getabunch(arg1, newarg))) {
-    if (!searchLinkedListVis(ch, newarg, getStuff())) {
+    if (!searchLinkedListVis(ch, newarg, stuff)) {
       ch->sendTo(COLOR_OBJECTS, fmt("There are no \"%s\"'s visible in %s.\n\r") %
               newarg % getName());
       return TRUE;
@@ -312,7 +313,7 @@ int TBaseContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
     sprintf(capbuf, "%s %s", newarg, arg2);
     act("You start getting items from $p.", TRUE, ch, this, NULL, TO_CHAR);
     act("$n starts getting items from $p.", TRUE, ch, this, NULL, TO_ROOM);
-    start_task(ch, ch->roomp->getStuff(), ch->roomp, TASK_GET_ALL, capbuf,
+    start_task(ch, NULL, ch->roomp, TASK_GET_ALL, capbuf,
             350, ch->in_room, 0, p + 1, 0);
 
     /*
@@ -342,7 +343,7 @@ int TBaseContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
 
 int TBaseContainer::putSomethingIntoContainer(TBeing *ch, TOpenContainer *cont)
 {
-  if(getStuff()){
+  if(!stuff.empty()){
     act("Containers can't hold other containers unless they're empty.", FALSE, ch, cont,this, TO_CHAR);
     return FALSE;
   }
@@ -352,10 +353,8 @@ int TBaseContainer::putSomethingIntoContainer(TBeing *ch, TOpenContainer *cont)
 
 void TBaseContainer::findSomeDrink(TDrinkCon **last_good, TBaseContainer **last_cont, TBaseContainer *)
 {
-  TThing *t;
-
-  for (t = getStuff(); t; t = t->nextThing) {
-    t->findSomeDrink(last_good, last_cont, this);
+  for(StuffIter it=stuff.begin();it!=stuff.end();++it) {
+    (*it)->findSomeDrink(last_good, last_cont, this);
 
     if (last_good)
       break;
@@ -364,36 +363,29 @@ void TBaseContainer::findSomeDrink(TDrinkCon **last_good, TBaseContainer **last_
 
 void TBaseContainer::findSomeFood(TFood **last_good, TBaseContainer **last_cont, TBaseContainer *)
 {
-  TThing *t;
-                                                              
-  for (t = getStuff(); t; t = t->nextThing)                        
-    t->findSomeFood(last_good, last_cont, this);              
+  for(StuffIter it=stuff.begin();it!=stuff.end();++it)       
+    (*it)->findSomeFood(last_good, last_cont, this);              
 }                                                             
 
 void TBaseContainer::powerstoneCheck(TOpal **topMax)
 {
-  TThing *t;
-
-  for (t = getStuff(); t; t = t->nextThing) {
-    t->powerstoneCheck(topMax);
+  for(StuffIter it=stuff.begin();it!=stuff.end();++it) {
+    (*it)->powerstoneCheck(topMax);
   }
 }
 
 void TBaseContainer::powerstoneCheckCharged(TOpal **topMax)
 {
-  TThing *t;
                                                               
-  for (t = getStuff(); t; t = t->nextThing) {                      
-    t->powerstoneCheckCharged(topMax);                        
+  for(StuffIter it=stuff.begin();it!=stuff.end();++it) {                      
+    (*it)->powerstoneCheckCharged(topMax);
   }                                                           
 }                                                             
                                                               
 void TBaseContainer::powerstoneMostMana(int *topMax)
 {
-  TThing *t;
-
-  for (t = getStuff(); t; t = t->nextThing) {
-    t->powerstoneMostMana(topMax);
+  for(StuffIter it=stuff.begin();it!=stuff.end();++it) {
+    (*it)->powerstoneMostMana(topMax);
   }
 }
 
@@ -402,8 +394,7 @@ bool TBaseContainer::fitsSellType(tObjectManipT tObjectManip,
                               sstring tStString, itemTypeT tItemType,
                               int & tCount, int tShop)
 {
-  TThing         *tThing,
-                 *tThingTemp;
+  TThing         *tThing;
   TObj           *tObj;
   TOpenContainer *tContainer = dynamic_cast<TOpenContainer *>(this);
 
@@ -411,8 +402,8 @@ bool TBaseContainer::fitsSellType(tObjectManipT tObjectManip,
        tObjectManip == OBJMAN_NOFIT ||
        tObjectManip == OBJMAN_TYPE) &&
       (!tContainer || !tContainer->isClosed())) {
-    for (tThing = getStuff(); tThing; tThing = tThingTemp) {
-      tThingTemp = tThing->nextThing;
+    for(StuffIter it=stuff.begin();it!=stuff.end();){
+      tThing=*(it++);
 
       if (!ch->sameRoom(*tKeeper) || !ch->awake())
         break;

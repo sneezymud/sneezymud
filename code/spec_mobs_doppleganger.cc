@@ -80,14 +80,14 @@ TBeing * dopplegangerFindTarget(TRoom *tRoom)
   TThing *tObj;
   TRoom  *tNewRoom;
 
-  for (tObj = tRoom->getStuff(); tObj; tObj = tObj->nextThing)
+  for(StuffIter it=tRoom->stuff.begin();it!=tRoom->stuff.end() && (tObj=*it);++it)
     if ((tSucker = dynamic_cast<TBeing *>(tObj)))
       tBestSucker = dopplegangerFindBetter(tSucker, tBestSucker);
 
   for (dirTypeT tDir = MIN_DIR; tDir < MAX_DIR; tDir++)
     if (tRoom->dir_option[tDir] &&
         (tNewRoom = real_roomp(tRoom->dir_option[tDir]->to_room)))
-      for (tObj = tNewRoom->getStuff(); tObj; tObj = tObj->nextThing)
+      for(StuffIter it=tNewRoom->stuff.begin();it!=tNewRoom->stuff.end() && (tObj=*it);++it)
         if ((tSucker = dynamic_cast<TBeing *>(tObj)))
           tBestSucker = dopplegangerFindBetter(tSucker, tBestSucker);
 

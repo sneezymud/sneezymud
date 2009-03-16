@@ -23,7 +23,7 @@ void TPCorpse::getMeFrom(TBeing *ch, TThing *t)
   if (!checkOnLists()) {
 //    vlogf(LOG_BUG, fmt("Something wrong with get from a corpse, corpse not set right %s (%s).") %  ch->getName() % getName());
   } else {
-    if (getStuff())
+    if (!stuff.empty())
       saveCorpseToFile();
     else
       removeCorpseFromList();
@@ -318,7 +318,7 @@ int TBeing::doGet(const char *argument)
       }
       sendTo("You start picking up things from the room.\n\r");
       act("$n starts picking up things from the room.",TRUE, this, 0, 0, TO_ROOM);
-      start_task(this, roomp->getStuff(), roomp, TASK_GET_ALL, "", 350, in_room, 0, 0, 0);
+      start_task(this, NULL, roomp, TASK_GET_ALL, "", 350, in_room, 0, 0, 0);
 
       // this is a kludge, task_get still has a tiny delay on it
       // this dumps around it and goes right to the guts
@@ -335,7 +335,7 @@ int TBeing::doGet(const char *argument)
         return FALSE;
       }
       if (getall(arg1, newarg)) {
-        if (!searchLinkedListVis(this, newarg, roomp->getStuff())) {
+        if (!searchLinkedListVis(this, newarg, roomp->stuff)) {
           sendTo(fmt("There are no \"%s\"'s visible in this room.\n\r") % newarg);
           return FALSE;    
         }
@@ -354,7 +354,7 @@ int TBeing::doGet(const char *argument)
         }
         sendTo("You start picking up things from the room.\n\r");
         act("$n starts picking up things from the room.",TRUE, this, 0, 0, TO_ROOM);
-        start_task(this, roomp->getStuff(), roomp, TASK_GET_ALL, newarg, 350, in_room, 0, 0 ,0);
+        start_task(this, NULL, roomp, TASK_GET_ALL, newarg, 350, in_room, 0, 0 ,0);
         // this is a kludge, task_get still has a tiny delay on it
         // this dumps around it and goes right to the guts
         rc = (*(tasks[TASK_GET_ALL].taskf))
@@ -364,7 +364,7 @@ int TBeing::doGet(const char *argument)
 
         break;
       } else if ((p = getabunch(arg1, newarg))) {
-        if (!searchLinkedListVis(this, newarg, roomp->getStuff())) {
+        if (!searchLinkedListVis(this, newarg, roomp->stuff)) {
           sendTo(fmt("There are no \"%s\"'s visible in this room.\n\r") % newarg);
           return FALSE;
         }
@@ -383,7 +383,7 @@ int TBeing::doGet(const char *argument)
         }
         sendTo("You start picking up things from the room.\n\r");
         act("$n starts picking up things from the room.",TRUE, this, 0, 0, TO_ROOM);
-        start_task(this, roomp->getStuff(), roomp, TASK_GET_ALL, newarg, 350, in_room, 0, p + 1, 0);
+        start_task(this, NULL, roomp, TASK_GET_ALL, newarg, 350, in_room, 0, p + 1, 0);
         // this is a kludge, task_get still has a tiny delay on it
         // this dumps around it and goes right to the guts
         rc = (*(tasks[TASK_GET_ALL].taskf))
@@ -394,7 +394,7 @@ int TBeing::doGet(const char *argument)
 
         break;
       }
-      if ((t = searchLinkedListVis(this, arg1, roomp->getStuff()))) {
+      if ((t = searchLinkedListVis(this, arg1, roomp->stuff))) {
         if (canGet(t, SILENT_NO)) {
           rc = get(this,t, NULL, GETOBJ, found);
           // get all has no lag, is this needed?
@@ -432,14 +432,14 @@ int TBeing::doGet(const char *argument)
         }
 
         TThing *t;
-        for (t = roomp->getStuff(); t; t = t->nextThing) {
+        for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
           TBaseCorpse *tbc = dynamic_cast<TBaseCorpse *>(t);
           // we do no name check here, since "pile dust" won't hit "corpse"
           if (tbc) {
 	    sstring namebuf;
 	    TThing *tt;
 	    int counter=1;
-	    for (tt = roomp->getStuff(); tt; tt = tt->nextThing) {
+	    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (tt=*it);++it) {
 	      if(dynamic_cast<TBaseCorpse *>(tt) == tbc)
 		break;
 	      if(dynamic_cast<TBaseCorpse *>(tt) &&
@@ -529,7 +529,7 @@ int TBeing::doGet(const char *argument)
 	  sendTo(fmt("You do not see or have the %s.\n\r") % arg2);
         break;
       }
-      if ((t = searchLinkedListVis(this, arg1, sub->getStuff()))) {
+      if ((t = searchLinkedListVis(this, arg1, sub->stuff))) {
         if (canGet(t, SILENT_NO)) {
           rc = get(this, t, sub, GETOBJOBJ, found);
 

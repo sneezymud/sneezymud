@@ -162,7 +162,7 @@ static int disarm(TBeing * caster, TBeing * victim, spellNumT skill)
     }
     caster->setPosition(POSITION_SITTING);
     if (dynamic_cast<TMonster *>(victim) && victim->awake() && !victim->fight()) 
-      caster->reconcileDamage(victim, 0, skill);;
+      caster->reconcileDamage(victim, 0, skill);
 
     return TRUE;
   }
@@ -197,7 +197,7 @@ static int disarm(TBeing * caster, TBeing * victim, spellNumT skill)
           FALSE, caster, victim, victim->heldInSecHand(), TO_CHAR);
       act("$n catches the edge of $p's $N but fails to disarm it.",
           FALSE, caster, victim, victim->heldInSecHand(), TO_ROOM);
-      caster->reconcileDamage(victim, 0, skill);;
+      caster->reconcileDamage(victim, 0, skill);
     } else if (obj) {
       act("You attempt to disarm $N.", TRUE, caster, 0, victim, TO_CHAR);
       if (caster->isHumanoid())
@@ -253,7 +253,7 @@ static int disarm(TBeing * caster, TBeing * victim, spellNumT skill)
     act("You try to disarm $N, but fail miserably, falling down in the process.", TRUE, caster, 0, victim, TO_CHAR, ANSI_YELLOW);
     act("$n does a nifty fighting move, but then falls on $s butt.", TRUE, caster, 0, 0, TO_ROOM);
     caster->setPosition(POSITION_SITTING);
-    caster->reconcileDamage(victim, 0, skill);;
+    caster->reconcileDamage(victim, 0, skill);
   }
   return TRUE;
 }

@@ -142,7 +142,6 @@ void TTrashPile::overFlow()
   int index=getSizeIndex();
   TRoom *rp=NULL;
   int volume=0;
-  TThing *t2;
   dirTypeT dir;
 
   if(!roomp)
@@ -167,8 +166,8 @@ void TTrashPile::overFlow()
       return;
     
     // move some stuff
-    for(TThing *t=getStuff();t;t=t2){
-      t2=t->nextThing;
+    for(StuffIter it=stuff.begin();it!=stuff.end();){
+      TThing *t=*(it++);
 
       volume+=t->getVolume();
       --(*t);
@@ -207,8 +206,8 @@ void TTrashPile::attractVermin()
      roomp->isRoomFlag(ROOM_NO_MOB))
     return;
 
-  for(TThing *t=roomp->getStuff();t;t=t->nextThing){
-    if(dynamic_cast<TBeing *>(t))
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();++it){
+    if(dynamic_cast<TBeing *>(*it))
       count++;
   }
   // don't spawn anything if there are already 11 mobs/people in the room
@@ -287,10 +286,9 @@ void TTrashPile::attractVermin()
 void TTrashPile::doDecay()
 {
   TObj *o;
-  TThing *t2;
 
-  for(TThing *t=getStuff();t;t=t2){
-    t2=t->nextThing;
+  for(StuffIter it=stuff.begin();it!=stuff.end();){
+    TThing *t=*(it++);
     if((o=dynamic_cast<TObj *>(t)) && !::number(0,3599)){
       o->addToStructPoints(-1);
 
@@ -315,13 +313,13 @@ bool TTrashPile::willMerge(TMergeable *tm)
 void TTrashPile::doMerge(TMergeable *tm)
 {
   TTrashPile *pile;
-  TThing *pt, *pt2;
+  TThing *pt;
 
   if(!(pile=dynamic_cast<TTrashPile *>(tm)))
     return;
 
-  for(pt=pile->getStuff();pt;pt=pt2){
-    pt2=pt->nextThing;
+  for(StuffIter it=pile->stuff.begin();it!=pile->stuff.end();){
+    pt=*(it++);
     --(*pt);
     *this += *pt;
   }

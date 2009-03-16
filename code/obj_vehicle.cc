@@ -455,7 +455,7 @@ void TVehicle::vehiclePulse(int pulse)
 
   // the doAt in driveLook() would screw up the getStuff list
   // so we "pre-cache" it
-  for (t=troom->getStuff(); t; t = t->nextThing)
+  for(StuffIter it=troom->stuff.begin();it!=troom->stuff.end() && (t=*it);++it)
     if((tb=dynamic_cast<TBeing *>(t)))
       tBeing.push_back(tb);
   

@@ -226,10 +226,10 @@ void TBeing::doChangeOutfit(const char *argument)
 
 
   // swap clothes  
-  TThing *removed, *t2, *first=NULL;
+  TThing *removed, *first=NULL, *t;
   wearSlotT pos;
-  for(TThing *t=suitcase->getStuff(); t; t=t2){
-    t2=t->nextThing;
+  for(StuffIter it=suitcase->stuff.begin();it!=suitcase->stuff.end();){
+    t=*(it++);
 
     // first is the first item we removed and then put in the suitcase
     // so it should be the end of the original items
@@ -547,7 +547,7 @@ void TBeing::doWizlock(const char *argument)
 
     return;
   } else if (is_abbrev(buf, "message")) {
-    TThing *t_note = searchLinkedListVis(this, "note", getStuff());
+    TThing *t_note = searchLinkedListVis(this, "note", stuff);
     note = dynamic_cast<TObj *>(t_note);
     if (note) {
       if (!note->action_description) {
@@ -578,7 +578,7 @@ void TBeing::doWizlock(const char *argument)
 int TBeing::doEmote(const sstring &argument)
 {
   sstring buf, tmpbuf;
-  TThing *t, *t2;
+  TThing *t;
 
   if (checkSoundproof())
     return FALSE;
@@ -606,8 +606,8 @@ int TBeing::doEmote(const sstring &argument)
     buf = fmt("$n %s<z>") % garbled;
     tmpbuf = fmt("%s") % nameColorString(this, desc, buf, NULL, COLOR_BASIC, FALSE);
     act(tmpbuf, TRUE, this, 0, 0, TO_CHAR);
-    for (t = roomp->getStuff(); t ; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+      t=*(it++);
       TBeing *ch = dynamic_cast<TBeing *>(t);
       if (!ch || ch == this)
         continue;
@@ -1311,8 +1311,10 @@ int TBeing::doGoto(const sstring & argument)
   }
   if (!hasWizPower(POWER_GOTO_IMP_POWER) &&
       real_roomp(location)->isRoomFlag(ROOM_PRIVATE)) {
-    for (i = 0, t = real_roomp(location)->getStuff(); t; t = t->nextThing)
-      if (dynamic_cast<TBeing *>(t))
+    i=0;
+    for(StuffIter it=real_roomp(location)->stuff.begin();
+	it!=real_roomp(location)->stuff.end();++it)
+      if (dynamic_cast<TBeing *>(*it))
         i++;
 
     if (i > 1) {
@@ -1324,7 +1326,7 @@ int TBeing::doGoto(const sstring & argument)
   bool hasStealth = (desc ? isPlayerAction(PLR_STEALTH) : false);
 
   if (msgVariables(MSG_BAMFOUT)[0] != '!') {
-    for (t = roomp->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       TBeing *tbt = dynamic_cast<TBeing *>(t);
 
       if (tbt && this != tbt && (!hasStealth || tbt->GetMaxLevel() > MAX_MORT)) {
@@ -1340,7 +1342,7 @@ int TBeing::doGoto(const sstring & argument)
     act("$n disappears in a cloud of mushrooms.",
         TRUE, this, NULL, NULL, TO_ROOM, NULL,  (hasStealth ? MAX_MORT : 0));
   else if (*desc->poof.poofout != '!') {
-    for (t = roomp->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       TBeing *tbt = dynamic_cast<TBeing *>(t);
 
       if (tbt && this != tbt && (!hasStealth || tbt->GetMaxLevel() > MAX_MORT)) {
@@ -1374,7 +1376,7 @@ int TBeing::doGoto(const sstring & argument)
   hasStealth = (desc ? isPlayerAction(PLR_STEALTH) : false);
 
   if (msgVariables(MSG_BAMFIN)[0] != '!') {
-    for (t = roomp->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       TBeing *tbt = dynamic_cast<TBeing *>(t);
 
       if (tbt && this != tbt && (!hasStealth || tbt->GetMaxLevel() > MAX_MORT)) {
@@ -1391,7 +1393,7 @@ int TBeing::doGoto(const sstring & argument)
         TRUE, this, 0, v, TO_ROOM, NULL, (hasStealth ? MAX_MORT : 0));
     *roomp += *read_object(OBJ_ROSEPETAL, VIRTUAL);
   } else if (*desc->poof.poofin != '!') {
-    for (t = roomp->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       TBeing *tbt = dynamic_cast<TBeing *>(t);
 
       if (tbt && this != tbt && (!hasStealth || tbt->GetMaxLevel() > MAX_MORT)) {
@@ -2214,7 +2216,7 @@ void TPerson::doForce(const char *argument)
   TBeing *vict;
   char name_buf[MAX_INPUT_LENGTH], to_force[MAX_INPUT_LENGTH], buf[MAX_INPUT_LENGTH];
   int rc;
-  TThing *t, *t2;
+  TThing *t;
 
   if (powerCheck(POWER_FORCE))
     return;
@@ -2275,8 +2277,8 @@ void TPerson::doForce(const char *argument)
     }
     sendTo("Ok.\n\r");
   } else if (!strcmp(name_buf, "room")) {
-    for (t = roomp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+      t=*(it++);
       TBeing *tbt = dynamic_cast<TBeing *>(t);
       if (tbt) {
         if ((GetMaxLevel() <= tbt->GetMaxLevel()) && dynamic_cast<TPerson *>(tbt))
@@ -2294,8 +2296,8 @@ void TPerson::doForce(const char *argument)
     }
     sendTo("Ok.\n\r");
   } else if (!strcmp(name_buf, "mobs")) {
-    for (t = roomp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+      t=*(it++);
       TMonster *tbt = dynamic_cast<TMonster *>(t);
       if (tbt) {
         sprintf(buf, "$n has forced you to '%s'.\n\r", to_force);
@@ -2468,7 +2470,8 @@ static void purge_one_room(int rnum, TRoom *rp, int *range)
   if (!rnum || (rnum < range[0]) || (rnum > range[1]))
     return;
 
-  for (t = rp->getStuff(); t; t = rp->getStuff()) {
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
+    t=*(it++);
     --(*t);
     thing_to_room(t, ROOM_VOID);
 
@@ -2569,7 +2572,7 @@ void TThing::purgeMe(TBeing *)
 void nukeLdead(TBeing *vict)
 {
   wearSlotT ij;
-  TThing *t, *t2;
+  TThing *t;
 
   // force a save here - this allows us to avoid various duping bugs
   vict->doSave(SILENT_YES);
@@ -2579,8 +2582,8 @@ void nukeLdead(TBeing *vict)
     if (obj) {
       vict->unequip(ij);
 
-      for (t = obj->getStuff(); t; t = t2) {
-        t2 = t->nextThing;
+      for(StuffIter it=obj->stuff.begin();it!=obj->stuff.end();){
+        t=*(it++);
 
         vict->logItem(t, CMD_NE);  // purge ldead
 
@@ -2604,15 +2607,15 @@ void nukeLdead(TBeing *vict)
       obj = NULL;
     }
   }
-  for (t = vict->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=vict->stuff.begin();it!=vict->stuff.end();){
+    t=*(it++);
     TObj * obj = dynamic_cast<TObj *>(t);
     if (!obj)
       continue;
 
-    TThing *t3, *t4;
-    for (t3 = obj->getStuff(); t3; t3 = t4) {
-      t4 = t3->nextThing;
+    TThing *t3;
+    for(StuffIter it=obj->stuff.begin();it!=obj->stuff.end();){
+      t3=*(it++);
 
       vict->logItem(t3, CMD_NE);  // purge ldead
 
@@ -2785,9 +2788,9 @@ void TPerson::doPurge(const char *argument)
             obj = NULL;
           }
         }
-        TThing *t, *t2;
-        for (t = vict->getStuff(); t; t = t2) {
-          t2 = t->nextThing;
+        TThing *t;
+        for(StuffIter it=vict->stuff.begin();it!=vict->stuff.end();){
+          t=*(it++);
           obj = dynamic_cast<TObj *>(t);
 
           // since the item is technically still in rent, it is accounted
@@ -2808,7 +2811,7 @@ void TPerson::doPurge(const char *argument)
       }
       delete vict;
       vict = NULL;
-    } else if ((t_obj = searchLinkedListVis(this, name_buf, roomp->getStuff()))) {
+    } else if ((t_obj = searchLinkedListVis(this, name_buf, roomp->stuff))) {
       // since we already did a get_char loop above, this is really just doing
       // objs, despite the fact that it is a TThing
       act("$n destroys $p.", TRUE, this, t_obj, 0, TO_ROOM);
@@ -2833,9 +2836,9 @@ void TPerson::doPurge(const char *argument)
             obj = NULL;
           }
         }
-        TThing *t, *t2;
-        for (t = vict->getStuff(); t; t = t2) {
-          t2 = t->nextThing;
+        TThing *t;
+        for(StuffIter it=vict->stuff.begin();it!=vict->stuff.end();){
+          t=*(it++);
           obj = dynamic_cast<TObj *>(t);
 
           // since the item is technically still in rent, it is accounted
@@ -2895,9 +2898,9 @@ void TPerson::doPurge(const char *argument)
     act(msgVariables(MSG_PURGE, (TThing *)NULL), TRUE, this, 0, 0, TO_ROOM);
     sendToRoom("The World seems a little cleaner.\n\r", in_room);
 
-    TThing *t, *n;
-    for (t = roomp->getStuff(); t; t = n) {
-      n = t->nextThing;
+    TThing *t;
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+      t=*(it++);
       t->purgeMe(this);
       // t may be invalid here
     }
@@ -3649,7 +3652,7 @@ int TBeing::doExits(const char *argument, cmdTypeT cmd)
   }
 
 // check for portals and add it if one is enterable
-  for (t = roomp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
     TPortal *tp = dynamic_cast<TPortal *>(t);  
     if (!tp)
       continue;
@@ -5712,7 +5715,7 @@ int TBeing::doExec()
   if (!isImmortal())
     return FALSE;
 
-  TThing *t_script = searchLinkedListVis(this, "exec script", getStuff());
+  TThing *t_script = searchLinkedListVis(this, "exec script", stuff);
   script = dynamic_cast<TObj *>(t_script);
   if (!script) {
     sendTo("You don't have an executable script.\n\r");
@@ -5813,7 +5816,7 @@ void TBeing::doResize(const char *arg)
   }
   }
 
-  TThing *t_obj = searchLinkedList(arg_obj, getStuff());
+  TThing *t_obj = searchLinkedList(arg_obj, stuff);
   obj = dynamic_cast<TObj *>(t_obj);
   if (!obj) {
     sendTo(fmt("You do not seem to have the %s.\n\r") % arg_obj);
@@ -6499,7 +6502,7 @@ void TPerson::doBestow(const sstring &argument)
     }
   } else {
     // look in inventory for item to de-monogram, de-immortalize
-    TThing *tobj = searchLinkedList(arg2, getStuff(), TYPEOBJ);
+    TThing *tobj = searchLinkedList(arg2, stuff, TYPEOBJ);
     obj = dynamic_cast<TObj *>(tobj);
     if (!obj) {
       sendTo("You do not seem to have anything like that.\n\r");
@@ -6575,11 +6578,11 @@ void TPerson::doBestow(const sstring &argument)
       return;
     }
     
-    TThing *t, *n;
+    TThing *t;
     bool redeem = TRUE;
     /* iterate over inventory to find coins */
-    for (t = getStuff(); t; t = n) {
-      n = t->nextThing;
+    for(StuffIter it=stuff.begin();it!=stuff.end();){
+      t=*(it++);
       coin = dynamic_cast<TTreasure *>(t);
       if (coin && coin->objVnum() == OBJ_IMMORTAL_EXCHANGE_COIN) {
         /* validity check then redeem the coin */

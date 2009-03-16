@@ -140,7 +140,7 @@ int TTable::getAllFrom(TBeing *ch, const char *argument)
 
   act("You start getting items off $p.", TRUE, ch, this, NULL, TO_CHAR);
   act("$n starts getting items off $p.", TRUE, ch, this, NULL, TO_ROOM);
-  start_task(ch, ch->roomp->getStuff(), ch->roomp, TASK_GET_ALL, argument, 350, ch->in_room, 0,0,0);
+  start_task(ch, NULL, ch->roomp, TASK_GET_ALL, argument, 350, ch->in_room, 0,0,0);
   // this is a kludge, task_get still has a tiny delay on it
   // this dumps around it and goes right to the guts
   rc = (*(tasks[TASK_GET_ALL].taskf))

@@ -203,7 +203,7 @@ int castGraniteFists(TBeing * caster, TBeing * victim)
 
 int pebbleSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
 {
-  TThing *t, *t2;
+  TThing *t;
   TBeing *vict = NULL;
 
   level = min(level, 15);
@@ -213,8 +213,8 @@ int pebbleSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
   if (caster->bSuccess(bKnown, SPELL_PEBBLE_SPRAY)) {
     act("You whip up a spray of pebbles.", FALSE, caster, NULL, NULL, TO_CHAR);
     act("$n whips up a spray of pebbles.", FALSE, caster, NULL, NULL, TO_ROOM);
-    for (t = caster->roomp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end();){
+      t=*(it++);
       vict = dynamic_cast<TBeing *>(t);
       if (!vict)
         continue;
@@ -282,7 +282,7 @@ int castPebbleSpray(TBeing * caster)
 
 int sandBlast(TBeing * caster, int level, byte bKnown, int adv_learn)
 {
-  TThing *t, *t2;
+  TThing *t;
   TBeing *vict = NULL;
 
   level = min(level, 33);
@@ -290,8 +290,8 @@ int sandBlast(TBeing * caster, int level, byte bKnown, int adv_learn)
   int dam = caster->getSkillDam(NULL, SPELL_SAND_BLAST, level, adv_learn);
 
   if (caster->bSuccess(bKnown, SPELL_SAND_BLAST)) {
-    for (t = caster->roomp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end();){
+      t=*(it++);
       vict = dynamic_cast<TBeing *>(t);
       if (!vict)
         continue;
@@ -316,8 +316,8 @@ int sandBlast(TBeing * caster, int level, byte bKnown, int adv_learn)
       caster->sendTo("Uh oh!\n\r");
       act("Uh oh!  Something didn't go quite right.", 
              FALSE, caster, 0, 0, TO_ROOM);
-      for (t = caster->roomp->getStuff(); t; t = t2) {
-        t2 = t->nextThing;
+      for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end();){
+        t=*(it++);
         vict = dynamic_cast<TBeing *>(t);
         if (!vict)
           continue;
@@ -382,7 +382,7 @@ int castSandBlast(TBeing * caster)
 
 int lavaStream(TBeing * caster, int level, byte bKnown, int adv_learn)
 {
-  TThing * t, *t2;
+  TThing * t;
   TBeing *vict = NULL;
 
   level = min(level, 60);
@@ -394,8 +394,8 @@ int lavaStream(TBeing * caster, int level, byte bKnown, int adv_learn)
           FALSE, caster, NULL, NULL, TO_CHAR);
     act("$n calls forth molten lava from the earth!", 
           FALSE, caster, NULL, NULL, TO_ROOM);
-    for (t = caster->roomp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end();){
+      t=*(it++);
       vict = dynamic_cast<TBeing *>(t);
       if (!vict)
         continue;
@@ -419,8 +419,8 @@ int lavaStream(TBeing * caster, int level, byte bKnown, int adv_learn)
       dam /= 2;
       act("Umm...something didn't seem to go just right.", 
            FALSE, caster, NULL, NULL, TO_CHAR);
-      for (t = caster->roomp->getStuff(); t; t = t2) {
-        t2 = t->nextThing;
+      for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end();){
+        t=*(it++);
         vict = dynamic_cast<TBeing *>(t);
         if (!vict)
           continue;

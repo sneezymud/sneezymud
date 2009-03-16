@@ -83,13 +83,12 @@ int TShopOwned::getInventoryCount(const TObj *obj)
   return 0;
 }
 
-TThing *TShopOwned::getStuff()
+StuffList TShopOwned::getStuff()
 {
   if(keeper)
-    return keeper->getStuff();
+    return keeper->stuff;
 
-  return NULL;
-
+  return *(new StuffList());
 }
 
 TMonster *TShopOwned::getKeeper()
@@ -791,7 +790,7 @@ int TShopOwned::setRates(sstring arg)
     } else {
       // find item in inventory matching keywords in arg
       // get vnum, then store in db
-      TThing *tt = searchLinkedListVis(ch, buf, ch->getStuff());
+      TThing *tt = searchLinkedListVis(ch, buf, ch->stuff);
       
       if(!tt){
 	keeper->doTell(ch->getName(), "I don't have that item.");
@@ -964,7 +963,7 @@ int TShopOwned::setRates(sstring arg)
   } else { ////////////////////////////////////////////////////////////////
     // find item in inventory matching keywords in arg
     // get vnum, then store in db
-    TThing *tt = searchLinkedListVis(ch, buf, keeper->getStuff());
+    TThing *tt = searchLinkedListVis(ch, buf, keeper->stuff);
     
     if(!tt){
       keeper->doTell(ch->getName(), "I don't have that item.");
@@ -1008,7 +1007,7 @@ int TShopOwned::buyShop(sstring arg){
     return TRUE;
   }
   
-  for(tt=keeper->getStuff();tt;tt=tt->nextThing){
+  for(StuffIter it=keeper->stuff.begin();it!=keeper->stuff.end() && (tt=*it);++it){
     o=dynamic_cast<TObj *>(tt);
     value+=o->obj_flags.cost;
   }

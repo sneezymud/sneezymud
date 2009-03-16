@@ -400,7 +400,7 @@ int catch_or_smack(TRoom *rp, TBeing **targ, TThing *thing, TBeing *ch, int cdis
 
 int TThing::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int mdist)
 {
-  TThing *c, *c_next;
+  TThing *c;
   int d = 0;
   bool true_targ;
   int i;
@@ -410,8 +410,8 @@ int TThing::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int mdis
 
   damtype = getWtype();
 
-  for (c = rp->getStuff(); c; c = c_next) {
-    c_next = c->nextThing;
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
+    c=*(it++);
     TBeing *tbt = dynamic_cast<TBeing *>(c);
     if (!tbt || (tbt == ch))
       continue;
@@ -544,7 +544,7 @@ int hit_obstacle_in_room(TRoom *rp, TThing *thing, TBeing *ch)
 {
   TThing *t;
 
-  for (t = rp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
     TObj *obj = dynamic_cast<TObj *>(t);
     if (obj) {
       if ((obj != thing) && (!number(0, 4)) && (obj->getVolume() > 10000) &&
@@ -835,7 +835,7 @@ dirTypeT can_see_linear(const TBeing *ch, const TBeing *targ, int *rng, dirTypeT
       if (clearpath(rm, i)) {
         rm = real_roomp(rm)->dir_option[i]->to_room;
         const TThing *t;
-        for (t = real_roomp(rm)->getStuff(); t; t = t->nextThing) {
+        for(StuffIter it=real_roomp(rm)->stuff.begin();it!=real_roomp(rm)->stuff.end() && (t=*it);++it) {
           if ((t == targ) && ch->canSee(t)) {
             *rng = range;
             *dr = i;
@@ -874,7 +874,7 @@ TBeing *get_char_linear(const TBeing *ch, char *arg, int *rf, dirTypeT *df)
   rm = ch->in_room;
   dirTypeT i = DIR_NONE;
   range = 0;
-  for (t = real_roomp(rm)->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=real_roomp(rm)->stuff.begin();it!=real_roomp(rm)->stuff.end() && (t=*it);++it) {
     TBeing *tbt = dynamic_cast<TBeing *>(t);
     if (tbt && (isname(tmp, tbt->name)) && ch->canSee(tbt)) {
       n_sofar++;
@@ -893,7 +893,7 @@ TBeing *get_char_linear(const TBeing *ch, char *arg, int *rf, dirTypeT *df)
       max_range -= TerrainInfo[real_roomp(rm)->getSectorType()]->thickness;
       if (clearpath(rm, i)) {
         rm = real_roomp(rm)->dir_option[i]->to_room;
-        for (t = real_roomp(rm)->getStuff(); t; t = t->nextThing) {
+        for(StuffIter it=real_roomp(rm)->stuff.begin();it!=real_roomp(rm)->stuff.end() && (t=*it);++it) {
           TBeing *tbt = dynamic_cast<TBeing *>(t);
           if (tbt && (isname(tmp, tbt->getName())) && ch->canSee(tbt)) {
             n_sofar++;
@@ -1011,7 +1011,7 @@ void TBeing::doScan(const char *argument)
   // Check in room first
   if (all) {
     // for specific directions, skip room so it doesn't count toward "nfnd"
-    for (t = roomp->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       if (!dynamic_cast<TBeing *>(t))
         continue;
       if (t == this)
@@ -1068,7 +1068,7 @@ void TBeing::doScan(const char *argument)
         else
           rm = new_rm;
 
-        for (t = real_roomp(rm)->getStuff(); t; t = t->nextThing) {
+        for(StuffIter it=real_roomp(rm)->stuff.begin();it!=real_roomp(rm)->stuff.end() && (t=*it);++it) {
           TBeing *tbt = dynamic_cast<TBeing *>(t);
           if (!tbt)
             continue;
@@ -1153,7 +1153,7 @@ TThing *has_range_object(TBeing *ch, int *pos)
   TThing *hucked;
   TObj *tobj;
 
-  if (!ch->equipment[HOLD_RIGHT] && !ch->equipment[HOLD_LEFT] && !ch->getStuff())
+  if (!ch->equipment[HOLD_RIGHT] && !ch->equipment[HOLD_LEFT] && ch->stuff.empty())
     return NULL;
 
   // Go thru possible places for throwing objects. 
@@ -1170,8 +1170,8 @@ TThing *has_range_object(TBeing *ch, int *pos)
       return (tobj);
     }
   } else {
-    for (TThing *t = ch->getStuff(); t; t = t->nextThing) {
-      tobj = dynamic_cast<TObj *>(t);
+    for(StuffIter it= ch->stuff.begin();it!= ch->stuff.end();++it) {
+      tobj = dynamic_cast<TObj *>(*it);
       if (tobj && tobj->canWear(ITEM_THROW)) {
         *pos = -1;
         return tobj;
@@ -1302,10 +1302,10 @@ int TBeing::unloadBow(const char *arg)
  
   if (!(t = equipment[getPrimaryHold()]) ||
       !(bow = dynamic_cast<TBow *>(t)) ||
-      !bow->getStuff() || !dynamic_cast<TArrow *>(bow->getStuff()))
+      bow->stuff.empty() || !dynamic_cast<TArrow *>(bow->stuff.front()))
     return FALSE;
  
-  arrow = dynamic_cast<TObj *>(bow->getStuff());
+  arrow = dynamic_cast<TObj *>(bow->stuff.front());
   --(*arrow);
   sendTo("You uncock your bow and take out its arrow!\n\r");
   act("$n uncocks $s bow and takes out its arrow!", 
@@ -1322,12 +1322,12 @@ TThing * TBeing::findArrow(const char *buf, silentTypeT silent) const
   int     curPos;
   TThing  *tThing;
 
-  arrow = searchLinkedListVis(this, buf, getStuff());
+  arrow = searchLinkedListVis(this, buf, stuff);
   if (!arrow) {
     for (curPos = MIN_WEAR; curPos < MAX_WEAR; curPos++) {
       if ((tQuiver = dynamic_cast<TQuiver *>(equipment[curPos])) &&
            !tQuiver->isClosed()) {
-        if ((arrow = searchLinkedListVis(this, buf, tQuiver->getStuff()))) {
+        if ((arrow = searchLinkedListVis(this, buf, tQuiver->stuff))) {
           if (!silent) {
             act("You pull $p from $N.",
                 TRUE, this, arrow, tQuiver, TO_CHAR);
@@ -1338,12 +1338,12 @@ TThing * TBeing::findArrow(const char *buf, silentTypeT silent) const
         }
       }
     }
-    for (tThing = getStuff(); tThing; tThing = tThing->nextThing) {
+    for(StuffIter it=stuff.begin();it!=stuff.end() && (tThing=*it);++it) {
       if (!(tQuiver = dynamic_cast<TQuiver *>(tThing)) ||
            tQuiver->isClosed())
         continue;
 
-      if (!(arrow = searchLinkedListVis(this, buf, tThing->getStuff())))
+      if (!(arrow = searchLinkedListVis(this, buf, tThing->stuff)))
         continue;
 
       if (!silent) {
@@ -1387,7 +1387,7 @@ void TBeing::doBload(const char *arg)
     sendTo(COLOR_OBJECTS, fmt("You would have a hard time firing your %s, while holding %s.\n\r") %          arg1 % sstring(heldInSecHand()->getName()).uncap());
     return;
   }
-  if (!(bow = searchLinkedListVis(this, arg1, getStuff()))) {
+  if (!(bow = searchLinkedListVis(this, arg1, stuff))) {
     sendTo("Syntax : bload <bow> <arrow>\n\r");
     return;
   }

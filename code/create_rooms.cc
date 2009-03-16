@@ -3060,10 +3060,11 @@ void RoomLoad(TBeing *ch, int start, int end, int useSecond)
 
         sendrpf(rp, tStString.c_str());
 
-        while ((t = rp->getStuff())) {
+	for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
+	  t=*(it++);
           --(*t);
           *rp2 += *t;
-        }
+	}
         delete rp;
         rp = NULL;
         rp2->putInDb(vnum);
@@ -3161,7 +3162,7 @@ void RoomLoad(TBeing *ch, int start, int end, int useSecond)
 	}
 
 	rp2->dir_option[dir]->condition = convertTo<int>(db_exits["condition_flag"]);
-	rp2->dir_option[dir]->lock_difficulty= convertTo<int>(db_exits["lock_difficulty"]);;
+	rp2->dir_option[dir]->lock_difficulty= convertTo<int>(db_exits["lock_difficulty"]);
 	rp2->dir_option[dir]->weight= convertTo<int>(db_exits["weight"]);
 	rp2->dir_option[dir]->key = convertTo<int>(db_exits["key_num"]);
 
@@ -3338,7 +3339,7 @@ void TRoom::initLight()
     setLight(outdoorLight());
   else if (getHasWindow()) {
     int best = 0, curr = 0;
-    for (ch = getStuff();ch;ch = ch->nextThing) {
+    for(StuffIter it=stuff.begin();it!=stuff.end() && (ch=*it);++it) {
       TSeeThru *obj = dynamic_cast<TSeeThru *>(ch);
       if (!obj) continue;
       if (obj->givesOutsideLight()) {
@@ -3357,7 +3358,8 @@ void TRoom::initLight()
   } else
     setLight(0);
 
-  for (ch = getStuff(); ch; ch = ch->nextThing) {
+  for(StuffIter it=stuff.begin();it!=stuff.end();++it) {
+    ch=*it;
     addToLight(ch->getLight());
 
     // things on tables also count toward room light

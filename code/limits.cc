@@ -1275,7 +1275,7 @@ void TBeing::gainCondition(condTypeT condition, int value)
 
       t->findSomeFood(&last_good, &last_cont, NULL); 
     }
-    for (t = getStuff(); t; t = t->nextThing) 
+    for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) 
       t->findSomeFood(&last_good, &last_cont, NULL);
             
     if (last_good && !last_cont) {
@@ -1302,7 +1302,7 @@ void TBeing::gainCondition(condTypeT condition, int value)
       (!task || task->task == TASK_SIT || task->task == TASK_REST)) {
     // Check to see if fountain is in room and drink from that before
     // anything else - Russ 01/06/95
-    for (t = roomp->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       if (dynamic_cast<TObj *>(t) && (t->spec == SPEC_FOUNTAIN)) {
         char drinkbuf[256];
 	sprintf(drinkbuf, "drink %s", t->name);
@@ -1322,7 +1322,7 @@ void TBeing::gainCondition(condTypeT condition, int value)
     }
 
     if (!last_good)
-      for (t = getStuff(); t; t = t->nextThing) {
+      for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
         t->findSomeDrink(&last_good, &last_cont, NULL);
 
 	if (last_good)

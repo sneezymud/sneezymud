@@ -223,7 +223,7 @@ int TStaff::suggestedPrice() const
 int TStaff::useMe(TBeing *ch, const char * argument)
 {
   TBeing *tmp_char;
-  TThing *t2, *t;
+  TThing *t;
   int rc = 0;
   bool isViolent = FALSE;
   spellNumT the_spell = getSpell();
@@ -258,8 +258,8 @@ int TStaff::useMe(TBeing *ch, const char * argument)
       } else {
         if ((discArray[the_spell]->targets & TAR_VIOLENT))
           isViolent = TRUE;
-        for (t = ch->roomp->getStuff(); t; t = t2) {
-          t2 = t->nextThing;
+        for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end();){
+          t=*(it++);
           tmp_char = dynamic_cast<TBeing *>(t);
           if (!tmp_char)
             continue;

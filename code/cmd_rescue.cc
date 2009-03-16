@@ -52,9 +52,9 @@ static int rescue(TBeing * caster, TBeing * victim, spellNumT skill)
   }
 #endif
   
-  TThing *t;
-  for (t = victim->roomp->getStuff(); t; t = t->nextThing, tmp_ch = NULL) {
-    tmp_ch = dynamic_cast<TBeing *>(t);
+  for(StuffIter it=victim->roomp->stuff.begin();
+      it!=victim->roomp->stuff.end();++it, tmp_ch=NULL){
+    tmp_ch = dynamic_cast<TBeing *>(*it);
     if (!tmp_ch)
       continue;
     if (tmp_ch->fight() == victim)

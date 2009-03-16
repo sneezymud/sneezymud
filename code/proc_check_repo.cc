@@ -16,7 +16,7 @@ void procCheckForRepo::run(int pulse) const
   for (tmp_ch = character_list; tmp_ch; tmp_ch = temp) {
     temp = tmp_ch->next; 
     int i;
-    TThing *repot, *repot2;
+    TThing *repot;
     TObj *repoo;
     // check worn equipment
     for (i = MIN_WEAR;i < MAX_WEAR;i++) {
@@ -26,8 +26,8 @@ void procCheckForRepo::run(int pulse) const
       repoCheckForRent(tmp_ch, repoo, false);
     }
     // check inventory
-    for (repot = tmp_ch->getStuff(); repot; repot = repot2) {
-      repot2 = repot->nextThing;
+    for(StuffIter it=tmp_ch->stuff.begin();it!=tmp_ch->stuff.end();){
+      repot=*(it++);
       repoo = dynamic_cast<TObj *>(repot);
       if (!repoo)
 	continue;

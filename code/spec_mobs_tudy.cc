@@ -21,7 +21,7 @@ int tudy(TBeing *, cmdTypeT cmd, const char *, TMonster *tudy, TObj *)
     return FALSE;
   
   // loop through inventory
-  for(t=tudy->getStuff();t;t=t->nextThing){
+  for(StuffIter it=tudy->stuff.begin();it!=tudy->stuff.end() && (t=*it);++it){
     if((o=dynamic_cast<TObj *>(t))){
       if(o->objVnum() == OBJ_TUDY_SHACKLE_KEY1)
 	haskey1=true;
@@ -50,7 +50,7 @@ int tudy(TBeing *, cmdTypeT cmd, const char *, TMonster *tudy, TObj *)
     newtudy->doSay("No mortal shall ever possess the heart of an angel!");
     newtudy->doSay("You will perish for your arrogance!");
 
-    for(t=newtudy->roomp->getStuff();t;t=t->nextThing){
+    for(StuffIter it=newtudy->roomp->stuff.begin();it!=newtudy->roomp->stuff.end() && (t=*it);++it){
       if((ch=dynamic_cast<TPerson *>(t))){
 	newtudy->takeFirstHit(*ch);
 	break;

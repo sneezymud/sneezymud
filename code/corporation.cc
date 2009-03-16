@@ -124,11 +124,11 @@ int TCorporation::getAssets()
     if(!room)
       continue;
 
-    for(TThing *tt=room->getStuff();tt;tt=tt->nextThing){
-      if((keeper=dynamic_cast<TMonster *>(tt)) &&
+    for(StuffIter it=room->stuff.begin();it!=room->stuff.end();++it){
+      if((keeper=dynamic_cast<TMonster *>(*it)) &&
 	 keeper->mobVnum() == keepernum){
-	for(TThing *t=keeper->getStuff();t;t=t->nextThing){
-	  o=dynamic_cast<TObj *>(t);
+	for(StuffIter itt=keeper->stuff.begin();itt!=keeper->stuff.end();++itt){
+	  o=dynamic_cast<TObj *>(*itt);
 	  value+=o->obj_flags.cost;
 	}
         break;

@@ -106,7 +106,7 @@ bool TBeing::checkForDiceHeld() const
   if (obj) {
     if (obj->objVnum() == CRAPS_DICE)
       return TRUE;
-    for (t = obj->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=obj->stuff.begin();it!=obj->stuff.end() && (t=*it);++it) {
       obj = dynamic_cast<TObj *>(t);
       if (obj && obj->objVnum() == CRAPS_DICE)
         return TRUE;
@@ -117,7 +117,7 @@ bool TBeing::checkForDiceHeld() const
   if (obj) {
     if (obj->objVnum() == CRAPS_DICE)
       return TRUE;
-    for (t = obj->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=obj->stuff.begin();it!=obj->stuff.end() && (t=*it);++it) {
       obj = dynamic_cast<TObj *>(t);
       if (obj && obj->objVnum() == CRAPS_DICE)
         return TRUE;
@@ -131,12 +131,12 @@ TObj *TBeing::checkForDiceInInv() const
   TThing *t, *t2;
   TObj *obj, *obj2;
 
-  for (t = getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
     obj = dynamic_cast<TObj *>(t);
     if (obj) {
       if (obj->objVnum() == CRAPS_DICE)
         return obj;
-      for (t2 = obj->getStuff(); t2; t2 = t2->nextThing) {
+      for(StuffIter it=obj->stuff.begin();it!=obj->stuff.end() && (t2=*it);++it) {
         obj2 = dynamic_cast<TObj *>(t2);
         if (obj2 && obj2->objVnum() == CRAPS_DICE)
           return obj2;
@@ -151,7 +151,7 @@ int TRoom::checkPointroll()
 {
   TThing *c;
 
-  for (c = getStuff(); c; c = c->nextThing) {
+  for(StuffIter it=stuff.begin();it!=stuff.end() && (c=*it);++it) {
     if (c->desc && c->desc->point_roll)
       return TRUE;
   }
@@ -425,7 +425,7 @@ int Craps::checkCraps(int diceroll)
   if (m_ch->desc->point_roll)
     return FALSE;
 
-  for (t = m_ch->roomp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=m_ch->roomp->stuff.begin();it!=m_ch->roomp->stuff.end() && (t=*it);++it) {
     if (!(d = t->desc))
       continue;
 
@@ -482,7 +482,7 @@ int Craps::checkSeven(int diceroll)
     vlogf(LOG_BUG, "Somehow m_ch without a desc got to checkSeven");
   }
 
-  for (t = m_ch->roomp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=m_ch->roomp->stuff.begin();it!=m_ch->roomp->stuff.end() && (t=*it);++it) {
     TBeing *tbt = dynamic_cast<TBeing *>(t);
     if (!tbt)
       continue;
@@ -552,7 +552,7 @@ int Craps::checkEleven(int diceroll)
   if ((diceroll != 11) || m_ch->desc->point_roll)
     return FALSE;
 
-  for (t = m_ch->roomp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=m_ch->roomp->stuff.begin();it!=m_ch->roomp->stuff.end() && (t=*it);++it) {
     TBeing *tbt = dynamic_cast<TBeing *>(t);
     if (!tbt)
       continue;
@@ -827,7 +827,8 @@ void Craps::checkOnerolls(int diceroll)
 
   // m_ch is the roller
 
-  for (t = m_ch->roomp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=m_ch->roomp->stuff.begin();it!=m_ch->roomp->stuff.end();++it) {
+    t=*it;
     Descriptor *d = t->desc;
     if (!d)
       continue;
@@ -861,7 +862,7 @@ void WinLoseCraps(TBeing *ch, int diceroll)
   TThing *t;
   Descriptor *d;
 
-  for (t = ch->roomp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (t=*it);++it) {
     TBeing *tbt = dynamic_cast<TBeing *>(t);
     if (!tbt)
       continue;

@@ -165,8 +165,8 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     return FALSE;
 
   // if we hate someone, the other guards hate them too
-  for (t = myself->roomp->getStuff(); t; t = t->nextThing) {
-    vict = dynamic_cast<TBeing *>(t);
+  for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end();++it) {
+    vict = dynamic_cast<TBeing *>(*it);
     if (!vict)
       continue;
     if (myself->Hates(vict, NULL)){
@@ -266,7 +266,7 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 	  job->state=STATE_BM_DELIVERING;
 	}
       } else {
-	for(t=myself->roomp->getStuff();t;t=t->nextThing){
+	for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (t=*it);++it){
 	  if((o=dynamic_cast<TObj *>(t)) && o->objVnum()==15344){
 	    myself->doEnter("trolley", NULL);
 	    break;
@@ -308,7 +308,7 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 	  job->state=STATE_TO_BANK;
 	}
       } else {
-	for(t=myself->roomp->getStuff();t;t=t->nextThing){
+	for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (t=*it);++it){
 	  if((o=dynamic_cast<TObj *>(t)) && o->objVnum()==15344){
 	    myself->doEnter("trolley", NULL);
 	    break;
@@ -333,9 +333,8 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 	act("$n hands off his delivery and dismisses his guards.",
 	    TRUE, myself, 0, 0, TO_ROOM);
 
-	TThing *tnext;
-	for(t=myself->getStuff();t;t=tnext){
-	  tnext=t->nextThing;
+	for(StuffIter it=myself->stuff.begin();it!=myself->stuff.end();){
+	  t=*(it++);
 	  if((o=dynamic_cast<TObj *>(t)) && o->objVnum() == MONEY_BAG){
 	    delete o;
 	  }

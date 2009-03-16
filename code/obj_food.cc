@@ -386,7 +386,7 @@ void TObj::eatMe(TBeing *ch)
     } else if (!isOrganic()) {
       ch->sendTo("Even you wouldn't consider eathing that!\n\r");
       return;
-    } else if (getStuff()) {
+    } else if (!stuff.empty()) {
       ch->sendTo("You can't eat that - its full of something!\n\r");
       return;
     } else if (isObjStat(ITEM_NOJUNK_PLAYER)) {
@@ -645,7 +645,7 @@ int TBeing::doPour(const char *argument)
     act("What do you want to pour from?", FALSE, this, 0, 0, TO_CHAR);
     return FALSE;
   }
-  TThing *t_from_obj = searchLinkedListVis(this, arg1, getStuff());
+  TThing *t_from_obj = searchLinkedListVis(this, arg1, stuff);
   from_obj = dynamic_cast<TObj *>(t_from_obj);
   if (!from_obj) {
     act("You can't find it!", FALSE, this, 0, 0, TO_CHAR);
@@ -660,9 +660,9 @@ int TBeing::doPour(const char *argument)
     return FALSE;
   }
 
-  TThing *t_to_obj = searchLinkedListVis(this, arg2, getStuff());
+  TThing *t_to_obj = searchLinkedListVis(this, arg2, stuff);
   if (!t_to_obj)
-    t_to_obj = searchLinkedListVis(this, arg2, roomp->getStuff());
+    t_to_obj = searchLinkedListVis(this, arg2, roomp->stuff);
   if (t_to_obj && (rc = t_to_obj->pourWaterOnMe(this, from_obj)) != 0) {
     if (rc == -1 && dynamic_cast<TBeing *>(t_to_obj)) {
       dynamic_cast<TBeing *>(t_to_obj)->reformGroup();
@@ -673,7 +673,7 @@ int TBeing::doPour(const char *argument)
   }
   to_obj = dynamic_cast<TObj *>(t_to_obj);
   if (!to_obj) {
-    t_to_obj = searchLinkedListVis(this, arg2, roomp->getStuff());
+    t_to_obj = searchLinkedListVis(this, arg2, roomp->stuff);
     to_obj = dynamic_cast<TObj *>(t_to_obj);
   }
   if (!to_obj) {
@@ -958,8 +958,8 @@ void TBeing::doFill(const char *arg)
     return;
   } else {
     TBaseCup *tbc=NULL;
-    for(TThing *t=roomp->getStuff();t;t=t->nextThing){
-      if((tbc=dynamic_cast<TBaseCup *>(t)) && tbc->getDrinkUnits()>0){
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();++it){
+      if((tbc=dynamic_cast<TBaseCup *>(*it)) && tbc->getDrinkUnits()>0){
 	tbc->pourMeIntoDrink1(this, obj1);
 	return;
       }
@@ -982,14 +982,14 @@ void TBeing::checkForSpills() const
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
     if ((t = equipment[i])) {
       t->spill(this);
-      for (t2 = t->getStuff(); t2; t2 = t2->nextThing) {
+      for(StuffIter it=t->stuff.begin();it!=t->stuff.end() && (t2=*it);++it) {
         t2->spill(this);
       }
     }
   }
-  for (t = getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
     t->spill(this);
-    for (t2 = t->getStuff(); t2; t2 = t2->nextThing) {
+    for(StuffIter it=t->stuff.begin();it!=t->stuff.end() && (t2=*it);++it) {
       t2->spill(this);
     }
   }

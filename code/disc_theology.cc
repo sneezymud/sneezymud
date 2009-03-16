@@ -87,7 +87,7 @@ void attune(TBeing * caster, TThing * sym)
     return;
   }
   
-  for (obj = caster->getStuff(); obj; obj = obj->nextThing) 
+  for(StuffIter it=caster->stuff.begin();it!=caster->stuff.end() && (obj=*it);++it) 
     obj->getBestVial(&best);
   
   if (!best) {

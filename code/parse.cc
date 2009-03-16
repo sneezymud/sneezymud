@@ -2259,7 +2259,7 @@ int TBeing::triggerSpecialOnPerson(TThing *ch, cmdTypeT cmd, const char *arg)
 {
   wearSlotT j;
   int rc;
-  TThing *t2, *t;
+  TThing *t;
 
   // special in equipment list?
   for (j = MIN_WEAR; j < MAX_WEAR; j++) {
@@ -2292,8 +2292,8 @@ int TBeing::triggerSpecialOnPerson(TThing *ch, cmdTypeT cmd, const char *arg)
     }
   }
   // special in inventory?
-  for (t = getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=stuff.begin();it!=stuff.end();){
+    t=*(it++);
     if (t->spec) {
       rc = t->checkSpec(this, cmd, arg, ch);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -2320,7 +2320,7 @@ int TBeing::triggerSpecialOnPerson(TThing *ch, cmdTypeT cmd, const char *arg)
 int TBeing::triggerSpecial(TThing *ch, cmdTypeT cmd, const char *arg)
 {
   int rc;
-  TThing *t, *t2;
+  TThing *t;
 
   // is the player busy doing something else? 
   if (task && task->task >= TASK_BOGUS && task->task < NUM_TASKS && tasks[task->task].taskf &&
@@ -2354,8 +2354,8 @@ int TBeing::triggerSpecial(TThing *ch, cmdTypeT cmd, const char *arg)
 
   if (roomp) {
     // special in mobile/object present? 
-    for (t = roomp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+      t=*(it++);
 
       // note this is virtual function call
       rc = t->checkSpec(this, cmd, arg, ch);

@@ -379,7 +379,7 @@ void TBeing::listExits(const TRoom *rp) const
 }
   
 
-void list_char_in_room(TThing *list, TBeing *ch)
+void list_char_in_room(StuffList list, TBeing *ch)
 {
   TThing *i, *cond_ptr[50];
   int k, cond_top;
@@ -388,7 +388,8 @@ void list_char_in_room(TThing *list, TBeing *ch)
 
   cond_top = 0;
 
-  for (i = list; i; i = i->nextThing) {
+  for(StuffIter it=list.begin();it!=list.end();++it){
+    i=*it;
     if (dynamic_cast<TBeing *>(i) && (ch != i) && (!i->rider) &&
         (ch->isAffected(AFF_SENSE_LIFE) || ch->isAffected(AFF_INFRAVISION) || (ch->canSee(i)))) {
       if ((cond_top < 50) && !i->riding) {
@@ -422,16 +423,6 @@ void list_char_in_room(TThing *list, TBeing *ch)
   }
 }
 
-
-void list_char_to_char(TBeing *list, TBeing *ch, int)
-{
-  TThing *i;
-
-  for (i = list; i; i = i->nextThing) {
-    if ((ch != i) && (ch->isAffected(AFF_SENSE_LIFE) || (ch->canSee(i))))
-      ch->showTo(i, SHOW_MODE_DESC_PLUS);
-  }
-}
 
 bool wordHasPunctuation(const sstring &s)
 {
@@ -2408,9 +2399,9 @@ void TBeing::doInventory(const char *argument)
     if (victim) {
       act("$N is carrying:", FALSE, this, NULL, victim, TO_CHAR);
       if (!arg2.empty()) {
-        list_in_heap_filtered(victim->getStuff(), this, arg2, 1);
+        list_in_heap_filtered(victim->stuff, this, arg2, 1);
       } else {
-        list_in_heap(victim->getStuff(), this, 1, 100);
+        list_in_heap(victim->stuff, this, 1, 100);
       }
     } else {
       sendTo("No such being exists.\n\r");
@@ -2422,9 +2413,9 @@ void TBeing::doInventory(const char *argument)
       sendTo("You are carrying:\n\r");
       
       if (!arg1.empty()) {
-        list_in_heap_filtered(getStuff(), this, arg1, 0);
+        list_in_heap_filtered(stuff, this, arg1, 0);
       } else {
-        list_in_heap(getStuff(), this, 0, 100);
+        list_in_heap(stuff, this, 0, 100);
       }
       
       if (GetMaxLevel() > 10) {
@@ -3684,7 +3675,7 @@ void TBeing::doMotd(const char *argument)
 #if 0
 sendTo("Feature disabled, bug Batopr.\n\r");
   } else if (is_abbrev(argument, "message") && (GetMaxLevel() >= GOD_LEVEL1)) {
-    TThing *t_note = searchLinkedListVis(this, "note", getStuff());
+    TThing *t_note = searchLinkedListVis(this, "note", stuff);
     TObj *note = dynamic_cast<TObj *>(t_note);
     if (note) {
       if (!note->action_description) {
@@ -4191,7 +4182,7 @@ void TBeing::doEvaluate(const char *argument)
   } else {
     wearSlotT j;
     if (!(obj = get_thing_in_equip(this, arg, equipment, &j, TRUE, &count))) {
-      if (!(obj = searchLinkedListVis(this, arg, getStuff(), &count))) {
+      if (!(obj = searchLinkedListVis(this, arg, stuff, &count))) {
         sendTo(fmt("You do not seem to have the '%s'.\n\r") % arg);
         return;
       }
@@ -4212,7 +4203,7 @@ void TObj::describeCondition(const TBeing *ch) const
 
 void TThing::describeContains(const TBeing *ch) const
 {
-  if (getStuff())
+  if (!stuff.empty())
     ch->sendTo(COLOR_OBJECTS, fmt("%s seems to have something in it...\n\r") % sstring(getName()).cap());
 }
 
@@ -5404,7 +5395,7 @@ void TBeing::doSpells(const sstring &argument)
   TComponent *item=NULL;
   int totalcharges;
   wizardryLevelT wizlevel = getWizardryLevel();
-  TThing *t1, *t2;
+  TThing *t1;
   TOpenContainer *tContainer;
 
   struct {
@@ -5413,7 +5404,7 @@ void TBeing::doSpells(const sstring &argument)
   } search[] = {
       {primary  , WIZ_LEV_COMP_PRIM_OTHER_FREE},
       {secondary, WIZ_LEV_COMP_EITHER         },
-      {getStuff()    , WIZ_LEV_COMP_INV            },
+      {this    , WIZ_LEV_COMP_INV            },
       {belt     , WIZ_LEV_COMP_BELT           },
       {juju     , WIZ_LEV_COMP_NECK           },
       {wristpouch, WIZ_LEV_COMP_WRIST         },
@@ -5553,20 +5544,19 @@ void TBeing::doSpells(const sstring &argument)
       
       for (l = 0; l < 7; l++) {
         if (search[l].where && wizlevel >= search[l].wizlevel) {
-          for (t1 = search[l].where; t1; t1 = t1->nextThing) {
-            if (!(item = dynamic_cast<TComponent *>(t1)) &&
-                (!(tContainer = dynamic_cast<TOpenContainer *>(item)) ||
-                 !tContainer->isClosed())) {
-              for (t2 = t1->getStuff(); t2; t2 = t2->nextThing) {
-                if ((item = dynamic_cast<TComponent *>(t2)) &&
-                    item->getComponentSpell() == i && 
-                    item->isComponentType(COMP_SPELL))
-                  totalcharges += item->getComponentCharges();
-              }
-            } else if (item->getComponentSpell() == i && 
-                       item->isComponentType(COMP_SPELL))
-              totalcharges += item->getComponentCharges();
-          }
+	  t1=search[l].where;
+	  if (!(item = dynamic_cast<TComponent *>(t1)) &&
+	      (!(tContainer = dynamic_cast<TOpenContainer *>(item)) ||
+	       !tContainer->isClosed())) {
+	    for(StuffIter it=t1->stuff.begin();it!=t1->stuff.end();++it) {
+	      if ((item = dynamic_cast<TComponent *>(*it)) &&
+		  item->getComponentSpell() == i && 
+		  item->isComponentType(COMP_SPELL))
+		totalcharges += item->getComponentCharges();
+	    }
+	  } else if (item->getComponentSpell() == i && 
+		     item->isComponentType(COMP_SPELL))
+	    totalcharges += item->getComponentCharges();
         }
       }
 
@@ -5644,7 +5634,7 @@ void TBeing::doRituals(const sstring &argument)
   TComponent *item=NULL;
   int totalcharges;
   ritualismLevelT ritlevel = getRitualismLevel();
-  TThing *t1, *t2;
+  TThing *t1;
   TOpenContainer *tContainer;
 
   struct {
@@ -5653,7 +5643,7 @@ void TBeing::doRituals(const sstring &argument)
   } search[] = {
       {primary  , RIT_LEV_COMP_PRIM_OTHER_FREE},
       {secondary, RIT_LEV_COMP_EITHER         },
-      {getStuff()    , RIT_LEV_COMP_INV            },
+      {this    , RIT_LEV_COMP_INV            },
       {belt     , RIT_LEV_COMP_BELT           },
       {juju     , RIT_LEV_COMP_NECK           },
       {wristpouch, RIT_LEV_COMP_WRIST         },
@@ -5793,20 +5783,19 @@ void TBeing::doRituals(const sstring &argument)
       
       for (l = 0; l < 7; l++) {
         if (search[l].where && ritlevel >= search[l].ritlevel) {
-          for (t1 = search[l].where; t1; t1 = t1->nextThing) {
-            if (!(item = dynamic_cast<TComponent *>(t1)) &&
-                (!(tContainer = dynamic_cast<TOpenContainer *>(item)) ||
-                 !tContainer->isClosed())) {
-              for (t2 = t1->getStuff(); t2; t2 = t2->nextThing) {
-                if ((item = dynamic_cast<TComponent *>(t2)) &&
-                    item->getComponentSpell() == i && 
-                    item->isComponentType(COMP_SPELL))
-                  totalcharges += item->getComponentCharges();
-              }
-            } else if (item->getComponentSpell() == i && 
-                       item->isComponentType(COMP_SPELL))
-              totalcharges += item->getComponentCharges();
-          }
+	  t1=search[l].where;
+	  if (!(item = dynamic_cast<TComponent *>(t1)) &&
+	      (!(tContainer = dynamic_cast<TOpenContainer *>(item)) ||
+	       !tContainer->isClosed())) {
+	    for(StuffIter it=t1->stuff.begin();it!=t1->stuff.end();++it) {
+	      if ((item = dynamic_cast<TComponent *>(*it)) &&
+		  item->getComponentSpell() == i && 
+		  item->isComponentType(COMP_SPELL))
+		totalcharges += item->getComponentCharges();
+	    }
+	  } else if (item->getComponentSpell() == i && 
+		     item->isComponentType(COMP_SPELL))
+	    totalcharges += item->getComponentCharges();
         }
       }
 
@@ -5885,13 +5874,13 @@ void TBeing::doPrayers(const sstring &argument)
   TComponent *item = NULL;
   int totalcharges;
   wizardryLevelT wizlevel = getWizardryLevel();
-  TThing *t1, *t2;
+  TThing *t1;
   TOpenContainer *tContainer;
 
   struct {
     TThing *where;
     wizardryLevelT wizlevel;
-  } search[]={{primary, WIZ_LEV_COMP_PRIM_OTHER_FREE}, {secondary, WIZ_LEV_COMP_EITHER}, {getStuff(), WIZ_LEV_COMP_INV}, {belt, WIZ_LEV_COMP_BELT}, {juju, WIZ_LEV_COMP_NECK}, {wristpouch, WIZ_LEV_COMP_WRIST}, {wristpouch2, WIZ_LEV_COMP_WRIST}};
+  } search[]={{primary, WIZ_LEV_COMP_PRIM_OTHER_FREE}, {secondary, WIZ_LEV_COMP_EITHER}, {this, WIZ_LEV_COMP_INV}, {belt, WIZ_LEV_COMP_BELT}, {juju, WIZ_LEV_COMP_NECK}, {wristpouch, WIZ_LEV_COMP_WRIST}, {wristpouch2, WIZ_LEV_COMP_WRIST}};
 
   if (!(d = desc))
     return;
@@ -6018,26 +6007,26 @@ void TBeing::doPrayers(const sstring &argument)
         
       for (l = 0; l < 7; ++l){
         if (search[l].where && wizlevel >= search[l].wizlevel) {
-          for (t1 = search[l].where; t1; t1 = t1->nextThing) {
-            if(!(item=dynamic_cast<TComponent *>(t1)) &&
-               (!(tContainer = dynamic_cast<TOpenContainer *>(item)) ||
-                !tContainer->isClosed())) {
-              for (t2 = t1->getStuff(); t2; t2 = t2->nextThing) {
-                if ((item=dynamic_cast<TComponent *>(t2)) &&
+	  t1=search[l].where;
+	  
+	  if(!(item=dynamic_cast<TComponent *>(t1)) &&
+	     (!(tContainer = dynamic_cast<TOpenContainer *>(item)) ||
+	      !tContainer->isClosed())) {
+	    for(StuffIter it=t1->stuff.begin();it!=t1->stuff.end();++it) {
+	      if ((item=dynamic_cast<TComponent *>(*it)) &&
                   item->getComponentSpell() == i && 
                   item->isComponentType(COMP_SPELL))
-                  totalcharges += item->getComponentCharges();
-                }
-              } else if(item->getComponentSpell() == i && 
-                item->isComponentType(COMP_SPELL))
-                
-              totalcharges += item->getComponentCharges();
-            }
-          }
-        }
-        if ((getSkillValue(i) <= 0) &&
+		totalcharges += item->getComponentCharges();
+	    }
+	  } else if(item->getComponentSpell() == i && 
+		    item->isComponentType(COMP_SPELL))
+	    totalcharges += item->getComponentCharges();
+	  
+	}
+      }
+      if ((getSkillValue(i) <= 0) &&
           (!tmp_var || (discArray[i]->start - tmp_var) > 0)) {
-          
+	
         if (!showall) 
           continue;
 

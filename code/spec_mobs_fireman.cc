@@ -98,7 +98,7 @@ void firemanSay(TBeing *myself)
 
 int fireman(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 {
-  TThing *t, *t2;
+  TThing *t;
   TObj *obj = NULL;
   int rc;
   int firehouse=4673;
@@ -107,8 +107,8 @@ int fireman(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     return FALSE;
 
   if(myself->inRoom() != firehouse){
-    for (t = myself->roomp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end();){
+      t=*(it++);
       
       if(!(obj = dynamic_cast<TObj *>(t)))
 	continue;

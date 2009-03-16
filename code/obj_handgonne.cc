@@ -33,14 +33,13 @@ int THandgonne::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirType
   // find flint
   TTool *flint;
   TThing *t;
-  TThing *ss=ch->getStuff();
 
-  t=findFlint(ss);
+  t=findFlint(ch->stuff);
   
   int m=WEAR_NOWHERE;
   while(!t && m<MAX_WEAR){
     ++m;
-    t=findFlint(ch->equipment[m]);
+    t=findFlint(ch->equipment[m]->stuff);
   }
 
   flint=dynamic_cast<TTool *>(t);
@@ -202,14 +201,12 @@ int task_handgonne_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
   }
 
   // find powder
-  TThing *ss=ch->getStuff();
-
-  t=findPowder(ss, 1);
+  t=findPowder(ch->stuff, 1);
   
   int m=WEAR_NOWHERE;
   while(!t && m<MAX_WEAR){
     ++m;
-    t=findPowder(ch->equipment[m], 1);
+    t=findPowder(ch->equipment[m]->stuff, 1);
   }
 
   powder=dynamic_cast<TTool *>(t);
@@ -221,14 +218,12 @@ int task_handgonne_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
   }
 
   // find shot
-  ss=ch->getStuff();
-
-  t=findShot(ss, AMMO_LEAD_SHOT);
+  t=findShot(ch->stuff, AMMO_LEAD_SHOT);
   
   m=WEAR_NOWHERE;
   while(!t && m<MAX_WEAR){
     ++m;
-    t=findShot(ch->equipment[m], AMMO_LEAD_SHOT);
+    t=findShot(ch->equipment[m]->stuff, AMMO_LEAD_SHOT);
   }
 
   shot=dynamic_cast<TAmmo *>(t);

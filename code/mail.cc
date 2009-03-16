@@ -24,7 +24,7 @@ bool TObj::canBeMailed() const
   return !isObjStat(ITEM_ATTACHED) && !isObjStat(ITEM_NORENT) &&
           !isObjStat(ITEM_BURNING) && !isObjStat(ITEM_PROTOTYPE) &&
           !isObjStat(ITEM_NOPURGE) && !isObjStat(ITEM_NEWBIE) &&
-          !isObjStat(ITEM_NODROP) && !isMonogrammed() && getStuff() == NULL &&
+          !isObjStat(ITEM_NODROP) && !isMonogrammed() && stuff.empty() &&
           !dynamic_cast<const TTrap*>(this) &&
           (!dynamic_cast<const TOpenContainer*>(this) ||
           !dynamic_cast<const TOpenContainer*>(this)->isContainerFlag(CONT_TRAPPED));
@@ -112,7 +112,7 @@ void postmasterValue(TBeing *ch, TBeing *postmaster, const char *arg)
 
   if (item.length() > 0)
   {
-    TThing *thing = get_thing_on_list_vis(ch, item.c_str(), ch->getStuff());
+    TThing *thing = get_thing_on_list_vis(ch, item.c_str(), ch->stuff.front());
     TObj *obj = thing ? dynamic_cast<TObj*>(thing) : NULL;
     if (obj == NULL)
     {
@@ -237,7 +237,7 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
   // sending item
   } else if (item.length() > 0) {
 
-    TThing *thing = searchLinkedListVis(this, item.c_str(), getStuff(), NULL, TYPEOBJ);
+    TThing *thing = searchLinkedListVis(this, item.c_str(), stuff, NULL, TYPEOBJ);
     TObj *obj = thing ? dynamic_cast<TObj*>(thing) : NULL;
     if (obj == NULL) {
       me->doTell(fname(name), "I don't see that item on you.");

@@ -353,7 +353,7 @@ static void osave(TBeing *ch, const char *argument)
     ch->sendTo("Syntax :oedit save <object name> <vnum>\n\r");
     return;
   }
-  TThing *t_obj = searchLinkedListVis(ch, buf, ch->getStuff());
+  TThing *t_obj = searchLinkedListVis(ch, buf, ch->stuff);
   obj = dynamic_cast<TObj *>(t_obj);
 
   if (obj && vnum)
@@ -423,13 +423,13 @@ static void oedit(TBeing *ch, const char *arg)
   if (!ch->isPc() || !ch->desc)
     return;
 
-  TThing *t_obj = searchLinkedListVis(ch, arg, ch->getStuff());
+  TThing *t_obj = searchLinkedListVis(ch, arg, ch->stuff);
   o = dynamic_cast<TObj *>(t_obj);
   if (!o) {
     ch->sendTo("You don't have such an object.\n\r");
     return;
   }
-  if (o->getStuff() || o->rider) {
+  if (!o->stuff.empty() || o->rider) {
     ch->sendTo("You can't edit an object unless it's empty and standalone.\n\r");
     return;
   }
@@ -504,7 +504,7 @@ void TPerson::doOEdit(const char *argument)
     case 21:
       if (!*sstring)
         sendTo("Syntax: oed resave <object>\n\r");
-      else if (!(cObj = dynamic_cast<TObj *>(searchLinkedListVis(this, sstring, getStuff()))))
+      else if (!(cObj = dynamic_cast<TObj *>(searchLinkedListVis(this, sstring, stuff))))
 	sendTo(fmt("Unable to find %s...Sorry...\n\r") % sstring);
       else if (cObj->getSnum() == cObj->objVnum() && !hasWizPower(POWER_OEDIT_IMP_POWER))
         sendTo("Unknown value on this object.  resave only usable on oed loaded objects...\n\r");
@@ -533,7 +533,7 @@ void TPerson::doOEdit(const char *argument)
         if (is_abbrev(tStBuffer, "resave")) {
           if (!hasWizPower(POWER_OEDIT_IMP_POWER))
             sendTo("Syntax: oed save <object> <vnum>\n\r");
-          else if (!(cObj = dynamic_cast<TObj *>(searchLinkedListVis(this, tStString, getStuff()))))
+          else if (!(cObj = dynamic_cast<TObj *>(searchLinkedListVis(this, tStString, stuff))))
             sendTo(fmt("Unable to find %s...Sorry...\n\r") % tStString);
           else if (cObj->getSnum() <= 0)
             sendTo("That object has a bad snum.  Sorry.  Can not resave.\n\r");
@@ -566,7 +566,7 @@ void TPerson::doOEdit(const char *argument)
       // Basically for doing large db changes online.
       if ((zGot = sscanf(sstring, "%s %d", object, &vnum)) != 2) {
         if (zGot == 1) {
-          cObj = dynamic_cast<TObj *>(searchLinkedListVis(this, object, getStuff()));
+          cObj = dynamic_cast<TObj *>(searchLinkedListVis(this, object, stuff));
           tString = one_argument(sstring, object);
           if (*tString) tString++;
         }
@@ -652,7 +652,7 @@ void TPerson::doOEdit(const char *argument)
   tString = sstring;
   half_chop(tString, object, sstring);
 
-  if (!(cObj = dynamic_cast<TObj *>(searchLinkedList(object, getStuff())))) {
+  if (!(cObj = dynamic_cast<TObj *>(searchLinkedList(object, stuff)))) {
     sendTo("Try an object next time, it works better.\n\r");
     return;
   }

@@ -2736,7 +2736,7 @@ void TBeing::sendCastingMessages(bool limbs, bool silence, int round, skillUseTy
     }
 // Then to room
     if (sendToRoom && roomp) {
-      for (temp = getStuff(); temp; temp = temp->nextThing) {
+      for(StuffIter it=stuff.begin();it!=stuff.end() && (temp=*it);++it) {
         if (!dynamic_cast<TBeing *>(temp))
           continue;
         if (!temp->desc)
@@ -2848,7 +2848,7 @@ void TBeing::sendCastingMessages(bool limbs, bool silence, int round, skillUseTy
     }
 // Then to room
     if (sendToRoom && roomp) {
-      for (temp = getStuff(); temp; temp = temp->nextThing) {
+      for(StuffIter it=stuff.begin();it!=stuff.end() && (temp=*it);++it) {
         if (!dynamic_cast<TBeing *>(temp))
           continue;
         if (!temp->desc)

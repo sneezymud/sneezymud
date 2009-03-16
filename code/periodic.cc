@@ -110,11 +110,11 @@ void procGlobalRoomStuff::run(int pulse) const
 
     if(!::number(0,9)){
       trash_count=fire_count=water_count=0;
-      for(TThing *t=rp->getStuff();t;t=t->nextThing){
-	o=dynamic_cast<TObj *>(t);
+      for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();++it){
+	o=dynamic_cast<TObj *>(*it);
 
 	// count volume on liquids
-	if((pool=dynamic_cast<TPool *>(t)))
+	if((pool=dynamic_cast<TPool *>(*it)))
 	  water_count+=pool->getDrinkUnits();
 
 	// count volume on fire
@@ -127,7 +127,7 @@ void procGlobalRoomStuff::run(int pulse) const
 	  trash_count++;
 	
 	// don't create any trash piles if we already have one
-	if(dynamic_cast<TTrashPile *>(t))
+	if(dynamic_cast<TTrashPile *>(*it))
 	  trash_count=-1;
       }
 
@@ -161,7 +161,7 @@ void procGlobalRoomStuff::run(int pulse) const
         TThing *in_room;
 
         soundNumT snd = pickRandSound(SOUND_THUNDER_1, SOUND_THUNDER_4);
-        for (in_room = rp->getStuff(); in_room; in_room = in_room->nextThing) {
+        for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (in_room=*it);++it) {
           TBeing *ch = dynamic_cast<TBeing *>(in_room);
           if (!ch || !ch->desc)
             continue;
@@ -488,7 +488,7 @@ bool TObj::isTrash()
   if(isObjStat(ITEM_NOJUNK_PLAYER) || 
      !canWear(ITEM_TAKE) || 
      !roomp ||
-     getStuff() ||
+     !stuff.empty() ||
      rider ||
      roomp->isWaterSector() ||
      roomp->isAirSector() ||
@@ -510,8 +510,8 @@ bool TObj::joinTrash()
     return false;
 
   // find a trash pile
-  for(TThing *t=roomp->getStuff();t;t=t->nextThing){
-    if((pile=dynamic_cast<TTrashPile *>(t)))
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();++it){
+    if((pile=dynamic_cast<TTrashPile *>(*it)))
       break;
   }
   if(!pile)
@@ -1057,7 +1057,7 @@ int TBeing::updateTickStuff()
            dynamic_cast<TMonster *>(this)->hates.clist)) {
         shouldGo = FALSE;
       }
-      if (shouldGo && !getStuff()) {
+      if (shouldGo && stuff.empty()) {
         for (j = MIN_WEAR; j < MAX_WEAR; j++) {
           if (equipment[j]) {
             shouldGo = FALSE;
@@ -1214,7 +1214,6 @@ int TBeing::updateHalfTickStuff()
 {
   int foodReject = FALSE;
   int rc = FALSE;
-  TThing *t;
   int j;
   TRoom *room = NULL;
   int loadRoom = 0;
@@ -1273,10 +1272,10 @@ int TBeing::updateHalfTickStuff()
 
   if(hasQuestBit(TOG_IS_NECROPHOBIC) && (getPosition() > POSITION_SLEEPING) && !::number(0,3)){
     TBeing *tb;
-    for(TThing *t=roomp->getStuff();t;t=t->nextThing){
-      if(dynamic_cast<TBaseCorpse *>(t) || ((tb=dynamic_cast<TBeing *>(t)) && tb->isUndead()))
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();++it){
+      if(dynamic_cast<TBaseCorpse *>(*it) || ((tb=dynamic_cast<TBeing *>(*it)) && tb->isUndead()))
       {
-        sendTo(fmt("You lose your cool at the sight of %s and freak out!\n\r")% t->getName());
+        sendTo(fmt("You lose your cool at the sight of %s and freak out!\n\r")% (*it)->getName());
         doFlee("");
         addCommandToQue("flee");
         addCommandToQue("flee");
@@ -1293,11 +1292,11 @@ int TBeing::updateHalfTickStuff()
                   roomp->getSectorType() == SECT_FIRE ||
                   roomp->getSectorType() == SECT_FIRE_ATMOSPHERE;
 
-    for(TThing *t=roomp->getStuff();!flee && t;t=t->nextThing){
-      TObj *tObj = dynamic_cast<TObj *>(t);
-      TLight *tLight = dynamic_cast<TLight *>(t);
-      tBeing = dynamic_cast<TBeing *>(t);
-      fleeing = t;
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();++it){
+      TObj *tObj = dynamic_cast<TObj *>(*it);
+      TLight *tLight = dynamic_cast<TLight *>(*it);
+      tBeing = dynamic_cast<TBeing *>(*it);
+      fleeing = *it;
 
       // check for burning/lit objects in room
       // perhaps later check for objects made of flame (flares)
@@ -1339,11 +1338,11 @@ int TBeing::updateHalfTickStuff()
     TBeing *tb;
     TMonster *tm;
     
-    for(TThing *t=roomp->getStuff();t;t=t->nextThing){
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();++it){
       if(!::number(0,1))
 	continue;
 
-      if((tb=dynamic_cast<TBeing *>(t))){
+      if((tb=dynamic_cast<TBeing *>(*it))){
 	if(tb==this)
 	  continue;
 
@@ -1358,7 +1357,7 @@ int TBeing::updateHalfTickStuff()
 	buf2 = fmt("You look at $N and say, \"%s\"") %buf;
 	act(buf2,TRUE,this,0,tb,TO_CHAR);
 	
-	if((tm=dynamic_cast<TMonster *>(t)))
+	if((tm=dynamic_cast<TMonster *>(*it)))
 	  tm->aiUpset(this);
 	
 	break;
@@ -1419,7 +1418,6 @@ int TBeing::updateHalfTickStuff()
        (getHit() >= hitLimit()) &&
       (number >= 0)) {
     j = 0; // temp holder
-    t = NULL; // temp holder
     if (IS_SET(specials.act, ACT_DIURNAL) && !isAffected(AFF_CHARM)) {
       if ((inRoom() == ROOM_NOCTURNAL_STORAGE)) {
 
@@ -1780,7 +1778,7 @@ void TPCorpse::decayMe()
   int found = FALSE;
   TThing *tmp = NULL;
 
-  for(tmp = getStuff(); tmp; tmp = tmp->nextThing) {
+  for(StuffIter it=stuff.begin();it!=stuff.end() && (tmp=*it);++it) {
     TObj *obj = dynamic_cast<TObj *>(tmp);
     if (!obj)
       continue;
@@ -1898,20 +1896,23 @@ int TObj::objectTickUpdate(int pulse)
         if (equippedBy)        {
           // Worn in equipment 
           act("$p decay$Q into nothing.", FALSE, equippedBy, this, 0, TO_CHAR);
-          while ((t = getStuff())) {
+	  for(StuffIter it=stuff.begin();it!=stuff.end();){
+	    t=*(it++);
             (*t)--;
             *equippedBy += *t;
           }
         } else if (parent) {
           act("$p disintegrate$Q in your hands.", FALSE, parent, this, 0, TO_CHAR);
-          while ((t = getStuff())) {
+	  for(StuffIter it=stuff.begin();it!=stuff.end();){
+	    t=*(it++);
             (*t)--;
             *parent += *t;
           }
         } else if (roomp) {  // in room
           act("$n fade$R into insignificance.",
                  TRUE, this, 0, 0, TO_ROOM);
-          while ((t = getStuff())) {
+	  for(StuffIter it=stuff.begin();it!=stuff.end();){
+	    t=*(it++);
             (*t)--;
             *roomp += *t;
           }
@@ -2126,11 +2127,11 @@ int TObj::updateBurning(void)
     TRoom *tr=real_roomp(this->in_room);
     int fire_count=0;
   
-    if(tr && material_nums[getMaterial()].flammability && tr->getStuff()){
-      for(TThing *tt=tr->getStuff();tt;tt=tt->nextThing){
+    if(tr && material_nums[getMaterial()].flammability && !tr->stuff.empty()){
+      for(StuffIter it=tr->stuff.begin();it!=tr->stuff.end();++it){
 	int cf=40; // chance factor: flammability/cf = percent chance
-	int chance=(int)(material_nums[tt->getMaterial()].flammability/cf);
-	TObj *to=dynamic_cast<TObj *>(tt);
+	int chance=(int)(material_nums[(*it)->getMaterial()].flammability/cf);
+	TObj *to=dynamic_cast<TObj *>(*it);
 
 	if(to && !to->isObjStat(ITEM_BURNING) && 
 	   material_nums[this->getMaterial()].flammability >0 &&
@@ -2179,7 +2180,7 @@ int TBeing::terrainSpecial()
       return reconcileDamage(this,dam,SPELL_FIREBALL);
     case SECT_DESERT:
       // drain water
-      for (t = getStuff(); t; t = t->nextThing) {
+      for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
         evaporate(this, SILENT_NO);
       }
       return FALSE;

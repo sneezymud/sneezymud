@@ -69,7 +69,7 @@ int berserk(TBeing * caster)
       af.modifier = ::number(caster->getSkillValue(SKILL_BERSERK),
 			     caster->getSkillValue(SKILL_BERSERK)*2);
       af.level = level;
-      //      af.duration = caster->getSkillValue(SKILL_BERSERK);;
+      //      af.duration = caster->getSkillValue(SKILL_BERSERK);
       af.duration = PERMANENT_DURATION;
       af.location = APPLY_HIT;
       af.bitvector = 0;
@@ -104,7 +104,7 @@ int berserk(TBeing * caster)
 void TBeing::doRepair(const char *arg)
 {
   char v_name[MAX_INPUT_LENGTH];
-  TThing *obj;
+  TThing *obj=NULL;
 
   strcpy(v_name, arg);
 
@@ -113,7 +113,8 @@ void TBeing::doRepair(const char *arg)
     return;
   }
 
-  for(obj=getStuff();obj;obj=obj->nextThing){
+  for(StuffIter it=stuff.begin();it!=stuff.end();++it){
+    obj=*it;
     if(isname(v_name, obj->name))
       break;
   }

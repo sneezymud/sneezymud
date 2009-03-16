@@ -264,8 +264,8 @@ void HoldemGame::showdown(TBeing *ch)
   TObj *obj;
   for(i=0;i<MAX_HOLDEM_PLAYERS;++i){
     if(players[i] && players[i]->ch){
-      for(TThing *t=players[i]->ch->getStuff();t;t=t->nextThing){
-	if((obj=dynamic_cast<TObj *>(t))){
+      for(StuffIter it=players[i]->ch->stuff.begin();it!=players[i]->ch->stuff.end();++it){
+	if((obj=dynamic_cast<TObj *>(*it))){
 	  if(obj->objVnum() == last_bet)
 	    tcount++;
 	}

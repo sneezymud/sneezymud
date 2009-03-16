@@ -170,7 +170,7 @@ int TMonster::lookForHorse()
   if (getPosition() < POSITION_STANDING)
     return FALSE;
 
-  for (t = roomp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
     horse = dynamic_cast<TBeing *>(t);
     if (!horse)
       continue;
@@ -611,7 +611,7 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h, silentTypeT silent
       return FALSE;
     }
     if (roomp->getMoblim() && !isImmortal() &&
-        (MobCountInRoom(roomp->getStuff()) >= roomp->getMoblim())) {
+        (MobCountInRoom(roomp->stuff) >= roomp->getMoblim())) {
       // movement treats horse + all riders as 1 "thing" in room
       sendTo("There isn't enough room in here to dismount.\n\r");
       return FALSE;

@@ -7,9 +7,9 @@ void deleteChips(TMonster *me)
   vector <TThing *> chipl;
   TCasinoChip *chip;
 
-  for(TThing *t=me->getStuff();t;t=t->nextThing){
-    if((chip=dynamic_cast<TCasinoChip *>(t))){
-      chipl.push_back(t);
+  for(StuffIter it=me->stuff.begin();it!=me->stuff.end();++it){
+    if((chip=dynamic_cast<TCasinoChip *>(*it))){
+      chipl.push_back(chip);
     }
   }
 
@@ -113,8 +113,8 @@ int holdemPlayer(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, T
 	me->doSay("There ain't no such thing as a free chip.");
 
 	int tcount=0;
-	for(TThing *t=me->getStuff();t;t=t->nextThing){
-	  if((obj=dynamic_cast<TObj *>(t))){
+	for(StuffIter it=me->stuff.begin();it!=me->stuff.end();++it){
+	  if((obj=dynamic_cast<TObj *>(*it))){
 	    if(obj->objVnum() == hpi->chip)
 	      tcount++;
 	  }

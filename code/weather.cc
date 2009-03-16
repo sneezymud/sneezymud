@@ -1024,9 +1024,9 @@ int getRoomWetness(TBeing *ch, TRoom* room, sstring & better,  sstring & worse)
 
   // burning obj in room
   unsigned int beforeFireLen = better.length();
-  for(TThing *t = room->getStuff(); t; t = t->nextThing)
+  for(StuffIter it= room->stuff.begin();it!= room->stuff.end();++it)
   {
-    TObj *o = dynamic_cast<TObj *>(t);
+    TObj *o = dynamic_cast<TObj *>(*it);
     if (o && o->isObjStat(ITEM_BURNING))
     {
       wetness -= int(100 * (o->getVolume() / (ROOM_FIRE_THRESHOLD * 3)));

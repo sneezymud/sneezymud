@@ -48,9 +48,9 @@ void doChoke(TGas *myself)
   if(!myself->roomp || getSmokeIndex(myself->getVolume()) < 7)
     return;
 
-  for(TThing *t=myself->roomp->getStuff();t;t=t->nextThing){
+  for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end();++it){
     TBeing *tb;
-    if(!::number(0,4) && (tb=dynamic_cast<TBeing *>(t))){
+    if(!::number(0,4) && (tb=dynamic_cast<TBeing *>(*it))){
       tb->sendTo(COLOR_BASIC, "<r>The large amount of smoke in the room causes you to choke and cough!<1>\n\r");
       int rc=tb->reconcileDamage(tb, ::number(3,11), DAMAGE_SUFFOCATION);
       
@@ -86,13 +86,13 @@ void doScent(TGas *myself)
 
   TBeing *createdBy = myself->getCreatedBy();
 
-  for(TThing *t = myself->roomp->getStuff(); t; t = t->nextThing)
+  for(StuffIter it= myself->roomp->stuff.begin();it!= myself->roomp->stuff.end();++it)
   {
     // only 25% chance of action per tick
     if (::number(0,3))
       continue;
 
-    TPlant *plant = dynamic_cast<TPlant *>(t);
+    TPlant *plant = dynamic_cast<TPlant *>(*it);
     if (plant)
     {
       plant->updateAge();
@@ -100,7 +100,7 @@ void doScent(TGas *myself)
       continue;
     }
 
-    TBeing *being = dynamic_cast<TBeing *>(t);
+    TBeing *being = dynamic_cast<TBeing *>(*it);
     if (!being)
       continue;
 
@@ -241,7 +241,7 @@ void TGas::doDrift()
 {
   roomDirData *exitp;
   TRoom *rp=roomp;
-  TThing *t, *t2;
+  TThing *t;
   TPortal *tp;
 
   if(!roomp)
@@ -269,8 +269,8 @@ void TGas::doDrift()
       dir=dirTypeT(dir-MAX_DIR+1);
       int seen = 0;
 
-      for (t = roomp->getStuff(); t; t = t2) {
-        t2 = t->nextThing;
+      for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+        t=*(it++);
 
         if ((tp=dynamic_cast<TPortal *>(t))){
           seen++;
@@ -392,9 +392,9 @@ int TThing::dropGas(int amt, gasTypeT type)
     return FALSE;
 
   // look for preexisting smoke
-  for(TThing *t = roomp->getStuff(); t; t = t->nextThing)
+  for(StuffIter it= roomp->stuff.begin();it!= roomp->stuff.end();++it)
   {
-    gas = dynamic_cast<TGas *>(t);
+    gas = dynamic_cast<TGas *>(*it);
     if (gas && gas->getType() == type)
       break;
     gas = NULL;

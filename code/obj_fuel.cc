@@ -187,8 +187,7 @@ int TFuel::chiMe(TBeing *tLunatic)
           bKnown = tLunatic->getSkillLevel(SKILL_CHI),
           tDamage,
           tRc = DELETE_VICT;
-  TThing *tThing,
-         *tNextThing;
+  TThing *tThing;
   TBeing *tBeing;
 
   if (tLunatic->getMana() < tMana) {
@@ -219,8 +218,8 @@ int TFuel::chiMe(TBeing *tLunatic)
 
   tDamage = max(1, (::number((getCurFuel() / 2), getCurFuel()) / 10));
 
-  for (tThing = roomp->getStuff(); tThing; tThing = tNextThing) {
-    tNextThing = tThing->nextThing;
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+    tThing=*(it++);
 
     if (!(tBeing = dynamic_cast<TBeing *>(tThing)) || tBeing->isImmortal())
       continue;

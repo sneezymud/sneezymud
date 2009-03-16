@@ -316,7 +316,7 @@ void generate_mob_index()
       exit(0);
     }
     
-    tmpi->virt = convertTo<int>(db["vnum"]);;
+    tmpi->virt = convertTo<int>(db["vnum"]);
     
     // read the sstrings
     tmpi->name = mud_str_dup(db["name"]);

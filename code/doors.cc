@@ -371,11 +371,11 @@ void TBeing::rawOpenDoor(dirTypeT dir)
 
     }
     TThing *t;
-    for (t = roomp->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       if (t->desc)
         t->desc->send_client_exits();
     }
-    for (t = rp2->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=rp2->stuff.begin();it!=rp2->stuff.end() && (t=*it);++it) {
       if (t->desc)
         t->desc->send_client_exits();
     }
@@ -610,11 +610,11 @@ void TBeing::rawCloseDoor(dirTypeT dir)
         rp2->playsound(snd, SOUND_TYPE_NOISE);
     }
     TThing *t;
-    for (t = roomp->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       if (t->desc)
         t->desc->send_client_exits();
     }
-    for (t = rp2->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=rp2->stuff.begin();it!=rp2->stuff.end() && (t=*it);++it) {
       if (t->desc)
         t->desc->send_client_exits();
     }

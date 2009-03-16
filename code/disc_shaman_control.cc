@@ -17,7 +17,7 @@
 int resurrection(TBeing * caster, TObj * obj, int level, byte bKnown)
 {
   affectedData aff;
-  TThing *t, *n;
+  TThing *t;
   TMonster * victim;
   TBaseCorpse *corpse;
   float shamLvl = caster->getLevel(SHAMAN_LEVEL_IND);
@@ -114,8 +114,8 @@ int resurrection(TBeing * caster, TObj * obj, int level, byte bKnown)
     restrict_xp(caster, victim, PERMANENT_DURATION);
 
     caster->addFollower(victim);
-    for (t = corpse->getStuff(); t; t = n) {
-      n = t->nextThing;
+    for(StuffIter it=corpse->stuff.begin();it!=corpse->stuff.end();){
+      t=*(it++);
       --(*t);
       *victim += *t;
     }

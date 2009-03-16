@@ -53,8 +53,6 @@ int TObj::maxFix(const TBeing *keeper, depreciationTypeT dep_done) const
 
 int findRepairMaterials(unsigned int shop_nr, TBeing *repair, TBeing *buyer, ubyte mat, int &mats_needed, bool purchase)
 {
-  TThing *t;
-  TCommodity *commod;
   int mat_price=0;
   unsigned int commod_shop=15;
 
@@ -80,6 +78,7 @@ int findRepairMaterials(unsigned int shop_nr, TBeing *repair, TBeing *buyer, uby
 
   // look through the commod shop inventory
   // REVIEW: this won't work - we should be using database for this not inventory
+#if 0
   for(t=tso.getStuff();t;t=t->nextThing){
     // find the appropriate commodity
     if((commod=dynamic_cast<TCommodity *>(t)) && commod->getMaterial() == mat){
@@ -104,6 +103,7 @@ int findRepairMaterials(unsigned int shop_nr, TBeing *repair, TBeing *buyer, uby
       break;
     }
   }
+#endif
 
   return mat_price;
 }
@@ -520,7 +520,7 @@ static bool will_not_repair(TBeing *ch, TMonster *repair, TObj *obj, silentTypeT
     return TRUE;
   }
 
-  if (obj->getStuff()) {
+  if (!obj->stuff.empty()) {
     // probably a mage-belt with components in it....
     if (!silent) {
       repair->doTell(fname(ch->name), "Sorry, you'll have to empty it out before I can do any work on it.");
@@ -549,11 +549,10 @@ void repairman_value(const char *arg, TMonster *repair, TBeing *buyer)
   }
 
   if (is_abbrev(arg, "all.damaged")) {
-    TThing * tListHead   = buyer->getStuff();
     int      iCostForAll = 0;
 
-    while (tListHead) {
-      valued = dynamic_cast<TObj *>(tListHead);
+    for(StuffIter it=buyer->stuff.begin();it!=buyer->stuff.end();++it){
+      valued = dynamic_cast<TObj *>(*it);
 
       if (valued)
         if (!will_not_repair(buyer, repair, valued, SILENT_YES)) {
@@ -572,8 +571,6 @@ void repairman_value(const char *arg, TMonster *repair, TBeing *buyer)
 
           iCostForAll += repairCost;
         }
-
-      tListHead = tListHead->nextThing;
     }
 
     if (!iCostForAll)
@@ -584,7 +581,7 @@ void repairman_value(const char *arg, TMonster *repair, TBeing *buyer)
     return;
   }
 
-  TThing *t_valued = searchLinkedListVis(buyer, arg, buyer->getStuff());
+  TThing *t_valued = searchLinkedListVis(buyer, arg, buyer->stuff);
   valued = dynamic_cast<TObj *>(t_valued);
   if (!valued) {
     repair->doTell(fname(buyer->name), 
@@ -621,7 +618,7 @@ int repairman_give(const char *arg, TMonster *repair, TBeing *buyer)
   char buf[256], obj_name[MAX_INPUT_LENGTH];
   char rep_name[MAX_INPUT_LENGTH];
   char obj_amt[MAX_INPUT_LENGTH];
-  TThing *t, *t2;
+  TThing *t;
 
   arg = one_argument(arg, obj_name, cElements(obj_name));
 
@@ -652,8 +649,8 @@ int repairman_give(const char *arg, TMonster *repair, TBeing *buyer)
   if (is_abbrev(obj_name, "all.damaged")) {
     int total = 0;
     bool found = false;
-    for (t = buyer->getStuff();t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=buyer->stuff.begin();it!=buyer->stuff.end();){
+      t=*(it++);
       TObj *tobj = dynamic_cast<TObj *>(t);
       if (!tobj)
         continue;
@@ -679,8 +676,8 @@ int repairman_give(const char *arg, TMonster *repair, TBeing *buyer)
   }
   if (is_abbrev(obj_name, "all.ticket")) {
     bool found = false;
-    for (t = buyer->getStuff();t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=buyer->stuff.begin();it!=buyer->stuff.end();){
+      t=*(it++);
       if (!isname("ticket", t->name))
         continue;
       int rc5;
@@ -696,7 +693,7 @@ int repairman_give(const char *arg, TMonster *repair, TBeing *buyer)
 
     return FALSE;
   }
-  t = searchLinkedListVis(buyer, obj_name, buyer->getStuff());
+  t = searchLinkedListVis(buyer, obj_name, buyer->stuff);
   TObj *tobj = dynamic_cast<TObj *>(t);
   if (!tobj) {
     repair->doTell(fname(buyer->name), "You don't have that item.");

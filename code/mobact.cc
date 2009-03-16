@@ -62,7 +62,7 @@ fights of same race mobs or being protected (children should get this) */
 // may return DELETE_THIS
 int TMonster::protectionStuff()
 {
-  TThing *t = NULL, *t2 = NULL;
+  TThing *t = NULL;
   int found = FALSE, rc = 0;
 
   if (fight() || desc)
@@ -77,8 +77,8 @@ int TMonster::protectionStuff()
   if (GuildProcs(spec) || UtilProcs(spec))
     return FALSE;
 
-  for (t = roomp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+    t=*(it++);
     TBeing *tbt = dynamic_cast<TBeing *>(t);
     if (!tbt || (this == tbt))
       continue;
@@ -111,8 +111,8 @@ int TMonster::protectionStuff()
     }
   }
   if (found && IS_SET(specials.act, ACT_PROTECTOR)) {
-    for (t = roomp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+      t=*(it++);
       TBeing *tbt = dynamic_cast<TBeing *>(t);
       if (!tbt || (this == tbt))
         continue;
@@ -137,8 +137,8 @@ int TMonster::protectionStuff()
     }
 
     if (found) {
-      for (t = roomp->getStuff(); t; t = t2) {
-        t2 = t->nextThing;
+      for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+        t=*(it++);
         TBeing *tbt = dynamic_cast<TBeing *>(t);
         if (!tbt || (this == tbt))
           continue;
@@ -493,8 +493,8 @@ int TMonster::hunt()
         return TRUE;
       persist -= 1;
       // rooms with musk are double hard for mobs to track through
-      for(TThing *musk = roomp->getStuff(); musk; musk = musk->nextThing)
-        if (dynamic_cast<TGas*>(musk) && dynamic_cast<TGas*>(musk)->getType() == GAS_MUSK) {
+      for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();++it)
+        if (dynamic_cast<TGas*>(*it) && dynamic_cast<TGas*>(*it)->getType() == GAS_MUSK) {
           count++;
           break;
         }
@@ -510,15 +510,15 @@ int TMonster::hunt()
         for (j = 0; j < bows.size(); j++)
         {
           bow = bows[j];
-          if (bow->getStuff())
-          break;
+          if (!bow->stuff.empty())
+	    break;
           if (!bow) vlogf(LOG_BUG, fmt("mobact.cc: bow is null somehow"));
           if (bow && (tempArr = autoGetAmmo(bow))) {
             ammo = tempArr;
             break;
           }
         }
-        if (bow && (ammo || bow->getStuff())) {
+        if (bow && (ammo || !bow->stuff.empty())) {
           if (archer(NULL, CMD_GENERIC_PULSE, NULL, this, NULL))
             break;
         }
@@ -647,7 +647,7 @@ int TMonster::superScavenger()
   if (UtilMobProc(this))
     return FALSE;
 
-  for (t = getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
     TBaseClothing *o = NULL;
     if (!(o = dynamic_cast<TBaseClothing *>(t)))
       continue;
@@ -687,9 +687,9 @@ int TMonster::superScavenger()
 // why do we need to rearrange inventory?
       /* Now move blocking object to end of inventory list */
       if (t && t->parent && t->nextThing) {
-        stuff = t->nextThing;
+        t=*(it++);
         t->nextThing = NULL;
-        for (t2 = getStuff(); t2->nextThing; t2 = t2->nextThing);
+        for(StuffIter it=stuff.begin();it!=stuff.end() && (t2=*it);++it);
         t2->nextThing = t;
       }
 #endif
@@ -714,7 +714,7 @@ int TMonster::superScavenger()
   }
   
   // best_o = NULL here, check room for goodies
-  for (t = roomp->getStuff();t; t = t->nextThing) {
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
     rc = t->scavengeMe(this, &best_o);
     if (IS_SET_DELETE(rc, DELETE_VICT))
       return DELETE_THIS;
@@ -726,7 +726,7 @@ int TMonster::superScavenger()
 
   // don't pick up entire, unlooted corpses
   bcorpse = dynamic_cast<TBaseCorpse *>(best_o);
-  if (bcorpse && bcorpse->getStuff())
+  if (bcorpse && !bcorpse->stuff.empty())
     return FALSE;
   corpse = dynamic_cast<TPCorpse *>(best_o);
   if (corpse)
@@ -809,7 +809,7 @@ int TMonster::remove()
 int TMonster::senseWimps()
 {
   TBeing *tmp_victim = NULL;
-  TThing *t, *t2;
+  TThing *t;
   int score, smallest=100000;
   TBeing *wimp = NULL;
   
@@ -829,7 +829,7 @@ int TMonster::senseWimps()
     !fight()->isPet(PETTYPE_PET|PETTYPE_CHARM|PETTYPE_THRALL) && !fight()->isPc()) {
     bool beingUsed = false;
     // if a PC using me to tank?
-    for(t = roomp->getStuff(); !beingUsed && t; t = t->nextThing)
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it)
       if (wimp = dynamic_cast<TBeing*>(t))
         beingUsed = (wimp != this && wimp->isPc() && wimp->fight() &&
                       (wimp->fight() == this || wimp->fight() == fight()));
@@ -855,7 +855,7 @@ int TMonster::senseWimps()
   if (!::number(0,4) && ::number(0,attackers)) {
 
     /* randomly consider folks */
-    for (t = roomp->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       tmp_victim = dynamic_cast<TBeing *>(t);
       if (!tmp_victim)
         continue;
@@ -867,8 +867,8 @@ int TMonster::senseWimps()
       return TRUE; 
     }
   }
-  for (t = roomp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+    t=*(it++);
     tmp_victim = dynamic_cast<TBeing *>(t);
     if (!tmp_victim)
       continue;
@@ -2358,7 +2358,7 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
 int TMonster::dynamicComponentLoader(spellNumT spell, int loadrate)
 {
   TComponent *tcomp;
-  TThing *t;
+  TThing *t=NULL;
   unsigned int comp;
 
   for (comp = 0; (comp < CompInfo.size()) &&
@@ -2367,7 +2367,7 @@ int TMonster::dynamicComponentLoader(spellNumT spell, int loadrate)
     return FALSE;
 
   if(!(tcomp = findComponent(spell))){
-    for(t = getStuff();t && !dynamic_cast<TSpellBag *>(t); t = t->nextThing);
+    for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it);
     if(t && (::number(1,100)<=loadrate)) {
       tcomp = dynamic_cast<TComponent *>(read_object(CompInfo[comp].comp_num, VIRTUAL));
       if (!tcomp)
@@ -3408,22 +3408,22 @@ int TMonster::scavenge()
   if (!hasHands() && !isHumanoid())
     return FALSE;
   
-  if (roomp->getStuff() && !::number(0, 5)) {
-    TThing *t;
+  if (!roomp->stuff.empty() && !::number(0, 5)) {
     best_obj = NULL;
-    for (iMax = 1, t = roomp->getStuff(); t; t = t->nextThing) {
-      if (!(obj = dynamic_cast<TObj *>(t)))
+    iMax=1;
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();++it){
+      if (!(obj = dynamic_cast<TObj *>(*it)))
         continue;
       
       // skip over unlooted corpses
-      corpse = dynamic_cast<TBaseCorpse *>(t);
-      if (corpse && corpse->getStuff())
+      corpse = dynamic_cast<TBaseCorpse *>(*it);
+      if (corpse && !corpse->stuff.empty())
         continue;
       
       if (obj->canWear(ITEM_TAKE) && canCarry(obj, SILENT_YES) &&
           canSee(obj) && 
           !obj->action_description &&   // checks for personalized
-          !obj->getStuff()) {
+          obj->stuff.empty()) {
         if (obj->obj_flags.cost > iMax) {
           best_obj = obj;
           iMax = obj->obj_flags.cost;
@@ -3451,7 +3451,7 @@ int TMonster::scavenge()
 // returns DELETE_THIS
 int TMonster::notFightingMove(int pulse)
 {
-  TThing *t, *t2;
+  TThing *t;
   TPerson *cons = NULL;
   int rc;
   TBeing *tmp_ch=NULL;
@@ -3471,8 +3471,8 @@ int TMonster::notFightingMove(int pulse)
     else if (rc)
       return TRUE;
 
-    for (t = roomp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+      t=*(it++);
       if(t == this || !(tmp_ch = dynamic_cast<TBeing *>(t)))
 	continue;
 
@@ -3527,7 +3527,7 @@ int TMonster::notFightingMove(int pulse)
   }
 
   if (hasClass(CLASS_THIEF) && !(pulse%(13*PULSE_MOBACT))) {
-    for (t = roomp->getStuff();t;t = t->nextThing) {
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       cons = dynamic_cast<TPerson *>(t);
       if (!cons)
         continue;
@@ -3580,8 +3580,8 @@ int TMonster::notFightingMove(int pulse)
     } else if (rc)
       return TRUE;
 
-    for (t = roomp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+      t=*(it++);
       tmp_ch = dynamic_cast<TBeing *>(t);
       
       // spellup friendly people
@@ -3760,7 +3760,7 @@ int TMonster::mobileActivity(int pulse)
         !isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL)) {
       // anything more comfortable around?
       map <sstring, short int> bedsChecked;
-      for (t = roomp->getStuff(); t; t = t->nextThing) {
+      for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       // added the hash to keep track of 1.chair, 2.chair, etc
         if (bedsChecked.find(fname(t->name)) == bedsChecked.end()) {
           bedsChecked[fname(t->name)] = 1;
@@ -4070,8 +4070,9 @@ int TMonster::fearCheck(const TBeing *ch, bool mobpulse)
   if (IS_SET(specials.act, ACT_AFRAID)) {
     if (!ch) {
       // see if anyone nearby is someone I fear
-      TThing *t;
-      for (t = roomp->getStuff(); t; t = t->nextThing) {
+      TThing *t=NULL;
+      for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();++it) {
+	t=*it;
         if (t == this)
           continue;
         TBeing *tmpch = dynamic_cast<TBeing *>(t);
@@ -4108,7 +4109,7 @@ int TMonster::fearCheck(const TBeing *ch, bool mobpulse)
 
 int TMonster::factionAggroCheck()
 {
-  TThing *t, *t2;
+  TThing *t;
   TPerson *tmp_ch;
   int rc;
 
@@ -4128,8 +4129,8 @@ int TMonster::factionAggroCheck()
 
     // Scroll through stuff list to get count of valid things to hit, 
 
-  for (t = roomp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+    t=*(it++);
     // cast to Person, rather than isPc(), so poly'd chars are safe 
     tmp_ch = dynamic_cast<TPerson *>(t);
     if (!tmp_ch)
@@ -4171,8 +4172,8 @@ int TMonster::factionAggroCheck()
 	} else if(isCult() && tmp_ch->isSnake()){
 	  // check for trade pass that prevents aggro first
 	  TObj *pass;
-	  for(TThing *t=tmp_ch->getStuff();t;t=t->nextThing){
-	    if((pass=dynamic_cast<TObj *>(t)) && pass->objVnum()==8879){
+	  for(StuffIter it=tmp_ch->stuff.begin();it!=tmp_ch->stuff.end();++it){
+	    if((pass=dynamic_cast<TObj *>(*it)) && pass->objVnum()==8879){
 	      if(!::number(0,4))
 		doEmote("checks your papers carefully and then lets you pass.");
 	      return FALSE;
@@ -4239,7 +4240,7 @@ int TMonster::factionAggroCheck()
 
 int TMonster::aggroCheck(bool mobpulse)
 {
-  TThing *t, *t2;
+  TThing *t;
   TBeing *tmp_ch;
   int rc, numtargets, whichtarget;
   numtargets = 0;
@@ -4285,8 +4286,8 @@ int TMonster::aggroCheck(bool mobpulse)
   if ((aggro() && (getHit() >= (hitLimit()/2)))){
     // Scroll through stuff list to get count of valid things to hit, 
 
-    for (t = roomp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+      t=*(it++);
       tmp_ch = dynamic_cast<TBeing *>(t);
       if (!tmp_ch || !tmp_ch->isPc())
         continue;
@@ -4304,8 +4305,8 @@ int TMonster::aggroCheck(bool mobpulse)
     // randomly choose one of the targets we found
     numtargets = 0;
     if(!mobpulse) whichtarget = -1;  // no randomization since we're attacking on roomenter
-    for (t = roomp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+      t=*(it++);
       tmp_ch = dynamic_cast<TBeing *>(t);
       if (!tmp_ch || !tmp_ch->isPc())
         continue;
@@ -4414,9 +4415,9 @@ int TMonster::assistFriend()
     thing_to_room(this, ROOM_VOID);
     return FALSE;
   }
-  TThing *t, *t2;
-  for (t = roomp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  TThing *t;
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+    t=*(it++);
     if (t == this)
       continue;
     tmp_ch = dynamic_cast<TBeing *>(t);
@@ -4447,7 +4448,7 @@ int TMonster::assistFriend()
 
             TThing *toto;
             // stop all fights
-            for (toto = roomp->getStuff(); toto; toto = toto->nextThing) {
+            for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (toto=*it);++it) {
               TBeing *tbto = dynamic_cast<TBeing *>(toto);
               if (!tbto)
                 continue;
@@ -4517,7 +4518,7 @@ int TMonster::findABetterWeapon()
   if (UtilMobProc(this))
     return FALSE;
 
-  for (t = roomp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
     if (!(dynamic_cast<TBaseWeapon *>(t)))
       continue;
     if (!(o = dynamic_cast<TObj *>(t)))
@@ -4533,7 +4534,7 @@ int TMonster::findABetterWeapon()
     if ((!best || (o->baseDamage() >= best->baseDamage()))) 
       best = o;
   }
-  for (t = getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
     if (!(o = dynamic_cast<TObj *>(t)))
       continue;
     if (dynamic_cast<TBow *>(o) || dynamic_cast<TArrow *>(o))
@@ -5344,9 +5345,9 @@ int TMonster::doHatefulStuff()
             act("$n growls '$N, would you care to step outside where we can settle this?'", TRUE, this, 0, tmp_ch, TO_ROOM);
           else
             act("$n points and motions to the nearest exit.", TRUE, this, 0, tmp_ch, TO_ROOM);
-          TThing *t, *t2;
-          for (t = roomp->getStuff();t;t = t2) {
-            t2 = t->nextThing;
+          TThing *t;
+          for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+            t=*(it++);
             TBeing *tbt = dynamic_cast<TBeing *>(t);
             if (!tbt || tbt == this || tbt == tmp_ch)
               continue;

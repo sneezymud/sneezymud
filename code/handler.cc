@@ -324,7 +324,7 @@ void TBeing::affectModify(applyTypeT loc, long mod, long mod2, uint64_t bitv, bo
           tmpInt = MAX_DISC_LEARNEDNESS;
         cd->setLearnedness(tmpInt);
       } else {
-        tmpInt = cd->getLearnedness() - mod2;;
+        tmpInt = cd->getLearnedness() - mod2;
         if (tmpInt < 0)
           tmpInt = 0;
         if (cd->getNatLearnedness() == MAX_DISC_LEARNEDNESS) 
@@ -1379,16 +1379,16 @@ TThing *get_thing_stuck_in_vis(TBeing *ch, const char *arg, wearSlotT *j, int *c
   return NULL;
 }
 
-TThing *searchLinkedList(const char * name, TThing *list, thingTypeT type)
+TThing *searchLinkedList(const char * name, StuffList list, thingTypeT type)
 {
   const sstring tmps = name;
   return searchLinkedList(tmps, list, type);
 }
 
-TThing *searchLinkedList(const sstring & name, TThing *list, thingTypeT type)
+TThing *searchLinkedList(const sstring & name, StuffList list, thingTypeT type)
 {
   TThing *i, *t;
-  int j, numx;
+  int j=1, numx;
   char tmpname[MAX_INPUT_LENGTH], *tmp;
 
   strcpy(tmpname, name.c_str());
@@ -1397,7 +1397,10 @@ TThing *searchLinkedList(const sstring & name, TThing *list, thingTypeT type)
   if (!(numx = get_number(&tmp)))
     return (0);
  
-  for (t = list, j = 1; t && (j <= numx); t = t->nextThing) {
+  for (StuffIter it=list.begin(); 
+       it!=list.end() && (j <= numx); 
+       ++it){
+    t=*it;
     if (isname(tmp, t->name)) {
       if (type == TYPETHING || 
           ((type == TYPEBEING) && dynamic_cast<TBeing *>(t)) ||
@@ -1462,33 +1465,21 @@ TThing *get_thing_on_list_num(int num, TThing *list)
   return NULL;
 }
 
-// Search a given list for an object number, and return a ptr to that obj 
-TThing *get_thing_in_list_num(int num, TThing *list)
-{
-  TThing *i;
-
-  for (i = list; i; i = i->nextThing) {
-    if (i->number == num)
-      return i;
-  }
-  return NULL;
-}
 
 // this gets used by shop code to get the "num"th thing in the "list"
-TObj *get_num_obj_in_list(TBeing *ch, int num, TThing *list, int shop_nr)
+TObj *get_num_obj_in_list(TBeing *ch, int num, StuffList list, int shop_nr)
 {
   vector<TObj *>cond_obj_vec(0);
   vector<int>cond_tot_vec(0);
 
-  TThing *i;
   bool found = false;
   unsigned int k;
 
   if (num <= 0)
     return NULL;
 
-  for (i = list; i; i = i->nextThing) {
-    TObj *to = dynamic_cast<TObj *>(i);
+  for(StuffIter it=list.begin();it!=list.end();++it){
+    TObj *to = dynamic_cast<TObj *>(*it);
     if (to && ch->canSee(to)) {
       if ((to->getValue() >= 1) &&
           !to->isObjStat(ITEM_NEWBIE) &&
@@ -1566,7 +1557,7 @@ TBeing *get_char_room(const sstring &name, int room, int *count)
 
   j = (count ? *count : 0);
 
-  for (i = real_roomp(room)->getStuff(); i && (j <= numx); i = i->nextThing) {
+  for(StuffIter it=real_roomp(room)->stuff.begin();it!=real_roomp(room)->stuff.end() && (i=*it);++it) {
     TBeing *tbt = dynamic_cast<TBeing *>(i);
     if (tbt && isname(tmp, tbt->name)) {
       j++;
@@ -1622,10 +1613,8 @@ TBeing *get_char_num(int nr)
 
 void TThing::newOwner(TThing *ch)
 {
-  if (getStuff())
-    stuff->newOwner(ch);
-  if (nextThing)
-    nextThing->newOwner(ch);
+  for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end();++it)
+    (*it)->newOwner(ch);
 
   parent = ch;
 }
@@ -1636,13 +1625,8 @@ void TObj::update(int use)
     obj_flags.decay_time -= use;
   }
 
-  if (getStuff())
-    getStuff()->update(use);
-
-  if (nextThing) {
-    if (nextThing != this)
-      nextThing->update(use);
-  }
+  for(StuffIter it=stuff.begin();it!=stuff.end();++it)
+    (*it)->update(use);
 } 
 
 void TBeing::updateCharObjects()
@@ -1653,8 +1637,8 @@ void TBeing::updateCharObjects()
     if (equipment[i])
       equipment[i]->update(1);
 
-  if (getStuff())
-    getStuff()->update(1);
+  for(StuffIter it=stuff.begin();it!=stuff.end();++it)
+    (*it)->update(1);
 }
 
 void extract_edit_char(TMonster *ch)
@@ -1701,7 +1685,7 @@ TBeing *get_char_room_vis(const TBeing *ch, const sstring &name, int *count, exa
     return NULL;
 
   j = (count ? *count : 0);
-  for (i = ch->roomp->getStuff(); i && (j <= numx); i = i->nextThing) {
+  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (i=*it);++it) {
     mob = dynamic_cast<TBeing *>(i);
     if (!mob)
       continue;
@@ -1772,7 +1756,7 @@ TBeing *get_char_vis_direction(const TBeing *ch, char *name, dirTypeT dir, unsig
 
   while (range <= max_dist) {
     if ((range == 0 && here) || range > 0) {
-      for (t = rp->getStuff(); t && (j <= numx); t = t->nextThing) {
+      for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
         TBeing *tbt = dynamic_cast<TBeing *>(t);
         if (tbt && isname(tmp, tbt->name) && 
             // use same func as scan.  technically might need a canSeeInfra too
@@ -1845,8 +1829,8 @@ TBeing *get_pc_room(const TBeing *ch, const sstring &name, exactTypeT exact, inf
   if (ch->roomp == NULL)
     return NULL;
 
-  for (TThing *thing = ch->roomp->getStuff(); thing; thing = thing->nextThing) {
-    i = dynamic_cast<TBeing*>(thing);
+  for(StuffIter it= ch->roomp->stuff.begin();it!= ch->roomp->stuff.end();++it) {
+    i = dynamic_cast<TBeing*>(*it);
     if (i == NULL)
       continue;
     if (i->isPc()) {
@@ -1930,11 +1914,12 @@ TBeing *get_char_vis(const TBeing *ch, const sstring &name, int *count, infraTyp
   return get_char_vis_world(ch, name, count, EXACT_NO, infra);
 }
 
-TThing *get_thing_in_list_getable(TBeing *ch, const char *name, TThing *list)
+TThing *get_thing_in_list_getable(TBeing *ch, const char *name, StuffList list)
 {
   TThing *o;
 
-  for (o = list; o; o = o->nextThing) {
+  for(StuffIter it=list.begin();it!=list.end();++it){
+    o=*it;
     if (!ch->canSee(o))
       continue;
     if (((o->thingHolding() == ch) &&
@@ -2003,7 +1988,7 @@ TThing *get_thing_on_list_getable(TBeing *ch, const char *name, TThing *list)
   return NULL;
 }
 
-TThing *searchLinkedListVis(const TBeing *ch, sstring name, TThing *list, int *count, thingTypeT type)
+TThing *searchLinkedListVis(const TBeing *ch, sstring name, StuffList list, int *count, thingTypeT type)
 {
   TThing *i, *t;
   int j, numx;
@@ -2017,7 +2002,8 @@ TThing *searchLinkedListVis(const TBeing *ch, sstring name, TThing *list, int *c
 
   j = (count ? *count : 0);
 
-  for (t = list; t && (j < numx); t = t->nextThing) {
+  for(StuffIter it=list.begin();it!=list.end() && (j < numx); ++it){
+    t=*it;
     if (t->name && isname(tmp, t->name)) {
       if (ch->canSee(t)) {
         if (type == TYPETHING || 
@@ -2126,12 +2112,12 @@ TObj *get_obj_vis(TBeing *ch, const char *name, int *count, exactTypeT exact)
 
   // int j = count ? *count : 0;
 
-  TThing *ti = searchLinkedListVis(ch, name, ch->getStuff(), count, TYPEOBJ);
+  TThing *ti = searchLinkedListVis(ch, name, ch->stuff, count, TYPEOBJ);
   i = dynamic_cast<TObj *>(ti);
   if (i)
     return (i);
 
-  ti = searchLinkedListVis(ch, name, ch->roomp->getStuff(), count, TYPEOBJ);
+  ti = searchLinkedListVis(ch, name, ch->roomp->stuff, count, TYPEOBJ);
   i = dynamic_cast<TObj *>(ti);
   if (i)
     return (i);
@@ -2157,7 +2143,7 @@ TObj *get_obj_vis_accessible(TBeing *ch, const sstring &name)
     return NULL;
 
   // scan items carried
-  for (i = ch->getStuff(); i && j <= numx; i = i->nextThing) {
+  for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end() && (i=*it);++it) {
     obj = dynamic_cast<TObj *>(i);
     if (obj && isname(tmp, obj->name) && ch->canSee(obj)) {
       if (j == numx)
@@ -2186,7 +2172,7 @@ TObj *get_obj_vis_accessible(TBeing *ch, const sstring &name)
         j++;
     }
   }
-  for (i = ch->roomp->getStuff();i && j <= numx; i = i->nextThing) {
+  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (i=*it);++it) {
     obj = dynamic_cast<TObj *>(i);
     if (obj && isname(tmp, obj->name) && ch->canSee(obj)) {
       if (j == numx)
@@ -2298,7 +2284,7 @@ int generic_find(const char *arg, int bv, TBeing *ch, TBeing **tar_ch, TObj **ob
       return FIND_CHAR_WORLD;
   }
   if (bv & FIND_OBJ_INV) {
-    if ((t = searchLinkedListVis(ch, name, ch->getStuff(), &count, TYPEOBJ))) {
+    if ((t = searchLinkedListVis(ch, name, ch->stuff, &count, TYPEOBJ))) {
       *obj = dynamic_cast<TObj *>(t);
       if (*obj) {
         return FIND_OBJ_INV;
@@ -2326,7 +2312,7 @@ int generic_find(const char *arg, int bv, TBeing *ch, TBeing **tar_ch, TObj **ob
     }
   }
   if (bv & FIND_OBJ_ROOM) {
-    if ((t = searchLinkedListVis(ch, name, ch->roomp->getStuff(), &count, TYPEOBJ))) {
+    if ((t = searchLinkedListVis(ch, name, ch->roomp->stuff, &count, TYPEOBJ))) {
       *obj = dynamic_cast<TObj *>(t);
       if (*obj) {
         return FIND_OBJ_ROOM;
@@ -2374,7 +2360,7 @@ TThing *get_thing_char_using(TBeing *ch, const char *arg, int vnum, bool check_b
         return t;
     } else if (dynamic_cast<TSpellBag *>(t) && check_spellbag) {
       bag = t;
-      for (t = bag->getStuff(); t; t = t->nextThing) {
+      for(StuffIter it=bag->stuff.begin();it!=bag->stuff.end() && (t=*it);++it) {
         TObj *to = dynamic_cast<TObj *>(t);
         if (((vnum >= 0) && to && (to->objVnum() == vnum)) ||
             (tmp && *tmp && isname(tmp, t->name))) 
@@ -2383,7 +2369,7 @@ TThing *get_thing_char_using(TBeing *ch, const char *arg, int vnum, bool check_b
       }
     } else if (dynamic_cast<TBag *>(t) && check_bag) {       
       bag = t;
-      for (t = bag->getStuff();t;t = t->nextThing) {
+      for(StuffIter it=bag->stuff.begin();it!=bag->stuff.end() && (t=*it);++it) {
         TObj *to = dynamic_cast<TObj *>(t);
         if (((vnum >= 0) && to && (to->objVnum() == vnum)) ||
             (tmp && *tmp && isname(tmp, t->name))) 
@@ -2401,7 +2387,7 @@ TThing *get_thing_char_using(TBeing *ch, const char *arg, int vnum, bool check_b
         return t;
     } else if (dynamic_cast<TSpellBag *>(t) && check_spellbag) {
       bag = t;
-      for (t = bag->getStuff();t;t = t->nextThing) {
+      for(StuffIter it=bag->stuff.begin();it!=bag->stuff.end() && (t=*it);++it) {
         TObj *to = dynamic_cast<TObj *>(t);
         if (((vnum >= 0) && to && (to->objVnum() == vnum)) ||
             (tmp && *tmp && isname(tmp, t->name))) 
@@ -2410,7 +2396,7 @@ TThing *get_thing_char_using(TBeing *ch, const char *arg, int vnum, bool check_b
       }
     } else if (dynamic_cast<TBag *>(t) && check_bag) {
       bag = t;
-      for (t = bag->getStuff();t;t = t->nextThing) {
+      for(StuffIter it=bag->stuff.begin();it!=bag->stuff.end() && (t=*it);++it) {
         TObj *to = dynamic_cast<TObj *>(t);
         if (((vnum >= 0) && to && (to->objVnum() == vnum)) ||
             (tmp && *tmp && isname(tmp, t->name))) 
@@ -2419,7 +2405,7 @@ TThing *get_thing_char_using(TBeing *ch, const char *arg, int vnum, bool check_b
       }
     }
   }
-  for (t = ch->getStuff(); t ; t = t->nextThing) {
+  for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end() && (t=*it);++it) {
     if (!ch->canSee(t))
       continue;
     TObj *to = dynamic_cast<TObj *>(t);
@@ -2429,7 +2415,7 @@ TThing *get_thing_char_using(TBeing *ch, const char *arg, int vnum, bool check_b
         return t;
     } else if (dynamic_cast<TSpellBag *>(to) && check_spellbag) {
       bag = to;
-      for (t2 = bag->getStuff();t2;t2 = t2->nextThing) {
+      for(StuffIter it=bag->stuff.begin();it!=bag->stuff.end() && (t2=*it);++it) {
         TObj *to2 = dynamic_cast<TObj *>(t2);
         if (((vnum >= 0) && to2 && (to2->objVnum() == vnum)) ||
             (tmp && *tmp && isname(tmp, t2->name))) 
@@ -2438,7 +2424,7 @@ TThing *get_thing_char_using(TBeing *ch, const char *arg, int vnum, bool check_b
       }
     } else if (dynamic_cast<TBag *>(to) && check_bag) {
       bag = to;
-      for (t2 = bag->getStuff();t2;t2 = t2->nextThing) {
+      for(StuffIter it=bag->stuff.begin();it!=bag->stuff.end() && (t2=*it);++it) {
         TObj *to2 = dynamic_cast<TObj *>(t2);
         if (((vnum >= 0) && to2 && (to2->objVnum() == vnum)) ||
             (tmp && *tmp && isname(tmp, t2->name))) 

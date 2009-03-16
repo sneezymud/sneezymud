@@ -21,8 +21,8 @@ bool TBeing::anythingGetable(const TObj *sub, const char *name) const
   TThing *o, *n;
 
   if (!sub) {
-    for (o = roomp->getStuff(); o; o = n) {
-      n = o->nextThing;
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+      o=*(it++);
       if (!dynamic_cast<TObj *>(o))
         continue;
 
@@ -33,8 +33,8 @@ bool TBeing::anythingGetable(const TObj *sub, const char *name) const
     }
   } else {
     if (!dynamic_cast<const TTable *>(sub)) {
-      for (o = sub->getStuff(); o; o = n) {
-        n = o->nextThing;
+      for(StuffIter it=sub->stuff.begin();it!=sub->stuff.end();){
+        o=*(it++);
         if (!dynamic_cast<TObj *>(o))
           continue;
         if (canGet(o, SILENT_YES))
@@ -63,7 +63,7 @@ static void getTaskStop(TObj *sub)
   if (sub) {
     TPCorpse * tmpcorpse = dynamic_cast<TPCorpse *>(sub);
     if (tmpcorpse) {
-      if (!tmpcorpse->getStuff())
+      if (tmpcorpse->stuff.empty())
         tmpcorpse->removeCorpseFromList();
       else
         tmpcorpse->saveCorpseToFile();
@@ -110,8 +110,8 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
         }
         if (!*ch->task->orig_arg && !ch->task->flags) {
           //    get all
-          for (t = rp->getStuff(); t; t = t2) {
-            t2 = t->nextThing;   // t2 needed since coins get destroyed
+          for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
+            t=*(it++);;   // t2 needed since coins get destroyed
             o = dynamic_cast<TObj *>(t);
             if (!o)
               continue;
@@ -179,7 +179,7 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
           }
         } else if (!ch->task->flags) {
           // This is something like get all.sword
-          while ((t = get_thing_in_list_getable(ch, ch->task->orig_arg, rp->getStuff()))) {
+          while ((t = get_thing_in_list_getable(ch, ch->task->orig_arg, rp->stuff))) {
             rc = get(ch, t, NULL, GETNULL, true);
 	    if (IS_SET_DELETE(rc, DELETE_ITEM)) {
                 delete t;
@@ -202,7 +202,7 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
           return FALSE;
         } else {
           // get 6*item   ?
-          while ((t = get_thing_in_list_getable(ch, ch->task->orig_arg, rp->getStuff()))) {
+          while ((t = get_thing_in_list_getable(ch, ch->task->orig_arg, rp->stuff))) {
             if (--(ch->task->flags) > 0) {
               rc = get(ch, t, NULL, GETNULL, true);
               if (IS_SET_DELETE(rc, DELETE_ITEM)) {
@@ -266,7 +266,7 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
             ch->doQueueSave();
             return FALSE;
           }
-          while ((t = get_thing_in_list_getable(ch, buf1.c_str(), sub->getStuff()))) {
+          while ((t = get_thing_in_list_getable(ch, buf1.c_str(), sub->stuff))) {
             if (--(ch->task->flags) > 0) {
               rc = get(ch, t, sub, GETOBJOBJ, true);
               if (IS_SET_DELETE(rc, DELETE_ITEM)) {
@@ -339,7 +339,7 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
           }
         } else {
           if (ch->task->status) {
-            while ((t = get_thing_in_list_getable(ch, buf1.c_str(), sub->getStuff()))) {
+            while ((t = get_thing_in_list_getable(ch, buf1.c_str(), sub->stuff))) {
               rc = get(ch, t, sub, GETOBJOBJ, true);
               if (IS_SET_DELETE(rc, DELETE_ITEM)) {
                 delete t;
@@ -400,8 +400,8 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
               ch->doQueueSave();
               return FALSE;
             }
-            for (t = sub->getStuff(); t; t = t2) {
-              t2 = t->nextThing;
+            for(StuffIter it=sub->stuff.begin();it!=sub->stuff.end();){
+              t=*(it++);
               rc = ch->checkForInsideTrap(sub);
               if (IS_SET_ONLY(rc, DELETE_THIS)) {
                 ch->stopTask();

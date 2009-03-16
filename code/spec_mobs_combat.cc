@@ -486,7 +486,7 @@ int rust_monster(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 {
   int i;
   TBeing *tmp_ch;
-  TThing *t, *t2;
+  TThing *t;
 
   if ((cmd != CMD_MOB_COMBAT))
     return FALSE;
@@ -497,8 +497,8 @@ int rust_monster(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
   if (!me->roomp || me->roomp->isRoomFlag(ROOM_ARENA))
     return FALSE;
 
-  for (t = me->roomp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=me->roomp->stuff.begin();it!=me->roomp->stuff.end();){
+    t=*(it++);
     tmp_ch = dynamic_cast<TBeing *>(t);
     if (!tmp_ch)
       continue;

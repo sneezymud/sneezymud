@@ -185,7 +185,7 @@ void TOpenContainer::changeObjValue2(TBeing *ch)
 
 void TOpenContainer::describeContains(const TBeing *ch) const
 {
-  if (getStuff() && !isClosed())
+  if (!stuff.empty() && !isClosed())
     ch->sendTo(COLOR_OBJECTS, fmt("%s seems to have something in it...\n\r") %
 	       sstring(getName()).cap());
 }
@@ -232,7 +232,7 @@ sstring TOpenContainer::showModifier(showModeT tMode, const TBeing *tBeing) cons
     tString += isClosed() ? "closed" : "opened";
     tString += ")";                                           
 
-    if(!isClosed() && !getStuff()){
+    if(!isClosed() && stuff.empty()){
       tString += " (empty)";
     }
 
@@ -473,7 +473,7 @@ void TOpenContainer::lookObj(TBeing *ch, int bits) const
   } else {
     vlogf(LOG_BUG, fmt("Problem in look in for object: (%s:%d), check vol/weight limit") %  getName() % objVnum());
   }
-  list_in_heap(getStuff(), ch, 0, 100);
+  list_in_heap(stuff, ch, 0, 100);
 
   // list_in_heap uses sequential sendTo's, so lets sstring it to them for
   // easier browsing
@@ -658,7 +658,7 @@ void TOpenContainer::pickMe(TBeing *thief)
 // THIS, VICT(ch), ITEM(bag)
 int TOpenContainer::sellCommod(TBeing *ch, TMonster *keeper, int shop_nr, TThing *)
 {
-  TThing *t, *t2;
+  TThing *t;
   int rc;
   bool wasClosed = false;
 
@@ -674,8 +674,8 @@ int TOpenContainer::sellCommod(TBeing *ch, TMonster *keeper, int shop_nr, TThing
     // if its still closed, we errored, or it was locked or something
     return FALSE;
   }
-  for (t = getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=stuff.begin();it!=stuff.end();){
+    t=*(it++);
     rc = t->sellCommod(ch, keeper, shop_nr, this);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       delete t;

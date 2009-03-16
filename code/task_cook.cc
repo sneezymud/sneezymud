@@ -22,7 +22,7 @@ bool check_ingredients(TCookware *pot, int recipe){
 
     for(int j=i;ingredients[j].recipe>=0 && ingredients[j].ingredient==ingredients[i].ingredient;++j){
       // look for this ingredient
-      for(t=pot->getStuff();t;t=t->nextThing){
+      for(StuffIter it=pot->stuff.begin();it!=pot->stuff.end() && (t=*it);++it){
 	switch(ingredients[i].type){
 	  case TYPE_VNUM:
 	    if(obj_index[t->number].virt==ingredients[i].num)
@@ -69,7 +69,7 @@ TCookware *find_pot(TBeing *ch, const sstring &cookware){
   TCookware *pot=NULL;
   int count=0;
 
-  if((tpot=searchLinkedListVis(ch, cookware, ch->getStuff(), &count))){
+  if((tpot=searchLinkedListVis(ch, cookware, ch->stuff, &count))){
     pot=dynamic_cast<TCookware *>(tpot);
   }
 
@@ -119,11 +119,9 @@ void TBeing::doCook(sstring arg)
 
   // delete the ingredients and then place the finished product in the pot
   // if the cooking fails we delete the finished product later
-  TThing *t2, *t=pot->getStuff();
-  while(t){
-    t2=t->nextThing;
+  for(StuffIter it=pot->stuff.begin();it!=pot->stuff.end();){
+    TThing *t=*(it++);
     delete t;
-    t=t2;
   }
   TObj *o;
   if((o=read_object(recipes[recipe].vnum, VIRTUAL)))
@@ -150,7 +148,7 @@ int task_cook(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *
     ch->stopTask();
 
     if(pot)
-      delete pot->getStuff();
+      delete pot->stuff.front();
 
     return FALSE; // returning FALSE lets command be interpreted
   }
@@ -208,18 +206,18 @@ int task_cook(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *
           TRUE, ch, 0, 0, TO_ROOM);
       ch->stopTask();
 
-      delete pot->getStuff();
+      delete pot->stuff.front();
 
       break;
     case CMD_TASK_FIGHTING:
       ch->sendTo("You can't properly cook while under attack.\n\r");
       ch->stopTask();
-      delete pot->getStuff();
+      delete pot->stuff.front();
       break;
   default:
       if (cmd < MAX_CMD_LIST)
         warn_busy(ch);
-      delete pot->getStuff();
+      delete pot->stuff.front();
       break;                    // eat the command
   }
   return TRUE;

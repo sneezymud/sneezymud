@@ -30,7 +30,7 @@ TObj * findShopObjForCompare(TBeing *ch, sstring StObject)
     tValue = 1;
   }
 
-  for (tThing = ch->roomp->getStuff(); tThing; tThing = tThing->nextThing) {
+  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (tThing=*it);++it) {
     if (!dynamic_cast<TMonster *>(tThing) ||
         (mob_specials[GET_MOB_SPE_INDEX(tThing->spec)].proc != shop_keeper))
       continue;
@@ -42,9 +42,9 @@ TObj * findShopObjForCompare(TBeing *ch, sstring StObject)
         !shop_index[shop_nr].willTradeWith(dynamic_cast<TMonster *>(tThing), ch))
       continue;
 
-    TThing *tObj = searchLinkedListVis(ch, tString, tThing->getStuff());
+    TThing *tObj = searchLinkedListVis(ch, tString, tThing->stuff);
     if (!tObj)
-      tObj = get_num_obj_in_list(ch, convertTo<int>(tString), tThing->getStuff(), shop_nr);
+      tObj = get_num_obj_in_list(ch, convertTo<int>(tString), tThing->stuff, shop_nr);
 
     if (tObj)
       return (dynamic_cast<TObj *>(tObj));
@@ -60,7 +60,7 @@ TObj * findForCompare(TBeing *ch, sstring StObject)
   TThing    *tObj;
 
   if (!(tObj = get_thing_in_equip(ch, StObject.c_str(), ch->equipment, &tSlot, TRUE, &tCount)))
-    if (!(tObj = searchLinkedListVis(ch, StObject, ch->getStuff(), &tCount)))
+    if (!(tObj = searchLinkedListVis(ch, StObject, ch->stuff, &tCount)))
       if (!(tObj = findShopObjForCompare(ch, StObject)))
         return NULL;
 

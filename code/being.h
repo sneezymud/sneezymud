@@ -1358,6 +1358,7 @@ class TBeing : public TThing {
     void removeCurseBeing(TBeing *, TMagicItem *, spellNumT);
 
     void addObjCost(TBeing *, TObj *, objCost *, sstring &str); 
+    void addObjCost(TBeing *, StuffList list, objCost *, sstring &str); 
     TObj *findMostExpensiveItem();
     bool recepOffer(TBeing *, objCost *);
     void makeRentNote(TBeing *);

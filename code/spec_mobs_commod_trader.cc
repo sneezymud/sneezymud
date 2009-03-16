@@ -13,8 +13,8 @@ TObj *findCart(TBeing *myself)
   TObj *cart=NULL;
   int cartnum=33296;
 
-  for(TThing *t=myself->roomp->getStuff();t;t=t->nextThing){
-    if((cart=dynamic_cast<TObj *>(t)) && cart->objVnum()==cartnum)
+  for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end();++it){
+    if((cart=dynamic_cast<TObj *>(*it)) && cart->objVnum()==cartnum)
       break;
   }
   if(!cart){
@@ -93,11 +93,10 @@ int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 
   if(0 && myself->in_room == commod_shops[*target_shop_idx]){
     TShopOwned tso(commod_shop_nr[*target_shop_idx], myself);
-    TThing *t2;
 
     // get stuff from the cart
-    for(TThing *t=cart->getStuff();t;t=t2){
-      t2=t->nextThing;
+    for(StuffIter it=cart->stuff.begin();it!=cart->stuff.end();){
+      TThing *t=*(it++);
 
       --(*t);
       *myself+=*t;
@@ -106,8 +105,8 @@ int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     // sell commods
     vlogf(LOG_PEEL, fmt("In target shop (%i) selling commods") %
 	  commod_shop_nr[*target_shop_idx]);
-    for(TThing *t=myself->getStuff();t;t=t2){
-      t2=t->nextThing;
+    for(StuffIter it=cart->stuff.begin();it!=cart->stuff.end();){
+      TThing *t=*(it++);
       if((commod=dynamic_cast<TCommodity *>(t))){
 	price=commod->sellPrice(commod->numUnits(), 
 				commod_shop_nr[*target_shop_idx], -1, myself);
@@ -190,9 +189,8 @@ int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 
       vlogf(LOG_PEEL, fmt("now moving to %i") % commod_shop_nr[*target_shop_idx]);
 
-      TThing *ttt2;
-      for(TThing *ttt=myself->getStuff();ttt;ttt=ttt2){
-	ttt2=ttt->nextThing;
+      for(StuffIter it=cart->stuff.begin();it!=cart->stuff.end();){
+	TThing *ttt=*(it++);
 	if(dynamic_cast<TCommodity *>(ttt)){
 	  --(*ttt);
 	  *cart += *ttt;

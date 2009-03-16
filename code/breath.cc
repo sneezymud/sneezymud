@@ -298,11 +298,11 @@ int DragonBreath(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   myself->addToWait(combatRound(1) * dragons[i].lag);
 
   // have all the mobs in the room try to run for it!
-  TThing *t1, *t2;
+  TThing *t1;
       
-  for (t1 = myself->roomp->getStuff(); t1; t1 = t2) {
+  for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end();){
     TMonster *tm;
-    t2 = t1->nextThing;
+    t1=*(it++);
     if ((tm = dynamic_cast<TMonster *>(t1))) {
       if (tm != myself && tm->canSee(myself)) {
         if (::number(0, 9)) {
@@ -313,8 +313,8 @@ int DragonBreath(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     }
   }
 
-  for (t1 = myself->roomp->getStuff(); t1; t1 = t2) {
-    t2 = t1->nextThing;
+  for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end();){
+    t1=*(it++);
     tmp = dynamic_cast<TBeing *>(t1);
     if (!tmp)
       continue;

@@ -34,7 +34,7 @@ extern bool noteLimitedItems(FILE *, const char *, unsigned char, bool);
 extern const int thaco[128];
 extern const byte ac_percent_pos[MAX_WEAR];
 extern int AddToCharHeap(TBeing *heap[50], int *, int total[50], TBeing *);
-extern int MobCountInRoom(const TThing *);
+extern int MobCountInRoom(const StuffList);
 extern bool WizLock;
 extern bool Shutdown;
 extern long timeTill;
@@ -209,16 +209,16 @@ extern int SHARP_PRICE(TObj *);
 extern bool UtilProcs(int);
 extern bool GuildProcs(int);
 
-extern void list_char_in_room(TThing *list, TBeing *ch);
+extern void list_char_in_room(StuffList list, TBeing *ch);
 
 // ch can not be const due to listMe()
-extern void list_thing_in_room(const TThing *list, TBeing *ch);
+extern void list_thing_in_room(const StuffList list, TBeing *ch);
 extern void list_thing_on_heap(const TThing *, TBeing *ch, bool);
 
 // ch can not be const, due to showTo
-extern void list_in_heap(const TThing *list, TBeing *ch, bool show_all, int perc);
+extern void list_in_heap(StuffList list, TBeing *ch, bool show_all, int perc);
 
-extern bool list_in_heap_filtered(TThing *list, TBeing *ch, sstring filter, bool show_all, silentTypeT silent = SILENT_NO);
+extern bool list_in_heap_filtered(StuffList list, TBeing *ch, sstring filter, bool show_all, silentTypeT silent = SILENT_NO);
 
 
 extern void update_world_weather();

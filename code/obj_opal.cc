@@ -144,7 +144,7 @@ TOpal *find_biggest_powerstone(const TBeing *ch)
     t->powerstoneCheck(&stone);
   }
   // Check through char's inventory -- only the biggest powerstone charges
-  for (t = ch->getStuff(); t; t = t->nextThing) 
+  for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end() && (t=*it);++it) 
     t->powerstoneCheck(&stone);
   
   return stone;

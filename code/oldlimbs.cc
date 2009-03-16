@@ -359,8 +359,6 @@ void TBeing::makeBodyPart(wearSlotT pos, TBeing *opp)
           describeBodySlot(pos).c_str(), getName());
   }
   corpse->setDescr(mud_str_dup(buf));
-
-  corpse->setStuff(NULL);
   corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
   corpse->addCorpseFlag(CORPSE_NO_REGEN);
   corpse->obj_flags.decay_time = 3 * (dynamic_cast<TMonster *>(this) ? MAX_NPC_CORPSE_TIME : MAX_PC_CORPSE_EMPTY_TIME);
@@ -402,7 +400,6 @@ void TBeing::makeOtherPart(const char *single, const char *part, TBeing *opp)
   sprintf(buf, "%s's bloody and ichor coated %s %s here.",
           getName(), part ? part : single, part ? "lay" : "lies");
   corpse->setDescr(mud_str_dup(buf));
-  corpse->setStuff(NULL);
   corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
   corpse->addCorpseFlag(CORPSE_NO_REGEN);
   corpse->setVolume(getHeight() * 122 / 100);

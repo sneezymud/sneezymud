@@ -221,13 +221,13 @@ TObj *catch_a_fish(TRoom *rp)
     TRoom *briny_deep=real_roomp(19024);
     int count=0;
 
-    for(TThing *t=briny_deep->getStuff();t;t=t->nextThing)
+    for(StuffIter it=briny_deep->stuff.begin();it!=briny_deep->stuff.end();++it)
       ++count;
 
     count=::number(0,count-1);
 
-    for(TThing *t=briny_deep->getStuff();t;t=t->nextThing){
-      if(!count-- && (fish=dynamic_cast<TObj *>(t))){
+    for(StuffIter it=briny_deep->stuff.begin();it!=briny_deep->stuff.end();++it){
+      if(!count-- && (fish=dynamic_cast<TObj *>(*it))){
 	sendrpf(briny_deep, "A fishing line with a hook attached descends from above and pulls up %s!\n\r", fish->getName());
 	--(*fish);
 	break;
@@ -239,20 +239,16 @@ TObj *catch_a_fish(TRoom *rp)
 }
 
 
-TThing *findBait(TThing *stuff){
-  TThing *tt;
+TThing *findBait(StuffList list){
   TTool *bait;
   TThing *ret;
 
-  if(!stuff) 
-    return NULL;
-
-  for(tt=stuff;tt;tt=tt->nextThing){
-    if(tt && (bait=dynamic_cast<TTool *>(tt)) &&
+  for(StuffIter it=list.begin();it!=list.end();++it){
+    if((bait=dynamic_cast<TTool *>(*it)) &&
        (bait->getToolType() == TOOL_FISHINGBAIT))
-      return tt;
+      return *it;
 
-    if(tt && tt->getStuff() && (ret=findBait(tt->getStuff())))
+    if(!(*it)->stuff.empty() && (ret=findBait((*it)->stuff)))
       return ret;
   }
 
@@ -287,15 +283,13 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
     return FALSE; // returning FALSE lets command be interpreted
   }
 
-  TThing *ss=ch->getStuff();
-
   // find our bait here
-  t=findBait(ss);
+  t=findBait(ch->stuff);
   
   int m=WEAR_NOWHERE;
   while(!t && m<MAX_WEAR){
     ++m;
-    t=findBait(ch->equipment[m]);
+    t=findBait(ch->equipment[m]->stuff);
   }
 
 

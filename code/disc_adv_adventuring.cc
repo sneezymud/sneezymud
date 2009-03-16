@@ -246,9 +246,9 @@ int forage_insect(TBeing *caster)
     bug = forage->bugs[::number(0,forage->cBugs-1)];
 
   // increase chance if there is spoiled food or trash
-  for(TThing *thing = caster->roomp->getStuff();food > 0 && thing; thing = thing->nextThing)
+  for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end();++it)
   {
-    if (dynamic_cast<TTrash*>(thing) || (dynamic_cast<TFood*>(thing) && dynamic_cast<TFood*>(thing)->isFoodFlag(FOOD_SPOILED)))
+    if (dynamic_cast<TTrash*>(*it) || (dynamic_cast<TFood*>(*it) && dynamic_cast<TFood*>(*it)->isFoodFlag(FOOD_SPOILED)))
     {
       food += 0.5;
       break;
@@ -879,7 +879,7 @@ void TBeing::doSeekwater()
                dirs_to_blank[code] % norm());
       else {
         int count = code - 9, seen = 0;
-        for (t = roomp->getStuff(); t; t = t->nextThing) {
+        for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
           TPortal *tp = dynamic_cast<TPortal *>(t);
           if (tp) {
             seen++;
@@ -947,7 +947,7 @@ int TBeing::inCamp() const
   if (!isAffected(AFF_GROUP))
     return FALSE;
 
-  for (t = roomp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
     ch = dynamic_cast<TBeing *>(t);
     if (!ch)
       continue;

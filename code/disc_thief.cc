@@ -613,7 +613,7 @@ void TBeing::doTrack(const char *argument)
                dirs_to_blank[code] % norm());
       else {
         int count = code - 9, seen = 0;
-        for (t = roomp->getStuff(); t; t = t->nextThing) {
+        for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
           TPortal *tp = dynamic_cast<TPortal *>(t);
           if (tp) {
             seen++;
@@ -733,7 +733,7 @@ int TBeing::track(TBeing *vict)
       }
     } else {
       int count = code - 9, seen = 0;
-      for (t = roomp->getStuff(); t; t = t->nextThing) {
+      for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
         TPortal *tp = dynamic_cast<TPortal *>(t);
         if (tp) {
           seen++;
@@ -763,7 +763,6 @@ dirTypeT TBeing::dirTrack(TBeing *vict)
 {
   dirTypeT code;
   affectedData *aff;
-  TThing *t;
 
   if (roomp && !isImmortal() && 
       (roomp->getLight() + visionBonus <= 0) &&
@@ -812,8 +811,9 @@ dirTypeT TBeing::dirTrack(TBeing *vict)
     return code;
   } else {
     int count = code - 9, seen = 0;
-    for (t = roomp->getStuff(); t; t = t->nextThing) {
-      TPortal *tp = dynamic_cast<TPortal*>(t);
+    TPortal *tp=NULL;
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();++it) {
+      tp = dynamic_cast<TPortal*>(*it);
       if (tp) {
          seen++;
         if (count == seen) {
@@ -823,7 +823,7 @@ dirTypeT TBeing::dirTrack(TBeing *vict)
         }
       }
     }
-    if (!t) {
+    if (!tp) {
       sendTo("Error finding path target!  Tell a god.\n\r");
       vlogf(LOG_BUG, "Error finding path (dirTrack)");
     }

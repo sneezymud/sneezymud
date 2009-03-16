@@ -19,7 +19,7 @@ vector <TBow *> TBeing::getBows()
     if ((temp = dynamic_cast<TBow *>(equipment[i])))
       bows.push_back(temp);
   }
-  for (j = getStuff(); j; j = j->nextThing) {
+  for(StuffIter it=stuff.begin();it!=stuff.end() && (j=*it);++it) {
     if (!canSee(j))
       continue;
     if ((temp = dynamic_cast<TBow *>(j)))
@@ -37,7 +37,7 @@ TArrow *TBeing::autoGetAmmoQuiver(TBow *bow, TQuiver *quiver)
   if (!bow || !quiver || quiver->isClosed())
     return ammo;
   
-  for (i = quiver->getStuff(); i; i = i->nextThing)
+  for(StuffIter it=quiver->stuff.begin();it!=quiver->stuff.end() && (i=*it);++it)
   {
     if ((temp = dynamic_cast<TArrow *>(i)) &&
         bow->getArrowType() == temp->getArrowType() &&
@@ -77,7 +77,7 @@ TArrow *TBeing::autoGetAmmo(TBow *bow)
     }
   }
   if (!ammo) { // no ammo on person - check inventory
-    for (j = getStuff(); j; j = j->nextThing) {
+    for(StuffIter it=stuff.begin();it!=stuff.end() && (j=*it);++it) {
       if (!canSee(j))
         continue;
       if ((quiver = dynamic_cast<TQuiver *>(j))) {
@@ -135,7 +135,7 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
   for (j = 0; j < bows.size(); j++)
   {
     bow = bows[j];
-  if (bow->getStuff())
+  if (!bow->stuff.empty())
       break;
     if (!bow) vlogf(LOG_BUG, fmt("spec_mobs_archer.cc: archer: bow is null somehow"));
     if (bow && (tempArr = ch->autoGetAmmo(bow))) {
@@ -144,15 +144,15 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
     }
   }
 
-  if (!bow || (!ammo && !bow->getStuff()))
+  if (!bow || (!ammo && bow->stuff.empty()))
       return FALSE;
 
 // if I have ammo, then I don't want to fight straight up
 // if I'm aggro and in the same room as a Pc, or I hate a PC
 // in my room, flee out first
 // only want to do this fleeing if they have a bow
-  for (t = ch->roomp->getStuff(); t; t = t->nextThing) {
-    if ((tbt = dynamic_cast<TBeing *>(t))) {
+  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end();++it) {
+    if ((tbt = dynamic_cast<TBeing *>(*it))) {
       if (tbt->isPc() && (IS_SET(ch->specials.act, ACT_AGGRESSIVE)) ||
           ch->Hates(tbt, NULL))
         ch->doFlee("");
@@ -162,7 +162,7 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
         for (j = 0; j < bows.size(); j++)
         {
           bow = bows[j];
-        if (bow->getStuff())
+        if (!bow->stuff.empty())
             break;
           if (!bow) vlogf(LOG_BUG, fmt("spec_mobs_archer.cc: archer: bow is null somehow"));
           if (bow && (tempArr = ch->autoGetAmmo(bow))) {
@@ -170,7 +170,7 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
             break;
           }
         }
-        if (!bow || (!ammo && !bow->getStuff()))
+        if (!bow || (!ammo && bow->stuff.empty()))
           return FALSE;
       }
     }
@@ -192,7 +192,7 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
         
         count = 0;
   
-        for (t = real_roomp(rm)->getStuff(); t; t = t->nextThing) {
+        for(StuffIter it=real_roomp(rm)->stuff.begin();it!=real_roomp(rm)->stuff.end() && (t=*it);++it) {
           tbt = dynamic_cast<TBeing *>(t);
           if (!tbt || !tbt->isPc())
             continue;
@@ -209,7 +209,7 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
       
       which = ::number(1,count);// which target to pick on the next pass
       count = 0;
-     for (t = real_roomp(rm)->getStuff(); t; t = t->nextThing) {
+     for(StuffIter it=real_roomp(rm)->stuff.begin();it!=real_roomp(rm)->stuff.end() && (t=*it);++it) {
       	tbt = dynamic_cast<TBeing *>(t);
       	if (!tbt || !tbt->isPc())
 	        continue;
@@ -237,7 +237,7 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
         return FALSE;
       }
       numsimilar = 0;
-      for (t = real_roomp(rm)->getStuff(); t; t = t->nextThing) {
+      for(StuffIter it=real_roomp(rm)->stuff.begin();it!=real_roomp(rm)->stuff.end() && (t=*it);++it) {
         tbt2 = dynamic_cast<TBeing *>(t);
         if (!tbt2)
           continue;
@@ -289,7 +289,7 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
       
     bow->bloadArrowBow(ch, ammo);
     if(!(bow = dynamic_cast<TBow *>(ch->equipment[ch->getPrimaryHold()]))
-        || !bow->getStuff())
+       || bow->stuff.empty())
       return FALSE; // in case bload fails for some reason
     
     // shoot target and remove bow

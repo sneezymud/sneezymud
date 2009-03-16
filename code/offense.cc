@@ -691,9 +691,8 @@ int TBeing::doOrder(const char *argument)
     // horses are skipped (intentional) due to !AFF_CHARM
     // captives also skipped
     // we enumerate per room and message individually to avoid players issung 'orders' to subvert speech
-    for (TThing *t = roomp->getStuff(); t; t = t->nextThing) {
-
-      TBeing *kfol = dynamic_cast<TBeing *>(t);
+    for(StuffIter it= roomp->stuff.begin();it!= roomp->stuff.end();++it) {
+      TBeing *kfol = dynamic_cast<TBeing *>(*it);
       if (!kfol || kfol == this || org_room != kfol->inRoom())
         continue;
       if (kfol->desc && kfol->desc->ignored.isIgnored(desc))
@@ -744,7 +743,7 @@ static bool canFleeThisWay(TBeing *ch, dirTypeT dir)
       !(rp2->isWaterSector() || rp2->isUnderwaterSector()))
     return false;
 
-  if (rp2->getMoblim() && MobCountInRoom(rp2->getStuff()) >= rp2->getMoblim())
+  if (rp2->getMoblim() && MobCountInRoom(rp2->stuff) >= rp2->getMoblim())
     return false;
 
 #if 0
@@ -1041,9 +1040,8 @@ int TBeing::doFlee(const char *arg)
         if (fight())
           stopFighting();
 
-        TThing *t2;
-        for (t = rp->getStuff(); t; t = t2) {
-          t2 = t->nextThing;
+        for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
+          t=*(it++);
           TBeing *tbt = dynamic_cast<TBeing *>(t);
           if (!tbt)
             continue;
@@ -1281,7 +1279,7 @@ int TBeing::doAssist(const char *argument, TBeing *vict, bool flags)
 int TObj::burnObject(TBeing *ch, int perc)
 {
   int rc = 0;
-  TThing *t, *t2;
+  TThing *t;
   char buf[256];
 
   if (ch && ch->roomp && ch->roomp->isRoomFlag(ROOM_ARENA))
@@ -1317,9 +1315,9 @@ int TObj::burnObject(TBeing *ch, int perc)
     return FALSE;
 
   TOpenContainer *trc = dynamic_cast<TOpenContainer *>(this);
-  for (t = getStuff(); t; t = t2) {
+  for(StuffIter it=stuff.begin();it!=stuff.end();){
     int perc2;
-    t2 = t->nextThing;
+    t=*(it++);
     if (trc) {
       if (trc->isClosed())
         perc2 = 5 * perc / 100;   // 5% chance if closed
@@ -1363,7 +1361,8 @@ int TObj::burnObject(TBeing *ch, int perc)
     }
     // since bag went poof, lets (re)check contents 
     // with an even higher percentage, and empty bag into owner
-    while ((t = getStuff())) {
+    for(StuffIter it=stuff.begin();it!=stuff.end();){
+      t=*(it++);
       (*t)--;
       if (parent)
         *parent += *t;
@@ -1416,7 +1415,7 @@ int TObj::burnObject(TBeing *ch, int perc)
 
 int TBeing::flameEngulfed()
 {
-  TThing *t, *t2;
+  TThing *t;
   TObj *obj = NULL;
   int i;
   int res = 0;
@@ -1433,8 +1432,8 @@ int TBeing::flameEngulfed()
     if (IS_SET_DELETE(res, DELETE_VICT))
       return DELETE_THIS;
   }
-  for (t = getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=stuff.begin();it!=stuff.end();){
+    t=*(it++);
     obj = dynamic_cast<TObj *>(t);
     if (!obj)
       continue;
@@ -1480,7 +1479,7 @@ int TBeing::flameEngulfed()
 
 int TBeing::thawEngulfed()
 {
-  TThing *t, *t2;
+  TThing *t;
   TObj *obj = NULL;
   int i;
   int res = 0;
@@ -1497,8 +1496,8 @@ int TBeing::thawEngulfed()
     if (IS_SET_DELETE(res, DELETE_VICT))
       return DELETE_THIS;
   }
-  for (t = getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=stuff.begin();it!=stuff.end();){
+    t=*(it++);
     obj = dynamic_cast<TObj *>(t);
     if (!obj)
       continue;
@@ -1528,8 +1527,8 @@ int TBaseContainer::thawObject(TBeing *ch, int perc)
   if(ch && ch->roomp && ch->roomp->isArcticSector())
     return FALSE;
 
-  for (TThing *t = getStuff(); t; t = t->nextThing) {
-    TObj * tot = dynamic_cast<TObj *>(t);
+  for(StuffIter it=stuff.begin();it!=stuff.end();it++){
+    TObj * tot = dynamic_cast<TObj *>(*it);
 
     if (tot) {
       tot->thawObject(ch, perc);
@@ -1609,7 +1608,7 @@ int TPool::thawObject(TBeing *ch, int perc)
 int TObj::freezeObject(TBeing *ch, int perc)
 {
   int rc = 0;
-  TThing *t = NULL, *t2 = NULL;
+  TThing *t = NULL;
 
   if (ch && ch->roomp && ch->roomp->isRoomFlag(ROOM_ARENA))
     return FALSE;
@@ -1635,9 +1634,9 @@ int TObj::freezeObject(TBeing *ch, int perc)
       return DELETE_VICT;
   }
   TOpenContainer *trc = dynamic_cast<TOpenContainer *>(this);
-  for (t = getStuff(); t; t = t2) {
+  for(StuffIter it=stuff.begin();it!=stuff.end();){
     int perc2;
-    t2 = t->nextThing;
+    t=*(it++);
     if (trc) {
       if (trc->isClosed())
         perc2 = 10 * perc / 100;   // 10% chance if closed
@@ -1781,7 +1780,7 @@ int TBeing::frostEngulfed()
   TObj *obj = NULL;
   int i;
   int res;
-  TThing *t = NULL, *t2 = NULL;
+  TThing *t = NULL;
 // Need to account for worn containers
   for (i = MIN_WEAR;i < MAX_WEAR;i++) {
     if (!(t = equipment[i]) || !(obj = dynamic_cast<TObj *>(t)))
@@ -1795,8 +1794,8 @@ int TBeing::frostEngulfed()
     if (IS_SET_DELETE(res, DELETE_VICT))
       return DELETE_THIS;
   }
-  for (t = getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=stuff.begin();it!=stuff.end();){
+    t=*(it++);
     obj = dynamic_cast<TObj *>(t);
     if (!obj)
       continue;
@@ -1816,7 +1815,7 @@ int TObj::meltObject(TBeing *ch, int perc)
 {
   int rc = 0;
   int orig = getStructPoints();
-  TThing *t, *t2;
+  TThing *t;
 
   if (ch && ch->roomp && ch->roomp->isRoomFlag(ROOM_ARENA))
     return FALSE;
@@ -1834,9 +1833,9 @@ int TObj::meltObject(TBeing *ch, int perc)
     return FALSE;
 
   TOpenContainer *trc = dynamic_cast<TOpenContainer *>(this);
-  for (t = getStuff(); t; t = t2) {
+  for(StuffIter it=stuff.begin();it!=stuff.end();){
     int perc2;
-    t2 = t->nextThing;
+    t=*(it++);
     if (trc) {
       if (trc->isClosed())
         perc2 = 10 * perc / 100;   // 10% chance if closed
@@ -1880,7 +1879,7 @@ int TObj::meltObject(TBeing *ch, int perc)
 
 int TBeing::acidEngulfed()
 {
-  TThing *t, *t2;
+  TThing *t;
   TObj *obj = NULL;
   int i, res;
 
@@ -1893,8 +1892,8 @@ int TBeing::acidEngulfed()
       obj = NULL;
     }
   }
-  for (t = getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=stuff.begin();it!=stuff.end();){
+    t=*(it++);
     obj = dynamic_cast<TObj *>(t);
     if (!obj)
       continue;
@@ -1970,7 +1969,7 @@ int TBeing::chlorineEngulfed()
     } else if (t)
       t->poisonObject();
   }
-  for (t = getStuff(); t; t = t->nextThing) 
+  for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) 
     t->poisonObject();
   
   return TRUE;
@@ -1986,9 +1985,9 @@ void TRoom::flameRoom()
   TObj *obj = NULL;
   int rc;
 
-  TThing *t, *t2;
-  for (t = getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  TThing *t;
+  for(StuffIter it=stuff.begin();it!=stuff.end();){
+    t=*(it++);
     obj = dynamic_cast<TObj *>(t);
     if (!obj)
       continue;
@@ -2005,12 +2004,12 @@ void TRoom::flameRoom()
 
 void TBeing::freezeRoom()
 {
-  TThing *t, *t2;
+  TThing *t;
   TObj *obj = NULL;
   int rc;
 
-  for (t = roomp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+    t=*(it++);
     obj = dynamic_cast<TObj *>(t);
     if (!obj || !obj->canWear(ITEM_TAKE))
       continue;
@@ -2026,12 +2025,12 @@ void TBeing::freezeRoom()
 
 void TBeing::acidRoom()
 {
-  TThing *t, *t2;
+  TThing *t;
   TObj *obj = NULL;
   int rc;
 
-  for (t = roomp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+    t=*(it++);
     obj = dynamic_cast<TObj *>(t);
     if (!obj)
       continue;
@@ -2048,10 +2047,9 @@ void TBeing::acidRoom()
 
 void TBeing::chlorineRoom()
 {
-  TThing *t;
 
-  for (t = roomp->getStuff(); t; t = t->nextThing) {
-    t->poisonObject();
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();++it) {
+    (*it)->poisonObject();
   }
   return;
 }

@@ -72,7 +72,6 @@ int adjustCritRollForBarehand(int roll, TBeing *me, spellNumT w_type)
 int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
 {
   char buf[256];
-  TThing *target;
   int rc;
   int num, num2;
   TBeing *tbt = NULL;
@@ -242,8 +241,8 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
         return (ONEHIT_MESS_CRIT_S);
       case 9:
         // Hit friend (half damage) (if no friend hit self) 
-        for (target = roomp->getStuff(); target; target = target->nextThing, tbt = NULL) {
-          tbt = dynamic_cast<TBeing *>(target);
+	for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();++it){
+          tbt = dynamic_cast<TBeing *>(*it);
           if (!tbt)
             continue;
 
@@ -320,8 +319,8 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
         return ONEHIT_MESS_CRIT_S;
       case 10:
         // Hit friend (full damage) (if no friend hit self) 
-        for (target = roomp->getStuff();target;target = target->nextThing, tbt = NULL) {
-          tbt = dynamic_cast<TBeing *>(target);
+	for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();++it){
+          tbt = dynamic_cast<TBeing *>(*it);
           if (!tbt)
             continue;
           if (!tbt->isAffected(AFF_CHARM) &&
@@ -1132,7 +1131,6 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
 	delete corpse->descr;
 	corpse->setDescr(mud_str_dup(buf));
 	      
-	corpse->setStuff(NULL);
 	corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
 	//	corpse->addCorpseFlag(CORPSE_NO_REGEN);
 	//	corpse->obj_flags.decay_time = 3 * (dynamic_cast<TMonster *>(this) ? MAX_NPC_CORPSE_TIME : MAX_PC_CORPSE_EMPTY_TIME);
@@ -1203,7 +1201,6 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
         corpse->setDescr(mud_str_dup(buf));
       }
 
-	    corpse->setStuff(NULL);
 	    corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
 	    //	    corpse->addCorpseFlag(CORPSE_NO_REGEN);
 	    corpse->obj_flags.decay_time = 3 * (dynamic_cast<TMonster *>(this) ? MAX_NPC_CORPSE_TIME : MAX_PC_CORPSE_EMPTY_TIME);
@@ -1353,7 +1350,7 @@ int TBeing::critSlash(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 
   if (crit_num <= 33) {
     // double damage 
-    *dam *= 2;;
+    *dam *= 2;
 
     buf = fmt("You strike $N's %s exceptionally well, sinking your %s deep into $S flesh!") % v->describeBodySlot(*part_hit) % limbStr;
     act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
@@ -1792,7 +1789,6 @@ buf=fmt("$n's %s slices into $N from gullet to groin, disembowling $M!") %
 	  }
 	  corpse->setDescr(mud_str_dup(buf));
 		
-	  corpse->setStuff(NULL);
 	  corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
 	  corpse->addCorpseFlag(CORPSE_NO_REGEN);
 	  corpse->obj_flags.decay_time = 3 * (dynamic_cast<TMonster *>(this) ? MAX_NPC_CORPSE_TIME : MAX_PC_CORPSE_EMPTY_TIME);

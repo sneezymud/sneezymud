@@ -4,7 +4,7 @@
 
 int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *obj)
 {
-  TThing *t, *t2;
+  TThing *t;
   TMonster *guard;
   TTool *totem=NULL;
   int learning = ch->getSkillValue(SKILL_SACRIFICE);
@@ -53,8 +53,8 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
     return TRUE;
   }
 
-  for (t = ch->roomp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end();){
+    t=*(it++);
     guard = dynamic_cast<TMonster *>(t);
     if (!guard)
       continue;

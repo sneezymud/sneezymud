@@ -337,14 +337,15 @@ bool TThing::listThingRoomMe(const TBeing *ch) const
   return false;
 }
 
-void list_thing_in_room(const TThing *list, TBeing *ch)
+void list_thing_in_room(const StuffList list, TBeing *ch)
 {
   const TThing *t;
   unsigned int k;
   vector <const TThing *> cond_ptr;
   vector <int> cond_tot;
 
-  for (t = list; t; t = t->nextThing) {
+  for(StuffIter it=list.begin();it!=list.end();++it){
+    t=*it;
     if (t->listThingRoomMe(ch))
       continue;
     if(t->riding){
@@ -374,14 +375,15 @@ void list_thing_in_room(const TThing *list, TBeing *ch)
   }
 }
 
-void list_in_heap(const TThing *list, TBeing *ch, bool show_all, int perc)
+void list_in_heap(StuffList list, TBeing *ch, bool show_all, int perc)
 {
   const TThing *i;
   vector<const TThing *>cond_ptr(0);
   vector<unsigned int>cond_tot(0);
   unsigned int k;
 
-  for (i = list; i; i = i->nextThing) {
+  for(StuffIter it=list.begin();it!=list.end();++it){
+    i=*it;
     if (number(0,99) > perc)
       continue;
     if (ch->canSee(i)) {
@@ -396,8 +398,8 @@ void list_in_heap(const TThing *list, TBeing *ch, bool show_all, int perc)
         cond_tot.push_back(1);
       }
     }
-    if (show_all && i->getStuff())
-      list_in_heap(i->getStuff(), ch, true, 100);
+    if (show_all && !i->stuff.empty())
+      list_in_heap(i->stuff, ch, true, 100);
   } // for loop
 
   if (cond_ptr.empty())
@@ -413,7 +415,7 @@ void list_in_heap(const TThing *list, TBeing *ch, bool show_all, int perc)
   }
 }
 
-bool list_in_heap_filtered (TThing *list, TBeing *ch, sstring filter, bool show_all, silentTypeT silent)
+bool list_in_heap_filtered (StuffList list, TBeing *ch, sstring filter, bool show_all, silentTypeT silent)
 {
   // used for applying a filter argument to an inventory list
   // for example, "inventory tool" will show only items matching "tool"
@@ -427,8 +429,9 @@ bool list_in_heap_filtered (TThing *list, TBeing *ch, sstring filter, bool show_
   vector<unsigned int>cond_tot(0);
   unsigned int k;
   bool suppress_nothing = FALSE; // the return value
-  
-  for (i = list; i; i = i->nextThing) {
+
+  for(StuffIter it=list.begin();it!=list.end();++it){
+    i=*it;
     
     if (ch->canSee(i)) {
       if (isname(filter, i->name)) {
@@ -445,16 +448,16 @@ bool list_in_heap_filtered (TThing *list, TBeing *ch, sstring filter, bool show_
         }
       }
     }
-    if (show_all && i->getStuff()) {
-      suppress_nothing = list_in_heap_filtered(i->getStuff(), ch, filter, TRUE, SILENT_YES) || suppress_nothing;
-    } else if (i->getStuff()) {
+    if (show_all && !i->stuff.empty()){
+      suppress_nothing = list_in_heap_filtered(i->stuff, ch, filter, TRUE, SILENT_YES) || suppress_nothing;
+    } else if (!i->stuff.empty()) {
       // TThing *ii = const_cast<TThing * const>(i);
       if (dynamic_cast<TBaseContainer *>(i)) {
         // check to see if it's a closed container
         TOpenContainer *oc = dynamic_cast<TOpenContainer *>(i);
         if (!(oc && oc->isClosed())) {
           // if it's open, look into it
-          suppress_nothing = list_in_heap_filtered(i->getStuff(), ch, filter, FALSE, SILENT_YES) || suppress_nothing;
+          suppress_nothing = list_in_heap_filtered(i->stuff, ch, filter, FALSE, SILENT_YES) || suppress_nothing;
         }
       }
     }
@@ -1206,7 +1209,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
       int skill = ch->getSkillValue(SKILL_SPY);
       ch->sendTo("\n\rYou attempt to peek at the inventory:\n\r");
       if (ch->isAffected(AFF_SCRYING)) {
-        list_in_heap(getStuff(), ch, FALSE, skill);
+        list_in_heap(stuff, ch, FALSE, skill);
       }
 
       // randomize wealth report
@@ -1220,7 +1223,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
     } else if (ch->isImmortal()) {
       ch->sendTo("Inventory:\n\r");
 
-      for (t = getStuff(); t; t = t->nextThing) {
+      for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
         ch->showTo(t, SHOW_MODE_SHORT_PLUS);
         found = TRUE;
       }
@@ -1229,7 +1232,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
     }
   } else if (mode == SHOW_MODE_SHORT_PLUS_INV) {
     act("$N is carrying:", FALSE, ch, 0, this, TO_CHAR);
-    list_in_heap(getStuff(), ch, false, 100);
+    list_in_heap(stuff, ch, false, 100);
   }
 }
 

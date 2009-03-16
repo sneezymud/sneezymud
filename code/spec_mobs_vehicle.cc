@@ -132,7 +132,6 @@ int fishingBoatCaptain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, T
   TRoom *boatroom=real_roomp(cockpit);
   int *job=NULL;
   int i;
-  TThing *tt;
   TVehicle *vehicle=NULL;
   TPathFinder path;
   path.setUsePortals(false);
@@ -165,7 +164,9 @@ int fishingBoatCaptain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, T
 
   // wait until we have passengers before we leave the docks
   if(boat->in_room == 15150 && timer<=0 && vehicle->getSpeed()==0){
-    for(tt=boatroom->getStuff();tt;tt=tt->nextThing){
+    TThing *tt=NULL;
+    for(StuffIter it=boatroom->stuff.begin();it!=boatroom->stuff.end();++it){
+      tt=*it;
       if(dynamic_cast<TPerson *>(tt))
 	break;
     }
@@ -372,8 +373,8 @@ int casinoElevatorGuard(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself
   }
 
   TVehicle *elevator;
-  for(TThing *tt=myself->roomp->getStuff();tt;tt=tt->nextThing){
-    if((elevator=dynamic_cast<TVehicle *>(tt)) && elevator->objVnum()==2360){
+  for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end();++it){
+    if((elevator=dynamic_cast<TVehicle *>(*it)) && elevator->objVnum()==2360){
       myself->doSay("Thank you, enjoy your stay!");
       ch->doEnter("", elevator);
       (*o)--;

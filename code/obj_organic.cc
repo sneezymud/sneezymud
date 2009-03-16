@@ -333,7 +333,7 @@ int TOrganic::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   }
   // See if the shop keeper already has one of these items.
   // This is mainly for 'unit' code.
-  for (t = keeper->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=keeper->stuff.begin();it!=keeper->stuff.end() && (t=*it);++it) {
     TOrganic *obj3 = dynamic_cast<TOrganic *>(t);
     if (!obj3)
       continue;
@@ -433,7 +433,7 @@ void TOrganic::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
     return;
   }
 
-  for (t = keeper->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=keeper->stuff.begin();it!=keeper->stuff.end() && (t=*it);++it) {
     obj2 = dynamic_cast<TOrganic *>(t);
     if (!obj2)
       continue;

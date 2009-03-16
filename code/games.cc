@@ -82,8 +82,8 @@ TObj *find_chip(TBeing *ch, const int &chip)
 {
   TObj *o;
 
-  for(TThing *tt=ch->getStuff();tt;tt=tt->nextThing)
-    if((o=dynamic_cast<TObj *>(tt)) && dynamic_cast<TCasinoChip *>(o) &&
+  for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end();++it)
+    if((o=dynamic_cast<TObj *>(*it)) && dynamic_cast<TCasinoChip *>(o) &&
        o->objVnum()==chip)
       return o;
   
@@ -228,8 +228,8 @@ void observerReaction(TBeing *ch, int what)
   TMonster *tm;
 
 
-  for(TThing *t=ch->roomp->getStuff();t;t=t->nextThing){
-    if((tm=dynamic_cast<TMonster *>(t)) &&
+  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end();++it){
+    if((tm=dynamic_cast<TMonster *>(*it)) &&
        isname("gambler", tm->name) && !::number(0,9)){
       switch(what){
 	case GAMBLER_WON:

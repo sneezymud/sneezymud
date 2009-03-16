@@ -34,7 +34,7 @@ class TShopOwned {
   double getExpenseRatio();
   int doExpenses(int, TObj *);
 
-  TThing *getStuff();
+  StuffList getStuff();
   TMonster *getKeeper();
 
   void setDividend(sstring);

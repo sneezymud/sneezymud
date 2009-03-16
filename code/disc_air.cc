@@ -499,7 +499,7 @@ int dustStorm(TBeing * caster, int level, byte bKnown, int adv_learn)
       CS(SPELL_DUST_STORM);
       dam *= 2;
     }
-    for (t = caster->roomp->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end() && (t=*it);++it) {
       tmp_victim = dynamic_cast<TBeing *>(t);
       if (!tmp_victim)
         continue;
@@ -522,7 +522,7 @@ int dustStorm(TBeing * caster, int level, byte bKnown, int adv_learn)
   } else {
     if (critFail(caster, SPELL_DUST_STORM)) {
       CF(SPELL_DUST_STORM);
-      for (t = caster->roomp->getStuff(); t; t = t->nextThing) {
+      for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end() && (t=*it);++it) {
         tmp_victim = dynamic_cast<TBeing *>(t);
         if (!tmp_victim)
           continue;
@@ -585,7 +585,7 @@ int castDustStorm(TBeing * caster)
 
 int tornado(TBeing * caster, int level, byte bKnown, int adv_learn)
 {
-  TThing *t, *t2, *ch;
+  TThing *t, *ch;
   TBeing *tb;
   int rc;
   level = min(level, 33);
@@ -599,8 +599,8 @@ int tornado(TBeing * caster, int level, byte bKnown, int adv_learn)
     }
     act("You've created a tornado!", FALSE, caster, NULL, NULL, TO_CHAR);
     act("$n has created a tornado!", FALSE, caster, NULL, NULL, TO_ROOM);
-    for (t = caster->roomp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end();){
+      t=*(it++);
       if(!(tb=dynamic_cast<TBeing *>(t)))
 	continue;
 
@@ -671,8 +671,8 @@ int tornado(TBeing * caster, int level, byte bKnown, int adv_learn)
       act("$n has created a tornado!", FALSE, caster, NULL, NULL, TO_ROOM);
 
       CF(SPELL_TORNADO);
-      for (t = caster->roomp->getStuff(); t; t = t2) {
-        t2 = t->nextThing;
+      for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end();){
+        t=*(it++);
       if(!(tb=dynamic_cast<TBeing *>(t)))
 	continue;
 
@@ -1007,7 +1007,7 @@ int antigravity(TBeing *caster, int, affectedData *aff, byte bKnown)
       case CRIT_S_NONE:
         break;
     }
-    for (t = caster->roomp->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end() && (t=*it);++it) {
       vict = dynamic_cast<TBeing *>(t);
       if (!vict)
         continue;

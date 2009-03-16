@@ -2852,7 +2852,7 @@ void TBeing::aiWear(TObj *obj)
   if (inRoom() == ROOM_NOWHERE)
     return;
 
-  for (tmp = roomp->getStuff(); tmp; tmp = tmp->nextThing) {
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (tmp=*it);++it) {
     TMonster *tbc = dynamic_cast<TMonster *>(tmp);
     if (!tbc)
       continue;
@@ -2879,7 +2879,7 @@ void TBeing::aiGet(TThing *obj)
     vlogf(LOG_MOB, fmt("%s without a roomp in aiGet") %  getName());
     return;
   }
-  for (tmp = roomp->getStuff(); tmp; tmp = tmp->nextThing) {
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (tmp=*it);++it) {
     TMonster *tmons = dynamic_cast<TMonster *>(tmp);
     if (!tmons)
       continue;
@@ -2899,15 +2899,15 @@ void TBeing::aiGet(TThing *obj)
 
 void TMonster::aiLook(TBeing *doer)
 {
-  TThing *t,*temp;
+  TThing *t;
   sstring buf;
   
   if (UtilMobProc(this))
     return;
 
   aiTarget(doer);
-  for (t = doer->roomp->getStuff(); t; t = temp) {
-    temp = t->nextThing;
+  for(StuffIter it=doer->roomp->stuff.begin();it!=doer->roomp->stuff.end();){
+    t=*(it++);
     TMonster *tmons = dynamic_cast<TMonster *>(t);
     if (!tmons || !tmons->canSee(doer) || !tmons->awake()) 
       continue;

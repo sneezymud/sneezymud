@@ -102,7 +102,7 @@ static bool countersteal(TBeing *thief, TBeing *vict, int known)
 static int steal(TBeing * thief, TBeing * victim)
 {
   int modifier, gold, rc;
-  TThing *t, *t2;
+  TThing *t;
   TMonster *guard = NULL;
   int vict_lev = victim->GetMaxLevel();
   int level = thief->getSkillLevel(SKILL_STEAL);
@@ -176,8 +176,8 @@ static int steal(TBeing * thief, TBeing * victim)
       act("You discover that $n has $s hands in your moneypouch.", 
            FALSE, thief, 0, victim, TO_VICT);
 
-    for (t = thief->roomp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=thief->roomp->stuff.begin();it!=thief->roomp->stuff.end();){
+      t=*(it++);
       if (!(guard = dynamic_cast<TMonster *>(t)))
         continue;
       if (!guard->isPolice()|| !guard->canSee(thief) || 
@@ -221,7 +221,7 @@ static int steal(TBeing * thief, TBeing * victim, const sstring &obj_name)
   wearSlotT eq_pos;
   int vict_lev = victim->GetMaxLevel();
   int level = thief->getSkillLevel(SKILL_STEAL);
-  TThing *t, *t2;
+  TThing *t;
   TMonster *guard = NULL;
   int rc;
   int bKnown = thief->getSkillValue(SKILL_STEAL);
@@ -269,7 +269,7 @@ static int steal(TBeing * thief, TBeing * victim, const sstring &obj_name)
     modifier -= dynamic_cast<TMonster *>(victim)->susp()/2;
 
 
-  TThing *tt = searchLinkedListVis(thief, obj_name, victim->getStuff());
+  TThing *tt = searchLinkedListVis(thief, obj_name, victim->stuff);
   TObj *obj = dynamic_cast<TObj *>(tt);
   if (!obj) {
     for (eq_pos = MIN_WEAR; (eq_pos < MAX_WEAR); eq_pos++) {
@@ -394,8 +394,8 @@ static int steal(TBeing * thief, TBeing * victim, const sstring &obj_name)
     } else
       act("$n just tried to steal your $o!!",FALSE,thief,obj,victim,TO_VICT);
 
-    for (t = thief->roomp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=thief->roomp->stuff.begin();it!=thief->roomp->stuff.end();){
+      t=*(it++);
       if (!(guard = dynamic_cast<TMonster *>(t)))
         continue;
       if (!guard->isPolice() || !guard->canSee(thief) || 

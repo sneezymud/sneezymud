@@ -142,7 +142,7 @@ void switchStat(statTypeT stat, TBeing *giver, TBeing *taker)
 
 void SwitchStuff(TBeing *giver, TBeing *taker, bool setStats)
 {
-  TThing *t, *next;
+  TThing *t;
   classIndT cit;  // used as iterator to pass through classes
 
   mud_assert(giver != NULL, "Something bogus in SwitchStuff()");
@@ -173,8 +173,8 @@ void SwitchStuff(TBeing *giver, TBeing *taker, bool setStats)
     }
   }
 
-  for (t = giver->getStuff(); t; t = next) {
-    next = t->nextThing;
+  for(StuffIter it=giver->stuff.begin();it!=giver->stuff.end();){
+    t=*(it++);
     --(*t); 
     *taker += *t;
   }
@@ -427,7 +427,7 @@ int TBeing::checkDecharm(forceTypeT force, safeTypeT safe)
     } else if (isElemental && tMon && (::number(mastLevel, tMon->anger()) <= 0)) {
        release = TRUE;
     }
-    if (!getStuff()) {
+    if (stuff.empty()) {
       for (j = MIN_WEAR; j < MAX_WEAR; j++) {
         if (equipment[j]) {
           release = FALSE;
@@ -485,7 +485,6 @@ int TBeing::checkDecharm(forceTypeT force, safeTypeT safe)
 
 TComponent *comp_from_object(TThing *item, spellNumT spell)
 {
-  TThing *t;
   TComponent *ret = NULL;
 
   item->findComp(&ret, spell);
@@ -495,8 +494,8 @@ TComponent *comp_from_object(TThing *item, spellNumT spell)
     return ret;
 
   // item is wrong component or spellbag 
-  for (t = item->getStuff(); t; t = t->nextThing) 
-    t->findComp(&ret, spell);
+  for(StuffIter it=item->stuff.begin();it!=item->stuff.end();++it) 
+    (*it)->findComp(&ret, spell);
   
   return ret;
 }
@@ -515,7 +514,7 @@ TComponent *TBeing::findComponent(spellNumT spell) const
   juju = equipment[WEAR_NECK];
   wristpouchL = equipment[WEAR_WRIST_L];
   wristpouchR = equipment[WEAR_WRIST_R];
-  inventory = getStuff();
+  inventory = stuff.front();
   item = NULL;
 
 // Let rangers have components anywhere if not fighting
@@ -557,7 +556,7 @@ TComponent *TBeing::findComponent(spellNumT spell) const
 	    item = comp_from_object(secondary, spell);
 	  if (!item && inventory) {
 	    TThing *t;
-	    for (t = getStuff(); t && !item; t = t->nextThing) {
+	    for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
 	      inventory = dynamic_cast<TObj *>(t);
 	      if (inventory)
 		item = comp_from_object(inventory, spell);
@@ -583,7 +582,7 @@ TComponent *TBeing::findComponent(spellNumT spell) const
         item = comp_from_object(wristpouchR, spell);
       if (!item && inventory) {
 	TThing *t;
-	for (t = getStuff(); t && !item; t = t->nextThing) {
+	for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
 	  inventory = dynamic_cast<TObj *>(t);
 	  if (inventory)
 	    item = comp_from_object(inventory, spell);
@@ -618,7 +617,7 @@ TComponent *TBeing::findComponent(spellNumT spell) const
 	    item = comp_from_object(secondary, spell);
 	  if (!item && inventory) {
 	    TThing *t;
-	    for (t = getStuff(); t && !item; t = t->nextThing) {
+	    for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
 	      inventory = dynamic_cast<TObj *>(t);
 	      if (inventory)
 		item = comp_from_object(inventory, spell);
@@ -644,7 +643,7 @@ TComponent *TBeing::findComponent(spellNumT spell) const
         item = comp_from_object(wristpouchR, spell);
       if (!item && inventory) {
 	TThing *t;
-	for (t = getStuff(); t && !item; t = t->nextThing) {
+	for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
 	  inventory = dynamic_cast<TObj *>(t);
 	  if (inventory)
 	    item = comp_from_object(inventory, spell);
@@ -825,7 +824,7 @@ int TBeing::mostPowerstoneMana() const
     t->powerstoneMostMana(&most);
   }
   // Check through char's inventory
-  for (t = getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
     t->powerstoneMostMana(&most);
   }
   return most;
@@ -972,7 +971,7 @@ const char *what_does_it_open(const TKey *o)
 int TBeing::rawSummon(TBeing *v)
 {
   TBeing *tmp = NULL;
-  TThing *t, *t2;
+  TThing *t;
   int i, rc;
   wearSlotT j;
 
@@ -996,8 +995,8 @@ int TBeing::rawSummon(TBeing *v)
         t_o = NULL;
       }
     }
-    for (t = v->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=v->stuff.begin();it!=v->stuff.end();){
+      t=*(it++);
       if (!dynamic_cast<TKey *>(t)) {
         --(*t);
         delete t;
@@ -1049,8 +1048,8 @@ int TBeing::rawSummon(TBeing *v)
       return DELETE_VICT;
   }
 
-  for (t = v->roomp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=v->roomp->stuff.begin();it!=v->roomp->stuff.end();){
+    t=*(it++);
     if (!(tmp = dynamic_cast<TBeing *>(t)))
       continue;
     if (!tmp->isPc() && ((IS_SET(tmp->specials.act, ACT_AGGRESSIVE)))) {
@@ -1376,7 +1375,7 @@ int TBeing::rawSleep(int level, int duration, int crit, saveTypeT save)
 
   // stop all fighting me too
   TThing *t;
-  for (t = roomp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
     TBeing *ch = dynamic_cast<TBeing *>(t);
     if (!ch)
       continue;
@@ -1765,7 +1764,7 @@ void TBeing::nothingHappens(silentTypeT silent_caster) const
     roomp->playsound(snd, SOUND_TYPE_MAGIC);
   else {
     TThing *t;
-    for (t = roomp->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       TBeing *tbt = dynamic_cast<TBeing *>(t);
       if (!tbt || tbt == this)
         continue;

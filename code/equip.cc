@@ -209,8 +209,9 @@ int TObj::personalizedCheck(TBeing *ch)
 
       vlogf(LOG_MISC, fmt("We got an illegal personalized item (%s) off of %s (was %s's item).") %  getName() % ch->getName() % namebuf);
 
-      t = ch->roomp->getStuff();
-      while (t) {
+      StuffIter it = ch->roomp->stuff.begin();
+      while (it!=ch->roomp->stuff.end()) {
+	t=*it;
         TMonster *tmons = dynamic_cast<TMonster *>(t);
         if (tmons && tmons->canSee(ch) && (tmons != ch) && tmons->isHumanoid() && (tmons->getPosition() > POSITION_SLEEPING)) {
           tmons->US(1 + obj_flags.cost/5000);
@@ -220,7 +221,7 @@ int TObj::personalizedCheck(TBeing *ch)
             act("$n glares at you and says, \"Thief!\"",TRUE,tmons,0,ch,TO_VICT);
           }
         }
-        t = t->nextThing;
+	++it;
       }
 
       if (eq_pos != WEAR_NOWHERE) 
@@ -1255,7 +1256,7 @@ void TBeing::doWear(const char *argument)
   char arg1[MAX_INPUT_LENGTH];
   char arg2[MAX_INPUT_LENGTH];
   char buf[256];
-  TThing *t, *temp;
+  TThing *t;
   TObj *o;
   int i, rc;
   wearKeyT keyword;
@@ -1282,8 +1283,8 @@ void TBeing::doWear(const char *argument)
 
   if (*arg1) {
     if (!strcmp(arg1, "all")) {
-      for (t = getStuff(); t; t = temp) {
-        temp = t->nextThing;
+      for(StuffIter it=stuff.begin();it!=stuff.end();){
+        t=*(it++);
         TObj *tobj = dynamic_cast<TObj *>(t);
         if (!tobj)
           continue;
@@ -1300,7 +1301,7 @@ void TBeing::doWear(const char *argument)
         }
       }
     } else {
-      TThing *tto = searchLinkedListVis(this, arg1, getStuff());
+      TThing *tto = searchLinkedListVis(this, arg1, stuff);
       o = dynamic_cast<TObj *>(tto);
       if (o) {
         if (*arg2) {
@@ -1359,7 +1360,7 @@ void TBeing::doWield(const char *argument)
   half_chop(argument, arg1, arg2);
 
   if (*arg1) {
-    if (!(o = searchLinkedList(arg1, getStuff()))) {
+    if (!(o = searchLinkedList(arg1, stuff))) {
       sendTo(fmt("You do not seem to have the '%s'.\n\r") % arg1);
       return;
     }
@@ -1384,7 +1385,7 @@ void TBeing::doGrab(const char *argument)
   half_chop(argument, arg1, arg2);
 
   if (*arg1) {
-    TThing *tto = searchLinkedList(arg1, getStuff());
+    TThing *tto = searchLinkedList(arg1, stuff);
     TObj *o = dynamic_cast<TObj *>(tto);
     if (!o) {
       sendTo(fmt("You do not seem to have the '%s'.\n\r") % arg1);
@@ -2181,7 +2182,7 @@ int TBeing::doSaddle(sstring arg)
     return FALSE;
   }
 
-  if (!(t = searchLinkedListVis(this, arg2, getStuff()))) {
+  if (!(t = searchLinkedListVis(this, arg2, stuff))) {
     sendTo(fmt("You don't seem to have the '%s'.\n\r") % arg2);
     return FALSE;
   }

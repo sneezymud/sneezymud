@@ -16,8 +16,8 @@ int TMoneypouch::getMoney(currencyTypeT c) const
   for(int i=0;i<MAX_CURRENCY;++i)
     currency[i]=0;
 
-  for(TThing *t=getStuff();t;t=t->nextThing){
-    if((money=dynamic_cast<TMoney *>(t)))
+  for(StuffIter it=stuff.begin();it!=stuff.end();++it){
+    if((money=dynamic_cast<TMoney *>(*it)))
       currency[money->getCurrency()]+=money->getMoney();
   }
   

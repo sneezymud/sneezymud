@@ -124,7 +124,7 @@ float TThing::getCarriedWeight() const
     total+=t->getTotalWeight(true);
   }
 
-  for(t=getStuff();t;t=t->nextThing){
+  for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it){
     if(dynamic_cast<TComponent *>(t))
       total+=(t->getTotalWeight(true)*0.10);
     else 
@@ -143,7 +143,7 @@ int TThing::getCarriedVolume() const
     total+=t->getTotalVolume();
   }
 
-  for(t=getStuff();t;t=t->nextThing){
+  for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it){
     if(dynamic_cast<TComponent *>(t))
       total+=(int)(t->getTotalVolume()*0.10);
     else

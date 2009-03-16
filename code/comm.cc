@@ -99,7 +99,7 @@ int run_the_game()
 
 void zoneData::nukeMobs()
 {
-  TThing *t, *t2;
+  TThing *t;
   TBeing *mob, *mob2;
   wearSlotT i;
   
@@ -129,8 +129,8 @@ void zoneData::nukeMobs()
         t_obj = NULL;
       }
     }
-    for (t = mob->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=mob->stuff.begin();it!=mob->stuff.end();){
+      t=*(it++);
       delete t;
     }
     delete mob;
@@ -161,7 +161,8 @@ void TRoom::sendTo(colorTypeT lev, const sstring &text) const
 {
   TThing *i;
 
-  for (i = getStuff(); i; i = i->nextThing) {
+  for(StuffIter it=stuff.begin();it!=stuff.end();++it) {
+    i=*it;
     TBeing *tbt = dynamic_cast<TBeing *>(i);
     if (tbt && tbt->desc && !tbt->desc->connected) {
       if ((lev == COLOR_NEVER) || (lev == COLOR_NONE)) {
@@ -245,7 +246,7 @@ void sendToRoom(colorTypeT color, const char *text, int room)
     return;
   }
   if (text) {
-    for (i = real_roomp(room)->getStuff(); i; i = i->nextThing) {
+    for(StuffIter it=real_roomp(room)->stuff.begin();it!=real_roomp(room)->stuff.end() && (i=*it);++it) {
       TBeing *tbt = dynamic_cast<TBeing *>(i);
       if (tbt && tbt->desc && !tbt->desc->connected && tbt->awake()) {
         sstring buf = colorString(tbt, tbt->desc, text, NULL, color, FALSE);
@@ -264,7 +265,7 @@ void sendToRoom(const char *text, int room)
     return;
   }
   if (text) {
-    for (i = real_roomp(room)->getStuff(); i; i = i->nextThing) {
+    for(StuffIter it=real_roomp(room)->stuff.begin();it!=real_roomp(room)->stuff.end() && (i=*it);++it) {
       TBeing *tbt = dynamic_cast<TBeing *>(i);
       if (!tbt)
         continue;
@@ -298,7 +299,7 @@ void sendrpf(int tslevel, colorTypeT color, TRoom *rp, const char *msg,...)
     va_start(ap, msg);
     vsnprintf(messageBuffer, cElements(messageBuffer), msg, ap);
     va_end(ap);
-    for (i = rp->getStuff(); i; i = i->nextThing) {
+    for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (i=*it);++it) {
       TBeing *tbt = dynamic_cast<TBeing *>(i);
       if (tbt && tbt->desc && !tbt->desc->connected && tbt->awake() &&
           tbt->GetMaxLevel() > tslevel)
@@ -331,7 +332,7 @@ void sendrpf(int tslevel, TRoom *rp, const char *msg,...)
     va_start(ap, msg);
     vsnprintf(messageBuffer, cElements(messageBuffer), msg, ap);
     va_end(ap);
-    for (i = rp->getStuff(); i; i = i->nextThing) {
+    for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (i=*it);++it) {
       TBeing *tbt = dynamic_cast<TBeing *>(i);
       if (tbt && tbt->desc && !tbt->desc->connected && tbt->awake() &&
           tbt->GetMaxLevel() > tslevel)
@@ -352,7 +353,7 @@ void sendrp_exceptf(TRoom *rp, TBeing *ch, const char *msg,...)
     va_start(ap, msg);
     vsnprintf(messageBuffer, cElements(messageBuffer), msg, ap);
     va_end(ap);
-    for (i = rp->getStuff(); i; i = i->nextThing) {
+    for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (i=*it);++it) {
       TBeing *tbt = dynamic_cast<TBeing *>(i);
       if (tbt && tbt->desc && !tbt->desc->connected && (tbt != ch) && tbt->awake())
         tbt->desc->output.putInQ(new UncategorizedComm(messageBuffer));
@@ -364,7 +365,8 @@ void TRoom::sendTo(const sstring &text) const
 {
   TThing *i;
 
-  for (i = getStuff(); i; i = i->nextThing) {
+  for(StuffIter it=stuff.begin();it!=stuff.end();++it) {
+    i=*it;
     if (i->desc && !i->desc->connected)
       i->desc->output.putInQ(new UncategorizedComm(text));
   }
@@ -414,7 +416,7 @@ void colorAct(colorTypeT colorLevel, const sstring &str, bool hide, const TThing
     which = TRUE;
   } else {
     which = FALSE;
-    to = t1->roomp->getStuff();
+    to = t1->roomp->stuff.front();
   }
 
   if (!to->desc && ((type == TO_VICT) || (type == TO_CHAR))) 
@@ -501,8 +503,8 @@ void colorAct(colorTypeT colorLevel, const sstring &str, bool hide, const TThing
   } else {
 // TO_ROOM
 // Doesnt work well if there are substitutes but if none its ok
-    for (; to; to = to->nextThing) {
-      const TBeing *tbto = dynamic_cast<const TBeing *>(to);
+    for(StuffIter it=t1->roomp->stuff.begin();it!=t1->roomp->stuff.end();++it){
+      const TBeing *tbto = dynamic_cast<const TBeing *>(*it);
       if (!tbto || !tbto->desc || tbto->GetMaxLevel() <= tslevel) 
         continue;
     
@@ -517,12 +519,12 @@ void colorAct(colorTypeT colorLevel, const sstring &str, bool hide, const TThing
   }
 }
 
+
 void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, const TThing *t3, actToParmT type, const char *color, int tslevel)
 {
   register const char *strp;
   register char *point;
   register const char *i = NULL;
-  const TThing *ttto;
   char ibuf[MAX_STRING_LENGTH];
   char buf[MAX_STRING_LENGTH];
   char namebuf[MAX_NAME_LENGTH];
@@ -543,8 +545,11 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
     vlogf(LOG_MISC, fmt("%s") %  str);
     return;
   }
-  if (!t1->roomp) 
+  if (!t1->roomp){
+    vlogf(LOG_MISC, "There is no room in act() TOCHAR");
+    vlogf(LOG_MISC, fmt("%s") %  str);
     return;
+  }
 
   if (!t3) {
     if (type == TO_VICT) {
@@ -557,20 +562,30 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
       vlogf(LOG_MISC, fmt("%s") %  str);
     }
   }
-  if (type == TO_VICT) 
-    ttto = t3;
-  else if (type == TO_CHAR) 
-    ttto = t1;
-  else {
-    if (!t1->roomp)
-      return;
+  
+  StuffListConst list;
 
-    ttto = t1->roomp->getStuff();
+  if (type == TO_VICT) {
+    list.push_front(t3);
+  } else if (type == TO_CHAR) {
+    list.push_front(t1);
+  } else {
+    if (!t1->roomp){
+      vlogf(LOG_MISC, "There is no room in act() TOCHAR 2");
+      vlogf(LOG_MISC, fmt("%s") %  str);
+      return;
+    }
+
+    for(StuffIter it=t1->roomp->stuff.begin();it!=t1->roomp->stuff.end();++it){
+      list.push_front(*it);
+    }
   }
+
   memset(&buf, '\0', sizeof(buf));
   memset(lastColor, '\0', sizeof(lastColor));
-  for (; ttto; ttto = ttto->nextThing) {
-    const TBeing *to = dynamic_cast<const TBeing *>(ttto);
+  for(StuffIterConst it=list.begin();it!=list.end();++it){
+    const TBeing *to = dynamic_cast<const TBeing *>(*it);
+
     if (to && to->desc && to->GetMaxLevel() > tslevel &&
           ((to != t1) || (type == TO_CHAR)) &&
           ((to != t3 || (t1 == t3 && type == TO_CHAR)) ||

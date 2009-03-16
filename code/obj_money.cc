@@ -315,7 +315,7 @@ int TMoney::moneyMeMoney(TBeing *ch, TThing *sub)
   if (ch->getMoney() > 500000 && (amount > 100000))
     vlogf(LOG_MISC, fmt("%s just got %d %ss") %  ch->getName() % amount % getCurrencyName());
 
-  for (t = ch->roomp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (t=*it);++it) {
     TBeing *tb = dynamic_cast<TBeing *>(t);
     if (!tb)
       continue;

@@ -100,19 +100,14 @@ int graffitiMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   // any existing message
   TThing *last=NULL, *first=NULL;
   TObj *obj;
-  for(TThing *t=ch->roomp->getStuff();t;t=t->nextThing){
-    if((obj=dynamic_cast<TObj *>(t)) && obj->objVnum()==GRAFFITI_OBJ) {
-      last=t;
-      first=ch->roomp->getStuff();
+  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end();++it){
+    if((obj=dynamic_cast<TObj *>(*it)) && obj->objVnum()==GRAFFITI_OBJ) {
+      last=*it;
+      first=ch->roomp->stuff.front();
     }
   }
 
   *ch->roomp += *gfti;
-  if (last) {
-    gfti->nextThing=last->nextThing;
-    last->nextThing=gfti;
-    ch->roomp->setStuff(first);
-  }
   //////
 
   tool->addToToolUses(-1);

@@ -104,7 +104,7 @@ bool TBeing::checkSlotPlayer() const
   const TBeing *better = NULL;
   TThing *t;
 
-  for (t = roomp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
     better = dynamic_cast<const TBeing *>(t);
     if (!better)
       continue;

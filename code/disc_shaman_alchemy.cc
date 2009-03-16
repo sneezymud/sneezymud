@@ -48,7 +48,7 @@ void TBeing::doBrew(const char *arg)
       }
     }
   }
-  for (t = getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
     t->findSomeComponent(&invalid, &comp_spell, &comp_brew, which_spell, 1);
 
     if(!comp_gen){

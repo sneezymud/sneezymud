@@ -109,7 +109,7 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
 
   // Make sure our criminal is still alive and in the same room
   if(job->criminal){
-    for(t=myself->roomp->getStuff(); t; t=t->nextThing){
+    for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (t=*it);++it){
       if((tb=dynamic_cast<TBeing *>(t)) && tb==job->criminal)
 	found=1;
     }
@@ -341,7 +341,7 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
 	} else if(rc){
 	  // look for a criminal, change state
 	  if(job->state==STATE_FIND_CRIM && !::number(0,0)){
-	    for(t=myself->roomp->getStuff(); t && job->state==STATE_FIND_CRIM;t=t->nextThing){
+	    for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (t=*it);++it){
 	      if((tmons=dynamic_cast<TMonster *>(t))){
 		for(i=0;i<3;++i){
 		  if(tmons->mobVnum() == criminals[i]){

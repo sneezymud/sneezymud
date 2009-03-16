@@ -186,7 +186,7 @@ int TBeing::doNoJunk(const char *argument, TObj *obj)
     o = obj;
     TThing *t_o = NULL;
     if (!o) {
-      t_o = searchLinkedListVis(this, arg, getStuff());
+      t_o = searchLinkedListVis(this, arg, stuff);
       o = dynamic_cast<TObj *>(t_o);
     }
     if (o) {
@@ -245,7 +245,7 @@ int TBeing::doJunk(const char *argument, TObj *obj)
     o = obj;
     TThing *t_o = NULL;
     if (!o) {
-      t_o = searchLinkedListVis(this, arg, getStuff());
+      t_o = searchLinkedListVis(this, arg, stuff);
       o = dynamic_cast<TObj *>(t_o);
     }
     if (o) {
@@ -261,11 +261,11 @@ int TBeing::doJunk(const char *argument, TObj *obj)
         sendTo("Monogrammed items can't be junked.\n\r");
         return FALSE;
       }
-      if (o->getStuff() && desc && (desc->autobits & AUTO_POUCH)) {
+      if (!o->stuff.empty() && desc && (desc->autobits & AUTO_POUCH)) {
         sendTo("There is still stuff in there, you choose not to junk it.\n\r");
         return FALSE;
       }
-      for (t = o->getStuff(); t; t = t->nextThing) {
+      for(StuffIter it=o->stuff.begin();it!=o->stuff.end() && (t=*it);++it) {
         TObj *tobj = dynamic_cast<TObj *>(t);
         if (!tobj)
           continue;
@@ -281,7 +281,7 @@ int TBeing::doJunk(const char *argument, TObj *obj)
       o->junkMe(this);
       
       logItem(o, CMD_JUNK);
-      for (t = o->getStuff(); t; t = t->nextThing) 
+      for(StuffIter it=o->stuff.begin();it!=o->stuff.end() && (t=*it);++it) 
         logItem(t, CMD_JUNK);
 
       --(*o);
@@ -549,8 +549,8 @@ void TBeing::doSplit(const char *argument, bool tell)
   } else {
     int count = 0;
     TThing *obj2;
-    if ((!(obj2 = searchLinkedListVis(this, buf, getStuff(), &count)) &&
-         !(obj2 = searchLinkedListVis(this, buf, roomp->getStuff(), &count))) ||
+    if ((!(obj2 = searchLinkedListVis(this, buf, stuff, &count)) &&
+         !(obj2 = searchLinkedListVis(this, buf, roomp->stuff, &count))) ||
          !obj2->splitMe(this, argument)) {
       sendTo("Pardon? Split WHAT?\n\r");
       return;
@@ -562,7 +562,7 @@ void TBeing::doReport(const char *argument)
 {
   char info[256];
   char target[80];
-  TThing *t, *t2;
+  TThing *t;
   int found = 0;
   TBeing *targ = NULL;
 
@@ -596,8 +596,8 @@ void TBeing::doReport(const char *argument)
            norm());
 
 
-  for (t = roomp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+    t=*(it++);
     TBeing *tb = dynamic_cast<TBeing *>(t);
     if (!tb) continue;
     if (!found && tb->desc && target) {
@@ -766,10 +766,10 @@ void TBeing::verifyWeightVolume()
   float rw = 0.0, bw;
   int rv = 0, bv;
   TThing *t, *t2;
-  for (t = getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
     bv = 0;
     bw = 0.0;
-    for (t2 = t->getStuff(); t2; t2 = t2->nextThing) {
+    for(StuffIter it=t->stuff.begin();it!=t->stuff.end() && (t2=*it);++it) {
       // bypass comps in spellbag
       if (dynamic_cast<TComponent *>(t2) &&
           dynamic_cast<TSpellBag *>(t))
@@ -1776,7 +1776,7 @@ void TBeing::doGroup(const char *argument, bool silent)
       sendTo("You can't group others without being the leader of the group.\n\r");
       return;
     }
-    for (t = roomp->getStuff();t;t = t->nextThing) {
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       victim = dynamic_cast<TBeing *>(t);
       if (!victim)
         continue;
@@ -2029,7 +2029,7 @@ int TBeing::doQuaff(sstring argument)
 
   one_argument(argument, buf);
 
-  if (!(t = searchLinkedListVis(this, buf, getStuff()))) {
+  if (!(t = searchLinkedListVis(this, buf, stuff))) {
     t = equipment[HOLD_RIGHT];
     if (!t || !isname(buf, t->name)) {
       act("You do not have that item.", FALSE, this, 0, 0, TO_CHAR);
@@ -3182,7 +3182,7 @@ int TBeing::doRecite(const char *argument)
 
   argument = one_argument(argument, buf, cElements(buf));
 
-  if (!(t = searchLinkedListVis(this, buf, getStuff()))) {
+  if (!(t = searchLinkedListVis(this, buf, stuff))) {
     t = heldInPrimHand();
     if (!t || !isname(buf, t->name)) {
       if (isAffected(AFF_BLIND)) {
@@ -3386,7 +3386,7 @@ void TBeing::doLight(const sstring & argument)
 
   // no visibility checks
   // look in room first
-  if (!heldOnly && !(t = searchLinkedList(arg1, roomp->getStuff()))) {
+  if (!heldOnly && !(t = searchLinkedList(arg1, roomp->stuff))) {
     if (roomOnly) {
       sendTo("You cannot find any such object in your surroundings.\n\r");
       return;
@@ -3496,7 +3496,7 @@ void TBeing::doExtinguish(const sstring & argument)
 
   // no visibility checks
   // look in room first
-  if (!heldOnly && !(t = searchLinkedList(arg1, roomp->getStuff()))) {
+  if (!heldOnly && !(t = searchLinkedList(arg1, roomp->stuff))) {
     if (roomOnly) {
       sendTo("You cannot find any such object in your surroundings.\n\r");
       return;
@@ -3577,7 +3577,7 @@ void TBeing::doRefuel(const sstring &argument)
   if (roomOnly || 
       !(t = get_thing_char_using(this, arg.c_str(), 0, FALSE, FALSE))) {
     if (heldOnly ||
-        !(t = searchLinkedListVis(this, arg, roomp->getStuff()))) {
+        !(t = searchLinkedListVis(this, arg, roomp->stuff))) {
       sendTo("You can only refuel an object in the room, or held.\n\r");
       sendTo("Syntax: refuel <light> <fuel> {\"room\" | \"held\"}\n\r");
       return;

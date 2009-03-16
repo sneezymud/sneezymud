@@ -612,7 +612,7 @@ void TBeing::doEgoTrip(const char *arg)
     }
     
     TThing *t;
-    for (t = roomp->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       TMonster *tmon = dynamic_cast<TMonster *>(t);
       if (!tmon)
         continue;
@@ -623,9 +623,9 @@ void TBeing::doEgoTrip(const char *arg)
     }
     return;
   } else if (is_abbrev(argument, "wander")) {
-    TThing *t, *t2;
-    for (t = roomp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    TThing *t;
+     for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+      t=*(it++);
       TMonster *tmon = dynamic_cast<TMonster *>(t);
       if (!tmon)
         continue;

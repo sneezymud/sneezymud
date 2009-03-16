@@ -329,7 +329,7 @@ sstring guardShout(TBeing *ch){
 int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
 {
   TBeing *tch = NULL;
-  TThing *t1 = NULL, *t2 = NULL;
+  TThing *t1 = NULL;
   TTrap *trap;
   int rc = 0, num = 0, num2 = 0;
 
@@ -357,8 +357,8 @@ int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
     }
    
     if (ch->fight() && ch->roomp) {
-      for (t1 = ch->roomp->getStuff(); t1; t1 = t2) {
-        t2 = t1->nextThing;
+      for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end();){
+        t1=*(it++);
         TBeing *tbt = dynamic_cast<TBeing *>(t1);
         if (!tbt || (ch == tbt))
           continue;
@@ -371,8 +371,8 @@ int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
         continue;
       }
       num = ::number(1, 2);
-      for (t1 = ch->roomp->getStuff(); t1; t1 = t2) {
-        t2 = t1->nextThing;
+      for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end();){
+        t1=*(it++);
         TBeing *tbt = dynamic_cast<TBeing *>(t1);
         if(!tbt)
           continue;
@@ -408,8 +408,8 @@ int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
   // not fighting stuff
   //
   
-  for (t1 = ch->roomp->getStuff(); t1; t1 = t2) {
-    t2 = t1->nextThing;
+  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end();){
+    t1=*(it++);
     tch = dynamic_cast<TBeing *>(t1);
 
     if((trap=dynamic_cast<TTrap *>(t1)) && trap->getTrapCharges()>0){

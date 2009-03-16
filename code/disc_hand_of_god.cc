@@ -735,7 +735,7 @@ int heroesFeast(TBeing * caster, int, byte bKnown, spellNumT spell)
   sstring message = "You partake of a magnificent feast!";
 
   if (caster->bSuccess(bKnown, caster->getPerc(), spell)) {
-    for (t = caster->roomp->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end() && (t=*it);++it) {
       tch = dynamic_cast<TBeing *>(t);
       if (!tch)
         continue;
@@ -803,7 +803,7 @@ int heroesFeast(TBeing * caster, int, byte bKnown, spellNumT spell)
     switch (critFail(caster, spell)) {
       case CRIT_F_HITSELF:
       case CRIT_F_HITOTHER:
-        for (t = caster->roomp->getStuff(); t; t = t->nextThing) {
+        for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end() && (t=*it);++it) {
           tch = dynamic_cast<TBeing *>(t);
           if (!tch)
             continue;

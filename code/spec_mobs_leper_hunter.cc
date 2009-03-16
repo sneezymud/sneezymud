@@ -20,8 +20,8 @@ int leperHunter(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   dir=path.findPath(myself->inRoom(), findLeper());
 
   if(dir==DIR_NONE){
-    for(TThing *t=myself->roomp->getStuff();t;t=t->nextThing){
-      leper = dynamic_cast<TMonster *>(t);
+    for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end();++it){
+      leper = dynamic_cast<TMonster *>(*it);
       if (!leper){
 	leper=NULL;
 	continue;

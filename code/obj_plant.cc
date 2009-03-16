@@ -277,7 +277,7 @@ void TPlant::updateDesc()
     TThing *t;
     int count=0;
 
-    for(t=getStuff();t;t=t->nextThing){
+    for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it){
       ++count;
     }
     
@@ -295,7 +295,7 @@ void TPlant::updateDesc()
     TThing *t;
     int count=0;
 
-    for(t=getStuff();t;t=t->nextThing){
+    for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it){
       ++count;
     }
     
@@ -312,7 +312,7 @@ void TPlant::updateDesc()
 		  TThing *tcount;
 		  TPlant *tree;
 		  double tree_count = 0.0;
-		  for(tcount = roomp->getStuff(); tcount; tcount = tcount->nextThing) {
+		  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (tcount=*it);++it) {
 			tree = dynamic_cast<TPlant *>(tcount);
 		    if(tree && tree->getType() == getType()) {
 		      // looking for same type of trees

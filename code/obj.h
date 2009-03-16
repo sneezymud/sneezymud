@@ -681,7 +681,7 @@ private:
     virtual void writeAffects(int, FILE *) const;
     virtual int addApply(TBeing *, applyTypeT);
     virtual void noteMe(TMonster *, TBeing*, TObj *, time_t, int) {}
-    virtual int noteMeForRent(sstring &, TBeing *, TThing *, int *);
+    virtual int noteMeForRent(sstring &, TBeing *, StuffList, int *);
     virtual sstring displayFourValues();
     virtual void changeObjValue1(TBeing *);
     virtual void changeObjValue2(TBeing *);

@@ -13,7 +13,7 @@ int main(int argc, char **argv)
   toggleInfo.loadToggles();
   
   if((argc-1) < 2){
-    printf("Usage: %s <immortal> <mob list>\n", argv[0]);;
+    printf("Usage: %s <immortal> <mob list>\n", argv[0]);
     exit(0);
   }
 

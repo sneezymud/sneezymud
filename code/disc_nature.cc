@@ -168,7 +168,7 @@ int treeWalk(TBeing * caster, const char * arg, int, byte bKnown)
   TBeing *ch = NULL;
   TObj *o;
   TRoom *rp = NULL;
-  TThing *t, *t2, *t3;
+  TThing *t, *t3;
   int rc;
   int numx, j = 1;
   char tmpname[MAX_INPUT_LENGTH], *tmp;
@@ -219,8 +219,8 @@ int treeWalk(TBeing * caster, const char * arg, int, byte bKnown)
       return SPELL_SUCCESS;
     }
 
-    for (t = caster->roomp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end();){
+      t=*(it++);
       TBeing *tbt = dynamic_cast<TBeing *>(t);
       if (!tbt)
         continue;

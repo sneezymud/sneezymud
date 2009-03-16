@@ -685,7 +685,7 @@ void applyAddictionAffects(TBeing *ch, drugTypeT drug, int severity){
           break;
 
         ch->sendTo("The urge to lick something becomes overwhelming!\n\r");
-        for(target = ch->roomp->getStuff(); target && ::number(0,9); target = target->nextThing);
+        for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (target=*it);++it);
         if (!target)
           target = ch;
         ch->doAction(fname(target->name), CMD_LICK);

@@ -2030,7 +2030,7 @@ TMonster *FindMobInRoomWithProcNum(int room, int num)
   if (room < 0)
     return NULL;
 
-  for (t = real_roomp(room)->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=real_roomp(room)->stuff.begin();it!=real_roomp(room)->stuff.end() && (t=*it);++it) {
     TMonster *tmons = dynamic_cast<TMonster *>(t);
     if (tmons && (tmons->spec == num))
       return tmons;

@@ -371,7 +371,7 @@ bool TMonster::restorePetToPc(TBeing *ch)
   affName = (char *) aff->be;
   rp = roomp;
 
-  for (t = roomp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
     if (!(pc = dynamic_cast<TBeing *>(t)))
       continue;
     if (is_exact_name(affName, pc->getName())) {

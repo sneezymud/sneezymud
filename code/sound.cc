@@ -32,7 +32,7 @@ void MakeRoomNoise(TMonster *mob, int room, const char *local_snd, const char *d
   char buf[256];
 
   if ((rp = real_roomp(room)) && local_snd && *local_snd) {
-    for (t = rp->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
       ch = dynamic_cast<TBeing *>(t);
       if (!ch || !ch->desc) {
         continue;
@@ -47,7 +47,7 @@ void MakeRoomNoise(TMonster *mob, int room, const char *local_snd, const char *d
   if (rp && distant_snd) {
     for (door = MIN_DIR; door < MAX_DIR; door++) {
       if (rp->dir_option[door] && (orp = real_roomp(rp->dir_option[door]->to_room))) {
-        for (t = orp->getStuff(); t; t = t->nextThing) {
+        for(StuffIter it=orp->stuff.begin();it!=orp->stuff.end() && (t=*it);++it) {
           ch = dynamic_cast<TBeing *>(t);
           if (!ch) {
             continue;
@@ -71,7 +71,7 @@ void MakeNoise(int room, const char *local_snd, const char *distant_snd)
   TThing *t = NULL;
 
   if ((rp = real_roomp(room))) {
-    for (t = rp->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
       ch = dynamic_cast<TBeing *>(t);
       if (!ch) {
         continue;
@@ -87,7 +87,7 @@ void MakeNoise(int room, const char *local_snd, const char *distant_snd)
   }
   for (door = MIN_DIR; door < MAX_DIR; door++) {
     if (rp->dir_option[door] && (orp = real_roomp(rp->dir_option[door]->to_room))) {
-      for (t = orp->getStuff(); t; t = t->nextThing) {
+      for(StuffIter it=orp->stuff.begin();it!=orp->stuff.end() && (t=*it);++it) {
         ch = dynamic_cast<TBeing *>(t);
         if (!ch) {
           continue;
@@ -168,9 +168,8 @@ int TThing::checkSoundproof() const
 
 void TRoom::playsound(soundNumT sound, const sstring &type, int vol, int prior, int loop) const
 {
-  TThing *ch;
-  for (ch = getStuff(); ch; ch = ch->nextThing) {
-    TBeing * chb = dynamic_cast<TBeing *>(ch);
+  for(StuffIter it=stuff.begin();it!=stuff.end();++it) {
+    TBeing * chb = dynamic_cast<TBeing *>(*it);
     if (chb)
       chb->playsound(sound, type, vol, prior, loop);
   }
@@ -178,9 +177,8 @@ void TRoom::playsound(soundNumT sound, const sstring &type, int vol, int prior, 
 
 void TRoom::stopsound() const
 {
-  TThing *ch;
-  for (ch = getStuff(); ch; ch = ch->nextThing) {
-    TBeing * chb = dynamic_cast<TBeing *>(ch);
+  for(StuffIter it=stuff.begin();it!=stuff.end();++it) {
+    TBeing * chb = dynamic_cast<TBeing *>(*it);
     if (chb)
       chb->stopsound();
   }

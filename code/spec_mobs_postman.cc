@@ -116,8 +116,8 @@ int postman(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
     return false;
 
   // search for post bag
-  for(TThing *tt=me->getStuff();tt;tt=tt->nextThing){
-    if((bag=dynamic_cast<TObj *>(tt)) && bag->objVnum()==2375)
+  for(StuffIter it=me->stuff.begin();it!=me->stuff.end();++it){
+    if((bag=dynamic_cast<TObj *>(*it)) && bag->objVnum()==2375)
       break;
     else
       bag=NULL;
@@ -130,8 +130,8 @@ int postman(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
   TMonster *tm=NULL;
   vector <TMonster *> mobs;
   
-  for(TThing *tt=me->roomp->getStuff();tt;tt=tt->nextThing){
-    if((tm=dynamic_cast<TMonster *>(tt)) && tm != me)
+  for(StuffIter it=me->roomp->stuff.begin();it!=me->roomp->stuff.end();++it){
+    if((tm=dynamic_cast<TMonster *>(*it)) && tm != me)
       mobs.push_back(tm);
   }
   if(mobs.size()==0)
@@ -139,8 +139,8 @@ int postman(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
   tm=mobs[::number(0,mobs.size()-1)];
 
   int count=0;
-  for(TThing *tt=bag->getStuff();tt;tt=tt->nextThing){
-    if((obj=dynamic_cast<TObj *>(tt)) && obj->objVnum() == 124)
+  for(StuffIter it=bag->stuff.begin();it!=bag->stuff.end();++it){
+    if((obj=dynamic_cast<TObj *>(*it)) && obj->objVnum() == 124)
       count++;
   }
   
@@ -148,8 +148,8 @@ int postman(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
     return false;
 
   if(!::number(0,5) || count > 10){
-    for(TThing *tt=bag->getStuff();tt;tt=tt->nextThing){
-      if((obj=dynamic_cast<TObj *>(tt)) && obj->objVnum() == 124){
+    for(StuffIter it=bag->stuff.begin();it!=bag->stuff.end();++it){
+      if((obj=dynamic_cast<TObj *>(*it)) && obj->objVnum() == 124){
 	--(*obj);
 	act("$n delivers $p to $N.",
 	    FALSE, me, obj, tm, TO_ROOM);

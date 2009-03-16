@@ -43,7 +43,7 @@ bool checkAttuneUsage(TBeing *ch, int * uses, int * reqUses, TVial **water, TSym
   TThing *tmp = NULL;
 
   *uses = 0;
-  for (tmp = ch->getStuff(); tmp; tmp = tmp->nextThing) {
+  for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end() && (tmp=*it);++it) {
     tmp->findVialAttune(water, uses);
   }
 
@@ -109,7 +109,7 @@ void TSymbol::attunePulse(TBeing *ch)
     uses = max(1, uses - ch->task->flags);
 
     TThing *tmp;
-    for (tmp = ch->getStuff(); tmp; tmp = tmp->nextThing) {
+    for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end() && (tmp=*it);++it) {
       water = NULL;
       num = 0;
       tmp->findVialAttune(&water, &num);

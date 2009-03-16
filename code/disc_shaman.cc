@@ -13,7 +13,7 @@
 int voodoo(TBeing *caster, TObj *obj, int level, byte bKnown)
 {
   TMonster *mob;
-  TThing *t, *n;
+  TThing *t;
   TBaseCorpse *corpse = dynamic_cast<TBaseCorpse *>(obj);
   char buf[256], capbuf[256];
   wearSlotT i;
@@ -67,8 +67,8 @@ int voodoo(TBeing *caster, TObj *obj, int level, byte bKnown)
   mob->setSex(SEX_NEUTER);
 
   // take all from corpse, and give to zombie 
-  for (t = corpse->getStuff(); t; t = n) {
-    n = t->nextThing;
+  for(StuffIter it=corpse->stuff.begin();it!=corpse->stuff.end();){
+    t=*(it++);
     --(*t);
     *mob += *t;
   }
@@ -195,7 +195,7 @@ int voodoo(TBeing * caster, TObj * corpse)
 int dancingBones(TBeing * caster, TObj * obj, int level, byte bKnown)
 {
   TMonster *mob;
-  TThing *t, *n;
+  TThing *t;
   TBaseCorpse *corpse;
   char buf[256], capbuf[256];
   wearSlotT i;
@@ -246,8 +246,8 @@ int dancingBones(TBeing * caster, TObj * obj, int level, byte bKnown)
   mob->setSex(SEX_NEUTER);
 
   // take all from corpse, and give to mob
-  for (t = corpse->getStuff(); t; t = n) {
-    n = t->nextThing;
+  for(StuffIter it=corpse->stuff.begin();it!=corpse->stuff.end();){
+    t=*(it++);
     --(*t);
     *mob += *t;
   }
@@ -2611,7 +2611,7 @@ int ret,level;
 
 int flatulence(TBeing * caster, int level, byte bKnown, int adv_learn)
 {
-  TThing *t, *t2;
+  TThing *t;
   TBeing *vict = NULL;
 
   level = min(level, 20);
@@ -2621,8 +2621,8 @@ int flatulence(TBeing * caster, int level, byte bKnown, int adv_learn)
   if (caster->bSuccess(bKnown, SPELL_FLATULENCE)) {
     act("<o>You turn around quickly and pass gas!<1>", FALSE, caster, NULL, NULL, TO_CHAR);
     act("<o>$n turns around quickly and passes gas!<1>", FALSE, caster, NULL, NULL, TO_ROOM);
-    for (t = caster->roomp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end();){
+      t=*(it++);
       vict = dynamic_cast<TBeing *>(t);
       if (!vict)
         continue;

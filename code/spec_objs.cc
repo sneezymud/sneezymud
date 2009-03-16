@@ -364,7 +364,7 @@ int TStaff::foodItemUsed(TBeing *ch, const char *)
     return FALSE;
   }
   addToCurCharges(-1);
-  for (t = ch->roomp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (t=*it);++it) {
     vict = dynamic_cast<TBeing *>(t);
     if (!vict)
       continue;
@@ -403,7 +403,7 @@ int orbOfDestruction(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   int rc;
   char buffer[256];
   TBeing *vict = NULL;
-  TThing *t, *t2;
+  TThing *t;
   int d = 0;
   int resCode = 0;
 
@@ -430,8 +430,8 @@ int orbOfDestruction(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
         act("You trigger $p, causing it to explode in a fiery blast of light!", 1, ch, o, NULL, TO_CHAR);
         act("$n's $o explodes in a fiery blast of light!", 1, ch, o, NULL, TO_ROOM);
-        for (t = ch->roomp->getStuff(); t; t = t2) {
-          t2 = t->nextThing;
+        for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end();){
+          t=*(it++);
           vict = dynamic_cast<TBeing *>(t);
           if (!vict)
             continue;
@@ -472,7 +472,7 @@ int orbOfTeleportation(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj 
   int rc;
   char buffer[256];
   TBeing *vict = NULL;
-  TThing *t, *t2;
+  TThing *t;
   int resCode = 0;
 
   if (!arg || !*arg)
@@ -496,8 +496,8 @@ int orbOfTeleportation(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj 
              1, ch, o, NULL, TO_CHAR);
         act("$n's $o makes a loud, throbbing noise!", 
              1, ch, o, NULL, TO_ROOM);
-        for (t = ch->roomp->getStuff(); t; t = t2) {
-          t2 = t->nextThing;
+        for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end();){
+          t=*(it++);
           vict = dynamic_cast<TBeing *>(t);
           if (!vict)
             continue;
@@ -736,7 +736,7 @@ int bowl_of_blood(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
 void explode(TObj *obj, int room, int dam)
 {
   TRoom *rm;
-  TThing *t, *t2;
+  TThing *t;
   int rc;
   TBeing *v = NULL;
 
@@ -745,8 +745,8 @@ void explode(TObj *obj, int room, int dam)
     return;
   }
 
-  for (t = rm->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=rm->stuff.begin();it!=rm->stuff.end();){
+    t=*(it++);
     v = dynamic_cast<TBeing *>(t);
     if (!v)
       continue;
@@ -1989,7 +1989,7 @@ int fishingBoat(TBeing *, cmdTypeT cmd, const char *, TObj *myself, TObj *)
   // we just idle in 15150 if we're empty
   if(myself->in_room == 15150){
     found=0;
-    for(tt=boatroom->getStuff();tt;tt=tt->nextThing){
+    for(StuffIter it=boatroom->stuff.begin();it!=boatroom->stuff.end() && (tt=*it);++it){
       if(dynamic_cast<TPerson *>(tt)){
 	found=1;
 	break;
@@ -2966,7 +2966,7 @@ int minecart(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
 	break;
       }
       if (status == 1) {
-	if (!(switchtrack =dynamic_cast<TObj *>( searchLinkedList("switchtrack", myself->roomp->getStuff(), TYPEOBJ)))) {
+	if (!(switchtrack =dynamic_cast<TObj *>( searchLinkedList("switchtrack", myself->roomp->stuff, TYPEOBJ)))) {
 	  vlogf(LOG_PROC, "Minecart looking for switchtrack that wasn't there. Dash sucks.");
 	  return FALSE;
 	} else {
@@ -3530,7 +3530,7 @@ int permaDeathMonument(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj
   if(cmd != CMD_LOOK)
     return FALSE;
 
-  for (o = ch->roomp->getStuff(); o; o = o->nextThing) {
+  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (o=*it);++it) {
     to = dynamic_cast<TObj *>(o);
     if (to && to->spec == SPEC_PERMA_DEATH &&
 	isname(arg, to->name)){
@@ -3587,7 +3587,7 @@ int trophyBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
   if(cmd != CMD_LOOK)
     return FALSE;
 
-  for (o = ch->roomp->getStuff(); o; o = o->nextThing) {
+  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (o=*it);++it) {
     to = dynamic_cast<TObj *>(o);
     if (to && to->spec == SPEC_TROPHY_BOARD &&
 	isname(arg, to->name)){
@@ -3709,7 +3709,7 @@ int highrollersBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *
   if(cmd != CMD_LOOK)
     return FALSE;
 
-  for (o = ch->roomp->getStuff(); o; o = o->nextThing) {
+  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (o=*it);++it) {
     to = dynamic_cast<TObj *>(o);
     if (to && to->spec == SPEC_HIGHROLLERS_BOARD &&
 	isname(arg, to->name)){
@@ -3761,7 +3761,7 @@ int shopinfoBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
   if(cmd != CMD_LOOK)
     return FALSE;
 
-  for (o = ch->roomp->getStuff(); o; o = o->nextThing) {
+  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (o=*it);++it) {
     to = dynamic_cast<TObj *>(o);
     if (to && to->spec == SPEC_SHOPINFO_BOARD &&
 	isname(arg, to->name)){
@@ -3867,7 +3867,7 @@ int brickScorecard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2
   if(cmd != CMD_LOOK)
     return FALSE;
 
-  for (o = ch->roomp->getStuff(); o; o = o->nextThing) {
+  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (o=*it);++it) {
     to = dynamic_cast<TObj *>(o);
     if (to && to->spec == SPEC_BRICKQUEST &&
 	isname(arg, to->name)){
@@ -3935,7 +3935,7 @@ int force(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
 
 
-      for (t = ch->roomp->getStuff(); t; t = t->nextThing) {
+      for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (t=*it);++it) {
 	vict = dynamic_cast<TBeing *>(t);
 	if (!vict)
 	  continue;
@@ -4178,7 +4178,7 @@ int symbolBlindingLight(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj
     act("<Y>Your $o suddenly starts to glow and quickly becomes unbearably bright!<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
     
     
-    for (t = ch->roomp->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (t=*it);++it) {
       tmp_victim = dynamic_cast<TBeing *>(t);
       if (!tmp_victim)
 	continue;
@@ -4234,7 +4234,7 @@ int blizzardRing(TBeing *being, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
       TThing *t;
       TBeing *vict = NULL;
 
-      for (t = ch->roomp->getStuff(); t; t = t->nextThing) {
+      for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (t=*it);++it) {
         vict = dynamic_cast<TBeing *>(t);
         if (!vict)
           continue;
@@ -4295,7 +4295,7 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
   if(cmd != CMD_LOOK)
     return FALSE;
 
-  for (o = ch->roomp->getStuff(); o; o = o->nextThing) {
+  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (o=*it);++it) {
     to = dynamic_cast<TObj *>(o);
     if (to && to->spec == SPEC_FACTIONSCORE_BOARD &&
 	isname(arg, to->name)){
@@ -5707,7 +5707,7 @@ int pirateHatDispenser(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj 
     return FALSE;
   }
 
-  if(tbc->getStuff()){
+  if(!tbc->stuff.empty()){
     ch->sendTo("The dispenser is full already.\n\r");
     return TRUE;
   }

@@ -24,7 +24,7 @@ sstring TPerson::parseTitle(Descriptor *user)
   int flag = FALSE;
 
   if (!title) {
-    return getName();;
+    return getName();
   }
 
   buf=nameColorString(this, user, title, &flag, COLOR_BASIC, FALSE);

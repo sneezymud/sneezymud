@@ -243,7 +243,7 @@ float TCommodity::shopPriceFloat(int num, int shop_nr, float, const TBeing *ch) 
 
   TShopOwned tso(shop_nr, NULL);
 
-  int total_units = tso.getInventoryCount(this);;
+  int total_units = tso.getInventoryCount(this);
 
   price=demandCurvePrice(num, price, getMaterial(), total_units);
 

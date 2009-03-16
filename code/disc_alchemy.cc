@@ -185,7 +185,7 @@ static sstring identifyBeingStuff(const TBeing *caster, TBeing *victim, showMeT 
 
   str += "Affected by: ";
 
-  str += sprintbit_64(victim->specials.affectedBy, affected_bits);;
+  str += sprintbit_64(victim->specials.affectedBy, affected_bits);
   str += "\n\r";
 
   str += caster->describeAffects(victim, show);
@@ -930,7 +930,7 @@ int farlook(TBeing *caster, TBeing * victim, int level, byte bKnown)
     act("$n conjures up a large cloud which shimmers slightly before revealing...",
               FALSE, caster, 0, 0, TO_ROOM);
 
-    for (t = caster->roomp->getStuff(); t; t = t->nextThing)
+    for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end() && (t=*it);++it)
       if ((ch = dynamic_cast<TBeing *>(t)) && ch->isPc() && ch->desc)
         tBeing.push_back(ch);
 
@@ -2145,7 +2145,7 @@ void TBeing::doScribe(const char *arg)
       t->findSomeComponent(&comp_gen, &comp_spell, &comp_scribe, which, 2);
     }
   }
-  for (t = getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
     t->findSomeComponent(&comp_gen, &comp_spell, &comp_scribe, which, 2);
   }
 

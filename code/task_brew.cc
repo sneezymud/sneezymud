@@ -58,7 +58,7 @@ int task_brew(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *
 	      }
 	    }
 	  }
-	  for (t = ch->getStuff(); t; t = t->nextThing) {
+	  for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end() && (t=*it);++it) {
 	    if(!potion_obj){
 	      if((potion_obj=dynamic_cast<TPotion *>(t)) &&
 		 potion_obj->getDrinkType() != LIQ_MAGICAL_ELIXIR)

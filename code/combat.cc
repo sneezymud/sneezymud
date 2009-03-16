@@ -135,7 +135,7 @@ bool TBeing::isTanking()
 
   //  Look through the current room and check each object.  If the object is
   //  fighting and I'm the one it is fighting, then I'm tanking.
-  for (contents = roomp->getStuff(); contents; contents = contents->nextThing) {
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (contents=*it);++it) {
     TBeing *tbg = dynamic_cast<TBeing *>(contents);
     if (tbg) {
       victim = tbg;
@@ -154,12 +154,10 @@ bool TBeing::isTanking()
 
 TBeing *findNextOpponent(TBeing *ch, TBeing *cur)
 {
-  TThing *temp;
   TBeing *tmp=NULL;
 
-  for (TThing *t = ch->roomp->getStuff(); t; t = temp) {
-    temp = t->nextThing;
-    tmp = dynamic_cast<TBeing *>(t);
+  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end();++it){
+    tmp = dynamic_cast<TBeing *>(*it);
     if (!tmp)
       continue;
 
@@ -250,7 +248,7 @@ void TBeing::deathCry()
     TBeing   *tPlayer;
 
     if (in_room != new_room && canGo(door)) {
-      for (i = newR->getStuff(); i; i = i->nextThing) {
+      for(StuffIter it=newR->stuff.begin();it!=newR->stuff.end() && (i=*it);++it) {
         if (!inGrimhaven() && (tMons = dynamic_cast<TMonster *>(i))) {
           tMons->UA(1);
           tMons->UM(1);
@@ -289,7 +287,7 @@ void TBeing::deathCry()
         sendrpf(COLOR_MOBS, newR, buf);
 
 	if (!inGrimhaven()) {
-	  for (i = newR->getStuff(); i; i = i->nextThing) {
+	  for(StuffIter it=newR->stuff.begin();it!=newR->stuff.end() && (i=*it);++it) {
 	    TMonster *tmons = dynamic_cast<TMonster *>(i);
 
 	    if (tmons) {
@@ -516,16 +514,10 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost)
   if (isShopkeeper()) {
     vlogf(LOG_COMBAT, "Shopkeeper inventory being removed.");
 
-    for (TThing *tThing = getStuff(); tThing; ) {
-      TThing *tThingB = tThing->nextThing;
-
-      delete tThing;
-      tThing = NULL;
-
-      tThing = tThingB;
+    for(StuffIter it=stuff.begin();it!=stuff.end();){
+      delete *(it++);
     }
 
-    setStuff(NULL);
     setMoney(0);
   }
 
@@ -707,7 +699,7 @@ bool TBeing::checkCut(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThing *w
 	  (weapon ? buf3.c_str() : ch->getMyRace()->getBodyLimbSlash());
         act(buf, FALSE, this, item, ch, TO_CHAR);
 
-        for (t = roomp->getStuff(); t; t = t->nextThing) {
+        for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
           temp = dynamic_cast<TBeing *>(t);
           if (!temp || (temp == this))
             continue;
@@ -779,7 +771,7 @@ bool TBeing::checkSmashed(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
 	  (altPart ? altPart : (weapon ? buf3 :  ch->getMyRace()->getBodyLimbBlunt()));
         act(buf, FALSE, this, item, ch, TO_CHAR);
 
-        for (t = roomp->getStuff(); t; t = t->nextThing) {
+        for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
           temp = dynamic_cast<TBeing *>(t);
           if (!temp || (temp == this))
             continue;
@@ -794,7 +786,7 @@ bool TBeing::checkSmashed(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
           } else if (weapon) {
             buf += colorString(temp, temp->desc, temp->objn(weapon).c_str(), NULL, COLOR_OBJECTS, FALSE);
           } else {
-            buf += ch->getMyRace()->getBodyLimbBlunt();;
+            buf += ch->getMyRace()->getBodyLimbBlunt();
           }
           buf += "!\n\r";
           act(buf, TRUE, this, item, temp, TO_VICT);
@@ -857,7 +849,7 @@ bool TBeing::checkPierced(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
 	  (weapon ? buf3 : ch->getMyRace()->getBodyLimbPierce(ch));
         act(buf, TRUE, this, item, ch, TO_CHAR);
 
-        for (t = roomp->getStuff(); t; t = t->nextThing) {
+        for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
           temp = dynamic_cast<TBeing *>(t);
           if (!temp || (temp == this))
             continue;
@@ -1155,8 +1147,8 @@ bool scrapMonogrammed(TObj *o)
   }
   // at this point, "this" is guaranteed to be in roomp
 
-  while (o->getStuff()) {
-    x = o->getStuff();
+  for(StuffIter it=o->stuff.begin();it!=o->stuff.end();){
+    x = *(it++);
     --(*x);
     *o->roomp += *x;
   }
@@ -1187,14 +1179,16 @@ bool TObj::makeScraps()
     tbc->setDrinkUnits(0);
   }
 
-  if (getStuff()) {
+  if (!stuff.empty()) {
     if ((ch = parent)) {
-      while ((x = getStuff())) {
+      for(StuffIter it=stuff.begin();it!=stuff.end();){
+	x=*(it++);
         --(*x);
         *ch += *x;
       }
     } else if ((ch = equippedBy)) {
-      while ((x = getStuff())) {
+      for(StuffIter it=stuff.begin();it!=stuff.end();){
+	x=*(it++);
         --(*x);
         if (ch->roomp)
           *ch->roomp += *x;
@@ -1313,8 +1307,8 @@ bool TObj::makeScraps()
   }
   // at this point, "this" is guaranteed to be in roomp
 
-  while (getStuff()) {
-    x = getStuff();
+  for(StuffIter it=stuff.begin();it!=stuff.end();){
+    x=*(it++);
     --(*x);
     *roomp += *x;
   }
@@ -2810,7 +2804,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
         if (v->desc && !(v->desc->autobits & AUTO_NOSPAM))
           act("You are missed by $n as $e tries to bite you.",
                  TRUE, this, 0, v, TO_VICT);
-        for (t = roomp->getStuff(); t; t = t->nextThing) {
+        for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
           other = dynamic_cast<TBeing *>(t);
           if (!other)
             continue;
@@ -2834,7 +2828,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
     if (v->desc && !(v->desc->autobits & AUTO_NOSPAM))
       act("You are missed by $n as $e tries to shoot you.",
 	  TRUE, this, 0, v, TO_VICT);
-    for (t = roomp->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       other = dynamic_cast<TBeing *>(t);
       if (!other)
 	continue;
@@ -2858,7 +2852,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
         if (v->desc && !(v->desc->autobits & AUTO_NOSPAM))
           act("You are missed by $n as $e thrusts at you.",
                  TRUE, this, 0, v, TO_VICT);
-        for (t = roomp->getStuff(); t; t = t->nextThing) {
+        for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
           other = dynamic_cast<TBeing *>(t);
           if (!other)
             continue;        
@@ -2881,7 +2875,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
           act("You stab wildly, but miss $N.", FALSE, this, 0, v, TO_CHAR);
         if (v->desc && !(v->desc->autobits & AUTO_NOSPAM))
           act("You are missed by $n as $e stabs wildly.", TRUE, this, 0, v, TO_VICT);
-        for (t = roomp->getStuff(); t; t = t->nextThing) {
+        for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
           other = dynamic_cast<TBeing *>(t);
           if (!other)
             continue;
@@ -2908,7 +2902,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
               (v->isHumanoid() ? "armor" : "hide"));
         if (v->desc && !(v->desc->autobits & AUTO_NOSPAM))
           act(buf, TRUE, this, 0, v, TO_VICT);
-        for (t = roomp->getStuff(); t; t = t->nextThing) {
+        for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
           other = dynamic_cast<TBeing *>(t);
           if (!other)
             continue;
@@ -2947,7 +2941,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
           act("You miss $N.", FALSE, this, 0, v, TO_CHAR);
         if (v->desc && !(v->desc->autobits &AUTO_NOSPAM))
           act("You are missed by $n.", TRUE, this, 0, v, TO_VICT);
-        for (t = roomp->getStuff(); t; t = t->nextThing) {
+        for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
           other = dynamic_cast<TBeing *>(t);
           if (!other)
             continue;
@@ -2978,7 +2972,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
         if (v->desc && !(v->desc->autobits & AUTO_NOSPAM))
           act("You are missed by $n as $e swings wildly.",
                   TRUE, this, 0, v, TO_VICT);
-        for (t = roomp->getStuff(); t; t = t->nextThing) {
+        for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
           other = dynamic_cast<TBeing *>(t);
           if (!other)
             continue;
@@ -3006,7 +3000,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
               (v->isHumanoid() ? "armor" : "hide"));
         if (v->desc && !(v->desc->autobits & AUTO_NOSPAM))
           act(buf, TRUE, this, 0, v, TO_VICT);
-        for (t = roomp->getStuff(); t; t = t->nextThing) {
+        for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
           other = dynamic_cast<TBeing *>(t);
           if (!other)
             continue;
@@ -3046,7 +3040,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
           act("You miss $N.", FALSE, this, 0, v, TO_CHAR);
         if (v->desc && !(v->desc->autobits & AUTO_NOSPAM))
           act("You are missed by $n.", TRUE, this, 0, v, TO_VICT);
-        for (t = roomp->getStuff(); t; t = t->nextThing) {
+        for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
           other = dynamic_cast<TBeing *>(t);
           if (!other)
             continue;
@@ -3186,7 +3180,7 @@ void TBeing::normalHitMessage(TBeing *v, TThing *weapon, spellNumT w_type, int d
   // correct w_type for the array offset
   w_type -= TYPE_MIN_HIT;
 
-  for (t = roomp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
 
     other = dynamic_cast<TBeing *>(t);
     if (!other || !other->desc || (other == this) || (other == v) || !other->awake())
@@ -3386,7 +3380,7 @@ int TBeing::checkShield(TBeing *v, TThing *weapon, wearSlotT part_hit, spellNumT
     act("You parry $N's blow with $p.", TRUE, v, shield, this, TO_CHAR, ANSI_CYAN);
   if (!desc || !IS_SET(desc->autobits, AUTO_NOSPAM))
     act("$n parries your blow with $p.", TRUE, v, shield, this, TO_VICT, ANSI_CYAN);
-  for (t = roomp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
     other = dynamic_cast<TBeing *>(t);
     if (!other)
       continue;
@@ -4445,7 +4439,7 @@ int TBeing::tellStatus(int dam, bool same, bool flying)
     roomp->playsound(snd, SOUND_TYPE_COMBAT, 100, 100, 1);
 
     if(!inGrimhaven()){
-      for (i = roomp->getStuff(); i; i = i->nextThing) {
+      for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (i=*it);++it) {
 	TMonster *tmons = dynamic_cast<TMonster *>(i);
 	if(tmons && tmons != this){
 	  tmons->UA(1);
@@ -4613,7 +4607,8 @@ void TBeing::catchLostLink(TBeing *vict)
     delete [] bag->name;
     bag->name = mud_str_dup(buf);
 
-    while ((o = vict->getStuff())) {
+    for(StuffIter it=vict->stuff.begin();it!=vict->stuff.end();){
+      o=*(it++);
       (*o)--;
       *bag += *o;
     }
@@ -4734,7 +4729,7 @@ TBeing *TBeing::findAnAttacker() const
   if (in_room < 0)
     return NULL;
 
-  for (tmp = roomp->getStuff(); tmp; tmp = tmp->nextThing) {
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (tmp=*it);++it) {
     TBeing *tbt = dynamic_cast<TBeing *>(tmp);
     if (!tbt)
       continue;

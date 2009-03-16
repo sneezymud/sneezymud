@@ -397,8 +397,7 @@ int TRoom::chiMe(TBeing *tLunatic)
 {
   TBeing *tSucker;
   int     tRc = 0;
-  TThing *tThing,
-         *tNextThing;
+  TThing *tThing;
 
   if (tLunatic->getSkillValue(SKILL_CHI) < 100 ||
       tLunatic->getDiscipline(DISC_MEDITATION_MONK)->getLearnedness() < 25) {
@@ -414,8 +413,8 @@ int TRoom::chiMe(TBeing *tLunatic)
   act("$n suddenly <r>radiates with power<z> and brings harm to $s enemies!",
       TRUE, tLunatic, NULL, NULL, TO_ROOM);
 
-  for (tThing = getStuff(); tThing; tThing = tNextThing) {
-    tNextThing = tThing->nextThing;
+  for(StuffIter it=stuff.begin();it!=stuff.end();){
+    tThing=*(it++);
 
     if (!(tSucker = dynamic_cast<TBeing *>(tThing)) || tSucker == tLunatic)
       continue;

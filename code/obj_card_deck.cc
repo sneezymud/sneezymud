@@ -25,9 +25,9 @@ void TBeing::doShuffle(const sstring &arg)
 
 
   vector <TThing *> cards;
-  TThing *t2;
-  for(TThing *t=deck->getStuff();t;t=t2){
-    t2 = t->nextThing;
+  TThing *t;
+  for(StuffIter it=deck->stuff.begin();it!=deck->stuff.end();){
+    t=*(it++);
     --(*t);
     cards.push_back(t);
   }
@@ -57,7 +57,7 @@ void TCardDeck::getObjFromMeText(TBeing *ch, TThing *obj, getTypeT, bool)
 void TCardDeck::lookObj(TBeing *ch, int bits) const
 {
   int count=0;
-  for(TThing *t=getStuff();t;t=t->nextThing){
+  for(StuffIter it=stuff.begin();it!=stuff.end();++it){
     count++;
   }
 
@@ -89,7 +89,7 @@ TCardDeck::~TCardDeck()
 void TCardDeck::describeObjectSpecifics(const TBeing *ch) const
 {
   int count=0;
-  for(TThing *t=getStuff();t;t=t->nextThing){
+  for(StuffIter it=stuff.begin();it!=stuff.end();++it){
     count++;
   }
 

@@ -452,7 +452,7 @@ TBeing * TMonster::findAHatee(void)
   TBeing *tmp_ch = NULL;
   TThing *t;
 
-  for (t = roomp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
     tmp_ch = dynamic_cast<TBeing *>(t);
     if (!tmp_ch)
       continue;
@@ -470,7 +470,7 @@ TBeing * TMonster::findAFearee(void)
   TBeing *tmp_ch = NULL;
   TThing *t;
 
-  for (t = roomp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
     tmp_ch = dynamic_cast<TBeing *>(t);
     if (!tmp_ch)
       continue;

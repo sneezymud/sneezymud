@@ -43,7 +43,7 @@ static int feignDeath(TBeing * caster)
     caster->stopFighting();
     caster->setPosition(POSITION_SLEEPING);
 
-    for (t = rp->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
       TBeing *tc = dynamic_cast<TBeing *>(t);
       if (!tc) continue;
       if (tc->fight() == caster) {

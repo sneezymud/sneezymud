@@ -58,8 +58,8 @@ int paladinPatrol(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
 
 
   // look for cyclopses
-  for(TThing *t=myself->roomp->getStuff();t;t=t->nextThing){
-    if((tm=dynamic_cast<TMonster *>(t)) && tm->getRace()==RACE_TYTAN){
+  for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end();++it){
+    if((tm=dynamic_cast<TMonster *>(*it)) && tm->getRace()==RACE_TYTAN){
       switch(::number(0,5)){
 	case 0:
 	  myself->doSay("Have at them, boys!");
@@ -172,11 +172,10 @@ int paladinPatrol(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
       } else {
 	followData *f, *n;
 	TBeing *vict;
-	TThing *tnext;
 	
 	// get rid of valuables, these accumulate
-	for(TThing *t=myself->getStuff();t;t=tnext){
-	  tnext=t->nextThing;
+	for(StuffIter it=myself->stuff.begin();it!=myself->stuff.end();){
+	  TThing *t=*(it++);
 	  --(*t);
 	  if(dynamic_cast<TCommodity *>(t) ||
 	     t->number == GENERIC_MONEYPOUCH){
@@ -195,8 +194,8 @@ int paladinPatrol(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
 	    if (!tmons)
 	      continue;
 	    // get rid of valuables, these accumulate
-	    for(TThing *t=tmons->getStuff();t;t=tnext){
-	      tnext=t->nextThing;
+	    for(StuffIter it=tmons->stuff.begin();it!=tmons->stuff.end();){
+	      TThing *t=*(it++);
 	      --(*t);
 	      if(dynamic_cast<TCommodity *>(t) ||
 		 t->number == GENERIC_MONEYPOUCH){

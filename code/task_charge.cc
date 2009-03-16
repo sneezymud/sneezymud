@@ -159,7 +159,7 @@ int taskChargeMoveInto(int to_room, TBeing *ch, bool moveHorse)
       return DELETE_THIS;
 
     if (nRc == TRUE || !to_room || to_here->isRoomFlag(ROOM_PEACEFUL) ||
-        (to_here->getMoblim() && (MobCountInRoom(to_here->getStuff()) >= to_here->getMoblim()))) {
+        (to_here->getMoblim() && (MobCountInRoom(to_here->stuff) >= to_here->getMoblim()))) {
       ch->sendTo("Your mount refuses to continue in your charge so you decide to stop.\n\r");
       stop_charge(ch);
 
@@ -523,7 +523,7 @@ int TBeing::ChargePulse(TBeing *ch)
   char         nString[256];
   int          nRc = TRUE;
 
-  for (tMonster = ch->roomp->getStuff(); tMonster; tMonster = tMonster->nextThing) {
+  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (tMonster=*it);++it) {
     if (!dynamic_cast<TMonster *>(tMonster))
       continue;
 
@@ -560,7 +560,7 @@ int TBeing::ChargePulse(TBeing *ch)
     nRc = ChargeRoom(ch);
   } else {
     // Either hit 0 or were doing an inf run-until-hit thing.
-    for (tMonster = ch->roomp->getStuff(); tMonster; tMonster = tMonster->nextThing) {
+    for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (tMonster=*it);++it) {
       if (!dynamic_cast<TMonster *>(tMonster))
         continue;
 

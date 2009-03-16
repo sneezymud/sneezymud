@@ -64,7 +64,7 @@ int TBoat::putSomethingInto(TBeing *ch, TThing *tThing)
     return 2;
   }
 
-  if (getStuff()) {
+  if (!stuff.empty()) {
     ch->sendTo("There is already something attached to this.\n\r");
     return 2;
   }
@@ -92,7 +92,7 @@ int TBoat::putSomethingInto(TBeing *ch, TThing *tThing)
 
 int TBoat::getObjFrom(TBeing *ch, const char *tString, const char *)
 {
-  if (!getStuff()) {
+  if (stuff.empty()) {
     ch->sendTo("There is nothing in there.\n\r");
     return TRUE;
   }
@@ -102,8 +102,8 @@ int TBoat::getObjFrom(TBeing *ch, const char *tString, const char *)
     return TRUE;
   }
 
-  if (isname(tString, getStuff()->getName())) {
-    TThing *tThing = getStuff();
+  if (isname(tString, stuff.front()->getName())) {
+    TThing *tThing = stuff.front();
     --(*tThing);
     *ch += *tThing;
 
@@ -131,5 +131,5 @@ int TBoat::getObjFrom(TBeing *ch, const char *tString, const char *)
 
 int TBoat::getLight() const
 {
-  return (TThing::getLight() + (getStuff() ? getStuff()->getLight() : 0));
+  return (TThing::getLight() + (!stuff.empty() ? stuff.front()->getLight() : 0));
 }

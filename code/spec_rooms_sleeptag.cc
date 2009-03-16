@@ -85,7 +85,7 @@ int sleepTagControl(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoo
         tJob->isActive = true;
         tJob->tPlayer  = NULL;
 
-        for (tThing = tRoom->getStuff(); tThing; tThing = tThing->nextThing) {
+        for(StuffIter it=tRoom->stuff.begin();it!=tRoom->stuff.end() && (tThing=*it);++it) {
           TBeing *tPlayer = dynamic_cast<TBeing *>(tThing);
 
           if (tPlayer && tPlayer->isPc() && !tPlayer->isImmortal()) {
@@ -157,20 +157,18 @@ int sleepTagControl(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoo
     case CMD_UP:
       tBeing->sendTo("Hope you had a good time.\n\r");
 
-      for (tThing = tBeing->getStuff(); tThing; ) {
+      for(StuffIter it=tBeing->stuff.begin();it!=tBeing->stuff.end();){
+	tThing=*(it++);
         TObj *tObj = dynamic_cast<TObj *>(tThing);
-
-        tIThing = tThing->nextThing;
 
         if (tObj && tObj->objVnum() == SLEEPTAG_STAFF) {
           --(*tThing);
           delete tThing;
           tThing = NULL;
-        } else if (tThing->getStuff())
-          for (tCThing = tThing->getStuff(); tCThing; ) {
+        } else if (!tThing->stuff.empty())
+	  for(StuffIter itt=tThing->stuff.begin();itt!=tThing->stuff.end();){
+            tCThing=*(it++);
             TObj *tCObj = dynamic_cast<TObj *>(tCThing);
-
-            tEThing = tCThing->nextThing;
 
             if (tCObj && tCObj->objVnum() == SLEEPTAG_STAFF) {
               --(*tCThing);
@@ -231,7 +229,7 @@ int sleepTagRoom(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoom)
 
   switch (tCmd) {
     case CMD_GENERIC_PULSE:
-      for (tThing = tRoom->getStuff(); tThing; tThing = tThing->nextThing)
+      for(StuffIter it=tRoom->stuff.begin();it!=tRoom->stuff.end() && (tThing=*it);++it)
         if ((tPerson = dynamic_cast<TBeing *>(tThing))) {
           tPerson->setMove(tPerson->getMaxMove());
 

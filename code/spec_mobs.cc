@@ -165,7 +165,7 @@ int TMonster::npcSteal(TPerson *victim)
     return FALSE;
 
   // check if a guard is around
-  for (t = roomp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
     TBeing *tbt = dynamic_cast<TBeing *>(t);
     if (tbt && tbt->isPolice())
       return FALSE;
@@ -586,10 +586,10 @@ int newbieEquipper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
         break;
       } else {
         best = NULL;
-        for (i = ch->getStuff(); i && !best; i = i->nextThing) {
+        for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end() && (i=*it);++it) {
           i->findSym(&best);
 
-          for (j = i->getStuff(); j && !best; j = j->nextThing) {
+          for(StuffIter it=i->stuff.begin();it!=i->stuff.end() && (j=*it);++it) {
             j->findSym(&best); 
           }
         }
@@ -620,7 +620,7 @@ int newbieEquipper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
         me->doTell(ch->getName(), "You are a monk.  I only help those who directly need the help.");
         return TRUE;
       }
-      for (i = ch->getStuff(); i; i = i->nextThing) {
+      for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end() && (i=*it);++it) {
         if (dynamic_cast<TGenWeapon *>(i)) {
           me->doTell(ch->getName(), "You already have a weapon.  I only help the the totally destitute.");
           return TRUE;
@@ -966,7 +966,7 @@ int insulter(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   if (myself->fight())
     vict = myself->fight();
   else {
-    for (t = myself->roomp->getStuff(); t; t = t->nextThing) {
+    for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (t=*it);++it) {
       vict = dynamic_cast<TBeing *>(t);
       if (!vict)
         continue;
@@ -994,7 +994,7 @@ int siren(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   roomDirData *exitp, *back;
   dirTypeT door;
   TRoom *rp, *rp2;
-  TThing *t, *t2;
+  TThing *t;
 
   if (cmd != CMD_GENERIC_PULSE)
     return FALSE;
@@ -1011,8 +1011,8 @@ int siren(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     if (rp != real_roomp(back->to_room))
       continue;
 
-    for (t = rp2->getStuff();t;t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=rp2->stuff.begin();it!=rp2->stuff.end();){
+      t=*(it++);
       vict = dynamic_cast<TBeing *>(t);
       if (!vict)
         continue;
@@ -1039,7 +1039,7 @@ int siren(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     }  
   }
 
-  for (t = myself->roomp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (t=*it);++it) {
     vict = dynamic_cast<TBeing *>(t);
     if (!vict)
       continue;
@@ -1098,7 +1098,7 @@ int siren(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 static int rob_blind(TBeing *ch, TBeing *vict)
 {
   // make all checks prohibiting stealing before coming in here
-  TThing *t, *t2;
+  TThing *t;
   sstring name, buf;
  
   if (ch->fight() || vict->fight())
@@ -1106,8 +1106,8 @@ static int rob_blind(TBeing *ch, TBeing *vict)
   if ((ch->getRace() == RACE_HOBBIT) && (ch->getSkillValue(SKILL_STEAL) < 80))
     ch->setSkillValue(SKILL_STEAL, 80);
 
-  for (t=vict->getStuff();t;t= t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=vict->stuff.begin();it!=vict->stuff.end();){
+    t=*(it++);
     if (::number(0,4) || !ch->canSee(t))
       continue;
     TObj *tmp_obj = dynamic_cast<TObj *>(t);
@@ -1138,9 +1138,9 @@ int thief(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
   if (ch->fight())
     return FALSE;
 
-  TThing *t1, *t2;
-  for (t1 = ch->roomp->getStuff();t1; t1 = t2) {
-    t2 = t1->nextThing;
+  TThing *t1;
+  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end();){
+    t1=*(it++);
     cons = dynamic_cast<TBeing *>(t1);
     if (!cons)
       continue;
@@ -1537,17 +1537,16 @@ int payToll(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
       if (!myself->canSee(ch) || (myself == ch) || ch->isAnimal() || !myself->awake() || myself->fight()) {
         return FALSE;
       } else if (((cmd == CMD_OPEN) && arg && is_abbrev(arg, "gate")) || (cmd == CMD_NORTH)) {
-        TThing * tThing  = ch->getStuff();
         TRoom  * tRoom   = real_roomp(36060);
         TObj   * tObj    = NULL;
 
-        for (; tThing; tThing = tThing->nextThing)
-          if ((tObj = dynamic_cast<TObj *>(tThing)) && (tObj->objVnum() == 36060))
+	for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end();++it)
+          if ((tObj = dynamic_cast<TObj *>(*it)) && (tObj->objVnum() == 36060))
             return FALSE;
 
         if (ch->master && ch->sameRoom(*(ch->master)))
-          for (tThing = ch->master->getStuff(); tThing; tThing = tThing->nextThing)
-            if ((tObj = dynamic_cast<TObj *>(tThing)) && (tObj->objVnum() == 36060))
+          for(StuffIter it=ch->master->stuff.begin();it!=ch->master->stuff.end();++it)
+            if ((tObj = dynamic_cast<TObj *>(*it)) && (tObj->objVnum() == 36060))
               return FALSE;
 
         if (ch->isPc())
@@ -1759,9 +1758,10 @@ int Tyrannosaurus_swallower(TBeing *ch, cmdTypeT cmd, const char *, TMonster *my
 
           // just a bit of a safety check
           TBaseCorpse *co = NULL;
-          if ((co = dynamic_cast<TBaseCorpse *>(ch->roomp->getStuff()))) {
+          if ((co = dynamic_cast<TBaseCorpse *>(ch->roomp->stuff.front()))) {
             TThing *t;
-            for (t = co->getStuff(); t; t = co->getStuff()) {
+	    for(StuffIter it=co->stuff.begin();it!=co->stuff.end();){
+	      t=*(it++);
               --(*t);
               *ch += *t; 
             }
@@ -1798,7 +1798,7 @@ int Tyrannosaurus_swallower(TBeing *ch, cmdTypeT cmd, const char *, TMonster *my
 
 static int frost_giant_stuff(TMonster *ch)
 {
-  TThing *t, *t2;
+  TThing *t;
   TBeing *vict = NULL, *v2;
   int rc;
   followData *f, *n;
@@ -1830,8 +1830,8 @@ static int frost_giant_stuff(TMonster *ch)
     return shouted;
   }
   // attack anyone in room
-  for (t = ch->roomp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end();){
+    t=*(it++);
     vict = dynamic_cast<TBeing *>(t);
     if (!vict)
       continue;
@@ -2010,7 +2010,7 @@ int frostGiant(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 static void lamp_stuff(TMonster *ch)
 {
   TThing *lamp;
-  lamp = searchLinkedListVis(ch, "lamppost", ch->roomp->getStuff());
+  lamp = searchLinkedListVis(ch, "lamppost", ch->roomp->stuff);
   if (lamp) {
     lamp->lampLightStuff(ch);
   }
@@ -2775,7 +2775,7 @@ static TWindow * getFirstWindowInRoom(TMonster *myself)
 {
   TThing *t;
   TWindow *tw = NULL;
-  for (t = myself->roomp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (t=*it);++it) {
     tw = dynamic_cast<TWindow *>(t);
     if (tw)
       return tw;
@@ -3410,7 +3410,7 @@ int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       act("$n breathes deeply then continues $e attuning.", TRUE, me, NULL, NULL, TO_ROOM);
       return TRUE;
     case CMD_GENERIC_PULSE:
-      for (t = me->getStuff(); t; t = t->nextThing) {
+      for(StuffIter it=me->stuff.begin();it!=me->stuff.end() && (t=*it);++it) {
         if (t != job->sym)
           continue;
         else {
@@ -3525,7 +3525,7 @@ int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       }
       for(; *arg && isspace(*arg);arg++);
 
-      if (!(t = searchLinkedListVis(ch, arg, ch->getStuff()))) {
+      if (!(t = searchLinkedListVis(ch, arg, ch->stuff))) {
         me->doTell(ch->getName(), "You don't have that symbol.");
         return TRUE;
       }
@@ -3653,7 +3653,7 @@ int sharpener(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
           sprintf(buf, "Here ya go %s! Good as new.", job->char_name);
           me->doSay(buf);
 
-          if (!(final = searchLinkedList(job->obj_name, me->getStuff()))) {
+          if (!(final = searchLinkedList(job->obj_name, me->stuff))) {
             me->doSay("Ack, I lost the weapon somehow! Tell a god immediately!");
             return FALSE;
           } 
@@ -3682,7 +3682,7 @@ int sharpener(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
           job->cost = 0;
           return FALSE;
         } else {
-          if (!(final = searchLinkedList(job->obj_name, me->getStuff()))) {
+          if (!(final = searchLinkedList(job->obj_name, me->stuff))) {
             me->doSay("Ack, I lost the weapon somehow! Tell a god immediately!");
             return FALSE;
           } 
@@ -3738,7 +3738,7 @@ int sharpener(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
     case CMD_VALUE:
       for(; *arg && isspace(*arg);arg++);
 
-      if (!(valued = searchLinkedListVis(ch, arg, ch->getStuff()))) {
+      if (!(valued = searchLinkedListVis(ch, arg, ch->stuff))) {
         me->doTell(ch->getName(), "You don't have that item.");
         return TRUE;
       }
@@ -3870,9 +3870,9 @@ int death(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
   }
 
   // this "kills" folks but doesn't cause exp loss
-  TThing *t1, *t2;
-  for (t1 = me->roomp->getStuff();t1; t1 = t2) {
-    t2 = t1->nextThing;
+  TThing *t1;
+  for(StuffIter it=me->roomp->stuff.begin();it!=me->roomp->stuff.end();){
+    t1=*(it++);
     TBeing * t = dynamic_cast<TBeing *>(t1);
     if (!t)
       continue;
@@ -3955,9 +3955,9 @@ int war(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
   // keep War and his horse out of it though 
   if (me->checkPeaceful(""))
     return FALSE;
-  TThing *t1, *t2, *t3;
-  for (t1 = me->roomp->getStuff();t1; t1 = t2) {
-    t2 = t1->nextThing;
+  TThing *t1, *t2=NULL, *t3=NULL;
+  for(StuffIter it=me->roomp->stuff.begin();it!=me->roomp->stuff.end();){
+    t1=*(it++);
     t = dynamic_cast<TBeing *>(t1);
     if (!t)
       continue;
@@ -3975,7 +3975,7 @@ int war(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
     if (t->GetMaxLevel() < 8 && me->inGrimhaven())
       continue;
     for (next_tar = NULL;t2;t2 = t3, next_tar = NULL) {
-      t3 = t2->nextThing;
+      t2=*(it++);
       next_tar = dynamic_cast<TBeing *>(t2);
       if (!next_tar)
         continue;
@@ -4007,13 +4007,13 @@ int war(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 
 void TBeing::findFood()
 {
-  TThing *t, *t2, *t3, *t4;
+  TThing *t, *t3;
 
-  for (t = getStuff();t;t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=stuff.begin();it!=stuff.end();){
+    t=*(it++);
 
-    for (t3 = t->getStuff();t3;t3 = t4) {
-      t4 = t3->nextThing;
+    for(StuffIter it=t->stuff.begin();it!=t->stuff.end();){
+      t3=*(it++);
       t3->nukeFood();
       // t3 may be invalid here
     }
@@ -4026,7 +4026,7 @@ void TBeing::findFood()
 int famine(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 {
   TBeing *t;
-  TThing *t1, *t2;
+  TThing *t1;
   int rc;
   affectedData aff;
 
@@ -4052,8 +4052,8 @@ int famine(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
     return TRUE;
   }
 
-  for (t1 = me->roomp->getStuff();t1; t1 = t2) {
-    t2 = t1->nextThing;
+  for(StuffIter it=me->roomp->stuff.begin();it!=me->roomp->stuff.end();){
+    t1=*(it++);
     t = dynamic_cast<TBeing *>(t1);
     if (!t)
       continue;
@@ -4162,9 +4162,9 @@ int pestilence(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
   }
 
   // casts disease on everybody
-  TThing *t1, *t2;
-  for (t1 = me->roomp->getStuff();t1; t1 = t2) {
-    t2 = t1->nextThing;
+  TThing *t1;
+  for(StuffIter it=me->roomp->stuff.begin();it!=me->roomp->stuff.end();){
+    t1=*(it++);
     if (number(0,14))
       continue;
     t = dynamic_cast<TBeing *>(t1);
@@ -4317,7 +4317,7 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
           me->doSay(buf);
           TThing *ts = NULL;
           TObj *final = NULL;
-          if (!(ts = searchLinkedList(job->obj_name, me->getStuff())) ||
+          if (!(ts = searchLinkedList(job->obj_name, me->stuff)) ||
               !(final = dynamic_cast<TObj *>(ts))) {
             me->doSay("Ack, I lost the item somehow! Tell a god immediately!  ");
             vlogf(LOG_PROC,fmt("engraver lost his engraving item (%s)") % final->name);
@@ -4412,7 +4412,7 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       for(; *arg && isspace(*arg);arg++);
       TThing *ts = NULL;
       TObj *valued = NULL;
-      if (!(ts = searchLinkedListVis(ch, arg, ch->getStuff())) ||
+      if (!(ts = searchLinkedListVis(ch, arg, ch->stuff)) ||
           !(valued = dynamic_cast<TObj *>(ts))) {
         me->doTell(ch->getName(), "You don't have that item.");
         return TRUE;
@@ -4746,7 +4746,7 @@ int banshee(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   act("$n unleashes a hideous screech.", FALSE, myself, 0, 0, TO_ROOM);
 
   TThing *t;
-  for (t = myself->roomp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (t=*it);++it) {
     TBeing *tbt = dynamic_cast<TBeing *>(t);
     if (!tbt)
       continue;
@@ -4767,7 +4767,7 @@ int banshee(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 
 int corpseMuncher(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 {
-  TThing *t, *t2;
+  TThing *t;
   TObj *obj = NULL;
   int found=0, msg;
   const char *munch[]={
@@ -4780,8 +4780,8 @@ int corpseMuncher(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
   if ((cmd != CMD_GENERIC_PULSE) || !ch->awake() || ch->fight())
     return FALSE;
 
-  for (t = myself->roomp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end();){
+    t=*(it++);
     if (!(obj = dynamic_cast<TObj *>(t)) ||
         !myself->canSee(obj) || !dynamic_cast<TBaseCorpse *>(obj) ||
 	obj->obj_flags.decay_time<=0)
@@ -4865,7 +4865,7 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *myself
 
       // heh why'd I do this instead of returning DELETE_ ??
       // beats me, I ain't gonna touch it now though
-      for(t=myself->getStuff();t;t=t->nextThing){
+      for(StuffIter it=myself->stuff.begin();it!=myself->stuff.end() && (t=*it);++it){
 	if(isname("caughtfish", t->name)){
 	  delete t;
 	  break;
@@ -4996,7 +4996,7 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
       return FALSE;
 
     // find a john
-    for(t=myself->roomp->getStuff(); t && !found; t=t->nextThing){
+    for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (t=*it);++it){
       if((tmons=dynamic_cast<TMonster *>(t))){
 	if(tmons!=myself && tmons->isHumanoid() && !tmons->isShopkeeper() &&
       !IS_SET(tmons->specials.act, ACT_SENTINEL) &&
@@ -5266,7 +5266,7 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
       break;
     case STATE_WAITFORCLEAR:
       found=0;
-      for(t=myself->roomp->getStuff();t;t=t->nextThing){
+      for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (t=*it);++it){
 	if(dynamic_cast<TPerson *>(t)){
 	  switch(::number(0,1)){
 	    case 0:
@@ -5357,16 +5357,16 @@ int bankGuard(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj 
 // for the jungle canyon zone - dash 7/25/01
 int scaredKid(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *o)
 {
-  TThing *t = NULL, *t2 = NULL;
-  TBeing *tb = NULL;;
+  TThing *t = NULL;
+  TBeing *tb = NULL;
   bool found = false;
 
   if (cmd != CMD_GENERIC_QUICK_PULSE || myself->fight())
     return FALSE;
   
   // look for people to run from
-  for (t = myself->roomp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
+  for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end();){
+    t=*(it++);
     if(!(tb=dynamic_cast<TBeing *>(t)))
       continue;
     if(tb->isPc() && myself->canSee(tb))
@@ -5545,7 +5545,7 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       for(; *arg && isspace(*arg);arg++);
       TThing *ts = NULL;
       TObj *valued = NULL;
-      if (!(ts = searchLinkedListVis(ch, arg, ch->getStuff())) ||
+      if (!(ts = searchLinkedListVis(ch, arg, ch->stuff)) ||
           !(valued = dynamic_cast<TObj *>(ts))) {
         me->doTell(ch->getName(), "You don't have that item.");
         return TRUE;
@@ -5619,8 +5619,8 @@ int gardener(TBeing *, cmdTypeT cmd, const char *, TMonster *mob, TObj *)
   if(::number(0,100))
     return FALSE;
 
-  for(TThing *t=mob->getStuff();t;t=t->nextThing){
-    if((tool=dynamic_cast<TTool *>(t)) &&
+  for(StuffIter it=mob->stuff.begin();it!=mob->stuff.end();++it){
+    if((tool=dynamic_cast<TTool *>(*it)) &&
        tool->getToolType() == TOOL_SEED){
       break;
     }
@@ -5628,10 +5628,9 @@ int gardener(TBeing *, cmdTypeT cmd, const char *, TMonster *mob, TObj *)
   }
   if(!tool)
     return FALSE;
-  TThing *tcount;
-  int count;
-  for (tcount = mob->roomp->getStuff(), count=0; tcount; tcount = tcount->nextThing) {
-    if (dynamic_cast<TPlant *>(tcount))
+  int count=0;
+  for(StuffIter it=mob->roomp->stuff.begin();it!=mob->roomp->stuff.end();++it){
+    if (dynamic_cast<TPlant *>(*it))
       ++count;
   }
   if (count >= 8) {
@@ -5714,7 +5713,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
   }
 
 
-  if (!bow->getStuff()) {
+  if (bow->stuff.empty()){
     //    vlogf(LOG_DASH, "archer loading an arrow");
 
     if (!(arrow = read_object(arrownum, VIRTUAL))) {
@@ -5759,7 +5758,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
 
       
 
-      for (t = real_roomp(rm)->getStuff(); t; t = t->nextThing) {
+      for(StuffIter it=real_roomp(rm)->stuff.begin();it!=real_roomp(rm)->stuff.end() && (t=*it);++it) {
 	tbt = dynamic_cast<TBeing *>(t);
 	if (!tbt)
 	  continue;
@@ -5778,7 +5777,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
 
       which = ::number(1,count);// which target to pick on the next pass
       count = 0;
-      for (t = real_roomp(rm)->getStuff(); t; t = t->nextThing) {
+      for(StuffIter it=real_roomp(rm)->stuff.begin();it!=real_roomp(rm)->stuff.end() && (t=*it);++it) {
         tbt = dynamic_cast<TBeing *>(t);
         if (!tbt)
           continue;
@@ -5800,7 +5799,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
       strcpy(temp, tbt->name);
       count =0;
       numsimilar = 0;
-      for (t = real_roomp(rm)->getStuff(); t; t = t->nextThing) {
+      for(StuffIter it=real_roomp(rm)->stuff.begin();it!=real_roomp(rm)->stuff.end() && (t=*it);++it) {
         tbt2 = dynamic_cast<TBeing *>(t);
         if (!tbt2)
           continue;
@@ -5972,7 +5971,7 @@ int aggroFollower(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
     // if mob in room that isn't in my group
     //   if within my level range (my level + 10 or lower?)
     //     attack
-    for(t=myself->roomp->getStuff();t;t=t->nextThing){
+    for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (t=*it);++it){
       if((tmons=dynamic_cast<TMonster *>(t)) &&
 	 !tmons->inGroup(*myself) && !tmons->isImmortal()){
 
@@ -6036,7 +6035,7 @@ int adventurer(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   // if mob in room that isn't in my group
   //   if within my level range (my level + 10 or lower?)
   //     attack
-  for(t=myself->roomp->getStuff();t;t=t->nextThing){
+  for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (t=*it);++it){
     if((tmons=dynamic_cast<TMonster *>(t)) &&
        !tmons->inGroup(*myself)){
       rc = myself->takeFirstHit(*tmons);
@@ -6078,24 +6077,22 @@ int barmaid(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   if ((myself->getCarriedWeight()/myself->carryWeightLimit()) * 100.0 > 25 || 
       (myself->getCarriedVolume()/myself->carryVolumeLimit()) * 100.0 > 25) {
     act("$n carries the empty glasses behind the counter and washes them.",FALSE, myself, 0, 0, TO_ROOM);
-    t= myself->getStuff();
-    while(t) {
+
+    for(StuffIter it=myself->stuff.begin();it!=myself->stuff.end();){
+      t=*(it++);
       if((glass=dynamic_cast<TBaseCup *>(t))){
-	t=t->nextThing;
 	--(*glass);
         delete glass;
         glass = NULL;
         myself->addToWait(2);
-      } else {
-	t=t->nextThing;
       }
-      
     }
+
     myself->addToWait(50);
     return TRUE;
   }
   
-  for(t=myself->roomp->getStuff();t;t=t->nextThing){
+  for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (t=*it);++it){
     if((table=dynamic_cast<TTable *>(t))){
       
       for(t2=table->rider;t2;t2=t2->nextRider){
@@ -6172,8 +6169,8 @@ bool okForCommodMaker(TObj *o, sstring &ret)
     }
 
     TObj *obj;
-    for(TThing *t=o->getStuff();t;t=t->nextThing){
-      if(!(obj=dynamic_cast<TObj *>(t)))
+    for(StuffIter it=o->stuff.begin();it!=o->stuff.end();++it){
+      if(!(obj=dynamic_cast<TObj *>(*it)))
 	      continue;
 
       if(material_nums[obj->getMaterial()].price <= 0){
@@ -6220,8 +6217,8 @@ map <ubyte,int> commodMakerValue(TObj *o, float &value)
   value += max((float)1.0, amt * (float)material_nums[o->getMaterial()].price);
 
 
-  for(TThing *t=o->getStuff();t;t=t->nextThing){
-    if(!(obj=dynamic_cast<TObj *>(t)))
+  for(StuffIter it=o->stuff.begin();it!=o->stuff.end();++it){
+    if(!(obj=dynamic_cast<TObj *>(*it)))
       continue;
 
     amt=(int)(obj->getWeight() * 10.0 * wastage);
@@ -6249,7 +6246,7 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
     return FALSE;
 
   if(cmd == CMD_VALUE){
-    if (!(ts = searchLinkedListVis(ch, arg, ch->getStuff())) ||
+    if (!(ts = searchLinkedListVis(ch, arg, ch->stuff)) ||
 	!(o = dynamic_cast<TObj *>(ts))) {
       me->doTell(ch->getName(), "You don't have that item.");
       return TRUE;
@@ -6714,8 +6711,8 @@ int shippingOfficial(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself
   if(!ch || !myself)
     return FALSE;
 
-  for(TThing *t=myself->roomp->getStuff();t;t=t->nextThing){
-    if((o=dynamic_cast<TObj *>(t))){
+  for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end();++it){
+    if((o=dynamic_cast<TObj *>(*it))){
       if(o->objVnum() == 90){
 	myself->doEmote("looks the crate over carefully.");
 	myself->doSay("Ok, this looks good.");
@@ -6759,7 +6756,7 @@ int cat(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
     return FALSE;
 
   if(cmd==CMD_PET){
-    for(TThing *t=ch->roomp->getStuff();t;t=t->nextThing){
+    for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end();++it){
       if (((tb = get_char_room_vis(ch, arg, NULL, EXACT_YES)) ||
 	   (tb = get_char_room_vis(ch, arg))) && tb==me){
 	ch->doAction(arg, CMD_PET);
@@ -6792,8 +6789,8 @@ int cat(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
       return FALSE;
     
     // LOOK FOR MICE
-    for(TThing *t=me->roomp->getStuff();t;t=t->nextThing){
-      if((tm=dynamic_cast<TMonster *>(t)) && tm->getRace()==RACE_RODENT &&
+    for(StuffIter it=me->roomp->stuff.begin();it!=me->roomp->stuff.end();++it){
+      if((tm=dynamic_cast<TMonster *>(*it)) && tm->getRace()==RACE_RODENT &&
 	 tm->getRealLevel() < me->getRealLevel()){
 	me->doAction(add_bars(tm->name), CMD_GROWL);
 	return tm->takeFirstHit(*me);
@@ -6823,8 +6820,8 @@ int cat(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	break;
       case 3:
 	// rub against leg if player (if humanoid?)
-	for(TThing *t=me->roomp->getStuff();t;t=t->nextThing){
-	  if((tb=dynamic_cast<TBeing *>(t)) && tb->isHumanoid()){
+	for(StuffIter it=me->roomp->stuff.begin();it!=me->roomp->stuff.end();++it){
+	  if((tb=dynamic_cast<TBeing *>(*it)) && tb->isHumanoid()){
 	    roompeople.push_back(tb);
 	  }
 	}
@@ -6852,8 +6849,8 @@ int cat(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	me->doAction("", CMD_STRETCH);
 	break;
       case 6:
-	for(TThing *t=me->roomp->getStuff();t;t=t->nextThing){
-	  if((o=dynamic_cast<TObj *>(t))){
+	for(StuffIter it=me->roomp->stuff.begin();it!=me->roomp->stuff.end();++it){
+	  if((o=dynamic_cast<TObj *>(*it))){
 	    roomobj.push_back(o);
 	  }
 	}
@@ -6867,8 +6864,8 @@ int cat(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	break;
       case 7: case 8: case 9: case 10:
 	// play with other cats
-        for(TThing *t=me->roomp->getStuff();t;t=t->nextThing){
-          if((tb=dynamic_cast<TBeing *>(t)) && 
+        for(StuffIter it=me->roomp->stuff.begin();it!=me->roomp->stuff.end();++it){
+          if((tb=dynamic_cast<TBeing *>(*it)) && 
 	     (tb->getRace() == RACE_FELINE) &&
 	     tb!=me){
             roompeople.push_back(tb);
@@ -6971,8 +6968,8 @@ int caretaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
     return FALSE;
 
   // pick stuff up
-  for(TThing *t=me->roomp->getStuff();t;t=t->nextThing){
-    if((o=dynamic_cast<TObj *>(t))){
+  for(StuffIter it=me->roomp->stuff.begin();it!=me->roomp->stuff.end();++it){
+    if((o=dynamic_cast<TObj *>(*it))){
       for(int i=0;i<3;++i){
 	if(o->objVnum() == vnums[i]){
 	  if(me->doGet(add_bars(o->name).c_str()))
@@ -6984,8 +6981,8 @@ int caretaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
   
   // drop stuff
   if(!found){
-    for(TThing *t=me->getStuff();t;t=t->nextThing){
-      if((o=dynamic_cast<TObj *>(t))){
+    for(StuffIter it=me->stuff.begin();it!=me->stuff.end();++it){
+      if((o=dynamic_cast<TObj *>(*it))){
 	for(int i=0;i<3;++i){
 	  if(o->objVnum() == vnums[i]){
 	    if(me->doDrop("", o))

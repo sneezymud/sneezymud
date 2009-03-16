@@ -596,7 +596,7 @@ int ret,level;
 int cloudOfConcealment(TBeing *caster, int level, byte bKnown)
 {
   TBeing *tmp_victim;
-  TThing *t, *t2;
+  TThing *t;
   affectedData aff;
   int found = FALSE;
   if (caster->bSuccess(bKnown, SPELL_CLOUD_OF_CONCEALMENT)) {
@@ -610,8 +610,8 @@ int cloudOfConcealment(TBeing *caster, int level, byte bKnown)
     aff.modifier = -40;
     aff.location = APPLY_ARMOR;
     aff.bitvector = AFF_INVISIBLE;
-    for (t = caster->roomp->getStuff(); t; t = t2) {
-      t2 = t->nextThing;
+    for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end();){
+      t=*(it++);
       tmp_victim = dynamic_cast<TBeing *>(t);
       if (!tmp_victim)
         continue;

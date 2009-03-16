@@ -19,7 +19,7 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
   TThing *t = NULL;
   TObj *cart = NULL;
   TObj *contents = NULL;
-  for (t = mob->roomp->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=mob->roomp->stuff.begin();it!=mob->roomp->stuff.end() && (t=*it);++it) {
     if (!(cart = dynamic_cast<TObj *>(t))) {
       continue;
     }
@@ -88,7 +88,7 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
   TDrinkCon *heart = NULL;
   TObj *bodypart = NULL;
   int foundsomething = 0;
-  for (t = ch->getStuff(); t; t = t->nextThing) {
+  for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end() && (t=*it);++it) {
     if (!isname(sarg.word(0), t->name))
         continue;
     foundsomething++;
