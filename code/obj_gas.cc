@@ -48,9 +48,9 @@ void doChoke(TGas *myself)
   if(!myself->roomp || getSmokeIndex(myself->getVolume()) < 7)
     return;
 
-  for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end();++it){
+  for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end();){
     TBeing *tb;
-    if(!::number(0,4) && (tb=dynamic_cast<TBeing *>(*it))){
+    if((tb=dynamic_cast<TBeing *>(*(it++))) && !::number(0,4)){
       tb->sendTo(COLOR_BASIC, "<r>The large amount of smoke in the room causes you to choke and cough!<1>\n\r");
       int rc=tb->reconcileDamage(tb, ::number(3,11), DAMAGE_SUFFOCATION);
       
