@@ -639,30 +639,30 @@ int healing_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
           case 416:
             --(*healed);
             thing_to_room(healed, 108);
-            break;
+            return TRUE; // stop the loop, since we changed rp->stuff
           case 1353:
             --(*healed);
             thing_to_room(healed, 1303);
-            break;
+            return TRUE; // stop the loop, since we changed rp->stuff
           case 3736:
             --(*healed);
             thing_to_room(healed, 3710);
-            break;
-	  case 16206:
-	    --(*healed);
-	    thing_to_room(healed, 16239);
-	    break;
+            return TRUE; // stop the loop, since we changed rp->stuff
+	        case 16206:
+	          --(*healed);
+	          thing_to_room(healed, 16239);
+	          return TRUE; // stop the loop, since we changed rp->stuff
           default:
             vlogf(LOG_PROC, fmt("Undefined room %d in healing_room") %  healed->in_room);
-        }
-      } else {
-	if(doctor->getMoney() < cost){
-	  doctor->doTell(healed->getName(), "I don't have enough money to cover my operating expenses!");
-	  return TRUE;
-	}
+          }
+        } else {
+	        if(doctor->getMoney() < cost){
+	          doctor->doTell(healed->getName(), "I don't have enough money to cover my operating expenses!");
+	          return TRUE;
+	      }
 
-	TShopOwned tso(shop_nr, dynamic_cast<TMonster *>(doctor), healed);
-	tso.doBuyTransaction(cost, "healing", TX_BUYING_SERVICE);
+        TShopOwned tso(shop_nr, dynamic_cast<TMonster *>(doctor), healed);
+        tso.doBuyTransaction(cost, "healing", TX_BUYING_SERVICE);
 
         healed->sendTo("The hospital works wonders on your body.\n\r");
         healed->addToHit(num);
