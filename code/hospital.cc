@@ -582,7 +582,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 
 int healing_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 {
-  TThing *t;
+  TThing *t=NULL;
   TBeing *healed, *doctor;
   int num, cost, shop_nr=-1;
 

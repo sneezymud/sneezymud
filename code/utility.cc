@@ -246,7 +246,7 @@ bool TBeing::inGroup(const TBeing &tbt) const
 
 unsigned int TBeing::numberInGroupInRoom() const
 {
-  TThing *t;
+  TThing *t=NULL;
   unsigned int count = 0;
 
   for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
@@ -435,7 +435,7 @@ TThing *TThing::thingHolding() const
 int RecCompObjNum(const TObj *o, int obj_num)
 {
   int total = 0;
-  TThing *i;
+  TThing *i=NULL;
 
   if (obj_index[o->getItemIndex()].virt == obj_num)
     total = 1;
@@ -1264,7 +1264,7 @@ bool in_range(int num, int low, int high)
 
 bool thingsInRoomVis(TThing *ch, TRoom *rp)
 {
-  TThing *o;
+  TThing *o=NULL;
 
   if (!ch || !rp) {
     vlogf(LOG_BUG, "thingsInRoomVis() called with NULL ch, or room!");
@@ -1758,7 +1758,7 @@ bool TBeing::isElemental() const
 // eg ignore_imms==TRUE, room with just an immortal will be considered empty
 bool TRoom::roomIsEmpty(bool ignore_imms) const
 {
-  TThing *t;
+  TThing *t=NULL;
   TBeing *vict;
 
   for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {

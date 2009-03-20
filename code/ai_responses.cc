@@ -121,6 +121,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
               obj->getName() % obj->objVnum());
       }
       TThing *t;
+      t=NULL;
       for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
         TObj *tob = dynamic_cast<TObj *>(t);
         if (!tob)
@@ -473,6 +474,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
       break;
     case CMD_RESP_CHECKPERSON:
       TThing *tt;
+      tt=NULL;
       TBeing *tb;
       for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (tt=*it);++it){
       	if((tb=dynamic_cast<TBeing *>(tt)) && isname(tb->getName(), arg))
@@ -603,7 +605,7 @@ int handleMobileResponse(TBeing *tBeing, cmdTypeT tCmd, const sstring &tString)
   if (!tBeing->roomp || tCmd <= 0 || tCmd >= MAX_CMD_LIST )
     return FALSE;
 
-  TThing   *tThing;
+  TThing   *tThing=NULL;
   TMonster *tMonster;
   int       nRc;
 

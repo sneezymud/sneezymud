@@ -225,7 +225,7 @@ int meeting_organizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mysel
 
   if (cmd == CMD_GENERIC_PULSE) {
     // make sure no one goes hungry
-    TThing *t;
+    TThing *t=NULL;
     for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (t=*it);++it) {
       if (t == myself)
         continue;

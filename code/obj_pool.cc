@@ -276,7 +276,7 @@ bool TPool::isPluralItem() const
 int TRoom::dropPool(int amt, liqTypeT liq)
 {
   TPool *pool=NULL;
-  TThing *t;
+  TThing *t=NULL;
   TObj *obj;
 
   if(amt==0)
@@ -323,7 +323,7 @@ int TRoom::dropPool(int amt, liqTypeT liq)
 int TBeing::dropPool(int amt, liqTypeT liq)
 {
   TPool *pool=NULL;
-  TThing *t;
+  TThing *t=NULL;
   TObj *obj;
 
   if(amt==0)

@@ -370,7 +370,7 @@ void TBeing::rawOpenDoor(dirTypeT dir)
         rp2->playsound(snd, SOUND_TYPE_NOISE);
 
     }
-    TThing *t;
+    TThing *t=NULL;
     for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       if (t->desc)
         t->desc->send_client_exits();
@@ -609,7 +609,7 @@ void TBeing::rawCloseDoor(dirTypeT dir)
               back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
         rp2->playsound(snd, SOUND_TYPE_NOISE);
     }
-    TThing *t;
+    TThing *t=NULL;
     for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       if (t->desc)
         t->desc->send_client_exits();

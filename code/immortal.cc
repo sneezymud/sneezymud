@@ -1198,7 +1198,7 @@ int TBeing::doGoto(const sstring & argument)
   followData *k, *n;
   int loc_nr, was_in = inRoom(), location, i;
   TBeing *target_mob;//, *v = NULL;
-  TThing *t;
+  TThing *t=NULL;
   TObj *target_obj;
   TRoom *rp2;
   int rc;
@@ -3539,7 +3539,7 @@ int TBeing::doExits(const char *argument, cmdTypeT cmd)
   char buf[1024];
   roomDirData *exitdata;
   int darkhere = FALSE;
-  TThing *t;
+  TThing *t=NULL;
   TRoom *rp;
   char nameBuf[256];
 

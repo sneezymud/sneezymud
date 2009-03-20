@@ -8,7 +8,7 @@
 
 bool check_ingredients(TCookware *pot, int recipe){
   int nfound=0;
-  TThing *t;
+  TThing *t=NULL;
   TPool *pool;
   TCorpse *corpse;
   TObj *obj;

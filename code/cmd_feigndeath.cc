@@ -12,7 +12,7 @@
 static int feignDeath(TBeing * caster)
 {
   TRoom *rp;
-  TThing *t;
+  TThing *t=NULL;
 
   if (!caster->fight()) {
     caster->sendTo("But you are not fighting anything...\n\r");

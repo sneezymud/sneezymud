@@ -729,7 +729,7 @@ int summon(TBeing * caster, TBeing * victim)
 int heroesFeast(TBeing * caster, int, byte bKnown, spellNumT spell)
 {
   TBeing *tch = NULL;
-  TThing *t;
+  TThing *t=NULL;
   sstring name = caster->getName();
   int gain = 16, hitgain = 1;
   sstring message = "You partake of a magnificent feast!";

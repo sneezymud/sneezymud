@@ -221,7 +221,7 @@ int TBeing::doJunk(const char *argument, TObj *obj)
   char arg[100], newarg[100];
   TObj *o;
   int num, p, count;
-  TThing *t;
+  TThing *t=NULL;
 
   strcpy(arg, argument);
   if (!*arg && !obj) {
@@ -1539,7 +1539,7 @@ void TBeing::doGroup(const char *argument, bool silent)
   TBeing *victim, *k;
   followData *f;
   int found=FALSE;
-  TThing *t;
+  TThing *t=NULL;
   int tmp_share;
 
   argument = one_argument(argument, namebuf, cElements(namebuf));

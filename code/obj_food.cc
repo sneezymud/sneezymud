@@ -976,7 +976,7 @@ void TBeing::doFill(const char *arg)
 
 void TBeing::checkForSpills() const
 {
-  TThing *t, *t2;
+  TThing *t=NULL, *t2=NULL;
   int i;
 
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {

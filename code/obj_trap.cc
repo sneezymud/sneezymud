@@ -389,7 +389,7 @@ void TTrap::armGrenade(TBeing *ch)
   ch->addToWait(combatRound(1));
 
   // run for it!
-  TThing *t;
+  TThing *t=NULL;
   TMonster *tm;
 
   if(::number(0,1)){

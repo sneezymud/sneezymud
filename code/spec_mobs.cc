@@ -149,7 +149,7 @@ bool TMonster::isPolice() const
 int TMonster::npcSteal(TPerson *victim)
 {
   sstring buf;
-  TThing *t;
+  TThing *t=NULL;
 
   int tmp = getLevel(THIEF_LEVEL_IND);
 
@@ -957,7 +957,7 @@ int TMonster::findMyHorse()
 int insulter(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 {
   TBeing *vict = NULL;
-  TThing *t;
+  TThing *t=NULL;
   if ((cmd != CMD_GENERIC_PULSE) || !myself->awake())
     return FALSE;
   if (::number(0,3))
@@ -994,7 +994,7 @@ int siren(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   roomDirData *exitp, *back;
   dirTypeT door;
   TRoom *rp, *rp2;
-  TThing *t;
+  TThing *t=NULL;
 
   if (cmd != CMD_GENERIC_PULSE)
     return FALSE;
@@ -2773,7 +2773,7 @@ int TMonster::petPrice() const
 
 static TWindow * getFirstWindowInRoom(TMonster *myself)
 {
-  TThing *t;
+  TThing *t=NULL;
   TWindow *tw = NULL;
   for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (t=*it);++it) {
     tw = dynamic_cast<TWindow *>(t);
@@ -3313,7 +3313,7 @@ void TSymbol::attunerGiven(TBeing *ch, TMonster *me)
 int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 {
   char buf[256];
-  TThing *t;
+  TThing *t=NULL;
   TBeing *final_pers;
   TThing *ttt;
   TBeing *tbt = NULL;
@@ -4745,7 +4745,7 @@ int banshee(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   act("You unleash a hideous screech.", FALSE, myself, 0, 0, TO_CHAR);
   act("$n unleashes a hideous screech.", FALSE, myself, 0, 0, TO_ROOM);
 
-  TThing *t;
+  TThing *t=NULL;
   for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (t=*it);++it) {
     TBeing *tbt = dynamic_cast<TBeing *>(t);
     if (!tbt)
@@ -5672,7 +5672,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
   TObj *arrow = NULL;
   bool nobow = FALSE;
   int rm = 0, new_rm = 0;
-  TThing *t;
+  TThing *t=NULL;
   char temp[256];
   const char *directions[][2] =
   {
@@ -5937,7 +5937,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
 int aggroFollower(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
 {
   bool fighting=false;
-  TThing *t;
+  TThing *t=NULL;
   TMonster *tmons;
   int rc;
   sstring argument=arg;
@@ -6010,7 +6010,7 @@ int aggroFollower(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
 int adventurer(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 {
   bool fighting=false;
-  TThing *t;
+  TThing *t=NULL;
   TMonster *tmons;
   int rc;
 
@@ -6061,7 +6061,7 @@ int adventurer(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 int barmaid(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 {
 
-  TThing *t, *t2=NULL;
+  TThing *t=NULL, *t2=NULL;
   TBaseCup *glass;
   TTable *table;
 

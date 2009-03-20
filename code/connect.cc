@@ -532,7 +532,7 @@ Descriptor::~Descriptor()
 {
   Descriptor *tmp;
   int num = 0;
-  TThing *th, *th2;
+  TThing *th=NULL, *th2=NULL;
   TRoom *rp;
 
   if (close(socket->m_sock))

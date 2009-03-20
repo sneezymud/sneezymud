@@ -867,8 +867,8 @@ void do_components(int situ)
                   continue;
                 if (!tmon->isPc() && 
                     (tmon->mobVnum() == component_placement[i].mob)) {
-                  for(StuffIter it=tmon->stuff.begin();it!=tmon->stuff.end() && (t=*it);++it) {
-                    TObj *tobj = dynamic_cast<TObj *>(t);
+                  for(StuffIter it=tmon->stuff.begin();it!=tmon->stuff.end();++it) {
+                    TObj *tobj = dynamic_cast<TObj *>(*it);
                     if (!tobj)
                       continue;
                     if (tobj->objVnum() == component_placement[i].number) {
@@ -882,8 +882,8 @@ void do_components(int situ)
                 continue;
             } else {
               // limit to 1 in the room
-              for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
-                TObj *tobj = dynamic_cast<TObj *>(t);
+              for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();++it) {
+                TObj *tobj = dynamic_cast<TObj *>(*it);
                 if (!tobj)
                   continue;
                 if (tobj->objVnum() == component_placement[i].number) {

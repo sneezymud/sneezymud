@@ -11,7 +11,7 @@ vector <TBow *> TBeing::getBows()
   TBow *temp = NULL;
   vector <TBow *> bows;
   wearSlotT i;
-  TThing *j;
+  TThing *j=NULL;
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
 // if you are carrying it you know it's there
 //    if (!canSee(equipment[i]))
@@ -30,7 +30,7 @@ vector <TBow *> TBeing::getBows()
  
 TArrow *TBeing::autoGetAmmoQuiver(TBow *bow, TQuiver *quiver) 
 {
-  TThing *i;
+  TThing *i=NULL;
   TArrow *temp = NULL;
   TArrow *ammo = NULL;
   
@@ -57,7 +57,7 @@ TArrow *TBeing::autoGetAmmo(TBow *bow)
   TArrow *ammo = NULL;
   TQuiver *quiver = NULL;
   wearSlotT i;
-  TThing *j;
+  TThing *j=NULL;
 
   if (!bow)
     return ammo;
@@ -102,7 +102,7 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
     return FALSE;
   
   int rm = 0, new_rm = 0;
-  TThing *t;
+  TThing *t=NULL;
   const char *directions[][2] =
   {
     {"north", "south"},

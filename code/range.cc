@@ -542,7 +542,7 @@ int TThing::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int mdis
 
 int hit_obstacle_in_room(TRoom *rp, TThing *thing, TBeing *ch)
 {
-  TThing *t;
+  TThing *t=NULL;
 
   for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
     TObj *obj = dynamic_cast<TObj *>(t);
@@ -834,7 +834,7 @@ dirTypeT can_see_linear(const TBeing *ch, const TBeing *targ, int *rng, dirTypeT
       max_range -= TerrainInfo[real_roomp(rm)->getSectorType()]->thickness;
       if (clearpath(rm, i)) {
         rm = real_roomp(rm)->dir_option[i]->to_room;
-        const TThing *t;
+        const TThing *t=NULL;
         for(StuffIter it=real_roomp(rm)->stuff.begin();it!=real_roomp(rm)->stuff.end() && (t=*it);++it) {
           if ((t == targ) && ch->canSee(t)) {
             *rng = range;
@@ -851,7 +851,7 @@ dirTypeT can_see_linear(const TBeing *ch, const TBeing *targ, int *rng, dirTypeT
 TBeing *get_char_linear(const TBeing *ch, char *arg, int *rf, dirTypeT *df)
 {
   int rm, max_range = 15, range = 0, n, n_sofar = 0;
-  TThing *t;
+  TThing *t=NULL;
   char *tmp, tmpname[256];
 
   if ((ch->getRace() == RACE_ELVEN) || (ch->getRace() == RACE_DROW))
@@ -970,7 +970,7 @@ void TBeing::doScan(const char *argument)
   int max_range = 15, range, new_rm, rm, nfnd;
   int hindered;
   bool found = FALSE;
-  TThing *t;
+  TThing *t=NULL;
   bool all = FALSE;
 
   argument_split_2(argument, arg1, arg2);
@@ -1320,7 +1320,7 @@ TThing * TBeing::findArrow(const char *buf, silentTypeT silent) const
   TThing *arrow;
   TQuiver *tQuiver;
   int     curPos;
-  TThing  *tThing;
+  TThing  *tThing=NULL;
 
   arrow = searchLinkedListVis(this, buf, stuff);
   if (!arrow) {

@@ -5,7 +5,7 @@ extern void startChargeTask(TBeing *, const char *);
 
 static int charge(TBeing *ch, TBeing *vict)
 {
-  TThing *c;
+  TThing *c=NULL;
   TBeing *tb;
   int rc;
 
@@ -66,7 +66,8 @@ static int charge(TBeing *ch, TBeing *vict)
     return FALSE;
   }
   // otherwise, allow the charge provided all the attackers are working together
-  for(StuffIter it=vict->roomp->stuff.begin();it!=vict->roomp->stuff.end() && (c=*it);++it) {
+  for(StuffIter it=vict->roomp->stuff.begin();it!=vict->roomp->stuff.end();++it) {
+    c=*it;
     TBeing *tbt = dynamic_cast<TBeing *>(c);
     if (!tbt)
       continue;

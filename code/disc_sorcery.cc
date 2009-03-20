@@ -946,7 +946,7 @@ int animate(TBeing *caster, int level, byte bKnown)
   if (caster->bSuccess(bKnown,SPELL_ANIMATE)) {
     // you need:  helm, jacket, 2 leggings, 2 sleeves, 2 gloves, 2 boots 
 
-    TThing *obj;
+    TThing *obj=NULL;
     for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end() && (obj=*it);++it) {
       o = dynamic_cast<TObj *>(obj);
       if (!o)

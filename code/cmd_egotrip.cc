@@ -611,7 +611,7 @@ void TBeing::doEgoTrip(const char *arg)
       return;
     }
     
-    TThing *t;
+    TThing *t=NULL;
     for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       TMonster *tmon = dynamic_cast<TMonster *>(t);
       if (!tmon)

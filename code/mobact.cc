@@ -633,7 +633,7 @@ int TTreasure::scavengeMe(TBeing *, TObj **best_o)
 int TMonster::superScavenger()
 {
   int sl;
-  TThing *t;
+  TThing *t=NULL;
   TObj *best_o = NULL;
   TPCorpse *corpse = NULL;
   TBaseCorpse *bcorpse = NULL;
@@ -809,7 +809,7 @@ int TMonster::remove()
 int TMonster::senseWimps()
 {
   TBeing *tmp_victim = NULL;
-  TThing *t;
+  TThing *t=NULL;
   int score, smallest=100000;
   TBeing *wimp = NULL;
   
@@ -3451,7 +3451,7 @@ int TMonster::scavenge()
 // returns DELETE_THIS
 int TMonster::notFightingMove(int pulse)
 {
-  TThing *t;
+  TThing *t=NULL;
   TPerson *cons = NULL;
   int rc;
   TBeing *tmp_ch=NULL;
@@ -3620,7 +3620,7 @@ int TMonster::mobileActivity(int pulse)
   affectedData *af, *af2;
   int  iHeight;
   int rc;
-  TThing *t;
+  TThing *t=NULL;
 
 #if 0
   // this doesn't work right
@@ -4446,7 +4446,7 @@ int TMonster::assistFriend()
             doSay("There is no fighting within the city limits!");
             act("$n breaks up the fight.", FALSE, this, 0, 0, TO_ROOM);
 
-            TThing *toto;
+            TThing *toto=NULL;
             // stop all fights
             for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (toto=*it);++it) {
               TBeing *tbto = dynamic_cast<TBeing *>(toto);
@@ -4508,7 +4508,7 @@ int TMonster::assistFriend()
 // might return DELETE_THIS
 int TMonster::findABetterWeapon()
 {
-  TThing *t;
+  TThing *t=NULL;
   TObj *o = NULL, *best = NULL;
   int rc =0;
   

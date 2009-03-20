@@ -105,7 +105,7 @@ int TMonster::lookForHorse()
 {
   int rc;
   sstring buf;
-  TThing *t;
+  TThing *t=NULL;
   TBeing *horse = NULL;
 
   if (!isHumanoid() || UtilMobProc(this) || GuildMobProc(this) ||

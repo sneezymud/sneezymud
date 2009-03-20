@@ -11,10 +11,9 @@
 bool TBeing::hasBoat() const
 {
   int has_boat = FALSE;
-  TThing *t;
 
-  for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it)
-    t->usingBoat(&has_boat);
+  for(StuffIter it=stuff.begin();it!=stuff.end();++it)
+    (*it)->usingBoat(&has_boat);
 
   return has_boat;
 }
@@ -379,11 +378,10 @@ int obj_hit_mobs(TObj *o, TRoom *rp)
 int obj_hit_objs(TObj *o, TRoom *rp)
 {
   TObj *t = NULL;
-  TThing *a;
   int d;
 
-  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (a=*it);++it) {
-    t = dynamic_cast<TObj *>(a);
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();++it) {
+    t = dynamic_cast<TObj *>(*it);
     if (!t)
       continue;
     if ((t != o) && (t->getVolume() > 10000) &&
@@ -517,13 +515,12 @@ int TBeing::fallKill()
 
 bool TBeing::fallingMobHitMob(TRoom *rp, int count)
 {
-  TThing *t;
   int prod, d;
 
   prod = (int) (2.35 * height * getWeight());
 
-  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
-    TBeing *k = dynamic_cast<TBeing *>(t);
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();++it) {
+    TBeing *k = dynamic_cast<TBeing *>(*it);
     if (!k)
       continue;
     if ((this != k) && ((prod + (2.35 * k->height * k->getWeight())) > (dice(1, 500) * 1000))) {

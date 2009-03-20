@@ -3334,7 +3334,7 @@ void runResetCmdY(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   if (!loadOnDeath && mob->hasClass(CLASS_MAGE)) {
     TSpellBag *tBagA = NULL,
               *tBagB = NULL;
-    TThing    *tThing;
+    TThing    *tThing=NULL;
 
     // Find Held Spellbag
     for(StuffIter it=mob->stuff.begin();it!=mob->stuff.end() && (tThing=*it);++it)

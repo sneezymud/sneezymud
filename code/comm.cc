@@ -239,7 +239,7 @@ void sendToExcept(char *text, TBeing *ch)
 
 void sendToRoom(colorTypeT color, const char *text, int room)
 {
-  TThing *i;
+  TThing *i=NULL;
 
   if (!real_roomp(room)) {
     vlogf(LOG_MISC, fmt("BOGUS room %d in sendToRoom") %  room);
@@ -258,7 +258,7 @@ void sendToRoom(colorTypeT color, const char *text, int room)
 
 void sendToRoom(const char *text, int room)
 {
-  TThing *i;
+  TThing *i=NULL;
 
   if (!real_roomp(room)) {
     vlogf(LOG_MISC, fmt("BOGUS room %d in sendToRoom") %  room);
@@ -293,7 +293,7 @@ void sendrpf(int tslevel, colorTypeT color, TRoom *rp, const char *msg,...)
 {
   char messageBuffer[MAX_STRING_LENGTH];
   va_list ap;
-  TThing *i;
+  TThing *i=NULL;
 
   if (rp && msg) {
     va_start(ap, msg);
@@ -326,7 +326,7 @@ void sendrpf(int tslevel, TRoom *rp, const char *msg,...)
 {
   char messageBuffer[MAX_STRING_LENGTH];
   va_list ap;
-  TThing *i;
+  TThing *i=NULL;
   
   if (rp && msg) {
     va_start(ap, msg);
@@ -347,7 +347,7 @@ void sendrp_exceptf(TRoom *rp, TBeing *ch, const char *msg,...)
 {
   char messageBuffer[MAX_STRING_LENGTH];
   va_list ap;
-  TThing *i;
+  TThing *i=NULL;
 
   if (rp && msg) {
     va_start(ap, msg);

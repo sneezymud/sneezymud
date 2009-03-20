@@ -41,7 +41,7 @@ void Descriptor::clientf(const sstring &msg)
 
 void TRoom::clientf(const sstring &msg)
 {
-  TThing *t;
+  TThing *t=NULL;
 
   if (!msg.empty()) {
     for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
@@ -59,7 +59,7 @@ void Descriptor::send_client_motd()
 void Descriptor::send_client_inventory()
 {
   TBeing *ch;
-  TThing *t;
+  TThing *t=NULL;
 
   if (!(ch = character))
     return;
@@ -74,7 +74,7 @@ void Descriptor::send_client_inventory()
 
 void Descriptor::send_client_room_people()
 {
-  TThing *folx;
+  TThing *folx=NULL;
   TBeing *ch;
 
   if (!(ch = character))
@@ -87,7 +87,7 @@ void Descriptor::send_client_room_people()
 void Descriptor::send_client_room_objects()
 {
   TBeing *ch;
-  TThing *t;
+  TThing *t=NULL;
 
   if (!(ch = character))
     return;

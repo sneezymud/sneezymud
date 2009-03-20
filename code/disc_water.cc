@@ -817,7 +817,7 @@ int conjureElemWater(TBeing * caster, int level, byte bKnown)
 
 int conjureElemWater(TBeing * caster)
 {
-  TThing *t;
+  TThing *t=NULL;
   int found=0;
   TPool *tp;
   TBaseCup *tbc;
@@ -1002,7 +1002,7 @@ int breathOfSarahage(TBeing * caster, int level, byte bKnown)
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = AFF_WATERBREATH;
-    TThing *t;
+    TThing *t=NULL;
     int found = FALSE;
     for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end() && (t=*it);++it) {
       tmp_victim = dynamic_cast<TBeing *>(t);

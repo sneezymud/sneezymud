@@ -286,7 +286,7 @@ void TMoney::setCurrency(currencyTypeT c)
 int TMoney::moneyMeMoney(TBeing *ch, TThing *sub)
 {
   int amount;
-  TThing *t;
+  TThing *t=NULL;
   char buf[256];
   bool isMyCorpse = false;
 

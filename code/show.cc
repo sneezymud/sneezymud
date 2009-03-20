@@ -756,7 +756,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
   char buffer[10000];
   char buf[80], capbuf[256];
   int found, percent;
-  TThing *t;
+  TThing *t=NULL;
 
   if (mode == SHOW_MODE_DESC_PLUS) {
     if (!ch->canSee(this)) {

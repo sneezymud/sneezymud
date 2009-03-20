@@ -870,7 +870,7 @@ void TBeing::doPoke(const sstring &arg)
 
 void TBeing::doPunch(const sstring &arg)
 {
-  TThing *t;
+  TThing *t=NULL;
   TBeing *b;
 
   doAction(arg, CMD_PUNCH);

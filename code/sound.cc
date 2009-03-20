@@ -28,7 +28,7 @@ void MakeRoomNoise(TMonster *mob, int room, const char *local_snd, const char *d
   dirTypeT door;
   TBeing *ch = NULL;
   TRoom *rp, *orp;
-  TThing *t;
+  TThing *t=NULL;
   char buf[256];
 
   if ((rp = real_roomp(room)) && local_snd && *local_snd) {

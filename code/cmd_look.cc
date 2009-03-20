@@ -162,7 +162,7 @@ void TBeing::lookInObj(sstring arg2, TThing *specific, unsigned int bits, const 
 
     // handle the look in all.corpse special case
     if (is_abbrev(arg2, "all.corpse") && arg2.length() > 6) {
-      TThing *t;
+      TThing *t=NULL;
       for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
 	TBaseCorpse * tbc = dynamic_cast<TBaseCorpse *>(t);
 	if (tbc) {
@@ -323,7 +323,7 @@ void TBeing::lookAtBeing(TThing *specific)
 {
   TBeing *tmpBeing = dynamic_cast<TBeing *> (specific);
   bool   bIsSpying = (isAffected(AFF_SCRYING) ? !::number(0, (getSkillValue(SKILL_SPY) * 10)) : false);
-  TThing *t;
+  TThing *t=NULL;
   sstring arg1;
 
   showTo(tmpBeing, SHOW_MODE_SHORT_PLUS);

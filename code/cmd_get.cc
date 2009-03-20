@@ -431,13 +431,13 @@ int TBeing::doGet(const char *argument)
           return FALSE;
         }
 
-        TThing *t;
+        TThing *t=NULL;
         for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
           TBaseCorpse *tbc = dynamic_cast<TBaseCorpse *>(t);
           // we do no name check here, since "pile dust" won't hit "corpse"
           if (tbc) {
 	    sstring namebuf;
-	    TThing *tt;
+	    TThing *tt=NULL;
 	    int counter=1;
 	    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (tt=*it);++it) {
 	      if(dynamic_cast<TBaseCorpse *>(tt) == tbc)

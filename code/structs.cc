@@ -615,7 +615,7 @@ bool TObj::checkOwnersList(const TPerson *ch, bool tPreserve)
   }
 
   // check contents too
-  TThing *t;
+  TThing *t=NULL;
   for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
     TObj * obj = dynamic_cast<TObj *>(t);
     if (obj)
@@ -711,7 +711,7 @@ TThing& TRoom::operator += (TThing& t)
   TSeeThru *tst = dynamic_cast<TSeeThru *>(&t);
   if (tst && tst->givesOutsideLight()) {
     int best=0, curr = 0;
-    TThing *i;
+    TThing *i=NULL;
     for(StuffIter it=stuff.begin();it!=stuff.end() && (i=*it);++it) {
       TSeeThru *tst2 = dynamic_cast<TSeeThru *>(i);
       if (tst2 && (tst2 != tst) && tst2->givesOutsideLight()) {

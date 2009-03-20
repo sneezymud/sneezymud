@@ -402,7 +402,7 @@ bool appliedSubstanceFindMatch(TThing **tObjList, int ceLevel, int LsSize, int s
 // Checks the room for a TFFlame object.
 bool appliedSubstanceCheckFire(TBeing *ch)
 {
-  TThing *tThing;
+  TThing *tThing=NULL;
 
   for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (tThing=*it);++it)
     if (dynamic_cast<TFFlame *>(tThing))
@@ -413,7 +413,7 @@ bool appliedSubstanceCheckFire(TBeing *ch)
 
 bool appliedSubstanceHasInvItem(TBeing *ch, int tVNum)
 {
-  TThing *tThing;
+  TThing *tThing=NULL;
   TObj   *tObj;
 
   for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end() && (tThing=*it);++it) {

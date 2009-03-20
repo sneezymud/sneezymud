@@ -128,7 +128,7 @@ bool TBeing::checkForDiceHeld() const
 
 TObj *TBeing::checkForDiceInInv() const
 {
-  TThing *t, *t2;
+  TThing *t=NULL, *t2=NULL;
   TObj *obj, *obj2;
 
   for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
@@ -149,7 +149,7 @@ TObj *TBeing::checkForDiceInInv() const
 
 int TRoom::checkPointroll()
 {
-  TThing *c;
+  TThing *c=NULL;
 
   for(StuffIter it=stuff.begin();it!=stuff.end() && (c=*it);++it) {
     if (c->desc && c->desc->point_roll)
@@ -413,7 +413,7 @@ int can_bet_craps(TBeing *ch)
 
 int Craps::checkCraps(int diceroll)
 {
-  TThing *t;
+  TThing *t=NULL;
   Descriptor *d;
   int newRoll = FALSE;
 
@@ -468,7 +468,7 @@ int Craps::checkCraps(int diceroll)
 
 int Craps::checkSeven(int diceroll)
 {
-  TThing *t;
+  TThing *t=NULL;
   Descriptor *d;
   int pointRoll = FALSE, newRoll = FALSE;
 
@@ -545,7 +545,7 @@ int Craps::checkSeven(int diceroll)
 
 int Craps::checkEleven(int diceroll)
 {
-  TThing *t;
+  TThing *t=NULL;
   Descriptor *d;
 //  int newRoll = FALSE;
 
@@ -859,7 +859,7 @@ void Craps::checkOnerolls(int diceroll)
 
 void WinLoseCraps(TBeing *ch, int diceroll)
 {
-  TThing *t;
+  TThing *t=NULL;
   Descriptor *d;
 
   for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (t=*it);++it) {

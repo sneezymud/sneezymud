@@ -482,7 +482,7 @@ int castSuffocate(TBeing * caster, TBeing * victim)
 
 int dustStorm(TBeing * caster, int level, byte bKnown, int adv_learn)
 {
-  TThing *t;
+  TThing *t=NULL;
   TBeing *tmp_victim = NULL;
 
   if (caster->roomp->isUnderwaterSector()) {
@@ -991,7 +991,7 @@ int castFly(TBeing * caster, TBeing * victim)
 
 int antigravity(TBeing *caster, int, affectedData *aff, byte bKnown)
 {
-  TThing *t;
+  TThing *t=NULL;
   TBeing *vict = NULL;
   char buf[80];
   

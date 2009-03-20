@@ -108,7 +108,7 @@ void TSymbol::attunePulse(TBeing *ch)
     // account for usage during the  task
     uses = max(1, uses - ch->task->flags);
 
-    TThing *tmp;
+    TThing *tmp=NULL;
     for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end() && (tmp=*it);++it) {
       water = NULL;
       num = 0;

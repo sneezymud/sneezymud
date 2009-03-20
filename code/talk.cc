@@ -866,7 +866,7 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
 int TBeing::doWhisper(const sstring &arg)
 {
   TBeing *vict, *bOther = NULL;
-  TThing *bThing;
+  TThing *bThing=NULL;
   sstring name, message, buf;
   int rc;
 

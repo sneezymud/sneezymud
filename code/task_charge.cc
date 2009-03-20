@@ -519,7 +519,7 @@ int ChargeHitWall(TBeing *ch)
 int TBeing::ChargePulse(TBeing *ch)
 {
   roomDirData *rExit;
-  TThing      *tMonster;
+  TThing      *tMonster=NULL;
   char         nString[256];
   int          nRc = TRUE;
 

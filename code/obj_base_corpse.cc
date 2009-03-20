@@ -127,7 +127,7 @@ TBaseCorpse::~TBaseCorpse()
 int TBaseCorpse::putMeInto(TBeing *ch, TOpenContainer *container)
 {
   TObj *o;
-  TThing *t;
+  TThing *t=NULL;
   
   for(StuffIter it=container->stuff.begin();it!=container->stuff.end() && (t=*it);++it){
     o = dynamic_cast<TObj *>(t);
@@ -327,7 +327,7 @@ int TBaseCorpse::putSomethingInto(TBeing *ch, TThing *)
 
 int TBaseCorpse::scavengeMe(TBeing *ch, TObj **)
 {
-  TThing *t;
+  TThing *t=NULL;
   TObj *obj;
   wearSlotT sl;
   char buf[256], buf2[256], buf3[256];

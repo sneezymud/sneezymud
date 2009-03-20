@@ -344,7 +344,7 @@ void TBeing::statRoom(TRoom *rmp)
   sstring tmp_str;
   sstring buf2, buf3, buf4;
   extraDescription *e;
-  TThing *t;
+  TThing *t=NULL;
   int counter = 0, volume;
 
   if (!limitPowerCheck(CMD_EDIT, rmp->number)) {
@@ -541,7 +541,7 @@ void TBeing::statRoom(TRoom *rmp)
 void TBeing::statObj(const TObj *j)
 {
   extraDescription *e;
-  TThing *t;
+  TThing *t=NULL;
   int i;
   sstring str;
 
@@ -709,7 +709,7 @@ void TBeing::statObj(const TObj *j)
 
 void TBeing::statObjForDivman(const TObj *j)
 {
-  TThing *t;
+  TThing *t=NULL;
   sstring str = "\n\r";
   sstring sitem = j->shortDescr;
   

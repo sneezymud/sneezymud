@@ -514,7 +514,7 @@ TComponent *TBeing::findComponent(spellNumT spell) const
   juju = equipment[WEAR_NECK];
   wristpouchL = equipment[WEAR_WRIST_L];
   wristpouchR = equipment[WEAR_WRIST_R];
-  inventory = stuff.front();
+  inventory = (stuff.size()>0?stuff.front():NULL);
   item = NULL;
 
 // Let rangers have components anywhere if not fighting
@@ -555,9 +555,8 @@ TComponent *TBeing::findComponent(spellNumT spell) const
 	  if (!item && secondary)
 	    item = comp_from_object(secondary, spell);
 	  if (!item && inventory) {
-	    TThing *t;
-	    for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
-	      inventory = dynamic_cast<TObj *>(t);
+	    for(StuffIter it=stuff.begin();it!=stuff.end();++it) {
+	      inventory = dynamic_cast<TObj *>(*it);
 	      if (inventory)
 		item = comp_from_object(inventory, spell);
 	    }
@@ -581,9 +580,8 @@ TComponent *TBeing::findComponent(spellNumT spell) const
       if (!item && wristpouchR)
         item = comp_from_object(wristpouchR, spell);
       if (!item && inventory) {
-	TThing *t;
-	for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
-	  inventory = dynamic_cast<TObj *>(t);
+	for(StuffIter it=stuff.begin();it!=stuff.end();++it) {
+	  inventory = dynamic_cast<TObj *>(*it);
 	  if (inventory)
 	    item = comp_from_object(inventory, spell);
 	}
@@ -616,9 +614,8 @@ TComponent *TBeing::findComponent(spellNumT spell) const
 	  if (!item && secondary)
 	    item = comp_from_object(secondary, spell);
 	  if (!item && inventory) {
-	    TThing *t;
-	    for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
-	      inventory = dynamic_cast<TObj *>(t);
+	    for(StuffIter it=stuff.begin();it!=stuff.end();++it) {
+	      inventory = dynamic_cast<TObj *>(*it);
 	      if (inventory)
 		item = comp_from_object(inventory, spell);
 	    }
@@ -642,9 +639,8 @@ TComponent *TBeing::findComponent(spellNumT spell) const
       if (!item && wristpouchR)
         item = comp_from_object(wristpouchR, spell);
       if (!item && inventory) {
-	TThing *t;
-	for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
-	  inventory = dynamic_cast<TObj *>(t);
+	for(StuffIter it=stuff.begin();it!=stuff.end();++it) {
+	  inventory = dynamic_cast<TObj *>(*it);
 	  if (inventory)
 	    item = comp_from_object(inventory, spell);
 	}
@@ -1374,7 +1370,7 @@ int TBeing::rawSleep(int level, int duration, int crit, saveTypeT save)
   setPosition(POSITION_SLEEPING);
 
   // stop all fighting me too
-  TThing *t;
+  TThing *t=NULL;
   for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
     TBeing *ch = dynamic_cast<TBeing *>(t);
     if (!ch)
@@ -1763,7 +1759,7 @@ void TBeing::nothingHappens(silentTypeT silent_caster) const
   if (!silent_caster)
     roomp->playsound(snd, SOUND_TYPE_MAGIC);
   else {
-    TThing *t;
+    TThing *t=NULL;
     for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       TBeing *tbt = dynamic_cast<TBeing *>(t);
       if (!tbt || tbt == this)

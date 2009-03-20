@@ -56,7 +56,7 @@ void TBeing::doRestring(const sstring &argument)
     return;
   }
 #if 1
-  TThing *t;
+  TThing *t=NULL;
   for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
     if (!bow) {
       bow = dynamic_cast<TBow *>(t);

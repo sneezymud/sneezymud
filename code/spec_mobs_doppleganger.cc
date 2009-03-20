@@ -77,7 +77,7 @@ TBeing * dopplegangerFindTarget(TRoom *tRoom)
 {
   TBeing *tSucker,
          *tBestSucker = NULL;
-  TThing *tObj;
+  TThing *tObj=NULL;
   TRoom  *tNewRoom;
 
   for(StuffIter it=tRoom->stuff.begin();it!=tRoom->stuff.end() && (tObj=*it);++it)

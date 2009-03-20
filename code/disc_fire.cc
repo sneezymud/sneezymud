@@ -1325,7 +1325,7 @@ int conjureElemFire(TBeing *caster, int level, byte bKnown)
 
 int conjureElemFire(TBeing *caster)
 {
-  TThing *t;
+  TThing *t=NULL;
   int found=0;
   TLight *tl;
   TObj *o;
@@ -1384,7 +1384,7 @@ int flare(TBeing *caster, int level, byte bKnown)
 {
   TBeing *tmp_victim = NULL;
   TObj *o = NULL;
-  TThing *t;
+  TThing *t=NULL;
 
   if (caster->roomp && caster->roomp->isUnderwaterSector()) {
     caster->sendTo("The water completely dissolves your flare!\n\r");
@@ -1503,7 +1503,7 @@ int flare(TBeing *caster)
   taskDiffT diff;
   TBeing *tmp_victim = NULL;
   TObj *o = NULL; 
-  TThing *t;
+  TThing *t=NULL;
 
   // look to see if there is already a flare here
   for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end() && (t=*it);++it) {
@@ -1570,7 +1570,7 @@ int castFlare(TBeing *caster)
 
 int flare(TBeing *caster, TMagicItem * obj)
 {
-  TThing *t;
+  TThing *t=NULL;
   TObj *o;
 
   if (caster->roomp->isUnderwaterSector()) {

@@ -1545,7 +1545,7 @@ TObj *get_obj_num(int nr)
 // search a room for a char, and return a pointer if found.. 
 TBeing *get_char_room(const sstring &name, int room, int *count)
 {
-  TThing *i;
+  TThing *i=NULL;
   int j, numx;
   char tmpname[MAX_INPUT_LENGTH];
   char *tmp;
@@ -1664,7 +1664,7 @@ void extract_edit_char(TMonster *ch)
 
 TBeing *get_char_room_vis(const TBeing *ch, const sstring &name, int *count, exactTypeT exact, infraTypeT infra)
 {
-  TThing *i;
+  TThing *i=NULL;
   TBeing *mob = NULL;
   int j, numx;
   char tmpname[MAX_INPUT_LENGTH];
@@ -1728,7 +1728,7 @@ TBeing *get_char_room_vis(const TBeing *ch, const sstring &name, int *count, exa
 // max_dist is the max-distance we will look at
 TBeing *get_char_vis_direction(const TBeing *ch, char *name, dirTypeT dir, unsigned int max_dist, bool here, unsigned int *count)
 {
-  TThing *t;
+  TThing *t=NULL;
   unsigned int numx;
   int rm;
   unsigned int j = 0;
@@ -2128,7 +2128,7 @@ TObj *get_obj_vis(TBeing *ch, const char *name, int *count, exactTypeT exact)
 // inv, eq, items in room
 TObj *get_obj_vis_accessible(TBeing *ch, const sstring &name)
 {
-  TThing *i;
+  TThing *i=NULL;
   TObj *obj = NULL;
   int j = 1, numx, k;
   char tmpname[MAX_INPUT_LENGTH];
@@ -2337,7 +2337,7 @@ int generic_find(const char *arg, int bv, TBeing *ch, TBeing **tar_ch, TObj **ob
 // looks in hands and bags
 TThing *get_thing_char_using(TBeing *ch, const char *arg, int vnum, bool check_bag, bool check_spellbag)
 {
-  TThing *t, *t2;
+  TThing *t, *t2=NULL;
   TThing *bag;
   int num = 1, j = 1;
   char tmpname[MAX_INPUT_LENGTH];

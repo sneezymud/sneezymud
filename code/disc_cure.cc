@@ -566,7 +566,7 @@ int healCritSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
   //  bool healed_evil = FALSE;
   //  // int decrem;
   int hp = caster->getSkillDam(NULL, SPELL_HEAL_CRITICAL_SPRAY, level, adv_learn);
-  TThing *t;
+  TThing *t=NULL;
   TBeing *targ;
 
   // spray is not tasked, so no need to adjust hp like in other heals
@@ -666,7 +666,7 @@ int healSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
   int hp_tmp;
   // bool healed_evil= FALSE;
   // int decrem;
-  TThing *t;
+  TThing *t=NULL;
   TBeing *targ = NULL;
 
   // spray is not tasked, so no need to adjust hp like in other heals
@@ -767,7 +767,7 @@ int healFullSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
   // bool healed_evil = FALSE;
   // int decrem;
   TBeing *targ = NULL;
-  TThing *t;
+  TThing *t=NULL;
 
   // spray is not tasked, so no need to adjust hp like in other heals
 

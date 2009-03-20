@@ -2843,7 +2843,7 @@ int TMonster::aiBlink(TBeing *, TBeing *, aiTarg cond)
 void TBeing::aiWear(TObj *obj)
 {
   int num;
-  TThing *tmp;
+  TThing *tmp=NULL;
 
   if (!obj) {
     vlogf(LOG_MOB_AI, "AI_wear called with bad declarations.");
@@ -2869,7 +2869,7 @@ void TBeing::aiWear(TObj *obj)
 void TBeing::aiGet(TThing *obj)
 {
   int num;
-  TThing *tmp;
+  TThing *tmp=NULL;
 
   if (!obj) {
     vlogf(LOG_MOB_AI, "AI_wear called with bad declarations.");

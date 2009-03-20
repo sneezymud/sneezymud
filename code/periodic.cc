@@ -158,7 +158,7 @@ void procGlobalRoomStuff::run(int pulse) const
     // weather noise
     if (rp->getWeather() == WEATHER_LIGHTNING) {
       if (!::number(0,9)) {
-        TThing *in_room;
+        TThing *in_room=NULL;
 
         soundNumT snd = pickRandSound(SOUND_THUNDER_1, SOUND_THUNDER_4);
         for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (in_room=*it);++it) {

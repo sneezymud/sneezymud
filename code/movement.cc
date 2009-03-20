@@ -1377,7 +1377,7 @@ int TBeing::displayMove(dirTypeT dir, int was_in, int total)
   // due to how act() handles hide_invis flag, have to have the
   // act() do a for-loop to VICT
 
-  TThing *t;
+  TThing *t=NULL;
   char tmp[256], how[128];
   TRoom *rp1, *rp2;
   int rc;
@@ -1593,7 +1593,7 @@ int TBeing::displayMove(dirTypeT dir, int was_in, int total)
 int TBeing::genericMovedIntoRoom(TRoom *rp, int was_in, 
      checkFallingT checkFall)
 {
-  TThing *t, *t2, *t3;
+  TThing *t, *t2, *t3=NULL;
   int rc;
   TMonster *mob;
   int groupcount=0;// used to make mobs not go superaggro on groups - dash
@@ -2146,7 +2146,7 @@ static bool keyCheck(const TObj *obj, int key)
 bool has_key(TBeing *ch, int key)
 {
   TObj *o = NULL;
-  TThing *t, *t2;
+  TThing *t=NULL, *t2=NULL;
   TKeyring *ring;
 
   for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end() && (t=*it);++it) {
@@ -2378,7 +2378,7 @@ int TBeing::doEnter(const char *argument, TPortal *por)
 // FLASE: no portal found, true otherwise
 int TBeing::portalLeaveCheck(char *argum, cmdTypeT cmd)
 {
-  TThing *t;
+  TThing *t=NULL;
   TPortal *o = NULL;
   char arg[80];
 

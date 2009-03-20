@@ -480,7 +480,7 @@ TPortal * TPortal::findMatchingPortal() const
   if (inRoom() < 0)
     return NULL;
 
-  TThing *t;
+  TThing *t=NULL;
   for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
     TPortal *tp = dynamic_cast<TPortal *>(t);
     if (!tp)

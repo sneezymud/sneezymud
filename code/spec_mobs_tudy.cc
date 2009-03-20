@@ -11,7 +11,7 @@ const int MOB_DEMI_ANGEL_TUDY   = 9637;
 // when anything given check inventory for both keys
 int tudy(TBeing *, cmdTypeT cmd, const char *, TMonster *tudy, TObj *)
 {
-  TThing *t;
+  TThing *t=NULL;
   TObj *o;
   bool haskey1=false, haskey2=false;
   TMonster *newtudy;

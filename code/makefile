@@ -80,6 +80,10 @@ CXXFLAGS +=-fPIC
 
 CXXFLAGS += -I/usr/local/include
 
+#CXXFLAGS +=-D_GLIBCXX_DEBUG
+#CXXFLAGS +=-D_GLIBCXX_DEBUG_PEDANTIC
+#CXXFLAGS +=-D_GLIBXX_DEBUG_PEDANTIC
+
 ###############################################################################
 #                                   LDFLAGS                                   #
 ###############################################################################

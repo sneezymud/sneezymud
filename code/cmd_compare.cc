@@ -30,7 +30,8 @@ TObj * findShopObjForCompare(TBeing *ch, sstring StObject)
     tValue = 1;
   }
 
-  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (tThing=*it);++it) {
+  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end();++it) {
+    tThing=*it;
     if (!dynamic_cast<TMonster *>(tThing) ||
         (mob_specials[GET_MOB_SPE_INDEX(tThing->spec)].proc != shop_keeper))
       continue;

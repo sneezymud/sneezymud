@@ -661,7 +661,7 @@ void TBaseClothing::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop
 int TBaseClothing::putMeInto(TBeing *ch, TOpenContainer *container)
 {
   TObj *o;
-  TThing *t;
+  TThing *t=NULL;
   int fingers=0, legs=0, feet=0, arms=0, wrists=0, hands=0;
 
   if(!dynamic_cast<TSuitcase *>(container))

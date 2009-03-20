@@ -450,7 +450,7 @@ int TMonster::addFears(zoneHateT parm_type, int parm)
 TBeing * TMonster::findAHatee(void)
 {
   TBeing *tmp_ch = NULL;
-  TThing *t;
+  TThing *t=NULL;
 
   for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
     tmp_ch = dynamic_cast<TBeing *>(t);
@@ -468,7 +468,7 @@ TBeing * TMonster::findAHatee(void)
 TBeing * TMonster::findAFearee(void)
 {
   TBeing *tmp_ch = NULL;
-  TThing *t;
+  TThing *t=NULL;
 
   for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
     tmp_ch = dynamic_cast<TBeing *>(t);

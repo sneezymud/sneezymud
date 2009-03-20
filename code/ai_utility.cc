@@ -271,7 +271,7 @@ void TMonster::aiHorse(TBeing *ch)
 
 void TMonster::mobAI()
 {
-  TThing *t;
+  TThing *t=NULL;
   int aggro_state_1 = aggro();
   int aggro_state_2;
 

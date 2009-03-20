@@ -352,7 +352,7 @@ int TWand::foodItemUsed(TBeing *ch, const char *arg)
 int TStaff::foodItemUsed(TBeing *ch, const char *)
 {
   TBeing *vict = NULL;
-  TThing *t;
+  TThing *t=NULL;
 
   act("$n taps $o three times on the $g.",
             TRUE, ch, this, 0, TO_ROOM);
@@ -1967,7 +1967,7 @@ int fishingBoat(TBeing *, cmdTypeT cmd, const char *, TObj *myself, TObj *)
   TRoom *boatroom=real_roomp(15349);
   static int timer;
   char buf[256], shortdescr[256];
-  TThing *tt;
+  TThing *tt=NULL;
 
   // docks 15150
 
@@ -3524,7 +3524,7 @@ int totemMask(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *weapon)
 int permaDeathMonument(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
 {
   int found=0;
-  TThing *o;
+  TThing *o=NULL;
   TObj *to;
 
   if(cmd != CMD_LOOK)
@@ -3581,7 +3581,7 @@ int permaDeathMonument(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj
 int trophyBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
 {
   int found=0;
-  TThing *o;
+  TThing *o=NULL;
   TObj *to;
 
   if(cmd != CMD_LOOK)
@@ -3703,7 +3703,7 @@ int trophyBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
 int highrollersBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
 {
   int found=0;
-  TThing *o;
+  TThing *o=NULL;
   TObj *to;
 
   if(cmd != CMD_LOOK)
@@ -3755,7 +3755,7 @@ int highrollersBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *
 int shopinfoBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
 {
   int found=0;
-  TThing *o;
+  TThing *o=NULL;
   TObj *to;
 
   if(cmd != CMD_LOOK)
@@ -3861,7 +3861,7 @@ int shopinfoBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
 
 int brickScorecard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2) {
   int found=0;
-  TThing *o;
+  TThing *o=NULL;
   TObj *to;
 
   if(cmd != CMD_LOOK)
@@ -3928,12 +3928,8 @@ int force(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
       act("You hold $p aloft, shouting the word '<p>force<1>'.",TRUE,ch,o,NULL,TO_CHAR,NULL);
       act("<c>The air around you seems to waver and suddenly solidifies, expanding in a wave of force!<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
 
-      TThing *t;
+      TThing *t=NULL;
       TBeing *vict = NULL;
-   
-
-
-
 
       for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (t=*it);++it) {
 	vict = dynamic_cast<TBeing *>(t);
@@ -4231,7 +4227,7 @@ int blizzardRing(TBeing *being, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
       act("<c>A blast of frigid air radiates from you<c>!<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
 
 
-      TThing *t;
+      TThing *t=NULL;
       TBeing *vict = NULL;
 
       for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (t=*it);++it) {
@@ -4289,7 +4285,7 @@ int blizzardRing(TBeing *being, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
 {
   int found=0;
-  TThing *o;
+  TThing *o=NULL;
   TObj *to;
 
   if(cmd != CMD_LOOK)

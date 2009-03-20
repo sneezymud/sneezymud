@@ -36,7 +36,7 @@ int tunnelerEarthquake(TBeing *ch, cmdTypeT tCmd, const char *tArg, TMonster *tM
   if (tCmd == CMD_MOB_COMBAT && !::number(0, 1) && tMyself->fight()) {
     int     tFighters = 0,
             tDamage;
-    TThing *tThing;
+    TThing *tThing=NULL;
     TBeing *tBeing;
 
     act("$n rises into the air then slams into the ground, vanishing.",

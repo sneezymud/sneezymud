@@ -131,7 +131,7 @@ struct attack_hit_type attack_hit_text_twink[TYPE_MAX_HIT - TYPE_MIN_HIT] = {
 bool TBeing::isTanking()
 {
   TBeing *victim = NULL;
-  TThing *contents;
+  TThing *contents=NULL;
 
   //  Look through the current room and check each object.  If the object is
   //  fighting and I'm the one it is fighting, then I'm tanking.
@@ -223,7 +223,7 @@ void TBeing::deathCry()
   int new_room;
   TRoom *newR;
   char buf[256];
-  TThing *i;
+  TThing *i=NULL;
   dirTypeT door;
 
   if ((in_room == ROOM_NOWHERE) || !roomp)
@@ -652,7 +652,7 @@ bool TBeing::checkCut(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThing *w
 {
   byte sharp;
   sstring buf, buf3, sbuf;
-  TThing *t;
+  TThing *t=NULL;
   TBeing *temp;
 
   temp = NULL;
@@ -726,7 +726,7 @@ bool TBeing::checkSmashed(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
 {
   int sharp;
   sstring buf, buf3, sbuf;
-  TThing *t;
+  TThing *t=NULL;
   TBeing *temp;
 
   temp = NULL;
@@ -803,7 +803,7 @@ bool TBeing::checkPierced(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
 {
   byte sharp;
   sstring buf, buf3, sbuf;
-  TThing *t;
+  TThing *t=NULL;
   TBeing *temp;
 
   temp = NULL;
@@ -2782,7 +2782,7 @@ int TBeing::hits(TBeing *v, int mod)
 int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
 {
   TBeing *other;
-  TThing *t;
+  TThing *t=NULL;
   int num, rc;
   char namebuf[MAX_NAME_LENGTH];
   char victbuf[MAX_NAME_LENGTH];
@@ -3149,7 +3149,7 @@ static int REALNUM(TBeing *ch, wearSlotT part_hit)
 void TBeing::normalHitMessage(TBeing *v, TThing *weapon, spellNumT w_type, int dam, wearSlotT part_hit)
 {
   char buf[256];
-  TThing *t;
+  TThing *t=NULL;
   TBeing *other;
 
   other = NULL;
@@ -3355,7 +3355,7 @@ int TBeing::checkShield(TBeing *v, TThing *weapon, wearSlotT part_hit, spellNumT
 {
   TThing *ts;
   TBaseClothing *shield;
-  TThing *t;
+  TThing *t=NULL;
   TBeing *other;
   char namebuf[256];
   int rc = 0;
@@ -4408,7 +4408,7 @@ int TBeing::tellStatus(int dam, bool same, bool flying)
 {
   int new_dam, max_hit;
   int rc;
-  TThing *ch, *i;
+  TThing *ch, *i=NULL;
 
   new_dam = points.hit;
 
@@ -4721,7 +4721,7 @@ int TBeing::skipImmortals(int amnt) const
 
 TBeing *TBeing::findAnAttacker() const
 {
-  TThing *tmp;
+  TThing *tmp=NULL;
 
   if (specials.fighting)
     return (specials.fighting);

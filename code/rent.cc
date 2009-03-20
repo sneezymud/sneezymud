@@ -2641,7 +2641,7 @@ TObj *TBeing::findMostExpensiveItem()
 {
   int i, high = 0;
   TObj *o = NULL;
-  TThing *t, *t2;
+  TThing *t=NULL, *t2=NULL;
 
   for(i = MIN_WEAR; i < MAX_WEAR; i++) {
     TObj *obj = dynamic_cast<TObj *>(equipment[i]);
@@ -3234,7 +3234,7 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
     return shopWhisper(ch, recep, shop_nr, arg);
 
   if (cmd == CMD_GENERIC_PULSE) {
-    TThing *t;
+    TThing *t=NULL;
     TBeing *tbt;
 
     // Toss out idlers

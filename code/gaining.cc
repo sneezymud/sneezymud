@@ -2025,7 +2025,7 @@ int GenericGuildMaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, 
 
 TMonster *FindMobInRoomWithProcNum(int room, int num)
 {
-  TThing *t;
+  TThing *t=NULL;
 
   if (room < 0)
     return NULL;

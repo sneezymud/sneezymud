@@ -71,7 +71,7 @@ int disease_null(TBeing *victim, int, affectedData *)
 
 void spread_affect(TBeing *ch, int chance_to_spread, bool race, bool not_race, affectedData * af)
 {
-  TThing *t;
+  TThing *t=NULL;
   affectedData vaf;
   if (ch->inRoom() == ROOM_NOCTURNAL_STORAGE)
     return;

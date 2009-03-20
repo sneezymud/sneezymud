@@ -8,7 +8,7 @@
 void relive(TBeing *ch, TBeing *vict)
 {
   affectedData aff;
-  TThing *t;
+  TThing *t=NULL;
   TPCorpse *corpse=NULL;
   sstring s;
   TObj *o;

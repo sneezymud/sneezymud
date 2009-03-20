@@ -855,7 +855,7 @@ int farlook(TBeing *caster, TBeing * victim, int level, byte bKnown)
 
   int target;
   char buf1[128];
-  TThing *t;
+  TThing *t=NULL;
   TBeing *ch;
 
   if (caster->isNotPowerful(victim, level, SPELL_FARLOOK, SILENT_NO)) 

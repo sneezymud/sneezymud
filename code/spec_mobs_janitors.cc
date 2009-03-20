@@ -876,7 +876,7 @@ int fruitScavenger(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj 
 	
 	TPlant *tree;
 	TObj *fruit;
-	TThing *t, *t2;
+	TThing *t=NULL, *t2=NULL;
 	
 	for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (t=*it);++it) {
 

@@ -139,8 +139,8 @@ void doSaveZoneFile(TBeing *ch, const sstring & tArg)
     if (!(tRoom = real_roomp(roomIndex)))
       continue;
 
-    TThing *tThing,
-           *tThing2;
+    TThing *tThing=NULL,
+           *tThing2=NULL;
     TObj   *tObj,
            *tObj2;
     int     iMaxExist = 0;
@@ -167,8 +167,8 @@ void doSaveZoneFile(TBeing *ch, const sstring & tArg)
       fputs(tBuffer, tFile);
 
       if(!tObj->stuff.empty()){
-        TThing *sThing,
-               *sThing2;
+        TThing *sThing=NULL,
+               *sThing2=NULL;
         TObj   *sObj,
                *sObj2;
 
@@ -205,8 +205,8 @@ void doSaveZoneFile(TBeing *ch, const sstring & tArg)
     if (!(tRoom = real_roomp(roomIndex)))
       continue;
 
-    TThing *tThing,
-           *tThing2;
+    TThing *tThing=NULL,
+           *tThing2=NULL;
     TObj   *tObj,
            *tObj2;
     int     iMaxExist = 0;
@@ -233,8 +233,8 @@ void doSaveZoneFile(TBeing *ch, const sstring & tArg)
       fputs(tBuffer, tFile);
 
       if(!tObj->stuff.empty()){
-        TThing *sThing, 
-               *sThing2;
+        TThing *sThing=NULL, 
+               *sThing2=NULL;
         TObj   *sObj, 
                *sObj2;
 
@@ -271,8 +271,8 @@ void doSaveZoneFile(TBeing *ch, const sstring & tArg)
     if (!(tRoom = real_roomp(roomIndex)))
       continue;
 
-    TThing   *tThing,
-             *tThing2;
+    TThing   *tThing=NULL,
+             *tThing2=NULL;
     TMonster *tMob,
              *tMob2;
     int       iMaxExist = 0;
@@ -297,7 +297,7 @@ void doSaveZoneFile(TBeing *ch, const sstring & tArg)
       fputs(tBuffer, tFile);
       
       if(!tMob->stuff.empty()){
-        TThing *sThing;
+        TThing *sThing=NULL;
         TObj   *sObj;
 
         for(StuffIter it=tMob->stuff.begin();it!=tMob->stuff.end() && (sThing=*it);++it) {

@@ -550,7 +550,7 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
           act("$n has no time for this right now.", false, myself, 0, 0, TO_ROOM);
 	  tmpch->stopFighting();
 	  myself->stopFighting();
-          TThing *toto;
+          TThing *toto=NULL;
           // stop all fights
           for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (toto=*it);++it) {
             TBeing *tbto = dynamic_cast<TBeing *>(toto);

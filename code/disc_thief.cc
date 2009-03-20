@@ -670,7 +670,7 @@ void TBeing::doTrack(const char *argument)
 int TBeing::track(TBeing *vict)
 {
   int code;
-  TThing *t;
+  TThing *t=NULL;
   int targetRm = -1;
   int isSW = affectedBySpell(SKILL_SEEKWATER);
   char buf[256];

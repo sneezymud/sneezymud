@@ -934,7 +934,7 @@ void TBeing::doSeekwater()
 // for groupmates of camper, return fraction of the level.
 int TBeing::inCamp() const
 {
-  TThing *t;
+  TThing *t=NULL;
   TBeing *ch;
   affectedData *aff;
 

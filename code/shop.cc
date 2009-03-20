@@ -2158,7 +2158,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
   TBeing *tbt = NULL;
 
   if (cmd == CMD_GENERIC_PULSE) {
-    TThing *t;
+    TThing *t=NULL;
     TBeing *tbt;
 
     // Toss out idlers
@@ -2400,7 +2400,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
 void shoplog(int shop_nr, TBeing *ch, TMonster *keeper, const sstring &name, int cost, const sstring &action){
   int value=0, count=0;
-  TThing *tt;
+  TThing *tt=NULL;
   TObj *o;  
 
   for(StuffIter it=keeper->stuff.begin();it!=keeper->stuff.end() && (tt=*it);++it){

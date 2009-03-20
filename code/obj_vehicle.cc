@@ -301,7 +301,7 @@ void update_exits(TVehicle *vehicle)
 
 void TVehicle::vehiclePulse(int pulse)
 {
-  TThing *t;
+  TThing *t=NULL;
   TBeing *tb;
   TRoom *troom=roomp;
   sstring buf;

@@ -275,7 +275,7 @@ void TBeing::saySpell(spellNumT si)
 
   int j, offs;
   TBeing *temp_char = NULL;
-  TThing *t;
+  TThing *t=NULL;
 
 
   struct syllable {

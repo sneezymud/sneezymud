@@ -959,7 +959,7 @@ int TTrap::moveTrapCheck(TBeing *ch, dirTypeT dir)
 // TRUE if prevent motion, else FALSE
 int TBeing::checkForMoveTrap(dirTypeT dir)
 {
-  TThing *t;
+  TThing *t=NULL;
   int rc;
 
   for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
@@ -1001,7 +1001,7 @@ int TTrap::insideTrapCheck(TBeing *ch, TThing *i)
 // triggers whenever anything inside the container is put/got
 int TBeing::checkForInsideTrap(TThing *i)
 {
-  TThing *t;
+  TThing *t=NULL;
   int rc;
 
   for(StuffIter it=i->stuff.begin();it!=i->stuff.end() && (t=*it);++it) {

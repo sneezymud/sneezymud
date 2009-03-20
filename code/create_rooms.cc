@@ -3332,7 +3332,7 @@ void TRoom::loadOne(FILE *fl, bool tinyfile)
 
 void TRoom::initLight()
 {
-  TThing *ch;
+  TThing *ch=NULL;
   int found = FALSE;
 
   if (!IS_SET(roomFlags, ROOM_INDOORS))

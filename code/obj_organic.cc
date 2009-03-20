@@ -297,7 +297,7 @@ static void sellReducePrice(const TBeing *ch, TBeing *keeper, const TOrganic *ob
 // This function deals with the selling of TOrganic stuff.
 int TOrganic::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
 {
-  TThing   *t;
+  TThing   *t=NULL;
   TOrganic *obj2 = NULL;
   int  price,
     found = 0;
@@ -419,7 +419,7 @@ int TOrganic::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
 void TOrganic::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
 {
   int  price;
-  TThing   *t;
+  TThing   *t=NULL;
   TOrganic *obj2 = NULL;
 
   if (getUnits() > 0)

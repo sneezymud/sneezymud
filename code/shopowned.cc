@@ -998,7 +998,7 @@ int TShopOwned::buyShop(sstring arg){
   int value=0;
   TDatabase db(DB_SNEEZY);
   sstring buf;
-  TThing *tt;
+  TThing *tt=NULL;
   TObj *o;
   int corp_id=0;
 
