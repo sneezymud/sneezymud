@@ -239,17 +239,16 @@ TObj *catch_a_fish(TRoom *rp)
 }
 
 
-TThing *findBait(StuffList list){
+TTool *findBait(StuffList list){
   TTool *bait;
-  TThing *ret;
 
   for(StuffIter it=list.begin();it!=list.end();++it){
     if((bait=dynamic_cast<TTool *>(*it)) &&
        (bait->getToolType() == TOOL_FISHINGBAIT))
-      return *it;
+      return bait;
 
-    if(!(*it)->stuff.empty() && (ret=findBait((*it)->stuff)))
-      return ret;
+    if(!(*it)->stuff.empty() && (bait=findBait((*it)->stuff)))
+      return bait;
   }
 
   return NULL;
@@ -261,7 +260,7 @@ TThing *findBait(StuffList list){
 int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj *)
 {
   TTool *bait=NULL;
-  TThing *t=NULL, *tpole=NULL;
+  TThing *tpole=NULL;
   sstring buf;
   TObj *fish=NULL, *pole=NULL;
   int baitmax=1000, baitchance=0;
@@ -284,16 +283,11 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
   }
 
   // find our bait here
-  t=findBait(ch->stuff);
-  
-  int m=WEAR_NOWHERE;
-  while(!t && m<MAX_WEAR){
-    ++m;
-    t=findBait(ch->equipment[m]->stuff);
+  bait=findBait(ch->stuff);
+  for (int m=MIN_WEAR; !bait && m < MAX_WEAR; m++) {
+    if (ch->equipment[m])
+      bait=findBait(ch->equipment[m]->stuff);
   }
-
-
-  bait=dynamic_cast<TTool *>(t);
 
   if(!bait && !awesomeFisher){
     ch->sendTo("You need to have some bait to fish.\n\r");
