@@ -675,6 +675,17 @@ sstring TellToComm::getXML(){
   return buf;
 }
 
+TBeing *findTellTarget(TBeing *me, const sstring &name, bool visible){
+  TBeing *vict;
+
+  if (!(vict = get_pc_world(me, name, EXACT_YES, INFRA_NO, visible)))
+    if (!(vict = get_pc_world(me, name, EXACT_NO, INFRA_NO, visible)))
+      if (!(vict = get_char_vis_world(me, name, NULL, EXACT_YES)))
+	vict = get_char_vis_world(me, name, NULL, EXACT_NO);
+
+  return vict;
+}
+
 
 // returns DELETE_THIS on death of this
 // triggerSpecOnPerson prevents this from being constant
@@ -708,17 +719,32 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
     if(desc)
       desc->output.putInQ(new CmdMsgComm("tell", "Whom do you wish to tell what??\n\r"));
     return FALSE;
-  } else if (!(vict = get_pc_world(this, name, EXACT_YES, INFRA_NO, visible))) {
-    if (!(vict = get_pc_world(this, name, EXACT_NO, INFRA_NO, visible))) {
-      if (!(vict = get_char_vis_world(this, name, NULL, EXACT_YES))) {
-        if (!(vict = get_char_vis_world(this, name, NULL, EXACT_NO))) {
-	  if(desc)
-	    desc->output.putInQ(new CmdMsgComm("tell", fmt("You fail to tell to '%s'\n\r") % name));
-	  return FALSE;
-        }
+  } else {
+    if(!(vict=findTellTarget(this, name, visible))){
+      if(isImmortal()){
+	TDatabase db(DB_SNEEZY);
+	db.query("select p1.name as name from player p1, player p2, account a where p2.name='%s' and a.account_id=p2.account_id and p1.account_id=a.account_id", name.c_str());
+
+	while(db.fetchRow()){
+	  if((vict=findTellTarget(this, db["name"], visible))){
+	    break;
+	  }
+	}
       }
+
+      sendTo(new CmdMsgComm("tell", 
+			    fmt("You fail to tell to '%s'\n\r") % name));
+
+      // if vict isn't NULL here, it means we found another player logged in
+      // under the same account
+      if(vict){
+	sendTo(new CmdMsgComm("tell", fmt("The player '%s' is logged in under the same account.\n\r") % vict->getName()));
+      }
+
+      return FALSE;
     }
   }
+
   if (isPlayerAction(PLR_GODNOSHOUT) && (vict->GetMaxLevel() <= MAX_MORT)) {
     if(desc)
       desc->output.putInQ(new CmdMsgComm("tell", "You have been sanctioned by the gods and can't tell to them!!\n\r"));
