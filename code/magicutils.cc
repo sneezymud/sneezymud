@@ -496,14 +496,14 @@ TComponent *comp_from_object(TThing *item, spellNumT spell)
   // item is wrong component or spellbag 
   for(StuffIter it=item->stuff.begin();it!=item->stuff.end();++it) 
     (*it)->findComp(&ret, spell);
-  
+
   return ret;
 }
 
 // This only returns components that are for spell-casting
 TComponent *TBeing::findComponent(spellNumT spell) const
 {
-  TThing *primary, *secondary, *belt, *juju, *wristpouchL, *wristpouchR, *inventory;
+  TThing *primary, *secondary, *belt, *juju, *wristpouchL, *wristpouchR;
   TComponent *item;
   wizardryLevelT wizlevel = WIZ_LEV_NONE;
   ritualismLevelT ritlevel = RIT_LEV_NONE;
@@ -514,7 +514,6 @@ TComponent *TBeing::findComponent(spellNumT spell) const
   juju = equipment[WEAR_NECK];
   wristpouchL = equipment[WEAR_WRIST_L];
   wristpouchR = equipment[WEAR_WRIST_R];
-  inventory = (stuff.size()>0?stuff.front():NULL);
   item = NULL;
 
 // Let rangers have components anywhere if not fighting
@@ -549,16 +548,16 @@ TComponent *TBeing::findComponent(spellNumT spell) const
 	  return NULL;
       }
       if (ritlevel <= RIT_LEV_NO_MANTRA) {
-	if (primary || secondary || inventory) {
+	if (primary || secondary || !stuff.empty()) {
 	  if (primary)
 	    item = comp_from_object(primary, spell);
 	  if (!item && secondary)
 	    item = comp_from_object(secondary, spell);
-	  if (!item && inventory) {
-	    for(StuffIter it=stuff.begin();it!=stuff.end();++it) {
-	      inventory = dynamic_cast<TObj *>(*it);
-	      if (inventory)
-		item = comp_from_object(inventory, spell);
+	  if (!item && !stuff.empty()) {
+	    for(StuffIter it=stuff.begin();it!=stuff.end() && !item;++it) {
+	      TObj *o = dynamic_cast<TObj *>(*it);
+	      if(o)
+		item = comp_from_object(o, spell);
 	    }
 	  }
 	  return item;
@@ -566,7 +565,7 @@ TComponent *TBeing::findComponent(spellNumT spell) const
 	  return NULL;
       }
     }
-    if (primary || secondary || belt || juju || wristpouchL || wristpouchR || inventory) {
+    if (primary || secondary || belt || juju || wristpouchL || wristpouchR || !stuff.empty()) {
       if (primary)
 	item = comp_from_object(primary, spell);
       if (!item && secondary)
@@ -579,11 +578,11 @@ TComponent *TBeing::findComponent(spellNumT spell) const
 	item = comp_from_object(wristpouchL, spell);
       if (!item && wristpouchR)
         item = comp_from_object(wristpouchR, spell);
-      if (!item && inventory) {
-	for(StuffIter it=stuff.begin();it!=stuff.end();++it) {
-	  inventory = dynamic_cast<TObj *>(*it);
-	  if (inventory)
-	    item = comp_from_object(inventory, spell);
+      if (!item && !stuff.empty()) {
+	for(StuffIter it=stuff.begin();it!=stuff.end() && !item;++it) {
+	  TObj *o = dynamic_cast<TObj *>(*it);
+	  if (o)
+	    item = comp_from_object(o, spell);
 	}
       }
       return item;
@@ -608,16 +607,16 @@ TComponent *TBeing::findComponent(spellNumT spell) const
 	  return NULL;
       }
       if (wizlevel <= WIZ_LEV_NO_MANTRA) {
-	if (primary || secondary || inventory) {
+	if (primary || secondary || !stuff.empty()) {
 	  if (primary)
 	    item = comp_from_object(primary, spell);
 	  if (!item && secondary)
 	    item = comp_from_object(secondary, spell);
-	  if (!item && inventory) {
-	    for(StuffIter it=stuff.begin();it!=stuff.end();++it) {
-	      inventory = dynamic_cast<TObj *>(*it);
-	      if (inventory)
-		item = comp_from_object(inventory, spell);
+	  if (!item && !stuff.empty()) {
+	    for(StuffIter it=stuff.begin();it!=stuff.end() && !item;++it) {
+	      TObj *o = dynamic_cast<TObj *>(*it);
+	      if (o)
+		item = comp_from_object(o, spell);
 	    }
 	  }
 	  return item;
@@ -625,7 +624,7 @@ TComponent *TBeing::findComponent(spellNumT spell) const
 	  return NULL;
       }
     }
-    if (primary || secondary || belt || juju || wristpouchL || wristpouchR || inventory) {
+    if (primary || secondary || belt || juju || wristpouchL || wristpouchR || !stuff.empty()) {
       if (primary)
 	item = comp_from_object(primary, spell);
       if (!item && secondary)
@@ -638,11 +637,11 @@ TComponent *TBeing::findComponent(spellNumT spell) const
 	item = comp_from_object(wristpouchL, spell);
       if (!item && wristpouchR)
         item = comp_from_object(wristpouchR, spell);
-      if (!item && inventory) {
-	for(StuffIter it=stuff.begin();it!=stuff.end();++it) {
-	  inventory = dynamic_cast<TObj *>(*it);
-	  if (inventory)
-	    item = comp_from_object(inventory, spell);
+      if (!item && !stuff.empty()) {
+	for(StuffIter it=stuff.begin();it!=stuff.end() && !item;++it) {
+	  TObj *o = dynamic_cast<TObj *>(*it);
+	  if (o)
+	    item = comp_from_object(o, spell);
 	}
       }
       return item;
@@ -669,7 +668,7 @@ int TBeing::useComponent(TComponent *o, TBeing *vict, checkOnlyT checkOnly)
 {
   unsigned int i;
 
-  if (isImmortal())
+  if (isImmortal() && isPlayerAction(PLR_NOHASSLE))
     return TRUE;
 
   // Until a better solution, mobs dont need components. - Russ 
