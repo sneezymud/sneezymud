@@ -864,7 +864,7 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
   if (d && d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
     garbedBuf = fmt("<c>%s<z>") % garbed;
     d->clientf(fmt("%d|%s|%s") % CLIENT_TELL %
-        colorString(vict, vict->desc, nameBuf, NULL, COLOR_NONE, FALSE) %
+        colorString(vict, vict->desc, capbuf, NULL, COLOR_NONE, FALSE) %
         colorString(vict, vict->desc, garbedBuf, NULL, COLOR_NONE, FALSE));
   }
 
