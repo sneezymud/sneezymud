@@ -170,7 +170,7 @@ sstring TBeing::garble(TBeing *to, const sstring &arg, SPEECHTYPE speechType, GA
 // in the range of 0 to 100, higher being worse at the language
 int getLanguageChance(const TBeing *from, TBeing *to, int length, spellNumT language)
 {
-  int learning = to->getSkillValue(language);
+  int learning = to ? to->getSkillValue(language) : 0;
   int difficulty = max(0, length-learning);
   int bonus = to && to->bSuccess(difficulty, language) ? learning/5 : 0;
   int chance = from ? 100 - from->plotStat(STAT_CURRENT, STAT_INT, 0, 100, 50) : 25;
