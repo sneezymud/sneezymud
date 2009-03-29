@@ -19,6 +19,7 @@ class Act : public CxxTest::TestSuite
   charFile st;
 
   void setUp(){
+    doConfiguration();
     buildSpellArray();
     chdir("lib");
     Races[RACE_HUMAN] = new Race(RACE_HUMAN);    

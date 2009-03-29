@@ -13,6 +13,8 @@ class CommTest : public CxxTest::TestSuite
   TPerson *testPerson;
 
   void setUp(){
+    doConfiguration();
+
     testString[0]="holding up my";
     testString[1]="purring cat to the moon";
     testString[2]="I sighed.";

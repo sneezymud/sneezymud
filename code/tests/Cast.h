@@ -37,7 +37,7 @@ class Cast : public CxxTest::TestSuite
     *testRoom += *testPerson;
   }
 
-  void testFindCompInventory(){
+  void xtestFindCompInventory(){
     TObj *junk=read_object(23641, VIRTUAL);
     TObj *comp=read_object(203, VIRTUAL);
     TObj *bag=read_object(323, VIRTUAL);

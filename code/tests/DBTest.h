@@ -7,6 +7,10 @@
 class DBTest : public CxxTest::TestSuite
 {
  public:
+  void setUp(){
+    doConfiguration();
+  }
+
   void testRetrieve(){
     TDatabase db(DB_SNEEZY);
 
