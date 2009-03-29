@@ -30,11 +30,16 @@ int main(int argc, char *argv[])
   sstring dir;
   bool bTrimmed = false;
   
-  po::options_description cmdline("Command line options");
+  // command line only options
+  po::options_description cmdline("Command line only");
   cmdline.add_options()
-    ("help", 
-     "produce help message")
-    ("directory,d", po::value<string>(&dir)->default_value(DFLT_DIR), 
+    ("help", "produce help message")
+    ;
+
+  // command line OR in config file
+  po::options_description config("Configuration");
+  config.add_options()
+    ("lib,l", po::value<string>(&dir)->default_value(DFLT_DIR), 
      "data directory to run in")
     ("nospecials,s", po::value<bool>(&noSpecials)->zero_tokens(),
      "suppress assignment of special routines")
@@ -44,6 +49,16 @@ int main(int argc, char *argv[])
      "game port")
     ;
 
+  po::options_description cmdline_options;
+  cmdline_options.add(cmdline).add(config);
+
+  po::options_description config_options;
+  config_options.add(config);
+
+  po::options_description visible("Allowed options");
+  visible.add(cmdline).add(config);
+
+
   // first positional argument is port number
   po::positional_options_description p;
   p.add("port", -1);
@@ -52,16 +67,18 @@ int main(int argc, char *argv[])
 
   try {
     po::store(po::command_line_parser(argc, argv).
-	      options(cmdline).positional(p).run(), vm);
+	      options(cmdline_options).positional(p).run(), vm);
   } catch(po::unknown_option){
-    sendHelp(cmdline);
+    sendHelp(visible);
     return 0;    
   }
 
+  ifstream ifs("sneezy.cfg");
+  po::store(parse_config_file(ifs, config_options), vm);
   po::notify(vm);
 
   if(vm.count("help")){
-    sendHelp(cmdline);
+    sendHelp(visible);
     return 0;
   }
 
