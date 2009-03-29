@@ -39,6 +39,10 @@
 
 using namespace std;
 
+#include <boost/regex.hpp>
+#include <boost/format.hpp>
+using namespace boost;
+
 
 #include "sstring.h"
 #include "low.h"

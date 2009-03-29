@@ -3,14 +3,22 @@
 
 class fmt;
 
+enum stringEscapeT {
+  XML,
+  SQL
+};
+
+
 class sstring : public string {
 public:
   // constructors
   sstring() : string(){}
   sstring(const char *str) : string(str?str:"") {}
   sstring(const string &str) : string(str) {}
+  sstring(boost::format &a) : string(a.str()) {}
 
   const sstring & operator=(fmt &a);
+  //  const sstring & operator=(boost::format &a);
   char &operator[](unsigned int i);
   const char &operator[](unsigned int i) const;
 
@@ -28,6 +36,7 @@ public:
   const sstring trim() const;
   const sstring capitalizeSentences() const;
   const sstring matchCase(const sstring match) const;
+  const sstring escape(stringEscapeT) const;
 
   // call this function with NULL data to get alloc size, then agian with alloc'd array
   int split(const char delimit, sstring *data) const;

@@ -40,7 +40,7 @@ SystemTask *systask;
 
 // local globals 
 
-int noSpecials = 0;		// Suppress ass. of special routines 
+bool noSpecials = false;		// Suppress ass. of special routines 
 time_t Uptime;			// time that the game has been up 
 
 char hostlist[MAX_BAN_HOSTS][40];	// list of sites to ban
@@ -1647,7 +1647,7 @@ sstring UncategorizedComm::getClientText(){
 }
 
 sstring UncategorizedComm::getXML(){
-  return fmt("<uncategorized>%x</uncategorized>") % text;
+  return fmt("<uncategorized>%s</uncategorized>") % text.escape(XML);
 }
 
 // RoomExitComm
@@ -1681,7 +1681,8 @@ sstring CmdMsgComm::getClientText(){
 }
 
 sstring CmdMsgComm::getXML(){
-  return fmt("<cmdmsg cmd=\"%x\">%x</cmdmsg>") % cmd % text;
+  return fmt("<cmdmsg cmd=\"%s\">%s</cmdmsg>") % 
+    cmd.escape(XML) % text.escape(XML);
 }
 
 

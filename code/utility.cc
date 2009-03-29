@@ -861,8 +861,8 @@ sstring SystemLogComm::getXML(){
 
   buf+=fmt("<log>\n");
   buf+=fmt("  <time>%i</time>\n") % logtime;
-  buf+=fmt("  <type>%x</type>\n") % getLogType(logtype);
-  buf+=fmt("  <msg>%x</msg>\n") % text;
+  buf+=fmt("  <type>%s</type>\n") % getLogType(logtype).escape(XML);
+  buf+=fmt("  <msg>%s</msg>\n") % text.escape(XML);
   buf+=fmt("</log>\n");
 
   return buf;

@@ -792,8 +792,8 @@ void TBeing::doTip(const sstring &arg)
   sstring hat=equipment[WEAR_HEAD]?fname(equipment[WEAR_HEAD]->name):"hat";
 
   if(arg.empty()){
-    act(fmt("You tip your %s.") % hat,  FALSE, this, NULL, NULL, TO_CHAR);
-    act(fmt("$n tips $s %s.") % hat,  FALSE, this, NULL, NULL, TO_ROOM);
+    act(format("You tip your %s.") % hat,  FALSE, this, NULL, NULL, TO_CHAR);
+    act(format("$n tips $s %s.") % hat,  FALSE, this, NULL, NULL, TO_ROOM);
   } else {
     t=searchLinkedList(arg, roomp->stuff, TYPETHING);
     if (!t)

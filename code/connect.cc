@@ -443,7 +443,8 @@ sstring SnoopComm::getClientText(){
 }
 
 sstring SnoopComm::getXML(){
-  return fmt("<snoop victim=\"%x\">%x</snoop>") % vict % text;
+  return fmt("<snoop victim=\"%s\">%s</snoop>") % 
+    vict.escape(XML) % text.escape(XML);
 }
 
 int Descriptor::outputProcessing()
@@ -2435,8 +2436,9 @@ sstring PromptComm::getClientText(){
 }
 
 sstring PromptComm::getXML(){
-  return fmt("<prompt time=\"%i\" hp=\"%i\" mana=\"%i\" piety=\"%f\" lifeforce=\"%i\" moves=\"%i\" money=\"%i\" room=\"%i\">%x</prompt>") %
-    time % hp % mana % piety % lifeforce % moves % money % room % text;
+  return fmt("<prompt time=\"%i\" hp=\"%i\" mana=\"%i\" piety=\"%f\" lifeforce=\"%i\" moves=\"%i\" money=\"%i\" room=\"%i\">%s</prompt>") %
+    time % hp % mana % piety % lifeforce % moves % money % room % 
+    text.escape(XML);
 }
 
 
@@ -2998,7 +3000,8 @@ sstring LoginComm::getClientText(){
 }
 
 sstring LoginComm::getXML(){
-  return fmt("<login prompt=\"%x\">%x</login>") % prompt % text;
+  return fmt("<login prompt=\"%s\">%s</login>") % 
+    prompt.escape(XML) % text.escape(XML);
 }
 
 // return DELETE_THIS
