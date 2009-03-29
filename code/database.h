@@ -150,6 +150,7 @@ class TDatabaseConnection
 
 };
 
+extern vector <string> db_hosts;
 extern queue<sstring> queryqueue;
 extern TDatabaseConnection database_connection;
 

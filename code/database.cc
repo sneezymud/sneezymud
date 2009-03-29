@@ -8,18 +8,7 @@ TDatabaseConnection database_connection;
 // we return this instead of null if they try to fetch an invalid column
 const sstring empty="";
 
-const char * db_hosts[DB_MAX] = {
-  "192.168.100.103",
-  "192.168.100.103",
-  "192.168.100.103",
-  "192.168.100.103",
-  "192.168.100.103",
-  "192.168.100.103",
-  "192.168.100.112",
-  "192.168.100.112",
-  "192.168.100.112",
-  "db",
-  };
+vector <string> db_hosts(DB_MAX);
 
 const char * db_connect[DB_MAX] = {
   NULL, // depends on game port
@@ -58,13 +47,14 @@ MYSQL *TDatabaseConnection::getDB(dbTypeT type)
 {
   if (type < 0 || type > DB_MAX)
     return NULL;
+
   if (!databases[type] || mysql_ping(databases[type]))
   {
     vlogf(LOG_DB, fmt("Initializing database '%s'.") % getConnectParam(type));
     databases[type] = mysql_init(NULL);
     
     vlogf(LOG_DB, "Connecting to database.");
-    if(!mysql_real_connect(databases[type], db_hosts[type], "sneezy", NULL, getConnectParam(type), 0, NULL, 0))
+    if(!mysql_real_connect(databases[type], db_hosts[type].c_str(), "sneezy", NULL, getConnectParam(type), 0, NULL, 0))
     {
       vlogf(LOG_DB, fmt("Could not connect to database '%s'.") % getConnectParam(type));
       vlogf(LOG_DB, fmt("%s") % mysql_error(databases[type]));

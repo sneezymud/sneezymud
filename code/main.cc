@@ -6,6 +6,7 @@
 
 #include "stdsneezy.h"
 #include "socket.h"
+#include "database.h"
 
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
@@ -49,14 +50,39 @@ int main(int argc, char *argv[])
      "game port")
     ;
 
+  // database options
+  po::options_description databases("Databases");
+  databases.add_options()
+    ("sneezy_db", po::value<string>(&db_hosts[DB_SNEEZY]),
+     "host for sneezy database")
+    ("sneezybeta_db", po::value<string>(&db_hosts[DB_SNEEZYBETA]),
+     "host for sneezybeta database (unused)")
+    ("immortal_db", po::value<string>(&db_hosts[DB_IMMORTAL]),
+     "host for immortal database")
+    ("sneezyglobal_db", po::value<string>(&db_hosts[DB_SNEEZYGLOBAL]),
+     "host for sneezyglobal database")
+    ("sneezyprod_db", po::value<string>(&db_hosts[DB_SNEEZYPROD]),
+     "host for sneezyprod database (unused)")
+    ("sneezybuilder_db", po::value<string>(&db_hosts[DB_SNEEZYBUILDER]),
+     "host for sneezybuilder database (unused)")
+    ("wiki_mortal_db", po::value<string>(&db_hosts[DB_WIKI_MORTAL]),
+     "host for mortal wiki database")
+    ("wiki_builder_db", po::value<string>(&db_hosts[DB_WIKI_BUILDER]),
+     "host for builder wiki database")
+    ("wiki_admin_db", po::value<string>(&db_hosts[DB_WIKI_ADMIN]),
+     "host for admin wiki database")
+    ("forums_admin_db", po::value<string>(&db_hosts[DB_FORUMS_ADMIN]),
+     "host for admin forums database")
+    ;
+
   po::options_description cmdline_options;
-  cmdline_options.add(cmdline).add(config);
+  cmdline_options.add(cmdline).add(config).add(databases);
 
   po::options_description config_options;
-  config_options.add(config);
+  config_options.add(config).add(databases);
 
   po::options_description visible("Allowed options");
-  visible.add(cmdline).add(config);
+  visible.add(cmdline).add(config).add(databases);
 
 
   // first positional argument is port number
@@ -65,16 +91,16 @@ int main(int argc, char *argv[])
   
   po::variables_map vm;
 
+  ifstream ifs("sneezy.cfg");
+
   try {
     po::store(po::command_line_parser(argc, argv).
 	      options(cmdline_options).positional(p).run(), vm);
+    po::store(parse_config_file(ifs, config_options), vm);
   } catch(po::unknown_option){
     sendHelp(visible);
     return 0;    
   }
-
-  ifstream ifs("sneezy.cfg");
-  po::store(parse_config_file(ifs, config_options), vm);
   po::notify(vm);
 
   if(vm.count("help")){
