@@ -49,7 +49,7 @@ void TThing::attuneMe(TBeing *caster, TVial *)
 void TSymbol::attuneMe(TBeing *caster, TVial *obj)
 {
   if (getSymbolFaction() != FACT_UNDEFINED) {
-    caster->sendTo(COLOR_OBJECTS, fmt("But %s has already been attuned!\n\r") % getName());
+    caster->sendTo(COLOR_OBJECTS, format("But %s has already been attuned!\n\r") % getName());
     return;
   }
 

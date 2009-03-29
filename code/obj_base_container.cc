@@ -141,12 +141,12 @@ void TBaseContainer::logMe(const TBeing *ch, const char *cmdbuf) const
     t=*(it++);
     if(it==stuff.end() || strcmp(last, (*it)->getName())){
       if(runcount>1){
-        vlogf(LOG_SILENT, fmt("%s%s%s %s containing %s [%i].") %     
+        vlogf(LOG_SILENT, format("%s%s%s %s containing %s [%i].") %     
               (ch ? ch->getName() : "") %                      
               (ch ? " " : "") %                                
               cmdbuf % getName() % t->getName() % runcount);     
       } else                                                  
-        vlogf(LOG_SILENT, fmt("%s%s%s %s containing %s.") %          
+        vlogf(LOG_SILENT, format("%s%s%s %s containing %s.") %          
           (ch ? ch->getName() : "") %                          
           (ch ? " " : "") %                                    
           cmdbuf % getName() % t->getName());                   
@@ -195,7 +195,7 @@ int TBaseContainer::getAllFrom(TBeing *ch, const char *argument)
     tAff.type     = AFFECT_PLAYERLOOT;
     tAff.duration = (24 * UPDATES_PER_MUDHOUR);
     ch->affectJoin(ch, &tAff, AVG_DUR_NO, AVG_EFF_NO);
-    vlogf(LOG_CHEAT, fmt("Adding PLoot Flag To: %s (1)") %  ch->getName());
+    vlogf(LOG_CHEAT, format("Adding PLoot Flag To: %s (1)") %  ch->getName());
   }
   */
 
@@ -218,7 +218,7 @@ int TBaseContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
 
   if (getall(arg1, newarg)) {                                 
     if (!searchLinkedListVis(ch, newarg, stuff)) {            
-      ch->sendTo(COLOR_OBJECTS, fmt("There are no \"%s\"'s visible in %s.\n\r") %
+      ch->sendTo(COLOR_OBJECTS, format("There are no \"%s\"'s visible in %s.\n\r") %
                newarg % getName());
       return TRUE;                                            
     }                                                         
@@ -263,7 +263,7 @@ int TBaseContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
       tAff.type     = AFFECT_PLAYERLOOT;
       tAff.duration = (24 * UPDATES_PER_MUDHOUR);
       ch->affectJoin(ch, &tAff, AVG_DUR_NO, AVG_EFF_NO);
-      vlogf(LOG_CHEAT, fmt("Adding PLoot Flag To: %s (2)") %  ch->getName());
+      vlogf(LOG_CHEAT, format("Adding PLoot Flag To: %s (2)") %  ch->getName());
     }
     */
 
@@ -279,7 +279,7 @@ int TBaseContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
     return TRUE;
   } else if ((p = getabunch(arg1, newarg))) {
     if (!searchLinkedListVis(ch, newarg, stuff)) {
-      ch->sendTo(COLOR_OBJECTS, fmt("There are no \"%s\"'s visible in %s.\n\r") %
+      ch->sendTo(COLOR_OBJECTS, format("There are no \"%s\"'s visible in %s.\n\r") %
               newarg % getName());
       return TRUE;
     }
@@ -325,7 +325,7 @@ int TBaseContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
       tAff.type     = AFFECT_PLAYERLOOT;
       tAff.duration = (24 * UPDATES_PER_MUDHOUR);
       ch->affectJoin(ch, &tAff, AVG_DUR_NO, AVG_EFF_NO);
-      vlogf(LOG_CHEAT, fmt("Adding PLoot Flag To: %s (3)") %  ch->getName());
+      vlogf(LOG_CHEAT, format("Adding PLoot Flag To: %s (3)") %  ch->getName());
     }
     */
 

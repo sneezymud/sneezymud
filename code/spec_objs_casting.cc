@@ -267,7 +267,7 @@ int objWornAstralWalk(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj
       old_name = sstring(o->name);
       new_name = old_name.word(0);
       while(old_name.word(i+1) != "") {
-        new_name += fmt(" %s") % old_name.word(i);
+        new_name += format(" %s") % old_name.word(i);
         i++;
       }
       name_end = old_name.word(i);
@@ -275,7 +275,7 @@ int objWornAstralWalk(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj
         
       if (!(atoi(name_end.substr(1,name_end.length()-2).c_str())))
       {
-        new_name += fmt(" %s") % name_end;
+        new_name += format(" %s") % name_end;
       }
     
       location = ch->in_room;
@@ -318,7 +318,7 @@ int objWornAstralWalk(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj
    
       o->swapToStrung();
       delete [] o->name;
-      new_name += fmt(" [%d]") % location;
+      new_name += format(" [%d]") % location;
       o->name = mud_str_dup(new_name);
       act("Your $o throbs.", 
           TRUE, ch,o,NULL,TO_CHAR,NULL);
@@ -340,7 +340,7 @@ int objWornAstralWalk(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj
       if (location == 0)
         location = ROOM_TOP_OF_TREE;
       room = real_roomp(location);
-      ch->sendTo(fmt("%s\n\r") % room->getName());
+      ch->sendTo(format("%s\n\r") % room->getName());
       return TRUE;
     } else
       return FALSE;
@@ -584,7 +584,7 @@ int objWornPortal(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     act("$p suddenly appears out of a swirling mist.", TRUE, ch, tmp_obj, NULL, TO_ROOM);
     act("$p suddenly appears out of a swirling mist.", TRUE, ch, tmp_obj, NULL, TO_CHAR);
 
-    buf2 = fmt("%s suddenly appears out of a swirling mist.\n\r") % 
+    buf2 = format("%s suddenly appears out of a swirling mist.\n\r") % 
       sstring(next_tmp_obj->shortDescr).cap();
     sendToRoom(buf2.c_str(), location);
 
@@ -606,7 +606,7 @@ int objWornPortal(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
       old_name = sstring(o->name);
       new_name = old_name.word(0);
       while(old_name.word(i+1) != "") {
-        new_name += fmt(" %s") % old_name.word(i);
+        new_name += format(" %s") % old_name.word(i);
         i++;
       }
       name_end = old_name.word(i);
@@ -614,7 +614,7 @@ int objWornPortal(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
         
       if (!(atoi(name_end.substr(1,name_end.length()-2).c_str())))
       {
-        new_name += fmt(" %s") % name_end;
+        new_name += format(" %s") % name_end;
       }
     
       location = ch->in_room;
@@ -657,7 +657,7 @@ int objWornPortal(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
    
       o->swapToStrung();
       delete [] o->name;
-      new_name += fmt(" [%d]") % location;
+      new_name += format(" [%d]") % location;
       o->name = mud_str_dup(new_name);
       act("Your $o throbs.", 
           TRUE, ch,o,NULL,TO_CHAR,NULL);
@@ -679,7 +679,7 @@ int objWornPortal(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
       if (location == 0)
         location = ROOM_TOP_OF_TREE;
       room = real_roomp(location);
-      ch->sendTo(fmt("%s\n\r") % room->getName());
+      ch->sendTo(format("%s\n\r") % room->getName());
       return TRUE;
     } else
       return FALSE;

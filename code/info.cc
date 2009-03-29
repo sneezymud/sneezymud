@@ -192,35 +192,35 @@ void TBeing::listExits(const TRoom *rp) const
 
         if (isImmortal()) {
           if (IS_SET(exitdata->condition, EX_CLOSED)) 
-            sendTo(fmt(" %s%s%s") % red() % exDirs[door] % norm());
+            sendTo(format(" %s%s%s") % red() % exDirs[door] % norm());
           else if (exitdata->door_type != DOOR_NONE) 
-            sendTo(fmt(" %s%s%s") % blue() % exDirs[door] % norm());
+            sendTo(format(" %s%s%s") % blue() % exDirs[door] % norm());
           else 
-            sendTo(fmt(" %s%s%s") % purple() % exDirs[door] % norm());
+            sendTo(format(" %s%s%s") % purple() % exDirs[door] % norm());
         } else /*if (canSeeThruDoor(exitdata))*/ {
           TRoom *exitp = real_roomp(exitdata->to_room);
 
           if (exitp) {
             if (exitdata->door_type != DOOR_NONE && ((!secret || open) || (!secret && see_thru))) {
               if (IS_SET(exitdata->condition, EX_CLOSED))
-                sendTo(fmt(" %s*%s%s") %                       (exitp->getSectorType() == SECT_FIRE ? red() :
+                sendTo(format(" %s*%s%s") %                       (exitp->getSectorType() == SECT_FIRE ? red() :
                         (exitp->isAirSector() ? cyan() :
                          (exitp->isWaterSector() ? blue() : purple()))) %
                        exDirs[door] % norm());
               else
-                sendTo(fmt(" %s%s%s") %
+                sendTo(format(" %s%s%s") %
                        ((exitp->getSectorType() == SECT_FIRE ? redBold() :
                         (exitp->isAirSector() ? cyanBold() :
                          (exitp->isWaterSector() ? blueBold() : purpleBold())))) %
                        exDirs[door] % norm());
             } else if (exitdata->door_type == DOOR_NONE)
-	      sendTo(fmt(" %s%s%s") %
+	      sendTo(format(" %s%s%s") %
                      (exitp->getSectorType() == SECT_FIRE ? red() :
                       (exitp->isAirSector() ? cyan() :
                        (exitp->isWaterSector() ? blue() : purple()))) %
                      exDirs[door] % norm());
           } else
-            vlogf(LOG_LOW, fmt("Problem with door in room %d") %  inRoom());
+            vlogf(LOG_LOW, format("Problem with door in room %d") %  inRoom());
         }
       }
     }
@@ -248,20 +248,20 @@ void TBeing::listExits(const TRoom *rp) const
 
     if (IS_SET(exitdata->condition, EX_DESTROYED)) {
       if (!exitdata->keyword) {
-	vlogf(LOG_LOW,fmt("Destroyed door with no name!  Room %d") %  in_room);
+	vlogf(LOG_LOW,format("Destroyed door with no name!  Room %d") %  in_room);
       } else if (door == 4) 
-	sendTo(fmt("%sThe %s in the ceiling has been destroyed.%s\n\r") %
+	sendTo(format("%sThe %s in the ceiling has been destroyed.%s\n\r") %
 	       blue() % fname(exitdata->keyword) % norm());
       else if (door == 5)
-	sendTo(fmt("%sThe %s in the %s has been destroyed.%s\n\r") %
+	sendTo(format("%sThe %s in the %s has been destroyed.%s\n\r") %
 	       blue() % fname(exitdata->keyword) % roomp->describeGround() % norm());
       else
-	sendTo(fmt("%sThe %s %s has been destroyed.%s\n\r") %
+	sendTo(format("%sThe %s %s has been destroyed.%s\n\r") %
 	       blue() % fname(exitdata->keyword) % dirs_to_leading[door] % norm());
     }
 
     if (IS_SET(exitdata->condition, EX_CAVED_IN)) {
-      sendTo(fmt("%sA cave in blocks the way %s.%s\n\r") %
+      sendTo(format("%sA cave in blocks the way %s.%s\n\r") %
 	     blue() % dirs[door] % norm());
     }
 
@@ -281,7 +281,7 @@ void TBeing::listExits(const TRoom *rp) const
 	chance += GetMaxLevel()/2 + 10;
       
       if ((::number(1,1000) < chance) && !isImmortal())
-	sendTo(fmt("%sYou suspect something out of the ordinary here.%s\n\r") %
+	sendTo(format("%sYou suspect something out of the ordinary here.%s\n\r") %
 	       blue() % norm());
     }
   }
@@ -364,16 +364,16 @@ void TBeing::listExits(const TRoom *rp) const
 		  (count == 1 || door == num ? ".\n\r" : ", "));
 	}
       } else
-	vlogf(LOG_LOW, fmt("Problem with door in room %d") %  inRoom());
+	vlogf(LOG_LOW, format("Problem with door in room %d") %  inRoom());
     }
   }
 
 
   if (*buf) {
     if (count == 1) 
-      sendTo(fmt("You see an exit %s") % buf);
+      sendTo(format("You see an exit %s") % buf);
     else 
-      sendTo(fmt("You can see exits to the %s") % buf);
+      sendTo(format("You can see exits to the %s") % buf);
   } else
     sendTo("You see no obvious exits.\n\r");
 }
@@ -552,7 +552,7 @@ sstring TBeing::dynColorRoom(TRoom * rp, int title, bool) const
 	buf2=addColorRoom(rp, 1);
       }
     } else {
-      vlogf(LOG_BUG, fmt("%s is in a room with no descr") %  getName());
+      vlogf(LOG_BUG, format("%s is in a room with no descr") %  getName());
       return "Bogus Name";
     }
   } else if (title == 2) {
@@ -566,11 +566,11 @@ sstring TBeing::dynColorRoom(TRoom * rp, int title, bool) const
 	buf2=addColorRoom(rp, 2);
       }
     } else {
-      vlogf(LOG_BUG, fmt("%s is in a room with no descr") %  getName());
+      vlogf(LOG_BUG, format("%s is in a room with no descr") %  getName());
       return "Bogus Name";
     }
   } else {
-    vlogf(LOG_BUG, fmt("%s called a function with a bad dynColorRoom argument") %  getName());
+    vlogf(LOG_BUG, format("%s called a function with a bad dynColorRoom argument") %  getName());
     return "Something Bogus, tell a god";
   }
 // Found had to initialize with this logic and too tired to figure out why
@@ -1034,7 +1034,7 @@ const sstring TBeing::addColorRoom(TRoom * rp, int title) const
     if (rp->getDescr()) 
       return buf3;
     else {
-      vlogf(LOG_BUG, fmt("room without a descr for dynamic coloring, %s") %  roomp->getName());
+      vlogf(LOG_BUG, format("room without a descr for dynamic coloring, %s") %  roomp->getName());
       return "";
     }
   } else {
@@ -1119,7 +1119,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
     switch (aff->type) {
       case SKILL_TRACK:
       case SKILL_SEEKWATER:
-	str += fmt("Tracking: %s\n\r") % (aff->type == SKILL_TRACK ?
+	str += format("Tracking: %s\n\r") % (aff->type == SKILL_TRACK ?
 					  ch->specials.hunting->getName() : 
 					  "seeking water");
         break;
@@ -1547,31 +1547,31 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
         else if (discArray[aff->type]) {
           if (show && strcmp(discArray[aff->type]->name, "sneak")) {
             if (aff->renew < 0) {
-	      str += fmt("Affected : '%s'\t: Approx. Duration : %s\n\r") %
+	      str += format("Affected : '%s'\t: Approx. Duration : %s\n\r") %
 		discArray[aff->type]->name %
 		describeDuration(this, aff->duration);
             } else {
-              str += fmt("Affected : '%s'\t: Time Left : %s %s\n\r") %
+              str += format("Affected : '%s'\t: Time Left : %s %s\n\r") %
 		discArray[aff->type]->name %
 		describeDuration(this, aff->duration) %
 		(aff->canBeRenewed() ? "(Renewable)" : "(Not Yet Renewable)");
             }
           }
         } else {
-          vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s.") %
+          vlogf(LOG_BUG, format("BOGUS AFFECT (%d) on %s.") %
 		aff->type % ch->getName());
           ch->affectRemove(aff);
         }
         break;
       case AFFECT_DISEASE:
         if (show) {
-          str+=fmt("Disease: '%s'\n\r") %
+          str+=format("Disease: '%s'\n\r") %
 	    DiseaseInfo[affToDisease(*aff)].name;
         } 
         break;
       case AFFECT_DUMMY:
         if (show) {
-          str+=fmt("Affected : '%s'\t: Time Left : %s %s\n\r") %
+          str+=format("Affected : '%s'\t: Time Left : %s %s\n\r") %
 	    "DUMMY" %
 	    describeDuration(this, aff->duration) %
 	    (aff->canBeRenewed() ? "(Renewable)" : "(Not Yet Renewable)");
@@ -1579,40 +1579,40 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
         break;
       case AFFECT_WAS_INDOORS:
         if (ch->isImmortal() && show) {
-          str+=fmt("Was indoors (immune to frostbite): Time Left : %s\n\r") %
+          str+=format("Was indoors (immune to frostbite): Time Left : %s\n\r") %
 	    describeDuration(this, aff->duration);
         }
         break;
       case AFFECT_FREE_DEATHS:
-        str+=fmt("Free deaths remaining: %ld\n\r") %
+        str+=format("Free deaths remaining: %ld\n\r") %
                aff->modifier;
         break;
       case AFFECT_HORSEOWNED:
-        str+=fmt("Horseowned:\t Time Left : %s\n\r") %
+        str+=format("Horseowned:\t Time Left : %s\n\r") %
 	  describeDuration(this, aff->duration);
         break;
       case AFFECT_PLAYERKILL:
-        str+=fmt("Player Killer:\t Time Left : %s\n\r") %
+        str+=format("Player Killer:\t Time Left : %s\n\r") %
 	  describeDuration(this, aff->duration);
         break;
       case AFFECT_PLAYERLOOT:
-        str+=fmt("Player Looter:\t Time Left : %s\n\r") %
+        str+=format("Player Looter:\t Time Left : %s\n\r") %
 	  describeDuration(this, aff->duration);
         break;
       case AFFECT_TEST_FIGHT_MOB:
-        str+=fmt("Test Fight Mob: %ld\n\r") %
+        str+=format("Test Fight Mob: %ld\n\r") %
 	  aff->modifier;
         break;
       case AFFECT_SKILL_ATTEMPT:
         if (isImmortal()) {
-          str+=fmt("Skill Attempt:(%ld) '%s'\t: Time Left : %s\n\r") %
+          str+=format("Skill Attempt:(%ld) '%s'\t: Time Left : %s\n\r") %
 	    aff->modifier % 
 	    (discArray[aff->modifier] ? 
 	     discArray[aff->modifier]->name : 
 	     "Unknown") %
 	    describeDuration(this, aff->duration);
         } else if (aff->modifier != getSkillNum(SKILL_SNEAK)) {
-          str+=fmt("Skill Attempt: '%s'\t: Time Left : %s\n\r") %
+          str+=format("Skill Attempt: '%s'\t: Time Left : %s\n\r") %
 	    (discArray[aff->modifier] ? 
 	     discArray[aff->modifier]->name : 
 	     "Unknown") %
@@ -1626,7 +1626,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
         break;
       case AFFECT_DRUNK:
         if (show) {
-          str+=fmt("Affected: Drunken Slumber: approx. duration : %s\n\r") %
+          str+=format("Affected: Drunken Slumber: approx. duration : %s\n\r") %
 	    describeDuration(this, aff->duration);
         } else {
           str += "Affected: Drunken Slumber: \n\r";
@@ -1636,16 +1636,16 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
         if (!aff->shouldGenerateText())
           continue;
         if (show) {
-          str+=fmt("Affected: %s: approx. duration : %s\n\r") %
+          str+=format("Affected: %s: approx. duration : %s\n\r") %
   	       drugTypes[aff->modifier2].name %
 	       describeDuration(this, aff->duration);
         } else {
-          str+=fmt("Affected: %s: \n\r") % drugTypes[aff->modifier2].name;
+          str+=format("Affected: %s: \n\r") % drugTypes[aff->modifier2].name;
         }
         break;
       case AFFECT_TRANSFORMED_ARMS:
         if (show) {
-          str+=fmt("Affected: Transformed Limb: falcon wings: approx. duration : %s\n\r") %
+          str+=format("Affected: Transformed Limb: falcon wings: approx. duration : %s\n\r") %
                  describeDuration(this, aff->duration);
         } else {
           str += "Affected: Transformed Limb: falcon wings: \n\r";
@@ -1653,35 +1653,35 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
         break;
       case AFFECT_TRANSFORMED_HANDS:
         if (ch == this)
-          str+=fmt("Affected: Transformed Limb: bear claws: approx. duration : %s\n\r") %
+          str+=format("Affected: Transformed Limb: bear claws: approx. duration : %s\n\r") %
                  describeDuration(this, aff->duration);
         else
           str+="Affected: Transformed Limb: bear claws \n\r";
         break;
       case AFFECT_TRANSFORMED_LEGS:
         if (ch == this)
-          str+=fmt("Affected: Transformed Limb: dolphin tail: approx. duration : %s\n\r") %
+          str+=format("Affected: Transformed Limb: dolphin tail: approx. duration : %s\n\r") %
                  describeDuration(this, aff->duration);
         else
           str+="Affected: Transformed Limb: dolphin tail: \n\r";
         break;
       case AFFECT_TRANSFORMED_HEAD:
         if (ch == this)
-          str+=fmt("Affected: Transformed Limb: eagle's head: approx. duration : %s\n\r") %
+          str+=format("Affected: Transformed Limb: eagle's head: approx. duration : %s\n\r") %
                  describeDuration(this, aff->duration);
         else
           str+="Affected: Transformed Limb: eagle's head: \n\r";
         break;
       case AFFECT_TRANSFORMED_NECK:
         if (ch == this)
-          str+=fmt("Affected: Transformed Limb: fish gills: approx. duration : %s\n\r") %
+          str+=format("Affected: Transformed Limb: fish gills: approx. duration : %s\n\r") %
                  describeDuration(this, aff->duration);
         else
           str+="Affected: Transformed Limb: fish gills: \n\r";
         break;
       case AFFECT_GROWTH_POTION:
         if (ch == this)
-          str+=fmt("Affected: Abnormal Growth: approx duration : %s\n\r") %
+          str+=format("Affected: Abnormal Growth: approx duration : %s\n\r") %
                   describeDuration(this, aff->duration);
         else
           str+="Affected: Abnormal Growth\n\r";
@@ -1689,7 +1689,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
 
       case AFFECT_DEFECTED:
 	if (ch == this) 
-	  str+=fmt("You recently defected from your faction.\n\r\ttime left : %s\n\r") %
+	  str+=format("You recently defected from your faction.\n\r\ttime left : %s\n\r") %
 		  describeDuration(this, aff->duration);
 	else
 	  str+="Recently defected from a faction.\n\r";
@@ -1699,7 +1699,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
 	  TGuild *f = NULL;
 	  f = get_guild_by_ID(aff->modifier);
 	  if (!f) break;
-	  str+=fmt("You received an offer to join %s. (Good for %s.)\n\r") %
+	  str+=format("You received an offer to join %s. (Good for %s.)\n\r") %
 		  f->getName() % describeDuration(this, aff->duration);
 	} else
 	  str+="Received an offer to join a faction.\n\r";
@@ -1707,8 +1707,8 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case AFFECT_OBJECT_USED:
         objused = aff->modifier;
 	if (show) {
-	  str+=fmt("Used magical object: %s\n\r") % obj_index[objused].short_desc;
-	  str+=fmt("     Object is reusable in %s.\n\r") %
+	  str+=format("Used magical object: %s\n\r") % obj_index[objused].short_desc;
+	  str+=format("     Object is reusable in %s.\n\r") %
 	    describeDuration(this, aff->duration);
         } else {
           str+="Used a magical object effect.";
@@ -1721,7 +1721,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
         break;
       case AFFECT_PET:
         if (show) {
-          str+=fmt("Pet of: '%s'.  Approx. duration : %s\n\r") %
+          str+=format("Pet of: '%s'.  Approx. duration : %s\n\r") %
                  (char *) aff->be %
                  describeDuration(this, aff->duration);
         } else {
@@ -1730,7 +1730,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
         break;
       case AFFECT_CHARM:
         if (show) {
-          str+=fmt("Charm of: '%s'.  Approx. duration : %s\n\r") %
+          str+=format("Charm of: '%s'.  Approx. duration : %s\n\r") %
                  (char *) aff->be %
                  describeDuration(this, aff->duration);
         } else {
@@ -1739,7 +1739,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
         break;
       case AFFECT_THRALL:
         if (show) {
-          str+=fmt("Thrall of: '%s'.  Approx. duration : %s\n\r") %
+          str+=format("Thrall of: '%s'.  Approx. duration : %s\n\r") %
                  (char *) aff->be %
                  describeDuration(this, aff->duration);
         } else {
@@ -1753,121 +1753,121 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
 
       case SKILL_MIND_FOCUS:
         if(show){
-          str+=fmt("Affected: mind focus.  Approx. duration : %s\n\r") %
+          str+=format("Affected: mind focus.  Approx. duration : %s\n\r") %
             describeDuration(this, aff->duration);
         }
         break;
       case SKILL_PSI_BLAST:
         if(show && aff->shouldGenerateText()){
-          str+=fmt("Affected: psionic blast.  Approx. duration : %s\n\r") %
+          str+=format("Affected: psionic blast.  Approx. duration : %s\n\r") %
             describeDuration(this, aff->duration);
         }
         break;
       case AFFECT_IMMORTAL_BLESSING:
         if(show){
-          str+=fmt("Affected: Immortal's Blessing.  Approx. duration : %s\n\r") %
+          str+=format("Affected: Immortal's Blessing.  Approx. duration : %s\n\r") %
             describeDuration(this, aff->duration);
         }
         break;
       case AFFECT_PEEL_BLESSING:
         if(show){
-          str+=fmt("Affected: Peel's Blessing.  Approx. duration : %s\n\r") %
+          str+=format("Affected: Peel's Blessing.  Approx. duration : %s\n\r") %
             describeDuration(this, aff->duration);
         }
         break;
       case AFFECT_VASCO_BLESSING:
         if(show){
-          str+=fmt("Affected: Vasco's Blessing.  Approx. duration : %s\n\r") %
+          str+=format("Affected: Vasco's Blessing.  Approx. duration : %s\n\r") %
             describeDuration(this, aff->duration);
         }
         break;
       case AFFECT_CORAL_BLESSING:
         if(show){
-          str+=fmt("Affected: Coral's Blessing.  Approx. duration : %s\n\r") %
+          str+=format("Affected: Coral's Blessing.  Approx. duration : %s\n\r") %
             describeDuration(this, aff->duration);
         }
         break;
       case AFFECT_ANGUS_BLESSING:
         if(show){
-          str+=fmt("Affected: Angus's Blessing.  Approx. duration : %s\n\r") %
+          str+=format("Affected: Angus's Blessing.  Approx. duration : %s\n\r") %
             describeDuration(this, aff->duration);
         }
         break;
       case AFFECT_JESUS_BLESSING:
         if(show){
-          str+=fmt("Affected: Jesus's Blessing.  Approx. duration : %s\n\r") %
+          str+=format("Affected: Jesus's Blessing.  Approx. duration : %s\n\r") %
             describeDuration(this, aff->duration);
         }
         break;
       case AFFECT_DAMESCENA_BLESSING:
         if(show){
-          str+=fmt("Affected: Damescena's Blessing.  Approx. duration : %s\n\r") %
+          str+=format("Affected: Damescena's Blessing.  Approx. duration : %s\n\r") %
             describeDuration(this, aff->duration);
         }
         break;
       case AFFECT_BUMP_BLESSING:
         if(show){
-          str+=fmt("Affected: Bump's Blessing.  Approx. duration : %s\n\r") %
+          str+=format("Affected: Bump's Blessing.  Approx. duration : %s\n\r") %
             describeDuration(this, aff->duration);
         }
         break;
       case AFFECT_MAROR_BLESSING:
         if(show){
-          str+=fmt("Affected: Maror's Blessing.  Approx. duration : %s\n\r") %
+          str+=format("Affected: Maror's Blessing.  Approx. duration : %s\n\r") %
             describeDuration(this, aff->duration);
         }
         break;
       case AFFECT_DASH_BLESSING:
         if(show){
-          str+=fmt("Affected: Dash's Blessing.  Approx. duration : %s\n\r") %
+          str+=format("Affected: Dash's Blessing.  Approx. duration : %s\n\r") %
             describeDuration(this, aff->duration);
         }
         break;
       case AFFECT_DEIRDRE_BLESSING:
         if(show){
-          str+=fmt("Affected: Deirdre's Blessing.  Approx. duration : %s\n\r") %
+          str+=format("Affected: Deirdre's Blessing.  Approx. duration : %s\n\r") %
             describeDuration(this, aff->duration);
         }
         break;
       case AFFECT_GARTHAGK_BLESSING:
         if(show){
-          str+=fmt("Affected: Garthagk's Blessing.  Approx. duration : %s\n\r") %
+          str+=format("Affected: Garthagk's Blessing.  Approx. duration : %s\n\r") %
             describeDuration(this, aff->duration);
         }
         break;
       case AFFECT_MERCURY_BLESSING:
         if(show){
-          str+=fmt("Affected: Mercury's Blessing.  Approx. duration : %s\n\r") %
+          str+=format("Affected: Mercury's Blessing.  Approx. duration : %s\n\r") %
             describeDuration(this, aff->duration);
         }
         break;
       case AFFECT_METROHEP_BLESSING:
         if(show){
-          str+=fmt("Affected: Metrohep's Blessing.  Approx. duration : %s\n\r") %
+          str+=format("Affected: Metrohep's Blessing.  Approx. duration : %s\n\r") %
             describeDuration(this, aff->duration);
         }
         break;
       case AFFECT_MAGDALENA_BLESSING:
         if(show){
-          str+=fmt("Affected: Magdalena's Blessing.  Approx. duration : %s\n\r") %
+          str+=format("Affected: Magdalena's Blessing.  Approx. duration : %s\n\r") %
             describeDuration(this, aff->duration);
         }
         break;
       case AFFECT_MACROSS_BLESSING:
         if(show){
-          str+=fmt("Affected: Macross's Blessing.  Approx. duration : %s\n\r") %
+          str+=format("Affected: Macross's Blessing.  Approx. duration : %s\n\r") %
             describeDuration(this, aff->duration);
         }
         break;
       case AFFECT_PAPPY_BLESSING:
         if(show){
-          str+=fmt("Affected: Pappy's Blessing.  Approx. duration : %s\n\r") %
+          str+=format("Affected: Pappy's Blessing.  Approx. duration : %s\n\r") %
             describeDuration(this, aff->duration);
         }
         break;
       case AFFECT_STAFFA_BLESSING:
         if(show){
-          str+=fmt("Affected: Staffa's Blessing.  Approx. duration : %s\n\r") %
+          str+=format("Affected: Staffa's Blessing.  Approx. duration : %s\n\r") %
             describeDuration(this, aff->duration);
         }
         break;
@@ -1878,7 +1878,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
 
       case AFFECT_PREENED:
         if(show)
-          str+=fmt("Affected: 'Preened'\t: Time Left : %s\n\r") % describeDuration(this, aff->duration);
+          str+=format("Affected: 'Preened'\t: Time Left : %s\n\r") % describeDuration(this, aff->duration);
         break;
 
       case AFFECT_WET:
@@ -2007,7 +2007,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_IRON_WILL:
       case SKILL_PLANT:
       case ABSOLUTE_MAX_SKILL:
-        vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s.") %
+        vlogf(LOG_BUG, format("BOGUS AFFECT (%d) on %s.") %
 	      aff->type % ch->getName());
         ch->affectRemove(aff);
         break;
@@ -2035,14 +2035,14 @@ void TBeing::describeLimbDamage(const TBeing *ch) const
     if (ch->isLimbFlags(j, PART_TRANSFORMED)) {
       const sstring str = describe_part_wounds(ch, j);
       if (!str.empty()) {
-        act(fmt("<y>%s %s %s %s<1>") % buf2.cap() %  
+        act(format("<y>%s %s %s %s<1>") % buf2.cap() %  
 	    ch->describeBodySlot(j) % ch->slotPlurality(j) % str, 
 	    FALSE, this, NULL, NULL, TO_CHAR);
       }
     }
     if ((t = ch->getStuckIn(j))) {
       if (canSee(t)) {
-	buf = fmt("<y>$p is sticking out of %s %s!<1>") %
+	buf = format("<y>$p is sticking out of %s %s!<1>") %
 	  buf2.uncap() % ch->describeBodySlot(j);
         act(buf, FALSE, this, t, NULL, TO_CHAR);
       }
@@ -2054,10 +2054,10 @@ void TBeing::describeLimbDamage(const TBeing *ch) const
       if (aff->type == AFFECT_DISEASE) {
         if (!aff->level) {
           if (ch == this)
-            sendTo(COLOR_BASIC, fmt("<y>You have %s.<1>\n\r") %
+            sendTo(COLOR_BASIC, format("<y>You have %s.<1>\n\r") %
                DiseaseInfo[affToDisease(*aff)].name);
           else
-            sendTo(COLOR_BASIC, fmt("<y>It seems %s has %s.<1>\n\r") %
+            sendTo(COLOR_BASIC, format("<y>It seems %s has %s.<1>\n\r") %
                 ch->hssh() % DiseaseInfo[affToDisease(*aff)].name);
         }
       }
@@ -2078,16 +2078,16 @@ void TBeing::doTime(const char *argument)
   one_argument(argument, arg);
   if (!arg.empty()) {
     if (!convertTo<int>(arg) && arg!="0"){
-      sendTo(fmt("Present time differential is set to %d hours.\n\r") % desc->account->time_adjust);
+      sendTo(format("Present time differential is set to %d hours.\n\r") % desc->account->time_adjust);
       sendTo("Syntax: time <difference>\n\r");
       return;
     }
     desc->account->time_adjust = convertTo<int>(arg);
-    sendTo(fmt("Your new time difference between your site and %s's will be: %d hours.\n\r") % MUD_NAME % desc->account->time_adjust);
+    sendTo(format("Your new time difference between your site and %s's will be: %d hours.\n\r") % MUD_NAME % desc->account->time_adjust);
     desc->saveAccount();
     return;
   }
-  buf = fmt("It is %s, on ") % hmtAsString(hourminTime());
+  buf = format("It is %s, on ") % hmtAsString(hourminTime());
 
   weekday = ((28 * time_info.month) + time_info.day + 1) % 7;        // 28 days in a month 
 
@@ -2097,25 +2097,25 @@ void TBeing::doTime(const char *argument)
 
   day = time_info.day + 1;        // day in [1..28] 
 
-  sendTo(fmt("The %s day of %s, Year %d P.S.\n\r") % 
+  sendTo(format("The %s day of %s, Year %d P.S.\n\r") % 
            numberAsString(day) %
            month_name[time_info.month] % time_info.year);
 
   tmp2 = sunTime(SUN_TIME_RISE);
-  buf = fmt("The sun will rise today at:   %s.\n\r") % hmtAsString(tmp2);
+  buf = format("The sun will rise today at:   %s.\n\r") % hmtAsString(tmp2);
   sendTo(buf);
 
   tmp2 = sunTime(SUN_TIME_SET);
-  buf = fmt("The sun will set today at:    %s.\n\r") % hmtAsString(tmp2);
+  buf = format("The sun will set today at:    %s.\n\r") % hmtAsString(tmp2);
   sendTo(buf);
 
   tmp2 = moonTime(MOON_TIME_RISE);
-  buf = fmt("The moon will rise today at:  %s    (%s).\n\r") %
+  buf = format("The moon will rise today at:  %s    (%s).\n\r") %
        hmtAsString(tmp2) % moonType();
   sendTo(buf);
 
   tmp2 = moonTime(MOON_TIME_SET);
-  buf = fmt("The moon will set today at:   %s.\n\r") %
+  buf = format("The moon will set today at:   %s.\n\r") %
        hmtAsString(tmp2);
   sendTo(buf);
 
@@ -2127,11 +2127,11 @@ void TBeing::doTime(const char *argument)
     ct = time(0);
   tmstr = asctime(localtime(&ct));
   *(tmstr + strlen(tmstr) - 1) = '\0';
-  sendTo(fmt("%sIn the real world, the time is:                     %s%s\n\r") % 
+  sendTo(format("%sIn the real world, the time is:                     %s%s\n\r") % 
         blue() % tmstr % norm());
 
   if (timeTill) {
-    sendTo(fmt("%sThe game will be shutdown in %s.\n\r%s") %
+    sendTo(format("%sThe game will be shutdown in %s.\n\r%s") %
            red() %
            secsToString(timeTill - time(0)) %
            norm());
@@ -2167,19 +2167,19 @@ void TBeing::doWeather(const char *arg)
       describeRoomLight();
       return;
     } else {
-      vlogf(LOG_BUG,fmt("Error in getWeather for %s.") % getName());
+      vlogf(LOG_BUG,format("Error in getWeather for %s.") % getName());
       return;
     }
     if (isImmortal()) {
-      sendTo(fmt("The current barometer is: %d.  Barometric change is: %d\n\r") %
+      sendTo(format("The current barometer is: %d.  Barometric change is: %d\n\r") %
             weather_info.pressure % weather_info.change); 
     }
-    sendTo(COLOR_BASIC, fmt("%s and %s.\n\r") % buf %
+    sendTo(COLOR_BASIC, format("%s and %s.\n\r") % buf %
         (weather_info.change >= 0 ? "you feel a relatively warm wind from the south" :
          "your foot tells you bad weather is due"));
 
     if (moonIsUp()) {
-      sendTo(fmt("A %s moon hangs in the sky.\n\r") % moonType());
+      sendTo(format("A %s moon hangs in the sky.\n\r") % moonType());
     }
     describeRoomLight();
     return;
@@ -2224,7 +2224,7 @@ void TBeing::doWeather(const char *arg)
         return;
       }
       time_info.month = num - 1 ;
-      sendTo(fmt("You set the month to: %s\n\r") % month_name[time_info.month]);
+      sendTo(format("You set the month to: %s\n\r") % month_name[time_info.month]);
       return;
     } else if (is_abbrev(buffer, "moon")) {
       arg = one_argument(arg, buffer, cElements(buffer));
@@ -2239,7 +2239,7 @@ void TBeing::doWeather(const char *arg)
         return;
       }
       moontype = num;
-      sendTo(fmt("The moon is now in stage %d (%s).\n\r") % moontype % moonType());
+      sendTo(format("The moon is now in stage %d (%s).\n\r") % moontype % moonType());
       return;
     } else {
       sendTo("Syntax: weather <\"worse\" | \"better\" | \"month\" | \"moon\">\n\r");
@@ -2278,9 +2278,9 @@ void TPerson::doUsers(const sstring &argument)
           continue;
 
         if (d->original)
-          line=fmt("%s%-16.16s%s: ") % purple() % d->original->name % norm();
+          line=format("%s%-16.16s%s: ") % purple() % d->original->name % norm();
         else
-          line=fmt("%s%-16.16s%s: ") % purple() % d->character->getName() %
+          line=format("%s%-16.16s%s: ") % purple() % d->character->getName() %
 	    norm();
       } else
         line="UNDEFINED       : ";
@@ -2296,21 +2296,21 @@ void TPerson::doUsers(const sstring &argument)
 
         sstring tmp_host = !(d->host.empty()) ? d->host : "????";
 	if(db.fetchRow()){
-	  buf2=fmt("[%s](%s)") % tmp_host % db["pingtime"];
+	  buf2=format("[%s](%s)") % tmp_host % db["pingtime"];
 	} else {
-	  buf2=fmt("[%s](??\?)") % tmp_host;
+	  buf2=format("[%s](??\?)") % tmp_host;
 	}
 
-        buf3=fmt("[%s]") % ((d->connected < MAX_CON_STATUS && d->connected >= 0) ? connected_types[d->connected] : "Editing");
-        buf4=fmt("[%s]") % ((d->account && !d->account->name.empty()) ? d->account->name : "UNDEFINED");
-        line += fmt("%s%-34.34s%s %s%-10.10s%s %s%s%s\n\r") %
+        buf3=format("[%s]") % ((d->connected < MAX_CON_STATUS && d->connected >= 0) ? connected_types[d->connected] : "Editing");
+        buf4=format("[%s]") % ((d->account && !d->account->name.empty()) ? d->account->name : "UNDEFINED");
+        line += format("%s%-34.34s%s %s%-10.10s%s %s%s%s\n\r") %
 	  red() % buf2 % norm() % green() % buf3 %
 	  norm() % cyan() % buf4 % norm();
       }
       sb += line;
       count++;
     }
-    buf2=fmt("\n\rTotal Descriptors : %d\n\r") % count;
+    buf2=format("\n\rTotal Descriptors : %d\n\r") % count;
     sb += buf2;
     if (desc)
       desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
@@ -2320,7 +2320,7 @@ void TPerson::doUsers(const sstring &argument)
       sendTo("Syntax : users site <sitename>\n\r");
       return;
     } else {
-      sendTo(fmt("\n\rPlayers online from %s:\n\r\n\r") % arg2);
+      sendTo(format("\n\rPlayers online from %s:\n\r\n\r") % arg2);
       sendTo(USERS_HEADER);
       for (d = descriptor_list; d; d = d->next) {
         if (d->host.lower().find(arg2.lower(), 0) != sstring::npos) {
@@ -2329,9 +2329,9 @@ void TPerson::doUsers(const sstring &argument)
               continue;
 
             if (d->original)
-              line=fmt("%-16.16s: ") % d->original->name;
+              line=format("%-16.16s: ") % d->original->name;
             else
-              line=fmt("%-16.16s: ") % d->character->getName();
+              line=format("%-16.16s: ") % d->character->getName();
           } else
             line="UNDEFINED       : ";
 
@@ -2340,10 +2340,10 @@ void TPerson::doUsers(const sstring &argument)
                 !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
             line += "*** Information Concealed ***\n\r";
           } else {
-            buf2=fmt("[%s]") % (!(d->host.empty()) ? d->host : "????");
-            buf3=fmt("[%s]") % ((d->connected < MAX_CON_STATUS && d->connected >= 0) ? connected_types[d->connected] : "Editing");
-            buf4=fmt("[%s]") % ((d->account && !d->account->name.empty()) ? d->account->name : "UNDEFINED");
-            line += fmt("%-34.34s %-10.10s %s\n\r") % buf2 % buf3 % buf4;
+            buf2=format("[%s]") % (!(d->host.empty()) ? d->host : "????");
+            buf3=format("[%s]") % ((d->connected < MAX_CON_STATUS && d->connected >= 0) ? connected_types[d->connected] : "Editing");
+            buf4=format("[%s]") % ((d->account && !d->account->name.empty()) ? d->account->name : "UNDEFINED");
+            line += format("%-34.34s %-10.10s %s\n\r") % buf2 % buf3 % buf4;
           }
           sendTo(line);
           count++;
@@ -2360,12 +2360,12 @@ void TPerson::doUsers(const sstring &argument)
       // don't let newbie gods blab who imm's mortals are
       if (k->desc->account && IS_SET(k->desc->account->flags, ACCOUNT_IMMORTAL) && 
             !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
-        sendTo(COLOR_MOBS, fmt("\n\r%-16.16s : *******Information Concealed*******\n\r") % k->getName());
+        sendTo(COLOR_MOBS, format("\n\r%-16.16s : *******Information Concealed*******\n\r") % k->getName());
       } else {
-        buf2=fmt("[%s]") % (!(k->desc->host.empty()) ? k->desc->host : "????");
-        buf3=fmt("[%s]") % ((k->desc->connected < MAX_CON_STATUS && k->desc->connected >= 0) ? connected_types[k->desc->connected] : "Editing");
-        buf4=fmt("[%s]") % (k->desc->account->name);
-        sendTo(COLOR_MOBS, fmt("\n\r%-16.16s : %-34.34s %-15.15s %-10.10s\n\r") % k->getName() % buf2 % buf3 % buf4);
+        buf2=format("[%s]") % (!(k->desc->host.empty()) ? k->desc->host : "????");
+        buf3=format("[%s]") % ((k->desc->connected < MAX_CON_STATUS && k->desc->connected >= 0) ? connected_types[k->desc->connected] : "Editing");
+        buf4=format("[%s]") % (k->desc->account->name);
+        sendTo(COLOR_MOBS, format("\n\r%-16.16s : %-34.34s %-15.15s %-10.10s\n\r") % k->getName() % buf2 % buf3 % buf4);
       }
       return;
     } else {
@@ -2419,7 +2419,7 @@ void TBeing::doInventory(const char *argument)
       }
       
       if (GetMaxLevel() > 10) {
-        sendTo(fmt("\n\r%3.f%c volume, %3.f%c weight.\n\r") %
+        sendTo(format("\n\r%3.f%c volume, %3.f%c weight.\n\r") %
                (((float)getCarriedVolume() / (float)carryVolumeLimit()) * 100.0) % '%' %
                (((float)getCarriedWeight() / (float)carryWeightLimit()) * 100.0) % '%');
       }
@@ -2446,8 +2446,8 @@ void TBeing::doEquipment(const sstring &arg)
       TObj *tobj = dynamic_cast<TObj *>(tt);
       if (tobj && tobj->getMaxStructPoints() != tobj->getStructPoints()) {
         if (!tobj->shouldntBeShown(j)) {
-	  buf=fmt("<%s>") % describeEquipmentSlot(j);
-	  sendTo(fmt("%s%-25s%s") % cyan() % buf % norm());
+	  buf=format("<%s>") % describeEquipmentSlot(j);
+	  sendTo(format("%s%-25s%s") % cyan() % buf % norm());
 	  if (canSee(tobj)) {
             showTo(tobj, SHOW_MODE_SHORT_PLUS);
             found = TRUE;
@@ -2467,13 +2467,13 @@ void TBeing::doEquipment(const sstring &arg)
       tattoos[convertTo<int>(db["location"])]=db["tattoo"];
     }
 
-    sendTo(fmt("You are using %i pounds of equipment:\n\r") % 
+    sendTo(format("You are using %i pounds of equipment:\n\r") % 
 	   (int)equipment.getWeight());
     found = FALSE;
     for (j = MIN_WEAR; j < MAX_WEAR; j++) {
       if (equipment[j] && !equipment[j]->shouldntBeShown(j)) {
-        buf=fmt("<%s>") % describeEquipmentSlot(j);
-        sendTo(fmt("%s%-26s%s") % cyan() % buf % norm());
+        buf=format("<%s>") % describeEquipmentSlot(j);
+        sendTo(format("%s%-26s%s") % cyan() % buf % norm());
         if (canSee(equipment[j])) {
           showTo(equipment[j], SHOW_MODE_SHORT_PLUS);
           found = TRUE;
@@ -2483,18 +2483,18 @@ void TBeing::doEquipment(const sstring &arg)
         }
       } else if(tattoos[j]!=""){
 	sstring slot = describeEquipmentSlot(j);
-	buf=fmt("<%s>") % 
+	buf=format("<%s>") % 
 	  (slot.find("Worn") != sstring::npos ? 
 	   (sstring)slot.replace(slot.find("Worn"),4,"Tattooed") : 
 	   slot);
-	sendTo(fmt("%s%-26s%s") % red() % buf % norm());
+	sendTo(format("%s%-26s%s") % red() % buf % norm());
 	sendTo(COLOR_BASIC, tattoos[j]);
 	sendTo("\n\r");
       }
     }
   } else {
     if (powerCheck(POWER_AT)) {
-      vlogf(LOG_MISC, fmt("%s just tried to do: equipment %s") % getName() % arg);
+      vlogf(LOG_MISC, format("%s just tried to do: equipment %s") % getName() % arg);
       return;
     }
 
@@ -2516,8 +2516,8 @@ void TBeing::doEquipment(const sstring &arg)
       found = FALSE;
       for (j = MIN_WEAR; j < MAX_WEAR; j++) {
         if (victim->equipment[j] && !victim->equipment[j]->shouldntBeShown(j)) {
-          buf=fmt("<%s>") % victim->describeEquipmentSlot(j);
-          sendTo(fmt("%s%-26s%s") % cyan() % buf % norm());
+          buf=format("<%s>") % victim->describeEquipmentSlot(j);
+          sendTo(format("%s%-26s%s") % cyan() % buf % norm());
           if (canSee(victim->equipment[j])) {
             showTo(victim->equipment[j], SHOW_MODE_SHORT_PLUS);
             found = TRUE;
@@ -2527,14 +2527,14 @@ void TBeing::doEquipment(const sstring &arg)
           }
         } else if(tattoos[j]!=""){
 	  sstring slot = describeEquipmentSlot(j);
-	  buf=fmt("<%s>") % 
+	  buf=format("<%s>") % 
 	    (slot.find("Worn") != sstring::npos ? 
 	     (sstring)slot.replace(slot.find("Worn"),4,"Tattooed") : 
 	     slot);
-	  sendTo(fmt("%s%-26s%s") % red() % buf % norm());
+	  sendTo(format("%s%-26s%s") % red() % buf % norm());
 
 	  //	  sprintf(buf, "<%s>", victim->describeEquipmentSlot(j).c_str());
-	  //	  sendTo(fmt("%s%-26s%s") % cyan() % buf % norm());
+	  //	  sendTo(format("%s%-26s%s") % cyan() % buf % norm());
 	  sendTo(COLOR_BASIC, tattoos[j]);
 	  sendTo("\n\r");
 	}
@@ -2558,20 +2558,20 @@ void TBeing::doEquipment(const sstring &arg)
         case WEAR_FINGER_L:
           break;
         case WEAR_NECK:
-          trans=fmt("<%s>") % describeTransLimb(j);
-          sendTo(fmt("%s%s%s\n\r") % cyan() % trans % norm());
+          trans=format("<%s>") % describeTransLimb(j);
+          sendTo(format("%s%s%s\n\r") % cyan() % trans % norm());
           break;
         case WEAR_BODY:
           break;
         case WEAR_HEAD:
-          trans=fmt("<%s>") % describeTransLimb(j);
-          sendTo(fmt("%s%s%s\n\r") % cyan() % trans % norm());
+          trans=format("<%s>") % describeTransLimb(j);
+          sendTo(format("%s%s%s\n\r") % cyan() % trans % norm());
           break;
         case WEAR_LEG_L:
           break;
         case WEAR_LEG_R:
-          trans=fmt("<%s>") % describeTransLimb(j);
-          sendTo(fmt("%s%s%s\n\r") % cyan() % trans % norm());
+          trans=format("<%s>") % describeTransLimb(j);
+          sendTo(format("%s%s%s\n\r") % cyan() % trans % norm());
           break;
         case WEAR_FOOT_R:
         case WEAR_FOOT_L:
@@ -2579,22 +2579,22 @@ void TBeing::doEquipment(const sstring &arg)
         case WEAR_HAND_R:
           if (isLimbFlags(WEAR_ARM_R, PART_TRANSFORMED))
             break;
-          trans=fmt("<%s>") % describeTransLimb(j);
-          sendTo(fmt("%s%s%s\n\r") % cyan() % trans % norm());
+          trans=format("<%s>") % describeTransLimb(j);
+          sendTo(format("%s%s%s\n\r") % cyan() % trans % norm());
           break;
         case WEAR_HAND_L:
           if (isLimbFlags(WEAR_ARM_L, PART_TRANSFORMED))
             break;
-          trans=fmt("<%s>") % describeTransLimb(j);
-          sendTo(fmt("%s%s%s\n\r") % cyan() % trans % norm());
+          trans=format("<%s>") % describeTransLimb(j);
+          sendTo(format("%s%s%s\n\r") % cyan() % trans % norm());
           break;
         case WEAR_ARM_R:
-          trans=fmt("<%s>") % describeTransLimb(j);
-          sendTo(fmt("%s%s%s\n\r") % cyan() % trans % norm());
+          trans=format("<%s>") % describeTransLimb(j);
+          sendTo(format("%s%s%s\n\r") % cyan() % trans % norm());
           break;
         case WEAR_ARM_L:
-          trans=fmt("<%s>") % describeTransLimb(j);
-          sendTo(fmt("%s%s%s\n\r") % cyan() % trans % norm());
+          trans=format("<%s>") % describeTransLimb(j);
+          sendTo(format("%s%s%s\n\r") % cyan() % trans % norm());
           break;
         case WEAR_BACK :
         case WEAR_WAIST:
@@ -2612,7 +2612,7 @@ void TBeing::doEquipment(const sstring &arg)
     if ((t = getStuckIn(j))) {
       if (canSee(t)) {
 	capbuf=t->getName();
-        sendTo(COLOR_OBJECTS, fmt("%s is sticking out of your %s!\n\r") % capbuf.cap() % describeBodySlot(j));
+        sendTo(COLOR_OBJECTS, format("%s is sticking out of your %s!\n\r") % capbuf.cap() % describeBodySlot(j));
       }
     }
   }
@@ -2799,7 +2799,7 @@ void TBeing::doWhere(const char *argument)
     for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
       k=*iter;
       if (!k->getName()) {
-        vlogf(LOG_BUG, fmt("Item without a name in object_list (doWhere) looking for %s") %  namebuf);
+        vlogf(LOG_BUG, format("Item without a name in object_list (doWhere) looking for %s") %  namebuf);
         continue;
       }
 
@@ -2897,7 +2897,7 @@ void TBeing::doWhere(const char *argument)
 
   for (i = character_list; i; i = i->next) {
     if (!i->name) {
-      vlogf(LOG_BUG, fmt("Being without a name in character_list (doWhere) looking for %s") %  namebuf);
+      vlogf(LOG_BUG, format("Being without a name in character_list (doWhere) looking for %s") %  namebuf);
       continue;
     }
     if (isname(namebuf, i->name) && canSeeWho(i) && canSee(i)) {
@@ -2931,7 +2931,7 @@ void TBeing::doWhere(const char *argument)
       unsigned char version;
       TObj *k;
       
-      if((dfd=opendir((fmt("mobdata/repairs/%d") % i->mobVnum()).c_str()))){
+      if((dfd=opendir(((sstring)(format("mobdata/repairs/%d") % i->mobVnum())).c_str()))){
 	while ((dp = readdir(dfd))) {
 	  if (!strcmp(dp->d_name, ".") || !strcmp(dp->d_name, ".."))
 	    continue;
@@ -2940,21 +2940,21 @@ void TBeing::doWhere(const char *argument)
 	  
 	  if((k=loadRepairItem(i, ticket, time, cost, version))){
 	    if (!k->getName()) {
-	      vlogf(LOG_BUG, fmt("Item without a name in object_list (doWhere) looking for %s") %  namebuf);
+	      vlogf(LOG_BUG, format("Item without a name in object_list (doWhere) looking for %s") %  namebuf);
 	      continue;
 	    }
 	    
 	    if (isname(namebuf, k->name) && canSee(k)) {
 	      if (!iNum || !(--count)) {
 		if (!iNum) {
-		  sb += fmt("[%2d] ") % ++count;
+		  sb += format("[%2d] ") % ++count;
 		}
 		if (++tot_found > 500) {
 		  sb += "Too many objects found.\n\r";
 		  break;
 		}
 		
-		sb += fmt("%s\n\r      - being repaired by %s\n\r") % 
+		sb += format("%s\n\r      - being repaired by %s\n\r") % 
 		  k->getNameNOC(this) % i->getName();
 
 		if (iNum != 0)
@@ -2977,7 +2977,7 @@ void TBeing::doWhere(const char *argument)
 	continue;
 
       if (!k->getName()) {
-        vlogf(LOG_BUG, fmt("Item without a name in object_list (doWhere) looking for %s") %  namebuf);
+        vlogf(LOG_BUG, format("Item without a name in object_list (doWhere) looking for %s") %  namebuf);
         continue;
       }
 
@@ -3004,7 +3004,7 @@ void TBeing::doWhere(const char *argument)
 	  if(tmp_sb != last_sb){
 	    sb += buf;
 	    if(tcount>1)
-	      sb += fmt("(%i) ") % tcount;
+	      sb += format("(%i) ") % tcount;
 	    sb += last_sb;
 	    last_sb=tmp_sb;
 	    tcount=1;
@@ -3029,7 +3029,7 @@ void TBeing::doWhere(const char *argument)
     sprintf(buf, "[%2d] ", ++count);
     sb += buf;
     if(tcount>1)
-      sb += fmt("(%i) ") % tcount;
+      sb += format("(%i) ") % tcount;
     sb += last_sb;
   }
 
@@ -3040,13 +3040,13 @@ void TBeing::doWhere(const char *argument)
   
   while(db.fetchRow()){
     if (isname(namebuf, db["objkeywords"])) {
-      sb += fmt("[%2d] ") % ++count;
+      sb += format("[%2d] ") % ++count;
       if (++tot_found > 500) {
 	sb += "Too many objects found.\n\r";
 	break;
       }
       
-      sb += fmt("%s\n\r      -  in the shop of %s (%i)\n\r") % 
+      sb += format("%s\n\r      -  in the shop of %s (%i)\n\r") % 
 	db["objname"] % db["mobname"] % convertTo<int>(db["shop_nr"]);
       
     }
@@ -3120,14 +3120,14 @@ void TBeing::doLevels(const char *argument)
         break;
 
       default:
-        sendTo(fmt("I don't recognize %s\n\r") % argument);
+        sendTo(format("I don't recognize %s\n\r") % argument);
         return;
         break;
     }
   }
   //RaceMax = RacialMax[race->getRace()][Class];
 
-  sb += fmt("The highest possible mortal level is %i.\n\r") % MAX_MORT;
+  sb += format("The highest possible mortal level is %i.\n\r") % MAX_MORT;
   sprintf(buf, "Experience needed for level in class %s:\n\r\n\r",
       classInfo[Class].name.cap().c_str());
   sb += buf;
@@ -3219,7 +3219,7 @@ void TBeing::doWorld()
 
   otmstr = asctime(localtime(&tt));
   *(otmstr + strlen(otmstr) - 1) = '\0';
-  buf = fmt("%sStart time was:                      %s%s\n\r") %
+  buf = format("%sStart time was:                      %s%s\n\r") %
     blue() % otmstr % norm();
   str += buf;
 
@@ -3227,12 +3227,12 @@ void TBeing::doWorld()
 
   tmstr = asctime(localtime(&ct));
   *(tmstr + strlen(tmstr) - 1) = '\0';
-  buf=fmt("%sCurrent time is:                     %s%s\n\r") %
+  buf=format("%sCurrent time is:                     %s%s\n\r") %
          blue() % tmstr % norm();
   str += buf;
 
   time_t upt = ct - tt;
-  buf=fmt("%sUptime is:                           %s%s\n\r") %
+  buf=format("%sUptime is:                           %s%s\n\r") %
     blue() % secsToString(upt) % norm();
   str += buf;
 
@@ -3243,7 +3243,7 @@ void TBeing::doWorld()
       count++;
     }
   }
-  buf=fmt("%sMachine Lag: Avg/Cur/High/Low        %ld/%ld/%ld/%ld%s\n\r") %
+  buf=format("%sMachine Lag: Avg/Cur/High/Low        %ld/%ld/%ld/%ld%s\n\r") %
     blue() % (count ? total/count : 0) % lag_info.current %
     lag_info.high % lag_info.low % norm();
   str += buf;
@@ -3253,18 +3253,18 @@ void TBeing::doWorld()
   db.query("select pingtime from pings where host='%s'", desc->host.c_str());
 
   if(db.fetchRow()){
-    buf=fmt("%sNetwork Lag: Yours/Avg/High/Low      %s") %
+    buf=format("%sNetwork Lag: Yours/Avg/High/Low      %s") %
       blue() % db["pingtime"];
     str += buf;
 
     db.query("select avg(pingtime) as avg, max(pingtime) as max, min(pingtime) as min from pings");
 
     if(db.fetchRow()){
-      buf=fmt("/%s/%s/%s%s\n\r") % db["avg"] % db["max"] %
+      buf=format("/%s/%s/%s%s\n\r") % db["avg"] % db["max"] %
 	db["min"] % norm();
       str += buf;
     } else {
-      buf=fmt("/??\?/??\?/???%s\n\r") % norm();
+      buf=format("/??\?/??\?/???%s\n\r") % norm();
       str += buf;
     }
   }
@@ -3272,29 +3272,29 @@ void TBeing::doWorld()
   db.query("select count(*) as count from rent");
   db.fetchRow();
 
-  str += fmt("Total number of rooms in world:               %ld\n\r") %
+  str += format("Total number of rooms in world:               %ld\n\r") %
     roomCount;
-  str += fmt("Total number of zones in world:               %d\n\r") %
+  str += format("Total number of zones in world:               %d\n\r") %
     zone_table.size();
-  str += fmt("Total number of distinct objects in world:%s    %d%s\n\r") %
+  str += format("Total number of distinct objects in world:%s    %d%s\n\r") %
     green() % obj_index.size() % norm();
-  str += fmt("Total number of objects in game:%s              %ld%s\n\r") %
+  str += format("Total number of objects in game:%s              %ld%s\n\r") %
         green() % objCount % norm();
-  str += fmt("Total number of objects in shops:%s             %ld%s\n\r") %
+  str += format("Total number of objects in shops:%s             %ld%s\n\r") %
     green() % convertTo<int>(db["count"]) % norm();
-  str += fmt("Total number of registered accounts:%s          %d%s\n\r") %
+  str += format("Total number of registered accounts:%s          %d%s\n\r") %
     blue() % accStat.account_number % norm();
-  str += fmt("Total number of registered players:%s           %d%s\n\r") % 
+  str += format("Total number of registered players:%s           %d%s\n\r") % 
     blue() % accStat.player_count % norm();
   
   if (hasWizPower(POWER_WIZARD)) {
-    str += fmt("Total number of 7-day active accounts:%s        %d%s\n\r") %
+    str += format("Total number of 7-day active accounts:%s        %d%s\n\r") %
       blue() % accStat.active_account7 % norm();
-    str += fmt("Total number of 7-day active players:%s         %d%s\n\r") %
+    str += format("Total number of 7-day active players:%s         %d%s\n\r") %
       blue() % accStat.active_player7 % norm();
-    str += fmt("Total number of 30-day active accounts:%s       %d%s\n\r") %
+    str += format("Total number of 30-day active accounts:%s       %d%s\n\r") %
       blue() % accStat.active_account30 % norm();
-    str += fmt("Total number of 30-day active players:%s        %d%s\n\r") %
+    str += format("Total number of 30-day active players:%s        %d%s\n\r") %
       blue() % accStat.active_player30 % norm();
   }
 
@@ -3303,7 +3303,7 @@ void TBeing::doWorld()
   strncpy(timebuf, ctime(&stats.first_login), cElements(timebuf));
   timebuf[strlen(timebuf) - 1] = '\0';
   strcat(timebuf, ":");
-  buf=fmt("Logins since %-32.32s %s%ld  (%ld per day)%s\n\r") %
+  buf=format("Logins since %-32.32s %s%ld  (%ld per day)%s\n\r") %
     timebuf %  blue() % stats.logins %
     (long) ((double) stats.logins * SECS_PER_REAL_DAY / (time(0) - stats.first_login)) %
      norm();
@@ -3320,7 +3320,7 @@ void TBeing::doWorld()
     }
   }
 
-  buf=fmt("Total number of distinct mobiles in world:%s    %d%s\n\r") %
+  buf=format("Total number of distinct mobiles in world:%s    %d%s\n\r") %
 	  red() % activemobcount % norm();
   str += buf;
 
@@ -3331,7 +3331,7 @@ void TBeing::doWorld()
   if(db.fetchRow())
     unkmobcount=convertTo<int>(db["count"]);
 
-  buf=fmt("Percent of distinct mobiles never killed: %s    %d%c (%i)%s\n\r") %
+  buf=format("Percent of distinct mobiles never killed: %s    %d%c (%i)%s\n\r") %
     red() % (100-(int)(((float)unkmobcount/(float)activemobcount)*100)) % '%' %
     (activemobcount-unkmobcount) %
     norm();
@@ -3339,10 +3339,10 @@ void TBeing::doWorld()
 
 
   if (GetMaxLevel() >= GOD_LEVEL1) {
-    buf=fmt("%sDistinct Mobs by level:%s\n\r") %
+    buf=format("%sDistinct Mobs by level:%s\n\r") %
          blue() % norm();
     str += buf;
-    buf=fmt("%sL1-5  [%s%3d%s]  L6-10 [%s%3d%s]  L11-15[%s%3d%s]  L16-20[%s%3d%s]  L21-25 [%s%3d%s] L26-30  [%s%3d%s]%s\n\r") % norm() %
+    buf=format("%sL1-5  [%s%3d%s]  L6-10 [%s%3d%s]  L11-15[%s%3d%s]  L16-20[%s%3d%s]  L21-25 [%s%3d%s] L26-30  [%s%3d%s]%s\n\r") % norm() %
         purple() % stats.mobs_1_5 % norm() %
         purple() % stats.mobs_6_10 % norm() %
         purple() % stats.mobs_11_15 % norm() %
@@ -3351,7 +3351,7 @@ void TBeing::doWorld()
         purple() % stats.mobs_26_30 % norm() %
         norm();
     str += buf;
-    buf=fmt("%sL31-40[%s%3d%s]  L41-50[%s%3d%s]  L51-60[%s%3d%s]  L61-70[%s%3d%s]  L71-100[%s%3d%s] L101-127[%s%3d%s]%s\n\r") % norm() %
+    buf=format("%sL31-40[%s%3d%s]  L41-50[%s%3d%s]  L51-60[%s%3d%s]  L61-70[%s%3d%s]  L71-100[%s%3d%s] L101-127[%s%3d%s]%s\n\r") % norm() %
         purple() % stats.mobs_31_40 % norm() %
         purple() % stats.mobs_41_50 % norm() %
         purple() % stats.mobs_51_60 % norm() %
@@ -3361,29 +3361,29 @@ void TBeing::doWorld()
         norm();
     str += buf;
   }
-  buf=fmt("Total number of monsters in game:%s             %ld%s\n\r") %
+  buf=format("Total number of monsters in game:%s             %ld%s\n\r") %
         red() % mobCount % norm();
   str += buf;
 
-  buf=fmt("%sActual Mobs by level:%s\n\r") %
+  buf=format("%sActual Mobs by level:%s\n\r") %
         purple() % norm();
   str += buf;
 
-  buf=fmt("%sL  1-  5  [%s%4u%s]  L  6- 10  [%s%4u%s]  L 11- 15  [%s%4u%s]  L 16- 20  [%s%4u%s]\n\r") % norm() %
+  buf=format("%sL  1-  5  [%s%4u%s]  L  6- 10  [%s%4u%s]  L 11- 15  [%s%4u%s]  L 16- 20  [%s%4u%s]\n\r") % norm() %
          purple() % stats.act_1_5 % norm() %
          purple() % stats.act_6_10 % norm() %
          purple() % stats.act_11_15 % norm() %
          purple() % stats.act_16_20 % norm();
   str += buf;
 
-  buf=fmt("%sL 21- 25  [%s%4u%s]  L 26- 30  [%s%4u%s]  L 31- 40  [%s%4u%s]  L 41- 50  [%s%4u%s]\n\r") % norm() %
+  buf=format("%sL 21- 25  [%s%4u%s]  L 26- 30  [%s%4u%s]  L 31- 40  [%s%4u%s]  L 41- 50  [%s%4u%s]\n\r") % norm() %
          purple() % stats.act_21_25 % norm() %
          purple() % stats.act_26_30 % norm() %
          purple() % stats.act_31_40 % norm() %
          purple() % stats.act_41_50 % norm();
   str += buf;
 
-  buf=fmt("%sL 51- 60  [%s%4u%s]  L 61- 70  [%s%4u%s]  L 71-100  [%s%4u%s]  L101-127  [%s%4u%s]\n\r") % norm() %
+  buf=format("%sL 51- 60  [%s%4u%s]  L 61- 70  [%s%4u%s]  L 71-100  [%s%4u%s]  L101-127  [%s%4u%s]\n\r") % norm() %
          purple() % stats.act_51_60 % norm() %
          purple() % stats.act_61_70 % norm() %
          purple() % stats.act_71_100 % norm() %
@@ -3516,7 +3516,7 @@ void TBeing::doClear(const char *argument)
   if ((i > -1) && (i < 16)) {
     desc->alias[i].command[0] = '\0';
     desc->alias[i].word[0] = '\0';
-    sendTo(fmt("Ok. Alias %d now clear.\n\r") % (i + 1));
+    sendTo(format("Ok. Alias %d now clear.\n\r") % (i + 1));
     return;
   } else {
     sendTo("Syntax :clear <alias number>\n\r");
@@ -3547,7 +3547,7 @@ void TBeing::doAlias(const char *argument)
   if (!*argument) {
     sendTo("Your list of aliases.....\n\r");
     for (i = 0; i < 16; i++) {
-      sendTo(fmt("%2d) %s%s %s %s\n\r") % (i + 1) % desc->alias[i].word %
+      sendTo(format("%2d) %s%s %s %s\n\r") % (i + 1) % desc->alias[i].word %
             (spaces + strlen(desc->alias[i].word)) %
             (ansi() ? ANSI_BLUE_BAR : "|") %
 	     desc->alias[i].command);
@@ -3582,12 +3582,12 @@ void TBeing::doAlias(const char *argument)
   if (remOption) {
     while ((i < 16)) {
       if (*desc->alias[i].word && !strcmp(arg2, desc->alias[i].word)) {
-        sendTo(fmt("Clearing alias %s\n\r") % arg2);
+        sendTo(format("Clearing alias %s\n\r") % arg2);
         return;
       }
       i++;
     }
-    sendTo(fmt("You have no alias for %s.\n\r") % arg2);
+    sendTo(format("You have no alias for %s.\n\r") % arg2);
     return;
   }
 
@@ -3603,7 +3603,7 @@ void TBeing::doAlias(const char *argument)
   }
   strncpy(desc->alias[i].word, arg1, cElements(desc->alias[i].word));
   strncpy(desc->alias[i].command, arg2, cElements(desc->alias[i].command));
-  sendTo(fmt("Setting alias %s to %s\n\r") % arg1 % arg2);
+  sendTo(format("Setting alias %s to %s\n\r") % arg1 % arg2);
 }
 
 sstring TObj::equip_condition(int amt) const
@@ -3757,7 +3757,7 @@ void TBeing::doLimbs(const sstring & argument)
     sendTo("You evaluate your limbs and their health.\n\r");
   } else {
     who = sstring(v->hshr()).cap();
-    sendTo(COLOR_BASIC, fmt("You evaluate %s's limbs and their health.\n\r") % v->getName());
+    sendTo(COLOR_BASIC, format("You evaluate %s's limbs and their health.\n\r") % v->getName());
   }
 
   bool found = false;
@@ -3769,66 +3769,66 @@ void TBeing::doLimbs(const sstring & argument)
     double perc = (double) v->getCurLimbHealth(i) / (double) v->getMaxLimbHealth(i);
 
     if (v->isLimbFlags(i, PART_MISSING)) {
-      sendTo(COLOR_BASIC, fmt("<R>%s %s%s%s %s missing!<Z>\n\r") % who % red() % v->describeBodySlot(i) % norm() % v->slotPlurality(i));
+      sendTo(COLOR_BASIC, format("<R>%s %s%s%s %s missing!<Z>\n\r") % who % red() % v->describeBodySlot(i) % norm() % v->slotPlurality(i));
       found = TRUE;
       continue;
     } 
     if (perc < 1.00) {
-      sendTo(COLOR_BASIC, fmt("%s %s %s %s.\n\r") % who % v->describeBodySlot(i) % v->slotPlurality(i) % LimbHealth(perc));
+      sendTo(COLOR_BASIC, format("%s %s %s %s.\n\r") % who % v->describeBodySlot(i) % v->slotPlurality(i) % LimbHealth(perc));
       found = TRUE;
     } 
     if (v->isLimbFlags(i, PART_USELESS)) {
-      sendTo(COLOR_BASIC, fmt("%s %s%s%s %s <O>useless<Z>!\n\r") %who % red() %v->describeBodySlot(i) %norm() % v->slotPlurality(i));
+      sendTo(COLOR_BASIC, format("%s %s%s%s %s <O>useless<Z>!\n\r") %who % red() %v->describeBodySlot(i) %norm() % v->slotPlurality(i));
       found = TRUE;
     }
     if (v->isLimbFlags(i, PART_PARALYZED)) {
-      sendTo(COLOR_BASIC, fmt("%s %s%s%s %s <O>paralyzed<Z>!\n\r") %
+      sendTo(COLOR_BASIC, format("%s %s%s%s %s <O>paralyzed<Z>!\n\r") %
          who %red() %v->describeBodySlot(i) %
          norm() % v->slotPlurality(i));
       found = TRUE;
     }
     if(v->isLimbFlags(i, PART_BRUISED)){
-      sendTo(COLOR_BASIC, fmt("%s %s%s%s %s <p>bruised<Z>!\n\r") %
+      sendTo(COLOR_BASIC, format("%s %s%s%s %s <p>bruised<Z>!\n\r") %
          who %red() %v->describeBodySlot(i) %
          norm() % v->slotPlurality(i));
       found = TRUE;      
     }
     if (v->isLimbFlags(i, PART_BLEEDING)) {
-      sendTo(COLOR_BASIC, fmt("%s %s%s%s %s <R>bleeding profusely<Z>!\n\r") %
+      sendTo(COLOR_BASIC, format("%s %s%s%s %s <R>bleeding profusely<Z>!\n\r") %
          who %red() %v->describeBodySlot(i) %
          norm() % v->slotPlurality(i));
       found = TRUE;
     }
     if (v->isLimbFlags(i, PART_INFECTED)) {
-      sendTo(COLOR_BASIC, fmt("%s %s%s%s %s infected with many <o>germs<1>!\n\r") %
+      sendTo(COLOR_BASIC, format("%s %s%s%s %s infected with many <o>germs<1>!\n\r") %
          who %red() %v->describeBodySlot(i) %
          norm() % v->slotPlurality(i));
       found = TRUE;
     }
     if (v->isLimbFlags(i, PART_BROKEN)) {
-      sendTo(COLOR_BASIC, fmt("%s %s%s%s %s broken!\n\r") %
+      sendTo(COLOR_BASIC, format("%s %s%s%s %s broken!\n\r") %
          who %red() %v->describeBodySlot(i) %
          norm() % v->slotPlurality(i));
       found = TRUE;
     }
     if (v->isLimbFlags(i, PART_LEPROSED)) {
-      sendTo(COLOR_BASIC, fmt("Leprosy has set into %s %s%s%s!\n\r") %
+      sendTo(COLOR_BASIC, format("Leprosy has set into %s %s%s%s!\n\r") %
           who.uncap() % red() %v->describeBodySlot(i) %norm());
       found = TRUE;
     }
     if (v->isLimbFlags(i, PART_GANGRENOUS)) {
-      sendTo(COLOR_BASIC, fmt("<k>Gangrene<1> has set into %s %s%s%s!\n\r") %
+      sendTo(COLOR_BASIC, format("<k>Gangrene<1> has set into %s %s%s%s!\n\r") %
           who.uncap() % red() %v->describeBodySlot(i) %norm());
       found = TRUE;
     }
     if (v->isLimbFlags(i, PART_TRANSFORMED)) {
-      sendTo(COLOR_BASIC, fmt("%s %s%s%s has been transformed!\n\r") %
+      sendTo(COLOR_BASIC, format("%s %s%s%s has been transformed!\n\r") %
           who % red() %v->describeBodySlot2(i) %norm());
       found = TRUE;
     }
     if ((t = v->getStuckIn(i))) {
       if (canSee(t)) {
-        sendTo(COLOR_OBJECTS, fmt("%s is sticking out of %s %s!\n\r") %
+        sendTo(COLOR_OBJECTS, format("%s is sticking out of %s %s!\n\r") %
         sstring(t->getName()).cap() % who.uncap() % v->describeBodySlot(i));
       }
     }
@@ -3844,7 +3844,7 @@ void TBeing::doLimbs(const sstring & argument)
     for (aff = v->affected; aff; aff = aff->next) {
       if (aff->type == AFFECT_DISEASE) {
         if (!aff->level) {
-          sendTo(fmt("%s %s %s.\n\r") % who % 
+          sendTo(format("%s %s %s.\n\r") % who % 
 	         ((v==this)?"have":"has") %
                  DiseaseInfo[affToDisease(*aff)].name);
           found = TRUE;
@@ -3859,7 +3859,7 @@ void TBeing::doLimbs(const sstring & argument)
     else
       who = v->hshr();
 
-    sendTo(fmt("All %s limbs are perfectly healthy!\n\r") % who);
+    sendTo(format("All %s limbs are perfectly healthy!\n\r") % who);
   }
 }
 
@@ -3926,7 +3926,7 @@ void TBeing::doEvaluate(const char *argument)
     // get it very general
     if (!roomp) {
       sendTo("You have no idea where you are, do you...\n\r");
-      vlogf(LOG_BUG, fmt("Player without room called evaluate room.  [%s]") %  getName());
+      vlogf(LOG_BUG, format("Player without room called evaluate room.  [%s]") %  getName());
       return;
     }
     if (isAffected(AFF_BLIND) && !isImmortal() && !isAffected(AFF_TRUE_SIGHT) && !isAffected(AFF_CLARITY)) {
@@ -3977,11 +3977,11 @@ void TBeing::doEvaluate(const char *argument)
       else 
         sendTo("You are on a body of water.\n\r");
       if (roomp->getRiverSpeed() >= 30)
-        sendTo(fmt("The current flows swiftly towards the %s.\n\r") % dirs[roomp->getRiverDir()]);
+        sendTo(format("The current flows swiftly towards the %s.\n\r") % dirs[roomp->getRiverDir()]);
       else if (roomp->getRiverSpeed() >= 15)
-        sendTo(fmt("The current flows steadily towards the %s.\n\r") % dirs[roomp->getRiverDir()]);
+        sendTo(format("The current flows steadily towards the %s.\n\r") % dirs[roomp->getRiverDir()]);
       else if (roomp->getRiverSpeed() > 0)
-        sendTo(fmt("The current gently flows towards the %s.\n\r") % dirs[roomp->getRiverDir()]);
+        sendTo(format("The current gently flows towards the %s.\n\r") % dirs[roomp->getRiverDir()]);
       else
         sendTo("There is no noticable current.\n\r");
     } else if (roomp->isRiverSector()) {
@@ -3990,11 +3990,11 @@ void TBeing::doEvaluate(const char *argument)
       else 
         sendTo("You are on a river.\n\r");
       if (roomp->getRiverSpeed() >= 30)
-        sendTo(fmt("The current flows swiftly towards the %s.\n\r") % dirs[roomp->getRiverDir()]);
+        sendTo(format("The current flows swiftly towards the %s.\n\r") % dirs[roomp->getRiverDir()]);
       else if (roomp->getRiverSpeed() >= 15)
-        sendTo(fmt("The current flows steadily towards the %s.\n\r") % dirs[roomp->getRiverDir()]);
+        sendTo(format("The current flows steadily towards the %s.\n\r") % dirs[roomp->getRiverDir()]);
       else if (roomp->getRiverSpeed() > 0)
-        sendTo(fmt("The current gently flows towards the %s.\n\r") % dirs[roomp->getRiverDir()]);
+        sendTo(format("The current gently flows towards the %s.\n\r") % dirs[roomp->getRiverDir()]);
       else
         sendTo("There is no noticable current.\n\r");
         
@@ -4021,7 +4021,7 @@ void TBeing::doEvaluate(const char *argument)
       sendTo("You are in an area without substance.\n\r");
     } else {
       // fell all the way through
-      vlogf(LOG_MISC, fmt("Sector type fell through on eval room. Room: (%d) Sector: (%d)") % roomp->in_room % ((int) roomp->getSectorType()));
+      vlogf(LOG_MISC, format("Sector type fell through on eval room. Room: (%d) Sector: (%d)") % roomp->in_room % ((int) roomp->getSectorType()));
       sendTo("Unrecognized room type...\n\r");
     }
     
@@ -4048,7 +4048,7 @@ void TBeing::doEvaluate(const char *argument)
     
     int wetness = getRoomWetness(roomp);
     if (wetness != 0) // show wetness
-      sendTo(fmt("The room is %s.\n\r") % describeWet(wetness));
+      sendTo(format("The room is %s.\n\r") % describeWet(wetness));
 
     // advanced adventuring conditions
     // should probably make a more modular isGreatOutdoorsSector() check or something...
@@ -4183,7 +4183,7 @@ void TBeing::doEvaluate(const char *argument)
     wearSlotT j;
     if (!(obj = get_thing_in_equip(this, arg, equipment, &j, TRUE, &count))) {
       if (!(obj = searchLinkedListVis(this, arg, stuff, &count))) {
-        sendTo(fmt("You do not seem to have the '%s'.\n\r") % arg);
+        sendTo(format("You do not seem to have the '%s'.\n\r") % arg);
         return;
       }
     }
@@ -4198,19 +4198,19 @@ void TTool::describeCondition(const TBeing *) const
 
 void TObj::describeCondition(const TBeing *ch) const
 {
-  ch->sendTo(COLOR_OBJECTS, fmt("It is in %s condition.\n\r") %equip_condition(-1));
+  ch->sendTo(COLOR_OBJECTS, format("It is in %s condition.\n\r") %equip_condition(-1));
 }
 
 void TThing::describeContains(const TBeing *ch) const
 {
   if (!stuff.empty())
-    ch->sendTo(COLOR_OBJECTS, fmt("%s seems to have something in it...\n\r") % sstring(getName()).cap());
+    ch->sendTo(COLOR_OBJECTS, format("%s seems to have something in it...\n\r") % sstring(getName()).cap());
 }
 
 void TBaseCup::describeContains(const TBeing *ch) const
 {
   if (getDrinkUnits())
-    ch->sendTo(COLOR_OBJECTS, fmt("%s seems to have some %s%s liquid in it...\n\r") % 
+    ch->sendTo(COLOR_OBJECTS, format("%s seems to have some %s%s liquid in it...\n\r") % 
 	       sstring(getName()).cap() % 
 	       (isDrinkConFlag(DRINK_FROZEN)?"<C>frozen<1> ":"") % 
 	       liquidInfo[getDrinkType()]->color);
@@ -4218,7 +4218,7 @@ void TBaseCup::describeContains(const TBeing *ch) const
 
 void TFood::describeCondition(const TBeing *ch) const
 {
-  ch->sendTo(COLOR_OBJECTS, fmt("It is in %s condition.\n\r") %equip_condition(-1));
+  ch->sendTo(COLOR_OBJECTS, format("It is in %s condition.\n\r") %equip_condition(-1));
 }
 
 void TFood::describeObjectSpecifics(const TBeing *ch) const
@@ -4255,36 +4255,36 @@ void TSymbol::describeObjectSpecifics(const TBeing *ch) const
 if (attuneCode) {
   switch (sym_faction) {
     case FACT_NONE:
-      ch->sendTo(COLOR_OBJECTS, fmt("You can tell that %s has been sanctified but it bears no insignia.\n\r") % sstring(getName()).cap());
+      ch->sendTo(COLOR_OBJECTS, format("You can tell that %s has been sanctified but it bears no insignia.\n\r") % sstring(getName()).cap());
       break;
     case FACT_BROTHERHOOD:
-      ch->sendTo(COLOR_OBJECTS, fmt("%s has the sign of the Brotherhood of Galek stamped upon it.\n\r") % sstring(getName()).cap());
+      ch->sendTo(COLOR_OBJECTS, format("%s has the sign of the Brotherhood of Galek stamped upon it.\n\r") % sstring(getName()).cap());
       break;
     case FACT_CULT:
-      ch->sendTo(COLOR_OBJECTS, fmt("%s has been sanctified and bears the insignia of the Cult of the Logrus.\n\r") % sstring(getName()).cap());
+      ch->sendTo(COLOR_OBJECTS, format("%s has been sanctified and bears the insignia of the Cult of the Logrus.\n\r") % sstring(getName()).cap());
       break;
     case FACT_SNAKE:
-      ch->sendTo(COLOR_OBJECTS, fmt("%s has been sanctified and branded with the image of a snake.\n\r") % sstring(getName()).cap());
+      ch->sendTo(COLOR_OBJECTS, format("%s has been sanctified and branded with the image of a snake.\n\r") % sstring(getName()).cap());
       break;
     case MAX_FACTIONS:
     case FACT_UNDEFINED:
-      ch->sendTo(COLOR_OBJECTS, fmt("%s is inert and has not been sanctified for use.\n\r") % sstring(getName()).cap());
+      ch->sendTo(COLOR_OBJECTS, format("%s is inert and has not been sanctified for use.\n\r") % sstring(getName()).cap());
   }
 }
 
   if (getSymbolMaxStrength()) {
     if (getSymbolCurStrength() == getSymbolMaxStrength()) {
-      ch->sendTo(COLOR_OBJECTS, fmt("%s has all of its original strength, it has not been used.\n\r") % sstring(getName()).cap());
+      ch->sendTo(COLOR_OBJECTS, format("%s has all of its original strength, it has not been used.\n\r") % sstring(getName()).cap());
 
     } else {
       diff = (double) ((double) getSymbolCurStrength() /
                        (double) getSymbolMaxStrength());
-      ch->sendTo(COLOR_OBJECTS, fmt("You can tell that %s has %s strength left.\n\r") % getName() %
+      ch->sendTo(COLOR_OBJECTS, format("You can tell that %s has %s strength left.\n\r") % getName() %
           ((diff < .20) ? "very little" : ((diff < .50) ? "some" :
           ((diff < .75) ? "a good bit of" : "most of its"))));
     }
   } else {
-    ch->sendTo(COLOR_OBJECTS, fmt("%s has none of its strength left.\n\r") % sstring(getName()).cap());
+    ch->sendTo(COLOR_OBJECTS, format("%s has none of its strength left.\n\r") % sstring(getName()).cap());
   }
 }
 
@@ -4297,7 +4297,7 @@ void TTool::describeObjectSpecifics(const TBeing *ch) const
   else
     diff = 1.00;
 
-  ch->sendTo(COLOR_OBJECTS,fmt("It appears %s is %s.\n\r") % getName() %
+  ch->sendTo(COLOR_OBJECTS,format("It appears %s is %s.\n\r") % getName() %
        ((diff <= 0.0) ? "totally gone" :
         ((diff >= 1.0) ? "brand new" :
         ((diff >= 0.8) ? "almost new" :
@@ -4317,7 +4317,7 @@ void TObj::describeMe(TBeing *ch) const
 
   strncpy(buf, material_nums[getMaterial()].mat_name, cElements(buf));
   strncpy(buf2, ch->objs(this), cElements(buf2));
-  ch->sendTo(COLOR_OBJECTS,fmt("%s is %s made of %s.\n\r") % sstring(buf2).cap() %
+  ch->sendTo(COLOR_OBJECTS,format("%s is %s made of %s.\n\r") % sstring(buf2).cap() %
                  ItemInfo[itemType()]->common_name % 
 	     sstring(buf).uncap());
 
@@ -4332,7 +4332,7 @@ void TObj::describeMe(TBeing *ch) const
     if (isRentable()) {
       int temp = max(0, rentCost());
   
-      ch->sendTo(fmt("It has a rental cost of %d talen%s.\n\r") %
+      ch->sendTo(format("It has a rental cost of %d talen%s.\n\r") %
           temp, (temp != 1 ? "s" : ""));
     } else 
       ch->sendTo("It can't be rented.\n\r");
@@ -4344,10 +4344,10 @@ void TObj::describeMe(TBeing *ch) const
     sstring volumeBuf = volumeDisplay(getVolume());
 
     if (compareWeights(wgt, 1.0) != 1) 
-      ch->sendTo(fmt("It weighs about %d pound%s and occupies roughly %s.\n\r") % 
+      ch->sendTo(format("It weighs about %d pound%s and occupies roughly %s.\n\r") % 
                (int) wgt % ((((int) wgt) == 1) ? "" : "s") % volumeBuf);
     else 
-      ch->sendTo(fmt("It weighs about %d drechel%s and occupies roughly %s.\n\r") % 
+      ch->sendTo(format("It weighs about %d drechel%s and occupies roughly %s.\n\r") % 
                getDrechels(TRUE) % ((getDrechels(TRUE) == 1) ? "" : "s") % volumeBuf);
   }
   describeCondition(ch);
@@ -4374,7 +4374,7 @@ void TObj::describeMe(TBeing *ch) const
   if (action_description) {
     strncpy(capbuf, action_description, cElements(capbuf));
     if ((sscanf(capbuf, "This is the personalized object of %s.", name_buf)) == 1)
-      sendTo(fmt("A monogram on it indicates it belongs to %s.\n\r") % name_buf);
+      sendTo(format("A monogram on it indicates it belongs to %s.\n\r") % name_buf);
   }
   describeObjectSpecifics(ch);
   evaluateMe(ch);
@@ -4511,7 +4511,7 @@ void TBeing::describeMaxSharpness(const TBaseWeapon *obj, int learn) const
   else
     strcpy(sharpbuf, "having a ragged edge");
 
-  sendTo(COLOR_OBJECTS,fmt("%s seems to be capable of %s.\n\r") %
+  sendTo(COLOR_OBJECTS,format("%s seems to be capable of %s.\n\r") %
            sstring(capbuf).cap() % sharpbuf);
 }
 
@@ -4552,7 +4552,7 @@ void TBeing::describeMaxPointiness(const TBaseWeapon *obj, int learn) const
   else
     strcpy(sharpbuf, "having a dull point");
 
-  sendTo(COLOR_OBJECTS,fmt("%s seems to be capable of %s.\n\r") %
+  sendTo(COLOR_OBJECTS,format("%s seems to be capable of %s.\n\r") %
            sstring(capbuf).cap() % sharpbuf);
 }
 
@@ -4568,13 +4568,13 @@ void TBeing::describeOtherFeatures(const TGenWeapon *obj, int learn) const
 
   if (hasClass(CLASS_THIEF) || isImmortal()) {
     if (obj->canCudgel())
-      sendTo(COLOR_OBJECTS, fmt("%s seems small enough to be used for cudgeling.\n\r") %
+      sendTo(COLOR_OBJECTS, format("%s seems small enough to be used for cudgeling.\n\r") %
              sstring(capbuf).cap());
     if (obj->canStab())
-      sendTo(COLOR_OBJECTS, fmt("%s seems small enough to be used for stabbing.\n\r") %
+      sendTo(COLOR_OBJECTS, format("%s seems small enough to be used for stabbing.\n\r") %
              sstring(capbuf).cap());
     if (obj->canBackstab())
-      sendTo(COLOR_OBJECTS, fmt("%s seems small enough to be used for backstabbing or throat slitting.\n\r") %
+      sendTo(COLOR_OBJECTS, format("%s seems small enough to be used for backstabbing or throat slitting.\n\r") %
              sstring(capbuf).cap());
   }
 }
@@ -4615,7 +4615,7 @@ void TBeing::describeMaxBluntness(const TBaseWeapon *obj, int learn) const
   else
     strcpy(sharpbuf, "having a sharp and ragged bluntness");
 
-  sendTo(COLOR_OBJECTS,fmt("%s seems to be capable of %s.\n\r") %
+  sendTo(COLOR_OBJECTS,format("%s seems to be capable of %s.\n\r") %
            sstring(capbuf).cap() % sharpbuf);
 }
 
@@ -4636,14 +4636,14 @@ void TBeing::describeWeaponDamage(const TBaseWeapon *obj, int learn) const
 #if 1
   double av_dam = GetApprox(obj->damageLevel(), learn);
 
-  sendTo(COLOR_OBJECTS, fmt("It is capable of doing %s of damage for your level\n\r") % 
+  sendTo(COLOR_OBJECTS, format("It is capable of doing %s of damage for your level\n\r") % 
          describe_damage((int) av_dam, this));
 #else
   double av_dam = obj->baseDamage();
   av_dam += (double) obj->itemDamroll();
   av_dam = GetApprox((int) av_dam, learn);
 
-  sendTo(COLOR_OBJECTS,fmt("It's capable of doing %s damage.\n\r") %
+  sendTo(COLOR_OBJECTS,format("It's capable of doing %s damage.\n\r") %
           ((av_dam < 1) ? "exceptionally low" :
           ((av_dam < 2) ? "incredibly low" :
           ((av_dam < 3) ? "very low" :
@@ -4719,14 +4719,14 @@ void TBeing::describeArmor(const TBaseClothing *obj, int learn)
   else
     tStLevel = "way too much of an amount";
 
-  sendTo(COLOR_OBJECTS, fmt("This supplies %s of protection for your class and level\n\r") %
+  sendTo(COLOR_OBJECTS, format("This supplies %s of protection for your class and level\n\r") %
          tStLevel);
 #else
   int armor = 0;    // works in reverse here.  armor > 0 is GOOD
   armor -= obj->itemAC();
   armor = GetApprox(armor, learn);
 
-  sendTo(COLOR_OBJECTS,fmt("In terms of armor quality, it ranks as %s.\n\r") %
+  sendTo(COLOR_OBJECTS,format("In terms of armor quality, it ranks as %s.\n\r") %
       ((armor < 0) ? "being more hurt then help" :
       ((armor < 2) ? "being virtually non-existant" :
       ((armor < 4) ? "being exceptionally low" :
@@ -4795,7 +4795,7 @@ void TBeing::describeArrowDamage(const TArrow *obj, int learn)
   av_dam += (double) obj->itemDamroll();
   av_dam = GetApprox((int) av_dam, learn);
 
-  sendTo(COLOR_OBJECTS, fmt("It's capable of doing %s damage.\n\r") %
+  sendTo(COLOR_OBJECTS, format("It's capable of doing %s damage.\n\r") %
           ((av_dam < 1) ? "exceptionally low" :
           ((av_dam < 2) ? "incredibly low" :
           ((av_dam < 3) ? "very low" :
@@ -4854,7 +4854,7 @@ void TBeing::describeArrowSharpness(const TArrow *obj, int learn)
   else
     strcpy(sharpbuf, "extremely dull");
  
-  sendTo(COLOR_OBJECTS, fmt("%s has a tip that is %s.\n\r") % sstring(capbuf).cap() % sharpbuf);
+  sendTo(COLOR_OBJECTS, format("%s has a tip that is %s.\n\r") % sstring(capbuf).cap() % sharpbuf);
 
 }
 
@@ -4873,7 +4873,7 @@ void TBeing::describeNoise(const TObj *obj, int learn) const
   char capbuf[160];
   strncpy(capbuf, objs(obj), cElements(capbuf));
 
-  sendTo(COLOR_OBJECTS, fmt("%s is %s.\n\r") % sstring(capbuf).cap() %
+  sendTo(COLOR_OBJECTS, format("%s is %s.\n\r") % sstring(capbuf).cap() %
           ((iNoise < -9) ? "beyond silent" :
           ((iNoise < -5) ? "extremely silent" :
           ((iNoise < -2) ? "very silent" :
@@ -4893,7 +4893,7 @@ void TBeing::describeRoomLight()
 {
   int illum = roomp->getLight();
 
-  sendTo(COLOR_BASIC, fmt("This area is %s.\n\r") % 
+  sendTo(COLOR_BASIC, format("This area is %s.\n\r") % 
           ((illum < -4) ? "<k>super dark<1>" :
           ((illum < 0) ? "<k>pitch dark<1>" :
           ((illum < 1) ? "<k>dark<1>" :
@@ -4909,7 +4909,7 @@ void TBeing::describeRoomLight()
 void TBeing::describeGround()
 {
   if(!roomp->describeGroundWeather().empty()){
-    sendTo(COLOR_BASIC, fmt("The %s is %s.\n\r") %
+    sendTo(COLOR_BASIC, format("The %s is %s.\n\r") %
 	   roomp->describeGroundType() % roomp->describeGroundWeather());
   }
 }
@@ -4924,7 +4924,7 @@ void TBeing::describeBowRange(const TBow *obj, int learn)
   char capbuf[160];
   strncpy(capbuf, objs(obj), cElements(capbuf));
 
-  sendTo(COLOR_OBJECTS, fmt("%s can %s.\n\r") % sstring(capbuf).cap() %
+  sendTo(COLOR_OBJECTS, format("%s can %s.\n\r") % sstring(capbuf).cap() %
           ((range < 1) ? "not shoot out of the immediate area" :
           ((range < 3) ? "barely shoot beyond arm's length" :
           ((range < 5) ? "shoot a short distance" :
@@ -4944,7 +4944,7 @@ void TBeing::describeMagicLevel(const TMagicItem *obj, int learn) const
   int level = GetApprox(obj->getMagicLevel(), learn);
   level = max(level,0);
 
-  sendTo(COLOR_OBJECTS, fmt("Spells from %s seem to be cast at %s level.\n\r") % 
+  sendTo(COLOR_OBJECTS, format("Spells from %s seem to be cast at %s level.\n\r") % 
 	 sstring(objs(obj)).uncap() %
           numberAsString(level));
 
@@ -4977,7 +4977,7 @@ void TBeing::describeMagicLearnedness(const TMagicItem *obj, int learn) const
 
   int level = GetApprox(obj->getMagicLearnedness(), learn);
 
-  sendTo(COLOR_OBJECTS, fmt("The learnedness of the spells in %s is: %s.\n\r") %
+  sendTo(COLOR_OBJECTS, format("The learnedness of the spells in %s is: %s.\n\r") %
 	 sstring(objs(obj)).uncap() %
 	 how_good(level));
 }
@@ -4991,7 +4991,7 @@ void TBeing::describeMagicSpell(const TMagicItem *obj, int learn)
   int level = GetApprox(getSkillLevel(SKILL_EVALUATE), learn);
 
   if (obj->getMagicLevel() > level) {
-    sendTo(COLOR_OBJECTS, fmt("You can tell nothing about the spells %s produces.\n\r") % 
+    sendTo(COLOR_OBJECTS, format("You can tell nothing about the spells %s produces.\n\r") % 
 	   sstring(objs(obj)).uncap());
     return;
   }
@@ -5009,10 +5009,10 @@ void TWand::descMagicSpells(TBeing *ch) const
   if ((iSpell = getSpell()) >= MIN_SPELL && discArray[iSpell] &&
       ((das = getDisciplineNumber(iSpell, FALSE)) != DISC_NONE)) {
     if (ch->doesKnowSkill(iSpell))
-      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % sstring(capbuf).cap() % 
+      ch->sendTo(COLOR_OBJECTS, format("%s produces: %s.\n\r") % sstring(capbuf).cap() % 
             discArray[iSpell]->name);
     else
-      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap() %  discNames[das].properName);
+      ch->sendTo(COLOR_OBJECTS, format("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap() %  discNames[das].properName);
   }
 
   return;
@@ -5028,10 +5028,10 @@ void TStaff::descMagicSpells(TBeing *ch) const
   if ((iSpell = getSpell()) >= MIN_SPELL && discArray[iSpell] &&
       ((das = getDisciplineNumber(iSpell, FALSE)) != DISC_NONE)) {
     if (ch->doesKnowSkill(iSpell))
-      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % sstring(capbuf).cap() % 
+      ch->sendTo(COLOR_OBJECTS, format("%s produces: %s.\n\r") % sstring(capbuf).cap() % 
             discArray[iSpell]->name);
     else
-      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap() %  discNames[das].properName);
+      ch->sendTo(COLOR_OBJECTS, format("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap() %  discNames[das].properName);
   }
 
   return;
@@ -5048,30 +5048,30 @@ void TScroll::descMagicSpells(TBeing *ch) const
   if (spell > TYPE_UNDEFINED && discArray[spell] &&
       ((das = getDisciplineNumber(spell, FALSE)) != DISC_NONE)) {
     if (ch->doesKnowSkill(spell))
-      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % sstring(capbuf).cap() % 
+      ch->sendTo(COLOR_OBJECTS, format("%s produces: %s.\n\r") % sstring(capbuf).cap() % 
             discArray[spell]->name);
     else
-      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap() %  discNames[das].properName);
+      ch->sendTo(COLOR_OBJECTS, format("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap() %  discNames[das].properName);
   }
 
   spell = getSpell(1);
   if (spell > TYPE_UNDEFINED && discArray[spell] &&
       ((das = getDisciplineNumber(spell, FALSE)) != DISC_NONE)) {
     if (ch->doesKnowSkill(spell))
-      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % sstring(capbuf).cap() % 
+      ch->sendTo(COLOR_OBJECTS, format("%s produces: %s.\n\r") % sstring(capbuf).cap() % 
             discArray[spell]->name);
     else
-       ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap() % discNames[das].properName);
+       ch->sendTo(COLOR_OBJECTS, format("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap() % discNames[das].properName);
   }
 
   spell = getSpell(2);
   if (spell > TYPE_UNDEFINED && discArray[spell] &&
       ((das = getDisciplineNumber(spell, FALSE)) != DISC_NONE)) {
     if (ch->doesKnowSkill(spell))
-      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % sstring(capbuf).cap() % 
+      ch->sendTo(COLOR_OBJECTS, format("%s produces: %s.\n\r") % sstring(capbuf).cap() % 
             discArray[spell]->name);
     else
-       ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap() % discNames[das].properName);
+       ch->sendTo(COLOR_OBJECTS, format("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap() % discNames[das].properName);
   }
 
   return;
@@ -5094,7 +5094,7 @@ void TBeing::describeSymbolOunces(const TSymbol *obj, int learn) const
   char capbuf[160];
   strncpy(capbuf, objs(obj), cElements(capbuf));
 
-  sendTo(COLOR_OBJECTS, fmt("%s requires about %d ounce%s of holy water to attune.\n\r") % sstring(capbuf).cap() % amt % (amt == 1 ? "" : "s"));
+  sendTo(COLOR_OBJECTS, format("%s requires about %d ounce%s of holy water to attune.\n\r") % sstring(capbuf).cap() % amt % (amt == 1 ? "" : "s"));
 
   return;
 }
@@ -5105,11 +5105,11 @@ void TBeing::describeComponentUseage(const TComponent *obj, int) const
   strncpy(capbuf, objs(obj), cElements(capbuf));
 
   if (IS_SET(obj->getComponentType(), COMP_SPELL))
-    sendTo(COLOR_OBJECTS, fmt("%s is a component used in creating magic.\n\r") % sstring(capbuf).cap());
+    sendTo(COLOR_OBJECTS, format("%s is a component used in creating magic.\n\r") % sstring(capbuf).cap());
   else if (IS_SET(obj->getComponentType(), COMP_POTION))
-    sendTo(COLOR_OBJECTS, fmt("%s is a component used to brew potions.\n\r") % sstring(capbuf).cap());
+    sendTo(COLOR_OBJECTS, format("%s is a component used to brew potions.\n\r") % sstring(capbuf).cap());
   else if (IS_SET(obj->getComponentType(), COMP_SCRIBE))
-    sendTo(COLOR_OBJECTS, fmt("%s is a component used during scribing.\n\r") % sstring(capbuf).cap());
+    sendTo(COLOR_OBJECTS, format("%s is a component used during scribing.\n\r") % sstring(capbuf).cap());
 
   return;
 }
@@ -5125,7 +5125,7 @@ void TBeing::describeComponentDecay(const TComponent *obj, int learn) const
   char capbuf[160];
   strncpy(capbuf, objs(obj), cElements(capbuf));
 
-  sendTo(COLOR_OBJECTS, fmt("%s will last ") % sstring(capbuf).cap());
+  sendTo(COLOR_OBJECTS, format("%s will last ") % sstring(capbuf).cap());
 
   if (!obj->isComponentType(COMP_DECAY)) {
     sendTo("well into the future.\n\r");
@@ -5158,7 +5158,7 @@ void TBeing::describeComponentSpell(const TComponent *obj, int learn) const
 
 #if 0
   if (obj->getMagicLevel() > level) {
-    sendTo(COLOR_OBJECTS, fmt("You can tell nothing about the spell %s is used for.\n\r") % 
+    sendTo(COLOR_OBJECTS, format("You can tell nothing about the spell %s is used for.\n\r") % 
 	   sstring(objs(obj)).uncap());
     return;
   }
@@ -5167,7 +5167,7 @@ void TBeing::describeComponentSpell(const TComponent *obj, int learn) const
   int which = obj->getComponentSpell();
 
   if (which >= 0 && discArray[which])
-    sendTo(COLOR_OBJECTS, fmt("%s is used for: %s.\n\r") % 
+    sendTo(COLOR_OBJECTS, format("%s is used for: %s.\n\r") % 
 	   sstring(objs(obj)).cap() %
           discArray[which]->name);
 
@@ -5202,39 +5202,39 @@ sstring describeMaterial(int mat)
   mat_name=material_nums[mat].mat_name;
   mat_name=mat_name.cap();
 
-  str += fmt("%s is %d%c susceptible to slash attacks.\n\r") %
+  str += format("%s is %d%c susceptible to slash attacks.\n\r") %
     mat_name % material_nums[mat].cut_susc % '%';
 
-  str += fmt("%s is %d%c susceptible to pierce attacks.\n\r") %
+  str += format("%s is %d%c susceptible to pierce attacks.\n\r") %
     mat_name % material_nums[mat].pierced_susc % '%';
 
-  str += fmt("%s is %d%c susceptible to blunt attacks.\n\r") %
+  str += format("%s is %d%c susceptible to blunt attacks.\n\r") %
     mat_name % material_nums[mat].smash_susc % '%';
 
-  str += fmt("%s is %d%c susceptible to flame attacks.\n\r") %
+  str += format("%s is %d%c susceptible to flame attacks.\n\r") %
     mat_name % material_nums[mat].burned_susc % '%';
 
-  str += fmt("%s is %d%c susceptible to acid attacks.\n\r") %
+  str += format("%s is %d%c susceptible to acid attacks.\n\r") %
     mat_name % material_nums[mat].acid_susc % '%';
 
-  str += fmt("%s is %d%c susceptible to water erosion, and suffers %d damage per erosion.\n\r") %
+  str += format("%s is %d%c susceptible to water erosion, and suffers %d damage per erosion.\n\r") %
     mat_name % (material_nums[mat].water_susc%10 * 10) % '%' %
     (material_nums[mat].water_susc/10);
 
-  str += fmt("%s is %d%c susceptible to fall shock, and suffers %d damage per shock.\n\r") %
+  str += format("%s is %d%c susceptible to fall shock, and suffers %d damage per shock.\n\r") %
     mat_name % (material_nums[mat].fall_susc%10 *10) % '%' %
     (material_nums[mat].fall_susc/10);
 
-  str += fmt("%s has a hardness of %d units.\n\r") %
+  str += format("%s has a hardness of %d units.\n\r") %
     mat_name % material_nums[mat].hardness;
 
-  str += fmt("%s has a compaction ratio of %d:1.\n\r") %
+  str += format("%s has a compaction ratio of %d:1.\n\r") %
     mat_name % material_nums[mat].vol_mult;
 
-  str += fmt("%s is %sconsidered a conductive material.\n\r") %
+  str += format("%s is %sconsidered a conductive material.\n\r") %
     mat_name % (material_nums[mat].conductivity ? "" : "not ");
 
-  str += fmt("%s is worth %f talens per unit.\n\r") %
+  str += format("%s is worth %f talens per unit.\n\r") %
     mat_name % material_nums[mat].price;
 
   return str;
@@ -5250,7 +5250,7 @@ void TBeing::sendRoomName(TRoom *rp) const
   if (!d)
     return;
 
-  clientBuf = fmt("\200%d|") % CLIENT_ROOMNAME;
+  clientBuf = format("\200%d|") % CLIENT_ROOMNAME;
 
   rFlagStr = sstring((rFlags & ROOM_PEACEFUL) ? " [PEACEFUL]" : "") +
              sstring((rFlags & ROOM_NO_HEAL) ? " [NOHEAL]" : "") +
@@ -5263,13 +5263,13 @@ void TBeing::sendRoomName(TRoom *rp) const
 
   if (IS_SET(desc->plr_color, PLR_COLOR_ROOM_NAME)) {
     if (hasColorStrings(this, rp->getName(), 2)) {
-      sendTo(COLOR_ROOM_NAME,fmt("%s%s%s%s%s%s\n\r") % 
+      sendTo(COLOR_ROOM_NAME,format("%s%s%s%s%s%s\n\r") % 
                 (d->m_bIsClient ? clientBuf : "") %
                 dynColorRoom(rp, 1, TRUE) %
                 norm() % red() % 
                 rFlagStr % norm());
     } else {
-      sendTo(COLOR_ROOM_NAME,fmt("%s%s%s%s%s%s%s\n\r") % 
+      sendTo(COLOR_ROOM_NAME,format("%s%s%s%s%s%s%s\n\r") % 
                 (d->m_bIsClient ? clientBuf : "") %
                 addColorRoom(rp, 1) %
                 rp->getName() % norm() % red() %  
@@ -5277,20 +5277,20 @@ void TBeing::sendRoomName(TRoom *rp) const
     }
   } else {
     if (hasColorStrings(this, rp->getName(), 2)) {
-      sendTo(COLOR_BASIC,fmt("%s%s%s%s%s%s\n\r") % 
+      sendTo(COLOR_BASIC,format("%s%s%s%s%s%s\n\r") % 
               (d->m_bIsClient ? clientBuf : "") % purple() % 
               colorString(this, desc, rp->getName(), NULL, COLOR_NONE, FALSE) %
               red() %
               rFlagStr % norm());
     } else {
-      sendTo(COLOR_BASIC,fmt("%s%s%s%s%s%s\n\r") % 
+      sendTo(COLOR_BASIC,format("%s%s%s%s%s%s\n\r") % 
 	     (d->m_bIsClient ? clientBuf : "") % 
              purple() %rp->getName() % red() %
              rFlagStr % norm());
     }
   }
   if (isImmortal() && (desc->prompt_d.type & PROMPT_BUILDER_ASSISTANT)) {
-    sendTo(fmt("{ %s%s%s%s%s%s%s%s%s%s%s%s%s%s}\n\r") %
+    sendTo(format("{ %s%s%s%s%s%s%s%s%s%s%s%s%s%s}\n\r") %
            (rFlags == 0 ?
 	    "--none-- "       : "") %
            (!(rFlags & (ROOM_ALWAYS_LIT | ROOM_NO_MOB    | ROOM_INDOORS |
@@ -5321,16 +5321,16 @@ void TBeing::sendRoomDesc(TRoom *rp) const
 
   if (hasColorStrings(this, tmp, 2)) {
     if (rp->isRoomFlag(ROOM_NO_AUTOFORMAT)) {
-      sendTo(COLOR_ROOMS, fmt("%s%s") % dynColorRoom(rp, 2, TRUE).toCRLF() % norm());
+      sendTo(COLOR_ROOMS, format("%s%s") % dynColorRoom(rp, 2, TRUE).toCRLF() % norm());
     } else {
-      sendTo(COLOR_ROOMS, fmt("%s%s") % autoFormatDesc(dynColorRoom(rp, 2, TRUE), true) % norm());
+      sendTo(COLOR_ROOMS, format("%s%s") % autoFormatDesc(dynColorRoom(rp, 2, TRUE), true) % norm());
     }
   } else {
     if (rp->isRoomFlag(ROOM_NO_AUTOFORMAT)) {
-      sendTo(COLOR_ROOMS, fmt("%s%s%s") % addColorRoom(rp, 2) % tmp.toCRLF() % norm());
-      // sendTo(COLOR_ROOMS, fmt("%s%s%s") % addColorRoom(rp % 2) % autoFormatDesc(rp->getDescr() % true % true) % norm());
+      sendTo(COLOR_ROOMS, format("%s%s%s") % addColorRoom(rp, 2) % tmp.toCRLF() % norm());
+      // sendTo(COLOR_ROOMS, format("%s%s%s") % addColorRoom(rp % 2) % autoFormatDesc(rp->getDescr() % true % true) % norm());
     } else {
-      sendTo(COLOR_ROOMS, fmt("%s%s%s") % addColorRoom(rp, 2) % autoFormatDesc(tmp, true) % norm());
+      sendTo(COLOR_ROOMS, format("%s%s%s") % addColorRoom(rp, 2) % autoFormatDesc(tmp, true) % norm());
     }
   }
 }
@@ -5349,7 +5349,7 @@ void TBeing::describeTrapLevel(const TTrap *obj, int learn) const
   int level = GetApprox(obj->getTrapLevel(), learn);
   level = max(level,0);
 
-  sendTo(COLOR_OBJECTS, fmt("%s seems to be a %s level trap.\n\r") % 
+  sendTo(COLOR_OBJECTS, format("%s seems to be a %s level trap.\n\r") % 
        sstring(objs(obj)).cap() % numberAsString(level));
 }
 
@@ -5361,7 +5361,7 @@ void TBeing::describeTrapCharges(const TTrap *obj, int learn) const
   int level = GetApprox(obj->getTrapCharges(), learn);
   level = max(level,0);
 
-  sendTo(COLOR_OBJECTS, fmt("%s seems to have %d charge%s left.\n\r") % 
+  sendTo(COLOR_OBJECTS, format("%s seems to have %d charge%s left.\n\r") % 
        sstring(objs(obj)).cap() % level % (level == 1 ? "" : "s"));
 }
 
@@ -5370,7 +5370,7 @@ void TBeing::describeTrapDamType(const TTrap *obj, int) const
   if (!doesKnowSkill(SKILL_DETECT_TRAP))
     return;
 
-  sendTo(COLOR_OBJECTS, fmt("You suspect %s is %s %s trap.\n\r") % 
+  sendTo(COLOR_OBJECTS, format("You suspect %s is %s %s trap.\n\r") % 
        sstring(objs(obj)).uncap() %
        (trap_types[obj->getTrapDamType()].startsVowel() ? "an" : "a") %
        trap_types[obj->getTrapDamType()].uncap());
@@ -5503,7 +5503,7 @@ void TBeing::doSpells(const sstring &argument)
       i = skillSortVec[j].theSkill;
       das = getDisciplineNumber(i, FALSE);
       if (das == DISC_NONE) {
-        vlogf(LOG_BUG, fmt("Bad disc for skill %d in doSpells") %  i);
+        vlogf(LOG_BUG, format("Bad disc for skill %d in doSpells") %  i);
         continue;
       }
       cd = getDiscipline(das);
@@ -5742,7 +5742,7 @@ void TBeing::doRituals(const sstring &argument)
       i = skillSortVec[j].theSkill;
       das = getDisciplineNumber(i, FALSE);
       if (das == DISC_NONE) {
-        vlogf(LOG_BUG, fmt("Bad disc for skill %d in doRituals") %  i);
+        vlogf(LOG_BUG, format("Bad disc for skill %d in doRituals") %  i);
         continue;
       }
       cd = getDiscipline(das);
@@ -5963,7 +5963,7 @@ void TBeing::doPrayers(const sstring &argument)
       i = skillSortVec[j].theSkill;
       das = getDisciplineNumber(i, FALSE);
       if (das == DISC_NONE) {
-        vlogf(LOG_BUG, fmt("Bad disc for skill %d in doPrayers") %  i);
+        vlogf(LOG_BUG, format("Bad disc for skill %d in doPrayers") %  i);
           continue;
       }
       cd = getDiscipline(das);

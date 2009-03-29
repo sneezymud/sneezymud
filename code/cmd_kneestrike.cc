@@ -67,7 +67,7 @@ bool TBeing::canKneestrike(TBeing *victim, silentTypeT silent)
 
   if (victim->getPosition() < POSITION_STANDING){
     if (!silent)
-      sendTo(fmt("That might work, but your victim seems to be on the %s.\n\r") % 
+      sendTo(format("That might work, but your victim seems to be on the %s.\n\r") % 
 		   roomp->describeGround());
     return FALSE;
   }
@@ -315,7 +315,7 @@ static int kneestrikeHit(TBeing *c, TBeing *victim)
 	dam += 10;
 	victim->cantHit += victim->loseRound(0.25);
       } else {
-	victim->sendTo(fmt("Good thing you were wearing your %s.\n\r") %
+	victim->sendTo(format("Good thing you were wearing your %s.\n\r") %
 		       fname(victim->equipment[WEAR_WAIST]->name));
       }
     } else {

@@ -77,7 +77,7 @@ void TTool::addToToolMaxUses(int r)
 void TTool::assignFourValues(int x1, int x2, int x3, int)
 {
   if (x1 < MIN_TOOL_TYPE || x1 >= MAX_TOOL_TYPE) {
-    vlogf(LOG_LOW, fmt("Bad toolTypeT value %d on %s!") %  x1 % getName());
+    vlogf(LOG_LOW, format("Bad toolTypeT value %d on %s!") %  x1 % getName());
     x1 = MIN_TOOL_TYPE;
   }
 

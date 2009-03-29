@@ -60,10 +60,10 @@ sstring getPlayerNames(int account_id)
 	   account_id);
 
   if(db.fetchRow())
-    names=fmt("'%s'") % db["name"];
+    names=format("'%s'") % db["name"];
 
   while(db.fetchRow()){
-    names+=fmt(", '%s'") % db["name"];
+    names+=format(", '%s'") % db["name"];
   }
 
   return names;
@@ -522,16 +522,16 @@ void sendShowExtra(int account_id, int vnum)
     cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
     cout << "<table border=1>";
 
-    cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "vnum" % "vnum" % db["vnum"];
-    cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "name" % "name" % db["name"];
+    cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "vnum" % "vnum" % db["vnum"];
+    cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "name" % "name" % db["name"];
 
     sstring buf=db["description"];
     while (buf.find("'") != sstring::npos)
       buf.replace(buf.find("'"), 1, "&#39;");
 
-    cout << fmt("<tr><td>%s</td><td><textarea name=description cols=90 rows=5>%s</textarea></td></tr>\n") % "description" % buf;
+    cout << format("<tr><td>%s</td><td><textarea name=description cols=90 rows=5>%s</textarea></td></tr>\n") % "description" % buf;
 
-    cout << fmt("<tr><td></td><td width=80 bgcolor=black>%s</td></tr>\n") %
+    cout << format("<tr><td></td><td width=80 bgcolor=black>%s</td></tr>\n") %
       mudColorToHTML(db["description"]);
     
     cout << "</table>";    
@@ -570,7 +570,7 @@ sstring getItemTypeForm(int selected)
 
   sstring buf="<tr><td>type</td><td><select name=type>\n";
   for(it=m.begin();it!=m.end();++it){
-    buf+=fmt("<option value=%i %s>%s</option>\n") %
+    buf+=format("<option value=%i %s>%s</option>\n") %
       (*it).second % (((*it).second==selected)?"selected":"") % 
       (*it).first;
   }
@@ -617,10 +617,10 @@ void sendShowAffect(int account_id, int vnum)
     cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
     cout << "<table border=1>";
 
-    cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "vnum" % "vnum" % db["vnum"];
+    cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "vnum" % "vnum" % db["vnum"];
     cout << getItemTypeForm(convertTo<int>(db["type"]));
-    cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "mod1" % "mod1" % db["mod1"];
-    cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "mod2" % "mod2" % db["mod2"];
+    cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "mod1" % "mod1" % db["mod1"];
+    cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "mod2" % "mod2" % db["mod2"];
 
     
     cout << "</table>";    
@@ -661,7 +661,7 @@ sstring getMaterialForm(int selected)
 
   sstring buf="<tr><td>material</td><td><select name=material>\n";
   for(it=m.begin();it!=m.end();++it){
-    buf+=fmt("<option value=%i %s>%s</option>\n") %
+    buf+=format("<option value=%i %s>%s</option>\n") %
       (*it).second % (((*it).second==selected)?"selected":"") % 
       (*it).first;
   }
@@ -683,7 +683,7 @@ sstring getTypesForm(int selected)
 
   sstring buf="<tr><td>type</td><td><select name=type>\n";
   for(it=m.begin();it!=m.end();++it){
-    buf+=fmt("<option value=%i %s>%s</option>\n") %
+    buf+=format("<option value=%i %s>%s</option>\n") %
       (*it).second % (((*it).second==selected)?"selected":"") % 
       (*it).first;
   }
@@ -710,7 +710,7 @@ sstring getProcForm(int selected, bool wizard)
     if(objSpecials[(*it).second].assignable || 
        (*it).second==selected ||
        wizard){
-      buf+=fmt("<option value=%i %s>%s</option>\n") %
+      buf+=format("<option value=%i %s>%s</option>\n") %
 	(*it).second % (((*it).second==selected)?"selected":"") % 
 	(*it).first;
     }
@@ -752,29 +752,29 @@ void sendShowObj(int account_id, int vnum, bool wizard)
   cout << "<table border=1>";
 
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "vnum" % "vnum" % db["vnum"];
+  cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "vnum" % "vnum" % db["vnum"];
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "name" % "name" % db["name"];
+  cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "name" % "name" % db["name"];
 
   sstring buf=db["short_desc"];
   while (buf.find("'") != sstring::npos)
     buf.replace(buf.find("'"), 1, "&#39;");
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "short_desc" % "short_desc" % buf;
+  cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "short_desc" % "short_desc" % buf;
 
-  cout << fmt("<tr><td></td><td bgcolor=black>%s</td></tr>\n") % 
+  cout << format("<tr><td></td><td bgcolor=black>%s</td></tr>\n") % 
     mudColorToHTML(db["short_desc"]);
 
   buf=db["long_desc"];
   while (buf.find("'") != sstring::npos)
     buf.replace(buf.find("'"), 1, "&#39;");
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "long_desc" % "long_desc" % buf;
+  cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "long_desc" % "long_desc" % buf;
 
-  cout << fmt("<tr><td></td><td bgcolor=black>%s</td></tr>\n") % 
+  cout << format("<tr><td></td><td bgcolor=black>%s</td></tr>\n") % 
     mudColorToHTML(db["long_desc"]);
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "action_desc" % "action_desc" % db["action_desc"];
+  cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "action_desc" % "action_desc" % db["action_desc"];
 
   cout << getTypesForm(convertTo<int>(db["type"]));
 
@@ -782,7 +782,7 @@ void sendShowObj(int account_id, int vnum, bool wizard)
   cout << "<tr><td>action_flag</td><td><table><tr>" << endl;
   int action_flag=convertTo<int>(db["action_flag"]);
   for(int i=0;i<MAX_OBJ_STAT;++i){
-    cout << fmt("<td><input type=checkbox %s name='%s'> %s") %
+    cout << format("<td><input type=checkbox %s name='%s'> %s") %
       ((action_flag & (1<<i))?"checked":"") % extra_bits[i] % extra_bits[i];
 
     cout << "</td>";
@@ -798,7 +798,7 @@ void sendShowObj(int account_id, int vnum, bool wizard)
   cout << "<tr><td>wear_flag</td><td><table><tr>" << endl;
   int wear_flag=convertTo<int>(db["wear_flag"]);
   for(unsigned int i=0;i<MAX_ITEM_WEARS;++i){
-    cout << fmt("<td><input type=checkbox %s name='%s'> %s</td>") %
+    cout << format("<td><input type=checkbox %s name='%s'> %s</td>") %
       ((wear_flag & (1<<i))?"checked":"") % wear_bits[i] % wear_bits[i];
 
     if(!((i+1) % 8))
@@ -810,46 +810,46 @@ void sendShowObj(int account_id, int vnum, bool wizard)
    * Added to compute the 4 values bit vectors for weapons *
    *********************************************************/
   if (convertTo<int>(db["type"]) == 5) {
-    cout << fmt("<script language=JavaScript>\n");
-    cout << fmt("function val_check(val, field){\n");
-    cout << fmt("  for(var i=0;i<val.length;i++){\n");
-    cout << fmt("    if(!is_digit(val.charAt(i))){\n");
-    cout << fmt("      document.saveobj[field].value = 0;\n");
-    cout << fmt("      return 0;\n");
-    cout << fmt("    }\n");
-    cout << fmt("  }\n");
-    cout << fmt("  return val;\n");
-    cout << fmt("}\n");
-    cout << fmt("function is_digit(num){\n");
-    cout << fmt("  var string='1234567890.';\n");
-    cout << fmt("  if (string.indexOf(num)!=-1){\n");
-    cout << fmt("    return true;\n");
-    cout << fmt("  }\n");
-    cout << fmt("  return false;\n");
-    cout << fmt("}\n");
-    cout << fmt("\n");
-    cout << fmt("function compute_weap_x0(){\n");
-    cout << fmt("  document.saveobj.val0.value = 1 * (val_check(document.saveobj.sharp_cur.value, 'sharp_cur')) + (val_check(document.saveobj.sharp_max.value, 'sharp_max') << 8);\n");
-    cout << fmt("}\n");
-    cout << fmt("\n");
-    cout << fmt("function compute_weap_x1(){\n");
-    cout << fmt("  document.saveobj.val1.value = 1 * (val_check(document.saveobj.dam_lev.value, 'dam_lev') * 4) + (val_check(document.saveobj.dam_dev.value, 'dam_dev') << 8);\n");
-    cout << fmt("  weap_dam()\n");
-    cout << fmt("}\n");
-    cout << fmt("\n");
-    cout << fmt("function compute_weap_x2(){\n");
-    cout << fmt("  document.saveobj.val2.value = 1 * (val_check(document.saveobj.weap_type_1.value, 'weap_type_1')) + (val_check(document.saveobj.weap_freq_1.value, 'weap_freq_1') << 8) + (val_check(document.saveobj.weap_type_2.value, 'weap_type_2') << 16) + (val_check(document.saveobj.weap_freq_2.value, 'weap_freq_2') << 24);\n");
-    cout << fmt("}\n");
-    cout << fmt("\n");
-    cout << fmt("function compute_weap_x3(){\n");
-    cout << fmt("  document.saveobj.val3.value = 1 * (val_check(document.saveobj.weap_type_3.value, 'weap_type_3')) + (val_check(document.saveobj.weap_freq_3.value, 'weap_freq_3') << 8);\n");
-    cout << fmt("}\n");
-    cout << fmt("function weap_dam(){\n");
-    cout << fmt("  base = val_check(document.saveobj.dam_lev.value, 'dam_lev') * 1.75;\n");
-    cout << fmt("  flux = parseInt(base * val_check(document.saveobj.dam_dev.value, 'dam_dev') / 10);\n");
-    cout << fmt("  document.saveobj.weap_dam.value = parseInt(base - flux) + ' - ' + parseInt(base + flux) + ' avg of ' + parseInt(base);\n");
-    cout << fmt("}\n");
-    cout << fmt("</script>\n") << endl;
+    cout << format("<script language=JavaScript>\n");
+    cout << format("function val_check(val, field){\n");
+    cout << format("  for(var i=0;i<val.length;i++){\n");
+    cout << format("    if(!is_digit(val.charAt(i))){\n");
+    cout << format("      document.saveobj[field].value = 0;\n");
+    cout << format("      return 0;\n");
+    cout << format("    }\n");
+    cout << format("  }\n");
+    cout << format("  return val;\n");
+    cout << format("}\n");
+    cout << format("function is_digit(num){\n");
+    cout << format("  var string='1234567890.';\n");
+    cout << format("  if (string.indexOf(num)!=-1){\n");
+    cout << format("    return true;\n");
+    cout << format("  }\n");
+    cout << format("  return false;\n");
+    cout << format("}\n");
+    cout << format("\n");
+    cout << format("function compute_weap_x0(){\n");
+    cout << format("  document.saveobj.val0.value = 1 * (val_check(document.saveobj.sharp_cur.value, 'sharp_cur')) + (val_check(document.saveobj.sharp_max.value, 'sharp_max') << 8);\n");
+    cout << format("}\n");
+    cout << format("\n");
+    cout << format("function compute_weap_x1(){\n");
+    cout << format("  document.saveobj.val1.value = 1 * (val_check(document.saveobj.dam_lev.value, 'dam_lev') * 4) + (val_check(document.saveobj.dam_dev.value, 'dam_dev') << 8);\n");
+    cout << format("  weap_dam()\n");
+    cout << format("}\n");
+    cout << format("\n");
+    cout << format("function compute_weap_x2(){\n");
+    cout << format("  document.saveobj.val2.value = 1 * (val_check(document.saveobj.weap_type_1.value, 'weap_type_1')) + (val_check(document.saveobj.weap_freq_1.value, 'weap_freq_1') << 8) + (val_check(document.saveobj.weap_type_2.value, 'weap_type_2') << 16) + (val_check(document.saveobj.weap_freq_2.value, 'weap_freq_2') << 24);\n");
+    cout << format("}\n");
+    cout << format("\n");
+    cout << format("function compute_weap_x3(){\n");
+    cout << format("  document.saveobj.val3.value = 1 * (val_check(document.saveobj.weap_type_3.value, 'weap_type_3')) + (val_check(document.saveobj.weap_freq_3.value, 'weap_freq_3') << 8);\n");
+    cout << format("}\n");
+    cout << format("function weap_dam(){\n");
+    cout << format("  base = val_check(document.saveobj.dam_lev.value, 'dam_lev') * 1.75;\n");
+    cout << format("  flux = parseInt(base * val_check(document.saveobj.dam_dev.value, 'dam_dev') / 10);\n");
+    cout << format("  document.saveobj.weap_dam.value = parseInt(base - flux) + ' - ' + parseInt(base + flux) + ' avg of ' + parseInt(base);\n");
+    cout << format("}\n");
+    cout << format("</script>\n") << endl;
 
     // wtf is up with javascript? multiplied values by 1 so it knows not to use the + operator for string concatenation
     
@@ -866,64 +866,64 @@ void sendShowObj(int account_id, int vnum, bool wizard)
     weaponT wt;
     
     // x0 - current and max sharpness
-    cout << fmt("<tr><td>%s<br>Bit # <input type=text size=12 name='%s' value='%s' style='border:0'></td>") % ItemInfo[convertTo<int>(db["type"])]->val0_info % "val0" % db["val0"] << endl;
-    cout << fmt("<td>Current sharpness <input type='text' size='15' maxlength='3' name='sharp_cur' value='%i' onchange='compute_weap_x0()'>\n<br>Maximum sharpness <input type='text' size='15' maxlength='3' name='sharp_max' value='%i' onchange='compute_weap_x0()'></td></tr>\n") % sharp_cur % sharp_max << endl;
+    cout << format("<tr><td>%s<br>Bit # <input type=text size=12 name='%s' value='%s' style='border:0'></td>") % ItemInfo[convertTo<int>(db["type"])]->val0_info % "val0" % db["val0"] << endl;
+    cout << format("<td>Current sharpness <input type='text' size='15' maxlength='3' name='sharp_cur' value='%i' onchange='compute_weap_x0()'>\n<br>Maximum sharpness <input type='text' size='15' maxlength='3' name='sharp_max' value='%i' onchange='compute_weap_x0()'></td></tr>\n") % sharp_cur % sharp_max << endl;
     
     // x1 - damage level and damage precision
-    cout << fmt("<tr><td>%s<br>Bit # <input type=text size=12 name='%s' value='%s' style='border:0'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=text size=24 name='weap_dam' value='' readonly style='border:0'></td>\n") % ItemInfo[convertTo<int>(db["type"])]->val1_info % "val1" % db["val1"];
-    cout << fmt("<td>Damage level <input type='text' size='15' maxlength='4' name='dam_lev' value='%i' onchange='compute_weap_x1()'> (no <b style='color:red'>NOT</b> multiply by 4 here)\n<br>Damage deviation <input type='text' size='15' maxlength='3' name='dam_dev' value='%i' onchange='compute_weap_x1()'></td></tr>\n") % dam_lev % dam_dev;
-    cout << fmt("<script>weap_dam();</script>") << endl;
+    cout << format("<tr><td>%s<br>Bit # <input type=text size=12 name='%s' value='%s' style='border:0'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=text size=24 name='weap_dam' value='' readonly style='border:0'></td>\n") % ItemInfo[convertTo<int>(db["type"])]->val1_info % "val1" % db["val1"];
+    cout << format("<td>Damage level <input type='text' size='15' maxlength='4' name='dam_lev' value='%i' onchange='compute_weap_x1()'> (no <b style='color:red'>NOT</b> multiply by 4 here)\n<br>Damage deviation <input type='text' size='15' maxlength='3' name='dam_dev' value='%i' onchange='compute_weap_x1()'></td></tr>\n") % dam_lev % dam_dev;
+    cout << format("<script>weap_dam();</script>") << endl;
     
     // x2 - attack rate 1 and attack rate 2
-    cout << fmt("<tr><td>%s<br>Bit # <input type=text size=12 name='%s' value='%s' style='border:0'></td>") % ItemInfo[convertTo<int>(db["type"])]->val2_info % "val2" % db["val2"] << endl;
+    cout << format("<tr><td>%s<br>Bit # <input type=text size=12 name='%s' value='%s' style='border:0'></td>") % ItemInfo[convertTo<int>(db["type"])]->val2_info % "val2" % db["val2"] << endl;
     
-    cout << fmt("<td>Type 1 <select type='select' name='weap_type_1' onchange='compute_weap_x2()'><option value='0'>None</option>") << endl;
+    cout << format("<td>Type 1 <select type='select' name='weap_type_1' onchange='compute_weap_x2()'><option value='0'>None</option>") << endl;
     for(wt = weaponT(WEAPON_TYPE_NONE + 1); wt < WEAPON_TYPE_MAX; wt = weaponT(wt + 1)) {
-      cout << fmt("<option value='%i'%s>%s</option>") % (int) wt % (((int) wt == weap_type_1) ? " selected" : "") % attack_hit_text[(int) ((mapWeaponT(wt) - TYPE_MIN_HIT))].singular << endl;
+      cout << format("<option value='%i'%s>%s</option>") % (int) wt % (((int) wt == weap_type_1) ? " selected" : "") % attack_hit_text[(int) ((mapWeaponT(wt) - TYPE_MIN_HIT))].singular << endl;
     }
-    cout << fmt("</select>&nbsp;&nbsp;&nbsp;Frequency 1 <input type='text' size='5' maxlength='3' name='weap_freq_1' value='%i' onchange='compute_weap_x2()'> %") % weap_freq_1 << endl;
+    cout << format("</select>&nbsp;&nbsp;&nbsp;Frequency 1 <input type='text' size='5' maxlength='3' name='weap_freq_1' value='%i' onchange='compute_weap_x2()'> %") % weap_freq_1 << endl;
     
-    cout << fmt("<br>Type 2 <select type='select' name='weap_type_2' onchange='compute_weap_x2()'><option value='0'>None</option>") << endl;
+    cout << format("<br>Type 2 <select type='select' name='weap_type_2' onchange='compute_weap_x2()'><option value='0'>None</option>") << endl;
     for(wt = weaponT(WEAPON_TYPE_NONE + 1); wt < WEAPON_TYPE_MAX; wt = weaponT(wt + 1)) {
-      cout << fmt("<option value='%i'%s>%s</option>") % (int) wt % (((int) wt == weap_type_2) ? " selected" : "") % attack_hit_text[(mapWeaponT(wt) - TYPE_MIN_HIT)].singular << endl;
+      cout << format("<option value='%i'%s>%s</option>") % (int) wt % (((int) wt == weap_type_2) ? " selected" : "") % attack_hit_text[(mapWeaponT(wt) - TYPE_MIN_HIT)].singular << endl;
     }
-    cout << fmt("</select>&nbsp;&nbsp;&nbsp;Frequency 2 <input type='text' size='5' maxlength='3' name='weap_freq_2' value='%i' onchange='compute_weap_x2()'> %</td></tr>") % weap_freq_2 << endl;
+    cout << format("</select>&nbsp;&nbsp;&nbsp;Frequency 2 <input type='text' size='5' maxlength='3' name='weap_freq_2' value='%i' onchange='compute_weap_x2()'> %</td></tr>") % weap_freq_2 << endl;
 
     // x3 - attack rate 3
-    cout << fmt("<tr><td>%s<br>Bit # <input type=text size=12 name='%s' value='%s' style='border:0'></td>\n") % ItemInfo[convertTo<int>(db["type"])]->val3_info % "val3" % db["val3"] << endl;
-    cout << fmt("<td>Type 3 <select type='select' name='weap_type_3' onchange='compute_weap_x3()'><option value='0'>None</option>");
+    cout << format("<tr><td>%s<br>Bit # <input type=text size=12 name='%s' value='%s' style='border:0'></td>\n") % ItemInfo[convertTo<int>(db["type"])]->val3_info % "val3" % db["val3"] << endl;
+    cout << format("<td>Type 3 <select type='select' name='weap_type_3' onchange='compute_weap_x3()'><option value='0'>None</option>");
     for(wt = weaponT(WEAPON_TYPE_NONE + 1); wt < WEAPON_TYPE_MAX; wt = weaponT(wt + 1)) {
-      cout << fmt("<option value='%i'%s>%s</option>") % (int) wt % (((int) wt == weap_type_3) ? " selected" : "") % attack_hit_text[(mapWeaponT(wt) - TYPE_MIN_HIT)].singular << endl;
+      cout << format("<option value='%i'%s>%s</option>") % (int) wt % (((int) wt == weap_type_3) ? " selected" : "") % attack_hit_text[(mapWeaponT(wt) - TYPE_MIN_HIT)].singular << endl;
     }
-    cout << fmt("</select>&nbsp;&nbsp;&nbsp;Frequency 3 <input type='text' size='5' maxlength='3' name='weap_freq_3' value='%i' onchange='compute_weap_x3()'> %</td></tr>") % weap_freq_3 << endl;
+    cout << format("</select>&nbsp;&nbsp;&nbsp;Frequency 3 <input type='text' size='5' maxlength='3' name='weap_freq_3' value='%i' onchange='compute_weap_x3()'> %</td></tr>") % weap_freq_3 << endl;
 
   } else {
 
-    cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % ItemInfo[convertTo<int>(db["type"])]->val0_info % "val0" % db["val0"];
+    cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % ItemInfo[convertTo<int>(db["type"])]->val0_info % "val0" % db["val0"];
 
-    cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % ItemInfo[convertTo<int>(db["type"])]->val1_info % "val1" % db["val1"];
+    cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % ItemInfo[convertTo<int>(db["type"])]->val1_info % "val1" % db["val1"];
 
-    cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % ItemInfo[convertTo<int>(db["type"])]->val2_info % "val2" % db["val2"];
+    cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % ItemInfo[convertTo<int>(db["type"])]->val2_info % "val2" % db["val2"];
 
-    cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % ItemInfo[convertTo<int>(db["type"])]->val3_info % "val3" % db["val3"] << endl;
+    cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % ItemInfo[convertTo<int>(db["type"])]->val3_info % "val3" % db["val3"] << endl;
   }
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "weight" % "weight" % db["weight"] << endl;
+  cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "weight" % "weight" % db["weight"] << endl;
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "price" % "price" % db["price"];
+  cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "price" % "price" % db["price"];
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "can_be_seen" % "can_be_seen" % db["can_be_seen"];
+  cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "can_be_seen" % "can_be_seen" % db["can_be_seen"];
 
   cout << getProcForm(convertTo<int>(db["spec_proc"]), wizard);
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "max_exist" % "max_exist" % db["max_exist"];
+  cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "max_exist" % "max_exist" % db["max_exist"];
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "max_struct" % "max_struct" % db["max_struct"];
+  cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "max_struct" % "max_struct" % db["max_struct"];
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "cur_struct" % "cur_struct" % db["cur_struct"];
+  cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "cur_struct" % "cur_struct" % db["cur_struct"];
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "decay" % "decay" % db["decay"];
+  cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "decay" % "decay" % db["decay"];
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "volume" % "volume" % db["volume"];
+  cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "volume" % "volume" % db["volume"];
 
 
   cout << getMaterialForm(convertTo<int>(db["material"]));
@@ -1096,7 +1096,7 @@ sstring mudColorToHTML(sstring str, bool spacer)
   if(!spacer)
     spacing_strip="";
 
-  return fmt("<span style=\"color:white\"><font face=\"courier\">%s%s</font></span>") % spacing_strip % str;
+  return format("<span style=\"color:white\"><font face=\"courier\">%s%s</font></span>") % spacing_strip % str;
 }
 
 spellNumT mapWeaponT(weaponT w) 

@@ -334,19 +334,19 @@ sstring TBeing::getInsult(TBeing *vict)
   }
   switch (::number(1,50)) {
     case 1:
-      buf = fmt("You %s %s") %buf2 % buf3;
+      buf = format("You %s %s") %buf2 % buf3;
       break;
     case 2:
-      buf = fmt("Goddamn %s %s") %buf2 % buf3;
+      buf = format("Goddamn %s %s") %buf2 % buf3;
       break;
     case 3:
-      buf = fmt("Damn %s") % buf3;
+      buf = format("Damn %s") % buf3;
       break;
     case 4:
       buf="Piece of doo-doo";
       break;
     case 5:
-      buf = fmt("Janky %s") %buf3;
+      buf = format("Janky %s") %buf3;
       break;
     case 6:
       buf="Dude, you got some heinous weenie-dog breath";
@@ -355,7 +355,7 @@ sstring TBeing::getInsult(TBeing *vict)
       buf=buf3;
       break;
     case 8:
-      buf = fmt("Mangy %s") %buf3;
+      buf = format("Mangy %s") %buf3;
       break;
     case 9:
       buf="Gnollish arsehat";
@@ -365,7 +365,7 @@ sstring TBeing::getInsult(TBeing *vict)
       break;
     case 11:
       if (getRace() != vict->getRace()) {
-        buf = fmt("All %s are idiots") % vict->getMyRace()->getProperName();
+        buf = format("All %s are idiots") % vict->getMyRace()->getProperName();
         break;
       } // else fall through
     case 12:
@@ -378,7 +378,7 @@ sstring TBeing::getInsult(TBeing *vict)
       buf = "Where'd you get that equipment?  I've seen better stuff in a dump";
       break;
     case 15:
-      buf = fmt("Hey %s, is it true your IQ is the same as your shoe size") % fname(vict->name);
+      buf = format("Hey %s, is it true your IQ is the same as your shoe size") % fname(vict->name);
       break;
     case 16:
       buf = "The only reason you were born is your dad could run faster than your mom";
@@ -453,7 +453,7 @@ sstring TBeing::getInsult(TBeing *vict)
       buf = "When are you going to stop going in circles?";
       break;
     case 40:
-      buf = fmt("We should go kill Mobatsu, %s is tanking") % fname(vict->name);
+      buf = format("We should go kill Mobatsu, %s is tanking") % fname(vict->name);
       break;
     case 41:
       buf = "Why? Why? Why? WHY? WHY??";
@@ -474,7 +474,7 @@ sstring TBeing::getInsult(TBeing *vict)
       buf = "Stop it";
       break;
     case 47:
-      buf = fmt("Stop wasting precious oxygen, you %s %s") %buf2 % buf3;
+      buf = format("Stop wasting precious oxygen, you %s %s") %buf2 % buf3;
       break;
     case 48:
       buf = "Your butt is on fire";
@@ -506,9 +506,9 @@ int TMonster::aiInsultDoer(TBeing *vict)
   if (canSpeak()) {
     buf=getInsult(vict);
 
-    buf2 = fmt("$n looks at you and says, \"%s\"") %buf;
+    buf2 = format("$n looks at you and says, \"%s\"") %buf;
     act(buf2,TRUE,this,0,vict,TO_VICT);
-    buf2 = fmt("$n looks at $N and says, \"%s\"") %buf;
+    buf2 = format("$n looks at $N and says, \"%s\"") %buf;
     act(buf2,TRUE,this,0,vict,TO_NOTVICT);
   }
 
@@ -815,11 +815,11 @@ int TMonster::aiMudSex(TBeing *doer)
       doSay("Come to me, I want you!");
       break;
     case 12:
-      buf = fmt("%s Will you still respect me in the morning?") %fname(doer->name);
+      buf = format("%s Will you still respect me in the morning?") %fname(doer->name);
       doAsk(buf);
       break;
     case 13:
-      buf = fmt("%s I love you for your body.") %fname(doer->name);
+      buf = format("%s I love you for your body.") %fname(doer->name);
       doWhisper(buf);
       break;
     default:
@@ -839,7 +839,7 @@ int TMonster::aiMudSexOther(TBeing *doer, TBeing *)
       doSay("Hey you two, get a room!");
       break;
     case 2:
-      doAsk(fmt("%s Hey, how about a menage a trois?") % fname(doer->name));
+      doAsk(format("%s Hey, how about a menage a trois?") % fname(doer->name));
       break;
     case 3:
       doSay("OK, no public displays of affection please!");
@@ -1031,15 +1031,15 @@ int TMonster::aiWimpSwitch(TBeing *vict)
     if (tSkill > mSkill) {
       sstring oMessage;
 
-      oMessage=fmt("%s attempts to switch to %s, but you block it.") %
+      oMessage=format("%s attempts to switch to %s, but you block it.") %
 	sstring(getName()).cap() % vict->getName();
       act(oMessage, TRUE, tank, 0, vict, TO_CHAR);
 
-      oMessage=fmt("%s attempts to switch to %s, but %s blocks it.") %
+      oMessage=format("%s attempts to switch to %s, but %s blocks it.") %
 	sstring(getName()).cap() % vict->getName() % tank->getName();
       act(oMessage, TRUE, tank, 0, vict, TO_NOTVICT);
 
-      oMessage=fmt("%s attempts to switch to you, but %s blocks it.") %
+      oMessage=format("%s attempts to switch to you, but %s blocks it.") %
 	sstring(getName()).cap() % tank->getName();
       act(oMessage, TRUE, tank, 0, vict, TO_VICT);
 
@@ -1112,7 +1112,7 @@ int TMonster::aiShoveReact(TBeing *doer, bool worked, dirTypeT dir)
     rc = goDirection(rev_dir[dir]);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       // we're not checking for death, log an error
-      vlogf(LOG_MOB_AI, fmt("error in shove react (%s shoving %d)") %   
+      vlogf(LOG_MOB_AI, format("error in shove react (%s shoving %d)") %   
           doer->getName() % dir);
       return DELETE_THIS;
     }
@@ -1320,7 +1320,7 @@ int TMonster::aiToastedAt(TBeing *doer)
           bs = "Aye!";
           break;
       }
-      doSay(fmt("%s  Did you see me %s that %s?") % bs % RandomVerb() % RandomWord());
+      doSay(format("%s  Did you see me %s that %s?") % bs % RandomVerb() % RandomWord());
       return TRUE;
       break;
     default:

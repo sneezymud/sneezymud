@@ -78,7 +78,7 @@ sstring read_delete(const sstring recipient, const char *recipient_formatted, ss
   talens=convertTo<int>(db["talens"]);
   rent_id=convertTo<int>(db["rent_id"]);
 
-  buf=fmt("The letter has a date stamped in the corner: %s\n\r\n\r%s,\n\r%s\n\rSigned, %s\n\r\n\r") %
+  buf=format("The letter has a date stamped in the corner: %s\n\r\n\r%s,\n\r%s\n\rSigned, %s\n\r\n\r") %
     db["timesent"] % recipient_formatted % db["content"] % db["mailfrom"];
 
   db.query("delete from mail where mailid=%s", db["mailid"].c_str());
@@ -100,13 +100,13 @@ void postmasterValue(TBeing *ch, TBeing *postmaster, const char *arg)
 
   if (is_abbrev(item, sstring("talens")) || is_abbrev(talen, sstring("talens")))
   {
-    postmaster->doTell(fname(ch->name), fmt("When sending talens, I charge an additional %d talens for handling fees.") % int((float)STAMP_PRICE * profit_buy * 2));
+    postmaster->doTell(fname(ch->name), format("When sending talens, I charge an additional %d talens for handling fees.") % int((float)STAMP_PRICE * profit_buy * 2));
     return;
   }
 
   if(item == "faction")
   {
-    postmaster->doTell(fname(ch->name), fmt("Bulk faction mail from me will cost about %d talens.") % int((float)FACTION_STAMP_PRICE * profit_buy));
+    postmaster->doTell(fname(ch->name), format("Bulk faction mail from me will cost about %d talens.") % int((float)FACTION_STAMP_PRICE * profit_buy));
     return;
   }
 
@@ -124,12 +124,12 @@ void postmasterValue(TBeing *ch, TBeing *postmaster, const char *arg)
       postmaster->doTell(fname(ch->name), "Sorry, I can't ship that.");
       return;
     }
-    postmaster->doTell(fname(ch->name), fmt("Shipping %s will cost you %d talens.") % obj->getName() %
+    postmaster->doTell(fname(ch->name), format("Shipping %s will cost you %d talens.") % obj->getName() %
       int((float)STAMP_PRICE * profit_buy * (obj->getWeight() + 3)));
     return;
   }
 
-  postmaster->doTell(fname(ch->name), fmt("My price for regular postage is %d talens.") % int((float)STAMP_PRICE * profit_buy));
+  postmaster->doTell(fname(ch->name), format("My price for regular postage is %d talens.") % int((float)STAMP_PRICE * profit_buy));
 }
 
 
@@ -198,7 +198,7 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
 
   // let anybody mail to immortals
   if (GetMaxLevel() < MIN_MAIL_LEVEL && !imm) {
-    me->doTell(getName(), fmt("Sorry, you have to be level %d to send mail!") % MIN_MAIL_LEVEL);
+    me->doTell(getName(), format("Sorry, you have to be level %d to send mail!") % MIN_MAIL_LEVEL);
     return;
   }
 
@@ -213,7 +213,7 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
     amt = (int)((float)FACTION_STAMP_PRICE * profit_buy);
 
     if(getMoney() < amt && !imm){
-      me->doTell(fname(name), fmt("Bulk mailing costs %d talens.") % amt);
+      me->doTell(fname(name), format("Bulk mailing costs %d talens.") % amt);
       me->doTell(fname(name), "...which I see you can't afford.");
       return;
     }
@@ -228,7 +228,7 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
       return;
     }
     if (talen_amt + amt > getMoney()) {
-      me->doTell(fname(name), fmt("Mailing %d talens plus a stamp costs a total of %d talens.") % talen_amt % (talen_amt + amt));
+      me->doTell(fname(name), format("Mailing %d talens plus a stamp costs a total of %d talens.") % talen_amt % (talen_amt + amt));
       me->doTell(fname(name), "...which I see you can't afford.");
       return;
     }
@@ -246,7 +246,7 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
 
     amt = (int)((float)STAMP_PRICE * profit_buy * (obj->getWeight() + 3));
     if (amt > getMoney() && !imm) {
-      me->doTell(fname(name), fmt("Mailing this item plus a stamp costs a total of %d talens.") % amt);
+      me->doTell(fname(name), format("Mailing this item plus a stamp costs a total of %d talens.") % amt);
       me->doTell(fname(name), "...which I see you can't afford.");
       return;
     }
@@ -263,7 +263,7 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
     amt = (int)((float)STAMP_PRICE * profit_buy);
 
     if (getMoney() < amt && !imm) {
-      me->doTell(fname(name), fmt("A stamp costs %d talens.") % amt);
+      me->doTell(fname(name), format("A stamp costs %d talens.") % amt);
       me->doTell(fname(name), "...which I see you can't afford.");
       return;
     }
@@ -271,9 +271,9 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
 
   act("$n starts to write some mail.", TRUE, this, 0, 0, TO_ROOM);
   if (!imm) {
-    me->doTell(fname(name), fmt("I'll take %d talens for the stamp.") % amt);
+    me->doTell(fname(name), format("I'll take %d talens for the stamp.") % amt);
     TShopOwned tso(shop_nr, me, this);
-    tso.doBuyTransaction(amt, fmt("mailing %s") % recipient, TX_BUYING_SERVICE);
+    tso.doBuyTransaction(amt, format("mailing %s") % recipient, TX_BUYING_SERVICE);
   } else if (isImmortal()) {
     me->doTell(fname(name), "Since you're high and mighty, I'll waive the fee.");
   } else {
@@ -289,7 +289,7 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
     desc->str = new const char *('\0');
     desc->max_str = MAX_MAIL_SIZE;
   } else
-    desc->clientf(fmt("%d|%s") % CLIENT_MAIL % recipient);
+    desc->clientf(format("%d|%s") % CLIENT_MAIL % recipient);
 }
 
 
@@ -343,7 +343,7 @@ void TBeing::postmasterReceiveMail(TMonster *me)
     // hence this setup instead.
     int robj = real_object(GENERIC_NOTE);
     if (robj < 0 || robj >= (signed int) obj_index.size()) {
-      vlogf(LOG_BUG, fmt("postmasterReceiveMail(): No object (%d) in database!") %  
+      vlogf(LOG_BUG, format("postmasterReceiveMail(): No object (%d) in database!") %  
             GENERIC_NOTE);
       return;
     }
@@ -383,7 +383,7 @@ void TBeing::postmasterReceiveMail(TMonster *me)
 
     if (talens > 0)
     {
-      vlogf(LOG_OBJ, fmt("Mail: %s receiving %i talens from %s") %
+      vlogf(LOG_OBJ, format("Mail: %s receiving %i talens from %s") %
           getName() % talens % from);
       *envelope += *create_money(talens);
     }
@@ -402,20 +402,20 @@ void TBeing::postmasterReceiveMail(TMonster *me)
 
       if (obj)
       {
-        vlogf(LOG_OBJ, fmt("Mail: retrieved object %s from rent_id:%i from mail for %s from %s") %
+        vlogf(LOG_OBJ, format("Mail: retrieved object %s from rent_id:%i from mail for %s from %s") %
           obj->getName() % rent_id % getName() % from);
         *envelope += *obj;
       }
       else
       {
-        vlogf(LOG_BUG, fmt("Mail: error retrieving rent_id:%i from mail for %s from %s") %
+        vlogf(LOG_BUG, format("Mail: error retrieving rent_id:%i from mail for %s from %s") %
           rent_id % getName() % from);
       }
     }
 
     *this += *envelope;
 
-    act(fmt("$n gives you $p from %s.") % from, FALSE, me, envelope, this, TO_VICT);
+    act(format("$n gives you $p from %s.") % from, FALSE, me, envelope, this, TO_VICT);
     act("$N gives $n $p.", FALSE, this, envelope, me, TO_ROOM);
   }
 }

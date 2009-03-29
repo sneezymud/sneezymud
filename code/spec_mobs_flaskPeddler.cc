@@ -49,11 +49,11 @@ int flaskPeddler(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *peddler, T
   
   sstring newName, newShort;
   if (cost_mult == 1) {
-    newName = fmt("flask golden small %s") % inscrip;
-    newShort = fmt("<Y>a small flask <z><b>labelled <z><W>%s<z>") % inscrip;
+    newName = format("flask golden small %s") % inscrip;
+    newShort = format("<Y>a small flask <z><b>labelled <z><W>%s<z>") % inscrip;
   } else { 
-    newName = fmt("flask golden %s") % inscrip;
-    newShort = fmt("<Y>a flask <z><b>labelled <z><W>%s<z>") % inscrip;
+    newName = format("flask golden %s") % inscrip;
+    newShort = format("<Y>a flask <z><b>labelled <z><W>%s<z>") % inscrip;
   }
 
   flask->swapToStrung();
@@ -63,14 +63,14 @@ int flaskPeddler(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *peddler, T
   act("You work your magic on the flask.", TRUE, peddler, flask, 0, TO_CHAR);
   act("$n mumbles something and touches the flask.", TRUE, peddler, flask, 0, TO_ROOM);
 
-  sstring buf = fmt("The letters <W>%s<z> appears on the flask's label.") 
+  sstring buf = format("The letters <W>%s<z> appears on the flask's label.") 
     % inscrip;
   act(buf, TRUE, peddler, NULL, 0, TO_CHAR);
   act(buf, TRUE, peddler, NULL, 0, TO_ROOM);
   
   peddler->doSay("Well, there you are then.");
   *peddler += *flask;
-  sstring giveBuf = fmt("%s %s") % add_bars(flask->name) % add_bars(ch->name);
+  sstring giveBuf = format("%s %s") % add_bars(flask->name) % add_bars(ch->name);
   peddler->doGive(giveBuf, GIVE_FLAG_IGN_DEX_TEXT);
 
   peddler->doSay("Please come again!");

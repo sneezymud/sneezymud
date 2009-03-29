@@ -23,15 +23,15 @@ int graffitiMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
     buf=o->name;
     delete o->name;
-    o->name=mud_str_dup(fmt("%s %s") % buf % colors[c]);
+    o->name=mud_str_dup(format("%s %s") % buf % colors[c]);
 
     buf=o->shortDescr;
     delete o->shortDescr;
-    o->shortDescr=mud_str_dup(fmt("%s%s<1>") % ccodes[c] % buf);
+    o->shortDescr=mud_str_dup(format("%s%s<1>") % ccodes[c] % buf);
     
     buf=o->descr;
     delete o->descr;
-    o->descr=mud_str_dup(fmt("%s%s<1>") % ccodes[c] % buf);
+    o->descr=mud_str_dup(format("%s%s<1>") % ccodes[c] % buf);
     return FALSE;
   }
   
@@ -69,7 +69,7 @@ int graffitiMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
   if (!gfti) {
     ch->sendTo("Problem making graffiti object, bug a coder.\n\r");
-    vlogf(LOG_BUG, fmt("Couldn't load object (%d) in graffitiMaker.") 
+    vlogf(LOG_BUG, format("Couldn't load object (%d) in graffitiMaker.") 
         % GRAFFITI_OBJ);
     return TRUE;
   }
@@ -83,9 +83,9 @@ int graffitiMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
 
 
-  sstring newName = fmt("%s message [graffiti] [%s]") % buf % ch->name;
-  sstring newShort = fmt("the message '%s%s<z>'") % ccodes[color] % buf;
-  sstring newLong = fmt("Some vandal has left a message: '%s%s<z>'.") % 
+  sstring newName = format("%s message [graffiti] [%s]") % buf % ch->name;
+  sstring newShort = format("the message '%s%s<z>'") % ccodes[color] % buf;
+  sstring newLong = format("Some vandal has left a message: '%s%s<z>'.") % 
     ccodes[color] % buf;
   gfti->swapToStrung();
   gfti->name = mud_str_dup(newName);

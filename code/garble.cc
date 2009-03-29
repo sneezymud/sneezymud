@@ -311,7 +311,7 @@ sstring garble_olddrunk(const TBeing *from, TBeing *to, const sstring &arg, SPEE
     {
       if(isupper(word[0]))
         latin[0]=tolower(word[0]);
-      latin = fmt("%s%cay") % latin.substr(1,latin.length()-1) % latin[0];
+      latin = format("%s%cay") % latin.substr(1,latin.length()-1) % latin[0];
     }
 
     if(isupper(word[0]))

@@ -220,7 +220,7 @@ void procDeityCheck::run(int pulse) const
         vlogf(LOG_BUG,"Big 'Ol bug in deityCheck()");
         return;
       }
-      vlogf(LOG_BUG,fmt("Purging the deity in room #%d") % deity->in_room);
+      vlogf(LOG_BUG,format("Purging the deity in room #%d") % deity->in_room);
       delete deity;
       deity = NULL;
     }
@@ -405,7 +405,7 @@ int TBeing::riverFlow(int)
 
   dirTypeT rd = roomp->getRiverDir();
   if ((rd < MIN_DIR) || (rd >= MAX_DIR)) {
-    vlogf(LOG_BUG, fmt("Illegal river direction (%d) in room %d") %  rd % inRoom());
+    vlogf(LOG_BUG, format("Illegal river direction (%d) in room %d") %  rd % inRoom());
     return FALSE;
   }
 
@@ -423,7 +423,7 @@ int TBeing::riverFlow(int)
     return FALSE;
 
   if ((rc = canSwim(rd)) > 0) {
-    sendTo(fmt("You swim %s against the current.\n\r") % (isAffected(AFF_SWIM) ? "effortlessly" : "valiantly"));
+    sendTo(format("You swim %s against the current.\n\r") % (isAffected(AFF_SWIM) ? "effortlessly" : "valiantly"));
     return FALSE;
   }
 
@@ -443,7 +443,7 @@ int TBeing::riverFlow(int)
 
     TBeing *tbt = dynamic_cast<TBeing *>(t);
     if (tbt) {
-      tbt->sendTo(fmt("You drift %s...\n\r") % dirs[rd]);
+      tbt->sendTo(format("You drift %s...\n\r") % dirs[rd]);
       tbt->doLook("", CMD_LOOK);
     }
 
@@ -455,7 +455,7 @@ int TBeing::riverFlow(int)
 
   }
 
-  sendTo(fmt("You drift %s...\n\r") % dirs[rd]);
+  sendTo(format("You drift %s...\n\r") % dirs[rd]);
   --(*this);
   *to_room += *this;
   doLook("", CMD_LOOK);
@@ -585,7 +585,7 @@ int TObj::riverFlow(int)
   for (t = rider; t; t = t2) {
     t2 = t->nextRider;
 
-    t->sendTo(fmt("Your %s drifts %s...\n\r") % objn(this) % dirs[rd]);
+    t->sendTo(format("Your %s drifts %s...\n\r") % objn(this) % dirs[rd]);
     sprintf(buf, "$n drifts %s in $p.", dirs[rd]);
     act(buf, TRUE, t, this, 0, TO_ROOM);
 
@@ -653,7 +653,7 @@ int TBeing::teleportRoomFlow(int pulse)
   }
 
   if (!(dest = real_roomp(roomp->getTeleTarg()))) {
-    vlogf(LOG_BUG, fmt("Invalid teleTarg room (%d) to room (%d)") %  
+    vlogf(LOG_BUG, format("Invalid teleTarg room (%d) to room (%d)") %  
              inRoom() % roomp->getTeleTarg());
     return FALSE;
   }
@@ -700,7 +700,7 @@ int TObj::teleportRoomFlow(int pulse)
     return FALSE;
 
   if (!(dest = real_roomp(roomp->getTeleTarg()))) {
-    vlogf(LOG_BUG, fmt("Invalid teleTarg room (%d) to room (%d)") % inRoom() % roomp->getTeleTarg());
+    vlogf(LOG_BUG, format("Invalid teleTarg room (%d) to room (%d)") % inRoom() % roomp->getTeleTarg());
     return FALSE;
   }
 
@@ -806,7 +806,7 @@ int TBeing::updateAffects()
       if (!couldBeRenewed && af->canBeRenewed()) {
         if (af->shouldGenerateText()) {
           if (af->type >= 0 && af->type < MAX_SKILL && discArray[af->type])
-            sendTo(fmt("The effects of %s can now be renewed.\n\r") %
+            sendTo(format("The effects of %s can now be renewed.\n\r") %
               discArray[af->type]->name);
         }
       }
@@ -929,14 +929,14 @@ int TBeing::updateTickStuff()
 
     rc = checkIdling();
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      vlogf(LOG_SILENT, fmt("updateTickStuff: %s (desc) caught idling") %  getName());
+      vlogf(LOG_SILENT, format("updateTickStuff: %s (desc) caught idling") %  getName());
       return DELETE_THIS;
     }
 
     if (getCond(DRUNK) > 15) {
       rc = passOut();
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
-        vlogf(LOG_SILENT, fmt("updateTickStuff: %s passed out") %  getName());
+        vlogf(LOG_SILENT, format("updateTickStuff: %s passed out") %  getName());
         return DELETE_THIS;
       }
     }
@@ -986,8 +986,8 @@ int TBeing::updateTickStuff()
       wearSlotT slot = cPoss > 0 ? possibles[::number(0, cPoss - 1)] : WEAR_NOWHERE;
       if (slot != WEAR_NOWHERE && limbConnections(slot))
       {
-        act(fmt("Your %s itches slighty.  It seems to finally be growing back!") % describeBodySlot(slot), FALSE, this, 0, 0, TO_CHAR);
-        act(fmt("$n's %s begins to grow back!") % describeBodySlot(slot), FALSE, this, 0, 0, TO_ROOM);
+        act(format("Your %s itches slighty.  It seems to finally be growing back!") % describeBodySlot(slot), FALSE, this, 0, 0, TO_CHAR);
+        act(format("$n's %s begins to grow back!") % describeBodySlot(slot), FALSE, this, 0, 0, TO_ROOM);
         setLimbFlags(slot, 0);
         if (slot == WEAR_HAND_R || slot == WEAR_HAND_L)
           setLimbFlags(wearSlotT(slot+9), 0);
@@ -1014,7 +1014,7 @@ int TBeing::updateTickStuff()
     }
 
     if (desc && (desc->character != this))
-      vlogf(LOG_BUG, fmt("bad desc in updateTickStuff() (%s)(%s)") %
+      vlogf(LOG_BUG, format("bad desc in updateTickStuff() (%s)(%s)") %
             (name ? getName() : "unknown") % 
             (desc->character ? desc->character->name ? desc->character->getName() : "unknown" : "no char"));
     if (desc && vt100())
@@ -1030,12 +1030,12 @@ int TBeing::updateTickStuff()
     if (getTimer() > 15 && GetMaxLevel() <= MAX_MORT) {
       // mortals get 15 mins
       nukeLdead(this);
-      vlogf(LOG_SILENT, fmt("updateTickStuff: %s (ldead) idled") %  getName());
+      vlogf(LOG_SILENT, format("updateTickStuff: %s (ldead) idled") %  getName());
       return DELETE_THIS;
     } else if (getTimer() > 60) {
       // imms get an hour
       nukeLdead(this);
-      vlogf(LOG_SILENT, fmt("updateTickStuff: %s (ldead-imm) idled") %  getName());
+      vlogf(LOG_SILENT, format("updateTickStuff: %s (ldead-imm) idled") %  getName());
       return DELETE_THIS;
     }
   } else if (desc && desc->original) {
@@ -1068,7 +1068,7 @@ int TBeing::updateTickStuff()
           if (isAnElemental) {
             rc = checkDecharm(FORCE_YES);
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
-              vlogf(LOG_SILENT, fmt("updateTickStuff: %s decharmed") %  getName());
+              vlogf(LOG_SILENT, format("updateTickStuff: %s decharmed") %  getName());
               return DELETE_THIS;
             }
             return 0;
@@ -1077,11 +1077,11 @@ int TBeing::updateTickStuff()
                 TRUE, this, NULL, NULL, TO_ROOM);
             j = die(DAMAGE_NORMAL);
             if (IS_SET_DELETE(j, DELETE_THIS)) {
-              vlogf(LOG_SILENT, fmt("updateTickStuff: %s died naturally") %  getName());
+              vlogf(LOG_SILENT, format("updateTickStuff: %s died naturally") %  getName());
               return DELETE_THIS;
             }
           }
-          vlogf(LOG_SILENT, fmt("updateTickStuff: %s died (2) naturally") %  getName());
+          vlogf(LOG_SILENT, format("updateTickStuff: %s died (2) naturally") %  getName());
           return DELETE_THIS;
         }
       }
@@ -1131,7 +1131,7 @@ int TBeing::updateBodyParts()
       if (::number(0,1)) {
         addCurLimbHealth(i, -1);
         if (getCurLimbHealth(i) <= 0) {
-          sendTo(fmt("The gangrene in your %s causes it to fall off!!\n\r") %
+          sendTo(format("The gangrene in your %s causes it to fall off!!\n\r") %
                describeBodySlot(i));
           makePartMissing(i, TRUE);
         }
@@ -1139,7 +1139,7 @@ int TBeing::updateBodyParts()
       if (isLimbFlags(i, PART_MISSING)) {
         setLimbFlags(i, PART_MISSING);   // get rid of superfluous flags
         if (i == WEAR_HEAD) {
-          vlogf(LOG_BUG, fmt("%s killed by lack of a head at %s (%d)") % 
+          vlogf(LOG_BUG, format("%s killed by lack of a head at %s (%d)") % 
             getName() % roomp->getName() % inRoom());
 
           rc = die(DAMAGE_BEHEADED);
@@ -1147,7 +1147,7 @@ int TBeing::updateBodyParts()
             return DELETE_THIS;
         }
         if (isCritPart(i)) {
-          vlogf(LOG_BUG, fmt("%s killed by lack of a critical body spot (%d:1) at %s (%d)") % 
+          vlogf(LOG_BUG, format("%s killed by lack of a critical body spot (%d:1) at %s (%d)") % 
             getName() % i % roomp->getName() % inRoom());
           rc = die(DAMAGE_NORMAL);
           if (IS_SET_ONLY(rc, DELETE_THIS))
@@ -1172,8 +1172,8 @@ int TBeing::updateBodyParts()
           // let go to 0, but don't cause "neck to fall off"
           setCurLimbHealth(i, 0);
         } else {
-          vlogf(LOG_COMBAT, fmt("Gangrene rotting off the %s of %s.") % describeBodySlot(i) % getName());
-          act(fmt("The <k>gangrene<1> in your %s causes it to fall off!") % describeBodySlot(i), FALSE, this, 0, 0, TO_CHAR);
+          vlogf(LOG_COMBAT, format("Gangrene rotting off the %s of %s.") % describeBodySlot(i) % getName());
+          act(format("The <k>gangrene<1> in your %s causes it to fall off!") % describeBodySlot(i), FALSE, this, 0, 0, TO_CHAR);
           makePartMissing(i, TRUE);
         }
       }
@@ -1183,14 +1183,14 @@ int TBeing::updateBodyParts()
     if (isLimbFlags(i, PART_MISSING)) {
       setLimbFlags(i, PART_MISSING);   // get rid of superfluous flags
       if (i == WEAR_HEAD) {
-        vlogf(LOG_BUG, fmt("%s killed by lack of a head at %s (%d)") % 
+        vlogf(LOG_BUG, format("%s killed by lack of a head at %s (%d)") % 
             getName() % roomp->getName() % inRoom());
         rc = die(DAMAGE_BEHEADED);
         if (IS_SET_ONLY(rc, DELETE_THIS))
           return DELETE_THIS;
       }
       if ((i == WEAR_BODY) || (i == WEAR_NECK) || (i == WEAR_BACK)) {
-        vlogf(LOG_BUG, fmt("%s killed by lack of a critical body spot (i:2) at %s (%d)") % 
+        vlogf(LOG_BUG, format("%s killed by lack of a critical body spot (i:2) at %s (%d)") % 
             getName() % i % roomp->getName() % inRoom());
         rc = die(DAMAGE_NORMAL);
         if (IS_SET_ONLY(rc, DELETE_THIS))
@@ -1245,7 +1245,7 @@ int TBeing::updateHalfTickStuff()
 	  updatePos();
 	}
 	if (-10 > getHit()) {
-	  vlogf(LOG_MISC, fmt("%s autokilled by excessive lifeforce drain at %s (%d)") % 
+	  vlogf(LOG_MISC, format("%s autokilled by excessive lifeforce drain at %s (%d)") % 
 		getName() % (roomp ? roomp->getName() : "nowhere") % inRoom());
 	  if (reconcileDamage(this, 1,DAMAGE_DRAIN) == -1) {
 	    die(DAMAGE_DRAIN);
@@ -1275,7 +1275,7 @@ int TBeing::updateHalfTickStuff()
     for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();++it){
       if(dynamic_cast<TBaseCorpse *>(*it) || ((tb=dynamic_cast<TBeing *>(*it)) && tb->isUndead()))
       {
-        sendTo(fmt("You lose your cool at the sight of %s and freak out!\n\r")% (*it)->getName());
+        sendTo(format("You lose your cool at the sight of %s and freak out!\n\r")% (*it)->getName());
         doFlee("");
         addCommandToQue("flee");
         addCommandToQue("flee");
@@ -1350,11 +1350,11 @@ int TBeing::updateHalfTickStuff()
 	  continue;
 
 	buf=getInsult(tb);
-	buf2 = fmt("$n looks at you and says, \"%s\"") %buf;
+	buf2 = format("$n looks at you and says, \"%s\"") %buf;
 	act(buf2,TRUE,this,0,tb,TO_VICT);
-	buf2 = fmt("$n looks at $N and says, \"%s\"") %buf;
+	buf2 = format("$n looks at $N and says, \"%s\"") %buf;
 	act(buf2,TRUE,this,0,tb,TO_NOTVICT);
-	buf2 = fmt("You look at $N and say, \"%s\"") %buf;
+	buf2 = format("You look at $N and say, \"%s\"") %buf;
 	act(buf2,TRUE,this,0,tb,TO_CHAR);
 	
 	if((tm=dynamic_cast<TMonster *>(*it)))
@@ -1389,7 +1389,7 @@ int TBeing::updateHalfTickStuff()
   
   if (isFlying()) {
     if (!canFly() && roomp && !roomp->isFlyingSector()) {
-      vlogf(LOG_BUG, fmt("Somehow %s was position fly and was not in flying sector") %  getName());
+      vlogf(LOG_BUG, format("Somehow %s was position fly and was not in flying sector") %  getName());
       sendTo("You stop flying around in the air.\n\r");
       setPosition(POSITION_STANDING);
     }
@@ -1399,14 +1399,14 @@ int TBeing::updateHalfTickStuff()
     if (!riding && !isFlying()) {
       setPosition(POSITION_FLYING);
       sendTo("You start to fly up in the air.\n\r");
-      vlogf(LOG_BUG, fmt("Somehow %s was not flying in flying sector") %  getName());
+      vlogf(LOG_BUG, format("Somehow %s was not flying in flying sector") %  getName());
     } else if (riding && !tbr) {
       dismount(POSITION_FLYING);
       sendTo("You start to fly up in the air.\n\r");
     } else if (tbr && !tbr->isFlying()) {
       tbr->setPosition(POSITION_FLYING);
       sendTo("Your mount starts to fly up in the air.\n\r");
-      vlogf(LOG_BUG, fmt("Somehow %s was not flying in flying sector") %  getName());
+      vlogf(LOG_BUG, format("Somehow %s was not flying in flying sector") %  getName());
     }
   }
   if (roomp && (zone_table[roomp->getZoneNum()].enabled == TRUE) && 
@@ -1432,15 +1432,15 @@ int TBeing::updateHalfTickStuff()
         if (is_daytime()) {
           if (loadRoom == ROOM_NOCTURNAL_STORAGE) {
             return DELETE_THIS;
-            vlogf(LOG_BUG, fmt("NOC:DIU: %s has oldRoom equal to %d") %  getName() % loadRoom);
+            vlogf(LOG_BUG, format("NOC:DIU: %s has oldRoom equal to %d") %  getName() % loadRoom);
           }
           if (!loadRoom || (loadRoom == ROOM_NOWHERE)) {
-            vlogf(LOG_BUG, fmt("NOC:DIU: %s was %s.") %  getName() %
+            vlogf(LOG_BUG, format("NOC:DIU: %s was %s.") %  getName() %
                   (!loadRoom ? "without loadRoom" : "in room nowhere"));
             return DELETE_THIS;
           }
           if (!(room = real_roomp(loadRoom))) {
-            vlogf(LOG_BUG, fmt("NOC:DIU: %s was in a room that no longer exists.") %  getName());
+            vlogf(LOG_BUG, format("NOC:DIU: %s was in a room that no longer exists.") %  getName());
             return DELETE_THIS;
           }
           --(*this);
@@ -1505,18 +1505,18 @@ int TBeing::updateHalfTickStuff()
         } else {
           if (loadRoom == ROOM_NOCTURNAL_STORAGE) {
             return DELETE_THIS;
-            vlogf(LOG_BUG, fmt("NOC:DIU: %s has oldRoom equal to %d") %  getName() % loadRoom);
+            vlogf(LOG_BUG, format("NOC:DIU: %s has oldRoom equal to %d") %  getName() % loadRoom);
           }
           if (!loadRoom || (loadRoom == ROOM_NOWHERE)) {
 	    if ((vnum == MOB_MALE_HOPPER) || (vnum == MOB_FEMALE_HOPPER) ||
 		(vnum == MOB_MALE_CHURCH_GOER) || (vnum == MOB_FEMALE_CHURCH_GOER))
 	      return DELETE_THIS; // do this before the check to cut down on hopper bug spam
-            vlogf(LOG_BUG, fmt("NOC:DIU: %s was %s.") %  getName() %
+            vlogf(LOG_BUG, format("NOC:DIU: %s was %s.") %  getName() %
                   (!loadRoom ? "without loadRoom" : "in room nowhere"));
             return DELETE_THIS;
           }
           if (!(room = real_roomp(loadRoom))) {
-            vlogf(LOG_BUG, fmt("NOC:DIU: %s was in a room that no longer exists.") %  getName());
+            vlogf(LOG_BUG, format("NOC:DIU: %s was in a room that no longer exists.") %  getName());
             return DELETE_THIS;
           }
           --(*this);
@@ -1581,7 +1581,7 @@ int TBeing::updateHalfTickStuff()
  
  // VERY TEMP FIX 10/99 -- COS
   if (!roomp) {
-    vlogf(LOG_BUG, fmt("%s has no roomp in updateHalf tick. Try to find") %  getName());
+    vlogf(LOG_BUG, format("%s has no roomp in updateHalf tick. Try to find") %  getName());
       return FALSE;
   }
 
@@ -1706,7 +1706,7 @@ int TBeing::updateHalfTickStuff()
           foodReject = TRUE;
           updatePos();
           if (points.hit < -10) {
-            vlogf(LOG_MISC, fmt("%s killed by starvation at %s (%d)") % 
+            vlogf(LOG_MISC, format("%s killed by starvation at %s (%d)") % 
                 getName() % (roomp ? roomp->getName() : "nowhere") % inRoom());
             rc = die(DAMAGE_STARVATION);
             if (IS_SET_ONLY(rc, DELETE_THIS))
@@ -1821,7 +1821,7 @@ int TObj::objectTickUpdate(int pulse)
   int rc;
 
   if (!name) {
-    vlogf(LOG_BUG, fmt("Object with NULL name in objectTickUpdate() : %d") %  objVnum());
+    vlogf(LOG_BUG, format("Object with NULL name in objectTickUpdate() : %d") %  objVnum());
     return DELETE_THIS;
   }
 
@@ -1928,11 +1928,11 @@ int TObj::objectTickUpdate(int pulse)
   // Jugged items - Russ 
   if (eq_stuck > WEAR_NOWHERE) {
     if ((t = stuckIn) && (ch = dynamic_cast<TBeing *>(t))) {
-      ch->sendTo(COLOR_OBJECTS, fmt("The wounds in your %s start to fester as %s sinks deeper into your flesh.\n\r") % ch->describeBodySlot(eq_stuck) % shortDescr);
+      ch->sendTo(COLOR_OBJECTS, format("The wounds in your %s start to fester as %s sinks deeper into your flesh.\n\r") % ch->describeBodySlot(eq_stuck) % shortDescr);
       if (::number(0, ch->getConShock()) < 2) {
         if (!ch->isLimbFlags(eq_stuck, PART_INFECTED)) {
           if (ch->rawInfect(eq_stuck, 200, SILENT_YES, CHECK_IMMUNITY_YES)) 
-            ch->sendTo(COLOR_OBJECTS, fmt("Your %s has been infected by %s.\n\r") % ch->describeBodySlot(eq_stuck) % shortDescr);
+            ch->sendTo(COLOR_OBJECTS, format("Your %s has been infected by %s.\n\r") % ch->describeBodySlot(eq_stuck) % shortDescr);
         }
       }
       if (::number(0, ch->getConShock()) < 2) {
@@ -2330,7 +2330,7 @@ int TBeing::bumpHead(int *iHeight)
     return FALSE;
   
   if (!isPc() && !inImperia() && master && isAffected(AFF_CHARM))
-    vlogf(LOG_LOW,fmt("Being (%s) (height %d) in small room (#%d)(roof: %d)") % 
+    vlogf(LOG_LOW,format("Being (%s) (height %d) in small room (#%d)(roof: %d)") % 
            getName() % getPosHeight() % roomp->number % *iHeight); 
 
   int num = max(0,(getPosHeight() - *iHeight));
@@ -2357,7 +2357,7 @@ void TBeing::checkCharmMana()
   for (k = followers;k; k = k2) {
     k2 = k->next;
     if (!(ch = k->follower) || !dynamic_cast<TBeing *>(ch)) {
-      vlogf(LOG_BUG, fmt("Non-Tbeing in followers of %s") %  getName());
+      vlogf(LOG_BUG, format("Non-Tbeing in followers of %s") %  getName());
       return;
     }
     bool ischarm = isPet(PETTYPE_CHARM);
@@ -2382,7 +2382,7 @@ void TBeing::checkCharmMana()
 
     if (!hasClass(CLASS_CLERIC) && !hasClass(CLASS_DEIKHAN) && !hasClass(CLASS_SHAMAN)) {
       if (getMana() < mana && isPc()) {
-        sendTo(COLOR_MOBS, fmt("You lack the mental concentration to control %s any longer.\n\r") % ch->getName());
+        sendTo(COLOR_MOBS, format("You lack the mental concentration to control %s any longer.\n\r") % ch->getName());
         ch->stopFollower(TRUE);
         if (ch->fight()) {
           rc = ch->doFlee("");
@@ -2407,7 +2407,7 @@ void TBeing::checkCharmMana()
       double piety;
       piety = (double) mana / 6.0;
       if (getPiety() < piety) {
-        sendTo(COLOR_MOBS, fmt("You lack the concentration to control %s any longer.\n\r") % ch->getName());
+        sendTo(COLOR_MOBS, format("You lack the concentration to control %s any longer.\n\r") % ch->getName());
         ch->stopFollower(TRUE);
         if (ch->fight()) {
           rc = ch->doFlee("");
@@ -2489,6 +2489,6 @@ void procAutoTips::run(int pulse) const
       continue;
     if (!IS_SET(d->autobits, AUTO_TIPS) || ch->isImmortal())
       continue;
-    ch->sendTo(COLOR_BASIC, fmt("<y>%s Tip :<z> %s\n\r") % MUD_NAME % buf);
+    ch->sendTo(COLOR_BASIC, format("<y>%s Tip :<z> %s\n\r") % MUD_NAME % buf);
   }
 }

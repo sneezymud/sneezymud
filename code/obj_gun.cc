@@ -42,7 +42,7 @@ void TGun::dropSpentCasing(TRoom *roomp){
 
   int robj = real_object(13874);
   if (robj < 0 || robj >= (signed int) obj_index.size()) {
-    vlogf(LOG_BUG, fmt("dropSpentCasing(): No object (%d) in database!") %  13874);
+    vlogf(LOG_BUG, format("dropSpentCasing(): No object (%d) in database!") %  13874);
     return;
   }
   
@@ -125,7 +125,7 @@ void TBeing::doGload(sstring arg)
   if(arg1 != "unload"){
 
     for(int i=1;i<=100;++i){
-      generic_find((fmt("%i.%s") % i % arg1).c_str(), FIND_OBJ_INV | FIND_OBJ_EQUIP | FIND_OBJ_ROOM, this, &tb, &bow);
+      generic_find(((sstring)(format("%i.%s") % i % arg1)).c_str(), FIND_OBJ_INV | FIND_OBJ_EQUIP | FIND_OBJ_ROOM, this, &tb, &bow);
       if(bow && dynamic_cast<TGun *>(bow))
 	break;
     }
@@ -146,7 +146,7 @@ void TBeing::doGload(sstring arg)
     }
     
     if(gun->getAmmo()){
-      buf = fmt("unload %s") % arg1;
+      buf = format("unload %s") % arg1;
       doGload(buf);
       if(gun->getAmmo()){
 	sendTo("That gun is already loaded!\n\r");
@@ -200,12 +200,12 @@ sstring TGun::statObjInfo() const
   TGenWeapon::statObjInfo();
 
   TAmmo *ammo=getAmmo();
-  buf = fmt("Rate of Fire: %i, Ammo Type: %s, Ammo: %i, Ammo Loaded: %s") %
+  buf = format("Rate of Fire: %i, Ammo Type: %s, Ammo: %i, Ammo Loaded: %s") %
     getROF() % getAmmoDescr(getAmmoType()) % (ammo?ammo->getRounds():0) %
     (ammo?ammo->getName():"None");
   sbuf += buf;
 
-  buf = fmt("\n\rSilenced: %s  Caseless: %s  Clipless: %s  Fouled: %s") %
+  buf = format("\n\rSilenced: %s  Caseless: %s  Clipless: %s  Fouled: %s") %
 	   (isSilenced()?"yes":"no") % (isCaseless()?"yes":"no") %
 	   (isClipless()?"yes":"no") % (isFouled()?"yes":"no");
   sbuf += buf;
@@ -217,11 +217,11 @@ sstring TGun::statObjInfo() const
 void TGun::describeObjectSpecifics(const TBeing *ch) const
 {
   if(getAmmo()){
-    ch->sendTo(fmt("It has %i rounds of %s ammunition left.\n\r") %
+    ch->sendTo(format("It has %i rounds of %s ammunition left.\n\r") %
 	       getAmmo()->getRounds() % getAmmoDescr(getAmmoType()));
   } else {
     // yeah yeah bad grammar, may as well be consistant though
-    ch->sendTo(fmt("It has 0 rounds of %s ammunition left.\n\r") %
+    ch->sendTo(format("It has 0 rounds of %s ammunition left.\n\r") %
 	       getAmmoDescr(getAmmoType()));
   }
 
@@ -230,7 +230,7 @@ void TGun::describeObjectSpecifics(const TBeing *ch) const
 
 void TAmmo::describeObjectSpecifics(const TBeing *ch) const
 {
-  ch->sendTo(fmt("It has %i rounds of %s ammunition left.\n\r") %
+  ch->sendTo(format("It has %i rounds of %s ammunition left.\n\r") %
 	     getRounds() % getAmmoDescr(getAmmoType()));
 
 }
@@ -295,7 +295,7 @@ sstring TAmmo::statObjInfo() const
 {
   sstring buf, sbuf;
 
-  buf = fmt("Ammo Type: %s, Rounds Remaining: %i") %
+  buf = format("Ammo Type: %s, Rounds Remaining: %i") %
 	  getAmmoDescr(getAmmoType()) % getRounds();
   sbuf += buf;
 
@@ -426,11 +426,11 @@ int TGun::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
     capbuf2 = colorString(ch, ch->desc, getName(), NULL, COLOR_OBJECTS, TRUE);
     
     if (targ)
-      ch->sendTo(COLOR_MOBS, fmt("You shoot %s out of %s at %s.\n\r") %
+      ch->sendTo(COLOR_MOBS, format("You shoot %s out of %s at %s.\n\r") %
 		 capbuf.uncap() % capbuf2.uncap() %
 		 targ->getName());
     else
-      ch->sendTo(fmt("You shoot %s out of %s.\n\r") %
+      ch->sendTo(format("You shoot %s out of %s.\n\r") %
 		 capbuf.uncap() % 
 		 capbuf2.uncap());
     

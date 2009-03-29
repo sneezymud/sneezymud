@@ -55,10 +55,10 @@ int main(int argc, char **argv)
     if(!db.isResults()){
       cout << "There are no teams designated right now." << endl;
     } else {
-      cout << (fmt("View limb-ventory for :<br>") % db["team"] % db["team"]) << endl;
+      cout << (format("View limb-ventory for :<br>") % db["team"] % db["team"]) << endl;
       while(db.fetchRow()) {
         teams.push_back(db["team"]);
-        cout << (fmt("<a href=\"limb_quest.cgi?%s\">%s</a><br>") % db["team"] % db["team"]) << endl;
+        cout << (format("<a href=\"limb_quest.cgi?%s\">%s</a><br>") % db["team"] % db["team"]) << endl;
       }
     }
     cout << "</td></tr>\n" << endl;
@@ -67,7 +67,7 @@ int main(int argc, char **argv)
     cout << "<tr><td colspan=\"4\" align=\"center\">&nbsp;<br><b>Team Summaries</b></td></tr>\n" << endl;
     for (unsigned int step = 0; step < teams.size(); step++) {
       db.query("select player from quest_limbs_team where team = '%s' order by player", teams[step].c_str());
-      cout << fmt("<tr><td colspan=\"4\">&nbsp;</td></tr><tr><td colspan=\"4\" align=\"center\" style=\"border: 1px solid grey;\"><b style=\"color:red;\">%s</b><br>") % teams[step] << endl;
+      cout << format("<tr><td colspan=\"4\">&nbsp;</td></tr><tr><td colspan=\"4\" align=\"center\" style=\"border: 1px solid grey;\"><b style=\"color:red;\">%s</b><br>") % teams[step] << endl;
       tmp = 0;
       while (db.fetchRow()) {
         tmp++;
@@ -92,11 +92,11 @@ int main(int argc, char **argv)
             max_level = -1;
           if (!(part_num = convertTo<int>(db["slot_num"])))
             part_num = 0;
-          cout << (fmt("<tr><td>%s</td><td align=\"right\">%s</td>%s%s</tr>") % genericPart(part_num) % db["tally"] % ambiguousLevel(avg_level) % ambiguousLevel(max_level)) <<endl;
+          cout << (format("<tr><td>%s</td><td align=\"right\">%s</td>%s%s</tr>") % genericPart(part_num) % db["tally"] % ambiguousLevel(avg_level) % ambiguousLevel(max_level)) <<endl;
         }
       }
       while (db.fetchRow()) {
-        cout << fmt(" %s") % db["player"] << endl;
+        cout << format(" %s") % db["player"] << endl;
       }
     }
     cout << "</table>"  << endl;
@@ -105,12 +105,12 @@ int main(int argc, char **argv)
     // view details for team
     cout << "<table align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td align=\"center\">"
          << "<table width=\"100%\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td valign=\"top\" colspan=\"4\" align=\"center\"><h3><a href=\"limb_quest.cgi\">Welcome to SneezyMUD: Quest for Limbs III</a></h3></td></tr>" << endl;
-    cout << fmt("<tr><td colspan=\"4\" align=\"center\" style=\"border: 1px solid grey; color: red; font-weight: bold\">%s</td></tr>") % team 
+    cout << format("<tr><td colspan=\"4\" align=\"center\" style=\"border: 1px solid grey; color: red; font-weight: bold\">%s</td></tr>") % team 
          << "<tr><td colspan=\"4\">&nbsp;</td></tr>"
          << endl;
     db.query("select q1.player, q1.mob_vnum, m1.short_desc, round((m1.ac + m1.hpbonus + m1.damage_level) / 3) as mob_level, q1.slot_name from quest_limbs q1 left join mob m1 on q1.mob_vnum = m1.vnum where q1.team = '%s' and q1.date_submitted < '2007-06-25 01:30:00' order by q1.date_submitted desc, q1.slot_num;", team.c_str());
     if(!db.isResults()){
-      cout << fmt("<tr><td colspan=\"4\">No limbs submitted. Get to work, %s!</td></tr>") % team << endl;
+      cout << format("<tr><td colspan=\"4\">No limbs submitted. Get to work, %s!</td></tr>") % team << endl;
     } else {
       cout << "</table>"  << endl;
       cout << "<table width=\"100%\" class=\"sortable\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><thead><tr><th align=\"left\"><a href=\"javascript:return false;\">Organ</a></th><th align=\"left\"><a href=\"javascript:return false;\">Donor</a></th><th align=\"left\"><a href=\"javascript:return false;\">Level</a></th><th align=\"left\"><a href=\"javascript:return false;\">Chopper</a></th></tr></thead>" <<endl;
@@ -119,7 +119,7 @@ int main(int argc, char **argv)
           level = convertTo<int>(db["mob_level"]);
         else
           level = -1;
-        cout << (fmt("<tr><td>%s</td><td>%s</td>%s<td>%s</td></tr>") % db["slot_name"] % mudColorToHTML(db["short_desc"]) % ambiguousLevel(level) % db["player"]) <<endl;
+        cout << (format("<tr><td>%s</td><td>%s</td>%s<td>%s</td></tr>") % db["slot_name"] % mudColorToHTML(db["short_desc"]) % ambiguousLevel(level) % db["player"]) <<endl;
       }
     }
     cout << "</table></td></tr></table>"  << endl;
@@ -284,7 +284,7 @@ sstring mudColorToHTML(sstring str)
   replaceString(str, "<z>", "</span><span style=\"color:white\">");
   replaceString(str, "<1>", "</span><span style=\"color:white\">");
 
-  return fmt("<span style=\"color:white;\">%s</span>") % str;
+  return format("<span style=\"color:white;\">%s</span>") % str;
 }
 
 

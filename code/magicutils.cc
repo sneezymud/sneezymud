@@ -332,7 +332,7 @@ void TBeing::spellWearOffSoon(spellNumT s)
   }
 
   if (discArray[s]->fadeAwaySoon) 
-    sendTo(fmt("%s\n\r") % discArray[s]->fadeAwaySoon);
+    sendTo(format("%s\n\r") % discArray[s]->fadeAwaySoon);
   
   if (discArray[s]->fadeAwaySoonRoom)
     act(discArray[s]->fadeAwaySoonRoom, TRUE, this, 0, 0, TO_ROOM);
@@ -367,7 +367,7 @@ int TBeing::spellWearOff(spellNumT s, safeTypeT safe)
   }
 
   if (discArray[s]->fadeAway) 
-    sendTo(fmt("%s\n\r") % discArray[s]->fadeAway);
+    sendTo(format("%s\n\r") % discArray[s]->fadeAway);
   
   if (discArray[s]->fadeAwayRoom)
     act(discArray[s]->fadeAwayRoom, TRUE, this, 0, 0, TO_ROOM);
@@ -689,13 +689,13 @@ int TBeing::useComponent(TComponent *o, TBeing *vict, checkOnlyT checkOnly)
   for (i=0; (i<CompInfo.size()) && (o->getComponentSpell() != CompInfo[i].spell_num);i++);
 
   if (i>= CompInfo.size()) {
-    vlogf(LOG_BUG,fmt("useComponent had problem finding component for %s") % 
+    vlogf(LOG_BUG,format("useComponent had problem finding component for %s") % 
         o->getName());
     sendTo("Uh oh, something bogus happened.\n\r");
     return FALSE;
   }
   if (o->isPersonalized() && !isname(getName(), o->name)) {
-    vlogf(LOG_MISC, fmt("Mage %s using component %s that was personalized but not theirs!!! Reprimand at once.") %  getName() % o->name); 
+    vlogf(LOG_MISC, format("Mage %s using component %s that was personalized but not theirs!!! Reprimand at once.") %  getName() % o->name); 
     sendTo("You can't use a component that is personalized for someone else!");
     return FALSE;
   }
@@ -711,7 +711,7 @@ int TBeing::useComponent(TComponent *o, TBeing *vict, checkOnlyT checkOnly)
       act(CompInfo[i].to_self, TRUE, this, o, 0, TO_CHAR);
       act(CompInfo[i].to_room, TRUE, this, o, 0, TO_ROOM);
     } else {
-      vlogf(LOG_BUG, fmt("Bad component sstring.  component %d  (1)") %  i);
+      vlogf(LOG_BUG, format("Bad component sstring.  component %d  (1)") %  i);
     }
   } else {
     if (*CompInfo[i].to_self && 
@@ -719,7 +719,7 @@ int TBeing::useComponent(TComponent *o, TBeing *vict, checkOnlyT checkOnly)
       act(CompInfo[i].to_self, TRUE, this, o, 0, TO_CHAR);
       act(CompInfo[i].to_room, TRUE, this, o, 0, TO_ROOM);
     } else {
-      vlogf(LOG_BUG, fmt("Bad component sstring.  component %d  (2)") %  i);
+      vlogf(LOG_BUG, format("Bad component sstring.  component %d  (2)") %  i);
     }
   }
 
@@ -767,7 +767,7 @@ int TBeing::useComponentObj(TComponent *o, TObj *targ, checkOnlyT checkOnly)
   for (i=0; (i<CompInfo.size()) && (o->getComponentSpell() != CompInfo[i].spell_num);i++);
 
   if (i>= CompInfo.size()) {
-    vlogf(LOG_BUG,fmt("useComponent had problem finding component for %s") % 
+    vlogf(LOG_BUG,format("useComponent had problem finding component for %s") % 
         o->shortDescr);
     sendTo("Uh oh, something bogus happened.\n\r");
     return FALSE;
@@ -783,10 +783,10 @@ int TBeing::useComponentObj(TComponent *o, TObj *targ, checkOnlyT checkOnly)
       act(CompInfo[i].to_caster, TRUE, this, o, targ, TO_CHAR);
       act(CompInfo[i].to_other, TRUE, this, o, targ, TO_ROOM);
     } else {
-      vlogf(LOG_BUG, fmt("Bad component sstring.  component %d  (3)") %  i);
+      vlogf(LOG_BUG, format("Bad component sstring.  component %d  (3)") %  i);
     }
   } else {
-    vlogf(LOG_BUG, fmt("Bad component sstring.  component %d  (4)") %  i);
+    vlogf(LOG_BUG, format("Bad component sstring.  component %d  (4)") %  i);
   }
 
   if (o->getComponentCharges() > 1)
@@ -1027,7 +1027,7 @@ int TBeing::rawSummon(TBeing *v)
   act("$n is exhausted from interplanar travel.", FALSE, v, NULL, NULL, TO_ROOM);
 
   // summon newbie to aggro zone far from GH, allow us to check for it
-  vlogf(LOG_SILENT, fmt("%s summoned %s to %s (%d)") % 
+  vlogf(LOG_SILENT, format("%s summoned %s to %s (%d)") % 
           getName() % v->getName() % roomp->getName() % inRoom());
 
   if (v->riding) {
@@ -1223,7 +1223,7 @@ void TMonster::elementalFix(TBeing *caster, spellNumT spell, bool flags)
       damlevel = (getDamLevel()/(int)GetMaxLevel());
       break;
     default:
-      vlogf(LOG_BUG, fmt("Bad spellNumT (%d) to elementalFix") %  spell);
+      vlogf(LOG_BUG, format("Bad spellNumT (%d) to elementalFix") %  spell);
       break;
   }
   // correct the level
@@ -1427,7 +1427,7 @@ int TBeing::rawBruise(wearSlotT pos, int duration, silentTypeT silent, checkImmu
   char buf[256];
 
   if (pos < MIN_WEAR || pos >= MAX_WEAR){
-    vlogf(LOG_BUG, fmt("rawBruise called with bad slot: %i on %s") % pos % getName());
+    vlogf(LOG_BUG, format("rawBruise called with bad slot: %i on %s") % pos % getName());
     return FALSE;
   }
   if (!hasPart(pos) || isLimbFlags(pos, PART_BRUISED)) {
@@ -1461,7 +1461,7 @@ int TBeing::rawBruise(wearSlotT pos, int duration, silentTypeT silent, checkImmu
   disease_start(this, &aff);
 
   if (!silent) {
-    sendTo(fmt("%sYour %s is bruised!%s\n\r") % 
+    sendTo(format("%sYour %s is bruised!%s\n\r") % 
         red() % describeBodySlot(pos) % norm());
     sprintf(buf, "$n's %s has been bruised!", describeBodySlot(pos).c_str());
     act(buf, TRUE, this, NULL, NULL, TO_ROOM);
@@ -1477,7 +1477,7 @@ int TBeing::rawBleed(wearSlotT pos, int duration, silentTypeT silent, checkImmun
   char buf[256];
 
   if (pos < MIN_WEAR || pos >= MAX_WEAR){
-    vlogf(LOG_BUG, fmt("rawBleed called with bad slot: %i on %s") % pos % getName());
+    vlogf(LOG_BUG, format("rawBleed called with bad slot: %i on %s") % pos % getName());
     return FALSE;
   }
   if (!hasPart(pos) || isLimbFlags(pos, PART_BLEEDING)) {
@@ -1511,7 +1511,7 @@ int TBeing::rawBleed(wearSlotT pos, int duration, silentTypeT silent, checkImmun
   dropBloodLimb(pos);
 
   if (!silent) {
-    sendTo(fmt("%sYour %s has started to bleed!%s\n\r") % 
+    sendTo(format("%sYour %s has started to bleed!%s\n\r") % 
         red() % describeBodySlot(pos) % norm());
     sprintf(buf, "$n's %s has begun to bleed!", describeBodySlot(pos).c_str());
     act(buf, TRUE, this, NULL, NULL, TO_ROOM);
@@ -1531,7 +1531,7 @@ int TBeing::rawInfect(wearSlotT pos, int duration, silentTypeT silent, checkImmu
       return FALSE;
   }
   if (pos < MIN_WEAR || pos >= MAX_WEAR){
-    vlogf(LOG_BUG, fmt("rawInfect called with bad slot: %i on %s") % pos % getName());
+    vlogf(LOG_BUG, format("rawInfect called with bad slot: %i on %s") % pos % getName());
     return FALSE;
   }
   if (!hasPart(pos) || isLimbFlags(pos, PART_INFECTED)) {
@@ -1559,7 +1559,7 @@ int TBeing::rawInfect(wearSlotT pos, int duration, silentTypeT silent, checkImmu
   disease_start(this, &aff);
 
   if (!silent) {
-    sendTo(fmt("Your %s has become totally infected!\n\r") % describeBodySlot(pos));
+    sendTo(format("Your %s has become totally infected!\n\r") % describeBodySlot(pos));
     sprintf(buf, "$n's %s has become totally infected!", describeBodySlot(pos).c_str());
     act(buf, TRUE, this, NULL, NULL, TO_ROOM);
   }
@@ -1575,7 +1575,7 @@ int TBeing::rawGangrene(wearSlotT pos, int duration, silentTypeT silent, checkIm
       return FALSE;
   }
   if (pos < MIN_WEAR || pos >= MAX_WEAR){
-    vlogf(LOG_BUG, fmt("rawGangrene called with bad slot: %i on %s") % pos % getName());
+    vlogf(LOG_BUG, format("rawGangrene called with bad slot: %i on %s") % pos % getName());
     return FALSE;
   }
   if (!hasPart(pos) || isLimbFlags(pos, PART_GANGRENOUS)) {
@@ -1612,7 +1612,7 @@ void TBeing::spellMessUp(spellNumT spell)
   int type = 0;
 
   if (!discArray[spell] || !*discArray[spell]->name) {
-    vlogf(LOG_BUG,fmt("Bad spell/skill number in spellMessUp %d") %  spell);
+    vlogf(LOG_BUG,format("Bad spell/skill number in spellMessUp %d") %  spell);
     return;
   }
 
@@ -1645,7 +1645,7 @@ void TBeing::spellMessUp(spellNumT spell)
     case DISC_DEIKHAN:
       type = 1;
     default:
-      vlogf(LOG_BUG, fmt("Undefined spell (%d) in spellMessUp") %  spell);
+      vlogf(LOG_BUG, format("Undefined spell (%d) in spellMessUp") %  spell);
       return;
   }
 #endif
@@ -2052,7 +2052,7 @@ bool genericDisease(TBeing *caster, TBeing *vict, int level)
   double slope = 6.0; // change to a higher number to even out the chances to land any particular disease
   for (step = 0; step < diseases.size(); step++) {
     roll_size += max(1, (int) (((level_diff / slope) / scaler) * (double) step));
-    // vlogf(LOG_MISC, fmt("%s- Step: %d Chance: %d") % DiseaseInfo[diseases[step]].name % step % max(1, (int) (((level_diff / slope) / scaler) * (double) step)));
+    // vlogf(LOG_MISC, format("%s- Step: %d Chance: %d") % DiseaseInfo[diseases[step]].name % step % max(1, (int) (((level_diff / slope) / scaler) * (double) step)));
   }
   int total = 0;
   int roll = ::number(1, roll_size);
@@ -2063,7 +2063,7 @@ bool genericDisease(TBeing *caster, TBeing *vict, int level)
       break;
     }
   }
-  // vlogf(LOG_MISC, fmt("%d of %d for %s.") % roll % roll_size % DiseaseInfo[diseases[step]].name);
+  // vlogf(LOG_MISC, format("%d of %d for %s.") % roll % roll_size % DiseaseInfo[diseases[step]].name);
   if (aff.modifier == DISEASE_GANGRENE) {
     // find a random slot for it
   	wearSlotT slot;
@@ -2212,7 +2212,7 @@ int lycanthropeTransform(TBeing *ch)
   mob->setWeight(ch->getWeight());
 
   mob->doAction("", CMD_HOWL);
-  mob->roomp->getZone()->sendTo(fmt("You hear a chilling wolf howl in the distance.\n\r"));
+  mob->roomp->getZone()->sendTo("You hear a chilling wolf howl in the distance.\n\r");
 
 
   return TRUE;

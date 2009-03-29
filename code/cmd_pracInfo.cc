@@ -24,12 +24,12 @@ void TBeing::doPracInfo(sstring arg) {
     return;
   sh_int expected = ch->expectedPracs();
   sh_int actual = ch->meanPracsSoFar();
-  buf = fmt("Practice info for %s:\n\r") % ch->getName();
-  buf += fmt("\tExpected pracs for level: %d \n\r")
+  buf = format("Practice info for %s:\n\r") % ch->getName();
+  buf += format("\tExpected pracs for level: %d \n\r")
     % expected;
-  buf += fmt("\tActual pracs for level:   %d (approx)\n\r")
+  buf += format("\tActual pracs for level:   %d (approx)\n\r")
     % actual;
-  buf += fmt("\tDiscrepancy:              %d\n\r")
+  buf += format("\tDiscrepancy:              %d\n\r")
     % (actual - expected);
   sendTo(buf);
   

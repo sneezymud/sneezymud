@@ -19,7 +19,7 @@ int personalize_object(TBeing *deity, TBeing *ch, int virt, int decay)
     return FALSE;
   }
   obj->obj_flags.decay_time = decay;
-  buf=fmt("This is the personalized object of %s") % ch->getName();
+  buf=format("This is the personalized object of %s") % ch->getName();
 
   obj->swapToStrung();
   if ((virt == WEAPON_AVENGER1) || 
@@ -35,7 +35,7 @@ int personalize_object(TBeing *deity, TBeing *ch, int virt, int decay)
   obj->action_description = mud_str_dup(buf);
 
   if (deity) {
-    buf=fmt("%s %s") % fname(obj->name) % ch->getName();
+    buf=format("%s %s") % fname(obj->name) % ch->getName();
     *deity += *obj; 
     rc = deity->doGive(buf);
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -65,7 +65,7 @@ int resize_personalize_object(TBeing *deity, TBeing *ch, int virt, int decay)
     return FALSE;
   }
   obj->obj_flags.decay_time = decay;
-  buf=fmt("This is the personalized object of %s") % ch->getName();
+  buf=format("This is the personalized object of %s") % ch->getName();
 
   // resize
   wearSlotT slot = slot_from_bit(obj->obj_flags.wear_flags);
@@ -84,7 +84,7 @@ int resize_personalize_object(TBeing *deity, TBeing *ch, int virt, int decay)
   obj->action_description = mud_str_dup(buf);
 
   if (deity) {
-    buf=fmt("%s %s") % fname(obj->name) % ch->getName();
+    buf=format("%s %s") % fname(obj->name) % ch->getName();
     *deity += *obj; 
     rc = deity->doGive(buf);
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -130,15 +130,15 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
   percent = (int) d_percent;
   percent = min(max(0, percent), 100);
 
-  vlogf(LOG_FACT, fmt("%s had a percent of %d") %  ch->getName() % percent);
+  vlogf(LOG_FACT, format("%s had a percent of %d") %  ch->getName() % percent);
 
   if (number(10, 90) < percent) {
-    buf=fmt("%s, you have faithfully practiced your beliefs.") % ch->getName();
+    buf=format("%s, you have faithfully practiced your beliefs.") % ch->getName();
     deity->doSay(buf);
     deity->doSay("Here is your reward.");
     // default will always do a nice thing, top ten do something great 
     int num = ::number(percent, 100);
-    vlogf(LOG_FACT, fmt("reward loop val=%d") %  num);
+    vlogf(LOG_FACT, format("reward loop val=%d") %  num);
     switch (num) {
       case 90:
         // Nice token that decays in 100 ticks. 
@@ -167,7 +167,7 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
       case 95:
         // 200 tick token and sanc and part restore. 
         deity->doSay("You are a paragon of virtue.");
-        buf=fmt("%s part") % ch->getName());
+        buf=format("%s part") % ch->getName());
         deity->doRestore(buf.c_str());
         if (!deity->doesKnowSkill(SPELL_SANCTUARY))
           deity->setSkillValue(SPELL_SANCTUARY,120);
@@ -180,7 +180,7 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
       case 97:
         // 200 tick token and sanc and full restore. 
         deity->doSay("You are virtually an avatar.");
-        buf=fmt("%s full") % ch->getName();
+        buf=format("%s full") % ch->getName();
         deity->doRestore(buf.c_str());
         if (!deity->doesKnowSkill(SPELL_SANCTUARY))
           deity->setSkillValue(SPELL_SANCTUARY,120);
@@ -192,7 +192,7 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
       case 98:
         // 250 tick token and sanc and full restore. 
         deity->doSay("You are virtually an avatar.");
-        buf=fmt("%s full") % ch->getName();
+        buf=format("%s full") % ch->getName();
         deity->doRestore(buf.c_str());
         if (!deity->doesKnowSkill(SPELL_SANCTUARY))
           deity->setSkillValue(SPELL_SANCTUARY,120);
@@ -204,7 +204,7 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
       case 99:
         // 300 tick token and sanc and full restore. 
         deity->doSay("You are virtually an avatar.");
-        buf=fmt("%s full") % ch->getName();
+        buf=format("%s full") % ch->getName();
         deity->doRestore(buf.c_str());
         if (!deity->doesKnowSkill(SPELL_SANCTUARY))
           deity->setSkillValue(SPELL_SANCTUARY,120);
@@ -216,7 +216,7 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
       case 100:
         // 500 tick token and sanc and full restore. 
         deity->doSay("You are an avatar of our beliefs.");
-        buf=fmt("%s full") % ch->getName();
+        buf=format("%s full") % ch->getName();
         deity->doRestore(buf.c_str());
         if (!deity->doesKnowSkill(SPELL_SANCTUARY))
           deity->setSkillValue(SPELL_SANCTUARY,120);
@@ -226,7 +226,7 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
           return DELETE_THIS;
         break;
       default:
-        buf=fmt("%s part") % ch->getName();
+        buf=format("%s part") % ch->getName();
         deity->doRestore(buf.c_str());
         break;
     }
@@ -236,7 +236,7 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
     deity->doSay(buf);
     deity->doSay("Here is your punishment");
     int num = number(0, percent);
-    vlogf(LOG_FACT, fmt("punishment loop val=%d") %  num);
+    vlogf(LOG_FACT, format("punishment loop val=%d") %  num);
     switch (num) {
        // default sucks, but not as bad as the 10 lowest ones. 
       case 0:
@@ -437,7 +437,7 @@ int alignment_deity(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
         d2 = d->next;
         if ((tmp_ch = d->character) && !d->connected) {
           if (!number(0, 30)) {
-            vlogf(LOG_FACT, fmt("%s in room %d reward/punishing %s") % 
+            vlogf(LOG_FACT, format("%s in room %d reward/punishing %s") % 
                 me->getName() % room % tmp_ch->getName());
             simple_deity_poof(me, tmp_ch->inRoom());
 

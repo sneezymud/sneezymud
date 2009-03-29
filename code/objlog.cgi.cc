@@ -110,7 +110,7 @@ int main(int argc, char **argv)
       my_query += " AND LOWER(o.name) LIKE LOWER('%s') ORDER BY l.loadtime";
       db.query(my_query.c_str(), (**name).c_str());
     } else {
-      my_query += fmt(" AND l.vnum = %i ORDER BY l.loadtime") % convertTo<int>(**vnum);
+      my_query += format(" AND l.vnum = %i ORDER BY l.loadtime") % convertTo<int>(**vnum);
       db.query(my_query.c_str());
     }
 
@@ -134,13 +134,13 @@ int main(int argc, char **argv)
       } else {
         delta = 0;
       }
-      cout << "    <td align=right>" << fmt("%i") % delta << "</td>" << endl;
+      cout << "    <td align=right>" << format("%i") % delta << "</td>" << endl;
       cout << "  </tr>" << endl;
 
       objtable[myvnum] = myobjcount;
     }
     cout << "</table><br>" << endl;
-    cout << fmt("Number of objects queried:  %i") % count;
+    cout << format("Number of objects queried:  %i") % count;
     cout << body() << endl;
   }
   cout << html() << endl;

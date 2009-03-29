@@ -147,7 +147,7 @@ int task_logging(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
               ch->stopTask();
               return TRUE;
             }
-            ch->sendTo(fmt("You've found a %s tree!\n\r") 
+            ch->sendTo(format("You've found a %s tree!\n\r") 
                 % sstring(log->getName()).word(1));
             act("You begin to chop at the tree.",
               FALSE, ch, NULL, 0, TO_CHAR);
@@ -157,7 +157,7 @@ int task_logging(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
             log = NULL;
           } else {
             if (!log)
-              vlogf(LOG_BUG, fmt("Error loading log %d in lumberjack task.")
+              vlogf(LOG_BUG, format("Error loading log %d in lumberjack task.")
                 % log_vnum);
             act("You don't find any promising trees.",
               FALSE, ch, NULL, 0, TO_CHAR);
@@ -288,7 +288,7 @@ void procReforestation::run(int pulse) const
     TRoom * tRoom = real_roomp((*tIter).first);
 
     if (!tRoom) {
-      vlogf(LOG_BUG, fmt("procReforestation() handling non-existent room! (%d)") % (*tIter).first);
+      vlogf(LOG_BUG, format("procReforestation() handling non-existent room! (%d)") % (*tIter).first);
       continue;
     }
 

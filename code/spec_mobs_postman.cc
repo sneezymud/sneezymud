@@ -33,8 +33,11 @@ sstring randommessage(sstring from)
   for(int i=0;i < ::number(1,3);++i){
     r=::number(0,sentences.size()-1);
     buf=sentences[r];
-    while(buf.find("%s")!=sstring::npos)
-      buf = fmt(buf) % RandomWord();
+    format fmt(buf);
+    for(int j=(int)count(buf.begin(), buf.end(), '%');j>0;--j)
+      fmt % RandomWord();
+
+      //      buf = format(buf) % RandomWord();
     msg += buf;
     msg += " ";
     sentences.erase(sentences.begin()+r);

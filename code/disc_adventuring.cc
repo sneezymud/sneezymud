@@ -158,7 +158,7 @@ void TBeing::doBandage(const sstring &arg)
     return;
   }
   if (vict->isLimbFlags(slot, PART_BANDAGED)) {
-    buf = fmt("$N's %s is already bandaged!") % vict->describeBodySlot(slot);
+    buf = format("$N's %s is already bandaged!") % vict->describeBodySlot(slot);
     act(buf, FALSE, this, NULL, vict, TO_CHAR);
     return;
   }
@@ -210,7 +210,7 @@ void TBeing::doBandage(const sstring &arg)
     } else {
       if (bSuccess( SKILL_BANDAGE)) {
         if (band_num > 1) {
-          buf = fmt("You quickly combine %d bandages into one big enough to bandage that part.\n\r") %band_num;
+          buf = format("You quickly combine %d bandages into one big enough to bandage that part.\n\r") %band_num;
           sendTo(buf);
         }
         bandage(vict,slot);
@@ -221,7 +221,7 @@ void TBeing::doBandage(const sstring &arg)
       addSkillLag(SKILL_BANDAGE, 0);
     }
   } else
-    sendTo(fmt("You need %d total bandages to cover that area.  You have %d.\n\r") % band_num % count);
+    sendTo(format("You need %d total bandages to cover that area.  You have %d.\n\r") % band_num % count);
 }
 
 
@@ -249,13 +249,13 @@ void TThing::butcherMe(TBeing *ch, const char *arg)
 
   // Check to see if argument passed exists in room
   if (!generic_find(arg, FIND_OBJ_ROOM, ch, &dummy, &obj)) {
-    ch->sendTo(fmt("You do not see a %s here.\n\r") % arg);
+    ch->sendTo(format("You do not see a %s here.\n\r") % arg);
     return;
   }
   // Check to see if corpse is a corpse
   
   if (!(corpse = dynamic_cast<TBaseCorpse *>(obj))) {
-    ch->sendTo(COLOR_OBJECTS, fmt("You cannot butcher %s.\n\r") % obj->getName());
+    ch->sendTo(COLOR_OBJECTS, format("You cannot butcher %s.\n\r") % obj->getName());
     return;
   }
   if (corpse->isCorpseFlag(CORPSE_NO_REGEN)) {
@@ -306,13 +306,13 @@ void TTool::butcherMe(TBeing *ch, const char *arg)
   }
   // Check to see if argument passed exists in room
   if (!generic_find(arg, FIND_OBJ_ROOM, ch, &dummy, &obj)) {
-    ch->sendTo(fmt("You do not see a %s here.\n\r") % arg);
+    ch->sendTo(format("You do not see a %s here.\n\r") % arg);
     return;
   }
   // Check to see if corpse is a corpse
   
   if (!(corpse = dynamic_cast<TBaseCorpse *>(obj))) {
-    ch->sendTo(COLOR_OBJECTS, fmt("You cannot butcher %s.\n\r") % obj->getName());
+    ch->sendTo(COLOR_OBJECTS, format("You cannot butcher %s.\n\r") % obj->getName());
     return;
   }
   if (corpse->isCorpseFlag(CORPSE_NO_REGEN)) {
@@ -348,13 +348,13 @@ void bareHandButcherMe(TBeing *ch, const char *arg)
 
   // Check to see if argument passed exists in room
   if (!generic_find(arg, FIND_OBJ_ROOM, ch, &dummy, &obj)) {
-    ch->sendTo(fmt("You do not see a %s here.\n\r") % arg);
+    ch->sendTo(format("You do not see a %s here.\n\r") % arg);
     return;
   }
   // Check to see if corpse is a corpse
   
   if (!(corpse = dynamic_cast<TBaseCorpse *>(obj))) {
-    ch->sendTo(COLOR_OBJECTS, fmt("You cannot butcher %s.\n\r") % obj->getName());
+    ch->sendTo(COLOR_OBJECTS, format("You cannot butcher %s.\n\r") % obj->getName());
     return;
   }
   if (corpse->isCorpseFlag(CORPSE_NO_REGEN)) {

@@ -102,7 +102,7 @@ CSkill *TBeing::getSkill(spellNumT skill) const
   discNumT which = getDisciplineNumber(skill, FALSE);
   if (which == DISC_NONE) {
     // silly core-generator, but helps to track down the item that is bad
-    vlogf(LOG_BUG, fmt("Bad discipline for skill %d in getSkill()") %  skill);
+    vlogf(LOG_BUG, format("Bad discipline for skill %d in getSkill()") %  skill);
     return NULL;
   }
 
@@ -1384,10 +1384,10 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 
 
   if (discArray[skill] == NULL) {
-    vlogf(LOG_BUG,fmt("Bad skill number: %d in getSkill (NADA)") % skill);
+    vlogf(LOG_BUG,format("Bad skill number: %d in getSkill (NADA)") % skill);
   } else if (*discArray[skill]->name) {
     if (strcmp(discArray[skill]->name,"\n"))
-      vlogf(LOG_BUG,fmt("Bad skill number: %d in getSkill (%s)") % skill % discArray[skill]->name);
+      vlogf(LOG_BUG,format("Bad skill number: %d in getSkill (%s)") % skill % discArray[skill]->name);
   }
   return (NULL);
 }
@@ -1489,7 +1489,7 @@ int TBeing::getAdvDoLearning(spellNumT skill) const
       ret = assDisc->getDoLearnedness();
       return ret;
     } else {
-      vlogf(LOG_BUG, fmt("Someone (%s) doesnt have a valid associated discipline for skill (%d)") %  getName() % skill);
+      vlogf(LOG_BUG, format("Someone (%s) doesnt have a valid associated discipline for skill (%d)") %  getName() % skill);
       return 0;
     }
   }
@@ -1513,7 +1513,7 @@ int TBeing::getAdvLearning(spellNumT skill) const
       ret = assDisc->getLearnedness();
       return ret;
     } else {
-      vlogf(LOG_BUG,fmt("Someone (%s) doesnt have a valid associated discipline for skill (%d)") %  getName() % skill);
+      vlogf(LOG_BUG,format("Someone (%s) doesnt have a valid associated discipline for skill (%d)") %  getName() % skill);
       return 0;
     }
   }
@@ -1538,7 +1538,7 @@ byte TBeing::getNatSkillValue(spellNumT skill) const
   if (value < 0) {
     return SKILL_MIN;
   } else if (value == 0) {
-    vlogf(LOG_BUG, fmt("%s showed up with 0 learning in a skill (%d)") %  getName() % skill);
+    vlogf(LOG_BUG, format("%s showed up with 0 learning in a skill (%d)") %  getName() % skill);
     return SKILL_MIN;
   } else {
     value = min((int) MAX_SKILL_LEARNEDNESS, value);

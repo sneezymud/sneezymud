@@ -29,53 +29,53 @@ int main(int argc, char **argv)
 
     db.query("select * from shop where shop_nr=%i", vnums[i]);
     if(db.fetchRow()){
-      buf = fmt("- shop\n"); sbuf+=buf;
-      buf = fmt("shop_nr:       %s\n") % db["shop_nr"];  sbuf+=buf;
-      buf = fmt("profit_buy:    %s\n") % db["profit_buy"];  sbuf+=buf;
-      buf = fmt("profit_sell:   %s\n") % db["profit_sell"];  sbuf+=buf;
-      buf = fmt("no_such_item1: %s\n") % db["no_such_item1"];  sbuf+=buf;
-      buf = fmt("no_such_item2: %s\n") % db["no_such_item2"];  sbuf+=buf;
-      buf = fmt("do_not_buy:    %s\n") % db["do_not_buy"];  sbuf+=buf;
-      buf = fmt("missing_cash1: %s\n") % db["missing_cash1"];  sbuf+=buf;
-      buf = fmt("missing_cash2: %s\n") % db["missing_cash2"];  sbuf+=buf;
-      buf = fmt("message_buy:   %s\n") % db["message_buy"];  sbuf+=buf;
-      buf = fmt("message_sell:  %s\n") % db["message_sell"];  sbuf+=buf;
-      buf = fmt("temper1:       %s\n") % db["temper1"];  sbuf+=buf;
-      buf = fmt("temper2:       %s\n") % db["temper2"];  sbuf+=buf;
-      buf = fmt("keeper:        %s\n") % db["keeper"];  sbuf+=buf;
-      buf = fmt("flags:         %s\n") % db["flags"];  sbuf+=buf;
-      buf = fmt("in_room:       %s\n") % db["in_room"];  sbuf+=buf;
-      buf = fmt("open1:         %s\n") % db["open1"];  sbuf+=buf;
-      buf = fmt("close1:        %s\n") % db["close1"];  sbuf+=buf;
-      buf = fmt("open2:         %s\n") % db["open2"];  sbuf+=buf;
-      buf = fmt("close2:        %s\n") % db["close2"];  sbuf+=buf;
-      buf = fmt("\n"); sbuf+=buf;
+      buf = format("- shop\n"); sbuf+=buf;
+      buf = format("shop_nr:       %s\n") % db["shop_nr"];  sbuf+=buf;
+      buf = format("profit_buy:    %s\n") % db["profit_buy"];  sbuf+=buf;
+      buf = format("profit_sell:   %s\n") % db["profit_sell"];  sbuf+=buf;
+      buf = format("no_such_item1: %s\n") % db["no_such_item1"];  sbuf+=buf;
+      buf = format("no_such_item2: %s\n") % db["no_such_item2"];  sbuf+=buf;
+      buf = format("do_not_buy:    %s\n") % db["do_not_buy"];  sbuf+=buf;
+      buf = format("missing_cash1: %s\n") % db["missing_cash1"];  sbuf+=buf;
+      buf = format("missing_cash2: %s\n") % db["missing_cash2"];  sbuf+=buf;
+      buf = format("message_buy:   %s\n") % db["message_buy"];  sbuf+=buf;
+      buf = format("message_sell:  %s\n") % db["message_sell"];  sbuf+=buf;
+      buf = format("temper1:       %s\n") % db["temper1"];  sbuf+=buf;
+      buf = format("temper2:       %s\n") % db["temper2"];  sbuf+=buf;
+      buf = format("keeper:        %s\n") % db["keeper"];  sbuf+=buf;
+      buf = format("flags:         %s\n") % db["flags"];  sbuf+=buf;
+      buf = format("in_room:       %s\n") % db["in_room"];  sbuf+=buf;
+      buf = format("open1:         %s\n") % db["open1"];  sbuf+=buf;
+      buf = format("close1:        %s\n") % db["close1"];  sbuf+=buf;
+      buf = format("open2:         %s\n") % db["open2"];  sbuf+=buf;
+      buf = format("close2:        %s\n") % db["close2"];  sbuf+=buf;
+      buf = format("\n"); sbuf+=buf;
     }
 
 
     db.query("select * from shoptype where shop_nr=%i", vnums[i]);
     while(db.fetchRow()){
-      buf = fmt("- shoptype\n"); sbuf+=buf;
-      buf = fmt("shop_nr: %s\n") % db["shop_nr"];  sbuf+=buf;
-      buf = fmt("type:    %s\n") % db["type"];  sbuf+=buf;
-      buf = fmt("\n"); sbuf+=buf;
+      buf = format("- shoptype\n"); sbuf+=buf;
+      buf = format("shop_nr: %s\n") % db["shop_nr"];  sbuf+=buf;
+      buf = format("type:    %s\n") % db["type"];  sbuf+=buf;
+      buf = format("\n"); sbuf+=buf;
     }
 
     db.query("select * from shopproducing where shop_nr=%i", vnums[i]);
     while(db.fetchRow()){
-      buf = fmt("- shopproducing\n"); sbuf+=buf;
-      buf = fmt("shop_nr: %s\n") % db["shop_nr"];  sbuf+=buf;
-      buf = fmt("producing:    %s\n") % db["producing"];  sbuf+=buf;
-      buf = fmt("\n"); sbuf+=buf;
+      buf = format("- shopproducing\n"); sbuf+=buf;
+      buf = format("shop_nr: %s\n") % db["shop_nr"];  sbuf+=buf;
+      buf = format("producing:    %s\n") % db["producing"];  sbuf+=buf;
+      buf = format("\n"); sbuf+=buf;
     }
 
 
     db.query("select * from shopmaterial where shop_nr=%i", vnums[i]);
     while(db.fetchRow()){
-      buf = fmt("- shopmaterial\n"); sbuf+=buf;
-      buf = fmt("shop_nr: %s\n") % db["shop_nr"];  sbuf+=buf;
-      buf = fmt("mat_type:    %s\n") % db["mat_type"];  sbuf+=buf;
-      buf = fmt("\n"); sbuf+=buf;
+      buf = format("- shopmaterial\n"); sbuf+=buf;
+      buf = format("shop_nr: %s\n") % db["shop_nr"];  sbuf+=buf;
+      buf = format("mat_type:    %s\n") % db["mat_type"];  sbuf+=buf;
+      buf = format("\n"); sbuf+=buf;
     }
 
   }
@@ -87,7 +87,7 @@ int main(int argc, char **argv)
   fclose(tmpfile);
 
   printf("Opening editor.\n");
-  buf = fmt("$EDITOR %s") % file;
+  buf = format("$EDITOR %s") % file;
   system(buf.c_str());
 
 
@@ -105,7 +105,7 @@ int main(int argc, char **argv)
     }
   }
 
-  buf = fmt("/bin/cp -f %s %s.backup") % file % file;
+  buf = format("/bin/cp -f %s %s.backup") % file % file;
   system(buf.c_str());
 
 

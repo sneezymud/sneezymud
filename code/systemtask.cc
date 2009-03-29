@@ -131,14 +131,14 @@ void SystemTask::CheckTask()
   //  Check on the running task.
   } else {
     if (waitpid(top->pid, &pstatus, WNOHANG) < 0) {
-      vlogf(LOG_SILENT, fmt("INFO: task '%s' completed.") %  top->cmd);
+      vlogf(LOG_SILENT, format("INFO: task '%s' completed.") %  top->cmd);
       //  Process the output.
       memset((char *) &fstatus, 0, sizeof(struct stat));
       if (stat(TMPFILE, &fstatus) < 0) 
 #if defined(LINUX)
         vlogf(LOG_BUG, "WARNING: SystemTask::CheckTask(): stat()");
 #else
-        vlogf(LOG_BUG, fmt("WARNING: SystemTask::CheckTask(): stat(): errno=%d") %  errno);
+        vlogf(LOG_BUG, format("WARNING: SystemTask::CheckTask(): stat(): errno=%d") %  errno);
 #endif
 
       // there's no real technical reason we couldn't shove all the
@@ -234,12 +234,12 @@ void SystemTask::start_task()
     return;
 
   if (top->pid) {
-    vlogf(LOG_BUG, fmt("ERROR: SystemTask::start_task(): task '%s' is already running.") %  top->cmd);
+    vlogf(LOG_BUG, format("ERROR: SystemTask::start_task(): task '%s' is already running.") %  top->cmd);
     return;
   }
   unlink(TMPFILE);
   if (forktask(top)) {
-    vlogf(LOG_BUG, fmt("ERROR: SystemTask::AddTask(): forktask() for task '%s' failed.") %  top->cmd);
+    vlogf(LOG_BUG, format("ERROR: SystemTask::AddTask(): forktask() for task '%s' failed.") %  top->cmd);
     top->owner->sendTo("Your task failed and has been deleted.\n\r");
     remove(top);
   }
@@ -262,7 +262,7 @@ int SystemTask::forktask(_task *tsk)
     remove(tsk);
     return(1);
   }
-  vlogf(LOG_SILENT, fmt("INFO: task '%s' started.") %  tsk->cmd);
+  vlogf(LOG_SILENT, format("INFO: task '%s' started.") %  tsk->cmd);
   top->owner->sendTo("Your task has started.\n\r");
   
   sscanf(tsk->cmd, "%s", cmd);

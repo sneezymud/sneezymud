@@ -66,7 +66,7 @@ static bool genericCanSteal(TBeing *thief, TBeing *victim)
 
   if (victim->isShopkeeper() && !is_imp) {
     thief->sendTo("Oh, Bad Move.  Bad Move.\n\r");
-    vlogf(LOG_CHEAT, fmt("%s just tried to steal from a shopkeeper! [%s]") % 
+    vlogf(LOG_CHEAT, format("%s just tried to steal from a shopkeeper! [%s]") % 
           thief->getName() % victim->getName());
     return FALSE;
   }
@@ -146,7 +146,7 @@ static int steal(TBeing * thief, TBeing * victim)
     if (gold > 0) {
       victim->giveMoney(thief, gold, GOLD_INCOME);
       
-      thief->sendTo(fmt("You have just stolen %d talen%s from %s.\n\r") % gold % 
+      thief->sendTo(format("You have just stolen %d talen%s from %s.\n\r") % gold % 
             ((gold > 1) ? "s" : "") % victim->getName());
 
       if (victim->isPerceptive())
@@ -356,14 +356,14 @@ static int steal(TBeing * thief, TBeing * victim, const sstring &obj_name)
           tAff.type     = AFFECT_PLAYERLOOT;
           tAff.duration = (24 * UPDATES_PER_MUDHOUR);
           thief->affectJoin(thief, &tAff, AVG_DUR_NO, AVG_EFF_NO);
-          vlogf(LOG_CHEAT, fmt("Adding PLoot Flag To: %s (4)") %  thief->getName());
+          vlogf(LOG_CHEAT, format("Adding PLoot Flag To: %s (4)") %  thief->getName());
         }
 	*/
 
         thief->doSave(SILENT_YES);
         victim->doSave(SILENT_YES);
         if (!thief->hasWizPower(POWER_WIZARD))
-          vlogf(LOG_MISC, fmt("%s stole %s from %s.") % thief->getName() %
+          vlogf(LOG_MISC, format("%s stole %s from %s.") % thief->getName() %
                 obj->getName() % victim->getName());
 
       if (victim->isPerceptive() && !thief->isImmortal())

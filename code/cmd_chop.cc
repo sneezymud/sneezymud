@@ -187,7 +187,7 @@ static int chop(TBeing *c, TBeing *v)
     c->sendTo("You can't use that attack on a mounted person!\n\r");
     return FALSE;
   } else if (v->riding) {
-    c->sendTo(COLOR_MOBS, fmt("You can't use that attack while %s is on %s!\n\r") %	      v->getName() % v->riding->getName());
+    c->sendTo(COLOR_MOBS, format("You can't use that attack while %s is on %s!\n\r") %	      v->getName() % v->riding->getName());
     return FALSE;
   }
 

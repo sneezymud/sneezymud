@@ -86,7 +86,7 @@ void TCookware::pourMeIntoDrink2(TBeing *ch, TBaseCup *from)
   // get pool object
   int robj = real_object(GENERIC_POOL);
   if (robj < 0 || robj >= (signed int) obj_index.size()) {
-    vlogf(LOG_BUG, fmt("TCookware::pourMeIntoDrink2(): No object (%d) in database!") %  GENERIC_POOL);
+    vlogf(LOG_BUG, format("TCookware::pourMeIntoDrink2(): No object (%d) in database!") %  GENERIC_POOL);
     return;
   }
   
@@ -99,11 +99,11 @@ void TCookware::pourMeIntoDrink2(TBeing *ch, TBaseCup *from)
 
   // let them know
   sstring buf;
-  buf = fmt("You pour %s into %s.\n\r") %
+  buf = format("You pour %s into %s.\n\r") %
     liquidInfo[from->getDrinkType()]->name % ch->objs(this);
   act(buf, FALSE, ch, 0, 0, TO_CHAR);
 
-  buf = fmt("$n pours %s into %s.\n\r") %
+  buf = format("$n pours %s into %s.\n\r") %
     liquidInfo[from->getDrinkType()]->name % ch->objs(this);
   act(buf, TRUE, ch, 0, 0, TO_ROOM);
 

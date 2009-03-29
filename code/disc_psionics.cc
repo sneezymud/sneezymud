@@ -100,7 +100,7 @@ int TBeing::doPTell(const char *arg, bool visible){
     if (!(vict = get_pc_world(this, name, EXACT_NO, INFRA_NO, visible))) {
       if (!(vict = get_char_vis_world(this, name, NULL, EXACT_YES))) {
         if (!(vict = get_char_vis_world(this, name, NULL, EXACT_NO))) {
-          sendTo(fmt("You fail to telepath to '%s'\n\r") % name);
+          sendTo(format("You fail to telepath to '%s'\n\r") % name);
           return FALSE;
         }
       }
@@ -166,17 +166,17 @@ int TBeing::doPTell(const char *arg, bool visible){
     sprintf(nameBuf, "%s", sstring(capbuf).cap().c_str());
   }
 
-  sendTo(COLOR_COMM, fmt("<G>You telepath %s<z>, \"%s\"\n\r") % vict->getName() % colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE));
+  sendTo(COLOR_COMM, format("<G>You telepath %s<z>, \"%s\"\n\r") % vict->getName() % colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE));
 
   // we only color the sstring to the victim, so leave this AFTER
   // the stuff we send to the teller.
   garbed.convertStringColor("<c>");
-  vict->sendTo(COLOR_COMM, fmt("%s telepaths you, \"<c>%s<z>\"\n\r") %            nameBuf % garbed);
+  vict->sendTo(COLOR_COMM, format("%s telepaths you, \"<c>%s<z>\"\n\r") %            nameBuf % garbed);
 
   Descriptor *d = vict->desc;
   if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
     sprintf(garbedBuf, "<c>%s<z>", garbed.c_str());
-    d->clientf(fmt("%d|%s|%s") % CLIENT_TELL %
+    d->clientf(format("%d|%s|%s") % CLIENT_TELL %
         colorString(vict, vict->desc, nameBuf, NULL, COLOR_NONE, FALSE) %
         colorString(vict, vict->desc, garbedBuf, NULL, COLOR_NONE, FALSE));
   }
@@ -235,7 +235,7 @@ int TBeing::doPSay(const char *arg){
 
     mud_str_copy(garbed, garble(NULL, arg, SPEECH_SAY), 256);
 
-    sendTo(COLOR_COMM, fmt("<g>You think to the room, <z>\"%s%s\"\n\r") %             colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE) % norm());
+    sendTo(COLOR_COMM, format("<g>You think to the room, <z>\"%s%s\"\n\r") %             colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE) % norm());
     // show everyone in room the say.
     for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
       tmp=*(it++);
@@ -254,39 +254,39 @@ int TBeing::doPSay(const char *arg){
         if (hasColorStrings(NULL, capbuf, 2)) {
           if (IS_SET(mob->desc->plr_color, PLR_COLOR_MOBS)) {
             sprintf(tmpbuf, "%s", colorString(mob, mob->desc, capbuf, NULL, COLOR_NONE, FALSE).c_str());
-	    mob->sendTo(COLOR_COMM, fmt("%s thinks, \"%s%s\"\n\r") % tmpbuf % garbed % mob->norm());
+	    mob->sendTo(COLOR_COMM, format("%s thinks, \"%s%s\"\n\r") % tmpbuf % garbed % mob->norm());
             if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
               sprintf(garbedBuf, "%s", 
                 colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
-              d->clientf(fmt("%d|%s|%s") % CLIENT_SAY % tmpbuf % garbedBuf);
+              d->clientf(format("%d|%s|%s") % CLIENT_SAY % tmpbuf % garbedBuf);
             }
           } else {
-	    mob->sendTo(COLOR_COMM, fmt("<c>%s thinks, <z>\"%s\"\n\r") % tmpbuf % garbed);
+	    mob->sendTo(COLOR_COMM, format("<c>%s thinks, <z>\"%s\"\n\r") % tmpbuf % garbed);
             if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
               sprintf(nameBuf, "<c>%s<z>", tmpbuf);
               sprintf(garbedBuf, "%s", 
                 colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
-              d->clientf(fmt("%d|%s|%s") % CLIENT_SAY % 
+              d->clientf(format("%d|%s|%s") % CLIENT_SAY % 
                 colorString(this, mob->desc, nameBuf, NULL, COLOR_NONE, FALSE) %
                 garbedBuf);
             }
           }
         } else {
-	  mob->sendTo(COLOR_COMM, fmt("<c>%s thinks, <z>\"%s\"\n\r") % tmpbuf % garbed);
+	  mob->sendTo(COLOR_COMM, format("<c>%s thinks, <z>\"%s\"\n\r") % tmpbuf % garbed);
           if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
             sprintf(nameBuf, "<c>%s<z>", tmpbuf);
             sprintf(garbedBuf, "%s",
             colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
-            d->clientf(fmt("%d|%s|%s") % CLIENT_SAY %
+            d->clientf(format("%d|%s|%s") % CLIENT_SAY %
                 colorString(this, mob->desc, nameBuf, NULL, COLOR_NONE, FALSE) %
                 garbedBuf);
           }
         }
       } else {
-	mob->sendTo(COLOR_COMM, fmt("%s thinks, \"%s\"\n\r") % sstring(getName()).cap() % 
+	mob->sendTo(COLOR_COMM, format("%s thinks, \"%s\"\n\r") % sstring(getName()).cap() % 
 		    colorString(this, mob->desc, garbed, NULL, COLOR_COMM, FALSE));
         if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
-          d->clientf(fmt("%d|%s|%s") % CLIENT_SAY % sstring(getName()).cap() %
+          d->clientf(format("%d|%s|%s") % CLIENT_SAY % sstring(getName()).cap() %
             colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE));
         }
       }
@@ -347,7 +347,7 @@ void TBeing::doPShout(const char *msg){
   } else {
     mud_str_copy(garbed, garble(NULL, msg, SPEECH_SHOUT, GARBLE_SCOPE_EVERYONE), 256);
 
-    sendTo(COLOR_SPELLS, fmt("You telepathically send the message, \"%s<z>\"\n\r") % garbed);
+    sendTo(COLOR_SPELLS, format("You telepathically send the message, \"%s<z>\"\n\r") % garbed);
     for (i = descriptor_list; i; i = i->next) {
       if (i->character && (i->character != this) &&
 	  !i->connected && !i->character->checkSoundproof() &&
@@ -356,8 +356,8 @@ void TBeing::doPShout(const char *msg){
 	   !i->character->isPlayerAction(PLR_GODNOSHOUT))) {
 	     char garbed_individual[256];
 	     mud_str_copy(garbed_individual, garble(i->character, garbed, SPEECH_SHOUT, GARBLE_SCOPE_INDIVIDUAL), 256);
-	i->character->sendTo(COLOR_SPELLS, fmt("Your mind is flooded with a telepathic message from %s.\n\r") % getName());
-	i->character->sendTo(COLOR_SPELLS, fmt("The message is, \"%s%s\"\n\r") % garbed_individual % i->character->norm());
+	i->character->sendTo(COLOR_SPELLS, format("Your mind is flooded with a telepathic message from %s.\n\r") % getName());
+	i->character->sendTo(COLOR_SPELLS, format("The message is, \"%s%s\"\n\r") % garbed_individual % i->character->norm());
       }
     }
   }
@@ -398,7 +398,7 @@ void TBeing::doTelevision(const char *arg)
     if (!(vict = get_pc_world(this, arg, EXACT_NO, INFRA_NO, visible))) {
       if (!(vict = get_char_vis_world(this, arg, NULL, EXACT_YES))) {
         if (!(vict = get_char_vis_world(this, arg, NULL, EXACT_NO))) {
-          sendTo(fmt("You can't sense '%s' anywhere.\n\r") % arg);
+          sendTo(format("You can't sense '%s' anywhere.\n\r") % arg);
           return;
         }
       }
@@ -496,7 +496,7 @@ TBeing *psiAttackChecks(TBeing *caster, spellNumT sk, const char *tString){
     return NULL;
 
   if (!caster->doesKnowSkill(sk)) {
-    caster->sendTo(fmt("You do not have the skill to use %s.\n\r") % 
+    caster->sendTo(format("You do not have the skill to use %s.\n\r") % 
 		   discArray[sk]->name);
     return NULL;
   }
@@ -520,7 +520,7 @@ TBeing *psiAttackChecks(TBeing *caster, spellNumT sk, const char *tString){
   }
 
   if(!tVictim){
-    caster->sendTo(fmt("Who do you want to use %s on?\n\r") % discArray[sk]->name);
+    caster->sendTo(format("Who do you want to use %s on?\n\r") % discArray[sk]->name);
     return NULL;
   }
 

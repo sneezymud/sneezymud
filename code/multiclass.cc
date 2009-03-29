@@ -66,7 +66,7 @@ unsigned int CountBits(unsigned int Class)
    if (Class == (1<<21))
       return (22);
 
-   vlogf(LOG_BUG, fmt("Bad call to CountBits (%d)") %  Class);
+   vlogf(LOG_BUG, format("Bad call to CountBits (%d)") %  Class);
    return FALSE;
 }
 

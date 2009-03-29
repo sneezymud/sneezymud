@@ -123,7 +123,7 @@ void TBeing::doZonesSingle(sstring tStString)
           int iRNum = real_mobile(convertTo<int>(db["mobvnum"]));
 
           if (iRNum < 0) {
-            vlogf(LOG_BUG, fmt("doZones detected bad mobvnum=%d for name='%s'") % iVNum % getName());
+            vlogf(LOG_BUG, format("doZones detected bad mobvnum=%d for name='%s'") % iVNum % getName());
             continue;
           }
 
@@ -269,7 +269,7 @@ void TBeing::doZonesSingle(sstring tStString)
     if ((iZIndex == 0) || (iZIndex >= sortZoneVec.size())) {
       iZIndex = (sortZoneVec.size() - 1);
 
-      sendTo(fmt("Requested zone index is out of range.  Range is: 1, ..., %u\n\r") % iZIndex);
+      sendTo(format("Requested zone index is out of range.  Range is: 1, ..., %u\n\r") % iZIndex);
     } else
       doZonesSingle(sortZoneVec[(iZIndex - 1)].zoneName);
 

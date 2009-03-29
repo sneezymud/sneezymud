@@ -44,9 +44,9 @@ void TNote::showMe(TBeing *ch) const
         ch->desc->page_string(sb);
       } else {
         processStringForClient(sb);
-        ch->desc->clientf(fmt("%d") % CLIENT_NOTE);
-        ch->sendTo(fmt("%s") % sb);  // tmpbuf may have "%" in it, do it this way
-        ch->desc->clientf(fmt("%d") % CLIENT_NOTE_END);
+        ch->desc->clientf(format("%d") % CLIENT_NOTE);
+        ch->sendTo(format("%s") % sb);  // tmpbuf may have "%" in it, do it this way
+        ch->desc->clientf(format("%d") % CLIENT_NOTE_END);
       }
   } else
     ch->sendTo("It's blank.\n\r");
@@ -65,10 +65,10 @@ void TObj::show_me_to_char(TBeing *ch, showModeT mode) const
         !isObjStat(ITEM_HOVER) &&
         !isObjStat(ITEM_FLOAT) &&
         !objVnum() == GENERIC_FLARE ) {
-      buffer = fmt("%s is floating here.") % getName();
+      buffer = format("%s is floating here.") % getName();
       buffer=buffer.cap();
     } else {
-      capbuf = fmt("%s") % addNameToBuf(ch, ch->desc, this, getDescr(), COLOR_OBJECTS);
+      capbuf = format("%s") % addNameToBuf(ch, ch->desc, this, getDescr(), COLOR_OBJECTS);
       sstring cStrbuf = capbuf;
       while (cStrbuf.find("$$g") != sstring::npos)
         cStrbuf.replace(cStrbuf.find("$$g"), 3,
@@ -88,7 +88,7 @@ void TObj::show_me_to_char(TBeing *ch, showModeT mode) const
       char namebuf[256];
       sscanf(action_description, "This is the personalized object of %s.", 
 	     namebuf);
-      buffer += fmt(" {%s}") % namebuf;
+      buffer += format(" {%s}") % namebuf;
     }
 
   } else if (mode == SHOW_MODE_TYPE) {
@@ -103,11 +103,11 @@ void TObj::show_me_to_char(TBeing *ch, showModeT mode) const
   if (isObjStat(ITEM_INVISIBLE))
     buffer += " (invisible)";
   if (isObjStat(ITEM_MAGIC) && ch->isAffected(AFF_DETECT_MAGIC)){
-    buf = fmt(" %s(blue aura)%s") % ch->cyan() % ch->norm();
+    buf = format(" %s(blue aura)%s") % ch->cyan() % ch->norm();
     buffer += buf;
   }
   if (isObjStat(ITEM_GLOW)){
-    buf = fmt(" %s(glowing)%s") % ch->orange() % ch->norm();
+    buf = format(" %s(glowing)%s") % ch->orange() % ch->norm();
     buffer += buf;
   }
   if (isObjStat(ITEM_SHADOWY))
@@ -117,23 +117,23 @@ void TObj::show_me_to_char(TBeing *ch, showModeT mode) const
   if (isObjStat(ITEM_HUM))
     buffer += " (humming)";
   if (isObjStat(ITEM_BURNING)){
-    buf = fmt(" %s(burning)%s") % ch->red() % ch->norm();
+    buf = format(" %s(burning)%s") % ch->red() % ch->norm();
     buffer += buf;
   }
   if (isObjStat(ITEM_CHARRED)){
-    buf = fmt(" %s(charred)%s") % ch->blackBold() % ch->norm();
+    buf = format(" %s(charred)%s") % ch->blackBold() % ch->norm();
     buffer += buf;
   }
   if(isObjStat(ITEM_RUSTY)){
-    buf = fmt(" %s(rusty)%s") % ch->orange() % ch->norm();
+    buf = format(" %s(rusty)%s") % ch->orange() % ch->norm();
     buffer += buf;
   }
   if (parent && dynamic_cast<TObj *>(parent)) {
-    buf = fmt(" (in %s)") % sstring(parent->getName()).uncap();
+    buf = format(" (in %s)") % sstring(parent->getName()).uncap();
     buffer += buf;
   }
   if (riding) {
-    buf = fmt(" (on %s)") % sstring(ch->objs(riding)).uncap();
+    buf = format(" (on %s)") % sstring(ch->objs(riding)).uncap();
     buffer += buf;
   }
   if (dynamic_cast<const TTable *>(this) && rider) {
@@ -144,7 +144,7 @@ void TObj::show_me_to_char(TBeing *ch, showModeT mode) const
   }
   if (!buffer.empty())
     buffer += "\n\r";
-  buf = fmt("%s") % colorString(ch, ch->desc, buffer, NULL, COLOR_OBJECTS, TRUE);
+  buf = format("%s") % colorString(ch, ch->desc, buffer, NULL, COLOR_OBJECTS, TRUE);
 //  ch->sendTo(COLOR_OBJECTS, buffer);
 //  COSMO_COLOR
   ch->sendTo(buf);
@@ -159,7 +159,7 @@ void TObj::show_me_mult_to_char(TBeing *ch, showModeT mode, unsigned int num) co
     return;
 
   if (mode == SHOW_MODE_DESC_PLUS && getDescr()) {
-    capbuf = fmt("%s") % addNameToBuf(ch, ch->desc, this, getDescr(), COLOR_OBJECTS);
+    capbuf = format("%s") % addNameToBuf(ch, ch->desc, this, getDescr(), COLOR_OBJECTS);
     sstring cStrbuf = capbuf;
     while (cStrbuf.find("$$g") != sstring::npos)
       cStrbuf.replace(cStrbuf.find("$$g"), 3, 
@@ -185,12 +185,12 @@ void TObj::show_me_mult_to_char(TBeing *ch, showModeT mode, unsigned int num) co
     if (isObjStat(ITEM_INVISIBLE)) 
       buffer += " (invisible)";
     if (isObjStat(ITEM_MAGIC) && ch->isAffected(AFF_DETECT_MAGIC)) {
-      tmp = fmt(" %s(glowing blue)%s") % ch->cyan() % ch->norm();
+      tmp = format(" %s(glowing blue)%s") % ch->cyan() % ch->norm();
       buffer += tmp;
     }
     
     if (isObjStat(ITEM_GLOW)) {
-      tmp = fmt(" %s(glowing)%s") % ch->orange() % ch->norm();
+      tmp = format(" %s(glowing)%s") % ch->orange() % ch->norm();
       buffer += tmp;
     }
     
@@ -202,35 +202,35 @@ void TObj::show_me_mult_to_char(TBeing *ch, showModeT mode, unsigned int num) co
     if (isObjStat(ITEM_HUM)) 
       buffer += " (humming)";
     if (isObjStat(ITEM_BURNING)){
-      tmp = fmt(" %s(burning)%s") % ch->red() % ch->norm();
+      tmp = format(" %s(burning)%s") % ch->red() % ch->norm();
       buffer += tmp;
     }
     if (isObjStat(ITEM_CHARRED)){
-      tmp = fmt(" %s(charred)%s") % ch->blackBold() % ch->norm();
+      tmp = format(" %s(charred)%s") % ch->blackBold() % ch->norm();
       buffer += tmp;
     }
     if (isObjStat(ITEM_RUSTY)){
-      tmp = fmt(" %s(rusty)%s") % ch->orange() % ch->norm();
+      tmp = format(" %s(rusty)%s") % ch->orange() % ch->norm();
       buffer += tmp;
     }
 
     
   }
   if (num > 1) {
-    tmp = fmt(" [%d]") % num;
+    tmp = format(" [%d]") % num;
     buffer += tmp;
   }
   if (parent && dynamic_cast<TObj *>(parent)) {    
-    tmp = fmt(" (in %s)") % sstring(parent->getName()).uncap();
+    tmp = format(" (in %s)") % sstring(parent->getName()).uncap();
     buffer += tmp;
   }
   if (riding) {
-    tmp = fmt(" (on %s)") % sstring(ch->objs(riding)).uncap();
+    tmp = format(" (on %s)") % sstring(ch->objs(riding)).uncap();
     buffer += tmp;
   }
   buffer += "\n\r";
   buffer=buffer.cap();
-  buffer = fmt("%s") % colorString(ch, ch->desc, buffer, NULL, COLOR_OBJECTS, TRUE);
+  buffer = format("%s") % colorString(ch, ch->desc, buffer, NULL, COLOR_OBJECTS, TRUE);
   ch->desc->page_string(buffer);
 }
 
@@ -767,7 +767,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
 		isPkChar() ? " (PK)" : "");
         ch->sendTo(buffer);
       } else if (ch->isAffected(AFF_SENSE_LIFE) && (GetMaxLevel() < 51))
-        ch->sendTo(fmt("You sense a hidden life form in the room.%s\n\r") %
+        ch->sendTo(format("You sense a hidden life form in the room.%s\n\r") %
 		   (isPkChar() ? " (PK)" : ""));
 
       return;
@@ -990,7 +990,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
     if (task && task->task != TASK_SIT && 
         task->task != TASK_REST && 
         task->task != TASK_SLEEP)
-      ch->sendTo(COLOR_MOBS,fmt(".....%s is busy %s.\n\r") % getName() % tasks[task->task].name);
+      ch->sendTo(COLOR_MOBS,format(".....%s is busy %s.\n\r") % getName() % tasks[task->task].name);
     if (checkSlots() && getPosition() == POSITION_SITTING)
       act(".....$n is sitting at the slot machine!", FALSE, this, 0, ch, TO_VICT);
     if(!ch->isPlayerAction(PLR_BRIEF))
@@ -1007,7 +1007,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
                         (roomp ? roomp->describeGround().c_str() : "TELL A GOD"));
       strcpy(capbuf, cStrbuf.c_str());
       strcpy(capbuf, sstring(capbuf).cap().c_str());
-      ch->sendTo(COLOR_MOBS, fmt("%s") % capbuf);
+      ch->sendTo(COLOR_MOBS, format("%s") % capbuf);
     } else 
       act("You see nothing special about $m.", FALSE, this, 0, ch, TO_VICT);
     
@@ -1088,7 +1088,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
     }
 
     if (affectedBySpell(AFFECT_WET))
-      act(fmt("$e looks %s.") % describeWet(this), FALSE, this, NULL, ch, TO_VICT);
+      act(format("$e looks %s.") % describeWet(this), FALSE, this, NULL, ch, TO_VICT);
 
     if (curStats.get(STAT_STR) > 190)
       strcpy(buffer,"$e is unhumanly muscular, ");
@@ -1179,13 +1179,13 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
         if (isLimbFlags(ij, PART_TRANSFORMED)) {
           if (shouldDescTransLimb(ij)) {
             sprintf(buf, "<%s>", describeTransEquipSlot(ij).c_str());
-            ch->sendTo(fmt("%s\n\r") % buf);
+            ch->sendTo(format("%s\n\r") % buf);
           }
         }
         if (equipment[ij] && ch->canSee(equipment[ij])) {
           if (!equipment[ij]->shouldntBeShown(ij)) {
             sprintf(buf, "<%s>", describeEquipmentSlot(ij).c_str());
-            ch->sendTo(fmt("%-26s") % buf);
+            ch->sendTo(format("%-26s") % buf);
             ch->showTo(equipment[ij], SHOW_MODE_SHORT_PLUS);
           }
         } else if(tattoos[ij]!=""){
@@ -1194,7 +1194,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
 
 
 	  //	  sprintf(buf, "<%s>", describeEquipmentSlot(ij).c_str());
-	  ch->sendTo(fmt("%-26s") %buf);
+	  ch->sendTo(format("%-26s") %buf);
 	  ch->sendTo(COLOR_BASIC, tattoos[ij]);
 	  ch->sendTo("\n\r");
 	}
@@ -1218,7 +1218,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
         skill = 0;
       value *= ::number(skill/10, (20-skill/10));
       value /= 10;
-      ch->sendTo(COLOR_MOBS,fmt("\n\rYou estimate %s has %d talens.\n\r") % getName() % value);
+      ch->sendTo(COLOR_MOBS,format("\n\rYou estimate %s has %d talens.\n\r") % getName() % value);
 
     } else if (ch->isImmortal()) {
       ch->sendTo("Inventory:\n\r");
@@ -1477,7 +1477,7 @@ void TBeing::doGlance(const char *argument)
       act(buffer, FALSE, i, 0, this, TO_VICT);
       describeLimbDamage(i);
 //      describeAffects(i);
-      sendTo(COLOR_MOBS, fmt("%s look%s %s.\n\r") %
+      sendTo(COLOR_MOBS, format("%s look%s %s.\n\r") %
 	     (i == this ? "You" : sstring(i->getName()).cap()) %
 	     (i == this ? "" : "s") %
         DescMoves((((double) i->getMove()) / ((double) i->moveLimit()))));

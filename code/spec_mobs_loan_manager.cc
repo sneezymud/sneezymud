@@ -66,7 +66,7 @@ void loanBuy(TBeing *ch, TMonster *myself, sstring arg)
 
   if(!db.fetchRow()){
     TRoom *tr=real_roomp(shop_index[corp.getBank()].in_room);
-    myself->doTell(ch->getName(), fmt("You need to have a bank account at %s in order to finance loans.") % tr->getName());
+    myself->doTell(ch->getName(), format("You need to have a bank account at %s in order to finance loans.") % tr->getName());
     return;
   }
 
@@ -83,7 +83,7 @@ void loanBuy(TBeing *ch, TMonster *myself, sstring arg)
   
   sba->addToMoney(amt, GOLD_SHOP);
   shoplog(160, ch, sba, "talens", amt, "loaning");
-  sba->saveItems(fmt("%s/%d") % SHOPFILE_PATH % 160);
+  sba->saveItems(format("%s/%d") % SHOPFILE_PATH % 160);
 
   // give fee amount to myself
 #endif
@@ -97,7 +97,7 @@ void loanList(TBeing *ch, TMonster *myself)
   db.query("select loan_id, amt, rate, risk from shopownednpcloans order by loan_id");
 
   while(db.fetchRow()){
-    ch->sendTo(fmt("[%s] %s talens at %s, risk %s\n\r") %
+    ch->sendTo(format("[%s] %s talens at %s, risk %s\n\r") %
 	       db["loan_id"] % db["amt"] % db["rate"] % db["risk"]);
   }
 }

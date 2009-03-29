@@ -58,7 +58,7 @@ void TPerson::setMaxHit(int newhit)
 {
   // TPerson hit points are dynamic now, so this shouldn't happen
   // unless an immortal uses @set
-  vlogf(LOG_BUG, fmt("TPerson::setMaxHit() got called on %s") %  getName());
+  vlogf(LOG_BUG, format("TPerson::setMaxHit() got called on %s") %  getName());
   points.maxHit = newhit;  
 }
 
@@ -97,7 +97,7 @@ float classHpPerLevel(const TPerson *tp){
  }
 
  if(!hpgain){
-    vlogf(LOG_BUG, fmt("No class in classHpPerLevel() for %s") %  tp->getName());
+    vlogf(LOG_BUG, format("No class in classHpPerLevel() for %s") %  tp->getName());
     hpgain=7.0;
  } 
 
@@ -593,7 +593,7 @@ sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
   
     // spammy with new functions
 /*  if(isPc()) {
-    vlogf(LOG_DASH, fmt("%s gaining %d pracs roll = %d (%d + %4.2f) lev: %d") %  getName() %
+    vlogf(LOG_DASH, format("%s gaining %d pracs roll = %d (%d + %4.2f) lev: %d") %  getName() %
 	  prac % roll % (int)temp % num % getLevel(Class));
   }*/
 
@@ -743,25 +743,25 @@ void TPerson::fixPracs()
   // compare it to how many pracs the person got
   // if the person is under by more than level/10 and this is their first time, give them a second chance
   if (-diff > max(5,level/2) && hasQuestBit(TOG_PRACS_FIXED)) {
-    vlogf(LOG_BUG, fmt("%s was eligible to have practices corrected, but has already had that done and was skipped.") % getName());
+    vlogf(LOG_BUG, format("%s was eligible to have practices corrected, but has already had that done and was skipped.") % getName());
   } else if (diff > level/10 && !hasQuestBit(TOG_PRACS_FIXED)) {
-    vlogf(LOG_MISC, fmt("%s is having practices corrected, got an extra %d pracs.  Had %d unspent.") % getName() % diff % getPracs(Class));
+    vlogf(LOG_MISC, format("%s is having practices corrected, got an extra %d pracs.  Had %d unspent.") % getName() % diff % getPracs(Class));
     addPracs(diff, Class);
-    sendTo(fmt("%sYou have gained %d practices as a result of an account update.%s\n\r") % redBold() % diff % norm() );
+    sendTo(format("%sYou have gained %d practices as a result of an account update.%s\n\r") % redBold() % diff % norm() );
     setQuestBit(TOG_PRACS_FIXED);
     doSave(SILENT_YES);
   } else if (-diff > max(5,level/2)) {
     if (getMaxExp() > 1) {
     // flip on a toggle to fix the account
-      vlogf(LOG_BUG, fmt("%s has %d pracs too many and has had the no experience toggle set.  Prepare for unrest.") % getName() % -diff);
-      sendTo(fmt("%sSomething has gone drastically wrong with your practice allocation.  Experience gain has been disabled for this player.  Contact a creator.%s\n\r")
+      vlogf(LOG_BUG, format("%s has %d pracs too many and has had the no experience toggle set.  Prepare for unrest.") % getName() % -diff);
+      sendTo(format("%sSomething has gone drastically wrong with your practice allocation.  Experience gain has been disabled for this player.  Contact a creator.%s\n\r")
           % redBold() % norm() );
       setQuestBit(TOG_NO_XP_GAIN);
       doSave(SILENT_YES);
     } else {
-      vlogf(LOG_BUG, fmt("%s may or may not have excess pracs.  Max XP was zero.  %s has been instructed to kill something then rent and come back.")
+      vlogf(LOG_BUG, format("%s may or may not have excess pracs.  Max XP was zero.  %s has been instructed to kill something then rent and come back.")
           % getName() % getName());
-      sendTo(fmt("%sThis character is old and needs to be updated before practices can be evaluated.  You can cause this to happen automatically.  Please go kill something (anything, e.g. a fuzzy mouse), then rent, and come back.  Thanks for your help.%s\n\r")
+      sendTo(format("%sThis character is old and needs to be updated before practices can be evaluated.  You can cause this to happen automatically.  Please go kill something (anything, e.g. a fuzzy mouse), then rent, and come back.  Thanks for your help.%s\n\r")
           % redBold() % norm() );
     }
   }
@@ -828,7 +828,7 @@ sh_int TBeing::expectedPracs(){
     fraction = (getMaxExp()-lvlStart)/(lvlEnd-lvlStart);
     double advancedlevel = 30.0 / getIntModForPracs();
     /*
-    vlogf(LOG_MAROR, fmt("level is %d, exp is %f, fraction is %f, advancedlevel is %f") 
+    vlogf(LOG_MAROR, format("level is %d, exp is %f, fraction is %f, advancedlevel is %f") 
        % level % getMaxExp() % fraction % advancedlevel );
     */
     for (i = 0; i <= level; i++) {
@@ -845,12 +845,12 @@ sh_int TBeing::expectedPracs(){
       }
       pracs += gain;
       /*
-      vlogf(LOG_MAROR, fmt("gaining %f practices for level %d.") %
+      vlogf(LOG_MAROR, format("gaining %f practices for level %d.") %
           gain % i);
       */
     }
   }
-//  vlogf(LOG_MAROR, fmt("----------------------------------"));
+//  vlogf(LOG_MAROR, format("----------------------------------"));
   return (sh_int) pracs;
 }
 
@@ -940,7 +940,7 @@ void gain_exp(TBeing *ch, double gain, int dam)
     gain *= 2;
 
   if (ch->hasQuestBit(TOG_NO_XP_GAIN)) {
-    ch->sendTo(fmt("%sYou would have gained XP here, but there is a problem with your account.  Please contact a creator.%s\n\r") % ch->redBold() % ch->norm());
+    ch->sendTo(format("%sYou would have gained XP here, but there is a problem with your account.  Please contact a creator.%s\n\r") % ch->redBold() % ch->norm());
     return;
   }
   
@@ -991,7 +991,7 @@ void gain_exp(TBeing *ch, double gain, int dam)
     // verifies first timers get the practices they deserve - dash
     // oct 2003
     if (ch->isPc() && ch->getMaxExp() == 0) {
-      vlogf(LOG_DASH, fmt("%s getting exp checked: MaxExp %.2f, Exp %.2f, Current Level Exp %.2f") %  ch->getMaxExp() % ch->getExp() % getExpClassLevel(Class, 50) % curr);
+      vlogf(LOG_DASH, format("%s getting exp checked: MaxExp %.2f, Exp %.2f, Current Level Exp %.2f") %  ch->getMaxExp() % ch->getExp() % getExpClassLevel(Class, 50) % curr);
       ch->setExp(min(ch->getExp(), getExpClassLevel(Class,50)));
       ch->setMaxExp(curr);
     }
@@ -1023,7 +1023,7 @@ if (ch->getLevel(Class) < MAX_MORT)
   // special case:  experience is higher than it should be
   // happens with use of set command
   if (ch->getMaxExp() > t_peak) {
-    vlogf(LOG_MAROR, fmt("%s has more experience than normal for level, gaining pracs for a whole level to make up for it.") % ch->getName());
+    vlogf(LOG_MAROR, format("%s has more experience than normal for level, gaining pracs for a whole level to make up for it.") % ch->getName());
     exp = t_curr;
   }
 
@@ -1033,19 +1033,19 @@ if (ch->getLevel(Class) < MAX_MORT)
     // if this exp step is past our max exp and is under the exp
     // we've gained, then get a prac
     if(t_exp > exp && t_exp <= new_exp){
-      vlogf(LOG_SILENT, fmt("%s gaining practice (current): t_curr=%f, t_peak=%f, delta_exp=%f, exp=%f, new_exp=%f, t_exp=%f") %  ch->getName() % t_curr % t_peak % delta_exp % exp % new_exp % t_exp); ;
+      vlogf(LOG_SILENT, format("%s gaining practice (current): t_curr=%f, t_peak=%f, delta_exp=%f, exp=%f, new_exp=%f, t_exp=%f") %  ch->getName() % t_curr % t_peak % delta_exp % exp % new_exp % t_exp); ;
       gain_pracs++;
     }
   }
 
-  //vlogf(LOG_MAROR, fmt("delta_exp %f t_peak %f t_exp %f")
+  //vlogf(LOG_MAROR, format("delta_exp %f t_peak %f t_exp %f")
  //     % delta_exp % t_peak % t_exp);
   // crossing the threshold into the next level
   if(new_exp >= t_peak){ // t_peak is the amount of exp required to level
     // roll for extra prac
     double overshoot = t_exp-t_peak; // amount of delta that is not part of this level
     if(::number(1,(int)delta_exp) < (delta_exp - overshoot)){
-      vlogf(LOG_SILENT, fmt("%s gaining practice (threshold): t_curr=%f, t_peak=%f, delta_exp=%f, exp=%f, new_exp=%f, overshoot=%f") 
+      vlogf(LOG_SILENT, format("%s gaining practice (threshold): t_curr=%f, t_peak=%f, delta_exp=%f, exp=%f, new_exp=%f, overshoot=%f") 
           %  ch->getName() % t_curr % t_peak % delta_exp % exp % new_exp % overshoot);
       gain_pracs++;
     }
@@ -1080,11 +1080,11 @@ else
   // max to min
   //  if (ch->getLevel(Class) >= MAX_MORT)
   exp = ch->getMaxExp(); // setting min exp required to get a prac in this level, for the loop
- // vlogf(LOG_MAROR, fmt("start gaining exp at %f exp") % exp);
+ // vlogf(LOG_MAROR, format("start gaining exp at %f exp") % exp);
   new_exp = ch->getExp() + gain; // setting bumped exp from xp gain
   for(j=t_curr;j<=new_exp && j<=t_peak;j+=delta_exp){
     if(j > exp && j < new_exp){
-      vlogf(LOG_SILENT, fmt("%s gaining practice (next): t_curr=%f, t_peak=%f, delta_exp=%f, exp=%f, new_exp=%f, j=%f") %  ch->getName() % t_curr % t_peak % delta_exp % exp % new_exp % j); ;
+      vlogf(LOG_SILENT, format("%s gaining practice (next): t_curr=%f, t_peak=%f, delta_exp=%f, exp=%f, new_exp=%f, j=%f") %  ch->getName() % t_curr % t_peak % delta_exp % exp % new_exp % j); ;
       gain_pracs++;
     }
   }
@@ -1093,7 +1093,7 @@ else
     // roll for extra prac
     double overshoot = new_exp-t_peak; // amount of delta that is not part of this level
     if(::number(1,(int)delta_exp) < (delta_exp - overshoot)){
-      vlogf(LOG_SILENT, fmt("%s gaining practice (threshold): t_curr=%f, t_peak=%f, delta_exp=%f, exp=%f, new_exp=%f, overshoot=%f") 
+      vlogf(LOG_SILENT, format("%s gaining practice (threshold): t_curr=%f, t_peak=%f, delta_exp=%f, exp=%f, new_exp=%f, overshoot=%f") 
           %  ch->getName() % t_curr % t_peak % delta_exp % exp % new_exp % overshoot);
       gain_pracs++;
     }
@@ -1106,7 +1106,7 @@ else
 if(gain_pracs > 0){
   if (ch->hasQuestBit(TOG_PRACS_FIXED) && 
         ch->meanPracsSoFar() > ch->expectedPracs() + ch->getLevel(Class)/10)
-      vlogf(LOG_MAROR, fmt("%s gaining practice outside normal bounds with 'practices ok' toggle on.") % ch->getName());
+      vlogf(LOG_MAROR, format("%s gaining practice outside normal bounds with 'practices ok' toggle on.") % ch->getName());
   if (ch->hasQuestBit(TOG_PRACS_FIXED) || 
       ch->meanPracsSoFar() <= (ch->expectedPracs() + ch->getLevel(Class)/10)) {
     ch->setQuestBit(TOG_PRACS_FIXED);
@@ -1114,12 +1114,12 @@ if(gain_pracs > 0){
     if(gain_pracs == 1){
       ch->sendTo(COLOR_BASIC, "<W>You have gained a practice!<1>\n\r");
     } else {
-      ch->sendTo(COLOR_BASIC, fmt("<W>You have gained %i practices!<1>\n\r") %
+      ch->sendTo(COLOR_BASIC, format("<W>You have gained %i practices!<1>\n\r") %
          gain_pracs);
     }
     
   } else 
-    vlogf(LOG_MAROR, fmt("%s missing practice gain due to too many practices.")
+    vlogf(LOG_MAROR, format("%s missing practice gain due to too many practices.")
         % ch->getName());
 }
 }
@@ -1131,7 +1131,7 @@ if(gain_pracs > 0){
     // do this last, so as not to mess up predefined values
   if (gain  > 0) {
 
-//    vlogf(LOG_MAROR, fmt("getExp %f gain %f peak %f getMaxExp %f")
+//    vlogf(LOG_MAROR, format("getExp %f gain %f peak %f getMaxExp %f")
 //      % ch->getExp() % gain % peak % ch->getMaxExp());
     ch->addToExp(gain);
     if ((ch->getExp() >= peak) && (ch->getExp() >= ch->getMaxExp()) &&
@@ -1393,7 +1393,7 @@ int TBeing::checkIdling()
       if (in_room != ROOM_NOWHERE)
         --(*this);
 
-      vlogf(LOG_SILENT, fmt("%s booted from game for inactivity.") %  getName());
+      vlogf(LOG_SILENT, format("%s booted from game for inactivity.") %  getName());
       thing_to_room(this, ROOM_DUMP);
 
       // this would be done by ~TPerson

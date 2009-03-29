@@ -222,7 +222,7 @@ int updateWholist()
     
     db.query("delete from wholist where port=%i", gamePort);
     
-    //  vlogf(LOG_DASH, fmt("Updating who table for port %d") %  gamePort);
+    //  vlogf(LOG_DASH, format("Updating who table for port %d") %  gamePort);
   for (p = descriptor_list; p; p = p->next) {
     if (p && p->connected == CON_PLYNG || p->connected > MAX_CON_STATUS && p->character &&
         p->character->name && p->character->isPc() && !p->character->isLinkdead() && p->character->polyed == POLY_TYPE_NONE) {
@@ -257,8 +257,8 @@ void updateUsagelogs(int count)
 
 
   if(logtime/TIME_BETWEEN_LOGS < ct/TIME_BETWEEN_LOGS) {
-    //	vlogf(LOG_DASH, fmt("Webstuff: collecting game usage data - %d seconds since last log") %  ct-lastlog);
-    //        vlogf(LOG_DASH, fmt("Webstuff:  logtime = %d,  ct = %d, players = %d") %  logtime % ct % count);
+    //	vlogf(LOG_DASH, format("Webstuff: collecting game usage data - %d seconds since last log") %  ct-lastlog);
+    //        vlogf(LOG_DASH, format("Webstuff:  logtime = %d,  ct = %d, players = %d") %  logtime % ct % count);
     
     
     if (logtime != 0) logtime += TIME_BETWEEN_LOGS;
@@ -350,7 +350,7 @@ bool TMainSocket::handleShutdown()
 
   if (timeTill  && (timeTill <= time(0))) {
     if (descriptor_list) {
-      buf=fmt("%s time has arrived!\n\r") % shutdown_or_reboot();
+      buf=format("%s time has arrived!\n\r") % shutdown_or_reboot();
       descriptor_list->worldSend(buf, NULL);
       descriptor_list->outputProcessing();
     }
@@ -359,7 +359,7 @@ bool TMainSocket::handleShutdown()
     int minutes=(timeTill - time(0)) / 60;
     if (!sent) {
       buf="<r>******* SYSTEM MESSAGE ******<z>\n\r";
-      buf+=fmt("<c>%s in %ld minute%s.<z>\n\r") % 
+      buf+=format("<c>%s in %ld minute%s.<z>\n\r") % 
 	shutdown_or_reboot() % minutes % ((minutes == 1) ? "" : "s");
       descriptor_list->worldSend(buf, NULL);
     }
@@ -368,7 +368,7 @@ bool TMainSocket::handleShutdown()
     long secs = timeTill - time(0);
     if (!sent) {
       buf="<r>******* SYSTEM MESSAGE ******<z>\n\r";
-      buf+=fmt("<c>%s in %ld second%s.<z>\n\r") %
+      buf+=format("<c>%s in %ld second%s.<z>\n\r") %
 	shutdown_or_reboot() % secs % ((secs == 1) ? "" : "s");
       descriptor_list->worldSend(buf, NULL);
       sent = true;
@@ -538,7 +538,7 @@ void pulseLog(sstring name, TTiming timer, int pulse)
   if(!toggleInfo[TOG_GAMELOOP]->toggle)
     return;
 
-  vlogf(LOG_MISC, fmt("%i %i) %s: %i") % 
+  vlogf(LOG_MISC, format("%i %i) %s: %i") % 
 	(pulse % 2400) % (pulse%12) % name % 
 	(int)(timer.getElapsedReset()*1000000));
 }
@@ -573,7 +573,7 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
       break;
 
     if (tmp_ch->getPosition() == POSITION_DEAD) {
-      vlogf(LOG_BUG, fmt("Error: dead creature (%s at %d) in character_list, removing.") % 
+      vlogf(LOG_BUG, format("Error: dead creature (%s at %d) in character_list, removing.") % 
 	    tmp_ch->getName() % tmp_ch->in_room);
       delete tmp_ch;
       tmp_ch = NULL;
@@ -581,7 +581,7 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
     }
     if ((tmp_ch->getPosition() < POSITION_STUNNED) &&
 	(tmp_ch->getHit() > 0)) {
-      vlogf(LOG_BUG, fmt("Error: creature (%s) with hit > 0 found with position < stunned") % 
+      vlogf(LOG_BUG, format("Error: creature (%s) with hit > 0 found with position < stunned") % 
 	    tmp_ch->getName());
       vlogf(LOG_BUG, "Setting player to POSITION_STANDING");
       tmp_ch->setPosition(POSITION_STANDING);
@@ -679,7 +679,7 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
 	strcpy(tmpbuf, "");
 	tmp_ch->sendTo("An incredibly powerful force pulls you back into Imperia.\n\r");
 	act("$n is pulled back whence $e came.", TRUE, tmp_ch, 0, 0, TO_ROOM);
-	vlogf(LOG_BUG,fmt("%s was wandering around the mortal world (R:%d) so moving to office.") % 
+	vlogf(LOG_BUG,format("%s was wandering around the mortal world (R:%d) so moving to office.") % 
 	      tmp_ch->getName() % tmp_ch->roomp->number);
 	    
 	if (!tmp_ch->hasWizPower(POWER_GOTO)) {
@@ -816,11 +816,11 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
 	if(eq && !::number(0,4319)){
 	  // at this point, they're standing outside in a lightning storm,
 	  // either holding something metal or wearing a metal helmet. zzzap.
-	  act(fmt("A bolt of lightning streaks down from the heavens and hits your %s!") % fname(eq->name),
+	  act(format("A bolt of lightning streaks down from the heavens and hits your %s!") % fname(eq->name),
 	      FALSE, tmp_ch, 0, 0, TO_CHAR);
 	  act("BZZZZZaaaaaappppp!!!!!",
 	      FALSE, tmp_ch, 0, 0, TO_CHAR);
-	  act(fmt("A bolt of lightning streaks down from the heavens and hits $n's %s!") % fname(eq->name),
+	  act(format("A bolt of lightning streaks down from the heavens and hits $n's %s!") % fname(eq->name),
 	      FALSE, tmp_ch, 0, 0, TO_ROOM);
 	  
 	  // stolen from ego blast
@@ -973,7 +973,7 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
       rc=(int)(t.getElapsedReset()*1000000);
       
       if(rc>1000){
-	vlogf(LOG_MISC, fmt("characterPulse: %s: %i") % 
+	vlogf(LOG_MISC, format("characterPulse: %s: %i") % 
 	      tmp_ch->getName() % rc);
       }
     }
@@ -1060,8 +1060,8 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
 
 
     if (!dynamic_cast<TObj *>(obj)) {
-      vlogf(LOG_BUG, fmt("Object_list produced a non-obj().  rm: %d") %  obj->in_room);
-      vlogf(LOG_BUG, fmt("roomp %s, parent %s") %  
+      vlogf(LOG_BUG, format("Object_list produced a non-obj().  rm: %d") %  obj->in_room);
+      vlogf(LOG_BUG, format("roomp %s, parent %s") %  
 	    (obj->roomp ? "true" : "false") %
 	    (obj->parent ? "true" : "false"));
       // bogus objects tend to have garbage in obj->next
@@ -1321,7 +1321,7 @@ void procMobHate::run(int pulse) const
 	  list->iHateStrength--;
 	  
 	  if (list->iHateStrength <= 0) {
-	    vlogf(LOG_LAPSOS, fmt("%s no longer hates %s") % 
+	    vlogf(LOG_LAPSOS, format("%s no longer hates %s") % 
 		  tmons->getName() % list->name);
 	    
 	    tmons->remHated(NULL, list->name);
@@ -1360,7 +1360,7 @@ void procTweakLoadRate::run(int) const
 
   stats.equip -= 0.00019166666666666666;
   save_game_stats();
-  vlogf(LOG_LOW, fmt("procTweakLoadRate: adjusted load rate to %f") %
+  vlogf(LOG_LOW, format("procTweakLoadRate: adjusted load rate to %f") %
 	stats.equip);
 }
 
@@ -1402,7 +1402,7 @@ void procCheckTriggerUsers::run(int) const
     if(count < 100)
       continue;
 
-    vlogf(LOG_MISC, fmt("procCheckTriggerUsers: %s has %i unique commands") % 
+    vlogf(LOG_MISC, format("procCheckTriggerUsers: %s has %i unique commands") % 
 	  d->character->getName() % (c-'a'));
 
     unsigned int longest=0;
@@ -1422,7 +1422,7 @@ void procCheckTriggerUsers::run(int) const
       }
     }
 
-    vlogf(LOG_MISC, fmt("procCheckTriggerUsers: %s has longest pattern of %i") % 
+    vlogf(LOG_MISC, format("procCheckTriggerUsers: %s has longest pattern of %i") % 
 	  d->character->getName() % longest);
   }
 }
@@ -1585,7 +1585,7 @@ int TMainSocket::gameLoop()
     if(toggleInfo[TOG_GAMELOOP]->toggle){
       count=((timespent.tv_sec*1000000)+timespent.tv_usec);
       
-      vlogf(LOG_MISC, fmt("%i %i) handleTimeAndSockets: %i (sleep = %i)") %
+      vlogf(LOG_MISC, format("%i %i) handleTimeAndSockets: %i (sleep = %i)") %
 	    (pulse % 2400) % (pulse%12) % 
 	    (int)((t.getElapsedReset()*1000000)-count) % count);
     }
@@ -1599,7 +1599,7 @@ int TMainSocket::gameLoop()
 
 
     if(toggleInfo[TOG_GAMELOOP]->toggle)
-      vlogf(LOG_MISC, fmt("%i %i) normal pulses: %s") % 
+      vlogf(LOG_MISC, format("%i %i) normal pulses: %s") % 
 	    pulse % (pulse%12) % pl.showPulses());
 
     // since we're operating on non-multiples of 12 pulses, we need to
@@ -1613,7 +1613,7 @@ int TMainSocket::gameLoop()
     pl.init(pulse);
 
     if(toggleInfo[TOG_GAMELOOP]->toggle){
-      vlogf(LOG_MISC, fmt("%i %i) split pulses: %s") % 
+      vlogf(LOG_MISC, format("%i %i) split pulses: %s") % 
 	    oldpulse % (oldpulse%12) % pl.showPulses());
 
       pulseLog("gameLoop1", t, oldpulse);
@@ -1623,7 +1623,7 @@ int TMainSocket::gameLoop()
     count=objectPulse(pl, (pulse % 2400));
 
     if(toggleInfo[TOG_GAMELOOP]->toggle)
-      vlogf(LOG_MISC, fmt("%i %i) objectPulse: %i, %i objs") % 
+      vlogf(LOG_MISC, format("%i %i) objectPulse: %i, %i objs") % 
 	    (oldpulse % 2400) % (oldpulse%12) % 
 	    (int)(t.getElapsedReset()*1000000) % count);
     
@@ -1631,7 +1631,7 @@ int TMainSocket::gameLoop()
     count=characterPulse(pl, (pulse % 2400));
 
     if(toggleInfo[TOG_GAMELOOP]->toggle)
-      vlogf(LOG_MISC, fmt("%i %i) characterPulse: %i, %i chars") %
+      vlogf(LOG_MISC, format("%i %i) characterPulse: %i, %i chars") %
 	    (oldpulse % 2400) % (oldpulse%12) % 
 	    (int)(t.getElapsedReset()*1000000) % count);
 
@@ -1639,7 +1639,7 @@ int TMainSocket::gameLoop()
     count=roomPulse(pl, (pulse % 2400));
 
     if(toggleInfo[TOG_GAMELOOP]->toggle)
-      vlogf(LOG_MISC, fmt("%i %i) roomPulse: %i, %i rooms") %
+      vlogf(LOG_MISC, format("%i %i) roomPulse: %i, %i rooms") %
 	    (oldpulse % 2400) % (oldpulse%12) % 
 	    (int)(t.getElapsedReset()*1000000) % count);
 
@@ -1714,7 +1714,7 @@ static const sstring IP_String(in_addr &_a)
   n2 = (_a.s_addr >> 16) - (n1 * 256);
   n3 = (_a.s_addr >> 8) - (n1 * 65536) - (n2 * 256);
   n4 = (_a.s_addr) % 256;
-  buf = fmt("%d.%d.%d.%d") % n4 % n3 % n2 % n1;
+  buf = format("%d.%d.%d.%d") % n4 % n3 % n2 % n1;
 #endif
   return buf;
 }
@@ -1733,7 +1733,7 @@ void gethostbyaddr_cb(void *arg, int status, struct hostent *host_ent)
   if (status != ARES_SUCCESS) {
     char *ares_errmem;
 
-    vlogf(LOG_MISC, fmt("gethostbyaddr_cb: %s: %s") % ip_string % ares_strerror(status, &ares_errmem));
+    vlogf(LOG_MISC, format("gethostbyaddr_cb: %s: %s") % ip_string % ares_strerror(status, &ares_errmem));
     ares_free_errmem(ares_errmem);
 
     for (d = descriptor_list; d; d = d2) {
@@ -1769,7 +1769,7 @@ void gethostbyaddr_cb(void *arg, int status, struct hostent *host_ent)
     memcpy(&addr, *p, sizeof(struct in_addr));
     resolved_name = sstring(host_ent->h_name).lower();
 
-    vlogf(LOG_MISC, fmt("gethostbyaddr_cb: %s resolved to %-32s") % ip_string % resolved_name);
+    vlogf(LOG_MISC, format("gethostbyaddr_cb: %s resolved to %-32s") % ip_string % resolved_name);
 
     for (d = descriptor_list; d; d = d2) {
       d2 = d->next;
@@ -1939,7 +1939,7 @@ void TMainSocket::initSocket(int t_port)
 #else
   if (!(hp = gethostbyname("localhost"))) {
 #endif
-    vlogf(LOG_BUG, fmt("failed getting hostname structure.  hostname: %s") %  hostname);
+    vlogf(LOG_BUG, format("failed getting hostname structure.  hostname: %s") %  hostname);
     perror("gethostbyname");
     exit(1);
   }
@@ -1965,7 +1965,7 @@ void TMainSocket::initSocket(int t_port)
   }
   if (bind(t_sock, (struct sockaddr *) &sa, sizeof(sa)) < 0) {
     perror("bind");
-    vlogf(LOG_BUG, fmt("initSocket: bind: errno=%d") %  errno);
+    vlogf(LOG_BUG, format("initSocket: bind: errno=%d") %  errno);
     close(t_sock);
     exit(0);
   }

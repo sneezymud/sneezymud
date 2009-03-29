@@ -294,7 +294,7 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
   }
 
   if (myself->master && stop_following) {
-    vlogf(LOG_PROC, fmt("Hero Faerie stopping follow in room %d.") % myself->in_room);
+    vlogf(LOG_PROC, format("Hero Faerie stopping follow in room %d.") % myself->in_room);
     myself->stopFollower(FALSE);
   }
   
@@ -336,7 +336,7 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
         }
         break;
       default:
-        vlogf(LOG_BUG, fmt("defaulting with myself->mobVnum()=%d") % myself->mobVnum());
+        vlogf(LOG_BUG, format("defaulting with myself->mobVnum()=%d") % myself->mobVnum());
         break;
     }
   }
@@ -348,7 +348,7 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
     act("$n disappears.  *pop*" , TRUE, myself, 0, NULL, TO_ROOM);
     if (myself->master)
     {
-      vlogf(LOG_PROC, fmt("Hero Faerie clearing follower: was %s") % myself->master->getName());
+      vlogf(LOG_PROC, format("Hero Faerie clearing follower: was %s") % myself->master->getName());
       myself->stopFollower(FALSE);
     }
     --(*myself);
@@ -361,17 +361,17 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
     if (myself->master) {
       act("$n tells you, <1>\"<c>Sorry, gotta go.  Someone more interesting has arrived.<1>\"", 
           TRUE, myself, 0, myself->master, TO_VICT);
-      vlogf(LOG_PROC, fmt("Hero Faerie switching follower: was %s") % (myself->master ? myself->master->getName() : "None"));
+      vlogf(LOG_PROC, format("Hero Faerie switching follower: was %s") % (myself->master ? myself->master->getName() : "None"));
       myself->stopFollower(FALSE);
     }
     
     if (myself->circleFollow(newMaster)) {
-      vlogf(LOG_BUG, fmt("Sprite %s following %s in a circle, bugging out.") % myself->name % newMaster->name);
+      vlogf(LOG_BUG, format("Sprite %s following %s in a circle, bugging out.") % myself->name % newMaster->name);
       return TRUE;
     }
 
     if (myself == newMaster) {
-      vlogf(LOG_BUG, fmt("Sprite %s is trying to follow itself, bugging out.") % myself->name);
+      vlogf(LOG_BUG, format("Sprite %s is trying to follow itself, bugging out.") % myself->name);
       return TRUE;
     }
     

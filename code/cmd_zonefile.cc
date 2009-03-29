@@ -67,7 +67,7 @@ void doSaveZoneFile(TBeing *ch, const sstring & tArg)
     return;
 
   if ((zValue = ch->roomp->getZoneNum()) > zone_table.size()) {
-    vlogf(LOG_BUG, fmt("Immortal in invalid zone [%s]") %  ch->getName());
+    vlogf(LOG_BUG, format("Immortal in invalid zone [%s]") %  ch->getName());
     ch->sendTo("You are in an invalid zone, how did you get there?!?\n\r");
     return;
   }
@@ -90,7 +90,7 @@ void doSaveZoneFile(TBeing *ch, const sstring & tArg)
 
   if (!(tFile = fopen(tString, "w"))) {
     ch->sendTo("Something went wrong, tell a coder what you did.\n\r");
-    vlogf(LOG_FILE, fmt("Unable to create file for zonefile writing.  [%s]") %  tString);
+    vlogf(LOG_FILE, format("Unable to create file for zonefile writing.  [%s]") %  tString);
     return;
   }
 
@@ -370,7 +370,7 @@ void doLoadZoneFile(TBeing * tBeing, const sstring & tArg)
     return;
 
   if ((zValue = ch->roomp->getZoneNum()) > zone_table.size()) {
-    vlogf(LOG_BUG, fmt("Immortal in invalid zone [%s]") %  tBeing->getName());
+    vlogf(LOG_BUG, format("Immortal in invalid zone [%s]") %  tBeing->getName());
     tBeing->sendTo("You are in an invalid zone, how did you get there?!?\n\r");
     return;
   }

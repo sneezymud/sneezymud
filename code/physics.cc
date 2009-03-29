@@ -85,7 +85,7 @@ bool TBeing::canClimb()
           IS_SET(roomp->dir_option[DIR_DOWN]->condition, EX_CLOSED)) {
         return TRUE;
       } else {
-        vlogf(LOG_BUG,fmt("%s falling from room %d with no down dir.") % getName() % in_room);
+        vlogf(LOG_BUG,format("%s falling from room %d with no down dir.") % getName() % in_room);
         return TRUE;
       }
     } else if (!riding) {
@@ -488,7 +488,7 @@ int TObj::checkFalling()
     }
   }
   if (count >= 100) {
-    vlogf(LOG_BUG, fmt("Air room %d is screwed.  Tell Brutius.") %  in_room);
+    vlogf(LOG_BUG, format("Air room %d is screwed.  Tell Brutius.") %  in_room);
     return FALSE;
   }
   return TRUE;
@@ -609,7 +609,7 @@ int TBeing::checkFalling()
     --(*this);
   
     if (!(rp = real_roomp(new_room = rp->dir_option[DIR_DOWN]->to_room))) {
-      vlogf(LOG_BUG, fmt("illegal room number for falling - %d") %  rp->dir_option[DIR_DOWN]->to_room);
+      vlogf(LOG_BUG, format("illegal room number for falling - %d") %  rp->dir_option[DIR_DOWN]->to_room);
       thing_to_room(this, ROOM_VOID);
       return FALSE;
     }
@@ -664,7 +664,7 @@ rp->isFlyingSector())) {
           fallKill();
           return DELETE_THIS;
         } else {
-          sendTo(fmt("You are CRUSHED as you impact with the %s.\n\r") % rp->describeGround());
+          sendTo(format("You are CRUSHED as you impact with the %s.\n\r") % rp->describeGround());
           if (rp->isWaterSector())
             act("$n plunges into the waters.", FALSE, this, 0, 0, TO_ROOM);
           else
@@ -709,7 +709,7 @@ rp->isFlyingSector())) {
             return DELETE_THIS;
         } else {
           act("$n screams as $e tumbles to the $g.", FALSE, this, 0, 0, TO_ROOM);
-          sendTo(fmt("You scream in pain as you tumble to the %s.\n\r") % roomp->describeGround());
+          sendTo(format("You scream in pain as you tumble to the %s.\n\r") % roomp->describeGround());
           int dam = count * ::number(15,55);
           if (affectedBySpell(SPELL_FEATHERY_DESCENT) ||
               doesKnowSkill(SKILL_CATFALL))
@@ -725,13 +725,13 @@ rp->isFlyingSector())) {
         sendTo("You fall un-scathed into the refreshing waters.\n\r");
       } else {
         act("$n drops gracefully onto the $g.", FALSE, this, 0, 0, TO_ROOM);
-        sendTo(COLOR_ROOMS, fmt("You drop gracefully to the %s.\n\r") % roomp->describeGround());
+        sendTo(COLOR_ROOMS, format("You drop gracefully to the %s.\n\r") % roomp->describeGround());
       }
       return TRUE;
     }
   }
   if (count >= 100) {
-    vlogf(LOG_BUG, fmt("Air room %d is screwed.  Tell Brutius.") %  in_room);
+    vlogf(LOG_BUG, format("Air room %d is screwed.  Tell Brutius.") %  in_room);
     if (!isImmortal()) {
       fallKill();
       return DELETE_THIS;
@@ -767,7 +767,7 @@ int TBeing::checkDrowning()
     }
     updatePos();
     if (getHit() < -10) {
-      vlogf(LOG_MISC, fmt("%s killed by drowning at %s (%d)") % 
+      vlogf(LOG_MISC, format("%s killed by drowning at %s (%d)") % 
           getName() % roomp->getName() % inRoom());
 
       if (!desc)

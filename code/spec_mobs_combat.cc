@@ -210,7 +210,7 @@ int belimus(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 
   if (targetSwallower == -1 ||
       targetSwallower >= MAX_SWALLOWER_TO_ROOM) {
-    vlogf(LOG_PROC, fmt("Mobile in belimus() proc that isn't hard coded.  [%s] [%d]") % 
+    vlogf(LOG_PROC, format("Mobile in belimus() proc that isn't hard coded.  [%s] [%d]") % 
           myself->getName() % myself->mobVnum());
     return FALSE;
   }
@@ -254,7 +254,7 @@ int belimus(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     thing_to_room(tmp, SWALLOWER_TO_ROOM_PROC[targetSwallower][1]);
     act("$n's mawed corpse arrives tumbling down $N's throat!",
         FALSE, tmp, 0, myself, TO_ROOM);
-    vlogf(LOG_PROC, fmt("%s killed by belimus-swallow[%s] at %s (%d)") % 
+    vlogf(LOG_PROC, format("%s killed by belimus-swallow[%s] at %s (%d)") % 
           tmp->getName() % myself->getName() %
           tmp->roomp->getName() % tmp->inRoom());
 
@@ -283,10 +283,10 @@ int belimus(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 
   if ((SWALLOWER_TO_ROOM_PROC[targetSwallower][3] != -1) &&
       (::number(1, 100) < SWALLOWER_TO_ROOM_PROC[targetSwallower][3])) {
-    vict->sendTo(fmt("%s chomps down upon you, biting you in two!!!!\n\r") % myself->getName());
+    vict->sendTo(format("%s chomps down upon you, biting you in two!!!!\n\r") % myself->getName());
     act("$n's mawed corpse arrives tumbling down $N's throat!",
         FALSE, vict, 0, myself, TO_ROOM);
-    vlogf(LOG_PROC, fmt("%s killed by Belimus-swallow[%s] at %s (%d)") % 
+    vlogf(LOG_PROC, format("%s killed by Belimus-swallow[%s] at %s (%d)") % 
           vict->getName() % myself->getName() %
           vict->roomp->getName() % vict->inRoom());
     rc = vict->die(DAMAGE_EATTEN);
@@ -1143,12 +1143,12 @@ int targetDummy(TBeing *character, cmdTypeT cmd, const char *argIn, TMonster *my
       // DPR, hit %
       // APR, avoid %
       player->sendTo("You feel a magical voice in your head.  It says:\n\r");
-      player->sendTo(fmt("Training session ending: Status report.\n\r"));
-      player->sendTo(fmt("You did %d damage total, received %d damage total over %d rounds.\n\r") % (meleetotalout + specialtotalout) % (meleetotalin + specialtotalin) % roundstotalout);
-      player->sendTo(fmt("Average %.1f damage per round, %d% hit chance.\n\r") % dprout % hitperout);
-      player->sendTo(fmt("Average %.1f damage taken per round, %d% of hits avoided.\n\r") % dprin % (100 - hitperin));
+      player->sendTo("Training session ending: Status report.\n\r");
+      player->sendTo(format("You did %d damage total, received %d damage total over %d rounds.\n\r") % (meleetotalout + specialtotalout) % (meleetotalin + specialtotalin) % roundstotalout);
+      player->sendTo(format("Average %.1f damage per round, %d% hit chance.\n\r") % dprout % hitperout);
+      player->sendTo(format("Average %.1f damage taken per round, %d% of hits avoided.\n\r") % dprin % (100 - hitperin));
       if (sdCompare.hones > 0)
-        player->sendTo(fmt("You also honed your combat skills %d times.\n\r") % sdCompare.hones);
+        player->sendTo(format("You also honed your combat skills %d times.\n\r") % sdCompare.hones);
     }
 
     // clear the targets list

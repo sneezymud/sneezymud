@@ -108,7 +108,7 @@ void TBeing::doDefect(const char * args) {
   if(!strcmp(buf, "yes")) {
     sprintf(buf, "You have defected from %s.\n\r", newguild()->getName());
     sendTo(COLOR_BASIC, buf);
-    vlogf(LOG_FACT, fmt("%s defected from %s.") %  getName() % newguild()->getName());
+    vlogf(LOG_FACT, format("%s defected from %s.") %  getName() % newguild()->getName());
     setGuildID(-1);
     setGuildRank(0);
     saveGuildStats();
@@ -299,7 +299,7 @@ void TBeing::add_guild(const char * args) {
     setGuildRank(0); // leader slot
     saveGuildStats();
   }  
-  vlogf(LOG_FACT, fmt("%s founded a new guild: [%s] (%d)") %  getName() % f->keywords % f->ID);
+  vlogf(LOG_FACT, format("%s founded a new guild: [%s] (%d)") %  getName() % f->keywords % f->ID);
   save_guilds();
   return;
 }
@@ -505,7 +505,7 @@ int guildRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, 
     }
     
     if(!ch->hasOffer(f)) {
-      myself->doTell(fname(ch->name), fmt("%s has not extended a recruitment offer to you.") % f->getName());
+      myself->doTell(fname(ch->name), format("%s has not extended a recruitment offer to you.") % f->getName());
       if(!IS_SET(f->flags, GUILD_OPEN_RECRUITMENT)) {
 	return TRUE;
       } else {
@@ -582,7 +582,7 @@ void TBeing::edit_guild(const char * args)
     } else if (count == 2) {
       if(is_abbrev(fact, "remove")){
 	if(!remove_guild(field)){
-	  sendTo(fmt("Unable to find guild '%s'\n\r") % field);
+	  sendTo(format("Unable to find guild '%s'\n\r") % field);
 	} else {
 	  sendTo("Guild removed.\n\r");
 	}
@@ -644,7 +644,7 @@ void TBeing::edit_guild(const char * args)
     if(f->proper_name)
       delete [] f->proper_name;
     f->proper_name = mud_str_dup(values);
-    vlogf(LOG_PEEL, fmt("corp_id=%i") % f->corp_id);
+    vlogf(LOG_PEEL, format("corp_id=%i") % f->corp_id);
     vlogf(LOG_PEEL, "update corporation set name='%s' where corp_id=%i");
     db.query("update corporation set name='%s' where corp_id=%i",
 	     values, f->corp_id);
@@ -676,7 +676,7 @@ void TBeing::edit_guild(const char * args)
       sendTo("Unrecognized faction.\n\r");
       return;
     }
-    sendTo(fmt("Faction affiliation changed to %s\n\r") % buf);
+    sendTo(format("Faction affiliation changed to %s\n\r") % buf);
   } else if (is_abbrev(field, "keywords")) {
     if(f->keywords)
       delete [] f->keywords;
@@ -900,7 +900,7 @@ void TBeing::edit_guild(const char * args)
 void TBeing::show_guild(const char * args)
 {
 #if 0
-  vlogf(LOG_DASH, fmt("show_guild() called with args = %s") %  args);
+  vlogf(LOG_DASH, format("show_guild() called with args = %s") %  args);
 #endif
   char buf[4096];
   if (args && strcmp(args, "showallguilds")) {
@@ -945,7 +945,7 @@ void TBeing::show_guild(const char * args)
       heraldcodes[f->colors[2]], heraldcolors[f->colors[2]]);
     sendTo(COLOR_BASIC,buf);
 
-    sendTo(COLOR_BASIC, fmt("<1><c>Faction Affiliation:<1> %s\n\r") %
+    sendTo(COLOR_BASIC, format("<1><c>Faction Affiliation:<1> %s\n\r") %
 	   FactionInfo[f->faction_affiliation].faction_name);
 
 
@@ -997,10 +997,10 @@ void TBeing::show_guild(const char * args)
 	if(getGuildID() == f->ID ||
 	   (!IS_SET(f->flags, GUILD_HIDE_RANKS) &&
 	   !IS_SET(f->flags, GUILD_HIDE_LEADERS))){
-	  sendTo(fmt("%s - %s\n\r") % 
+	  sendTo(format("%s - %s\n\r") % 
 		 db["name"].cap() % (f->rank[convertTo<int>(db["guildrank"])] ? f->rank[convertTo<int>(db["guildrank"])] : "(null)"));
 	} else {
-	  sendTo(fmt("%s\n\r") % 
+	  sendTo(format("%s\n\r") % 
 		 db["name"].cap());
 	}
 	membercount++;
@@ -1130,7 +1130,7 @@ bool remove_guild_by_keywords(const char * args) {
 TGuild * get_guild(const char *args) {
   int num = 0;
   int count = 0;
-  //  vlogf(LOG_DASH, fmt("get_guild called with args = '%s'") %  args);
+  //  vlogf(LOG_DASH, format("get_guild called with args = '%s'") %  args);
   count = sscanf(args,"%d", &num);
   if(count)
     return get_guild_by_ID(num);
@@ -1231,17 +1231,17 @@ void TBeing::saveGuildStats()
   sprintf(buf, "player/%c/%s.guild", LOWER(name[0]), sstring(name).lower().c_str());
 
   if (!(fp = fopen(buf, "w"))) {
-    vlogf(LOG_FILE, fmt("Unable to open file (%s) for saving guild stats. (%d)") %  buf % errno);
+    vlogf(LOG_FILE, format("Unable to open file (%s) for saving guild stats. (%d)") %  buf % errno);
     return;
   }
   if(!get_guild_by_ID(getGuildID())) {
-    vlogf(LOG_FACT, fmt("%s had bad guild during saveGuildStats() ... making unaffiliated") %  getName());
+    vlogf(LOG_FACT, format("%s had bad guild during saveGuildStats() ... making unaffiliated") %  getName());
     setGuildID(-1);
     setGuildRank(0);
   }
 
   if(getGuildRank() < 0 || getGuildRank() >= newguild()->ranks) {
-    vlogf(LOG_FACT, fmt("%s had bad rank - setting to lowest in guild.") %  getName());
+    vlogf(LOG_FACT, format("%s had bad rank - setting to lowest in guild.") %  getName());
     setGuildRank(newguild()->ranks - 1);
   }
   fprintf(fp, "%u\n",
@@ -1251,7 +1251,7 @@ void TBeing::saveGuildStats()
   fprintf(fp,"%d %d\n", faction.align_ge, faction.align_lc);
 
   if (fclose(fp))
-    vlogf(LOG_FILE, fmt("Problem closing %s's guild stats") %  name);
+    vlogf(LOG_FILE, format("Problem closing %s's guild stats") %  name);
 }
 
 //this loads the guild data for the PLAYER
@@ -1275,30 +1275,30 @@ void TBeing::loadGuildStats()
 
   if (fscanf(fp, "%d\n",
 	     &current_version) != 1) {
-    vlogf(LOG_BUG, fmt("Bad data in guild stat read (%s)") %  getName());
+    vlogf(LOG_BUG, format("Bad data in guild stat read (%s)") %  getName());
     fclose(fp);
     return;
   }
 
   if (fscanf(fp, "%d %d\n", &num1, &num2) != 2) {
-    vlogf(LOG_BUG, fmt("Bad data in guilds stat read (%s)") %  getName());
+    vlogf(LOG_BUG, format("Bad data in guilds stat read (%s)") %  getName());
     fclose(fp);
     return;
   }
   setGuildID(num1);
   if(!get_guild_by_ID(getGuildID())) {
-    vlogf(LOG_FACT, fmt("%s had bad guild during loadGuildStats() ... making unaffiliated") %  getName());
+    vlogf(LOG_FACT, format("%s had bad guild during loadGuildStats() ... making unaffiliated") %  getName());
     setGuildID(-1);
     setGuildRank(0);
   }
   setGuildRank(num2);
   if(getGuildRank() < 0 || getGuildRank() >= newguild()->ranks) {
-    vlogf(LOG_FACT, fmt("%s had bad rank during loadGuildStats - setting to lowest in guild.") %  getName());
+    vlogf(LOG_FACT, format("%s had bad rank during loadGuildStats - setting to lowest in guild.") %  getName());
     setGuildRank(newguild()->ranks - 1);
   }
 
   if (fscanf(fp, "%d %d\n", &num3, &num4) != 2) {
-    vlogf(LOG_BUG, fmt("Bad data in guilds stat read (%s)") %  getName());
+    vlogf(LOG_BUG, format("Bad data in guilds stat read (%s)") %  getName());
     fclose(fp);
     return;
   }
@@ -1326,7 +1326,7 @@ int load_guilds() {
   while(fp) {
     TGuild *f = new TGuild;
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,fmt("ERROR: bogus line in GUILD_FILE: %d") %  line);
+      vlogf(LOG_FILE,format("ERROR: bogus line in GUILD_FILE: %d") %  line);
       fclose(fp);
       return FALSE;
     }
@@ -1336,7 +1336,7 @@ int load_guilds() {
     sscanf(buf, "#%d\n\r", &i1);
     f->ID = i1;
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,fmt("ERROR: bogus line in GUILD_FILE: %d") %  line);
+      vlogf(LOG_FILE,format("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
       fclose(fp);
       return FALSE;
@@ -1348,7 +1348,7 @@ int load_guilds() {
     sscanf(buf, "keywords: %[a-zA-Z '<>]\n\r", c1);
     f->keywords = mud_str_dup(c1);
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,fmt("ERROR: bogus line in GUILD_FILE: %d") %  line);
+      vlogf(LOG_FILE,format("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
       fclose(fp);
       return FALSE;
@@ -1359,7 +1359,7 @@ int load_guilds() {
     sscanf(buf, "name: %[a-zA-Z '<>]\n\r", c1);
     f->proper_name = mud_str_dup(c1);
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,fmt("ERROR: bogus line in GUILD_FILE: %d") %  line);
+      vlogf(LOG_FILE,format("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
       fclose(fp);
       return FALSE;
@@ -1371,7 +1371,7 @@ int load_guilds() {
     sscanf(buf, "shortname: %[a-zA-Z '<>]\n\r", c1);
     f->slang_name = mud_str_dup(c1);
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,fmt("ERROR: bogus line in GUILD_FILE: %d") %  line);
+      vlogf(LOG_FILE,format("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
       fclose(fp);
       return FALSE;
@@ -1380,7 +1380,7 @@ int load_guilds() {
     sscanf(buf, "password: %s\n\r", c1);
     f->password = mud_str_dup(c1);
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,fmt("ERROR: bogus line in GUILD_FILE: %d") %  line);
+      vlogf(LOG_FILE,format("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
       fclose(fp);
       return FALSE;
@@ -1392,7 +1392,7 @@ int load_guilds() {
     f->flags = (unsigned int)(i3);
     f->power = f1;
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,fmt("ERROR: bogus line in GUILD_FILE: %d") %  line);
+      vlogf(LOG_FILE,format("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
       fclose(fp);
       return FALSE;
@@ -1406,7 +1406,7 @@ int load_guilds() {
     f->acty = i4;
 
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,fmt("ERROR: bogus line in GUILD_FILE: %d") %  line);
+      vlogf(LOG_FILE,format("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
       fclose(fp);
       return FALSE;
@@ -1419,7 +1419,7 @@ int load_guilds() {
     f->colors[2] = i3;
 
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,fmt("ERROR: bogus line in GUILD_FILE: %d") %  line);
+      vlogf(LOG_FILE,format("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
       fclose(fp);
       return FALSE;
@@ -1430,7 +1430,7 @@ int load_guilds() {
     f->patron = deityTypeT(i1);
 
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,fmt("ERROR: bogus line in GUILD_FILE: %d") %  line);
+      vlogf(LOG_FILE,format("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
       fclose(fp);
       return FALSE;
@@ -1444,7 +1444,7 @@ int load_guilds() {
 
     for(int j = 0; j < NUM_MAX_RANK; j++) {
       if(fgets(buf, 256, fp) == NULL) {
-	vlogf(LOG_FILE,fmt("ERROR: bogus line in GUILD_FILE: %d") %  line);
+	vlogf(LOG_FILE,format("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
 	fclose(fp);
 	return FALSE;
@@ -1458,7 +1458,7 @@ int load_guilds() {
     }
     TRelation *r;
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,fmt("ERROR: bogus line in GUILD_FILE: %d") %  line);
+      vlogf(LOG_FILE,format("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
       fclose(fp);
       return FALSE;
@@ -1473,7 +1473,7 @@ int load_guilds() {
       r->relation = i2;
       f->relations.push_back(r);
       if(fgets(buf, 256, fp) == NULL) {
-	vlogf(LOG_FILE,fmt("ERROR: bogus line in GUILD_FILE: %d") %  line);
+	vlogf(LOG_FILE,format("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
         fclose(fp);
         return FALSE;

@@ -1396,7 +1396,7 @@ discArray[SKILL_TELEKINESIS] = new spellInfo(SKILL_GENERAL, DISC_PSIONICS, DISC_
       continue;
 
     if((((101-discArray[i]->start)*discArray[i]->learn)) < 100){
-      vlogf(LOG_BUG, fmt("skill '%s' has bad learning (start: %i, learn: %i)")%
+      vlogf(LOG_BUG, format("skill '%s' has bad learning (start: %i, learn: %i)")%
 	    discArray[i]->name % discArray[i]->start % discArray[i]->learn);
     }
   }

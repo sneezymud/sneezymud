@@ -74,9 +74,9 @@ void TBow::remBowFlags(unsigned int r)
 void TBow::describeObjectSpecifics(const TBeing *ch) const
 {
   if (!stuff.empty())
-    ch->sendTo(COLOR_OBJECTS, fmt("%s is loaded with an arrow.\n\r") % sstring(getName()).cap());
+    ch->sendTo(COLOR_OBJECTS, format("%s is loaded with an arrow.\n\r") % sstring(getName()).cap());
   else
-    ch->sendTo(COLOR_OBJECTS, fmt("%s has no arrow ready.\n\r") % sstring(getName()).cap());
+    ch->sendTo(COLOR_OBJECTS, format("%s has no arrow ready.\n\r") % sstring(getName()).cap());
 
   if (isBowFlag(BOW_STRING_BROKE))
     act("$p has a broken string.", false, ch, this, 0, TO_CHAR);
@@ -143,31 +143,31 @@ void TBow::evaluateMe(TBeing *ch) const
   if (learn > 10)
     switch (arrowType) {
       case 0:
-        ch->sendTo(COLOR_OBJECTS, fmt("%s can hold hunting type arrows.\n\r") % getName());
+        ch->sendTo(COLOR_OBJECTS, format("%s can hold hunting type arrows.\n\r") % getName());
         break;
       case 1:
-        ch->sendTo(COLOR_OBJECTS, fmt("%s can hold fighting type arrows.\n\r") % getName());
+        ch->sendTo(COLOR_OBJECTS, format("%s can hold fighting type arrows.\n\r") % getName());
         break;
       case 2:
-        ch->sendTo(COLOR_OBJECTS, fmt("%s can hold squabble type quarrels.\n\r") % getName());
+        ch->sendTo(COLOR_OBJECTS, format("%s can hold squabble type quarrels.\n\r") % getName());
         break;
       case 3:
-        ch->sendTo(COLOR_OBJECTS, fmt("%s can hold common type quarrels.\n\r") % getName());
+        ch->sendTo(COLOR_OBJECTS, format("%s can hold common type quarrels.\n\r") % getName());
         break;
       case 4:
-        ch->sendTo(COLOR_OBJECTS, fmt("%s can hold sniper type blowdarts.\n\r") % getName());
+        ch->sendTo(COLOR_OBJECTS, format("%s can hold sniper type blowdarts.\n\r") % getName());
         break;
       case 5:
-        ch->sendTo(COLOR_OBJECTS, fmt("%s can hold common type blowdarts.\n\r") % getName());
+        ch->sendTo(COLOR_OBJECTS, format("%s can hold common type blowdarts.\n\r") % getName());
         break;
       case 6:
-        ch->sendTo(COLOR_OBJECTS, fmt("%s can hold heavy type sling ammo.\n\r") % getName());
+        ch->sendTo(COLOR_OBJECTS, format("%s can hold heavy type sling ammo.\n\r") % getName());
         break;
       case 7:
-        ch->sendTo(COLOR_OBJECTS, fmt("%s can hold common type sling ammo.\n\r") % getName());
+        ch->sendTo(COLOR_OBJECTS, format("%s can hold common type sling ammo.\n\r") % getName());
         break;
       default:
-        ch->sendTo(COLOR_OBJECTS, fmt("%s seems to have a messy arrow size.\r") % getName());
+        ch->sendTo(COLOR_OBJECTS, format("%s seems to have a messy arrow size.\r") % getName());
         break;
     }
 
@@ -212,7 +212,7 @@ void TBow::bloadArrowBow(TBeing *ch, TArrow *the_arrow)
   }
 
   if (getArrowType() != the_arrow->getArrowType()) {
-    ch->sendTo(fmt("That arrow is just too %s to fit properly.\n\r") %
+    ch->sendTo(format("That arrow is just too %s to fit properly.\n\r") %
                ((getArrowType() < the_arrow->getArrowType()) ? "small" : "big"));
 
     return;
@@ -240,7 +240,7 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
     act("$p isn't loaded with an arrow!", FALSE, ch, this, 0, TO_CHAR);
 
     if (!stuff.empty() && !dynamic_cast<TArrow *>(stuff.front())) {
-      vlogf(LOG_BUG, fmt("Bow loaded with something not an arrow. [%s]") %  ch->getName());
+      vlogf(LOG_BUG, format("Bow loaded with something not an arrow. [%s]") %  ch->getName());
       TThing *tThing = stuff.front();
       --(*tThing);
       delete tThing;
@@ -253,7 +253,7 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
 
   if ((shoot_dist > 50) || (max_distance < (unsigned int) shoot_dist)) {
     ch->sendTo("Much too far.  Maybe in your dreams!\n\r");
-    ch->sendTo(fmt("You couldn't possibly shoot it further than %d rooms.\n\r") % max_distance);
+    ch->sendTo(format("You couldn't possibly shoot it further than %d rooms.\n\r") % max_distance);
     return FALSE;
   }
 
@@ -339,11 +339,11 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
     sstring capbuf2 = colorString(ch, ch->desc, getName(), NULL, COLOR_OBJECTS, TRUE);
     
     if (targ)
-      ch->sendTo(COLOR_MOBS, fmt("You shoot %s out of %s at %s.\n\r") %
+      ch->sendTo(COLOR_MOBS, format("You shoot %s out of %s at %s.\n\r") %
 		 capbuf.uncap() % capbuf2.uncap() %
 		 targ->getName());
     else
-      ch->sendTo(fmt("You shoot %s out of %s.\n\r") %
+      ch->sendTo(format("You shoot %s out of %s.\n\r") %
 		 capbuf.uncap() % 
 		 capbuf2.uncap());
     
@@ -384,7 +384,7 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
     if (the_arrow)
       the_arrow->bloadBowArrow(ch, this);
     else {
-      ch->sendTo(fmt("You seem to have run out of '%s's.\n\r") % buf);
+      ch->sendTo(format("You seem to have run out of '%s's.\n\r") % buf);
       break;
     }
   }

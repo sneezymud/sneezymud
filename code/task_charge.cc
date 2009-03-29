@@ -188,7 +188,7 @@ int taskChargeMoveInto(int to_room, TBeing *ch, bool moveHorse)
     }
 
     if (ch->bothLegsHurt()) {
-      ch->sendTo(COLOR_MOBS, fmt("Riding %s without working legs is painful!\n\r") %
+      ch->sendTo(COLOR_MOBS, format("Riding %s without working legs is painful!\n\r") %
                  tHorse->getName());
       ch->addToMove(-5);
       if (!::number(0, 1)) {
@@ -413,10 +413,10 @@ int ChargeFlyIntoRoom(TBeing *ch, roomDirData *rExit)
   if (nRc == TRUE || nRc == FALSE)
     return TRUE;
 
-  nString=fmt("$n suddenly flies into the room and smashes into the %s.") %
+  nString=format("$n suddenly flies into the room and smashes into the %s.") %
     real_roomp(nRoom)->describeGround();
   act(nString, TRUE, ch, 0, 0, TO_ROOM);
-  ch->sendTo(fmt("You fly into the next room and smash into the %s.\n\r") %
+  ch->sendTo(format("You fly into the next room and smash into the %s.\n\r") %
              real_roomp(nRoom)->describeGround());
   ch->doLook("", CMD_LOOK);
 
@@ -430,7 +430,7 @@ int ChargeHitDoor(TBeing *ch, roomDirData *rExit)
   TBeing *tHorse;
 
   tHorse = dynamic_cast<TBeing *>(ch->riding);
-  ch->sendTo(fmt("You charge towards %s!\n\r") %
+  ch->sendTo(format("You charge towards %s!\n\r") %
              (IS_SET(rExit->condition, EX_CLOSED) ? "a door" : "the exit"));
 
   if (!ch->isAgile(0) && tHorse && !tHorse->hasSaddle() && !::number(0, 3)) {
@@ -553,7 +553,7 @@ int TBeing::ChargePulse(TBeing *ch)
     }
 
     ch->task->timeLeft--;
-    ch->sendTo(fmt("You charge %s.\n\r") % dirs[ch->task->flags]);
+    ch->sendTo(format("You charge %s.\n\r") % dirs[ch->task->flags]);
     sprintf(nString, "$n charges %s.", dirs[ch->task->flags]);
     act(nString, FALSE, ch, 0, 0, TO_ROOM);
 
@@ -586,7 +586,7 @@ int TBeing::ChargePulse(TBeing *ch)
         return ChargeHitDoor(ch, rExit);
       }
 
-      ch->sendTo(fmt("You charge %s.\n\r") % dirs[ch->task->flags]);
+      ch->sendTo(format("You charge %s.\n\r") % dirs[ch->task->flags]);
       sprintf(nString, "$n charges %s.", dirs[ch->task->flags]);
       act(nString, FALSE, ch, 0, 0, TO_ROOM);
 

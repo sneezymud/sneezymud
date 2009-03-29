@@ -43,7 +43,7 @@ int task_brew(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *
       // init timeLeft to 0 and increment by 1 each iteration
       if (ch->task->timeLeft) {
         if (ch->task->timeLeft < (how_many * 2)) {
-          ch->sendTo(fmt("You continue brewing your potion%s.\n\r") %
+          ch->sendTo(format("You continue brewing your potion%s.\n\r") %
 		     (how_many <= 5 ? "" : "s"));
 	  ch->addToLifeforce(-resulting);
         } else {
@@ -74,12 +74,12 @@ int task_brew(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *
 
           if (ch->bSuccess(knowledge, SKILL_BREW)) {
             // successful brew, set learnedness to knowledge in the skill
-            ch->sendTo(fmt("You successfully create your potion%s.\n\r") %
+            ch->sendTo(format("You successfully create your potion%s.\n\r") %
 		       (how_many <= 5 ? "" : "s"));
 	    
 	    potion_obj->setDrinkUnits(how_many);
 	    potion_obj->setDrinkType(spell_to_liq(which));
-            ch->sendTo(fmt("You now have a potion of %s.\n\r") %
+            ch->sendTo(format("You now have a potion of %s.\n\r") %
                        discArray[which]->name);
           } else {
             // failed brew, set learnedness to 0

@@ -124,7 +124,7 @@ float TTrophy::getExpModVal(float count, int mobvnum)
   t5=(double)(max(t4*100, min_mod*100)/100);
   t5=(double)(min(t5*100, max_mod*100)/100);
 
-  //  vlogf(LOG_PEEL, fmt("%f %f %f %f %f") %  t1 % t2 % t3 % t4 % t5);
+  //  vlogf(LOG_PEEL, format("%f %f %f %f %f") %  t1 % t2 % t3 % t4 % t5);
 
 
   return t5;
@@ -206,7 +206,7 @@ void TBeing::doTrophy(const sstring &arg)
 
       int rnum = real_mobile(convertTo<int>(db["mobvnum"]));
       if (rnum < 0) {
-	vlogf(LOG_BUG, fmt("DoTrophy detected bad mobvnum=%d for name='%s'") %  
+	vlogf(LOG_BUG, format("DoTrophy detected bad mobvnum=%d for name='%s'") %  
 	      convertTo<int>(db["mobvnum"]) % per->getName());
 	continue;
       }
@@ -225,7 +225,7 @@ void TBeing::doTrophy(const sstring &arg)
       // print the zone header if we haven't already
       // we do it here, so we can prevent printing headers for empty zones
       if(!header){
-	buf = fmt("\n--%s\n") % zd.name;
+	buf = format("\n--%s\n") % zd.name;
 	sb += buf; 
 	header=1;
       }
@@ -233,7 +233,7 @@ void TBeing::doTrophy(const sstring &arg)
       count=convertTo<float>(db["count"]);
 
       if(!summary){
-	buf = fmt("You will gain %s experience when fighting %s.\n\r") %
+	buf = format("You will gain %s experience when fighting %s.\n\r") %
 		trophy.getExpModDescr(count,vnum) % mob_index[rnum].short_desc;
 	sb += buf;
       }
@@ -249,7 +249,7 @@ void TBeing::doTrophy(const sstring &arg)
 
     // we have some mobs for this zone, so do some tallies
     if(header){
-      buf = fmt("Total mobs: %i\n\r") % zcount;
+      buf = format("Total mobs: %i\n\r") % zcount;
       sb += buf;
 
       unsigned int objnx;
@@ -261,7 +261,7 @@ void TBeing::doTrophy(const sstring &arg)
 	}
       }
 
-      buf = fmt("You have killed %1.2f%c of mobs in this zone.\n\r") %((float)((float)active_zcount/(float)zcountt)*100.0) % '%';
+      buf = format("You have killed %1.2f%c of mobs in this zone.\n\r") %((float)((float)active_zcount/(float)zcountt)*100.0) % '%';
       sb += buf;
     }
 
@@ -285,10 +285,10 @@ void TBeing::doTrophy(const sstring &arg)
 
 
 
-  buf = fmt("\n--\nTotal mobs: %i\n\r") % mcount;
+  buf = format("\n--\nTotal mobs: %i\n\r") % mcount;
   sb += buf;
   if(mcount>0){
-    buf = fmt("You have killed %1.2f%c of all mobs.\n\r") %((float)((float)mcount/(float)activemobcount)*100.0) % '%';
+    buf = format("You have killed %1.2f%c of all mobs.\n\r") %((float)((float)mcount/(float)activemobcount)*100.0) % '%';
     sb += buf;
   }
 

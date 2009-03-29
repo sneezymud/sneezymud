@@ -750,9 +750,9 @@ int dualStyleWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
   spectype_struct *weapspec = NULL;
   if (cmd == CMD_GENERIC_CREATED || !(weapspec = static_cast<spectype_struct *>(o->act_ptr))) {
     o->act_ptr = new spectype_struct();
-    vlogf(LOG_PROC, fmt("obj (%s) with dualstyle proc ... attempting to alocate.") %  o->getName());
+    vlogf(LOG_PROC, format("obj (%s) with dualstyle proc ... attempting to alocate.") %  o->getName());
     if (!(weapspec = static_cast<spectype_struct *>(o->act_ptr))) {
-      vlogf(LOG_PROC, fmt("obj (%s) with dualstyle proc had no memory alocated, investigate.") %  o->getName());
+      vlogf(LOG_PROC, format("obj (%s) with dualstyle proc had no memory alocated, investigate.") %  o->getName());
       return FALSE;
     }
     weapspec->type1 = weap->getWeaponType();
@@ -1019,13 +1019,13 @@ int weaponUnmaker(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   TThing *t;
 
   if (!vict->hasPart(slot)) {
-    vlogf(LOG_COMBAT, fmt("BOGUS SLOT trying to be made PART_MISSING: %d on %s") % 
+    vlogf(LOG_COMBAT, format("BOGUS SLOT trying to be made PART_MISSING: %d on %s") % 
 	  slot % vict->getName());
     return FALSE;
   }
   if (!vict->roomp) {
     // bat 8-16-96, mob could be dead, this is a bug
-    vlogf(LOG_COMBAT, fmt("!roomp for target (%s) of makePartMissing().") %  vict->getName());
+    vlogf(LOG_COMBAT, format("!roomp for target (%s) of makePartMissing().") %  vict->getName());
     return FALSE;
   }
 
@@ -1052,17 +1052,17 @@ int weaponUnmaker(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   // snipped limb missing code
 
 
-  buf = fmt("$n's $o glows with a <g>sickly light<1> as it strikes your %s!") % limb;
+  buf = format("$n's $o glows with a <g>sickly light<1> as it strikes your %s!") % limb;
   act(buf, FALSE, ch, o, vict, TO_VICT, NULL);
-  buf = fmt("Your %s turns to <o>soft clay<1> and falls to the ground!\n\rYou look down at your missing %s and scream!") % limb % limb;
+  buf = format("Your %s turns to <o>soft clay<1> and falls to the ground!\n\rYou look down at your missing %s and scream!") % limb % limb;
   act(buf, FALSE, vict, NULL, NULL, TO_CHAR, NULL);
 
-  buf = fmt("Your $o glows with a <g>sickly light<1> as it strikes $N's %s!") % limb;
+  buf = format("Your $o glows with a <g>sickly light<1> as it strikes $N's %s!") % limb;
   act(buf, FALSE, ch, o, vict, TO_CHAR, NULL);
-  buf = fmt("$n's $o glows with a <g>sickly light<1> as it strikes $N's %s!") % limb;
+  buf = format("$n's $o glows with a <g>sickly light<1> as it strikes $N's %s!") % limb;
   act(buf, FALSE, ch, o, vict, TO_NOTVICT, NULL);
 
-  buf = fmt("$N looks down in terror as $S %s turns to <o>soft clay<1> before $S eyes!\n\r<o>A lump of clay falls to the ground.<1>") % limb;
+  buf = format("$N looks down in terror as $S %s turns to <o>soft clay<1> before $S eyes!\n\r<o>A lump of clay falls to the ground.<1>") % limb;
   act(buf, FALSE, vict, NULL, vict, TO_ROOM, NULL);
 
   vict->dropWeapon(slot);
@@ -1482,9 +1482,9 @@ int brokenBottle(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   obj = read_object(33468, VIRTUAL);
   dam = ::number(3,12);
 
-  buf=fmt("$p cracks from the impact and %s breaks off while embedded in $n's %s.") % obj->getName() % vict->describeBodySlot(slot);
+  buf=format("$p cracks from the impact and %s breaks off while embedded in $n's %s.") % obj->getName() % vict->describeBodySlot(slot);
   act(buf, 0, vict, o, 0, TO_ROOM);
-  buf=fmt("$p cracks from the impact and %s breaks off while embedded in your %s.") % obj->getName() % vict->describeBodySlot(slot);
+  buf=format("$p cracks from the impact and %s breaks off while embedded in your %s.") % obj->getName() % vict->describeBodySlot(slot);
   act(buf, 0, vict, o, 0, TO_CHAR);
 
   vict->stickIn(obj, wearSlotT(slot));
@@ -1704,10 +1704,10 @@ int daggerOfHunting(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
       act("$n falls to the $g.", TRUE, me, 0, 0, TO_ROOM);
       act("$p fails to find its target.", FALSE, ch, me, 0, TO_CHAR);
       act("$p fails to find its target.", FALSE, ch, me, 0, TO_ROOM);
-       ch->sendTo(fmt("Unable to find path.  dir=%d\n\r") % dir);
+       ch->sendTo(format("Unable to find path.  dir=%d\n\r") % dir);
       return TRUE;
     }
-    buf = fmt("With blinding speed, $n streaks out of the room %s.") %
+    buf = format("With blinding speed, $n streaks out of the room %s.") %
              dirs_to_blank[dir];
     act(buf, TRUE, me, 0, 0, TO_ROOM);
   
@@ -1717,7 +1717,7 @@ int daggerOfHunting(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
     --(*me);
     *rp += *me;
 
-    buf = fmt("With blinding speed, $n streaks into the room from the %s.") %
+    buf = format("With blinding speed, $n streaks into the room from the %s.") %
              dirs[rev_dir[dir]];
     act(buf, TRUE, me, 0, 0, TO_ROOM);
   }
@@ -1737,11 +1737,11 @@ int daggerOfHunting(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
     return DELETE_THIS;  // delete me
   }
 
-  buf = fmt("$p impales itself into $n's %s.") % target->describeBodySlot(phit);
+  buf = format("$p impales itself into $n's %s.") % target->describeBodySlot(phit);
   act(buf, TRUE, target, me, ch, TO_VICT);
 //  act(buf, TRUE, target, me, NULL, TO_ROOM);
   act(buf, TRUE, target, me, ch, TO_NOTVICT);
-  buf = fmt("$p impales itself into your %s.") % target->describeBodySlot(phit);
+  buf = format("$p impales itself into your %s.") % target->describeBodySlot(phit);
   act(buf, TRUE, target, me, NULL, TO_CHAR);
 
   --(*me);
@@ -1755,7 +1755,7 @@ int daggerOfHunting(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
   if (tbw) {
     dam = (int)(tbw->baseDamage());
     rc = ch->applyDamage(target, dam, tbw->getWtype()); 
-    buf = fmt("You do %d damage to $M.") % dam;
+    buf = format("You do %d damage to $M.") % dam;
     act(buf, TRUE, ch, 0, target, TO_CHAR);
     if (IS_SET_DELETE(rc, DELETE_VICT)) {
       delete target;
@@ -1880,17 +1880,17 @@ int weaponBreaker(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   sprintf(limb, "%s", vict->describeBodySlot(slot).c_str());
 
   vict->addToLimbFlags(slot, PART_BROKEN);
-  buf = fmt("A muffled SNAP leaps from your %s as $n hits it with $s $p!") % limb;
+  buf = format("A muffled SNAP leaps from your %s as $n hits it with $s $p!") % limb;
   act(buf, FALSE, ch, o, vict, TO_VICT, ANSI_ORANGE);
-  buf = fmt("Extreme pain shoots through your %s!\n\rYour %s has been broken and is now useless!") % limb % limb;
+  buf = format("Extreme pain shoots through your %s!\n\rYour %s has been broken and is now useless!") % limb % limb;
   act(buf, FALSE, vict, NULL, NULL, TO_CHAR, ANSI_ORANGE);
 
-  buf = fmt("You hit $N's %s hard with your $p.") % limb;
+  buf = format("You hit $N's %s hard with your $p.") % limb;
   act(buf, FALSE, ch, o, vict, TO_CHAR, ANSI_ORANGE);
-  buf = fmt("$n hits $N's %s hard with $s $p.") % limb;
+  buf = format("$n hits $N's %s hard with $s $p.") % limb;
   act(buf, FALSE, ch, o, vict, TO_NOTVICT, ANSI_ORANGE);
 
-  buf = fmt("You hear a muffled SNAP as $n clutches $s %s in extreme pain!") % limb;
+  buf = format("You hear a muffled SNAP as $n clutches $s %s in extreme pain!") % limb;
   act(buf, FALSE, vict, NULL, NULL, TO_ROOM, ANSI_ORANGE);
 
   vict->dropWeapon(slot);
@@ -1966,20 +1966,20 @@ int weaponDisruption(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   spellNumT w_type = o->getWtype();
   obj_act("hums softly which quickly becomes a high pitched whine.",
             ch,o,vict, ANSI_ORANGE);
-  buf = fmt("$n's $p screams with power as $e swings it at your %s!") %
+  buf = format("$n's $p screams with power as $e swings it at your %s!") %
     vict->describeBodySlot(part);
   act(buf,TRUE,ch,o,vict,TO_VICT,ANSI_RED);
-  buf = fmt("$n's $p screams with power as $e swings it at $N's %s!") %
+  buf = format("$n's $p screams with power as $e swings it at $N's %s!") %
     vict->describeBodySlot(part);
   act(buf,TRUE,ch,o,vict,TO_NOTVICT,ANSI_ORANGE);
-  buf = fmt("Your $p screams with power as you swing it at $N's %s!") %
+  buf = format("Your $p screams with power as you swing it at $N's %s!") %
      vict->describeBodySlot(part);
   act(buf,TRUE,ch,o,vict,TO_CHAR,ANSI_GREEN);
 
-  buf=fmt("A soft WOMPF! is heard as $p releases a shock wave into $n's %s!") %
+  buf=format("A soft WOMPF! is heard as $p releases a shock wave into $n's %s!") %
     (obj ? obj->getName() : (vict->isHumanoid() ? "skin" : "hide"));
   act(buf, TRUE, vict,o,0,TO_ROOM,ANSI_ORANGE);
-  buf=fmt("A soft WOMPF! is heard as $p releases a shock wave into your %s!") %
+  buf=format("A soft WOMPF! is heard as $p releases a shock wave into your %s!") %
     (obj ? obj->getName() : (vict->isHumanoid() ? "skin" : "hide"));
   act(buf, TRUE, vict,o,0,TO_CHAR,ANSI_RED);
   
@@ -2033,7 +2033,7 @@ int warMaker(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
     if (number(0,13))
       return FALSE;
     if (o->in_room != -1) {
-      buf = fmt("%s moves a bit... as if alive!\n\r") % o->shortDescr;
+      buf = format("%s moves a bit... as if alive!\n\r") % o->shortDescr;
       sendToRoom(buf.c_str(), roomOfObject(o));
     } else if ((tmp = dynamic_cast<TBeing *>(o->equippedBy))) {
       if (!tmp->fight()) {
@@ -2121,7 +2121,7 @@ int warMaker(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
         }
       }
     } else if (o->parent && dynamic_cast<TObj *>(o->parent)) {
-      buf = fmt("Something grumbles 'Damnit, I'm %s.  Let me out of here.  It's dark.'\n\r") % o->shortDescr;
+      buf = format("Something grumbles 'Damnit, I'm %s.  Let me out of here.  It's dark.'\n\r") % o->shortDescr;
       sendToRoom(COLOR_BASIC, buf.c_str(), roomOfObject(o));
     } else if (o->parent) {
       act("$n's $o begs $m to wield it.", 1, o->parent, o, NULL, TO_ROOM);
@@ -2411,16 +2411,16 @@ void lightSaberExtend(TBeing *ch, TGenWeapon *weapon)
   weapon->setWeapDamDev(8);
   weapon->swapToStrung();
 
-  buf=fmt("A brilliant blade of %s%s<o> light springs forth from $p.") %
+  buf=format("A brilliant blade of %s%s<o> light springs forth from $p.") %
     colorcodes[which_color] % colornames[which_color];
   act(buf, false, ch, weapon, NULL, TO_CHAR, ANSI_ORANGE);
 
-  buf=fmt("A brilliant blade of %s%s<o> light springs forth from $n's $o.") %
+  buf=format("A brilliant blade of %s%s<o> light springs forth from $n's $o.") %
     colorcodes[which_color] % colornames[which_color];
   act(buf, false, ch, weapon, NULL, TO_ROOM, ANSI_ORANGE);
 
 
-  buf = fmt("%s with a brilliant %s%s<1> blade of light") %
+  buf = format("%s with a brilliant %s%s<1> blade of light") %
     obj_index[weapon->getItemIndex()].short_desc %
     colorcodes[which_color] % colornames[which_color];
   delete weapon->shortDescr;
@@ -2455,11 +2455,11 @@ void lightSaberRetract(TBeing *ch, TGenWeapon *weapon)
     }
     which_color=which_color % 6;
     
-    buf=fmt("A brilliant blade of %s%s<o> light retracts into $p.") %
+    buf=format("A brilliant blade of %s%s<o> light retracts into $p.") %
       colorcodes[which_color] % colornames[which_color];
     act(buf, false, ch, weapon, NULL, TO_CHAR, ANSI_ORANGE);
     
-    buf=fmt("A brilliant blade of %s%s<o> light retracts into $n's $o.") %
+    buf=format("A brilliant blade of %s%s<o> light retracts into $n's $o.") %
       colorcodes[which_color] % colornames[which_color];
     act(buf, false, ch, weapon, NULL, TO_ROOM, ANSI_ORANGE);
   }

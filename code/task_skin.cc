@@ -164,7 +164,7 @@ int TThing::skinPulse(TBeing *ch, TBaseCorpse *corpse)
   if (num == -1 || !(item = read_object(num, VIRTUAL))) {
     // no item, this should not happen (checked previously)
     ch->sendTo("Problem.  tell a god.\n\r");
-    vlogf(LOG_BUG, fmt("Problem in skinning (%s)") %  ch->getName());
+    vlogf(LOG_BUG, format("Problem in skinning (%s)") %  ch->getName());
     return FALSE;
   }
 
@@ -278,7 +278,7 @@ int TTool::skinPulse(TBeing *ch, TBaseCorpse *corpse)
     if (num == -1 || !(item = read_object(num, VIRTUAL))) {
       // no item, this should not happen (checked previously)
       ch->sendTo("Problem.  tell a god.\n\r");
-      vlogf(LOG_BUG, fmt("Problem in skinning (%s)") %  ch->getName());
+      vlogf(LOG_BUG, format("Problem in skinning (%s)") %  ch->getName());
       return FALSE;
     }
 

@@ -99,7 +99,7 @@ void TToothNecklace::updateDesc()
     swapToStrung();
 
   delete [] shortDescr;
-  shortDescr=mud_str_dup(fmt("<W>a necklace with %s <1><r>bloody<1><W> teeth<1>")%
+  shortDescr=mud_str_dup(format("<W>a necklace with %s <1><r>bloody<1><W> teeth<1>")%
 			 teeth_count_desc(count));
 }
 
@@ -110,7 +110,7 @@ void TToothNecklace::describeObjectSpecifics(const TBeing *ch) const
     count++;
   }
 
-  ch->sendTo(fmt("It has %i teeth on it.\n\r") % count);
+  ch->sendTo(format("It has %i teeth on it.\n\r") % count);
 }
 
 

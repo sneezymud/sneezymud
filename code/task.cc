@@ -128,14 +128,14 @@ void TBeing::stopTask()
 int start_task(TBeing *ch, TThing *t, TRoom *rp, taskTypeT task, const char *arg, int timeLeft, ushort wasInRoom, ubyte status, int flags, int nextUpdate)
 {
   if (!ch || (ch->task)) {
-    vlogf(LOG_BUG, fmt("%s got to bad place in start_task (%d).  Tell Brutius or Batopr") % 
+    vlogf(LOG_BUG, format("%s got to bad place in start_task (%d).  Tell Brutius or Batopr") % 
        (ch ? ch->getName() : "Unknown") % task);
     if (ch)
       ch->sendTo("Problem in task.  Bug Brutius.\n\r");
     return FALSE;
   }
   if (!(ch->task = new taskData)) {
-    vlogf(LOG_BUG, fmt("Couldn't allocate memory in start_task for %s") %  ch->getName());
+    vlogf(LOG_BUG, format("Couldn't allocate memory in start_task for %s") %  ch->getName());
     return FALSE;
   }
 
@@ -159,7 +159,7 @@ int start_task(TBeing *ch, TThing *t, TRoom *rp, taskTypeT task, const char *arg
 void warn_busy(TBeing *ch)
 {
   if (!ch || !(ch->task)) {
-    vlogf(LOG_BUG, fmt("%s got to bad place in warn_busy.  Tell Brutius or Batopr") % 
+    vlogf(LOG_BUG, format("%s got to bad place in warn_busy.  Tell Brutius or Batopr") % 
        (ch ? ch->getName() : "Unknown"));
     return;
   }
@@ -170,7 +170,7 @@ void warn_busy(TBeing *ch)
 int task_bogus(TBeing *ch, cmdTypeT, const char *, int , TRoom *, TObj *)
 {
   ch->sendTo("Um... you hit a buggy spot in the code.  Tell an immort or something.\n\r");
-  vlogf(LOG_BUG, fmt("%s was busy doing a buggy task!  Yikes!") %  ch->getName());
+  vlogf(LOG_BUG, format("%s was busy doing a buggy task!  Yikes!") %  ch->getName());
   ch->stopTask();
 
   return FALSE;

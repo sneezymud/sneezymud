@@ -60,10 +60,10 @@ void PokerGame::stay(TBeing *ch)
       card[i] = deck[deck_inx++];
 
       
-    log_msg = fmt("%i) %s\n\r") % (i+1) % pretty_card_printout(ch, card[i]);
+    log_msg = format("%i) %s\n\r") % (i+1) % pretty_card_printout(ch, card[i]);
     ch->sendTo(COLOR_BASIC, log_msg);
     
-    log_msg = fmt("%s") %pretty_card_printout(ch, card[i]);
+    log_msg = format("%s") %pretty_card_printout(ch, card[i]);
     act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
   }
 
@@ -293,9 +293,9 @@ void PokerGame::Bet(TBeing *ch, const sstring &arg)
     ch->doSave(SILENT_YES);
 
     sstring buf;
-    buf = fmt("$n bets %s.") % chip->getName();
+    buf = format("$n bets %s.") % chip->getName();
     act(buf, TRUE, ch, 0, 0, TO_ROOM);
-    buf = fmt("You bet %s.") % chip->getName();
+    buf = format("You bet %s.") % chip->getName();
     act(buf, TRUE, ch, 0, 0, TO_CHAR);
 
     (*chip)--;
@@ -311,11 +311,11 @@ void PokerGame::Bet(TBeing *ch, const sstring &arg)
     for(int i=0;i<5;++i){
       card[i] = deck[deck_inx++];
 
-      log_msg = fmt("%i) %s\n\r") % (i+1) % pretty_card_printout(ch, card[i]);
+      log_msg = format("%i) %s\n\r") % (i+1) % pretty_card_printout(ch, card[i]);
       ch->sendTo(COLOR_BASIC, log_msg);
       
 
-      log_msg = fmt("%s") %pretty_card_printout(ch, card[i]);
+      log_msg = format("%s") %pretty_card_printout(ch, card[i]);
       act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
     }    
 
@@ -341,9 +341,9 @@ void PokerGame::discard(TBeing *ch, sstring arg)
     }
     
     
-    ch->sendTo(COLOR_BASIC, fmt("You discard %s.\n\r") %
+    ch->sendTo(COLOR_BASIC, format("You discard %s.\n\r") %
 	       pretty_card_printout(ch, card[i]));
-    buf = fmt("$n discards %s.") %
+    buf = format("$n discards %s.") %
       pretty_card_printout(ch, card[i]);
     act(buf, TRUE, ch, 0, 0, TO_ROOM);
 
@@ -371,7 +371,7 @@ void PokerGame::peek(const TBeing *ch)
 
   for(int i=0;i<5;++i){
     if(card[i]){
-      log_msg = fmt("%i) %s\n\r") % (i+1) %
+      log_msg = format("%i) %s\n\r") % (i+1) %
 	pretty_card_printout(ch, card[i]);
       ch->sendTo(COLOR_BASIC, log_msg);
     }
@@ -385,7 +385,7 @@ int PokerGame::exitGame(const TBeing *ch)
   int inx;
 
   if ((inx = index(ch)) < 0) {
-    vlogf(LOG_BUG, fmt("%s left a table he was not at!") %  ch->name);
+    vlogf(LOG_BUG, format("%s left a table he was not at!") %  ch->name);
     return FALSE;
   }
   inuse = FALSE;

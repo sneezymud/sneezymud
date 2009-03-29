@@ -279,10 +279,10 @@ int DragonBreath(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   if (dragons[i].vnum == -1) {
     // in general, this is bad, but dumn builders often "test"
     if (myself->number == -1)
-      vlogf(LOG_LOW, fmt("Dragon (%s:%d) trying to breathe in room %d and not hard coded.") % 
+      vlogf(LOG_LOW, format("Dragon (%s:%d) trying to breathe in room %d and not hard coded.") % 
             myself->getName() % myself->mobVnum() % myself->inRoom());
     else
-      vlogf(LOG_BUG, fmt("Dragon has no defined breath. (%d)") %  myself->mobVnum());
+      vlogf(LOG_BUG, format("Dragon has no defined breath. (%d)") %  myself->mobVnum());
     return FALSE;
   }
   if (myself->hasDisease(DISEASE_DROWNING) ||
@@ -306,7 +306,7 @@ int DragonBreath(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     if ((tm = dynamic_cast<TMonster *>(t1))) {
       if (tm != myself && tm->canSee(myself)) {
         if (::number(0, 9)) {
-          // vlogf(LOG_BUG, fmt("Calling doFlee for dragon breath on %s.") %  tm->getName());
+          // vlogf(LOG_BUG, format("Calling doFlee for dragon breath on %s.") %  tm->getName());
           tm->doFlee("");
         }
       }
@@ -340,7 +340,7 @@ int DragonBreath(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 	rc = spell_dust_breath(myself->GetMaxLevel(), myself, tmp, dragons[i].lag);
 	break;
       default:
-	vlogf(LOG_BUG, fmt("Bad breath for %s, buy it some Binaca") % myself->getName());
+	vlogf(LOG_BUG, format("Bad breath for %s, buy it some Binaca") % myself->getName());
 	break;
     }
     if (IS_SET_DELETE(rc, DELETE_VICT)) {

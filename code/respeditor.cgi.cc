@@ -50,10 +50,10 @@ sstring getPlayerNames(int account_id)
 	   account_id);
 
   if(db.fetchRow())
-    names=fmt("'%s'") % db["name"];
+    names=format("'%s'") % db["name"];
 
   while(db.fetchRow()){
-    names+=fmt(", '%s'") % db["name"];
+    names+=format(", '%s'") % db["name"];
   }
 
   return names;
@@ -222,14 +222,14 @@ void sendShowResp(int account_id, int vnum, bool wizard)
   cout << "<table border=1>";
 
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "vnum" % "vnum" % db["vnum"];
+  cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "vnum" % "vnum" % db["vnum"];
 
 
   sstring buf=db["response"];
   while (buf.find("'") != sstring::npos)
     buf.replace(buf.find("'"), 1, "&#39;");
 
-  cout << fmt("<tr><td>%s</td><td><textarea name='%s' cols=90 rows=30>%s</textarea></td></tr>\n") % "response" % "response" % buf;
+  cout << format("<tr><td>%s</td><td><textarea name='%s' cols=90 rows=30>%s</textarea></td></tr>\n") % "response" % "response" % buf;
 
 
 
@@ -366,6 +366,6 @@ sstring mudColorToHTML(sstring str, bool spacer)
   if(!spacer)
     spacing_strip="";
 
-  return fmt("<span style=\"color:white\"><font face=\"courier\">%s%s</font></span>") % spacing_strip % str;
+  return format("<span style=\"color:white\"><font face=\"courier\">%s%s</font></span>") % spacing_strip % str;
 }
 

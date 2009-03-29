@@ -115,7 +115,7 @@ int task_yoginsa(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
 	    // phase out the speed of hp recover without causing a ruckus.
 	    // lower the .85 lower down and raise the 80 above, keeping the
 	    // product of the two close to .65 (or whatever stats.damage_modifier is)
-            ch->sendTo(fmt("%sMeditating refreshes your inner harmonies!%s\n\r") %
+            ch->sendTo(format("%sMeditating refreshes your inner harmonies!%s\n\r") %
                      ch->green() % ch->norm());
             ch->setHit(min(ch->getHit() + 
 			   max(2,(int)(((double)ch->hitGain())*(.80))), (int) ch->hitLimit()));
@@ -518,7 +518,7 @@ int TBeing::doChi(const char *tString, TThing *tSucker)
     REM_DELETE(tRc, RET_STOP_PARSING);
 
   if (IS_SET_DELETE(tRc, DELETE_VICT)) {
-    //    vlogf(LOG_BUG, fmt("Passive Delete: %s/%s") %  (tVictim ? "tVictim" : "-") % (tObj ? "tObj" : "-"));
+    //    vlogf(LOG_BUG, format("Passive Delete: %s/%s") %  (tVictim ? "tVictim" : "-") % (tObj ? "tObj" : "-"));
 
     if (tVictim) {
       delete tVictim;

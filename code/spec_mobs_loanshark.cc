@@ -128,7 +128,7 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
   db.query("select x, y from shopownedloanrate where shop_nr=%i",
 	   shop_nr);
   if(!db.fetchRow()){
-    vlogf(LOG_DB, fmt("couldn't find loanrate table for shop %i") % shop_nr);
+    vlogf(LOG_DB, format("couldn't find loanrate table for shop %i") % shop_nr);
     me->doTell(ch->getName(), "Hm, I can't seem to find my paperwork!");
     return false;
   }
@@ -155,24 +155,24 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 			 convertTo<float>(db["default_charge"]));
 
 	me->doTell(ch->getName(), 
-		   fmt("%s for %i talens at %.2f%c due %s of %s, %d P.S") %
+		   format("%s for %i talens at %.2f%c due %s of %s, %d P.S") %
 		   db["name"] % convertTo<int>(db["amt"]) % 
 		   (convertTo<float>(db["rate"]) * 100) % '%' %
 		   numberAsString(due.day) % month_name[due.month] %
 		   due.year);
 	me->doTell(ch->getName(),
-		   fmt("%s currently owes %i talens.") %
+		   format("%s currently owes %i talens.") %
 		   db["name"] % amt);
       }
     } else if(sstring(arg)=="repo" && tso.hasAccess(SHOPACCESS_INFO)){
       me->doTell(ch->getName(), 
 		 "I have the following options for collecting on loans.");
-      me->doTell(ch->getName(), fmt("1.[1%c]) I can do a direct transfer from the debtors bank account.") % '%');
-      me->doTell(ch->getName(), fmt("2.[1%c]) I can do a direct transfer from the debtors corporate account.") % '%');
-      me->doTell(ch->getName(), fmt("3.[3%c]) I can do a direct transfer from the debtors shops.") % '%');
-      me->doTell(ch->getName(), fmt("4.[5%c]) I can repossess items from the debtors shops and give them to you.") % '%');
-      me->doTell(ch->getName(), fmt("5.[7%c]) I can repossess entire shops if need be.") % '%');
-      me->doTell(ch->getName(), fmt("6.[9%c]) I can send out a collection agent to collect the debt by force.") % '%');
+      me->doTell(ch->getName(), format("1.[1%c]) I can do a direct transfer from the debtors bank account.") % '%');
+      me->doTell(ch->getName(), format("2.[1%c]) I can do a direct transfer from the debtors corporate account.") % '%');
+      me->doTell(ch->getName(), format("3.[3%c]) I can do a direct transfer from the debtors shops.") % '%');
+      me->doTell(ch->getName(), format("4.[5%c]) I can repossess items from the debtors shops and give them to you.") % '%');
+      me->doTell(ch->getName(), format("5.[7%c]) I can repossess entire shops if need be.") % '%');
+      me->doTell(ch->getName(), format("6.[9%c]) I can send out a collection agent to collect the debt by force.") % '%');
       me->doTell(ch->getName(), "The cost of the collection method is a percent of the debt, as listed.");
       me->doTell(ch->getName(), "You will be charged even if the collection isn't successful.");
       me->doTell(ch->getName(), "Shops won't be repossessed unless the debt exceeds the value of the shop.");
@@ -184,7 +184,7 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 	amt=convertTo<int>(db["amt"]);
 	due=whenDue(convertTo<int>(db["granted_time"]), convertTo<int>(db["term"]));
 	
-	me->doTell(ch->getName(), fmt("You have a loan for %i talens, due on the %s day of %s, Year %d P.S.") %
+	me->doTell(ch->getName(), format("You have a loan for %i talens, due on the %s day of %s, Year %d P.S.") %
 		   amt %
 		   numberAsString(due.day) % 
 		   month_name[due.month] %
@@ -195,14 +195,14 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 			 convertTo<float>(db["default_charge"]));
 	
 	
-	me->doTell(ch->getName(), fmt("With interest, you owe %i talens.") % amt);
+	me->doTell(ch->getName(), format("With interest, you owe %i talens.") % amt);
       } else {
-	me->doTell(ch->getName(), fmt("I can extend you a loan for %i talens.") % amt);
-	me->doTell(ch->getName(), fmt("A yearly cumulative interest rate of %.2f%c will apply.") % 
+	me->doTell(ch->getName(), format("I can extend you a loan for %i talens.") % amt);
+	me->doTell(ch->getName(), format("A yearly cumulative interest rate of %.2f%c will apply.") % 
 		   (getRate(shop_nr, ch->getName()) * 100) % '%');
-	me->doTell(ch->getName(), fmt("The term length I can offer is %i years.") % term);
+	me->doTell(ch->getName(), format("The term length I can offer is %i years.") % term);
 	me->doTell(ch->getName(), "One mud year is about 2 weeks in real time.");
-	me->doTell(ch->getName(), fmt("If you default on the loan, you will be charged an additional %.2f%c.") %
+	me->doTell(ch->getName(), format("If you default on the loan, you will be charged an additional %.2f%c.") %
 		   (getPenalty(shop_nr, ch->getName()) * 100) % '%');
 	me->doTell(ch->getName(), "Do \"buy loan <amt>\" to take out the loan.");
       }
@@ -237,7 +237,7 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       int loanamt=convertTo<int>(sstring(arg).word(1));
     
       if(loanamt > amt || loanamt <= 0){
-	      me->doTell(ch->getName(), fmt("You can't take out a loan for that much.  The most I can give you is %i.") % amt);
+	      me->doTell(ch->getName(), format("You can't take out a loan for that much.  The most I can give you is %i.") % amt);
 	      return true;
       }
 
@@ -258,7 +258,7 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       me->saveItems(shop_nr);
 
 
-      me->doTell(ch->getName(), fmt("There you go.  Remember, I need the money back, plus interest, within %i years.") % term);
+      me->doTell(ch->getName(), format("There you go.  Remember, I need the money back, plus interest, within %i years.") % term);
       me->doTell(ch->getName(), "Do 'list' again at anytime to see how much you owe with interest included.");
       me->doTell(ch->getName(), "You can give me talens at any time to make a payment on your loan.");
     
@@ -294,7 +294,7 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 	      db.query("update shopownedloans set amt=%i where player_id=%i",
 		       principle, ch->getPlayerID());
 
-	      me->doTell(ch->getName(), fmt("Thanks for the payment.  You paid down the principle by %i talens, the rest went to interest.") % (int)(perc*coins));
+	      me->doTell(ch->getName(), format("Thanks for the payment.  You paid down the principle by %i talens, the rest went to interest.") % (int)(perc*coins));
 
 	      shoplog(shop_nr, ch, me, "talens", coins, "giving");
       }

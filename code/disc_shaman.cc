@@ -43,7 +43,7 @@ int voodoo(TBeing *caster, TObj *obj, int level, byte bKnown)
     return SPELL_FAIL;
   }
   if (!(mob = read_mobile(corpse->getCorpseVnum(), VIRTUAL))) {
-    vlogf(LOG_BUG, fmt("FAILED Load!!  No mob (%d)") %  corpse->getCorpseVnum());
+    vlogf(LOG_BUG, format("FAILED Load!!  No mob (%d)") %  corpse->getCorpseVnum());
     caster->sendTo("Something screwed up.  Tell a god.\n\r");
     act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_ROOM);
     return SPELL_FAIL;
@@ -225,7 +225,7 @@ int dancingBones(TBeing * caster, TObj * obj, int level, byte bKnown)
     return SPELL_FAIL;
   }
   if (!(mob = read_mobile(corpse->getCorpseVnum(), VIRTUAL))) {
-    vlogf(LOG_BUG, fmt("FAILED Load!!  No mob (%d)") %  corpse->getCorpseVnum());
+    vlogf(LOG_BUG, format("FAILED Load!!  No mob (%d)") %  corpse->getCorpseVnum());
     caster->sendTo("Something screwed up.  Tell a god.\n\r");
     act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_ROOM);
     return SPELL_FAIL;
@@ -711,23 +711,23 @@ void TThing::sacrificeMe(TBeing *ch, const char *arg)
   TBeing *dummy;
 
   if (ch->getPosition() != POSITION_STANDING) {
-    ch->sendTo(COLOR_OBJECTS, fmt("You must stand to sacrifice %s.\n\r") % obj->getName());
+    ch->sendTo(COLOR_OBJECTS, format("You must stand to sacrifice %s.\n\r") % obj->getName());
     return;
   }
 
   if (ch->task) {
-    ch->sendTo(COLOR_OBJECTS, fmt("The sacrifice of %s requires your total attention.\n\r") % obj->getName());
+    ch->sendTo(COLOR_OBJECTS, format("The sacrifice of %s requires your total attention.\n\r") % obj->getName());
     return;
   }
   // Check to see if argument passed exists in room
   if (!generic_find(arg, FIND_OBJ_ROOM, ch, &dummy, &obj)) {
-    ch->sendTo(fmt("You do not see a %s here.\n\r") % arg);
+    ch->sendTo(format("You do not see a %s here.\n\r") % arg);
     return;
   }
   // Check to see if corpse is a corpse
   
   if (!(corpse = dynamic_cast<TBaseCorpse *>(obj))) {
-    ch->sendTo(COLOR_OBJECTS, fmt("You cannot sacrifice %s.\n\r") % obj->getName());
+    ch->sendTo(COLOR_OBJECTS, format("You cannot sacrifice %s.\n\r") % obj->getName());
     return;
   }
   if (corpse->isCorpseFlag(CORPSE_SACRIFICE)) {
@@ -759,19 +759,19 @@ void TTool::sacrificeMe(TBeing *ch, const char *arg)
     return;
   }
   if (ch->getPosition() != POSITION_STANDING) {
-    ch->sendTo(COLOR_OBJECTS, fmt("You must stand to sacrifice %s.\n\r") % obj->getName());
+    ch->sendTo(COLOR_OBJECTS, format("You must stand to sacrifice %s.\n\r") % obj->getName());
     return;
   }
 
   // Check to see if argument passed exists in room
   if (!generic_find(arg, FIND_OBJ_ROOM, ch, &dummy, &obj)) {
-    ch->sendTo(fmt("You do not see a %s here.\n\r") % arg);
+    ch->sendTo(format("You do not see a %s here.\n\r") % arg);
     return;
   }
   // Check to see if corpse is a corpse
   
   if (!(corpse = dynamic_cast<TBaseCorpse *>(obj))) {
-    ch->sendTo(COLOR_OBJECTS, fmt("You cannot sacrifice %s.\n\r") % obj->getName());
+    ch->sendTo(COLOR_OBJECTS, format("You cannot sacrifice %s.\n\r") % obj->getName());
     return;
   }
   if (corpse->isCorpseFlag(CORPSE_SACRIFICE)) {
@@ -1245,7 +1245,7 @@ int rombler(TBeing *caster, int, byte bKnown)
       caster->sendTo("Drumming without spirits to send is moot.\n\r");
       caster->nothingHappens(SILENT_YES);
     } else {
-      caster->sendTo(COLOR_SPELLS, fmt("<g>You romble to the world, \"<z>%s<g>\"<z>\n\r") % msg);
+      caster->sendTo(COLOR_SPELLS, format("<g>You romble to the world, \"<z>%s<g>\"<z>\n\r") % msg);
       for (i = descriptor_list; i; i = i->next) {
         if (i->character && (i->character != caster) &&
             !i->connected && !i->character->checkSoundproof() &&
@@ -1255,9 +1255,9 @@ int rombler(TBeing *caster, int, byte bKnown)
         if (i->character->doesKnowSkill(SPELL_ROMBLER) || i->character->isImmortal()) {
 
           pgbuff = caster->garble(i->character, msg, SPEECH_SHOUT, GARBLE_SCOPE_INDIVIDUAL);
-          i->character->sendTo(COLOR_SPELLS, fmt("<Y>%s<z> rombles, \"<o>%s%s\"\n\r") % caster->getName() % pgbuff % i->character->norm());
+          i->character->sendTo(COLOR_SPELLS, format("<Y>%s<z> rombles, \"<o>%s%s\"\n\r") % caster->getName() % pgbuff % i->character->norm());
           if (!i->m_bIsClient && IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
-            i->clientf(fmt("%d|%s|%s") % CLIENT_ROMBLER % colorString(i->character, i, caster->getName(), NULL, COLOR_NONE, FALSE) % colorString(i->character, i, pgbuff, NULL, COLOR_NONE, FALSE));
+            i->clientf(format("%d|%s|%s") % CLIENT_ROMBLER % colorString(i->character, i, caster->getName(), NULL, COLOR_NONE, FALSE) % colorString(i->character, i, pgbuff, NULL, COLOR_NONE, FALSE));
 
           } else {
 	    int num = ::number(0,3);

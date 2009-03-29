@@ -1201,7 +1201,7 @@ int mapSpellnumToFile(spellNumT stt)
     case ABSOLUTE_MAX_SKILL:
       break;
   }
-  vlogf(LOG_BUG, fmt("Bogus value (%d) in mapSpellNumToFile") %  stt);
+  vlogf(LOG_BUG, format("Bogus value (%d) in mapSpellNumToFile") %  stt);
   return -1;
 }
 
@@ -2172,8 +2172,8 @@ spellNumT mapFileToSpellnum(int stt)
     default:
       break;
   }
-  //  vlogf(LOG_BUG, fmt("Bad value (%d) in mapFileToSpellnum") %  stt);
-  vlogf(LOG_BUG, fmt("Bad value (%d) in mapFileToSpellnum") %  stt);
+  //  vlogf(LOG_BUG, format("Bad value (%d) in mapFileToSpellnum") %  stt);
+  vlogf(LOG_BUG, format("Bad value (%d) in mapFileToSpellnum") %  stt);
   return MAX_SKILL;
 }
 

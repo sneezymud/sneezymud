@@ -96,7 +96,7 @@ void TBeing::doMessage(const char *tArg)
     for (tValue = MSG_MIN; tValue < MSG_TYPE_MAX; tValue++ ) {
       if (messageCommandSwitches[tValue][2] &&
           hasWizPower(wizPowerT(messageCommandSwitches[tValue][2])))
-        sendTo(fmt("%-15s:  %s\n\r") % messageCommandTypes[tValue-1] %
+        sendTo(format("%-15s:  %s\n\r") % messageCommandTypes[tValue-1] %
             msgVariables(messageTypeT(tValue), 
               (TThing *)NULL, (const char *) NULL, false));
     }
@@ -113,7 +113,7 @@ void TBeing::doMessage(const char *tArg)
       sendTo("All sstrings have a hard limit of 250 characters, please use less than you did.\n\r");
     else {
       if (tStString.empty()) {
-        sendTo(COLOR_BASIC, fmt("Message Type: %s set to:\n\r%s\n\r") %
+        sendTo(COLOR_BASIC, format("Message Type: %s set to:\n\r%s\n\r") %
                messageCommandTypes[(tValue - 1)] %
                msgVariables(messageTypeT(tValue), (TThing *)NULL, (const char *)NULL, false));
         return;
@@ -121,7 +121,7 @@ void TBeing::doMessage(const char *tArg)
 
       if (is_abbrev(tStString, "default")) {
         msgVariables(messageTypeT(tValue), "");
-        sendTo(fmt("Message Type: %s set to default.\n\r") %
+        sendTo(format("Message Type: %s set to default.\n\r") %
                messageCommandTypes[(tValue - 1)]);
         msgVariables.savedown();
         return;
@@ -131,7 +131,7 @@ void TBeing::doMessage(const char *tArg)
 
       if (colorString(this, desc, tStString, NULL, COLOR_NONE, TRUE).length() >
           messageCommandSwitches[tValue][0]) {
-        sendTo(fmt("String length, for this field, is limited to %d characters in total.\n\r") %
+        sendTo(format("String length, for this field, is limited to %d characters in total.\n\r") %
                messageCommandSwitches[tValue][0]);
         return;
       }
@@ -150,7 +150,7 @@ void TBeing::doMessage(const char *tArg)
 
       if ((messageCommandSwitches[tValue][1] & MSG_REQ_GNAME) &&
           !isNamed && (tStString.find("<n>") == sstring::npos)) {
-        sendTo(fmt("This type requires your name.  Either use %s or <n>\n\r") %
+        sendTo(format("This type requires your name.  Either use %s or <n>\n\r") %
                getNameNOC(this));
         return;
       }
@@ -175,7 +175,7 @@ void TBeing::doMessage(const char *tArg)
 
       msgVariables(messageTypeT(tValue), tStString);
 
-      sendTo(COLOR_BASIC, fmt("Message %s set to:\n\r%s\n\r") %
+      sendTo(COLOR_BASIC, format("Message %s set to:\n\r%s\n\r") %
               messageCommandTypes[(tValue - 1)] %
               msgVariables(messageTypeT(tValue), (TThing *)NULL, (const char *)NULL, false));
       msgVariables.savedown();
@@ -419,7 +419,7 @@ void TMessages::operator()(messageTypeT tValue, sstring tStString)
       break;
     case MSG_ERROR:
     case MSG_MAX:
-      vlogf(LOG_BUG, fmt("TMessages::operator()(int, sstring) got invalid tValue.  [%d]") % 
+      vlogf(LOG_BUG, format("TMessages::operator()(int, sstring) got invalid tValue.  [%d]") % 
             tValue);
   }
 }
@@ -559,7 +559,7 @@ sstring TMessages::operator[](messageTypeT tValue) const
       return tMessages.msgNote;
       break;
     default:
-      vlogf(LOG_BUG, fmt("TMessages::operator[](int) got invalid tValue.  [%d]") % 
+      vlogf(LOG_BUG, format("TMessages::operator[](int) got invalid tValue.  [%d]") % 
             tValue);
   }
 
@@ -569,7 +569,7 @@ sstring TMessages::operator[](messageTypeT tValue) const
 sstring fread_tilTilde(FILE *tFile)
 {
   sstring tStString("");
-  char   tChar = '\0';
+  char tChar='\0';
 
   if (tFile && !feof(tFile))
     while (1) {

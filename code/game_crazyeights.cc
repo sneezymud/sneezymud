@@ -98,7 +98,7 @@ void CrazyEightsGame::deal(TBeing *ch)
   }
 
   if ((dealerNum = index(ch)) < 0) {
-    vlogf(LOG_BUG, fmt("%s got into CrazyEights::deal without being at the eights table!") % 
+    vlogf(LOG_BUG, format("%s got into CrazyEights::deal without being at the eights table!") % 
           ch->getName());
     return;
   }
@@ -141,12 +141,12 @@ void CrazyEightsGame::deal(TBeing *ch)
 
   strcpy(tString, pretty_card_printout(ch, starterCard).c_str());
 
-  ch->sendTo(fmt("You turn the %s over as the starting card.\n\r") % tString);
-  ch2->sendTo(fmt("%s turns the %s over as the starting card.\n\r") %
+  ch->sendTo(format("You turn the %s over as the starting card.\n\r") % tString);
+  ch2->sendTo(format("%s turns the %s over as the starting card.\n\r") %
               sstring(ch->getName()).cap() % tString);
-  ch3->sendTo(fmt("%s turns the %s over as the starting card.\n\r") %
+  ch3->sendTo(format("%s turns the %s over as the starting card.\n\r") %
               sstring(ch->getName()).cap() % tString);
-  ch4->sendTo(fmt("%s turns the %s over as the starting card.\n\r") %
+  ch4->sendTo(format("%s turns the %s over as the starting card.\n\r") %
               sstring(ch->getName()).cap() % tString);
 }
 
@@ -230,7 +230,7 @@ int CrazyEightsGame::move_card(TBeing *ch, const char *tArg)
     }
 
     hands[playerNum][moveSlot] = tempCard;
-    ch->sendTo(fmt("You move the card %d to slot %d.\n\r") %
+    ch->sendTo(format("You move the card %d to slot %d.\n\r") %
                (origSlot + 1) % (moveSlot + 1));
   } else {
     ch->sendTo("Crazy Eights Syntax: put <old card slot> <new card slot>\n\r");
@@ -288,7 +288,7 @@ int CrazyEightsGame::exitGame(const TBeing *ch)
          *ch4 = NULL;
 
   if ((playerNum = index(ch)) < 0) {
-    vlogf(LOG_BUG, fmt("%s left a crazy eights table %s wasn't at!") % 
+    vlogf(LOG_BUG, format("%s left a crazy eights table %s wasn't at!") % 
           ch->getName() % ch->hssh());
     return FALSE;
   }
@@ -392,10 +392,10 @@ int CrazyEightsGame::new_deal()
   }
 
   if (tScore >= 100) {
-    ch1->sendTo(fmt("%s won the game.\n\r") % sstring(names[playerNum]).cap());
-    ch2->sendTo(fmt("%s won the game.\n\r") % sstring(names[playerNum]).cap());
-    ch3->sendTo(fmt("%s won the game.\n\r") % sstring(names[playerNum]).cap());
-    ch4->sendTo(fmt("%s won the game.\n\r") % sstring(names[playerNum]).cap());
+    ch1->sendTo(format("%s won the game.\n\r") % sstring(names[playerNum]).cap());
+    ch2->sendTo(format("%s won the game.\n\r") % sstring(names[playerNum]).cap());
+    ch3->sendTo(format("%s won the game.\n\r") % sstring(names[playerNum]).cap());
+    ch4->sendTo(format("%s won the game.\n\r") % sstring(names[playerNum]).cap());
 
     scores[0] = scores[1] = scores[2] = scores[3] = 0;
   }
@@ -403,10 +403,10 @@ int CrazyEightsGame::new_deal()
   initialPlayer = LEFT(ch5);
   deal(ch5);
 
-  ch1->sendTo(fmt("The score is now %s.\n\r") % score());
-  ch2->sendTo(fmt("The score is now %s.\n\r") % score());
-  ch3->sendTo(fmt("The score is now %s.\n\r") % score());
-  ch4->sendTo(fmt("The score is now %s.\n\r") % score());
+  ch1->sendTo(format("The score is now %s.\n\r") % score());
+  ch2->sendTo(format("The score is now %s.\n\r") % score());
+  ch3->sendTo(format("The score is now %s.\n\r") % score());
+  ch4->sendTo(format("The score is now %s.\n\r") % score());
 
   return TRUE;
 }
@@ -574,7 +574,7 @@ void CrazyEightsGame::play(const TBeing *ch, const char *tArg)
 
   starterCard = hands[playerNum][cardPlayed];
 
-  ch->sendTo(fmt("You play the %s.\n\r") % pretty_card_printout(ch, starterCard));
+  ch->sendTo(format("You play the %s.\n\r") % pretty_card_printout(ch, starterCard));
   sprintf(tBuffer, "%s plays the %s.\n\r",
           sstring(ch->getName()).cap().c_str(),
           pretty_card_printout(ch, starterCard).c_str());
@@ -588,7 +588,7 @@ void CrazyEightsGame::play(const TBeing *ch, const char *tArg)
     starterCard &= ~(CARD_WATER | CARD_FIRE | CARD_EARTH | CARD_ETHER);
     starterCard |= newSuit;
 
-    ch->sendTo(fmt("You change the %s into an %s.\n\r") % tString %
+    ch->sendTo(format("You change the %s into an %s.\n\r") % tString %
                pretty_card_printout(ch, starterCard));
     sprintf(tBuffer, "%s waves his hand and changes the %s into an %s.\n\r",
             sstring(ch->getName()).cap().c_str(), tString,
@@ -694,11 +694,11 @@ int CrazyEightsGame::look(const TBeing *ch, const char *tArg)
       ch->sendTo("The game is not yet in progress, nothing to look at.\n\r");
     else {
       if (showFull) {
-        ch->sendTo(fmt("To your left sits %s.%s\n\r") %
+        ch->sendTo(format("To your left sits %s.%s\n\r") %
                    names[LEFT  (ch)]% ( LEFT  (ch) == nextPlayer ? " (current turn)" : ""));
-        ch->sendTo(fmt("Across from you sits %s.%s\n\r") %
+        ch->sendTo(format("Across from you sits %s.%s\n\r") %
                    names[ACROSS(ch)] % ( ACROSS(ch) == nextPlayer ? " (current turn)" : ""));
-        ch->sendTo(fmt("To your right sits %s.%s\n\r") %
+        ch->sendTo(format("To your right sits %s.%s\n\r") %
                    names[RIGHT (ch)] % ( RIGHT (ch) == nextPlayer ? " (current turn)" : ""));
 
         if (nextPlayer == playerNum)
@@ -706,7 +706,7 @@ int CrazyEightsGame::look(const TBeing *ch, const char *tArg)
       }
 
       if (is_abbrev(tArg, "pile") || showFull)
-        ch->sendTo(fmt("Current card in play: %s\n\r") %
+        ch->sendTo(format("Current card in play: %s\n\r") %
                    pretty_card_printout(ch, starterCard));
 
       if (is_abbrev(tArg, "deck") || showFull) {
@@ -722,7 +722,7 @@ int CrazyEightsGame::look(const TBeing *ch, const char *tArg)
           ch->sendTo("An itty bitty little part of the deck remains.\n\r");
       }
 
-      ch->sendTo(fmt("The score is currently %s.\n\r") % score());
+      ch->sendTo(format("The score is currently %s.\n\r") % score());
     }
   } else
     return FALSE;

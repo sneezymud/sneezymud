@@ -170,7 +170,7 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
 
   if (this != v) {
     if (v->getHit() <= -11) {
-      vlogf(LOG_BUG, fmt("Uh Oh, %s had %d hp and wasn't dead.  Was fighting %s") % v->getName() %v->getHit() %getName());
+      vlogf(LOG_BUG, format("Uh Oh, %s had %d hp and wasn't dead.  Was fighting %s") % v->getName() %v->getHit() %getName());
       stopFighting();
       act("Something bogus about this fight.  Tell a god!", TRUE, this, 0, v, TO_CHAR);
       return 0;
@@ -209,7 +209,7 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
               questmob = 0;
 
             // Receiving help
-//            vlogf(LOG_BUG, fmt("%s received help from %s killing %s") %  tbt->getName() % getName() % v->getName());
+//            vlogf(LOG_BUG, format("%s received help from %s killing %s") %  tbt->getName() % getName() % v->getName());
             switch (questmob) {
               case MOB_TROLL_GIANT:
                 tbt->setQuestBit(TOG_AVENGER_CHEAT);
@@ -241,7 +241,7 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
               default:
                 break;
             }
-//            vlogf(LOG_BUG, fmt("Removing combat bit (%d) from: %s") %  af->level % v->getName());
+//            vlogf(LOG_BUG, format("Removing combat bit (%d) from: %s") %  af->level % v->getName());
             v->affectRemove(af);
           }
         }
@@ -297,7 +297,7 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
     percent = ((double) dam / (double) (v->getHit() + 11));
 
     if (percent < 0)
-      vlogf(LOG_BUG, fmt("Error: %% < 0 in applyDamage() : %s fighting %s.") %  getName() %v->getName());
+      vlogf(LOG_BUG, format("Error: %% < 0 in applyDamage() : %s fighting %s.") %  getName() %v->getName());
     else if(dmg_type!=TYPE_CANNON)
       gainExpPerHit(v, percent, dam);
   } else {
@@ -328,7 +328,7 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
       desc->session.skill_dam_done[getCombatMode()] += dam;
   }
 #if DAMAGE_DEBUG
-  vlogf(LOG_BUG, fmt("DAMAGE APPLIED (%d) %s (victim = %s) Damage Type = %d .") %  dam % getName() % v->getName() % dmg_type);
+  vlogf(LOG_BUG, format("DAMAGE APPLIED (%d) %s (victim = %s) Damage Type = %d .") %  dam % getName() % v->getName() % dmg_type);
 #endif
 
   v->doDamage(dam, dmg_type);
@@ -502,9 +502,9 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
     aff.bitvector = 0;
 
     if(!isPking())
-      vlogf(LOG_MISC, fmt("%s being flagged as PK participant.") % getName());
+      vlogf(LOG_MISC, format("%s being flagged as PK participant.") % getName());
     if(!v->isPking())
-      vlogf(LOG_MISC, fmt("%s being flagged as PK participant.")%v->getName());
+      vlogf(LOG_MISC, format("%s being flagged as PK participant.")%v->getName());
 
     if(affectedBySpell(AFFECT_PLAYERKILL))
       affectFrom(AFFECT_PLAYERKILL);
@@ -568,8 +568,8 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
     if (af->type == AFFECT_COMBAT && af->modifier == COMBAT_SOLO_KILL) {
       if (af->be == this && v->getPosition() == POSITION_DEAD) {
         // successfully solo killed
-        vlogf(LOG_MISC, fmt("%s successfully killed %s") %  getName() % v->getName());
-        vlogf(LOG_MISC, fmt("Removing combat bit (%d) from: %s") %  af->level % v->getName());
+        vlogf(LOG_MISC, format("%s successfully killed %s") %  getName() % v->getName());
+        vlogf(LOG_MISC, format("Removing combat bit (%d) from: %s") %  af->level % v->getName());
         v->affectRemove(af);
 
         if (dynamic_cast<TMonster*>(v))
@@ -629,7 +629,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
     switch (questmob) {
       case MOB_TROLL_GIANT:
         if (v->hasQuestBit(TOG_AVENGER_HUNTING)) {
-          vlogf(LOG_MISC, fmt("%s died in quest and flags being reset/removed") %  v->getName());
+          vlogf(LOG_MISC, format("%s died in quest and flags being reset/removed") %  v->getName());
           v->remQuestBit(TOG_AVENGER_HUNTING);
           v->setQuestBit(TOG_AVENGER_RULES);
           v->sendTo("You have failed in your quest.\n\r");
@@ -639,7 +639,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
         break;
       case MOB_CAPTAIN_RYOKEN:
         if (v->hasQuestBit(TOG_VINDICATOR_HUNTING_1)) {
-          vlogf(LOG_MISC, fmt("%s died in quest and flags being reset/removed") %  v->getName());
+          vlogf(LOG_MISC, format("%s died in quest and flags being reset/removed") %  v->getName());
           v->remQuestBit(TOG_VINDICATOR_HUNTING_1);
           v->setQuestBit(TOG_VINDICATOR_FOUND_BLACKSMITH);
           v->sendTo("You have failed in your quest.\n\r");
@@ -649,7 +649,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
         break;
       case MOB_TREE_SPIRIT:
         if (v->hasQuestBit(TOG_VINDICATOR_HUNTING_2)) {
-          vlogf(LOG_MISC, fmt("%s died in quest and flags being reset/removed") %  v->getName());
+          vlogf(LOG_MISC, format("%s died in quest and flags being reset/removed") %  v->getName());
           v->remQuestBit(TOG_VINDICATOR_HUNTING_2);
           v->setQuestBit(TOG_VINDICATOR_RULES_2);
           v->sendTo("You have failed in your quest.\n\r");
@@ -784,13 +784,13 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
           // killed by a mob
           // for sanity, check if the killer mob was a pet, etc
           if (master)
-            vlogf(LOG_MISC, fmt("%s killed by %s at %s (%d).  Method: %s -- master was %s") %  
+            vlogf(LOG_MISC, format("%s killed by %s at %s (%d).  Method: %s -- master was %s") %  
                  v->getName() % getName() % v->roomp->name % v->inRoom() % buf2 % master->getName());
           else if (rider)
-            vlogf(LOG_MISC, fmt("%s killed by %s at %s (%d).  Method: %s -- rider was %s") %  
+            vlogf(LOG_MISC, format("%s killed by %s at %s (%d).  Method: %s -- rider was %s") %  
                  v->getName() % getName() % v->roomp->name % v->inRoom() % buf2 % rider->getName());
           else
-            vlogf(LOG_MISC, fmt("%s killed by %s at %s (%d).  Method: %s") %  
+            vlogf(LOG_MISC, format("%s killed by %s at %s (%d).  Method: %s") %  
                  v->getName() % getName() % v->roomp->name % v->inRoom() % buf2);
 	  // taunting shout
 	  // added for information to other players that haven't died but
@@ -798,81 +798,81 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 	  // should be fun to come up with new shouts
 	  int chance = ::number(1,26);
 	  if (chance == 1) {
-	    taunt_buf=fmt("WOO! And %s goes down! HA!") % v->getName();
+	    taunt_buf=format("WOO! And %s goes down! HA!") % v->getName();
 	  } else if (chance == 2) {
-	    taunt_buf=fmt("Yeah! That moron %s just had to push it!") % v->getName();
+	    taunt_buf=format("Yeah! That moron %s just had to push it!") % v->getName();
 	  } else if (chance == 3) {
-	    taunt_buf=fmt("Someone help %s regen some hitpoints! *snort*") % v->getName();
+	    taunt_buf=format("Someone help %s regen some hitpoints! *snort*") % v->getName();
 	  } else if (chance == 4) {
-	    taunt_buf=fmt("I didn't kill %s! Really!!") % v->getName();
+	    taunt_buf=format("I didn't kill %s! Really!!") % v->getName();
 	  } else if (chance == 5) {
-	    taunt_buf=fmt("Creatures killed : Alone 45,687! Looks like %s makes that 45,688!") % v->getName();
+	    taunt_buf=format("Creatures killed : Alone 45,687! Looks like %s makes that 45,688!") % v->getName();
 	  } else if (chance == 6) {
-	    taunt_buf=fmt("HAHAHA! Hey %s! How much to next level NOW?!?") % v->getName();
+	    taunt_buf=format("HAHAHA! Hey %s! How much to next level NOW?!?") % v->getName();
 	  } else if (chance == 7) {
-	    taunt_buf=fmt("It's time to remind %s that SneezyMUD is... Aw hell, can't remind the dead!") % v->getName();
+	    taunt_buf=format("It's time to remind %s that SneezyMUD is... Aw hell, can't remind the dead!") % v->getName();
 	  } else if (chance == 8) {
-	    taunt_buf=fmt("SneezyMUD is WAY too easy! Everytime losers like %s try to kill me they die! No challenge at all...") % v->getName();
+	    taunt_buf=format("SneezyMUD is WAY too easy! Everytime losers like %s try to kill me they die! No challenge at all...") % v->getName();
 	  } else if (chance == 9) {
-	    taunt_buf=fmt("There once was a player named %s... once...") % v->getName();
+	    taunt_buf=format("There once was a player named %s... once...") % v->getName();
 	  } else if (chance == 10) {
-	    taunt_buf=fmt("Dime a dozen, %s failed, who's next to die to my hand?") % v->getName();
+	    taunt_buf=format("Dime a dozen, %s failed, who's next to die to my hand?") % v->getName();
 	  } else if (chance == 11) {
-	    taunt_buf=fmt("Told %s once, Told %s twice, did %s listen to my advice? R.I.P.") % v->getName() % v->getName() % v->getName();
+	    taunt_buf=format("Told %s once, Told %s twice, did %s listen to my advice? R.I.P.") % v->getName() % v->getName() % v->getName();
 	  } else if (chance == 12) {
-	    taunt_buf=fmt("Did %s bring a scroll of recall? Oooops, guess not!") % v->getName();
+	    taunt_buf=format("Did %s bring a scroll of recall? Oooops, guess not!") % v->getName();
 	  } else if (chance == 13) {
-	    taunt_buf=fmt("Hey %s, it's time to go back to scrabbling in the dirt, it can't KILL you like I did!") % v->getName();
+	    taunt_buf=format("Hey %s, it's time to go back to scrabbling in the dirt, it can't KILL you like I did!") % v->getName();
 	  } else if (chance == 14) {
-	    taunt_buf=fmt("I'm walkin' on Sunshine, oooh yeah, and %s is dead, oooh yeah...") % v->getName();
+	    taunt_buf=format("I'm walkin' on Sunshine, oooh yeah, and %s is dead, oooh yeah...") % v->getName();
 	  } else if (chance == 15) {
-	    taunt_buf=fmt("Mama always said, \"Life is like a box of chocolate, you never know what you're gonna get unless you're fighting %s.\"") % v->getName();
+	    taunt_buf=format("Mama always said, \"Life is like a box of chocolate, you never know what you're gonna get unless you're fighting %s.\"") % v->getName();
 	  } else if (chance == 16) {
-	    taunt_buf=fmt("Let us contemplate for a moment the very brave and often foolish deeds of %s. R.I.P.") % v->getName();
+	    taunt_buf=format("Let us contemplate for a moment the very brave and often foolish deeds of %s. R.I.P.") % v->getName();
 	  } else if (chance == 17) {
-	    taunt_buf=fmt("No, now go away %s or I shall kill you a second time.") % v->getName();
+	    taunt_buf=format("No, now go away %s or I shall kill you a second time.") % v->getName();
 	  } else if (chance == 18) {
-	    taunt_buf=fmt("Sometimes I think I'd be better off dead. No, wait. Not me, %s.") % v->getName();
+	    taunt_buf=format("Sometimes I think I'd be better off dead. No, wait. Not me, %s.") % v->getName();
 	  } else if (chance == 19) {
-	    taunt_buf=fmt("Please! This is supposed to be a happy occasion. Let's not bicker and argue over who killed %s.") % v->getName();
+	    taunt_buf=format("Please! This is supposed to be a happy occasion. Let's not bicker and argue over who killed %s.") % v->getName();
 	  } else if (chance == 20) {
-	    taunt_buf=fmt("This %s is no more. It has ceased to be. It's expired and gone to meet its maker. This is a late %s.") % v->getName() % v->getName();
+	    taunt_buf=format("This %s is no more. It has ceased to be. It's expired and gone to meet its maker. This is a late %s.") % v->getName() % v->getName();
     } else if (chance == 21) {
-      taunt_buf=fmt("This is what it sounds like, when %s dies!") % v->getName();
+      taunt_buf=format("This is what it sounds like, when %s dies!") % v->getName();
     } else if (chance == 22) {
-      taunt_buf=fmt("Well, %s is dead. Who could have forseen that?!") % v->getName();
+      taunt_buf=format("Well, %s is dead. Who could have forseen that?!") % v->getName();
     } else if (chance == 23) {
-      taunt_buf=fmt("Quick, summon %s! Or, well, maybe next time...") % v->getName();
+      taunt_buf=format("Quick, summon %s! Or, well, maybe next time...") % v->getName();
     } else if (chance == 24) {
-      taunt_buf=fmt("Your pets will love new %s brand kibble!") % v->getName();
+      taunt_buf=format("Your pets will love new %s brand kibble!") % v->getName();
     } else if (chance == 25) {
-      taunt_buf=fmt("%s-lite, now with 100% less hitpoints!") % v->getName();
+      taunt_buf=format("%s-lite, now with 100% less hitpoints!") % v->getName();
     } else if (chance == 26) {
-      taunt_buf=fmt("Ouch! Does someone have a relive for %s?") % v->getName();
+      taunt_buf=format("Ouch! Does someone have a relive for %s?") % v->getName();
 	  } else {
-	    taunt_buf=fmt("WOO! And %s goes down! HA!") % v->getName();
+	    taunt_buf=format("WOO! And %s goes down! HA!") % v->getName();
 	  }
 	  doShout(taunt_buf);
         } else {
 #if 1
           if (v == this && isPc())
-            vlogf(LOG_COMBAT, fmt("%s killed %sself at %s (%d) Method: %s -- <%sSuicide>") % 
+            vlogf(LOG_COMBAT, format("%s killed %sself at %s (%d) Method: %s -- <%sSuicide>") % 
                   getName() % hmhr() % roomp->name % inRoom() % buf2 %
                   ((GetMaxLevel() <= 5) ? "NEWBIE " : ""));
           else if (GetMaxLevel() > MAX_MORT && isPc() && v->isPc()) {
             if (v->GetMaxLevel() > MAX_MORT)
-              vlogf(LOG_COMBAT, fmt("%s killed by %s at %s (%d) Method: %s -- <God VS God>") % 
+              vlogf(LOG_COMBAT, format("%s killed by %s at %s (%d) Method: %s -- <God VS God>") % 
                     v->getName() % getName() % v->roomp->name % v->inRoom() % buf2);
             else
-              vlogf(LOG_COMBAT, fmt("%s killed by %s at %s (%d) Method: %s -- <Immortal Kill>") % 
+              vlogf(LOG_COMBAT, format("%s killed by %s at %s (%d) Method: %s -- <Immortal Kill>") % 
                     v->getName() % getName() % v->roomp->name % v->inRoom() % buf2);
           } else
-            vlogf(LOG_COMBAT, fmt("%s killed by %s at %s (%d) Method: %s -- <%sPlayer kill>") % 
+            vlogf(LOG_COMBAT, format("%s killed by %s at %s (%d) Method: %s -- <%sPlayer kill>") % 
                   v->getName() % getName() % v->roomp->name % v->inRoom() % buf2 %
                   ((v->GetMaxLevel() <= 5) ? "NEWBIE " : ""));
 
 #else
-          vlogf(LOG_MISC, fmt("%s killed by %s at %s (%d) Method: %s -- <%sPlayer kill>") % 
+          vlogf(LOG_MISC, format("%s killed by %s at %s (%d) Method: %s -- <%sPlayer kill>") % 
                 v->getName() % getName() % v->roomp->name % v->inRoom() %
                 buf2 %
                 ((v->GetMaxLevel() <= 5 && v != this) ? "NEWBIE " : ""));
@@ -887,7 +887,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 // hence this setup instead.
           int robj = real_object(OBJ_GENERIC_GRAVE);
           if (robj < 0 || robj >= (signed int) obj_index.size()) {
-            vlogf(LOG_BUG, fmt("damageEpilog(): No object (%d) in database!") %  OBJ_GENERIC_GRAVE);
+            vlogf(LOG_BUG, format("damageEpilog(): No object (%d) in database!") %  OBJ_GENERIC_GRAVE);
             return false;
           }
 
@@ -902,7 +902,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
   
             graveDesc += "by ";
             graveDesc += getName();
-            graveDesc += fmt(" this %s day of %s, Year %d P.S.\n\r") %
+            graveDesc += format(" this %s day of %s, Year %d P.S.\n\r") %
                    numberAsString(time_info.day+1) %
                    month_name[time_info.month] %  time_info.year;
 
@@ -919,7 +919,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
           }
         }
       } else 
-        vlogf(LOG_MISC, fmt("%s killed by %s at Nowhere  Method: %s.") %  v->getName() % getName() % buf2);
+        vlogf(LOG_MISC, format("%s killed by %s at Nowhere  Method: %s.") %  v->getName() % getName() % buf2);
     }
     // Mark an actual kill for the person giving the final blow
     if (desc) {
@@ -977,7 +977,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
     // theoretically possible, but I don't believe situation will
     // have it occur realistically, JIC though
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      vlogf(LOG_BUG, fmt("Bad result from PkRespawn (%s at %d).  Multiple deaths??") % 
+      vlogf(LOG_BUG, format("Bad result from PkRespawn (%s at %d).  Multiple deaths??") % 
           v->getName() % v->inRoom());
     }
 
@@ -1024,7 +1024,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
       }
 
       if(desc && IS_SET(desc->autobits, AUTO_TROPHY)){
-	sendTo(COLOR_BASIC,fmt("You will gain %s experience when fighting %s.\n\r") %
+	sendTo(COLOR_BASIC,format("You will gain %s experience when fighting %s.\n\r") %
 	       trophy->getExpModDescr(trophy->getCount(v->mobVnum()), v->mobVnum()) %
 	       v->getName());
       }
@@ -1057,7 +1057,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
       if (!isPc() && !isAffected(AFF_CHARM)) {
         TBaseCorpse *corpse = NULL;
 	      sprintf(buf, "%s-corpse", buf2);
-        if ((t2 = searchLinkedList((fmt("%s-corpse") % buf2).c_str(), roomp->stuff)) &&
+        if ((t2 = searchLinkedList(((sstring)(format("%s-corpse") % buf2)).c_str(), roomp->stuff)) &&
             (corpse = dynamic_cast<TBaseCorpse *>(t2)))
         {
           corpse->addCorpseFlag(CORPSE_NO_DISSECT|CORPSE_NO_SKIN);
@@ -1090,7 +1090,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 // hence this setup instead.
               int robj = real_object(comp);
               if (robj < 0 || robj >= (signed int) obj_index.size()) {
-                vlogf(LOG_BUG, fmt("damageEpilog(): No object (%d) in database!") %  comp);
+                vlogf(LOG_BUG, format("damageEpilog(): No object (%d) in database!") %  comp);
                 return false;
               }
 
@@ -1164,7 +1164,7 @@ int TBeing::damageEm(int dam, sstring log, spellNumT dmg_type)
 
   if (getPosition() == POSITION_DEAD) {
     if (!log.empty())
-      vlogf(LOG_MISC, fmt("[%s] - %s") %  getName() % log);
+      vlogf(LOG_MISC, format("[%s] - %s") %  getName() % log);
     if (specials.fighting)
       stopFighting();
     return die(dmg_type);

@@ -333,7 +333,7 @@ sstring TTrap::statObjInfo() const
 {
   sstring sbuf, buf;
 
-  buf = fmt("Trap level: %d, damage type: %s (%d), charges: %d\n\r") %
+  buf = format("Trap level: %d, damage type: %s (%d), charges: %d\n\r") %
            getTrapLevel() %
            trap_types[getTrapDamType()] %
            getTrapDamType() %

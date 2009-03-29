@@ -192,7 +192,7 @@ const sstring sstring::comify() const
   sstring tString=*this;
   unsigned int  strCount, charIndex = 0;
 
-  tString=fmt("%.0f") % convertTo<float>(*this);
+  tString=format("%.0f") % convertTo<float>(*this);
   strCount = tString.length();
   tString="";
 
@@ -395,14 +395,36 @@ const char *sstring::c_str() const
   // cause strlen to come up short. we're only interested if std::string::c_str
   // gives us a too-long string.
   if(strlen(string::c_str()) > length())
-    throw std::runtime_error(fmt("corruption in sstring::c_str"));
+    throw std::runtime_error(format("corruption in sstring::c_str").str());
 
   return string::c_str();
 }
 
-const sstring & sstring::operator=(fmt &a)
+const sstring & sstring::operator+=(const char &a){
+  string::operator+=(a);
+  return *this;
+}
+
+const sstring & sstring::operator+=(const string &a){
+  this->append(a);
+  return *this;
+}
+
+const sstring & sstring::operator+=(const char *a)
 {
-  this->assign(a);
+  this->append(a);
+  return *this;
+}
+
+const sstring & sstring::operator+=(const format &a)
+{
+  this->append(a.str());
+  return *this;
+}
+
+const sstring & sstring::operator=(const format &a)
+{
+  this->assign(a.str());
   return *this;
 }
 

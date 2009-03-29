@@ -74,7 +74,7 @@ bool TBeing::canBash(TBeing *victim, silentTypeT silent)
 
   if (victim->riding && !dynamic_cast<TBeing *>(victim->riding)) {
     if (!silent)
-      sendTo(COLOR_MOBS, fmt("You are unable to bash %s off of %s!\n\r") % victim->getName() % victim->riding->getName());
+      sendTo(COLOR_MOBS, format("You are unable to bash %s off of %s!\n\r") % victim->getName() % victim->riding->getName());
     return FALSE;
   }
   if (victim == this) {
@@ -112,7 +112,7 @@ bool TBeing::canBash(TBeing *victim, silentTypeT silent)
   }
   if (victim->getPosition() <= POSITION_SITTING) {
     if (!silent)
-      sendTo(fmt("How can you bash someone already on the %s?!?\n\r") % roomp->describeGround());
+      sendTo(format("How can you bash someone already on the %s?!?\n\r") % roomp->describeGround());
     return FALSE;
   }    
   if (getMove() < 5) {
@@ -248,7 +248,7 @@ int TBeing::bashFail(TBeing *victim, spellNumT skill)
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
 
-    sendTo(fmt("%sYou fall over.%s\n\r") % red() % norm());
+    sendTo(format("%sYou fall over.%s\n\r") % red() % norm());
     act("$n falls over.",TRUE, this, 0, 0, TO_ROOM);
 
     rc = trySpringleap(victim);

@@ -87,7 +87,7 @@ void TVehicle::lookObj(TBeing *ch, int) const
 {
   sstring buf;
 
-  buf = fmt("%d look") % getTarget();
+  buf = format("%d look") % getTarget();
   ch->doAt(buf.c_str(), true);
 }
 
@@ -145,9 +145,9 @@ void TVehicle::driveDir(TBeing *ch, dirTypeT dir)
 
   setDir(dir);
 
-  buf = fmt("$n directs $p to the %s.") % dirs[dir];
+  buf = format("$n directs $p to the %s.") % dirs[dir];
   act(buf, 0, ch, this, 0, TO_ROOM);
-  buf = fmt("You direct $p to the %s.") % dirs[dir];
+  buf = format("You direct $p to the %s.") % dirs[dir];
   act(buf, 0, ch, this, 0, TO_CHAR);
 }
 
@@ -168,7 +168,7 @@ void TVehicle::driveLook(TBeing *ch, bool silent)
   if(!silent)
     ch->sendTo("You look outside.\n\r");
 
-  buf = fmt("%d look") % in_room;
+  buf = format("%d look") % in_room;
   ch->doAt(buf.c_str(), true);
 }
 
@@ -226,13 +226,13 @@ void TVehicle::changeObjValue3(TBeing *ch)
   getFourValues(&x1, &x2, &x3, &x4);
 
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt("What does this value do? :\n\r %s\n\r") %
+  ch->sendTo(format("What does this value do? :\n\r %s\n\r") %
        ItemInfo[itemType()]->val2_info);
   ch->specials.edit = CHANGE_OBJ_VALUE3;
 
-  ch->sendTo(fmt("Value 3 for %s : %d\n\r\n\r") %
+  ch->sendTo(format("Value 3 for %s : %d\n\r\n\r") %
        sstring(getName()).uncap() % x3);
-  ch->sendTo(fmt(VT_CURSPOS) % 10 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 10 % 1);
   ch->sendTo("Enter new value.\n\r--> ");
 }
 
@@ -407,43 +407,43 @@ void TVehicle::vehiclePulse(int pulse)
     if(getSpeed() >= FAST_SPEED){
       sendrpf(COLOR_OBJECTS, roomp, "%s sails rapidly in from the %s.\n\r",
 	      shortdescr, dirs[rev_dir[getDir()]]);
-      buf = fmt("$p sails %s.") % dirs[getDir()];
+      buf = format("$p sails %s.") % dirs[getDir()];
     } else if(getSpeed() >= MED_SPEED){
       sendrpf(COLOR_OBJECTS, roomp, "%s sails in from the %s.\n\r",
 	      shortdescr, dirs[rev_dir[getDir()]]);
-      buf = fmt("$p sails %s.") % dirs[getDir()];
+      buf = format("$p sails %s.") % dirs[getDir()];
     } else {
       sendrpf(COLOR_OBJECTS, roomp, "%s drifts in from the %s.\n\r",
 	      shortdescr, dirs[rev_dir[getDir()]]);
-      buf = fmt("$p drifts %s.") % dirs[getDir()];
+      buf = format("$p drifts %s.") % dirs[getDir()];
     }
   } else if(getType() == VEHICLE_TROLLEY){
     if(getSpeed() >= FAST_SPEED){
       sendrpf(COLOR_OBJECTS, roomp, "%s rumbles in from the %s.\n\r",
 	      shortdescr, dirs[rev_dir[getDir()]]);
-      buf = fmt("$p rumbles %s.") % dirs[getDir()];
+      buf = format("$p rumbles %s.") % dirs[getDir()];
     } else if(getSpeed() >= MED_SPEED){
       sendrpf(COLOR_OBJECTS, roomp, "%s rumbles in from the %s.\n\r",
 	      shortdescr, dirs[rev_dir[getDir()]]);
-      buf = fmt("$p rumbles %s.") % dirs[getDir()];
+      buf = format("$p rumbles %s.") % dirs[getDir()];
     } else {
       sendrpf(COLOR_OBJECTS, roomp, "%s rolls in from the %s.\n\r",
 	      shortdescr, dirs[rev_dir[getDir()]]);
-      buf = fmt("$p drifts %s.") % dirs[getDir()];
+      buf = format("$p drifts %s.") % dirs[getDir()];
     }
   } else {
     if(getSpeed() >= FAST_SPEED){
       sendrpf(COLOR_OBJECTS, roomp, "%s speeds in from the %s.\n\r",
 	      shortdescr, dirs[rev_dir[getDir()]]);
-      buf = fmt("$p speeds %s.") % dirs[getDir()];
+      buf = format("$p speeds %s.") % dirs[getDir()];
     } else if(getSpeed() >= MED_SPEED){
       sendrpf(COLOR_OBJECTS, roomp, "%s rolls in from the %s.\n\r",
 	      shortdescr, dirs[rev_dir[getDir()]]);
-      buf = fmt("$p rolls %s.") % dirs[getDir()];
+      buf = format("$p rolls %s.") % dirs[getDir()];
     } else {
       sendrpf(COLOR_OBJECTS, roomp, "%s creeps in from the %s.\n\r",
 	      shortdescr, dirs[rev_dir[getDir()]]);
-      buf = fmt("$p creeps %s.") % dirs[getDir()];
+      buf = format("$p creeps %s.") % dirs[getDir()];
     }
   }
   
@@ -470,9 +470,9 @@ void TVehicle::driveStatus(TBeing *ch)
 {
   sstring buf;
 
-  buf = fmt("$p is pointing to the %s.\n\r") % dirs[getDir()];
+  buf = format("$p is pointing to the %s.\n\r") % dirs[getDir()];
   act(buf, 0, ch, this, 0, TO_CHAR);
-  buf = fmt("$p is traveling at a %i speed.\n\r") % getSpeed();
+  buf = format("$p is traveling at a %i speed.\n\r") % getSpeed();
   act(buf, 0, ch, this, 0, TO_CHAR);
 }
 
@@ -483,9 +483,9 @@ sstring TVehicle::statObjInfo() const
 
   TPortal::statObjInfo();
 
-  buf = fmt("It is pointing to the %s.\n\r") % dirs[getDir()];
+  buf = format("It is pointing to the %s.\n\r") % dirs[getDir()];
   sbuf+=buf;
-  buf = fmt("It is traveling at %i speed.\n\r") % getSpeed();
+  buf = format("It is traveling at %i speed.\n\r") % getSpeed();
   sbuf+=buf;
 
   return sbuf;

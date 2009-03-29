@@ -19,10 +19,10 @@ int board(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
 int TObj::boardHandler(TBeing *, cmdTypeT cmd, const char *)
 {
   if (cmd != CMD_GENERIC_DESTROYED){
-    vlogf(LOG_PROC, fmt("board handler with non-board (%s) cmd=%d") %  getName() % cmd);
+    vlogf(LOG_PROC, format("board handler with non-board (%s) cmd=%d") %  getName() % cmd);
   } else {
     // this msg comes in ~TObj() so we will never be a TBoard when we get it.
-    // vlogf(LOG_PROC, fmt("Um, deleted a board?"));
+    // vlogf(LOG_PROC, format("Um, deleted a board?"));
   }
   return FALSE;
 }
@@ -113,9 +113,9 @@ int TBoard::readPost(TBeing *ch, const char *arg)
          sstring sb = buffer;
          processStringForClient(sb);
    
-         ch->desc->clientf(fmt("%d") % CLIENT_NOTE);
+         ch->desc->clientf(format("%d") % CLIENT_NOTE);
          ch->sendTo(COLOR_BASIC, sb);
-         ch->desc->clientf(fmt("%d") % CLIENT_NOTE_END);
+         ch->desc->clientf(format("%d") % CLIENT_NOTE_END);
        } else {
          sprintf(buffer, "Message %d : [%s] %s (%s)\n\r\n\r%s\n\r%sEnd of message %d.\n\r", post_num, mud_str_dup(db["date_posted"]), mud_str_dup(db["subject"]), mud_str_dup(db["author"]), mud_str_dup(db["post"]), ch->norm(), post_num);
          sstring sb = buffer;
@@ -169,15 +169,15 @@ int TBoard::lookBoard(TBeing *ch, const char *arg)
   TDatabase db(DB_SNEEZY);
   db.query("select post_num, date_format(date_posted, '%%b %%e %%H:%%i %%Y') as date_posted, subject, author from board_message where board_vnum = %i and date_removed is null order by post_num %s", this->objVnum(), reverse ? "desc" : "asc");
   act("$n studies $p.", TRUE, ch, this, 0, TO_ROOM);
-  sbuf1 = fmt("This is a bulletin board. You can %sPOST%s, %sREAD <#>%s or %sGET <#>%s.\n\r") % ch->green() % ch->norm() % ch->green() % ch->norm() % ch->green() % ch->norm();
-  sbuf1 += fmt("To view the latest message first, %sLOOK <BOARD> REVERSE%s.\n\r\n\r") % ch->green() % ch->norm();
+  sbuf1 = format("This is a bulletin board. You can %sPOST%s, %sREAD <#>%s or %sGET <#>%s.\n\r") % ch->green() % ch->norm() % ch->green() % ch->norm() % ch->green() % ch->norm();
+  sbuf1 += format("To view the latest message first, %sLOOK <BOARD> REVERSE%s.\n\r\n\r") % ch->green() % ch->norm();
   
   ch->desc->page_string(sbuf1);
   
   sbuf1 = "";
   int num = 0;
   while (db.fetchRow()){
-    sbuf1 += fmt("%s%-2d%s : %s[%s] %s%s %s(%s)%s\n\r") %
+    sbuf1 += format("%s%-2d%s : %s[%s] %s%s %s(%s)%s\n\r") %
 	ch->cyan() % convertTo<int>(db["post_num"]) % ch->norm() % 
         ch->green() % db["date_posted"] %
 	ch->purple() % db["subject"] % 
@@ -191,7 +191,7 @@ int TBoard::lookBoard(TBeing *ch, const char *arg)
     act("There is 1 message on $p.\n\r", TRUE, ch, this, 0, TO_CHAR);
     ch->desc->page_string(sbuf1);
   } else {
-    sbuf2 = fmt("There are %i messages on $p.\n\r") % num;
+    sbuf2 = format("There are %i messages on $p.\n\r") % num;
     act(sbuf2, TRUE, ch, this, 0, TO_CHAR);
     ch->desc->page_string(sbuf1);
   }

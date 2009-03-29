@@ -24,7 +24,7 @@ bool findFairFight::isTarget(int room) const
     if (tmon->isImmortal())
       continue;
 
-    //    vlogf(LOG_PEEL, fmt("level %f %i") % tmon->getRealLevel() % myself->GetMaxLevel());
+    //    vlogf(LOG_PEEL, format("level %f %i") % tmon->getRealLevel() % myself->GetMaxLevel());
 
     if((int)((tmon->getRealLevel()+0.5)-myself->GetMaxLevel()))
       return false;
@@ -367,7 +367,7 @@ void TPathFinder::setRange(int d){
   if(d<0){
     // old find_path used negative depth to set certain options
     // this is depreciated, so check for erroneous usage
-    vlogf(LOG_BUG, fmt("TPathFinder::setRange called with negative depth (%i)!") % d);
+    vlogf(LOG_BUG, format("TPathFinder::setRange called with negative depth (%i)!") % d);
     d=-d;
   }
   

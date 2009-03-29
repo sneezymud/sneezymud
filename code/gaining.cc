@@ -11,7 +11,7 @@
 void TBeing::setSpellEligibleToggle(TMonster *trainer, spellNumT spell, silentTypeT silent) 
 {
   if (!silent && trainer) {
-    trainer->doTell(fname(name), fmt("You now have the training to learn %s!") % discArray[spell]->name);
+    trainer->doTell(fname(name), format("You now have the training to learn %s!") % discArray[spell]->name);
   }
 
   switch (spell) {
@@ -210,7 +210,7 @@ int TBeing::calcRaiseDisc(discNumT which, bool drop) const
 
   // people report practicing and getting no gain, trap this event.
   if (i_inc <= 0)
-    vlogf(LOG_BUG, fmt("Bad discipline increase - did %s prac and get nothing from it?") % getName());
+    vlogf(LOG_BUG, format("Bad discipline increase - did %s prac and get nothing from it?") % getName());
 
   return i_inc;
 }
@@ -880,7 +880,7 @@ void TBeing::raiseLevel(classIndT)
 void TMonster::raiseLevel(classIndT Class)
 {
   if (getExp() < getExpClassLevel(Class, getLevel(Class) + 1)){
-    vlogf(LOG_BUG, fmt("raiseLevel() called on %s when exp too low") %
+    vlogf(LOG_BUG, format("raiseLevel() called on %s when exp too low") %
 	  getName());
     return;
   }
@@ -913,7 +913,7 @@ void TPerson::raiseLevel(classIndT Class)
   int maxhit;
 
   if (getExp() < getExpClassLevel(Class, getLevel(Class) + 1)){
-    vlogf(LOG_BUG, fmt("raiseLevel() called on %s when exp too low") %  getName());
+    vlogf(LOG_BUG, format("raiseLevel() called on %s when exp too low") %  getName());
     return;
   }
 
@@ -1160,7 +1160,7 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
       // trainers should be level 60 or level 100
       // this determines the maximum amount they can train, and
       // basic trainers go to 60%, second trainers to 100%
-      vlogf(LOG_LOW, fmt("%s: trainer with inappropriate level (%i)") %
+      vlogf(LOG_LOW, format("%s: trainer with inappropriate level (%i)") %
 	    me->getName() % me->GetMaxLevel());
     }
   }
@@ -1177,7 +1177,7 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
       break;
     }
     if (TrainerInfo[offset].spec == -1) {
-      vlogf(LOG_BUG, fmt("TrainerMob lacked setup in TrainerInfo array (%s)") %  
+      vlogf(LOG_BUG, format("TrainerMob lacked setup in TrainerInfo array (%s)") %  
              me->getName());
       return FALSE;
     }
@@ -1294,7 +1294,7 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
     me->doTell(fname(ch->name), "You have no more practices you can use here.");
     return TRUE;
   } else if (practices < pracs) {
-      me->doTell(fname(ch->name), fmt("I will only be able to use %d of your requested practices.") % practices);
+      me->doTell(fname(ch->name), format("I will only be able to use %d of your requested practices.") % practices);
   }
   if (ch->doTraining(ch, me, accclass, offset, min(practices, pracs))) 
     return TRUE;
@@ -1353,7 +1353,7 @@ int TBeing::checkDoneBasic(TBeing *ch, classIndT accclass, int guild, int amount
       bas = ch->getDiscipline(DISC_THIEF)->getNatLearnedness();
       break;
     default:
-      vlogf(LOG_BUG,fmt("Wierd case in checkDoneBasic %d") %  accclass);
+      vlogf(LOG_BUG,format("Wierd case in checkDoneBasic %d") %  accclass);
   }
 
   if (amountCheck) {
@@ -1540,7 +1540,7 @@ int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline,
     }
     
     if(!found){
-      vlogf(LOG_BUG, fmt("Bad case in gaining pre requisites (%d) (%s)") %  accclass % ch->getName());
+      vlogf(LOG_BUG, format("Bad case in gaining pre requisites (%d) (%s)") %  accclass % ch->getName());
       ch->sendTo("Bug that you got this at the gain trainer.");
       return TRUE;
     }
@@ -1562,7 +1562,7 @@ int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline,
       return TRUE;
     case 1:
       me->doTell(fname(ch->name), "Tsk! Tsk! You have not kept up with your general training and you expect me to teach you more.");
-      me->doTell(fname(ch->name), fmt("Go learn more about %s before you come back to me.") % tmp_buf);
+      me->doTell(fname(ch->name), format("Go learn more about %s before you come back to me.") % tmp_buf);
       return TRUE;
   }
   return FALSE;
@@ -1586,7 +1586,7 @@ int TBeing::doTraining(TBeing *ch, TMonster *me, classIndT accclass, int offset,
   int tOldSL2 = ch->getDiscipline(getDisciplineNumber(SPELL_SHAPESHIFT, FALSE))->getLearnedness();
 
   if (pracs <= 0) {
-    vlogf(LOG_BUG, fmt("Bogus pracs used %s (%d)") %  ch->getName() % ch->in_room);
+    vlogf(LOG_BUG, format("Bogus pracs used %s (%d)") %  ch->getName() % ch->in_room);
     return TRUE;
   }
 
@@ -1621,7 +1621,7 @@ int TBeing::doTraining(TBeing *ch, TMonster *me, classIndT accclass, int offset,
       return TRUE;
     } else {
       ch->addPracs(-1, accclass);
-      ch->sendTo(fmt("You have %d %s practices left.\n\r") %       ch->getPracs(accclass) % classInfo[accclass].name);
+      ch->sendTo(format("You have %d %s practices left.\n\r") %       ch->getPracs(accclass) % classInfo[accclass].name);
     }
     initial = (ch->getDiscipline(TrainerInfo[offset].disc))->getNatLearnedness();
     ch->raiseDiscOnce(TrainerInfo[offset].disc);
@@ -1677,11 +1677,11 @@ int TBeing::doTraining(TBeing *ch, TMonster *me, classIndT accclass, int offset,
           dynamic_cast<TComponent *>(obj)->setComponentCharges(10);
           obj->obj_flags.decay_time = -1;
           *ch += *obj;
-          me->doTell(fname(ch->getName()), fmt("Here is %s for you to help in your learning of %s.") % obj->getName() % discArray[i]->name);
+          me->doTell(fname(ch->getName()), format("Here is %s for you to help in your learning of %s.") % obj->getName() % discArray[i]->name);
         }
       } else if (ch->doesKnowSkill(i)) {
         if ((discArray[i]->start <=final) && (ch->getRawSkillValue(i) < 0)) {
-          vlogf(LOG_BUG, fmt("%s: ch->doesKnowSkill %s (%d) with no actual learning..could be array change or bug") %  ch->getName() % discArray[i]->name % i);
+          vlogf(LOG_BUG, format("%s: ch->doesKnowSkill %s (%d) with no actual learning..could be array change or bug") %  ch->getName() % discArray[i]->name % i);
           ch->setNatSkillValue(i, 1);
           ch->setSkillValue(i, 1);
         }
@@ -1956,7 +1956,7 @@ int GenericGuildMaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, 
   if (!ch->hasClass(Class)) {
     sstring buf;
 
-    buf = fmt("$n growls, \"Go away, $N.  You're no %s!\"") %
+    buf = format("$n growls, \"Go away, $N.  You're no %s!\"") %
 	     classInfo[cit].name;
     act(buf, FALSE, me, 0, ch, TO_ROOM);
 
@@ -1988,9 +1988,9 @@ int GenericGuildMaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, 
 
     if (is_abbrev(arg, "reset")) {
       if (ch->getMoney() < cost) {
-        me->doSay(fmt("I'm sorry, you don't have enough money for me to reset your spent practices.  The cost is %d talens.") % cost);
+        me->doSay(format("I'm sorry, you don't have enough money for me to reset your spent practices.  The cost is %d talens.") % cost);
       } else if (ch->resetPractices(cit, practices, true)) {
-        me->doSay(fmt("I have reset %d practices for you.  You will now have to visit your trainers to relearn your disciplines.") % practices);
+        me->doSay(format("I have reset %d practices for you.  You will now have to visit your trainers to relearn your disciplines.") % practices);
         ch->giveMoney(me, cost, GOLD_SHOP_RESPONSES);
         if (resetQuest)
           ch->remQuestBit(resetQuest);
@@ -2011,10 +2011,10 @@ int GenericGuildMaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, 
     }
 
     if (practices > 0) {
-      me->doSay(fmt("I could also reset all of your %d spent practices for you.") % practices);
-      me->doSay(fmt("To do so, type 'gain reset'.  There will be a fee of %d talens.") % cost);
+      me->doSay(format("I could also reset all of your %d spent practices for you.") % practices);
+      me->doSay(format("To do so, type 'gain reset'.  There will be a fee of %d talens.") % cost);
       if (resetQuest && !ch->hasQuestBit(resetQuest))
-         me->doSay(fmt("I'll help you for only %d talens if you do me a small <c>favor<1> first.") % (cost / 2));
+         me->doSay(format("I'll help you for only %d talens if you do me a small <c>favor<1> first.") % (cost / 2));
     }
 
   } else if (ch->getLevel(cit) < MAX_MORT) {
@@ -2186,7 +2186,7 @@ void TBeing::pracPath(TMonster *gm, classIndT Class)
       sprintf(buf, "You need to use these practices at your basic %s trainer or you could pursue a weapon specialization.", gm->getProfName().c_str());
     }
   } else {
-    vlogf(LOG_BUG, fmt("Bad case in pracPath for %s") %  getName());
+    vlogf(LOG_BUG, format("Bad case in pracPath for %s") %  getName());
     sendTo("Please bug that there is a bad place in guildmaster instructions.");
     return;
   }

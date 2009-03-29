@@ -54,7 +54,7 @@ void TBeing::doPaint(sstring arg)
     stopTask();
   }
 
-  sendTo(fmt("You start painting %s.\n\r") % (rp ? rp->getName() : obj ? obj->getName() : tb ? tb->getName() : "nothing"));
+  sendTo(format("You start painting %s.\n\r") % (rp ? rp->getName() : obj ? obj->getName() : tb ? tb->getName() : "nothing"));
 
   start_task(this, NULL, NULL, TASK_PAINT, arg.c_str(), 2, inRoom(), 0, 0, 5);
 }

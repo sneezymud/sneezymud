@@ -128,13 +128,13 @@ int TCannon::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT d
     capbuf2 = colorString(ch, ch->desc, getName(), NULL, COLOR_OBJECTS, TRUE);
     
     if (targ){
-      ch->sendTo(COLOR_BASIC, fmt("<Y>BANG!<1>  A deafening blast sounds as you ignite %s.\n\r") % shortDescr);
-      ch->sendTo(COLOR_MOBS, fmt("You shoot %s out of %s at %s.\n\r") %
+      ch->sendTo(COLOR_BASIC, format("<Y>BANG!<1>  A deafening blast sounds as you ignite %s.\n\r") % shortDescr);
+      ch->sendTo(COLOR_MOBS, format("You shoot %s out of %s at %s.\n\r") %
 		 capbuf.uncap() % capbuf2.uncap() %
 		 targ->getName());
     } else {
-      ch->sendTo(COLOR_BASIC, fmt("<Y>BANG!<1>  A deafening blast sounds as you ignite %s.\n\r") % shortDescr);
-      ch->sendTo(fmt("You shoot %s out of %s.\n\r") %
+      ch->sendTo(COLOR_BASIC, format("<Y>BANG!<1>  A deafening blast sounds as you ignite %s.\n\r") % shortDescr);
+      ch->sendTo(format("You shoot %s out of %s.\n\r") %
 		 capbuf.uncap() % 
 		 capbuf2.uncap());
     }    
@@ -153,7 +153,7 @@ int TCannon::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT d
     int rc = throwThing(bullet, dir, ch->in_room, &targ, shoot_dist, 1, ch);
 
     if(!isSilenced())
-      ch->roomp->getZone()->sendTo(fmt("<R>BOOM!<1>  A loud cannon shot echoes around.\n\r"));
+      ch->roomp->getZone()->sendTo("<R>BOOM!<1>  A loud cannon shot echoes around.\n\r");
 
     // delete the bullet afterwards, arbitrary decision
     // since they are arrow type and you usually don't find spent lead anyway
@@ -211,10 +211,10 @@ int task_cannon_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *r
       
       switch (ch->task->timeLeft) {
 	case 5:
-	  buf = fmt("You clear out the barrel of %s.") %
+	  buf = format("You clear out the barrel of %s.") %
 		   cannon->shortDescr;
 	  act(buf, FALSE, ch, NULL, cannon, TO_CHAR);
-	  buf = fmt("$n clears out the barrel of %s.") %
+	  buf = format("$n clears out the barrel of %s.") %
 		   cannon->shortDescr;
 	  act(buf, FALSE, ch, NULL, cannon, TO_ROOM);
 
@@ -241,11 +241,11 @@ int task_cannon_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *r
 	    return FALSE;
 	  }
 
-	  buf = fmt("You pour some powder from $p into %s.") %
+	  buf = format("You pour some powder from $p into %s.") %
 		   cannon->shortDescr;
 	  act(buf, FALSE, ch, powder, 0, TO_CHAR);
 
-	  buf = fmt("$n pours some powder from $p into %s.") %
+	  buf = format("$n pours some powder from $p into %s.") %
 		   cannon->shortDescr;
           act(buf, FALSE, ch, powder, 0, TO_ROOM);
           ch->task->timeLeft--;
@@ -310,7 +310,7 @@ int task_cannon_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *r
 	  act("$n pours priming powder into the touchhole of $N.",
 	      FALSE, ch, NULL, cannon, TO_ROOM);
 
-	  ch->sendTo(COLOR_BASIC, fmt("You have finished loading %s.\n\r") % cannon->shortDescr);
+	  ch->sendTo(COLOR_BASIC, format("You have finished loading %s.\n\r") % cannon->shortDescr);
 	  cannon->remFromFlags(GUN_FLAG_FOULED);
 	  ch->stopTask();
 	  break;
@@ -342,7 +342,7 @@ void TCannon::loadMe(TBeing *ch, TAmmo *ammo)
   // find black powder
   // check for flint and steel
 
-  ch->sendTo(COLOR_BASIC, fmt("You start loading %s.\n\r") % shortDescr);
+  ch->sendTo(COLOR_BASIC, format("You start loading %s.\n\r") % shortDescr);
 
   start_task(ch, this, ch->roomp, TASK_CANNON_LOAD, "", 5, ch->inRoom(), 0, 0, 5);
 

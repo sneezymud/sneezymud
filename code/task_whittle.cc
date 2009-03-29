@@ -216,7 +216,7 @@ void task_whittlePulse(TBeing *ch, TArrow *tArrow, whittlePulseT tWhitLevel)
       tArrow->setWeapDamDev((int)tTemp);
       break;
     default:
-      vlogf(LOG_BUG, fmt("task_shittlePulse(TArrow) called with invalid tWhitLevel.  [%d]") % 
+      vlogf(LOG_BUG, format("task_shittlePulse(TArrow) called with invalid tWhitLevel.  [%d]") % 
             tWhitLevel);
       break;
   }
@@ -267,7 +267,7 @@ void task_whittlePulse(TBeing *ch, TBow *tBow, whittlePulseT tWhitLevel)
       tBow->setMaxRange((int)(tValue + tBow->getMaxRange()));
       break;
     default:
-      vlogf(LOG_BUG, fmt("task_shittlePulse(TBow) called with invalid tWhitLevel.  [%d]") % 
+      vlogf(LOG_BUG, format("task_shittlePulse(TBow) called with invalid tWhitLevel.  [%d]") % 
             tWhitLevel);
       break;
   }
@@ -303,17 +303,17 @@ void task_whittleSetupObject(TBeing *ch, TObj *tObj, TOrganic *tWood, int tIndex
     tStWood=tStString.word(1);
     tStObject = whittleItems[tIndex].getName(true);
 
-    tString=fmt("%s %s %s<z>") %
+    tString=format("%s %s %s<z>") %
       tStPost % tStWood % tStObject;
     delete [] tObj->shortDescr;
     tObj->shortDescr = mud_str_dup(tString);
 
-    tString=fmt("%s %s %s") %
+    tString=format("%s %s %s") %
             tStObject % tStWood % whittleItems[tIndex].getName(false);
     delete [] tObj->name;
     tObj->name = mud_str_dup(tString);
 
-    tString=fmt("%s %s %s %s<z>") %
+    tString=format("%s %s %s %s<z>") %
       sstring(tStPost).cap() % tStWood %
       tStObject % tailMessages[::number(0, 4)];
     delete [] tObj->descr;
@@ -415,7 +415,7 @@ bool task_whittleCreateNew(TBeing *ch, sstring tStWood, int tIndex)
 
     if (!(ch->task->obj = read_object(real_object(whittleItems[tIndex].itemVnum), REAL))) {
       ch->sendTo("Something bad happened.  Tell a god.\n\r");
-      vlogf(LOG_BUG, fmt("Player in whittle got to item that doesn't exist!  [%d]") % 
+      vlogf(LOG_BUG, format("Player in whittle got to item that doesn't exist!  [%d]") % 
             whittleItems[tIndex].itemVnum);
       return false;
     }
@@ -586,7 +586,7 @@ void TBeing::doWhittle(const char *tArg)
                                 whittleItems[whittleIndex].weiSize) / 25) *
                               whittleItems[whittleIndex].itemType);
 
-        sendTo(fmt("%-45s:%c: %6.0f %3.0f %3.0d%c %5d %2d %4.0f\n\r") %
+        sendTo(format("%-45s:%c: %6.0f %3.0f %3.0d%c %5d %2d %4.0f\n\r") %
                whittleItems[whittleIndex].name %
                (whittleItems[whittleIndex].valid ? '*' : ' ') %
                whittleItems[whittleIndex].volSize %
@@ -827,7 +827,7 @@ void taskWhittleEntry::operator()(sstring tString, int newtClass,
     weiSize *= 1.10;
     weaSize = max(400.0, ((volSize + weiSize) / 10));
 
-    vlogf(LOG_MISC, fmt("Adding Whittle: [%.1f %d : %.1f] [%.1f %.1f : %.1f]") % 
+    vlogf(LOG_MISC, format("Adding Whittle: [%.1f %d : %.1f] [%.1f %.1f : %.1f]") % 
           volSize % tObj->getVolume() % (tObj->getVolume() * 1.10) %
           weiSize % tObj->getWeight() % (tObj->getWeight() * 1.10));
 

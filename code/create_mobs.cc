@@ -135,7 +135,7 @@ static void send_mob_menu(const TBeing *ch, const TMonster *tMon)
         strcat(tStringOut[tMsgIndex], "...");
       }
 
-    ch->sendTo(COLOR_MOBS, fmt(mob_edit_menu_advanced) %
+    ch->sendTo(COLOR_MOBS, format(mob_edit_menu_advanced) %
           ch->cyan()   % ch->norm() %                           tStringOut[0] %
           ch->purple() % ch->norm() %                           tStringOut[1] %
           ch->cyan()   % ch->norm() %                           tStringOut[2] %
@@ -167,7 +167,7 @@ static void send_mob_menu(const TBeing *ch, const TMonster *tMon)
           ch->cyan()   % ch->norm() % ch->purple() % ch->norm() % tStringOut[21] %
           ch->purple() % ch->norm() % ch->cyan()   % ch->norm());
   } else
-    ch->sendTo(COLOR_MOBS, fmt(mob_edit_menu_basic) %
+    ch->sendTo(COLOR_MOBS, format(mob_edit_menu_basic) %
           ch->cyan() % ch->norm() % ch->purple() % ch->norm() %
           ch->cyan() % ch->norm() % ch->purple() % ch->norm() %
           ch->cyan() % ch->norm() % ch->purple() % ch->norm() %
@@ -190,7 +190,7 @@ static void TBeingLoad(TBeing *ch, int vnum)
   TMonster *mob;
   int rc; //, num;
   mob = new TMonster();
-  ch->sendTo(fmt("Loading mob number %d.\n\r") % vnum);
+  ch->sendTo(format("Loading mob number %d.\n\r") % vnum);
 
   // do this here to avoid the 'deleted & not found in character_list' assertion 
   // in ~TMonster if readMobFromDB fails or returns delete
@@ -203,7 +203,7 @@ static void TBeingLoad(TBeing *ch, int vnum)
     delete mob;
     return;
   } else if (!rc) {
-    ch->sendTo(fmt("Mob %d not found in the builder database.\n\r") % vnum);
+    ch->sendTo(format("Mob %d not found in the builder database.\n\r") % vnum);
     delete mob;
     return;
   }
@@ -251,7 +251,7 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
 {
   if (!mob->name || !mob->getDescr() || !mob->shortDescr || !mob->getLongDesc()) {
     ch->sendTo("Your mob is missing one or more important strings.\n\r");
-    ch->sendTo(fmt("Please update the following before saving:%s%s%s%s\n\r")
+    ch->sendTo(format("Please update the following before saving:%s%s%s%s\n\r")
                % (mob->name                 ? "" : " Name")
                % (mob->shortDescr           ? "" : " Short description")
                % (mob->getLongDesc()        ? "" : " Long description")
@@ -423,13 +423,13 @@ static void msave(TBeing *ch, char *argument)
 static void update_mob_menu(TBeing *ch, TMonster *mob)
 {
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt("%sMobile Name:%s %s") % ch->cyan() % ch->norm() % mob->name);
-  ch->sendTo(fmt(VT_CURSPOS) % 2 % 1);
-  ch->sendTo(fmt("%sCurrent level:%s %d") % ch->purple() % ch->norm() % mob->GetMaxLevel());
-  ch->sendTo(fmt(VT_CURSPOS) % 3 % 1);
-  ch->sendTo(fmt("%sSuggested level:%s %d") % ch->purple() % ch->norm() % 
+  ch->sendTo(format("%sMobile Name:%s %s") % ch->cyan() % ch->norm() % mob->name);
+  ch->sendTo(format(VT_CURSPOS) % 2 % 1);
+  ch->sendTo(format("%sCurrent level:%s %d") % ch->purple() % ch->norm() % mob->GetMaxLevel());
+  ch->sendTo(format(VT_CURSPOS) % 3 % 1);
+  ch->sendTo(format("%sSuggested level:%s %d") % ch->purple() % ch->norm() % 
     (int) ((double) 0.5 + (double) mob->getRealLevel()));
-  ch->sendTo(fmt(VT_CURSPOS) % 5 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 5 % 1);
   ch->sendTo("Editing Menu:\n\r");
   send_mob_menu(ch, mob);
   ch->sendTo("--> ");
@@ -539,7 +539,7 @@ static void mlist(TPerson *ch, bool zone=false)
   
   longstr = "<c>Vnum   Short description<1>\n\r";
   while(db.fetchRow()){
-    longstr += fmt("%-6s %-s\n\r") % db["vnum"] % db["short_desc"];
+    longstr += format("%-6s %-s\n\r") % db["vnum"] % db["short_desc"];
   }
 
   ch->desc->page_string(longstr, SHOWNOW_NO, ALLOWREP_YES);
@@ -585,7 +585,7 @@ static void change_mob_name(TBeing *ch, TMonster *mob, const char *arg, editorEn
   }
   ch->sendTo(VT_HOMECLR);
 
-  ch->sendTo(fmt("Current Mobile Name: %s") % mob->name);
+  ch->sendTo(format("Current Mobile Name: %s") % mob->name);
   ch->sendTo("\n\r\n\rNew Mobile Name: ");
 
   return;
@@ -601,7 +601,7 @@ static void change_mob_short_desc(TBeing *ch, TMonster *mob, editorEnterTypeT ty
   ch->sendTo(VT_HOMECLR);
 
   ch->sendTo("Current short description:\n\r");
-  ch->sendTo(fmt("%s") % mob->shortDescr);
+  ch->sendTo(format("%s") % mob->shortDescr);
   ch->sendTo("\n\r\n\rNew short description:\n\r");
   ch->sendTo("ALWAYS start the short description with a lowercase letter.\n\r");
   ch->sendTo("Unless it is a formal name, like Brutius, or Kalas.\n\r");
@@ -624,7 +624,7 @@ static void change_mob_long_desc(TBeing *ch, TMonster *mob, editorEnterTypeT typ
   ch->sendTo(VT_HOMECLR);
 
   ch->sendTo("Current long description:\n\r");
-  ch->sendTo(fmt("%s") % mob->getLongDesc());
+  ch->sendTo(format("%s") % mob->getLongDesc());
   ch->sendTo("\n\r\n\rNew mob long description:\n\r");
   ch->sendTo("Terminate with a ~ ON A SEPERATE LINE. Press <ENTER> again to continue.\n\r");
   delete [] mob->player.longDescr;
@@ -644,7 +644,7 @@ static void change_mob_desc(TBeing *ch, TMonster *mob, editorEnterTypeT type)
   ch->sendTo(VT_HOMECLR);
 
   ch->sendTo("Current description:\n\r");
-  ch->sendTo(fmt("%s") % mob->getDescr());
+  ch->sendTo(format("%s") % mob->getDescr());
   ch->sendTo("\n\r\n\rNew mob description:\n\r");
   ch->sendTo("Terminate with a ~. Press <ENTER> again to continue.\n\r");
   delete [] mob->getDescr();
@@ -740,9 +740,9 @@ static void change_mob_act_flags(TBeing *ch, TMonster *mob, const char *arg, edi
     if (j & 1)
       row++;
     ch->sendTo(buf);
-    ch->sendTo(fmt("%2d [%s] %s") % (j + 1) % ((mob->specials.act & (1 << j)) ? "X" : " ") % action_bits[j]);
+    ch->sendTo(format("%2d [%s] %s") % (j + 1) % ((mob->specials.act & (1 << j)) ? "X" : " ") % action_bits[j]);
   }
-  ch->sendTo(fmt(VT_CURSPOS) % 21 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 21 % 1);
   ch->sendTo("Select number to toggle, <ENTER> to return to the main menu.\n\r--> ");
 }
 
@@ -785,10 +785,10 @@ static void change_mob_affect_flags(TBeing *ch, TMonster *mob, const char *arg, 
     if (i & 1)
       row++;
     ch->sendTo(buf);
-    ch->sendTo(fmt("%2d [%s] %s") % (i + 1) % 
+    ch->sendTo(format("%2d [%s] %s") % (i + 1) % 
         ((mob->specials.affectedBy & uint64_t(1 << i)) ? "X" : " ") % affected_bits[i]);
   }
-  ch->sendTo(fmt(VT_CURSPOS) % 21 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 21 % 1);
   ch->sendTo("Select number to toggle, <ENTER> to return to the main menu.\n\r--> ");
 }
 
@@ -815,8 +815,8 @@ static void change_mob_faction_percent(TBeing *ch, TMonster *mob, const char *ar
     }
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt("Current mob faction percent: %3.2f") % mob->getPerc());
-  ch->sendTo(fmt(VT_CURSPOS) % 4 % 1);
+  ch->sendTo(format("Current mob faction percent: %3.2f") % mob->getPerc());
+  ch->sendTo(format(VT_CURSPOS) % 4 % 1);
   ch->sendTo("Select a new faction percent.\n\r--> ");
 }
 
@@ -833,7 +833,7 @@ static void change_mob_faction_type(TBeing *ch, TMonster *mob, const char *arg, 
     new_faction = convertTo<int>(arg);
 
     if (new_faction < MIN_FACTION || new_faction >= MAX_FACTIONS ) {
-      ch->sendTo(fmt("Please enter a number from %d to %d.\n\r") %
+      ch->sendTo(format("Please enter a number from %d to %d.\n\r") %
                  MIN_FACTION % (MAX_FACTIONS - 1));
       return;
     } else {
@@ -844,9 +844,9 @@ static void change_mob_faction_type(TBeing *ch, TMonster *mob, const char *arg, 
     }
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt("Current mob faction: %d : %s") % mob->getFaction() %
+  ch->sendTo(format("Current mob faction: %d : %s") % mob->getFaction() %
            FactionInfo[mob->getFaction()].faction_name);
-  ch->sendTo(fmt(VT_CURSPOS) % 4 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 4 % 1);
   ch->sendTo("Select a new faction.\n\r0: Unaffiliated    1: Brotherhood     2: Cult      3: Serpent Order\n\r--> ");
 }
 
@@ -875,8 +875,8 @@ static void change_mob_mult_att(TBeing *ch, TMonster *mob, const char *arg, edit
     }
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt("Current mob number of attacks: %.1f") % mob->getMult());
-  ch->sendTo(fmt(VT_CURSPOS) % 4 % 1);
+  ch->sendTo(format("Current mob number of attacks: %.1f") % mob->getMult());
+  ch->sendTo(format(VT_CURSPOS) % 4 % 1);
   ch->sendTo("Select a new attack number.\n\r--> ");
 }
 
@@ -905,14 +905,14 @@ static void change_mob_level(TBeing *ch, TMonster *mob, const char *arg, editorE
   if (!UtilProcs(mob->spec) && !GuildProcs(mob->spec)) {
     ch->specials.edit = MAIN_MENU;
     update_mob_menu(ch, mob);
-    ch->sendTo(fmt(VT_CURSPOS) % 23 % 1);
+    ch->sendTo(format(VT_CURSPOS) % 23 % 1);
     ch->sendTo("Level is automatically set for this mob based on things like HP, AC and damage.\n\r");
     return;
   }
 
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt("Current mob level: %d") % mob->GetMaxLevel());
-  ch->sendTo(fmt(VT_CURSPOS) % 4 % 1);
+  ch->sendTo(format("Current mob level: %d") % mob->GetMaxLevel());
+  ch->sendTo(format(VT_CURSPOS) % 4 % 1);
   ch->sendTo("Select a new level.\n\r--> ");
 }
 
@@ -943,10 +943,10 @@ static void change_mob_thaco(TBeing *ch, TMonster *mob, const char *arg, editorE
     }
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt("Current mob hitroll: %d") % mob->getHitroll());
-  ch->sendTo(fmt(VT_CURSPOS) % 4 % 1);
+  ch->sendTo(format("Current mob hitroll: %d") % mob->getHitroll());
+  ch->sendTo(format(VT_CURSPOS) % 4 % 1);
   ch->sendTo("A hitroll of 0 = normal for level.  A hitroll of +10 gives hitrate of level+1\n\r--> ");
-  ch->sendTo(fmt(VT_CURSPOS) % 5 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 5 % 1);
   ch->sendTo("Select a new hitroll.\n\r--> ");
 }
 
@@ -995,9 +995,9 @@ static void change_mob_class(TBeing *ch, TMonster *mob, const char *arg, editorE
     if (ij % 2 == 1)
       row++;
     ch->sendTo(buf);
-    ch->sendTo(fmt("%2d [%s] %s") % (ij + 1) % ((mob->getClass() & (1 << ij)) ? "X" : " ") % classInfo[ij].name.cap());
+    ch->sendTo(format("%2d [%s] %s") % (ij + 1) % ((mob->getClass() & (1 << ij)) ? "X" : " ") % classInfo[ij].name.cap());
   }
-  ch->sendTo(fmt(VT_CURSPOS) % 21 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 21 % 1);
   ch->sendTo("Select number to toggle, <ENTER> to return to the main menu.\n\r--> ");
 }
 
@@ -1026,8 +1026,8 @@ static void change_mob_height(TBeing *ch, TMonster *mob, const char *arg, editor
   ch->sendTo(VT_HOMECLR);
   ch->sendTo("Height affects whether they bump their heads on the ceiling.\n\r");
   ch->sendTo("So, MAKE SURE you are giving their height and not their length.\n\r");
-  ch->sendTo(fmt("Current mob height: %d (inches)") % mob->getHeight());
-  ch->sendTo(fmt(VT_CURSPOS) % 4 % 1);
+  ch->sendTo(format("Current mob height: %d (inches)") % mob->getHeight());
+  ch->sendTo(format(VT_CURSPOS) % 4 % 1);
   ch->sendTo("Select a new height (in inches).\n\r--> ");
 }
 
@@ -1054,8 +1054,8 @@ static void change_mob_weight(TBeing *ch, TMonster *mob, const char *arg, editor
     }
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt("Current mob weight: %d (lbs.)") % (int) mob->getWeight());
-  ch->sendTo(fmt(VT_CURSPOS) % 4 % 1);
+  ch->sendTo(format("Current mob weight: %d (lbs.)") % (int) mob->getWeight());
+  ch->sendTo(format(VT_CURSPOS) % 4 % 1);
   ch->sendTo("Select a new weight (in lbs.).\n\r--> ");
 }
 
@@ -1082,7 +1082,7 @@ static void change_mob_vision(TBeing *ch, TMonster *mob, const char *arg, editor
     }
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt("Current mob vision bonus: %d\n\r") % mob->visionBonus);
+  ch->sendTo(format("Current mob vision bonus: %d\n\r") % mob->visionBonus);
   ch->sendTo("TBeing vision bonus will help a mob see in low light.\n\r");
   ch->sendTo("Values for light range from 0 at pitch black dark,\n\r");
   ch->sendTo("to 25 at noon time sunlight. To see more about the\n\r");
@@ -1090,7 +1090,7 @@ static void change_mob_vision(TBeing *ch, TMonster *mob, const char *arg, editor
   ch->sendTo("A monsters vision bonus should only be set for mobs\n\r");
   ch->sendTo("that intuitively should be able to see in the dark\n\r");
   ch->sendTo("better than others.\n\r");
-  ch->sendTo(fmt(VT_CURSPOS) % 12 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 12 % 1);
   ch->sendTo("Select a new vision bonus.\n\r--> ");
 }
 
@@ -1117,11 +1117,11 @@ static void change_mob_cbs(TBeing *ch, TMonster *mob, const char *arg, editorEnt
     }
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt("Current mob can be seen: %d\n\r") % mob->canBeSeen);
+  ch->sendTo(format("Current mob can be seen: %d\n\r") % mob->canBeSeen);
   ch->sendTo("If you don't understand how the lighting\n\r");
   ch->sendTo("system works, please look at help light before going\n\r");
   ch->sendTo("further.\n\r");
-  ch->sendTo(fmt(VT_CURSPOS) % 4 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 4 % 1);
   ch->sendTo("Select a new can be seen.\n\r--> ");
 }
 
@@ -1153,12 +1153,12 @@ static void change_mob_armor(TBeing *ch, TMonster *mob, const char *arg, editorE
     }
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt("Current mob AC Level: %.1f") % mob->getACLevel());
-  ch->sendTo(fmt(VT_CURSPOS) % 5 % 1);
+  ch->sendTo(format("Current mob AC Level: %.1f") % mob->getACLevel());
+  ch->sendTo(format(VT_CURSPOS) % 5 % 1);
   ch->sendTo("AC Level should be from 0.0 to 127.0");
-  ch->sendTo(fmt(VT_CURSPOS) % 6 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 6 % 1);
   ch->sendTo("AC Level will give the mob the appropriate armor for that level.");
-  ch->sendTo(fmt(VT_CURSPOS) % 8 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 8 % 1);
   ch->sendTo("Select a new AC Level.\n\r--> ");
 }
 
@@ -1190,8 +1190,8 @@ static void change_mob_hit_bonus(TBeing *ch, TMonster *mob, const char *arg, edi
     }
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt("Current mob HP Level: %.1f") % mob->getHPLevel());
-  ch->sendTo(fmt(VT_CURSPOS) % 5 % 1);
+  ch->sendTo(format("Current mob HP Level: %.1f") % mob->getHPLevel());
+  ch->sendTo(format(VT_CURSPOS) % 5 % 1);
   ch->sendTo("Select a new HP Level.\n\r--> ");
 }
 
@@ -1230,22 +1230,22 @@ static void change_mob_damage(TBeing *ch, TMonster *mob, const char *arg, editor
     }
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt("Current mob damage: %.1f+%d") %
+  ch->sendTo(format("Current mob damage: %.1f+%d") %
         mob->getDamLevel() %
         mob->getDamPrecision());
-  ch->sendTo(fmt(VT_CURSPOS) % 4 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 4 % 1);
   ch->sendTo("Please enter Damage Level and Precision in the form X+Y.");
-  ch->sendTo(fmt(VT_CURSPOS) % 5 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 5 % 1);
   ch->sendTo("X = the Damage Level (0.0 to 127.0).");
-  ch->sendTo(fmt(VT_CURSPOS) % 6 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 6 % 1);
       ch->sendTo("    Damage Level sets damage appropriate for that level of mob.");
-  ch->sendTo(fmt(VT_CURSPOS) % 7 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 7 % 1);
       ch->sendTo("Y = the Damage Precision (0%% to 100%%).");
-  ch->sendTo(fmt(VT_CURSPOS) % 8 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 8 % 1);
       ch->sendTo("    Damage Precision randomizes the damage.");
-  ch->sendTo(fmt(VT_CURSPOS) % 9 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 9 % 1);
       ch->sendTo("    25%% Precision is +/-25%% the dam from the level.");
-  ch->sendTo(fmt(VT_CURSPOS) % 11 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 11 % 1);
   ch->sendTo("Select a new damage.\n\r--> ");
 }
 
@@ -1273,8 +1273,8 @@ static void change_mob_gold(TBeing *ch, TMonster *mob, const char *arg, editorEn
     }
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt("Current mob money constant: %d") % mob->moneyConst);
-  ch->sendTo(fmt(VT_CURSPOS) % 4 % 1);
+  ch->sendTo(format("Current mob money constant: %d") % mob->moneyConst);
+  ch->sendTo(format(VT_CURSPOS) % 4 % 1);
   ch->sendTo("Please use a value of 0 for animals.\n\r");
   ch->sendTo("Average people should have values from 1-5.\n\r");
   ch->sendTo("The VERY wealthy should get values from 5-8.\n\r");
@@ -1307,7 +1307,7 @@ static void change_mob_race(TBeing *ch, TMonster *mob, const char *arg, editorEn
     }
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt("TBeing Race: %s") % mob->getMyRace()->getSingularName());
+  ch->sendTo(format("TBeing Race: %s") % mob->getMyRace()->getSingularName());
 
   row = 0;
   for (i = 0; i < MAX_RACIAL_TYPES; i++) {
@@ -1320,7 +1320,7 @@ static void change_mob_race(TBeing *ch, TMonster *mob, const char *arg, editorEn
     if (row > 18)
       break;    // display is overly long
   }
-  ch->sendTo(fmt(VT_CURSPOS) % 21 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 21 % 1);
   ch->sendTo("Read HELP RACES for a complete list of races.\n\r");
   ch->sendTo("Select the number to set to, <ENTER> to return to main menu.\n\r--> ");
 }
@@ -1365,8 +1365,8 @@ static void change_mob_def_pos(TBeing *ch, TMonster *mob, const char *arg, edito
     return;
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt("Current mob default position: %s") % position_types[mob->default_pos]);
-  ch->sendTo(fmt(VT_CURSPOS) % 4 % 1);
+  ch->sendTo(format("Current mob default position: %s") % position_types[mob->default_pos]);
+  ch->sendTo(format(VT_CURSPOS) % 4 % 1);
   ch->sendTo("1) Standing\n\r2) Sitting\n\r3) Sleeping\n\r4) Resting\n\r");
   ch->sendTo("5) Crawling\n\r6) Flying\n\r");
   ch->sendTo("\n\r\n\r");
@@ -1396,8 +1396,8 @@ static void change_mob_sex(TBeing *ch, TMonster *mob, const char *arg, editorEnt
     }
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt("Current mob sex: %d") % mob->getSex());
-  ch->sendTo(fmt(VT_CURSPOS) % 4 % 1);
+  ch->sendTo(format("Current mob sex: %d") % mob->getSex());
+  ch->sendTo(format(VT_CURSPOS) % 4 % 1);
   ch->sendTo("0 = other, 1 = male, 2 = female.\n\r\n\r");
   ch->sendTo("Select a new sex.\n\r--> ");
 }
@@ -1425,12 +1425,12 @@ static void change_mob_max_exist(TBeing *ch, TMonster *mob, const char *arg, edi
     }
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt("Current mob max exist: %d\n\r\n\r") % mob->max_exist);
+  ch->sendTo(format("Current mob max exist: %d\n\r\n\r") % mob->max_exist);
   
   ch->sendTo("Mob max exist will limit the absolute number of mobs that can exist\n\ranywhere in the mud (rent, or loaded).\n\r");
   ch->sendTo("You can limit the number of mobs that load in a given room through the zone\n\rfile.\n\r");
 
-  ch->sendTo(fmt(VT_CURSPOS) %22 % 1);
+  ch->sendTo(format(VT_CURSPOS) %22 % 1);
   ch->sendTo("Select a new max exist.\n\r--> ");
 }
 
@@ -1475,19 +1475,19 @@ static void change_mob_immune(TBeing *ch, TMonster *mob, const char *arg, editor
     if (!((j + 1) % 4))
       row++;
     ch->sendTo(buf);
-    ch->sendTo(fmt("%2d %s") % (i + 1) % immunity_names[i]);
+    ch->sendTo(format("%2d %s") % (i + 1) % immunity_names[i]);
     j++;
   }
 
-  ch->sendTo(fmt(VT_CURSPOS) % 11 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 11 % 1);
   immuneTypeT ij;
   for (ij = MIN_IMMUNE;ij < MAX_IMMUNES; ij++) {
     if (mob->getImmunity(ij) == 0)
       continue;
-    ch->sendTo(fmt("%d%c %s to %s.\n\r") %mob->getImmunity(ij) % '%' %
+    ch->sendTo(format("%d%c %s to %s.\n\r") %mob->getImmunity(ij) % '%' %
        "resistant" % immunity_names[ij]);
   }
-  ch->sendTo(fmt(VT_CURSPOS) % 19 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 19 % 1);
   ch->sendTo("Enter the number of the immunity and the amount seperated by a space.\n\r");
   ch->sendTo("To delete an apply, type the number and 0 seperated by a space.\n\r");
   ch->sendTo("For example, enter 17 33 to give a 33%% immunity to electricity.\n\r");
@@ -1523,7 +1523,7 @@ static void change_mob_skin(TBeing *ch, TMonster *mob, const char *arg, editorEn
                 if (i & 1)
                   row++;
                 ch->sendTo(buf);
-                ch->sendTo(fmt("%2d) %s") % (i + 1) % material_nums[i].mat_name);
+                ch->sendTo(format("%2d) %s") % (i + 1) % material_nums[i].mat_name);
               }
               break;
             case 1:
@@ -1534,7 +1534,7 @@ static void change_mob_skin(TBeing *ch, TMonster *mob, const char *arg, editorEn
                 if (i & 1)
                   row++;
                 ch->sendTo(buf);
-                ch->sendTo(fmt("%2d) %s") % (i + 1) % material_nums[i+50].mat_name);
+                ch->sendTo(format("%2d) %s") % (i + 1) % material_nums[i+50].mat_name);
               }
               break;
             case 2:
@@ -1545,7 +1545,7 @@ static void change_mob_skin(TBeing *ch, TMonster *mob, const char *arg, editorEn
                 if (i & 1)
                   row++;
                 ch->sendTo(buf);
-                ch->sendTo(fmt("%2d) %s") % (i + 1) % material_nums[i+100].mat_name);
+                ch->sendTo(format("%2d) %s") % (i + 1) % material_nums[i+100].mat_name);
               }
               break;
             case 3:
@@ -1556,11 +1556,11 @@ static void change_mob_skin(TBeing *ch, TMonster *mob, const char *arg, editorEn
                 if (i & 1)
                   row++;
                 ch->sendTo(buf);
-                ch->sendTo(fmt("%2d) %s") % (i + 1) % material_nums[i].mat_name);
+                ch->sendTo(format("%2d) %s") % (i + 1) % material_nums[i].mat_name);
               }
               break;
           }
-          ch->sendTo(fmt(VT_CURSPOS) % 20 % 1);
+          ch->sendTo(format(VT_CURSPOS) % 20 % 1);
           ch->sendTo("Enter a new material type.\n\r--> ");
           return;
         }
@@ -1605,11 +1605,11 @@ static void change_mob_skin(TBeing *ch, TMonster *mob, const char *arg, editorEn
     }
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt("Current skin type : %s\n\r\n\r") % material_nums[mob->getMaterial(WEAR_BODY)].mat_name);
+  ch->sendTo(format("Current skin type : %s\n\r\n\r") % material_nums[mob->getMaterial(WEAR_BODY)].mat_name);
   for (i = 0; i <= 3; i++)
-    ch->sendTo(fmt("%d) %s\n\r") % (i + 1) % material_groups[i]);
+    ch->sendTo(format("%d) %s\n\r") % (i + 1) % material_groups[i]);
 
-  ch->sendTo(fmt(VT_CURSPOS) % 10 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 10 % 1);
   ch->sendTo("Which general group do you want?\n\r--> ");
 }
 
@@ -1635,73 +1635,73 @@ static void change_mob_stats(TBeing *ch, TMonster *mob, const char *arg, editorE
             case 1:
               ch->specials.edit = CHANGE_MOB_STR;
               ch->sendTo(VT_HOMECLR);
-              ch->sendTo(fmt("Current str : %d\n\rNew strength :") % 
+              ch->sendTo(format("Current str : %d\n\rNew strength :") % 
                          mob->getStat(STAT_CHOSEN, STAT_STR));
               return;
             case 2:
               ch->specials.edit = CHANGE_MOB_DEX;
               ch->sendTo(VT_HOMECLR);
-              ch->sendTo(fmt("Current dex : %d\n\rNew dex :") % 
+              ch->sendTo(format("Current dex : %d\n\rNew dex :") % 
                          mob->getStat(STAT_CHOSEN, STAT_DEX));
               return;
             case 3:
               ch->specials.edit = CHANGE_MOB_CON;
               ch->sendTo(VT_HOMECLR);
-              ch->sendTo(fmt("Current con : %d\n\rNew con :") % 
+              ch->sendTo(format("Current con : %d\n\rNew con :") % 
                          mob->getStat(STAT_CHOSEN, STAT_CON));
               return;
             case 4:
               ch->specials.edit = CHANGE_MOB_BRA;
               ch->sendTo(VT_HOMECLR);
-              ch->sendTo(fmt("Current bra : %d\n\rNew bra :") % 
+              ch->sendTo(format("Current bra : %d\n\rNew bra :") % 
                          mob->getStat(STAT_CHOSEN, STAT_BRA));
               return;
             case 5:
               ch->specials.edit = CHANGE_MOB_AGI;
               ch->sendTo(VT_HOMECLR);
-              ch->sendTo(fmt("Current agi : %d\n\rNew agi :") % 
+              ch->sendTo(format("Current agi : %d\n\rNew agi :") % 
                          mob->getStat(STAT_CHOSEN, STAT_AGI));
               return;
             case 6:
               ch->specials.edit = CHANGE_MOB_INT;
               ch->sendTo(VT_HOMECLR);
-              ch->sendTo(fmt("Current int : %d\n\rNew intelligence :") % 
+              ch->sendTo(format("Current int : %d\n\rNew intelligence :") % 
                          mob->getStat(STAT_CHOSEN, STAT_INT));
               return;
             case 7:
               ch->specials.edit = CHANGE_MOB_FOC;
               ch->sendTo(VT_HOMECLR);
-              ch->sendTo(fmt("Current foc : %d\n\rNew focus :") % 
+              ch->sendTo(format("Current foc : %d\n\rNew focus :") % 
                          mob->getStat(STAT_CHOSEN, STAT_FOC));
               return;
             case 8:
               ch->specials.edit = CHANGE_MOB_WIS;
               ch->sendTo(VT_HOMECLR);
-              ch->sendTo(fmt("Current wis : %d\n\rNew wis :") % 
+              ch->sendTo(format("Current wis : %d\n\rNew wis :") % 
                          mob->getStat(STAT_CHOSEN, STAT_WIS));
               return;
             case 9:
               ch->specials.edit = CHANGE_MOB_SPE;
               ch->sendTo(VT_HOMECLR);
-              ch->sendTo(fmt("Current spe : %d\n\rNew speed:") % 
+              ch->sendTo(format("Current spe : %d\n\rNew speed:") % 
                          mob->getStat(STAT_CHOSEN, STAT_SPE));
               return;
             case 10:
               ch->specials.edit = CHANGE_MOB_PER;
               ch->sendTo(VT_HOMECLR);
-              ch->sendTo(fmt("Current per : %d\n\rNew per:") % 
+              ch->sendTo(format("Current per : %d\n\rNew per:") % 
                          mob->getStat(STAT_CHOSEN, STAT_PER));
               return;
             case 11:
               ch->specials.edit = CHANGE_MOB_KAR;
               ch->sendTo(VT_HOMECLR);
-              ch->sendTo(fmt("Current kar : %d\n\rNew karma:") % 
+              ch->sendTo(format("Current kar : %d\n\rNew karma:") % 
                          mob->getStat(STAT_CHOSEN, STAT_KAR));
               return;
             case 12:
               ch->specials.edit = CHANGE_MOB_CHA;
               ch->sendTo(VT_HOMECLR);
-              ch->sendTo(fmt("Current cha : %d\n\rNew cha:") % 
+              ch->sendTo(format("Current cha : %d\n\rNew cha:") % 
                          mob->getStat(STAT_CHOSEN, STAT_CHA));
               return;
           }
@@ -1841,7 +1841,7 @@ static void change_mob_stats(TBeing *ch, TMonster *mob, const char *arg, editorE
     }
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt("Current stats :\n\r1) str : %d\n\r2) dex : %d\n\r3) con : %d\n\r4) bra : %d\n\r5) agi : %d\n\r6) int : %d\n\r7) foc : %d\n\r8) wis : %d\n\r9) spe : %d\n\r10) per : %d\n\r11) kar : %d\n\r12) chr : %d\n\r") %
+  ch->sendTo(format("Current stats :\n\r1) str : %d\n\r2) dex : %d\n\r3) con : %d\n\r4) bra : %d\n\r5) agi : %d\n\r6) int : %d\n\r7) foc : %d\n\r8) wis : %d\n\r9) spe : %d\n\r10) per : %d\n\r11) kar : %d\n\r12) chr : %d\n\r") %
 	     mob->getStat(STAT_CHOSEN, STAT_STR) %
 	     mob->getStat(STAT_CHOSEN, STAT_DEX) %
 	     mob->getStat(STAT_CHOSEN, STAT_CON) %
@@ -1856,19 +1856,19 @@ static void change_mob_stats(TBeing *ch, TMonster *mob, const char *arg, editorE
 	     mob->getStat(STAT_CHOSEN, STAT_CHA));
 
   ch->sendTo("\n\r");
-  ch->sendTo(fmt("Physical sum (must be 0 or less) : %d\n\r") %	     (mob->getStat(STAT_CHOSEN, STAT_STR) +
+  ch->sendTo(format("Physical sum (must be 0 or less) : %d\n\r") %	     (mob->getStat(STAT_CHOSEN, STAT_STR) +
 	      mob->getStat(STAT_CHOSEN, STAT_BRA) +
 	      mob->getStat(STAT_CHOSEN, STAT_DEX) +
 	      mob->getStat(STAT_CHOSEN, STAT_AGI) +
 	      mob->getStat(STAT_CHOSEN, STAT_CON)));
-  ch->sendTo(fmt("Mental sum (must be 0 or less) : %d\n\r") %	     (mob->getStat(STAT_CHOSEN, STAT_INT) +
+  ch->sendTo(format("Mental sum (must be 0 or less) : %d\n\r") %	     (mob->getStat(STAT_CHOSEN, STAT_INT) +
 	      mob->getStat(STAT_CHOSEN, STAT_WIS) +
 	      mob->getStat(STAT_CHOSEN, STAT_FOC)));
-  ch->sendTo(fmt("Utility sum (must be 0 or less) : %d\n\r") %	     (mob->getStat(STAT_CHOSEN, STAT_SPE) +
+  ch->sendTo(format("Utility sum (must be 0 or less) : %d\n\r") %	     (mob->getStat(STAT_CHOSEN, STAT_SPE) +
 	      mob->getStat(STAT_CHOSEN, STAT_CHA) +
 	      mob->getStat(STAT_CHOSEN, STAT_KAR) +
 	      mob->getStat(STAT_CHOSEN, STAT_PER)));
-  ch->sendTo(fmt(VT_CURSPOS) % 20 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 20 % 1);
   ch->sendTo("Which stat to change?\n\r--> ");
 }
 
@@ -1886,7 +1886,7 @@ static void change_mob_spec(TBeing *ch, TMonster *mob, const char *arg, editorEn
     new_spec = convertTo<int>(arg);
 
     if (new_spec < 0 || new_spec > NUM_MOB_SPECIALS) {
-      ch->sendTo(fmt("Please enter a number from 0 to %d.\n\r") % NUM_MOB_SPECIALS);
+      ch->sendTo(format("Please enter a number from 0 to %d.\n\r") % NUM_MOB_SPECIALS);
       return;
     } else if (!mob_specials[new_spec].assignable && 
 	       !ch->hasWizPower(POWER_MEDIT_IMP_POWER)) {
@@ -1900,7 +1900,7 @@ static void change_mob_spec(TBeing *ch, TMonster *mob, const char *arg, editorEn
     }
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt("Current mob spec: %s") % ((mob->spec) ? mob_specials[GET_MOB_SPE_INDEX(mob->spec)].name : "none"));
+  ch->sendTo(format("Current mob spec: %s") % ((mob->spec) ? mob_specials[GET_MOB_SPE_INDEX(mob->spec)].name : "none"));
   row = 0;
   for (i = 1, j=1; i <= NUM_MOB_SPECIALS; i++) {
     if (!mob_specials[i].assignable)
@@ -1909,10 +1909,10 @@ static void change_mob_spec(TBeing *ch, TMonster *mob, const char *arg, editorEn
     if (!(j % 3))
       row++;
     ch->sendTo(buf);
-    ch->sendTo(fmt("%2d %s") % i % mob_specials[i].name);
+    ch->sendTo(format("%2d %s") % i % mob_specials[i].name);
     j++;
   }
-  ch->sendTo(fmt(VT_CURSPOS) % 22 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 22 % 1);
 
   ch->sendTo("Select a new special procedure (0 = no procedure).\n\r--> ");
 }
@@ -1933,7 +1933,7 @@ static void change_mob_sounds(TBeing *ch, TMonster *mob, const char *arg, editor
       case 1:
         ch->sendTo(VT_HOMECLR);
         ch->sendTo("Current mobile room sound:\n\r");
-        ch->sendTo(fmt("%s") % mob->sounds);
+        ch->sendTo(format("%s") % mob->sounds);
         ch->sendTo("\n\r\n\rNew room sound:\n\r");
         ch->sendTo("Terminate with a ~ ON A NEW LINE. Press <ENTER> again to continue.\n\r");
         delete [] mob->sounds;
@@ -1944,7 +1944,7 @@ static void change_mob_sounds(TBeing *ch, TMonster *mob, const char *arg, editor
       case 2:
         ch->sendTo(VT_HOMECLR);
         ch->sendTo("Current mobile distant sound:\n\r");
-        ch->sendTo(fmt("%s") % mob->distantSnds);
+        ch->sendTo(format("%s") % mob->distantSnds);
         ch->sendTo("\n\r\n\rNew distant sound:\n\r");
         ch->sendTo("Terminate with a ~ ON A NEW LINE. Press <ENTER> again to continue.\n\r");
         delete [] mob->distantSnds;
@@ -1957,7 +1957,7 @@ static void change_mob_sounds(TBeing *ch, TMonster *mob, const char *arg, editor
   ch->sendTo(VT_HOMECLR);
   ch->sendTo("1) Sounds sent to room of mobile.\n\r");
   ch->sendTo("2) Sounds sent to adjacent rooms.\n\r");
-  ch->sendTo(fmt(VT_CURSPOS) % 10 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 10 % 1);
   ch->sendTo("Enter your choice to modify.\n\r--> ");
 }
 
@@ -1992,7 +1992,7 @@ positionTypeT mapFileToPos(int pos)
     case 12:
       return POSITION_FLYING;
     default:
-      vlogf(LOG_LOW, fmt("Undefined position (%d) in mapPosition(load)") %  pos);
+      vlogf(LOG_LOW, format("Undefined position (%d) in mapPosition(load)") %  pos);
       return POSITION_STANDING;
   }
 }
@@ -2069,7 +2069,7 @@ void TPerson::doMedit(const char *argument)
       if (!*sstring)
         sendTo("Syntax: med resave <mobile>\n\r");
       else if (!(cMob = dynamic_cast<TMonster *>(searchLinkedListVis(this, sstring, roomp->stuff))))
-        sendTo(fmt("Unable to find %s...Sorry...\n\r") % sstring);
+        sendTo(format("Unable to find %s...Sorry...\n\r") % sstring);
       else if (cMob->getSnum() == cMob->mobVnum() && !hasWizPower(POWER_MEDIT_IMP_POWER))
         sendTo("Unknown value on this mobile.  resave only usable on med loaded mobiles...\n\r");
 
@@ -2096,7 +2096,7 @@ void TPerson::doMedit(const char *argument)
           if (!hasWizPower(POWER_MEDIT_IMP_POWER))
             sendTo("Syntax: med save <mobile> <vnum>\n\r");
           else if (!(cMob = dynamic_cast<TMonster *>(searchLinkedListVis(this, tStString, roomp->stuff))))
-            sendTo(fmt("Unable to find %s...Sorry...\n\r") % tStString);
+            sendTo(format("Unable to find %s...Sorry...\n\r") % tStString);
           else if (cMob->getSnum() <= 0)
             sendTo("That mobile has a bad snum.  Sorry.  Can not resave.\n\r");
 
@@ -2149,7 +2149,7 @@ void TPerson::doMedit(const char *argument)
         if ((in_room == 9) || (in_room == 2) || (in_room == desc->office))
           TBeingLoad(this, vnum);
         else
-          sendTo(fmt("You must be in the lab(room 9), lounge(room 2) or office(room %d) to load mobs.\n\r") % desc->office);
+          sendTo(format("You must be in the lab(room 9), lounge(room 2) or office(room %d) to load mobs.\n\r") % desc->office);
       } else
         TBeingLoad(this, vnum);
 
@@ -2208,7 +2208,7 @@ void TPerson::doMedit(const char *argument)
     case 6: // Name
       if (!*sstring) {
         sendTo("You need to give me a name.\n\r");
-        sendTo(fmt("Current name is: %s\n\r") % cMob->name);
+        sendTo(format("Current name is: %s\n\r") % cMob->name);
         return;
       }
       cMob->swapToStrung();
@@ -2222,7 +2222,7 @@ void TPerson::doMedit(const char *argument)
     case 7: // Short Description
       if (!*sstring) {
         sendTo("You need to give me a short description.\n\r");
-        sendTo(fmt("Current Short is: %s\n\r") % cMob->shortDescr);
+        sendTo(format("Current Short is: %s\n\r") % cMob->shortDescr);
         return;
       }
       cMob->swapToStrung();
@@ -2234,7 +2234,7 @@ void TPerson::doMedit(const char *argument)
     case 8: // Long Description
       if (!*sstring) {
         sendTo("You need to give me a long description.\n\r");
-        sendTo(fmt("Current Long is:\n\r%s\n\r") % cMob->getLongDesc());
+        sendTo(format("Current Long is:\n\r%s\n\r") % cMob->getLongDesc());
         return;
       }
       cMob->swapToStrung();
@@ -2247,7 +2247,7 @@ void TPerson::doMedit(const char *argument)
     case 9: // Description
       cMob->swapToStrung();
       if (cMob->descr) {
-        sendTo(fmt("Current Description:\n\r%s\n\r\n\r") % cMob->descr);
+        sendTo(format("Current Description:\n\r%s\n\r\n\r") % cMob->descr);
         delete [] cMob->descr;
         cMob->descr = NULL;
       }
@@ -2326,7 +2326,7 @@ void TPerson::doMedit(const char *argument)
           oValue < MIN_FACTION || oValue >= MAX_FACTIONS ||
           Diff < 0 || Diff > 100) {
         sendTo("Incorrect Faction or Percent.\n\r");
-        sendTo(fmt("Faction must be between %d and %d.\n\r") % MIN_FACTION % (MAX_FACTIONS-1));
+        sendTo(format("Faction must be between %d and %d.\n\r") % MIN_FACTION % (MAX_FACTIONS-1));
         sendTo("Pecent must be between 0 and 100.\n\r");
         return;
       }
@@ -2369,12 +2369,12 @@ void TPerson::doMedit(const char *argument)
     case 18: // Race
       if (sscanf(sstring, "%d", &oValue) != 1 ||
           oValue < 1 || oValue >= MAX_RACIAL_TYPES) {
-        sendTo(fmt("Incorrect Race, Must be between 1 and %d.\n\r") % (MAX_RACIAL_TYPES-1));
+        sendTo(format("Incorrect Race, Must be between 1 and %d.\n\r") % (MAX_RACIAL_TYPES-1));
         sendTo("See HELP RACES for race list.\n\r");
         return;
       }
       cMob->setRace(race_t(oValue));
-      sendTo(fmt("Setting Race To: %s\n\r") % cMob->getMyRace()->getSingularName());
+      sendTo(format("Setting Race To: %s\n\r") % cMob->getMyRace()->getSingularName());
       return;
       break;
     case 19: // Sex
@@ -2449,7 +2449,7 @@ void TPerson::doMedit(const char *argument)
 
       if (sscanf(sstring, "%d", &oValue) != 1 ||
           oValue < MIN_CLASS_IND || oValue >= MAX_CLASSES) {
-        sendTo(fmt("Incorrect Class, Must be between %d and %d.\n\r") %
+        sendTo(format("Incorrect Class, Must be between %d and %d.\n\r") %
                MIN_CLASS_IND % (MAX_CLASSES-1));
         return;
       }
@@ -2480,7 +2480,7 @@ void TPerson::doMedit(const char *argument)
       break;
     case 27: // Room Sound
       if (cMob->sounds) {
-        sendTo(fmt("Current Room Sound:\n\r%s\n\r") % cMob->sounds);
+        sendTo(format("Current Room Sound:\n\r%s\n\r") % cMob->sounds);
         delete [] cMob->sounds;
       }
       sendTo("Enter Room Sound, terminate with a '~' on a NEW line.\n\r");
@@ -2490,7 +2490,7 @@ void TPerson::doMedit(const char *argument)
       break;
     case 28: // Other Room Sound
       if (cMob->distantSnds) {
-        sendTo(fmt("Current Distant Sound:\n\r%s\n\r") % cMob->distantSnds);
+        sendTo(format("Current Distant Sound:\n\r%s\n\r") % cMob->distantSnds);
         delete [] cMob->distantSnds;
       }
       sendTo("Enter Distant Room Sound, terminate with a '~' on a NEW line.\n\r");
@@ -2592,7 +2592,7 @@ static void change_mob_sstring_values(TBeing *ch, TMonster *tMob, const char *tS
     if (tUpdate < 0 || tUpdate > 5)
       return;
 
-    ch->sendTo(fmt("Enter Message: %s\n\rEnter to complete entry\n\r` to delete entry\n\r--> ") % tMobStringShorts[tUpdate]);
+    ch->sendTo(format("Enter Message: %s\n\rEnter to complete entry\n\r` to delete entry\n\r--> ") % tMobStringShorts[tUpdate]);
     ch->specials.edit = editorChangeTypeT(CHANGE_MOB_STRINGS__BAMFIN + tUpdate);
 
     return;
@@ -2616,12 +2616,12 @@ static void change_mob_sstring_values(TBeing *ch, TMonster *tMob, const char *tS
     if (tHas && tMob->ex_description) {
       exd = tMob->ex_description->findExtraDesc(tMobStringShorts[iter]);
     }
-    ch->sendTo(COLOR_MOBS, fmt(tMobStringValues[iter]) %
+    ch->sendTo(COLOR_MOBS, format(tMobStringValues[iter]) %
              ch->cyan() % ch->norm() %
              (exd ? exd : "Empty"));
   }
 
-  ch->sendTo(fmt(VT_CURSPOS) % 21 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 21 % 1);
   ch->sendTo("Select message type, <ENTER> to return to the main menu.\n\r--> ");
 }
 

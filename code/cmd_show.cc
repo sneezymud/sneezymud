@@ -66,7 +66,7 @@ static void show_room_zone(int rnum, TRoom *rp, sstring &, struct
     srzs->blank = 0;
   }
   if (!rp->name) {
-    vlogf(LOG_BUG, fmt("room %d's name is screwed!\n\r") %  rp->number);
+    vlogf(LOG_BUG, format("room %d's name is screwed!\n\r") %  rp->number);
     return;
   } else if (1 == sscanf(rp->name, "%d", &srzs->lastblank) && srzs->lastblank
 	     == rp->number) {
@@ -405,32 +405,32 @@ void TPerson::doShow(const sstring &argument)
     sb += "Faction                   Power    Wealth   Tithe\n\r";
     factionTypeT i;
     for (i = MIN_FACTION; i < MAX_FACTIONS; i++) {
-      sb += fmt("%-25.25s %7.2f %-7i %5.2f\n\r") %
+      sb += format("%-25.25s %7.2f %-7i %5.2f\n\r") %
           FactionInfo[i].faction_name %
           FactionInfo[i].faction_power %
           FactionInfo[i].getMoney() %
           FactionInfo[i].faction_tithe;
-      sb += fmt("      %s%-15.15s%s %-15.15s %-15.15s %-15.15s\n\r") %
+      sb += format("      %s%-15.15s%s %-15.15s %-15.15s %-15.15s\n\r") %
           blue() % FactionInfo[i].leader[0] % norm() %
           FactionInfo[i].leader[1] %
           FactionInfo[i].leader[2] %
           FactionInfo[i].leader[3];
-      sb += fmt("      %sCaravan:%s interval: %d, counter: %d, value: %d, defense: %d\n\r") %
+      sb += format("      %sCaravan:%s interval: %d, counter: %d, value: %d, defense: %d\n\r") %
           blue() % norm() %
           FactionInfo[i].caravan_interval %
           FactionInfo[i].caravan_counter %
           FactionInfo[i].caravan_value %
           FactionInfo[i].caravan_defense;
-      sb += fmt("             : attempts: %d, successes: %d\n\r") %
+      sb += format("             : attempts: %d, successes: %d\n\r") %
           FactionInfo[i].caravan_attempts %
           FactionInfo[i].caravan_successes;
-      sb += fmt("      %sHelp Ratio:%s %.1f, %.1f, %.1f, %.1f\n\r") %
+      sb += format("      %sHelp Ratio:%s %.1f, %.1f, %.1f, %.1f\n\r") %
           blue() % norm() %
           FactionInfo[i].faction_array[FACT_NONE][OFF_HELP] %
           FactionInfo[i].faction_array[FACT_BROTHERHOOD][OFF_HELP] %
           FactionInfo[i].faction_array[FACT_CULT][OFF_HELP] %
           FactionInfo[i].faction_array[FACT_SNAKE][OFF_HELP];
-      sb += fmt("      %sHarm Ratio:%s %.1f, %.1f, %.1f, %.1f\n\r") %
+      sb += format("      %sHarm Ratio:%s %.1f, %.1f, %.1f, %.1f\n\r") %
           blue() % norm() %
           FactionInfo[i].faction_array[FACT_NONE][OFF_HURT] %
           FactionInfo[i].faction_array[FACT_BROTHERHOOD][OFF_HURT] %
@@ -438,20 +438,20 @@ void TPerson::doShow(const sstring &argument)
           FactionInfo[i].faction_array[FACT_SNAKE][OFF_HURT];
       sb += "\n\r";
     }
-    sb += fmt("average power: %5.2f\n\r") % avg_faction_power;
+    sb += format("average power: %5.2f\n\r") % avg_faction_power;
   } else if (is_abbrev(buf, "fights")) {
     sb += "Combatant                      Fighting                       Room\n\r";
     sb += "------------------------------------------------------------------\n\r";
     for (ch = gCombatList; ch; ch = ch->next_fighting) {
-      sb += fmt("%-30s %-30s %d\n\r") %
+      sb += format("%-30s %-30s %d\n\r") %
         ch->getName() % ch->fight()->getName() % ch->inRoom();
     }
   } else if (is_abbrev(buf, "liquids")){
-    sb += fmt("%3s) %-30s%-8s%-10s%-8s%-8s%-8s\n\r") %
+    sb += format("%3s) %-30s%-8s%-10s%-8s%-8s%-8s\n\r") %
       "No." % "Liquid" % "Drunk" % "Fullness" % "Thirst" % "Potion" % "Poison";
     sb += "---------------------------------------------------------------------------\n\r";
     for (liqTypeT i = (liqTypeT)(LIQ_NONE+1); i < MAX_DRINK_TYPES; i++) {
-      sb += fmt("%3i) %-30s%-8i%-10i%-8i%-8s%-8s\n\r")  %
+      sb += format("%3i) %-30s%-8i%-10i%-8i%-8s%-8s\n\r")  %
 	i % stripColorCodes(liquidInfo[i]->name) % liquidInfo[i]->drunk % 
 	liquidInfo[i]->hunger % liquidInfo[i]->thirst %
 	(liquidInfo[i]->potion?"yes":"no") %
@@ -461,7 +461,7 @@ void TPerson::doShow(const sstring &argument)
     sb += "Toggles\n\r";
     sb += "------------------------------------\n\r";
     for (int i = 1; i< MAX_TOG_INDEX; i++) {
-      sb += fmt("%i) %s\n\r") % i % TogIndex[i].name;
+      sb += format("%i) %s\n\r") % i % TogIndex[i].name;
     }
   } else if (is_abbrev(buf, "trapped")) {
     sb += "Trapped Containers\n\r";
@@ -490,9 +490,9 @@ void TPerson::doShow(const sstring &argument)
         if (zd.enabled)
           buf2 = sstring(zd.name);
         else
-          buf2 = fmt("DISABLED: %s") % zd.name;
+          buf2 = format("DISABLED: %s") % zd.name;
        
-        sb += fmt("%3d %-38.38s %4dm %4dm %6d-%-6d %3d %.1f\n\r") %
+        sb += format("%3d %-38.38s %4dm %4dm %6d-%-6d %3d %.1f\n\r") %
           zone % buf2 % zd.lifespan % zd.age % bottom % zd.top %
           zd.zone_value %
           (zd.num_mobs ? zd.mob_levels/zd.num_mobs : 0);
@@ -537,10 +537,10 @@ void TPerson::doShow(const sstring &argument)
           delete obj;
 
           if (!hasWizPower(POWER_SHOW_TRUSTED))
-            sb += fmt("%5d %5d   %s\n\r") %
+            sb += format("%5d %5d   %s\n\r") %
               obj_index[objectIndex].virt % objectIndex % buf;
           else
-            sb += fmt("%5d %5d     %5d %5d %3d %3d %5d %s\n\r") %
+            sb += format("%5d %5d     %5d %5d %3d %3d %5d %s\n\r") %
               obj_index[objectIndex].virt %
               obj_index[objectIndex].getNumber() %
               obj_index[objectIndex].max_exist %
@@ -598,9 +598,9 @@ void TPerson::doShow(const sstring &argument)
       delete obj;
 
       if (!hasWizPower(POWER_SHOW_TRUSTED)) {
-        sb += fmt("%5d %5d   %s\n\r") % obj_index[objnx].virt % objnx % buf2;
+        sb += format("%5d %5d   %s\n\r") % obj_index[objnx].virt % objnx % buf2;
       } else {
-        sb += fmt("%5d %5d     %5d %5d %3d %3d %5d %s\n\r") % 
+        sb += format("%5d %5d     %5d %5d %3d %3d %5d %s\n\r") % 
           obj_index[objnx].virt %
           obj_index[objnx].getNumber() %
           obj_index[objnx].max_exist %
@@ -623,8 +623,8 @@ void TPerson::doShow(const sstring &argument)
       sb += "-------------------------------------\n\r";
       for (b = character_list; b; b = b->next) {
         if (b->master && dynamic_cast<TMonster *>(b)) {
-          sb += fmt("%-30s") % b->getNameNOC(this);
-          sb += fmt(" %s%s\n\r") %
+          sb += format("%-30s") % b->getNameNOC(this);
+          sb += format(" %s%s\n\r") %
             b->master->getNameNOC(this) %
             (b->master->isPc() ? " (PC)" : "");
         }  
@@ -653,7 +653,7 @@ void TPerson::doShow(const sstring &argument)
 	}
 	
 	if(!haters.empty()){
-	  sb += fmt("%-20.20s (room: %5d) Hates: %s") %
+	  sb += format("%-20.20s (room: %5d) Hates: %s") %
             stripColorCodes(tmons->getName()) %
             tmons->inRoom() % haters;
 	  sb += "\n\r";
@@ -669,11 +669,11 @@ void TPerson::doShow(const sstring &argument)
         if (!b->isPc() && IS_SET(b->specials.act, ACT_HUNTING) && 
              (ch = b->specials.hunting)) {
           TMonster *tmons = dynamic_cast<TMonster *>(b);
-          sb += fmt("%-20.20s (room: %5d)    %-20.20s (room: %5d) %7s\n\r") %
+          sb += format("%-20.20s (room: %5d)    %-20.20s (room: %5d) %7s\n\r") %
             tmons->getName() % tmons->inRoom() %
             ch->getName() % ch->inRoom() %
             (tmons->Hates(ch, NULL) ? "(HATED)" : "");
-          sb += fmt("       persist: %d, range: %d, origin: %d\n\r") %
+          sb += format("       persist: %d, range: %d, origin: %d\n\r") %
               tmons->persist % tmons->hunt_dist %
               tmons->oldRoom;
         }
@@ -687,7 +687,7 @@ void TPerson::doShow(const sstring &argument)
       for (b = character_list; b; b = b->next) {
         if ((k = dynamic_cast<TMonster *>(b)) && 
             k->resps && k->resps->respList) {
-          sb += fmt("%-30.30s (room: %5d)\n\r") %
+          sb += format("%-30.30s (room: %5d)\n\r") %
             b->getName() % b->in_room;
         }
       }
@@ -703,13 +703,13 @@ void TPerson::doShow(const sstring &argument)
         if (b->spec == SPEC_BOUNTY_HUNTER && b->act_ptr) {
           job = (bounty_hunt_struct *) b->act_ptr;
           if (job && job->hunted_item && *job->hunted_item)
-            sb += fmt("%-30.30s (room: %5d)     item: %20.20s\n\r") %
+            sb += format("%-30.30s (room: %5d)     item: %20.20s\n\r") %
               b->getName() % b->in_room % job->hunted_item;
           else if (job && job->hunted_victim && *job->hunted_victim)
-            sb += fmt("%-30.30s (room: %5d)     vict: %20.20s\n\r") %
+            sb += format("%-30.30s (room: %5d)     vict: %20.20s\n\r") %
               b->getName() % b->in_room % job->hunted_victim;
           else
-            sb += fmt("%-30.30s (room: %5d)     BOGUS\n\r") %
+            sb += format("%-30.30s (room: %5d)     BOGUS\n\r") %
               b->getName() % b->in_room;
         }
       }
@@ -744,12 +744,12 @@ void TPerson::doShow(const sstring &argument)
             continue;
 
           if (!hasWizPower(POWER_SHOW_TRUSTED))
-            sb += fmt("%5d %3ld   %3ld  %3ld %s\n\r") %
+            sb += format("%5d %3ld   %3ld  %3ld %s\n\r") %
               mob_index[mobileIndex].virt % mob_index[mobileIndex].level %
               mob_index[mobileIndex].Class % mob_index[mobileIndex].faction %
               mob_index[mobileIndex].name;
           else
-            sb += fmt("%5d %4d  %3d   %3ld   %3ld  %3ld %s\n\r") %
+            sb += format("%5d %4d  %3d   %3ld   %3ld  %3ld %s\n\r") %
               mob_index[mobileIndex].virt % mob_index[mobileIndex].max_exist %
               mob_index[mobileIndex].getNumber() % mob_index[mobileIndex].level %
               mob_index[mobileIndex].Class % mob_index[mobileIndex].faction %
@@ -794,12 +794,12 @@ void TPerson::doShow(const sstring &argument)
     continue;
 
       if (!hasWizPower(POWER_SHOW_TRUSTED)) {
-        sb += fmt("%5d %3ld   %3ld  %3ld %s\n\r") %
+        sb += format("%5d %3ld   %3ld  %3ld %s\n\r") %
           mob_index[objnx].virt % mob_index[objnx].level %
           mob_index[objnx].Class % mob_index[objnx].faction %
           mob_index[objnx].name;
       } else {
-        sb += fmt("%5d %4d  %3d   %3ld   %3ld  %3ld %s\n\r") %
+        sb += format("%5d %4d  %3d   %3ld   %3ld  %3ld %s\n\r") %
           mob_index[objnx].virt % mob_index[objnx].max_exist %
           mob_index[objnx].getNumber() % mob_index[objnx].level %
           mob_index[objnx].Class % mob_index[objnx].faction %
@@ -822,7 +822,7 @@ void TPerson::doShow(const sstring &argument)
       buf2 = obj->getNameForShow(false, true, this);
       delete obj;
 
-      sb += fmt("%5d %3d    %5d   %3d %2d %5d %s\n\r") %
+      sb += format("%5d %3d    %5d   %3d %2d %5d %s\n\r") %
         obj_index[objnx].virt % obj_index[objnx].getNumber() %
         obj_index[objnx].max_exist %
         obj_index[objnx].max_struct %
@@ -846,7 +846,7 @@ void TPerson::doShow(const sstring &argument)
       buf2 = obj->getNameForShow(false, true, this);
       delete obj;
 
-      sb += fmt("%5d %3d    %5d   %3d %2d %5d %s\n\r") %
+      sb += format("%5d %3d    %5d   %3d %2d %5d %s\n\r") %
         obj_index[objnx].virt % obj_index[objnx].getNumber() %
         obj_index[objnx].max_exist %
         obj_index[objnx].max_struct %
@@ -906,7 +906,7 @@ void TPerson::doShow(const sstring &argument)
 
         if (srzs.blank) {
           sb += srzs.sb;
-          sb += fmt("rooms %d-%d are blank.\n\r") %
+          sb += format("rooms %d-%d are blank.\n\r") %
             srzs.startblank % srzs.lastblank;
           srzs.blank = 0;
         } else
@@ -923,7 +923,7 @@ void TPerson::doShow(const sstring &argument)
       sb += "--------------------------------------------------------------\n\r";
       for(i=0;i<200;++i){
 	if(material_nums[i].mat_name[0]){
-	  sb += fmt("%-8i %-18s %-8i %-10f %-9i %i\n\r") % i %
+	  sb += format("%-8i %-18s %-8i %-10f %-9i %i\n\r") % i %
 	    sstring(material_nums[i].mat_name).uncap() % 
 	    commod_index[i] % material_nums[i].price %
 	    (int)TCommodity::demandCurvePrice(1,0,i) %
@@ -950,7 +950,7 @@ void TPerson::doShow(const sstring &argument)
       sb += "------------------\n\r";
       for(i=0;i<200;++i){
 	if(material_nums[i].mat_name[0]){
-	  sb += fmt("%-9i %s\n\r") % i % 
+	  sb += format("%-9i %s\n\r") % i % 
             sstring(material_nums[i].mat_name).uncap();
 	}
       }
@@ -1013,13 +1013,13 @@ void TPerson::doShow(const sstring &argument)
 
     if (!shFrError) {
       if (top == bottom)
-        buf2 = fmt("%d") % top;
+        buf2 = format("%d") % top;
       else if (!hasWizPower(POWER_SHOW_TRUSTED))
-        buf2 = fmt("%d/%d") % bottom % top;
+        buf2 = format("%d/%d") % bottom % top;
       else
-        buf2 = fmt("%d,...,%d") % bottom % top;
+        buf2 = format("%d,...,%d") % bottom % top;
 
-      sb += fmt("Showing Free %s Entires in Zone: %s\n\r--------------------\n\r") %
+      sb += format("Showing Free %s Entires in Zone: %s\n\r--------------------\n\r") %
         (isMobileF ? "Mobiles" : "Objects") % buf2;
 
       if (top == bottom)
@@ -1031,7 +1031,7 @@ void TPerson::doShow(const sstring &argument)
         for (int Runner = bottom; Runner < (top + 1); Runner++)
           shFrTotalCount += showFreeMobObj(Runner, &sb, isMobileF, true);
 
-      sb += fmt("Total Count of %s: %lu\n\r") %
+      sb += format("Total Count of %s: %lu\n\r") %
         (isMobileF ? "Mobiles" : "Objects") % shFrTotalCount;
     }
   } else if (is_abbrev(buf, "created")) {
@@ -1079,7 +1079,7 @@ void TPerson::doShow(const sstring &argument)
 
           sprintf(tBuf, "[%%5d] [%%4d] %%-%ds (%%s)\n\r", (40 + factualSpace));
 
-          sb += fmt(tBuf) %
+          sb += format(tBuf) %
             obj_index[tObjectIndex].virt % obj_index[tObjectIndex].value %
             tBuffer %
             ItemInfo[obj_index[tObjectIndex].itemtype]->name;
@@ -1087,7 +1087,7 @@ void TPerson::doShow(const sstring &argument)
         }
 
       sb += "\n\r";
-      tStCount = fmt("Total Count: %d\n\r") % tTotalCount;
+      tStCount = format("Total Count: %d\n\r") % tTotalCount;
 
       tStArgument = tStCount;
       tStArgument += "\n\r";
@@ -1133,7 +1133,7 @@ void TPerson::doShow(const sstring &argument)
             else
               tBuffer += " ";
 
-            tString = fmt("%25s [%s] %s\n\r") %
+            tString = format("%25s [%s] %s\n\r") %
               (!tError ? "Undefined" : (tError == -1 ? "UNKNOWN/BOGUS" :
                discArray[tComponent->getComponentSpell()]->name)) %
               tBuffer % tComponent->getName();
@@ -1168,7 +1168,7 @@ void TPerson::doShow(const sstring &argument)
 	  if(!db.fetchRow())
 	    break;
 
-	sb += fmt("%3i) [%s] %-30s (%-2s objects)\n\r") % 
+	sb += format("%3i) [%s] %-30s (%-2s objects)\n\r") % 
 	  i % (objSpecials[i].assignable?"X":" ") % objSpecials[i].name % 
 	  ((convertTo<int>(db["spec_proc"])==i)?db["count"]:"0");
       }
@@ -1180,7 +1180,7 @@ void TPerson::doShow(const sstring &argument)
     for (int i = 1; i< NUM_MOB_SPECIALS; i++) {
       if(!is_abbrev(my_arg, "assignable") ||
 	 mob_specials[i].assignable)
-	sb += fmt("%i) [%s] %s\n\r") % 
+	sb += format("%i) [%s] %s\n\r") % 
 	  i % (mob_specials[i].assignable?"X":" ") % mob_specials[i].name;
     }
   } else if (is_abbrev(buf, "boobies")) {
@@ -1528,7 +1528,7 @@ void TPerson::doShow(sstring tStString)
         ShopFights();
         break;
       default:
-        vlogf(LOG_BUG, fmt("Unregistered entry in show: %d") %  tSelection);
+        vlogf(LOG_BUG, format("Unregistered entry in show: %d") %  tSelection);
         break;
     }
   } else {

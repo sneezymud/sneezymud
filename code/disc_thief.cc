@@ -609,7 +609,7 @@ void TBeing::doTrack(const char *argument)
     }
     if (worked) {
       if (code <= 9)
-        sendTo(fmt("%sYou see traces of your quarry %s.%s\n\r") % purple() %
+        sendTo(format("%sYou see traces of your quarry %s.%s\n\r") % purple() %
                dirs_to_blank[code] % norm());
       else {
         int count = code - 9, seen = 0;
@@ -618,7 +618,7 @@ void TBeing::doTrack(const char *argument)
           if (tp) {
             seen++;
             if (count == seen) {
-              sendTo(COLOR_OBJECTS, fmt("%sYou see traces of your quarry through %s.%s\n\r") % 
+              sendTo(COLOR_OBJECTS, format("%sYou see traces of your quarry through %s.%s\n\r") % 
                      purple() % tp->getName() % norm());
               break;
             }
@@ -632,7 +632,7 @@ void TBeing::doTrack(const char *argument)
       }
     } else {
       code = -2;
-      sendTo(COLOR_MOBS, fmt("You begin tracking %s.\n\r") % specials.hunting->getName());
+      sendTo(COLOR_MOBS, format("You begin tracking %s.\n\r") % specials.hunting->getName());
     }
   }
 
@@ -642,7 +642,7 @@ void TBeing::doTrack(const char *argument)
   affectTo(&aff);
 
   if (desc && desc->m_bIsClient)
-    desc->clientf(fmt("%d|%d") % CLIENT_TRACKING % (1 << code));
+    desc->clientf(format("%d|%d") % CLIENT_TRACKING % (1 << code));
 
   if (code <= 9) {
     if (code >= 0 && desc && (desc->autobits & AUTO_HUNT)) {
@@ -679,7 +679,7 @@ int TBeing::track(TBeing *vict)
   path.setUsePortals(false);
 
   if (!vict && !isSW) {
-    vlogf(LOG_BUG, fmt("Problem in track() %s") %  getName());
+    vlogf(LOG_BUG, format("Problem in track() %s") %  getName());
     return TRUE;
   }
   if (roomp && !isImmortal() && 
@@ -709,23 +709,23 @@ int TBeing::track(TBeing *vict)
   }
   if ((vict && sameRoom(*vict)) ||
       (targetRm != -1 && targetRm == inRoom())) {
-    sendTo(fmt("%s###You have found %s!%s\n\r") % orange() % (isSW ? "some water" :
+    sendTo(format("%s###You have found %s!%s\n\r") % orange() % (isSW ? "some water" :
            "your quarry") % norm());
     addToWait(combatRound(1));
     if (desc && desc->m_bIsClient)
-      desc->clientf(fmt("%d") % CLIENT_TRACKOFF);
+      desc->clientf(format("%d") % CLIENT_TRACKOFF);
     stopTask();
     addToWait(combatRound(1));
     return FALSE;
   }
   if (task && task->flags > 0 && task->flags != 100) {
     if (task->flags != (code + 1)) {
-      sendTo(fmt("%s###For some reason the path you found is gone.%s\n\r") %
+      sendTo(format("%s###For some reason the path you found is gone.%s\n\r") %
              purple() % norm());
       task->flags = 0;
       return TRUE;
     } else if (code <= 9) {
-      sendTo(fmt("%s###You track %s %s.%s\n\r") % purple() %
+      sendTo(format("%s###You track %s %s.%s\n\r") % purple() %
              (isSW ? "some water" : "your target") % dirs_to_blank[code] % norm());
       if (desc && (desc->autobits & AUTO_HUNT)) {
         strcpy(buf, dirs[code]);
@@ -738,7 +738,7 @@ int TBeing::track(TBeing *vict)
         if (tp) {
           seen++;
           if (count == seen) {
-            sendTo(COLOR_OBJECTS, fmt("%sYou track %s through %s.%s\n\r") % purple() %
+            sendTo(COLOR_OBJECTS, format("%sYou track %s through %s.%s\n\r") % purple() %
                    (isSW ? "some water" : "your quarry") % tp->getName() % norm());
             if (desc && (desc->autobits & AUTO_HUNT)) {
               strcpy(buf, tp->name);
@@ -775,7 +775,7 @@ dirTypeT TBeing::dirTrack(TBeing *vict)
   for (aff = vict->affected; aff; aff = aff->next) {
     if (aff->type == SKILL_CONCEALMENT) {
       if (::number(1,150) < aff->modifier) {
-        sendTo(fmt("%s##You have lost the trail.%s\n\r") % orange() % norm());
+        sendTo(format("%s##You have lost the trail.%s\n\r") % orange() % norm());
 
         if (aff->be == vict) {
           act("You have successfully concealed your path from $N.",
@@ -800,13 +800,13 @@ dirTypeT TBeing::dirTrack(TBeing *vict)
 
   if (code == DIR_NONE) {
     if (sameRoom(*vict))
-      sendTo(fmt("%s##You have found your target!%s\n\r") % orange() % norm());
+      sendTo(format("%s##You have found your target!%s\n\r") % orange() % norm());
     else
-      sendTo(fmt("%s##You have lost the trail.%s\n\r") % orange() % norm());
+      sendTo(format("%s##You have lost the trail.%s\n\r") % orange() % norm());
  
     return DIR_NONE;                // false to continue the hunt 
   } else if (code < MAX_DIR) {
-    sendTo(fmt("%s##You see a faint trail %s.%s\n\r") % 
+    sendTo(format("%s##You see a faint trail %s.%s\n\r") % 
          purple() % dirs_to_leading[code] % norm());
     return code;
   } else {
@@ -817,7 +817,7 @@ dirTypeT TBeing::dirTrack(TBeing *vict)
       if (tp) {
          seen++;
         if (count == seen) {
-          sendTo(COLOR_OBJECTS, fmt("%sYou see a faint trail through %s.%s\n\r") %
+          sendTo(COLOR_OBJECTS, format("%sYou see a faint trail through %s.%s\n\r") %
              purple() % tp->getName() % norm());
           break;
         }

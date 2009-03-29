@@ -127,7 +127,7 @@ void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstrin
 {
   if (vnum < 0) {
     if (chance > 100)
-      ch->sendTo(fmt("No %s exists in that set.\n\r") % slotname);
+      ch->sendTo(format("No %s exists in that set.\n\r") % slotname);
     return;
   }
 
@@ -151,7 +151,7 @@ void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstrin
 
       return;
     } else {
-      ch->sendTo(fmt("The %s in that suit is over max.\n\r") % slotname);
+      ch->sendTo(format("The %s in that suit is over max.\n\r") % slotname);
 
       // let L58+ gods load full set regardless
       if (!ch->hasWizPower(POWER_LOAD_LIMITED))
@@ -162,7 +162,7 @@ void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstrin
   int obj_lp = 0;
   obj_lp = getObjLoadPotential(vnum);
   if (obj_lp == 0) {
-    vlogf(LOG_MISC, fmt("Didn't find suitset load potential of [%d].") % vnum);
+    vlogf(LOG_MISC, format("Didn't find suitset load potential of [%d].") % vnum);
     obj_lp = 1;
   }
 
@@ -170,14 +170,14 @@ void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstrin
   // obj_lp_ratio = 1 - pow(exp(1), ((log(1 - 0.01*cbrt((double)obj_lp))/(double)obj_lp)));
   // 1 - ((1-0.01*n**1/3)^(1/n)) = normalized load rate, less math
   double adj_obj_lp_ratio = 1 - pow((1 - 0.01*cbrt((double)obj_lp)), 1/(double)obj_lp);
-  // vlogf(LOG_MISC, fmt("suitset: (10000000 * adj_obj_lp_ratio * stats.equip) = %d") % (int) (10000000 * adj_obj_lp_ratio * stats.equip));
+  // vlogf(LOG_MISC, format("suitset: (10000000 * adj_obj_lp_ratio * stats.equip) = %d") % (int) (10000000 * adj_obj_lp_ratio * stats.equip));
   if ((gamePort == BETA_GAMEPORT) ||
       (chance >= 99) ||
       (::number(0,9999999) < (int) (10000000 * adj_obj_lp_ratio * stats.equip))) {
     /*
     if (chance < 101) {
       double obj_lp_ratio = (double)chance/100;
-      vlogf(LOG_MISC, fmt("Adjusted probability for suitset load of %s [%d]: %lf -> %lf") % obj_index[rob].short_desc % vnum % obj_lp_ratio % adj_obj_lp_ratio);
+      vlogf(LOG_MISC, format("Adjusted probability for suitset load of %s [%d]: %lf -> %lf") % obj_index[rob].short_desc % vnum % obj_lp_ratio % adj_obj_lp_ratio);
     }
     */
     // NOTE: this should be using read_object_buy_build if (chance < 101)
@@ -205,7 +205,7 @@ void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstrin
       if (chance > 100 && !ch->hasWizPower(POWER_LOAD_NOPROTOS))
         obj->addObjStat(ITEM_PROTOTYPE);
     } else if (chance > 100)
-      ch->sendTo(fmt("The %s was listed but not found, not in db yet?\n\r") % slotname);
+      ch->sendTo(format("The %s was listed but not found, not in db yet?\n\r") % slotname);
   }
 }
 
@@ -584,7 +584,7 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance, bool findLoadPote
       sendTo("You load a set of armor.\n\r");
       act("$n loads a set of armor.", TRUE, this, 0, 0, TO_ROOM);
     } else {
-      sendTo(fmt("You load a %s piece from a suit of armor.\n\r") % suitPieceNames[tPiece]);
+      sendTo(format("You load a %s piece from a suit of armor.\n\r") % suitPieceNames[tPiece]);
       act("$n loads a piece of armor.", TRUE, this, 0, 0, TO_ROOM);
     }
   }
@@ -603,7 +603,7 @@ void loadSetClass::SetupLoadSetSuits()
   bool    hasSuit = false;
 
   if (!(suitFile = fopen(suitFilePath, "r"))) {
-    vlogf(LOG_FILE, fmt("Unable to open '%s' for reading.") %  suitFilePath);
+    vlogf(LOG_FILE, format("Unable to open '%s' for reading.") %  suitFilePath);
     return;
   }
 

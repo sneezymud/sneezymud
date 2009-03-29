@@ -149,7 +149,7 @@ void TShopOwned::journalize_debit(int post_ref, const sstring &customer,
 
   //    db.query("insert into shoplogjournal (shop_nr, journal_id, customer_name, obj_name, sneezy_year, logtime, post_ref, debit, credit) values (%i, %s, '%s', '%s', %i, now(), %i, %i, 0)", shop_nr, (new_id?"NULL":"LAST_INSERT_ID()"), customer.c_str(), name.c_str(), time_info.year, post_ref, amt);
 
-  queryqueue.push(fmt("insert into shoplogjournal (shop_nr, journal_id, customer_name, obj_name, sneezy_year, logtime, post_ref, debit, credit) values (%i, %s, '%s', '%s', %i, now(), %i, %i, 0)") % shop_nr % ((sstring)(new_id?"NULL":"LAST_INSERT_ID()")).escape(SQL) % customer.escape(SQL) % name.escape(SQL) % time_info.year % post_ref % amt);
+  queryqueue.push(format("insert into shoplogjournal (shop_nr, journal_id, customer_name, obj_name, sneezy_year, logtime, post_ref, debit, credit) values (%i, %s, '%s', '%s', %i, now(), %i, %i, 0)") % shop_nr % ((sstring)(new_id?"NULL":"LAST_INSERT_ID()")).escape(SQL) % customer.escape(SQL) % name.escape(SQL) % time_info.year % post_ref % amt);
 }
 				  
 void TShopOwned::journalize_credit(int post_ref, const sstring &customer,
@@ -157,7 +157,7 @@ void TShopOwned::journalize_credit(int post_ref, const sstring &customer,
 {
   TDatabase db(DB_SNEEZY);
 
-  queryqueue.push(fmt("insert into shoplogjournal (shop_nr, journal_id, customer_name, obj_name, sneezy_year, logtime, post_ref, debit, credit)values (%i, %s, '%s', '%s', %i, now(), %i, 0, %i)") % shop_nr % ((sstring)(new_id?"NULL":"LAST_INSERT_ID()")).escape(SQL) % customer.escape(SQL) % name.escape(SQL) % time_info.year % post_ref % amt);
+  queryqueue.push(format("insert into shoplogjournal (shop_nr, journal_id, customer_name, obj_name, sneezy_year, logtime, post_ref, debit, credit)values (%i, %s, '%s', '%s', %i, now(), %i, 0, %i)") % shop_nr % ((sstring)(new_id?"NULL":"LAST_INSERT_ID()")).escape(SQL) % customer.escape(SQL) % name.escape(SQL) % time_info.year % post_ref % amt);
 }
 
 void TShopOwned::COGS_add(const sstring &name, int amt, int num)
@@ -169,9 +169,9 @@ void TShopOwned::COGS_add(const sstring &name, int amt, int num)
 
   if(!db.fetchRow()){
     //    db.query("insert into shoplogcogs (shop_nr, obj_name, count, total_cost) values (%i, '%s', %i, %i)", shop_nr, name.c_str(), num, amt);
-    queryqueue.push(fmt("insert into shoplogcogs (shop_nr, obj_name, count, total_cost) values (%i, '%s', %i, %i)") % shop_nr % name.escape(SQL) % num % amt);
+    queryqueue.push(format("insert into shoplogcogs (shop_nr, obj_name, count, total_cost) values (%i, '%s', %i, %i)") % shop_nr % name.escape(SQL) % num % amt);
   } else {
-    queryqueue.push(fmt("update shoplogcogs set count=count+%i, total_cost=total_cost+%i where obj_name='%s' and shop_nr=%i") % num % amt % name.escape(SQL) % shop_nr);
+    queryqueue.push(format("update shoplogcogs set count=count+%i, total_cost=total_cost+%i where obj_name='%s' and shop_nr=%i") % num % amt % name.escape(SQL) % shop_nr);
   }
 }
 
@@ -181,7 +181,7 @@ void TShopOwned::COGS_remove(const sstring &name, int num)
 
   //  db.query("update shoplogcogs set total_cost=total_cost-((total_cost/count)*%i), count=count-%i where obj_name='%s' and shop_nr=%i", num, num, name.c_str(), shop_nr);
 
-  queryqueue.push(fmt("update shoplogcogs set total_cost=total_cost-(floor((total_cost/count))*%i), count=count-%i where obj_name='%s' and shop_nr=%i") % num % num % name.escape(SQL) % shop_nr);
+  queryqueue.push(format("update shoplogcogs set total_cost=total_cost-(floor((total_cost/count))*%i), count=count-%i where obj_name='%s' and shop_nr=%i") % num % num % name.escape(SQL) % shop_nr);
 }
 
 int TShopOwned::COGS_get(const sstring &name)
@@ -338,48 +338,48 @@ void TShopOwned::giveStatements(sstring arg)
   sstring keywords, short_desc, long_desc, buf, name;
   
   name=real_roomp(shop_index[shop_nr].in_room)->getName();
-  keywords=fmt("statement income financial %i %i %s") % 
+  keywords=format("statement income financial %i %i %s") % 
     shop_nr % year % name;
-  short_desc=fmt("an income statement for '<p>%s<1>', year <r>%i<1>") %
+  short_desc=format("an income statement for '<p>%s<1>', year <r>%i<1>") %
     name % year;
   long_desc="A crumpled up financial statement lies here.";
 
   if(year == time_info.year)
-    buf=fmt("Income statement for '%s', current year %i.\n\r") % 
+    buf=format("Income statement for '%s', current year %i.\n\r") % 
       name % year;
   else
-    buf=fmt("Income statement for '%s', year ending %i.\n\r") % 
+    buf=format("Income statement for '%s', year ending %i.\n\r") % 
       name % year;
 
-  sstring prev_re=fmt("Retained earnings %i") % (year-1);
+  sstring prev_re=format("Retained earnings %i") % (year-1);
 
   buf+="-----------------------------------------------------------------\n\r";
-  buf+=fmt("%-36s %10s %10i\n\r") % 
+  buf+=format("%-36s %10s %10i\n\r") % 
     "Sales revenue" % "" % tsj.getValue("Sales");
   if(tsj.getValue("Recycling"))
-    buf+=fmt("%-36s %10s %10i\n\r") % 
+    buf+=format("%-36s %10s %10i\n\r") % 
       "Recycling revenue" % "" % tsj.getValue("Recycling");
-  buf+=fmt("  %-34s %10i\n\r") %
+  buf+=format("  %-34s %10i\n\r") %
     "Cost of goods sold" % tsj.getValue("COGS");
-  buf+=fmt("  %-34s %10i\n\r") %
+  buf+=format("  %-34s %10i\n\r") %
     "Sales tax" % tsj.getValue("Tax");
   if(tsj.getValue("Expenses"))
-    buf+=fmt("  %-34s %10i\n\r") %
+    buf+=format("  %-34s %10i\n\r") %
       "Service expenses" % tsj.getValue("Expenses");
   if(tsj.getValue("Interest"))
-    buf+=fmt("  %-34s %10i\n\r") %
+    buf+=format("  %-34s %10i\n\r") %
       "Interest expense" % tsj.getValue("Interest");
-  buf+=fmt("%-36s %10s %10i\n\r") %
+  buf+=format("%-36s %10s %10i\n\r") %
     "Total expenses" % "" % tsj.getExpenses();
-  buf+=fmt("%-36s %10s %10s\n\r") % "" % "----------" % "----------";
-  buf+=fmt("%-36s %10s %10i\n\r") %
+  buf+=format("%-36s %10s %10s\n\r") % "" % "----------" % "----------";
+  buf+=format("%-36s %10s %10i\n\r") %
     "Net income" % "" % tsj.getNetIncome();
-  buf+=fmt("%-36s %10s %10i\n\r") %
+  buf+=format("%-36s %10s %10i\n\r") %
     "Dividends" % "" % tsj.getValue("Dividends");
-  buf+=fmt("%-36s %10s %10i\n\r") %
+  buf+=format("%-36s %10s %10i\n\r") %
     prev_re % "" % tsj.getValue("Retained Earnings");
-  buf+=fmt("%-36s %10s %10s\n\r") % "" % "----------" % "----------";
-  buf+=fmt("%-36s %10s %10i\n\r") %
+  buf+=format("%-36s %10s %10s\n\r") % "" % "----------" % "----------";
+  buf+=format("%-36s %10s %10i\n\r") %
     "Retained earnings" % "" % tsj.getRetainedEarnings();
   
   TNote *income_statement = createNote(mud_str_dup(buf));
@@ -395,46 +395,46 @@ void TShopOwned::giveStatements(sstring arg)
 
 
   name=real_roomp(shop_index[shop_nr].in_room)->getName();
-  keywords=fmt("sheet balance financial statement %i %i %s") % 
+  keywords=format("sheet balance financial statement %i %i %s") % 
     shop_nr % year % name;
-  short_desc=fmt("a balance sheet for '<p>%s<1>', year <r>%i<1>") %
+  short_desc=format("a balance sheet for '<p>%s<1>', year <r>%i<1>") %
     name % year;
   long_desc="A crumpled up financial statement lies here.";
 
 
   if(year == time_info.year)
-    buf=fmt("Balance sheet for '%s', current year %i.\n\r\n\r") % 
+    buf=format("Balance sheet for '%s', current year %i.\n\r\n\r") % 
       name % year;
   else
-    buf=fmt("Balance sheet for '%s', year ending %i.\n\r\n\r") % 
+    buf=format("Balance sheet for '%s', year ending %i.\n\r\n\r") % 
       name % year;
 
-  buf+=fmt("%-36s   %-36s\n\r") % 
+  buf+=format("%-36s   %-36s\n\r") % 
     "Assets" % "Liabilities";
   buf+="-----------------------------------------------------------------\n\r";
   
   if(tsj.getValue("Deposits")){
-    buf+=fmt("%-36s | %-25s\n\r") %
+    buf+=format("%-36s | %-25s\n\r") %
       "" % "Liabilities";
-    buf+=fmt("%-25s %10i | %-25s %10i\n") %
+    buf+=format("%-25s %10i | %-25s %10i\n") %
       "Cash" % tsj.getValue("Cash") % 
       "  Deposits" % tsj.getValue("Deposits");
   } else {
-    buf+=fmt("%-25s %10i |\n") %
+    buf+=format("%-25s %10i |\n") %
       "Cash" % tsj.getValue("Cash");
   }
 
-  buf+=fmt("%-25s %10i | %-36s\n\r") %
+  buf+=format("%-25s %10i | %-36s\n\r") %
     "Inventory" % tsj.getValue("Inventory") % "";
-  buf+=fmt("%-36s | %-36s\n\r") %
+  buf+=format("%-36s | %-36s\n\r") %
     "" % "Shareholders' equity";
-  buf+=fmt("%-36s | %-25s %10i\n\r") %
+  buf+=format("%-36s | %-25s %10i\n\r") %
     "" % "  Paid-in capital" % tsj.getValue("Paid-in Capital");
-  buf+=fmt("%-36s | %-25s %10i\n\r") %
+  buf+=format("%-36s | %-25s %10i\n\r") %
     "" % "  Retained earnings" % tsj.getRetainedEarnings();
-  buf+=fmt("%-25s %10s | %-25s %10s\n\r") %
+  buf+=format("%-25s %10s | %-25s %10s\n\r") %
     "" % "----------" % "" % "----------";
-  buf+=fmt("%-25s %10i | %-25s %10i\n\r") %
+  buf+=format("%-25s %10i | %-25s %10i\n\r") %
     "Total assets" % tsj.getAssets() %
     "Total liabilities & SHE" % 
     (tsj.getLiabilities()+tsj.getShareholdersEquity());

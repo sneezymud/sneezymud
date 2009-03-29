@@ -111,7 +111,7 @@ int doppleganger(TBeing *ch, cmdTypeT cmd, const char *tArg, TMonster *tMyself, 
   switch (cmd) {
     case CMD_GENERIC_CREATED:
       if (tMyself->act_ptr) {
-        vlogf(LOG_PROC, fmt("%s created with action pointer already existing.\n\r") %  tMyself->getName());
+        vlogf(LOG_PROC, format("%s created with action pointer already existing.\n\r") %  tMyself->getName());
         return FALSE;
       }
 

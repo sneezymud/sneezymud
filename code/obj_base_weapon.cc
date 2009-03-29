@@ -288,7 +288,7 @@ int TBaseWeapon::sharpenerValueMe(const TBeing *ch, TMonster *me) const
   }
   cost = sharpenPrice();
 
-  me->doTell(ch->getName(), fmt("It will cost %d talens to totally %s your %s.") %
+  me->doTell(ch->getName(), format("It will cost %d talens to totally %s your %s.") %
 	     cost % (isBluntWeapon() ? "dull" : "sharpen") %
 	     fname(name));
   return TRUE;
@@ -345,7 +345,7 @@ int TBaseWeapon::sharpenerGiveMe(TBeing *ch, TMonster *me)
     return TRUE;
   } else {
     if (!job->char_name)
-      vlogf(LOG_PROC, fmt("somehow sharpener %s didnt have a name on existing job") %  me->getName());
+      vlogf(LOG_PROC, format("somehow sharpener %s didnt have a name on existing job") %  me->getName());
     sprintf(buf, "Sorry, %s, but you'll have to wait while I re-edge %s's weapon.", ch->getName(), job->char_name);
     me->doSay(buf);
     strcpy(buf, name);
@@ -363,24 +363,24 @@ int TBaseWeapon::sharpenerGiveMe(TBeing *ch, TMonster *me)
 
 void TBaseWeapon::objMenu(const TBeing *ch) const
 {
-  ch->sendTo(fmt(VT_CURSPOS) % 3 % 1);
-  ch->sendTo(fmt("%sSuggested price:%s %d%s") % ch->purple() % ch->norm() %
+  ch->sendTo(format(VT_CURSPOS) % 3 % 1);
+  ch->sendTo(format("%sSuggested price:%s %d%s") % ch->purple() % ch->norm() %
                  suggestedPrice() % (suggestedPrice() != obj_flags.cost ? " *" : ""));
 
-  ch->sendTo(fmt(VT_CURSPOS) % 4 % 1);
-  ch->sendTo(fmt("%sReal Lvl:%s %.2f") %
+  ch->sendTo(format(VT_CURSPOS) % 4 % 1);
+  ch->sendTo(format("%sReal Lvl:%s %.2f") %
         ch->purple() % ch->norm() % weaponLevel());
                  
-  ch->sendTo(fmt(VT_CURSPOS) % 4 % 18);
-  ch->sendTo(fmt("%sDam Lvl:%s %.2f") %
+  ch->sendTo(format(VT_CURSPOS) % 4 % 18);
+  ch->sendTo(format("%sDam Lvl:%s %.2f") %
         ch->purple() % ch->norm() % damageLevel());
                  
-  ch->sendTo(fmt(VT_CURSPOS) % 4 % 32);
-  ch->sendTo(fmt("%sStr Lvl:%s %.2f") %
+  ch->sendTo(format(VT_CURSPOS) % 4 % 32);
+  ch->sendTo(format("%sStr Lvl:%s %.2f") %
         ch->purple() % ch->norm() % structLevel());
                  
-  ch->sendTo(fmt(VT_CURSPOS) % 4 % 50);
-  ch->sendTo(fmt("%sQual Lvl:%s %.2f") %
+  ch->sendTo(format(VT_CURSPOS) % 4 % 50);
+  ch->sendTo(format("%sQual Lvl:%s %.2f") %
         ch->purple() % ch->norm() % sharpLevel());
 }
 
@@ -405,13 +405,13 @@ void TBaseWeapon::changeObjValue2(TBeing *ch)
     return;
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt("What does this value do? :\n\r %s\n\r") %
+  ch->sendTo(format("What does this value do? :\n\r %s\n\r") %
         ItemInfo[itemType()]->val1_info);
   ch->specials.edit = CHANGE_OBJ_VALUE2;
 
-  ch->sendTo(fmt("Value 2 for %s : %d\n\r\n\r") %
+  ch->sendTo(format("Value 2 for %s : %d\n\r\n\r") %
        sstring(getName()).uncap() % x2);
-  ch->sendTo(fmt(VT_CURSPOS) % 10 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 10 % 1);
   ch->sendTo("Enter new value.\n\r--> ");
 }
 
@@ -425,13 +425,13 @@ void TBaseWeapon::changeObjValue3(TBeing *ch)
     return;
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt("What does this value do? :\n\r %s\n\r") %
+  ch->sendTo(format("What does this value do? :\n\r %s\n\r") %
         ItemInfo[itemType()]->val2_info);
   ch->specials.edit = CHANGE_OBJ_VALUE3;
 
-  ch->sendTo(fmt("Value 3 for %s : %d\n\r\n\r") %
+  ch->sendTo(format("Value 3 for %s : %d\n\r\n\r") %
        sstring(getName()).uncap() % x3);
-  ch->sendTo(fmt(VT_CURSPOS) % 10 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 10 % 1);
   ch->sendTo("Enter new value.\n\r--> ");
 }
 
@@ -489,7 +489,7 @@ int TBaseWeapon::damageMe(TBeing *ch, TBeing *v, wearSlotT part_hit)
               v->describeBodySlot(part_hit).c_str());
       }
       act(buf, TRUE, v, item, ch, TO_VICT);
-      ch->sendTo(COLOR_OBJECTS, fmt("It is in %s condition.\n\r") %equip_condition(-1));
+      ch->sendTo(COLOR_OBJECTS, format("It is in %s condition.\n\r") %equip_condition(-1));
       addToCurSharp(-1);
     }
     // Check for structural damage
@@ -509,7 +509,7 @@ int TBaseWeapon::damageMe(TBeing *ch, TBeing *v, wearSlotT part_hit)
              ch->red(), ch->norm(), (item ? "$p on " : ""),
                v->describeBodySlot(part_hit).c_str());
           act(buf, FALSE, ch, item, v, TO_CHAR);
-	  ch->sendTo(COLOR_OBJECTS, fmt("<R>It is in<1> %s <R>condition.<1>\n\r") %equip_condition(-1));
+	  ch->sendTo(COLOR_OBJECTS, format("<R>It is in<1> %s <R>condition.<1>\n\r") %equip_condition(-1));
         }
       }
     }
@@ -692,10 +692,10 @@ bool TBaseWeapon::isPierceWeapon() const
 void TBaseWeapon::divinateMe(TBeing *caster) const
 {
 #if 1
-  caster->sendTo(fmt("It is capable of doing %s of damage for your level.\n\r") % 
+  caster->sendTo(format("It is capable of doing %s of damage for your level.\n\r") % 
           describe_damage((int) damageLevel(), caster));
 #else
-  caster->sendTo(fmt("It is capable of doing %s of damage.\n\r") % 
+  caster->sendTo(format("It is capable of doing %s of damage.\n\r") % 
           describe_damage((int) damageLevel(), caster));
 #endif
 }
@@ -745,7 +745,7 @@ int TBaseWeapon::enhanceMe(TBeing *caster, int level, byte bKnown)
         CS(SPELL_ENHANCE_WEAPON);
         affected[0].modifier += 1;
 //        affected[1].modifier += 1;
-//        vlogf(LOG_MISC, fmt("Somehow, %s just got a critical success on enchant weapon") %  caster->getName());
+//        vlogf(LOG_MISC, format("Somehow, %s just got a critical success on enchant weapon") %  caster->getName());
         break;
       case CRIT_S_TRIPLE:
       case CRIT_S_DOUBLE:
@@ -867,12 +867,12 @@ void TBaseWeapon::changeBaseWeaponValue1(TBeing *ch, const char *arg, editorEnte
       switch (update_num) {
         case 1:
           ch->sendTo(VT_HOMECLR);
-          ch->sendTo(fmt("Current max %s: %d\n\r") %
+          ch->sendTo(format("Current max %s: %d\n\r") %
                 ((isBluntWeapon() ? "bluntness" :
                  (isPierceWeapon() ? "pointiness" :
                  "sharpness"))) %
                 getMaxSharp());
-          ch->sendTo(fmt("Enter new max %s.\n\r--> ") %
+          ch->sendTo(format("Enter new max %s.\n\r--> ") %
                 ((isBluntWeapon() ? "bluntness" :
                  (isPierceWeapon() ? "pointiness" :
                  "sharpness"))));
@@ -880,12 +880,12 @@ void TBaseWeapon::changeBaseWeaponValue1(TBeing *ch, const char *arg, editorEnte
           return;
         case 2:
           ch->sendTo(VT_HOMECLR);
-          ch->sendTo(fmt("Current %s: %d\n\r") %
+          ch->sendTo(format("Current %s: %d\n\r") %
                 ((isBluntWeapon() ? "bluntness" :
                  (isPierceWeapon() ? "pointiness" :
                  "sharpness"))) %
                  getCurSharp());
-          ch->sendTo(fmt("Enter new %s.\n\r--> ") %
+          ch->sendTo(format("Enter new %s.\n\r--> ") %
                 ((isBluntWeapon() ? "bluntness" :
                  (isPierceWeapon() ? "pointiness" :
                  "sharpness"))));
@@ -920,16 +920,16 @@ void TBaseWeapon::changeBaseWeaponValue1(TBeing *ch, const char *arg, editorEnte
   }
   ch->sendTo(VT_HOMECLR);
   if (isSlashWeapon()) {
-    ch->sendTo(fmt("1) Max sharpness (Maximum sharpness item can ever be):     Max    =%d\n\r") % getMaxSharp());
-    ch->sendTo(fmt("2) Sharpness (sharpness that weapon will start out with):  Current=%d\n\r") % getCurSharp());
+    ch->sendTo(format("1) Max sharpness (Maximum sharpness item can ever be):     Max    =%d\n\r") % getMaxSharp());
+    ch->sendTo(format("2) Sharpness (sharpness that weapon will start out with):  Current=%d\n\r") % getCurSharp());
   } else if (isBluntWeapon()) {
-    ch->sendTo(fmt("1) Max Bluntness (Maximum bluntness item can ever be):     Max    =%d\n\r") % getMaxSharp());
-    ch->sendTo(fmt("2) Bluntness (sharpness that weapon will start out with):  Current=%d\n\r") % getCurSharp());
+    ch->sendTo(format("1) Max Bluntness (Maximum bluntness item can ever be):     Max    =%d\n\r") % getMaxSharp());
+    ch->sendTo(format("2) Bluntness (sharpness that weapon will start out with):  Current=%d\n\r") % getCurSharp());
   } else {
-    ch->sendTo(fmt("1) Max Pointiness (Maximum pointiness item can ever have):   Max    =%d\n\r") % getMaxSharp());
-    ch->sendTo(fmt("2) Pointiness (pointiness that weapon will start out with):  Current=%d\n\r") % getCurSharp());
+    ch->sendTo(format("1) Max Pointiness (Maximum pointiness item can ever have):   Max    =%d\n\r") % getMaxSharp());
+    ch->sendTo(format("2) Pointiness (pointiness that weapon will start out with):  Current=%d\n\r") % getCurSharp());
   }
-  ch->sendTo(fmt(VT_CURSPOS) % 10 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 10 % 1);
   ch->sendTo("Enter your choice to modify.\n\r--> ");
 }
 
@@ -941,7 +941,7 @@ int TGenWeapon::smiteWithMe(TBeing *ch, TBeing *v)
   if ((objVnum() != WEAPON_AVENGER1) &&
       (objVnum() != WEAPON_AVENGER2) &&
       (objVnum() != WEAPON_AVENGER3)) {
-    ch->sendTo(COLOR_OBJECTS, fmt("%s has no respect for someone using %s.\n\r") %
+    ch->sendTo(COLOR_OBJECTS, format("%s has no respect for someone using %s.\n\r") %
         sstring(ch->yourDeity(SKILL_SMITE, FIRST_PERSON)).cap() % getName());
     return FALSE;
   }
@@ -1053,7 +1053,7 @@ int TBaseWeapon::wieldMe(TBeing *ch, char *arg2)
       canSingleWieldPrim = canSingleWieldSecd = false;
 
 #if 0
-    vlogf(LOG_LAPSOS, fmt("Dynamic Paired Code Active: %s %d %d") % 
+    vlogf(LOG_LAPSOS, format("Dynamic Paired Code Active: %s %d %d") % 
           arg2 % canSingleWieldPrim % canSingleWieldSecd);
 #endif
 
@@ -1279,16 +1279,16 @@ void TBaseWeapon::evaluateMe(TBeing *ch) const
     ch->describeWeaponDamage(this, learn);
 
   if (ch->isImmortal()) {
-    ch->sendTo(COLOR_OBJECTS, fmt("IMMORTAL EVAL: %s overall is rated as a L%5.2f weapon.\n\r") % getName() % weaponLevel());
-    ch->sendTo(COLOR_OBJECTS, fmt("IMMORTAL EVAL: %s damage is rated as L%5.2f.\n\r") % getName() % damageLevel());
-    ch->sendTo(COLOR_OBJECTS, fmt("IMMORTAL EVAL: %s structure is rated as L%5.2f.\n\r") % getName() % structLevel());
-    ch->sendTo(COLOR_OBJECTS, fmt("IMMORTAL EVAL: %s quality is rated as L%5.2f.\n\r") % getName() % sharpLevel());
+    ch->sendTo(COLOR_OBJECTS, format("IMMORTAL EVAL: %s overall is rated as a L%5.2f weapon.\n\r") % getName() % weaponLevel());
+    ch->sendTo(COLOR_OBJECTS, format("IMMORTAL EVAL: %s damage is rated as L%5.2f.\n\r") % getName() % damageLevel());
+    ch->sendTo(COLOR_OBJECTS, format("IMMORTAL EVAL: %s structure is rated as L%5.2f.\n\r") % getName() % structLevel());
+    ch->sendTo(COLOR_OBJECTS, format("IMMORTAL EVAL: %s quality is rated as L%5.2f.\n\r") % getName() % sharpLevel());
   }
 }
 
 void TBaseWeapon::describeObjectSpecifics(const TBeing *ch) const
 {
-  ch->sendTo(COLOR_OBJECTS, fmt("You can tell that %s.\n\r") % ch->describeSharpness(this));
+  ch->sendTo(COLOR_OBJECTS, format("You can tell that %s.\n\r") % ch->describeSharpness(this));
 }
 
 sstring TBaseWeapon::describeMySharp(const TBeing *ch) const
@@ -1342,7 +1342,7 @@ void TBaseWeapon::descMaxStruct(const TBeing *ch, int learn) const
   int maxstruct = GetApprox(getMaxStructPoints(), learn);
 
   strncpy(capbuf, ch->objs(this), cElements(capbuf));
-  ch->sendTo(COLOR_OBJECTS,fmt("%s seems to %s.\n\r") %
+  ch->sendTo(COLOR_OBJECTS,format("%s seems to %s.\n\r") %
            sstring(capbuf).cap() %
           ((maxstruct >= 99) ? "be virtually indestructible" :
            ((maxstruct >= 95) ? "be very durable" :
@@ -1544,7 +1544,7 @@ int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int
           }
         }
 #if RANGE_DEBUG
-        vlogf(LOG_MISC, fmt("Range debug: (1) %s damaging %s with %s for %d dam") % 
+        vlogf(LOG_MISC, format("Range debug: (1) %s damaging %s with %s for %d dam") % 
                  ch->getName() % tb->getName() % getName() % d);
 #endif
         rc = ch->applyDamage(tb, d, damtype);
@@ -1604,14 +1604,14 @@ void TBaseWeapon::lowCheck()
 #else
   if (ap != obj_flags.cost) {
 #endif
-    vlogf(LOG_LOW, fmt("base_weapon %s has a bad price (%d).  should be (%d)") % 
+    vlogf(LOG_LOW, format("base_weapon %s has a bad price (%d).  should be (%d)") % 
          getName() % obj_flags.cost % ap);
     obj_flags.cost = ap;
   }
   if (canWear(ITEM_HOLD)) {
     int amt = -itemAC();
     if (amt)
-      vlogf(LOG_LOW, fmt("Holdable weapon (%s:%d) with AC.  (bad!)") % 
+      vlogf(LOG_LOW, format("Holdable weapon (%s:%d) with AC.  (bad!)") % 
           getName() % objVnum());
   }
 }

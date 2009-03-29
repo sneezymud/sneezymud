@@ -72,13 +72,13 @@ sstring TMoneypouch::statObjInfo() const
 
   for(currencyTypeT c=MIN_CURRENCY;c<MAX_CURRENCY;c++){
     if(getMoney(c) > 0){
-      buf += fmt("%ss inside: %i\n\r") % currencyInfo[c]->getName().cap() % 
+      buf += format("%ss inside: %i\n\r") % currencyInfo[c]->getName().cap() % 
 	getMoney(c);
       total += (int)((float)getMoney(c) * currencyInfo[c]->getExchangeRate(CURRENCY_GRIMHAVEN));
     }
   }
   
-  buf += fmt("Total (in talens): %i\n\r") % total;
+  buf += format("Total (in talens): %i\n\r") % total;
 
   buf = buf + TExpandableContainer::statObjInfo();
 

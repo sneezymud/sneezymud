@@ -48,10 +48,10 @@ sstring getPlayerNames(int account_id)
 	   account_id);
 
   if(db.fetchRow())
-    names=fmt("'%s'") % db["name"];
+    names=format("'%s'") % db["name"];
 
   while(db.fetchRow()){
-    names+=fmt(", '%s'") % db["name"];
+    names+=format(", '%s'") % db["name"];
   }
 
   return names;
@@ -198,55 +198,55 @@ void getSlotData(int wear_flag, wearSlotT &slot, float &slot_c, float &slot_s, s
       slot=WEAR_BODY;
       slot_c=0.15;
       slot_s=0.0908;
-      fav=fmt("%i,%i,%i") % mapApplyToFile(APPLY_STR) % mapApplyToFile(APPLY_BRA) % mapApplyToFile(APPLY_CON) ;
+      fav=format("%i,%i,%i") % mapApplyToFile(APPLY_STR) % mapApplyToFile(APPLY_BRA) % mapApplyToFile(APPLY_CON) ;
       break;
     case 17:  // head
       slot=WEAR_HEAD;
       slot_c=0.07;
       slot_s=0.0908;
-      fav=fmt("%i,%i,%i,%i,%i") % mapApplyToFile(APPLY_INT) % mapApplyToFile(APPLY_FOC) % mapApplyToFile(APPLY_WIS) % mapApplyToFile(APPLY_PER) % mapApplyToFile(APPLY_VISION);
+      fav=format("%i,%i,%i,%i,%i") % mapApplyToFile(APPLY_INT) % mapApplyToFile(APPLY_FOC) % mapApplyToFile(APPLY_WIS) % mapApplyToFile(APPLY_PER) % mapApplyToFile(APPLY_VISION);
       break;
     case 33:  // legs
       slot=WEAR_LEG_R;
       slot_c=0.05;
       slot_s=0.0454;
-      fav=fmt("%i,%i") % mapApplyToFile(APPLY_AGI) % mapApplyToFile(APPLY_MOVE) ;
+      fav=format("%i,%i") % mapApplyToFile(APPLY_AGI) % mapApplyToFile(APPLY_MOVE) ;
       break;
     case 65:  // feet
       slot=WEAR_FOOT_R;
       slot_c=0.02;
       slot_s=0.0454;
-      fav=fmt("%i,%i") % mapApplyToFile(APPLY_SPE) % mapApplyToFile(APPLY_MOVE) ;
+      fav=format("%i,%i") % mapApplyToFile(APPLY_SPE) % mapApplyToFile(APPLY_MOVE) ;
       break;
     case 129: // hands
       slot=WEAR_HAND_R;
       slot_c=0.03;
       slot_s=0.0454;
-      fav=fmt("%i,%i") % mapApplyToFile(APPLY_DEX) % mapApplyToFile(APPLY_SPE) ;
+      fav=format("%i,%i") % mapApplyToFile(APPLY_DEX) % mapApplyToFile(APPLY_SPE) ;
       break;
     case 257: // arms
       slot=WEAR_ARM_R;
       slot_c=0.04;
       slot_s=0.0454;
-      fav=fmt("%i,%i") % mapApplyToFile(APPLY_AGI) % mapApplyToFile(APPLY_STR) ;
+      fav=format("%i,%i") % mapApplyToFile(APPLY_AGI) % mapApplyToFile(APPLY_STR) ;
       break;
     case 1025: // back
       slot=WEAR_BACK;
       slot_c=0.07;
       slot_s=0.0908;
-      fav=fmt("%i,%i") % mapApplyToFile(APPLY_CON) % mapApplyToFile(APPLY_BRA) ;
+      fav=format("%i,%i") % mapApplyToFile(APPLY_CON) % mapApplyToFile(APPLY_BRA) ;
       break;
     case 2049: // waist
       slot=WEAR_WAIST;
       slot_c=0.08;
       slot_s=0.0908;
-      fav=fmt("%i,%i") % mapApplyToFile(APPLY_CON) % mapApplyToFile(APPLY_STR) ;
+      fav=format("%i,%i") % mapApplyToFile(APPLY_CON) % mapApplyToFile(APPLY_STR) ;
       break;
     case 4097: // wrist
       slot=WEAR_WRIST_R;
       slot_c=0.02;
       slot_s=0.0454;
-      fav=fmt("%i,%i,%i") % mapApplyToFile(APPLY_DEX) % mapApplyToFile(APPLY_AGI) % mapApplyToFile(APPLY_SPE) ;
+      fav=format("%i,%i,%i") % mapApplyToFile(APPLY_DEX) % mapApplyToFile(APPLY_AGI) % mapApplyToFile(APPLY_SPE) ;
       break;
     case 16385: // hold
       slot=HOLD_LEFT;
@@ -255,7 +255,7 @@ void getSlotData(int wear_flag, wearSlotT &slot, float &slot_c, float &slot_s, s
       break;
   }
 
-  fav=fmt("%s,%i,%i,%i,%i,%i,%i") % fav % mapApplyToFile(APPLY_MANA) % mapApplyToFile(APPLY_HIT) % mapApplyToFile(APPLY_NOISE) % mapApplyToFile(APPLY_AGE) % mapApplyToFile(APPLY_CHA) % mapApplyToFile(APPLY_KAR);
+  fav=format("%s,%i,%i,%i,%i,%i,%i") % fav % mapApplyToFile(APPLY_MANA) % mapApplyToFile(APPLY_HIT) % mapApplyToFile(APPLY_NOISE) % mapApplyToFile(APPLY_AGE) % mapApplyToFile(APPLY_CHA) % mapApplyToFile(APPLY_KAR);
 }
 
 
@@ -267,7 +267,7 @@ int getStatCount(sstring vnum, sstring owner, sstring fav)
     db2.fetchRow();
     int statcount=convertTo<int>(db2["statcount"]);
 
-    sstring unfav=fmt("%s,%i,%i,%i,%i,%i") % fav % mapApplyToFile(APPLY_ARMOR) % mapApplyToFile(APPLY_IMMUNITY) % mapApplyToFile(APPLY_DISCIPLINE) % mapApplyToFile(APPLY_SPELL_EFFECT) % mapApplyToFile(APPLY_SPELL) ;
+    sstring unfav=format("%s,%i,%i,%i,%i,%i") % fav % mapApplyToFile(APPLY_ARMOR) % mapApplyToFile(APPLY_IMMUNITY) % mapApplyToFile(APPLY_DISCIPLINE) % mapApplyToFile(APPLY_SPELL_EFFECT) % mapApplyToFile(APPLY_SPELL) ;
     db2.query("select sum(mod1) as statcount from objaffect where vnum=%s and owner='%s' and type not in (%s)", vnum.c_str(), owner.c_str(), unfav.c_str());
     db2.fetchRow();
     statcount+=convertTo<int>(db2["statcount"]);
@@ -290,7 +290,7 @@ int getStatCount(sstring vnum, sstring owner, sstring fav)
 void lowerStats(sstring vnum, sstring owner, sstring fav, float maxes)
 {
   TDatabase db2(DB_IMMORTAL);
-  sstring unfav=fmt("%s,%i,%i,%i,%i,%i") % fav % mapApplyToFile(APPLY_ARMOR) % mapApplyToFile(APPLY_IMMUNITY) % mapApplyToFile(APPLY_DISCIPLINE) % mapApplyToFile(APPLY_SPELL_EFFECT) % mapApplyToFile(APPLY_SPELL);
+  sstring unfav=format("%s,%i,%i,%i,%i,%i") % fav % mapApplyToFile(APPLY_ARMOR) % mapApplyToFile(APPLY_IMMUNITY) % mapApplyToFile(APPLY_DISCIPLINE) % mapApplyToFile(APPLY_SPELL_EFFECT) % mapApplyToFile(APPLY_SPELL);
   int count=0, lcount=0, breakout=0;
 
   while(((count=getStatCount(vnum, owner, fav)) > maxes)){
@@ -562,6 +562,6 @@ sstring mudColorToHTML(sstring str, bool spacer)
   if(!spacer)
     spacing_strip="";
 
-  return fmt("<span style=\"color:white\"><font face=\"courier\">%s%s</font></span>") % spacing_strip % str;
+  return format("<span style=\"color:white\"><font face=\"courier\">%s%s</font></span>") % spacing_strip % str;
 }
 

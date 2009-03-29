@@ -14,7 +14,7 @@ void corpListing(TBeing *ch, TMonster *me)
 
   for(unsigned int i=0;i<corp_list.size();++i){
     m.insert(pair<int,sstring>(corp_list[i].rank,
-		 fmt("%-2i| <r>%-38s<1> | %6s talens  %6s in assets\n\r") % 
+		 format("%-2i| <r>%-38s<1> | %6s talens  %6s in assets\n\r") % 
 			       corp_list[i].corp_id % corp_list[i].name %
 			       talenDisplay(corp_list[i].gold) %
 			       talenDisplay(corp_list[i].assets)));
@@ -79,7 +79,7 @@ void corpLogs(TBeing *ch, TMonster *me, sstring arg, sstring corp_arg)
       if(last_date != db["logtime"]){
 	if(!last_date.empty()){
 	  color_code=(color_code=="<b>")?"<r>":"<b>";
-	  buf=fmt("%16.16s  %20.20s %10s %10i<1>\n\r") %
+	  buf=format("%16.16s  %20.20s %10s %10i<1>\n\r") %
 	    "" % "Total" % "" % total;
 	  sb += buf;
 	}
@@ -88,7 +88,7 @@ void corpLogs(TBeing *ch, TMonster *me, sstring arg, sstring corp_arg)
       }
       total+=convertTo<int>(db["talens"]);
 
-      buf = fmt("%s%16.16s  %20.20s %10s %10s  Total: %s<1>\n\r") %
+      buf = format("%s%16.16s  %20.20s %10s %10s  Total: %s<1>\n\r") %
 	color_code %
 	db["logtime"] % db["name"] % db["action"] %
 	db["talens"] % db["corptalens"];
@@ -98,7 +98,7 @@ void corpLogs(TBeing *ch, TMonster *me, sstring arg, sstring corp_arg)
     db.query("select name, action, talens, corptalens, logtime from corplog where corp_id = %i order by logtime desc", corp_id);
     
     while(db.fetchRow()){
-      buf = fmt("%16.16s  %20.20s %10s %10s  Total: %s\n\r") %
+      buf = format("%16.16s  %20.20s %10s %10s  Total: %s\n\r") %
 	db["logtime"] % db["name"] % db["action"] %
 	db["talens"] % db["corptalens"];
       sb += buf;
@@ -146,7 +146,7 @@ void corpSummary(TBeing *ch, TMonster *me, int corp_id)
 
   me->doTell(ch->getName(), "This is what I know about that corporation:");
   
-  ch->sendTo(COLOR_BASIC, fmt("%-3i| <r>%s<1>\n\r") % corp_id % db["name"]);
+  ch->sendTo(COLOR_BASIC, format("%-3i| <r>%s<1>\n\r") % corp_id % db["name"]);
 
   bank=convertTo<int>(db["bank"]);
   bankowner=convertTo<int>(db["bankowner"]);
@@ -159,14 +159,14 @@ void corpSummary(TBeing *ch, TMonster *me, int corp_id)
   if(bankowner == corp_id)
     gold -= banktalens;
 
-  ch->sendTo(COLOR_BASIC, fmt("<r>Bank Talens:<1> %12s\n\r") %
-  	     (fmt("%i") % banktalens).comify());
-  ch->sendTo(COLOR_BASIC, fmt("<r>Talens:<1>      %12s\n\r") % 
-	     (fmt("%i") % gold).comify());
-  ch->sendTo(COLOR_BASIC, fmt("<r>Assets:<1>      %12s\n\r") % 
-	     (fmt("%i") % value).comify());
-  ch->sendTo(COLOR_BASIC, fmt("<r>Total value:<1> %12s\n\r") %
-	     (fmt("%i") % (banktalens+gold+value)).comify());
+  ch->sendTo(COLOR_BASIC, format("<r>Bank Talens:<1> %12s\n\r") %
+  	     ((sstring)(format("%i") % banktalens)).comify());
+  ch->sendTo(COLOR_BASIC, format("<r>Talens:<1>      %12s\n\r") % 
+	     ((sstring)(format("%i") % gold)).comify());
+  ch->sendTo(COLOR_BASIC, format("<r>Assets:<1>      %12s\n\r") % 
+	     ((sstring)(format("%i") % value)).comify());
+  ch->sendTo(COLOR_BASIC, format("<r>Total value:<1> %12s\n\r") %
+	     ((sstring)(format("%i") % (banktalens+gold+value))).comify());
 
 
   // officers
@@ -177,12 +177,12 @@ void corpSummary(TBeing *ch, TMonster *me, int corp_id)
     buf+=" ";
     buf+=db["name"].cap();
   }
-  ch->sendTo(COLOR_BASIC, fmt("Corporate officers are:<r>%s<1>\n\r") % buf);
+  ch->sendTo(COLOR_BASIC, format("Corporate officers are:<r>%s<1>\n\r") % buf);
 
   // bank
   if((tr=real_roomp(shop_index[bank].in_room))){
     ch->sendTo(COLOR_BASIC, "Corporate bank is:\n\r");
-    ch->sendTo(COLOR_BASIC, fmt("%-3i| <r>%s<1>\n\r") % bank % tr->getName());
+    ch->sendTo(COLOR_BASIC, format("%-3i| <r>%s<1>\n\r") % bank % tr->getName());
   }
 
   // shops    
@@ -193,7 +193,7 @@ void corpSummary(TBeing *ch, TMonster *me, int corp_id)
   while(db.fetchRow()){
     if((tr=real_roomp(convertTo<int>(db["in_room"])))){
       gold=convertTo<int>(db["gold"]);
-      ch->sendTo(COLOR_BASIC, fmt("%-3s| <r>%s<1> with %s talens.\n\r") %
+      ch->sendTo(COLOR_BASIC, format("%-3s| <r>%s<1> with %s talens.\n\r") %
 		 db["shop_nr"] % tr->getName() % talenDisplay(gold));
     }
   }
@@ -252,12 +252,12 @@ void corpDeposit(TBeing *ch, TMonster *me, int gold, sstring arg)
   }
 
   if(!banker){
-    vlogf(LOG_BUG, fmt("couldn't find banker for shop %i!") % shop_nr);
+    vlogf(LOG_BUG, format("couldn't find banker for shop %i!") % shop_nr);
     me->doTell(ch->getName(), "I couldn't find the bank!  Tell a god!");
     return;
   }
 
-  me->doTell(ch->getName(), fmt("Ok, you are depositing %i gold.") % gold);
+  me->doTell(ch->getName(), format("Ok, you are depositing %i gold.") % gold);
 
   // transfer
   ch->giveMoney(banker, gold, GOLD_XFER);
@@ -271,7 +271,7 @@ void corpDeposit(TBeing *ch, TMonster *me, int gold, sstring arg)
   // log
   shoplog(shop_nr, ch, dynamic_cast<TMonster *>(banker), "talens", gold, "corporate deposit");
 
-  me->doTell(ch->getName(), fmt("Your balance is %i.") % corp.getMoney());
+  me->doTell(ch->getName(), format("Your balance is %i.") % corp.getMoney());
 }
 
 
@@ -317,7 +317,7 @@ void corpWithdraw(TBeing *ch, TMonster *me, int gold, sstring arg)
   int tmp=corp.getMoney();
 
   if(tmp < gold){
-    me->doTell(ch->getName(), fmt("Your corporation only has %i talens.") % 
+    me->doTell(ch->getName(), format("Your corporation only has %i talens.") % 
 	       tmp);
     return;
   }
@@ -330,7 +330,7 @@ void corpWithdraw(TBeing *ch, TMonster *me, int gold, sstring arg)
   }
   
   if(!banker){
-    vlogf(LOG_BUG, fmt("couldn't find banker for shop_nr=%i!") % shop_nr);
+    vlogf(LOG_BUG, format("couldn't find banker for shop_nr=%i!") % shop_nr);
     me->doTell(ch->getName(), "I couldn't find the bank, tell a god!");
     return;
   }
@@ -350,8 +350,8 @@ void corpWithdraw(TBeing *ch, TMonster *me, int gold, sstring arg)
 
   dynamic_cast<TMonster *>(banker)->saveItems(shop_nr);
 
-  me->doTell(ch->getName(), fmt("Ok, here is %i talens.") % gold);
-  me->doTell(ch->getName(), fmt("Your balance is %i.") % (tmp-gold));
+  me->doTell(ch->getName(), format("Ok, here is %i talens.") % gold);
+  me->doTell(ch->getName(), format("Your balance is %i.") % (tmp-gold));
 
   shoplog(shop_nr, ch, dynamic_cast<TMonster *>(banker), "talens", -gold, "corporate withdrawal");
 }
@@ -394,7 +394,7 @@ void corpBalance(TBeing *ch, TMonster *me, sstring arg)
 
   TCorporation corp(corp_id);
 
-  me->doTell(ch->getName(), fmt("Your balance is %i.") % corp.getMoney());
+  me->doTell(ch->getName(), format("Your balance is %i.") % corp.getMoney());
 
 
 }

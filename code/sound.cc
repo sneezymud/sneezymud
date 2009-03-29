@@ -82,7 +82,7 @@ void MakeNoise(int room, const char *local_snd, const char *distant_snd)
     }
   }
   if (!rp) {
-    vlogf(LOG_MISC, fmt("Testing log: No rp in MakeNoise for %s") %  ((ch->name) ? ch->name : "null"));
+    vlogf(LOG_MISC, format("Testing log: No rp in MakeNoise for %s") %  ((ch->name) ? ch->name : "null"));
     return;
   }
   for (door = MIN_DIR; door < MAX_DIR; door++) {
@@ -459,29 +459,29 @@ void TBeing::playsound(soundNumT sound, const sstring &type, int vol, int prior,
 sstring SoundComm::getXML(){
   sstring buf="";
 
-  buf+=fmt("<sound type=\"%s\">\n") % soundtype;
+  buf+=format("<sound type=\"%s\">\n") % soundtype;
 
-  buf+=fmt("  <file>%s</file>\n") % text;
+  buf+=format("  <file>%s</file>\n") % text;
 
   if(type!="")
-    buf+=fmt("  <type>%s</type>\n") % type;
+    buf+=format("  <type>%s</type>\n") % type;
 
   if(url!="")
-    buf+=fmt("  <url>%s</url>\n") % url;
+    buf+=format("  <url>%s</url>\n") % url;
 
   if(volume!=-1)
-    buf+=fmt("  <volume>%i</volume>\n") % volume;
+    buf+=format("  <volume>%i</volume>\n") % volume;
 
   if(priority!=-1)
-    buf+=fmt("  <priority>%i</priority>\n") % priority;
+    buf+=format("  <priority>%i</priority>\n") % priority;
 
   if(cont!=-1)
-    buf+=fmt("  <continue>%i</continue>\n") % (cont?"true":"false");
+    buf+=format("  <continue>%i</continue>\n") % (cont?"true":"false");
 
   if(repeats!=-1)
-    buf+=fmt("  <loop>%i</loop>\n") % repeats;
+    buf+=format("  <loop>%i</loop>\n") % repeats;
 
-  buf+=fmt("</sound>\n");
+  buf+=format("</sound>\n");
 
   return buf;
 }
@@ -489,28 +489,28 @@ sstring SoundComm::getXML(){
 sstring SoundComm::getText(){
   sstring buf="";
 
-  buf+=fmt("!!%s(%s") % soundtype.upper()% text;
+  buf+=format("!!%s(%s") % soundtype.upper()% text;
   
   if(type!="")
-    buf+=fmt(" T=%s") % type;
+    buf+=format(" T=%s") % type;
 
   if(url!="")
-    buf+=fmt(" U=%s") % url;
+    buf+=format(" U=%s") % url;
 
   if(volume!=-1)
-    buf+=fmt(" V=%i") % volume;
+    buf+=format(" V=%i") % volume;
 
   if(priority!=-1)
-    buf+=fmt(" P=%i") % priority;
+    buf+=format(" P=%i") % priority;
 
   if(repeats!=-1)
-    buf+=fmt(" L=%i") % repeats;
+    buf+=format(" L=%i") % repeats;
 
   if(cont!=-1)
-    buf+=fmt(" C=%i") % cont;
+    buf+=format(" C=%i") % cont;
 
 
-  buf+=fmt(")\n\r");
+  buf+=format(")\n\r");
 
   return buf;
 }

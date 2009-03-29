@@ -108,7 +108,7 @@ int TBeing::doDissect(sstring argument)
 
   if (!(obj = dynamic_cast<TObj *> (searchLinkedListVis(this, namebuf, roomp->stuff)))) {
     if (!(obj = dynamic_cast<TObj *> (searchLinkedListVis(this, namebuf, stuff)))) {
-      sendTo(fmt("There doesn't seem to be any '%s' here to dissect.\n\r") % namebuf);
+      sendTo(format("There doesn't seem to be any '%s' here to dissect.\n\r") % namebuf);
       return FALSE;
     }
   }
@@ -159,7 +159,7 @@ void readDissectionFile()
 
   fp = fopen(dissect_file, "r");
   if (!fp) {
-    vlogf(LOG_FILE, fmt("Unable to open '%s' for reading") %  dissect_file);
+    vlogf(LOG_FILE, format("Unable to open '%s' for reading") %  dissect_file);
     return;
   }
 

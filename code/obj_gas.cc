@@ -276,10 +276,10 @@ void TGas::doDrift()
           seen++;
           if (dir == seen) {
             if((rp=real_roomp(tp->getTarget()))){
-              act(fmt("$n drifts into %s.") % tp->getName(), FALSE, this, 0, 0, TO_ROOM);
+              act(format("$n drifts into %s.") % tp->getName(), FALSE, this, 0, 0, TO_ROOM);
               --(*this);
               *rp += *this;
-              act(fmt("$n drifts in from %s.") % tp->getName(), FALSE, this, 0, 0, TO_ROOM);
+              act(format("$n drifts in from %s.") % tp->getName(), FALSE, this, 0, 0, TO_ROOM);
             }
           }
         }
@@ -287,10 +287,10 @@ void TGas::doDrift()
     } else if (dir >= MIN_DIR && dir != DIR_DOWN && 
                (exitp=roomp->exitDir(dir)) &&
                (rp=real_roomp(exitp->to_room))){
-      act(fmt("$n drifts %s.") % dirs_to_blank[dir], FALSE, this, 0, 0, TO_ROOM);
+      act(format("$n drifts %s.") % dirs_to_blank[dir], FALSE, this, 0, 0, TO_ROOM);
       --(*this);
       *rp += *this;
-      act(fmt("$n drifts in from the %s.") % dirs[rev_dir[dir]], FALSE, this, 0, 0, TO_ROOM); 
+      act(format("$n drifts in from the %s.") % dirs[rev_dir[dir]], FALSE, this, 0, 0, TO_ROOM); 
     }
   }
 }
@@ -407,12 +407,12 @@ int TThing::dropGas(int amt, gasTypeT type)
     int robj = real_object(GENERIC_GAS);
     if (robj < 0 || robj >= (signed int) obj_index.size())
     {
-      vlogf(LOG_BUG, fmt("dropGas(): No object (%d) in database!") %  robj);
+      vlogf(LOG_BUG, format("dropGas(): No object (%d) in database!") %  robj);
       return FALSE;
     }
     if (!(obj = read_object(robj, REAL)))
     {
-      vlogf(LOG_LOW, fmt("Error, No gas object created  (%d)") %  robj);
+      vlogf(LOG_LOW, format("Error, No gas object created  (%d)") %  robj);
       return FALSE;
     }
     if (!(gas = dynamic_cast<TGas*>(obj)))

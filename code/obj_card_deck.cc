@@ -61,7 +61,7 @@ void TCardDeck::lookObj(TBeing *ch, int bits) const
     count++;
   }
 
-  ch->sendTo(fmt("It has %i cards in it.\n\r") % count);
+  ch->sendTo(format("It has %i cards in it.\n\r") % count);
 }
 
 
@@ -93,7 +93,7 @@ void TCardDeck::describeObjectSpecifics(const TBeing *ch) const
     count++;
   }
 
-  ch->sendTo(fmt("It has %i cards in it.\n\r") % count);
+  ch->sendTo(format("It has %i cards in it.\n\r") % count);
 }
 
 

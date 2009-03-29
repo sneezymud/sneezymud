@@ -56,7 +56,7 @@ void TKey::lowCheck()
     db.query("select 1 from property where key_vnum=%i", objVnum());
     
     if(!db.fetchRow())
-      vlogf(LOG_LOW, fmt("rentable key %i (%s)!") % objVnum() %  getName());
+      vlogf(LOG_LOW, format("rentable key %i (%s)!") % objVnum() %  getName());
   }
 
   TObj::lowCheck();

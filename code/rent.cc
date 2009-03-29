@@ -323,7 +323,7 @@ void wipePlayerFile(const char *name)
   }
   sprintf(buf, "player/%c/%s", LOWER(name[0]), sstring(name).lower().c_str());
   if (unlink(buf) != 0) {
-    vlogf(LOG_FILE, fmt("error in unlink (0) (%s) %d") %  buf % errno);
+    vlogf(LOG_FILE, format("error in unlink (0) (%s) %d") %  buf % errno);
   }
 
   // nuke sstrings, ignore errors
@@ -423,7 +423,7 @@ void TBeing::removeRent()
     // being::isPc() checks for a bit set in specials.act, but could be
     // that bit is set (poly) but has no desc.  Not sure how this happens
     // so add this to track problem down
-    vlogf(LOG_BUG, fmt("removeRent() called for a bad isPc() (%s)") %  getName()); 
+    vlogf(LOG_BUG, format("removeRent() called for a bad isPc() (%s)") %  getName()); 
     return;
   }
 
@@ -642,7 +642,7 @@ bool ItemSave::raw_write_item(TObj *o)
         return FALSE;
       }
     } else
-      vlogf(LOG_BUG, fmt("Object %d has no name!") %  o->objVnum());
+      vlogf(LOG_BUG, format("Object %d has no name!") %  o->objVnum());
 
     if (fwrite(o->shortDescr, strlen(o->shortDescr) + 1, 1, fp) != 1) {
       vlogf(LOG_BUG, "Error writing object short description to rent.");
@@ -655,7 +655,7 @@ bool ItemSave::raw_write_item(TObj *o)
         return FALSE;
       }
     } else {
-      vlogf(LOG_BUG, fmt("object %d has no descr") %  o->objVnum());
+      vlogf(LOG_BUG, format("object %d has no descr") %  o->objVnum());
     }
     if (o->action_description) {
       if (fwrite(o->action_description, strlen(o->action_description) + 1, 1, fp) != 1) {
@@ -764,7 +764,7 @@ TObj *ItemLoad::raw_read_item()
   }
 
   if (!(o = read_object(item.item_number, VIRTUAL))) {
-    vlogf(LOG_BUG, fmt("Unable to load object Vnum = %d from rent.") %  item.item_number);
+    vlogf(LOG_BUG, format("Unable to load object Vnum = %d from rent.") %  item.item_number);
     return NULL;
   }
 
@@ -927,7 +927,7 @@ TObj *ItemLoad::raw_read_item()
   /*if (CURRENT_RENT_VERSION > 9 &&
     convertV9MaterialToV10(o->getMaterial()) != o->getMaterial())
   {
-    vlogf(LOG_OBJ, fmt("Object %s converting from material type %d to %d") %  o->getName() % o->getMaterial() % convertV9MaterialToV10(o->getMaterial()));
+    vlogf(LOG_OBJ, format("Object %s converting from material type %d to %d") %  o->getName() % o->getMaterial() % convertV9MaterialToV10(o->getMaterial()));
     o->setMaterial(convertV9MaterialToV10(o->getMaterial()));
   }*/
 
@@ -942,13 +942,13 @@ TObj *ItemLoadDB::raw_read_item(int rent_id, int &slot)
   db.query("select owner_type, owner, vnum, slot, container, val0, val1, val2, val3, extra_flags, weight, bitvector, decay, cur_struct, max_struct, material, volume, price, depreciation from rent where rent_id=%i and owner_type='%s' and owner=%i", rent_id, owner_type.c_str(), owner);
 
   if(!db.fetchRow()){
-    vlogf(LOG_DB, fmt("rent object %i not found! Owner %i (%s)") % 
+    vlogf(LOG_DB, format("rent object %i not found! Owner %i (%s)") % 
 	  rent_id % owner % owner_type);
     return NULL;
   }
 
   if (!(o = read_object(convertTo<int>(db["vnum"]), VIRTUAL))) {
-    vlogf(LOG_BUG, fmt("read_object failed on rent object %s. Owner %i (5s)") %
+    vlogf(LOG_BUG, format("read_object failed on rent object %s. Owner %i (5s)") %
 	  db["vnum"] % owner % owner_type);
     return NULL;
   }
@@ -1073,7 +1073,7 @@ static bool immortalityNukeCheck(TBeing *ch, TObj * new_obj, bool corpse)
     char buf[1200];
     sprintf(buf, "Item (%s) was automatically recycled due to your immortal status.\n\r", new_obj->getName());
     autoMail(ch, NULL, buf);
-    vlogf(LOG_SILENT, fmt("%s's %s being recycled due to immortality.") %  ch->getName() % new_obj->getName());
+    vlogf(LOG_SILENT, format("%s's %s being recycled due to immortality.") %  ch->getName() % new_obj->getName());
 
 
     delete new_obj;
@@ -1086,14 +1086,14 @@ static bool immortalityNukeCheck(TBeing *ch, TObj * new_obj, bool corpse)
 
 bool ItemLoad::objToParent(signed char slot, TObj *parent, TObj *new_obj, TRoom *r, TBeing *ch)
 {
-  //  vlogf(LOG_PEEL, fmt("objToParent: %s") % new_obj->name);
+  //  vlogf(LOG_PEEL, format("objToParent: %s") % new_obj->name);
 
   if(slot != NORMAL_SLOT){
     if (r)
-      vlogf(LOG_BUG, fmt("Room %d.  Invalid Slot %d.") %
+      vlogf(LOG_BUG, format("Room %d.  Invalid Slot %d.") %
 	    r->number % slot);
     else if (ch)
-      vlogf(LOG_BUG, fmt("%s's objects.  Invalid slot %d.") %
+      vlogf(LOG_BUG, format("%s's objects.  Invalid slot %d.") %
 	    ch->getName() % slot);
     vlogf(LOG_BUG, "Error in objsFromStore (3)");
     return false;
@@ -1108,14 +1108,14 @@ bool ItemLoad::objToParent(signed char slot, TObj *parent, TObj *new_obj, TRoom 
 
 bool ItemLoadDB::objToParent(signed char slot, TObj *parent, TObj *new_obj, TRoom *r, TBeing *ch)
 {
-  //  vlogf(LOG_PEEL, fmt("objToParent: %s") % new_obj->name);
+  //  vlogf(LOG_PEEL, format("objToParent: %s") % new_obj->name);
 
   if(slot != NORMAL_SLOT){
     if (r)
-      vlogf(LOG_BUG, fmt("Room %d.  Invalid Slot %d.") %
+      vlogf(LOG_BUG, format("Room %d.  Invalid Slot %d.") %
 	    r->number % slot);
     else if (ch)
-      vlogf(LOG_BUG, fmt("%s's objects.  Invalid slot %d.") %
+      vlogf(LOG_BUG, format("%s's objects.  Invalid slot %d.") %
 	    ch->getName() % slot);
     vlogf(LOG_BUG, "Error in objsFromStore (3)");
     return false;
@@ -1130,7 +1130,7 @@ bool ItemLoadDB::objToParent(signed char slot, TObj *parent, TObj *new_obj, TRoo
 
 bool ItemLoad::objToEquipChar(unsigned char slot, TBeing *ch, TObj *new_obj, TRoom *r)
 {
-  //  vlogf(LOG_PEEL, fmt("objToEquipChar: %s") % new_obj->name);
+  //  vlogf(LOG_PEEL, format("objToEquipChar: %s") % new_obj->name);
 
   if (ch) {
     wearSlotT mapped_slot = mapFileToSlot( slot);
@@ -1139,7 +1139,7 @@ bool ItemLoad::objToEquipChar(unsigned char slot, TBeing *ch, TObj *new_obj, TRo
     else
       ch->equipChar(new_obj, mapped_slot, SILENT_YES);
   } else {
-    vlogf(LOG_BUG, fmt("Room %d has invalid slot #.") %  
+    vlogf(LOG_BUG, format("Room %d has invalid slot #.") %  
 	  ((r) ? r->number : -99));
     return false;
   }
@@ -1149,7 +1149,7 @@ bool ItemLoad::objToEquipChar(unsigned char slot, TBeing *ch, TObj *new_obj, TRo
 #if 0
 bool ItemLoadDB::objToEquipChar(unsigned char slot, TBeing *ch, TObj *new_obj, TRoom *r)
 {
-  //  vlogf(LOG_PEEL, fmt("objToEquipChar: %s") % new_obj->name);
+  //  vlogf(LOG_PEEL, format("objToEquipChar: %s") % new_obj->name);
 
   if (ch) {
     wearSlotT mapped_slot = mapFileToSlot( slot);
@@ -1158,7 +1158,7 @@ bool ItemLoadDB::objToEquipChar(unsigned char slot, TBeing *ch, TObj *new_obj, T
     else
       ch->equipChar(new_obj, mapped_slot, SILENT_YES);
   } else {
-    vlogf(LOG_BUG, fmt("Room %d has invalid slot #.") %  
+    vlogf(LOG_BUG, format("Room %d has invalid slot #.") %  
 	  ((r) ? r->number : -99));
     return false;
   }
@@ -1168,7 +1168,7 @@ bool ItemLoadDB::objToEquipChar(unsigned char slot, TBeing *ch, TObj *new_obj, T
 
 bool ItemLoad::objToTarg(unsigned char slot, TBeing *ch, TObj *new_obj, TRoom *r)
 {
-  //  vlogf(LOG_PEEL, fmt("objToTarg: %s") % new_obj->name);
+  //  vlogf(LOG_PEEL, format("objToTarg: %s") % new_obj->name);
 
   if (ch)
     *ch += *new_obj;
@@ -1185,7 +1185,7 @@ bool ItemLoad::objToTarg(unsigned char slot, TBeing *ch, TObj *new_obj, TRoom *r
 #if 0    
 bool ItemLoadDB::objToTarg(unsigned char slot, TBeing *ch, TObj *new_obj, TRoom *r)
 {
-  //  vlogf(LOG_PEEL, fmt("objToTarg: %s") % new_obj->name);
+  //  vlogf(LOG_PEEL, format("objToTarg: %s") % new_obj->name);
 
   if (ch)
     *ch += *new_obj;
@@ -1210,9 +1210,9 @@ bool ItemLoad::objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r, b
     //// read slot
     if (fread(&slot, sizeof(signed char), 1, fp) != 1) {
       if (r)
-        vlogf(LOG_BUG, fmt("  Room %d.  Couldn't read slot.") %  r->number);
+        vlogf(LOG_BUG, format("  Room %d.  Couldn't read slot.") %  r->number);
       else if (ch)
-        vlogf(LOG_BUG, fmt(" %s's objects.  Couldn't read slot.") %
+        vlogf(LOG_BUG, format(" %s's objects.  Couldn't read slot.") %
 	      ch->getName());
       else
         vlogf(LOG_BUG, "Error in objsFromStore (1)");
@@ -1220,10 +1220,10 @@ bool ItemLoad::objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r, b
       return true;
     } else if (slot >= MAX_WEAR) {
       if (ch)
-	vlogf(LOG_BUG, fmt("%s's objects.  Slot %d > MAX_WEAR.") %
+	vlogf(LOG_BUG, format("%s's objects.  Slot %d > MAX_WEAR.") %
 	      ch->getName() % slot);
       else if (r)
-	vlogf(LOG_BUG, fmt("Room %d's objects.  Slot %d > MAX_WEAR.") %
+	vlogf(LOG_BUG, format("Room %d's objects.  Slot %d > MAX_WEAR.") %
 	      r->number % slot);
       vlogf(LOG_BUG, "Error in objsFromStore (4)");
       return true;
@@ -1293,10 +1293,10 @@ bool ItemLoadDB::objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r,
 
     if (slot >= MAX_WEAR) {
       if (ch)
-	vlogf(LOG_BUG, fmt("%s's objects.  Slot %d > MAX_WEAR.") %
+	vlogf(LOG_BUG, format("%s's objects.  Slot %d > MAX_WEAR.") %
 	      ch->getName() % slot);
       else if (r)
-	vlogf(LOG_BUG, fmt("Room %d's objects.  Slot %d > MAX_WEAR.") %
+	vlogf(LOG_BUG, format("Room %d's objects.  Slot %d > MAX_WEAR.") %
 	      r->number % slot);
       vlogf(LOG_BUG, "Error in objsFromStore (4)");
       return true;
@@ -1383,7 +1383,7 @@ void ItemSave::objToStore(signed char slot, TObj *o,
   } else {
     // write out the slot
     if (fwrite(&slot, sizeof(signed char), 1, fp) != 1) {
-      vlogf(LOG_BUG, fmt("Error saving %s's objects -- slot write.") %
+      vlogf(LOG_BUG, format("Error saving %s's objects -- slot write.") %
 	    (ch?ch->getName():"unknown"));
       return;
     }
@@ -1392,7 +1392,7 @@ void ItemSave::objToStore(signed char slot, TObj *o,
     
     // write out the item
     if (!raw_write_item(o)) 
-      vlogf(LOG_BUG, fmt("Rent error in %s's file") %
+      vlogf(LOG_BUG, format("Rent error in %s's file") %
 	    (ch?ch->getName():"UNKNOWN"));
     
     // save the contents
@@ -1401,7 +1401,7 @@ void ItemSave::objToStore(signed char slot, TObj *o,
     // write the contents footer
     slot = CONTENTS_END;
     if (fwrite(&slot, sizeof(signed char), 1, fp) != 1) {
-      vlogf(LOG_BUG, fmt("Error saving %s's objects -- slot write (2).") %  
+      vlogf(LOG_BUG, format("Error saving %s's objects -- slot write (2).") %  
 	    ((ch) ? ch->getName() : "UNKNOWN"));
       return;
     }      
@@ -1513,7 +1513,7 @@ void TBeing::addObjCost(TBeing *re, TObj *obj, objCost *cost, sstring &str)
 #ifdef FREE_RENT
     // in sneezy 5.2 we don't want to charge for anything that isn't limited. -dash 01/01
     if(obj->max_exist > LIMITED_RENT_ITEM) temp = 0;
-    //    vlogf(LOG_DASH, fmt("%s getting cost on %s, max exist %d, limit %d, cost %d") %  getName() % obj->getName() %
+    //    vlogf(LOG_DASH, format("%s getting cost on %s, max exist %d, limit %d, cost %d") %  getName() % obj->getName() %
     //	  obj->max_exist % LIMITED_RENT_ITEM % temp);
     
     // BOD decision 8-28-01 - no rent :)
@@ -1534,9 +1534,9 @@ void TBeing::addObjCost(TBeing *re, TObj *obj, objCost *cost, sstring &str)
         str += buf;
     } else if (!silent && re) {
         if (!FreeRent) 
-	  sendTo(COLOR_OBJECTS, fmt("%-30s : %d talens/day\n\r") % obj->getName() % temp);
+	  sendTo(COLOR_OBJECTS, format("%-30s : %d talens/day\n\r") % obj->getName() % temp);
 	else
-	  sendTo(COLOR_OBJECTS, fmt("%-30s \n\r") % obj->getName());
+	  sendTo(COLOR_OBJECTS, format("%-30s \n\r") % obj->getName());
 
     }
     if (temp<=100)
@@ -1573,9 +1573,9 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
   if (recep) {
     act("$n tells you \"Have a nice stay!\"", FALSE, recep, 0, this, TO_VICT);
     if (client) {
-      desc->clientf(fmt("%d") % CLIENT_RENT);
+      desc->clientf(format("%d") % CLIENT_RENT);
       sendTo("Rent is free!");
-      desc->clientf(fmt("%d") % CLIENT_RENT_END);
+      desc->clientf(format("%d") % CLIENT_RENT_END);
     }
   }
 
@@ -1624,7 +1624,7 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
 	str += buf;
       } else if (!silent) {
 	if (!FreeRent) 
-	  sendTo(COLOR_OBJECTS, fmt("%-30s : %d talens/day   ********** Storage fee \n\r") % ch->getName() % actual_cost);
+	  sendTo(COLOR_OBJECTS, format("%-30s : %d talens/day   ********** Storage fee \n\r") % ch->getName() % actual_cost);
         else
           sprintf(buf, "%-30s - Pet/Charm/Thrall/Mount \n\r", ch->getName());
 
@@ -1660,9 +1660,9 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
     if (client && recep) {
       processStringForClient(str);
 
-      desc->clientf(fmt("%d") % CLIENT_RENT);
+      desc->clientf(format("%d") % CLIENT_RENT);
       sendTo(str);
-      desc->clientf(fmt("%d") % CLIENT_RENT_END);
+      desc->clientf(format("%d") % CLIENT_RENT_END);
     }
     return TRUE;
   }
@@ -1675,7 +1675,7 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
   }
   if (recep && hasClass(CLASS_MONK) && ((cost->no_carried-cost->lowrentobjs) > 35)) {
     sendTo("You remember your vow not to carry over 35 items, and change your mind.\n\r");
-    sendTo(fmt("You are currently carrying %d items.\n\r") % (cost->no_carried-cost->lowrentobjs));
+    sendTo(format("You are currently carrying %d items.\n\r") % (cost->no_carried-cost->lowrentobjs));
     return FALSE;
   }
   if (recep) {
@@ -1683,10 +1683,10 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
       sprintf(buf, "$n tells you, \"That totals to be %d talens.\"", cost->total_cost);
       act(buf, TRUE, recep, NULL, this, TO_VICT);
       if (cost->total_cost/GetMaxLevel() > 5000)
-	vlogf(LOG_BUG, fmt("%s has %d value in equipment and is level %d") %  getName() % cost->total_cost % GetMaxLevel());
+	vlogf(LOG_BUG, format("%s has %d value in equipment and is level %d") %  getName() % cost->total_cost % GetMaxLevel());
 
       if (cost->no_carried && (cost->no_carried < 10) && (((cost->total_cost)/(cost->no_carried)) > 15000)) 
-	vlogf(LOG_BUG, fmt("%s has only %d items with an %d average cost, please check") %  
+	vlogf(LOG_BUG, format("%s has only %d items with an %d average cost, please check") %  
 	      getName() % cost->no_carried % (cost->total_cost/cost->no_carried));
     }
   }
@@ -1791,9 +1791,9 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
     if (str.length() > 9000) // max send length for the clients rent dialog is somewhere under 10k
       str.resize(9000);
 
-    desc->clientf(fmt("%d") % CLIENT_RENT);
+    desc->clientf(format("%d") % CLIENT_RENT);
     sendTo(str);
-    desc->clientf(fmt("%d") % CLIENT_RENT_END);
+    desc->clientf(format("%d") % CLIENT_RENT_END);
   }
       
       return TRUE;
@@ -1819,7 +1819,7 @@ void TMonster::saveItems(const sstring &filepath)
   ItemSave is;
 
   if (!is.openFile(filepath)) {
-    vlogf(LOG_FILE, fmt("Failed to open file '%s' in TMonster::saveItems() call.") % filepath);
+    vlogf(LOG_FILE, format("Failed to open file '%s' in TMonster::saveItems() call.") % filepath);
     return;
   }
 
@@ -1927,7 +1927,7 @@ void TRoom::saveItems(const sstring &)
   sstring filepath;
   ItemSave is;
 
-  filepath = fmt("%s/%d") % ROOM_SAVE_PATH % number;
+  filepath = format("%s/%d") % ROOM_SAVE_PATH % number;
 
   if(stuff.empty()){
     unlink(filepath.c_str());
@@ -1935,7 +1935,7 @@ void TRoom::saveItems(const sstring &)
   }
 
   if(!is.openFile(filepath)){
-    vlogf(LOG_BUG, fmt("Error saving room [%d] items.") %  number);
+    vlogf(LOG_BUG, format("Error saving room [%d] items.") %  number);
     return;
   }
   is.writeVersion();
@@ -1971,13 +1971,13 @@ void TRoom::loadItems()
   int reset;
   ItemLoad il;
 
-  filepath = fmt("%s/%d") % ROOM_SAVE_PATH % number;
+  filepath = format("%s/%d") % ROOM_SAVE_PATH % number;
 
   if(!il.fileExists(filepath))
     return;
 
   if(!il.openFile(filepath)) {
-    vlogf(LOG_FILE, fmt("Failed to open file '%s' in TRoom::loadItems() call.") % filepath);
+    vlogf(LOG_FILE, format("Failed to open file '%s' in TRoom::loadItems() call.") % filepath);
     return;
   }
   
@@ -1988,7 +1988,7 @@ void TRoom::loadItems()
     removeRoomFlagBit(ROOM_SAVE_ROOM);
 
   if(!il.readVersion()){
-    vlogf(LOG_BUG, fmt("Error while reading version from %s.") % filepath);
+    vlogf(LOG_BUG, format("Error while reading version from %s.") % filepath);
     if (reset)
       setRoomFlagBit(ROOM_SAVE_ROOM);
     return;
@@ -2025,7 +2025,7 @@ void TRoom::loadItems()
 
       // Remove various things.
       if (!(tContainer = dynamic_cast<TBag *>(tThing))) {
-        vlogf(LOG_LOW, fmt("Storage: Moving Junk: %s") %  tThing->name);
+        vlogf(LOG_LOW, format("Storage: Moving Junk: %s") %  tThing->name);
         --(*tThing);
         *tBag += *tThing;
         continue;
@@ -2051,14 +2051,14 @@ void TRoom::loadItems()
         if (gamePort == PROD_GAMEPORT)
           emailStorageBag("User Deleted", tString, tThing);
 
-        vlogf(LOG_LOW, fmt("Storage: Purging linkbag: %s") %  tString);
+        vlogf(LOG_LOW, format("Storage: Purging linkbag: %s") %  tString);
         --(*tThing);
         delete tThing;
 
         continue;
       }
 
-      vlogf(LOG_LOW, fmt("Storage: Processing Linkbag: %s") %  tString);
+      vlogf(LOG_LOW, format("Storage: Processing Linkbag: %s") %  tString);
 
       // If we got here, the bag is a linkbag and the player is around.
       for(StuffIter it=tThing->stuff.begin();it!=tThing->stuff.end() && (tCont=*it);++it) {
@@ -2079,7 +2079,7 @@ void TRoom::loadItems()
         if (sscanf(tNote->action_description,
                    "Current time is: %s %s %d %d:%d:%d %d (%*s)",
                    tWek, tMon, &tDay, &tHour, &tMin, &tSec, &tYear) != 7) {
-          vlogf(LOG_LAPSOS, fmt("Storage: Note:\n\r%s") %  tNote->action_description);
+          vlogf(LOG_LAPSOS, format("Storage: Note:\n\r%s") %  tNote->action_description);
           continue;
         }
 
@@ -2117,7 +2117,7 @@ void TRoom::loadItems()
         else if (!strcmp(tMon, "Dec"))
           tTime.tm_mon = 11;
         else {
-          vlogf(LOG_BUG, fmt("Storage: Unknown Month: %s") %  tMon);
+          vlogf(LOG_BUG, format("Storage: Unknown Month: %s") %  tMon);
           tTime.tm_mon = 0;
         }
 
@@ -2136,7 +2136,7 @@ void TRoom::loadItems()
         else if (!strcmp(tWek, "Sat"))
           tTime.tm_wday = 6;
         else {
-          vlogf(LOG_BUG, fmt("Storage: Unknown Day: %s") %  tWek);
+          vlogf(LOG_BUG, format("Storage: Unknown Day: %s") %  tWek);
           tTime.tm_wday = 1;
         }
 
@@ -2171,7 +2171,7 @@ void TRoom::loadItems()
         tTime.tm_yday = tDay;
 
         time_t tTempReal = mktime(&tTime);
-        vlogf(LOG_LAPSOS, fmt("Storage: %s") %  ctime(&tTempReal));
+        vlogf(LOG_LAPSOS, format("Storage: %s") %  ctime(&tTempReal));
 
         double tTimeDiff = difftime(tCurrentTime, mktime(&tTime)),
                tCheck    = 60.0 * 60.0 * 24.0 * 30.0;
@@ -2181,7 +2181,7 @@ void TRoom::loadItems()
           if (gamePort == PROD_GAMEPORT)
             emailStorageBag("Time Expired", tString, tThing);
 
-          vlogf(LOG_LOW, fmt("Storage: Expired: %s") %  tString);
+          vlogf(LOG_LOW, format("Storage: Expired: %s") %  tString);
 
 	  for(StuffIter it=tThing->stuff.begin();it!=tThing->stuff.end();){
 	    TThing *tTemp=*(it++);
@@ -2197,7 +2197,7 @@ void TRoom::loadItems()
       }
 
       if (!tCont)
-        vlogf(LOG_LOW, fmt("Storage: Unable to find rent note for: %s") %  tString);
+        vlogf(LOG_LOW, format("Storage: Unable to find rent note for: %s") %  tString);
     }
 
     if (tBag->stuff.empty())
@@ -2234,18 +2234,18 @@ void updateSavedRoom(const char *tfname)
   }
   sprintf(fileName, "%s/%s", ROOM_SAVE_PATH, tfname);
   if (!(fp = fopen(fileName, "r+b"))) {
-    vlogf(LOG_BUG, fmt("  Error opening the room save file for room #%s") %  tfname);
+    vlogf(LOG_BUG, format("  Error opening the room save file for room #%s") %  tfname);
     return;
   }
 
   if (fread(&version, sizeof(version), 1, fp) != 1) {
-    vlogf(LOG_BUG, fmt("Error reading version from %s.") %  fileName);
+    vlogf(LOG_BUG, format("Error reading version from %s.") %  fileName);
     fclose(fp);
     return;
   }
 
   if (!noteLimitedItems(fp, fileName, version, FALSE))
-    vlogf(LOG_BUG, fmt("  Unable to count limited items in file  %s") %  fileName);
+    vlogf(LOG_BUG, format("  Unable to count limited items in file  %s") %  fileName);
   fclose(fp);
 }
 
@@ -2290,7 +2290,7 @@ void TPCorpse::removeCorpseFromList(bool updateFile)
     }
   }
   if (!found && checkOnLists()) {
-    vlogf(LOG_BUG, fmt("Error in removeCorpseList, corpse says listed but no corpse in list (%s).") %  getName());
+    vlogf(LOG_BUG, format("Error in removeCorpseList, corpse says listed but no corpse in list (%s).") %  getName());
   }
   if (previousCorpse) {
     otherCorpse = previousCorpse;
@@ -2311,7 +2311,7 @@ void TPCorpse::removeCorpseFromList(bool updateFile)
   if (!otherCorpse && !fileName.empty() && pc_corpse_list) {
     for (otherCorpse = pc_corpse_list; otherCorpse; otherCorpse = otherCorpse->nextGlobalCorpse) {
       if (otherCorpse == this) {
-        vlogf(LOG_BUG, fmt("Big error in corpse list walking %s") %  fileName);
+        vlogf(LOG_BUG, format("Big error in corpse list walking %s") %  fileName);
         continue;
       }
       if (!otherCorpse->fileName.empty() && !otherCorpse->fileName.compare(fileName))
@@ -2342,7 +2342,7 @@ void TPCorpse::addCorpseToLists()
     return;
 
   if (checkOnLists())
-    vlogf(LOG_BUG, fmt("Call to addCorpseToList for a corpse already on list (%s)") %  getName());
+    vlogf(LOG_BUG, format("Call to addCorpseToList for a corpse already on list (%s)") %  getName());
   if (!pc_corpse_list) {
     pc_corpse_list = this;
     nextGlobalCorpse = NULL;
@@ -2408,7 +2408,7 @@ void TBeing::assignCorpsesToRooms()
   if(!il.openFile(buf)) {
     // this isn't an error really, just means they don't have a corpse in
     // the game
-    //    vlogf(LOG_FILE, fmt("Failed to open file '%s' in assignCorpsesToRooms() call.") % buf);
+    //    vlogf(LOG_FILE, format("Failed to open file '%s' in assignCorpsesToRooms() call.") % buf);
     return;
   }
 
@@ -2419,13 +2419,13 @@ void TBeing::assignCorpsesToRooms()
   fclose(playerFile);
 
   if (GetMaxLevel() > MAX_MORT) {
-    vlogf(LOG_BUG, fmt("An immortal had a corpse saved (%s).") %  getName());
+    vlogf(LOG_BUG, format("An immortal had a corpse saved (%s).") %  getName());
     wipeCorpseFile(sstring(name).lower().c_str());
     return;
   }
 
   if(!il.readHeader()){
-    vlogf(LOG_BUG, fmt("Error while reading %s's corpse file header.") %
+    vlogf(LOG_BUG, format("Error while reading %s's corpse file header.") %
 	  getName());
     return;
   }
@@ -2437,7 +2437,7 @@ void TBeing::assignCorpsesToRooms()
     rp->removeRoomFlagBit(ROOM_SAVE_ROOM);
 
   if (il.objsFromStore(NULL, &num_read, NULL, rp, TRUE)) {
-    vlogf(LOG_BUG, fmt("Error while reading %s's corpse file. Prepare for reimb!") % getName());
+    vlogf(LOG_BUG, format("Error while reading %s's corpse file. Prepare for reimb!") % getName());
     if (reset)
       rp->setRoomFlagBit(ROOM_SAVE_ROOM);
     return;
@@ -2462,7 +2462,7 @@ void TBeing::assignCorpsesToRooms()
       if (corpse->roomp)
         --(*corpse);
       *rp2 += *corpse; 
-      vlogf(LOG_BUG, fmt("%s distributed to Storage Room (%d).") %  corpse->getName() % ROOM_STORAGE);
+      vlogf(LOG_BUG, format("%s distributed to Storage Room (%d).") %  corpse->getName() % ROOM_STORAGE);
       sendTo(COLOR_BASIC, "<r>*** You had a CORPSE placed in the storage area. See a god to get it back. *** <z>\n\r");
     } else {
       rp2 = real_roomp(corpse->getRoomNum());
@@ -2471,13 +2471,13 @@ void TBeing::assignCorpsesToRooms()
         if (corpse->roomp)
           --(*corpse);
         *rp2 += *corpse;
-        vlogf(LOG_BUG, fmt("%s distributed to Storage Room (%d).") %  corpse->getName() % ROOM_STORAGE);
+        vlogf(LOG_BUG, format("%s distributed to Storage Room (%d).") %  corpse->getName() % ROOM_STORAGE);
       sendTo(COLOR_BASIC, "<r>*** You had a CORPSE placed in the storage area. See a god to get it back. ***<z>\n\r");
       } else {
         if (corpse->roomp)
           --(*corpse);
         *rp2 += *corpse;
-        vlogf(LOG_BUG, fmt("%s distributed to %s (%d).") %  corpse->getName() %
+        vlogf(LOG_BUG, format("%s distributed to %s (%d).") %  corpse->getName() %
 rp2->getName() % corpse->getRoomNum());
         sendTo(COLOR_BASIC, "<r>*** Your CORPSE has been restored to its place in the World ***.<z>\n\r");
       }
@@ -2498,7 +2498,7 @@ void TPCorpse::saveCorpseToFile()
   ItemSave is;
 
   if (fileName.empty()) {
-    vlogf(LOG_BUG, fmt("Attempt to save a corpse with no fileName (%s)") %  getName());
+    vlogf(LOG_BUG, format("Attempt to save a corpse with no fileName (%s)") %  getName());
     return;
   }
 
@@ -2507,7 +2507,7 @@ void TPCorpse::saveCorpseToFile()
   sprintf(buf, "corpses/%s", fileName.c_str());
 
   if(!is.openFile(buf)){
-    vlogf(LOG_FILE, fmt("Failed to open file '%s' in saveCorpseToFile() call.") % buf);
+    vlogf(LOG_FILE, format("Failed to open file '%s' in saveCorpseToFile() call.") % buf);
     onlyCorpse = TRUE; 
   }
 
@@ -2534,7 +2534,7 @@ void TPCorpse::saveCorpseToFile()
   is.st.first_update = is.st.last_update = (long) time(0);
 
   if(!is.writeHeader()){
-    vlogf(LOG_BUG, fmt("Error writing corpse header for %s.") %  getName());
+    vlogf(LOG_BUG, format("Error writing corpse header for %s.") %  getName());
     return;
   }
 
@@ -2561,7 +2561,7 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
 
   sprintf(buf, "rent/%c/%s", LOWER(tmp->name[0]), sstring(tmp->name).lower().c_str());
   if(!is.openFile(buf)){
-    vlogf(LOG_BUG, fmt("Error opening file for saving %s's objects") %
+    vlogf(LOG_BUG, format("Error opening file for saving %s's objects") %
 	  getName());
     return;
   }
@@ -2574,7 +2574,7 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
 
 
   if(!is.writeHeader()){
-    vlogf(LOG_BUG, fmt("Error writing rent header for %s.") %  getName());
+    vlogf(LOG_BUG, format("Error writing rent header for %s.") %  getName());
     return;
   }
   is.st.number = 0;        // reset to count actual # saved 
@@ -2601,11 +2601,11 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
 
 
   if (msgStatus == 1 && desc) {
-    vlogf(LOG_PIO, fmt("Saving %s [%d talens/%d bank/%.2f xps/%d items/%d age-mod/%d rent]") %  
+    vlogf(LOG_PIO, format("Saving %s [%d talens/%d bank/%.2f xps/%d items/%d age-mod/%d rent]") %  
         getName() % getMoney() % getBank() % getExp() % is.st.number % 
         age_mod % is.st.total_cost);
   } else if (msgStatus == 2 && desc) {
-    vlogf(LOG_PIO, fmt("Renting %s [%d talens/%d bank/%.2f xps/%d items/%d age-mod/%d rent]") %  
+    vlogf(LOG_PIO, format("Renting %s [%d talens/%d bank/%.2f xps/%d items/%d age-mod/%d rent]") %  
         getName() % getMoney() % getBank() % getExp() % is.st.number % 
         age_mod % is.st.total_cost);
   }
@@ -2624,12 +2624,12 @@ void TMonster::loadItems(const sstring &filepath)
   ItemLoad il;
 
   if(!il.openFile(filepath)) {
-    vlogf(LOG_FILE, fmt("Failed to open file '%s' in TMonster::loadItems() call.") % filepath);
+    vlogf(LOG_FILE, format("Failed to open file '%s' in TMonster::loadItems() call.") % filepath);
     return;
   }
 
   if(!il.readVersion()){
-    vlogf(LOG_BUG, fmt("Error while reading version from %s.") %  filepath);
+    vlogf(LOG_BUG, format("Error while reading version from %s.") %  filepath);
     return;
   }
 
@@ -2700,7 +2700,7 @@ void TMoney::moneyMove(TBeing *ch)
   }
 
   ch->addToMoney(getMoney(), GOLD_XFER);
-  vlogf(LOG_PIO, fmt("Found %d talens on %s's person during rent check") % 
+  vlogf(LOG_PIO, format("Found %d talens on %s's person during rent check") % 
             getMoney() % ch->getName()); 
   delete this;
 }
@@ -2749,33 +2749,33 @@ void TPerson::loadRent()
 
   if(!il.openFile(buf)){
     if (should_be_logged(this)) {
-      vlogf(LOG_PIO, fmt("%s has no equipment.") %  getName());
+      vlogf(LOG_PIO, format("%s has no equipment.") %  getName());
 
       actual = meanPracsSoFar();
 
-      vlogf(LOG_PIO, fmt("Loading %s [%d talens/%d bank/%.2f xps/no items/%d age-mod/no rent/%d extra pracs (%d-%d)]") %  
+      vlogf(LOG_PIO, format("Loading %s [%d talens/%d bank/%.2f xps/no items/%d age-mod/no rent/%d extra pracs (%d-%d)]") %  
          getName() % getMoney() % getBank() % getExp() % age_mod %
          (actual-expectedPracs()) % actual % expectedPracs());
     }
     return;
   }
   if(!il.readHeader()){
-    vlogf(LOG_BUG, fmt("Error while reading %s's rent file header.") %  getName());
+    vlogf(LOG_BUG, format("Error while reading %s's rent file header.") %  getName());
     return;
   }
   if (il.objsFromStore(NULL, &num_read, this, NULL, false)) {
-    vlogf(LOG_BUG, fmt("Error while reading %s's objects. Prepare for reimb!") % getName());
+    vlogf(LOG_BUG, format("Error while reading %s's objects. Prepare for reimb!") % getName());
     return;
   }
   if (strcmp(name, il.st.owner))
-    vlogf(LOG_BUG, fmt("  %s just got %s's objects!") %
+    vlogf(LOG_BUG, format("  %s just got %s's objects!") %
 	  getName() % il.st.owner);
 
 #if 0
   // A nice idea, but the two are now out of synch since the rent header
   // has number of my items plus mob follower's items.
   if (il.st.number != num_read) {
-    vlogf(LOG_BUG, fmt("Error while reading %s's objects.  %d in rent file, only %d loaded.") %  getName() % il.st.number % num_read);
+    vlogf(LOG_BUG, format("Error while reading %s's objects.  %d in rent file, only %d loaded.") %  getName() % il.st.number % num_read);
     return;
   }
 #endif
@@ -2798,17 +2798,17 @@ void TPerson::loadRent()
     timegold = (int) (((float) ((float) il.st.total_cost/(float) SECS_PER_REAL_DAY)) * (time(0) - il.st.last_update));
     // this is a kludge cuz total is going negative sometimes somehow - Bat 
     if (timegold < 0) {
-      vlogf(LOG_BUG,fmt("ERROR: timegold rent charged negative for %s.") % il.st.owner);
-      vlogf(LOG_BUG,fmt("ERROR: %s   daily cost: %d timegold: %d") % il.st.owner %il.st.total_cost %timegold);
-      vlogf(LOG_BUG,fmt("ERROR: %s   current time: %d, update time: %d") % il.st.owner %time(0) %il.st.last_update);
-      vlogf(LOG_BUG,fmt("ERROR: %s   time differential: int: %d") % il.st.owner %(time(0) - il.st.last_update));
+      vlogf(LOG_BUG,format("ERROR: timegold rent charged negative for %s.") % il.st.owner);
+      vlogf(LOG_BUG,format("ERROR: %s   daily cost: %d timegold: %d") % il.st.owner %il.st.total_cost %timegold);
+      vlogf(LOG_BUG,format("ERROR: %s   current time: %d, update time: %d") % il.st.owner %time(0) %il.st.last_update);
+      vlogf(LOG_BUG,format("ERROR: %s   time differential: int: %d") % il.st.owner %(time(0) - il.st.last_update));
       timegold = 0;
     }
-    vlogf(LOG_PIO, fmt("%s ran up charges of %d since last update, %d total charges") %  getName() % timegold % (gone + timegold));
+    vlogf(LOG_PIO, format("%s ran up charges of %d since last update, %d total charges") %  getName() % timegold % (gone + timegold));
 
     int total_rent=(timegold + gone)>il.st.total_cost?il.st.total_cost:(timegold + gone);
     if (!FreeRent)
-      sendTo(fmt("You ran up charges of %d talen%s in rent.\n\r") % total_rent %      (((total_rent) == 1) ? "" : "s"));
+      sendTo(format("You ran up charges of %d talen%s in rent.\n\r") % total_rent %      (((total_rent) == 1) ? "" : "s"));
     addToMoney(-(total_rent), GOLD_RENT);
 
 
@@ -2826,7 +2826,7 @@ void TPerson::loadRent()
       moneyCheck();
 
       if (getMoney() < 0) {
-        vlogf(LOG_PIO, fmt("%s ran out of money in rent") %  getName());
+        vlogf(LOG_PIO, format("%s ran out of money in rent") %  getName());
         sendTo("You ran out of money in rent.\n\rSome of your belongings were confiscated.\n\r");
 
         // Rent will now take items one by one to meet the rent requirements
@@ -2841,7 +2841,7 @@ void TPerson::loadRent()
         recepOffer(NULL, &curCost);
         int diff = il.st.total_cost - curCost.total_cost;
         if (diff > 0) {
-          vlogf(LOG_PIO, fmt("%s had followers taken by rent.") %  getName());
+          vlogf(LOG_PIO, format("%s had followers taken by rent.") %  getName());
           addToMoney(diff, GOLD_SHOP);
 
           sprintf(buf, "Your followers, and any items they may have had, were confiscated for %d talens to meet your rent obligations.", diff);
@@ -2859,7 +2859,7 @@ void TPerson::loadRent()
           else if (i->parent)
             --(*i);
 
-          vlogf(LOG_PIO, fmt("%s had item '%s' taken by rent.") %  getName() % i->getName());
+          vlogf(LOG_PIO, format("%s had item '%s' taken by rent.") %  getName() % i->getName());
           TThing *t;
 	  for(StuffIter it=i->stuff.begin();it!=i->stuff.end();){
 	    t=*(it++);
@@ -2882,7 +2882,7 @@ void TPerson::loadRent()
           sprintf(buf, "%s has been confiscated for %d talens to meet your rent obligations.\n\r", sstring(i->getName()).cap().c_str(), amt);
           lbuf += buf;
 
-          vlogf(LOG_SILENT, fmt("%s's %s being recycled due to rent obligations.") %  
+          vlogf(LOG_SILENT, format("%s's %s being recycled due to rent obligations.") %  
                  getName() % i->getName());
           delete i;
           i = NULL;
@@ -2894,13 +2894,13 @@ void TPerson::loadRent()
       } else {
         sendTo("You didn't have enough cash, but your bank account covered the difference.\n\r");
         sendTo("The remaining bank balance was moved to your character's money.\n\r");
-        vlogf(LOG_PIO, fmt("Bank account saved %s from losing items.") %  getName());
+        vlogf(LOG_PIO, format("Bank account saved %s from losing items.") %  getName());
       }
     }
   }
   actual = meanPracsSoFar();
     
-  vlogf(LOG_PIO, fmt("Loading %s [%d talens/%d bank/%.2f xps/%d items/%d age-mod/%d rent/%d extra pracs (%d-%d)]") %  
+  vlogf(LOG_PIO, format("Loading %s [%d talens/%d bank/%.2f xps/%d items/%d age-mod/%d rent/%d extra pracs (%d-%d)]") %  
        getName() % getMoney() % getBank() % getExp() % il.st.number % 
        age_mod % il.st.total_cost % (actual - expectedPracs()) % 
        actual % expectedPracs());
@@ -2961,7 +2961,7 @@ int TComponent::noteMeForRent(sstring &tStString, TBeing *ch, StuffList tList, i
     }
   }
 
-  tBuffer = fmt("%c-%ds : ") % '%' % (30 + (strlen(getName()) - getNameNOC(ch).length()));
+  tBuffer = format("%c-%ds : ") % '%' % (30 + (strlen(getName()) - getNameNOC(ch).length()));
 
   if (isRentable()) {
     tBuffer+="%5d talens/day";
@@ -2971,12 +2971,12 @@ int TComponent::noteMeForRent(sstring &tStString, TBeing *ch, StuffList tList, i
 #ifdef FREE_RENT
     if(max_exist > LIMITED_RENT_ITEM) tCost = 0;
 #endif
-    tString = fmt(tBuffer) % getName() % tCost;
+    tString = format(tBuffer) % getName() % tCost;
     if (FreeRent) {
       if (lCount == 1)
 	tString+="\n\r";
       else {
-	tBuffer = fmt("  x%3d\n\r") % lCount;
+	tBuffer = format("  x%3d\n\r") % lCount;
 	tString+=tBuffer;
       }
     } else {
@@ -2984,7 +2984,7 @@ int TComponent::noteMeForRent(sstring &tStString, TBeing *ch, StuffList tList, i
       if (lCount == 1)
 	tString+="\n\r";
       else {
-	tBuffer = fmt("  [%5dx%3d]\n\r") % max(0, rentCost()) % lCount;
+	tBuffer = format("  [%5dx%3d]\n\r") % max(0, rentCost()) % lCount;
 	tString+=tBuffer;
       }
     }
@@ -2993,12 +2993,12 @@ int TComponent::noteMeForRent(sstring &tStString, TBeing *ch, StuffList tList, i
   } else {
     tBuffer+="NOT RENTABLE";
     lCount++;
-    tString=fmt(tBuffer) % getName();
+    tString=format(tBuffer) % getName();
 
     if (lCount == 1)
       tString+="\n\r";
     else {
-      tBuffer = fmt("      [x%3d]\n\r") % lCount;
+      tBuffer = format("      [x%3d]\n\r") % lCount;
       tString+=tBuffer;
     }
 
@@ -3246,7 +3246,7 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
 	    tbt->getTimer() > 1 && 
 	    !tbt->isImmortal()) {
 	  if ((tbt->master) && tbt->master->inRoom() == tbt->inRoom()) {
-	    // vlogf(LOG_DASH, fmt("saving %s from loitering code, master is %s, room is (%d == %d)") % tbt->getName() %
+	    // vlogf(LOG_DASH, format("saving %s from loitering code, master is %s, room is (%d == %d)") % tbt->getName() %
 	    //	tbt->master->getName() % tbt->inRoom() % tbt->master->inRoom());
 	    continue;
 	  }
@@ -3424,11 +3424,11 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
 
 	  if (ch->getMoney() < tax) {
 	    recep->doTell(ch->getName(), 
-			  fmt("The mayor has issued a %d talen hospice tax, which I see you can't afford.") 
+			  format("The mayor has issued a %d talen hospice tax, which I see you can't afford.") 
 			  % tax);
 	    recep->doAction("", CMD_SIGH);
 	    recep->doTell(ch->getName(), 
-			  fmt("Sorry. Come back when you can pay your taxes."));
+			  "Sorry. Come back when you can pay your taxes.");
 	    for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
 	      if (exit_ok(exitp = recep->exitDir(dir), NULL)) {
 		act("$n throws you from the inn.",
@@ -3441,9 +3441,9 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
 	      }
 	    }
 	  } else {
-	    recep->doTell(ch->getName(), fmt(msg) % tax);
+	    recep->doTell(ch->getName(), format(msg) % tax);
 	    tso.doBuyTransaction(tax, "paying rent", TX_BUYING_SERVICE);
-            vlogf(LOG_PIO, fmt("%s being charged %d talens rent tax by %s") % ch->getName() % tax % recep->getName());
+            vlogf(LOG_PIO, format("%s being charged %d talens rent tax by %s") % ch->getName() % tax % recep->getName());
 	  }
 	}
         act("$n stores your stuff in the safe, and shows you to your room.", FALSE, recep, 0, ch, TO_VICT);
@@ -3472,12 +3472,12 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
       TBeing *vict = get_pc_world(ch, buf, EXACT_NO);
       if (vict) {
         //vict->makeRentNote(ch);
-        //recep->doTell(ch->getName(), fmt("Here is a note with %s's items listed.") % vict->getName());
+        //recep->doTell(ch->getName(), format("Here is a note with %s's items listed.") % vict->getName());
 	TShopOwned tso(shop_nr, recep, vict);	
 	float multiplier = (shop_index[shop_nr].getProfitBuy(NULL, vict));
 	int tax = (int)((float) vict->GetMaxLevel() * multiplier);
 
-	recep->doTell(ch->getName(), fmt("In addition to any fees"/* listed on that note*/", there is a tax of %i talens.") % tax);
+	recep->doTell(ch->getName(), format("In addition to any fees"/* listed on that note*/", there is a tax of %i talens.") % tax);
 	return TRUE;
       }
     }
@@ -3487,7 +3487,7 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
 
     //ch->makeRentNote(ch);
     //recep->doTell(ch->getName(), "Here is a note with your items listed.");
-    recep->doTell(ch->getName(), fmt("In addition to any fees"/* listed on that note*/", there is a tax of %i talens.") % tax);
+    recep->doTell(ch->getName(), format("In addition to any fees"/* listed on that note*/", there is a tax of %i talens.") % tax);
   }
   return TRUE;
 }
@@ -3547,14 +3547,14 @@ bool noteLimitedItems(FILE * fp, const char *tag, unsigned char version, bool im
     int robj = real_object(item.item_number);
     if (item.item_number >= 0) {
       if (robj < 0) {
-        vlogf(LOG_BUG, fmt("BOGUS ITEM #%d found in %s's rent file!") %  
+        vlogf(LOG_BUG, format("BOGUS ITEM #%d found in %s's rent file!") %  
            item.item_number % tag);
         delete [] ad;
         delete [] s;
         continue;
       }
 
-      vlogf(LOG_MISC, fmt("     [%d] - %s%s") %  item.item_number % tag % 
+      vlogf(LOG_MISC, format("     [%d] - %s%s") %  item.item_number % tag % 
 	    (immortal ? "  (immortal)" : ""));
       obj_index[robj].addToNumber(1);
     }
@@ -3575,7 +3575,7 @@ void printLimitedInRent(void)
   unsigned int i;
   for (i = 0; i < obj_index.size(); i++) {
     if (obj_index[i].getNumber() > 0) {
-      vlogf(LOG_MISC, fmt("  %d - [%d] : max [%d]") % 
+      vlogf(LOG_MISC, format("  %d - [%d] : max [%d]") % 
            obj_index[i].virt % obj_index[i].getNumber() % obj_index[i].max_exist);
       if (obj_index[i].getNumber() > obj_index[i].max_exist &&
           obj_index[i].max_exist) {
@@ -3603,7 +3603,7 @@ void countAccounts(const char *arg)
 
   sprintf(buf, "account/%c/%s", LOWER(arg[0]), sstring(arg).lower().c_str());
   if (!(dfd = opendir(buf))) {
-    vlogf(LOG_BUG, fmt("bad call to countAccount (%s)") %  buf);
+    vlogf(LOG_BUG, format("bad call to countAccount (%s)") %  buf);
     return;
   }
 
@@ -3623,13 +3623,13 @@ void countAccounts(const char *arg)
     if (ret != 0) {
       // some error occurred
       if (errno == ENOENT) {
-        vlogf(LOG_MISC, fmt("Deleting reference to %s in %s's account") %  buf2 % arg);
+        vlogf(LOG_MISC, format("Deleting reference to %s in %s's account") %  buf2 % arg);
         sprintf(buf2, "%s/%s", buf, dp->d_name);
-        vlogf(LOG_MISC, fmt("Deleting %s") %  buf2);
+        vlogf(LOG_MISC, format("Deleting %s") %  buf2);
         if (unlink(buf2) != 0)
-          vlogf(LOG_FILE, fmt("error in unlink (12) (%s) %d") %  buf2 % errno);
+          vlogf(LOG_FILE, format("error in unlink (12) (%s) %d") %  buf2 % errno);
       } else {
-        vlogf(LOG_FILE, fmt("ERROR: stat() failed for %s.  errno = %d") %  buf2 % errno);
+        vlogf(LOG_FILE, format("ERROR: stat() failed for %s.  errno = %d") %  buf2 % errno);
         perror("stat");
       }
       continue;
@@ -3656,7 +3656,7 @@ void countAccounts(const char *arg)
   if (!count) {
     // delete this empty account 
 
-    vlogf(LOG_MISC, fmt("Empty Account: %s, deleting it.") %  buf);
+    vlogf(LOG_MISC, format("Empty Account: %s, deleting it.") %  buf);
     
     TDatabase db(DB_SNEEZY);
     db.query("delete from account where name=lower('%s')", arg);
@@ -3668,7 +3668,7 @@ void countAccounts(const char *arg)
     unlink(buf2);
 
     if (rmdir(buf) != 0)
-      vlogf(LOG_FILE, fmt("error in rmdir (%s) %d") %  buf % errno);
+      vlogf(LOG_FILE, format("error in rmdir (%s) %d") %  buf % errno);
 
     return;
   }
@@ -3703,21 +3703,21 @@ static void parseFollowerRent(FILE *fp, TBeing *ch, const char *arg)
   FILE *fp2 = NULL;
   while (fscanf(fp, "#%d\n", &num) == 1) {
     if (!(mob = read_mobile(num, VIRTUAL))) {
-      vlogf(LOG_BUG, fmt("Error loading mob %d in loadFollower") %  num);
+      vlogf(LOG_BUG, format("Error loading mob %d in loadFollower") %  num);
       break;
     }
     // Since this mob was in rent, don't double count it.
     mob_index[mob->getMobIndex()].addToNumber(-1);
 
     if (fscanf(fp, "%d ", &tmp) != 1) {
-      vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (1)") %  arg % num);
+      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (1)") %  arg % num);
       deleteDuringRead(mob);
       break;
     }
     mob->specials.act = tmp;
 
     if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (2)") %  arg % num);
+      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (2)") %  arg % num);
       deleteDuringRead(mob);
       break;
     }
@@ -3728,7 +3728,7 @@ static void parseFollowerRent(FILE *fp, TBeing *ch, const char *arg)
     // if it had been cast, it should be added by the affections loop below
 
     if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (3)") %  arg % num);
+      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (3)") %  arg % num);
       deleteDuringRead(mob);
       break;
     }
@@ -3736,14 +3736,14 @@ static void parseFollowerRent(FILE *fp, TBeing *ch, const char *arg)
     mob->setFaction(factionTypeT(tmp));
 
     if (fscanf(fp, " %f ", &att) != 1) {
-      vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (4)") %  arg % num);
+      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (4)") %  arg % num);
       deleteDuringRead(mob);
       break;
     }
     mob->setPerc((double) att);
 
     if (fscanf(fp, " %f ", &att) != 1) {
-      vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (5)") %  arg % num);
+      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (5)") %  arg % num);
       deleteDuringRead(mob);
       break;
     }
@@ -3752,28 +3752,28 @@ static void parseFollowerRent(FILE *fp, TBeing *ch, const char *arg)
     fscanf(fp, "\n");
   
     if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (6)") %  arg % num);
+      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (6)") %  arg % num);
       deleteDuringRead(mob);
       break;
     }
     mob->setClass(tmp);
 
     if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (7)") %  arg % num);
+      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (7)") %  arg % num);
       deleteDuringRead(mob);
       break;
     }
     mob->fixLevels(tmp);
 
     if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (8)") %  arg % num);
+      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (8)") %  arg % num);
       deleteDuringRead(mob);
       break;
     }
     mob->setHitroll(tmp);
   
     if (fscanf(fp, " %f ", &att) != 1) {
-      vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (9)") %  arg % num);
+      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (9)") %  arg % num);
       deleteDuringRead(mob);
       break;
     }
@@ -3785,14 +3785,14 @@ float old_ac_lev = mob->getACLevel();
     // we will let HP Level be whatever the tiny mob is, and just set
     // the actual and max here
     if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (10)") %  arg % num);
+      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (10)") %  arg % num);
       deleteDuringRead(mob);
       break;
     }
     mob->setHit(tmp);
 
     if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (11)") %  arg % num);
+      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (11)") %  arg % num);
       deleteDuringRead(mob);
       break;
     }
@@ -3800,7 +3800,7 @@ float old_ac_lev = mob->getACLevel();
   
     rc = fscanf(fp, " %f+%d \n", &att, &tmp);
     if (rc == 1) {
-      vlogf(LOG_BUG, fmt("Old style mob found in %s's rent") %  
+      vlogf(LOG_BUG, format("Old style mob found in %s's rent") %  
 	    (ch ? ch->getName() : "Unknown"));
       // first, correct the file pointer so reading works ok
       rc = fscanf(fp, "d%d+%d", &tmp, &tmp2);
@@ -3816,7 +3816,7 @@ float old_ac_lev = mob->getACLevel();
       mob->setACFromACLevel();
 
     } else if (rc != 2) {
-      vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (12)") %  arg % num);
+      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (12)") %  arg % num);
       deleteDuringRead(mob);
       break;
     } else {
@@ -3833,42 +3833,42 @@ float old_ac_lev = mob->getACLevel();
     //    mob->setMaxMove(50);
   
     if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (13)") %  arg % num);
+      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (13)") %  arg % num);
       deleteDuringRead(mob);
       break;
     }
     mob->setMoney(tmp);
 
     if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (14)") %  arg % num);
+      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (14)") %  arg % num);
       deleteDuringRead(mob);
       break;
     }
     mob->setExp(tmp);
 
     if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (14)") %  arg % num);
+      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (14)") %  arg % num);
       deleteDuringRead(mob);
       break;
     }
     mob->setMaxExp(tmp);
 
     if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (15)") %  arg % num);
+      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (15)") %  arg % num);
       deleteDuringRead(mob);
       break;
     }
     mob->setRace(race_t(tmp));
 
     if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (16)") %  arg % num);
+      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (16)") %  arg % num);
       deleteDuringRead(mob);
       break;
     }
     mob->setWeight(tmp);
 
     if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (17)") %  arg % num);
+      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (17)") %  arg % num);
       deleteDuringRead(mob);
       break;
     }
@@ -3880,28 +3880,28 @@ float old_ac_lev = mob->getACLevel();
     }
 
     if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (24)") %  arg % num);
+      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (24)") %  arg % num);
       deleteDuringRead(mob);
       break;
     }
     mob->setPosition(mapFileToPos(tmp));
 
     if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (25)") %  arg % num);
+      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (25)") %  arg % num);
       deleteDuringRead(mob);
       break;
     }
     mob->default_pos = mapFileToPos(tmp);
 
     if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (26)") %  arg % num);
+      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (26)") %  arg % num);
       deleteDuringRead(mob);
       break;
     }
     mob->setSexUnsafe(tmp);
 
     if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (27)") %  arg % num);
+      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (27)") %  arg % num);
       deleteDuringRead(mob);
       break;
     }
@@ -3910,7 +3910,7 @@ float old_ac_lev = mob->getACLevel();
     immuneTypeT ij;
     for (ij=MIN_IMMUNE; ij < MAX_IMMUNES; ij++) {
       if (fscanf(fp, " %d ", &tmp) != 1) {
-        vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (28)") %  arg % num);
+        vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (28)") %  arg % num);
         deleteDuringRead(mob);
         break;
       }
@@ -3935,28 +3935,28 @@ float old_ac_lev = mob->getACLevel();
     affectedData af;
     for (i = 0; i < MAX_AFFECT; i++) {
       if (fscanf(fp, " %d ", &tmp) != 1) {
-        vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (29)") %  arg % num);
+        vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (29)") %  arg % num);
         deleteDuringRead(mob);
         break;
       }
       af.type = mapFileToSpellnum(tmp);
 
       if (fscanf(fp, " %d ", &tmp) != 1) {
-        vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (30)") %  arg % num);
+        vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (30)") %  arg % num);
         deleteDuringRead(mob);
         break;
       }
       af.level = tmp;
 
       if (fscanf(fp, " %d ", &tmp) != 1) {
-        vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (31)") %  arg % num);
+        vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (31)") %  arg % num);
         deleteDuringRead(mob);
         break;
       }
       af.duration = tmp;
 
       if (fscanf(fp, " %d ", &tmp) != 1) {
-        vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (32)") %  arg % num);
+        vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (32)") %  arg % num);
         deleteDuringRead(mob);
         break;
       }
@@ -3964,14 +3964,14 @@ float old_ac_lev = mob->getACLevel();
       int raw_modifier = tmp;
 
       if (fscanf(fp, " %d ", &tmp) != 1) {
-        vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (33)") %  arg % num);
+        vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (33)") %  arg % num);
         deleteDuringRead(mob);
         break;
       }
       af.modifier2 = tmp;
 
       if (fscanf(fp, " %d ", &tmp) != 1) {
-        vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (34)") %  arg % num);
+        vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (34)") %  arg % num);
         deleteDuringRead(mob);
         break;
       }
@@ -3982,7 +3982,7 @@ float old_ac_lev = mob->getACLevel();
       else
         af.modifier = raw_modifier;
       if (fscanf(fp, " %d ", &tmp) != 1) {
-        vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (35)") %  arg % num);
+        vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (35)") %  arg % num);
         deleteDuringRead(mob);
         break;
       }
@@ -4001,21 +4001,21 @@ float old_ac_lev = mob->getACLevel();
       // find the wear slot that corresponds to i in the file
       wearSlotT mapped_slot = mapFileToSlot(i);
       if (fscanf(fp, " %d ", &tmp) != 1) {
-        vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (36)") %  arg % num);
+        vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (36)") %  arg % num);
         deleteDuringRead(mob);
         break;
       }
       mob->setLimbFlags(mapped_slot, tmp);
 
       if (fscanf(fp, " %d ", &tmp) != 1) {
-        vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (37)") %  arg % num);
+        vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (37)") %  arg % num);
         deleteDuringRead(mob);
         break;
       }
       mob->setCurLimbHealth(mapped_slot, tmp);
 
       if (fscanf(fp, " %d ", &tmp) != 1) {
-        vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (37b)") %  arg % num);
+        vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (37b)") %  arg % num);
         deleteDuringRead(mob);
         break;
       }
@@ -4031,7 +4031,7 @@ float old_ac_lev = mob->getACLevel();
       il.setVersion(version);
       if (tmp != -1 && (new_obj = il.raw_read_item())) {
         if (ch) {
-          vlogf(LOG_SILENT, fmt("%s's %s rent-retrieving: (%s : %d)") %  arg % mob->getName() % new_obj->getName() % new_obj->objVnum());
+          vlogf(LOG_SILENT, format("%s's %s rent-retrieving: (%s : %d)") %  arg % mob->getName() % new_obj->getName() % new_obj->objVnum());
           mob->equipChar(new_obj, mapped_slot, SILENT_YES);
         } else {
           // count the item
@@ -4040,7 +4040,7 @@ float old_ac_lev = mob->getACLevel();
           if ((new_obj->number >= 0)) {
             obj_index[new_obj->getItemIndex()].addToNumber(2);
 	    
-            vlogf(LOG_PIO, fmt("     [%d] - in %s's follower rent") %  
+            vlogf(LOG_PIO, format("     [%d] - in %s's follower rent") %  
                      new_obj->objVnum() % arg);
           }
           delete new_obj;
@@ -4050,7 +4050,7 @@ float old_ac_lev = mob->getACLevel();
     }
 
     if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (37c)") %  arg % num);
+      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (37c)") %  arg % num);
       deleteDuringRead(mob);
       break;
     }
@@ -4067,7 +4067,7 @@ float old_ac_lev = mob->getACLevel();
       il.setVersion(version);
       if ((new_obj = il.raw_read_item())) {
         if (ch) {
-          vlogf(LOG_SILENT, fmt("%s's %s rent-retrieving: (%s : %d)") %  arg % mob->getName() % new_obj->getName() % new_obj->objVnum());
+          vlogf(LOG_SILENT, format("%s's %s rent-retrieving: (%s : %d)") %  arg % mob->getName() % new_obj->getName() % new_obj->objVnum());
           *mob += *new_obj;
         } else {
           // count the item
@@ -4075,14 +4075,14 @@ float old_ac_lev = mob->getACLevel();
           // the delete will reduce the number, add an additional one
           if ((new_obj->number >= 0)) {
             obj_index[new_obj->getItemIndex()].addToNumber(2);
-            vlogf(LOG_PIO, fmt("     [%d] - in %s's follower rent") %  
+            vlogf(LOG_PIO, format("     [%d] - in %s's follower rent") %  
                      new_obj->objVnum() % arg);
           }
           delete new_obj;
         }
       }
       if (fscanf(fp, " %d ", &tmp) != 1) {
-        vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (37d)") %  arg % num);
+        vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (37d)") %  arg % num);
         deleteDuringRead(mob);
         break;
       }
@@ -4105,7 +4105,7 @@ float old_ac_lev = mob->getACLevel();
                FALSE, ch, 0, mob, TO_CHAR);
       act("$n retrieves $N from $S storage area.", 
                FALSE, ch, 0, mob, TO_NOTVICT);
-      vlogf(LOG_SILENT, fmt("%s mobile-rent retrieving %s") %  ch->getName() % mob->getName());
+      vlogf(LOG_SILENT, format("%s mobile-rent retrieving %s") %  ch->getName() % mob->getName());
 
       // if they rented while mounted, bring horse back in, but don't force
       // the follow (since they aren't mounted anymore)
@@ -4136,7 +4136,7 @@ float old_ac_lev = mob->getACLevel();
       // decrease that will happen in delete.
       mob_index[mob->getMobIndex()].addToNumber(2);
 
-      vlogf(LOG_PIO, fmt("     [%d] - mobile (%s) owned by %s") % 
+      vlogf(LOG_PIO, format("     [%d] - mobile (%s) owned by %s") % 
                      mob->mobVnum() % mob->getName() % arg);
       thing_to_room(mob, ROOM_VOID);
       delete mob;
@@ -4188,18 +4188,18 @@ void chargeRent(const char *who)
     return;
 
   if (!(fp = fopen(fileName, "r+b"))) {
-    vlogf(LOG_BUG, fmt("Error opening %s's rent file!") %  who);
+    vlogf(LOG_BUG, format("Error opening %s's rent file!") %  who);
     return;
   }
   memset(&h, 0, sizeof(rentHeader));
   if ((fread(&h, sizeof(rentHeader), 1, fp)) != 1) {
-    vlogf(LOG_BUG, fmt("  Cannot read rent file header for %s") %  who);
+    vlogf(LOG_BUG, format("  Cannot read rent file header for %s") %  who);
     fclose(fp);
     return;
   }
 #if 1
   if (sstring(h.owner).lower().compare(who)) {
-    vlogf(LOG_BUG, fmt("WARNING!  rent file %s holds objects for %s!") %  who % h.owner);
+    vlogf(LOG_BUG, format("WARNING!  rent file %s holds objects for %s!") %  who % h.owner);
     fclose(fp);
     return;
   }
@@ -4208,7 +4208,7 @@ void chargeRent(const char *who)
   strcpy(h.owner, who);
 #endif
   if (!load_char(who, &pd)) {
-    vlogf(LOG_BUG, fmt("Unable to read player file for %s, so deleting rent file.") %  h.owner);
+    vlogf(LOG_BUG, format("Unable to read player file for %s, so deleting rent file.") %  h.owner);
     fclose(fp);
     wipeRentFile(who);
     //removeFollowers();
@@ -4216,7 +4216,7 @@ void chargeRent(const char *who)
   }
 
   if(!account.read(pd.aname)){
-    vlogf(LOG_BUG, fmt("  Cannot read account file for %s") %  who);
+    vlogf(LOG_BUG, format("  Cannot read account file for %s") %  who);
     fclose(fp);
     return;
   }
@@ -4228,28 +4228,28 @@ void chargeRent(const char *who)
     pd.load_room = ROOM_NOWHERE;
     h.last_update = time(0);
     if (!noteLimitedItems(fp, who, h.version, immortal)) {
-      vlogf(LOG_BUG, fmt("cannot count (1) limited items for %s") %  h.owner);
+      vlogf(LOG_BUG, format("cannot count (1) limited items for %s") %  h.owner);
       fclose(fp);
       return;
     }
     rewind(fp);
     if (fwrite(&h, sizeof(rentHeader), 1, fp) != 1) {
-      vlogf(LOG_BUG, fmt("Cannot write updated rent file header for %s") %  h.owner);
+      vlogf(LOG_BUG, format("Cannot write updated rent file header for %s") %  h.owner);
       fclose(fp);
       return;
     }
     fclose(fp);
     if (!raw_save_char(who, &pd)) {
-      vlogf(LOG_BUG, fmt("Error updating player-file entry for %s in chargeRent.") %  h.owner);
+      vlogf(LOG_BUG, format("Error updating player-file entry for %s in chargeRent.") %  h.owner);
       return;
     }
-    vlogf(LOG_PIO, fmt("   De-autorented %s") %  h.owner);
+    vlogf(LOG_PIO, format("   De-autorented %s") %  h.owner);
   } else {   // this person was rented as normal 
     total = (h.total_cost * days_passed);
 
 #if 1
     if (!noteLimitedItems(fp, who, h.version, immortal)) {
-      vlogf(LOG_BUG, fmt("cannot count (2) limited items for %s") %  h.owner);
+      vlogf(LOG_BUG, format("cannot count (2) limited items for %s") %  h.owner);
       fclose(fp);
       return;
     }
@@ -4264,30 +4264,30 @@ void chargeRent(const char *who)
     // this is a kludge cuz total is going negative sometimes somehow - Bat 
     if (total < 0) {
       total = -total;  
-      vlogf(LOG_BUG,fmt("ERROR: total rent charged negative for %s.") % h.owner);
-      vlogf(LOG_BUG,fmt("ERROR: %s   daily cost: %d    days: %d    secs: %d    total: %d") % h.owner %h.total_cost %days_passed %secs_lost %-total);
+      vlogf(LOG_BUG,format("ERROR: total rent charged negative for %s.") % h.owner);
+      vlogf(LOG_BUG,format("ERROR: %s   daily cost: %d    days: %d    secs: %d    total: %d") % h.owner %h.total_cost %days_passed %secs_lost %-total);
     }
 
     if (total > (h.gold_left + pd.bankmoney)) {
-      vlogf(LOG_MISC, fmt("   %s will run out of money on login.") %  h.owner);
-      vlogf(LOG_MISC, fmt("   %s had %d total cost and %d gold left(including bank)") % 
+      vlogf(LOG_MISC, format("   %s will run out of money on login.") %  h.owner);
+      vlogf(LOG_MISC, format("   %s had %d total cost and %d gold left(including bank)") % 
                 h.owner % total % (h.gold_left + pd.bankmoney));
       pd.money = 0;
       pd.bankmoney = 0;
       pd.load_room = ROOM_NOWHERE;
       if (!noteLimitedItems(fp, who, h.version, immortal)) {
-        vlogf(LOG_BUG, fmt("cannot count (2) limited items for %s") %  h.owner);
+        vlogf(LOG_BUG, format("cannot count (2) limited items for %s") %  h.owner);
         fclose(fp);
         return;
       }
       fclose(fp);
       if (!raw_save_char(who, &pd)) {
-        vlogf(LOG_BUG, fmt("Error updating player-file entry for %s in chargeRent.") %  h.owner);
+        vlogf(LOG_BUG, format("Error updating player-file entry for %s in chargeRent.") %  h.owner);
         return;
       }
     } else {
       if (!noteLimitedItems(fp, who, h.version, immortal)) {
-        vlogf(LOG_BUG, fmt("cannot count (3) limited items for %s") %  h.owner);
+        vlogf(LOG_BUG, format("cannot count (3) limited items for %s") %  h.owner);
         fclose(fp);
         return;
       }
@@ -4295,7 +4295,7 @@ void chargeRent(const char *who)
       h.last_update = time(0);
       rewind(fp);
       if (fwrite(&h, sizeof(rentHeader), 1, fp) != 1) {
-        vlogf(LOG_BUG, fmt("Cannot write updated rent file header for %s") %  h.owner);
+        vlogf(LOG_BUG, format("Cannot write updated rent file header for %s") %  h.owner);
         fclose(fp);
         return;
       }
@@ -4303,10 +4303,10 @@ void chargeRent(const char *who)
 #if 0
 // redundant
       if (!days_passed)
-        vlogf(LOG_SILENT, fmt("   same day %d coin update of %s") %  total % h.owner);
+        vlogf(LOG_SILENT, format("   same day %d coin update of %s") %  total % h.owner);
 #endif
 
-      vlogf(LOG_PIO, fmt("   charged %s %d talens rent.  (%d per day)(left: %d)(bank: %d)") %  h.owner % total % h.total_cost % h.gold_left % pd.bankmoney);
+      vlogf(LOG_PIO, format("   charged %s %d talens rent.  (%d per day)(left: %d)(bank: %d)") %  h.owner % total % h.total_cost % h.gold_left % pd.bankmoney);
     }
 #endif
   }
@@ -4447,7 +4447,7 @@ bool TBeing::saveFollowers(bool rent_time)
     return FALSE;
   }
   if (!(fp = fopen(buf, "w"))) {
-    vlogf(LOG_FILE, fmt("Can't open follower file for %s!") %  tmp->name);
+    vlogf(LOG_FILE, format("Can't open follower file for %s!") %  tmp->name);
     return FALSE;
   }
 
@@ -4579,7 +4579,7 @@ bool TBeing::saveFollowers(bool rent_time)
         if (!fp2_open) {
           sprintf(buf, "rent/%c/%s.fr", LOWER(tmp->name[0]), sstring(tmp->name).lower().c_str());
           if (!(fp2 = fopen(buf, "w+b"))) {
-            vlogf(LOG_BUG, fmt("Error opening %'s follower rent file for write.") %  tmp->name);
+            vlogf(LOG_BUG, format("Error opening %'s follower rent file for write.") %  tmp->name);
           } else 
             fp2_open = true;
         }
@@ -4589,7 +4589,7 @@ bool TBeing::saveFollowers(bool rent_time)
           is.raw_write_item(obj);
 
         if (rent_time) {
-          vlogf(LOG_SILENT, fmt("%s's %s renting: (%s : %d)") %  getName() % mob->getName() % obj->getName() % obj->objVnum());
+          vlogf(LOG_SILENT, format("%s's %s renting: (%s : %d)") %  getName() % mob->getName() % obj->getName() % obj->objVnum());
 
 
           delete obj;
@@ -4609,7 +4609,7 @@ bool TBeing::saveFollowers(bool rent_time)
       if (!fp2_open) {
         sprintf(buf, "rent/%c/%s.fr", LOWER(tmp->name[0]), sstring(tmp->name).lower().c_str());
         if (!(fp2 = fopen(buf, "w+b"))) {
-          vlogf(LOG_BUG, fmt("Error opening %'s follower rent file for write.") %  tmp->name);
+          vlogf(LOG_BUG, format("Error opening %'s follower rent file for write.") %  tmp->name);
         } else
           fp2_open = true;
       }
@@ -4619,7 +4619,7 @@ bool TBeing::saveFollowers(bool rent_time)
         is.raw_write_item(obj);
 
       if (rent_time) {
-        vlogf(LOG_SILENT, fmt("%s's %s renting: (%s : %d)") %  getName() % mob->getName() % obj->getName() % obj->objVnum());
+        vlogf(LOG_SILENT, format("%s's %s renting: (%s : %d)") %  getName() % mob->getName() % obj->getName() % obj->objVnum());
 
         delete obj;
       }
@@ -4682,7 +4682,7 @@ bool TBeing::saveFollowers(bool rent_time)
 
     if (rent_time) {
       act("$n is led off to a storage area.", FALSE, mob, 0, 0, TO_ROOM);
-      vlogf(LOG_SILENT, fmt("%s mobile-renting %s") %  getName() % mob->getName());
+      vlogf(LOG_SILENT, format("%s mobile-renting %s") %  getName() % mob->getName());
 
       // do this here so we don't show it in delete
       // also, we suppress the "realizes is a jerk" text this way
@@ -4997,17 +4997,17 @@ void processCorpseFile(const char * cfName)
   }
   sprintf(fileName, "corpses/%s", cfName);
   if (!(fp = fopen(fileName, "r+b"))) {
-    vlogf(LOG_FILE, fmt("  Error opening the corpse file for corpse %s") %  cfName);
+    vlogf(LOG_FILE, format("  Error opening the corpse file for corpse %s") %  cfName);
     return;
   }
   if ((fread(&h, sizeof(rentHeader), 1, fp)) != 1) {
-    vlogf(LOG_BUG, fmt("Error reading version from %s.") %  fileName);
+    vlogf(LOG_BUG, format("Error reading version from %s.") %  fileName);
     fclose(fp);
     return;
   }
 
   if (!noteLimitedItems(fp, fileName, h.version, FALSE))
-    vlogf(LOG_BUG, fmt("  Unable to count limited items in file  %s") %  fileName);
+    vlogf(LOG_BUG, format("  Unable to count limited items in file  %s") %  fileName);
 
   fclose(fp);
 }
@@ -5073,17 +5073,17 @@ void TBeing::doClone(const sstring &arg)
   mob->swapToStrung();
 
   delete [] mob->name;
-  mob->name = mud_str_dup(fmt("%s [clone]") % st1.name);
+  mob->name = mud_str_dup(format("%s [clone]") % st1.name);
 
   delete [] mob->shortDescr;
   mob->shortDescr = mud_str_dup(st1.name);
 
   delete [] mob->player.longDescr;
-  mob->player.longDescr = mud_str_dup(fmt("<c>%s<1> is standing here.") % st1.name);
+  mob->player.longDescr = mud_str_dup(format("<c>%s<1> is standing here.") % st1.name);
 
   delete [] mob->getDescr();
   if(*st1.description)
-    mob->setDescr(mud_str_dup(fmt("%s\n\r") % st1.description));
+    mob->setDescr(mud_str_dup(format("%s\n\r") % st1.description));
   else 
     mob->setDescr(mud_str_dup("You see nothing special about him.\n\r"));
   
@@ -5094,17 +5094,17 @@ void TBeing::doClone(const sstring &arg)
   
   
   // open player rent file
-  sstring buf = fmt ("rent/%c/%s") % LOWER(ch_name[0]) % ch_name.lower();
+  sstring buf = format("rent/%c/%s") % LOWER(ch_name[0]) % ch_name.lower();
   if (!il.openFile(buf)){
     sendTo("Rent file could not be opened.  Your clone stands naked before you.\n\r");
     return;
   }
   if(!il.readHeader()){
-    vlogf(LOG_BUG, fmt("Error while reading %s's rent file header.  Your clone stands naked before you.") %  ch_name);
+    vlogf(LOG_BUG, format("Error while reading %s's rent file header.  Your clone stands naked before you.") %  ch_name);
     return;
   }
   if (il.objsFromStore(NULL, &num_read, mob, NULL, false)) {
-    vlogf(LOG_BUG, fmt("Error while reading %s's objects in doClone.  Your clone stands naked before you.") %  ch_name);
+    vlogf(LOG_BUG, format("Error while reading %s's objects in doClone.  Your clone stands naked before you.") %  ch_name);
     return;
   }
   
@@ -5125,7 +5125,7 @@ void TBeing::doClone(const sstring &arg)
         delete o;
       }
     } else if (mob->equipment[ij]) 
-      vlogf(LOG_BUG, fmt("did not add no-rent flag to item %s in slot %d when cloning") % mob->equipment[ij]->name % (int) ij);
+      vlogf(LOG_BUG, format("did not add no-rent flag to item %s in slot %d when cloning") % mob->equipment[ij]->name % (int) ij);
   }
   
   TThing *i, *j, *tmp;
@@ -5145,7 +5145,7 @@ void TBeing::doClone(const sstring &arg)
         continue;
       }
     } else 
-      vlogf(LOG_BUG, fmt("did not add no-rent flag to %s when cloning") %  
+      vlogf(LOG_BUG, format("did not add no-rent flag to %s when cloning") %  
 	    i->name);
     
     if ((dynamic_cast<TBaseContainer *>(i))) {
@@ -5156,7 +5156,7 @@ void TBeing::doClone(const sstring &arg)
           obj_index[bo->getItemIndex()].addToNumber(1);
           bo->addObjStat(ITEM_NORENT);
         } else 
-          vlogf(LOG_BUG, fmt("did not add no-rent flag to %s when cloning") %  
+          vlogf(LOG_BUG, format("did not add no-rent flag to %s when cloning") %  
 	          bo->name);
         
         if ((dynamic_cast<TNote *>(j))) 

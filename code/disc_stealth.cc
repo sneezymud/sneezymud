@@ -44,7 +44,7 @@ void TBeing::doConceal(sstring argument)
             return;
           }
 
-          sendTo(COLOR_MOBS, fmt("You stop concealing %s's trail.\n\r") % vict->getName());
+          sendTo(COLOR_MOBS, format("You stop concealing %s's trail.\n\r") % vict->getName());
           vict->affectFrom(SKILL_CONCEALMENT);
           return;
         }
@@ -251,7 +251,7 @@ int disguise(TBeing *caster, char * buffer)
       continue;
 
     if(!*buffer){
-      caster->sendTo(fmt("%-25s") % DisguiseList[i].name);
+      caster->sendTo(format("%-25s") % DisguiseList[i].name);
       if((column++)==2){
 	caster->sendTo("\n\r");
 	column=0;

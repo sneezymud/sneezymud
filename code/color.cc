@@ -290,7 +290,7 @@ void TBeing::doPrompt(const char *arg)
         sendTo("Syntax: prompt color <arg> <color>:\n\r<arg> is one of:\n\r");
         unsigned int ui;
         for (ui = 0; *stat_fields[ui] != '\n'; ui++)
-          sendTo(fmt("\t%s\n\r") % stat_fields[ui]);
+          sendTo(format("\t%s\n\r") % stat_fields[ui]);
         return;
       }
       if (is_abbrev(caColor, "off")) 
@@ -481,7 +481,7 @@ void TBeing::doPrompt(const char *arg)
         } else {
           SET_BIT(desc->prompt_d.type, PROMPT_VTANSI_BAR);
           cls();
-          sendTo(fmt(VT_MARGSET) % 1 % (getScreen() - 3));
+          sendTo(format(VT_MARGSET) % 1 % (getScreen() - 3));
           doCls(false);
           sendTo("Initilizing ansi/vt100 information bar.\n\r");
         }
@@ -509,13 +509,13 @@ void TBeing::doPrompt(const char *arg)
 
 	      if (canSeeWho(d->character)) {
 	        desc->prompt_mode = -1;
-	        desc->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % buf % DELETE);
-	        desc->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % d->character->getName() % DELETE);
+	        desc->clientf(format("%d|%s|%d|0") % CLIENT_WHO % buf % DELETE);
+	        desc->clientf(format("%d|%s|%d|0") % CLIENT_WHO % d->character->getName() % DELETE);
 
 	        if (d->character->isPlayerAction(PLR_ANONYMOUS) && !isImmortal())
-	          desc->clientf(fmt("%d|%s|%d|0|1") % CLIENT_WHO % buf % ADD);
+	          desc->clientf(format("%d|%s|%d|0|1") % CLIENT_WHO % buf % ADD);
 	        else
-	          desc->clientf(fmt("%d|%s|%d|%d|1") % CLIENT_WHO % buf % ADD % d->character->GetMaxLevel());
+	          desc->clientf(format("%d|%s|%d|%d|1") % CLIENT_WHO % buf % ADD % d->character->GetMaxLevel());
 	      }
 	    }
 	  }
@@ -527,13 +527,13 @@ void TBeing::doPrompt(const char *arg)
         if (IS_SET(desc->prompt_d.type, PROMPT_CLASSIC_ANSIBAR)) {
           REMOVE_BIT(desc->prompt_d.type, PROMPT_CLASSIC_ANSIBAR);
           cls();
-          sendTo(fmt(VT_MARGSET) % 1 % (getScreen() - 3));
+          sendTo(format(VT_MARGSET) % 1 % (getScreen() - 3));
           doCls(false);
           sendTo("Changing to the modern vt100/ansi bar.\n\r");
         } else {
           SET_BIT(desc->prompt_d.type, PROMPT_CLASSIC_ANSIBAR);
           cls();
-          sendTo(fmt(VT_MARGSET) % 1 % (getScreen() - 3));
+          sendTo(format(VT_MARGSET) % 1 % (getScreen() - 3));
           doCls(false);
           sendTo("Changing to the classic vt100/ansi bar.\n\r");
         }
@@ -563,7 +563,7 @@ void TBeing::doCls(bool tell)
     if (!IS_SET(desc->prompt_d.type, PROMPT_VTANSI_BAR))
       return;
 
-    sendTo(fmt(VT_MARGSET) % 1 % (getScreen() - 4));
+    sendTo(format(VT_MARGSET) % 1 % (getScreen() - 4));
     sprintf(buf + strlen(buf), VT_CURSPOS, getScreen() - 3, 1);
     sprintf(buf + strlen(buf), "_____________________________________________________________________________");
     sprintf(buf + strlen(buf), VT_CURSPOS, getScreen() - 2, 1);
@@ -612,14 +612,14 @@ void TBeing::doCls(bool tell)
     }
 
     sendTo(buf);
-    sendTo(fmt(VT_CURSPOS) % 1 % 1);
+    sendTo(format(VT_CURSPOS) % 1 % 1);
 
     if (vt100()) {
       desc->updateScreenVt100(2*CHANGED_PIETY - 1);
     } else if (ansi()) 
       desc->updateScreenAnsi(2*CHANGED_PIETY - 1);
 
-    sendTo(fmt("%s") % norm());
+    sendTo(format("%s") % norm());
   } else if (tell || !desc || IS_SET(desc->prompt_d.type, PROMPT_VTANSI_BAR))
     cls();
 }
@@ -637,7 +637,7 @@ void TPerson::doColor(const char *buf)
   int toggle = TRUE;
 
   if (!desc) {
-    vlogf(LOG_BUG, fmt("Something without a desc (%s) is trying to set a colorLevel") %  getName());
+    vlogf(LOG_BUG, format("Something without a desc (%s) is trying to set a colorLevel") %  getName());
     return;
   }
   if (!isPc()) {
@@ -651,13 +651,13 @@ void TPerson::doColor(const char *buf)
     for (i = 0;i < (MAX_PLR_COLOR - 1);i++) {
       if (*color_options[i]) {
         if (isImmortal() || (!(i == PLR_COLOR_CODES) && !(i == PLR_COLOR_LOGS))) {  
-          sendTo(fmt("%-45s : %s\n\r") % color_options[i] %
+          sendTo(format("%-45s : %s\n\r") % color_options[i] %
             ((IS_SET(desc->plr_color, (unsigned) (1<<i))) ? "on" : "off"));
         }
       }
     }
-    sendTo(fmt("%-45s : %s\n\r") % "Color Substitute" % (desc->plr_colorSub ? "yes" : "no")); 
-    sendTo(fmt("%-45s : %s\n\r") % "Color Replacements" % (desc->plr_colorOff ? "yes" : "no"));
+    sendTo(format("%-45s : %s\n\r") % "Color Substitute" % (desc->plr_colorSub ? "yes" : "no")); 
+    sendTo(format("%-45s : %s\n\r") % "Color Replacements" % (desc->plr_colorOff ? "yes" : "no"));
     return;
   }
   if (is_abbrev(arg, "test")) {
@@ -695,7 +695,7 @@ void TPerson::doColor(const char *buf)
         SET_BIT(desc->prompt_d.type, PROMPT_COLOR);
     } else {
       SET_BIT(desc->plr_color, PLR_COLOR_BASIC);
-      sendTo(fmt("%sC%so%sl%so%sr%s mode enabled.\n\r") % ANSI_RED % ANSI_CYAN % ANSI_BLUE % ANSI_ORANGE % ANSI_PURPLE % ANSI_NORMAL);
+      sendTo(format("%sC%so%sl%so%sr%s mode enabled.\n\r") % ANSI_RED % ANSI_CYAN % ANSI_BLUE % ANSI_ORANGE % ANSI_PURPLE % ANSI_NORMAL);
       
       if (!(isPlayerAction(PLR_COLOR))) 
         addPlayerAction(PLR_COLOR);
@@ -1105,9 +1105,9 @@ void TPerson::doColor(const char *buf)
       return;
     } 
     if (toggle) {
-      sendTo(fmt("You have chosen to replace %s as a color with your substitute.\n\r") % tempBuf);
+      sendTo(format("You have chosen to replace %s as a color with your substitute.\n\r") % tempBuf);
     } else {
-      sendTo(fmt("You will no longer replace %s as a color.\n\r") % tempBuf);
+      sendTo(format("You will no longer replace %s as a color.\n\r") % tempBuf);
     }
   } else if (is_abbrev(arg, "substitute.\n\r")) {
     if (is_abbrev(arg2, "none")) { 
@@ -1237,7 +1237,7 @@ void TPerson::doColor(const char *buf)
       sendTo("Syntax: color substitute <color>\n\r");
       return;
     }
-    sendTo(fmt("You have chosen %s as your substitute color.\n\r") % tempBuf);
+    sendTo(format("You have chosen %s as your substitute color.\n\r") % tempBuf);
   } else {
     sendTo("You have to pick one or more supported color level(s).\n\r");
     sendTo("Syntax: color <enabled | disabled>\n\r");

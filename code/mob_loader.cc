@@ -256,7 +256,7 @@ void TMonster::thiefLootLoader()
   
   // load it
   if (!(obj = read_object_buy_build(this,vnum,VIRTUAL))){
-    vlogf(LOG_BUG, fmt("couldn't load object %i") %  vnum);
+    vlogf(LOG_BUG, format("couldn't load object %i") %  vnum);
     return;
   }
     
@@ -537,7 +537,7 @@ void TMonster::mageComponentLoader(void)
       iters++;
     
       if (spell < TYPE_UNDEFINED || spell >= MAX_SKILL) {
-        vlogf(LOG_BUG, fmt("Component (%d) defined with bad spell (%d).  num=%d") %  comp % spell % num);
+        vlogf(LOG_BUG, format("Component (%d) defined with bad spell (%d).  num=%d") %  comp % spell % num);
         continue;
       }
       if (spell != TYPE_UNDEFINED && hideThisSpell(spell)) {
@@ -628,7 +628,7 @@ void TMonster::mageComponentLoader(void)
         continue;
 
       if (comp == -1) {
-        vlogf(LOG_BUG, fmt("Bogus component on spell %d (%s)") % 
+        vlogf(LOG_BUG, format("Bogus component on spell %d (%s)") % 
                  spell % discArray[spell]->name);
         continue;
       }
@@ -727,7 +727,7 @@ void TMonster::rangerComponentLoader(void)
         continue;
 
       if (comp == -1) {
-        vlogf(LOG_BUG, fmt("Bogus component on spell %d (%s)") % 
+        vlogf(LOG_BUG, format("Bogus component on spell %d (%s)") % 
                  spell % discArray[spell]->name);
         continue;
       }
@@ -817,7 +817,7 @@ void TMonster::shamanComponentLoader(void)
       iters++;
     
       if (spell < TYPE_UNDEFINED || spell >= MAX_SKILL) {
-        vlogf(LOG_BUG, fmt("Component (%d) defined with bad spell (%d).  num=%d") %  comp % spell % num);
+        vlogf(LOG_BUG, format("Component (%d) defined with bad spell (%d).  num=%d") %  comp % spell % num);
         continue;
       }
       if (spell != TYPE_UNDEFINED && hideThisSpell(spell)) {
@@ -882,7 +882,7 @@ void TMonster::shamanComponentLoader(void)
         continue;
 
       if (comp == -1) {
-        vlogf(LOG_BUG, fmt("Bogus component on spell %d (%s)") % 
+        vlogf(LOG_BUG, format("Bogus component on spell %d (%s)") % 
                  spell % discArray[spell]->name);
         continue;
       }
@@ -1109,7 +1109,7 @@ void TMonster::buffMobLoader()
 // hence this setup instead.
   int robj = real_object(vnum);
   if (robj < 0 || robj >= (signed int) obj_index.size()) {
-    vlogf(LOG_BUG, fmt("buffMobLoader(): No object (%d) in database!") %  vnum);
+    vlogf(LOG_BUG, format("buffMobLoader(): No object (%d) in database!") %  vnum);
     return;
   }
 
@@ -1119,7 +1119,7 @@ void TMonster::buffMobLoader()
 #endif
 
   if (!obj) {
-    vlogf(LOG_BUG, fmt("Error in buffMobLoader (%d)") %  vnum);
+    vlogf(LOG_BUG, format("Error in buffMobLoader (%d)") %  vnum);
     return;
   }
 

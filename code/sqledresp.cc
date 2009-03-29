@@ -28,10 +28,10 @@ int main(int argc, char **argv)
 
     db.query("select vnum, response from mobresponses where vnum=%i", vnums[i]);
     if(db.fetchRow()){
-      buf = fmt("- response\n"); sbuf+=buf;
-      buf = fmt("vnum: %s\n") % db["vnum"];  sbuf+=buf;
-      buf = fmt("response~:\n%s~\n") % db["response"];  sbuf+=buf;
-      buf = fmt("\n"); sbuf+=buf;
+      buf = format("- response\n"); sbuf+=buf;
+      buf = format("vnum: %s\n") % db["vnum"];  sbuf+=buf;
+      buf = format("response~:\n%s~\n") % db["response"];  sbuf+=buf;
+      buf = format("\n"); sbuf+=buf;
     }
   }
 
@@ -42,7 +42,7 @@ int main(int argc, char **argv)
   fclose(tmpfile);
 
   printf("Opening editor.\n");
-  buf = fmt("$EDITOR %s") % file;
+  buf = format("$EDITOR %s") % file;
   system(buf.c_str());
 
 
@@ -60,7 +60,7 @@ int main(int argc, char **argv)
     }
   }
 
-  buf = fmt("/bin/cp -f %s %s.backup") % file % file;
+  buf = format("/bin/cp -f %s %s.backup") % file % file;
   system(buf.c_str());
 
 

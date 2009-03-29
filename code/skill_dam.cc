@@ -101,11 +101,11 @@ static int genericDam(const TBeing *victim, spellNumT skill, discNumT basic_disc
 if (discArray[skill]->disc == discArray[skill]->assDisc) {
   // specialized disc
   //  if (discArray[skill]->disc == basic_disc)
-  //    vlogf(LOG_BUG, fmt("bad setup for skill %d wrt disc arrangement (1)") %  skill);
+  //    vlogf(LOG_BUG, format("bad setup for skill %d wrt disc arrangement (1)") %  skill);
 } else {
   // basic disc
   if (discArray[skill]->disc != basic_disc)
-    vlogf(LOG_BUG, fmt("bad setup for skill %d wrt disc arrangement (2)") %  skill);
+    vlogf(LOG_BUG, format("bad setup for skill %d wrt disc arrangement (2)") %  skill);
 }
 
   getSkillLevelRange(skill, min_lev, max_lev, adv_learn);
@@ -492,7 +492,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
       dam = genericDam(victim, skill, DISC_ANIMAL, level, adv_learn, 0.529 * OUTDOOR_ONLY, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     default:
-      vlogf(LOG_BUG, fmt("Unknown skill %d in call to getSkillDam") %  skill);
+      vlogf(LOG_BUG, format("Unknown skill %d in call to getSkillDam") %  skill);
       dam = 0;
   }
 

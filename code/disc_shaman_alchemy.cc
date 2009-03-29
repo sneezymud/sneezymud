@@ -98,7 +98,7 @@ void TBeing::doBrew(const char *arg)
     return;
   }
 
-  buf=fmt("You begin to brew %d ounces of %s.") %
+  buf=format("You begin to brew %d ounces of %s.") %
     how_many % discArray[which_spell]->name;
   act(buf, FALSE, this, 0, 0, TO_CHAR);
   buf="$n begins to brew a potion.";
@@ -114,7 +114,7 @@ void TBeing::doBrew(const char *arg)
     comp_brew = NULL;
   }
 
-  buf=fmt("You use up %i charge%s of $p.") % how_many % (how_many > 1 ? "s" : "");
+  buf=format("You use up %i charge%s of $p.") % how_many % (how_many > 1 ? "s" : "");
   act(buf, FALSE, this, comp_spell, 0, TO_CHAR);
   comp_spell->addToComponentCharges(-how_many);
   if (comp_spell->getComponentCharges() <= 0) {

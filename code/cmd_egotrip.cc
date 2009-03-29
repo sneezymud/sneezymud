@@ -209,7 +209,7 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
     afp->modifier += bonus;
 
     // yay having multiple gods on is awesome!
-    v->sendTo(COLOR_SPELLS,fmt("...it increases the power of %s's blessing!\n\r")% blessings[afp->type].name);
+    v->sendTo(COLOR_SPELLS,format("...it increases the power of %s's blessing!\n\r")% blessings[afp->type].name);
   }
 }
 
@@ -354,7 +354,7 @@ void TBeing::doEgoTrip(const char *arg)
       return;
     }
     
-    sendTo(fmt("You teleport %s\n\r") % ch->getName());
+    sendTo(format("You teleport %s\n\r") % ch->getName());
     
     ch->genericTeleport(SILENT_NO, false, true);
   } else if(is_abbrev(argument, "portal")){
@@ -382,8 +382,8 @@ void TBeing::doEgoTrip(const char *arg)
     act("$p suddenly appears out of a swirling mist.", TRUE, this, tmp_obj, NULL, TO_ROOM);
     act("$p suddenly appears out of a swirling mist.", TRUE, this, tmp_obj, NULL, TO_CHAR);
 
-    sendToRoom((fmt("%s suddenly appears out of a swirling mist.") %
-		sstring(next_tmp_obj->shortDescr).cap()).c_str(),
+    sendToRoom(((sstring)(format("%s suddenly appears out of a swirling mist.") %
+		sstring(next_tmp_obj->shortDescr).cap())).c_str(),
 	       next_tmp_obj->roomp->number);
 
     return;
@@ -406,7 +406,7 @@ void TBeing::doEgoTrip(const char *arg)
       if (rc)
         found = true;
     }
-    vlogf(LOG_MISC, fmt("%s egotripped deities") %  getName());
+    vlogf(LOG_MISC, format("%s egotripped deities") %  getName());
     if (!found)
       sendTo("No deities in The World.\n\r");
     return;
@@ -417,7 +417,7 @@ void TBeing::doEgoTrip(const char *arg)
       return;
     }
 
-    vlogf(LOG_MISC, fmt("%s egotripped bless") %  getName());
+    vlogf(LOG_MISC, format("%s egotripped bless") %  getName());
     Descriptor *d;
     map <spellNumT,ego_imm_blessing> blessings=init_ego_imm_blessing();
     map <spellNumT,ego_imm_blessing>::iterator iter;
@@ -434,7 +434,7 @@ void TBeing::doEgoTrip(const char *arg)
 
       for(iter=blessings.begin();iter!=blessings.end();++iter){
 	if(!strcmp(getName(), (*iter).second.name.c_str())){
-	  ch->sendTo(COLOR_SPELLS, fmt("%s has bestowed upon you %s blessing of %s.\n\r") %
+	  ch->sendTo(COLOR_SPELLS, format("%s has bestowed upon you %s blessing of %s.\n\r") %
 		     sstring(ch->pers(this)).cap() % hshr() %
 		     (*iter).second.msg);
 	  egoAffect(this, ch, (*iter).first, 5);
@@ -443,7 +443,7 @@ void TBeing::doEgoTrip(const char *arg)
       }
       if(!found){
 	// default blessing
-	ch->sendTo(COLOR_SPELLS,fmt("%s has graciously bestowed upon you %s blessing.\n\r") %
+	ch->sendTo(COLOR_SPELLS,format("%s has graciously bestowed upon you %s blessing.\n\r") %
 		   sstring(ch->pers(this)).cap() % hshr());
 	egoAffect(this, ch, AFFECT_IMMORTAL_BLESSING, 5);
       }
@@ -455,7 +455,7 @@ void TBeing::doEgoTrip(const char *arg)
       return;
     }
 
-    vlogf(LOG_MISC, fmt("%s is egotrippin and now everyone is stupid") %  getName());
+    vlogf(LOG_MISC, format("%s is egotrippin and now everyone is stupid") %  getName());
     Descriptor *d;
     for (d = descriptor_list; d; d = d->next) {
       if (d->connected != CON_PLYNG)
@@ -466,7 +466,7 @@ void TBeing::doEgoTrip(const char *arg)
       // Try and ditch some of the un-needed spam/waste.
       if (!ch || ch->GetMaxLevel() > MAX_MORT)
         continue;
-      ch->sendTo(fmt("%s has reconfirmed %s suspicions.\n\r") %
+      ch->sendTo(format("%s has reconfirmed %s suspicions.\n\r") %
             sstring(ch->pers(this)).cap() % hshr());
       castStupidity(this, ch);
     }
@@ -507,8 +507,8 @@ void TBeing::doEgoTrip(const char *arg)
     aff.duration = 5;
     aff.modifier2 = crit;
     ch->affectTo(&aff);
-    sendTo(fmt("It looks like some bad luck will befall %s before too long. Heh, heh, heh.\n\r") %ch->getName());
-    vlogf(LOG_MISC, fmt("%s egotrip critted %s with crit #%d") %  getName() % ch->getName() % crit);
+    sendTo(format("It looks like some bad luck will befall %s before too long. Heh, heh, heh.\n\r") %ch->getName());
+    vlogf(LOG_MISC, format("%s egotrip critted %s with crit #%d") %  getName() % ch->getName() % crit);
     return;
   } else if (is_abbrev(argument, "blast")) {
     sstring target;
@@ -523,7 +523,7 @@ void TBeing::doEgoTrip(const char *arg)
       sendTo("Syntax: egotrip blast <target>\n\r");
       return;
     }
-    vlogf(LOG_MISC, fmt("%s egotrip blasted %s") %  getName() % ch->getName());
+    vlogf(LOG_MISC, format("%s egotrip blasted %s") %  getName() % ch->getName());
     if (ch->isPc() && ch->isImmortal() &&
         ch->GetMaxLevel() > GetMaxLevel()) {
       sendTo("Shame Shame, you shouldn't do that.\n\r");
@@ -575,7 +575,7 @@ void TBeing::doEgoTrip(const char *arg)
       return;
     }
     
-    vlogf(LOG_MISC, fmt("%s egotrip damned %s") %  getName() % ch->getName());
+    vlogf(LOG_MISC, format("%s egotrip damned %s") %  getName() % ch->getName());
     if (ch->isPc() && ch->isImmortal() &&
         ch->GetMaxLevel() > GetMaxLevel()) {
       sendTo("Shame Shame, you shouldn't do that.\n\r");
@@ -646,7 +646,7 @@ void TBeing::doEgoTrip(const char *arg)
       return;
     }
 
-    vlogf(LOG_MISC, fmt("%s egotripped cleanse") %  getName());
+    vlogf(LOG_MISC, format("%s egotripped cleanse") %  getName());
 
     TBeing       *tBeing;
     affectedData *tAff = NULL,
@@ -667,12 +667,12 @@ void TBeing::doEgoTrip(const char *arg)
           continue;
         }
 
-        tBeing->sendTo(fmt("%s has cured your %s.\n\r") %
+        tBeing->sendTo(format("%s has cured your %s.\n\r") %
                        sstring(getName()).cap() %
                        DiseaseInfo[affToDisease(*tAff)].name);
 
 
-	sendTo(COLOR_BASIC, fmt("Your cure %s of: %s.\n\r") %
+	sendTo(COLOR_BASIC, format("Your cure %s of: %s.\n\r") %
 	       tBeing->getName() %
 	       DiseaseInfo[affToDisease(*tAff)].name);
 
@@ -712,7 +712,7 @@ void TBeing::doEgoTrip(const char *arg)
     if (garblePerson == NULL) {
       sendTo("The list of available garbles to apply:\n\r");
       for (int iGarble=0; iGarble < GARBLE_MAX; iGarble++)
-        sendTo(fmt(GarbleData[iGarble].automatic ? "  %s : %s (auto)\n\r" : "  %s : %s \n\r") % GarbleData[iGarble].name % GarbleData[iGarble].description);
+        sendTo(format(GarbleData[iGarble].automatic ? "  %s : %s (auto)\n\r" : "  %s : %s \n\r") % GarbleData[iGarble].name % GarbleData[iGarble].description);
       return;
     }
 
@@ -720,7 +720,7 @@ void TBeing::doEgoTrip(const char *arg)
     if (!garble.empty()) {
       for (int iToggGarble=0; iToggGarble < GARBLE_MAX; iToggGarble++) {
         if (is_abbrev(garble, GarbleData[iToggGarble].name)) {
-          sendTo(fmt("Toggling garble \"%s\" on %s.\n\r") % GarbleData[iToggGarble].name % garblePerson->name);
+          sendTo(format("Toggling garble \"%s\" on %s.\n\r") % GarbleData[iToggGarble].name % garblePerson->name);
           garblePerson->toggleGarble((GARBLETYPE)iToggGarble);
           break;
         }
@@ -728,7 +728,7 @@ void TBeing::doEgoTrip(const char *arg)
     }
 
     // list the target's garbles
-    string printout = fmt("%s has the following set of garbles applied: ") % garblePerson->name;
+    sstring printout = format("%s has the following set of garbles applied: ") % garblePerson->name;
     int garbles = garblePerson->getGarbles(NULL);
     for (int iTargetGarble=0; iTargetGarble < GARBLE_MAX; iTargetGarble++) {
       if (garbles & (1<<iTargetGarble)) {

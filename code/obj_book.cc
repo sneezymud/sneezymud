@@ -83,9 +83,9 @@ void TBook::lookAtObj(TBeing *ch, const char *arg, showModeT) const
         sstring sb = buf;
         processStringForClient(sb);
 
-        ch->desc->clientf(fmt("%d") % CLIENT_NOTE);
+        ch->desc->clientf(format("%d") % CLIENT_NOTE);
         ch->sendTo(sb);
-        ch->desc->clientf(fmt("%d") % CLIENT_NOTE_END);
+        ch->desc->clientf(format("%d") % CLIENT_NOTE_END);
       }
       return;
     }
@@ -116,14 +116,14 @@ void TBook::lookAtObj(TBeing *ch, const char *arg, showModeT) const
         sstring sb = buf;
         processStringForClient(sb);
 
-        ch->desc->clientf(fmt("%d") % CLIENT_NOTE);
+        ch->desc->clientf(format("%d") % CLIENT_NOTE);
         ch->sendTo(sb);
-        ch->desc->clientf(fmt("%d") % CLIENT_NOTE_END);
+        ch->desc->clientf(format("%d") % CLIENT_NOTE_END);
       }
       return;
     }
     sprintf(buf + strlen(buf), "Apparently, %s is blank.\n\r", getName());
-    vlogf(LOG_FILE, fmt("Object %d has no book file!") %  vnum);
+    vlogf(LOG_FILE, format("Object %d has no book file!") %  vnum);
     ch->desc->page_string(buf);
     return;
   }

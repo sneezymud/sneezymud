@@ -20,14 +20,14 @@ void TBaseCup::lookObj(TBeing *ch, int) const
   int temp;
 
   if (getMaxDrinkUnits()/128) {
-    ch->sendTo(COLOR_OBJECTS, fmt("%s has a capacity of %d gallon%s, %d fluid ounce%s.\n\r") %
+    ch->sendTo(COLOR_OBJECTS, format("%s has a capacity of %d gallon%s, %d fluid ounce%s.\n\r") %
           sstring(ch->pers(this)).cap() %
           (getMaxDrinkUnits()/128) %
           (getMaxDrinkUnits()/128 == 1 ? "" : "s") %
           (getMaxDrinkUnits()%128) %
           (getMaxDrinkUnits()%128 == 1 ? "" : "s"));
   } else {
-    ch->sendTo(COLOR_OBJECTS, fmt("%s has a capacity of %d fluid ounce%s.\n\r") %
+    ch->sendTo(COLOR_OBJECTS, format("%s has a capacity of %d fluid ounce%s.\n\r") %
           sstring(ch->pers(this)).cap() %
 	       (getMaxDrinkUnits()%128) %
           (getMaxDrinkUnits()%128 == 1 ? "" : "s"));
@@ -36,7 +36,7 @@ void TBaseCup::lookObj(TBeing *ch, int) const
     act("It is empty.", FALSE, ch, 0, 0, TO_CHAR);
   else {
     temp = ((getDrinkUnits() * 3) / getMaxDrinkUnits());
-    ch->sendTo(COLOR_OBJECTS, fmt("It's %sfull of a %s%s liquid.\n\r") %
+    ch->sendTo(COLOR_OBJECTS, format("It's %sfull of a %s%s liquid.\n\r") %
 	       fullness[temp] %
 	       (isDrinkConFlag(DRINK_FROZEN)?"<C>frozen<1> ":"") %
 	       liquidInfo[getDrinkType()]->color);
@@ -76,8 +76,8 @@ void TBeing::lookDir(int keyword_no)
   if (keyword_no >= 10)  // adjust cause of our whacky array
     keyword_no -= 4;
   
-  sendTo(fmt("You look %swards.\n\r") % dirs[keyword_no]);
-  act(fmt("$n looks %swards.") % dirs[keyword_no], TRUE, this, 0, 0, TO_ROOM);
+  sendTo(format("You look %swards.\n\r") % dirs[keyword_no]);
+  act(format("$n looks %swards.") % dirs[keyword_no], TRUE, this, 0, 0, TO_ROOM);
 
   if (!(exitp = exitDir(dirTypeT(keyword_no)))) {
     if (roomp && roomp->ex_description &&
@@ -95,18 +95,18 @@ void TBeing::lookDir(int keyword_no)
 	if (exitp->to_room && (rp = real_roomp(exitp->to_room))) {
 	  if (IS_SET(desc->plr_color, PLR_COLOR_ROOM_NAME)) {
 	    if (hasColorStrings(NULL, rp->getName(), 2)) {
-	      sendTo(COLOR_ROOM_NAME, fmt("You see %s<1>.\n\r") %
+	      sendTo(COLOR_ROOM_NAME, format("You see %s<1>.\n\r") %
 		     dynColorRoom(rp, 1, TRUE));
 	    } else {
-	      sendTo(COLOR_ROOM_NAME, fmt("You see %s%s%s.\n\r") %                           addColorRoom(rp, 1) % rp->name  %norm());
+	      sendTo(COLOR_ROOM_NAME, format("You see %s%s%s.\n\r") %                           addColorRoom(rp, 1) % rp->name  %norm());
 	    }
 	  } else {
-	    sendTo(COLOR_BASIC, fmt("You see %s%s%s.\n\r") % purple() % 
+	    sendTo(COLOR_BASIC, format("You see %s%s%s.\n\r") % purple() % 
 		   rp->getNameNOC(this) % norm());
 	  }
 	} else {
 	  sendTo("You see nothing special.\n\r");
-	  vlogf(LOG_BUG, fmt("Bad room exit in room %d") %  in_room);
+	  vlogf(LOG_BUG, format("Bad room exit in room %d") %  in_room);
 	}
       }
 
@@ -126,7 +126,7 @@ void TBeing::lookDir(int keyword_no)
         list_thing_in_room(rp->stuff, this);
       }
     } else if (!(exitp->condition & EX_SECRET))
-      sendTo(fmt("The %s is closed.\n\r") % exitp->getName());
+      sendTo(format("The %s is closed.\n\r") % exitp->getName());
     else
       sendTo("You see nothing special.\n\r");
   }
@@ -151,7 +151,7 @@ void TBeing::lookInObj(sstring arg2, TThing *specific, unsigned int bits, const 
 	  bits = FIND_OBJ_ROOM;
 	}
 	if ((bits == FIND_OBJ_ROOM) && riding && tmpO->parent) {
-	  sendTo(fmt("You can't look into items on the %s while mounted!\n\r") %roomp->describeGround());
+	  sendTo(format("You can't look into items on the %s while mounted!\n\r") %roomp->describeGround());
 	  return;
 	} else {
 	  tmpO->lookObj(this, bits);
@@ -178,7 +178,7 @@ void TBeing::lookInObj(sstring arg2, TThing *specific, unsigned int bits, const 
       if ((bits == FIND_OBJ_ROOM) && riding && o->parent) {
 	// we want to allow them to look at item's on a table, but not
 	// in a bag while on a horse.
-	sendTo(fmt("You can't look into items on the %s while mounted!\n\r") % roomp->describeGround());
+	sendTo(format("You can't look into items on the %s while mounted!\n\r") % roomp->describeGround());
 	return;
       }
 
@@ -345,7 +345,7 @@ void TBeing::lookAtBeing(TThing *specific)
 	   bOther->isAffected(AFF_SCRYING)) &&
 	  bOther->GetMaxLevel() >= GetMaxLevel() &&
 	  bOther != this) {
-	arg1 = fmt("You detect $n looking at %s with spying eyes.") % (bOther == tmpBeing ? "you" : tmpBeing->getName());
+	arg1 = format("You detect $n looking at %s with spying eyes.") % (bOther == tmpBeing ? "you" : tmpBeing->getName());
 	act(arg1, TRUE, this, 0, bOther, TO_VICT);
 	if (bOther == tmpBeing && !tmpBeing->isPc()
 	    && !isname("[clone]", tmpBeing->name))
@@ -373,13 +373,13 @@ void TBeing::lookingAtObj(TThing *specific)
       found = TRUE;
       describeObject(tmpObj);
       if (tmpObj->riding)
-	sendTo(COLOR_OBJECTS, fmt("%s is on %s.") % tmpObj->getName() % tmpObj->riding->getName());
+	sendTo(COLOR_OBJECTS, format("%s is on %s.") % tmpObj->getName() % tmpObj->riding->getName());
       showTo(tmpObj, SHOW_MODE_PLUS);
       return;
     } else {
       tmpObj->lookAtObj(this, tmp, SHOW_MODE_TYPE);
       if (tmpObj->riding)
-	sendTo(COLOR_OBJECTS, fmt("%s is on %s.") % tmpObj->getName() % tmpObj->riding->getName());
+	sendTo(COLOR_OBJECTS, format("%s is on %s.") % tmpObj->getName() % tmpObj->riding->getName());
       return;
     }
   } else {
@@ -744,14 +744,14 @@ void TBeing::doLook(const sstring &argument, cmdTypeT cmd, TThing *specific)
 		  desc->page_string(tmp_desc);
 		  found = TRUE;
 		  describeObject(t2);
-		  sendTo(COLOR_OBJECTS, fmt("%s is on %s.") % t2->getName() % t->getName());
+		  sendTo(COLOR_OBJECTS, format("%s is on %s.") % t2->getName() % t->getName());
 		  return;
 		}
 		if (isname(tmp, t2->name)) {
 		  totalFound++;
 		  if (iNum == totalFound) {
 		    t2->lookAtObj(this, tmp, SHOW_MODE_TYPE);
-		    sendTo(COLOR_OBJECTS, fmt("%s is on %s.") % t2->getName() % t->getName());
+		    sendTo(COLOR_OBJECTS, format("%s is on %s.") % t2->getName() % t->getName());
 		    return;
 		  } else {
 		    continue;

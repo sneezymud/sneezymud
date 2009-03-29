@@ -97,7 +97,7 @@ bool TMonster::addHated(TBeing *hatee)
     SET_BIT(hatefield, HATE_CHAR);
 
     if (hatee->isImmortal())
-      hatee->sendTo(COLOR_MOBS, fmt("--- %s hates you.\n\r") % sstring(getName()).cap());
+      hatee->sendTo(COLOR_MOBS, format("--- %s hates you.\n\r") % sstring(getName()).cap());
   }
   return ((hatee) ? TRUE : FALSE);
 }
@@ -108,7 +108,7 @@ int TMonster::addHatred(zoneHateT parm_type, int parm)
     case OP_SEX:
       SET_BIT(hatefield, HATE_SEX);
       if (parm != SEX_MALE && parm != SEX_FEMALE && parm != SEX_NEUTER) {
-        vlogf(LOG_BUG, fmt("bad parm to adHatred-sex for %s : %d") %  getName() % parm);
+        vlogf(LOG_BUG, format("bad parm to adHatred-sex for %s : %d") %  getName() % parm);
         parm = 0;
       }
       hates.sex = sexTypeT(parm);
@@ -117,7 +117,7 @@ int TMonster::addHatred(zoneHateT parm_type, int parm)
       if (!IS_SET(hatefield, HATE_RACE))
 	SET_BIT(hatefield, HATE_RACE);
       if (parm < RACE_NORACE || parm >= MAX_RACIAL_TYPES) {
-        vlogf(LOG_BUG, fmt("Bad parm to addHatred-race for %s : %d") %  getName() % parm);
+        vlogf(LOG_BUG, format("Bad parm to addHatred-race for %s : %d") %  getName() % parm);
         parm = 0;
       }
       hates.race = race_t(parm);
@@ -148,7 +148,7 @@ int TMonster::addHatred(zoneHateT parm_type, int parm)
     case OP_UNUSED2:
     case OP_CHAR:
     case MAX_HATE:
-      vlogf(LOG_LOW, fmt("Bad use of Hate flags on %s") %  getName());
+      vlogf(LOG_LOW, format("Bad use of Hate flags on %s") %  getName());
       return TRUE;
   }
   if (!IS_SET(specials.act, ACT_HATEFUL)) {
@@ -192,10 +192,10 @@ bool TMonster::multiHates(const TBeing *v, bool silent)
           // shout it, log it
           if (!silent) {
             if (m)
-              m->doShout(fmt("%s smells so much like %s it's creepy.") % v->getName() % i->name);
+              m->doShout(format("%s smells so much like %s it's creepy.") % v->getName() % i->name);
           }
           
-          vlogf(LOG_CHEAT, fmt("MULTIPLAY: Players %s and %s are both hated by %s.") % v->getName() % i->name % getName());
+          vlogf(LOG_CHEAT, format("MULTIPLAY: Players %s and %s are both hated by %s.") % v->getName() % i->name % getName());
           multi = TRUE;
         }
       }
@@ -322,7 +322,7 @@ bool TMonster::Fears(const TBeing *v, const char *s) const
       return TRUE;
 
   if (IS_SET(fearfield, FEAR_VNUM)) {
-    sendTo(fmt("You fear %i \n\r") % fears.vnum);
+    sendTo(format("You fear %i \n\r") % fears.vnum);
     const TMonster *mv = dynamic_cast<const TMonster *>(v);
     if (mv && (fears.vnum == mv->mobVnum()))
       return TRUE;
@@ -385,7 +385,7 @@ int TMonster::addFeared(TBeing *hatee)
     SET_BIT(fearfield, FEAR_CHAR);
 
     if (hatee->isImmortal())
-      hatee->sendTo(COLOR_MOBS, fmt("--- %s fears you.  (as well they should)\n\r") % sstring(getName()).cap());
+      hatee->sendTo(COLOR_MOBS, format("--- %s fears you.  (as well they should)\n\r") % sstring(getName()).cap());
   }
   return ((hatee) ? TRUE : FALSE);
 }
@@ -398,7 +398,7 @@ int TMonster::addFears(zoneHateT parm_type, int parm)
       if (!IS_SET(fearfield, FEAR_SEX))
 	SET_BIT(fearfield, FEAR_SEX);
       if (parm != SEX_MALE && parm != SEX_FEMALE && parm != SEX_NEUTER) {
-        vlogf(LOG_BUG, fmt("bad parm to addFears-sex for %s : %d") %  getName() % parm);
+        vlogf(LOG_BUG, format("bad parm to addFears-sex for %s : %d") %  getName() % parm);
         parm = 0;
       }
       fears.sex = sexTypeT(parm);
@@ -407,7 +407,7 @@ int TMonster::addFears(zoneHateT parm_type, int parm)
       if (!IS_SET(fearfield, FEAR_RACE))
 	SET_BIT(fearfield, FEAR_RACE);
       if (parm < RACE_NORACE || parm >= MAX_RACIAL_TYPES) {
-        vlogf(LOG_BUG, fmt("Bad parm to addFears-race for %s : %d") %  getName() % parm);
+        vlogf(LOG_BUG, format("Bad parm to addFears-race for %s : %d") %  getName() % parm);
         parm = 0;
       }
       fears.race = race_t(parm);
@@ -438,7 +438,7 @@ int TMonster::addFears(zoneHateT parm_type, int parm)
     case OP_UNUSED2:
     case OP_CHAR:
     case MAX_HATE:
-      vlogf(LOG_LOW, fmt("Bad use of Fear flags on %s") %  getName());
+      vlogf(LOG_LOW, format("Bad use of Fear flags on %s") %  getName());
       return TRUE;
   }
   SET_BIT(specials.act, ACT_AFRAID);
@@ -578,7 +578,7 @@ void TMonster::setHunting(TBeing *tch)
   oldRoom = inRoom();
 
   if (tch->isImmortal())
-    tch->sendTo(COLOR_MOBS,fmt(">>%s is hunting you from %s\n\r") % getName() % roomp->name);
+    tch->sendTo(COLOR_MOBS,format(">>%s is hunting you from %s\n\r") % getName() % roomp->name);
 }
 
 /* ------------------------------------------------------
@@ -603,7 +603,7 @@ bool TMonster::isAttackerMultiplay(TBeing *aggressor)
       if (iChar->account_id == aggressor->player.account_id &&
         iChar->player_id != aggressor->player.player_id)
       {
-        vlogf(LOG_CHEAT, fmt("Multiplay: %s is attempting to multiplay harm %s which was already tagged by %s!") % aggressor->name % this->name % iChar->name);
+        vlogf(LOG_CHEAT, format("Multiplay: %s is attempting to multiplay harm %s which was already tagged by %s!") % aggressor->name % this->name % iChar->name);
         return true;
       }
     }

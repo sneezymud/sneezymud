@@ -234,7 +234,7 @@ int TBeing::doEngagedHit(const char *argument, TBeing *vict)
   spellNumT skill = getSkillNum(SKILL_SWITCH_OPP);
 
   if (!fight()) {
-    vlogf(LOG_BUG,fmt("DoEngagedHit called without pc (%s) fighting") %  getName());
+    vlogf(LOG_BUG,format("DoEngagedHit called without pc (%s) fighting") %  getName());
     return FALSE;
   }
 
@@ -513,7 +513,7 @@ int TBeing::doKill(const char *argument, TBeing *vict)
       delete v;
       v = NULL;
     } else {
-      sendTo(COLOR_MOBS, fmt("You can't kill %s!\n\r") % v->getName());
+      sendTo(COLOR_MOBS, format("You can't kill %s!\n\r") % v->getName());
     }
   }
   return FALSE;
@@ -533,7 +533,7 @@ static int applyOrder(TBeing *ch, TBeing *vict, const char * message, silentType
     ch->sendTo("OK.\n\r");
 
   if (vict->getWait() <= 1) {
-    vlogf(LOG_SILENT, fmt("%s ordering %s to '%s' at %d") % 
+    vlogf(LOG_SILENT, format("%s ordering %s to '%s' at %d") % 
           ch->getName() % vict->getName() % message % ch->inRoom());
     if (!strncmp(message, "ret", 3)) {
       rc = vict->checkDecharm(FORCE_YES);
@@ -681,7 +681,7 @@ int TBeing::doOrder(const char *argument)
     }
   } else {
     // This is order "followers" 
-    sstring garbled = garble(NULL, fmt("$n issues the order '%s'.") % message, SPEECH_SAY);
+    sstring garbled = garble(NULL, format("$n issues the order '%s'.") % message, SPEECH_SAY);
 
     // there is a possibility that the order would change our room
     // which might have drastic consequences, so we do this check
@@ -925,7 +925,7 @@ int TBeing::doFlee(const char *arg)
             return DELETE_THIS;
 	  
           if (iDie == TRUE) {
-            sendTo(fmt("You nearly hurt yourself as you fled madly %swards.\n\r") % dirs[attempt]);
+            sendTo(format("You nearly hurt yourself as you fled madly %swards.\n\r") % dirs[attempt]);
             REMOVE_BIT(specials.affectedBy, AFF_ENGAGER);
 	    
             return TRUE;
@@ -1026,7 +1026,7 @@ int TBeing::doFlee(const char *arg)
             addToExp(-min(lose, getExp()));
         }
         if (panic) {
-          sendTo(fmt("Panic-stricken, you flee %s.\n\r") % dirs[attempt]);
+          sendTo(format("Panic-stricken, you flee %s.\n\r") % dirs[attempt]);
           if (!::number(0,1) && getMyRace()->hasTalent(TALENT_MUSK) && getCond(FULL) > 5) {
             act("In your panic you release some musk scent to cover your tracks.", FALSE, this, 0, NULL, TO_CHAR);
             act("$n releases some musk into the room!", FALSE, this, 0, NULL, TO_ROOM);
@@ -1034,7 +1034,7 @@ int TBeing::doFlee(const char *arg)
             setCond(FULL, getCond(FULL)-5);
           }
         } else
-          sendTo(fmt("You retreat skillfully %s.\n\r") % dirs[attempt]);
+          sendTo(format("You retreat skillfully %s.\n\r") % dirs[attempt]);
 
         // do this before lookForEngaged to get attackers check to work OK
         if (fight())
@@ -1267,7 +1267,7 @@ int TBeing::doAssist(const char *argument, TBeing *vict, bool flags)
 #if 0
   // trap a problem report
   if (!fight())
-    vlogf(LOG_BUG, fmt("%s not fighting after assist %s") %  getName() % v->getName());
+    vlogf(LOG_BUG, format("%s not fighting after assist %s") %  getName() % v->getName());
 #endif
 
   return rc;
@@ -1369,7 +1369,7 @@ int TObj::burnObject(TBeing *ch, int perc)
       else if (roomp)
         *roomp += *t;
       else
-        vlogf(LOG_BUG, fmt("Bad struct on burnObj %s") %  t->name);
+        vlogf(LOG_BUG, format("Bad struct on burnObj %s") %  t->name);
       TObj * tot = dynamic_cast<TObj *>(t);
       if (tot) {
         rc = tot->burnObject(ch, 100);
@@ -1452,7 +1452,7 @@ int TBeing::flameEngulfed()
     if (0 == addWetness(this, -50))
       sendTo("You feel completely dried off now.\n\r");
     else
-      sendTo(fmt("You dry out a bit from the flames!  You feel %s.\n\r") % describeWet(this));
+      sendTo(format("You dry out a bit from the flames!  You feel %s.\n\r") % describeWet(this));
   }
 
   if (hasQuestBit(TOG_HAS_PYROPHOBIA))
@@ -1555,11 +1555,11 @@ int TBaseCup::thawObject(TBeing *ch, int perc)
     return rc;
 
   if (ch) {
-    act(fmt("The warmth causes the %s in your $o to thaw.") %
+    act(format("The warmth causes the %s in your $o to thaw.") %
 	liquidInfo[getDrinkType()]->name,
 	TRUE,ch, this,0,TO_CHAR, ANSI_BLUE);
   } else {
-    act(fmt("The warmth causes the %s in $n to thaw.") %
+    act(format("The warmth causes the %s in $n to thaw.") %
 	liquidInfo[getDrinkType()]->name,
 	TRUE,this,0,0,TO_ROOM);
   }
@@ -1697,11 +1697,11 @@ int TPool::freezeObject(TBeing *ch, int perc)
   addDrinkConFlags(DRINK_FROZEN);
 
   if (ch) {
-    act(fmt("The chill causes the %s in your $o to freeze.") %
+    act(format("The chill causes the %s in your $o to freeze.") %
 	liquidInfo[getDrinkType()]->name,
 	TRUE,ch, this,0,TO_CHAR, ANSI_BLUE);
   } else {
-    act(fmt("The chill causes the %s in $n to freeze.") %
+    act(format("The chill causes the %s in $n to freeze.") %
 	liquidInfo[getDrinkType()]->name,
 	TRUE,this,0,0,TO_ROOM);
   }
@@ -1962,7 +1962,7 @@ int TBeing::chlorineEngulfed()
 	continue;
 
       if ((dam = getActualDamage(this, 0, dam, SPELL_CHLORINE_BREATH)))
-        sendTo(fmt("The chlorine gas gives you a caustic burn on your %s.\n\r") %describeBodySlot(i));
+        sendTo(format("The chlorine gas gives you a caustic burn on your %s.\n\r") %describeBodySlot(i));
       rc = applyDamage(this,dam,SPELL_CHLORINE_BREATH);
       if (IS_SET_DELETE(rc, DELETE_VICT))
         return DELETE_THIS;

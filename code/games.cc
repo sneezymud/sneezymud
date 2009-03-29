@@ -30,9 +30,9 @@ void payout(TBeing *ch, int talens, int chip_vnum)
       } else if(talens >= 100){
 	chip=read_object(CHIP_100, VIRTUAL);
       } else {
-	buf = fmt("You receive %i talens.") % talens;
+	buf = format("You receive %i talens.") % talens;
 	act(buf, TRUE, ch, 0, 0, TO_CHAR);
-	buf = fmt("$n receives %i talens.") % talens;
+	buf = format("$n receives %i talens.") % talens;
 	act(buf, TRUE, ch, 0, 0, TO_ROOM);
 	ch->addToMoney(talens, GOLD_GAMBLE);
 	break;
@@ -62,16 +62,16 @@ void payout(TBeing *ch, int talens, int chip_vnum)
 
   for(iter=chipout.begin();iter!=chipout.end();++iter){
     if((*iter).second > 1){
-      buf = fmt("You receive %s. [%i]") %
+      buf = format("You receive %s. [%i]") %
 	       (*iter).first % (*iter).second;
       act(buf, FALSE, ch, 0, 0, TO_CHAR);
-      buf = fmt("$n receives %s. [%i]") %
+      buf = format("$n receives %s. [%i]") %
 	       (*iter).first % (*iter).second;
       act(buf, FALSE, ch, 0, 0, TO_ROOM);
     } else {
-      buf = fmt("You receive %s.") % (*iter).first;
+      buf = format("You receive %s.") % (*iter).first;
       act(buf, FALSE, ch, 0, 0, TO_CHAR);
-      buf = fmt("$n receives %s.") % (*iter).first;
+      buf = format("$n receives %s.") % (*iter).first;
       act(buf, FALSE, ch, 0, 0, TO_ROOM);
     }
   }

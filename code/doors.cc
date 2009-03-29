@@ -20,7 +20,7 @@ void TBeing::rawUnlockDoor(roomDirData * exitp, dirTypeT door)
       back->to_room == in_room) {
     REMOVE_BIT(back->condition, EX_LOCKED);
   } else
-    vlogf(LOG_LOW, fmt("Inconsistent door locks in rooms %d->%d") %  in_room % exitp->to_room);
+    vlogf(LOG_LOW, format("Inconsistent door locks in rooms %d->%d") %  in_room % exitp->to_room);
 }
 
 // returns direction of door
@@ -85,12 +85,12 @@ dirTypeT TBeing::findDoor(const char *type, const char *direct, doorIntentT mode
         return (door);
       else {
         if (!silent)
-          sendTo(fmt("I see no %s there.\n\r") % type);
+          sendTo(format("I see no %s there.\n\r") % type);
         return DIR_NONE;
       }
     } else {
       if (!silent)
-        sendTo(fmt("I see no %s there.\n\r") % type);
+        sendTo(format("I see no %s there.\n\r") % type);
       return DIR_NONE;
     }
   } else {                        /* try to locate the keyword */
@@ -124,9 +124,9 @@ dirTypeT TBeing::findDoor(const char *type, const char *direct, doorIntentT mode
     }
     if (!silent) {
       if (!found)
-        sendTo(fmt("I see no %s here.\n\r") % type);
+        sendTo(format("I see no %s here.\n\r") % type);
       else
-        sendTo(fmt("%s: All of them in this room are %s.\n\r") % type % action2);
+        sendTo(format("%s: All of them in this room are %s.\n\r") % type % action2);
     }
     if (found)
       return DIR_BOGUS;
@@ -143,11 +143,11 @@ void TBeing::rawOpenDoor(dirTypeT dir)
   soundNumT snd = SOUND_OFF;
 
   if (!(rp = roomp))
-    vlogf(LOG_BUG, fmt("NULL rp in rawOpenDoor() for %s.") %  getName());
+    vlogf(LOG_BUG, format("NULL rp in rawOpenDoor() for %s.") %  getName());
 
   exitp = rp->dir_option[dir];
   if (exitp->condition & EX_DESTROYED) {
-    sendTo(fmt("The %s has been destroyed, of course it's open.\n\r") %
+    sendTo(format("The %s has been destroyed, of course it's open.\n\r") %
        exitp->getName());
     return;
   }
@@ -178,7 +178,7 @@ void TBeing::rawOpenDoor(dirTypeT dir)
       sprintf(buf, "$n causes the %s %s to lower.",
             exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       act(buf, TRUE, this, 0, 0, TO_ROOM);
-      sendTo(fmt("You cause the %s %s to lower.\n\r") %
+      sendTo(format("You cause the %s %s to lower.\n\r") %
             exitp->getName().uncap() % dirs_to_blank[dir]);
       break;
     case DOOR_PANEL:
@@ -186,14 +186,14 @@ void TBeing::rawOpenDoor(dirTypeT dir)
       sprintf(buf, "$n slides the %s %s to one side and opens the way.",
             exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       act(buf, TRUE, this, 0, 0, TO_ROOM);
-      sendTo(fmt("You slide the %s %s to one side and open the way.\n\r") %
+      sendTo(format("You slide the %s %s to one side and open the way.\n\r") %
             exitp->getName().uncap() % dirs_to_blank[dir]);
       break;
     case DOOR_RUBBLE:
       sprintf(buf, "$n pushes the %s %s aside and clears the way.",
             exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       act(buf, TRUE, this, 0, 0, TO_ROOM);
-      sendTo(fmt("You push the %s %s aside and clear the way.\n\r") %
+      sendTo(format("You push the %s %s aside and clear the way.\n\r") %
             exitp->getName().uncap() % dirs_to_blank[dir]);
       break;
     case DOOR_PORTCULLIS:
@@ -201,13 +201,13 @@ void TBeing::rawOpenDoor(dirTypeT dir)
         sprintf(buf, "$n leans over and lifts the %s %s open.",
                 exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
         act(buf, TRUE, this, 0, 0, TO_ROOM);
-        sendTo(fmt("You lean over and lift the %s %s open.\n\r") %
+        sendTo(format("You lean over and lift the %s %s open.\n\r") %
                exitp->getName().uncap() % dirs_to_blank[dir]);
       } else {
         sprintf(buf, "$n squats down and lifts the %s %s open.",
               exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
         act(buf, TRUE, this, 0, 0, TO_ROOM);
-        sendTo(fmt("You squat down and lift the %s %s open.\n\r") %
+        sendTo(format("You squat down and lift the %s %s open.\n\r") %
               exitp->getName().uncap() % dirs_to_blank[dir]);
       }
       break;
@@ -216,19 +216,19 @@ void TBeing::rawOpenDoor(dirTypeT dir)
         sprintf(buf, "$n reaches up and pushes the %s open.",
               exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
-        sendTo(fmt("You reach up and push the %s open.\n\r") %
+        sendTo(format("You reach up and push the %s open.\n\r") %
               exitp->getName().uncap());
       } else if (dir == DIR_DOWN) {
         sprintf(buf, "$n reaches down and lifts the %s open.",
               exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
-        sendTo(fmt("You reach down and lift the %s open.\n\r") %
+        sendTo(format("You reach down and lift the %s open.\n\r") %
               exitp->getName().uncap());
       } else {
         sprintf(buf, "$n opens the %s %s.",
               exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
         act(buf, TRUE, this, 0, 0, TO_ROOM);
-        sendTo(fmt("You open the %s %s.\n\r") %
+        sendTo(format("You open the %s %s.\n\r") %
               exitp->getName().uncap() % dirs_to_blank[dir]);
       }
       break;
@@ -236,7 +236,7 @@ void TBeing::rawOpenDoor(dirTypeT dir)
       sprintf(buf, "$n unlatches the %s %s and swings it open.",
               exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       act(buf, TRUE, this, 0, 0, TO_ROOM);
-      sendTo(fmt("You unlatch the %s %s and swing it open.\n\r") %
+      sendTo(format("You unlatch the %s %s and swing it open.\n\r") %
               exitp->getName().uncap() % dirs_to_blank[dir]);
       break;
     case DOOR_TRAPDOOR:
@@ -244,19 +244,19 @@ void TBeing::rawOpenDoor(dirTypeT dir)
         sprintf(buf, "$n unlatches the %s in the ceiling and pulls it open.",
                 exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
-        sendTo(fmt("You unlatch the %s in the ceiling and pull it open.\n\r") %
+        sendTo(format("You unlatch the %s in the ceiling and pull it open.\n\r") %
                 exitp->getName().uncap());
       } else if (dir == DIR_DOWN) {
         sprintf(buf, "$n unlatches the %s in the $g and pushes it open.",
                 exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
-        sendTo(fmt("You unlatch the %s in the %s and push it open.\n\r") %
+        sendTo(format("You unlatch the %s in the %s and push it open.\n\r") %
                 exitp->getName().uncap() % roomp->describeGround());
       } else {
         sprintf(buf, "$n opens the %s %s.",
               exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
         act(buf, TRUE, this, 0, 0, TO_ROOM);
-        sendTo(fmt("You open the %s %s.\n\r") %
+        sendTo(format("You open the %s %s.\n\r") %
               exitp->getName().uncap() % dirs_to_blank[dir]);
       }
       break;
@@ -265,19 +265,19 @@ void TBeing::rawOpenDoor(dirTypeT dir)
         sprintf(buf, "$n reachs up and opens the %s in the ceiling.",
                 exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
-        sendTo(fmt("You reach up and open the %s in the ceiling.\n\r") %
+        sendTo(format("You reach up and open the %s in the ceiling.\n\r") %
                 exitp->getName().uncap());
       } else if (dir == DIR_DOWN) {
         sprintf(buf, "$n reaches down and opens the %s in the $g.",
                 exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
-        sendTo(fmt("You reach down and open the %s in the %s.\n\r") %
+        sendTo(format("You reach down and open the %s in the %s.\n\r") %
                 exitp->getName().uncap() % roomp->describeGround());
       } else {
         sprintf(buf, "$n opens the %s in the %s wall.",
               exitp->getName().uncap().c_str(), dirs[dir]);
         act(buf, TRUE, this, 0, 0, TO_ROOM);
-        sendTo(fmt("You open the %s in the %s wall.\n\r") %
+        sendTo(format("You open the %s in the %s wall.\n\r") %
               exitp->getName().uncap() % dirs[dir]);
       }
       break;
@@ -289,7 +289,7 @@ void TBeing::rawOpenDoor(dirTypeT dir)
       sprintf(buf, "$n opens the %s %s.",
               exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       act(buf, TRUE, this, 0, 0, TO_ROOM);
-      sendTo(fmt("You open the %s %s.\n\r") %
+      sendTo(format("You open the %s %s.\n\r") %
               exitp->getName().uncap() % dirs_to_blank[dir]);
   }
 
@@ -390,11 +390,11 @@ void TBeing::rawCloseDoor(dirTypeT dir)
   soundNumT snd = SOUND_OFF;
  
   if (!(rp = roomp))
-    vlogf(LOG_BUG, fmt("NULL rp in rawCloseDoor() for %s.") %  getName());
+    vlogf(LOG_BUG, format("NULL rp in rawCloseDoor() for %s.") %  getName());
  
   exitp = rp->dir_option[dir];
   if (IS_SET(exitp->condition, EX_DESTROYED)) {
-    sendTo(fmt("The %s has been destroyed, it can't be closed.\n\r") %
+    sendTo(format("The %s has been destroyed, it can't be closed.\n\r") %
        exitp->getName());
     return;
   }
@@ -409,7 +409,7 @@ void TBeing::rawCloseDoor(dirTypeT dir)
       sprintf(buf, "$n raises the %s %s.",
             exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       act(buf, TRUE, this, 0, 0, TO_ROOM);
-      sendTo(fmt("You raise the %s %s.\n\r") %
+      sendTo(format("You raise the %s %s.\n\r") %
             exitp->getName().uncap() % dirs_to_blank[dir]);
       break;
     case DOOR_PANEL:
@@ -417,21 +417,21 @@ void TBeing::rawCloseDoor(dirTypeT dir)
       sprintf(buf, "$n slides the %s %s closed.", 
             exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       act(buf, TRUE, this, 0, 0, TO_ROOM);
-      sendTo(fmt("You slide the %s %s closed.\n\r") %
+      sendTo(format("You slide the %s %s closed.\n\r") %
             exitp->getName().uncap() % dirs_to_blank[dir]);
       break;
     case DOOR_RUBBLE:
       sprintf(buf, "$n pushes the %s %s into the path and blocks the way.", 
             exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       act(buf, TRUE, this, 0, 0, TO_ROOM);
-      sendTo(fmt("You push the %s %s into the path and block the way.\n\r") %
+      sendTo(format("You push the %s %s into the path and block the way.\n\r") %
             exitp->getName().uncap() % dirs_to_blank[dir]);
       break;
     case DOOR_PORTCULLIS:
       sprintf(buf, "$n reaches up and lowers the %s %s.",
             exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       act(buf, TRUE, this, 0, 0, TO_ROOM);
-      sendTo(fmt("You reach up and lower the %s %s.\n\r") %
+      sendTo(format("You reach up and lower the %s %s.\n\r") %
             exitp->getName().uncap() % dirs_to_blank[dir]);
       break;
     case DOOR_GRATE:
@@ -439,19 +439,19 @@ void TBeing::rawCloseDoor(dirTypeT dir)
         sprintf(buf, "$n reaches up and pushes the %s closed.",
               exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
-        sendTo(fmt("You reach up and push the %s close.\n\r") %
+        sendTo(format("You reach up and push the %s close.\n\r") %
               exitp->getName().uncap());
       } else if (dir == DIR_DOWN) {
         sprintf(buf, "$n reaches down and closes the %s.",
               exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
-        sendTo(fmt("You reach down and close the %s.\n\r") %
+        sendTo(format("You reach down and close the %s.\n\r") %
               exitp->getName().uncap());
       } else {
         sprintf(buf, "$n closes the %s %s.",
               exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
         act(buf, TRUE, this, 0, 0, TO_ROOM);
-        sendTo(fmt("You close the %s %s.\n\r") %
+        sendTo(format("You close the %s %s.\n\r") %
               exitp->getName().uncap() % dirs_to_blank[dir]);
       }
       break;
@@ -459,7 +459,7 @@ void TBeing::rawCloseDoor(dirTypeT dir)
       sprintf(buf, "$n swings the %s %s closed and latches it.",
               exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       act(buf, TRUE, this, 0, 0, TO_ROOM);
-      sendTo(fmt("You swing the %s %s closed and latch it.\n\r") %
+      sendTo(format("You swing the %s %s closed and latch it.\n\r") %
               exitp->getName().uncap() % dirs_to_blank[dir]);
       break;
     case DOOR_TRAPDOOR:
@@ -467,19 +467,19 @@ void TBeing::rawCloseDoor(dirTypeT dir)
         sprintf(buf, "$n pushes the %s in the ceiling closed and latch it.",
                 exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
-        sendTo(fmt("You push the %s in the ceiling closed and latch it.\n\r") %
+        sendTo(format("You push the %s in the ceiling closed and latch it.\n\r") %
                 exitp->getName().uncap());
       } else if (dir == DIR_DOWN) {
         sprintf(buf, "$n pull the %s in the $g closed and latch it.",
                   exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
-        sendTo(fmt("You close the %s in the %s and latch it.\n\r") %
+        sendTo(format("You close the %s in the %s and latch it.\n\r") %
                 exitp->getName().uncap() % roomp->describeGround());
       } else {
         sprintf(buf, "$n closes the %s %s.",
               exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
         act(buf, TRUE, this, 0, 0, TO_ROOM);
-        sendTo(fmt("You close the %s %s.\n\r") %
+        sendTo(format("You close the %s %s.\n\r") %
               exitp->getName().uncap() % dirs_to_blank[dir]);
       }
       break;
@@ -488,19 +488,19 @@ void TBeing::rawCloseDoor(dirTypeT dir)
         sprintf(buf, "$n reaches up and pushes the %s closed.",
               exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
-        sendTo(fmt("You reach up and push the %s closed.\n\r") %
+        sendTo(format("You reach up and push the %s closed.\n\r") %
               exitp->getName().uncap());
       } else if (dir == DIR_DOWN) {
         sprintf(buf, "$n reaches down and closes the %s.",
               exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
-        sendTo(fmt("You reach down and close the %s.\n\r") %
+        sendTo(format("You reach down and close the %s.\n\r") %
               exitp->getName().uncap());
       } else {
         sprintf(buf, "$n closes the %s %s.",
               exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
         act(buf, TRUE, this, 0, 0, TO_ROOM);
-        sendTo(fmt("You close the %s %s.\n\r") %
+        sendTo(format("You close the %s %s.\n\r") %
               exitp->getName().uncap() % dirs_to_blank[dir]);
       }
       break;
@@ -508,7 +508,7 @@ void TBeing::rawCloseDoor(dirTypeT dir)
     default:
       sprintf(buf, "$n closes the %s %s.", exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       act(buf, TRUE, this, 0, 0, TO_ROOM);
-      sendTo(fmt("You close the %s %s.\n\r") %exitp->getName().uncap() % dirs_to_blank[dir]);
+      sendTo(format("You close the %s %s.\n\r") %exitp->getName().uncap() % dirs_to_blank[dir]);
 
       snd = pickRandSound(SOUND_DOORCLOSE_01, SOUND_DOORCLOSE_04);
       roomp->playsound(snd, SOUND_TYPE_NOISE);
@@ -667,12 +667,12 @@ void TBeing::openUniqueDoor(dirTypeT dir, doorUniqueT intent,
   successResT open = SUCCESS_OPEN;
  
   if (!(rp = roomp)) {
-    vlogf(LOG_BUG, fmt("NULL rp in openUniqueDoor() for %s.") %  getName());
+    vlogf(LOG_BUG, format("NULL rp in openUniqueDoor() for %s.") %  getName());
     return;
   }
 
   if (!(exitp = rp->dir_option[dir])) {
-    vlogf(LOG_BUG, fmt("Bogus exit in openUniqueDoor() for %s (%d).") %  getName() % dir);
+    vlogf(LOG_BUG, format("Bogus exit in openUniqueDoor() for %s (%d).") %  getName() % dir);
     return;
   }
 
@@ -865,7 +865,7 @@ int SecretDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
     return FALSE;
 
   if (rp->number != ch->in_room) {
-    vlogf(LOG_BUG,fmt("char %s not in proper room (SecretDoors)") % ch->getName());
+    vlogf(LOG_BUG,format("char %s not in proper room (SecretDoors)") % ch->getName());
     return FALSE;
   }
 
@@ -2242,7 +2242,7 @@ int SecretDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
       }
       break;
     default:
-      vlogf(LOG_LOW, fmt("Unsupported room (%d) in secretDoors") %  rp->number);
+      vlogf(LOG_LOW, format("Unsupported room (%d) in secretDoors") %  rp->number);
       return FALSE;
   }
   return FALSE;

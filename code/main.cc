@@ -35,13 +35,13 @@ int main(int argc, char *argv[])
 
   Uptime = time(0);
 
-  vlogf(LOG_MISC, fmt("Running %s on port %d.") %  MUD_NAME % gamePort);
+  vlogf(LOG_MISC, format("Running %s on port %d.") %  MUD_NAME % gamePort);
 
   if (chdir(dir.c_str()) < 0) {
     perror("chdir");
     exit(0);
   }
-  vlogf(LOG_MISC, fmt("Using %s as data directory.") %  dir);
+  vlogf(LOG_MISC, format("Using %s as data directory.") %  dir);
 
   srand(time(0));
 

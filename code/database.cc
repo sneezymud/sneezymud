@@ -50,14 +50,14 @@ MYSQL *TDatabaseConnection::getDB(dbTypeT type)
 
   if (!databases[type] || mysql_ping(databases[type]))
   {
-    vlogf(LOG_DB, fmt("Initializing database '%s'.") % getConnectParam(type));
+    vlogf(LOG_DB, format("Initializing database '%s'.") % getConnectParam(type));
     databases[type] = mysql_init(NULL);
     
     vlogf(LOG_DB, "Connecting to database.");
     if(!mysql_real_connect(databases[type], db_hosts[type].c_str(), "sneezy", NULL, getConnectParam(type), 0, NULL, 0))
     {
-      vlogf(LOG_DB, fmt("Could not connect to database '%s'.") % getConnectParam(type));
-      vlogf(LOG_DB, fmt("%s") % mysql_error(databases[type]));
+      vlogf(LOG_DB, format("Could not connect to database '%s'.") % getConnectParam(type));
+      vlogf(LOG_DB, format("%s") % mysql_error(databases[type]));
       return NULL;
     }
   }
@@ -106,7 +106,7 @@ bool TDatabase::fetchRow(){
 const sstring TDatabase::operator[] (unsigned int i) const
 {
   if(res && i > (mysql_num_fields(res)-1)){
-    vlogf(LOG_DB, fmt("TDatabase::operator[%i] - invalid column index") % i);
+    vlogf(LOG_DB, format("TDatabase::operator[%i] - invalid column index") % i);
     return empty;
   } else {
     return row[i];
@@ -121,7 +121,7 @@ const sstring TDatabase::operator[] (const sstring &s) const
   map<const char*, int, ltstr>::const_iterator cur=column_names.find(s.lower().c_str());
 
   if(cur == column_names.end()){
-    vlogf(LOG_DB, fmt("TDatabase::operator[%s] - invalid column name") %  s);
+    vlogf(LOG_DB, format("TDatabase::operator[%s] - invalid column name") %  s);
     return empty;
   }
 
@@ -158,7 +158,7 @@ bool TDatabase::query(const char *query,...)
 	 	  	  
 	  if(!from){
 	    vlogf(LOG_DB, "null argument for format specifier 'r'");
-	    vlogf(LOG_DB, fmt("%s") % qsave);	    
+	    vlogf(LOG_DB, format("%s") % qsave);	    
 	  }
 	  
 	  buf += from;
@@ -168,7 +168,7 @@ bool TDatabase::query(const char *query,...)
 	 	  	  
 	  if(!from){
 	    vlogf(LOG_DB, "null argument for format specifier 's'");
-	    vlogf(LOG_DB, fmt("%s") % qsave);	    
+	    vlogf(LOG_DB, format("%s") % qsave);	    
 	  }
 
 	  fromlen=strlen(from);
@@ -176,8 +176,8 @@ bool TDatabase::query(const char *query,...)
 	  // mysql_escape_string needs a buffer that is 
 	  // (string * 2) + 1 in size to avoid overruns
 	  if(((fromlen*2)+1) > tolen){
-	    vlogf(LOG_DB, fmt("query - buffer overrun on %s") % from);
-	    vlogf(LOG_DB, fmt("%s") % qsave);
+	    vlogf(LOG_DB, format("query - buffer overrun on %s") % from);
+	    vlogf(LOG_DB, format("%s") % qsave);
 	    return FALSE;
 	  }
 	  
@@ -185,17 +185,17 @@ bool TDatabase::query(const char *query,...)
 	  buf += to;
 	  break;
 	case 'i':
-	  buf = fmt("%s%i") % buf % va_arg(ap, int);
+	  buf = format("%s%i") % buf % va_arg(ap, int);
 	  break;
 	case 'f':
-	  buf = fmt("%s%f") % buf % va_arg(ap, double);
+	  buf = format("%s%f") % buf % va_arg(ap, double);
 	  break;
 	case '%':
 	  buf += "%";
 	  break;
 	default:
-	  vlogf(LOG_DB, fmt("query - bad format specifier - %c") %  *query);
-	  vlogf(LOG_DB, fmt("%s") %  qsave);
+	  vlogf(LOG_DB, format("query - bad format specifier - %c") %  *query);
+	  vlogf(LOG_DB, format("%s") %  qsave);
 	  return FALSE;
       }
     } else {
@@ -205,8 +205,8 @@ bool TDatabase::query(const char *query,...)
   va_end(ap);
 
   if(mysql_query(db, buf.c_str())){
-    vlogf(LOG_DB, fmt("query failed: %s") % mysql_error(db));
-    vlogf(LOG_DB, fmt("%s") % buf);
+    vlogf(LOG_DB, format("query failed: %s") % mysql_error(db));
+    vlogf(LOG_DB, format("%s") % buf);
     return FALSE;
   }
   restmp=mysql_store_result(db);
@@ -238,8 +238,8 @@ bool TDatabase::query(const char *query,...)
   t.end();
 
   if(t.getElapsed() > 1.0){
-    vlogf(LOG_DB, fmt("Query took %f seconds.") % t.getElapsed());
-    vlogf(LOG_DB, fmt("%s") % buf);
+    vlogf(LOG_DB, format("Query took %f seconds.") % t.getElapsed());
+    vlogf(LOG_DB, format("%s") % buf);
   }
 
   // this saves the queries (without args) and the execution time
@@ -256,7 +256,7 @@ bool TDatabase::query(const char *query,...)
       buf += *query++;
     }
 
-    buf = fmt("insert into querytimes (query, secs) values ('%s', %f)") % 
+    buf = format("insert into querytimes (query, secs) values ('%s', %f)") % 
       buf % t.getElapsed();
 
     mysql_query(db, buf.c_str());

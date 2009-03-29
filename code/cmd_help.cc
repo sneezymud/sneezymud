@@ -335,14 +335,15 @@ void replaceWikiTable(sstring &data)
     for(int iFmt = 0; iFmt < cCols; iFmt++)
     {
       rgRowFmt[iFmt] = colColorHdr[iFmt%cElements(colColorHdr)];
-      rgRowFmt[iFmt] += "%-" + (fmt("%i.%i") % rgWidth[iFmt] % rgWidth[iFmt]) + "s";
+      rgRowFmt[iFmt] += "%-";
+      rgRowFmt[iFmt] += (format("%i.%is") % rgWidth[iFmt] % rgWidth[iFmt]).str();
       rgRowFmt[iFmt] += colColorFtr[iFmt%cElements(colColorFtr)];
     }
 
     // write the table
     for(int iData = 0;iData < cData; iData++)
     {
-      tableReplace += fmt(rgRowFmt[iData % cCols]) % rgTableData[iData].trim();
+      tableReplace += format(rgRowFmt[iData % cCols]) % rgTableData[iData].trim();
       if (iData % cCols == cCols-1)
         tableReplace += "\n";
       else
@@ -365,14 +366,14 @@ sstring wiki_to_text(const Descriptor *desc, sstring titleIn, const sstring modi
 {
   // look for spoiler, return "spoiler warning"
   if (textIn.findBetween("{{", "SPOILER", "}}") != sstring::npos)
-    return fmt("The topic '%s' could not be read: Spoiler warning found!\n\r") % titleIn;
+    return format("The topic '%s' could not be read: Spoiler warning found!\n\r") % titleIn;
 
   sstring bold = desc->whiteBold();
   sstring blue = desc->blueBold();
   sstring norm = desc->norm();
 
   // print title
-  sstring textOut = fmt("%s%-30.30s (Last Updated: %s/%s, %s)%s\n\r") % desc->green() %
+  sstring textOut = format("%s%-30.30s (Last Updated: %s/%s, %s)%s\n\r") % desc->green() %
     titleIn % modified.substr(4,2) % modified.substr(6,2) % modified.substr(0,4) % desc->norm();
   textOut += textIn;
 
@@ -531,10 +532,10 @@ void wiki_findTitle(const TBeing *ch, dbTypeT type, const sstring argIn, bool li
   article = wiki_to_text(ch->desc, title, lastModified, article);
 
   if (cCategories > 0)
-    article += fmt("\n\r%sThere are %i subcategories under the category '%s':%s\n\r\%s\n\r") % ch->desc->orangeBold() %
+    article += format("\n\r%sThere are %i subcategories under the category '%s':%s\n\r\%s\n\r") % ch->desc->orangeBold() %
                     cCategories % title % ch->desc->norm() % subCategories;
   if (listArticles && cArticles > 0)
-    article += fmt("\n\r%sThere are %i articles under the category '%s':%s\n\r\%s\n\r") % ch->desc->orangeBold() %
+    article += format("\n\r%sThere are %i articles under the category '%s':%s\n\r\%s\n\r") % ch->desc->orangeBold() %
                     cArticles % title % ch->desc->norm() % childArticles;
 
   // display the article finally
@@ -569,7 +570,7 @@ void wiki_searchText(const TBeing *ch, dbTypeT type, const sstring argIn)
             AND cl_from = si_page AND cl_to = '%s' ORDER BY relevance, si_title LIMIT 100;", arg.c_str(), arg.c_str(), helpCategory[type]);
   if (!db.fetchRow())
   {
-    ch->sendTo(fmt("Sorry, there are no help articles which contain '%s'.\n\r") % arg);
+    ch->sendTo(format("Sorry, there are no help articles which contain '%s'.\n\r") % arg);
     return;
   }
 
@@ -608,7 +609,7 @@ void /*TBeing::*/displayHelpFile(TBeing *ch, char *helppath, char *namebuf){
 
   // find the last modified time on the file
   if (stat(helppath, &timestat)) {
-    vlogf(LOG_BUG,fmt("bad call to help function %s, rebuilding indices") %  namebuf);
+    vlogf(LOG_BUG,format("bad call to help function %s, rebuilding indices") %  namebuf);
     buildHelpIndex();
     ch->sendTo("There was an error, try again.\n\r");
     return;
@@ -729,7 +730,7 @@ void TBeing::doHelp(const char *arg)
         namebuf[j] = UPPER(namebuf[j]);
 
       if (stat(helppath, &timestat)) {
-	vlogf(LOG_BUG,fmt("bad call to help function %s, rebuilding indices") %  namebuf);
+	vlogf(LOG_BUG,format("bad call to help function %s, rebuilding indices") %  namebuf);
 	buildHelpIndex();
 	sendTo("There was an error, try again.\n\r");
 	return;
@@ -771,7 +772,7 @@ void TBeing::doHelp(const char *arg)
       for (j = 0;namebuf[j] != '\0';j++)
         namebuf[j] = UPPER(namebuf[j]);
       if (stat(helppath, &timestat)) {
-	vlogf(LOG_BUG,fmt("bad call to help function %s, rebuilding indices") %  namebuf);
+	vlogf(LOG_BUG,format("bad call to help function %s, rebuilding indices") %  namebuf);
 	buildHelpIndex();
 	sendTo("There was an error, try again.\n\r");
 	return;
@@ -845,7 +846,7 @@ void TBeing::doHelp(const char *arg)
     for (j = 0;namebuf[j] != '\0';j++)
       namebuf[j] = UPPER(namebuf[j]);
     if (stat(helppath, &timestat)) {
-      vlogf(LOG_BUG,fmt("bad call to help function %s, rebuilding indices") %  namebuf);
+      vlogf(LOG_BUG,format("bad call to help function %s, rebuilding indices") %  namebuf);
       buildHelpIndex();
       sendTo("There was an error, try again.\n\r");
       return;
@@ -886,12 +887,12 @@ void TBeing::doHelp(const char *arg)
 
     skill = snt;
     if (skill >= MAX_SKILL) {
-      vlogf(LOG_BUG,fmt("Bogus spell help file: %s") %  spellIndex[i]);
+      vlogf(LOG_BUG,format("Bogus spell help file: %s") %  spellIndex[i]);
       return;
     }
     skill = getSkillNum(skill);
     if (skill < 0) {
-      vlogf(LOG_BUG,fmt("Bogus spell help file: %s") %  spellIndex[i]);
+      vlogf(LOG_BUG,format("Bogus spell help file: %s") %  spellIndex[i]);
       return;
     }
     disc_num = getDisciplineNumber(skill, FALSE);
@@ -906,7 +907,7 @@ void TBeing::doHelp(const char *arg)
         str += buf2;
       }
     } else {
-      vlogf(LOG_BUG, fmt("Bad skill %d to getDisciplineNumber in doHelp") %  skill);
+      vlogf(LOG_BUG, format("Bad skill %d to getDisciplineNumber in doHelp") %  skill);
     }
     str += purple();
     str += "\n\rSpecialization   : ";
@@ -967,7 +968,7 @@ void TBeing::doHelp(const char *arg)
 		sstring(obj_index[real_object(CompInfo[comp].comp_num)].short_desc).cap().c_str());
         str += buf2;
       } else
-        vlogf(LOG_BUG, fmt("Problem in help file for skill=%d, comp=%d.  (component definition)") %  skill % comp);
+        vlogf(LOG_BUG, format("Problem in help file for skill=%d, comp=%d.  (component definition)") %  skill % comp);
     } else {
       sprintf(buf2, "\n\r%sSpell Component  :%s NONE\n\r", purple(), norm());
       str += buf2;
@@ -1135,7 +1136,7 @@ void TBeing::doHelp(const char *arg)
       namebuf[j] = UPPER(namebuf[j]);
 
     if (stat(helppath, &timestat)) {
-      vlogf(LOG_BUG,fmt("bad call to help function %s, rebuilding indices") %  namebuf);
+      vlogf(LOG_BUG,format("bad call to help function %s, rebuilding indices") %  namebuf);
       buildHelpIndex();
       sendTo("There was an error, try again.\n\r");
       return;
@@ -1178,7 +1179,7 @@ void TBeing::doHelp(const char *arg)
     skill = snt;
 
     if (skill >= MAX_SKILL) {
-      vlogf(LOG_BUG,fmt("Bogus skill help file: %s") %  skillIndex[i]);
+      vlogf(LOG_BUG,format("Bogus skill help file: %s") %  skillIndex[i]);
       return;
     }
     disc_num = getDisciplineNumber(skill, FALSE);
@@ -1193,7 +1194,7 @@ void TBeing::doHelp(const char *arg)
         str += buf2;
       }
     } else 
-      vlogf(LOG_BUG, fmt("Bad disc for skill %d in doHelp()") %  skill);
+      vlogf(LOG_BUG, format("Bad disc for skill %d in doHelp()") %  skill);
     
     str += purple();
     str += "\n\rSpecialization   : ";
@@ -1326,14 +1327,14 @@ void TBeing::doWizhelp(const char *arg)
       tLength = max(strlen(commandArray[i]->name), (unsigned) tLength);
   }
 
-  tString = fmt("%c-%ds") % '%' % (tLength + 1);
+  tString = format("%c-%ds") % '%' % (tLength + 1);
   tLength = (79 / tLength);
 
   sendTo("The following privileged commands are available:\n\r\n\r");
 
   if ((tPower = wizPowerFromCmd(CMD_AS)) == MAX_POWER_INDEX ||
       hasWizPower(tPower))
-    buf = fmt(tString) % "as";
+    buf = format(tString) % "as";
 
   for (no = 2, i = 0; i < MAX_CMD_LIST; i++) {
     if (!commandArray[i])
@@ -1344,7 +1345,7 @@ void TBeing::doWizhelp(const char *arg)
         ((tPower = wizPowerFromCmd(cmdTypeT(i))) == MAX_POWER_INDEX ||
          hasWizPower(tPower))) {
 
-      sbuf = fmt(tString) % commandArray[i]->name;
+      sbuf = format(tString) % commandArray[i]->name;
       buf += sbuf;
 
       if (!(no % (tLength - 1)))

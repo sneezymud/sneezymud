@@ -869,7 +869,7 @@ int main(int argc, char **argv)
   while ((dp = readdir(dfd))) {
     if (strcmp(dp->d_name, ".") && strcmp(dp->d_name, "..") &&
 	strcmp(dp->d_name, "CVS") && strcmp(dp->d_name, ".svn")){
-      buf=fmt("/mud/build/lib/zonefiles/%s") % dp->d_name;
+      buf=format("/mud/build/lib/zonefiles/%s") % dp->d_name;
 
       if((zone=fopen(buf.c_str(), "rt"))){
 	makezonelist(zone);

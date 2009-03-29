@@ -130,13 +130,13 @@ int THandgonne::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirType
     capbuf2 = colorString(ch, ch->desc, getName(), NULL, COLOR_OBJECTS, TRUE);
     
     if (targ){
-      ch->sendTo(COLOR_BASIC, fmt("<Y>BANG!<1>  A loud blast sounds as you ignite %s.\n\r") % shortDescr);
-      ch->sendTo(COLOR_MOBS, fmt("You shoot %s out of %s at %s.\n\r") %
+      ch->sendTo(COLOR_BASIC, format("<Y>BANG!<1>  A loud blast sounds as you ignite %s.\n\r") % shortDescr);
+      ch->sendTo(COLOR_MOBS, format("You shoot %s out of %s at %s.\n\r") %
 		 capbuf.uncap() % capbuf2.uncap() %
 		 targ->getName());
     } else {
-      ch->sendTo(COLOR_BASIC, fmt("<Y>BANG!<1>  A loud blast sounds as you ignite %s.\n\r") % shortDescr);
-      ch->sendTo(fmt("You shoot %s out of %s.\n\r") %
+      ch->sendTo(COLOR_BASIC, format("<Y>BANG!<1>  A loud blast sounds as you ignite %s.\n\r") % shortDescr);
+      ch->sendTo(format("You shoot %s out of %s.\n\r") %
 		 capbuf.uncap() % 
 		 capbuf2.uncap());
     }    
@@ -257,11 +257,11 @@ int task_handgonne_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
 	    delete powder;
 	  }
 
-	  buf = fmt("You pack some powder from $p into %s.") %
+	  buf = format("You pack some powder from $p into %s.") %
 		   handgonne->shortDescr;
 	  act(buf, FALSE, ch, powder, 0, TO_CHAR);
 
-	  buf = fmt("$n packs some powder from $p into %s.") %
+	  buf = format("$n packs some powder from $p into %s.") %
 		   handgonne->shortDescr;
           act(buf, TRUE, ch, powder, 0, TO_ROOM);
           ch->task->timeLeft--;
@@ -291,7 +291,7 @@ int task_handgonne_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
 	  act("$n pours priming powder into the touchhole of $N.",
 	      TRUE, ch, shot, handgonne, TO_ROOM);
 
-	  ch->sendTo(COLOR_BASIC, fmt("You have finished loading %s.\n\r") % handgonne->shortDescr);
+	  ch->sendTo(COLOR_BASIC, format("You have finished loading %s.\n\r") % handgonne->shortDescr);
 	  handgonne->remFromFlags(GUN_FLAG_FOULED);
 	  ch->stopTask();
 	  break;
@@ -323,7 +323,7 @@ void THandgonne::loadMe(TBeing *ch, TAmmo *ammo)
   // find black powder
   // check for flint and steel
 
-  ch->sendTo(COLOR_BASIC, fmt("You start loading %s.\n\r") % shortDescr);
+  ch->sendTo(COLOR_BASIC, format("You start loading %s.\n\r") % shortDescr);
 
   start_task(ch, this, ch->roomp, TASK_HANDGONNE_LOAD, "", 3, ch->inRoom(), 0, 0, 5);
 

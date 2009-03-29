@@ -87,7 +87,7 @@ void TBeing::windowLook(const TWindow *w)
   act("$n peers through $p.", FALSE, this, w, NULL, TO_ROOM);
   if (!(target = real_roomp(w->getTarget(&isRandom)))) {
     sendTo("You see only an empty void.\n\r");
-    vlogf(LOG_BUG, fmt("%s [%d] points to non existant room %d") %  w->shortDescr %
+    vlogf(LOG_BUG, format("%s [%d] points to non existant room %d") %  w->shortDescr %
           obj_index[w->getItemIndex()].virt % w->getTarget());
     return;
   }

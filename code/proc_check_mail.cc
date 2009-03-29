@@ -25,7 +25,7 @@ void procCheckMail::run(int pulse) const
         continue;
       }
       if (has_mail(recipient.lower()))
-        ch->sendTo(fmt("You have %sMAIL!%s\n\r") % ch->cyan() % ch->norm());
+        ch->sendTo(format("You have %sMAIL!%s\n\r") % ch->cyan() % ch->norm());
     }
   }
 }

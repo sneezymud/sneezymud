@@ -181,7 +181,7 @@ void DrawPokerGame::deal(TBeing *ch, const char *tArg)
   }
 
   if ((dealerNum = index(ch)) < 0) {
-    vlogf(LOG_BUG, fmt("%s got into DrawPoker::deal without being at the poker table!") % 
+    vlogf(LOG_BUG, format("%s got into DrawPoker::deal without being at the poker table!") % 
           ch->getName());
     return;
   }
@@ -208,7 +208,7 @@ void DrawPokerGame::deal(TBeing *ch, const char *tArg)
   anteCost     = anteCosts[0];
 
   if (*tArg) {
-    vlogf(LOG_LAPSOS, fmt("DrawPoker::deal [%s]") %  tArg);
+    vlogf(LOG_LAPSOS, format("DrawPoker::deal [%s]") %  tArg);
 
     do {
       half_chop(tArg, tString, tBuffer);
@@ -219,7 +219,7 @@ void DrawPokerGame::deal(TBeing *ch, const char *tArg)
           anteCost = convertTo<int>(tString);
 
           if (!in_range(anteCost, anteCosts[0], anteCosts[1])) {
-            ch->sendTo(fmt("No luck slick.  Ante must be between: %d-%d\n\r") %
+            ch->sendTo(format("No luck slick.  Ante must be between: %d-%d\n\r") %
                        anteCosts[0] % anteCosts[1]);
             return;
           }
@@ -230,7 +230,7 @@ void DrawPokerGame::deal(TBeing *ch, const char *tArg)
           bidCosts[1] = convertTo<int>(tString);
 
           if (!in_range(bidCosts[1], bidCosts[0], oldMax)) {
-            ch->sendTo(fmt("No luck slick.  Bid max must be between: %d-%d\n\r") %
+            ch->sendTo(format("No luck slick.  Bid max must be between: %d-%d\n\r") %
                        bidCosts[0] % oldMax);
             bidCosts[1] = oldMax;
             return;
@@ -270,7 +270,7 @@ void DrawPokerGame::deal(TBeing *ch, const char *tArg)
     for(int playerIndex = 0; playerIndex < 6; playerIndex++)
       if (tChar[playerIndex] && inuse[playerIndex])
         if ((tChar[playerIndex]->getMoney() < anteCost) && !silentBets) {
-          ch->sendTo(fmt("You can not cover the ante of %d talens, your forced to sit out.\n\r") %
+          ch->sendTo(format("You can not cover the ante of %d talens, your forced to sit out.\n\r") %
                      anteCost);
           act("$n is forced to sit out this round due to low talens.",
               FALSE, ch, NULL, NULL, TO_ROOM);
@@ -419,7 +419,7 @@ int DrawPokerGame::move_card(TBeing *ch, const char *tArg)
     }
 
     hands[playerNum][moveSlot] = tempCard;
-    ch->sendTo(fmt("You move the card %d to slot %d.\n\r") %
+    ch->sendTo(format("You move the card %d to slot %d.\n\r") %
                (origSlot + 1) % (moveSlot + 1));
   } else {
     ch->sendTo("Poker Syntax: put <old card slot> <new card slot>\n\r");
@@ -487,7 +487,7 @@ int DrawPokerGame::exitGame(const TBeing *ch)
          *ch6 = NULL;
 
   if ((playerNum = index(ch)) < 0) {
-    vlogf(LOG_BUG, fmt("%s left a poker table %s wasn't at!") % 
+    vlogf(LOG_BUG, format("%s left a poker table %s wasn't at!") % 
           ch->getName() % ch->hssh());
     return FALSE;
   }
@@ -619,7 +619,7 @@ int DrawPokerGame::new_deal()
 
   for (int playerIndex = 0; playerIndex < 6; playerIndex++) {
     if (tChar[playerIndex] && !silentBets) {
-      tChar[playerIndex]->sendTo(fmt("The score is now %s.\n\r") % tString);
+      tChar[playerIndex]->sendTo(format("The score is now %s.\n\r") % tString);
 
       settleUp(tChar[playerIndex], false);
     }
@@ -662,7 +662,7 @@ void DrawPokerGame::pass(const TBeing *ch)
     return;
   }
 
-  ch->sendTo(fmt("You skip %s this time.\n\r") %
+  ch->sendTo(format("You skip %s this time.\n\r") %
              (iplay == 1 ? "discarding" : "betting"));
 
   if (iplay == 1)
@@ -732,7 +732,7 @@ void DrawPokerGame::bet(const TBeing *ch, const char *tArg)
   for (; isspace(*tArg); tArg++);
   strcpy(tBuffer, tArg);
   if (!*tArg || !is_number(tBuffer)) {
-    ch->sendTo(fmt("Poker Syntax: bet <amount[Limit:%d]>\n\r") % bidCosts[1]);
+    ch->sendTo(format("Poker Syntax: bet <amount[Limit:%d]>\n\r") % bidCosts[1]);
     return;
   }
 
@@ -744,7 +744,7 @@ void DrawPokerGame::bet(const TBeing *ch, const char *tArg)
   }
 
   if (!in_range(newBet, bidCosts[0], bidCosts[1])) {
-    ch->sendTo(fmt("Funny, Real Funny.  Bugger off.  Bid is limited to: %d-%d\n\r") %
+    ch->sendTo(format("Funny, Real Funny.  Bugger off.  Bid is limited to: %d-%d\n\r") %
                bidCosts[0] % bidCosts[1]);
     return;
   }
@@ -762,7 +762,7 @@ void DrawPokerGame::bet(const TBeing *ch, const char *tArg)
     iplay++;
   }
 
-  ch->sendTo(fmt("You bet %d.\n\r%s") % newBet %
+  ch->sendTo(format("You bet %d.\n\r%s") % newBet %
              (nextPlayer == playerNum ? "Betting is closed." : ""));
 
   if (nextPlayer == playerNum && iplay == 2)
@@ -861,8 +861,8 @@ int DrawPokerGame::look(const TBeing *ch, const char *tArg)
       if (silentBets) {
         ch->sendTo("Since there is no bidding there isn't any scores to view.\n\r");
       } else {
-        ch->sendTo(fmt("The score is currently:\n\r%s\n\r") % score());
-        ch->sendTo(fmt("The bet is currently:\n\r%s\n\r") % bets());
+        ch->sendTo(format("The score is currently:\n\r%s\n\r") % score());
+        ch->sendTo(format("The bet is currently:\n\r%s\n\r") % bets());
       }
     }
   } else
@@ -950,7 +950,7 @@ void DrawPokerGame::discard(const TBeing *ch, const char *tArg)
 
   discarded[playerNum] = true;
 
-  ch->sendTo(fmt("You discard %d cards.\n\r") % discardIndex);
+  ch->sendTo(format("You discard %d cards.\n\r") % discardIndex);
   sprintf(tString, "$n discards %d cards.", discardIndex);
   act(tString, FALSE, ch, NULL, NULL, TO_ROOM);
 
@@ -1016,7 +1016,7 @@ int DrawPokerGame::findWinner(int *PlyWin1, int *PlyWin2, int *PlyWin3,
     if (handHighs[playerIndex][0] == -1)
       handHighs[playerIndex][0] = getHighCard(playerIndex, 0);
 
-    vlogf(LOG_LAPSOS, fmt("DrawPoker::S:%d F:%d 2:%d 2x2:%d 3:%d 4:%d H1:%d H2:%d Ply:%d") % 
+    vlogf(LOG_LAPSOS, format("DrawPoker::S:%d F:%d 2:%d 2x2:%d 3:%d 4:%d H1:%d H2:%d Ply:%d") % 
           hasStraight % hasFlush % hasTwoPair % hasSecondTwoPair % hasThreePair % hasFourPair %
           handHighs[playerIndex][0] % handHighs[playerIndex][1] % playerIndex);
 
@@ -1274,7 +1274,7 @@ void DrawPokerGame::settleUp(const TBeing *ch, bool doOutputs)
 
   tChar = get_char_room(names[index(ch)], ROOM_DRAWPOKER);
   if (!tChar) {
-    vlogf(LOG_BUG, fmt("WHOA, lost player in drawpoker [%s][index=%d][name=%s]") %  ch->getName() % index(ch) % names[index(ch)]);
+    vlogf(LOG_BUG, format("WHOA, lost player in drawpoker [%s][index=%d][name=%s]") %  ch->getName() % index(ch) % names[index(ch)]);
     return;
   }
 

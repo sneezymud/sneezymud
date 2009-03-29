@@ -119,12 +119,12 @@ void TScroll::lowCheck()
            !discArray[curspell]->minLifeforce &&
            !discArray[curspell]->minPiety)) ||
         (getDisciplineNumber(curspell, FALSE) == DISC_NONE)))) {
-      vlogf(LOG_LOW, fmt("scroll (%s:%d) has messed up spell (slot %d: %d)") % 
+      vlogf(LOG_LOW, format("scroll (%s:%d) has messed up spell (slot %d: %d)") % 
            getName() % objVnum() % (i+1) % curspell);
       if ((curspell < TYPE_UNDEFINED) || (curspell >= MAX_SKILL))
         vlogf(LOG_LOW, "bogus range");
       else if (!discArray[curspell])
-        vlogf(LOG_LOW, fmt("bogus spell, %d") %  curspell);
+        vlogf(LOG_LOW, format("bogus spell, %d") %  curspell);
       else if ((!discArray[curspell]->minMana && !discArray[curspell]->minLifeforce &&
         !discArray[curspell]->minPiety))
         vlogf(LOG_LOW, "non-spell");
@@ -133,7 +133,7 @@ void TScroll::lowCheck()
     if (curspell > TYPE_UNDEFINED &&
         discArray[curspell]->targets & TAR_CHAR_WORLD) {
       // spells that use this setting are not a good choice for obj spells
-      vlogf(LOG_LOW, fmt("Obj (%s : %d) had spell that shouldn't be on objs (%s : %d)") %
+      vlogf(LOG_LOW, format("Obj (%s : %d) had spell that shouldn't be on objs (%s : %d)") %
           getName() % objVnum() % discArray[curspell]->name % curspell);
     }
   }

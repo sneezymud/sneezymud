@@ -46,7 +46,7 @@ int task_scribe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
       // init timeLeft to 0 and increment by 1 each iteration
       if (ch->task->timeLeft) {
         if (ch->task->timeLeft < (how_many * 2)) {
-          ch->sendTo(fmt("You continue drafting your scroll%s.\n\r") % (how_many == 1 ? "" : "s"));
+          ch->sendTo(format("You continue drafting your scroll%s.\n\r") % (how_many == 1 ? "" : "s"));
           ch->addToMana(-resulting);
         } else {
           obj = read_object(OBJ_GENERIC_SCROLL, VIRTUAL);
@@ -72,11 +72,11 @@ int task_scribe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
           scroll_obj->setMagicLevel(ch->getClassLevel(CLASS_MAGE));
 
           if (ch->bSuccess(knowledge, SKILL_SCRIBE) || ch->bSuccess(readmagic, SKILL_READ_MAGIC)) {
-            ch->sendTo(fmt("You have successfully scribed your scroll%s.\n\r") % (how_many == 1 ? "" : "s"));
+            ch->sendTo(format("You have successfully scribed your scroll%s.\n\r") % (how_many == 1 ? "" : "s"));
             scroll_obj->setMagicLearnedness(ch->getSkillValue((ch->getSkillValue(which) > 0) ? which : SKILL_SCRIBE));
           } else {
             // failed brew, set learnedness to 0
-            ch->sendTo(fmt("Your incompetence has resulted in %sunreadable scroll%s.\n\r") %
+            ch->sendTo(format("Your incompetence has resulted in %sunreadable scroll%s.\n\r") %
               ((how_many > 1) ? "an " : "") %
               ((how_many > 1) ? "s" : ""));
             scroll_obj->setMagicLearnedness(0);

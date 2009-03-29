@@ -130,7 +130,7 @@ void fixSunlight()
    sendToOutdoor(COLOR_BASIC, "<b>The moon sets.<1>\n\r","<b>The moon sets.<1>\n\r");
   }
   if (hmt == moonTime(MOON_TIME_RISE)) {
-    buf = fmt("<b>The %s moon rises in the east.<1>\n\r") % moonType();
+    buf = format("<b>The %s moon rises in the east.<1>\n\r") % moonType();
     sendToOutdoor(COLOR_BASIC, buf, buf);
   }
   if (hmt == sunTime(SUN_TIME_DAWN)) {
@@ -197,7 +197,7 @@ void anotherHour()
         if (time_info.month >= 12) {
           time_info.month = 0;
           time_info.year++;
-          buf = fmt("Happy New Year! It is now the Year %d P.S\n\r") % time_info.year;
+          buf = format("Happy New Year! It is now the Year %d P.S\n\r") % time_info.year;
           descriptor_list->worldSend(buf, NULL);
         }
       }
@@ -427,7 +427,7 @@ static void sendWeatherMessage(weatherMessT num)
             }
             break;
           default:
-            vlogf(LOG_BUG, fmt("Bad num %d sent to sendWeatherMessage") %  num);
+            vlogf(LOG_BUG, format("Bad num %d sent to sendWeatherMessage") %  num);
             break;
         }
 
@@ -646,7 +646,7 @@ void GetMonth(int month)
   }
 
   sstring buf;
-  buf = fmt("It is now the %s of %s.\n\r") % numberAsString(time_info.day + 1) % month_name[month];
+  buf = format("It is now the %s of %s.\n\r") % numberAsString(time_info.day + 1) % month_name[month];
   descriptor_list->worldSend(buf, NULL);
 }
 
@@ -763,7 +763,7 @@ void TBeing::describeWeather(int room)
  
   rp = real_roomp(room);
   if (!rp) {
-    vlogf(LOG_BUG, fmt("No roomp for room %d in describeWeather for %s") %  room % getName());
+    vlogf(LOG_BUG, format("No roomp for room %d in describeWeather for %s") %  room % getName());
     return;
   }
   wth = rp->getWeather();
@@ -971,7 +971,7 @@ sstring hmtAsString(int hmt)
   int minute = hmt%4 * 15;
 
   sstring buf;
-  buf = fmt("%d:%2.2d %s") %
+  buf = format("%d:%2.2d %s") %
     (!(hour % 12) ? 12 : hour%12) %
     minute %
     ((hour >= 12) ? "PM" : "AM");
@@ -1034,7 +1034,7 @@ int getRoomWetness(TBeing *ch, TRoom* room, sstring & better,  sstring & worse)
         continue;
       if (!better.empty())
         better += " and ";
-      better = fmt("%s dries you") % o->getName();
+      better = format("%s dries you") % o->getName();
     }
   }
 
@@ -1044,7 +1044,7 @@ int getRoomWetness(TBeing *ch, TRoom* room, sstring & better,  sstring & worse)
     wetness -= 10;
     if (!better.empty())
       better += " and ";
-    better = fmt("your fire magic dries you");
+    better = format("your fire magic dries you");
   }
 
   // weather
@@ -1130,13 +1130,13 @@ int getWet(TBeing *ch, TRoom* room, silentTypeT silent)
       sstring wetShow;
         
       if (wetness > 0 && oldWet <= 0)
-        wetShow = fmt("You begin to get wet from staying %s %s") %
+        wetShow = format("You begin to get wet from staying %s %s") %
           TerrainInfo[room->getSectorType()]->prep %
           sstring(TerrainInfo[room->getSectorType()]->name).lower();
       else if (newWet == 0)
         wetShow = "You feel completely dried off now";
       else
-        wetShow = fmt("Your time %s %s means you %s") %
+        wetShow = format("Your time %s %s means you %s") %
           TerrainInfo[room->getSectorType()]->prep %
           sstring(TerrainInfo[room->getSectorType()]->name).lower() %
           (wetness > 0 ? "get wetter" : "dry off some");
@@ -1164,7 +1164,7 @@ const sstring describeWet(const TBeing *ch)
 {
   int wetness = getWetness(ch);
   const char * color = wetness > WET_MAXIMUM/2 ? ch->blue() : ch->cyan();
-  return fmt("%s%s%s") % color % describeWet(wetness) % ch->norm();
+  return format("%s%s%s") % color % describeWet(wetness) % ch->norm();
 }
 
 // generically describes wetness (room eval)

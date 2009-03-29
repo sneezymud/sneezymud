@@ -222,7 +222,7 @@ const sstring TBeing::doColorSub() const
             break;
           default:
             return "";
-            vlogf(LOG_BUG, fmt("Problem in color substituting (%s)") %  getName());
+            vlogf(LOG_BUG, format("Problem in color substituting (%s)") %  getName());
             break;
         }
         return buf;
@@ -954,7 +954,7 @@ void TBeing::cls() const
 void TBeing::fullscreen() const
 {
   if ((ansi() || vt100()))
-    sendTo(fmt(VT_MARGSET) % 1 % getScreen());
+    sendTo(format(VT_MARGSET) % 1 % getScreen());
 }
 
 int TBeing::getScreen() const

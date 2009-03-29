@@ -82,26 +82,26 @@ spellNumT doStabMsg(TBeing *tThief, TBeing *tSucker, TGenWeapon *tWeapon, wearSl
     tSucker->rawBlind(tThief->GetMaxLevel(), tAff.duration, SAVE_NO);
   } else switch (::number(0, 5)) {
     case 0:
-      tStringChar=fmt("You thrust your $o into $N's %s!") % tStLimb;
-      tStringVict=fmt("$n thrusts $s $o into your %s!") % tStLimb;
-      tStringOthr=fmt("$n thrusts $s $o into $N's %s!") % tStLimb;
+      tStringChar=format("You thrust your $o into $N's %s!") % tStLimb;
+      tStringVict=format("$n thrusts $s $o into your %s!") % tStLimb;
+      tStringOthr=format("$n thrusts $s $o into $N's %s!") % tStLimb;
       break;
 
     case 1:
-      tStringChar=fmt("You stab $N in $S %s!") % tStLimb;
-      tStringVict=fmt("$n stabs you in your %s!") % tStLimb;
-      tStringOthr=fmt("$n stabs $N in $S %s!") % tStLimb;
+      tStringChar=format("You stab $N in $S %s!") % tStLimb;
+      tStringVict=format("$n stabs you in your %s!") % tStLimb;
+      tStringOthr=format("$n stabs $N in $S %s!") % tStLimb;
       break;
 
     case 2:
-      tStringChar=fmt("You gouge $N in $S %s!") % tStLimb;
-      tStringVict=fmt("$n gouges you in your %s!") % tStLimb;
-      tStringOthr=fmt("$n gouges $N in $S %s!") % tStLimb;
+      tStringChar=format("You gouge $N in $S %s!") % tStLimb;
+      tStringVict=format("$n gouges you in your %s!") % tStLimb;
+      tStringOthr=format("$n gouges $N in $S %s!") % tStLimb;
 
     default:
-      tStringChar=fmt("You puncture $N's %s with your $o!") % tStLimb;
-      tStringVict=fmt("$n punctures your %s with $s $o!") % tStLimb;
-      tStringOthr=fmt("$n punctures $N's %s with $s $o!") % tStLimb;
+      tStringChar=format("You puncture $N's %s with your $o!") % tStLimb;
+      tStringVict=format("$n punctures your %s with $s $o!") % tStLimb;
+      tStringOthr=format("$n punctures $N's %s with $s $o!") % tStLimb;
       break;
   }
 
@@ -174,11 +174,11 @@ spellNumT doStabMsg(TBeing *tThief, TBeing *tSucker, TGenWeapon *tWeapon, wearSl
         break;
 
       default:
-        tStringChar=fmt("Your stab to $N's %s ceases their existence!") %
+        tStringChar=format("Your stab to $N's %s ceases their existence!") %
 	  tStLimb;
-        tStringVict=fmt("$n stabs you in your %s, ceasing your existence!") %
+        tStringVict=format("$n stabs you in your %s, ceasing your existence!") %
 	  tStLimb;
-        tStringOthr=fmt("$n stabs $N in $S %s, ceasing their existence!") %
+        tStringOthr=format("$n stabs $N in $S %s, ceasing their existence!") %
 	  tStLimb;
         break;
     }
@@ -253,11 +253,11 @@ spellNumT doStabMsg(TBeing *tThief, TBeing *tSucker, TGenWeapon *tWeapon, wearSl
           } else if (!tSucker->isLimbFlags(tLimb, PART_INFECTED))
             if (!::number(0, 9) &&
                 tSucker->rawInfect(tLimb, tDuration, SILENT_YES, CHECK_IMMUNITY_YES)) {
-              tStringChar=fmt("Your stab to $N's %s infects it!") %
+              tStringChar=format("Your stab to $N's %s infects it!") %
 		tStLimb;
-              tStringVict=fmt("Your %s gets infected from $n's stab!") %
+              tStringVict=format("Your %s gets infected from $n's stab!") %
 		tStLimb;
-              tStringOthr=fmt("$N's %s gets infected from $n's stab!") %
+              tStringOthr=format("$N's %s gets infected from $n's stab!") %
 		tStLimb;
 	      
               act(tStringChar, FALSE, tThief, NULL, tSucker, TO_CHAR);
@@ -287,8 +287,8 @@ spellNumT doStabMsg(TBeing *tThief, TBeing *tSucker, TGenWeapon *tWeapon, wearSl
       // Legs   :  1 (can not be whacked)
       // Fingers: -4 (can     be whacked)
       if (::number(tNewSever, 500) <= 0 && !tSucker->isLucky(tSucker->GetMaxLevel())) {
-        tStringChar=fmt("You slice $N's %s right off!") % tStLimb;
-        tStringVict=fmt("$n slices your %s right off!") % tStLimb;
+        tStringChar=format("You slice $N's %s right off!") % tStLimb;
+        tStringVict=format("$n slices your %s right off!") % tStLimb;
         tStringOthr="$n slices $N's %s right off!") % tStLimb;
 
         tSucker->makePartMissing(tLimb, false, tThief);

@@ -102,12 +102,12 @@ int TBeing::doSetTraps(const char *arg)
       }
 
       if (!IS_SET(exitp->condition, EX_CLOSED)) {
-        sendTo(fmt("You need to close the %s first.\n\r") %
+        sendTo(format("You need to close the %s first.\n\r") %
 	       exitp->getName().uncap());
         return FALSE;
       }
       if (IS_SET(exitp->condition, EX_TRAPPED)) {
-	sendTo(fmt("When you try to trap the %s, you set off the trap that is already there!\n\r") % exitp->getName().uncap());
+	sendTo(format("When you try to trap the %s, you set off the trap that is already there!\n\r") % exitp->getName().uncap());
 	rc = triggerDoorTrap(door);
         if (IS_SET_DELETE(rc, DELETE_THIS))
 	  return DELETE_THIS;
@@ -864,7 +864,7 @@ int TBeing::triggerDoorTrap(dirTypeT door)
 
   switch (exitp->trap_info) {
     case DOOR_TRAP_POISON:
-      sendTo(fmt("A small needle lunges out of the %s and punctures your hand.\n\r") %
+      sendTo(format("A small needle lunges out of the %s and punctures your hand.\n\r") %
                fname(exitp->keyword));
       trapPoison(dam);
       break;
@@ -1451,7 +1451,7 @@ int TBeing::triggerTrap(TTrap *o)
 
       return TRUE;
     default:
-      vlogf(LOG_BUG, fmt("Unknown trap type %d in triggerTrap (%s:%d)") %  
+      vlogf(LOG_BUG, format("Unknown trap type %d in triggerTrap (%s:%d)") %  
          o->getTrapDamType() % o->getName() % o->objVnum());
       return TRUE;
   }
@@ -2561,7 +2561,7 @@ bool TBeing::hasTrapComps(const char *type, trap_targ_t targ, int amt, int *pric
   } else if (is_abbrev(type, "spike")) {
     if (targ != TRAP_TARG_DOOR &&
         targ != TRAP_TARG_CONT) 
-      vlogf(LOG_MISC, fmt("spike trap being set  with trap targ: %d") % targ);
+      vlogf(LOG_MISC, format("spike trap being set  with trap targ: %d") % targ);
 
     item1 = ST_SPIKE;
     item2 = ST_SPRING;
@@ -2569,7 +2569,7 @@ bool TBeing::hasTrapComps(const char *type, trap_targ_t targ, int amt, int *pric
   } else if (is_abbrev(type, "bolt")) {
     if (targ != TRAP_TARG_MINE && 
         targ != TRAP_TARG_GRENADE) 
-      vlogf(LOG_MISC, fmt("bolt trap being set  with trap targ: %d") % targ);
+      vlogf(LOG_MISC, format("bolt trap being set  with trap targ: %d") % targ);
 
     item1 = ST_TUBING;
     item2 = ST_CGAS;
@@ -2577,7 +2577,7 @@ bool TBeing::hasTrapComps(const char *type, trap_targ_t targ, int amt, int *pric
   } else if (is_abbrev(type, "blade")) {
     if (targ != TRAP_TARG_DOOR &&
         targ != TRAP_TARG_CONT)
-      vlogf(LOG_MISC, fmt("blade trap being set  with trap targ: %d") % targ);
+      vlogf(LOG_MISC, format("blade trap being set  with trap targ: %d") % targ);
 
     item1 = ST_RAZOR_BLADE;
     item2 = ST_SPRING;
@@ -2585,14 +2585,14 @@ bool TBeing::hasTrapComps(const char *type, trap_targ_t targ, int amt, int *pric
   } else if (is_abbrev(type, "disk")) {
     if (targ != TRAP_TARG_MINE &&
         targ != TRAP_TARG_GRENADE)
-      vlogf(LOG_MISC, fmt("disk trap being set  with trap targ: %d") % targ);
+      vlogf(LOG_MISC, format("disk trap being set  with trap targ: %d") % targ);
 
     item1 = ST_RAZOR_DISK;
     item2 = ST_SPRING;
     item3 = ST_CANISTER;
   } else if (is_abbrev(type, "hammer")) {
     if (targ != TRAP_TARG_DOOR) 
-      vlogf(LOG_MISC, fmt("hammer trap being set  with trap targ: %d") % targ);
+      vlogf(LOG_MISC, format("hammer trap being set  with trap targ: %d") % targ);
 
     item1 = ST_CONCRETE;
     item2 = ST_WEDGE;
@@ -2601,7 +2601,7 @@ bool TBeing::hasTrapComps(const char *type, trap_targ_t targ, int amt, int *pric
     if (targ != TRAP_TARG_CONT && 
         targ != TRAP_TARG_MINE && 
         targ != TRAP_TARG_GRENADE) 
-      vlogf(LOG_MISC, fmt("pebble trap being set  with trap targ: %d") % targ);
+      vlogf(LOG_MISC, format("pebble trap being set  with trap targ: %d") % targ);
 
     item1 = ST_TUBING;
     item2 = ST_CGAS;
@@ -2635,7 +2635,7 @@ bool TBeing::hasTrapComps(const char *type, trap_targ_t targ, int amt, int *pric
       item3 = ST_ATHANOR;
     }
   } else {
-    vlogf(LOG_MISC, fmt("Bad call to hasTrapComps() : %s") %  type);
+    vlogf(LOG_MISC, format("Bad call to hasTrapComps() : %s") %  type);
     return FALSE;
   }
   item1 = real_object(item1);
@@ -2721,9 +2721,9 @@ void TBeing::sendTrapMessage(const char *type, trap_targ_t targ, int num)
       return;
     } else if (num == 4) {
       if (targ == TRAP_TARG_DOOR) {
-        sendTo(fmt("You trap the %s with your bag.\n\r") % 
+        sendTo(format("You trap the %s with your bag.\n\r") % 
            fname(roomp->dir_option[task->flags]->keyword));
-        buf=fmt("$n jimmys the %s with $s bag.") %
+        buf=format("$n jimmys the %s with $s bag.") %
            fname(roomp->dir_option[task->flags]->keyword);
         act(buf, TRUE, this, NULL, NULL, TO_ROOM);
         return;
@@ -2765,9 +2765,9 @@ void TBeing::sendTrapMessage(const char *type, trap_targ_t targ, int num)
       return;
     } else if (num == 4) {
       if (targ == TRAP_TARG_DOOR) {
-        sendTo(fmt("You afix the bottle to the %s.\n\r") %
+        sendTo(format("You afix the bottle to the %s.\n\r") %
            fname(roomp->dir_option[task->flags]->keyword));
-        buf=fmt("$n jimmys the %s with $s bottle.") %
+        buf=format("$n jimmys the %s with $s bottle.") %
            fname(roomp->dir_option[task->flags]->keyword);
         act(buf, TRUE, this, NULL, NULL, TO_ROOM);
         return;
@@ -2841,9 +2841,9 @@ void TBeing::sendTrapMessage(const char *type, trap_targ_t targ, int num)
 
     } else if (num == 4) {
       if (targ == TRAP_TARG_DOOR) {
-        sendTo(fmt("You conceal the poisoned needle inside the %s's lock.\n\r") %
+        sendTo(format("You conceal the poisoned needle inside the %s's lock.\n\r") %
            fname(roomp->dir_option[task->flags]->keyword));
-        buf=fmt("$n conceals the poisoned needle inside the %s's lock.") %
+        buf=format("$n conceals the poisoned needle inside the %s's lock.") %
            fname(roomp->dir_option[task->flags]->keyword);
         act(buf, TRUE, this, NULL, NULL, TO_ROOM);
         return;
@@ -2883,9 +2883,9 @@ void TBeing::sendTrapMessage(const char *type, trap_targ_t targ, int num)
       return;
     } else if (num == 4) {
       if (targ == TRAP_TARG_DOOR) {
-        sendTo(fmt("You conceal the gas apparatus within the %s.\n\r") %
+        sendTo(format("You conceal the gas apparatus within the %s.\n\r") %
            fname(roomp->dir_option[task->flags]->keyword));
-        buf=fmt("$n conceals the apparatus inside the %s.") %
+        buf=format("$n conceals the apparatus inside the %s.") %
            fname(roomp->dir_option[task->flags]->keyword);
         act(buf, TRUE, this, NULL, NULL, TO_ROOM);
         return;
@@ -2927,9 +2927,9 @@ void TBeing::sendTrapMessage(const char *type, trap_targ_t targ, int num)
       return;
     } else if (num == 4) {
       if (targ == TRAP_TARG_DOOR) {
-        sendTo(fmt("You conceal the frost apparatus into the %s.\n\r") %
+        sendTo(format("You conceal the frost apparatus into the %s.\n\r") %
            fname(roomp->dir_option[task->flags]->keyword));
-        buf=fmt("$n conceals the apparatus into the %s.") %
+        buf=format("$n conceals the apparatus into the %s.") %
            fname(roomp->dir_option[task->flags]->keyword);
         act(buf, TRUE, this, NULL, NULL, TO_ROOM);
         return;
@@ -3002,9 +3002,9 @@ void TBeing::sendTrapMessage(const char *type, trap_targ_t targ, int num)
       }
     } else if (num == 4) {
       if (targ == TRAP_TARG_DOOR) {
-        sendTo(fmt("You conceal the trap inside the %s.\n\r") %
+        sendTo(format("You conceal the trap inside the %s.\n\r") %
            fname(roomp->dir_option[task->flags]->keyword));
-        buf=fmt("$n conceals the trap inside the %s.") %
+        buf=format("$n conceals the trap inside the %s.") %
            fname(roomp->dir_option[task->flags]->keyword);
         act(buf, TRUE, this, NULL, NULL, TO_ROOM);
         return;
@@ -3075,9 +3075,9 @@ void TBeing::sendTrapMessage(const char *type, trap_targ_t targ, int num)
       }
     } else if (num == 4) {
       if (targ == TRAP_TARG_DOOR) {
-        sendTo(fmt("You conceal the trap inside the %s.\n\r") %
+        sendTo(format("You conceal the trap inside the %s.\n\r") %
            fname(roomp->dir_option[task->flags]->keyword));
-        buf=fmt("$n conceals the trap inside the %s.") %
+        buf=format("$n conceals the trap inside the %s.") %
            fname(roomp->dir_option[task->flags]->keyword);
         act(buf, TRUE, this, NULL, NULL, TO_ROOM);
         return;
@@ -3107,9 +3107,9 @@ void TBeing::sendTrapMessage(const char *type, trap_targ_t targ, int num)
       return;
     } else if (num == 2) {
       if (targ == TRAP_TARG_DOOR) {
-        sendTo(fmt("You conceal the spike inside the %s.\n\r") %
+        sendTo(format("You conceal the spike inside the %s.\n\r") %
            fname(roomp->dir_option[task->flags]->keyword));
-        buf=fmt("$n conceals the spike inside the %s.") %
+        buf=format("$n conceals the spike inside the %s.") %
            fname(roomp->dir_option[task->flags]->keyword);
         act(buf, TRUE, this, NULL, NULL, TO_ROOM);
         return;
@@ -3127,9 +3127,9 @@ void TBeing::sendTrapMessage(const char *type, trap_targ_t targ, int num)
       return;
     } else if (num == 4) {
       if (targ == TRAP_TARG_DOOR) {
-        sendTo(fmt("You stretch the tripwire across the %s and tie it off.\n\r") %
+        sendTo(format("You stretch the tripwire across the %s and tie it off.\n\r") %
            fname(roomp->dir_option[task->flags]->keyword));
-        buf=fmt("$n stretches a tripwire across the %s and ties it off.") %
+        buf=format("$n stretches a tripwire across the %s and ties it off.") %
            fname(roomp->dir_option[task->flags]->keyword);
         act(buf, TRUE, this, NULL, NULL, TO_ROOM);
         return;
@@ -3183,9 +3183,9 @@ void TBeing::sendTrapMessage(const char *type, trap_targ_t targ, int num)
       return;
     } else if (num == 2) {
       if (targ == TRAP_TARG_DOOR) {
-        sendTo(fmt("You conceal the razor blade inside the %s.\n\r") %
+        sendTo(format("You conceal the razor blade inside the %s.\n\r") %
            fname(roomp->dir_option[task->flags]->keyword));
-        buf=fmt("$n conceals the razor blade inside the %s.") %
+        buf=format("$n conceals the razor blade inside the %s.") %
            fname(roomp->dir_option[task->flags]->keyword);
         act(buf, TRUE, this, NULL, NULL, TO_ROOM);
         return;
@@ -3203,9 +3203,9 @@ void TBeing::sendTrapMessage(const char *type, trap_targ_t targ, int num)
       return;
     } else if (num == 4) {
       if (targ == TRAP_TARG_DOOR) {
-        sendTo(fmt("You stretch the tripwire across the %s and tie it off.\n\r") %
+        sendTo(format("You stretch the tripwire across the %s and tie it off.\n\r") %
            fname(roomp->dir_option[task->flags]->keyword));
-        buf=fmt("$n stretches a tripwire across the %s and ties it off.") %
+        buf=format("$n stretches a tripwire across the %s and ties it off.") %
            fname(roomp->dir_option[task->flags]->keyword);
         act(buf, TRUE, this, NULL, NULL, TO_ROOM);
         return;
@@ -3256,18 +3256,18 @@ void TBeing::sendTrapMessage(const char *type, trap_targ_t targ, int num)
   } else if (is_abbrev(type, "hammer")) {
     if (num == 1) {
       if (targ == TRAP_TARG_DOOR) {
-        sendTo(fmt("You pry open the frame of a %s with your wedge.\n\r") %
+        sendTo(format("You pry open the frame of a %s with your wedge.\n\r") %
            fname(roomp->dir_option[task->flags]->keyword));
-        buf=fmt("$n pries at a %s's frame.") %
+        buf=format("$n pries at a %s's frame.") %
            fname(roomp->dir_option[task->flags]->keyword);
         act(buf, TRUE, this, NULL, NULL, TO_ROOM);
         return;
       }
     } else if (num == 2) {
       if (targ == TRAP_TARG_DOOR) {
-        sendTo(fmt("You shove the concrete up above the %s's frame.\n\r") %
+        sendTo(format("You shove the concrete up above the %s's frame.\n\r") %
            fname(roomp->dir_option[task->flags]->keyword));
-        buf=fmt("$n stuffs something bulky above the %s.") %
+        buf=format("$n stuffs something bulky above the %s.") %
            fname(roomp->dir_option[task->flags]->keyword);
         act(buf, TRUE, this, NULL, NULL, TO_ROOM);
         return;
@@ -3281,9 +3281,9 @@ void TBeing::sendTrapMessage(const char *type, trap_targ_t targ, int num)
       }
     } else if (num == 4) {
       if (targ == TRAP_TARG_DOOR) {
-        sendTo(fmt("You stretch the tripwire across the %s and tie it off.\n\r") %
+        sendTo(format("You stretch the tripwire across the %s and tie it off.\n\r") %
            fname(roomp->dir_option[task->flags]->keyword));
-        buf=fmt("$n stretches a tripwire across the %s and ties it off.") %
+        buf=format("$n stretches a tripwire across the %s and ties it off.") %
            fname(roomp->dir_option[task->flags]->keyword);
         act(buf, TRUE, this, NULL, NULL, TO_ROOM);
         return;
@@ -3332,9 +3332,9 @@ void TBeing::sendTrapMessage(const char *type, trap_targ_t targ, int num)
   } else if (is_abbrev(type, "teleport")) {
     if (num == 1) {
       if (targ == TRAP_TARG_DOOR) {
-        sendTo(fmt("You plaster a pentagram to the %s to focus the magical forces.\n\r") %
+        sendTo(format("You plaster a pentagram to the %s to focus the magical forces.\n\r") %
            fname(roomp->dir_option[task->flags]->keyword));
-        buf=fmt("$n plasters a pentagram to the %s.") %
+        buf=format("$n plasters a pentagram to the %s.") %
            fname(roomp->dir_option[task->flags]->keyword);
         act(buf, TRUE, this, NULL, NULL, TO_ROOM);
         return;
@@ -3378,9 +3378,9 @@ void TBeing::sendTrapMessage(const char *type, trap_targ_t targ, int num)
       }
     } else if (num == 4) {
       if (targ == TRAP_TARG_DOOR) {
-        sendTo(fmt("You stretch the tripwire across the %s and tie it off.\n\r") %
+        sendTo(format("You stretch the tripwire across the %s and tie it off.\n\r") %
            fname(roomp->dir_option[task->flags]->keyword));
-        buf=fmt("$n stretches a tripwire across the %s and ties it off.") %
+        buf=format("$n stretches a tripwire across the %s and ties it off.") %
            fname(roomp->dir_option[task->flags]->keyword);
         act(buf, TRUE, this, NULL, NULL, TO_ROOM);
         return;
@@ -3402,9 +3402,9 @@ void TBeing::sendTrapMessage(const char *type, trap_targ_t targ, int num)
   } else if (is_abbrev(type, "power")) {
     if (num == 1) {
       if (targ == TRAP_TARG_DOOR) {
-        sendTo(fmt("You plaster a pentagram to the %s to focus the magical forces.\n\r") %
+        sendTo(format("You plaster a pentagram to the %s to focus the magical forces.\n\r") %
            fname(roomp->dir_option[task->flags]->keyword));
-        buf=fmt("$n plasters a pentagram to the %s.") %
+        buf=format("$n plasters a pentagram to the %s.") %
            fname(roomp->dir_option[task->flags]->keyword);
         act(buf, TRUE, this, NULL, NULL, TO_ROOM);
         return;
@@ -3448,9 +3448,9 @@ void TBeing::sendTrapMessage(const char *type, trap_targ_t targ, int num)
       }
     } else if (num == 4) {
       if (targ == TRAP_TARG_DOOR) {
-        sendTo(fmt("You stretch the tripwire across the %s and tie it off.\n\r") %
+        sendTo(format("You stretch the tripwire across the %s and tie it off.\n\r") %
            fname(roomp->dir_option[task->flags]->keyword));
-        buf=fmt("$n stretches a tripwire across the %s and ties it off.") %
+        buf=format("$n stretches a tripwire across the %s and ties it off.") %
            fname(roomp->dir_option[task->flags]->keyword);
         act(buf, TRUE, this, NULL, NULL, TO_ROOM);
         return;
@@ -3471,7 +3471,7 @@ void TBeing::sendTrapMessage(const char *type, trap_targ_t targ, int num)
     }
   }
 
-  vlogf(LOG_BUG, fmt("Bad trap type (%s, %d, %d) with character %s") %  
+  vlogf(LOG_BUG, format("Bad trap type (%s, %d, %d) with character %s") %  
              type % targ % num % getName());
   return;
 }

@@ -133,7 +133,7 @@ int TSeeThru::getLightFromOutside() const
   rp = real_roomp(getTarget());
 
   if (!rp) {
-    vlogf(LOG_BUG,fmt("Bad room value on %s for light determination.") % getName());
+    vlogf(LOG_BUG,format("Bad room value on %s for light determination.") % getName());
     return 0;
   }
   val = rp->outdoorLightWindow();

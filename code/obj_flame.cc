@@ -194,7 +194,7 @@ int TFFlame::pourWaterOnMe(TBeing *ch, TObj *sObj)
     dContainer->setDrinkUnits(0);
     // If object is left, then we 'crack and pop'
     if (obj_flags.decay_time > 0) {
-      ch->sendTo(COLOR_OBJECTS, fmt("%s lets off a large crack and pop as you pour some %s on it.\n\r") %
+      ch->sendTo(COLOR_OBJECTS, format("%s lets off a large crack and pop as you pour some %s on it.\n\r") %
                  sstring(shortDescr).cap() % liquidInfo[dContainer->getDrinkType()]->name);
       sprintf(Buf[0], "%s dies down a little as $n pours %s over it.",
               sstring(shortDescr).cap().c_str(), liquidInfo[dContainer->getDrinkType()]->name);
@@ -216,7 +216,7 @@ int TFFlame::getMe(TBeing *ch, TThing *)
 {
   if (!ch->isImmortal()) {
     ch->sendTo(COLOR_OBJECTS,
-               fmt("As you grab ahold of %s % you feel your fingers begin to burn and drop it.\n\r") %
+               format("As you grab ahold of %s % you feel your fingers begin to burn and drop it.\n\r") %
                shortDescr);
     ch->doDrop("", this, true);
     if (ch->reconcileDamage(ch, ::number(1,2), DAMAGE_FIRE) == -1)
@@ -245,7 +245,7 @@ void TFFlame::extinguishMe(TBeing *ch)
 
 void TFFlame::peeOnMe(const TBeing *ch)
 {
-  ch->sendTo(COLOR_OBJECTS, fmt("Steam rises from %s as you pee on it.\n\r") % getName());
+  ch->sendTo(COLOR_OBJECTS, format("Steam rises from %s as you pee on it.\n\r") % getName());
 }
 
 void TFFlame::refuelMeLight(TBeing *ch, TThing *)
@@ -255,7 +255,7 @@ void TFFlame::refuelMeLight(TBeing *ch, TThing *)
 
 void TFFlame::describeObjectSpecifics(const TBeing *ch) const
 {
-  ch->sendTo(COLOR_OBJECTS, fmt("%s seems to be %s.") % getName() %
+  ch->sendTo(COLOR_OBJECTS, format("%s seems to be %s.") % getName() %
     (obj_flags.decay_time > 150 ? "burning wildly" :
     (obj_flags.decay_time > 100 ? "burning fiercly" :
     (obj_flags.decay_time >  50 ? "burning barely out of control" :
@@ -357,7 +357,7 @@ void TFFlame::updateFlameInfo()
       lFound = true;
     }
   if (!lFound)
-    vlogf(LOG_BUG, fmt("TFFlame object with No extra slots for lighting [%s].") % 
+    vlogf(LOG_BUG, format("TFFlame object with No extra slots for lighting [%s].") % 
           (shortDescr ? shortDescr : "BAD OBJECT!"));
 }
 
@@ -508,7 +508,7 @@ void TFFlame::addFlameToMe(TBeing *ch, const char *argument, TThing *fObj, bool 
     }
     if (!(woodItem = searchLinkedListVis(ch, argument, ch->stuff, &count)) &&
         !(woodItem = searchLinkedListVis(ch, argument, ch->roomp->stuff, &count))) {
-      ch->sendTo(COLOR_OBJECTS, fmt("You can not seem to find the '%s'.\n\r") % argument);
+      ch->sendTo(COLOR_OBJECTS, format("You can not seem to find the '%s'.\n\r") % argument);
       if (isFirst) delete this;
       return;
     }
@@ -598,7 +598,7 @@ void TBeing::igniteObject(const char *argument, TThing *fObj)
 
   // must be new, so lets create it and make sure it got created.
   if (!(newFlame = new TFFlame())) {
-    vlogf(LOG_BUG, fmt("Was unable to allocate for new Flame item.  User[%s]") %  getName());
+    vlogf(LOG_BUG, format("Was unable to allocate for new Flame item.  User[%s]") %  getName());
     sendTo("Something bad occured, tell a god.\n\r");
     return;
   }
@@ -732,7 +732,7 @@ int TBeing::pourWaterOnMe(TBeing *ch, TObj *sObj)
   if (size > 0)
   {
     addWetness(this, size); // we never expect this to return 0
-    sendTo(fmt("You feel %s.\n\r") % describeWet(this));
+    sendTo(format("You feel %s.\n\r") % describeWet(this));
   }
 
   dContainer->setDrinkUnits(0);  

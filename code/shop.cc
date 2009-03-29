@@ -58,7 +58,7 @@ unsigned int find_shop_nr(int mobvnum)
   for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != mobvnum); shop_nr++);
 
   if (shop_nr >= shop_index.size()) {
-    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") % mob_index[mobvnum].virt);
+    vlogf(LOG_BUG, format("Warning... shop # for mobile %d (real nr) not found.") % mob_index[mobvnum].virt);
     return 0;
   }   
 
@@ -613,20 +613,20 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   if (!ch->isImmortal())
   {
     if ((ch->getCarriedVolume() + (num * getTotalVolume())) > ch->carryVolumeLimit()) {
-      ch->sendTo(fmt("%s: You can't carry that much volume.\n\r") % fname(name));
+      ch->sendTo(format("%s: You can't carry that much volume.\n\r") % fname(name));
       return -1;
     }
     // obj-weight > free ch limit
     if (compareWeights(getTotalWeight(TRUE),
          ((ch->carryWeightLimit() - ch->getCarriedWeight())/num)) == -1) {
-      ch->sendTo(fmt("%s: You can't carry that much weight.\n\r") % fname(name));
+      ch->sendTo(format("%s: You can't carry that much weight.\n\r") % fname(name));
       return -1;
     }
   }
   
   tmp = number_objects_in_list(this, keeper->stuff);
   if (num > tmp) {
-    keeper->doTell(ch->name, fmt("I don't have %d of that item. Here %s the %d I do have.") %
+    keeper->doTell(ch->name, format("I don't have %d of that item. Here %s the %d I do have.") %
 		   num  % ((tmp > 1) ? "are" : "is") % tmp);
   } else
     tmp = num;
@@ -678,16 +678,16 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     return -1;
   }
 
-  //  ch->sendTo(fmt("You manage to swindle the shopkeeper into a %i%s discount.\n\r") % (int)(swindle*100) % "%");
-  keeper->doTell(ch->name, fmt(shop_index[shop_nr].message_buy) %
+  //  ch->sendTo(format("You manage to swindle the shopkeeper into a %i%s discount.\n\r") % (int)(swindle*100) % "%");
+  keeper->doTell(ch->name, format(shop_index[shop_nr].message_buy) %
 		 (cost * count));
 
-  ch->sendTo(COLOR_OBJECTS, fmt("You now have %s (*%d).\n\r") % 
+  ch->sendTo(COLOR_OBJECTS, format("You now have %s (*%d).\n\r") % 
 	     sstring(getName()).uncap() % count);
   if (count == 1) 
     act("$n buys $p.", FALSE, ch, this, NULL, TO_ROOM); 
   else {
-    buf = fmt("$n buys %s [%d].") % fname(name) % count;
+    buf = format("$n buys %s [%d].") % fname(name) % count;
     act(buf, FALSE, ch, this, 0, TO_ROOM);
   }
   ch->doQueueSave();
@@ -704,7 +704,7 @@ bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int shop_nr)
   }
 #if NO_DAMAGED_ITEMS_SHOP
   if (temp1->getStructPoints() != temp1->getMaxStructPoints()) {
-    buf = fmt("%s I don't buy damaged goods.") % ch->getName();
+    buf = format("%s I don't buy damaged goods.") % ch->getName();
     keeper->doTell(buf);
     return TRUE;
   }
@@ -758,7 +758,7 @@ bool TObj::sellMeCheck(TBeing *ch, TMonster *keeper, int, int defaultMax) const
   for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != (keeper)->number); shop_nr++);
 
   if (shop_nr >= shop_index.size()) {
-    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  mob_index[keeper->number].virt);
+    vlogf(LOG_BUG, format("Warning... shop # for mobile %d (real nr) not found.") %  mob_index[keeper->number].virt);
     return FALSE;
   }
   
@@ -876,7 +876,7 @@ int TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
       cost /= getMaxStructPoints();
     }
 #if NO_DAMAGED_ITEMS_SHOP
-    buf = fmt("%s It's been damaged, but I guess I can buy it as scrap.") %
+    buf = format("%s It's been damaged, but I guess I can buy it as scrap.") %
       fname(ch->name);
     keeper->doTell(buf);
 #endif
@@ -892,9 +892,9 @@ int TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   }
   act("$n sells $p.", FALSE, ch, this, 0, TO_ROOM);
 
-  keeper->doTell(ch->getName(), fmt(shop_index[shop_nr].message_sell)% cost);
+  keeper->doTell(ch->getName(), format(shop_index[shop_nr].message_sell)% cost);
 
-  ch->sendTo(COLOR_OBJECTS, fmt("The shopkeeper now has %s.\n\r") % sstring(getName()).uncap());
+  ch->sendTo(COLOR_OBJECTS, format("The shopkeeper now has %s.\n\r") % sstring(getName()).uncap());
   ch->logItem(this, CMD_SELL);
 
   --(*this);
@@ -905,7 +905,7 @@ int TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   if (ch->isAffected(AFF_GROUP) && ch->desc &&
            IS_SET(ch->desc->autobits, AUTO_SPLIT) && 
           (ch->master || ch->followers)){
-    buf = fmt("%d") % cost;
+    buf = format("%d") % cost;
     ch->doSplit(buf.c_str(), false);
   }
 
@@ -1403,16 +1403,16 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
     cost *= getStructPoints();
     cost /= getMaxStructPoints();
 #if NO_DAMAGED_ITEMS_SHOP
-    buf = fmt("%s It's been damaged, but I guess I can buy it as scrap.") %
+    buf = format("%s It's been damaged, but I guess I can buy it as scrap.") %
              fname(ch->name);
     keeper->doTell(buf);
 #endif
   }
   max(cost, 1);  // at least 1 talen
   if(willbuy){
-    buf = fmt("I'll give you %d talens for %s!") % cost % getName();
+    buf = format("I'll give you %d talens for %s!") % cost % getName();
   } else {
-    buf = fmt("Normally, I'd give you %d talens for %s!") % cost % getName();
+    buf = format("Normally, I'd give you %d talens for %s!") % cost % getName();
   }
   keeper->doTell(ch->name, buf);
 
@@ -1765,7 +1765,7 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
         FitT |= (1 <<  2);
       }
     } else if (is_number(argument.word(i))){
-      buf=fmt("and r.rent_id=%s") % argument;
+      buf=format("and r.rent_id=%s") % argument;
     } else if (!argument.word(i).empty()) {
       keyword=argument.word(i);
     }
@@ -1818,7 +1818,7 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
     if(type==ITEM_RAW_MATERIAL){
       int mat = convertTo<int>(db["short_desc"]);
       price=TCommodity::demandCurvePrice(1, 0, mat, convertTo<int>(db["count"]));
-      short_desc=fmt("COMMODITY: %s") % material_nums[mat].mat_name;
+      short_desc=format("COMMODITY: %s") % material_nums[mat].mat_name;
     }
 
     // modify price for structure damage
@@ -1953,7 +1953,7 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
 
     // buffer output
     if(type==ITEM_RAW_MATERIAL){
-      buf+=fmt("[%8i] %s COMMODITY  [%6i] %7.3f\n\r") %
+      buf+=format("[%8i] %s COMMODITY  [%6i] %7.3f\n\r") %
 	convertTo<int>(db["rent_id"]) %
 	list_string(short_desc, 40) % 
 	convertTo<int>(db["count"]) %
@@ -1964,14 +1964,14 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
 	if(ch->doesKnowSkill(mapFileToSpellnum(convertTo<int>(db["val2"]))))
 	  spell=discArray[mapFileToSpellnum(convertTo<int>(db["val2"]))]->name;
       }
-      buf+=fmt("[%8i] %s %s [%6i] %7i\n\r") %
+      buf+=format("[%8i] %s %s [%6i] %7i\n\r") %
 	convertTo<int>(db["rent_id"]) %
 	list_string(short_desc, 30) % 
 	list_string(spell, 20) %
 	convertTo<int>(db["count"]) %
 	(int)(max((float)1.0, price));      
     } else {
-      buf+=fmt("[%8i] %s %s [%6i] %7i\n\r") %
+      buf+=format("[%8i] %s %s [%6i] %7i\n\r") %
 	convertTo<int>(db["rent_id"]) %
 	list_string(short_desc, 40) % 
 	list_string(equip_cond(convertTo<int>(db["cur_struct"]),
@@ -2000,7 +2000,7 @@ void TMonster::autoCreateShop(int shop_nr)
   if (!stuff.empty())  // just can't see the shopkeepers inventory so lists nada?
     return;
 
-  vlogf(LOG_MISC,fmt("Creating a new shopfile for %s (shop #%d)") % getName() %shop_nr);
+  vlogf(LOG_MISC,format("Creating a new shopfile for %s (shop #%d)") % getName() %shop_nr);
   doSay("Whoops, I seem to have run out of everything.");
   doSay("One moment while I go back and get some more stuff.");
   act("$n slips quickly into the storeroom.",0, this, 0, 0, TO_ROOM);
@@ -2042,7 +2042,7 @@ static bool shopping_look(const char *arg, TBeing *ch, TMonster *keeper, int sho
     for(int i=0;!arg_words.word(i).empty();++i){
       mysql_escape_string(buf, arg_words.word(i).c_str(), arg_words.word(i).length());
 
-      query += fmt("and ((rs.name is not null and rs.name like '%s%s%s') or (o.name like '%s%s%s'))") % 
+      query += format("and ((rs.name is not null and rs.name like '%s%s%s') or (o.name like '%s%s%s'))") % 
 	"%%" % buf % "%%" %
 	"%%" % buf % "%%";
     }
@@ -2109,7 +2109,7 @@ static bool shopping_evaluate(const char *arg, TBeing *ch, TMonster *keeper, int
     for(int i=0;!arg_words.word(i).empty();++i){
       mysql_escape_string(buf, arg_words.word(i).c_str(), arg_words.word(i).length());
 
-      query += fmt("and ((rs.name is not null and rs.name like '%s%s%s') or (o.name like '%s%s%s'))") % 
+      query += format("and ((rs.name is not null and rs.name like '%s%s%s') or (o.name like '%s%s%s'))") % 
 	"%%" % buf % "%%" %
 	"%%" % buf % "%%";
     }
@@ -2166,7 +2166,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       if((tbt=dynamic_cast<TBeing *>(t)) && 
 	 tbt->getTimer()>1 && !tbt->isImmortal()){
         if ((tbt->master) && tbt->master->inRoom() == tbt->inRoom()) {
-          //vlogf(LOG_DASH, fmt("saving %s from loitering code, master is %s, room is (%d == %d)") % tbt->getName() %
+          //vlogf(LOG_DASH, format("saving %s from loitering code, master is %s, room is (%d == %d)") % tbt->getName() %
           //      tbt->master->getName() % tbt->inRoom() % tbt->master->inRoom());
 	  continue;
 	}
@@ -2199,14 +2199,14 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
   if (cmd == CMD_GENERIC_INIT) {
     if (!myself->isUnique()) {
-      vlogf(LOG_BUG, fmt("Warning!  %s attempted to be loaded, when not unique.") %  myself->getName());
+      vlogf(LOG_BUG, format("Warning!  %s attempted to be loaded, when not unique.") %  myself->getName());
       return TRUE;
     } else
       return FALSE;
 #ifdef UNUSED
   } else if(cmd == CMD_GENERIC_CREATED && 0){
     // this is for conversion to new shop code, only will be run once
-    myself->loadItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+    myself->loadItems(format("%s/%d") % SHOPFILE_PATH % shop_nr);
 
     TThing *t, *t2;
     for(StuffIter it=myself->stuff.begin();it!=myself->stuff.end();){
@@ -2280,7 +2280,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
         continue;
 
       if (!(o = read_object(*iter, REAL))) {
-        vlogf(LOG_BUG, fmt("Shopkeeper %d couldn't load produced item.") %  
+        vlogf(LOG_BUG, format("Shopkeeper %d couldn't load produced item.") %  
 	      shop_nr);
         return FALSE;
       }
@@ -2307,7 +2307,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
         continue;
       }
 
-      //      vlogf(LOG_LOW, fmt("%s loading produced object %s") %
+      //      vlogf(LOG_LOW, format("%s loading produced object %s") %
       //      myself->getName() % o->getName());
 
       // money goes to sba
@@ -2413,7 +2413,7 @@ void shoplog(int shop_nr, TBeing *ch, TMonster *keeper, const sstring &name, int
 
   //  db.query("insert into shoplog values (%i, '%s', '%s', '%s', %i, %i, %i, now(), %i)", shop_nr, ch?ch->getName():"unknown", action.c_str(), name.c_str(), cost, keeper->getMoney(), value, count);
 
-  queryqueue.push(fmt("insert into shoplog values (%i, '%s', '%s', '%s', %i, %i, %i, now(), %i)") % shop_nr % ((sstring)(ch?ch->getName():"unknown")).escape(SQL) % action.escape(SQL) % name.escape(SQL) % cost % keeper->getMoney() % value % count);
+  queryqueue.push(format("insert into shoplog values (%i, '%s', '%s', '%s', %i, %i, %i, now(), %i)") % shop_nr % ((sstring)(ch?ch->getName():"unknown")).escape(SQL) % action.escape(SQL) % name.escape(SQL) % cost % keeper->getMoney() % value % count);
 
 
 }
@@ -2551,14 +2551,14 @@ void bootTheShops()
   db.query("select shop_nr from shopowned where tax_nr is null and corp_id not in (21, 27, 29, 28)");
 
   while(db.fetchRow()){
-    vlogf(LOG_LOW, fmt("Shop %s is untaxed.") % db["shop_nr"]);
+    vlogf(LOG_LOW, format("Shop %s is untaxed.") % db["shop_nr"]);
   }
 
 
   db.query("select shop_nr from shop where shop_nr not in (select shop_nr from shopowned)");
 
   while(db.fetchRow()){
-    vlogf(LOG_LOW, fmt("Shop %s is unowned.") % db["shop_nr"]);
+    vlogf(LOG_LOW, format("Shop %s is unowned.") % db["shop_nr"]);
   }
 
 
@@ -2570,13 +2570,13 @@ bool safe_to_save_shop_stuff(TMonster *ch)
 {
 
   if (mob_index[ch->getMobIndex()].getNumber() < 1) {
-     vlogf(LOG_BUG, fmt("Shopkeeper #%d got safe_to_save_shop_stuff called when none in world!") % 
+     vlogf(LOG_BUG, format("Shopkeeper #%d got safe_to_save_shop_stuff called when none in world!") % 
             mob_index[ch->getMobIndex()].virt);
     ch->doSay("I'm not functioning properly.  Tell a god to check the logs, case 1.");
     return FALSE;
   }
   if (mob_index[ch->getMobIndex()].getNumber() > 1) {
-    vlogf(LOG_BUG, fmt("More than one shopkeeper #%d in world.  Now the shop won't work!") % 
+    vlogf(LOG_BUG, format("More than one shopkeeper #%d in world.  Now the shop won't work!") % 
           mob_index[ch->getMobIndex()].virt);
     ch->doSay("I'm not functioning properly.  Tell a god to check the logs, case 2.");
     return FALSE;
@@ -2597,17 +2597,17 @@ bool safe_to_save_shop_stuff(TMonster *ch)
   }
   sprintf(fileName, "%s/%s", SHOPFILE_PATH, cFname);
   if (!(fp = fopen(fileName, "r"))) {
-    vlogf(LOG_BUG, fmt("  Error opening the shop file for shop #%s") %  cFname);
+    vlogf(LOG_BUG, format("  Error opening the shop file for shop #%s") %  cFname);
     return;
   }
   if (fread(&ucVersion, sizeof(ucVersion), 1, fp) != 1) {
-    vlogf(LOG_BUG, fmt("Error reading version from %s.") %  fileName);
+    vlogf(LOG_BUG, format("Error reading version from %s.") %  fileName);
     fclose(fp);
     return;
   }
 
   if (!noteLimitedItems(fp, fileName, ucVersion, FALSE))
-    vlogf(LOG_BUG, fmt("  Unable to count limited items in file  %s") %  fileName);
+    vlogf(LOG_BUG, format("  Unable to count limited items in file  %s") %  fileName);
   fclose(fp);
 }
 
@@ -2809,7 +2809,7 @@ void factoryProduction(int shop_nr)
 
     // read object
     if (!(obj = read_object(vnum, VIRTUAL))) {
-      vlogf(LOG_BUG, fmt("Unable to load object %i for factory") % vnum);
+      vlogf(LOG_BUG, format("Unable to load object %i for factory") % vnum);
       continue;
     }
 

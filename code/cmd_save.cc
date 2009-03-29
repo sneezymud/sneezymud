@@ -35,7 +35,7 @@ void doSaveMOEdit(TBeing *ch, const char *tArg)
   }
 
   if (!ch->roomp) {
-    vlogf(LOG_BUG, fmt("Player doing save without a room!  [%s]") %  ch->getName());
+    vlogf(LOG_BUG, format("Player doing save without a room!  [%s]") %  ch->getName());
     return;
   }
 
@@ -48,7 +48,7 @@ void doSaveMOEdit(TBeing *ch, const char *tArg)
   if (dynamic_cast<TBeing *>(tThing) &&
       (dynamic_cast<TBeing *>(tThing))->isPc()) {
     ch->sendTo("Kinky.  Did you buy them dinner first?\n\r");
-    (dynamic_cast<TBeing *>(tThing))->sendTo(fmt("%s just tried to save you for later use!\n\r") %
+    (dynamic_cast<TBeing *>(tThing))->sendTo(format("%s just tried to save you for later use!\n\r") %
                                              ch->getName());
     return;
   }
@@ -114,7 +114,7 @@ void TBeing::doSave(silentTypeT silent, const char *tArg)
 
 #if 0
   if (!desc) {
-    vlogf(LOG_BUG, fmt("%s tried to doSave while link dead.") %  getName());
+    vlogf(LOG_BUG, format("%s tried to doSave while link dead.") %  getName());
     return;
   }
 #endif

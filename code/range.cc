@@ -148,7 +148,7 @@ vlogf(LOG_BUG, buf);
 
   if ((iDist > 50) || (max_distance < (unsigned int) iDist)) {
     ch->sendTo("Much too far.  Maybe in your dreams!\n\r");
-    ch->sendTo(fmt("You couldn't possibly throw it further than %d rooms.\n\r") % max_distance);
+    ch->sendTo(format("You couldn't possibly throw it further than %d rooms.\n\r") % max_distance);
     return FALSE;
   }
 
@@ -175,7 +175,7 @@ vlogf(LOG_BUG, buf);
   act("$n throws $p!", TRUE, ch, this, 0, TO_ROOM);
   tmp = ch->unequip(ch->getPrimaryHold());
   if (!tmp) {
-    vlogf(LOG_BUG, fmt("Bad unequip in throwThing (%s : %s)") %  getName() % ch->getName());
+    vlogf(LOG_BUG, format("Bad unequip in throwThing (%s : %s)") %  getName() % ch->getName());
     ch->sendTo("Something real bad happened.  Talk to a god.\n\r");
     return FALSE;
   }
@@ -487,18 +487,18 @@ int TThing::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int mdis
         resCode = TRUE;
         d = min(max(0, (int) (getWeight() - 5)), 10);
 #if RANGE_DEBUG
-        vlogf(LOG_BUG, fmt("Range debug: (2) dam ping 1: %d") %  d);
+        vlogf(LOG_BUG, format("Range debug: (2) dam ping 1: %d") %  d);
 #endif
 // don't do this or we wind up with acorns killing people
 //        d *= mdist - range + 1;  // modify for point blank range - bat
 #if RANGE_DEBUG
-        vlogf(LOG_BUG, fmt("Range debug: (2) dam ping 3: %d") %  d);
+        vlogf(LOG_BUG, format("Range debug: (2) dam ping 3: %d") %  d);
 #endif
         TObj *tobj = dynamic_cast<TObj *>(this);
         if (tobj) {
           d = get_range_actual_damage(ch, tbt, tobj, d, TYPE_HIT);
 #if RANGE_DEBUG
-          vlogf(LOG_BUG, fmt("Range debug: (2) dam ping 4: %d") %  d);
+          vlogf(LOG_BUG, format("Range debug: (2) dam ping 4: %d") %  d);
 #endif
 
           if (::number(1, d) <= tobj->getStructPoints() &&
@@ -512,7 +512,7 @@ int TThing::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int mdis
             }
           }
 #if RANGE_DEBUG
-          vlogf(LOG_BUG, fmt("Range debug: (2) %s damaging %s with %s for %d dam") % 
+          vlogf(LOG_BUG, format("Range debug: (2) %s damaging %s with %s for %d dam") % 
                  ch->getName() % tbt->getName() % tobj->getName() % d);
 #endif
           if (ch->reconcileDamage(tbt, d, getWtype()) == -1) {
@@ -757,7 +757,7 @@ int throwThing(TThing *t, dirTypeT dir, int from, TBeing **targ, int dist, int m
     *(real_roomp(from)) += *t;
   }
   if (!rp) {
-    vlogf(LOG_BUG, fmt("%s thrown into non-existant room #%d") %  capbuf % from);
+    vlogf(LOG_BUG, format("%s thrown into non-existant room #%d") %  capbuf % from);
     --(*t);
     thing_to_room(t, ROOM_VOID);
     return FALSE;
@@ -925,7 +925,7 @@ int clearpath(int room, dirTypeT dir)
     return FALSE;
 
   if (!real_roomp(rp->dir_option[dir]->to_room)) {
-    vlogf(LOG_BUG, fmt("Range function done in room with bad exit. (%d) Dir:[%d]") %  room % dir);
+    vlogf(LOG_BUG, format("Range function done in room with bad exit. (%d) Dir:[%d]") %  room % dir);
     return FALSE;
   }
   if (IS_SET(rp->dir_option[dir]->condition, EX_CLOSED))
@@ -1017,15 +1017,15 @@ void TBeing::doScan(const char *argument)
       if (t == this)
         continue;
       if (canSee(t)) {
-        sstring nc_name = fmt("%30s") % t->getNameNOC(this);
+        sstring nc_name = format("%30s") % t->getNameNOC(this);
         int name_pos = nc_name.find_first_not_of(" ");
 
         nc_name.replace(name_pos, nc_name.length()-name_pos, t->getName());
 
-        sendTo(COLOR_MOBS, fmt("%s : right here\n\r") % nc_name);
+        sendTo(COLOR_MOBS, format("%s : right here\n\r") % nc_name);
         found = TRUE;
       } else if (canSee(t, INFRA_YES)) {
-        sendTo(COLOR_MOBS, fmt("%30s : right here\n\r") % "A blob of heat");
+        sendTo(COLOR_MOBS, format("%30s : right here\n\r") % "A blob of heat");
         found = TRUE;
       }
     }
@@ -1073,24 +1073,24 @@ void TBeing::doScan(const char *argument)
           if (!tbt)
             continue;
           if (can_see_char_other_room(this, tbt, real_roomp(rm))) {
-            sstring nc_name = fmt("%30s") % tbt->getNameNOC(this);
+            sstring nc_name = format("%30s") % tbt->getNameNOC(this);
             int name_pos = nc_name.find_first_not_of(" ");
 
             nc_name.replace(name_pos, nc_name.length()-name_pos, tbt->getName());
-            sendTo(COLOR_MOBS, fmt("%s : %s %s\n\r") % nc_name % rng_desc[range] % dirs_to_blank[i]);
+            sendTo(COLOR_MOBS, format("%s : %s %s\n\r") % nc_name % rng_desc[range] % dirs_to_blank[i]);
             nfnd++;
             found = TRUE;
             if (nfnd > (5 + visionBonus / 3)) {
-              sendTo(fmt("The crowd hinders you from seeing any further %s.\n\r") % dirs_to_blank[i]);
+              sendTo(format("The crowd hinders you from seeing any further %s.\n\r") % dirs_to_blank[i]);
               hindered = TRUE;
               break;
             }
           } else if (canSee(tbt, INFRA_YES)) {
-            sendTo(COLOR_MOBS, fmt("%30s : %s %s\n\r") % "A blob of heat" % rng_desc[range] % dirs_to_blank[i]);
+            sendTo(COLOR_MOBS, format("%30s : %s %s\n\r") % "A blob of heat" % rng_desc[range] % dirs_to_blank[i]);
             nfnd++;
             found = TRUE;
             if (nfnd > (5 + visionBonus / 3)) {
-              sendTo(fmt("The crowd hinders you from seeing any further %s.\n\r") % dirs_to_blank[i]);
+              sendTo(format("The crowd hinders you from seeing any further %s.\n\r") % dirs_to_blank[i]);
               hindered = TRUE;
               break;
             }
@@ -1371,7 +1371,7 @@ void TBeing::doBload(const char *arg)
   }
   if (heldInPrimHand()) {
     if (!isname(arg1, heldInPrimHand()->name)) {
-      sendTo(COLOR_OBJECTS, fmt("You would have a hard time firing your %s, while holding %s.\n\r") %            arg1 % sstring(heldInPrimHand()->getName()).uncap());
+      sendTo(COLOR_OBJECTS, format("You would have a hard time firing your %s, while holding %s.\n\r") %            arg1 % sstring(heldInPrimHand()->getName()).uncap());
       return;
     } else {
       TThing *tObj = heldInPrimHand();
@@ -1379,12 +1379,12 @@ void TBeing::doBload(const char *arg)
       *this += *(unequip(getPrimaryHold()));
       //--(*tObj);
       //*this += *tObj;
-      sendTo(COLOR_OBJECTS, fmt("You remove %s to load it.\n\r") %
+      sendTo(COLOR_OBJECTS, format("You remove %s to load it.\n\r") %
              sstring(tObj->getName()).uncap());
     }
   }
   if (heldInSecHand()) {
-    sendTo(COLOR_OBJECTS, fmt("You would have a hard time firing your %s, while holding %s.\n\r") %          arg1 % sstring(heldInSecHand()->getName()).uncap());
+    sendTo(COLOR_OBJECTS, format("You would have a hard time firing your %s, while holding %s.\n\r") %          arg1 % sstring(heldInSecHand()->getName()).uncap());
     return;
   }
   if (!(bow = searchLinkedListVis(this, arg1, stuff))) {
@@ -1401,7 +1401,7 @@ void TBeing::doBload(const char *arg)
     if (arrow)
       arrow->bloadBowArrow(this, bow);
     else
-      sendTo(fmt("You seem to have run out of '%s's.\n\r") % arg2);
+      sendTo(format("You seem to have run out of '%s's.\n\r") % arg2);
   }
 }
 

@@ -579,7 +579,7 @@ TObj *findCart(TMonster *mob)
   }
   if (!cart || obj_index[cart->getItemIndex()].virt != CART_VNUM) {
     if(!(cart = read_object(CART_VNUM, VIRTUAL))){
-      vlogf(LOG_LOW, fmt("Error loading cart in spec_mobs_garbage_convoy.cc"));
+      vlogf(LOG_LOW, "Error loading cart in spec_mobs_garbage_convoy.cc");
       return NULL;
     }
     *mob->roomp += *cart;
@@ -687,7 +687,7 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
     return FALSE;
 
   if(DEBUG)
-    myself->doSay(fmt("I am %s.") % hunt_text_stateT[job->state]);
+    myself->doSay(format("I am %s.") % hunt_text_stateT[job->state]);
 
   // now the actual actions
   switch(job->state){
@@ -895,8 +895,8 @@ int fruitScavenger(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj 
 			for(StuffIter it=tree->stuff.begin();it!=tree->stuff.end() && (t2=*it);++it) {
 				fruit = dynamic_cast<TObj *>(t2);
 				if (fruit && fruit->objVnum() == seek_fruit) {
-					act(fmt("$n eats %s from $p.") % fruit->getName(), TRUE, myself, tree, 0, TO_ROOM);
-					act(fmt("You eat %s from a $p.") % fruit->getName(), FALSE, myself, tree, 0, TO_CHAR);
+					act(format("$n eats %s from $p.") % fruit->getName(), TRUE, myself, tree, 0, TO_ROOM);
+					act(format("You eat %s from a $p.") % fruit->getName(), FALSE, myself, tree, 0, TO_CHAR);
 					tree->setVerminated(tree->getVerminated() + 1);
 					delete fruit;
 					return TRUE;

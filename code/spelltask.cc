@@ -112,7 +112,7 @@ void TBeing::stopCast(stopCastT messages)
 
   if (target) {
     if (!(ch = target->getCaster())) {
-      vlogf(LOG_BUG, fmt("%s doesnt have a casterList in stopCast(%s)") % target->getName() %getName());
+      vlogf(LOG_BUG, format("%s doesnt have a casterList in stopCast(%s)") % target->getName() %getName());
     } else {
       if (target->getCaster() == this) {
         // first in list
@@ -136,7 +136,7 @@ void TBeing::stopCast(stopCastT messages)
           }  
         }
         if (!ch)
-          vlogf(LOG_BUG,fmt("%s not found in spelltasking list on %s") %  target->getName() %getName());
+          vlogf(LOG_BUG,format("%s not found in spelltasking list on %s") %  target->getName() %getName());
       }
     }  
   }
@@ -267,7 +267,7 @@ static bool doComponentUse(spellNumT spell, TBeing *ch)
     if (!ch->useComponentObj(ch->findComponent(spell), ch->spelltask->object)) 
       return FALSE;
   } else {
-    vlogf(LOG_BUG, fmt("Bad target in doComponentUse(%s)(%d).") %  ch->getName() % spell);
+    vlogf(LOG_BUG, format("Bad target in doComponentUse(%s)(%d).") %  ch->getName() % spell);
     return FALSE;
   }
   return TRUE;
@@ -289,7 +289,7 @@ int start_cast(TBeing *ch, TBeing *victim, TThing *obj, TRoom *rp, spellNumT spe
       return FALSE;
     }
     // mob casting 2 spells.  2nd spell is "spell", look at spelltask for first...
-    vlogf(LOG_BUG, fmt("%s got to bad place in start_cast (%d).  Tell a coder.") % 
+    vlogf(LOG_BUG, format("%s got to bad place in start_cast (%d).  Tell a coder.") % 
        (ch ? ch->getName() : "Unknown") % spell);
 
     if (ch)
@@ -298,7 +298,7 @@ int start_cast(TBeing *ch, TBeing *victim, TThing *obj, TRoom *rp, spellNumT spe
     return FALSE;
   }
   if (!(ch->spelltask = new spellTaskData())) {
-    vlogf(LOG_BUG, fmt("Couldn't allocate memory in start_cast for %s") %  ch->getName());
+    vlogf(LOG_BUG, format("Couldn't allocate memory in start_cast for %s") %  ch->getName());
     return FALSE;
   }
   ch->spelltask->orig_arg = mud_str_dup(arg);
@@ -416,7 +416,7 @@ void cast_warn_busy(const TBeing *ch, spellNumT which)
   skillUseTypeT styp;
 
   if (!ch || !(ch->spelltask)) {
-    vlogf(LOG_BUG, fmt("%s got to bad place in cast_warn_busy.  Tell a coder") % 
+    vlogf(LOG_BUG, format("%s got to bad place in cast_warn_busy.  Tell a coder") % 
        (ch ? ch->getName() : "Unknown"));
     return;
   }
@@ -453,7 +453,7 @@ int TBeing::cast_spell(TBeing *ch, cmdTypeT cmd, int pulse)
   pulse = rc = ret = 0;
   limbs = silence = false;
   if (!ch->spelltask) {
-    vlogf(LOG_BUG,fmt("Somehow %s got to cast_spell with no spelltask structure,") %  ch->getName());
+    vlogf(LOG_BUG,format("Somehow %s got to cast_spell with no spelltask structure,") %  ch->getName());
     act("Something went wrong here in spellcasting. Could you please place a bug or tell a coder the details" , FALSE, ch, NULL, NULL,TO_CHAR);
    return FALSE;
   } 
@@ -582,7 +582,7 @@ int TBeing::cast_spell(TBeing *ch, cmdTypeT cmd, int pulse)
           colorAct(COLOR_SPELLS, "You try to ignore the surroundings and continue the ritual.", FALSE, ch, NULL, NULL, TO_CHAR);
       }
 #if SPELLTASK_DEBUG
-      vlogf(LOG_BUG, fmt("%s has a distract of %d in round %d on spell %s") % ch->getName() % distract % rounds % discArray[spell]->name);
+      vlogf(LOG_BUG, format("%s has a distract of %d in round %d on spell %s") % ch->getName() % distract % rounds % discArray[spell]->name);
 #endif
       
       if (distract && (((2 * distract) >= ::number(1,20)) || (distract == -1))) {
@@ -603,7 +603,7 @@ int TBeing::cast_spell(TBeing *ch, cmdTypeT cmd, int pulse)
               TRUE, ch, NULL, NULL, TO_ROOM);
         }
         ch->spelltask->distracted = 0;
-//        vlogf(LOG_BUG,fmt("1. before distracted(%d) distract= %d rounds = %d") %  ch->spelltask->distracted % distract % ch->spelltask->rounds);
+//        vlogf(LOG_BUG,format("1. before distracted(%d) distract= %d rounds = %d") %  ch->spelltask->distracted % distract % ch->spelltask->rounds);
         ch->stopCast(STOP_CAST_NONE);
         return FALSE;
       } else if (distract && (distract >= ::number(0,(distract + 1)))) {
@@ -680,7 +680,7 @@ int TBeing::cast_spell(TBeing *ch, cmdTypeT cmd, int pulse)
           colorAct(COLOR_SPELLS, "<c>You almost lose your focus but slowly you manage to continue your spell.<z>",
                FALSE, ch, NULL, NULL, TO_CHAR);
 #if SPELLTASK_DEBUG
-          vlogf(LOG_BUG,fmt("Distracted(%d) distract= %d add 1 to rounds = %d") %  ch->spelltask->distracted % distract % ch->spelltask->rounds);
+          vlogf(LOG_BUG,format("Distracted(%d) distract= %d add 1 to rounds = %d") %  ch->spelltask->distracted % distract % ch->spelltask->rounds);
 #endif
           ch->spelltask->rounds++;
           rounds++;
@@ -688,7 +688,7 @@ int TBeing::cast_spell(TBeing *ch, cmdTypeT cmd, int pulse)
           colorAct(COLOR_SPELLS, "<c>You almost lose your focus but slowly you manage to continue your prayer.<z>",
               FALSE, ch, NULL, NULL, TO_CHAR);
 #if SPELLTASK_DEBUG
-          vlogf(LOG_BUG,fmt("Distracted(%d) distract= %d add 1 to rounds = %d") %  ch->spelltask->distracted % distract % ch->spelltask->rounds);
+          vlogf(LOG_BUG,format("Distracted(%d) distract= %d add 1 to rounds = %d") %  ch->spelltask->distracted % distract % ch->spelltask->rounds);
 #endif
           ch->spelltask->rounds++;
           rounds++;
@@ -696,7 +696,7 @@ int TBeing::cast_spell(TBeing *ch, cmdTypeT cmd, int pulse)
           colorAct(COLOR_SPELLS, "<B>You almost lose your focus but slowly you manage to continue the ritual.<z>",
               FALSE, ch, NULL, NULL, TO_CHAR);
 #if SPELLTASK_DEBUG
-          vlogf(LOG_BUG,fmt("Distracted(%d) distract= %d add 1 to rounds = %d") %  ch->spelltask->distracted % distract % ch->spelltask->rounds);
+          vlogf(LOG_BUG,format("Distracted(%d) distract= %d add 1 to rounds = %d") %  ch->spelltask->distracted % distract % ch->spelltask->rounds);
 #endif
           ch->spelltask->rounds++;
           rounds++;
@@ -706,7 +706,7 @@ int TBeing::cast_spell(TBeing *ch, cmdTypeT cmd, int pulse)
         if (typ == SPELL_CASTER) {
           colorAct(COLOR_SPELLS, "<c>Your concentration is good and your spell forms faster than usual.<z>", FALSE, ch, NULL, NULL, TO_CHAR);
 #if SPELLTASK_DEBUG
-          vlogf(LOG_BUG,fmt("%s subtract 1 from rounds = %d") %  ch->getName() % ch->spelltask->rounds);
+          vlogf(LOG_BUG,format("%s subtract 1 from rounds = %d") %  ch->getName() % ch->spelltask->rounds);
 #endif
           ch->spelltask->rounds--;
           rounds--;
@@ -872,7 +872,7 @@ int TBeing::cast_spell(TBeing *ch, cmdTypeT cmd, int pulse)
 
           if ((ch->GetMaxLevel() < GOD_LEVEL1) && ch->desc && (ch->spelltask && !ch->spelltask->component) && IS_SET(discArray[spell]->comp_types, COMP_MATERIAL)) {
             sendTo(COLOR_SPELLS, "<r>You seem to have lost your component.<z>\n\r");
-            vlogf(LOG_BUG, fmt("%s got to end of casting without using component, spell:%s (%d)") %  ch->getName() % discArray[spell]->name % spell);
+            vlogf(LOG_BUG, format("%s got to end of casting without using component, spell:%s (%d)") %  ch->getName() % discArray[spell]->name % spell);
            ch->stopCast(STOP_CAST_NONE);
             return FALSE;
           }
@@ -890,7 +890,7 @@ int TBeing::cast_spell(TBeing *ch, cmdTypeT cmd, int pulse)
             ADD_DELETE(rc, DELETE_THIS);
           break;
         default:
-          vlogf(LOG_BUG,fmt("Somehow %s got sent to bad counter case in cast_spell") % ch->getName());
+          vlogf(LOG_BUG,format("Somehow %s got sent to bad counter case in cast_spell") % ch->getName());
           break;
       }
       break;
@@ -1379,7 +1379,7 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
   orgArg = caster->spelltask->orig_arg;
 
   if (!discArray[which]) {
-    vlogf(LOG_BUG, fmt("doSpellCast called with null discArray[] (%d) (%s)") %  which % getName());
+    vlogf(LOG_BUG, format("doSpellCast called with null discArray[] (%d) (%s)") %  which % getName());
     return FALSE;
   }
 
@@ -2451,7 +2451,7 @@ int TBeing::applyCompCheck(spellNumT spell, int round, int status)
   else if (IS_SET(discArray[spell]->comp_types, COMP_MATERIAL_ALMOST_END))
     use = 5;
   else 
-    vlogf(LOG_BUG,fmt("Bad case in spell_parser.comp_type(%d)") % spell);
+    vlogf(LOG_BUG,format("Bad case in spell_parser.comp_type(%d)") % spell);
   
 // No component needed
   if (!use)
@@ -2488,7 +2488,7 @@ int TBeing::applyCompCheck(spellNumT spell, int round, int status)
         return TRUE;
       break;
     default:
-      vlogf(LOG_BUG,fmt("Bad case in applyCompCheck (%s)") %  getName());
+      vlogf(LOG_BUG,format("Bad case in applyCompCheck (%s)") %  getName());
       return FALSE;
   }
 

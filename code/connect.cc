@@ -311,10 +311,10 @@ bool Descriptor::checkForMultiplay()
       total += 1;
       if (total > max_multiplay_chars &&
 	  gamePort == PROD_GAMEPORT){
-        vlogf(LOG_CHEAT, fmt("MULTIPLAY: %s and %s from same account[%s]") % 
+        vlogf(LOG_CHEAT, format("MULTIPLAY: %s and %s from same account[%s]") % 
               character->name % ch->name % account->name);
 #if FORCE_MULTIPLAY_COMPLIANCE
-        character->sendTo(fmt("\n\rTake note: You have another character, %s, currently logged in.\n\r") % ch->name);
+        character->sendTo(format("\n\rTake note: You have another character, %s, currently logged in.\n\r") % ch->name);
         character->sendTo("Adding this character would cause you to be in violation of multiplay rules.\n\r");
         character->sendTo("Please log off your other character and then try again.\n\r");
         outputProcessing();  // gotta write this to them, before we sever  :)
@@ -351,7 +351,7 @@ bool Descriptor::checkForMultiplay()
         const int trigger_minutes = 1;
         if (((now - talkCount) > ((trigger_minutes + character->getTimer()) * SECS_PER_REAL_MIN)) &&
             ((now - ch->desc->talkCount) > ((trigger_minutes + ch->getTimer()) * SECS_PER_REAL_MIN))) {
-          vlogf(LOG_CHEAT, fmt("MULTIPLAY: Players %s and %s are possibly multiplaying.") %  character->getName() % ch->getName());
+          vlogf(LOG_CHEAT, format("MULTIPLAY: Players %s and %s are possibly multiplaying.") %  character->getName() % ch->getName());
 
           time_t ct = time(0);
           struct tm * lt = localtime(&ct);
@@ -379,7 +379,7 @@ bool Descriptor::checkForMultiplay()
           FILE *fp;
           if (!(fp = fopen(cmd_buf.c_str(), "a+"))) {
             perror("doComment");
-            vlogf(LOG_FILE, fmt("Could not open the comment-file (%s).") %  cmd_buf);
+            vlogf(LOG_FILE, format("Could not open the comment-file (%s).") %  cmd_buf);
           } else {
             fputs(tmpstr.c_str(), fp);
             fclose(fp);
@@ -412,7 +412,7 @@ bool Descriptor::checkForMultiplay()
 
           fclose(tFile);
 #if 1
-		  character->sendTo(fmt("\n\rTake note: You have a link-dead character, %s, currently logged in.\n\r") % tChar->name);
+		  character->sendTo(format("\n\rTake note: You have a link-dead character, %s, currently logged in.\n\r") % tChar->name);
           character->sendTo("Adding this character would cause you to be in violation of multiplay rules.\n\r");
           character->sendTo("Please reconnect your other character to log them off and then try again.\n\r");
           outputProcessing();  // gotta write this to them, before we sever  :)
@@ -443,7 +443,7 @@ sstring SnoopComm::getClientText(){
 }
 
 sstring SnoopComm::getXML(){
-  return fmt("<snoop victim=\"%s\">%s</snoop>") % 
+  return format("<snoop victim=\"%s\">%s</snoop>") % 
     vict.escape(XML) % text.escape(XML);
 }
 
@@ -486,8 +486,8 @@ int Descriptor::outputProcessing()
     if (counter >= 5000) {
       char buf2[MAX_STRING_LENGTH + MAX_STRING_LENGTH];
       strcpy(buf2, i);
-      vlogf(LOG_BUG, fmt("Tell a coder, bad loop in outputProcessing, please investigate %s") %  (character ? character->getName() : "'No char for desc'"));
-      vlogf(LOG_BUG, fmt("i = %s, last i= %s") %  buf2 % buf); 
+      vlogf(LOG_BUG, format("Tell a coder, bad loop in outputProcessing, please investigate %s") %  (character ? character->getName() : "'No char for desc'"));
+      vlogf(LOG_BUG, format("i = %s, last i= %s") %  buf2 % buf); 
       // Set everything to NULL, might lose memory but we dont wanna try
       // a delete cause it might crash/ - Russ
       output.clear();
@@ -537,7 +537,7 @@ Descriptor::~Descriptor()
   TRoom *rp;
 
   if (close(socket->m_sock))
-    vlogf(LOG_BUG, fmt("Close() exited with errno (%d) return value in ~Descriptor") %  errno);
+    vlogf(LOG_BUG, format("Close() exited with errno (%d) return value in ~Descriptor") %  errno);
   
   // clear out input/output buffers
   flush();
@@ -584,7 +584,7 @@ Descriptor::~Descriptor()
       }
 
       act("$n has lost $s link.", TRUE, character, 0, 0, TO_ROOM);
-      vlogf(LOG_PIO, fmt("Closing link to: %s.") %  character->getName());
+      vlogf(LOG_PIO, format("Closing link to: %s.") %  character->getName());
 
       // this is partly a penalty for losing link (lose followers)
       // the more practical reason is that the mob and items are saved
@@ -615,7 +615,7 @@ Descriptor::~Descriptor()
           num++;
         }
       }
-      vlogf(LOG_PIO, fmt("Link Lost for %s: [%d talens/%d bank/%.2f xps/%d items/%d age-mod/%d rent]") % 
+      vlogf(LOG_PIO, format("Link Lost for %s: [%d talens/%d bank/%.2f xps/%d items/%d age-mod/%d rent]") % 
             character->getName() % character->getMoney() % character->getBank() %
             character->getExp() % num % character->age_mod % 
             (dynamic_cast<TPerson *>(character)?dynamic_cast<TPerson *>(character)->last_rent:0));
@@ -640,7 +640,7 @@ Descriptor::~Descriptor()
       if (connected == CON_PWDNRM)
         bad_login++;
       if (character->getName())
-        vlogf(LOG_PIO, fmt("Losing player: %s [%s].") %  character->getName() % host);
+        vlogf(LOG_PIO, format("Losing player: %s [%s].") %  character->getName() % host);
 
       // shove into list so delete works OK
       character->desc = NULL;
@@ -768,7 +768,7 @@ void TPerson::autoDeath()
 {
   char buf[1024];
 
-  vlogf(LOG_PIO, fmt("%s reconnected with negative hp, auto death occurring.") %  
+  vlogf(LOG_PIO, format("%s reconnected with negative hp, auto death occurring.") %  
                         getName());
   sendTo("You reconnected with negative hit points, automatic death occurring.");
   sprintf(buf, "%s detected you reconnecting with %d hit points.\n\r", MUD_NAME, getHit());
@@ -872,7 +872,7 @@ void ShowNewNews(TBeing * tBeing)
           }
 
           bufStr = tString;
-          tBeing->sendTo(fmt("%s") % bufStr.toCRLF());
+          tBeing->sendTo(format("%s") % bufStr.toCRLF());
 
           if (++tCount == 10) {
             tBeing->sendTo("...And there is more, type NEWS to see more.\n\r");
@@ -908,7 +908,7 @@ void ShowNewNews(TBeing * tBeing)
           }
 
           bufStr = tString;
-          tBeing->sendTo(fmt("%s") % bufStr.toCRLF());
+          tBeing->sendTo(format("%s") % bufStr.toCRLF());
 
           if (++tCount == 10) {
             tBeing->sendTo("...And there is more, type NEWS to see more.\n\r");
@@ -943,7 +943,7 @@ void ShowNewNews(TBeing * tBeing)
           }
 
           bufStr = tString;
-          tBeing->sendTo(fmt("%s") % bufStr.toCRLF());
+          tBeing->sendTo(format("%s") % bufStr.toCRLF());
 
           if (++tCount == 10) {
             tBeing->sendTo("...And there is more, SEE WIZNEWS to see more.\n\r");
@@ -1002,9 +1002,9 @@ int Descriptor::nanny(sstring arg)
         // too bad they can't do this from the menu, but they won't get this
         // far if this was set anyway
         writeToQ("The email account you entered for your account is thought to be bogus.\n\r");
-        buf = fmt("You entered an email address of: %s\n\r") % account->email;
+        buf = format("You entered an email address of: %s\n\r") % account->email;
         writeToQ(buf);
-        buf = fmt("If this address is truly valid, please send a mail from it to: %s") % MUDADMIN_EMAIL;
+        buf = format("If this address is truly valid, please send a mail from it to: %s") % MUDADMIN_EMAIL;
         writeToQ(buf);
         writeToQ("Otherwise, please change your account email address.\n\r");
         rp = real_roomp(ROOM_VOID);
@@ -1149,11 +1149,11 @@ int Descriptor::nanny(sstring arg)
             objCost cost;
 
             if (IS_SET(account->flags, ACCOUNT_IMMORTAL)) {
-              vlogf(LOG_PIO, fmt("%s[%s] has reconnected  (account: %s).") % 
+              vlogf(LOG_PIO, format("%s[%s] has reconnected  (account: %s).") % 
 	             character->getName() % host % account->name);
 
 	    } else {
-              vlogf(LOG_PIO, fmt("%s[%s] has reconnected  (account: %s).") %  
+              vlogf(LOG_PIO, format("%s[%s] has reconnected  (account: %s).") %  
                      character->getName() % host % account->name);
             }
             character->recepOffer(NULL, &cost);
@@ -1188,9 +1188,9 @@ int Descriptor::nanny(sstring arg)
       }
       if (should_be_logged(character)) {
         if (IS_SET(account->flags, ACCOUNT_IMMORTAL)) {
-	  vlogf(LOG_PIO, fmt("%s[%s] has connected  (account: %s).") %  character->getName() % host % account->name);
+	  vlogf(LOG_PIO, format("%s[%s] has connected  (account: %s).") %  character->getName() % host % account->name);
         } else {
-          vlogf(LOG_PIO, fmt("%s[%s] has connected  (account: %s).") %  character->getName() % host % account->name);
+          vlogf(LOG_PIO, format("%s[%s] has connected  (account: %s).") %  character->getName() % host % account->name);
         }
       }
       
@@ -1281,9 +1281,9 @@ int Descriptor::nanny(sstring arg)
                 objCost cost;
 
                 if (IS_SET(account->flags, ACCOUNT_IMMORTAL)) 
-		  vlogf(LOG_PIO, fmt("%s[%s] has reconnected  (account: %s).") %  tmp_ch->getName() % host % account->name);
+		  vlogf(LOG_PIO, format("%s[%s] has reconnected  (account: %s).") %  tmp_ch->getName() % host % account->name);
                 else 
-                  vlogf(LOG_PIO, fmt("%s[%s] has reconnected  (account: %s).") %  tmp_ch->getName() % host % account->name);
+                  vlogf(LOG_PIO, format("%s[%s] has reconnected  (account: %s).") %  tmp_ch->getName() % host % account->name);
                 
                 tmp_ch->recepOffer(NULL, &cost);
                 dynamic_cast<TPerson *>(tmp_ch)->saveRent(&cost, FALSE, 1);
@@ -1388,7 +1388,7 @@ int Descriptor::nanny(sstring arg)
       // called to trigger responses etc
       rc = character->genericMovedIntoRoom(character->roomp, -1);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
-        vlogf(LOG_BUG, fmt("Response trigger in %s caused %s to be deleted and drop eq.") % character->roomp->getName() % character->getName());
+        vlogf(LOG_BUG, format("Response trigger in %s caused %s to be deleted and drop eq.") % character->roomp->getName() % character->getName());
         dynamic_cast<TPerson *>(character)->dropItemsToRoom(SAFE_YES, NUKE_ITEMS);
         return DELETE_THIS;
       }
@@ -1414,7 +1414,7 @@ int TPerson::genericLoadPC()
 #endif
 
   if (should_be_logged(this)) {
-    vlogf(LOG_PIO, fmt("Loading %s's equipment") %  name);
+    vlogf(LOG_PIO, format("Loading %s's equipment") %  name);
   }
   resetChar();
   BatoprsResetCharFlags(this);
@@ -1431,7 +1431,7 @@ int TPerson::genericLoadPC()
   character_list = this;
 
 #if SPEEF_MAKE_BODY
-  vlogf(LOG_MISC, fmt("Loading a body for %s\n\r") %  name);
+  vlogf(LOG_MISC, format("Loading a body for %s\n\r") %  name);
   body = new Body(race->getBodyType(), points.maxHit);
 #endif
   if (in_room == ROOM_NOWHERE || in_room == ROOM_AUTO_RENT) {
@@ -1443,12 +1443,12 @@ int TPerson::genericLoadPC()
       if (player.hometown != 0xFFFF) {
         rp = real_roomp(player.hometown);
         if (!rp) {
-          vlogf(LOG_LOW, fmt("Player (%s) had non-existant hometown (%d)") %  getName() % player.hometown);
+          vlogf(LOG_LOW, format("Player (%s) had non-existant hometown (%d)") %  getName() % player.hometown);
           rp = real_roomp(ROOM_NEWBIE);
         }
 
         if (!rp) {
-          vlogf(LOG_LOW, fmt("Was unable to read center square!  Player being disconnected!  (%s)") % getName());
+          vlogf(LOG_LOW, format("Was unable to read center square!  Player being disconnected!  (%s)") % getName());
           return DELETE_THIS;
         }
 
@@ -1457,7 +1457,7 @@ int TPerson::genericLoadPC()
         rp = real_roomp(ROOM_NEWBIE);
 
         if (!rp) {
-          vlogf(LOG_LOW, fmt("Was unable to read center square!  Player being disconnected!  (%s) [2]") % getName());
+          vlogf(LOG_LOW, format("Was unable to read center square!  Player being disconnected!  (%s) [2]") % getName());
           return DELETE_THIS;
         }
 
@@ -1470,18 +1470,18 @@ int TPerson::genericLoadPC()
       rp = real_roomp((desc ? desc->office : ROOM_IMPERIA));
 
       if (!IS_SET(desc->account->flags, ACCOUNT_IMMORTAL)) {
-        vlogf(LOG_BUG, fmt("%s is immortal but account isn't set immortal.  Setting now.") % 
+        vlogf(LOG_BUG, format("%s is immortal but account isn't set immortal.  Setting now.") % 
               getName());
         SET_BIT(desc->account->flags, ACCOUNT_IMMORTAL);
       }
 
       if (!rp) {
-        vlogf(LOG_BUG, fmt("Attempting to place %s in room that does not exist.\n\r") %  name);
+        vlogf(LOG_BUG, format("Attempting to place %s in room that does not exist.\n\r") %  name);
         rp = real_roomp(ROOM_VOID);
       }
 
       if (!rp) {
-	vlogf(LOG_LOW, fmt("Was unable to read VOID!  Immortal being disconnected!  (%s) [3]") % getName());
+	vlogf(LOG_LOW, format("Was unable to read VOID!  Immortal being disconnected!  (%s) [3]") % getName());
 	return DELETE_THIS;
       }
 
@@ -1505,7 +1505,7 @@ int TPerson::genericLoadPC()
         rp = real_roomp(in_room);
 
         if (!rp) {
-          vlogf(LOG_LOW, fmt("Was unable to read room %d!  Player being disconnected!  (%s) [3]") % in_room % getName());
+          vlogf(LOG_LOW, format("Was unable to read room %d!  Player being disconnected!  (%s) [3]") % in_room % getName());
           return DELETE_THIS;
         }
 
@@ -1516,7 +1516,7 @@ int TPerson::genericLoadPC()
         rp = real_roomp(ROOM_NEWBIE);
 
         if (!rp) {
-          vlogf(LOG_LOW, fmt("Was unable to read center square!  Player being disconnected!  (%s) [4]") % getName());
+          vlogf(LOG_LOW, format("Was unable to read center square!  Player being disconnected!  (%s) [4]") % getName());
           return DELETE_THIS;
         }
 
@@ -1528,7 +1528,7 @@ int TPerson::genericLoadPC()
       rp = real_roomp(ROOM_HELL);
 
       if (!rp) {
-        vlogf(LOG_LOW, fmt("Was unable to read HELL!  Player being disconnected!  (%s) [5]") % getName());
+        vlogf(LOG_LOW, format("Was unable to read HELL!  Player being disconnected!  (%s) [5]") % getName());
         return DELETE_THIS;
       }
 
@@ -1668,7 +1668,7 @@ bool Descriptor::page_file(const char *the_input)
 
   for (lines = 0; lines < (cur_page - 1) * lines_per_page; lines++) {
     if (!fgets(buffer, 255, fp)) {
-      vlogf(LOG_FILE, fmt("Error paging file: %s, %d") %  pagedfile % cur_page);
+      vlogf(LOG_FILE, format("Error paging file: %s, %d") %  pagedfile % cur_page);
       delete [] pagedfile;
       pagedfile = NULL;
       cur_page = tot_pages = 0;
@@ -2114,7 +2114,7 @@ void Descriptor::sstring_add(char *s)
               connected = CON_PLYNG;
 
             if (m_bIsClient)
-              clientf(fmt("%d|%d") % CLIENT_ENABLEWINDOW % FALSE);
+              clientf(format("%d|%d") % CLIENT_ENABLEWINDOW % FALSE);
 
             return;
           }
@@ -2193,7 +2193,7 @@ void Descriptor::sstring_add(char *s)
     if (character->isPlayerAction(PLR_MAILING)) {
       if (ignored.isMailIgnored(this, name))
       {
-        vlogf(LOG_OBJ, fmt("Mail: mail sent by %s was ignored by %s.") % character->getName() % name);
+        vlogf(LOG_OBJ, format("Mail: mail sent by %s was ignored by %s.") % character->getName() % name);
       }
       else if (terminator)
       {
@@ -2202,13 +2202,13 @@ void Descriptor::sstring_add(char *s)
         {
           ItemSaveDB is("mail", GH_MAIL_SHOP);
           rent_id = is.raw_write_item(obj, -1 , 0);
-          vlogf(LOG_OBJ, fmt("Mail: %s mailing %s (vnum:%i) to %s rented as rent_id:%i") %
+          vlogf(LOG_OBJ, format("Mail: %s mailing %s (vnum:%i) to %s rented as rent_id:%i") %
             character->getName() % obj->getName() % obj->objVnum() % name % rent_id);
           delete obj;
         }
         if (amount > 0)
         {
-          vlogf(LOG_OBJ, fmt("Mail: %s mailing %i talens to %s") %
+          vlogf(LOG_OBJ, format("Mail: %s mailing %i talens to %s") %
             character->getName() % amount % name);
           character->addToMoney(min(0, -amount), GOLD_XFER);
         }
@@ -2274,7 +2274,7 @@ void Descriptor::sstring_add(char *s)
     str = NULL;
 
     if (m_bIsClient)
-      clientf(fmt("%d|%d") % CLIENT_ENABLEWINDOW % FALSE);
+      clientf(format("%d|%d") % CLIENT_ENABLEWINDOW % FALSE);
   } else {
     const char *t=*str;
     strcpy(buf, t);
@@ -2324,7 +2324,7 @@ sstring getPietyPrompt(TBeing *ch, Descriptor *d, float piety){
   sstring promptbuf="";
 
   if (IS_SET(d->prompt_d.type, PROMPT_PIETY)) {	    
-    promptbuf=fmt(StPrompts[2]) %
+    promptbuf=format(StPrompts[2]) %
       (IS_SET(d->prompt_d.type, PROMPT_COLOR) ? d->prompt_d.pietyColor : "") %
       piety %
       ch->norm();
@@ -2336,7 +2336,7 @@ sstring getLFPrompt(TBeing *ch, Descriptor *d, int lf){
   sstring promptbuf="";
   
   if (IS_SET(d->prompt_d.type, PROMPT_LIFEFORCE)) {	    
-    promptbuf=fmt(StPrompts[12]) %
+    promptbuf=format(StPrompts[12]) %
       (IS_SET(d->prompt_d.type, PROMPT_COLOR) ? d->prompt_d.lifeforceColor : "") %
       lf %
       ch->norm();
@@ -2348,7 +2348,7 @@ sstring getMovesPrompt(TBeing *ch, Descriptor *d, int moves){
   sstring promptbuf="";
   
   if (IS_SET(d->prompt_d.type, PROMPT_MOVE))
-    promptbuf=fmt(StPrompts[4]) %
+    promptbuf=format(StPrompts[4]) %
       (IS_SET(d->prompt_d.type, PROMPT_COLOR) ? d->prompt_d.moveColor : "") %
       moves %
       ch->norm();
@@ -2359,7 +2359,7 @@ sstring getMoneyPrompt(TBeing *ch, Descriptor *d, int money){
   sstring promptbuf="";
   
   if (IS_SET(d->prompt_d.type, PROMPT_GOLD))
-    promptbuf=fmt(StPrompts[5]) %
+    promptbuf=format(StPrompts[5]) %
       (IS_SET(d->prompt_d.type, PROMPT_COLOR) ? d->prompt_d.moneyColor : "") %
       money %
       ch->norm();
@@ -2370,7 +2370,7 @@ sstring getRoomPrompt(TBeing *ch, Descriptor *d, int room){
   sstring promptbuf="";
 
   if (IS_SET(d->prompt_d.type, PROMPT_ROOM))
-    promptbuf=fmt(StPrompts[6]) %
+    promptbuf=format(StPrompts[6]) %
       (IS_SET(d->prompt_d.type, PROMPT_COLOR) ? d->prompt_d.roomColor : "") %
       room %
       ch->norm();
@@ -2382,7 +2382,7 @@ sstring getManaPrompt(TBeing *ch, Descriptor *d, int mana){
   sstring promptbuf="";
 
   if (IS_SET(d->prompt_d.type, PROMPT_MANA)) {
-    promptbuf=fmt(StPrompts[3]) %
+    promptbuf=format(StPrompts[3]) %
       (IS_SET(d->prompt_d.type, PROMPT_COLOR) ? d->prompt_d.manaColor : "") %
       mana %
       ch->norm();
@@ -2395,7 +2395,7 @@ sstring getHitPointsPrompt(TBeing *ch, Descriptor *d, int hp){
   sstring promptbuf="";
 
   if (IS_SET(d->prompt_d.type, PROMPT_HIT))
-    promptbuf=fmt(StPrompts[1]) % 
+    promptbuf=format(StPrompts[1]) % 
       (IS_SET(d->prompt_d.type, PROMPT_COLOR) ? d->prompt_d.hpColor : "") %
       hp %
       ch->norm();
@@ -2419,7 +2419,7 @@ sstring getTimePrompt(TBeing *ch, Descriptor *d, time_t ct){
   struct tm *tm=localtime(&ct);
   
   if (IS_SET(d->prompt_d.type, PROMPT_TIME)){
-    promptbuf=fmt(StPrompts[13]) % 
+    promptbuf=format(StPrompts[13]) % 
       (IS_SET(d->prompt_d.type, PROMPT_COLOR) ? d->prompt_d.timeColor : "") %
       tm->tm_hour % tm->tm_min % tm->tm_sec %
       ch->norm();
@@ -2436,7 +2436,7 @@ sstring PromptComm::getClientText(){
 }
 
 sstring PromptComm::getXML(){
-  return fmt("<prompt time=\"%i\" hp=\"%i\" mana=\"%i\" piety=\"%f\" lifeforce=\"%i\" moves=\"%i\" money=\"%i\" room=\"%i\">%s</prompt>") %
+  return format("<prompt time=\"%i\" hp=\"%i\" mana=\"%i\" piety=\"%f\" lifeforce=\"%i\" moves=\"%i\" money=\"%i\" room=\"%i\">%s</prompt>") %
     time % hp % mana % piety % lifeforce % moves % money % room % 
     text.escape(XML);
 }
@@ -2453,22 +2453,22 @@ sstring RoomExitComm::getClientText(){
 sstring RoomExitComm::getXML(){
   sstring buf="";
 
-  buf+=fmt("<roomexits>\n");
+  buf+=format("<roomexits>\n");
 
   for(dirTypeT dir=MIN_DIR;dir<MAX_DIR;dir++){
     if(exits[dir].exit){
-      buf+=fmt("  <exit>\n");
-      buf+=fmt("    <direction>%s</direction>\n") % dirs[dir];
+      buf+=format("  <exit>\n");
+      buf+=format("    <direction>%s</direction>\n") % dirs[dir];
       if(exits[dir].door){
-	buf+=fmt("    <door>\n");
-	buf+=fmt("      <open>%s</open>\n") % (exits[dir].open?"true":"false");
-	buf+=fmt("    </door>\n");
+	buf+=format("    <door>\n");
+	buf+=format("      <open>%s</open>\n") % (exits[dir].open?"true":"false");
+	buf+=format("    </door>\n");
       }
-      buf+=fmt("  </exit>\n");
+      buf+=format("  </exit>\n");
     }
   }
 
-  buf+=fmt("</roomexits>\n");
+  buf+=format("</roomexits>\n");
 
   return buf;
 }
@@ -2537,7 +2537,7 @@ void setPrompts(fd_set out)
           } else {
             strcat(promptbuf, "\n\rERROR!  Unable to find repair target! > ");
             d->output.putInQ(new UncategorizedComm(promptbuf));
-            vlogf(LOG_OBJ, fmt("Unable to find repair item for (%s) for prompt report (%s)") % ch->getName() % ch->task->orig_arg);
+            vlogf(LOG_OBJ, format("Unable to find repair item for (%s) for prompt report (%s)") % ch->getName() % ch->task->orig_arg);
           }
 	}
       }
@@ -2938,7 +2938,7 @@ void processAllInput()
             } else {
               // either descriptor_list hit end, or d is the next guy to process
               // in all likelihood, this descriptor has already been deleted and we point to free'd memory
-              vlogf(LOG_BUG, fmt("Descriptor not found in list after parseCommand called.  (%s).  VERY BAD!") %  comm);
+              vlogf(LOG_BUG, format("Descriptor not found in list after parseCommand called.  (%s).  VERY BAD!") %  comm);
             }
             continue;
           }
@@ -3000,7 +3000,7 @@ sstring LoginComm::getClientText(){
 }
 
 sstring LoginComm::getXML(){
-  return fmt("<login prompt=\"%s\">%s</login>") % 
+  return format("<login prompt=\"%s\">%s</login>") % 
     prompt.escape(XML) % text.escape(XML);
 }
 
@@ -3012,8 +3012,8 @@ int Descriptor::sendLogin(const sstring &arg)
   sstring outputBuf;
 
   if (arg.length() > 20) {
-    vlogf(LOG_MISC, fmt("Buffer overflow attempt from [%s]") % host);
-    vlogf(LOG_MISC, fmt("Login = '%s'") % arg);
+    vlogf(LOG_MISC, format("Buffer overflow attempt from [%s]") % host);
+    vlogf(LOG_MISC, format("Login = '%s'") % arg);
   }
 
   if (m_bIsClient)
@@ -3064,7 +3064,7 @@ int Descriptor::sendLogin(const sstring &arg)
     output.putInQ(new UncategorizedComm(buf2));
 
     outputBuf="Please type NEW (case sensitive) for a new account, or ? for help.\n\r";
-    outputBuf+=fmt("If you need assistance you may email %s.\n\r\n\r") % MUDADMIN_EMAIL;
+    outputBuf+=format("If you need assistance you may email %s.\n\r\n\r") % MUDADMIN_EMAIL;
     outputBuf+="\n\rLogin: ";
     output.putInQ(new LoginComm("user", outputBuf));
     return FALSE;
@@ -3282,7 +3282,7 @@ int Descriptor::doAccountStuff(char *arg)
       saveAccount();
       accStat.account_number++;
 
-      vlogf(LOG_MISC, fmt("New Account: '%s' with email '%s'") %  account->name % account->email);
+      vlogf(LOG_MISC, format("New Account: '%s' with email '%s'") %  account->name % account->email);
 
       account->status = TRUE;
       rc = doAccountMenu("");
@@ -3527,7 +3527,7 @@ int Descriptor::doAccountStuff(char *arg)
 #endif
 
       writeToQ("Character deleted.\n\r");
-      vlogf(LOG_PIO, fmt("Character %s self-deleted. (%s account)") %  delname % account->name);
+      vlogf(LOG_PIO, format("Character %s self-deleted. (%s account)") %  delname % account->name);
       DeleteHatreds(NULL, delname);
       autobits = 0;
       // remove trophy entries so they do not carry over if the character is recreated
@@ -3548,13 +3548,13 @@ int Descriptor::doAccountStuff(char *arg)
       wipeRentFile(delname);
       wipeFollowersFile(delname);
 
-      vlogf(LOG_PIO, fmt("Deleting mail for character %s.") %  delname);
+      vlogf(LOG_PIO, format("Deleting mail for character %s.") %  delname);
       db.query("delete from mail where lower(mailto)=lower('%s')", delname);
 
       sprintf(buf, "account/%c/%s/%s", LOWER(account->name[0]), 
            sstring(account->name).lower().c_str(), delname);
       if (unlink(buf) != 0)
-        vlogf(LOG_FILE, fmt("error in unlink (3) (%s) %d") %  buf % errno);
+        vlogf(LOG_FILE, format("error in unlink (3) (%s) %d") %  buf % errno);
       account->status = TRUE;
       rc = doAccountMenu("");
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -3678,7 +3678,7 @@ int Descriptor::doAccountStuff(char *arg)
       }
       break;
     default:
-      vlogf(LOG_BUG, fmt("Bad connectivity in doAccountStuff() (%d, %s, %s)") %  
+      vlogf(LOG_BUG, format("Bad connectivity in doAccountStuff() (%d, %s, %s)") %  
           connected % (character ? character->getName() : "false") % "0");
       vlogf(LOG_BUG, "Trying to delete it.");
       return DELETE_THIS;
@@ -3696,7 +3696,7 @@ int Descriptor::doAccountMenu(const char *arg)
   bonus_points.total= bonus_points.combat= bonus_points.combat2= bonus_points.learn= bonus_points.util=0;
 
   if (m_bIsClient) {
-    clientf(fmt("%d") % CLIENT_MENU);
+    clientf(format("%d") % CLIENT_MENU);
     return DELETE_THIS;
   }
   if (!connected) {
@@ -3829,13 +3829,13 @@ void Descriptor::saveAccount()
   sstring path;
 
   if(!account->write(account->name)){
-    vlogf(LOG_FILE, fmt("Big problems in saveAccount (%s)") % 
+    vlogf(LOG_FILE, format("Big problems in saveAccount (%s)") % 
 	  account->name.lower());
   }
 
-  path=(fmt("account/%c/%s") % account->name[0] % account->name).lower();
+  path=((sstring)(format("account/%c/%s") % account->name[0] % account->name)).lower();
   if (mkdir(path.c_str(), 0770) && errno != EEXIST){
-    vlogf(LOG_FILE, fmt("Can't make directory for Descriptor::saveAccount (%s) (%i)") %
+    vlogf(LOG_FILE, format("Can't make directory for Descriptor::saveAccount (%s) (%i)") %
 	  path % errno);
   }
 }
@@ -3846,11 +3846,11 @@ void Descriptor::deleteAccount()
   struct dirent *dp;
   char buf[256];
 
-  vlogf(LOG_PIO, fmt("Account %s self-deleted.") % account->name);
+  vlogf(LOG_PIO, format("Account %s self-deleted.") % account->name);
 
   sprintf(buf, "account/%c/%s", LOWER(account->name[0]), sstring(account->name).lower().c_str());
   if (!(dfd = opendir(buf))) {
-    vlogf(LOG_FILE, fmt("Unable to walk directory for delete account (%s account)") %  account->name);
+    vlogf(LOG_FILE, format("Unable to walk directory for delete account (%s account)") %  account->name);
     return;
   }
   while ((dp = readdir(dfd))) {
@@ -3859,7 +3859,7 @@ void Descriptor::deleteAccount()
 
     sprintf(buf, "account/%c/%s/%s", LOWER(account->name[0]), sstring(account->name).lower().c_str(), dp->d_name);
     if (unlink(buf) != 0)
-      vlogf(LOG_FILE, fmt("error in unlink (4) (%s) %d") %  buf % errno);
+      vlogf(LOG_FILE, format("error in unlink (4) (%s) %d") %  buf % errno);
 
     // these are in the dir, but are not "players"
     if (!strcmp(dp->d_name, "comment") ||
@@ -4056,7 +4056,7 @@ void Descriptor::sendMotd(int wiz)
       sb = wizmotd;
     }
     processStringForClient(sb);
-    clientf(fmt("%d|%s") % CLIENT_MOTD % sb);
+    clientf(format("%d|%s") % CLIENT_MOTD % sb);
   }
 }
 
@@ -4156,7 +4156,7 @@ void inputQ::putInQ(const sstring &txt)
 int TBeing::applyAutorentPenalties(int secs)
 {
 #if PENALIZE_FOR_AUTO_RENTING
-  vlogf(LOG_PIO, fmt("%s was autorented for %d secs") %
+  vlogf(LOG_PIO, format("%s was autorented for %d secs") %
 	(getName() ? getName() : "Unknown name") % secs);
 
 #endif
@@ -4173,7 +4173,7 @@ int TBeing::applyRentBenefits(int secs)
   local_tics = secs / SECS_PER_UPDATE;
   local_tics /= 3;  // arbitrary
 
-  vlogf(LOG_PIO, fmt("%s was rented for %d secs, counting as %d tics out-of-game") % 
+  vlogf(LOG_PIO, format("%s was rented for %d secs, counting as %d tics out-of-game") % 
         getName() % secs % local_tics);
 
   setHit(min((int) hitLimit(), getHit() + (local_tics * hitGain())));

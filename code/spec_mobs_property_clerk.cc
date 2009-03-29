@@ -43,7 +43,7 @@ int propertyClerk(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, 
       db.query("select id, name from property order by id");
       
       while(db.fetchRow()){
-	me->doTell(ch->getName(), fmt("%-2i| %s") % 
+	me->doTell(ch->getName(), format("%-2i| %s") % 
 		   convertTo<int>(db["id"]) % db["name"]);
       }
     } else {
@@ -51,20 +51,20 @@ int propertyClerk(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, 
       
       while(db.fetchRow()){
 	if(ch->isImmortal()){
-	  me->doTell(ch->getName(), fmt("%-2i| %s") % 
+	  me->doTell(ch->getName(), format("%-2i| %s") % 
 		     convertTo<int>(db["id"]) % db["name"]);
-	  me->doTell(ch->getName(), fmt("Owned by: %s (%i)") % 
+	  me->doTell(ch->getName(), format("Owned by: %s (%i)") % 
 		     db["owner"] % convertTo<int>(db["owner_id"]));
-	  me->doTell(ch->getName(), fmt("Key: %s (%i)") % 
+	  me->doTell(ch->getName(), format("Key: %s (%i)") % 
 		     db["keyname"] % convertTo<int>(db["key_vnum"]));
-	  me->doTell(ch->getName(), fmt("Entrance: %s (%i)") %
+	  me->doTell(ch->getName(), format("Entrance: %s (%i)") %
 		     db["entrance"] % convertTo<int>(db["entrance_id"]));
 	} else {
-	  me->doTell(ch->getName(), fmt("%-2i| %s") % 
+	  me->doTell(ch->getName(), format("%-2i| %s") % 
 		     convertTo<int>(db["id"]) % db["name"]);
-	  me->doTell(ch->getName(), fmt("Owned by: %s") % 
+	  me->doTell(ch->getName(), format("Owned by: %s") % 
 		     db["owner"]);
-	  me->doTell(ch->getName(), fmt("Entrance: %s") %
+	  me->doTell(ch->getName(), format("Entrance: %s") %
 		     db["entrance"]);
 	}
       }

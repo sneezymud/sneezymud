@@ -294,7 +294,7 @@ void Race::initRace(const char *whichRace)
   FILE * raceFile;
 
   sprintf(aFilename, "races/%s", whichRace);
-  vlogf(LOG_FILE, fmt("initRace races/%s") %  whichRace);
+  vlogf(LOG_FILE, format("initRace races/%s") %  whichRace);
 
   raceFile = fopen(aFilename, "r");
   if (!raceFile) {
@@ -350,7 +350,7 @@ void Race::initRace(const char *whichRace)
       else if (!strcasecmp(value, "other"))
 	Kingdom = LORE_OTHER;
       else {
-        vlogf(LOG_LOW, fmt("Bad lore %s, defined for %s") %  value % whichRace);
+        vlogf(LOG_LOW, format("Bad lore %s, defined for %s") %  value % whichRace);
         Kingdom = LORE_PEOPLE;
       }
     }
@@ -384,36 +384,36 @@ void Race::initRace(const char *whichRace)
     else if (!strcasecmp(keyword,  "age")) {
       if (sscanf(buf, " %d+%dd%d",
          &baseAge, &ageNumDice, &ageDieSize) != 3) {
-        vlogf(LOG_LOW, fmt("Bad format for age on %s") %  whichRace);
+        vlogf(LOG_LOW, format("Bad format for age on %s") %  whichRace);
       }
     }
     else if (!strcasecmp(keyword,  "maleht")) {
       if (sscanf(buf, " %d+%dd%d",
          &baseMaleHeight, &maleHtNumDice, &maleHtDieSize) != 3) {
-        vlogf(LOG_LOW, fmt("Bad format for male height on %s") %  whichRace);
+        vlogf(LOG_LOW, format("Bad format for male height on %s") %  whichRace);
       }
     }
     else if (!strcasecmp(keyword,  "femaleht")) {
       if (sscanf(buf, " %d+%dd%d",
          &baseFemaleHeight, &femaleHtNumDice, &femaleHtDieSize) != 3) {
-        vlogf(LOG_LOW, fmt("Bad format for female height on %s") %  whichRace);
+        vlogf(LOG_LOW, format("Bad format for female height on %s") %  whichRace);
       }
     }
     else if (!strcasecmp(keyword,  "malewt")) {
       if (sscanf(buf, " %d+%dd%d",
          &baseMaleWeight, &maleWtNumDice, &maleWtDieSize) != 3) {
-        vlogf(LOG_LOW, fmt("Bad format for male weight on %s") %  whichRace);
+        vlogf(LOG_LOW, format("Bad format for male weight on %s") %  whichRace);
       }
     }
     else if (!strcasecmp(keyword,  "femalewt")) {
       if (sscanf(buf, " %d+%dd%d",
          &baseFemaleWeight, &femaleWtNumDice, &femaleWtDieSize) != 3) {
-        vlogf(LOG_LOW, fmt("Bad format for male weight on %s") %  whichRace);
+        vlogf(LOG_LOW, format("Bad format for male weight on %s") %  whichRace);
       }
     }
     else if (!strcasecmp(keyword,  "corpse")) {
       if (sscanf(buf, " %f", &corpse_const) != 1) {
-        vlogf(LOG_LOW, fmt("Bad format for corpse const on %s") %  whichRace);
+        vlogf(LOG_LOW, format("Bad format for corpse const on %s") %  whichRace);
       }
     }
 
@@ -587,7 +587,7 @@ void Race::initRace(const char *whichRace)
       else if (!strcasecmp(value, "fishman"))
         bodyType = BODY_FISHMAN;
       else {
-        vlogf(LOG_LOW, fmt("Unknown body on %s") %  whichRace);
+        vlogf(LOG_LOW, format("Unknown body on %s") %  whichRace);
         bodyType = BODY_HUMANOID;
       }
     }

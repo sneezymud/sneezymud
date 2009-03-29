@@ -156,7 +156,7 @@ void TBaseCup::fillMe(const TBeing *ch, liqTypeT liq)
   if ((getDrinkType() != liq) && isDrinkConFlag(DRINK_PERM)) {
     sstring mesg;
 
-    mesg = fmt("$p is filled with %s, but quickly dilutes.") %
+    mesg = format("$p is filled with %s, but quickly dilutes.") %
       liquidInfo[liq]->name;
 
     act(mesg, FALSE, ch, this, 0, TO_ROOM);
@@ -209,10 +209,10 @@ void TBaseCup::pourMeOut(TBeing *ch)
 void TBaseCup::lowCheck()
 {
   if (getMaxDrinkUnits() < getDrinkUnits())
-    vlogf(LOG_LOW, fmt("drinkcon %s  maxdrinks < current drinks.") % 
+    vlogf(LOG_LOW, format("drinkcon %s  maxdrinks < current drinks.") % 
          getName());
   if (isDrinkConFlag(DRINK_PERM) && canWear(ITEM_TAKE))
-    vlogf(LOG_LOW, fmt("drinkcon %s  takeable and permanent container.") % 
+    vlogf(LOG_LOW, format("drinkcon %s  takeable and permanent container.") % 
          getName());
 
   TObj::lowCheck();
@@ -233,7 +233,7 @@ void TBaseCup::assignFourValues(int x1, int x2, int x3, int x4)
   setDrinkConFlags((unsigned) x4);
 
   if (x3 < MIN_DRINK_TYPES || x3 >= MAX_DRINK_TYPES) {
-    vlogf(LOG_OBJ, fmt("Bad parm (%d) for drink type on %s") %  x3 % getName());
+    vlogf(LOG_OBJ, format("Bad parm (%d) for drink type on %s") %  x3 % getName());
     x3 = MIN_DRINK_TYPES;
   }
   setDrinkType(liqTypeT(x3));
@@ -321,7 +321,7 @@ void TBaseCup::evaporate(TBeing *ch, silentTypeT tSilent)
       addToDrinkUnits(-amount);
 
       if (!tSilent)
-        ch->sendTo(COLOR_OBJECTS, fmt("The desert heat causes some of your %s to evaporate.\n\r") %
+        ch->sendTo(COLOR_OBJECTS, format("The desert heat causes some of your %s to evaporate.\n\r") %
             liquidInfo[getDrinkType()]->name);
     }
   }
@@ -419,7 +419,7 @@ void TBaseCup::updateDesc()
   if(getDrinkUnits()<=0){
     liquid="empty";
   } else if(isDrinkConFlag(DRINK_FROZEN)){
-    liquid = fmt("<C>frozen<1> %s") % liquidInfo[getDrinkType()]->color;
+    liquid = format("<C>frozen<1> %s") % liquidInfo[getDrinkType()]->color;
   } else {
     liquid=liquidInfo[getDrinkType()]->color;
   }
@@ -452,9 +452,9 @@ void TBaseCup::updateDesc()
   if(getDrinkUnits()<=0){
     liquid="an empty";
   } else if(isDrinkConFlag(DRINK_FROZEN)){
-    liquid = fmt("a <C>frozen<1> %s") % liquidInfo[getDrinkType()]->color;
+    liquid = format("a <C>frozen<1> %s") % liquidInfo[getDrinkType()]->color;
   } else {
-    liquid = fmt("a %s") % liquidInfo[getDrinkType()]->color;
+    liquid = format("a %s") % liquidInfo[getDrinkType()]->color;
   }
 
   while (newname.find("$$al") != sstring::npos){
@@ -486,9 +486,9 @@ void TBaseCup::updateDesc()
   if(getDrinkUnits()<=0){
     liquid="nothing";
   } else if(isDrinkConFlag(DRINK_FROZEN)){
-    liquid = fmt("<C>frozen<1> %s") % liquidInfo[getDrinkType()]->name;
+    liquid = format("<C>frozen<1> %s") % liquidInfo[getDrinkType()]->name;
   } else {
-    liquid = fmt("%s") % liquidInfo[getDrinkType()]->name;
+    liquid = format("%s") % liquidInfo[getDrinkType()]->name;
   }
 
   while (newname.find("$$nl") != sstring::npos){

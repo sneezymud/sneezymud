@@ -158,7 +158,7 @@ static int deathstroke(TBeing *caster, TBeing *victim)
       caster->setVictFighting(victim);
     } else if (cfight && (cfight == vfight)) {
       caster->setVictFighting(victim);
-      vlogf(LOG_BUG, fmt("Should never have gotten here in deathstroke (%s)") %  caster->getName());
+      vlogf(LOG_BUG, format("Should never have gotten here in deathstroke (%s)") %  caster->getName());
     } else if (cfight && (cfight != victim) && (::number(0,4) < 2)) {
       act("You turn your attention to $N.", TRUE, caster, 0, victim, TO_CHAR);
       act("$n turns $s attention to $N.", TRUE, caster, 0, victim, TO_NOTVICT);

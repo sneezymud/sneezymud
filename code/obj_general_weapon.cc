@@ -106,30 +106,30 @@ sstring TGenWeapon::statObjInfo() const
 {
   sstring a = "";
   
-  a += fmt("Current %-11s %-7d  Damage Level:     %d\n\r") % ((isBluntWeapon() ? "bluntness:" : (isPierceWeapon() ? "pointiness:" : "sharpness:"))) % getCurSharp() % (int) (getWeapDamLvl() / 4.0);
-  a += fmt("Maximum %-11s %-7d  Damage Deviation: %d\n\r") % ((isBluntWeapon() ? "bluntness:" : (isPierceWeapon() ? "pointiness:" : "sharpness:"))) % getCurSharp() % getWeapDamDev();
+  a += format("Current %-11s %-7d  Damage Level:     %d\n\r") % ((isBluntWeapon() ? "bluntness:" : (isPierceWeapon() ? "pointiness:" : "sharpness:"))) % getCurSharp() % (int) (getWeapDamLvl() / 4.0);
+  a += format("Maximum %-11s %-7d  Damage Deviation: %d\n\r") % ((isBluntWeapon() ? "bluntness:" : (isPierceWeapon() ? "pointiness:" : "sharpness:"))) % getCurSharp() % getWeapDamDev();
   
   double base = baseDamage();
   double flux = base * getWeapDamDev() / 10;
-  sstring buf = fmt("%d-%d") % (int) (base - (int) flux) % (int) (base + (int) flux);
-  a += fmt("Damage When Swung:  %-7s  Average Damage:   %d\n\r") % buf % (int) baseDamage();
+  sstring buf = format("%d-%d") % (int) (base - (int) flux) % (int) (base + (int) flux);
+  a += format("Damage When Swung:  %-7s  Average Damage:   %d\n\r") % buf % (int) baseDamage();
   
-  a += fmt("Damage When Thrown: %d\n\r") % (int) damageLevel();
+  a += format("Damage When Thrown: %d\n\r") % (int) damageLevel();
   
   for (int wt = 0; wt < 3; ++wt) {
     if (!getWeaponType(wt))
       continue;
     if (toggleInfo[TOG_TWINK]->toggle) {
-      a += fmt("Attack Type:        %-8s") % attack_hit_text_twink[getWtype(wt) - TYPE_MIN_HIT].singular;
+      a += format("Attack Type:        %-8s") % attack_hit_text_twink[getWtype(wt) - TYPE_MIN_HIT].singular;
     } else {
-      a += fmt("Attack Type:        %-8s") % attack_hit_text[getWtype(wt) - TYPE_MIN_HIT].singular;
+      a += format("Attack Type:        %-8s") % attack_hit_text[getWtype(wt) - TYPE_MIN_HIT].singular;
     }
     if (getWeaponFreq(wt))
-      a += fmt(" Attack Frequeny:  %d%") % getWeaponFreq(wt);
+      a += format(" Attack Frequeny:  %d%") % getWeaponFreq(wt);
     a += "\n\r";
   }
   if(isPoisoned()){
-    a += fmt("Poisoned with:      %s\n\r") % liquidInfo[getPoison()]->name;
+    a += format("Poisoned with:      %s\n\r") % liquidInfo[getPoison()]->name;
   }
   return a;
 }
@@ -147,20 +147,20 @@ float TThing::blowCountSplitter(const TBeing *, bool) const
 void TGenWeapon::lowCheck()
 {
   if ((int) getWeight() < 1)
-    vlogf(LOG_LOW,fmt("weapon %s has a bad weight set.") % 
+    vlogf(LOG_LOW,format("weapon %s has a bad weight set.") % 
              getName());
 
   if ((getVolume() <= 800) && (getWeight() < 3))
     if (!canWear(ITEM_THROW) && !dynamic_cast<TGun *>(this))
-      vlogf(LOG_LOW,fmt("weapon %s probably needs to be set throwable.") % 
+      vlogf(LOG_LOW,format("weapon %s probably needs to be set throwable.") % 
               getName());
 
   if (getWeaponType() == WEAPON_TYPE_NONE)
-    vlogf(LOG_LOW,fmt("weapon %s needs a weapon_type defined") % 
+    vlogf(LOG_LOW,format("weapon %s needs a weapon_type defined") % 
              getName());
 
   if (!isBluntWeapon() && !isSlashWeapon() && !isPierceWeapon())
-    vlogf(LOG_LOW,fmt("weapon %s has bogus type apparently.") % 
+    vlogf(LOG_LOW,format("weapon %s has bogus type apparently.") % 
              getName());
 
   TBaseWeapon::lowCheck();

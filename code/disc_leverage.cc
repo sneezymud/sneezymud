@@ -103,9 +103,9 @@ static int hurlHit(TBeing *caster, TBeing *victim, dirTypeT dr)
       dam += 2;
     }
 
-    caster->sendTo(COLOR_MOBS, fmt("%s is hurled %s out of the room!\n\r") % 
+    caster->sendTo(COLOR_MOBS, format("%s is hurled %s out of the room!\n\r") % 
          sstring(victim->getName()).cap() % dirs[dr]);
-    victim->sendTo(COLOR_MOBS, fmt("%s hurls you %s out of the room!\n\r") % 
+    victim->sendTo(COLOR_MOBS, format("%s hurls you %s out of the room!\n\r") % 
             sstring(caster->getName()).cap() % dirs[dr]);
     sprintf(buf, "$N is hurled %s out of the room by $n.", dirs[dr]);
     act(buf, TRUE, caster, 0, victim, TO_NOTVICT);
@@ -228,11 +228,11 @@ int hurl(TBeing *caster, TBeing *victim, char *direction)
     caster->sendTo("You can't use that attack on a mounted person!\n\r");
     return FALSE;
   } else if (victim->riding) {
-    caster->sendTo(COLOR_MOBS, fmt("You can't use that attack while %s is on %s!\n\r") % victim->getName() % victim->riding->getName());
+    caster->sendTo(COLOR_MOBS, format("You can't use that attack while %s is on %s!\n\r") % victim->getName() % victim->riding->getName());
     return FALSE;
   }
   if (victim->getPosition() < POSITION_STANDING)  {
-    caster->sendTo(fmt("You can't hurl someone whom is already on the %s.\n\r") % 
+    caster->sendTo(format("You can't hurl someone whom is already on the %s.\n\r") % 
     caster->roomp->describeGround());
     return FALSE;
   }
@@ -456,12 +456,12 @@ int shoulderThrow(TBeing *caster, TBeing *victim)
     caster->sendTo("You can't use that attack on a mounted person!\n\r");
     return FALSE;
   } else if (victim->riding) {
-    caster->sendTo(COLOR_MOBS, fmt("You can't use that attack while %s is on %s!\n\r") % victim->getName() % victim->riding->getName());
+    caster->sendTo(COLOR_MOBS, format("You can't use that attack while %s is on %s!\n\r") % victim->getName() % victim->riding->getName());
     return FALSE;
   }
 
   if (victim->getPosition() < POSITION_STANDING)  {
-    caster->sendTo(fmt("You can't shoulder throw someone whom is already on the %s.\n\r") % caster->roomp->describeGround());
+    caster->sendTo(format("You can't shoulder throw someone whom is already on the %s.\n\r") % caster->roomp->describeGround());
     return FALSE;
   }
   if (caster->getPosition() != POSITION_STANDING)  {
@@ -609,9 +609,9 @@ static int defenestrateHit(TBeing *caster, TBeing *victim, int to_room, TWindow 
       dam += 2;
     }
 
-    caster->sendTo(COLOR_MOBS, fmt("%s is defenestrated out of the room!\n\r") % 
+    caster->sendTo(COLOR_MOBS, format("%s is defenestrated out of the room!\n\r") % 
          sstring(victim->getName()).cap());
-    victim->sendTo(COLOR_MOBS, fmt("%s defenestrates you out of the room!\n\r") % 
+    victim->sendTo(COLOR_MOBS, format("%s defenestrates you out of the room!\n\r") % 
             sstring(caster->getName()).cap());
     sprintf(buf, "$N is defenestrated out of the room by $n.");
     act(buf, TRUE, caster, 0, victim, TO_NOTVICT);
@@ -683,11 +683,11 @@ int defenestrate(TBeing *caster, TBeing *victim, sstring direction)
     caster->sendTo("You can't use that attack on a mounted person!\n\r");
     return FALSE;
   } else if (victim->riding) {
-    caster->sendTo(COLOR_MOBS, fmt("You can't use that attack while %s is on %s!\n\r") % victim->getName() % victim->riding->getName());
+    caster->sendTo(COLOR_MOBS, format("You can't use that attack while %s is on %s!\n\r") % victim->getName() % victim->riding->getName());
     return FALSE;
   }
   if (victim->getPosition() < POSITION_STANDING)  {
-    caster->sendTo(fmt("You can't defenestrate someone whom is already on the %s.\n\r") % 
+    caster->sendTo(format("You can't defenestrate someone whom is already on the %s.\n\r") % 
     caster->roomp->describeGround());
     return FALSE;
   }

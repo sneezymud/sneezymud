@@ -4,7 +4,7 @@
 liqEntry *liqInfoT::operator[] (const liqTypeT i)
 {
   if(liquids.find(i) == liquids.end()){
-    vlogf(LOG_BUG, fmt("invalid liquid detected: %i") % i);
+    vlogf(LOG_BUG, format("invalid liquid detected: %i") % i);
     return liquids[LIQ_WATER];
   } else {
     return liquids[i];

@@ -50,7 +50,7 @@ void Descriptor::menuWho()
       if (dynamic_cast<TPerson *>(person) &&
           (person->getInvisLevel() < GOD_LEVEL1)) {
         buf=person->parseTitle(this);
-        buf2 = fmt("%s\n\r") % colorString(person, this, buf, NULL, COLOR_BASIC, FALSE);
+        buf2 = format("%s\n\r") % colorString(person, this, buf, NULL, COLOR_BASIC, FALSE);
 	send += buf2;
       }
     }
@@ -179,7 +179,7 @@ void TBeing::doWho(const char *argument)
             if (p->desc && (time(0)-p->desc->account->birth) < NEWBIE_PURGATORY_LENGTH)
               buf += "   (Newbie)";
             if (!p->msgVariables(MSG_NOTE).empty())
-              buf += fmt("   (%s)") % p->msgVariables(MSG_NOTE);
+              buf += format("   (%s)") % p->msgVariables(MSG_NOTE);
             buf += "\n\r";
 
             if (isImmortal() && p->isLinkdead()) {
@@ -194,21 +194,21 @@ void TBeing::doWho(const char *argument)
                 (p->GetMaxLevel() >= which1 && p->GetMaxLevel() <= which2)) &&
               IS_SET(p->specials.act, ACT_POLYSELF)) {
             count++;
-            buf = fmt("%s (polymorphed)\n\r") % sstring(pers(p)).cap();
+            buf = format("%s (polymorphed)\n\r") % sstring(pers(p)).cap();
             sb += buf;
           } else if (canSeeWho(p) &&
                 (!*argument || 
                 (p->GetMaxLevel() >= which1 && p->GetMaxLevel() <= which2)) &&
                      IS_SET(p->specials.act, ACT_DISGUISED)) {
             count++;
-            buf = fmt("%s (disguised thief)\n\r") % sstring(pers(p)).cap();
+            buf = format("%s (disguised thief)\n\r") % sstring(pers(p)).cap();
             sb += buf;
           }
         }
       }
     }
     accStat.max_player_since_reboot = max(accStat.max_player_since_reboot, count);
-    buf = fmt("\n\rTotal Players : [%d] Max since last reboot : [%d] Avg Players : [%.1f]\n\r") % count % accStat.max_player_since_reboot % (stats.useage_iters ? (float) stats.num_users / stats.useage_iters : 0);
+    buf = format("\n\rTotal Players : [%d] Max since last reboot : [%d] Avg Players : [%.1f]\n\r") % count % accStat.max_player_since_reboot % (stats.useage_iters ? (float) stats.num_users / stats.useage_iters : 0);
     sb += buf;
     if (desc)
       desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
@@ -244,10 +244,10 @@ void TBeing::doWho(const char *argument)
 
       if(strchr(arg, 'c') && isImmortal()){
 	
-	buf = fmt("%sList may not be accurate for ports that are not currently running.\n\r") % buf;
-	buf = fmt("%s------------------------------------------------------------------\n\r") % buf;
-        buf = fmt("%sProduction (Port 7900)\n\r") % buf;
-        buf = fmt("%s------------------------------------------------------------------\n\r") % buf;
+	buf = format("%sList may not be accurate for ports that are not currently running.\n\r") % buf;
+	buf = format("%s------------------------------------------------------------------\n\r") % buf;
+        buf = format("%sProduction (Port 7900)\n\r") % buf;
+        buf = format("%s------------------------------------------------------------------\n\r") % buf;
 
 
 	TDatabase db(DB_SNEEZYPROD);
@@ -263,13 +263,13 @@ void TBeing::doWho(const char *argument)
 	    stmp.replace(pos,3,db["name"]);
 
 	  
-	  buf = fmt("%s[%s] %s<1>\n\r") % buf %
+	  buf = format("%s[%s] %s<1>\n\r") % buf %
 		   db["port"] % stmp;
 	}
 	
-        buf = fmt("%s------------------------------------------------------------------\n\r") % buf;
-        buf = fmt("%sTesting (Other Ports)\n\r") % buf;
-        buf = fmt("%s------------------------------------------------------------------\n\r") % buf;
+        buf = format("%s------------------------------------------------------------------\n\r") % buf;
+        buf = format("%sTesting (Other Ports)\n\r") % buf;
+        buf = format("%s------------------------------------------------------------------\n\r") % buf;
 
 
         TDatabase db3(DB_SNEEZYBETA);
@@ -285,7 +285,7 @@ void TBeing::doWho(const char *argument)
             stmp.replace(pos,3,db3["name"]);
 
 
-          buf = fmt("%s[%s] %s<1>\n\r") % buf %
+          buf = format("%s[%s] %s<1>\n\r") % buf %
                    db3["port"] % stmp;
         }
 
@@ -333,14 +333,14 @@ void TBeing::doWho(const char *argument)
               (!strchr(arg, '!') || p->hasQuestBit(TOG_FAE_TOUCHED)) &&
 	      (!strchr(arg, 'x') || p->hasQuestBit(TOG_PERMA_DEATH_CHAR)))) {
             if (p->isLinkdead() && isImmortal())
-              buf = fmt("[%-12s] ") % pers(p);
+              buf = format("[%-12s] ") % pers(p);
             else if (p->polyed == POLY_TYPE_SWITCH && isImmortal())
-              buf = fmt("[%-12s] (switched) ") % pers(p);
+              buf = format("[%-12s] (switched) ") % pers(p);
             else if (dynamic_cast<TMonster *>(p) &&
                      (p->specials.act & ACT_POLYSELF))
-              buf = fmt("(%-14s) ") % pers(p);
+              buf = format("(%-14s) ") % pers(p);
             else 
-              buf = fmt("%-11s ") % pers(p);
+              buf = format("%-11s ") % pers(p);
             listed++;
             for (l = 1; l <= (int) strlen(arg); l++) {
               switch (arg[l]) {
@@ -351,7 +351,7 @@ void TBeing::doWho(const char *argument)
                     followData *f;
 
 		    if(p->desc)
-		      buf = fmt("Group: %s\n\r%s") %
+		      buf = format("Group: %s\n\r%s") %
 			   p->desc->session.groupName % buf;
 
                     for (f = p->followers; f; f = f->next) {
@@ -361,16 +361,16 @@ void TBeing::doWho(const char *argument)
                       if (!canSeeWho(ch))
                         continue;
                       if (ch->isLinkdead() && isImmortal())
-                        buf = fmt("%s[%-12s] ") % buf % pers(ch);
+                        buf = format("%s[%-12s] ") % buf % pers(ch);
                       else if (ch->polyed == POLY_TYPE_SWITCH && isImmortal())
-                        buf = fmt("%s[%-12s] (switched) ") % buf % pers(ch);
+                        buf = format("%s[%-12s] (switched) ") % buf % pers(ch);
                       else if (dynamic_cast<TMonster *>(ch) &&
                                (ch->specials.act & ACT_POLYSELF))
-                        buf = fmt("%s(%-14s) ") % buf % pers(ch);
+                        buf = format("%s(%-14s) ") % buf % pers(ch);
                       else if (ch->isPlayerAction(PLR_ANONYMOUS) && !isImmortal())
-                        buf = fmt("%s%-11s (??\?) ") % buf % pers(ch);
+                        buf = format("%s%-11s (??\?) ") % buf % pers(ch);
                       else
-                        buf = fmt("%s%-11s (L%d) ") % buf % pers(ch) % ch->GetMaxLevel();
+                        buf = format("%s%-11s (L%d) ") % buf % pers(ch) % ch->GetMaxLevel();
                     }
 
                     group = true;
@@ -379,7 +379,7 @@ void TBeing::doWho(const char *argument)
                 case 'i':
                   if (!idle) {
                     if (isImmortal())
-                      buf = fmt("%sIdle:[%-3d] ") % buf % p->getTimer();
+                      buf = format("%sIdle:[%-3d] ") % buf % p->getTimer();
                   }
                   idle = TRUE;
                   break;
@@ -394,7 +394,7 @@ void TBeing::doWho(const char *argument)
                     if (p->desc && (time(0)-p->desc->account->birth) < NEWBIE_PURGATORY_LENGTH)
                       buf += "   (Newbie)";
                     if (!p->msgVariables(MSG_NOTE).empty())
-                      buf += fmt("   (%s)") % p->msgVariables(MSG_NOTE);
+                      buf += format("   (%s)") % p->msgVariables(MSG_NOTE);
                   }
                   level = TRUE;
                   break;
@@ -404,22 +404,22 @@ void TBeing::doWho(const char *argument)
                   // only a god can go invis, mortals technically have
                   // invisLevel if they are linkdead, ignore that though
                   if (p->getInvisLevel() > MAX_MORT)
-                    buf = fmt("%s  (invis %d)  ") % buf %
+                    buf = format("%s  (invis %d)  ") % buf %
                         p->getInvisLevel();
                   break;
                 case 'h':
                   if (!iPoints) {
                     if (isImmortal())
                       if (p->hasClass(CLASS_CLERIC)||p->hasClass(CLASS_DEIKHAN))
-                        buf = fmt("%sHit:[%-3d] Pty:[%-.2f] Move:[%-3d], Talens:[%-8d], Bank:[%-8d]") % 
+                        buf = format("%sHit:[%-3d] Pty:[%-.2f] Move:[%-3d], Talens:[%-8d], Bank:[%-8d]") % 
 			  buf % p->getHit() % p->getPiety() % p->getMove() %
 			  p->getMoney() % p->getBank();
                       else if (p->hasClass(CLASS_SHAMAN))
-                        buf = fmt("%sHit:[%-3d] LF:[%-4d] Move:[%-3d], Talens:[%-8d], Bank:[%-8d]") %
+                        buf = format("%sHit:[%-3d] LF:[%-4d] Move:[%-3d], Talens:[%-8d], Bank:[%-8d]") %
 			  buf % p->getHit() % p->getLifeforce() % 
 			  p->getMove() % p->getMoney() % p->getBank();
                       else
-			buf = fmt("%sHit:[%-3d] Mana:[%-3d] Move:[%-3d], Talens:[%-8d], Bank:[%-8d]") % 
+			buf = format("%sHit:[%-3d] Mana:[%-3d] Move:[%-3d], Talens:[%-8d], Bank:[%-8d]") % 
 			  buf % p->getHit() % p->getMana() % p->getMove() %
 			  p->getMoney() % p->getBank();
                   }
@@ -435,13 +435,13 @@ void TBeing::doWho(const char *argument)
 			if (f->ID && (IS_SET(f->flags, GUILD_ACTIVE) || newguild()== p->newguild()||isImmortal()) &&
 			    (!IS_SET(f->flags, GUILD_HIDDEN) || newguild() == p->newguild() || isImmortal()) &&
 			    (!p->isImmortal() || isImmortal())) {
-			  buf = fmt("%s%s[<1>%s%s]<1>") % buf %
+			  buf = format("%s%s[<1>%s%s]<1>") % buf %
 			    heraldcodes[p->newguild()->colors[0]] %
 			    p->newguild()->getName() %
 			    heraldcodes[p->newguild()->colors[0]];
 			  if(!IS_SET(f->flags, GUILD_HIDE_RANKS) || newguild() == p->newguild()
 			     || isImmortal()) 
-			    buf = fmt("%s %s[<1>%s%s]<1>") % buf %
+			    buf = format("%s %s[<1>%s%s]<1>") % buf %
 			      heraldcodes[p->newguild()->colors[1]] %
 			      p->rank() %
 			      heraldcodes[p->newguild()->colors[1]];
@@ -453,11 +453,11 @@ void TBeing::doWho(const char *argument)
 		      if ((getFaction()==p->getFaction() &&
 			   p->GetMaxLevel() <= MAX_MORT) || isImmortal()) {
 #if FACTIONS_IN_USE
-			buf = fmt("%s[%s] %5.2f%c") % buf %
+			buf = format("%s[%s] %5.2f%c") % buf %
 			  FactionInfo[p->getFaction()].faction_name %
 			  p->getPerc() % '%';
 #else
-			buf = fmt("%s[%s]") % buf %
+			buf = format("%s[%s]") % buf %
 				FactionInfo[p->getFaction()].faction_name;
 #endif
 		      }
@@ -468,7 +468,7 @@ void TBeing::doWho(const char *argument)
                 case 's':
                   if (!statsx) {
                     if (isImmortal())
-                      buf = fmt("%s\n\r\t[St:%-3d Br:%-3d Co:%-3d De:%-3d Ag:%-3d In:%-3d Wi:%-3d Fo:%-3d Pe:%-3d Ch:%-3d Ka:%-3d Sp:%-3d]") % 
+                      buf = format("%s\n\r\t[St:%-3d Br:%-3d Co:%-3d De:%-3d Ag:%-3d In:%-3d Wi:%-3d Fo:%-3d Pe:%-3d Ch:%-3d Ka:%-3d Sp:%-3d]") % 
 			buf %
 			p->curStats.get(STAT_STR) %
 			p->curStats.get(STAT_BRA) %
@@ -488,10 +488,10 @@ void TBeing::doWho(const char *argument)
                 case 'q':
                   if (!quest) {
                     if (p->isPlayerAction(PLR_SOLOQUEST))
-                      buf = fmt("%s (%sSOLO QUEST%s)") % buf % red() % norm();
+                      buf = format("%s (%sSOLO QUEST%s)") % buf % red() % norm();
                     
                     if (p->isPlayerAction(PLR_GRPQUEST))
-                      buf = fmt("%s (%sGROUP QUEST%s)") % buf % blue() % norm();
+                      buf = format("%s (%sGROUP QUEST%s)") % buf % blue() % norm();
                   }
                   quest = TRUE;
                   break;
@@ -536,7 +536,7 @@ void TBeing::doWho(const char *argument)
         if (k->desc && (time(0)-k->desc->account->birth) < NEWBIE_PURGATORY_LENGTH)
           buf += "   (Newbie)";
         if (!k->msgVariables(MSG_NOTE).empty())
-          buf += fmt("   (%s)") % k->msgVariables(MSG_NOTE);
+          buf += format("   (%s)") % k->msgVariables(MSG_NOTE);
         buf += "\n\r";
         sb += buf;
       }
@@ -551,17 +551,17 @@ void TBeing::doWho(const char *argument)
   accStat.max_player_since_reboot = max(accStat.max_player_since_reboot, count);
   if (isImmortal()) {
     if (!listed)
-      buf = fmt("\n\rTotal players / Link dead [%d/%d] (%2.0f%c)\n\rMax since Reboot [%d]  Avg Players : [%.1f]\n\r") %
+      buf = format("\n\rTotal players / Link dead [%d/%d] (%2.0f%c)\n\rMax since Reboot [%d]  Avg Players : [%.1f]\n\r") %
 	count % lcount % (((double) lcount / (int) count) * 100) % '%' %
 	accStat.max_player_since_reboot %
 	(stats.useage_iters ? (float) stats.num_users / stats.useage_iters : 0);
     else
-      buf = fmt("\n\rTotal players / Link dead [%d/%d] (%2.0f%c)\n\rNumber Listed: %d  Max since Reboot [%d]  Avg Players : [%.1f]\n\r") %
+      buf = format("\n\rTotal players / Link dead [%d/%d] (%2.0f%c)\n\rNumber Listed: %d  Max since Reboot [%d]  Avg Players : [%.1f]\n\r") %
 	count % lcount % (((double) lcount / (int) count) * 100) % '%' % listed %
 	accStat.max_player_since_reboot %
 	(stats.useage_iters ? (float) stats.num_users / stats.useage_iters : 0);
   } else {
-    buf = fmt("\n\rTotal Players : [%d] Max since last reboot : [%d] Avg Players : [%.1f]\n\r") % count % accStat.max_player_since_reboot % (stats.useage_iters ? (float) stats.num_users / stats.useage_iters : 0);
+    buf = format("\n\rTotal Players : [%d] Max since last reboot : [%d] Avg Players : [%.1f]\n\r") % count % accStat.max_player_since_reboot % (stats.useage_iters ? (float) stats.num_users / stats.useage_iters : 0);
   }
   sb += buf;
   if (desc)
@@ -582,9 +582,9 @@ void TBeing::doWhozone()
     if (!d->connected && canSee(d->character) &&
         (rp = real_roomp((person = (d->original ? d->original : d->character))->in_room)) &&
         (rp->getZoneNum() == roomp->getZoneNum())) {
-      sbuf = fmt("%-25s - %s ") % person->getName() % rp->name;
+      sbuf = format("%-25s - %s ") % person->getName() % rp->name;
       if (GetMaxLevel() > MAX_MORT){
-        buf = fmt("[%d]") % person->in_room;
+        buf = format("[%d]") % person->in_room;
 	sbuf+=buf;
       }
       sbuf += "\n\r";
@@ -592,5 +592,5 @@ void TBeing::doWhozone()
       count++;
     }
   }
-  sendTo(fmt("\n\rTotal visible players: %d\n\r") % count);
+  sendTo(format("\n\rTotal visible players: %d\n\r") % count);
 }

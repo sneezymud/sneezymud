@@ -39,7 +39,7 @@
 
 void TThing::logMe(const TBeing *ch, const char *cmdbuf) const
 {
-  vlogf(LOG_SILENT, fmt("%s%s%s %s.") %  
+  vlogf(LOG_SILENT, format("%s%s%s %s.") %  
     (ch ? ch->getName() : "") %
     (ch ? " " : "") %
     cmdbuf % getName());
@@ -47,7 +47,7 @@ void TThing::logMe(const TBeing *ch, const char *cmdbuf) const
 
 void TObj::logMe(const TBeing *ch, const char *cmdbuf) const
 {
-  vlogf(LOG_SILENT, fmt("%s%s%s %s. (max: %d, cur: %d)") %  
+  vlogf(LOG_SILENT, format("%s%s%s %s. (max: %d, cur: %d)") %  
            (ch ? ch->getName() : "") %
            (ch ? " " : "") %
            cmdbuf % getName() %
@@ -240,7 +240,7 @@ void TTrap::dropMe(TBeing *ch, showMeT, showRoomT showroom)
   extraDescription *ed;
 
   if (!isname("grenade", name)) {
-    ch->sendTo(COLOR_OBJECTS, fmt("You drop %s, concealing and arming it.\n\r") % 
+    ch->sendTo(COLOR_OBJECTS, format("You drop %s, concealing and arming it.\n\r") % 
                      sstring(getName()).uncap());
 
     swapToStrung();
@@ -255,7 +255,7 @@ void TTrap::dropMe(TBeing *ch, showMeT, showRoomT showroom)
     TObj::dropMe(ch, DONT_SHOW_ME, DONT_SHOW_ROOM);
     return;
   } else {
-    ch->sendTo(COLOR_OBJECTS, fmt("You drop %s, activating it.\n\r") % 
+    ch->sendTo(COLOR_OBJECTS, format("You drop %s, activating it.\n\r") % 
                      sstring(getName()).uncap());
 
     armGrenade(ch);
@@ -617,7 +617,7 @@ int TBeing::doPut(const char *argument)
           return FALSE;
         }
         if (!(sub = get_obj_vis_accessible(this, arg2))) {
-          sendTo(fmt("You don't see any '%s' here.\n\r") % arg2);
+          sendTo(format("You don't see any '%s' here.\n\r") % arg2);
           return FALSE;
         }
         sub->putMoneyInto(this, amount);
@@ -689,7 +689,7 @@ int TBeing::doPut(const char *argument)
           }
           return FALSE;
         } else {
-          sendTo(fmt("You don't have the '%s'.\n\r") % arg2);
+          sendTo(format("You don't have the '%s'.\n\r") % arg2);
           return FALSE;
         }
       } else {
@@ -697,7 +697,7 @@ int TBeing::doPut(const char *argument)
         tmp = tmpname;
 
         if (!(iNumb = get_number(&tmp))) {
-          sendTo(fmt("You don't have the '%s'.\n\r") % arg1);
+          sendTo(format("You don't have the '%s'.\n\r") % arg1);
           return FALSE;
         }
 	bool firsttimeround=TRUE;
@@ -749,17 +749,17 @@ int TBeing::doPut(const char *argument)
                 num = 0;
               }
             } else {
-              sendTo(fmt("You don't have the '%s'.\n\r") % arg2);
+              sendTo(format("You don't have the '%s'.\n\r") % arg2);
               num = 0;
             }
           }
         }  // for loop
         if (i == 0 && num != 0) {
-          sendTo(fmt("You don't have the '%s'.\n\r") % arg1);
+          sendTo(format("You don't have the '%s'.\n\r") % arg1);
         }
       }
     } else
-      sendTo(fmt("Put %s in what?\n\r") % arg1);
+      sendTo(format("Put %s in what?\n\r") % arg1);
   } else
     sendTo("Put what in what?\n\r");
 
@@ -885,8 +885,8 @@ int TBeing::doGive(const sstring &oarg, giveTypeT flags)
       act("Not while $N is fighting.", FALSE, this, 0, vict, TO_CHAR);
       return FALSE;
     }
-    sendTo(COLOR_MOBS, fmt("You give %d talen%s to %s.\n\r") % amount %             ((amount == 1) ? "" : "s") % pers(vict));
-    buf=fmt("$n gives you %d talen%s.\n\r") % 
+    sendTo(COLOR_MOBS, format("You give %d talen%s to %s.\n\r") % amount %             ((amount == 1) ? "" : "s") % pers(vict));
+    buf=format("$n gives you %d talen%s.\n\r") % 
       amount % ((amount == 1) ? "" : "s");
     if(flags != GIVE_FLAG_SILENT_VICT){
       act(buf, TRUE, this, NULL, vict, TO_VICT);
@@ -898,7 +898,7 @@ int TBeing::doGive(const sstring &oarg, giveTypeT flags)
     saveChar(ROOM_AUTO_RENT);
     vict->saveChar(ROOM_AUTO_RENT);
     if ((vict->getMoney() > 500000) && (amount > 100000))
-      vlogf(LOG_MISC,fmt("%s gave %d talens to %s.") %  getName() % amount % vict->getName());
+      vlogf(LOG_MISC,format("%s gave %d talens to %s.") %  getName() % amount % vict->getName());
 
     if (!vict->isPc()) {
       // log if it's an owned shopkeeper
@@ -913,7 +913,7 @@ int TBeing::doGive(const sstring &oarg, giveTypeT flags)
       }
       
       // check reponses
-      buf=fmt("%i") % amount;
+      buf=format("%i") % amount;
 
       rc = dynamic_cast<TMonster *>(vict)->checkResponses(this, NULL, buf, CMD_GIVE);
       TMonster *tMob;
@@ -941,10 +941,10 @@ int TBeing::doGive(const sstring &oarg, giveTypeT flags)
               (vict->getMoney() >= (vict->GetMaxLevel() * 1000))) {
             act("$N stares at $n and smiles.",
                 TRUE, this, NULL, vict, TO_ROOM);
-            act(fmt("$N stares at you and smiles, I think %s likes you.")
+            act(format("$N stares at you and smiles, I think %s likes you.")
                 % thirdPerson(POS_SUBJECT),
                 TRUE, this, NULL, vict, TO_CHAR);
-            act(fmt("$n leaves to make use of %s new found cash.")
+            act(format("$n leaves to make use of %s new found cash.")
                 % thirdPerson(POS_POSSESS),
                 TRUE, vict, NULL, NULL, TO_ROOM);
 
@@ -1145,7 +1145,7 @@ int TBeing::doGive(const sstring &oarg, giveTypeT flags)
               return DELETE_THIS;
           }
         } else 
-          vlogf(LOG_BUG, fmt("Bad flags in doGive (%s)") %  getName());
+          vlogf(LOG_BUG, format("Bad flags in doGive (%s)") %  getName());
         
 	doQueueSave();
         if (vict)
@@ -1156,10 +1156,10 @@ int TBeing::doGive(const sstring &oarg, giveTypeT flags)
         if (obj->obj_flags.cost >= 100) {
           switch (CheckStorageChar(this, vict)) {
             case 1:
-              vlogf(LOG_CHEAT, fmt("Storage Character %s giving %s to %s") % getName() %obj->getName() %vict->getName());
+              vlogf(LOG_CHEAT, format("Storage Character %s giving %s to %s") % getName() %obj->getName() %vict->getName());
               break;
             case 2:
-              vlogf(LOG_CHEAT, fmt("Storage Character %s w/low KAR giving %s to %s w/high KAR") % getName() % obj->getName() %vict->getName());
+              vlogf(LOG_CHEAT, format("Storage Character %s w/low KAR giving %s to %s w/high KAR") % getName() % obj->getName() %vict->getName());
               break;
             case 0:
             default:
@@ -1318,7 +1318,7 @@ bool TThing::canCarryMe(const TBeing *ch, silentTypeT silent) const
 
     if (ch->getCarriedVolume() + (getTotalVolume() - getReducedVolume(NULL)) > ch->carryVolumeLimit()) {
       if (!silent)
-        ch->sendTo(COLOR_OBJECTS,fmt("%s : You need more dexterity to carry that much volume.\n\r") % sstring(getName()).cap());
+        ch->sendTo(COLOR_OBJECTS,format("%s : You need more dexterity to carry that much volume.\n\r") % sstring(getName()).cap());
       return FALSE;
     }
   } else {
@@ -1328,13 +1328,13 @@ bool TThing::canCarryMe(const TBeing *ch, silentTypeT silent) const
     if (compareWeights(getTotalWeight(TRUE),
                   (ch->carryWeightLimit() - ch->getCarriedWeight())) == -1) {
       if (!silent)
-        ch->sendTo(COLOR_OBJECTS, fmt("%s : You don't have enough strength to carry that much weight.\n\r") % sstring(getName()).cap());
+        ch->sendTo(COLOR_OBJECTS, format("%s : You don't have enough strength to carry that much weight.\n\r") % sstring(getName()).cap());
       return FALSE;
     }
 
     if (ch->getCarriedVolume() + getTotalVolume() > ch->carryVolumeLimit()) {
       if (!silent)
-        ch->sendTo(COLOR_OBJECTS,fmt("%s : You need more dexterity to carry that much volume.\n\r") % sstring(getName()).cap());
+        ch->sendTo(COLOR_OBJECTS,format("%s : You need more dexterity to carry that much volume.\n\r") % sstring(getName()).cap());
       return FALSE;
     }
   }
@@ -1398,7 +1398,7 @@ bool TTrap::canDrop() const
 
 int TObj::getAllFrom(TBeing *ch, const char *argument)
 {
-  ch->sendTo(COLOR_OBJECTS, fmt("%s is not a container.\n\r") % sstring(getName()).cap());
+  ch->sendTo(COLOR_OBJECTS, format("%s is not a container.\n\r") % sstring(getName()).cap());
   return FALSE;
 }
 
@@ -1417,7 +1417,7 @@ int TTable::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
 
   if (getall(arg1, newarg)) {
     if (!get_thing_on_list_vis(ch, newarg, rider)) {
-      ch->sendTo(COLOR_OBJECTS, fmt("There are no \"%s\"'s visible on %s.\n\r") % newarg % getName());
+      ch->sendTo(COLOR_OBJECTS, format("There are no \"%s\"'s visible on %s.\n\r") % newarg % getName());
       return TRUE;
     }
     if (ch->getPosition() <= POSITION_SITTING) {
@@ -1448,7 +1448,7 @@ int TTable::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
     return TRUE;
   } else if ((p = getabunch(arg1, newarg))) {
     if (!get_thing_on_list_vis(ch, newarg, rider)) {
-      ch->sendTo(COLOR_OBJECTS, fmt("There are no \"%s\"'s visible on %s.\n\r") % newarg % getName());
+      ch->sendTo(COLOR_OBJECTS, format("There are no \"%s\"'s visible on %s.\n\r") % newarg % getName());
       return TRUE;
     }
     if (ch->getPosition() <= POSITION_SITTING) {
@@ -1489,7 +1489,7 @@ int TBed::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
 
   if (getall(arg1, newarg)) {
     if (!get_thing_on_list_vis(ch, newarg, rider)) {
-      ch->sendTo(COLOR_OBJECTS, fmt("There are no \"%s\"'s visible on %s.\n\r") % newarg % getName());
+      ch->sendTo(COLOR_OBJECTS, format("There are no \"%s\"'s visible on %s.\n\r") % newarg % getName());
       return TRUE;
     }
     if (ch->getPosition() <= POSITION_SITTING) {
@@ -1520,7 +1520,7 @@ int TBed::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
     return TRUE;
   } else if ((p = getabunch(arg1, newarg))) {
     if (!get_thing_on_list_vis(ch, newarg, rider)) {
-      ch->sendTo(COLOR_OBJECTS, fmt("There are no \"%s\"'s visible on %s.\n\r") % newarg % getName());
+      ch->sendTo(COLOR_OBJECTS, format("There are no \"%s\"'s visible on %s.\n\r") % newarg % getName());
       return TRUE;
     }
     if (ch->getPosition() <= POSITION_SITTING) {
@@ -1898,7 +1898,7 @@ void TPerson::dropItemsToRoom(safeTypeT ok, dropNukeT actually_nuke)
         // quit calls this with ok=true before deleting
         // idle-timeout moves player to dump, and does ok=true call
         if (!ok)
-          vlogf(LOG_BUG, fmt("%s had objects going to room somehow.  Investigate immediately.  Tell Batopr!") %  getName());
+          vlogf(LOG_BUG, format("%s had objects going to room somehow.  Investigate immediately.  Tell Batopr!") %  getName());
 
         if (actually_nuke) {
           // this is mostly a handler for idle-time-out

@@ -48,7 +48,7 @@ bool BjGame::enter(const TBeing *ch)
   if (inx < 0) {
     ch->sendTo("The table seems to be full.\n\r");
     if (ch->isImmortal())
-      ch->sendTo(fmt("%s is at the table.\n\r") % name);
+      ch->sendTo(format("%s is at the table.\n\r") % name);
     return FALSE;
   }
   ch->sendTo("You move up to the blackjack table.\n\r");
@@ -64,7 +64,7 @@ int BjGame::exitGame(const TBeing *ch)
   int inx, i;
 
   if ((inx = index(ch)) < 0) {
-    vlogf(LOG_BUG, fmt("%s left a table he was not at!") %  ch->name);
+    vlogf(LOG_BUG, format("%s left a table he was not at!") %  ch->name);
     return FALSE;
   }
   *name = '\0';
@@ -118,9 +118,9 @@ void BjGame::Bet(TBeing *ch, const char *arg)
     ch->doSave(SILENT_YES);
 
     sstring buf;
-    buf = fmt("$n bets %s.") % chip->getName();
+    buf = format("$n bets %s.") % chip->getName();
     act(buf, TRUE, ch, 0, 0, TO_ROOM);
-    buf = fmt("You bet %s.") % chip->getName();
+    buf = format("You bet %s.") % chip->getName();
     act(buf, TRUE, ch, 0, 0, TO_CHAR);
 
     (*chip)--;
@@ -247,7 +247,7 @@ void BjGame::stay(TBeing *ch)
 
     player = best_dealer();
     if (player > 21) {
-      ch->sendTo(fmt("The dealer busts with %d.\n\r") % player);
+      ch->sendTo(format("The dealer busts with %d.\n\r") % player);
       sprintf(log_msg, "The dealer busts with %d.", player);
       act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
       break;

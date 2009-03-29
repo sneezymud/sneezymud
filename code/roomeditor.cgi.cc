@@ -61,10 +61,10 @@ sstring getPlayerNames(int account_id)
 	   account_id);
 
   if(db.fetchRow())
-    names=fmt("'%s'") % db["name"];
+    names=format("'%s'") % db["name"];
 
   while(db.fetchRow()){
-    names+=fmt(", '%s'") % db["name"];
+    names+=format(", '%s'") % db["name"];
   }
 
   return names;
@@ -542,11 +542,11 @@ void sendShowExtra(int account_id, int vnum)
     cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
     cout << "<table border=1>";
 
-    cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "vnum" % "vnum" % db["vnum"];
-    cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "name" % "name" % db["name"];
-    cout << fmt("<tr><td>%s</td><td><textarea name=description cols=90 rows=5>%s</textarea></td></tr>\n") % "description" % db["description"];
+    cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "vnum" % "vnum" % db["vnum"];
+    cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "name" % "name" % db["name"];
+    cout << format("<tr><td>%s</td><td><textarea name=description cols=90 rows=5>%s</textarea></td></tr>\n") % "description" % db["description"];
 
-    cout << fmt("<tr><td></td><td bgcolor=black>%s</td></tr>\n") %
+    cout << format("<tr><td></td><td bgcolor=black>%s</td></tr>\n") %
       mudColorToHTML(db["description"]);
     
     cout << "</table>";    
@@ -575,7 +575,7 @@ sstring getDirectionForm(int selected)
 {
   sstring buf="<tr><td>direction</td><td><select name=direction>\n";
   for(int i=0;i<MAX_DIR;++i){
-    buf+=fmt("<option value=%i %s>%s</option>\n") %
+    buf+=format("<option value=%i %s>%s</option>\n") %
       i % ((i==selected)?"selected":"") % dirs[i];
   }
   buf+="</select>\n";
@@ -587,7 +587,7 @@ sstring getTypeForm(int selected)
 {
   sstring buf="<tr><td>type</td><td><select name=type>\n";
   for(int i=0;i<MAX_DOOR_TYPES;++i){
-    buf+=fmt("<option value=%i %s>%s</option>\n") %
+    buf+=format("<option value=%i %s>%s</option>\n") %
       i % ((i==selected)?"selected":"") % door_types[i];
   }
   buf+="</select>\n";
@@ -604,7 +604,7 @@ sstring getDestinationForm(int selected, int account_id)
   sstring buf="<tr><td>destination</td><td><select name=destination>\n";
   buf+="<option bgcolor=black value=new>New Room</option>\n";
   while(db.fetchRow()){
-    buf+=fmt("<option bgcolor=black value=%s %s>%s - %s</option>\n") %
+    buf+=format("<option bgcolor=black value=%s %s>%s - %s</option>\n") %
        db["vnum"] % ((convertTo<int>(db["vnum"])==selected)?"selected":"") % 
       mudColorToHTML(db["name"], false) % db["vnum"];
   }
@@ -651,23 +651,23 @@ void sendShowExit(int account_id, int vnum)
     cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
     cout << "<table border=1>";
 
-    cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "vnum" % "vnum" % db["vnum"];
+    cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "vnum" % "vnum" % db["vnum"];
 
     cout << getDirectionForm(convertTo<int>(db["direction"]));
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "name" % "name" % db["name"];
-  cout << fmt("<tr><td></td><td bgcolor=black>%s</td></tr>\n") % 
+  cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "name" % "name" % db["name"];
+  cout << format("<tr><td></td><td bgcolor=black>%s</td></tr>\n") % 
     mudColorToHTML(db["name"]);
 
-  cout << fmt("<tr><td>%s</td><td><textarea name=description cols=90 rows=5>%s</textarea></td></tr>\n") % "description" % db["description"];
-  cout << fmt("<tr><td></td><td bgcolor=black>%s</td></tr>\n") %
+  cout << format("<tr><td>%s</td><td><textarea name=description cols=90 rows=5>%s</textarea></td></tr>\n") % "description" % db["description"];
+  cout << format("<tr><td></td><td bgcolor=black>%s</td></tr>\n") %
     mudColorToHTML(db["description"]);
 
     cout << getTypeForm(convertTo<int>(db["type"]));
-    cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "condition_flag" % "condition_flag" % db["condition_flag"];
-    cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "lock_difficulty" % "lock_difficulty" % db["lock_difficulty"];
-    cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "weight" % "weight" % db["weight"];
-    cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "key_num" % "key_num" % db["key_num"];
+    cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "condition_flag" % "condition_flag" % db["condition_flag"];
+    cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "lock_difficulty" % "lock_difficulty" % db["lock_difficulty"];
+    cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "weight" % "weight" % db["weight"];
+    cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "key_num" % "key_num" % db["key_num"];
 
 
     cout << getDestinationForm(convertTo<int>(db["destination"]), account_id);
@@ -699,10 +699,10 @@ void sendShowExit(int account_id, int vnum)
 sstring getRiverDirForm(int selected)
 {
   sstring buf="<tr><td>river_dir</td><td><select name=river_dir>\n";
-  buf+=fmt("<option value=%i %s>%s</option>\n") %
+  buf+=format("<option value=%i %s>%s</option>\n") %
    -1 % ((-1==selected)?"selected":"") % "none";
   for(int i=0;i<MAX_DIR;++i){
-    buf+=fmt("<option value=%i %s>%s</option>\n") %
+    buf+=format("<option value=%i %s>%s</option>\n") %
       i % ((i==selected)?"selected":"") % dirs[i];
   }
   buf+="</select>\n";
@@ -727,7 +727,7 @@ sstring getTerrainForm(int selected)
 
   sstring buf="<tr><td>sector</td><td><select name=sector>\n";
   for(it=m.begin();it!=m.end();++it){
-    buf+=fmt("<option value=%i %s>%s</option>\n") %
+    buf+=format("<option value=%i %s>%s</option>\n") %
       (*it).second % (((*it).second==selected)?"selected":"") % 
       (*it).first;
   }
@@ -754,7 +754,7 @@ sstring getProcForm(int selected, bool wizard)
     if(roomSpecials[(*it).second].assignable || 
        (*it).second==selected ||
        wizard){
-      buf+=fmt("<option value=%i %s>%s</option>\n") %
+      buf+=format("<option value=%i %s>%s</option>\n") %
 	(*it).second % (((*it).second==selected)?"selected":"") % 
 	(*it).first;
     }
@@ -865,30 +865,30 @@ void sendShowRoom(int account_id, int vnum, bool wizard)
   cout << "<table border=1>";
 
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "vnum" % "vnum" % db["vnum"];
+  cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "vnum" % "vnum" % db["vnum"];
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "x" % "x" % db["x"];
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "y" % "y" % db["y"];
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "z" % "z" % db["z"];
+  cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "x" % "x" % db["x"];
+  cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "y" % "y" % db["y"];
+  cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "z" % "z" % db["z"];
 
   buf=db["name"];
   while (buf.find("'") != sstring::npos)
     buf.replace(buf.find("'"), 1, "&#39;");
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "name" % "name" % buf;
-  buf=fmt("%s%s") % 
+  cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "name" % "name" % buf;
+  buf=format("%s%s") % 
     getSectorNameColor(mapFileToSector(convertTo<int>(db["sector"])), NULL) %
     db["name"];
-  cout << fmt("<tr><td></td><td bgcolor=black>%s</td></tr>\n") % 
+  cout << format("<tr><td></td><td bgcolor=black>%s</td></tr>\n") % 
     mudColorToHTML(buf);
 
   buf=db["description"];
   while (buf.find("'") != sstring::npos)
     buf.replace(buf.find("'"), 1, "&#39;");
-  cout << fmt("<tr><td>%s</td><td><textarea name=description cols=90 rows=5>%s</textarea></td></tr>\n") % "description" % buf;
-  buf=fmt("%s%s") % 
+  cout << format("<tr><td>%s</td><td><textarea name=description cols=90 rows=5>%s</textarea></td></tr>\n") % "description" % buf;
+  buf=format("%s%s") % 
     getSectorDescrColor(mapFileToSector(convertTo<int>(db["sector"])), NULL) %
     db["description"];
-  cout << fmt("<tr><td></td><td width=80 bgcolor=black>%s</td></tr>\n") %
+  cout << format("<tr><td></td><td width=80 bgcolor=black>%s</td></tr>\n") %
     mudColorToHTML(buf);
 
 
@@ -896,7 +896,7 @@ void sendShowRoom(int account_id, int vnum, bool wizard)
   cout << "<tr><td>room_flag</td><td><table><tr>" << endl;
   int room_flag=convertTo<int>(db["room_flag"]);
   for(int i=0;i<MAX_ROOM_BITS;++i){
-    cout << fmt("<td><input type=checkbox %s name='%s'> %s") %
+    cout << format("<td><input type=checkbox %s name='%s'> %s") %
       ((room_flag & (1<<i))?"checked":"") % room_bits[i] % room_bits[i];
 
     cout << "</td>";
@@ -911,14 +911,14 @@ void sendShowRoom(int account_id, int vnum, bool wizard)
 
   cout << getTerrainForm(convertTo<int>(db["sector"]));
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "teletime" % "teletime" % db["teletime"];
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "teletarg" % "teletarg" % db["teletarg"];
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "telelook" % "telelook" % db["telelook"];
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "river_speed" % "river_speed" % db["river_speed"];
+  cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "teletime" % "teletime" % db["teletime"];
+  cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "teletarg" % "teletarg" % db["teletarg"];
+  cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "telelook" % "telelook" % db["telelook"];
+  cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "river_speed" % "river_speed" % db["river_speed"];
   cout << getRiverDirForm(convertTo<int>(db["river_dir"]));
 
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "capacity" % "capacity" % db["capacity"];
-  cout << fmt("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "height" % "height" % db["height"];
+  cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "capacity" % "capacity" % db["capacity"];
+  cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "height" % "height" % db["height"];
   
   cout << getProcForm(convertTo<int>(db["spec"]), wizard);
 
@@ -1011,7 +1011,7 @@ void sendRoomlist(int account_id)
 
     cout << "<tr><td>" << "<a href=javascript:pickroom('" << db["vnum"];
     cout << "','showroom')>" << db["vnum"] << "</a>" << endl;
-    buf=fmt("%s%s") % 
+    buf=format("%s%s") % 
       getSectorNameColor(mapFileToSector(convertTo<int>(db["sector"])), NULL) %
       db["name"];
     cout << "</td><td bgcolor=black>" << mudColorToHTML(buf, false);
@@ -1094,6 +1094,6 @@ sstring mudColorToHTML(sstring str, bool spacer)
   if(!spacer)
     spacing_strip="";
 
-  return fmt("<span style=\"color:white\"><font face=\"courier\">%s%s</font></span>") % spacing_strip % str;
+  return format("<span style=\"color:white\"><font face=\"courier\">%s%s</font></span>") % spacing_strip % str;
 }
 

@@ -76,7 +76,7 @@ sstring TMagicItem::displayFourValues()
 int TMagicItem::objectSell(TBeing *ch, TMonster *keeper)
 {
   if (getMagicLearnedness() < MAX_SKILL_LEARNEDNESS) {
-    keeper->doTell(ch->getName(), fmt("I'm sorry, that %s is of sub-standard quality.") % fname(name));
+    keeper->doTell(ch->getName(), format("I'm sorry, that %s is of sub-standard quality.") % fname(name));
     return TRUE;
   }
 
@@ -105,8 +105,8 @@ int TMagicItem::getMagicLearnedness() const
 
 void TMagicItem::objMenu(const TBeing *ch) const
 {
-  ch->sendTo(fmt(VT_CURSPOS) % 3 % 1);
-  ch->sendTo(fmt("%sSuggested price:%s %d%s") %
+  ch->sendTo(format(VT_CURSPOS) % 3 % 1);
+  ch->sendTo(format("%sSuggested price:%s %d%s") %
              ch->purple() % ch->norm() % suggestedPrice() %
              (suggestedPrice() != obj_flags.cost ? " *" : ""));
 }
@@ -115,7 +115,7 @@ void TMagicItem::lowCheck()
 {
   int sp = suggestedPrice();
   if (obj_flags.cost >= 0 && obj_flags.cost < sp) {
-    vlogf(LOG_LOW, fmt("magicitem (%s:%d) with bad price %d should be %d.") % 
+    vlogf(LOG_LOW, format("magicitem (%s:%d) with bad price %d should be %d.") % 
           getName() % objVnum() % obj_flags.cost % sp);
     obj_flags.cost = sp;
   }

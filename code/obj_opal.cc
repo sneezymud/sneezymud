@@ -171,7 +171,7 @@ void TOpal::lowCheck()
 {
   int ap = suggestedPrice();
   if (ap != obj_flags.cost && ap) {
-    vlogf(LOG_LOW, fmt("Opal (%s:%d) has a bad price (%d).  should be (%d)") % 
+    vlogf(LOG_LOW, format("Opal (%s:%d) has a bad price (%d).  should be (%d)") % 
          getName() % objVnum() % obj_flags.cost % ap);
     obj_flags.cost = ap;
   }

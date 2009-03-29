@@ -83,7 +83,7 @@ int task_penance(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
               ch->desc->updateScreenVt100(CHANGED_PIETY);
           }
         } else {
-          ch->sendTo(fmt("%sAn earthly force in the room stops your penance!%s\n\r") %
+          ch->sendTo(format("%sAn earthly force in the room stops your penance!%s\n\r") %
                      ch->red() % ch->norm());
           ch->stopTask();
           return FALSE;

@@ -280,7 +280,7 @@ void bootPulse(const char *str, bool end_str)
   }
 
   if (str && strcmp(str, "."))
-    vlogf(LOG_MISC, fmt("%s") %  str);
+    vlogf(LOG_MISC, format("%s") %  str);
 }
 
 void object_stats()
@@ -303,12 +303,12 @@ void object_stats()
     if(count[li]==-1)
       break;
     
-    vlogf(LOG_MISC, fmt("[%6i] %-17s") % count[li] % ItemInfo[li]->name);
+    vlogf(LOG_MISC, format("[%6i] %-17s") % count[li] % ItemInfo[li]->name);
     total += count[li];
     count[li]=-1;
   }
   
-  vlogf(LOG_MISC, fmt("[%6i] %-17s") % total % "Total");
+  vlogf(LOG_MISC, format("[%6i] %-17s") % total % "Total");
 }
 
 
@@ -374,7 +374,7 @@ void bootDb(void)
   bootPulse("Initializing Terrains.");
   assignTerrainInfo();
 
-  vlogf(LOG_MISC, fmt("Boot timing: misc 1: %.2f seconds") % 
+  vlogf(LOG_MISC, format("Boot timing: misc 1: %.2f seconds") % 
       (t.getElapsedReset()));
 
   bootPulse("Generating index tables for mobile file.");
@@ -383,17 +383,17 @@ void bootDb(void)
   bootPulse("Generating index tables for object file.");
   generate_obj_index();
 
-  vlogf(LOG_MISC, fmt("Boot timing: mob/obj indexes: %.2f seconds") % (t.getElapsedReset()));
+  vlogf(LOG_MISC, format("Boot timing: mob/obj indexes: %.2f seconds") % (t.getElapsedReset()));
 
   bootPulse("Pre-loading object cache.");
   obj_cache.preload();
 
-  vlogf(LOG_MISC, fmt("Boot timing: obj cache: %.2f seconds") % (t.getElapsedReset()));
+  vlogf(LOG_MISC, format("Boot timing: obj cache: %.2f seconds") % (t.getElapsedReset()));
 
   bootPulse("Pre-loading mobile cache.");
   mob_cache.preload();
 
-  vlogf(LOG_MISC, fmt("Boot timing: mob cache: %.2f seconds") % (t.getElapsedReset()));
+  vlogf(LOG_MISC, format("Boot timing: mob cache: %.2f seconds") % (t.getElapsedReset()));
 
 
   bootPulse("Building suitset information.");
@@ -412,20 +412,20 @@ void bootDb(void)
   bootPulse("Checking for new species of fish.");
   initialize_fish_records();
   
-  vlogf(LOG_MISC, fmt("Boot timing: misc 2: %.2f seconds") % (t.getElapsedReset()));
+  vlogf(LOG_MISC, format("Boot timing: misc 2: %.2f seconds") % (t.getElapsedReset()));
 
   unsigned int i;
   bootPulse("Loading rooms:", false);
   bootWorld();
   bootPulse(NULL, true);
 
-  vlogf(LOG_MISC, fmt("Boot timing: rooms: %.2f seconds") % (t.getElapsedReset()));
+  vlogf(LOG_MISC, format("Boot timing: rooms: %.2f seconds") % (t.getElapsedReset()));
 
   vlogf(LOG_MISC, "Assigning function pointers:");
   vlogf(LOG_MISC, "   Shopkeepers.");
   bootTheShops();
 
-  vlogf(LOG_MISC, fmt("Boot timing: shops: %.2f seconds") % (t.getElapsedReset()));
+  vlogf(LOG_MISC, format("Boot timing: shops: %.2f seconds") % (t.getElapsedReset()));
 
   //bootPulse("Initializing boards.");
   //InitBoards();
@@ -455,7 +455,7 @@ void bootDb(void)
   bootPulse("Building whittle information.");
   initWhittle();
 
-  vlogf(LOG_MISC, fmt("Boot timing: misc 3: %.2f seconds") % (t.getElapsedReset()));
+  vlogf(LOG_MISC, format("Boot timing: misc 3: %.2f seconds") % (t.getElapsedReset()));
 
   bootPulse("Updating characters with saved items:", false);
   updateRentFiles();
@@ -468,7 +468,7 @@ void bootDb(void)
   bootPulse("Processing corpse-save files.");
   processCorpseFiles();
 
-  vlogf(LOG_MISC, fmt("Boot timing: save files: %.2f seconds") % (t.getElapsedReset()));
+  vlogf(LOG_MISC, format("Boot timing: save files: %.2f seconds") % (t.getElapsedReset()));
 
   bootPulse("Calculating number of items in rent.");
   vlogf(LOG_MISC, "Totals on limited items:");
@@ -483,7 +483,7 @@ void bootDb(void)
     d = (i ? (zone_table[i - 1].top + 1) : 0);
     e = zone_table[i].top;
 
-    vlogf(LOG_MISC, fmt("Calculating object load potentials of %s (rooms %d-%d).") % zone_table[i].name % d % e);
+    vlogf(LOG_MISC, format("Calculating object load potentials of %s (rooms %d-%d).") % zone_table[i].name % d % e);
     zone_table[i].resetZone(true, true);
 
     if (i%10 == 0)
@@ -491,14 +491,14 @@ void bootDb(void)
   }
   bootPulse(NULL, true);
 
-  vlogf(LOG_MISC, fmt("Object load potentials:"));
+  vlogf(LOG_MISC, "Object load potentials:");
   map<int, int>::iterator tIter = obj_load_potential.begin();
   while (tIter != obj_load_potential.end()) {
-    vlogf(LOG_MISC, fmt("VNum[%d] = %d") % tIter->first % tIter->second);
+    vlogf(LOG_MISC, format("VNum[%d] = %d") % tIter->first % tIter->second);
     ++tIter;
   }
 
-  vlogf(LOG_MISC, fmt("Boot timing: load potentials: %.2f seconds") % (t.getElapsedReset()));
+  vlogf(LOG_MISC, format("Boot timing: load potentials: %.2f seconds") % (t.getElapsedReset()));
 
   for (i = 0; i < zone_table.size(); i++) {
     int d, e;
@@ -515,7 +515,7 @@ void bootDb(void)
     }
 
 
-    vlogf(LOG_MISC, fmt("Performing boot-time reset of %s (rooms %d-%d).") % zone_table[i].name % d % e);
+    vlogf(LOG_MISC, format("Performing boot-time reset of %s (rooms %d-%d).") % zone_table[i].name % d % e);
     zone_table[i].resetZone(TRUE);
 
     // stagger reset times
@@ -526,7 +526,7 @@ void bootDb(void)
   }
   bootPulse(NULL, true);
 
-  vlogf(LOG_MISC, fmt("Boot timing: zones and shop rent: %.2f seconds") % (t.getElapsedReset()));
+  vlogf(LOG_MISC, format("Boot timing: zones and shop rent: %.2f seconds") % (t.getElapsedReset()));
 
   for (unsigned int mobnum = 0; mobnum < mob_index.size(); mobnum++) {
     for (unsigned int zone = 0; zone < zone_table.size(); zone++) {
@@ -550,7 +550,7 @@ void bootDb(void)
 
   r_q.head = r_q.tail = 0;
 
-  vlogf(LOG_MISC, fmt("Boot timing: pfiles: %.2f seconds") % (t.getElapsedReset()));
+  vlogf(LOG_MISC, format("Boot timing: pfiles: %.2f seconds") % (t.getElapsedReset()));
 
   bootPulse("Boot -- DONE.");
   bootTime=false;
@@ -569,7 +569,7 @@ void reset_time(void)
   extern void fixSunlight();
   fixSunlight();
 
-  vlogf(LOG_MISC, fmt("   Current Gametime: %dm, %dH %dD %dM %dY.") %  
+  vlogf(LOG_MISC, format("   Current Gametime: %dm, %dH %dD %dM %dY.") %  
         time_info.minutes % time_info.hours % time_info.day % time_info.month % time_info.year);
 
   weather_info.pressure = 960;
@@ -658,7 +658,7 @@ void bootWorld(void)
 
     if (virtual_nr/1000 > num) {
       num = virtual_nr/1000;
-      vlogf(LOG_MISC, fmt("Room %ld allocated") %  (num*1000));
+      vlogf(LOG_MISC, format("Room %ld allocated") %  (num*1000));
       bootPulse(".", false);
     } 
     allocate_room(virtual_nr);
@@ -676,7 +676,7 @@ void bootWorld(void)
       for (z = 0; rp->number>zone_table[z].top && z<zone_table.size(); z++);
 
       if (z >= zone_table.size()) {
-        vlogf(LOG_EDIT, fmt("Room %d is outside of any zone.\n") % rp->number);
+        vlogf(LOG_EDIT, format("Room %d is outside of any zone.\n") % rp->number);
         exit(0);
       }
       rp->setZoneNum(z);
@@ -711,11 +711,11 @@ void bootWorld(void)
       new_descr = new extraDescription();
       new_descr->keyword = mud_str_dup(db_extras["name"]);
       if (!new_descr->keyword || !*new_descr->keyword)
-        vlogf(LOG_EDIT, fmt("No keyword in room %d\n") %  rp->number);
+        vlogf(LOG_EDIT, format("No keyword in room %d\n") %  rp->number);
       
       new_descr->description = mud_str_dup(db_extras["description"]);
       if (!new_descr->description || !*new_descr->description)
-        vlogf(LOG_LOW, fmt("No desc in room %d\n") %  rp->number);
+        vlogf(LOG_LOW, format("No desc in room %d\n") %  rp->number);
       
       new_descr->next = rp->ex_description;
       rp->ex_description = new_descr;
@@ -751,17 +751,17 @@ void bootWorld(void)
 
       tmp=convertTo<int>(db_exits[4]);
       if (tmp < 0 || tmp >= MAX_DOOR_TYPES) {
-        vlogf(LOG_LOW,fmt("bogus door type (%d) in room (%d) dir %d.") % 
+        vlogf(LOG_LOW,format("bogus door type (%d) in room (%d) dir %d.") % 
             tmp % rp->number % dir);
         return;
       }
       rp->dir_option[dir]->door_type = doorTypeT(tmp);
       if ((tmp == DOOR_NONE) && (rp->dir_option[dir]->keyword)){
         if (strcmp(rp->dir_option[dir]->keyword, "_unique_door_"))
-          vlogf(LOG_LOW,fmt("non-door with name in room %d") % rp->number);
+          vlogf(LOG_LOW,format("non-door with name in room %d") % rp->number);
       }
       if ((tmp != DOOR_NONE) && !(rp->dir_option[dir]->keyword)){
-        vlogf(LOG_LOW,fmt("door with no name in room %d") % rp->number);
+        vlogf(LOG_LOW,format("door with no name in room %d") % rp->number);
       }
 
       rp->dir_option[dir]->condition = convertTo<int>(db_exits[5]);
@@ -774,9 +774,9 @@ void bootWorld(void)
       if (IS_SET(rp->dir_option[dir]->condition, EX_SECRET) && 
           canSeeThruDoor(rp->dir_option[dir])) {
         if (IS_SET(rp->dir_option[dir]->condition, EX_CLOSED)){
-          //vlogf(LOG_LOW, fmt("See thru door set secret. (%d, %d)") %  room % dir);
+          //vlogf(LOG_LOW, format("See thru door set secret. (%d, %d)") %  room % dir);
         } else
-          vlogf(LOG_LOW, fmt("Secret door saved as open. (%d, %d)") % 
+          vlogf(LOG_LOW, format("Secret door saved as open. (%d, %d)") % 
               rp->number % dir);
       }
       if(!db_exits.fetchRow())
@@ -797,35 +797,35 @@ void bootWorld(void)
       continue;
 
     if (rp->isRoomFlag(ROOM_PEACEFUL) && !rp->isRoomFlag(ROOM_NO_HEAL))
-      vlogf(LOG_LOW, fmt("%s room %d set peaceful && !no_heal (bit: %d)") % 
+      vlogf(LOG_LOW, format("%s room %d set peaceful && !no_heal (bit: %d)") % 
                 rp->name %rp->number % ROOM_NO_HEAL);
     if (rp->isRoomFlag(ROOM_PEACEFUL) && !rp->isRoomFlag(ROOM_NO_STEAL))
-      vlogf(LOG_LOW, fmt("%s room %d set peaceful && !no_steal (bit: %d)") % 
+      vlogf(LOG_LOW, format("%s room %d set peaceful && !no_steal (bit: %d)") % 
                 rp->name %rp->number % ROOM_NO_STEAL);
     if (rp->isRoomFlag(ROOM_PEACEFUL) && !rp->isRoomFlag(ROOM_NO_MAGIC))
-      vlogf(LOG_LOW, fmt("%s room %d set PEACEFUL && !no_magic (bit: %d)") % 
+      vlogf(LOG_LOW, format("%s room %d set PEACEFUL && !no_magic (bit: %d)") % 
                 rp->name %rp->number % ROOM_NO_MAGIC);
     if (rp->isRoomFlag(ROOM_NO_HEAL) && rp->isRoomFlag(ROOM_HOSPITAL))
-      vlogf(LOG_LOW, fmt("%s room %d set NO_HEAL(%d) and HOSPITAL(%d)") % 
+      vlogf(LOG_LOW, format("%s room %d set NO_HEAL(%d) and HOSPITAL(%d)") % 
                 rp->name %rp->number % ROOM_NO_HEAL % ROOM_HOSPITAL);
 
     if (rp->isIndoorSector() && !rp->isRoomFlag(ROOM_INDOORS)) {
       // in general, this is an error
       // of course you could have a bldg whose roof has collapsed...
       if (rp->number != 27349)
-        vlogf(LOG_LOW,fmt("%s room %d set building & !indoor") % 
+        vlogf(LOG_LOW,format("%s room %d set building & !indoor") % 
                 rp->name %rp->number);
     }
     if (rp->isRoomFlag(ROOM_INDOORS) && rp->getRoomHeight() <= 0)
-      vlogf(LOG_LOW,fmt("%s indoor room %d set with unlimited height") % 
+      vlogf(LOG_LOW,format("%s indoor room %d set with unlimited height") % 
                 rp->name %rp->number);
     if (!rp->isRoomFlag(ROOM_INDOORS) && rp->getRoomHeight() >= 0)
-      vlogf(LOG_LOW,fmt("%s outdoor room %d set with limited height") % 
+      vlogf(LOG_LOW,format("%s outdoor room %d set with limited height") % 
                 rp->name %rp->number);
 
 #if 0
     if ((rp->getRoomHeight() >= 0) && rp->isFallSector())
-      vlogf(LOG_LOW,fmt("%s fall room %d set with limited height") % 
+      vlogf(LOG_LOW,format("%s fall room %d set with limited height") % 
                 rp->name %rp->number);
 #endif
   }
@@ -1138,7 +1138,7 @@ void setup_dir(FILE * fl, int room, dirTypeT dir, TRoom *tRoom)
   TRoom *rp;
 
   if (!(rp = real_roomp(room)) && !(rp = tRoom)) {
-    vlogf(LOG_MISC, fmt("Setup_dir called with bad room number %d") %  room);
+    vlogf(LOG_MISC, format("Setup_dir called with bad room number %d") %  room);
     return;
   }
   rp->dir_option[dir] = new roomDirData();
@@ -1148,17 +1148,17 @@ void setup_dir(FILE * fl, int room, dirTypeT dir, TRoom *tRoom)
 
   fscanf(fl, " %d ", &tmp);
   if (tmp < 0 || tmp >= MAX_DOOR_TYPES) {
-    vlogf(LOG_LOW,fmt("bogus door type (%d) in room (%d) dir %d.") % 
+    vlogf(LOG_LOW,format("bogus door type (%d) in room (%d) dir %d.") % 
         tmp % room % dir);
     return;
   }
   rp->dir_option[dir]->door_type = doorTypeT(tmp);
   if ((tmp == DOOR_NONE) && (rp->dir_option[dir]->keyword)){
     if (strcmp(rp->dir_option[dir]->keyword, "_unique_door_"))
-      vlogf(LOG_LOW,fmt("non-door with name in room %d") % room);
+      vlogf(LOG_LOW,format("non-door with name in room %d") % room);
   }
   if ((tmp != DOOR_NONE) && !(rp->dir_option[dir]->keyword)){
-    vlogf(LOG_LOW,fmt("door with no name in room %d") % room);
+    vlogf(LOG_LOW,format("door with no name in room %d") % room);
   }
 
   fscanf(fl, " %d ", &tmp);
@@ -1176,9 +1176,9 @@ void setup_dir(FILE * fl, int room, dirTypeT dir, TRoom *tRoom)
   if (IS_SET(rp->dir_option[dir]->condition, EX_SECRET) && 
       canSeeThruDoor(rp->dir_option[dir])) {
     if (IS_SET(rp->dir_option[dir]->condition, EX_CLOSED)){
-      //      vlogf(LOG_LOW, fmt("See thru door set secret. (%d, %d)") %  room % dir);
+      //      vlogf(LOG_LOW, format("See thru door set secret. (%d, %d)") %  room % dir);
     } else
-      vlogf(LOG_LOW, fmt("Secret door saved as open. (%d, %d)") %  room % dir);
+      vlogf(LOG_LOW, format("Secret door saved as open. (%d, %d)") %  room % dir);
   }
 
 
@@ -1187,7 +1187,7 @@ void setup_dir(FILE * fl, int room, dirTypeT dir, TRoom *tRoom)
 
 void zoneData::logError(char ch, const char *type, int cmd, int value)
 {
-  vlogf(LOG_LOW, fmt("zone %s cmd %d (%c) resolving %s number (%d)") % 
+  vlogf(LOG_LOW, format("zone %s cmd %d (%c) resolving %s number (%d)") % 
       name % cmd % ch % type % value);
 }
 
@@ -1392,7 +1392,7 @@ void TBeing::doBoot(const sstring &arg)
   }
 
 
-  sendTo(fmt("Rebooting zone %s (%i) (rooms %i-%i)\n\r")
+  sendTo(format("Rebooting zone %s (%i) (rooms %i-%i)\n\r")
       % zone_table[z].name % z % zone_table[z].bottom % zone_table[z].top);
 
   sendTo("Reloading zonefile.\n\r");
@@ -1442,7 +1442,7 @@ bool zoneData::bootZone(int zone_nr)
   char *check, buf[256];
   int i1 = 0, i2, i3, i4;
   int rc;
-  FILE *fl=fopen((fmt("zonefiles/%i") % zone_nr).c_str(), "r");
+  FILE *fl=fopen(((sstring)(format("zonefiles/%i") % zone_nr)).c_str(), "r");
 
   if (!fl) {
     perror("bootZone");
@@ -1461,7 +1461,7 @@ bool zoneData::bootZone(int zone_nr)
     enabled = i4;
     age = 0;
   } else { 
-    vlogf(LOG_LOW, fmt("Bad zone format for zone %d (%s)") % zone_nr % check);
+    vlogf(LOG_LOW, format("Bad zone format for zone %d (%s)") % zone_nr % check);
     return false;
   }
 
@@ -1486,7 +1486,7 @@ bool zoneData::bootZone(int zone_nr)
 
     int numc = fscanf(fl, " %d %d %d", &tmp, &rs.arg1, &rs.arg2);
     if (numc != 3)
-      vlogf(LOG_LOW,fmt("command %u ('%c') in %s missing some of first three args [%d : %d %d %d]") % 
+      vlogf(LOG_LOW,format("command %u ('%c') in %s missing some of first three args [%d : %d %d %d]") % 
           cmd.size() %
           rs.command %
           name %
@@ -1505,7 +1505,7 @@ bool zoneData::bootZone(int zone_nr)
       case 'P':
       case 'E':
         if (!rs.if_flag) {
-          vlogf(LOG_LOW,fmt("command %u in %s has bogus if_flag") % 
+          vlogf(LOG_LOW,format("command %u in %s has bogus if_flag") % 
           cmd.size() %name);
           continue;
         }
@@ -1526,23 +1526,23 @@ bool zoneData::bootZone(int zone_nr)
         rs.command == 'D' ||
         rs.command == 'L')
       if ((rc = fscanf(fl, " %d", &rs.arg3)) != 1)
-        vlogf(LOG_LOW,fmt("command %u ('%c') in %s missing arg3 (rc=%d)") % 
+        vlogf(LOG_LOW,format("command %u ('%c') in %s missing arg3 (rc=%d)") % 
             cmd.size() %
             rs.command %
             name % rc);
 
     if (rs.command == '?')
       if (fscanf(fl, " %c", &rs.character) != 1)
-        vlogf(LOG_LOW,fmt("command %u ('?') in %s missing character") % cmd.size() %name);
+        vlogf(LOG_LOW,format("command %u ('?') in %s missing character") % cmd.size() %name);
 
     if (rs.command == 'T' && !rs.if_flag) 
       if (fscanf(fl, " %d", &rs.arg4) != 1)
-        vlogf(LOG_LOW,fmt("command %u ('T') in %s missing arg4") % 
+        vlogf(LOG_LOW,format("command %u ('T') in %s missing arg4") % 
             cmd.size() % name);
 
     if (rs.command == 'L')
       if (fscanf(fl, " %d", &rs.arg4) != 1)
-        vlogf(LOG_LOW, fmt("command %u ('L') in %s missing arg4") % 
+        vlogf(LOG_LOW, format("command %u ('L') in %s missing arg4") % 
             cmd.size() % name);
     
     cmd.push_back(rs);
@@ -1590,7 +1590,7 @@ void bootZones(void)
     zoneData zd;
     if(zd.bootZone((*it).first)){
       zd.renumCmd();
-      vlogf(LOG_MISC, fmt("booting zone %d") % zon);
+      vlogf(LOG_MISC, format("booting zone %d") % zon);
       zd.zone_nr=zon++;
       // note that a zone's zone_nr may change over time if a new zone is inserted before it
       // so update all records in the zone table
@@ -1623,7 +1623,7 @@ TMonster *read_mobile(int nr, readFileTypeT type)
   }
 
   if (nr < 0) {
-    vlogf(LOG_FILE, fmt("Mobile (V) %d does not exist in database.") %  i);
+    vlogf(LOG_FILE, format("Mobile (V) %d does not exist in database.") %  i);
     return NULL;
   }
 
@@ -1642,11 +1642,11 @@ TMonster *read_mobile(int nr, readFileTypeT type)
   
   rc = mob->readMobFromDB(virt, FALSE);
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
-    vlogf(LOG_BUG, fmt("Mobile %d returned DELETE_THIS on init.") %  virt);
+    vlogf(LOG_BUG, format("Mobile %d returned DELETE_THIS on init.") %  virt);
     delete mob;
     return NULL;
   } else if (!rc) {
-    vlogf(LOG_BUG, fmt("Mobile %d failed to load from database.") %  virt);
+    vlogf(LOG_BUG, format("Mobile %d failed to load from database.") %  virt);
     delete mob;
     return NULL;
   }
@@ -1979,7 +1979,7 @@ TObj *read_object_buy_build(TBeing *buyer, int nr, readFileTypeT type)
     --(*o);
     buyer->addToMoney(price, GOLD_XFER); // this is to offset cost
     tso.doBuyTransaction(price, o->getName(), TX_BUYING, o);
-    vlogf(LOG_PEEL, fmt("%s purchased %s from shop %i for %i talens.") %
+    vlogf(LOG_PEEL, format("%s purchased %s from shop %i for %i talens.") %
 	  buyer->getName() % o->getName() % shop_nr % price);
 
     if (tso.getKeeper())
@@ -1994,7 +1994,7 @@ TObj *read_object_buy_build(TBeing *buyer, int nr, readFileTypeT type)
 			 TX_BUYING, commod);
 
     commod->setWeight(commod->getWeight() - weight);
-    vlogf(LOG_PEEL, fmt("%s purchased %s (%i) from shop %i for %i talens.") %
+    vlogf(LOG_PEEL, format("%s purchased %s (%i) from shop %i for %i talens.") %
 	  buyer->getName() %commod->getName() % (int)(weight*10) %
 	  commod_shop_nr % commod_price);
 
@@ -2116,7 +2116,7 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing *ch)
       
       if (getPosition() == POSITION_DEAD) {
 	// can happen.  no legs and trying to set resting, etc
-	vlogf(LOG_LOW, fmt("Mob (%s) put in dead position during creation.") % 
+	vlogf(LOG_LOW, format("Mob (%s) put in dead position during creation.") % 
 	      getName());
       }
       
@@ -2184,7 +2184,7 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing *ch)
     }
     if (!db.fetchRow()) {
       if (!should_alloc) {
-	vlogf(LOG_LOW, fmt("Failure to load mob vnum %d from database.") % virt);
+	vlogf(LOG_LOW, format("Failure to load mob vnum %d from database.") % virt);
       }
       return FALSE;
     }
@@ -2286,7 +2286,7 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing *ch)
       
       if (getPosition() == POSITION_DEAD) {
 	// can happen.  no legs and trying to set resting, etc
-	vlogf(LOG_LOW, fmt("Mob (%s) put in dead position during creation.") % 
+	vlogf(LOG_LOW, format("Mob (%s) put in dead position during creation.") % 
 	      getName());
       }
       
@@ -2383,7 +2383,7 @@ TObj *read_object(int nr, readFileTypeT type)
     nr = real_object(nr);
 
   if ((nr < 0) || (nr >= (signed int) obj_index.size())) {
-    vlogf(LOG_BUG, fmt("read_object: bad nr %d (i = %d)") % nr % i);
+    vlogf(LOG_BUG, format("read_object: bad nr %d (i = %d)") % nr % i);
     return NULL;
   }
 
@@ -2481,7 +2481,7 @@ TObj *read_object(int nr, readFileTypeT type)
   obj->checkObjStats();
 
   if(/*bootTime &&*/ obj_cache[nr]==NULL){
-    //    vlogf(LOG_PEEL, fmt("caching object - %s") %  obj->shortDescr);
+    //    vlogf(LOG_PEEL, format("caching object - %s") %  obj->shortDescr);
     cached_object *c=new cached_object;
     
     c->number=nr;
@@ -2649,7 +2649,7 @@ wearSlotT mapFileToSlot(int num)
       case 23:
         return WEAR_EX_FOOT_L;
       default:
-        vlogf(LOG_LOW, fmt("Bogus slot (%d, 1) in zone file") %  num);
+        vlogf(LOG_LOW, format("Bogus slot (%d, 1) in zone file") %  num);
         vlogf(LOG_BUG, "forced crash");
         return wearSlotT(0);
     }
@@ -2707,7 +2707,7 @@ int mapSlotToFile(wearSlotT num)
       return 23;
     case MAX_WEAR:
     default:
-      vlogf(LOG_LOW, fmt("Bogus slot (%d, 2) in zone file") %  num);
+      vlogf(LOG_LOW, format("Bogus slot (%d, 2) in zone file") %  num);
       vlogf(LOG_BUG, "forced crash");
       return 0;
   }
@@ -2736,7 +2736,7 @@ static void mobRepop(TMonster *mob, int zone, int tRPNum = 0)
 #endif
 
   if (mob->spec && zone && UtilProcs(mob->spec))
-    vlogf(LOG_LOW, fmt("Mob (%s:%d) has a utility proc (%s:%d) and is not in zone #0") % 
+    vlogf(LOG_LOW, format("Mob (%s:%d) has a utility proc (%s:%d) and is not in zone #0") % 
          mob->getName() % mob->mobVnum() % 
          mob_specials[mob->spec].name % mob->spec);
 
@@ -2795,14 +2795,14 @@ void runResetCmdE(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
 
   if (!mob)
   {
-    vlogf(LOG_LOW, fmt("no mob for 'E' command.  Obj (%i)") %  rs.arg1);
+    vlogf(LOG_LOW, format("no mob for 'E' command.  Obj (%i)") %  rs.arg1);
     last_cmd = objload = false;
     return;
   }
 
   int obj_lp = getObjLoadPotential(obj_index[rs.arg1].virt);
   if (obj_lp == 0) {
-    vlogf(LOG_MISC, fmt("Didn't find load potential of %s [%d].  rs.arg1=%d") % obj_index[rs.arg1].short_desc % obj_index[rs.arg1].virt % rs.arg1);
+    vlogf(LOG_MISC, format("Didn't find load potential of %s [%d].  rs.arg1=%d") % obj_index[rs.arg1].short_desc % obj_index[rs.arg1].virt % rs.arg1);
     obj_lp = 1;
   }
 
@@ -2817,7 +2817,7 @@ void runResetCmdE(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   // getting to this point means we've already beat the fixed_chance%
   // chance of loading an object.  This has to be taken into account
   // when computing the odds of the normalized load potential.
-  // vlogf(LOG_MISC, fmt("(10000000 * adj_obj_lp_ratio / obj_lp_ratio * stats.equip) = %d") % (int) (10000000 * adj_obj_lp_ratio / obj_lp_ratio * stats.equip));
+  // vlogf(LOG_MISC, format("(10000000 * adj_obj_lp_ratio / obj_lp_ratio * stats.equip) = %d") % (int) (10000000 * adj_obj_lp_ratio / obj_lp_ratio * stats.equip));
   if(!((obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist) &&
      (::number(0, 9999999) < (int)(10000000*adj_obj_lp_ratio / obj_lp_ratio*stats.equip)) &&
 	   (obj = read_object_buy_build(mob, rs.arg1, REAL))))
@@ -2834,7 +2834,7 @@ void runResetCmdE(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   // check for double-equip
   if (mob->equipment[realslot])
   {
-    vlogf(LOG_LOW, fmt("'E' command operating on already equipped slot.  %s, %s slot %d\n\rpre-equipped with %s, is_same: %s") %  
+    vlogf(LOG_LOW, format("'E' command operating on already equipped slot.  %s, %s slot %d\n\rpre-equipped with %s, is_same: %s") %  
           mob->getName() % obj->getName() % realslot %
           mob->equipment[realslot]->getName() %
           ((mob->equipment[realslot] == obj) ? "true" : "false"));
@@ -2845,15 +2845,15 @@ void runResetCmdE(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
 
   // these are just safety logs, equipping will be done regardless
   if (!mob->canUseEquipment(obj, SILENT_YES))
-    vlogf(LOG_LOW, fmt("'E' command equipping unusable item (%s:%d) on (%s:%d).") % obj->getName() % obj->objVnum() % mob->getName() % mob->mobVnum());
+    vlogf(LOG_LOW, format("'E' command equipping unusable item (%s:%d) on (%s:%d).") % obj->getName() % obj->objVnum() % mob->getName() % mob->mobVnum());
   TBaseClothing *tbc = dynamic_cast<TBaseClothing *>(obj);
   if (tbc && tbc->canWear(ITEM_WEAR_FINGERS) && gamePort != PROD_GAMEPORT) {
-    vlogf(LOG_LOW, fmt("RINGLOAD: [%s][%-6.2f] loading on [%s][%d]") % 
+    vlogf(LOG_LOW, format("RINGLOAD: [%s][%-6.2f] loading on [%s][%d]") % 
           obj->getName() % tbc->armorLevel(ARMOR_LEV_REAL) %
           mob->getName() % mob->GetMaxLevel());
   }
   if (tbc && !mob->validEquipSlot(realslot) && !tbc->isSaddle())
-    vlogf(LOG_LOW, fmt("'E' command for %s equipping item (%s) on nonvalid slot %d.") % mob->getName() % tbc->getName() % realslot);
+    vlogf(LOG_LOW, format("'E' command for %s equipping item (%s) on nonvalid slot %d.") % mob->getName() % tbc->getName() % realslot);
   if (!check_size_restrictions(mob, obj, realslot, mob) &&
       realslot != HOLD_RIGHT && realslot != HOLD_LEFT)
   {
@@ -2864,7 +2864,7 @@ void runResetCmdE(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
       if (obj->isPaired())
         size_per /= 2;
     }
-    vlogf(LOG_LOW, fmt("'E' for (%s:%d) equipping (%s:%d) with bad fit. (m:%d%%/o:%d%%) change vol to %d, or height to %d.") %  
+    vlogf(LOG_LOW, format("'E' for (%s:%d) equipping (%s:%d) with bad fit. (m:%d%%/o:%d%%) change vol to %d, or height to %d.") %  
         mob->getName() % mob->mobVnum() % obj->getName() % obj->objVnum() % (mob->getHeight() * 100) %
         size_per % (mob->getHeight() * (obj->isPaired() ? 2 : 1) * race_vol_constants[mapSlotToFile( realslot)]) %
         (size_per / 100));
@@ -2884,9 +2884,9 @@ void runResetCmdE(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   double al = obj->objLevel();
   double grl = mob->getRealLevel();
   if (al > (grl + 1))
-    vlogf(LOG_LOW, fmt("Mob (%s:%d) of level %.1f loading item (%s:%d) thought to be level %.1f.") %  mob->getName() % mob->mobVnum() % grl % obj->getName() % obj->objVnum() % al);
+    vlogf(LOG_LOW, format("Mob (%s:%d) of level %.1f loading item (%s:%d) thought to be level %.1f.") %  mob->getName() % mob->mobVnum() % grl % obj->getName() % obj->objVnum() % al);
   if (!mob->equipment[realslot])
-    vlogf(LOG_LOW, fmt("Zone-file %s (%d) failed to equip %s (%d)") % mob->getName() % mob->mobVnum() % obj->getName() % obj->objVnum());
+    vlogf(LOG_LOW, format("Zone-file %s (%d) failed to equip %s (%d)") % mob->getName() % mob->mobVnum() % obj->getName() % obj->objVnum());
 
   last_cmd = true;
 }
@@ -2898,7 +2898,7 @@ void runResetCmdM(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
 
   // check if zone is disabled or if mob exceeds absolute max
   if (rs.arg1 < 0 || rs.arg1 >= (signed int) mob_index.size()) {
-    vlogf(LOG_LOW, fmt("Detected bogus mob number (%d) on read_mobile call for resetZone (load room %d).") % rs.arg1 % rs.arg3);
+    vlogf(LOG_LOW, format("Detected bogus mob number (%d) on read_mobile call for resetZone (load room %d).") % rs.arg1 % rs.arg3);
     return;
   }
 
@@ -2913,14 +2913,14 @@ void runResetCmdM(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   // catch cases where builder used global max over zonefile max
   if (rs.arg2 > mob_index[rs.arg1].max_exist && gamePort != BETA_GAMEPORT && rs.arg3 != zone.random_room)
   {
-    vlogf(LOG_LOW, fmt("Mob %s (%i) tried has improper load max (%i) compared to global (%i) in zonefile") %
+    vlogf(LOG_LOW, format("Mob %s (%i) tried has improper load max (%i) compared to global (%i) in zonefile") %
       mob_index[rs.arg1].short_desc % mob_index[rs.arg1].virt % rs.arg2 % mob_index[rs.arg1].max_exist);
   }
 
   if (mob_index[rs.arg1].getNumber() >= mob_index[rs.arg1].max_exist)
   {
     if((flags & resetFlagBootTime))
-      vlogf(LOG_LOW, fmt("Mob %s (%i) tried to load but hit max_exist") % 
+      vlogf(LOG_LOW, format("Mob %s (%i) tried to load but hit max_exist") % 
             mob_index[rs.arg1].short_desc % mob_index[rs.arg1].virt);
     return;
   }
@@ -2928,7 +2928,7 @@ void runResetCmdM(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   TRoom *rp = real_roomp(rs.arg3);
   if (!rp)
   {
-    vlogf(LOG_LOW, fmt("No room (%d) in M command (%d)") % rs.arg3 % rs.arg1);
+    vlogf(LOG_LOW, format("No room (%d) in M command (%d)") % rs.arg3 % rs.arg1);
     return;
   }
 
@@ -2945,7 +2945,7 @@ void runResetCmdM(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
     return;
 
   if (!(mob = read_mobile(rs.arg1, REAL))) {
-    vlogf(LOG_BUG, fmt("Error reading mobile (%d).  You suck.") %  rs.arg1);
+    vlogf(LOG_BUG, format("Error reading mobile (%d).  You suck.") %  rs.arg1);
     return;
   }
 
@@ -3039,13 +3039,13 @@ void runResetCmdR(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
 
   // sanity checks
   if (mob->getHeight() <= (6 * rider->getHeight() / 10))
-    vlogf(LOG_LOW, fmt("Mob mounting mount that is too small.  [%s] [%s]") % rider->getName() % mob->getName());
+    vlogf(LOG_LOW, format("Mob mounting mount that is too small.  [%s] [%s]") % rider->getName() % mob->getName());
   if (mob->getHeight() >= (5 * rider->getHeight() / 2))
-    vlogf(LOG_LOW, fmt("Mob mounting mount that is too big.  [%s] [%s]") % rider->getName() % mob->getName());
+    vlogf(LOG_LOW, format("Mob mounting mount that is too big.  [%s] [%s]") % rider->getName() % mob->getName());
   if (compareWeights(rider->getTotalWeight(TRUE),(mob->carryWeightLimit() - mob->getCarriedWeight())) == -1)
-    vlogf(LOG_LOW, fmt("Mob mounting mount that is too weak.  [%s] [%s]") % rider->getName() % mob->getName());
+    vlogf(LOG_LOW, format("Mob mounting mount that is too weak.  [%s] [%s]") % rider->getName() % mob->getName());
   if (mob->GetMaxLevel() > rider->GetMaxLevel())
-    vlogf(LOG_LOW, fmt("Mob mounting mount that is too strong.  [%s:%d] [%s:%d]") % rider->getName() % rider->GetMaxLevel() % mob->getName() % mob->GetMaxLevel());
+    vlogf(LOG_LOW, format("Mob mounting mount that is too strong.  [%s:%d] [%s:%d]") % rider->getName() % rider->GetMaxLevel() % mob->getName() % mob->GetMaxLevel());
 
   // mount up
   rider->mount(mob);
@@ -3070,7 +3070,7 @@ void runResetCmdA(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
       break;
 
   if (iRoom >= 10)
-    vlogf(LOG_LOW, fmt("Unable to detect room in 'A' %d %d") % rs.arg1 % rs.arg2);
+    vlogf(LOG_LOW, format("Unable to detect room in 'A' %d %d") % rs.arg1 % rs.arg2);
 }
 
 void runResetCmdQMark(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
@@ -3111,7 +3111,7 @@ void runResetCmdB(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   TRoom *rp = real_roomp(rs.arg3);
   if (!rp)
   {
-    vlogf(LOG_LOW, fmt("No room (%d) in B/O command (%d).  cmd=%d, zone=%d") %  rs.arg3 % rs.arg1 % rs.cmd_no % zone.zone_nr);
+    vlogf(LOG_LOW, format("No room (%d) in B/O command (%d).  cmd=%d, zone=%d") %  rs.arg3 % rs.arg1 % rs.cmd_no % zone.zone_nr);
     return;
   }
 
@@ -3148,7 +3148,7 @@ void runResetCmdB(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   int load = min(max(rs.arg2, 0), max(0, obj_index[rs.arg1].max_exist - obj_index[rs.arg1].getNumber()));
   if (load <= 0)
   {
-    vlogf(LOG_LOW, fmt("Strange error attempting to load %i of object %i in room %i.") % rs.arg2 % rs.arg1 % rs.arg3);
+    vlogf(LOG_LOW, format("Strange error attempting to load %i of object %i in room %i.") % rs.arg2 % rs.arg1 % rs.arg3);
     obj = found;
     last_cmd = objload = (obj != NULL);
     return;
@@ -3160,7 +3160,7 @@ void runResetCmdB(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
     obj = read_object(rs.arg1, REAL);
     if (obj == NULL)
     {
-      vlogf(LOG_LOW, fmt("No obj (%d) in O command (room=%d).  cmd=%d, zone=%d") %  rs.arg1 % rs.arg3 % rs.cmd_no % zone.zone_nr);
+      vlogf(LOG_LOW, format("No obj (%d) in O command (room=%d).  cmd=%d, zone=%d") %  rs.arg1 % rs.arg3 % rs.cmd_no % zone.zone_nr);
       objload = last_cmd = false;
       continue;
     }
@@ -3188,7 +3188,7 @@ void runResetCmdP(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
 
   if (!obj || obj_index[rs.arg1].getNumber() >= obj_index[rs.arg1].max_exist)
   {
-    vlogf(LOG_LOW, fmt("Error placing (%d) in P command.  cmd=%d, zone=%d") %  rs.arg1 % rs.cmd_no % zone.zone_nr);
+    vlogf(LOG_LOW, format("Error placing (%d) in P command.  cmd=%d, zone=%d") %  rs.arg1 % rs.cmd_no % zone.zone_nr);
     return;
   }
 
@@ -3196,7 +3196,7 @@ void runResetCmdP(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   bool isTable = dynamic_cast<TTable *>(obj);
   if (!isContainer && !isTable)
   {
-    vlogf(LOG_LOW, fmt("Error placing (%d) in P command into object %d - not a container.  cmd=%d, zone=%d") %  rs.arg1 % obj->objVnum() % rs.cmd_no % zone.zone_nr);
+    vlogf(LOG_LOW, format("Error placing (%d) in P command into object %d - not a container.  cmd=%d, zone=%d") %  rs.arg1 % obj->objVnum() % rs.cmd_no % zone.zone_nr);
     return;
   }
 
@@ -3221,7 +3221,7 @@ void runResetCmdV(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
 
   if (rs.arg1 < 0 && rs.arg1 >= 4)
   {
-    vlogf(LOG_LOW, fmt("Bad slot (%d) for V command (%d)") % rs.arg1 % rs.arg2);
+    vlogf(LOG_LOW, format("Bad slot (%d) for V command (%d)") % rs.arg1 % rs.arg2);
     return;
   }
 
@@ -3380,7 +3380,7 @@ void runResetCmdD(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   if (!exitp || IS_SET(exitp->condition, EX_DESTROYED) ||
       IS_SET(exitp->condition, EX_CAVED_IN) || exitp->door_type == DOOR_NONE)
   {
-    vlogf(LOG_LOW, fmt("'D' command operating on DOOR_NONE in room %d") %  rp->number);
+    vlogf(LOG_LOW, format("'D' command operating on DOOR_NONE in room %d") %  rp->number);
     return;
   }
 
@@ -3400,14 +3400,14 @@ void runResetCmdD(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
       break;
     case 2:
       if (exitp->key < 0) 
-        vlogf(LOG_LOW, fmt("Door with key < 0 set to lock in room %d.") % rp->number);
+        vlogf(LOG_LOW, format("Door with key < 0 set to lock in room %d.") % rp->number);
       if (!IS_SET(exitp->condition, EX_CLOSED))
         sendrpf(rp, "The %s closes.\n\r", exitp->getName().uncap().c_str());
       SET_BIT(exitp->condition, EX_LOCKED);
       SET_BIT(exitp->condition, EX_CLOSED);
       break;
     default:
-      vlogf(LOG_LOW, fmt("Error in 'D' command in room %d - bad arg3 parameter of %i.") % rp->number % rs.arg3);
+      vlogf(LOG_LOW, format("Error in 'D' command in room %d - bad arg3 parameter of %i.") % rp->number % rs.arg3);
       break;
   }
 
@@ -3444,7 +3444,7 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
   random_room = -1;
 
   if(!bootTime) {
-    vlogf(LOG_SILENT, fmt("Resetting zone '%s' (rooms %d-%d).") % name % bottom % top);
+    vlogf(LOG_SILENT, format("Resetting zone '%s' (rooms %d-%d).") % name % bottom % top);
     update_commod_index();
   }
 
@@ -3496,7 +3496,7 @@ bool zoneData::doGenericReset(void)
   
   if (zone_nr < 0 || zone_nr >= (signed int) zone_table.size())
   {
-    vlogf(LOG_BUG, fmt("Bad zone number in doGenericReset (%d)") %  zone_nr);
+    vlogf(LOG_BUG, format("Bad zone number in doGenericReset (%d)") %  zone_nr);
     return FALSE;
   }
   bottom = zone_nr ? (zone_table[zone_nr - 1].top + 1) : 0;
@@ -3695,7 +3695,7 @@ int real_object(int virt)
     if (obj_index[mid].virt == virt)
       return (mid);
     if (bot >= top) {
-      vlogf(LOG_SILENT, fmt("real_object: probable failure for %d") %  virt);
+      vlogf(LOG_SILENT, format("real_object: probable failure for %d") %  virt);
       return (-1);
     }
     if (obj_index[mid].virt > virt)
@@ -3859,7 +3859,7 @@ TObj * makeNewObj(itemTypeT tmp)
     case ITEM_UNDEFINED:
     case ITEM_MARTIAL_WEAPON:
     case MAX_OBJ_TYPES:
-      vlogf(LOG_BUG, fmt("Unknown item type (%d)") %  tmp);
+      vlogf(LOG_BUG, format("Unknown item type (%d)") %  tmp);
   }
   return NULL;
 }

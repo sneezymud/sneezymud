@@ -590,7 +590,7 @@ void vlogf_trace(logTypeT tError, const sstring &errorMsg)
   trace_symbols = backtrace_symbols(trace, cTrace);
 
   for(size_t iFrame= 0;iFrame < cTrace; iFrame++)
-    vlogf(tError, fmt("\tat function: %s") % trace_symbols[iFrame]);
+    vlogf(tError, format("\tat function: %s") % trace_symbols[iFrame]);
 
   free(trace_symbols);
 }
@@ -650,43 +650,43 @@ sstring getLogType(logTypeT tError)
       break;
     case LOG_BATOPR:
       name = "Batopr";
-      buf = fmt("%s") % name;
+      buf = format("%s") % name;
       break;
     case LOG_BRUTIUS:
       name = "Brutius";
-      buf = fmt("%s") % name;
+      buf = format("%s") % name;
       break;
     case LOG_COSMO:
       name = "Cosmo";
-      buf = fmt("%s") % name;
+      buf = format("%s") % name;
       break;
     case LOG_LAPSOS:
       name = "Lapsos";
-      buf = fmt("%s") % name;
+      buf = format("%s") % name;
       break;
     case LOG_PEEL:
       name = "Peel";
-      buf = fmt("%s") % name;
+      buf = format("%s") % name;
       break;
     case LOG_JESUS:
       name = "Jesus";
-      buf = fmt("%s") % name;
+      buf = format("%s") % name;
       break;
     case LOG_DASH:
       name = "Dash";
-      buf = fmt("%s") % name;
+      buf = format("%s") % name;
       break;
     case LOG_ANGUS:
       name = "Angus";
-      buf = fmt("%s") % name;
+      buf = format("%s") % name;
       break;
     case LOG_MAROR:
       name = "Maror";
-      buf = fmt("%s") % name;
+      buf = format("%s") % name;
       break;
     case LOG_DB:
       name = "Database";
-      buf = fmt("%s") % name;
+      buf = format("%s") % name;
       break;
     default:
       break;
@@ -750,43 +750,43 @@ sstring getLogPlayer(logTypeT tError)
       break;
     case LOG_BATOPR:
       name = "Batopr";
-      buf = fmt("%s") % name;
+      buf = format("%s") % name;
       break;
     case LOG_BRUTIUS:
       name = "Brutius";
-      buf = fmt("%s") % name;
+      buf = format("%s") % name;
       break;
     case LOG_COSMO:
       name = "Cosmo";
-      buf = fmt("%s") % name;
+      buf = format("%s") % name;
       break;
     case LOG_LAPSOS:
       name = "Lapsos";
-      buf = fmt("%s") % name;
+      buf = format("%s") % name;
       break;
     case LOG_PEEL:
       name = "Peel";
-      buf = fmt("%s") % name;
+      buf = format("%s") % name;
       break;
     case LOG_JESUS:
       name = "Jesus";
-      buf = fmt("%s") % name;
+      buf = format("%s") % name;
       break;
     case LOG_DASH:
       name = "Dash";
-      buf = fmt("%s") % name;
+      buf = format("%s") % name;
       break;
     case LOG_ANGUS:
       name = "Angus";
-      buf = fmt("%s") % name;
+      buf = format("%s") % name;
       break;
     case LOG_MAROR:
       name = "Maror";
-      buf = fmt("%s") % name;
+      buf = format("%s") % name;
       break;
     case LOG_DB:
       name = "Database";
-      buf = fmt("%s") % name;
+      buf = format("%s") % name;
       break;
     default:
       break;
@@ -813,7 +813,7 @@ void vlogf(logTypeT tError, const sstring &errorMsg)
   if(buf=="")
     buf=errorMsg;
   else
-    buf = fmt("%s: %s") % buf % errorMsg;
+    buf = format("%s: %s") % buf % errorMsg;
 
   fprintf(stderr, "%4.4d|%2.2d%2.2d|%2.2d:%2.2d:%2.2d :: %s\n",
           this_time->tm_year + 1900, this_time->tm_mon + 1, this_time->tm_mday,
@@ -848,22 +848,22 @@ void vlogf(logTypeT tError, const sstring &errorMsg)
 }
 
 sstring SystemLogComm::getText(){
-  return fmt("// %s: %s\n\r") % getLogType(logtype) % text;
+  return format("// %s: %s\n\r") % getLogType(logtype) % text;
 }
 
 sstring SystemLogComm::getClientText(){
-  return fmt("\200%d|%d|%s: %s\n") % CLIENT_LOG % logtype % 
+  return format("\200%d|%d|%s: %s\n") % CLIENT_LOG % logtype % 
     getLogType(logtype) % text;
 }
 
 sstring SystemLogComm::getXML(){
   sstring buf="";
 
-  buf+=fmt("<log>\n");
-  buf+=fmt("  <time>%i</time>\n") % logtime;
-  buf+=fmt("  <type>%s</type>\n") % getLogType(logtype).escape(XML);
-  buf+=fmt("  <msg>%s</msg>\n") % text.escape(XML);
-  buf+=fmt("</log>\n");
+  buf+=format("<log>\n");
+  buf+=format("  <time>%i</time>\n") % logtime;
+  buf+=format("  <type>%s</type>\n") % getLogType(logtype).escape(XML);
+  buf+=format("  <msg>%s</msg>\n") % text.escape(XML);
+  buf+=format("</log>\n");
 
   return buf;
 }
@@ -874,7 +874,7 @@ void dirwalk(const sstring &dir, void (*fcn) (const char *))
   DIR *dfd;
 
   if (dir.empty() || !(dfd = opendir(dir.c_str()))) {
-    vlogf(LOG_BUG, fmt("Unable to dirwalk directory %s") % dir);
+    vlogf(LOG_BUG, format("Unable to dirwalk directory %s") % dir);
     return;
   }
   while ((dp = readdir(dfd))) {
@@ -892,7 +892,7 @@ void dirwalk_fullname(const char *dir, void (*fcn) (const char *))
   DIR *dfd;
 
   if (!dir || !(dfd = opendir(dir))) {
-    vlogf(LOG_BUG, fmt("Unable to dirwalk directory %s") % dir);
+    vlogf(LOG_BUG, format("Unable to dirwalk directory %s") % dir);
     return;
   }
   while ((dp = readdir(dfd))) {
@@ -912,7 +912,7 @@ void dirwalk_subs_fullname(const char *dir, void (*fcn) (const char *))
   DIR *dfd;
 
   if (!dir || !(dfd = opendir(dir))) {
-    vlogf(LOG_BUG, fmt("Unable to dirwalk_subs directory %s") % dir);
+    vlogf(LOG_BUG, format("Unable to dirwalk_subs directory %s") % dir);
     return;
   }
   while ((dp = readdir(dfd))) {
@@ -941,7 +941,7 @@ bool TBeing::canSeeMe(const TBeing *ch, infraTypeT infra) const
     if (parent) 
       r = parent->roomp;
     else {
-      vlogf(LOG_BUG, fmt("Thing (%s) has no rp pointer in TBeing::canSeeMe") % name);
+      vlogf(LOG_BUG, format("Thing (%s) has no rp pointer in TBeing::canSeeMe") % name);
       return FALSE;
     }
   }
@@ -1304,7 +1304,7 @@ bool TObj::canGetMe(const TBeing *ch, silentTypeT silent) const
        (parent && isname("[wizard]", parent->name))) &&
       !ch->hasWizPower(POWER_WIZARD)) {
     ch->sendTo("I'm afraid you are not permitted to touch this.");
-    vlogf(LOG_OBJ, fmt("%s tried to pick up wizard set object %s") %
+    vlogf(LOG_OBJ, format("%s tried to pick up wizard set object %s") %
           ch->getNameNOC(ch) % getNameNOC(ch));
     return FALSE;
   }
@@ -1317,7 +1317,7 @@ bool TObj::canGetMe(const TBeing *ch, silentTypeT silent) const
 
     if (rider) {
       if (!silent)
-        ch->sendTo(COLOR_OBJECTS, fmt("%s : Occupied.\n\r") % sstring(shortDescr).cap());
+        ch->sendTo(COLOR_OBJECTS, format("%s : Occupied.\n\r") % sstring(shortDescr).cap());
       return FALSE;
     }
 
@@ -1326,13 +1326,13 @@ bool TObj::canGetMe(const TBeing *ch, silentTypeT silent) const
       if (!ch->isImmortal()) {
         if (canWear(ITEM_TAKE)) {
           if (riding) {
-            ch->sendTo(COLOR_OBJECTS, fmt("%s is attached to %s and is not currently getable.\n\r") % getName() % riding->getName());
+            ch->sendTo(COLOR_OBJECTS, format("%s is attached to %s and is not currently getable.\n\r") % getName() % riding->getName());
           } else {
-            ch->sendTo(COLOR_OBJECTS, fmt("%s is attached and is not currently getable.\n\r") % getName());
+            ch->sendTo(COLOR_OBJECTS, format("%s is attached and is not currently getable.\n\r") % getName());
           
           }
         } else {
-          ch->sendTo(COLOR_OBJECTS, fmt("%s : You can't take that.\n\r") % getName());
+          ch->sendTo(COLOR_OBJECTS, format("%s : You can't take that.\n\r") % getName());
         }
         return FALSE;
       }
@@ -1348,14 +1348,14 @@ bool TObj::canGetMe(const TBeing *ch, silentTypeT silent) const
     // attached items
     if (isObjStat(ITEM_ATTACHED)) {
       if (canWear(ITEM_TAKE))
-        ch->sendTo(COLOR_OBJECTS, fmt("%s is attached and is not currently getable.\n\r") % getName());
+        ch->sendTo(COLOR_OBJECTS, format("%s is attached and is not currently getable.\n\r") % getName());
       else
-        ch->sendTo(COLOR_OBJECTS, fmt("%s : You can't take that.\n\r") % getName());
+        ch->sendTo(COLOR_OBJECTS, format("%s : You can't take that.\n\r") % getName());
       return FALSE;
     }
 
     if (!silent)
-      ch->sendTo(COLOR_OBJECTS, fmt("%s : You can't take that.\n\r") % sstring(shortDescr).cap());
+      ch->sendTo(COLOR_OBJECTS, format("%s : You can't take that.\n\r") % sstring(shortDescr).cap());
 
     return FALSE;
   }
@@ -1443,8 +1443,8 @@ bool TBeing::tooManyFollowers(const TBeing *pet, newFolTypeT type) const
   else if (type == FOL_PET)
     count += 1 + (pet->GetMaxLevel() / 7);
 
-  //  vlogf(LOG_DASH, fmt("tooManyFollowers(): %s has %d followers & %d count with max of %d.") %  getName() % tot_num % count % max_followers);
-  //  vlogf(LOG_DASH, fmt("tooManyFollowers(): %d = (%d + %d) / 20") %  max_followers % GetMaxLevel() %
+  //  vlogf(LOG_DASH, format("tooManyFollowers(): %s has %d followers & %d count with max of %d.") %  getName() % tot_num % count % max_followers);
+  //  vlogf(LOG_DASH, format("tooManyFollowers(): %d = (%d + %d) / 20") %  max_followers % GetMaxLevel() %
   //plotStat(STAT_CURRENT % STAT_CHA % -15 % 15 % 0));
 
   //  if (count > max_count)
@@ -1585,9 +1585,9 @@ int TBeing::bumpHeadDoor(roomDirData *exitp, int *height)
 
   doorbuf=exitp->getName();
   if (::number(1, 300) > plotStat(STAT_CURRENT, STAT_AGI, 30, 180, 110)) {
-    sendTo(fmt("You bump your head as you go through the %s.  OUCH!\n\r") %
+    sendTo(format("You bump your head as you go through the %s.  OUCH!\n\r") %
 	   doorbuf.uncap());
-    buf = fmt("$n bumps $s head on the %s.  That had to hurt.") %
+    buf = format("$n bumps $s head on the %s.  That had to hurt.") %
 	     doorbuf.uncap();
     act(buf,TRUE, this, 0,0,TO_ROOM);
     // Lets do some head-gear checks to see if gear can absorb or negate damage
@@ -1606,7 +1606,7 @@ int TBeing::bumpHeadDoor(roomDirData *exitp, int *height)
         return DELETE_THIS;
     } 
   } else 
-    sendTo(fmt("You duck down as you go through the %s.\n\r") %
+    sendTo(format("You duck down as you go through the %s.\n\r") %
 	   doorbuf.uncap());
   
   return FALSE;
@@ -1776,7 +1776,7 @@ bool TRoom::roomIsEmpty(bool ignore_imms) const
 void TBeing::giveMoney(TBeing *ch, int money, moneyTypeT type)
 {
   if(money < 0){
-    vlogf(LOG_BUG, fmt("%s just tried to give negative money (%i) to %s") %
+    vlogf(LOG_BUG, format("%s just tried to give negative money (%i) to %s") %
 	  getName() % money % ch->getName());
     return;
   }
@@ -1794,7 +1794,7 @@ void TBeing::addToMoney(int money, moneyTypeT type, bool allowTithe)
   TDatabase db(DB_SNEEZY);
 
   if(money && !bootTime)
-    vlogf(LOG_SILENT, fmt("%s talens changed by %i.") %
+    vlogf(LOG_SILENT, format("%s talens changed by %i.") %
 	  getName() % money);
 
   points.money += money;
@@ -1828,7 +1828,7 @@ void TBeing::addToMoney(int money, moneyTypeT type, bool allowTithe)
           reconcileHelp(NULL, amount * TITHE_FACTOR);
 
 	  if(amount>0)
-	    sendTo(fmt("You tithe %i talens.\n\r") % amount);
+	    sendTo(format("You tithe %i talens.\n\r") % amount);
         }
         break;
       case GOLD_TITHE:
@@ -2073,13 +2073,13 @@ bool TBeing::checkBusy(const sstring &buf)
   }
 #if 0
   int tmpnum = (hitsPerRound ? (int) (cantHit/hitsPerRound + 1) : 1000000); 
-  sendTo(fmt(" (Roughly %d round%s to go)\n\r") % tmpnum % (tmpnum > 1) ? "s" : "");
+  sendTo(format(" (Roughly %d round%s to go)\n\r") % tmpnum % (tmpnum > 1) ? "s" : "");
 #else
   float tmpnum = (hitsPerRound ? (cantHit/hitsPerRound) : 1000000); 
   tmpnum *= PULSE_COMBAT;
   tmpnum /= ONE_SECOND;
 
-  sendTo(fmt(" (Roughly %.1f seconds to go)\n\r") % tmpnum);
+  sendTo(format(" (Roughly %.1f seconds to go)\n\r") % tmpnum);
 #endif
   return TRUE;
 }
@@ -2104,7 +2104,7 @@ sstring secsToString(time_t num)
 {
   /// passing a negative time appears to have crashed the mud at some point - Maror
   if (num < 0) {
-    vlogf(LOG_BUG, fmt("Passed a negative time to secsToString in utility.cc."));
+    vlogf(LOG_BUG, "Passed a negative time to secsToString in utility.cc.");
     return "BUG A CODER: something bad happened.";
   }
   unsigned int days = num / SECS_PER_REAL_DAY;
@@ -2117,30 +2117,30 @@ sstring secsToString(time_t num)
 
 #if 0
   if (weeks) {
-    buf = fmt("%d week%s") % weeks % weeks == 1 ? "" : "s";
+    buf = format("%d week%s") % weeks % weeks == 1 ? "" : "s";
     timesstring += buf;
   }
 #endif
   if (days) {
-    buf = fmt("%d day%s") % days % (days == 1 ? "" : "s");
+    buf = format("%d day%s") % days % (days == 1 ? "" : "s");
     if (!timesstring.empty())
       timesstring += ", ";
     timesstring += buf;
   }
   if (hours) {
-    buf = fmt("%d hour%s") % hours % (hours == 1 ? "" : "s");
+    buf = format("%d hour%s") % hours % (hours == 1 ? "" : "s");
     if (!timesstring.empty())
       timesstring += ", ";
     timesstring += buf;
   }
   if (mins) {
-    buf = fmt("%d minute%s") % mins % (mins == 1 ? "" : "s");
+    buf = format("%d minute%s") % mins % (mins == 1 ? "" : "s");
     if (!timesstring.empty())
       timesstring += ", ";
     timesstring += buf;
   }
   if (secs) {
-    buf = fmt("%d second%s") % secs % (secs == 1 ? "" : "s");
+    buf = format("%d second%s") % secs % (secs == 1 ? "" : "s");
     if (!timesstring.empty())
       timesstring += ", ";
     timesstring += buf;
@@ -2154,13 +2154,13 @@ sstring talenDisplay(int talens)
 
   if(talens>1000000){
     t=(int)(talens/100000);
-    return fmt("%.1fM") % (t/10.0);
+    return format("%.1fM") % (t/10.0);
   } else if(talens > 10000){
     t=(int)(talens/1000);
-    return fmt("%ik") % (int)t;
+    return format("%ik") % (int)t;
   }
 
-  return fmt("%i") % talens;
+  return format("%i") % talens;
 }
 
 sstring volumeDisplay(int volume)
@@ -2177,15 +2177,15 @@ sstring volumeDisplay(int volume)
   if (volumeTmp > CUBIC_INCHES_PER_YARD) {
     yards = volume/CUBIC_INCHES_PER_YARD;
     volumeTmp = volume % CUBIC_INCHES_PER_YARD;
-    volumeBuf=fmt("%d cubic yard%s, ") % yards % ((yards == 1) ? "" : "s");
+    volumeBuf=format("%d cubic yard%s, ") % yards % ((yards == 1) ? "" : "s");
   }
   if (volumeTmp > CUBIC_INCHES_PER_FOOT) {
     feet = volumeTmp/CUBIC_INCHES_PER_FOOT;
     volumeTmp = volume % CUBIC_INCHES_PER_FOOT;
-    volumeBuf += fmt("%d cubic %s, ") % feet % ((yards == 1) ? "foot":"feet");
+    volumeBuf += format("%d cubic %s, ") % feet % ((yards == 1) ? "foot":"feet");
   }
   if ((inches = volumeTmp))
-    volumeBuf += fmt("%d cubic inch%s") % inches % ((inches == 1) ? "" : "es");
+    volumeBuf += format("%d cubic inch%s") % inches % ((inches == 1) ? "" : "es");
   if (!volume) {
     // this only kicks in if no volume
     volumeBuf += "0 cubic inches";

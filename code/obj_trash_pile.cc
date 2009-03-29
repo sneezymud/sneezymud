@@ -44,7 +44,7 @@ sstring TTrashPile::statObjInfo() const
 bool TTrashPile::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
 {
   if (!silent)
-    repair->doTell(fname(ch->name), fmt("I'm not the trash man. Take %s to the dump!") % getName());
+    repair->doTell(fname(ch->name), format("I'm not the trash man. Take %s to the dump!") % getName());
 
   return TRUE;
 }
@@ -226,12 +226,12 @@ void TTrashPile::attractVermin()
   path.setNoMob(false);
   path.setThruDoors(true);
   
-  vlogf(LOG_PEEL, fmt("attractVermin: checking path, here=%i") % inRoom());
+  vlogf(LOG_PEEL, format("attractVermin: checking path, here=%i") % inRoom());
 
   if(path.findPath(inRoom(), findOutdoors())==DIR_NONE)
     return;
 
-  vlogf(LOG_PEEL, fmt("attractVermin: found path from %i to %i, dist=%i") %
+  vlogf(LOG_PEEL, format("attractVermin: found path from %i to %i, dist=%i") %
 	inRoom() % path.getDest() % path.getDist());
 
 

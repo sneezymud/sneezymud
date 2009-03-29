@@ -35,7 +35,7 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
     cart = read_object(CART_VNUM, VIRTUAL);
     contents = read_object(CONTENTS_VNUM, VIRTUAL);
     if (!cart || !contents) {
-      vlogf(LOG_LOW, fmt("Error loading objects in spec_mobs_limbDispo.cc"));
+      vlogf(LOG_LOW, "Error loading objects in spec_mobs_limbDispo.cc");
       return TRUE;
     }
     *mob->roomp += *cart;
@@ -124,7 +124,7 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
 
   act("You put $N into $p's cart.", TRUE, ch, mob, bodypart, TO_CHAR);
   act("$n puts $N into $p's cart.", TRUE, ch, mob, bodypart, TO_ROOM); 
-  sstring stmp = fmt("There's your %d talen, compliments of our most generous and sanitary King.") % FEE;
+  sstring stmp = format("There's your %d talen, compliments of our most generous and sanitary King.") % FEE;
   mob->doSay(stmp);
   
   ch->addToMoney(FEE, GOLD_SHOP_RESPONSES);
@@ -208,24 +208,24 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
       else
         team = "";
       db.query("insert quest_limbs (player, team, mob_vnum, slot_num, slot_name) select '%s', '%s', %i, %i, '%s'", chopper.c_str(), team.c_str(), m_vnum, slot, mob_part.c_str());
-      vlogf(LOG_MAROR, fmt("Chop shop: %s") % partname);
+      vlogf(LOG_MAROR, format("Chop shop: %s") % partname);
       
       if (!team.empty()) {
         if (samaritan) {
-          mob->doWhisper(fmt("%s Why ain't you thoughtful, picking up after %s's mess!") % ch->name % chopper);
+          mob->doWhisper(format("%s Why ain't you thoughtful, picking up after %s's mess!") % ch->name % chopper);
           if (team.compare(db["caddy_team"]))
-            mob->doWhisper(fmt("%s I'll make sure their gang, <o>%s<1>, gets the blame for this one.") % ch->name % team);
+            mob->doWhisper(format("%s I'll make sure their gang, <o>%s<1>, gets the blame for this one.") % ch->name % team);
           else
-            mob->doWhisper(fmt("%s I'll make sure your gang, <o>%s<1>, gets the nod for this one.") % ch->name % team);
+            mob->doWhisper(format("%s I'll make sure your gang, <o>%s<1>, gets the nod for this one.") % ch->name % team);
         } else {
-          mob->doWhisper(fmt("%s I'll make sure your gang, <o>%s<1>, gets the nod for this one.") % ch->name % team);
+          mob->doWhisper(format("%s I'll make sure your gang, <o>%s<1>, gets the nod for this one.") % ch->name % team);
         }
         delete bodypart;
         bodypart=NULL;
         return TRUE;
       }
     } else {
-      vlogf(LOG_MAROR, fmt("Chop shop not recorded in db: %s") % partname);
+      vlogf(LOG_MAROR, format("Chop shop not recorded in db: %s") % partname);
     }
   }
   
@@ -261,7 +261,7 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
       resp = "Seen a lot of those this week, I have.";
       break;
   }
-  mob->doWhisper(fmt("%s %s") % ch->name % resp);
+  mob->doWhisper(format("%s %s") % ch->name % resp);
   
   return TRUE;
 }

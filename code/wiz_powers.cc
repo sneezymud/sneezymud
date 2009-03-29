@@ -6,7 +6,7 @@
 bool TBeing::powerCheck(wizPowerT wpt) const
 {
   if (!hasWizPower(wpt)) {
-    sendTo(fmt("%s: You lack this power.\n\r") % getWizPowerName(wpt));
+    sendTo(format("%s: You lack this power.\n\r") % getWizPowerName(wpt));
     return true;
   }
   return false;
@@ -14,7 +14,7 @@ bool TBeing::powerCheck(wizPowerT wpt) const
 
 bool TBeing::limitPowerCheck(cmdTypeT cmd, int vnum) {
   if (!desc) {
-    vlogf(LOG_BUG,fmt("%s got to limitPowerCheck() without desc, very bad.") %  getName());
+    vlogf(LOG_BUG,format("%s got to limitPowerCheck() without desc, very bad.") %  getName());
     return TRUE; // if we return FALSE here it could cause a crash
   }
   if (hasWizPower(POWER_NO_LIMITS))
@@ -72,7 +72,7 @@ bool TBeing::limitPowerCheck(cmdTypeT cmd, int vnum) {
         return TRUE;
       break;
     default:
-      vlogf(LOG_DASH, fmt("%s called limits check with undefined command type (%d)") % 
+      vlogf(LOG_DASH, format("%s called limits check with undefined command type (%d)") % 
 	    getName() % (int)cmd);
       break;
   }
@@ -333,7 +333,7 @@ void TBeing::remWizPower(wizPowerT)
 bool TPerson::hasWizPower(wizPowerT value) const
 {
   if (value >= MAX_POWER_INDEX) {
-    vlogf(LOG_BUG, fmt("Bad check of hasWizPower(%d)") %  value);
+    vlogf(LOG_BUG, format("Bad check of hasWizPower(%d)") %  value);
     return FALSE;
   }
 
@@ -355,7 +355,7 @@ bool TPerson::hasWizPower(wizPowerT value) const
 void TPerson::setWizPower(wizPowerT value)
 {
   if (value >= MAX_POWER_INDEX) {
-    vlogf(LOG_BUG, fmt("Bad check of setWizPower(%d)") %  value);
+    vlogf(LOG_BUG, format("Bad check of setWizPower(%d)") %  value);
     return;
   }
 
@@ -365,7 +365,7 @@ void TPerson::setWizPower(wizPowerT value)
 void TPerson::remWizPower(wizPowerT value)
 {
   if (value >= MAX_POWER_INDEX) {
-    vlogf(LOG_BUG, fmt("Bad check of remWizPower(%d)") %  value);
+    vlogf(LOG_BUG, format("Bad check of remWizPower(%d)") %  value);
     return;
   }
 
@@ -464,7 +464,7 @@ void TPerson::doPowers(const sstring &argument) const
       wizPowerList[tWizPower] = ch->hasWizPower(tWizPower);
   }
 
-  tString = fmt("%s%s Wiz-Powers:\n\r") %
+  tString = format("%s%s Wiz-Powers:\n\r") %
     (ch == this ? "Your" : (ch ? ch->getName() : tStName)) %
     (ch == this ? "" : "'s");
   tStString += tString;
@@ -476,7 +476,7 @@ void TPerson::doPowers(const sstring &argument) const
         (is_number(tString) && convertTo<int>(tStPower) == (tWizPower + 1)) ||
         (!is_number(tString) &&
          is_abbrev(tStPower, getWizPowerName(tWizPower)))) {
-      tString = fmt("%3d.) [%c] %-25.25s") %
+      tString = format("%3d.) [%c] %-25.25s") %
               (tWizPower + 1) %
               (wizPowerList[tWizPower] ? '*' : ' ') %
               getWizPowerName(tWizPower);

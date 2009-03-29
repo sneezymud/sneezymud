@@ -137,7 +137,7 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
     bow = bows[j];
   if (!bow->stuff.empty())
       break;
-    if (!bow) vlogf(LOG_BUG, fmt("spec_mobs_archer.cc: archer: bow is null somehow"));
+    if (!bow) vlogf(LOG_BUG, "spec_mobs_archer.cc: archer: bow is null somehow");
     if (bow && (tempArr = ch->autoGetAmmo(bow))) {
       ammo = tempArr;
       break;
@@ -164,7 +164,7 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
           bow = bows[j];
         if (!bow->stuff.empty())
             break;
-          if (!bow) vlogf(LOG_BUG, fmt("spec_mobs_archer.cc: archer: bow is null somehow"));
+          if (!bow) vlogf(LOG_BUG, "spec_mobs_archer.cc: archer: bow is null somehow");
           if (bow && (tempArr = ch->autoGetAmmo(bow))) {
             ammo = tempArr;
             break;
@@ -233,7 +233,7 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
       if (tbt) {
         temp = tbt->getName();
       } else {
-        vlogf(LOG_BUG, fmt("spec_mobs_archer.cc: archer: no tbt for some reason"));
+        vlogf(LOG_BUG, "spec_mobs_archer.cc: archer: no tbt for some reason");
         return FALSE;
       }
       numsimilar = 0;
@@ -297,7 +297,7 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
   
     // text to character
         
-    buf = fmt("%s %d.%s %d") % directions[i][0] % numsimilar % temp % range;
+    buf = format("%s %d.%s %d") % directions[i][0] % numsimilar % temp % range;
 
     temp = tbt->getName();
   
@@ -309,7 +309,7 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
 //      ch->addHated(tbt);
 
     if (!(ch->doShoot(buf.c_str())))
-      vlogf(LOG_BUG, fmt("spec_mobs_archer.cc: archer: error shooting bow with arguments: %s") % buf);
+      vlogf(LOG_BUG, format("spec_mobs_archer.cc: archer: error shooting bow with arguments: %s") % buf);
         
       t = ch->equipment[HOLD_LEFT];
       rc = ch->doRemove("", t);   
@@ -332,7 +332,7 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
       Hf = tbt->getHit();
   
 #if 0
-        vlogf(LOG_MAROR, fmt("archer: %d->%d, temp/name: (%s)/(%s), tbt?: %s") % 
+        vlogf(LOG_MAROR, format("archer: %d->%d, temp/name: (%s)/(%s), tbt?: %s") % 
             Hi % Hf % temp % (tbt->getName() ? tbt->getName() : "(NULL)") % (tbt ? "exists" : "(NULL)"));
 #endif
       return TRUE; 

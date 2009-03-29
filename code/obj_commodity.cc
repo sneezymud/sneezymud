@@ -64,7 +64,7 @@ bool TCommodity::splitMe(TBeing *ch, const sstring &tString)
   }
 
   if (tCount >= numUnits()) {
-    ch->sendTo(fmt("Units must be between 1 and %d.\n\r") %
+    ch->sendTo(format("Units must be between 1 and %d.\n\r") %
                (numUnits()-1));
     return true;
   }
@@ -143,15 +143,15 @@ sstring TCommodity::statObjInfo() const
 void TCommodity::lowCheck()
 {
   if (!isname("commodity", name)) {
-    vlogf(LOG_LOW, fmt("raw material without COMMODITY in name (%s : %d)") % 
+    vlogf(LOG_LOW, format("raw material without COMMODITY in name (%s : %d)") % 
                getName() % objVnum());
   }
   if (!numUnits()) {
-    vlogf(LOG_LOW, fmt("raw material needs weight above 0.0 (%s : %d)") % 
+    vlogf(LOG_LOW, format("raw material needs weight above 0.0 (%s : %d)") % 
                getName() % objVnum());
   }
   if (!pricePerUnit()) {
-    vlogf(LOG_LOW, fmt("raw material needs price above 0 (%s : %d)") % 
+    vlogf(LOG_LOW, format("raw material needs price above 0 (%s : %d)") % 
                getName() % objVnum());
   }
 
@@ -266,13 +266,13 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   // someone will probably find this code trying to figure out why no one
   // has enough volume to buy commods. :)
   if ((ch->getCarriedVolume() + getTotalVolume()) > ch->carryVolumeLimit()) {
-    ch->sendTo(fmt("%s: You can't carry that much volume.\n\r") % fname(name));
+    ch->sendTo(format("%s: You can't carry that much volume.\n\r") % fname(name));
     return -1;
   }
   // obj-weight > free ch limit
   if (compareWeights(num/10.0,
        (ch->carryWeightLimit() - ch->getCarriedWeight())) == -1) {
-    ch->sendTo(fmt("%s: You can't carry that much weight.\n\r") % fname(name));
+    ch->sendTo(format("%s: You can't carry that much weight.\n\r") % fname(name));
     return -1;
   }
 
@@ -287,7 +287,7 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   }
   if (num > (int) (numUnits())) {
     num = (int) (numUnits());
-    keeper->doTell(ch->getName(), fmt("I don't have that much %s.  Here's the %d that I do have.") % fname(name) % num);
+    keeper->doTell(ch->getName(), format("I don't have that much %s.  Here's the %d that I do have.") % fname(name) % num);
   }
   cost_per = pricePerUnit();
   price = shopPrice(num, shop_nr, -1, ch);
@@ -322,7 +322,7 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     obj2->setWeight(num/10.0);
     obj2->setMaterial(getMaterial());
     *ch += *obj2;
-    keeper->doTell(ch->getName(), fmt("That'll be %i.  Here's %d units of %s.") %
+    keeper->doTell(ch->getName(), format("That'll be %i.  Here's %d units of %s.") %
 		   price % num % material_nums[getMaterial()].mat_name);
     act("$n buys $p.", TRUE, ch, obj2, keeper, TO_NOTVICT);
 
@@ -331,7 +331,7 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
 
   } else {
     // this happens with sub zero weight components
-    vlogf(LOG_BUG, fmt("Bogus num %d in buyMe commodity at %d.  wgt=%.2f") %  num % ch->in_room % getWeight());
+    vlogf(LOG_BUG, format("Bogus num %d in buyMe commodity at %d.  wgt=%.2f") %  num % ch->in_room % getWeight());
   }
 
   keeper->saveItems(shop_nr);
@@ -360,11 +360,11 @@ bool TCommodity::sellMeCheck(TBeing *ch, TMonster *keeper, int num, int total_in
     total_inventory = tso.getInventoryCount(this);
   
   if (total_inventory >= max_num) {
-    keeper->doTell(ch->getName(), fmt("I already have plenty of %s.") % 
+    keeper->doTell(ch->getName(), format("I already have plenty of %s.") % 
 		   getName());
     return TRUE;
   } else if (total_inventory + num > max_num) {
-    keeper->doTell(ch->getName(), fmt("I'll buy no more than %d unit%s of %s.") % (max_num - total_inventory) % (max_num - total_inventory > 1 ? "s" : "") % getName());
+    keeper->doTell(ch->getName(), format("I'll buy no more than %d unit%s of %s.") % (max_num - total_inventory) % (max_num - total_inventory > 1 ? "s" : "") % getName());
     return TRUE;
   }
   
@@ -419,7 +419,7 @@ int TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
     TShopOwned tso(shop_nr, keeper, ch);
     tso.doSellTransaction(price, getName(), TX_SELLING);
 
-    keeper->doTell(ch->getName(), fmt("Thanks, here's your %d talens.") % price);
+    keeper->doTell(ch->getName(), format("Thanks, here's your %d talens.") % price);
     act("$n sells $p.", TRUE, ch, this, 0, TO_ROOM);
     if (ch->isAffected(AFF_GROUP) && ch->desc &&
             IS_SET(ch->desc->autobits, AUTO_SPLIT) &&
@@ -513,7 +513,7 @@ void TCommodity::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
 
   price = sellPrice(numUnits(), shop_nr, -1, ch);
 
-  keeper->doTell(ch->getName(), fmt("Hmm, I'd give you %d talens for your %i units of that.") % price % numUnits());
+  keeper->doTell(ch->getName(), format("Hmm, I'd give you %d talens for your %i units of that.") % price % numUnits());
 
   //delete obj2;
   return;
@@ -551,7 +551,7 @@ float TCommodity::pricePerUnit() const
 {
   /*
   if(!material_nums[getMaterial()].price)
-    vlogf(LOG_BUG, fmt("commodity '%s' has no price for material %i") %
+    vlogf(LOG_BUG, format("commodity '%s' has no price for material %i") %
 	  getName() % getMaterial());
   */
 
@@ -639,43 +639,43 @@ void TCommodity::updateDesc()
   }
 
   if(isMineral()){
-    sprintf(buf, (fmt("commodity %s %s") % mineralname[sizeindex] %
-	    material_nums[getMaterial()].mat_name).c_str());
+    sprintf(buf, ((sstring)(format("commodity %s %s") % mineralname[sizeindex] %
+	    material_nums[getMaterial()].mat_name)).c_str());
     name = mud_str_dup(buf);
     
-    sprintf(buf, (fmt("a %s of rough %s") % mineralname[sizeindex] %
-		  material_nums[getMaterial()].mat_name).c_str());
+    sprintf(buf, ((sstring)(format("a %s of rough %s") % mineralname[sizeindex] %
+		  material_nums[getMaterial()].mat_name)).c_str());
     shortDescr = mud_str_dup(buf);
     
-    sprintf(buf, (fmt("A %s of rough %s has been left here.  What luck!") %
+    sprintf(buf, ((sstring)(format("A %s of rough %s has been left here.  What luck!") %
 		  mineralname[sizeindex] %
-		  material_nums[getMaterial()].mat_name).c_str());
+		  material_nums[getMaterial()].mat_name)).c_str());
     setDescr(mud_str_dup(buf));
   } else if (isMetal()) {
-    sprintf(buf, (fmt("commodity %s %s") % metalname[sizeindex] %
-	    material_nums[getMaterial()].mat_name).c_str());
+    sprintf(buf, ((sstring)(format("commodity %s %s") % metalname[sizeindex] %
+	    material_nums[getMaterial()].mat_name)).c_str());
     name = mud_str_dup(buf);    
 
-    sprintf(buf, (fmt("a %s of %s") % metalname[sizeindex] %
-		  material_nums[getMaterial()].mat_name).c_str());
+    sprintf(buf, ((sstring)(format("a %s of %s") % metalname[sizeindex] %
+		  material_nums[getMaterial()].mat_name)).c_str());
     shortDescr = mud_str_dup(buf);
     
-    sprintf(buf, (fmt("A %s of %s has been left here.  What luck!") %
+    sprintf(buf, ((sstring)(format("A %s of %s has been left here.  What luck!") %
 		  metalname[sizeindex] %
-		  material_nums[getMaterial()].mat_name).c_str());
+		  material_nums[getMaterial()].mat_name)).c_str());
     setDescr(mud_str_dup(buf));
   } else {
-    sprintf(buf, (fmt("commodity %s %s") % miscname[sizeindex] %
-	    material_nums[getMaterial()].mat_name).c_str());
+    sprintf(buf, ((sstring)(format("commodity %s %s") % miscname[sizeindex] %
+	    material_nums[getMaterial()].mat_name)).c_str());
     name = mud_str_dup(buf);    
 
-    sprintf(buf, (fmt("a %s of %s") % miscname[sizeindex] %
-		  material_nums[getMaterial()].mat_name).c_str());
+    sprintf(buf, ((sstring)(format("a %s of %s") % miscname[sizeindex] %
+		  material_nums[getMaterial()].mat_name)).c_str());
     shortDescr = mud_str_dup(buf);
     
-    sprintf(buf, (fmt("A %s of %s has been left here.  What luck!") %
+    sprintf(buf, ((sstring)(format("A %s of %s has been left here.  What luck!") %
 		  miscname[sizeindex] %
-		  material_nums[getMaterial()].mat_name).c_str());
+		  material_nums[getMaterial()].mat_name)).c_str());
     setDescr(mud_str_dup(buf));
 
   }

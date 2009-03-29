@@ -39,7 +39,7 @@ void TBeing::goThroughPortalMsg(const TPortal *o) const
 
   type = o->getPortalType();
   if (type > MAX_PORTAL_TYPE) {
-    vlogf(LOG_BUG, fmt("%s has illegal portal type of %d.") %  o->shortDescr % type);
+    vlogf(LOG_BUG, format("%s has illegal portal type of %d.") %  o->shortDescr % type);
     type = 0;
   }
   if (riding) {
@@ -69,7 +69,7 @@ void TBeing::exitFromPortalMsg(const TPortal *o) const
   }
   type = o2->getPortalType();
   if (type > MAX_PORTAL_TYPE) {
-    vlogf(LOG_BUG, fmt("%s has illegal portal type of %d.") %  o2->shortDescr % type);
+    vlogf(LOG_BUG, format("%s has illegal portal type of %d.") %  o2->shortDescr % type);
     type = 0;
   }
   if (riding) {
@@ -149,12 +149,12 @@ bool TBeing::validMove(dirTypeT cmd)
       return FALSE;
     }
     if (!sameRoom(*riding) && (riding->horseMaster() == this)) {
-      vlogf(LOG_BUG, fmt("mount/rider in different rooms: (%s, %s) %d %d") %  
+      vlogf(LOG_BUG, format("mount/rider in different rooms: (%s, %s) %d %d") %  
             getName() % riding->getName() % inRoom() % riding->inRoom());
       dismount(POSITION_STANDING);
     }
     if (tbt && !tbt->master) {
-      vlogf(LOG_BUG, fmt("Bogus riding situation (no master for %s).  setting to %s") % 
+      vlogf(LOG_BUG, format("Bogus riding situation (no master for %s).  setting to %s") % 
           tbt->getName() % getName());
       tbt->master = this;
     }
@@ -199,7 +199,7 @@ bool TBeing::validMove(dirTypeT cmd)
       if (!IS_SET(exitp->condition, EX_SECRET)) {
         char doorbuf[64];
         strcpy(doorbuf, fname(exitp->keyword).c_str());
-        sendTo(fmt("The %s %s %s.\n\r") % 
+        sendTo(format("The %s %s %s.\n\r") % 
                doorbuf %
                (doorbuf[strlen(doorbuf) -1] == 's' ? "are" : "is") %
                exitp->closed());
@@ -209,7 +209,7 @@ bool TBeing::validMove(dirTypeT cmd)
         return FALSE;
       }
     } else {
-      vlogf(LOG_LOW, fmt("Problematic door: rm %d dir %d (closed with no-name?)") % 
+      vlogf(LOG_LOW, format("Problematic door: rm %d dir %d (closed with no-name?)") % 
             inRoom() % cmd);
       notLegalMove();
       return FALSE;
@@ -298,7 +298,7 @@ int TBeing::checkPassWard(dirTypeT cmd) const
   rp = in_room;
 
    if (!rp || !(in_room == rp)) {
-     vlogf(LOG_BUG,fmt("Bad room in checkPassWard: %s in %d") %  getName() % rp);
+     vlogf(LOG_BUG,format("Bad room in checkPassWard: %s in %d") %  getName() % rp);
      sendTo("Please bug what you just tried to do.\n\r");
      return FALSE;
    }
@@ -395,8 +395,8 @@ bool TBeing::rawMoveTied(dirTypeT dir, int new_r)
        dynamic_cast<TTrap *>(tied) ||
        compareWeights(tied->getTotalWeight(TRUE), weight_limit)==-1){
       if(rider)
-	rider->sendTo(COLOR_BASIC, fmt("%s strains against the harness but can't pull %s.\n\r") % ((sstring)getName()).cap() % (tied?tied->getName():"that"));
-      sendTo(COLOR_BASIC, fmt("You strain against the harness but can't pull %s.\n\r") % (tied?tied->getName():"that"));
+	rider->sendTo(COLOR_BASIC, format("%s strains against the harness but can't pull %s.\n\r") % ((sstring)getName()).cap() % (tied?tied->getName():"that"));
+      sendTo(COLOR_BASIC, format("You strain against the harness but can't pull %s.\n\r") % (tied?tied->getName():"that"));
       return false;
     }
 
@@ -507,7 +507,7 @@ int TBeing::rawMove(dirTypeT dir)
   if (!to_here) {
     --(*this);
     thing_to_room(this, ROOM_VOID);
-    sendTo(fmt("Uh-oh.  The %s melts beneath you as you fall into the swirling chaos.\n\r") % roomp->describeGround());
+    sendTo(format("Uh-oh.  The %s melts beneath you as you fall into the swirling chaos.\n\r") % roomp->describeGround());
     doLook("room", CMD_LOOK);
     return TRUE;
   }
@@ -543,7 +543,7 @@ int TBeing::rawMove(dirTypeT dir)
   if (!riding && !isFlying()) {
     if (bothLegsHurt()) {
       if (!bothArmsHurt() && getPosition() == POSITION_CRAWLING) {
-        sendTo(fmt("You drag yourself along the %s slowly and painfully.\n\r") % roomp->describeGround());
+        sendTo(format("You drag yourself along the %s slowly and painfully.\n\r") % roomp->describeGround());
         need_movement += 20;
         if (eitherArmHurt()) {
           sendTo("And to make matters worse, you only have one arm to drag yourself with.\n\r");
@@ -637,7 +637,7 @@ int TBeing::rawMove(dirTypeT dir)
     }
   } else if (riding) {
     if (bothLegsHurt()) {
-      sendTo(COLOR_MOBS, fmt("Riding %s without working legs is painful!\n\r") % riding->getName());
+      sendTo(COLOR_MOBS, format("Riding %s without working legs is painful!\n\r") % riding->getName());
       addToMove(-5);
       if (!::number(0,2)) {
         rc = fallOffMount(riding, POSITION_SITTING);
@@ -858,7 +858,7 @@ int TBeing::rawMove(dirTypeT dir)
         } else {
           if (!has_boat) {
             if ((rc = canSwim(dir)) > 0) {
-              sendTo(fmt("You swim %s through the water.\n\r") % (isAffected(AFF_SWIM) ? "easily" : "valiantly"));
+              sendTo(format("You swim %s through the water.\n\r") % (isAffected(AFF_SWIM) ? "easily" : "valiantly"));
             } else {
               sendTo("You try to swim, but fail to make any headway.\n\r");
               if (rc == -1)
@@ -902,7 +902,7 @@ int TBeing::rawMove(dirTypeT dir)
     if (from_here->isUnderwaterSector()) {
       if (!isAffected(AFF_WATERBREATH)) {
         if ((rc = canSwim(dir)) > 0) {
-          sendTo(fmt("You swim %s under the water.\n\r") % (isAffected(AFF_SWIM) ? "easily" : "valiantly"));
+          sendTo(format("You swim %s under the water.\n\r") % (isAffected(AFF_SWIM) ? "easily" : "valiantly"));
         } else {
           sendTo("You try to swim under the water, but fail to make any headway.\n\r");
           if (rc == -1)
@@ -964,14 +964,14 @@ int TBeing::rawMove(dirTypeT dir)
     }
   }
   if (getPosition() == POSITION_CRAWLING) 
-    sendTo(fmt("You crawl %s.\n\r") %dirs[dir]);
+    sendTo(format("You crawl %s.\n\r") %dirs[dir]);
   else if (isAffected(AFF_BLIND) && !isImmortal() && !isAffected(AFF_TRUE_SIGHT) && !isAffected(AFF_CLARITY)) {
     if (dir == DIR_UP || dir == DIR_DOWN) {
       // say nothing on these
     } else if (isSwimming()) {
-      sendTo(fmt("You blindly paddle %s.\n\r") %dirs[dir]);
+      sendTo(format("You blindly paddle %s.\n\r") %dirs[dir]);
     } else {
-      sendTo(fmt("You blindly stumble %s.\n\r") %dirs[dir]);
+      sendTo(format("You blindly stumble %s.\n\r") %dirs[dir]);
     }
   }
 
@@ -1127,7 +1127,7 @@ int TBeing::moveGroup(dirTypeT dir)
         // sanity check - this should not occur, however the hero faerie proc seems to be causing issues
         if (!tft)
         {
-          vlogf(LOG_BUG, fmt("ERROR: NULL follower for %s in TBeing::moveGroup") % getName());
+          vlogf(LOG_BUG, format("ERROR: NULL follower for %s in TBeing::moveGroup") % getName());
           continue;
         }
         else
@@ -1136,7 +1136,7 @@ int TBeing::moveGroup(dirTypeT dir)
           for (found = followers; found && found->follower != tft; found = found->next);
           if (!found)
           {
-            vlogf(LOG_BUG, fmt("ERROR: corrupt follower for %s in TBeing::moveGroup.  Was this object deleted from followers improperly?") % getName());
+            vlogf(LOG_BUG, format("ERROR: corrupt follower for %s in TBeing::moveGroup.  Was this object deleted from followers improperly?") % getName());
             return FALSE;
           }
         }
@@ -1145,7 +1145,7 @@ int TBeing::moveGroup(dirTypeT dir)
         // bat - 11/19/99
         if (tft->master != this) {
           // this happens, but I guess it's safe to just ignore
-          vlogf(LOG_BUG, fmt("ERROR: Bad critter looping through moveGroup()! (this=[%s], badguy=[%s], master=[%s])") %  getName() % 
+          vlogf(LOG_BUG, format("ERROR: Bad critter looping through moveGroup()! (this=[%s], badguy=[%s], master=[%s])") %  getName() % 
 		(tft->getName() ? tft->getName() : "NoName") % 
 		(tft->master ? tft->master->getName() : "NoMaster"));
           continue;
@@ -1390,7 +1390,7 @@ int TBeing::displayMove(dirTypeT dir, int was_in, int total)
       vlogf(LOG_BUG, "NULL getName in NULL rp in displayMove()");
       return FALSE;
     }
-    vlogf(LOG_BUG, fmt("NULL rp in displayMove!  (%s)(%d)") %  getName() % was_in);
+    vlogf(LOG_BUG, format("NULL rp in displayMove!  (%s)(%d)") %  getName() % was_in);
     return FALSE;
   }
   strcpy(how, movementType(FALSE).c_str());
@@ -1624,7 +1624,7 @@ int TBeing::genericMovedIntoRoom(TRoom *rp, int was_in,
     }
   }    
   if (rp->isRoomFlag(ROOM_DEATH) && !isImmortal()) {
-    vlogf(LOG_MISC, fmt("%s killed by DEATHTRAP at %s (%d)") % 
+    vlogf(LOG_MISC, format("%s killed by DEATHTRAP at %s (%d)") % 
           getName() % roomp->getName() % inRoom());
     die(DAMAGE_NORMAL);
     return DELETE_THIS;
@@ -1799,7 +1799,7 @@ int TBeing::doOpen(const char *argument)
 
   if ((findDoor(type, dir, DOOR_INTENT_OPEN, SILENT_YES) == DIR_NONE) &&
              (tmpdesc = roomp->ex_description->findExtraDesc(argument))) {
-    sendTo(fmt("%s: Your attempt to open it seems to have no effect.\n\r") % type);
+    sendTo(format("%s: Your attempt to open it seems to have no effect.\n\r") % type);
     return FALSE;
   } 
 
@@ -1854,7 +1854,7 @@ int TBeing::doOpen(const char *argument)
     float tRidingManip = ((getPosition() == POSITION_MOUNTED) ?
                           (1.5 - (((float)getSkillValue(SKILL_RIDE) / 2) / 100)) : 1.0);
     if ((exitp->weight * tRidingManip) > maxWieldWeight(NULL, HAND_TYPE_PRIM)) {
-      sendTo(fmt("The %s is too large and heavy for you to budge it.\n\r") %
+      sendTo(format("The %s is too large and heavy for you to budge it.\n\r") %
          exitp->getName());
       sprintf(buf, "$n throws $mself at a %s, but $e can't budge it.",
          exitp->getName().c_str());
@@ -1862,7 +1862,7 @@ int TBeing::doOpen(const char *argument)
       return FALSE;
     }
     if (IS_SET(exitp->condition, EX_DESTROYED)) {
-      sendTo(fmt("The %s has been destroyed, it stands wide open.\n\r") %
+      sendTo(format("The %s has been destroyed, it stands wide open.\n\r") %
          exitp->getName());
       return FALSE;
     } else if (IS_SET(exitp->condition, EX_CAVED_IN)) {
@@ -1876,7 +1876,7 @@ int TBeing::doOpen(const char *argument)
       if (IS_SET(exitp->condition, EX_TRAPPED)) {
 	if (doesKnowSkill(SKILL_DETECT_TRAP)) {
 	  if (detectTrapDoor(this, door)) {
-	    sendTo(fmt("You start to open the %s, but then notice an insidious %s trap...\n\r") %
+	    sendTo(format("You start to open the %s, but then notice an insidious %s trap...\n\r") %
 		   sstring(exitp->getName()) % sstring(trap_types[exitp->trap_info]).uncap());
 	    return FALSE;
 	  }
@@ -1918,7 +1918,7 @@ int TBeing::doRaise(const char *argument, cmdTypeT cmd)
         sendTo("Raise what?\n\r");
   } else if ((findDoor(type, dir, DOOR_INTENT_RAISE, SILENT_YES) == DIR_NONE) &&
              (tmpdesc = roomp->ex_description->findExtraDesc(argument))) {
-    sendTo(fmt("%s: Your attempt to raise it seems to have no effect.\n\r") % type);
+    sendTo(format("%s: Your attempt to raise it seems to have no effect.\n\r") % type);
     return FALSE;
   } else if ((door = findDoor(type, dir, DOOR_INTENT_RAISE, SILENT_NO)) >= MIN_DIR) {
     // perhaps it is a door
@@ -1940,7 +1940,7 @@ int TBeing::doRaise(const char *argument, cmdTypeT cmd)
     float tRidingManip = ((getPosition() == POSITION_MOUNTED) ?
                           (1.5 - (((float)getSkillValue(SKILL_RIDE) / 2) / 100)) : 1.0);
     if ((exitp->weight * tRidingManip) > maxWieldWeight(NULL, HAND_TYPE_PRIM)) {
-      sendTo(fmt("The %s is too large and heavy for you to budge it.\n\r") %
+      sendTo(format("The %s is too large and heavy for you to budge it.\n\r") %
          exitp->getName());
       sprintf(buf, "$n throws $mself at a %s, but $e can't budge it.",
          exitp->getName().c_str());
@@ -1948,7 +1948,7 @@ int TBeing::doRaise(const char *argument, cmdTypeT cmd)
       return FALSE;
     }
     if (IS_SET(exitp->condition, EX_DESTROYED)) {
-      sendTo(fmt("The %s has been destroyed, it stands wide open.\n\r") %
+      sendTo(format("The %s has been destroyed, it stands wide open.\n\r") %
          exitp->getName());
       return FALSE;
     } else if (IS_SET(exitp->condition, EX_CAVED_IN)) {
@@ -1969,7 +1969,7 @@ int TBeing::doRaise(const char *argument, cmdTypeT cmd)
       else if (IS_SET(exitp->condition, EX_TRAPPED)) {
         if (doesKnowSkill(SKILL_DETECT_TRAP)) {
           if (detectTrapDoor(this, door)) {
-            sendTo(fmt("You start to raise the %s, but then notice an insidious %s trap...\n\r") %                 exitp->getName() % sstring(trap_types[exitp->trap_info]).uncap());
+            sendTo(format("You start to raise the %s, but then notice an insidious %s trap...\n\r") %                 exitp->getName() % sstring(trap_types[exitp->trap_info]).uncap());
             return FALSE;
           }
         }
@@ -2006,7 +2006,7 @@ void TBeing::doClose(const char *argument)
     obj->closeMe(this);
   } else if ((findDoor(type, dir, DOOR_INTENT_CLOSE, SILENT_YES) == DIR_NONE) &&
              (tmpdesc = roomp->ex_description->findExtraDesc(argument))) {
-    sendTo(fmt("%s: Your attempt to close it seems to have no effect.\n\r") % type);
+    sendTo(format("%s: Your attempt to close it seems to have no effect.\n\r") % type);
     return;
   } else if ((door = findDoor(type, dir, DOOR_INTENT_CLOSE, SILENT_NO)) >= MIN_DIR) {
     if (getPosition() < POSITION_CRAWLING){
@@ -2031,7 +2031,7 @@ void TBeing::doClose(const char *argument)
     float tRidingManip = ((getPosition() == POSITION_MOUNTED) ?
                           (1.5 - (((float)getSkillValue(SKILL_RIDE) / 2) / 100)) : 1.0);
     if ((exitp->weight * tRidingManip) > maxWieldWeight(NULL, HAND_TYPE_PRIM)) {
-      sendTo(fmt("The %s is too large and heavy for you to budge it.\n\r") %
+      sendTo(format("The %s is too large and heavy for you to budge it.\n\r") %
          exitp->getName());
       sprintf(buf, "$n throws $mself at a %s, but $e can't budge it.",
          exitp->getName().c_str());
@@ -2039,7 +2039,7 @@ void TBeing::doClose(const char *argument)
       return;
     }
     if (IS_SET(exitp->condition, EX_DESTROYED)) {
-      sendTo(fmt("The %s has been destroyed, it can't be closed anymore.\n\r") %
+      sendTo(format("The %s has been destroyed, it can't be closed anymore.\n\r") %
          exitp->getName());
       return;
     } else if (IS_SET(exitp->condition, EX_CAVED_IN)) {
@@ -2073,7 +2073,7 @@ int TBeing::doLower(const char *argument)
     sendTo("Lower what?\n\r");
   } else if ((findDoor(type, dir, DOOR_INTENT_LOWER, SILENT_YES) == DIR_NONE) &&
              (tmpdesc = roomp->ex_description->findExtraDesc(argument))) {
-    sendTo(fmt("%s: Your attempt to lower it seems to have no effect.\n\r") % type);
+    sendTo(format("%s: Your attempt to lower it seems to have no effect.\n\r") % type);
     return FALSE;
   } else if ((door = findDoor(type, dir, DOOR_INTENT_LOWER, SILENT_NO)) >= MIN_DIR) {
     exitp = exitDir(door);
@@ -2094,7 +2094,7 @@ int TBeing::doLower(const char *argument)
     float tRidingManip = ((getPosition() == POSITION_MOUNTED) ?
                           (1.5 - (((float)getSkillValue(SKILL_RIDE) / 2) / 100)) : 1.0);
     if ((exitp->weight * tRidingManip) > maxWieldWeight(NULL, HAND_TYPE_PRIM)) {
-      sendTo(fmt("The %s is too large and heavy for you to budge it.\n\r") %
+      sendTo(format("The %s is too large and heavy for you to budge it.\n\r") %
          exitp->getName());
       sprintf(buf, "$n throws $mself at a %s, but $e can't budge it.",
          exitp->getName().c_str());
@@ -2102,7 +2102,7 @@ int TBeing::doLower(const char *argument)
       return FALSE;
     }
     if (IS_SET(exitp->condition, EX_DESTROYED)) {
-      sendTo(fmt("The %s has been destroyed.\n\r") %
+      sendTo(format("The %s has been destroyed.\n\r") %
          exitp->getName());
       return FALSE;
     } else if (IS_SET(exitp->condition, EX_CAVED_IN)) {
@@ -2117,7 +2117,7 @@ int TBeing::doLower(const char *argument)
       else if (IS_SET(exitp->condition, EX_TRAPPED)) {
         if (doesKnowSkill(SKILL_DETECT_TRAP)) {
           if (detectTrapDoor(this, door)) {
-            sendTo(fmt("You start to lower the %s, but then notice an insidious %s trap...\n\r") %                 exitp->getName() %  sstring(trap_types[exitp->trap_info]).uncap());
+            sendTo(format("You start to lower the %s, but then notice an insidious %s trap...\n\r") %                 exitp->getName() %  sstring(trap_types[exitp->trap_info]).uncap());
             return FALSE;
           }
         }
@@ -2205,7 +2205,7 @@ void TBeing::doLock(const char *argument)
     obj->lockMe(this);
   } else if ((findDoor(type, dir, DOOR_INTENT_LOCK, SILENT_YES) == DIR_NONE) &&
              (tmpdesc = roomp->ex_description->findExtraDesc(argument))) {
-    sendTo(fmt("%s: Your attempt to lock it seems to have no effect.\n\r") % type);
+    sendTo(format("%s: Your attempt to lock it seems to have no effect.\n\r") % type);
     return;
   } else if ((door = findDoor(type, dir, DOOR_INTENT_LOCK, SILENT_NO)) >= MIN_DIR) {
     exitp = exitDir(door);
@@ -2215,7 +2215,7 @@ void TBeing::doLock(const char *argument)
       return;
     }
     if (IS_SET(exitp->condition, EX_DESTROYED)) {
-      sendTo(fmt("The %s has been destroyed; locking it now is a bit silly.\n\r") %
+      sendTo(format("The %s has been destroyed; locking it now is a bit silly.\n\r") %
 
          exitp->getName().c_str());
       return;
@@ -2263,7 +2263,7 @@ void TBeing::doUnlock(const char *argument)
     obj->unlockMe(this);
   } else if ((findDoor(type, dir, DOOR_INTENT_UNLOCK, SILENT_YES) == DIR_NONE) &&
              (tmpdesc = roomp->ex_description->findExtraDesc(argument))) {
-    sendTo(fmt("%s: Your attempt to unlock it seems to have no effect.\n\r") % type);
+    sendTo(format("%s: Your attempt to unlock it seems to have no effect.\n\r") % type);
     return;
   } else if ((door = findDoor(type, dir, DOOR_INTENT_UNLOCK, SILENT_NO)) >= MIN_DIR) {
     exitp = exitDir(door);
@@ -2273,7 +2273,7 @@ void TBeing::doUnlock(const char *argument)
       return;
     }
     if (IS_SET(exitp->condition, EX_DESTROYED)) {
-      sendTo(fmt("The %s has been destroyed and stands wide open.\n\rWhy do you need to unlock it?\n\r") %
+      sendTo(format("The %s has been destroyed and stands wide open.\n\rWhy do you need to unlock it?\n\r") %
          exitp->getName());
       return;
     } else if (IS_SET(exitp->condition, EX_CAVED_IN)) {
@@ -2957,7 +2957,7 @@ void TBeing::doFollow(const char *argument)
       return;
     }
     if (leader->isPlayerAction(PLR_GRPQUEST) && !isPlayerAction(PLR_GRPQUEST)) {
-      sendTo(fmt("COLOR_MOBS, %s has a group quest flag. You can't follow without one yourself.\n\r") % leader->getName());
+      sendTo(format("COLOR_MOBS, %s has a group quest flag. You can't follow without one yourself.\n\r") % leader->getName());
       return;
     }
     if (isPlayerAction(PLR_GRPQUEST) && !leader->isPlayerAction(PLR_GRPQUEST)) {
@@ -3003,7 +3003,7 @@ void TBeing::setPosition(positionTypeT pos)
   if (dynamic_cast<TBeing *>(riding) && 
       (pos != POSITION_FIGHTING) && (pos != POSITION_MOUNTED)) {
     // for debug
-    // vlogf(LOG_BUG, fmt("Mounted person (%s) set to new position (%s:%d).") %  getName() % position_types[pos] % pos);
+    // vlogf(LOG_BUG, format("Mounted person (%s) set to new position (%s:%d).") %  getName() % position_types[pos] % pos);
     // this is called whenever a mob falls off a mount - dismount them first
     dismount(POSITION_STANDING);
   }
@@ -3157,7 +3157,7 @@ int TBeing::goDirection(dirTypeT dir)
       float tRidingManip = ((getPosition() == POSITION_MOUNTED) ?
                             (1.5 - (((float)getSkillValue(SKILL_RIDE) / 2) / 100)) : 1.0);
       if ((exitp->weight * tRidingManip) > maxWieldWeight(NULL, HAND_TYPE_PRIM)) {
-        sendTo(fmt("The %s is too large and heavy for you to budge it.\n\r") %
+        sendTo(format("The %s is too large and heavy for you to budge it.\n\r") %
            exitp->getName());
         sprintf(buf, "$n throws $mself at a %s, but $e can't budge it.",
            exitp->getName().c_str());
@@ -3301,7 +3301,7 @@ int TBeing::crashLanding(positionTypeT pos, bool force, bool dam)
   if (force) {
 // option to force this
     setPosition(pos);
-    sendTo(COLOR_ROOMS, fmt("You smash into the %s hard!\n\r") % roomp->describeGround());
+    sendTo(COLOR_ROOMS, format("You smash into the %s hard!\n\r") % roomp->describeGround());
     act("$n tumbles end over end as $e crash lands!",
         TRUE, this, 0, 0, TO_ROOM);
   } else if (!isFlying()) {
@@ -3342,12 +3342,12 @@ int TBeing::crashLanding(positionTypeT pos, bool force, bool dam)
   } else if (doesKnowSkill(SKILL_CATFALL) && bSuccess(SKILL_CATFALL)){
     setPosition(POSITION_STANDING);
     act("$n drops gracefully onto the $g.", FALSE, this, 0, 0, TO_ROOM);
-    sendTo(COLOR_ROOMS, fmt("You drop gracefully to the %s.\n\r") % roomp->describeGround());
+    sendTo(COLOR_ROOMS, format("You drop gracefully to the %s.\n\r") % roomp->describeGround());
     dam=false;
   } else {
 // Flying person
     setPosition(pos);
-    sendTo(COLOR_ROOMS, fmt("You smash into the %s hard!\n\r") % roomp->describeGround());
+    sendTo(COLOR_ROOMS, format("You smash into the %s hard!\n\r") % roomp->describeGround());
     act("$n tumbles end over end as $e crash lands!",
         TRUE, this, 0, 0, TO_ROOM);
   }
@@ -3669,7 +3669,7 @@ int TBeing::doMortalGoto(const sstring & argument)
     sendTo("You will need to explore in order to locate the trainer for that discipline.\n\r");
     return FALSE;
   } else {
-    sendTo(fmt("You can't seem to locate '%s'.\n\r") % arg);
+    sendTo(format("You can't seem to locate '%s'.\n\r") % arg);
     return FALSE;
   }
 
@@ -3687,18 +3687,18 @@ int TBeing::doMortalGoto(const sstring & argument)
       sendTo("Strangely, you can't quite figure out how to get there from here.\n\r");
       return FALSE;
     }
-    sendTo(COLOR_MOBS, fmt("You can get to a fair fight by going "));
+    sendTo(COLOR_MOBS, "You can get to a fair fight by going ");
 
     for(unsigned int i=1;i<path.path.size()-1;++i){
       if(path.path[i]->direct >= 10)
 	sendTo(COLOR_MOBS, "enter portal, ");
       else
-	sendTo(COLOR_MOBS, fmt("%s, ") % dirs[path.path[i]->direct]);
+	sendTo(COLOR_MOBS, format("%s, ") % dirs[path.path[i]->direct]);
     }
     if(path.path[path.path.size()-1]->direct >= 10)
       sendTo(COLOR_MOBS, "enter portal.\n\r");
     else
-      sendTo(COLOR_MOBS, fmt("%s.\n\r") % dirs[path.path[path.path.size()-1]->direct]);
+      sendTo(COLOR_MOBS, format("%s.\n\r") % dirs[path.path[path.path.size()-1]->direct]);
 
   } else if (targ_rm) {
     if (inRoom() == targ_rm) {
@@ -3715,24 +3715,24 @@ int TBeing::doMortalGoto(const sstring & argument)
       sendTo("Strangely, you can't quite figure out how to get there from here.\n\r");
       return FALSE;
     }
-    sendTo(COLOR_MOBS, fmt("You can get to %s by going ") % rp->getName());
+    sendTo(COLOR_MOBS, format("You can get to %s by going ") % rp->getName());
 
     for(unsigned int i=1;i<path.path.size()-1;++i){
       if(path.path[i]->direct >= 10)
 	sendTo(COLOR_MOBS, "enter portal, ");
       else
-	sendTo(COLOR_MOBS, fmt("%s, ") % dirs[path.path[i]->direct]);
+	sendTo(COLOR_MOBS, format("%s, ") % dirs[path.path[i]->direct]);
     }
     if(path.path[path.path.size()-1]->direct >= 10)
       sendTo(COLOR_MOBS, "enter portal.\n\r");
     else
-      sendTo(COLOR_MOBS, fmt("%s.\n\r") % dirs[path.path[path.path.size()-1]->direct]);
+      sendTo(COLOR_MOBS, format("%s.\n\r") % dirs[path.path[path.path.size()-1]->direct]);
 
-    //    sendTo(COLOR_ROOMS, fmt("You can get to %s by going %s.\n\r") % rp->getName() % dirs[dir]); 
+    //    sendTo(COLOR_ROOMS, format("You can get to %s by going %s.\n\r") % rp->getName() % dirs[dir]); 
   } else {
     int rn = real_mobile(targ_ch);
     if (rn < 0) {
-      vlogf(LOG_BUG, fmt("Error in goto for mob %s") %  arg);
+      vlogf(LOG_BUG, format("Error in goto for mob %s") %  arg);
       return FALSE;
     }
     ch = get_char_num(rn);
@@ -3771,20 +3771,20 @@ int TBeing::doMortalGoto(const sstring & argument)
       return FALSE;
     }
 
-    sendTo(COLOR_MOBS, fmt("You can get to %s by going ") % ch->getName());
+    sendTo(COLOR_MOBS, format("You can get to %s by going ") % ch->getName());
 
     for(unsigned int i=1;i<path.path.size()-1;++i){
       if(path.path[i]->direct >= 10)
 	sendTo(COLOR_MOBS, "enter portal, ");
       else
-	sendTo(COLOR_MOBS, fmt("%s, ") % dirs[path.path[i]->direct]);
+	sendTo(COLOR_MOBS, format("%s, ") % dirs[path.path[i]->direct]);
     }
     if(path.path[path.path.size()-1]->direct >= 10)
       sendTo(COLOR_MOBS, "enter portal.\n\r");
     else
-      sendTo(COLOR_MOBS, fmt("%s.\n\r") % dirs[path.path[path.path.size()-1]->direct]);
+      sendTo(COLOR_MOBS, format("%s.\n\r") % dirs[path.path[path.path.size()-1]->direct]);
 
-    //    sendTo(COLOR_MOBS, fmt("You can get to %s by going %s.\n\r") % ch->getName() % dirs[dir]); 
+    //    sendTo(COLOR_MOBS, format("You can get to %s by going %s.\n\r") % ch->getName() % dirs[dir]); 
   }
 
   return FALSE;

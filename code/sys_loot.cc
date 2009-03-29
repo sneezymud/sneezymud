@@ -97,7 +97,7 @@ bool sysLootBoot()
           isLegalLoot(obj_index[tOIndex].name)) ||
           isSpecialLegalLoot(tOIndex)) &&
         obj_index[tOIndex].max_exist == 9999) {
-      //vlogf(LOG_BUG, fmt("Loot Object Debug, reading object: %d") %  tOIndex);
+      //vlogf(LOG_BUG, format("Loot Object Debug, reading object: %d") %  tOIndex);
       tObj = read_object(tOIndex, REAL);
 
       switch (obj_index[tOIndex].itemtype) { // Set tLevel
@@ -105,7 +105,7 @@ bool sysLootBoot()
         case ITEM_STAFF:
         case ITEM_SCROLL:
           if (!(tMagicItem = dynamic_cast<TMagicItem *>(tObj))) {
-            vlogf(LOG_BUG, fmt("Screwup in Loot Loader: %s") %  tObj->getName());
+            vlogf(LOG_BUG, format("Screwup in Loot Loader: %s") %  tObj->getName());
             delete tObj;
             tObj = NULL;
           } else
@@ -114,14 +114,14 @@ bool sysLootBoot()
           break;
         case ITEM_POTION:
 	  if(!(pot = dynamic_cast<TPotion *>(tObj))){
-	    vlogf(LOG_BUG, fmt("Screwup in Loot Loader (potion): %s") %  tObj->getName());
+	    vlogf(LOG_BUG, format("Screwup in Loot Loader (potion): %s") %  tObj->getName());
 	    delete tObj;
 	    tObj = NULL;
 	  } else
 	    tLevel = pot->getDrinkUnits();
 	  break;
         default:
-          vlogf(LOG_BUG, fmt("sysLootBoot Error: Unrecognized Type: %d") % 
+          vlogf(LOG_BUG, format("sysLootBoot Error: Unrecognized Type: %d") % 
                 obj_index[tOIndex].virt);
           delete tObj;
           tObj = NULL;
@@ -129,7 +129,7 @@ bool sysLootBoot()
       }
 
       if (tObj) {
-        //vlogf(LOG_BUG, fmt("Adding New Loot Object: %s") %  tObj->name);
+        //vlogf(LOG_BUG, format("Adding New Loot Object: %s") %  tObj->name);
         TLootStructure *tNLoot;
 
         if (!(tNLoot = new TLootStructure))
@@ -170,16 +170,16 @@ bool sysLootLoad(resetCom & rs, TBeing *tBeing, TObj *tObj, bool isImmortal)
 
   if (rs.arg4 == 0) {
     if (!(tThing = tBeing)) {
-      vlogf(LOG_LOW, fmt("L used on Mobile failed: %d") %  rs.arg4);
+      vlogf(LOG_LOW, format("L used on Mobile failed: %d") %  rs.arg4);
       return false;
     }
   } else if (rs.arg4 == 1) {
     if (!(tThing = tObj)) {
-      vlogf(LOG_LOW, fmt("L used on Object failed: %d") %  rs.arg4);
+      vlogf(LOG_LOW, format("L used on Object failed: %d") %  rs.arg4);
       return false;
     }
   } else if (!(tThing = (tRoom = real_roomp(rs.arg4)))) {
-    vlogf(LOG_LOW, fmt("L used on Room failed: %d") %  rs.arg4);
+    vlogf(LOG_LOW, format("L used on Room failed: %d") %  rs.arg4);
     return false;
   }
 
@@ -205,7 +205,7 @@ bool sysLootLoad(resetCom & rs, TBeing *tBeing, TObj *tObj, bool isImmortal)
 
       if (tObjn < 0 || tObjn >= obj_index.size() ||
           !(tObj = read_object(tObjn, REAL))) {
-        vlogf(LOG_LOW, fmt("Error in Loot Loader: %d") %  tTLoot->tRNum);
+        vlogf(LOG_LOW, format("Error in Loot Loader: %d") %  tTLoot->tRNum);
         return false;
       }
 

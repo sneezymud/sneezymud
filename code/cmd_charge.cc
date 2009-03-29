@@ -87,9 +87,9 @@ static int charge(TBeing *ch, TBeing *vict)
   if ((vict->getPosition() > POSITION_SITTING) &&
       ::number(0,2) &&
       ch->isTanking()) {
-    ch->sendTo(COLOR_MOBS, fmt("You try to get in position to take a charge at %s.\n\r") %
+    ch->sendTo(COLOR_MOBS, format("You try to get in position to take a charge at %s.\n\r") %
 vict->getName());
-    ch->sendTo(COLOR_MOBS, fmt("However, %s stays close to you.\n\rYou can't get the space needed to charge!\n\r") % vict->getName());
+    ch->sendTo(COLOR_MOBS, format("However, %s stays close to you.\n\rYou can't get the space needed to charge!\n\r") % vict->getName());
     ch->cantHit += ch->loseRound(1);
     return FALSE;
   }
@@ -166,7 +166,7 @@ vict->getName());
       //   didCrit = true;
     }
 	
-    // vlogf(LOG_MISC, fmt("Charge Damage Formula [%s][%.2f / %.2f|%d / %s]") %  ch->getName() %
+    // vlogf(LOG_MISC, format("Charge Damage Formula [%s][%.2f / %.2f|%d / %s]") %  ch->getName() %
     //      newDam % crossValue % initialDamage % (didCrit ? "Critical" : "Normal"));
     //  }
 #endif

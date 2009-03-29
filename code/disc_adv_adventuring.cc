@@ -34,7 +34,7 @@ int forage(TBeing *caster, byte bKnown)
   spellNumT skill = caster->getSkillNum(SKILL_FORAGE);
 
   if (!caster->roomp) {
-    vlogf(LOG_BUG, fmt("Forage called without room pointer: %s") % caster->name);
+    vlogf(LOG_BUG, format("Forage called without room pointer: %s") % caster->name);
     return SPELL_FAIL;
   }
   
@@ -109,7 +109,7 @@ int forage(TBeing *caster, byte bKnown)
   
       if (!obj) {
         caster->sendTo("Something went wrong, bug Cosmo.\n\r");
-        vlogf(LOG_BUG, fmt("Forage tried to load a NULL object (%d)") % forageItem);
+        vlogf(LOG_BUG, format("Forage tried to load a NULL object (%d)") % forageItem);
         return SPELL_FAIL;
       }
   
@@ -223,7 +223,7 @@ int forage_insect(TBeing *caster)
   }
   if (!caster->roomp)
   {
-    vlogf(LOG_BUG, fmt("Forage called without room pointer: %s") % caster->name);
+    vlogf(LOG_BUG, format("Forage called without room pointer: %s") % caster->name);
     return SPELL_FAIL;
   }
   if (caster->checkForSkillAttempt(SKILL_FORAGE))
@@ -278,12 +278,12 @@ int forage_insect(TBeing *caster)
   bugname += " ";
   bugname += bug;
   sstring action = actions[::number(0, cElements(actions)-1)];
-  action = fmt(action) % bugname;
+  action = format(action) % bugname;
 
-  act(fmt("You flick your tongue out and snag a %s!") % bugname, false, caster, NULL, NULL, TO_CHAR);
-  act(fmt("$n flicks $s tongue out and snags a %s!") % bugname, false, caster, NULL, NULL, TO_ROOM);
-  act(fmt("You eat a %s.") % bugname, false, caster, NULL, NULL, TO_CHAR);
-  act(fmt("$n %s!") % action, false, caster, NULL, NULL, TO_ROOM);
+  act(format("You flick your tongue out and snag a %s!") % bugname, false, caster, NULL, NULL, TO_CHAR);
+  act(format("$n flicks $s tongue out and snags a %s!") % bugname, false, caster, NULL, NULL, TO_ROOM);
+  act(format("You eat a %s.") % bugname, false, caster, NULL, NULL, TO_CHAR);
+  act(format("$n %s!") % action, false, caster, NULL, NULL, TO_ROOM);
 
   caster->gainCondition(FULL, int(food));
   if (caster->getCond(FULL) > 20)
@@ -670,13 +670,13 @@ void TThing::skinMe(TBeing *ch, const char *arg)
 
   // Check to see if argument passed exists in room
   if (!generic_find(arg, FIND_OBJ_ROOM, ch, &dummy, &obj)) {
-    ch->sendTo(fmt("You do not see a %s here.\n\r") % arg);
+    ch->sendTo(format("You do not see a %s here.\n\r") % arg);
     return;
   }
   // Check to see if corpse is a corpse
   
   if (!(corpse = dynamic_cast<TBaseCorpse *>(obj))) {
-    ch->sendTo(COLOR_OBJECTS, fmt("You cannot skin %s.\n\r") % obj->getName());
+    ch->sendTo(COLOR_OBJECTS, format("You cannot skin %s.\n\r") % obj->getName());
     return;
   }
   if (corpse->isCorpseFlag(CORPSE_NO_REGEN)) {
@@ -739,13 +739,13 @@ void TTool::skinMe(TBeing *ch, const char *arg)
   }
   // Check to see if argument passed exists in room
   if (!generic_find(arg, FIND_OBJ_ROOM, ch, &dummy, &obj)) {
-    ch->sendTo(fmt("You do not see a %s here.\n\r") % arg);
+    ch->sendTo(format("You do not see a %s here.\n\r") % arg);
     return;
   }
   // Check to see if corpse is a corpse
   
   if (!(corpse = dynamic_cast<TBaseCorpse *>(obj))) {
-    ch->sendTo(COLOR_OBJECTS, fmt("You cannot skin %s.\n\r") % obj->getName());
+    ch->sendTo(COLOR_OBJECTS, format("You cannot skin %s.\n\r") % obj->getName());
     return;
   }
   if (corpse->isCorpseFlag(CORPSE_NO_REGEN)) {
@@ -875,7 +875,7 @@ void TBeing::doSeekwater()
     worked = bSuccess(skill, SKILL_SEEKWATER);
     if (worked) {
       if (code <= 9)
-        sendTo(fmt("%sYou see traces of water %s.%s\n\r") % purple() %
+        sendTo(format("%sYou see traces of water %s.%s\n\r") % purple() %
                dirs_to_blank[code] % norm());
       else {
         int count = code - 9, seen = 0;
@@ -884,7 +884,7 @@ void TBeing::doSeekwater()
           if (tp) {
             seen++;
             if (count == seen) {
-              sendTo(COLOR_OBJECTS, fmt("%sYou see traces of water through %s.%s\n\r") % 
+              sendTo(COLOR_OBJECTS, format("%sYou see traces of water through %s.%s\n\r") % 
                      purple() % tp->getName() % norm());
               break;
             }
@@ -908,7 +908,7 @@ void TBeing::doSeekwater()
   affectTo(&aff);
 
   if (desc && desc->m_bIsClient)
-    desc->clientf(fmt("%d|%d") % CLIENT_TRACKING % (1 << code));
+    desc->clientf(format("%d|%d") % CLIENT_TRACKING % (1 << code));
 
   if (code <= 9) {
     if (code >= 0 && desc && (desc->autobits & AUTO_HUNT)) {
@@ -980,7 +980,7 @@ int TBeing::doEncamp()
 int encamp(TBeing * caster)
 {
   if (!caster || !caster->isPc()) {
-    vlogf(LOG_BUG, fmt("Non-PC in encamp() call.  %s") %  caster->getName());
+    vlogf(LOG_BUG, format("Non-PC in encamp() call.  %s") %  caster->getName());
     return FALSE;
   }
 
@@ -1141,7 +1141,7 @@ int TDrinkCon::divineMe(TBeing *caster, int, byte bKnown)
       setDrinkType(LIQ_WATER);
       addToDrinkUnits(units);
       weightChangeObject(units * SIP_WEIGHT);
-      caster->sendTo(fmt("You divine %d ounces of water.\n\r") % units);
+      caster->sendTo(format("You divine %d ounces of water.\n\r") % units);
       if (getDrinkUnits() == getMaxDrinkUnits())
         act("$p is filled.", FALSE, caster, this, 0, TO_CHAR);
       else

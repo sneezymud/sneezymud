@@ -398,7 +398,7 @@ const char *on_or_off(bool tog){
 
 sstring int_on_or_off(bool tog, int i){
   if(tog)
-    return fmt("<G>%-4i<1>") % i;
+    return format("<G>%-4i<1>") % i;
   else
     return "<R>off <1>";
 }
@@ -409,9 +409,9 @@ void updateCorpseLootFlags(const sstring &name, bool lootable)
 
   for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
     if((pcorpse=dynamic_cast<TPCorpse *>(*iter))){
-      vlogf(LOG_PEEL, fmt("name=%s") % pcorpse->name);
+      vlogf(LOG_PEEL, format("name=%s") % pcorpse->name);
       
-      if((sstring)pcorpse->name == fmt("corpse %s pcorpse") % name){
+      if((sstring)pcorpse->name == ((sstring) (format("corpse %s pcorpse") % name))){
 	if(!lootable){
 	  pcorpse->addCorpseFlag(CORPSE_DENY_LOOT);
 	  REMOVE_BIT(pcorpse->obj_flags.wear_flags, ITEM_TAKE);
@@ -433,7 +433,7 @@ void closeClientConnections(TBeing *me)
     dn = d->next;
     if (d->m_bIsClient) {
       d->writeToQ("Link severed by admin.\n\r");
-      me->sendTo(COLOR_MOBS, fmt("Disconnecting client use by %s.\n\r") % 
+      me->sendTo(COLOR_MOBS, format("Disconnecting client use by %s.\n\r") % 
 		 (d->character ? d->character->getName() : "Unknown"));
       delete d;
     }
@@ -469,40 +469,40 @@ void TBeing::doToggle(const char *arg2)
     {
       if (!*auto_name[iAuto])
         continue;
-      sendTo(COLOR_BASIC, fmt("%-17s : %s%s") % auto_name[iAuto] % on_or_off(IS_SET(desc->autobits, (unsigned)(1<<iAuto))) % ((++printed % width) ? "  | " : "\n\r"));
+      sendTo(COLOR_BASIC, format("%-17s : %s%s") % auto_name[iAuto] % on_or_off(IS_SET(desc->autobits, (unsigned)(1<<iAuto))) % ((++printed % width) ? "  | " : "\n\r"));
     }
 
     // toggles not represented by MAX_AUTO
-    sendTo(COLOR_BASIC, fmt("Wimpy             : %s%s") % int_on_or_off(getWimpy(), getWimpy()).c_str() % ((++printed % width) ? " | " : "\n\r"));   
-    sendTo(COLOR_BASIC, fmt("Deny Corpse Loot  : %s%s") % on_or_off(isPlayerAction(PLR_DENY_LOOT)) % ((++printed % width) ? "  | " : "\n\r"));
-    sendTo(COLOR_BASIC, fmt("Newbie Helper     : %s%s") % on_or_off(isPlayerAction(PLR_NEWBIEHELP)) % ((++printed % width) ? "  | " : "\n\r"));
-    sendTo(COLOR_BASIC, fmt("Anonymous         : %s\n\r") % on_or_off(isPlayerAction(PLR_ANONYMOUS)));
+    sendTo(COLOR_BASIC, format("Wimpy             : %s%s") % int_on_or_off(getWimpy(), getWimpy()).c_str() % ((++printed % width) ? " | " : "\n\r"));   
+    sendTo(COLOR_BASIC, format("Deny Corpse Loot  : %s%s") % on_or_off(isPlayerAction(PLR_DENY_LOOT)) % ((++printed % width) ? "  | " : "\n\r"));
+    sendTo(COLOR_BASIC, format("Newbie Helper     : %s%s") % on_or_off(isPlayerAction(PLR_NEWBIEHELP)) % ((++printed % width) ? "  | " : "\n\r"));
+    sendTo(COLOR_BASIC, format("Anonymous         : %s\n\r") % on_or_off(isPlayerAction(PLR_ANONYMOUS)));
 
     // terminal toggles
     static const char* termnames[TERM_MAX] = { "none ", "vt100", "ansi "};
     int playerTerm = ansi() ? TERM_ANSI : vt100() ? TERM_VT100 : TERM_NONE;
     sendTo(COLOR_BASIC, "\n\r<c>Terminal Toggles<1>\n\r");
     sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------------------------<1>\n\r");
-    sendTo(COLOR_BASIC, fmt("Screensize        : <G>%-3i<1>  | ") % desc->screen_size);
-    sendTo(COLOR_BASIC, fmt("Terminal          : <G>%-5s<1>| ") % termnames[playerTerm]);
-    sendTo(COLOR_BASIC, fmt("Boss Mode         : %s\n\r") % on_or_off(IS_SET(desc->account->flags, ACCOUNT_BOSS)));
-    sendTo(COLOR_BASIC, fmt("MSP Sound         : %s  | ") % on_or_off(IS_SET(desc->account->flags, ACCOUNT_MSP)));
-    sendTo(COLOR_BASIC, fmt("Account Terminal  : <G>%-5s<1>| ") % termnames[desc->account->term]);
-    sendTo(COLOR_BASIC, fmt("Allow Pinging     : %s\n\r") % on_or_off(isPlayerAction(PLR_PING)));
-    sendTo(COLOR_BASIC, fmt("Brief             : %s  | ") % on_or_off(isPlayerAction(PLR_BRIEF)));
-    sendTo(COLOR_BASIC, fmt("Compact           : %s  | ") % on_or_off(isPlayerAction(PLR_COMPACT)));
-    sendTo(COLOR_BASIC, fmt("Show Saves        : %s\n\r") % on_or_off(isPlayerAction(PLR_SHOW_SAVES)));
+    sendTo(COLOR_BASIC, format("Screensize        : <G>%-3i<1>  | ") % desc->screen_size);
+    sendTo(COLOR_BASIC, format("Terminal          : <G>%-5s<1>| ") % termnames[playerTerm]);
+    sendTo(COLOR_BASIC, format("Boss Mode         : %s\n\r") % on_or_off(IS_SET(desc->account->flags, ACCOUNT_BOSS)));
+    sendTo(COLOR_BASIC, format("MSP Sound         : %s  | ") % on_or_off(IS_SET(desc->account->flags, ACCOUNT_MSP)));
+    sendTo(COLOR_BASIC, format("Account Terminal  : <G>%-5s<1>| ") % termnames[desc->account->term]);
+    sendTo(COLOR_BASIC, format("Allow Pinging     : %s\n\r") % on_or_off(isPlayerAction(PLR_PING)));
+    sendTo(COLOR_BASIC, format("Brief             : %s  | ") % on_or_off(isPlayerAction(PLR_BRIEF)));
+    sendTo(COLOR_BASIC, format("Compact           : %s  | ") % on_or_off(isPlayerAction(PLR_COMPACT)));
+    sendTo(COLOR_BASIC, format("Show Saves        : %s\n\r") % on_or_off(isPlayerAction(PLR_SHOW_SAVES)));
 
     // immortal toggles
     if(isImmortal() || GetMaxLevel() >= GOD_LEVEL1){
       sendTo(COLOR_BASIC, "\n\r<c>Immortal Toggles<1>\n\r");
       sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------------------------<1>\n\r");
       
-	    sendTo(COLOR_BASIC, fmt("Invisibility      : %s | ") % int_on_or_off(getInvisLevel(), getInvisLevel()).c_str());    
-      sendTo(COLOR_BASIC, fmt("Auto Success      : %s  | ") % on_or_off(IS_SET(desc->autobits, AUTO_SUCCESS)));
-      sendTo(COLOR_BASIC, fmt("Stealth Mode      : %s\n\r") % on_or_off(isPlayerAction(PLR_STEALTH)));
-      sendTo(COLOR_BASIC, fmt("No Hassle         : %s  | ") % on_or_off(isPlayerAction(PLR_NOHASSLE)));
-      sendTo(COLOR_BASIC, fmt("Immortality       : %s\n\r") % on_or_off(isPlayerAction(PLR_IMMORTAL)));
+	    sendTo(COLOR_BASIC, format("Invisibility      : %s | ") % int_on_or_off(getInvisLevel(), getInvisLevel()).c_str());    
+      sendTo(COLOR_BASIC, format("Auto Success      : %s  | ") % on_or_off(IS_SET(desc->autobits, AUTO_SUCCESS)));
+      sendTo(COLOR_BASIC, format("Stealth Mode      : %s\n\r") % on_or_off(isPlayerAction(PLR_STEALTH)));
+      sendTo(COLOR_BASIC, format("No Hassle         : %s  | ") % on_or_off(isPlayerAction(PLR_NOHASSLE)));
+      sendTo(COLOR_BASIC, format("Immortality       : %s\n\r") % on_or_off(isPlayerAction(PLR_IMMORTAL)));
     }
 
     if (hasWizPower(POWER_TOGGLE)){
@@ -513,7 +513,7 @@ void TBeing::doToggle(const char *arg2)
 	      if(toggleInfo[t]->testcode || t==TOG_NONE)
 	        continue;
 
-	      sendTo(COLOR_BASIC, fmt("%-17s : %s%s") %
+	      sendTo(COLOR_BASIC, format("%-17s : %s%s") %
 	       toggleInfo[t]->name %
 	       on_or_off(toggleInfo[t]->toggle) %
 	       ((++i%width) ? "  | " : "\n\r"));
@@ -529,7 +529,7 @@ void TBeing::doToggle(const char *arg2)
 	      if(!toggleInfo[t]->testcode || t==TOG_NONE)
 	        continue;
 
-	      sendTo(COLOR_BASIC, fmt("%-17s : %s%s") %
+	      sendTo(COLOR_BASIC, format("%-17s : %s%s") %
 	       toggleInfo[t]->name %
 	       on_or_off(toggleInfo[t]->toggle) %
 	       ((++i%width) ? "  | " : "\n\r"));
@@ -542,7 +542,7 @@ void TBeing::doToggle(const char *arg2)
       // in the toggle list
       sendTo(COLOR_BASIC, "\n\r<c>Global Toggles<1>\n\r");
       sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------------------------<1>\n\r");
-      sendTo(COLOR_BASIC, fmt("%-17s : %s\n\r") %
+      sendTo(COLOR_BASIC, format("%-17s : %s\n\r") %
 	     toggleInfo[TOG_DOUBLEEXP]->name %
 	     on_or_off(toggleInfo[TOG_DOUBLEEXP]->toggle));
     }
@@ -632,12 +632,12 @@ void TBeing::doToggle(const char *arg2)
       sendTo("STEALTH mode OFF.\n\r");
       remPlayerAction(PLR_STEALTH);
       if (desc && desc->m_bIsClient)
-	desc->clientf(fmt("%d|%d") % CLIENT_STEALTH % FALSE);
+	desc->clientf(format("%d|%d") % CLIENT_STEALTH % FALSE);
     } else {
       sendTo("STEALTH mode ON.\n\r");
       addPlayerAction(PLR_STEALTH);
       if (desc && desc->m_bIsClient)
-	desc->clientf(fmt("%d|%d") % CLIENT_STEALTH % TRUE);
+	desc->clientf(format("%d|%d") % CLIENT_STEALTH % TRUE);
     }
   } else if (is_abbrev(arg, "newbiehelper") ||
 	     is_abbrev(arg, "helper")) {
@@ -678,7 +678,7 @@ void TBeing::doToggle(const char *arg2)
       else if (level > GetMaxLevel())
 	level = GetMaxLevel();
       setInvisLevel(level);
-      sendTo(fmt("Invis level set to %d.\n\r") % level);
+      sendTo(format("Invis level set to %d.\n\r") % level);
       fixClientPlayerLists(TRUE);
     } else {
       if (getInvisLevel() > 0) {
@@ -705,7 +705,7 @@ void TBeing::doToggle(const char *arg2)
       if(hasQuestBit(TOG_IS_COWARD)){
         sendTo("You can't change your wimpy setting, you're a coward!\n\r");
       } else {
-        sendTo(fmt("Setting Wimpy to Max(%d).\n\r") % (wimplimit - 1));
+        sendTo(format("Setting Wimpy to Max(%d).\n\r") % (wimplimit - 1));
       }
       num = wimplimit - 1;
     } else if (is_abbrev(arg2, "off") || (num = convertTo<int>(arg2)) <= 0) {
@@ -725,12 +725,12 @@ void TBeing::doToggle(const char *arg2)
     }
 
     if ((num < 0) || (wimplimit <= num)) {
-      sendTo(fmt("Please enter a number between 0-%d.\n\r") % (wimplimit-1));
+      sendTo(format("Please enter a number between 0-%d.\n\r") % (wimplimit-1));
       return;
     }
     
     sendTo("You are now a wimp!!\n\r");
-    sendTo(fmt("You will now flee at %d hit points!\n\r") % num);
+    sendTo(format("You will now flee at %d hit points!\n\r") % num);
     setWimpy(num);
   } else if (is_abbrev(arg, "boss")) {
     if (!IS_SET(desc->account->flags, ACCOUNT_BOSS)) {
@@ -777,7 +777,7 @@ void TBeing::doToggle(const char *arg2)
         if (!IS_SET(desc->prompt_d.type, PROMPT_VTANSI_BAR))
           SET_BIT(desc->prompt_d.type, PROMPT_VTANSI_BAR);
         cls();
-        sendTo(fmt(VT_MARGSET) % 1 % (getScreen() - 3));
+        sendTo(format(VT_MARGSET) % 1 % (getScreen() - 3));
         addPlayerAction(PLR_ANSI);
         if (vt100())
           remPlayerAction(PLR_VT100);
@@ -786,7 +786,7 @@ void TBeing::doToggle(const char *arg2)
       } else if(is_abbrev(arg2, "vt100")){
         if (!IS_SET(desc->prompt_d.type, PROMPT_VTANSI_BAR))
           SET_BIT(desc->prompt_d.type, PROMPT_VTANSI_BAR);
-        sendTo(fmt(VT_MARGSET) % 1 % (getScreen() - 3));
+        sendTo(format(VT_MARGSET) % 1 % (getScreen() - 3));
         addPlayerAction(PLR_VT100);
         if (ansi())
           remPlayerAction(PLR_ANSI);
@@ -813,13 +813,13 @@ void TBeing::doToggle(const char *arg2)
       if (isdigit(*arg2)) {
 	desc->screen_size = min(128, convertTo<int>(arg2));
 	doCls(false);
-	sendTo(fmt("Your screensize has been set to: %d\n\r") % desc->screen_size);
+	sendTo(format("Your screensize has been set to: %d\n\r") % desc->screen_size);
       } else {
-	sendTo(fmt("Your current screensize is set to: %d\n\r") % desc->screen_size);
+	sendTo(format("Your current screensize is set to: %d\n\r") % desc->screen_size);
           sendTo("Screensize needs to be a number from 1-128.\n\r");
       }
     } else {
-      sendTo(fmt("Your current screensize is set to: %d\n\r") % desc->screen_size);
+      sendTo(format("Your current screensize is set to: %d\n\r") % desc->screen_size);
     }
   } else if (is_abbrev(arg, "autokill") || is_abbrev(arg, "kill")) {
     if (IS_SET(desc->autobits, AUTO_KILL)) {
@@ -995,7 +995,7 @@ void TBeing::doToggle(const char *arg2)
     }
   } else if (is_abbrev(arg, "engage") ) {
     if (IS_SET(desc->autobits, AUTO_ENGAGE)) {
-      sendTo(COLOR_BASIC, fmt("You will now default to %sfighting back%s if attacked or if casting.\n\r") % redBold() % norm());
+      sendTo(COLOR_BASIC, format("You will now default to %sfighting back%s if attacked or if casting.\n\r") % redBold() % norm());
       sendTo("You are still free to engage rather than fight by using the engage command.\n\r");
       REMOVE_BIT(desc->autobits, AUTO_ENGAGE);
     } else {
@@ -1004,20 +1004,20 @@ void TBeing::doToggle(const char *arg2)
 
       } else {
 
-        sendTo(COLOR_BASIC, fmt("You will now %sengage%s if you start a fight by casting or praying.\n\r") % greenBold() % norm());
+        sendTo(COLOR_BASIC, format("You will now %sengage%s if you start a fight by casting or praying.\n\r") % greenBold() % norm());
         SET_BIT(desc->autobits, AUTO_ENGAGE);
       }
     }
   } else if (is_abbrev(arg, "engage-all") || is_abbrev(arg, "no-fight") || is_abbrev(arg, "engage-always") ) {
     if (IS_SET(desc->autobits, AUTO_ENGAGE_ALWAYS)) {
-      sendTo(COLOR_BASIC, fmt("You will now default to %sfighting back%s if attacked and when you cast.\n\r") % redBold() % norm());
+      sendTo(COLOR_BASIC, format("You will now default to %sfighting back%s if attacked and when you cast.\n\r") % redBold() % norm());
       sendTo("You are still free to engage rather than fight by using the engage command.\n\r");
       REMOVE_BIT(desc->autobits, AUTO_ENGAGE_ALWAYS);
     } else {
       if (IS_SET(desc->autobits, AUTO_ENGAGE)) {
         sendTo("You can not both auto engage and engage-all.\n\r");
       } else {
-        sendTo(COLOR_BASIC, fmt("You will now default to %sengaging%s if attacked and when you cast to start a fight.\n\r") % greenBold() % norm());
+        sendTo(COLOR_BASIC, format("You will now default to %sengaging%s if attacked and when you cast to start a fight.\n\r") % greenBold() % norm());
         sendTo("You are free to fight rather than engage by using the hit command in battle.\n\r");
         SET_BIT(desc->autobits, AUTO_ENGAGE_ALWAYS);
       }
@@ -1056,9 +1056,9 @@ void TBeing::doToggle(const char *arg2)
     }
   } else if (is_abbrev(arg, "nuke") && hasWizPower(POWER_TOGGLE)) {
     nuke_inactive_mobs = !nuke_inactive_mobs;
-    sendTo(fmt("Mobs in inactive zones are now %s.\n\r") % 
+    sendTo(format("Mobs in inactive zones are now %s.\n\r") % 
 	   (nuke_inactive_mobs ? "nuked" : "preserved"));
-    vlogf(LOG_MISC, fmt("%s has turned nuke mode %s.") %  getName() %
+    vlogf(LOG_MISC, format("%s has turned nuke mode %s.") %  getName() %
              (nuke_inactive_mobs ? "on" : "off"));
     unsigned int zone;
     for (zone = 1; zone < zone_table.size(); zone++) {
@@ -1069,7 +1069,7 @@ void TBeing::doToggle(const char *arg2)
      if(t==TOG_NONE)
 	    continue;
       
-      sendTo(COLOR_BASIC, fmt("%-17s : %s\n\r") %
+      sendTo(COLOR_BASIC, format("%-17s : %s\n\r") %
 	     toggleInfo[t]->name %
 	     toggleInfo[t]->descr);
     }
@@ -1087,12 +1087,12 @@ void TBeing::doToggle(const char *arg2)
       if(is_abbrev(arg, buf)){
 	      toggleInfo[t]->toggle = !toggleInfo[t]->toggle;
 
-	      sendTo(fmt("%s is now %s.\n\r") % 
+	      sendTo(format("%s is now %s.\n\r") % 
 	       toggleInfo[t]->name %
 	       (toggleInfo[t]->toggle ? "on" : "off"));
-	      vlogf(LOG_MISC, fmt("%s has turned %s %s") % getName() %
+	      vlogf(LOG_MISC, format("%s has turned %s %s") % getName() %
 	            toggleInfo[t]->name % on_or_off(toggleInfo[t]->toggle));
-	      vlogf(LOG_MISC, fmt("- %s") % toggleInfo[t]->descr);
+	      vlogf(LOG_MISC, format("- %s") % toggleInfo[t]->descr);
 
 	      if(t==TOG_CLIENTS)
 	        closeClientConnections(this);

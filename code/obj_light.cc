@@ -194,7 +194,7 @@ void TLight::lowCheck()
   for (i=0; i<MAX_OBJ_AFFECT;i++) {
     if (affected[i].location == APPLY_LIGHT) {
       if (!isLit())
-        vlogf(LOG_LOW,fmt("item %s was defined apply-light.") % getName());
+        vlogf(LOG_LOW,format("item %s was defined apply-light.") % getName());
     }
   }
 }
@@ -290,8 +290,8 @@ void TLight::describeObjectSpecifics(const TBeing *ch) const
   else {
     diff = (double) ((double) getCurBurn() /
             max(1.0, (double) getMaxBurn()));
-    ch->sendTo(COLOR_OBJECTS,fmt("%s looks refuelable.\n\r") % sstring(getName()).cap());
-    ch->sendTo(COLOR_OBJECTS, fmt("You can tell that %s has %s fuel left.\n\r") %
+    ch->sendTo(COLOR_OBJECTS,format("%s looks refuelable.\n\r") % sstring(getName()).cap());
+    ch->sendTo(COLOR_OBJECTS, format("You can tell that %s has %s fuel left.\n\r") %
 	       sstring(getName()).uncap() %
           ((diff == 0) ? "no" :
            ((diff < .20) ? "very little" :
@@ -397,7 +397,7 @@ void TLight::lightMe(TBeing *ch, silentTypeT silent)
     return;
   } else {
     ch->sendTo("Problems lighting object. Tell a god!\n\r");
-    vlogf(LOG_BUG, fmt("%s had problems lighting an object.") %  ch->getName());
+    vlogf(LOG_BUG, format("%s had problems lighting an object.") %  ch->getName());
     return;
   }
 }

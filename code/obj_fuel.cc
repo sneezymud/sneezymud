@@ -76,7 +76,7 @@ void TFuel::describeObjectSpecifics(const TBeing *ch) const
   if (getMaxFuel()) {
     diff = (double) ((double) getCurFuel() / (double) getMaxFuel());
     ch->sendTo(COLOR_OBJECTS,
-	       fmt("You can tell that %s has %s of its fuel left.\n\r") %
+	       format("You can tell that %s has %s of its fuel left.\n\r") %
 	       sstring(getName()).uncap() %
           ((diff < .20) ? "very little" : ((diff < .50) ? "some" :
           ((diff < .75) ? "a good bit of" : "almost all of its"))));
@@ -103,7 +103,7 @@ void TFuel::refuelMeFuel(TBeing *ch, TLight *lamp)
   use = min(use, getCurFuel());
 
   act("$n refuels $s $o.", TRUE, ch, lamp, 0, TO_ROOM);
-  ch->sendTo(fmt("You refuel your %s.\n\r") % fname(lamp->name));
+  ch->sendTo(format("You refuel your %s.\n\r") % fname(lamp->name));
 
   addToCurFuel(-use);
   lamp->addToCurBurn(use);
@@ -136,7 +136,7 @@ void TFuel::getFourValues(int *x1, int *x2, int *x3, int *x4) const
 void TFuel::lowCheck()
 {
   if (getCurFuel() > getMaxFuel())
-    vlogf(LOG_LOW,fmt("fuel %s had more current fuel than max.") %  getName());
+    vlogf(LOG_LOW,format("fuel %s had more current fuel than max.") %  getName());
 
   TObj::lowCheck();
 }

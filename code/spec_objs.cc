@@ -116,9 +116,9 @@ void obj_act(const char *message, const TThing *ch, const TObj *o, const TBeing 
     vlogf(LOG_PROC,"NULL obj in obj_act");
     return;
   }
-  buffer = fmt("$n's $o %s") % message;
+  buffer = format("$n's $o %s") % message;
   act(buffer, TRUE, ch, o, ch2, TO_ROOM, color);
-  buffer = fmt("Your $o %s") %message;
+  buffer = format("Your $o %s") %message;
   act(buffer, TRUE, ch, o, ch2, TO_CHAR, color);
 }
 
@@ -203,11 +203,11 @@ int ladder(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
     return FALSE;
 
   if (!vict->hasHands()) {
-    vict->sendTo(COLOR_OBJECTS, fmt("I'm afraid you need hands to climb %s.\n\r") % o->getName());
+    vict->sendTo(COLOR_OBJECTS, format("I'm afraid you need hands to climb %s.\n\r") % o->getName());
     return TRUE;
   }
   if (vict->bothArmsHurt()) {
-    vict->sendTo(COLOR_OBJECTS, fmt("I'm afraid you need working arms to climb %s.\n\r") % o->getName());
+    vict->sendTo(COLOR_OBJECTS, format("I'm afraid you need working arms to climb %s.\n\r") % o->getName());
     return TRUE;
   }
   if (vict->riding) {
@@ -301,7 +301,7 @@ int weatherArmor(TBeing *, cmdTypeT cmd, const char *, TObj *o, TObj *)
 
 int TObj::foodItemUsed(TBeing *ch, const char *)
 {
-  vlogf(LOG_LOW, fmt("Undefined item (%s) with special proc: foodItem") %  getName());
+  vlogf(LOG_LOW, format("Undefined item (%s) with special proc: foodItem") %  getName());
   act("Oily black smoke pours from $p as something goes wrong.",
       TRUE, ch, this, 0, TO_CHAR);
   act("Oily black smoke pours from $p as something goes wrong.",
@@ -897,7 +897,7 @@ int vending_machine2(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *o
       return TRUE;
     }
     else if (!(drinkobj = read_object(result, VIRTUAL))) {
-      vlogf(LOG_PROC, fmt("Damn vending machine couldn't read drink, obj %d.  DASH!!!") %  result);
+      vlogf(LOG_PROC, format("Damn vending machine couldn't read drink, obj %d.  DASH!!!") %  result);
       return TRUE;
     }
     else {
@@ -918,7 +918,7 @@ int dagger_of_death(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
 
   if (cmd == CMD_OBJ_STUCK_IN) {
     if (o->eq_stuck == WEAR_HEAD) {
-      vlogf(LOG_PROC, fmt("%s killed by ITEM:dagger-of-death at %s (%d)") % 
+      vlogf(LOG_PROC, format("%s killed by ITEM:dagger-of-death at %s (%d)") % 
             ch->getName() % ch->roomp->getName() % ch->inRoom());
 
       rc = ch->die(DAMAGE_NORMAL);
@@ -1011,11 +1011,11 @@ int pager(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *ob2)
       ch->sendTo("You must have it equipped to use it!\n\r");
     else if (job->isOn) {
       act("$n discretely turns off $s $o.", TRUE, ch, o, 0, TO_ROOM);
-      ch->sendTo(fmt("You turn off your %s, trying to be very discrete about it.\n\r") % fname(o->getName()));
+      ch->sendTo(format("You turn off your %s, trying to be very discrete about it.\n\r") % fname(o->getName()));
       job->isOn = FALSE;
     } else {
       act("$n turns on $s $o, causing it to beep obnoxiously....", FALSE, ch, o, 0, TO_ROOM);
-      ch->sendTo(fmt("You turn on your %s, producing a series of annoying beeps....\n\r") % fname(o->getName()));
+      ch->sendTo(format("You turn on your %s, producing a series of annoying beeps....\n\r") % fname(o->getName()));
       job->isOn = TRUE;
     }
     return TRUE;
@@ -1030,15 +1030,15 @@ int pager(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *ob2)
     strcpy(capbuf, tbob2->getName());
 
     if (t->hasColor())
-      t->sendTo(fmt("%s%s%s tells you %s\"%s\"%s % triggering your pager....\n\r") %             t->purple() % sstring(capbuf).cap() % t->norm() % t->cyan() % arg % t->norm());
+      t->sendTo(format("%s%s%s tells you %s\"%s\"%s % triggering your pager....\n\r") %             t->purple() % sstring(capbuf).cap() % t->norm() % t->cyan() % arg % t->norm());
     else if (t->vt100())
-      t->sendTo(fmt("%s%s%s tells you \"%s\" % triggering your pager....\n\r") %
+      t->sendTo(format("%s%s%s tells you \"%s\" % triggering your pager....\n\r") %
              t->bold() % sstring(capbuf).cap() % t->norm() % arg);
     else
-      t->sendTo(fmt("%s tells you \"%s\" % triggering your pager....\n\r") %
+      t->sendTo(format("%s tells you \"%s\" % triggering your pager....\n\r") %
               sstring(capbuf).cap() % arg);
 
-    tbob2->sendTo(COLOR_MOBS, fmt("You tell %s \"%s\".\n\r") % t->getName() % arg);
+    tbob2->sendTo(COLOR_MOBS, format("You tell %s \"%s\".\n\r") % t->getName() % arg);
 
     strcpy(capbuf, t->getName());
     act("$n looks startled as $s $o begins to beep!",
@@ -1264,7 +1264,7 @@ int caravan_wagon(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
       vlogf(LOG_PROC, "Problematic direction in CMD_OBJ_MOVEMENT");
       return FALSE;
     }
-    buf = fmt("$n rolls %s.") % dirs[dir];
+    buf = format("$n rolls %s.") % dirs[dir];
     act(buf, TRUE, me, 0, 0, TO_ROOM);
 
     rp2 = real_roomp(me->exitDir(dir)->to_room);
@@ -1272,7 +1272,7 @@ int caravan_wagon(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
     (*me)--;
     *rp2 += *me;
 
-    buf = fmt("$n rolls in from the %s.") % dirs[rev_dir[dir]];
+    buf = format("$n rolls in from the %s.") % dirs[rev_dir[dir]];
     act(buf, TRUE, me, 0, 0, TO_ROOM);
 
     return TRUE;
@@ -1319,9 +1319,9 @@ int goofersDust(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
       return FALSE;
     }
     if (::number(0,3) == 0) {
-      buf = fmt("As you moved %sward, you somehow tripped and fell down.") % dirs[dir];
+      buf = format("As you moved %sward, you somehow tripped and fell down.") % dirs[dir];
       act(buf, TRUE, ch, me, 0, TO_CHAR);
-      buf = fmt("$n trips and falls as $e moves in from a %sward direction.") % dirs[dir];
+      buf = format("$n trips and falls as $e moves in from a %sward direction.") % dirs[dir];
       act(buf, TRUE, ch, me, 0, TO_ROOM);
       ch->setPosition(POSITION_SITTING);
       delete me;
@@ -1338,7 +1338,7 @@ int goofersDust(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
 int bogusObjProc(TBeing *, cmdTypeT, const char *, TObj *me, TObj *)
 {
   if (me)
-    vlogf(LOG_PROC, fmt("WARNING:  %s is running around with a bogus spec_proc #%d") % 
+    vlogf(LOG_PROC, format("WARNING:  %s is running around with a bogus spec_proc #%d") % 
        me->getName() % me->spec);
   else
     vlogf(LOG_PROC, "WARNING: indeterminate obj has bogus spec_proc");
@@ -1373,7 +1373,7 @@ int bleedChair(TBeing *ch, cmdTypeT cmd, const char *, TObj *me, TObj *)
 
   ch->doSit(me->getName());
 
-  ch->sendTo(fmt("Ouch that %shurt!%s\n\r") % ch->red() % ch->norm());
+  ch->sendTo(format("Ouch that %shurt!%s\n\r") % ch->red() % ch->norm());
 
   if (slot >= MAX_WEAR) {
     // no slots to bleed...
@@ -1569,142 +1569,142 @@ int newbieHelperWProc(TBeing *vict, cmdTypeT cmd, const char *Parg, TObj *o, TOb
 
   Parg = one_argument(Parg, PargA, cElements(PargA));
   Parg = one_argument(Parg, Topic, cElements(Topic));
-  ch->sendTo(fmt("Newbie Weapon Info: %s %s\n\r") % PargA % Topic);
+  ch->sendTo(format("Newbie Weapon Info: %s %s\n\r") % PargA % Topic);
 
   switch (cmd) {
     case CMD_SAY:
       if (is_abbrev(PargA, "help"))
         if (!*Topic) {
-          ch->sendTo(fmt("%s: Hello %s.  I am a newbie helper weapon.\n\r") %
+          ch->sendTo(format("%s: Hello %s.  I am a newbie helper weapon.\n\r") %
                      o->getName() % ch->getName());
-          ch->sendTo(fmt("%s: I will lend assistance when you need it.\n\r") %
+          ch->sendTo(format("%s: I will lend assistance when you need it.\n\r") %
                      o->getName());
-          ch->sendTo(fmt("%s: This is how you use me:\n\r") %
+          ch->sendTo(format("%s: This is how you use me:\n\r") %
                      o->getName());
-          ch->sendTo(fmt("%s:      help ??? where ??? is one of the following:\n\r") %
+          ch->sendTo(format("%s:      help ??? where ??? is one of the following:\n\r") %
                      o->getName());
-          ch->sendTo(fmt("%s:  basics   : A basic helpfile to get your started.\n\r") %
+          ch->sendTo(format("%s:  basics   : A basic helpfile to get your started.\n\r") %
                      o->getName());
-          ch->sendTo(fmt("%s:  goto     : Covers the 'donation' command.\n\r") %
+          ch->sendTo(format("%s:  goto     : Covers the 'donation' command.\n\r") %
                      o->getName());
-          ch->sendTo(fmt("%s:  donation : Covers the donation room.\n\r") %
+          ch->sendTo(format("%s:  donation : Covers the donation room.\n\r") %
                      o->getName());
-          ch->sendTo(fmt("%s:  kill     : This covers the 'kill' command.\n\r") %
+          ch->sendTo(format("%s:  kill     : This covers the 'kill' command.\n\r") %
                      o->getName());
-          ch->sendTo(fmt("%s:  consider : This covers a very important command, 'consider'.\n\r") %
+          ch->sendTo(format("%s:  consider : This covers a very important command, 'consider'.\n\r") %
                      o->getName());
           return TRUE;
         } else {
           if (is_abbrev(Topic, "basics")) {
-            ch->sendTo(fmt("%s: The first command to get used to is 'help' without the say.\n\r") %
+            ch->sendTo(format("%s: The first command to get used to is 'help' without the say.\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s: The help command will cover most everything you need plus more.\n\r") %
+            ch->sendTo(format("%s: The help command will cover most everything you need plus more.\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s: You should have also gotten a newbie book.  To use this book:\n\r") %
+            ch->sendTo(format("%s: You should have also gotten a newbie book.  To use this book:\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s:   read newbie\n\r") %
+            ch->sendTo(format("%s:   read newbie\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s: If you get in a jam and need help that you can't seem to find.\n\r") %
+            ch->sendTo(format("%s: If you get in a jam and need help that you can't seem to find.\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s: Then do a:  who  and look for anyone with (Newbie-helper) to\n\r") %
+            ch->sendTo(format("%s: Then do a:  who  and look for anyone with (Newbie-helper) to\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s: the right of there name.  These people are here to help you learn\n\r") %
+            ch->sendTo(format("%s: the right of there name.  These people are here to help you learn\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s: and understand the mud.  If there is nobody on with that, then\n\r") %
+            ch->sendTo(format("%s: and understand the mud.  If there is nobody on with that, then\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s: use the  who  command and look for a friendly name.\n\r") %
+            ch->sendTo(format("%s: use the  who  command and look for a friendly name.\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s: Once you have a person you wish to ask, talk to them with:\n\r") %
+            ch->sendTo(format("%s: Once you have a person you wish to ask, talk to them with:\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s:   tell player_name what_to_ask\n\r") %
+            ch->sendTo(format("%s:   tell player_name what_to_ask\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s: Example:  tell mrfriendly Hi, i'm new here.  Can you help me?\n\r") %
+            ch->sendTo(format("%s: Example:  tell mrfriendly Hi, i'm new here.  Can you help me?\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s: There are certain communication rules which you should know:\n\r") %
+            ch->sendTo(format("%s: There are certain communication rules which you should know:\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s:   1. Please don't use all CAPITAL LETTERS.\n\r") %
+            ch->sendTo(format("%s:   1. Please don't use all CAPITAL LETTERS.\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s:   2. Please avoid profanity, try and keep it clean.\n\r") %
+            ch->sendTo(format("%s:   2. Please avoid profanity, try and keep it clean.\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s:   3. If you ask someone for help and they don't reply or choose\n\r") %
+            ch->sendTo(format("%s:   3. If you ask someone for help and they don't reply or choose\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s:      not to help you, please don't give repetive tells to them.\n\r") %
+            ch->sendTo(format("%s:      not to help you, please don't give repetive tells to them.\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s:   4. When you obtain level 2 and the shout command, please don't\n\r") %
+            ch->sendTo(format("%s:   4. When you obtain level 2 and the shout command, please don't\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s:      abuse it.  See  help shout  about this command and rules.\n\r") %
+            ch->sendTo(format("%s:      abuse it.  See  help shout  about this command and rules.\n\r") %
                        o->getName());
           } else if (is_abbrev(Topic, "donation")) {
-            ch->sendTo(fmt("%s: Surplus items are left here for others.\n\r") %
+            ch->sendTo(format("%s: Surplus items are left here for others.\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s: When taking from surplus please use these rules:\n\r") %
+            ch->sendTo(format("%s: When taking from surplus please use these rules:\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s:    1. Take only what you need and can use.\n\r") %
+            ch->sendTo(format("%s:    1. Take only what you need and can use.\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s:    2. Please don't take things from surplus then sell them.\n\r") %
+            ch->sendTo(format("%s:    2. Please don't take things from surplus then sell them.\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s:    3. If you take from surpluse, please put something back at\n\r") %
+            ch->sendTo(format("%s:    3. If you take from surpluse, please put something back at\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s:       a later date.\n\r") %
+            ch->sendTo(format("%s:       a later date.\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s: To get to donation, please use the  goto surplus  command.\n\r") %
+            ch->sendTo(format("%s: To get to donation, please use the  goto surplus  command.\n\r") %
                        o->getName());
           } else if (is_abbrev(Topic, "kill")) {
-            ch->sendTo(fmt("%s: You use this command to start a fight.  It is usually a good idea\n\r") %
+            ch->sendTo(format("%s: You use this command to start a fight.  It is usually a good idea\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s: to  consider  your target before attacking him.  And also a good\n\r") %
+            ch->sendTo(format("%s: to  consider  your target before attacking him.  And also a good\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s: idea to make sure you have all your equipment and any weapons you\n\r") %
+            ch->sendTo(format("%s: idea to make sure you have all your equipment and any weapons you\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s: may have equiped.  Also a good idea to have used any of your\n\r") %
+            ch->sendTo(format("%s: may have equiped.  Also a good idea to have used any of your\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s: practices you might have.\n\r") %
+            ch->sendTo(format("%s: practices you might have.\n\r") %
                        o->getName());
           } else if (is_abbrev(Topic, "consider")) {
-            ch->sendTo(fmt("%s: When you consider something the mud will tell you what your\n\r") %
+            ch->sendTo(format("%s: When you consider something the mud will tell you what your\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s: probable chances are at winning.  The consider command is not\n\r") %
+            ch->sendTo(format("%s: probable chances are at winning.  The consider command is not\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s: always accurate.  But it makes for a good idea of what level your\n\r") %
+            ch->sendTo(format("%s: always accurate.  But it makes for a good idea of what level your\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s: target is.\n\r") %
+            ch->sendTo(format("%s: target is.\n\r") %
                        o->getName());
           } else if (is_abbrev(Topic, "goto")) {
-            ch->sendTo(fmt("%s: While you're in Grimhaven you can use the goto command to get\n\r") %
+            ch->sendTo(format("%s: While you're in Grimhaven you can use the goto command to get\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s: to the more important places.  These are the more important ones:\n\r") %
+            ch->sendTo(format("%s: to the more important places.  These are the more important ones:\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s:    goto cs        : Center Square  [Food/Water]\n\r") %
+            ch->sendTo(format("%s:    goto cs        : Center Square  [Food/Water]\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s:    goto mail      : Post office    [MudMail/You have mail!]\n\r") %
+            ch->sendTo(format("%s:    goto mail      : Post office    [MudMail/You have mail!]\n\r") %
                        o->getName());
             if (!ch->hasClass(CLASS_MONK))
-            ch->sendTo(fmt("%s:    goto weapon    : Weapon Shop    [Swords/Daggers/Clubs]\n\r") %
+            ch->sendTo(format("%s:    goto weapon    : Weapon Shop    [Swords/Daggers/Clubs]\n\r") %
                        o->getName());
             if (!ch->hasClass(CLASS_MONK) && !ch->hasClass(CLASS_MAGE))
-            ch->sendTo(fmt("%s:    goto armor     : Armor Shop     [Metallic Armor]\n\r") %
+            ch->sendTo(format("%s:    goto armor     : Armor Shop     [Metallic Armor]\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s:    goto food      : Food Shop      [Provisions/Rations/Bread]\n\r") %
+            ch->sendTo(format("%s:    goto food      : Food Shop      [Provisions/Rations/Bread]\n\r") %
                        o->getName());
             if (ch->hasClass(CLASS_CLERIC) || ch->hasClass(CLASS_DEIKHAN))
-            ch->sendTo(fmt("%s:    goto symbol    : Symbol Shop    [Holy Symbols]\n\r") %
+            ch->sendTo(format("%s:    goto symbol    : Symbol Shop    [Holy Symbols]\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s:    goto commodity : Commodity Shop [bits of tin/ingots of copper]\n\r") %
+            ch->sendTo(format("%s:    goto commodity : Commodity Shop [bits of tin/ingots of copper]\n\r") %
                        o->getName());
             if (ch->hasClass(CLASS_MAGE) || ch->hasClass(CLASS_RANGER))
-            ch->sendTo(fmt("%s:    goto component : Component Shop [Mage Spell Components]\n\r") %
+            ch->sendTo(format("%s:    goto component : Component Shop [Mage Spell Components]\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s:    goto doctor    : Doctor         [Heal bleeding Wounds]\n\r") %
+            ch->sendTo(format("%s:    goto doctor    : Doctor         [Heal bleeding Wounds]\n\r") %
                        o->getName());
             if (ch->hasClass(CLASS_CLERIC) || ch->hasClass(CLASS_DEIKHAN))
-            ch->sendTo(fmt("%s:    goto attuner   : Attuner        [Makes Holy Symbols Usable]\n\r") %
+            ch->sendTo(format("%s:    goto attuner   : Attuner        [Makes Holy Symbols Usable]\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s:    goto tanner    : Tanning Shop   [Leather Armor]\n\r") %
+            ch->sendTo(format("%s:    goto tanner    : Tanning Shop   [Leather Armor]\n\r") %
                        o->getName());
-            ch->sendTo(fmt("%s:    goto surplus   : Donation Room  [Surplus Items]\n\r") %
+            ch->sendTo(format("%s:    goto surplus   : Donation Room  [Surplus Items]\n\r") %
                        o->getName());
             if (ch->GetMaxLevel() < 2)
-            ch->sendTo(fmt("%s:    goto park      : Newbie Area    [Basic area for newbies]\n\r") %
+            ch->sendTo(format("%s:    goto park      : Newbie Area    [Basic area for newbies]\n\r") %
                        o->getName());
           } else return FALSE; // He didn't call on us for help, maybe another player?
           return TRUE; // If we got here, we had a topic so lets eat the command.
@@ -1712,31 +1712,31 @@ int newbieHelperWProc(TBeing *vict, cmdTypeT cmd, const char *Parg, TObj *o, TOb
       return FALSE;
     case CMD_LIST:
       if (!*Topic) {
-        ch->sendTo(fmt("%s: You should use one of the following when using the list command:\n\r") %
+        ch->sendTo(format("%s: You should use one of the following when using the list command:\n\r") %
                    o->getName());
-        ch->sendTo(fmt("%s: list fit    : To list only that which will fit you.\n\r") %
+        ch->sendTo(format("%s: list fit    : To list only that which will fit you.\n\r") %
                          o->getName());
-        ch->sendTo(fmt("%s: list <slot> : To list armor by worn location\n\r") %
+        ch->sendTo(format("%s: list <slot> : To list armor by worn location\n\r") %
                          o->getName());
-        ch->sendTo(fmt("%s:   head, neck, body, back, arm, wrist, hand, waist, leg, feet, finger\n\r") %
+        ch->sendTo(format("%s:   head, neck, body, back, arm, wrist, hand, waist, leg, feet, finger\n\r") %
                          o->getName());
-        ch->sendTo(fmt("%s: list #1 #2: To list armor which cost no more than #2 but at least #1\n\r") %
+        ch->sendTo(format("%s: list #1 #2: To list armor which cost no more than #2 but at least #1\n\r") %
                          o->getName());
-        ch->sendTo(fmt("%s: And when buying, always be careful not to exceed your rent limit.\n\r") %
+        ch->sendTo(format("%s: And when buying, always be careful not to exceed your rent limit.\n\r") %
                          o->getName());
       }
       return FALSE;
     case CMD_CONSIDER:
       if (!*Topic) {
-        ch->sendTo(fmt("%s: It is very important to understand what this command tells you.\n\r") %
+        ch->sendTo(format("%s: It is very important to understand what this command tells you.\n\r") %
                          o->getName());
-        ch->sendTo(fmt("%s: If the outcome looks bad, you might not want to try it.  But always\n\r") %
+        ch->sendTo(format("%s: If the outcome looks bad, you might not want to try it.  But always\n\r") %
                          o->getName());
-        ch->sendTo(fmt("%s: be wary no matter how easy a target may look.\n\r") %
+        ch->sendTo(format("%s: be wary no matter how easy a target may look.\n\r") %
                          o->getName());
-        ch->sendTo(fmt("%s: You can even consider yourself to get an idea of how good/bad your\n\r") %
+        ch->sendTo(format("%s: You can even consider yourself to get an idea of how good/bad your\n\r") %
                          o->getName());
-        ch->sendTo(fmt("%s: own armor is at the moment for your level.\n\r") %
+        ch->sendTo(format("%s: own armor is at the moment for your level.\n\r") %
                          o->getName());
         sprintf(buf, "consider %s", ch->getName());
         ch->addCommandToQue(buf);
@@ -1807,7 +1807,7 @@ int teleportingObject(TBeing *, cmdTypeT cmd, const char *arg, TObj *o, TObj *){
   if(!tp->roomp)
     return FALSE;
 
-  tp->roomp->sendTo(COLOR_BASIC, fmt("%s flares up brightly and disappears.\n\r") %
+  tp->roomp->sendTo(COLOR_BASIC, format("%s flares up brightly and disappears.\n\r") %
 		    sstring(o->getName()).cap());
   
   rc = o->genericTeleport(SILENT_YES, FALSE);
@@ -2143,12 +2143,12 @@ int squirtGun(TBeing *vict, cmdTypeT cmd, const char *Parg, TObj *o, TObj *)
       ch->dropPool(shot, gun->getDrinkType());
       
       /*act("<1>You squeeze the trigger on your $p.",TRUE,ch,gun,squirtee,TO_CHAR,NULL);
-	ch->sendTo(COLOR_OBJECTS, fmt("A deadly stream of %s squirts at %s!\n\r") %liqname % squirtee->getName());
+	ch->sendTo(COLOR_OBJECTS, format("A deadly stream of %s squirts at %s!\n\r") %liqname % squirtee->getName());
 	act("<1>$n squeezes the trigger on $s $p, shooting a deadly stream of liquid at $N!"
 	,TRUE,ch,gun,squirtee,TO_NOTVICT,NULL);
 	
 	act("<1>$n squeezes the trigger on $s $p.",TRUE,ch,gun,squirtee,TO_VICT,NULL);
-	squirtee->sendTo(COLOR_OBJECTS, fmt("A deadly stream of %s squirts at you!\n\r") %liqname);
+	squirtee->sendTo(COLOR_OBJECTS, format("A deadly stream of %s squirts at you!\n\r") %liqname);
       */
       char Buf[256];
       sprintf(Buf, "You squeeze the trigger on $p, squirting a deadly stream of %s at $N!", liqname.c_str());
@@ -2252,7 +2252,7 @@ int keyInKnife(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     return FALSE;
  
   if (!(key = read_object(17211, VIRTUAL))) {
-    vlogf(LOG_PROC, fmt("Key in Knife -- bad read of object (%s)") %  ch->getName());
+    vlogf(LOG_PROC, format("Key in Knife -- bad read of object (%s)") %  ch->getName());
     return FALSE;
   }
  
@@ -2304,7 +2304,7 @@ int teleportVial(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     --(*ch);
     delete o;  
     *newRoom += *ch;
-    vlogf(LOG_PROC, fmt("TELEPORT VIAL: %s transfered to room #%d") %  ch->getName() % targetroom);
+    vlogf(LOG_PROC, format("TELEPORT VIAL: %s transfered to room #%d") %  ch->getName() % targetroom);
     act("$n appears in the room with a puff of smoke.<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
     ch->doLook("", CMD_LOOK);
     ch->addToWait(combatRound(2));
@@ -3180,7 +3180,7 @@ int switchtrack(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
       else if(is_abbrev(arg2, "south") || is_abbrev(arg2, "s")) {
 	strcpy(arg2,"southern");
 	if(isname("switchtrackdoswitch", myself->getName())) {
-	  ch->sendTo(fmt("The switchtrack is already aligned with the %s fork.") % arg2);
+	  ch->sendTo(format("The switchtrack is already aligned with the %s fork.") % arg2);
 	  return TRUE;
 	}
 	strcpy(myself->name, "switchtracks tracks switchtrackdoswitch");
@@ -3188,7 +3188,7 @@ int switchtrack(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
       else if(is_abbrev(arg2, "southwest") || is_abbrev(arg2, "se")) {
 	strcpy(arg2,"southwestern");
 	if(isname("switchtrackdontswitch", myself->getName())) {
-	  ch->sendTo(fmt("The switchtrack is already aligned with the %s fork.") % arg2);
+	  ch->sendTo(format("The switchtrack is already aligned with the %s fork.") % arg2);
 	  return TRUE;
 	}
 	strcpy(myself->name, "switchtracks tracks switchtrackdontswitch");
@@ -3204,7 +3204,7 @@ int switchtrack(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
       else if(is_abbrev(arg2, "east") || is_abbrev(arg2, "e")) {
 	strcpy(arg2,"eastern");
 	if(isname("switchtrackdoswitch", myself->getName())) {
-	  ch->sendTo(fmt("The switchtrack is already aligned with the %s fork.") % arg2);
+	  ch->sendTo(format("The switchtrack is already aligned with the %s fork.") % arg2);
 	  return TRUE;
 	}
 	strcpy(myself->name, "switchtracks tracks switchtrackdoswitch");
@@ -3212,7 +3212,7 @@ int switchtrack(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
       else if(is_abbrev(arg2, "south") || is_abbrev(arg2, "s")) {
 	strcpy(arg2,"southern");
 	if (isname("switchtrackdontswitch", myself->getName())) {
-	  ch->sendTo(fmt("The switchtrack is already aligned with the %s fork.") % arg2);
+	  ch->sendTo(format("The switchtrack is already aligned with the %s fork.") % arg2);
 	  return TRUE;
 	}
 	strcpy(myself->name, "switchtracks tracks switchtrackdontswitch");  
@@ -3228,7 +3228,7 @@ int switchtrack(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
       else if(is_abbrev(arg2, "east") || is_abbrev(arg2, "e")) {
 	strcpy(arg2,"eastern");
 	if(isname("switchtrackdoswitch", myself->getName())) {
-	  ch->sendTo(fmt("The switchtrack is already aligned with the %s fork.") % arg2);
+	  ch->sendTo(format("The switchtrack is already aligned with the %s fork.") % arg2);
 	  return TRUE;
 	}
 	strcpy(myself->name, "switchtracks tracks switchtrackdoswitch");
@@ -3236,7 +3236,7 @@ int switchtrack(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
       else if(is_abbrev(arg2, "north") || is_abbrev(arg2, "n")) {
 	strcpy(arg2,"northern");
 	if(isname("switchtrackdontswitch", myself->getName())) {
-	  ch->sendTo(fmt("The switchtrack is already aligned with the %s fork.") % arg2);
+	  ch->sendTo(format("The switchtrack is already aligned with the %s fork.") % arg2);
 	  return TRUE;
 	}
 	strcpy(myself->name, "switchtracks tracks switchtrackdontswitch");
@@ -3248,7 +3248,7 @@ int switchtrack(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
       break;
     default:
       ch->sendTo("Uh. This switchtrack shouldn't be here. Tell a god or something?");
-      //      vlogf(LOG_PROC, fmt("%s tried to operate a switchtrack (%d) in room with no switchtrack code (%d)") % 
+      //      vlogf(LOG_PROC, format("%s tried to operate a switchtrack (%d) in room with no switchtrack code (%d)") % 
       //	    ch->getName() % myself->objVnum % where);
     }
     sprintf(buf,"<k>You force the $o into alignment with the %s tunnel.<1>",arg2);
@@ -3558,17 +3558,17 @@ int permaDeathMonument(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj
   int i=1;
   while(i<=25){
     if(db_living.fetchRow()){
-      ch->sendTo(COLOR_BASIC, fmt("%2s| %-13s | ") %
+      ch->sendTo(COLOR_BASIC, format("%2s| %-13s | ") %
 		 db_living["level"] % db_living["name"]);
     } else {
-      ch->sendTo(COLOR_BASIC, fmt(" 0) %-13s | ") % "no one");
+      ch->sendTo(COLOR_BASIC, format(" 0) %-13s | ") % "no one");
     }
 
     if(db_dead.fetchRow()){
-      ch->sendTo(COLOR_BASIC, fmt("%2s| %-13s killed by %s.\n\r")%
+      ch->sendTo(COLOR_BASIC, format("%2s| %-13s killed by %s.\n\r")%
 		 db_dead["level"] % db_dead["name"] % db_dead["killer"]);
     } else {
-      ch->sendTo(COLOR_BASIC, fmt(" 0) %-13s\n\r") % "no one");
+      ch->sendTo(COLOR_BASIC, format(" 0) %-13s\n\r") % "no one");
     }
 
     ++i;
@@ -3648,7 +3648,7 @@ int trophyBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
       is_me2=true;
     }
 
-    ch->sendTo(COLOR_BASIC, fmt("%2i) %s%-13s<1> - %i (%3d%c) | %2i) %s%-13s<1> - %i (%3d%c)\n\r") % 
+    ch->sendTo(COLOR_BASIC, format("%2i) %s%-13s<1> - %i (%3d%c) | %2i) %s%-13s<1> - %i (%3d%c)\n\r") % 
 	       i % 
 	       (is_me1?"<r>":"") %
 	       db["name"] % 
@@ -3667,21 +3667,21 @@ int trophyBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
     if(!found1){
       db.query("select p.name, t.count, t.player_id from player p, trophyplayer t where t.player_id=p.id and p.id=%i", ch->getPlayerID());
       if(db.fetchRow()){
-	ch->sendTo(COLOR_BASIC, fmt("XX) <r>%-13s<1> - %i (%3d%c) ") % 
+	ch->sendTo(COLOR_BASIC, format("XX) <r>%-13s<1> - %i (%3d%c) ") % 
 		   db["name"] % 
 		   convertTo<int>(db["count"]) % 
 		   (int)(((float)convertTo<int>(db["count"])/(float)activemobcount)*100) % '%');
       } else {
-	ch->sendTo(COLOR_BASIC, fmt("                                "));   
+	ch->sendTo(COLOR_BASIC, "                                ");   
       }
     } else {
-      ch->sendTo(COLOR_BASIC, fmt("                                "));
+      ch->sendTo(COLOR_BASIC, "                                ");
     }
 
     if(!found2){
       db2.query("select p.name, t.total, t.player_id from player p, trophyplayer t where t.player_id=p.id and t.total is not null and p.id=%i", ch->getPlayerID());
       if(db2.fetchRow()){
-	ch->sendTo(COLOR_BASIC, fmt("| XX) %s%-13s<1> - %i (%3d%c)\n\r") % 
+	ch->sendTo(COLOR_BASIC, format("| XX) %s%-13s<1> - %i (%3d%c)\n\r") % 
 		   (!found2?"<r>":"") %
 		   db2["name"] % (int)(convertTo<float>(db2["total"])) %
 		   (int)((convertTo<float>(db2["total"])/mostkilled)*100) % '%');
@@ -3732,7 +3732,7 @@ int highrollersBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *
 
   int i=1;
   while(db.fetchRow()){
-    ch->sendTo(COLOR_BASIC, fmt("%i) %s has won %s talens!\n\r") % 
+    ch->sendTo(COLOR_BASIC, format("%i) %s has won %s talens!\n\r") % 
 	       i % db["name"] % db["money"]);
     ++i;
   }
@@ -3743,7 +3743,7 @@ int highrollersBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *
 
   i=1;
   while(db.fetchRow()){
-    ch->sendTo(COLOR_BASIC, fmt("%i) %s has lost %i talens.\n\r") % 
+    ch->sendTo(COLOR_BASIC, format("%i) %s has lost %i talens.\n\r") % 
 	       i % db["name"] % abs(convertTo<int>(db["money"])));
     ++i;
   }
@@ -3799,7 +3799,7 @@ int shopinfoBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
   if(db.fetchRow())
     nowned=convertTo<int>(db["count"]);
     
-  ch->sendTo(fmt("There are %i shops, %i of which are privately owned.\n\r") %
+  ch->sendTo(format("There are %i shops, %i of which are privately owned.\n\r") %
 	     nshops % nowned);
 
   ////////////////////////////
@@ -3807,7 +3807,7 @@ int shopinfoBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
   db.query("select count(*) as count from shopowned where gold<100000");
 
   if(db.fetchRow())
-    ch->sendTo(fmt("%s shops have less than 100000 talens.\n\r") % db["count"]);
+    ch->sendTo(format("%s shops have less than 100000 talens.\n\r") % db["count"]);
 
 
   /////////////////////////////
@@ -3815,7 +3815,7 @@ int shopinfoBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
   db.query("select round(avg(gold)) as gold from shopowned");
 
   if(db.fetchRow())
-    ch->sendTo(fmt("Average talens per shop is %s.\n\r") % db["gold"]);
+    ch->sendTo(format("Average talens per shop is %s.\n\r") % db["gold"]);
   
   ////////////////////////////
   // top ten shops
@@ -3826,7 +3826,7 @@ int shopinfoBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
   ch->sendTo("\n\rThe ten wealthiest shops are:\n\r");
   while(db.fetchRow()){
     if((tr=real_roomp(convertTo<int>(db["in_room"])))){
-      ch->sendTo(COLOR_BASIC, fmt("%i) %s with %s talens.\n\r") %
+      ch->sendTo(COLOR_BASIC, format("%i) %s with %s talens.\n\r") %
 		 i % tr->getName() % db["gold"]);
     }
     ++i;
@@ -3838,16 +3838,16 @@ int shopinfoBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
   ch->sendTo("\n\rThe number of shops that deal in each commodity are:\n\r");
   
   while(db.fetchRow()){
-    ch->sendTo(fmt("[%2s] %-17s   ") %
+    ch->sendTo(format("[%2s] %-17s   ") %
 	       db["count"] % ItemInfo[convertTo<int>(db["type"])]->name);
 
     if(db.fetchRow()){
-      ch->sendTo(fmt("[%2s] %-17s   ") %
+      ch->sendTo(format("[%2s] %-17s   ") %
 		 db["count"] % ItemInfo[convertTo<int>(db["type"])]->name);
     }
 
     if(db.fetchRow()){
-      ch->sendTo(fmt("[%2s] %-17s   ") %
+      ch->sendTo(format("[%2s] %-17s   ") %
 		 db["count"] % ItemInfo[convertTo<int>(db["type"])]->name);
     }
 
@@ -3892,7 +3892,7 @@ int brickScorecard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2
   int i=1;
   while(i<=25){
     if(db_brickquest.fetchRow()){
-      ch->sendTo(COLOR_BASIC, fmt("%s has %s bricks collected so far.\r\n") %
+      ch->sendTo(COLOR_BASIC, format("%s has %s bricks collected so far.\r\n") %
 		 db_brickquest["name"] % db_brickquest["numbricks"]);
     }
     ++i;
@@ -4315,7 +4315,7 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
 
   for(int i=0;i<=2;++i){
     // faction header
-    ch->sendTo(fmt("%s\n\r") % FactionInfo[factionNumber(factnames[i])].faction_name);
+    ch->sendTo(format("%s\n\r") % FactionInfo[factionNumber(factnames[i])].faction_name);
 
 #if 0
     // get the number of members, we use this in a few places
@@ -4339,7 +4339,7 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
     }
     score=score/10; // scale down a bit
 
-    ch->sendTo(COLOR_BASIC, fmt("<g>[<1>%3i<g>]<1> average level\n\r") % score);
+    ch->sendTo(COLOR_BASIC, format("<g>[<1>%3i<g>]<1> average level\n\r") % score);
     totalscore+=score;
 
 
@@ -4362,7 +4362,7 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
     }
 
     
-    ch->sendTo(COLOR_BASIC, fmt("<g>[<1>%3i<g>]<1> pounds of fish caught and number of records\n\r") % score);
+    ch->sendTo(COLOR_BASIC, format("<g>[<1>%3i<g>]<1> pounds of fish caught and number of records\n\r") % score);
     totalscore+=score;
 
 
@@ -4380,7 +4380,7 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
     }
     score /= 10000;
 
-    ch->sendTo(COLOR_BASIC, fmt("<g>[<1>%3i<g>]<1> average trophy percentage\n\r") % score);
+    ch->sendTo(COLOR_BASIC, format("<g>[<1>%3i<g>]<1> average trophy percentage\n\r") % score);
     totalscore+=score;
 
 
@@ -4392,7 +4392,7 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
     if(db.fetchRow()){
       score=convertTo<int>(db["count"])*10;
 
-      ch->sendTo(COLOR_BASIC, fmt("<g>[<1>%3i<g>]<1> shops owned by faction members\n\r") % 
+      ch->sendTo(COLOR_BASIC, format("<g>[<1>%3i<g>]<1> shops owned by faction members\n\r") % 
 		 score);
       totalscore+=score;
     }
@@ -4402,14 +4402,14 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
 
     // faction bank account
     score=(int)(FactionInfo[factionNumber(factnames[i])].getMoney()/100000.0);
-    ch->sendTo(COLOR_BASIC, fmt("<g>[<1>%3i<g>]<1> faction wealth\n\r") % score);
+    ch->sendTo(COLOR_BASIC, format("<g>[<1>%3i<g>]<1> faction wealth\n\r") % score);
     totalscore+=score;
 
 
 
 
     // total score
-    ch->sendTo(COLOR_BASIC, fmt("<g>[<R>%3i<1><g>]<1> total score\n\r") % totalscore);
+    ch->sendTo(COLOR_BASIC, format("<g>[<R>%3i<1><g>]<1> total score\n\r") % totalscore);
 
     // end of faction
     ch->sendTo("\n\r\n\r");
@@ -4537,7 +4537,7 @@ int starfiresheath(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
 	    *ch2->roomp += *ch2->unequip(sword->eq_pos);
 	  } else {
-	    vlogf(LOG_BUG, fmt("starfire proc trying to unequip %s in slot -1 on %s") %  sword->getName() %
+	    vlogf(LOG_BUG, format("starfire proc trying to unequip %s in slot -1 on %s") %  sword->getName() %
 		  sword->equippedBy->getName());
 	    return FALSE;
 	  }
@@ -4840,7 +4840,7 @@ int mobSpawnOpen(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
     if (!cont->isContainerFlag(CONT_CLOSED)) 
     {
       cont->addContainerFlag(CONT_CLOSED);
-      o->roomp->sendTo(COLOR_BASIC, fmt("The %s slams shut.\n\r") % o->name);
+      o->roomp->sendTo(COLOR_BASIC, format("The %s slams shut.\n\r") % o->name);
     }
     return FALSE;
   }
@@ -4915,9 +4915,9 @@ int energyShield(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *weapon)
     else if ( newcharge / 100 <= 9) buf="<g>green";
     else buf="<c>blue";
     
-    buf2 = fmt("The display panel on your $o glows %s<1> as it reads %d0%c.") % buf % (newcharge/100) % '%';
+    buf2 = format("The display panel on your $o glows %s<1> as it reads %d0%c.") % buf % (newcharge/100) % '%';
     act(buf2,TRUE,ch,generator,NULL,TO_CHAR,NULL);
-    buf2 = fmt("The display panel on $n's $o glows %s<1>.") % buf;
+    buf2 = format("The display panel on $n's $o glows %s<1>.") % buf;
     act(buf2,TRUE,ch,generator,NULL, TO_ROOM,NULL);
   }
   
@@ -5005,10 +5005,10 @@ int energyShieldGenerator(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TOb
 	  
 	  ch->equipChar(shield, il);
 	  
-	  buf2 = fmt("Your %s is surrounded by a crackling blue aura.") % ch->describeBodySlot((wearSlotT)il);
+	  buf2 = format("Your %s is surrounded by a crackling blue aura.") % ch->describeBodySlot((wearSlotT)il);
 	  
 	  act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-	  buf2 = fmt("$n's %s is surrounded by a crackling blue aura.") % ch->describeBodySlot((wearSlotT)il);
+	  buf2 = format("$n's %s is surrounded by a crackling blue aura.") % ch->describeBodySlot((wearSlotT)il);
 	  
 	  act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
 	  
@@ -5024,9 +5024,9 @@ int energyShieldGenerator(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TOb
       else if ( newcharge / 100 <= 9) buf="<g>green";
       else buf="<c>blue";
       
-      buf2 = fmt("The display panel on your $o glows %s<1> as it reads %d0%c.") % buf % (newcharge/100) % '%';
+      buf2 = format("The display panel on your $o glows %s<1> as it reads %d0%c.") % buf % (newcharge/100) % '%';
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      buf2 = fmt("The display panel on $n's $o glows %s<1>.") % buf;
+      buf2 = format("The display panel on $n's $o glows %s<1>.") % buf;
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
       
     }
@@ -5052,11 +5052,11 @@ int energyShieldGenerator(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TOb
       act("$n presses the display button on $p.",TRUE,ch,o,NULL, TO_ROOM,NULL);
 
 
-      buf2 = fmt("The display panel on your $o glows %s<1> as it reads %d%c.") % buf % (charge/10) % '%';
+      buf2 = format("The display panel on your $o glows %s<1> as it reads %d%c.") % buf % (charge/10) % '%';
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      buf2 = fmt("The display panel on $n's $o glows %s<1>.") % buf;
+      buf2 = format("The display panel on $n's $o glows %s<1>.") % buf;
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
-      buf2 = fmt("The power LED on your $o is currently %s<1>.") % (isOn ? "<g>on<1>" : "<r>off<1>");
+      buf2 = format("The power LED on your $o is currently %s<1>.") % (isOn ? "<g>on<1>" : "<r>off<1>");
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
 
       
@@ -5077,7 +5077,7 @@ int energyShieldGenerator(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TOb
 	isOn = 1;
       }
 
-      buf2 = fmt("The power LED on your $o turns %s<1>.") % (isOn ? "<g>on<1>" : "<r>off<1>");
+      buf2 = format("The power LED on your $o turns %s<1>.") % (isOn ? "<g>on<1>" : "<r>off<1>");
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
 
       sprintf(o->name, "generator shield belt [on=%d] [charge=%d]", isOn, charge);
@@ -5138,19 +5138,19 @@ int stimPack(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TObj *weapon)
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
       buf2="A panel on $n's <W>forearm guard<1> flips open, revealing a row of lights.";
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
-      buf2 = fmt("The light representing the first stim is %s.") % (charge >= 1000 ? "<B>lit<1>" : "<k>dim<1>");
+      buf2 = format("The light representing the first stim is %s.") % (charge >= 1000 ? "<B>lit<1>" : "<k>dim<1>");
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      buf2 = fmt("The light representing the second stim is %s.") % (charge >= 800 ? "<C>lit<1>" : "<k>dim<1>");
+      buf2 = format("The light representing the second stim is %s.") % (charge >= 800 ? "<C>lit<1>" : "<k>dim<1>");
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      buf2 = fmt("The light representing the third stim is %s.") % (charge >= 600 ? "<G>lit<1>" : "<k>dim<1>");
+      buf2 = format("The light representing the third stim is %s.") % (charge >= 600 ? "<G>lit<1>" : "<k>dim<1>");
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      buf2 = fmt("The light representing the fourth stim is %s.") % (charge >= 400 ? "<Y>lit<1>" : "<k>dim<1>");
+      buf2 = format("The light representing the fourth stim is %s.") % (charge >= 400 ? "<Y>lit<1>" : "<k>dim<1>");
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      buf2 = fmt("The light representing the fifth stim is %s.") % (charge >= 200 ? "<R>lit<1>" : "<k>dim<1>");
+      buf2 = format("The light representing the fifth stim is %s.") % (charge >= 200 ? "<R>lit<1>" : "<k>dim<1>");
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
       buf2="$n glances quickly at the panel before flipping it closed again.";
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
-      buf2 = fmt("The charging LED on your <W>forearm guard<1> is currently %s<1>.") % (isOn ? "<P>on<1>" : "<k>off<1>");
+      buf2 = format("The charging LED on your <W>forearm guard<1> is currently %s<1>.") % (isOn ? "<P>on<1>" : "<k>off<1>");
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
       buf2="You quickly flip the display panel closed again.";
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
@@ -5218,9 +5218,9 @@ int stimPack(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TObj *weapon)
         isOn = 1;
       }
 
-      buf2 = fmt("The charging LED on your $o turns %s<1>.") % (isOn ? "<P>on<1>" : "<k>off<1>");
+      buf2 = format("The charging LED on your $o turns %s<1>.") % (isOn ? "<P>on<1>" : "<k>off<1>");
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      buf2 = fmt("A little %s on $n's <W>forearm guard<1> %s.") %
+      buf2 = format("A little %s on $n's <W>forearm guard<1> %s.") %
 	(isOn ? "<k>light<1>" : "<P>light<1>") % 
 	(isOn ? "turns <P>on<1>" : "goes <k>out<1>");
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
@@ -5347,14 +5347,14 @@ int finnsGaff(TBeing *, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     if(!isname("caughtfish", fish->name))
       return false;
 
-    buf = fmt("$n points $p at %s.") % fish->shortDescr;
+    buf = format("$n points $p at %s.") % fish->shortDescr;
     act(buf,TRUE,ch,o,NULL, TO_ROOM,NULL);
-    buf = fmt("You point $p at %s.") % fish->shortDescr;
+    buf = format("You point $p at %s.") % fish->shortDescr;
     act(buf,TRUE,ch,o,NULL, TO_CHAR,NULL);
 
-    buf = fmt("$p makes panicked fishy noises as its lifeforce is absorbed by %s!") % o->shortDescr;
+    buf = format("$p makes panicked fishy noises as its lifeforce is absorbed by %s!") % o->shortDescr;
     act(buf, TRUE,ch,fish,NULL,TO_ROOM,NULL);
-    buf = fmt("$p makes panicked fishy noises as its lifeforce is absorbed by %s!") % o->shortDescr;
+    buf = format("$p makes panicked fishy noises as its lifeforce is absorbed by %s!") % o->shortDescr;
     act(buf, TRUE,ch,fish,NULL,TO_CHAR,NULL);
 
 
@@ -5474,9 +5474,9 @@ int fortuneCookie(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
   // there is a memory leak here, o is just left hanging
   // returning DELETE_ITEM doesn't work as it should.
 
-  buf = fmt("$n tears open $p and pulls out %s.") % fortune->shortDescr;
+  buf = format("$n tears open $p and pulls out %s.") % fortune->shortDescr;
   act(buf,TRUE,ch,cookie,NULL, TO_ROOM,NULL);
-  buf = fmt("You tear open $p and pull out %s.") % fortune->shortDescr;
+  buf = format("You tear open $p and pull out %s.") % fortune->shortDescr;
   act(buf,TRUE,ch,cookie,NULL, TO_CHAR,NULL);
 
   return DELETE_ITEM;
@@ -5639,14 +5639,14 @@ int statueArmTwist(TBeing *me, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   TObj *packet = NULL;
   if (buf.word(0) == "arm" && buf.word(1) == "off") {
     if (!(packet = read_object(15969, VIRTUAL))) {
-      vlogf(LOG_PROC, fmt("Error reading object 15969 in proc statueArmTwist"));
+      vlogf(LOG_PROC, "Error reading object 15969 in proc statueArmTwist");
       return TRUE;
     }
     act("You manage to move the arm of the statue a bit.", TRUE, me, o, 0, TO_CHAR);
     act("$n fiddles with the arm of the statue.", TRUE, me, o, 0, TO_ROOM);
-    act(fmt("%s falls out of the join between the arm and the statue.") % 
+    act(format("%s falls out of the join between the arm and the statue.") % 
         packet->getName(), TRUE, me, o, 0, TO_CHAR);
-    act(fmt("%s falls out of the join between the arm and the statue.") % 
+    act(format("%s falls out of the join between the arm and the statue.") % 
         packet->getName(), TRUE, me, o, 0, TO_ROOM);
     *me->roomp += *packet;
     act("The statue was not well made and starts to crumble as you watch.", TRUE, me, 0, 0, TO_CHAR);
@@ -5807,7 +5807,7 @@ int skittishObject (TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 			}
 			
 			if (!possible_exits.size()){
-				msg = fmt("$p spins around in a circle.");
+				msg = format("$p spins around in a circle.");
 				act(msg, FALSE, o, o, 0, TO_ROOM);
 				return FALSE;
 			}
@@ -5822,16 +5822,16 @@ int skittishObject (TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
       if (rp2->isFlyingSector()
           || rp2->isUnderwaterSector()
           || rp2->isAirSector()) {
-				msg = fmt("$p spins around in a circle.");
+				msg = format("$p spins around in a circle.");
 				act(msg, FALSE, o, o, 0, TO_ROOM);
 				return FALSE;
       }
       
 			// movement out of room
 			if (o->roomp->isWaterSector()){
-				msg = fmt("$p swims %s.") % dirs[use_dir];
+				msg = format("$p swims %s.") % dirs[use_dir];
 			} else {
-				msg = fmt("$p skitters %s.") % dirs[use_dir];
+				msg = format("$p skitters %s.") % dirs[use_dir];
 			}
 			act(msg, FALSE, o, o, 0, TO_ROOM);
 			
@@ -5840,9 +5840,9 @@ int skittishObject (TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 			
 			// movement into room
 			if (o->roomp->isWaterSector() || o->roomp->isUnderwaterSector()){
-				msg = fmt("$p swims in from the %s.") % dirs[rev_dir[use_dir]];
+				msg = format("$p swims in from the %s.") % dirs[rev_dir[use_dir]];
 			} else {
-				msg = fmt("$p skitters in from the %s.") % dirs[rev_dir[use_dir]];
+				msg = format("$p skitters in from the %s.") % dirs[rev_dir[use_dir]];
 			}
 			act(msg, FALSE, o, o, 0, TO_ROOM);
 			
@@ -5890,7 +5890,7 @@ int skittishObject (TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 						return FALSE;
 					} else {
 						// container is open -> jump out
-						msg = fmt("$p leaps from your %s and falls to the $g!") % fname(open_container->name);
+						msg = format("$p leaps from your %s and falls to the $g!") % fname(open_container->name);
 						act(msg, FALSE, ch, o, 0, TO_CHAR, NULL);
 						act("$p wriggles itself free from $n and falls to the $g!", FALSE, ch, o, 0, TO_ROOM, NULL);
 						
@@ -5901,7 +5901,7 @@ int skittishObject (TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 				} else {
 					// this means its an always open container? -> jump out
 					if (::number(0, 1)){
-						msg = fmt("$p leaps from your %s and falls to the $g!") % fname(container->name);
+						msg = format("$p leaps from your %s and falls to the $g!") % fname(container->name);
 						act(msg, FALSE, ch, o, 0, TO_CHAR, NULL);
 						act("$p wriggles itself free from $n and falls to the $g!", FALSE, ch, o, 0, TO_ROOM, NULL);
 						
@@ -6195,14 +6195,14 @@ int mobSpawnGrab(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *cont
     return FALSE;
   
   // first time grab, flag it
-  me->name = mud_str_dup(fmt("%s [proc_152-%d]") % me->name % time(NULL));
+  me->name = mud_str_dup(format("%s [proc_152-%d]") % me->name % time(NULL));
   
   // spawn the 3 mobs
   int mob_vnum = 32762; // guard deranged spirit hobbit
   for (int loop = 0; loop < 3; loop = loop + 1) {
     TBeing *mob = read_mobile(mob_vnum, VIRTUAL);
     if (!mob) {
-      vlogf(LOG_PROC, fmt("Proc mobSpawnGrab failing to grab spawn mob #%i in room %i.") % mob_vnum % ch->in_room);
+      vlogf(LOG_PROC, format("Proc mobSpawnGrab failing to grab spawn mob #%i in room %i.") % mob_vnum % ch->in_room);
       return FALSE;
     }
     *ch->roomp += *mob;
@@ -6535,42 +6535,42 @@ int rubiksCube(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
   if((cmd==CMD_LOOK && isname(arg, myself->name)) || cmd==CMD_TWIST){
     // oh god my eyes my eyes my brain my brain
     ch->sendTo(COLOR_BASIC, 
-	       fmt("       <%c>#<1>                   <%c>#<1>             \n\r") %
+	       format("       <%c>#<1>                   <%c>#<1>             \n\r") %
 	       rc->blue[0][2] % rc->yellow[0][2]);
     ch->sendTo(COLOR_BASIC, 
-	       fmt("    <%c>#<1>     <%c>#<1>             <%c>#<1>     <%c>#<1>         \n\r") %
+	       format("    <%c>#<1>     <%c>#<1>             <%c>#<1>     <%c>#<1>         \n\r") %
 	       rc->blue[0][1] % rc->blue[1][2] %
 	       rc->yellow[0][1] % rc->yellow[1][2]);
     ch->sendTo(COLOR_BASIC, 
-	       fmt("  <%c>#<1>    <%c>#<1>    <%c>#<1>         <%c>#<1>    <%c>#<1>    <%c>#<1>    \n\r") %
+	       format("  <%c>#<1>    <%c>#<1>    <%c>#<1>         <%c>#<1>    <%c>#<1>    <%c>#<1>    \n\r") %
 	       rc->blue[0][0] % rc->blue[1][1] % rc->blue[2][2] %
 	       rc->yellow[0][0] % rc->yellow[1][1] % rc->yellow[2][2]);
     ch->sendTo(COLOR_BASIC, 
-	       fmt("<%c>#<1>   <%c>#<1>     <%c>#<1>   <%c>#<1>     <%c>#<1>   <%c>#<1>     <%c>#<1>   <%c>#<1>\n\r") %
+	       format("<%c>#<1>   <%c>#<1>     <%c>#<1>   <%c>#<1>     <%c>#<1>   <%c>#<1>     <%c>#<1>   <%c>#<1>\n\r") %
 	       rc->red[0][2] % rc->blue[1][0] % rc->blue[2][1] % rc->white[2][2] %
 	       rc->green[0][2] % rc->yellow[1][0] % rc->yellow[2][1] % rc->orange[2][2]);
     ch->sendTo(COLOR_BASIC, 
-	       fmt("   <%c>#<1>   <%c>#<1>   <%c>#<1>           <%c>#<1>   <%c>#<1>   <%c>#<1>     \n\r") %
+	       format("   <%c>#<1>   <%c>#<1>   <%c>#<1>           <%c>#<1>   <%c>#<1>   <%c>#<1>     \n\r") %
 	       rc->red[1][2] % rc->blue[2][0] % rc->white[1][2] %
 	       rc->green[1][2] % rc->yellow[2][0] % rc->orange[1][2]);
     ch->sendTo(COLOR_BASIC, 
-	       fmt("<%c>#<1>     <%c>#<1> <%c>#<1>     <%c>#<1>     <%c>#<1>     <%c>#<1> <%c>#<1>     <%c>#<1>\n\r") %
+	       format("<%c>#<1>     <%c>#<1> <%c>#<1>     <%c>#<1>     <%c>#<1>     <%c>#<1> <%c>#<1>     <%c>#<1>\n\r") %
 	       rc->red[0][1] % rc->red[2][2] % rc->white[0][2] % rc->white[2][1] %
 	       rc->green[0][1] % rc->green[2][2] % rc->orange[0][2] % rc->orange[2][1]);
     ch->sendTo(COLOR_BASIC, 
-	       fmt("   <%c>#<1>       <%c>#<1>           <%c>#<1>       <%c>#<1>       \n\r") %
+	       format("   <%c>#<1>       <%c>#<1>           <%c>#<1>       <%c>#<1>       \n\r") %
 	       rc->red[1][1] % rc->white[1][1] %
 	       rc->green[1][1] % rc->orange[1][1]);
     ch->sendTo(COLOR_BASIC, 
-	       fmt("<%c>#<1>     <%c>#<1> <%c>#<1>     <%c>#<1>     <%c>#<1>     <%c>#<1> <%c>#<1>     <%c>#<1>\n\r") %
+	       format("<%c>#<1>     <%c>#<1> <%c>#<1>     <%c>#<1>     <%c>#<1>     <%c>#<1> <%c>#<1>     <%c>#<1>\n\r") %
 	       rc->red[0][0] % rc->red[2][1] % rc->white[0][1] % rc->white[2][0] %
 	       rc->green[0][0] % rc->green[2][1] % rc->orange[0][1] % rc->orange[2][0]);
     ch->sendTo(COLOR_BASIC, 
-	       fmt("   <%c>#<1>       <%c>#<1>           <%c>#<1>       <%c>#<1>       \n\r") %
+	       format("   <%c>#<1>       <%c>#<1>           <%c>#<1>       <%c>#<1>       \n\r") %
 	       rc->red[1][0] % rc->white[1][0] %
 	       rc->green[1][0] % rc->orange[1][0]);
     ch->sendTo(COLOR_BASIC, 
-	       fmt("      <%c>#<1> <%c>#<1>                 <%c>#<1> <%c>#<1>          \n\r") %
+	       format("      <%c>#<1> <%c>#<1>                 <%c>#<1> <%c>#<1>          \n\r") %
 	       rc->red[2][0] % rc->white[0][0] %
 	       rc->green[2][0] % rc->orange[0][0]);
     
@@ -6617,9 +6617,9 @@ int liquidSource(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
 
   sendrpf(COLOR_BASIC, tdc->roomp,
-	  (fmt("Some %s flows out of %s.\n\r") % 
+	  ((sstring)(format("Some %s flows out of %s.\n\r") % 
 	   liquidInfo[tdc->getDrinkType()]->name %
-	   tdc->getName()).c_str());
+	   tdc->getName())).c_str());
 
   tdc->roomp->dropPool(tdc->getDrinkUnits(), tdc->getDrinkType());
 
@@ -6657,11 +6657,11 @@ int ieComputer(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 				sstring contents = "<o>Immortal Exchange Coin Redemption<1>\n\r";
 				db.query("select p1.name as redeemed_for, p2.name as redeemed_by, count(*) as coins, date_format(now(), '%%M %%e %%Y %%l:%%i %%p') as date_printed from immortal_exchange_coin c1 left join player p1 on p1.id = c1.redeemed_for left join player p2 on c1.redeemed_by = p2.id group by p1.name, p2.name order by p1.name, p2.name;");
 				if (db.fetchRow()) {
-					contents += fmt("<o>as of<1> <c>%s<1>\n\r\n\r") % db["date_printed"];
-					contents += fmt("<o>%-25s %-25s %8s<1>\n\r") % "Redeemed for" % "Redeemed by" % "Coins";
-					contents += fmt("<c>%-25s %-25s %8s<1>\n\r") % db["redeemed_for"].cap() % db["redeemed_by"].cap() % db["coins"];
+					contents += format("<o>as of<1> <c>%s<1>\n\r\n\r") % db["date_printed"];
+					contents += format("<o>%-25s %-25s %8s<1>\n\r") % "Redeemed for" % "Redeemed by" % "Coins";
+					contents += format("<c>%-25s %-25s %8s<1>\n\r") % db["redeemed_for"].cap() % db["redeemed_by"].cap() % db["coins"];
 					while (db.fetchRow()) {
-						contents += fmt("<c>%-25s %-25s %8s<1>\n\r") % db["redeemed_for"].cap() % db["redeemed_by"].cap() % db["coins"];
+						contents += format("<c>%-25s %-25s %8s<1>\n\r") % db["redeemed_for"].cap() % db["redeemed_by"].cap() % db["coins"];
 					}
 				} else {
 					contents += "\n\r<c>No coins on record!<1>\n\r";
@@ -6671,11 +6671,11 @@ int ieComputer(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 				sstring contents = "<g>Immortal Exchange Coin Distribution<1>\n\r";
 				db.query("select p1.name as created_for, p2.name as created_by, count(*) as coins, date_format(now(), '%%M %%e %%Y %%l:%%i %%p') as date_printed from immortal_exchange_coin c1 left join player p1 on p1.id = c1.created_for left join player p2 on c1.created_by = p2.id group by p1.name, p2.name order by p1.name, p2.name;");
 				if (db.fetchRow()) {
-					contents += fmt("<g>as of<1> <c>%s<1>\n\r\n\r") % db["date_printed"];
-					contents += fmt("<g>%-25s %-25s %8s<1>\n\r") % "Created for" % "Created by" % "Coins";
-					contents += fmt("<c>%-25s %-25s %8s<1>\n\r") % db["created_for"].cap() % db["created_by"].cap() % db["coins"];
+					contents += format("<g>as of<1> <c>%s<1>\n\r\n\r") % db["date_printed"];
+					contents += format("<g>%-25s %-25s %8s<1>\n\r") % "Created for" % "Created by" % "Coins";
+					contents += format("<c>%-25s %-25s %8s<1>\n\r") % db["created_for"].cap() % db["created_by"].cap() % db["coins"];
 					while (db.fetchRow()) {
-						contents += fmt("<c>%-25s %-25s %8s<1>\n\r") % db["created_for"].cap() % db["created_by"].cap() % db["coins"];
+						contents += format("<c>%-25s %-25s %8s<1>\n\r") % db["created_for"].cap() % db["created_by"].cap() % db["coins"];
 					}
 				} else {
 					contents += "\n\r<c>No coins on record!<1>\n\r";

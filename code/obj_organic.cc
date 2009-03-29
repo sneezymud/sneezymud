@@ -183,7 +183,7 @@ int TOrganic::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   if (getUnits() > 0) {
     if (num > getUnits()) {
       num = getUnits();
-      keeper->doTell(ch->getName(), fmt("I don't have that much of %s.  Here's the %d that I do have.") % nocName % num);
+      keeper->doTell(ch->getName(), format("I don't have that much of %s.  Here's the %d that I do have.") % nocName % num);
     }
   }
   // cost_per = pricePerUnit();
@@ -234,7 +234,7 @@ int TOrganic::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
       obj2->setWeight(nWeight);
       obj2->obj_flags.cost = nCost;
       *ch += *obj2;
-      keeper->doTell(ch->getName(), fmt("Here ya go.  That's %d unit%s of %s for %d talen%s.") % num % (num > 1 ? "s" : "") % nocName % price % (price > 1 ? "s" : ""));
+      keeper->doTell(ch->getName(), format("Here ya go.  That's %d unit%s of %s for %d talen%s.") % num % (num > 1 ? "s" : "") % nocName % price % (price > 1 ? "s" : ""));
       act("$n buys $p.", TRUE, ch, obj2, keeper, TO_NOTVICT);
     } else {
       // Must not have been a unit item, just give them the item in question.
@@ -246,7 +246,7 @@ int TOrganic::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     ch->giveMoney(keeper, price, GOLD_COMM);
   } else {
     // this happens with sub zero weight components
-    vlogf(LOG_BUG, fmt("Bogus num %d in buyMe component at %d.  wgt=%.2f") %  num % ch->in_room % getWeight());
+    vlogf(LOG_BUG, format("Bogus num %d in buyMe component at %d.  wgt=%.2f") %  num % ch->in_room % getWeight());
   }
 
   keeper->saveItems(shop_nr);
@@ -392,7 +392,7 @@ int TOrganic::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
 
     keeper->giveMoney(ch, price, GOLD_COMM);
 
-    keeper->doTell(ch->getName(), fmt("Thanks, here's your %d talen%s.") %
+    keeper->doTell(ch->getName(), format("Thanks, here's your %d talen%s.") %
 		   price, (price > 1 ? "s" : ""));
     act("$n sells $p.", TRUE, ch, this, 0, TO_ROOM);
     if (ch->isAffected(AFF_GROUP) && ch->desc &&
@@ -445,7 +445,7 @@ void TOrganic::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   sellReducePrice(ch, keeper, obj2, price);
 
 
-  keeper->doTell(ch->getName(), fmt("Hmm, I'd give you %d talen%s for that.") %
+  keeper->doTell(ch->getName(), format("Hmm, I'd give you %d talen%s for that.") %
 		 price, (price > 1 ? "s" : ""));
 
   return;
@@ -460,7 +460,7 @@ const sstring TOrganic::shopList(const TBeing *ch, const sstring &arg,
   bool usePlural = false;
   int cost = shopPrice(num, shop_nr, -1, ch);
 
-  Buf[1] = fmt("%s") % shortDescr;
+  Buf[1] = format("%s") % shortDescr;
 
   if (Buf[1].length() > 31) {
     Buf[1] = Buf[1].substr(0,28);
@@ -468,20 +468,20 @@ const sstring TOrganic::shopList(const TBeing *ch, const sstring &arg,
   }
 
   if (getUnits() > 0) {
-    tString = fmt("%5d") % getUnits();
+    tString = format("%5d") % getUnits();
     usePlural = (getUnits() > 1 ? true : false);
   } else {
-    tString = fmt("%d") % num;
+    tString = format("%d") % num;
 
     usePlural = (cost > 1 ? true : false);
   }
 
   if (getUnits() > 0)
-    Buf[0] = fmt("[%2d] %-31s  <Z>: %s unit%c %5d talen%c (per unit)\n\r") %
+    Buf[0] = format("[%2d] %-31s  <Z>: %s unit%c %5d talen%c (per unit)\n\r") %
       (k + 1) % Buf[1] % tString % (usePlural ? 's' : ' ') %
       cost % (cost > 1 ? 's' : ' ');
   else
-    Buf[0] = fmt("[%2d] %-31s  <Z>:             %5d talen%c [%s]\n\r") %
+    Buf[0] = format("[%2d] %-31s  <Z>:             %5d talen%c [%s]\n\r") %
       (k + 1) % Buf[1] % cost % (usePlural ? 's' : ' ') % tString;
 
   if (arg.empty() && min_amt == 999999)     // everything
@@ -565,9 +565,9 @@ bool TOrganic::splitMe(TBeing *ch, const sstring &argument)
     ch->sendTo("That hide is just not big enough to be split so much.\n\r");
     return true;
   }
-  ch->sendTo(COLOR_OBJECTS, fmt("You split %s into %d pieces.\n\r") %
+  ch->sendTo(COLOR_OBJECTS, format("You split %s into %d pieces.\n\r") %
              shortDescr % num);
-  Buf = fmt("$n splits %s into %d pieces.") % shortDescr % num;
+  Buf = format("$n splits %s into %d pieces.") % shortDescr % num;
   act(Buf, TRUE, ch, 0, 0, TO_ROOM);
 
   // Lets get the users Weight&Volume so we can decide if the new hide goes on the

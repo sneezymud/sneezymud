@@ -44,15 +44,15 @@ void TBeing::wizFileRead()
   if (!(GetMaxLevel() > MAX_MORT) || !(d = desc))
     return;
 
-  buf = fmt("immortals/%s/wizdata") % getName();
+  buf = format("immortals/%s/wizdata") % getName();
   fp = fopen(buf.c_str(), "r");
   if (!fp) {
-    buf2 = fmt("immortals/%s") % getName();
+    buf2 = format("immortals/%s") % getName();
     fp = fopen(buf2.c_str(), "r");
     if (!fp) {	// no immort directory 
       if (mkdir(buf2.c_str(), 0770)) {
 	sendTo("Unable to create a wizard directory for you.\n\r");
-	vlogf(LOG_FILE, fmt("Unable to create a wizard directory for %s.") %  getName());
+	vlogf(LOG_FILE, format("Unable to create a wizard directory for %s.") %  getName());
       } else
 	sendTo("Wizard directory created...\n\r");
     } else
@@ -61,7 +61,7 @@ void TBeing::wizFileRead()
     return;
   }
   if (fread(&saveData, sizeof(saveData), 1, fp) != 1) {
-    vlogf(LOG_BUG, fmt("Corrupt wiz save file for %s") %  getName());
+    vlogf(LOG_BUG, format("Corrupt wiz save file for %s") %  getName());
     fclose(fp);
     return;
   } 
@@ -75,17 +75,17 @@ void TBeing::wizFileRead()
   d->blockbend   = saveData.blockbend;
 
   if (should_be_logged(this))
-    vlogf(LOG_IIO, fmt("Loaded %s's wizard file.") %  getName());
+    vlogf(LOG_IIO, format("Loaded %s's wizard file.") %  getName());
 
   TPerson * tPerson = dynamic_cast<TPerson *>(this);
 
   if (tPerson && !tPerson->tLogFile && should_be_logged(tPerson)) {
     sstring tString;
 
-    tString = fmt("immortals/%s/logfile") % name;
+    tString = format("immortals/%s/logfile") % name;
 
     if (!(tPerson->tLogFile = fopen(tString.c_str(), "a")))
-      vlogf(LOG_FILE, fmt("Unable to open Log File for %s") %  name);
+      vlogf(LOG_FILE, format("Unable to open Log File for %s") %  name);
     else
       tPerson->logf("Logging in...");
   }
@@ -108,10 +108,10 @@ void TPerson::wizFileSave()
   if (d->connected != CON_PLYNG)  // semi arbitrary, but here for sanity
     return;
 
-  buf = fmt("immortals/%s/wizdata") % getName();
+  buf = format("immortals/%s/wizdata") % getName();
   unlink(buf.c_str());
   if (!(fp = fopen(buf.c_str(), "wa+"))) {
-    buf = fmt("immortals/%s") % getName();
+    buf = format("immortals/%s") % getName();
     if (!(fp = fopen(buf.c_str(), "r"))) {	// no immort directory 
       if (mkdir(buf.c_str(), 0770))
 	sendTo("Unable to create a wizard directory for you.  Tell Brutius or Batopr.\n\r");
@@ -151,19 +151,19 @@ void TBeing::doOffice(sstring arg)
     return;
   }
 
-  buf = fmt("immortals/%s/wizdata") % arg;
+  buf = format("immortals/%s/wizdata") % arg;
   fp = fopen(buf.c_str(), "r");
   if (!fp) {
-	  sendTo(fmt("Unable to open file for %s (case sensitive!).\n\r") % arg);
+	  sendTo(format("Unable to open file for %s (case sensitive!).\n\r") % arg);
     return;
   }
   if (fread(&saveData, sizeof(saveData), 1, fp) != 1) {
-    vlogf(LOG_BUG, fmt("Corrupt wiz save file for %s") % arg);
+    vlogf(LOG_BUG, format("Corrupt wiz save file for %s") % arg);
     fclose(fp);
     return;
   } 
   fclose(fp);
-  buf3 = fmt ("The office of %s is %d.\n\r") % arg % saveData.office;
+  buf3 = format("The office of %s is %d.\n\r") % arg % saveData.office;
   sendTo(buf3);
 }
 

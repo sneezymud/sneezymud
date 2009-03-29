@@ -140,13 +140,13 @@ int TMonster::lookForHorse()
   if (tbt) {
     if (tbt->getPosition() < POSITION_SLEEPING) {
     } else if (tbt->getPosition() == POSITION_SLEEPING) {
-      buf = fmt("order %s wake") %fname(tbt->name);
+      buf = format("order %s wake") %fname(tbt->name);
       rc = addCommandToQue(buf);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return TRUE;
     } else if (tbt->getPosition() <= POSITION_SITTING) {
-      buf = fmt("order %s stand") %fname(tbt->name);
+      buf = format("order %s stand") %fname(tbt->name);
       rc = addCommandToQue(buf);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
@@ -155,7 +155,7 @@ int TMonster::lookForHorse()
 
     /* don't look for another horse, but make mount assist me */
     if (fight() && !tbt->fight()) {
-      buf = fmt("order %s hit ") %fname(tbt->name);
+      buf = format("order %s hit ") %fname(tbt->name);
       buf += fname(fight()->name);
       rc = addCommandToQue(buf);
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -212,7 +212,7 @@ TThing * TThing::dismount(positionTypeT pos)
 
   if (!riding) {
     // use this to find out where this is called from
-    vlogf(LOG_BUG, fmt("%s not riding in call to dismount().") %  getName());
+    vlogf(LOG_BUG, format("%s not riding in call to dismount().") %  getName());
     return NULL;
   }
   if (riding->rider == this)
@@ -342,7 +342,7 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h, silentTypeT silent
       return FALSE;
     }
     if (horse->getNumRiders(this) >= horse->getMaxRiders()) {
-      sendTo(COLOR_MOBS, fmt("The maximum number of riders are already riding %s.\n\r") % horse->getName());
+      sendTo(COLOR_MOBS, format("The maximum number of riders are already riding %s.\n\r") % horse->getName());
       return FALSE;
     }
 
@@ -456,12 +456,12 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h, silentTypeT silent
               return FALSE;
             }
           } else {
-            act(fmt("You attempt to coax $N into landing but %s seems to ignore you.")
+            act(format("You attempt to coax $N into landing but %s seems to ignore you.")
                 % horse->thirdPerson(POS_SUBJECT),
                 TRUE, this, NULL, horse, TO_CHAR);
             act("The Nerve!  $n just tried to make you land.",
                 TRUE, this, NULL, horse, TO_VICT);
-            act(fmt("$n attempts to coax $N into landing, who promptly ignores %s.")
+            act(format("$n attempts to coax $N into landing, who promptly ignores %s.")
                 % thirdPerson(POS_OBJECT),
                 TRUE, this, NULL, horse, TO_NOTVICT);
             return FALSE;
@@ -661,7 +661,7 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h, silentTypeT silent
     }
     return TRUE;
   }
-  vlogf(LOG_BUG, fmt("Undefined call to doMount.  cmd = %d") %  cmd);
+  vlogf(LOG_BUG, format("Undefined call to doMount.  cmd = %d") %  cmd);
   return TRUE;
 }
 

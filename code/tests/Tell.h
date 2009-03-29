@@ -90,7 +90,7 @@ class Tell : public CxxTest::TestSuite
       TS_ASSERT_EQUALS("You fail to tell to 'milton'\n\r", c->getComm(COMM_TEXT));
 
     if((c=testPerson3->desc->output.takeFromQ())){
-      TS_FAIL(fmt("received data from output queue: '%s'") % c->getComm(COMM_TEXT));
+      TS_FAIL(format("received data from output queue: '%s'") % c->getComm(COMM_TEXT));
     }
 
     // make sure it works with a player who isn't logged in at all
@@ -102,7 +102,7 @@ class Tell : public CxxTest::TestSuite
       TS_ASSERT_EQUALS("You fail to tell to 'pappy'\n\r", c->getComm(COMM_TEXT));
 
     if((c=testPerson3->desc->output.takeFromQ())){
-      TS_FAIL(fmt("received data from output queue: '%s'") % c->getComm(COMM_TEXT));
+      TS_FAIL(format("received data from output queue: '%s'") % c->getComm(COMM_TEXT));
     }
 
     // and with a non-existent player
@@ -114,7 +114,7 @@ class Tell : public CxxTest::TestSuite
       TS_ASSERT_EQUALS("You fail to tell to 'notaplayer'\n\r", c->getComm(COMM_TEXT));
 
     if((c=testPerson3->desc->output.takeFromQ())){
-      TS_FAIL(fmt("received data from output queue: '%s'") % c->getComm(COMM_TEXT));
+      TS_FAIL(format("received data from output queue: '%s'") % c->getComm(COMM_TEXT));
     }
 
 

@@ -15,7 +15,7 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
   int factor2 = ::number(5, (((clev + learning) + percent) / 5));
 
   if (!ch || !ch->task) {
-    vlogf(LOG_BUG, fmt("No %s in task_sacrifice!") % (ch ? "character" : "task"));
+    vlogf(LOG_BUG, format("No %s in task_sacrifice!") % (ch ? "character" : "task"));
     return FALSE;
   }
 
@@ -29,7 +29,7 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
 	  act("$n stops singing and looks confused.", TRUE, ch, 0, 0, TO_ROOM);
     ch->stopTask();
     vlogf(LOG_BUG,
-        fmt("task_sacrifice.cc: sacrifice task entered by %s without a corpse!") 
+        format("task_sacrifice.cc: sacrifice task entered by %s without a corpse!") 
         % ch->getName());
     return TRUE;
   }
@@ -177,7 +177,7 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
           // BUG - somehow you land here if you run your life force down
           // when sacrificing and the loa forces you to stop
           act("Bug Maror if you get this message.", false, ch, 0, 0, TO_CHAR);
-          vlogf(LOG_BUG, fmt("no appropriate option in switch in sacrifice.cc, timeleft value was %d")
+          vlogf(LOG_BUG, format("no appropriate option in switch in sacrifice.cc, timeleft value was %d")
               % ch->task->timeLeft);
           ch->stopTask();
           if (corpse->isCorpseFlag(CORPSE_SACRIFICE))

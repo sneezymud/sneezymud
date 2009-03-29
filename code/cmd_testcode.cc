@@ -22,7 +22,7 @@ void TBeing::doTestCode(const char *arg)
   // target shop is to drain 1.05 * what it provides
   float new_shop_mod = old_shop_mod * shopDrain / shopPos / 1.05;
 
-  sendTo(fmt("Theoretical shop equilibrium modifier:   %.2f\n\r") % new_shop_mod);
+  sendTo(format("Theoretical shop equilibrium modifier:   %.2f\n\r") % new_shop_mod);
 
   // calculate the "budget" portion of the shop values
   unsigned int shopPosBudg = shopPos - getPosGold(GOLD_SHOP_PET);
@@ -50,7 +50,7 @@ void TBeing::doTestCode(const char *arg)
   int drainRepDes = drainDes - drainNoRep;
   float old_repair_factor = gold_modifier[GOLD_REPAIR].getVal();
   float new_repair_factor = drainRepDes / drainRepAct * old_repair_factor;
-  sendTo(fmt("Theoretical repair equilibrium modifier:   %.2f\n\r") % new_repair_factor);
+  sendTo(format("Theoretical repair equilibrium modifier:   %.2f\n\r") % new_repair_factor);
 
   // income
   int posIncAct = getPosGold(GOLD_INCOME);
@@ -59,7 +59,7 @@ void TBeing::doTestCode(const char *arg)
   int posIncDes = posDes - posNoInc;
   float old_inc_factor = gold_modifier[GOLD_INCOME].getVal();
   float new_inc_factor = posIncDes / posIncAct * old_inc_factor;
-  sendTo(fmt("Theoretical income quilibrium modifier: %.2f\n\r") % new_inc_factor);
+  sendTo(format("Theoretical income quilibrium modifier: %.2f\n\r") % new_inc_factor);
 #endif
 #if 0
   char arg1[256];
@@ -105,7 +105,7 @@ void TBeing::doTestCode(const char *arg)
     equipChar(sym, getPrimaryHold());
   } while (breaks < 1000);
 
-  sendTo(fmt("Spell (%s:%d) cast successfully %d total times (avg:%.1f).\n\r") %
+  sendTo(format("Spell (%s:%d) cast successfully %d total times (avg:%.1f).\n\r") %
      discArray[spell]->name, spell, iters, (float) iters / breaks);
   delete sym;
 #endif
@@ -117,7 +117,7 @@ void TBeing::doTestCode(const char *arg)
   sendTo("Checking array boundaries\n\r");
   for (int i = 5;i>=-1;i--) {
     if (discArray[i])
-      sendTo(fmt("%s\n\r") % discArray[i]->name); 
+      sendTo(format("%s\n\r") % discArray[i]->name); 
   }
   sendTo("Checking new/delete\n\r");
   char *s = mud_str_dup("test sstring");
@@ -132,9 +132,9 @@ void TBeing::doTestCode(const char *arg)
   sstring strin = "this is input";
   str1=strin.word(0);
   str2=strin.word(1);
-  sendTo(fmt("in: '%s'\n\r") % strin);
-  sendTo(fmt("1: '%s'\n\r") % str1);
-  sendTo(fmt("2: '%s'\n\r") % str2);
+  sendTo(format("in: '%s'\n\r") % strin);
+  sendTo(format("1: '%s'\n\r") % str1);
+  sendTo(format("2: '%s'\n\r") % str2);
 #endif
 #if 0
   extern void rewrite_obj_file();
@@ -149,7 +149,7 @@ void TBeing::doTestCode(const char *arg)
     ch = read_mobile(i, REAL);
     *rp += *ch;
     if (ch->canFly() && !ch->isFlying())
-      sendTo(fmt("Mob '%s' : %d not flying.\n\r") % ch->getName() % ch->mobVnum());
+      sendTo(format("Mob '%s' : %d not flying.\n\r") % ch->getName() % ch->mobVnum());
     delete ch;
   }
   return;
@@ -170,7 +170,7 @@ void TBeing::doTestCode(const char *arg)
         (i == CMD_PENANCE) || (i == CMD_TRACEROUTE) ||
         (i == CMD_MID) || (i == CMD_LOGLIST) || (i == CMD_BRUTTEST))
       continue;
-    vlogf(LOG_MISC, fmt("%s : con %d") %  commandArray[i]->name % desc->connected);
+    vlogf(LOG_MISC, format("%s : con %d") %  commandArray[i]->name % desc->connected);
     doCommand(i, "", NULL, FALSE);
     if (note) {
       char *tmp = note->action_description;
@@ -193,7 +193,7 @@ void TBeing::doTestCode(const char *arg)
   TThing *obj = NULL;
   char tmpbuf[256];
 
-  sendTo(fmt("You are in zone %d.\n\r") % roomp->getZoneNum());
+  sendTo(format("You are in zone %d.\n\r") % roomp->getZoneNum());
   return;
 
   one_argument(arg, tmpbuf);
@@ -202,7 +202,7 @@ void TBeing::doTestCode(const char *arg)
   TBaseClothing *tbc = dynamic_cast<TBaseClothing *>(obj);
   if (!tbc) return;
 
-  sendTo(fmt("item: %s, level: %d,  base: %d\n\r") %
+  sendTo(format("item: %s, level: %d,  base: %d\n\r") %
         tbc->getName(), tbc->armorLevel(), tbc->armorPriceStruct(0));
 #endif
 #if 0

@@ -38,11 +38,11 @@ class Garble : public CxxTest::TestSuite
       for(int j=0;j<(int)GARBLE_MAX;++j){
 	testPerson->toggleGarble((GARBLETYPE)j);
 
-	TSM_ASSERT_THROWS_NOTHING(fmt("SPEECHTYPE = %i, GARBLETYPE = %i") % i % j, testPerson->garble(testPerson, testString[0], (SPEECHTYPE)i, GARBLE_SCOPE_INDIVIDUAL));
-	TSM_ASSERT_THROWS_NOTHING(fmt("SPEECHTYPE = %i, GARBLETYPE = %i") % i % j, testPerson->garble(testPerson, testString[0], (SPEECHTYPE)i, GARBLE_SCOPE_SELF));
-	TSM_ASSERT_THROWS_NOTHING(fmt("SPEECHTYPE = %i, GARBLETYPE = %i") % i % j, testPerson->garble(testPerson, testString[0], (SPEECHTYPE)i, GARBLE_SCOPE_EVERYONEANDSELF));
-	TSM_ASSERT_THROWS_NOTHING(fmt("SPEECHTYPE = %i, GARBLETYPE = %i") % i % j, testPerson->garble(testPerson, testString[0], (SPEECHTYPE)i, GARBLE_SCOPE_ALL));
-	TSM_ASSERT_THROWS_NOTHING(fmt("SPEECHTYPE = %i, GARBLETYPE = %i") % i % j, testPerson->garble(testPerson, testString[0], (SPEECHTYPE)i, GARBLE_SCOPE_EVERYONE));
+	TSM_ASSERT_THROWS_NOTHING(format("SPEECHTYPE = %i, GARBLETYPE = %i") % i % j, testPerson->garble(testPerson, testString[0], (SPEECHTYPE)i, GARBLE_SCOPE_INDIVIDUAL));
+	TSM_ASSERT_THROWS_NOTHING(format("SPEECHTYPE = %i, GARBLETYPE = %i") % i % j, testPerson->garble(testPerson, testString[0], (SPEECHTYPE)i, GARBLE_SCOPE_SELF));
+	TSM_ASSERT_THROWS_NOTHING(format("SPEECHTYPE = %i, GARBLETYPE = %i") % i % j, testPerson->garble(testPerson, testString[0], (SPEECHTYPE)i, GARBLE_SCOPE_EVERYONEANDSELF));
+	TSM_ASSERT_THROWS_NOTHING(format("SPEECHTYPE = %i, GARBLETYPE = %i") % i % j, testPerson->garble(testPerson, testString[0], (SPEECHTYPE)i, GARBLE_SCOPE_ALL));
+	TSM_ASSERT_THROWS_NOTHING(format("SPEECHTYPE = %i, GARBLETYPE = %i") % i % j, testPerson->garble(testPerson, testString[0], (SPEECHTYPE)i, GARBLE_SCOPE_EVERYONE));
       }
     }
   }

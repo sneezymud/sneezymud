@@ -100,7 +100,7 @@ TBaseCorpse::~TBaseCorpse()
         *riding->roomp += *t;
       } else {
         // i dunno... how about we junk it?
-        vlogf(LOG_BUG, fmt("Corpse (%s) decayed on %s, deleting %s") % this->getName() % riding->getName() % t->getName());
+        vlogf(LOG_BUG, format("Corpse (%s) decayed on %s, deleting %s") % this->getName() % riding->getName() % t->getName());
         delete t;
       }
  
@@ -108,7 +108,7 @@ TBaseCorpse::~TBaseCorpse()
       *this->roomp += *t;
       
     } else {
-      vlogf(LOG_BUG, fmt("Unowned corpse decayed: %s - deleting: %s") % this->getName() % t->getName());
+      vlogf(LOG_BUG, format("Unowned corpse decayed: %s - deleting: %s") % this->getName() % t->getName());
       delete t;
     }
   }
@@ -138,7 +138,7 @@ int TBaseCorpse::putMeInto(TBeing *ch, TOpenContainer *container)
     if (dynamic_cast<TToothNecklace *>(container) &&
 	dynamic_cast<TBaseCorpse *>(o) &&
 	getCorpseVnum() == dynamic_cast<TBaseCorpse *>(o)->getCorpseVnum()){
-      ch->sendTo(fmt("You already have one of those teeth in your %s.\n\r") %
+      ch->sendTo(format("You already have one of those teeth in your %s.\n\r") %
 		 fname(container->name).c_str());
       return TRUE;
     }
@@ -266,7 +266,7 @@ int TBaseCorpse::dissectMe(TBeing *caster)
   }
   if (!(obj = read_object(num, VIRTUAL))) {
     caster->sendTo("Serious problem in dissect.\n\r");
-    vlogf(LOG_OBJ, fmt("Bad call to read_object in dissect, num %d") %  num);
+    vlogf(LOG_OBJ, format("Bad call to read_object in dissect, num %d") %  num);
     return FALSE;
   }
   int bKnown = caster->getSkillValue(SKILL_DISSECT);
@@ -384,7 +384,7 @@ int TBaseCorpse::objectDecay()
   }
 
   if(dynamic_cast<TPCorpse *>(this))
-    vlogf(LOG_MISC, fmt("PCorpse '%s' decayed in '%s' with %f exp.") % getName() % (roomp?roomp->getName():"(null roomp)") % dynamic_cast<TPCorpse *>(this)->getExpLost());
+    vlogf(LOG_MISC, format("PCorpse '%s' decayed in '%s' with %f exp.") % getName() % (roomp?roomp->getName():"(null roomp)") % dynamic_cast<TPCorpse *>(this)->getExpLost());
 
   return DELETE_THIS;
 }

@@ -319,24 +319,24 @@ TMonster::~TMonster()
   mobCount--;
 // Looking for bugs below--cos 8/98
   if (getDescr() && getDescr() == mob_index[getMobIndex()].description) { 
-    vlogf(LOG_BUG, fmt("TMonster delete: after allocation, monster still had shared sstring (%s) : descr") %  getName());
-    vlogf(LOG_BUG, fmt("New Alloc: %s: shared descr is: %s") %  (didAloc ? "True" : "False") % getDescr());
+    vlogf(LOG_BUG, format("TMonster delete: after allocation, monster still had shared sstring (%s) : descr") %  getName());
+    vlogf(LOG_BUG, format("New Alloc: %s: shared descr is: %s") %  (didAloc ? "True" : "False") % getDescr());
   }
   if (name && name == mob_index[getMobIndex()].name) 
-    vlogf(LOG_BUG, fmt("TMonster delete: after allocation, monster still had shared sstring (%s) : name") %  getName());
+    vlogf(LOG_BUG, format("TMonster delete: after allocation, monster still had shared sstring (%s) : name") %  getName());
 
   if (shortDescr && shortDescr == mob_index[getMobIndex()].short_desc) 
-    vlogf(LOG_BUG, fmt("TMonster delete: after allocation, monster still had shared sstring (%s) : short") %  getName());
+    vlogf(LOG_BUG, format("TMonster delete: after allocation, monster still had shared sstring (%s) : short") %  getName());
 
   if (getLongDesc() && player.longDescr == mob_index[getMobIndex()].long_desc)
-    vlogf(LOG_BUG, fmt("TMonster delete: after allocation, monster still had shared sstring (%s) : long") %  getName());
+    vlogf(LOG_BUG, format("TMonster delete: after allocation, monster still had shared sstring (%s) : long") %  getName());
 
   TRoom *tRoom;
 
   if (brtRoom == ROOM_NOWHERE)
     ; // Do nothing.  This triggers on immortal loaded mobs so is cool.
   else if (!(tRoom = real_roomp(brtRoom)))
-    vlogf(LOG_BUG, fmt("Mobile being destroyed with empty birth room! [%s][%i]") %  getName() % brtRoom);
+    vlogf(LOG_BUG, format("Mobile being destroyed with empty birth room! [%s][%i]") %  getName() % brtRoom);
   else
     *tRoom >> *this;
 }
@@ -386,7 +386,7 @@ int TMonster::calculateGoldFromConstant()
     for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != this->number); shop_nr++);
     
     if (shop_nr >= shop_index.size()) {
-      vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  mob_index[this->number].virt);
+      vlogf(LOG_BUG, format("Warning... shop # for mobile %d (real nr) not found.") %  mob_index[this->number].virt);
       return FALSE;
     }
 
@@ -449,7 +449,7 @@ void TMonster::setHPFromHPLevel()
   amt = (int) (amt / sanct_modifier);
 
   if (amt >= 32768) {
-    vlogf(LOG_DASH, fmt("mob %s had hp overflow problem with %d hp, capping at 32767.") %  getName() % amt);
+    vlogf(LOG_DASH, format("mob %s had hp overflow problem with %d hp, capping at 32767.") %  getName() % amt);
     amt = 32767;
   }
 

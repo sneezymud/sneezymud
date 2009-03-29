@@ -235,7 +235,7 @@ void TPool::updateDesc()
   }
 
   if(isDrinkConFlag(DRINK_FROZEN)){
-    buf2 = fmt("chunk frozen %s %s") %
+    buf2 = format("chunk frozen %s %s") %
       stripColorCodes(liquidInfo[getDrinkType()]->name) %
       stripColorCodes(liquidInfo[getDrinkType()]->color);
     name = mud_str_dup(buf2);
@@ -248,7 +248,7 @@ void TPool::updateDesc()
     
     SET_BIT(obj_flags.wear_flags, ITEM_TAKE);
   } else {
-    buf2 = fmt("pool puddle %s %s") %
+    buf2 = format("pool puddle %s %s") %
       stripColorCodes(liquidInfo[getDrinkType()]->name) %
       stripColorCodes(liquidInfo[getDrinkType()]->color);
     name = mud_str_dup(buf2);
@@ -298,7 +298,7 @@ int TRoom::dropPool(int amt, liqTypeT liq)
 // hence this setup instead.
     int robj = real_object(GENERIC_POOL);
     if (robj < 0 || robj >= (signed int) obj_index.size()) {
-      vlogf(LOG_BUG, fmt("dropPool(): No object (%d) in database!") %  GENERIC_POOL);
+      vlogf(LOG_BUG, format("dropPool(): No object (%d) in database!") %  GENERIC_POOL);
       return false;
     }
 
@@ -345,7 +345,7 @@ int TBeing::dropPool(int amt, liqTypeT liq)
 // hence this setup instead.
     int robj = real_object(GENERIC_POOL);
     if (robj < 0 || robj >= (signed int) obj_index.size()) {
-      vlogf(LOG_BUG, fmt("dropPool(): No object (%d) in database!") %  GENERIC_POOL);
+      vlogf(LOG_BUG, format("dropPool(): No object (%d) in database!") %  GENERIC_POOL);
       return false;
     }
 

@@ -70,7 +70,7 @@ int signMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 
   me->doSay("Well, there you are then.");
   *me += *sign;
-  sstring giveBuf = fmt("%s %s") % add_bars(sign->name) % add_bars(ch->name);
+  sstring giveBuf = format("%s %s") % add_bars(sign->name) % add_bars(ch->name);
   me->doGive(giveBuf, GIVE_FLAG_IGN_DEX_TEXT);
 
   return TRUE;

@@ -64,19 +64,19 @@ int sweepsScratch(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     buf3 = "P";
   
   ch->sendTo("As you watch, the blank face of the tile blurs momentarily.\n\r");
-  buf4 = fmt("The letter <Y>%s<z> appears.") % buf3;
+  buf4 = format("The letter <Y>%s<z> appears.") % buf3;
 
 // delete tile, load tile with join proc
 // need to know what hand to hold it in tile->eq_pos
   TObj *newtile = NULL;
   if (!(newtile = read_object(TILEVNUM_SHAKEN, VIRTUAL))) {
-    vlogf(LOG_LOW, fmt("could not read obj %d in spec_objs_sweeps.cc") % 
+    vlogf(LOG_LOW, format("could not read obj %d in spec_objs_sweeps.cc") % 
         TILEVNUM_SHAKEN);
   }
   if (newtile) { // delete tile and load item
     wearSlotT pos = o->eq_pos;
-    sstring buf5 = fmt("tile %s") % buf3;
-    sstring buf6 = fmt("an <b>obsidian tile<z> inscribed with <Y>%s<z>") % buf3;
+    sstring buf5 = format("tile %s") % buf3;
+    sstring buf6 = format("an <b>obsidian tile<z> inscribed with <Y>%s<z>") % buf3;
     newtile->swapToStrung();
     newtile->name = mud_str_dup(buf5);
     newtile->shortDescr = mud_str_dup(buf6);
@@ -151,11 +151,11 @@ int sweepsSplitJoin(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) 
 
     delete tile2;
   
-    sstring newname = fmt("%s%s") % name1 % name2;
+    sstring newname = format("%s%s") % name1 % name2;
     ch->sendTo("As you watch, the face of the tile blurs momentarily.\n\r");
-    buf4 = fmt("The letters <Y>%s<z> appear.") % newname;
-    buf5 = fmt("tile %s") % newname;
-    buf6 = fmt("an <b>obsidian tile<z> inscribed with <Y>%s<z>") % newname;
+    buf4 = format("The letters <Y>%s<z> appear.") % newname;
+    buf5 = format("tile %s") % newname;
+    buf6 = format("an <b>obsidian tile<z> inscribed with <Y>%s<z>") % newname;
     tile1->swapToStrung();
     tile1->name = mud_str_dup(buf5);
     tile1->shortDescr = mud_str_dup(buf6);
@@ -165,7 +165,7 @@ int sweepsSplitJoin(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) 
       act("The tile vanishes.", TRUE,ch,NULL,NULL,TO_CHAR,NULL);
       act("The tile vanishes.", TRUE,ch,NULL,NULL,TO_ROOM,NULL);
       delete tile1;
-      vlogf(LOG_LOW, fmt("%s has just been teleported by the sneezy sweeps") %
+      vlogf(LOG_LOW, format("%s has just been teleported by the sneezy sweeps") %
           ch->getName());
       teleport(ch,ch,50,100);
     } else {
@@ -188,7 +188,7 @@ int sweepsSplitJoin(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) 
       if (newobjn > 0) { 
         TObj *newobj = NULL;
         if (!(newobj = read_object(newobjn, VIRTUAL))) {
-          vlogf(LOG_LOW, fmt("could not read obj %d in spec_objs_sweeps.cc") % 
+          vlogf(LOG_LOW, format("could not read obj %d in spec_objs_sweeps.cc") % 
               newobjn);
         }
         if (newobj) { // delete tile and load item
@@ -198,7 +198,7 @@ int sweepsSplitJoin(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) 
           act("The tile vanishes, and $p appears in $n's hand.",
               TRUE,ch,newobj,NULL,TO_ROOM,NULL);
           ch->equipChar(newobj, HOLD_RIGHT, SILENT_YES);
-          vlogf(LOG_LOW, fmt("%s has just won %s in the sneezy sweeps") %
+          vlogf(LOG_LOW, format("%s has just won %s in the sneezy sweeps") %
               ch->getName() % newobj->getName());
         }
       }
@@ -218,7 +218,7 @@ int sweepsSplitJoin(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) 
     }
     if (!(tile2 = read_object(TILEVNUM_SHAKEN, VIRTUAL) ))
     {
-      vlogf(LOG_BUG, fmt("spec_objs_sweeps.cc, problem loading object %d") % TILEVNUM_SHAKEN);
+      vlogf(LOG_BUG, format("spec_objs_sweeps.cc, problem loading object %d") % TILEVNUM_SHAKEN);
       act("Nothing happens.",TRUE,ch,NULL,NULL,TO_ROOM,NULL);
       act("Nothing happens.",TRUE,ch,NULL,NULL,TO_CHAR,NULL);
       return TRUE;
@@ -241,15 +241,15 @@ int sweepsSplitJoin(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) 
     act("<R>*SNAP*<z>\n\rYou tug at a tile and it separates into two.",TRUE,ch,NULL,NULL,TO_CHAR,NULL);
 
     // deal with tile1
-    buf5 = fmt("tile %s") % name1;
-    buf6 = fmt("an <b>obsidian tile<z> inscribed with <Y>%s<z>") % name1;
+    buf5 = format("tile %s") % name1;
+    buf6 = format("an <b>obsidian tile<z> inscribed with <Y>%s<z>") % name1;
     tile1->swapToStrung();
     tile1->name = mud_str_dup(buf5);
     tile1->shortDescr = mud_str_dup(buf6);
 
     // deal with tile2 - new object
-    sstring buf5 = fmt("tile %s") % name2;
-    sstring buf6 = fmt("an <b>obsidian tile<z> inscribed with <Y>%s<z>") % name2;
+    sstring buf5 = format("tile %s") % name2;
+    sstring buf6 = format("an <b>obsidian tile<z> inscribed with <Y>%s<z>") % name2;
     tile2->swapToStrung();
     tile2->name = mud_str_dup(buf5);
     tile2->shortDescr = mud_str_dup(buf6);

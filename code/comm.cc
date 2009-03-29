@@ -67,7 +67,7 @@ int run_the_game()
   ares_status = ares_init(&channel);
   vlogf(LOG_MISC, "run_the_game: finished calling ares_init");
   if (ares_status != ARES_SUCCESS) {
-    vlogf(LOG_BUG, fmt("fatal error in ares_init: %s") % ares_strerror(ares_status, &ares_errmem));
+    vlogf(LOG_BUG, format("fatal error in ares_init: %s") % ares_strerror(ares_status, &ares_errmem));
     ares_free_errmem(ares_errmem);
     return FALSE;
   }
@@ -242,7 +242,7 @@ void sendToRoom(colorTypeT color, const char *text, int room)
   TThing *i=NULL;
 
   if (!real_roomp(room)) {
-    vlogf(LOG_MISC, fmt("BOGUS room %d in sendToRoom") %  room);
+    vlogf(LOG_MISC, format("BOGUS room %d in sendToRoom") %  room);
     return;
   }
   if (text) {
@@ -261,7 +261,7 @@ void sendToRoom(const char *text, int room)
   TThing *i=NULL;
 
   if (!real_roomp(room)) {
-    vlogf(LOG_MISC, fmt("BOGUS room %d in sendToRoom") %  room);
+    vlogf(LOG_MISC, format("BOGUS room %d in sendToRoom") %  room);
     return;
   }
   if (text) {
@@ -389,7 +389,7 @@ void colorAct(colorTypeT colorLevel, const sstring &str, bool hide, const TThing
 
   if (!t1) {
     vlogf(LOG_MISC, "There is no char in coloract TOCHAR.");
-    vlogf(LOG_MISC, fmt("%s") %  str);
+    vlogf(LOG_MISC, format("%s") %  str);
     return;
   }
 
@@ -398,13 +398,13 @@ void colorAct(colorTypeT colorLevel, const sstring &str, bool hide, const TThing
 
   if (!t3) {
     if (type == TO_VICT) {
-      vlogf(LOG_MISC, fmt("There is no victim in coloract TOVICT %s is char.") %  t1->getName());
-      vlogf(LOG_MISC, fmt("%s") %  str);
+      vlogf(LOG_MISC, format("There is no victim in coloract TOVICT %s is char.") %  t1->getName());
+      vlogf(LOG_MISC, format("%s") %  str);
       return;
     } else if (type == TO_NOTVICT) {
       type = TO_ROOM;
-      vlogf(LOG_MISC, fmt("There is no victim in coloract TONOTVICT %s is char.") %  t1->getName());
-      vlogf(LOG_MISC, fmt("%s") %  str);
+      vlogf(LOG_MISC, format("There is no victim in coloract TONOTVICT %s is char.") %  t1->getName());
+      vlogf(LOG_MISC, format("%s") %  str);
     }
   }
 
@@ -542,24 +542,24 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
 
   if (!t1) {
     vlogf(LOG_MISC, "There is no char in act() TOCHAR.");
-    vlogf(LOG_MISC, fmt("%s") %  str);
+    vlogf(LOG_MISC, format("%s") %  str);
     return;
   }
   if (!t1->roomp){
     //    vlogf(LOG_MISC, "There is no room in act() TOCHAR");
-    //    vlogf(LOG_MISC, fmt("%s") %  str);
+    //    vlogf(LOG_MISC, format("%s") %  str);
     return;
   }
 
   if (!t3) {
     if (type == TO_VICT) {
-      vlogf(LOG_MISC, fmt("There is no victim in act() TOVICT %s is char.") %  t1->getName());
-      vlogf(LOG_MISC, fmt("%s") %  str);
+      vlogf(LOG_MISC, format("There is no victim in act() TOVICT %s is char.") %  t1->getName());
+      vlogf(LOG_MISC, format("%s") %  str);
       return;
     } else if (type == TO_NOTVICT) {
       type = TO_ROOM;
-      vlogf(LOG_MISC, fmt("There is no victim in act() TONOTVICT %s is char.") %  t1->getName());
-      vlogf(LOG_MISC, fmt("%s") %  str);
+      vlogf(LOG_MISC, format("There is no victim in act() TONOTVICT %s is char.") %  t1->getName());
+      vlogf(LOG_MISC, format("%s") %  str);
     }
   }
   
@@ -572,7 +572,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
   } else {
     if (!t1->roomp){
       //      vlogf(LOG_MISC, "There is no room in act() TOCHAR 2");
-      //      vlogf(LOG_MISC, fmt("%s") %  str);
+      //      vlogf(LOG_MISC, format("%s") %  str);
       return;
     }
 
@@ -626,7 +626,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
 	    case 'P':
 	    case 'N':
               if (!t3) {
-                vlogf(LOG_BUG, fmt("Bad act P or N. '%s'") %  str);
+                vlogf(LOG_BUG, format("Bad act P or N. '%s'") %  str);
                 return;
               }
               tbtt = dynamic_cast<const TBeing *>(t3);
@@ -671,7 +671,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
               break;
 	    case 'G':
               if (!t3) {
-                vlogf(LOG_BUG, fmt("Bad act G. '%s'") %  str);
+                vlogf(LOG_BUG, format("Bad act G. '%s'") %  str);
                 return;
               }
               strncpy(ibuf, t3->roomp->describeGround().c_str(), cElements(ibuf));
@@ -684,7 +684,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
               break;
 	    case 'D':
               if (!t3) {
-                vlogf(LOG_BUG, fmt("Bad act D. '%s'") %  str);
+                vlogf(LOG_BUG, format("Bad act D. '%s'") %  str);
                 return;
               }
               strncpy(ibuf, t3->yourDeity(your_deity_val, ((to == t3) ? FIRST_PERSON : (strlen(buf) == 0 ? THIRD_PERSON : SECOND_PERSON))).c_str(), cElements(ibuf));
@@ -693,7 +693,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
             case 'q':
               // is/are based on plurality of $o, $p
               if (!obj) {
-                vlogf(LOG_BUG, fmt("Bad act q. '%s'") %  str);
+                vlogf(LOG_BUG, format("Bad act q. '%s'") %  str);
                 return;
               }
               tobj = dynamic_cast<const TObj *>(obj);
@@ -705,7 +705,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
             case 'Q':
               // a verb modifier so can do "$o look$Q happy" for plurality
               if (!obj) {
-                vlogf(LOG_BUG, fmt("Bad act Q. '%s'") %  str);
+                vlogf(LOG_BUG, format("Bad act Q. '%s'") %  str);
                 return;
               }
               tobj = dynamic_cast<const TObj *>(obj);
@@ -717,7 +717,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
             case 'r':
               // is/are based on plurality of $n
               if (!t1) {
-                vlogf(LOG_BUG, fmt("Bad act r. '%s'") %  str);
+                vlogf(LOG_BUG, format("Bad act r. '%s'") %  str);
                 return;
               }
               tobj = dynamic_cast<const TObj *>(t1);
@@ -729,7 +729,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
             case 'R':
               // a verb modifier so can do "$n look$Q happy" for plurality
               if (!t1) {
-                vlogf(LOG_BUG, fmt("Bad act R. '%s'") %  str);
+                vlogf(LOG_BUG, format("Bad act R. '%s'") %  str);
                 return;
               }
               tobj = dynamic_cast<const TObj *>(t1);
@@ -746,7 +746,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
 	      break;
 	    case 'M':
               if (!t3) {
-                vlogf(LOG_BUG, fmt("Bad act M. '%s'") %  str);
+                vlogf(LOG_BUG, format("Bad act M. '%s'") %  str);
                 return;
               }
               if ((type == TO_CHAR) && (t1 == t3)) 
@@ -764,7 +764,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
 	      break;
 	    case 'S':
               if (!t3) {
-                vlogf(LOG_BUG, fmt("Bad act S. '%s'") %  str);
+                vlogf(LOG_BUG, format("Bad act S. '%s'") %  str);
                 return;
               }
               if (to->canSee(t3))
@@ -780,7 +780,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
 	      break;
 	    case 'E':
               if (!t3) {
-                vlogf(LOG_BUG, fmt("Bad act E. '%s'") %  str);
+                vlogf(LOG_BUG, format("Bad act E. '%s'") %  str);
                 return;
               }
               if (to->canSee(t3))
@@ -790,7 +790,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
 	      break;
 	    case 'o':
               if (!obj) {
-                vlogf(LOG_BUG, fmt("Bad act o. '%s'") %  str);
+                vlogf(LOG_BUG, format("Bad act o. '%s'") %  str);
                 return;
               }
 	      strncpy(ibuf, dynamic_cast<const TBeing *>(obj) ? to->persfname(obj).c_str() : to->objn(obj).c_str(), cElements(ibuf));
@@ -798,7 +798,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
 	      break;
 	    case 'O':
               if (!t3) {
-                vlogf(LOG_BUG, fmt("Bad act O. '%s'") %  str);
+                vlogf(LOG_BUG, format("Bad act O. '%s'") %  str);
                 return;
               }
 	      strncpy(ibuf, dynamic_cast<const TBeing *>(t3) ? to->persfname(t3).c_str() : to->objn(t3).c_str(), cElements(ibuf));
@@ -806,7 +806,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
 	      break;
 	    case 'p':
               if (!obj) {
-                vlogf(LOG_BUG, fmt("Bad act p. '%s'") %  str);
+                vlogf(LOG_BUG, format("Bad act p. '%s'") %  str);
                 return;
               }
               tbtt = dynamic_cast<const TBeing *>(obj);
@@ -821,28 +821,28 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
 	      break;
 	    case 'a':
               if (!obj) {
-                vlogf(LOG_BUG, fmt("Bad act a. '%s'") %  str);
+                vlogf(LOG_BUG, format("Bad act a. '%s'") %  str);
                 return;
               }
 	      i = obj->sana();
 	      break;
 	    case 'A':
               if (!t3) {
-                vlogf(LOG_BUG, fmt("Bad act A. '%s'") %  str);
+                vlogf(LOG_BUG, format("Bad act A. '%s'") %  str);
                 return;
               }
 	      i = t3->sana();
 	      break;
 	    case 'T':
               if (!t3) {
-                vlogf(LOG_BUG, fmt("Bad act T. '%s'") %  str);
+                vlogf(LOG_BUG, format("Bad act T. '%s'") %  str);
                 return;
               }
 	      i = (const char *) t3;
 	      break;
 	    case 'F':
               if (!t3) {
-                vlogf(LOG_BUG, fmt("Bad act F. '%s'") %  str);
+                vlogf(LOG_BUG, format("Bad act F. '%s'") %  str);
                 return;
               }
 	      i = fname((const char *) t3).c_str();
@@ -883,13 +883,13 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
       sstring s=buf;
 
       if (!color) {
-        to->desc->output.putInQ(new UncategorizedComm(fmt("%s\n\r") %s.cap()));
+        to->desc->output.putInQ(new UncategorizedComm(format("%s\n\r") %s.cap()));
       } else {
         sstring str = to->ansi_color(color);
         if (str.empty())
-          to->desc->output.putInQ(new UncategorizedComm(fmt("%s\n\r") %s.cap()));
+          to->desc->output.putInQ(new UncategorizedComm(format("%s\n\r") %s.cap()));
         else {
-	  to->desc->output.putInQ(new UncategorizedComm(fmt("%s%s%s\n\r") %
+	  to->desc->output.putInQ(new UncategorizedComm(format("%s%s%s\n\r") %
 							str % s.cap() % 
 							to->norm()));
         } 
@@ -909,7 +909,7 @@ void Descriptor::updateScreenVt100(unsigned int update)
     return;
 
   if (!ch->vt100()) {
-    vlogf(LOG_MISC, fmt("%s in updateScreenVt100 and not vt (%d)") % ch->getName() %update);
+    vlogf(LOG_MISC, format("%s in updateScreenVt100 and not vt (%d)") % ch->getName() %update);
     return;
   }
 
@@ -1236,7 +1236,7 @@ void Descriptor::updateScreenAnsi(unsigned int update)
     return;
 
   if (!ch->ansi()) {
-    vlogf(LOG_MISC, fmt("%s in updateScreenAnsi and not ansi (%d)") % ch->getName() % update);
+    vlogf(LOG_MISC, format("%s in updateScreenAnsi and not ansi (%d)") % ch->getName() % update);
     return;
   }
 
@@ -1268,15 +1268,15 @@ void Descriptor::updateScreenAnsi(unsigned int update)
   missing_moves = 10 - current_moves;
 
   writeToQ(VT_CURSAVE);
-  buf = fmt(VT_CURSPOS) % (ch->getScreen() - 2) % 1;
+  buf = format(VT_CURSPOS) % (ch->getScreen() - 2) % 1;
 
   if (IS_SET(prompt_d.type, PROMPT_CLASSIC_ANSIBAR)) {
 
     // Line 1:
 
     if (update & CHANGED_HP) {
-      buf += fmt(VT_CURSPOS) % (ch->getScreen() - 2) % 7;
-      buf += fmt("%s%-5d ") % (current_hit > 2 ? VT_BOLDTEX : ANSI_RED) % ch->getHit();
+      buf += format(VT_CURSPOS) % (ch->getScreen() - 2) % 7;
+      buf += format("%s%-5d ") % (current_hit > 2 ? VT_BOLDTEX : ANSI_RED) % ch->getHit();
       buf += ANSI_BLUE;
 
       for (i = 1; i <= current_hit; i++)
@@ -1289,14 +1289,14 @@ void Descriptor::updateScreenAnsi(unsigned int update)
     }
 
     if (IS_SET(update, CHANGED_MANA) || IS_SET(update, CHANGED_PIETY) || IS_SET(update, CHANGED_LIFEFORCE)) {
-      buf += fmt(VT_CURSPOS) % (ch->getScreen() - 2) % 34;
+      buf += format(VT_CURSPOS) % (ch->getScreen() - 2) % 34;
 
       if (ch->hasClass(CLASS_DEIKHAN) || ch->hasClass(CLASS_CLERIC))
-        buf += fmt("%s%-5.1f ") % (current_mana ? VT_BOLDTEX : ANSI_RED) % ch->getPiety();
+        buf += format("%s%-5.1f ") % (current_mana ? VT_BOLDTEX : ANSI_RED) % ch->getPiety();
       else if (ch->hasClass(CLASS_SHAMAN))
-        buf += fmt("%s%-5d ") % (current_mana ? VT_BOLDTEX : ANSI_RED) % ch->getLifeforce();
+        buf += format("%s%-5d ") % (current_mana ? VT_BOLDTEX : ANSI_RED) % ch->getLifeforce();
       else
-        buf += fmt("%s%-5d ") % (current_mana ? VT_BOLDTEX : ANSI_RED) % ch->getMana();
+        buf += format("%s%-5d ") % (current_mana ? VT_BOLDTEX : ANSI_RED) % ch->getMana();
 
       buf += ANSI_BLUE;
 
@@ -1310,8 +1310,8 @@ void Descriptor::updateScreenAnsi(unsigned int update)
     }
 
     if (IS_SET(update, CHANGED_MOVE)) {
-      buf += fmt(VT_CURSPOS) % (ch->getScreen() - 2) % 62;
-      buf += fmt("%s%-5d ") % (current_moves ? VT_BOLDTEX : ANSI_RED) % ch->getMove();
+      buf += format(VT_CURSPOS) % (ch->getScreen() - 2) % 62;
+      buf += format("%s%-5d ") % (current_moves ? VT_BOLDTEX : ANSI_RED) % ch->getMove();
       buf += ANSI_BLUE;
 
       for (i = 1; i <= current_moves; i++)
@@ -1327,8 +1327,8 @@ void Descriptor::updateScreenAnsi(unsigned int update)
 
     if (ch->isImmortal()) {
       if (update & CHANGED_ROOM) {
-        buf += fmt(VT_CURSPOS) % (ch->getScreen() - 1) % 7;
-        buf += fmt("%s%-6d") % ANSI_GREEN % ch->roomp->number;
+        buf += format(VT_CURSPOS) % (ch->getScreen() - 1) % 7;
+        buf += format("%s%-6d") % ANSI_GREEN % ch->roomp->number;
       }
     } else {
 #if FACTIONS_IN_USE
@@ -1340,13 +1340,13 @@ void Descriptor::updateScreenAnsi(unsigned int update)
     }
 
     if (IS_SET(update, CHANGED_GOLD)) {
-      buf += fmt(VT_CURSPOS) % (ch->getScreen() - 1) % 34;
-      buf += fmt("%s%-8d") % ANSI_GREEN % ch->getMoney();
+      buf += format(VT_CURSPOS) % (ch->getScreen() - 1) % 34;
+      buf += format("%s%-8d") % ANSI_GREEN % ch->getMoney();
     }
 
     if (IS_SET(update, CHANGED_EXP)) {
-      buf += fmt(VT_CURSPOS) % (ch->getScreen() - 1) % 58;
-      buf += fmt("%s%s") % ANSI_GREEN % ch->displayExp();
+      buf += format(VT_CURSPOS) % (ch->getScreen() - 1) % 58;
+      buf += format("%s%s") % ANSI_GREEN % ch->displayExp();
     }
 
     // Line 3:
@@ -1355,8 +1355,8 @@ void Descriptor::updateScreenAnsi(unsigned int update)
       if (f->sameRoom(*ch)) {
         int maxh = max(1, (int) f->hitLimit());
         int ratio = min(10, max(0, ((f->getHit() * 9) / maxh)));
-        buf += fmt(VT_CURSPOS) % ch->getScreen() % 3;
-        buf += fmt("%s<%s=%s>%s") % ch->purple() % fname(f->name) % prompt_mesg[ratio] % ch->norm();
+        buf += format(VT_CURSPOS) % ch->getScreen() % 3;
+        buf += format("%s<%s=%s>%s") % ch->purple() % fname(f->name) % prompt_mesg[ratio] % ch->norm();
         last.fighting = TRUE;
 
         ratio = fname(f->name).length() + strlen(prompt_mesg[ratio]);
@@ -1368,15 +1368,15 @@ void Descriptor::updateScreenAnsi(unsigned int update)
       }
     } else {
       if (last.fighting) {
-        buf += fmt(VT_CURSPOS) % ch->getScreen() % 3;
+        buf += format(VT_CURSPOS) % ch->getScreen() % 3;
         buf += "                         ";
         last.fighting = FALSE;
       }
     }
 
     if (IS_SET(update, CHANGED_MUD)) {
-      buf += fmt(VT_CURSPOS) % ch->getScreen() % 35;
-      buf += fmt("%s") % hmtAsString(hourminTime());
+      buf += format(VT_CURSPOS) % ch->getScreen() % 35;
+      buf += format("%s") % hmtAsString(hourminTime());
     }
 
     if (IS_SET(update, CHANGED_TIME)) {
@@ -1392,8 +1392,8 @@ void Descriptor::updateScreenAnsi(unsigned int update)
         } else if (tptr->tm_hour > 23)
           tptr->tm_hour -= 24;
 
-        buf += fmt(VT_CURSPOS) % ch->getScreen() % 62;
-        buf += fmt("%2d:%02d %2s") %
+        buf += format(VT_CURSPOS) % ch->getScreen() % 62;
+        buf += format("%2d:%02d %2s") %
                 ((!(tptr->tm_hour%12) ? 12 : tptr->tm_hour%12)) %
                 tptr->tm_min %
                 ((tptr->tm_hour >= 12) ? "PM" : "AM");
@@ -1405,8 +1405,8 @@ void Descriptor::updateScreenAnsi(unsigned int update)
     // Line 1:
 
     if (IS_SET(update, CHANGED_HP)) {
-      buf += fmt(VT_CURSPOS) % (ch->getScreen() - 2) % 7;
-      buf += fmt("%s%-5d ") % (current_hit > 2 ? VT_BOLDTEX : ANSI_RED) % ch->getHit();
+      buf += format(VT_CURSPOS) % (ch->getScreen() - 2) % 7;
+      buf += format("%s%-5d ") % (current_hit > 2 ? VT_BOLDTEX : ANSI_RED) % ch->getHit();
       buf += ANSI_BLUE;
 
       for (i = 1; i <= current_hit; i++)
@@ -1419,14 +1419,14 @@ void Descriptor::updateScreenAnsi(unsigned int update)
     }
 
     if (IS_SET(update, CHANGED_MANA) || IS_SET(update, CHANGED_PIETY) || IS_SET(update, CHANGED_LIFEFORCE)) {
-      buf += fmt(VT_CURSPOS) % (ch->getScreen() - 2) % 34;
+      buf += format(VT_CURSPOS) % (ch->getScreen() - 2) % 34;
 
       if (ch->hasClass(CLASS_DEIKHAN) || ch->hasClass(CLASS_CLERIC)) 
-        buf += fmt("%s%-5.1f ") % (current_mana ? VT_BOLDTEX : ANSI_RED) % ch->getPiety();
+        buf += format("%s%-5.1f ") % (current_mana ? VT_BOLDTEX : ANSI_RED) % ch->getPiety();
       else if (ch->hasClass(CLASS_SHAMAN)) 
-        buf += fmt("%s%-5d ") % (current_mana ? VT_BOLDTEX : ANSI_RED) % ch->getLifeforce();
+        buf += format("%s%-5d ") % (current_mana ? VT_BOLDTEX : ANSI_RED) % ch->getLifeforce();
       else
-        buf += fmt("%s%-5d ") % (current_mana ? VT_BOLDTEX : ANSI_RED) % ch->getMana();
+        buf += format("%s%-5d ") % (current_mana ? VT_BOLDTEX : ANSI_RED) % ch->getMana();
 
       buf += ANSI_BLUE;
 
@@ -1440,8 +1440,8 @@ void Descriptor::updateScreenAnsi(unsigned int update)
     }
 
     if (IS_SET(update, CHANGED_MOVE)) {
-      buf += fmt(VT_CURSPOS) % (ch->getScreen() - 2) % 62;
-      buf += fmt("%s%-5d ") % (current_moves ? VT_BOLDTEX : ANSI_RED) % ch->getMove();
+      buf += format(VT_CURSPOS) % (ch->getScreen() - 2) % 62;
+      buf += format("%s%-5d ") % (current_moves ? VT_BOLDTEX : ANSI_RED) % ch->getMove();
       buf += ANSI_BLUE;
 
       for (i = 1; i <= current_moves; i++)
@@ -1474,34 +1474,34 @@ void Descriptor::updateScreenAnsi(unsigned int update)
 
         StTemp[23] = '\0';
 
-        buf += fmt(VT_CURSPOS) % (ch->getScreen() - 1) % 1;
-        buf += fmt("%s%s%s") % ch->purple() % StTemp % ch->norm();
+        buf += format(VT_CURSPOS) % (ch->getScreen() - 1) % 1;
+        buf += format("%s%s%s") % ch->purple() % StTemp % ch->norm();
 
         last.fighting = TRUE;
       }
     } else {
       if (last.fighting) {
-        buf += fmt(VT_CURSPOS) % (ch->getScreen() - 1) % 1;
+        buf += format(VT_CURSPOS) % (ch->getScreen() - 1) % 1;
         buf += "                      ";
         last.fighting = FALSE;
       }
     }
 
     if (IS_SET(update, CHANGED_EXP)) {
-      buf += fmt(VT_CURSPOS) % (ch->getScreen() - 1) % 34;
-      buf += fmt("%s%s") % ANSI_GREEN % ch->displayExp();
+      buf += format(VT_CURSPOS) % (ch->getScreen() - 1) % 34;
+      buf += format("%s%s") % ANSI_GREEN % ch->displayExp();
     }
 
     if (ch->isImmortal()) {
       if (IS_SET(update, CHANGED_ROOM)) {
-        buf += fmt(VT_CURSPOS) % (ch->getScreen() - 1) % 62;
-        buf += fmt("%s%-6d") % ANSI_GREEN % ch->roomp->number;
+        buf += format(VT_CURSPOS) % (ch->getScreen() - 1) % 62;
+        buf += format("%s%-6d") % ANSI_GREEN % ch->roomp->number;
       }
     } else {
 #if FACTIONS_IN_USE
       if (IS_SET(update, CHANGED_PERC)) {
-        buf += fmt(VT_CURSPOS) % (ch->getScreen() - 1) % 45;
-        buf += fmt("%s%3.4f") % ANSI_GREEN % ch->getPerc();
+        buf += format(VT_CURSPOS) % (ch->getScreen() - 1) % 45;
+        buf += format("%s%3.4f") % ANSI_GREEN % ch->getPerc();
       }
 #else
       if (ch->fight() && ch->awake() && ch->fight()->sameRoom(*ch)) {
@@ -1525,16 +1525,16 @@ void Descriptor::updateScreenAnsi(unsigned int update)
 
           StTemp[23] = '\0';
 
-          buf += fmt(VT_CURSPOS) % (ch->getScreen() - 1) % 55;
-          buf += fmt("%s%s%s") % ch->purple() % StTemp % ch->norm();
+          buf += format(VT_CURSPOS) % (ch->getScreen() - 1) % 55;
+          buf += format("%s%s%s") % ch->purple() % StTemp % ch->norm();
 
           last.fighting = TRUE;
         } else {
-          buf += fmt(VT_CURSPOS) % (ch->getScreen() - 1) % 55;
+          buf += format(VT_CURSPOS) % (ch->getScreen() - 1) % 55;
           buf += "                      ";
         }
       } else {
-        buf += fmt(VT_CURSPOS) % (ch->getScreen() - 1) % 55;
+        buf += format(VT_CURSPOS) % (ch->getScreen() - 1) % 55;
         buf += "                      ";
       }
 #endif
@@ -1543,8 +1543,8 @@ void Descriptor::updateScreenAnsi(unsigned int update)
     // Line 3:
 
     if (IS_SET(update, CHANGED_MUD)) {
-      buf += fmt(VT_CURSPOS) % ch->getScreen() % 1;
-      buf += fmt("   %8s   ") % hmtAsString(hourminTime());
+      buf += format(VT_CURSPOS) % ch->getScreen() % 1;
+      buf += format("   %8s   ") % hmtAsString(hourminTime());
     }
 
     time_t t1;
@@ -1561,8 +1561,8 @@ void Descriptor::updateScreenAnsi(unsigned int update)
       else if (tptr->tm_hour > 23)
         tptr->tm_hour -= 24;
 
-      buf += fmt(VT_CURSPOS) % ch->getScreen() % 15;
-      buf += fmt("   %2d:%02d %2s   ") %
+      buf += format(VT_CURSPOS) % ch->getScreen() % 15;
+      buf += format("   %2d:%02d %2s   ") %
             ((!(tptr->tm_hour%12) ? 12 : tptr->tm_hour%12)) %
             tptr->tm_min %
             ((tptr->tm_hour >= 12) ? "PM" : "AM");
@@ -1575,7 +1575,7 @@ void Descriptor::updateScreenAnsi(unsigned int update)
         if (ch->getLevel(iClass)) {
           double iNeed = getExpClassLevel(iClass, ch->getLevel(iClass) + 1) - ch->getExp();
 
-          buf += fmt(VT_CURSPOS) % ch->getScreen() % 34;
+          buf += format(VT_CURSPOS) % ch->getScreen() % 34;
 
           if (ch->getLevel(iClass) >= MAX_MORT)
             buf += "0";
@@ -1600,8 +1600,8 @@ void Descriptor::updateScreenAnsi(unsigned int update)
     }
 
     if (IS_SET(update, CHANGED_GOLD)) {
-      buf += fmt(VT_CURSPOS) % ch->getScreen() % 62;
-      buf += fmt("%s%-8d") % ANSI_GREEN % ch->getMoney();
+      buf += format(VT_CURSPOS) % ch->getScreen() % 62;
+      buf += format("%s%-8d") % ANSI_GREEN % ch->getMoney();
     }
 
   }
@@ -1647,7 +1647,7 @@ sstring UncategorizedComm::getClientText(){
 }
 
 sstring UncategorizedComm::getXML(){
-  return fmt("<uncategorized>%s</uncategorized>") % text.escape(XML);
+  return format("<uncategorized>%s</uncategorized>") % text.escape(XML);
 }
 
 // RoomExitComm
@@ -1681,7 +1681,7 @@ sstring CmdMsgComm::getClientText(){
 }
 
 sstring CmdMsgComm::getXML(){
-  return fmt("<cmdmsg cmd=\"%s\">%s</cmdmsg>") % 
+  return format("<cmdmsg cmd=\"%s\">%s</cmdmsg>") % 
     cmd.escape(XML) % text.escape(XML);
 }
 

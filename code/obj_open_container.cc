@@ -186,24 +186,24 @@ void TOpenContainer::changeObjValue2(TBeing *ch)
 void TOpenContainer::describeContains(const TBeing *ch) const
 {
   if (!stuff.empty() && !isClosed())
-    ch->sendTo(COLOR_OBJECTS, fmt("%s seems to have something in it...\n\r") %
+    ch->sendTo(COLOR_OBJECTS, format("%s seems to have something in it...\n\r") %
 	       sstring(getName()).cap());
 }
 
 void TOpenContainer::lowCheck()
 {
   if (carryWeightLimit() <= 0.0) {
-    vlogf(LOG_LOW, fmt("Container (%s) with bad weight limit (%5.2f).") % 
+    vlogf(LOG_LOW, format("Container (%s) with bad weight limit (%5.2f).") % 
             getName() % carryWeightLimit());
   }
   if (carryVolumeLimit() <= 0) {
-    vlogf(LOG_LOW, fmt("Container (%s) with bad volume limit (%d).") % 
+    vlogf(LOG_LOW, format("Container (%s) with bad volume limit (%d).") % 
             getName() % carryVolumeLimit());
   }
 
   if (isContainerFlag(CONT_TRAPPED)) {
     if (getContainerTrapType() == DOOR_TRAP_NONE) {
-      vlogf(LOG_LOW, fmt("Container (%s:%d) trapped with no trap type.  Removing.") % 
+      vlogf(LOG_LOW, format("Container (%s:%d) trapped with no trap type.  Removing.") % 
            getName() % objVnum());
       remContainerFlag(CONT_TRAPPED);
     }
@@ -467,11 +467,11 @@ void TOpenContainer::lookObj(TBeing *ch, int bits) const
   if (carryVolumeLimit() && carryWeightLimit()) {
     // moneypouches are occasionally overfilled, so we will just force the
     // info to look right...
-    ch->sendTo(fmt("%d%c full, %d%c loaded.\n\r") %
+    ch->sendTo(format("%d%c full, %d%c loaded.\n\r") %
      min(100, getCarriedVolume() * 100 / carryVolumeLimit()) % '%' %
      min(100, (int) (getCarriedWeight() * 100.0 / carryWeightLimit())) % '%');
   } else {
-    vlogf(LOG_BUG, fmt("Problem in look in for object: (%s:%d), check vol/weight limit") %  getName() % objVnum());
+    vlogf(LOG_BUG, format("Problem in look in for object: (%s:%d), check vol/weight limit") %  getName() % objVnum());
   }
   list_in_heap(stuff, ch, 0, 100);
 

@@ -372,7 +372,7 @@ bool appliedSubstanceFindMatch(TThing **tObjList, int ceLevel, int LsSize, int s
     if (skClassAs == CLASS_RANGER)
       tCompListOrig[Runner] = AppliedCreate[ceLevel]->CompList[Runner];
     else {
-      vlogf(LOG_BUG, fmt("Person got to SubstanceFindMatch with wrong skClassAs value [%d]") %  skClassAs);
+      vlogf(LOG_BUG, format("Person got to SubstanceFindMatch with wrong skClassAs value [%d]") %  skClassAs);
       return false;
     }
   }

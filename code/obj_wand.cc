@@ -86,7 +86,7 @@ int TWand::changeItemVal4Check(TBeing *ch, int the_update)
 
 void TWand::divinateMe(TBeing *caster) const
 {
-  caster->sendTo(fmt("It has %d out of %d charges left.\n\r") %
+  caster->sendTo(format("It has %d out of %d charges left.\n\r") %
            getCurCharges() % getMaxCharges());
   caster->describeMagicLevel(this, 101);
   caster->describeMagicLearnedness(this, 101);
@@ -149,12 +149,12 @@ void TWand::lowCheck()
          !discArray[curspell]->minLifeforce && 
          !discArray[curspell]->minPiety)) ||
       (getDisciplineNumber(curspell, FALSE) == DISC_NONE)))) {
-    vlogf(LOG_LOW, fmt("wand (%s:%d) has messed up spell(%d)") % 
+    vlogf(LOG_LOW, format("wand (%s:%d) has messed up spell(%d)") % 
          getName() % objVnum() % curspell);
     if ((curspell < TYPE_UNDEFINED) || (curspell >= MAX_SKILL))
       vlogf(LOG_LOW, "bogus range");
     else if (!discArray[curspell])
-      vlogf(LOG_LOW, fmt("bogus spell, %d") %  curspell);
+      vlogf(LOG_LOW, format("bogus spell, %d") %  curspell);
     else if ((!discArray[curspell]->minMana && !discArray[curspell]->minLifeforce && 
       !discArray[curspell]->minPiety))
       vlogf(LOG_LOW, "non-spell");
@@ -162,7 +162,7 @@ void TWand::lowCheck()
   if (curspell > TYPE_UNDEFINED &&
       discArray[curspell]->targets & TAR_CHAR_WORLD) {
     // spells that use this setting are not a good choice for obj spells
-    vlogf(LOG_LOW, fmt("Obj (%s : %d) had spell that shouldn't be on objs (%s : %d)") %
+    vlogf(LOG_LOW, format("Obj (%s : %d) had spell that shouldn't be on objs (%s : %d)") %
         getName() % objVnum() % discArray[curspell]->name % curspell);
   }
 
@@ -213,7 +213,7 @@ int TWand::useMe(TBeing *ch, const char * argument)
 
   the_spell = getSpell();
   if (!discArray[the_spell]) {
-    vlogf(LOG_BUG,fmt("doUse (%s) called spell (%d) that does not exist! - Don't do that!") %  getName() % getSpell());
+    vlogf(LOG_BUG,format("doUse (%s) called spell (%d) that does not exist! - Don't do that!") %  getName() % getSpell());
     return FALSE;
   }
 

@@ -967,7 +967,7 @@ int armor(TBeing *c, TBeing * victim, int level, byte learn, spellNumT spell)
   else if (spell == SPELL_ARMOR_DEIKHAN)
     aff.modifier = -75;
   else {
-    vlogf(LOG_BUG, fmt("Unknown spell %d in armor()") %  spell);
+    vlogf(LOG_BUG, format("Unknown spell %d in armor()") %  spell);
     aff.modifier = 0;
   }
   

@@ -179,7 +179,7 @@ LIBSYS=	ansi.o		database.o   	socket.o		\
 	colorstring.o  	handler.o    	timing.o		\
 	comm.o         	indexdata.o				\
 	connect.o      	signals.o    	sstring.o		\
-	format.o	pathfinder.o	process.o		\
+	pathfinder.o	process.o		\
 	proc_check_mail.o		proc_check_repo.o	\
 	rewrite_obj_file.o	create_character.o		\
 	configuration.o

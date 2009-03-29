@@ -175,13 +175,13 @@ int bankDeposit(TBeing *ch, TMonster *myself, TMonster *teller, int shop_nr, int
 
   if (!db.fetchRow()) {
     teller->doTell(ch->getName(), "You really should not see me, this is an error...");
-    vlogf(LOG_BUG, fmt("Banking error, was unable to retrieve balance after a deposit: %s") % ch->getName());
+    vlogf(LOG_BUG, format("Banking error, was unable to retrieve balance after a deposit: %s") % ch->getName());
 
     return TRUE;
   } else
     bankmoney = convertTo<int>(db["talens"]);
 
-  teller->doTell(ch->getName(), fmt("...Your new balance is %i") % bankmoney);
+  teller->doTell(ch->getName(), format("...Your new balance is %i") % bankmoney);
 
   return TRUE;
 }
@@ -202,7 +202,7 @@ int bankBalance(TBeing *ch, TMonster *myself, TMonster *teller, int shop_nr)
   } else
     bankmoney = convertTo<int>(db["talens"]);
 
-  teller->doTell(ch->getName(), fmt("Your balance is %i.") % bankmoney);
+  teller->doTell(ch->getName(), format("Your balance is %i.") % bankmoney);
 
   return TRUE;
 }
@@ -258,7 +258,7 @@ int centralBanker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
       db2.query("select (sb.c+sbc.c) as c, (sb.t+sbc.t) as t from (select count(*) as c, sum(talens) as t from shopownedbank where shop_nr=%i) sb, (select count(*) as c, sum(talens) as t from shopownedcorpbank where shop_nr=%i) sbc", db["shop_nr"].c_str(), db["shop_nr"].c_str());
 
       if(db2.fetchRow()){
-	buf += fmt("<c>%s - %s accounts, %s in deposits.<1>\n\r") % 
+	buf += format("<c>%s - %s accounts, %s in deposits.<1>\n\r") % 
 	  db["name"] % db2["c"] %
 	  talenDisplay(convertTo<int>(db2["t"]));
       }
@@ -307,16 +307,16 @@ int banker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
       if(convertTo<int>(db["talens"]) == 0)
 	empty++;
       else
-	buf += fmt("<c>%s - %s talens.<1>\n\r") % db["name"] %
+	buf += format("<c>%s - %s talens.<1>\n\r") % db["name"] %
 	  talenDisplay(convertTo<int>(db["talens"]));
     }
-    buf += fmt("%i empty accounts.\n\r") % empty;
+    buf += format("%i empty accounts.\n\r") % empty;
 
     db.query("select (sb.c+sbc.c) as c, (sb.t+sbc.t) as t from (select count(*) as c, sum(talens) as t from shopownedbank where shop_nr=%i) sb, (select count(*) as c, sum(talens) as t from shopownedcorpbank where shop_nr=%i) sbc", shop_nr, shop_nr);
 
 
     if(db.fetchRow()){
-      buf += fmt("%i total accounts, %s talens.\n\r") %
+      buf += format("%i total accounts, %s talens.\n\r") %
 	convertTo<int>(db["c"]) % 
 	talenDisplay(convertTo<int>(db["t"]));
     }

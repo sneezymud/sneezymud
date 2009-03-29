@@ -260,7 +260,7 @@ int lichTouch(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
         if (pers && !save) {
           pers->dropLevel(pers->bestClass());
           pers->setTitle(false);
-          vlogf(LOG_MISC, fmt("%s just lost a level from a critical lich touch!") %  pers->getName());
+          vlogf(LOG_MISC, format("%s just lost a level from a critical lich touch!") %  pers->getName());
         }
         break;
       case CRIT_S_NONE:

@@ -64,7 +64,7 @@ int TBeing::diseaseStop(affectedData *af)
 
 int disease_null(TBeing *victim, int, affectedData *)
 {
-  vlogf(LOG_BUG, fmt("WARNING:  %s has a bogus disease #%d affect.") % 
+  vlogf(LOG_BUG, format("WARNING:  %s has a bogus disease #%d affect.") % 
 	((victim) ? victim->getName() : "A null pointer"));
   return FALSE;
 }
@@ -111,7 +111,7 @@ void spread_affect(TBeing *ch, int chance_to_spread, bool race, bool not_race, a
         (af->type == AFFECT_DISEASE && !v->hasDisease(affToDisease(*af)))) {
 
 #if 0
-      vlogf(LOG_MISC, fmt("%s (%s:%d) spreading from %s to %s at %d") % 
+      vlogf(LOG_MISC, format("%s (%s:%d) spreading from %s to %s at %d") % 
              af->type == AFFECT_DISEASE ? "Disease" : "Spell" %
              af->type == AFFECT_DISEASE ? 
                  DiseaseInfo[af->modifier].name : 
@@ -353,7 +353,7 @@ int disease_numbed(TBeing *victim, int message, affectedData *af)
   wearSlotT slot = wearSlotT(af->level);
 
   if(slot < MIN_WEAR || slot >= MAX_WEAR){
-    vlogf(LOG_BUG, fmt("disease_numbed called with bad slot: %i") % slot);
+    vlogf(LOG_BUG, format("disease_numbed called with bad slot: %i") % slot);
     return FALSE;
   }
 
@@ -369,7 +369,7 @@ int disease_numbed(TBeing *victim, int message, affectedData *af)
         victim->remLimbFlags(slot, PART_PARALYZED); 
                                                                             
       if (victim->getPosition() > POSITION_DEAD && victim->hasPart(slot)) {
-        victim->sendTo(fmt("You feel the life come back to your %s!\n\r") % victim->describeBodySlot(slot));
+        victim->sendTo(format("You feel the life come back to your %s!\n\r") % victim->describeBodySlot(slot));
       }
       break;                                                                    
     default:
@@ -387,7 +387,7 @@ int disease_bruised(TBeing *victim, int message, affectedData *af)
 
 
   if(i < MIN_WEAR || i >= MAX_WEAR){
-    vlogf(LOG_BUG, fmt("disease_bruised called with bad slot: %i") % i);
+    vlogf(LOG_BUG, format("disease_bruised called with bad slot: %i") % i);
     return FALSE;
   }
 
@@ -411,14 +411,14 @@ int disease_bruised(TBeing *victim, int message, affectedData *af)
 
       if (!number(0, 50)) {
         // just for fun, no damage or anything
-        victim->sendTo(fmt("You feel your %s throb and the bruise turns a deeper shade of purple.\n\r") % victim->describeBodySlot(i));
+        victim->sendTo(format("You feel your %s throb and the bruise turns a deeper shade of purple.\n\r") % victim->describeBodySlot(i));
       }
       break;
     case DISEASE_DONE:
       if (victim->isLimbFlags(i, PART_BRUISED))
         victim->remLimbFlags(i, PART_BRUISED);
       if (victim->getPosition() > POSITION_DEAD && victim->hasPart(i)) {
-        victim->sendTo(fmt("The bruise on your %s fades away!\n\r") % victim->describeBodySlot(i));
+        victim->sendTo(format("The bruise on your %s fades away!\n\r") % victim->describeBodySlot(i));
         sprintf(buf, "The bruise on $n's %s fades away!", victim->describeBodySlot(i).c_str());
         act(buf, TRUE, victim, NULL, NULL, TO_ROOM);
       }
@@ -435,7 +435,7 @@ int disease_bleeding(TBeing *victim, int message, affectedData *af)
   // defines the limb that is bleeding
   wearSlotT i = wearSlotT(af->level);
   if(i < MIN_WEAR || i >= MAX_WEAR){
-    vlogf(LOG_BUG, fmt("disease_bleeding called with bad slot: %i") % i);
+    vlogf(LOG_BUG, format("disease_bleeding called with bad slot: %i") % i);
     return FALSE;
   }
   if (victim->isPc() && !victim->desc)
@@ -466,7 +466,7 @@ int disease_bleeding(TBeing *victim, int message, affectedData *af)
             break;
           }
         }
-        victim->sendTo(fmt("You feel your energy drained as your blood drips out of your %s.\n\r") %victim-> describeBodySlot(i));
+        victim->sendTo(format("You feel your energy drained as your blood drips out of your %s.\n\r") %victim-> describeBodySlot(i));
         sprintf(buf, "$n looks stunned as blood drips from $s %s.", victim->describeBodySlot(i).c_str());
 
         act(buf, TRUE, victim, NULL, NULL, TO_ROOM);
@@ -487,7 +487,7 @@ int disease_bleeding(TBeing *victim, int message, affectedData *af)
         victim->remLimbFlags(i, PART_BLEEDING);
 
       if (victim->getPosition() > POSITION_DEAD && victim->hasPart(i)) {
-        victim->sendTo(fmt("Your %s clots and stops bleeding!\n\r") % victim->describeBodySlot(i));
+        victim->sendTo(format("Your %s clots and stops bleeding!\n\r") % victim->describeBodySlot(i));
         sprintf(buf, "$n's %s clots and stops bleeding!", victim->describeBodySlot(i).c_str());
         act(buf, TRUE, victim, NULL, NULL, TO_ROOM);
       }
@@ -505,7 +505,7 @@ int disease_infection(TBeing *victim, int message, affectedData * af)
   wearSlotT slot = wearSlotT(af->level);
 
   if(slot < MIN_WEAR || slot >= MAX_WEAR){
-    vlogf(LOG_BUG, fmt("disease_infection called with bad slot: %i") % slot);
+    vlogf(LOG_BUG, format("disease_infection called with bad slot: %i") % slot);
     return FALSE;
   }
   if (victim->isPc() && !victim->desc)
@@ -529,7 +529,7 @@ int disease_infection(TBeing *victim, int message, affectedData * af)
       // level of infection dictates damage rate
 			int level = af->modifier2;
       if (!number(0, max(14, 35 - (int) ((double) level / 3.2)))) {
-        victim->sendTo(fmt("Your %s shakes and twinges as the infection in it festers.\n\r") % victim->describeBodySlot(slot));
+        victim->sendTo(format("Your %s shakes and twinges as the infection in it festers.\n\r") % victim->describeBodySlot(slot));
         sprintf(buf, "$n's %s shakes and twinges as the infection in it festers.", victim->describeBodySlot(slot).c_str());
         act(buf, TRUE, victim, NULL, NULL, TO_ROOM);
         int rc = victim->hurtLimb(1, slot);
@@ -549,7 +549,7 @@ int disease_infection(TBeing *victim, int message, affectedData * af)
     case DISEASE_DONE:
       victim->remLimbFlags(slot, PART_INFECTED);
       if (victim->getPosition() > POSITION_DEAD && victim->hasPart(slot)) {
-        victim->sendTo(fmt("Your %s stops twitching and heals!\n\r") % victim->describeBodySlot(slot));
+        victim->sendTo(format("Your %s stops twitching and heals!\n\r") % victim->describeBodySlot(slot));
         sprintf(buf, "$n's %s stops twitching and heals!", victim->describeBodySlot(slot).c_str());
         act(buf, TRUE, victim, NULL, NULL, TO_ROOM);
       }
@@ -650,7 +650,7 @@ int disease_frostbite(TBeing *victim, int message, affectedData *)
 			   (wearSlotT)i);
 	  sprintf(buf, "$n's %s takes on a gray-blue color as frost-bite sets in.", victim->describeBodySlot(i).c_str());
 	  act(buf, TRUE, victim, NULL, NULL, TO_ROOM);
-	  victim->sendTo(fmt("Your %s feels numb and takes on a gray-blue color.  Looks like frostbite.\n\r") % victim->describeBodySlot(i));
+	  victim->sendTo(format("Your %s feels numb and takes on a gray-blue color.  Looks like frostbite.\n\r") % victim->describeBodySlot(i));
 	}
       }
       
@@ -1059,7 +1059,7 @@ void TBeing::bodySpread(int chance_to_spread, affectedData * af)
   int brakes;
   // note, taht we allow WEAR_NOWHERE since it's the starting point
   if(part < WEAR_NOWHERE || part >= MAX_WEAR){
-    vlogf(LOG_BUG, fmt("bodySpread called with bad slot: %i") % part);
+    vlogf(LOG_BUG, format("bodySpread called with bad slot: %i") % part);
     return;
   }
 
@@ -1209,9 +1209,9 @@ void TBeing::bodySpread(int chance_to_spread, affectedData * af)
     affectTo(&vaf);
     wearSlotT slot = wearSlotT(vaf.level);
     if (!part)
-			sendTo(fmt("Infection has set into your %s!\n\r") % describeBodySlot(slot));
+			sendTo(format("Infection has set into your %s!\n\r") % describeBodySlot(slot));
     else
-			sendTo(fmt("Infection spreads to your %s!\n\r") % describeBodySlot(slot));
+			sendTo(format("Infection spreads to your %s!\n\r") % describeBodySlot(slot));
 			
     disease_start(this, &vaf);
   } else {  
@@ -1230,7 +1230,7 @@ void TBeing::bodySpread(int chance_to_spread, affectedData * af)
     affectTo(&vaf);
 
     wearSlotT slot = wearSlotT(vaf.level);
-    sendTo(fmt("Lesions begin to form on your %s and it begins to feel numb!\n\r") % describeBodySlot(slot));
+    sendTo(format("Lesions begin to form on your %s and it begins to feel numb!\n\r") % describeBodySlot(slot));
     disease_start(this, &vaf);
   }
   return;
@@ -1239,8 +1239,8 @@ void TBeing::bodySpread(int chance_to_spread, affectedData * af)
 void TBeing::dummyLeprosy(wearSlotT part)
 {
   if (!::number(0, 199)) {
-      sendTo(fmt("The lesions covering your %s thicken.\n\r") % describeBodySlot(part));
-      act(fmt("The lesions covering $n's %s appear thicker.") % describeBodySlot(part), TRUE, this, 0, 0, TO_ROOM);
+      sendTo(format("The lesions covering your %s thicken.\n\r") % describeBodySlot(part));
+      act(format("The lesions covering $n's %s appear thicker.") % describeBodySlot(part), TRUE, this, 0, 0, TO_ROOM);
   }
 }
 
@@ -1250,7 +1250,7 @@ int disease_leprosy(TBeing *victim, int message, affectedData * af)
   wearSlotT slot = wearSlotT(af->level);
 
   if(slot < WEAR_NOWHERE || slot >= MAX_WEAR){
-    vlogf(LOG_BUG, fmt("disease_leprosy called with bad slot: %i") % slot);
+    vlogf(LOG_BUG, format("disease_leprosy called with bad slot: %i") % slot);
     return FALSE;
   }
   switch (message) {
@@ -1284,7 +1284,7 @@ int disease_leprosy(TBeing *victim, int message, affectedData * af)
       if (slot) {
         victim->remLimbFlags(slot, PART_LEPROSED);
         if (victim->hasPart(slot)) {
-          act(fmt("The skin of your %s softens a bit and the feeling returns.") % victim->describeBodySlot(slot), FALSE, victim, 0, 0, TO_CHAR);
+          act(format("The skin of your %s softens a bit and the feeling returns.") % victim->describeBodySlot(slot), FALSE, victim, 0, 0, TO_CHAR);
         }
 			} else if (victim->getPosition() > POSITION_DEAD) {
 		    act("The hardened lesions on your skin disappear.", FALSE, victim, 0, 0, TO_CHAR);
@@ -1302,7 +1302,7 @@ int disease_plague(TBeing *victim, int message, affectedData * af)
   wearSlotT slot = wearSlotT(af->level);
 
   if(slot < WEAR_NOWHERE || slot >= MAX_WEAR){
-    vlogf(LOG_BUG, fmt("disease_plague called with bad slot: %i") % slot);
+    vlogf(LOG_BUG, format("disease_plague called with bad slot: %i") % slot);
     return FALSE;
   }
 
@@ -1368,20 +1368,20 @@ int disease_gangrene(TBeing *victim, int message, affectedData *af)
   wearSlotT slot = wearSlotT(af->level); // defines the limb that has gangrene
 
   if (slot < MIN_WEAR || slot >= MAX_WEAR){
-    vlogf(LOG_BUG, fmt("disease_gangrene called with bad slot: %i on %s") % slot % victim->getName());
+    vlogf(LOG_BUG, format("disease_gangrene called with bad slot: %i on %s") % slot % victim->getName());
     return FALSE;
   }
   
   switch (message) {
     case DISEASE_BEGUN:
       victim->addToLimbFlags(slot, PART_GANGRENOUS);
-	    act(fmt("Your %s has become <k>gangrenous<1>!") % victim->describeBodySlot(slot), FALSE, victim, 0, 0, TO_CHAR);
-      act(fmt("$n's %s has become <k>gangrenous<1>!") % victim->describeBodySlot(slot), TRUE, victim, NULL, NULL, TO_ROOM);
+	    act(format("Your %s has become <k>gangrenous<1>!") % victim->describeBodySlot(slot), FALSE, victim, 0, 0, TO_CHAR);
+      act(format("$n's %s has become <k>gangrenous<1>!") % victim->describeBodySlot(slot), TRUE, victim, NULL, NULL, TO_ROOM);
       break;
     case DISEASE_PULSE:
       if (isCritPart(slot) && victim->getCurLimbHealth(slot) <= 0) {
         // do something nasty? crit body parts just stay at 0...
-        // vlogf(LOG_MISC, fmt("%s at 0 on %s") % victim->describeBodySlot(slot) % victim->getName());
+        // vlogf(LOG_MISC, format("%s at 0 on %s") % victim->describeBodySlot(slot) % victim->getName());
       }
 
       // check to see if somehow the gangrene bit got taken off
@@ -1393,10 +1393,10 @@ int disease_gangrene(TBeing *victim, int message, affectedData *af)
       if (!number(0, 10)) {
         switch (number(0, 1)) {
           case 0:
-            victim->sendTo(fmt("You are in a world of pain as your %s darkens and swells.\n\r") % victim->describeBodySlot(slot));
+            victim->sendTo(format("You are in a world of pain as your %s darkens and swells.\n\r") % victim->describeBodySlot(slot));
             break;
           case 1:
-					  act(fmt("Your %s discharges a <o>foul<1> <k>black<1> ichor.  The pain!") % victim->describeBodySlot(slot), FALSE, victim, 0, 0, TO_CHAR);
+					  act(format("Your %s discharges a <o>foul<1> <k>black<1> ichor.  The pain!") % victim->describeBodySlot(slot), FALSE, victim, 0, 0, TO_CHAR);
             break;
           default:
             // should never fall through here
@@ -1430,8 +1430,8 @@ int disease_gangrene(TBeing *victim, int message, affectedData *af)
       if (victim->isLimbFlags(slot, PART_GANGRENOUS))
         victim->remLimbFlags(slot, PART_GANGRENOUS);
       if (victim->getPosition() > POSITION_DEAD && victim->hasPart(slot)) {
-        act(fmt("You experience profound relief as the <k>gangrene<1> in your %s disappears!") % victim->describeBodySlot(slot), FALSE, victim, 0, 0, TO_CHAR);
-        act(fmt("$n's necrotic %s regains some of its health!") % victim->describeBodySlot(slot).c_str(), TRUE, victim, NULL, NULL, TO_ROOM);
+        act(format("You experience profound relief as the <k>gangrene<1> in your %s disappears!") % victim->describeBodySlot(slot), FALSE, victim, 0, 0, TO_CHAR);
+        act(format("$n's necrotic %s regains some of its health!") % victim->describeBodySlot(slot).c_str(), TRUE, victim, NULL, NULL, TO_ROOM);
       }
       break;
     default:
@@ -1468,15 +1468,15 @@ int disease_scurvy(TBeing *victim, int message, affectedData *af)
             tooth->setCorpseVnum(victim->mobVnum());
           }
           delete corpse->name;
-          buf = fmt("tooth lost limb rotten %s") % victim->name;
+          buf = format("tooth lost limb rotten %s") % victim->name;
           corpse->name = mud_str_dup(buf);
 
           delete corpse->shortDescr;
-          buf = fmt("a <k>rotten<1> tooth of %s") % victim->getName();
+          buf = format("a <k>rotten<1> tooth of %s") % victim->getName();
           corpse->shortDescr = mud_str_dup(buf);
 
           delete corpse->descr;
-          buf = fmt("A <k>rotten<1> tooth lies here, having fallen from %s's mouth.") % victim->getName();
+          buf = format("A <k>rotten<1> tooth lies here, having fallen from %s's mouth.") % victim->getName();
           corpse->setDescr(mud_str_dup(buf));
 
           corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
@@ -1515,8 +1515,8 @@ int disease_scurvy(TBeing *victim, int message, affectedData *af)
             return FALSE;
           if (victim->rawBruise(slot, 225, SILENT_YES, CHECK_IMMUNITY_NO)) {
             // note: bruise duration is doubled in rawBruise for all you scurvy coves
-            act(fmt("Your %s feels painfully tender and a <p>mottled<1> <P>bruise<1> blooms.") % victim->describeBodySlot(slot), FALSE, victim, 0, 0, TO_CHAR);
-            act(fmt("A mottled bruise forms on $n's %s.") % victim->describeBodySlot(slot), TRUE, victim, NULL, NULL, TO_ROOM);
+            act(format("Your %s feels painfully tender and a <p>mottled<1> <P>bruise<1> blooms.") % victim->describeBodySlot(slot), FALSE, victim, 0, 0, TO_CHAR);
+            act(format("A mottled bruise forms on $n's %s.") % victim->describeBodySlot(slot), TRUE, victim, NULL, NULL, TO_ROOM);
           }
           break;
         case 5:
@@ -1542,8 +1542,8 @@ int disease_scurvy(TBeing *victim, int message, affectedData *af)
             if (found) {
               int duration = ::number(100,  150);
               victim->rawBleed(slot, duration, SILENT_YES, CHECK_IMMUNITY_NO);
-              act(fmt("Your %s feels painfully tender and begins to <r>bleed<1>.") % victim->describeBodySlot(slot), FALSE, victim, 0, 0, TO_CHAR);
-              act(fmt("$n's %s starts to bleed.") % victim->describeBodySlot(slot), TRUE, victim, NULL, NULL, TO_ROOM);
+              act(format("Your %s feels painfully tender and begins to <r>bleed<1>.") % victim->describeBodySlot(slot), FALSE, victim, 0, 0, TO_CHAR);
+              act(format("$n's %s starts to bleed.") % victim->describeBodySlot(slot), TRUE, victim, NULL, NULL, TO_ROOM);
             }
           }
           break;

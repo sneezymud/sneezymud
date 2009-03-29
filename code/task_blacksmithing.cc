@@ -174,7 +174,7 @@ bool BaseRepair::ConsumeRepairMats(TObj *o)
 
       if(!(mat = getRepairMaterial(m_ch->stuff, o->getMaterial())) || mat->numUnits() < mats_needed)
       {
-        act(fmt("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, m_ch, o, 0, TO_CHAR);
+        act(format("You don't have enough %s to continue repairing $p.") % material_nums[o->getMaterial()].mat_name, FALSE, m_ch, o, 0, TO_CHAR);
         return false;
       }
       mat->setWeight(mat->getWeight() - (mats_needed/10.0));
@@ -432,8 +432,8 @@ int MetalRepair::OnSuccess(TObj *o)
   else
   {
     bool primary = ::number(0,3) != 0;
-    act(fmt("$n pounds $p on %s with $s $O.") % anvil->getName(), FALSE, m_ch, o, hammer, TO_ROOM);
-    act(fmt("You pound $p on %s with your $O.") % m_ch->objs(anvil), FALSE, m_ch, o, hammer, TO_CHAR);
+    act(format("$n pounds $p on %s with $s $O.") % anvil->getName(), FALSE, m_ch, o, hammer, TO_ROOM);
+    act(format("You pound $p on %s with your $O.") % m_ch->objs(anvil), FALSE, m_ch, o, hammer, TO_CHAR);
     if (DamageTool(primary, o, true))
       return -1; // stop
     return 1; // repair this obj

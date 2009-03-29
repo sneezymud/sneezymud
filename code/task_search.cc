@@ -71,7 +71,7 @@ int task_search(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
                  ((IS_SET(fdd->condition, EX_SECRET) &&
                   !IS_SET(fdd->condition, EX_CLOSED)) ||
                   !IS_SET(fdd->condition, EX_SECRET))) {
-        ch->sendTo(fmt("You decide to skip searching %s.  Seeing there is an exit there.\n\r") %
+        ch->sendTo(format("You decide to skip searching %s.  Seeing there is an exit there.\n\r") %
                    dirs_to_blank[eDirection]);
         if (++ch->task->flags == 10) {
           ch->sendTo("You finish your searching and stop.\n\r");
@@ -108,7 +108,7 @@ int task_search(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
       } else {
         sprintf(buf, "$n searches %s for secret doors.", dirs_to_blank[eDirection]);
         act(buf, FALSE, ch, 0, 0, TO_ROOM);
-        ch->sendTo(fmt("You search %s for secret doors.\n\r") % dirs_to_blank[eDirection]);
+        ch->sendTo(format("You search %s for secret doors.\n\r") % dirs_to_blank[eDirection]);
         ch->task->timeLeft++;
       }
       // Basic Checks:

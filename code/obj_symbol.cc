@@ -50,7 +50,7 @@ void TSymbol::assignFourValues(int x1, int x2, int x3, int x4)
 
   // allow undefined, rather than MIN_FACTION since undefined = unattnued
   if (x3 < FACT_UNDEFINED || x3 >= MAX_FACTIONS) {
-     vlogf(LOG_LOW,fmt("symbol with bad faction (%s).") %  getName());
+     vlogf(LOG_LOW,format("symbol with bad faction (%s).") %  getName());
     x3 = FACT_UNDEFINED;
   }
   mud_assert(x3 >= FACT_UNDEFINED && x3 < MAX_FACTIONS, "bad val");
@@ -150,18 +150,18 @@ void TSymbol::lowCheck()
   int i;
 
   if (getSymbolMaxStrength() < getSymbolCurStrength())
-    vlogf(LOG_LOW, fmt("symbol (%s) has lower max strength then current.") % 
+    vlogf(LOG_LOW, format("symbol (%s) has lower max strength then current.") % 
              getName());
   for (i=0; i<MAX_OBJ_AFFECT;i++) {
     if (affected[i].location == APPLY_ARMOR) {
-      vlogf(LOG_LOW, fmt("symbol (%s) had armor, bad!") % 
+      vlogf(LOG_LOW, format("symbol (%s) had armor, bad!") % 
          getName());
     }
   }
   int ap = suggestedPrice();
   if (ap != obj_flags.cost && obj_flags.cost >= 0 && ap) {
     // ignore newbie symbol with cost = -1
-    vlogf(LOG_LOW, fmt("symbol (%s:%d) has a bad price (%d).  should be (%d)") % 
+    vlogf(LOG_LOW, format("symbol (%s:%d) has a bad price (%d).  should be (%d)") % 
          getName() % objVnum() % obj_flags.cost % ap);
     obj_flags.cost = ap;
   }
@@ -190,7 +190,7 @@ bool TSymbol::lowCheckSlots(silentTypeT silent)
 
   if (value != 0) {
     if (!silent)
-      vlogf(LOG_LOW, fmt("symbol (%s) with bad wear slots: %d") % 
+      vlogf(LOG_LOW, format("symbol (%s) with bad wear slots: %d") % 
                  getName() % value);
     return true;
   }
@@ -212,12 +212,12 @@ int TSymbol::suggestedPrice() const
 
 void TSymbol::objMenu(const TBeing *ch) const
 {
-  ch->sendTo(fmt(VT_CURSPOS) % 3 % 1);
-  ch->sendTo(fmt("%sSuggested price:%s %d%s") %
+  ch->sendTo(format(VT_CURSPOS) % 3 % 1);
+  ch->sendTo(format("%sSuggested price:%s %d%s") %
              ch->purple() % ch->norm() % suggestedPrice() %
              (suggestedPrice() != obj_flags.cost ? " *" : ""));
-  ch->sendTo(fmt(VT_CURSPOS) % 4 % 1);
-  ch->sendTo(fmt("%sSymbol Level:%s %.1f") %
+  ch->sendTo(format(VT_CURSPOS) % 4 % 1);
+  ch->sendTo(format("%sSymbol Level:%s %.1f") %
        ch->purple() % ch->norm() %
        getSymbolLevel());
 }

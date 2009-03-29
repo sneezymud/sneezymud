@@ -60,7 +60,7 @@ void sendCorporationInfo(int corp_id)
 
   cout << "<table border=1>";
 
-  cout << (fmt("<tr><td>%-3i</td><td>%s</td></tr>") %
+  cout << (format("<tr><td>%-3i</td><td>%s</td></tr>") %
 	   corp_id % db["name"]);
 
   bank=convertTo<int>(db["bank"]);
@@ -76,16 +76,16 @@ void sendCorporationInfo(int corp_id)
   if(bankowner == corp_id)
     gold -= banktalens;
   
-  cout << (fmt("<tr><td>Bank Talens</td><td>%12s</td></tr>") %
-	     (fmt("%i") % banktalens).comify());
-  cout << (fmt("<tr><td>Talens</td><td>%12s</td></tr>") % 
-	     (fmt("%i") % gold).comify());
-  cout << (fmt("<tr><td>Assets</td><td>%12s</td></tr>") % 
-	     (fmt("%i") % value).comify());
-  cout << (fmt("<tr><td>Shops (x1M)</td><td>%12s</td></tr>") % 
-	     (fmt("%i") % (shopcount*1000000)).comify());
-  cout << (fmt("<tr><td>Total value</td><td>%12s</td></tr>") %
-	     (fmt("%i") % (banktalens+gold+value+(shopcount * 1000000))).comify());
+  cout << (format("<tr><td>Bank Talens</td><td>%12s</td></tr>") %
+	     (format("%i") % banktalens).comify());
+  cout << (format("<tr><td>Talens</td><td>%12s</td></tr>") % 
+	     (format("%i") % gold).comify());
+  cout << (format("<tr><td>Assets</td><td>%12s</td></tr>") % 
+	     (format("%i") % value).comify());
+  cout << (format("<tr><td>Shops (x1M)</td><td>%12s</td></tr>") % 
+	     (format("%i") % (shopcount*1000000)).comify());
+  cout << (format("<tr><td>Total value</td><td>%12s</td></tr>") %
+	     (format("%i") % (banktalens+gold+value+(shopcount * 1000000))).comify());
 
 
   // officers
@@ -96,12 +96,12 @@ void sendCorporationInfo(int corp_id)
     buf+=" ";
     buf+=db["name"];
   }
-  cout << (fmt("<tr><td>Corporate officers are</td><td>%s</td></tr>") % buf);
+  cout << (format("<tr><td>Corporate officers are</td><td>%s</td></tr>") % buf);
 
   // bank
   //  if((tr=real_roomp(shop_index[bank].in_room))){
     cout << ("<tr><td>Corporate bank is</td><td>");
-    cout << (fmt("%-3i| %s</td></tr>") % bank % bankname); //tr->getName());
+    cout << (format("%-3i| %s</td></tr>") % bank % bankname); //tr->getName());
     //  }
 
   // shops    
@@ -112,7 +112,7 @@ void sendCorporationInfo(int corp_id)
   while(db.fetchRow()){
     //    if((tr=real_roomp(convertTo<int>(db["in_room"])))){
       gold=convertTo<int>(db["gold"]);
-      cout << (fmt("<tr><td>%-3s</td><td>%s with %s talens.</td></tr>") %
+      cout << (format("<tr><td>%-3s</td><td>%s with %s talens.</td></tr>") %
 		 db["shop_nr"] % db["name"] % talenDisplay(gold));
       //    }
   }
@@ -141,7 +141,7 @@ void sendCorporationsList()
   cout << "<table border=1>" << endl;
   cout << "<tr><td>ID</td><td>Name</td><td>Gold</td></tr>" << endl;
   for(it=m.begin();it!=m.end();++it){
-    cout << (fmt("<tr><td>%i</td><td><a href=\"corpinfo.cgi?corp_id=%i\">%s</a></td><td>%s</td></tr>") %
+    cout << (format("<tr><td>%i</td><td><a href=\"corpinfo.cgi?corp_id=%i\">%s</a></td><td>%s</td></tr>") %
 	     corp_list[(int)((*it).second)].corp_id %
 	     corp_list[(int)((*it).second)].corp_id %
 	     corp_list[(int)((*it).second)].name %

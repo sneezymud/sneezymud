@@ -72,7 +72,7 @@ static const char *script_edit_menu =
 
 void send_sedit_menu(TBeing *ch)
 {
-  ch->sendTo(fmt(script_edit_menu) %
+  ch->sendTo(format(script_edit_menu) %
              ch->cyan() % ch->norm() %
              ch->cyan() % ch->norm() %
              ch->cyan() % ch->norm() %
@@ -371,7 +371,7 @@ void seditCoreAdd(TBeing *ch, TMonster *tMonster,
   else
     tRespCmd = (respIndex->cmds = new command(tCmd, tString));
 
-  ch->sendTo(fmt("\t%s%s%s;\n\rAdded to Trigger {%s%s%s}\n\r") %
+  ch->sendTo(format("\t%s%s%s;\n\rAdded to Trigger {%s%s%s}\n\r") %
 
              seditExtraWords(tRespCmd->cmd) %
              (tRespCmd->args ? " " : "") %
@@ -407,7 +407,7 @@ void seditCoreDelete(TBeing *ch, TMonster *tMonster,
     }
 
     respIndexB->next = respIndex->next;
-    ch->sendTo(fmt("Block {%s} deleted.\n\r") %               seditExtraWords(blockCmd) % tStCommand);
+    ch->sendTo(format("Block {%s} deleted.\n\r") %               seditExtraWords(blockCmd) % tStCommand);
     delete respIndex;
     respIndex = NULL;
     return;
@@ -434,7 +434,7 @@ void seditCoreDelete(TBeing *ch, TMonster *tMonster,
     return;
   }
 
-  ch->sendTo(fmt("\t%s%s%s;\n\rDeleted from Trigger {%s%s%s}\n\r") %
+  ch->sendTo(format("\t%s%s%s;\n\rDeleted from Trigger {%s%s%s}\n\r") %
 
              seditExtraWords(tRespCmd->cmd) %
              (tRespCmd->args ? " " : "") %
@@ -473,7 +473,7 @@ FILE * seditVerifyDirTree(TBeing *ch, char *tArg,
   FILE *tFile;
   sstring tPath;
 
-  tPath = fmt("immortals/%s/mobs") % ch->getNameNOC(ch);
+  tPath = format("immortals/%s/mobs") % ch->getNameNOC(ch);
 
   if (!(tFile = fopen(tPath.c_str(), "r"))) {
     if (mkdir(tPath.c_str(), 0770)) {
@@ -770,7 +770,7 @@ void seditDisplayResponse(TBeing *ch, resp *respIndex,
     if (isSilent)
       *tStString += tBuffer;
     else
-      ch->sendTo(fmt(tBuffer) % tValue);
+      ch->sendTo(format(tBuffer) % tValue);
   }
 
   if (respIndex->cmd == CMD_GIVE && ch->hasWizPower(POWER_SEDIT_IMP_POWER) &&
@@ -946,10 +946,10 @@ long int seditCountTriggers(TMonster *tMonster, int tCmd = -1)
 void update_sedit_menu(TBeing *ch, TMonster *tMonster, bool useBar)
 {
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt("%sMobile Name:%s %s") %             ch->cyan() % ch->norm() % tMonster->name);
-  ch->sendTo(fmt(VT_CURSPOS) % 2 % 1);
-  ch->sendTo(fmt("%sTotal Triggers:%s %d") %              ch->cyan() % ch->norm() % seditCountTriggers(tMonster));
-  ch->sendTo(fmt(VT_CURSPOS) % 4 % 1);
+  ch->sendTo(format("%sMobile Name:%s %s") %             ch->cyan() % ch->norm() % tMonster->name);
+  ch->sendTo(format(VT_CURSPOS) % 2 % 1);
+  ch->sendTo(format("%sTotal Triggers:%s %d") %              ch->cyan() % ch->norm() % seditCountTriggers(tMonster));
+  ch->sendTo(format(VT_CURSPOS) % 4 % 1);
   ch->sendTo("Editing Menu:\n\r");
   send_sedit_menu(ch);
 
@@ -1009,7 +1009,7 @@ void seditList(TBeing *ch)
   sprintf(tString, "immortals/%s/mobs/scripts", ch->getNameNOC(ch).c_str());
 
   if (!(tDirInfo = opendir(tString))) {
-    vlogf(LOG_EDIT, fmt("Unable to dirwalk directory %s") %  tString);
+    vlogf(LOG_EDIT, format("Unable to dirwalk directory %s") %  tString);
     return;
   }
 
@@ -1063,7 +1063,7 @@ void seditPurge(TBeing *ch)
   sprintf(tString, "immortals/%s/mobs/scripts", ch->getNameNOC(ch).c_str());
 
   if (!(tDirInfo = opendir(tString))) {
-    vlogf(LOG_EDIT, fmt("Unable to dirwalk directory %s") %  tString);
+    vlogf(LOG_EDIT, format("Unable to dirwalk directory %s") %  tString);
     return;
   }
 
@@ -1169,7 +1169,7 @@ void seditCore(TBeing *ch, const char *tArg)
       seditDisplayMenu(ch, ch->desc->mob, tArg, 0);
       break;
     default:
-      vlogf(LOG_EDIT, fmt("Got to bad place in seditCore() [%d]") %  ch->specials.edit);
+      vlogf(LOG_EDIT, format("Got to bad place in seditCore() [%d]") %  ch->specials.edit);
       break;
   }
 }
@@ -1360,7 +1360,7 @@ void seditDisplayMenuFull(TBeing *ch, TMonster *tMonster, const char *tArg, int 
   ch->specials.editFriend = 0;
   ch->sendTo(VT_HOMECLR);
   ch->sendTo("Options: [More than 20 Triggers present]\n\r\n\r");
-  ch->sendTo(fmt(sedit_display_menu) %
+  ch->sendTo(format(sedit_display_menu) %
              ch->cyan() % ch->norm() % seditCountTriggers(tMonster, CMD_SAY) %
              ch->cyan() % ch->norm() % seditCountTriggers(tMonster, CMD_GIVE) %
              ch->cyan() % ch->norm() % seditCountTriggers(tMonster, CMD_RESP_ROOM_ENTER) %

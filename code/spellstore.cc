@@ -52,7 +52,7 @@ int TBeing::doTrigger(const char *argument){
     return FALSE;
 
   if (!discArray[which]) {
-    vlogf(LOG_BUG, fmt("doTrigger called with null discArray[] (%d) (%s)") %  which % getName());
+    vlogf(LOG_BUG, format("doTrigger called with null discArray[] (%d) (%s)") %  which % getName());
     return FALSE;
   }
 

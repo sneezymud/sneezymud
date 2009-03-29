@@ -55,7 +55,7 @@ bool checkAttuneUsage(TBeing *ch, int * uses, int * reqUses, TVial **water, TSym
 
   *reqUses = (int) (0.005 * sym->obj_flags.cost);
   if ((*uses + (ch->task ? ch->task->flags : 0)) < *reqUses) {
-    ch->sendTo(COLOR_OBJECTS, fmt("You do not have enough holy water to finish attuning %s!\n\r") %
+    ch->sendTo(COLOR_OBJECTS, format("You do not have enough holy water to finish attuning %s!\n\r") %
                sym->getName());
     stop_attune(ch, SILENT_YES, SILENT_NO);
     return false;
@@ -68,7 +68,7 @@ void TSymbol::attunePulse(TBeing *ch)
   int uses = 0, num = 0, reqUses = 0;
 
   if (getSymbolFaction() != FACT_UNDEFINED) {
-    ch->sendTo(COLOR_OBJECTS, fmt("%s has already been attuned.\n\r") % getName());
+    ch->sendTo(COLOR_OBJECTS, format("%s has already been attuned.\n\r") % getName());
     stop_attune(ch, SILENT_YES, SILENT_NO);
     return;
   }

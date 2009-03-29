@@ -23,7 +23,7 @@ int ballotBox(TBeing *ch, cmdTypeT cmd, const char *argument, TObj *o, TObj *)
     sstring arg=argument;
     if(arg.empty()){
       /////////// list all polls
-      ch->sendTo(COLOR_BASIC, fmt("You have a look at %s...\n\r") % 
+      ch->sendTo(COLOR_BASIC, format("You have a look at %s...\n\r") % 
 		 o->getName());
 
       db.query("select poll_id, descr from poll where status='open' order by poll_id");
@@ -31,7 +31,7 @@ int ballotBox(TBeing *ch, cmdTypeT cmd, const char *argument, TObj *o, TObj *)
       if(db.fetchRow()){
 	ch->sendTo(COLOR_BASIC, "These polls are open:\n\r");
 	do {
-	  ch->sendTo(COLOR_BASIC, fmt("%-2i| <r>%s<1>\n\r") %
+	  ch->sendTo(COLOR_BASIC, format("%-2i| <r>%s<1>\n\r") %
 		     convertTo<int>(db["poll_id"]) % db["descr"]);
 	} while(db.fetchRow());
 	ch->sendTo("\n\r");
@@ -42,7 +42,7 @@ int ballotBox(TBeing *ch, cmdTypeT cmd, const char *argument, TObj *o, TObj *)
       if(db.fetchRow()){
 	ch->sendTo(COLOR_BASIC, "These polls are closed:\n\r");
 	do {
-	  ch->sendTo(COLOR_BASIC, fmt("%-2i| <r>%s<1>\n\r") %
+	  ch->sendTo(COLOR_BASIC, format("%-2i| <r>%s<1>\n\r") %
 		     convertTo<int>(db["poll_id"]) % db["descr"]);
 	} while(db.fetchRow());
 	ch->sendTo("\n\r");
@@ -56,9 +56,9 @@ int ballotBox(TBeing *ch, cmdTypeT cmd, const char *argument, TObj *o, TObj *)
 	       which);
 
       if(db.fetchRow()){
-	ch->sendTo(COLOR_BASIC, fmt("%-2i| <r>%s<1>\n\r") %
+	ch->sendTo(COLOR_BASIC, format("%-2i| <r>%s<1>\n\r") %
 		   convertTo<int>(db["poll_id"]) % db["descr"]);
-	ch->sendTo(COLOR_BASIC, fmt("Poll is <r>%s<1>.\n\r\n\r") %
+	ch->sendTo(COLOR_BASIC, format("Poll is <r>%s<1>.\n\r\n\r") %
 		   db["status"]);
 	status=db["status"];
       }
@@ -68,14 +68,14 @@ int ballotBox(TBeing *ch, cmdTypeT cmd, const char *argument, TObj *o, TObj *)
 		 which);
 	
 	while(db.fetchRow()){
-	  ch->sendTo(COLOR_BASIC, fmt("%-2i| <b>%s<1>\n\r") %
+	  ch->sendTo(COLOR_BASIC, format("%-2i| <b>%s<1>\n\r") %
 		     convertTo<int>(db["option_id"]) % db["descr"]);
 	}
       } else if(status=="closed"){
 	db.query("select pv.option_id as option_id, po.descr as descr, count(pv.option_id) as count from poll_vote pv, poll_option po where pv.poll_id=%i and pv.poll_id=po.poll_id and pv.option_id=po.option_id group by pv.option_id, po.descr order by count desc", which);
 	
 	while(db.fetchRow()){
-	  ch->sendTo(COLOR_BASIC, fmt("%-2i| <b>%s<1> (%i votes)\n\r") %
+	  ch->sendTo(COLOR_BASIC, format("%-2i| <b>%s<1> (%i votes)\n\r") %
 		     convertTo<int>(db["option_id"]) % db["descr"] %
 		     convertTo<int>(db["count"]));
 	}
@@ -91,7 +91,7 @@ int ballotBox(TBeing *ch, cmdTypeT cmd, const char *argument, TObj *o, TObj *)
 
     if(tmp.empty()){
       if(!voteAdmin(ch)){
-	ch->sendTo(fmt("%s\n\r") % usage);
+	ch->sendTo(format("%s\n\r") % usage);
       } else {
 	ch->sendTo("Usage:\n\r");
 	ch->sendTo("vote <poll_id> <option_id>\n\r");
@@ -105,7 +105,7 @@ int ballotBox(TBeing *ch, cmdTypeT cmd, const char *argument, TObj *o, TObj *)
     } if(tmp == "add"){
       // vote add <poll_id> <descr>
       if(!voteAdmin(ch)){
-	ch->sendTo(fmt("%s\n\r") % usage);
+	ch->sendTo(format("%s\n\r") % usage);
 	return true;
       }
 
@@ -117,7 +117,7 @@ int ballotBox(TBeing *ch, cmdTypeT cmd, const char *argument, TObj *o, TObj *)
     } else if(tmp == "close"){
       // vote close <poll_id>
       if(!voteAdmin(ch)){
-	ch->sendTo(fmt("%s\n\r") % usage);
+	ch->sendTo(format("%s\n\r") % usage);
 	return true;
       }
       arg=one_argument(arg, tmp);
@@ -129,7 +129,7 @@ int ballotBox(TBeing *ch, cmdTypeT cmd, const char *argument, TObj *o, TObj *)
     } else if(tmp == "open"){
       // vote open <poll_id>
       if(!voteAdmin(ch)){
-	ch->sendTo(fmt("%s\n\r") % usage);
+	ch->sendTo(format("%s\n\r") % usage);
 	return true;
       }
       arg=one_argument(arg, tmp);
@@ -145,7 +145,7 @@ int ballotBox(TBeing *ch, cmdTypeT cmd, const char *argument, TObj *o, TObj *)
       if(tmp == "add"){
 	// vote <poll_id> add <option_id> <descr>
 	if(!voteAdmin(ch)){
-	  ch->sendTo(fmt("%s\n\r") % usage);
+	  ch->sendTo(format("%s\n\r") % usage);
 	  return true;
 	}
 	arg=one_argument(arg, tmp);
@@ -157,7 +157,7 @@ int ballotBox(TBeing *ch, cmdTypeT cmd, const char *argument, TObj *o, TObj *)
       } else if(tmp == "remove"){
 	// vote <poll_id> remove <option_id>
 	if(!voteAdmin(ch)){
-	  ch->sendTo(fmt("%s\n\r") % usage);
+	  ch->sendTo(format("%s\n\r") % usage);
 	  return true;
 	}
 	arg=one_argument(arg, tmp);
@@ -202,7 +202,7 @@ int ballotBox(TBeing *ch, cmdTypeT cmd, const char *argument, TObj *o, TObj *)
 	db.query("select po.descr as descr from poll_option po, poll_vote pv where po.poll_id=%i and po.option_id=%i and pv.poll_id=%i and pv.option_id=%i and pv.account='%s'", poll_id, option_id, poll_id, option_id, ch->desc->account->name.c_str());
 	
 	if(db.fetchRow()){
-	  ch->sendTo(fmt("You cast your vote for %s.\n\r") % 
+	  ch->sendTo(format("You cast your vote for %s.\n\r") % 
 		     db["descr"]);
 	} else {
 	  ch->sendTo("There was an error - speak to an admin.\n\r");

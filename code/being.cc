@@ -694,62 +694,62 @@ bool TAccount::fileRead(const sstring &aname)
   char buf[1024];
   FILE *fp;
 
-  filename=(fmt("account/%c/%s/account") % aname[0] % aname).lower();
+  filename=((sstring)(format("account/%c/%s/account") % aname[0] % aname)).lower();
   
   fp=fopen(filename.c_str(), "r");
 
   if(!fp){
-    vlogf(LOG_BUG, fmt("Couldn't open %s for reading.") % filename);
+    vlogf(LOG_BUG, format("Couldn't open %s for reading.") % filename);
     return false;
   }
 
   if(!fread(buf, 80, 1, fp)){
-    vlogf(LOG_BUG, fmt("Error reading email from %s.") % filename);
+    vlogf(LOG_BUG, format("Error reading email from %s.") % filename);
     return false;
   }
   email=buf;
   
   if(!fread(buf, 11, 1, fp)){
-    vlogf(LOG_BUG, fmt("Error reading passwd from %s.") % filename);
+    vlogf(LOG_BUG, format("Error reading passwd from %s.") % filename);
     return false;
   }
   passwd=buf;
 
   if(!fread(buf, 10, 1, fp)){
-    vlogf(LOG_BUG, fmt("Error reading name from %s.") % filename);
+    vlogf(LOG_BUG, format("Error reading name from %s.") % filename);
     return false;
   }
   name=buf;
 
   if(!fread(buf, 3, 1, fp)){ 
-    vlogf(LOG_BUG, fmt("Error reading mystery bytes (1) from %s.") % filename);
+    vlogf(LOG_BUG, format("Error reading mystery bytes (1) from %s.") % filename);
     return false;
   }
   
   if(!fread(&birth, sizeof(long), 1, fp)){
-    vlogf(LOG_BUG, fmt("Error reading birth from %s.") % filename);
+    vlogf(LOG_BUG, format("Error reading birth from %s.") % filename);
     return false;
   }
   if(!fread(&term, sizeof(byte), 1, fp)){
-    vlogf(LOG_BUG, fmt("Error reading term from %s.") % filename);
+    vlogf(LOG_BUG, format("Error reading term from %s.") % filename);
     return false;
   }
   if(!fread(&time_adjust, sizeof(byte), 1, fp)){
-    vlogf(LOG_BUG, fmt("Error reading time_adjust from %s.") % filename);
+    vlogf(LOG_BUG, format("Error reading time_adjust from %s.") % filename);
     return false;
   }
 
   if(!fread(buf, 2, 1, fp)){
-    vlogf(LOG_BUG, fmt("Error reading mystery bytes (2) from %s.") % filename);
+    vlogf(LOG_BUG, format("Error reading mystery bytes (2) from %s.") % filename);
     return false;
   }
 
   if(!fread(&flags, sizeof(unsigned int), 1, fp)){
-    vlogf(LOG_BUG, fmt("Error reading flags from %s.") % filename);
+    vlogf(LOG_BUG, format("Error reading flags from %s.") % filename);
     return false;
   }
   if(!fread(&last_logon, sizeof(time_t), 1, fp)){
-    vlogf(LOG_BUG, fmt("Error reading last_logon from %s.") % filename);
+    vlogf(LOG_BUG, format("Error reading last_logon from %s.") % filename);
     return false;
   }
 
@@ -769,14 +769,14 @@ bool TAccount::fileWrite(const sstring &aname)
   char buf[1024];
   FILE *fp;
 
-  path=(fmt("account/%c/%s") % aname[0] % aname).lower();
-  filename=(fmt("%s/account") % path).lower();
+  path=((sstring)(format("account/%c/%s") % aname[0] % aname)).lower();
+  filename=((sstring)(format("%s/account") % path)).lower();
   
   fp=fopen(filename.c_str(), "w");
 
   if(!fp){
     if (mkdir(path.c_str(), 0770)) {
-      vlogf(LOG_FILE, fmt("Can't make directory for TAccount::fileWrite (%s)")%
+      vlogf(LOG_FILE, format("Can't make directory for TAccount::fileWrite (%s)")%
 	    path);
       return false;
     }
@@ -784,59 +784,59 @@ bool TAccount::fileWrite(const sstring &aname)
   }
 
   if(!fp){
-    vlogf(LOG_BUG, fmt("Couldn't open %s for writing.") % filename);
+    vlogf(LOG_BUG, format("Couldn't open %s for writing.") % filename);
     return false;
   }
 
   strncpy(buf, email.c_str(), 80);
   if(!fwrite(buf, 80, 1, fp)){
-    vlogf(LOG_BUG, fmt("Error writing email to %s.") % filename);
+    vlogf(LOG_BUG, format("Error writing email to %s.") % filename);
     return false;
   }
 
   strncpy(buf, passwd.c_str(), 11);
   if(!fwrite(buf, 11, 1, fp)){
-    vlogf(LOG_BUG, fmt("Error writing passwd to %s.") % filename);
+    vlogf(LOG_BUG, format("Error writing passwd to %s.") % filename);
     return false;
   }
 
   strncpy(buf, name.c_str(), 10);
   if(!fwrite(buf, 10, 1, fp)){
-    vlogf(LOG_BUG, fmt("Error writing name to %s.") % filename);
+    vlogf(LOG_BUG, format("Error writing name to %s.") % filename);
     return false;
   }
 
   buf[0]=buf[1]=buf[2]=0;
   if(!fwrite(buf, 3, 1, fp)){
-    vlogf(LOG_BUG, fmt("Error writing mystery bytes (1) to %s.") % filename);
+    vlogf(LOG_BUG, format("Error writing mystery bytes (1) to %s.") % filename);
     return false;
   }
   
   if(!fwrite(&birth, sizeof(long), 1, fp)){
-    vlogf(LOG_BUG, fmt("Error writing birth to %s.") % filename);
+    vlogf(LOG_BUG, format("Error writing birth to %s.") % filename);
     return false;
   }
   if(!fwrite(&term, sizeof(byte), 1, fp)){
-    vlogf(LOG_BUG, fmt("Error writing term to %s.") % filename);
+    vlogf(LOG_BUG, format("Error writing term to %s.") % filename);
     return false;
   }
   if(!fwrite(&time_adjust, sizeof(byte), 1, fp)){
-    vlogf(LOG_BUG, fmt("Error writing time_adjust to %s.") % filename);
+    vlogf(LOG_BUG, format("Error writing time_adjust to %s.") % filename);
     return false;
   }
 
   buf[0]=buf[1]=buf[2]=0;
   if(!fwrite(buf, 2, 1, fp)){
-    vlogf(LOG_BUG, fmt("Error writing mystery bytes (2) to %s.") % filename);
+    vlogf(LOG_BUG, format("Error writing mystery bytes (2) to %s.") % filename);
     return false;
   }
 
   if(!fwrite(&flags, sizeof(unsigned int), 1, fp)){
-    vlogf(LOG_BUG, fmt("Error writing flags to %s.") % filename);
+    vlogf(LOG_BUG, format("Error writing flags to %s.") % filename);
     return false;
   }
   if(!fwrite(&last_logon, sizeof(time_t), 1, fp)){
-    vlogf(LOG_BUG, fmt("Error writing last_logon to %s.") % filename);
+    vlogf(LOG_BUG, format("Error writing last_logon to %s.") % filename);
     return false;
   }
 
@@ -877,7 +877,7 @@ int TBeing::getPlayerID() const
   } else {
     // this might be where the null account_id's are coming from...
     // This error occurs every character creation - not interesting
-    //vlogf(LOG_BUG, fmt("Couldn't find a player_id for '%s', creating a new one.") % myname);
+    //vlogf(LOG_BUG, format("Couldn't find a player_id for '%s', creating a new one.") % myname);
 
     db.query("insert into player (name) values (lower('%s'))", myname.c_str());
     db.query("select id from player where lower(name)=('%s')", myname.c_str());
@@ -885,7 +885,7 @@ int TBeing::getPlayerID() const
     if(db.fetchRow()){
       playerID=convertTo<int>(db["id"]);
     } else {
-      vlogf(LOG_BUG,fmt("Couldn't create an entry in player table for '%s'!") %
+      vlogf(LOG_BUG,format("Couldn't create an entry in player table for '%s'!") %
 	    myname);
       return 0;
     }
@@ -1447,7 +1447,7 @@ int TBeing::getBank() const
 
 void TBeing::setBank(int bank)
 {
-  vlogf(LOG_BUG, fmt("%s called setBank(%i)!") % getName() % bank);
+  vlogf(LOG_BUG, format("%s called setBank(%i)!") % getName() % bank);
   points.bankmoney = bank;
 }
 
@@ -1459,7 +1459,7 @@ int TBeing::getMoney() const
 void TBeing::setMoney(int money)
 {
   if((money - points.money) && !bootTime)
-    vlogf(LOG_SILENT, fmt("%s talens changed by %i.") %
+    vlogf(LOG_SILENT, format("%s talens changed by %i.") %
 	  getName() % (money - points.money));
 	
   points.money = money;
@@ -1473,7 +1473,7 @@ sexTypeT TBeing::getSex() const
 void TBeing::setSexUnsafe(int sex)
 {
   if (sex < SEX_NEUTER || sex > SEX_FEMALE) {
-    vlogf(LOG_LOW, fmt("Bad sex on %s during set (%d)") %  getName() % sex);
+    vlogf(LOG_LOW, format("Bad sex on %s during set (%d)") %  getName() % sex);
     sex = 0;
   }
 
@@ -1531,10 +1531,10 @@ void TBeing::setInvisLevel(byte num)
 {
   if (desc && desc->m_bIsClient) {
     if ((invisLevel > 50) && (num < 50))
-      desc->clientf(fmt("%d|%d") % CLIENT_INVIS % FALSE);
+      desc->clientf(format("%d|%d") % CLIENT_INVIS % FALSE);
 
     if (num > 50)
-      desc->clientf(fmt("%d|%d") % CLIENT_INVIS % TRUE);
+      desc->clientf(format("%d|%d") % CLIENT_INVIS % TRUE);
   }
 
   invisLevel = num;
@@ -1651,7 +1651,7 @@ sh_int TBeing::getArmor() const
 
 void TBeing::setArmor(sh_int armor)
 {
-  vlogf(LOG_PEEL, fmt("Something called setArmor(%i) on %s") % 
+  vlogf(LOG_PEEL, format("Something called setArmor(%i) on %s") % 
 	armor % getName());
 
   //  points.armor = armor;
@@ -1815,7 +1815,7 @@ int TBeing::chiMe(TBeing *tLunatic)
         if (0 == addWetness(this, -15))
           sendTo("You feel completely dried off now.\n\r");
         else
-          sendTo(fmt("The heat dries you a bit.  You feel %s.\n\r") % describeWet(this));
+          sendTo(format("The heat dries you a bit.  You feel %s.\n\r") % describeWet(this));
       }
 
       aff.type      = SKILL_CHI;
@@ -1944,7 +1944,7 @@ sstring TBeing::thirdPerson(const int pos)
         return "its";
     }
   }
-  vlogf(LOG_BUG, fmt("thirdPerson called on %s in strange circumstance") % name);
+  vlogf(LOG_BUG, format("thirdPerson called on %s in strange circumstance") % name);
   return "???";
 }
 

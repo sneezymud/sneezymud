@@ -512,25 +512,25 @@ void sendCorpShopList(int account_id)
 
   while(db.fetchRow()){
       cout << "<tr><td>" << endl;
-      cout << fmt("<a href=javascript:pickshop('%s','showshop')>") %
+      cout << format("<a href=javascript:pickshop('%s','showshop')>") %
 	db["shop_nr"];
       cout << db["shopname"] << "</a></td><td>" << endl;
       cout << name_list[db["corpname"]] << "</td><td>";
       cout << "<a href=corp_info.cgi?corp_id=" << db["corp_id"] << ">";
       cout << db["corpname"] << "</a></td><td>";
-      cout << fmt("<a href=javascript:pickshop('%s','showlogs')>") %
+      cout << format("<a href=javascript:pickshop('%s','showlogs')>") %
 	db["shop_nr"];
       cout << "logs" << "</td><td>";
 
-      cout << fmt("<a href=javascript:pickshop('%s','showlogsraw')>") % 
+      cout << format("<a href=javascript:pickshop('%s','showlogsraw')>") % 
 	db["shop_nr"];
       cout << "logs" << "</td><td>";
 
-      cout << fmt("<a href=javascript:pickshop('%s','showlogsarchive')>") %
+      cout << format("<a href=javascript:pickshop('%s','showlogsarchive')>") %
 	db["shop_nr"];
       cout << "logs" << "</td><td>";
 
-      cout << fmt("<a href=javascript:pickshop('%s','showlogsrawarchive')>") % 
+      cout << format("<a href=javascript:pickshop('%s','showlogsrawarchive')>") % 
 	db["shop_nr"];
       cout << "logs" << "</td></tr>";
   }
@@ -547,7 +547,7 @@ void sendAccessShopList(int account_id)
   std::map<sstring, sstring>name_list;
 
   while(db.fetchRow()){
-    name_list[db["shopname"]]+=fmt("%s (%s) ") % db["pname"] % db["access"];
+    name_list[db["shopname"]]+=format("%s (%s) ") % db["pname"] % db["access"];
   }
 
   db.query("select distinct so.shop_nr, r.name as shopname, c.name as corpname, c.corp_id from shopownedaccess soa, corporation c, room r, shop s, shopowned so, player p where p.account_id=%i and so.corp_id=c.corp_id and s.shop_nr=so.shop_nr and s.in_room=r.vnum and lower(p.name)=lower(soa.name) and soa.shop_nr=s.shop_nr order by c.name, r.name", account_id);
@@ -559,16 +559,16 @@ void sendAccessShopList(int account_id)
 
   while(db.fetchRow()){
       cout << "<tr><td>" << endl;
-      cout << fmt("<a href=javascript:pickshop('%s','showshop')>") %
+      cout << format("<a href=javascript:pickshop('%s','showshop')>") %
 	db["shop_nr"];
       cout << db["shopname"] << "</a></td><td>" << endl;
       cout << name_list[db["shopname"]] << "</td><td>";
       cout << "<a href=corp_info.cgi?corp_id=" << db["corp_id"] << ">";
       cout << db["corpname"] << "</a></td><td>";
-      cout << fmt("<a href=javascript:pickshop('%s','showlogs')>") %
+      cout << format("<a href=javascript:pickshop('%s','showlogs')>") %
 	db["shop_nr"];
       cout << "logs" << "</td><td>";
-      cout << fmt("<a href=javascript:pickshop('%s','showlogsraw')>") % 
+      cout << format("<a href=javascript:pickshop('%s','showlogsraw')>") % 
 	db["shop_nr"];
       cout << "logs" << "</td></tr>";
   }

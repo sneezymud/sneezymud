@@ -48,9 +48,9 @@ TPlant & TPlant::operator=(const TPlant &a)
 TPlant::~TPlant()
 {
   if (this->getVerminated())
-	  vlogf(LOG_MISC, fmt("%s is dying: lifetime yield of %i, %i lost to vermin.") % this->getName() % this->getYield() % this->getVerminated());
+	  vlogf(LOG_MISC, format("%s is dying: lifetime yield of %i, %i lost to vermin.") % this->getName() % this->getYield() % this->getVerminated());
   else
-	  vlogf(LOG_MISC, fmt("%s is dying: lifetime yield of %i.") % this->getName() % this->getYield());
+	  vlogf(LOG_MISC, format("%s is dying: lifetime yield of %i.") % this->getName() % this->getYield());
 }
 
 int TPlant::putSomethingInto(TBeing *ch, TThing *)
@@ -327,7 +327,7 @@ void TPlant::updateDesc()
 			int mob_vnum = MOB_CANDY_HEART_EATER; // sugar-toothed weasel
 		    TBeing *mob = read_mobile(mob_vnum, VIRTUAL);
 		    if (!mob) {
-		      // vlogf(LOG_PROC, fmt("Failed attempt to spawn a fruit scavenger (%i) in room %i.") % mob_vnum % in_room);
+		      // vlogf(LOG_PROC, format("Failed attempt to spawn a fruit scavenger (%i) in room %i.") % mob_vnum % in_room);
 		      return;
 		    }
 		    *roomp += *mob;

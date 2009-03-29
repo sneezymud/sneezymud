@@ -17,8 +17,12 @@ public:
   sstring(const string &str) : string(str) {}
   sstring(boost::format &a) : string(a.str()) {}
 
-  const sstring & operator=(fmt &a);
-  //  const sstring & operator=(boost::format &a);
+  const sstring & operator=(const format &a);
+  const sstring & operator+=(const format &a);
+  const sstring & operator+=(const char &a);
+  const sstring & operator+=(const char *a);
+  const sstring & operator+=(const string &a);
+
   char &operator[](unsigned int i);
   const char &operator[](unsigned int i) const;
 

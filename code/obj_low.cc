@@ -64,7 +64,7 @@ int ObjectEvaluator::getPointValue(PointType pt)
 
   // we don't allow negative stats to powerup the main points
   if (rawStat < 0)
-    vlogf(LOG_LOW, fmt("ObjectEvaluator found negative stat points on %s (vnum %i)") % m_obj->getName() % m_obj->objVnum());
+    vlogf(LOG_LOW, format("ObjectEvaluator found negative stat points on %s (vnum %i)") % m_obj->getName() % m_obj->objVnum());
 
   if (PointType_Stats == pt)
     return rawStat;

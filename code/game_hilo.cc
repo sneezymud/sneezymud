@@ -33,9 +33,9 @@ void HiLoGame::BetHi(TBeing *ch, const Card *new_card)
 
   if(new_card->getValAceHi() > card->getValAceHi()){
     win_perc*=2;
-    ch->sendTo(fmt("You win!  Your winnings are now at %i talens.\n\r") %
+    ch->sendTo(format("You win!  Your winnings are now at %i talens.\n\r") %
 	       (int)((float)bet * (1.0 + win_perc)));
-    buf = fmt("$n wins!  $n's winnings are now at %i talens.") %
+    buf = format("$n wins!  $n's winnings are now at %i talens.") %
 	       (int)((float)bet * (1.0 + win_perc));
     act(buf, TRUE, ch, 0, 0, TO_ROOM);    
     observerReaction(ch, GAMBLER_HILO_BET);
@@ -60,9 +60,9 @@ void HiLoGame::BetLo(TBeing *ch, const Card *new_card)
 
   if(new_card->getValAceHi() < card->getValAceHi()){
     win_perc*=2;
-    ch->sendTo(fmt("You win!  Your winnings are now at %i talens.\n\r") %
+    ch->sendTo(format("You win!  Your winnings are now at %i talens.\n\r") %
 	       (int)((float)bet * (1.0 + win_perc)));
-    buf = fmt("$n wins!  $n's winnings are now at %i talens.") %
+    buf = format("$n wins!  $n's winnings are now at %i talens.") %
 	       (int)((float)bet * (1.0 + win_perc));
     act(buf, TRUE, ch, 0, 0, TO_ROOM);    
     observerReaction(ch, GAMBLER_HILO_BET);
@@ -93,12 +93,12 @@ void HiLoGame::stay(TBeing *ch)
       TRUE, ch, 0, 0, TO_ROOM);
 
   const Card *next_card=deck.draw();
-  //  vlogf(LOG_PEEL, fmt("drew %s") %  next_card->getName());
+  //  vlogf(LOG_PEEL, format("drew %s") %  next_card->getName());
 
   sstring buf;
-  ch->sendTo(COLOR_BASIC,fmt("The next card was the %s.\n\r") %next_card->getName());
+  ch->sendTo(COLOR_BASIC,format("The next card was the %s.\n\r") %next_card->getName());
 
-  buf = fmt("The next card was the %s.") % next_card->getName();
+  buf = format("The next card was the %s.") % next_card->getName();
   act(buf, TRUE, ch, 0, 0, TO_ROOM);
 
   payout(ch, (int)((double)bet * (1.0 + win_perc)));
@@ -124,14 +124,14 @@ void HiLoGame::Bet(TBeing *ch, const sstring &arg)
     if (bet > 0) {
       if(arg=="hi" || arg=="lo"){
 	new_card=deck.draw();
-	//	vlogf(LOG_PEEL, fmt("drew %s") %  new_card->getName());
+	//	vlogf(LOG_PEEL, format("drew %s") %  new_card->getName());
 	
-	buf = fmt("$n bets %s.") % arg;
+	buf = format("$n bets %s.") % arg;
 	act(buf, TRUE, ch, 0, 0, TO_ROOM);
 	
-	ch->sendTo(COLOR_BASIC,fmt("You are dealt:\n\r%s\n\r") %new_card->getName());
+	ch->sendTo(COLOR_BASIC,format("You are dealt:\n\r%s\n\r") %new_card->getName());
 	
-	log_msg = fmt("$n is dealt:\n\r%s") % new_card->getName();
+	log_msg = format("$n is dealt:\n\r%s") % new_card->getName();
 	act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
 	
 	if(arg=="hi"){
@@ -163,9 +163,9 @@ void HiLoGame::Bet(TBeing *ch, const sstring &arg)
     ch->doSave(SILENT_YES);
 
     sstring buf;
-    buf = fmt("$n bets %s.") % chip->getName();
+    buf = format("$n bets %s.") % chip->getName();
     act(buf, TRUE, ch, 0, 0, TO_ROOM);
-    buf = fmt("You bet %s.") % chip->getName();
+    buf = format("You bet %s.") % chip->getName();
     act(buf, TRUE, ch, 0, 0, TO_CHAR);
 
     (*chip)--;
@@ -179,11 +179,11 @@ void HiLoGame::Bet(TBeing *ch, const sstring &arg)
     act("The dealer shuffles the deck.",FALSE, ch, 0, 0, TO_ROOM);
 
     card=deck.draw();
-    //    vlogf(LOG_PEEL, fmt("drew %s") %  card->getName());
+    //    vlogf(LOG_PEEL, format("drew %s") %  card->getName());
 
-    ch->sendTo(COLOR_BASIC, fmt("You are dealt:\n\r%s\n\r") % card->getName());
+    ch->sendTo(COLOR_BASIC, format("You are dealt:\n\r%s\n\r") % card->getName());
 
-    log_msg = fmt("$n is dealt:\n\r%s\n\r") % card->getName();
+    log_msg = format("$n is dealt:\n\r%s\n\r") % card->getName();
     act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
 
     observerReaction(ch, GAMBLER_HILO_BET);
@@ -203,7 +203,7 @@ void HiLoGame::peek(const TBeing *ch)
     ch->sendTo("You are not playing a game.\n\r");
     return;
   }
-  log_msg = fmt("You peek at your hand:\n\r%s\n\r") % card->getName();
+  log_msg = format("You peek at your hand:\n\r%s\n\r") % card->getName();
   ch->sendTo(COLOR_BASIC, log_msg);
 }
 
@@ -213,7 +213,7 @@ int HiLoGame::exitGame(const TBeing *ch)
   int inx;
 
   if ((inx = index(ch)) < 0) {
-    vlogf(LOG_BUG, fmt("%s left a table he was not at!") %  ch->name);
+    vlogf(LOG_BUG, format("%s left a table he was not at!") %  ch->name);
     return FALSE;
   }
   inuse = FALSE;

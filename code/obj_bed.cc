@@ -212,10 +212,10 @@ void TBed::changeBedValue1(TBeing *ch, const char *arg, editorEnterTypeT type)
   }
   ch->sendTo(VT_HOMECLR);
   ch->sendTo("1) Max users (number that can sit/sleep/rest on)\n\r");
-  ch->sendTo(fmt("        current: %d\n\r") % getMaxUsers());
+  ch->sendTo(format("        current: %d\n\r") % getMaxUsers());
   ch->sendTo("2) Min position (0 = sleeping, 1 = resting, 2 = sitting)\n\r");
-  ch->sendTo(fmt("        current: %d\n\r") % getMinPosUse());
-  ch->sendTo(fmt(VT_CURSPOS) % 10 % 1);
+  ch->sendTo(format("        current: %d\n\r") % getMinPosUse());
+  ch->sendTo(format(VT_CURSPOS) % 10 % 1);
   ch->sendTo("Enter your choice to modify.\n\r--> ");
 }
 
@@ -266,7 +266,7 @@ void TBed::bedRegen(TBeing *ch, int *gain, silentTypeT silent) const
   if (ch->getHit() < ch->hitLimit()) {
     // act() is suppressed if person is !awake(), use a sendTo
     if (!silent)
-      ch->sendTo(COLOR_OBJECTS, fmt("Your rest on %s rejuvenates you.\n\r") % getName());
+      ch->sendTo(COLOR_OBJECTS, format("Your rest on %s rejuvenates you.\n\r") % getName());
   }
 }
 
@@ -510,7 +510,7 @@ int TBed::mobPulseBed(TMonster *mob, short int occurrence)
   int n;
   sstring fullName;
 // concatenate name of object with occurrence in room, e.g. 3.chair
-  fullName = fmt("%hi%s%s") % occurrence % "." % fname(name);
+  fullName = format("%hi%s%s") % occurrence % "." % fname(name);
 
   if (mob->default_pos <= POSITION_SLEEPING)
     n = 3;
@@ -600,12 +600,12 @@ void TBed::lowCheck()
 {
   if (canWear(ITEM_TAKE) && getVolume() <= 3000 && getWeight() <= 10 &&
       getRegen() >= 3)
-    vlogf(LOG_LOW, fmt("Portable bed (%s) with excessive regen rates!") % 
+    vlogf(LOG_LOW, format("Portable bed (%s) with excessive regen rates!") % 
              getName());
 
 #if 0
   if (canWear(ITEM_TAKE)) {
-    vlogf(LOG_LOW, fmt("Bed (%s) set to be portable.") % 
+    vlogf(LOG_LOW, format("Bed (%s) set to be portable.") % 
                 getName());
   }
 #endif

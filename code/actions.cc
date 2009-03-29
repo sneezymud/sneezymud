@@ -797,18 +797,18 @@ void TBeing::doTip(const sstring &arg)
   } else {
     t=searchLinkedList(arg, roomp->stuff, TYPETHING);
     if (!t)
-      sendTo(fmt("Tip your %s to whom?\n\r") % hat);
+      sendTo(format("Tip your %s to whom?\n\r") % hat);
     else if(t==this){
-      act(fmt("You tip your %s to yourself - are you feeling alright?") % hat,
+      act(format("You tip your %s to yourself - are you feeling alright?") % hat,
 	  FALSE, this, NULL, t, TO_CHAR);
-      act(fmt("$n tips $s %s to $mself? Don't ask...") % hat,
+      act(format("$n tips $s %s to $mself? Don't ask...") % hat,
 	  FALSE, this, NULL, t, TO_ROOM);
     } else {
-      act(fmt("You tip your %s in acknowledgement of $N.") % hat, 
+      act(format("You tip your %s in acknowledgement of $N.") % hat, 
 	  FALSE, this, NULL, t, TO_CHAR);
-      act(fmt("$n tips $s %s to $N.") % hat,
+      act(format("$n tips $s %s to $N.") % hat,
 	  FALSE, this, NULL, t, TO_NOTVICT);
-      act(fmt("$n tips $s %s to you.") % hat,
+      act(format("$n tips $s %s to you.") % hat,
 	  FALSE, this, NULL, t, TO_VICT);
     }
   }
@@ -831,9 +831,9 @@ void TBeing::doPoke(const sstring &arg)
     buf="finger";
 
   if (arg.empty()) {
-    holdBuf = fmt("You point your %s around threateningly.") % buf;
+    holdBuf = format("You point your %s around threateningly.") % buf;
     act(holdBuf, FALSE, this, NULL, this, TO_CHAR);
-    holdBuf = fmt("$n points $s %s around threateningly.") % buf;
+    holdBuf = format("$n points $s %s around threateningly.") % buf;
     act(holdBuf, FALSE, this, NULL, this, TO_ROOM);
     return;
   }
@@ -842,8 +842,8 @@ void TBeing::doPoke(const sstring &arg)
     if (isname(arg, t->name)) {
       obj = dynamic_cast<TObj *>(t);
       if (obj) {
-	sendTo(COLOR_OBJECTS, fmt("You carefully prod %s with your %s.\n\r") % obj->getName() % buf);
-	holdBuf = fmt("$n carefully prods $N with $s %s.") % buf;
+	sendTo(COLOR_OBJECTS, format("You carefully prod %s with your %s.\n\r") % obj->getName() % buf);
+	holdBuf = format("$n carefully prods $N with $s %s.") % buf;
 	act(holdBuf, FALSE, this, NULL, obj, TO_ROOM);
         return;
       } 
@@ -853,10 +853,10 @@ void TBeing::doPoke(const sstring &arg)
           sendTo("You poke yourself in the ribs, feeling very silly.\n\r");
           act("$n pokes $mself in the ribs, looking very sheepish.", FALSE, this, NULL, NULL, TO_ROOM);
         } else {
-	  sendTo(COLOR_OBJECTS,fmt("You poke %s in the ribs with your %s.\n\r") % b->getName() % buf);
-	  holdBuf = fmt("$n pokes %s in the ribs with $s %s.") % b->getName() %buf;
+	  sendTo(COLOR_OBJECTS,format("You poke %s in the ribs with your %s.\n\r") % b->getName() % buf);
+	  holdBuf = format("$n pokes %s in the ribs with $s %s.") % b->getName() %buf;
 	  act(holdBuf, FALSE, this, NULL, b, TO_NOTVICT);
-	  holdBuf = fmt("$n pokes you in the ribs with $s %s.") % buf;
+	  holdBuf = format("$n pokes you in the ribs with $s %s.") % buf;
 	  act(holdBuf, FALSE, this, NULL, b,TO_VICT);
 	}
         return;
@@ -928,9 +928,9 @@ void TBeing::doPoint(const sstring &arg)
     buf="finger";
 
   if (arg.empty()) {
-    holdBuf = fmt("You point your %s around randomly.") % buf;
+    holdBuf = format("You point your %s around randomly.") % buf;
     act(holdBuf, FALSE, this, NULL, this, TO_CHAR);
-    holdBuf = fmt("$n points $s %s around randomly.") % buf;
+    holdBuf = format("$n points $s %s around randomly.") % buf;
     act(holdBuf, FALSE, this, NULL, this, TO_ROOM);
     return;
   }
@@ -938,8 +938,8 @@ void TBeing::doPoint(const sstring &arg)
   // point in a direction
   dirTypeT dir = getDirFromChar(arg);
   if (dir != DIR_NONE) {
-    sendTo(fmt("You point your %s %s.\n\r") % buf % dirs_to_blank[dir]);
-    act(fmt("$n points $s %s %s.") % buf % dirs_to_blank[dir],
+    sendTo(format("You point your %s %s.\n\r") % buf % dirs_to_blank[dir]);
+    act(format("$n points $s %s %s.") % buf % dirs_to_blank[dir],
 	false, this, NULL, NULL, TO_ROOM);
     return;
   }
@@ -949,9 +949,9 @@ void TBeing::doPoint(const sstring &arg)
     if (isname(arg, t->name)) {
       obj = dynamic_cast<TObj *>(t);
       if (obj) {
-        sendTo(COLOR_OBJECTS,fmt("You point your %s at %s.\n\r") % 
+        sendTo(COLOR_OBJECTS,format("You point your %s at %s.\n\r") % 
 	       buf % obj->getName());
-        holdBuf = fmt("$n points $s %s at %s.") % buf % obj->getName();
+        holdBuf = format("$n points $s %s at %s.") % buf % obj->getName();
         act(holdBuf, FALSE, this, obj, NULL, TO_ROOM);
         return;
       } 
@@ -961,11 +961,11 @@ void TBeing::doPoint(const sstring &arg)
           sendTo("You point at yourself.\n\r");
           act("$n points at $mself.", FALSE, this, NULL, NULL, TO_ROOM);
         } else {
-	  sendTo(COLOR_OBJECTS, fmt("You point at %s with your %s.\n\r") % 
+	  sendTo(COLOR_OBJECTS, format("You point at %s with your %s.\n\r") % 
 		 b->getName() % buf);
-	  holdBuf = fmt("$n points at %s with $s %s.") % b->getName() % buf;
+	  holdBuf = format("$n points at %s with $s %s.") % b->getName() % buf;
 	  act(holdBuf, FALSE, this, NULL, b, TO_NOTVICT);
-	  holdBuf = fmt("$n points at you with $s %s.") % buf;
+	  holdBuf = format("$n points at you with $s %s.") % buf;
 	  act(holdBuf, FALSE, this, NULL, b, TO_VICT);
 	}
         return;
@@ -1154,7 +1154,7 @@ int TBeing::doBite(const sstring &arg)
 	  sendTo(COLOR_OBJECTS, "You bite yourself. Are you that deranged?\n\r");
 	  act("$n bites himself. WEIRD?!?", FALSE, this, NULL, b, TO_NOTVICT);
 	} else if(b){
-	  sendTo(COLOR_OBJECTS, fmt("You rip %s's flesh with your piercing bite.\n\r") %
+	  sendTo(COLOR_OBJECTS, format("You rip %s's flesh with your piercing bite.\n\r") %
 		 b->getName());
 	  act("$n sinks $s teeth into $N. $N screams in agony!",
 	      FALSE, this, NULL, b, TO_NOTVICT);
@@ -1214,9 +1214,9 @@ void TBeing::doToast(const sstring &arg)
               else if ((dc1->isMetal() || dc1->isMineral()) && (dc2->isMetal() || dc2->isMineral()))
                 clink = "<w>*clunk*<1>";
               sb = fname(dc2->name);
-              act(fmt("You raise your $o and knock it against $N's %s. %s") % sb % clink, FALSE, this, dc1, vict, TO_CHAR);
-              act(fmt("$n raises $s $o and knocks it against your %s. %s") % sb % clink, FALSE, this, dc1, vict, TO_VICT);
-              act(fmt("$n and $N knock their drinks together. %s") % clink, FALSE, this, dc1, vict, TO_NOTVICT);
+              act(format("You raise your $o and knock it against $N's %s. %s") % sb % clink, FALSE, this, dc1, vict, TO_CHAR);
+              act(format("$n raises $s $o and knocks it against your %s. %s") % sb % clink, FALSE, this, dc1, vict, TO_VICT);
+              act(format("$n and $N knock their drinks together. %s") % clink, FALSE, this, dc1, vict, TO_NOTVICT);
               spill_chance = 14;
             } else {
               // vict has no drink
@@ -1239,13 +1239,13 @@ void TBeing::doToast(const sstring &arg)
       // checking dc1, the toaster's drink container
       if (vict && vict->isImmortal() && dc1->isDrinkConFlag(DRINK_PERM)) {
         // toasting with an immortal, guaranteed spill but luckily it's a bottomless cup
-        act(fmt("You spill some %s on the $g.") % liquidInfo[dc1->getDrinkType()]->name, FALSE, this, dc1, NULL, TO_CHAR);
-        act(fmt("$n spills some %s on the $g.") % liquidInfo[dc1->getDrinkType()]->name, TRUE, this, dc1, NULL, TO_ROOM);
+        act(format("You spill some %s on the $g.") % liquidInfo[dc1->getDrinkType()]->name, FALSE, this, dc1, NULL, TO_CHAR);
+        act(format("$n spills some %s on the $g.") % liquidInfo[dc1->getDrinkType()]->name, TRUE, this, dc1, NULL, TO_ROOM);
         dropPool(dc1->getDrinkUnits(), dc1->getDrinkType());
       } else if (vict && vict->isImmortal()) {
         // toasting with an immortal, guaranteed to spill out everything
-        act(fmt("You spill what's left of your %s on the $g!") % liquidInfo[dc1->getDrinkType()]->name, FALSE, this, dc1, NULL, TO_CHAR);
-        act(fmt("$n spills what's left of $s %s on the $g!") % liquidInfo[dc1->getDrinkType()]->name, TRUE, this, dc1, NULL, TO_ROOM);
+        act(format("You spill what's left of your %s on the $g!") % liquidInfo[dc1->getDrinkType()]->name, FALSE, this, dc1, NULL, TO_CHAR);
+        act(format("$n spills what's left of $s %s on the $g!") % liquidInfo[dc1->getDrinkType()]->name, TRUE, this, dc1, NULL, TO_ROOM);
         dropPool(dc1->getDrinkUnits(), dc1->getDrinkType());
         dc1->genericEmpty();
         dc1->updateDesc();
@@ -1256,14 +1256,14 @@ void TBeing::doToast(const sstring &arg)
           roll = min(dc1->getDrinkUnits(), roll / 10);
           dropPool(roll, dc1->getDrinkType());
           if (roll < dc1->getDrinkUnits()) {
-            act(fmt("You spill some %s on the $g.") % liquidInfo[dc1->getDrinkType()]->name, FALSE, this, dc1, NULL, TO_CHAR);
-            act(fmt("$n spills some %s on the $g.") % liquidInfo[dc1->getDrinkType()]->name, TRUE, this, dc1, NULL, TO_ROOM);
+            act(format("You spill some %s on the $g.") % liquidInfo[dc1->getDrinkType()]->name, FALSE, this, dc1, NULL, TO_CHAR);
+            act(format("$n spills some %s on the $g.") % liquidInfo[dc1->getDrinkType()]->name, TRUE, this, dc1, NULL, TO_ROOM);
             dc1->addToDrinkUnits(-roll);
             dc1->updateDesc();
             dc1->weightCorrection();
           } else {
-            act(fmt("You spill what's left of your %s on the $g!") % liquidInfo[dc1->getDrinkType()]->name, FALSE, this, dc1, NULL, TO_CHAR);
-            act(fmt("$n spills what's left of $s %s on the $g!") % liquidInfo[dc1->getDrinkType()]->name, TRUE, this, dc1, NULL, TO_ROOM);
+            act(format("You spill what's left of your %s on the $g!") % liquidInfo[dc1->getDrinkType()]->name, FALSE, this, dc1, NULL, TO_CHAR);
+            act(format("$n spills what's left of $s %s on the $g!") % liquidInfo[dc1->getDrinkType()]->name, TRUE, this, dc1, NULL, TO_ROOM);
             dc1->genericEmpty();
             dc1->updateDesc();
           }
@@ -1274,8 +1274,8 @@ void TBeing::doToast(const sstring &arg)
           // bottomless drink, spill but don't change liquid amount
           roll = min(dc1->getDrinkUnits(), roll / 10);
           dropPool(roll, dc1->getDrinkType());
-          act(fmt("You spill some %s on the $g.") % liquidInfo[dc1->getDrinkType()]->name, FALSE, this, dc1, NULL, TO_CHAR);
-          act(fmt("$n spills some %s on the $g.") % liquidInfo[dc1->getDrinkType()]->name, TRUE, this, dc1, NULL, TO_ROOM);
+          act(format("You spill some %s on the $g.") % liquidInfo[dc1->getDrinkType()]->name, FALSE, this, dc1, NULL, TO_CHAR);
+          act(format("$n spills some %s on the $g.") % liquidInfo[dc1->getDrinkType()]->name, TRUE, this, dc1, NULL, TO_ROOM);
         }
       }
     }
@@ -1289,13 +1289,13 @@ void TBeing::doToast(const sstring &arg)
         // checking dc2, the toastee's drink container
         if (this->isImmortal() && dc2->isDrinkConFlag(DRINK_PERM)) {
           // toasting with an immortal, guaranteed spill but luckily it's a bottomless cup
-          act(fmt("You spill some %s on the $g.") % liquidInfo[dc2->getDrinkType()]->name, FALSE, vict, dc2, NULL, TO_CHAR);
-          act(fmt("$n spills some %s on the $g.") % liquidInfo[dc2->getDrinkType()]->name, TRUE, vict, dc2, NULL, TO_ROOM);
+          act(format("You spill some %s on the $g.") % liquidInfo[dc2->getDrinkType()]->name, FALSE, vict, dc2, NULL, TO_CHAR);
+          act(format("$n spills some %s on the $g.") % liquidInfo[dc2->getDrinkType()]->name, TRUE, vict, dc2, NULL, TO_ROOM);
           vict->dropPool(dc2->getDrinkUnits(), dc2->getDrinkType());
         } else if (this->isImmortal()) {
           // toasting with an immortal, guaranteed to spill out everything
-          act(fmt("You spill what's left of your %s on the $g!") % liquidInfo[dc2->getDrinkType()]->name, FALSE, vict, dc2, NULL, TO_CHAR);
-          act(fmt("$n spills what's left of $s %s on the $g!") % liquidInfo[dc2->getDrinkType()]->name, TRUE, vict, dc2, NULL, TO_ROOM);
+          act(format("You spill what's left of your %s on the $g!") % liquidInfo[dc2->getDrinkType()]->name, FALSE, vict, dc2, NULL, TO_CHAR);
+          act(format("$n spills what's left of $s %s on the $g!") % liquidInfo[dc2->getDrinkType()]->name, TRUE, vict, dc2, NULL, TO_ROOM);
           vict->dropPool(dc2->getDrinkUnits(), dc2->getDrinkType());
           dc2->genericEmpty();
           dc2->updateDesc();
@@ -1306,14 +1306,14 @@ void TBeing::doToast(const sstring &arg)
             roll = min(dc2->getDrinkUnits(), roll / 10);
             vict->dropPool(roll, dc2->getDrinkType());
             if (roll < dc2->getDrinkUnits()) {
-              act(fmt("You spill some %s on the $g.") % liquidInfo[dc2->getDrinkType()]->name, FALSE, vict, dc2, NULL, TO_CHAR);
-              act(fmt("$n spills some %s on the $g.") % liquidInfo[dc2->getDrinkType()]->name, TRUE, vict, dc2, NULL, TO_ROOM);
+              act(format("You spill some %s on the $g.") % liquidInfo[dc2->getDrinkType()]->name, FALSE, vict, dc2, NULL, TO_CHAR);
+              act(format("$n spills some %s on the $g.") % liquidInfo[dc2->getDrinkType()]->name, TRUE, vict, dc2, NULL, TO_ROOM);
               dc2->addToDrinkUnits(-roll);
               dc2->updateDesc();
               dc2->weightCorrection();
             } else {
-              act(fmt("You spill what's left of your %s on the $g!") % liquidInfo[dc2->getDrinkType()]->name, FALSE, vict, dc2, NULL, TO_CHAR);
-              act(fmt("$n spills what's left of $s %s on the $g!") % liquidInfo[dc2->getDrinkType()]->name, TRUE, vict, dc2, NULL, TO_ROOM);
+              act(format("You spill what's left of your %s on the $g!") % liquidInfo[dc2->getDrinkType()]->name, FALSE, vict, dc2, NULL, TO_CHAR);
+              act(format("$n spills what's left of $s %s on the $g!") % liquidInfo[dc2->getDrinkType()]->name, TRUE, vict, dc2, NULL, TO_ROOM);
               dc2->genericEmpty();
               dc2->updateDesc();
             }
@@ -1324,8 +1324,8 @@ void TBeing::doToast(const sstring &arg)
             // bottomless drink, spill but don't change liquid amount
             roll = min(dc2->getDrinkUnits(), roll / 10);
             vict->dropPool(roll, dc2->getDrinkType());
-            act(fmt("You spill some %s on the $g.") % liquidInfo[dc2->getDrinkType()]->name, FALSE, vict, dc2, NULL, TO_CHAR);
-            act(fmt("$n spills some %s on the $g.") % liquidInfo[dc2->getDrinkType()]->name, TRUE, vict, dc2, NULL, TO_ROOM);
+            act(format("You spill some %s on the $g.") % liquidInfo[dc2->getDrinkType()]->name, FALSE, vict, dc2, NULL, TO_CHAR);
+            act(format("$n spills some %s on the $g.") % liquidInfo[dc2->getDrinkType()]->name, TRUE, vict, dc2, NULL, TO_ROOM);
           }
         }
       }

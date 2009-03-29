@@ -34,7 +34,7 @@ void TBeing::doNewbieEqLoad(race_t num, ush_int num2, bool initNum)
     raceNum = num;
     classNum = num2;
   } else {
-    vlogf(LOG_BUG, fmt("Something called doNewbieEqLoad when it shouldnt %s") %  getName());
+    vlogf(LOG_BUG, format("Something called doNewbieEqLoad when it shouldnt %s") %  getName());
     return;
   }
 
@@ -123,7 +123,7 @@ void TBeing::doNewbie(const sstring &arg)
 
   const char *header = isNewbie ? "You ask the experts: %s" : "You advise to newbies: %s";
   const char *title = isNewbie ? "Newbie" : "Expert";
-  sendTo(fmt(header) % colorString(this, desc, message, NULL, COLOR_BASIC, TRUE, TRUE));
+  sendTo(format(header) % colorString(this, desc, message, NULL, COLOR_BASIC, TRUE, TRUE));
 
   for (Descriptor *d = descriptor_list; d; d = d->next)
   {
@@ -143,11 +143,11 @@ void TBeing::doNewbie(const sstring &arg)
 
     sstring str = colorString(this, d, message, NULL, COLOR_COMM, FALSE);
     str.convertStringColor("<c>");
-    act((fmt("%s%s $n: %s%s%s") % d->purple() % title % d->cyan() % str % d->norm()), 0, this, 0, person, TO_VICT);
+    act((format("%s%s $n: %s%s%s") % d->purple() % title % d->cyan() % str % d->norm()), 0, this, 0, person, TO_VICT);
 
     // hack: newbie channel looks like a telepathy chat for sneezyclient
     if (!d->m_bIsClient && IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT))
-      d->clientf(fmt("%d|%s|%s") % CLIENT_TELEPATHY % colorString(person, d, (fmt("%s %s") % title % getName()), NULL, COLOR_NONE, FALSE) % str);
+      d->clientf(format("%d|%s|%s") % CLIENT_TELEPATHY % colorString(person, d, (format("%s %s") % title % getName()), NULL, COLOR_NONE, FALSE) % str);
   }
   return;
 }

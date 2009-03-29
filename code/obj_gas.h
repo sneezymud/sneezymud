@@ -40,7 +40,7 @@ class TGas : public TMergeable {
 
     void setType(gasTypeT newType) { type = newType; }
     gasTypeT getType() const { return type; }
-    void addCreator(const char *s) { creator += s; creator += ','; }
+    void addCreator(const char *s) { creator += s; creator += ","; }
     bool hasCreator(const sstring s) const { return creator.find(s) != sstring::npos; }
     TBeing * getCreatedBy() const { return get_pc_world(NULL, creator.substr(0,creator.find(",")), EXACT_YES, INFRA_NO, FALSE); }
 

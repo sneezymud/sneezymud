@@ -301,7 +301,7 @@ void nannyDisclaimer_output(Descriptor * desc)
     return;
 
   if (!file_to_sstring(disclaimers[whichDis].c_str(), str))
-    str = fmt("Error: failed to load file %s.  Please contact an admin.") % disclaimers[whichDis];
+    str = format("Error: failed to load file %s.  Please contact an admin.") % disclaimers[whichDis];
 
   // swap color sstrings
   str = colorString(desc->character, desc, str, NULL, COLOR_BASIC,  false);
@@ -321,7 +321,7 @@ connectStateT nannyMultiplaywarn_input(Descriptor * desc, sstring & output, cons
   {
     // somehow this error message doesnt get displayed.
     output = "\n\rI'm sorry, you MUST agree to the terms and conditions of our rules\n\r";
-    output += fmt("before we allow you to play a character on %s. Please reconsider\n\r") % MUD_NAME;
+    output += format("before we allow you to play a character on %s. Please reconsider\n\r") % MUD_NAME;
     output += "and come back soon!\n\r";
     return CON_CREATION_ERROR;
   }
@@ -380,7 +380,7 @@ void nannyClass_output(Descriptor * desc)
   {
     if(!classInfo[i].enabled)
       continue;
-    sbuf += fmt("[%c] %2i. %-24s") %
+    sbuf += format("[%c] %2i. %-24s") %
       (desc->character->hasClass(classInfo[i].class_num) ? 'X' : ' ') %
       (i+1) % classInfo[i].name.cap();
     if(i%2)
@@ -454,7 +454,7 @@ void nannyHand_output(Descriptor * desc)
 {
   desc->writeToQ("Now you get to pick your handedness. The hand you pick as your primary\n\r");
   desc->writeToQ("hand will be the strongest, and be able to do more things than your\n\r");
-  desc->writeToQ(fmt("secondary hand.  Your character is currently %shanded.\n\r") %
+  desc->writeToQ(format("secondary hand.  Your character is currently %shanded.\n\r") %
                   (desc->character->isRightHanded() ? "Right" : "Left"));
   desc->writeToQ("Pick your primary hand:\n\r1. Right\n\r2. Left\n\r");
 }
@@ -479,7 +479,7 @@ connectStateT nannySex_input(Descriptor * desc, sstring & output, const sstring 
 // prints choices for sex
 void nannySex_output(Descriptor * desc)
 {
-  desc->writeToQ(fmt("Please choose your gender.  You are currently %s.\n\r") %
+  desc->writeToQ(format("Please choose your gender.  You are currently %s.\n\r") %
     (desc->character->getSex() == SEX_MALE ? "Male" : "Female"));
   desc->writeToQ("1. Male\n\r2. Female\n\r");
 }
@@ -508,7 +508,7 @@ void nannyRace_output(Descriptor * desc)
   // print the race choices - races[iRace] is index into nannyRaces
   for(int iRace = 0; iRace < cRaces; iRace++)
   {
-    raceString += fmt("[%c] %2i. %-24s") %
+    raceString += format("[%c] %2i. %-24s") %
       ((desc->character->getRace() == nannyRaces[races[iRace]].race) ? 'X' : ' ') %
       (iRace+1) % nannyRaces[races[iRace]].name;
     if (iRace % 2)
@@ -516,7 +516,7 @@ void nannyRace_output(Descriptor * desc)
   }
 
   desc->writeToQ(raceString);
-  desc->writeToQ(fmt("\n\rThe choice of race is very important on %s.\n\r") % MUD_NAME);
+  desc->writeToQ(format("\n\rThe choice of race is very important on %s.\n\r") % MUD_NAME);
   desc->writeToQ("There are advantages and disadvantages to each choice.\n\r");
   desc->writeToQ("Among other factors, race will majorly affect your stats,\n\r");
   desc->writeToQ("immunities, racial skills, and the supply of available equipment.\n\r");
@@ -535,7 +535,7 @@ connectStateT nannyRace_input(Descriptor * desc, sstring & output, const sstring
     if (iChoice >= 0 && iChoice < cRaces)
     {
       desc->character->setRace(nannyRaces[races[iChoice]].race);
-      output = fmt("Okay Race set to %s.") % nannyRaces[races[iChoice]].name;
+      output = format("Okay Race set to %s.") % nannyRaces[races[iChoice]].name;
       desc->character->player.hometown = nannyRaces[races[iChoice]].hometown;
       desc->character->player.hometerrain = nannyRaces[races[iChoice]].territories[0];
       return (connectStateT)(desc->connected+1);
@@ -557,11 +557,11 @@ void nannyTerritory_output(Descriptor * desc)
   if (iRace >= (int)cElements(nannyRaces))
     return;
 
-  desc->writeToQ(fmt("Please pick one of the following homelands for your %s.\n\rYour current homeland selection is marked with an 'X'.\n\r\n\r") % nannyRaces[iRace].name);
+  desc->writeToQ(format("Please pick one of the following homelands for your %s.\n\rYour current homeland selection is marked with an 'X'.\n\r\n\r") % nannyRaces[iRace].name);
 
   for(int iTerr = 0; iTerr < nannyRaces[iRace].cTerritories; iTerr++)
   {
-    terrString += fmt("[%c] %2i. %-24s") %
+    terrString += format("[%c] %2i. %-24s") %
       (desc->character->player.hometerrain == nannyRaces[iRace].territories[iTerr] ? 'X' : ' ') %
       (iTerr+1) % home_terrains[nannyRaces[iRace].territories[iTerr]];
     if (iTerr % 2)
@@ -589,7 +589,7 @@ connectStateT nannyTerritory_input(Descriptor * desc, sstring & output, const ss
     if (iChoice >= 0 && iChoice < nannyRaces[iRace].cTerritories)
     {
       desc->character->player.hometerrain = nannyRaces[iRace].territories[iChoice];
-      output = fmt("Okay Homeland set to %s.") % home_terrains[nannyRaces[iRace].territories[iChoice]];
+      output = format("Okay Homeland set to %s.") % home_terrains[nannyRaces[iRace].territories[iChoice]];
       return CON_CREATION_LAUNCHPAD;
     }
     output = "Invalid Choice!";
@@ -614,7 +614,7 @@ bool nannyLaunchpad_allowdone(Descriptor * desc, sstring & output)
   // check for an illegal race
   if (nannyRaces[iRace].num50any > num50any)
   {
-    output = fmt("The %s race requires more level 50 characters than you have.") % nannyRaces[iRace].name;
+    output = format("The %s race requires more level 50 characters than you have.") % nannyRaces[iRace].name;
     return false;
   }
 
@@ -623,12 +623,12 @@ bool nannyLaunchpad_allowdone(Descriptor * desc, sstring & output)
     if (desc->character->hasQuestBit(traits[iTrait].tog))
       if (traits[iTrait].num50any > num50any)
       {
-        output = fmt("The %s trait requires more level 50 characters than you have.") % traits[iTrait].name;
+        output = format("The %s trait requires more level 50 characters than you have.") % traits[iTrait].name;
         return false;
       }
       else if (traits[iTrait].num50race > num50race)
       {
-        output = fmt("The %s trait requires more level 50%s %ss than you have.") %
+        output = format("The %s trait requires more level 50%s %ss than you have.") %
                   traits[iTrait].name %
                   (perma ? " perma-death" : "") %
                   nannyRaces[iRace].name;
@@ -636,7 +636,7 @@ bool nannyLaunchpad_allowdone(Descriptor * desc, sstring & output)
       }
       else if (nannyRaces[iRace].disableTrait == iTrait)
       {
-        output = fmt("The %s trait is not allowed for %ss.") % traits[iTrait].name % nannyRaces[iRace].name;
+        output = format("The %s trait is not allowed for %ss.") % traits[iTrait].name % nannyRaces[iRace].name;
         return false;
       }
 
@@ -644,7 +644,7 @@ bool nannyLaunchpad_allowdone(Descriptor * desc, sstring & output)
   int extra = desc->bonus_points.total - desc->totalChosenStats();
   if (extra < 0)
   {
-    output = fmt("You have over-spent your stat customizations by %d points.") % (-extra);
+    output = format("You have over-spent your stat customizations by %d points.") % (-extra);
     return false;
   }
 
@@ -690,7 +690,7 @@ connectStateT nannyLaunchpad_input(Descriptor * desc, sstring & output, const ss
       }
     }
 
-    vlogf(LOG_PIO, fmt("%s [%s] new player.") %  desc->character->getName() % desc->host);
+    vlogf(LOG_PIO, format("%s [%s] new player.") %  desc->character->getName() % desc->host);
     desc->character->saveChar(ROOM_AUTO_RENT);
     db.query("insert into player (name) values (lower('%s'))", desc->character->getName());
     accStat.player_count++;
@@ -722,7 +722,7 @@ void nannyLaunchpad_output(Descriptor * desc)
 
   // Name
   desc->writeToQ("Below are your current character settings.\n\rChoose a number to customize your character.\n\r");
-  desc->writeToQ(fmt("1. Name               : %-24s\n\r") % desc->character->getName());
+  desc->writeToQ(format("1. Name               : %-24s\n\r") % desc->character->getName());
 
   // Race and Homeland
   output = "None";
@@ -731,18 +731,18 @@ void nannyLaunchpad_output(Descriptor * desc)
       output = nannyRaces[iRace].name;
   output += '/';
   output += home_terrains[desc->character->player.hometerrain];
-  desc->writeToQ(fmt("2. Race/Homeland      : %-24s\n\r") % output);
+  desc->writeToQ(format("2. Race/Homeland      : %-24s\n\r") % output);
 
   // Class
-  desc->writeToQ(fmt("3. Class              : %-24s\n\r") % desc->character->getProfName());
+  desc->writeToQ(format("3. Class              : %-24s\n\r") % desc->character->getProfName());
 
   // Sex
   output = (desc->character->getSex() == SEX_MALE ? "Male" : "Female");
-  desc->writeToQ(fmt("4. Sex                : %-24s\n\r") % output);
+  desc->writeToQ(format("4. Sex                : %-24s\n\r") % output);
 
   // Handedness
   output = (desc->character->isRightHanded() ? "Right" : "Left");
-  desc->writeToQ(fmt("5. Primary Hand       : %-24s\n\r") % output);
+  desc->writeToQ(format("5. Primary Hand       : %-24s\n\r") % output);
 
   // Traits
   output = "";
@@ -757,26 +757,26 @@ void nannyLaunchpad_output(Descriptor * desc)
     output = "None";
   else if (output.length() > 34)
     output = "Many";
-  desc->writeToQ(fmt("6. Traits             : %-24s\n\r") % output);
+  desc->writeToQ(format("6. Traits             : %-24s\n\r") % output);
 
   // Stat Customizations
   output = "Default";
   int extra = desc->bonus_points.total - desc->totalChosenStats();
   if (extra > 0)
-    output = fmt("%d bonus points unspent") % extra;
+    output = format("%d bonus points unspent") % extra;
   else if (extra < 0)
-    output = fmt("%d penalty points left") % (-extra);
+    output = format("%d penalty points left") % (-extra);
   else if (!desc->isDefaultChosenStats())
     output = "Customized";
-  desc->writeToQ(fmt("7. Stats              : %-24s\n\r") % output);
+  desc->writeToQ(format("7. Stats              : %-24s\n\r") % output);
 
   // check if we can be done
   if (nannyLaunchpad_allowdone(desc, output))
-      desc->writeToQ(fmt("\n\rChoose %sD%s to complete character creation and enter the game.") % desc->red() % desc->norm());
+      desc->writeToQ(format("\n\rChoose %sD%s to complete character creation and enter the game.") % desc->red() % desc->norm());
   else
-      desc->writeToQ(fmt("\n\r%s") % output);
-  desc->writeToQ(fmt("\n\rChoose %sR%s to reset your customizations.\n\r") % desc->red() % desc->norm());
-  desc->writeToQ(fmt("Choose %sC%s to enter a creation code.\n\r") % desc->red() % desc->norm());
+      desc->writeToQ(format("\n\r%s") % output);
+  desc->writeToQ(format("\n\rChoose %sR%s to reset your customizations.\n\r") % desc->red() % desc->norm());
+  desc->writeToQ(format("Choose %sC%s to enter a creation code.\n\r") % desc->red() % desc->norm());
 }
 
 // print out all of the traits for this trate page
@@ -808,13 +808,13 @@ void nannyTraits_output(Descriptor * desc)
       check = 'X';
     else if (traits[i].num50any > num50any || traits[i].num50race > num50race || nannyRaces[iRace].disableTrait == i)
       check = '*';
-    buf+=fmt("[%c] %2i. %-12s (%3i points)\n\r        %s\n\r") %
+    buf+=format("[%c] %2i. %-12s (%3i points)\n\r        %s\n\r") %
       check % i %
       traits[i].name %
       traits[i].points % traits[i].desc;
   }
 
-  buf+=fmt("\n\rBonus points          [%3d]\n\r") % desc->bonus_points.total;
+  buf+=format("\n\rBonus points          [%3d]\n\r") % desc->bonus_points.total;
 
   desc->writeToQ(buf);
 }
@@ -837,12 +837,12 @@ connectStateT nannyTraits_input(Descriptor * desc, sstring & output, const sstri
   }
   else if (traits[iTrait].num50race > num50race)
   {
-    output = fmt("Invalid Choice! %d L50 character%s needed for %s (race-specific).") %
+    output = format("Invalid Choice! %d L50 character%s needed for %s (race-specific).") %
       traits[iTrait].num50race % (traits[iTrait].num50race > 1 ? "s are" : " is" ) % traits[iTrait].name;
   }
   else if (traits[iTrait].num50any > num50any)
   {
-    output = fmt("Invalid Choice! %d L50 character%s needed for %s.") %
+    output = format("Invalid Choice! %d L50 character%s needed for %s.") %
       traits[iTrait].num50any % (traits[iTrait].num50any > 1 ? "s are" : " is" ) % traits[iTrait].name;
   }
   else
@@ -858,7 +858,7 @@ void nannyStatRules_output(Descriptor * desc)
 {
   sstring output;
 
-  output += fmt("Welcome to the %s stat customization process.\n\r") % MUD_NAME;
+  output += format("Welcome to the %s stat customization process.\n\r") % MUD_NAME;
   output += "All changes apply on top of your existing stats given your race and homeland.\n\r";
   output += "REALIZE THAT A ZERO STAT IS THE NORMAL AMOUNT FOR YOU RACE AND HOMELAND.\n\r";
   output += "Your stats are split into four groups: power and grace, mental, and utility.\n\r";
@@ -879,7 +879,7 @@ void nannyStats_output(Descriptor * desc)
   TStatGroup *stats = statGroups[iGroup];
   const sstring statsName = statGroupNames[iGroup];
 
-  desc->writeToQ(fmt("Your current %s characteristics are: \n\r\n\r") % statsName);
+  desc->writeToQ(format("Your current %s characteristics are: \n\r\n\r") % statsName);
 
   sstring output;
   int totalStats = 0;
@@ -895,15 +895,15 @@ void nannyStats_output(Descriptor * desc)
     const sstring statDesc[MAX_STATS] = realStatAmount < 0 ? statDescNeg : statDescPos;
     int iAdj = max(realStatAmount, -realStatAmount) / cElements(statAmountAdj);
 
-    output += fmt(stats[iStat].shortName) % desc->cyan() % desc->norm() % desc->cyan() % desc->norm();
-    output += fmt("[%3d] ") % statAmount;
+    output += format(stats[iStat].shortName) % desc->cyan() % desc->norm() % desc->cyan() % desc->norm();
+    output += format("[%3d] ") % statAmount;
 
     if (iAdj < 1)
       output += "(about average)";
     else if (iAdj < (int)cElements(statAmountAdj))
-      output += fmt("(%s %s)") % statAmountAdj[iAdj] % statDesc[stats[iStat].stat];
+      output += format("(%s %s)") % statAmountAdj[iAdj] % statDesc[stats[iStat].stat];
     else
-      output += fmt("(off the chart %s)") % statDesc[stats[iStat].stat];
+      output += format("(off the chart %s)") % statDesc[stats[iStat].stat];
 
     output += "\n\r";
     totalStats += statAmount;
@@ -915,27 +915,27 @@ void nannyStats_output(Descriptor * desc)
   // show descriptions
   for (int iStat = 0; iStat < 3; iStat++)
   {
-    desc->writeToQ(fmt("%s\n\r") % stats[iStat].desc);
+    desc->writeToQ(format("%s\n\r") % stats[iStat].desc);
   }
 
   // show free points
-  desc->writeToQ(fmt("\n\rYou have %d free %s stat points.\n\r") % (bonusPoints[iGroup]-totalStats) % statsName);
+  desc->writeToQ(format("\n\rYou have %d free %s stat points.\n\r") % (bonusPoints[iGroup]-totalStats) % statsName);
   bool canLeave = (bonusPoints[iGroup]-totalStats) >= 0;
 
   // show some example or something? for syntax
 
   // print dynamic menus
   if (!canLeave)
-    desc->writeToQ(fmt("\n\rYou cannot finish customizing %s until you have spent your %d points.") % statsName % (bonusPoints[iGroup]-totalStats));
-  desc->writeToQ(fmt("\n\rType %s?%s to see a help file for help on this choice.") % desc->red() % desc->norm());
+    desc->writeToQ(format("\n\rYou cannot finish customizing %s until you have spent your %d points.") % statsName % (bonusPoints[iGroup]-totalStats));
+  desc->writeToQ(format("\n\rType %s?%s to see a help file for help on this choice.") % desc->red() % desc->norm());
   if (canLeave && desc->connected < CON_CREATION_CUSTOMIZE_UTIL)
-    desc->writeToQ(fmt("\n\rType %sC%s to continue on to the next menu.") % desc->red() % desc->norm());
+    desc->writeToQ(format("\n\rType %sC%s to continue on to the next menu.") % desc->red() % desc->norm());
   if (canLeave && desc->connected >= CON_CREATION_CUSTOMIZE_UTIL)
-    desc->writeToQ(fmt("\n\rType %sC%s to finish and go to the main character menu.") % desc->red() % desc->norm());
+    desc->writeToQ(format("\n\rType %sC%s to finish and go to the main character menu.") % desc->red() % desc->norm());
   if (canLeave && desc->connected > CON_CREATION_CUSTOMIZE_COMBAT)
-    desc->writeToQ(fmt("\n\rType %s/%s to go back to the previous menu.") % desc->red() % desc->norm());
+    desc->writeToQ(format("\n\rType %s/%s to go back to the previous menu.") % desc->red() % desc->norm());
   if (canLeave && desc->connected <= CON_CREATION_CUSTOMIZE_COMBAT)
-    desc->writeToQ(fmt("\n\rType %s/%s to go back to the main character menu.") % desc->red() % desc->norm());
+    desc->writeToQ(format("\n\rType %s/%s to go back to the main character menu.") % desc->red() % desc->norm());
 }
 
 // customize stats (this has to use its own custom menu to prevent leaving the stage with negative stats
@@ -951,7 +951,7 @@ connectStateT nannyStats_input(Descriptor * desc, sstring & output, const sstrin
   bool canLeave = (bonusPoints[iGroup]-totalStats) >= 0;
 
   if (!canLeave)
-    output = fmt("\n\rYou cannot finish customizing %s until you have spent your %d points.") % statsName % (bonusPoints[iGroup]-totalStats);
+    output = format("\n\rYou cannot finish customizing %s until you have spent your %d points.") % statsName % (bonusPoints[iGroup]-totalStats);
 
   if (!input.empty() && input.length() < 7 && // 7 randomly chosen for sanity
     (input[0] == '+' || input[0] == '-'))
@@ -976,7 +976,7 @@ connectStateT nannyStats_input(Descriptor * desc, sstring & output, const sstrin
     }
     else
     {
-      output = fmt("Adjusting your %s stat by %d.") % statsName % amount;
+      output = format("Adjusting your %s stat by %d.") % statsName % amount;
       desc->setChosenStat(stat, newChosen);
     }
   }
@@ -992,14 +992,14 @@ connectStateT nannyStats_input(Descriptor * desc, sstring & output, const sstrin
 void nannyDone_output(Descriptor * desc)
 {
   sstring output = "Congratulations, you have finished the character creation process.\n\r";
-  output += fmt("If you are a newcomer to %s, %stake a minute to read this screen%s.\n\r\n\r") % MUD_NAME % desc->orange() % desc->norm();
+  output += format("If you are a newcomer to %s, %stake a minute to read this screen%s.\n\r\n\r") % MUD_NAME % desc->orange() % desc->norm();
 
   output += "Upon connecting, you will want to check your initial terminal options.\n\r";
   output += "Know that the game will automatically set some of these options for you.\n\r";
   output += "These include: prompts, toggles, terminal size, color.\n\r";
   output += "Your initial settings are just defaults and you can change them easily.\n\r";
-  output += fmt("Good help files to read are <%sTOGGLE%s>, <%sPROMPT%s> and <%sCOLOR%s>.\n\r") % desc->orange() % desc->norm() % desc->orange() % desc->norm() % desc->orange() % desc->norm();
-  output += fmt("You should also %sread the newbie guide%s and %swear your equipment%s.\n\r") % desc->orange() % desc->norm() %desc-> orange() % desc->norm();
+  output += format("Good help files to read are <%sTOGGLE%s>, <%sPROMPT%s> and <%sCOLOR%s>.\n\r") % desc->orange() % desc->norm() % desc->orange() % desc->norm() % desc->orange() % desc->norm();
+  output += format("You should also %sread the newbie guide%s and %swear your equipment%s.\n\r") % desc->orange() % desc->norm() %desc-> orange() % desc->norm();
 
   output += "For further orientation, use the help system, newbie helpers and immortal staff.\n\r";
   output += "Check the SneezyMUD website's Help section for more: http://www.sneezymud.com\n\r";
@@ -1008,7 +1008,7 @@ void nannyDone_output(Descriptor * desc)
   output += "and encouraged to help you with command problems and general orientation.\n\r\n\r";
 
   output += "You may also wish to check out our web site, forums and newsletter.\n\r";
-  output += fmt("The staff of %s hope that you enjoy your stay.\n\r") % MUD_NAME;
+  output += format("The staff of %s hope that you enjoy your stay.\n\r") % MUD_NAME;
   
   desc->writeToQ(output);
 }
@@ -1045,53 +1045,53 @@ connectStateT nannyCode_input(Descriptor * desc, sstring & output, const sstring
     unsigned long stats1=strtoul(input.substr(12,6).c_str(), NULL, 36);
     unsigned long other=strtoul(input.substr(18,6).c_str(), NULL, 36);
 
-    nannyRace_input(desc, buf, fmt("%i") % GET_BITS_CORRECT(other, 3, 4));
+    nannyRace_input(desc, buf, format("%i") % GET_BITS_CORRECT(other, 3, 4));
     output += buf + "\n\r";
     buf="";
 
-    nannyTerritory_input(desc, buf, fmt("%i") % GET_BITS_CORRECT(other, 6, 3));
+    nannyTerritory_input(desc, buf, format("%i") % GET_BITS_CORRECT(other, 6, 3));
     output += buf + "\n\r";
     buf="";
     
-    nannyClass_input(desc, buf, fmt("%i") % GET_BITS_CORRECT(other, 9, 3));
+    nannyClass_input(desc, buf, format("%i") % GET_BITS_CORRECT(other, 9, 3));
     output += buf + "\n\r";
     buf="";
 
-    nannySex_input(desc, buf, fmt("%i") % (GET_BITS_CORRECT(other, 10, 1)+1));
+    nannySex_input(desc, buf, format("%i") % (GET_BITS_CORRECT(other, 10, 1)+1));
     output += buf + "\n\r";
     buf="";
 
-    nannyHand_input(desc, buf, fmt("%i") % (GET_BITS_CORRECT(other, 11, 1)+1));
+    nannyHand_input(desc, buf, format("%i") % (GET_BITS_CORRECT(other, 11, 1)+1));
     output += buf + "\n\r";
     buf="";    
     
     for(int i=12;i<28;++i){
       if(GET_BITS_CORRECT(other, i, 1)){
-        nannyTraits_input(desc, buf, fmt("%i") % (i-11));
+        nannyTraits_input(desc, buf, format("%i") % (i-11));
 	      output += buf + "\n\r";
 	      buf="";
       }
     }
 
     desc->connected=CON_CREATION_CUSTOMIZE_COMBAT;
-    nannyStats_input(desc, buf, fmt("%+is") % (GET_BITS_CORRECT(stats1, 5, 6)-25));
-    nannyStats_input(desc, buf, fmt("%+ib") % (GET_BITS_CORRECT(stats1, 11, 6)-25));
-    nannyStats_input(desc, buf, fmt("%+ic") % (GET_BITS_CORRECT(stats1, 17, 6)-25));
+    nannyStats_input(desc, buf, format("%+is") % (GET_BITS_CORRECT(stats1, 5, 6)-25));
+    nannyStats_input(desc, buf, format("%+ib") % (GET_BITS_CORRECT(stats1, 11, 6)-25));
+    nannyStats_input(desc, buf, format("%+ic") % (GET_BITS_CORRECT(stats1, 17, 6)-25));
 
     desc->connected=CON_CREATION_CUSTOMIZE_COMBAT2;
-    nannyStats_input(desc, buf, fmt("%+id") % (GET_BITS_CORRECT(stats1, 23, 6)-25));
-    nannyStats_input(desc, buf, fmt("%+ia") % (GET_BITS_CORRECT(stats2, 5, 6)-25));
-    nannyStats_input(desc, buf, fmt("%+is") % (GET_BITS_CORRECT(stats3, 23, 6)-25));
+    nannyStats_input(desc, buf, format("%+id") % (GET_BITS_CORRECT(stats1, 23, 6)-25));
+    nannyStats_input(desc, buf, format("%+ia") % (GET_BITS_CORRECT(stats2, 5, 6)-25));
+    nannyStats_input(desc, buf, format("%+is") % (GET_BITS_CORRECT(stats3, 23, 6)-25));
 
     desc->connected=CON_CREATION_CUSTOMIZE_LEARN;
-    nannyStats_input(desc, buf, fmt("%+ii") % (GET_BITS_CORRECT(stats2, 11, 6)-25));
-    nannyStats_input(desc, buf, fmt("%+iw") % (GET_BITS_CORRECT(stats2, 17, 6)-25));
-    nannyStats_input(desc, buf, fmt("%+if") % (GET_BITS_CORRECT(stats2, 23, 6)-25));
+    nannyStats_input(desc, buf, format("%+ii") % (GET_BITS_CORRECT(stats2, 11, 6)-25));
+    nannyStats_input(desc, buf, format("%+iw") % (GET_BITS_CORRECT(stats2, 17, 6)-25));
+    nannyStats_input(desc, buf, format("%+if") % (GET_BITS_CORRECT(stats2, 23, 6)-25));
 
     desc->connected=CON_CREATION_CUSTOMIZE_UTIL;
-    nannyStats_input(desc, buf, fmt("%+ip") % (GET_BITS_CORRECT(stats3, 5, 6)-25));
-    nannyStats_input(desc, buf, fmt("%+ic") % (GET_BITS_CORRECT(stats3, 11, 6)-25));
-    nannyStats_input(desc, buf, fmt("%+ik") % (GET_BITS_CORRECT(stats3, 17, 6)-25));
+    nannyStats_input(desc, buf, format("%+ip") % (GET_BITS_CORRECT(stats3, 5, 6)-25));
+    nannyStats_input(desc, buf, format("%+ic") % (GET_BITS_CORRECT(stats3, 11, 6)-25));
+    nannyStats_input(desc, buf, format("%+ik") % (GET_BITS_CORRECT(stats3, 17, 6)-25));
   }
   return CON_CREATION_LAUNCHPAD;
 }
@@ -1111,17 +1111,17 @@ void nannyCommonMenu(Descriptor * desc, int menu)
     return;
   }
   if (menu & NANNY_MENU_HELP)
-    desc->writeToQ(fmt("\n\rType %s?%s to see a help file for help on this choice.") % desc->red() % desc->norm());
+    desc->writeToQ(format("\n\rType %s?%s to see a help file for help on this choice.") % desc->red() % desc->norm());
   if (menu & NANNY_MENU_FRWD)
-    desc->writeToQ(fmt("\n\rType %sC%s to continue on to the next menu.") % desc->red() % desc->norm());
+    desc->writeToQ(format("\n\rType %sC%s to continue on to the next menu.") % desc->red() % desc->norm());
   if (menu & NANNY_MENU_DPAD)
-    desc->writeToQ(fmt("\n\rType %sC%s to finish and go to the main character menu.") % desc->red() % desc->norm());
+    desc->writeToQ(format("\n\rType %sC%s to finish and go to the main character menu.") % desc->red() % desc->norm());
   if (menu & NANNY_MENU_BACK)
-    desc->writeToQ(fmt("\n\rType %s/%s to go back to the previous menu.") % desc->red() % desc->norm());
+    desc->writeToQ(format("\n\rType %s/%s to go back to the previous menu.") % desc->red() % desc->norm());
   if (menu & NANNY_MENU_BPAD)
-    desc->writeToQ(fmt("\n\rType %s/%s to go back to the main character menu.") % desc->red() % desc->norm());
+    desc->writeToQ(format("\n\rType %s/%s to go back to the main character menu.") % desc->red() % desc->norm());
   if (menu & NANNY_MENU_DISC)
-    desc->writeToQ(fmt("\n\rType %s~%s to disconnect.") % desc->red() % desc->norm());
+    desc->writeToQ(format("\n\rType %s~%s to disconnect.") % desc->red() % desc->norm());
   if (menu & NANNY_MENU_PROM)
     desc->writeToQ("\n\r\n\r--> ");
 }

@@ -252,7 +252,7 @@ int castCreateWater(TBeing *caster, TObj *obj)
   if (ret == SPELL_SUCCESS) {
     if ((drink = dynamic_cast<TDrinkCon *>(obj))) {
       if (!(drink->getMaxDrinkUnits() - drink->getDrinkUnits())) {
-        caster->sendTo(COLOR_SPELLS, fmt("<p>Your %s is completely full so you stop your prayer.<z>\n\r") % fname(drink->name));
+        caster->sendTo(COLOR_SPELLS, format("<p>Your %s is completely full so you stop your prayer.<z>\n\r") % fname(drink->name));
         act("$n stops praying.", TRUE, caster, NULL, NULL, TO_ROOM);
         caster->stopCast(STOP_CAST_NONE);
       }
@@ -349,7 +349,7 @@ int wordOfRecall(TBeing * caster, TBeing * victim, int, byte bKnown)
 
   if (victim->isImmortal()) {
     caster->sendTo("I don't think that is a good idea...\n\r");
-    victim->sendTo(fmt("%s just tried to recall you, how pathetic...\n\r") %
+    victim->sendTo(format("%s just tried to recall you, how pathetic...\n\r") %
                    caster->getNameNOC(victim));
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
     return SPELL_FAIL;
@@ -881,7 +881,7 @@ int portal(TBeing * caster, const char * portalroom, int level, byte bKnown)
 
   if (!rp || !location) {
     caster->sendTo("You can't seem to portal to that location.\n\r");
-    //    vlogf(LOG_BUG, fmt("Attempt to portal to room %d") % location);
+    //    vlogf(LOG_BUG, format("Attempt to portal to room %d") % location);
     return SPELL_FAIL;
   }
 

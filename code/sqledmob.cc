@@ -30,74 +30,74 @@ int main(int argc, char **argv)
 
     db.query("select * from mob where vnum=%i", vnums[i]);
     if(db.fetchRow()){
-      buf = fmt("- mob\n"); sbuf+=buf;
-      buf = fmt("vnum: %s\n") % db["vnum"];  sbuf+=buf;
-      buf = fmt("name: %s\n") % db["name"];  sbuf+=buf;
-      buf = fmt("short_desc: %s\n") % db["short_desc"];  sbuf+=buf;
-      buf = fmt("long_desc~:\n%s~\n") % db["long_desc"];  sbuf+=buf;
-      buf = fmt("description~:\n%s~\n") % db["description"];  sbuf+=buf;
-      buf = fmt("actions: %s\n") % db["actions"];  sbuf+=buf;
-      buf = fmt("affects: %s\n") % db["affects"];  sbuf+=buf;
-      buf = fmt("faction: %s\n") % db["faction"];  sbuf+=buf;
-      buf = fmt("fact_perc: %s\n") % db["fact_perc"];  sbuf+=buf;
-      buf = fmt("letter: %s\n") % db["letter"];  sbuf+=buf;
-      buf = fmt("attacks: %s\n") % db["attacks"];  sbuf+=buf;
-      buf = fmt("class: %s\n") % db["class"];  sbuf+=buf;
-      buf = fmt("level: %s\n") % db["level"];  sbuf+=buf;
-      buf = fmt("tohit: %s\n") % db["tohit"];  sbuf+=buf;
-      buf = fmt("ac: %s\n") % db["ac"];  sbuf+=buf;
-      buf = fmt("hpbonus: %s\n") % db["hpbonus"];  sbuf+=buf;
-      buf = fmt("damage_level: %s\n") % db["damage_level"];  sbuf+=buf;
-      buf = fmt("damage_precision: %s\n") % db["damage_precision"];  sbuf+=buf;
-      buf = fmt("gold: %s\n") % db["gold"];  sbuf+=buf;
-      buf = fmt("race: %s\n") % db["race"];  sbuf+=buf;
-      buf = fmt("weight: %s\n") % db["weight"];  sbuf+=buf;
-      buf = fmt("height: %s\n") % db["height"];  sbuf+=buf;
-      buf = fmt("str: %s\n") % db["str"];  sbuf+=buf;
-      buf = fmt("bra: %s\n") % db["bra"];  sbuf+=buf;
-      buf = fmt("con: %s\n") % db["con"];  sbuf+=buf;
-      buf = fmt("dex: %s\n") % db["dex"];  sbuf+=buf;
-      buf = fmt("agi: %s\n") % db["agi"];  sbuf+=buf;
-      buf = fmt("intel: %s\n") % db["intel"];  sbuf+=buf;
-      buf = fmt("wis: %s\n") % db["wis"];  sbuf+=buf;
-      buf = fmt("foc: %s\n") % db["foc"];  sbuf+=buf;
-      buf = fmt("per: %s\n") % db["per"];  sbuf+=buf;
-      buf = fmt("cha: %s\n") % db["cha"];  sbuf+=buf;
-      buf = fmt("kar: %s\n") % db["kar"];  sbuf+=buf;
-      buf = fmt("spe: %s\n") % db["spe"];  sbuf+=buf;
-      buf = fmt("pos: %s\n") % db["pos"];  sbuf+=buf;
-      buf = fmt("def_position: %s\n") % db["def_position"];  sbuf+=buf;
-      buf = fmt("sex: %s\n") % db["sex"];  sbuf+=buf;
-      buf = fmt("spec_proc: %s\n") % db["spec_proc"];  sbuf+=buf;
-      buf = fmt("skin: %s\n") % db["skin"];  sbuf+=buf;
-      buf = fmt("vision: %s\n") % db["vision"];  sbuf+=buf;
-      buf = fmt("can_be_seen: %s\n") % db["can_be_seen"];  sbuf+=buf;
-      buf = fmt("max_exist: %s\n") % db["max_exist"];  sbuf+=buf;
-      buf = fmt("local_sound~:\n%s~\n") % db["local_sound"];  sbuf+=buf;
-      buf = fmt("adjacent_sound~:\n%s~\n") % db["adjacent_sound"];  sbuf+=buf;
+      buf = format("- mob\n"); sbuf+=buf;
+      buf = format("vnum: %s\n") % db["vnum"];  sbuf+=buf;
+      buf = format("name: %s\n") % db["name"];  sbuf+=buf;
+      buf = format("short_desc: %s\n") % db["short_desc"];  sbuf+=buf;
+      buf = format("long_desc~:\n%s~\n") % db["long_desc"];  sbuf+=buf;
+      buf = format("description~:\n%s~\n") % db["description"];  sbuf+=buf;
+      buf = format("actions: %s\n") % db["actions"];  sbuf+=buf;
+      buf = format("affects: %s\n") % db["affects"];  sbuf+=buf;
+      buf = format("faction: %s\n") % db["faction"];  sbuf+=buf;
+      buf = format("fact_perc: %s\n") % db["fact_perc"];  sbuf+=buf;
+      buf = format("letter: %s\n") % db["letter"];  sbuf+=buf;
+      buf = format("attacks: %s\n") % db["attacks"];  sbuf+=buf;
+      buf = format("class: %s\n") % db["class"];  sbuf+=buf;
+      buf = format("level: %s\n") % db["level"];  sbuf+=buf;
+      buf = format("tohit: %s\n") % db["tohit"];  sbuf+=buf;
+      buf = format("ac: %s\n") % db["ac"];  sbuf+=buf;
+      buf = format("hpbonus: %s\n") % db["hpbonus"];  sbuf+=buf;
+      buf = format("damage_level: %s\n") % db["damage_level"];  sbuf+=buf;
+      buf = format("damage_precision: %s\n") % db["damage_precision"];  sbuf+=buf;
+      buf = format("gold: %s\n") % db["gold"];  sbuf+=buf;
+      buf = format("race: %s\n") % db["race"];  sbuf+=buf;
+      buf = format("weight: %s\n") % db["weight"];  sbuf+=buf;
+      buf = format("height: %s\n") % db["height"];  sbuf+=buf;
+      buf = format("str: %s\n") % db["str"];  sbuf+=buf;
+      buf = format("bra: %s\n") % db["bra"];  sbuf+=buf;
+      buf = format("con: %s\n") % db["con"];  sbuf+=buf;
+      buf = format("dex: %s\n") % db["dex"];  sbuf+=buf;
+      buf = format("agi: %s\n") % db["agi"];  sbuf+=buf;
+      buf = format("intel: %s\n") % db["intel"];  sbuf+=buf;
+      buf = format("wis: %s\n") % db["wis"];  sbuf+=buf;
+      buf = format("foc: %s\n") % db["foc"];  sbuf+=buf;
+      buf = format("per: %s\n") % db["per"];  sbuf+=buf;
+      buf = format("cha: %s\n") % db["cha"];  sbuf+=buf;
+      buf = format("kar: %s\n") % db["kar"];  sbuf+=buf;
+      buf = format("spe: %s\n") % db["spe"];  sbuf+=buf;
+      buf = format("pos: %s\n") % db["pos"];  sbuf+=buf;
+      buf = format("def_position: %s\n") % db["def_position"];  sbuf+=buf;
+      buf = format("sex: %s\n") % db["sex"];  sbuf+=buf;
+      buf = format("spec_proc: %s\n") % db["spec_proc"];  sbuf+=buf;
+      buf = format("skin: %s\n") % db["skin"];  sbuf+=buf;
+      buf = format("vision: %s\n") % db["vision"];  sbuf+=buf;
+      buf = format("can_be_seen: %s\n") % db["can_be_seen"];  sbuf+=buf;
+      buf = format("max_exist: %s\n") % db["max_exist"];  sbuf+=buf;
+      buf = format("local_sound~:\n%s~\n") % db["local_sound"];  sbuf+=buf;
+      buf = format("adjacent_sound~:\n%s~\n") % db["adjacent_sound"];  sbuf+=buf;
 
 
-      buf = fmt("\n"); sbuf+=buf;
+      buf = format("\n"); sbuf+=buf;
     }
 
 
     db.query("select * from mob_extra where vnum=%i", vnums[i]);
     while(db.fetchRow()){
-      buf = fmt("- mob_extra\n"); sbuf+=buf;
-      buf = fmt("vnum: %s\n") % db["vnum"];  sbuf+=buf;
-      buf = fmt("keyword: %s\n") % db["keyword"];  sbuf+=buf;
-      buf = fmt("description~:\n%s~\n") % db["description"];  sbuf+=buf;
-      buf = fmt("\n"); sbuf+=buf;
+      buf = format("- mob_extra\n"); sbuf+=buf;
+      buf = format("vnum: %s\n") % db["vnum"];  sbuf+=buf;
+      buf = format("keyword: %s\n") % db["keyword"];  sbuf+=buf;
+      buf = format("description~:\n%s~\n") % db["description"];  sbuf+=buf;
+      buf = format("\n"); sbuf+=buf;
     }
 
 
     db.query("select * from mob_imm where vnum=%i", vnums[i]);
     while(db.fetchRow()){
-      buf = fmt("- mob_imm\n"); sbuf+=buf;
-      buf = fmt("vnum: %s\n") % db["vnum"];  sbuf+=buf;
-      buf = fmt("type: %s\n") % db["type"];  sbuf+=buf;
-      buf = fmt("amt: %s\n") % db["amt"];  sbuf+=buf;
-      buf = fmt("\n"); sbuf+=buf;
+      buf = format("- mob_imm\n"); sbuf+=buf;
+      buf = format("vnum: %s\n") % db["vnum"];  sbuf+=buf;
+      buf = format("type: %s\n") % db["type"];  sbuf+=buf;
+      buf = format("amt: %s\n") % db["amt"];  sbuf+=buf;
+      buf = format("\n"); sbuf+=buf;
     }
   }
 
@@ -108,7 +108,7 @@ int main(int argc, char **argv)
   fclose(tmpfile);
 
   printf("Opening editor.\n");
-  buf = fmt("$EDITOR %s") % file;
+  buf = format("$EDITOR %s") % file;
   system(buf.c_str());
 
 
@@ -126,7 +126,7 @@ int main(int argc, char **argv)
     }
   }
 
-  buf = fmt("/bin/cp -f %s %s.backup") % file % file;
+  buf = format("/bin/cp -f %s %s.backup") % file % file;
   system(buf.c_str());
 
 

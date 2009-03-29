@@ -31,7 +31,7 @@ static int rescue(TBeing * caster, TBeing * victim, spellNumT skill)
     return FALSE;
   }
   if (victim->riding) {
-    caster->sendTo(COLOR_MOBS, fmt("You can't rescue %s off of %s!\n\r") % 
+    caster->sendTo(COLOR_MOBS, format("You can't rescue %s off of %s!\n\r") % 
          victim->getName() % victim->riding->getName());
     return FALSE;
   }

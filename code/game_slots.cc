@@ -325,19 +325,19 @@ void spin_slot(TBeing *ch)
     fruit2 = ChooseSecondFruit();
     fruit3 = ChooseThirdFruit();
   }
-  ch->sendTo(fmt("%-10s %-10s %-10s\n\r") % fruit1 % fruit2 % fruit3);
+  ch->sendTo(format("%-10s %-10s %-10s\n\r") % fruit1 % fruit2 % fruit3);
   sprintf(buf, "$n spins a [%-10s %-10s %-10s]", fruit1, fruit2, fruit3);
   act(buf, FALSE, ch, 0, 0, TO_ROOM);
 
   bits = generic_find("slot", FIND_OBJ_ROOM, ch, &tmp_char, &slot);
 
   if(bits != FIND_OBJ_ROOM){
-    vlogf(LOG_BUG, fmt("No slot machine in room %d") %  ch->in_room);
+    vlogf(LOG_BUG, format("No slot machine in room %d") %  ch->in_room);
     return;
   }
 
   if(ch->desc->bet.slot==0){
-    vlogf(LOG_BUG, fmt("slot bet was 0 in room %s") %  ch->in_room);
+    vlogf(LOG_BUG, format("slot bet was 0 in room %s") %  ch->in_room);
     return;
   }
 

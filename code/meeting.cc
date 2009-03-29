@@ -81,9 +81,9 @@ static bool checkForSay(TBeing *ch, TMonster *myself, cmdTypeT cmd, const char *
         myself->doTell(fname(ch->name), tmpString);
       }
       if (job->speech_dur > 0) {
-        myself->doTell(fname(ch->name), fmt("Speech time is restricted to %d seconds.") % job->speech_dur);
+        myself->doTell(fname(ch->name), format("Speech time is restricted to %d seconds.") % job->speech_dur);
         if (!job->speech_list.empty()) {
-          myself->doTell(fname(ch->name), fmt("%s has %ld seconds remaining.") % job->speech_list[0] % (job->speech_dur +job->start_time - time(0)));
+          myself->doTell(fname(ch->name), format("%s has %ld seconds remaining.") % job->speech_list[0] % (job->speech_dur +job->start_time - time(0)));
         }
       } else {
         myself->doTell(fname(ch->name), "Speech time is unrestricted.");
@@ -349,16 +349,16 @@ int meeting_organizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mysel
 
   myself->doTell(fname(ch->name), "To maintain order at the meeting, you are restricted to the following commands:");
   myself->doTell(fname(ch->name), "movement, utility, NOD, SHAKE, AGREE, DISAGREE");
-  myself->doTell(fname(ch->name), fmt("To be added to the speaker list : say %s add me") % ORGANIZER_ID);
-  myself->doTell(fname(ch->name), fmt("To review the speaker list : say %s show list") % ORGANIZER_ID);
-  myself->doTell(fname(ch->name), fmt("To relinquish the speaker position : say %s done") % ORGANIZER_ID);
+  myself->doTell(fname(ch->name), format("To be added to the speaker list : say %s add me") % ORGANIZER_ID);
+  myself->doTell(fname(ch->name), format("To review the speaker list : say %s show list") % ORGANIZER_ID);
+  myself->doTell(fname(ch->name), format("To relinquish the speaker position : say %s done") % ORGANIZER_ID);
 
   if (ch->GetMaxLevel() > MAX_MORT) {
-    myself->doTell(fname(ch->name), fmt("To pause/restart the speaker clock : say %s pause") % ORGANIZER_ID);
-    myself->doTell(fname(ch->name), fmt("To open/close debate to all : say %s open_debate") % ORGANIZER_ID);
-    myself->doTell(fname(ch->name), fmt("To set the speech time : say %s speech_time <seconds>") % ORGANIZER_ID);
-    myself->doTell(fname(ch->name), fmt("To clear the speaker list : say %s clear") % ORGANIZER_ID);
-    myself->doTell(fname(ch->name), fmt("To log/unlog the meeting : say %s log") % ORGANIZER_ID);
+    myself->doTell(fname(ch->name), format("To pause/restart the speaker clock : say %s pause") % ORGANIZER_ID);
+    myself->doTell(fname(ch->name), format("To open/close debate to all : say %s open_debate") % ORGANIZER_ID);
+    myself->doTell(fname(ch->name), format("To set the speech time : say %s speech_time <seconds>") % ORGANIZER_ID);
+    myself->doTell(fname(ch->name), format("To clear the speaker list : say %s clear") % ORGANIZER_ID);
+    myself->doTell(fname(ch->name), format("To log/unlog the meeting : say %s log") % ORGANIZER_ID);
   }
 
   return TRUE;

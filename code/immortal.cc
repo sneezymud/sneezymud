@@ -43,7 +43,7 @@ extern "C" {
 togEntry *togInfoT::operator[] (const togTypeT i)
 {
   if(toggles.find(i) == toggles.end()){
-    vlogf(LOG_BUG, fmt("invalid toggle detected: %i") % i);
+    vlogf(LOG_BUG, format("invalid toggle detected: %i") % i);
     return toggles[TOG_NONE];
   } else {
     return toggles[i];
@@ -247,19 +247,19 @@ void TBeing::doChangeOutfit(const char *argument)
     if(equipment[pos]){
       removed = unequip(pos);
       *suitcase += *removed;
-      sendTo(COLOR_OBJECTS, fmt("You stash %s in %s.\n\r") %
+      sendTo(COLOR_OBJECTS, format("You stash %s in %s.\n\r") %
        removed->getName() % suitcase->getName());
 
       if(o->isPaired()){
   if(pos==WEAR_LEG_L && equipment[WEAR_LEG_R]){
     removed = unequip(WEAR_LEG_R);
     *suitcase += *removed;
-    sendTo(COLOR_OBJECTS, fmt("You stash %s in %s.\n\r") %
+    sendTo(COLOR_OBJECTS, format("You stash %s in %s.\n\r") %
      removed->getName() % suitcase->getName()); 
   } else if(pos==WEAR_LEG_R && equipment[WEAR_LEG_L]){
     removed = unequip(WEAR_LEG_L);
     *suitcase += *removed;
-    sendTo(COLOR_OBJECTS, fmt("You stash %s in %s.\n\r") %
+    sendTo(COLOR_OBJECTS, format("You stash %s in %s.\n\r") %
      removed->getName() % suitcase->getName());
   }
       }
@@ -304,28 +304,28 @@ void TPerson::doChange(const char *argument)
     argument = one_argument(argument, buf, cElements(buf));
     int val = convertTo<int>(buf);
     QuestVar1 = val;
-    sendTo(fmt("You have changed QuestVar1 to %d.") % val);
+    sendTo(format("You have changed QuestVar1 to %d.") % val);
     return;
   } else if (is_abbrev(argument, "questvar2")) {
     argument = one_argument(argument, buf, cElements(buf));
     argument = one_argument(argument, buf, cElements(buf));
     int val = convertTo<int>(buf);
     QuestVar2 = val;
-    sendTo(fmt("You have changed QuestVar2 to %d.") % val);
+    sendTo(format("You have changed QuestVar2 to %d.") % val);
     return;
   } else if (is_abbrev(argument, "questvar3")) {
     argument = one_argument(argument, buf, cElements(buf));
     argument = one_argument(argument, buf, cElements(buf));
     int val = convertTo<int>(buf);
     QuestVar3 = val;
-    sendTo(fmt("You have changed QuestVar3 to %d.") % val);
+    sendTo(format("You have changed QuestVar3 to %d.") % val);
     return;
   } else if (is_abbrev(argument, "questvar4")) {
     argument = one_argument(argument, buf, cElements(buf));
     argument = one_argument(argument, buf, cElements(buf));
     int val = convertTo<int>(buf);
     QuestVar4 = val;
-    sendTo(fmt("You have changed QuestVar4 to %d.") % val);
+    sendTo(format("You have changed QuestVar4 to %d.") % val);
     return;
   }
 
@@ -335,7 +335,7 @@ void TPerson::doChange(const char *argument)
   if (*buf && *buf2 && hasWizPower(POWER_CHANGE)) {
     if (isdigit(*buf2)) {
       if ((new_lev = convertTo<int>(buf2)) > MAX_IMMORT) {
-        sendTo(fmt("The new level can't be greater than %d.\n\r") % MAX_IMMORT);
+        sendTo(format("The new level can't be greater than %d.\n\r") % MAX_IMMORT);
         return;
       }
     } else {
@@ -344,7 +344,7 @@ void TPerson::doChange(const char *argument)
     }
     cmdTypeT cmd = searchForCommandNum(buf);
     if (cmd >= MAX_CMD_LIST) {
-      sendTo(fmt("(%s) no such command.\n\r") % buf);
+      sendTo(format("(%s) no such command.\n\r") % buf);
       return;
     }
     if (cmd >= 0 && GetMaxLevel() < commandArray[cmd]->minLevel) {
@@ -352,11 +352,11 @@ void TPerson::doChange(const char *argument)
         sendTo("That command is too high for you to change.\n\r");
         return;
       } else 
-        sendTo(fmt("It was set to level %d.\n\r") %  commandArray[cmd]->minLevel);
+        sendTo(format("It was set to level %d.\n\r") %  commandArray[cmd]->minLevel);
     }
     if (cmd >= 0) {
       commandArray[cmd]->minLevel = new_lev;
-      sendTo(fmt("You just changed the %s command's min level to %d.\n\r") % commandArray[cmd]->name % new_lev);
+      sendTo(format("You just changed the %s command's min level to %d.\n\r") % commandArray[cmd]->name % new_lev);
     }
   } else if (!*buf2) {
     cmdTypeT cmd = searchForCommandNum(buf);
@@ -364,7 +364,7 @@ void TPerson::doChange(const char *argument)
       sendTo("Syntax : change <command name> <new level>.\n\r");
       return;
     }
-    sendTo(fmt("\n\r%s : Min Level : %d\n\r") % commandArray[cmd]->name % commandArray[cmd]->minLevel);
+    sendTo(format("\n\r%s : Min Level : %d\n\r") % commandArray[cmd]->name % commandArray[cmd]->minLevel);
   } else {
     sendTo("Syntax : change <command name> <new level>\n\r");
     return;
@@ -421,19 +421,19 @@ void TBeing::doHighfive(const sstring &argument)
       if (tch->isImmortal() && isImmortal()) {
         switch(::number(1,3)) {
           case 1:
-            mess = fmt("Time stops for a moment as %s and %s high five.\n\r") %
+            mess = format("Time stops for a moment as %s and %s high five.\n\r") %
         name % tch->name;
             break;
           case 2:
-            mess = fmt("Thunder booms and lightning streaks across the heavens as %s and %s high five.\n\r") %
+            mess = format("Thunder booms and lightning streaks across the heavens as %s and %s high five.\n\r") %
         name % tch->name;
       break;
           case 3:
-            mess = fmt("The world shakes as %s and %s high five.\n\r") %
+            mess = format("The world shakes as %s and %s high five.\n\r") %
         name % tch->name;
             break;
           default:
-            mess = fmt("Time stops for a moment as %s and %s high five.\n\r") %
+            mess = format("Time stops for a moment as %s and %s high five.\n\r") %
         name % tch->name;
             break;
         }
@@ -467,7 +467,7 @@ void TBeing::doWizlock(const char *argument)
 
   if (!*buf) {
     sendTo("Wizlock {all | off | add <host> | rem <host> | list  | message}\n\r");
-    sendTo(fmt("Global wizlock is presently %s.\n\r") % (WizLock ? "ON" : "OFF"));
+    sendTo(format("Global wizlock is presently %s.\n\r") % (WizLock ? "ON" : "OFF"));
     sendTo("The wizlock message is currently:\n\r");
     sendTo(lockmess);
     return;
@@ -477,7 +477,7 @@ void TBeing::doWizlock(const char *argument)
       sendTo("It's already on!\n\r");
     else {
       sendTo("WizLock is now on.\n\r");
-      vlogf(LOG_MISC, fmt("WizLock was turned on by %s.") %  getName());
+      vlogf(LOG_MISC, format("WizLock was turned on by %s.") %  getName());
       WizLock = TRUE;
     }
   } else if (!strcmp(buf, "off")) {
@@ -485,7 +485,7 @@ void TBeing::doWizlock(const char *argument)
       sendTo("It's already off!\n\r");
     else {
       sendTo("WizLock is now off.\n\r");
-      vlogf(LOG_MISC, fmt("WizLock was turned off by %s.") %  getName());
+      vlogf(LOG_MISC, format("WizLock was turned off by %s.") %  getName());
       WizLock = FALSE;
     }
   } else if (!strcmp(buf, "add")) {
@@ -506,7 +506,7 @@ void TBeing::doWizlock(const char *argument)
       }
     }
     strcpy(hostlist[numberhosts], buf);
-    vlogf(LOG_MISC, fmt("%s has added host %s to the access denied list.") %  getName() % hostlist[numberhosts]);
+    vlogf(LOG_MISC, format("%s has added host %s to the access denied list.") %  getName() % hostlist[numberhosts]);
     numberhosts++;
     return;
   } else if (!strcmp(buf, "rem")) {
@@ -529,7 +529,7 @@ void TBeing::doWizlock(const char *argument)
       if (!strncmp(hostlist[a], buf, length)) {
     for (b = a; b <= numberhosts; b++)
       strcpy(hostlist[b], hostlist[b + 1]);
-    vlogf(LOG_MISC, fmt("%s has removed host %s from the access denied list.") %  getName() % buf);
+    vlogf(LOG_MISC, format("%s has removed host %s from the access denied list.") %  getName() % buf);
     numberhosts--;
     return;
       }
@@ -537,13 +537,13 @@ void TBeing::doWizlock(const char *argument)
     sendTo("Host is not in database.\n\r");
     return;
   } else if (!strcmp(buf, "list")) {
-    sendTo(fmt("Global wizlock is presently %s.\n\r") % (WizLock ? "ON" : "OFF"));
+    sendTo(format("Global wizlock is presently %s.\n\r") % (WizLock ? "ON" : "OFF"));
     if (numberhosts <= 0) {
       sendTo("Host list is empty.\n\r");
       return;
     }
     for (a = 0; a <= numberhosts - 1; a++)
-      sendTo(fmt("Host: %s\n\r") % hostlist[a]);
+      sendTo(format("Host: %s\n\r") % hostlist[a]);
 
     return;
   } else if (is_abbrev(buf, "message")) {
@@ -555,7 +555,7 @@ void TBeing::doWizlock(const char *argument)
         return;
       } else {
         lockmess = note->action_description;
-        vlogf(LOG_MISC, fmt("%s added a wizlock message.") %  getName());
+        vlogf(LOG_MISC, format("%s added a wizlock message.") %  getName());
         sendTo("The wizlock message is now:\n\r");
         sendTo(lockmess);
         return;
@@ -566,7 +566,7 @@ void TBeing::doWizlock(const char *argument)
     }
   } else {
     sendTo("Wizlock {all | add <host> | rem <host> | list}\n\r");
-    sendTo(fmt("Global wizlock is presently %s.\n\r") % (WizLock ? "ON" : "OFF"));
+    sendTo(format("Global wizlock is presently %s.\n\r") % (WizLock ? "ON" : "OFF"));
     sendTo("The wizlock message is currently:\n\r");
     sendTo(lockmess);
     return;
@@ -603,8 +603,8 @@ int TBeing::doEmote(const sstring &argument)
     sendTo("Yes.. But what?\n\r");
   else {
     sstring garbled = garble(NULL, argument, SPEECH_EMOTE, GARBLE_SCOPE_EVERYONE);
-    buf = fmt("$n %s<z>") % garbled;
-    tmpbuf = fmt("%s") % nameColorString(this, desc, buf, NULL, COLOR_BASIC, FALSE);
+    buf = format("$n %s<z>") % garbled;
+    tmpbuf = format("%s") % nameColorString(this, desc, buf, NULL, COLOR_BASIC, FALSE);
     act(tmpbuf, TRUE, this, 0, 0, TO_CHAR);
     for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
       t=*(it++);
@@ -618,8 +618,8 @@ int TBeing::doEmote(const sstring &argument)
                       (ch->desc->connected <= 20) && 
                       !(ch->isPlayerAction(PLR_MAILING | PLR_BUGGING))) {
         sstring garbledTo = garble(ch, garbled, SPEECH_EMOTE, GARBLE_SCOPE_INDIVIDUAL);
-        garbledTo = fmt("$n %s<z>") % garbledTo;
-        garbledTo = fmt("%s") % nameColorString(ch, ch->desc, garbledTo, NULL, COLOR_COMM, FALSE);
+        garbledTo = format("$n %s<z>") % garbledTo;
+        garbledTo = format("%s") % nameColorString(ch, ch->desc, garbledTo, NULL, COLOR_COMM, FALSE);
         act(garbledTo, TRUE, this, 0, ch, TO_VICT);
       }
 #if 0
@@ -701,11 +701,11 @@ TO_CHAR);
       victim->remPlayerAction(PLR_BANISHED);
       act("You just removed $N's banished flag", FALSE, this, 0, victim, TO_CHAR);
       victim->sendTo("Your banishment flag has been removed.\n\r");
-      vlogf(LOG_MISC, fmt("%s removed %s's banish flag.") %  getName() % victim->getName());
+      vlogf(LOG_MISC, format("%s removed %s's banish flag.") %  getName() % victim->getName());
     } else {
       victim->addPlayerAction(PLR_BANISHED);
       act("You just set $N's banished flag.", FALSE, this, 0, victim, TO_CHAR);
-      vlogf(LOG_MISC, fmt("%s banished %s.") %  getName() % victim->getName());
+      vlogf(LOG_MISC, format("%s banished %s.") %  getName() % victim->getName());
       victim->sendTo("Your banishment flag has just been activated!\n\r");
     }
   } else if (is_abbrev(buf2, "solo")) {
@@ -965,11 +965,11 @@ void TBeing::doSystem(const sstring &argument)
     sendTo("You usually system something.\n\r");
     return;
   } else if (!hasWizPower(POWER_WIZARD)) {
-    buf=fmt("The following is an official message from %s:\n\r   %s\n\r") %
+    buf=format("The following is an official message from %s:\n\r   %s\n\r") %
       getName() % argument;
     descriptor_list->worldSend(buf, this);
   } else {
-    buf=fmt("%s\n\r") % argument;
+    buf=format("%s\n\r") % argument;
     descriptor_list->worldSend(buf, this);
   } 
 }
@@ -1009,7 +1009,7 @@ void TPerson::doTrans(const char *argument)
       }
       if (victim->hasWizPower(POWER_WIZARD) && victim->isPc()) {
         sendTo("You can't trans someone that powerful!\n\r");
-        victim->sendTo(COLOR_MOBS, fmt("%s just tried to transfer you!\n\r") % getName());
+        victim->sendTo(COLOR_MOBS, format("%s just tried to transfer you!\n\r") % getName());
         return;
       }
       if (!victim->isPc() && victim->number == -1 && 
@@ -1022,7 +1022,7 @@ void TPerson::doTrans(const char *argument)
   return;
       }
       // used to track down: XXX trans'd me outta inn and got me killed!
-      vlogf(LOG_SILENT, fmt("%s transferring %s from %d to %d.") %  getName() % victim->getName() % victim->inRoom() % inRoom());
+      vlogf(LOG_SILENT, format("%s transferring %s from %d to %d.") %  getName() % victim->getName() % victim->inRoom() % inRoom());
 
       act("$n disappears in a cloud of smoke.", FALSE, victim, 0, 0, TO_ROOM);
       --(*victim);
@@ -1149,7 +1149,7 @@ int TBeing::doAt(const char *argument, bool isFarlook)
 
     if (!is_abbrev(tStString, "yes")) {
       sendTo("That room, or the creature's room you chose, is a particular room.\n\r");
-      sendTo(fmt("To do this, do this: at %s yes %s %s %s\n\r") % 
+      sendTo(format("To do this, do this: at %s yes %s %s %s\n\r") % 
              loc % tStString % tStBuffer % tStArgument);
       return FALSE;
     }
@@ -1222,7 +1222,7 @@ int TBeing::doGoto(const sstring & argument)
 
   // allow "goto shop #"
   if(buf == "shop" && desc)
-    buf=fmt("%i") % shop_index[convertTo<int>(tStString)].in_room;
+    buf=format("%i") % shop_index[convertTo<int>(tStString)].in_room;
 
   if (buf.empty()) {
     char tString[10];
@@ -1231,19 +1231,19 @@ int TBeing::doGoto(const sstring & argument)
     buf = tString;
   } else if (buf == "help" && desc) {
     sendTo("Useful rooms:\n\r____________________\n\r");
-    sendTo(fmt("         %6d: Your Office\n\r") % desc->office);
+    sendTo(format("         %6d: Your Office\n\r") % desc->office);
 
     if (desc->blockastart)
-      sendTo(fmt("%6d - %6d: Your Primary Room Block\n\r") % desc->blockastart % desc->blockaend);
+      sendTo(format("%6d - %6d: Your Primary Room Block\n\r") % desc->blockastart % desc->blockaend);
 
     if (desc->blockbstart)
-      sendTo(fmt("%6d - %6d: Your Secondary Room Block\n\r") % desc->blockbstart % desc->blockbend);
+      sendTo(format("%6d - %6d: Your Secondary Room Block\n\r") % desc->blockbstart % desc->blockbend);
 
-    sendTo(fmt("         %6d: Wizard Board\n\r") % ROOM_IMPERIA);
+    sendTo(format("         %6d: Wizard Board\n\r") % ROOM_IMPERIA);
     sendTo("              9: Lab\n\r");
     sendTo("              2: Builder's Lounge/Board\n\r");
     sendTo("              8: Reimbursement/Enforcement Board\n\r");
-    sendTo(fmt("         %6d: Center Square\n\r") % ROOM_CS);
+    sendTo(format("         %6d: Center Square\n\r") % ROOM_CS);
     sendTo("             77: Slap on the Wrist (First Offense)\n\r");
     sendTo("             70: Hell\n\r");
     sendTo("             81: Conference Room\n\r");
@@ -1296,7 +1296,7 @@ int TBeing::doGoto(const sstring & argument)
   }
 
   if (isSpammyRoom(location) && !is_abbrev(tStString, "yes")) {
-    sendTo(fmt("To enter this particular room you must do: goto %d yes\n\r") % location);
+    sendTo(format("To enter this particular room you must do: goto %d yes\n\r") % location);
     return FALSE;
   }
 
@@ -1473,7 +1473,7 @@ void TPerson::doShutdown(const char *argument)
   if (!*arg) {
     if (gamePort == PROD_GAMEPORT || gamePort == BUILDER_GAMEPORT) {
       // oops, did we type shutdown in the wrong window again???
-      sendTo(fmt("Running on game port (%d) or builder port (%d).\n\r") 
+      sendTo(format("Running on game port (%d) or builder port (%d).\n\r") 
           % PROD_GAMEPORT % BUILDER_GAMEPORT);
       sendTo("Please do a timed shutdown to avoid complaints.\n\r");
       return;
@@ -1492,7 +1492,7 @@ void TPerson::doShutdown(const char *argument)
       if (!timeTill)
         timeTill = time(0) + (num * SECS_PER_REAL_MIN);
       else if (timeTill < (time(0) + (num * SECS_PER_REAL_MIN))) {
-        sendTo(fmt("A shutdown has already been scheduled for %d minutes.\n\r") %
+        sendTo(format("A shutdown has already been scheduled for %d minutes.\n\r") %
                ((timeTill - time(0))/SECS_PER_REAL_MIN));
         return;
       } else {
@@ -1562,7 +1562,7 @@ void TPerson::doSnoop(const char *argument)
       if (desc->snoop.snooping->desc)
     desc->snoop.snooping->desc->snoop.snoop_by = 0;
       else
-    vlogf(LOG_MISC, fmt("Caught %s snooping %s who didn't have a descriptor!") %  name % desc->snoop.snooping->name);
+    vlogf(LOG_MISC, format("Caught %s snooping %s who didn't have a descriptor!") %  name % desc->snoop.snooping->name);
 
       desc->snoop.snooping = 0;
     }
@@ -1612,7 +1612,7 @@ void TPerson::doSwitch(const char *argument)
   if ((!isImmortal() && !hasSwiO) || 
       (isImmortal()) && powerCheck(POWER_SWITCH))
   {
-    sendTo(fmt("%sIncorrect%s command. Please see help files if you need assistance!\n\r") % red() % norm());
+    sendTo(format("%sIncorrect%s command. Please see help files if you need assistance!\n\r") % red() % norm());
     return;
   }
   
@@ -2070,7 +2070,7 @@ void TBeing::transformLimbsBack(const char * buffer, wearSlotT limb, bool cmd)
         if (isLimbFlags(slot, PART_TRANSFORMED)) {
           found = TRUE;
           if (isLimbFlags(slot, PART_MISSING))
-           vlogf(LOG_MISC, fmt("%s has both a missing and a transformed limb") %  getName());
+           vlogf(LOG_MISC, format("%s has both a missing and a transformed limb") %  getName());
         remLimbFlags(slot, PART_TRANSFORMED);
         }
       }
@@ -2245,13 +2245,13 @@ void TPerson::doForce(const char *argument)
       sendTo("Oh no you don't!!\n\r");
     else {
       if (vict->canSee(this))
-        vict->sendTo(COLOR_MOBS, fmt("%s\n\r") %
+        vict->sendTo(COLOR_MOBS, format("%s\n\r") %
                      msgVariables(MSG_FORCE, (TThing *)NULL, to_force));
       else
-        vict->sendTo(COLOR_MOBS, fmt("%s has forced you to '%s'.\n\r") %
+        vict->sendTo(COLOR_MOBS, format("%s has forced you to '%s'.\n\r") %
                      vict->pers(this) % to_force);
 
-      sendTo(COLOR_MOBS, fmt("You force %s to '%s'.\n\r") % vict->getName() %to_force);
+      sendTo(COLOR_MOBS, format("You force %s to '%s'.\n\r") % vict->getName() %to_force);
 
       if ((rc = vict->parseCommand(to_force, FALSE)) == DELETE_THIS) {
         delete vict;
@@ -2260,7 +2260,7 @@ void TPerson::doForce(const char *argument)
     }
   } else if (!strcmp("all", name_buf)) {
     // force all 
-    vlogf(LOG_MISC, fmt("%s just forced all to '%s'") %  getName() % to_force);
+    vlogf(LOG_MISC, format("%s just forced all to '%s'") %  getName() % to_force);
     for (i = descriptor_list; i; i = i->next) {
       if ((vict = i->character) && (i->character != this) && !i->connected) {
         if ((GetMaxLevel() <= vict->GetMaxLevel()) && dynamic_cast<TPerson *>(vict))
@@ -2362,7 +2362,7 @@ void TPerson::doLoad(const char *argument)
         return;
       }
       if (mob_index[numx].getNumber() > 0) {
-        sendTo(fmt("Trying to create that mob when one already exists could create problems (%s).\n\r") % mob_index[numx].name);
+        sendTo(format("Trying to create that mob when one already exists could create problems (%s).\n\r") % mob_index[numx].name);
         return;
       }
     }
@@ -2477,7 +2477,7 @@ static void purge_one_room(int rnum, TRoom *rp, int *range)
 
     TBeing *tbt = dynamic_cast<TBeing *>(t);
     if (tbt) {
-      tbt->sendTo(fmt("A god strikes the heavens making the %s around you erupt into a\n\r") % rp->describeGround());
+      tbt->sendTo(format("A god strikes the heavens making the %s around you erupt into a\n\r") % rp->describeGround());
       tbt->sendTo("fluid fountain boiling into the ether.  All that's left is the Void.\n\r");
       tbt->doLook("", CMD_LOOK);
     }
@@ -2504,7 +2504,7 @@ void TPerson::doCutlink(const char *argument)
   if (!*name_buf) {
     for (d = descriptor_list; d; d = d->next) {
       if (!d->character || !d->character->name) {
-        sendTo(fmt("You cut a link from host %s\n\r") %
+        sendTo(format("You cut a link from host %s\n\r") %
                (!(d->host.empty()) ? d->host : "Host Unknown"));
 
         delete d;
@@ -2648,7 +2648,7 @@ void genericPurgeLdead(TBeing *ch)
     temp = vict->next;
     if (vict->isLinkdead()) {
       if (ch)
-        ch->sendTo(COLOR_MOBS, fmt("Purging %s.\n\r") % vict->getName());
+        ch->sendTo(COLOR_MOBS, format("Purging %s.\n\r") % vict->getName());
       nukeLdead(vict);
       delete vict;
       vict = NULL;
@@ -2725,7 +2725,7 @@ void TPerson::doPurge(const char *argument)
             zone_table[zone].zone_value = 0;
           }
         }
-        sendTo(fmt("All excess mobs nuked.  %d mobs destroyed, %d creatures now.\n\r") % (oldnum-mobCount) % mobCount);
+        sendTo(format("All excess mobs nuked.  %d mobs destroyed, %d creatures now.\n\r") % (oldnum-mobCount) % mobCount);
         return;
       }
 
@@ -2747,7 +2747,7 @@ void TPerson::doPurge(const char *argument)
     if ((vict = get_char_room_vis(this, name_buf))) {
       if (vict->isShopkeeper()) {    // shopkeeper 
         sendTo("Be glad Brutius put this catch in for shopkeepers.\n\r");
-        vlogf(LOG_MISC, fmt("%s just tried to purge a shopkeeper.") %  getName());
+        vlogf(LOG_MISC, format("%s just tried to purge a shopkeeper.") %  getName());
         return;
       }
       if (vict->isPc() && 
@@ -2938,9 +2938,9 @@ static void welcomeNewPlayer(const TPerson *ch)
     if (!tbt)
       continue;
     if (tbt->isPlayerAction(PLR_NEWBIEHELP)) {
-      tbt->sendTo(COLOR_BASIC, fmt("<c>Attention Newbie-Helpers: Please welcome %s to <h>!!!<1>\n\r") % ch->getName());
+      tbt->sendTo(COLOR_BASIC, format("<c>Attention Newbie-Helpers: Please welcome %s to <h>!!!<1>\n\r") % ch->getName());
       if (count == 1)
-        tbt->sendTo(COLOR_BASIC, fmt("<c>%s is the first character in %s account!<1>\n\r") % ch->getName() % ch->hshr());
+        tbt->sendTo(COLOR_BASIC, format("<c>%s is the first character in %s account!<1>\n\r") % ch->getName() % ch->hshr());
     }
   }
 }
@@ -3059,9 +3059,9 @@ void TPerson::doStart()
     while(!hasPart(location) && ++cBodypartCheck < 15)
       location = tattoo_slot[::number(0, cElements(tattoo_slot)-1)];
     if (::number(0,1))
-      tattoo = fmt("A tattoo of a %s %s<1>.") % adj % noun;
+      tattoo = format("A tattoo of a %s %s<1>.") % adj % noun;
     else
-      tattoo = fmt("A tattoo of a %s.") % noun;
+      tattoo = format("A tattoo of a %s.") % noun;
     if (cBodypartCheck < 15 && hasPart(location))
       applyTattoo(location, tattoo, SILENT_YES);
   }
@@ -3161,25 +3161,25 @@ void TPerson::doStart()
 
   if (!desc->m_bIsClient) {
     sendTo("You have been given appropriate newbie equipment.\n\r");
-    sendTo(fmt("--> See %sHELP WEAR%s for more details.\n\r") % cyan() % norm());
-    sendTo(fmt("Be sure to read your %snewbie guide%s...\n\r") % green() % norm());
+    sendTo(format("--> See %sHELP WEAR%s for more details.\n\r") % cyan() % norm());
+    sendTo(format("Be sure to read your %snewbie guide%s...\n\r") % green() % norm());
     sendTo("If you are feeling lost, read HELP GOTO for some quick directions.\n\r");
   }
 
   if (hasClass(CLASS_SHAMAN)) {
-    sendTo(fmt("\n\r%s**%s\a\t*+*+*+*+*+*+*+*+*+*+*+ %sWARNING%s +*+*+*+*+*+*+*+*+*+*+*+\n\r\n\r") % red() % norm() % red() % norm());
-    sendTo(fmt("%s**%s\tThe class you are about to play has been designed with\n\r") % red() % norm());
-    sendTo(fmt("%s**%s\tthe most advanced of players in mind. The class is not\n\r") % red() % norm());
-    sendTo(fmt("%s**%s\tan easy one to play in the least. Please be sure, if \n\r") % red() % norm());
-    sendTo(fmt("%s**%s\tyou decide to dedicate time to a Shaman character, that\n\r") % red() % norm());
-    sendTo(fmt("%s**%s\tyou can deal with playing an advanced class that would\n\r") % red() % norm());
-    sendTo(fmt("%s**%s\tbe by most considered impossible or unplayable. Please\n\r") % red() % norm());
-    sendTo(fmt("%s**%s\tfamiliarize yourself with the help files pertaining to\n\r") % red() % norm());
-    sendTo(fmt("%s**%s\tthe Shaman class before undertaking this challenge.\n\r%s**%s\n\r") % red() % norm() % red() % norm());
-    sendTo(fmt("%s**%s\tSee %sHELP LIFEFORCE%s for more details.\n\r") % red() % norm() % cyan() % norm());
-    sendTo(fmt("%s**%s\tBe sure to read your %snewbie guide%s...\n\r") % red() % norm() % green() % norm());
-    sendTo(fmt("%s**%s\tIf you have serious problems, by all means,\n\r") % red() % norm());
-    sendTo(fmt("%s**%s\task a player with the %sNEWBIE HELPER%s flag.\n\r") % red() % norm() % red() % norm());
+    sendTo(format("\n\r%s**%s\a\t*+*+*+*+*+*+*+*+*+*+*+ %sWARNING%s +*+*+*+*+*+*+*+*+*+*+*+\n\r\n\r") % red() % norm() % red() % norm());
+    sendTo(format("%s**%s\tThe class you are about to play has been designed with\n\r") % red() % norm());
+    sendTo(format("%s**%s\tthe most advanced of players in mind. The class is not\n\r") % red() % norm());
+    sendTo(format("%s**%s\tan easy one to play in the least. Please be sure, if \n\r") % red() % norm());
+    sendTo(format("%s**%s\tyou decide to dedicate time to a Shaman character, that\n\r") % red() % norm());
+    sendTo(format("%s**%s\tyou can deal with playing an advanced class that would\n\r") % red() % norm());
+    sendTo(format("%s**%s\tbe by most considered impossible or unplayable. Please\n\r") % red() % norm());
+    sendTo(format("%s**%s\tfamiliarize yourself with the help files pertaining to\n\r") % red() % norm());
+    sendTo(format("%s**%s\tthe Shaman class before undertaking this challenge.\n\r%s**%s\n\r") % red() % norm() % red() % norm());
+    sendTo(format("%s**%s\tSee %sHELP LIFEFORCE%s for more details.\n\r") % red() % norm() % cyan() % norm());
+    sendTo(format("%s**%s\tBe sure to read your %snewbie guide%s...\n\r") % red() % norm() % green() % norm());
+    sendTo(format("%s**%s\tIf you have serious problems, by all means,\n\r") % red() % norm());
+    sendTo(format("%s**%s\task a player with the %sNEWBIE HELPER%s flag.\n\r") % red() % norm() % red() % norm());
     sendTo("***********************************************************************\n\r\n\r");
   }
 
@@ -3394,8 +3394,8 @@ void TBeing::doRestore(const char *argument)
     pracs = min(pracs,(int)victim->getLevel(victim->bestClass())); // cap at 1/lev
     victim->practices.prac[victim->bestClass()]+=pracs;
 
-    victim->sendTo(fmt("Congratulations, you've been reimbursed %d practices!\n\r") %pracs);
-    sendTo(fmt("Reimbursing %s %d practices.\n\r") %victim->getName() %pracs);
+    victim->sendTo(format("Congratulations, you've been reimbursed %d practices!\n\r") %pracs);
+    sendTo(format("Reimbursing %s %d practices.\n\r") %victim->getName() %pracs);
 
     
   } else {
@@ -3492,12 +3492,12 @@ void TBeing::doNoshout(const sstring &argument)
       vict->sendTo("You can shout again.\n\r");
       sendTo("NOSHOUT removed.\n\r");
       vict->remPlayerAction(PLR_GODNOSHOUT);
-      vlogf(LOG_MISC,fmt("%s had noshout removed by %s") % vict->getName() % getName());
+      vlogf(LOG_MISC,format("%s had noshout removed by %s") % vict->getName() % getName());
     } else if (hasWizPower(POWER_NOSHOUT)) {
       vict->sendTo("The gods take away your ability to shout!\n\r");
       sendTo("NOSHOUT set.\n\r");
       vict->addPlayerAction(PLR_GODNOSHOUT);
-      vlogf(LOG_MISC,fmt("%s had noshout set by %s") % vict->getName() % getName());
+      vlogf(LOG_MISC,format("%s had noshout set by %s") % vict->getName() % getName());
     } else
       sendTo("Sorry, you can't do that.\n\r");
   } else {
@@ -3576,7 +3576,7 @@ int TBeing::doExits(const char *argument, cmdTypeT cmd)
     if ((exitdata = exitDir(door)) != NULL) {
       if (!(rp = real_roomp(exitdata->to_room))) {
         if (isImmortal()) {
-          sendTo(fmt("%s - swirling chaos of #%d\n\r") % exits[door] % exitdata->to_room);
+          sendTo(format("%s - swirling chaos of #%d\n\r") % exits[door] % exitdata->to_room);
           found = TRUE;
         }  
       } else if (exitdata->to_room != ROOM_NOWHERE &&
@@ -3585,7 +3585,7 @@ int TBeing::doExits(const char *argument, cmdTypeT cmd)
              !rp->isRoomFlag(ROOM_ALWAYS_LIT) &&
              !isImmortal() && !isAffected(AFF_TRUE_SIGHT) && !isAffected(AFF_CLARITY)) {
           if (!darkhere) {
-              sendTo(fmt("%s - Too dark to tell\n\r") % exits[door]);
+              sendTo(format("%s - Too dark to tell\n\r") % exits[door]);
               found = TRUE;
           }
         } else {
@@ -3607,27 +3607,27 @@ int TBeing::doExits(const char *argument, cmdTypeT cmd)
           if (IS_SET(desc->plr_color, PLR_COLOR_ROOM_NAME)) {
             if (hasColorStrings(NULL, rp->getName(), 2)) {
               if (isImmortal()) {
-                sendTo(COLOR_ROOM_NAME, fmt("%s - %s%s (%d)%s\n\r") % exits[door] % dynColorRoom(rp, 1, TRUE) % norm() % rp->number % slopedData);
+                sendTo(COLOR_ROOM_NAME, format("%s - %s%s (%d)%s\n\r") % exits[door] % dynColorRoom(rp, 1, TRUE) % norm() % rp->number % slopedData);
                found = TRUE;
               } else {
-                sendTo(COLOR_ROOM_NAME, fmt("%s - %s%s%s\n\r") % exits[door] % dynColorRoom(rp, 1, TRUE) % norm() % slopedData);
+                sendTo(COLOR_ROOM_NAME, format("%s - %s%s%s\n\r") % exits[door] % dynColorRoom(rp, 1, TRUE) % norm() % slopedData);
                 found = TRUE;
               }
             } else {
               if (isImmortal()) {
-                sendTo(COLOR_ROOM_NAME, fmt("%s - %s%s%s (%d)%s\n\r") % exits[door] % addColorRoom(rp, 1) % rp->name % norm() % rp->number % slopedData);
+                sendTo(COLOR_ROOM_NAME, format("%s - %s%s%s (%d)%s\n\r") % exits[door] % addColorRoom(rp, 1) % rp->name % norm() % rp->number % slopedData);
                 found = TRUE;
               } else {
-                sendTo(COLOR_ROOM_NAME, fmt("%s - %s%s%s%s\n\r") % exits[door] % addColorRoom(rp, 1) % rp->name % norm() % slopedData);
+                sendTo(COLOR_ROOM_NAME, format("%s - %s%s%s%s\n\r") % exits[door] % addColorRoom(rp, 1) % rp->name % norm() % slopedData);
                 found = TRUE;
               }        
             }
           } else {
             if (isImmortal()) {
-              sendTo(COLOR_BASIC, fmt("%s - %s%s%s (%d)%s\n\r") % exits[door] % purple() %
+              sendTo(COLOR_BASIC, format("%s - %s%s%s (%d)%s\n\r") % exits[door] % purple() %
                       rp->getNameNOC(this) % norm() % rp->number % slopedData);
             } else {
-              sendTo(COLOR_BASIC, fmt("%s - %s%s%s%s\n\r") % exits[door] % purple() %
+              sendTo(COLOR_BASIC, format("%s - %s%s%s%s\n\r") % exits[door] % purple() %
                       rp->getNameNOC(this) % norm() % slopedData);
             }
             found = TRUE;
@@ -3637,7 +3637,7 @@ int TBeing::doExits(const char *argument, cmdTypeT cmd)
             !IS_SET(exitdata->condition, EX_SECRET)) {
         if (darkhere) {
         } else {
-          sendTo(COLOR_ROOMS, fmt("%s - A closed '<b>%s<1>'\n\r") % exits[door] % fname(exitdata->keyword));
+          sendTo(COLOR_ROOMS, format("%s - A closed '<b>%s<1>'\n\r") % exits[door] % fname(exitdata->keyword));
           found = TRUE;
         }
       }
@@ -3733,9 +3733,9 @@ void TBeing::doWipe(const char *argument)
          LOWER(st.aname[0]), sstring(st.aname).lower().c_str(), sstring(namebuf).lower().c_str());
 
   if (unlink(buf) != 0)
-    vlogf(LOG_FILE, fmt("error in unlink (7) (%s) %d") %  buf % errno);
+    vlogf(LOG_FILE, format("error in unlink (7) (%s) %d") %  buf % errno);
 
-  sendTo(fmt("Removing: %s\n\r") % buf);
+  sendTo(format("Removing: %s\n\r") % buf);
 }
 
 // Command to access, view, and edit player files - Russ
@@ -3842,7 +3842,7 @@ void TPerson::doAccess(const sstring &arg)
   account.write(st.aname);
 
         sendTo("Password changed successfully.\n\r");
-        vlogf(LOG_MISC, fmt("%s changed password on %s account") %  getName() % st.aname);
+        vlogf(LOG_MISC, format("%s changed password on %s account") %  getName() % st.aname);
         return;
       case 5:
         if (sscanf(arg.c_str(), "%d %d", &lev, &Class) != 2) {
@@ -3855,7 +3855,7 @@ void TPerson::doAccess(const sstring &arg)
         }
         if (Class <= RANGER_LEVEL_IND) {
           st.level[Class] = lev;
-          sendTo(fmt("Setting level %d in Class %s\n\r") % lev %classInfo[Class].name);
+          sendTo(format("Setting level %d in Class %s\n\r") % lev %classInfo[Class].name);
         } else {
           sendTo("Class must be between 0 and 7.\n\r");
           return;
@@ -3870,7 +3870,7 @@ void TPerson::doAccess(const sstring &arg)
         return;
     }
   } else {
-    tmpbuf=fmt("Name : <p>%s<1>, Sex : <c>%d<1>, Screensize : <c>%d<1>, Weight <c>%.2f<1>, Height <c>%d<1>\n\r") %
+    tmpbuf=format("Name : <p>%s<1>, Sex : <c>%d<1>, Screensize : <c>%d<1>, Weight <c>%.2f<1>, Height <c>%d<1>\n\r") %
       st.name % st.sex % st.screen % st.weight % st.height;
     buf+=tmpbuf;
     birth = asctime(localtime(&(st.birth)));
@@ -3881,24 +3881,24 @@ void TPerson::doAccess(const sstring &arg)
     tmstr = (char *) asctime(localtime(&ct));
     *(tmstr + strlen(tmstr) - 1) = '\0';
 
-    tmpbuf = fmt("Last login : %s%s%s, Last Host : %s%s%s\n\rFirst Login : %s%s%s\n\r") %
+    tmpbuf = format("Last login : %s%s%s, Last Host : %s%s%s\n\rFirst Login : %s%s%s\n\r") %
         green() % tmstr % norm() %
         green() % st.lastHost % norm() %
         cyan() % birth_buf % norm();
     buf+=tmpbuf;
 
-    tmpbuf = fmt("Playing time : %d days, %d hours.\n\r") % playing_time.day % playing_time.hours;
+    tmpbuf = format("Playing time : %d days, %d hours.\n\r") % playing_time.day % playing_time.hours;
     buf+=tmpbuf;
 
-    tmpbuf = fmt("User Levels: M%d C%d W%d T%d A%d D%d K%d R%d") %st.level[0] %st.level[1] %st.level[2] %st.level[3] %st.level[4] %st.level[5] %st.level[6] %st.level[7];
+    tmpbuf = format("User Levels: M%d C%d W%d T%d A%d D%d K%d R%d") %st.level[0] %st.level[1] %st.level[2] %st.level[3] %st.level[4] %st.level[5] %st.level[6] %st.level[7];
     buf+=tmpbuf;
 
-    tmpbuf = fmt("\tRace: %s\n\r") % RaceNames[st.race];
+    tmpbuf = format("\tRace: %s\n\r") % RaceNames[st.race];
     buf+=tmpbuf;
 
     buf+="Stats  :[Str][Bra][Con][Dex][Agi][Int][Wis][Foc][Per][Cha][Kar][Spe]\n\r";
 
-    tmpbuf = fmt("Chosen : %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d\n\r") %
+    tmpbuf = format("Chosen : %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d\n\r") %
       st.stats[STAT_STR] %
       st.stats[STAT_BRA] %
       st.stats[STAT_CON] %
@@ -3919,16 +3919,16 @@ void TPerson::doAccess(const sstring &arg)
       st.bankmoney=convertTo<int>(db["bankmoney"]);
     }
 
-    tmpbuf = fmt("Gold:  %d,    Bank:  %d,   Exp:  %.3f\n\r") %
+    tmpbuf = format("Gold:  %d,    Bank:  %d,   Exp:  %.3f\n\r") %
           st.money % st.bankmoney % st.exp;
     buf+=tmpbuf;
 
-    tmpbuf = fmt("Height:  %d,    Weight:  %.1f\n\r") %
+    tmpbuf = format("Height:  %d,    Weight:  %.1f\n\r") %
           st.height % st.weight;
     buf+=tmpbuf;
 
-    arg1 = fmt("account/%c/%s") % LOWER(st.aname[0]) % sstring(st.aname).lower();
-    arg2 = fmt("%s/comment") % arg1;
+    arg1 = format("account/%c/%s") % LOWER(st.aname[0]) % sstring(st.aname).lower();
+    arg2 = format("%s/comment") % arg1;
     if ((fp = fopen(arg2.c_str(), "r"))) {
       while (fgets(filebuf, 255, fp))
   buf+=filebuf;
@@ -3943,7 +3943,7 @@ void TPerson::doAccess(const sstring &arg)
       buf+="Account name: ***, Account email address : ***\n\r";
       buf+="Account flagged immortal.  Remaining Information Restricted.\n\r";
     } else {
-      tmpbuf = fmt("Account name: %s%s%s, Account email address : %s%s%s\n\r") % cyan() % account.name % norm() % cyan() % account.email % norm();
+      tmpbuf = format("Account name: %s%s%s, Account email address : %s%s%s\n\r") % cyan() % account.name % norm() % cyan() % account.email % norm();
       buf+=tmpbuf;
 
       sstring lStr = "";
@@ -4014,13 +4014,13 @@ void TBeing::doReplace(const sstring &argument)
   }
   sprintf(buf, "%s/%s/%c/%s", dir, dir2, arg1[0], arg1.c_str());
   if (!(fp = fopen(buf, "r"))) {
-    sendTo(fmt("Sorry, can't find file '%s'.\n\r") % buf);
+    sendTo(format("Sorry, can't find file '%s'.\n\r") % buf);
     return;
   } else {
     fclose(fp);
 
     // log this event so we can see if item duplication (etc.) is caused by it.
-    vlogf(LOG_FILE, fmt("%s replacing %s's %s file.") % 
+    vlogf(LOG_FILE, format("%s replacing %s's %s file.") % 
        getName() % arg1 % dir2);
 
     sprintf(buf, "cp -r %s/%s/%c/%s %s/%c/%s", 
@@ -4045,7 +4045,7 @@ void TBeing::doReplace(const sstring &argument)
       sendTo("Done.\n\r");
     }
     if (!dontMove) {
-      sendTo(fmt("Copying backup %s file from %s/%s/%c/%s to %s/%c/%s.\n\r") %
+      sendTo(format("Copying backup %s file from %s/%s/%c/%s to %s/%c/%s.\n\r") %
       dir2 % dir % dir2 % arg1[0] % arg1 % dir2 % arg1[0] % arg1);
       return;
     }
@@ -4099,7 +4099,7 @@ void TBeing::doSetsev(const char *arg)
 
     for (tMatch = 0; tFields[tMatch][0] != '\n'; tMatch++) {
       if (tMatch == LOG_LOW || hasWizPower(POWER_SETSEV_IMM)) {
-        sendTo(fmt("%s: %-15s: %s\n\r") %
+        sendTo(format("%s: %-15s: %s\n\r") %
                ((d->severity & (1 << tMatch)) ? "On " : "Off") %
                tFields[tMatch] % tHelp[tMatch]);
       }
@@ -4115,7 +4115,7 @@ void TBeing::doSetsev(const char *arg)
       else
         d->severity |= (1 << LOG_BATOPR);
 
-      sendTo(fmt("Your Personal Log Messages are now %s\n\r") %
+      sendTo(format("Your Personal Log Messages are now %s\n\r") %
              ((d->severity & (1 << LOG_BATOPR)) ? "On" : "Off"));
     } else if (is_abbrev(arg, "brutius") && !strcmp(getName(), "Brutius")) {
       if ((d->severity & (1 << LOG_BRUTIUS)))
@@ -4123,7 +4123,7 @@ void TBeing::doSetsev(const char *arg)
       else
         d->severity |= (1 << LOG_BRUTIUS);
 
-      sendTo(fmt("Your Personal Log Messages are now %s\n\r") %
+      sendTo(format("Your Personal Log Messages are now %s\n\r") %
              ((d->severity & (1 << LOG_BRUTIUS)) ? "On" : "Off"));
     } else if (is_abbrev(arg, "cosmo") && !strcmp(getName(), "Cosmo")) {
       if ((d->severity & (1 << LOG_COSMO)))
@@ -4131,7 +4131,7 @@ void TBeing::doSetsev(const char *arg)
       else
         d->severity |= (1 << LOG_COSMO);
 
-      sendTo(fmt("Your Personal Log Messages are now %s\n\r") %
+      sendTo(format("Your Personal Log Messages are now %s\n\r") %
              ((d->severity & (1 << LOG_COSMO)) ? "On" : "Off"));
     } else if (is_abbrev(arg, "lapsos") && !strcmp(getName(), "Lapsos")) {
       if ((d->severity & (1 << LOG_LAPSOS)))
@@ -4139,7 +4139,7 @@ void TBeing::doSetsev(const char *arg)
       else
         d->severity |= (1 << LOG_LAPSOS);
 
-      sendTo(fmt("Your Personal Log Messages are now %s\n\r") %
+      sendTo(format("Your Personal Log Messages are now %s\n\r") %
              ((d->severity & (1 << LOG_LAPSOS)) ? "On" : "Off"));
     } else if (is_abbrev(arg, "peel") && !strcmp(getName(), "Peel")) {
       if ((d->severity & (1 << LOG_PEEL)))
@@ -4147,7 +4147,7 @@ void TBeing::doSetsev(const char *arg)
       else
         d->severity |= (1 << LOG_PEEL);
 
-      sendTo(fmt("Your Personal Log Messages are now %s\n\r") %
+      sendTo(format("Your Personal Log Messages are now %s\n\r") %
              ((d->severity & (1 << LOG_PEEL)) ? "On" : "Off"));
     } else if (is_abbrev(arg, "jesus") && !strcmp(getName(), "Jesus")) {
       if ((d->severity & (1 << LOG_JESUS)))
@@ -4155,7 +4155,7 @@ void TBeing::doSetsev(const char *arg)
       else
         d->severity |= (1 << LOG_JESUS);
 
-      sendTo(fmt("Your Personal Log Messages are now %s\n\r") %
+      sendTo(format("Your Personal Log Messages are now %s\n\r") %
              ((d->severity & (1 << LOG_JESUS)) ? "On" : "Off"));
     } else if (is_abbrev(arg, "dash") && !strcmp(getName(), "Dash")) {
       if ((d->severity & (1 << LOG_DASH)))
@@ -4163,19 +4163,19 @@ void TBeing::doSetsev(const char *arg)
       else
         d->severity |= (1 << LOG_DASH);
 
-      sendTo(fmt("Your Personal Log Messages are now %s\n\r") %
+      sendTo(format("Your Personal Log Messages are now %s\n\r") %
              ((d->severity & (1 << LOG_DASH)) ? "On" : "Off"));
     } else if (is_abbrev(arg, "maror") && !strcmp(getName(), "Maror")) {
       if ((d->severity & (1 << LOG_MAROR))) d->severity &= ~(1 << LOG_MAROR);
       else d->severity |= (1 << LOG_MAROR);
 
-      sendTo(fmt("Your Personal Log Messages are now %s\n\r") %
+      sendTo(format("Your Personal Log Messages are now %s\n\r") %
              ((d->severity & (1 << LOG_MAROR)) ? "On" : "Off"));
     } else if (is_abbrev(arg, "angus") && !strcmp(getName(), "Angus")) {
       if ((d->severity & (1 << LOG_ANGUS))) d->severity &= ~(1 << LOG_ANGUS);
       else d->severity |= (1 << LOG_ANGUS);
 
-      sendTo(fmt("Your Personal Log Messages are now %s\n\r") %
+      sendTo(format("Your Personal Log Messages are now %s\n\r") %
              ((d->severity & (1 << LOG_ANGUS)) ? "On" : "Off"));
     } else
       sendTo("Incorrect Log Type.\n\r");
@@ -4188,7 +4188,7 @@ void TBeing::doSetsev(const char *arg)
     else
       d->severity |= (1 << (tMatch - 1));
 
-    sendTo(fmt("Log Type %s toggled %s.\n\r") %
+    sendTo(format("Log Type %s toggled %s.\n\r") %
            tFields[(tMatch - 1)] %
            ((d->severity & (1 << (tMatch - 1))) ? "On" : "Off"));
   }
@@ -4262,7 +4262,7 @@ void TBeing::doInfo(const char *arg)
 
 	  if((commod=dynamic_cast<TCommodity *>(t)) &&
 	     isname(arg2, commod->name)){
-	    sendTo(fmt("Shop %i: %i units of %s at %i talens per unit.\n\r")%
+	    sendTo(format("Shop %i: %i units of %s at %i talens per unit.\n\r")%
 		   shop_nr % commod->numUnits() % 
 		   material_nums[commod->getMaterial()].mat_name %
 		   commod->shopPrice(1, shop_nr, -1, this));
@@ -4273,20 +4273,20 @@ void TBeing::doInfo(const char *arg)
 	  delete t;
 	}
       }
-      sendTo(fmt("-- Total amount of %s available: %i units.\n\r") %
+      sendTo(format("-- Total amount of %s available: %i units.\n\r") %
 	     name % total);
 
 
     } else if (is_abbrev(arg1, "commands")) {
       sendTo("Command access information:\n\r");
-      sendTo(fmt("  News file accessed %d times.\n\r") % news_used_num);
-      sendTo(fmt("  Wiznews file accessed %d times.\n\r") % wiznews_used_num);
-      sendTo(fmt("  Wizlist file accessed %d times.\n\r") % wizlist_used_num);
-      sendTo(fmt("  Help file(s) accessed %d times since last reboot.\n\r") % help_used_num);
-      sendTo(fmt("               accessed %d times total.\n\r") % total_help_number);
-      sendTo(fmt("  Typo file accessed %d times.\n\r") % typo_used_num);
-      sendTo(fmt("  Bugs file accessed %d times.\n\r") % bug_used_num);
-      sendTo(fmt("  Idea file accessed %d times.\n\r") % idea_used_num);
+      sendTo(format("  News file accessed %d times.\n\r") % news_used_num);
+      sendTo(format("  Wiznews file accessed %d times.\n\r") % wiznews_used_num);
+      sendTo(format("  Wizlist file accessed %d times.\n\r") % wizlist_used_num);
+      sendTo(format("  Help file(s) accessed %d times since last reboot.\n\r") % help_used_num);
+      sendTo(format("               accessed %d times total.\n\r") % total_help_number);
+      sendTo(format("  Typo file accessed %d times.\n\r") % typo_used_num);
+      sendTo(format("  Bugs file accessed %d times.\n\r") % bug_used_num);
+      sendTo(format("  Idea file accessed %d times.\n\r") % idea_used_num);
     } else if (is_abbrev(arg1, "objects")) {
       int count[MAX_OBJ_TYPES], i=0, li=0, total=0;
       
@@ -4306,13 +4306,13 @@ void TBeing::doInfo(const char *arg)
 	if(count[li]==-1)
 	  break;
 	
-	buf = fmt("%s[%6i] %-17s\n\r") %
+	buf = format("%s[%6i] %-17s\n\r") %
 	  buf % count[li] % ItemInfo[li]->name;
 	total += count[li];
 	count[li]=-1;
       }
       
-      buf = fmt("%s[%6i] %-17s\n\r") %
+      buf = format("%s[%6i] %-17s\n\r") %
 	buf % total % "Total";
       
       desc->page_string(buf);
@@ -4326,7 +4326,7 @@ void TBeing::doInfo(const char *arg)
 	obj=*iter;
 	if(obj->in_room == ROOM_NOWHERE && !obj->parent &&
 	   !obj->equippedBy && !obj->stuckIn && !obj->riding){
-	  tbuf=fmt("[%6i] %-17s\n\r") %
+	  tbuf=format("[%6i] %-17s\n\r") %
 	    i++ % obj->getNameNOC(this);
 	  buf+=tbuf;
 	}
@@ -4337,7 +4337,7 @@ void TBeing::doInfo(const char *arg)
       for(tb=character_list;tb;tb=tb->next){
 	if(tb->in_room == ROOM_NOWHERE && !tb->parent &&
 	   !tb->equippedBy && !tb->stuckIn && !tb->riding){
-	  tbuf =fmt("[%6i] %-17s\n\r") %
+	  tbuf =format("[%6i] %-17s\n\r") %
 	    i++ % tb->getNameNOC(this);
 	  buf+=tbuf;
 	} 
@@ -4361,7 +4361,7 @@ void TBeing::doInfo(const char *arg)
 	  stats.equip -= .05;
 	save_game_stats();
       } else {
-	sendTo(fmt("loadrate is %f\n\r") % stats.equip);
+	sendTo(format("loadrate is %f\n\r") % stats.equip);
       }
     } 
     else if (is_abbrev(arg1, "deaths")) {
@@ -4370,8 +4370,8 @@ void TBeing::doInfo(const char *arg)
         return;
       }
       sendTo("Player death information:\n\r");
-      sendTo(fmt("  Total player deaths : %d.\n\r") % total_deaths);
-      sendTo(fmt("  Total player kills  : %d.\n\r") % total_player_kills);
+      sendTo(format("  Total player deaths : %d.\n\r") % total_deaths);
+      sendTo(format("  Total player kills  : %d.\n\r") % total_player_kills);
     } else if (is_abbrev(arg1, "piety")) {
       double total = 0.0;
       for (i = descriptor_list; i; i = i->next) {
@@ -4382,7 +4382,7 @@ void TBeing::doInfo(const char *arg)
         }
       }
       sendTo("--------------------\n\r");
-      sendTo(fmt("TOTAL: %10.3f\n\r") % total);
+      sendTo(format("TOTAL: %10.3f\n\r") % total);
     } else if (is_abbrev(arg1, "descriptors")) {
       for (i = descriptor_list; i; i = i->next) {
         if (i->character)  {
@@ -4396,11 +4396,11 @@ void TBeing::doInfo(const char *arg)
       }
     } else if (is_abbrev(arg1, "numbers")) {
       sendTo("Player number info:\n\r");
-      sendTo(fmt("  Current number of players: %u.\n\r") % accStat.player_num);
-      sendTo(fmt("  Max number since reboot : %u.\n\r") % accStat.max_player_since_reboot);
-      sendTo(fmt("  Max descriptors is presently: %d.\n\r") % maxdesc);
-      sendTo(fmt("  Average faction_power is: %.4f\n\r") % avg_faction_power);
-      sendTo(fmt("  Number of room-specials: %u\n\r") % roomspec_db.size());
+      sendTo(format("  Current number of players: %u.\n\r") % accStat.player_num);
+      sendTo(format("  Max number since reboot : %u.\n\r") % accStat.max_player_since_reboot);
+      sendTo(format("  Max descriptors is presently: %d.\n\r") % maxdesc);
+      sendTo(format("  Average faction_power is: %.4f\n\r") % avg_faction_power);
+      sendTo(format("  Number of room-specials: %u\n\r") % roomspec_db.size());
 
       ci = j = 0;
       for (ch = character_list; ch; ch = ch->next) {
@@ -4408,7 +4408,7 @@ void TBeing::doInfo(const char *arg)
         if (ch->discs)
           ci++;
       }
-      sendTo(fmt("  Beings with initialized disciplines: %d of %d (%d%c)\n\r") % 
+      sendTo(format("  Beings with initialized disciplines: %d of %d (%d%c)\n\r") % 
 	     ci % j %  (ci * 100/ j) % '%');
 
     } else if (is_abbrev(arg1, "gold")) {
@@ -4994,7 +4994,7 @@ void TBeing::doInfo(const char *arg)
         which = spellNumT(convertTo<int>(arg1));
 
         if (which < MIN_SPELL || which >= MAX_SKILL) {
-          sendTo(fmt("Syntax: info skills <skill #:%d - %d>\n\r") % MIN_SPELL % (MAX_SKILL + 1));
+          sendTo(format("Syntax: info skills <skill #:%d - %d>\n\r") % MIN_SPELL % (MAX_SKILL + 1));
           return;
         }
       } else {
@@ -5229,12 +5229,12 @@ static void TimeTravel(const char *ch)
     return;
 
   if (!(fp = fopen(fileName, "r+b"))) {
-    vlogf(LOG_MISC, fmt("Error updating %s's rent file!") %  ch);
+    vlogf(LOG_MISC, format("Error updating %s's rent file!") %  ch);
     return;
   }
 
   if (fread(&h, sizeof(h), 1, fp) != 1) {
-    vlogf(LOG_MISC, fmt("  Cannot read rent file header for %s") %  ch);
+    vlogf(LOG_MISC, format("  Cannot read rent file header for %s") %  ch);
     fclose(fp);
     return;
   }
@@ -5248,15 +5248,15 @@ static void TimeTravel(const char *ch)
     h.last_update = time(0);
     unsigned int amt = h.total_cost * delta / SECS_PER_REAL_DAY;
     h.gold_left += amt;
-    vlogf(LOG_SILENT, fmt("Crediting %s with %u gold for downtime. (left=%d)") % 
+    vlogf(LOG_SILENT, format("Crediting %s with %u gold for downtime. (left=%d)") % 
         ch % amt % h.gold_left);
   } else
-    vlogf(LOG_SILENT, fmt("TimeTravel for %s done as update-advance only. (left=%d)") % 
+    vlogf(LOG_SILENT, format("TimeTravel for %s done as update-advance only. (left=%d)") % 
         ch % h.gold_left);
 
   rewind(fp);
   if (fwrite(&h, sizeof(h), 1, fp) != 1) {
-    vlogf(LOG_MISC, fmt("Cannot write updated rent file header for %s") %  h.owner);
+    vlogf(LOG_MISC, format("Cannot write updated rent file header for %s") %  h.owner);
     fclose(fp);
     return;
   }
@@ -5286,7 +5286,7 @@ void TBeing::doTimeshift(const char *arg)
       return;
     }
 #endif
-    vlogf(LOG_MISC,fmt("%s moving time back %d minutes.") % getName() %deltatime);
+    vlogf(LOG_MISC,format("%s moving time back %d minutes.") % getName() %deltatime);
     dirwalk("rent/a",TimeTravel);
     dirwalk("rent/b",TimeTravel);
     dirwalk("rent/c",TimeTravel);
@@ -5398,7 +5398,7 @@ void TBeing::doLog(const char *argument)
       for (d = descriptor_list; d; d = d->next) {
         if (!d->connected && d->character) {
           if (d->character->isPlayerAction(PLR_LOGGED)) {
-            sendTo(COLOR_MOBS, fmt("%s\n\r") % d->character->getName());
+            sendTo(COLOR_MOBS, format("%s\n\r") % d->character->getName());
             found = TRUE;
           }
         }
@@ -5417,7 +5417,7 @@ void TBeing::doLog(const char *argument)
     sendTo("I don't think they would like that.\n\r");
     return;
   } else if (!vict->isPlayerAction(PLR_LOGGED)) {
-    sendTo(COLOR_MOBS, fmt("%s will now be logged.\n\r") % vict->getName());
+    sendTo(COLOR_MOBS, format("%s will now be logged.\n\r") % vict->getName());
     sendTo("Please either post a reason for adding the log to the immortal board,\n\r");
     sendTo("or add a comment to the player's account (permanent) stating your reasons.\n\r");
     vict->addPlayerAction(PLR_LOGGED);
@@ -5462,7 +5462,7 @@ void TBeing::doHostlog(const char *argument)
       }
     }
     strcpy(hostLogList[numberLogHosts], buf);
-    vlogf(LOG_MISC, fmt("%s has added host %s to the hostlog list.") %  getName() % hostLogList[numberLogHosts]);
+    vlogf(LOG_MISC, format("%s has added host %s to the hostlog list.") %  getName() % hostLogList[numberLogHosts]);
     numberLogHosts++;
     return;
   } else if (!strcmp(buf, "rem")) {
@@ -5485,7 +5485,7 @@ void TBeing::doHostlog(const char *argument)
       if (!strncmp(hostLogList[a], buf, length)) {
         for (b = a; b <= numberLogHosts; b++)
           strcpy(hostLogList[b], hostLogList[b + 1]);
-        vlogf(LOG_MISC, fmt("%s has removed host %s from the hostlog list.") %  getName() % buf);
+        vlogf(LOG_MISC, format("%s has removed host %s from the hostlog list.") %  getName() % buf);
         numberLogHosts--;
         return;
       }
@@ -5498,7 +5498,7 @@ void TBeing::doHostlog(const char *argument)
       return;
     }
     for (a = 0; a <= numberLogHosts - 1; a++)
-      sendTo(fmt("Host: %s\n\r") % hostLogList[a]);
+      sendTo(format("Host: %s\n\r") % hostLogList[a]);
 
     return;
   } else {
@@ -5681,7 +5681,7 @@ void TBeing::doSysChecklog(const sstring &arg)
  
   // If we don't trust these people why even have the command?
   if (!hasWizPower(POWER_WIZARD))
-    vlogf(LOG_MISC, fmt("%s checklogging: '%s'") %  getName() % tString);
+    vlogf(LOG_MISC, format("%s checklogging: '%s'") %  getName() % tString);
 }
 
 void TBeing::doSysViewoutput() 
@@ -5696,9 +5696,9 @@ void TBeing::doSysViewoutput()
     file_to_sstring(file, sb);
     sb += "\n\r";
     processStringForClient(sb);
-    desc->clientf(fmt("%d") % CLIENT_NOTE);
-    sendTo(fmt("%s") % sb);  
-    desc->clientf(fmt("%d") % CLIENT_NOTE_END);
+    desc->clientf(format("%d") % CLIENT_NOTE);
+    sendTo(format("%s") % sb);  
+    desc->clientf(format("%d") % CLIENT_NOTE_END);
   }
 }
 
@@ -5738,7 +5738,7 @@ int TBeing::doExec()
     //    cleanCharBuf(argument);
     for (i = 0; invalidcmds[i]; ++i) {
       if (is_abbrev(lbuf, invalidcmds[i])) {
-        sendTo(fmt("%s isn't an allowed command.\n\r") % invalidcmds[i]);
+        sendTo(format("%s isn't an allowed command.\n\r") % invalidcmds[i]);
         lptr = strchr(lptr, '\r');
         if (lptr)
           ++lptr;
@@ -5799,7 +5799,7 @@ void TBeing::doResize(const char *arg)
     arg = one_argument(arg, arg_type_val, cElements(arg_type_val));
     race = convertTo<int>(arg_type_val);
     if(race >= MAX_RACIAL_TYPES || race < 0){
-      sendTo(fmt("Race number %i doesn't exist.\n\r") % race);
+      sendTo(format("Race number %i doesn't exist.\n\r") % race);
       return;
     }
   } else if (!strcmp(arg_type, "height")) {
@@ -5819,7 +5819,7 @@ void TBeing::doResize(const char *arg)
   TThing *t_obj = searchLinkedList(arg_obj, stuff);
   obj = dynamic_cast<TObj *>(t_obj);
   if (!obj) {
-    sendTo(fmt("You do not seem to have the %s.\n\r") % arg_obj);
+    sendTo(format("You do not seem to have the %s.\n\r") % arg_obj);
     return;
   }
   
@@ -5843,16 +5843,16 @@ void TBeing::doResize(const char *arg)
     Race *targ_race = new Race((race_t)race);
     double avg_height = (double) targ_race->getBaseMaleHeight() + (((double) targ_race->getMaleHtNumDice() + (double) targ_race->getMaleHtDieSize()) / 2.0);
     new_volume = (int) (avg_height * race_vol_constants[mapSlotToFile(slot)]);
-    feedback = fmt("Your target's average height is %i inches.  Item volume is now %i cubic inches.") % (int) avg_height % new_volume;
+    feedback = format("Your target's average height is %i inches.  Item volume is now %i cubic inches.") % (int) avg_height % new_volume;
     delete targ_race;
       } else if (height) {
       // resize based on requested height
       new_volume = (int) ((double) height * race_vol_constants[mapSlotToFile(slot)]);
-    feedback = fmt("Your target height is %i inches.  Item volume is now %i cubic inches.") % height % new_volume;
+    feedback = format("Your target height is %i inches.  Item volume is now %i cubic inches.") % height % new_volume;
     } else if (targ) {
       // use targ's height
         new_volume = (int) ((double) targ->getHeight() * race_vol_constants[mapSlotToFile(slot)]);
-    feedback = fmt("Your target's height is %i inches.  Item volume is now %i cubic inches.") % targ->getHeight() % new_volume;
+    feedback = format("Your target's height is %i inches.  Item volume is now %i cubic inches.") % targ->getHeight() % new_volume;
     } else {
         // shouldn't have gotten here
         vlogf(LOG_BUG, "Bug in TBeing::doResize - no player, race or height to resize to.");
@@ -5861,7 +5861,7 @@ void TBeing::doResize(const char *arg)
     // do the resize
     obj->setVolume(new_volume);
     } else {
-    vlogf(LOG_BUG, fmt("Missing race_vol_constant[] while resizing %s.") % obj->getName());
+    vlogf(LOG_BUG, format("Missing race_vol_constant[] while resizing %s.") % obj->getName());
     return;
   }
     
@@ -5870,7 +5870,7 @@ void TBeing::doResize(const char *arg)
 
     //  flag the object as having been resized for an individual 
     if (targ && obj->objVnum() != -1) {
-      buf = fmt("%s [resized]") % obj->name;
+      buf = format("%s [resized]") % obj->name;
       delete [] obj->name;
       obj->name = mud_str_dup(buf.c_str());
     }
@@ -5883,13 +5883,13 @@ void TBeing::doResize(const char *arg)
   // finish up
   if (targ) {
     // personalize it
-    buf = fmt("This is the personalized object of %s") % targ->getName();
+    buf = format("This is the personalized object of %s") % targ->getName();
     delete [] obj->action_description;
     obj->action_description = mud_str_dup(buf.c_str());
     act("You have resized $p for $N.", FALSE, this, obj, targ, TO_CHAR);
   } else if (race) {
     // resized for a specific race
-    buf = fmt("You have resized $p for %s.") % RaceNames[race];
+    buf = format("You have resized $p for %s.") % RaceNames[race];
     act(buf, FALSE, this, obj, 0, TO_CHAR);
   } else if (height) {
     // resized for a specific height
@@ -5961,7 +5961,7 @@ void TBeing::doAccount(const sstring &arg)
   }
 
 
-  buf2 = fmt("account/%c/%s") % namebuf.lower()[0] % namebuf.lower();
+  buf2 = format("account/%c/%s") % namebuf.lower()[0] % namebuf.lower();
   if (!(dfd = opendir(buf2.c_str()))) {
     sendTo("No account by that name exists.\n\r");
     sendTo("Syntax: account <account name>\n\r");
@@ -5981,12 +5981,12 @@ void TBeing::doAccount(const sstring &arg)
     if (is_abbrev(my_arg, "banished")) {
       if (IS_SET(account.flags, ACCOUNT_BANISHED)) {
         REMOVE_BIT(account.flags, ACCOUNT_BANISHED);
-        sendTo(fmt("You have unbanished the %s account.\n\r") % account.name);
-        vlogf(LOG_MISC, fmt("%s unbanished account '%s'") % getName() % account.name);
+        sendTo(format("You have unbanished the %s account.\n\r") % account.name);
+        vlogf(LOG_MISC, format("%s unbanished account '%s'") % getName() % account.name);
       } else {
         SET_BIT(account.flags, ACCOUNT_BANISHED);
-        sendTo(fmt("You have set the %s account banished.\n\r") % account.name);
-        vlogf(LOG_MISC, fmt("%s banished account '%s'") % getName() % account.name);
+        sendTo(format("You have set the %s account banished.\n\r") % account.name);
+        vlogf(LOG_MISC, format("%s banished account '%s'") % getName() % account.name);
       }
 
       account.write(namebuf);
@@ -5994,12 +5994,12 @@ void TBeing::doAccount(const sstring &arg)
     } else if (is_abbrev(my_arg, "email")) {
       if (IS_SET(account.flags, ACCOUNT_EMAIL)) {
         REMOVE_BIT(account.flags, ACCOUNT_EMAIL);
-        sendTo(fmt("You have un-email-banished the %s account.\n\r") % account.name);
-        vlogf(LOG_MISC, fmt("%s un-email-banished account '%s'") % getName() % account.name);
+        sendTo(format("You have un-email-banished the %s account.\n\r") % account.name);
+        vlogf(LOG_MISC, format("%s un-email-banished account '%s'") % getName() % account.name);
       } else {
         SET_BIT(account.flags, ACCOUNT_EMAIL);
-        sendTo(fmt("You have set the %s account email-banished.\n\r") % account.name);
-        vlogf(LOG_MISC, fmt("%s email-banished account '%s'") % getName() % account.name);
+        sendTo(format("You have set the %s account email-banished.\n\r") % account.name);
+        vlogf(LOG_MISC, format("%s email-banished account '%s'") % getName() % account.name);
       }
       
       account.write(namebuf);
@@ -6011,10 +6011,10 @@ void TBeing::doAccount(const sstring &arg)
   
       if (IS_SET(account.flags, ACCOUNT_ALLOW_DOUBLECLASS)) {
         REMOVE_BIT(account.flags, ACCOUNT_ALLOW_DOUBLECLASS);
-        sendTo(fmt("You revoke the %s account's ability to double-class.\n\r") % account.name);
+        sendTo(format("You revoke the %s account's ability to double-class.\n\r") % account.name);
       } else {
         SET_BIT(account.flags, ACCOUNT_ALLOW_DOUBLECLASS);
-        sendTo(fmt("You grant the %s account the ability to double-class.\n\r") % account.name);
+        sendTo(format("You grant the %s account the ability to double-class.\n\r") % account.name);
       }
       
       account.write(namebuf);
@@ -6026,10 +6026,10 @@ void TBeing::doAccount(const sstring &arg)
   
       if (IS_SET(account.flags, ACCOUNT_ALLOW_TRIPLECLASS)) {
         REMOVE_BIT(account.flags, ACCOUNT_ALLOW_TRIPLECLASS);
-        sendTo(fmt("You revoke the %s account's ability to triple-class.\n\r") % account.name);
+        sendTo(format("You revoke the %s account's ability to triple-class.\n\r") % account.name);
       } else {
         SET_BIT(account.flags, ACCOUNT_ALLOW_TRIPLECLASS);
-        sendTo(fmt("You grant the %s account the ability to triple-class.\n\r") % account.name);
+        sendTo(format("You grant the %s account the ability to triple-class.\n\r") % account.name);
       }
 
       account.write(namebuf);
@@ -6064,12 +6064,12 @@ void TBeing::doAccount(const sstring &arg)
   
       if (IS_SET(account.flags, ACCOUNT_IMMORTAL)) {
         REMOVE_BIT(account.flags, ACCOUNT_IMMORTAL);
-        sendTo(fmt("You un-flag the %s account immortal.\n\r") % account.name);
-        vlogf(LOG_MISC, fmt("%s making account='%s' non-immortal") %  getName() % account.name);
+        sendTo(format("You un-flag the %s account immortal.\n\r") % account.name);
+        vlogf(LOG_MISC, format("%s making account='%s' non-immortal") %  getName() % account.name);
       } else {
         SET_BIT(account.flags, ACCOUNT_IMMORTAL);
-        sendTo(fmt("You flag the %s account as immortal.\n\r") % account.name);
-        vlogf(LOG_MISC, fmt("%s making account='%s' immortal") %  getName() % account.name);
+        sendTo(format("You flag the %s account as immortal.\n\r") % account.name);
+        vlogf(LOG_MISC, format("%s making account='%s' immortal") %  getName() % account.name);
       }
       account.write(namebuf);
       return;
@@ -6077,12 +6077,12 @@ void TBeing::doAccount(const sstring &arg)
   }
 
 
-  buf2 = fmt("Account email address : %s%s%s\n\r") % cyan() % account.email % norm();
+  buf2 = format("Account email address : %s%s%s\n\r") % cyan() % account.email % norm();
   str += buf2;
 
   char *tmstr = (char *) asctime(localtime(&account.last_logon));
   *(tmstr + strlen(tmstr) - 1) = '\0';
-  sstring tmpbuf = fmt("Last login : %s%s%s\n\r") %
+  sstring tmpbuf = format("Last login : %s%s%s\n\r") %
     green() % tmstr % norm();
   str += tmpbuf;
   
@@ -6107,7 +6107,7 @@ void TBeing::doAccount(const sstring &arg)
   // only let imms see comments
   if (hasWizPower(POWER_ACCOUNT)) {
     FILE *fp;
-    buf2 = fmt("account/%c/%s/comment") % namebuf.lower()[0] % namebuf.lower();
+    buf2 = format("account/%c/%s/comment") % namebuf.lower()[0] % namebuf.lower();
     if ((fp = fopen(buf2.c_str(), "r"))) {
       char buf3[256];
       while (fgets(buf3, 255, fp))
@@ -6129,7 +6129,7 @@ void TBeing::doClients()
 
   for (Descriptor *tDesc = descriptor_list; tDesc; tDesc = tDesc->next)
     if (tDesc->m_bIsClient) {
-      tString += fmt("%-16s %-34s\n\r") %
+      tString += format("%-16s %-34s\n\r") %
               ((tDesc->character && tDesc->character->name) ?
                tDesc->character->name : "UNDEFINED") %
               (!(tDesc->host.empty()) ? tDesc->host : "Host Unknown");
@@ -6365,7 +6365,7 @@ int TBeing::doAs(const char *arg)
   // this is event where rc == DELETE_THIS
   // handle this by forcing a return
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
-    vlogf(LOG_BUG, fmt("doAs(): %s somehow killed self: %s") % 
+    vlogf(LOG_BUG, format("doAs(): %s somehow killed self: %s") % 
             desc->original->getName() % arg);
     sendTo("Please don't do things that will cause your original character to be destroyed.\n\r");
     remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
@@ -6405,7 +6405,7 @@ void TBeing::doComment(const char *argument)
     return;
   }
 
-  sendTo(fmt("Write your comment about %s, use ~ when done, or ` to cancel.\n\r") % arg);
+  sendTo(format("Write your comment about %s, use ~ when done, or ` to cancel.\n\r") % arg);
   sendTo("Please do not make stupid comments, just list things that are important.\n\r");
 
   addPlayerAction(PLR_BUGGING);
@@ -6417,7 +6417,7 @@ void TBeing::doComment(const char *argument)
 
   desc->max_str = MAX_MAIL_SIZE;
   if (desc->m_bIsClient)
-    desc->clientf(fmt("%d") % CLIENT_STARTEDIT % MAX_MAIL_SIZE);
+    desc->clientf(format("%d") % CLIENT_STARTEDIT % MAX_MAIL_SIZE);
 
   return;
 }
@@ -6452,7 +6452,7 @@ void TPerson::doBestow(const sstring &argument)
   
   if (!desc) {
     // this seems unlikely, eh?
-    vlogf(LOG_MISC, fmt("How did %s get to doBestow without a desc?") % getName());
+    vlogf(LOG_MISC, format("How did %s get to doBestow without a desc?") % getName());
     return;
   }
   
@@ -6552,7 +6552,7 @@ void TPerson::doBestow(const sstring &argument)
         coin->setSerialNumber(coin_uid);
         
         act("$n mints $p.", TRUE, this, coin, NULL, TO_ROOM);
-        act(fmt("You mint $p, serial number %i.") % coin->getSerialNumber(), TRUE, this, coin, NULL, TO_CHAR);
+        act(format("You mint $p, serial number %i.") % coin->getSerialNumber(), TRUE, this, coin, NULL, TO_CHAR);
         *this += *coin;
         logItem(coin, CMD_LOAD);
         number_done++;
@@ -6562,9 +6562,9 @@ void TPerson::doBestow(const sstring &argument)
       }
     }
     if (number_done == number_needed) {
-      act(fmt("<c>You successfully minted<1> <W>%i<1> <c>coin%s for<1> <W>%s<1><c>.<1>") % number_done % (number_done == 1 ? "" : "s") % ch->getName(), TRUE, this, coin, NULL, TO_CHAR);
+      act(format("<c>You successfully minted<1> <W>%i<1> <c>coin%s for<1> <W>%s<1><c>.<1>") % number_done % (number_done == 1 ? "" : "s") % ch->getName(), TRUE, this, coin, NULL, TO_CHAR);
     } else {
-      act(fmt("You minted <R>%i<1> coin%s for %s!") % number_done % (number_done == 1 ? "" : "s") % ch->getName(), TRUE, this, coin, NULL, TO_CHAR);
+      act(format("You minted <R>%i<1> coin%s for %s!") % number_done % (number_done == 1 ? "" : "s") % ch->getName(), TRUE, this, coin, NULL, TO_CHAR);
     }
     if (number_done)
       doSave(SILENT_NO);
@@ -6596,19 +6596,19 @@ void TPerson::doBestow(const sstring &argument)
           if (db.fetchRow()) {
             if (db["date_redeemed"].length() > 0) {
               // already redeemed, possible duped object
-              sendTo(fmt("Coin #%i already redeemed!  Counterfeit!!  Destroying!!!\n\r") % coin->getSerialNumber());
+              sendTo(format("Coin #%i already redeemed!  Counterfeit!!  Destroying!!!\n\r") % coin->getSerialNumber());
               redeem = FALSE;
             }
           } else {
             // no record in the db?! that's pretty bad, since it got a serial number somehow...
-            sendTo(fmt("Coin with an unknown serial number: %i!  Destroying!!\n\r") % coin->getSerialNumber());
+            sendTo(format("Coin with an unknown serial number: %i!  Destroying!!\n\r") % coin->getSerialNumber());
             redeem = FALSE;
           }
         }
         
         if (redeem) {
           db.query("update immortal_exchange_coin set redeemed_by = %i, redeemed_for = %i, date_redeemed = CURRENT_TIMESTAMP where k_coin = %i", getPlayerID(), ch->getPlayerID(), coin->getSerialNumber());
-          sendTo(fmt("Coin number %i crumbles with immortal redemption.\n\r") % coin->getSerialNumber());
+          sendTo(format("Coin number %i crumbles with immortal redemption.\n\r") % coin->getSerialNumber());
           number_done++;
         }
         
@@ -6624,9 +6624,9 @@ void TPerson::doBestow(const sstring &argument)
     if (number_tried == 0) {
       sendTo("Well, you don't have any coins...\n\r");
     } else if (number_done < number_needed) {
-      act(fmt("You redeemed <R>%d<1> coin%s for $N.") % number_done % (number_done == 1 ? "" : "s"), TRUE, this, coin, ch, TO_CHAR);
+      act(format("You redeemed <R>%d<1> coin%s for $N.") % number_done % (number_done == 1 ? "" : "s"), TRUE, this, coin, ch, TO_CHAR);
     } else {
-      act(fmt("<c>You redeemed<1> <W>%d<1> <c>coin%s for<1> <W>$N<1><c>.<1>") % number_done % (number_done == 1 ? "" : "s"), TRUE, this, coin, ch, TO_CHAR);
+      act(format("<c>You redeemed<1> <W>%d<1> <c>coin%s for<1> <W>$N<1><c>.<1>") % number_done % (number_done == 1 ? "" : "s"), TRUE, this, coin, ch, TO_CHAR);
     }
     if (number_tried)
       doSave(SILENT_NO);
@@ -6682,24 +6682,24 @@ void TPerson::doBestow(const sstring &argument)
       name_buffer = "your";
     else {
       name_buffer = ch->getName();
-      name_buffer += fmt("'%s") % (name_buffer.at(name_buffer.size() - 1) == 's' ? "" : "s");
+      name_buffer += format("'%s") % (name_buffer.at(name_buffer.size() - 1) == 's' ? "" : "s");
     }
     
     // are we adding or removing a tattoo?
     if (ch->applyTattoo(slot, arg4, SILENT_NO)) {
       if (arg4.length() > 0) {
         // adding
-        act(fmt("<r>You tattoo %s %s with:<1> %s<1>") % name_buffer % ch->describeBodySlot(slot) % arg4, TRUE, this, NULL, ch, TO_CHAR);
-        act(fmt("You feel a <r>piercing<1> sensation on your %s.") % ch->describeBodySlot(slot), FALSE, ch, NULL, NULL, TO_CHAR);
+        act(format("<r>You tattoo %s %s with:<1> %s<1>") % name_buffer % ch->describeBodySlot(slot) % arg4, TRUE, this, NULL, ch, TO_CHAR);
+        act(format("You feel a <r>piercing<1> sensation on your %s.") % ch->describeBodySlot(slot), FALSE, ch, NULL, NULL, TO_CHAR);
       } else {
         // removing
-        act(fmt("You remove the tattoo from %s %s.") % name_buffer % ch->describeBodySlot(slot), TRUE, this, NULL, ch, TO_CHAR);
-        act(fmt("Your %s feels <r>raw<1>.") % ch->describeBodySlot(slot), FALSE, ch, NULL, NULL, TO_CHAR);
+        act(format("You remove the tattoo from %s %s.") % name_buffer % ch->describeBodySlot(slot), TRUE, this, NULL, ch, TO_CHAR);
+        act(format("Your %s feels <r>raw<1>.") % ch->describeBodySlot(slot), FALSE, ch, NULL, NULL, TO_CHAR);
       }
       // bruising, for kicks
       ch->rawBruise(slot, 225, SILENT_YES, CHECK_IMMUNITY_YES);
     } else if (arg4.length() == 0) {
-      act(fmt("Are you sure %s %s was tattooed?") % name_buffer % ch->describeBodySlot(slot), TRUE, this, NULL, ch, TO_CHAR);
+      act(format("Are you sure %s %s was tattooed?") % name_buffer % ch->describeBodySlot(slot), TRUE, this, NULL, ch, TO_CHAR);
     } else {
       sendTo("Well, that didn't work...\n\r");
     }

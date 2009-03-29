@@ -222,7 +222,7 @@ int slumber(TBeing *caster, TBeing *victim, int level, byte bKnown)
         caster->sendTo("You can not use that staff here.\n\r");
         return SPELL_FAIL;
       }
-      vlogf(LOG_MISC, fmt("Sleep Tag Staff: %s just got slept by %s") % 
+      vlogf(LOG_MISC, format("Sleep Tag Staff: %s just got slept by %s") % 
                victim->getName() % caster->getName());
       rc = victim->rawSleep(level, (4 + level/2) * UPDATES_PER_MUDHOUR, crit, save);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -622,7 +622,7 @@ int cloudOfConcealment(TBeing *caster, int level, byte bKnown)
 #if 0
 // setting the affect sends similar text, so don't be redundant
             act("$n dissolves out of sight!", TRUE, tmp_victim, NULL, NULL, TO_ROOM,ANSI_GREEN);
-            tmp_victim->sendTo(fmt("You vanish!\n\r") %ANSI_GREEN);
+            tmp_victim->sendTo(format("You vanish!\n\r") %ANSI_GREEN);
 #endif
 
             tmp_victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
@@ -634,7 +634,7 @@ int cloudOfConcealment(TBeing *caster, int level, byte bKnown)
     if (!caster->isAffected(AFF_INVISIBLE)) {
 #if 0
       act("$n dissolves out of sight!", TRUE, caster, NULL, NULL, TO_ROOM, ANSI_GREEN);
-      caster->sendTo(fmt("You vanish!\n\r") %ANSI_GREEN);
+      caster->sendTo(format("You vanish!\n\r") %ANSI_GREEN);
 #endif
       caster->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
       found = TRUE;
@@ -690,7 +690,7 @@ int dispelInvisible(TBeing *caster, TBeing *victim, int level, byte bKnown)
     if (victim->affectedBySpell(SPELL_INVISIBILITY)) {
 #if 0
       act("$n slowly becomes visible again.", TRUE, victim, NULL, NULL, TO_ROOM, ANSI_WHITE_BOLD);
-      victim->sendTo(fmt("You slowly become visible again.\n\r") %ANSI_WHITE_BOLD);
+      victim->sendTo(format("You slowly become visible again.\n\r") %ANSI_WHITE_BOLD);
 #endif
 
       victim->affectFrom(SPELL_INVISIBILITY);
@@ -770,7 +770,7 @@ int dispelInvisible(TBeing *caster, TObj * obj, int, byte bKnown)
       act("$p loses its cloak of invisibility!",
                   FALSE, caster, obj, NULL, TO_ROOM);
     } else {
-      caster->sendTo(fmt("Uhm, that item wasn't invisible.\n\r"));
+      caster->sendTo("Uhm, that item wasn't invisible.\n\r");
       caster->nothingHappens(SILENT_YES);
     }
 
@@ -1744,7 +1744,7 @@ int telepathy(TBeing *caster, int, byte bKnown)
       caster->nothingHappens(SILENT_YES);
     } else {
       garbled = caster->garble(NULL, msg, SPEECH_SHOUT, GARBLE_SCOPE_EVERYONE);
-      caster->sendTo(COLOR_SPELLS, fmt("You telepathically send the message, \"%s<z>\"\n\r") % msg);
+      caster->sendTo(COLOR_SPELLS, format("You telepathically send the message, \"%s<z>\"\n\r") % msg);
       for (i = descriptor_list; i; i = i->next) {
         if (i->character && (i->character != caster) &&
             !i->connected && !i->character->checkSoundproof() &&
@@ -1752,11 +1752,11 @@ int telepathy(TBeing *caster, int, byte bKnown)
               (!IS_SET(i->autobits, AUTO_NOSHOUT)) ||
               !i->character->isPlayerAction(PLR_GODNOSHOUT))) {
 
-          i->character->sendTo(COLOR_SPELLS, fmt("Your mind is flooded with a telepathic message from %s.\n\r") % caster->getName());
+          i->character->sendTo(COLOR_SPELLS, format("Your mind is flooded with a telepathic message from %s.\n\r") % caster->getName());
           pgbuf = caster->garble(i->character, garbled, SPEECH_SHOUT, GARBLE_SCOPE_INDIVIDUAL);
-          i->character->sendTo(COLOR_SPELLS, fmt("The message is, \"%s%s\"\n\r") % pgbuf % i->character->norm());
+          i->character->sendTo(COLOR_SPELLS, format("The message is, \"%s%s\"\n\r") % pgbuf % i->character->norm());
           if (!i->m_bIsClient && IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
-          i->clientf(fmt("%d|%s|%s") % CLIENT_TELEPATHY % colorString(i->character, i, caster->getName(), NULL, COLOR_NONE, FALSE) % colorString(i->character, i, pgbuf, NULL, COLOR_NONE, FALSE));
+          i->clientf(format("%d|%s|%s") % CLIENT_TELEPATHY % colorString(i->character, i, caster->getName(), NULL, COLOR_NONE, FALSE) % colorString(i->character, i, pgbuf, NULL, COLOR_NONE, FALSE));
 
         }
       }

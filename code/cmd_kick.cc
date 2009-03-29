@@ -215,7 +215,7 @@ static int kickHit(TBeing *caster, TBeing *victim, int score, int level, spellNu
           dam += 1;
           victim->cantHit += victim->loseRound(0.25);
         } else 
-          victim->sendTo(fmt("Good thing you were wearing your %s.\n\r") %
+          victim->sendTo(format("Good thing you were wearing your %s.\n\r") %
                fname(victim->equipment[WEAR_WAIST]->name));
       }
       item = dynamic_cast<TObj *>(victim->equipment[WEAR_WAIST]);

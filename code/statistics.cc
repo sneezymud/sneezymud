@@ -136,7 +136,7 @@ int init_game_stats(void)
              &gold_statistics[GOLD_SHOP_PET][i],
              &gold_statistics[GOLD_SHOP_RESPONSES][i],
              &gold_statistics[GOLD_DUMP][i]) != 16) {
-        vlogf(LOG_BUG, fmt("bad gold info, resetting %d") %  i);
+        vlogf(LOG_BUG, format("bad gold info, resetting %d") %  i);
         int j;
         for (j = 0; j < MAX_MONEY_TYPE; j++)
           gold_statistics[j][i] = 0;
@@ -158,7 +158,7 @@ int init_game_stats(void)
              &gold_positive[GOLD_SHOP_PET][i],
              &gold_positive[GOLD_SHOP_RESPONSES][i],
              &gold_positive[GOLD_DUMP][i]) != 16) {
-        vlogf(LOG_BUG, fmt("bad gold info, resetting %d") %  i);
+        vlogf(LOG_BUG, format("bad gold info, resetting %d") %  i);
         int j;
         for (j = 0; j < MAX_MONEY_TYPE; j++)
           gold_positive[j][i] = 0;
@@ -181,7 +181,7 @@ int init_game_stats(void)
              &gold_modifier[GOLD_SHOP_PET],
              &gold_modifier[GOLD_SHOP_RESPONSES],
              &gold_modifier[GOLD_DUMP]) != 16) {
-        vlogf(LOG_BUG, fmt("bad gold modifier info, resetting %d") %  i);
+        vlogf(LOG_BUG, format("bad gold modifier info, resetting %d") %  i);
         int j;
         for (j = 0; j < MAX_MONEY_TYPE; j++)
           gold_modifier[j] = 1.0;
@@ -197,7 +197,7 @@ int init_game_stats(void)
       for (j = 0; j < MAX_CLASSES; j++) {
         if (fscanf(fp, "%d %ld ", 
                &stats.levels[j][i], &stats.time_levels[j][i]) != 2) {
-          vlogf(LOG_BUG, fmt("Bad level info, class %d, lev %d") %  j % (i+1));
+          vlogf(LOG_BUG, format("Bad level info, class %d, lev %d") %  j % (i+1));
         }
       }
     }
@@ -295,7 +295,7 @@ void save_game_stats(void)
  
     fclose(fp);
   } else {
-    vlogf(LOG_BUG, fmt("Error writing %s") %  STATS_FILE);
+    vlogf(LOG_BUG, format("Error writing %s") %  STATS_FILE);
   }
 }
 
@@ -328,147 +328,147 @@ void TBeing::doGamestats(const sstring &arg)
       setStat(STAT_CURRENT, STAT_STR, tmpint);
       plot1 = plotStat(STAT_CURRENT, STAT_STR, .80, 1.25, 1.00, curve);
       plot2 = plotStat(STAT_CURRENT, STAT_STR, 0.0, 100.0, 50.0, curve);
-      buf = fmt("Stat Value: %5.2f     Plot1: %5.2f    Plot2: %5.2f%c\n\r") % (double)tmpint % plot1 % plot2 % '%';
+      buf = format("Stat Value: %5.2f     Plot1: %5.2f    Plot2: %5.2f%c\n\r") % (double)tmpint % plot1 % plot2 % '%';
       sendTo(buf);
     }
     setStat(STAT_CURRENT, STAT_STR, temp_stat);
     return;
   } else if (is_abbrev(buf, "combat")) {
     int tot_dam = stats.damage[PC_STAT] + stats.damage[MOB_STAT];
-    buf = fmt("Total damage taken  : %d\n\r") % tot_dam;
+    buf = format("Total damage taken  : %d\n\r") % tot_dam;
     str += buf;
 
-    buf = fmt("\tMob damage taken    : %ld   (%5.2f%c)\n\r") %
+    buf = format("\tMob damage taken    : %ld   (%5.2f%c)\n\r") %
       stats.damage[MOB_STAT] % (tot_dam ? (100.0 * stats.damage[MOB_STAT] / tot_dam) : 0) % '%';
     str += buf;
-    buf = fmt("\tPC  damage taken    : %ld   (%5.2f%c)\n\r") %
+    buf = format("\tPC  damage taken    : %ld   (%5.2f%c)\n\r") %
          stats.damage[PC_STAT] % (tot_dam ? (100.0 * stats.damage[PC_STAT] / tot_dam) : 0) % '%';
     str += buf;
 
     tot_dam = stats.combat_damage[PC_STAT] + stats.combat_damage[MOB_STAT];
-    buf = fmt("Combat damage only  : %d\n\r") % tot_dam;
+    buf = format("Combat damage only  : %d\n\r") % tot_dam;
     str += buf;
-    buf = fmt("\tMob combat damage taken    : %ld   (%5.2f%c)\n\r") %
+    buf = format("\tMob combat damage taken    : %ld   (%5.2f%c)\n\r") %
          stats.combat_damage[MOB_STAT] % (tot_dam ? (100.0 * stats.combat_damage[MOB_STAT] / tot_dam) : 0) % '%';
     str += buf;
-    buf = fmt("\tPC combat damage taken     : %ld   (%5.2f%c)\n\r") %
+    buf = format("\tPC combat damage taken     : %ld   (%5.2f%c)\n\r") %
          stats.combat_damage[PC_STAT] % (tot_dam ? (100.0 * stats.combat_damage[PC_STAT] / tot_dam) : 0) % '%';
     str += buf;
 
     int tot_ac = stats.ac_absorb[MOB_STAT] + stats.ac_absorb[PC_STAT];
-    buf = fmt("AC  damage absorbed : %d\n\r") % tot_ac;
+    buf = format("AC  damage absorbed : %d\n\r") % tot_ac;
     str += buf;
 
     int mob_dam = stats.ac_absorb[MOB_STAT] + stats.combat_damage[MOB_STAT];
-    buf = fmt("\tMob AC absorb       : %ld   (%5.2f%c of all abs) (%5.2f%c of mob ComDam)\n\r") %
+    buf = format("\tMob AC absorb       : %ld   (%5.2f%c of all abs) (%5.2f%c of mob ComDam)\n\r") %
         stats.ac_absorb[MOB_STAT] % (tot_ac ? stats.ac_absorb[MOB_STAT] * 100.0 / tot_ac : 0) % '%' %
       (mob_dam ? stats.ac_absorb[MOB_STAT] * 100.0 / mob_dam : 0) % '%';
     str += buf;
 
     int pc_dam = stats.ac_absorb[PC_STAT] + stats.combat_damage[PC_STAT];
-    buf = fmt("\tPC AC absorb        : %ld   (%5.2f%c of all abs) (%5.2f%c of PC ComDam)\n\r") %
+    buf = format("\tPC AC absorb        : %ld   (%5.2f%c of all abs) (%5.2f%c of PC ComDam)\n\r") %
       stats.ac_absorb[PC_STAT] % (tot_ac ? stats.ac_absorb[PC_STAT] * 100.0 / tot_ac : 0) % '%' %
       (pc_dam ? stats.ac_absorb[PC_STAT] * 100.0 / pc_dam : 0) % '%';
     str += buf;
-    buf = fmt("Current absorbtion constants : TBeing %d, PC %d\n\r\n\r") %
+    buf = format("Current absorbtion constants : TBeing %d, PC %d\n\r\n\r") %
       stats.absorb_damage_divisor[MOB_STAT] %
       stats.absorb_damage_divisor[PC_STAT];
     str += buf;
 
     long tot_blows = stats.combat_blows[PC_STAT] + stats.combat_blows[MOB_STAT];
-    buf = fmt("Total Combat blows        : %ld\n\r") % tot_blows;
+    buf = format("Total Combat blows        : %ld\n\r") % tot_blows;
     str += buf;
-    buf = fmt("\tMob combat blows           : %ld   (%5.2f%c)\n\r") %
+    buf = format("\tMob combat blows           : %ld   (%5.2f%c)\n\r") %
       stats.combat_blows[MOB_STAT] %
       (tot_blows ? (100.0 * stats.combat_blows[MOB_STAT] / tot_blows) : 0) %
       '%';
     str += buf;
-    buf = fmt("\tPC combat blows            : %ld   (%5.2f%c)\n\r") %
+    buf = format("\tPC combat blows            : %ld   (%5.2f%c)\n\r") %
       stats.combat_blows[PC_STAT] %
       (tot_blows ? (100.0 * stats.combat_blows[PC_STAT] / tot_blows) : 0) %
       '%';
     str += buf;
 
     long tot_hits = stats.combat_hits[PC_STAT] + stats.combat_hits[MOB_STAT];
-    buf = fmt("Total Combat hits         : %ld  (%5.2f%c)\n\r") %
+    buf = format("Total Combat hits         : %ld  (%5.2f%c)\n\r") %
       tot_hits % (tot_blows == 0 ? 0.0 : (100.0 * tot_hits / tot_blows)) % '%';
     str += buf;
-    buf = fmt("\tMob combat hits            : %ld   (%5.2f%c)  (%5.2f%c hit rate)\n\r") %
+    buf = format("\tMob combat hits            : %ld   (%5.2f%c)  (%5.2f%c hit rate)\n\r") %
       stats.combat_hits[MOB_STAT] % (tot_hits ? (100.0 * stats.combat_hits[MOB_STAT] / tot_hits) : 0) % '%' %
       (stats.combat_blows[MOB_STAT] ? stats.combat_hits[MOB_STAT] * 100.0 / stats.combat_blows[MOB_STAT] : 0) % '%';
     str += buf;
-    buf = fmt("\tPC combat hits             : %ld   (%5.2f%c)  (%5.2f%c hit rate)\n\r") %
+    buf = format("\tPC combat hits             : %ld   (%5.2f%c)  (%5.2f%c hit rate)\n\r") %
       stats.combat_hits[PC_STAT] % (tot_hits ? (100.0 * stats.combat_hits[PC_STAT] / tot_hits) : 0 ) % '%' %
       (stats.combat_blows[PC_STAT] ? stats.combat_hits[PC_STAT] * 100.0 / stats.combat_blows[PC_STAT] : 0) % '%';
     str += buf;
 
     int tot_lev = stats.combat_level[PC_STAT] + stats.combat_level[MOB_STAT];
-    buf = fmt("Average Combat level      : %5.2f\n\r") %
+    buf = format("Average Combat level      : %5.2f\n\r") %
       (tot_blows ?  ((double) tot_lev / (double) tot_blows) : 0.0);
     str += buf;
-    buf = fmt("\tMob combat level           : %5.2f\n\r") %
+    buf = format("\tMob combat level           : %5.2f\n\r") %
          (stats.combat_blows[MOB_STAT] ?  ((double) stats.combat_level[MOB_STAT] / (double) stats.combat_blows[MOB_STAT]) : 0.0);
     str += buf;
-    buf = fmt("\tPC combat level            : %5.2f\n\r") %
+    buf = format("\tPC combat level            : %5.2f\n\r") %
       (stats.combat_blows[PC_STAT] ?  ((double) stats.combat_level[PC_STAT] / (double) stats.combat_blows[PC_STAT]) : 0.0);
     str += buf;
 
-    buf = fmt("Average Combat damage     : %5.2f\n\r") %
+    buf = format("Average Combat damage     : %5.2f\n\r") %
       (tot_hits ?  ((double) tot_dam / (double) tot_hits) : 0.0);
     str += buf;
-    buf = fmt("\tMob avg. combat dam.       : %5.2f\n\r") %
+    buf = format("\tMob avg. combat dam.       : %5.2f\n\r") %
       (stats.combat_hits[MOB_STAT] ?  ((double) stats.combat_damage[MOB_STAT] / (double) stats.combat_hits[MOB_STAT]) : 0.0);
     str += buf;
-    buf = fmt("\tPC avg. combat dam.        : %5.2f\n\r") %
+    buf = format("\tPC avg. combat dam.        : %5.2f\n\r") %
       (stats.combat_hits[PC_STAT] ?  ((double) stats.combat_damage[PC_STAT] / (double) stats.combat_hits[PC_STAT]) : 0.0);
     str += buf;
 
-    buf = fmt("Total crit-success checks : %ld  (%5.2f%c of hits)\n\r") %
+    buf = format("Total crit-success checks : %ld  (%5.2f%c of hits)\n\r") %
       stats.combat_crit_suc %
       (tot_hits == 0 ? 0.0 : 
        (100.0 * stats.combat_crit_suc / tot_hits)) % '%';
     str += buf;
-    buf = fmt("Total crit-fail checks    : %ld  (%5.2f%c of misses)\n\r") %
+    buf = format("Total crit-fail checks    : %ld  (%5.2f%c of misses)\n\r") %
            stats.combat_crit_fail %
       ((tot_blows - tot_hits) == 0 ? 0.0 : 
        (100.0 * stats.combat_crit_fail / (tot_blows - tot_hits))) % '%';
     str += buf;
-    buf = fmt("Total crit-success passes : %ld  (%5.2f%c of hits)\n\r") %
+    buf = format("Total crit-success passes : %ld  (%5.2f%c of hits)\n\r") %
       stats.combat_crit_suc_pass %
       (tot_hits == 0 ? 0.0 : 
        (100.0 * stats.combat_crit_suc_pass / tot_hits)) % '%';
     str += buf;
-    buf = fmt("Total crit-fail passes    : %ld  (%5.2f%c of misses)\n\r") %
+    buf = format("Total crit-fail passes    : %ld  (%5.2f%c of misses)\n\r") %
             stats.combat_crit_fail_pass %
       ((tot_blows - tot_hits) == 0 ? 0.0 : 
        (100.0 * stats.combat_crit_fail_pass / (tot_blows - tot_hits))) % '%';
     str += buf;
     str += "\n\r";
-    buf = fmt("Mobiles have tried to aggro : %d times.\n\r") % stats.aggro_attempts;
+    buf = format("Mobiles have tried to aggro : %d times.\n\r") % stats.aggro_attempts;
     str += buf;
-    buf = fmt("Mobiles have aggro'd        : %d times.\n\r") % stats.aggro_successes;
+    buf = format("Mobiles have aggro'd        : %d times.\n\r") % stats.aggro_successes;
     str += buf;
     if (desc)
       desc->page_string(str, SHOWNOW_NO, ALLOWREP_YES);
     return;
   } else if (is_abbrev(buf, "equipment")) {
-    sendTo(fmt("Current Equipment Load Modifier : %4.2f\n\r") % stats.equip);
-    sendTo(fmt("Current Max-Exist Modifier      : %4.2f\n\r") % stats.max_exist);
-    sendTo(fmt("Current Mob-Money Modifier      : %4.2f\n\r") % gold_modifier[GOLD_INCOME].getVal());
-    sendTo(fmt("Current Mob-XP Modifier         : %4.2f\n\r") % stats.xp_modif);
-    sendTo(fmt("Current Damage Modifier         : %4.2f\n\r") % stats.damage_modifier);
+    sendTo(format("Current Equipment Load Modifier : %4.2f\n\r") % stats.equip);
+    sendTo(format("Current Max-Exist Modifier      : %4.2f\n\r") % stats.max_exist);
+    sendTo(format("Current Mob-Money Modifier      : %4.2f\n\r") % gold_modifier[GOLD_INCOME].getVal());
+    sendTo(format("Current Mob-XP Modifier         : %4.2f\n\r") % stats.xp_modif);
+    sendTo(format("Current Damage Modifier         : %4.2f\n\r") % stats.damage_modifier);
     return;
   } else if (is_abbrev(buf, "trivia")) {
-    sendTo(fmt("Average HP regen              : %4.2f  (attempts : %d)\n\r") %        (stats.hit_gained_attempts == 0 ? 0.0 :
+    sendTo(format("Average HP regen              : %4.2f  (attempts : %d)\n\r") %        (stats.hit_gained_attempts == 0 ? 0.0 :
         ((float) stats.hit_gained / (float) stats.hit_gained_attempts)) %
         stats.hit_gained_attempts);
-    sendTo(fmt("Average MV regen              : %4.2f  (attempts : %d)\n\r") %        (stats.move_gained_attempts == 0 ? 0.0 :
+    sendTo(format("Average MV regen              : %4.2f  (attempts : %d)\n\r") %        (stats.move_gained_attempts == 0 ? 0.0 :
         ((float) stats.move_gained / (float) stats.move_gained_attempts)) %
         stats.move_gained_attempts);
-    sendTo(fmt("Average mana regen            : %4.2f  (attempts : %d)\n\r") %        (stats.mana_gained_attempts == 0 ? 0.0 :
+    sendTo(format("Average mana regen            : %4.2f  (attempts : %d)\n\r") %        (stats.mana_gained_attempts == 0 ? 0.0 :
         ((float) stats.mana_gained / (float) stats.mana_gained_attempts)) %
         stats.mana_gained_attempts);
-    sendTo(fmt("Average piety regen           : %4.2f  (attempts : %d)\n\r") %        (stats.piety_gained_attempts == 0 ? 0.0 :
+    sendTo(format("Average piety regen           : %4.2f  (attempts : %d)\n\r") %        (stats.piety_gained_attempts == 0 ? 0.0 :
         (stats.piety_gained / (float) stats.piety_gained_attempts)) %
         stats.piety_gained_attempts);
     return;
@@ -479,13 +479,13 @@ void TBeing::doGamestats(const sstring &arg)
     }
     lev = convertTo<int>(buf2);
     if ((lev >= 0) && (lev < 70)) {
-      sendTo(fmt("Mobile Deaths for level %d, %ld\n\r") % lev % stats.deaths[lev][1]);
-      sendTo(fmt("PC  Deaths for level %d, %ld\n\r") % lev % stats.deaths[lev][0]);
+      sendTo(format("Mobile Deaths for level %d, %ld\n\r") % lev % stats.deaths[lev][1]);
+      sendTo(format("PC  Deaths for level %d, %ld\n\r") % lev % stats.deaths[lev][0]);
 
       if (lev >= 1 && lev <= 50) {
         sendTo("PC Leveling Data:\n\r");
         unsigned int factor = secs_to_level(lev);
-        sendTo(fmt("Desired leveling time: %s\n\r") %
+        sendTo(format("Desired leveling time: %s\n\r") %
            secsToString(factor));
 
         for (i=0;i<MAX_CLASSES;i++) {
@@ -493,7 +493,7 @@ void TBeing::doGamestats(const sstring &arg)
           if (stats.levels[i][lev-1])
             factor = SECS_PER_REAL_MIN * stats.time_levels[i][lev-1] / stats.levels[i][lev-1];
 
-          sendTo(fmt("Class: %-10.10s :    number %3d,  avg. time: %s\n\r") %
+          sendTo(format("Class: %-10.10s :    number %3d,  avg. time: %s\n\r") %
             classInfo[i].name % stats.levels[i][lev-1] %
             secsToString(factor));
         }
@@ -690,12 +690,12 @@ void procCheckGoldStats::run(int pulse) const
   if (net_gold_all_shops > 0) {
     // shops are giving out too much money
     gold_modifier[GOLD_SHOP] -= 0.01;
-//    vlogf(LOG_BUG, fmt("ECONOMY: shop modifier lowered. %d %u %.2f") %  net_gold_all_shops % pos_gold_all_shops % gold_modifier[GOLD_SHOP].getVal());
+//    vlogf(LOG_BUG, format("ECONOMY: shop modifier lowered. %d %u %.2f") %  net_gold_all_shops % pos_gold_all_shops % gold_modifier[GOLD_SHOP].getVal());
     should_reset = true;
   } else if ((unsigned int) -net_gold_all_shops > pos_gold_all_shops/10) {
     // shops are making too much money
     gold_modifier[GOLD_SHOP] += 0.01;
-//    vlogf(LOG_BUG, fmt("ECONOMY: shop modifier raised. %d %u %.2f") %  net_gold_all_shops % pos_gold_all_shops % gold_modifier[GOLD_SHOP].getVal());
+//    vlogf(LOG_BUG, format("ECONOMY: shop modifier raised. %d %u %.2f") %  net_gold_all_shops % pos_gold_all_shops % gold_modifier[GOLD_SHOP].getVal());
     should_reset = true;
   }
 
@@ -704,12 +704,12 @@ void procCheckGoldStats::run(int pulse) const
   if ((unsigned int) net_gold_budget < ((target_income - 0.03) * pos_gold_budget)) {
     // players losing money
     gold_modifier[GOLD_INCOME] += 0.01;
-//    vlogf(LOG_BUG, fmt("ECONOMY: income modifier raised. %d %u %.2f") %  net_gold_budget % pos_gold_budget % gold_modifier[GOLD_INCOME].getVal());
+//    vlogf(LOG_BUG, format("ECONOMY: income modifier raised. %d %u %.2f") %  net_gold_budget % pos_gold_budget % gold_modifier[GOLD_INCOME].getVal());
     should_reset = true;
   } else if ((unsigned int) net_gold_budget > ((target_income + 0.03) * pos_gold_budget)) {
     // players making too much
     gold_modifier[GOLD_INCOME] -= 0.01;
-//    vlogf(LOG_BUG, fmt("ECONOMY: income modifier lowered. %d %u %.2f") %  net_gold_budget % pos_gold_budget % gold_modifier[GOLD_INCOME].getVal());
+//    vlogf(LOG_BUG, format("ECONOMY: income modifier lowered. %d %u %.2f") %  net_gold_budget % pos_gold_budget % gold_modifier[GOLD_INCOME].getVal());
     should_reset = true;
   }
   

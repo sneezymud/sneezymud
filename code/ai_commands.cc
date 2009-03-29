@@ -1000,7 +1000,7 @@ int TMonster::aiBow (TBeing *doer, TBeing *, aiTarg cond)
     return FALSE;
 
   if (doer->getSex() == SEX_FEMALE)
-    doWhisper(fmt("%s Pssst, polite women curtsey...") % fname(doer->name));
+    doWhisper(format("%s Pssst, polite women curtsey...") % fname(doer->name));
 
   switch (cond) {
     case TARGET_NONE:
@@ -1178,7 +1178,7 @@ int TMonster::aiCurtsey (TBeing *doer, TBeing *, aiTarg cond)
     return FALSE;
 
   if (doer->getSex() != SEX_FEMALE)
-    doWhisper(fmt("%s Pssst, usually it's the WOMEN that curtsey...") % fname(doer->name));
+    doWhisper(format("%s Pssst, usually it's the WOMEN that curtsey...") % fname(doer->name));
 
   switch (cond) {
     case TARGET_NONE:
@@ -2876,7 +2876,7 @@ void TBeing::aiGet(TThing *obj)
     return;
   }
   if (!roomp) {
-    vlogf(LOG_MOB, fmt("%s without a roomp in aiGet") %  getName());
+    vlogf(LOG_MOB, format("%s without a roomp in aiGet") %  getName());
     return;
   }
   for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (tmp=*it);++it) {
@@ -2920,7 +2920,7 @@ void TMonster::aiLook(TBeing *doer)
         if (getRace() == doer->getRace())
 	  buf="Stop looking at me ugly!";
         else
-	  buf=fmt("Stop looking at me you ugly %s.") %
+	  buf=format("Stop looking at me you ugly %s.") %
 	    doer->getMyRace()->getSingularName();
         if (!::number(0,3))
           doSay(buf);
@@ -3030,11 +3030,11 @@ int TMonster::aiSteal(TBeing *thief)
   UA(38);
   if (!pissed() && !isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL) && canSee(thief, INFRA_YES) && thief->isPc()) {
     if (!hasClass(CLASS_THIEF)) {
-      buf = fmt("%s is a bloody thief.") % thief->getName();
+      buf = format("%s is a bloody thief.") % thief->getName();
       doShout(buf);
       CallForGuard(this, thief, 2);
     } else {
-      buf = fmt("Alright %s, you little punk, nice try but no dice.") %
+      buf = format("Alright %s, you little punk, nice try but no dice.") %
         thief->getName();
       doSay(buf);
     }
@@ -3548,7 +3548,7 @@ int TMonster::aiToast(TBeing *doer, TBeing *other, aiTarg cond)
       if (!::number(0, 5))
         doSay("Jolly good times!");
       else if (!::number(0, 3) && other)
-        doSay(fmt("%s is the %s!") % stripColorCodes(sstring(other->getName()).cap()) % RandomWord());
+        doSay(format("%s is the %s!") % stripColorCodes(sstring(other->getName()).cap()) % RandomWord());
       break;
     case TARGET_MOB:
       aiToastedAt(doer);

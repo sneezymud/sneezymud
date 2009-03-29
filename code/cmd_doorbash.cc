@@ -17,7 +17,7 @@ int TBeing::slamIntoWall(roomDirData * exitp)
   } else
     strcpy(doorname, "barrier");
 
-  sendTo(fmt("You slam against the %s with no effect.\n\r") % doorname);
+  sendTo(format("You slam against the %s with no effect.\n\r") % doorname);
   sendTo("OUCH!  That REALLY Hurt!\n\r");
   sprintf(buf, "$n crashes against the %s with no effect.\n\r", doorname);
   act(buf, FALSE, this, 0, 0, TO_ROOM);
@@ -80,7 +80,7 @@ static int doorbash(TBeing * caster, dirTypeT dir)
   }
   sprintf(buf, "$n charges %swards.", dirs[dir]);
   act(buf, FALSE, caster, 0, 0, TO_ROOM);
-  caster->sendTo(fmt("You charge %swards.\n\r") % dirs[dir]);
+  caster->sendTo(format("You charge %swards.\n\r") % dirs[dir]);
   
   if (caster->willBumpHeadDoor(exitp, &height)) {
     caster->sendTo("Belatedly, you realize the exit is a bit too short for you to charge at successfully.\n\r");
@@ -148,7 +148,7 @@ static int doorbash(TBeing * caster, dirTypeT dir)
     sprintf(buf, "$n slams into the %s, and it bursts open!", 
                  fname(exitp->keyword).c_str());
     act(buf, FALSE, caster, 0, 0, TO_ROOM);
-    caster->sendTo(fmt("You slam into the %s, and it bursts open!\n\r") % 
+    caster->sendTo(format("You slam into the %s, and it bursts open!\n\r") % 
             fname(exitp->keyword));
     int room = caster->in_room;
     if (IS_SET(exitp->condition, EX_TRAPPED))

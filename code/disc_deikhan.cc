@@ -28,7 +28,7 @@ int synostodweomer(TBeing *caster, TBeing *v, int level, byte bKnown)
   }
 
   if (v->affectedBySpell(SPELL_SYNOSTODWEOMER)) {
-    caster->sendTo(COLOR_MOBS, fmt("%s is already affected by Snyostodweomer.\n\r") % v->getName());
+    caster->sendTo(COLOR_MOBS, format("%s is already affected by Snyostodweomer.\n\r") % v->getName());
     return FALSE;
   }
 
@@ -113,7 +113,7 @@ int synostodweomer(TBeing *caster, TBeing *v)
   }
 
   if (v->affectedBySpell(SPELL_SYNOSTODWEOMER)) {
-    caster->sendTo(COLOR_MOBS, fmt("%s is already affected by Snyostodweomer.\n\r") % v->getName());
+    caster->sendTo(COLOR_MOBS, format("%s is already affected by Snyostodweomer.\n\r") % v->getName());
     return FALSE;
   }
 

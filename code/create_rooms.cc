@@ -134,13 +134,13 @@ static void update_room_menu(const TBeing *ch)
  "%s10)%s %sDelete All Extra Descriptions%s\n\r";
 
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt(VT_CURSPOS) % 1 % 1);
-  ch->sendTo(fmt("Room Name: %s") % ch->roomp->name);
-  ch->sendTo(fmt(VT_CURSPOS) % 2 % 1);
-  ch->sendTo(fmt("Number: %d") % ch->roomp->number);
-  ch->sendTo(fmt(VT_CURSPOS) % 3 % 1);
-  ch->sendTo(fmt("Sector Type: %s") % TerrainInfo[ch->roomp->getSectorType()]->name);
-  ch->sendTo(fmt(VT_CURSPOS) % 5 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 1 % 1);
+  ch->sendTo(format("Room Name: %s") % ch->roomp->name);
+  ch->sendTo(format(VT_CURSPOS) % 2 % 1);
+  ch->sendTo(format("Number: %d") % ch->roomp->number);
+  ch->sendTo(format(VT_CURSPOS) % 3 % 1);
+  ch->sendTo(format("Sector Type: %s") % TerrainInfo[ch->roomp->getSectorType()]->name);
+  ch->sendTo(format(VT_CURSPOS) % 5 % 1);
   ch->sendTo("Menu:\n\r");
 
   if (IS_SET(ch->desc->autobits, AUTO_TIPS)) {
@@ -165,7 +165,7 @@ static void update_room_menu(const TBeing *ch)
       tStString += "NONE";
     }
 
-    ch->sendTo(fmt(edit_menu_advanced) %
+    ch->sendTo(format(edit_menu_advanced) %
                ch->cyan() % ch->norm() % ch->roomp->name %
                ch->cyan() % ch->norm() % ch->purple() % ch->norm() %
                ch->cyan() % ch->norm() % ch->purple() % ch->norm() %
@@ -290,7 +290,7 @@ void TPerson::doEdit(const char *arg)
 #if 0
 // as is, this will cause it to send the descr as a "bug"
       if (desc->m_bIsClient) {
-        desc->clientf(fmt("%d") % CLIENT_STARTEDIT % 4000);
+        desc->clientf(format("%d") % CLIENT_STARTEDIT % 4000);
       }
 #endif
       break;
@@ -315,7 +315,7 @@ void TPerson::doEdit(const char *arg)
       }
       if ((rdir < MIN_DIR) || (rdir >= MAX_DIR)) {
         sendTo("Incorrect direction.\n\r");
-        sendTo(fmt("Must enter %d-%d.  I will ask for text.\n\r") % MIN_DIR % (MAX_DIR-1));
+        sendTo(format("Must enter %d-%d.  I will ask for text.\n\r") % MIN_DIR % (MAX_DIR-1));
         return;
       }
       sstring[0] = 0;
@@ -350,7 +350,7 @@ void TPerson::doEdit(const char *arg)
 
         if (!(newrpTo = real_roomp(toRoom))) {
           if (toRoom < 0 || toRoom >= WORLD_SIZE) {
-            sendTo(fmt("Invalid room number.  Must be between 0 and %d.\n\r") %
+            sendTo(format("Invalid room number.  Must be between 0 and %d.\n\r") %
                    (WORLD_SIZE - 1));
             return;
           }
@@ -386,7 +386,7 @@ void TPerson::doEdit(const char *arg)
             }
 
             if ((new_dir = convertTo<int>(Buf)) < MIN_DIR || new_dir >= MAX_DIR) {
-              sendTo(fmt("Direction must be between %d and %d.\n\r") % MIN_DIR % (MAX_DIR - 1));
+              sendTo(format("Direction must be between %d and %d.\n\r") % MIN_DIR % (MAX_DIR - 1));
               return;
             }
           } else {
@@ -408,7 +408,7 @@ void TPerson::doEdit(const char *arg)
 
           if (!(newrp = real_roomp(rdir))) {
             if (rdir < 0 || rdir >= WORLD_SIZE) {
-              sendTo(fmt("Invalid room number.  Must be between 0 and %d.\n\r") %
+              sendTo(format("Invalid room number.  Must be between 0 and %d.\n\r") %
                      (WORLD_SIZE - 1));
               return;
             }
@@ -422,12 +422,12 @@ void TPerson::doEdit(const char *arg)
             CreateOneRoom(rdir);
 
             if (!(newrp = real_roomp(rdir))) {
-              sendTo(fmt("For some reason room %d neither exists nor could it be created.\n\r") %
+              sendTo(format("For some reason room %d neither exists nor could it be created.\n\r") %
                      rdir);
               return;
             }
 
-            sendTo(fmt("You create room %d for the exit(s).\n\r") % rdir);
+            sendTo(format("You create room %d for the exit(s).\n\r") % rdir);
             newrp->setRoomFlags(roomp->getRoomFlags());
             newrp->setSectorType(roomp->getSectorType());
             newrp->setRoomHeight(roomp->getRoomHeight());
@@ -487,11 +487,11 @@ void TPerson::doEdit(const char *arg)
         return;
       }
       if ((rdir < MIN_DIR) || (rdir >= MAX_DIR)) {
-        sendTo(fmt("Direction must be between %d and %d.\n\r") % MIN_DIR % (MAX_DIR-1));
+        sendTo(format("Direction must be between %d and %d.\n\r") % MIN_DIR % (MAX_DIR-1));
         return;
       }
       if ((dtype < DOOR_NONE) || (dtype >= MAX_DOOR_TYPES)) {
-        sendTo(fmt("Door_type must be between %d and %d.\n\r") % DOOR_NONE % (MAX_DOOR_TYPES-1));
+        sendTo(format("Door_type must be between %d and %d.\n\r") % DOOR_NONE % (MAX_DOOR_TYPES-1));
         return;
       }
       doortype = doorTypeT(dtype);
@@ -535,7 +535,7 @@ void TPerson::doEdit(const char *arg)
           newrp->setRoomHeight(roomp->getRoomHeight());	
 	  make_room_coords(roomp, newrp, rdir);  
         } else {
-          sendTo(fmt("Rooms need to be positive numbers less than %d.\n\r") % (WORLD_SIZE-1));
+          sendTo(format("Rooms need to be positive numbers less than %d.\n\r") % (WORLD_SIZE-1));
           return;
         }
       }
@@ -563,7 +563,7 @@ void TPerson::doEdit(const char *arg)
         if (newrp->dir_option[new_dir]->to_room == in_room)
           sendTo("And is back into the correct room.\n\r");
         else
-          sendTo(fmt("And exits into incorrect room [%d].\n\r") % newrp->dir_option[new_dir]->to_room);
+          sendTo(format("And exits into incorrect room [%d].\n\r") % newrp->dir_option[new_dir]->to_room);
       } else {
         sendTo("Making new exit back into this room.\n\r");
         newrp->dir_option[new_dir] = new roomDirData();
@@ -589,7 +589,7 @@ void TPerson::doEdit(const char *arg)
         sendTo("You have to supply a keyword.\n\r");
         sendTo("Existing keywords:\n\r");
         for (ed = roomp->ex_description; ed; ed = ed->next) {
-          sendTo(fmt("%s\n\r") % ed->keyword);
+          sendTo(format("%s\n\r") % ed->keyword);
         }
         return;
       }
@@ -606,7 +606,7 @@ void TPerson::doEdit(const char *arg)
           sendTo("Terminate with a '~' on a NEW LINE.\n\r");
           break;
         } else if (!strcasecmp(ed->keyword, sstring)) {
-          sendTo(fmt("Current description:\n\r%s\n\r") % ed->description);
+          sendTo(format("Current description:\n\r%s\n\r") % ed->description);
           sendTo("This description has been deleted.  If you needed to modify it, simply readd it.\n\r");
           sendTo("Press return to proceed.\n\r");
           if (prev == ed) {
@@ -626,7 +626,7 @@ void TPerson::doEdit(const char *arg)
       // there current state.
       if (!*sstring) {
         for (j = 0; j < MAX_ROOM_BITS; j++) {
-          sendTo(fmt("%-2d [%s] %-30s%s") % (j + 1) %
+          sendTo(format("%-2d [%s] %-30s%s") % (j + 1) %
                  ((roomp->getRoomFlags() & (1 << j)) ? "X" : " ") %
                  room_bits[j] % ((j % 2) == 1 ? "\n\r" : ""));
         }
@@ -667,13 +667,13 @@ void TPerson::doEdit(const char *arg)
             r_flags = (1 << j);
             if (((*sstringB[1] && is_abbrev("off", sstringB[1])) ||
                 !*sstringB[1]) && (roomp->getRoomFlags() & r_flags)) {
-              sendTo(fmt("Removing Flag %s\n\r") % room_bits[j]);
+              sendTo(format("Removing Flag %s\n\r") % room_bits[j]);
               r_flags = roomp->getRoomFlags() - r_flags;
               roomp->setRoomFlags(r_flags);
               return;
             } else if (((*sstringB[1] && is_abbrev("on", sstringB[1])) ||
                        !*sstringB[1]) && !(roomp->getRoomFlags() & r_flags)) {
-              sendTo(fmt("Adding Flag %s\n\r") % room_bits[j]);
+              sendTo(format("Adding Flag %s\n\r") % room_bits[j]);
               r_flags = roomp->getRoomFlags() + r_flags;
               roomp->setRoomFlags(r_flags);
               return;
@@ -695,7 +695,7 @@ void TPerson::doEdit(const char *arg)
       // for flag 0, flag - 1, which is (1 << (flag-1))
       r_flags--;
       // First.  Are we removing or adding it?  Give messages depending.
-      sendTo(fmt("%s flag %s.\n\r") %
+      sendTo(format("%s flag %s.\n\r") %
              ((roomp->getRoomFlags() & (1 << r_flags)) ?
               "Removing" : "Adding") %
              room_bits[r_flags]);
@@ -731,7 +731,7 @@ void TPerson::doEdit(const char *arg)
           roomp->initLight();
         }
       }
-      sendTo(fmt("Setting Room Height to %d.\n\r") % rheight);
+      sendTo(format("Setting Room Height to %d.\n\r") % rheight);
       roomp->setRoomHeight(rheight);
       return;
       break;
@@ -915,7 +915,7 @@ void TPerson::doEdit(const char *arg)
 
       if (!tStString.empty()) {
         delete [] roomp->name;
-        sendTo(fmt("New Room Title: %s\n\r") % tStString);
+        sendTo(format("New Room Title: %s\n\r") % tStString);
         roomp->name = mud_str_dup(tStString);
 
         return;
@@ -931,7 +931,7 @@ void TPerson::doEdit(const char *arg)
         roomp->setRiverSpeed(rspeed);
         roomp->setRiverDir(mapFileToDir(rdir));
       } else
-        sendTo(fmt("Direction must be between %d and %d.\n\r") % MIN_DIR % (MAX_DIR-1));
+        sendTo(format("Direction must be between %d and %d.\n\r") % MIN_DIR % (MAX_DIR-1));
       return;
       break;
     case 11: // Sector_Type
@@ -942,7 +942,7 @@ void TPerson::doEdit(const char *arg)
           if (!*TerrainInfo[j]->name)
             continue;
 
-          sendTo(fmt("%-2d %-26s%s") % (j+1) % TerrainInfo[j]->name %
+          sendTo(format("%-2d %-26s%s") % (j+1) % TerrainInfo[j]->name %
                  ((j % 3) == 2 ? "\n\r" : ""));
         }
         if (((j-1) % 3) != 2)
@@ -1193,7 +1193,7 @@ void TPerson::doEdit(const char *arg)
               (*sstring ? "_2" : ""));
 
       if (!(tFile = fopen(tString, "r"))) {
-        sendTo(fmt("You don't have a %srooms file.\n\r") %
+        sendTo(format("You don't have a %srooms file.\n\r") %
                (*sstring ? "2nd " : ""));
       } else {
         tStr = "Room List:\n\r";
@@ -1388,7 +1388,7 @@ void TPerson::doEdit(const char *arg)
     *(desc->str) = mud_str_dup(sstring);
     sendTo("Ok.\n\r");
   } else {			// there was no sstring. enter sstring mode 
-    sendTo(fmt("Enter sstring.  Terminate with '~' on %s.\n\r") %
+    sendTo(format("Enter sstring.  Terminate with '~' on %s.\n\r") %
            ((field == 1 || field == 2) ? "NEW LINE" : "SAME LINE"));
     *desc->str = 0;
     desc->max_str = room_length[field - 1];
@@ -1523,7 +1523,7 @@ static void ChangeMaxCap(TRoom *rp, TBeing *ch, const char *arg, editorEnterType
     return;
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt("Current room maximum capacity: %d") % rp->getMoblim());
+  ch->sendTo(format("Current room maximum capacity: %d") % rp->getMoblim());
   ch->sendTo("\n\r\n\rNew maximum capacity: ");
   return;
 }
@@ -1552,7 +1552,7 @@ static void ChangeRoomHeight(TRoom *rp, TBeing *ch, const char *arg, editorEnter
     return;
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt("Current room height: %d\n\r\n\r") % rp->getRoomHeight());
+  ch->sendTo(format("Current room height: %d\n\r\n\r") % rp->getRoomHeight());
   ch->sendTo("A value of -1 implies an unlimited height.\n\r");
   ch->sendTo("Unlimited heights are for outdoor rooms ONLY.\n\r");
   ch->sendTo("\n\r\n\rNew Room Height: ");
@@ -1609,9 +1609,9 @@ static void ChangeRoomFlags(TRoom *rp, TBeing *ch, const char *arg, editorEnterT
     if (j & 1)
       row++;
     ch->sendTo(buf);
-    ch->sendTo(fmt("%-2d [%s] %s") % (j + 1) % ((rp->getRoomFlags() & (1 << j)) ? "X" : " ") % room_bits[j]);
+    ch->sendTo(format("%-2d [%s] %s") % (j + 1) % ((rp->getRoomFlags() & (1 << j)) ? "X" : " ") % room_bits[j]);
   }
-  ch->sendTo(fmt(VT_CURSPOS) % 20 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 20 % 1);
   // could have just made the saveroom flag an invalid option but someday someone will
   // need it unset so i added a warning about keeping the flag set
   ch->sendTo("Make sure the SAVE ROOM flag is set unless you KNOW you don't need it set.\n\r");
@@ -1682,7 +1682,7 @@ static void ChangeRoomName(TRoom *rp, TBeing *ch, const char *arg, editorEnterTy
   }
   ch->sendTo(VT_HOMECLR);
 
-  ch->sendTo(fmt("Current Room Name: %s") % rp->name);
+  ch->sendTo(format("Current Room Name: %s") % rp->name);
   ch->sendTo("\n\r\n\rNew Room Name: ");
 
   return;
@@ -1745,13 +1745,13 @@ static void ChangeRoomType(TRoom *rp, TBeing *ch, const char *arg, editorEnterTy
 	}
       case CHANGE_ROOM_TYPE2:
 	rp->setRiverSpeed(update + 1);
-	ch->sendTo(fmt("\n\rRiver Direction (%d - %d): ") % MIN_DIR % (MAX_DIR-1));
+	ch->sendTo(format("\n\rRiver Direction (%d - %d): ") % MIN_DIR % (MAX_DIR-1));
 	ch->specials.edit = CHANGE_ROOM_TYPE3;
 	return;
       case CHANGE_ROOM_TYPE3:
 	update++;
 	if (update < MIN_DIR || update >= MAX_DIR) {
-	  ch->sendTo(fmt("Direction must be between %d and %d.\n\r") % MIN_DIR % (MAX_DIR-1));
+	  ch->sendTo(format("Direction must be between %d and %d.\n\r") % MIN_DIR % (MAX_DIR-1));
 	  return;
 	}
 	rp->setRiverDir(dirTypeT(update));
@@ -1763,7 +1763,7 @@ static void ChangeRoomType(TRoom *rp, TBeing *ch, const char *arg, editorEnterTy
     }
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt("Sector Type: %s") % TerrainInfo[rp->getSectorType()]->name);
+  ch->sendTo(format("Sector Type: %s") % TerrainInfo[rp->getSectorType()]->name);
 
   row = 0;
   sectorTypeT i;
@@ -1774,9 +1774,9 @@ static void ChangeRoomType(TRoom *rp, TBeing *ch, const char *arg, editorEnterTy
     if ((i%3) == 2)
       row++;
     ch->sendTo(buf);
-    ch->sendTo(fmt("%-2d %s") % (i+1) % TerrainInfo[i]->name);
+    ch->sendTo(format("%-2d %s") % (i+1) % TerrainInfo[i]->name);
   }
-  ch->sendTo(fmt(VT_CURSPOS) % 23 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 23 % 1);
   ch->sendTo("Select the number to set to, <C/R> to return to main menu.\n\r--> ");
 }
 
@@ -1830,7 +1830,7 @@ static void finishRoom(TRoom *rp, TBeing *ch, dirTypeT dir)
       newrp->dir_option[new_dir]->key = rp->dir_option[dir]->key;
       newrp->dir_option[new_dir]->keyword = mud_str_dup(rp->dir_option[dir]->keyword);
     } else {
-      ch->sendTo(fmt("And exits into incorrect room [%d].\n\r") % newrp->dir_option[new_dir]->to_room);
+      ch->sendTo(format("And exits into incorrect room [%d].\n\r") % newrp->dir_option[new_dir]->to_room);
     }
   } else {
     ch->sendTo("Making new exit back into this room.\n\r");
@@ -1932,11 +1932,11 @@ static void ChangeExitSlopedStatus(TRoom *rp, TBeing *ch, const char *arg, edito
 
   ch->sendTo(VT_HOMECLR);
   ch->sendTo("Sloped Status:\n\r");
-  ch->sendTo(fmt("\n\r9  [%c] Sloped Up") %
+  ch->sendTo(format("\n\r9  [%c] Sloped Up") %
              (IS_SET(rp->dir_option[dir]->condition, EX_SLOPED_UP) ? 'X' : ' '));
-  ch->sendTo(fmt("\n\r10 [%c] Sloped Down") %
+  ch->sendTo(format("\n\r10 [%c] Sloped Down") %
              (IS_SET(rp->dir_option[dir]->condition, EX_SLOPED_DOWN) ? 'X' : ' '));
-  ch->sendTo(fmt(VT_CURSPOS) % 20 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 20 % 1);
   ch->sendTo("Select the number to toggle, <C/R> to return to continue.\n\r--> ");
 }
 
@@ -2188,7 +2188,7 @@ static void ChangeExitWeight(TRoom *rp, TBeing *ch, const char *arg, editorEnter
       return;
     }
   }
-  ch->sendTo(fmt("\n\r\n\rEnter the weight you wish the %s to have.\n\r") %
+  ch->sendTo(format("\n\r\n\rEnter the weight you wish the %s to have.\n\r") %
     ((rp->dir_option[dir]->keyword) ? fname(rp->dir_option[dir]->keyword) :
       "BOGUS DOOR KEYWORD"));
   ch->sendTo("\n\rNew Weight: ");
@@ -2290,7 +2290,7 @@ static void ChangeExitKeyword(TRoom *rp, TBeing *ch, const char *arg, editorEnte
     return;
   }
   if (rp->dir_option[dir]->keyword) {
-    ch->sendTo(fmt("Former Keywords: %s\n\r") % rp->dir_option[dir]->keyword);
+    ch->sendTo(format("Former Keywords: %s\n\r") % rp->dir_option[dir]->keyword);
     ch->sendTo("    You will need to retype the Former Keyword if you want to keep it.\n\r");
   }
   ch->sendTo("New Keywords: ");
@@ -2448,11 +2448,11 @@ static void ChangeExitCondition(TRoom *rp, TBeing *ch, const char *arg, editorEn
     if (j & 1)
       row++;
     ch->sendTo(buf);
-    ch->sendTo(fmt("%-2d [%s] %s") % (j + 1) % (((rp->dir_option[dir]->condition & (1 << j)) ? "X" : " ")) %
+    ch->sendTo(format("%-2d [%s] %s") % (j + 1) % (((rp->dir_option[dir]->condition & (1 << j)) ? "X" : " ")) %
 	  exit_bits[j]);
   }
 
-  ch->sendTo(fmt(VT_CURSPOS) % 20 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 20 % 1);
   ch->sendTo("Select the number to toggle, <C/R> to return to continue.\n\r--> ");
 }
 
@@ -2597,7 +2597,7 @@ static void ChangeExitType(TRoom *rp, TBeing *ch, const char *arg, editorEnterTy
   }
 
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt("Door Type: %s") % door_types[rp->dir_option[dir]->door_type]);
+  ch->sendTo(format("Door Type: %s") % door_types[rp->dir_option[dir]->door_type]);
 
   row = 0;
   for (i = 0; i < MAX_DOOR_TYPES; i++) {
@@ -2605,9 +2605,9 @@ static void ChangeExitType(TRoom *rp, TBeing *ch, const char *arg, editorEnterTy
     if ((i%3) == 2)
       row++;
     ch->sendTo(buf);
-    ch->sendTo(fmt("%-2d %s") % (i+1) % door_types[i]);
+    ch->sendTo(format("%-2d %s") % (i+1) % door_types[i]);
   }
-  ch->sendTo(fmt(VT_CURSPOS) % 23 % 1);
+  ch->sendTo(format(VT_CURSPOS) % 23 % 1);
   ch->sendTo("Select the door type.\n\r--> ");
 }
 
@@ -2732,7 +2732,7 @@ static void ChangeExitDir(TRoom *rp, TBeing *ch, const char *arg, editorEnterTyp
       ch->sendTo("\n\rMaking new exit.");
       rp->dir_option[update] = new roomDirData();
     } else {
-      ch->sendTo(fmt("\n\rModifying exit.  Current exit to room %i.") % 
+      ch->sendTo(format("\n\rModifying exit.  Current exit to room %i.") % 
 		 rp->dir_option[update]->to_room);
     }
     ch->sendTo("\n\r\n\rExit to Room: ");
@@ -2778,10 +2778,10 @@ static void ChangeExitDir(TRoom *rp, TBeing *ch, const char *arg, editorEnterTyp
     return;
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(fmt("Room Name: %s") % rp->name);
-  ch->sendTo(fmt(VT_CURSPOS) % 1 % 40);
-  ch->sendTo(fmt("Room Number: %d") % rp->number);
-  ch->sendTo(fmt(VT_CURSPOS) % 4 % 1);
+  ch->sendTo(format("Room Name: %s") % rp->name);
+  ch->sendTo(format(VT_CURSPOS) % 1 % 40);
+  ch->sendTo(format("Room Number: %d") % rp->number);
+  ch->sendTo(format(VT_CURSPOS) % 4 % 1);
   ch->sendTo(exit_menu);
   ch->sendTo("--> ");
   return;
@@ -2830,7 +2830,7 @@ static void DeleteExit(TRoom *rp, TBeing *ch, const char *arg, editorEnterTypeT 
 
   for (tExit = MIN_DIR; tExit < MAX_DIR; tExit++)
     if ((tData = rp->exitDir(tExit)) && tData->to_room != ROOM_NOWHERE) {
-      ch->sendTo(fmt("  %2d) %-9s     ") % (tExit + 1) % dirs[tExit]);
+      ch->sendTo(format("  %2d) %-9s     ") % (tExit + 1) % dirs[tExit]);
 
       if ((tExit % 2))
         ch->sendTo("\n\r");
@@ -2884,7 +2884,7 @@ static void change_room_extra(TRoom *rp, TBeing *ch, const char *arg, editorEnte
 	ch->sendTo("Enter the description. Terminate with a '~' on a NEW LINE.\n\r");
 	break;
       } else if (!strcasecmp(ed->keyword, arg)) {
-        ch->sendTo(fmt("Current description:\n\r%s\n\r") % ed->description);
+        ch->sendTo(format("Current description:\n\r%s\n\r") % ed->description);
         ch->sendTo("This description has been deleted.  If you needed to modify it, simply readd it.\n\r");
         ch->sendTo("Press return to proceed.\n\r");
         if (prev == ed) {
@@ -2902,7 +2902,7 @@ static void change_room_extra(TRoom *rp, TBeing *ch, const char *arg, editorEnte
   }
   ch->sendTo("Existing keywords:\n\r");
   for ( ed = rp->ex_description;ed ; ed = ed->next) {
-    ch->sendTo(fmt("%s\n\r") % ed->keyword);
+    ch->sendTo(format("%s\n\r") % ed->keyword);
   }
   ch->sendTo("\n\rEnter the keyword for the extra description.\n\r--> ");
   ch->specials.edit = CHANGE_ROOM_ROOM_EXDESC;
@@ -3086,7 +3086,7 @@ void RoomLoad(TBeing *ch, int start, int end, int useSecond)
 	for (z = 0; rp2->number>zone_table[z].top && z<zone_table.size(); z++);
 	
 	if (z >= zone_table.size()) {
-	  vlogf(LOG_EDIT, fmt("Room %d is outside of any zone.\n") % rp2->number);
+	  vlogf(LOG_EDIT, format("Room %d is outside of any zone.\n") % rp2->number);
 	  exit(0);
 	}
 	rp2->setZoneNum(z);
@@ -3114,11 +3114,11 @@ void RoomLoad(TBeing *ch, int start, int end, int useSecond)
 	new_descr = new extraDescription();
 	new_descr->keyword = mud_str_dup(db_extras["name"]);
 	if (!new_descr->keyword || !*new_descr->keyword)
-	  vlogf(LOG_EDIT, fmt("No keyword in room %d\n") %  rp2->number);
+	  vlogf(LOG_EDIT, format("No keyword in room %d\n") %  rp2->number);
 
 	new_descr->description = mud_str_dup(db_extras["description"]);
 	if (!new_descr->description || !*new_descr->description)
-	  vlogf(LOG_LOW, fmt("No desc in room %d\n") %  rp2->number);
+	  vlogf(LOG_LOW, format("No desc in room %d\n") %  rp2->number);
 
 	new_descr->next = rp2->ex_description;
 	rp2->ex_description = new_descr;
@@ -3148,17 +3148,17 @@ void RoomLoad(TBeing *ch, int start, int end, int useSecond)
 
 	tmp=convertTo<int>(db_exits["type"]);
 	if (tmp < 0 || tmp >= MAX_DOOR_TYPES) {
-	  vlogf(LOG_LOW,fmt("bogus door type (%d) in room (%d) dir %d.") % 
+	  vlogf(LOG_LOW,format("bogus door type (%d) in room (%d) dir %d.") % 
 		tmp % rp2->number % dir);
 	  return;
 	}
 	rp2->dir_option[dir]->door_type = doorTypeT(tmp);
 	if ((tmp == DOOR_NONE) && (rp2->dir_option[dir]->keyword)){
 	  if (strcmp(rp2->dir_option[dir]->keyword, "_unique_door_"))
-	    vlogf(LOG_LOW,fmt("non-door with name in room %d") % rp2->number);
+	    vlogf(LOG_LOW,format("non-door with name in room %d") % rp2->number);
 	}
 	if ((tmp != DOOR_NONE) && !(rp2->dir_option[dir]->keyword)){
-	  vlogf(LOG_LOW,fmt("door with no name in room %d") % rp2->number);
+	  vlogf(LOG_LOW,format("door with no name in room %d") % rp2->number);
 	}
 
 	rp2->dir_option[dir]->condition = convertTo<int>(db_exits["condition_flag"]);
@@ -3171,9 +3171,9 @@ void RoomLoad(TBeing *ch, int start, int end, int useSecond)
 	if (IS_SET(rp2->dir_option[dir]->condition, EX_SECRET) && 
 	    canSeeThruDoor(rp2->dir_option[dir])) {
 	  if (IS_SET(rp2->dir_option[dir]->condition, EX_CLOSED)){
-	    //vlogf(LOG_LOW, fmt("See thru door set secret. (%d, %d)") %  room % dir);
+	    //vlogf(LOG_LOW, format("See thru door set secret. (%d, %d)") %  room % dir);
 	  } else
-	    vlogf(LOG_LOW, fmt("Secret door saved as open. (%d, %d)") % 
+	    vlogf(LOG_LOW, format("Secret door saved as open. (%d, %d)") % 
 		  rp2->number % dir);
 	}
 	if(!db_exits.fetchRow())
@@ -3182,7 +3182,7 @@ void RoomLoad(TBeing *ch, int start, int end, int useSecond)
       
       rp2->initLight();
     } else {
-      ch->sendTo(fmt("Room %d found, but not in load range!  Skipping.\n\r") % vnum);
+      ch->sendTo(format("Room %d found, but not in load range!  Skipping.\n\r") % vnum);
 
     }
   }
@@ -3207,7 +3207,7 @@ void CreateOneRoom(int loc_nr)
     for (z = 0; rp->number > zone_table[z].top && z < zone_table.size(); z++);
 
     if (z >= zone_table.size()) {
-      vlogf(LOG_EDIT, fmt("Room %d is outside of any zone.\n") %  rp->number);
+      vlogf(LOG_EDIT, format("Room %d is outside of any zone.\n") %  rp->number);
       z--;
     }
     rp->setZoneNum(z);
@@ -3258,7 +3258,7 @@ void TRoom::loadOne(FILE *fl, bool tinyfile)
     for (z = 0; number > zone_table[z].top && z < zone_table.size(); z++);
 
     if (z >= zone_table.size()) {
-      vlogf(LOG_EDIT, fmt("Room %d is outside of any zone.\n") %  number);
+      vlogf(LOG_EDIT, format("Room %d is outside of any zone.\n") %  number);
       exit(0);
     }
     zone = &zone_table[z];
@@ -3310,11 +3310,11 @@ void TRoom::loadOne(FILE *fl, bool tinyfile)
         new_descr = new extraDescription();
         new_descr->keyword = fread_string(fl);
         if (!new_descr->keyword || !*new_descr->keyword)
-          vlogf(LOG_EDIT, fmt("No keyword in room %d\n") %  number);
+          vlogf(LOG_EDIT, format("No keyword in room %d\n") %  number);
 
         new_descr->description = fread_string(fl);
         if (!new_descr->description || !*new_descr->description)
-          vlogf(LOG_LOW, fmt("No desc in room %d\n") %  number);
+          vlogf(LOG_LOW, format("No desc in room %d\n") %  number);
 
         new_descr->next = ex_description;
         ex_description = new_descr;
@@ -3324,7 +3324,7 @@ void TRoom::loadOne(FILE *fl, bool tinyfile)
         roomCount++;
         return;
       default:
-        vlogf(LOG_EDIT, fmt("Unknown auxiliary code `%s' in room load of #%d") %  chk % number);
+        vlogf(LOG_EDIT, format("Unknown auxiliary code `%s' in room load of #%d") %  chk % number);
         break;
     }
   }
@@ -3351,7 +3351,7 @@ void TRoom::initLight()
         found = TRUE;
     }
     if (!found) {
-      vlogf(LOG_EDIT, fmt("Room (%s:%d) missing expected window.  Resetting.") %  name % number);
+      vlogf(LOG_EDIT, format("Room (%s:%d) missing expected window.  Resetting.") %  name % number);
       setHasWindow(FALSE);
     }
     setLight(best);
@@ -3430,7 +3430,7 @@ sstring TRoom::describeGroundType() const
 
 sstring TRoom::describeGround() const
 {
-  return fmt("%s%s%s") % describeGroundWeather() % 
+  return format("%s%s%s") % describeGroundWeather() % 
     (describeGroundWeather().empty()?"":" ") % describeGroundType();
 }
 
@@ -3684,7 +3684,7 @@ void room_edit(TBeing *ch, const char *arg)
       ChangeExitSlopedStatus(rp, ch, arg, ENTER_REENTRANT);
       return;
     default:
-      vlogf(LOG_EDIT, fmt("Got to bad spot in room_edit (Error: %d)") % ch->specials.edit);
+      vlogf(LOG_EDIT, format("Got to bad spot in room_edit (Error: %d)") % ch->specials.edit);
       return;
   }
 }

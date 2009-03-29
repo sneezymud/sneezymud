@@ -106,7 +106,7 @@ int sleepTagControl(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoo
             TObj *tStaff = read_object(SLEEPTAG_STAFF, VIRTUAL);
 
             if (!tNRoom || !tRoom) {
-              vlogf(LOG_PROC, fmt("Serious problems in Sleeptag.  [0: %d/%d]") %  !tNRoom % !tStaff);
+              vlogf(LOG_PROC, format("Serious problems in Sleeptag.  [0: %d/%d]") %  !tNRoom % !tStaff);
               return FALSE;
             }
 
@@ -243,7 +243,7 @@ int sleepTagRoom(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoom)
                 *tRP += *tPerson;
                 tPerson->affectFrom(SPELL_SLUMBER);
               } else
-                vlogf(LOG_PROC, fmt("Unable to load room %d for sleeptag move!") %  SLEEPTAG_CONTROL_ROOM);
+                vlogf(LOG_PROC, format("Unable to load room %d for sleeptag move!") %  SLEEPTAG_CONTROL_ROOM);
 
             sleepTagReport(tRoom->getZoneNum(), "%s has lost this game...", tPerson->getName());
           } else {

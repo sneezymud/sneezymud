@@ -286,7 +286,7 @@ itemTypeT mapFileToItemType(int num)
     case 75:
       return ITEM_MONEYPOUCH;
   }
-  vlogf(LOG_BUG, fmt("Unknown type %d in map file") %  num);
+  vlogf(LOG_BUG, format("Unknown type %d in map file") %  num);
   return ITEM_UNDEFINED;
 }
 
@@ -448,7 +448,7 @@ int mapItemTypeToFile(itemTypeT itt)
     case MAX_OBJ_TYPES:
       break;
   }
-  vlogf(LOG_BUG, fmt("Unknown type %d in map item") %  itt);
+  vlogf(LOG_BUG, format("Unknown type %d in map item") %  itt);
   return 0;
 }
 
@@ -462,14 +462,14 @@ void TObj::lowCheck()
   int i;
 
   if (!getVolume() && canWear(ITEM_TAKE))
-    vlogf(LOG_LOW,fmt("item (%s:%d) had 0 volume.") % getName() % objVnum());
+    vlogf(LOG_LOW,format("item (%s:%d) had 0 volume.") % getName() % objVnum());
 
   // not sure logically, but would a canWear(ITEM_TAKE) check be appropriate here?
   // allow APPLY_LIGHT on untakeable things?
   // ^ yes... Maror 08/04
   for (i=0; i<MAX_OBJ_AFFECT;i++) {
     if (affected[i].location == APPLY_LIGHT && canWear(ITEM_TAKE)) {
-      vlogf(LOG_LOW,fmt("item %s was defined apply-light.") % getName());
+      vlogf(LOG_LOW,format("item %s was defined apply-light.") % getName());
     }
   }
 }
@@ -487,7 +487,7 @@ bool TObj::lowCheckSlots(silentTypeT silent)
     if (IS_SET(value, (unsigned) (1<<ui)))
       if (value != (unsigned) (1<<ui)) {
         if (!silent)
-          vlogf(LOG_LOW, fmt("item (%s) with multiple wear slots: %s") % 
+          vlogf(LOG_LOW, format("item (%s) with multiple wear slots: %s") % 
                getName() % wear_bits[ui]);
         return true;
       }
@@ -516,10 +516,10 @@ void TObj::addGlowEffects()
       affected[i].modifier = (1 + getVolume()/6000);
       addToLight(affected[i].modifier);
       if (affected[i].modifier > 5 && canWear(ITEM_TAKE))
-        vlogf(LOG_LOW,fmt("Mega light on %s") % getName());
+        vlogf(LOG_LOW,format("Mega light on %s") % getName());
       break;
     } else if (i==(MAX_OBJ_AFFECT-1))
-      vlogf(LOG_LOW,fmt("obj %s has too many affects to set glow on it.") % 
+      vlogf(LOG_LOW,format("obj %s has too many affects to set glow on it.") % 
              getName());
   }
 }

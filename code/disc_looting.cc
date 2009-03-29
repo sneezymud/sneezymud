@@ -102,7 +102,7 @@ int detectSecret(TBeing * thief)
         continue;
 
       if (thief->bSuccess(bKnown,SKILL_SEARCH)) {
-	thief->sendTo(fmt("Secret door found %s! Door is named %s.\n\r") %
+	thief->sendTo(format("Secret door found %s! Door is named %s.\n\r") %
 	      dirs[j] % (fdd->keyword ? fname(fdd->keyword) : "NO NAME. TELL A GOD"));
 	sprintf(buf, "$n exclaims, \"Look %s! A SECRET door named %s!\"\n\r", dirs[j], 
                        (fdd->keyword ? fname(fdd->keyword).c_str() : "NO NAME. TELL A GOD"));
@@ -157,7 +157,7 @@ int TBeing::disarmTrap(const char *arg, TObj *tp)
     return FALSE;
   } else {
     // needed for "disarm elite weapon"
-    sendTo(fmt("You can't find \"%s\" here.\n\r") % arg);
+    sendTo(format("You can't find \"%s\" here.\n\r") % arg);
     return FALSE;
   }
 
@@ -184,7 +184,7 @@ int TTrap::disarmMe(TBeing *thief)
   strcpy(trap_type, trap_types[getTrapDamType()].c_str());
 
   if (thief->bSuccess(bKnown, SKILL_DISARM_TRAP)) {
-    thief->sendTo(fmt("Click.  You disarm the %s trap.\n\r") % trap_type);
+    thief->sendTo(format("Click.  You disarm the %s trap.\n\r") % trap_type);
     act("$n disarms $p.", FALSE, thief, this, 0, TO_ROOM);
     setTrapCharges(0);
     return TRUE;
@@ -221,7 +221,7 @@ int disarmTrapDoor(TBeing * thief, dirTypeT door)
   strcpy(doorbuf, fname(exitp->keyword).c_str());
 
   if (!IS_SET(exitp->condition, EX_TRAPPED)) {
-    thief->sendTo(fmt("I don't think the %s is trapped.\n\r") % doorbuf);
+    thief->sendTo(format("I don't think the %s is trapped.\n\r") % doorbuf);
     return FALSE;
   }
 
@@ -231,7 +231,7 @@ int disarmTrapDoor(TBeing * thief, dirTypeT door)
   learnedness = min((int) MAX_SKILL_LEARNEDNESS, 2*bKnown);
 
   if (thief->bSuccess(learnedness, SKILL_DISARM_TRAP)) {
-    thief->sendTo(fmt("Click.  You disarm the %s trap in the %s.\n\r") % trap_type % doorbuf);
+    thief->sendTo(format("Click.  You disarm the %s trap in the %s.\n\r") % trap_type % doorbuf);
     sprintf(buf, "$n disarms the %s trap in the %s.", trap_type, doorbuf);
     act(buf, FALSE, thief, 0, 0, TO_ROOM);
     REMOVE_BIT(exitp->condition, EX_TRAPPED);

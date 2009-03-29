@@ -105,7 +105,7 @@ void TScheduler::run(int pulse)
       
       if(toggleInfo[TOG_GAMELOOP]->toggle){
 	timer.end();
-	vlogf(LOG_MISC, fmt("%i %i) %s: %i") % 
+	vlogf(LOG_MISC, format("%i %i) %s: %i") % 
 	      (pulse % 2400) % (pulse%12) % (*iter)->name % 
 	      (int)(timer.getElapsed()*1000000));
       }
@@ -122,5 +122,5 @@ procSeedRandom::procSeedRandom(const int &p)
 void procSeedRandom::run(int) const
 {
   srand(time(0));
-  vlogf(LOG_SILENT, fmt("procSeedRandom: Generated new seed."));
+  vlogf(LOG_SILENT, "procSeedRandom: Generated new seed.");
 }

@@ -84,7 +84,7 @@ cmdTypeT searchForCommandNum(const sstring &argument)
 
 void TBeing::incorrectCommand() const
 {
-  sendTo(fmt("%sIncorrect%s command. Please see help files if you need assistance!\n\r") % red() % norm());
+  sendTo(format("%sIncorrect%s command. Please see help files if you need assistance!\n\r") % red() % norm());
 }
 
 bool willBreakHide(cmdTypeT tCmd, bool isPre)
@@ -253,7 +253,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
   if (hasClass(CLASS_SHAMAN)) {
     if (isPc()) {
       if (-10 > getHit()) {
-  vlogf(LOG_MISC, fmt("Half-tick force updated for %s (Shaman).") %  getName());
+  vlogf(LOG_MISC, format("Half-tick force updated for %s (Shaman).") %  getName());
   sendTo("The loa are disappointed in your state of life.\n\r");
   updateHalfTickStuff();
   doSave(SILENT_YES);
@@ -312,12 +312,12 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
       TPerson * tPerson = dynamic_cast<TPerson *>(ch);
 
       if (ch == this) {
-  vlogf(LOG_SILENT, fmt("%s (%i):%s %s") %  name % in_room % commandArray[cmd]->name % newarg);
+  vlogf(LOG_SILENT, format("%s (%i):%s %s") %  name % in_room % commandArray[cmd]->name % newarg);
 
   if (tPerson)
     tPerson->logf("%s:%s %s", name, commandArray[cmd]->name, newarg.c_str());
       } else {
-  vlogf(LOG_SILENT, fmt("%s (%s) (%i):%s %s") %  name % desc->original->name % 
+  vlogf(LOG_SILENT, format("%s (%s) (%i):%s %s") %  name % desc->original->name % 
         in_room % commandArray[cmd]->name % newarg);
 
   if (tPerson)
@@ -325,11 +325,11 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
       commandArray[cmd]->name, newarg.c_str());
       }
     } else if (ch->isPc() && ch->isPlayerAction(PLR_LOGGED))
-      vlogf(LOG_SILENT, fmt("%s %s%s") %  name % commandArray[cmd]->name % newarg);
+      vlogf(LOG_SILENT, format("%s %s%s") %  name % commandArray[cmd]->name % newarg);
     else if (numberLogHosts && desc) {
       for (int a = 0; a < numberLogHosts; a++) {
         if (desc->host.lower() == sstring(hostLogList[a]).lower())
-    vlogf(LOG_SILENT, fmt("%s %s%s") %  name % commandArray[cmd]->name % newarg);
+    vlogf(LOG_SILENT, format("%s %s%s") %  name % commandArray[cmd]->name % newarg);
       }
     }
 
@@ -1866,7 +1866,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
       case CMD_MOB_COMBAT2:
       case CMD_MOB_COMBAT_ONATTACK:
       case CMD_MOB_COMBAT_ONATTACKED:
-        sendTo(fmt("doCommand:incorrectCommand: [%d]\n\r") % cmd);
+        sendTo(format("doCommand:incorrectCommand: [%d]\n\r") % cmd);
   incorrectCommand();
   return FALSE;
     }
@@ -1931,7 +1931,7 @@ int TBeing::parseCommand(const sstring &orig_arg, bool typedIn)
 
     if (i < 16) {
       if (!arg2.empty())
-  aliasbuf=fmt("%s %s") % desc->alias[i].command % arg2;
+  aliasbuf=format("%s %s") % desc->alias[i].command % arg2;
       else
         aliasbuf=desc->alias[i].command;
 
@@ -2336,7 +2336,7 @@ int TBeing::triggerSpecial(TThing *ch, cmdTypeT cmd, const char *arg)
     rc = roomp->checkSpec(this, cmd, arg, NULL);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       // delete room?
-      vlogf(LOG_BUG, fmt("checkSpec indicated delete room (%d)") %  in_room);
+      vlogf(LOG_BUG, format("checkSpec indicated delete room (%d)") %  in_room);
     }
     if (IS_SET_ONLY(rc, DELETE_VICT))
       return DELETE_THIS;
@@ -3356,7 +3356,7 @@ char *mud_str_copy(char *dest, const sstring &src, size_t n)
 
   if(src.length() > n){
     dest[n-1]='\0';
-    vlogf(LOG_BUG, fmt("mud_str_copy: source sstring too long.  Truncated to: %s") %  dest);
+    vlogf(LOG_BUG, format("mud_str_copy: source sstring too long.  Truncated to: %s") %  dest);
   }
 
   return dest;

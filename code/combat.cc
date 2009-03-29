@@ -197,14 +197,14 @@ void TBeing::goBerserk(TBeing *cur)
   if (!isCombatMode(ATTACK_BERSERK))
     return;
   if (fight()) {
-    vlogf(LOG_COMBAT, fmt("Whoa, %s was fighting when it tried to goBerserk") % getName());
+    vlogf(LOG_COMBAT, format("Whoa, %s was fighting when it tried to goBerserk") % getName());
     return;
   }
   if (getPosition() <= POSITION_SLEEPING)
     return;
 
   if (checkPeaceful("")) {
-    vlogf(LOG_COMBAT, fmt("Hmmm, %s was berserking in a peaceful room.") % getName());
+    vlogf(LOG_COMBAT, format("Hmmm, %s was berserking in a peaceful room.") % getName());
     setCombatMode(ATTACK_NORMAL);
     return;
   }
@@ -381,7 +381,7 @@ void TBeing::updatePos()
     setPosition(newPos);
     doSave(SILENT_YES);
   } else {
-    vlogf(LOG_COMBAT, fmt("Bad position in update position for %s") %  getName());
+    vlogf(LOG_COMBAT, format("Bad position in update position for %s") %  getName());
     setPosition(POSITION_STUNNED);
   }
 #else
@@ -544,15 +544,15 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost)
   preKillCheck();
 
   if (isShopkeeper() && number >= 0) {
-    vlogf(LOG_COMBAT, fmt("Shopkeeper [%s] was just killed.  Find out how!") %  getName());
+    vlogf(LOG_COMBAT, format("Shopkeeper [%s] was just killed.  Find out how!") %  getName());
 
     unsigned int shop_nr;
     for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != number); shop_nr++);
 
     if (shop_nr >= shop_index.size()) 
-      vlogf(LOG_MISC, fmt("Warning... shop # for mobile %d (real nr) not found.") % mob_index[number].virt);
+      vlogf(LOG_MISC, format("Warning... shop # for mobile %d (real nr) not found.") % mob_index[number].virt);
     else {
-      vlogf(LOG_COMBAT, fmt("Deleting shopkeeper file for shop #%d.") %  shop_nr);
+      vlogf(LOG_COMBAT, format("Deleting shopkeeper file for shop #%d.") %  shop_nr);
       // REVIEW: should we destroy this shop's database data at all?  money, objects, etc
     }
   }
@@ -610,15 +610,15 @@ int TBeing::die(spellNumT dam_type, TBeing *tKiller)
     if (isPc() && !rp->isRoomFlag(ROOM_ARENA) && !skip_death) {
       int val_num = ::number(0,3);
       if (GetMaxLevel() <= 10) val_num = 0;
-      vlogf(LOG_COMBAT,fmt("%s died and lost %.2f exp (age +%d).  Before death: %.2f exp and %d talens.") % 
+      vlogf(LOG_COMBAT,format("%s died and lost %.2f exp (age +%d).  Before death: %.2f exp and %d talens.") % 
                getName() % deathExp() % val_num % getExp() %getMoney());
-      //      vlogf(LOG_COMBAT,fmt("Average skill loss: %f") %  deathSkillLoss());
+      //      vlogf(LOG_COMBAT,format("Average skill loss: %f") %  deathSkillLoss());
       age_mod += val_num;
       gain_exp(this, -deathExp(), -1);
       exp_lost=deathExp();
     }
   } else {
-    vlogf(LOG_COMBAT, fmt("Death called with ch (%s) in ROOM_NOWHERE!") %  getName());
+    vlogf(LOG_COMBAT, format("Death called with ch (%s) in ROOM_NOWHERE!") %  getName());
     gain_exp(this, -deathExp(), -1);
     exp_lost=deathExp();
   }
@@ -677,7 +677,7 @@ bool TBeing::checkCut(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThing *w
   else
     sharp = sharpness[wtype];
 
-//  vlogf(LOG_COMBAT, fmt("tear: susc: %d, sharp: %d, struct: %d, dam: %d") %  material_nums[item->getMaterial()].cut_susc % sharp % item->getStructPoints() % dam);
+//  vlogf(LOG_COMBAT, format("tear: susc: %d, sharp: %d, struct: %d, dam: %d") %  material_nums[item->getMaterial()].cut_susc % sharp % item->getStructPoints() % dam);
   if (item->willTear(sharp)) {
 //  vlogf(LOG_COMBAT, "torn");
     int chance = item->getStructPoints() / dam;
@@ -694,7 +694,7 @@ bool TBeing::checkCut(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThing *w
         if (weapon)
 	  buf3=objn(weapon);
 
-        buf=fmt("Your %s$o%s $q %scut%s by $N's %s!") % 
+        buf=format("Your %s$o%s $q %scut%s by $N's %s!") % 
 	  blue() % norm() % purple() % norm() %
 	  (weapon ? buf3.c_str() : ch->getMyRace()->getBodyLimbSlash());
         act(buf, FALSE, this, item, ch, TO_CHAR);
@@ -705,7 +705,7 @@ bool TBeing::checkCut(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThing *w
             continue;
 
 	  buf="$n's $o $q cut by ";
-	  sbuf=fmt("%s%s ") % (temp != ch ? temp->pers(ch) : "your") %
+	  sbuf=format("%s%s ") % (temp != ch ? temp->pers(ch) : "your") %
 	    (temp != ch ? "'s" : "");
 	  buf+=sbuf;
 	  buf +=(weapon ? temp->objn(weapon) :
@@ -750,7 +750,7 @@ bool TBeing::checkSmashed(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
   else
     sharp = sharpness[wtype];
 
-//    vlogf(LOG_COMBAT, fmt("dent: susc: %d, sharp: %d, struct: %d, dam: %d") %  material_nums[item->getMaterial()].smash_susc % sharp % item->getStructPoints() % dam);
+//    vlogf(LOG_COMBAT, format("dent: susc: %d, sharp: %d, struct: %d, dam: %d") %  material_nums[item->getMaterial()].smash_susc % sharp % item->getStructPoints() % dam);
   if (item->willDent(sharp)) {
 //  vlogf(LOG_COMBAT, "dented");
     int chance = item->getStructPoints() / dam;
@@ -766,7 +766,7 @@ bool TBeing::checkSmashed(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
       } else {
         if (weapon)
           buf3=fname(weapon->name);
-        buf = fmt("Your %s$o%s $q %ssmashed%s by $N's %s!") %
+        buf = format("Your %s$o%s $q %ssmashed%s by $N's %s!") %
 	  blue() % norm() % purple() % norm() %
 	  (altPart ? altPart : (weapon ? buf3 :  ch->getMyRace()->getBodyLimbBlunt()));
         act(buf, FALSE, this, item, ch, TO_CHAR);
@@ -777,7 +777,7 @@ bool TBeing::checkSmashed(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
             continue;
 
           buf = "$n's $o $q smashed by ";
-          sbuf = fmt("%s%s ") %
+          sbuf = format("%s%s ") %
 	    (temp != ch ? temp->pers(ch) : "your") %
 	    (temp != ch ? "'s" : "");
 	  buf += sbuf;
@@ -828,7 +828,7 @@ bool TBeing::checkPierced(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
   else
     sharp = sharpness[wtype];
 
-//  vlogf(LOG_COMBAT, fmt("pierce: susc: %d, sharp: %d, struct: %d, dam: %d") %  material_nums[item->getMaterial()].pierced_susc % sharp % item->getStructPoints() % dam);
+//  vlogf(LOG_COMBAT, format("pierce: susc: %d, sharp: %d, struct: %d, dam: %d") %  material_nums[item->getMaterial()].pierced_susc % sharp % item->getStructPoints() % dam);
   if (item->willPuncture(sharp)) {
 //  vlogf(LOG_COMBAT, "puncted");
     int chance = item->getStructPoints() / dam;
@@ -844,7 +844,7 @@ bool TBeing::checkPierced(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
       } else {
         if (weapon)
           buf3=fname(weapon->name);
-        buf = fmt("Your %s$o%s $q %spierced%s by $N's %s!") %
+        buf = format("Your %s$o%s $q %spierced%s by $N's %s!") %
 	  blue() % norm() % purple() % norm() %
 	  (weapon ? buf3 : ch->getMyRace()->getBodyLimbPierce(ch));
         act(buf, TRUE, this, item, ch, TO_CHAR);
@@ -855,7 +855,7 @@ bool TBeing::checkPierced(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
             continue;
 
           buf="$n's $o $q pierced by ";
-          sbuf = fmt("%s%s ") %
+          sbuf = format("%s%s ") %
 	    (temp != ch ? temp->pers(ch) : "your") %
 	    (temp != ch ? "'s" : "");
 	  buf+=sbuf;
@@ -993,7 +993,7 @@ int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
                !v->isLucky(levelLuckModifier(min((int) GetMaxLevel(), v->GetMaxLevel() + 10)))) {
       wound_duration = max(120, (*dam) * (isPc() ? 10 : 20));
       v->rawBleed(part_hit, wound_duration, SILENT_NO, CHECK_IMMUNITY_YES);
-      // vlogf(LOG_COMBAT, fmt("Cut in combat for %d: %s (%d) by %s (%d)") % wound_duration % v->getName() % v->GetMaxLevel() % getName() % GetMaxLevel());
+      // vlogf(LOG_COMBAT, format("Cut in combat for %d: %s (%d) by %s (%d)") % wound_duration % v->getName() % v->GetMaxLevel() % getName() % GetMaxLevel());
     }
     if(!v->isLimbFlags(part_hit, PART_BRUISED) 
 	   && !::number(0, ((v->isLimbFlags(part_hit, PART_LEPROSED) || v->hasDisease(DISEASE_SCURVY)) ? 3 : 6) ) 
@@ -1001,7 +1001,7 @@ int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
        !v->isLucky(levelLuckModifier(min((int) GetMaxLevel(), v->GetMaxLevel() + 10)))){
       wound_duration = max(240, (*dam) * (isPc() ? 20 : 40));
       v->rawBruise(part_hit, wound_duration, SILENT_NO, CHECK_IMMUNITY_YES);
-      // vlogf(LOG_COMBAT, fmt("Bruised in combat for %d: %s (%d) by %s (%d)") % wound_duration % v->getName() % v->GetMaxLevel() % getName() % GetMaxLevel());
+      // vlogf(LOG_COMBAT, format("Bruised in combat for %d: %s (%d) by %s (%d)") % wound_duration % v->getName() % v->GetMaxLevel() % getName() % GetMaxLevel());
     }
 /*
     } else if (::number(0, 400) < (sharp / 2) && 
@@ -1053,13 +1053,13 @@ int TBeing::damageHand(TBeing *v, wearSlotT part_hit)
   if (::number(1, 100) < hardness) {
     if (!::number(0, getCurLimbHealth(getPrimaryHold()))) {
       if (affectedBySpell(AFFECT_TRANSFORMED_HANDS))
-        sendTo(COLOR_MOBS, fmt("You damage your claw on %s's %s.\n\r") % pers(v) % 
+        sendTo(COLOR_MOBS, format("You damage your claw on %s's %s.\n\r") % pers(v) % 
               (item ? fname(item->name) : (v->isHumanoid() ? "body" : "hide")));
       else if (affectedBySpell(AFFECT_TRANSFORMED_ARMS))
-        sendTo(COLOR_MOBS, fmt("You damage your wing on %s's %s.\n\r") % pers(v) %
+        sendTo(COLOR_MOBS, format("You damage your wing on %s's %s.\n\r") % pers(v) %
               (item ? fname(item->name) : (v->isHumanoid() ? "body" : "hide")));
       else
-        sendTo(COLOR_MOBS, fmt("You damage your hand on %s's %s.\n\r") % pers(v) %
+        sendTo(COLOR_MOBS, format("You damage your hand on %s's %s.\n\r") % pers(v) %
               (item ? fname(item->name) : (v->isHumanoid() ? "body" : "hide")));
       return TRUE;
     }
@@ -1070,7 +1070,7 @@ int TBeing::damageHand(TBeing *v, wearSlotT part_hit)
 int TObj::damageItem(sh_int amt)
 {
   if(amt < 0){
-    vlogf(LOG_BUG, fmt("%s::damageItem(%i) got passed a negative number!") %
+    vlogf(LOG_BUG, format("%s::damageItem(%i) got passed a negative number!") %
 	  getName() % amt);
     amt=-amt;
   }
@@ -1096,7 +1096,7 @@ bool scrapMonogrammed(TObj *o)
     act("$p falls to the $g.", TRUE, ch, o, NULL, TO_ROOM);
     act("Your $o falls to the $g.", FALSE, ch, o, NULL, TO_CHAR, ANSI_RED);
 
-    vlogf(LOG_COMBAT, fmt("%s's (monogrammed) %s just scrapped.") %
+    vlogf(LOG_COMBAT, format("%s's (monogrammed) %s just scrapped.") %
 	  ch->getName() % o->getName());
   } else {
     if ((o->parent && (tmp = o->parent->equippedBy)) || (tmp = o->parent))  {
@@ -1111,7 +1111,7 @@ bool scrapMonogrammed(TObj *o)
     } else if (o->roomp) {
       act("$n is destroyed.", TRUE, o, NULL, NULL, TO_ROOM);
     } else 
-      vlogf(LOG_COMBAT, fmt("Something in scrapMonogrammed isn't in a room %s.") %  o->getName());
+      vlogf(LOG_COMBAT, format("Something in scrapMonogrammed isn't in a room %s.") %  o->getName());
   }
 
   TBeing *chb;
@@ -1193,7 +1193,7 @@ bool TObj::makeScraps()
         if (ch->roomp)
           *ch->roomp += *x;
         else
-          vlogf(LOG_COMBAT,fmt("EquippedBy without a roomp %s") %  ch->getName());
+          vlogf(LOG_COMBAT,format("EquippedBy without a roomp %s") %  ch->getName());
       }
     }
   }
@@ -1224,7 +1224,7 @@ bool TObj::makeScraps()
     act(buf2, FALSE, ch, this, NULL, TO_CHAR, ANSI_RED);
 
     if (owner)
-      vlogf(LOG_COMBAT, fmt("%s's %s just scrapped.") % owner->getName() % getName());
+      vlogf(LOG_COMBAT, format("%s's %s just scrapped.") % owner->getName() % getName());
   } else {
     if ((parent && (tmp = parent->equippedBy)) || (tmp = parent))  {
       if (isMineral()) {
@@ -1235,7 +1235,7 @@ bool TObj::makeScraps()
         sprintf(buf2, "Your $o is destroyed.");
       }
       if (owner)
-        vlogf(LOG_COMBAT, fmt("%s's %s just scrapped.") % owner->getName() % getName());
+        vlogf(LOG_COMBAT, format("%s's %s just scrapped.") % owner->getName() % getName());
       while (tmp) {
         if (tmp->roomp) {
           act(buf2, TRUE, tmp, this, NULL, TO_CHAR, ANSI_RED);
@@ -1251,9 +1251,9 @@ bool TObj::makeScraps()
         sprintf(buf, "$n is destroyed.");
       act(buf, TRUE, this, NULL, NULL, TO_ROOM);
       if (owner)
-        vlogf(LOG_COMBAT, fmt("%s's %s just scrapped.") % owner->getName() % getName());
+        vlogf(LOG_COMBAT, format("%s's %s just scrapped.") % owner->getName() % getName());
     } else 
-      vlogf(LOG_COMBAT, fmt("Something in make scraps isnt in a room %s.") %  getName());
+      vlogf(LOG_COMBAT, format("Something in make scraps isnt in a room %s.") %  getName());
   }
   
   o = new TTrash();
@@ -1327,7 +1327,7 @@ static void absorb_damage(TBeing *v, wearSlotT part_hit, int *dam)
   stats.ac_absorb[v->isPc() ? PC_STAT : MOB_STAT] += abs;
 
 #if DEBUG
-  vlogf(LOG_COMBAT, fmt("Debug : Damage went from %d to %d with armor absorption!") %  *dam % (*dam - abs));
+  vlogf(LOG_COMBAT, format("Debug : Damage went from %d to %d with armor absorption!") %  *dam % (*dam - abs));
 #endif
   *dam -= abs;
 }
@@ -1410,7 +1410,7 @@ void TBeing::setFighting(TThing *vict, int dam, bool inFight)
     return;
 
   if (fight()) {
-    vlogf(LOG_COMBAT, fmt("Fighting character (%s) set to fighting another. (%s)") % 
+    vlogf(LOG_COMBAT, format("Fighting character (%s) set to fighting another. (%s)") % 
        getName() % tbv->getName());
     return;
   }
@@ -1520,7 +1520,7 @@ void TBeing::checkForQuestTog(TBeing *vict)
       vict->affectTo(&af, -1);
       vict->doTell(getName(), "You have acted honorably in attacking me.");
       vict->doTell(getName(), "Let this fight be to the death!");
-//      vlogf(LOG_COMBAT, fmt("Setting quest bit for %d on %s vs %s") %  bitnum % vict->getName() % getName());
+//      vlogf(LOG_COMBAT, format("Setting quest bit for %d on %s vs %s") %  bitnum % vict->getName() % getName());
       // some specials stun the critter so it doesn't start fighting.
       // we need to set them fighting so that if char stuns and flees
       // it acknowledges as a no good attack.
@@ -1574,7 +1574,7 @@ void TBeing::sendCheatMessage(char *cheater)
       doTell(nameBuf, "An honorable ranger would allow me to heal completely before attacking again.");
       break;
     default:
-      vlogf(LOG_COMBAT, fmt("Somehow got to getCheatMessage without a valid toggle bit %s.") %  getName());
+      vlogf(LOG_COMBAT, format("Somehow got to getCheatMessage without a valid toggle bit %s.") %  getName());
       break;
   }
 }
@@ -1590,8 +1590,8 @@ void TBeing::stopFighting()
 
   if (!fight()) {
     REMOVE_BIT(specials.affectedBy, AFF_ENGAGER);
-    //vlogf(LOG_COMBAT, fmt("Character (%s) not fighting at invocation of stopFighting") %  getName());
-    vlogf(LOG_BUG, fmt("Character (%s) not fighting at invocation of stopFighting") %  getName());
+    //vlogf(LOG_COMBAT, format("Character (%s) not fighting at invocation of stopFighting") %  getName());
+    vlogf(LOG_BUG, format("Character (%s) not fighting at invocation of stopFighting") %  getName());
     if (desc && (cantHit > 0)) {
       sendTo("You finish orienting yourself.\n\r");
       cantHit = 0;
@@ -1605,7 +1605,7 @@ void TBeing::stopFighting()
   }
   // Clear out client fight and tank condition fields
   if (desc && (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT))) 
-    desc->clientf(fmt("%d|%s|%s|%s|%s") % CLIENT_FIGHT % "" % "" % "" % "");
+    desc->clientf(format("%d|%s|%s|%s|%s") % CLIENT_FIGHT % "" % "" % "" % "");
 
   // see explanation at declaration for details on this
   if (gCombatNext == this)
@@ -1620,7 +1620,7 @@ void TBeing::stopFighting()
       // combat stopped for some other reason
       // ie, mob fled, got paralyzed, teleported, etc.
       if (awake()) {
-        vlogf(LOG_COMBAT, fmt("Removing Solo Combat Affect from: %s") %  getName());
+        vlogf(LOG_COMBAT, format("Removing Solo Combat Affect from: %s") %  getName());
         sprintf(nameBuf, "%s", fname(af->be->name).c_str());
         sendCheatMessage(nameBuf);
         affectRemove(af);
@@ -1636,7 +1636,7 @@ void TBeing::stopFighting()
     fight()->attackers--;
 
   if(fight()->attackers < 0){
-    vlogf(LOG_COMBAT, fmt("too few people attacking. %d") %  fight()->attackers);
+    vlogf(LOG_COMBAT, format("too few people attacking. %d") %  fight()->attackers);
     fight()->attackers = 0;
   }
 
@@ -1799,7 +1799,7 @@ static int getMonkWeaponDam(const TBeing *ch, const TBeing *v, primaryTypeT ispr
   dam = (int) (dam * stats.damage_modifier);
 
 #if DAMAGE_DEBUG
-  vlogf(LOG_COMBAT, fmt("MONK %s (%d %s) barehand dam = %d , wep = %d roll = %d, stats = %.2f") %  ch->getName() % ch->GetMaxLevel() % ch->getProfName() % dam % wepDam % rollDam % statDam);
+  vlogf(LOG_COMBAT, format("MONK %s (%d %s) barehand dam = %d , wep = %d roll = %d, stats = %.2f") %  ch->getName() % ch->GetMaxLevel() % ch->getProfName() % dam % wepDam % rollDam % statDam);
 #endif
 
   return (dam);
@@ -1968,7 +1968,7 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
     dam = max(1, dam);
 
 #if DAMAGE_DEBUG
-    vlogf(LOG_COMBAT, fmt("PLAYER %s (%d %s) %s dam = %d , wep = %d bon = %d roll = %d, stats = %.2f skill = %d") %  getName() % GetMaxLevel() % getProfName() % buf % dam % wepDam % bonusDam % rollDam % statDam % wepLearn);
+    vlogf(LOG_COMBAT, format("PLAYER %s (%d %s) %s dam = %d , wep = %d bon = %d roll = %d, stats = %.2f skill = %d") %  getName() % GetMaxLevel() % getProfName() % buf % dam % wepDam % bonusDam % rollDam % statDam % wepLearn);
 #endif
 
   } else {
@@ -1980,7 +1980,7 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
     wepDam = max(wepDam, 1);
     dam = wepDam + bonusDam + rollDam;
 #if DAMAGE_DEBUG
-    vlogf(LOG_COMBAT, fmt("MOB %s (%d %s) dam = %d , wep = %d bon = %d roll = %d.") %  getName() % GetMaxLevel() % getProfName() % dam % wepDam % bonusDam % rollDam);
+    vlogf(LOG_COMBAT, format("MOB %s (%d %s) dam = %d , wep = %d bon = %d roll = %d.") %  getName() % GetMaxLevel() % getProfName() % dam % wepDam % bonusDam % rollDam);
 #endif
 
   }
@@ -2228,7 +2228,7 @@ int TBeing::hit(TBeing *target, int pulse)
 
   int myLevel = GetMaxLevel();
   if ((desc || target->desc) && isImmortal())
-    vlogf(LOG_COMBAT, fmt("hitter = %s (level %d) targ = %s (level = %d) mod = %d, offense = %d, defense = %d") %  getName() % myLevel % target->getName() % tarLevel % mod % offense % defense);
+    vlogf(LOG_COMBAT, format("hitter = %s (level %d) targ = %s (level = %d) mod = %d, offense = %d, defense = %d") %  getName() % myLevel % target->getName() % tarLevel % mod % offense % defense);
 #endif
 
   o = heldInPrimHand();
@@ -2817,7 +2817,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
           strcpy(namebuf, other->pers(this));
           strcpy(victbuf, other->pers(v));
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
-            other->sendTo(COLOR_MOBS,fmt("%s tries to bite %s, but misses.\n\r") % sstring(namebuf).cap() % victbuf);
+            other->sendTo(COLOR_MOBS,format("%s tries to bite %s, but misses.\n\r") % sstring(namebuf).cap() % victbuf);
 
         }
         break;
@@ -2839,7 +2839,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
       strcpy(namebuf, other->pers(this));
       strcpy(victbuf, other->pers(v));
       if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
-	other->sendTo(COLOR_MOBS,fmt("%s tries to shoot %s, but misses.\n\r") % sstring(namebuf).cap() % victbuf);
+	other->sendTo(COLOR_MOBS,format("%s tries to shoot %s, but misses.\n\r") % sstring(namebuf).cap() % victbuf);
     }
   } else if (pierceType(wtype)) {
     num = ::number(1,10);
@@ -2866,7 +2866,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
 //          sprintf(victbuf, colorString(((TBeing *) t), ((TBeing *) t)->desc, (other->pers(v)), NULL, COLOR_MOBS, TRUE));
 
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
-            other->sendTo(COLOR_MOBS, fmt("%s thrusts at %s, but misses.\n\r") % sstring(namebuf).cap() %
+            other->sendTo(COLOR_MOBS, format("%s thrusts at %s, but misses.\n\r") % sstring(namebuf).cap() %
                  victbuf);
         }
         break;
@@ -2888,7 +2888,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
 //          sprintf(namebuf, colorString(((TBeing *) t), ((TBeing *) t)->desc, (other->pers(this)), NULL, COLOR_MOBS, TRUE));
 //          sprintf(victbuf, colorString(((TBeing *) t), ((TBeing *) t)->desc, (other->pers(v)), NULL, COLOR_MOBS, TRUE));
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
-            other->sendTo(COLOR_MOBS, fmt("%s stabs wildly, but misses %s.\n\r") % sstring(namebuf).cap() %
+            other->sendTo(COLOR_MOBS, format("%s stabs wildly, but misses %s.\n\r") % sstring(namebuf).cap() %
                  victbuf);
         }
         break;
@@ -2916,7 +2916,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
 //          sprintf(victbuf, colorString(((TBeing *) t), ((TBeing *) t)->desc, (other->pers(v)), NULL, COLOR_MOBS, TRUE));
 
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
-            other->sendTo(COLOR_MOBS, fmt("%s hits %s, but fails to penetrate %s thick %s.\n\r") % sstring(namebuf).cap() % victbuf % v->hshr() % 
+            other->sendTo(COLOR_MOBS, format("%s hits %s, but fails to penetrate %s thick %s.\n\r") % sstring(namebuf).cap() % victbuf % v->hshr() % 
                     (v->isHumanoid() ? "armor" : "hide"));
         }
         break;
@@ -2955,7 +2955,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
 //          sprintf(victbuf, colorString(((TBeing *) t), ((TBeing *) t)->desc, (other->pers(v)), NULL, COLOR_MOBS, TRUE));
 
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
-            other->sendTo(COLOR_MOBS, fmt("%s misses %s.\n\r") % sstring(namebuf).cap() %
+            other->sendTo(COLOR_MOBS, format("%s misses %s.\n\r") % sstring(namebuf).cap() %
                  victbuf);
         }
         break;
@@ -2986,7 +2986,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
 //          sprintf(victbuf, colorString(((TBeing *) t), ((TBeing *) t)->desc, (other->pers(v)), NULL, COLOR_MOBS, TRUE));
 
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
-            other->sendTo(COLOR_MOBS, fmt("%s swings wildly, but misses %s.\n\r") % sstring(namebuf).cap() %
+            other->sendTo(COLOR_MOBS, format("%s swings wildly, but misses %s.\n\r") % sstring(namebuf).cap() %
                  victbuf);
         }
         break;
@@ -3014,7 +3014,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
 //          sprintf(victbuf, colorString(((TBeing *) t), ((TBeing *) t)->desc, (other->pers(v)), NULL, COLOR_MOBS, TRUE));
 
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
-            other->sendTo(COLOR_MOBS, fmt("%s hits %s, but fails to penetrate %s thick %s.\n\r") %
+            other->sendTo(COLOR_MOBS, format("%s hits %s, but fails to penetrate %s thick %s.\n\r") %
                     sstring(namebuf).cap() % victbuf % v->hshr() %
                     (v->isHumanoid() ? "armor" : "hide"));
         }
@@ -3054,7 +3054,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
 //          sprintf(victbuf, colorString(((TBeing *) t), ((TBeing *) t)->desc, (other->pers(v)), NULL, COLOR_MOBS, TRUE));
 
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
-            other->sendTo(COLOR_MOBS, fmt("%s misses %s.\n\r") % sstring(namebuf).cap() %
+            other->sendTo(COLOR_MOBS, format("%s misses %s.\n\r") % sstring(namebuf).cap() %
                  victbuf);
         }
         break;
@@ -3391,7 +3391,7 @@ int TBeing::checkShield(TBeing *v, TThing *weapon, wearSlotT part_hit, spellNumT
     sprintf(namebuf, other->pers(this));
     sstring equipBuf = colorString(other, other->desc, shield->getName(), NULL, COLOR_OBJECTS, TRUE);
     if (!other->desc || !(other->desc->autobits & AUTO_NOSPAM))
-      other->sendTo(COLOR_MOBS, fmt("%s parries %s's blow with %s.\n\r") %
+      other->sendTo(COLOR_MOBS, format("%s parries %s's blow with %s.\n\r") %
 		    sstring(other->pers(v)).cap() %
 		    namebuf % equipBuf); 
   }
@@ -3459,28 +3459,28 @@ bool TBeing::canAttack(primaryTypeT isprimary)
   if (!canUseArm(isprimary)) {
     if (isprimary) {
       if (!canUseLimb(getPrimaryArm())) {
-        sendTo(fmt("%sYou didn't hit here because your arm is damaged.%s\n\r") %            purple() % norm());
+        sendTo(format("%sYou didn't hit here because your arm is damaged.%s\n\r") %            purple() % norm());
       } else if (!canUseLimb(getPrimaryWrist())) {
-        sendTo(fmt("%sYour injured wrist makes it impossible to hit here.%s\n\r") %            purple() % norm());
+        sendTo(format("%sYour injured wrist makes it impossible to hit here.%s\n\r") %            purple() % norm());
       } else if (!canUseLimb(getPrimaryHand()) ||
                  !canUseLimb(getPrimaryHold())) {
-        sendTo(fmt("%sYou didn't hit here because your hand is damaged.%s\n\r") %            purple() % norm());
+        sendTo(format("%sYou didn't hit here because your hand is damaged.%s\n\r") %            purple() % norm());
       } else if (!canUseLimb(getPrimaryFinger())) {
-        sendTo(fmt("%sYour injured finger makes it impossible to hit here.%s\n\r") %            purple() % norm());
+        sendTo(format("%sYour injured finger makes it impossible to hit here.%s\n\r") %            purple() % norm());
       } else {
         // we checked all the cases right?
         vlogf(LOG_COMBAT, "WTF is wrong in hit check");
       }
     } else {
       if (!canUseLimb(getSecondaryArm())) {
-        sendTo(fmt("%sYou didn't hit here because your arm is damaged.%s\n\r") %            purple() % norm());
+        sendTo(format("%sYou didn't hit here because your arm is damaged.%s\n\r") %            purple() % norm());
       } else if (!canUseLimb(getSecondaryWrist())) {
-        sendTo(fmt("%sYour injured wrist makes it impossible to hit here.%s\n\r") %            purple() % norm());
+        sendTo(format("%sYour injured wrist makes it impossible to hit here.%s\n\r") %            purple() % norm());
       } else if (!canUseLimb(getSecondaryHand()) ||
                  !canUseLimb(getSecondaryHold())) {
-        sendTo(fmt("%sYou didn't hit here because your hand is damaged.%s\n\r") %            purple() % norm());
+        sendTo(format("%sYou didn't hit here because your hand is damaged.%s\n\r") %            purple() % norm());
       } else if (!canUseLimb(getSecondaryFinger())) {
-        sendTo(fmt("%sYour injured finger makes it impossible to hit here.%s\n\r") %            purple() % norm());
+        sendTo(format("%sYour injured finger makes it impossible to hit here.%s\n\r") %            purple() % norm());
       } else {
         // we checked all the cases right?
         vlogf(LOG_COMBAT, "WTF is wrong in hit check");
@@ -3582,7 +3582,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
       // potentially they have gone linkdead or something
       // lets check for the obvious cheat
       if (vict->desc->connected == CON_WRITING) {
-        vlogf(LOG_COMBAT, fmt("%s using editing trick to prevent combat with %s at room %d") % 
+        vlogf(LOG_COMBAT, format("%s using editing trick to prevent combat with %s at room %d") % 
               vict->getName() % getName() % vict->in_room);
  
         // grab their stuff if they were REALLY cheating
@@ -3879,7 +3879,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
     if (!vict->isImmortal())
       dam = max(dam, 1);
 #if 0
-    vlogf(LOG_COMBAT, fmt("DAMAGE %d (%s) After getActualDamage and absorb.") %  dam % getName());  
+    vlogf(LOG_COMBAT, format("DAMAGE %d (%s) After getActualDamage and absorb.") %  dam % getName());  
 #endif
 
     if (!IS_SET_DELETE(mess_sent, ONEHIT_MESS_CRIT_S) &&
@@ -4131,7 +4131,7 @@ int TBeing::numValidSlots()
       count++;
   }
   if (!count) {
-    vlogf(LOG_COMBAT, fmt("ch->numValidSlots returned 0 for %s. Setting to 1.") %  getName());
+    vlogf(LOG_COMBAT, format("ch->numValidSlots returned 0 for %s. Setting to 1.") %  getName());
     count = 1;
   }
   return (count);
@@ -4197,7 +4197,7 @@ bool TBeing::canFight(TBeing *target)
   TThing *t;
 
   if (roomp && roomp->isRoomFlag(ROOM_PEACEFUL)) {
-    vlogf(LOG_COMBAT, fmt("hit() called in PEACEFUL room.  %s hitting %s") %  getName() % target->getName());
+    vlogf(LOG_COMBAT, format("hit() called in PEACEFUL room.  %s hitting %s") %  getName() % target->getName());
     stopFighting();
     return FALSE;
   }
@@ -4205,7 +4205,7 @@ bool TBeing::canFight(TBeing *target)
     return FALSE;
 
   if (!sameRoom(*target)) {
-    vlogf(LOG_COMBAT, fmt("NOT in same room when fighting : %s, %s") %  name % target->name);
+    vlogf(LOG_COMBAT, format("NOT in same room when fighting : %s, %s") %  name % target->name);
     if (fight())
       stopFighting();
     return FALSE;
@@ -4307,7 +4307,7 @@ bool TBeing::damDetailsOk(const TBeing *vict, int dam, bool ranged) const
 int TBeing::setCharFighting(TBeing *vict, int dam)
 {
   if (!vict) {
-    vlogf(LOG_BUG, fmt("No victim in call to setCharFighting! (%s)") %  getName());
+    vlogf(LOG_BUG, format("No victim in call to setCharFighting! (%s)") %  getName());
     sendTo("Something bad happened, tell a god what you did!\n\r");
     return -1;
   }
@@ -4375,7 +4375,7 @@ void fleeFlush(TBeing *ch)
     commText *s;
     while ((s = ch->desc->input.getBegin())) {
       if (strcmp("flee", s->getText())) {
-        ch->sendTo(fmt("Flushing input command: '%s'\n\r") % 
+        ch->sendTo(format("Flushing input command: '%s'\n\r") % 
              s->getText());
         ch->desc->input.setBegin(s->getNext());
         delete s;
@@ -4451,7 +4451,7 @@ int TBeing::tellStatus(int dam, bool same, bool flying)
   } else {
     max_hit = hitLimit();
     if (dam > (max_hit / 5))
-      sendTo(fmt("That really did %sHURT%s!\n\r") % red() % norm());
+      sendTo(format("That really did %sHURT%s!\n\r") % red() % norm());
 
     // self-preservation check for charms and pets
     if (!same && isPet(PETTYPE_CHARM | PETTYPE_PET)) {
@@ -4467,7 +4467,7 @@ int TBeing::tellStatus(int dam, bool same, bool flying)
       return TRUE;
     }
     if (dam && (getHit() < (hitLimit() / 6))) 
-      sendTo(fmt("You wish that your wounds would stop %sHURTING%s so much!!\n\r") % red() % norm());
+      sendTo(format("You wish that your wounds would stop %sHURTING%s so much!!\n\r") % red() % norm());
     
     if (getHit() < (hitLimit() / 10)) {
       if (dynamic_cast<TMonster *>(this) && !same && (specials.act & ACT_WIMPY) && (dam > 0)) {
@@ -4553,7 +4553,7 @@ void TBeing::catchLostLink(TBeing *vict)
   *buf = '\0';
 
   act("$n is rescued by divine forces.", TRUE, vict, 0, 0, TO_ROOM);
-  vlogf(LOG_COMBAT, fmt("%s lost link while fighting %s (%d)") %  vict->getName() % getName() % in_room);
+  vlogf(LOG_COMBAT, format("%s lost link while fighting %s (%d)") %  vict->getName() % getName() % in_room);
 
   vict->specials.was_in_room = vict->in_room;
   if (vict->in_room != ROOM_NOWHERE)
@@ -4563,7 +4563,7 @@ void TBeing::catchLostLink(TBeing *vict)
 
   if (((vict->getHit() < (vict->hitLimit() / 2)) ||
      vict->isCombatMode(ATTACK_BERSERK)) && (vict->GetMaxLevel() <= MAX_MORT)) {
-    vlogf(LOG_COMBAT, fmt("Creating link-loss bag for %s") %  vict->getName());
+    vlogf(LOG_COMBAT, format("Creating link-loss bag for %s") %  vict->getName());
     ct = time(0);
     tmstr = asctime(localtime(&ct));
     *(tmstr + strlen(tmstr) - 1) = '\0';
@@ -4850,9 +4850,9 @@ int TBeing::objDamage(spellNumT damtype, int amnt, TThing *t)
   if (getPosition() == POSITION_DEAD) {
     if ((dynamic_cast<TPerson *>(this) || (desc && desc->original)) && roomp && roomp->name) {
       if (desc && desc->original && desc->original != this) {
-        vlogf(LOG_COMBAT, fmt("%s killed by %s at %s (polyed as a %s)") %  desc->original->getName() % (t ? t->getName() : "a door") % roomp->getName() % getName());
+        vlogf(LOG_COMBAT, format("%s killed by %s at %s (polyed as a %s)") %  desc->original->getName() % (t ? t->getName() : "a door") % roomp->getName() % getName());
       } else {
-        vlogf(LOG_COMBAT, fmt("%s killed by %s at %s") %  getName() % 
+        vlogf(LOG_COMBAT, format("%s killed by %s at %s") %  getName() % 
             (t ? t->getName() : "a door") % roomp->getName());
       }
       if (desc) 
@@ -4886,7 +4886,7 @@ void perform_violence(int pulse)
     for (ch = gCombatList; ch; ch = gCombatNext) {
       gCombatNext = ch->next_fighting;
       if (!(vict = ch->fight())) {
-        vlogf(LOG_COMBAT, fmt("%s is not fighting in perform_violence!  *BUG BRUTIUS*") %  ch->getName());
+        vlogf(LOG_COMBAT, format("%s is not fighting in perform_violence!  *BUG BRUTIUS*") %  ch->getName());
         continue;
       }
       if (!ch->roomp || ch == vict) {
@@ -4927,7 +4927,7 @@ void TBeing::doAttack(const char *argument)
   one_argument(argument, arg, cElements(arg));
 
   if (!*arg || is_abbrev(arg, "?")) {
-    sendTo(fmt("You are in %s%s%s attack mode.\n\r") %
+    sendTo(format("You are in %s%s%s attack mode.\n\r") %
         cyan() % attack_modes[getCombatMode()] % norm());
     return;
   }
@@ -4949,12 +4949,12 @@ void TBeing::doAttack(const char *argument)
     return;
   }
   if (isCombatMode(new_combat)) {
-    sendTo(fmt("You are already in attack mode: %s.\n\r") % attack_modes[getCombatMode()]);
+    sendTo(format("You are already in attack mode: %s.\n\r") % attack_modes[getCombatMode()]);
     return;
   }
   setCombatMode(new_combat);
 
-  sendTo(fmt("Switching attack mode to %s.\n\r") % attack_modes[getCombatMode()]);
+  sendTo(format("Switching attack mode to %s.\n\r") % attack_modes[getCombatMode()]);
   return;
 }
 
@@ -5048,7 +5048,7 @@ void TBeing::gainExpPerHit(TBeing *v, double percent, int dam)
   gain_exp(v, -exp_received, -1 );
 
   if(EXP_DEBUG)
-    vlogf(LOG_COMBAT, fmt("gainExpPerHit: removed %f exp from %s (hitter: %s)") %
+    vlogf(LOG_COMBAT, format("gainExpPerHit: removed %f exp from %s (hitter: %s)") %
 	  exp_received % v->getName() % getName());
 
   // throw this exp away - it cannot be handed out due to the restrict XP affect
@@ -5105,9 +5105,9 @@ void TBeing::gainExpPerHit(TBeing *v, double percent, int dam)
   }
 
   if(EXP_DEBUG){
-    vlogf(LOG_COMBAT, fmt("gainExpPerHit: exp_shares=%f, tmp_exp=%f") %
+    vlogf(LOG_COMBAT, format("gainExpPerHit: exp_shares=%f, tmp_exp=%f") %
 	  exp_shares % tmp_exp);
-    vlogf(LOG_COMBAT, fmt("gainExpPerHit: percent=%.15f, tmp_perc=%.15f") %
+    vlogf(LOG_COMBAT, format("gainExpPerHit: percent=%.15f, tmp_perc=%.15f") %
 	  percent % tmp_perc);
   }
     
@@ -5117,7 +5117,7 @@ void TBeing::gainExpPerHit(TBeing *v, double percent, int dam)
     exp_received *= (FRACT(real_master, v) / 100.0);
     gain_exp(real_master, exp_received, dam*10000/v->hitLimit());
     if(EXP_DEBUG){
-      vlogf(LOG_COMBAT, fmt("gainExpPerHit: master %s gained %f exp") %
+      vlogf(LOG_COMBAT, format("gainExpPerHit: master %s gained %f exp") %
 	    real_master->getName() % exp_received);
     }
   }
@@ -5128,7 +5128,7 @@ void TBeing::gainExpPerHit(TBeing *v, double percent, int dam)
       exp_received *= (FRACT(f->follower, v) / 100.0);
       gain_exp(f->follower, exp_received, dam*10000/v->hitLimit());
       if(EXP_DEBUG)
-	vlogf(LOG_COMBAT, fmt("gainExpPerHit: follower %s gained %f exp") %
+	vlogf(LOG_COMBAT, format("gainExpPerHit: follower %s gained %f exp") %
 	      f->follower->getName() % exp_received);
     }
   }
@@ -5164,7 +5164,7 @@ int TBeing::setDistracted(int amt, int flags)
   if (!spelltask)
     return FALSE;
   if (amt < 0) {
-    vlogf(LOG_COMBAT, fmt("something set a negative number to distract made 0 %s") %  getName());
+    vlogf(LOG_COMBAT, format("something set a negative number to distract made 0 %s") %  getName());
     amt = 0;
   }
   if (!flags) {
@@ -5212,7 +5212,7 @@ void TThing::remCastingList(TThing *obj)
     tmp_ch = ch->next_caster;
 
     if (!ch->spelltask) {
-//      vlogf(LOG_COMBAT, fmt("Somehow, %s object was being cast on by someone (%s) who had no spelltask.") %  obj->getName() % ch->getName());
+//      vlogf(LOG_COMBAT, format("Somehow, %s object was being cast on by someone (%s) who had no spelltask.") %  obj->getName() % ch->getName());
       continue;
     }
 
@@ -5237,11 +5237,11 @@ void TBeing::remCastingList(TThing *v)
   for (ch = v->getCaster(); ch; ch = tmp_ch) {
     tmp_ch = ch->next_caster;
     if (!ch->spelltask) { 
-      vlogf(LOG_COMBAT, fmt("Somehow, %s was being cast on by someone (%s) who had no spelltask.") %  v->getName() % ch->getName()); 
+      vlogf(LOG_COMBAT, format("Somehow, %s was being cast on by someone (%s) who had no spelltask.") %  v->getName() % ch->getName()); 
       continue;
     }
     if (!ch->spelltask->victim) { 
-      vlogf(LOG_COMBAT, fmt("Somehow, %s was being cast on by someone (%s) who had no casting target.") %  v->getName() % ch->getName()); 
+      vlogf(LOG_COMBAT, format("Somehow, %s was being cast on by someone (%s) who had no casting target.") %  v->getName() % ch->getName()); 
     }
     ch->spelltask->victim = NULL;
     ch->next_caster = NULL;
@@ -5298,10 +5298,10 @@ int TBeing::dislodgeWeapon(TBeing *v, TThing *weapon, wearSlotT part)
   if (weapon && !v->getStuckIn(part)) {
     sstring nameBuf = colorString(this, desc, pers(v), NULL, COLOR_MOBS, TRUE);
 
-    sendTo(COLOR_OBJECTS, fmt("Your %s, still stuck in %s's %s, is %storn from your grasp%s.\n\r") %
+    sendTo(COLOR_OBJECTS, format("Your %s, still stuck in %s's %s, is %storn from your grasp%s.\n\r") %
        objn(weapon) % nameBuf % 
        v->describeBodySlot(part) %red() %norm());
-    v->sendTo(COLOR_OBJECTS, fmt("%s%s leaves %s %s stuck in your %s%s.\n\r") %
+    v->sendTo(COLOR_OBJECTS, format("%s%s leaves %s %s stuck in your %s%s.\n\r") %
        v->orange() % sstring(getName()).cap() % hshr() %
        objn(weapon) %v->describeBodySlot(part) % v->norm());
 
@@ -5319,13 +5319,13 @@ void TBeing::makePartMissing(wearSlotT slot, bool diseased, TBeing *opp)
   TThing *t;
 
   if (!hasPart(slot)) {
-    vlogf(LOG_COMBAT, fmt("BOGUS SLOT trying to be made PART_MISSING: %d on %s") % 
+    vlogf(LOG_COMBAT, format("BOGUS SLOT trying to be made PART_MISSING: %d on %s") % 
          slot % getName());
     return;
   }
   if (!roomp) {
     // bat 8-16-96, mob could be dead, this is a bug 
-    vlogf(LOG_COMBAT, fmt("!roomp for target (%s) of makePartMissing().") %  getName());
+    vlogf(LOG_COMBAT, format("!roomp for target (%s) of makePartMissing().") %  getName());
     return;
   }
   if (!diseased)
@@ -5523,7 +5523,7 @@ void TBeing::reformGroup()
       if (!new_master->isAffected(AFF_GROUP))
         SET_BIT(new_master->specials.affectedBy, AFF_GROUP);
 
-      new_master->sendTo(COLOR_BASIC, fmt("<R>%s has died and you have taken over leadership of the group.<z>\n\r") % getName());
+      new_master->sendTo(COLOR_BASIC, format("<R>%s has died and you have taken over leadership of the group.<z>\n\r") % getName());
       continue;
     }
     survivor = tmp->follower;
@@ -5533,7 +5533,7 @@ void TBeing::reformGroup()
     if (!survivor->isAffected(AFF_GROUP))
       SET_BIT(survivor->specials.affectedBy, AFF_GROUP);
 
-    survivor->sendTo(COLOR_BASIC, fmt("<R>%s has died and %s has taken over leadership of the group.<z>\n\r") % getName() % new_master->getName());
+    survivor->sendTo(COLOR_BASIC, format("<R>%s has died and %s has taken over leadership of the group.<z>\n\r") % getName() % new_master->getName());
   }
 
 // ADDING in linkDeads, polyed mobs and Immortals after finding a new leader
@@ -5554,7 +5554,7 @@ void TBeing::reformGroup()
       new_master->master = NULL;
       if (!new_master->isAffected(AFF_GROUP))
         SET_BIT(new_master->specials.affectedBy, AFF_GROUP);
-      new_master->sendTo(COLOR_BASIC, fmt("<R>%s has died and you have taken over leadership of the group.<z>\n\r") % getName());
+      new_master->sendTo(COLOR_BASIC, format("<R>%s has died and you have taken over leadership of the group.<z>\n\r") % getName());
       continue;
     }
    
@@ -5564,7 +5564,7 @@ void TBeing::reformGroup()
 
     if (!survivor->isAffected(AFF_GROUP))
       SET_BIT(survivor->specials.affectedBy, AFF_GROUP);
-    survivor->sendTo(COLOR_BASIC, fmt("<R>%s has died and %s has taken over leadership of the group.<z>\n\r") % getName() % new_master->getName());
+    survivor->sendTo(COLOR_BASIC, format("<R>%s has died and %s has taken over leadership of the group.<z>\n\r") % getName() % new_master->getName());
   }
  
   return;
@@ -5582,12 +5582,12 @@ void TBeing::genericKillFix(void)
   int rc = generic_dispel_magic(NULL, this, MAX_IMMORT, IMMORTAL_YES, SAFE_YES);
   int rc2 = genericChaseSpirits(NULL, this, MAX_IMMORT, IMMORTAL_YES, SAFE_YES);
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
-    vlogf(LOG_BUG, fmt("Multiple deaths (%s in room %d) occurred!") % 
+    vlogf(LOG_BUG, format("Multiple deaths (%s in room %d) occurred!") % 
          getName() % inRoom());
   }
 
   if (IS_SET_DELETE(rc2, DELETE_VICT)) {
-    vlogf(LOG_BUG, fmt("Multiple deaths (%s in room %d) occurred!") % 
+    vlogf(LOG_BUG, format("Multiple deaths (%s in room %d) occurred!") % 
          getName() % inRoom());
   }
 
@@ -5681,7 +5681,7 @@ double TBeing::deathSkillLoss()
     setSkillValue(i, max(amt, 1));
     setNatSkillValue(i, amt);
 
-    vlogf(LOG_COMBAT, fmt("skill loss %s (%d) = %d,  %d->%d") %  
+    vlogf(LOG_COMBAT, format("skill loss %s (%d) = %d,  %d->%d") %  
 	  discArray[i]->name % i % (preskill-amt) %
 	  preskill % getRawNatSkillValue(i));
   }
@@ -5711,13 +5711,13 @@ void TBeing::setCombatMode(attack_mode_t n)
   combatMode = n;
   if (desc && desc->m_bIsClient) {
     if (n == ATTACK_OFFENSE)
-      desc->clientf(fmt("%d") % CLIENT_OFFENSIVE);
+      desc->clientf(format("%d") % CLIENT_OFFENSIVE);
     else if (n == ATTACK_DEFENSE)
-      desc->clientf(fmt("%d") % CLIENT_DEFENSIVE);
+      desc->clientf(format("%d") % CLIENT_DEFENSIVE);
     else if (n == ATTACK_BERSERK)
-      desc->clientf(fmt("%d") % CLIENT_BERSERK);
+      desc->clientf(format("%d") % CLIENT_BERSERK);
     else
-      desc->clientf(fmt("%d") % CLIENT_NORMAL);
+      desc->clientf(format("%d") % CLIENT_NORMAL);
   }
 }
 

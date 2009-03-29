@@ -164,7 +164,7 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
 	////////////////////////////////////////////////////////////
 	// we know that wizradry is < 60 from getWizardryLevel check
 	////////////////////////////////////////////////////////////
-	ch->sendTo(fmt("Restricted movement while %s causes you to mess up the ritual's gestures.\n\r") % sstring(position_types[ch->getPosition()]).uncap());
+	ch->sendTo(format("Restricted movement while %s causes you to mess up the ritual's gestures.\n\r") % sstring(position_types[ch->getPosition()]).uncap());
 	act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
 	return FALSE;
       }
@@ -196,7 +196,7 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
 	////////////////////////////////////////////////////////////////
 	// we know that ritualism is < 60 from getRitualismLevel check
 	///////////////////////////////////////////////////////////////
-	ch->sendTo(fmt("Restricted movement while %s causes you to mess up the ritual's gestures.\n\r") % sstring(position_types[ch->getPosition()]).uncap());
+	ch->sendTo(format("Restricted movement while %s causes you to mess up the ritual's gestures.\n\r") % sstring(position_types[ch->getPosition()]).uncap());
 	act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
 	return FALSE;
       }
@@ -615,7 +615,7 @@ spellNumT TBeing::getSkillNum(spellNumT spell_num) const
   int num2 = 0;
 
   if ((spell_num < MIN_SPELL) || (spell_num >= MAX_SKILL)) {
-    vlogf(LOG_BUG, fmt("Something is passing a bad skill number (%d) to getSkillNum for %s") %  spell_num % getName());
+    vlogf(LOG_BUG, format("Something is passing a bad skill number (%d) to getSkillNum for %s") %  spell_num % getName());
     return TYPE_UNDEFINED;
   }
 
@@ -1870,7 +1870,7 @@ static void logSkillFail(const TBeing *caster, spellNumT spell, logSkillFailT ty
   }
 
 #if DISC_DEBUG
-  vlogf(LOG_BUG, fmt("%s Fail Spell %s (%d) ubComp < 0") %  caster->getName() % discArray[spell]->name % spell);
+  vlogf(LOG_BUG, format("%s Fail Spell %s (%d) ubComp < 0") %  caster->getName() % discArray[spell]->name % spell);
 #endif
 
   if ((caster->GetMaxLevel() > MAX_MORT) && caster->desc) {
@@ -1925,7 +1925,7 @@ static bool bSucCounter(TBeing *caster, skillUseClassT skillType, spellNumT spel
           logSkillFail(caster, spell, FAIL_ENGAGE);
 #if DISC_DEBUG
           if (caster->desc && caster->isPc()) {
-            vlogf(LOG_BUG, fmt("%s Fail Spell %s (%d) EngFail: boost (%d) num (%d) , roll (%d) ubComp (%d)") %  caster->getName() % discArray[spell]->name % spell % boost % num % roll % ubCompetence);
+            vlogf(LOG_BUG, format("%s Fail Spell %s (%d) EngFail: boost (%d) num (%d) , roll (%d) ubComp (%d)") %  caster->getName() % discArray[spell]->name % spell % boost % num % roll % ubCompetence);
           }
 #endif
           switch (getSpellType(discArray[spell]->typ)) {
@@ -2023,7 +2023,7 @@ static void logLearnFail(TBeing *caster, spellNumT spell, int type)
   // learnFromDoing and learnFromDoingUnusual
 
   if (!caster) {
-    vlogf(LOG_BUG,fmt("Something went into logLearnFail with no caster (%d)") %  spell);
+    vlogf(LOG_BUG,format("Something went into logLearnFail with no caster (%d)") %  spell);
     return;
   }
 
@@ -2032,12 +2032,12 @@ static void logLearnFail(TBeing *caster, spellNumT spell, int type)
   } 
 
   if (!caster->desc) {
-    vlogf(LOG_BUG,fmt("Something went into logLearnFail with no desc (%d)") %  spell);
+    vlogf(LOG_BUG,format("Something went into logLearnFail with no desc (%d)") %  spell);
     return;
   }
 
 #if DISC_DEBUG
-  vlogf(LOG_BUG, fmt("%s Fail Spell %s (%d) ubComp < 0") %  caster->getName() % discArray[spell]->name % spell); 
+  vlogf(LOG_BUG, format("%s Fail Spell %s (%d) ubComp < 0") %  caster->getName() % discArray[spell]->name % spell); 
 #endif
 
   if (type) {
@@ -2085,7 +2085,7 @@ bool TBeing::bSuccess(int ubCompetence, spellNumT spell)
     logSkillFail(this, spell, FAIL_GENERAL);
 #if DISC_DEBUG
     if (desc && isPc()) {
-      vlogf(LOG_BUG, fmt("%s Fail Spell %s (%d) ubComp < 0") %  
+      vlogf(LOG_BUG, format("%s Fail Spell %s (%d) ubComp < 0") %  
 	    getName() % discArray[spell]->name % spell);
     }
 #endif
@@ -2150,7 +2150,7 @@ critSuccT critSuccess(TBeing *caster, spellNumT spell)
   CDiscipline *cd;
 
   if (das == DISC_NONE) {
-    vlogf(LOG_BUG, fmt("bad disc for skill %d") %  spell);
+    vlogf(LOG_BUG, format("bad disc for skill %d") %  spell);
     return CRIT_S_NONE;
   }
   if (!(cd = caster->getDiscipline(das)))
@@ -2226,7 +2226,7 @@ critFailT critFail(TBeing *caster, spellNumT spell)
   }
   discNumT das = getDisciplineNumber(spell, FALSE);
   if (das == DISC_NONE) {
-    vlogf(LOG_BUG, fmt("bad disc for spell %d") %  spell);
+    vlogf(LOG_BUG, format("bad disc for spell %d") %  spell);
     return CRIT_F_NONE; 
   } 
 // adjust for learnedness of caster
@@ -2473,7 +2473,7 @@ void checkFactionHurt(TBeing * caster, TBeing * victim)
   if (caster->isSameFaction(victim)) {
     dec_amt = (int) (caster->getMove() / 4);
     caster->addToMove(-dec_amt);
-    caster->sendTo(fmt("%s frown upon the harming of a creature of the same faction.\n\r") % sstring(caster->yourDeity(your_deity_val, FIRST_PERSON).cap()));
+    caster->sendTo(format("%s frown upon the harming of a creature of the same faction.\n\r") % sstring(caster->yourDeity(your_deity_val, FIRST_PERSON).cap()));
     caster->sendTo("You are exhausted from the effort of doing so.\n\r");
     act("$n's chest heaves from exhaustion.", FALSE, caster, 0, 0, TO_ROOM);
     caster->updatePos();
@@ -2489,7 +2489,7 @@ void checkFactionHelp(TBeing *caster, TBeing *victim)
   if (caster->isOppositeFaction(victim)) {
     dec_amt = (int) (caster->getMove() / 4);
     caster->addToMove(-dec_amt);
-    caster->sendTo(fmt("%s frown upon the minions of the enemy.\n\r") % sstring(caster->yourDeity(your_deity_val, FIRST_PERSON)).cap());
+    caster->sendTo(format("%s frown upon the minions of the enemy.\n\r") % sstring(caster->yourDeity(your_deity_val, FIRST_PERSON)).cap());
     caster->sendTo("You are exhausted from the effort of doing so.\n\r");
     act("$n's chest heaves from exhaustion.", FALSE, caster, 0, 0, TO_ROOM);
     caster->updatePos();
@@ -2605,7 +2605,7 @@ void TBeing::assignDisciplinesClass()
 
     
   if (!player.Class) {
-    vlogf(LOG_BUG,fmt("call to assignDisciplinesClass without a valid Class (%s)") %  getName());
+    vlogf(LOG_BUG,format("call to assignDisciplinesClass without a valid Class (%s)") %  getName());
     return;
   }
 
@@ -3099,7 +3099,7 @@ int TBeing::getSkillLevel(spellNumT skill) const
     case MAX_DISCS:
     case DISC_NONE:
     case MAX_SAVED_DISCS:
-      vlogf(LOG_BUG, fmt("bad disc (%d, %d) in getSkillLevel (%s).") % 
+      vlogf(LOG_BUG, format("bad disc (%d, %d) in getSkillLevel (%s).") % 
                disc_num % skill % getName());
       lev = 0;
       break;
@@ -3112,7 +3112,7 @@ byte TBeing::getMaxSkillValue(spellNumT skill) const
   int tmp2;
   discNumT dn = getDisciplineNumber(skill, FALSE);
   if (dn == DISC_NONE) {
-    vlogf(LOG_BUG, fmt("bad disc for skill %d") %  skill);
+    vlogf(LOG_BUG, format("bad disc for skill %d") %  skill);
     return SKILL_MIN;
   }
   CDiscipline * cdisc = getDiscipline(dn);
@@ -3134,7 +3134,7 @@ byte TBeing::getMaxSkillValue(spellNumT skill) const
 CDiscipline * TBeing::getDiscipline(discNumT n) const
 {
   if(n < 0 || n > MAX_DISCS){
-    vlogf(LOG_BUG, fmt("getDiscipline called out of range: n=%i") %  n);
+    vlogf(LOG_BUG, format("getDiscipline called out of range: n=%i") %  n);
     return NULL;
   }
 
@@ -3289,7 +3289,7 @@ static void logLearnSuccess(TBeing *caster, spellNumT spell, logLearnSuccessT ty
   // learnFromDoing and learnFromDoingUnusual
 
   if (!caster) {
-    vlogf(LOG_BUG,fmt("Something went into logLearnSuccess with no caster (%d)") %  spell);
+    vlogf(LOG_BUG,format("Something went into logLearnSuccess with no caster (%d)") %  spell);
     return;
   }
 
@@ -3298,7 +3298,7 @@ static void logLearnSuccess(TBeing *caster, spellNumT spell, logLearnSuccessT ty
   }
 
   if (!caster->desc) {
-    vlogf(LOG_BUG,fmt("Something went into logLearnSuccess with no desc (%d)") %  spell);
+    vlogf(LOG_BUG,format("Something went into logLearnSuccess with no desc (%d)") %  spell);
     return;
   }
 
@@ -3349,7 +3349,7 @@ int TPerson::learnFromDoingUnusual(learnUnusualTypeT type, spellNumT spell, int 
         spell = SKILL_PIERCE_PROF;
         spell2 = SKILL_PIERCE_SPEC;
       } else {
-        vlogf(LOG_BUG, fmt("Wierd case in learnFromDoingUnusual %s, %d") %  getName() % w_type);
+        vlogf(LOG_BUG, format("Wierd case in learnFromDoingUnusual %s, %d") %  getName() % w_type);
         return FALSE;
       }
       if (amt && ::number(0,amt)) {
@@ -3414,7 +3414,7 @@ int TPerson::learnFromDoingUnusual(learnUnusualTypeT type, spellNumT spell, int 
       }
       break;
     case LEARN_UNUSUAL_NONE:
-      vlogf(LOG_BUG, fmt("Wierd case in learnFromDoingUnusual %s, type %d spell %d") %  getName() % type % spell);
+      vlogf(LOG_BUG, format("Wierd case in learnFromDoingUnusual %s, type %d spell %d") %  getName() % type % spell);
       return FALSE;
   }
   return FALSE;
@@ -3510,7 +3510,7 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
   //   do skill's disc learning here COSMO MARKER
     if (!(discipline = getDiscipline(discArray[sknum]->disc))) {
 #if DISC_DEBUG
-      vlogf(LOG_SILENT, fmt("(%s) has a skill (%d) but doesnt have the discipline") %  getName() % sknum);
+      vlogf(LOG_SILENT, format("(%s) has a skill (%d) but doesnt have the discipline") %  getName() % sknum);
 #endif
       return FALSE;
     } 
@@ -3520,14 +3520,14 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
     if (discLearn < 100) {
       discipline->setDoLearnedness(discLearn);
 #if DISC_DEBUG
-      vlogf(LOG_SILENT, fmt("%s just learned something in %s, Learn = %d.") %  getName() % discNames[(discArray[sknum]->assDisc)].properName % discLearn); 
+      vlogf(LOG_SILENT, format("%s just learned something in %s, Learn = %d.") %  getName() % discNames[(discArray[sknum]->assDisc)].properName % discLearn); 
 #endif
     }
   }
   if (!chanceAss) {
     if (!(assDiscipline = getDiscipline(discArray[sknum]->assDisc))) {
 #if DISC_DEBUG
-      vlogf(LOG_SILENT, fmt("(%s) has a skill (%d) but doesnt have the assDisc") %  getName() % sknum);
+      vlogf(LOG_SILENT, format("(%s) has a skill (%d) but doesnt have the assDisc") %  getName() % sknum);
 #endif
       return FALSE;
     }
@@ -3537,7 +3537,7 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
     if (discLearn < 100) {
       assDiscipline->setDoLearnedness(discLearn);
 #if DISC_DEBUG
-      vlogf(LOG_SILENT, fmt("%s just learned something in %s, Learn = %d.") %  getName() % discNames[(discArray[sknum]->assDisc)].properName % discLearn); 
+      vlogf(LOG_SILENT, format("%s just learned something in %s, Learn = %d.") %  getName() % discNames[(discArray[sknum]->assDisc)].properName % discLearn); 
 #endif
     }
   }
@@ -3554,7 +3554,7 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
     const int max_amt = MAX_SKILL_LEARNEDNESS;
     float amount = ((float) max_amt - (float) actual) / ((float) max_amt);
 #if DISC_DEBUG
-    vlogf(LOG_SILENT, fmt("learnFromDoing (%s) amt(%f) max(%d) actual(%d)") %  discArray[sknum]->name % amount % max_amt % actual);
+    vlogf(LOG_SILENT, format("learnFromDoing (%s) amt(%f) max(%d) actual(%d)") %  discArray[sknum]->name % amount % max_amt % actual);
 #endif
 
   // some basic background on how this was formulated.
@@ -3597,11 +3597,11 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
     } else
       strcpy(tString, "feel your skills honing in regards to");
 
-    sendTo(COLOR_BASIC, fmt("<c>You %s %s.<z>\n\r") % tString % discArray[sknum]->name);
+    sendTo(COLOR_BASIC, format("<c>You %s %s.<z>\n\r") % tString % discArray[sknum]->name);
   }
 #else
   if (!silent)
-    sendTo(COLOR_BASIC, fmt("<c>You increase your mastery of %s.<z>\n\r") % discArray[sknum]->name);
+    sendTo(COLOR_BASIC, format("<c>You increase your mastery of %s.<z>\n\r") % discArray[sknum]->name);
 #endif
 
   // boost at this point is 1, now make it more it if appropriate
@@ -3613,7 +3613,7 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
       boost = 90 - actual;
   }
 #if DISC_DEBUG
-  vlogf(LOG_SILENT, fmt("learnFromDoing (%s)(%d): actual (%d), boost (%d)") %  discArray[sknum]->name % sknum % actual % boost);
+  vlogf(LOG_SILENT, format("learnFromDoing (%s)(%d): actual (%d), boost (%d)") %  discArray[sknum]->name % sknum % actual % boost);
 #endif
   setSkillValue(sknum, getSkillValue(sknum) + boost);
   setNatSkillValue(sknum, actual + boost);
@@ -3628,7 +3628,7 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
     } else if(getNatSkillValue(sknum) >= 20 &&
 	      (sknum == SKILL_SLASH_PROF || sknum == SKILL_BLUNT_PROF ||
 	       sknum == SKILL_PIERCE_PROF || sknum == SKILL_RANGED_PROF)){
-      sendTo(COLOR_BASIC, fmt("<c>You feel that you have enough knowledge of %s to please your guildmaster.<z>") % discArray[sknum]->name);
+      sendTo(COLOR_BASIC, format("<c>You feel that you have enough knowledge of %s to please your guildmaster.<z>") % discArray[sknum]->name);
     }
   }
   
@@ -3647,7 +3647,7 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
       strcpy(tString, "feel you have total mastery over");
 
     if (!silent)
-      sendTo(COLOR_BASIC, fmt("<c>You %s %s.<z>\n\r") % tString % discArray[sknum]->name);
+      sendTo(COLOR_BASIC, format("<c>You %s %s.<z>\n\r") % tString % discArray[sknum]->name);
 
     if (doesKnowSkill(SKILL_KICK_MONK) && sknum == SKILL_KICK_MONK) {
       setQuestBit(TOG_ELIGIBLE_ADVANCED_KICKING);
@@ -3666,7 +3666,7 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
       strcpy(tString, "feel you have all the control you can currently have over");
 
     if (!silent)
-      sendTo(COLOR_BASIC, fmt("<c>You %s %s.<z>\n\r") % tString % discArray[sknum]->name);
+      sendTo(COLOR_BASIC, format("<c>You %s %s.<z>\n\r") % tString % discArray[sknum]->name);
   }
 
   return TRUE;

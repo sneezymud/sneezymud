@@ -43,8 +43,8 @@ void TBaseCup::weightChangeObject(float wgt_amt)
                (-wgt_amt + obj_index[getItemIndex()].weight)) == 1) {
 #if DRINK_DEBUG
     // this happens sometimes because of that stupid roundoff error in floats
-    vlogf(LOG_BUG, fmt("Attempt to reduce %s below its empty weight") %  getName());
-    vlogf(LOG_BUG, fmt("weight: %f, adjust: %f, base: %f") %  getWeight() % 
+    vlogf(LOG_BUG, format("Attempt to reduce %s below its empty weight") %  getName());
+    vlogf(LOG_BUG, format("weight: %f, adjust: %f, base: %f") %  getWeight() % 
          -wgt_amt % obj_index[getItemIndex()].weight);
 #endif
     wgt_amt = -(getWeight() - obj_index[getItemIndex()].weight);
@@ -75,7 +75,7 @@ void TBaseCup::weightChangeObject(float wgt_amt)
     mount(tmp);
   } else {
     // if object (pool) is changing in weight at load time, this is ok
-    //vlogf(LOG_BUG, fmt("Unknown attempt to subtract weight from an object. (weightChangeObject) obj=%s") %  getName());
+    //vlogf(LOG_BUG, format("Unknown attempt to subtract weight from an object. (weightChangeObject) obj=%s") %  getName());
 
     addToWeight(wgt_amt);
   }
@@ -86,11 +86,11 @@ void TBaseCup::weightChangeObject(float wgt_amt)
   if (compareWeights(getWeight(), max_amt) == -1) {
 #if DRINK_DEBUG
     // this happens, silly float round off
-    vlogf(LOG_BUG, fmt("DRINK: Bad weight change on %s.  Location %s") %  getName() %
+    vlogf(LOG_BUG, format("DRINK: Bad weight change on %s.  Location %s") %  getName() %
            (in_room != ROOM_NOWHERE ? roomp->getName() :
            (equippedBy ? equippedBy->getName() :
            parent->getName())));
-    vlogf(LOG_BUG, fmt("DRINK: Orig: %.1f, change %.1f, now %.1f, max %.1f, sips: %d") %  
+    vlogf(LOG_BUG, format("DRINK: Orig: %.1f, change %.1f, now %.1f, max %.1f, sips: %d") %  
         sweight % wgt_amt % getWeight() % max_amt % getMaxDrinkUnits());
     vlogf(LOG_BUG, "DRINK: resetting");
 #endif
@@ -158,8 +158,8 @@ int TBaseCup::drinkMe(TBeing *ch)
     return FALSE;
   }
 
-  act(fmt("$n drinks %s from $p.") % liquidInfo[getDrinkType()]->name, TRUE, ch, this, 0, TO_ROOM);
-  ch->sendTo(COLOR_OBJECTS, fmt("You drink the %s.\n\r") % liquidInfo[getDrinkType()]->name);
+  act(format("$n drinks %s from $p.") % liquidInfo[getDrinkType()]->name, TRUE, ch, this, 0, TO_ROOM);
+  ch->sendTo(COLOR_OBJECTS, format("You drink the %s.\n\r") % liquidInfo[getDrinkType()]->name);
 
   // a single drink "should" average about 8 oz.
   // this means have to drink 3-4 to get unthirsty so go with unreal value.
@@ -307,7 +307,7 @@ int TBaseCup::drinkMe(TBeing *ch)
   }
   if (getDrinkUnits() <= 0) {
     if (!tPool) {
-      act(fmt("%s is completely empty.") % drinkName, FALSE, ch, this, 0, TO_CHAR);
+      act(format("%s is completely empty.") % drinkName, FALSE, ch, this, 0, TO_CHAR);
       remDrinkConFlags(DRINK_POISON);
     } else {
       act("You finish licking up $p from the $g.", FALSE, ch, this, 0, TO_CHAR);
@@ -611,7 +611,7 @@ void TBaseCup::pourMeIntoDrink2(TBeing *ch, TBaseCup *from_obj)
     ch->sendTo("How are you going to pour from something into itself?\n\r");
     return;
   }
-  ch->sendTo(COLOR_OBJECTS, fmt("You pour %s into %s.\n\r") % 
+  ch->sendTo(COLOR_OBJECTS, format("You pour %s into %s.\n\r") % 
           liquidInfo[from_obj->getDrinkType()]->name % ch->objs(this));
 
   // set liquid type
@@ -715,7 +715,7 @@ void TBaseCup::sipMe(TBeing *ch)
   }
   act("You sip from the $o.", FALSE, ch, this, NULL, TO_CHAR);
   act("$n sips from the $o.", TRUE, ch, this, 0, TO_ROOM);
-  ch->sendTo(COLOR_OBJECTS, fmt("It tastes like %s.\n\r") % liquidInfo[getDrinkType()]->name);
+  ch->sendTo(COLOR_OBJECTS, format("It tastes like %s.\n\r") % liquidInfo[getDrinkType()]->name);
 
   bool noFood = ch->getMyRace()->hasTalent(TALENT_FISHEATER) || ch->getMyRace()->hasTalent(TALENT_MEATEATER) ||
                 ch->getMyRace()->hasTalent(TALENT_INSECT_EATER);
@@ -782,7 +782,7 @@ void TBaseCup::sipMe(TBeing *ch)
     TPool * tPool = dynamic_cast<TPool *>(this);
 
     if (!tPool) {
-      act(fmt("%s is completely empty.") % drinkName, FALSE, ch, this, 0, TO_CHAR);
+      act(format("%s is completely empty.") % drinkName, FALSE, ch, this, 0, TO_CHAR);
       remDrinkConFlags(DRINK_POISON);
     } else {
       act("You finish licking up $p from the $g.", FALSE, ch, this, 0, TO_CHAR);
@@ -1102,27 +1102,27 @@ int TFood::productionPrice() const
 void TFood::lowCheck()
 {
   if (getFoodFill() <= 0)
-        vlogf(LOG_LOW,fmt("food (%s) with bad fills value.") %  getName());
+        vlogf(LOG_LOW,format("food (%s) with bad fills value.") %  getName());
 
   int vModified = suggestedPrice();
   if (vModified != obj_flags.cost) {
-    vlogf(LOG_LOW, fmt("food (%s:%d) with bad price.  Should be: %d.") % 
+    vlogf(LOG_LOW, format("food (%s:%d) with bad price.  Should be: %d.") % 
           getName() % objVnum() % vModified);
     obj_flags.cost = vModified;
   }
   if (obj_flags.decay_time < 0 && !isObjStat(ITEM_MAGIC)) {
-    vlogf(LOG_LOW, fmt("food (%s:%d) with bad decay.  Should be magic or decay.") % 
+    vlogf(LOG_LOW, format("food (%s:%d) with bad decay.  Should be magic or decay.") % 
           getName() % objVnum());
   }
 
   if ((vModified = (getFoodFill() * 10)) != getVolume()) {
-    vlogf(LOG_LOW, fmt("food (%s) with bad volume.  Should be: %d.") % 
+    vlogf(LOG_LOW, format("food (%s) with bad volume.  Should be: %d.") % 
           getName() % vModified);
     setVolume(vModified);
   }
 #if 0
   if ((vModified = (int) (getFoodFill() / 12)) != getWeight()) {
-    vlogf(LOG_LOW, fmt("food (%s) with bad weight.  Should be: %d") % 
+    vlogf(LOG_LOW, format("food (%s) with bad weight.  Should be: %d") % 
           getName() % vModified);
     setWeight(vModified);
   }

@@ -42,7 +42,7 @@ TTable::~TTable()
     else if (roomp)
       *roomp += *t;
     else {
-      vlogf(LOG_BUG,fmt("Table Delete %s: Not in room not in parent") %  getName());
+      vlogf(LOG_BUG,format("Table Delete %s: Not in room not in parent") %  getName());
       delete t;
       t = NULL;
       continue;
@@ -74,7 +74,7 @@ void TTable::getFourValues(int *x1, int *x2, int *x3, int *x4) const
 void TTable::lowCheck()
 {
   if (canWear(ITEM_TAKE)) {
-    vlogf(LOG_LOW, fmt("Table (%s) set to be takeable.") %  getName());
+    vlogf(LOG_LOW, format("Table (%s) set to be takeable.") %  getName());
   }
 
 // we are explicitely NOT doing the TObj part of lowCheck since we

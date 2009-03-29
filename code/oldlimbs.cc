@@ -334,9 +334,9 @@ void TBeing::makeBodyPart(wearSlotT pos, TBeing *opp)
     
   corpse = new TCorpse();
   if (opp && opp->isPc())
-    sbuf = fmt("%s lost limb %s [q] [%s] [%d] [%d] [%s]") % describeBodySlot(pos) % name % describeBodySlot(pos).replaceString(" ", "-") % (int) pos % v_vnum % opp->getName();
+    sbuf = format("%s lost limb %s [q] [%s] [%d] [%d] [%s]") % describeBodySlot(pos) % name % describeBodySlot(pos).replaceString(" ", "-") % (int) pos % v_vnum % opp->getName();
   else
-    sbuf = fmt("%s lost limb %s") % describeBodySlot(pos) % name;
+    sbuf = format("%s lost limb %s") % describeBodySlot(pos) % name;
   
   corpse->name = mud_str_dup(sbuf);
   
@@ -388,9 +388,9 @@ void TBeing::makeOtherPart(const char *single, const char *part, TBeing *opp)
 
   
   if (opp && opp->isPc())
-    sbuf = fmt("%s lost limb %s [q] [eyeballs] [0] [%d] [%s]") % (single ? single : part) % name % v_vnum % opp->getName();
+    sbuf = format("%s lost limb %s [q] [eyeballs] [0] [%d] [%s]") % (single ? single : part) % name % v_vnum % opp->getName();
   else 
-    sbuf = fmt("%s lost limb %s") % (single ? single : part) % name;
+    sbuf = format("%s lost limb %s") % (single ? single : part) % name;
   
   corpse->name = mud_str_dup(sbuf);
 
@@ -614,7 +614,7 @@ const sstring TBeing::describeTransBodySlot(wearSlotT i) const
           return "right paw";
         }
       } else {
-        vlogf(LOG_BUG, fmt("There is a bad case 1 in describeTransBodySlot, %s") %  getName());
+        vlogf(LOG_BUG, format("There is a bad case 1 in describeTransBodySlot, %s") %  getName());
         return "bogus transformed body part";
       } 
     case WEAR_FINGER_L:
@@ -625,7 +625,7 @@ const sstring TBeing::describeTransBodySlot(wearSlotT i) const
           return "left paw";
         }
       } else {
-        vlogf(LOG_BUG, fmt("There is a bad case 2 in describeTransBodySlot, %s") %  getName());
+        vlogf(LOG_BUG, format("There is a bad case 2 in describeTransBodySlot, %s") %  getName());
 
         return "bogus transformed body part";
       }
@@ -636,7 +636,7 @@ const sstring TBeing::describeTransBodySlot(wearSlotT i) const
         return "gills";
       }
     case WEAR_BODY:
-        vlogf(LOG_BUG, fmt("There is a bad case 3 in describeTransBodySlot, %s") %  getName());
+        vlogf(LOG_BUG, format("There is a bad case 3 in describeTransBodySlot, %s") %  getName());
 
       return "bogus transformed body part";
     case WEAR_HEAD:
@@ -663,11 +663,11 @@ const sstring TBeing::describeTransBodySlot(wearSlotT i) const
     case WEAR_ARM_L:
       return "left wing";
     case WEAR_BACK:
-        vlogf(LOG_BUG, fmt("There is a bad case 4 in describeTransBodySlot, %s") %  getName());
+        vlogf(LOG_BUG, format("There is a bad case 4 in describeTransBodySlot, %s") %  getName());
 
       return "bogus transformed body part";
     case WEAR_WAIST:
-        vlogf(LOG_BUG, fmt("There is a bad case 5 in describeTransBodySlot, %s") %  getName());
+        vlogf(LOG_BUG, format("There is a bad case 5 in describeTransBodySlot, %s") %  getName());
 
       return "bogus transformed body part";
     case WEAR_WRIST_R:
@@ -678,7 +678,7 @@ const sstring TBeing::describeTransBodySlot(wearSlotT i) const
           return "right paw";
         }
       } else {
-        vlogf(LOG_BUG, fmt("There is a bad case 6 in describeTransBodySlot, %s") %  getName());
+        vlogf(LOG_BUG, format("There is a bad case 6 in describeTransBodySlot, %s") %  getName());
 
         return "bogus transformed body part";
       }
@@ -690,7 +690,7 @@ const sstring TBeing::describeTransBodySlot(wearSlotT i) const
           return "left paw";
         }
       } else {
-        vlogf(LOG_BUG, fmt("There is a bad case 7 in describeTransBodySlot, %s") %  getName());
+        vlogf(LOG_BUG, format("There is a bad case 7 in describeTransBodySlot, %s") %  getName());
 
         return "bogus transformed body part";
       }
@@ -717,21 +717,21 @@ const sstring TBeing::describeTransBodySlot(wearSlotT i) const
         return "bogus transformed body part";
       }
     case WEAR_EX_LEG_R:
-        vlogf(LOG_BUG, fmt("There is a bad case 10 in describeTransBodySlot, %s") %  getName());
+        vlogf(LOG_BUG, format("There is a bad case 10 in describeTransBodySlot, %s") %  getName());
 
       return "bogus transformed body part";
     case WEAR_EX_LEG_L:
-        vlogf(LOG_BUG, fmt("There is a bad case 11 in describeTransBodySlot, %s") %  getName());
+        vlogf(LOG_BUG, format("There is a bad case 11 in describeTransBodySlot, %s") %  getName());
       return "bogus transformed body part";
     case WEAR_EX_FOOT_R:
-        vlogf(LOG_BUG, fmt("There is a bad case 12 in describeTransBodySlot, %s") %  getName());
+        vlogf(LOG_BUG, format("There is a bad case 12 in describeTransBodySlot, %s") %  getName());
 
       return "bogus transformed body part";
     case WEAR_EX_FOOT_L:
-        vlogf(LOG_BUG, fmt("There is a bad case 13 in describeTransBodySlot, %s") %  getName());
+        vlogf(LOG_BUG, format("There is a bad case 13 in describeTransBodySlot, %s") %  getName());
       return "bogus transformed body part";
     default:
-        vlogf(LOG_BUG, fmt("There is a bad case 14 in describeTransBodySlot, %s") %  getName());
+        vlogf(LOG_BUG, format("There is a bad case 14 in describeTransBodySlot, %s") %  getName());
       return "bogus transformed body slot-part";
   }
 }
@@ -991,7 +991,7 @@ wearSlotT TBeing::getPartHit(TBeing *hitter, bool allowHold)
     if (d <= (ct += real_slot_chance[i])) 
       return i;
   }
-  vlogf(LOG_BUG, fmt("Warning!  get_part_hit error on %s.") %  getName());
+  vlogf(LOG_BUG, format("Warning!  get_part_hit error on %s.") %  getName());
   return WEAR_BODY;
 }
 
@@ -1052,7 +1052,7 @@ int TBeing::getPartMinHeight(int part) const
       case ITEM_WEAR_FEET:
         return max(0, midline - (50 * hgt/100));
       default:
-        vlogf(LOG_BUG, fmt("Bogus part %d in getPartMinHeight()") %  part);
+        vlogf(LOG_BUG, format("Bogus part %d in getPartMinHeight()") %  part);
         return 0;
     }
   } else {
@@ -1073,7 +1073,7 @@ int TBeing::getPartMinHeight(int part) const
       case ITEM_WEAR_FEET:
         return 0;
       default:
-        vlogf(LOG_BUG, fmt("Bogus part %d in getPartMinHeight()") %  part);
+        vlogf(LOG_BUG, format("Bogus part %d in getPartMinHeight()") %  part);
         return 0;
     }
   }

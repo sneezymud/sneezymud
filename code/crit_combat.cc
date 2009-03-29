@@ -502,7 +502,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
     return FALSE;
 
   if(mod>100){
-    vlogf(LOG_BUG, fmt("critSuccessChance called with mod>100 (%i)") %  mod);
+    vlogf(LOG_BUG, format("critSuccessChance called with mod>100 (%i)") %  mod);
     return FALSE;
   }
 
@@ -618,7 +618,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
   } else if (bluntType(wtype)) {
     return critBlunt(v, weapon, part_hit, wtype, dam, crit_num);
   } else {
-    vlogf(LOG_BUG, fmt("unknown weapon type in critSuccessChance (%i)") %  wtype);
+    vlogf(LOG_BUG, format("unknown weapon type in critSuccessChance (%i)") %  wtype);
   }
   return FALSE;
 }
@@ -669,7 +669,7 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
     v_vnum = -2;
 
   if(crit_num>100){
-    vlogf(LOG_BUG, fmt("critBlunt called with crit_num>100 (%i)") %  crit_num);
+    vlogf(LOG_BUG, format("critBlunt called with crit_num>100 (%i)") %  crit_num);
     crit_num=0;
   }
 
@@ -680,19 +680,19 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
     // double damage 
     *dam *= 2;
 
-    buf=fmt("You strike $N exceptionally well, %s $S %s with your %s!") %
+    buf=format("You strike $N exceptionally well, %s $S %s with your %s!") %
       attack_hit_text[new_wtype].hitting %
       v->describeBodySlot(*part_hit) %
       limbStr;
     act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
 
-    buf = fmt("$n strikes you exceptionally well, %s your %s with $s %s.") %
+    buf = format("$n strikes you exceptionally well, %s your %s with $s %s.") %
       attack_hit_text[new_wtype].hitting %
       v->describeBodySlot(*part_hit) %
       limbStr;
     act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
 
-    buf = fmt("$n strikes $N exceptionally well, %s $S %s with $s %s.") %
+    buf = format("$n strikes $N exceptionally well, %s $S %s with $s %s.") %
       attack_hit_text[new_wtype].hitting %
       v->describeBodySlot(*part_hit) % 
       limbStr;
@@ -703,19 +703,19 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
     // triple damage 
     *dam *= 3;
     
-    buf = fmt("You critically strike $N, %s $S %s with your %s!") %
+    buf = format("You critically strike $N, %s $S %s with your %s!") %
       attack_hit_text[new_wtype].hitting %
       v->describeBodySlot(*part_hit) %
       limbStr;
     act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
 
-    buf = fmt("$n critically strikes you, %s your %s with $s %s.") %
+    buf = format("$n critically strikes you, %s your %s with $s %s.") %
       attack_hit_text[new_wtype].hitting %
       v->describeBodySlot(*part_hit) %
       limbStr;
     act(buf, TRUE, this, 0, v, TO_VICT, ANSI_RED);
 
-    buf = fmt("$n critically strikes $N, %s $S %s with $s %s.") %
+    buf = format("$n critically strikes $N, %s $S %s with $s %s.") %
       attack_hit_text[new_wtype].hitting %
       v->describeBodySlot(*part_hit) %
       limbStr;
@@ -736,15 +736,15 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	  return 0;
         if (v->isLimbFlags(WEAR_FINGER_R, PART_BROKEN))
           return 0;
-	buf = fmt("With your %s, you crush $N's %s!") %
+	buf = format("With your %s, you crush $N's %s!") %
 	  limbStr %
 	  v->describeBodySlot(WEAR_FINGER_R);
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-	buf=fmt("$n's %s crushes your %s!") %
+	buf=format("$n's %s crushes your %s!") %
 		limbStr %
 		v->describeBodySlot(WEAR_FINGER_R);
 	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-	buf = fmt("$n's %s crushes $N's %s!") %
+	buf = format("$n's %s crushes $N's %s!") %
 	  limbStr %
 	  v->describeBodySlot(WEAR_FINGER_R);
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
@@ -773,15 +773,15 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	  return 0;
         if (v->isLimbFlags(WEAR_HAND_R, PART_BROKEN))
           return 0;
-	buf=fmt("With your %s, you shatter the bones in $N's %s!") %
+	buf=format("With your %s, you shatter the bones in $N's %s!") %
 	  limbStr %
 	  v->describeBodySlot(WEAR_HAND_R);
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-	buf=fmt("$n's %s shatters the bones in your %s!") %
+	buf=format("$n's %s shatters the bones in your %s!") %
 	  limbStr %
 	  v->describeBodySlot(WEAR_HAND_R);
 	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-	buf = fmt("$n's %s shatters the bones in $N's %s!") %
+	buf = format("$n's %s shatters the bones in $N's %s!") %
 		limbStr %
 		v->describeBodySlot(WEAR_HAND_R);
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
@@ -811,15 +811,15 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
         if (v->isLimbFlags(WEAR_HAND_L, PART_BROKEN))
           return 0;
 	*part_hit = WEAR_HAND_L;
-	buf=fmt("With your %s, you shatter the bones in $N's %s!") %
+	buf=format("With your %s, you shatter the bones in $N's %s!") %
 		limbStr %
 		v->describeBodySlot(WEAR_HAND_L);
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-	buf=fmt("$n's %s shatters the bones in your %s!") %
+	buf=format("$n's %s shatters the bones in your %s!") %
 		limbStr %
 		v->describeBodySlot(WEAR_HAND_L);
 	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-	buf=fmt("$n's %s shatters the bones in $N's %s!") %
+	buf=format("$n's %s shatters the bones in $N's %s!") %
 		limbStr %
 		v->describeBodySlot(WEAR_HAND_L);
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
@@ -849,13 +849,13 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
         if (v->isLimbFlags(v->getPrimaryArm(), PART_BROKEN))
           return 0;
 	*part_hit = v->getPrimaryArm();
-	buf=fmt("You shatter the bones in $N's forearm with your %s!") %
+	buf=format("You shatter the bones in $N's forearm with your %s!") %
 	        limbStr;
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-	buf=fmt("$n's %s shatters the bones in your forearm!") %
+	buf=format("$n's %s shatters the bones in your forearm!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-	buf=fmt("$n's %s shatters the bones in $N's forearm!") %
+	buf=format("$n's %s shatters the bones in $N's forearm!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	v->addToLimbFlags(v->getPrimaryArm(), PART_BROKEN);
@@ -884,13 +884,13 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
         if (v->isLimbFlags(new_slot, PART_USELESS))
           return 0;
 
-        buf=fmt("With your %s, you crush the nerves in $N's shoulder!") %
+        buf=format("With your %s, you crush the nerves in $N's shoulder!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-        buf=fmt("$n's %s crushes the nerves in your shoulder!") %
+        buf=format("$n's %s crushes the nerves in your shoulder!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-        buf=fmt("$n's %s crushes the nerves in $N's shoulder!") %
+        buf=format("$n's %s crushes the nerves in $N's shoulder!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	v->damageArm(TRUE,PART_USELESS);
@@ -913,13 +913,13 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
           return 0;
 
 	*part_hit = WEAR_LEG_L;
-buf=fmt("You shatter $N's femur with your %s!") %
+buf=format("You shatter $N's femur with your %s!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n's %s shatters your femur!") %
+buf=format("$n's %s shatters your femur!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=fmt("$n's %s shatters $N's femur!") %
+buf=format("$n's %s shatters $N's femur!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	*part_hit = WEAR_LEG_L;
@@ -948,13 +948,13 @@ buf=fmt("$n's %s shatters $N's femur!") %
           return 0;
 
 	*part_hit = WEAR_LEG_L;
-        buf=fmt("With your %s, you crush the muscles in $N's leg!") %
+        buf=format("With your %s, you crush the muscles in $N's leg!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-        buf=fmt("$n's %s crushes the muscles in your leg!") %
+        buf=format("$n's %s crushes the muscles in your leg!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-        buf=fmt("$n's %s crushes the muscles in $N's leg!") %
+        buf=format("$n's %s crushes the muscles in $N's leg!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	*part_hit = WEAR_LEG_L;
@@ -987,13 +987,13 @@ buf=fmt("$n's %s shatters $N's femur!") %
 	if (!v->hasPart(WEAR_HEAD))
 	  return 0;
 	*part_hit = WEAR_HEAD;
-buf=fmt("You slam $N's head massively with your %s!") %
+buf=format("You slam $N's head massively with your %s!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n's %s slams into your head and .. What?  who?  Where am I????") %
+buf=format("$n's %s slams into your head and .. What?  who?  Where am I????") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=fmt("$n's %s slams into $N's head, stunning $M completely!") %
+buf=format("$n's %s slams into $N's head, stunning $M completely!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	v->cantHit += v->loseRound(5);
@@ -1020,13 +1020,13 @@ buf=fmt("$n's %s slams into $N's head, stunning $M completely!") %
           return 0;
 
 	*part_hit = WEAR_BODY;
-buf=fmt("With your %s, you slam $N's chest, breaking a rib!") %
+buf=format("With your %s, you slam $N's chest, breaking a rib!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n's %s crushes your chest and shatters a rib!") %
+buf=format("$n's %s crushes your chest and shatters a rib!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=fmt("$n's %s shatters one of $N's ribs!") %
+buf=format("$n's %s shatters one of $N's ribs!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	v->addToLimbFlags(WEAR_BODY, PART_BROKEN);
@@ -1051,13 +1051,13 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
           return 0;
 
 	*part_hit = WEAR_BODY;
-buf=fmt("With your %s, you slam $N's chest, breaking a rib and causing internal damage!") %
+buf=format("With your %s, you slam $N's chest, breaking a rib and causing internal damage!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n's %s crushes your chest, shatters a rib and causes internal bleeding!") %
+buf=format("$n's %s crushes your chest, shatters a rib and causes internal bleeding!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=fmt("$n's %s shatters one of $N's ribs!") %
+buf=format("$n's %s shatters one of $N's ribs!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	v->addToLimbFlags(WEAR_BODY, PART_BROKEN);
@@ -1089,11 +1089,11 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
         if (v->race->hasNoBones())
           return 0;
 
-	buf = fmt("You swing your %s right into $N's face, sending a tooth flying.") % limbStr;
+	buf = format("You swing your %s right into $N's face, sending a tooth flying.") % limbStr;
 	act(buf, FALSE, this, obj, v, TO_CHAR, ANSI_ORANGE);
-	buf = fmt("$n's %s connects with your face, sending a tooth flying.") % limbStr;
+	buf = format("$n's %s connects with your face, sending a tooth flying.") % limbStr;
 	act(buf, FALSE, this, obj, v, TO_VICT, ANSI_ORANGE);
-	buf = fmt("$n's %s connects with $N's face, sending a tooth flying.") % limbStr;
+	buf = format("$n's %s connects with $N's face, sending a tooth flying.") % limbStr;
 	act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
 	      	      
 	TObj *corpse;
@@ -1115,19 +1115,19 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
     db.query("select team from quest_limbs_team where player = '%s'", getName());
     if (db.fetchRow())
       limb_quest = 0;
-    buf = fmt("tooth lost limb %s [q] [tooth] [%d] [%d] [%s]") % v->name % limb_quest % v_vnum % getName();
+    buf = format("tooth lost limb %s [q] [tooth] [%d] [%d] [%s]") % v->name % limb_quest % v_vnum % getName();
   } else{
-    buf = fmt("tooth lost limb %s") % v->name;
+    buf = format("tooth lost limb %s") % v->name;
   }
   
 	delete corpse->name;
 	corpse->name = mud_str_dup(buf);
 	
-	buf = fmt("<W>a <1><r>bloody<1><W> tooth of %s<1>") % v->getName();
+	buf = format("<W>a <1><r>bloody<1><W> tooth of %s<1>") % v->getName();
 	delete corpse->shortDescr;
 	corpse->shortDescr = mud_str_dup(buf);
 	
-	buf = fmt("<W>A <1><r>bloody<1><W> tooth lies here, having been knocked out of %s's mouth.<1>") % v->getName();
+	buf = format("<W>A <1><r>bloody<1><W> tooth lies here, having been knocked out of %s's mouth.<1>") % v->getName();
 	delete corpse->descr;
 	corpse->setDescr(mud_str_dup(buf));
 	      
@@ -1162,13 +1162,13 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
     // ...But make it a bit fancier on ghosts, zombies and skeletons.
   
     if (IS_SET(v->specials.act, ACT_GHOST)) {
-      buf = fmt("With your %s, you reach into $N's chest and rip out what you think is $S heart!") % limbStr;
+      buf = format("With your %s, you reach into $N's chest and rip out what you think is $S heart!") % limbStr;
       act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
       act("You hold the ghostly organ above your head in triumph!", FALSE, this, 0, v, TO_CHAR, ANSI_RED);
       act("$n reaches into your chest and rips out your heart!", FALSE, this, 0, v, TO_VICT, ANSI_RED);
       act("$n reaches into $N's chest and rips out what appears to be $S heart!", FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	  } else {
-	    buf = fmt("With your %s, you reach into $N's chest and rip out $S heart!") % limbStr;
+	    buf = format("With your %s, you reach into $N's chest and rip out $S heart!") % limbStr;
 	    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
 	    act("You hold the still beating heart above your head in triumph, as blood runs down your arm!", FALSE, this, 0, v, TO_CHAR, ANSI_RED);
 	    act("$n reaches into your chest and rips out your heart!", FALSE, this, 0, v, TO_VICT, ANSI_RED);
@@ -1181,23 +1181,23 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
       TDrinkCon *corpse;
       corpse = new TDrinkCon();
       if (dynamic_cast<TPerson *>(this))
-        buf = fmt("heart lost limb %s [q] [heart] [0] [%d] [%s]") % v->name % v_vnum % getName();
+        buf = format("heart lost limb %s [q] [heart] [0] [%d] [%s]") % v->name % v_vnum % getName();
       else
-        buf = fmt("heart lost limb %s") % v->name;
+        buf = format("heart lost limb %s") % v->name;
 
       corpse->name = mud_str_dup(buf);
 
       if (IS_SET(v->specials.act, ACT_ZOMBIE)) {
-        buf = fmt("the putrid <r>heart<1> of %s") % v->getName();
+        buf = format("the putrid <r>heart<1> of %s") % v->getName();
         corpse->shortDescr = mud_str_dup(buf);
 
-        buf = fmt("The putrid <r>heart<1> of %s lies here.") % v->getName();
+        buf = format("The putrid <r>heart<1> of %s lies here.") % v->getName();
         corpse->setDescr(mud_str_dup(buf));
       } else {
-        buf = fmt("the lifeless <r>heart<1> of %s") % v->getName();
+        buf = format("the lifeless <r>heart<1> of %s") % v->getName();
         corpse->shortDescr = mud_str_dup(buf);
 
-        buf = fmt("The lifeless <r>heart<1> of %s lies here.") % v->getName();
+        buf = format("The lifeless <r>heart<1> of %s lies here.") % v->getName();
         corpse->setDescr(mud_str_dup(buf));
       }
 
@@ -1241,13 +1241,13 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
 	  if (!v->hasPart(WEAR_HEAD))
 	    return 0;
 	  if ((obj = v->equipment[WEAR_HEAD])) {
-buf=fmt("With a mighty blow, you crush $N's head with your %s. Unfortunately, $S $o saves $M.") %
+buf=format("With a mighty blow, you crush $N's head with your %s. Unfortunately, $S $o saves $M.") %
 		     limbStr;
 	    act(buf, FALSE, this, obj, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n's %s strikes a mighty blow to your head crushing your $o!") %
+buf=format("$n's %s strikes a mighty blow to your head crushing your $o!") %
 		     limbStr;
 	    act(buf, FALSE, this, obj, v, TO_VICT, ANSI_RED);
-buf=fmt("$n's %s strikes a mighty blow to $N's head, crushing $S $o!") %
+buf=format("$n's %s strikes a mighty blow to $N's head, crushing $S $o!") %
 		     limbStr;
 	    act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
 	    if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA))
@@ -1262,13 +1262,13 @@ buf=fmt("$n's %s strikes a mighty blow to $N's head, crushing $S $o!") %
 	    // crush skull
 	    if (!v->hasPart(WEAR_HEAD))
 	      return 0;
-buf=fmt("With your %s, you crush $N's skull, and $S brains ooze out!") %
+buf=format("With your %s, you crush $N's skull, and $S brains ooze out!") %
 		     limbStr;
 	    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n's %s crushes your skull and The World goes dark!") %
+buf=format("$n's %s crushes your skull and The World goes dark!") %
 		     limbStr;
 	    act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=fmt("$n's %s crushes $N's skull.  Brains ooze out as $E crumples!") %
+buf=format("$n's %s crushes $N's skull.  Brains ooze out as $E crumples!") %
 		     limbStr;
 	    act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	    if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
@@ -1286,7 +1286,7 @@ buf=fmt("$n's %s crushes $N's skull.  Brains ooze out as $E crumples!") %
 	  }
 	}
       default:
-	vlogf(LOG_BUG, fmt("crit_num=%i in critBlunt switch, shouldn't happen") % 
+	vlogf(LOG_BUG, format("crit_num=%i in critBlunt switch, shouldn't happen") % 
 	      crit_num);
 	break;
     }
@@ -1337,7 +1337,7 @@ int TBeing::critSlash(TBeing *v, TThing *weapon, wearSlotT *part_hit,
   TMonster *vmob;
 
   if(crit_num>100){
-    vlogf(LOG_BUG, fmt("critSlash called with crit_num>100 (%i)") %  crit_num);
+    vlogf(LOG_BUG, format("critSlash called with crit_num>100 (%i)") %  crit_num);
     crit_num=0;
   }
   if ((vmob = dynamic_cast<TMonster *>(v)))
@@ -1352,13 +1352,13 @@ int TBeing::critSlash(TBeing *v, TThing *weapon, wearSlotT *part_hit,
     // double damage 
     *dam *= 2;
 
-    buf = fmt("You strike $N's %s exceptionally well, sinking your %s deep into $S flesh!") % v->describeBodySlot(*part_hit) % limbStr;
+    buf = format("You strike $N's %s exceptionally well, sinking your %s deep into $S flesh!") % v->describeBodySlot(*part_hit) % limbStr;
     act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
 
-    buf = fmt("$n strikes your %s exceptionally well, sinking $s %s deep into your flesh!") % v->describeBodySlot(*part_hit) % limbStr;
+    buf = format("$n strikes your %s exceptionally well, sinking $s %s deep into your flesh!") % v->describeBodySlot(*part_hit) % limbStr;
     act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
 
-    buf = fmt("$n strikes $N's %s exceptionally well, sinking $s %s deep into $N's flesh!") % v->describeBodySlot(*part_hit) % limbStr;
+    buf = format("$n strikes $N's %s exceptionally well, sinking $s %s deep into $N's flesh!") % v->describeBodySlot(*part_hit) % limbStr;
     act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 
     return (ONEHIT_MESS_CRIT_S);
@@ -1366,13 +1366,13 @@ int TBeing::critSlash(TBeing *v, TThing *weapon, wearSlotT *part_hit,
     // triple damage
     *dam *= 3;
 
-    buf = fmt("You critically strike $N's %s, sinking your %s deep into $S flesh!") % v->describeBodySlot(*part_hit) % limbStr;
+    buf = format("You critically strike $N's %s, sinking your %s deep into $S flesh!") % v->describeBodySlot(*part_hit) % limbStr;
     act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
 
-    buf = fmt("$n critically strikes your %s, sinking $s %s deep into your flesh!") % v->describeBodySlot(*part_hit) % limbStr;
+    buf = format("$n critically strikes your %s, sinking $s %s deep into your flesh!") % v->describeBodySlot(*part_hit) % limbStr;
     act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
 
-    buf = fmt("$n critically strikes $N's %s, sinking $s %s deep into $N's flesh!") % v->describeBodySlot(*part_hit) % limbStr;
+    buf = format("$n critically strikes $N's %s, sinking $s %s deep into $N's flesh!") % v->describeBodySlot(*part_hit) % limbStr;
     act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 
     return (ONEHIT_MESS_CRIT_S);
@@ -1387,13 +1387,13 @@ int TBeing::critSlash(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	if (!v->hasPart(WEAR_FINGER_R))
 	  return 0;
 
-        buf=fmt("Your %s severs $N's %s and sends it flying!") % limbStr % v->describeBodySlot(WEAR_FINGER_R);
+        buf=format("Your %s severs $N's %s and sends it flying!") % limbStr % v->describeBodySlot(WEAR_FINGER_R);
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
 
-        buf=fmt("$n's %s severs your %s and sends it flying!!  OH THE PAIN!") % limbStr % v->describeBodySlot(WEAR_FINGER_R);
+        buf=format("$n's %s severs your %s and sends it flying!!  OH THE PAIN!") % limbStr % v->describeBodySlot(WEAR_FINGER_R);
 	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
 
-        buf=fmt("$n's %s severs $N's %s and sends it flying!") % limbStr % v->describeBodySlot(WEAR_FINGER_R);
+        buf=format("$n's %s severs $N's %s and sends it flying!") % limbStr % v->describeBodySlot(WEAR_FINGER_R);
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 
 	v->makePartMissing(WEAR_FINGER_R, FALSE, this);
@@ -1412,15 +1412,15 @@ int TBeing::critSlash(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	// sever finger-l
 	if (!v->hasPart(WEAR_FINGER_L))
 	  return 0;
-buf=fmt("Your %s severs $N's %s and sends it flying!") %
+buf=format("Your %s severs $N's %s and sends it flying!") %
 		limbStr %
 		v->describeBodySlot(WEAR_FINGER_L);
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n's %s severs your %s and sends it flying!!  OH THE PAIN!") %
+buf=format("$n's %s severs your %s and sends it flying!!  OH THE PAIN!") %
 		limbStr %
 		v->describeBodySlot(WEAR_FINGER_L);
 	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=fmt("$n's %s severs $N's %s and sends it flying!") %
+buf=format("$n's %s severs $N's %s and sends it flying!") %
 		limbStr %
 		v->describeBodySlot(WEAR_FINGER_L);
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
@@ -1439,7 +1439,7 @@ buf=fmt("$n's %s severs $N's %s and sends it flying!") %
 	if (!v->isHumanoid())
 	  return 0;
 	if ((obj = v->equipment[WEAR_WRIST_R])) {
-	  v->sendTo(COLOR_OBJECTS, fmt("Your %s saves you from losing your %s!\n\r") %
+	  v->sendTo(COLOR_OBJECTS, format("Your %s saves you from losing your %s!\n\r") %
 		    fname(obj->name) % v->describeBodySlot(WEAR_HAND_R));
 	  for (i=1;i<5;i++)
 	    if (v->equipment[WEAR_WRIST_R])
@@ -1453,15 +1453,15 @@ buf=fmt("$n's %s severs $N's %s and sends it flying!") %
 	  return 0;
 	if (!v->isHumanoid())
 	  return 0;
-buf=fmt("Your %s severs $N's %s and sends it flying!") %
+buf=format("Your %s severs $N's %s and sends it flying!") %
 		limbStr %
 		v->describeBodySlot(WEAR_HAND_R);
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n's %s severs your %s and sends it flying!!  OH THE PAIN!") %
+buf=format("$n's %s severs your %s and sends it flying!!  OH THE PAIN!") %
 		limbStr %
 		v->describeBodySlot(WEAR_HAND_R);
 	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=fmt("$n's %s severs $N's %s and sends it flying!") %
+buf=format("$n's %s severs $N's %s and sends it flying!") %
 		limbStr %
 		v->describeBodySlot(WEAR_HAND_R);
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
@@ -1481,7 +1481,7 @@ buf=fmt("$n's %s severs $N's %s and sends it flying!") %
 	if (!v->isHumanoid())
 	  return 0;
 	if ((obj = v->equipment[WEAR_WRIST_L])) {
-	  v->sendTo(COLOR_OBJECTS, fmt("Your %s saves you from losing a hand!\n\r") %
+	  v->sendTo(COLOR_OBJECTS, format("Your %s saves you from losing a hand!\n\r") %
 		    fname(obj->name));
 	  for (i=1;i<5;i++)
 	    if (v->equipment[WEAR_WRIST_L])
@@ -1495,15 +1495,15 @@ buf=fmt("$n's %s severs $N's %s and sends it flying!") %
 	  return 0;
 	if (!v->isHumanoid())
 	  return 0;
-buf=fmt("Your %s severs $N's %s and sends it flying!") %
+buf=format("Your %s severs $N's %s and sends it flying!") %
 		limbStr %
 		v->describeBodySlot(WEAR_HAND_L);
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n's %s severs your %s and sends it flying!!  OH THE PAIN!") %
+buf=format("$n's %s severs your %s and sends it flying!!  OH THE PAIN!") %
 		limbStr %
 		v->describeBodySlot(WEAR_HAND_L);
 	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=fmt("$n's %s severs $N's %s and sends it flying!") %
+buf=format("$n's %s severs $N's %s and sends it flying!") %
 		limbStr %
 		v->describeBodySlot(WEAR_HAND_L);
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
@@ -1523,15 +1523,15 @@ buf=fmt("$n's %s severs $N's %s and sends it flying!") %
 	  return 0;
 	if (!v->isHumanoid())
 	  return 0;
-buf=fmt("Your %s severs $N's %s and sends it flying!") %
+buf=format("Your %s severs $N's %s and sends it flying!") %
 		limbStr %
 		v->describeBodySlot(WEAR_ARM_R);
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n's %s severs your %s and sends it flying!!  OH THE PAIN!") %
+buf=format("$n's %s severs your %s and sends it flying!!  OH THE PAIN!") %
 		limbStr %
 		v->describeBodySlot(WEAR_ARM_R);
 	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=fmt("$n's %s severs $N's %s and sends it flying!") %
+buf=format("$n's %s severs $N's %s and sends it flying!") %
 		limbStr %
 		v->describeBodySlot(WEAR_ARM_R);
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
@@ -1551,15 +1551,15 @@ buf=fmt("$n's %s severs $N's %s and sends it flying!") %
 	  return 0;
 	if (!v->isHumanoid())
 	  return 0;
-buf=fmt("Your %s severs $N's %s and sends it flying!") %
+buf=format("Your %s severs $N's %s and sends it flying!") %
 		limbStr %
 		v->describeBodySlot(WEAR_ARM_L);
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n's %s severs your %s and sends it flying!!  OH THE PAIN!") %
+buf=format("$n's %s severs your %s and sends it flying!!  OH THE PAIN!") %
 		limbStr %
 		v->describeBodySlot(WEAR_ARM_L);
 	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=fmt("$n's %s severs $N's %s and sends it flying!") %
+buf=format("$n's %s severs $N's %s and sends it flying!") %
 		limbStr %
 		v->describeBodySlot(WEAR_ARM_L);
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
@@ -1578,15 +1578,15 @@ buf=fmt("$n's %s severs $N's %s and sends it flying!") %
 	if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA)) {
 	  if (!v->hasPart(WEAR_FOOT_R))
 	    return 0;
-buf=fmt("Your %s severs $N's %s and sends it flying!") %
+buf=format("Your %s severs $N's %s and sends it flying!") %
 		  limbStr %
 		  v->describeBodySlot(WEAR_FOOT_R);
 	  act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n's %s severs your %s!!  OH THE PAIN!") %
+buf=format("$n's %s severs your %s!!  OH THE PAIN!") %
 		  limbStr %
 		  v->describeBodySlot(WEAR_FOOT_R);
 	  act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=fmt("$n's %s severs $N's %s and sends it flying!") %
+buf=format("$n's %s severs $N's %s and sends it flying!") %
 		  limbStr %
 		  v->describeBodySlot(WEAR_FOOT_R);
 	  act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
@@ -1608,15 +1608,15 @@ buf=fmt("$n's %s severs $N's %s and sends it flying!") %
 	// sever other leg: foot missing, leg useless
 	if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
 	    v->hasPart(WEAR_FOOT_L)) {
-buf=fmt("Your %s severs $N's %s and sends it flying!") %
+buf=format("Your %s severs $N's %s and sends it flying!") %
 		  limbStr %
 		  v->describeBodySlot(WEAR_FOOT_L);
 	  act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n's %s severs your %s!!  OH THE PAIN!") %
+buf=format("$n's %s severs your %s!!  OH THE PAIN!") %
 		  limbStr %
 		  v->describeBodySlot(WEAR_FOOT_L);
 	  act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=fmt("$n's %s severs $N's %s and sends it flying!") %
+buf=format("$n's %s severs $N's %s and sends it flying!") %
 		  limbStr %
 		  v->describeBodySlot(WEAR_FOOT_L);
 	  act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
@@ -1638,13 +1638,13 @@ buf=fmt("$n's %s severs $N's %s and sends it flying!") %
 	// impale with weapon
 	if (!v->hasPart(WEAR_BODY))
 	  return 0;
-buf=fmt("You stick your %s through $N's body, impaling $M!") %
+buf=format("You stick your %s through $N's body, impaling $M!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n's %s is thrust through your torso, impaling you!!") %
+buf=format("$n's %s is thrust through your torso, impaling you!!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=fmt("$n thrusts $s %s deep into $N's torso, impaling $M!") %
+buf=format("$n thrusts $s %s deep into $N's torso, impaling $M!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	if (desc)
@@ -1664,13 +1664,13 @@ buf=fmt("$n thrusts $s %s deep into $N's torso, impaling $M!") %
 	if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
 	    v->hasPart(WEAR_WAIST) &&
 	    (obj = v->equipment[WEAR_WAIST])) {
-buf=fmt("You attempt to cleave $N in two with your %s, but $p saves $M from a hideous fate.") %
+buf=format("You attempt to cleave $N in two with your %s, but $p saves $M from a hideous fate.") %
 		  limbStr;
 	  act(buf, FALSE, this, obj, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n tries to cleave you in two with $s %s, but $p saves you thankfully!") %
+buf=format("$n tries to cleave you in two with $s %s, but $p saves you thankfully!") %
 		  limbStr;
 	  act(buf, FALSE, this, obj, v, TO_VICT, ANSI_RED);
-buf=fmt("$n attempts to cleave $N in two with $s %s! Thankfully $p saves $M!") %
+buf=format("$n attempts to cleave $N in two with $s %s! Thankfully $p saves $M!") %
 		  limbStr;
 	  act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
 
@@ -1689,13 +1689,13 @@ buf=fmt("$n attempts to cleave $N in two with $s %s! Thankfully $p saves $M!") %
 	if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA)) {
 	  if (!weapon && ((getHeight()*3) < v->getHeight()) &&
 	      !isDiabolic() && !isLycanthrope()) {
-buf=fmt("With a mighy warcry, you almost cleave $N in two with your %s.") %
+buf=format("With a mighy warcry, you almost cleave $N in two with your %s.") %
 		    limbStr;
 	    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n unleashes a mighty warcry and slashes you HARD down the center with $s %s!") %
+buf=format("$n unleashes a mighty warcry and slashes you HARD down the center with $s %s!") %
 		    limbStr;
 	    act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=fmt("$n gives a mighty warcry and slashes $N down the center with $s %s!") %
+buf=format("$n gives a mighty warcry and slashes $N down the center with $s %s!") %
 		    limbStr;
 	    act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	    if ((obj = v->equipment[WEAR_WAIST]))
@@ -1708,13 +1708,13 @@ buf=fmt("$n gives a mighty warcry and slashes $N down the center with $s %s!") %
 	      v->desc->career.crit_cleave_two_suff++;
 	    return applyDamage(v, GetMaxLevel()*3, DAMAGE_HACKED);
 	  } else {
-buf=fmt("With a mighty warcry, you cleave $N in two with your %s.") %
+buf=format("With a mighty warcry, you cleave $N in two with your %s.") %
 		    limbStr;
 	    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n unleashes a mighty warcry before cleaving you in two with $s %s!") %
+buf=format("$n unleashes a mighty warcry before cleaving you in two with $s %s!") %
 		    limbStr;
 	    act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=fmt("$n gives a mighty warcry and cleaves $N in two with $s %s!") %
+buf=format("$n gives a mighty warcry and cleaves $N in two with $s %s!") %
 		    limbStr;
 	    act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	    if ((obj = v->equipment[WEAR_WAIST]))
@@ -1733,13 +1733,13 @@ buf=fmt("$n gives a mighty warcry and cleaves $N in two with $s %s!") %
       case 90:
 	// slice torso from gullet to groin
 	if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) && !IS_SET(v->specials.act, ACT_SKELETON)) {
-buf=fmt("With your %s, you slice $N from gullet to groin disembowling $M!") %
+buf=format("With your %s, you slice $N from gullet to groin disembowling $M!") %
 		  limbStr;
 	  act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n's %s slices you from gullet to groin, disembowling you!") %
+buf=format("$n's %s slices you from gullet to groin, disembowling you!") %
 		  limbStr;
 	  act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=fmt("$n's %s slices into $N from gullet to groin, disembowling $M!") %
+buf=format("$n's %s slices into $N from gullet to groin, disembowling $M!") %
 		  limbStr;
 	  act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	  if ((obj = v->equipment[WEAR_BODY]))
@@ -1756,9 +1756,9 @@ buf=fmt("$n's %s slices into $N from gullet to groin, disembowling $M!") %
       case 91:
       case 92:
 	if (v->getSex()==SEX_MALE && v->hasPart(WEAR_WAIST) && (!(obj = v->equipment[WEAR_WAIST]) || !obj->isMetal()) && !IS_SET(v->specials.act, ACT_SKELETON) && !IS_SET(v->specials.act, ACT_GHOST)){
-	  buf = fmt("With a deft swing of your %s, you sever $N's genitals.") % limbStr;
+	  buf = format("With a deft swing of your %s, you sever $N's genitals.") % limbStr;
 	  act(buf,FALSE,this,obj,v,TO_CHAR,ANSI_ORANGE);
-	  buf = fmt("$n deftly severs your genitals with $s %s!  OWWWWW!") % limbStr;
+	  buf = format("$n deftly severs your genitals with $s %s!  OWWWWW!") % limbStr;
 	  act(buf,FALSE,this,obj,v,TO_VICT,ANSI_ORANGE);
 
 	  if(obj)
@@ -1768,24 +1768,24 @@ buf=fmt("$n's %s slices into $N from gullet to groin, disembowling $M!") %
 		
 	  corpse = new TCorpse();
     if (dynamic_cast<TPerson *>(this)) 
-      buf = fmt("genitalia lost limb %s [q] [jumblies] [0] [%d] [%s]") % v->name % v_vnum % getName();
+      buf = format("genitalia lost limb %s [q] [jumblies] [0] [%d] [%s]") % v->name % v_vnum % getName();
     else
-      buf = fmt("genitalia lost limb %s") % v->name;
+      buf = format("genitalia lost limb %s") % v->name;
     corpse->name = mud_str_dup(buf);
 		
 	  if (v->getMaterial(WEAR_WAIST) > MAT_GEN_MINERAL) {
 	    // made of mineral or metal
-	    buf = fmt("the mangled genitalia of %s") % v->getName();
+	    buf = format("the mangled genitalia of %s") % v->getName();
 	  } else {
-	    buf = fmt("the bloody, mangled genitalia of %s") % v->getName();
+	    buf = format("the bloody, mangled genitalia of %s") % v->getName();
 	  }
 	  corpse->shortDescr = mud_str_dup(buf);
 		
 	  if (v->getMaterial(WEAR_WAIST) > MAT_GEN_MINERAL) {
 	    // made of mineral or metal
-	    buf = fmt("The mangled, severed genitalia of %s is lying here.") % v->getName();
+	    buf = format("The mangled, severed genitalia of %s is lying here.") % v->getName();
 	  } else {
-	    buf = fmt("The bloody, mangled, severed genitalia of %s is lying here.") % v->getName();
+	    buf = format("The bloody, mangled, severed genitalia of %s is lying here.") % v->getName();
 	  }
 	  corpse->setDescr(mud_str_dup(buf));
 		
@@ -1825,13 +1825,13 @@ buf=fmt("$n's %s slices into $N from gullet to groin, disembowling $M!") %
 	// decapitate if no neck armor
 	if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
 	    (obj = v->equipment[WEAR_NECK])) {
-buf=fmt("You attempt to decapitate $N with your %s, but $p saves $M from a hideous fate.") %
+buf=format("You attempt to decapitate $N with your %s, but $p saves $M from a hideous fate.") %
 		  limbStr;
 	  act(buf, FALSE, this, obj, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n tries to decapitate you with $s %s, but $p saves you!") %
+buf=format("$n tries to decapitate you with $s %s, but $p saves you!") %
 		  limbStr;
 	  act(buf, FALSE, this, obj, v, TO_VICT, ANSI_RED);
-buf=fmt("$n attempts to decapitate $N with $s %s!  Luckily, $p saves $M!") %
+buf=format("$n attempts to decapitate $N with $s %s!  Luckily, $p saves $M!") %
 		  limbStr;
 	  act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
 
@@ -1863,7 +1863,7 @@ buf=fmt("$n attempts to decapitate $N with $s %s!  Luckily, $p saves $M!") %
 	  return DELETE_VICT;
 	}
       default:
-	vlogf(LOG_BUG, fmt("crit_num=%i in critSlash switch, shouldn't happen") % 
+	vlogf(LOG_BUG, format("crit_num=%i in critSlash switch, shouldn't happen") % 
 	      crit_num);
 	break;
     }
@@ -1910,7 +1910,7 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
   weaponStr=(weapon ? "$o" : getMyRace()->getBodyLimbPierce(this));
   
   if(crit_num>100){
-    vlogf(LOG_BUG, fmt("critPierce called with crit_num>100 (%i)") %  crit_num);
+    vlogf(LOG_BUG, format("critPierce called with crit_num>100 (%i)") %  crit_num);
     crit_num=0;
   }
 
@@ -1919,13 +1919,13 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
     // double damage 
     *dam *= 2;
 
-    buf = fmt("You strike $N's %s exceptionally well, sinking your %s deep into $S flesh!") % v->describeBodySlot(*part_hit) % weaponStr;
+    buf = format("You strike $N's %s exceptionally well, sinking your %s deep into $S flesh!") % v->describeBodySlot(*part_hit) % weaponStr;
     act(buf, FALSE, this, weapon, v, TO_CHAR, ANSI_ORANGE);
 
-    buf = fmt("$n strikes your %s exceptionally well, sinking $s %s deep into your flesh!") % v->describeBodySlot(*part_hit) % weaponStr;
+    buf = format("$n strikes your %s exceptionally well, sinking $s %s deep into your flesh!") % v->describeBodySlot(*part_hit) % weaponStr;
     act(buf, FALSE, this, weapon, v, TO_VICT, ANSI_RED);
 
-    buf = fmt("$n strikes $N's %s exceptionally well, sinking $s %s deep into $N's flesh!") % v->describeBodySlot(*part_hit) % weaponStr;
+    buf = format("$n strikes $N's %s exceptionally well, sinking $s %s deep into $N's flesh!") % v->describeBodySlot(*part_hit) % weaponStr;
     act(buf, FALSE, this, weapon, v, TO_NOTVICT, ANSI_BLUE);
 
     return (ONEHIT_MESS_CRIT_S);
@@ -1933,13 +1933,13 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
     // triple damage 
     *dam *= 3;
 
-    buf = fmt("You critically strike $N's %s, sinking your %s deep into $S flesh!") % v->describeBodySlot(*part_hit) % weaponStr;
+    buf = format("You critically strike $N's %s, sinking your %s deep into $S flesh!") % v->describeBodySlot(*part_hit) % weaponStr;
     act(buf, FALSE, this, weapon, v, TO_CHAR, ANSI_ORANGE);
 
-    buf = fmt("$n critically strikes your %s, sinking $s %s deep into your flesh!") % v->describeBodySlot(*part_hit) % weaponStr;
+    buf = format("$n critically strikes your %s, sinking $s %s deep into your flesh!") % v->describeBodySlot(*part_hit) % weaponStr;
     act(buf, FALSE, this, weapon, v, TO_VICT, ANSI_RED);
 
-    buf = fmt("$n critically strikes $N's %s, sinking $s %s deep into $N's flesh!") % v->describeBodySlot(*part_hit) % weaponStr;
+    buf = format("$n critically strikes $N's %s, sinking $s %s deep into $N's flesh!") % v->describeBodySlot(*part_hit) % weaponStr;
     act(buf, FALSE, this, weapon, v, TO_NOTVICT, ANSI_BLUE);
 
     return (ONEHIT_MESS_CRIT_S);
@@ -1953,7 +1953,7 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	  return 0;
 	*part_hit = WEAR_NECK;
 	if ((obj = v->equipment[WEAR_NECK])) {
-	  v->sendTo(COLOR_OBJECTS, fmt("Your %s saves you from a punctured larynx!\n\r") %
+	  v->sendTo(COLOR_OBJECTS, format("Your %s saves you from a punctured larynx!\n\r") %
 		    fname(obj->name));
 	  for (i=1;i<5;i++)
 	    if (v->equipment[WEAR_NECK])
@@ -1967,13 +1967,13 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	  return 0;
 	if (v->hasDisease(DISEASE_VOICEBOX))
 	  return 0;
-buf=fmt("You pop your %s into $N's throat, puncturing $S voice box!") %
+buf=format("You pop your %s into $N's throat, puncturing $S voice box!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n pops $s %s into your throat, puncturing your voice box!") %
+buf=format("$n pops $s %s into your throat, puncturing your voice box!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=fmt("$n pops $s %s into $N's throat, puncturing $S voice box!") %
+buf=format("$n pops $s %s into $N's throat, puncturing $S voice box!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	for (i=1;i<5;i++)
@@ -2001,13 +2001,13 @@ buf=fmt("$n pops $s %s into $N's throat, puncturing $S voice box!") %
 	  return 0;
 	if (!v->hasPart(WEAR_HEAD))
 	  return 0;
-buf=fmt("You pop your %s into $N's eyes, gouging them out and blinding $M!") %
+buf=format("You pop your %s into $N's eyes, gouging them out and blinding $M!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n pops $s %s into your eyes and The World goes DARK!") %
+buf=format("$n pops $s %s into your eyes and The World goes DARK!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=fmt("$n pops $s %s into $N's eyes, gouging them out and blinding $M!") %
+buf=format("$n pops $s %s into $N's eyes, gouging them out and blinding $M!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	act("$n's eyeballs fall from $s sockets!",TRUE,v,0,0,TO_ROOM);
@@ -2034,7 +2034,7 @@ buf=fmt("$n pops $s %s into $N's eyes, gouging them out and blinding $M!") %
 	if (!v->isHumanoid())
 	  return 0;
 	if ((obj = v->equipment[WEAR_LEG_R])) {
-	  v->sendTo(COLOR_OBJECTS, fmt("Your %s saves you from losing a tendon!\n\r") %
+	  v->sendTo(COLOR_OBJECTS, format("Your %s saves you from losing a tendon!\n\r") %
 		    fname(obj->name));
 	  for (i=1;i<5;i++)
 	    if (v->equipment[WEAR_LEG_R])
@@ -2051,13 +2051,13 @@ buf=fmt("$n pops $s %s into $N's eyes, gouging them out and blinding $M!") %
 	  return 0;
 	if (!v->isHumanoid())
 	  return 0;
-buf=fmt("Your %s rips through $N's tendon on $S lower leg!") %
+buf=format("Your %s rips through $N's tendon on $S lower leg!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n's %s rips through the tendon in your lower leg.") %
+buf=format("$n's %s rips through the tendon in your lower leg.") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=fmt("$n's %s rips into $N, tearing the tendon in $S lower leg.") %
+buf=format("$n's %s rips into $N, tearing the tendon in $S lower leg.") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	v->setMove(v->getMove()/4);
@@ -2074,7 +2074,7 @@ buf=fmt("$n's %s rips into $N, tearing the tendon in $S lower leg.") %
 	if (!v->hasPart(WEAR_BACK))
 	  return 0;
 	if ((obj = v->equipment[WEAR_BACK])) {
-	  v->sendTo(COLOR_OBJECTS, fmt("Your %s saves you from a gory wound!\n\r") %
+	  v->sendTo(COLOR_OBJECTS, format("Your %s saves you from a gory wound!\n\r") %
 		    fname(obj->name));
 	  for (i=1;i<5;i++)
 	    if (v->equipment[WEAR_BACK])
@@ -2086,13 +2086,13 @@ buf=fmt("$n's %s rips into $N, tearing the tendon in $S lower leg.") %
 	// Side wound, vict stunned 6 rounds. 
 	if (!v->hasPart(WEAR_BACK))
 	  return 0;
-buf=fmt("You plunge your %s deep into $N's side, stunning $M!") %
+buf=format("You plunge your %s deep into $N's side, stunning $M!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n plunges $s %s deep into your side.  The agony makes you forget about the fight.") %
+buf=format("$n plunges $s %s deep into your side.  The agony makes you forget about the fight.") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=fmt("$n plunges $s %s deep into $N's side, stunning $M.") %
+buf=format("$n plunges $s %s deep into $N's side, stunning $M.") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	for (i=1;i<5;i++)
@@ -2110,17 +2110,17 @@ buf=fmt("$n plunges $s %s deep into $N's side, stunning $M.") %
 	if (!v->hasPart(WEAR_HEAD))
 	  return 0;
 	if ((obj = v->equipment[WEAR_HEAD])) {
-	  buf=fmt("You try to thrust your %s into the back of $N's head.") %
+	  buf=format("You try to thrust your %s into the back of $N's head.") %
 	    limbStr;
 	  act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
 	  buf = "Unfortunately, $p saves $M from a hideous death!";
 	  act(buf, FALSE, this, obj, v, TO_CHAR);
-	  buf=fmt("$n tries to thrust $s %s into the back of your head.") %
+	  buf=format("$n tries to thrust $s %s into the back of your head.") %
 	    limbStr;
 	  act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
 	  buf="But $p saves you from a hideous death!";
 	  act(buf, FALSE, this, obj, v, TO_VICT, ANSI_RED);
-	  buf=fmt("$n tries plunging $s %s into the back of $N's head, but $p saves $M.") %
+	  buf=format("$n tries plunging $s %s into the back of $N's head, but $p saves $M.") %
 	    limbStr;
 	  act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
 	  for (i=1;i<5;i++)
@@ -2135,15 +2135,15 @@ buf=fmt("$n plunges $s %s deep into $N's side, stunning $M.") %
 	    return DELETE_VICT;
 	  return ONEHIT_MESS_CRIT_S;
 	} else {
-buf=fmt("You thrust your %s into the back of $N's head causing an immediate death.") %
+buf=format("You thrust your %s into the back of $N's head causing an immediate death.") %
 		  limbStr;
 	  act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n's %s tears into the back of your unprotected head.") %
+buf=format("$n's %s tears into the back of your unprotected head.") %
 		  limbStr;
 	  act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-	  buf = fmt("The world goes black and dark...");
+	  buf = format("The world goes black and dark...");
 	  act(buf, FALSE, this, 0, v, TO_VICT, ANSI_BLACK);
-buf=fmt("$n thrusts $s %s deep into the back of $N's unprotected head, causing an immediate death.") %
+buf=format("$n thrusts $s %s deep into the back of $N's unprotected head, causing an immediate death.") %
 		  limbStr;
 	  act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	  rc = dislodgeWeapon(v,weapon,WEAR_HEAD);
@@ -2166,13 +2166,13 @@ buf=fmt("$n thrusts $s %s deep into the back of $N's unprotected head, causing a
 	  return 0;
 	if (!v->isHumanoid())
 	  return FALSE;
-buf=fmt("$N blocks your %s with $S arm.  However the force shatters $S elbow!") %
+buf=format("$N blocks your %s with $S arm.  However the force shatters $S elbow!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n's %s is blocked by your arm.  Unfortunately your elbow is shattered!") %
+buf=format("$n's %s is blocked by your arm.  Unfortunately your elbow is shattered!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=fmt("$n's %s shatters $N's elbow!") %
+buf=format("$n's %s shatters $N's elbow!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	v->damageArm(FALSE,PART_BROKEN);
@@ -2203,13 +2203,13 @@ buf=fmt("$n's %s shatters $N's elbow!") %
 	  return 0;
 	if (!v->isHumanoid())
 	  return 0;
-buf=fmt("Your %s severs $N's hand at $S wrist!") %
+buf=format("Your %s severs $N's hand at $S wrist!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n's %s severs your arm below the wrist!") %
+buf=format("$n's %s severs your arm below the wrist!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=fmt("$n's %s severs $N's hand at the wrist!") %
+buf=format("$n's %s severs $N's hand at the wrist!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	v->makePartMissing(v->getPrimaryHand(), FALSE, this);
@@ -2227,7 +2227,7 @@ buf=fmt("$n's %s severs $N's hand at the wrist!") %
 	if (!v->hasPart(WEAR_BODY))
 	  return 0;
 	if ((obj = v->equipment[WEAR_BODY])) {
-	  v->sendTo(COLOR_OBJECTS, fmt("Your %s saves you from a punctured lung!\n\r") %
+	  v->sendTo(COLOR_OBJECTS, format("Your %s saves you from a punctured lung!\n\r") %
 		    fname(obj->name));
 	  for (i=1;i<9;i++)
 	    if (v->equipment[WEAR_BODY])
@@ -2241,13 +2241,13 @@ buf=fmt("$n's %s severs $N's hand at the wrist!") %
           return 0;
 	if (v->hasDisease(DISEASE_LUNG))
 	  return 0;
-buf=fmt("Your %s plunges into $N's chest puncturing a lung!") %
+buf=format("Your %s plunges into $N's chest puncturing a lung!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n's %s plunges into your chest and punctures a lung!!!") %
+buf=format("$n's %s plunges into your chest and punctures a lung!!!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=fmt("$n's %s plunges into $N's chest.\n\rA hiss of air escapes $S punctured lung!") %
+buf=format("$n's %s plunges into $N's chest.\n\rA hiss of air escapes $S punctured lung!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	af.type = AFFECT_DISEASE;
@@ -2274,7 +2274,7 @@ buf=fmt("$n's %s plunges into $N's chest.\n\rA hiss of air escapes $S punctured 
 	if (!v->hasPart(WEAR_BODY))
 	  return 0;
 	if ((obj = v->equipment[WEAR_BODY])) {
-	  v->sendTo(COLOR_OBJECTS, fmt("Your %s saves you from a kidney wound!\n\r") %
+	  v->sendTo(COLOR_OBJECTS, format("Your %s saves you from a kidney wound!\n\r") %
 		    fname(obj->name));
 	  for (i=1;i<7;i++)
 	    if (v->equipment[WEAR_BODY])
@@ -2288,13 +2288,13 @@ buf=fmt("$n's %s plunges into $N's chest.\n\rA hiss of air escapes $S punctured 
           return 0;
 	if (!v->hasPart(WEAR_BODY))
 	  return 0;
-buf=fmt("You puncture $N's kidney with your %s and cause an infection!") %
+buf=format("You puncture $N's kidney with your %s and cause an infection!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n's %s tears into your kidney; the pain is AGONIZING and an infection has started!") %
+buf=format("$n's %s tears into your kidney; the pain is AGONIZING and an infection has started!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=fmt("$n's %s punctures $N's kidney!") %
+buf=format("$n's %s punctures $N's kidney!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 
@@ -2318,13 +2318,13 @@ buf=fmt("$n's %s punctures $N's kidney!") %
 	  return 0;
 	if (v->hasDisease(DISEASE_STOMACH))
 	  return 0;
-buf=fmt("You plunge your %s into $N's stomach, opening up $S gullet!") %
+buf=format("You plunge your %s into $N's stomach, opening up $S gullet!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n's %s tears into your stomach and exposes your intestines!!") %
+buf=format("$n's %s tears into your stomach and exposes your intestines!!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=fmt("$n's %s tears into $N's stomach exposing intestines!") %
+buf=format("$n's %s tears into $N's stomach exposing intestines!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	v->rawInfect(WEAR_BODY, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
@@ -2362,13 +2362,13 @@ buf=fmt("$n's %s tears into $N's stomach exposing intestines!") %
       case 100:
         if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
           return 0;
-	buf=fmt("You sink your %s between $N's eyes, causing an immediate death!") %
+	buf=format("You sink your %s between $N's eyes, causing an immediate death!") %
 	  limbStr;
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-	buf=fmt("$n sinks $s %s right between your eyes, causing an immediate death!") %
+	buf=format("$n sinks $s %s right between your eyes, causing an immediate death!") %
 	  limbStr;
 	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-	buf=fmt("$n sinks $s %s smack between $N's eyes, causing an immediate death!") %
+	buf=format("$n sinks $s %s smack between $N's eyes, causing an immediate death!") %
 	  limbStr;
 	act(buf, FALSE, this, 0, v, TO_ROOM);
 	applyDamage(v, (20 * v->hitLimit()),wtype);
@@ -2379,7 +2379,7 @@ buf=fmt("$n's %s tears into $N's stomach exposing intestines!") %
 	  v->desc->career.crit_cranial_pierce_suff++;
 	return DELETE_VICT;
       default:
-	vlogf(LOG_BUG, fmt("crit_num=%i in critPierce switch, shouldn't happen") % 
+	vlogf(LOG_BUG, format("crit_num=%i in critPierce switch, shouldn't happen") % 
 	      crit_num);
 	break;
     }

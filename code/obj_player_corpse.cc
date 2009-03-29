@@ -221,7 +221,7 @@ int TPCorpse::getMe(TBeing *ch, TThing *sub)
     return TRUE;
   }
   if (sub) {
-    vlogf(LOG_BUG,fmt("Problem with a sub in corpse.getMe %s %s") %  (ch ? ch->getName() : "") % getName());
+    vlogf(LOG_BUG,format("Problem with a sub in corpse.getMe %s %s") %  (ch ? ch->getName() : "") % getName());
     removeCorpseFromList();
     return DELETE_THIS;
   }

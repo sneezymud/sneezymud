@@ -167,7 +167,7 @@ int TThing::butcherPulse(TBeing *ch, TBaseCorpse *corpse)
     // hence this setup instead.
     int robj = real_object(GENERIC_STEAK);
     if (robj < 0 || robj >= (signed int) obj_index.size()) {
-      vlogf(LOG_BUG, fmt("butcherPulse: No object (%d) in database!") %  GENERIC_STEAK);
+      vlogf(LOG_BUG, format("butcherPulse: No object (%d) in database!") %  GENERIC_STEAK);
       return false;
     }
     item = read_object(robj, REAL);
@@ -196,19 +196,19 @@ int TThing::butcherPulse(TBeing *ch, TBaseCorpse *corpse)
     steak->setVolume(FoodUnits * 10);
     steak->setFoodFlags(FOOD_BUTCHERED);
 
-    buf=fmt("meat %s %s") %
+    buf=format("meat %s %s") %
       (tpc?namebuf:Races[corpse->getCorpseRace()]->getSingularName()) %
       meats[whichmeat];
     delete [] steak->name;
     steak->name = mud_str_dup(buf);
 
-    buf=fmt("a %s of %s meat") %
+    buf=format("a %s of %s meat") %
       meats[whichmeat] %
       (tpc?namebuf:Races[corpse->getCorpseRace()]->getSingularName());
     delete [] steak->shortDescr;
     steak->shortDescr = mud_str_dup(buf);
 
-    buf=fmt("A %s of %s meat lies here.") %
+    buf=format("A %s of %s meat lies here.") %
       meats[whichmeat] %
       (tpc?namebuf:Races[corpse->getCorpseRace()]->getSingularName());
     delete [] steak->descr;
@@ -382,7 +382,7 @@ int bareHandsButcherPulse(TBeing *ch, TBaseCorpse *corpse)
     // check4errors
     int robj = real_object(GENERIC_STEAK);
     if (robj < 0 || robj >= (signed int) obj_index.size()) {
-      vlogf(LOG_BUG, fmt("bareHandsButcherPulse: No object (%d) in database!") %  GENERIC_STEAK);
+      vlogf(LOG_BUG, format("bareHandsButcherPulse: No object (%d) in database!") %  GENERIC_STEAK);
       return false;
     }
     item = read_object(robj, REAL);
@@ -413,11 +413,11 @@ int bareHandsButcherPulse(TBeing *ch, TBaseCorpse *corpse)
 
     // set strings
     delete [] steak->name;
-    steak->name = mud_str_dup(fmt("meat mangled %s %s") % fromName % meats[whichmeat]);
+    steak->name = mud_str_dup(format("meat mangled %s %s") % fromName % meats[whichmeat]);
     delete [] steak->shortDescr;
-    steak->shortDescr = mud_str_dup(fmt("a mangled %s of %s meat") % meats[whichmeat] % fromName);
+    steak->shortDescr = mud_str_dup(format("a mangled %s of %s meat") % meats[whichmeat] % fromName);
     delete [] steak->descr;
-    steak->setDescr(mud_str_dup(fmt("A mangled %s of %s meat lies here.") % meats[whichmeat] % fromName));
+    steak->setDescr(mud_str_dup(format("A mangled %s of %s meat lies here.") % meats[whichmeat] % fromName));
 
     *ch += *steak;
   }

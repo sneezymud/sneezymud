@@ -12,7 +12,7 @@
 currencyEntry *currencyInfoT::operator[] (const currencyTypeT i)
 {
   if(currencies.find(i) == currencies.end()){
-    vlogf(LOG_BUG, fmt("invalid currency detected: %i") % i);
+    vlogf(LOG_BUG, format("invalid currency detected: %i") % i);
     return currencies[CURRENCY_GRIMHAVEN];
   } else {
     return currencies[i];
@@ -131,7 +131,7 @@ sstring TMoney::statObjInfo() const
 {
   sstring buf;
 
-  buf=fmt("%s in pile: %i") % currencyInfo[getCurrency()]->getName().cap() %
+  buf=format("%s in pile: %i") % currencyInfo[getCurrency()]->getName().cap() %
     getMoney();
 
   return buf;
@@ -172,7 +172,7 @@ TMoney *create_money(int amount, currencyTypeT currency)
   TMoney *money;
 
   if(amount<0){
-    vlogf(LOG_BUG, fmt("ERROR: Try to create negative money (%i).") %  amount);
+    vlogf(LOG_BUG, format("ERROR: Try to create negative money (%i).") %  amount);
     amount=1;
   }
 
@@ -200,44 +200,44 @@ TMoney *create_money(int amount, currencyTypeT currency)
   if (amount == 1) {
     money->name = mud_str_dup(money->getCurrencyName() + " money");
     money->shortDescr = mud_str_dup("a "+money->getCurrencyName());
-    money->setDescr(mud_str_dup(fmt("One miserable %s lies here.") % money->getCurrencyName()));
+    money->setDescr(mud_str_dup(format("One miserable %s lies here.") % money->getCurrencyName()));
 
     new_descr->keyword = mud_str_dup(money->getCurrencyName() + " money");
-    new_descr->description = mud_str_dup(fmt("One miserable %s.\n\r") % money->getCurrencyName());
+    new_descr->description = mud_str_dup(format("One miserable %s.\n\r") % money->getCurrencyName());
 
   } else {
     money->name = mud_str_dup(money->getCurrencyName()+"s money");
-    money->shortDescr = mud_str_dup(fmt("some %ss") % money->getCurrencyName());
+    money->shortDescr = mud_str_dup(format("some %ss") % money->getCurrencyName());
     if (amount > 100000)
-      buf=fmt("A tremendously HUGE pile of %ss lies here.") % money->getCurrencyName();
+      buf=format("A tremendously HUGE pile of %ss lies here.") % money->getCurrencyName();
     else if (amount > 50000)
-      buf=fmt("A HUGE pile of %ss lies here.") % money->getCurrencyName();
+      buf=format("A HUGE pile of %ss lies here.") % money->getCurrencyName();
     else if (amount > 10000)
-      buf=fmt("A LARGE pile of %ss lies here.") % money->getCurrencyName();
+      buf=format("A LARGE pile of %ss lies here.") % money->getCurrencyName();
     else if (amount > 1000)
-      buf=fmt("A nice-sized pile of %ss lies here.") % money->getCurrencyName();
+      buf=format("A nice-sized pile of %ss lies here.") % money->getCurrencyName();
     else if (amount > 500)
-      buf=fmt("A pile of %ss lies here.") % money->getCurrencyName();
+      buf=format("A pile of %ss lies here.") % money->getCurrencyName();
     else if (amount > 100)
-      buf=fmt("A small pile of %ss lies here.") % money->getCurrencyName();
+      buf=format("A small pile of %ss lies here.") % money->getCurrencyName();
     else if (amount > 50)
-      buf=fmt("A tiny pile of %ss lies here.") % money->getCurrencyName();
+      buf=format("A tiny pile of %ss lies here.") % money->getCurrencyName();
     else
-      buf=fmt("A few %ss have been left in a pile here.") % money->getCurrencyName();
+      buf=format("A few %ss have been left in a pile here.") % money->getCurrencyName();
 
     money->setDescr(mud_str_dup(buf));
     new_descr->keyword = mud_str_dup(money->getCurrencyName()+"s money");
     if (amount < 10) {
-      buf=fmt("There are %i %ss.\n\r") % amount % money->getCurrencyName();
+      buf=format("There are %i %ss.\n\r") % amount % money->getCurrencyName();
       new_descr->description = mud_str_dup(buf);
     } else if (amount < 100) {
-      buf=fmt("There are about %i %ss.\n\r") % (10 * (amount / 10)) % money->getCurrencyName();
+      buf=format("There are about %i %ss.\n\r") % (10 * (amount / 10)) % money->getCurrencyName();
       new_descr->description = mud_str_dup(buf);
     } else if (amount < 10000) {
-      buf=fmt("You guess there are %i %ss.\n\r") % (100 * (amount / 100)) % money->getCurrencyName();
+      buf=format("You guess there are %i %ss.\n\r") % (100 * (amount / 100)) % money->getCurrencyName();
       new_descr->description = mud_str_dup(buf);
     } else
-      new_descr->description = mud_str_dup(fmt("There are a LOT of %ss.\n\r") % money->getCurrencyName());
+      new_descr->description = mud_str_dup(format("There are a LOT of %ss.\n\r") % money->getCurrencyName());
   }
   new_descr->next = NULL;
   money->ex_description = new_descr;
@@ -296,24 +296,24 @@ int TMoney::moneyMeMoney(TBeing *ch, TThing *sub)
   (*this)--;
   amount = getMoney();
   if (amount == 1) {
-    ch->sendTo(fmt("There was one %s.\n\r") % getCurrencyName());
+    ch->sendTo(format("There was one %s.\n\r") % getCurrencyName());
   } else {
-    ch->sendTo(fmt("There were %d %ss.\n\r") % amount % getCurrencyName());
+    ch->sendTo(format("There were %d %ss.\n\r") % amount % getCurrencyName());
     /*int amt2 = 0;
     if (!isMyCorpse && !ch->isImmortal())
       amt2 = (int) (amount * FactionInfo[ch->getFaction()].faction_tithe / 100.0);
 
     if (!amt2)
-      ch->sendTo(fmt("There were %d talens.\n\r") % amount);
+      ch->sendTo(format("There were %d talens.\n\r") % amount);
     else {
-      ch->sendTo(fmt("There were %d talens, and you tithe %d of them.\n\r") % amount % amt2);
+      ch->sendTo(format("There were %d talens, and you tithe %d of them.\n\r") % amount % amt2);
       // BUGFIX: tithing was creating money 
       amount = amount - amt2;
     }*/
   }
 
   if (ch->getMoney() > 500000 && (amount > 100000))
-    vlogf(LOG_MISC, fmt("%s just got %d %ss") %  ch->getName() % amount % getCurrencyName());
+    vlogf(LOG_MISC, format("%s just got %d %ss") %  ch->getName() % amount % getCurrencyName());
 
   for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (t=*it);++it) {
     TBeing *tb = dynamic_cast<TBeing *>(t);

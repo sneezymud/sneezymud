@@ -165,12 +165,12 @@ void TBeing::assignSkills(classIndT Class, discNumT primDisc,
   discNumT favoredNum=DISC_NONE, discnum;
   
   if(!(prim=getDiscipline(primDisc))){
-    vlogf(LOG_BUG, fmt("%s didn't have prim discipline.") %  getName());
+    vlogf(LOG_BUG, format("%s didn't have prim discipline.") %  getName());
     return;
   }
 
   if(!(combat=getDiscipline(DISC_COMBAT))){
-    vlogf(LOG_BUG, fmt("%s didn't have combat discipline.") %  getName());
+    vlogf(LOG_BUG, format("%s didn't have combat discipline.") %  getName());
     return;
   }
 
@@ -219,7 +219,7 @@ void TBeing::assignSkills(classIndT Class, discNumT primDisc,
       favoredNum=favorites[0];
       
       if(!(favored = getDiscipline(favoredNum))){
-	vlogf(LOG_BUG, fmt("%s didn't have discipline %i.") %  getName() % favoredNum);
+	vlogf(LOG_BUG, format("%s didn't have discipline %i.") %  getName() % favoredNum);
 	return;
       }
     }
@@ -238,7 +238,7 @@ void TBeing::assignSkills(classIndT Class, discNumT primDisc,
     bool found=false;
     for(unsigned int i=0;i < disclist.size();++i){
       if(!(cd=getDiscipline(disclist[i]))){
-	vlogf(LOG_BUG, fmt("%s didn't have discipline %i.") %  getName() %disclist[i]);
+	vlogf(LOG_BUG, format("%s didn't have discipline %i.") %  getName() %disclist[i]);
 	return;
       }
       if(cd->getLearnedness() < MAX_DISC_LEARNEDNESS){

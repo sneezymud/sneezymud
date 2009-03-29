@@ -199,7 +199,7 @@ void TDrugContainer::lowCheck()
   for (i=0; i<MAX_OBJ_AFFECT;i++) {
     if (affected[i].location == APPLY_LIGHT) {
       if (!getLit())
-        vlogf(LOG_LOW,fmt("item %s was defined apply-light.") % getName());
+        vlogf(LOG_LOW,format("item %s was defined apply-light.") % getName());
     }
   }
 }
@@ -270,14 +270,14 @@ void TDrugContainer::describeObjectSpecifics(const TBeing *ch) const
   if (getMaxBurn() < 0)
     act("$p doesn't seem to be reusable.", FALSE, ch, this, 0, TO_CHAR);
   else 
-    ch->sendTo(COLOR_OBJECTS,fmt("%s is reusable.\n\r") % sstring(getName()).cap());
+    ch->sendTo(COLOR_OBJECTS,format("%s is reusable.\n\r") % sstring(getName()).cap());
   
   diff = (double) ((double) getCurBurn() / max(1.0, (double) getMaxBurn()));
   if(diff==0 || getDrugType()==DRUG_NONE)
-    ch->sendTo(COLOR_OBJECTS, fmt("%s is completely empty.\n\r") %
+    ch->sendTo(COLOR_OBJECTS, format("%s is completely empty.\n\r") %
 	       sstring(getName()).uncap());
   else      
-    ch->sendTo(COLOR_OBJECTS, fmt("You can tell that %s has %s %s left.\n\r") % sstring(getName()).uncap() %
+    ch->sendTo(COLOR_OBJECTS, format("You can tell that %s has %s %s left.\n\r") % sstring(getName()).uncap() %
 	       (((diff == 0) ? "no" :
 		((diff < .20) ? "very little" :
 		 ((diff < .50) ? "some" :

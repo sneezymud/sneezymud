@@ -49,7 +49,7 @@ void TBaseClothing::lowCheck()
   // warn about prices that are WAY too high though too
   if ((ap > obj_flags.cost || ap < obj_flags.cost-200) && !isSaddle()) {
 #endif
-    vlogf(LOG_LOW, fmt("base_clothing (%s:%d) has a bad price (%d).  should be (%d)") % 
+    vlogf(LOG_LOW, format("base_clothing (%s:%d) has a bad price (%d).  should be (%d)") % 
          getName() % objVnum() % obj_flags.cost % ap);
     obj_flags.cost = ap;
   }
@@ -58,13 +58,13 @@ void TBaseClothing::lowCheck()
     float amt = -(float) itemAC();
 
     if ((20*getWeight()) < amt)
-      vlogf(LOG_LOW, fmt("shield %s has a bad weight.  should be (%.1f)") % 
+      vlogf(LOG_LOW, format("shield %s has a bad weight.  should be (%.1f)") % 
            getName() % (amt/20.0+0.1));
   } else {
     if (canWear(ITEM_HOLD)) {
       int amt = -itemAC();
       if (amt)
-        vlogf(LOG_LOW, fmt("Holdable item (%s:%d) with AC that was not a shield.") % 
+        vlogf(LOG_LOW, format("Holdable item (%s:%d) with AC that was not a shield.") % 
             getName() % objVnum());
     }
   }
@@ -77,7 +77,7 @@ void TBaseClothing::lowCheck()
   if (ui != ITEM_HOLD) {
     int num = CountBits(ui) - 1;
     if (num < 0) {
-      vlogf(LOG_LOW, fmt("Base Clothing (%s:%d) with insufficient wearability.") % 
+      vlogf(LOG_LOW, format("Base Clothing (%s:%d) with insufficient wearability.") % 
             getName() % objVnum());
     }
   }
@@ -110,18 +110,18 @@ bool TBaseClothing::isBarding() const
 
 void TBaseClothing::objMenu(const TBeing *ch) const
 {
-  ch->sendTo(fmt(VT_CURSPOS) % 3 % 1);
-  ch->sendTo(fmt("%sSuggested price:%s %d%s") %
+  ch->sendTo(format(VT_CURSPOS) % 3 % 1);
+  ch->sendTo(format("%sSuggested price:%s %d%s") %
              ch->purple() % ch->norm() % suggestedPrice() %
              (suggestedPrice() != obj_flags.cost ? " *" : ""));
-  ch->sendTo(fmt(VT_CURSPOS) % 3 % 25);
-  ch->sendTo(fmt("%sReal Level:%s %.2f") %
+  ch->sendTo(format(VT_CURSPOS) % 3 % 25);
+  ch->sendTo(format("%sReal Level:%s %.2f") %
              ch->purple() % ch->norm() % armorLevel(ARMOR_LEV_REAL));
-  ch->sendTo(fmt(VT_CURSPOS) % 3 % 45);
-  ch->sendTo(fmt("%sAC Lev:%s %.2f") %
+  ch->sendTo(format(VT_CURSPOS) % 3 % 45);
+  ch->sendTo(format("%sAC Lev:%s %.2f") %
              ch->purple() % ch->norm() % armorLevel(ARMOR_LEV_AC));
-  ch->sendTo(fmt(VT_CURSPOS) % 3 % 60);
-  ch->sendTo(fmt("%sStr Lev:%s %.2f") %
+  ch->sendTo(format(VT_CURSPOS) % 3 % 60);
+  ch->sendTo(format("%sStr Lev:%s %.2f") %
              ch->purple() % ch->norm() % armorLevel(ARMOR_LEV_STR));
 }
 
@@ -141,14 +141,14 @@ void TBaseClothing::evaluateMe(TBeing *ch) const
     ch->describeArmor(this, learn);
 
   if (ch->isImmortal()) {
-    ch->sendTo(COLOR_OBJECTS, fmt("IMMORTAL EVAL: %s originally rates as %.2f gear.\n\r") % getName() % armorLevel(ARMOR_LEV_REAL));
-    ch->sendTo(COLOR_OBJECTS, fmt("IMMORTAL EVAL: %s has structure of %.2f gear.\n\r") % getName() % armorLevel(ARMOR_LEV_STR));
-    ch->sendTo(COLOR_OBJECTS, fmt("IMMORTAL EVAL: %s has armor of %.2f gear.\n\r") % getName() % armorLevel(ARMOR_LEV_AC));
+    ch->sendTo(COLOR_OBJECTS, format("IMMORTAL EVAL: %s originally rates as %.2f gear.\n\r") % getName() % armorLevel(ARMOR_LEV_REAL));
+    ch->sendTo(COLOR_OBJECTS, format("IMMORTAL EVAL: %s has structure of %.2f gear.\n\r") % getName() % armorLevel(ARMOR_LEV_STR));
+    ch->sendTo(COLOR_OBJECTS, format("IMMORTAL EVAL: %s has armor of %.2f gear.\n\r") % getName() % armorLevel(ARMOR_LEV_AC));
 
     ArmorEvaluator ae(this);
-    ch->sendTo(COLOR_OBJECTS, fmt("IMMORTAL EVAL (new): %s is considered '%s'.\n\r") % getName() % ae.getTierString());
-    ch->sendTo(COLOR_OBJECTS, fmt("IMMORTAL EVAL (new): %s is using %i armor, %i stat points (%i total).\n\r") % getName() % ae.getPointValue(PointType_Main) % ae.getPointValue(PointType_Stats) % ae.getPointValue(PointType_All));
-    ch->sendTo(COLOR_OBJECTS, fmt("IMMORTAL EVAL (new): %s should load on level %.2f or lower mobs.\n\r") % getName() % ae.getLoadLevel());
+    ch->sendTo(COLOR_OBJECTS, format("IMMORTAL EVAL (new): %s is considered '%s'.\n\r") % getName() % ae.getTierString());
+    ch->sendTo(COLOR_OBJECTS, format("IMMORTAL EVAL (new): %s is using %i armor, %i stat points (%i total).\n\r") % getName() % ae.getPointValue(PointType_Main) % ae.getPointValue(PointType_Stats) % ae.getPointValue(PointType_All));
+    ch->sendTo(COLOR_OBJECTS, format("IMMORTAL EVAL (new): %s should load on level %.2f or lower mobs.\n\r") % getName() % ae.getLoadLevel());
   }
 }
 
@@ -163,7 +163,7 @@ void TBaseClothing::descMaxStruct(const TBeing *ch, int learn) const
   int maxstruct = GetApprox(getMaxStructPoints(), learn);
 
   strncpy(capbuf, ch->objs(this), cElements(capbuf));
-  ch->sendTo(COLOR_OBJECTS,fmt("%s seems to %s.\n\r") %
+  ch->sendTo(COLOR_OBJECTS,format("%s seems to %s.\n\r") %
            sstring(capbuf).cap() %
           ((maxstruct >= 99) ? "be virtually indestructible" :
            ((maxstruct >= 95) ? "be very durable" :
@@ -233,7 +233,7 @@ void TBaseClothing::armorPercs(double *ac_perc, double *str_perc) const
     *ac_perc  = 0.25;
     *str_perc = 0.07;
   } else {
-    vlogf(LOG_LOW, fmt("Item %s needs a definition of where worn") %  getName());
+    vlogf(LOG_LOW, format("Item %s needs a definition of where worn") %  getName());
     *ac_perc = 0.01;
     *str_perc = 0.01;
   }
@@ -384,7 +384,7 @@ int TBaseClothing::armorPriceStruct(armorLevT type, double *lev) const
   // double it since cost = 2 * rent
   price *= 2;
 
-// vlogf(LOG_MISC, fmt("ac_lev: %.2f, str_lev: %.2f, price: %d") %  ac_lev % str_lev % price);
+// vlogf(LOG_MISC, format("ac_lev: %.2f, str_lev: %.2f, price: %d") %  ac_lev % str_lev % price);
 
   return price;
 }
@@ -448,7 +448,7 @@ int TBaseClothing::suggestedPrice() const
   double modif = (lev + lev_mod) * max(20.0, (lev + lev_mod)) /
                 max(1.0, (lev * max(20.0, lev)));
   modif = min(1.25, modif);
-// vlogf(LOG_MISC, fmt("%s had a wearability modifier of %.3f (%.3f)") %  getName() % modif % lev_mod);
+// vlogf(LOG_MISC, format("%s had a wearability modifier of %.3f (%.3f)") %  getName() % modif % lev_mod);
   price = (int) (price * modif);
 #endif
   
@@ -597,7 +597,7 @@ void TBaseClothing::describeObjectSpecifics(const TBeing *ch) const
       buf += ".";
       act(buf, FALSE, ch, this, 0, TO_CHAR);
     } else {
-      vlogf(LOG_LOW, fmt("Base Clothing (%s:%d) with insufficient wearability.") % 
+      vlogf(LOG_LOW, format("Base Clothing (%s:%d) with insufficient wearability.") % 
             getName() % objVnum());
     }
   }
@@ -691,7 +691,7 @@ int TBaseClothing::putMeInto(TBeing *ch, TOpenContainer *container)
        (o->canWear(ITEM_WEAR_HEAD) && canWear(ITEM_WEAR_HEAD)) ||
        (o->canWear(ITEM_WEAR_BACK) && canWear(ITEM_WEAR_BACK)) ||
        (o->canWear(ITEM_WEAR_WAIST) && canWear(ITEM_WEAR_WAIST))){
-      ch->sendTo(fmt("You already have something that fits that slot in your %s.\n\r") % fname(container->name));
+      ch->sendTo(format("You already have something that fits that slot in your %s.\n\r") % fname(container->name));
       return TRUE;
     }
   }
@@ -702,7 +702,7 @@ int TBaseClothing::putMeInto(TBeing *ch, TOpenContainer *container)
      (canWear(ITEM_WEAR_ARMS) && arms >= 2) ||
      (canWear(ITEM_WEAR_WRISTS) && wrists >= 2) ||
      (canWear(ITEM_WEAR_HANDS) && hands >= 2)){
-    ch->sendTo(fmt("You already have two things that fit that slot in your %s.\n\r") % fname(container->name));
+    ch->sendTo(format("You already have two things that fit that slot in your %s.\n\r") % fname(container->name));
     return TRUE;
   }
 

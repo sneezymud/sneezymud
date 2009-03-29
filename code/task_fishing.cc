@@ -158,7 +158,7 @@ TObj *catch_a_fish(TRoom *rp)
   vector <int> fishworld=fishworldfishes();
   float weightmod=(((float)(::number(0,100))-50.0)/100.0)+1.0;  // plus or minus 30%
 
-  //  vlogf(LOG_PEEL, fmt("weightmod=%f") %  weightmod);
+  //  vlogf(LOG_PEEL, format("weightmod=%f") %  weightmod);
 
   if(!::number(0,99)){  // 1 in 100
     // big one
@@ -311,7 +311,7 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
   if (awesomeFisher && NULL == pole && 
     !ch->canUseHand(true) && (!ch->isAmbidextrous() || ch->bothHandsHurt()))
   {
-    ch->sendTo(fmt("Fish with what?  Your %s is too damaged.\n\r") % ch->describeBodySlot(ch->getPrimaryHand()));
+    ch->sendTo(format("Fish with what?  Your %s is too damaged.\n\r") % ch->describeBodySlot(ch->getPrimaryHand()));
     ch->stopTask();
     return FALSE;
   }
@@ -382,14 +382,14 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
         break;
 
       if (!awesomeFisher && fishlore) {
-        toChar = fmt("You <c>smoothly<1> bait %s with $p in one fluid motion.") % pole->shortDescr;
-        toRoom = fmt("$n <c>smoothly<1> baits %s with $p in one fluid motion.") % pole->shortDescr;
+        toChar = format("You <c>smoothly<1> bait %s with $p in one fluid motion.") % pole->shortDescr;
+        toRoom = format("$n <c>smoothly<1> baits %s with $p in one fluid motion.") % pole->shortDescr;
       } else if (awesomeFisher) {
         toChar = "You scan the surrounding water for prey.";
         toRoom = "$n scans the water looking for prey.";
       } else {
-        toChar = fmt("You bait %s with $p.") % pole->shortDescr;
-        toRoom = fmt("$n baits %s with $p.") % pole->shortDescr;
+        toChar = format("You bait %s with $p.") % pole->shortDescr;
+        toRoom = format("$n baits %s with $p.") % pole->shortDescr;
       }
 
       act(toChar, FALSE, ch, bait, 0, TO_CHAR);
@@ -412,8 +412,8 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
         toChar = "You spot a <c>ripple in the water<1> and reach towards it.";
         toRoom = "$n reaches toward a <c>ripple in the water<1>.";
       } else if (awesomeFisher) {
-        toChar = fmt("You search around the water with your %s.") % ch->describeBodySlot(fishHand);
-        toRoom = fmt("$n gropes around the water with $s %s.") % ch->describeBodySlot(fishHand);
+        toChar = format("You search around the water with your %s.") % ch->describeBodySlot(fishHand);
+        toRoom = format("$n gropes around the water with $s %s.") % ch->describeBodySlot(fishHand);
       } else {
         toChar = "You cast your line out.";
         toRoom = "$n casts $s line out.";
@@ -434,7 +434,7 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
 	  catchchance=::number(1,100);
 	  
 
-	  //	  vlogf(LOG_PEEL, fmt("fishing: baitcost=%i, bait=%i, pole=%i, catch=%i") % 
+	  //	  vlogf(LOG_PEEL, format("fishing: baitcost=%i, bait=%i, pole=%i, catch=%i") % 
 	  //	bait->obj_flags.cost % baitchance % polechance % catchchance);
   
 	  if((ch->bSuccess(SKILL_FISHING) ||
@@ -568,7 +568,7 @@ void procFishRespawning::run(int pulse) const
     TRoom * tRoom = real_roomp((*tIter).first);
 
     if (!tRoom) {
-      vlogf(LOG_BUG, fmt("handleFishRespawning() handling non-existent room! (%d)") % (*tIter).first);
+      vlogf(LOG_BUG, format("handleFishRespawning() handling non-existent room! (%d)") % (*tIter).first);
       continue;
     }
 

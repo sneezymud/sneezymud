@@ -28,7 +28,7 @@ TPortal::TPortal(const TRoom *rp) :
 
   name = mud_str_dup("portal");
   shortDescr = mud_str_dup("a magic portal");
-  buf = fmt("A portal going to %s is in the room.") % rp->name;
+  buf = format("A portal going to %s is in the room.") % rp->name;
   setDescr(mud_str_dup(buf));
   obj_flags.wear_flags = 0;
   obj_flags.decay_time = 5;
@@ -364,7 +364,7 @@ int TPortal::enterMe(TBeing *ch)
     // to do something VERY crual to them for this.
 
     ch->sendTo("Something goes wrong as you enter the portal and you feel torn through the astral plane!\n\r");
-    vlogf(LOG_CHEAT, fmt("Player using Portal created by other player in same account! (%s)") % 
+    vlogf(LOG_CHEAT, format("Player using Portal created by other player in same account! (%s)") % 
           ch->getName());
     rc = ch->genericTeleport(SILENT_NO, true);
 
@@ -473,7 +473,7 @@ TPortal * TPortal::findMatchingPortal() const
   TRoom *rp;
 
   if (!(rp = real_roomp(getTarget()))) {
-    vlogf(LOG_BUG, fmt("Bad portal (%s) with destination to NULL room! %d") % 
+    vlogf(LOG_BUG, format("Bad portal (%s) with destination to NULL room! %d") % 
           getName() % getTarget());
     return NULL;
   }
