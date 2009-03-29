@@ -7,6 +7,9 @@
 #include "stdsneezy.h"
 #include "socket.h"
 
+#include <boost/program_options.hpp>
+namespace po = boost::program_options;
+
 extern "C" {
 #include <unistd.h>
 }
@@ -16,73 +19,65 @@ extern int run_the_game();
 
 #ifndef LOWTOOLS
 
+void sendHelp(po::options_description desc){
+  cout << "Usage: sneezy [options] [port]" << endl;
+  cout << desc;  
+}
+
 int main(int argc, char *argv[])
 {
-#if 0
-  printf("Checking new/delete\n");
-  char *s = mud_str_dup("test sstring");
-  delete s;
-  printf("Checking unused.\n");
-  int x = 5;
-  int j;
-  printf("done\n");
-  exit(0);
-#endif
-  int a, pos = 1;
-  char dir[256];
+  int a;
+  sstring dir;
   bool bTrimmed = false;
+  
+  po::options_description cmdline("Command line options");
+  cmdline.add_options()
+    ("help", 
+     "produce help message")
+    ("directory,d", po::value<string>(&dir)->default_value(DFLT_DIR), 
+     "data directory to run in")
+    ("nospecials,s", po::value<bool>(&noSpecials)->zero_tokens(),
+     "suppress assignment of special routines")
+    ("trimmed,t", po::value<bool>(&bTrimmed)->zero_tokens(),
+     "load as trimmed port")
+    ("port,p", po::value<int>(&gamePort)->default_value(PROD_GAMEPORT),
+     "game port")
+    ;
 
-  gamePort = PROD_GAMEPORT;   // set as default
-  strcpy(dir, DFLT_DIR);
+  // first positional argument is port number
+  po::positional_options_description p;
+  p.add("port", -1);
+  
+  po::variables_map vm;
 
-  while ((pos < argc) && (*(argv[pos]) == '-')) {
-    switch (*(argv[pos] + 1)) {
-      case 'd':
-	if (*(argv[pos] + 2))
-	  strcpy(dir, argv[pos] + 2);
-	else if (++pos < argc)
-	  strcpy(dir, argv[pos]);
-	else {
-	  vlogf(LOG_MISC, "Directory arg expected after option -d.");
-	  exit(0);
-	}
-	break;
-
-      case 's':
-	noSpecials = 1;
-	vlogf(LOG_MISC, "Suppressing assignment of special routines.");
-	break;
-
-      case 't':
-        bTrimmed = true;
-        vlogf(LOG_MISC, "Loading as trimmed port.");
-        break;
-
-      default:
-	vlogf(LOG_MISC, fmt("Unknown option -% in argument sstring.") %  *(argv[pos] + 1));
-	break;
-    }
-    pos++;
+  try {
+    po::store(po::command_line_parser(argc, argv).
+	      options(cmdline).positional(p).run(), vm);
+  } catch(po::unknown_option){
+    sendHelp(cmdline);
+    return 0;    
   }
 
-  if (pos < argc) {
-    if (!isdigit(*argv[pos])) {
-      vlogf(LOG_MISC, fmt("Usage: %s [-s] [-d pathname] [ port # ]\n") %  argv[0]);
-      exit(0);
-    } else if ((gamePort = convertTo<int>(argv[pos])) <= 1024) {
-      printf("Illegal port #\n");
-      exit(0);
-    }
+  po::notify(vm);
+
+  if(vm.count("help")){
+    sendHelp(cmdline);
+    return 0;
   }
 
-  if (bTrimmed)
+  if(noSpecials)
+    vlogf(LOG_MISC, "Suppressing assignment of special routines.");
+
+  if (bTrimmed){
+    vlogf(LOG_MISC, "Loading as trimmed port.");
     GAMMA_GAMEPORT = gamePort;
+  }
 
   Uptime = time(0);
 
   vlogf(LOG_MISC, fmt("Running %s on port %d.") %  MUD_NAME % gamePort);
 
-  if (chdir(dir) < 0) {
+  if (chdir(dir.c_str()) < 0) {
     perror("chdir");
     exit(0);
   }
@@ -106,15 +101,8 @@ int main(int argc, char *argv[])
   numberLogHosts = 0;
 
 #if 0
-  extern void convert_all_pfiles();
-  convert_all_pfiles();
-#endif
-#if 0
-  extern void convert_all_rentfiles();
-  convert_all_rentfiles();
-#endif
-#if 0
   // graceful, but too bad its not informative about the exception
+  // (could try vlogf_trace here instead of assert?)
   try {
     run_the_game();
   } catch (...) {

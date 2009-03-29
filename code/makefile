@@ -131,6 +131,7 @@ LDFLAGS += -lmysqlclient
 LDFLAGS +=-lares
 
 LDFLAGS += -lboost_regex
+LDFLAGS += -lboost_program_options
 ###############################################################################
 ##                        Actual Compiling Starts Here                       ##
 ###############################################################################
