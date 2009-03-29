@@ -37,9 +37,10 @@ class Cast : public CxxTest::TestSuite
     *testRoom += *testPerson;
   }
 
-  void xtestFindCompInventory(){
+  void testFindCompInventory(){
     TObj *junk=read_object(23641, VIRTUAL);
     TObj *comp=read_object(203, VIRTUAL);
+    TObj *comp2=read_object(269, VIRTUAL);
     TObj *bag=read_object(323, VIRTUAL);
 
     TS_ASSERT(bag);
@@ -50,11 +51,10 @@ class Cast : public CxxTest::TestSuite
 
     *testPerson += *comp;
     TS_ASSERT(testPerson->findComponent(SPELL_TORNADO));
-    --(*comp);
 
-    *bag += *comp;
+    *bag += *comp2;
     *testPerson += *bag;
-    TS_ASSERT(testPerson->findComponent(SPELL_TORNADO));
+    TS_ASSERT(testPerson->findComponent(SPELL_TSUNAMI));
 
   }
 };
