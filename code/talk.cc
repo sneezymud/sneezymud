@@ -155,23 +155,33 @@ int TBeing::doSay(const sstring &arg)
   }
   
   // everyone needs to see the say before the response gets triggered
-  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
-    tmp=*(it++);
-    mob = dynamic_cast<TBeing *>(tmp);
-    if (!mob)
-      continue;
-    
-    if (mob == this || (mob->getPosition() <= POSITION_SLEEPING))
-      continue;
-    
-    if (isPc() && !mob->isPc()) { 
+  // loop through the list, get the mobs to trigger, THEN trigger them seperately
+  // this is because response triggers can affect room contents (roomp->stuff)
+  if (isPc()) {
+    list<TMonster *> mobs;
+    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+      tmp=*(it++);
+      if (!tmp)
+        continue;
+      mob = dynamic_cast<TBeing *>(tmp);
+      if (!mob)
+        continue;
+      if (mob == this || (mob->getPosition() <= POSITION_SLEEPING))
+        continue;
+      if (mob->isPc())
+        continue;
       TMonster *tmons = dynamic_cast<TMonster *>(mob);
+      if (!tmons)
+        continue;
+      mobs.push_front(tmons);
+    }
+
+    for(list<TMonster*>::const_iterator it = mobs.begin(); it != mobs.end();) {
+      TMonster *tmons = *(it++);
       tmons->aiSay(this, NULL);
       rc = tmons->checkResponses(this, 0, garbleRoom, CMD_SAY);
-      if (IS_SET_DELETE(rc, DELETE_THIS)) {
+      if (IS_SET_DELETE(rc, DELETE_THIS))
         delete tmons;
-        tmons = NULL;
-      }
       if (IS_SET_DELETE(rc, DELETE_VICT)) 
         return DELETE_THIS;
     }
