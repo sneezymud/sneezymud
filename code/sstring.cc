@@ -2,7 +2,6 @@
 #include <mysql/mysql.h>
 #include "stdsneezy.h"
 #include "sstring.h"
-#include "format.h"
 
 const sstring sstring::escape(stringEscapeT escape_type) const
 {
