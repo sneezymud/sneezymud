@@ -227,6 +227,7 @@ bool TDatabase::query(const char *query,...)
 
   // store the column names and offsets
   if(res){
+    column_names.clear();
     unsigned int num_fields=mysql_num_fields(res);
     MYSQL_FIELD *fields=mysql_fetch_fields(res);
     
