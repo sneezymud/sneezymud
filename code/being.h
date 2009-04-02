@@ -981,6 +981,7 @@ class TBeing : public TThing {
     bool hasDisease(diseaseTypeT) const;
     void diseaseFrom(diseaseTypeT);
     int affectJoin(TBeing *, affectedData *, avgDurT, avgEffT, bool text = TRUE);
+    bool affectJoin2(affectedData *af, joinFlag flags = joinFlagDefault);
     int polyAffectJoin(TBeing *);
     void classSpecificStuff();
     virtual int hitGain() = 0;
@@ -1785,6 +1786,9 @@ class TBeing : public TThing {
     int getLifeforce() const;
     void setLifeforce(int lifeforce);
     void addToLifeforce(int lifeforce);
+    virtual sstring getStealLootNames() const { return "nothing"; }
+    virtual bool getStolenFrom() const { return false; }
+    virtual void setStolenFrom(bool) { }
 
     TBeing *fight() const;
 

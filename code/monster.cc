@@ -173,6 +173,7 @@ TMonster::TMonster() :
   damLevel(0.0),
   damPrecision(0),
   acLevel(0.0),
+  stolenFrom(false),
   default_pos(POSITION_STANDING)
 {
 }
@@ -192,6 +193,7 @@ TMonster::TMonster(const TMonster &a) :
   damLevel(a.damLevel),
   damPrecision(a.damPrecision),
   acLevel(a.acLevel),
+  stolenFrom(a.stolenFrom),
   default_pos(a.default_pos)
 {
   if (a.resps)
@@ -226,6 +228,7 @@ TMonster & TMonster::operator=(const TMonster &a)
   damLevel = a.damLevel;
   damPrecision = a.damPrecision;
   acLevel = a.acLevel;
+  stolenFrom = a.stolenFrom;
   default_pos = a.default_pos;
 
   delete [] sounds;
@@ -367,7 +370,8 @@ void TMonster::swapToStrung()
   setDescr(mud_str_dup(mob_index[getMobIndex()].description));
 }
 
-int TMonster::calculateGoldFromConstant()
+// returns the amount of money we're expeted to load with
+double TMonster::getLoadMoney() const
 {
   double rlev = getRealLevel();
 
@@ -379,6 +383,13 @@ int TMonster::calculateGoldFromConstant()
   int CENTRAL_BANK=123;
   the_gold *= shop_index[CENTRAL_BANK].getProfitSell(NULL, NULL);
   //  the_gold *= gold_modifier[GOLD_INCOME].getVal();
+  return the_gold;
+}
+
+// called at load/generate time to set this mobs money
+int TMonster::calculateGoldFromConstant()
+{
+  double the_gold = getLoadMoney();
 
   if (isShopkeeper()){
     unsigned int shop_nr;

@@ -807,3 +807,30 @@ loadSetStruct::~loadSetStruct()
   delete [] name;
   name = NULL;
 }
+
+
+int weightedRandomizer::add(int v, int w, int p)
+{
+  weightedBucket item;
+  item.value = v;
+  item.weight = w;
+  item.percent = p;
+  m_items.push_back(item);
+  return 1;
+}
+
+int weightedRandomizer::getRandomIndex(int weightMax)
+{
+  if (m_items.size() < 0)
+    return -1;
+  for(unsigned int c = 0; c < iterMax; c++)
+  {
+    int i = ::number(0, m_items.size());
+    if (weightMax > 0 && m_items[i].weight > 0 && m_items[i].weight > weightMax)
+      continue;
+    if (::number(0, 100) > m_items[i].percent)
+      continue;
+    return i;
+  }
+  return -1;
+}

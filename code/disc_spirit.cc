@@ -1899,36 +1899,35 @@ int castFear(TBeing *caster, TBeing *victim)
 
 int fumble(TBeing *caster, TBeing *victim, int level, byte bKnown) 
 {
-  bool both = FALSE, done = FALSE;
-  TObj *tobj;
+  bool drop = FALSE;
+  wearSlotT toDrop = WEAR_NOWHERE;
+  affectedData af;
+  int bonus = 0;
 
-//  if (caster->isNotPowerful(victim, level, SPELL_DISPEL_INVISIBLE, SILENT_NO)) {
-  if (caster->isNotPowerful(victim, level, SKILL_DISARM, SILENT_NO)) {
+  if (caster->isNotPowerful(victim, level, SKILL_DISARM, SILENT_NO))
     return SPELL_FAIL;
-  }
+
+  // bonus attribute: skill level
+  bonus += bKnown / 33;
+
+  // bonus attribute: wis
+  bonus += caster->plotStat(STAT_CURRENT, STAT_WIS, 0, 2, 0);
+
+  // apply 'fumbling' affect, which is -1 level's worth of tohit, bonus goes to duration
+  af.type = SPELL_FUMBLE;
+  af.level = level;
+  af.location = APPLY_HITROLL;
+  af.modifier = -1;
+  af.duration = (5 + bonus);
 
   caster->reconcileHurt(victim, discArray[SPELL_FUMBLE]->alignMod);
 
+  // succeeded
   if (caster->bSuccess(bKnown,SPELL_FUMBLE)) {
-    switch (critSuccess(caster, SPELL_FUMBLE)) {
-      case CRIT_S_DOUBLE:
-      case CRIT_S_TRIPLE:
-      case CRIT_S_KILL:
+    if (critSuccess(caster, SPELL_FUMBLE) != CRIT_S_NONE) {
         CS(SPELL_FUMBLE);
-        both = TRUE;
-        break;
-      case CRIT_S_NONE:
-        break;
-    }
-
-    if (both) {
-      if (!(victim->heldInPrimHand() && victim->heldInSecHand()))
-        both = FALSE;    /* doesn't have something in both hands */
-    }
-    if (both) {
-      tobj = dynamic_cast<TObj *>(victim->heldInPrimHand());
-      if (tobj && tobj->isPaired())
-        both = FALSE;
+        drop = TRUE;
+        af.duration *= 2;
     }
 
     act("Your fingers begin to tingle as magical forces ripple over your hands!",
@@ -1936,47 +1935,47 @@ int fumble(TBeing *caster, TBeing *victim, int level, byte bKnown)
     act("A glowing blue ball of light poofs out around $n's hands!",
             FALSE, victim, NULL, NULL, TO_ROOM, ANSI_CYAN);
 
-    if (victim->heldInSecHand()) {
-      victim->dropWeapon(victim->getSecondaryHold());
-      done = TRUE;
-    }
-    if (victim->heldInPrimHand() && (both || !done)) {
-      victim->dropWeapon(victim->getPrimaryHold());
-      done = TRUE;
-    }
-    if (!done) {
-      act("But $N isn't holding anything!", FALSE, caster, NULL, victim, TO_CHAR, ANSI_CYAN);
-    }
+    victim->affectJoin2(&af, joinFlagUpdateDur);
+    caster->reconcileDamage(victim, 0, SPELL_FUMBLE);
+    victim->addToWait(combatRound(1));
+
+    if (drop && victim->heldInSecHand())
+      toDrop = victim->getSecondaryHold();
+    else if (drop && victim->heldInPrimHand())
+      toDrop = victim->getPrimaryHold();
+
+    if (toDrop > WEAR_NOWHERE)
+      victim->dropWeapon(toDrop);
 
     return SPELL_SUCCESS;
-  } else {
-    switch (critFail(caster, SPELL_FUMBLE)) {
-      case CRIT_F_HITSELF:
-      case CRIT_F_HITOTHER:
-        CF(SPELL_FUMBLE);
-
-        act("Oops! You have a terrible feeling something went horribly wrong!",
-                FALSE, caster, NULL, NULL, TO_CHAR, ANSI_CYAN);
-        act("You've cast your 'fumble' on yourself!",
-                FALSE, caster, NULL, NULL, TO_CHAR, ANSI_CYAN);
-
-        tobj = dynamic_cast<TObj *>(victim->heldInSecHand());
-        if (tobj && !tobj->isPaired()) {
-          victim->dropWeapon(victim->getSecondaryHold());
-          done = TRUE;
-        }
-        if (victim->heldInPrimHand() && (both || !done)) {
-          victim->dropWeapon(victim->getPrimaryHold());
-          done = TRUE;
-        }
-        return SPELL_CRIT_FAIL;
-        break;
-      case CRIT_F_NONE:
-        break;
-    }
-    caster->nothingHappens();
-    return SPELL_FAIL;
   }
+
+  // failed, check for crit
+  if (critFail(caster, SPELL_FUMBLE) != CRIT_F_NONE) {
+    CF(SPELL_FUMBLE);
+
+    act("Oops! You have a terrible feeling something went horribly wrong!",
+            FALSE, caster, NULL, NULL, TO_CHAR, ANSI_CYAN);
+    act("You've cast your 'fumble' on yourself!",
+            FALSE, caster, NULL, NULL, TO_CHAR, ANSI_CYAN);
+    act("$n looks shocked as a blue ball of light explodes in $s face!",
+            FALSE, caster, NULL, NULL, TO_ROOM, ANSI_CYAN);
+
+    caster->affectJoin2(&af, joinFlagUpdateDur);
+
+    if (drop && caster->heldInSecHand())
+      toDrop = caster->getSecondaryHold();
+    else if (drop && caster->heldInPrimHand())
+      toDrop = caster->getPrimaryHold();
+
+    if (toDrop > WEAR_NOWHERE) 
+      caster->dropWeapon(toDrop);
+
+    return SPELL_CRIT_FAIL;
+  }
+
+  caster->nothingHappens();
+  return SPELL_FAIL;
 }
 
 int fumble(TBeing *caster, TBeing *victim)

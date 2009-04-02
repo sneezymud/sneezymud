@@ -97,6 +97,7 @@ class TMonster : public TBeing {
     ubyte damPrecision;
     float acLevel;
     sstring procData;
+    bool stolenFrom;
 
     positionTypeT default_pos;
 
@@ -524,6 +525,7 @@ class TMonster : public TBeing {
     void swapToStrung();
     double determineExp();
     int calculateGoldFromConstant();
+    double getLoadMoney() const;
     bool isTestmob() const;
     int wanderAround();
     void quickieDefend();
@@ -541,6 +543,9 @@ class TMonster : public TBeing {
     void balanceMakeNPCLikePC();
     int lookForEngaged(const TBeing *);
     bool isAttackerMultiplay(TBeing *aggressor);
+    virtual sstring getStealLootNames() const;
+    virtual bool getStolenFrom() const { return stolenFrom; }
+    virtual void setStolenFrom(bool v) { stolenFrom = v; }
 };
 
 #endif  // inclusion sandwich

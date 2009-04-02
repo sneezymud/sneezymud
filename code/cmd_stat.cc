@@ -1305,13 +1305,13 @@ void TBeing::statBeing(TBeing *k)
       cyan() % norm() %
       (tmons->opinion.random ? tmons->opinion.random->getName() : "-");
 
-    if (tmons->loadCom.size() > 0) {
+  /*if (tmons->loadCom.size() > 0) {
       str += "\n\rThis mob has the following zonefile load commands:";
       for(unsigned int iLoad = 0; iLoad < tmons->loadCom.size(); iLoad++) {
         const resetCom *p = &tmons->loadCom[iLoad];
         str += format("\n\r%c %i %i %i %i %i %c") % p->command % p->if_flag % p->arg1 % p->arg2 % p->arg3 % p->arg4 % p->character;
       }
-    }
+    }*/
 
     str += "\n\r";
   } else {

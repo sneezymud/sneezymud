@@ -2885,7 +2885,7 @@ void runResetCmdE(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   double grl = mob->getRealLevel();
   if (al > (grl + 1))
     vlogf(LOG_LOW, format("Mob (%s:%d) of level %.1f loading item (%s:%d) thought to be level %.1f.") %  mob->getName() % mob->mobVnum() % grl % obj->getName() % obj->objVnum() % al);
-  if (!mob->equipment[realslot])
+  if (!loadOnDeath && !mob->equipment[realslot])
     vlogf(LOG_LOW, format("Zone-file %s (%d) failed to equip %s (%d)") % mob->getName() % mob->mobVnum() % obj->getName() % obj->objVnum());
 
   last_cmd = true;
@@ -3463,6 +3463,7 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
     // save commands on mobs for later load
     if (mobload && mob && rs.shouldStickToMob(lastStuck)) {
       mob->loadCom.push_back(rs);
+      continue;
     }
 
     // simplify the room assignment logic - if they use a random room, just assign them the proper roomId
@@ -3970,8 +3971,8 @@ bool resetCom::usesRandomRoom()
 // lastComStuck - true if the previous resetCom before this one was 'stuck' to a mob
 bool resetCom::shouldStickToMob(bool &lastComStuck)
 {
-  //if (!loadOnDeath)
-  //  return lastComStuck = false;
+  if (!loadOnDeath)
+    return lastComStuck = false;
 
   // special case: since V's modify a potentially stuck (non-existant) obj, we need to stick ?'s for V's too
   if (command == '?' && character == 'V' && lastComStuck)

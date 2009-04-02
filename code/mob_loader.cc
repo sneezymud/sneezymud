@@ -11,6 +11,7 @@
 #include "obj_component.h"
 #include "obj_potion.h"
 #include "obj_commodity.h"
+#include "loadset.h"
 
 static void treasureCreate(int num, int mat, int &wealth, TObj *bag, TMonster *ch)
 {
@@ -278,21 +279,20 @@ void TMonster::createWealth(void)
 
   if (isPc())
     return;
-  if (UtilMobProc(this) || (getMoney() <= 0))
+  if (UtilMobProc(this))
     return;
 
-  // rare and random chance at hitting the Jackpot!
-  if (!::number(0,1000)) {
-    setMoney(10 * getMoney());
-    while (!::number(0,9))
-      setMoney(10 * getMoney());
-  }
+  if (loadOnDeath)
+    calculateGoldFromConstant();
+
+  if (getMoney() <= 0)
+    return;
 
   // execute our post-load commands
   if (loadOnDeath && loadCom.size() > 0) {
     bool last_cmd = true;
     bool objload = false;
-    bool mobload = false;
+    bool mobload = true;
     TObj *obj = NULL;
     TMonster *myself = this;
     TRoom *birthRoom = real_roomp(brtRoom);
@@ -301,6 +301,13 @@ void TMonster::createWealth(void)
     for(unsigned int iLoad = 0; zone && iLoad < loadCom.size(); iLoad++)
       if (!loadCom[iLoad].execute(*zone, resetFlagNone, mobload, myself, objload, obj, last_cmd))
         break;
+  }
+
+  // rare and random chance at hitting the Jackpot!
+  if (!::number(0,1000)) {
+    setMoney(10 * getMoney());
+    while (!::number(0,9))
+      setMoney(10 * getMoney());
   }
 
   // class based loading
@@ -324,7 +331,6 @@ void TMonster::createWealth(void)
     }
   }
 
-
   // load specialty items
   //loadRepairItems(this);
   buffMobLoader();
@@ -332,131 +338,34 @@ void TMonster::createWealth(void)
   potionLoader(this);
   commodLoader(this, bag);
 
-
-
-  int num = 0;
-
   // trap bag sometimes
   if (bag) {
-    num = ::number(0, 400);
+    int num = ::number(0, 400);
     if (hasClass(CLASS_THIEF))
       num /= 4;
     if (num < GetMaxLevel()) {
 
       bag->addContainerFlag(CONT_TRAPPED | CONT_CLOSED);
+      weightedRandomizer wr;
 
       // pick a random damage type
       // sleep is aggravating, avoid
       // teleport also aggravating, slightly avoid
-      switch (::number(1,76)) {
-        case 1:
-        case 29:
-        case 30:
-          bag->setContainerTrapType(DOOR_TRAP_TNT);
-          break;
-        case 2:
-        case 31:
-        case 32:
-          bag->setContainerTrapType(DOOR_TRAP_ENERGY);
-          break;
-        case 3:
-        case 4:
-          bag->setContainerTrapType(DOOR_TRAP_SLEEP);
-          break;
-        case 5:
-        case 6:
-        case 7:
-        case 33:
-        case 34:
-        case 35:
-        case 36:
-        case 37:
-        case 38:
-          bag->setContainerTrapType(DOOR_TRAP_POISON);
-          break;
-        case 8:
-        case 9:
-        case 10:
-        case 39:
-        case 40:
-        case 41:
-        case 42:
-        case 43:
-        case 44:
-          bag->setContainerTrapType(DOOR_TRAP_FIRE);
-          break;
-        case 11:
-        case 12:
-        case 45:
-        case 46:
-        case 47:
-        case 48:
-          bag->setContainerTrapType(DOOR_TRAP_ACID);
-          break;
-        case 13:
-        case 14:
-        case 49:
-        case 50:
-        case 51:
-        case 52:
-          bag->setContainerTrapType(DOOR_TRAP_DISEASE);
-          break;
-        case 15:
-        case 16:
-        case 17:
-        case 53:
-        case 54:
-        case 55:
-        case 56:
-        case 57:
-        case 58:
-          bag->setContainerTrapType(DOOR_TRAP_SPIKE);
-          break;
-        case 18:
-        case 19:
-        case 20:
-        case 59:
-        case 60:
-        case 61:
-        case 62:
-        case 63:
-        case 64:
-          bag->setContainerTrapType(DOOR_TRAP_BLADE);
-          break;
-        case 21:
-        case 22:
-        case 23:
-        case 65:
-        case 66:
-        case 67:
-        case 68:
-        case 69:
-        case 70:
-          bag->setContainerTrapType(DOOR_TRAP_PEBBLE);
-          break;
-        case 24:
-        case 25:
-        case 71:
-        case 72:
-        case 73:
-        case 74:
-          bag->setContainerTrapType(DOOR_TRAP_FROST);
-          break;
-        case 26:
-        case 27:
-        case 28:
-        case 75:
-        case 76:
-        default:
-          if (GetMaxLevel() > 30)
-            bag->setContainerTrapType(DOOR_TRAP_TELEPORT);
-          else 
-            bag->setContainerTrapType(DOOR_TRAP_SPIKE);
-          break;
-      } 
-      int amt = ::number(1 * GetMaxLevel(), 3 * GetMaxLevel());
-      amt = min(150, amt);
-      bag->setContainerTrapDam(amt);
+      wr.add(DOOR_TRAP_TNT, -1, 25);
+      wr.add(DOOR_TRAP_ENERGY, -1, 25);
+      wr.add(DOOR_TRAP_SLEEP, -1, 15);
+      wr.add(DOOR_TRAP_POISON, -1, 100);
+      wr.add(DOOR_TRAP_FIRE, -1, 100);
+      wr.add(DOOR_TRAP_ACID, -1, 75);
+      wr.add(DOOR_TRAP_DISEASE, -1, 100);
+      wr.add(DOOR_TRAP_SPIKE, -1, 100);
+      wr.add(DOOR_TRAP_BLADE, -1, 100);
+      wr.add(DOOR_TRAP_PEBBLE, -1, 100);
+      wr.add(DOOR_TRAP_FROST, -1, 75);
+      wr.add(DOOR_TRAP_TELEPORT, 30, 15);
+
+      bag->setContainerTrapType(doorTrapT(wr.getRandomItem(GetMaxLevel())));
+      bag->setContainerTrapDam(min(150, ::number(1 * GetMaxLevel(), 3 * GetMaxLevel())));
     }
   }
 
@@ -503,17 +412,87 @@ bool isMobComponentSeller(int comp, int mvn)
   return false;
 }
 
+// returns 0 for a failed get
+int getRandomMageComp(int maxCost)
+{
+  static weightedRandomizer wr;
+
+  // initialize - only done once per boot
+  if (!wr.size())
+  {
+    for(unsigned int i = 0; i < (unsigned int)CompIndex.size(); i++)
+    {
+      spellNumT spell = CompIndex[i].spell_num;
+      int comp = CompIndex[i].comp_vnum;
+      int cost = obj_index[real_object(comp)].value;
+      int percent = 100;
+    
+      if (spell < TYPE_UNDEFINED || spell >= MAX_SKILL) {
+        vlogf(LOG_BUG, format("Component (%d) defined with bad spell (%d).  num=%d") % comp % spell % i);
+        continue;
+      }
+
+      if (spell <= TYPE_UNDEFINED || spell >= MAX_SKILL || !discArray[spell])
+        continue;
+      if (hideThisSpell(spell))
+        continue;
+      // only load mage spell component
+      if (discArray[spell]->typ != SPELL_MAGE)
+    	  continue;
+      // no dissectable comps please
+      if (isDissectComponent(comp))
+        continue;
+      if (comp == -1) {
+        vlogf(LOG_BUG, format("Bogus component on spell %d (%s)") % spell % discArray[spell]->name);
+        continue;
+      }
+
+      // we'll make utility comps more rare so that relatively speaking
+      // the comps for offensive spells are more prevalent
+      if (!(discArray[spell]->targets & TAR_VIOLENT))
+        percent = 30;
+
+      // special-case certain components
+      switch (comp)
+      {
+        case COMP_FARLOOK:
+        case COMP_INVISIBILITY:
+        case COMP_LEVITATE:
+        case COMP_TRUE_SIGHT:
+        case COMP_HASTE:
+          // these are also "utility" comps, but players have asked for a
+          // slightly higher load rate on them
+          percent = 50;
+          break;
+        case COMP_GALVANIZE:
+          // keep fairly rare
+          percent = 5;
+          break;
+        case COMP_ENHANCE_WEAPON:
+          // keep VERY rare
+          percent = 3;
+          break;
+        default:      
+          break;
+      }
+      wr.add(comp, cost, percent);
+    }
+  }
+  return wr.getRandomItem(maxCost);
+}
+
+
+
 void TMonster::mageComponentLoader(void)
 {
   int wealth = getMoney();
   TObj *obj,
        *bag = NULL;
-  int num = -1, iters = 0;
-  spellNumT spell;
   int comp = 0;
   int bag_num = 0;
   bool found = FALSE;
   int inksloaded = 0;
+  const int priceAdjust = 13;
 
   if (GetMaxLevel() >= 50  && wealth > 1000) {
     wealth -= 800;
@@ -524,132 +503,38 @@ void TMonster::mageComponentLoader(void)
   } else 
     bag_num = 321;
 
-  if (!(bag = read_object_buy_build(this,bag_num, VIRTUAL)))
+  // can't buy_build this obj if its doing to be deleted
+  if (!(bag = read_object(bag_num, VIRTUAL)))
     return;
 
   while (::number(0,3) && (wealth > 10)) { 
-    iters = 0;
-    num = -1;
-    while ((num == -1) && (iters < 25)) {
-      num = ::number(0, CompIndex.size() - 1);
-      spell = CompIndex[num].spell_num;
-      comp = CompIndex[num].comp_vnum;
-      iters++;
-    
-      if (spell < TYPE_UNDEFINED || spell >= MAX_SKILL) {
-        vlogf(LOG_BUG, format("Component (%d) defined with bad spell (%d).  num=%d") %  comp % spell % num);
-        continue;
-      }
-      if (spell != TYPE_UNDEFINED && hideThisSpell(spell)) {
-        num = -1;
-        continue;
-      }
-      // only load mage spell component
-      if (spell != TYPE_UNDEFINED && discArray[spell]->typ != SPELL_MAGE) {
-      	num=-1;
-      	continue;
-      }
 
-      if (isDissectComponent(comp))
-        num = -1;
-
-      if (isInkComponent(comp) && ++inksloaded>3)
-	num = -1;
-
-      // disallow certain components
-      switch (comp) {
-        case COMP_FEATHERY_DESCENT:
-        case COMP_FALCON_WINGS:
-        case COMP_ANTIGRAVITY:
-        case COMP_POWERSTONE:
-        case COMP_SHATTER:
-        case COMP_ILLUMINATE:
-        case COMP_DETECT_MAGIC:
-        case COMP_DISPEL_MAGIC:
-        case COMP_COPY:
-        case COMP_TRAIL_SEEK:
-        case COMP_FLARE:
-        case COMP_ANIMATE:
-        case COMP_BIND:
-        case COMP_TELEPORT:
-        case COMP_SENSE_LIFE:
-        case COMP_SILENCE:
-        case COMP_STEALTH:
-        case COMP_CALM:
-        case COMP_ENSORCER:
-        case COMP_FEAR:
-        case COMP_CLOUD_OF_CONCEAL:
-        case COMP_DETECT_INVIS:
-        case COMP_DETECT_SHADOW:
-        case COMP_DISPEL_INVIS:
-        case COMP_TELEPATHY:
-        case COMP_POLYMORPH:
-        case COMP_GILLS_OF_FLESH:
-        case COMP_BREATH_SARAHAGE:
-        case COMP_INFRAVISION:
-        case COMP_FLIGHT:
-          // we'll make utility comps more rare so that relatively speaking
-          // the comps for offensive spells are more prevalent
-          if (::number(0,2))
-            num = -1;
-          break;
-        case COMP_FARLOOK:
-        case COMP_INVISIBILITY:
-        case COMP_LEVITATE:
-        case COMP_TRUE_SIGHT:
-          // these are also "utility" comps, but players have asked for a
-          // slightly higher load rate on them
-          if (::number(0,9) < 5)
-            num = -1;
-          break;
-        case COMP_GALVANIZE:
-          // keep fairly rare
-          if (::number(0,19))
-            num = -1;
-          break;
-        case COMP_ENHANCE_WEAPON:
-          // keep VERY rare
-          if (::number(0,29))
-            num = -1;
-          break;
-        default:
-          break;
-      }
-      if (num == -1)
-        continue;
-
-      // this check is to prevent a mob that "sells" comps via responses
-      // from loading the comp they sell, and hence preventing the response
-      // load from working
-      if (isMobComponentSeller(comp, mobVnum()))
-        num = -1;
-
-      if (num == -1)
-        continue;
-
-      if (comp == -1) {
-        vlogf(LOG_BUG, format("Bogus component on spell %d (%s)") % 
-                 spell % discArray[spell]->name);
-        continue;
-      }
-    }
-    if (num == -1)
+    comp = getRandomMageComp(wealth*priceAdjust);
+    if (comp <= 0)
       continue;
-    // gets here if component is valid for mob
 
+    if (isInkComponent(comp))
+      inksloaded++;
+
+    // don't allow more than 3 inks in a bag
+    if (inksloaded > 3)
+      continue;
+
+    // this check is to prevent a mob that "sells" comps via responses
+    // from loading the comp they sell, and hence preventing the response
+    // load from working
+    if (!loadOnDeath && isMobComponentSeller(comp, mobVnum()))
+      continue;
+
+    // gets here if component is valid for mob
     if (!(obj = read_object(comp,VIRTUAL)))
       continue;
 
     TComponent *tcom =dynamic_cast<TComponent *>(obj);
-    spell = CompIndex[num].spell_num;
 
-    if (tcom && tcom->isComponentType(COMP_SPELL) && spell == TYPE_UNDEFINED) {
-      num = -1;
-      delete tcom;
+    if (!tcom)
       continue;
-    }
-    if (tcom->isComponentType(COMP_POTION)) {
-      num = -1;
+    if (!tcom->isComponentType(COMP_SPELL) || tcom->isComponentType(COMP_POTION)) {
       delete tcom;
       continue;
     }
@@ -657,7 +542,7 @@ void TMonster::mageComponentLoader(void)
     // 15 is a wee high, 12 is a wee low
     // this is the best way to up the overall availability of components
     // increase the divisor to increase the loads
-    int price = obj->obj_flags.cost / 13;
+    int price = obj->obj_flags.cost / priceAdjust;
     if (wealth >= price) {
       *bag += *obj;
       wealth -= price;
@@ -696,7 +581,8 @@ void TMonster::rangerComponentLoader(void)
   } else 
     bag_num = 330;
 
-  if (!(bag = read_object_buy_build(this,bag_num, VIRTUAL)))
+  // cant buy_build this obj if its going to be deleted
+  if (!(bag = read_object(bag_num, VIRTUAL)))
     return;
 
   while (::number(0,3) && (wealth > 10)) { 
@@ -753,7 +639,7 @@ void TMonster::rangerComponentLoader(void)
       delete tcom;
       continue;
     }
-    // skip scribe comps
+    // skip brew comps
     if (tcom->isComponentType(COMP_POTION)) {
       num = -1;
       delete tcom;
@@ -771,7 +657,7 @@ void TMonster::rangerComponentLoader(void)
       obj = NULL;
     }
   }
-  if (found || ::number(0,2))
+  if (found || !::number(0,3))
     *this += *bag;
   else {
     delete bag;
@@ -803,7 +689,8 @@ void TMonster::shamanComponentLoader(void)
   } else 
     bag_num = 31317;
 
-  if (!(bag = read_object_buy_build(this,bag_num, VIRTUAL)))
+  // can't but this obj if its going to be deleted
+  if (!(bag = read_object(bag_num, VIRTUAL)))
     return;
 
 
@@ -834,19 +721,19 @@ void TMonster::shamanComponentLoader(void)
         num = -1;
 
       if (isBrewComponent(comp) && ++Brewload>3)
-	num = -1;
+	      num = -1;
 
       // disallow certain components
       switch (comp) {
-	case COMP_BLOOD_BOIL:
-	case COMP_AQUALUNG:
+	      case COMP_BLOOD_BOIL:
+	      case COMP_AQUALUNG:
         case COMP_HYPNOSIS:
           // we'll make utility comps more rare so that relatively speaking
           // the comps for offensive spells are more prevalent
           if (::number(0,2))
             num = -1;
           break;
-	case COMP_CELERITE:
+	      case COMP_CELERITE:
         case COMP_CLARITY:
         case COMP_SHADOW_WALK:
           // these are also "utility" comps, but players have asked for a
@@ -922,7 +809,7 @@ void TMonster::shamanComponentLoader(void)
       obj = NULL;
     }
   }
-  if (found || ::number(0,2))
+  if (found || !::number(0,3))
     *this += *bag;
   else {
     delete bag;
@@ -993,8 +880,8 @@ void TMonster::clericSymbolLoader(void)
     
     if(wealth>value){
       if (!(obj = read_object_buy_build(this,syms[i], VIRTUAL))) {
-	vlogf(LOG_BUG, "Error in cleric Component Loader");
-	return;
+	      vlogf(LOG_BUG, "Error in cleric Component Loader");
+	      return;
       }
 
       *this += *obj;
@@ -1009,19 +896,11 @@ void TMonster::clericSymbolLoader(void)
 
 void TMonster::buffMobLoader()
 {
-  // no idea whats trying to be done
-  // bat changed down on line 906 so
-  // i commented out this declaration
-  //  TObj *obj;
-  int num, vnum;
-
-#if 1
   const int level_min = 20;
   if (GetMaxLevel() < level_min)
     return;
   if (GetMaxLevel() > 75)
     return;
-#endif
 
   // value of 99  : 5 potions, 7770 mobs : 6.43e-4
   // value of 199 : 4 potions, 6330 mobs : 6.32e-4
@@ -1029,102 +908,26 @@ void TMonster::buffMobLoader()
     return;
 
   // level based chance
-  if (::number(0,9999) > (GetMaxLevel() + 10) *
-                         (GetMaxLevel() + 10))
+  if (::number(0,9999) > (GetMaxLevel() + 10) * (GetMaxLevel() + 10))
     return;
 
-//  char buf[1024];
-//  sprintf(buf, "%s made it thru buffMob.\n\r", getName());
-  int obj_lev = -1;
+  int vnums[19], num = 0;
+  while(num < 5)
+    vnums[num++] = MYSTERY_POTION; // 5 are mystery pot
+  vnums[num++] = LEARNING_POTION;
+  vnums[num++] = YOUTH_POTION;
+  while(num < (int)cElements(vnums))
+    vnums[num++] = STATS_POTION; // default is stats pot
 
-  num = ::number(1,19);
-  switch (num) {
-    case 1:
-    case 14:
-    case 15:
-    case 16:
-    case 17:
-      vnum = MYSTERY_POTION;
-      break;
-    case 18:
-      vnum = LEARNING_POTION;
-      break;
-    case 19:
-      vnum = YOUTH_POTION;
-      break;
-    case 2:
-      vnum = STATS_POTION;
-      obj_lev = STAT_STR;
-      break;
-    case 3:
-      vnum = STATS_POTION;
-      obj_lev = STAT_DEX;
-      break;
-    case 4:
-      vnum = STATS_POTION;
-      obj_lev = STAT_BRA;
-      break;
-    case 5:
-      vnum = STATS_POTION;
-      obj_lev = STAT_AGI;
-      break;
-    case 6:
-      vnum = STATS_POTION;
-      obj_lev = STAT_CON;
-      break;
-    case 7:
-      vnum = STATS_POTION;
-      obj_lev = STAT_INT;
-      break;
-    case 8:
-      vnum = STATS_POTION;
-      obj_lev = STAT_WIS;
-      break;
-    case 9:
-      vnum = STATS_POTION;
-      obj_lev = STAT_FOC;
-      break;
-    case 10:
-      vnum = STATS_POTION;
-      obj_lev = STAT_CHA;
-      break;
-    case 11:
-      vnum = STATS_POTION;
-      obj_lev = STAT_KAR;
-      break;
-    case 12:
-      vnum = STATS_POTION;
-      obj_lev = STAT_SPE;
-      break;
-    case 13:
-      vnum = STATS_POTION;
-      obj_lev = STAT_PER;
-      break;
-    default:
-      return;
-  }
+  num = vnums[::number(0, cElements(vnums))];
 
-#if 1
-// builder port uses stripped down database which was causing problems
-// hence this setup instead.
-  int robj = real_object(vnum);
-  if (robj < 0 || robj >= (signed int) obj_index.size()) {
-    vlogf(LOG_BUG, format("buffMobLoader(): No object (%d) in database!") %  vnum);
-    return;
-  }
-
-  TObj * obj = read_object(robj, REAL);
-#else
-  TObj * obj = read_object(vnum, VIRTUAL);
-#endif
-
+  TObj * obj = read_object(num, VIRTUAL);
   if (!obj) {
-    vlogf(LOG_BUG, format("Error in buffMobLoader (%d)") %  vnum);
+    vlogf(LOG_BUG, format("Error in buffMobLoader (%d)") %  num);
     return;
   }
 
   *this += *obj;
-
 
   return;
 }
@@ -1220,7 +1023,8 @@ void TMonster::genericMobLoader(TOpenContainer **bag)
     return;
  
   TObj *obj;
-  if (!(obj = read_object_buy_build(this,GENERIC_MONEYPOUCH, VIRTUAL)) ||
+  // moneypouches are newbie flagged and not sellable, so probably shouldn't buy_build
+  if (!(obj = read_object(GENERIC_MONEYPOUCH, VIRTUAL)) ||
       !(*bag = dynamic_cast<TOpenContainer *>(obj)))
     return;
 
@@ -1234,3 +1038,4 @@ void TMonster::genericMobLoader(TOpenContainer **bag)
 
   return;
 }
+

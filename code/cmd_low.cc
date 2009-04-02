@@ -525,11 +525,13 @@ double TMonster::determineExp()
 
   d_exp = mob_exp(real_level);
 
-  calculateGoldFromConstant();
+  if (!loadOnDeath)
+    calculateGoldFromConstant();
 
   if (specials.act & ACT_AGGRESSIVE)
     d_exp *= 1.05;
 
+  // what about LoadOnDeath here?
   if (!getMoney() && (GetMaxLevel() < 12))
     d_exp += (d_exp * (double) ::number(1,5)) / 100.;   // 1% to 5% increase
 

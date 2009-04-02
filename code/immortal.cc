@@ -1659,7 +1659,8 @@ void TPerson::doSwitch(const char *argument)
 
     *roomp += *tBeing;
     (dynamic_cast<TMonster *>(tBeing))->oldRoom = inRoom();
-    (dynamic_cast<TMonster *>(tBeing))->createWealth();
+    if (!loadOnDeath)
+      (dynamic_cast<TMonster *>(tBeing))->createWealth();
 
     tStMobile = tStBuffer;
   }
@@ -2380,7 +2381,8 @@ void TPerson::doLoad(const char *argument)
       }
       *roomp += *mob;
       mob->oldRoom = inRoom();
-      mob->createWealth();
+      if (!loadOnDeath)
+        mob->createWealth();
 
       act("$n makes a quaint, magical gesture with one hand.", TRUE, this, 0, 0, TO_ROOM);
       act(msgVariables(MSG_LOAD_MOB, mob), TRUE, this, 0, mob, TO_ROOM);

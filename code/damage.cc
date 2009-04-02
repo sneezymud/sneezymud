@@ -459,7 +459,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
     }
   }
 
-  if (dynamic_cast<TMonster*>(v))
+  if (dynamic_cast<TMonster*>(v) && v->getPosition() == POSITION_DEAD)
   {
     positionTypeT pos = v->getPosition();
     v->setPosition(POSITION_STANDING); // temporarily set to allow scripts to drop items, etc

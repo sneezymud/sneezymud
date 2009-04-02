@@ -706,6 +706,12 @@ static void describeSpellEffects(const TBeing *me, const TBeing *ch, bool verbos
     ++totspell;
   }
 
+  if (me->affectedBySpell(SPELL_FUMBLE)) {
+    tStSpell += ".....$n is clumsily fumbling around.\n\r";
+    tStSpell += displayShowApprox(me, ch, SPELL_FUMBLE, 2.0);
+    ++totspell;
+  }
+
   strcpy(bufspell, tStSpell.c_str());
   strcpy(bufpray, tStPray.c_str());
 
@@ -1205,21 +1211,30 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
 
     found = FALSE;
     if ((ch != this) && !ch->isImmortal() && ch->affectedBySpell(SKILL_SPY)) {
-      int value = getMoney();
-      int skill = ch->getSkillValue(SKILL_SPY);
-      ch->sendTo("\n\rYou attempt to peek at the inventory:\n\r");
-      if (ch->isAffected(AFF_SCRYING)) {
+
+      bool success = ch->isAffected(AFF_SCRYING);
+      int skill = success ? ch->getSkillValue(SKILL_SPY) : 0;
+      const TMonster * monster = loadOnDeath ? dynamic_cast<const TMonster*>(this) : NULL;
+      int money = monster ? (int)monster->getLoadMoney() : getMoney();
+      int moneyGuess = (money * ::number(skill/10, (20-skill/10))) / 10;
+
+      // show if they've been stolen from before
+      if (success && loadOnDeath && getStolenFrom())
+        ch->sendTo(COLOR_MOBS, "\n\rIt looks like someone has already gone through their pockets.");
+
+      // show money guestimate
+      ch->sendTo(COLOR_MOBS,format("\n\rYou estimate %s has %d talen%s.\n\r") % getName() % moneyGuess % (moneyGuess != 1 ? "s" : ""));
+
+      // show items you can get from a good steal
+      if (loadOnDeath)
+        ch->sendTo(COLOR_MOBS,format("You suspect their pockets contain %s.\n\r") % (success ? getStealLootNames() : "nothing"));
+
+      // if they are carrying stuff, show
+      ch->sendTo("You peek into their inventory for loot:\n\r");
+      if (success && !stuff.empty())
         list_in_heap(stuff, ch, FALSE, skill);
-      }
-
-      // randomize wealth report
-      // this is anywhere from 0* to 2* as much at 0 learning, to exact at 100%
-      if (!ch->isAffected(AFF_SCRYING))
-        skill = 0;
-      value *= ::number(skill/10, (20-skill/10));
-      value /= 10;
-      ch->sendTo(COLOR_MOBS,format("\n\rYou estimate %s has %d talens.\n\r") % getName() % value);
-
+      else
+        ch->sendTo("Nothing.\n\r"); // this should be identical text as list_in_heap
     } else if (ch->isImmortal()) {
       ch->sendTo("Inventory:\n\r");
 

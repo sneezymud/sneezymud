@@ -310,6 +310,26 @@ class wizListInfo {
 
 const int PERMANENT_DURATION = -9;   // for affectedData.duration
 
+enum joinFlag
+{
+  joinFlagNone = 0,
+  joinFlagCreateOnly = 1, // fail if this affect is already applied
+  joinFlagUpdateOnly = 2, // fail if this affect isnt already there
+  joinFlagAllowMultiples = 4, // allow multiples of the same affect (by spell)
+  joinFlagOverwriteDur = 8, // overwrite an existing duration with this one
+  joinFlagUpdateDur = 16, // only update duration if this one is higher
+  joinFlagAlwaysRenew = 32, // always allow this affect to be renewed
+  joinFlagAveDur = 64, // average the two durations
+  joinFlagAveMod = 128, // average the two modifiers
+
+  // composite/default flags
+  joinFlagDefault = joinFlagNone,
+  joinFlagDisease = joinFlagUpdateDur,
+
+  joinFlagAll = -1,
+};
+
+
 class affectedData {
  public:
     spellNumT type;
@@ -328,7 +348,19 @@ class affectedData {
     affectedData(const saveAffectedData &a);
     affectedData & operator=(const affectedData &a);
     ~affectedData();
+ 
+    bool operator !=(affectedData &cmp) { return !(*this == cmp); }
+    bool operator ==(affectedData &cmp)
+    {
+      if (type != cmp.type || location != cmp.location)
+        return false;
+      if (location == APPLY_IMMUNITY || location == APPLY_SPELL)
+        return modifier == cmp.modifier;
+      return true;
+    }
 
+    long getMod() { return (location == APPLY_IMMUNITY || location == APPLY_SPELL) ? modifier2 : modifier; }
+    void setMod(long v) { if (location == APPLY_IMMUNITY || location == APPLY_SPELL)  modifier2 = v; else modifier = v; }
     bool canBeRenewed() const;
     bool shouldGenerateText() const;
 };

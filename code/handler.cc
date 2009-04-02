@@ -1025,6 +1025,58 @@ int TBeing::affectJoin(TBeing * caster, affectedData *af, avgDurT avg_dur, avgEf
   return FALSE;
 }
 
+// Note from Pappy
+// Essentially I re-wrote affectJoin to allow for more affect management
+// returns true if the affect was applied, false if not
+bool TBeing::affectJoin2(affectedData *af, joinFlag flags)
+{
+  for (affectedData *afOld = affected; afOld; afOld = afOld->next)
+  {
+    if (*afOld != *af)
+      continue;
+
+    if (flags & joinFlagCreateOnly)
+      return false;
+
+    if (flags & joinFlagAllowMultiples)
+      break;
+
+    if (!(flags & joinFlagAlwaysRenew) && !afOld->canBeRenewed())
+      return false;
+
+    if (flags & joinFlagUpdateDur && afOld->duration > af->duration)
+      return false;
+
+    int renew = 0;
+    if ((renew = afOld->renew) <= 0)
+      renew = max(af->duration, afOld->duration) / 2;
+
+    if (!(flags & joinFlagOverwriteDur))
+    {
+      af->duration += afOld->duration;
+
+      if (flags & joinFlagAveDur)
+        af->duration /= 2;
+    }
+
+    af->setMod(af->getMod() + afOld->getMod());
+
+    if (flags & joinFlagAveMod)
+       af->setMod(af->getMod() / 2);
+
+    affectRemove(afOld, SILENT_YES);
+    affectTo(af, renew, SILENT_YES);
+    return true;
+  }
+
+  // no affect found
+  if (flags & joinFlagUpdateOnly)
+    return false;
+  affectTo(af, 0, SILENT_YES);
+  return true;
+}
+
+
 void thing_to_room(TThing *ch, int room)
 {
   TRoom *rp;
