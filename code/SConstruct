@@ -53,25 +53,42 @@ Export('env')
 
 CacheDir('/mud/build/cache')
 
+Default('sneezy.2')
+
 env.SConscript('code/SConscript',
                build_dir='objs',
                duplicate=0,
                exports='env')
 
 
+# etags
+def PhonyTargets(env = None, **kw):
+    if not env: env = DefaultEnvironment()
+    for target,action in kw.items():
+        env.AlwaysBuild(env.Alias(target, [], action))
 
+PhonyTargets(env, tags='@etags code/*/*')
+
+
+# progress indicator
 Progress(['\033[32mChecking dependencies\033[0m -\r',
           '\033[32mChecking dependencies\033[0m \\\r',
           '\033[32mChecking dependencies\033[0m |\r',
           '\033[32mChecking dependencies\033[0m /\r'], interval=5)
 
+# command line help
 Help("""
-'scons sneezy' to build the main binary (output: sneezy.2).
-'scons lowtools' to build the low tools (output: lowtools/).
-'scons objs/*/*.os' to build a specific file (eg: objs/game/game_hilo.os).
-
-'scons -c' to clean build objects and executables.
+Targets:
+sneezy:      build the main binary (output: sneezy.2).
+lowtools:    build the low tools (output: lowtools/).
+objs/*/*.os: build a specific file (eg: objs/game/game_hilo.os).
+tags:        rebuild the emacs tag file. 
+'scons -c' to clean objects and executables.
 """)
 
 
 
+
+
+        
+    
