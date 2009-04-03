@@ -83,6 +83,7 @@ sneezy:      build the main binary (output: sneezy.2).
 lowtools:    build the low tools (output: lowtools/).
 objs/*/*.os: build a specific file (eg: objs/game/game_hilo.os).
 tags:        rebuild the emacs tag file. 
+check:       build and run unit tests
 'scons -c' to clean objects and executables.
 """)
 
