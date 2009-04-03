@@ -5,6 +5,7 @@
 
 int main(int argc, char **argv)
 {
+  doConfiguration();
   TDatabase db(DB_IMMORTAL);
   vector<int>vnums;
   map<sstring,sstring>val;

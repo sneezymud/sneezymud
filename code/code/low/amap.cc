@@ -782,7 +782,11 @@ int main(int argc, char **argv)
   int headroom=100;
   sstring infile, buf, outputfile="imageout.jpg";
   sstring logfile="/mud/prod/lib/logs/logcurrent";
+
+  doConfiguration();
+
   TDatabase db(DB_SNEEZYBETA), dbexits(DB_SNEEZYBETA);
+
 
   toggleInfo.loadToggles();
 

@@ -15,6 +15,7 @@ int txt2dir(sstring txt)
 
 int main(int argc, char **argv)
 {
+  doConfiguration();
   TDatabase db(DB_SNEEZYBETA);
   vector<int>vnums;
   map<sstring,sstring>val;
