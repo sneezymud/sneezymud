@@ -1,0 +1,13 @@
+# hey emacs, this is -*- python -*-
+
+Import(['env', 'libs'])
+
+env.CxxTest('DBTest.h', LIBS=libs, CXXTEST_SKIP_ERRORS=True)
+env.CxxTest('CommTest.h', LIBS=libs, CXXTEST_SKIP_ERRORS=True)
+env.CxxTest('SString.h', LIBS=libs, CXXTEST_SKIP_ERRORS=True)
+env.CxxTest('Exceptions.h', LIBS=libs, CXXTEST_SKIP_ERRORS=True)
+env.CxxTest('ConvertTo.h', LIBS=libs, CXXTEST_SKIP_ERRORS=True)
+env.CxxTest('Garble.h', LIBS=libs, CXXTEST_SKIP_ERRORS=True)
+env.CxxTest('Act.h', LIBS=libs, CXXTEST_SKIP_ERRORS=True)
+env.CxxTest('Tell.h', LIBS=libs, CXXTEST_SKIP_ERRORS=True)
+env.CxxTest('Cast.h', LIBS=libs, CXXTEST_SKIP_ERRORS=True)
