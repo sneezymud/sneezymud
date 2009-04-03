@@ -20,6 +20,8 @@ class Act : public CxxTest::TestSuite
 
   void setUp(){
     doConfiguration();
+    freopen("code/tests/output/Act.out", "w", stderr);
+
     buildSpellArray();
     chdir("lib");
     Races[RACE_HUMAN] = new Race(RACE_HUMAN);    

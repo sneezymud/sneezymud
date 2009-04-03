@@ -15,6 +15,9 @@ class Cast : public CxxTest::TestSuite
   charFile st;
 
   void setUp(){
+    doConfiguration();
+    freopen("code/tests/output/Cast.out", "w", stderr);
+
     buildSpellArray();
     chdir("lib");
     Races[RACE_HUMAN] = new Race(RACE_HUMAN);    

@@ -11,7 +11,7 @@ void sendHelp(po::options_description desc){
 
 bool doConfiguration(int argc, char *argv[])
 {
-  string configFile;
+  string configFile="sneezy.cfg";
 
   // command line only options
   po::options_description cmdline("Command line only");

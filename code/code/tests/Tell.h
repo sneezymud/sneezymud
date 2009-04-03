@@ -19,6 +19,7 @@ class Tell : public CxxTest::TestSuite
 
   void setUp(){
     doConfiguration();
+    freopen("code/tests/output/Tell.out", "w", stderr);
     buildSpellArray();
     chdir("lib");
     Races[RACE_HUMAN] = new Race(RACE_HUMAN);    

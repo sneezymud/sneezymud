@@ -9,6 +9,7 @@ class DBTest : public CxxTest::TestSuite
  public:
   void setUp(){
     doConfiguration();
+    freopen("code/tests/output/DBTest.out", "w", stderr);
   }
 
   void testRetrieve(){

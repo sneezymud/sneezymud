@@ -14,6 +14,7 @@ class CommTest : public CxxTest::TestSuite
 
   void setUp(){
     doConfiguration();
+    freopen("code/tests/output/CommTest.out", "w", stderr);
 
     testString[0]="holding up my";
     testString[1]="purring cat to the moon";
