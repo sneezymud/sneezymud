@@ -1,0 +1,49 @@
+# hey emacs, this is -*- python -*-
+
+Import('env');
+
+# make sure we have access to our local headers
+env.Append(CXXFLAGS=' '.join(['-Icode/cmd -Icode/disc '
+                              '-Icode/game -Icode/misc '
+                              '-Icode/obj -Icode/spec '
+                              '-Icode/sys -Icode/task ']))
+
+# library targets
+libcmd=env.SharedLibrary(target='cmd', source=Glob('cmd/*.cc'))
+libdisc=env.SharedLibrary(target='disc', source=Glob('disc/*.cc'))
+libgame=env.SharedLibrary(target='game', source=Glob('game/*.cc'))
+libmisc=env.SharedLibrary(target='misc', source=Glob('misc/*.cc'))
+libobj=env.SharedLibrary(target='obj', source=Glob('obj/*.cc'))
+libspec=env.SharedLibrary(target='spec', source=Glob('spec/*.cc'))
+libsys=env.SharedLibrary(target='sys', source=Glob('sys/*.cc'))
+libtask=env.SharedLibrary(target='task', source=Glob('task/*.cc'))
+
+libs=[libcmd, libdisc, libgame, libmisc,
+      libobj, libspec, libsys, libtask,
+      'libares']
+
+# main binary
+sneezy=env.Program('sneezy.2', 'main.cc', LIBS=[libs, 'libares'])
+env.InstallAs('../sneezy.2', sneezy)
+env.Alias('sneezy', '../sneezy.2');
+
+# low tools
+lto=env.Object('low/lowtools.cc');
+
+amap=env.Program(['low/amap.cc', lto], LIBS=libs)
+sqladdmobs=env.Program(['low/sqladdmobs.cc', lto], LIBS=libs)
+sqladdobjs=env.Program(['low/sqladdobjs.cc', lto], LIBS=libs)
+sqladdresp=env.Program(['low/sqladdresp.cc', lto], LIBS=libs)
+sqladdwld=env.Program(['low/sqladdwld.cc', lto], LIBS=libs)
+sqledimmobj=env.Program(['low/sqledimmobj.cc', lto], LIBS=libs)
+sqledmob=env.Program(['low/sqledmob.cc', lto], LIBS=libs)
+sqledobj=env.Program(['low/sqledobj.cc', lto], LIBS=libs)
+sqledresp=env.Program(['low/sqledresp.cc', lto], LIBS=libs)
+sqledshop=env.Program(['low/sqledshop.cc', lto], LIBS=libs)
+sqledwld=env.Program(['low/sqledwld.cc', lto], LIBS=libs)
+
+env.Install('../lowtools', [amap, sqladdmobs, sqladdobjs, sqladdresp,
+                            sqladdwld, sqledimmobj, sqledmob, sqledobj,
+                            sqledresp, sqledshop, sqledwld])
+env.Alias('lowtools', '../lowtools')
+

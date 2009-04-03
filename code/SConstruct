@@ -1,0 +1,64 @@
+# hey emacs, this is -*- python -*-
+from SCons.Script.SConscript import SConsEnvironment
+import os.path;
+
+CXXFLAGS = [
+    '-g '             # debugger
+    '-DLINUX '        # compiling on Linux
+    '-DFAST '         # compiling on a fast processor machine
+    '-O2 '            # optimize code
+    '-Wall '                  # all rec. warnings shown (includes all above)
+    '-Wpointer-arith '        # looks for things that depend on sizeof()
+    '-Wcast-qual '            # Warns about using casting to remove const
+    '-Wcast-align '           # a pointer cast changes alignment
+    '-Wwrite-strings '        # looks for formal const char* sent to char*
+    '-Wconversion '           # bad conversions
+    '-Woverloaded-virtual '   # virtual without a declaration in base class
+    '-Werror '                # turns a warning into an error
+    '-I/usr/local/include '
+    ];
+
+LDFLAGS = [
+    '-lstdc++ '
+    '/usr/lib/libcrypt.a ' # enable for insight
+    '-g ' # enable core debugging
+    '-L/usr/local/lib '
+    '-lmysqlclient '
+    '-lares '
+    '-lboost_regex '
+    '-lboost_program_options '
+    ];
+
+
+# build environment
+env=Environment(CXXFLAGS=' '.join(CXXFLAGS),
+                LINKFLAGS=' '.join(LDFLAGS),
+                SHCXXCOMSTR = "\033[35mCompiling\033[0m $SOURCE",
+                CXXCOMSTR = "\033[35mCompiling\033[0m $SOURCE",
+                SHLINKCOMSTR = "\033[31mLinking\033[0m $TARGET",
+                LINKCOMSTR = "\033[31mLinking\033[0m $TARGET",
+                INSTALLSTR = "\033[33mInstalling\033[0m '$SOURCE' as '$TARGET'"
+                )
+
+Export('env')
+
+CacheDir('/mud/build/cache')
+
+env.SConscript('code/SConscript',
+               build_dir='objs',
+               duplicate=0,
+               exports='env')
+
+Progress(['\033[32mChecking dependencies\033[0m -\r',
+          '\033[32mChecking dependencies\033[0m \\\r',
+          '\033[32mChecking dependencies\033[0m |\r',
+          '\033[32mChecking dependencies\033[0m /\r'], interval=5)
+
+Help("""
+'scons sneezy' to build the main binary (output: sneezy.2).
+'scons lowtools' to build the low tools (output: lowtools/).
+'scons objs/*/*.os' to build a specific file (eg: objs/game/game_hilo.os).
+
+'scons -c' to clean build objects and executables.
+""")
+

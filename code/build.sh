@@ -4,17 +4,17 @@ whoami=`whoami`
 
 if [ "$1" = "start" ]
 then
-  pid=`pgrep -U $whoami -f "gmake"`
+  pid=`pgrep -U $whoami -f "scons"`
   if [ "$pid" == "" ]
   then
-    echo "Starting make, output to file.mak.";
-    (gmake -k -j 3 -l 3 libs && gmake exe) >& file.mak &
+    echo "Starting scons, output to file.mak.";
+    (/mud/build/scons/bin/scons -k) >& file.mak &
   else
-    echo "You are already running make."
+    echo "You are already running scons."
   fi
 elif [ "$1" = "stop" ]
 then
-  pid=`pgrep -U $whoami -f "gmake"`
+  pid=`pgrep -U $whoami -f "scons"`
   if [ "$pid" != "" ]
   then
     echo "Killing process $pid."
@@ -24,12 +24,12 @@ then
   fi
 elif [ "$1" = "status" ]
 then
-  pid=`pgrep -U $whoami -f "gmake"`
+  pid=`pgrep -U $whoami -f "scons"`
   if [ "$pid" != "" ]
   then
-    echo "Make process found, pid $pid."
+    echo "scons process found, pid $pid."
   else
-    echo "Make process not found."
+    echo "scons process not found."
   fi
 else
   echo "Usage: $0 <start|stop>";
