@@ -2,12 +2,6 @@
 
 Import('env');
 
-# make sure we have access to our local headers
-env.Append(CXXFLAGS=' '.join(['-Icode/cmd -Icode/disc '
-                              '-Icode/game -Icode/misc '
-                              '-Icode/obj -Icode/spec '
-                              '-Icode/sys -Icode/task ']))
-
 # library targets
 libcmd=env.SharedLibrary(target='cmd', source=Glob('cmd/*.cc'))
 libdisc=env.SharedLibrary(target='disc', source=Glob('disc/*.cc'))
@@ -47,3 +41,6 @@ env.Install('../lowtools', [amap, sqladdmobs, sqladdobjs, sqladdresp,
                             sqledresp, sqledshop, sqledwld])
 env.Alias('lowtools', '../lowtools')
 
+# unit tests
+env.SConscript('tests/SConscript',
+               exports='libs')

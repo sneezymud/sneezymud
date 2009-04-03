@@ -2,6 +2,7 @@
 
 #include "stdsneezy.h"
 #include "code/tests/ValueTraits.h"
+#include "socket.h"
 
 class Garble : public CxxTest::TestSuite
 {

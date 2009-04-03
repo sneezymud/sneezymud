@@ -1,6 +1,7 @@
 #include <cxxtest/TestSuite.h>
 
 #include "stdsneezy.h"
+#include "socket.h"
 #include "code/tests/ValueTraits.h"
 
 class Exceptions : public CxxTest::TestSuite
