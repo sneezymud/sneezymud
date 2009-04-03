@@ -11,10 +11,14 @@ void sendHelp(po::options_description desc){
 
 bool doConfiguration(int argc, char *argv[])
 {
+  string configFile;
+
   // command line only options
   po::options_description cmdline("Command line only");
   cmdline.add_options()
     ("help", "produce help message")
+    ("config,c", po::value<string>(&configFile)->default_value("sneezy.cfg"),
+     "configuration file to use")
     ;
 
   // command line OR in config file
@@ -71,19 +75,21 @@ bool doConfiguration(int argc, char *argv[])
   
   po::variables_map vm;
 
-  ifstream ifs("sneezy.cfg");
 
   try {
     if(argc){
       po::store(po::command_line_parser(argc, argv).
 		options(cmdline_options).positional(p).run(), vm);
     }
+    po::notify(vm);
+    ifstream ifs(configFile.c_str());
+
     po::store(parse_config_file(ifs, config_options), vm);
+    po::notify(vm);
   } catch(po::unknown_option){
     sendHelp(visible);
     return false;    
   }
-  po::notify(vm);
 
   if(vm.count("help")){
     sendHelp(visible);
