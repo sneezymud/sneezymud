@@ -122,6 +122,7 @@ class TDatabase
   const sstring operator[] (unsigned int) const;
   bool isResults();
   long rowCount();
+  long lastInsertId() { return db ? mysql_insert_id(db) : 0; }
 
   TDatabase();
   TDatabase(dbTypeT);

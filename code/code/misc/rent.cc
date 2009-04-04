@@ -693,6 +693,8 @@ int ItemSaveDB::raw_write_item(TObj *o, int slot, int container, int rent_id)
     db.fetchRow();
 
     rent_id=convertTo<int>(db["rent_id"]);
+    if (0 == rent_id)
+      vlogf(LOG_BUG, "Error in rent_id, value is 0 - this code should be switched to use db.lastInsertId()");
   } else {
     db.query("insert into rent (rent_id, owner_type, owner, vnum, slot, container, val0, val1, val2, val3, extra_flags, weight, bitvector, decay, cur_struct, max_struct, material, volume, price, depreciation) values (%i, '%s', %i, %i, %i, %i, %i, %i, %i, %i, %i, %f, %i, %i, %i, %i, %i, %i, %i, %i)",
 	     rent_id, owner_type.c_str(), owner, 

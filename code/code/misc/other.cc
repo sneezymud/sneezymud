@@ -4191,27 +4191,25 @@ void Descriptor::send_feedback(const char *subject, const char *msg)
   // clean up the message to remove any badness
   message.ascify();
   message.inlineReplaceString("\r\n", "\n");
-
+ 
   // add post
   if (!db.query(addPostQuery, g_smfPrefix, g_smfboardId, subject, message.c_str(), player->getName(), account->email.c_str(), (int)now) ||
-      !db.query("select last_insert_id() as postId") ||
-      !db.fetchRow())
+      0 == (postId = db.lastInsertId()))
   {
-    // sendto?? log??
+    vlogf(LOG_BUG, format("Player feedback failed when posting message for %s.") % player->name);
+    player->sendTo("There was an error filing your feedback.  Please try agian using http://www.sneezymud.com/Contact_Us.html");
     return;
   }
-  postId = convertTo<int>(db["postId"]);
 
   // add topic
   if (!db.query(addTopicQuery, g_smfPrefix, g_smfboardId, postId, postId) ||
-      !db.query("select last_insert_id() as topicId") ||
-      !db.fetchRow())
+      0 == (topicId = db.lastInsertId()))
   {
-    // sendto??  log??
     db.query("DELETE FROM %smessages WHERE ID_MSG = %i LIMIT 1", g_smfPrefix, postId);
+    vlogf(LOG_BUG, format("Player feedback failed when posting topic for %s.") % player->name);
+    player->sendTo("There was an error filing your feedback.  Please try agian using http://www.sneezymud.com/Contact_Us.html");
     return;
   }
-  topicId = convertTo<int>(db["topicId"]);
 
 	// join msg to topic
 	db.query("UPDATE %smessages SET ID_TOPIC = %i, ID_MSG_MODIFIED = %i WHERE ID_MSG = %i LIMIT 1", g_smfPrefix, topicId, postId, postId);
