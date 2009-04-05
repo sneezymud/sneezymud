@@ -125,7 +125,7 @@ sstring TGenWeapon::statObjInfo() const
       a += format("Attack Type:        %-8s") % attack_hit_text[getWtype(wt) - TYPE_MIN_HIT].singular;
     }
     if (getWeaponFreq(wt))
-      a += format(" Attack Frequeny:  %d%") % getWeaponFreq(wt);
+      a += format(" Attack Frequeny:  %d%%") % getWeaponFreq(wt);
     a += "\n\r";
   }
   if(isPoisoned()){
