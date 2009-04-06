@@ -89,8 +89,10 @@ typedef unsigned int resetFlag;
 const resetFlag resetFlagNone = 0;
 const resetFlag resetFlagBootTime = 1<<0;
 const resetFlag resetFlagFindLoadPotential = 1<<1;
-const resetFlag resetFlagMax = 1<<2;
-const resetFlag resetFlagCount = 2;
+const resetFlag resetFlagAlwaysEquip = 1<<2;
+
+const resetFlag resetFlagCount = 3;
+const resetFlag resetFlagMax = 1<<resetFlagCount;
 
 class resetCom {
   public:
@@ -141,6 +143,8 @@ class resetCom {
       cmd_SetFear, // F
       cmd_SetDoor, // D
       cmd_LoadLoot, // L
+      cmd_LoadObjEquippedProp, // I
+      cmd_LoadObjSetLocalProp, // J
 
       cmd_Max
     };

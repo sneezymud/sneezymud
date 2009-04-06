@@ -2872,7 +2872,7 @@ void runResetCmdE(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   // end sanity checks
 
   // OK, actually do the equip
-  if (loadOnDeath)
+  if (loadOnDeath && !(flags & resetFlagAlwaysEquip))
     *mob += *obj;
   else
     mob->equipChar(obj, realslot);
@@ -3419,6 +3419,42 @@ void runResetCmdL(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   last_cmd = (flags & resetFlagBootTime) ? sysLootLoad(rs, mob, obj, false) : false;
 }
 
+// marks an object as a 'prop' - not for player use
+void markProp(TObj *obj)
+{
+  if (!obj)
+    return;
+
+  obj->addObjStat(ITEM_NORENT | ITEM_NEWBIE | ITEM_NOLOCATE | ITEM_PROTOTYPE);
+  obj->obj_flags.cost = 0;
+}
+
+// loads eq, just like 'E' command and then marks as 'prop' (counts as regular eq: best to load specailized eq)
+void runResetCmdI(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
+{
+  runResetCmdE(zone, rs, flags & resetFlagAlwaysEquip, mobload, mob, objload, obj, last_cmd);
+  if (obj && last_cmd)
+    markProp(obj);
+}
+
+// loads a local set of eq as prop objects same syntax as 'Z' (see 'I' cmd for more info on props) 
+void runResetCmdJ(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
+{
+  if ((flags & resetFlagFindLoadPotential))
+  {
+    for (wearSlotT i = MIN_WEAR; i < MAX_WEAR; i++)
+      if (zone.armorSets.getArmor(rs.arg1, i) != 0)
+        tallyObjLoadPotential(zone.armorSets.getArmor(rs.arg1, i));
+    return;
+  }
+
+  if (mob && mobload && rs.arg1 >=0)
+    for (wearSlotT i = MIN_WEAR; i < MAX_WEAR; i++)
+      if (zone.armorSets.getArmor(rs.arg1, i) != 0)
+        if (loadsetCheck(mob, zone.armorSets.getArmor(rs.arg1, i),(rs.arg2 >= 98) ? rs.arg2 : fixed_chance, i, "(null... for now)"))
+          markProp(dynamic_cast<TObj*>(mob->equipment[i])); // assume: loadsetCheck returning true = obj on mob in that slot
+}
+
 void zoneData::resetZone(bool bootTime, bool findLoadPotential)
 {
   bool last_cmd = true;
@@ -3901,6 +3937,8 @@ resetCom::resetCom() :
     executeMethods[cmd_SetFear] = runResetCmdF;
     executeMethods[cmd_SetDoor] = runResetCmdD;
     executeMethods[cmd_LoadLoot] = runResetCmdL;
+    executeMethods[cmd_LoadObjEquippedProp] = runResetCmdI;
+    executeMethods[cmd_LoadObjSetLocalProp] = runResetCmdJ;
   }
 }
 
@@ -3947,6 +3985,8 @@ bool comHasLoadPotential(const char cmd)
   case 'Y':
   case 'Z':
   case 'X':
+  case 'I':
+  case 'J':
     return true;
   }
   return false;
@@ -3980,6 +4020,10 @@ bool resetCom::shouldStickToMob(bool &lastComStuck)
 
   // all other '?' commands we should just execute it to let further commands stick or not
   if (command == '?')
+    return lastComStuck = false;
+
+  // Prop loads should never stick
+  if (command == 'I' || command == 'J')
     return lastComStuck = false;
 
   return lastComStuck = (hasLoadPotential() ||

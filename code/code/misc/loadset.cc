@@ -123,23 +123,23 @@ bool loadSetClass::suitLoad(const char *argument, TBeing *ch, loadSetTypeT tPiec
   return false;
 }
 
-void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstring &slotname, bool findLoadPotential)
+bool loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstring &slotname, resetFlag flags)
 {
   if (vnum < 0) {
     if (chance > 100)
       ch->sendTo(format("No %s exists in that set.\n\r") % slotname);
-    return;
+    return false;
   }
 
-  if (findLoadPotential) {
+  if (flags & resetFlagFindLoadPotential) {
     tallyObjLoadPotential(vnum);
-    return;
+    return false;
   }
 
   int rob = real_object(vnum);
 
   if (rob < 0 || rob >= (signed) obj_index.size())
-    return;
+    return false;
 
   if (obj_index[rob].getNumber() >= obj_index[rob].max_exist) {
     if (chance <= 100) {
@@ -149,13 +149,13 @@ void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstrin
       if (mon && ::number(0,99) < chance)
         repoCheck(mon, rob);
 
-      return;
+      return false;
     } else {
       ch->sendTo(format("The %s in that suit is over max.\n\r") % slotname);
 
       // let L58+ gods load full set regardless
       if (!ch->hasWizPower(POWER_LOAD_LIMITED))
-        return;
+        return false;
     }
   }
 
@@ -180,8 +180,11 @@ void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstrin
       vlogf(LOG_MISC, format("Adjusted probability for suitset load of %s [%d]: %lf -> %lf") % obj_index[rob].short_desc % vnum % obj_lp_ratio % adj_obj_lp_ratio);
     }
     */
-    // NOTE: this should be using read_object_buy_build if (chance < 101)
-    TObj *obj = read_object(rob, REAL);
+    TObj *obj = NULL;
+    if (!loadOnDeath || chance == 101)
+      obj = read_object(rob, REAL);
+    else
+      obj = read_object_buy_build(ch, rob, REAL);
     if (obj) {
       ch->logItem(obj, CMD_LOAD);
       if (chance < 101) {
@@ -190,12 +193,12 @@ void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstrin
       if (obj->isPaired() && slot == WEAR_LEG_L)
       {
         delete obj;  // avoid double loads of pants
-        return;
-      } else if (loadOnDeath || chance == 101)
+        return false;
+      } else if ((loadOnDeath || chance == 101) && !(flags & resetFlagAlwaysEquip))
         *ch += *obj;
       else if (ch->equipment[slot]){
 	      delete obj;
-	      return;
+	      return false;
       } else
         ch->equipChar(obj, slot);
 
@@ -204,9 +207,13 @@ void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstrin
       //   with no proto.
       if (chance > 100 && !ch->hasWizPower(POWER_LOAD_NOPROTOS))
         obj->addObjStat(ITEM_PROTOTYPE);
+      return true;
+
     } else if (chance > 100)
       ch->sendTo(format("The %s was listed but not found, not in db yet?\n\r") % slotname);
+      return false;
   }
+  return false;
 }
 
 bool is_floatVal(const char *str)
