@@ -51,9 +51,10 @@ env.Append(CXXFLAGS=' '.join(['-Icode/cmd -Icode/disc '
 
 Export('env')
 
-CacheDir('/mud/build/cache')
+# getting some problems with this
+#CacheDir('/mud/build/cache')
 
-Default('sneezy.2')
+Default('sneezy')
 
 env.SConscript('code/SConscript',
                build_dir='objs',

@@ -47,7 +47,6 @@ echo "Moving code to production."
 
 # copy the latest executable
 echo "Copying binaries."
-mv -fv $CODE_MUD_ROOT/sneezy.2 $CODE_MUD_ROOT/sneezy
 cp -fv $CODE_MUD_ROOT/sneezy $PROD_MUD_ROOT/sneezy.2
 
 echo "Copying shared object files."

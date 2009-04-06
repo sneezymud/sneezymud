@@ -98,7 +98,6 @@ then
   pid=$(pgrep -U $USER -f "sneezy $PORT")
   if [ "$pid" == "" ]
   then
-    mv -f sneezy.2 sneezy >& /dev/null
     rm -f file
     echo "Booting ./sneezy $PORT."
     ./sneezy $FLAGS $PORT >& file &

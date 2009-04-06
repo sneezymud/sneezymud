@@ -17,9 +17,8 @@ libs=[libcmd, libdisc, libgame, libmisc,
       'libares']
 
 # main binary
-sneezy=env.Program('sneezy.2', 'main.cc', LIBS=[libs, 'libares'])
-env.InstallAs('../sneezy.2', sneezy)
-env.Alias('sneezy', '../sneezy.2');
+sneezy=env.Program('sneezy', 'main.cc', LIBS=[libs, 'libares'])
+env.InstallAs('../sneezy', sneezy)
 
 # low tools
 lto=env.Object('low/lowtools.cc');
