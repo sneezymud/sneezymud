@@ -16,7 +16,7 @@ CXXFLAGS = [
     '-Woverloaded-virtual '   # virtual without a declaration in base class
     '-Werror '                # turns a warning into an error
     '-I/usr/local/include '
-
+    '-I/mud/build/curl/include '
     ];
 
 LDFLAGS = [
@@ -28,6 +28,8 @@ LDFLAGS = [
     '-lares '
     '-lboost_regex '
     '-lboost_program_options '
+    '-L/mud/build/curl/lib '
+    '-lcurl '
     ];
 
 

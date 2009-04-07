@@ -1,0 +1,49 @@
+#include "stdsneezy.h"
+#include <curl/curl.h>
+#include <curl/types.h>
+#include <curl/easy.h>
+
+bool twitterShout(sstring from, sstring msg)
+{
+  CURL *curl;
+  CURLcode res;
+
+  struct curl_httppost *formpost=NULL;
+  struct curl_httppost *lastptr=NULL;
+  struct curl_slist *headerlist=NULL;
+  static const char buf[] = "Expect:";
+
+
+  curl_global_init(CURL_GLOBAL_ALL);
+
+  curl_formadd(&formpost, &lastptr, 
+	       CURLFORM_COPYNAME, "status",
+	       CURLFORM_COPYCONTENTS, 
+	       (format("%s: %s")% from% msg).str().c_str(),
+	       CURLFORM_END);
+	       
+  curl = curl_easy_init();
+  headerlist = curl_slist_append(headerlist, buf);
+
+  curl_easy_setopt(curl, CURLOPT_URL, 
+		   "http://twitter.com/statuses/update.xml");
+  curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerlist);
+  curl_easy_setopt(curl, CURLOPT_USERNAME, "sneezymud");
+  curl_easy_setopt(curl, CURLOPT_PASSWORD, "kegenlgn");
+  curl_easy_setopt(curl, CURLOPT_HTTPPOST, formpost);
+
+  res = curl_easy_perform(curl);
+
+  curl_easy_cleanup(curl);
+  curl_formfree(formpost);
+  curl_slist_free_all (headerlist);
+
+  if(res){
+    vlogf(LOG_PEEL, format("curl failed: %i") % res);
+  }
+
+
+  return true;
+
+}
+
