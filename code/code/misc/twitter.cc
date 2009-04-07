@@ -3,10 +3,17 @@
 #include <curl/types.h>
 #include <curl/easy.h>
 
+size_t dummyWriter(void *, size_t size, size_t nmemb, void *){
+  return size*nmemb;
+}
+
 bool twitterShout(sstring from, sstring msg)
 {
   CURL *curl;
   CURLcode res;
+  
+  if(gamePort!=PROD_GAMEPORT)
+    return false;
 
   struct curl_httppost *formpost=NULL;
   struct curl_httppost *lastptr=NULL;
@@ -31,6 +38,7 @@ bool twitterShout(sstring from, sstring msg)
   curl_easy_setopt(curl, CURLOPT_USERNAME, "sneezymud");
   curl_easy_setopt(curl, CURLOPT_PASSWORD, "kegenlgn");
   curl_easy_setopt(curl, CURLOPT_HTTPPOST, formpost);
+  curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, dummyWriter);
 
   res = curl_easy_perform(curl);
 
