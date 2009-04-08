@@ -3,65 +3,77 @@ from SCons.Script.SConscript import SConsEnvironment
 import os.path;
 
 CXXFLAGS = [
-    '-g '             # debugger
-    '-DLINUX '        # compiling on Linux
-    '-DFAST '         # compiling on a fast processor machine
-    '-O2 '            # optimize code
-    '-Wall '                  # all rec. warnings shown (includes all above)
-    '-Wpointer-arith '        # looks for things that depend on sizeof()
-    '-Wcast-qual '            # Warns about using casting to remove const
-    '-Wcast-align '           # a pointer cast changes alignment
-    '-Wwrite-strings '        # looks for formal const char* sent to char*
-    '-Wconversion '           # bad conversions
-    '-Woverloaded-virtual '   # virtual without a declaration in base class
-    '-Werror '                # turns a warning into an error
-    '-I/usr/local/include '
-    '-I/mud/build/curl/include '
-    ];
+    '-g',             # debugger
+    '-DLINUX',        # compiling on Linux
+    '-DFAST',         # compiling on a fast processor machine
+    '-O2',            # optimize code
+    '-Wall',                  # all rec. warnings shown (includes all above)
+    '-Wpointer-arith',        # looks for things that depend on sizeof()
+    '-Wcast-qual',            # Warns about using casting to remove const
+    '-Wcast-align',           # a pointer cast changes alignment
+    '-Wwrite-strings',        # looks for formal const char* sent to char*
+    '-Wconversion',           # bad conversions
+    '-Woverloaded-virtual',   # virtual without a declaration in base class
+    '-Werror',                # turns a warning into an error
+    ]
+
+CPPPATH = [
+    '/usr/local/include',
+    '/mud/build/curl/include',
+    '#/code/cmd',
+    '#/code/disc',
+    '#/code/game',
+    '#/code/misc',
+    '#/code/obj',
+    '#/code/spec',
+    '#/code/sys',
+    '#/code/task'
+    ]
 
 LDFLAGS = [
-    '-lstdc++ '
-    '/usr/lib/libcrypt.a ' # enable for insight
-    '-g ' # enable core debugging
-    '-L/usr/local/lib '
-    '-lmysqlclient '
-    '-lares '
-    '-lboost_regex '
-    '-lboost_program_options '
-    '-L/mud/build/curl/lib '
-    '-lcurl '
-    ];
+    '-lstdc++',
+    '/usr/lib/libcrypt.a', # enable for insight
+    '-g', # enable core debugging
+    '-lmysqlclient',
+    '-lares',
+    '-lboost_regex',
+    '-lboost_program_options',
+    '-lcurl'
+    ]
 
+LIBPATH = [
+    '/usr/local/lib',
+    '/mud/build/curl/lib'
+    ]
 
 # build environment
-env=Environment(CXXFLAGS=' '.join(CXXFLAGS),
-                LINKFLAGS=' '.join(LDFLAGS),
+env=Environment(CXXFLAGS=CXXFLAGS,
+                LINKFLAGS=LDFLAGS,
+                CPPPATH=CPPPATH,
+                LIBPATH=LIBPATH,
+                tools=['default', 'cxxtest'],
+
+                #prettified output
                 SHCXXCOMSTR = "\033[35mCompiling\033[0m $SOURCE",
                 CXXCOMSTR = "\033[35mCompiling\033[0m $SOURCE",
                 SHLINKCOMSTR = "\033[31mLinking\033[0m $TARGET",
                 LINKCOMSTR = "\033[31mLinking\033[0m $TARGET",
                 INSTALLSTR = "\033[33mInstalling\033[0m '$SOURCE' as '$TARGET'",
-                tools=['default', 'cxxtest'],
                 )
 
-# make sure we have access to our local headers
-env.Append(CXXFLAGS=' '.join(['-Icode/cmd -Icode/disc '
-                              '-Icode/game -Icode/misc '
-                              '-Icode/obj -Icode/spec '
-                              '-Icode/sys -Icode/task ']))
-
-
+# this is so unit tests can execute
 env['ENV']['LD_LIBRARY_PATH']='/mud/build/curl/lib'
-
 
 
 Export('env')
 
 # getting some problems with this
-#CacheDir('/mud/build/cache')
+CacheDir('/mud/build/cache')
 
+# build the sneezy exe by default, see the help below for other targets
 Default('sneezy')
 
+# go into code and start building
 env.SConscript('code/SConscript',
                build_dir='objs',
                duplicate=0,
