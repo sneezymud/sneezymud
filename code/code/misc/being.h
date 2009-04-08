@@ -718,7 +718,7 @@ class TBeing : public TThing {
 
     sstring getInsult(TBeing *);
     
-    ubyte getMaterial(wearSlotT) const;
+    ush_int getMaterial(wearSlotT) const;
 
     ubyte GetMaxLevel() const;
     void setMaxLevel(ubyte num);

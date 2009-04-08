@@ -165,7 +165,7 @@ class TThing {
     void addToLight(int num);
     void setRoom(int room);
     virtual void setMaterial(ubyte num);
-    ubyte getMaterial() const;
+    ush_int getMaterial() const;
     virtual void setWeight(const float w);
     void addToWeight(const float w);
     float getCarriedWeight() const;

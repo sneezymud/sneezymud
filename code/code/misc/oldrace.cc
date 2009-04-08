@@ -732,7 +732,7 @@ const sstring TBeing::describeBodySlot(wearSlotT i) const
   return buf;
 }
 
-ubyte TBeing::getMaterial(wearSlotT pos) const
+ush_int TBeing::getMaterial(wearSlotT pos) const
 {
   if((hasQuestBit(TOG_PEGLEG_R) && pos==WEAR_LEG_R) ||
      (hasQuestBit(TOG_PEGLEG_L) && pos==WEAR_LEG_L))

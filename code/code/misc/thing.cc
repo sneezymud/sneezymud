@@ -218,7 +218,7 @@ void TThing::setMaterial(ubyte num)
   material_type = convertV9MaterialToV10(num);
 }
 
-ubyte TThing::getMaterial() const
+ush_int TThing::getMaterial() const
 {
   return material_type;
 }
