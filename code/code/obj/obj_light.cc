@@ -43,7 +43,7 @@ bool TLight::isLit() const
   return lit;
 }
 
-int TLight::illuminateMe(TBeing *caster, int, byte)
+int TLight::illuminateMe(TBeing *caster, int, sh_int)
 {
   caster->sendTo("That object is a light; why don't you just light it?!?\n\r");
   act("Nothing seems to happen.", TRUE, caster, 0, 0, TO_ROOM);

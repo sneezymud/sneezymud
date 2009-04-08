@@ -45,9 +45,9 @@ private:
 
 int thornflesh(TBeing *caster);
 int castThornflesh(TBeing *caster);
-int thornflesh(TBeing *caster, int level, byte bKnown);
+int thornflesh(TBeing *caster, int level, sh_int bKnown);
 
-int aqualung(TBeing * caster, TBeing * victim, int level, byte bKnown);
+int aqualung(TBeing * caster, TBeing * victim, int level, sh_int bKnown);
 void aqualung(TBeing * caster, TBeing * victim, TMagicItem * obj);
 int aqualung(TBeing * caster, TBeing * victim);
 int castAqualung(TBeing * caster, TBeing * victim);
@@ -55,12 +55,12 @@ int castAqualung(TBeing * caster, TBeing * victim);
 int shadowWalk(TBeing *, TBeing *);
 int castShadowWalk(TBeing *, TBeing *);
 void shadowWalk(TBeing *, TBeing *, TMagicItem *);
-int shadowWalk(TBeing *, TBeing *, int, byte);
+int shadowWalk(TBeing *, TBeing *, int, sh_int);
 
     int celerite(TBeing *, TBeing *);
     int castCelerite(TBeing *, TBeing *);
     void celerite(TBeing *, TBeing *, TMagicItem *);
-    int celerite(TBeing *, TBeing *, int, byte);
+    int celerite(TBeing *, TBeing *, int, sh_int);
 
 #endif
 

@@ -89,7 +89,7 @@ DISC_ANIMAL},
   {"all", 1, 1, "all your limbs", MAX_WEAR, TYPE_UNDEFINED, DISC_RANGER}
 };
 
-int transformLimb(TBeing * caster, const char * buffer, int level, byte bKnown)
+int transformLimb(TBeing * caster, const char * buffer, int level, sh_int bKnown)
 {
   int ret;
   bool multi = TRUE;
@@ -268,7 +268,7 @@ int transformLimb(TBeing * caster, const char * buffer, int level, byte bKnown)
 
 // STORMY SKIES
  
-int stormySkies(TBeing * caster, TBeing * victim, int level, byte bKnown)
+int stormySkies(TBeing * caster, TBeing * victim, int level, sh_int bKnown)
 {
   int rc;
 
@@ -413,7 +413,7 @@ int stormySkies(TBeing * caster, TBeing * victim, TMagicItem * obj)
 // END STORMY SKIES
 // AQUATIC BLAST
 
-int aquaticBlast(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_learn)
+int aquaticBlast(TBeing * caster, TBeing * victim, int level, sh_int bKnown, int adv_learn)
 {
   int rc;
   TThing *t;
@@ -567,7 +567,7 @@ struct PolyType ShapeShiftList[LAST_SHAPED_MOB] =
   {"\n"       , -1,  -1,    -1, DISC_SHAMAN_FROG, RACE_NORACE}
 };
 
-int shapeShift(TBeing *caster, int level, byte bKnown)
+int shapeShift(TBeing *caster, int level, sh_int bKnown)
 {
   int i, ret = 0;
 //  bool nameFound = FALSE;
@@ -947,7 +947,7 @@ int castTransformLimb(TBeing * caster)
 
 // END SHAPESHIFT
 
-int deathWave(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
+int deathWave(TBeing *caster, TBeing *victim, int level, sh_int bKnown, int adv_learn)
 {
   char buf[256];
   sstring bBuf;

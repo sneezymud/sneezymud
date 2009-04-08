@@ -10,7 +10,7 @@
 #include "combat.h"
 
 // returns VICTIM_DEAD if corpse should be fried
-int voodoo(TBeing *caster, TObj *obj, int level, byte bKnown)
+int voodoo(TBeing *caster, TObj *obj, int level, sh_int bKnown)
 {
   TMonster *mob;
   TThing *t;
@@ -192,7 +192,7 @@ int voodoo(TBeing * caster, TObj * corpse)
 }
 
 // returns VICTIM_DEAD if corpse should be fried
-int dancingBones(TBeing * caster, TObj * obj, int level, byte bKnown)
+int dancingBones(TBeing * caster, TObj * obj, int level, sh_int bKnown)
 {
   TMonster *mob;
   TThing *t;
@@ -370,7 +370,7 @@ int dancingBones(TBeing * caster, TObj * corpse)
   return TRUE;
 }
 
-int shieldOfMists(TBeing *caster, TBeing *victim, int level, byte bKnown)
+int shieldOfMists(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
 {
   affectedData aff;
 
@@ -453,7 +453,7 @@ int ret,level;
   return TRUE;
 }
 
-int enthrallSpectre(TBeing * caster, int level, byte bKnown)
+int enthrallSpectre(TBeing * caster, int level, sh_int bKnown)
 {
   affectedData aff;
   TMonster * victim;
@@ -577,7 +577,7 @@ int castEnthrallSpectre(TBeing * caster)
   return TRUE;
 }
 
-int enthrallGhast(TBeing * caster, int level, byte bKnown)
+int enthrallGhast(TBeing * caster, int level, sh_int bKnown)
 {
   affectedData aff;
   TMonster * victim;
@@ -821,7 +821,7 @@ void TBeing::doSacrifice(const char *arg)
   tobj->sacrificeMe(this, arg);
 }
 
-int vampiricTouch(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
+int vampiricTouch(TBeing *caster, TBeing *victim, int level, sh_int bKnown, int adv_learn)
 {
   if (victim->isImmortal()) {
     act("You can't touch a god in that manner!",
@@ -924,7 +924,7 @@ int vampiricTouch(TBeing *tMaster, TBeing *tSucker, TMagicItem *tMagItem)
   return tRc;
 }
 
-int lifeLeech(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
+int lifeLeech(TBeing *caster, TBeing *victim, int level, sh_int bKnown, int adv_learn)
 {
   if (victim->isImmortal()) {
     act("You can't touch a god in that manner!",
@@ -1034,7 +1034,7 @@ int lifeLeech(TBeing *tMaster, TBeing *tSucker, TMagicItem *tMagItem)
   return tRc;
 }
 
-int cheval(TBeing *caster, TBeing *victim, int level, byte bKnown)
+int cheval(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
 {
   affectedData aff;
 
@@ -1120,7 +1120,7 @@ bool shaman_create_deny(int numberx)
   return false;
 }
         
-int chrism(TBeing *caster, TObj **obj, int, const char * name, byte bKnown)
+int chrism(TBeing *caster, TObj **obj, int, const char * name, sh_int bKnown)
 {
   unsigned int numberx;
 
@@ -1224,7 +1224,7 @@ TO_ROOM);
   return TRUE;
 }
 
-int rombler(TBeing *caster, int, byte bKnown)
+int rombler(TBeing *caster, int, sh_int bKnown)
 {
   Descriptor *i;
   sstring msg = caster->spelltask->orig_arg;
@@ -1309,7 +1309,7 @@ int ret,level;
   return TRUE;
 }
 
-int intimidate(TBeing *caster, TBeing *victim, int level, byte bKnown)
+int intimidate(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
 {
   int rc;
 
@@ -1412,7 +1412,7 @@ int castIntimidate(TBeing *caster, TBeing *victim)
   return rc;
 }
 
-int senseLifeShaman(TBeing *caster, TBeing *victim, int level, byte bKnown)
+int senseLifeShaman(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
 {
   affectedData aff;
 
@@ -1492,7 +1492,7 @@ ANSI_CYAN);
   return TRUE;
 }
 
-int detectShadow(TBeing *caster, TBeing *victim, int level, byte bKnown)
+int detectShadow(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
 {
   affectedData aff;
 
@@ -1565,7 +1565,7 @@ int castDetectShadow(TBeing *caster, TBeing *victim)
   return TRUE;
 }
 
-int djallasProtection(TBeing *caster, TBeing *victim, int level, byte bKnown)
+int djallasProtection(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
 {
   affectedData aff, aff2, aff3, aff4;
 
@@ -1671,7 +1671,7 @@ int castDjallasProtection(TBeing *caster, TBeing *victim)
   return TRUE;
 }
 
-int legbasGuidance(TBeing *caster, TBeing *victim, int level, byte bKnown)
+int legbasGuidance(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
 {
   affectedData aff, aff2, aff3, aff4;
 
@@ -1803,7 +1803,7 @@ int castEmbalm(TBeing *caster, TObj *corpse)
   return FALSE;
 }
 
-int embalm(TBeing *caster, TObj *o, int level, byte bKnown)
+int embalm(TBeing *caster, TObj *o, int level, sh_int bKnown)
 {
   TBaseCorpse *corpse;
 
@@ -1844,7 +1844,7 @@ int embalm(TBeing *caster, TObj *o, int level, byte bKnown)
 }
 
 
-int squish(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_learn)
+int squish(TBeing * caster, TBeing * victim, int level, sh_int bKnown, int adv_learn)
 {
   level = min(level, 25);
 
@@ -1945,7 +1945,7 @@ int castSquish(TBeing * caster, TBeing * victim)
   return rc;
 }
 
-int distort(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
+int distort(TBeing *caster, TBeing *victim, int level, sh_int bKnown, int adv_learn)
 {
   char buf[256];
   sstring bBuf;
@@ -2112,7 +2112,7 @@ int castDistort(TBeing *caster, TBeing *victim)
   return rc;
 }
 
-int soulTwist(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
+int soulTwist(TBeing *caster, TBeing *victim, int level, sh_int bKnown, int adv_learn)
 {
   if (victim->isImmortal()) {
     act("You can't twist a gods soul!", FALSE, caster, NULL, victim, TO_CHAR);
@@ -2234,7 +2234,7 @@ int castSoulTwist(TBeing *caster, TBeing *victim)
 }
 // ENTHRALL GHOUL
 
-int enthrallGhoul(TBeing * caster, int level, byte bKnown)
+int enthrallGhoul(TBeing * caster, int level, sh_int bKnown)
 {
   affectedData aff;
   TMonster * victim;
@@ -2366,7 +2366,7 @@ TO_CHAR);
 
 // END ENTHRALL GHOUL
 
-int stupidity(TBeing *caster, TBeing *victim, int level, byte bKnown)
+int stupidity(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
 {
   affectedData aff;
   int ret = 0;
@@ -2609,7 +2609,7 @@ int ret,level;
 
 }
 
-int flatulence(TBeing * caster, int level, byte bKnown, int adv_learn)
+int flatulence(TBeing * caster, int level, sh_int bKnown, int adv_learn)
 {
   TThing *t;
   TBeing *vict = NULL;
@@ -2690,7 +2690,7 @@ int castFlatulence(TBeing * caster)
 }
 
 
-int chaseSpirits(TBeing *caster, TObj * obj, int, byte bKnown)
+int chaseSpirits(TBeing *caster, TObj * obj, int, sh_int bKnown)
 {
   int i;
 
@@ -2760,7 +2760,7 @@ int castChaseSpirits(TBeing *caster, TObj *obj)
   return ret;
 }
 
-int chaseSpirits(TBeing *caster, TBeing * victim, int, byte bKnown)
+int chaseSpirits(TBeing *caster, TBeing * victim, int, sh_int bKnown)
 {
   caster->reconcileHurt(victim,discArray[SPELL_CHASE_SPIRIT]->alignMod);
 

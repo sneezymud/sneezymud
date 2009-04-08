@@ -700,7 +700,7 @@ void TBaseWeapon::divinateMe(TBeing *caster) const
 #endif
 }
 
-int TBaseWeapon::enhanceMe(TBeing *caster, int level, byte bKnown)
+int TBaseWeapon::enhanceMe(TBeing *caster, int level, sh_int bKnown)
 {
   int i;
 

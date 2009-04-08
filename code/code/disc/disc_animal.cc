@@ -18,7 +18,7 @@ int beastSoother(TBeing *caster, TBeing *victim, TMagicItem *tObj)
 }
 
 
-int beastSoother(TBeing * caster, TBeing * victim, int tWand, byte bKnown)
+int beastSoother(TBeing * caster, TBeing * victim, int tWand, sh_int bKnown)
 {
   int rc;
 
@@ -457,7 +457,7 @@ int TBeing::doCharmBeast(const char *argument)
 
 
 
-int beastSummon(TBeing * caster, const char * arg, int level, byte bKnown)
+int beastSummon(TBeing * caster, const char * arg, int level, sh_int bKnown)
 {
   int i;
   int max_dist, num_sum = 0, max_num;

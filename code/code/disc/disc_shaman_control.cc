@@ -14,7 +14,7 @@
 #include "obj_magic_item.h"
 #include "combat.h"
 
-int resurrection(TBeing * caster, TObj * obj, int level, byte bKnown)
+int resurrection(TBeing * caster, TObj * obj, int level, sh_int bKnown)
 {
   affectedData aff;
   TThing *t;
@@ -204,7 +204,7 @@ int resurrection(TBeing * caster, TObj * obj)
 
 // ENTHRALL DEMON
 
-int enthrallDemon(TBeing * caster, int level, byte bKnown)
+int enthrallDemon(TBeing * caster, int level, sh_int bKnown)
 {
   affectedData aff;
   TMonster * victim;
@@ -335,7 +335,7 @@ TO_CHAR);
 // END ENTHRALL DEMON
 
 // wood golem
-int createWoodGolem(TBeing * caster, int level, byte bKnown)
+int createWoodGolem(TBeing * caster, int level, sh_int bKnown)
 {
   affectedData aff;
   TMonster * victim;
@@ -460,7 +460,7 @@ int castCreateWoodGolem(TBeing * caster)
 
 /////////////////
 // rock golem
-int createRockGolem(TBeing * caster, int level, byte bKnown)
+int createRockGolem(TBeing * caster, int level, sh_int bKnown)
 {
   affectedData aff;
   TMonster * victim;
@@ -587,7 +587,7 @@ SPELL_SUCCESS) {
 
 //////////////////
 // iron golem
-int createIronGolem(TBeing * caster, int level, byte bKnown)
+int createIronGolem(TBeing * caster, int level, sh_int bKnown)
 {
   affectedData aff;
   TMonster * victim;
@@ -713,7 +713,7 @@ SPELL_SUCCESS) {
 
 //////////////////
 // diamond golem
-int createDiamondGolem(TBeing * caster, int level, byte bKnown)
+int createDiamondGolem(TBeing * caster, int level, sh_int bKnown)
 {
   affectedData aff;
   TMonster * victim;

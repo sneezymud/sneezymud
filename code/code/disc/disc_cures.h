@@ -71,66 +71,66 @@ private:
     void healLight(TBeing *, TBeing *);      
     int castHealLight(TBeing *, TBeing *);      
     void healLight(TBeing *, TBeing *, TMagicItem *, spellNumT);
-    int healLight(TBeing *, TBeing *, int, byte, spellNumT, int);
+    int healLight(TBeing *, TBeing *, int, sh_int, spellNumT, int);
 
     void healSerious(TBeing *, TBeing *);    
     int castHealSerious(TBeing *, TBeing *);      
     void healSerious(TBeing *, TBeing *, TMagicItem *, spellNumT);
-    int healSerious(TBeing *, TBeing *, int, byte, spellNumT);
+    int healSerious(TBeing *, TBeing *, int, sh_int, spellNumT);
 
     void healCritical(TBeing *, TBeing *);   
     int castHealCritical(TBeing *, TBeing *);      
     void healCritical(TBeing *, TBeing *, TMagicItem *, spellNumT);
-    int healCritical(TBeing *, TBeing *, int, byte, spellNumT, int);
+    int healCritical(TBeing *, TBeing *, int, sh_int, spellNumT, int);
 
     void heal(TBeing *, TBeing *);           
     int castHeal(TBeing *, TBeing *);      
     void heal(TBeing *, TBeing *, TMagicItem *, spellNumT);
-    int heal(TBeing *, TBeing *, int, byte, spellNumT, int);
+    int heal(TBeing *, TBeing *, int, sh_int, spellNumT, int);
 
     void healFull(TBeing *, TBeing *);       
     int castHealFull(TBeing *, TBeing *);      
     void healFull(TBeing *, TBeing *, TMagicItem *);
-    int healFull(TBeing *, TBeing *, int, byte, int);
+    int healFull(TBeing *, TBeing *, int, sh_int, int);
 
     void healCritSpray(TBeing *);
     int castHealCritSpray(TBeing *, TBeing *);      
     void healCritSpray(TBeing *, TMagicItem *);
-    int healCritSpray(TBeing *, int, byte);
+    int healCritSpray(TBeing *, int, sh_int);
 
     void healSpray(TBeing *);     
     int castHealSpray(TBeing *, TBeing *);      
     void healSpray(TBeing *, TMagicItem *);
-    int healSpray(TBeing *, int, byte);
+    int healSpray(TBeing *, int, sh_int);
 
     void healFullSpray(TBeing *);  
     int castHealFullSpray(TBeing *, TBeing *);      
     void healFullSpray(TBeing *, TMagicItem *);
-    int healFullSpray(TBeing *, int, byte);
+    int healFullSpray(TBeing *, int, sh_int);
 
     void knitBone(TBeing *, TBeing *);
     void knitBone(TBeing *, TBeing *, TMagicItem *);
-    int knitBone(TBeing *, TBeing *, int, byte);
+    int knitBone(TBeing *, TBeing *, int, sh_int);
 
     void clot(TBeing *, TBeing *);
     void clot(TBeing *, TBeing *, TMagicItem *, spellNumT);
-    int clot(TBeing *, TBeing *, int, byte, spellNumT);
+    int clot(TBeing *, TBeing *, int, sh_int, spellNumT);
 
     void restoreLimb(TBeing *, TBeing *);
     void restoreLimb(TBeing *, TBeing *, TMagicItem *);
-    int restoreLimb(TBeing *, TBeing *, int, byte);
+    int restoreLimb(TBeing *, TBeing *, int, sh_int);
 
     void sterilize(TBeing *, TBeing *);
     void sterilize(TBeing *, TBeing *, TMagicItem *, spellNumT);
-    int sterilize(TBeing *, TBeing *, int, byte, spellNumT);
+    int sterilize(TBeing *, TBeing *, int, sh_int, spellNumT);
 
     void salve(TBeing *, TBeing *);
     void salve(TBeing *, TBeing *, TMagicItem *, spellNumT);
-    int salve(TBeing *, TBeing *, int, byte, spellNumT);
+    int salve(TBeing *, TBeing *, int, sh_int, spellNumT);
 
     void expel(TBeing *, TBeing *);
     void expel(TBeing *, TBeing *, TMagicItem *, spellNumT);
-    int expel(TBeing *, TBeing *, int, byte, spellNumT);
+    int expel(TBeing *, TBeing *, int, sh_int, spellNumT);
 
 // this is the amount of healing a removing bruise is equivalent to
 #define BRUISE_HEAL_AMOUNT 7

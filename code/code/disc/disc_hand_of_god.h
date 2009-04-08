@@ -57,27 +57,27 @@ private:
 };
 
     int astralWalk(TBeing *, TBeing *);
-    int astralWalk(TBeing *, TBeing *, int, byte);
+    int astralWalk(TBeing *, TBeing *, int, sh_int);
 
     void createFood(TBeing *);
-    int createFood(TBeing *, int, byte, spellNumT);
+    int createFood(TBeing *, int, sh_int, spellNumT);
 
     void createWater(TBeing *, TObj *);
     int castCreateWater(TBeing *, TObj *);
-    int createWater(TBeing *, TObj *, int, byte, spellNumT);
+    int createWater(TBeing *, TObj *, int, sh_int, spellNumT);
 
     void wordOfRecall(TBeing *, TBeing *);
     void wordOfRecall(TBeing *, TBeing *, TMagicItem *);
-    int wordOfRecall(TBeing *, TBeing *, int, byte);
+    int wordOfRecall(TBeing *, TBeing *, int, sh_int);
 
     int summon(TBeing *, TBeing *);
-    int summon(TBeing *, TBeing *, int, byte);
+    int summon(TBeing *, TBeing *, int, sh_int);
 
     void heroesFeast(TBeing *);
-    int heroesFeast(TBeing *, int, byte, spellNumT);
+    int heroesFeast(TBeing *, int, sh_int, spellNumT);
 
     void portal(TBeing *, const char *);
-    int portal(TBeing *, const char *, int, byte);
+    int portal(TBeing *, const char *, int, sh_int);
 
 
 

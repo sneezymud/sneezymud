@@ -25,7 +25,7 @@ static const int FORAGE_CAVE_BEGIN = 37134, FORAGE_CAVE_END = 37136;
 static const int FORAGE_DESERT_BEGIN = 37137, FORAGE_DESERT_END = 37140;
 static const int FORAGE_INSECT_FOOD = 4;
 
-int forage(TBeing *caster, byte bKnown)
+int forage(TBeing *caster, sh_int bKnown)
 {
   TObj *obj = NULL;
   int forageItem;
@@ -1069,18 +1069,18 @@ void divine(TBeing * caster, TThing *obj)
   divine(caster, caster->getSkillLevel(SKILL_DIVINATION), caster->getSkillValue(SKILL_DIVINATION), obj);
 }
 
-int divine(TBeing *caster, int x, byte y, TThing *obj)
+int divine(TBeing *caster, int x, sh_int y, TThing *obj)
 {
   return obj->divineMe(caster, x, y);
 }
 
-int TThing::divineMe(TBeing *caster, int, byte)
+int TThing::divineMe(TBeing *caster, int, sh_int)
 {
   act("$p is not a drink container.", FALSE, caster, this, 0, TO_CHAR);
   return SPELL_FALSE;
 }
 
-int TDrinkCon::divineMe(TBeing *caster, int, byte bKnown)
+int TDrinkCon::divineMe(TBeing *caster, int, sh_int bKnown)
 {
   affectedData aff;
   int units;

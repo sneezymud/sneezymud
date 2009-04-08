@@ -196,7 +196,7 @@ private:
 };
 
     int synostodweomer(TBeing * caster, TBeing * victim);
-    int synostodweomer(TBeing * caster, TBeing * victim, int, byte);
+    int synostodweomer(TBeing * caster, TBeing * victim, int, sh_int);
 
     int smite(TBeing *, TBeing *);
 

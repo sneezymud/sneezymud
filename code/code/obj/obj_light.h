@@ -1,11 +1,3 @@
-
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
 #ifndef __OBJ_LIGHT_H
 #define __OBJ_LIGHT_H
 
@@ -23,7 +15,7 @@ class TLight : public TBaseLight {
     virtual itemTypeT itemType() const { return ITEM_LIGHT; }
 
     virtual int chiMe(TBeing *);
-    virtual int illuminateMe(TBeing *, int, byte);
+    virtual int illuminateMe(TBeing *, int, sh_int);
     virtual void refuelMeLight(TBeing *, TThing*);
     virtual int objectDecay();
     virtual void unequipMe(TBeing *);

@@ -67,42 +67,42 @@ private:
 
     void curse(TBeing *, TObj *);
     void curse(TBeing *, TObj *, TMagicItem *, spellNumT);
-    int curse(TBeing *, TObj *, int, byte, spellNumT);
+    int curse(TBeing *, TObj *, int, sh_int, spellNumT);
 
     void curse(TBeing *, TBeing *);
     void curse(TBeing *, TBeing *, TMagicItem *, spellNumT);
-    int curse(TBeing *, TBeing *, int, byte, spellNumT);
+    int curse(TBeing *, TBeing *, int, sh_int, spellNumT);
 
     int earthquake(TBeing *);
     int earthquake(TBeing *, TMagicItem * obj, spellNumT);
-    int earthquake(TBeing *, int, byte, spellNumT, int);
+    int earthquake(TBeing *, int, sh_int, spellNumT, int);
 
     int callLightning(TBeing *, TBeing *);
     int callLightning(TBeing *, TBeing *, TMagicItem * obj, spellNumT);
-    int callLightning(TBeing *, TBeing *, int, byte, spellNumT, int);
+    int callLightning(TBeing *, TBeing *, int, sh_int, spellNumT, int);
 
     int spontaneousCombust(TBeing *, TBeing *);
     int spontaneousCombust(TBeing *, TBeing *, TMagicItem *);
-    int spontaneousCombust(TBeing *, TBeing *, int, byte, spellNumT);
+    int spontaneousCombust(TBeing *, TBeing *, int, sh_int, spellNumT);
 
     int flamestrike(TBeing *, TBeing *);
     int flamestrike(TBeing *, TBeing *, TMagicItem * obj);
-    int flamestrike(TBeing *, TBeing *, int, byte, spellNumT);
+    int flamestrike(TBeing *, TBeing *, int, sh_int, spellNumT);
 
     int rainBrimstone(TBeing *, TBeing *);
     int rainBrimstone(TBeing *, TBeing *, TMagicItem * obj, spellNumT);
-    int rainBrimstone(TBeing *, TBeing *, int, byte, spellNumT, int);
+    int rainBrimstone(TBeing *, TBeing *, int, sh_int, spellNumT, int);
 
     int pillarOfSalt(TBeing *, TBeing *);
     int pillarOfSalt(TBeing *, TBeing *, TMagicItem * obj);
-    int pillarOfSalt(TBeing *, TBeing *, int, byte, spellNumT);
+    int pillarOfSalt(TBeing *, TBeing *, int, sh_int, spellNumT);
 
     int plagueOfLocusts(TBeing *, TBeing *);
     int plagueOfLocusts(TBeing *, TBeing *, TMagicItem * obj);
-    int plagueOfLocusts(TBeing *, TBeing *, int, byte);
+    int plagueOfLocusts(TBeing *, TBeing *, int, sh_int);
 
     int hailStorm(TBeing *);
-    int hailStorm(TBeing *, int, byte);
+    int hailStorm(TBeing *, int, sh_int);
 
 #endif
 

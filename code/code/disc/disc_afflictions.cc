@@ -69,7 +69,7 @@ static void addTorment(TBeing * victim, spellNumT spell)
   victim->affectTo(&hjp);
 }
 
-int harm(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT spell, int adv_learn)
+int harm(TBeing * caster, TBeing * victim, int level, sh_int bKnown, spellNumT spell, int adv_learn)
 {
   level = min(level, 70);
 
@@ -180,7 +180,7 @@ int harm(TBeing * caster, TBeing * victim)
   return rc;
 }
 
-int poison(TBeing * caster, TObj * obj, int, byte bKnown, spellNumT spell)
+int poison(TBeing * caster, TObj * obj, int, sh_int bKnown, spellNumT spell)
 {
   int rc;
 
@@ -228,7 +228,7 @@ int poison(TBeing * caster, TObj * target, TMagicItem *obj, spellNumT spell)
   return FALSE;
 }
 
-int poison(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT spell)
+int poison(TBeing * caster, TBeing * victim, int level, sh_int bKnown, spellNumT spell)
 {
   affectedData aff, aff2;
 
@@ -431,7 +431,7 @@ int poison(TBeing * caster, TBeing * victim, TMagicItem * obj, spellNumT spell)
   return FALSE;  
 }
 
-int blindness(TBeing * caster, TBeing * victim, int level, byte bKnown)
+int blindness(TBeing * caster, TBeing * victim, int level, sh_int bKnown)
 {
   int ret = 0;
   if (caster->isNotPowerful(victim, level, SPELL_BLINDNESS, SILENT_YES)) {
@@ -648,7 +648,7 @@ void blindness(TBeing * caster, TBeing * victim)
   return;
 }
 
-int harmLight(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT spell, int adv_learn)
+int harmLight(TBeing * caster, TBeing * victim, int level, sh_int bKnown, spellNumT spell, int adv_learn)
 {
   level = min(level, 10);
 
@@ -756,7 +756,7 @@ int harmLight(TBeing * caster, TBeing * victim)
   return rc;
 }
 
-int harmCritical(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT spell, int adv_learn)
+int harmCritical(TBeing * caster, TBeing * victim, int level, sh_int bKnown, spellNumT spell, int adv_learn)
 {
   if (caster->isNotPowerful(victim, level, spell, SILENT_NO)) {
     return SPELL_FAIL;
@@ -853,7 +853,7 @@ int harmCritical(TBeing * caster, TBeing * victim)
   return rc;
 }
 
-int harmSerious(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT spell, int adv_learn)
+int harmSerious(TBeing * caster, TBeing * victim, int level, sh_int bKnown, spellNumT spell, int adv_learn)
 {
   if (caster->isNotPowerful(victim, level, spell, SILENT_NO)) {
     return SPELL_FAIL;
@@ -951,7 +951,7 @@ int harmSerious(TBeing * caster, TBeing * victim)
   return rc;
 }
 
-int paralyze(TBeing * caster, TBeing * victim, int level, byte bKnown)
+int paralyze(TBeing * caster, TBeing * victim, int level, sh_int bKnown)
 {
   int save1, ret;
   affectedData aff;
@@ -1267,7 +1267,7 @@ bool TBeing::canBoneBreak(TBeing *victim, silentTypeT silent)
   return TRUE;
 }
 
-int boneBreaker(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_learn)
+int boneBreaker(TBeing * caster, TBeing * victim, int level, sh_int bKnown, int adv_learn)
 {
   char buf[256], limb[256];
   int ret;
@@ -1473,7 +1473,7 @@ bool notBleedSlot(wearSlotT slot)
   return (slot == HOLD_RIGHT || slot == HOLD_LEFT);
 }
 
-int bleed(TBeing * caster, TBeing * victim, int level, byte bKnown)
+int bleed(TBeing * caster, TBeing * victim, int level, sh_int bKnown)
 {
   char buf[256], limb[256];
   int ret;
@@ -1724,7 +1724,7 @@ bool TBeing::canWither(TBeing *victim, silentTypeT silent)
   return TRUE;
 }
 
-int witherLimb(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_learn)
+int witherLimb(TBeing * caster, TBeing * victim, int level, sh_int bKnown, int adv_learn)
 {
   char buf[256], limb[256];
   wearSlotT slot;
@@ -1879,7 +1879,7 @@ bool TBeing::canParalyzeLimb(TBeing *victim, silentTypeT silent)
   return TRUE;
 }
 
-int paralyzeLimb(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
+int paralyzeLimb(TBeing *caster, TBeing *victim, int level, sh_int bKnown, int adv_learn)
 {
   char buf[256], limb[256];
   wearSlotT slot;
@@ -1979,7 +1979,7 @@ int paralyzeLimb(TBeing * caster, TBeing * v)
   return retCode;
 }
 
-int numb(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT spell, int adv_learn)
+int numb(TBeing * caster, TBeing * victim, int level, sh_int bKnown, spellNumT spell, int adv_learn)
 {
   char buf[256], limb[256];
   wearSlotT slot;
@@ -2124,7 +2124,7 @@ int numb(TBeing *caster, TBeing *victim)
   return retCode;
 }
 
-int disease(TBeing * caster, TBeing * victim, int level, byte bKnown)
+int disease(TBeing * caster, TBeing * victim, int level, sh_int bKnown)
 {
   if (caster->isNotPowerful(victim, level, SPELL_DISEASE, SILENT_NO)) {
     return SPELL_FAIL;
@@ -2185,7 +2185,7 @@ void disease(TBeing *caster, TBeing *victim)
   return;
 }
 
-int infect(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT spell)
+int infect(TBeing * caster, TBeing * victim, int level, sh_int bKnown, spellNumT spell)
 {
   char buf[256], limb[256];
   bool found = FALSE;

@@ -164,7 +164,7 @@ int castThornflesh(TBeing *caster)
   return ret;
 }
 
-int thornflesh(TBeing *caster, int level, byte bKnown)
+int thornflesh(TBeing *caster, int level, sh_int bKnown)
 {
   affectedData aff;
 
@@ -220,7 +220,7 @@ static bool canBeLunged(TBeing *caster, TBeing *victim)
   return false;
 }
 
-int aqualung(TBeing * caster, TBeing * victim, int level, byte bKnown)
+int aqualung(TBeing * caster, TBeing * victim, int level, sh_int bKnown)
 {
   affectedData aff;
 
@@ -302,7 +302,7 @@ int castAqualung(TBeing * caster, TBeing * victim)
 
 // END AQUALUNG
 // SHADOW WALK
-int shadowWalk(TBeing *caster, TBeing *victim, int level, byte bKnown)
+int shadowWalk(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
 {
   affectedData aff;
 
@@ -408,7 +408,7 @@ ANSI_GREEN);
 
 // END SHADOW WALK
 
-int celerite(TBeing *caster, TBeing *victim, int level, byte bKnown)
+int celerite(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
 {
   affectedData aff;
   caster->reconcileHelp(victim, discArray[SPELL_CELERITE]->alignMod);

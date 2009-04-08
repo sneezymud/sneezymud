@@ -80,7 +80,7 @@ void relive(TBeing *ch, TBeing *vict)
   }
 }
 
-int cureBlindness(TBeing *c, TBeing * victim, int level, byte learn)
+int cureBlindness(TBeing *c, TBeing * victim, int level, sh_int learn)
 {
   affectedData * aff;  // pointer declaration is an exception to this rule
 
@@ -177,7 +177,7 @@ void cureBlindness(TBeing *c, TBeing *victim)
   }
 }
 
-int cureDisease(TBeing *caster, TBeing * victim, int, byte learn, spellNumT spell)
+int cureDisease(TBeing *caster, TBeing * victim, int, sh_int learn, spellNumT spell)
 {
   char buf[256];
   bool found = FALSE;
@@ -372,7 +372,7 @@ void cureDisease(TBeing *c, TBeing * victim, TMagicItem * obj, spellNumT spell)
   }
 }
 
-int curePoison(TBeing *c, TBeing * victim, int level, byte learn, spellNumT spell)
+int curePoison(TBeing *c, TBeing * victim, int level, sh_int learn, spellNumT spell)
 {
   char buf[256];
   affectedData aff;
@@ -462,7 +462,7 @@ void curePoison(TBeing *c, TBeing *victim)
    }
 }
 
-int refresh(TBeing *c, TBeing * victim, int level, byte learn, spellNumT spell)
+int refresh(TBeing *c, TBeing * victim, int level, sh_int learn, spellNumT spell)
 {
   int retCode;
 
@@ -589,7 +589,7 @@ void refresh(TBeing *c, TBeing * victim)
   return;
 }
 
-int secondWind(TBeing *c, TBeing *victim, int level, byte learn)
+int secondWind(TBeing *c, TBeing *victim, int level, sh_int learn)
 {
   int dam = 0;
 
@@ -717,7 +717,7 @@ void secondWind(TBeing *c, TBeing * victim)
   }
 }
 
-int cureParalysis(TBeing *c, TBeing * victim, int level, byte learn)
+int cureParalysis(TBeing *c, TBeing * victim, int level, sh_int learn)
 {
   affectedData aff;
 
@@ -799,7 +799,7 @@ void cureParalysis(TBeing *c, TBeing * victim)
   }
 }
 
-int TBeing::removeCurseObj(TObj * obj, int, byte learn, spellNumT spell)
+int TBeing::removeCurseObj(TObj * obj, int, sh_int learn, spellNumT spell)
 {
   if (!obj->isObjStat(ITEM_NODROP)) {
     act("Do you often go around removing curses from items that aren't cursed?", FALSE, this, NULL, NULL, TO_CHAR);
@@ -851,7 +851,7 @@ void TBeing::removeCurseObj(TObj * obj)
   }
 }
 
-int TBeing::removeCurseBeing(TBeing * victim, int level, byte learn, spellNumT spell)
+int TBeing::removeCurseBeing(TBeing * victim, int level, sh_int learn, spellNumT spell)
 {
   affectedData aff;
   char buf[256];
@@ -951,7 +951,7 @@ void TBeing::removeCurseBeing(TBeing * victim)
     deityIgnore();
 }
 
-int armor(TBeing *c, TBeing * victim, int level, byte learn, spellNumT spell)
+int armor(TBeing *c, TBeing * victim, int level, sh_int learn, spellNumT spell)
 {
   affectedData aff;
 
@@ -1090,7 +1090,7 @@ void armor(TBeing *c, TBeing * victim)
   }
 }
 
-int sanctuary(TBeing *c, TBeing *victim, int level, byte learn)
+int sanctuary(TBeing *c, TBeing *victim, int level, sh_int learn)
 {
   affectedData aff;
 
@@ -1165,7 +1165,7 @@ void sanctuary(TBeing *c, TBeing * victim)
   }
 }
 
-int bless(TBeing *c, TObj * obj, int level, byte learn, spellNumT spell)
+int bless(TBeing *c, TObj * obj, int level, sh_int learn, spellNumT spell)
 {
   if (c->bSuccess(learn, c->getPerc(), spell)) {
     if ((5 * level > (int) obj->getWeight())) { 
@@ -1206,7 +1206,7 @@ void bless(TBeing *c, TObj * obj)
   bless(c,obj,level, level, spell);
 }
 
-int bless(TBeing *c, TBeing * victim, int level, byte learn, spellNumT spell)
+int bless(TBeing *c, TBeing * victim, int level, sh_int learn, spellNumT spell)
 {
   if (c->bSuccess(learn, c->getPerc(), spell)) {
     c->reconcileHelp(victim, discArray[spell]->alignMod);

@@ -46,27 +46,27 @@ public:
     virtual CDShamanControl * cloneMe() { return new CDShamanControl(*this); }
 private:
 };
-    int enthrallDemon(TBeing * caster, int level, byte bKnown);
+    int enthrallDemon(TBeing * caster, int level, sh_int bKnown);
     int enthrallDemon(TBeing * caster);
     int castEnthrallDemon(TBeing * caster);
 
-    int createWoodGolem(TBeing * caster, int level, byte bKnown);
+    int createWoodGolem(TBeing * caster, int level, sh_int bKnown);
     int createWoodGolem(TBeing * caster);
     int castCreateWoodGolem(TBeing * caster);
 
-    int createRockGolem(TBeing * caster, int level, byte bKnown);
+    int createRockGolem(TBeing * caster, int level, sh_int bKnown);
     int createRockGolem(TBeing * caster);
     int castCreateRockGolem(TBeing * caster);
 
-    int createIronGolem(TBeing * caster, int level, byte bKnown);
+    int createIronGolem(TBeing * caster, int level, sh_int bKnown);
     int createIronGolem(TBeing * caster);
     int castCreateIronGolem(TBeing * caster);
 
-    int createDiamondGolem(TBeing * caster, int level, byte bKnown);
+    int createDiamondGolem(TBeing * caster, int level, sh_int bKnown);
     int createDiamondGolem(TBeing * caster);
     int castCreateDiamondGolem(TBeing * caster);
 
-    int resurrection(TBeing *, TObj *, int, byte);
+    int resurrection(TBeing *, TObj *, int, sh_int);
     void resurrection(TBeing *, TObj *, TMagicItem *);
     int resurrection(TBeing *, TObj *);
     int castResurrection(TBeing *, TObj *);

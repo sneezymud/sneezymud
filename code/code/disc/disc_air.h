@@ -44,61 +44,61 @@ private:
 };
 
     int gust(TBeing *, TBeing *);
-    int gust(TBeing*, TBeing *, int, byte, int);
+    int gust(TBeing*, TBeing *, int, sh_int, int);
     int castGust(TBeing *, TBeing *);
     int gust(TBeing *, TBeing *, TMagicItem *);
  
     int immobilize(TBeing *, TBeing *);
-    int immobilize(TBeing *, TBeing *, int, byte);
+    int immobilize(TBeing *, TBeing *, int, sh_int);
     int castImmobilize(TBeing *, TBeing *);
  
     int suffocate(TBeing *, TBeing *);
     void suffocate(TBeing *, TBeing *, TMagicItem *);
-    int suffocate(TBeing *, TBeing *, int, byte );
+    int suffocate(TBeing *, TBeing *, int, sh_int );
     int castSuffocate(TBeing *, TBeing *);
  
     int dustStorm(TBeing *);
-    int dustStorm(TBeing *, int, byte, int);
+    int dustStorm(TBeing *, int, sh_int, int);
     int castDustStorm(TBeing *);
  
     void tornado(TBeing *);
     void tornado(TBeing *, TMagicItem *);
-    int tornado(TBeing *, int, byte, int);
+    int tornado(TBeing *, int, sh_int, int);
     int castTornado(TBeing *);
  
     void featheryDescent(TBeing *, TBeing *, int, int);
     void featheryDescent(TBeing *, TBeing *, TMagicItem *);
-    int featheryDescent(TBeing *, TBeing *, int, affectedData *, byte);
+    int featheryDescent(TBeing *, TBeing *, int, affectedData *, sh_int);
     int castFeatheryDescent(TBeing *, TBeing *);
     int featheryDescent(TBeing *, TBeing *);
  
     int castFly(TBeing *, TBeing *);
     int fly(TBeing *, TBeing *);
     void fly(TBeing *, TBeing *, TMagicItem *);
-    int fly(TBeing *, TBeing *, int, affectedData *, byte);
+    int fly(TBeing *, TBeing *, int, affectedData *, sh_int);
  
     int antigravity(TBeing *);
-    int antigravity(TBeing *, int, affectedData *, byte);
+    int antigravity(TBeing *, int, affectedData *, sh_int);
     int castAntigravity(TBeing *);
  
     int castConjureElemAir(TBeing *);
-    int conjureElemAir(TBeing *, int, byte);
+    int conjureElemAir(TBeing *, int, sh_int);
     int conjureElemAir(TBeing *);
 
  
     void levitate(TBeing *, TBeing *);
-    int levitate(TBeing *, TBeing *, int, byte);
+    int levitate(TBeing *, TBeing *, int, sh_int);
     int castLevitate(TBeing *, TBeing *);
  
     int falconWings(TBeing *, TBeing *);
     void falconWings(TBeing *, TBeing *, TMagicItem *);
-    int falconWings(TBeing *, TBeing *, int, byte);
+    int falconWings(TBeing *, TBeing *, int, sh_int);
     int castFalconWings(TBeing *, TBeing *);
  
     int castProtectionFromAir(TBeing *, TBeing *);
     int protectionFromAir(TBeing *, TBeing *);
     void protectionFromAir(TBeing *, TBeing *, TMagicItem *);
-    int protectionFromAir(TBeing *, TBeing *, int, byte);
+    int protectionFromAir(TBeing *, TBeing *, int, sh_int);
 
     void weightCorrectDuration(const TBeing *, affectedData *);
 

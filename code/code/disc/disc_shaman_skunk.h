@@ -48,29 +48,29 @@ public:
 
 private:
 };
-    int deathMist(TBeing * caster, int level, byte bKnown, int adv_learn);
+    int deathMist(TBeing * caster, int level, sh_int bKnown, int adv_learn);
     int deathMist(TBeing * caster);
     int castDeathMist(TBeing * caster);
 
     int lichTouch(TBeing *, TBeing *);
     int castLichTouch(TBeing *, TBeing *);
-    int lichTouch(TBeing *, TBeing *, int, byte, int);
+    int lichTouch(TBeing *, TBeing *, int, sh_int, int);
     int lichTouch(TBeing *, TBeing *, TMagicItem *);
 
     int cleanse(TBeing *, TBeing *);
     int castCleanse(TBeing *, TBeing *);
-    int cleanse(TBeing *, TBeing *, int, byte, spellNumT);
+    int cleanse(TBeing *, TBeing *, int, sh_int, spellNumT);
     int cleanse(TBeing *, TBeing *, TMagicItem *);
 
     int cardiacStress(TBeing *, TBeing *);
     int castCardiacStress(TBeing *, TBeing *);
     int cardiacStress(TBeing *, TBeing *, TMagicItem *);
-    int cardiacStress(TBeing *, TBeing *, int, byte, int);
+    int cardiacStress(TBeing *, TBeing *, int, sh_int, int);
 
     int bloodBoil(TBeing *, TBeing *);
     int castBloodBoil(TBeing *, TBeing *);
     int bloodBoil(TBeing *, TBeing *, TMagicItem *);
-    int bloodBoil(TBeing *, TBeing *, int, byte, int);
+    int bloodBoil(TBeing *, TBeing *, int, sh_int, int);
 
 #endif
 

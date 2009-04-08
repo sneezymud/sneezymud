@@ -51,6 +51,10 @@ env.Append(CXXFLAGS=' '.join(['-Icode/cmd -Icode/disc '
                               '-Icode/sys -Icode/task ']))
 
 
+env['ENV']['LD_LIBRARY_PATH']='/mud/build/curl/lib'
+
+
+
 Export('env')
 
 # getting some problems with this

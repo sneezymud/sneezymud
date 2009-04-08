@@ -16,7 +16,7 @@
 #include "obj_magic_item.h"
 #include "obj_worn.h"
 
-int mysticDarts(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
+int mysticDarts(TBeing *caster, TBeing *victim, int level, sh_int bKnown, int adv_learn)
 {
   char buf[256];
   sstring misBuf;
@@ -183,7 +183,7 @@ int castMysticDarts(TBeing *caster, TBeing *victim)
   return rc;
 }
 
-int stunningArrow(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
+int stunningArrow(TBeing *caster, TBeing *victim, int level, sh_int bKnown, int adv_learn)
 {
   if (victim->isImmortal()) {
     act("You can't arrow $N -- $E's a god!", FALSE, caster, NULL, victim, TO_CHAR);
@@ -315,7 +315,7 @@ int blastOfFury(TBeing *caster, TBeing *victim, TMagicItem *tObj)
   return tReturn;
 }
 
-int blastOfFury(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
+int blastOfFury(TBeing *caster, TBeing *victim, int level, sh_int bKnown, int adv_learn)
 {
   if (victim->isImmortal()) {
     act("You can't blast $N -- $E's a god! ", FALSE, caster, NULL, victim, TO_CHAR);
@@ -437,7 +437,7 @@ int castBlastOfFury(TBeing *caster, TBeing *victim)
   return rc;
 }
 
-int colorSpray(TBeing *caster, int level, byte bKnown, int adv_learn)
+int colorSpray(TBeing *caster, int level, sh_int bKnown, int adv_learn)
 {
   TBeing *tmp_victim = NULL;
   TThing *t;
@@ -578,7 +578,7 @@ int castColorSpray(TBeing *caster)
   return rc;
 }
 
-int energyDrain(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
+int energyDrain(TBeing *caster, TBeing *victim, int level, sh_int bKnown, int adv_learn)
 {
   if (victim->isImmortal()) {
     act("You can't drain $N's energy -- $E's a god!",
@@ -706,7 +706,7 @@ int energyDrain(TBeing *tMaster, TBeing *tSucker, TMagicItem *tMagItem)
   return tRc;
 }
 
-int acidBlast(TBeing *caster, int level, byte bKnown, int adv_learn)
+int acidBlast(TBeing *caster, int level, sh_int bKnown, int adv_learn)
 {
   TThing *t;
   TBeing *b = NULL;
@@ -827,7 +827,7 @@ int castAcidBlast(TBeing *caster)
   return rc;
 }
 
-int atomize(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
+int atomize(TBeing *caster, TBeing *victim, int level, sh_int bKnown, int adv_learn)
 {
   if (victim->isImmortal()) {
     act("You can't atomize $N -- $E's a god!", FALSE, caster, NULL, victim, TO_CHAR);
@@ -932,7 +932,7 @@ int atomize(TBeing *tMaster, TBeing *tSucker, TMagicItem *tMagItem)
   return tRc;
 }
 
-int animate(TBeing *caster, int level, byte bKnown)
+int animate(TBeing *caster, int level, sh_int bKnown)
 {
   int count = 0, armor;
   TMonster *gol;
@@ -1192,7 +1192,7 @@ int castAnimate(TBeing *caster)
   return TRUE;
 }
 
-int sorcerersGlobe(TBeing *caster, TBeing *victim, int level, byte bKnown)
+int sorcerersGlobe(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
 {
   affectedData aff;
 
@@ -1274,7 +1274,7 @@ int ret,level;
   return TRUE;
 }
 
-int bind(TBeing *caster, TBeing *victim, int level, byte bKnown)
+int bind(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
 {
   affectedData aff1, aff2;
 
@@ -1383,7 +1383,7 @@ int ret,level;
   return TRUE;
 }
 
-int teleport(TBeing *caster, TBeing *victim, int, byte bKnown) 
+int teleport(TBeing *caster, TBeing *victim, int, sh_int bKnown) 
 {
   int rc;
   TMonster *tmons = dynamic_cast<TMonster *>(victim);
@@ -1484,7 +1484,7 @@ int castTeleport(TBeing *caster, TBeing *victim)
     ADD_DELETE(rc, DELETE_THIS);
   return rc;
 }
-int protectionFromElements(TBeing *caster, TBeing *victim, int level, byte bKnown)
+int protectionFromElements(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
 {
   affectedData aff,aff2;
  

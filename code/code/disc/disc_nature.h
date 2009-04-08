@@ -31,13 +31,13 @@ public:
 private:
 };
 
-    int treeWalk(TBeing *, const char *, int, byte);
+    int treeWalk(TBeing *, const char *, int, sh_int);
     int treeWalk(TBeing *, const char *);
 
     int barkskin(TBeing *, TBeing *);
     int castBarkskin(TBeing *, TBeing *);
     int barkskin(TBeing *, TBeing *, TMagicItem *);
-    int barkskin(TBeing *, TBeing *, int, byte);
+    int barkskin(TBeing *, TBeing *, int, sh_int);
 
 
 

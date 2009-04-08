@@ -672,7 +672,7 @@ private:
     virtual void thingDumped(TBeing *, int *);
     virtual void junkMe(TBeing *);
     virtual int scavengeMe(TBeing *, TObj **);
-    virtual int illuminateMe(TBeing *, int, byte);
+    virtual int illuminateMe(TBeing *, int, sh_int);
     virtual int personalizedCheck(TBeing *);
     virtual void describeMe(TBeing *) const;
     virtual void giveToRepair(TMonster *, TBeing *, int *);
@@ -713,7 +713,7 @@ private:
     virtual int shopPrice(int, int, float, const TBeing *) const;
     virtual int sellPrice(int ,int, float, const TBeing *);
     virtual void divinateMe(TBeing *) const;
-    virtual int copyMe(TBeing *, byte);
+    virtual int copyMe(TBeing *, sh_int);
     virtual int changeItemVal2Check(TBeing *, int);
     virtual int changeItemVal3Check(TBeing *, int);
     virtual int changeItemVal4Check(TBeing *, int);

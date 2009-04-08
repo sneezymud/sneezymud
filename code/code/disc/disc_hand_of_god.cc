@@ -18,7 +18,7 @@ static void moveLoss(TBeing &ch)
   ch.addToMove(max(-100, -(ch.getMove()-10)));
 }
 
-int astralWalk(TBeing * caster, TBeing * victim, int level, byte bKnown)
+int astralWalk(TBeing * caster, TBeing * victim, int level, sh_int bKnown)
 {
   int rc;
   int ret,location;
@@ -175,7 +175,7 @@ int astralWalk(TBeing * caster, TBeing * victim)
   return rc;
 }
 
-int createFood(TBeing *c, int level, byte bKnown, spellNumT spell)
+int createFood(TBeing *c, int level, sh_int bKnown, spellNumT spell)
 {
   TFood *o;
   int fill_amt;
@@ -261,7 +261,7 @@ int castCreateWater(TBeing *caster, TObj *obj)
   return ret;
 }
 
-int createWater(TBeing * caster, TObj * obj, int level, byte bKnown, spellNumT spell)
+int createWater(TBeing * caster, TObj * obj, int level, sh_int bKnown, spellNumT spell)
 {
   if (caster->bSuccess(bKnown, caster->getPerc(), spell)) {
     obj->waterCreate(caster, level);
@@ -313,7 +313,7 @@ int ret;
   ret=wordOfRecall(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
 }
 
-int wordOfRecall(TBeing * caster, TBeing * victim, int, byte bKnown)
+int wordOfRecall(TBeing * caster, TBeing * victim, int, sh_int bKnown)
 {
   int ret = 0, learning = 0,location = 0;
   TRoom *room;
@@ -469,7 +469,7 @@ int ret,level;
   }
 }
 
-int summon(TBeing * caster, TBeing * victim, int level, byte bKnown)
+int summon(TBeing * caster, TBeing * victim, int level, sh_int bKnown)
 {
   int rc = 0;
   TThing *t;
@@ -726,7 +726,7 @@ int summon(TBeing * caster, TBeing * victim)
   return rc;
 }
 
-int heroesFeast(TBeing * caster, int, byte bKnown, spellNumT spell)
+int heroesFeast(TBeing * caster, int, sh_int bKnown, spellNumT spell)
 {
   TBeing *tch = NULL;
   TThing *t=NULL;
@@ -864,7 +864,7 @@ portalRoomT portalRooms[] =
 const int NUM_PORTAL_ROOMS = 4;
 
 
-int portal(TBeing * caster, const char * portalroom, int level, byte bKnown)
+int portal(TBeing * caster, const char * portalroom, int level, sh_int bKnown)
 {
   char buf[256];
   TPerson *tPerson = dynamic_cast<TPerson *>(caster);

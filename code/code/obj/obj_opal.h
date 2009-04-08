@@ -24,7 +24,7 @@ class TOpal : public TObj {
     virtual sstring statObjInfo() const;
     virtual void describeObjectSpecifics(const TBeing *) const;
     virtual void powerstoneCheck(TOpal **);
-    virtual int powerstoneMe(TBeing *, int, byte);
+    virtual int powerstoneMe(TBeing *, int, sh_int);
     virtual itemTypeT itemType() const { return ITEM_OPAL; }
     virtual sstring compareMeAgainst(TBeing *, TObj *);
     virtual int suggestedPrice() const;

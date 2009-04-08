@@ -74,86 +74,86 @@ private:
 
     int identify(TBeing *, TObj *);
     int castIdentify(TBeing *, TObj *);
-    int identify(TBeing *, TObj *, int, byte);
+    int identify(TBeing *, TObj *, int, sh_int);
     void identify(TBeing *, TObj *, TMagicItem *);
     void identify(TBeing *, TBeing *, TMagicItem *);
     int identify(TBeing *, TBeing *);
     int castIdentify(TBeing *, TBeing *);
-    int identify(TBeing *, TBeing *, int, byte);
+    int identify(TBeing *, TBeing *, int, sh_int);
  
     int divinationBeing(TBeing *, TBeing *);
     int castDivinationBeing(TBeing *, TBeing *);
-    int divinationBeing(TBeing *, const TObj *, int, byte);
+    int divinationBeing(TBeing *, const TObj *, int, sh_int);
     void divinationBeing(TBeing *, TBeing *, TMagicItem *);
     int divinationObj(TBeing *, TObj *);
     int castDivinationObj(TBeing *, const TObj *);
-    int divinationObj(TBeing *, TBeing *, int, byte);
+    int divinationObj(TBeing *, TBeing *, int, sh_int);
     void divinationObj(TBeing *, TObj *, TMagicItem *);
   
  
     int eyesOfFertuman(TBeing *, const char *);
     int castEyesOfFertuman(TBeing *, const char *);
-    int eyesOfFertuman(TBeing *, const char *, int, byte);
+    int eyesOfFertuman(TBeing *, const char *, int, sh_int);
  
     int powerstone(TBeing *, TObj *);
     int castPowerstone(TBeing *, TObj *);
-    int powerstone(TBeing *, TObj *, int, byte);
+    int powerstone(TBeing *, TObj *, int, sh_int);
  
     int shatter(TBeing *, TBeing *);
     int castShatter(TBeing *, TBeing *);
-    int shatter(TBeing *, TBeing *, int, byte);
+    int shatter(TBeing *, TBeing *, int, sh_int);
 
 //    void farlook(TBeing *, TBeing *); 
     int farlook(TBeing *, TBeing *);
     int castFarlook(TBeing *, TBeing *);
-    int farlook(TBeing *, TBeing *, int, byte);
+    int farlook(TBeing *, TBeing *, int, sh_int);
  
     int illuminate(TBeing *, TObj *);
     void illuminate(TBeing *, TMagicItem *, TObj *);
-    int illuminate(TBeing *, TObj *, int, byte);
+    int illuminate(TBeing *, TObj *, int, sh_int);
     int castIlluminate(TBeing *, TObj *);
  
     int detectMagic(TBeing *, TBeing *);
     int castDetectMagic(TBeing *, TBeing *);
     void detectMagic(TBeing *, TBeing *, TMagicItem *);
-    int detectMagic(TBeing *, TBeing *, int, byte);
+    int detectMagic(TBeing *, TBeing *, int, sh_int);
  
     int dispelMagic(TBeing *, TObj *);
     int castDispelMagic(TBeing *, TObj *);
     void dispelMagic(TBeing *, TObj *, TMagicItem *);
-    int dispelMagic(TBeing *, TObj *, int, byte);
+    int dispelMagic(TBeing *, TObj *, int, sh_int);
     int dispelMagic(TBeing *, TBeing *);
     int castDispelMagic(TBeing *, TBeing *);
     int dispelMagic(TBeing *, TBeing *, TMagicItem *);
-    int dispelMagic(TBeing *, TBeing *, int, byte);
+    int dispelMagic(TBeing *, TBeing *, int, sh_int);
  
     int enhanceWeapon(TBeing *, TObj *);
     int castEnhanceWeapon(TBeing *, TObj *);
     int enhanceWeapon(TBeing *, TMagicItem *, TObj *);
-    int enhanceWeapon(TBeing *, TObj *, int, byte);
+    int enhanceWeapon(TBeing *, TObj *, int, sh_int);
  
     extern       bool alchemy_create_deny(int);
     const int MATERIALIZE_PRICE = 100;
     int castMaterialize(TBeing *, const char *);
     int materialize(TBeing *, const char *);
-    int materialize(TBeing *, TObj **, int, const char *, byte);
+    int materialize(TBeing *, TObj **, int, const char *, sh_int);
  
     const int SPONT_PRICE = 1000;
     void spontaneousGeneration(TBeing *, const char *);
-    int spontaneousGeneration(TBeing *, TObj **, const char *, int, byte);
+    int spontaneousGeneration(TBeing *, TObj **, const char *, int, sh_int);
     int castSpontaneousGeneration(TBeing *, const char *);
  
     int copy(TBeing *, TObj *);
     int castCopy(TBeing *, TObj *);
     void copy(TBeing *, TMagicItem *, TObj *);
-    int copy(TBeing *, TObj *, int, byte);
+    int copy(TBeing *, TObj *, int, sh_int);
  
     int ethrealGate(TBeing *, TObj *);
     int castEthrealGate(TBeing *, TObj *);
-    int ethrealGate(TBeing *, TObj *, int, byte);
+    int ethrealGate(TBeing *, TObj *, int, sh_int);
 
     int galvanize(TBeing *, TObj *);
     int castGalvanize(TBeing *, TObj *);
-    int galvanize(TBeing *, TObj *, int, byte);
+    int galvanize(TBeing *, TObj *, int, sh_int);
 
 #endif

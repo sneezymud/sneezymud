@@ -14,7 +14,7 @@
 #include "obj_light.h"
 #include "obj_magic_item.h"
 
-int handsOfFlame(TBeing *caster, TBeing *victim, int level, byte bKnown, int *damage, int adv_learn)
+int handsOfFlame(TBeing *caster, TBeing *victim, int level, sh_int bKnown, int *damage, int adv_learn)
 {
   int ret = 0;
 
@@ -301,7 +301,7 @@ int castHandsOfFlame(TBeing *caster, TBeing *victim)
   return rc;
 }
 
-int faerieFire(TBeing *caster, TBeing *victim, int level, byte bKnown)
+int faerieFire(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
 {
   affectedData aff;
   int ret = 0;
@@ -558,7 +558,7 @@ int ret,level;
 
 }
 
-int flamingSword(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
+int flamingSword(TBeing *caster, TBeing *victim, int level, sh_int bKnown, int adv_learn)
 {
   int ret = 0;
 
@@ -722,7 +722,7 @@ int flamingSword(TBeing *caster, TBeing *victim, TMagicItem *obj)
 
 
 
-int inferno(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
+int inferno(TBeing *caster, TBeing *victim, int level, sh_int bKnown, int adv_learn)
 {
   int dam = caster->getSkillDam(victim, SPELL_INFERNO, level, adv_learn);
 
@@ -856,7 +856,7 @@ int inferno(TBeing *caster, TBeing *victim, TMagicItem * obj)
   return rc2;
 }
 
-int hellfire(TBeing *caster, int level, byte bKnown, int adv_learn)
+int hellfire(TBeing *caster, int level, sh_int bKnown, int adv_learn)
 {
   int rc;
   int dam;
@@ -982,7 +982,7 @@ int castHellfire(TBeing *caster)
   return rc;
 }
 
-int fireball(TBeing *caster, int level, byte bKnown, int adv_learn)
+int fireball(TBeing *caster, int level, sh_int bKnown, int adv_learn)
 {
   int rc;
   int ret = 0;
@@ -1135,7 +1135,7 @@ int castFireball(TBeing *caster)
   return rc;
 }
 
-int flamingFlesh(TBeing *caster, TBeing *victim, int level, byte bKnown)
+int flamingFlesh(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
 {
   affectedData aff1;
 
@@ -1243,7 +1243,7 @@ int castFlamingFlesh(TBeing *caster, TBeing *victim)
   return TRUE;
 }
 
-int conjureElemFire(TBeing *caster, int level, byte bKnown)
+int conjureElemFire(TBeing *caster, int level, sh_int bKnown)
 {
   affectedData aff;
   TMonster *victim;
@@ -1380,7 +1380,7 @@ int castConjureElemFire(TBeing *caster)
   return TRUE;
 }
 
-int flare(TBeing *caster, int level, byte bKnown)
+int flare(TBeing *caster, int level, sh_int bKnown)
 {
   TBeing *tmp_victim = NULL;
   TObj *o = NULL;
@@ -1608,7 +1608,7 @@ int flare(TBeing *caster, TMagicItem * obj)
   return rc;
 }
 
-int infravision(TBeing *caster, TBeing *victim, int level, byte bKnown)
+int infravision(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
 {
   affectedData aff;
   int ret = 0;
@@ -1811,7 +1811,7 @@ int castInfravision(TBeing *caster, TBeing *victim)
     return rc;
 }
 
-int protectionFromFire(TBeing *caster, TBeing *v,int level, byte bKnown)
+int protectionFromFire(TBeing *caster, TBeing *v,int level, sh_int bKnown)
 {
   affectedData aff;
  

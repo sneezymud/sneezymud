@@ -14,7 +14,7 @@
 #include "obj_magic_item.h"
 #include "combat.h"
 
-int faerieFog(TBeing * caster, int, byte bKnown)
+int faerieFog(TBeing * caster, int, sh_int bKnown)
 {
   TBeing *tmp_victim;
   TThing *t;
@@ -96,7 +96,7 @@ int castFaerieFog(TBeing * caster)
   return TRUE;
 }
 
-int icyGrip(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_learn)
+int icyGrip(TBeing * caster, TBeing * victim, int level, sh_int bKnown, int adv_learn)
 {
   affectedData aff;
 
@@ -242,7 +242,7 @@ int castIcyGrip(TBeing *caster, TBeing *victim)
   return rc;
 }
 
-int wateryGrave(TBeing * caster, TBeing * victim, int level, byte bKnown, int)
+int wateryGrave(TBeing * caster, TBeing * victim, int level, sh_int bKnown, int)
 {
   affectedData aff;
 
@@ -329,7 +329,7 @@ int castWateryGrave(TBeing * caster, TBeing * victim)
   return TRUE;
 }
 
-int arcticBlast(TBeing * caster, int level, byte bKnown, int adv_learn)
+int arcticBlast(TBeing * caster, int level, sh_int bKnown, int adv_learn)
 {
   int rc = 0;
   TBeing *tmp_victim = NULL;
@@ -470,7 +470,7 @@ int castArcticBlast(TBeing * caster)
   return rc;
 }
 
-int iceStorm(TBeing * caster, int level, byte bKnown, int adv_learn)
+int iceStorm(TBeing * caster, int level, sh_int bKnown, int adv_learn)
 {
   int rc;
   int ret = 0;
@@ -613,7 +613,7 @@ int castIceStorm(TBeing * caster)
   return rc;
 }
 
-int tsunami(TBeing * caster, int level, byte bKnown, int adv_learn)
+int tsunami(TBeing * caster, int level, sh_int bKnown, int adv_learn)
 {
   TBeing *tmp_victim = NULL;
   TThing *t;
@@ -734,7 +734,7 @@ void spell_geyser(byte level, TBeing *ch, TBeing *, int)
 #endif
 }
 
-int conjureElemWater(TBeing * caster, int level, byte bKnown)
+int conjureElemWater(TBeing * caster, int level, sh_int bKnown)
 {
   affectedData aff;
   TMonster * victim;
@@ -908,7 +908,7 @@ static bool canBeGilled(TBeing *caster, TBeing *victim)
   return false;
 }
 
-int gillsOfFlesh(TBeing * caster, TBeing * victim, int level, byte bKnown)
+int gillsOfFlesh(TBeing * caster, TBeing * victim, int level, sh_int bKnown)
 {
   affectedData aff;
 
@@ -990,7 +990,7 @@ int castGillsOfFlesh(TBeing * caster, TBeing * victim)
   return TRUE;
 }
 
-int breathOfSarahage(TBeing * caster, int level, byte bKnown)
+int breathOfSarahage(TBeing * caster, int level, sh_int bKnown)
 {
   TBeing *tmp_victim = NULL;
   affectedData aff;
@@ -1057,7 +1057,7 @@ int castBreathOfSarahage(TBeing * caster)
   return TRUE;
 }
 
-int protectionFromWater(TBeing *caster, TBeing *victim, int level, byte bKnown)
+int protectionFromWater(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
 {
   affectedData aff;
 
@@ -1124,7 +1124,7 @@ int castProtectionFromWater(TBeing *caster, TBeing *victim)
   return TRUE;
 }
  
-int gusher(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_learn)
+int gusher(TBeing * caster, TBeing * victim, int level, sh_int bKnown, int adv_learn)
 {
   int rc;
   TThing *t;
@@ -1326,7 +1326,7 @@ int castPlasmaMirror(TBeing *caster)
   return ret;
 }
 
-int plasmaMirror(TBeing *caster, int level, byte bKnown)
+int plasmaMirror(TBeing *caster, int level, sh_int bKnown)
 {
   affectedData aff;
 
@@ -1400,7 +1400,7 @@ void garmulsTail(TBeing *caster, TBeing *victim, TMagicItem *obj)
   }
 }
 
-int garmulsTail(TBeing *caster, TBeing *victim, int level, byte bKnown)
+int garmulsTail(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
 {
   affectedData aff;
 

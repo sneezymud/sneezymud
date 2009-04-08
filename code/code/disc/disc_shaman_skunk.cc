@@ -14,7 +14,7 @@
 #include "disc_shaman_skunk.h"
 #include "obj_magic_item.h"
 
-int deathMist(TBeing *caster, int level, byte bKnown)
+int deathMist(TBeing *caster, int level, sh_int bKnown)
 {
   TBeing *tmp_victim;
   TThing *t;
@@ -124,7 +124,7 @@ int ret,level;
 }
 // END DEATH MIST
 
-int cleanse(TBeing *caster, TBeing * victim, int level, byte learn, spellNumT spell)
+int cleanse(TBeing *caster, TBeing * victim, int level, sh_int learn, spellNumT spell)
 {
   char buf[256];
   affectedData aff;
@@ -215,7 +215,7 @@ int cleanse(TBeing *caster, TBeing *victim, TMagicItem *tMagItem)
 
 // LICH TOUCH
 
-int lichTouch(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
+int lichTouch(TBeing *caster, TBeing *victim, int level, sh_int bKnown, int adv_learn)
 {
   if (victim->isImmortal()) {
     act("You can't touch a god in that manner!",
@@ -354,7 +354,7 @@ int lichTouch(TBeing *tMaster, TBeing *tSucker, TMagicItem *tMagItem)
 }
 // END LICH TOUCH
 
-int cardiacStress(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
+int cardiacStress(TBeing *caster, TBeing *victim, int level, sh_int bKnown, int adv_learn)
 {
   if (victim->isImmortal()) {
     act("Gods dont have heart attacks, they don't have hearts!", FALSE, caster, NULL, victim, TO_CHAR);
@@ -477,7 +477,7 @@ int bloodBoil(TBeing *caster, TBeing *victim, TMagicItem *tObj)
   return tReturn;
 }
 
-int bloodBoil(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
+int bloodBoil(TBeing *caster, TBeing *victim, int level, sh_int bKnown, int adv_learn)
 {
   if (victim->isImmortal()) {
     act("You can't boil $N's blood -- $E's a god! ", FALSE, caster, NULL, victim, TO_CHAR);

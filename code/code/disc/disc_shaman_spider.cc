@@ -15,7 +15,7 @@
 #include "obj_magic_item.h"
 #include "combat.h"
 
-int transfix(TBeing * caster, TBeing * victim, int level, byte bKnown)
+int transfix(TBeing * caster, TBeing * victim, int level, sh_int bKnown)
 {
   int dif, rc;
   affectedData aff;
@@ -93,7 +93,7 @@ int transfix(TBeing * caster, TBeing * victim, int level, byte bKnown)
 
 // LIVING VINES
 
-int livingVines(TBeing *caster, TBeing *victim,int level, byte bKnown)
+int livingVines(TBeing *caster, TBeing *victim,int level, sh_int bKnown)
 {
   affectedData aff1, aff2;
  
@@ -204,7 +204,7 @@ int rootControl(TBeing *caster, TBeing *victim, TMagicItem *tObj)
   return tReturn;
 }
 
-int rootControl(TBeing * caster, TBeing * victim, int, int dam, byte bKnown)
+int rootControl(TBeing * caster, TBeing * victim, int, int dam, sh_int bKnown)
 {
   dam = max(1,dam);
  
@@ -343,7 +343,7 @@ int transfix(TBeing * caster, TBeing * victim)
 
 // STICKS TO SNAKES
 
-int sticksToSnakes(TBeing * caster, TBeing * victim, int level, byte bKnown)
+int sticksToSnakes(TBeing * caster, TBeing * victim, int level, sh_int bKnown)
 {
   TMonster *snake;
   affectedData aff; 
@@ -520,7 +520,7 @@ int castSticksToSnakes(TBeing *caster, TBeing *victim)
 // END STICKS TO SNAKES
 // CONTROL UNDEAD
 
-int controlUndead(TBeing *caster,TBeing *victim,int level,byte bKnown)
+int controlUndead(TBeing *caster,TBeing *victim,int level,sh_int bKnown)
 {
   affectedData aff;
   char buf[256];
@@ -661,7 +661,7 @@ int controlUndead(TBeing *caster, TBeing *victim)
 // END CONTROL UNDEAD
 // START CLARITY
 
-int clarity(TBeing *caster, TBeing *victim, int level, byte bKnown)
+int clarity(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
 {
   affectedData aff;
 
@@ -732,7 +732,7 @@ int castClarity(TBeing *caster, TBeing *victim)
 }
 // END CLARITY
 
-int hypnosis(TBeing *caster, TBeing *victim, int level, byte bKnown)
+int hypnosis(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
 {
   affectedData aff;
   int again;
@@ -961,7 +961,7 @@ ANSI_RED_BOLD);
   return TRUE;
 }
 
-int raze(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
+int raze(TBeing *caster, TBeing *victim, int level, sh_int bKnown, int adv_learn)
 {
   if (victim->isImmortal()) {
     act("You can't do that to an immortal being.", FALSE, caster, NULL, victim, TO_CHAR);

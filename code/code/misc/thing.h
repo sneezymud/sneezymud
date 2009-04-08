@@ -263,8 +263,8 @@ class TThing {
     virtual int moneyMeBeing(TThing *, TThing *) { return FALSE; }
     virtual int moneyMeMoney(TBeing *, TThing *) { return FALSE; }
     virtual void logMe(const TBeing *, const char *) const;
-    virtual int powerstoneMe(TBeing *, int, byte);
-    virtual int divineMe(TBeing *, int, byte);
+    virtual int powerstoneMe(TBeing *, int, sh_int);
+    virtual int divineMe(TBeing *, int, sh_int);
     virtual void postMe(TBeing *, const char *, TBoard *);
     virtual void giveToRepairNote(TMonster *, TBeing *, int *) {}
     virtual void describeMe(TBeing *) const {}
@@ -348,7 +348,7 @@ class TThing {
     virtual void curseMe() {}
     virtual int poisonWeaponWeapon(TBeing *, TThing *);
     virtual int smiteWithMe(TBeing *, TBeing *);
-    virtual int enhanceMe(TBeing *, int, byte);
+    virtual int enhanceMe(TBeing *, int, sh_int);
     virtual void moneyMove(TBeing *);
     virtual bool isRentable() const { return FALSE; }
     virtual float blowCountSplitter(const TBeing *, bool) const;

@@ -65,60 +65,60 @@ private:
 
     int harm(TBeing *, TBeing *);
     int harm(TBeing *, TBeing *, TMagicItem *, spellNumT);
-    int harm(TBeing *, TBeing *, int, byte, spellNumT, int);
+    int harm(TBeing *, TBeing *, int, sh_int, spellNumT, int);
  
     void poison(TBeing *, TObj *);
-    int poison(TBeing *, TObj *, int, byte, spellNumT);
+    int poison(TBeing *, TObj *, int, sh_int, spellNumT);
     void poison(TBeing *, TBeing *);
     int poison(TBeing *, TBeing *, TMagicItem *, spellNumT);
     int poison(TBeing *, TObj *, TMagicItem *, spellNumT);
-    int poison(TBeing *, TBeing *, int, byte, spellNumT);
+    int poison(TBeing *, TBeing *, int, sh_int, spellNumT);
  
     void blindness(TBeing *, TBeing *);
     void blindness(TBeing *, TBeing *, TMagicItem *);
-    int blindness(TBeing *, TBeing *, int, byte);
+    int blindness(TBeing *, TBeing *, int, sh_int);
  
     int harmLight(TBeing *, TBeing *);
     int harmLight(TBeing *, TBeing *, TMagicItem *, spellNumT);
-    int harmLight(TBeing *, TBeing *, int, byte, spellNumT, int);
+    int harmLight(TBeing *, TBeing *, int, sh_int, spellNumT, int);
  
     int harmCritical(TBeing *, TBeing *);
     int harmCritical(TBeing *, TBeing *, TMagicItem *, spellNumT);
-    int harmCritical(TBeing *, TBeing *, int, byte, spellNumT, int);
+    int harmCritical(TBeing *, TBeing *, int, sh_int, spellNumT, int);
  
     int harmSerious(TBeing *, TBeing *);
     int harmSerious(TBeing *, TBeing *, TMagicItem *, spellNumT);
-    int harmSerious(TBeing *, TBeing *, int, byte, spellNumT, int);
+    int harmSerious(TBeing *, TBeing *, int, sh_int, spellNumT, int);
  
     void paralyze(TBeing *, TBeing *);
     void paralyze(TBeing *, TBeing *, TMagicItem *);
-    int paralyze(TBeing *, TBeing *, int, byte);
+    int paralyze(TBeing *, TBeing *, int, sh_int);
  
     int boneBreaker(TBeing *, TBeing *);
     int boneBreaker(TBeing *, TBeing *, TMagicItem *);
-    int boneBreaker(TBeing *, TBeing *, int, byte, int);
+    int boneBreaker(TBeing *, TBeing *, int, sh_int, int);
  
     int bleed(TBeing *, TBeing *);
     int bleed(TBeing *, TBeing *, TMagicItem *);
-    int bleed(TBeing *, TBeing *, int, byte);
+    int bleed(TBeing *, TBeing *, int, sh_int);
  
     int witherLimb(TBeing *, TBeing *);
     int witherLimb(TBeing *, TBeing *, TMagicItem *);
-    int witherLimb(TBeing *, TBeing *, int, byte, int);
+    int witherLimb(TBeing *, TBeing *, int, sh_int, int);
  
     int paralyzeLimb(TBeing *, TBeing *);
     int paralyzeLimb(TBeing *, TBeing *, TMagicItem *);
-    int paralyzeLimb(TBeing *, TBeing *, int, byte, int);
+    int paralyzeLimb(TBeing *, TBeing *, int, sh_int, int);
  
     int numb(TBeing *, TBeing *);
     int numb(TBeing *, TBeing *, TMagicItem *, spellNumT);
-    int numb(TBeing *, TBeing *, int, byte, spellNumT, int);
+    int numb(TBeing *, TBeing *, int, sh_int, spellNumT, int);
  
     void infect(TBeing *, TBeing *);
     void infect(TBeing *, TBeing *, TMagicItem *, spellNumT);
-    int infect(TBeing *, TBeing *, int, byte, spellNumT);
+    int infect(TBeing *, TBeing *, int, sh_int, spellNumT);
  
     void disease(TBeing *, TBeing *);
     void disease(TBeing *, TBeing *, TMagicItem *);
-    int disease(TBeing *, TBeing *, int, byte);
+    int disease(TBeing *, TBeing *, int, sh_int);
 #endif

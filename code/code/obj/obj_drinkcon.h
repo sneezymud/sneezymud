@@ -16,7 +16,7 @@ class TDrinkCon : public TBaseCup {
     virtual itemTypeT itemType() const { return ITEM_DRINKCON; }
     virtual void findSomeDrink(TDrinkCon **, TBaseContainer **, TBaseContainer *);
     virtual void waterCreate(const TBeing *, int);
-    virtual int divineMe(TBeing *, int, byte);
+    virtual int divineMe(TBeing *, int, sh_int);
 
     TDrinkCon();
     TDrinkCon(const TDrinkCon &a);

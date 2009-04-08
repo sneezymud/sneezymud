@@ -51,26 +51,26 @@ private:
     int stormySkies(TBeing *, TBeing *);
     int castStormySkies(TBeing *, TBeing *);
     int stormySkies(TBeing *, TBeing *, TMagicItem *);
-    int stormySkies(TBeing *, TBeing *, int, byte);
+    int stormySkies(TBeing *, TBeing *, int, sh_int);
 
     int aquaticBlast(TBeing *, TBeing *);
     int castAquaticBlast(TBeing *, TBeing *);
     int aquaticBlast(TBeing *, TBeing *, TMagicItem *);
-    int aquaticBlast(TBeing *, TBeing *, int, byte, int);
+    int aquaticBlast(TBeing *, TBeing *, int, sh_int, int);
 
-    int shapeShift(TBeing *caster, int level, byte bKnown);
+    int shapeShift(TBeing *caster, int level, sh_int bKnown);
     int shapeShift(TBeing *caster, const char * buffer);
     int castShapeShift(TBeing *caster);
 
     int deathWave(TBeing *, TBeing *);
     int castDeathWave(TBeing *, TBeing *);
     int deathWave(TBeing *, TBeing *, TMagicItem *);
-    int deathWave(TBeing *, TBeing *, int, byte, int);
+    int deathWave(TBeing *, TBeing *, int, sh_int, int);
 
 
     int transformLimb(TBeing *, const char *);
     int castTransformLimb(TBeing *);
-    int transformLimb(TBeing *, const char *, int, byte);
+    int transformLimb(TBeing *, const char *, int, sh_int);
 
 
 #endif

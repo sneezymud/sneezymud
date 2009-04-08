@@ -1351,10 +1351,10 @@ class TBeing : public TThing {
     int checkForSkillAttempt(spellNumT);
     void removeSkillAttempt(spellNumT);
 
-    int removeCurseObj(TObj *, int, byte, spellNumT);
+    int removeCurseObj(TObj *, int, sh_int, spellNumT);
     void removeCurseObj(TObj *);
     void removeCurseObj(TObj *, TMagicItem *, spellNumT);
-    int removeCurseBeing(TBeing *, int, byte, spellNumT);
+    int removeCurseBeing(TBeing *, int, sh_int, spellNumT);
     void removeCurseBeing(TBeing *);
     void removeCurseBeing(TBeing *, TMagicItem *, spellNumT);
 

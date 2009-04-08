@@ -61,7 +61,7 @@ class TBaseWeapon : public TObj {
     virtual void curseMe();
     virtual int poisonWeaponWeapon(TBeing *, TThing *);
     virtual int galvanizeMe(TBeing *, byte);
-    virtual int enhanceMe(TBeing *, int, byte);
+    virtual int enhanceMe(TBeing *, int, sh_int);
     virtual int rentCost() const;
     virtual sstring compareMeAgainst(TBeing *, TObj *);
     virtual sstring getNameForShow(bool, bool, const TBeing *) const;

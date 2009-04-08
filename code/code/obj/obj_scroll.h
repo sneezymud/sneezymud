@@ -20,7 +20,7 @@ class TScroll : public TMagicItem {
     virtual itemTypeT itemType() const { return ITEM_SCROLL; }
 
     virtual void descMagicSpells(TBeing *) const;
-    virtual int copyMe(TBeing *, byte);
+    virtual int copyMe(TBeing *, sh_int);
     virtual int changeItemVal2Check(TBeing *, int);
     virtual int changeItemVal3Check(TBeing *, int);
     virtual int changeItemVal4Check(TBeing *, int);
