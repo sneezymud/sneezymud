@@ -1522,12 +1522,12 @@ void TBeing::setSex(sexTypeT sex)
   player.sex = sex;
 }
 
-byte TBeing::getInvisLevel() const
+short TBeing::getInvisLevel() const
 {
   return invisLevel;
 }
 
-void TBeing::setInvisLevel(byte num)
+void TBeing::setInvisLevel(short num)
 {
   if (desc && desc->m_bIsClient) {
     if ((invisLevel > 50) && (num < 50))
@@ -1673,7 +1673,7 @@ TBeing * TBeing::fight() const
   return specials.fighting;
 }
 
-ubyte TBeing::getLevel(classIndT i) const
+ush_int TBeing::getLevel(classIndT i) const
 {
   return player.level[i];
 }
@@ -1683,12 +1683,12 @@ ush_int TBeing::getClass() const
   return player.Class;
 }
 
-ubyte TBeing::GetMaxLevel() const
+ush_int TBeing::GetMaxLevel() const
 {
   return player.max_level;
 }
 
-void TBeing::setMaxLevel(ubyte num)
+void TBeing::setMaxLevel(ush_int num)
 {
   player.max_level = num;
 }
@@ -1728,17 +1728,17 @@ sstring TBeing::displayExp() const
   return xp_sstring;
 }
 
-byte TBeing::getProtection() const
+sh_int TBeing::getProtection() const
 {
   return my_protection;
 }
 
-void TBeing::setProtection(byte num)
+void TBeing::setProtection(sh_int num)
 {
   my_protection = num;
 }
 
-void TBeing::addToProtection(byte num)
+void TBeing::addToProtection(short num)
 {
   my_protection = (byte) min(max((int) (num + my_protection), -100), 100);
 }

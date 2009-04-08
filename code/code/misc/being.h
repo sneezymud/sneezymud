@@ -607,8 +607,8 @@ class TBeing : public TThing {
     bool toggles[MAX_TOG_INDEX];
     Craps * m_craps;
   private:
-    byte invisLevel;
-    byte my_protection;       // % reduction for sanct
+    short invisLevel;
+    short my_protection;       // % reduction for sanct
     bodyPartsDamage body_parts[MAX_WEAR];
     attack_mode_t combatMode;      
     int my_garbleFlags;
@@ -619,9 +619,9 @@ class TBeing : public TThing {
     bool inPraying;
     bool inQuaffUse;
     sh_int attackers;
-    byte visionBonus;
+    short visionBonus;
     sh_int age_mod;
-    byte cantHit; 
+    short cantHit; 
     sh_int wait;   // this goes up in multiples of COMBAT_ROUND (=20)
     polyTypeT polyed;         
     sh_int hunt_dist;    // used by track, mob-hunting, etc
@@ -720,8 +720,8 @@ class TBeing : public TThing {
     
     ush_int getMaterial(wearSlotT) const;
 
-    ubyte GetMaxLevel() const;
-    void setMaxLevel(ubyte num);
+    ush_int GetMaxLevel() const;
+    void setMaxLevel(ush_int num);
     sstring const getProfName() const;
     const char * const getProfAbbrevName() const;
     void deityIgnore(silentTypeT = SILENT_NO) const;
@@ -954,16 +954,16 @@ class TBeing : public TThing {
     void addCaptive(TBeing *);
     void remCaptive(TBeing *);
 
-    virtual byte getImmunity(immuneTypeT type) const;
-    virtual void setImmunity(immuneTypeT type, byte amt);
-    virtual void addToImmunity(immuneTypeT type, byte amt);
+    virtual short getImmunity(immuneTypeT type) const;
+    virtual void setImmunity(immuneTypeT type, short amt);
+    virtual void addToImmunity(immuneTypeT type, short amt);
     bool isImmune(immuneTypeT, wearSlotT, int modifier = 0) const;
     bool isLucky(int) const;
     int spellLuckModifier(spellNumT);
     void spellMessUp(spellNumT);
     void disturbMeditation(TBeing *) const;
-    void setCond(condTypeT i, sbyte val);
-    sbyte getCond(condTypeT i) const;
+    void setCond(condTypeT i, short val);
+    short getCond(condTypeT i) const;
     void gainCondition(condTypeT, int);
     int drunkMinus() const;
     void calcMaxLevel();
@@ -1025,13 +1025,13 @@ class TBeing : public TThing {
     void loadSetEquipment(int, char *, int, bool findLoadPotential = false);
     bool doesKnowSkill(spellNumT) const;
     int getSkillLevel(spellNumT) const;
-    byte getMaxSkillValue(spellNumT) const;
-    byte getNatSkillValue(spellNumT) const;
+    short getMaxSkillValue(spellNumT) const;
+    short getNatSkillValue(spellNumT) const;
     void setNatSkillValue(spellNumT, int);
-    byte getSkillValue(spellNumT) const;
+    short getSkillValue(spellNumT) const;
     void setSkillValue(spellNumT, int);
-    byte getRawNatSkillValue(spellNumT) const;
-    byte getRawSkillValue(spellNumT) const;
+    short getRawNatSkillValue(spellNumT) const;
+    short getRawSkillValue(spellNumT) const;
     virtual immortalTypeT isImmortal(int = GOD_LEVEL1) const { return IMMORTAL_NO; }
 
     virtual ush_int getBaseAge() const {
@@ -1337,8 +1337,8 @@ class TBeing : public TThing {
     void sendRoomName(TRoom *) const;
     void sendRoomDesc(TRoom *) const;
     void addFollower(TBeing *, bool = FALSE);
-    void addSkillApply(spellNumT, sbyte);
-    void remSkillApply(spellNumT, sbyte);
+    void addSkillApply(spellNumT, short);
+    void remSkillApply(spellNumT, short);
     virtual int checkFalling();
     bool circleFollow(const TBeing *) const;
     void saySpell(spellNumT);
@@ -1678,7 +1678,7 @@ class TBeing : public TThing {
     int rawKill(spellNumT, TBeing * = NULL, float = 0);
     bool validMove(dirTypeT);
     const sstring movementType(bool) const;
-    ubyte getMaxLimbHealth(wearSlotT) const;
+    ush_int getMaxLimbHealth(wearSlotT) const;
     bool removeAllCasinoGames() const;
     bool checkHearts(bool = false) const;
     bool checkCrazyEights(bool = false) const;
@@ -1704,8 +1704,8 @@ class TBeing : public TThing {
     virtual bool isPc() const {
       return ((specials.act & ACT_POLYSELF) != 0);
     }
-    void setCurLimbHealth(wearSlotT, ubyte);
-    ubyte getCurLimbHealth(wearSlotT) const;
+    void setCurLimbHealth(wearSlotT, ush_int);
+    ush_int getCurLimbHealth(wearSlotT) const;
     void addCurLimbHealth(wearSlotT, int);
     TThing * getStuckIn(wearSlotT limb) const;
     void setStuckIn(wearSlotT limb, TThing *item);
@@ -1722,8 +1722,8 @@ class TBeing : public TThing {
         return (getHit() - dam <= 0);
     }
     bool willKill(TBeing *, int dam, spellNumT, bool);
-    ubyte getLevel(classIndT i) const;
-    void setLevel(classIndT i, ubyte);
+    ush_int getLevel(classIndT i) const;
+    void setLevel(classIndT i, ush_int);
     ush_int getClass() const;
     void setClass(ush_int num);
 
@@ -1761,8 +1761,8 @@ class TBeing : public TThing {
     sexTypeT getSex() const;
     void setSexUnsafe(int sex);
     void setSex(sexTypeT sex);
-    byte getInvisLevel() const;
-    void setInvisLevel(byte num);
+    short getInvisLevel() const;
+    void setInvisLevel(short num);
     double getMult() const;
     void setMult(double mult);
     sh_int getArmor() const;
@@ -1804,9 +1804,9 @@ class TBeing : public TThing {
     }
     bool isAffected(uint64_t bv) const;
     unsigned int rentCredit() const;
-    byte getProtection() const;
-    void setProtection(byte num);
-    void addToProtection(byte num);
+    short getProtection() const;
+    void setProtection(sh_int num);
+    void addToProtection(sh_int num);
 
     int getHeroNum() const {
       return heroNum;

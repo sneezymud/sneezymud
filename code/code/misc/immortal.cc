@@ -3210,7 +3210,7 @@ void TPerson::doStart()
   condTypeT ic;
   for (ic = MIN_COND; ic < MAX_COND_TYPE; ++ic)
     setCond(ic, (GetMaxLevel() > MAX_MORT ? -1 : 24));
-  setCond(DRUNK, min((sbyte) 0, getCond(DRUNK)));
+  setCond(DRUNK, min(0, (int)getCond(DRUNK)));
 
   welcomeNewPlayer(this);
 

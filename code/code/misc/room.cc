@@ -368,7 +368,7 @@ dirTypeT TRoom::getRiverDir() const
   return riverDir;
 }
 
-byte TRoom::getRiverSpeed() const
+sh_int TRoom::getRiverSpeed() const
 {
   return riverSpeed;
 }

@@ -26,9 +26,9 @@ void TBeing::setRacialStuff()
     if (amt == 0)
       amt = getImmunity(itt);
     else if (amt < 0 && getImmunity(itt) < 0)
-      amt = min(amt, getImmunity(itt));
+      amt = min(amt, (byte)getImmunity(itt));
     else if (amt > 0 && getImmunity(itt) > 0)
-      amt = max(amt, getImmunity(itt));
+      amt = max(amt, (byte)getImmunity(itt));
     else
       amt = max(min(100, amt + getImmunity(itt)), -100);
 
@@ -52,7 +52,7 @@ void TBeing::setRacialStuff()
   }
   if (isUndead()) {
     addToLight(-GetMaxLevel() / 5);
-    visionBonus = max(visionBonus, (byte) (-getLight() + 1));
+    visionBonus = max((int)visionBonus, (-getLight() + 1));
     setImmunity(IMMUNE_DRAIN,100);
     setImmunity(IMMUNE_BLEED,100);
     setImmunity(IMMUNE_POISON,100);

@@ -3107,7 +3107,7 @@ int TBeing::getSkillLevel(spellNumT skill) const
   return lev;
 }
 
-byte TBeing::getMaxSkillValue(spellNumT skill) const
+sh_int TBeing::getMaxSkillValue(spellNumT skill) const
 {
   int tmp2;
   discNumT dn = getDisciplineNumber(skill, FALSE);

@@ -9,14 +9,14 @@
 #include "combat.h"
 #include "obj_corpse.h"
 
-void TBeing::setCurLimbHealth(wearSlotT slot, ubyte num)
+void TBeing::setCurLimbHealth(wearSlotT slot, ush_int num)
 {
   body_parts[slot].setHealth(num);
 }
 
-ubyte TBeing::getCurLimbHealth(wearSlotT slot) const
+ush_int TBeing::getCurLimbHealth(wearSlotT slot) const
 {
-  return min(getMaxLimbHealth(slot), body_parts[slot].getHealth());
+  return min(getMaxLimbHealth(slot), (ush_int)body_parts[slot].getHealth());
 }
 
 void TBeing::addCurLimbHealth(wearSlotT slot, int num)
@@ -65,7 +65,7 @@ bool TBeing::isLimbFlags(wearSlotT limb, int num) const
   return ((body_parts[limb].getFlags() & num) != 0);
 }
 
-ubyte TBeing::getMaxLimbHealth(wearSlotT limb) const
+ush_int TBeing::getMaxLimbHealth(wearSlotT limb) const
 {
   int health;
 

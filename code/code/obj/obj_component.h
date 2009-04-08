@@ -202,12 +202,12 @@ class compPlace
     // have the place actions be 10, 14, and the take be 15, -1
     // uses mud hours, so 0-47 range
     // if hours aren't valid criteria, set both values to -1
-    byte hour1;
-    byte hour2;
-    byte day1;
-    byte day2;
-    byte month1;
-    byte month2;
+    short hour1;
+    short hour2;
+    short day1;
+    short day2;
+    short month1;
+    short month2;
 
     // weather condition
     // uses the WEATHER_xx values from weather.h
@@ -225,7 +225,7 @@ class compPlace
     soundNumT sound;
     unsigned int sound_loop;
 
-    compPlace(int r, int r2, int m, int mn, int pa, int mx, int v, byte h1, byte h2, byte m1, byte m2, byte d1, byte d2, int w, const char *msg, const char *gm, soundNumT snt = SOUND_OFF, unsigned int sl = 1) :
+    compPlace(int r, int r2, int m, int mn, int pa, int mx, int v, short h1, short h2, short m1, short m2, short d1, short d2, int w, const char *msg, const char *gm, soundNumT snt = SOUND_OFF, unsigned int sl = 1) :
       room1(r),
       room2(r2),
       mob(m),

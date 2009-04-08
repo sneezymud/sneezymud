@@ -1010,7 +1010,7 @@ void TPerson::doLevelSkillsLearn(discNumT discipline, int initial, int final)
           } else if (getRawSkillValue(i) >= getMaxSkillValue(i)) {
             // do nothing
           } else {
-            value = min(discArray[i]->startLearnDo, getMaxSkillValue(i));
+            value = min(discArray[i]->startLearnDo, (byte)getMaxSkillValue(i));
             value = max(value, (int) getRawNatSkillValue(i));
             value = max(value, 1);
             value = min(value, (int) MAX_SKILL_LEARNEDNESS);
@@ -1703,7 +1703,7 @@ int TBeing::doTraining(TBeing *ch, TMonster *me, classIndT accclass, int offset,
               // do nothing
               ch->affectTotal();
             } else {
-              value = min(discArray[i]->startLearnDo, ch->getMaxSkillValue(i));
+              value = min(discArray[i]->startLearnDo, (byte)ch->getMaxSkillValue(i));
               value = max(value, (int) ch->getRawNatSkillValue(i)); 
               value = max(value, 1);
               value = min(value, (int) MAX_SKILL_LEARNEDNESS);

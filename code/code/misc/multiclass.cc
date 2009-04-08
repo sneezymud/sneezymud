@@ -326,7 +326,7 @@ classIndT TBeing::bestClass() const
   return(Class);
 }
 
-void TBeing::setLevel(classIndT i, ubyte lev)
+void TBeing::setLevel(classIndT i, ush_int lev)
 {
   if (i >= MAX_CLASSES) {
     vlogf(LOG_BUG, "Bad class value");

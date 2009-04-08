@@ -2671,7 +2671,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
   if (ch.getDiscipline(best_disc)->getLearnedness() <= 0)
     return TYPE_UNDEFINED;
 
-  int cutoff = min(ch.GetMaxLevel(), (ubyte) 50);
+  int cutoff = min((int)ch.GetMaxLevel(), 50);
 
   // PANIC spells
   spell = SPELL_CURE_BLINDNESS;

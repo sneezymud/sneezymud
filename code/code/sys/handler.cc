@@ -208,7 +208,7 @@ void TBeing::affectChange(uint64_t original, silentTypeT silent)
   }
 }
 
-void TBeing::addSkillApply(spellNumT skillNum, sbyte amt)
+void TBeing::addSkillApply(spellNumT skillNum, sh_int amt)
 {
   skillApplyData *temp = NULL;
 
@@ -230,7 +230,7 @@ void TBeing::addSkillApply(spellNumT skillNum, sbyte amt)
   skillApplys = temp;
 }
 
-void TBeing::remSkillApply(spellNumT skillNum, sbyte amt)
+void TBeing::remSkillApply(spellNumT skillNum, sh_int amt)
 {
   skillApplyData *temp = NULL, *temp2 = NULL;
  

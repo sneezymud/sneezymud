@@ -90,7 +90,7 @@ byte Immunities::getImmunity(immuneTypeT whichImmunity) const
   return ImmunityArray[whichImmunity];
 }
 
-byte TBeing::getImmunity(immuneTypeT type) const
+short TBeing::getImmunity(immuneTypeT type) const
 {
   int amount, imm;
 
@@ -167,12 +167,12 @@ byte TBeing::getImmunity(immuneTypeT type) const
   return imm;
 }
 
-void TBeing::setImmunity(immuneTypeT type, byte amt)
+void TBeing::setImmunity(immuneTypeT type, sh_int amt)
 {
   immunities.immune_arr[type] = amt;
 }
 
-void TBeing::addToImmunity(immuneTypeT type, byte amt)
+void TBeing::addToImmunity(immuneTypeT type, sh_int amt)
 {
   immunities.immune_arr[type] = min(max(immunities.immune_arr[type] + amt, -100), 100);
 }
