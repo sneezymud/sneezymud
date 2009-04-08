@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LD_LIBRARY_PATH="/mud/build/curl/lib";
+export LD_LIBRARY_PATH="/mud/build/curl/lib";
 
 FLAGS="";
 
