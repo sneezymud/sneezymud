@@ -190,7 +190,7 @@ int TBeing::doSkySpirit(const char *argument)
   char    tTarget[256];
   TObj   *tObj    = NULL;
   TBeing *victim = NULL;
-  char    spirit[256];
+  sstring spirit;
   
   if (checkBusy())
     return FALSE;
@@ -229,41 +229,41 @@ int TBeing::doSkySpirit(const char *argument)
   int percent = bKnown + ::number(-5,5);
 
   if (percent <= 0)
-    strcpy(spirit, "<k>gnat");
+    spirit="<k>gnat";
   else if (percent <= 5)
-    strcpy(spirit, "pigeon");
+    spirit="pigeon";
   else if (percent <= 10)
-    strcpy(spirit, "sparrow");
+    spirit="sparrow";
   else if (percent <= 15)
-    strcpy(spirit, "<k>crow");
+    spirit="<k>crow";
   else if (percent <= 20)
-    strcpy(spirit, "<k>raven");
+    spirit="<k>raven";
   else if (percent <= 25)
-    strcpy(spirit, "<r>vulture");
+    spirit="<r>vulture";
   else if (percent <= 30)
-    strcpy(spirit, "<W>owl");
+    spirit="<W>owl";
   else if (percent <= 40)
-    strcpy(spirit, "<B>couatl");
+    spirit="<B>couatl";
   else if (percent <= 49)
-    strcpy(spirit, "<o>falcon");
+    spirit="<o>falcon";
   else if (percent <= 55)
-    strcpy(spirit, "<g>hawk");
+    spirit="<g>hawk";
   else if (percent <= 60)
-    strcpy(spirit, "<Y>dragonne");
+    spirit="<Y>dragonne";
   else if (percent <= 70)
-    strcpy(spirit, "<o>condor");
+    spirit="<o>condor";
   else if (percent <= 75)
-    strcpy(spirit, "<W>eagle");
+    spirit="<W>eagle";
   else if (percent <= 80)
-    strcpy(spirit, "<o>roc");
+    spirit="<o>roc";
   else if (percent <= 85)
-    strcpy(spirit, "<G>wyvern");
+    spirit="<G>wyvern";
   else if (percent <= 90)
-    strcpy(spirit, "<Y>drake");
+    spirit="<Y>drake";
   else if (percent >= MAX_SKILL_LEARNEDNESS)
-    strcpy(spirit, "<Y>dragon");
+    spirit="<Y>dragon";
   else
-    strcpy(spirit, "<R>phoenix");
+    spirit="<R>phoenix";
 
 
 
@@ -280,7 +280,7 @@ int TBeing::doSkySpirit(const char *argument)
     if (critSuccess(this, SPELL_SKY_SPIRIT) == CRIT_S_DOUBLE) {
       CS(SPELL_SKY_SPIRIT);
       dam *= 2;
-      sprintf(spirit, "%s of incredible size", spirit);
+      spirit += " of incredible size";
     }
     
     act("You summon a spirit of the sky!", FALSE, this, NULL, victim, TO_CHAR);

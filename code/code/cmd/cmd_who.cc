@@ -78,7 +78,7 @@ static const sstring getWizDescriptLev(const TBeing *ch)
 
 static const sstring getWhoLevel(const TBeing *ch, TBeing *p)
 {
-  char tempbuf[256];
+  sstring tempbuf;
   char colorBuf[256] = "\0";
 
   if (p->hasWizPower(POWER_WIZARD))
@@ -96,17 +96,18 @@ static const sstring getWhoLevel(const TBeing *ch, TBeing *p)
     unsigned int frontpadding = padding/2;
     for (unsigned int iter = 0; iter < frontpadding; iter++)
       str.insert(0, " ");
-    
-    sprintf(tempbuf, "%sLevel:[%-14s%s][%s] %s",
-            colorBuf, str.c_str(),
-            colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
+
+    tempbuf=format("%sLevel:[%-14s%s][%s] %s") %
+      colorBuf %  str %
+      colorBuf % getWizDescriptLev(p) % ch->norm();
   } else {
     sstring tmpstring;
 
     if(p->isPlayerAction(PLR_ANONYMOUS) && !ch->isImmortal()){
       tmpstring = "Anonymous";
     } else {
-      sprintf(tempbuf, "%-5s Lev %2d", p->getProfAbbrevName(), p->GetMaxLevel());
+      tempbuf=format("%-5s Lev %2d") % 
+	p->getProfAbbrevName() % p->GetMaxLevel();
       tmpstring += tempbuf;
     }
 
@@ -115,16 +116,16 @@ static const sstring getWhoLevel(const TBeing *ch, TBeing *p)
     if (tmpstring.length() < 14)
       tmpstring += " ";
 
-    sprintf(tempbuf, "Level:[%s] ", tmpstring.c_str());
+    tempbuf=format("Level:[%s] ") % tmpstring;
     TGuild *f = NULL;
     if((f = p->newguild()) && toggleInfo[TOG_TESTCODE5]->toggle) {
       if (f->ID && (IS_SET(f->flags, GUILD_ACTIVE) || ch->newguild() == p->newguild() || ch->isImmortal()) &&
 	  (!IS_SET(f->flags, GUILD_HIDDEN) || ch->newguild() == p->newguild() || ch->isImmortal()) &&
 	  (!p->isImmortal() || ch->isImmortal())) {
-	sprintf(tempbuf, "%s %s[<1>%s%s]<1>", tempbuf,
-		heraldcodes[p->newguild()->colors[0]],
-		p->newguild()->getName(),
-		heraldcodes[p->newguild()->colors[0]]);
+	tempbuf += format(" %s[<1>%s%s]<1>") % 
+	  heraldcodes[p->newguild()->colors[0]] %
+	  p->newguild()->getName() %
+	  heraldcodes[p->newguild()->colors[0]];
       }
     }
        
