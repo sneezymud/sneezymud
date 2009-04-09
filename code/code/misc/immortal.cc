@@ -3873,7 +3873,8 @@ void TPerson::doAccess(const sstring &arg)
     }
   } else {
     tmpbuf=format("Name : <p>%s<1>, Sex : <c>%d<1>, Screensize : <c>%d<1>, Weight <c>%.2f<1>, Height <c>%d<1>\n\r") %
-      st.name % st.sex % st.screen % st.weight % st.height;
+      (int)st.name % (int)st.sex % (int)st.screen % 
+      (int)st.weight % (int)st.height;
     buf+=tmpbuf;
     birth = asctime(localtime(&(st.birth)));
     *(birth + strlen(birth) - 1) = '\0';
@@ -3889,10 +3890,10 @@ void TPerson::doAccess(const sstring &arg)
         cyan() % birth_buf % norm();
     buf+=tmpbuf;
 
-    tmpbuf = format("Playing time : %d days, %d hours.\n\r") % playing_time.day % playing_time.hours;
+    tmpbuf = format("Playing time : %d days, %d hours.\n\r") % (int)playing_time.day % (int)playing_time.hours;
     buf+=tmpbuf;
 
-    tmpbuf = format("User Levels: M%d C%d W%d T%d A%d D%d K%d R%d") %st.level[0] %st.level[1] %st.level[2] %st.level[3] %st.level[4] %st.level[5] %st.level[6] %st.level[7];
+    tmpbuf = format("User Levels: M%d C%d W%d T%d A%d D%d K%d R%d") %(int)st.level[0] %(int)st.level[1] %(int)st.level[2] %(int)st.level[3] %(int)st.level[4] %(int)st.level[5] %(int)st.level[6] %(int)st.level[7];
     buf+=tmpbuf;
 
     tmpbuf = format("\tRace: %s\n\r") % RaceNames[st.race];
