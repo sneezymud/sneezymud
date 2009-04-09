@@ -239,6 +239,7 @@ void Descriptor::send_client_exits()
   }
 
   ch->sendTo(comm);
+  delete comm;
 
   if (m_bIsClient)
     clientf(format("%d|%d|%d") % CLIENT_EXITS % bits % ch->isImmortal());

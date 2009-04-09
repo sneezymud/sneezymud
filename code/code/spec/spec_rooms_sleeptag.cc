@@ -424,6 +424,6 @@ void sleepTagReport(int tZone, const char *tString, ...)
         dynamic_cast<TPerson *>(tBeing))
       tBeing->sendTo(COLOR_COMM, tBuffer);
 
-  delete tBuffer;
+  delete [] tBuffer;
   tBuffer = NULL;
 }

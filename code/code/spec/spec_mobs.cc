@@ -5584,6 +5584,7 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       tso=new TShopOwned(find_shop_nr(me->number), 
 			 dynamic_cast<TMonster *>(me), ch);
       tso->doBuyTransaction(cost, "divination", TX_BUYING_SERVICE);
+      delete tso;
 
       ch->sendTo(COLOR_BASIC, format("%s concentrates deeply on %s.\n\r") % me->getName() % item->getName());
       ch->sendTo(format("%s conjures up a cloud of smoke.\n\rInside the cloud of smoke you see...\n\r") % me->getName());
