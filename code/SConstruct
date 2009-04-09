@@ -90,20 +90,25 @@ PhonyTargets(env, tags='@etags code/*/*')
 
 
 # progress indicator
-Progress(['\033[32mChecking dependencies\033[0m -\r',
-          '\033[32mChecking dependencies\033[0m \\\r',
-          '\033[32mChecking dependencies\033[0m |\r',
-          '\033[32mChecking dependencies\033[0m /\r'], interval=5)
+AddOption('--no-progress', dest='no-progress',
+          action="store_true", default=False)
+
+if not GetOption('no-progress'):
+    Progress(['\033[32mChecking dependencies\033[0m -\r',
+              '\033[32mChecking dependencies\033[0m \\\r',
+              '\033[32mChecking dependencies\033[0m |\r',
+              '\033[32mChecking dependencies\033[0m /\r'], interval=5)
 
 # command line help
 Help("""
 Targets:
-sneezy:      build the main binary (output: sneezy.2).
-lowtools:    build the low tools (output: lowtools/).
-objs/*/*.os: build a specific file (eg: objs/game/game_hilo.os).
-tags:        rebuild the emacs tag file. 
-check:       build and run unit tests
-'scons -c' to clean objects and executables.
+sneezy:         build the main binary (output: sneezy.2).
+lowtools:       build the low tools (output: lowtools/).
+objs/*/*.os:    build a specific file (eg: objs/game/game_hilo.os).
+tags:           rebuild the emacs tag file. 
+check:          build and run unit tests
+'-c'            to clean objects and executables.
+'--no-progress' to mute the "Checking dependencies" output.
 """)
 
 
