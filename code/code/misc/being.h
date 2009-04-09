@@ -430,7 +430,7 @@ class bodyPartsDamage {
   private:
     unsigned short int flags;
     TThing *stuckIn;
-    ubyte health;
+    ush_int health;
 
   public:
     bodyPartsDamage();
@@ -444,9 +444,9 @@ class bodyPartsDamage {
     void remFlags(unsigned short int num) { flags &= ~num; }
     TThing *getStuckIn() const { return stuckIn; }
     void setStuckIn(TThing *t) { stuckIn = t; }
-    ubyte getHealth() const { return health; }
-    void setHealth(ubyte num) { health = num; }
-    void addHealth(ubyte num) { health += num; }
+    ush_int getHealth() const { return health; }
+    void setHealth(ush_int num) { health = num; }
+    void addHealth(ush_int num) { health += num; }
 };
 
 class followData {

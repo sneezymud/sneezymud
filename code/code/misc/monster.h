@@ -43,7 +43,7 @@ class opinionData {
     charList *clist;
     sexTypeT sex;
     race_t race;
-    byte Class;
+    sh_int Class;
     short vnum;
 
   opinionData();
@@ -56,15 +56,15 @@ class Mobile_Attitude {
   friend class TMonster;
 
   private:
-    ubyte suspicion;          /* current suspicion value */
-    ubyte greed;              /* current greed value */
-    ubyte malice;             /* current malice value */
-    ubyte anger;              /* current anger value */
+    ush_int suspicion;          /* current suspicion value */
+    ush_int greed;              /* current greed value */
+    ush_int malice;             /* current malice value */
+    ush_int anger;              /* current anger value */
   
-    ubyte def_suspicion;      /* the various default values */
-    ubyte def_greed;
-    ubyte def_malice;
-    ubyte def_anger;
+    ush_int def_suspicion;      /* the various default values */
+    ush_int def_greed;
+    ush_int def_malice;
+    ush_int def_anger;
   
     TBeing *target;             /* the target of the mobs opinions */
   public:
@@ -88,13 +88,13 @@ class TMonster : public TBeing {
     int brtRoom;
     unsigned short hatefield;
     unsigned short fearfield;
-    ubyte moneyConst;
+    ush_int moneyConst;
 
     const char *sounds;
     const char *distantSnds;
     float hpLevel;
     float damLevel;
-    ubyte damPrecision;
+    ush_int damPrecision;
     float acLevel;
     sstring procData;
     bool stolenFrom;
@@ -221,8 +221,8 @@ class TMonster : public TBeing {
     void setHPLevel(float);
     float getDamLevel() const;
     void setDamLevel(float);
-    ubyte getDamPrecision() const;
-    void setDamPrecision(ubyte);
+    ush_int getDamPrecision() const;
+    void setDamPrecision(ush_int);
     int getMobDamage() const;
 
     int aiSocialSwitch(TBeing *, TBeing *, cmdTypeT, aiTarg);

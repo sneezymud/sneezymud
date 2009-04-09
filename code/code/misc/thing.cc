@@ -213,7 +213,7 @@ void TThing::setRoom(int room)
   in_room = room;
 }
 
-void TThing::setMaterial(ubyte num)
+void TThing::setMaterial(ush_int num)
 {
   material_type = convertV9MaterialToV10(num);
 }

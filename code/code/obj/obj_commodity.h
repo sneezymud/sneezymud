@@ -28,7 +28,7 @@ class TCommodity : public TMergeable {
     int getSizeIndex() const;
     virtual int suggestedPrice() const;
     virtual void setWeight(const float);
-    virtual void setMaterial(ubyte num);
+    virtual void setMaterial(ush_int num);
     virtual bool splitMe(TBeing *, const sstring &);
 
     virtual void lowCheck();

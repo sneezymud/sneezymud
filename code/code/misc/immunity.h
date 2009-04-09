@@ -52,13 +52,13 @@ const immuneTypeT MIN_IMMUNE = immuneTypeT(0);
 
 class Immunities {
   private:
-    byte ImmunityArray[MAX_IMMUNES];
+    sh_int ImmunityArray[MAX_IMMUNES];
 
   public:
 
     Immunities();
-    void setImmunity(const sstring &whichImmunity, byte percent);
-    byte getImmunity(immuneTypeT whichImmunity) const;
+    void setImmunity(const sstring &whichImmunity, sh_int percent);
+    sh_int getImmunity(immuneTypeT whichImmunity) const;
 
     // convert() is a utility function to switch from const char *
     // to immune_t so other functions can access the ImmunityArray.

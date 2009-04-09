@@ -596,14 +596,14 @@ private:
     void addToMaxStructPoints(sh_int num) {
       obj_flags.max_struct_points += num;
     }
-    byte getDepreciation() const {
+    sh_int getDepreciation() const {
       return 0;
       //      return obj_flags.depreciation;
     }
-    void setDepreciation(byte num) {
+    void setDepreciation(sh_int num) {
       obj_flags.depreciation = num;
     }
-    void addToDepreciation(byte num) {
+    void addToDepreciation(sh_int num) {
       obj_flags.depreciation += num;
     }
 
@@ -724,7 +724,7 @@ private:
     //virtual void changeBaseWeaponValue3(TBeing *, const char *, editorEnterTypeT) {}
     virtual void objMenu(const TBeing *) const;
     virtual int rentCost() const;
-    virtual int galvanizeMe(TBeing *, byte);
+    virtual int galvanizeMe(TBeing *, sh_int);
     virtual int grenadeHit(TTrap *);
     int burnObject(TBeing *, int);
     int meltObject(TBeing *, int);

@@ -49,7 +49,7 @@ void TArmor::lowCheck()
   TBaseClothing::lowCheck();
 }
 
-int TArmor::galvanizeMe(TBeing *local_caster, byte bKnown)
+int TArmor::galvanizeMe(TBeing *local_caster, sh_int bKnown)
 {
   if (getMaxStructPoints() < 2) {
     act("$p is as solid as it is possible.",

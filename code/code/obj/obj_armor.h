@@ -19,7 +19,7 @@ class TArmor : public virtual TBaseClothing {
     virtual itemTypeT itemType() const { return ITEM_ARMOR; }
 
     virtual void lowCheck();
-    virtual int galvanizeMe(TBeing *, byte);
+    virtual int galvanizeMe(TBeing *, sh_int);
 
     TArmor();
     TArmor(const TArmor &a);

@@ -498,12 +498,12 @@ void TMonster::setDamLevel(float n)
   damLevel = n;
 }
 
-ubyte TMonster::getDamPrecision() const
+ush_int TMonster::getDamPrecision() const
 {
   return damPrecision;
 }
 
-void TMonster::setDamPrecision(ubyte n)
+void TMonster::setDamPrecision(ush_int n)
 {
   damPrecision = n;
 }

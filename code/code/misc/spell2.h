@@ -449,11 +449,11 @@ class spellInfo {
     unsigned int toggle;
     discNumT disc;
     discNumT assDisc;
-    byte startLearnDo;
-    byte amtLearnDo;
+    sh_int startLearnDo;
+    sh_int amtLearnDo;
     int learnDoDiff;
-    byte secStartLearnDo;
-    byte secAmtLearnDo;
+    sh_int secStartLearnDo;
+    sh_int secAmtLearnDo;
     map<int, int>sectorData;
     map<int, int>weatherData;
 

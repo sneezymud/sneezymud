@@ -78,14 +78,14 @@ immuneTypeT Immunities::convert(const sstring & immunity) const
 }
 
 // setImmunity() assigns a percentage to a particular immunity.
-void Immunities::setImmunity(const sstring &whichImmunity, byte percent)
+void Immunities::setImmunity(const sstring &whichImmunity, sh_int percent)
 {
   immuneTypeT itt = convert(whichImmunity);
   ImmunityArray[itt] = percent;
 }
 
 // getImmunity() returns the value of the particular immunity.
-byte Immunities::getImmunity(immuneTypeT whichImmunity) const
+sh_int Immunities::getImmunity(immuneTypeT whichImmunity) const
 {
   return ImmunityArray[whichImmunity];
 }

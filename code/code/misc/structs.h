@@ -265,9 +265,9 @@ class roomDirData {
     const char *keyword;             // keyword for opening and closing doors
     doorTypeT door_type;           // type of door
     unsigned int condition;           // bitvector for door status
-    byte lock_difficulty;      // how hard to open, -1 = unlockable
-    byte weight;               // how heavy door is, -1 = no door
-    byte trap_info;            // Trap flags
+    sh_int lock_difficulty;      // how hard to open, -1 = unlockable
+    sh_int weight;               // how heavy door is, -1 = no door
+    sh_int trap_info;            // Trap flags
     sh_int trap_dam;           // Damage trap will do
     int key;                // Number of object that opens door
     int to_room;            // What room we exit to. -1 means no exit
