@@ -3,8 +3,11 @@
 #include <dirent.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <errno.h>
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "configuration.h"
 #include "charfile.h"
 #include "rent.h"
@@ -12,6 +15,7 @@
 #include "statistics.h"
 #include "mail.h"
 #include "shop.h"
+#include "person.h"
 #include "database.h"
 #include "spec_mobs.h"
 #include "obj_player_corpse.h"

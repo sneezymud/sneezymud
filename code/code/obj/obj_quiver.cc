@@ -8,6 +8,7 @@
 // quiver.cc
 
 #include "stdsneezy.h"
+#include "monster.h"
 #include "disc_looting.h"
 #include "obj_quiver.h"
 

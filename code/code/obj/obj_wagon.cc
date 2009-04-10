@@ -8,6 +8,7 @@
 
 
 #include "stdsneezy.h"
+#include "monster.h"
 #include "obj_wagon.h"
 #include "obj_open_container.h"
 

@@ -8,6 +8,7 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "monster.h"
 #include "obj_fuel.h"
 #include "obj_light.h"
 

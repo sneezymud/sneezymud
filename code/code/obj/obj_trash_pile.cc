@@ -1,4 +1,5 @@
 #include "stdsneezy.h"
+#include "monster.h"
 #include "obj_trash_pile.h"
 #include "pathfinder.h"
 

@@ -13,12 +13,15 @@ extern "C" {
 #include <algorithm>
 
 #include "stdsneezy.h"
+#include "colorstring.h"
+#include "monster.h"
 #include "range.h"
 #include "materials.h"
 #include "statistics.h"
 #include "combat.h"
 #include "account.h"
 #include "games.h"
+#include "person.h"
 #include "mail.h"
 #include "obj_drug.h"
 #include "skillsort.h"

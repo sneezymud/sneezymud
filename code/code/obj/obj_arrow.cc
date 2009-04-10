@@ -1,4 +1,5 @@
 #include "stdsneezy.h"
+#include "monster.h"
 #include "obj_open_container.h"
 #include "obj_arrow.h"
 #include "obj_base_weapon.h"

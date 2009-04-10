@@ -8,6 +8,7 @@
 ///////////////////////////////////
 
 #include "stdsneezy.h"
+#include "person.h"
 
 void TBeing::doVisible(const char *, bool)
 {

@@ -9,6 +9,7 @@
 #include <algorithm>
 
 #include "stdsneezy.h"
+#include "colorstring.h"
 #include "statistics.h"
 #include "combat.h"
 #include "database.h"
@@ -27,6 +28,9 @@
 #include "obj_jewelry.h"
 #include "spec_mobs.h"
 #include "materials.h"
+#include "monster.h"
+#include "person.h"
+#include "low.h"
 
 double balanceCorrectionForLevel(double level)
 {

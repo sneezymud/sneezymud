@@ -8,6 +8,8 @@
 #include <cmath>
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "disease.h"
 #include "combat.h"
 #include "spelltask.h"
@@ -15,6 +17,7 @@
 #include "obj_armor.h"
 #include "obj_magic_item.h"
 #include "obj_worn.h"
+#include "person.h"
 
 int mysticDarts(TBeing *caster, TBeing *victim, int level, sh_int bKnown, int adv_learn)
 {

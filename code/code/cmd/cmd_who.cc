@@ -7,11 +7,14 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "colorstring.h"
 #include "statistics.h"
 #include "games.h"
 #include "database.h"
 #include "cmd_message.h"
 #include "account.h"
+#include "person.h"
+#include "monster.h"
 
 sstring TBeing::parseTitle(Descriptor *)
 {

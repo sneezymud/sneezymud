@@ -12,9 +12,12 @@ extern "C" {
 }
 
 #include "stdsneezy.h"
+#include "colorstring.h"
+#include "person.h"
 #include "configuration.h"
 #include "socket.h"
 #include "mail.h"
+#include "monster.h"
 
 sstring lockmess;
 commandInfo *commandArray[MAX_CMD_LIST];

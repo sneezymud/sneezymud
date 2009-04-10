@@ -1,4 +1,7 @@
 #include "stdsneezy.h"
+#include <errno.h>
+#include "low.h"
+#include "monster.h"
 #include "database.h"
 #include "corporation.h"
 #include "guild.h"

@@ -8,6 +8,7 @@
 #include "stdsneezy.h"
 #include "combat.h"
 #include "obj_base_clothing.h"
+#include "monster.h"
 
 bool TBeing::canDisarm(TBeing *victim, silentTypeT silent)
 {

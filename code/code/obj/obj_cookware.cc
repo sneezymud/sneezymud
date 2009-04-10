@@ -8,6 +8,8 @@
 
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "obj_cookware.h"
 #include "obj_open_container.h"
 #include "obj_pool.h"

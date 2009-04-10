@@ -2,6 +2,7 @@
 #include "shop.h"
 #include "database.h"
 #include "spec_mobs.h"
+#include "monster.h"
 
 int taxman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 {

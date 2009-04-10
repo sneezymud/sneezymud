@@ -7,7 +7,10 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "materials.h"
+#include "person.h"
 
 #include <csignal>
 #include <cstdarg>

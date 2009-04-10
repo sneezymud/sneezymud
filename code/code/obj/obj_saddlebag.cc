@@ -9,6 +9,7 @@
 //
 
 #include "stdsneezy.h"
+#include "monster.h"
 #include "obj_saddlebag.h"
 
 TSaddlebag::TSaddlebag() :

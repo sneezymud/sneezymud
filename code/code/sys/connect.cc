@@ -7,6 +7,7 @@
 
 #include <csignal>
 #include <cstdarg>
+#include <errno.h>
 
 extern "C" {
 #include <dirent.h>
@@ -28,6 +29,9 @@ extern "C" {
 }
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "person.h"
+#include "monster.h"
 #include "configuration.h"
 #include "charfile.h"
 #include "account.h"
@@ -35,7 +39,9 @@ extern "C" {
 #include "socket.h"
 #include "mail.h"
 #include "games.h"
+#include "person.h"
 #include "cmd_trophy.h"
+#include "colorstring.h"
 #include "database.h"
 #include "rent.h"
 #include "shop.h"

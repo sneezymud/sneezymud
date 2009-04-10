@@ -1,4 +1,5 @@
 #include "stdsneezy.h"
+#include "monster.h"
 #include "disease.h"
 #include "combat.h"
 #include "disc_animal.h"

@@ -1,3 +1,5 @@
+#include <fstream>
+
 #include "stdsneezy.h"
 #include "database.h"
 

@@ -6,6 +6,10 @@
 
 
 #include "stdsneezy.h"
+#include "person.h"
+#include "low.h"
+#include "colorstring.h"
+#include "monster.h"
 #include "disc_psionics.h"
 #include "garble.h"
 

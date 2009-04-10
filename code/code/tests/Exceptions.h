@@ -5,6 +5,7 @@
 #include "socket.h"
 #include "code/tests/ValueTraits.h"
 #include "spec_mobs.h"
+#include "person.h"
 
 class Exceptions : public CxxTest::TestSuite
 {

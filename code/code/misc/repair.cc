@@ -4,6 +4,8 @@
 #include <dirent.h>
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "configuration.h"
 #include "statistics.h"
 #include "account.h"

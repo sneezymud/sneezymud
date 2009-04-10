@@ -1,4 +1,5 @@
 #include "stdsneezy.h"
+#include "monster.h"
 #include "database.h"
 
 int tattooArtist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)

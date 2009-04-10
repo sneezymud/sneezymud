@@ -9,6 +9,7 @@
 #include <cmath>
 
 #include "stdsneezy.h"
+#include "monster.h"
 #include "obj_food.h"
 #include "obj_egg.h"
 

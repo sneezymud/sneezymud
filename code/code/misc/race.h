@@ -18,6 +18,7 @@
 #endif
 
 #include "cmd_dissect.h"
+#include "immunity.h"
 
 // forward declarations
 class TCorpse;

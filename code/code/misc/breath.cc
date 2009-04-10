@@ -6,6 +6,7 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "monster.h"
 #include "disease.h"
 
 static int dragonBreathDam(byte level, int lag)

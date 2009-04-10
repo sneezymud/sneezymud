@@ -6,6 +6,9 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
+#include "colorstring.h"
 #include "configuration.h"
 #include "combat.h"
 #include "statistics.h"

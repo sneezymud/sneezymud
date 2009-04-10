@@ -1,4 +1,5 @@
 #include "stdsneezy.h"
+#include "colorstring.h"
 #include "obj_tool.h"
 
 const unsigned int GRAFFITI_MAX = 50;

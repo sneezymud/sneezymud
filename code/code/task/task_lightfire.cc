@@ -5,6 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "monster.h"
 #include "obj_tool.h"
 #include "materials.h"
 

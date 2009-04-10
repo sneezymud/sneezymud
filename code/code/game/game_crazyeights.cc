@@ -10,6 +10,7 @@
 ******************************************************************************/
 
 #include "stdsneezy.h"
+#include "monster.h"
 #include "games.h"
 
 CrazyEightsGame gEights;

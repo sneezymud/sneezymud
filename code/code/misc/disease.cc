@@ -8,6 +8,8 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "monster.h"
+#include "low.h"
 #include "disease.h"
 #include "obj_tool.h"
 #include "obj_corpse.h"

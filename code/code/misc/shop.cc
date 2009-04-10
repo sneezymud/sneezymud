@@ -3,6 +3,7 @@
 #include <algorithm>
 
 #include "stdsneezy.h"
+#include "monster.h"
 #include "configuration.h"
 #include "shop.h"
 #include "materials.h"

@@ -1,4 +1,5 @@
 #include "stdsneezy.h"
+#include "monster.h"
 
 const int COST = 1000000;
 

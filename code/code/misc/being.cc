@@ -6,11 +6,14 @@
 
 
 #include "stdsneezy.h"
+#include "low.h"
 #include "charfile.h"
 #include "being.h"
 #include "database.h"
 #include "obj_opal.h"
 #include "account.h"
+#include "person.h"
+#include "monster.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>

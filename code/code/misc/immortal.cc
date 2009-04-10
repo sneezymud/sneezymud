@@ -7,6 +7,10 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include <errno.h>
+#include "colorstring.h"
+#include "low.h"
+#include "monster.h"
 #include "configuration.h"
 #include "charfile.h"
 
@@ -22,6 +26,7 @@ extern "C" {
 
 #include "disease.h"
 #include "statistics.h"
+#include "person.h"
 #include "combat.h"
 #include "mail.h"
 #include "games.h"

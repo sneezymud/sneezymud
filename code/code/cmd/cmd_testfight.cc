@@ -19,9 +19,12 @@ int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 #endif
 
 #include "stdsneezy.h"
+#include "low.h"
 #include "configuration.h"
 #include "combat.h"
 #include "spelltask.h"
+#include "monster.h"
+#include "person.h"
 
 static unsigned int num_fighting = 0;
 static unsigned long left1 = 0;

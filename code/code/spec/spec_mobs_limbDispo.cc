@@ -1,4 +1,5 @@
 #include "stdsneezy.h"
+#include "monster.h"
 #include "obj_corpse.h"
 #include "obj_drinkcon.h"
 #include "obj_trash.h"

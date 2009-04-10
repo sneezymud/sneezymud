@@ -6,6 +6,7 @@
 
 
 #include "stdsneezy.h"
+#include "monster.h"
 #include "disc_mounted.h"
 
 // return 0-100, which is an average of advanced riding and ride xxx

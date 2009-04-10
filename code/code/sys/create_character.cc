@@ -5,6 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "low.h"
 #include "account.h"
 #include "statistics.h"
 #include "socket.h"
@@ -12,6 +13,7 @@
 #include "games.h"
 #include "cmd_trophy.h"
 #include "database.h"
+#include "colorstring.h"
 
 // General arrays used for character creation
 

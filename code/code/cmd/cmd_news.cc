@@ -13,6 +13,7 @@
 
 #include "stdsneezy.h"
 #include "statistics.h"
+#include <fstream>
 
 class newsFileList {
   public:

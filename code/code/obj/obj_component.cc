@@ -7,6 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "low.h"
 #include "materials.h"
 #include "shop.h"
 #include "database.h"
@@ -16,6 +17,7 @@
 #include "shopowned.h"
 #include "corporation.h"
 #include "obj_mergeable.h"
+#include "monster.h"
 
 vector<compPlace>component_placement(0);
 vector<compInfo>CompInfo(0);

@@ -6,6 +6,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "low.h"
 #include "obj_scroll.h"
 
 int task_scribe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *)

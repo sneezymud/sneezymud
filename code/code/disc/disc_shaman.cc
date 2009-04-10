@@ -1,4 +1,8 @@
 #include "stdsneezy.h"
+#include "person.h"
+#include "low.h"
+#include "colorstring.h"
+#include "monster.h"
 #include "disease.h"
 #include "combat.h"
 #include "disc_shaman.h"

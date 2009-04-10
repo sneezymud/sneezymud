@@ -1,4 +1,8 @@
+#include <errno.h>
+
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "unistd.h"
 #include "obj_note.h"
 TNote::TNote() :

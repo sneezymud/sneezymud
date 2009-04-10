@@ -1,4 +1,5 @@
 #include "stdsneezy.h"
+#include "low.h"
 #include "disc_adv_adventuring.h"
 #include "disease.h"
 #include "combat.h"

@@ -12,9 +12,12 @@ extern "C" {
 }
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "mail.h"
 #include "materials.h"
 #include "combat.h"
+#include "person.h"
 #include "statistics.h"
 #include "spec_mobs.h"
 #include "database.h"

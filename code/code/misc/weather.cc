@@ -9,6 +9,9 @@
 #include <cmath>
 
 #include "stdsneezy.h"
+#include "person.h"
+#include "colorstring.h"
+#include "monster.h"
 #include "obj_trash_pile.h"
 #include "process.h"
 

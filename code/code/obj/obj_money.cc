@@ -5,6 +5,8 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "statistics.h"
 #include "obj_player_corpse.h"
 #include "obj_money.h"

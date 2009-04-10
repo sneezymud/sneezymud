@@ -7,11 +7,14 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "configuration.h"
 #include "materials.h"
 #include "combat.h"
 #include "disease.h"
 #include "mail.h"
+#include "person.h"
 #include "disc_monk.h"
 #include "obj_component.h"
 #include "obj_drug.h"

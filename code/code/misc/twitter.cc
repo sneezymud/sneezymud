@@ -1,4 +1,5 @@
 #include "stdsneezy.h"
+#include "colorstring.h"
 #include "configuration.h"
 #include <curl/curl.h>
 #include <curl/types.h>

@@ -9,8 +9,12 @@
 #include <dirent.h>
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "colorstring.h"
+#include "monster.h"
 #include "disc_looting.h"
 #include "combat.h"
+#include "person.h"
 #include "obj_component.h"
 #include "cmd_dissect.h"
 #include "disc_alchemy.h"

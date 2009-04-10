@@ -6,11 +6,13 @@
 *************************************************************************/
 
 #include <unistd.h>
+#include <errno.h>
 
 #include "stdsneezy.h"
 #include "database.h"
 #include "charfile.h"
 #include "account.h"
+#include "monster.h"
 
 static void renamePersonalizeFix(TThing *t, const char * orig_name, const char * new_name)
 {

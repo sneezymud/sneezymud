@@ -7,6 +7,7 @@
 
 
 #include "stdsneezy.h"
+#include "monster.h"
 #include "range.h"
 #include "disease.h"
 #include "combat.h"

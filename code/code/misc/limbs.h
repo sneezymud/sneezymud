@@ -32,6 +32,8 @@
 #ifndef __LIMBS_H
 #define __LIMBS_H
 
+#include "discipline.h"
+
 const int LIMB_NONE	= -1;
 
 const int LIMB_HEAD	= 0;

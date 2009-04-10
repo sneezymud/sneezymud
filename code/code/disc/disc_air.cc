@@ -6,6 +6,8 @@
 
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "disc_air.h"
 #include "disease.h"
 #include "combat.h"

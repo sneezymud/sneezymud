@@ -10,6 +10,7 @@
 
 #include <sys/time.h>
 #include "stdsneezy.h"
+#include "person.h"
 
 void checkpointing(int);
 void shutdownRequest(int);

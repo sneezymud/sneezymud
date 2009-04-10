@@ -1,4 +1,6 @@
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "combat.h"
 #include "obj_base_container.h"
 #include "obj_table.h"

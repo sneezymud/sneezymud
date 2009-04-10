@@ -10,6 +10,8 @@
 #include "obj_open_container.h"
 #include "obj_component.h"
 #include "loadset.h"
+#include "person.h"
+#include "monster.h"
 
 // We sometimes use steal as a mechanism to reposess items from mortals
 // invisibly.  Not a great thing to do, but necessary and has a valid

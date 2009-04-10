@@ -1,4 +1,5 @@
 #include "stdsneezy.h"
+#include "low.h"
 #include "obj_gas.h"
 #include "pathfinder.h"
 #include "obj_portal.h"

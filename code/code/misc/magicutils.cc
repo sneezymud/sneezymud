@@ -1,10 +1,16 @@
 // magicutils.cc
 
+#include <cmath>
+
 #include "stdsneezy.h"
+#include "low.h"
+#include "low.h"
+#include "monster.h"
 #include "disease.h"
 #include "obj_open_container.h"
 #include "obj_opal.h"
 #include "obj_component.h"
+#include "person.h"
 #include "obj_key.h"
 #include "being.h"
 

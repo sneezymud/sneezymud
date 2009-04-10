@@ -8,6 +8,7 @@
 #include "stdsneezy.h"
 #include "combat.h"
 #include "disc_mindbody.h"
+#include "monster.h"
 
 static int feignDeath(TBeing * caster)
 {

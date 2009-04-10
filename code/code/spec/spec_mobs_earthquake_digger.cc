@@ -10,6 +10,7 @@
 ******************************************************************************/
 
 #include "stdsneezy.h"
+#include "monster.h"
 
 int tunnelerEarthquake(TBeing *ch, cmdTypeT tCmd, const char *tArg, TMonster *tMyself, TObj *tObj)
 {

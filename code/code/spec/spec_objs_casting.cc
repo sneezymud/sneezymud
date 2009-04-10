@@ -1,5 +1,7 @@
 #include "stdsneezy.h"
+#include "low.h"
 #include "obj_money.h"
+#include "person.h"
 #include "obj_table.h"
 #include "obj_portal.h"
 

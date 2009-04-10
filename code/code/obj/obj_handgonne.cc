@@ -3,6 +3,7 @@
 #include "obj_general_weapon.h"
 #include "obj_base_weapon.h"
 #include "obj_gun.h"
+#include "colorstring.h"
 #include "range.h"
 #include "obj_arrow.h"
 #include "obj_tool.h"

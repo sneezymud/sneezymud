@@ -46,7 +46,9 @@
 
 #include "stdsneezy.h"
 #include "discipline.h"
+#include "monster.h"
 #include "spelltask.h"
+#include "person.h"
 #include "disc_air.h"
 #include "disc_alchemy.h"
 #include "disc_shaman_armadillo.h"

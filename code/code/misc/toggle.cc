@@ -8,7 +8,10 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "configuration.h"
+#include "person.h"
 #include "account.h"
 #include "obj_player_corpse.h"
 

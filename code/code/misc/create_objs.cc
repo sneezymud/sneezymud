@@ -16,11 +16,13 @@ extern "C" {
 #include <algorithm>
 
 #include "stdsneezy.h"
+#include "monster.h"
 #include "obj_component.h"
 #include "dirsort.h"
 #include "materials.h"
 #include "statistics.h"
 #include "database.h"
+#include "person.h"
 #include "obj_open_container.h"
 #include "obj_trash.h"
 #include "obj_book.h"

@@ -10,7 +10,10 @@
 ******************************************************************************/
 
 #include "stdsneezy.h"
+#include "monster.h"
 #include "account.h"
+#include "person.h"
+#include "low.h"
 
 void doSaveMOEdit(TBeing *ch, const char *tArg)
 {

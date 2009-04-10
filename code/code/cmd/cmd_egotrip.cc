@@ -16,6 +16,8 @@
 #include "disease.h"
 #include "obj_portal.h"
 #include "garble.h"
+#include "monster.h"
+#include "person.h"
 
 
 class ego_imm_blessing {

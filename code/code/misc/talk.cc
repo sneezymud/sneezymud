@@ -9,6 +9,9 @@
 #include <stdarg.h>
 
 #include "stdsneezy.h"
+#include "colorstring.h"
+#include "monster.h"
+#include "person.h"
 #include "disease.h"
 #include "obj_pen.h"
 #include "obj_note.h"

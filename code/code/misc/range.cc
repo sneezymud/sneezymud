@@ -11,6 +11,8 @@
 #include <map>
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "range.h"
 #include "combat.h"
 #include "obj_quiver.h"

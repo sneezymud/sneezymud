@@ -13,6 +13,7 @@
 #include "spelltask.h"
 #include "disc_shaman_skunk.h"
 #include "obj_magic_item.h"
+#include "person.h"
 
 int deathMist(TBeing *caster, int level, sh_int bKnown)
 {

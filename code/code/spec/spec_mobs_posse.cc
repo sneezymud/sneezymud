@@ -7,6 +7,8 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "paths.h"
 
 int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)

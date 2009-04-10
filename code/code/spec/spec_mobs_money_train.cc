@@ -1,4 +1,6 @@
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "paths.h"
 
 const unsigned int MT_GUARD=31762;

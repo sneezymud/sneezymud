@@ -6,11 +6,16 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <cmath>
+
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "range.h"
 #include "disease.h"
 #include "statistics.h"
 #include "shop.h"
+#include "person.h"
 #include "being.h"
 #include "spec_mobs.h"
 #include "database.h"

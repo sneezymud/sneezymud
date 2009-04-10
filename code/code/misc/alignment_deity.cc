@@ -6,6 +6,9 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "person.h"
+#include "low.h"
+#include "monster.h"
 
 // returns DELETE_THIS if deity went boom
 int personalize_object(TBeing *deity, TBeing *ch, int virt, int decay)

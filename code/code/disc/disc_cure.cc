@@ -1,4 +1,5 @@
 #include "stdsneezy.h"
+#include "colorstring.h"
 #include "disease.h"
 #include "combat.h"
 #include "disc_cures.h"

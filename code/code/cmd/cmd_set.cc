@@ -9,6 +9,8 @@
 #include "stdsneezy.h"
 #include "charfile.h"
 #include "statistics.h"
+#include "person.h"
+#include "monster.h"
 
 void TBeing::doSet(const char *)
 {

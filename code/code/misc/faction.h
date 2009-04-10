@@ -8,6 +8,9 @@
 #ifndef __FACTION_H
 #define __FACTION_H
 
+// some faction code is bad  (faction%) without fully enabled factions
+#define FACTIONS_IN_USE 0
+
 
 const int FACT_LEADER_SLOTS  = 4; // leader = 0, 3 subleaders
 

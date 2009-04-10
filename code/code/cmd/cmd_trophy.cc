@@ -9,6 +9,7 @@
 #include "cmd_trophy.h"
 #include "database.h"
 #include "process.h"
+#include "person.h"
 
 TTrophy::TTrophy(sstring n) :
   db(new TDatabase(DB_SNEEZY)),

@@ -6,6 +6,8 @@
 
 
 #include "stdsneezy.h"
+#include "colorstring.h"
+#include "low.h"
 #include "obj_pool.h"
 #include "liquids.h"
 #include "materials.h"

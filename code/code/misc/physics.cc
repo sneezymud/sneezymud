@@ -6,6 +6,7 @@
 *************************************************************************/
 
 #include "stdsneezy.h"
+#include "low.h"
 #include "combat.h"
 #include "materials.h"
 

@@ -6,6 +6,7 @@
 
 
 #include "stdsneezy.h"
+#include "monster.h"
 #include "database.h"
 
 /* **********************************************************************

@@ -18,6 +18,8 @@
 // forth in order to echo things properly.
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "combat.h"
 #include "games.h"
 #include "client.h"

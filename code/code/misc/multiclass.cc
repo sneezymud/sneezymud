@@ -6,6 +6,7 @@
 
 
 #include "stdsneezy.h"
+#include "person.h"
 
 int NumClasses(int Class)
 {

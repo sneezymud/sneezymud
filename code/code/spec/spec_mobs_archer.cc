@@ -3,6 +3,7 @@
 #include "obj_arrow.h"
 #include "obj_quiver.h"
 #include "being.h"
+#include "monster.h"
 
 #define MAX_RANGE 3
 

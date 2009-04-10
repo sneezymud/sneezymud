@@ -1,7 +1,7 @@
 #include "stdsneezy.h"
 #include "database.h"
 #include "corporation.h"
-
+#include "monster.h"
 
 sstring TCorporation::getName()
 {

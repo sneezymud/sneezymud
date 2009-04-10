@@ -6,6 +6,7 @@
 
 
 #include "stdsneezy.h"
+#include "monster.h"
 
 int TMonster::remHated(const TBeing *hatee, const char *n)
 {

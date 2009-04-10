@@ -1,8 +1,10 @@
 #include <cmath>
 
 #include "stdsneezy.h"
+#include "monster.h"
 #include "statistics.h"
 #include "obj_component.h"
+#include "person.h"
 #include "database.h"
 #include "spec_mobs.h"
 #include "materials.h"

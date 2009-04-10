@@ -7,6 +7,8 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "obj_light.h"
 
 TLight::TLight() :

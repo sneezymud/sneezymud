@@ -2,6 +2,7 @@
 
 #include "stdsneezy.h"
 #include "configuration.h"
+#include "person.h"
 #include "charfile.h"
 #include "code/tests/ValueTraits.h"
 #include "connect.h"

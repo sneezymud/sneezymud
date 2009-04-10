@@ -1,5 +1,6 @@
 #include "stdsneezy.h"
-
+#include "person.h"
+#include "race.h"
 
 bool TBeing::hasQuestBit(int value) const
 {

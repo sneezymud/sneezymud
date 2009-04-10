@@ -1,4 +1,5 @@
 #include "stdsneezy.h"
+#include "monster.h"
 #include "shop.h"
 #include "obj_note.h"
 #include "shopowned.h"

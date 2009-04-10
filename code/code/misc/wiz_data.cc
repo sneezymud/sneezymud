@@ -11,6 +11,8 @@ extern "C" {
 }
 
 #include "stdsneezy.h"
+#include "monster.h"
+#include "person.h"
 
 class wizSaveData {
   public:

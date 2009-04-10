@@ -8,11 +8,14 @@
  *******************************************************************/
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "disease.h"
 #include "combat.h"
 #include "spelltask.h"
 #include "disc_shaman_frog.h"
 #include "obj_magic_item.h"
+#include "person.h"
 
 int vampireTransform(TBeing *ch)
 {

@@ -1,4 +1,5 @@
 #include "stdsneezy.h"
+#include "low.h"
 #include "spec_objs_sweeps.h"
 #include "disc_sorcery.h"
 

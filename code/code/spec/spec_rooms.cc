@@ -17,12 +17,15 @@
 #include <cmath>
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "configuration.h"
 #include "statistics.h"
 #include "obj_food.h"
 #include "obj_note.h"
 #include "obj_portal.h"
 #include "spec_rooms.h"
+#include "person.h"
 
 
 int TRoom::checkSpec(TBeing *ch, cmdTypeT cmd, const char *arg, TThing *)

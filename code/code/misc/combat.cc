@@ -9,11 +9,15 @@
 #include <cmath>
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "colorstring.h"
+#include "monster.h"
 #include "configuration.h"
 #include "materials.h"
 #include "range.h"
 #include "combat.h"
 #include "statistics.h"
+#include "person.h"
 #include "disease.h"
 #include "mail.h"
 #include "shop.h"

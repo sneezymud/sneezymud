@@ -6,12 +6,16 @@
 
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "colorstring.h"
+#include "monster.h"
 #include "disease.h"
 #include "combat.h"
 #include "spelltask.h"
 #include "disc_spirit.h"
 #include "obj_magic_item.h"
 #include "combat.h"
+#include "person.h"
 
 int knot(TBeing *caster, TBeing *victim)
 {

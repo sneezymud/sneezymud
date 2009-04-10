@@ -1,4 +1,6 @@
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "paths.h"
 #include "obj_base_corpse.h"
 #include "obj_player_corpse.h"

@@ -18,9 +18,12 @@ extern "C" {
 #include <algorithm>
 
 #include "stdsneezy.h"
+#include "low.h"
 #include "configuration.h"
 #include "combat.h"
 #include "dirsort.h"
+#include "person.h"
+#include "monster.h"
 
 void seditAddMenu        (TBeing *, TMonster *, const char *, int);
 void seditDeleteMenu     (TBeing *, TMonster *, const char *, int);

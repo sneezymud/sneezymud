@@ -1,4 +1,6 @@
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "disease.h"
 #include "spelltask.h"
 #include "combat.h"
@@ -7,6 +9,7 @@
 #include "obj_food.h"
 #include "obj_portal.h"
 #include "obj_drinkcon.h"
+#include "person.h"
 #include "obj_magic_item.h"
 #include "materials.h"
 

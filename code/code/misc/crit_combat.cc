@@ -5,8 +5,11 @@
 //      "crit_combat.cc" - All functions and routines related to combat
 //
 //////////////////////////////////////////////////////////////////////////
+#include <cmath>
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "disease.h"
 #include "combat.h"
 #include "statistics.h"
@@ -16,6 +19,7 @@
 #include "obj_drinkcon.h"
 #include "database.h"
 #include "materials.h"
+#include "person.h"
 
 // adjust the crit table for fighting barehand.  All crit types are not equal,
 // but for barehand we want them to appear so.  This means nerfing slash barehand crits.

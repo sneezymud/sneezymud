@@ -4,9 +4,12 @@ extern "C" {
 #include <cmath>
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "statistics.h"
 #include "games.h"
 #include "obj_base_container.h"
+#include "person.h"
 #include "obj_food.h"
 #include "obj_bed.h"
 #include "obj_drinkcon.h"

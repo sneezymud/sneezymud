@@ -14,6 +14,9 @@
 #include "obj_base_cup.h"
 #include "obj_drinkcon.h"
 #include "liquids.h"
+#include "colorstring.h"
+#include "person.h"
+#include "monster.h"
 
 void TBaseCup::lookObj(TBeing *ch, int) const
 {

@@ -8,6 +8,7 @@
 
 
 #include "stdsneezy.h"
+#include "monster.h"
 #include "configuration.h"
 #include "combat.h"
 #include "disease.h"

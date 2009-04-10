@@ -12,6 +12,9 @@
 //  return DELETE_THIS if this dies, or DELETE_VICT if doer dies
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "colorstring.h"
+#include "monster.h"
 #include "combat.h"
 #include "materials.h"
 #include "spec_mobs.h"

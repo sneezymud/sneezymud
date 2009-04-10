@@ -1,5 +1,6 @@
 #include "stdsneezy.h"
 #include "range.h"
+#include "colorstring.h"
 #include "obj_bow.h"
 #include "obj_arrow.h"
 #include "shop.h"

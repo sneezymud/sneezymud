@@ -8,6 +8,7 @@
 // trash.cc
 
 #include "stdsneezy.h"
+#include "monster.h"
 #include "obj_trash.h"
 
 TTrash::TTrash() :

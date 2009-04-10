@@ -6,6 +6,9 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "person.h"
+#include "monster.h"
 #include "configuration.h"
 #include "shop.h"
 #include "statistics.h"

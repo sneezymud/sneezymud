@@ -1,4 +1,5 @@
 #include "stdsneezy.h"
+#include "monster.h"
 #include "database.h"
 #include "corporation.h"
 #include "shop.h"

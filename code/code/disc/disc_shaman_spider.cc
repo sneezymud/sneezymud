@@ -8,6 +8,8 @@
  *******************************************************************/
  
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "disease.h"
 #include "combat.h"
 #include "spelltask.h"

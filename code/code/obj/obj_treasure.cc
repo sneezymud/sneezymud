@@ -8,6 +8,7 @@
 // treasure.cc
 
 #include "stdsneezy.h"
+#include "low.h"
 #include "obj_treasure.h"
 #include "database.h"
 #include "obj_base_container.h"

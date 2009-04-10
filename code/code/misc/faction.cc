@@ -13,7 +13,10 @@ extern "C" {
 #include <cmath>
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "charfile.h"
+#include "person.h"
 #include "database.h"
 #include "corporation.h"
 #include "process.h"

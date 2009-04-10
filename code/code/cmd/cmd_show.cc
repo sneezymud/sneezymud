@@ -9,9 +9,11 @@
 #include <dirent.h>
 
 #include "stdsneezy.h"
+#include "colorstring.h"
 #include "configuration.h"
 #include "disc_looting.h"
 #include "materials.h"
+#include "monster.h"
 #include "combat.h"
 #include "obj_component.h"
 #include "cmd_dissect.h"
@@ -22,6 +24,7 @@
 #include "database.h"
 #include "obj_commodity.h"
 #include "spec_mobs.h"
+#include "person.h"
 
 extern int getObjLoadPotential(const int obj_num);
 

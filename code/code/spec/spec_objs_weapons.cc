@@ -1,4 +1,5 @@
 #include "stdsneezy.h"
+#include "low.h"
 #include "pathfinder.h"
 #include "materials.h"
 #include "obj_trap.h"

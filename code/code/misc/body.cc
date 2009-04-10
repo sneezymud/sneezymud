@@ -2,6 +2,7 @@
 //
 //  Lets see if I can make some magic.
 
+#include <fstream>
 #include "stdsneezy.h"
 #include "body.h"
 #include "race.h"

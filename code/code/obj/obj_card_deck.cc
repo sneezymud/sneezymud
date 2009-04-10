@@ -7,6 +7,7 @@
 
 #include "stdsneezy.h"
 #include "obj_tooth_necklace.h"
+#include "monster.h"
 #include "obj_card_deck.h"
 
 void TBeing::doShuffle(const sstring &arg)

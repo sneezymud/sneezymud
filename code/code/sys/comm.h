@@ -8,6 +8,8 @@
 #ifndef __COMM_H
 #define __COMM_H
 
+#include "ansi.h"
+
 enum actToParmT {
      TO_ROOM,
      TO_VICT,

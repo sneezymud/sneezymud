@@ -10,6 +10,7 @@
 
 #include <csignal>
 #include <cstdarg>
+#include <errno.h>
 
 extern "C" {
 #include <unistd.h>
@@ -34,13 +35,16 @@ int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 }
 
 #include "stdsneezy.h"
+#include "monster.h"
 #include "configuration.h"
 #include "statistics.h"
 #include "database.h"
 #include "spelltask.h"
 #include "systemtask.h"
 #include "socket.h"
+#include "person.h"
 #include "weather.h"
+#include "colorstring.h"
 #include "obj_gas.h"
 #include "obj_vehicle.h"
 #include "obj_trash_pile.h"
@@ -54,6 +58,7 @@ int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 #include "shopaccounting.h"
 #include "shopowned.h"
 #include "obj_commodity.h"
+#include "low.h"
 
 int maxdesc, avail_descs;  
 bool Shutdown = 0;               // clean shutdown

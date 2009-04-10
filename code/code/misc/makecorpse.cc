@@ -7,6 +7,8 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "configuration.h"
 #include "combat.h"
 #include "obj_component.h"

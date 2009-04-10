@@ -6,17 +6,22 @@
 
 
 #include <cstdarg>
+#include <cmath>
 
 extern "C" {
 #include <unistd.h>
 }
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "combat.h"
 #include "disease.h"
 #include "range.h"
 #include "connect.h"
 #include "shop.h"
+#include "person.h"
+#include "colorstring.h"
 #include "obj_spellbag.h"
 #include "obj_bag.h"
 #include "obj_table.h"

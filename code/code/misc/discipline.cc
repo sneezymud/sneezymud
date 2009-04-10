@@ -2,10 +2,12 @@
 
 #include <cmath>
 #include "stdsneezy.h"
+#include "monster.h"
 #include "disease.h"
 #include "obj_component.h"
 #include "combat.h"
 #include "disc_mage.h"
+#include "person.h"
 #include "disc_cleric.h"
 #include "disc_soldiering.h"
 #include "disc_blacksmithing.h"

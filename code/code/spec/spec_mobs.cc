@@ -33,11 +33,17 @@
       return DELETE_THIS if second TBeing gone
 #endif
 
+#include <errno.h>
+
+
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "configuration.h"
 #include "account.h"
 #include "combat.h"
 #include "disease.h"
+#include "person.h"
 #include "disc_aegis.h"
 #include "materials.h"
 #include "disc_wrath.h"

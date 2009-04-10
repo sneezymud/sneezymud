@@ -1,4 +1,6 @@
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "paths.h"
 #include "pathfinder.h"
 #include "obj_commodity.h"

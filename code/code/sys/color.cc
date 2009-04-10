@@ -7,6 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "person.h"
 #include "account.h"
 
 void TBeing::doPrompt(const char *arg)

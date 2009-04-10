@@ -19,6 +19,7 @@
 #include "obj_base_light.h"
 #include "obj_base_clothing.h"
 #include "materials.h"
+#include "monster.h"
 
 TObj * findShopObjForCompare(TBeing *ch, sstring StObject)
 {

@@ -10,6 +10,8 @@
 #include <cmath>
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "materials.h"
 #include "disease.h"
 #include "shop.h"

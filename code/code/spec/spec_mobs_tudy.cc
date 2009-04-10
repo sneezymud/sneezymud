@@ -1,4 +1,6 @@
 #include "stdsneezy.h"
+#include "monster.h"
+#include "person.h"
 
 const int OBJ_TUDY_BILGE        = 9635;
 const int OBJ_TUDY_SHACKLE_KEY1 = 9636;

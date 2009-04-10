@@ -9,6 +9,7 @@
 // Peel
 
 #include "stdsneezy.h"
+#include "monster.h"
 #include "obj_keyring.h"
 #include "obj_key.h"
 TKeyring::TKeyring() :

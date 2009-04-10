@@ -6,8 +6,11 @@
 //  
 //////////////////////////////////////////////////////////////////////////
 
+#include <cmath>
+
 #include "stdsneezy.h"
 #include "configuration.h"
+#include "monster.h"
 #include "materials.h"
 #include "loadset.h"
 #include "obj_armor.h"

@@ -1,4 +1,5 @@
 #include "stdsneezy.h"
+#include "low.h"
 #include "games.h"
 
 HiLoGame gHiLo;

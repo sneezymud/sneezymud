@@ -59,14 +59,18 @@
 //    if item1 goes poof, return DELETE_THIS
 //  
 
+#include <cmath>
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "disease.h"
 #include "database.h"
 #include "shop.h"
 #include "obj_base_corpse.h"
 #include "obj_open_container.h"
 #include "obj_base_clothing.h"
+#include "person.h"
 #include "obj_trap.h"
 #include "obj_portal.h"
 #include "obj_symbol.h"

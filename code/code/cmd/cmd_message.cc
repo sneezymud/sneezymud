@@ -9,6 +9,7 @@
 
 #include <unistd.h>
 #include "stdsneezy.h"
+#include "colorstring.h"
 
 messageTypeT mapMessageFromFile(const char tString);
 sstring mapMessageToFile(TMessages *tMsgStore, messageTypeT tType);

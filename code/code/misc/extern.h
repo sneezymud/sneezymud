@@ -8,11 +8,11 @@
 #ifndef __EXTERN_H
 #define __EXTERN_H
 
-#ifndef __BEING_H
-#error Please include BEING.H prior to inclusion of EXTERN.H
-#endif
 
 #include "wiz_powers.h"
+#include "charfile.h"
+#include "room.h"
+#include "obj_drug.h"
 
 extern "C" {
 #if 0

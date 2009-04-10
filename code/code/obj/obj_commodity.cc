@@ -7,7 +7,11 @@
 
 // commodity.cc
 
+#include <cmath>
+
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "materials.h"
 #include "shop.h"
 #include "obj_commodity.h"

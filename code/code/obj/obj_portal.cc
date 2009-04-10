@@ -10,6 +10,7 @@
 
 #include "stdsneezy.h"
 #include "obj_portal.h"
+#include "person.h"
 
 
 

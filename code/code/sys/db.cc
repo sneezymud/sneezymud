@@ -7,12 +7,17 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "person.h"
+#include "monster.h"
 #include "configuration.h"
 
 #include <sys/types.h>
 #include <dirent.h>
+#include <cmath>
 
 #include "socket.h"
+#include "colorstring.h"
 #include "statistics.h"
 #include "help.h"
 #include "mail.h"

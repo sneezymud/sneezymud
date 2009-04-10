@@ -66,6 +66,9 @@
 #include "disease.h"
 #include "stats.h"
 #include "room.h"
+#include "immunity.h"
+#include "discipline.h"
+#include "spell2.h"
 
 class TTrophy;
 class TWindow;

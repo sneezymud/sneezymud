@@ -1,4 +1,6 @@
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "obj_component.h"
 #include "disc_sorcery.h"
 #include "disc_earth.h"

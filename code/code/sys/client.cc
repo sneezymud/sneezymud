@@ -16,9 +16,13 @@
 #endif
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "person.h"
+#include "monster.h"
 #include "configuration.h"
 #include "account.h"
 #include "charfile.h"
+#include "person.h"
 #include "statistics.h"
 #include "combat.h"
 #include "database.h"

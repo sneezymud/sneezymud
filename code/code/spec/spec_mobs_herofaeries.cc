@@ -1,4 +1,7 @@
 #include "stdsneezy.h"
+#include "low.h"
+#include "person.h"
+#include "monster.h"
 #include "db.h"
 #include "database.h"
 #include "spec_mobs.h"

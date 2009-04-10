@@ -1,4 +1,5 @@
 #include "stdsneezy.h"
+#include "monster.h"
 #include "obj_trap.h"
 #include "spec_mobs.h"
 

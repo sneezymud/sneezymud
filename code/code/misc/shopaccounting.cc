@@ -5,6 +5,7 @@
 #include "corporation.h"
 #include "obj_note.h"
 #include "shopaccounting.h"
+#include "monster.h"
 
 // pull data from archive
 TShopJournal::TShopJournal(int shop, int y)

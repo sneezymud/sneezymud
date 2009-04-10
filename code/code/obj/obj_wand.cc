@@ -1,6 +1,7 @@
 // wand.cc
 
 #include "stdsneezy.h"
+#include "monster.h"
 #include "obj_magic_item.h"
 #include "obj_wand.h"
 #include "materials.h"

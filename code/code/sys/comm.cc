@@ -9,8 +9,11 @@
 
 
 #include "stdsneezy.h"
+#include "person.h"
+#include "monster.h"
 #include "account.h"
 #include "configuration.h"
+#include "colorstring.h"
 #include "systemtask.h"
 #include "socket.h"
 #include "spec_mobs.h"

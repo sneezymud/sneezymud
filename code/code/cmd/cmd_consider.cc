@@ -10,6 +10,8 @@
 
 #include "stdsneezy.h"
 #include "cmd_trophy.h"
+#include "person.h"
+#include "monster.h"
 
 void TBeing::doConsider(const char *argument)
 {

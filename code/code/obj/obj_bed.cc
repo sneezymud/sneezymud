@@ -1,6 +1,8 @@
 // bed.cc
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "games.h"
 #include "obj_bed.h"
 #include "obj_base_corpse.h"

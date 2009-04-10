@@ -8,6 +8,8 @@
 
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "statistics.h"
 #include "shop.h"
 #include "database.h"

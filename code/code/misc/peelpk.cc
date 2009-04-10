@@ -9,6 +9,8 @@
 #include <ctime>
 
 #include "stdsneezy.h"
+#include "person.h"
+#include "monster.h"
 #include "obj_gun.h"
 
 

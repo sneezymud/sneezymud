@@ -6,8 +6,11 @@
 
 
 // symbol.cc
+#include <cmath>
+
 
 #include "stdsneezy.h"
+#include "monster.h"
 #include "materials.h"
 #include "shop.h"
 #include "obj_symbol.h"

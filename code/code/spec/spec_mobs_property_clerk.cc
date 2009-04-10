@@ -1,5 +1,6 @@
 #include "stdsneezy.h"
 #include "database.h"
+#include "monster.h"
 
 int propertyClerk(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, TObj *)
 {

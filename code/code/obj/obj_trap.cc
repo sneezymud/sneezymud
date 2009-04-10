@@ -6,6 +6,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "monster.h"
 #include "disc_looting.h"
 #include "disease.h"
 #include "obj_trap.h"

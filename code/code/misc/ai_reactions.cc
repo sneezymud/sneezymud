@@ -15,6 +15,7 @@
 //  return values are unimportant.  if char(s) are lost, return a -1
 
 #include "stdsneezy.h"
+#include "monster.h"
 #include "combat.h"
 
 int TMonster::aiGrinnedAt(TBeing *doer)

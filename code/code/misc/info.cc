@@ -7,6 +7,9 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "colorstring.h"
+#include "monster.h"
 
 #include <algorithm>
 #include <sys/types.h>
@@ -21,6 +24,7 @@
 #include "obj_component.h"
 #include "database.h"
 #include "room.h"
+#include "person.h"
 #include "shop.h"
 #include "liquids.h"
 #include "spec_mobs.h"

@@ -1,4 +1,6 @@
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "obj_tool.h"
 #include "obj_plant.h"
 

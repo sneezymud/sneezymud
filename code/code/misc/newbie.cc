@@ -7,6 +7,9 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "person.h"
+#include "colorstring.h"
+#include "monster.h"
 #include "account.h"
 #include "cmd_message.h"
 #include "spec_mobs.h"

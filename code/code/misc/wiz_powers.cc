@@ -2,6 +2,7 @@
 
 #include "stdsneezy.h"
 #include "database.h"
+#include "person.h"
 
 bool TBeing::powerCheck(wizPowerT wpt) const
 {

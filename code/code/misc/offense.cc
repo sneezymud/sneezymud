@@ -7,6 +7,8 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "games.h"
 #include "combat.h"
 #include "obj_spellbag.h"

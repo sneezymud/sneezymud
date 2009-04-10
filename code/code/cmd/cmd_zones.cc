@@ -8,6 +8,7 @@
 
 
 #include <algorithm>
+#include <cmath>
 
 #include "stdsneezy.h"
 #include "database.h"

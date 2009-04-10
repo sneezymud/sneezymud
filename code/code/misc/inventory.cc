@@ -7,12 +7,15 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "games.h"
 #include "statistics.h"
 #include "disc_looting.h"
 #include "shop.h"
 #include "shopowned.h"
 #include "materials.h"
+#include "person.h"
 #include "obj_spellbag.h"
 #include "obj_keyring.h"
 #include "obj_base_corpse.h"

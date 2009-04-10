@@ -8,6 +8,7 @@
 // room.cc
 
 #include "stdsneezy.h"
+#include "monster.h"
 
 bool TRoom::isCitySector() const
 {

@@ -17,6 +17,8 @@
 //   it was some random PC that did nothing. */
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "combat.h"
 #include "spec_mobs.h"
 

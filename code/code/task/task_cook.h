@@ -1,6 +1,8 @@
 #ifndef __TASK_COOK_H
 #define __TASK_COOK_H
 
+#include "low.h"
+
 const int TYPE_VNUM=0;
 const int TYPE_LIQUID=1;
 const int TYPE_MATERIAL=2;

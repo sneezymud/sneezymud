@@ -12,9 +12,14 @@ extern "C" {
 #include <dirent.h>
 }
 
+#include <errno.h>
+
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "configuration.h"
 #include "account.h"
+#include "person.h"
 #include "charfile.h"
 #include "shop.h"
 #include "mail.h"

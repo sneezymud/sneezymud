@@ -8,6 +8,9 @@
 
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "colorstring.h"
+#include "monster.h"
 #include "disease.h"
 #include "materials.h"
 #include "combat.h"
@@ -18,6 +21,7 @@
 #include "obj_component.h"
 #include "obj_magic_item.h"
 #include "obj_scroll.h"
+#include "person.h"
 
 int identify(TBeing *caster, TObj *obj, int, sh_int bKnown)
 {

@@ -7,10 +7,13 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "combat.h"
 #include "statistics.h"
 #include "obj_base_corpse.h"
 #include "database.h"
+#include "person.h"
 #include "cmd_trophy.h"
 
 // there is another one of these defines in combat.cc

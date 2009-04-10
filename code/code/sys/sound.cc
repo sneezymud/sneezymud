@@ -6,7 +6,10 @@
 
 
 #include "stdsneezy.h"
+#include "low.h"
 #include "account.h"
+#include "colorstring.h"
+#include "monster.h"
 
 int RecGetObjRoom(const TThing *obj)
 {

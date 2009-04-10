@@ -1,4 +1,5 @@
 #include "stdsneezy.h"
+#include "monster.h"
 #include "combat.h"
 
 extern void startChargeTask(TBeing *, const char *);

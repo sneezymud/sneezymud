@@ -6,6 +6,7 @@
 *************************************************************************/
 
 #include "stdsneezy.h"
+#include "monster.h"
 #include "combat.h"
 #include "obj_corpse.h"
 #include "materials.h"

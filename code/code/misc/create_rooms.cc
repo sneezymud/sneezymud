@@ -11,9 +11,12 @@
  *****************************************************************************/
 
 #include "stdsneezy.h"
+#include "colorstring.h"
+#include "low.h"
 #include "obj_table.h"
 #include "obj_seethru.h"
 #include "database.h"
+#include "person.h"
 
 const char *room_fields[] =
 {

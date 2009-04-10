@@ -2,6 +2,8 @@
 // Part of SneezyMUD
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "disease.h"
 #include "combat.h"
 #include "disc_wrath.h"

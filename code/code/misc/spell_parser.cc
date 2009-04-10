@@ -8,7 +8,8 @@
 /////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
-
+#include "low.h"
+#include "monster.h"
 #include "disc_shaman_armadillo.h"
 #include "disc_shaman_healing.h"
 #include "disc_air.h"

@@ -1,6 +1,7 @@
 // see_thru.cc
 
 #include "stdsneezy.h"
+#include "low.h"
 #include "obj_seethru.h"
 #include "obj_window.h"
 

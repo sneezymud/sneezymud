@@ -10,6 +10,8 @@
 *************************************************************************/
 
 #include "stdsneezy.h"
+#include "low.h"
+#include "monster.h"
 #include "games.h"
 
 HeartsGame gHearts;
