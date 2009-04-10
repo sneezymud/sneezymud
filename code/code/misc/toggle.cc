@@ -8,6 +8,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "configuration.h"
 #include "obj_player_corpse.h"
 
 TOGINFO TogIndex[MAX_TOG_INDEX + 1] =

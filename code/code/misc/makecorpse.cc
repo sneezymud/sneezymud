@@ -7,6 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "configuration.h"
 #include "combat.h"
 #include "obj_component.h"
 #include "obj_base_corpse.h"

@@ -9,6 +9,7 @@
 #include <dirent.h>
 
 #include "stdsneezy.h"
+#include "configuration.h"
 #include "disc_looting.h"
 #include "combat.h"
 #include "obj_component.h"

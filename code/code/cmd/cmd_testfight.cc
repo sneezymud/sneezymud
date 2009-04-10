@@ -19,6 +19,7 @@ int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 #endif
 
 #include "stdsneezy.h"
+#include "configuration.h"
 #include "combat.h"
 #include "spelltask.h"
 

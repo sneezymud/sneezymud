@@ -1,4 +1,5 @@
 #include "stdsneezy.h"
+#include "configuration.h"
 #include "process.h"
 #include "mail.h"
 

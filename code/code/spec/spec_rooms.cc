@@ -17,6 +17,7 @@
 #include <cmath>
 
 #include "stdsneezy.h"
+#include "configuration.h"
 #include "statistics.h"
 #include "obj_food.h"
 #include "obj_note.h"

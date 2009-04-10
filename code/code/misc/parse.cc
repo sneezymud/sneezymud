@@ -12,6 +12,7 @@ extern "C" {
 }
 
 #include "stdsneezy.h"
+#include "configuration.h"
 #include "socket.h"
 #include "mail.h"
 

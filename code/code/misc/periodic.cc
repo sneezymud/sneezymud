@@ -7,6 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "configuration.h"
 #include "combat.h"
 #include "disease.h"
 #include "mail.h"

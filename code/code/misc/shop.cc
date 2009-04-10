@@ -3,6 +3,7 @@
 #include <algorithm>
 
 #include "stdsneezy.h"
+#include "configuration.h"
 #include "shop.h"
 #include "statistics.h"
 #include "database.h"
@@ -702,13 +703,13 @@ bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int shop_nr)
   if (!ch->isImmortal() && temp1->objectSell(ch, keeper)) {
     return TRUE;
   }
-#if NO_DAMAGED_ITEMS_SHOP
-  if (temp1->getStructPoints() != temp1->getMaxStructPoints()) {
-    buf = format("%s I don't buy damaged goods.") % ch->getName();
-    keeper->doTell(buf);
-    return TRUE;
+  if(NO_DAMAGED_ITEMS_SHOP){
+    if (temp1->getStructPoints() != temp1->getMaxStructPoints()) {
+      keeper->doTell(ch->getName(), "I don't buy damaged goods.");
+      return TRUE;
+    }
   }
-#endif
+
   if (!temp1->stuff.empty()) {
     keeper->doTell(ch->getName(), "Sorry, I don't buy items that contain other items.");
     return TRUE;
@@ -875,11 +876,9 @@ int TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
       cost *= getStructPoints();
       cost /= getMaxStructPoints();
     }
-#if NO_DAMAGED_ITEMS_SHOP
-    buf = format("%s It's been damaged, but I guess I can buy it as scrap.") %
-      fname(ch->name);
-    keeper->doTell(buf);
-#endif
+    if(NO_DAMAGED_ITEMS_SHOP){
+      keeper->doTell(fname(ch->name), "It's been damaged, but I guess I can buy it as scrap.");
+    }
   }
   max(cost, 1);   // at least 1 talen 
   if (keeper->getMoney() < cost) {
@@ -1402,11 +1401,10 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
     cost /= 10;
     cost *= getStructPoints();
     cost /= getMaxStructPoints();
-#if NO_DAMAGED_ITEMS_SHOP
-    buf = format("%s It's been damaged, but I guess I can buy it as scrap.") %
-             fname(ch->name);
-    keeper->doTell(buf);
-#endif
+    if(NO_DAMAGED_ITEMS_SHOP){
+      keeper->doTell(fname(ch->name), "It's been damaged, but I guess I can buy it as scrap.");
+    }
+
   }
   max(cost, 1);  // at least 1 talen
   if(willbuy){

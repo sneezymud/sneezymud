@@ -6,6 +6,7 @@
 
 
 #include "stdsneezy.h"
+#include "configuration.h"
 #include "statistics.h"
 #include "database.h"
 

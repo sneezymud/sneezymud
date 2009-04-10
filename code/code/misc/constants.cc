@@ -2230,17 +2230,3 @@ const char * heraldcolors[] =
 };
 
 
-// some factors from stdsneezy.h
-const int PROD_GAMEPORT = 7900;
-const int PROD_XMLPORT = 7901;
-const int BETA_GAMEPORT = 5678;
-const int ALPHA_GAMEPORT = 6969;
-const int BUILDER_GAMEPORT = 8900;
-      int GAMMA_GAMEPORT = 6961; // Maror - quick boot! (skips zones) -Updated to allow otf swapping -Lapsos
-const int ITEM_DAMAGE_RATE = 1;
-const int RENT_CREDIT_VAL = 75;
-const bool RENT_SELL_TO_PAWN = false;
-const bool RENT_RESTRICT_INNS_BY_LEVEL = false;
-const int WEAPON_DAM_MIN_HARDNESS = 20;
-const int WEAPON_DAM_MAX_HARDNESS = 150;
-const int WEAPON_DAM_MAX_SHARP = 150;

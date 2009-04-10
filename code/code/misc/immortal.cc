@@ -7,6 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "configuration.h"
 
 extern "C" {
 #include <dirent.h>
@@ -3873,7 +3874,7 @@ void TPerson::doAccess(const sstring &arg)
     }
   } else {
     tmpbuf=format("Name : <p>%s<1>, Sex : <c>%d<1>, Screensize : <c>%d<1>, Weight <c>%.2f<1>, Height <c>%d<1>\n\r") %
-      (int)st.name % (int)st.sex % (int)st.screen % 
+      st.name % (int)st.sex % (int)st.screen % 
       (int)st.weight % (int)st.height;
     buf+=tmpbuf;
     birth = asctime(localtime(&(st.birth)));

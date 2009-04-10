@@ -7,6 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "configuration.h"
 
 #include <sys/types.h>
 #include <dirent.h>

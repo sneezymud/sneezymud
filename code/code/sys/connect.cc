@@ -28,6 +28,7 @@ extern "C" {
 }
 
 #include "stdsneezy.h"
+#include "configuration.h"
 #include "account.h"
 #include "statistics.h"
 #include "socket.h"
@@ -313,12 +314,13 @@ bool Descriptor::checkForMultiplay()
 	  gamePort == PROD_GAMEPORT){
         vlogf(LOG_CHEAT, format("MULTIPLAY: %s and %s from same account[%s]") % 
               character->name % ch->name % account->name);
-#if FORCE_MULTIPLAY_COMPLIANCE
-        character->sendTo(format("\n\rTake note: You have another character, %s, currently logged in.\n\r") % ch->name);
-        character->sendTo("Adding this character would cause you to be in violation of multiplay rules.\n\r");
-        character->sendTo("Please log off your other character and then try again.\n\r");
-        outputProcessing();  // gotta write this to them, before we sever  :)
-#endif
+	if(FORCE_MULTIPLAY_COMPLIANCE){
+	  character->sendTo(format("\n\rTake note: You have another character, %s, currently logged in.\n\r") % ch->name);
+	  character->sendTo("Adding this character would cause you to be in violation of multiplay rules.\n\r");
+	  character->sendTo("Please log off your other character and then try again.\n\r");
+	  outputProcessing();  // gotta write this to them, before we sever  :)
+	}
+
         return TRUE;
       }
     }
@@ -1135,15 +1137,15 @@ int Descriptor::nanny(sstring arg)
             tmp_ch->doCls(false);
 
           rc = checkForMultiplay();
-#if FORCE_MULTIPLAY_COMPLIANCE
-          if (rc) {
-            // disconnect, but don't cause character to be deleted
-            // do this by disassociating character from descriptor
-            character = NULL;
-
-            return DELETE_THIS;
-          }
-#endif
+	  if(FORCE_MULTIPLAY_COMPLIANCE){
+	    if (rc) {
+	      // disconnect, but don't cause character to be deleted
+	      // do this by disassociating character from descriptor
+	      character = NULL;
+	      
+	      return DELETE_THIS;
+	    }
+	  }
 	  
           if (should_be_logged(character)) {
             objCost cost;
@@ -1408,10 +1410,10 @@ int TPerson::genericLoadPC()
   int rc;
 
   rc = desc->checkForMultiplay();
-#if FORCE_MULTIPLAY_COMPLIANCE
-  if (rc)
-    return DELETE_THIS;
-#endif
+  if(FORCE_MULTIPLAY_COMPLIANCE){
+    if (rc)
+      return DELETE_THIS;
+  }
 
   if (should_be_logged(this)) {
     vlogf(LOG_PIO, format("Loading %s's equipment") %  name);
@@ -4155,11 +4157,11 @@ void inputQ::putInQ(const sstring &txt)
 
 int TBeing::applyAutorentPenalties(int secs)
 {
-#if PENALIZE_FOR_AUTO_RENTING
-  vlogf(LOG_PIO, format("%s was autorented for %d secs") %
-	(getName() ? getName() : "Unknown name") % secs);
+  if(PENALIZE_FOR_AUTO_RENTING){
+    vlogf(LOG_PIO, format("%s was autorented for %d secs") %
+	  (getName() ? getName() : "Unknown name") % secs);    
+  }
 
-#endif
   return FALSE;
 }
 

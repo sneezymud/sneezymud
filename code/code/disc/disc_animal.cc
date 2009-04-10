@@ -287,12 +287,12 @@ int TBeing::doSkySpirit(const char *argument)
     act("$n summons a spirit of the sky!", FALSE, this, NULL, victim, TO_ROOM);
     char buf[256];
 
-    sprintf(buf, "<c>A phantasmal %s<1><c> swoops down from above and strikes $N!<1>", spirit);
+    sprintf(buf, "<c>A phantasmal %s<1><c> swoops down from above and strikes $N!<1>", spirit.c_str());
 
     act(buf, FALSE, this, NULL, victim, TO_CHAR);
     act(buf, FALSE, this, NULL, victim, TO_NOTVICT);
 
-    sprintf(buf, "<C>A phantasmal %s<1><c> swoops down from above and strikes you!<1>", spirit);
+    sprintf(buf, "<C>A phantasmal %s<1><c> swoops down from above and strikes you!<1>", spirit.c_str());
 
     act(buf, FALSE, this, NULL, victim, TO_VICT);
 

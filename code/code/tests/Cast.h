@@ -1,6 +1,7 @@
 #include <cxxtest/TestSuite.h>
 
 #include "stdsneezy.h"
+#include "configuration.h"
 #include "code/tests/ValueTraits.h"
 #include "socket.h"
 

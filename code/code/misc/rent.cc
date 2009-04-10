@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 
 #include "stdsneezy.h"
+#include "configuration.h"
 #include "rent.h"
 #include "statistics.h"
 #include "mail.h"

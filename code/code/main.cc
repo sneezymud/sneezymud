@@ -7,7 +7,7 @@
 #include "stdsneezy.h"
 #include "socket.h"
 #include "database.h"
-
+#include "configuration.h"
 
 extern "C" {
 #include <unistd.h>

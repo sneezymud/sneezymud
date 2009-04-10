@@ -9,6 +9,7 @@
 #include <cmath>
 
 #include "stdsneezy.h"
+#include "configuration.h"
 #include "range.h"
 #include "combat.h"
 #include "statistics.h"

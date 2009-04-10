@@ -34,6 +34,7 @@
 #endif
 
 #include "stdsneezy.h"
+#include "configuration.h"
 #include "combat.h"
 #include "disease.h"
 #include "disc_aegis.h"

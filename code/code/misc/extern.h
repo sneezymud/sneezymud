@@ -429,7 +429,6 @@ extern double atof_safe(const sstring);
 extern int GetApprox(int, int);
 extern double GetApprox(double, int);
 
-extern bool doConfiguration(int argc=0, char *argv[]=NULL);
 extern sstring dir;
 extern bool bTrimmed;
 #endif

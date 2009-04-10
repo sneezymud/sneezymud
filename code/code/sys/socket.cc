@@ -34,6 +34,7 @@ int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 }
 
 #include "stdsneezy.h"
+#include "configuration.h"
 #include "statistics.h"
 #include "database.h"
 #include "spelltask.h"

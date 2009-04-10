@@ -13,6 +13,7 @@ extern "C" {
 }
 
 #include "stdsneezy.h"
+#include "configuration.h"
 #include "shop.h"
 #include "mail.h"
 #include "statistics.h"

@@ -16,6 +16,7 @@
 #endif
 
 #include "stdsneezy.h"
+#include "configuration.h"
 #include "statistics.h"
 #include "combat.h"
 #include "database.h"
@@ -659,15 +660,16 @@ int Descriptor::read_client(char *str2)
             dynamic_cast<TPerson *>(ch)->autoDeath();
 
           int rc = checkForMultiplay();
-#if FORCE_MULTIPLAY_COMPLIANCE
-          if (rc) {
-            // disconnect, but don't cause character to be deleted
-            // do this by disassociating character from descriptor
-            character = NULL;
+	  if(FORCE_MULTIPLAY_COMPLIANCE){
+	    if (rc) {
+	      // disconnect, but don't cause character to be deleted
+	      // do this by disassociating character from descriptor
+	      character = NULL;
+	      
+	      return DELETE_THIS;
+	    }
+	  }
 
-            return DELETE_THIS;
-          }
-#endif
           ch->fixClientPlayerLists(FALSE);
           return FALSE;
         }
@@ -1203,15 +1205,15 @@ int Descriptor::client_nanny(char *arg)
         dynamic_cast<TPerson *>(tmp_ch)->autoDeath();
       
       rc = checkForMultiplay();
-#if FORCE_MULTIPLAY_COMPLIANCE
-      if (rc) {
-        // disconnect, but don't cause character to be deleted
-        // do this by disassociating character from descriptor
-        character = NULL;
-
-        return DELETE_THIS;
+      if(FORCE_MULTIPLAY_COMPLIANCE){
+	if (rc) {
+	  // disconnect, but don't cause character to be deleted
+	  // do this by disassociating character from descriptor
+	  character = NULL;
+	  
+	  return DELETE_THIS;
+	}
       }
-#endif
 
       if (tmp_ch->hasClass(CLASS_CLERIC) || tmp_ch->hasClass(CLASS_DEIKHAN))
         clientf(format("%d") % CLIENT_PIETY);

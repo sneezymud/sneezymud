@@ -6,6 +6,7 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "configuration.h"
 #include "shop.h"
 #include "statistics.h"
 #include "pathfinder.h"
@@ -1127,35 +1128,35 @@ void repoCheck(TMonster *mob, int rnum)
   //players still complain like mad.  taking it out again - dash 9/15/02
   return;
 
-#if REPO_MOBS
-  char buf[160],buf2[160];
-  int cur_num = obj_index[rnum].getNumber();
-  int max_num = obj_index[rnum].max_exist;
-
-  // Bounty's just cause massive griping - bat 2/23/97
-  // keep it in, but at low low frequency - brut 2/27/97
-  if ((cur_num >= max_num) &&
-      !::number(0, ((cur_num > max_num) ? 10 : 100))) {
-    // reduce hunter chance on artifacts
-    if (::number(1,5) <= cur_num) {
-      strcpy(buf,obj_index[rnum].name);
-      strcpy(buf, add_bars(buf).c_str());
-      sprintf(buf2,"Hunter, repo %s",buf);
-      vlogf(LOG_PROC,format("REPO: %s auto-hunting: '%s' : cur:%d, max:%d.") % 
-               mob->getName() %buf % cur_num % max_num);
-      mob->spec = SPEC_BOUNTY_HUNTER;
-      bounty_hunter(NULL, CMD_SAY, buf2, mob, NULL);
-
-#if SUPER_REPO_MOBS
-      // make supertough to enforce max-exist rules
-      if (cur_num > max_num) {
-        mob->setMaxHit(5*mob->hitLimit());
-        mob->setHit(mob->hitLimit());
+  if(REPO_MOBS){
+    char buf[160],buf2[160];
+    int cur_num = obj_index[rnum].getNumber();
+    int max_num = obj_index[rnum].max_exist;
+    
+    // Bounty's just cause massive griping - bat 2/23/97
+    // keep it in, but at low low frequency - brut 2/27/97
+    if ((cur_num >= max_num) &&
+	!::number(0, ((cur_num > max_num) ? 10 : 100))) {
+      // reduce hunter chance on artifacts
+      if (::number(1,5) <= cur_num) {
+	strcpy(buf,obj_index[rnum].name);
+	strcpy(buf, add_bars(buf).c_str());
+	sprintf(buf2,"Hunter, repo %s",buf);
+	vlogf(LOG_PROC,format("REPO: %s auto-hunting: '%s' : cur:%d, max:%d.") % 
+	      mob->getName() %buf % cur_num % max_num);
+	mob->spec = SPEC_BOUNTY_HUNTER;
+	bounty_hunter(NULL, CMD_SAY, buf2, mob, NULL);
+	
+	if(SUPER_REPO_MOBS){
+	  // make supertough to enforce max-exist rules
+	  if (cur_num > max_num) {
+	    mob->setMaxHit(5*mob->hitLimit());
+	    mob->setHit(mob->hitLimit());
+	  }
+	}
       }
-#endif
     }
   }
-#endif
 }
 
 

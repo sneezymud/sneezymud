@@ -9,6 +9,7 @@
 
 
 #include "stdsneezy.h"
+#include "configuration.h"
 #include "systemtask.h"
 #include "socket.h"
 

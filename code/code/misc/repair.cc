@@ -4,6 +4,7 @@
 #include <dirent.h>
 
 #include "stdsneezy.h"
+#include "configuration.h"
 #include "statistics.h"
 #include "obj_note.h"
 #include "shop.h"
@@ -1068,15 +1069,16 @@ void processRepairFile(const char *name)
     fclose(fp);
     return;
   }
-#if NUKE_REPAIR_ITEMS
-  if ((time(0) - then) > 180 * SECS_PER_REAL_DAY) {
-    fclose(fp);
-    vlogf(LOG_MISC, format("REPAIR: Item %s was in repair %d days") %  name %
-         ((time(0) - then)/SECS_PER_REAL_DAY));
-    unlink(name);
-    return;
+  if(NUKE_REPAIR_ITEMS){
+    if ((time(0) - then) > 180 * SECS_PER_REAL_DAY) {
+      fclose(fp);
+      vlogf(LOG_MISC, format("REPAIR: Item %s was in repair %d days") %  name %
+	    ((time(0) - then)/SECS_PER_REAL_DAY));
+      unlink(name);
+      return;
+    }
   }
-#endif
+
   if (fread(&cost, sizeof(cost), 1, fp) != 1) {
     vlogf(LOG_BUG, format("Error reading repairman_file %s for limited item count.  Point 3!") %  name);
     fclose(fp);

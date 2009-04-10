@@ -1,8 +1,32 @@
 #include "stdsneezy.h"
+#include "configuration.h"
 #include "database.h"
 
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
+
+const int PROD_GAMEPORT = 7900;
+const int PROD_XMLPORT = 7901;
+const int BETA_GAMEPORT = 5678;
+const int ALPHA_GAMEPORT = 6969;
+const int BUILDER_GAMEPORT = 8900;
+      int GAMMA_GAMEPORT = 6961; // Maror - quick boot! (skips zones) -Updated to allow otf swapping -Lapsos
+const int ITEM_DAMAGE_RATE = 1;
+const int RENT_CREDIT_VAL = 75;
+const bool RENT_SELL_TO_PAWN = false;
+const bool RENT_RESTRICT_INNS_BY_LEVEL = false;
+const int WEAPON_DAM_MIN_HARDNESS = 20;
+const int WEAPON_DAM_MAX_HARDNESS = 150;
+const int WEAPON_DAM_MAX_SHARP = 150;
+const bool NUKE_REPAIR_ITEMS=true;
+const bool CHECK_MULTIPLAY=true;
+const bool FORCE_MULTIPLAY_COMPLIANCE=true;
+const bool REPO_MOBS=true;
+const bool SUPER_REPO_MOBS=false;
+const bool NO_DAMAGED_ITEMS_SHOP=false;
+const bool PENALIZE_FOR_AUTO_RENTING=true;
+const bool SPEEF_MAKE_BODY=false;
+
 
 void sendHelp(po::options_description desc){
   cout << "Usage: sneezy [options] [port]" << endl;
