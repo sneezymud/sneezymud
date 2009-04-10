@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include <mysql/mysql.h>
+#include <boost/regex.hpp>
 #include "stdsneezy.h"
 #include "sstring.h"
 

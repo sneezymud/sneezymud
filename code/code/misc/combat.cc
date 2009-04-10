@@ -10,6 +10,7 @@
 
 #include "stdsneezy.h"
 #include "configuration.h"
+#include "materials.h"
 #include "range.h"
 #include "combat.h"
 #include "statistics.h"

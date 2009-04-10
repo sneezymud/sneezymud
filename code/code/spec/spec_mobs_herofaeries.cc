@@ -1,6 +1,7 @@
 #include "stdsneezy.h"
 #include "db.h"
 #include "database.h"
+#include "spec_mobs.h"
 
 #define UNIQUE_TROPHY_FAERIE 33313
 #define PERMA_DEATH_FAERIE 33314

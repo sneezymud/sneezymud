@@ -10,6 +10,7 @@
 #include "games.h"
 #include "combat.h"
 #include "obj_spellbag.h"
+#include "materials.h"
 #include "obj_open_container.h"
 #include "obj_base_weapon.h"
 #include "obj_gun.h"

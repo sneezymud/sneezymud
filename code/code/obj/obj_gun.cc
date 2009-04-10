@@ -6,6 +6,7 @@
 
 
 #include "stdsneezy.h"
+#include "materials.h"
 #include "obj_general_weapon.h"
 #include "obj_base_weapon.h"
 #include "obj_gun.h"

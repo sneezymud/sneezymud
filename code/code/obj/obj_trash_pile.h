@@ -2,6 +2,7 @@
 #define __OBJ_TRASH_PILE_H
 
 #include "obj_expandable_container.h"
+#include "obj_mergeable.h"
 
 class TTrashPile : public TExpandableContainer, public TMergeable {
   private:

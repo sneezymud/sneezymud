@@ -8,6 +8,7 @@
 // thing.h
 
 #include "stdsneezy.h"
+#include "materials.h"
 #include "obj_base_container.h"
 #include "obj_open_container.h"
 #include "obj_component.h"

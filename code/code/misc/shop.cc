@@ -5,6 +5,7 @@
 #include "stdsneezy.h"
 #include "configuration.h"
 #include "shop.h"
+#include "materials.h"
 #include "statistics.h"
 #include "database.h"
 #include "obj_drug.h"
@@ -22,6 +23,7 @@
 #include "obj_commodity.h"
 #include "liquids.h"
 #include "shopaccounting.h"
+#include "spec_mobs.h"
 
 extern int kick_mobs_from_shop(TMonster *myself, TBeing *ch, int from_room);
 

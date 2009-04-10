@@ -16,6 +16,7 @@
 #include "statistics.h"
 #include "help.h"
 #include "mail.h"
+#include "spec_mobs.h"
 #include "obj_component.h"
 #include "stdsneezy.h"
 #include "loadset.h"

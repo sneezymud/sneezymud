@@ -11,6 +11,8 @@
 #include "disease.h"
 #include "obj_tool.h"
 #include "obj_corpse.h"
+#include "spec_mobs.h"
+#include "materials.h"
 
 //  use reconcileDamage to apply damage to victims.
 //  if victim dies, leave victim valid (do not delete) annd return a -1

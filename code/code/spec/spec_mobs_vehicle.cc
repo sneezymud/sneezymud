@@ -1,4 +1,5 @@
 #include "stdsneezy.h"
+#include "account.h"
 #include "obj_vehicle.h"
 #include "pathfinder.h"
 #include "obj_casino_chip.h"

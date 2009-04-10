@@ -8,6 +8,7 @@
 
 #include "stdsneezy.h"
 #include "configuration.h"
+#include "charfile.h"
 
 extern "C" {
 #include <dirent.h>
@@ -40,6 +41,8 @@ extern "C" {
 #include "obj_treasure.h"
 #include "shopowned.h"
 #include "obj_commodity.h"
+#include "spec_mobs.h"
+#include "materials.h"
 
 togEntry *togInfoT::operator[] (const togTypeT i)
 {

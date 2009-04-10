@@ -14,6 +14,7 @@ extern "C" {
 
 #include "stdsneezy.h"
 #include "range.h"
+#include "materials.h"
 #include "statistics.h"
 #include "combat.h"
 #include "account.h"

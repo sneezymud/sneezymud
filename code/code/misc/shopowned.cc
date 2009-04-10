@@ -1,4 +1,5 @@
 #include "stdsneezy.h"
+#include "charfile.h"
 #include "shopowned.h"
 #include "database.h"
 #include "shop.h"
@@ -6,6 +7,7 @@
 #include "obj_note.h"
 #include "shopaccounting.h"
 #include "obj_commodity.h"
+#include "spec_mobs.h"
 
 #define GRIMHAVEN_TAX_OFFICE 14
 

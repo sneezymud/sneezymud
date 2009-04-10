@@ -12,6 +12,8 @@
 #error Please include BEING.H prior to inclusion of EXTERN.H
 #endif
 
+#include "wiz_powers.h"
+
 extern "C" {
 #if 0
 // disabled functions

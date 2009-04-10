@@ -6,6 +6,7 @@
 
 #include "stdsneezy.h"
 #include "obj_tool.h"
+#include "materials.h"
 
 int task_lightfire(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *obj)
 {

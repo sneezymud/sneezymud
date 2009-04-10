@@ -6,6 +6,7 @@
 
 
 #include "stdsneezy.h"
+#include "spec_mobs.h"
 
 extern void warn_busy(TBeing *);
 

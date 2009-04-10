@@ -7,6 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "materials.h"
 #include "shop.h"
 #include "database.h"
 #include "obj_spellbag.h"

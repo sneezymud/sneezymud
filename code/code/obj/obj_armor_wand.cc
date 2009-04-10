@@ -12,6 +12,7 @@
 //
 
 #include "stdsneezy.h"
+#include "materials.h"
 #include "obj_armor_wand.h"
 
 TArmorWand::TArmorWand() :

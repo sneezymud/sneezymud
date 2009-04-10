@@ -1,3 +1,5 @@
+#include <stdarg.h>
+
 #include "stdsneezy.h"
 #include "configuration.h"
 #include "database.h"

@@ -9,6 +9,7 @@
 
 #include "stdsneezy.h"
 #include "disease.h"
+#include "materials.h"
 #include "combat.h"
 #include "spelltask.h"
 #include "disc_alchemy.h"

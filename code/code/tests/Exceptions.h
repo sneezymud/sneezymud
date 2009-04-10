@@ -4,6 +4,7 @@
 #include "configuration.h"
 #include "socket.h"
 #include "code/tests/ValueTraits.h"
+#include "spec_mobs.h"
 
 class Exceptions : public CxxTest::TestSuite
 {

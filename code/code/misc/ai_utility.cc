@@ -18,6 +18,7 @@
 
 #include "stdsneezy.h"
 #include "combat.h"
+#include "spec_mobs.h"
 
 // This function should be used if you want to see if the mob is "pissed" 
 int TMonster::pissed(void)

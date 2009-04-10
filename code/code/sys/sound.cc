@@ -6,6 +6,7 @@
 
 
 #include "stdsneezy.h"
+#include "account.h"
 
 int RecGetObjRoom(const TThing *obj)
 {

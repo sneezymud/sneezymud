@@ -12,6 +12,7 @@
 #include "statistics.h"
 #include "shop.h"
 #include "being.h"
+#include "spec_mobs.h"
 #include "database.h"
 #include "obj_spellbag.h"
 #include "obj_base_corpse.h"

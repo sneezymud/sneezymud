@@ -7,6 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "charfile.h"
 #include "statistics.h"
 
 void TBeing::doSet(const char *)

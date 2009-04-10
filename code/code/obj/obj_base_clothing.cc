@@ -4,6 +4,7 @@
 
 #include "stdsneezy.h"
 #include "shop.h"
+#include "materials.h"
 #include "obj_base_clothing.h"
 #include "shopowned.h"
 #include "corporation.h"

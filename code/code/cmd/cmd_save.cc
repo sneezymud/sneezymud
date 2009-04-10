@@ -10,6 +10,7 @@
 ******************************************************************************/
 
 #include "stdsneezy.h"
+#include "account.h"
 
 void doSaveMOEdit(TBeing *ch, const char *tArg)
 {

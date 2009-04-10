@@ -3,7 +3,7 @@
 #include "pathfinder.h"
 #include "obj_portal.h"
 #include "obj_plant.h"
-
+#include "materials.h"
 
 // TGas uses function pointers to get a virtual-class like affect,
 // without having to have multiple objects and object types for each

@@ -24,6 +24,7 @@
 #include "disc_looting.h"
 #include "room.h"
 #include "obj_base_corpse.h"
+#include "spec_mobs.h"
 #include "obj_keyring.h"
 #include "obj_key.h"
 #include "obj_portal.h"

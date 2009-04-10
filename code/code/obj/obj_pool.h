@@ -9,6 +9,7 @@
 #define __OBJ_POOL_H
 
 #include "obj_base_cup.h"
+#include "obj_mergeable.h"
 
 class TPool : public TBaseCup, public TMergeable {
   public:    

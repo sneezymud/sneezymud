@@ -2,6 +2,7 @@
 
 #include "stdsneezy.h"
 #include "obj_vial.h"
+#include "materials.h"
 
 TVial::TVial() :
   TBaseCup()

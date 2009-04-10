@@ -3,7 +3,7 @@
 #include "shop.h"
 #include "shopowned.h"
 #include "process.h"
-
+#include "spec_mobs.h"
 
 // procBankInterest
 procBankInterest::procBankInterest(const int &p)

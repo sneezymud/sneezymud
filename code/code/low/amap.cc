@@ -10,6 +10,7 @@
 #include<sys/socket.h>
 #include<dirent.h>
 #include"stdsneezy.h"
+#include"configuration.h"
 #include"lowtools.h"
 #include"parse.h"
 #include"database.h"

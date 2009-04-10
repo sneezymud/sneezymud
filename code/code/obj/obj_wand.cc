@@ -3,6 +3,9 @@
 #include "stdsneezy.h"
 #include "obj_magic_item.h"
 #include "obj_wand.h"
+#include "materials.h"
+
+
 TWand::TWand() :
   TMagicItem(),
   maxCharges(0),

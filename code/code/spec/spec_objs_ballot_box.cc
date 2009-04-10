@@ -1,5 +1,6 @@
 #include "stdsneezy.h"
 #include "database.h"
+#include "account.h"
 
 // create table poll (poll_id int primary key, descr varchar(127), status varchar(8));
 // create table poll_option (option_id int, poll_id int, descr varchar(127), primary key (option_id, poll_id));

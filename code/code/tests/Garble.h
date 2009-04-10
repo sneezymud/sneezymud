@@ -2,6 +2,7 @@
 
 #include "stdsneezy.h"
 #include "configuration.h"
+#include "charfile.h"
 #include "code/tests/ValueTraits.h"
 #include "socket.h"
 

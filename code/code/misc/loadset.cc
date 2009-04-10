@@ -8,6 +8,7 @@
 
 #include "stdsneezy.h"
 #include "configuration.h"
+#include "materials.h"
 #include "loadset.h"
 #include "obj_armor.h"
 #include "obj_base_clothing.h"

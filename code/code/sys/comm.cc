@@ -9,9 +9,11 @@
 
 
 #include "stdsneezy.h"
+#include "account.h"
 #include "configuration.h"
 #include "systemtask.h"
 #include "socket.h"
+#include "spec_mobs.h"
 
 #include <csignal>
 #include <cstdarg>

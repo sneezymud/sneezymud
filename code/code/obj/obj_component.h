@@ -12,6 +12,9 @@
 #ifndef __COMPONENTS_H
 #define __COMPONENTS_H
 
+#include "obj_mergeable.h"
+
+
 const unsigned int COMP_DECAY      =    (1<<0);
 const unsigned int COMP_SPELL      =    (1<<1);
 const unsigned int COMP_POTION     =    (1<<2);

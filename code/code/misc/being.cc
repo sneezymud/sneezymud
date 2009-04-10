@@ -6,9 +6,11 @@
 
 
 #include "stdsneezy.h"
+#include "charfile.h"
 #include "being.h"
 #include "database.h"
 #include "obj_opal.h"
+#include "account.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>

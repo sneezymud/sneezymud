@@ -8,6 +8,7 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "materials.h"
 #include "obj_opal.h"
 
 TOpal::TOpal() :

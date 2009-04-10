@@ -12,6 +12,9 @@
 #include "spec_objs.h"
 #endif
 
+#include "trap.h"
+#include "create.h"
+
 class objCost { 
   public:
     int total_cost;

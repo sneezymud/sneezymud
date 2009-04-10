@@ -17,6 +17,8 @@
 #include "body.h"
 #endif
 
+#include "cmd_dissect.h"
+
 // forward declarations
 class TCorpse;
 

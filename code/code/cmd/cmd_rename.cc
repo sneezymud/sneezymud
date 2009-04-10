@@ -9,7 +9,8 @@
 
 #include "stdsneezy.h"
 #include "database.h"
-
+#include "charfile.h"
+#include "account.h"
 
 static void renamePersonalizeFix(TThing *t, const char * orig_name, const char * new_name)
 {

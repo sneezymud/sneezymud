@@ -7,6 +7,7 @@
 
 #include "stdsneezy.h"
 #include "combat.h"
+#include "materials.h"
 
 bool TBeing::hasBoat() const
 {

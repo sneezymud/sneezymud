@@ -35,9 +35,11 @@
 
 #include "stdsneezy.h"
 #include "configuration.h"
+#include "account.h"
 #include "combat.h"
 #include "disease.h"
 #include "disc_aegis.h"
+#include "materials.h"
 #include "disc_wrath.h"
 #include "disc_alchemy.h"
 #include "paths.h"
@@ -62,6 +64,7 @@
 #include "obj_commodity.h"
 #include "obj_component.h"
 #include "obj_food.h"
+#include "spec_mobs.h"
 
 const int GET_MOB_SPE_INDEX(int d)
 {

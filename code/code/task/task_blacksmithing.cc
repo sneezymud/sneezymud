@@ -15,7 +15,7 @@
 #include "stdsneezy.h"
 #include "obj_tool.h"
 #include "obj_commodity.h"
-
+#include "materials.h"
 
 // used to plug messages and behavior to common repair functions
 class BaseRepair

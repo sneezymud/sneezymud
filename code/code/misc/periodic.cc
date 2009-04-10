@@ -8,6 +8,7 @@
 
 #include "stdsneezy.h"
 #include "configuration.h"
+#include "materials.h"
 #include "combat.h"
 #include "disease.h"
 #include "mail.h"

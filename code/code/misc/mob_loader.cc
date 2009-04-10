@@ -8,10 +8,12 @@
 
 #include "stdsneezy.h"
 #include "obj_open_container.h"
+#include "materials.h"
 #include "obj_component.h"
 #include "obj_potion.h"
 #include "obj_commodity.h"
 #include "loadset.h"
+#include "spec_mobs.h"
 
 static void treasureCreate(int num, int mat, int &wealth, TObj *bag, TMonster *ch)
 {

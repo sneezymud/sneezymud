@@ -2,6 +2,7 @@
 #include "shop.h"
 #include "obj_note.h"
 #include "shopowned.h"
+#include "spec_mobs.h"
 
 const int SIGN_COST = 100000;
 const int SIGN_VNUM = 33271;

@@ -11,6 +11,7 @@
 #include "statistics.h"
 #include "shop.h"
 #include "database.h"
+#include "spec_mobs.h"
 
 charList::charList() :
   name(NULL),

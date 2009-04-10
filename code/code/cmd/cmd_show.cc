@@ -11,6 +11,7 @@
 #include "stdsneezy.h"
 #include "configuration.h"
 #include "disc_looting.h"
+#include "materials.h"
 #include "combat.h"
 #include "obj_component.h"
 #include "cmd_dissect.h"
@@ -20,6 +21,7 @@
 #include "liquids.h"
 #include "database.h"
 #include "obj_commodity.h"
+#include "spec_mobs.h"
 
 extern int getObjLoadPotential(const int obj_num);
 

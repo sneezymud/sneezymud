@@ -17,6 +17,8 @@
 
 #include "stdsneezy.h"
 #include "configuration.h"
+#include "account.h"
+#include "charfile.h"
 #include "statistics.h"
 #include "combat.h"
 #include "database.h"

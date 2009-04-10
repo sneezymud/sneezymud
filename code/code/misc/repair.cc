@@ -6,12 +6,15 @@
 #include "stdsneezy.h"
 #include "configuration.h"
 #include "statistics.h"
+#include "account.h"
 #include "obj_note.h"
 #include "shop.h"
 #include "database.h"
 #include "shopowned.h"
 #include "rent.h"
 #include "obj_commodity.h"
+#include "materials.h"
+#include "spec_mobs.h"
 
 extern int kick_mobs_from_shop(TMonster *myself, TBeing *ch, int from_room);
 

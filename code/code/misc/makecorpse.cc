@@ -14,6 +14,7 @@
 #include "obj_player_corpse.h"
 #include "obj_corpse.h"
 #include "obj_money.h"
+#include "materials.h"
 
 TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost)
 {

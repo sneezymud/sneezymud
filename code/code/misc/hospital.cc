@@ -13,6 +13,7 @@
 #include "disease.h"
 #include "shop.h"
 #include "shopowned.h"
+#include "spec_mobs.h"
 
 int poison_price(TBeing *ch, affectedData *, int shop_nr)
 {

@@ -8,7 +8,7 @@
 #include "stdsneezy.h"
 #include "obj_pool.h"
 #include "liquids.h"
-
+#include "materials.h"
 
 void TPool::overFlow()
 {

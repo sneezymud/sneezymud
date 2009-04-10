@@ -2,6 +2,8 @@
 #define __DATABASE_H
 
 #include <mysql/mysql.h>
+#include <queue>
+#include <map>
 
 // TDatabase is a class for interacting with the sql database.
 //

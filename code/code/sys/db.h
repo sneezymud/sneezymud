@@ -17,6 +17,8 @@
 #include "structs.h"
 #endif
 
+#include <map>
+
 // Strings for the mud name
 // also: WELC_MESSG needs to be updated if these change
 // also: SNEEZY_ADMIN

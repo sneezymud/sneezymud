@@ -17,11 +17,13 @@
 #include "disease.h"
 #include "combat.h"
 #include "statistics.h"
+#include "materials.h"
 #include "obj_component.h"
 #include "database.h"
 #include "room.h"
 #include "shop.h"
 #include "liquids.h"
+#include "spec_mobs.h"
 
 #include "skillsort.h"
 #include "obj_open_container.h"

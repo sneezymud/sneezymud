@@ -10,6 +10,7 @@
 
 #include "stdsneezy.h"
 #include "games.h"
+#include "spec_mobs.h"
 
 Craps::Craps() :
   m_ch(NULL)

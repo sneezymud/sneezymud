@@ -16,6 +16,7 @@
 #include "obj_light.h"
 #include "obj_drinkcon.h"
 #include "liquids.h"
+#include "materials.h"
 
 TFFlame::TFFlame() :
   TBaseLight(),

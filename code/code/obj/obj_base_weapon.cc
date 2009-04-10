@@ -16,6 +16,8 @@
 #include "obj_base_weapon.h"
 #include "shopowned.h"
 #include "corporation.h"
+#include "materials.h"
+#include "spec_mobs.h"
 
 TBaseWeapon::TBaseWeapon() :
   TObj(),

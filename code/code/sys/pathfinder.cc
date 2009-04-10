@@ -2,6 +2,7 @@
 #include "pathfinder.h"
 #include "obj_portal.h"
 #include "obj_base_corpse.h"
+#include "spec_mobs.h"
 
 findFairFight::findFairFight(TBeing *tb)
 {

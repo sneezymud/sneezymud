@@ -9,6 +9,7 @@
 #define __PERSON_H
 
 #include "being.h"
+#include "wiz_powers.h"
 
 extern Descriptor *descriptor_list;
 extern Descriptor *next_to_process;

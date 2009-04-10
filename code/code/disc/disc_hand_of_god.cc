@@ -8,6 +8,7 @@
 #include "obj_portal.h"
 #include "obj_drinkcon.h"
 #include "obj_magic_item.h"
+#include "materials.h"
 
 static void moveLoss(TBeing &ch)
 { 

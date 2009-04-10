@@ -1,5 +1,6 @@
 #include "stdsneezy.h"
 #include "obj_trap.h"
+#include "spec_mobs.h"
 
 
 sstring guardShout(TBeing *ch){

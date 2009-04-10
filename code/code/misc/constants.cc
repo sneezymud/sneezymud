@@ -9,7 +9,7 @@
 #include "stdsneezy.h"
 #include "obj_drug.h"
 #include "obj_gun.h"
-
+#include "materials.h"
 
 const sstring whitespace=" \f\n\r\t\v";  // from isspace() man page
 

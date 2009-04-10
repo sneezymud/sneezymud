@@ -9,6 +9,8 @@
 #ifndef __HANDLER_H
 #define __HANDLER_H
 
+#include <list>
+
 #include "obj_money.h"
 
 TMoney *create_money( int amount, currencyTypeT =CURRENCY_GRIMHAVEN);

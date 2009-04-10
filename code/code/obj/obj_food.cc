@@ -10,6 +10,7 @@
 #include <cmath>
 
 #include "stdsneezy.h"
+#include "materials.h"
 #include "disease.h"
 #include "shop.h"
 #include "obj_food.h"

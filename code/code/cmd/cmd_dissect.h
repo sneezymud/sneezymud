@@ -23,6 +23,8 @@
 #ifndef __CMD_DISSECT_H
 #define __CMD_DISSECT_H
 
+#include <map>
+
 class dissectInfo
 {
   public:

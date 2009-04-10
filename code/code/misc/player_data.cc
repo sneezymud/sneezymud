@@ -14,11 +14,14 @@ extern "C" {
 
 #include "stdsneezy.h"
 #include "configuration.h"
+#include "account.h"
+#include "charfile.h"
 #include "shop.h"
 #include "mail.h"
 #include "statistics.h"
 #include "combat.h"
 #include "database.h"
+#include "materials.h"
 
 TAccountStats accStat;
 wizListInfo *wiz;

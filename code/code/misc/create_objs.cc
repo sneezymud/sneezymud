@@ -18,6 +18,7 @@ extern "C" {
 #include "stdsneezy.h"
 #include "obj_component.h"
 #include "dirsort.h"
+#include "materials.h"
 #include "statistics.h"
 #include "database.h"
 #include "obj_open_container.h"

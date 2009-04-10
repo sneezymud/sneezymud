@@ -81,6 +81,7 @@
 #include "pathfinder.h"
 #include "liquids.h"
 #include "obj_chest.h"
+#include "materials.h"
 
 // CMD_OBJ_GOTTEN returns DELETE_THIS if this goes bye bye
 // returns DELETE_VICT if t goes bye bye

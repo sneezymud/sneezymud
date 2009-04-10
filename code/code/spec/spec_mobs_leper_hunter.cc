@@ -2,6 +2,7 @@
 #include "paths.h"
 #include "pathfinder.h"
 #include "obj_commodity.h"
+#include "spec_mobs.h"
 
 int leperHunter(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 {

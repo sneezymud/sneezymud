@@ -8,6 +8,7 @@
 // commodity.cc
 
 #include "stdsneezy.h"
+#include "materials.h"
 #include "shop.h"
 #include "obj_commodity.h"
 #include "shopowned.h"

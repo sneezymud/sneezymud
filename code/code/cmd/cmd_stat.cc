@@ -7,9 +7,12 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "account.h"
+#include "materials.h"
 #include "disease.h"
 #include "spec_rooms.h"
 #include "combat.h"
+#include "spec_mobs.h"
 
 extern int eqHpBonus(const TPerson *);
 extern int baseHp();

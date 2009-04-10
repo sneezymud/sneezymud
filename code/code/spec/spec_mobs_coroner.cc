@@ -1,6 +1,7 @@
 #include "stdsneezy.h"
 #include "obj_base_corpse.h"
 #include "pathfinder.h"
+#include "spec_mobs.h"
 
 // returns DELETE_THIS
 int goToMorgue(TBeing *myself)

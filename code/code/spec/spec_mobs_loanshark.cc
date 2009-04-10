@@ -2,6 +2,7 @@
 #include "database.h"
 #include "shop.h"
 #include "shopowned.h"
+#include "spec_mobs.h"
 
 // 1 loan per account
 

@@ -10,6 +10,7 @@
 #include "combat.h"
 #include "disc_warrior.h"
 #include "obj_tool.h"
+#include "materials.h"
 
 int TBeing::doBerserk() 
 {

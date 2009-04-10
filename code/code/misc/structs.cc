@@ -8,6 +8,8 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "charfile.h"
+#include "account.h"
 #include "combat.h"
 #include "obj_board.h"
 #include "statistics.h"
@@ -15,6 +17,7 @@
 #include "obj_base_corpse.h"
 #include "obj_table.h"
 #include "obj_money.h"
+#include "materials.h"
 #include "obj_seethru.h"
 #include "cmd_trophy.h"
 #include "obj_open_container.h"

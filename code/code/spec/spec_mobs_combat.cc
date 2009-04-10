@@ -4,6 +4,7 @@
 #include "disc_earth.h"
 #include "disc_water.h"
 #include "disc_afflictions.h"
+#include "materials.h"
 
 int vampire(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 {

@@ -8,6 +8,9 @@
 #ifndef __ROOM_H
 #define __ROOM_H
 
+#include "weather.h"
+#include "sound.h"
+
 // cubic inches of burning material where room itself burns
 const int ROOM_FIRE_THRESHOLD=20000;
 const int ROOM_FLOOD_THRESHOLD=30000;

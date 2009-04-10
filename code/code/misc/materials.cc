@@ -8,6 +8,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "materials.h"
 #include "statistics.h"
 #include "obj_base_weapon.h"
 

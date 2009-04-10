@@ -12,6 +12,11 @@
 #include <string.h>
 #endif
 
+#include <list>
+
+#include "limbs.h"
+#include "faction.h"
+
 enum thingTypeT {
   TYPETHING,    // = 0;
   TYPEOBJ,    //   = 1;

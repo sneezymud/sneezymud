@@ -57,7 +57,15 @@
 #endif
 
 #include "guild.h"
-
+#include "trap.h"
+#include "sound.h"
+#include "wiz_powers.h"
+#include "cmd_message.h"
+#include "toggle.h"
+#include "task.h"
+#include "disease.h"
+#include "stats.h"
+#include "room.h"
 
 class TTrophy;
 class TWindow;

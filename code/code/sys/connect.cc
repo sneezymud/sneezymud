@@ -29,6 +29,7 @@ extern "C" {
 
 #include "stdsneezy.h"
 #include "configuration.h"
+#include "charfile.h"
 #include "account.h"
 #include "statistics.h"
 #include "socket.h"

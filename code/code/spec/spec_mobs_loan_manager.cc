@@ -3,6 +3,7 @@
 #include "shop.h"
 #include "shopowned.h"
 #include "corporation.h"
+#include "spec_mobs.h"
 
 // need a periodic function to create the loans
 

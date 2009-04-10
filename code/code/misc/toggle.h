@@ -9,6 +9,8 @@
 #ifndef __TOGGLE_H
 #define __TOGGLE_H
 
+#include <map>
+
 // Toggles
 
 // quest toggles on individual players

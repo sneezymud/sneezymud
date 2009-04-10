@@ -7,7 +7,9 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "account.h"
 #include "cmd_message.h"
+#include "spec_mobs.h"
 
 void TBeing::doNewbieEqLoad(race_t num, ush_int num2, bool initNum)
 {

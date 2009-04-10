@@ -11,7 +11,7 @@
 #include "games.h"
 #include "database.h"
 #include "cmd_message.h"
-
+#include "account.h"
 
 sstring TBeing::parseTitle(Descriptor *)
 {

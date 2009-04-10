@@ -5,6 +5,7 @@
 #include "shopowned.h"
 #include "obj_open_container.h"
 #include "database.h"
+#include "materials.h"
 
 // shop rooms 558,8734,1393,3709
 

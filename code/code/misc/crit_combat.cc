@@ -15,7 +15,7 @@
 #include "obj_trash.h"
 #include "obj_drinkcon.h"
 #include "database.h"
-
+#include "materials.h"
 
 // adjust the crit table for fighting barehand.  All crit types are not equal,
 // but for barehand we want them to appear so.  This means nerfing slash barehand crits.

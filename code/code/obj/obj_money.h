@@ -8,7 +8,10 @@
 #ifndef __OBJ_MONEY_H
 #define __OBJ_MONEY_H
 
+#include <map>
+
 #include "obj.h"
+#include "obj_mergeable.h"
 
 
 enum currencyTypeT {

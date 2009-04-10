@@ -13,6 +13,8 @@
 
 #include "stdsneezy.h"
 #include "combat.h"
+#include "materials.h"
+#include "spec_mobs.h"
 
 int TMonster::aiBounce(TBeing *doer,TBeing *, aiTarg cond)
 {

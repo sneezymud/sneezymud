@@ -6,6 +6,8 @@
 //  
 //////////////////////////////////////////////////////////////////////////
 
+#include <stdarg.h>
+
 #include "stdsneezy.h"
 #include "disease.h"
 #include "obj_pen.h"

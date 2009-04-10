@@ -8,6 +8,8 @@
 #ifndef __SPELLS2_H
 #define __SPELLS2_H
 
+#include <map>
+
 enum skillUseTypeT {
      SPELL_UNDEFINED,
      SPELL_CASTER,

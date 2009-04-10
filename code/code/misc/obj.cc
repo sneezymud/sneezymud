@@ -2,6 +2,7 @@
 #include "shop.h"
 #include "shopowned.h"
 #include "corporation.h"
+#include "materials.h"
 
 bool TObj::isPluralItem() const
 {

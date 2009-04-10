@@ -8,6 +8,7 @@
 #include "statistics.h"
 #include "obj_player_corpse.h"
 #include "obj_money.h"
+#include "spec_mobs.h"
 
 currencyEntry *currencyInfoT::operator[] (const currencyTypeT i)
 {

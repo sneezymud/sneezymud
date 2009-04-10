@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
-
+#include "materials.h"
 
 /* remove these races
     case RACE_UNCERT:

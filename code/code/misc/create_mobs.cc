@@ -13,8 +13,10 @@ extern "C" {
 
 #include "stdsneezy.h"
 #include "mail.h"
+#include "materials.h"
 #include "combat.h"
 #include "statistics.h"
+#include "spec_mobs.h"
 #include "database.h"
 
 static void stripSpellAffects(TBeing * mob)

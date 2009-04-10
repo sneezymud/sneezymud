@@ -9,6 +9,8 @@
 
 ******************************************************************************/
 
+#include <stdarg.h>
+
 #include "stdsneezy.h"
 #include "configuration.h"
 #include "obj_staff.h"

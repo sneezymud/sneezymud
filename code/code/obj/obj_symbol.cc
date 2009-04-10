@@ -8,6 +8,7 @@
 // symbol.cc
 
 #include "stdsneezy.h"
+#include "materials.h"
 #include "shop.h"
 #include "obj_symbol.h"
 #include "shopowned.h"

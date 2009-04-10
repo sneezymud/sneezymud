@@ -4,6 +4,8 @@
 #include "statistics.h"
 #include "obj_component.h"
 #include "database.h"
+#include "spec_mobs.h"
+#include "materials.h"
 
 #define REPRAC_COST_PER_PRAC 1000
 

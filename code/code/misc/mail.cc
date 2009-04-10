@@ -1,4 +1,5 @@
 #include "stdsneezy.h"
+#include "charfile.h"
 #include "mail.h"
 #include "database.h"
 #include "shop.h"
@@ -6,6 +7,7 @@
 #include "rent.h"
 #include "obj_trap.h"
 #include "obj_open_container.h"
+#include "spec_mobs.h"
 
 // may not exceed NAME_SIZE (15) chars
 static const char * const SNEEZY_ADMIN = "SneezyMUD Administration";

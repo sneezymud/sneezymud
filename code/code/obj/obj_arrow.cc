@@ -4,7 +4,7 @@
 #include "obj_base_weapon.h"
 #include "shop.h"
 #include "shopowned.h"
-
+#include "materials.h"
 
 TArrow::TArrow() :
   TBaseWeapon(),

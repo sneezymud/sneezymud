@@ -2,6 +2,8 @@
 #define __CONNECT_H
 
 #include "obj_drug.h"
+#include "stats.h"
+#include <deque>
 
 const unsigned int PROMPT_HIT               = (1<<0);
 const unsigned int PROMPT_MANA              = (1<<1);

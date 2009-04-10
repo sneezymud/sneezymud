@@ -10,6 +10,7 @@
 #include "shop.h"
 #include "statistics.h"
 #include "pathfinder.h"
+#include "spec_mobs.h"
 
 static TBeing *char_with_name(char *name)
 {

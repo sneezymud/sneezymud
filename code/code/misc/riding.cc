@@ -3,6 +3,7 @@
 #include "obj_base_container.h"
 #include "obj_table.h"
 #include "obj_base_clothing.h"
+#include "spec_mobs.h"
 
 
 // Peel
