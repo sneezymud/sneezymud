@@ -7,8 +7,8 @@
 
 // statue.cc
 
-#include "stdsneezy.h"
 #include "obj_statue.h"
+#include "extern.h"
 
 TStatue::TStatue() :
   TObj()

@@ -5,7 +5,9 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "room.h"
+#include "being.h"
+#include "extern.h"
 #include "monster.h"
 
 int TMonster::remHated(const TBeing *hatee, const char *n)

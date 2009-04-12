@@ -1,4 +1,4 @@
-#include "stdsneezy.h"
+#include "room.h"
 #include "monster.h"
 #include "person.h"
 
@@ -51,6 +51,7 @@ int tudy(TBeing *, cmdTypeT cmd, const char *, TMonster *tudy, TObj *)
 
     newtudy->doSay("No mortal shall ever possess the heart of an angel!");
     newtudy->doSay("You will perish for your arrogance!");
+
 
     for(StuffIter it=newtudy->roomp->stuff.begin();it!=newtudy->roomp->stuff.end() && (t=*it);++it){
       if((ch=dynamic_cast<TPerson *>(t))){

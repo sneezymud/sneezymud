@@ -12,7 +12,8 @@
 #include <stdarg.h>
 #include <cmath>
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "room.h"
 #include "configuration.h"
 #include "obj_staff.h"
 #include "obj_wand.h"
@@ -235,6 +236,7 @@ int sleepTagRoom(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoom)
 
   switch (tCmd) {
     case CMD_GENERIC_PULSE:
+
       for(StuffIter it=tRoom->stuff.begin();it!=tRoom->stuff.end() && (tThing=*it);++it)
         if ((tPerson = dynamic_cast<TBeing *>(tThing))) {
           tPerson->setMove(tPerson->getMaxMove());

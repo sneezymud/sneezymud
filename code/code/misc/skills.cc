@@ -14,9 +14,10 @@
   "Raw" functions.
 #endif
 
-#include "stdsneezy.h"
+#include "being.h"
 #include "disc_mage.h"
 #include "disc_cleric.h"
+#include "extern.h"
 #include "disc_soldiering.h"
 #include "disc_blacksmithing.h"
 #include "disc_deikhan_fight.h"

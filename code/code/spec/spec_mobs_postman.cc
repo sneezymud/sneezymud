@@ -1,12 +1,13 @@
-#include "stdsneezy.h"
 #include "low.h"
+#include "room.h"
 #include "monster.h"
+#include "extern.h"
 
 sstring randommessage(sstring from)
 {
   sstring msg, buf, sbuf;
   sstring to=mob_index[::number(0,mob_index.size()-1)].short_desc;
-  vector <sstring> sentences;
+  std::vector <sstring> sentences;
 
   sentences.push_back("The %s jumps over the %s in the pale moonlight.");
   sentences.push_back("The %s barks %s at noon.");
@@ -133,7 +134,7 @@ int postman(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 
   // find random mob
   TMonster *tm=NULL;
-  vector <TMonster *> mobs;
+  std::vector <TMonster *> mobs;
   
   for(StuffIter it=me->roomp->stuff.begin();it!=me->roomp->stuff.end();++it){
     if((tm=dynamic_cast<TMonster *>(*it)) && tm != me)

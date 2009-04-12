@@ -6,7 +6,10 @@
 //  
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "handler.h"
+#include "room.h"
+#include "being.h"
 #include "disc_shaman.h"
 #include "disc_shaman_healing.h"
 #include "disc_fire.h"
@@ -45,9 +48,9 @@ public:
 };
 
 
-map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
+std::map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
 {
-  map <spellNumT,ego_imm_blessing> blessings;
+  std::map <spellNumT,ego_imm_blessing> blessings;
   
   blessings[AFFECT_IMMORTAL_BLESSING]=
     ego_imm_blessing("immortal",
@@ -161,7 +164,7 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
 {
   affectedData aff;
   affectedData *afp;
-  map <spellNumT,ego_imm_blessing> blessings = init_ego_imm_blessing();
+  std::map <spellNumT,ego_imm_blessing> blessings = init_ego_imm_blessing();
   bool success = false;
 
   // all durations & level are the same
@@ -375,6 +378,7 @@ void TBeing::doEgoTrip(const char *arg)
 
     TPortal * tmp_obj = new TPortal(ch->roomp);
     *roomp += *tmp_obj;
+
     roomp->playsound(SOUND_SPELL_PORTAL, SOUND_TYPE_MAGIC);
 
     TPortal * next_tmp_obj = new TPortal(roomp);
@@ -421,8 +425,8 @@ void TBeing::doEgoTrip(const char *arg)
 
     vlogf(LOG_MISC, format("%s egotripped bless") %  getName());
     Descriptor *d;
-    map <spellNumT,ego_imm_blessing> blessings=init_ego_imm_blessing();
-    map <spellNumT,ego_imm_blessing>::iterator iter;
+    std::map <spellNumT,ego_imm_blessing> blessings=init_ego_imm_blessing();
+    std::map <spellNumT,ego_imm_blessing>::iterator iter;
     bool found=false;
     for (d = descriptor_list; d; d = d->next) {
       if (d->connected != CON_PLYNG)

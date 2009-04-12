@@ -16,9 +16,11 @@
 
 ******************************************************************************/
 
-#include "stdsneezy.h"
+#include "room.h"
+#include "being.h"
 #include "obj_component.h"
 #include "obj_staff.h"
+#include "extern.h"
 
 // How many charges per 'charge' does it cost.
 static const int STAVECHARGE_COMPMULTIPLIER = 5;
@@ -189,6 +191,7 @@ void TBeing::doChargeStave(sstring tStString)
     sendTo("You are too busy.\n\r");
     return;
   }
+
 
   if (roomp->isWaterSector() || roomp->isUnderwaterSector()) {
     sendTo("Treading water and charging staves don't mix well.\n\r");

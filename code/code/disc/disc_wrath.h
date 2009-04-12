@@ -21,6 +21,9 @@
 
 // This is the WRATH discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDWrath : public CDiscipline
 {
 public:

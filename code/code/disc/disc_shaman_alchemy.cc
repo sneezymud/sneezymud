@@ -1,4 +1,5 @@
-#include "stdsneezy.h"
+#include "extern.h"
+#include "being.h"
 #include "disease.h"
 #include "combat.h"
 #include "spelltask.h"

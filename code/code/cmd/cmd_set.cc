@@ -6,7 +6,9 @@
 //  
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "handler.h"
+#include "being.h"
 #include "charfile.h"
 #include "statistics.h"
 #include "person.h"

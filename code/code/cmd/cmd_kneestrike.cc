@@ -5,7 +5,11 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
+#include "enum.h"
 #include "combat.h"
 
 bool TBeing::canKneestrike(TBeing *victim, silentTypeT silent)
@@ -68,6 +72,7 @@ bool TBeing::canKneestrike(TBeing *victim, silentTypeT silent)
   if (victim->getPosition() < POSITION_STANDING){
     if (!silent)
       sendTo(format("That might work, but your victim seems to be on the %s.\n\r") % 
+
 		   roomp->describeGround());
     return FALSE;
   }

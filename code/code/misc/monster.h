@@ -11,6 +11,9 @@
 #include "being.h"
 #include "paths.h"
 
+using std::min;
+using std::max;
+
 enum zoneHateT {
      OP_SEX      = 1,
      OP_RACE,
@@ -101,7 +104,7 @@ class TMonster : public TBeing {
 
     positionTypeT default_pos;
 
-    vector<resetCom> loadCom;
+    std::vector<resetCom> loadCom;
 
     TMonster();
     TMonster(const TMonster &);
@@ -496,7 +499,7 @@ class TMonster : public TBeing {
     bool checkResponsesPossible(cmdTypeT, const sstring &, TBeing *);
     int  checkResponses(TBeing*, TThing *, const sstring &, cmdTypeT);
     int  checkResponsesReal(TBeing*, TThing *, const sstring &, cmdTypeT);
-    resp *readCommand(istringstream &);
+    resp *readCommand(std::istringstream &);
     void createWealth();
     int dynamicComponentLoader(spellNumT, int);
     void thiefLootLoader();

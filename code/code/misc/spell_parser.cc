@@ -7,7 +7,10 @@
 //
 /////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "low.h"
 #include "monster.h"
 #include "disc_shaman_armadillo.h"
@@ -370,6 +373,7 @@ void TBeing::saySpell(spellNumT si)
     sprintf(buf2, "$n utters the holy words, '%s'", buf);
     sprintf(buf, "$n utters the holy words, '%s'", discArray[si]->name);
   }
+
 
   for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
     temp_char = dynamic_cast<TBeing *>(t);

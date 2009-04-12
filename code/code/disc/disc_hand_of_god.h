@@ -24,6 +24,9 @@
 
 // This is the HAND_OF_GOD discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDHand : public CDiscipline
 {
 public:

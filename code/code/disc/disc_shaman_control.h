@@ -3,6 +3,9 @@
 #define __DISC_SHAMAN_CONTROL_H
 
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDShamanControl : public CDiscipline
 {
 public:

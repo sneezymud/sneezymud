@@ -1,6 +1,6 @@
-#include "stdsneezy.h"
 #include "obj_player_corpse.h"
 #include "obj_base_corpse.h"
+#include "being.h"
 
 float TPCorpse::getExpLost() const
 {

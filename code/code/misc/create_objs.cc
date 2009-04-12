@@ -15,7 +15,11 @@ extern "C" {
 
 #include <algorithm>
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "handler.h"
+#include "being.h"
+#include "room.h"
+#include "client.h"
 #include "monster.h"
 #include "obj_component.h"
 #include "dirsort.h"
@@ -3031,7 +3035,7 @@ void generic_dirlist(const char *buf, const TBeing *ch)
   // alphabetic order anyway -> (1, 10, 11, 2, 20, 200, 3, ...) BAD!
 
   // this will be a vector that we can sort later
-  vector<sstring>sort_str(0);
+  std::vector<sstring>sort_str(0);
 
   while ((dp = readdir(dfd))) {
     if (!strcmp(dp->d_name, ".") || !strcmp(dp->d_name, ".."))

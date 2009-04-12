@@ -6,7 +6,8 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "room.h"
 #include "low.h"
 #include "materials.h"
 #include "shop.h"
@@ -19,9 +20,9 @@
 #include "obj_mergeable.h"
 #include "monster.h"
 
-vector<compPlace>component_placement(0);
-vector<compInfo>CompInfo(0);
-vector<COMPINDEX>CompIndex(0);
+std::vector<compPlace>component_placement(0);
+std::vector<compInfo>CompInfo(0);
+std::vector<COMPINDEX>CompIndex(0);
 
 
 bool TComponent::willMerge(TMergeable *tm)
@@ -834,6 +835,7 @@ void do_components(int situ)
     if ((rp = real_roomp(l_room))) {
       // check weather condition
       if (component_placement[i].weather != -1) {
+
         if (!IS_SET(component_placement[i].weather, (1<<rp->getWeather())))
           continue;
       }

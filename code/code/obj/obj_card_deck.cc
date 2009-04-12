@@ -5,10 +5,12 @@
 //////////////////////////////////////////////////////////////////////////
 // Peel
 
-#include "stdsneezy.h"
+#include "being.h"
 #include "obj_tooth_necklace.h"
+#include "extern.h"
 #include "monster.h"
 #include "obj_card_deck.h"
+#include "handler.h"
 
 void TBeing::doShuffle(const sstring &arg)
 {
@@ -25,7 +27,7 @@ void TBeing::doShuffle(const sstring &arg)
   }
 
 
-  vector <TThing *> cards;
+  std::vector <TThing *> cards;
   TThing *t;
   for(StuffIter it=deck->stuff.begin();it!=deck->stuff.end();){
     t=*(it++);

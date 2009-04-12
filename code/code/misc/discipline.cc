@@ -1,7 +1,9 @@
 // discipline.cc
 
 #include <cmath>
-#include "stdsneezy.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "monster.h"
 #include "disease.h"
 #include "obj_component.h"
@@ -2452,6 +2454,7 @@ TSymbol * TBeing::findHolySym(silentTypeT silent) const
 bool canDoVerbal(TBeing *ch)
 {
   // glub glub glub
+
   if (ch->roomp && ch->roomp->isUnderwaterSector())
     return FALSE;
 

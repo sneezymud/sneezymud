@@ -8,6 +8,8 @@
 #ifndef __SOUND_H
 #define __SOUND_H
 
+class sstring;
+
 extern const sstring & SOUND_TYPE_SOCIAL;
 extern const sstring & SOUND_TYPE_NOISE;
 extern const sstring & SOUND_TYPE_COMBAT;

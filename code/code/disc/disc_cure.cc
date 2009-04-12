@@ -1,4 +1,4 @@
-#include "stdsneezy.h"
+#include "extern.h"
 #include "colorstring.h"
 #include "disease.h"
 #include "combat.h"
@@ -6,6 +6,8 @@
 #include "spelltask.h"
 #include "statistics.h"
 #include "obj_magic_item.h"
+#include "being.h"
+#include "room.h"
 
 static void repHealing(TBeing *caster, TBeing *victim)
 {

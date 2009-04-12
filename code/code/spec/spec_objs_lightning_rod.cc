@@ -9,10 +9,12 @@
 
 ******************************************************************************/
 
-#include "stdsneezy.h"
+#include "room.h"
 #include "obj_base_weapon.h"
+#include "being.h"
 #include "obj_base_clothing.h"
 
+using std::max;
 
 int lightningRodFryPerson  (TBaseWeapon   *, TBeing *, TBeing *);
 int lightningRodGotHit     (TBaseWeapon   *, TBeing *, TBeing *);
@@ -132,6 +134,7 @@ int lightningRodGotHit(TBaseClothing *tObj, TBeing *tMaster, TBeing *tSucker)
 // Generic in-room without master fry anything.
 int lightningRodFryRoom(TBaseWeapon *tObj, TRoom *tRoom)
 {
+
   if (tRoom->getWeather() != WEATHER_LIGHTNING || tRoom->isRoomFlag(ROOM_INDOORS) || ::number(0, 100))
     return FALSE;
 

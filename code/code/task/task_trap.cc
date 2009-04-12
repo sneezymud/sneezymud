@@ -6,8 +6,9 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "room.h"
 #include "low.h"
+#include "extern.h"
 #include "monster.h"
 #include "obj_open_container.h"
 #include "obj_trap.h"
@@ -18,6 +19,7 @@
 static int trapGuardCheck(TBeing *ch)
 {
   TThing *t;
+
   for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end();){
     t=*(it++);
     TMonster *guard = dynamic_cast<TMonster *>(t);

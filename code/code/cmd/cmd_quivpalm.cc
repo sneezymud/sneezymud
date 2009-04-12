@@ -5,7 +5,8 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "being.h"
 #include "combat.h"
 
 static int quiveringPalm(TBeing *c, TBeing *v)

@@ -1,10 +1,12 @@
-#include "stdsneezy.h"
+#include "handler.h"
 #include "monster.h"
 #include "database.h"
 #include "shop.h"
 #include "shopowned.h"
 #include "rent.h"
+#include "extern.h"
 #include "corporation.h"
+#include "room.h"
 #include "process.h"
 
 sstring getPlayerName(int id)

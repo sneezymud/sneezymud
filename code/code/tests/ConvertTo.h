@@ -1,7 +1,7 @@
 #include <cxxtest/TestSuite.h>
 
-#include "stdsneezy.h"
 #include "code/tests/ValueTraits.h"
+#include "parse.h"
 
 class ConvertTo : public CxxTest::TestSuite
 {

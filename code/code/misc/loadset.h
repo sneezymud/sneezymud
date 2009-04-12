@@ -54,7 +54,7 @@ class loadSetStruct {
 
 class loadSetClass {
   public:
-    map<unsigned short int, loadSetStruct>suits;
+    std::map<unsigned short int, loadSetStruct>suits;
 
     bool suitLoad(const char *, TBeing *, loadSetTypeT, int, int, bool findLoadPotential=false);
     void SetupLoadSetSuits();
@@ -81,7 +81,7 @@ private:
       int percent;
     };
 
-    vector<weightedBucket> m_items;
+    std::vector<weightedBucket> m_items;
     static const unsigned int iterMax = 50;
 
 public:

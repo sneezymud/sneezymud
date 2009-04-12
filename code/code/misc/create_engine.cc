@@ -1,5 +1,6 @@
-#include "stdsneezy.h"
+#include "being.h"
 #include "create_engine.h"
+#include "extern.h"
 
 int appliedSubstanceCreateBalm  (TBeing *, cmdTypeT, int, TObj *),
     appliedSubstanceCreateSalve (TBeing *, cmdTypeT, int, TObj *),
@@ -363,7 +364,7 @@ int task_createEngine(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *
           skMax   = AppliedCreate[ch->task->flags]->skCEMax;
           skMin   = AppliedCreate[ch->task->flags]->skCEMin;
           skLvl   = ch->getSkillValue(AppliedCreate[ch->task->flags]->skCESkillNum);
-          skDiff  = ((float)(min(skLvl, skMax) - skMin) / (float)(skMax - skMin));
+          skDiff  = ((float)(std::min(skLvl, skMax) - skMin) / (float)(skMax - skMin));
           skRnds  = ((2.0 - skDiff) * AppliedCreate[ch->task->flags]->skCERounds);
           skMsgs  = (int)(skRnds / 5);
           curMesg = (int)(ch->task->timeLeft / skMsgs);

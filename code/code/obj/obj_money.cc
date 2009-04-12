@@ -4,9 +4,11 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "room.h"
 #include "low.h"
 #include "monster.h"
+#include "handler.h"
 #include "statistics.h"
 #include "obj_player_corpse.h"
 #include "obj_money.h"
@@ -317,6 +319,7 @@ int TMoney::moneyMeMoney(TBeing *ch, TThing *sub)
 
   if (ch->getMoney() > 500000 && (amount > 100000))
     vlogf(LOG_MISC, format("%s just got %d %ss") %  ch->getName() % amount % getCurrencyName());
+
 
   for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (t=*it);++it) {
     TBeing *tb = dynamic_cast<TBeing *>(t);

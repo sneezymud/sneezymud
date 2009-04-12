@@ -1,7 +1,10 @@
 #ifndef __SSTRING_H
 #define __SSTRING_H
 
-class fmt;
+
+#include <boost/format.hpp>
+using boost::format;
+using std::string;
 
 enum stringEscapeT {
   XML,

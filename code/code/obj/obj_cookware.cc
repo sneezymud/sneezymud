@@ -7,7 +7,6 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
 #include "low.h"
 #include "monster.h"
 #include "obj_cookware.h"

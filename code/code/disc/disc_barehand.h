@@ -26,6 +26,9 @@
 
 // This is the BAREHAND discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDBarehand : public CDiscipline
 {
 public:

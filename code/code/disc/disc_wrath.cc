@@ -1,10 +1,11 @@
 // DISC_WRATH.cc
 // Part of SneezyMUD
 
-#include "stdsneezy.h"
+#include "room.h"
 #include "low.h"
 #include "monster.h"
 #include "disease.h"
+#include "extern.h"
 #include "combat.h"
 #include "disc_wrath.h"
 #include "obj_magic_item.h"
@@ -267,6 +268,7 @@ int pillarOfSalt(TBeing * caster, TBeing * victim, int level, sh_int bKnown, int
         dam /= 2;
       }
     }
+
 
     victim->roomp->playsound(SOUND_SPELL_PILLAR_OF_SALT, SOUND_TYPE_MAGIC);
 

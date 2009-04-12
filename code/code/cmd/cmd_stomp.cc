@@ -5,7 +5,9 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "being.h"
+#include "enum.h"
 #include "combat.h"
 
 bool TBeing::canStomp(TBeing *victim, silentTypeT silent)

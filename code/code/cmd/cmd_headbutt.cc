@@ -7,8 +7,12 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "combat.h"
+#include "enum.h"
 
 bool TBeing::canHeadbutt(TBeing *victim, silentTypeT silent)
 {
@@ -68,6 +72,7 @@ bool TBeing::canHeadbutt(TBeing *victim, silentTypeT silent)
   if ((int) (getPosHeight() * 0.9) > victim->getPosHeight()) {
     if (victim->getPosition() < POSITION_STANDING) {
       if (!silent)
+
         sendTo(format("That might work, but your victim seems to be on the %s.\n\r") % roomp->describeGround());
     } else {
       if (!silent)

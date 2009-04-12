@@ -12,7 +12,10 @@ extern "C" {
 }
 #include <cmath>
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "being.h"
+#include "client.h"
 #include "low.h"
 #include "monster.h"
 #include "charfile.h"

@@ -27,6 +27,17 @@
 #ifndef __SPEC_MOBS_H
 #define __SPEC_MOBS_H
 
+class TBeing;
+class TMonster;
+class TObj;
+class TSymbol;
+
+#include "parse.h"
+#include "faction.h"
+#include "spells.h"
+#include "structs.h"
+
+
 const int SPEC_JANITOR           =5;
 const int SPEC_TORMENTOR         =6;
 const int SPEC_TRAINER_AIR       =7;

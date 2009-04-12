@@ -36,6 +36,8 @@
    long bitvector;     <-- this should be 0
 */
 
+class affectedData;
+
 enum diseaseTypeT {
      DISEASE_NULL,
      DISEASE_COLD,

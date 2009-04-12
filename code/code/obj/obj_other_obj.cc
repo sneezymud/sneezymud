@@ -1,7 +1,7 @@
 // other_obj.cc
 
-#include "stdsneezy.h"
 #include "obj_other_obj.h"
+#include "extern.h"
 
 TOtherObj::TOtherObj() :
   TObj()

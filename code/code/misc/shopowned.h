@@ -1,6 +1,13 @@
 #ifndef __SHOPOWNED_H
 #define __SHOPOWNED_H
 
+#include "thing.h"
+
+class TMonster;
+class TBeing;
+class sstring;
+class TObj;
+
 enum transactionTypeT {
   TX_BUYING,
   TX_BUYING_SERVICE,

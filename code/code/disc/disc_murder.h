@@ -30,6 +30,9 @@
 
 // This is the MURDER discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDMurder : public CDiscipline
 {
 public:

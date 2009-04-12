@@ -21,6 +21,9 @@
 
 // This is the DEIKHAN MOUNT discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDMounted : public CDiscipline
 {
 public:

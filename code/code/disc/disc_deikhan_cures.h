@@ -21,6 +21,9 @@
 
 // This is the DEIKHAN CURES discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDDeikhanCures : public CDiscipline
 {
 public:

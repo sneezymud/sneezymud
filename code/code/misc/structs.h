@@ -6,12 +6,17 @@
 #endif
 
 #include "parse.h"
+#include "spells.h"
+
+class sstring;
 
 // forward declarations
 class TObj;
 class TBeing;
 class TMonster;
 class TPerson;
+
+
 class TRoom;
 class TThing;
 class Craps;

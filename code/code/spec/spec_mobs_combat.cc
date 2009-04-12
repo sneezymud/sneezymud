@@ -1,7 +1,9 @@
-#include "stdsneezy.h"
+#include "room.h"
 #include "low.h"
+#include "handler.h"
 #include "monster.h"
 #include "obj_component.h"
+#include "extern.h"
 #include "disc_sorcery.h"
 #include "disc_earth.h"
 #include "disc_water.h"
@@ -291,6 +293,7 @@ int belimus(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
         FALSE, vict, 0, myself, TO_ROOM);
     vlogf(LOG_PROC, format("%s killed by Belimus-swallow[%s] at %s (%d)") % 
           vict->getName() % myself->getName() %
+
           vict->roomp->getName() % vict->inRoom());
     rc = vict->die(DAMAGE_EATTEN);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -1023,7 +1026,7 @@ int targetDummy(TBeing *character, cmdTypeT cmd, const char *argIn, TMonster *my
   if (!myself)
     return FALSE;
 
-  static map<sstring, sessionData> s_beginningSession;
+  static std::map<sstring, sessionData> s_beginningSession;
 
   sstring sargIn = argIn;
 

@@ -1,7 +1,7 @@
-#include "stdsneezy.h"
 #include "monster.h"
 #include "paths.h"
 #include "pathfinder.h"
+#include "room.h"
 #include "obj_commodity.h"
 #include "spec_mobs.h"
 

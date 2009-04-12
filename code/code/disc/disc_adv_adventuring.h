@@ -9,6 +9,9 @@
 #define __DISC_ADV_ADVENTURING_H   1
 
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDAdvAdventuring : public CDiscipline
 {
   public:

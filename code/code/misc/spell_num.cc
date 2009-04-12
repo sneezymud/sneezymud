@@ -8,7 +8,9 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "extern.h"
+
+
 #if 0
     case SPELL_FIND_FAMILIAR:
       return 35;

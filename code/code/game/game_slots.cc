@@ -8,9 +8,11 @@
 
 *************************************************************************/
 
-#include "stdsneezy.h"
+#include "being.h"
 #include "games.h"
 #include "obj_money.h"
+#include "room.h"
+#include "handler.h"
 
 void spin_slot(TBeing *ch);
 

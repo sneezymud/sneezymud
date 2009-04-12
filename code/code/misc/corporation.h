@@ -1,6 +1,10 @@
 #ifndef __CORPORATION_H
 #define __CORPORATION_H
 
+#include "sstring.h"
+
+class TBeing;
+
 class TCorporation {
   int corp_id;
 
@@ -30,7 +34,7 @@ struct corp_list_data {
   int assets;
 };
 
-vector <corp_list_data> getCorpListingData(void);
+std::vector <corp_list_data> getCorpListingData(void);
 
 const unsigned int CORPACCESS_PARTNER   = (1<<0);
 const unsigned int CORPACCESS_INFO    = (1<<1);

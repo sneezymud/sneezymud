@@ -9,7 +9,7 @@
 //
 /////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "extern.h"
 
 spellInfo *discArray[MAX_SKILL+1];
 

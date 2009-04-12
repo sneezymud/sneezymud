@@ -5,7 +5,11 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
+#include "client.h"
 #include "person.h"
 #include "low.h"
 #include "colorstring.h"
@@ -241,6 +245,7 @@ int TBeing::doPSay(const char *arg){
 
     sendTo(COLOR_COMM, format("<g>You think to the room, <z>\"%s%s\"\n\r") %             colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE) % norm());
     // show everyone in room the say.
+
     for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
       tmp=*(it++);
           

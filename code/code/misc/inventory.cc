@@ -6,7 +6,10 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "room.h"
+#include "extern.h"
+#include "being.h"
 #include "low.h"
 #include "monster.h"
 #include "games.h"
@@ -226,6 +229,7 @@ void TPCorpse::dropMe(TBeing *ch, showMeT showme, showRoomT showroom)
   // utilize baseclass so we are recursive and show text, etc.
   TBaseCorpse::dropMe(ch, showme, showroom);
 #if 1
+
   if (ch->roomp && ch->roomp->isRoomFlag(ROOM_SAVE_ROOM))
     return;
 

@@ -6,7 +6,10 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "handler.h"
+#include "room.h"
+#include "being.h"
 #include "games.h"
 #include "obj_base_corpse.h"
 #include "obj_table.h"
@@ -62,6 +65,7 @@ void TBeing::lookDark()
   sendTo("It is very dark in here...\n\r");
   
   // this already handles stuff like infravision, and glowing mobs
+
   list_char_in_room(roomp->stuff, this);
   
   for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();++it) {

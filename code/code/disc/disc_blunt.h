@@ -26,6 +26,9 @@
 
 // This is the BLUNT discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDBash : public CDiscipline
 {
 public:

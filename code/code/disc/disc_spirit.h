@@ -24,6 +24,9 @@
 
 // This is the SPIRIT discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDSpirit : public CDiscipline
 {
 public:

@@ -9,7 +9,7 @@
 #include <cmath>
 
 
-#include "stdsneezy.h"
+#include "extern.h"
 #include "monster.h"
 #include "materials.h"
 #include "shop.h"

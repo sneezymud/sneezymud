@@ -17,7 +17,10 @@ extern "C" {
 
 #include <algorithm>
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "handler.h"
+#include "room.h"
+#include "being.h"
 #include "low.h"
 #include "configuration.h"
 #include "combat.h"
@@ -183,6 +186,7 @@ void TPerson::doSEdit(const char *tArg)
   if (field != 8 && field != 9 && field != 10) {
     tStInit = tString;
     tStArg = one_argument(tStInit, tStMobile);
+
 
     if (!(tThing = searchLinkedListVis(this, tStMobile, roomp->stuff))) {
       sendTo("I don't see that here, do you?\n\r");
@@ -1002,7 +1006,7 @@ void seditList(TBeing *ch)
   sstring          tStString(""),
                   tStBuffer("");
   unsigned int    tCount = 0;
-  vector<sstring>  sortStr(0);
+  std::vector<sstring>  sortStr(0);
 
   if ((tFile = seditVerifyDirTree(ch, NULL)))
     fclose(tFile);

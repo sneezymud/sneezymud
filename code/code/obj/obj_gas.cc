@@ -1,8 +1,11 @@
-#include "stdsneezy.h"
+#include "comm.h"
+#include "room.h"
 #include "low.h"
+#include "extern.h"
 #include "obj_gas.h"
 #include "pathfinder.h"
 #include "obj_portal.h"
+#include "being.h"
 #include "obj_plant.h"
 #include "materials.h"
 
@@ -86,6 +89,7 @@ void doScent(TGas *myself)
   };
 
   TBeing *createdBy = myself->getCreatedBy();
+
 
   for(StuffIter it= myself->roomp->stuff.begin();it!= myself->roomp->stuff.end();++it)
   {

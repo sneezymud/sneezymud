@@ -6,7 +6,8 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "room.h"
+#include "extern.h"
 #include "low.h"
 #include "monster.h"
 #include "obj_light.h"
@@ -75,6 +76,7 @@ void TLight::genericExtinguish(const TBeing *ch)
 void TLight::extinguishWater(TBeing *ch)
 {
   if (isLit()) {
+
     ch->roomp->addToLight(-getLightAmt());
     ch->addToLight(-getLightAmt());
     act("$p is put out by the room's water.", TRUE, ch, this, 0, TO_CHAR);

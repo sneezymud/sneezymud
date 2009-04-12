@@ -6,7 +6,8 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "being.h"
 #include "race.h"
 #include "obj_player_corpse.h"
 #include "obj_corpse.h"

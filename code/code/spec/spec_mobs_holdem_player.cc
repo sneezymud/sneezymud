@@ -1,11 +1,10 @@
-#include "stdsneezy.h"
 #include "monster.h"
 #include "obj_casino_chip.h"
 #include "games.h"
 
 void deleteChips(TMonster *me)
 {
-  vector <TThing *> chipl;
+  std::vector <TThing *> chipl;
   TCasinoChip *chip;
 
   for(StuffIter it=me->stuff.begin();it!=me->stuff.end();++it){
@@ -161,7 +160,7 @@ int holdemPlayer(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, T
 
   int handval=gHoldem.handValue(hp);
   TObj *chip;
-  vector <TObj *> chipl;
+  std::vector <TObj *> chipl;
 
   if(gHoldem.getLastBet()){
     if(gHoldem.getLastBet() != hpi->chip){

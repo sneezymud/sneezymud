@@ -8,7 +8,9 @@
 
 #include <cmath>
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "being.h"
 #include "cmd_trophy.h"
 #include "person.h"
 #include "monster.h"

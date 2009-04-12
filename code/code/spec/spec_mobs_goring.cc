@@ -7,7 +7,6 @@
 
 ******************************************************************************/
 
-#include "stdsneezy.h"
 #include "monster.h"
 
 int tuskGoring(TBeing *ch, cmdTypeT tCmd, const char *tArg, TMonster *tMyself, TObj *tObj)

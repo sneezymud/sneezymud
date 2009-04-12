@@ -71,11 +71,14 @@ struct tJumpCmdInformation
    "$n falls from above but stops meer inches from the water!"}
 };
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "room.h"
+#include "being.h"
 
 int TBeing::doJump(const sstring &tArg)
 {
   // Ignore invalid or errored locations.
+
   if (!roomp || !roomp->number)
     return FALSE;
 

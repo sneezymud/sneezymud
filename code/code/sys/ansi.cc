@@ -6,7 +6,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "being.h"
 
 void TBeing::setColor(setColorFieldT num, setColorKolorT col)
 {

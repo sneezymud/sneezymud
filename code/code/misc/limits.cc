@@ -3,8 +3,11 @@ extern "C" {
 }
 #include <cmath>
 
-#include "stdsneezy.h"
+#include "room.h"
+#include "being.h"
+#include "extern.h"
 #include "low.h"
+#include "handler.h"
 #include "monster.h"
 #include "statistics.h"
 #include "games.h"
@@ -496,6 +499,7 @@ int TBeing::moveGain()
     gain *= 2;
   if (isAquatic())
     gain = int(gain * (affectedBySpell(AFFECT_WET) ? 1.3 : 0.5));
+
 
   if (roomp && roomp->isRoomFlag(ROOM_NO_HEAL))
     gain /= 3;

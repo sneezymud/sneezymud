@@ -21,6 +21,9 @@
 
 // This is the DEIKHAN FIGHTING skills discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDDeikhanFight : public CDiscipline
 {
   public:

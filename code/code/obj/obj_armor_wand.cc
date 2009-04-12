@@ -11,9 +11,13 @@
 // TWand.  It is possible since TArmor uses no 4-values
 //
 
-#include "stdsneezy.h"
+#include "comm.h"
+#include "handler.h"
 #include "materials.h"
 #include "obj_armor_wand.h"
+#include "thing.h"
+#include "being.h"
+#include "spell2.h"
 
 TArmorWand::TArmorWand() :
   TArmor(),

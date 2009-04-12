@@ -7,7 +7,6 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
 #include "monster.h"
 #include "obj_chest.h"
 #include "obj_open_container.h"

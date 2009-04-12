@@ -21,6 +21,9 @@
 
 // This is the RANGED discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDRanged : public CDiscipline
 {
 public:

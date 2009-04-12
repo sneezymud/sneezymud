@@ -1,4 +1,4 @@
-#include "stdsneezy.h"
+#include "extern.h"
 #include "obj_handgonne.h"
 #include "obj_general_weapon.h"
 #include "obj_base_weapon.h"

@@ -6,8 +6,8 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
 #include "socket.h"
+#include "connect.h"
 
 #include <unistd.h>
 #include <arpa/telnet.h>

@@ -9,7 +9,7 @@
 #endif
 
 #include <sys/time.h>
-#include "stdsneezy.h"
+#include "extern.h"
 #include "person.h"
 
 void checkpointing(int);

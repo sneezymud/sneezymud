@@ -5,7 +5,9 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "room.h"
+#include "extern.h"
 #include "low.h"
 #include "person.h"
 #include "monster.h"
@@ -36,7 +38,7 @@ static TObj * findHuntedItem(const TBeing *ch, const char *arg, const TObj *stop
   
   TObj *obj, *last;
   unsigned int i;
-  map<int,int>vnums;
+  std::map<int,int>vnums;
   
   // scan the object index and make a list of vnums that match our keyword
   for (i = 0;i < obj_index.size();i++) {
@@ -66,7 +68,7 @@ static TObj * findHuntedItem(const TBeing *ch, const char *arg, const TObj *stop
 {
   TObj *obj, *last;
   unsigned int i;
-  map<int,int>vnums;
+  std::map<int,int>vnums;
 
   // scan the object index and make a list of vnums that match our keyword
   for (i = 0;i < obj_index.size();i++) {
@@ -557,6 +559,7 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
 	  myself->stopFighting();
           TThing *toto=NULL;
           // stop all fights
+
           for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (toto=*it);++it) {
             TBeing *tbto = dynamic_cast<TBeing *>(toto);
             if (!tbto)

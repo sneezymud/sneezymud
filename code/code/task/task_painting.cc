@@ -1,4 +1,7 @@
-#include "stdsneezy.h"
+#include "room.h"
+#include "extern.h"
+#include "being.h"
+#include "handler.h"
 #include "obj_tool.h"
 
 bool find_paint_target(TBeing *ch, sstring arg, TBeing **tb, TObj **obj, TRoom **rp)
@@ -53,6 +56,7 @@ void TBeing::doPaint(sstring arg)
   if(task){
     stopTask();
   }
+
 
   sendTo(format("You start painting %s.\n\r") % (rp ? rp->getName() : obj ? obj->getName() : tb ? tb->getName() : "nothing"));
 

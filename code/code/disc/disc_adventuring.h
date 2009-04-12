@@ -43,6 +43,9 @@
 // On the same token, I don know know if any of these set any character flags.
 // They don't seem to directly have any functions.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDAdventuring : public CDiscipline
 {
   public:

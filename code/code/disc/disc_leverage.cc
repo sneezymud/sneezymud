@@ -1,4 +1,7 @@
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "low.h"
 #include "combat.h"
 #include "disc_leverage.h"
@@ -75,6 +78,7 @@ static int hurlHit(TBeing *caster, TBeing *victim, dirTypeT dr)
   if (caster->roomp && !caster->roomp->dir_option[dr] &&
     caster->roomp->dir_option[dr]->to_room &&
     !IS_SET(caster->roomp->dir_option[dr]->condition, EX_CLOSED) &&
+
     (caster->roomp->dir_option[dr]->to_room |= ROOM_NOWHERE)) {
     caster->sendTo("That direction seems to be blocked.\n\r");
     return FALSE;

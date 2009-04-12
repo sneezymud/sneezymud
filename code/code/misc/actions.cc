@@ -6,7 +6,10 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "colorstring.h"
 #include "low.h"
 #include "monster.h"
@@ -131,7 +134,7 @@ char *fread_action(FILE *fl)
   }
 }
 
-static map<int, socialMessg>soc_mess_list;
+static std::map<int, socialMessg>soc_mess_list;
 
 void bootSocialMessages(void)
 {
@@ -342,7 +345,7 @@ int TBeing::doAction(const sstring & argument, cmdTypeT cmd)
     }
   }
 
-  map<int, socialMessg>::const_iterator CT;
+  std::map<int, socialMessg>::const_iterator CT;
   CT = soc_mess_list.find(cmd);
 
   if (CT == soc_mess_list.end()) {
@@ -358,6 +361,7 @@ int TBeing::doAction(const sstring & argument, cmdTypeT cmd)
   if (roomp) {
     switch (cmd) {
       case CMD_YAWN:
+
         roomp->playsound(pickRandSound(SOUND_YAWN_1, SOUND_YAWN_4), SOUND_TYPE_SOCIAL);
         break;
       case CMD_GIGGLE:
@@ -881,7 +885,7 @@ void TBeing::doPunch(const sstring &arg)
   if(!isImmortal())
     return;
 
-  vector <wearSlotT> slots;
+  std::vector <wearSlotT> slots;
 
   for(wearSlotT slot=MIN_WEAR;slot<MAX_WEAR;slot++){
     slots.push_back(slot);

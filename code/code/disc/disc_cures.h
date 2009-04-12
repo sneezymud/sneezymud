@@ -27,6 +27,9 @@
 
 // This is the CLERIC CURES discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDCures : public CDiscipline
 {
 public:

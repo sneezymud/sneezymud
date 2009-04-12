@@ -1,4 +1,7 @@
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "low.h"
 #include "monster.h"
 #include "combat.h"
@@ -113,6 +116,7 @@ int TMonster::lookForHorse()
 
   if (!isHumanoid() || UtilMobProc(this) || GuildMobProc(this) ||
       IS_SET(specials.act, ACT_SENTINEL) ||
+
       roomp->isRoomFlag(ROOM_PEACEFUL))
     return FALSE;
 

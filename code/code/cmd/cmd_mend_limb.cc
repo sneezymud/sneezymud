@@ -5,7 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "being.h"
 
 int TBeing::doMendLimb(const sstring &)
 {

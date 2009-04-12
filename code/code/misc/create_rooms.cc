@@ -10,7 +10,9 @@
  **                                                                         **
  *****************************************************************************/
 
-#include "stdsneezy.h"
+#include "room.h"
+#include "being.h"
+#include "extern.h"
 #include "colorstring.h"
 #include "low.h"
 #include "obj_table.h"
@@ -72,6 +74,7 @@ int room_length[] =
 };
 
 void make_room_coords(TRoom *rorig, TRoom *tdest, int dir){
+
   tdest->setXCoord(rorig->getXCoord());
   tdest->setYCoord(rorig->getYCoord());
   tdest->setZCoord(rorig->getZCoord());

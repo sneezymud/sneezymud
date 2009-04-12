@@ -1,4 +1,5 @@
-#include "stdsneezy.h"
+#include "handler.h"
+#include "room.h"
 #include "low.h"
 #include "monster.h"
 #include "pathfinder.h"
@@ -14,6 +15,7 @@ findFairFight::findFairFight(TBeing *tb)
 bool findFairFight::isTarget(int room) const
 {
   TRoom *rp = real_roomp(room);
+
   if (!rp->inGrimhaven())
     return false;
   if(rp->isRoomFlag(ROOM_PEACEFUL))
@@ -360,7 +362,7 @@ void TPathFinder::Clear()
   dest=ROOM_NOWHERE;
   dist = 0;
 
-  deque<pathData *>::iterator it;
+  std::deque<pathData *>::iterator it;
   for(it=path.begin();it!=path.end();++it){
     delete *it;
   }
@@ -389,10 +391,10 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
 
   // create this room as a starting point
 
-  map<int, pathData *>path_map;
+  std::map<int, pathData *>path_map;
   path_map[here] = new pathData(here, DIR_NONE, -1, false, 0);
 
-  map<int, pathData *>::const_iterator CI;
+  std::map<int, pathData *>::const_iterator CI;
   bool found=true;
   pathData *pd;
   int distance=0;
@@ -442,7 +444,7 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
 	    continue;
 
 	  // do we have this room already?
-	  map<int, pathData *>::const_iterator CT;
+	  std::map<int, pathData *>::const_iterator CT;
 	  CT = path_map.find(exitp->to_room);
 	  if (CT != path_map.end())
 	    continue;
@@ -504,7 +506,7 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
           }
 
           // do we have this room already?
-          map<int, pathData *>::const_iterator CT;
+          std::map<int, pathData *>::const_iterator CT;
           CT = path_map.find(tmp_room);
           if (CT != path_map.end())
             continue;

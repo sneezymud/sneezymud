@@ -34,9 +34,10 @@ extern "C" {
 int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);   
 }
 
-#include "stdsneezy.h"
+#include "room.h"
 #include "monster.h"
 #include "configuration.h"
+#include "extern.h"
 #include "statistics.h"
 #include "database.h"
 #include "spelltask.h"
@@ -640,6 +641,7 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
       }
 	
       if (!tmp_ch->isPc() && dynamic_cast<TMonster *>(tmp_ch) &&
+
 	  (zone_table[tmp_ch->roomp->getZoneNum()].zone_value!=1 || 
 	   tmp_ch->isShopkeeper() || 
 	   IS_SET(tmp_ch->specials.act, ACT_HUNTING))){
@@ -1380,8 +1382,8 @@ void procCheckTriggerUsers::run(int) const
 {
   Descriptor *d;
   sstring buf;
-  vector <sstring> str;
-  map <sstring, unsigned char> cmds;
+  std::vector <sstring> str;
+  std::map <sstring, unsigned char> cmds;
   unsigned char c='a';
   int count=0;
 

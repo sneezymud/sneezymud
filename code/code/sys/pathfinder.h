@@ -166,7 +166,7 @@ class TPathFinder {
   int dist;
 
  public:
-  deque <pathData *> path;
+  std::deque <pathData *> path;
 
   void setRange(int);
   void setThruDoors(bool t){ thru_doors=t; }

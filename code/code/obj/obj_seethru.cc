@@ -1,8 +1,9 @@
 // see_thru.cc
 
-#include "stdsneezy.h"
+#include "room.h"
 #include "low.h"
 #include "obj_seethru.h"
+#include "extern.h"
 #include "obj_window.h"
 
 TSeeThru::TSeeThru() :
@@ -28,6 +29,7 @@ TSeeThru & TSeeThru::operator=(const TSeeThru &a)
 TSeeThru::~TSeeThru()
 {
   if (roomp && givesOutsideLight())
+
     roomp->decrementWindow();
 }
 

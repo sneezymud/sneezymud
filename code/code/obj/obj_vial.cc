@@ -1,6 +1,5 @@
 // vial.cc
 
-#include "stdsneezy.h"
 #include "monster.h"
 #include "obj_vial.h"
 #include "materials.h"

@@ -1,12 +1,12 @@
 #include <cxxtest/TestSuite.h>
 
-#include "stdsneezy.h"
 #include "configuration.h"
 #include "charfile.h"
 #include "person.h"
 #include "account.h"
 #include "socket.h"
 #include "code/tests/ValueTraits.h"
+#include "extern.h"
 
 class Tell : public CxxTest::TestSuite
 {

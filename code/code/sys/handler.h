@@ -13,6 +13,8 @@
 
 #include "obj_money.h"
 
+class equipmentData;
+
 TMoney *create_money( int amount, currencyTypeT =CURRENCY_GRIMHAVEN);
 TMoney *create_money( int amount, factionTypeT);
 

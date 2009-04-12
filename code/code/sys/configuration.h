@@ -97,6 +97,6 @@ extern const int WEAPON_DAM_MAX_SHARP;
 // speef is too important for comments so we don't know what this does
 extern const bool SPEEF_MAKE_BODY;
 
-extern bool doConfiguration(int argc=0, char *argv[]=NULL);
+extern bool doConfiguration(int argc=0, char *argv[]=0);
 
 #endif

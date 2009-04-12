@@ -1,4 +1,3 @@
-#include "stdsneezy.h"
 #include "monster.h"
 #include "spec_objs_lottery_ticket.h"
 

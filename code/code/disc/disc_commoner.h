@@ -9,6 +9,8 @@
 #ifndef __DISC_COMMONER_H
 #define __DISC_COMMONER_H
 
+#include "discipline.h"
+
 class CDCommoner : public CDiscipline
 {
 public:

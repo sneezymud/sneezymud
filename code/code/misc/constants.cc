@@ -6,10 +6,12 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
 #include "obj_drug.h"
 #include "obj_gun.h"
 #include "materials.h"
+#include "being.h"
 
 const sstring whitespace=" \f\n\r\t\v";  // from isspace() man page
 

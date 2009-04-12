@@ -16,8 +16,10 @@
 //   a mob could piss off another mob, and the pissed off mob "think"
 //   it was some random PC that did nothing. */
 
-#include "stdsneezy.h"
+#include "being.h"
+#include "room.h"
 #include "low.h"
+#include "extern.h"
 #include "monster.h"
 #include "combat.h"
 #include "spec_mobs.h"

@@ -7,7 +7,10 @@
  *                                                                 *
  *******************************************************************/
  
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "low.h"
 #include "monster.h"
 #include "disease.h"
@@ -219,6 +222,7 @@ int rootControl(TBeing * caster, TBeing * victim, int, int dam, sh_int bKnown)
     act("Nothing seems to happen.", TRUE, caster, 0, 0, TO_ROOM);
     return SPELL_FAIL;
   }
+
   if (caster->roomp->notRangerLandSector() && !caster->roomp->isForestSector()) {
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
     caster->sendTo("You need to be in nature or on land to cast this spell!\n\r");

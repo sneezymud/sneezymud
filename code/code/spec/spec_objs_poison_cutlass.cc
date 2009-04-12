@@ -1,5 +1,6 @@
-#include "stdsneezy.h"
+#include "comm.h"
 #include "obj_base_weapon.h"
+#include "extern.h"
 
 
 int poisonCutlass(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *){

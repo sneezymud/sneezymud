@@ -10,6 +10,9 @@
 
 // This is the Brawling discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDBrawling : public CDiscipline
 {
   public:

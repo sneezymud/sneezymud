@@ -7,7 +7,10 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "combat.h"
 
 int TBeing::doTurn(const char *argument, TBeing *vict)
@@ -148,6 +151,7 @@ int TBeing::doTurn(const char *argument, TBeing *vict)
 
 void TBeing::doPenance()
 {
+
   if ((roomp->isWaterSector() || roomp->isUnderwaterSector()) && !isAquatic()) {
     sendTo("Trying to tread water really messes up your ability to repent.\n\r");
     return;

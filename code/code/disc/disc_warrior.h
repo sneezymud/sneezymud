@@ -35,6 +35,9 @@
 
 // This is the WARRIOR discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDWarrior : public CDiscipline
 {
 public:

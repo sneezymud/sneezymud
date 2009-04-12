@@ -1,16 +1,21 @@
-#include "stdsneezy.h"
+#include "handler.h"
+#include "being.h"
 #include "monster.h"
 #include "disease.h"
 #include "combat.h"
 #include "spelltask.h"
+#include "room.h"
 #include "disc_murder.h"
 #include "obj_tool.h"
+#include "extern.h"
 #include "obj_general_weapon.h"
 #include "obj_base_weapon.h"
 #include "obj_base_cup.h"
 #include "obj_arrow.h"
 #include "liquids.h"
 #include "combat.h"
+
+class TRoom;
 
 static void playBackstab(const TRoom *rp)
 {

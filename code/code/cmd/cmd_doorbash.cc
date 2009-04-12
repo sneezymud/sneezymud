@@ -1,4 +1,7 @@
-#include "stdsneezy.h"
+#include "extern.h"
+#include "handler.h"
+#include "room.h"
+#include "being.h"
 #include "combat.h"
 #include "disc_warrior.h"
 
@@ -73,6 +76,7 @@ static int doorbash(TBeing * caster, dirTypeT dir)
   rp = real_roomp(exitp->to_room);
 
   if (dir == DIR_UP) {
+
     if (rp->isAirSector() && !caster->isFlying()) {
       caster->sendTo("You would need to be flying to go there!\n\r");
       return FALSE;

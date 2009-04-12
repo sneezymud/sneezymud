@@ -29,6 +29,9 @@
 
 // This is the CLERIC BASIC discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDCleric : public CDiscipline
 {
 public:

@@ -8,7 +8,9 @@
 
 #include <cmath>
 
-#include "stdsneezy.h"
+#include "room.h"
+#include "extern.h"
+#include "being.h"
 #include "person.h"
 #include "colorstring.h"
 #include "monster.h"
@@ -250,6 +252,7 @@ static void sendWeatherMessage(weatherMessT num)
             text="<b>The sky is getting cloudy<1>.\n\r";
             break;
           case WEATHER_MESS_RAIN_START:
+
             switch (ch->roomp->getSectorType()) {
               case SECT_DESERT:
                 text="<k>The clouds overhead darken and look more ominous.<1>\n\r";

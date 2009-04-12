@@ -6,7 +6,9 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "room.h"
+#include "handler.h"
+#include "extern.h"
 #include "low.h"
 #include "monster.h"
 #include "paths.h"
@@ -111,6 +113,7 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
 
   // Make sure our criminal is still alive and in the same room
   if(job->criminal){
+
     for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (t=*it);++it){
       if((tb=dynamic_cast<TBeing *>(t)) && tb==job->criminal)
 	found=1;

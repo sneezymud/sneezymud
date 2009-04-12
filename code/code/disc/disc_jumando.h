@@ -21,6 +21,9 @@
 
 // This is the JUMANDO discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDJumando: public CDiscipline
 {
 public:

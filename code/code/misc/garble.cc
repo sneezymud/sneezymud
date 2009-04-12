@@ -6,7 +6,9 @@
 // Code for changing how players talk
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "garble.h"
 
 // utility functions defined below
@@ -73,6 +75,7 @@ int TBeing::getGarbles(TBeing *to) const
 
   if (getSkillValue(SKILL_SIGN) < MAX_SKILL_LEARNEDNESS)
     garbleFlags |= GARBLE_FLAG_SIGN;
+
 
   if ((roomp->isUnderwaterSector() || hasDisease(DISEASE_DROWNING)) &&
       !isImmortal() && !isShopkeeper() && !isAffected(AFF_WATERBREATH) &&

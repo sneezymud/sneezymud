@@ -6,7 +6,10 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "room.h"
+#include "being.h"
+#include "extern.h"
+#include "client.h"
 #include "person.h"
 #include "account.h"
 

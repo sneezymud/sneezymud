@@ -1,4 +1,8 @@
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
+#include "client.h"
 #include "low.h"
 #include "disc_adv_adventuring.h"
 #include "disease.h"
@@ -44,6 +48,7 @@ int forage(TBeing *caster, sh_int bKnown)
     return SPELL_FAIL;
   }
   
+
   if (caster->roomp->isCitySector()
       || !(caster->roomp->isForestSector()
       || caster->roomp->isBeachSector()

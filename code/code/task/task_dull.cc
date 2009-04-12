@@ -5,8 +5,10 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "comm.h"
 #include "obj_tool.h"
+#include "handler.h"
+#include "being.h"
 
 void stop_dull(TBeing *ch)
 {

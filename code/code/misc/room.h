@@ -10,6 +10,13 @@
 
 #include "weather.h"
 #include "sound.h"
+#include "ansi.h"
+#include "structs.h"
+#include "db.h"
+#include "thing.h"
+#include "obj.h"
+
+class TRoom;
 
 // cubic inches of burning material where room itself burns
 const int ROOM_FIRE_THRESHOLD=20000;
@@ -18,13 +25,13 @@ const int ROOM_FLOOD_THRESHOLD=30000;
 extern TRoom *room_db[];
 extern TRoom *real_roomp(int);
 extern int top_of_world;
-extern vector<zoneData>zone_table;
+extern std::vector<zoneData>zone_table;
 
 // this array is used for cycling through room specials
 // cycling through all the rooms takes too long so just store which rooms
 // actually  have special procs
-extern vector<TRoom *>roomspec_db;
-extern vector<TRoom *>roomsave_db;
+extern std::vector<TRoom *>roomspec_db;
+extern std::vector<TRoom *>roomsave_db;
 
 // this is used for track range
 const unsigned int MAX_ROOMS   = 5000;
@@ -84,73 +91,6 @@ const unsigned int EX_SLOPED_DOWN  = (1<<9);   // 512
 
 const int MAX_DOOR_CONDITIONS = 10;   // move and change
 
-/* For 'Sector types' */
-enum sectorTypeT {
-     SECT_SUBARCTIC,
-     SECT_ARCTIC_WASTE,
-     SECT_ARCTIC_CITY,
-     SECT_ARCTIC_ROAD,
-     SECT_TUNDRA,
-     SECT_ARCTIC_MOUNTAINS,
-     SECT_ARCTIC_FOREST,
-     SECT_ARCTIC_MARSH,
-     SECT_ARCTIC_RIVER_SURFACE,
-     SECT_ICEFLOW,
-     SECT_COLD_BEACH,
-     SECT_SOLID_ICE,
-     SECT_ARCTIC_BUILDING,
-     SECT_ARCTIC_CAVE,
-     SECT_ARCTIC_ATMOSPHERE,
-     SECT_ARCTIC_CLIMBING,
-     SECT_ARCTIC_FOREST_ROAD,
-     SECT_PLAINS,
-     SECT_TEMPERATE_CITY,
-     SECT_TEMPERATE_ROAD,
-     SECT_GRASSLANDS,
-     SECT_TEMPERATE_HILLS,
-     SECT_TEMPERATE_MOUNTAINS,
-     SECT_TEMPERATE_FOREST,
-     SECT_TEMPERATE_SWAMP,
-     SECT_TEMPERATE_OCEAN,
-     SECT_TEMPERATE_RIVER_SURFACE,
-     SECT_TEMPERATE_UNDERWATER,
-     SECT_TEMPERATE_BEACH,
-     SECT_TEMPERATE_BUILDING,
-     SECT_TEMPERATE_CAVE,
-     SECT_TEMPERATE_ATMOSPHERE,
-     SECT_TEMPERATE_CLIMBING,
-     SECT_TEMPERATE_FOREST_ROAD,
-     SECT_DESERT,
-     SECT_SAVANNAH,
-     SECT_VELDT,
-     SECT_TROPICAL_CITY,
-     SECT_TROPICAL_ROAD,
-     SECT_JUNGLE,
-     SECT_RAINFOREST,
-     SECT_TROPICAL_HILLS,
-     SECT_TROPICAL_MOUNTAINS,
-     SECT_VOLCANO_LAVA,
-     SECT_TROPICAL_SWAMP,
-     SECT_TROPICAL_OCEAN,
-     SECT_TROPICAL_RIVER_SURFACE,
-     SECT_TROPICAL_UNDERWATER,
-     SECT_TROPICAL_BEACH,
-     SECT_TROPICAL_BUILDING,
-     SECT_TROPICAL_CAVE,
-     SECT_TROPICAL_ATMOSPHERE,
-     SECT_TROPICAL_CLIMBING,
-     SECT_RAINFOREST_ROAD,
-     SECT_ASTRAL_ETHREAL,
-     SECT_SOLID_ROCK,
-     SECT_FIRE,
-     SECT_INSIDE_MOB,
-     SECT_FIRE_ATMOSPHERE,
-     SECT_MAKE_FLY,
-     SECT_DEAD_WOODS,
-     MAX_SECTOR_TYPES
-};
-const sectorTypeT MIN_SECTOR_TYPE = sectorTypeT(0);
-extern sectorTypeT & operator++(sectorTypeT &, int);
 
 class TTerrainInfo {
   public:

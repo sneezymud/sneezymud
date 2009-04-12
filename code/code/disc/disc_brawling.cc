@@ -5,7 +5,10 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "disc_brawling.h"
 
 CDBrawling::CDBrawling() :
@@ -70,6 +73,7 @@ int TBeing::doTaunt(const sstring &arg)
   }
 
   if(!doesKnowSkill(SKILL_TAUNT) ||
+
      (roomp && roomp->isRoomFlag(ROOM_PEACEFUL)) ||
      victim==this || noHarmCheck(victim) || checkBusy() ||
      victim->isDumbAnimal() || !canSpeak() || victim != fight()){

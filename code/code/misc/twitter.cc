@@ -1,4 +1,4 @@
-#include "stdsneezy.h"
+#include "extern.h"
 #include "colorstring.h"
 #include "configuration.h"
 #include <curl/curl.h>

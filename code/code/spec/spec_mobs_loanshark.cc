@@ -1,8 +1,8 @@
 #include <cmath>
 
-#include "stdsneezy.h"
 #include "monster.h"
 #include "database.h"
+#include "extern.h"
 #include "shop.h"
 #include "shopowned.h"
 #include "spec_mobs.h"

@@ -5,7 +5,10 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "monster.h"
 #include "obj_drug_container.h"
 
@@ -686,6 +689,7 @@ void applyAddictionAffects(TBeing *ch, drugTypeT drug, int severity){
           break;
 
         ch->sendTo("The urge to lick something becomes overwhelming!\n\r");
+
         for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (target=*it);++it);
         if (!target)
           target = ch;
@@ -795,7 +799,7 @@ TDrugInfo::~TDrugInfo()
 {
 }
 
-vector<TDrugInfo>drugTypes(0);
+std::vector<TDrugInfo>drugTypes(0);
 
 void assign_drug_info(void)
 {

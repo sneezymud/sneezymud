@@ -1,4 +1,3 @@
-#include "stdsneezy.h"
 #include "database.h"
 #include "session.cgi.h"
 

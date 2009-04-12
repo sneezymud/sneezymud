@@ -1,7 +1,10 @@
 // organic.cc
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "room.h"
+#include "being.h"
 #include "create_engine.h"
+#include "extern.h"
 #include "obj_expandable_container.h"
 #include "obj_organic.h"
 #include "obj_arrow.h"
@@ -403,6 +406,7 @@ bool appliedSubstanceFindMatch(TThing **tObjList, int ceLevel, int LsSize, int s
 bool appliedSubstanceCheckFire(TBeing *ch)
 {
   TThing *tThing=NULL;
+
 
   for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (tThing=*it);++it)
     if (dynamic_cast<TFFlame *>(tThing))

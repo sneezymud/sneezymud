@@ -5,7 +5,9 @@
     All rights reserved.
 ******************************************************************** */
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "handler.h"
+#include "being.h"
 #include "low.h"
 #include "disease.h"
 #include "combat.h"

@@ -5,7 +5,10 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "handler.h"
+#include "room.h"
+#include "being.h"
 #include "disc_looting.h"
 #include "obj_open_container.h"
 #include "obj_component.h"
@@ -47,6 +50,7 @@ static bool genericCanSteal(TBeing *thief, TBeing *victim)
   if (!is_imp) { 
     if (thief->checkPeaceful("What if they caught you?\n\r"))
       return FALSE;
+
     if (thief->roomp->isRoomFlag(ROOM_NO_STEAL)) {
       thief->sendTo("Such actions are prevented here.\n\r");
       return FALSE;

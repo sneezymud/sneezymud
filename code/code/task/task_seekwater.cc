@@ -4,7 +4,11 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "extern.h"
+
+class TBeing;
+class TRoom;
+class TObj;
 
 // For now the seekwater task is part of the tracking task, found right
 // above this.  Will strip it later on.

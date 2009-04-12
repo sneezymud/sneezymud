@@ -27,6 +27,9 @@
 
 // This is the AIR discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDAir : public CDiscipline
 {
 public:

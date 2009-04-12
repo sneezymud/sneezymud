@@ -7,8 +7,11 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "comm.h"
+#include "room.h"
 #include "obj_drug.h"
+#include "extern.h"
+#include "being.h"
 #include "obj_drug_container.h"
 
 TDrugContainer::TDrugContainer() :
@@ -141,6 +144,7 @@ void TDrugContainer::lightDecay()
       setCurBurn(0);
       putLightOut();
       setDrugType(DRUG_NONE);
+
 
       if (roomp && !roomp->stuff.empty()) {
         act("With a puff of smoke, $p burns out.",

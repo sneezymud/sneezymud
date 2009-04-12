@@ -15,7 +15,10 @@
 #include <unistd.h>
 #endif
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
+#include "client.h"
 #include "low.h"
 #include "person.h"
 #include "monster.h"
@@ -327,6 +330,7 @@ int Descriptor::read_client(char *str2)
         else 
           sprintf(tmpBuf + strlen(tmpBuf), "|0");
       }
+
       if (rp->ex_description) {
         for (exptr = rp->ex_description; exptr; exptr = exptr->next) {
           sprintf(tmpBuf2 + strlen(tmpBuf2), "|%s|%s", exptr->keyword, exptr->description); 

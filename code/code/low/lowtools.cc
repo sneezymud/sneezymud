@@ -1,10 +1,11 @@
 #include <fstream>
 
-#include "stdsneezy.h"
 #include "database.h"
+#include "sstring.h"
+#include "parse.h"
 
 // parses args like "13700-13780 13791 13798"
-bool parse_num_args(int argc, char **argv, vector<int> &vnums)
+bool parse_num_args(int argc, char **argv, std::vector<int> &vnums)
 {
   int s, e, n;
   sstring tmp;
@@ -57,11 +58,11 @@ bool parse_num_args(int argc, char **argv, vector<int> &vnums)
 }
 
 
-map <sstring,sstring> parse_data_file(const sstring &file, int num)
+std::map <sstring,sstring> parse_data_file(const sstring &file, int num)
 {
-  ifstream ifile(file.c_str());
+  std::ifstream ifile(file.c_str());
   sstring buf, name, val, type;
-  map <sstring,sstring> values;
+  std::map <sstring,sstring> values;
   unsigned int loc;
 
   // this is a crappy kluge

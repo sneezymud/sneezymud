@@ -8,7 +8,6 @@
 // saddle.cc
 //
 
-#include "stdsneezy.h"
 #include "obj_base_clothing.h"
 #include "obj_saddle.h"
 

@@ -5,7 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "extern.h"
 #include "obj_base_weapon.h"
 
 void stop_trance_of_blades(TBeing *ch)

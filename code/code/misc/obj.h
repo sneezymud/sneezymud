@@ -12,8 +12,17 @@
 #include "spec_objs.h"
 #endif
 
+#include <vector>
+#include <list>
+
 #include "trap.h"
 #include "create.h"
+#include "spells.h"
+#include "db.h"
+#include "thing.h"
+#include "limbs.h"
+
+class objIndexData;
 
 class objCost { 
   public:
@@ -27,10 +36,10 @@ class objCost {
 
 
 
-extern vector<objIndexData>obj_index;
+extern std::vector<objIndexData>obj_index;
 
-typedef list<TObj *> TObjList;
-typedef list<TObj *>::iterator TObjIter;
+typedef std::list<TObj *> TObjList;
+typedef std::list<TObj *>::iterator TObjIter;
 
 extern TObjList object_list;
 

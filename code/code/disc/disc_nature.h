@@ -5,6 +5,9 @@
 // Most of these were moved to armadillo for shaman
 // reserving disc nature for ranger use
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDNature : public CDiscipline
 {
 public:

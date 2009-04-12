@@ -7,7 +7,10 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "handler.h"
+#include "room.h"
+#include "being.h"
 #include "shop.h"
 #include "spec_mobs.h"
 #include "obj_bow.h"

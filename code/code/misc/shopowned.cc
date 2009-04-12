@@ -1,5 +1,6 @@
-#include "stdsneezy.h"
+#include "handler.h"
 #include "low.h"
+#include "extern.h"
 #include "monster.h"
 #include "charfile.h"
 #include "shopowned.h"

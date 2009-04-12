@@ -7,7 +7,9 @@
 
 // room.cc
 
-#include "stdsneezy.h"
+#include "room.h"
+#include "extern.h"
+#include "being.h"
 #include "monster.h"
 
 bool TRoom::isCitySector() const
@@ -33,6 +35,7 @@ bool TRoom::isFlyingSector() const
 }
 
 bool TRoom::isRoadSector() const
+
 {
   switch (getSectorType()) {
     case SECT_TROPICAL_ROAD:

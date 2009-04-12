@@ -8,7 +8,9 @@
 #include <cmath>
 #include <algorithm>
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "handler.h"
+#include "being.h"
 #include "colorstring.h"
 #include "statistics.h"
 #include "combat.h"
@@ -53,7 +55,7 @@ double get_doubling_level(float real_lev)
   // since what follows is resource intensive, let's just do the calculations
   // once, and do lookups thereafter
   static bool loaded = false;
-  static map<int, double>mob_double_table;
+  static std::map<int, double>mob_double_table;
   const double RESOLUTION = .01;
 
   if (!loaded) {
@@ -79,7 +81,7 @@ double get_doubling_level(float real_lev)
 
   double k_lev = 1.000;
   do {
-    map<int, double>::const_iterator CT = mob_double_table.find(lookup_lev);
+    std::map<int, double>::const_iterator CT = mob_double_table.find(lookup_lev);
     if (CT == mob_double_table.end()) {
       // if we aren't an exact match, back up a bit and try again
       k_lev = 0.0;
@@ -105,7 +107,7 @@ static double get_perc_level(float real_lev)
   // this tends also to be resource intensive, so only do it once and
   // save it for later
   static bool loaded = false;
-  static map<int, double>mob_perc_table;
+  static std::map<int, double>mob_perc_table;
   const double RESOLUTION = .01;
 
   if (!loaded) {
@@ -136,7 +138,7 @@ static double get_perc_level(float real_lev)
   double k_perc = 0.0;
   int lookup_lev = (int) (real_lev/RESOLUTION);
   do {
-    map<int, double>::const_iterator CT = mob_perc_table.find(lookup_lev);
+    std::map<int, double>::const_iterator CT = mob_perc_table.find(lookup_lev);
     if (CT == mob_perc_table.end()) {
       // if we aren'tan exact match, back up a bit and try again
       k_perc = 0.0;
@@ -212,7 +214,7 @@ double mob_exp(float real_lev)
 
   // Obviously, it's resource intensive, so again, do it once and save
   static bool loaded = false;
-  static map<int, double>mob_xp_table;
+  static std::map<int, double>mob_xp_table;
   const double RESOLUTION = .01;
 
   if (!loaded) {
@@ -235,7 +237,7 @@ double mob_exp(float real_lev)
       double mob_xp;
 
       do {
-        map<int, double>::const_iterator CT = mob_xp_table.find(newlev);
+        std::map<int, double>::const_iterator CT = mob_xp_table.find(newlev);
         if (CT == mob_xp_table.end()) {
           // if we aren'tan exact match, back up a bit and try again
           mob_xp = 0.0;
@@ -248,7 +250,7 @@ double mob_exp(float real_lev)
       double mob_xp2;
 
       do {
-        map<int, double>::const_iterator CT = mob_xp_table.find(newlev2);
+        std::map<int, double>::const_iterator CT = mob_xp_table.find(newlev2);
         if (CT == mob_xp_table.end()) {
           // if we aren'tan exact match, back up a bit and try again
           mob_xp2 = 0.0;
@@ -270,7 +272,7 @@ double mob_exp(float real_lev)
   double mob_xp = 0.0;
   int lookup_lev = (int) (real_lev/RESOLUTION);
   do {
-    map<int, double>::const_iterator CT = mob_xp_table.find(lookup_lev);
+    std::map<int, double>::const_iterator CT = mob_xp_table.find(lookup_lev);
     if (CT == mob_xp_table.end()) {
       // if we aren't an exact match, back up a bit and try again
       mob_xp = 0.0;
@@ -1700,7 +1702,7 @@ void TBeing::lowObjs(const char *arg)
   int sort_race_high = 0;
   double tmp;
   sstring str;
-  vector<int>objList(0);
+  std::vector<int>objList(0);
 
   arg = one_argument(arg, buf2, cElements(buf2));
   if (!*buf2) {
@@ -1798,9 +1800,9 @@ void TBeing::lowObjs(const char *arg)
   
   // now lets do some sorting
   if (val_sort)
-    sort(objList.begin(), objList.end(), lowObjSortValue());
+    std::sort(objList.begin(), objList.end(), lowObjSortValue());
   else
-    sort(objList.begin(), objList.end(), lowObjSort());
+    std::sort(objList.begin(), objList.end(), lowObjSort());
 
 // sortbuf now holds a sorted list of objects
 // send that to user
@@ -1929,7 +1931,7 @@ void TBeing::lowWeaps(const char *arg)
   char buf2[255];
   bool blunt = FALSE, pierce = FALSE, slash = FALSE, arrow = false;
   int i;
-  vector<int>objList(0);
+  std::vector<int>objList(0);
   bool sort_val = false;
   sstring str;
 
@@ -1989,9 +1991,9 @@ void TBeing::lowWeaps(const char *arg)
 
   // now lets do some sorting
   if (!sort_val)
-    sort(objList.begin(), objList.end(), lowWeapSort());
+    std::sort(objList.begin(), objList.end(), lowWeapSort());
   else
-    sort(objList.begin(), objList.end(), lowObjSortValue());
+    std::sort(objList.begin(), objList.end(), lowObjSortValue());
 
   // objList now holds a sorted list of objects
   // send that to user

@@ -28,7 +28,10 @@ extern "C" {
 #endif
 }
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "being.h"
+#include "client.h"
+#include "handler.h"
 #include "low.h"
 #include "person.h"
 #include "monster.h"

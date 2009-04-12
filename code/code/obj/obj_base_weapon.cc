@@ -5,9 +5,11 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "room.h"
 #include "low.h"
 #include "monster.h"
+#include "handler.h"
 #include "colorstring.h"
 #include "configuration.h"
 #include "combat.h"
@@ -1415,6 +1417,7 @@ int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int
       damtype = DAMAGE_ARROWS;
   } else
     damtype = getWtype();
+
 
   for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
     c=*(it++);

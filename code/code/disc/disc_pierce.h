@@ -26,6 +26,9 @@
 
 // This is the PIERCE discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDPierce : public CDiscipline
 {
 public:

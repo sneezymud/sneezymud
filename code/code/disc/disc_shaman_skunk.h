@@ -4,6 +4,9 @@
 #define __DISC_SHAMAN_SKUNK_H
 
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDShamanSkunk : public CDiscipline
 {
 public:

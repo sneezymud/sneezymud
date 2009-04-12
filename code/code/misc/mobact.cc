@@ -8,7 +8,9 @@
 
 #include <cmath>
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "handler.h"
+#include "room.h"
 #include "low.h"
 #include "monster.h"
 #include "range.h"
@@ -82,6 +84,7 @@ int TMonster::protectionStuff()
 
   if (GuildProcs(spec) || UtilProcs(spec))
     return FALSE;
+
 
   for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
     t=*(it++);
@@ -511,7 +514,7 @@ int TMonster::hunt()
         TBow *bow = NULL;
         TArrow *ammo = NULL;
         TArrow *tempArr = NULL;
-        vector <TBow *> bows = getBows();
+        std::vector <TBow *> bows = getBows();
         unsigned int j;
         for (j = 0; j < bows.size(); j++)
         {
@@ -3765,7 +3768,7 @@ int TMonster::mobileActivity(int pulse)
         (getHit() >= hitLimit()) &&
         !isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL)) {
       // anything more comfortable around?
-      map <sstring, short int> bedsChecked;
+      std::map <sstring, short int> bedsChecked;
       for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       // added the hash to keep track of 1.chair, 2.chair, etc
         if (bedsChecked.find(fname(t->name)) == bedsChecked.end()) {

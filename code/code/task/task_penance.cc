@@ -5,7 +5,9 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "being.h"
+#include "room.h"
+#include "obj.h"
 
 int task_penance(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *)
 {

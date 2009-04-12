@@ -5,7 +5,9 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "being.h"
+#include "obj.h"
+#include "room.h"
 
 int task_meditate(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *)
 {
@@ -41,8 +43,8 @@ int task_meditate(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TO
             ch->sendTo(format("%sYour meditation focuses your mind%s!\n\r") %
                      ch->green() % ch->norm());
             gainAmt = ch->manaGain() - 1;
-            gainAmt = max(gainAmt, 1);
-            ch->setMana(min(ch->getMana() + gainAmt, (int) ch->manaLimit()));
+            gainAmt = std::max(gainAmt, 1);
+            ch->setMana(std::min(ch->getMana() + gainAmt, (int) ch->manaLimit()));
           } else {
 	    // give them resting regen if a fail on meditate
             ch->addToMana(1);

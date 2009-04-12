@@ -5,7 +5,10 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "room.h"
+#include "extern.h"
+#include "handler.h"
+#include "being.h"
 #include "monster.h"
 #include "spec_mobs.h"
 
@@ -52,6 +55,7 @@ int taskChargeMoveInto(int to_room, TBeing *ch, bool moveHorse)
 
   // Handle 'flying out of the room' check first.
   if (!moveHorse) {
+
     if (from_here->isFlyingSector()) {
       ch->sendTo("Luckily you can fly freely here.\n\r");
       act("$n begins to fly after taking to the air.",

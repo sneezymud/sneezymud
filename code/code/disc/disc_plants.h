@@ -10,6 +10,9 @@
 
 // This is the RANGER plants discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDPlants : public CDiscipline
 {
 public:

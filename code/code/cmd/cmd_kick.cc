@@ -5,7 +5,11 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
+#include "enum.h"
 #include "combat.h"
 
 bool TBeing::canKick(TBeing *victim, silentTypeT silent)
@@ -86,6 +90,7 @@ bool TBeing::canKick(TBeing *victim, silentTypeT silent)
       sendTo("You can't kick while mounted!\n\r");
     return FALSE;
   }
+
   if (roomp && roomp->isUnderwaterSector()) {
     if (!silent)
       sendTo("The water around you totally impedes your kick!\n\r");

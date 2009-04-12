@@ -7,9 +7,11 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "being.h"
 #include "low.h"
+#include "extern.h"
 #include "monster.h"
+#include "room.h"
 #include "statistics.h"
 #include "shop.h"
 #include "database.h"

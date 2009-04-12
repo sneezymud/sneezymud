@@ -10,6 +10,9 @@
 
 // This is the WARRIOR SOLDIERING discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDSoldiering : public CDiscipline
 {
 public:

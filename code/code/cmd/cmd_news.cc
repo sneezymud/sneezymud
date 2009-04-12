@@ -11,7 +11,8 @@
 #include <dirent.h>
 #include <algorithm>
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "being.h"
 #include "statistics.h"
 #include <fstream>
 
@@ -55,7 +56,7 @@ void TBeing::doNews(const char *argument)
   char buf[256];
   char timebuf[256];
   struct stat theStat;
-  vector<newsFileList>vecFiles(0);
+  std::vector<newsFileList>vecFiles(0);
 
   vecFiles.clear();
 
@@ -198,7 +199,7 @@ void TBeing::doNews(const char *argument)
   str += "------------------------------------------------------\n\r";
 
   if (vecFiles.size()) {
-    sort(vecFiles.begin(), vecFiles.end(), newsFileSorter());
+    std::sort(vecFiles.begin(), vecFiles.end(), newsFileSorter());
 
     str += "The following information files have changed recently:\n\r";
     str += "------------------------------------------------------\n\r";
@@ -218,7 +219,7 @@ void TBeing::doNews(const char *argument)
 #if 1
 
   if(*arg){
-    ifstream news(NEWS_FILE);
+    std::ifstream news(NEWS_FILE);
     sstring s;
 
     while(news.getline(buf, 256)){

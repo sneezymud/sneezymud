@@ -6,7 +6,10 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "low.h"
 #include "monster.h"
 #include "obj_base_container.h"
@@ -211,6 +214,7 @@ int TObj::personalizedCheck(TBeing *ch)
       act("$n is zapped by $p!",TRUE,ch,this,0,TO_ROOM);
 
       vlogf(LOG_MISC, format("We got an illegal personalized item (%s) off of %s (was %s's item).") %  getName() % ch->getName() % namebuf);
+
 
       StuffIter it = ch->roomp->stuff.begin();
       while (it!=ch->roomp->stuff.end()) {

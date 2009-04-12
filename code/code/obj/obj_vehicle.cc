@@ -6,9 +6,13 @@
 
 // this code sucks and should be rewritten from scratch at some point
 
-#include "stdsneezy.h"
+#include "comm.h"
+#include "being.h"
+#include "handler.h"
+#include "room.h"
 #include "obj_vehicle.h"
-
+#include "comm.h"
+#include "extern.h"
 
 TVehicle::TVehicle() :
   TPortal(),
@@ -245,6 +249,7 @@ void update_exits(TVehicle *vehicle)
       if(vehicle->parent && vehicle->parent->roomp){
 	// update the exit even if we're being carried or something
 	for(int i=MIN_DIR;i<MAX_DIR;++i){
+
 	  if(vehicleroom->dir_option[i])
 	    vehicleroom->dir_option[i]->to_room=vehicle->parent->roomp->number;
 	}
@@ -306,7 +311,7 @@ void TVehicle::vehiclePulse(int pulse)
   TRoom *troom=roomp;
   sstring buf;
   char shortdescr[256];
-  vector<TBeing *>tBeing(0);
+  std::vector<TBeing *>tBeing(0);
 
   update_exits(this);
 

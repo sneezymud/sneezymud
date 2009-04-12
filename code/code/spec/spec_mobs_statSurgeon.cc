@@ -1,4 +1,3 @@
-#include "stdsneezy.h"
 #include "monster.h"
 
 const int COST = 1000000;
@@ -14,7 +13,7 @@ int statSurgeon(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *surg, TObj 
   }
 
   sstring sarg = arg;
-  vector <statTypeT> stats;
+  std::vector <statTypeT> stats;
   int i, j;
   for (i = 0;i < 2;i++) {
     if (is_abbrev(sarg.word(i), "speed"))
@@ -42,12 +41,12 @@ int statSurgeon(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *surg, TObj 
     return TRUE;
   }
   
-  vector <int> group1;
+  std::vector <int> group1;
   group1.push_back(STAT_SPE);
   group1.push_back(STAT_DEX);
   group1.push_back(STAT_AGI);
   
-  vector <int> group2;
+  std::vector <int> group2;
   group2.push_back(STAT_STR);
   group2.push_back(STAT_BRA);
   group2.push_back(STAT_CON);

@@ -1,4 +1,3 @@
-#include "stdsneezy.h"
 #include "database.h"
 #include "session.cgi.h"
 
@@ -335,7 +334,7 @@ void adjustObjs(Cgicc cgi, int account_id)
   TDatabase db(DB_IMMORTAL);
   TDatabase db2(DB_IMMORTAL);
   int moblevel=convertTo<int>((**(cgi.getElement("moblevel"))));
-  vector <FormEntry> objlist;
+  std::vector <FormEntry> objlist;
   cgi.getElement("objlist", objlist);
   sstring buf;
   bool is_artifact, any_race;
@@ -379,7 +378,7 @@ void adjustObjs(Cgicc cgi, int account_id)
       Races[rindex] = new Race(rindex);
 
     // list of player usable races
-    vector <race_t> player_races;
+    std::vector <race_t> player_races;
     player_races.push_back(RACE_HUMAN);
     player_races.push_back(RACE_ELVEN);
     player_races.push_back(RACE_DWARF);

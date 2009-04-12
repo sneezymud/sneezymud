@@ -8,8 +8,10 @@
 // portal.cc
 //
 
-#include "stdsneezy.h"
+#include "room.h"
+#include "handler.h"
 #include "obj_portal.h"
+#include "extern.h"
 #include "person.h"
 
 
@@ -301,6 +303,7 @@ void TPortal::unlockMe(TBeing *ch)
 
 int TPortal::objectDecay()
 {
+
   if (roomp && !roomp->stuff.empty()) {
 #if 0
     sendrpf(COLOR_OBJECTS, roomp, "%s flickers out of view.\n\r", getName(.cap()).c_str());

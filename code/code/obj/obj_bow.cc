@@ -1,4 +1,4 @@
-#include "stdsneezy.h"
+#include "extern.h"
 #include "range.h"
 #include "colorstring.h"
 #include "obj_bow.h"

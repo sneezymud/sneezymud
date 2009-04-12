@@ -1,8 +1,8 @@
 #include <cxxtest/TestSuite.h>
 
-#include "stdsneezy.h"
 #include "configuration.h"
 #include "person.h"
+#include "extern.h"
 #include "charfile.h"
 #include "code/tests/ValueTraits.h"
 #include "socket.h"

@@ -7,8 +7,10 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "room.h"
 #include "monster.h"
+#include "handler.h"
 #include "configuration.h"
 #include "combat.h"
 #include "disease.h"
@@ -593,6 +595,7 @@ int healing_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     return FALSE;
 
   // find the doctor
+
   switch(rp->number){
     case 416:
       shop_nr=144; // gh

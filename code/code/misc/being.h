@@ -8,54 +8,19 @@
 #ifndef __BEING_H
 #define __BEING_H
 
-#ifndef __DB_H
 #include "db.h"
-#endif
-
-#ifndef __THING_H
 #include "thing.h"
-#endif
-
-#ifndef __RESPONSE_H
+#include "comm.h"
 #include "response.h"
-#endif
-
-#ifndef __CONNECT_H
 #include "connect.h"
-#endif
-
-#ifndef __FACTION_H
 #include "faction.h"
-#endif
-
-#ifndef __SPELLS_H
 #include "spells.h"
-#endif
-
-#ifndef __CHARACTERISTICS_H
 #include "characteristics.h"
-#endif
-
-#ifndef __RACE_H
 #include "race.h"
-#endif
-
-#ifndef __DISCIPLINE_H
 #include "discipline.h"
-#endif
-
-#ifndef __SKILLS_H
 #include "skills.h"
-#endif
-
-#ifndef __STRUCTS_H
 #include "structs.h"
-#endif
-
-#ifndef __GARBLE_H
 #include "garble.h"
-#endif
-
 #include "guild.h"
 #include "trap.h"
 #include "sound.h"
@@ -65,10 +30,10 @@
 #include "task.h"
 #include "disease.h"
 #include "stats.h"
-#include "room.h"
 #include "immunity.h"
 #include "discipline.h"
 #include "spell2.h"
+#include "ansi.h"
 
 class TTrophy;
 class TWindow;
@@ -76,11 +41,12 @@ class TGenWeapon;
 class TBaseClothing;
 class TQuiver;
 class TCommodity;
+class TRoom;
 
 class objCost;
 extern TBeing *character_list;
 extern long mobCount;
-extern vector<mobIndexData>mob_index;
+extern std::vector<mobIndexData>mob_index;
 extern TMonster *read_mobile(int nr, readFileTypeT type);
 
 // these functions are used in methods
@@ -1091,7 +1057,7 @@ class TBeing : public TThing {
     TBeing *findDiffZoneSameRace();
     int validEquipSlot(wearSlotT);
     void assignSkillsClass();
-    void assignSkills(classIndT, discNumT, vector<discNumT>);
+    void assignSkills(classIndT, discNumT, std::vector<discNumT>);
     void assignDisciplinesClass();
     const sstring bogus_slot(wearSlotT) const;
     const sstring bogus_slot_worn(wearSlotT) const;
@@ -1495,7 +1461,7 @@ class TBeing : public TThing {
     void doSacrifice(const char *);
     void doWhittle(const char *);
     void doBload(const char *);
-    vector <TBow *> getBows();
+    std::vector <TBow *> getBows();
     TArrow * autoGetAmmoQuiver(TBow *, TQuiver *);
     TArrow * autoGetAmmo(TBow *);
     void doGload(sstring);

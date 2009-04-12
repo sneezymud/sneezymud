@@ -5,7 +5,8 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "being.h"
+#include "room.h"
 
 void TBeing::dropWeapon(wearSlotT slot)
 {

@@ -21,6 +21,9 @@
 
 // This is the DEIKHAN AEGIS discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDDeikhanAegis : public CDiscipline
 {
 public:

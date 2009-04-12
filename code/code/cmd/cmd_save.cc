@@ -9,7 +9,9 @@
 
 ******************************************************************************/
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "room.h"
+#include "being.h"
 #include "monster.h"
 #include "account.h"
 #include "person.h"
@@ -42,6 +44,7 @@ void doSaveMOEdit(TBeing *ch, const char *tArg)
     vlogf(LOG_BUG, format("Player doing save without a room!  [%s]") %  ch->getName());
     return;
   }
+
 
   if (!(tThing = searchLinkedList(tStThing, ch->roomp->stuff)) &&
       !(tThing = searchLinkedList(tStThing, ch->stuff))) {

@@ -9,8 +9,8 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
 #include "obj_base_weapon.h"
+#include "extern.h"
 #include "obj_base_cup.h"
 
 void rewrite_obj_file()

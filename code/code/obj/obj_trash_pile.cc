@@ -1,6 +1,7 @@
-#include "stdsneezy.h"
+#include "room.h"
 #include "monster.h"
 #include "obj_trash_pile.h"
+#include "extern.h"
 #include "pathfinder.h"
 
 const int MAX_TRASH_PILE_VOL=46656;
@@ -183,6 +184,7 @@ void TTrashPile::overFlow()
 
     sendrpf(COLOR_BASIC, rp, "An avalanch of trash cascades in from the %s.\n\r",
 	    dirs[rev_dir[dir]]);
+
 
 
     roomp->saveItems("");

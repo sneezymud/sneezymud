@@ -5,8 +5,11 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "comm.h"
+#include "room.h"
 #include "obj_tool.h"
+#include "being.h"
 
 void TThing::pickPulse(TBeing *ch)
 {
@@ -95,6 +98,7 @@ void TTool::pickPulse(TBeing *ch)
     // now for unlocking the other side, too
     temp_rp = real_roomp(exitp->to_room);
     if (temp_rp &&
+
         (back = temp_rp->dir_option[rev_dir[ch->task->status]]) &&
         back->to_room == ch->in_room)
       REMOVE_BIT(back->condition, EX_LOCKED);

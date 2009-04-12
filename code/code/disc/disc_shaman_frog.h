@@ -5,6 +5,9 @@ const int LAST_TRANSFORM_LIMB = 6;
 extern struct TransformLimbType TransformLimbList[LAST_TRANSFORM_LIMB];
 
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDShamanFrog : public CDiscipline
 {
 public:

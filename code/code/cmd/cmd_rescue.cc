@@ -7,7 +7,10 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 
 static int rescue(TBeing * caster, TBeing * victim, spellNumT skill)
 {
@@ -52,6 +55,7 @@ static int rescue(TBeing * caster, TBeing * victim, spellNumT skill)
   }
 #endif
   
+
   for(StuffIter it=victim->roomp->stuff.begin();
       it!=victim->roomp->stuff.end();++it, tmp_ch=NULL){
     tmp_ch = dynamic_cast<TBeing *>(*it);

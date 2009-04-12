@@ -6,7 +6,6 @@
 
 
 
-#include "stdsneezy.h"
 #include "obj_casino_chip.h"
 #include "shop.h"
 

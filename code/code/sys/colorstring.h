@@ -10,6 +10,13 @@
 #ifndef __COLORSTRING_H
 #define __COLORSTRING_H
 
+#include "ansi.h"
+
+class sstring;
+class TBeing;
+class TThing;
+class Descriptor;
+
 sstring stripColorCodes(const sstring &s);
 
 bool hasColorStrings(const TBeing *, const sstring &, int);

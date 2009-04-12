@@ -5,7 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "being.h"
 #include "disc_ranged.h"
 #include "obj_bow.h"
 #include "obj_tool.h"

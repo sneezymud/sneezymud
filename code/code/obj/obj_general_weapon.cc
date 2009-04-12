@@ -1,10 +1,11 @@
-#include "stdsneezy.h"
 #include "obj_general_weapon.h"
 #include "obj_base_weapon.h"
 #include "obj_gun.h"
 #include "shop.h"
 #include "shopowned.h"
 #include "liquids.h"
+#include "toggle.h"
+#include "extern.h"
 
 
 TGenWeapon::TGenWeapon() :

@@ -25,6 +25,9 @@
 
 // This is the SHAMAN UNDEAD discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDUndead : public CDiscipline
 {
 public:

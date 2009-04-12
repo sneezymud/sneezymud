@@ -6,7 +6,8 @@
 //  
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "being.h"
+#include "client.h"
 #include "person.h"
 #include "colorstring.h"
 #include "monster.h"

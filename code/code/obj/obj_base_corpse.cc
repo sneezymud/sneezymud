@@ -7,9 +7,11 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "comm.h"
+#include "room.h"
 #include "low.h"
 #include "materials.h"
+#include "being.h"
 #include "obj_base_corpse.h"
 #include "obj_player_corpse.h"
 #include "obj_base_corpse.h"
@@ -372,6 +374,7 @@ int TBaseCorpse::objectDecay()
 {
   if (parent)
     act("$p disintegrates in your hands.", FALSE, parent, this, 0, TO_CHAR);
+
   else if (roomp && !roomp->stuff.empty()) {
     if (getMaterial() == MAT_POWDER) {
       sendrpf(COLOR_OBJECTS, roomp, "A gust of wind scatters %s.\n\r", getName());

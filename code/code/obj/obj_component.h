@@ -13,7 +13,8 @@
 #define __COMPONENTS_H
 
 #include "obj_mergeable.h"
-
+#include "enum.h"
+#include "sound.h"
 
 const unsigned int COMP_DECAY      =    (1<<0);
 const unsigned int COMP_SPELL      =    (1<<1);
@@ -255,7 +256,7 @@ class compPlace
     compPlace() {}
 };
 
-extern vector<compPlace>component_placement;
+extern std::vector<compPlace>component_placement;
 
 class compInfo 
 {
@@ -285,8 +286,8 @@ typedef struct {
   int usage;
 } COMPINDEX;
 
-extern vector<COMPINDEX>CompIndex;
-extern vector<compInfo>CompInfo;
+extern std::vector<COMPINDEX>CompIndex;
+extern std::vector<compInfo>CompInfo;
 
 
 class TComponent : public TMergeable {

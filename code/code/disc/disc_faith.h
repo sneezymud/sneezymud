@@ -24,6 +24,9 @@
 
 // This is the FAITH discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDFaith : public CDiscipline
 {
 public:

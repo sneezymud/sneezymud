@@ -9,14 +9,16 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "room.h"
+#include "being.h"
 #include "obj_component.h"
 #include "disc_adventuring.h"
 #include "cmd_dissect.h"
 #include "obj_base_corpse.h"
 #include "low.h"
 
-map<unsigned short int, dissectInfo>dissect_array;
+std::map<unsigned short int, dissectInfo>dissect_array;
 
 int determineDissectionItem(TBaseCorpse *corpse, int *amount, char *msg, char *gl_msg, TBeing *ch)
 {
@@ -66,7 +68,7 @@ int determineDissectionItem(TBaseCorpse *corpse, int *amount, char *msg, char *g
     }  
   }
   if (num == -1) {
-    map<unsigned short int, dissectInfo>::const_iterator CT;
+    std::map<unsigned short int, dissectInfo>::const_iterator CT;
     CT = dissect_array.find(corpse->getCorpseVnum());
     if (CT != dissect_array.end()) {
       num = CT->second.loadItem;

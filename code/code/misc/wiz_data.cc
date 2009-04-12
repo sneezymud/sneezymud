@@ -10,7 +10,8 @@ extern "C" {
 #include <sys/stat.h>
 }
 
-#include "stdsneezy.h"
+#include "being.h"
+#include "extern.h"
 #include "monster.h"
 #include "person.h"
 

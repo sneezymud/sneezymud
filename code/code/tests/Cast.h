@@ -1,10 +1,10 @@
 #include <cxxtest/TestSuite.h>
 
-#include "stdsneezy.h"
 #include "configuration.h"
 #include "charfile.h"
 #include "person.h"
 #include "account.h"
+#include "extern.h"
 #include "code/tests/ValueTraits.h"
 #include "socket.h"
 

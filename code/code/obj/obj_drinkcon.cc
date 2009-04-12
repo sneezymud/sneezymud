@@ -1,7 +1,10 @@
-#include "stdsneezy.h"
+#include "comm.h"
 #include "obj_base_container.h"
 #include "obj_drinkcon.h"
-
+#include "being.h"
+#include "thing.h"
+#include "room.h"
+#include "weather.h"
 
 TDrinkCon::TDrinkCon() :
   TBaseCup()
@@ -57,7 +60,7 @@ void TDrinkCon::waterCreate(const TBeing *caster, int level)
     }
 
     // Calculate water it can contain, or water created
-    water = min(getMaxDrinkUnits() - getDrinkUnits(), water);
+    water = std::min(getMaxDrinkUnits() - getDrinkUnits(), water);
 
     if (water > 0) {
       LogDam(caster, SPELL_CREATE_WATER, water);

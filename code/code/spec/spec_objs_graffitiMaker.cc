@@ -1,6 +1,8 @@
-#include "stdsneezy.h"
+#include "comm.h"
 #include "colorstring.h"
 #include "obj_tool.h"
+#include "being.h"
+#include "room.h"
 
 const unsigned int GRAFFITI_MAX = 50;
 const int GRAFFITI_OBJ = 33315;

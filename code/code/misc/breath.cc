@@ -5,7 +5,10 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "monster.h"
 #include "disease.h"
 
@@ -301,6 +304,7 @@ int DragonBreath(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   // have all the mobs in the room try to run for it!
   TThing *t1;
       
+
   for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end();){
     TMonster *tm;
     t1=*(it++);

@@ -10,6 +10,9 @@
 
 // This is the SORCERY discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDSorcery : public CDiscipline
 {
 public:

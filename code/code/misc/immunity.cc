@@ -2,8 +2,12 @@
 //
 // Class for Immunity Data.
 
-#include "stdsneezy.h"
+#include "being.h"
 #include "immunity.h"
+#include "extern.h"
+
+using std::min;
+using std::max;
 
 // Constructor.  Zero out everything.
 Immunities::Immunities()

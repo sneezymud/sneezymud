@@ -1,7 +1,10 @@
-#include "stdsneezy.h"
+#include "handler.h"
+#include "being.h"
 #include "combat.h"
 #include "disc_monk.h"
 #include "disc_leverage.h"
+#include "spells.h"
+#include "extern.h"
 
 int TBeing::doBoneBreak(const char *argument, TBeing *vict)
 {

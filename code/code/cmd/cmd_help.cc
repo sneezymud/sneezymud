@@ -1,4 +1,5 @@
-#include "stdsneezy.h"
+#include "extern.h"
+#include "being.h"
 
 extern "C" {
 #include <unistd.h>
@@ -15,11 +16,11 @@ extern "C" {
 
 #define ARTICLE_LIST_WIDTH 80
 
-static vector<sstring>helpIndex(0);
-static vector<char *>immortalIndex(0);
-static vector<char *>builderIndex(0);
-static vector<char *>skillIndex(0);
-static vector<char *>spellIndex(0);
+static std::vector<sstring>helpIndex(0);
+static std::vector<char *>immortalIndex(0);
+static std::vector<char *>builderIndex(0);
+static std::vector<char *>skillIndex(0);
+static std::vector<char *>spellIndex(0);
 
 static const char* helpCategory[DB_MAX] = {
   NULL,

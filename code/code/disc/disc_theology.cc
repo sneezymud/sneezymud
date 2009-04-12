@@ -4,11 +4,8 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
-// DISC_THEOLOGY.cc
-// Part of SneezyMUD 4.5
-
-#include "stdsneezy.h"
+#include "extern.h"
+#include "being.h"
 #include "disc_theology.h"
 #include "obj_vial.h"
 #include "obj_symbol.h"

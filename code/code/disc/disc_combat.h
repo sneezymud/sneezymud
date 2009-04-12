@@ -26,6 +26,9 @@
 
 // This contains the general combat skills.  
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDCombat : public CDiscipline
 {
   public:

@@ -30,6 +30,10 @@
 
 // This is the blacksmith discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
+
 class CDBlacksmithing : public CDiscipline
 {
 public:

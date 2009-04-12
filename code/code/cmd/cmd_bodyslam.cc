@@ -5,8 +5,14 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "combat.h"
+#include "enum.h"
+#include "spells.h"
+#include "being.h"
 
 bool TBeing::canBodyslam(TBeing *victim, silentTypeT silent)
 {

@@ -6,7 +6,9 @@
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "colorstring.h"
 #include "statistics.h"
 #include "games.h"
@@ -585,6 +587,7 @@ void TBeing::doWhozone()
   for (d = descriptor_list; d; d = d->next) {
     if (!d->connected && canSee(d->character) &&
         (rp = real_roomp((person = (d->original ? d->original : d->character))->in_room)) &&
+
         (rp->getZoneNum() == roomp->getZoneNum())) {
       sbuf = format("%-25s - %s ") % person->getName() % rp->name;
       if (GetMaxLevel() > MAX_MORT){

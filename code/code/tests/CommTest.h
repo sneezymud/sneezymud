@@ -1,6 +1,5 @@
 #include <cxxtest/TestSuite.h>
 #include "code/tests/ValueTraits.h"
-#include "stdsneezy.h"
 #include "configuration.h"
 #include "person.h"
 #include "connect.h"

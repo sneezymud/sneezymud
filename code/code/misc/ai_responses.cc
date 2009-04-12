@@ -1,4 +1,6 @@
-#include "stdsneezy.h"
+#include "extern.h"
+#include "handler.h"
+#include "room.h"
 #include "low.h"
 #include "monster.h"
 #include "combat.h"
@@ -37,7 +39,7 @@ void TMonster::loadResponses(int virt, const sstring &immortal)
   //
   //    Read the response.
   //
-  istringstream is(db["response"]);
+  std::istringstream is(db["response"]);
 
   while ((tmp = readCommand(is)) != 0) {
     tmp->next = resps->respList;
@@ -408,6 +410,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
       value = convertTo<int>(arg);
 
       tRoom = real_roomp(value);
+
 
       if ((!roomp || !tRoom || tRoom->getZoneNum() != roomp->getZoneNum()) && !inImperia())
         return RET_STOP_PARSING;
@@ -1257,7 +1260,7 @@ sstring TMonster::parseResponse( TBeing *speaker, const char *sstring)
 }
 
 
-void cleanInputBuffer(istringstream &is)
+void cleanInputBuffer(std::istringstream &is)
 {
   int c;
   if(!is.eof()){
@@ -1272,7 +1275,7 @@ void cleanInputBuffer(istringstream &is)
 // end of file, chr, or '}'
 
 // should be able to convert this to sstring and find() etc
-int readToChar(istringstream &is, char *buf, char chr)
+int readToChar(std::istringstream &is, char *buf, char chr)
 {
   char *ptr = buf;
   int c;
@@ -1391,7 +1394,7 @@ static void sstringTranslate(char *buf)
   }
 }
 
-resp * TMonster::readCommand(istringstream &is)
+resp * TMonster::readCommand(std::istringstream &is)
 {
   char		*args, cmdStr[32], buf[1024];
   int		c, i;

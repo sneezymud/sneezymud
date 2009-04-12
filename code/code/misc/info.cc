@@ -6,10 +6,13 @@
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "being.h"
 #include "low.h"
 #include "colorstring.h"
 #include "monster.h"
+#include "client.h"
 
 #include <algorithm>
 #include <sys/types.h>
@@ -2789,7 +2792,7 @@ void TBeing::doWhere(const char *argument)
   sstring tStString(argument),
          tStName(""),
          tStArg("");
-  map <int,bool> vnums_notmatch;
+  std::map <int,bool> vnums_notmatch;
 
   if (powerCheck(POWER_WHERE))
     return;
@@ -5471,7 +5474,7 @@ void TBeing::doSpells(const sstring &argument)
     }
   }
 
-  vector<skillSorter>skillSortVec(0);
+  std::vector<skillSorter>skillSortVec(0);
 
   for (i = MIN_SPELL; i < MAX_SKILL; i++) {
     if (hideThisSpell(i) || (!discArray[i]->minMana))
@@ -5710,7 +5713,7 @@ void TBeing::doRituals(const sstring &argument)
     }
   }
 
-  vector<skillSorter>skillSortVec(0);
+  std::vector<skillSorter>skillSortVec(0);
 
   for (i = MIN_SPELL; i < MAX_SKILL; i++) {
     if (hideThisSpell(i) || !discArray[i]->minLifeforce)
@@ -5934,7 +5937,7 @@ void TBeing::doPrayers(const sstring &argument)
     }
   }
 
-  vector<skillSorter>skillSortVec(0);
+  std::vector<skillSorter>skillSortVec(0);
 
   for (i = MIN_SPELL; i < MAX_SKILL; i++) {
     if (hideThisSpell(i) || (!discArray[i]->minMana))

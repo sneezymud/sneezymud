@@ -9,7 +9,9 @@
 
 #include <cmath>
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "room.h"
+#include "being.h"
 #include "low.h"
 #include "monster.h"
 #include "materials.h"
@@ -665,6 +667,7 @@ int TBeing::doPour(const char *argument)
 
   TThing *t_to_obj = searchLinkedListVis(this, arg2, stuff);
   if (!t_to_obj)
+
     t_to_obj = searchLinkedListVis(this, arg2, roomp->stuff);
   if (t_to_obj && (rc = t_to_obj->pourWaterOnMe(this, from_obj)) != 0) {
     if (rc == -1 && dynamic_cast<TBeing *>(t_to_obj)) {

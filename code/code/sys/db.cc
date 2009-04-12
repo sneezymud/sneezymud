@@ -6,7 +6,8 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "room.h"
+#include "being.h"
 #include "low.h"
 #include "person.h"
 #include "monster.h"
@@ -23,7 +24,7 @@
 #include "mail.h"
 #include "spec_mobs.h"
 #include "obj_component.h"
-#include "stdsneezy.h"
+#include "extern.h"
 #include "loadset.h"
 #include "sys_loot.h"
 #include "shop.h"
@@ -121,7 +122,7 @@ TBeing *character_list = 0; // global l-list of chars
 TMonster *pawnman = NULL;
 TPCorpse *pc_corpse_list = NULL;
 // table of reset data 
-vector<zoneData>zone_table(0);
+std::vector<zoneData>zone_table(0);
 
 liqInfoT liquidInfo;
 currencyInfoT currencyInfo;
@@ -152,19 +153,19 @@ int faction_number = 0;
 // load rate percentage, overrides rates defined in zonefiles
 int fixed_chance = 1;
 
-vector<TRoom *>roomspec_db(0);
-vector<TRoom *>roomsave_db(0);
-queue<sstring>queryqueue;
+std::vector<TRoom *>roomspec_db(0);
+std::vector<TRoom *>roomsave_db(0);
+std::queue<sstring>queryqueue;
 
 
-struct cached_object { int number;map <sstring, sstring> s; };
+struct cached_object { int number;std::map <sstring, sstring> s; };
 struct cached_mob_extra { int number;sstring keyword; sstring description; };
 struct cached_mob_imm { int number;int type; int amt; };
 
 
 class TObjectCache {
 public:
-  map<int, cached_object *>cache;
+  std::map<int, cached_object *>cache;
 
   void preload(void);
   cached_object *operator[](int);
@@ -173,9 +174,9 @@ public:
 
 class TMobileCache {
 public:
-  map<int, cached_object *>cache;
-  map<int, vector <cached_mob_extra *> >extra;
-  map<int, vector <cached_mob_imm *> >imm;
+  std::map<int, cached_object *>cache;
+  std::map<int, std::vector <cached_mob_extra *> >extra;
+  std::map<int, std::vector <cached_mob_imm *> >imm;
 
   void preload(void);
   cached_object *operator[](int);
@@ -189,7 +190,7 @@ struct weather_data weather_info;        // the infomation about the weather
 class lag_data lag_info;
 
 // count of the number of mobs that can load an object
-map<int, int> obj_load_potential;
+std::map<int, int> obj_load_potential;
 
 // local procedures
 static void bootZones(void);
@@ -221,7 +222,7 @@ void update_commod_index()
 
 int getObjLoadPotential(const int obj_num)
 {
-  map<int, int>::iterator tIter;
+  std::map<int, int>::iterator tIter;
   int obj_lp;
 
   tIter = obj_load_potential.find(obj_num);
@@ -235,7 +236,7 @@ int getObjLoadPotential(const int obj_num)
 
 void tallyObjLoadPotential(const int obj_num)
 {
-  map<int, int>::iterator tIter;
+  std::map<int, int>::iterator tIter;
 
   tIter = obj_load_potential.find(obj_num);
   if (tIter != obj_load_potential.end()) {
@@ -499,7 +500,7 @@ void bootDb(void)
   bootPulse(NULL, true);
 
   vlogf(LOG_MISC, "Object load potentials:");
-  map<int, int>::iterator tIter = obj_load_potential.begin();
+  std::map<int, int>::iterator tIter = obj_load_potential.begin();
   while (tIter != obj_load_potential.end()) {
     vlogf(LOG_MISC, format("VNum[%d] = %d") % tIter->first % tIter->second);
     ++tIter;
@@ -670,6 +671,7 @@ void bootWorld(void)
     } 
     allocate_room(virtual_nr);
     rp = real_roomp(virtual_nr);
+
 
     rp->setXCoord(convertTo<int>(db["x"]));
     rp->setYCoord(convertTo<int>(db["y"]));
@@ -1350,7 +1352,7 @@ void zoneData::renumCmd(void)
   }
   
   // set the object and mob tallies in zoneData
-  map<int,int>::iterator iter;
+  std::map<int,int>::iterator iter;
   stat_mobs_total = 0;
   stat_mobs_unique = 0;
   for (iter = stat_mobs.begin(); iter != stat_mobs.end(); iter++ ) {
@@ -1567,8 +1569,8 @@ void bootZones(void)
   DIR *dfd;
   struct dirent *dp;
   int zon=0, tmp;
-  multimap <int, sstring, std::less<int> > files;
-  multimap <int, sstring, std::less<int> >::iterator it;
+  std::multimap <int, sstring, std::less<int> > files;
+  std::multimap <int, sstring, std::less<int> >::iterator it;
   TDatabase db(DB_SNEEZY);
   
   if(!(dfd=opendir("zonefiles"))){
@@ -1589,7 +1591,7 @@ void bootZones(void)
     if(tmp==0 && strcmp(dp->d_name, "0"))
       continue;
 
-    files.insert(pair<int,sstring>(tmp, dp->d_name));
+    files.insert(std::pair<int,sstring>(tmp, dp->d_name));
   }
   
   db.query("update zone set util_flag = 0");
@@ -1737,7 +1739,7 @@ TMonster *read_mobile(int nr, readFileTypeT type)
 
 cached_object *TObjectCache::operator[](int nr)
 {
-  map<int, cached_object *>::iterator tIter;
+  std::map<int, cached_object *>::iterator tIter;
   cached_object *ret;
 
   tIter = cache.find(nr);
@@ -1751,7 +1753,7 @@ cached_object *TObjectCache::operator[](int nr)
 
 cached_object *TMobileCache::operator[](int nr)
 {
-  map<int, cached_object *>::iterator tIter;
+  std::map<int, cached_object *>::iterator tIter;
   cached_object *ret;
 
   tIter = cache.find(nr);

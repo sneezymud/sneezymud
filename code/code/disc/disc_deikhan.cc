@@ -5,7 +5,8 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "being.h"
 #include "disease.h"
 #include "combat.h"
 #include "disc_deikhan.h"
@@ -191,7 +192,7 @@ int TBeing::doLayHands(const char *arg)
           FALSE, this, 0, vict, TO_ROOM);
     }
     vict->addToHit(amt);
-    vict->setHit(min(vict->getHit(), (int) vict->hitLimit()));
+    vict->setHit(std::min(vict->getHit(), (int) vict->hitLimit()));
 
     // success prevents from working for 12 hours
     aff.type = SKILL_LAY_HANDS;

@@ -6,8 +6,11 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "room.h"
+#include "being.h"
+#include "handler.h"
 #include "low.h"
+#include "extern.h"
 #include "monster.h"
 #include "configuration.h"
 #include "combat.h"
@@ -155,6 +158,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
 
 
   if (!specialCorpse && roomp && 
+
       (roomp->isUnderwaterSector() || roomp->isWaterSector())) {
     sprintf(buf, "The bloated, water-filled corpse of %s is floating here.", getName());
   } else if (!specialCorpse) {
@@ -721,7 +725,7 @@ void TBaseCorpse::setupDissectionObjects()
     tDissections->tNext = NULL;
   }
 
-  map<unsigned short int, dissectInfo>::const_iterator tMarker;
+  std::map<unsigned short int, dissectInfo>::const_iterator tMarker;
 
   if ((tMarker = dissect_array.find(getCorpseVnum())) != dissect_array.end()) {
     dissectInfo *tDissect;

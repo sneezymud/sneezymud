@@ -4,7 +4,11 @@
 //
 //
 //////////////////////////////////////////////////////////////////////////
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
+#include "client.h"
 #include "games.h"
 #include "disease.h"
 #include "combat.h"
@@ -487,6 +491,7 @@ void TBeing::doTrack(const char *argument)
     return;
   }
   if (roomp && !isImmortal() &&
+
       (roomp->getLight() + visionBonus <= 0) &&
       !roomp->isRoomFlag(ROOM_ALWAYS_LIT) &&
       !isAffected(AFF_TRUE_SIGHT) && !isAffected(AFF_CLARITY)) {

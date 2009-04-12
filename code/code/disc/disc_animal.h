@@ -3,6 +3,9 @@
 
 // This is the ANIMAL discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDAnimal : public CDiscipline
 {
 public:

@@ -8,8 +8,9 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "being.h"
 #include "games.h"
+#include "extern.h"
 
 
 cardSuitT & operator++(cardSuitT &c, int)

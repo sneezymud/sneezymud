@@ -1,8 +1,9 @@
-#include "stdsneezy.h"
+#include "comm.h"
 #include "low.h"
 #include "obj_base_corpse.h"
 #include "obj_tool.h"
 #include "obj_food.h"
+#include "being.h"
 #include "obj_base_weapon.h"
 #include "obj_player_corpse.h"
 

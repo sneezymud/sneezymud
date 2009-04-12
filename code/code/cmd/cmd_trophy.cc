@@ -5,7 +5,8 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "room.h"
+#include "being.h"
 #include "cmd_trophy.h"
 #include "database.h"
 #include "process.h"
@@ -122,8 +123,8 @@ float TTrophy::getExpModVal(float count, int mobvnum)
   t2=step_mod / num_steps;
   t3=t1*t2;
   t4=max_mod-t3;
-  t5=(double)(max(t4*100, min_mod*100)/100);
-  t5=(double)(min(t5*100, max_mod*100)/100);
+  t5=(double)(std::max(t4*100, min_mod*100)/100);
+  t5=(double)(std::min(t5*100, max_mod*100)/100);
 
   //  vlogf(LOG_PEEL, format("%f %f %f %f %f") %  t1 % t2 % t3 % t4 % t5);
 
@@ -172,6 +173,7 @@ void TBeing::doTrophy(const sstring &arg)
       arg1=arg2;
       zonesearch=-1;
     } else {
+
       zonesearch=roomp->getZoneNum();
     }
   } else if(arg1=="summary"){

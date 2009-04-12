@@ -1,7 +1,9 @@
 // book.cc
 
-#include "stdsneezy.h"
+#include "client.h"
+#include "being.h"
 #include "obj_book.h"
+#include "extern.h"
 
 TBook::TBook() :
   TObj()

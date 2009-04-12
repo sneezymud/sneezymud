@@ -8,9 +8,11 @@
 // spellbag.cc
 //
 
-#include "stdsneezy.h"
+#include "comm.h"
 #include "obj_spellbag.h"
 #include "obj_component.h"
+#include "thing.h"
+#include "being.h"
 
 TSpellBag::TSpellBag() :
   TExpandableContainer()

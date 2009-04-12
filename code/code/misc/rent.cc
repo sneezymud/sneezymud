@@ -5,9 +5,13 @@
 #include <sys/stat.h>
 #include <errno.h>
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
+#include "client.h"
 #include "low.h"
 #include "monster.h"
+#include "handler.h"
 #include "configuration.h"
 #include "charfile.h"
 #include "rent.h"
@@ -1101,6 +1105,7 @@ bool ItemLoad::objToParent(signed char slot, TObj *parent, TObj *new_obj, TRoom 
   if(slot != NORMAL_SLOT){
     if (r)
       vlogf(LOG_BUG, format("Room %d.  Invalid Slot %d.") %
+
 	    r->number % slot);
     else if (ch)
       vlogf(LOG_BUG, format("%s's objects.  Invalid slot %d.") %

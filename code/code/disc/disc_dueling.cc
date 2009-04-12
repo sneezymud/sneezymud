@@ -6,7 +6,9 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "handler.h"
+#include "being.h"
 #include "monster.h"
 #include "range.h"
 #include "disease.h"

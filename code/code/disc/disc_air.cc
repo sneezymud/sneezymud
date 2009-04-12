@@ -5,7 +5,8 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "room.h"
 #include "low.h"
 #include "monster.h"
 #include "disc_air.h"
@@ -486,6 +487,7 @@ int dustStorm(TBeing * caster, int level, sh_int bKnown, int adv_learn)
 {
   TThing *t=NULL;
   TBeing *tmp_victim = NULL;
+
 
   if (caster->roomp->isUnderwaterSector()) {
     caster->sendTo("Not much air down here under all this water.\n\r");

@@ -1,24 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: limbs.h,v $
-// Revision 5.2  2003/03/13 22:40:53  peel
-// added sstring class, same as string but takes NULL as an empty string
-// replaced all uses of string to sstring
-//
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
 
 // limbs.h
 //
@@ -33,6 +12,8 @@
 #define __LIMBS_H
 
 #include "discipline.h"
+#include "sstring.h"
+#include "spells.h"
 
 const int LIMB_NONE	= -1;
 

@@ -7,12 +7,12 @@
 
 // treasure.cc
 
-#include "stdsneezy.h"
+#include "room.h"
 #include "low.h"
 #include "obj_treasure.h"
 #include "database.h"
 #include "obj_base_container.h"
-
+#include "being.h"
 
 TTreasure::TTreasure() :
   TObj()
@@ -92,6 +92,7 @@ void TTreasure::lowCheck()
       if (db.rowCount() > 0) {
         sstring buffer;
         if (roomp) {
+
           buffer = format(" in room %i") % roomp->in_room;
         } else if (equippedBy) {
           buffer = format(" on %s") % equippedBy->getName();

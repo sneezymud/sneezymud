@@ -24,6 +24,9 @@
 
 // This is the WIZARDRY discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDWizardry : public CDiscipline
 {
 public:

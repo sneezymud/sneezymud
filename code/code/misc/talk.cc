@@ -8,7 +8,11 @@
 
 #include <stdarg.h>
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
+#include "client.h"
 #include "colorstring.h"
 #include "monster.h"
 #include "person.h"
@@ -101,6 +105,7 @@ int TBeing::doSay(const sstring &arg)
    norm());
 
   // show everyone in room the say.
+
   for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
     tmp=*(it++);
     
@@ -163,7 +168,7 @@ int TBeing::doSay(const sstring &arg)
   // loop through the list, get the mobs to trigger, THEN trigger them seperately
   // this is because response triggers can affect room contents (roomp->stuff)
   if (isPc()) {
-    list<TMonster *> mobs;
+    std::list<TMonster *> mobs;
     for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
       tmp=*(it++);
       if (!tmp)
@@ -181,7 +186,8 @@ int TBeing::doSay(const sstring &arg)
       mobs.push_front(tmons);
     }
 
-    for(list<TMonster*>::const_iterator it = mobs.begin(); it != mobs.end();) {
+    for(std::list<TMonster*>::const_iterator it = mobs.begin(); 
+	it != mobs.end();) {
       TMonster *tmons = *(it++);
       tmons->aiSay(this, NULL);
       rc = tmons->checkResponses(this, 0, garbleRoom, CMD_SAY);

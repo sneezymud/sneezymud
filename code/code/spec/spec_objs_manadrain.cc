@@ -5,7 +5,8 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "comm.h"
+#include "being.h"
 #include "obj_base_weapon.h"
 
 /*
@@ -52,9 +53,9 @@ int weaponManaDrainer(TBeing *tVictim, cmdTypeT tCmd, const char *, TObj *tObj, 
        !ch->hasClass(CLASS_MONK)))
     return FALSE;
 
-  if (!::number(0, max(10, (int)(tWeap->weaponLevel() +
-                                 (tVictim->GetMaxLevel() -
-                                  ch->GetMaxLevel())))) || forceSuccess) {
+  if (!::number(0, std::max(10, (int)(tWeap->weaponLevel() +
+				      (tVictim->GetMaxLevel() -
+				       ch->GetMaxLevel())))) || forceSuccess) {
     act("A field of darkness seeps from $p.",
         FALSE, ch, tObj, tVictim, TO_CHAR);
     act("$n braces $mself as a field of darkness seeps from $p.",
@@ -62,7 +63,7 @@ int weaponManaDrainer(TBeing *tVictim, cmdTypeT tCmd, const char *, TObj *tObj, 
     act("You feel your energy sucked out of you as a field of darkness seeps from $n's $p.",
         FALSE, ch, tObj, tVictim, TO_VICT);
 
-    int manaDrawn = ::number(1, max(2, min(10, (ch->GetMaxLevel() - tVictim->GetMaxLevel()))));
+    int manaDrawn = ::number(1, std::max(2, std::min(10, (ch->GetMaxLevel() - tVictim->GetMaxLevel()))));
 
     tVictim->addToMana(-manaDrawn);
     ch->addToMana(manaDrawn);

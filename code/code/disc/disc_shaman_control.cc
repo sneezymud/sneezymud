@@ -4,7 +4,7 @@
 //
 ///////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "room.h"
 #include "low.h"
 #include "monster.h"
 #include "disease.h"
@@ -423,6 +423,7 @@ int createWoodGolem(TBeing * caster, int level, sh_int bKnown)
 
 int createWoodGolem(TBeing * caster)
 {
+
   if (caster->roomp && caster->roomp->isUnderwaterSector()) {
     caster->sendTo("You cannot dance the ritual under these wet conditions!\n\r");
     return FALSE;

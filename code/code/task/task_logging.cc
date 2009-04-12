@@ -1,19 +1,22 @@
-#include "stdsneezy.h"
+#include "room.h"
+#include "being.h"
 #include "process.h"
+#include "extern.h"
 #include "obj_base_weapon.h"
 
 #define LAST_WOOD_TYPE 0
 #define LOGS_PER_ROOM 5
 
-map <int, bool> mRoomsLogsHarvested;
+std::map <int, bool> mRoomsLogsHarvested;
     
 void TBeing::doLogging(){
 
-  vector<int>treetypes;
+  std::vector<int>treetypes;
   const int woodtypes[] = { 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85,
     86, 87, 88, 0 };
   int i = 0;
   
+
 
   if(!roomp->isForestSector()){
     sendTo("Forests are said to be a good place to find trees.  Maybe you should find one?\n\r");
@@ -281,7 +284,7 @@ procReforestation::procReforestation(const int &p)
 
 void procReforestation::run(int pulse) const
 {
-  map <int, bool> ::iterator tIter     = mRoomsLogsHarvested.begin(),
+  std::map <int, bool> ::iterator tIter     = mRoomsLogsHarvested.begin(),
                              tLastGood = mRoomsLogsHarvested.begin();
 
   while (tIter != mRoomsLogsHarvested.end()) {

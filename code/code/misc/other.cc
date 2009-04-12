@@ -12,7 +12,11 @@ extern "C" {
 
 #include <algorithm>
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
+#include "client.h"
 #include "colorstring.h"
 #include "monster.h"
 #include "range.h"
@@ -319,6 +323,7 @@ int TBeing::doJunk(const char *argument, TObj *obj)
           case MAT_GLASS:
           case MAT_CORAL:
           case MAT_ICE:
+
             if (this->roomp->isAirSector()) {
               act("You thrown $p down to it's doom below.",
                   TRUE, this, o, NULL, TO_CHAR);
@@ -400,7 +405,7 @@ void TBeing::doCommand(const char *arg)
   }
 
   unsigned int i;
-  vector<sstring>cmdVec(0);
+  std::vector<sstring>cmdVec(0);
 
   // shove everything into the vector
   for (i = 0; i < MAX_CMD_LIST; i++) {
@@ -1057,7 +1062,7 @@ void TBeing::sendSkillsList(discNumT which)
   strcat(buffer, buf);
   char how_long[160];
 
-  vector<skillSorter>sortDiscVec(0);
+  std::vector<skillSorter>sortDiscVec(0);
 
   for (i = MIN_SPELL; i < MAX_SKILL; i++) {
     if (hideThisSpell(i))
@@ -1683,7 +1688,7 @@ void TBeing::doGroup(const char *argument, bool silent)
       sendTo("Only the master of a group may throw lots.\n\r");
       return;
     }
-    vector <sstring> gnames;
+    std::vector <sstring> gnames;
     gnames.push_back(name);
     for (f = followers; f; f = f->next) {
       if (!f->follower->isPc()) continue;
@@ -4633,7 +4638,7 @@ void TBeing::addToRandomStat(int extra_points) {
   int amt;
   unsigned i=0;
   bool firstPass=TRUE;
-  vector<statTypeT>stats;
+  std::vector<statTypeT>stats;
   for (whichStat=MIN_STAT;whichStat<MAX_STATS_USED;whichStat++){
     stats.push_back(whichStat);
   }

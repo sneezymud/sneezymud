@@ -5,12 +5,15 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "being.h"
 #include "disease.h"
 #include "combat.h"
 #include "disc_warrior.h"
 #include "obj_tool.h"
 #include "materials.h"
+
+using std::min;
+using std::max;
 
 int TBeing::doBerserk() 
 {

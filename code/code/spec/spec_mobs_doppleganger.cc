@@ -9,7 +9,8 @@
 
 ******************************************************************************/
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "room.h"
 #include "monster.h"
 
 class mimicStructure
@@ -80,6 +81,7 @@ TBeing * dopplegangerFindTarget(TRoom *tRoom)
          *tBestSucker = NULL;
   TThing *tObj=NULL;
   TRoom  *tNewRoom;
+
 
   for(StuffIter it=tRoom->stuff.begin();it!=tRoom->stuff.end() && (tObj=*it);++it)
     if ((tSucker = dynamic_cast<TBeing *>(tObj)))

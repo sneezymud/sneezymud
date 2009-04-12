@@ -7,7 +7,9 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "being.h"
+#include "client.h"
+#include "handler.h"
 #include "low.h"
 #include "monster.h"
 #include "configuration.h"

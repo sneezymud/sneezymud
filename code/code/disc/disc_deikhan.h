@@ -29,6 +29,9 @@
 
 // This is the deikhan discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDDeikhan : public CDiscipline
 {
 public:

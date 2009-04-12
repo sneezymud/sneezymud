@@ -32,6 +32,9 @@
 
 // This is the SHAMAN CURES discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDShamanHealing : public CDiscipline
 {
 public:

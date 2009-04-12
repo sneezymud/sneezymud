@@ -5,6 +5,8 @@
 #include <queue>
 #include <map>
 
+class sstring;
+
 // TDatabase is a class for interacting with the sql database.
 //
 // You should always use local instances of TDatabase, do not use a pointer
@@ -114,7 +116,7 @@ class TDatabase
   MYSQL_ROW row;
   MYSQL *db;
   long row_count;
-  map <const char *, int, ltstr> column_names;
+  std::map <const char *, int, ltstr> column_names;
   
  public:
   void setDB(dbTypeT);
@@ -153,8 +155,8 @@ class TDatabaseConnection
 
 };
 
-extern vector <string> db_hosts;
-extern queue<sstring> queryqueue;
+extern std::vector <std::string> db_hosts;
+extern std::queue<sstring> queryqueue;
 extern TDatabaseConnection database_connection;
 
 #endif

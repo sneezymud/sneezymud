@@ -5,9 +5,11 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "room.h"
+#include "being.h"
 #include "colorstring.h"
 #include "low.h"
+#include "extern.h"
 #include "obj_pool.h"
 #include "liquids.h"
 #include "materials.h"
@@ -20,9 +22,9 @@ void TPool::overFlow()
   bool valid;
 
   // should make a structure for this but I'm in a hurry
-  vector<TRoom *>rooms;
-  vector<dirTypeT>roomdirs;
-  vector<int>roomamts;
+  std::vector<TRoom *>rooms;
+  std::vector<dirTypeT>roomdirs;
+  std::vector<int>roomamts;
 
   if(!roomp)
     return;
@@ -37,6 +39,7 @@ void TPool::overFlow()
       // eligible exit
       if(exitDir(dir) && real_roomp(exitDir(dir)->to_room) &&
 	 !(exitDir(dir)->condition & EX_CLOSED) &&
+
 	 (rp = real_roomp(roomp->exitDir(dir)->to_room))){
 	// check each item
 	valid=true;

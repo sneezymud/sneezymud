@@ -10,7 +10,8 @@
 #define __PARSE_H
 
 #include <sstream>
-
+#include "sstring.h"
+#include "enum.h"
 
 int search_block(const sstring &arg, const char * const *, bool);
 int old_search_block(const char *, int, int, const char * const *, bool);
@@ -711,7 +712,7 @@ template<class T> T convertTo(const sstring &s)
   } else if(typeid(x)==typeid(unsigned int)){
     return (T) strtoll(s.c_str(), NULL, 10);
   } else {
-    istringstream is(s);
+    std::istringstream is(s);
     if(!(is >> x)) // let failure convert to 0 with no warning.  we relied on
       x=0;         // this (undefined) behavior with atoi, so we need it now
     

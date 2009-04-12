@@ -10,6 +10,9 @@
 
 // This is the THIEF TRAPS discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDTraps : public CDiscipline
 {
 public:

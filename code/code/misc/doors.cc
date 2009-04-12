@@ -5,7 +5,9 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 
 void TBeing::rawUnlockDoor(roomDirData * exitp, dirTypeT door)
 {
@@ -144,6 +146,7 @@ void TBeing::rawOpenDoor(dirTypeT dir)
 
   if (!(rp = roomp))
     vlogf(LOG_BUG, format("NULL rp in rawOpenDoor() for %s.") %  getName());
+
 
   exitp = rp->dir_option[dir];
   if (exitp->condition & EX_DESTROYED) {

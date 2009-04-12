@@ -7,7 +7,9 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "low.h"
 #include "colorstring.h"
 #include "monster.h"
@@ -535,6 +537,7 @@ int eyesOfFertuman(TBeing *caster, const char * tofind, int level, sh_int bKnown
             continue;
           } else {
             if (IS_SET(caster->desc->plr_color, PLR_COLOR_ROOM_NAME)) {
+
               if (hasColorStrings(NULL, obj->roomp->getName(), 2)) {
                  caster->sendTo(COLOR_ROOM_NAME, format("%s is in %s.\n\r") % capbuf % caster->dynColorRoom(obj->roomp, 1, TRUE));
               } else {
@@ -856,7 +859,7 @@ int castShatter(TBeing *caster, TBeing * victim)
 
 int farlook(TBeing *caster, TBeing * victim, int level, sh_int bKnown)
 {
-  vector<TBeing *>tBeing(0);
+  std::vector<TBeing *>tBeing(0);
 
   int target;
   char buf1[128];

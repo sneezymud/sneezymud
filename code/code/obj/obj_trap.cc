@@ -5,7 +5,8 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "room.h"
 #include "monster.h"
 #include "disc_looting.h"
 #include "disease.h"
@@ -109,6 +110,7 @@ int TTrap::detonateGrenade()
     *rp += *this;
   } 
   // don't explode in noheal
+
   if (roomp->isRoomFlag(ROOM_NO_HEAL)){
     act("A muffled explosion is heard as $n begins to detonate, but is suppressed by a magical field.",
 	FALSE, this, 0, 0, TO_ROOM);      

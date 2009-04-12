@@ -5,7 +5,10 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "room.h"
+#include "being.h"
+#include "extern.h"
+#include "client.h"
 #include "low.h"
 #include "charfile.h"
 #include "being.h"
@@ -1513,6 +1516,7 @@ bool TBeing::isValidPkTarget(const TBeing *attacker) const
      (attacker->GetMaxLevel() >= (GetMaxLevel()-MAX_NEWBIE_LEVEL)) &&
      (attacker->GetMaxLevel() <= (GetMaxLevel()+MAX_NEWBIE_LEVEL)))
     return true;
+
 
   if(inPkZone() || (roomp && roomp->isRoomFlag(ROOM_ARENA)))
     return true;

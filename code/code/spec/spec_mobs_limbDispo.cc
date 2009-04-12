@@ -1,5 +1,5 @@
-#include "stdsneezy.h"
 #include "monster.h"
+#include "room.h"
 #include "obj_corpse.h"
 #include "obj_drinkcon.h"
 #include "obj_trash.h"
@@ -137,7 +137,7 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
   // we don't want any other stuff to enter this block
   if (partname.find("[q]") != sstring::npos) {
     // record stuff for limb questing
-    vector <sstring> partinfo;
+    std::vector <sstring> partinfo;
     split_string(partname, " []\n\r\t", partinfo);
     bool record_part = TRUE;
     

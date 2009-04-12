@@ -10,6 +10,9 @@
 
 // This is the dueling discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDDueling : public CDiscipline
 {
 public:

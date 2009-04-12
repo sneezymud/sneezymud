@@ -8,7 +8,8 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "room.h"
+#include "being.h"
 #include "low.h"
 #include "monster.h"
 #include "games.h"
@@ -151,6 +152,7 @@ TObj *TBeing::checkForDiceInInv() const
 }
 
 int TRoom::checkPointroll()
+
 {
   TThing *c=NULL;
 

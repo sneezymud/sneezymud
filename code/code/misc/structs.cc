@@ -7,7 +7,10 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "room.h"
+#include "handler.h"
+#include "being.h"
 #include "low.h"
 #include "monster.h"
 #include "charfile.h"
@@ -315,6 +318,7 @@ TBeing::~TBeing()
     }
   }
   if (rp)
+
     rp->initLight();
   else
     vlogf(LOG_BUG, "NULL rp in TBeing destructor at initLight call.");

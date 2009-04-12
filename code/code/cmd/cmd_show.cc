@@ -8,7 +8,9 @@
 
 #include <dirent.h>
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "colorstring.h"
 #include "configuration.h"
 #include "disc_looting.h"
@@ -32,6 +34,7 @@ static void print_room(int rnum, TRoom *rp, sstring &sb, struct show_room_zone_s
 {
   char buf[10240];
   int dink, bits, scan;
+
 
   sprintf(buf, "%5d %4d %-12s     %s\n\r", rp->number, rnum,
         TerrainInfo[rp->getSectorType()]->name, (rp->name ? rp->name : "Empty"));

@@ -1,10 +1,11 @@
 #include <errno.h>
 
-#include "stdsneezy.h"
 #include "low.h"
 #include "monster.h"
 #include "unistd.h"
 #include "obj_note.h"
+#include "extern.h"
+
 TNote::TNote() :
   TObj(),
   repairman(0),

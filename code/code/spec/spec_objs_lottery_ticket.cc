@@ -1,6 +1,7 @@
-#include "stdsneezy.h"
 #include "spec_objs_lottery_ticket.h"
-
+#include "being.h"
+#include "parse.h"
+#include "obj.h"
 
 LotteryPrizes prizes[NUM_LOTTERY_PRIZES] =
 {

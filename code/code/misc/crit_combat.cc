@@ -7,7 +7,9 @@
 //////////////////////////////////////////////////////////////////////////
 #include <cmath>
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "low.h"
 #include "monster.h"
 #include "disease.h"
@@ -245,6 +247,7 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
         return (ONEHIT_MESS_CRIT_S);
       case 9:
         // Hit friend (half damage) (if no friend hit self) 
+
 	for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();++it){
           tbt = dynamic_cast<TBeing *>(*it);
           if (!tbt)

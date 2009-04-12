@@ -8,6 +8,9 @@
 #ifndef __DISC_PSIONICS_H
 #define __DISC_PSIONICS_H
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDPsionics : public CDiscipline
 {
 public:

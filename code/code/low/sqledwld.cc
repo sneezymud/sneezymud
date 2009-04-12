@@ -1,8 +1,11 @@
-#include "stdsneezy.h"
 #include "configuration.h"
 #include "database.h"
+#include "toggle.h"
 #include "lowtools.h"
 #include <unistd.h>
+#include "sstring.h"
+#include "parse.h"
+#include "extern.h"
 
 int txt2dir(sstring txt)
 {
@@ -18,8 +21,8 @@ int main(int argc, char **argv)
 {
   doConfiguration();
   TDatabase db(DB_SNEEZYBETA);
-  vector<int>vnums;
-  map<sstring,sstring>val;
+  std::vector<int>vnums;
+  std::map<sstring,sstring>val;
   char file[]="/tmp/sqledwldXXXXXX";
   FILE *tmpfile;
   sstring buf, sbuf;

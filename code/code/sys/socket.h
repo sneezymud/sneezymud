@@ -8,6 +8,12 @@
 #ifndef __SOCKET_H
 #define __SOCKET_H
 
+#include "comm.h"
+#include "structs.h"
+#include "obj.h"
+
+class TSocket;
+
 extern int maxdesc, avail_descs;
 
 const int OPT_USEC = 100000; 
@@ -68,8 +74,8 @@ public:
 
 class TMainSocket {
  private:
-  vector <int> m_sock;
-  vector <int> m_port;
+  std::vector <int> m_sock;
+  std::vector <int> m_port;
   TBeing *tmp_ch;
   TObj *placeholder;
   TObjIter iter;

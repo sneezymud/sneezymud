@@ -1,8 +1,8 @@
 #include <iostream>
 #include <fstream>
 
-#include "stdsneezy.h"
 #include "configuration.h"
+#include "extern.h"
 #include "database.h"
 
 #include <boost/program_options.hpp>
@@ -32,8 +32,8 @@ const bool SPEEF_MAKE_BODY=false;
 
 
 void sendHelp(po::options_description desc){
-  cout << "Usage: sneezy [options] [port]" << endl;
-  cout << desc;  
+  std::cout << "Usage: sneezy [options] [port]" << std::endl;
+  std::cout << desc;  
 }
 
 bool doConfiguration(int argc, char *argv[])
@@ -109,7 +109,7 @@ bool doConfiguration(int argc, char *argv[])
 		options(cmdline_options).positional(p).run(), vm);
     }
     po::notify(vm);
-    ifstream ifs(configFile.c_str());
+    std::ifstream ifs(configFile.c_str());
 
     po::store(parse_config_file(ifs, config_options), vm);
     po::notify(vm);

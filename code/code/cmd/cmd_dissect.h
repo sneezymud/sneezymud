@@ -47,6 +47,6 @@ class dissectInfo
     }
 };
 
-extern map<unsigned short int, dissectInfo>dissect_array;
+extern std::map<unsigned short int, dissectInfo>dissect_array;
 
 #endif

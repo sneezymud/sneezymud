@@ -9,9 +9,10 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "being.h"
 #include "low.h"
 #include "games.h"
+#include "extern.h"
 
 const unsigned short MAX_BLACKJACK = 1;
 

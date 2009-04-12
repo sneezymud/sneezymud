@@ -7,7 +7,6 @@
 
 // gemstone.cc
 
-#include "stdsneezy.h"
 #include "obj_gemstone.h"
 
 TGemstone::TGemstone() :

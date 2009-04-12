@@ -5,7 +5,8 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "room.h"
+#include "being.h"
 #include "combat.h"
 #include "disc_mindbody.h"
 #include "monster.h"
@@ -43,6 +44,7 @@ static int feignDeath(TBeing * caster)
 
     caster->stopFighting();
     caster->setPosition(POSITION_SLEEPING);
+
 
     for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
       TBeing *tc = dynamic_cast<TBeing *>(t);

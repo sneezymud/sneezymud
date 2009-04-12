@@ -1,4 +1,5 @@
-#include "stdsneezy.h"
+#include "handler.h"
+#include "room.h"
 #include "monster.h"
 #include "obj_base_corpse.h"
 #include "obj_tool.h"
@@ -53,6 +54,7 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
       corpse->remCorpseFlag(CORPSE_SACRIFICE);
     return TRUE;
   }
+
 
   for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end();){
     t=*(it++);

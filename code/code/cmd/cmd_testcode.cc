@@ -1,4 +1,4 @@
-#include "stdsneezy.h"
+#include "being.h"
 #include "statistics.h"
 #include "obj_symbol.h"
 #include "obj_base_clothing.h"

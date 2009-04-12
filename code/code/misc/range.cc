@@ -10,7 +10,10 @@
 #include <cmath>
 #include <map>
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "low.h"
 #include "monster.h"
 #include "range.h"
@@ -819,6 +822,7 @@ dirTypeT can_see_linear(const TBeing *ch, const TBeing *targ, int *rng, dirTypeT
     else if ((ch->age()->year - ch->getBaseAge() + 17) < 20)
       max_range += 1;
   }
+
 
 
   if ((ch->roomp->getWeather() == WEATHER_RAINY) ||

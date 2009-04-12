@@ -9,6 +9,9 @@
 #ifndef __DISC_IRON_BODY_H
 #define __DISC_IRON_BODY_H
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDIronBody : public CDiscipline
 {
 public:

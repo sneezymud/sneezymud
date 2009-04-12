@@ -1,8 +1,10 @@
 #ifndef __SHOPACCOUNTING_H
 #define __SHOPACCOUNTING_H
 
+#include <map>
+
 class TShopJournal {
-  map <sstring, int> values;
+  std::map <sstring, int> values;
   int shop_nr;
   int year;
 

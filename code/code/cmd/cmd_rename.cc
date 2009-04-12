@@ -8,7 +8,9 @@
 #include <unistd.h>
 #include <errno.h>
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "handler.h"
+#include "being.h"
 #include "database.h"
 #include "charfile.h"
 #include "account.h"

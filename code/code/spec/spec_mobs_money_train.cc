@@ -1,4 +1,4 @@
-#include "stdsneezy.h"
+#include "room.h"
 #include "low.h"
 #include "monster.h"
 #include "paths.h"
@@ -167,6 +167,7 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     return FALSE;
 
   // if we hate someone, the other guards hate them too
+
   for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end();++it) {
     vict = dynamic_cast<TBeing *>(*it);
     if (!vict)

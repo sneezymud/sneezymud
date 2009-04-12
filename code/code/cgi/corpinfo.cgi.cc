@@ -1,4 +1,3 @@
-#include "stdsneezy.h"
 #include "database.h"
 #include "corporation.h"
 
@@ -125,7 +124,7 @@ void sendCorporationInfo(int corp_id)
 
 void sendCorporationsList()
 {
-  vector <corp_list_data> corp_list;
+  std::vector <corp_list_data> corp_list;
   multimap <int, int, std::greater<int> > m;
   multimap <int, int, std::greater<int> >::iterator it;
 

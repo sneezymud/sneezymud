@@ -1,13 +1,16 @@
-#include "stdsneezy.h"
+#include "being.h"
 #include <errno.h>
 #include "low.h"
 #include "monster.h"
 #include "database.h"
 #include "corporation.h"
 #include "guild.h"
+#include "handler.h"
+#include "room.h"
+#include "extern.h"
 
 // start new guild stuff
-vector<TGuild *>guild_table(0);
+std::vector<TGuild *>guild_table(0);
 
 void TBeing::setGuildID(int id)
 {
@@ -955,7 +958,7 @@ void TBeing::show_guild(const char * args)
 
     int relationcount = 0;
     sendTo(COLOR_BASIC, "<1><c>Relations:<1>\n\r");
-    vector<TGuild *>::iterator i;
+    std::vector<TGuild *>::iterator i;
     TGuild *f2 = NULL;
     for( i = guild_table.begin(); i != guild_table.end(); ++i) {
       f2 = (*i);
@@ -1020,7 +1023,7 @@ void TBeing::show_guild(const char * args)
 
   sprintf(buf, "<c>ID          Name\n\r");
   sendTo(COLOR_BASIC, buf);
-  vector<TGuild *>::iterator i;
+  std::vector<TGuild *>::iterator i;
   for(i = guild_table.begin();i != guild_table.end(); ++i) {
     if (isImmortal() || (*i) == newguild() ||
 	!(IS_SET((*i)->flags, GUILD_HIDDEN) || (*i)->ID == 0 || !IS_SET((*i)->flags, GUILD_ACTIVE))) {
@@ -1059,7 +1062,7 @@ int TGuild::getRelation(TGuild * target) {
 }
 
 int TGuild::getRelation(int target) {
-  vector<TRelation *>::iterator i;
+  std::vector<TRelation *>::iterator i;
   for (i = relations.begin(); i != relations.end(); ++i) {
     if((*i)->targ_fact == target) {
       return (*i)->relation;
@@ -1073,7 +1076,7 @@ void TGuild::setRelation(TGuild * target, int state) {
 }
 
 void TGuild::setRelation(int target, int state) {
-  vector<TRelation *>::iterator i;
+  std::vector<TRelation *>::iterator i;
   for (i = relations.begin(); i != relations.end(); ++i) {
     if((*i)->targ_fact == target) {
       if (state == RELATION_NONE) {
@@ -1108,7 +1111,7 @@ bool remove_guild(const char *args)
 }
 
 bool remove_guild_by_ID(int idnum) {
-  vector<TGuild *>::iterator i;
+  std::vector<TGuild *>::iterator i;
   TDatabase db(DB_SNEEZY);
   for (i = guild_table.begin();i != guild_table.end();++i) {
     if ((*i)->ID == idnum) {
@@ -1120,7 +1123,7 @@ bool remove_guild_by_ID(int idnum) {
 }
 
 bool remove_guild_by_keywords(const char * args) {
-  vector<TGuild *>::iterator i;
+  std::vector<TGuild *>::iterator i;
   for (i = guild_table.begin(); i != guild_table.end();++i) {
     if (isname(args, (*i)->keywords)) {
       guild_table.erase(i);
@@ -1143,7 +1146,7 @@ TGuild * get_guild(const char *args) {
 }
 
 TGuild * get_guild_by_ID(int idnum) {
-  vector<TGuild *>::iterator i;
+  std::vector<TGuild *>::iterator i;
   for (i = guild_table.begin();i != guild_table.end();++i) {
     if ((*i)->ID == idnum) {
       return (*i);
@@ -1153,7 +1156,7 @@ TGuild * get_guild_by_ID(int idnum) {
 }
 
 TGuild * get_guild_by_keywords(const char * args) {
-  vector<TGuild *>::iterator i;
+  std::vector<TGuild *>::iterator i;
   for (i = guild_table.begin(); i != guild_table.end();++i) {
     if (isname(args, (*i)->keywords)) {
       return (*i);
@@ -1502,7 +1505,7 @@ void save_guilds()
     vlogf(LOG_FILE, "Couldn't open guilds datafile in save_guilds()");
     return;
   }
-  vector<TGuild *>::iterator i;
+  std::vector<TGuild *>::iterator i;
   TGuild *f = NULL;
   for(i = guild_table.begin(); i != guild_table.end(); ++i) {
     f = (*i);
@@ -1519,7 +1522,7 @@ void save_guilds()
     for(int j = 0; j < NUM_MAX_RANK; j++) {
       fprintf(fp, "rank %d %d %s\n", j, f->permissions[j], f->rank[j]);
     }
-    vector<TRelation *>::iterator k;
+    std::vector<TRelation *>::iterator k;
     for(k = f->relations.begin(); k != f->relations.end(); ++k) {
       fprintf(fp, "R %d %d\n", (*k)->targ_fact, (*k)->relation);
     }

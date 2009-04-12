@@ -3,8 +3,9 @@
 #include <sys/types.h>
 #include <dirent.h>
 
-#include "stdsneezy.h"
+#include "handler.h"
 #include "low.h"
+#include "extern.h"
 #include "monster.h"
 #include "configuration.h"
 #include "statistics.h"

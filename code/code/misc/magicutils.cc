@@ -2,7 +2,10 @@
 
 #include <cmath>
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "handler.h"
+#include "room.h"
+#include "being.h"
 #include "low.h"
 #include "low.h"
 #include "monster.h"
@@ -947,6 +950,7 @@ const char *what_does_it_open(const TKey *o)
   for (i = 0; i < WORLD_SIZE; i++) {	// check if it opens a door 
     if ((rp = real_roomp(i))) {
       for (x = 0; x < 10; x++) {
+
 	if ((ex = rp->dir_option[x]) && (ex->key == vnum)) {
 	  if (IS_SET(ex->condition, EX_SECRET))
 	    return "a secret door";
@@ -2026,7 +2030,7 @@ bool genericDisease(TBeing *caster, TBeing *vict, int level)
   aff.duration = level * UPDATES_PER_MUDHOUR / 3;
   aff.modifier2 = level;
 	
-  vector <diseaseTypeT> diseases; // possible disease types
+  std::vector <diseaseTypeT> diseases; // possible disease types
   // starting with most potent... order matters
   if(!vict->hasDisease(DISEASE_GANGRENE) && level >= 50)
     diseases.push_back(DISEASE_GANGRENE);
@@ -2047,7 +2051,7 @@ bool genericDisease(TBeing *caster, TBeing *vict, int level)
   double level_diff = (double) (vict->GetMaxLevel() - level);
   if (level_diff < 0) {
     reverse(diseases.begin(), diseases.end());
-    level_diff = abs(level_diff);
+    level_diff = std::abs(level_diff);
   }
   // this scales depending on the number of diseases available
   // higher level diseases will be  harder to land (on higher level targets) depending on the what the slope is set to

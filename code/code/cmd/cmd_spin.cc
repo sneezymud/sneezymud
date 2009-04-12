@@ -5,7 +5,10 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "being.h"
+#include "enum.h"
 #include "combat.h"
 
 bool TBeing::canSpin(TBeing *victim, silentTypeT silent)

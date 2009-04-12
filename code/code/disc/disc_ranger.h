@@ -10,6 +10,9 @@
 
 // This is the RANGER discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDRanger : public CDiscipline
 {
 public:

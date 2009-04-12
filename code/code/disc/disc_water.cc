@@ -5,7 +5,8 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "room.h"
 #include "low.h"
 #include "monster.h"
 #include "disease.h"
@@ -22,6 +23,7 @@ int faerieFog(TBeing * caster, int, sh_int bKnown)
   TThing *t;
 
   if (caster->bSuccess(bKnown, SPELL_FAERIE_FOG)) {
+
     for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end();){
       t=*(it++);
       tmp_victim = dynamic_cast<TBeing *>(t);

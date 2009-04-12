@@ -1,4 +1,6 @@
-#include "stdsneezy.h"
+#include "being.h"
+#include "room.h"
+#include "obj.h"
 
 int task_extinguish_my_ass(TBeing *ch, cmdTypeT cmd, const char *arg, int pulse, TRoom *, TObj *)
 {

@@ -8,7 +8,8 @@
 /////////////////////////////////////////
 
 #include <unistd.h>
-#include "stdsneezy.h"
+#include "extern.h"
+#include "being.h"
 #include "colorstring.h"
 
 messageTypeT mapMessageFromFile(const char tString);

@@ -4,6 +4,7 @@
 // this is a base class for object types are that "mergeable"
 // ex, components, commodities, talens, etc
 
+#include "obj.h"
 
 class TMergeable : public virtual TObj {
  private:

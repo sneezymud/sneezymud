@@ -21,6 +21,9 @@
 
 // This is the FIRE discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDFire : public CDiscipline
 {
 public:

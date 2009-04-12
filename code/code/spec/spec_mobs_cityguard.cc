@@ -1,4 +1,4 @@
-#include "stdsneezy.h"
+#include "room.h"
 #include "monster.h"
 #include "obj_trap.h"
 #include "spec_mobs.h"
@@ -153,6 +153,7 @@ sstring guardShout(TBeing *ch){
     case 70:
     case 71:
     case 72:
+
       s = format("Help!  Criminals at %s!") % ch->roomp->name;
       break;
     case 73:

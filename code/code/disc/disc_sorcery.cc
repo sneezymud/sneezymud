@@ -7,7 +7,7 @@
 
 #include <cmath>
 
-#include "stdsneezy.h"
+#include "room.h"
 #include "low.h"
 #include "monster.h"
 #include "disease.h"
@@ -98,6 +98,7 @@ int mysticDarts(TBeing *caster, TBeing *victim, int level, sh_int bKnown, int ad
           dam /= 2;
         }
     }
+
 
     victim->roomp->playsound(SOUND_SPELL_MYSTIC_DART, SOUND_TYPE_MAGIC);
 

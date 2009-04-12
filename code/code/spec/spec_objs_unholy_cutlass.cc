@@ -1,5 +1,7 @@
-#include "stdsneezy.h"
+#include "comm.h"
 #include "obj_base_weapon.h"
+#include "extern.h"
+#include "being.h"
 
 
 int doHurt(TBeing *ch, TBeing *vict, TObj *o)

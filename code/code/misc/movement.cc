@@ -17,7 +17,9 @@
 // It keeps track of where being was and temporarily moves them back and
 // forth in order to echo things properly.
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "being.h"
 #include "low.h"
 #include "monster.h"
 #include "combat.h"

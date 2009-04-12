@@ -1,8 +1,10 @@
-#include "stdsneezy.h"
 #include "process.h"
 #include "timing.h"
 #include "database.h"
 #include "shop.h"
+#include "parse.h"
+#include "faction.h"
+#include "extern.h"
 
 ///////////
 
@@ -94,7 +96,7 @@ void TScheduler::add(TProcess *p)
 void TScheduler::run(int pulse)
 {
   TTiming timer;
-  vector<TProcess *>::iterator iter;
+  std::vector<TProcess *>::iterator iter;
 
   for(iter=procs.begin();iter!=procs.end();++iter){
     if((*iter)->should_run(pulse)){

@@ -1,4 +1,7 @@
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "monster.h"
 #include "disease.h"
 #include "combat.h"
@@ -183,6 +186,7 @@ int TBeing::doSkySpirit(const char *argument)
     sendTo("You do not know how to summon the spirits of the sky.\n\r");
     return FALSE;
   }
+
   if (this->roomp->isIndoorSector()) {
     sendTo("You cannot summon the spirits of the sky unless you are outdoors!\n\r");
     return FALSE;

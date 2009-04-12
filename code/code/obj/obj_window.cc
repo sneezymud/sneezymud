@@ -1,7 +1,10 @@
 // window.cc
 //
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "handler.h"
+#include "room.h"
+#include "being.h"
 #include "obj_window.h"
 
 TWindow::TWindow() :
@@ -98,6 +101,7 @@ void TBeing::windowLook(const TWindow *w)
     act("You peer through $p...", FALSE, this, w, NULL, TO_CHAR);
   sendRoomName(target);
   sendRoomDesc(target);
+
   list_thing_in_room(target->stuff, this);
 }
 

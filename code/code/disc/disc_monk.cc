@@ -5,7 +5,10 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "combat.h"
 #include "disc_monk.h"
 #include "disc_cures.h"
@@ -35,6 +38,7 @@ int TBeing::doLeap(const sstring &arg)
     sendTo("You do not know the secrets of cat-like leaping.\n\r");
     return FALSE;
   }
+
 
   if(roomp->isFallSector()){
     sendTo("There's no ground beneath you to leap off of here!\n\r");

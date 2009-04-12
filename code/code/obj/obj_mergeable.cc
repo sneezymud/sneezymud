@@ -1,18 +1,16 @@
-#include "stdsneezy.h"
 #include "obj_mergeable.h"
-
 
 bool TMergeable::willMerge(TMergeable *t)
 {
-  vlogf(LOG_PEEL, format("TMergeable::willMerge: %s %s") %
-	getName() % t->getName());
+  //  vlogf(LOG_PEEL, format("TMergeable::willMerge: %s %s") %
+  //	getName() % t->getName());
   return false;
 }
 
 void TMergeable::doMerge(TMergeable *t)
 {
-  vlogf(LOG_PEEL, format("TMergeable::doMerge: %s %s") %
-	getName() % t->getName());
+  //  vlogf(LOG_PEEL, format("TMergeable::doMerge: %s %s") %
+  //	getName() % t->getName());
   return;
 }
 

@@ -12,10 +12,14 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "comm.h"
+#include "room.h"
+#include "extern.h"
 #include "obj_tool.h"
 #include "obj_commodity.h"
+#include "being.h"
 #include "materials.h"
+
 
 // used to plug messages and behavior to common repair functions
 class BaseRepair
@@ -114,6 +118,7 @@ TTool* BaseRepair::GetRoomTool(int vnum)
 
   if (!(rp = real_roomp(m_ch->in_room)))
     return NULL;
+
 
   for(StuffIter it= rp->stuff.begin();it!= rp->stuff.end();++it)
   {

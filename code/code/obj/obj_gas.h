@@ -10,6 +10,7 @@
 
 #include "obj.h"
 #include "obj_mergeable.h"
+#include "handler.h"
 
 // All gasses operate the same way somewhat.  They behavior is
 // differentiated by their gasTypeT.  All sorts of data can be stored

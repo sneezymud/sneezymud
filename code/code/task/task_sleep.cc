@@ -4,7 +4,8 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "being.h"
+#include "room.h"
 
 int task_sleep(TBeing *ch, cmdTypeT cmd, const char *arg, int pulse, TRoom *, TObj *)
 {

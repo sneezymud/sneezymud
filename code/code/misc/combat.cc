@@ -8,7 +8,11 @@
 
 #include <cmath>
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
+#include "client.h"
 #include "low.h"
 #include "colorstring.h"
 #include "monster.h"
@@ -161,6 +165,7 @@ bool TBeing::isTanking()
 TBeing *findNextOpponent(TBeing *ch, TBeing *cur)
 {
   TBeing *tmp=NULL;
+
 
   for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end();++it){
     tmp = dynamic_cast<TBeing *>(*it);

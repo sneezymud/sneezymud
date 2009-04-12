@@ -1,10 +1,10 @@
-#include "stdsneezy.h"
 #include "monster.h"
 #include "pathfinder.h"
 #include "obj_commodity.h"
 #include "shop.h"
 #include "shopowned.h"
 #include "obj_open_container.h"
+#include "room.h"
 #include "database.h"
 #include "materials.h"
 

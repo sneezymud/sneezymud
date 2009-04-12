@@ -9,7 +9,7 @@
 
 ******************************************************************************/
 
-#include "stdsneezy.h"
+#include "room.h"
 #include "monster.h"
 
 int tunnelerEarthquake(TBeing *ch, cmdTypeT tCmd, const char *tArg, TMonster *tMyself, TObj *tObj)
@@ -82,6 +82,7 @@ int tunnelerEarthquake(TBeing *ch, cmdTypeT tCmd, const char *tArg, TMonster *tM
     }
 
     tFighters = ::number(1, tFighters);
+
 
     for(StuffIter it=tMyself->roomp->stuff.begin();it!=tMyself->roomp->stuff.end() && (tThing=*it);++it)
       if ((tBeing = dynamic_cast<TBeing *>(tThing)) &&

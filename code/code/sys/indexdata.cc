@@ -5,7 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "extern.h"
 #include "configuration.h"
 #include "statistics.h"
 #include "database.h"
@@ -13,8 +13,8 @@
 extern FILE *obj_f;
 extern FILE *mob_f;
 
-vector<mobIndexData>mob_index(0);
-vector<objIndexData>obj_index(0);
+std::vector<mobIndexData>mob_index(0);
+std::vector<objIndexData>obj_index(0);
 
 indexData::indexData() :
   virt(0),

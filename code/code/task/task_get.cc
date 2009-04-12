@@ -5,8 +5,11 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "handler.h"
+#include "being.h"
 #include "obj_player_corpse.h"
+#include "room.h"
 #include "obj_base_container.h"
 #include "obj_table.h"
 

@@ -5,7 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "room.h"
 #include "low.h"
 #include "monster.h"
 #include "disease.h"
@@ -56,6 +56,7 @@ int slingShot(TBeing * caster, TBeing * victim, int level, sh_int bKnown, int ad
                 FALSE, caster, NULL, victim, TO_NOTVICT);
       }
     }
+
     victim->roomp->playsound(SOUND_SPELL_SLING_SHOT, SOUND_TYPE_MAGIC);
     if (caster->reconcileDamage(victim, dam, SPELL_SLING_SHOT) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;

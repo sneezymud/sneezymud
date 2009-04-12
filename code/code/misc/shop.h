@@ -9,6 +9,9 @@
 #ifndef __SHOP_H
 #define __SHOP_H
 
+#include <map>
+#include <vector>
+
 const unsigned int SHOPACCESS_OWNER   = (1<<0);
 const unsigned int SHOPACCESS_INFO    = (1<<1);
 const unsigned int SHOPACCESS_RATES   = (1<<2);
@@ -42,12 +45,16 @@ const int SHOP_FILE_VERSION = 1;
 
 // forward declaration
 class shopData;
+class TObj;
+class TMonster;
+class sstring;
+class TBeing;
 
 #if SHOP_PRICES_FLUXUATE
-extern vector<shop_pricing>ShopPriceIndex;
+extern std::vector<shop_pricing>ShopPriceIndex;
 #endif
 
-extern vector<shopData>shop_index;
+extern std::vector<shopData>shop_index;
 
 extern TObj *loadRepairItem(TBeing *, int, long &, int &, unsigned char &);
 
@@ -60,11 +67,11 @@ class shopData {
   public:
     int shop_nr;
     bool owned;
-    vector <int> producing;       /* Which item to produce (virtual)      */
+    std::vector <int> producing;  /* Which item to produce (virtual)      */
     float profit_buy;             /* Factor to multiply cost with.        */
     float profit_sell;            /* Factor to multiply cost with.        */
-    vector<unsigned int>type;     /* Which item to trade.                 */
-    vector <int> mat_type;       /* Material types to allow              */
+    std::vector<unsigned int>type;/* Which item to trade.                 */
+    std::vector <int> mat_type;   /* Material types to allow              */
     char *no_such_item1;          /* Message if keeper hasn't got an item */
     char *no_such_item2;          /* Message if player hasn't got an item */
     char *missing_cash1;          /* Message if keeper hasn't got cash    */
@@ -110,15 +117,15 @@ class shopData {
 
 private:
     bool isCached;
-    map<int,float> buy_ratios_cache;
-    map<sstring,float> buy_matches_cache;
-    map<sstring,float> buy_player_cache;
-    map<int,float> sell_ratios_cache;
-    map<sstring,float> sell_matches_cache;
-    map<sstring,float> sell_player_cache;
-    map<int,int> max_ratios_cache;
-    map<sstring,int> max_matches_cache;
-    map<sstring,int> max_player_cache;
+    std::map<int,float> buy_ratios_cache;
+    std::map<sstring,float> buy_matches_cache;
+    std::map<sstring,float> buy_player_cache;
+    std::map<int,float> sell_ratios_cache;
+    std::map<sstring,float> sell_matches_cache;
+    std::map<sstring,float> sell_player_cache;
+    std::map<int,int> max_ratios_cache;
+    std::map<sstring,int> max_matches_cache;
+    std::map<sstring,int> max_player_cache;
     int max_num;
     int corp_id;
     double dividend;

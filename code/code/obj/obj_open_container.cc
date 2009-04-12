@@ -7,10 +7,11 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "extern.h"
 #include "disc_looting.h"
 #include "obj_open_container.h"
 #include "obj_money.h"
+#include "handler.h"
 
 TOpenContainer::TOpenContainer() :
   TBaseContainer(),

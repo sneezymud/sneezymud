@@ -11,6 +11,7 @@
 // some faction code is bad  (faction%) without fully enabled factions
 #define FACTIONS_IN_USE 0
 
+#include "spells.h"
 
 const int FACT_LEADER_SLOTS  = 4; // leader = 0, 3 subleaders
 

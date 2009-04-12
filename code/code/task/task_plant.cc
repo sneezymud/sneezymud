@@ -1,4 +1,6 @@
-#include "stdsneezy.h"
+#include "handler.h"
+#include "room.h"
+#include "being.h"
 #include "low.h"
 #include "monster.h"
 #include "obj_tool.h"
@@ -153,6 +155,7 @@ int TBeing::doSeedPlant(sstring arg){
     sendTo("You need to specify some seeds to plant.\n\r");
     return FALSE;
   }
+
 
   if(roomp->isFallSector() || roomp->isWaterSector() || 
      roomp->isIndoorSector() || roomp->isUnderwaterSector()){

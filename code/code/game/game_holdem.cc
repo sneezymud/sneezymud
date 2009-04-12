@@ -1,6 +1,7 @@
-#include "stdsneezy.h"
+#include "being.h"
 #include "low.h"
 #include "games.h"
+#include "handler.h"
 
 // this is a good example of how not to write code
 // no need to thank me - peel
@@ -206,7 +207,7 @@ sstring HoldemGame::handValToStr(int val){
 void HoldemGame::showdown(TBeing *ch)
 {
   int hands[MAX_HOLDEM_PLAYERS], highest=0;
-  vector <int> winners;
+  std::vector <int> winners;
   int i;
   sstring buf, msg;
 
@@ -604,7 +605,7 @@ void HoldemGame::call(TBeing *ch)
 {
   sstring buf;
   TObj *chip;
-  vector <TObj *> chipl;
+  std::vector <TObj *> chipl;
 
   if (!ch->checkHoldem())
     return;
@@ -680,7 +681,7 @@ void HoldemGame::raise(TBeing *ch, const sstring &arg)
 {
   sstring buf;
   TObj *chip;
-  vector <TObj *> chipl;
+  std::vector <TObj *> chipl;
 
   if (!ch->checkHoldem())
     return;

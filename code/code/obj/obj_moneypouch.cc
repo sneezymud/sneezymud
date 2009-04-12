@@ -4,9 +4,9 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
 #include "monster.h"
 #include "obj_moneypouch.h"
+#include "obj_money.h"
 
 int TMoneypouch::getMoney(currencyTypeT c) const
 {

@@ -8,6 +8,9 @@
 #ifndef __DISC_DEFENSE_H
 #define __DISC_DEFENSE_H
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDDefense : public CDiscipline
 {
 public:

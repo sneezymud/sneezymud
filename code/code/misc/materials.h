@@ -9,6 +9,8 @@
 #ifndef __MATERIALS_H
 #define __MATERIALS_H
 
+#include "structs.h"
+
 const int    MAT_UNDEFINED       =0;
 const int    MAT_PAPER           =1;
 const int    MAT_CLOTH           =2;

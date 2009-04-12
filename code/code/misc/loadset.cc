@@ -8,9 +8,10 @@
 
 #include <cmath>
 
-#include "stdsneezy.h"
+#include "being.h"
 #include "configuration.h"
 #include "monster.h"
+#include "extern.h"
 #include "materials.h"
 #include "loadset.h"
 #include "obj_armor.h"

@@ -16,6 +16,8 @@
 
 #include "limbs.h"
 #include "faction.h"
+#include "ansi.h"
+#include "spells.h"
 
 enum thingTypeT {
   TYPETHING,    // = 0;
@@ -42,10 +44,10 @@ class extraDescription {
     const char *findExtraDesc(const char *word);
 };
 
-typedef list <TThing *> StuffList;
+typedef std::list <TThing *> StuffList;
 typedef StuffList::const_iterator StuffIter;
 
-typedef list <const TThing *> StuffListConst;
+typedef std::list <const TThing *> StuffListConst;
 typedef StuffListConst::const_iterator StuffIterConst;
 
 class TThing {

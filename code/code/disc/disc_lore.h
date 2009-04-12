@@ -31,6 +31,9 @@
 
 // This is the mage/ranger/shaman lore discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDLore : public CDiscipline
 {
 public:

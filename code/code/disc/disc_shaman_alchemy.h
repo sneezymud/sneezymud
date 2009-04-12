@@ -21,6 +21,9 @@
 
 // This is the SHAMAN ALCHEMY discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDShamanAlchemy : public CDiscipline
 {
 public:

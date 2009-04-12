@@ -4,10 +4,11 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
 #include "socket.h"
 #include "database.h"
 #include "configuration.h"
+#include "extern.h"
+#include "enum.h"
 
 extern "C" {
 #include <unistd.h>

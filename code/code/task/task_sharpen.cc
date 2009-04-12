@@ -4,8 +4,10 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "comm.h"
 #include "obj_tool.h"
+#include "being.h"
+#include "handler.h"
 
 void stop_sharpen(TBeing *ch)
 {

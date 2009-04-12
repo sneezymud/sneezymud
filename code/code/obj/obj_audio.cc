@@ -7,8 +7,8 @@
 
 // audio.cc
 
-#include "stdsneezy.h"
 #include "low.h"
+#include "extern.h"
 #include "obj_audio.h"
 
 int TAudio::getFreq() const

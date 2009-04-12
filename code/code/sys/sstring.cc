@@ -1,8 +1,11 @@
 #include <stdexcept>
 #include <mysql/mysql.h>
 #include <boost/regex.hpp>
-#include "stdsneezy.h"
 #include "sstring.h"
+#include "db.h"
+#include "extern.h"
+#include "ansi.h"
+#include "parse.h"
 
 const sstring sstring::escape(stringEscapeT escape_type) const
 {

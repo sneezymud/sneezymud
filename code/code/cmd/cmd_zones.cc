@@ -10,7 +10,8 @@
 #include <algorithm>
 #include <cmath>
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "being.h"
 #include "database.h"
 #include "cmd_trophy.h"
 
@@ -188,7 +189,7 @@ void TBeing::doZonesSingle(sstring tStString)
     iZIndex = atoi(tStString.c_str());
 
     // Is a digit, find the appropriate zone here.
-    vector <zoneSorter> sortZoneVec(0);
+    std::vector <zoneSorter> sortZoneVec(0);
 
     for (zone = 0; zone < zone_table.size(); zone++) {
       // skip the void (0) : this is for misc. mobs
@@ -265,7 +266,7 @@ void TBeing::doZonesSingle(sstring tStString)
     }
 
     // sort the vector
-    sort(sortZoneVec.begin(), sortZoneVec.end(), zoneSorter());
+    std::sort(sortZoneVec.begin(), sortZoneVec.end(), zoneSorter());
 
     if ((iZIndex == 0) || (iZIndex >= sortZoneVec.size())) {
       iZIndex = (sortZoneVec.size() - 1);
@@ -317,7 +318,7 @@ void TBeing::doZones(sstring tStString)
   str += "for players.  The levels shown may also fluxuate from moment to moment.\n\r";
   str += "\n\r";
 
-  vector<zoneSorter>sortZoneVec(0);
+  std::vector<zoneSorter>sortZoneVec(0);
 
   for (zone = 0; zone < zone_table.size(); zone++) {
     // skip the void (0) : this is for misc. mobs
@@ -444,7 +445,7 @@ void TBeing::doZones(sstring tStString)
   }
 
   // sort the vector
-  sort(sortZoneVec.begin(), sortZoneVec.end(), zoneSorter());
+  std::sort(sortZoneVec.begin(), sortZoneVec.end(), zoneSorter());
 
   // list is sorted by avg level, cat it all together now
   int lastavg = -1;

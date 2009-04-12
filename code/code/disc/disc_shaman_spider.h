@@ -2,6 +2,9 @@
 #ifndef __DISC_SHAMAN_SPIDER_H
 #define __DISC_SHAMAN_SPIDER_H
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDShamanSpider : public CDiscipline
 {
 public:

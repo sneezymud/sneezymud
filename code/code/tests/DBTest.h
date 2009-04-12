@@ -1,9 +1,10 @@
 #include <cxxtest/TestSuite.h>
 
-#include "stdsneezy.h"
 #include "configuration.h"
 #include "database.h"
 #include "timing.h"
+#include "sstring.h"
+#include "parse.h"
 
 class DBTest : public CxxTest::TestSuite
 {

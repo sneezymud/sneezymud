@@ -8,7 +8,9 @@
 
 #include <ctime>
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "room.h"
+#include "being.h"
 #include "person.h"
 #include "monster.h"
 #include "obj_gun.h"
@@ -53,6 +55,7 @@ bool TBeing::inPkZone() const
   int i;
   
   for(i=0;i<peelPk.zones;++i){
+
     if(roomp->getZoneNum()==peelPk.zone[i])
       return TRUE;
   }

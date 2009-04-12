@@ -5,8 +5,12 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "comm.h"
+#include "handler.h"
+#include "extern.h"
+#include "client.h"
 #include "obj_board.h"
+#include "being.h"
 #include "obj_note.h"
 #include "database.h"
 

@@ -6,7 +6,7 @@
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "extern.h"
 #include "colorstring.h"
 
 

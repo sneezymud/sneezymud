@@ -5,7 +5,8 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "room.h"
+#include "handler.h"
 #include "monster.h"
 #include <deque>
 
@@ -16,7 +17,7 @@ class organizer_struct {
     bool pause;
     bool open_debate;
     bool logging;
-    deque<sstring>speech_list;
+    std::deque<sstring>speech_list;
 
     organizer_struct()  :
       speech_dur(-1),
@@ -227,6 +228,7 @@ int meeting_organizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mysel
   if (cmd == CMD_GENERIC_PULSE) {
     // make sure no one goes hungry
     TThing *t=NULL;
+
     for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (t=*it);++it) {
       if (t == myself)
         continue;

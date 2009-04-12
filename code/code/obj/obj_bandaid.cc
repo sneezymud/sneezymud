@@ -7,8 +7,8 @@
 
 // bandaid.cc
 
-#include "stdsneezy.h"
 #include "obj_bandaid.h"
+#include "being.h"
 
 TBandaid::TBandaid() :
   TObj()

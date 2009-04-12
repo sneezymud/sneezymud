@@ -32,6 +32,9 @@
 
 // This is the BASIC THIEF discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDThief : public CDiscipline
 {
 public:

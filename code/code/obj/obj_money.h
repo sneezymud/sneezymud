@@ -82,7 +82,7 @@ class currencyEntry {
 
 
 class currencyInfoT {
-  map<currencyTypeT, currencyEntry *>currencies;
+  std::map<currencyTypeT, currencyEntry *>currencies;
 
  public:
   currencyEntry *operator[] (const currencyTypeT);

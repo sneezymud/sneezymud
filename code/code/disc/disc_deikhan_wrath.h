@@ -21,6 +21,9 @@
 
 // This is the DEIKHAN WRATH discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDDeikhanWrath : public CDiscipline
 {
 public:

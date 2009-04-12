@@ -1,5 +1,5 @@
-#include "stdsneezy.h"
 #include "low.h"
+#include "room.h"
 #include "monster.h"
 #include "paths.h"
 #include "pathfinder.h"

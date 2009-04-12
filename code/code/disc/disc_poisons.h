@@ -21,6 +21,9 @@
 
 // This is the THIEF POISONS discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDPoisons : public CDiscipline
 {
 public:

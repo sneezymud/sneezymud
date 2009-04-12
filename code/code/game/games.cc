@@ -1,14 +1,15 @@
-#include "stdsneezy.h"
+#include "room.h"
 #include "monster.h"
 #include "games.h"
 #include "obj_casino_chip.h"
+#include "handler.h"
 
 void payout(TBeing *ch, int talens, int chip_vnum)
 {
   TObj *chip;
   sstring buf;
-  map <sstring, int> chipout;
-  map <sstring, int>::iterator iter;
+  std::map <sstring, int> chipout;
+  std::map <sstring, int>::iterator iter;
 
   while(talens>0){
     if(!chip_vnum){
@@ -227,6 +228,7 @@ void react_gambler_blackjack_bet(TBeing *ch, TMonster *tm)
 void observerReaction(TBeing *ch, int what)
 {
   TMonster *tm;
+
 
 
   for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end();++it){

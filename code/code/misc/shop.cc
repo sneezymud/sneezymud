@@ -2,8 +2,10 @@
 #include <unistd.h>
 #include <algorithm>
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "room.h"
 #include "monster.h"
+#include "extern.h"
 #include "configuration.h"
 #include "shop.h"
 #include "materials.h"
@@ -28,7 +30,7 @@
 
 extern int kick_mobs_from_shop(TMonster *myself, TBeing *ch, int from_room);
 
-vector<shopData>shop_index(0);
+std::vector<shopData>shop_index(0);
 
 const unsigned int SHOP_DUMP = 124;
 
@@ -71,7 +73,7 @@ unsigned int find_shop_nr(int mobvnum)
 
 float shopData::getProfitSell(const TObj *obj, const TBeing *ch)
 {
-  map <sstring,float>::iterator iter;
+  std::map <sstring,float>::iterator iter;
   float profit=profit_sell;
 
   // if the shop is player owned, we check custom pricing
@@ -239,7 +241,7 @@ bool shopData::ensureCache()
 
 int shopData::getMaxNum(const TBeing* ch, const TObj* o, int defaultMax)
 {
-  map <sstring,int>::iterator iter;
+  std::map <sstring,int>::iterator iter;
 
   if (!isOwned() || !ensureCache())
     return defaultMax;
@@ -262,7 +264,7 @@ int shopData::getMaxNum(const TBeing* ch, const TObj* o, int defaultMax)
 float shopData::getProfitBuy(int vnum, sstring name, const TBeing *ch)
 {
   float profit=-1;
-  map <sstring,float>::iterator iter;
+  std::map <sstring,float>::iterator iter;
 
   if (!ensureCache())
     return profit_buy;
@@ -532,8 +534,8 @@ void shopping_buy(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
   if (!num)
     num = 1;
 
-  vector<int>objects;
-  vector<TObj *>objects_p;
+  std::vector<int>objects;
+  std::vector<TObj *>objects_p;
 
   if(!(rent_id=convertTo<int>(argm))){
     db.query("select r.rent_id as rent_id, coalesce(rs.name, o.name) as name\
@@ -2163,6 +2165,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     TBeing *tbt;
 
     // Toss out idlers
+
     for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (t=*it);++it){
       if((tbt=dynamic_cast<TBeing *>(t)) && 
 	 tbt->getTimer()>1 && !tbt->isImmortal()){
@@ -2258,7 +2261,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
     // produce new items
     
-    vector<int>::iterator iter;
+    std::vector<int>::iterator iter;
     TObj *o;
     int count=0;
     // find the sba shopkeeper
@@ -2771,8 +2774,8 @@ void factoryProduction(int shop_nr)
   TObj *obj;
   TMonster *keeper=tso.getKeeper();
   bool ready=false;
-  map<sstring, int>supplies;
-  map<sstring, int>::iterator iter;
+  std::map<sstring, int>supplies;
+  std::map<sstring, int>::iterator iter;
 
   if (!keeper) // keeper is null on test ports
     return;

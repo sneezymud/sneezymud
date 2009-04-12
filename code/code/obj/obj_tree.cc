@@ -7,9 +7,10 @@
 
 // tree.cc
 
-#include "stdsneezy.h"
+#include "comm.h"
 #include "obj_tree.h"
-
+#include "thing.h"
+#include "being.h"
 
 TTree::TTree() :
   TObj()

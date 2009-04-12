@@ -7,9 +7,9 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
 #include "monster.h"
 #include "obj_fuel.h"
+#include "room.h"
 #include "obj_light.h"
 
 TFuel::TFuel() :

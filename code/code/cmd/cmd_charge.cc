@@ -1,6 +1,9 @@
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "being.h"
 #include "monster.h"
 #include "combat.h"
+#include "room.h"
 
 extern void startChargeTask(TBeing *, const char *);
 

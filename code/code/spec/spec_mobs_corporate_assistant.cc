@@ -1,5 +1,6 @@
-#include "stdsneezy.h"
+#include "room.h"
 #include "monster.h"
+#include "extern.h"
 #include "database.h"
 #include "corporation.h"
 #include "shop.h"
@@ -7,14 +8,14 @@
 void corpListing(TBeing *ch, TMonster *me)
 {
   TDatabase db(DB_SNEEZY);
-  multimap <int, sstring, std::greater<int> > m;
-  multimap <int, sstring, std::greater<int> >::iterator it;
-  vector <corp_list_data> corp_list;
+  std::multimap <int, sstring, std::greater<int> > m;
+  std::multimap <int, sstring, std::greater<int> >::iterator it;
+  std::vector <corp_list_data> corp_list;
 
   corp_list=getCorpListingData();
 
   for(unsigned int i=0;i<corp_list.size();++i){
-    m.insert(pair<int,sstring>(corp_list[i].rank,
+    m.insert(std::pair<int,sstring>(corp_list[i].rank,
 		 format("%-2i| <r>%-38s<1> | %6s talens  %6s in assets\n\r") % 
 			       corp_list[i].corp_id % corp_list[i].name %
 			       talenDisplay(corp_list[i].gold) %
@@ -183,6 +184,7 @@ void corpSummary(TBeing *ch, TMonster *me, int corp_id)
   // bank
   if((tr=real_roomp(shop_index[bank].in_room))){
     ch->sendTo(COLOR_BASIC, "Corporate bank is:\n\r");
+
     ch->sendTo(COLOR_BASIC, format("%-3i| <r>%s<1>\n\r") % bank % tr->getName());
   }
 

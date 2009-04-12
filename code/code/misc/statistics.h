@@ -8,6 +8,11 @@
 #ifndef __STATS_H
 #define __STATS_H
 
+#include "being.h"
+
+using std::min;
+using std::max;
+
 const int PC_STAT  = 0;
 const int MOB_STAT = 1;
 

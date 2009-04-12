@@ -1,7 +1,9 @@
-#include "stdsneezy.h"
+#include "toggle.h"
+#include "sstring.h"
 #include "configuration.h"
 #include "database.h"
 #include "lowtools.h"
+#include "parse.h"
 
 int main(int argc, char **argv)
 {
@@ -9,7 +11,7 @@ int main(int argc, char **argv)
   TDatabase db_immo(DB_IMMORTAL);
   TDatabase db_beta(DB_SNEEZYBETA);
   sstring immortal;
-  vector<int>vnums;
+  std::vector<int>vnums;
   int actions;
 
   toggleInfo.loadToggles();

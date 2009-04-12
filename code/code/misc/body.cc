@@ -3,7 +3,7 @@
 //  Lets see if I can make some magic.
 
 #include <fstream>
-#include "stdsneezy.h"
+#include "extern.h"
 #include "body.h"
 #include "race.h"
 
@@ -93,14 +93,14 @@ void Body::loadBody()
   const sstring bodyLib = "bodytypes/";
 
   sstring limbtype, connector, description, aFilename;
-  ifstream bodyFile;
+  std::ifstream bodyFile;
 
   aFilename = bodyLib + bodyNames[bodyType];
 
-  bodyFile.open(aFilename.c_str(), ios::in);
+  bodyFile.open(aFilename.c_str(), std::ios::in);
   if (!bodyFile.is_open()) {
     aFilename = bodyLib + "HUMANOID";
-    bodyFile.open(aFilename.c_str(), ios::in);
+    bodyFile.open(aFilename.c_str(), std::ios::in);
   }
 
   // Go through each line of the bodytype file and add each limb as specified.

@@ -21,6 +21,9 @@
 
 // This is the AFFLICT discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDAfflict : public CDiscipline
 {
 public:

@@ -2,12 +2,14 @@
 
 #include <cmath>
 
-#include "stdsneezy.h"
+#include "comm.h"
 #include "shop.h"
 #include "materials.h"
+#include "extern.h"
 #include "obj_base_clothing.h"
 #include "shopowned.h"
 #include "corporation.h"
+#include "being.h"
 #include "obj_suitcase.h"
 #include "obj_saddle.h"
 #include "obj_harness.h"

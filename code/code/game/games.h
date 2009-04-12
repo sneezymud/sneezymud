@@ -130,7 +130,7 @@ class Card {
 
 class CardDeck {
  private:
-  deque <Card *> deck;
+  std::deque <Card *> deck;
  public:
   CardDeck();
   virtual ~CardDeck(){};

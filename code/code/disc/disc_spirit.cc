@@ -5,8 +5,11 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "room.h"
+#include "client.h"
 #include "low.h"
+#include "handler.h"
 #include "colorstring.h"
 #include "monster.h"
 #include "disease.h"
@@ -65,6 +68,7 @@ int knot(TBeing *caster, TBeing *victim, int, sh_int bKnown)
           FALSE, caster, NULL, NULL, TO_ROOM);
       return SPELL_FAIL;
     }
+
     if (caster->roomp->isRoomFlag(ROOM_NO_ESCAPE)) {
       caster->sendTo("The defenses of this area are too strong.\n\r");
       caster->nothingHappens(SILENT_YES);

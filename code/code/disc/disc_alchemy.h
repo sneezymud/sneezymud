@@ -24,6 +24,9 @@
 
 // This is the ALCHEMY discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDAlchemy : public CDiscipline
 {
 public:

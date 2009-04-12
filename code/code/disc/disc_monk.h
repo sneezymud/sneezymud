@@ -9,6 +9,11 @@
 #ifndef __DISC_MONK_H
 #define __DISC_MONK_H
 
+#include "discipline.h"
+#include "skills.h"
+
+#include "discipline.h"
+
 class CDMonk : public CDiscipline
 {
 public:

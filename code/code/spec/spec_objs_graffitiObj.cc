@@ -1,4 +1,6 @@
-#include "stdsneezy.h"
+#include "being.h"
+#include "obj.h"
+#include "parse.h"
 
 int graffitiObject(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 {

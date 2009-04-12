@@ -8,7 +8,11 @@
 
 #include <dirent.h>
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "room.h"
+#include "extern.h"
+#include "being.h"
+#include "client.h"
 #include "low.h"
 #include "colorstring.h"
 #include "monster.h"
@@ -65,6 +69,7 @@ void TObj::show_me_to_char(TBeing *ch, showModeT mode) const
   sstring buffer, buf, capbuf;
 
   if (mode == SHOW_MODE_DESC_PLUS && getDescr()) {
+
     if (roomp && roomp->isWaterSector() && 
         !isObjStat(ITEM_HOVER) &&
         !isObjStat(ITEM_FLOAT) &&
@@ -345,8 +350,8 @@ void list_thing_in_room(const StuffList list, TBeing *ch)
 {
   const TThing *t;
   unsigned int k;
-  vector <const TThing *> cond_ptr;
-  vector <int> cond_tot;
+  std::vector <const TThing *> cond_ptr;
+  std::vector <int> cond_tot;
 
   for(StuffIter it=list.begin();it!=list.end();++it){
     t=*it;
@@ -382,8 +387,8 @@ void list_thing_in_room(const StuffList list, TBeing *ch)
 void list_in_heap(StuffList list, TBeing *ch, bool show_all, int perc)
 {
   const TThing *i;
-  vector<const TThing *>cond_ptr(0);
-  vector<unsigned int>cond_tot(0);
+  std::vector<const TThing *>cond_ptr(0);
+  std::vector<unsigned int>cond_tot(0);
   unsigned int k;
 
   for(StuffIter it=list.begin();it!=list.end();++it){
@@ -429,8 +434,8 @@ bool list_in_heap_filtered (StuffList list, TBeing *ch, sstring filter, bool sho
   // so only the first list_in_heap_filtered called will send a "nothing" to the user, if nothing was found
   
   TThing *i;
-  vector<const TThing *>cond_ptr(0);
-  vector<unsigned int>cond_tot(0);
+  std::vector<const TThing *>cond_ptr(0);
+  std::vector<unsigned int>cond_tot(0);
   unsigned int k;
   bool suppress_nothing = FALSE; // the return value
 

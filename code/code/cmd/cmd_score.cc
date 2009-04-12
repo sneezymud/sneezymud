@@ -6,7 +6,9 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 
 void TBeing::doScore()
 {
@@ -222,6 +224,7 @@ void TBeing::doScore()
         sendTo(Buf);
         break;
       case POSITION_FLYING:
+
          if (roomp && roomp->isUnderwaterSector())
           sendTo("You are swimming about.");
         else

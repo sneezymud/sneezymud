@@ -7,10 +7,11 @@
 
 // boat.cc
 
-#include "stdsneezy.h"
+#include "comm.h"
 #include "obj_boat.h"
 #include "obj_light.h"
-
+#include "being.h"
+#include "room.h"
 
 TBoat::TBoat() :
   TObj()

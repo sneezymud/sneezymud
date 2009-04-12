@@ -6,7 +6,9 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "materials.h"
 
 /* remove these races
@@ -385,6 +387,7 @@ TBeing *TBeing::findDiffZoneSameRace()
 
   for (t = character_list; t; t = t->next, num--) {
     if (isSameRace(t) && !t->isPc() && !num) {
+
       if (roomp->getZoneNum() != t->roomp->getZoneNum())
         return t;
     }

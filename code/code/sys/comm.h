@@ -9,6 +9,14 @@
 #define __COMM_H
 
 #include "ansi.h"
+#include "sstring.h"
+#include "enum.h"
+
+class TThing;
+class TBeing;
+class TRoom;
+class TObj;
+class sstring;
 
 enum actToParmT {
      TO_ROOM,
@@ -24,7 +32,7 @@ void sendToRoom(const char *messg, int room);
 void sendToRoomExcept(char *messg, int room, TBeing *ch);
 void sendToRoomExceptTwo(char *, int, TBeing *, TBeing *);
 void perform_to_all(char *messg, TBeing *ch);
-void perform_complex(TBeing *, TBeing *, TObj *, TObj *, char *, byte, int);
+void perform_complex(TBeing *, TBeing *, TObj *, TObj *, char *, char, int);
 void sendrpf(int, colorTypeT, TRoom *, const char *,...);
 void sendrpf(int, TRoom *, const char *,...);
 void sendrpf(colorTypeT, TRoom *, const char *,...);

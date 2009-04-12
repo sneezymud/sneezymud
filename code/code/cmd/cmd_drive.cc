@@ -1,4 +1,5 @@
-#include "stdsneezy.h"
+#include "extern.h"
+#include "being.h"
 #include "obj_vehicle.h"
 
 TVehicle *findVehicle(TBeing *ch)

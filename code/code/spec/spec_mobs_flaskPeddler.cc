@@ -1,5 +1,5 @@
-#include "stdsneezy.h"
 #include "monster.h"
+#include "extern.h"
 
 const int FLASK_COST = 50000;
 const int FLASK_SMALL_VNUM = 33307;

@@ -1,5 +1,6 @@
-#include "stdsneezy.h"
 #include "liquids.h"
+#include "enum.h"
+#include "structs.h"
 
 liqEntry *liqInfoT::operator[] (const liqTypeT i)
 {

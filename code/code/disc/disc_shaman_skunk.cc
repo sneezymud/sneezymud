@@ -7,7 +7,7 @@
  *                                                                 *
  *******************************************************************/
  
-#include "stdsneezy.h"
+#include "room.h"
 #include "disease.h"
 #include "combat.h"
 #include "spelltask.h"
@@ -41,6 +41,7 @@ int deathMist(TBeing *caster, int level, sh_int bKnown)
     aff2.modifier = DISEASE_SYPHILIS;
     aff2.location = APPLY_NONE;
     aff2.bitvector = AFF_SYPHILIS;
+
 
     for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end();){
       t=*(it++);
@@ -363,7 +364,7 @@ int cardiacStress(TBeing *caster, TBeing *victim, int level, sh_int bKnown, int 
     return SPELL_FAIL;
   }
 
-  level = min(level, 80);
+  level = std::min(level, 80);
 
   int dam = caster->getSkillDam(victim, SPELL_CARDIAC_STRESS, level, adv_learn);
 
@@ -485,7 +486,7 @@ int bloodBoil(TBeing *caster, TBeing *victim, int level, sh_int bKnown, int adv_
     caster->nothingHappens(SILENT_YES);
     return SPELL_FAIL;
   }
-  level = min(level, 45);
+  level = std::min(level, 45);
 
   int dam = caster->getSkillDam(victim, SPELL_BLOOD_BOIL, level, adv_learn);
 

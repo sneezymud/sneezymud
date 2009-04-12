@@ -5,7 +5,10 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "disease.h"
 #include "combat.h"
 #include "disc_looting.h"
@@ -85,6 +88,7 @@ int detectSecret(TBeing * thief)
     thief->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_SEARCH, 5);
 
   for (j = 0; j < 10; j++) {
+
     if ((fdd = thief->roomp->dir_option[j])) {
       if (((j < 4) || (j > 5))) {
 	sprintf(buf, "$n searches the %s wall for secret doors.", dirs[j]);

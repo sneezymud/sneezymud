@@ -7,12 +7,14 @@
 
 // thing.h
 
-#include "stdsneezy.h"
+#include "comm.h"
+#include "handler.h"
 #include "materials.h"
 #include "obj_base_container.h"
 #include "obj_open_container.h"
 #include "obj_component.h"
 #include "obj_tool.h"
+#include "being.h"
 
 const char * TThing::objs(const TThing *t) const
 {
@@ -99,7 +101,7 @@ int TThing::swungObjectDamage(const TBeing *, const TBeing *) const
   int dam = 0;
 
   dam = (int) getWeight() / 5;
-  dam = min(15, dam);
+  dam = std::min(15, dam);
   return dam;
 }
 

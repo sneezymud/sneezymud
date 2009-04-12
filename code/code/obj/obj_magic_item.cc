@@ -1,6 +1,5 @@
 // magic_item.cc
 
-#include "stdsneezy.h"
 #include "monster.h"
 #include "obj_magic_item.h"
 

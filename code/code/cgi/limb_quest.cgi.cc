@@ -1,4 +1,3 @@
-#include "stdsneezy.h"
 #include "database.h"
 
 #include <vector>
@@ -48,7 +47,7 @@ int main(int argc, char **argv)
 
   if (team.empty() || team.length() > 30) {
     // show list of available teams
-    vector <sstring> teams; // for the team summaries
+    std::vector <sstring> teams; // for the team summaries
     cout << "<table align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td valign=\"top\" colspan=\"4\" align=\"center\"><h3><a href=\"limb_quest.cgi\">Welcome to SneezyMUD: Quest for Limbs III</a></h3></td></tr>" << endl;
     cout << "<tr><td colspan=\"2\" align=\"right\"><img src=\"http://www.sneezymud.com/Metrohep/handy.jpg\"></td><td colspan=\"2\" align=\"left\">" << endl;
     db.query("select distinct team from quest_limbs_team order by team");

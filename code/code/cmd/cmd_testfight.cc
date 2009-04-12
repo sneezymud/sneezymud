@@ -18,7 +18,10 @@ int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 }
 #endif
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "handler.h"
+#include "room.h"
+#include "being.h"
 #include "low.h"
 #include "configuration.h"
 #include "combat.h"
@@ -82,6 +85,7 @@ static void test_fight_start(bool same_time)
       delete mob2;
       return;
     }
+
 
     TRoom *rp = new TRoom(vnum);
     if (!rp) {

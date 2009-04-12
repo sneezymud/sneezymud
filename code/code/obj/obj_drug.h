@@ -35,7 +35,7 @@ class TDrugInfo
 
     TDrugInfo();  // not supposed to be called, but needed for vector
 };
-extern vector<TDrugInfo>drugTypes;
+extern std::vector<TDrugInfo>drugTypes;
 
 class drugData {
  public:

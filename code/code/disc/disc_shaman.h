@@ -4,6 +4,9 @@
 
 // This is the SHAMAN discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDShaman : public CDiscipline
 {
 public:

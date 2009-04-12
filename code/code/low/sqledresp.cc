@@ -1,4 +1,5 @@
-#include "stdsneezy.h"
+#include "toggle.h"
+#include "sstring.h"
 #include "configuration.h"
 #include "database.h"
 #include "lowtools.h"
@@ -8,8 +9,8 @@ int main(int argc, char **argv)
 {
   doConfiguration();
   TDatabase db(DB_SNEEZYBETA);
-  vector<int>vnums;
-  map<sstring,sstring>val;
+  std::vector<int>vnums;
+  std::map<sstring,sstring>val;
   char file[]="/tmp/sqledrespXXXXXX";
   FILE *tmpfile;
   sstring buf, sbuf;

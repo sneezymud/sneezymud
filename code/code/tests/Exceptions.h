@@ -1,11 +1,11 @@
 #include <cxxtest/TestSuite.h>
 
-#include "stdsneezy.h"
 #include "configuration.h"
 #include "socket.h"
 #include "code/tests/ValueTraits.h"
 #include "spec_mobs.h"
 #include "person.h"
+#include "extern.h"
 
 class Exceptions : public CxxTest::TestSuite
 {

@@ -1,4 +1,6 @@
-#include "stdsneezy.h"
+#include "room.h"
+#include "extern.h"
+#include "handler.h"
 #include "monster.h"
 #include "account.h"
 #include "obj_vehicle.h"
@@ -168,6 +170,7 @@ int fishingBoatCaptain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, T
   // wait until we have passengers before we leave the docks
   if(boat->in_room == 15150 && timer<=0 && vehicle->getSpeed()==0){
     TThing *tt=NULL;
+
     for(StuffIter it=boatroom->stuff.begin();it!=boatroom->stuff.end();++it){
       tt=*it;
       if(dynamic_cast<TPerson *>(tt))
@@ -394,11 +397,11 @@ int casinoElevatorGuard(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself
 class ship_masters {
 	/* class to handle ship captains and methods to see who can control them */
 public:
-	map<int, int> captains;
+	std::map<int, int> captains;
 	ship_masters () {
 		// captain vnum, ship vnum
-	  captains.insert(make_pair(19000, 19077)); // captain matho & the tequila sunrise
-	  captains.insert(make_pair(15375, 15375)); // viking norseman & the viking ship of shopping
+	  captains.insert(std::make_pair(19000, 19077)); // captain matho & the tequila sunrise
+	  captains.insert(std::make_pair(15375, 15375)); // viking norseman & the viking ship of shopping
 	}
 	int may_control (TMonster *captain, TBeing *ersatz_master) {
 		if (!ersatz_master)
@@ -428,7 +431,7 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
   sstring argument=arg;
   TDatabase db(DB_SNEEZY);
   int privileges = 0; // 0 = none, 1 = delegated (minimal control), 2 = full control of captain
-  map<int, int>::iterator ship;
+  std::map<int, int>::iterator ship;
   ship = captains_and_masters.captains.find(myself->mobVnum());
   if (ship == captains_and_masters.captains.end())
   	return FALSE;

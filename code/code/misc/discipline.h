@@ -1,9 +1,10 @@
 #ifndef __DISCIPLINE_H
 #define __DISCIPLINE_H 
 
-#ifndef __SPELLS_H
-#error Please include SPELLS.H before DISCIPLINE.H
-#endif
+
+#include "sstring.h"
+#include "spells.h"
+#include "structs.h"
 
 // technically, these should be unsigned.
 // I got lazy and didn't want to change all the return types and vars

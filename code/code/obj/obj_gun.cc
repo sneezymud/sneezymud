@@ -5,7 +5,10 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "materials.h"
 #include "obj_general_weapon.h"
 #include "obj_base_weapon.h"
@@ -446,6 +449,7 @@ int TGun::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
     int rc = throwThing(bullet, dir, ch->in_room, &targ, shoot_dist, 10, ch);
 
     if(!isSilenced())
+
       ch->roomp->getZone()->sendTo("A gunshot echoes in the distance.\n\r",
 				   ch->in_room);
 

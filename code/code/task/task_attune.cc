@@ -5,8 +5,10 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "comm.h"
+#include "extern.h"
 #include "obj_symbol.h"
+#include "being.h"
 #include "obj_vial.h"
 
 static void stop_attune(TBeing *ch, silentTypeT silent_char, silentTypeT silent_room)
@@ -106,7 +108,7 @@ void TSymbol::attunePulse(TBeing *ch)
     // get total uses required
     uses = (int) (0.005 * obj_flags.cost);
     // account for usage during the  task
-    uses = max(1, uses - ch->task->flags);
+    uses = std::max(1, uses - ch->task->flags);
 
     TThing *tmp=NULL;
     for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end() && (tmp=*it);++it) {

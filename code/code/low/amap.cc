@@ -1,19 +1,23 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<math.h>
-#include<string.h>
-#include<map>
-#include<vector>
-#include<ctype.h>
-#include<unistd.h>
-#include<sys/stat.h>
-#include<sys/socket.h>
-#include<dirent.h>
-#include"stdsneezy.h"
-#include"configuration.h"
-#include"lowtools.h"
-#include"parse.h"
-#include"database.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+#include <map>
+#include <vector>
+#include <ctype.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/socket.h>
+#include <dirent.h>
+#include "configuration.h"
+#include "lowtools.h"
+#include "extern.h"
+#include "parse.h"
+#include "database.h"
+#include "toggle.h"
+
+using std::min;
+using std::max;
 
 // this code is totally janky, but it gets the job done - peel
 
@@ -106,7 +110,7 @@ public:
   NODE();
 } *head;
 
-map <int, class NODE *> nodes;
+std::map <int, class NODE *> nodes;
 
 
 NODE::NODE()
@@ -119,7 +123,7 @@ NODE::NODE()
 }
 
 
-map<int,bool>zone_enabled;
+std::map<int,bool>zone_enabled;
 
 
 
@@ -150,7 +154,7 @@ NODE *find_node(int num){
 bool isEnabled(int num)
 {
   bool enabled=false;
-  map<int,bool>::iterator iter;
+  std::map<int,bool>::iterator iter;
 
   if(zone_enabled.size()==0)
     return true;
@@ -450,7 +454,7 @@ void check_rooms(int MAXROOMS){
   }
   printf("%i rooms have same coords\n", count);
 
-  map<int,bool> done;
+  std::map<int,bool> done;
 
   for(int i=0;i<MAXROOMS;++i){
     if(nodes[i]){
@@ -491,10 +495,10 @@ void check_rooms(int MAXROOMS){
   }
 }
 
-map <int,int> makeroomcount(FILE *log, int &max){
+std::map <int,int> makeroomcount(FILE *log, int &max){
   sstring buf;
   unsigned int s, e;
-  map <int,int> roomcount;
+  std::map <int,int> roomcount;
   char sbuf[1024];
 
   while(!feof(log)){
@@ -534,7 +538,7 @@ void createmap(int MINLEVEL, int MAXLEVEL, int SCALEBY, sstring outputfile, bool
   int i=0, j, k, l, tmp;
   FILE *out=fopen("imageout", "wb");
   const int CELLSIZE=3;
-  map <int,int> roomcount;
+  std::map <int,int> roomcount;
   int max=0;
 
   // count rooms for popularity
@@ -776,8 +780,8 @@ int main(int argc, char **argv)
   struct dirent *dp;
   NODE *last=NULL, *t;
   int SCALEBY=2, rcount, ch, zmax=20, zmin=-10, tmp;
-  vector <int> roomrange_t;
-  map <int, bool> roomrange;
+  std::vector <int> roomrange_t;
+  std::map <int, bool> roomrange;
   bool use_range=false, checkrooms_p=false, quiet=false, sideways=false;
   bool popularity=false, gradient_exits=false;
   int headroom=100;

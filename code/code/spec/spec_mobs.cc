@@ -36,7 +36,10 @@
 #include <errno.h>
 
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "low.h"
 #include "monster.h"
 #include "configuration.h"
@@ -901,6 +904,7 @@ int TMonster::findMyHorse()
   TPathFinder path;
 
   // this is here to prevent the endless horse create/fall to death scenario
+
   if(roomp && roomp->isFallSector())
     return FALSE;
 
@@ -6215,9 +6219,9 @@ bool okForCommodMaker(TObj *o, sstring &ret)
 }
 
 
-map <ubyte,int> commodMakerValue(TObj *o, float &value)
+std::map <ubyte,int> commodMakerValue(TObj *o, float &value)
 {
-  map <ubyte,int> mat_list;
+  std::map <ubyte,int> mat_list;
   const float wastage=0.90;
   value=0;
   int amt=0;
@@ -6247,8 +6251,8 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
   TObj *commod=NULL;
   int shop_nr=find_shop_nr(me->number);
   TThing *ts = NULL;
-  map <ubyte,int> mat_list;
-  map <ubyte,int>::iterator iter;
+  std::map <ubyte,int> mat_list;
+  std::map <ubyte,int>::iterator iter;
 
   if(cmd == CMD_WHISPER)
     return shopWhisper(ch, me, shop_nr, arg);
@@ -6479,8 +6483,8 @@ int riddlingTree(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *tree, TObj
     return FALSE;
   
   int whichRiddle;
-  vector <sstring> riddles;
-  vector <sstring> answers;
+  std::vector <sstring> riddles;
+  std::vector <sstring> answers;
   static time_t firstGuessTime;
   static short int chancesLeft;
   int elapsedTime = 0;
@@ -6757,8 +6761,8 @@ int cat(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 {
   TBeing *tb;
   TMonster *tm;
-  vector <TBeing *> roompeople;
-  vector <TObj *> roomobj;
+  std::vector <TBeing *> roompeople;
+  std::vector <TObj *> roomobj;
   TObj *o;
   affectedData af;
 

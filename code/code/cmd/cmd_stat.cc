@@ -6,7 +6,10 @@
 //  
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "handler.h"
+#include "room.h"
+#include "being.h"
 #include "low.h"
 #include "account.h"
 #include "materials.h"
@@ -48,6 +51,7 @@ void TBeing::statZone(const sstring &zoneNumber)
       vlogf(LOG_BUG, "statZone called by being with no current room.");
       return;
     }
+
     zone_num = roomp->getZoneNum();
   } else {
     zone_num = convertTo<int>(zoneNumber);
@@ -168,7 +172,7 @@ void TBeing::statZone(const sstring &zoneNumber)
   int mob_lvl_avg_unique = 0;
   int mob_lvl_avg_total = 0;
   
-  map<int,int>::iterator iter;
+  std::map<int,int>::iterator iter;
   for (iter = zoned.stat_mobs.begin(); iter != zoned.stat_mobs.end(); iter++ ) {
     if (!mob_lvl_low)
       mob_lvl_low = (int) mob_index[iter->first].level;
@@ -231,7 +235,7 @@ void TBeing::statZoneMobs(sstring zoneNumber)
   zoneData zoned = zone_table[zone_num];
   
   int count = 0;
-  map<int,int>::iterator iter;
+  std::map<int,int>::iterator iter;
   
   out += "<g>Zonefile Mobile Report<1>\n\r";
   out += format("<g>Zone name:<1>  %-s\n\r") % zoned.name;
@@ -299,7 +303,7 @@ void TBeing::statZoneObjs(sstring zoneNumber)
   zoneData zoned = zone_table[zone_num];
   
   int count = 0;
-  map<int,int>::iterator iter;
+  std::map<int,int>::iterator iter;
   out += "<g>Zonefile Object Report<1>\n\r";
   out += format("<g>Zone name:<1>  %-s\n\r") % zoned.name;
   out += format("<g>Zone num:<1>   %-3d       <g>Active:<1>   %-s\n\r\n\r") % zone_num % (zoned.enabled ? "Enabled" : "Disabled");

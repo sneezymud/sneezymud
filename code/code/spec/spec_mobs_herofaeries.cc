@@ -1,8 +1,9 @@
-#include "stdsneezy.h"
+#include "room.h"
 #include "low.h"
 #include "person.h"
 #include "monster.h"
 #include "db.h"
+#include "handler.h"
 #include "database.h"
 #include "spec_mobs.h"
 
@@ -254,6 +255,7 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
     act("$N left without you!  Can't have that!  *pop*", FALSE, myself, 0, myself->master, TO_CHAR);
     act("$n disappears.  *pop*", TRUE, myself, 0, NULL, TO_ROOM);
     --(*myself);
+
     thing_to_room(myself, myself->master->roomp->number); 
     myself->doLook("",CMD_LOOK);
     act("$n appears in the room.  *pop*", TRUE, myself, 0, NULL, TO_ROOM);

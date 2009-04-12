@@ -1,4 +1,5 @@
-#include "stdsneezy.h"
+#include "handler.h"
+#include "being.h"
 
 
 void TBeing::doPracInfo(sstring arg) {

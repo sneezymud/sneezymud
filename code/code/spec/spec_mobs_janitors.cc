@@ -1,8 +1,10 @@
-#include "stdsneezy.h"
+#include "room.h"
+#include "being.h"
 #include "low.h"
 #include "monster.h"
 #include "paths.h"
 #include "obj_base_corpse.h"
+#include "handler.h"
 #include "obj_player_corpse.h"
 #include "obj_pool.h"
 #include "combat.h"
@@ -195,6 +197,7 @@ int janitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 
   if (::number(0,3))
     return FALSE;
+
 
   for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end();){
     t=*(it++);
@@ -908,7 +911,7 @@ int fruitScavenger(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj 
 	}
 	
 	// find nearby trees or fruits and go to them
-	vector <dirTypeT> possible_exits;
+	std::vector <dirTypeT> possible_exits;
 	TRoom *rp;
 	dirTypeT use_dir;
 	for(use_dir = MIN_DIR; use_dir < MAX_DIR; use_dir++){

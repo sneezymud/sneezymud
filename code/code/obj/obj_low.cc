@@ -8,7 +8,6 @@
 #include <cmath>
 #include <algorithm>
 
-#include "stdsneezy.h"
 #include "statistics.h"
 #include "combat.h"
 #include "obj_base_weapon.h"

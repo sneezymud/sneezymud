@@ -13,9 +13,11 @@ extern "C" {
 #include <unistd.h>
 }
 
-#include "stdsneezy.h"
 #include "systemtask.h"
+#include "being.h"
 #include "obj_note.h"
+#include "extern.h"
+
 #if !defined(LINUX)
 extern pid_t vfork(void);
 #endif

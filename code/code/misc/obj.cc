@@ -1,8 +1,9 @@
-#include "stdsneezy.h"
 #include "shop.h"
 #include "shopowned.h"
 #include "corporation.h"
 #include "materials.h"
+#include "obj.h"
+#include "extern.h"
 
 bool TObj::isPluralItem() const
 {

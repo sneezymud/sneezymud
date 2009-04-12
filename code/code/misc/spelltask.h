@@ -33,6 +33,8 @@
 #ifndef __SPELLTASK
 #define __SPELLTASK 1
 
+#include "spell2.h"
+
 //CASTER HAS TO BE ABLE TO SEE THE VICTIM
 const unsigned int CASTFLAG_SEE_VICT   = (1<<0);
 const unsigned int CASTFLAG_NO_SENSE_CAST   = (1<<1);

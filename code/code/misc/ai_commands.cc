@@ -11,7 +11,9 @@
 
 //  return DELETE_THIS if this dies, or DELETE_VICT if doer dies
 
-#include "stdsneezy.h"
+#include "room.h"
+#include "extern.h"
+#include "being.h"
 #include "low.h"
 #include "colorstring.h"
 #include "monster.h"
@@ -2884,6 +2886,7 @@ void TBeing::aiGet(TThing *obj)
     vlogf(LOG_MOB, format("%s without a roomp in aiGet") %  getName());
     return;
   }
+
   for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (tmp=*it);++it) {
     TMonster *tmons = dynamic_cast<TMonster *>(tmp);
     if (!tmons)

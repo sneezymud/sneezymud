@@ -1,16 +1,18 @@
-#include "stdsneezy.h"
+#include "being.h"
 #include "obj_bow.h"
+#include "extern.h"
 #include "obj_arrow.h"
 #include "obj_quiver.h"
 #include "being.h"
+#include "room.h"
 #include "monster.h"
 
 #define MAX_RANGE 3
 
-vector <TBow *> TBeing::getBows() 
+std::vector <TBow *> TBeing::getBows() 
 {
   TBow *temp = NULL;
-  vector <TBow *> bows;
+  std::vector <TBow *> bows;
   wearSlotT i;
   TThing *j=NULL;
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
@@ -132,7 +134,7 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
   TArrow *ammo = NULL;
   TArrow *tempArr = NULL;
   unsigned int j;
-  vector <TBow *> bows = ch->getBows();
+  std::vector <TBow *> bows = ch->getBows();
   for (j = 0; j < bows.size(); j++)
   {
     bow = bows[j];
@@ -159,7 +161,7 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
         ch->doFlee("");
       if (!ch->canSee(bow) || !ch->canSee(ammo)) // fled to darker spot
       {
-        vector <TBow *> bows = ch->getBows();
+        std::vector <TBow *> bows = ch->getBows();
         for (j = 0; j < bows.size(); j++)
         {
           bow = bows[j];

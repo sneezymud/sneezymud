@@ -1,4 +1,3 @@
-#include "stdsneezy.h"
 #include "database.h"
 #include "session.cgi.h"
 
@@ -208,7 +207,7 @@ int TSession::validateSessionID()
 sstring TSession::getSessionCookie()
 {
   cgicc::CgiEnvironment env = cgi->getEnvironment();
-  vector<cgicc::HTTPCookie> cookies = env.getCookieList();
+  std::vector<cgicc::HTTPCookie> cookies = env.getCookieList();
 
   if(!cookies.size())
     return "";

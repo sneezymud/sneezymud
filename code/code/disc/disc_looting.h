@@ -25,6 +25,9 @@
 
 // This is the LOOTING discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDLooting : public CDiscipline
 {
 public:

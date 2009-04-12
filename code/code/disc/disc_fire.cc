@@ -6,7 +6,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "room.h"
 #include "low.h"
 #include "monster.h"
 #include "disease.h"
@@ -664,6 +664,7 @@ int flamingSword(TBeing *caster, TBeing *victim)
   taskDiffT diff;
 
 // 1. First check for unusual fails
+
   if (caster->roomp->isUnderwaterSector()) {
     caster->sendTo("You cannot cast that under these wet conditions!\n\r");
     return FALSE;

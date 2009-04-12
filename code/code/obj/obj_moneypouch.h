@@ -9,6 +9,7 @@
 #define __OBJ_MONEYPOUCH_H
 
 #include "obj_expandable_container.h"
+#include "obj_money.h"
 
 class TMoneypouch : public TExpandableContainer {
   private:

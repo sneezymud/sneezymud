@@ -7,7 +7,7 @@
 //
 ///////////////////////////////////
 
-#include "stdsneezy.h"
+#include "being.h"
 #include "person.h"
 
 void TBeing::doVisible(const char *, bool)

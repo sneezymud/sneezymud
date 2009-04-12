@@ -17,6 +17,8 @@
 #include "structs.h"
 #endif
 
+#include "sstring.h"
+
 #include <map>
 
 // Strings for the mud name
@@ -190,8 +192,8 @@ class zoneData
 
     // the following stat_* variables are intended to be used for zone reporting in the stat zone command
     // they are not air-tight counts and should not be treated as such
-    map<int, int> stat_mobs; // key: real mob number, value: count of that mob loading in the zonefile
-    map<int, int> stat_objs; // key: real obj number, value: count of that obj loading in the zonefile
+    std::map<int, int> stat_mobs; // key: real mob number, value: count of that mob loading in the zonefile
+    std::map<int, int> stat_objs; // key: real obj number, value: count of that obj loading in the zonefile
     // note the count value for stat_objs ignores things like load rates so is pretty useless info
     // it also doesn't contain global suitset objs and doesn't check to see if local suitsets actually load, so...
     
@@ -211,7 +213,7 @@ class zoneData
     bool bootZone(int);
     void renumCmd(void);
 
-    vector<resetCom>cmd;          // command table for reset
+    std::vector<resetCom>cmd;          // command table for reset
   
     zoneData();
     zoneData(const zoneData &t);

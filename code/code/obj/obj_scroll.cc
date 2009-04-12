@@ -1,6 +1,6 @@
 // scroll.cc
 
-#include "stdsneezy.h"
+#include "extern.h"
 #include "monster.h"
 #include "materials.h"
 #include "obj_magic_item.h"

@@ -21,6 +21,9 @@
 
 // This is the EARTH discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDEarth : public CDiscipline
 {
 public:

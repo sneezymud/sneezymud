@@ -456,8 +456,8 @@ class spellInfo {
     int learnDoDiff;
     sh_int secStartLearnDo;
     sh_int secAmtLearnDo;
-    map<int, int>sectorData;
-    map<int, int>weatherData;
+    std::map<int, int>sectorData;
+    std::map<int, int>weatherData;
 
   private:
     spellInfo() {}  // prevent default constructor from being used

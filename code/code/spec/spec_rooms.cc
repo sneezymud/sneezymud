@@ -16,7 +16,9 @@
 
 #include <cmath>
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "room.h"
+#include "handler.h"
 #include "low.h"
 #include "monster.h"
 #include "configuration.h"
@@ -29,6 +31,7 @@
 
 
 int TRoom::checkSpec(TBeing *ch, cmdTypeT cmd, const char *arg, TThing *)
+
 {
   int rc;
 

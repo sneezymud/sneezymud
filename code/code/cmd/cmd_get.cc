@@ -6,7 +6,10 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "handler.h"
+#include "room.h"
+#include "being.h"
 #include "games.h"
 #include "obj_player_corpse.h"
 #include "obj_base_corpse.h"
@@ -336,6 +339,7 @@ int TBeing::doGet(const char *argument)
         return FALSE;
       }
       if (getall(arg1, newarg)) {
+
         if (!searchLinkedListVis(this, newarg, roomp->stuff)) {
           sendTo(format("There are no \"%s\"'s visible in this room.\n\r") % newarg);
           return FALSE;    

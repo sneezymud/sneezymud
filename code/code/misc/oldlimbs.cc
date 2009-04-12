@@ -5,7 +5,8 @@
 
 *************************************************************************/
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "being.h"
 #include "monster.h"
 #include "combat.h"
 #include "obj_corpse.h"

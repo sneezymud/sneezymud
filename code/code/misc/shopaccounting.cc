@@ -1,11 +1,12 @@
-#include "stdsneezy.h"
 #include "shopowned.h"
 #include "database.h"
 #include "shop.h"
+#include "extern.h"
 #include "corporation.h"
 #include "obj_note.h"
 #include "shopaccounting.h"
 #include "monster.h"
+#include "room.h"
 
 // pull data from archive
 TShopJournal::TShopJournal(int shop, int y)

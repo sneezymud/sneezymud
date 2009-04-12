@@ -11,13 +11,16 @@ extern "C" {
 #include <arpa/telnet.h>
 }
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "colorstring.h"
 #include "person.h"
 #include "configuration.h"
 #include "socket.h"
 #include "mail.h"
 #include "monster.h"
+#include "client.h"
 
 sstring lockmess;
 commandInfo *commandArray[MAX_CMD_LIST];
@@ -2194,7 +2197,7 @@ bool is_abbrev(const sstring &arg1, const sstring &arg2, multipleTypeT multiple,
 
     // may have converted the following code incorrectly
     // I wasn't entirely certain what it was doing - peel
-    vector <sstring> buf1, buf2;
+    std::vector <sstring> buf1, buf2;
 
     split_string(carg1, " ", buf1);
     split_string(carg2, " ", buf2);
@@ -2358,6 +2361,7 @@ int TBeing::triggerSpecial(TThing *ch, cmdTypeT cmd, const char *arg)
 
   if (roomp) {
     // special in mobile/object present? 
+
     for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
       t=*(it++);
 

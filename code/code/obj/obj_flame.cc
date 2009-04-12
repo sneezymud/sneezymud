@@ -7,7 +7,10 @@
 
 // flame.cc
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "obj_fuel.h"
 #include "obj_organic.h"
 #include "obj_trash.h"
@@ -298,6 +301,7 @@ void TFFlame::decayMe()
   if (!roomp || hasMagBV(TFFLAME_IMMORTAL)) return;
 
   // Current weather affects decay_time loss.
+
   if (roomp->getWeather() == WEATHER_SNOWY) {
     sendrpf(roomp, "The current snowstorm kills the fire a little more.\n\r");
     obj_flags.decay_time -= 5;

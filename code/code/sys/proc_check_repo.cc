@@ -1,6 +1,8 @@
-#include "stdsneezy.h"
 #include "process.h"
-
+#include "being.h"
+#include "thing.h"
+#include "obj.h"
+#include "extern.h"
 
 // procCheckForRepo
 procCheckForRepo::procCheckForRepo(const int &p)

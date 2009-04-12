@@ -6,11 +6,14 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "low.h"
 #include "monster.h"
 #include "materials.h"
 #include "person.h"
+#include "client.h"
 
 #include <csignal>
 #include <cstdarg>
@@ -54,6 +57,7 @@ bool TBeing::canSeeWho(const TBeing *o) const
 {
   if (inRoom() < 0 || o->inRoom() < 0 || !o || !o->roomp)
     return FALSE;
+
 
   int illum = o->roomp->getLight();
 

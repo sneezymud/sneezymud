@@ -5,7 +5,10 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "combat.h"
 #include "obj_base_clothing.h"
 
@@ -107,6 +110,7 @@ bool TBeing::canTrip(TBeing *victim, silentTypeT silent)
   }
   if (victim->getPosition() <= POSITION_SITTING) {
     if (!silent)
+
       sendTo(format("How can you trip someone already on the %s?!?\n\r") % roomp->describeGround());
     return FALSE;
   }    

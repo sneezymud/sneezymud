@@ -9,7 +9,9 @@
 
  *****************************************************************************/
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "monster.h"
 
 //#define MAIL_ZONEFILE
@@ -116,6 +118,7 @@ void doSaveZoneFile(TBeing *ch, const sstring & tArg)
     TRoom *tERoom;
 
     for (int exitIndex = 0; exitIndex < MAX_DIR; exitIndex++) {
+
       if (!(tExit = tRoom->dir_option[exitIndex]) ||
           tExit->door_type <= DOOR_NONE ||
           !(tExit->condition & EX_CLOSED))

@@ -7,9 +7,9 @@
 
 // organic.cc
 
-#include "stdsneezy.h"
 #include "monster.h"
 #include "shop.h"
+#include "extern.h"
 #include "obj_organic.h"
 #include "obj_flame.h"
 

@@ -1,4 +1,6 @@
-#include "stdsneezy.h"
+#include "extern.h"
+#include "handler.h"
+#include "being.h"
 #include "low.h"
 #include "monster.h"
 #include "games.h"

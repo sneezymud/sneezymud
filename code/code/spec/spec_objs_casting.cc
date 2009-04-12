@@ -1,4 +1,5 @@
-#include "stdsneezy.h"
+#include "extern.h"
+#include "room.h"
 #include "low.h"
 #include "obj_money.h"
 #include "person.h"
@@ -43,6 +44,7 @@ int objCastSorcGlobe(TObj *o, TBeing *targ)
   aff.modifier = -100;
   targ->affectJoin(NULL, &aff, AVG_DUR_NO, AVG_EFF_YES);
 
+
   targ->roomp->playsound(SOUND_SPELL_SORCERERS_GLOBE, SOUND_TYPE_MAGIC);
   act("$n is instantly surrounded by a hardened wall of air!",\
       TRUE, targ, NULL, NULL, TO_ROOM);
@@ -67,8 +69,8 @@ int marukalia(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   sstring sarg = arg;
   TThing *t;
   TMoney *mon;
-  vector <sstring> expected_contents;
-  vector <sstring> contents;
+  std::vector <sstring> expected_contents;
+  std::vector <sstring> contents;
   int talens = 0;
   int dmg;
   int rc = 0;

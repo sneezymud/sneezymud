@@ -7,7 +7,10 @@
  *                                                                 *
  *******************************************************************/
  
-#include "stdsneezy.h"
+#include "extern.h"
+#include "handler.h"
+#include "room.h"
+#include "being.h"
 #include "disease.h"
 #include "combat.h"
 #include "spelltask.h"
@@ -21,6 +24,7 @@ int TBeing::doEarthmaw(const char *argument)
     sendTo("You do no know the secrets of the earthmaw spell.\n\r");
     return FALSE;
   }
+
   if (this->roomp->notRangerLandSector()) {
     sendTo("You must be in a wilderness landscape for the earthmaw spell to be effective!\n\r");
     return FALSE;

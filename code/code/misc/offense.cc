@@ -6,7 +6,10 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "low.h"
 #include "monster.h"
 #include "games.h"
@@ -156,6 +159,7 @@ int TBeing::doHit(const sstring &argument, TBeing *vict)
       shouldHit = TRUE;
 
       soundNumT snd = pickRandSound(SOUND_BANZAI_01, SOUND_BANZAI_04);
+
       roomp->playsound(snd, SOUND_TYPE_COMBAT);
     }
     rc = hit(victim);

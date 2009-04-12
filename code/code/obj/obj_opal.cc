@@ -7,8 +7,8 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
 #include "monster.h"
+#include "extern.h"
 #include "materials.h"
 #include "obj_opal.h"
 

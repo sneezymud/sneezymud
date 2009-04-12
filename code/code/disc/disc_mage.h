@@ -29,6 +29,9 @@
 
 // This is the MAGE BASIC discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDMage : public CDiscipline
 {
 public:

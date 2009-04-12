@@ -1,10 +1,12 @@
-#include "stdsneezy.h"
+#include "room.h"
+#include "being.h"
 #include "obj_tool.h"
 #include "process.h"
+#include "extern.h"
 #include "database.h"
 #include "obj_food.h"
 
-map <int, bool> mRoomsFished;
+std::map <int, bool> mRoomsFished;
 
 void TBeing::doFish(sstring direction){
   TRoom *rp;
@@ -18,6 +20,7 @@ void TBeing::doFish(sstring direction){
       rp=roomp;      
     }
   }
+
 
   if(rp->isUnderwaterSector()){
     if (!getMyRace()->hasTalent(TALENT_FISHEATER)) {
@@ -51,9 +54,9 @@ void TBeing::doFish(sstring direction){
   start_task(this, NULL, rp, TASK_FISHING, "", 2, inRoom(), 0, 0, 5);
 }
 
-vector <int> freshfishes()
+std::vector <int> freshfishes()
 {
-  vector <int> f;
+  std::vector <int> f;
 
   f.push_back(13800);
   f.push_back(13801);
@@ -82,9 +85,9 @@ vector <int> freshfishes()
   return f;
 }
 
-vector <int> marinefishes()
+std::vector <int> marinefishes()
 {
-  vector <int> f;
+  std::vector <int> f;
 
   f.push_back(12445);
   f.push_back(13808);
@@ -125,9 +128,9 @@ vector <int> marinefishes()
   return f;
 }
 
-vector <int> icefishes()
+std::vector <int> icefishes()
 {
-  vector <int> f;
+  std::vector <int> f;
   f.push_back(13875);
   f.push_back(13876);
   f.push_back(13877);
@@ -140,9 +143,9 @@ vector <int> icefishes()
 }
 
 
-vector <int> fishworldfishes()
+std::vector <int> fishworldfishes()
 {
-  vector <int> f;
+  std::vector <int> f;
   f.push_back(31870);
   return f;
 }
@@ -152,10 +155,10 @@ TObj *catch_a_fish(TRoom *rp)
 {
   TObj *fish=NULL;
   unsigned int num=0;
-  vector <int> freshfish=freshfishes();
-  vector <int> marinefish=marinefishes();
-  vector <int> icefish=icefishes();
-  vector <int> fishworld=fishworldfishes();
+  std::vector <int> freshfish=freshfishes();
+  std::vector <int> marinefish=marinefishes();
+  std::vector <int> icefish=icefishes();
+  std::vector <int> fishworld=fishworldfishes();
   float weightmod=(((float)(::number(0,100))-50.0)/100.0)+1.0;  // plus or minus 30%
 
   //  vlogf(LOG_PEEL, format("weightmod=%f") %  weightmod);
@@ -180,7 +183,7 @@ TObj *catch_a_fish(TRoom *rp)
     }
   }
 
-  vector <int> fishlist;
+  std::vector <int> fishlist;
 
   if(rp->number >= 31800 && rp->number <= 31899){ // fish world
     for(unsigned int i=0;i<fishworld.size();++i)
@@ -517,7 +520,7 @@ void initialize_fish_records()
   // put a row into the fishlargest table for any new, uncaught fish
   TDatabase db(DB_SNEEZY);
   unsigned int step;
-  vector <int> fishious;
+  std::vector <int> fishious;
   
   fishious = freshfishes();
   for (step = 0; step < fishious.size(); step++) {
@@ -561,7 +564,7 @@ procFishRespawning::procFishRespawning(const int &p)
 
 void procFishRespawning::run(int pulse) const
 {
-  map <int, bool> ::iterator tIter     = mRoomsFished.begin(),
+  std::map <int, bool> ::iterator tIter     = mRoomsFished.begin(),
                              tLastGood = mRoomsFished.begin();
 
   while (tIter != mRoomsFished.end()) {

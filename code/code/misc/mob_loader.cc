@@ -6,8 +6,10 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "room.h"
 #include "low.h"
+#include "handler.h"
+#include "extern.h"
 #include "monster.h"
 #include "obj_open_container.h"
 #include "materials.h"
@@ -75,7 +77,7 @@ void commodLoader(TMonster *tmons, TObj *bag)
   int wealth = (int)(((::number(0,25)+::number(0,25))/100.0) * tmons->getMoney());
   tmons->setMoney(tmons->getMoney()-wealth);
 
-  vector <int> base_mats;
+  std::vector <int> base_mats;
   for (int i=0; i<200; ++i){
     if (material_nums[i].mat_name[0]){
       base_mats.push_back(i);
@@ -113,7 +115,7 @@ void commodLoader(TMonster *tmons, TObj *bag)
 
 void potionLoader(TMonster *tmons)
 {
-  vector<int>potions;
+  std::vector<int>potions;
   int pot=0;
   
   potions.push_back(800); // remove poison
@@ -240,7 +242,7 @@ void potionLoader(TMonster *tmons)
 void TMonster::thiefLootLoader()
 {
   int vnum=0;
-  vector<int>loot;
+  std::vector<int>loot;
   TObj *obj;
 
   if(::number(0,3))
@@ -300,6 +302,7 @@ void TMonster::createWealth(void)
     TObj *obj = NULL;
     TMonster *myself = this;
     TRoom *birthRoom = real_roomp(brtRoom);
+
     zoneData *zone = birthRoom ? birthRoom->getZone() : NULL;
 
     for(unsigned int iLoad = 0; zone && iLoad < loadCom.size(); iLoad++)

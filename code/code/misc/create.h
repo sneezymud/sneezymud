@@ -8,6 +8,11 @@
 #ifndef __CREATE_H
 #define __CREATE_H
 
+class TArrow;
+class TPortal;
+class TOpenContainer;
+class TEgg;
+
 enum editorEnterTypeT {
     ENTER_REENTRANT,
     ENTER_CHECK

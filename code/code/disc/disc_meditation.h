@@ -19,6 +19,9 @@
 #ifndef __DISC_MEDITATION_MONK_H
 #define __DISC_MEDITATION_MONK_H
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDMeditationMonk: public CDiscipline
 {
 public:

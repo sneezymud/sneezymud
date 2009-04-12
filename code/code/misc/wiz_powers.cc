@@ -1,8 +1,10 @@
 #include <unistd.h>
 
-#include "stdsneezy.h"
+#include "being.h"
 #include "database.h"
 #include "person.h"
+#include "extern.h"
+#include "handler.h"
 
 bool TBeing::powerCheck(wizPowerT wpt) const
 {

@@ -1,7 +1,9 @@
-#include "stdsneezy.h"
+#include "being.h"
 #include "statistics.h"
-
+#include "handler.h"
+#include "room.h"
 #include "sys_loot.h"
+#include "extern.h"
 #include "obj_money.h"
 #include "obj_magic_item.h"
 #include "obj_potion.h"

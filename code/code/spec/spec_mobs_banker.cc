@@ -1,7 +1,8 @@
-#include "stdsneezy.h"
+#include "room.h"
 #include "monster.h"
 #include "database.h"
 #include "shop.h"
+#include "extern.h"
 #include "shopowned.h"
 #include "process.h"
 #include "spec_mobs.h"
@@ -18,8 +19,8 @@ void procBankInterest::run(int pulse) const
   TDatabase db(DB_SNEEZY), in(DB_SNEEZY), out(DB_SNEEZY);
   double profit_sell;
   unsigned int shop_nr;
-  map <int, int> player_gain;
-  map <int, int> corp_gain;
+  std::map <int, int> player_gain;
+  std::map <int, int> corp_gain;
 
   db.query("update shopownedbank set earned_interest=0 where earned_interest is null");
   db.query("update shopownedcorpbank set earned_interest=0 where earned_interest is null");
@@ -367,6 +368,7 @@ int bankRoom(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
     return FALSE;
 
   // find out which teller for this room
+
   switch(rp->number){
     case 31751: 
     case 31756:

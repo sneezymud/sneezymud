@@ -14,7 +14,9 @@
 
 //  return values are unimportant.  if char(s) are lost, return a -1
 
-#include "stdsneezy.h"
+#include "room.h"
+#include "being.h"
+#include "extern.h"
 #include "monster.h"
 #include "combat.h"
 
@@ -682,6 +684,7 @@ int TMonster::aiMobShock(TBeing *doer)
       case 1:
         act("The hair on $n's back raises and $e hisses loudly.",
              TRUE, this, 0, 0, TO_ROOM);
+
 
         doer->roomp->playsound(SOUND_CATHISS, SOUND_TYPE_NOISE);
         break;

@@ -5,7 +5,10 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "disease.h"
 #include "combat.h"
 #include "spelltask.h"
@@ -218,6 +221,7 @@ int treeWalk(TBeing * caster, const char * arg, int, sh_int bKnown)
       act("$n snaps out of $s trance.", FALSE, caster, 0, 0, TO_ROOM);
       return SPELL_SUCCESS;
     }
+
 
     for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end();){
       t=*(it++);

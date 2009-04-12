@@ -49,7 +49,7 @@
     - SO BASICALLY, THIS VALUE IS WORTHLESS
 #endif
 
-#include "stdsneezy.h"
+#include "being.h"
 
 //FYI: CMD_TASK_CONTINUE is checked once per PULSE_MOBACT
 

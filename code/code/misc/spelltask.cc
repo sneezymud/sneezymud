@@ -44,8 +44,9 @@
     - SO BASICALLY, THIS VALUE IS WORTHLESS
 */
 
-#include "stdsneezy.h"
+#include "being.h"
 #include "discipline.h"
+#include "room.h"
 #include "monster.h"
 #include "spelltask.h"
 #include "person.h"

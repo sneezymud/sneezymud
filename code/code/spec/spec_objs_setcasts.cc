@@ -1,5 +1,6 @@
-#include "stdsneezy.h"
+#include "comm.h"
 #include "obj_base_clothing.h"
+#include "being.h"
 
 // constants that define the combo items
 // combo 1

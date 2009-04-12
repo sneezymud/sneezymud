@@ -1,5 +1,6 @@
-#include "stdsneezy.h"
+#include "comm.h"
 #include "obj_base_weapon.h"
+#include "being.h"
 
 const int AVENGER=319;
 const int VINDICATOR=326;
@@ -59,9 +60,9 @@ void doBlind(TBeing *ch, TBeing *vict, TObj *o)
       ch->isNotPowerful(vict, (int)tWeap->weaponLevel(), SPELL_BLINDNESS, SILENT_YES))
     return;
 
-  if (!::number(0, max(10, (int)(tWeap->weaponLevel() +
-                                 (vict->GetMaxLevel() -
-                                  ch->GetMaxLevel()))))) {
+  if (!::number(0, std::max(10, (int)(tWeap->weaponLevel() +
+				      (vict->GetMaxLevel() -
+				       ch->GetMaxLevel()))))) {
     act("A searing light shines from $p, blinding $N.",
         FALSE, ch, o, vict, TO_CHAR);
     act("$n shields $s eyes as a searing light shines from $p, blinding $N.",

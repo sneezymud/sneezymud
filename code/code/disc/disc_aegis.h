@@ -24,6 +24,9 @@
 
 // This is the AEGIS discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDAegis : public CDiscipline
 {
 public:

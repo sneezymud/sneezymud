@@ -4,7 +4,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "extern.h"
 #include "low.h"
 #include "account.h"
 #include "statistics.h"

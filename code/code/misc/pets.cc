@@ -5,8 +5,11 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "being.h"
 #include "monster.h"
+#include "room.h"
+#include "extern.h"
 #include "database.h"
 
 /* **********************************************************************

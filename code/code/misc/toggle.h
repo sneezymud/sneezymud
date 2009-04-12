@@ -11,6 +11,8 @@
 
 #include <map>
 
+#include "sstring.h"
+
 // Toggles
 
 // quest toggles on individual players
@@ -68,7 +70,7 @@ class togEntry {
 
 
 class togInfoT {
-  map<togTypeT, togEntry *>toggles;
+  std::map<togTypeT, togEntry *>toggles;
   bool loaded;
 
  public:

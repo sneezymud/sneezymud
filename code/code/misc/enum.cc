@@ -5,7 +5,8 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "obj_money.h"
 
 int mapApplyToFile(applyTypeT att)
 {

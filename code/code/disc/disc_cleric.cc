@@ -7,7 +7,6 @@
 
 // disc_cleric.cc
 
-#include "stdsneezy.h"
 #include "disc_cleric.h"
 
 CDCleric::CDCleric() :

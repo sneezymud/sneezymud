@@ -26,6 +26,9 @@
 
 // This is the THEOLOGY discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDTheology : public CDiscipline
 {
 public:

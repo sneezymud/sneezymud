@@ -5,7 +5,9 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "being.h"
 #include "combat.h"
 #include "obj_base_clothing.h"
 #include "monster.h"

@@ -21,6 +21,9 @@
 
 // This is the THIEF FIGHTHING skills discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDThiefFight : public CDiscipline
 {
 public:

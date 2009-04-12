@@ -12,7 +12,10 @@ extern "C" {
 #include <unistd.h>
 }
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "handler.h"
+#include "room.h"
+#include "being.h"
 #include "low.h"
 #include "monster.h"
 #include "combat.h"
@@ -48,7 +51,7 @@ const sstring fname(const char *namelist)
 
 // split up "str", using delimiters "sep" and place resulting sstrings in "argv"
 // TODO: move into sstring class
-int split_string(const sstring &str, const sstring &sep, vector<sstring> &argv)
+int split_string(const sstring &str, const sstring &sep, std::vector<sstring> &argv)
 {
   unsigned int pos=0, last=0;
 
@@ -64,7 +67,7 @@ int split_string(const sstring &str, const sstring &sep, vector<sstring> &argv)
 
 bool isname(const sstring &str, const sstring &namelist)
 {
-  vector <sstring> argv, xargv;
+  std::vector <sstring> argv, xargv;
   unsigned int i, j;
 
   if (namelist.empty())
@@ -88,7 +91,7 @@ bool isname(const sstring &str, const sstring &namelist)
 
 bool is_exact_spellname(const sstring &str, const sstring &namelist)
 {
-  vector <sstring> argv, xargv;
+  std::vector <sstring> argv, xargv;
   unsigned int i, j;
 
   split_string(str, "- \t\n\r,", argv);
@@ -112,7 +115,7 @@ bool is_exact_spellname(const sstring &str, const sstring &namelist)
 
 bool is_exact_name(const sstring &str, const sstring &namelist)
 {
-  vector <sstring> argv, xargv;
+  std::vector <sstring> argv, xargv;
   unsigned int i, j;
 
   split_string(str, "- \t\n\r,", argv);
@@ -184,6 +187,7 @@ void TBeing::affectChange(uint64_t original, silentTypeT silent)
     act("A brilliant, white light surrounds $n!", FALSE, this,0,0,TO_ROOM);
   }
   if (!IS_SET(current, AFF_FLYING) && IS_SET(original, AFF_FLYING)) {
+
     if (roomp && roomp->isFlyingSector()) {
       sendTo("You lose your ability to fly. Lucky for you the magic in this room prevents your fall.\n\r");
     } else {
@@ -1526,8 +1530,8 @@ TThing *get_thing_on_list_num(int num, TThing *list)
 // this gets used by shop code to get the "num"th thing in the "list"
 TObj *get_num_obj_in_list(TBeing *ch, int num, StuffList list, int shop_nr)
 {
-  vector<TObj *>cond_obj_vec(0);
-  vector<int>cond_tot_vec(0);
+  std::vector<TObj *>cond_obj_vec(0);
+  std::vector<int>cond_tot_vec(0);
 
   bool found = false;
   unsigned int k;

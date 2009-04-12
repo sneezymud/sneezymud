@@ -9,6 +9,8 @@
 #define __OBJ_BASE_CORPSE_H
 
 #include "obj_base_container.h"
+#include "extern.h"
+#include "race.h"
 
 // an abstract corpse
 class TBaseCorpse : public TBaseContainer {

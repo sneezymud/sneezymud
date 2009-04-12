@@ -1,6 +1,7 @@
 // staff.cc
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "room.h"
 #include "low.h"
 #include "monster.h"
 #include "materials.h"
@@ -261,6 +262,7 @@ int TStaff::useMe(TBeing *ch, const char * argument)
       } else {
         if ((discArray[the_spell]->targets & TAR_VIOLENT))
           isViolent = TRUE;
+
         for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end();){
           t=*(it++);
           tmp_char = dynamic_cast<TBeing *>(t);

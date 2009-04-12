@@ -6,7 +6,11 @@
 //  
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "handler.h"
+#include "room.h"
+#include "being.h"
+#include "client.h"
 #include <errno.h>
 #include "colorstring.h"
 #include "low.h"
@@ -615,6 +619,7 @@ int TBeing::doEmote(const sstring &argument)
     buf = format("$n %s<z>") % garbled;
     tmpbuf = format("%s") % nameColorString(this, desc, buf, NULL, COLOR_BASIC, FALSE);
     act(tmpbuf, TRUE, this, 0, 0, TO_CHAR);
+
     for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
       t=*(it++);
       TBeing *ch = dynamic_cast<TBeing *>(t);
@@ -1081,7 +1086,7 @@ static bool isSpammyRoom(int tRoom)
 bool isInt(const sstring &s)
 {
   int x;
-  istringstream is(s);
+  std::istringstream is(s);
   if(!(is >> x)){
     return false;
   } else {

@@ -1,4 +1,6 @@
-#include "stdsneezy.h"
+#include "being.h"
+#include "parse.h"
+#include "obj.h"
 
 int blackSun(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 {

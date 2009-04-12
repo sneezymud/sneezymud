@@ -1,4 +1,8 @@
-#include "stdsneezy.h"
+#include "being.h"
+#include "extern.h"
+#include "room.h"
+
+class TObj;
 
 int task_ride(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *)
 {

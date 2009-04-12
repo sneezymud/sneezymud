@@ -8,9 +8,11 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "being.h"
 #include "person.h"
+#include "extern.h"
 #include "monster.h"
+#include "room.h"
 #include "account.h"
 #include "configuration.h"
 #include "colorstring.h"

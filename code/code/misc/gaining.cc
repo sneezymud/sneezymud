@@ -1,6 +1,7 @@
 #include <cmath>
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "being.h"
 #include "monster.h"
 #include "statistics.h"
 #include "obj_component.h"

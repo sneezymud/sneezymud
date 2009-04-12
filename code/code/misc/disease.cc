@@ -7,7 +7,8 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "room.h"
+#include "being.h"
 #include "monster.h"
 #include "low.h"
 #include "disease.h"
@@ -85,6 +86,7 @@ void spread_affect(TBeing *ch, int chance_to_spread, bool race, bool not_race, a
   // Do not spread disease in peacful zones, this can become real hairy.
   if (ch->roomp && ch->roomp->isRoomFlag(ROOM_PEACEFUL))
     return;
+
 
   for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (t=*it);++it) {
     TBeing *v = dynamic_cast<TBeing *>(t);

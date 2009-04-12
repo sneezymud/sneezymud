@@ -5,9 +5,11 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "room.h"
+#include "being.h"
 #include "low.h"
 #include "account.h"
+#include "extern.h"
 #include "colorstring.h"
 #include "monster.h"
 
@@ -180,6 +182,7 @@ void TRoom::playsound(soundNumT sound, const sstring &type, int vol, int prior, 
 }
 
 void TRoom::stopsound() const
+
 {
   for(StuffIter it=stuff.begin();it!=stuff.end();++it) {
     TBeing * chb = dynamic_cast<TBeing *>(*it);

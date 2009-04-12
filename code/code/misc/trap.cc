@@ -5,7 +5,10 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "room.h"
+#include "extern.h"
+#include "being.h"
 #include "low.h"
 #include "monster.h"
 #include "disc_looting.h"
@@ -445,6 +448,7 @@ int TBeing::triggerPortalTrap(TPortal *o)
       amnt = o->getPortalTrapDam();
 
       // fry people in room
+
       for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
         t=*(it++);
         TBeing *tbt = dynamic_cast<TBeing *>(t);

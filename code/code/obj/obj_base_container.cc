@@ -8,7 +8,7 @@
 // container.cc
 //
 
-#include "stdsneezy.h"
+#include "handler.h"
 #include "low.h"
 #include "monster.h"
 #include "obj_base_container.h"

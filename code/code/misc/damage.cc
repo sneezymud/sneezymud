@@ -6,7 +6,10 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "low.h"
 #include "monster.h"
 #include "combat.h"
@@ -493,6 +496,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 
   // set pkilling flag on pkillers
   if(isPc() && v->isPc() && this!=v && this->roomp && 
+
      !this->roomp->isRoomFlag(ROOM_ARENA) &&
      !this->inPkZone() && v->isValidPkTarget(this)){
 

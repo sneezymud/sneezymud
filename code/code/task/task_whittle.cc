@@ -9,16 +9,20 @@
 
 ******************************************************************************/
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "being.h"
 #include "task_whittle.h"
 #include "obj_bow.h"
 #include "obj_organic.h"
 #include "obj_arrow.h"
+#include "extern.h"
 #include "obj_general_weapon.h"
 
+using std::max;
+using std::min;
 
 
-map<unsigned long int, taskWhittleEntry>whittleItems;
+std::map<unsigned long int, taskWhittleEntry>whittleItems;
 
 void initWhittle()
 {

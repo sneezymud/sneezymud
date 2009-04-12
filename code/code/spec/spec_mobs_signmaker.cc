@@ -1,7 +1,7 @@
-#include "stdsneezy.h"
 #include "monster.h"
 #include "shop.h"
 #include "obj_note.h"
+#include "extern.h"
 #include "shopowned.h"
 #include "spec_mobs.h"
 

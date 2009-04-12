@@ -1,6 +1,7 @@
 // stats.cc
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "being.h"
 #include "stats.h"
 
 #include <cmath>

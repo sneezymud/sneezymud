@@ -57,7 +57,7 @@ class TGuild {
   double power;
   int colors[3];
   deityTypeT patron;
-  vector<TRelation *>relations;
+  std::vector<TRelation *>relations;
   
  public:
   int getRelation(int);

@@ -1,4 +1,4 @@
-#include "stdsneezy.h"
+#include "room.h"
 #include "low.h"
 #include "monster.h"
 #include "disease.h"
@@ -36,6 +36,7 @@ int astralWalk(TBeing * caster, TBeing * victim, int level, sh_int bKnown)
     vlogf(LOG_BUG, "Attempt to astral to a NULL room.");
     return SPELL_FAIL;
   }
+
 
   if (room->isFlyingSector() || caster->roomp->isFlyingSector()) {
     act("$d refuses to let you astral walk through the magic",

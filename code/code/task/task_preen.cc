@@ -1,4 +1,6 @@
-#include "stdsneezy.h"
+#include "handler.h"
+#include "room.h"
+#include "being.h"
 #include "low.h"
 #include "process.h"
 
@@ -24,6 +26,7 @@ void TBeing::doPreen(sstring &argument)
 {
   if (in_room < 0)
     return;
+
 
   TThing *target = !argument.empty() ? searchLinkedListVis(this, argument, roomp->stuff) : dynamic_cast<TThing*>(this);
   bool being = target && dynamic_cast<TBeing*>(target) != NULL;

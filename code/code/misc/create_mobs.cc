@@ -11,7 +11,10 @@ extern "C" {
 #include <sys/stat.h>
 }
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "room.h"
+#include "extern.h"
+#include "being.h"
 #include "low.h"
 #include "monster.h"
 #include "mail.h"

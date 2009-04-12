@@ -8,6 +8,12 @@
 #ifndef __WEATHER_H
 #define __WEATHER_H
 
+#include "enum.h"
+
+class TBeing;
+class TRoom;
+class sstring;
+
 enum weatherT { WEATHER_NONE, WEATHER_CLOUDLESS, WEATHER_CLOUDY, WEATHER_RAINY, WEATHER_LIGHTNING, WEATHER_SNOWY };
 // need to add in WEATHER_WINDY here - Rix
 

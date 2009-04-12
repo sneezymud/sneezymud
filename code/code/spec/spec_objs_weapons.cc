@@ -1,4 +1,6 @@
-#include "stdsneezy.h"
+#include "extern.h"
+#include "room.h"
+#include "handler.h"
 #include "low.h"
 #include "pathfinder.h"
 #include "materials.h"
@@ -1151,6 +1153,7 @@ int fireballWeapon(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 
   chance = ::number(4,10); // .33 * .3 = 10% chance the proc will do damage
   
+
   if (chance < 8 || (rp &&  rp->isUnderwaterSector())) {
     act("$n's $p glows fire red.", 0, ch, o, 0, TO_ROOM, ANSI_RED);
     act("Your $p glows fire red.", 0, ch, o, 0, TO_CHAR, ANSI_RED);

@@ -1,4 +1,8 @@
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
+#include "client.h"
 #include "person.h"
 #include "low.h"
 #include "colorstring.h"
@@ -62,6 +66,7 @@ int voodoo(TBeing *caster, TObj *obj, int level, sh_int bKnown)
 
   act("You channel some of the cosmic energy into $p!", FALSE, caster, corpse, NULL, TO_CHAR);
   act("$n channels some of the cosmic energy into $p!", TRUE, caster, corpse, NULL, TO_ROOM);
+
 
   caster->roomp->playsound(SOUND_SPELL_ANIMATE_DEAD, SOUND_TYPE_MAGIC);
 

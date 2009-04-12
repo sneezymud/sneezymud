@@ -1,7 +1,8 @@
-#include "stdsneezy.h"
+#include "extern.h"
+#include "being.h"
 #include <algorithm>
 
-vector<discNumT>disclist;
+std::vector<discNumT>disclist;
 
 void TBeing::assignSkillsClass()
 {
@@ -11,7 +12,7 @@ void TBeing::assignSkillsClass()
   discNumT prim;
   int value;
   CDiscipline *cd;
-  vector<discNumT>favorites;
+  std::vector<discNumT>favorites;
 
   mud_assert(discs != NULL, "Somehow got to assignSkillsClass without a discs %s", getName());
 
@@ -159,7 +160,7 @@ void TBeing::assignSkillsClass()
 }
 
 void TBeing::assignSkills(classIndT Class, discNumT primDisc,
-			  vector<discNumT>favorites)
+			  std::vector<discNumT>favorites)
 {
   CDiscipline *cd, *prim, *combat, *favored=NULL;
   discNumT favoredNum=DISC_NONE, discnum;

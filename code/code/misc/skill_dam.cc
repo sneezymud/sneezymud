@@ -5,7 +5,8 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "being.h"
 #include "statistics.h"
 
 double getSkillDiffModifier(spellNumT skill)

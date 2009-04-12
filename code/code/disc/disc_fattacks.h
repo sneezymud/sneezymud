@@ -20,6 +20,9 @@
 #define __DISC_FOCUSED_ATTACKS_H 
 
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDFAttacks : public CDiscipline
 {
 public:

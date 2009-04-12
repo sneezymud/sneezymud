@@ -1,4 +1,3 @@
-#include "stdsneezy.h"
 #include "colorstring.h"
 #include "disease.h"
 #include "combat.h"
@@ -6,7 +5,7 @@
 #include "spelltask.h"
 #include "statistics.h"
 #include "obj_magic_item.h"
-
+#include "being.h"
 
 ////////////////////////////////////////////////////////////////
 //   The following are copies of repHealing and adjustHealHp

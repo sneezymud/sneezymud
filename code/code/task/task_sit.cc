@@ -4,7 +4,9 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "being.h"
+#include "obj.h"
+#include "room.h"
 
 int task_sit(TBeing *ch, cmdTypeT cmd, const char *arg, int pulse, TRoom *, TObj *)
 {

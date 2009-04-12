@@ -61,7 +61,9 @@
 
 #include <cmath>
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
 #include "low.h"
 #include "monster.h"
 #include "disease.h"
@@ -369,6 +371,7 @@ int TStaff::foodItemUsed(TBeing *ch, const char *)
     return FALSE;
   }
   addToCurCharges(-1);
+
   for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (t=*it);++it) {
     vict = dynamic_cast<TBeing *>(t);
     if (!vict)
@@ -5382,7 +5385,7 @@ int fortuneCookie(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
   if(!ch || !o || cmd != CMD_OBJ_OPENED)
     return false;
 
-  vector <sstring> fortunes;
+  std::vector <sstring> fortunes;
   fortunes.push_back("This paper is better than you in every way, because it can achieve Zen.  You, on the other hand, cannot.  And thus you must resume your misguided existence and continue on forever envious of this little bit of bleached wood pulp.\n\r");
   fortunes.push_back("The greatest danger could be your stupidity.\n\r");
   fortunes.push_back("Our first and last love is... self love.\n\r");
@@ -5546,8 +5549,8 @@ int vellaKeyJoin(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
   TObj *key2 = NULL;
   TObj *linked_key = NULL;
 
-  map <int, short int> vnumToVec;
-  map <short int, int> vecToVnum;
+  std::map <int, short int> vnumToVec;
+  std::map <short int, int> vecToVnum;
   
   vnumToVec[27561] = 1;
   vnumToVec[27705] = 6;
@@ -5805,7 +5808,7 @@ int skittishObject (TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 			// #### on the ground -> wander the object
 
 			// find permissible exits - must be open
-			vector <dirTypeT> possible_exits;
+			std::vector <dirTypeT> possible_exits;
 			for(use_dir = MIN_DIR; use_dir < MAX_DIR; use_dir++){
 				if (o->roomp->exitDir(use_dir) && !IS_SET(o->roomp->exitDir(use_dir)->condition, EX_CLOSED))
 					possible_exits.push_back(use_dir);

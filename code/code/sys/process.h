@@ -1,6 +1,7 @@
 #ifndef __PROCESS_H
 #define __PROCESS_H
 
+#include "sstring.h"
 
 // This is the template of a process.
 class TProcess {
@@ -249,7 +250,7 @@ class procDoComponents : public TProcess {
 /////////////////////
 
 class TScheduler {
-  vector<TProcess *>procs;
+  std::vector<TProcess *>procs;
 
  public:
   void add(TProcess *);

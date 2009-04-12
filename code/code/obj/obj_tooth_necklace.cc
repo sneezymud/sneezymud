@@ -5,7 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 // Peel
 
-#include "stdsneezy.h"
+#include "extern.h"
 #include "monster.h"
 #include "obj_tooth_necklace.h"
 

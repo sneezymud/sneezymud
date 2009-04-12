@@ -5,8 +5,9 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "extern.h"
 #include "person.h"
+#include "handler.h"
 #include "low.h"
 #include "monster.h"
 

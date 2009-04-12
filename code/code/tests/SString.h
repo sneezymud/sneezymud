@@ -1,6 +1,5 @@
 #include <cxxtest/TestSuite.h>
 
-#include "stdsneezy.h"
 #include "code/tests/ValueTraits.h"
 #include "timing.h"
 

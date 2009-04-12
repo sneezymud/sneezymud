@@ -14,8 +14,12 @@ extern "C" {
 
 #include <errno.h>
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
+#include "client.h"
 #include "low.h"
+#include "handler.h"
 #include "monster.h"
 #include "configuration.h"
 #include "account.h"
@@ -1638,6 +1642,7 @@ void TBeing::doReset(sstring arg)
 
     one_argument(arg, buf);
     if (buf.empty()){
+
       zone = (roomp ? roomp->getZoneNum() : 0);
       /*
       sendTo("Syntax: reset zone <zone#>\n\r");

@@ -3,6 +3,7 @@
 
 #include "obj_drug.h"
 #include "stats.h"
+#include "comm.h"
 #include <deque>
 
 const unsigned int PROMPT_HIT               = (1<<0);
@@ -149,7 +150,7 @@ class commText
 class outputQ
 {
  private:
-  deque <Comm *> queue;
+  std::deque <Comm *> queue;
   
  public:
   Comm *getBegin();

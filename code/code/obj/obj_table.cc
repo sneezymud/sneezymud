@@ -1,8 +1,9 @@
 // table.cc
 //
 
-#include "stdsneezy.h"
+#include "extern.h"
 #include "obj_table.h"
+#include "handler.h"
 
 TTable::TTable() :
   TObj()

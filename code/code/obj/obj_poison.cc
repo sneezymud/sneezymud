@@ -6,7 +6,6 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
 #include "obj_base_container.h"
 #include "obj_poison.h"
 #include "monster.h"

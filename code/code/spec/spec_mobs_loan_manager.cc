@@ -1,4 +1,4 @@
-#include "stdsneezy.h"
+#include "room.h"
 #include "monster.h"
 #include "database.h"
 #include "shop.h"
@@ -68,6 +68,7 @@ void loanBuy(TBeing *ch, TMonster *myself, sstring arg)
 
   if(!db.fetchRow()){
     TRoom *tr=real_roomp(shop_index[corp.getBank()].in_room);
+
     myself->doTell(ch->getName(), format("You need to have a bank account at %s in order to finance loans.") % tr->getName());
     return;
   }

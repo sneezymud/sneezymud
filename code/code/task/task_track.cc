@@ -5,7 +5,8 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "extern.h"
+#include "client.h"
 #include "obj_portal.h"
 #include "pathfinder.h"
 

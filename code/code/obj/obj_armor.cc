@@ -1,8 +1,9 @@
 // armor.cc
 
-#include "stdsneezy.h"
+#include "comm.h"
 #include "obj_armor.h"
 #include "obj_base_clothing.h"
+#include "being.h"
 
 
 TArmor::TArmor() :

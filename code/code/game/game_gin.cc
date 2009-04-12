@@ -9,9 +9,10 @@
 //                                                                           //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
 #include "monster.h"
 #include "games.h"
+#include "extern.h"
+#include "handler.h"
 
 GinGame gGin;
 

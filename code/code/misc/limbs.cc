@@ -9,7 +9,7 @@
 //
 //  Time for some more magic.
 
-#include "stdsneezy.h"
+#include "being.h"
 #include <cmath>
 
 const char *limbNames[MAX_LIMB_TYPES] = {
@@ -134,7 +134,7 @@ int TBeing::hurtLimb(unsigned int dam, wearSlotT part_hit)
   sstring buf;
 
   if (limHlt > 0) {
-    addCurLimbHealth(part_hit, -min(dam, limHlt));
+    addCurLimbHealth(part_hit, -std::min(dam, limHlt));
     if (getCurLimbHealth(part_hit) <= 0) {
       sendTo(COLOR_BASIC, format("%sYour %s has become totally useless!%s\n\r") %
 	     red() % describeBodySlot(part_hit) % norm());

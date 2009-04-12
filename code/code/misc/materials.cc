@@ -7,8 +7,9 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "being.h"
 #include "materials.h"
+#include "room.h"
 #include "statistics.h"
 #include "obj_base_weapon.h"
 

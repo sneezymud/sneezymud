@@ -14,6 +14,9 @@
 #include "room.h"
 #include "obj_drug.h"
 
+using std::min;
+using std::max;
+
 extern "C" {
 #if 0
 // disabled functions
@@ -22,7 +25,7 @@ extern int min_stat(race_t, statTypeT);
 #endif
 extern wearSlotT slot_from_bit(int);
 extern void cleanCharBuf(char *);
-extern int split_string(const sstring &str, const sstring &sep, vector<sstring> &argv);
+extern int split_string(const sstring &str, const sstring &sep, std::vector<sstring> &argv);
 extern void sendrp_exceptf(TRoom *, TBeing *, const char *,...);
 extern const char *how_good(int);
 extern sstring sprintbit(unsigned long, const char * const []);
@@ -204,7 +207,7 @@ extern int numberLogHosts;
 extern long roomCount;
 extern int script_on_command(TBeing *, char *, int);
 extern void initWhittle();
-extern vector<zoneData>zone_table;
+extern std::vector<zoneData>zone_table;
 extern void DeleteHatreds(const TBeing *, const char *);
 extern void DeleteFears(const TBeing *, const char *);
 extern int SHARP_PRICE(TObj *);

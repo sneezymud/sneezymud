@@ -1,4 +1,3 @@
-#include "stdsneezy.h"
 #include "shop.h"
 #include "database.h"
 #include "spec_mobs.h"

@@ -1,4 +1,6 @@
-#include "stdsneezy.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "low.h"
 #include "disease.h"
 #include "combat.h"
@@ -26,6 +28,7 @@ void relive(TBeing *ch, TBeing *vict)
   
 
   // locate corpse
+
   for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (t=*it);++it){
     if((corpse=dynamic_cast<TPCorpse *>(t)) &&
        corpse->getOwner().lower() == sstring(vict->getName()).lower())

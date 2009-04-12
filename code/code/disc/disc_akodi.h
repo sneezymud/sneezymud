@@ -21,6 +21,9 @@
 
 // This is the AKODI discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDAkodi : public CDiscipline
 {
 public:

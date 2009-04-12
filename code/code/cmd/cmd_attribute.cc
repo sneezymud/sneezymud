@@ -6,8 +6,11 @@
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "being.h"
 #include "account.h"
+#include "ansi.h"
+#include "extern.h"
+#include "handler.h"
 
 static void showStatsTo(const Descriptor *d, const TBeing *ch, bool hidden_stuff)
 {

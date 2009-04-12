@@ -7,7 +7,10 @@
  *                                                                 *
  *******************************************************************/
 
-#include "stdsneezy.h"
+#include "handler.h"
+#include "extern.h"
+#include "room.h"
+#include "being.h"
 #include "low.h"
 #include "monster.h"
 #include "disease.h"
@@ -113,6 +116,7 @@ int transformLimb(TBeing * caster, const char * buffer, int level, sh_int bKnown
 
   // failure = scrapped item.  no item damage allowed in arena
   // this is to block problem in doTransformDrop()
+
   if (caster->roomp && caster->roomp->isRoomFlag(ROOM_ARENA)) {
     act("A magic power prevents anything from happening here.",
          FALSE, caster, 0, 0, TO_CHAR);

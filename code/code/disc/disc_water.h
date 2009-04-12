@@ -21,6 +21,9 @@
 
 // This is the WATER discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDWater : public CDiscipline
 {
 public:

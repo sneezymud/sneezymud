@@ -24,6 +24,9 @@
 
 // This is the THIEF Stealth discipline.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDStealth : public CDiscipline
 {
 public:

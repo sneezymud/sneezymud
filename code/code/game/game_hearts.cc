@@ -9,10 +9,13 @@
 
 *************************************************************************/
 
-#include "stdsneezy.h"
+#include "room.h"
+#include "being.h"
 #include "low.h"
 #include "monster.h"
 #include "games.h"
+#include "extern.h"
+#include "handler.h"
 
 HeartsGame gHearts;
 
@@ -485,6 +488,7 @@ void HeartsGame::play(TBeing *ch, const char *arg)
     firstplay = FALSE;
     take_card_from_hand(hands[which], card, 12);
     ch->sendTo(format("You play the %s.\n\r") % pretty_card_printout(ch, pile[iplay]));
+
     for(StuffIter it= ch->roomp->stuff.begin();it!= ch->roomp->stuff.end();++it) {
       TBeing *tbt = dynamic_cast<TBeing *>(*it);
       if (tbt && (tbt != ch))

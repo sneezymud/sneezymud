@@ -4,8 +4,11 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "comm.h"
+#include "room.h"
 #include "obj_plant.h"
+#include "thing.h"
+#include "being.h"
 
 TPlant::TPlant() :
   TExpandableContainer()
@@ -119,7 +122,7 @@ int seed_to_plant(int vnum)
 
 void TPlant::updateDesc()
 {
-  int plantindex=min(3, (getAge()/10));
+  int plantindex=std::min(3, (getAge()/10));
   char buf[256];
 
   const char *plantkeywords [] =
@@ -346,6 +349,7 @@ void TPlant::updateAge(){
   setAge(getAge()+::number(1,3));
   updateDesc();
   if(roomp)
+
     roomp->saveItems("");
 }
 

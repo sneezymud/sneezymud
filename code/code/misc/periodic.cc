@@ -6,12 +6,15 @@
 //  
 ///////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "room.h"
+#include "being.h"
+#include "handler.h"
 #include "low.h"
 #include "monster.h"
 #include "configuration.h"
 #include "materials.h"
 #include "combat.h"
+#include "extern.h"
 #include "disease.h"
 #include "mail.h"
 #include "person.h"
@@ -57,6 +60,7 @@ void procGlobalRoomStuff::run(int pulse) const
     bool isbeach=false;
     
     if(rp->isRoomFlag(ROOM_FLOODED)){
+
       rp->removeRoomFlagBit(ROOM_FLOODED);
       isbeach=rp->isBeachSector();
       rp->setRoomFlagBit(ROOM_FLOODED);

@@ -1,4 +1,5 @@
-#include "stdsneezy.h"
+#include "handler.h"
+#include "being.h"
 #include "combat.h"
 #include "obj_base_weapon.h"
 
@@ -239,6 +240,7 @@ int TBeing::doDeathstroke(const char *argument, TBeing *vict)
   strcpy(v_name, argument);
   
   if (!(victim = vict)) {
+
     if (!(victim = get_char_room_vis(this, v_name))) {
       if (!(victim = fight())) {
         sendTo("Deathstroke whom?\n\r");

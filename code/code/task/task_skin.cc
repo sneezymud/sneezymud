@@ -6,10 +6,12 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "stdsneezy.h"
+#include "comm.h"
 #include "obj_base_corpse.h"
+#include "extern.h"
 #include "obj_organic.h"
 #include "obj_component.h"
+#include "being.h"
 #include "obj_tool.h"
 #include "obj_base_weapon.h"
 

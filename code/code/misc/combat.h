@@ -9,6 +9,8 @@
 #ifndef __COMBAT_H
 #define __COMBAT_H
 
+class TBeing;
+
 // these ONEHIT_MESS may be used with DELETE's, use caution!
 const int ONEHIT_MESS_CRIT_S    = (1<<0);
 const int ONEHIT_MESS_LIMB      = (1<<1);

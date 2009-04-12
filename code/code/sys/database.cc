@@ -1,7 +1,7 @@
 #include <stdarg.h>
 
-#include "stdsneezy.h"
 #include "configuration.h"
+#include "extern.h"
 #include "database.h"
 #include "timing.h"
 
@@ -11,7 +11,7 @@ TDatabaseConnection database_connection;
 // we return this instead of null if they try to fetch an invalid column
 const sstring empty="";
 
-vector <string> db_hosts(DB_MAX);
+std::vector <string> db_hosts(DB_MAX);
 
 const char * db_connect[DB_MAX] = {
   NULL, // depends on game port
@@ -121,7 +121,7 @@ const sstring TDatabase::operator[] (const sstring &s) const
   if(!res || !row)
     return NULL;
 
-  map<const char*, int, ltstr>::const_iterator cur=column_names.find(s.lower().c_str());
+  std::map<const char*, int, ltstr>::const_iterator cur=column_names.find(s.lower().c_str());
 
   if(cur == column_names.end()){
     vlogf(LOG_DB, format("TDatabase::operator[%s] - invalid column name") %  s);

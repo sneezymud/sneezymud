@@ -16,7 +16,9 @@ const int SYSTEM_FIND_EMAIL = 5;
 const int SYSTEM_STATISTICS = 6;
 const int SYSTEM_SEARCH_HELP = 7;
 
+class TBeing;
 class	_task;
+class sstring;
 
 class SystemTask {
   bool taskstatus;

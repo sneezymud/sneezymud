@@ -6,11 +6,11 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "stdsneezy.h"
 #include "monster.h"
 #include "obj_base_container.h"
 #include "obj_potion.h"
 #include "shop.h"
+#include "extern.h"
 #include "database.h"
 #include "liquids.h"
 

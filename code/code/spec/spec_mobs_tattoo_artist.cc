@@ -1,6 +1,6 @@
-#include "stdsneezy.h"
 #include "monster.h"
 #include "database.h"
+#include "extern.h"
 
 int tattooArtist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
 {

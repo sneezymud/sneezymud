@@ -1,6 +1,9 @@
 #ifndef __DISC_RITUALISM_H
 #define __DISC_RITUALISM_H
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDRitualism : public CDiscipline
 {
 public:

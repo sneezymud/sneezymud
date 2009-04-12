@@ -5,8 +5,11 @@
   
 *************************************************************************/
 
-#include "stdsneezy.h"
+#include "room.h"
+#include "extern.h"
+#include "being.h"
 #include "low.h"
+#include "handler.h"
 #include "combat.h"
 #include "materials.h"
 
@@ -182,6 +185,7 @@ bool TBeing::canSwim(dirTypeT dir)
   mass += (!canUseLimb(WEAR_LEG_L)) ? 5 * GRAMS_PER_POUND : 0;
   
   // adjust for swimming with/against current
+
   if (rp->getRiverSpeed()) {
     if (dir == DIR_NONE)  // floating in place
       mass += 5 * GRAMS_PER_POUND;  // tough to stay where I am

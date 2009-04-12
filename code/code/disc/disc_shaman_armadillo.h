@@ -3,6 +3,9 @@
 
 // This is the ARMADILLO discipline for shaman.
 
+#include "discipline.h"
+#include "skills.h"
+
 class CDShamanArmadillo : public CDiscipline
 {
 public:
