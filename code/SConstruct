@@ -19,7 +19,6 @@ CXXFLAGS = [
 
 CPPPATH = [
     '/usr/local/include',
-    '/mud/build/curl/include',
     '#/code/cmd',
     '#/code/disc',
     '#/code/game',
@@ -43,7 +42,6 @@ LDFLAGS = [
 
 LIBPATH = [
     '/usr/local/lib',
-    '/mud/build/curl/lib'
     ]
 
 # build environment
@@ -51,7 +49,7 @@ env=Environment(CXXFLAGS=CXXFLAGS,
                 LINKFLAGS=LDFLAGS,
                 CPPPATH=CPPPATH,
                 LIBPATH=LIBPATH,
-                tools=['default', 'cxxtest'],
+                tools=['default', 'cxxtest', 'gch'],
 
                 #prettified output
                 SHCXXCOMSTR = "\033[35mCompiling\033[0m $SOURCE",
@@ -60,9 +58,6 @@ env=Environment(CXXFLAGS=CXXFLAGS,
                 LINKCOMSTR = "\033[31mLinking\033[0m $TARGET",
                 INSTALLSTR = "\033[33mInstalling\033[0m '$SOURCE' as '$TARGET'",
                 )
-
-# this is so unit tests can execute
-env['ENV']['LD_LIBRARY_PATH']='/mud/build/curl/lib'
 
 
 Export('env')
