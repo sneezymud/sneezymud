@@ -49,7 +49,7 @@ env=Environment(CXXFLAGS=CXXFLAGS,
                 LINKFLAGS=LDFLAGS,
                 CPPPATH=CPPPATH,
                 LIBPATH=LIBPATH,
-                tools=['default', 'cxxtest', 'gch'],
+                tools=['default', 'cxxtest'],
 
                 #prettified output
                 SHCXXCOMSTR = "\033[35mCompiling\033[0m $SOURCE",
