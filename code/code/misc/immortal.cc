@@ -384,46 +384,6 @@ void TPerson::doChange(const char *argument)
   }
 }
 
-char * dsearch(const char *sstring)
-{
-  char *c, buf[256], buf2[256];
-  int j;
-  char *tmp;
-
-  tmp = mud_str_dup(sstring);
-  while (1) {
-    if (!strchr(tmp, '~')) {
-      return tmp;
-    } else {
-      c = strchr(tmp, '~');
-      j = c - tmp;
-      if (j+1 >= (int) strlen(tmp)) {
-        // This prevents someone from ending with a ~
-        return tmp;
-      }
-      switch (tmp[j + 1]) {
-        case 'N':
-          strcpy(buf2, "$n");
-          break;
-        case 'H':
-          strcpy(buf2, "$s");
-          break;
-        case 'R':
-          strcpy(buf2, "\n\r");
-          break;
-        default:
-          strcpy(buf2, "");
-          break;
-      }
-      strcpy(buf, tmp);
-      strcpy(&buf[j], buf2);
-      strcat(buf, (tmp + j + 2));
-      delete [] tmp;
-      tmp = mud_str_dup(buf);
-    }
-  }
-}
-
 void TBeing::doHighfive(const sstring &argument)
 {
   sstring mess;

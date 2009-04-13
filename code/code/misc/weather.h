@@ -86,4 +86,11 @@ extern int getRoomWetness(TRoom* room);
 extern const sstring describeWet(int wetness);
 extern const sstring describeWet(const TBeing *ch);
 extern int addWetness(TBeing *ch, int diffWet);
+
+extern void update_world_weather();
+extern int getWeather(int);
+extern bool is_daytime();
+extern bool is_nighttime();
+
+
 #endif

@@ -141,4 +141,10 @@ private:
 // notes.  Add sheath slots to body and jewelry slot to limb with flag for if
 // it can use jewlery or not.  Get rid of finger as a limb and replace it with
 // a jewelry slot on hand.  Add worn weight field to limb.
+
+
+extern bool has_healthy_body(TBeing *);
+extern void break_bone(TBeing *, wearSlotT which);
+
+
 #endif

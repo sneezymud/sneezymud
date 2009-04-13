@@ -10,6 +10,7 @@
 #include "monster.h"
 #include "combat.h"
 #include "obj_corpse.h"
+#include "limbs.h"
 #include "materials.h"
 
 void TBeing::setCurLimbHealth(wearSlotT slot, ush_int num)

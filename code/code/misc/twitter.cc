@@ -38,8 +38,9 @@ bool twitterShout(sstring from, sstring msg)
   curl_easy_setopt(curl, CURLOPT_URL, 
 		   "http://twitter.com/statuses/update.xml");
   curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerlist);
-  curl_easy_setopt(curl, CURLOPT_USERNAME, "sneezymud");
-  curl_easy_setopt(curl, CURLOPT_PASSWORD, "kegenlgn");
+  curl_easy_setopt(curl, CURLOPT_USERPWD, "sneezymud:kegenlgn");
+  //  curl_easy_setopt(curl, CURLOPT_USERNAME, "sneezymud");
+  //  curl_easy_setopt(curl, CURLOPT_PASSWORD, "kegenlgn");
   curl_easy_setopt(curl, CURLOPT_HTTPPOST, formpost);
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, dummyWriter);
 

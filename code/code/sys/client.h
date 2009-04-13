@@ -9,6 +9,8 @@
 #ifndef __CLIENT_H
 #define __CLIENT_H
 
+class sstring;
+
 const char CLIENT_CODE_CHAR = '\200';
 
 const int CLIENT_INIT         = 100;
@@ -107,6 +109,8 @@ const int DELETE        = 0;
 const int ADD           = 1;
 
 extern bool is_client_sstring(char *str);
+extern void stripFrontBytes(char *, int);
+extern void processStringForClient(sstring &);
 
 
 #endif

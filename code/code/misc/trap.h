@@ -8,6 +8,7 @@
 #ifndef __TRAP_H
 #define __TRAP_H
 
+
 const unsigned int TRAP_EFF_MOVE      = (1<<0);   // 1  trigger on movement
 const unsigned int TRAP_EFF_OBJECT    = (1<<1);   // 2  trigger on get or put
 const unsigned int TRAP_EFF_ROOM      = (1<<2);   // 4  affect all in room
@@ -27,7 +28,6 @@ const unsigned int TRAP_EFF_ARMED2    = (1<<15);  // 32768
 const unsigned int TRAP_EFF_ARMED3    = (1<<16);  // 65538
 
 const int MAX_TRAP_EFF       = 17;  // move and change
-
 // these values are same for traps, doors, portals and containers
 
 enum doorTrapT {
@@ -52,5 +52,12 @@ enum trap_targ_t {
 extern const sstring trap_types[];
 extern const char * const GRENADE_EX_DESC;
 extern const char * const TRAP_EX_DESC;
+
+
+extern const int TrapDir[];
+extern const char * const trap_effects[MAX_TRAP_EFF];
+extern doorTrapT mapFileToDoorTrap(int);
+extern int mapDoorTrapToFile(doorTrapT);
+
 
 #endif

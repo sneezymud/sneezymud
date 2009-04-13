@@ -1429,7 +1429,6 @@ int TPerson::genericLoadPC()
     vlogf(LOG_PIO, format("Loading %s's equipment") %  name);
   }
   resetChar();
-  BatoprsResetCharFlags(this);
   loadRent();
   if (player.time.last_logon && (player.time.last_logon < Uptime)) {
     if ((time(0) - player.time.last_logon) > 36 * SECS_PER_REAL_HOUR)

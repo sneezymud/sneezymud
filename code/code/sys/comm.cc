@@ -351,24 +351,6 @@ void sendrpf(int tslevel, TRoom *rp, const char *msg,...)
 }
 
 
-void sendrp_exceptf(TRoom *rp, TBeing *ch, const char *msg,...)
-{
-  char messageBuffer[MAX_STRING_LENGTH];
-  va_list ap;
-  TThing *i=NULL;
-
-  if (rp && msg) {
-    va_start(ap, msg);
-    vsnprintf(messageBuffer, cElements(messageBuffer), msg, ap);
-    va_end(ap);
-    for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (i=*it);++it) {
-      TBeing *tbt = dynamic_cast<TBeing *>(i);
-      if (tbt && tbt->desc && !tbt->desc->connected && (tbt != ch) && tbt->awake())
-        tbt->desc->output.putInQ(new UncategorizedComm(messageBuffer));
-    }
-  }
-}
-
 void TRoom::sendTo(const sstring &text) const
 {
   TThing *i;

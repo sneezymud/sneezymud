@@ -458,38 +458,6 @@ int RecCompObjNum(const TObj *o, int obj_num)
 
 }
 
-// this is a silly noop function
-// occasionally we need to apply flags or "fix" things, so I usually do them
-// all here, for easy centralizing.
-void BatoprsResetCharFlags(TBeing *ch)
-{
-#if 0
-  // strip off free_deaths from 5.0 for 5.1
-  affectedData *aff, *an;
-  for (aff = ch->affected; aff; aff = an) {
-    an = aff->next;
-    if (aff->type != AFFECT_FREE_DEATHS)
-      continue;
-    if (aff->level <= 3) {
-      ch->affectRemove(aff);
-    }
-  }
-
-  // insure multiclassing flags set up ok, this can go away eventually
-  if (ch->GetMaxLevel() >= MAX_MORT && ch->desc) {
-    SET_BIT(ch->desc->account->flags, ACCOUNT_ALLOW_DOUBLECLASS);
-    ch->desc->saveAccount();
-  }
-  // allow access to factions for L50, others can get it on gain
-  if (ch->GetMaxLevel() == 50 && ch->isUnaff() &&
-      !ch->hasQuestBit(TOG_FACTIONS_ELIGIBLE)) {
-    ch->setQuestBit(TOG_FACTIONS_ELIGIBLE);
-  }
-    
-  return;
-#endif
-}
-
 bool TBeing::nomagic(const sstring &msg_ch, const sstring &msg_rm) const
 {
   if (isImmortal())
@@ -1141,19 +1109,6 @@ bool can_see_char_other_room(const TBeing *ch, TBeing *victim, TRoom *)
 bool safe_to_be_in_system(const sstring &cp)
 {
   return (cp.find_first_of("\"';`", 0) == sstring::npos);
-}
-
-bool safe_to_be_in_system_filepath(const sstring &cp)
-{
-  if (cp.empty())
-    return FALSE;
-
-  for(unsigned int i=0;i<cp.size();++i){
-    if (!(isalnum(cp[i]) || (cp[i] == '*')))
-      return FALSE;
-  }
-
-  return TRUE;
 }
 
 bool TBeing::makesNoise() const

@@ -11,6 +11,7 @@
 #include "disc_looting.h"
 #include "disease.h"
 #include "obj_trap.h"
+#include "trap.h"
 
 int TTrap::anyTrapCheck(TBeing *ch)
 {
