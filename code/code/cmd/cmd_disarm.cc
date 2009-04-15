@@ -11,6 +11,7 @@
 #include "combat.h"
 #include "obj_base_clothing.h"
 #include "monster.h"
+#include "skills.h"
 
 bool TBeing::canDisarm(TBeing *victim, silentTypeT silent)
 {

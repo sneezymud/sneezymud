@@ -38,6 +38,8 @@
 #include "obj_suitcase.h"
 #include "obj_bed.h"
 #include "obj_moneypouch.h"
+#include "game_crazyeights.h"
+#include "game_drawpoker.h"
 
 // watches rent in, rent out, dropped, etc
 #define VERBOSE_LOGS   1

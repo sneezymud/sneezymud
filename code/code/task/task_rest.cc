@@ -9,6 +9,7 @@
 #include "handler.h"
 #include "obj.h"
 #include "room.h"
+#include "connect.h"
 
 int task_rest(TBeing *ch, cmdTypeT cmd, const char *arg, int pulse, TRoom *, TObj *)
 {

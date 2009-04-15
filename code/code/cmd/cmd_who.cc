@@ -17,6 +17,7 @@
 #include "account.h"
 #include "person.h"
 #include "monster.h"
+#include "guild.h"
 
 sstring TBeing::parseTitle(Descriptor *)
 {

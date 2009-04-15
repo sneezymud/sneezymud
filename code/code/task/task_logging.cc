@@ -3,6 +3,7 @@
 #include "process.h"
 #include "extern.h"
 #include "obj_base_weapon.h"
+#include "skills.h"
 
 #define LAST_WOOD_TYPE 0
 #define LOGS_PER_ROOM 5

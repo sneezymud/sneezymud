@@ -10,6 +10,7 @@
 
 #include "being.h"
 #include "wiz_powers.h"
+#include "connect.h"
 
 extern Descriptor *descriptor_list;
 extern Descriptor *next_to_process;

@@ -4,7 +4,7 @@
 #include "obj_armor.h"
 #include "obj_base_clothing.h"
 #include "being.h"
-
+#include "skills.h"
 
 TArmor::TArmor() :
   TBaseClothing()

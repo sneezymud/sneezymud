@@ -36,6 +36,8 @@
 #include "obj_trap.h"
 #include "pathfinder.h"
 #include "obj_wagon.h"
+#include "game_crazyeights.h"
+#include "game_drawpoker.h"
 
 void TBeing::goThroughPortalMsg(const TPortal *o) const
 {

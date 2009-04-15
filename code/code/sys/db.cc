@@ -12,6 +12,7 @@
 #include "person.h"
 #include "monster.h"
 #include "configuration.h"
+#include "guild.h"
 
 #include <sys/types.h>
 #include <dirent.h>

@@ -9,6 +9,7 @@
 #include "database.h"
 #include "spec_mobs.h"
 #include "materials.h"
+#include "skills.h"
 
 #define REPRAC_COST_PER_PRAC 1000
 

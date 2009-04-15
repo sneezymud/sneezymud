@@ -11,6 +11,7 @@
 #include "ansi.h"
 #include "extern.h"
 #include "handler.h"
+#include "guild.h"
 
 static void showStatsTo(const Descriptor *d, const TBeing *ch, bool hidden_stuff)
 {

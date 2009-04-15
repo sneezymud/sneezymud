@@ -8,6 +8,9 @@
 #ifndef __STATS_H
 #define __STATS_H
 
+#include <algorithm>
+
+#include "enum.h"
 #include "being.h"
 
 using std::min;

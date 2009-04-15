@@ -19,6 +19,8 @@
 #include "combat.h"
 #include "spec_mobs.h"
 #include "person.h"
+#include "guild.h"
+#include "skills.h"
 
 extern int eqHpBonus(const TPerson *);
 extern int baseHp();

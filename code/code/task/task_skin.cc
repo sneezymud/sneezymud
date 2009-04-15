@@ -14,6 +14,8 @@
 #include "being.h"
 #include "obj_tool.h"
 #include "obj_base_weapon.h"
+#include "connect.h"
+#include "skills.h"
 
 void stop_skin(TBeing *ch)
 {

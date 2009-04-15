@@ -13,6 +13,7 @@
 #include "statistics.h"
 #include "person.h"
 #include "monster.h"
+#include "guild.h"
 
 void TBeing::doSet(const char *)
 {

@@ -13,6 +13,7 @@
 #include "colorstring.h"
 #include "monster.h"
 #include "client.h"
+#include "guild.h"
 
 #include <algorithm>
 #include <sys/types.h>

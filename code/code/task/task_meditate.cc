@@ -8,6 +8,7 @@
 #include "being.h"
 #include "obj.h"
 #include "room.h"
+#include "connect.h"
 
 int task_meditate(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *)
 {

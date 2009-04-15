@@ -20,6 +20,8 @@
 #include "colorstring.h"
 #include "person.h"
 #include "monster.h"
+#include "game_crazyeights.h"
+#include "game_drawpoker.h"
 
 void TBaseCup::lookObj(TBeing *ch, int) const
 {

@@ -26,6 +26,7 @@ extern "C" {
 #include "person.h"
 #include "charfile.h"
 #include "shop.h"
+#include "skills.h"
 #include "mail.h"
 #include "statistics.h"
 #include "combat.h"

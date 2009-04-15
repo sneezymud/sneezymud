@@ -11,6 +11,7 @@
 #include "database.h"
 #include "process.h"
 #include "person.h"
+#include "connect.h"
 
 TTrophy::TTrophy(sstring n) :
   db(new TDatabase(DB_SNEEZY)),

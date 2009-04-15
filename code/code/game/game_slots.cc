@@ -15,6 +15,7 @@
 #include "handler.h"
 #include "game_crazyeights.h"
 #include "game_drawpoker.h"
+#include "connect.h"
 
 void spin_slot(TBeing *ch);
 

@@ -6,8 +6,9 @@
 #include "being.h"
 #include "obj_base_weapon.h"
 #include "obj_player_corpse.h"
+#include "skills.h"
 
- const static char *meats[]={"rib-eye steak", "chuck-eye steak", "skirt steak",
+const static char *meats[]={"rib-eye steak", "chuck-eye steak", "skirt steak",
   "flank steak", "t-bone steak", "porterhouse steak",
   "tenderloin steak", "sirloin steak", "tri-tip steak",
   "chuck steak", "set of ribs", "short loin steak",

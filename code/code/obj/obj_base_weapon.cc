@@ -15,6 +15,7 @@
 #include "combat.h"
 #include "statistics.h"
 #include "shop.h"
+#include "skills.h"
 #include "obj_tool.h"
 #include "obj_arrow.h"
 #include "obj_general_weapon.h"

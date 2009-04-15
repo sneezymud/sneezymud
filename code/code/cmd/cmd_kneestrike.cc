@@ -11,6 +11,7 @@
 #include "being.h"
 #include "enum.h"
 #include "combat.h"
+#include "skills.h"
 
 bool TBeing::canKneestrike(TBeing *victim, silentTypeT silent)
 {

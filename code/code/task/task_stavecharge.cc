@@ -21,6 +21,8 @@
 #include "obj_component.h"
 #include "obj_staff.h"
 #include "extern.h"
+#include "connect.h"
+#include "skills.h"
 
 // How many charges per 'charge' does it cost.
 static const int STAVECHARGE_COMPMULTIPLIER = 5;

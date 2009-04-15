@@ -3,6 +3,7 @@
 #include "combat.h"
 #include "obj_general_weapon.h"
 #include "materials.h"
+#include "skills.h"
 
 //#define ALLOW_STAB_SEVER
 #define USE_NEW_STAB

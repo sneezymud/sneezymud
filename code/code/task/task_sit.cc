@@ -7,6 +7,7 @@
 #include "being.h"
 #include "obj.h"
 #include "room.h"
+#include "connect.h"
 
 int task_sit(TBeing *ch, cmdTypeT cmd, const char *arg, int pulse, TRoom *, TObj *)
 {

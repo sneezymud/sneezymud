@@ -17,6 +17,7 @@
 #include "obj_trap.h"
 #include "obj_base_weapon.h"
 #include "low.h"
+#include "game_crazyeights.h"
 
 void TThing::getMeFrom(TBeing *ch, TThing *t)
 {

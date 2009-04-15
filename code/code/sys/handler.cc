@@ -15,6 +15,7 @@ extern "C" {
 #include "extern.h"
 #include "handler.h"
 #include "room.h"
+#include "skills.h"
 #include "being.h"
 #include "low.h"
 #include "monster.h"

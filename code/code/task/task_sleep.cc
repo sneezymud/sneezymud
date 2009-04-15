@@ -6,6 +6,7 @@
 
 #include "being.h"
 #include "room.h"
+#include "connect.h"
 
 int task_sleep(TBeing *ch, cmdTypeT cmd, const char *arg, int pulse, TRoom *, TObj *)
 {

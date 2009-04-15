@@ -14,6 +14,9 @@
 #include "materials.h"
 #include "person.h"
 #include "client.h"
+#include "skills.h"
+#include "game_crazyeights.h"
+#include "game_drawpoker.h"
 
 #include <csignal>
 #include <cstdarg>

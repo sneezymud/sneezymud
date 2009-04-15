@@ -17,6 +17,8 @@
 #include "monster.h"
 #include "configuration.h"
 #include "charfile.h"
+#include "game_crazyeights.h"
+#include "game_drawpoker.h"
 
 extern "C" {
 #include <dirent.h>
