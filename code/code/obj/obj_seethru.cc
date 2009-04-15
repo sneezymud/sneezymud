@@ -5,6 +5,7 @@
 #include "obj_seethru.h"
 #include "extern.h"
 #include "obj_window.h"
+#include "being.h" // for number()
 
 TSeeThru::TSeeThru() :
   TObj(),

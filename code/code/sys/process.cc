@@ -5,6 +5,8 @@
 #include "parse.h"
 #include "faction.h"
 #include "extern.h"
+#include "toggle.h"
+#include "guild.h"
 
 ///////////
 

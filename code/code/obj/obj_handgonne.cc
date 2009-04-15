@@ -7,6 +7,7 @@
 #include "range.h"
 #include "obj_arrow.h"
 #include "obj_tool.h"
+#include "being.h"
 
 // this is a hand held cannon-lock firearm - essentially a small cannon
 // it takes a long time to load and is virtually unaimable

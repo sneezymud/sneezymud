@@ -6,7 +6,7 @@
 #include "liquids.h"
 #include "toggle.h"
 #include "extern.h"
-
+#include "being.h"
 
 TGenWeapon::TGenWeapon() :
   TBaseWeapon()

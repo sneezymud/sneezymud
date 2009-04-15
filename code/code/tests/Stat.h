@@ -4,6 +4,7 @@
 #include "code/tests/ValueTraits.h"
 #include "obj_general_weapon.h"
 #include "extern.h"
+#include "toggle.h"
 
 class Stat : public CxxTest::TestSuite
 {

@@ -9,6 +9,7 @@
 #include "client.h"
 #include "obj_portal.h"
 #include "pathfinder.h"
+#include "being.h"
 
 void stop_tracking(TBeing *ch)
 {

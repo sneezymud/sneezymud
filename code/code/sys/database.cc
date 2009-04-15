@@ -4,7 +4,7 @@
 #include "extern.h"
 #include "database.h"
 #include "timing.h"
-
+#include "toggle.h"
 
 TDatabaseConnection database_connection;
 

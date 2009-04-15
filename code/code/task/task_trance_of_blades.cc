@@ -7,6 +7,7 @@
 
 #include "extern.h"
 #include "obj_base_weapon.h"
+#include "being.h"
 
 void stop_trance_of_blades(TBeing *ch)
 {

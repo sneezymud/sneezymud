@@ -12,6 +12,7 @@
 #include "obj_open_container.h"
 #include "obj_money.h"
 #include "handler.h"
+#include "being.h"
 
 TOpenContainer::TOpenContainer() :
   TBaseContainer(),

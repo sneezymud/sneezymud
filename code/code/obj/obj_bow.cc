@@ -5,7 +5,7 @@
 #include "obj_arrow.h"
 #include "shop.h"
 #include "shopowned.h"
-
+#include "being.h"
 
 TBow::TBow() :
   TObj(),

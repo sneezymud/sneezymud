@@ -4,6 +4,7 @@
 #include "extern.h"
 #include "obj_table.h"
 #include "handler.h"
+#include "being.h"
 
 TTable::TTable() :
   TObj()

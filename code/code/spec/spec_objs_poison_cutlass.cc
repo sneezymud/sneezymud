@@ -1,7 +1,7 @@
 #include "comm.h"
 #include "obj_base_weapon.h"
 #include "extern.h"
-
+#include "being.h"
 
 int poisonCutlass(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *){
   TBaseWeapon *cutlass;

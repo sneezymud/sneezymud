@@ -8,7 +8,7 @@
 
 #include "extern.h"
 #include "colorstring.h"
-
+#include "being.h"
 
 sstring stripColorCodes(const sstring &s)
 {

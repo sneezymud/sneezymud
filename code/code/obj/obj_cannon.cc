@@ -7,7 +7,7 @@
 #include "range.h"
 #include "obj_arrow.h"
 #include "obj_tool.h"
-
+#include "being.h"
 
 
 int TCannon::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir, int shoot_dist)

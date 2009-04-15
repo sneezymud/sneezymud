@@ -4,6 +4,7 @@
 #include "materials.h"
 #include "obj.h"
 #include "extern.h"
+#include "being.h"
 
 bool TObj::isPluralItem() const
 {

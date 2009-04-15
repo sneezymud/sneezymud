@@ -10,9 +10,15 @@
 
 
 #include "wiz_powers.h"
-#include "charfile.h"
 #include "room.h"
 #include "obj_drug.h"
+#include "immunity.h"
+#include "connect.h"
+#include "body.h"
+#include "race.h"
+
+struct PolyType;
+class charFile;
 
 using std::min;
 using std::max;
@@ -93,7 +99,6 @@ extern const char * const bodyParts[MAX_WEAR+1];
 extern const char * const chest_bits[];
 extern const char * const door_types[];
 extern const char * const color_options[10];
-extern const char * const auto_name[MAX_AUTO];
 extern const char * const exits[];
 extern const char * const corpse_flags[MAX_CORPSE_FLAGS];
 extern const char * const illegalnames[];

@@ -10,6 +10,7 @@
 #include "low.h"
 #include "extern.h"
 #include "obj_audio.h"
+#include "being.h" // for number()... groan
 
 int TAudio::getFreq() const
 {
