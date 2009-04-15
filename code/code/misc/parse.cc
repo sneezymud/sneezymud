@@ -2363,8 +2363,8 @@ int TBeing::triggerSpecial(TThing *ch, cmdTypeT cmd, const char *arg)
     // special in mobile/object present? 
 
     for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
-      t=*(it++);
-
+      if (!(t=*(it++)))
+        continue;
       // note this is virtual function call
       rc = t->checkSpec(this, cmd, arg, ch);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
