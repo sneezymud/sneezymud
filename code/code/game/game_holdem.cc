@@ -9,6 +9,13 @@
 
 HoldemGame gHoldem;
 
+
+HoldemPlayer::HoldemPlayer(const TBeing *ch){
+  name=ch->name;
+  hand[0]=hand[1]=NULL;
+  allin=false;
+}
+
 bool TBeing::checkHoldem(bool inGame) const
 {
   gHoldem.linkPlayers();

@@ -2,34 +2,11 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: game_drawpoker.h,v $
-// Revision 5.4  2003/09/16 00:08:46  peel
-// removed const from peek()
-// added undraw to CardDeck
-// additional additional debug info to peek
-//
-// Revision 5.3  2003/04/28 02:04:39  peel
-// added poker game (video poker)
-//
-// Revision 5.2  2003/03/13 22:40:53  peel
-// added sstring class, same as string but takes NULL as an empty string
-// replaced all uses of string to sstring
-//
-// Revision 5.1  2001/07/13 05:32:20  peel
-// renamed a bunch of source files
-//
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
+#include "games.h"
+
+class TBeing;
 
 class DrawPokerGame : public CardGame {
   private:

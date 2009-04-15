@@ -11,7 +11,8 @@
 #include "being.h"
 #include "games.h"
 #include "extern.h"
-
+#include "game_drawpoker.h"
+#include "game_crazyeights.h"
 
 cardSuitT & operator++(cardSuitT &c, int)
 {

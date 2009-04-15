@@ -14,6 +14,7 @@
 #include "monster.h"
 #include "games.h"
 #include "spec_mobs.h"
+#include "game_drawpoker.h"
 
 Craps::Craps() :
   m_ch(NULL)

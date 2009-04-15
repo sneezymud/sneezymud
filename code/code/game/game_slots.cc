@@ -13,6 +13,8 @@
 #include "obj_money.h"
 #include "room.h"
 #include "handler.h"
+#include "game_crazyeights.h"
+#include "game_drawpoker.h"
 
 void spin_slot(TBeing *ch);
 

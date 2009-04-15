@@ -12,6 +12,11 @@
 #include <algorithm>
 #include <deque>
 
+#include "sstring.h"
+
+class TBeing;
+class TObj;
+
 const int CARD_WATER = 128;
 const int CARD_FIRE = 64;
 const int CARD_EARTH = 32;
@@ -164,7 +169,7 @@ class CardGame {
     void shuffle();
     void pass(TBeing *, const char *, int);
     void order_high_to_low(int *, int *, int *);
-    virtual int index(const TBeing *) const { return FALSE; }
+    virtual int index(const TBeing *) const { return false; }
 };
 
 class GinGame : public CardGame {
@@ -366,11 +371,7 @@ class HoldemPlayer {
   const Card *hand[2];
   bool allin;
 
-  HoldemPlayer(const TBeing *ch){
-    name=ch->name;
-    hand[0]=hand[1]=NULL;
-    allin=false;
-  }
+  HoldemPlayer(const TBeing *ch);
 };
 
 
@@ -469,8 +470,5 @@ extern int hearts_index(TBeing *);
 extern int hearts_pass(TBeing *, char *arg);
 extern int hearts_get_pass(TBeing *, char *);
 extern int get_suit(int);
-
-#include "game_crazyeights.h"
-#include "game_drawpoker.h"
 
 #endif

@@ -14,6 +14,7 @@
 #include "games.h"
 #include "extern.h"
 #include "handler.h"
+#include "game_drawpoker.h"
 
 DrawPokerGame gDrawPoker;
 
