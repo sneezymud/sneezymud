@@ -698,8 +698,8 @@ int TBeing::doOrder(const char *argument)
     // horses are skipped (intentional) due to !AFF_CHARM
     // captives also skipped
     // we enumerate per room and message individually to avoid players issung 'orders' to subvert speech
-    for(StuffIter it= roomp->stuff.begin();it!= roomp->stuff.end();++it) {
-      TBeing *kfol = dynamic_cast<TBeing *>(*it);
+    for(StuffIter it= roomp->stuff.begin();it!= roomp->stuff.end();) {
+      TBeing *kfol = dynamic_cast<TBeing *>(*it++);
       if (!kfol || kfol == this || org_room != kfol->inRoom())
         continue;
       if (kfol->desc && kfol->desc->ignored.isIgnored(desc))
