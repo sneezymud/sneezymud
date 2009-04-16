@@ -708,7 +708,7 @@ bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int shop_nr)
   if (!ch->isImmortal() && temp1->objectSell(ch, keeper)) {
     return TRUE;
   }
-  if(NO_DAMAGED_ITEMS_SHOP){
+  if(Config::NoDamagedItemsShop()){
     if (temp1->getStructPoints() != temp1->getMaxStructPoints()) {
       keeper->doTell(ch->getName(), "I don't buy damaged goods.");
       return TRUE;
@@ -881,7 +881,7 @@ int TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
       cost *= getStructPoints();
       cost /= getMaxStructPoints();
     }
-    if(NO_DAMAGED_ITEMS_SHOP){
+    if(Config::NoDamagedItemsShop()){
       keeper->doTell(fname(ch->name), "It's been damaged, but I guess I can buy it as scrap.");
     }
   }
@@ -1406,7 +1406,7 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
     cost /= 10;
     cost *= getStructPoints();
     cost /= getMaxStructPoints();
-    if(NO_DAMAGED_ITEMS_SHOP){
+    if(Config::NoDamagedItemsShop()){
       keeper->doTell(fname(ch->name), "It's been damaged, but I guess I can buy it as scrap.");
     }
 
@@ -2417,7 +2417,7 @@ void shoplog(int shop_nr, TBeing *ch, TMonster *keeper, const sstring &name, int
 
   //  db.query("insert into shoplog values (%i, '%s', '%s', '%s', %i, %i, %i, now(), %i)", shop_nr, ch?ch->getName():"unknown", action.c_str(), name.c_str(), cost, keeper->getMoney(), value, count);
 
-  queryqueue.push(format("insert into shoplog values (%i, '%s', '%s', '%s', %i, %i, %i, now(), %i)") % shop_nr % ((sstring)(ch?ch->getName():"unknown")).escape(SQL) % action.escape(SQL) % name.escape(SQL) % cost % keeper->getMoney() % value % count);
+  queryqueue.push(format("insert into shoplog values (%i, '%s', '%s', '%s', %i, %i, %i, now(), %i)") % shop_nr % ((sstring)(ch?ch->getName():"unknown")).escape(sstring::SQL) % action.escape(sstring::SQL) % name.escape(sstring::SQL) % cost % keeper->getMoney() % value % count);
 
 
 }

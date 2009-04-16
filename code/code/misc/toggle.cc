@@ -1061,16 +1061,6 @@ void TBeing::doToggle(const char *arg2)
       sendTo("You will now automatically group new followers.\n\r");
       SET_BIT(desc->autobits, AUTO_AUTOGROUP);
     }
-  } else if (is_abbrev(arg, "nuke") && hasWizPower(POWER_TOGGLE)) {
-    nuke_inactive_mobs = !nuke_inactive_mobs;
-    sendTo(format("Mobs in inactive zones are now %s.\n\r") % 
-	   (nuke_inactive_mobs ? "nuked" : "preserved"));
-    vlogf(LOG_MISC, format("%s has turned nuke mode %s.") %  getName() %
-             (nuke_inactive_mobs ? "on" : "off"));
-    unsigned int zone;
-    for (zone = 1; zone < zone_table.size(); zone++) {
-      zone_table[zone].zone_value = (nuke_inactive_mobs ? 1 : -1);
-    }
   } else if(is_abbrev(arg, "list") && hasWizPower(POWER_TOGGLE)){
     for(togTypeT t=TOG_NONE;t<MAX_TOG_TYPES;t++){
      if(t==TOG_NONE)

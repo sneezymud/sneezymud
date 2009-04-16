@@ -18,7 +18,7 @@ class Garble : public CxxTest::TestSuite
   charFile st;
 
   void setUp(){
-    doConfiguration();
+    Config::doConfiguration();
     freopen("code/tests/output/Garble.out", "w", stderr);
     testString[0]="holding up my";
     testString[1]="purring cat to the moon";

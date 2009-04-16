@@ -669,7 +669,7 @@ int Descriptor::read_client(char *str2)
             dynamic_cast<TPerson *>(ch)->autoDeath();
 
           int rc = checkForMultiplay();
-	  if(FORCE_MULTIPLAY_COMPLIANCE){
+	  if(Config::ForceMultiplayCompliance()){
 	    if (rc) {
 	      // disconnect, but don't cause character to be deleted
 	      // do this by disassociating character from descriptor
@@ -1214,7 +1214,7 @@ int Descriptor::client_nanny(char *arg)
         dynamic_cast<TPerson *>(tmp_ch)->autoDeath();
       
       rc = checkForMultiplay();
-      if(FORCE_MULTIPLAY_COMPLIANCE){
+      if(Config::ForceMultiplayCompliance()){
 	if (rc) {
 	  // disconnect, but don't cause character to be deleted
 	  // do this by disassociating character from descriptor
@@ -1292,9 +1292,9 @@ sstring WhoListComm::getXML(){
     buf+=format("  <idle>%i</idle>\n") % idle;
   
   buf+=format("  <linkdead>%s</linkdead>\n") % (linkdead ? "true" : "false");
-  buf+=format("  <name>%s</name>\n") % who.escape(XML);
-  buf+=format("  <prof>%s</prof>\n") % prof.escape(XML);
-  buf+=format("  <title>%s</title>\n") % title.escape(XML);
+  buf+=format("  <name>%s</name>\n") % who.escape(sstring::XML);
+  buf+=format("  <prof>%s</prof>\n") % prof.escape(sstring::XML);
+  buf+=format("  <title>%s</title>\n") % title.escape(sstring::XML);
   buf+=format("</wholist>\n");
 
   return buf;

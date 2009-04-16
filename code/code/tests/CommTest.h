@@ -14,7 +14,7 @@ class CommTest : public CxxTest::TestSuite
   TPerson *testPerson;
 
   void setUp(){
-    doConfiguration();
+    Config::doConfiguration();
     freopen("code/tests/output/CommTest.out", "w", stderr);
 
     testString[0]="holding up my";
@@ -48,19 +48,19 @@ class CommTest : public CxxTest::TestSuite
       testPerson->desc->output.putInQ(new UncategorizedComm(testString[2]));
       
       c=testPerson->desc->output.takeFromQ();
-      TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), testString[0]);
+      TS_ASSERT_EQUALS(c->getComm(Comm::TEXT), testString[0]);
       
       // stick something in out of order
       testPerson->desc->output.putInQ(new UncategorizedComm(testString[3]));
       
       c=testPerson->desc->output.takeFromQ();
-      TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), testString[1]);
+      TS_ASSERT_EQUALS(c->getComm(Comm::TEXT), testString[1]);
       
       c=testPerson->desc->output.takeFromQ();
-      TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), testString[2]);
+      TS_ASSERT_EQUALS(c->getComm(Comm::TEXT), testString[2]);
       
       c=testPerson->desc->output.takeFromQ();
-      TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), testString[3]);
+      TS_ASSERT_EQUALS(c->getComm(Comm::TEXT), testString[3]);
     }
 
     // queue should be empty now (after operations)
@@ -72,7 +72,7 @@ class CommTest : public CxxTest::TestSuite
     testPerson->desc->output.putInQ(new UncategorizedComm(testString[2]));
     
     c=testPerson->desc->output.takeFromQ();
-    TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), testString[0]);
+    TS_ASSERT_EQUALS(c->getComm(Comm::TEXT), testString[0]);
     
     testPerson->desc->output.clear();
     TS_ASSERT(testPerson->desc->output.takeFromQ()==NULL);
@@ -83,8 +83,8 @@ class CommTest : public CxxTest::TestSuite
     testPerson->desc->output.putInQ(new UncategorizedComm(testString[0]));
     Comm *comm=testPerson->desc->output.takeFromQ();
 
-    TS_ASSERT_EQUALS(comm->getComm(COMM_TEXT), testString[0]);
-    TS_ASSERT_EQUALS(comm->getComm(COMM_XML), 
+    TS_ASSERT_EQUALS(comm->getComm(Comm::TEXT), testString[0]);
+    TS_ASSERT_EQUALS(comm->getComm(Comm::XML), 
 		     (format("<uncategorized>%s</uncategorized>") % testString[0]).str());
   }
 
@@ -92,9 +92,9 @@ class CommTest : public CxxTest::TestSuite
     testPerson->desc->output.putInQ(new UncategorizedComm("this is <r>a<1> test"));
     Comm *comm=testPerson->desc->output.takeFromQ();
 
-    TS_ASSERT_EQUALS(comm->getComm(COMM_TEXT),
+    TS_ASSERT_EQUALS(comm->getComm(Comm::TEXT),
 		     "this is <r>a<1> test");
-    TS_ASSERT_EQUALS(comm->getComm(COMM_XML),
+    TS_ASSERT_EQUALS(comm->getComm(Comm::XML),
 		     "<uncategorized>this is <font color=\"norm\" /><font color=\"red\" />a<font color=\"norm\" /> test</uncategorized>");
   }
 
@@ -102,9 +102,9 @@ class CommTest : public CxxTest::TestSuite
     testPerson->desc->output.putInQ(new UncategorizedComm(format("this is %sa%s test") % ANSI_RED % ANSI_NORMAL));
     Comm *comm=testPerson->desc->output.takeFromQ();
 
-    TS_ASSERT_EQUALS(comm->getComm(COMM_TEXT),
+    TS_ASSERT_EQUALS(comm->getComm(Comm::TEXT),
 		     (format("this is %sa%s test") % ANSI_RED % ANSI_NORMAL).str());
-    TS_ASSERT_EQUALS(comm->getComm(COMM_XML),
+    TS_ASSERT_EQUALS(comm->getComm(Comm::XML),
 		     "<uncategorized>this is <font color=\"red\" />a<font color=\"norm\" /> test</uncategorized>");
   }
 
@@ -113,9 +113,9 @@ class CommTest : public CxxTest::TestSuite
     testPerson->desc->output.putInQ(new SystemLogComm(time(0), LOG_PIO, testString[1]));
     Comm *comm=testPerson->desc->output.takeFromQ();
 
-    TS_ASSERT_EQUALS(comm->getComm(COMM_TEXT),
+    TS_ASSERT_EQUALS(comm->getComm(Comm::TEXT),
 		     (format("// Player I/O: %s\n\r") % testString[1]).str());
-    TS_ASSERT_EQUALS(comm->getComm(COMM_XML),
+    TS_ASSERT_EQUALS(comm->getComm(Comm::XML),
 		     (format("<log>\n  <time>%i</time>\n  <type>Player I/O</type>\n  <msg>%s</msg>\n</log>\n") % time(0) % testString[1]).str());
   }
 
@@ -126,10 +126,10 @@ class CommTest : public CxxTest::TestSuite
 						     true, false));
     Comm *comm=testPerson->desc->output.takeFromQ();
     
-    TS_ASSERT_EQUALS(comm->getComm(COMM_TEXT),
+    TS_ASSERT_EQUALS(comm->getComm(Comm::TEXT),
 		     (format("<p>Peel<z> tells you, \"<c>%s, %s, %s<z>\"\n\r") %
     		     testString[0] % testString[1] % testString[2]).str());
-    TS_ASSERT_EQUALS(comm->getComm(COMM_XML),
+    TS_ASSERT_EQUALS(comm->getComm(Comm::XML),
 		     (format("<tellfrom>\n  <to>Deirdre</to>\n  <from>Peel</from>\n  <drunk>true</drunk>\n  <mob>false</mob>\n  <tell>%s, %s, %s</tell>\n</tellfrom>\n") % testString[0] % testString[1] % testString[2]).str());
   }
 
@@ -139,10 +139,10 @@ class CommTest : public CxxTest::TestSuite
 						    testString[0] % testString[1] % testString[2]).str()));
     Comm *comm=testPerson->desc->output.takeFromQ();
 
-    TS_ASSERT_EQUALS(comm->getComm(COMM_TEXT),
+    TS_ASSERT_EQUALS(comm->getComm(Comm::TEXT),
 		     (format("<G>You tell Deirdre<z>, \"%s, %s, %s\"\n\r") %
     		     testString[0] % testString[1] % testString[2]).str());
-    TS_ASSERT_EQUALS(comm->getComm(COMM_XML),
+    TS_ASSERT_EQUALS(comm->getComm(Comm::XML),
 		     (format("<tellto>\n  <to>Deirdre</to>\n  <from>Peel</from>\n  <tell>%s, %s, %s</tell>\n</tellto>\n") % testString[0] % testString[1] % testString[2]).str());
   }
 
@@ -151,8 +151,8 @@ class CommTest : public CxxTest::TestSuite
 	 true, "The Freshmaker", "Peel keeps her warm but they never kiss."));
     Comm *comm=testPerson->desc->output.takeFromQ();
 
-    TS_ASSERT_EQUALS(comm->getComm(COMM_TEXT), "");
-    TS_ASSERT_EQUALS(comm->getComm(COMM_XML), 
+    TS_ASSERT_EQUALS(comm->getComm(Comm::TEXT), "");
+    TS_ASSERT_EQUALS(comm->getComm(Comm::XML), 
 		     "<wholist>\n  <online>false</online>\n  <level>60</level>\n  <idle>100</idle>\n  <linkdead>true</linkdead>\n  <name>Peel</name>\n  <prof>The Freshmaker</prof>\n  <title>Peel keeps her warm but they never kiss.</title>\n</wholist>\n");
 
   }
@@ -162,8 +162,8 @@ class CommTest : public CxxTest::TestSuite
 	false, "The Freshmaker", "Peel keeps her warm but they never kiss."));
     Comm *comm=testPerson->desc->output.takeFromQ();
 
-    TS_ASSERT_EQUALS(comm->getComm(COMM_TEXT), "");
-    TS_ASSERT_EQUALS(comm->getComm(COMM_XML), 
+    TS_ASSERT_EQUALS(comm->getComm(Comm::TEXT), "");
+    TS_ASSERT_EQUALS(comm->getComm(Comm::XML), 
 		     "<wholist>\n  <online>false</online>\n  <level>60</level>\n  <idle>100</idle>\n  <linkdead>false</linkdead>\n  <name>Peel</name>\n  <prof>The Freshmaker</prof>\n  <title>Peel keeps her warm but they never kiss.</title>\n</wholist>\n");
 
   }
@@ -180,13 +180,13 @@ class CommTest : public CxxTest::TestSuite
 
     // for XML mode it shouldn't do anything
     c=testPerson->desc->output.takeFromQ();
-    TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), testString[0]);
+    TS_ASSERT_EQUALS(c->getComm(Comm::TEXT), testString[0]);
     
     c=testPerson->desc->output.takeFromQ();
-    TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), testString[1]);
+    TS_ASSERT_EQUALS(c->getComm(Comm::TEXT), testString[1]);
     
     c=testPerson->desc->output.takeFromQ();
-    TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), testString[2]);
+    TS_ASSERT_EQUALS(c->getComm(Comm::TEXT), testString[2]);
 
 
     testPerson->desc->output.putInQ(new UncategorizedComm(testString[0]));
@@ -197,7 +197,7 @@ class CommTest : public CxxTest::TestSuite
     testPerson->makeOutputPaged();
     
     c=testPerson->desc->output.takeFromQ();
-    TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), (format("%s%s%s") %
+    TS_ASSERT_EQUALS(c->getComm(Comm::TEXT), (format("%s%s%s") %
 		     testString[0] % testString[1] % testString[2]).str());
 
   }
@@ -211,7 +211,7 @@ class CommTest : public CxxTest::TestSuite
 
     c=testPerson->desc->output.takeFromQ();
 
-    TS_ASSERT_EQUALS(c->getComm(COMM_XML), (format("<prompt time=\"%i\" hp=\"100\" mana=\"100\" piety=\"100.000000\" lifeforce=\"100\" moves=\"100\" money=\"100\" room=\"100\">prompt&#62; </prompt>") % time(0)).str());
+    TS_ASSERT_EQUALS(c->getComm(Comm::XML), (format("<prompt time=\"%i\" hp=\"100\" mana=\"100\" piety=\"100.000000\" lifeforce=\"100\" moves=\"100\" money=\"100\" room=\"100\">prompt&#62; </prompt>") % time(0)).str());
 
   }
 
@@ -230,7 +230,7 @@ class CommTest : public CxxTest::TestSuite
     
     c=testPerson->desc->output.takeFromQ();
 
-    TS_ASSERT_EQUALS(c->getComm(COMM_XML), "<roomexits>\n  <exit>\n    <direction>north</direction>\n    <door>\n      <open>true</open>\n    </door>\n  </exit>\n</roomexits>\n");
+    TS_ASSERT_EQUALS(c->getComm(Comm::XML), "<roomexits>\n  <exit>\n    <direction>north</direction>\n    <door>\n      <open>true</open>\n    </door>\n  </exit>\n</roomexits>\n");
     
   }
 
@@ -241,15 +241,15 @@ class CommTest : public CxxTest::TestSuite
     testPerson->sendTo(sound);
     c=testPerson->desc->output.takeFromQ();
 
-    TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), "!!SOUND(cackle.wav T=socials)\n\r");
-    TS_ASSERT_EQUALS(c->getComm(COMM_XML), "<sound type=\"sound\">\n  <file>cackle.wav</file>\n  <type>socials</type>\n</sound>\n");
+    TS_ASSERT_EQUALS(c->getComm(Comm::TEXT), "!!SOUND(cackle.wav T=socials)\n\r");
+    TS_ASSERT_EQUALS(c->getComm(Comm::XML), "<sound type=\"sound\">\n  <file>cackle.wav</file>\n  <type>socials</type>\n</sound>\n");
 
     sound=new SoundComm("sound", "http://sneezymud.com/sounds/", "Off", "", -1,-1,-1, -1);
     testPerson->sendTo(sound);
     c=testPerson->desc->output.takeFromQ();
 
-    TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), "!!SOUND(Off U=http://sneezymud.com/sounds/)\n\r");
-    TS_ASSERT_EQUALS(c->getComm(COMM_XML), "<sound type=\"sound\">\n  <file>Off</file>\n  <url>http://sneezymud.com/sounds/</url>\n</sound>\n");
+    TS_ASSERT_EQUALS(c->getComm(Comm::TEXT), "!!SOUND(Off U=http://sneezymud.com/sounds/)\n\r");
+    TS_ASSERT_EQUALS(c->getComm(Comm::XML), "<sound type=\"sound\">\n  <file>Off</file>\n  <url>http://sneezymud.com/sounds/</url>\n</sound>\n");
 
   }
   

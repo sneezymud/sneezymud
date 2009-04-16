@@ -32,10 +32,6 @@ long gold_statistics[MAX_MONEY_TYPE][MAX_IMMORT];
 long gold_positive[MAX_MONEY_TYPE][MAX_IMMORT];
 TGoldModifier gold_modifier[MAX_MONEY_TYPE];
 
-bool auto_deletion;
-bool rent_only_deletion;
-bool nuke_inactive_mobs;
-
 void SetupStaticGoldModifiers()
 {
   gold_modifier[GOLD_XFER           ].setMM(0.01, 100.0);
@@ -90,19 +86,6 @@ int init_game_stats(void)
   // this should be better for 5.2
   stats.damage_modifier = 0.65;
   //stats.damage_modifier = 0.86;
-
-  // Enabling this makes game look at player activity to decide
-  // if deleting should occur.  This MUST be true for ANY form of
-  // deleting to occur
-//  auto_deletion = TRUE;
-  auto_deletion = FALSE;
-
-  // This forces the deleting to ONLY be for rent files.  Otherwise,
-  // both the rent file AND the player file will be deleted.  If neither
-  // should be deleted, play with auto_deletion variable (above).
-  rent_only_deletion = TRUE;
-
-  nuke_inactive_mobs = FALSE;
 
   if (!(fp = fopen(STATS_FILE,"r"))) {
     vlogf(LOG_BUG, "Unable to open txt/stat file");

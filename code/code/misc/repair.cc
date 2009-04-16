@@ -1075,7 +1075,7 @@ void processRepairFile(const char *name)
     fclose(fp);
     return;
   }
-  if(NUKE_REPAIR_ITEMS){
+  if(Config::NukeRepairItems()){
     if ((time(0) - then) > 180 * SECS_PER_REAL_DAY) {
       fclose(fp);
       vlogf(LOG_MISC, format("REPAIR: Item %s was in repair %d days") %  name %

@@ -269,179 +269,179 @@ Descriptor & Descriptor::operator=(const Descriptor &a)
 // returns TRUE if multiplay is detected
 bool Descriptor::checkForMultiplay()
 {
-#if CHECK_MULTIPLAY
-  TBeing *ch;
-  unsigned int total = 1;
-  Descriptor *d;
-
-  if (!character || !account || !character->name)
-    return FALSE;
-
-  if (gamePort == ALPHA_GAMEPORT)
-    return FALSE;
-
-  if (character->hasWizPower(POWER_MULTIPLAY))
-    return FALSE;
-
-  // determine player load
-  unsigned int tot_descs = 0;
-  for (d = descriptor_list; d; d = d->next)
-    tot_descs++;
-
-  // established maximums based on player load thresholds
-  unsigned int max_multiplay_chars;
-  if (tot_descs < 15)
-    max_multiplay_chars = 1;
-  else if (tot_descs < 30)
-    max_multiplay_chars = 1;
-  else if (tot_descs < 60)
-    max_multiplay_chars = 1;
-  else
-    max_multiplay_chars = 1;
-
-  // for first 30 mins after a reboot, limit to 1 multiplay
-  // this prevents a "race to login" from occurring.
-  time_t diff = time(0) - Uptime;
-  if (diff < (30 * SECS_PER_REAL_MIN))
-    max_multiplay_chars = 1;
-
-  for (d = descriptor_list; d; d = d->next) {
-    if (d == this)
-      continue;
-    if (!(ch = d->character) || !ch->name)
-      continue;
-
-    if (ch->hasWizPower(POWER_MULTIPLAY))
-      continue;
-
-    // reconnect while still connected triggers otherwise
-    if (!strcmp(character->name, ch->name))
-      continue;
-
-    if (d->account->name==account->name) {
-      total += 1;
-      if (total > max_multiplay_chars &&
-	  gamePort == PROD_GAMEPORT){
-        vlogf(LOG_CHEAT, format("MULTIPLAY: %s and %s from same account[%s]") % 
-              character->name % ch->name % account->name);
-	if(FORCE_MULTIPLAY_COMPLIANCE){
-	  character->sendTo(format("\n\rTake note: You have another character, %s, currently logged in.\n\r") % ch->name);
-	  character->sendTo("Adding this character would cause you to be in violation of multiplay rules.\n\r");
-	  character->sendTo("Please log off your other character and then try again.\n\r");
-	  outputProcessing();  // gotta write this to them, before we sever  :)
+  if(Config::CheckMultiplay()){
+    TBeing *ch;
+    unsigned int total = 1;
+    Descriptor *d;
+    
+    if (!character || !account || !character->name)
+      return FALSE;
+    
+    if (gamePort == ALPHA_GAMEPORT)
+      return FALSE;
+    
+    if (character->hasWizPower(POWER_MULTIPLAY))
+      return FALSE;
+    
+    // determine player load
+    unsigned int tot_descs = 0;
+    for (d = descriptor_list; d; d = d->next)
+      tot_descs++;
+    
+    // established maximums based on player load thresholds
+    unsigned int max_multiplay_chars;
+    if (tot_descs < 15)
+      max_multiplay_chars = 1;
+    else if (tot_descs < 30)
+      max_multiplay_chars = 1;
+    else if (tot_descs < 60)
+      max_multiplay_chars = 1;
+    else
+      max_multiplay_chars = 1;
+    
+    // for first 30 mins after a reboot, limit to 1 multiplay
+    // this prevents a "race to login" from occurring.
+    time_t diff = time(0) - Uptime;
+    if (diff < (30 * SECS_PER_REAL_MIN))
+      max_multiplay_chars = 1;
+    
+    for (d = descriptor_list; d; d = d->next) {
+      if (d == this)
+	continue;
+      if (!(ch = d->character) || !ch->name)
+	continue;
+      
+      if (ch->hasWizPower(POWER_MULTIPLAY))
+	continue;
+      
+      // reconnect while still connected triggers otherwise
+      if (!strcmp(character->name, ch->name))
+	continue;
+      
+      if (d->account->name==account->name) {
+	total += 1;
+	if (total > max_multiplay_chars &&
+	    gamePort == PROD_GAMEPORT){
+	  vlogf(LOG_CHEAT, format("MULTIPLAY: %s and %s from same account[%s]") % 
+		character->name % ch->name % account->name);
+	  if(Config::ForceMultiplayCompliance()){
+	    character->sendTo(format("\n\rTake note: You have another character, %s, currently logged in.\n\r") % ch->name);
+	    character->sendTo("Adding this character would cause you to be in violation of multiplay rules.\n\r");
+	    character->sendTo("Please log off your other character and then try again.\n\r");
+	    outputProcessing();  // gotta write this to them, before we sever  :)
+	  }
+	  
+	  return TRUE;
 	}
-
-        return TRUE;
       }
-    }
-
+      
 #if 0
-    // beyond here, we start checking for cheaters using multiple accounts
-    // since this logic is imprecise, we should first slip around any known
-    // accounts that tend to trigger this.
-    FILE *fp;
-    fp = fopen("allowed_multiplay", "r");
-    if (fp) {
-      char acc1[256], acc2[256];
-      bool allowed = false;
-      while (fscanf(fp, "%s %s", acc1, acc2) == 2) {
-        if (!strcmp(account->name, acc1) && !strcmp(d->account->name, acc2))
-          allowed = true;
-        if (!strcmp(account->name, acc2) && !strcmp(d->account->name, acc1))
-          allowed = true;
+      // beyond here, we start checking for cheaters using multiple accounts
+      // since this logic is imprecise, we should first slip around any known
+      // accounts that tend to trigger this.
+      FILE *fp;
+      fp = fopen("allowed_multiplay", "r");
+      if (fp) {
+	char acc1[256], acc2[256];
+	bool allowed = false;
+	while (fscanf(fp, "%s %s", acc1, acc2) == 2) {
+	  if (!strcmp(account->name, acc1) && !strcmp(d->account->name, acc2))
+	    allowed = true;
+	  if (!strcmp(account->name, acc2) && !strcmp(d->account->name, acc1))
+	    allowed = true;
+	}
+	fclose(fp);
+	if (allowed)
+	  continue;
       }
-      fclose(fp);
-      if (allowed)
-        continue;
-    }
-
-    if (max_multiplay_chars == 1) {
-      // some diabolical logic to catch multiplay with separate accounts
-      // check to see if they are grouped, but haven't spoken recently
-      if (character->inGroup(*ch)) {
-        time_t now = time(0);
-        const int trigger_minutes = 1;
-        if (((now - talkCount) > ((trigger_minutes + character->getTimer()) * SECS_PER_REAL_MIN)) &&
-            ((now - ch->desc->talkCount) > ((trigger_minutes + ch->getTimer()) * SECS_PER_REAL_MIN))) {
-          vlogf(LOG_CHEAT, format("MULTIPLAY: Players %s and %s are possibly multiplaying.") %  character->getName() % ch->getName());
-
-          time_t ct = time(0);
-          struct tm * lt = localtime(&ct);
-          char *tmstr = asctime(lt);
-          *(tmstr + strlen(tmstr) - 1) = '\0';
-
-          sstring tmpstr;
-          tmpstr = "***** Auto-Comment on ";
-          tmpstr += tmstr;
-          tmpstr += ":\nPlayer ";
-          tmpstr += character->getName();
-          tmpstr += " was potentially multiplaying with ";
-          tmpstr += ch->getName();
-          tmpstr += " from account '";
-          tmpstr += d->account->name;
-          tmpstr += "'.\n";
-
-          sstring cmd_buf;
-          cmd_buf = "account/";
-          cmd_buf += LOWER(account->name[0]);
-          cmd_buf += "/";
-          cmd_buf += account->name.lower();
-          cmd_buf += "/comment";
-
-          FILE *fp;
-          if (!(fp = fopen(cmd_buf.c_str(), "a+"))) {
-            perror("doComment");
-            vlogf(LOG_FILE, format("Could not open the comment-file (%s).") %  cmd_buf);
-          } else {
-            fputs(tmpstr.c_str(), fp);
-            fclose(fp);
-          }
-        }
-      }
-    } // CHAR_LIMIT = 1
+      
+      if (max_multiplay_chars == 1) {
+	// some diabolical logic to catch multiplay with separate accounts
+	// check to see if they are grouped, but haven't spoken recently
+	if (character->inGroup(*ch)) {
+	  time_t now = time(0);
+	  const int trigger_minutes = 1;
+	  if (((now - talkCount) > ((trigger_minutes + character->getTimer()) * SECS_PER_REAL_MIN)) &&
+	      ((now - ch->desc->talkCount) > ((trigger_minutes + ch->getTimer()) * SECS_PER_REAL_MIN))) {
+	    vlogf(LOG_CHEAT, format("MULTIPLAY: Players %s and %s are possibly multiplaying.") %  character->getName() % ch->getName());
+	    
+	    time_t ct = time(0);
+	    struct tm * lt = localtime(&ct);
+	    char *tmstr = asctime(lt);
+	    *(tmstr + strlen(tmstr) - 1) = '\0';
+	    
+	    sstring tmpstr;
+	    tmpstr = "***** Auto-Comment on ";
+	    tmpstr += tmstr;
+	    tmpstr += ":\nPlayer ";
+	    tmpstr += character->getName();
+	    tmpstr += " was potentially multiplaying with ";
+	    tmpstr += ch->getName();
+	    tmpstr += " from account '";
+	    tmpstr += d->account->name;
+	    tmpstr += "'.\n";
+	    
+	    sstring cmd_buf;
+	    cmd_buf = "account/";
+	    cmd_buf += LOWER(account->name[0]);
+	    cmd_buf += "/";
+	    cmd_buf += account->name.lower();
+	    cmd_buf += "/comment";
+	    
+	    FILE *fp;
+	    if (!(fp = fopen(cmd_buf.c_str(), "a+"))) {
+	      perror("doComment");
+	      vlogf(LOG_FILE, format("Could not open the comment-file (%s).") %  cmd_buf);
+	    } else {
+	      fputs(tmpstr.c_str(), fp);
+	      fclose(fp);
+	    }
+	  }
+	}
+      } // CHAR_LIMIT = 1
 #endif
-  }
-
-  if (character && account && !account->name.empty() && 
-      !character->hasWizPower(POWER_MULTIPLAY)) {
-    TBeing *tChar = NULL,
-           *oChar = NULL;
-    char tAccount[256];
-    FILE *tFile = NULL;
-
-    for (tChar = character_list; tChar;) {
-      oChar = tChar->next;
-
-      if (tChar != character && tChar->isLinkdead()) {
-        sprintf(tAccount, "account/%c/%s/%s",
-                LOWER(account->name[0]),
-                sstring(account->name).lower().c_str(),
-		tChar->getNameNOC(character).lower().c_str());
-
-        if (tChar->isPc() && (tFile = fopen(tAccount, "r"))) {
-          if (tChar->hasWizPower(POWER_MULTIPLAY))
-            return FALSE;
-
-          fclose(tFile);
+    }
+    
+    if (character && account && !account->name.empty() && 
+	!character->hasWizPower(POWER_MULTIPLAY)) {
+      TBeing *tChar = NULL,
+	*oChar = NULL;
+      char tAccount[256];
+      FILE *tFile = NULL;
+      
+      for (tChar = character_list; tChar;) {
+	oChar = tChar->next;
+	
+	if (tChar != character && tChar->isLinkdead()) {
+	  sprintf(tAccount, "account/%c/%s/%s",
+		  LOWER(account->name[0]),
+		  sstring(account->name).lower().c_str(),
+		  tChar->getNameNOC(character).lower().c_str());
+	  
+	  if (tChar->isPc() && (tFile = fopen(tAccount, "r"))) {
+	    if (tChar->hasWizPower(POWER_MULTIPLAY))
+	      return FALSE;
+	    
+	    fclose(tFile);
 #if 1
-		  character->sendTo(format("\n\rTake note: You have a link-dead character, %s, currently logged in.\n\r") % tChar->name);
-          character->sendTo("Adding this character would cause you to be in violation of multiplay rules.\n\r");
-          character->sendTo("Please reconnect your other character to log them off and then try again.\n\r");
-          outputProcessing();  // gotta write this to them, before we sever  :)
-          return TRUE;
+	    character->sendTo(format("\n\rTake note: You have a link-dead character, %s, currently logged in.\n\r") % tChar->name);
+	    character->sendTo("Adding this character would cause you to be in violation of multiplay rules.\n\r");
+	    character->sendTo("Please reconnect your other character to log them off and then try again.\n\r");
+	    outputProcessing();  // gotta write this to them, before we sever  :)
+	    return TRUE;
 #else
-          nukeLdead(tChar);
-          delete tChar;
-          tChar = NULL;
+	    nukeLdead(tChar);
+	    delete tChar;
+	    tChar = NULL;
 #endif
-        }
+	  }
+	}
+	
+	if (!(tChar = oChar))
+	  return FALSE;
       }
-
-      if (!(tChar = oChar))
-        return FALSE;
     }
   }
-#endif
 
   return FALSE;
 }
@@ -456,7 +456,7 @@ sstring SnoopComm::getClientText(){
 
 sstring SnoopComm::getXML(){
   return format("<snoop victim=\"%s\">%s</snoop>") % 
-    vict.escape(XML) % text.escape(XML);
+    vict.escape(sstring::XML) % text.escape(sstring::XML);
 }
 
 int Descriptor::outputProcessing()
@@ -471,7 +471,7 @@ int Descriptor::outputProcessing()
   int counter = 0;
   char buf[MAX_STRING_LENGTH + MAX_STRING_LENGTH];
   Comm *c;
-  commTypeT commtype;
+  Comm::commTypeT commtype;
   TBeing *ch = original ? original : character;
 
   if (!prompt_mode && !connected && !m_bIsClient)
@@ -482,11 +482,11 @@ int Descriptor::outputProcessing()
   // Take everything from queued output
   while (c=output.takeFromQ()) {
     if(m_bIsClient){
-      commtype=COMM_CLIENT;
+      commtype=Comm::CLIENT;
     } else if(socket->port==PROD_XMLPORT){
-      commtype=COMM_XML;
+      commtype=Comm::XML;
     } else {
-      commtype=COMM_TEXT;
+      commtype=Comm::TEXT;
     }
 
     strncpy(i, c->getComm(commtype).c_str(), MAX_STRING_LENGTH + MAX_STRING_LENGTH);
@@ -532,7 +532,7 @@ int Descriptor::outputProcessing()
     if (socket->writeToSocket(colorBuf.c_str()))
       return -1;
 
-    if(commtype == COMM_XML)
+    if(commtype == Comm::XML)
       socket->writeNull();
 
     memset(i, '\0', sizeof(i));
@@ -1147,7 +1147,7 @@ int Descriptor::nanny(sstring arg)
             tmp_ch->doCls(false);
 
           rc = checkForMultiplay();
-	  if(FORCE_MULTIPLAY_COMPLIANCE){
+	  if(Config::ForceMultiplayCompliance()){
 	    if (rc) {
 	      // disconnect, but don't cause character to be deleted
 	      // do this by disassociating character from descriptor
@@ -1420,7 +1420,7 @@ int TPerson::genericLoadPC()
   int rc;
 
   rc = desc->checkForMultiplay();
-  if(FORCE_MULTIPLAY_COMPLIANCE){
+  if(Config::ForceMultiplayCompliance()){
     if (rc)
       return DELETE_THIS;
   }
@@ -1441,10 +1441,11 @@ int TPerson::genericLoadPC()
   next = character_list;
   character_list = this;
 
-#if SPEEF_MAKE_BODY
-  vlogf(LOG_MISC, format("Loading a body for %s\n\r") %  name);
-  body = new Body(race->getBodyType(), points.maxHit);
-#endif
+  if(Config::SpeefMakeBody()){
+    vlogf(LOG_MISC, format("Loading a body for %s\n\r") %  name);
+    body = new Body(race->getBodyType(), points.maxHit);
+  }
+
   if (in_room == ROOM_NOWHERE || in_room == ROOM_AUTO_RENT) {
     if (banished()) {
       rp = real_roomp(ROOM_HELL);
@@ -2449,7 +2450,7 @@ sstring PromptComm::getClientText(){
 sstring PromptComm::getXML(){
   return format("<prompt time=\"%i\" hp=\"%i\" mana=\"%i\" piety=\"%f\" lifeforce=\"%i\" moves=\"%i\" money=\"%i\" room=\"%i\">%s</prompt>") %
     time % hp % mana % piety % lifeforce % moves % money % room % 
-    text.escape(XML);
+    text.escape(sstring::XML);
 }
 
 
@@ -3012,7 +3013,7 @@ sstring LoginComm::getClientText(){
 
 sstring LoginComm::getXML(){
   return format("<login prompt=\"%s\">%s</login>") % 
-    prompt.escape(XML) % text.escape(XML);
+    prompt.escape(sstring::XML) % text.escape(sstring::XML);
 }
 
 // return DELETE_THIS
@@ -4166,7 +4167,7 @@ void inputQ::putInQ(const sstring &txt)
 
 int TBeing::applyAutorentPenalties(int secs)
 {
-  if(PENALIZE_FOR_AUTO_RENTING){
+  if(Config::PenalizeForAutoRenting()){
     vlogf(LOG_PIO, format("%s was autorented for %d secs") %
 	  (getName() ? getName() : "Unknown name") % secs);    
   }

@@ -1190,7 +1190,7 @@ void do_the_player_stuff(const char *name)
     if ((time(0) - st.last_logon) <= (30 * SECS_PER_REAL_DAY))
       accStat.active_player30++;
     
-    if (auto_deletion) {
+    if (Config::AutoDeletion()){
       time_t ltime = time(0);
       tm *curtime;
       curtime = localtime(&ltime);
@@ -1199,7 +1199,7 @@ void do_the_player_stuff(const char *name)
 
       // This gives a player at least 3 months before delete occurs
       if((time(0) - lastlogin) > (90 * SECS_PER_REAL_DAY)){
-	if (!rent_only_deletion) {
+	if (!Config::RentOnlyDeletion()){
 	  vlogf(LOG_MISC, format("%s (level %d) did not log in for %d days. Deleting.") %  
 		name %
 		max_level % elapsed_time);

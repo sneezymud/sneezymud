@@ -667,11 +667,11 @@ sstring TellFromComm::getXML(){
   sstring buf="";
   
   buf+=format("<tellfrom>\n");
-  buf+=format("  <to>%s</to>\n") % to.escape(XML);
-  buf+=format("  <from>%s</from>\n") % from.escape(XML);
+  buf+=format("  <to>%s</to>\n") % to.escape(sstring::XML);
+  buf+=format("  <from>%s</from>\n") % from.escape(sstring::XML);
   buf+=format("  <drunk>%s</drunk>\n") % (drunk ? "true" : "false");
   buf+=format("  <mob>%s</mob>\n") % (mob ? "true" : "false");
-  buf+=format("  <tell>%s</tell>\n") % text.escape(XML);
+  buf+=format("  <tell>%s</tell>\n") % text.escape(sstring::XML);
   buf+=format("</tellfrom>\n");
 
   return buf;
@@ -690,9 +690,9 @@ sstring TellToComm::getXML(){
   sstring buf="";
   
   buf+=format("<tellto>\n");
-  buf+=format("  <to>%s</to>\n") % to.escape(XML);
-  buf+=format("  <from>%s</from>\n") % from.escape(XML);
-  buf+=format("  <tell>%s</tell>\n") % text.escape(XML);
+  buf+=format("  <to>%s</to>\n") % to.escape(sstring::XML);
+  buf+=format("  <from>%s</from>\n") % from.escape(sstring::XML);
+  buf+=format("  <tell>%s</tell>\n") % text.escape(sstring::XML);
   buf+=format("</tellto>\n");
 
   return buf;
@@ -881,7 +881,7 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
     d->output.putInQ(new TellFromComm(vict->getName(), capbuf.cap(), garbed, false, !isPc()));
 
   TDatabase db(DB_SNEEZY);
-  queryqueue.push(format("insert into tellhistory (tellfrom, tellto, tell, telltime) values ('%s', '%s', '%s', now())") % capbuf.cap().escape(SQL) % ((sstring)vict->getName()).escape(SQL) % garbed.escape(SQL));
+  queryqueue.push(format("insert into tellhistory (tellfrom, tellto, tell, telltime) values ('%s', '%s', '%s', now())") % capbuf.cap().escape(sstring::SQL) % ((sstring)vict->getName()).escape(sstring::SQL) % garbed.escape(sstring::SQL));
 
 
   if (d && d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {

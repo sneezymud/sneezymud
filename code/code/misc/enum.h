@@ -83,12 +83,6 @@ enum sectorTypeT {
 const sectorTypeT MIN_SECTOR_TYPE = sectorTypeT(0);
 extern sectorTypeT & operator++(sectorTypeT &, int);
 
-enum commTypeT {
-  COMM_TEXT,
-  COMM_CLIENT,
-  COMM_XML,
-};
-
 enum aiTarg { TARGET_NONE, TARGET_SELF, TARGET_MOB, TARGET_OTHER };
 
 enum getTypeT {

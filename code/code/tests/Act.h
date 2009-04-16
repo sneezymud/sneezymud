@@ -22,7 +22,7 @@ class Act : public CxxTest::TestSuite
   charFile st;
 
   void setUp(){
-    doConfiguration();
+    Config::doConfiguration();
     freopen("code/tests/output/Act.out", "w", stderr);
 
     buildSpellArray();
@@ -65,17 +65,17 @@ class Act : public CxxTest::TestSuite
     if(!(c=testPerson->desc->output.takeFromQ()))
       TS_FAIL("received NULL from output queue");
     else
-      TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), "You start riding Chaucer.\n\r");
+      TS_ASSERT_EQUALS(c->getComm(Comm::TEXT), "You start riding Chaucer.\n\r");
 
     if(!(c=testPerson2->desc->output.takeFromQ()))
       TS_FAIL("received NULL from output queue");
     else
-      TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), "Dante starts riding Chaucer.\n\r");
+      TS_ASSERT_EQUALS(c->getComm(Comm::TEXT), "Dante starts riding Chaucer.\n\r");
 
     if(!(c=testHorse->desc->output.takeFromQ()))
       TS_FAIL("received NULL from output queue");
     else
-      TS_ASSERT_EQUALS(c->getComm(COMM_TEXT), "Dante hops on your back!\n\r");
+      TS_ASSERT_EQUALS(c->getComm(Comm::TEXT), "Dante hops on your back!\n\r");
 
   }
 };

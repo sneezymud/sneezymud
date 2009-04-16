@@ -305,7 +305,7 @@ void procNukeInactiveMobs::run(int pulse) const
 {
   unsigned int i;
 
-  if(!nuke_inactive_mobs)
+  if(!Config::NukeInactiveMobs())
     return;
 
   for (i = 0; i < zone_table.size(); i++) {

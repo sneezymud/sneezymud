@@ -15,7 +15,7 @@ class Exceptions : public CxxTest::TestSuite
   TPerson *testPerson2;
 
   void setUp(){
-    doConfiguration();
+    Config::doConfiguration();
     freopen("code/tests/output/Exceptions.out", "w", stderr);
     testSocket=new TSocket();
     testDesc=new Descriptor(testSocket);

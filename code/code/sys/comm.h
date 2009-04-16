@@ -112,6 +112,8 @@ extern bool noSpecials;
 class Comm
 {
  public:
+  enum commTypeT { TEXT, CLIENT, XML };
+
   sstring getComm(commTypeT);
 
   virtual ~Comm(){}

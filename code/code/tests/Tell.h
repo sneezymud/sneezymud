@@ -22,7 +22,7 @@ class Tell : public CxxTest::TestSuite
   charFile st;
 
   void setUp(){
-    doConfiguration();
+    Config::doConfiguration();
     freopen("code/tests/output/Tell.out", "w", stderr);
     buildSpellArray();
     chdir("lib");
@@ -79,12 +79,12 @@ class Tell : public CxxTest::TestSuite
     if(!(c=testPerson2->desc->output.takeFromQ()))
       TS_FAIL("received NULL from output queue");
     else
-      TS_ASSERT_EQUALS("You fail to tell to 'milton'\n\r", c->getComm(COMM_TEXT));
+      TS_ASSERT_EQUALS("You fail to tell to 'milton'\n\r", c->getComm(Comm::TEXT));
 
     if(!(c=testPerson2->desc->output.takeFromQ()))
       TS_FAIL("received NULL from output queue");
     else
-      TS_ASSERT_EQUALS("The player 'Dante' is logged in under the same account.\n\r", c->getComm(COMM_TEXT));
+      TS_ASSERT_EQUALS("The player 'Dante' is logged in under the same account.\n\r", c->getComm(Comm::TEXT));
 
 
     // now make sure it doesn't work for mortals
@@ -93,10 +93,10 @@ class Tell : public CxxTest::TestSuite
     if(!(c=testPerson3->desc->output.takeFromQ()))
       TS_FAIL("received NULL from output queue");
     else
-      TS_ASSERT_EQUALS("You fail to tell to 'milton'\n\r", c->getComm(COMM_TEXT));
+      TS_ASSERT_EQUALS("You fail to tell to 'milton'\n\r", c->getComm(Comm::TEXT));
 
     if((c=testPerson3->desc->output.takeFromQ())){
-      TS_FAIL(format("received data from output queue: '%s'") % c->getComm(COMM_TEXT));
+      TS_FAIL(format("received data from output queue: '%s'") % c->getComm(Comm::TEXT));
     }
 
     // make sure it works with a player who isn't logged in at all
@@ -105,10 +105,10 @@ class Tell : public CxxTest::TestSuite
     if(!(c=testPerson2->desc->output.takeFromQ()))
       TS_FAIL("received NULL from output queue");
     else
-      TS_ASSERT_EQUALS("You fail to tell to 'pappy'\n\r", c->getComm(COMM_TEXT));
+      TS_ASSERT_EQUALS("You fail to tell to 'pappy'\n\r", c->getComm(Comm::TEXT));
 
     if((c=testPerson3->desc->output.takeFromQ())){
-      TS_FAIL(format("received data from output queue: '%s'") % c->getComm(COMM_TEXT));
+      TS_FAIL(format("received data from output queue: '%s'") % c->getComm(Comm::TEXT));
     }
 
     // and with a non-existent player
@@ -117,10 +117,10 @@ class Tell : public CxxTest::TestSuite
     if(!(c=testPerson2->desc->output.takeFromQ()))
       TS_FAIL("received NULL from output queue");
     else
-      TS_ASSERT_EQUALS("You fail to tell to 'notaplayer'\n\r", c->getComm(COMM_TEXT));
+      TS_ASSERT_EQUALS("You fail to tell to 'notaplayer'\n\r", c->getComm(Comm::TEXT));
 
     if((c=testPerson3->desc->output.takeFromQ())){
-      TS_FAIL(format("received data from output queue: '%s'") % c->getComm(COMM_TEXT));
+      TS_FAIL(format("received data from output queue: '%s'") % c->getComm(Comm::TEXT));
     }
 
 

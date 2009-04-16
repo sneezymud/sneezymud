@@ -214,13 +214,13 @@ unsigned int rent_credit(ush_int Class, unsigned int orig_lev, unsigned int numC
   lev -= lev_mod;
   lev = max(lev, 1.0);
 
-  double num = (lev * max(20.0, lev) * RENT_CREDIT_VAL);
+  double num = (lev * max(20.0, lev) * Config::RentCreditVal());
 
   // next, give credit for a weapon.
   // use the real level rather than the modified level we used above since
   // damage capacity is not class-modified.
   // a weapon should be an extra 20.5% of the price
-  num += (orig_lev * max(20, (int) orig_lev) * RENT_CREDIT_VAL * .205);
+  num += (orig_lev * max(20, (int) orig_lev) * Config::RentCreditVal() * .205);
 
   // make allowances for sundry items
   // this includes: water skin, food, lanterns, fuel, bags, whetstones, etc
@@ -1705,22 +1705,22 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
 	      getName() % cost->no_carried % (cost->total_cost/cost->no_carried));
     }
   }
-
-#if RENT_RESTRICT_INNS_BY_LEVEL
-  // note that you could use autorent to get around this rent credit reduction
-  if (recep && (recep->GetMaxLevel() < GetMaxLevel()) {
-    sprintf(buf,"%s I can only grant rent credit through level %d.",
-           getName(),recep->GetMaxLevel());
-    recep->doTell(buf);
-    sprintf(buf,"%s That's %d talens of credit.",
-            getName(),recep->rentCredit());
-    recep->doTell(buf);
-    credit = recep->rentCredit();
-  } else
-    credit = rentCredit();
-#else
-  credit = rentCredit();  
-#endif
+  
+  if(Config::RentRestrictInnsByLevel()){
+    // note that you could use autorent to get around this rent credit reduction
+    if (recep && (recep->GetMaxLevel() < GetMaxLevel())) {
+      sprintf(buf,"I can only grant rent credit through level %d.",
+	      recep->GetMaxLevel());
+      recep->doTell(getName(), buf);
+      sprintf(buf,"That's %d talens of credit.",
+	      recep->rentCredit());
+      recep->doTell(getName(), buf);
+      credit = recep->rentCredit();
+    } else
+      credit = rentCredit();
+  } else {
+    credit = rentCredit();  
+  }
   if (desc) {
     desc->best_rent_credit = max(credit, desc->best_rent_credit);
     credit = desc->best_rent_credit;
@@ -2882,26 +2882,26 @@ void TPerson::loadRent()
             *this += *t;
           }
             
-#if RENT_SELL_TO_PAWN
-          if (pawnman) {
-            *pawnman += *i;
-            sprintf(buf, "%s has been sold to %s for %d talens to meet your rent obligations.\n\r", i->getName(.cap()).c_str(), pawnman->getName(), amt);
-            lbuf += buf;
-          } else {
-            vlogf(LOG_BUG, "Pawnman is NULL! Putting rent items in brutius office!");
-            thing_to_room(i, 5); 
-          }
-#else
-          // this just clutters up the pawnguy, plus he has to sell a bunch
-          // of junk so other people use him as a junkyard.
-          sprintf(buf, "%s has been confiscated for %d talens to meet your rent obligations.\n\r", sstring(i->getName()).cap().c_str(), amt);
-          lbuf += buf;
-
-          vlogf(LOG_SILENT, format("%s's %s being recycled due to rent obligations.") %  
-                 getName() % i->getName());
-          delete i;
-          i = NULL;
-#endif
+	  if(Config::RentSellToPawn()){
+	    if (pawnman) {
+	      *pawnman += *i;
+	      //	      sprintf(buf, "%s has been sold to %s for %d talens to meet your rent obligations.\n\r", i->getName(.cap()).c_str(), pawnman->getName(), amt);
+	      lbuf += buf;
+	    } else {
+	      vlogf(LOG_BUG, "Pawnman is NULL! Putting rent items in brutius office!");
+	      thing_to_room(i, 5); 
+	    }
+	  } else {
+	    // this just clutters up the pawnguy, plus he has to sell a bunch
+	    // of junk so other people use him as a junkyard.
+	    sprintf(buf, "%s has been confiscated for %d talens to meet your rent obligations.\n\r", sstring(i->getName()).cap().c_str(), amt);
+	    lbuf += buf;
+	    
+	    vlogf(LOG_SILENT, format("%s's %s being recycled due to rent obligations.") %  
+		  getName() % i->getName());
+	    delete i;
+	    i = NULL;
+	  }
         }
         autoMail(this, NULL, lbuf.c_str());
         if (getMoney() < 0)

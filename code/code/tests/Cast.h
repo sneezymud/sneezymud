@@ -19,7 +19,7 @@ class Cast : public CxxTest::TestSuite
   charFile st;
 
   void setUp(){
-    doConfiguration();
+    Config::doConfiguration();
     freopen("code/tests/output/Cast.out", "w", stderr);
 
     buildSpellArray();

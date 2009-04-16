@@ -8,35 +8,39 @@
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
 
+// static data member defs
+int Config::ITEM_DAMAGE_RATE;
+int Config::RENT_CREDIT_VAL;
+bool Config::RENT_SELL_TO_PAWN;
+bool Config::RENT_RESTRICT_INNS_BY_LEVEL;
+bool Config::PENALIZE_FOR_AUTO_RENTING;
+int Config::WEAPON_DAM_MIN_HARDNESS;
+int Config::WEAPON_DAM_MAX_HARDNESS;
+int Config::WEAPON_DAM_MAX_SHARP;
+bool Config::SPEEF_MAKE_BODY;
+bool Config::NUKE_REPAIR_ITEMS;
+bool Config::CHECK_MULTIPLAY;
+bool Config::FORCE_MULTIPLAY_COMPLIANCE;
+bool Config::REPO_MOBS;
+bool Config::SUPER_REPO_MOBS;
+bool Config::NO_DAMAGED_ITEMS_SHOP;
+bool Config::auto_deletion;
+bool Config::rent_only_deletion;
+bool Config::nuke_inactive_mobs;
+
 const int PROD_GAMEPORT = 7900;
 const int PROD_XMLPORT = 7901;
 const int BETA_GAMEPORT = 5678;
 const int ALPHA_GAMEPORT = 6969;
 const int BUILDER_GAMEPORT = 8900;
       int GAMMA_GAMEPORT = 6961; // Maror - quick boot! (skips zones) -Updated to allow otf swapping -Lapsos
-const int ITEM_DAMAGE_RATE = 1;
-const int RENT_CREDIT_VAL = 75;
-const bool RENT_SELL_TO_PAWN = false;
-const bool RENT_RESTRICT_INNS_BY_LEVEL = false;
-const int WEAPON_DAM_MIN_HARDNESS = 20;
-const int WEAPON_DAM_MAX_HARDNESS = 150;
-const int WEAPON_DAM_MAX_SHARP = 150;
-const bool NUKE_REPAIR_ITEMS=true;
-const bool CHECK_MULTIPLAY=true;
-const bool FORCE_MULTIPLAY_COMPLIANCE=true;
-const bool REPO_MOBS=true;
-const bool SUPER_REPO_MOBS=false;
-const bool NO_DAMAGED_ITEMS_SHOP=false;
-const bool PENALIZE_FOR_AUTO_RENTING=true;
-const bool SPEEF_MAKE_BODY=false;
-
 
 void sendHelp(po::options_description desc){
   std::cout << "Usage: sneezy [options] [port]" << std::endl;
   std::cout << desc;  
 }
 
-bool doConfiguration(int argc, char *argv[])
+bool Config::doConfiguration(int argc, char *argv[])
 {
   string configFile="sneezy.cfg";
 
@@ -49,7 +53,7 @@ bool doConfiguration(int argc, char *argv[])
     ;
 
   // command line OR in config file
-  po::options_description config("Configuration");
+  po::options_description config("Configuration + Command line");
   config.add_options()
     ("lib,l", po::value<string>(&dir)->default_value(DFLT_DIR), 
      "data directory to run in")
@@ -59,6 +63,65 @@ bool doConfiguration(int argc, char *argv[])
      "load as trimmed port")
     ("port,p", po::value<int>(&gamePort)->default_value(PROD_GAMEPORT),
      "game port")
+    ;
+
+  // config file only options
+  po::options_description configOnly("Configuration File Only");
+  configOnly.add_options()
+    ("item_damage_rate", 
+     po::value<int>(&ITEM_DAMAGE_RATE)->default_value(1),
+     "see configuration.h")
+    ("rent_credit_val",
+     po::value<int>(&RENT_CREDIT_VAL)->default_value(75),
+     "see configuration.h")
+    ("rent_sell_to_pawn",
+     po::value<bool>(&RENT_SELL_TO_PAWN)->default_value(false),
+     "see configuration.h")
+    ("rent_restrict_inns_by_level",
+     po::value<bool>(&RENT_RESTRICT_INNS_BY_LEVEL)->default_value(false),
+     "see configuration.h")
+    ("penalize_for_auto_renting",
+     po::value<bool>(&PENALIZE_FOR_AUTO_RENTING)->default_value(true),
+     "see configuration.h")
+    ("weapon_dam_min_hardness",
+     po::value<int>(&WEAPON_DAM_MIN_HARDNESS)->default_value(20),
+     "see configuration.h")
+    ("weapon_dam_max_hardness",
+     po::value<int>(&WEAPON_DAM_MAX_HARDNESS)->default_value(150),
+     "see configuration.h")
+    ("weapon_dam_max_sharp",
+     po::value<int>(&WEAPON_DAM_MAX_SHARP)->default_value(150),
+     "see configuration.h")
+    ("speef_make_body",
+     po::value<bool>(&SPEEF_MAKE_BODY)->default_value(false),
+     "see configuration.h")
+    ("nuke_repair_items",
+     po::value<bool>(&NUKE_REPAIR_ITEMS)->default_value(true),
+     "see configuration.h")
+    ("check_multiplay",
+     po::value<bool>(&CHECK_MULTIPLAY)->default_value(true),
+     "see configuration.h")
+    ("force_multiplay_compliance",
+     po::value<bool>(&FORCE_MULTIPLAY_COMPLIANCE)->default_value(true),
+     "see configuration.h")
+    ("repo_mobs",
+     po::value<bool>(&REPO_MOBS)->default_value(false),
+     "see configuration.h")
+    ("super_repo_mobs",
+     po::value<bool>(&SUPER_REPO_MOBS)->default_value(false),
+     "see configuration.h")
+    ("no_damaged_items_shop",
+     po::value<bool>(&NO_DAMAGED_ITEMS_SHOP)->default_value(false),
+     "see configuration.h")
+    ("auto_deletion",
+     po::value<bool>(&auto_deletion)->default_value(false),
+     "see configuration.h")
+    ("rent_only_deletion",
+     po::value<bool>(&rent_only_deletion)->default_value(false),
+     "see configuration.h")
+    ("nuke_inactive_mobs",
+     po::value<bool>(&nuke_inactive_mobs)->default_value(false),
+     "see configuration.h")
     ;
 
   // database options
@@ -92,8 +155,11 @@ bool doConfiguration(int argc, char *argv[])
   po::options_description config_options;
   config_options.add(config).add(databases);
 
+  po::options_description config_only_options;
+  config_only_options.add(configOnly);
+
   po::options_description visible("Allowed options");
-  visible.add(cmdline).add(config).add(databases);
+  visible.add(cmdline).add(config).add(databases).add(configOnly);
 
 
   // first positional argument is port number
@@ -112,6 +178,7 @@ bool doConfiguration(int argc, char *argv[])
     std::ifstream ifs(configFile.c_str());
 
     po::store(parse_config_file(ifs, config_options), vm);
+    po::store(parse_config_file(ifs, config_only_options), vm);
     po::notify(vm);
   } catch(po::unknown_option){
     sendHelp(visible);
@@ -124,3 +191,5 @@ bool doConfiguration(int argc, char *argv[])
   }
   return true;
 }
+
+

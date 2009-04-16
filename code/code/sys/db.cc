@@ -1207,7 +1207,7 @@ void zoneData::renumCmd(void)
   int value;
 
   // init the zone_value array
-  if (nuke_inactive_mobs)
+  if(Config::NukeInactiveMobs())
     zone_value = ((zone_nr <= 1) ? -1 : 0);
   else
     zone_value = -1;

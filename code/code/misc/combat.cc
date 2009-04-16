@@ -676,7 +676,7 @@ bool TBeing::checkCut(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThing *w
     return FALSE;
   }
 
-  if (dam <= ITEM_DAMAGE_RATE) 
+  if (dam <= Config::ItemDamageRate()) 
     return FALSE;
 
   if(inPkZone())
@@ -747,7 +747,7 @@ bool TBeing::checkSmashed(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
     vlogf(LOG_COMBAT, "check_smashed called with no item!");
     return FALSE;
   }
-  if (dam <= ITEM_DAMAGE_RATE) 
+  if (dam <= Config::ItemDamageRate()) 
     return FALSE;
 
   if(inPkZone())
@@ -826,7 +826,7 @@ bool TBeing::checkPierced(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
     vlogf(LOG_COMBAT, "Check pierced called with no item! BUG BRUTIUS!!!");
     return FALSE;
   }
-  if (dam <= ITEM_DAMAGE_RATE) 
+  if (dam <= Config::ItemDamageRate()) 
     return FALSE;
 
   if(inPkZone())

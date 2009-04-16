@@ -6,7 +6,7 @@
 
 int main(int argc, char **argv)
 {
-  doConfiguration();
+  Config::doConfiguration();
   TDatabase db_immo(DB_IMMORTAL);
   TDatabase db_beta(DB_SNEEZYBETA);
   sstring immortal;

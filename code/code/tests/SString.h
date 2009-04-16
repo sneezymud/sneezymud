@@ -33,11 +33,11 @@ class SString : public CxxTest::TestSuite
   }
 
   void testEscapeXML(){
-    TS_ASSERT_EQUALS(((sstring)"<r><red><z>").escape(XML),
+    TS_ASSERT_EQUALS(((sstring)"<r><red><z>").escape(sstring::XML),
 		     "<font color=\"norm\" /><font color=\"red\" />&#60;red&#62;<font color=\"norm\" />");
-    TS_ASSERT_EQUALS(((sstring)"<<C>onnect> <r>red<z> <<C>onnect").escape(XML),
+    TS_ASSERT_EQUALS(((sstring)"<<C>onnect> <r>red<z> <<C>onnect").escape(sstring::XML),
 		     "&#60;C&#62;onnect&#62; <font color=\"norm\" /><font color=\"red\" />red<font color=\"norm\" /> &#60;C&#62;onnect");
-    TS_ASSERT_EQUALS(((sstring)"<<C>onnect <C>onnect").escape(XML),
+    TS_ASSERT_EQUALS(((sstring)"<<C>onnect <C>onnect").escape(sstring::XML),
 		     "&#60;C&#62;onnect <font style=\"bold\" color=\"cyan\" />onnect");    
   }
 

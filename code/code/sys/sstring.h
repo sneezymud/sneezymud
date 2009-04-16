@@ -6,14 +6,11 @@
 using boost::format;
 using std::string;
 
-enum stringEscapeT {
-  XML,
-  SQL
-};
-
 
 class sstring : public string {
 public:
+  enum stringEscapeT { XML, SQL };
+
   // constructors
   sstring() : string(){}
   sstring(const char *str) : string(str?str:"") {}

@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 {
   int a;
 
-  if(!doConfiguration(argc, argv))
+  if(!Config::doConfiguration(argc, argv))
     return 0;
 
   if(noSpecials)

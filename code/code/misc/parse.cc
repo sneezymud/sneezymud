@@ -3409,7 +3409,7 @@ void TBeing::makeOutputPaged()
     return;
 
   while(c=desc->output.takeFromQ()){
-    str += c->getComm(COMM_TEXT);
+    str += c->getComm(Comm::TEXT);
     delete c;
   }
 

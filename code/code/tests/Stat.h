@@ -10,7 +10,7 @@ class Stat : public CxxTest::TestSuite
 {
  public:
   void setUp(){
-    doConfiguration();
+    Config::doConfiguration();
     freopen("code/tests/output/Cast.out", "w", stderr);
     generate_obj_index();
     toggleInfo.loadToggles();

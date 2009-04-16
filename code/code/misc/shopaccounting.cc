@@ -151,7 +151,7 @@ void TShopOwned::journalize_debit(int post_ref, const sstring &customer,
 
   //    db.query("insert into shoplogjournal (shop_nr, journal_id, customer_name, obj_name, sneezy_year, logtime, post_ref, debit, credit) values (%i, %s, '%s', '%s', %i, now(), %i, %i, 0)", shop_nr, (new_id?"NULL":"LAST_INSERT_ID()"), customer.c_str(), name.c_str(), time_info.year, post_ref, amt);
 
-  queryqueue.push(format("insert into shoplogjournal (shop_nr, journal_id, customer_name, obj_name, sneezy_year, logtime, post_ref, debit, credit) values (%i, %s, '%s', '%s', %i, now(), %i, %i, 0)") % shop_nr % ((sstring)(new_id?"NULL":"LAST_INSERT_ID()")).escape(SQL) % customer.escape(SQL) % name.escape(SQL) % time_info.year % post_ref % amt);
+  queryqueue.push(format("insert into shoplogjournal (shop_nr, journal_id, customer_name, obj_name, sneezy_year, logtime, post_ref, debit, credit) values (%i, %s, '%s', '%s', %i, now(), %i, %i, 0)") % shop_nr % ((sstring)(new_id?"NULL":"LAST_INSERT_ID()")).escape(sstring::SQL) % customer.escape(sstring::SQL) % name.escape(sstring::SQL) % time_info.year % post_ref % amt);
 }
 				  
 void TShopOwned::journalize_credit(int post_ref, const sstring &customer,
@@ -159,7 +159,7 @@ void TShopOwned::journalize_credit(int post_ref, const sstring &customer,
 {
   TDatabase db(DB_SNEEZY);
 
-  queryqueue.push(format("insert into shoplogjournal (shop_nr, journal_id, customer_name, obj_name, sneezy_year, logtime, post_ref, debit, credit)values (%i, %s, '%s', '%s', %i, now(), %i, 0, %i)") % shop_nr % ((sstring)(new_id?"NULL":"LAST_INSERT_ID()")).escape(SQL) % customer.escape(SQL) % name.escape(SQL) % time_info.year % post_ref % amt);
+  queryqueue.push(format("insert into shoplogjournal (shop_nr, journal_id, customer_name, obj_name, sneezy_year, logtime, post_ref, debit, credit)values (%i, %s, '%s', '%s', %i, now(), %i, 0, %i)") % shop_nr % ((sstring)(new_id?"NULL":"LAST_INSERT_ID()")).escape(sstring::SQL) % customer.escape(sstring::SQL) % name.escape(sstring::SQL) % time_info.year % post_ref % amt);
 }
 
 void TShopOwned::COGS_add(const sstring &name, int amt, int num)
@@ -171,9 +171,9 @@ void TShopOwned::COGS_add(const sstring &name, int amt, int num)
 
   if(!db.fetchRow()){
     //    db.query("insert into shoplogcogs (shop_nr, obj_name, count, total_cost) values (%i, '%s', %i, %i)", shop_nr, name.c_str(), num, amt);
-    queryqueue.push(format("insert into shoplogcogs (shop_nr, obj_name, count, total_cost) values (%i, '%s', %i, %i)") % shop_nr % name.escape(SQL) % num % amt);
+    queryqueue.push(format("insert into shoplogcogs (shop_nr, obj_name, count, total_cost) values (%i, '%s', %i, %i)") % shop_nr % name.escape(sstring::SQL) % num % amt);
   } else {
-    queryqueue.push(format("update shoplogcogs set count=count+%i, total_cost=total_cost+%i where obj_name='%s' and shop_nr=%i") % num % amt % name.escape(SQL) % shop_nr);
+    queryqueue.push(format("update shoplogcogs set count=count+%i, total_cost=total_cost+%i where obj_name='%s' and shop_nr=%i") % num % amt % name.escape(sstring::SQL) % shop_nr);
   }
 }
 
@@ -183,7 +183,7 @@ void TShopOwned::COGS_remove(const sstring &name, int num)
 
   //  db.query("update shoplogcogs set total_cost=total_cost-((total_cost/count)*%i), count=count-%i where obj_name='%s' and shop_nr=%i", num, num, name.c_str(), shop_nr);
 
-  queryqueue.push(format("update shoplogcogs set total_cost=total_cost-(floor((total_cost/count))*%i), count=count-%i where obj_name='%s' and shop_nr=%i") % num % num % name.escape(SQL) % shop_nr);
+  queryqueue.push(format("update shoplogcogs set total_cost=total_cost-(floor((total_cost/count))*%i), count=count-%i where obj_name='%s' and shop_nr=%i") % num % num % name.escape(sstring::SQL) % shop_nr);
 }
 
 int TShopOwned::COGS_get(const sstring &name)

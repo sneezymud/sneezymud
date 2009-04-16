@@ -474,10 +474,10 @@ int TBaseWeapon::damageMe(TBeing *ch, TBeing *v, wearSlotT part_hit)
 
   // this hardness check will be made for ALL types of weapon damage
   // both blunting and structural
-  if ((::number(WEAPON_DAM_MIN_HARDNESS, WEAPON_DAM_MAX_HARDNESS) <= hardness) ||
-      (::number(WEAPON_DAM_MIN_HARDNESS, WEAPON_DAM_MAX_HARDNESS) <= hardness)) {
+  if ((::number(Config::WeaponDamMinHardness(), Config::WeaponDamMaxHardness()) <= hardness) ||
+      (::number(Config::WeaponDamMinHardness(), Config::WeaponDamMaxHardness()) <= hardness)) {
     if (sharp &&
-          (::number(0, WEAPON_DAM_MAX_SHARP) <= sharp)) {
+          (::number(0, Config::WeaponDamMaxSharp()) <= sharp)) {
       if (isBluntWeapon()) {
         // The blunter the weapon, the easier to chip a bit - bat
         sprintf(buf, "Your %s%s%s is %schipped%s by %s$n's %s.",

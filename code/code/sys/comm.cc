@@ -111,7 +111,7 @@ void zoneData::nukeMobs()
   TBeing *mob, *mob2;
   wearSlotT i;
   
-  if (!nuke_inactive_mobs)
+  if(!Config::NukeInactiveMobs())
     return;
 
   for (mob = character_list; mob; mob = mob2) {
@@ -1609,13 +1609,13 @@ void Descriptor::updateScreenAnsi(unsigned int update)
 // base class
 sstring Comm::getComm(commTypeT comm){
   switch(comm){
-    case COMM_TEXT:
+    case TEXT:
       return getText();
       break;
-    case COMM_CLIENT:
+    case CLIENT:
       return getClientText();
       break;
-    case COMM_XML:
+    case XML:
       return getXML();
       break;
   }
@@ -1637,7 +1637,7 @@ sstring UncategorizedComm::getClientText(){
 }
 
 sstring UncategorizedComm::getXML(){
-  return format("<uncategorized>%s</uncategorized>") % text.escape(XML);
+  return format("<uncategorized>%s</uncategorized>") % text.escape(sstring::XML);
 }
 
 // RoomExitComm
@@ -1672,7 +1672,7 @@ sstring CmdMsgComm::getClientText(){
 
 sstring CmdMsgComm::getXML(){
   return format("<cmdmsg cmd=\"%s\">%s</cmdmsg>") % 
-    cmd.escape(XML) % text.escape(XML);
+    cmd.escape(sstring::XML) % text.escape(sstring::XML);
 }
 
 

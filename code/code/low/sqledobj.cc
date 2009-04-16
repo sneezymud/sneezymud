@@ -7,7 +7,7 @@
 
 int main(int argc, char **argv)
 {
-  doConfiguration();
+  Config::doConfiguration();
   TDatabase db(DB_SNEEZYBETA);
   std::vector<int>vnums;
   std::map<sstring,sstring>val;
