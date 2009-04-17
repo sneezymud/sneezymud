@@ -394,7 +394,7 @@ int TOrganic::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
     keeper->giveMoney(ch, price, GOLD_COMM);
 
     keeper->doTell(ch->getName(), format("Thanks, here's your %d talen%s.") %
-		   price, (price > 1 ? "s" : ""));
+		   price % (price > 1 ? "s" : ""));
     act("$n sells $p.", TRUE, ch, this, 0, TO_ROOM);
     if (ch->isAffected(AFF_GROUP) && ch->desc &&
         IS_SET(ch->desc->autobits, AUTO_SPLIT) &&
