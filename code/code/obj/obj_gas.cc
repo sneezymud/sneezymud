@@ -275,7 +275,8 @@ void TGas::doDrift()
       int seen = 0;
 
       for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
-        t=*(it++);
+        if (!(t=*(it++)))
+          continue;
 
         if ((tp=dynamic_cast<TPortal *>(t))){
           seen++;
