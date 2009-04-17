@@ -1084,11 +1084,6 @@ int TMonster::fighterMove(TBeing &vict)
   bool badspell=FALSE;
   spellTaskData *ts=NULL;
 
-  //this goes with disarm at the bottom
-#if 0
-  TBaseClothing *secHandCloth = dynamic_cast<TBaseClothing *>(vict.heldInSecHand());
-#endif
-  
   if (!awake())
     return FALSE;
 
@@ -1105,20 +1100,20 @@ int TMonster::fighterMove(TBeing &vict)
       k = &vict;
     for (f = k->followers; f; f = f->next){
       if((t=f->follower) && t->spelltask && (ts = t->spelltask)){
-	offensive=discArray[ts->spell]->targets & TAR_VIOLENT;
+	      offensive=discArray[ts->spell]->targets & TAR_VIOLENT;
 
-	if(((ts->victim == this || ts->room == this->roomp) && offensive) ||
-	   (t->inGroup(vict) && !offensive))
-	  badspell = TRUE;
+	      if(((ts->victim == this || ts->room == this->roomp) && offensive) ||
+	          (t->inGroup(vict) && !offensive))
+	        badspell = TRUE;
       }
       if (!canSee(t)) {
-	continue;
+	      continue;
       }
       if (t && t->isAffected(AFF_GROUP) && 
-	  t->hasClass(CLASS_MAGE | CLASS_CLERIC | CLASS_SHAMAN) &&
-	  (badspell || !::number(0,4)) &&
-	  canBash(t, SILENT_YES) && getPosition() > POSITION_SITTING){
-	return doBash("", t);
+	        t->hasClass(CLASS_MAGE | CLASS_CLERIC | CLASS_SHAMAN) &&
+	        (badspell || !::number(0,4)) &&
+	        canBash(t, SILENT_YES) && getPosition() > POSITION_SITTING){
+	      return doBash("", t);
       }
     }
   }
@@ -1195,21 +1190,10 @@ int TMonster::fighterMove(TBeing &vict)
       canTrip(&vict, SILENT_YES) &&
       (getPosition() >= POSITION_CRAWLING)) {
     return doTrip("", &vict);
-  } else if (canDisarm(&vict, SILENT_YES) && 
-             (getPosition() >= POSITION_CRAWLING) &&
-             (vict.heldInPrimHand() || 
-// as long as disarm is the last thing they try, and there is no penalty
-//  for failing to disarm a shield (currently none, other than normal lockout)
-//  they may as well try
-#if 1
-              vict.heldInSecHand())) {
-#else
-              (vict.heldInSecHand() && !secHandCloth) ||
-              (secHandCloth && !secHandCloth->isShield() )||
-          /// trying to account for disarm working 1/3 of time with shield
-          //    don't want to keep failing and landing on ass
-              (secHandCloth && secHandCloth->isShield() && !::number(0,2)))) {
-#endif
+  } else if (getSkillValue(SKILL_DISARM) > 33 &&
+            canDisarm(&vict, SILENT_YES) &&
+           (getPosition() >= POSITION_CRAWLING) &&
+           !vict.affectedBySpell(SPELL_FUMBLE)) {
     return doDisarm("", &vict);
   }
   return FALSE;
@@ -1218,7 +1202,7 @@ int TMonster::fighterMove(TBeing &vict)
 int TMonster::monkMove(TBeing &vict)
 {
   int num;
-  TBaseClothing *secHandCloth = dynamic_cast<TBaseClothing *>(vict.heldInSecHand());
+
   if (!awake())
     return FALSE;
 
@@ -1284,13 +1268,10 @@ int TMonster::monkMove(TBeing &vict)
           break;
         }
       case 4:
-        if ((canDisarm(&vict, SILENT_YES)) &&
+        if (getSkillValue(SKILL_DISARM_MONK) > 33 &&
+           canDisarm(&vict, SILENT_YES) &&
            (getPosition() >= POSITION_CRAWLING) &&
-           (vict.heldInPrimHand() || 
-             (vict.heldInSecHand() && !secHandCloth) ||
-           (secHandCloth && !secHandCloth->isShield()) ||
-           // trying to account for disarm working 1/3 of time with shield
-           (secHandCloth && secHandCloth->isShield() && !::number(0,2)))) {
+           !vict.affectedBySpell(SPELL_FUMBLE)) {
           return doDisarm("", &vict);
           break;
         }
@@ -1378,21 +1359,10 @@ int TMonster::thiefMove(TBeing &vict)
       return doStab("", &vict);
     }
   } else {
-    if (canDisarm(&vict, SILENT_YES) && 
-       (getPosition() >= POSITION_STANDING) &&
-       (vict.heldInPrimHand() ||
-// as long as disarm is the last thing they try, and there is no penalty
-//  for failing to disarm a shield (currently none, other than normal lockout)
-//  they may as well try
-#if 1
-              vict.heldInSecHand())) {
-#else
-            (vict.heldInSecHand() && !secHandCloth) ||
-            (secHandCloth && !secHandCloth->isShield() )||
-        /// trying to account for disarm working 1/3 of time with shield
-        //    don't want to keep failing and landing on ass
-            (secHandCloth && secHandCloth->isShield() && !::number(0,2)))) {
-#endif
+    if (getSkillValue(SKILL_DISARM_THIEF) > 33 &&
+       canDisarm(&vict, SILENT_YES) &&
+       (getPosition() >= POSITION_CRAWLING) &&
+       !vict.affectedBySpell(SPELL_FUMBLE)) {
       return doDisarm("", &vict);
     }
   }

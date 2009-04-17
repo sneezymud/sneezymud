@@ -81,12 +81,11 @@ bool TBeing::canDisarm(TBeing *victim, silentTypeT silent)
       return FALSE;
     }
   }
-#if 0
-  if (!equipment[getPrimaryHold()]) {
-    sendTo("Your primary hand must be FREE in order to attempt a disarm!\n\r");
+  if (affectedBySpell(SPELL_FUMBLE)) {
+    if (!silent)
+      act("You are fumbling about too much to disarm!", FALSE, this, 0, 0, TO_CHAR);
     return FALSE;
   }
-#endif
 
   return TRUE;
 }
@@ -118,10 +117,9 @@ bool trytelekinesis(TBeing *caster, TBeing *victim, TObj *obj, bool success){
 static int disarm(TBeing * caster, TBeing * victim, spellNumT skill) 
 {
   int percent = 0;
-  int bonus = 0;
-  int level;
+  int level = caster->getSkillLevel(skill);
   affectedData af;
-  int bKnown;
+  int bKnown = caster->getSkillValue(skill);
   const int disarm_move = 20;
   wearSlotT worn = WEAR_NOWHERE;
   TObj * obj = NULL;
@@ -133,29 +131,31 @@ static int disarm(TBeing * caster, TBeing * victim, spellNumT skill)
     caster->sendTo("You are too tired to attempt a disarm maneuver!\n\r");
     return FALSE;
   }
-  caster->addToMove(-disarm_move);
 
-  level = caster->getSkillLevel(skill);
-  bKnown = caster->getSkillValue(skill);
+  // apply 'fumbling' affect, which is -1 level's worth of tohit, bonus goes to duration
+  af.type = SPELL_FUMBLE;
+  af.level = level;
+  af.location = APPLY_HITROLL;
+  af.modifier = -1;
+  af.duration = 5;
+
+  caster->addToMove(-disarm_move);
 
   // fail to overcome target save
   if (caster->isNotPowerful(victim, level, skill, SILENT_YES))
   {
-    act("You try to disarm $N, but fail miserably.",
-        TRUE, caster, 0, victim, TO_CHAR);
+    act("You try to disarm $N, but fail miserably, causing you to fumble about.", TRUE, caster, 0, victim, TO_CHAR);
     if (caster->isHumanoid())
     {
-      act("$n does a nifty fighting move, but fails to accomplish anything.",
-          TRUE, caster, 0, 0, TO_ROOM);
+      act("$n does a nifty fighting move, but then fumbles about looking foolish.", TRUE, caster, 0, 0, TO_ROOM);
     }
     else
     {
-      act("$n lunges at you, but fails to accomplish anything.", 
-          TRUE, caster, 0, victim, TO_VICT);
-      act("$n lunges at $N, but fails to accomplish anything.",
-          TRUE, caster, 0, victim, TO_NOTVICT);
+      act("$n lunges at you, but fails to accomplish anything.", TRUE, caster, 0, victim, TO_VICT);
+      act("$n lunges at $N, but fails to accomplish anything.", TRUE, caster, 0, victim, TO_NOTVICT);
     }
-    caster->setPosition(POSITION_SITTING);
+
+    caster->affectJoin2(&af, joinFlagUpdateDur);
     if (dynamic_cast<TMonster *>(victim) && victim->awake() && !victim->fight()) 
       caster->reconcileDamage(victim, 0, skill);
 
@@ -165,16 +165,6 @@ static int disarm(TBeing * caster, TBeing * victim, spellNumT skill)
   // agility vs dex for a bonus towards success
   percent += caster->getDexReaction() * 5;
   percent -= victim->getAgiReaction() * 5;
-
-  // bonus attribute: agi
-  bonus += caster->plotStat(STAT_CURRENT, STAT_AGI, 0, 2, 0);
-
-  // apply 'fumbling' affect, which is -1 level's worth of tohit, bonus goes to duration
-  af.type = SPELL_FUMBLE;
-  af.level = level;
-  af.location = APPLY_HITROLL;
-  af.modifier = -1;
-  af.duration = (5 + bonus);
 
   // execute the special attack
   int attack = caster->specialAttack(victim, skill);
@@ -186,6 +176,9 @@ static int disarm(TBeing * caster, TBeing * victim, spellNumT skill)
     caster->reconcileDamage(victim, 0, skill);
     return TRUE;
   }
+
+  // bonus attribute: agi
+  af.duration += caster->plotStat(STAT_CURRENT, STAT_AGI, 0, 2, 0);
 
   // apply affect
   act("You attempt to disarm $N.", TRUE, caster, 0, victim, TO_CHAR);
@@ -200,7 +193,6 @@ static int disarm(TBeing * caster, TBeing * victim, spellNumT skill)
   // affect
   victim->affectJoin2(&af, joinFlagUpdateDur);
   caster->reconcileDamage(victim, 0, skill);
-  victim->addToWait(combatRound(1));
   caster->reconcileHurt(victim, 0.01);
   act("Your skillful attack causes $N to fumble.", FALSE, caster, obj, victim, TO_CHAR);
   act("$n's skillful attack causes you to fumble.", FALSE, caster, obj, victim, TO_VICT, ANSI_RED);
