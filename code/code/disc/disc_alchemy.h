@@ -94,9 +94,9 @@ private:
     void divinationObj(TBeing *, TObj *, TMagicItem *);
   
  
-    int eyesOfFertuman(TBeing *, const char *);
-    int castEyesOfFertuman(TBeing *, const char *);
-    int eyesOfFertuman(TBeing *, const char *, int, sh_int);
+    int eyesOfFertuman(TBeing *, TBeing *);
+    int castEyesOfFertuman(TBeing *, TBeing*);
+    int eyesOfFertuman(TBeing *, TBeing*, int, sh_int);
  
     int powerstone(TBeing *, TObj *);
     int castPowerstone(TBeing *, TObj *);

@@ -128,10 +128,24 @@ class findLeper : public TPathTarget {
  public:
   findLeper();
   bool isTarget(int) const;
-
 };
 
+// findEquipment() = finds eq once belonging to a specific being
+class findEquipment : public TPathTarget {
+ private:
+  TPerson *owner;
+  std::vector<TThing *> foundlist;
+  bool findInStuff(StuffList stuff) const;
+  bool findInThing(TThing *) const;
+  bool contains(TThing *t) const;
+  bool checkOwner(TObj *o) const;
 
+ public:
+  findEquipment(TPerson *o) { owner = o; }
+  bool isTarget(int) const;
+  int getCount() const { return (int)foundlist.size(); }
+  TThing *getFound(int i) const { if ((int)foundlist.size() <= i) return NULL; return foundlist[i]; }
+};
 
 
 class pathData {
@@ -186,6 +200,12 @@ class TPathFinder {
   ~TPathFinder();
 
   void Clear();
+};
+
+// based on TPathFinder, it combines up a path to the target(s)
+class TPathBuilder : public TPathFinder {
+
+
 };
 
 

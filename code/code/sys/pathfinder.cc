@@ -6,6 +6,9 @@
 #include "obj_portal.h"
 #include "obj_base_corpse.h"
 #include "spec_mobs.h"
+#include "person.h"
+
+using std::vector;
 
 findFairFight::findFairFight(TBeing *tb)
 {
@@ -332,6 +335,97 @@ bool findLeper::isTarget(int room) const
 
 //////////
 
+// findEquipment finds eq once belonging to a specific being
+
+bool findEquipment::isTarget(int room) const
+{
+  return findInStuff(real_roomp(room)->stuff);
+}
+
+bool findEquipment::findInStuff(StuffList stuff) const
+{
+  // loop all objects in stuff, check obj
+  for(StuffIter it = stuff.begin(); it != stuff.end(); ++it) {
+    TThing *t = *it;
+    if (findInThing(t))
+      return true;
+  }
+  return false;
+}
+
+bool findEquipment::findInThing(TThing *t) const
+{
+  if (!t)
+    return false;
+
+  // ignore owner
+  if (owner == dynamic_cast<TPerson*>(t))
+    return false;
+
+  // check if we've seen this obj before, if so, skip it
+  if (contains(t))
+    return false;
+
+  // check if this is our obj (cheat to allow us to modify this obj in const function)
+  if (checkOwner(dynamic_cast<TObj *>(t))) {
+    findEquipment *pThis = const_cast<findEquipment *>(this);
+    pThis->foundlist.push_back(t);
+    return true;
+  }
+
+  // if thing is container, loop its stuff
+  if (findInStuff(t->stuff))
+    return true;
+
+  // if thing is table, loop that
+  TThing *r = t->rider;
+  while(r) {
+    if (findInThing(r))
+      return true;
+    r = r->nextRider;
+  }
+
+  // loop mobs worn and stuckIn too
+  TBeing *b = dynamic_cast<TBeing*>(t);
+  for(wearSlotT slot = WEAR_HEAD; b && slot < MAX_WEAR; slot++) {
+    if (findInThing(b->equipment[slot]))
+      return true;
+    if (findInThing(b->getStuckIn(slot)))
+      return true;
+  }
+
+  return false;
+}
+
+bool findEquipment::contains(TThing *t) const
+{
+  for(vector<TThing *>::const_iterator it = foundlist.begin(); it < foundlist.end(); it++)
+    if (t == *it)
+      return true;
+  return false;
+}
+
+bool findEquipment::checkOwner(TObj *o) const
+{
+  if (!o)
+    return false;
+
+  sstring ownerList = o->owners;
+  sstring prevOwner;
+
+  ownerList = one_argument(ownerList, prevOwner);
+  while (!prevOwner.empty()) {  
+    if (strcmp(owner->getName(), prevOwner.c_str()) == 0)
+      return true;
+    ownerList = one_argument(ownerList, prevOwner);
+  }
+
+  return false;
+}
+
+
+//////////
+
 
 ///////////
 
@@ -463,11 +557,10 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
 	      path.push_front(new pathData(pd));
 
 	      if (pd->source == -1) {
-		// clean up allocated memory
-		for (CI = path_map.begin(); CI != path_map.end(); ++CI)
-		  delete CI->second;
-		
-		return dir;
+		      // clean up allocated memory
+		      for (CI = path_map.begin(); CI != path_map.end(); ++CI)
+		        delete CI->second;
+		      return dir;
 	      }
 	      dir = pd->direct;
 	      pd = path_map[pd->source];

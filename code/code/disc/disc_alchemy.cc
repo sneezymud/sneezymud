@@ -24,6 +24,11 @@
 #include "obj_magic_item.h"
 #include "obj_scroll.h"
 #include "person.h"
+#include "pathfinder.h"
+#include "handler.h"
+
+using std::vector;
+using std::deque;
 
 int identify(TBeing *caster, TObj *obj, int, sh_int bKnown)
 {
@@ -437,7 +442,171 @@ int castDivinationBeing(TBeing *caster, TBeing * victim)
      return ret;
 }
 
-int eyesOfFertuman(TBeing *caster, const char * tofind, int level, sh_int bKnown)
+const char *dirname(dirTypeT dir)
+{
+	static char portalDir[] = "enter portal";
+	static char rightHere[] = "right here";
+  if (dir <= DIR_NONE)
+    return rightHere;
+  if (dir >= MAX_DIR)
+    return portalDir;
+	return dirs[dir];
+}
+
+sstring genPathString(deque<pathData *> path)
+{
+  sstring result;
+
+  if (path.size() <= 1)
+    return "Right here";
+
+  for(unsigned int i = 1; i < path.size()-1; ++i) {
+    if (result.length() == 0)
+      result += "To the ";
+    else
+      result += ", ";
+    result += dirname(path[i]->direct);
+  }
+  if (path.size() > 2)
+    result += " and ";
+  result += dirname(path[path.size()-1]->direct);
+  return result;
+}
+
+int eyesOfFertuman(TBeing *caster, TBeing* victim, int level, sh_int bKnown)
+{
+  sstring exitNames;
+  TPerson *person;
+  vector<sstring> exits;
+  int range = 0, bonus = 0;
+  int searches = 1;
+
+  person = victim ? dynamic_cast<TPerson *>(victim) : NULL;
+
+  if (!person) {
+    caster->sendTo("Whose item should the eyes search for?\n\r");
+    return SPELL_FAIL;
+  }
+
+  if (!caster->bSuccess(bKnown, SPELL_EYES_OF_FERTUMAN)) {
+    caster->nothingHappens();
+    return SPELL_FAIL;
+  }
+
+  // bonus for higher skill, perception
+  if (bKnown > 0)
+    bonus += bKnown/32 + caster->plotStat(STAT_CURRENT, STAT_PER, 0, 3, 1);
+
+  // number of searches increases with level (up to 4)
+  searches += level/16;
+
+  // check for crit
+  if (CRIT_S_NONE != critSuccess(caster, SPELL_EYES_OF_FERTUMAN))
+    bonus = bonus*2 + 1;
+
+  // target selection & range
+  // range is about 3-5 base, + bonus
+  //   min is around 3 or 4, ave will be around 8
+  //   max is 11, crit max is 18
+  range = level/10 + bonus;
+
+  // gather the list of visible exits and combine them into a string
+  for (dirTypeT door = MIN_DIR; door < MAX_DIR; door++) {
+    roomDirData *exitData = caster->exitDir(door);
+    if (!exitData || !canSeeThruDoor(exitData))
+      continue;
+    exits.push_back(dirs[door]);
+  }
+  for (unsigned int iExit = 0; iExit < exits.size(); iExit++) {
+    if (iExit > 0 && iExit == exits.size()-1)
+      exitNames += ", and ";
+    else if (iExit > 0)
+      exitNames += ", ";
+    exitNames += exits[iExit];
+  }
+
+  // nowhere to go? not much to search then
+  if (exits.empty()) {
+    caster->sendTo("There are no exits from this room for the eyes of Fertuman to search!\n\r");
+    return SPELL_SUCCESS;
+  }
+
+  // send out the eyes!
+  act("You send a multitude of eyes to search for $N's belongings.", TRUE, caster, NULL, person, TO_CHAR);
+  act("A mutitude of tiny swirling eyeballs stream forth from $n's hands!", TRUE, caster, NULL, NULL, TO_ROOM);
+
+  // send message about where they went
+  act(format("The eyes of Fertuman swirl around $N's body, and then zoom off to the %s!") % exitNames, TRUE, caster, NULL, person, TO_CHAR);
+  act(format("The eyeballs swirl around $N, and then zoom off to the %s!") % exitNames, TRUE, caster, NULL, person, TO_ROOM);
+
+  // track our target, build up result strings
+  findEquipment eqFinder(person);
+  vector<sstring> paths;
+
+  for(int iSearch = 0; iSearch < searches; iSearch++) {
+    TPathFinder eqScan;
+
+    eqScan.setRange(range);
+    eqScan.setStayZone(false);
+    eqScan.setThruDoors(true);
+    eqScan.setUsePortals(true);
+    eqScan.setNoMob(false);
+
+    dirTypeT dir = eqScan.findPath(caster->in_room, eqFinder);
+    if (dir == DIR_BOGUS || NULL == eqFinder.getFound(iSearch))
+      break; // stop if we didnt find anything, continue if we found something
+    
+    // found something, save this path
+    paths.push_back(genPathString(eqScan.path));
+  }
+
+  // send empty result to char
+  if (eqFinder.getCount() <= 0) {
+    act("You are unable to detect anything with $N's signature.", TRUE, caster, NULL, person, TO_CHAR);
+    act("$n finishs chanting and a frown appears on $s face.", TRUE, caster, NULL, person, TO_ROOM);
+    return SPELL_SUCCESS;
+  }
+
+  // we found something
+  caster->sendTo("The eyes of Fertuman search every nearby nook and cranny to find:\n\r");
+
+  // print out items, paths
+  for(int iObj = 0; iObj < eqFinder.getCount(); iObj++) {
+    TThing *t = eqFinder.getFound(iObj);
+    mud_assert(t != NULL, "Bad object found in Eyes of Fertuman");
+    if (!t->getName())
+      continue;
+    caster->sendTo(t->getName());
+    TThing *p = t->parent;
+    TBeing *b = p ? dynamic_cast<TBeing*>(p) : NULL;
+    TThing *r = t->riding;
+    TThing *e = t->equippedBy;
+    TBeing *k = t->stuckIn;
+
+    if (b)
+      caster->sendTo(format(" (carried by %s)") % b->getName());
+    else if (p)
+      caster->sendTo(format(" (in a %s)") % p->getName());
+    else if (r)
+      caster->sendTo(format(" (on a %s)") % r->getName());
+    else if (e)
+      caster->sendTo(format(" (worn by %s)") % e->getName());
+    else if (k)
+      caster->sendTo(format(" (stuck in %s)") % k->getName());
+    caster->sendTo("\n\r   ");
+    caster->sendTo(paths[iObj].c_str());
+    caster->sendTo(".\n\r");
+  }
+
+  // send result to room
+  act("$n finishes chanting and smiles to $mself.", TRUE, caster, NULL, NULL, TO_ROOM);
+
+  return SPELL_SUCCESS;
+}
+
+
+#ifdef OLD_EYES_OF_FERTUMAN
+int eyesOfFertuman(TBeing *caster, const char * tofind, int level, byte bKnown)
 {
   TObj *obj;
   TBeing *ch;
@@ -478,7 +647,6 @@ int eyesOfFertuman(TBeing *caster, const char * tofind, int level, sh_int bKnown
     for(TObjIter iter=object_list.begin();iter!=object_list.end() && j;++iter){
       obj=*iter;
       if (isname(mod_to_find, obj->getName())) {
-      /* this should randomize display a bit */
         if (obj->isObjStat(ITEM_MAGIC)) {
           if (number(0,5))
             continue;
@@ -607,12 +775,13 @@ int eyesOfFertuman(TBeing *caster, const char * tofind, int level, sh_int bKnown
     return SPELL_FAIL;
   }
 }
+#endif // OLD_EYES_OF_FERTUMAN
 
-int eyesOfFertuman(TBeing *caster, const char * tofind)
+int eyesOfFertuman(TBeing *caster, TBeing *v)
 {
   taskDiffT diff;
 
-  if (!tofind)
+  if (!v)
     return FALSE;
 
 //  if (caster->affectedBySpell(SPELL_BLINDNESS)) {
@@ -626,7 +795,7 @@ int eyesOfFertuman(TBeing *caster, const char * tofind)
   if (caster->GetMaxLevel() > MAX_MORT &&
       caster->GetMaxLevel() < commandArray[CMD_WHERE]->minLevel) {
     caster->sendTo("You are unable to locate things at your level.\n\r");
-    vlogf(LOG_CHEAT, format("%s using %s to locate '%s'") %  caster->getName() % discArray[SPELL_EYES_OF_FERTUMAN]->name % tofind);
+    vlogf(LOG_CHEAT, format("%s using %s to locate %s's gear") %  caster->getName() % discArray[SPELL_EYES_OF_FERTUMAN]->name % v->name);
     return FALSE;
   }
 
@@ -636,22 +805,22 @@ int eyesOfFertuman(TBeing *caster, const char * tofind)
   lag_t rounds = discArray[SPELL_EYES_OF_FERTUMAN]->lag;
   diff = discArray[SPELL_EYES_OF_FERTUMAN]->task;
 
-  start_cast(caster, NULL, NULL, caster->roomp, SPELL_EYES_OF_FERTUMAN, diff, 1, tofind, rounds, caster->in_room, 0, 0,TRUE, 0);
+  start_cast(caster, v, NULL, caster->roomp, SPELL_EYES_OF_FERTUMAN, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 0);
     return TRUE;
 }
 
-int castEyesOfFertuman(TBeing *caster, const char * tofind)
+int castEyesOfFertuman(TBeing *caster, TBeing* v)
 {
   int ret = 0,level;
 
-  if (!tofind) {
+  if (!v) {
     vlogf(LOG_BUG, "Somehow someone lost the argument in eyes of fert");
     return FALSE;
   }
 
   level = caster->getSkillLevel(SPELL_EYES_OF_FERTUMAN);
 
-  ret=eyesOfFertuman(caster,tofind,level,caster->getSkillValue(SPELL_EYES_OF_FERTUMAN));
+  ret=eyesOfFertuman(caster,v,level,caster->getSkillValue(SPELL_EYES_OF_FERTUMAN));
   return ret;
 }
 

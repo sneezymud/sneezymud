@@ -2080,7 +2080,7 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
           rc = castDivinationBeing(this, victim);
         break;
       case SPELL_EYES_OF_FERTUMAN:
-        rc = castEyesOfFertuman(this, orgArg);
+        rc = castEyesOfFertuman(this, victim);
 	break;
       case SPELL_POWERSTONE:
         rc = castPowerstone(this, o);

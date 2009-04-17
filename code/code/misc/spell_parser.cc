@@ -274,20 +274,12 @@ void TBeing::addFollower(TBeing *foll, bool textLimits) // default argument
 
 void TBeing::saySpell(spellNumT si)
 {
-  char buf[512], splwd[MAX_BUF_LENGTH];
-  char buf2[512];
-
-  int j, offs;
-  TBeing *temp_char = NULL;
+  sstring spellWords;
   TThing *t=NULL;
+  sstring toLayman;
+  sstring toExpert;
 
-
-  struct syllable {
-    char org[10];
-    char n[10];
-  };
-
-  struct syllable syls[] =
+  static const sstring syls[][2] =
   {
     {" ", " "},
     {"ar", "snee"},
@@ -343,48 +335,32 @@ void TBeing::saySpell(spellNumT si)
     {"x", "n"},
     {"y", "l"},
     {"z", "k"},
-    {"", ""}
   };
 
-
-  strcpy(buf, "");
-  strcpy(splwd, discArray[si]->name);
-
-  offs = 0;
-
-  while (*(splwd + offs)) {
-    for (j = 0; *(syls[j].org); j++)
-      if (!strncmp(syls[j].org, splwd + offs, strlen(syls[j].org))) {
-        strcat(buf, syls[j].n);
-        if (strlen(syls[j].org))
-          offs += strlen(syls[j].org);
-        else
-          ++offs;
-      }
-  }
+  spellWords = discArray[si]->name;
+  for(unsigned int iReplace = 0; iReplace < cElements(syls); iReplace++)
+    spellWords.inlineReplaceString(syls[iReplace][0], syls[iReplace][1]);
 
   if (discArray[si]->minMana) {
-    sprintf(buf2, "$n utters the incantation, '%s'", buf);
-    sprintf(buf, "$n utters the incantation, '%s'", discArray[si]->name);
+    toLayman = format("$n utters the incantation, '%s'") % spellWords;
+    toExpert = format("$n utters the incantation, '%s'") % discArray[si]->name;
   } else if (discArray[si]->minLifeforce) {
-    sprintf(buf2, "$n chants the invokation, '%s'", buf);
-    sprintf(buf, "$n chants the invokation, '%s'", discArray[si]->name);
+    toLayman = format("$n chants the invokation, '%s'") % spellWords;
+    toExpert = format("$n chants the invokation, '%s'") % discArray[si]->name;
   } else {
-    sprintf(buf2, "$n utters the holy words, '%s'", buf);
-    sprintf(buf, "$n utters the holy words, '%s'", discArray[si]->name);
+    toLayman = format("$n utters the holy words, '%s'") % spellWords;
+    toExpert = format("$n utters the holy words, '%s'") % discArray[si]->name;
   }
 
-
   for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
-    temp_char = dynamic_cast<TBeing *>(t);
+    TBeing *temp_char = dynamic_cast<TBeing *>(t);
     if (!temp_char)
       continue;
     if (temp_char != this) {
       if (temp_char->doesKnowSkill(si))
-        act(buf, FALSE, this, 0, temp_char, TO_VICT);
+        act(toExpert, FALSE, this, 0, temp_char, TO_VICT);
       else
-        act(buf2, FALSE, this, 0, temp_char, TO_VICT);
-
+        act(toLayman, FALSE, this, 0, temp_char, TO_VICT);
     }
   }
   updatePos();
@@ -1565,7 +1541,7 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
         rc = divinationObj(this,o);
       break;
     case SPELL_EYES_OF_FERTUMAN:
-      rc = eyesOfFertuman(this, n);
+      rc = eyesOfFertuman(this, ch);
       break;
     case SPELL_POWERSTONE:
       rc = powerstone(this, o);
