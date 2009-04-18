@@ -68,16 +68,18 @@ void TBeing::doScore()
     if (playing_time.day)
       playing_time.hours += playing_time.day * 24;
 
-    sendTo(format("You have been playing for %s%d%s hour%s, %s%d%s minute%s and %s%d%s second%s in this session.\n\r") %         purple() % playing_time.hours   % norm() % (playing_time.hours   == 1 ? "" : "s") %
-         purple() % playing_time.minutes % norm() % (playing_time.minutes == 1 ? "" : "s") %
-         purple() % playing_time.seconds % norm() % (playing_time.seconds == 1 ? "" : "s"));
+    sendTo(format("You have been playing for %s%d%s hour%s, %s%d%s minute%s and %s%d%s second%s in this session.\n\r") %
+         purple() % int(playing_time.hours)   % norm() % (playing_time.hours   == 1 ? "" : "s") %
+         purple() % int(playing_time.minutes) % norm() % (playing_time.minutes == 1 ? "" : "s") %
+         purple() % int(playing_time.seconds) % norm() % (playing_time.seconds == 1 ? "" : "s"));
   }
 
   realTimePassed((time(0) - player.time.logon) + player.time.played,
                  0, &playing_time);
 
-  sendTo(format("For a lifetime total of %s%d%s day%s and %s%d%s hour%s.\n\r") %         purple() % playing_time.day   % norm() % (playing_time.day   == 1 ? "" : "s") %
-         purple() % playing_time.hours % norm() % (playing_time.hours == 1 ? "" : "s"));
+  sendTo(format("For a lifetime total of %s%d%s day%s and %s%d%s hour%s.\n\r") %
+         purple() % int(playing_time.day)   % norm() % (playing_time.day   == 1 ? "" : "s") %
+         purple() % int(playing_time.hours) % norm() % (playing_time.hours == 1 ? "" : "s"));
 
   classIndT i;
   // since XP tables are all the same, the only time this should be

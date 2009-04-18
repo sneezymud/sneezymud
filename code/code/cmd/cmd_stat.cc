@@ -615,7 +615,7 @@ void TBeing::statObj(const TObj *j)
   str += sprintbit(j->getObjStat(), extra_bits);
   str += "\n\r";
 
-  str += format("Can be seen   : %d\n\r") % j->canBeSeen;
+  str += format("Can be seen   : %d\n\r") % int(j->canBeSeen);
 
   str += format("Volume: %d, Weight: %.1f, Value: %d, Cost/day: %d\n\r") %
     j->getVolume() % j->getWeight() %
@@ -677,7 +677,7 @@ void TBeing::statObj(const TObj *j)
           discArray[j->affected[i].modifier]->name %
           j->affected[i].modifier2;
       } else {
-        vlogf(LOG_BUG, format("BOGUS AFFECT (%d) on %s") %
+        vlogf(LOG_BUG, format("BOGUS AFFECT (%ld) on %s") %
           j->affected[i].modifier % j->getName());
       }
     } else if (j->affected[i].location == APPLY_DISCIPLINE) {
@@ -687,7 +687,7 @@ void TBeing::statObj(const TObj *j)
           discNames[j->affected[i].modifier].name %
           j->affected[i].modifier2;
       } else {
-        vlogf(LOG_BUG, format("BOGUS AFFECT (%d) on %s") %
+        vlogf(LOG_BUG, format("BOGUS AFFECT (%ld) on %s") %
           j->affected[i].modifier % j->getName());
       }
     } else if (j->affected[i].location == APPLY_IMMUNITY) {
@@ -704,14 +704,14 @@ void TBeing::statObj(const TObj *j)
           if (1<<nr & j->affected[i].modifier) {
             // item has affect
             if (*affected_bits[nr]) {
-              str += format("    Affect:  Magic Affect of %s (%d)\n\r") % affected_bits[nr] % (1<<nr);
+              str += format("    Affect:  Magic Affect of %s (%d)\n\r") % affected_bits[nr] % int(1<<nr);
             } else {
-              str += format("    Affect:  Magic Affect of %d\n\r") % (1<<nr);
+              str += format("    Affect:  Magic Affect of %d\n\r") % int(1<<nr);
             }
           }
         }
       } else {
-        str += format("    Affect:  %s by %d\n\r") % apply_types[j->affected[i].location].name % j->affected[i].modifier;
+        str += format("    Affect:  %s by %ld\n\r") % apply_types[j->affected[i].location].name % j->affected[i].modifier;
       }
     }
   }
@@ -739,7 +739,7 @@ void TBeing::statObjForDivman(const TObj *j)
   str += "Its extra flags are: " + sprintbit(j->getObjStat(), extra_bits) + "\n\r\n\r";
   
   str += format("%s modifies light by %d.\n\r") % sitem.cap() % j->getLight();
-  str += format("At least %d units of light are needed to see it.\n\r") % j->canBeSeen;
+  str += format("At least %d units of light are needed to see it.\n\r") % int(j->canBeSeen);
   if (j->obj_flags.decay_time < 0) {
     str += "It will not decay.\n\r";
   } else {
@@ -768,20 +768,20 @@ void TBeing::statObjForDivman(const TObj *j)
   for (int i = 0; i < MAX_OBJ_AFFECT; i++) {
     if (j->affected[i].location == APPLY_SPELL) {
       if (discArray[j->affected[i].modifier]) {
-        buf += format("    Affect:  %s: %s by %d\n\r") % apply_types[j->affected[i].location].name % discArray[j->affected[i].modifier]->name % j->affected[i].modifier2;
+        buf += format("    Affect:  %s: %s by %ld\n\r") % apply_types[j->affected[i].location].name % discArray[j->affected[i].modifier]->name % j->affected[i].modifier2;
       } else {
-        vlogf(LOG_BUG, format("BOGUS AFFECT (%d) on %s") %
+        vlogf(LOG_BUG, format("BOGUS AFFECT (%ld) on %s") %
           j->affected[i].modifier % j->getName());
       }
     } else if (j->affected[i].location == APPLY_DISCIPLINE) {
      if (discNames[j->affected[i].modifier].disc_num) {
-        buf += format("    Affect:  %s: %s by %d\n\r") % apply_types[j->affected[i].location].name % discNames[j->affected[i].modifier].name % j->affected[i].modifier2;
+        buf += format("    Affect:  %s: %s by %ld\n\r") % apply_types[j->affected[i].location].name % discNames[j->affected[i].modifier].name % j->affected[i].modifier2;
       } else {
-        vlogf(LOG_BUG, format("BOGUS AFFECT (%d) on %s") %
+        vlogf(LOG_BUG, format("BOGUS AFFECT (%ld) on %s") %
           j->affected[i].modifier % j->getName());
       }
     } else if (j->affected[i].location == APPLY_IMMUNITY) {
-      buf += format("    Affect:  %s: %s by %d\n\r") % apply_types[j->affected[i].location].name % immunity_names[j->affected[i].modifier] % j->affected[i].modifier2;
+      buf += format("    Affect:  %s: %s by %ld\n\r") % apply_types[j->affected[i].location].name % immunity_names[j->affected[i].modifier] % j->affected[i].modifier2;
     } else if (j->affected[i].location != APPLY_NONE) {
       if (!strcmp(apply_types[j->affected[i].location].name, "Magic Affect")) {
         for (unsigned long nr = 0; ; ++nr) {
@@ -793,12 +793,12 @@ void TBeing::statObjForDivman(const TObj *j)
             if (*affected_bits[nr]) {
               buf += format("    Affect:  Magic Affect of %s\n\r") % affected_bits[nr];
             } else {
-              buf += format("    Affect:  Magic Affect of %d\n\r") % (1<<nr);
+              buf += format("    Affect:  Magic Affect of %d\n\r") % int(1<<nr);
             }
           }
         }
       } else {
-        buf += format("    Affect:  %s by %d\n\r") % apply_types[j->affected[i].location].name % j->affected[i].modifier;
+        buf += format("    Affect:  %s by %ld\n\r") % apply_types[j->affected[i].location].name % j->affected[i].modifier;
       }
     }
   }
@@ -897,7 +897,7 @@ void TBeing::statBeing(TBeing *k)
   for (classIndT i = MIN_CLASS_IND; i < MAX_CLASSES; i++) {
     str += format("%c%c:%d ") %
       classInfo[i].name.cap()[0] % classInfo[i].name.cap()[1] %
-      k->getLevel(i);
+      int(k->getLevel(i));
   }
   str += "]\n\r";
 
@@ -935,16 +935,16 @@ void TBeing::statBeing(TBeing *k)
     str += format("%sBirth       : %s%s     %sLogon:%s %s\n\r") %
       cyan() % norm() % birth_buf % cyan() % norm() % logon_buf;
     str += format("%sPlaying time:%s %d days, %d hours.      %sBase age:%s %d    %sAge Mod:%s %d\n\r") %
-      cyan() % norm() % playing_time.day % playing_time.hours %
-      cyan() % norm() % k->getBaseAge() %
-      cyan() % norm() % k->age_mod;
+      cyan() % norm() % int(playing_time.day) % int(playing_time.hours) %
+      cyan() % norm() % int(k->getBaseAge()) %
+      cyan() % norm() % int(k->age_mod);
     if (!k->desc) {
       str += format("%sWARNING%s, player is offline, age will not be accurate.\n\r") % red() % norm();
     }
 
     str += format("%sPlayer age  :%s %d years, %d months, %d days, %d hours\n\r\n\r") %
-      cyan() % norm() % k->age()->year % k->age()->month %
-      k->age()->day % k->age()->hours;
+      cyan() % norm() % int(k->age()->year) % int(k->age()->month) %
+      int(k->age()->day) % int(k->age()->hours);
   }
 
   buf3 = format("[%5.2f]") % k->getExp();
@@ -1002,16 +1002,16 @@ void TBeing::statBeing(TBeing *k)
     cyan() % norm() % buf3 %
     cyan() % norm() % buf2;
 
-  buf2 = format("[%5d]") % k->specials.conditions[FULL];
-  buf3 = format("[%5d]") % k->specials.conditions[DRUNK];
+  buf2 = format("[%5d]") % int(k->specials.conditions[FULL]);
+  buf3 = format("[%5d]") % int(k->specials.conditions[DRUNK]);
   str += format("%sThirst :%s [%5d]   %sHunger   :%s %-16s %sDrunk   :%s %-13s\n\r") %
-    cyan() % norm() % k->specials.conditions[THIRST] %
+    cyan() % norm() % int(k->specials.conditions[THIRST]) %
     cyan() % norm() % buf2 %
     cyan() % norm() % buf3;
 
   str += format("%sPee    :%s [%5d]   %sPoop     :%s [%5d]\n\r") %
-    cyan() % norm() % k->specials.conditions[PEE] %
-    cyan() % norm() % k->specials.conditions[POOP];
+    cyan() % norm() % int(k->specials.conditions[PEE]) %
+    cyan() % norm() % int(k->specials.conditions[POOP]);
 
   buf2 = format("[%5d]") % k->getArmor();
   buf3 = format("[%5d]") % noise(k);
