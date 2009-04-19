@@ -26,6 +26,7 @@
 #include "person.h"
 #include "pathfinder.h"
 #include "handler.h"
+#include "weather.h"
 
 using std::vector;
 using std::deque;

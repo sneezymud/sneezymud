@@ -806,7 +806,7 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
     if(pl.teleport){
       if(!tmp_ch->roomp->isIndoorSector() &&
 	 !tmp_ch->roomp->isRoomFlag(ROOM_INDOORS) &&
-	 tmp_ch->roomp->getWeather() == WEATHER_LIGHTNING){
+	 Weather::getWeather(*tmp_ch->roomp) == Weather::LIGHTNING){
 	TThing *eq=NULL;
 
 	if(tmp_ch->equipment[WEAR_HEAD] &&
@@ -898,7 +898,7 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
     if(pl.teleport){
       if(!tmp_ch->roomp->isIndoorSector() && 
 	 !tmp_ch->roomp->isRoomFlag(ROOM_INDOORS) &&
-	 (tmp_ch->inRoom() != ROOM_VOID) && sunIsUp()){
+	 (tmp_ch->inRoom() != ROOM_VOID) && Weather::sunIsUp()){
 	    
 	if(tmp_ch->hasQuestBit(TOG_VAMPIRE)){
 	  act("<r>Exposure to sunlight causes your skin to ignite!<1>",
@@ -930,11 +930,13 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
 	 !tmp_ch->hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE)
 	 && !tmp_ch->isLinkdead() &&
            
-	 moonType() == "full" && !sunIsUp() && moonIsUp()) {
+	 Weather::moonType() == "full" && 
+	 !Weather::sunIsUp() && Weather::moonIsUp()) {
 	lycanthropeTransform(tmp_ch);
 	continue;
       } else if(tmp_ch->hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE)){
-	if(moonType() != "full" || sunIsUp() || !moonIsUp()){
+	if(Weather::moonType() != "full" || 
+	   Weather::sunIsUp() || !Weather::moonIsUp()){
 	  tmp_ch->remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
 	  tmp_ch->doReturn("", WEAR_NOWHERE, CMD_RETURN);
 	  continue;
@@ -1009,8 +1011,8 @@ int TMainSocket::roomPulse(TPulseList &pl, int realpulse)
 
     // rain
     if(pl.mobstuff){
-      if((rp->getWeather()==WEATHER_RAINY ||
-	  rp->getWeather()==WEATHER_LIGHTNING) &&
+      if((Weather::getWeather(*rp)==Weather::RAINY ||
+	  Weather::getWeather(*rp)==Weather::LIGHTNING) &&
 	 !::number(0,999)){
 	rp->dropPool(::number(2,5), LIQ_WATER);
 	++count;
@@ -1191,8 +1193,8 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
 	if(obj->roomp)
 	  rp=obj->roomp;
 
-	if(rp && (rp->getWeather()==WEATHER_RAINY ||
-		  rp->getWeather()==WEATHER_LIGHTNING ||
+	if(rp && (Weather::getWeather(*rp)==Weather::RAINY ||
+		  Weather::getWeather(*rp)==Weather::LIGHTNING ||
 		  rp->isWaterSector())){
 	  obj->addObjStat(ITEM_RUSTY);
 	}

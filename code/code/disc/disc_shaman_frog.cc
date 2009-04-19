@@ -19,6 +19,7 @@
 #include "disc_shaman_frog.h"
 #include "obj_magic_item.h"
 #include "person.h"
+#include "weather.h"
 
 int vampireTransform(TBeing *ch)
 {
@@ -283,9 +284,9 @@ int stormySkies(TBeing * caster, TBeing * victim, int level, sh_int bKnown)
     return SPELL_FAIL;
   }
 
-  if (!((victim->roomp->getWeather() == WEATHER_RAINY) || 
-     (victim->roomp->getWeather() == WEATHER_LIGHTNING) ||
-     (victim->roomp->getWeather() == WEATHER_SNOWY))) {
+  if (!((Weather::getWeather(*victim->roomp) == Weather::RAINY) || 
+     (Weather::getWeather(*victim->roomp) == Weather::LIGHTNING) ||
+     (Weather::getWeather(*victim->roomp) == Weather::SNOWY))) {
     caster->sendTo("You fail to call upon the weather to aid you!\n\r");
     if (!victim->outside())
       caster->sendTo("You have to be outside to cast this spell!\n\r");
@@ -296,8 +297,8 @@ int stormySkies(TBeing * caster, TBeing * victim, int level, sh_int bKnown)
   
   int dam = caster->getSkillDam(victim, SPELL_STORMY_SKIES, caster->getSkillLevel(SPELL_STORMY_SKIES), caster->getAdvLearning(SPELL_STORMY_SKIES));
  
-  if ((victim->roomp->getWeather() == WEATHER_RAINY) ||
-     (victim->roomp->getWeather() == WEATHER_LIGHTNING)) {
+  if ((Weather::getWeather(*victim->roomp) == Weather::RAINY) ||
+     (Weather::getWeather(*victim->roomp) == Weather::LIGHTNING)) {
     if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_STORMY_SKIES)) {
       if (victim->isLucky(caster->spellLuckModifier(SPELL_STORMY_SKIES)))
         dam /= 2; // half damage
@@ -333,7 +334,7 @@ int stormySkies(TBeing * caster, TBeing * victim, int level, sh_int bKnown)
       caster->sendTo("Nothing seems to happen.\n\r");
       return SPELL_FAIL;
     }
-  } else if (victim->roomp->getWeather() == WEATHER_SNOWY) { 
+  } else if (Weather::getWeather(*victim->roomp) == Weather::SNOWY) { 
     if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_STORMY_SKIES)) {
       if (victim->isLucky(caster->spellLuckModifier(SPELL_STORMY_SKIES)))
         dam /= 2;         // half damage

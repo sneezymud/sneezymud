@@ -32,6 +32,7 @@
 #include "database.h"
 #include "obj_base_container.h"
 #include "obj_open_container.h"
+#include "weather.h"
 
 void TThing::showMe(TBeing *ch) const
 {
@@ -1103,7 +1104,8 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
     }
 
     if (affectedBySpell(AFFECT_WET))
-      act(format("$e looks %s.") % describeWet(this), FALSE, this, NULL, ch, TO_VICT);
+      act(format("$e looks %s.") % 
+	  Weather::describeWet(this), FALSE, this, NULL, ch, TO_VICT);
 
     if (curStats.get(STAT_STR) > 190)
       strcpy(buffer,"$e is unhumanly muscular, ");

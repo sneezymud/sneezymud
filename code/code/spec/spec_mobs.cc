@@ -74,6 +74,7 @@
 #include "obj_component.h"
 #include "obj_food.h"
 #include "spec_mobs.h"
+#include "weather.h"
 
 const int GET_MOB_SPE_INDEX(int d)
 {

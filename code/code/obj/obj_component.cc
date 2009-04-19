@@ -19,6 +19,7 @@
 #include "corporation.h"
 #include "obj_mergeable.h"
 #include "monster.h"
+#include "weather.h"
 
 std::vector<compPlace>component_placement(0);
 std::vector<compInfo>CompInfo(0);
@@ -91,12 +92,12 @@ void assign_component_placement()
   component_placement.push_back(compPlace(BRIDGE_ROOM, -1, MOB_NONE, 
      ITEM_RAINBOW_BRIDGE1,
      CACT_PLACE, 1, 100,
-     HOUR_SUNRISE, HOUR_SUNSET, -1, -1, -1, -1, 1<<WEATHER_RAINY | 1<<WEATHER_LIGHTNING,
+     HOUR_SUNRISE, HOUR_SUNSET, -1, -1, -1, -1, 1<<Weather::RAINY | 1<<Weather::LIGHTNING,
      "<p>$p slowly shimmers into existence!<1>", ""));
   component_placement.push_back(compPlace(BRIDGE_ROOM, -1, MOB_NONE, 
      ITEM_RAINBOW_BRIDGE1,
      CACT_REMOVE, 1, 100,
-     -1, -1, -1, -1, -1, -1, ~(1<<WEATHER_RAINY | 1<<WEATHER_LIGHTNING),
+     -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY | 1<<Weather::LIGHTNING),
      "<p>$p slowly fades out of existence!<1>", ""));
   component_placement.push_back(compPlace(BRIDGE_ROOM, -1, MOB_NONE, 
      ITEM_RAINBOW_BRIDGE1,
@@ -107,12 +108,12 @@ void assign_component_placement()
   component_placement.push_back(compPlace(BRIDGE_ROOM2, -1, MOB_NONE, 
      ITEM_RAINBOW_BRIDGE2,
      CACT_PLACE, 1, 100,
-     HOUR_SUNRISE, HOUR_SUNSET, -1, -1, -1, -1, 1<<WEATHER_RAINY | 1<<WEATHER_LIGHTNING,
+     HOUR_SUNRISE, HOUR_SUNSET, -1, -1, -1, -1, 1<<Weather::RAINY | 1<<Weather::LIGHTNING,
      "<p>$p slowly shimmers into existence!<1>", ""));
   component_placement.push_back(compPlace(BRIDGE_ROOM2, -1, MOB_NONE, 
      ITEM_RAINBOW_BRIDGE2,
      CACT_REMOVE, 1, 100,
-     -1, -1, -1, -1, -1, -1, ~(1<<WEATHER_RAINY | 1<<WEATHER_LIGHTNING),
+     -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY | 1<<Weather::LIGHTNING),
      "<p>$p slowly fades out of existence!<1>", ""));
   component_placement.push_back(compPlace(BRIDGE_ROOM2, -1, MOB_NONE, 
      ITEM_RAINBOW_BRIDGE2,
@@ -124,7 +125,7 @@ void assign_component_placement()
   component_placement.push_back(compPlace(6101, -1, MOB_NONE, 
      COMP_CHEVAL,
      CACT_PLACE, 9999, 65,
-     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
      "<k>$p stupidly dives into the ground and lands on its back.<1>" ,""));
   component_placement.push_back(compPlace(6101, -1, MOB_NONE, 
      COMP_CHEVAL,
@@ -134,12 +135,12 @@ void assign_component_placement()
   component_placement.push_back(compPlace(6101, -1, MOB_NONE, 
      COMP_CHEVAL,
      CACT_REMOVE, -1, 100,
-     -1, -1, -1, -1, -1, -1, ~(1<<WEATHER_RAINY),
+     -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY),
      "<k>$p flips over and flies away.<1>", ""));
   component_placement.push_back(compPlace(6104, -1, MOB_NONE, 
      COMP_CHEVAL,
      CACT_PLACE, 9999, 65,
-     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
      "<k>$p stupidly dives into the ground and lands on its back.<1>" ,""));
   component_placement.push_back(compPlace(6104, -1, MOB_NONE, 
      COMP_CHEVAL,
@@ -149,12 +150,12 @@ void assign_component_placement()
   component_placement.push_back(compPlace(6104, -1, MOB_NONE, 
      COMP_CHEVAL,
      CACT_REMOVE, -1, 100,
-     -1, -1, -1, -1, -1, -1, ~(1<<WEATHER_RAINY),
+     -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY),
      "<k>$p flips over and flies away.<1>", ""));
   component_placement.push_back(compPlace(6108, -1, MOB_NONE, 
      COMP_CHEVAL,
      CACT_PLACE, 9999, 65,
-     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
      "<k>$p stupidly dives into the ground and lands on its back.<1>" ,""));
   component_placement.push_back(compPlace(6108, -1, MOB_NONE, 
      COMP_CHEVAL,
@@ -164,12 +165,12 @@ void assign_component_placement()
   component_placement.push_back(compPlace(6108, -1, MOB_NONE, 
      COMP_CHEVAL,
      CACT_REMOVE, -1, 100,
-     -1, -1, -1, -1, -1, -1, ~(1<<WEATHER_RAINY),
+     -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY),
      "<k>$p flips over and flies away.<1>", ""));
   component_placement.push_back(compPlace(6200, -1, MOB_NONE, 
      COMP_CHEVAL,
      CACT_PLACE, 9999, 65,
-     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
      "<k>$p stupidly dives into the ground and lands on its back.<1>" ,""));
   component_placement.push_back(compPlace(6200, -1, MOB_NONE, 
      COMP_CHEVAL,
@@ -179,13 +180,13 @@ void assign_component_placement()
   component_placement.push_back(compPlace(6200, -1, MOB_NONE, 
      COMP_CHEVAL,
      CACT_REMOVE, -1, 100,
-     -1, -1, -1, -1, -1, -1, ~(1<<WEATHER_RAINY),
+     -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY),
      "<k>$p flips over and flies away.<1>", ""));
 
   component_placement.push_back(compPlace(6205, -1, MOB_NONE, 
      COMP_CHEVAL,
      CACT_PLACE, 9999, 65,
-     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
      "<k>$p stupidly dives into the ground and lands on its back.<1>" ,""));
   component_placement.push_back(compPlace(6205, -1, MOB_NONE, 
      COMP_CHEVAL,
@@ -195,13 +196,13 @@ void assign_component_placement()
   component_placement.push_back(compPlace(6205, -1, MOB_NONE, 
      COMP_CHEVAL,
      CACT_REMOVE, -1, 100,
-     -1, -1, -1, -1, -1, -1, ~(1<<WEATHER_RAINY),
+     -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY),
      "<k>$p flips over and flies away.<1>", ""));
 
   component_placement.push_back(compPlace(6211, -1, MOB_NONE, 
      COMP_CHEVAL,
      CACT_PLACE, 9999, 65,
-     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
      "<k>$p stupidly dives into the ground and lands on its back.<1>" ,""));
   component_placement.push_back(compPlace(6211, -1, MOB_NONE, 
      COMP_CHEVAL,
@@ -211,12 +212,12 @@ void assign_component_placement()
   component_placement.push_back(compPlace(6211, -1, MOB_NONE, 
      COMP_CHEVAL,
      CACT_REMOVE, -1, 100,
-     -1, -1, -1, -1, -1, -1, ~(1<<WEATHER_RAINY),
+     -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY),
      "<k>$p flips over and flies away.<1>", ""));
   component_placement.push_back(compPlace(6220, -1, MOB_NONE, 
      COMP_CHEVAL,
      CACT_PLACE, 9999, 65,
-     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
      "<k>$p stupidly dives into the ground and lands on its back.<1>" ,""));
   component_placement.push_back(compPlace(6220, -1, MOB_NONE, 
      COMP_CHEVAL,
@@ -226,7 +227,7 @@ void assign_component_placement()
   component_placement.push_back(compPlace(6220, -1, MOB_NONE, 
      COMP_CHEVAL,
      CACT_REMOVE, -1, 100,
-     -1, -1, -1, -1, -1, -1, ~(1<<WEATHER_RAINY),
+     -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY),
      "<k>$p flips over and flies away.<1>", ""));
 
 
@@ -234,7 +235,7 @@ void assign_component_placement()
   component_placement.push_back(compPlace(11328, -1, MOB_NONE, 
      COMP_COLOR_SPRAY,
      CACT_PLACE, 9999, 65,
-     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
      "<B>A small stone nearby begins to sparkle and glow from the kiss of a rainbow.<1>" ,""));
   component_placement.push_back(compPlace(11328, -1, MOB_NONE, 
      COMP_COLOR_SPRAY,
@@ -244,13 +245,13 @@ void assign_component_placement()
   component_placement.push_back(compPlace(11328, -1, MOB_NONE, 
      COMP_COLOR_SPRAY,
      CACT_REMOVE, -1, 100,
-     -1, -1, -1, -1, -1, -1, ~(1<<WEATHER_RAINY),
+     -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY),
      "<b>$p dulls and fades away.<1>", ""));
 
   component_placement.push_back(compPlace(1008, 1015, MOB_NONE, 
      COMP_COLOR_SPRAY,
      CACT_PLACE, 9999, 65,
-     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
      "<B>A small stone nearby begins to sparkle and glow from the kiss of a rainbow.<1>",
      "<y>A beautiful rainbow streaks across the sky.<1>"));
   component_placement.push_back( compPlace(1008, 1015, MOB_NONE, 
@@ -261,12 +262,12 @@ void assign_component_placement()
   component_placement.push_back( compPlace(1008, 1015, MOB_NONE, 
      COMP_COLOR_SPRAY,
      CACT_REMOVE, -1, 100,
-     -1, -1, -1, -1, -1, -1, ~(1<<WEATHER_RAINY),
+     -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY),
      "<b>$p dulls and fades away.<1>", ""));
   component_placement.push_back( compPlace(11368, -1, MOB_NONE, 
      COMP_COLOR_SPRAY,
      CACT_PLACE, 9999, 65,
-     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
      "<B>A small stone nearby begins to sparkle and glow from the kiss of a rainbow.<1>",
      "<y>A beautiful rainbow streaks across the sky.<1>"));
   component_placement.push_back( compPlace(11368, -1, MOB_NONE, 
@@ -277,12 +278,12 @@ void assign_component_placement()
   component_placement.push_back( compPlace(11368, -1, MOB_NONE, 
      COMP_COLOR_SPRAY,
      CACT_REMOVE, -1, 100,
-     -1, -1, -1, -1, -1, -1, ~(1<<WEATHER_RAINY),
+     -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY),
      "<b>$p dulls and fades away.<1>", ""));
   component_placement.push_back( compPlace(1018, 1023, MOB_NONE, 
      COMP_COLOR_SPRAY,
      CACT_PLACE, 9999, 65,
-     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
      "<B>A small stone nearby begins to sparkle and glow from the kiss of a rainbow.<1>", ""));
   component_placement.push_back( compPlace(1018, 1023, MOB_NONE, 
      COMP_COLOR_SPRAY,
@@ -293,13 +294,13 @@ void assign_component_placement()
   component_placement.push_back( compPlace(1018, 1023, MOB_NONE, 
      COMP_COLOR_SPRAY,
      CACT_REMOVE, -1, 100,
-     -1, -1, -1, -1, -1, -1, ~(1<<WEATHER_RAINY),
+     -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY),
      "<b>$p dulls and fades away.<1>", ""));
 
   component_placement.push_back( compPlace(7510, 7512, MOB_NONE, 
      COMP_COLOR_SPRAY,
      CACT_PLACE, 9999, 65,
-     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
      "<B>A small stone nearby begins to sparkle and glow from the kiss of a rainbow.<1>",
      "<y>A beautiful rainbow streaks across the sky.<1>"));
   component_placement.push_back( compPlace(7510, 7512, MOB_NONE, 
@@ -310,13 +311,13 @@ void assign_component_placement()
   component_placement.push_back( compPlace(7510, 7512, MOB_NONE, 
      COMP_COLOR_SPRAY,
      CACT_REMOVE, -1, 100,
-     -1, -1, -1, -1, -1, -1, ~(1<<WEATHER_RAINY),
+     -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY),
      "<b>$p dulls and fades away.<1>", ""));
 
   component_placement.push_back(compPlace(11324, -1, MOB_NONE, 
      COMP_COLOR_SPRAY,
      CACT_PLACE, 9999, 65,
-     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
      "<B>A small stone nearby begins to sparkle and glow from the kiss of a rainbow.<1>",
      "<y>A beautiful rainbow streaks across the sky.<1>"));
   component_placement.push_back(compPlace(11324, -1, MOB_NONE, 
@@ -327,7 +328,7 @@ void assign_component_placement()
   component_placement.push_back(compPlace(11324, -1, MOB_NONE, 
      COMP_COLOR_SPRAY,
      CACT_REMOVE, -1, 100,
-     -1, -1, -1, -1, -1, -1, ~(1<<WEATHER_RAINY),
+     -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY),
      "<b>$p dulls and fades away.<1>", ""));
 
   component_placement.push_back(compPlace(7514, -1, MOB_NONE,
@@ -341,121 +342,121 @@ void assign_component_placement()
   component_placement.push_back(compPlace(6798, -1, MOB_NONE,
      COMP_SAND_BLAST,
      CACT_PLACE, 9999, 50,
-     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_CLOUDLESS),
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::CLOUDLESS),
      "The extreme heat from the sun dries and cracks the $g.",
      "The blazing sun blisters the $g."));
   component_placement.push_back(compPlace(6798, -1, MOB_NONE,
      COMP_SAND_BLAST,
      CACT_REMOVE, -1, 100,
      -1, -1, -1, -1, -1, -1,
-     (1<<WEATHER_RAINY | WEATHER_SNOWY | WEATHER_LIGHTNING),
+     (1<<Weather::RAINY | Weather::SNOWY | Weather::LIGHTNING),
      "Moisture hangs heavily in the air as bad weather approaches.", ""));
   component_placement.push_back(compPlace(7524, -1, MOB_NONE,
      COMP_SAND_BLAST,
      CACT_PLACE, 9999, 50,
-     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_CLOUDLESS),
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::CLOUDLESS),
      "The extreme heat from the sun dries and cracks the $g.",
      "The blazing sun blisters the $g."));
   component_placement.push_back(compPlace(7524, -1, MOB_NONE,
      COMP_SAND_BLAST,
      CACT_REMOVE, -1, 100,
      -1, -1, -1, -1, -1, -1,
-     (1<<WEATHER_RAINY | WEATHER_SNOWY | WEATHER_LIGHTNING),
+     (1<<Weather::RAINY | Weather::SNOWY | Weather::LIGHTNING),
      "Moisture hangs heavily in the air as bad weather approaches.", ""));
   component_placement.push_back(compPlace(9110, -1, MOB_NONE,
      COMP_SAND_BLAST,
      CACT_PLACE, 9999, 50,
-     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_CLOUDLESS),
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::CLOUDLESS),
      "The extreme heat from the sun dries and cracks the $g.",
      "The blazing sun blisters the $g."));
   component_placement.push_back(compPlace(9110, -1, MOB_NONE,
      COMP_SAND_BLAST,
      CACT_REMOVE, -1, 100,
      -1, -1, -1, -1, -1, -1,
-     (1<<WEATHER_RAINY | WEATHER_SNOWY | WEATHER_LIGHTNING),
+     (1<<Weather::RAINY | Weather::SNOWY | Weather::LIGHTNING),
      "Moisture hangs heavily in the air as bad weather approaches.", ""));
   component_placement.push_back(compPlace(9114, -1, MOB_NONE,
      COMP_SAND_BLAST,
      CACT_PLACE, 9999, 50,
-     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_CLOUDLESS),
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::CLOUDLESS),
      "The extreme heat from the sun dries and cracks the $g.",
      "The blazing sun blisters the $g."));
   component_placement.push_back(compPlace(9114, -1, MOB_NONE,
      COMP_SAND_BLAST,
      CACT_REMOVE, -1, 100,
      -1, -1, -1, -1, -1, -1,
-     (1<<WEATHER_RAINY | WEATHER_SNOWY | WEATHER_LIGHTNING),
+     (1<<Weather::RAINY | Weather::SNOWY | Weather::LIGHTNING),
      "Moisture hangs heavily in the air as bad weather approaches.", ""));
   component_placement.push_back(compPlace(9118, -1, MOB_NONE,
      COMP_SAND_BLAST,
      CACT_PLACE, 9999, 50,
-     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_CLOUDLESS),
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::CLOUDLESS),
      "The extreme heat from the sun dries and cracks the $g.",
      "The blazing sun blisters the $g."));
   component_placement.push_back(compPlace(9118, -1, MOB_NONE,
      COMP_SAND_BLAST,
      CACT_REMOVE, -1, 100,
      -1, -1, -1, -1, -1, -1,
-     (1<<WEATHER_RAINY | WEATHER_SNOWY | WEATHER_LIGHTNING),
+     (1<<Weather::RAINY | Weather::SNOWY | Weather::LIGHTNING),
      "Moisture hangs heavily in the air as bad weather approaches.", ""));
   component_placement.push_back(compPlace(9157, -1, MOB_NONE,
      COMP_SAND_BLAST,
      CACT_PLACE, 9999, 50,
-     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_CLOUDLESS),
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::CLOUDLESS),
      "The extreme heat from the sun dries and cracks the $g.",
      "The blazing sun blisters the $g."));
   component_placement.push_back(compPlace(9157, -1, MOB_NONE,
      COMP_SAND_BLAST,
      CACT_REMOVE, -1, 100,
      -1, -1, -1, -1, -1, -1,
-     (1<<WEATHER_RAINY | WEATHER_SNOWY | WEATHER_LIGHTNING),
+     (1<<Weather::RAINY | Weather::SNOWY | Weather::LIGHTNING),
      "Moisture hangs heavily in the air as bad weather approaches.", ""));
   component_placement.push_back(compPlace(9163, 9164, MOB_NONE,
      COMP_SAND_BLAST,
      CACT_PLACE, 9999, 50,
-     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_CLOUDLESS),
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::CLOUDLESS),
      "The extreme heat from the sun dries and cracks the $g.",
      "The blazing sun blisters the $g."));
   component_placement.push_back(compPlace(9163, 9164, MOB_NONE,
      COMP_SAND_BLAST,
      CACT_REMOVE, -1, 100,
      -1, -1, -1, -1, -1, -1,
-     (1<<WEATHER_RAINY | WEATHER_SNOWY | WEATHER_LIGHTNING),
+     (1<<Weather::RAINY | Weather::SNOWY | Weather::LIGHTNING),
      "Moisture hangs heavily in the air as bad weather approaches.", ""));
   component_placement.push_back(compPlace(9170, -1, MOB_NONE,
      COMP_SAND_BLAST,
      CACT_PLACE, 9999, 50,
-     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_CLOUDLESS),
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::CLOUDLESS),
      "The extreme heat from the sun dries and cracks the $g.",
      "The blazing sun blisters the $g."));
   component_placement.push_back(compPlace(9170, -1, MOB_NONE,
      COMP_SAND_BLAST,
      CACT_REMOVE, -1, 100,
      -1, -1, -1, -1, -1, -1,
-     (1<<WEATHER_RAINY | WEATHER_SNOWY | WEATHER_LIGHTNING),
+     (1<<Weather::RAINY | Weather::SNOWY | Weather::LIGHTNING),
      "Moisture hangs heavily in the air as bad weather approaches.", ""));
   component_placement.push_back(compPlace(12641, 12643, MOB_NONE,
      COMP_SAND_BLAST,
      CACT_PLACE, 9999, 50,
-     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, 1<<WEATHER_CLOUDLESS,
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, 1<<Weather::CLOUDLESS,
      "The extreme heat from the sun dries and cracks the $g.",
      "The blazing sun blisters the $g."));
   component_placement.push_back(compPlace(12641, 12643, MOB_NONE,
      COMP_SAND_BLAST,
      CACT_REMOVE, -1, 100,
-     -1, -1, -1, -1, -1, -1, (1<<WEATHER_RAINY | WEATHER_SNOWY | WEATHER_LIGHTNING),
+     -1, -1, -1, -1, -1, -1, (1<<Weather::RAINY | Weather::SNOWY | Weather::LIGHTNING),
      "Moisture hangs heavily in the air as bad weather approaches.", ""));
 
   component_placement.push_back(compPlace(12795, 12799, MOB_NONE,
      COMP_SAND_BLAST,
      CACT_PLACE, 9999, 50,
-     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, 1<<WEATHER_CLOUDLESS,
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, 1<<Weather::CLOUDLESS,
      "The extreme heat from the sun dries and cracks the $g.", 
      "The blazing sun blisters the $g."));
   component_placement.push_back(compPlace(12795, 12799, MOB_NONE,
      COMP_SAND_BLAST,
      CACT_REMOVE, -1, 100,
-     -1, -1, -1, -1, -1, -1, (1<<WEATHER_RAINY | WEATHER_SNOWY | WEATHER_LIGHTNING),
+     -1, -1, -1, -1, -1, -1, (1<<Weather::RAINY | Weather::SNOWY | Weather::LIGHTNING),
      "Moisture hangs heavily in the air as bad weather approaches.", ""));
 
 // Some porous bedrock [stoneskin] //
@@ -469,12 +470,12 @@ void assign_component_placement()
   component_placement.push_back(compPlace(7829, -1, MOB_NONE, 
      COMP_STEALTH,
      CACT_PLACE | CACT_UNIQUE, 9999, 80,
-     -1, -1, -1, -1, -1, -1, ~(1<<WEATHER_RAINY | 1<<WEATHER_SNOWY),
+     -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY | 1<<Weather::SNOWY),
      "", ""));
   component_placement.push_back(compPlace(7829, -1, MOB_NONE, 
      COMP_STEALTH,
      CACT_REMOVE, -1, 100,
-     -1, -1, -1, -1, -1, -1, (1<<WEATHER_RAINY | 1<<WEATHER_SNOWY),
+     -1, -1, -1, -1, -1, -1, (1<<Weather::RAINY | 1<<Weather::SNOWY),
      "", ""));
 
   // A prism of condensation [concealment] //
@@ -483,27 +484,27 @@ void assign_component_placement()
   component_placement.push_back(compPlace(2712, 2717, MOB_NONE, 
      COMP_CLOUD_OF_CONCEAL,
      CACT_PLACE | CACT_UNIQUE, 9999, 80,
-     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
      "Raindrops slowly fall from the leaves.",
      "The falling rain gathers on the foliage around you."));
 
   component_placement.push_back(compPlace(2712, 2717, MOB_NONE, 
      COMP_CLOUD_OF_CONCEAL,
      CACT_REMOVE, -1, 100,
-     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_CLOUDLESS),
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::CLOUDLESS),
      "The bright heat from the sun warms the air around you.", ""));
 
   component_placement.push_back(compPlace(10101, 10159, MOB_NONE, 
      COMP_CLOUD_OF_CONCEAL,
      CACT_PLACE | CACT_UNIQUE, 9999, 80,
-     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
      "Raindrops slowly fall from the leaves.", 
      "The falling rain gathers on the foliage around you."));
 
   component_placement.push_back(compPlace(10101, 10159, MOB_NONE, 
      COMP_CLOUD_OF_CONCEAL,
      CACT_REMOVE, -1, 100,
-     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_CLOUDLESS),
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::CLOUDLESS),
      "The bright heat from the sun warms the air around you.", ""));
 
   // Some gnome flour [dispel invisible] //
@@ -555,28 +556,28 @@ void assign_component_placement()
   component_placement.push_back(compPlace(11000, 11017, MOB_NONE, 
      COMP_CONJURE_AIR,
      CACT_PLACE | CACT_UNIQUE, 9999, 60,
-     -1, -1, -1, -1, -1, -1, (1<<WEATHER_CLOUDY | 1<<WEATHER_RAINY),
+     -1, -1, -1, -1, -1, -1, (1<<Weather::CLOUDY | 1<<Weather::RAINY),
      "Heavy winds buffet the clouds, sending $p across the $g.",
      "Howling winds scream in your ears."));
 
   component_placement.push_back(compPlace(11000, 11017, MOB_NONE, 
      COMP_CONJURE_AIR,
      CACT_REMOVE, -1, 100,
-     -1, -1, -1, -1, -1, -1, ~(1<<WEATHER_CLOUDY | 1<<WEATHER_RAINY),
+     -1, -1, -1, -1, -1, -1, ~(1<<Weather::CLOUDY | 1<<Weather::RAINY),
      "The winds begin to die down somewhat.", ""));
 
 // A bit of cloud foam [fly] //
   component_placement.push_back(compPlace(11000, 11017, MOB_NONE, 
      COMP_FLIGHT,
      CACT_PLACE | CACT_UNIQUE, 9999, 40,
-     -1, -1, -1, -1, -1, -1, (1<<WEATHER_RAINY),
+     -1, -1, -1, -1, -1, -1, (1<<Weather::RAINY),
      "The moist air creates $p on the $g.",
      "The $g becomes heavy with moisture."));
 
   component_placement.push_back(compPlace(11000, 11017, MOB_NONE, 
      COMP_FLIGHT,
      CACT_REMOVE, -1, 100,
-     -1, -1, -1, -1, -1, -1, (1<<WEATHER_CLOUDY),
+     -1, -1, -1, -1, -1, -1, (1<<Weather::CLOUDY),
      "The clouds firm up as the rain dissipates.", ""));
 
 // Some liquid brimstone [hellfire] //
@@ -759,29 +760,29 @@ void do_components(int situ)
     start = component_placement[i].hour1;
     stop = component_placement[i].hour2;
     if (start == HOUR_SUNRISE)
-      start = sunTime(SUN_TIME_RISE);
+      start = Weather::sunTime(Weather::SUN_TIME_RISE);
     else if (start == HOUR_SUNSET)
-      start = sunTime(SUN_TIME_SET);
+      start = Weather::sunTime(Weather::SUN_TIME_SET);
     else if (start == HOUR_MOONRISE)
-      start = moonTime(MOON_TIME_RISE);
+      start = Weather::moonTime(Weather::MOON_TIME_RISE);
     else if (start == HOUR_MOONSET)
-      start = moonTime(MOON_TIME_SET);
+      start = Weather::moonTime(Weather::MOON_TIME_SET);
     else if (start == HOUR_DAY_BEGIN)
-      start = sunTime(SUN_TIME_DAY);
+      start = Weather::sunTime(Weather::SUN_TIME_DAY);
     else if (start == HOUR_DAY_END)
-      start = sunTime(SUN_TIME_SINK);
+      start = Weather::sunTime(Weather::SUN_TIME_SINK);
     if (stop == HOUR_SUNRISE)
-      stop = sunTime(SUN_TIME_RISE);
+      stop = Weather::sunTime(Weather::SUN_TIME_RISE);
     else if (stop == HOUR_SUNSET)
-      stop = sunTime(SUN_TIME_SET);
+      stop = Weather::sunTime(Weather::SUN_TIME_SET);
     else if (stop == HOUR_MOONRISE)
-      stop = moonTime(MOON_TIME_RISE);
+      stop = Weather::moonTime(Weather::MOON_TIME_RISE);
     else if (stop == HOUR_MOONSET)
-      stop = moonTime(MOON_TIME_SET);
+      stop = Weather::moonTime(Weather::MOON_TIME_SET);
     else if (stop == HOUR_DAY_BEGIN)
-      stop = sunTime(SUN_TIME_DAY);
+      stop = Weather::sunTime(Weather::SUN_TIME_DAY);
     else if (stop == HOUR_DAY_END)
-      stop = sunTime(SUN_TIME_SINK);
+      stop = Weather::sunTime(Weather::SUN_TIME_SINK);
 
     if (start != -1) {
       if (stop == -1) {
@@ -836,7 +837,7 @@ void do_components(int situ)
       // check weather condition
       if (component_placement[i].weather != -1) {
 
-        if (!IS_SET(component_placement[i].weather, (1<<rp->getWeather())))
+        if (!IS_SET(component_placement[i].weather, (1<<Weather::getWeather(*rp))))
           continue;
       }
 

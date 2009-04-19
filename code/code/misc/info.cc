@@ -32,6 +32,7 @@
 #include "shop.h"
 #include "liquids.h"
 #include "spec_mobs.h"
+#include "weather.h"
 
 #include "skillsort.h"
 #include "obj_open_container.h"
@@ -624,19 +625,19 @@ sstring TRoom::daynightColorRoom() const
   if(IS_SET(roomFlags, ROOM_INDOORS))
     return("<z>");
 
-  switch (weather_info.sunlight) {
-    case SUN_DAWN:
-    case SUN_RISE:
+  switch (Weather::getSunlight()) {
+    case Weather::SUN_DAWN:
+    case Weather::SUN_RISE:
       return("<w>");
       break;
-    case SUN_LIGHT:
+    case Weather::SUN_LIGHT:
       return("<z>");
       break;
-    case SUN_SET:
-    case SUN_TWILIGHT:
+    case Weather::SUN_SET:
+    case Weather::SUN_TWILIGHT:
       return("<w>");
       break;
-    case SUN_DARK:
+    case Weather::SUN_DARK:
       return("<k>");
       break;
   }
@@ -2097,7 +2098,7 @@ void TBeing::doTime(const char *argument)
     desc->saveAccount();
     return;
   }
-  buf = format("It is %s, on ") % hmtAsString(hourminTime());
+  buf = format("It is %s, on ") % Weather::hmtAsString(Weather::hourminTime());
 
   weekday = ((28 * time_info.month) + time_info.day + 1) % 7;        // 28 days in a month 
 
@@ -2111,22 +2112,23 @@ void TBeing::doTime(const char *argument)
            numberAsString(day) %
            month_name[time_info.month] % time_info.year);
 
-  tmp2 = sunTime(SUN_TIME_RISE);
-  buf = format("The sun will rise today at:   %s.\n\r") % hmtAsString(tmp2);
+  tmp2 = Weather::sunTime(Weather::Weather::SUN_TIME_RISE);
+  buf = format("The sun will rise today at:   %s.\n\r") %
+    Weather::hmtAsString(tmp2);
   sendTo(buf);
 
-  tmp2 = sunTime(SUN_TIME_SET);
-  buf = format("The sun will set today at:    %s.\n\r") % hmtAsString(tmp2);
+  tmp2 = Weather::sunTime(Weather::Weather::SUN_TIME_SET);
+  buf = format("The sun will set today at:    %s.\n\r") % Weather::hmtAsString(tmp2);
   sendTo(buf);
 
-  tmp2 = moonTime(MOON_TIME_RISE);
+  tmp2 = Weather::moonTime(Weather::MOON_TIME_RISE);
   buf = format("The moon will rise today at:  %s    (%s).\n\r") %
-       hmtAsString(tmp2) % moonType();
+       Weather::hmtAsString(tmp2) % Weather::moonType();
   sendTo(buf);
 
-  tmp2 = moonTime(MOON_TIME_SET);
+  tmp2 = Weather::moonTime(Weather::MOON_TIME_SET);
   buf = format("The moon will set today at:   %s.\n\r") %
-       hmtAsString(tmp2);
+       Weather::hmtAsString(tmp2);
   sendTo(buf);
 
   time_t ct;
@@ -2152,27 +2154,27 @@ void TBeing::doWeather(const char *arg)
 {
   char buf[80];
   char buffer[256];
-  changeWeatherT change = WEATHER_CHANGE_NONE;
+  Weather::changeWeatherT change = Weather::CHANGE_NONE;
  
   arg = one_argument(arg, buffer, cElements(buffer));
 
   if (!*buffer || !isImmortal()) {
-    if (roomp->getWeather() == WEATHER_SNOWY)
+    if (Weather::getWeather(*roomp) == Weather::SNOWY)
       strcpy(buf,"It is snowing");
-    else if (roomp->getWeather() == WEATHER_LIGHTNING)
+    else if (Weather::getWeather(*roomp) == Weather::LIGHTNING)
       strcpy(buf,"The sky is lit by flashes of lightning as a heavy rain pours down");
-    else if (roomp->getWeather() == WEATHER_RAINY)
+    else if (Weather::getWeather(*roomp) == Weather::RAINY)
       strcpy(buf,"It is raining");
-    else if (roomp->getWeather() == WEATHER_CLOUDY)
+    else if (Weather::getWeather(*roomp) == Weather::CLOUDY)
       strcpy(buf,"The sky is cloudy");
-    else if (roomp->getWeather() == WEATHER_CLOUDLESS) {
-      if (is_nighttime())
+    else if (Weather::getWeather(*roomp) == Weather::CLOUDLESS) {
+      if (Weather::is_nighttime())
         strcpy(buf,"A <K>dark sky<1> stretches before you");
       else
         strcpy(buf,"A <b>clear blue sky<1> stretches before you");
-//  } else if (roomp->getWeather() == WEATHER_WINDY) {
+//  } else if (Weather::getWeather(*roomp) == Weather::WINDY) {
 //    strcpy(buf,"The winds begin to pick up");
-    } else if (roomp->getWeather() == WEATHER_NONE) {
+    } else if (Weather::getWeather(*roomp) == Weather::NONE) {
       sendTo("You have no feeling about the weather at all.\n\r");
       describeRoomLight();
       return;
@@ -2182,44 +2184,44 @@ void TBeing::doWeather(const char *arg)
     }
     if (isImmortal()) {
       sendTo(format("The current barometer is: %d.  Barometric change is: %d\n\r") %
-            weather_info.pressure % weather_info.change); 
+            Weather::getPressure() % Weather::getChange()); 
     }
     sendTo(COLOR_BASIC, format("%s and %s.\n\r") % buf %
-        (weather_info.change >= 0 ? "you feel a relatively warm wind from the south" :
+        (Weather::getChange() >= 0 ? "you feel a relatively warm wind from the south" :
          "your foot tells you bad weather is due"));
 
-    if (moonIsUp()) {
-      sendTo(format("A %s moon hangs in the sky.\n\r") % moonType());
+    if (Weather::moonIsUp()) {
+      sendTo(format("A %s moon hangs in the sky.\n\r") % Weather::moonType());
     }
     describeRoomLight();
     return;
   } else {
     if (is_abbrev(buffer, "worse")) {
-      weather_info.change = -10;
+      Weather::addToChange(-10);
       sendTo("The air-pressure drops and the weather worsens.\n\r");
-      weather_info.pressure += weather_info.change;
+      Weather::addToPressure(Weather::getChange());
 
-      AlterWeather(&change);
-      if (weather_info.pressure >= 1040) {
+      Weather::AlterWeather(&change);
+      if (Weather::getPressure() >= 1040) {
         sendTo("The weather can't get any better.\n\r");
-        weather_info.pressure = 1040;
-      } else if (weather_info.pressure <= 960) {
+        Weather::setPressure(1040);
+      } else if (Weather::getPressure() <= 960) {
         sendTo("The weather can't get any worse.\n\r");
-        weather_info.pressure = 960;
+        Weather::setPressure(960);
       }
       return;
     } else if (is_abbrev(buffer, "better")) {
-      weather_info.change = +10;
+      Weather::addToChange(10);
       sendTo("The air-pressure climbs and the weather improves.\n\r");
-      weather_info.pressure += weather_info.change;
+      Weather::addToPressure(Weather::getChange());
 
-      AlterWeather(&change);
-      if (weather_info.pressure >= 1040) {
+      Weather::AlterWeather(&change);
+      if (Weather::getPressure() >= 1040) {
         sendTo("The weather can't get any better.\n\r");
-        weather_info.pressure = 1040;
-      } else if (weather_info.pressure <= 960) {
+        Weather::setPressure(1040);
+      } else if (Weather::getPressure() <= 960) {
         sendTo("The weather can't get any worse.\n\r");
-        weather_info.pressure = 960;
+        Weather::setPressure(960);
       }
     } else if (is_abbrev(buffer, "month")) {
       arg = one_argument(arg, buffer, cElements(buffer));
@@ -2248,8 +2250,9 @@ void TBeing::doWeather(const char *arg)
         sendTo("<num> must be in range 1-32.\n\r");
         return;
       }
-      moontype = num;
-      sendTo(format("The moon is now in stage %d (%s).\n\r") % moontype % moonType());
+      Weather::setMoon(num);
+      sendTo(format("The moon is now in stage %d (%s).\n\r") % 
+	     Weather::getMoon() % Weather::moonType());
       return;
     } else {
       sendTo("Syntax: weather <\"worse\" | \"better\" | \"month\" | \"moon\">\n\r");
@@ -4058,7 +4061,7 @@ void TBeing::doEvaluate(const char *argument)
     
     int wetness = getRoomWetness(roomp);
     if (wetness != 0) // show wetness
-      sendTo(format("The room is %s.\n\r") % describeWet(wetness));
+      sendTo(format("The room is %s.\n\r") % Weather::describeWet(wetness));
 
     // advanced adventuring conditions
     // should probably make a more modular isGreatOutdoorsSector() check or something...

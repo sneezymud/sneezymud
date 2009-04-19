@@ -8,6 +8,7 @@
 #include "obj_arrow.h"
 #include "obj_tool.h"
 #include "being.h"
+#include "weather.h"
 
 
 int TCannon::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir, int shoot_dist)
@@ -94,7 +95,8 @@ int TCannon::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT d
     return FALSE;
   }
 
-  if((!ch->roomp->isIndoorSector() && weather_info.sky==SKY_RAINING &&
+  if((!ch->roomp->isIndoorSector() && 
+      Weather::getSky()==Weather::SKY_RAINING &&
       !::number(0,3)) ||
      ch->roomp->isUnderwaterSector()){
     act("Nothing happens, $N has been fouled by wet weather!",

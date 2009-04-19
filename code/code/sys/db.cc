@@ -110,6 +110,7 @@
 #include "obj_wagon.h"
 #include "timing.h"
 #include "obj_moneypouch.h"
+#include "weather.h"
 
 int top_of_world = 0;         // ref to the top element of world 
 
@@ -187,7 +188,6 @@ public:
 bool bootTime=false;
 
 struct time_info_data time_info;        // the infomation about the time   
-struct weather_data weather_info;        // the infomation about the weather 
 class lag_data lag_info;
 
 // count of the number of mobs that can load an object
@@ -555,7 +555,7 @@ void bootDb(void)
   fixup_players();
   
   bootPulse("Initializing light levels.");
-  sunriseAndSunset();
+  Weather::sunriseAndSunset();
 
   r_q.head = r_q.tail = 0;
 
@@ -570,39 +570,38 @@ void reset_time(void)
 {
   mudTimePassed(time(0), BEGINNING_OF_TIME, &time_info);
   time_info.year += YEAR_ADJUST;
-  moontype = time_info.day;
+  Weather::setMoon(time_info.day);
 
-  calcNewSunRise();
-  calcNewSunSet();
+  Weather::calcNewSunRise();
+  Weather::calcNewSunSet();
 
-  extern void fixSunlight();
-  fixSunlight();
+  Weather::fixSunlight();
 
   vlogf(LOG_MISC, format("   Current Gametime: %dm, %dH %dD %dM %dY.") %  
         time_info.minutes % time_info.hours % time_info.day % time_info.month % time_info.year);
 
-  weather_info.pressure = 960;
+  Weather::setPressure(960);
   if ((time_info.month >= 7) && (time_info.month <= 12))
-    weather_info.pressure += dice(1, 50);
+    Weather::addToPressure(dice(1, 50));
   else
-    weather_info.pressure += dice(1, 80);
+    Weather::addToPressure(dice(1, 80));
 
-  weather_info.change = 0;
+  Weather::setChange(0);
 
-  if (weather_info.pressure <= 980) {
+  if (Weather::getPressure() <= 980) {
     if ((time_info.month >= 3) && (time_info.month <= 9))
-      weather_info.sky = SKY_LIGHTNING;
+      Weather::setSky(Weather::SKY_LIGHTNING);
     else
-      weather_info.sky = SKY_LIGHTNING;
-  } else if (weather_info.pressure <= 1000) {
+      Weather::setSky(Weather::SKY_LIGHTNING);
+  } else if (Weather::getPressure() <= 1000) {
     if ((time_info.month >= 3) && (time_info.month <= 9))
-      weather_info.sky = SKY_RAINING;
+      Weather::setSky(Weather::SKY_RAINING);
     else
-      weather_info.sky = SKY_RAINING;
-  } else if (weather_info.pressure <= 1020) {
-    weather_info.sky = SKY_CLOUDY;
+      Weather::setSky(Weather::SKY_RAINING);
+  } else if (Weather::getPressure() <= 1020) {
+    Weather::setSky(Weather::SKY_CLOUDY);
   } else {
-    weather_info.sky = SKY_CLOUDLESS;
+    Weather::setSky(Weather::SKY_CLOUDLESS);
   }
 }
 

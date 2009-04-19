@@ -28,14 +28,9 @@
 #include "disc_afflictions.h"
 #include "disc_cures.h"
 #include "disc_hand_of_god.h"
-//#include "disc_azroki.h"
 #include "disc_deikhan.h"
-//#include "disc_ranger.h"
 #include "disc_animal.h"
 #include "disc_nature.h"
-//#include "disc_kararki.h"
-//#include "disc_yofu.h"
-//#include "disc_jumando.h"
 #include "disc_ranged.h"
 #include "disc_adventuring.h"
 #include "disc_shaman_frog.h"
@@ -43,6 +38,7 @@
 #include "disc_shaman_skunk.h"
 #include "disc_shaman_control.h"
 #include "obj_opal.h"
+#include "weather.h"
 
 int TBeing::useMana(spellNumT spl)
 {
@@ -2229,11 +2225,11 @@ void buildWeatherDamMap()
 {
   int i;
   i = SPELL_GUST;
-    discArray[i]->weatherData[WEATHER_RAINY] = -20;
-//    discArray[i]->weatherData[WEATHER_WINDY] = 20;
+    discArray[i]->weatherData[Weather::RAINY] = -20;
+//    discArray[i]->weatherData[Weather::WINDY] = 20;
   i = SPELL_HANDS_OF_FLAME;
-    discArray[i]->weatherData[WEATHER_RAINY] = 20;
-    discArray[i]->weatherData[WEATHER_SNOWY] = 20;
+    discArray[i]->weatherData[Weather::RAINY] = 20;
+    discArray[i]->weatherData[Weather::SNOWY] = 20;
 }
 
 void buildTerrainDamMap()

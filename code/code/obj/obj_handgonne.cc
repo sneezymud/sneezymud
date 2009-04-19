@@ -8,6 +8,7 @@
 #include "obj_arrow.h"
 #include "obj_tool.h"
 #include "being.h"
+#include "weather.h"
 
 // this is a hand held cannon-lock firearm - essentially a small cannon
 // it takes a long time to load and is virtually unaimable
@@ -98,7 +99,7 @@ int THandgonne::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirType
     return FALSE;
   }
 
-  if((!ch->roomp->isIndoorSector() && weather_info.sky==SKY_RAINING) ||
+  if((!ch->roomp->isIndoorSector() && Weather::getSky()==Weather::SKY_RAINING) ||
      ch->roomp->isUnderwaterSector()){
     act("Nothing happens, $N has been fouled by wet weather!",
 	TRUE, ch, NULL, this, TO_CHAR);

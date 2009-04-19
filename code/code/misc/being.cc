@@ -17,6 +17,7 @@
 #include "account.h"
 #include "person.h"
 #include "monster.h"
+#include "weather.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -1821,10 +1822,11 @@ int TBeing::chiMe(TBeing *tLunatic)
 
       if (affectedBySpell(AFFECT_WET))
       {
-        if (0 == addWetness(this, -15))
+        if (0 == Weather::addWetness(this, -15))
           sendTo("You feel completely dried off now.\n\r");
         else
-          sendTo(format("The heat dries you a bit.  You feel %s.\n\r") % describeWet(this));
+          sendTo(format("The heat dries you a bit.  You feel %s.\n\r") % 
+		 Weather::describeWet(this));
       }
 
       aff.type      = SKILL_CHI;

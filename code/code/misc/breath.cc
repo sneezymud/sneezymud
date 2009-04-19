@@ -11,6 +11,7 @@
 #include "being.h"
 #include "monster.h"
 #include "disease.h"
+#include "weather.h"
 
 static int dragonBreathDam(byte level, int lag)
 {

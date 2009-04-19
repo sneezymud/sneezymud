@@ -8,7 +8,6 @@
 #ifndef __ROOM_H
 #define __ROOM_H
 
-#include "weather.h"
 #include "sound.h"
 #include "ansi.h"
 #include "structs.h"
@@ -153,7 +152,6 @@ class TRoom : public TThing {
     bool operator |= (const TThing &); // See if a mob is on the born list.
     void operator >> (const TThing &); // Remove mob from the born list.
 
-//    WeatherStuff weather;   // not ready yet - bat
     roomDirData *dir_option[MAX_DIR]; // Exits
 
     TRoom(int);
@@ -177,12 +175,8 @@ class TRoom : public TThing {
     sstring daynightColorRoom() const;
     virtual int getLight();
     void initLight();
-    void initWeather();
-    void updateWeather();
-    void computeNewWeather();
     void saveItems(const sstring &);
     void loadItems();
-    weatherT getWeather() const;
     int outdoorLight();
     int outdoorLightWindow();
     bool putInDb(int vnum);

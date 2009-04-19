@@ -16,6 +16,7 @@
 #include "obj_pool.h"
 #include "obj_magic_item.h"
 #include "combat.h"
+#include "weather.h"
 
 int faerieFog(TBeing * caster, int, sh_int bKnown)
 {
@@ -835,7 +836,7 @@ int conjureElemWater(TBeing * caster)
     return FALSE;
 
   if(caster->roomp->isWaterSector() || caster->roomp->isUnderwaterSector() ||
-     caster->roomp->getWeather() == WEATHER_RAINY){
+     Weather::getWeather(*caster->roomp) == Weather::RAINY){
     found=1;
   } else {
     for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end() && (t=*it);++it) {

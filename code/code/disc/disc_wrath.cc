@@ -9,6 +9,7 @@
 #include "combat.h"
 #include "disc_wrath.h"
 #include "obj_magic_item.h"
+#include "weather.h"
 
 int plagueOfLocusts(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
 {
@@ -22,7 +23,7 @@ int plagueOfLocusts(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
     caster->sendTo("You need to be outside to summon locusts!\n\r");
     return SPELL_FAIL;
   }
-  if (caster->roomp->getWeather() == WEATHER_RAINY) {
+  if (Weather::getWeather(*caster->roomp) == Weather::RAINY) {
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
     caster->sendTo("How do you expect to summon locusts in the rain!\n\r");
     return SPELL_FAIL;
@@ -732,12 +733,12 @@ int callLightning(TBeing *caster, TBeing *victim, int level, sh_int bKnown, spel
   //  return SPELL_FAIL;
   //}
 
-  if (!((victim->roomp->getWeather() == WEATHER_RAINY) ||
-      (victim->roomp->getWeather() == WEATHER_LIGHTNING))) {
+  if (!((Weather::getWeather(*victim->roomp) == Weather::RAINY) ||
+      (Weather::getWeather(*victim->roomp) == Weather::LIGHTNING))) {
     caster->sendTo("You fail to call upon the lightning from the sky!\n\r");
     if (!victim->outside())
       caster->sendTo("There is no sky here...you're not outdoors!\n\r");
-    //    else if (victim->roomp->getWeather() == WEATHER_SNOWY)
+    //    else if (Weather::getWeather(*victim->roomp) == Weather::SNOWY)
     //      caster->sendTo("It's too cold to produce lightning.\n\r");
     else
       caster->sendTo("There is no lightning here...it's not storming!\n\r");

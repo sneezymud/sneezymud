@@ -28,7 +28,7 @@
 #include "obj_portal.h"
 #include "spec_rooms.h"
 #include "person.h"
-
+#include "weather.h"
 
 int TRoom::checkSpec(TBeing *ch, cmdTypeT cmd, const char *arg, TThing *)
 
@@ -1915,8 +1915,8 @@ int dayGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     }
   }
   //vlogf(LOG_DASH, format("daygate proc: found: %s") %  found ? "true" : "false");
-  //vlogf(LOG_DASH, format("daygate proc: hmt: %d  suntime: %d") %  hourminTime() % sunTime(SUN_TIME_DAY));
-  if (hourminTime() > 50   || hourminTime() < 46) {
+  //vlogf(LOG_DASH, format("daygate proc: hmt: %d  suntime: %d") %  Weather::hourminTime() % sunTime(Weather::SUN_TIME_DAY));
+  if (Weather::hourminTime() > 50   || Weather::hourminTime() < 46) {
     // code to remove gate
     if (found && to) {
       //     vlogf(LOG_DASH, "daygate proc found gate, removing");
@@ -1971,7 +1971,7 @@ int moonGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
       break;
     }
   }
-  if ( hourminTime() > 2 && hourminTime() < 94) {
+  if ( Weather::hourminTime() > 2 && Weather::hourminTime() < 94) {
     // code to remove gate
     if (found && to) {
       //     vlogf(LOG_DASH, "moongate proc found moongate, removing");
@@ -2024,7 +2024,8 @@ int waterfallRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
       break;
     }
   }
-  if (weather_info.sunlight != SUN_LIGHT || weather_info.sky != SKY_CLOUDLESS) {
+  if (Weather::getSunlight() != Weather::SUN_LIGHT || 
+      Weather::getSky() != Weather::SKY_CLOUDLESS) {
     // code to remove rainbow
     if (!found || !to)
       return FALSE;

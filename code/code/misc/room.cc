@@ -11,6 +11,7 @@
 #include "extern.h"
 #include "being.h"
 #include "monster.h"
+#include "weather.h"
 
 bool TRoom::isCitySector() const
 {
@@ -337,7 +338,7 @@ sectorTypeT TRoom::getSectorType() const
   static bool looped=false;
   if(!looped){
     looped=true;
-    if(getWeather() == WEATHER_SNOWY){
+    if(Weather::getWeather(*this) == Weather::SNOWY){
       sectorTypeT sec=getArcticSectorType();
       looped=false;
       return sec;

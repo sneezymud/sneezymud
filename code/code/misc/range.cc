@@ -24,6 +24,7 @@
 #include "obj_arrow.h"
 #include "obj_gun.h"
 #include "pathfinder.h"
+#include "weather.h"
 
 #define RANGE_DEBUG 0
 
@@ -825,10 +826,10 @@ dirTypeT can_see_linear(const TBeing *ch, const TBeing *targ, int *rng, dirTypeT
 
 
 
-  if ((ch->roomp->getWeather() == WEATHER_RAINY) ||
-      (ch->roomp->getWeather() == WEATHER_LIGHTNING))
+  if ((Weather::getWeather(*ch->roomp) == Weather::RAINY) ||
+      (Weather::getWeather(*ch->roomp) == Weather::LIGHTNING))
     max_range /= 2;
-  else if (ch->roomp->getWeather() == WEATHER_SNOWY)
+  else if (Weather::getWeather(*ch->roomp) == Weather::SNOWY)
     max_range /= 4;
 
   dirTypeT i;
@@ -865,10 +866,10 @@ TBeing *get_char_linear(const TBeing *ch, char *arg, int *rf, dirTypeT *df)
 
   max_range += (ch->visionBonus + 1)/2;
 
-  if ((ch->roomp->getWeather() == WEATHER_RAINY) ||
-      (ch->roomp->getWeather() == WEATHER_LIGHTNING))
+  if ((Weather::getWeather(*ch->roomp) == Weather::RAINY) ||
+      (Weather::getWeather(*ch->roomp) == Weather::LIGHTNING))
     max_range /= 2;
-  else if (ch->roomp->getWeather() == WEATHER_SNOWY)
+  else if (Weather::getWeather(*ch->roomp) == Weather::SNOWY)
     max_range /= 4;
 
   strcpy(tmpname, arg);
@@ -1043,17 +1044,17 @@ void TBeing::doScan(const char *argument)
   // Let weather conditions play a part in range - Russ 10/14/98
   // silly immortal check, but imms gripe about it
   if (!isImmortal()) {
-    if (roomp->getWeather() == WEATHER_SNOWY) {
+    if (Weather::getWeather(*roomp) == Weather::SNOWY) {
       max_range -= 3;
       sendTo(COLOR_BASIC, "The <W>SNOW<1> greatly decreases your view!\n\r");
-    } else if (roomp->getWeather() == WEATHER_RAINY) {
+    } else if (Weather::getWeather(*roomp) == Weather::RAINY) {
       max_range -= 2;
       sendTo(COLOR_BASIC, "The <B>RAIN<1> decreases your view!\n\r");
-    } else if (roomp->getWeather() == WEATHER_CLOUDY) {
+    } else if (Weather::getWeather(*roomp) == Weather::CLOUDY) {
     max_range -= 1;
         sendTo(COLOR_BASIC, "The <k>FOG<1> slightly decreases your view!\n\r");
       //sendTo(COLOR_BASIC, "The <k>CLOUDS<1> slightly decrease your view!\n\r");
-    } else if (roomp->getWeather() == WEATHER_CLOUDLESS) {
+    } else if (Weather::getWeather(*roomp) == Weather::CLOUDLESS) {
       max_range += 1;
       sendTo(COLOR_BASIC, "The <c>clear skies<1> enhance your view!\n\r");
     }

@@ -24,6 +24,7 @@
 #include "obj_base_clothing.h"
 #include "obj_bag.h"
 #include "liquids.h"
+#include "weather.h"
 
 // DELETE_THIS implies this needs to be deleted
 int TBeing::doHit(const sstring &argument, TBeing *vict)
@@ -1456,10 +1457,10 @@ int TBeing::flameEngulfed()
 
   if (affectedBySpell(AFFECT_WET))
   {
-    if (0 == addWetness(this, -50))
+    if (0 == Weather::addWetness(this, -50))
       sendTo("You feel completely dried off now.\n\r");
     else
-      sendTo(format("You dry out a bit from the flames!  You feel %s.\n\r") % describeWet(this));
+      sendTo(format("You dry out a bit from the flames!  You feel %s.\n\r") % Weather::describeWet(this));
   }
 
   if (hasQuestBit(TOG_HAS_PYROPHOBIA))

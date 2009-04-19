@@ -52,9 +52,9 @@ void TDrinkCon::waterCreate(const TBeing *caster, int level)
     water *= 4;
     water /= 3;
 
-    if ((caster->roomp->getWeather() == WEATHER_RAINY) ||
-        (caster->roomp->getWeather() == WEATHER_LIGHTNING) ||
-        (caster->roomp->getWeather() == WEATHER_SNOWY)) {
+    if ((Weather::getWeather(*caster->roomp) == Weather::RAINY) ||
+        (Weather::getWeather(*caster->roomp) == Weather::LIGHTNING) ||
+        (Weather::getWeather(*caster->roomp) == Weather::SNOWY)) {
       water *= 2;
       CS(SPELL_CREATE_WATER);
     }

@@ -33,6 +33,7 @@
 #include "obj_base_weapon.h"
 #include "obj_base_clothing.h"
 #include "obj_gas.h"
+#include "weather.h"
 
 // returns DELETE_THIS if this has to be deleted
 int TMonster::mobileGuardian()
@@ -2877,8 +2878,8 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     spell = ch.getSkillNum(SPELL_CALL_LIGHTNING);
     if (!::number(0, 6) && 
          vict.outside() &&
-         ((vict.roomp->getWeather() == WEATHER_RAINY) ||
-              (vict.roomp->getWeather() == WEATHER_LIGHTNING)) &&
+         ((Weather::getWeather(*vict.roomp) == Weather::RAINY) ||
+	  (Weather::getWeather(*vict.roomp) == Weather::LIGHTNING)) &&
          ch.doesKnowSkill(spell) && 
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {

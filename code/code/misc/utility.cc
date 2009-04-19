@@ -17,6 +17,7 @@
 #include "skills.h"
 #include "game_crazyeights.h"
 #include "game_drawpoker.h"
+#include "weather.h"
 
 #include <csignal>
 #include <cstdarg>
@@ -976,9 +977,9 @@ bool TBeing::canSeeMe(const TBeing *ch, infraTypeT infra) const
 
       // easier at night, harder at day
       if (outside()) {
-        if (is_nighttime())
+        if (Weather::is_nighttime())
           vision_adj += 1;
-        else if (is_daytime())
+        else if (Weather::is_daytime())
           vision_adj -= 1;
       } else   // indoors or underwater
         vision_adj += 1;
@@ -1466,11 +1467,11 @@ int TThing::visibility() const
 
   if (roomp->isForestSector())
     cbs += 2;
-  if (roomp->getWeather() == WEATHER_RAINY)
+  if (Weather::getWeather(*roomp) == Weather::RAINY)
     cbs += 1;
-  else if (roomp->getWeather() == WEATHER_SNOWY)
+  else if (Weather::getWeather(*roomp) == Weather::SNOWY)
     cbs -= 2;
-  else if (roomp->getWeather() == WEATHER_LIGHTNING)
+  else if (Weather::getWeather(*roomp) == Weather::LIGHTNING)
     cbs -= 1;
 
   return cbs;
@@ -1495,11 +1496,11 @@ int TBeing::eyeSight(TRoom *rp) const
     int light = rp->getLight();
     vision += light;
 
-    if (rp->getWeather() == WEATHER_RAINY)
+    if (Weather::getWeather(*rp) == Weather::RAINY)
       vision -= 1;
-    else if (rp->getWeather() == WEATHER_SNOWY)
+    else if (Weather::getWeather(*rp) == Weather::SNOWY)
       vision -= 2;
-    else if (rp->getWeather() == WEATHER_LIGHTNING)
+    else if (Weather::getWeather(*rp) == Weather::LIGHTNING)
       vision -= 1;
   
     // if they are indoors, the lighting of the room should be "subdued"

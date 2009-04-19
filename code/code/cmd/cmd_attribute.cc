@@ -13,6 +13,7 @@
 #include "handler.h"
 #include "guild.h"
 #include "configuration.h"
+#include "weather.h"
 
 static void showStatsTo(const Descriptor *d, const TBeing *ch, bool hidden_stuff)
 {

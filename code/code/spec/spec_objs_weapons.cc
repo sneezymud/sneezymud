@@ -9,6 +9,7 @@
 #include "obj_general_weapon.h"
 #include "disc_fire.h"
 #include "being.h"
+#include "weather.h"
 
 int ghostlyShiv(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 {
@@ -123,7 +124,7 @@ int nightBlade(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 
   if (!ch->outside())
     return false;
-  if (!is_nighttime())
+  if (!Weather::is_nighttime())
     return false;
 
   act("A pulse of darkness as black as the new moon travels up the blade of $p.",
@@ -160,7 +161,7 @@ int daySword(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 
   if (!ch->outside())
     return false;
-  if (!is_daytime())
+  if (!Weather::is_daytime())
     return false;
 
   act("A pulse of light as bright as the sun travels up the blade of $p.",

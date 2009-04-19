@@ -19,6 +19,7 @@
 #include "systemtask.h"
 #include "socket.h"
 #include "spec_mobs.h"
+#include "weather.h"
 
 #include <csignal>
 #include <cstdarg>
@@ -993,7 +994,8 @@ void Descriptor::updateScreenVt100(unsigned int update)
 
     if (IS_SET(update, CHANGED_MUD)) {
       snprintf(buf + strlen(buf), cElements(buf) - strlen(buf), VT_CURSPOS, ch->getScreen(), 35);
-      snprintf(buf + strlen(buf), cElements(buf) - strlen(buf), " %s ", hmtAsString(hourminTime()).c_str());
+      snprintf(buf + strlen(buf), cElements(buf) - strlen(buf), " %s ", 
+	       Weather::hmtAsString(Weather::hourminTime()).c_str());
     }
 
     if (IS_SET(update, CHANGED_TIME)) {
@@ -1140,7 +1142,7 @@ void Descriptor::updateScreenVt100(unsigned int update)
 
     if (IS_SET(update, CHANGED_MUD)) {
       snprintf(buf + strlen(buf), cElements(buf) - strlen(buf), VT_CURSPOS, ch->getScreen(), 1);
-      snprintf(buf + strlen(buf), cElements(buf) - strlen(buf), "   %8s   ", hmtAsString(hourminTime()).c_str());
+      snprintf(buf + strlen(buf), cElements(buf) - strlen(buf), "   %8s   ", Weather::hmtAsString(Weather::hourminTime()).c_str());
     }
 
     if (IS_SET(update, CHANGED_TIME)) {
@@ -1366,7 +1368,7 @@ void Descriptor::updateScreenAnsi(unsigned int update)
 
     if (IS_SET(update, CHANGED_MUD)) {
       buf += format(VT_CURSPOS) % ch->getScreen() % 35;
-      buf += format("%s") % hmtAsString(hourminTime());
+      buf += format("%s") % Weather::hmtAsString(Weather::hourminTime());
     }
 
     if (IS_SET(update, CHANGED_TIME)) {
@@ -1534,7 +1536,7 @@ void Descriptor::updateScreenAnsi(unsigned int update)
 
     if (IS_SET(update, CHANGED_MUD)) {
       buf += format(VT_CURSPOS) % ch->getScreen() % 1;
-      buf += format("   %8s   ") % hmtAsString(hourminTime());
+      buf += format("   %8s   ") % Weather::hmtAsString(Weather::hourminTime());
     }
 
     time_t t1;

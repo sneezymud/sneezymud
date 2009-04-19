@@ -11,7 +11,7 @@ extern const int BUILDER_GAMEPORT;
 
 class Config {
  private:
-  Config(); // singleton
+  Config();
 
   // modifies rate at which items take damage
   // The higher the number, the lower the damage

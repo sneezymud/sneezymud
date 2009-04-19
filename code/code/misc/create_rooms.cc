@@ -19,6 +19,7 @@
 #include "obj_seethru.h"
 #include "database.h"
 #include "person.h"
+#include "weather.h"
 
 const char *room_fields[] =
 {
@@ -3396,7 +3397,7 @@ TRoom *room_find_or_create(int key)
 sstring TRoom::describeGroundWeather() const
 {
   if(!isUnderwaterSector() && !isWaterSector() && 
-     getWeather() == WEATHER_SNOWY){
+     Weather::getWeather(*this) == Weather::SNOWY){
     // non-water sector in the snow
     return "<W>snow-covered<1>";
   } else if(isArcticSector()){
@@ -3406,7 +3407,7 @@ sstring TRoom::describeGroundWeather() const
 
   if(!isUnderwaterSector() && !isWaterSector() &&
      !isSwampSector() && !isBeachSector() &&
-     getWeather() == WEATHER_RAINY){
+     Weather::getWeather(*this) == Weather::RAINY){
     // non-water/mud/sand sector in the rain
     return "<B>rain-slick<1>";
   }

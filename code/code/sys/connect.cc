@@ -48,6 +48,7 @@ extern "C" {
 #include "database.h"
 #include "rent.h"
 #include "shop.h"
+#include "weather.h"
 
 const int DONT_SEND = -1;
 const int FORCE_LOW_INVSTE = 1;
@@ -2632,8 +2633,8 @@ void setPrompts(fd_set out)
               SET_BIT(update, CHANGED_PERC);
             }
 #endif
-            if (hourminTime() != d->last.mudtime) {
-              d->last.mudtime = hourminTime();
+            if (Weather::hourminTime() != d->last.mudtime) {
+              d->last.mudtime = Weather::hourminTime();
               SET_BIT(update, CHANGED_MUD);
             }
             if (update || ch->fight()) {

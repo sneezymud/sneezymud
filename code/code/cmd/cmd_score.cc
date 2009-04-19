@@ -9,6 +9,7 @@
 #include "extern.h"
 #include "room.h"
 #include "being.h"
+#include "weather.h"
 
 void TBeing::doScore()
 {
@@ -260,7 +261,7 @@ void TBeing::doScore()
   }
 
   if (affectedBySpell(AFFECT_WET))
-    sendTo(format("You feel %s.\n\r") % describeWet(this));
+    sendTo(format("You feel %s.\n\r") % Weather::describeWet(this));
 
   sendTo(format("You are in %s%s%s attack mode.\n\r") %         cyan() % attack_modes[getCombatMode()] % norm());
 

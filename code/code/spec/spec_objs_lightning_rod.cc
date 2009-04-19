@@ -13,6 +13,7 @@
 #include "obj_base_weapon.h"
 #include "being.h"
 #include "obj_base_clothing.h"
+#include "weather.h"
 
 using std::max;
 
@@ -135,7 +136,8 @@ int lightningRodGotHit(TBaseClothing *tObj, TBeing *tMaster, TBeing *tSucker)
 int lightningRodFryRoom(TBaseWeapon *tObj, TRoom *tRoom)
 {
 
-  if (tRoom->getWeather() != WEATHER_LIGHTNING || tRoom->isRoomFlag(ROOM_INDOORS) || ::number(0, 100))
+  if (Weather::getWeather(*tRoom) != Weather::LIGHTNING || 
+      tRoom->isRoomFlag(ROOM_INDOORS) || ::number(0, 100))
     return FALSE;
 
   sendrpf(COLOR_OBJECTS, tRoom,

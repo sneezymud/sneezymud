@@ -5,8 +5,8 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __WEATHER_H
-#define __WEATHER_H
+#ifndef __H
+#define __H
 
 #include "enum.h"
 
@@ -14,20 +14,113 @@ class TBeing;
 class TRoom;
 class sstring;
 
-enum weatherT { WEATHER_NONE, WEATHER_CLOUDLESS, WEATHER_CLOUDY, WEATHER_RAINY, WEATHER_LIGHTNING, WEATHER_SNOWY };
-// need to add in WEATHER_WINDY here - Rix
+class Weather {
+ public:  
+  enum weatherT { NONE, CLOUDLESS, CLOUDY, 
+		  RAINY, LIGHTNING, SNOWY };
+  
+  enum sunT { SUN_DARK, SUN_DAWN, SUN_RISE, SUN_LIGHT, SUN_SET, SUN_TWILIGHT };
+  
+  enum skyT { SKY_CLOUDLESS, SKY_CLOUDY, SKY_RAINING, SKY_LIGHTNING };
+  
+  enum changeWeatherT {
+    CHANGE_NONE,
+    CHANGE_CLOUDS,
+    CHANGE_RAIN,
+    CHANGE_STORM,
+    CHANGE_CLOUDS_AWAY,
+    CHANGE_RAIN_AWAY,
+    CHANGE_STORM_AWAY
+  };
 
-enum sunT { SUN_DARK, SUN_DAWN, SUN_RISE, SUN_LIGHT, SUN_SET, SUN_TWILIGHT };
+  enum moonTimeT {
+    MOON_TIME_SET,
+    MOON_TIME_RISE,
+  };
 
-enum skyT { SKY_CLOUDLESS, SKY_CLOUDY, SKY_RAINING, SKY_LIGHTNING };
+  enum sunTimeT {
+    SUN_TIME_DAWN,
+    SUN_TIME_RISE,
+    SUN_TIME_DAY,
+    SUN_TIME_SINK,
+    SUN_TIME_SET,
+    SUN_TIME_NIGHT,
+  };
 
-struct weather_data
-{
-   int pressure;        /* How is the pressure ( Mb ) */
-   int change;  /* How fast and what way does it change. */
-   skyT sky;     /* How is the sky. */
-   sunT sunlight;        /* And how much sun. */
+  enum weatherMessT {
+    MESS_CLOUDY,
+    MESS_RAIN_START,
+    MESS_SNOW_START,
+    MESS_CLOUDS_AWAY,
+    MESS_LIGHTNING,
+    MESS_BLIZZARD,
+    MESS_RAIN_AWAY,
+    MESS_SNOW_AWAY,
+    MESS_LIGHTNING_AWAY,
+    MESS_BLIZZARD_AWAY
+  };
+  
+  static const int WET_MAXIMUM;
+  
+  static void AlterWeather(changeWeatherT *);
+  static void calcNewSunRise();
+  static void calcNewSunSet();
+  static int hourminTime();
+  static sstring hmtAsString(int);
+  static void anotherHour();
+  static void weatherChange();
+  static void GetMonth(int);
+  static void sunriseAndSunset();
+  static int moonTime(moonTimeT);
+  static const sstring moonType();
+  static bool moonIsUp();
+  static int sunTime(sunTimeT);
+  static bool sunIsUp();
+  static int getWet(TBeing *ch, TRoom* room, silentTypeT silent);
+  static const sstring describeWet(int wetness);
+  static const sstring describeWet(const TBeing *ch);
+  static int addWetness(TBeing *ch, int diffWet);
+  static void update_world_weather();
+  static int getWeather(int);
+  static bool is_daytime();
+  static bool is_nighttime();
+  static weatherT getWeather(const TRoom &);
+  static void fixSunlight();
+  static void sendWeatherMessage(weatherMessT);
+  static void ChangeWeather(changeWeatherT);
+
+  // accessors
+  static int getPressure(){ return pressure; }
+  static int getChange(){ return change; }
+  static int getSky(){ return sky; }
+  static int getSunlight(){ return sunlight; }
+  static int getMoon(){ return moontype; }
+
+  // manipulators
+  static void setPressure(int p){ pressure=p; }
+  static void addToPressure(int p){ pressure+=p; }
+  static void setChange(int c){ change=c; }
+  static void addToChange(int c){ change+=c; }
+  static void setSunlight(sunT s){ sunlight=s; } 
+  static void setSky(skyT s){ sky=s; }
+  static void setMoon(int m){ moontype=m; }
+
+ private:
+  Weather();
+  
+  static int pressure;        /* How is the pressure ( Mb ) */
+  static int change;          /* How fast and what way does it change. */
+  static skyT sky;            /* How is the sky. */
+  static sunT sunlight;       /* And how much sun. */
+  static int moontype;        // what stage is moon in?  (0 - 31) 
+  
+  // due to the calculations involved in sunrise/set formula
+  // it becomes expensive to calculate this each time
+  // do it as needed, and save it.
+  static int si_sunRise;
+  static int si_sunSet;
 };
+
 
 // this represents the arbitrary starting point for mud-time functions
 // It is Fri Aug 10 18:05:15 1990  (Gamma 0.0 release?)
@@ -37,60 +130,10 @@ const unsigned long BEGINNING_OF_TIME      =650336715;
 // Beginning_OF_TIME will be Jan 1, year 0 + YEAR_ADJUST
 const int YEAR_ADJUST            =550;
 
-enum changeWeatherT {
-  WEATHER_CHANGE_NONE,
-  WEATHER_CHANGE_CLOUDS,
-  WEATHER_CHANGE_RAIN,
-  WEATHER_CHANGE_STORM,
-  WEATHER_CHANGE_CLOUDS_AWAY,
-  WEATHER_CHANGE_RAIN_AWAY,
-  WEATHER_CHANGE_STORM_AWAY
-};
 
-extern void AlterWeather(changeWeatherT *);
-extern void calcNewSunRise();
-extern void calcNewSunSet();
-extern int hourminTime();
-extern sstring hmtAsString(int);
-extern struct weather_data weather_info;
-extern void anotherHour();
-extern void weatherChange();
-extern void GetMonth(int);
-extern void sunriseAndSunset();
+extern int getRoomWetness(TRoom*);
 
-extern int moontype;
-enum moonTimeT {
-  MOON_TIME_SET,
-  MOON_TIME_RISE,
-};
 
-extern int moonTime(moonTimeT);
-extern const sstring moonType();
-extern bool moonIsUp();
-
-enum sunTimeT {
-  SUN_TIME_DAWN,
-  SUN_TIME_RISE,
-  SUN_TIME_DAY,
-  SUN_TIME_SINK,
-  SUN_TIME_SET,
-  SUN_TIME_NIGHT,
-};
-
-#define WET_MAXIMUM 100
-
-extern int sunTime(sunTimeT);
-extern bool sunIsUp();
-extern int getWet(TBeing *ch, TRoom* room, silentTypeT silent);
-extern int getRoomWetness(TRoom* room);
-extern const sstring describeWet(int wetness);
-extern const sstring describeWet(const TBeing *ch);
-extern int addWetness(TBeing *ch, int diffWet);
-
-extern void update_world_weather();
-extern int getWeather(int);
-extern bool is_daytime();
-extern bool is_nighttime();
 
 
 #endif

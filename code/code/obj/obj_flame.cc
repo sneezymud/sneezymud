@@ -20,6 +20,7 @@
 #include "obj_drinkcon.h"
 #include "liquids.h"
 #include "materials.h"
+#include "weather.h"
 
 TFFlame::TFFlame() :
   TBaseLight(),
@@ -302,13 +303,13 @@ void TFFlame::decayMe()
 
   // Current weather affects decay_time loss.
 
-  if (roomp->getWeather() == WEATHER_SNOWY) {
+  if (Weather::getWeather(*roomp) == Weather::SNOWY) {
     sendrpf(roomp, "The current snowstorm kills the fire a little more.\n\r");
     obj_flags.decay_time -= 5;
-  } else if (roomp->getWeather() == WEATHER_LIGHTNING) {
+  } else if (Weather::getWeather(*roomp) == Weather::LIGHTNING) {
     sendrpf(roomp, "The great downpour of rain kills the fire and puts it out.\n\r");
     obj_flags.decay_time = 0;
-  } else if (roomp->getWeather() == WEATHER_RAINY) {
+  } else if (Weather::getWeather(*roomp) == Weather::RAINY) {
     sendrpf(roomp, "The rain effects the fire and slowly kills it.\n\r");
     obj_flags.decay_time -= 20;
   } else obj_flags.decay_time--;
@@ -585,8 +586,8 @@ void TBeing::igniteObject(const char *argument, TThing *fObj)
     sendTo("Unfortunatly, it doesn't work to start a fire in the water.\n\r");
     return;
   }
-  if (roomp->getWeather() == WEATHER_LIGHTNING ||
-      roomp->getWeather() == WEATHER_RAINY) {
+  if (Weather::getWeather(*roomp) == Weather::LIGHTNING ||
+      Weather::getWeather(*roomp) == Weather::RAINY) {
     sendTo("I'm afraid it doesn't work to ignite a fire in the rain.\n\r");
     return;
   }
@@ -736,8 +737,8 @@ int TBeing::pourWaterOnMe(TBeing *ch, TObj *sObj)
   // add wetness affect
   if (size > 0)
   {
-    addWetness(this, size); // we never expect this to return 0
-    sendTo(format("You feel %s.\n\r") % describeWet(this));
+    Weather::addWetness(this, size); // we never expect this to return 0
+    sendTo(format("You feel %s.\n\r") % Weather::describeWet(this));
   }
 
   dContainer->setDrinkUnits(0);  

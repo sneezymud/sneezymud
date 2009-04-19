@@ -19,6 +19,7 @@
 #include "charfile.h"
 #include "game_crazyeights.h"
 #include "game_drawpoker.h"
+#include "weather.h"
 
 extern "C" {
 #include <dirent.h>
@@ -5900,9 +5901,9 @@ void TBeing::doHeaven(const sstring &arg)
 
   sendTo("You move the heavens and the world.\n\r");
   for (int i = 0; i < num; i++){
-    anotherHour();
-    weatherChange();
-    sunriseAndSunset();
+    Weather::anotherHour();
+    Weather::weatherChange();
+    Weather::sunriseAndSunset();
   }
 }
 

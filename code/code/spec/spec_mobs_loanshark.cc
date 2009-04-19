@@ -6,6 +6,7 @@
 #include "shop.h"
 #include "shopowned.h"
 #include "spec_mobs.h"
+#include "weather.h"
 
 // 1 loan per account
 

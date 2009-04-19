@@ -88,6 +88,7 @@
 #include "liquids.h"
 #include "obj_chest.h"
 #include "materials.h"
+#include "weather.h"
 
 // CMD_OBJ_GOTTEN returns DELETE_THIS if this goes bye bye
 // returns DELETE_VICT if t goes bye bye
@@ -4139,10 +4140,10 @@ int arcticHeart(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
 
 
-      changeWeatherT change = WEATHER_CHANGE_NONE;
-      weather_info.change = -10;
-      weather_info.pressure = 960;
-      AlterWeather(&change);
+      Weather::changeWeatherT change = Weather::CHANGE_NONE;
+      Weather::addToChange(-10);
+      Weather::setPressure(960);
+      Weather::AlterWeather(&change);
 
       
       ch->addToWait(combatRound(3));

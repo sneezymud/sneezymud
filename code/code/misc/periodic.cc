@@ -33,6 +33,7 @@
 #include "obj_light.h"
 #include "timing.h"
 #include "shopaccounting.h"
+#include "weather.h"
 
 // procGlobalRoomStuff
 procGlobalRoomStuff::procGlobalRoomStuff(const int &p)
@@ -165,7 +166,7 @@ void procGlobalRoomStuff::run(int pulse) const
     }
     
     // weather noise
-    if (rp->getWeather() == WEATHER_LIGHTNING) {
+    if (Weather::getWeather(*rp) == Weather::LIGHTNING) {
       if (!::number(0,9)) {
         TThing *in_room=NULL;
 
@@ -1438,7 +1439,7 @@ int TBeing::updateHalfTickStuff()
             (vnum == MOB_MALE_CHURCH_GOER) || (vnum == MOB_FEMALE_CHURCH_GOER))
           return DELETE_THIS;
 
-        if (is_daytime()) {
+        if (Weather::is_daytime()) {
           if (loadRoom == ROOM_NOCTURNAL_STORAGE) {
             return DELETE_THIS;
             vlogf(LOG_BUG, format("NOC:DIU: %s has oldRoom equal to %d") %  getName() % loadRoom);
@@ -1474,7 +1475,7 @@ int TBeing::updateHalfTickStuff()
              act(tString, TRUE, this, 0, 0, TO_ROOM);
           }
         }
-      } else if (!is_daytime() && ((vnum == MOB_FREEZING_MIST) || !specials.hunting)) {
+      } else if (!Weather::is_daytime() && ((vnum == MOB_FREEZING_MIST) || !specials.hunting)) {
         if (vnum == MOB_FREEZING_MIST) {
           act("$n is dispersed by the coming of morning.", 
               TRUE, this, 0, 0, TO_ROOM);
@@ -1507,7 +1508,7 @@ int TBeing::updateHalfTickStuff()
       }
     } else if (IS_SET(specials.act, ACT_NOCTURNAL) && !isAffected(AFF_CHARM)) {
       if ((in_room == ROOM_NOCTURNAL_STORAGE)) {
-        if (!is_nighttime()) {
+        if (!Weather::is_nighttime()) {
           if ((vnum == MOB_MALE_HOPPER) || (vnum == MOB_FEMALE_HOPPER) ||
               (vnum == MOB_MALE_CHURCH_GOER) || (vnum == MOB_FEMALE_CHURCH_GOER))
             return DELETE_THIS;
@@ -1550,7 +1551,7 @@ int TBeing::updateHalfTickStuff()
             act(tString, TRUE, this, 0, 0, TO_ROOM);
           }
         }
-      } else if (!is_nighttime() && 
+      } else if (!Weather::is_nighttime() && 
                    ((vnum == MOB_FREEZING_MIST) || !specials.hunting)) {
         if (vnum == MOB_FREEZING_MIST) {
           act("$n is dispersed by the coming of morning.", 
@@ -1725,10 +1726,10 @@ int TBeing::updateHalfTickStuff()
       }
     }
     if (roomp && (roomp->getSectorType() == SECT_DESERT) &&
-        (getPosition() > POSITION_STUNNED) && is_daytime())
+        (getPosition() > POSITION_STUNNED) && Weather::is_daytime())
       sendTo("The desert heat makes you uncomfortably warm.\n\r");
     else if (roomp && (roomp->getSectorType() == SECT_JUNGLE) &&
-        (getPosition() > POSITION_STUNNED) && is_daytime())
+        (getPosition() > POSITION_STUNNED) && Weather::is_daytime())
       sendTo("The jungle humidity causes you to sweat uncontrollably.\n\r");
     else if (roomp && (getPosition() > POSITION_STUNNED)) {
       // At the end of this if we do the elemental 'drain' checks.  Regardless of
@@ -2257,7 +2258,9 @@ int TBeing::terrainSpecial()
 
   if (toggleInfo[TOG_QUESTCODE4]->toggle) {
     if (affectedBySpell(AFFECT_WAS_INDOORS) || hasDisease(DISEASE_FROSTBITE)) return FALSE;  // make it only hit em if they sit outside for a while
-    if (weather_info.sky != SKY_RAINING && weather_info.sky != SKY_CLOUDY && weather_info.sky != SKY_LIGHTNING)
+    if (Weather::getSky() != Weather::SKY_RAINING && 
+	Weather::getSky() != Weather::SKY_CLOUDY && 
+	Weather::getSky() != Weather::SKY_LIGHTNING)
       return FALSE;
     if (isImmune(IMMUNE_COLD, WEAR_BODY))
       return FALSE;
@@ -2276,7 +2279,7 @@ int TBeing::terrainSpecial()
     disease_start(this, &af);
   }
 
-  getWet(this, roomp, SILENT_NO);
+  Weather::getWet(this, roomp, SILENT_NO);
 
   return FALSE;
 }

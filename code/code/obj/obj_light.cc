@@ -11,6 +11,7 @@
 #include "low.h"
 #include "monster.h"
 #include "obj_light.h"
+#include "weather.h"
 
 TLight::TLight() :
   TBaseLight(),
@@ -98,13 +99,13 @@ void TLight::extinguishWater()
 void TLight::lampLightStuff(TMonster *ch)
 {
   // if lamp is on during day, turn off
-  if (is_daytime() && isLit()) {
+  if (Weather::is_daytime() && isLit()) {
     ch->doExtinguish(fname(name));
   }
   // if off at night, turn on
   // we use !isday rather than isnight so that dawn/twilight will cause
   // lights to be turned on
-  if (!is_daytime() && !isLit())  {
+  if (!Weather::is_daytime() && !isLit())  {
     ch->doLight(fname(name));
   }
   // refill if < 90% full.  val1 = max, val2 = current

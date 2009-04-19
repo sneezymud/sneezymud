@@ -27,6 +27,7 @@
 #include "liquids.h"
 #include "shopaccounting.h"
 #include "spec_mobs.h"
+#include "weather.h"
 
 extern int kick_mobs_from_shop(TMonster *myself, TBeing *ch, int from_room);
 
@@ -392,7 +393,7 @@ int TObj::shopPrice(int num, int shop_nr, float chr, const TBeing *ch) const
 
 bool shopData::willTradeWith(TMonster *keeper, TBeing *ch)
 {
-  int hmt = hourminTime();
+  int hmt = Weather::hourminTime();
 
   if (shop_index[shop_nr].open1 > hmt) {
      keeper->doSay("Come back later!");

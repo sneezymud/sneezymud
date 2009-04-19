@@ -31,6 +31,7 @@
 #include "database.h"
 #include "rent.h"
 #include "shop.h"
+#include "weather.h"
 
 const int  CURRENT_VERSION = 19990615;
 const int  BAD_VERSION = 19990614;
@@ -210,7 +211,7 @@ void Descriptor::send_client_prompt(int, int update)
 
   if (update & CHANGED_MUD) {
     clientf(format("%d|%s") % CLIENT_MUDTIME %
-	    hmtAsString(hourminTime()));
+	    Weather::hmtAsString(Weather::hourminTime()));
 
   }
   //prompt_mode = -1;
