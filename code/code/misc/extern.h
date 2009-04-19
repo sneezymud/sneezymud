@@ -11,11 +11,11 @@
 
 #include "wiz_powers.h"
 #include "room.h"
-#include "obj_drug.h"
 #include "immunity.h"
 #include "connect.h"
 #include "body.h"
 #include "race.h"
+#include "obj_drug.h"
 
 struct PolyType;
 class charFile;
@@ -279,8 +279,6 @@ extern void count_repair_items(const char *name);
 extern int roomOfObject(const TThing *t);
 extern char lcb[256];
 extern const sstring describeTime();
-extern void mudTimePassed(time_t t2, time_t t1, time_info_data *);
-extern void realTimePassed(time_t t2, time_t t1, time_info_data *);
 extern void assign_item_info();
 extern void assignTerrainInfo();
 extern int gamePort;   // the port we are running on

@@ -787,11 +787,11 @@ void do_components(int situ)
     if (start != -1) {
       if (stop == -1) {
         // only the one hour was specified
-        if (start != time_info.hours)
+        if (start != GameTime::getHours())
           continue;
-      } else if (time_info.hours < start)
+      } else if (GameTime::getHours() < start)
         continue;  // too early
-      else if (time_info.hours >= stop)
+      else if (GameTime::getHours() >= stop)
         continue;  // too late
     }
 
@@ -799,11 +799,11 @@ void do_components(int situ)
     if (component_placement[i].day1 != -1) {
       if (component_placement[i].day2 == -1) {
         // only the one day was specified
-        if (component_placement[i].day1 != time_info.day)
+        if (component_placement[i].day1 != GameTime::getDay())
           continue;
-      } else if (time_info.day < component_placement[i].day1)
+      } else if (GameTime::getDay() < component_placement[i].day1)
         continue;  // too early
-      else if (time_info.day >= component_placement[i].day2)
+      else if (GameTime::getDay() >= component_placement[i].day2)
         continue;  // too late
     }
 
@@ -811,11 +811,11 @@ void do_components(int situ)
     if (component_placement[i].month1 != -1) {
       if (component_placement[i].month2 == -1) {
         // only the one month was specified
-        if (component_placement[i].month1 != time_info.month)
+        if (component_placement[i].month1 != GameTime::getMonth())
           continue;
-      } else if (time_info.month < component_placement[i].month1)
+      } else if (GameTime::getMonth() < component_placement[i].month1)
         continue;  // too early
-      else if (time_info.month >= component_placement[i].month2)
+      else if (GameTime::getMonth() >= component_placement[i].month2)
         continue;  // too late
     }
 

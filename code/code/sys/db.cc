@@ -187,7 +187,6 @@ public:
 
 bool bootTime=false;
 
-struct time_info_data time_info;        // the infomation about the time   
 class lag_data lag_info;
 
 // count of the number of mobs that can load an object
@@ -196,7 +195,6 @@ std::map<int, int> obj_load_potential;
 // local procedures
 static void bootZones(void);
 static void bootWorld(void);
-static void reset_time(void);
 
 // fish init
 void initialize_fish_records(void);
@@ -345,7 +343,8 @@ void bootDb(void)
   vlogf(LOG_MISC, "Boot timing: begin");
 
   bootPulse("Resetting the game time.");
-  reset_time();
+  GameTime::reset_time();
+
   bootPulse("Initializing game statistics.");
   if (!init_game_stats()) {
     vlogf(LOG_MISC, "bad result from init_game_stats");
@@ -566,46 +565,6 @@ void bootDb(void)
 }
 
 
-void reset_time(void)
-{
-  mudTimePassed(time(0), BEGINNING_OF_TIME, &time_info);
-  time_info.year += YEAR_ADJUST;
-  Weather::setMoon(time_info.day);
-
-  Weather::calcNewSunRise();
-  Weather::calcNewSunSet();
-
-  Weather::fixSunlight();
-
-  vlogf(LOG_MISC, format("   Current Gametime: %dm, %dH %dD %dM %dY.") %  
-        time_info.minutes % time_info.hours % time_info.day % time_info.month % time_info.year);
-
-  Weather::setPressure(960);
-  if ((time_info.month >= 7) && (time_info.month <= 12))
-    Weather::addToPressure(dice(1, 50));
-  else
-    Weather::addToPressure(dice(1, 80));
-
-  Weather::setChange(0);
-
-  if (Weather::getPressure() <= 980) {
-    if ((time_info.month >= 3) && (time_info.month <= 9))
-      Weather::setSky(Weather::SKY_LIGHTNING);
-    else
-      Weather::setSky(Weather::SKY_LIGHTNING);
-  } else if (Weather::getPressure() <= 1000) {
-    if ((time_info.month >= 3) && (time_info.month <= 9))
-      Weather::setSky(Weather::SKY_RAINING);
-    else
-      Weather::setSky(Weather::SKY_RAINING);
-  } else if (Weather::getPressure() <= 1020) {
-    Weather::setSky(Weather::SKY_CLOUDY);
-  } else {
-    Weather::setSky(Weather::SKY_CLOUDLESS);
-  }
-}
-
-
 
 // procUpdateTime
 procUpdateTime::procUpdateTime(const int &p)
@@ -621,7 +580,7 @@ void procUpdateTime::run(int pulse) const
   FILE *f1;
   long current_time;
 
-  if (time_info.hours != 1)
+  if (GameTime::getHours() != 1)
     return;
 
   f1 = fopen(TIME_FILE, "w");
@@ -635,10 +594,10 @@ void procUpdateTime::run(int pulse) const
   fprintf(f1, "#\n");
 
   fprintf(f1, "%ld\n", current_time);
-  fprintf(f1, "%d\n", time_info.minutes);
-  fprintf(f1, "%d\n", time_info.hours);
-  fprintf(f1, "%d\n", time_info.day);
-  fprintf(f1, "%d\n", time_info.month);
+  fprintf(f1, "%d\n", GameTime::getMinutes());
+  fprintf(f1, "%d\n", GameTime::getHours());
+  fprintf(f1, "%d\n", GameTime::getDay());
+  fprintf(f1, "%d\n", GameTime::getMonth());
   fprintf(f1, "%d\n", time_info.year);
 
   fclose(f1);
@@ -2356,9 +2315,9 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing *ch)
   }
     
   
-  player.time.birth = time(0);
-  player.time.played = 0;
-  player.time.logon = time(0);
+  player.time->birth = time(0);
+  player.time->played = 0;
+  player.time->logon = time(0);
   
   condTypeT ic;
   for (ic = MIN_COND; ic < MAX_COND_TYPE; ++ic)

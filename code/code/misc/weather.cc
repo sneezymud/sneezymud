@@ -30,14 +30,6 @@ const int Weather::WET_MAXIMUM=100;
 
 
 
-// to simplify sun and moon time checks, this function returns the
-// combination of hour and minute as a single int [0-95]
-// the hour is simply val/4, and the minute is val%4
-int Weather::hourminTime()
-{
-  return time_info.hours*4 + (time_info.minutes/15);
-}
-
 const sstring Weather::moonType()
 {
   if (moontype < 4)
@@ -87,17 +79,17 @@ int Weather::moonTime(moonTimeT mtt)
 int Weather::sunTime(sunTimeT stt)
 {
   switch (stt) {
-    case Weather::SUN_TIME_DAWN:
+    case SUN_TIME_DAWN:
       return si_sunRise - 6;
-    case Weather::SUN_TIME_RISE:
+    case SUN_TIME_RISE:
       return si_sunRise;
-    case Weather::SUN_TIME_DAY:
+    case SUN_TIME_DAY:
       return si_sunRise + 6;
-    case Weather::SUN_TIME_SINK:
+    case SUN_TIME_SINK:
       return si_sunSet - 6;
-    case Weather::SUN_TIME_SET:
+    case SUN_TIME_SET:
       return si_sunSet;
-    case Weather::SUN_TIME_NIGHT:
+    case SUN_TIME_NIGHT:
       return si_sunSet + 6;
   }
   return 0;
@@ -112,7 +104,7 @@ procWeatherAndTime::procWeatherAndTime(const int &p)
 
 void procWeatherAndTime::run(int pulse) const
 {
-  Weather::anotherHour();
+  GameTime::anotherHour();
   Weather::weatherChange();
   Weather::sunriseAndSunset();
 }
@@ -120,11 +112,11 @@ void procWeatherAndTime::run(int pulse) const
 
 const sstring describeTime(void)
 {
-  if (time_info.hours < 5) 
+  if (GameTime::getHours() < 5) 
     return "evening";
-  else if (time_info.hours < 12)
+  else if (GameTime::getHours() < 12)
     return "morning";
-  else if (time_info.hours < 18)
+  else if (GameTime::getHours() < 18)
     return "afternoon";
   else
     return "evening";
@@ -132,7 +124,7 @@ const sstring describeTime(void)
 
 void Weather::fixSunlight()
 {
-  int hmt = hourminTime();
+  int hmt = GameTime::hourminTime();
   sstring buf;
 
   if (hmt == moonTime(MOON_TIME_SET)) {
@@ -142,88 +134,35 @@ void Weather::fixSunlight()
     buf = format("<b>The %s moon rises in the east.<1>\n\r") % moonType();
     sendToOutdoor(COLOR_BASIC, buf, buf);
   }
-  if (hmt == sunTime(Weather::SUN_TIME_DAWN)) {
-    Weather::setSunlight(SUN_DAWN);
+  if (hmt == sunTime(SUN_TIME_DAWN)) {
+    setSunlight(SUN_DAWN);
     sendToOutdoor(COLOR_BASIC, "<Y>The skies brighten as dawn begins.<1>\n\r",
           "<Y>Dawn begins to break.<1>\n\r");
   }
-  if (hmt == sunTime(Weather::SUN_TIME_RISE)) {
-    Weather::setSunlight(SUN_RISE);
+  if (hmt == sunTime(SUN_TIME_RISE)) {
+    setSunlight(SUN_RISE);
     sendToOutdoor(COLOR_BASIC, "<y>The sun rises in the east.<1>\n\r",
   "<y>The sun rises in the east.<1>\n\r");
   }
-  if (hmt == sunTime(Weather::SUN_TIME_DAY)) {
-    Weather::setSunlight(SUN_LIGHT);
+  if (hmt == sunTime(SUN_TIME_DAY)) {
+    setSunlight(SUN_LIGHT);
     sendToOutdoor(COLOR_BASIC, "<W>The day has begun.<1>\n\r",
                       "<W>The day has begun.<1>\n\r");
   }
-  if (hmt == sunTime(Weather::SUN_TIME_SINK)) {
-    Weather::setSunlight(SUN_SET);
+  if (hmt == sunTime(SUN_TIME_SINK)) {
+    setSunlight(SUN_SET);
     sendToOutdoor(COLOR_BASIC, "<y>The sun slowly sinks in the west.<1>\n\r",
                       "<y>The sun slowly sinks in the west.<1>\n\r");
   }
-  if (hmt == sunTime(Weather::SUN_TIME_SET)) {
-    Weather::setSunlight(SUN_TWILIGHT);
+  if (hmt == sunTime(SUN_TIME_SET)) {
+    setSunlight(SUN_TWILIGHT);
     sendToOutdoor(COLOR_BASIC, "<k>The sun sets as twilight begins.<1>\n\r",
                       "<k>The sun sets as twilight begins.<1>\n\r");
   }
-  if (hmt == sunTime(Weather::SUN_TIME_NIGHT)) {
-    Weather::setSunlight(SUN_DARK);
+  if (hmt == sunTime(SUN_TIME_NIGHT)) {
+    setSunlight(SUN_DARK);
     sendToOutdoor(COLOR_BASIC, "<k>The night has begun.<1>\n\r","<k>The night has begun.<1>\n\r");
   }
-}
-
-void Weather::anotherHour()
-{
-  sstring buf;
-
-  // we have 4 ticks per mud hour (this is called per tick)
-  time_info.minutes += 15;
-
-  // check for new hour
-  if (time_info.minutes >= 60) {
-    time_info.hours++;
-    time_info.minutes = 0;
-
-    if (time_info.hours == 12)
-      sendToOutdoor(COLOR_BASIC, "<Y>It is noon.<1>\n\r","<Y>It is noon.<1>\n\r");
-
-    // check for new day
-    if (time_info.hours >= 24) {
-      sendToOutdoor(COLOR_BASIC, "<k>It is midnight.<1>\n\r","<k>It is midnight.<1>\n\r");
-      time_info.day++;
-      time_info.hours = 0;
-
-      // check for new month
-      if (time_info.day >= 28) {
-        time_info.month++;
-        time_info.day = 0;
-
-        // announce new month, etc.
-        GetMonth(time_info.month);
-    
-        // check for new year
-        if (time_info.month >= 12) {
-          time_info.month = 0;
-          time_info.year++;
-          buf = format("Happy New Year! It is now the Year %d P.S\n\r") % time_info.year;
-          descriptor_list->worldSend(buf, NULL);
-        }
-      }
-  
-      // on a new day, update the moontime too
-      moontype++;
-
-      if (moontype >= 32) {
-        moontype = 0;
-      }
-
-      // on a new day, determine the new sunrise/sunset
-      calcNewSunRise();
-      calcNewSunSet();
-    }
-  }
-  fixSunlight();
 }
 
 
@@ -447,7 +386,7 @@ void Weather::ChangeWeather(changeWeatherT change)
       setSky(SKY_CLOUDY);
       break;
     case CHANGE_RAIN:
-      if ((time_info.month > 2) && (time_info.month < 11)) {
+      if ((GameTime::getMonth() > 2) && (GameTime::getMonth() < 11)) {
         // starts to rain
         sendWeatherMessage(MESS_RAIN_START);
       } else {
@@ -462,7 +401,7 @@ void Weather::ChangeWeather(changeWeatherT change)
       setSky(SKY_CLOUDLESS);
       break;
     case CHANGE_STORM:
-      if ((time_info.month > 2) && (time_info.month < 11)) {
+      if ((GameTime::getMonth() > 2) && (GameTime::getMonth() < 11)) {
         // caught in lightning
         sendWeatherMessage(MESS_LIGHTNING);
       } else {
@@ -472,7 +411,7 @@ void Weather::ChangeWeather(changeWeatherT change)
       setSky(SKY_LIGHTNING);
       break;
     case CHANGE_RAIN_AWAY:
-      if ((time_info.month > 2) && (time_info.month < 11)) {
+      if ((GameTime::getMonth() > 2) && (GameTime::getMonth() < 11)) {
         // rain has stopped
         sendWeatherMessage(MESS_RAIN_AWAY);
       } else {
@@ -482,7 +421,7 @@ void Weather::ChangeWeather(changeWeatherT change)
       setSky(SKY_CLOUDY);
       break;
     case CHANGE_STORM_AWAY:
-      if ((time_info.month > 2) && (time_info.month < 11)) {
+      if ((GameTime::getMonth() > 2) && (GameTime::getMonth() < 11)) {
         sendWeatherMessage(MESS_LIGHTNING_AWAY);
       } else {
         sendWeatherMessage(MESS_BLIZZARD_AWAY);
@@ -553,7 +492,7 @@ Weather::weatherT Weather::getWeather(const TRoom &room)
 
   switch (getSky()) {
     case SKY_RAINING:
-      if ((time_info.month <= 2) || (time_info.month >= 11)) {
+      if ((GameTime::getMonth() <= 2) || (GameTime::getMonth() >= 11)) {
         if (room.isTropicalSector())
           return RAINY;
         else
@@ -565,7 +504,7 @@ Weather::weatherT Weather::getWeather(const TRoom &room)
           return RAINY;
       }
     case SKY_LIGHTNING:
-      if ((time_info.month <= 2) || (time_info.month >= 11)) {
+      if ((GameTime::getMonth() <= 2) || (GameTime::getMonth() >= 11)) {
         if (room.isTropicalSector())
           return LIGHTNING;
         else
@@ -631,7 +570,7 @@ void Weather::GetMonth(int month)
   }
 
   sstring buf;
-  buf = format("It is now the %s of %s.\n\r") % numberAsString(time_info.day + 1) % month_name[month];
+  buf = format("It is now the %s of %s.\n\r") % numberAsString(GameTime::getDay() + 1) % month_name[month];
   descriptor_list->worldSend(buf, NULL);
 }
 
@@ -768,20 +707,20 @@ void TBeing::describeWeather(int room)
 // return true if nighttime mob, and it is not nighttime.
 bool TMonster::isNocturnal() const
 {
-  return (IS_SET(specials.act, ACT_NOCTURNAL) && !Weather::is_nighttime());
+  return (IS_SET(specials.act, ACT_NOCTURNAL) && !GameTime::is_nighttime());
 }
 
 // return true if daytime mob, and it is not daytime.
 bool TMonster::isDiurnal() const
 {
-  return (IS_SET(specials.act, ACT_DIURNAL) && !Weather::is_daytime());
+  return (IS_SET(specials.act, ACT_DIURNAL) && !GameTime::is_daytime());
 }
 
 bool Weather::moonIsUp()
 {
   int mr = moonTime(MOON_TIME_RISE);
   int ms = moonTime(MOON_TIME_SET);
-  int hmt = hourminTime();
+  int hmt = GameTime::hourminTime();
 
   // moon might set before it rises
   if (((mr < ms) &&
@@ -796,29 +735,13 @@ bool Weather::sunIsUp()
 {
   int sr = sunTime(Weather::SUN_TIME_RISE);
   int ss = sunTime(Weather::SUN_TIME_SET);
-  int hmt = hourminTime();
+  int hmt = GameTime::hourminTime();
 
   // assumption that sr is always < ss
   if (hmt >= sr && hmt < ss)
     return TRUE;
 
   return FALSE;
-}
-
-bool Weather::is_daytime()
-{
-  int hmt = hourminTime();
-
-  return (hmt >= sunTime(Weather::SUN_TIME_DAY) &&
-           hmt < sunTime(Weather::SUN_TIME_SINK));
-}
-
-bool Weather::is_nighttime()
-{
-  int hmt = hourminTime();
-
-  return (hmt < sunTime(Weather::SUN_TIME_DAWN) ||
-          hmt > sunTime(Weather::SUN_TIME_NIGHT));
 }
 
 void Weather::weatherChange()
@@ -845,15 +768,15 @@ void Weather::weatherChange()
 #if 0
 // a worthy idea, but seems to make for crappy weather
   // summer months are warm, winter months cold : drive pressure accordingly
-  if ((time_info.month == 6) || (time_info.month == 7))
+  if ((GameTime::getMonth() == 6) || (GameTime::getMonth() == 7))
     Weather::addToChange(-2);
-  else if ((time_info.month == 5) || (time_info.month == 8))
+  else if ((GameTime::getMonth() == 5) || (GameTime::getMonth() == 8))
     Weather::addToChange(-1);
-  else if ((time_info.month == 4) || (time_info.month == 9))
+  else if ((GameTime::getMonth() == 4) || (GameTime::getMonth() == 9))
     Weather::addToChange(-0);
-  else if ((time_info.month == 3) || (time_info.month == 10))
+  else if ((GameTime::getMonth() == 3) || (GameTime::getMonth() == 10))
     Weather::addToChange(1);
-  else if ((time_info.month == 2) || (time_info.month == 11))
+  else if ((GameTime::getMonth() == 2) || (GameTime::getMonth() == 11))
     Weather::addToChange(2);
   else
     Weather::addToChange(3);
@@ -862,7 +785,7 @@ void Weather::weatherChange()
   // sun up warms land
   if (sunIsUp())
     Weather::addToChange(-1);
-  else if (is_nighttime())
+  else if (GameTime::is_nighttime())
     Weather::addToChange(1);
 
   // precipitation lessens air pressure
@@ -910,7 +833,7 @@ void Weather::weatherChange()
 void Weather::calcNewSunRise()
 {
   // calc new sunrise
-  int day = (time_info.month) * 28 + time_info.day + 1;
+  int day = (GameTime::getMonth()) * 28 + GameTime::getDay() + 1;
   int equinox = 3 * 28 + 1;  // april 1st
   
   // treat whole year as sinusoidal with APR 1 as origin
@@ -931,7 +854,7 @@ void Weather::calcNewSunRise()
 void Weather::calcNewSunSet()
 {
   // calc new sunset
-  int day = (time_info.month) * 28 + time_info.day + 1;
+  int day = (GameTime::getMonth()) * 28 + GameTime::getDay() + 1;
   int equinox = 3 * 28 + 1;  // april 1st
  
   // treat whole year as sinusoidal with APR 1 as origin
@@ -947,20 +870,6 @@ void Weather::calcNewSunSet()
   // the 0.5 is for proper rounding
   // convert our number into hourminTime
   si_sunSet = (18*4+0) + (int) (x*4 + 0.5);
-}
-
-// display time (given in hourminTime format) as a string
-sstring Weather::hmtAsString(int hmt)
-{
-  int hour = hmt/4;
-  int minute = hmt%4 * 15;
-
-  sstring buf;
-  buf = format("%d:%2.2d %s") %
-    (!(hour % 12) ? 12 : hour%12) %
-    minute %
-    ((hour >= 12) ? "PM" : "AM");
-  return buf;
 }
 
 // true if we're getting wet from stepping on the ground

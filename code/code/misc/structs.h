@@ -77,26 +77,6 @@ extern char * mud_str_dup(const char *buf);
 extern char * mud_str_dup(const sstring &buf);
 extern char * mud_str_copy(char *dest, const sstring &src, size_t n);
 
-class time_info_data
-{
-  public:
-    byte seconds, minutes, hours, day, month;
-    sh_int year;
-
-  time_info_data();
-  time_info_data(const time_info_data &a);
-  time_info_data & operator=(const time_info_data &a);
-  ~time_info_data();
-};
-
-struct time_data
-{
-  time_t birth;    /* This represents the characters age                */
-  time_t logon;    /* Time of the last logon (used to calculate played) */
-  int played;      /* This is the total accumulated time played in secs */
-  time_t last_logon;
-};
-
 class lag_data
 {
   public:
@@ -125,8 +105,6 @@ extern lag_data lag_info;
 
 const bool TRUE = true;
 const bool FALSE = false;
-
-extern time_info_data time_info;
 
 const int BIT_POOF_IN  = 1;
 const int BIT_POOF_OUT = 2;

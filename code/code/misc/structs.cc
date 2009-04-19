@@ -1665,38 +1665,6 @@ objFlagData::~objFlagData()
 {
 }
 
-time_info_data::time_info_data() :
-  seconds(0),
-  minutes(0),
-  hours(0),
-  day(0),
-  month(0),
-  year(0)
-{
-}
-
-time_info_data::time_info_data(const time_info_data &a)
-  : seconds(a.seconds), minutes(a.minutes),
-    hours(a.hours), day(a.day),
-    month(a.month), year(a.year)
-{
-}
-
-time_info_data & time_info_data::operator=(const time_info_data &a)
-{
-  if (this == &a) return *this;
-  seconds = a.seconds;
-  minutes = a.minutes;
-  hours = a.hours;
-  day = a.day;
-  month = a.month;
-  year = a.year;
-  return *this;
-}
-
-time_info_data::~time_info_data()
-{
-}
 
 snoopData::snoopData()
   : snooping(NULL), snoop_by(NULL)

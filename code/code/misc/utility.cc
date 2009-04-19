@@ -154,61 +154,12 @@ bool roll_chance(double fract){
 
 
 
-// Calculate the REAL time passed over the last t2-t1 centuries (secs) 
-void realTimePassed(time_t t2, time_t t1, struct time_info_data *now)
-{
-  long secs;
-
-  secs = (long) (t2 - t1);
-
-  now->minutes = (secs / SECS_PER_REAL_MIN) % 60;
-  secs -= SECS_PER_REAL_MIN * now->minutes;
-
-  now->hours = (secs / SECS_PER_REAL_HOUR) % 24;
-  secs -= SECS_PER_REAL_HOUR * now->hours;
-
-  now->day = (secs / SECS_PER_REAL_DAY);
-  secs -= SECS_PER_REAL_DAY * now->day;
-
-  now->month = -1;
-  now->year = -1;
-  now->seconds = secs;
-
-  return;
-}
-
-// Calculate the MUD time passed over the last t2-t1 centuries (secs) 
-void mudTimePassed(time_t t2, time_t t1, struct time_info_data *now)
-{
-  long secs;
-
-  secs = (long) (t2 - t1);
-
-  now->minutes = (secs / SECS_PER_UPDATE) % 4;	
-  secs -= SECS_PER_UPDATE * now->minutes;
-
-  // values are 0, 15, 30, 45...
-  now->minutes *= 15;
-
-  now->hours = (secs / SECS_PER_MUDHOUR) % 24;	
-  secs -= SECS_PER_MUDHOUR * now->hours;
-
-  now->day = (secs / SECS_PER_MUD_DAY) % 28;	
-  secs -= SECS_PER_MUD_DAY * now->day;
-
-  now->month = (secs / SECS_PER_MUD_MONTH) % 12;		
-  secs -= SECS_PER_MUD_MONTH * now->month;
-
-  now->year = (secs / SECS_PER_MUD_YEAR);	
-
-  return;
-}
 
 time_info_data *TBeing::age() const
 {
   static time_info_data player_age;
 
-  mudTimePassed(time(0), player.time.birth, &player_age);
+  GameTime::mudTimePassed(time(0), player.time->birth, &player_age);
 
   player_age.year += getBaseAge();
   player_age.year += age_mod;
@@ -977,9 +928,9 @@ bool TBeing::canSeeMe(const TBeing *ch, infraTypeT infra) const
 
       // easier at night, harder at day
       if (outside()) {
-        if (Weather::is_nighttime())
+        if (GameTime::is_nighttime())
           vision_adj += 1;
-        else if (Weather::is_daytime())
+        else if (GameTime::is_daytime())
           vision_adj -= 1;
       } else   // indoors or underwater
         vision_adj += 1;

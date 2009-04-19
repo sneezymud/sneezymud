@@ -747,9 +747,21 @@ int TBeing::doSmoke(const char *argument)
 
   // Update drug stats
   tdc->addToCurBurn(-1);
-  if(!desc->drugs[tdc->getDrugType()].total_consumed)
-    desc->drugs[tdc->getDrugType()].first_use=time_info;
-  desc->drugs[tdc->getDrugType()].last_use=time_info;
+  if(!desc->drugs[tdc->getDrugType()].total_consumed){
+    desc->drugs[tdc->getDrugType()].first_use.seconds=GameTime::getSeconds();
+    desc->drugs[tdc->getDrugType()].first_use.minutes=GameTime::getMinutes();
+    desc->drugs[tdc->getDrugType()].first_use.hours=GameTime::getHours();
+    desc->drugs[tdc->getDrugType()].first_use.day=GameTime::getDay();
+    desc->drugs[tdc->getDrugType()].first_use.month=GameTime::getMonth();
+    desc->drugs[tdc->getDrugType()].first_use.year=GameTime::getYear();
+
+    desc->drugs[tdc->getDrugType()].last_use.seconds=GameTime::getSeconds();
+    desc->drugs[tdc->getDrugType()].last_use.minutes=GameTime::getMinutes();
+    desc->drugs[tdc->getDrugType()].last_use.hours=GameTime::getHours();
+    desc->drugs[tdc->getDrugType()].last_use.day=GameTime::getDay();
+    desc->drugs[tdc->getDrugType()].last_use.month=GameTime::getMonth();
+    desc->drugs[tdc->getDrugType()].last_use.year=GameTime::getYear();
+  }
   desc->drugs[tdc->getDrugType()].total_consumed++;
   desc->drugs[tdc->getDrugType()].current_consumed++;
 

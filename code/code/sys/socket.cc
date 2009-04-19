@@ -1447,9 +1447,9 @@ void procCloseAccountingBooks::run(int) const
 {
   // close out the accounting year.
   TDatabase db(DB_SNEEZY);
-  db.query("select distinct shop_nr from shoplogjournal where sneezy_year=%i order by shop_nr", time_info.year-1);
+  db.query("select distinct shop_nr from shoplogjournal where sneezy_year=%i order by shop_nr", GameTime::getYear()-1);
   while (db.fetchRow()){
-      TShopJournal tsj(convertTo<int>(db["shop_nr"]), time_info.year-1);
+      TShopJournal tsj(convertTo<int>(db["shop_nr"]), GameTime::getYear()-1);
       tsj.closeTheBooks();
   }
 }

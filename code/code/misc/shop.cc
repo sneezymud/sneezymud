@@ -393,7 +393,7 @@ int TObj::shopPrice(int num, int shop_nr, float chr, const TBeing *ch) const
 
 bool shopData::willTradeWith(TMonster *keeper, TBeing *ch)
 {
-  int hmt = Weather::hourminTime();
+  int hmt = GameTime::hourminTime();
 
   if (shop_index[shop_nr].open1 > hmt) {
      keeper->doSay("Come back later!");

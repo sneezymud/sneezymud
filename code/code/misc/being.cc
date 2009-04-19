@@ -32,17 +32,18 @@ playerData::playerData() :
   max_level(0),
   Class(0),
   hometown(ROOM_NEWBIE),
-  hometerrain(HOME_TER_NONE)
+  hometerrain(HOME_TER_NONE),
+  time(new time_data())
 {
   classIndT i;
   for (i = MIN_CLASS_IND; i < MAX_SAVED_CLASSES; i++) {
     level[i] = 0;
     doneBasic[i] = 0;
   }
-  time.birth = ::time(0);
-  time.logon = ::time(0);
-  time.played = 0;
-  time.last_logon = ::time(0);
+  time->birth = ::time(0);
+  time->logon = ::time(0);
+  time->played = 0;
+  time->last_logon = ::time(0);
   
   account_id = 0;
   player_id = 0;
@@ -52,7 +53,8 @@ playerData::playerData(const playerData &a) :
   longDescr(NULL),
   sex(a.sex),
   max_level(a.max_level),
-  Class(a.Class), hometown(a.hometown), hometerrain(a.hometerrain)
+  Class(a.Class), hometown(a.hometown), hometerrain(a.hometerrain),
+  time(new time_data())
 {
   // just assign by default, this gets overridden in TBeing stuff
   longDescr = a.longDescr;
@@ -62,10 +64,10 @@ playerData::playerData(const playerData &a) :
     level[i] = a.level[i];
     doneBasic[i] = a.doneBasic[i];
   }
-  time.birth = a.time.birth;
-  time.logon = a.time.logon;
-  time.played = a.time.played;
-  time.last_logon = a.time.last_logon;
+  time->birth = a.time->birth;
+  time->logon = a.time->logon;
+  time->played = a.time->played;
+  time->last_logon = a.time->last_logon;
   
   account_id = a.account_id;
   player_id = a.player_id;
@@ -91,10 +93,10 @@ playerData & playerData::operator=(const playerData &a)
   Class = a.Class;
   hometown = a.hometown;
 
-  time.birth = a.time.birth;
-  time.logon = a.time.logon;
-  time.played = a.time.played;
-  time.last_logon = a.time.last_logon;
+  time->birth = a.time->birth;
+  time->logon = a.time->logon;
+  time->played = a.time->played;
+  time->last_logon = a.time->last_logon;
   
   account_id = a.account_id;
   player_id = a.player_id;
@@ -106,6 +108,8 @@ playerData::~playerData()
 {
   delete [] longDescr;
   longDescr = NULL;
+
+  delete time;
 }
 
 pointData::pointData() :

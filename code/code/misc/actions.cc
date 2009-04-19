@@ -509,9 +509,21 @@ int TBeing::doAction(const sstring & argument, cmdTypeT cmd)
       dynamic_cast<TBeing*>(vict)->getMyRace()->hasTalent(TALENT_FROGSLIME_SKIN) &&
       !getMyRace()->hasTalent(TALENT_FROGSLIME_SKIN))
   {
-    if(!desc->drugs[DRUG_FROGSLIME].total_consumed)
-      desc->drugs[DRUG_FROGSLIME].first_use = time_info;
-    desc->drugs[DRUG_FROGSLIME].last_use = time_info;
+    if(!desc->drugs[DRUG_FROGSLIME].total_consumed){
+      desc->drugs[DRUG_FROGSLIME].first_use.seconds = GameTime::getSeconds();
+      desc->drugs[DRUG_FROGSLIME].first_use.minutes = GameTime::getMinutes();
+      desc->drugs[DRUG_FROGSLIME].first_use.hours = GameTime::getHours();
+      desc->drugs[DRUG_FROGSLIME].first_use.day = GameTime::getDay();
+      desc->drugs[DRUG_FROGSLIME].first_use.month = GameTime::getMonth();
+      desc->drugs[DRUG_FROGSLIME].first_use.year = GameTime::getYear();
+    }
+    desc->drugs[DRUG_FROGSLIME].last_use.seconds = GameTime::getSeconds();
+    desc->drugs[DRUG_FROGSLIME].last_use.minutes = GameTime::getMinutes();
+    desc->drugs[DRUG_FROGSLIME].last_use.hours = GameTime::getHours();
+    desc->drugs[DRUG_FROGSLIME].last_use.day = GameTime::getDay();
+    desc->drugs[DRUG_FROGSLIME].last_use.month = GameTime::getMonth();
+    desc->drugs[DRUG_FROGSLIME].last_use.year = GameTime::getYear();
+
     desc->drugs[DRUG_FROGSLIME].total_consumed++;
     desc->drugs[DRUG_FROGSLIME].current_consumed++;
 

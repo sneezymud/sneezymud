@@ -171,7 +171,7 @@ void TPerson::doSet(const char *argument)
     return;
   } else if (is_abbrev(field, "playtime")) {
     sscanf(parmstr, "%d", &parm);
-    mob->player.time.played += parm * SECS_PER_REAL_MIN;
+    mob->player.time->played += parm * SECS_PER_REAL_MIN;
     sendTo(COLOR_MOBS, format("You add %d minutes to %s's playing time.\n\r") % parm % mob->getName());
     return;
   } else if (is_abbrev(field, "exp")) {

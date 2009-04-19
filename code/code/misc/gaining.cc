@@ -949,8 +949,8 @@ void TPerson::raiseLevel(classIndT Class)
     long mins;
     struct time_info_data playing_time;
 
-    realTimePassed((time(0) - player.time.logon) +
-		   player.time.played, 0, &playing_time);
+    GameTime::realTimePassed((time(0) - player.time->logon) +
+			     player.time->played, 0, &playing_time);
 
     mins = playing_time.minutes + 
       (playing_time.hours * 60) +

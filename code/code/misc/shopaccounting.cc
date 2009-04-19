@@ -37,7 +37,7 @@ TShopJournal::TShopJournal(int shop, int y)
 TShopJournal::TShopJournal(int shop)
 {
   TDatabase db(DB_SNEEZY);
-  year=time_info.year;
+  year=GameTime::getYear();
 
   db.query("select a.name, sum(credit)-sum(debit) as amt from shoplogjournal, shoplogaccountchart a where shop_nr=%i and a.post_ref=shoplogjournal.post_ref group by a.name", shop);
 
@@ -103,7 +103,7 @@ void TShopJournal::closeTheBooks()
     queryqueue.pop();
   }
 
-  if(year == time_info.year){
+  if(year == GameTime::getYear()){
     vlogf(LOG_BUG, "closeTheBooks() called for current year!");
     return;
   }
@@ -149,9 +149,9 @@ void TShopOwned::journalize_debit(int post_ref, const sstring &customer,
 {
   TDatabase db(DB_SNEEZY);
 
-  //    db.query("insert into shoplogjournal (shop_nr, journal_id, customer_name, obj_name, sneezy_year, logtime, post_ref, debit, credit) values (%i, %s, '%s', '%s', %i, now(), %i, %i, 0)", shop_nr, (new_id?"NULL":"LAST_INSERT_ID()"), customer.c_str(), name.c_str(), time_info.year, post_ref, amt);
+  //    db.query("insert into shoplogjournal (shop_nr, journal_id, customer_name, obj_name, sneezy_year, logtime, post_ref, debit, credit) values (%i, %s, '%s', '%s', %i, now(), %i, %i, 0)", shop_nr, (new_id?"NULL":"LAST_INSERT_ID()"), customer.c_str(), name.c_str(), GameTime::getYear(), post_ref, amt);
 
-  queryqueue.push(format("insert into shoplogjournal (shop_nr, journal_id, customer_name, obj_name, sneezy_year, logtime, post_ref, debit, credit) values (%i, %s, '%s', '%s', %i, now(), %i, %i, 0)") % shop_nr % ((sstring)(new_id?"NULL":"LAST_INSERT_ID()")).escape(sstring::SQL) % customer.escape(sstring::SQL) % name.escape(sstring::SQL) % time_info.year % post_ref % amt);
+  queryqueue.push(format("insert into shoplogjournal (shop_nr, journal_id, customer_name, obj_name, sneezy_year, logtime, post_ref, debit, credit) values (%i, %s, '%s', '%s', %i, now(), %i, %i, 0)") % shop_nr % ((sstring)(new_id?"NULL":"LAST_INSERT_ID()")).escape(sstring::SQL) % customer.escape(sstring::SQL) % name.escape(sstring::SQL) % GameTime::getYear() % post_ref % amt);
 }
 				  
 void TShopOwned::journalize_credit(int post_ref, const sstring &customer,
@@ -159,7 +159,7 @@ void TShopOwned::journalize_credit(int post_ref, const sstring &customer,
 {
   TDatabase db(DB_SNEEZY);
 
-  queryqueue.push(format("insert into shoplogjournal (shop_nr, journal_id, customer_name, obj_name, sneezy_year, logtime, post_ref, debit, credit)values (%i, %s, '%s', '%s', %i, now(), %i, 0, %i)") % shop_nr % ((sstring)(new_id?"NULL":"LAST_INSERT_ID()")).escape(sstring::SQL) % customer.escape(sstring::SQL) % name.escape(sstring::SQL) % time_info.year % post_ref % amt);
+  queryqueue.push(format("insert into shoplogjournal (shop_nr, journal_id, customer_name, obj_name, sneezy_year, logtime, post_ref, debit, credit)values (%i, %s, '%s', '%s', %i, now(), %i, 0, %i)") % shop_nr % ((sstring)(new_id?"NULL":"LAST_INSERT_ID()")).escape(sstring::SQL) % customer.escape(sstring::SQL) % name.escape(sstring::SQL) % GameTime::getYear() % post_ref % amt);
 }
 
 void TShopOwned::COGS_add(const sstring &name, int amt, int num)
@@ -334,7 +334,7 @@ void TShopOwned::giveStatements(sstring arg)
 
   int year=convertTo<int>(arg);
   if(!year)
-    year=time_info.year;
+    year=GameTime::getYear();
 
   TShopJournal tsj(shop_nr, year);
   sstring keywords, short_desc, long_desc, buf, name;
@@ -346,7 +346,7 @@ void TShopOwned::giveStatements(sstring arg)
     name % year;
   long_desc="A crumpled up financial statement lies here.";
 
-  if(year == time_info.year)
+  if(year == GameTime::getYear())
     buf=format("Income statement for '%s', current year %i.\n\r") % 
       name % year;
   else
@@ -404,7 +404,7 @@ void TShopOwned::giveStatements(sstring arg)
   long_desc="A crumpled up financial statement lies here.";
 
 
-  if(year == time_info.year)
+  if(year == GameTime::getYear())
     buf=format("Balance sheet for '%s', current year %i.\n\r\n\r") % 
       name % year;
   else

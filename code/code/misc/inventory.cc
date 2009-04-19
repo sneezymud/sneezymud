@@ -1249,7 +1249,7 @@ int TBeing::doGive(const sstring &oarg, giveTypeT flags)
 int CheckStorageChar (TBeing *ch, TBeing *other)
 {
   time_t ct = time(0);
-  time_t lt = ch->player.time.last_logon;
+  time_t lt = ch->player.time->last_logon;
 
   if ((ct - lt) <= 900)
     return 1;
@@ -1259,9 +1259,9 @@ int CheckStorageChar (TBeing *ch, TBeing *other)
       if (ch->desc->host == other->desc->host) {
         if ((ch->getStat(STAT_CHOSEN, STAT_CHA) <= -10) &&
             (other->getStat(STAT_CHOSEN, STAT_CHA) > 10)) {
-          if ((ch->player.time.played * 4) < other->player.time.played) {
+          if ((ch->player.time->played * 4) < other->player.time->played) {
             return 2;
-          } else if ((other->player.time.played * 4) < ch->player.time.played) {
+          } else if ((other->player.time->played * 4) < ch->player.time->played) {
             return 2;
           }
         }

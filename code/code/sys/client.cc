@@ -211,7 +211,7 @@ void Descriptor::send_client_prompt(int, int update)
 
   if (update & CHANGED_MUD) {
     clientf(format("%d|%s") % CLIENT_MUDTIME %
-	    Weather::hmtAsString(Weather::hourminTime()));
+	    GameTime::hmtAsString(GameTime::hourminTime()));
 
   }
   //prompt_mode = -1;

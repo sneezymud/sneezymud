@@ -854,7 +854,7 @@ bool MakeTimeT(int tMon, int tDay, int tYear, time_t tLast)
 
 void ShowNewNews(TBeing * tBeing)
 {
-  time_t  tLast = tBeing->player.time.last_logon,
+  time_t  tLast = tBeing->player.time->last_logon,
           tTime = time(0);
   struct  stat tData;
   FILE   *tFile;
@@ -1431,8 +1431,8 @@ int TPerson::genericLoadPC()
   }
   resetChar();
   loadRent();
-  if (player.time.last_logon && (player.time.last_logon < Uptime)) {
-    if ((time(0) - player.time.last_logon) > 36 * SECS_PER_REAL_HOUR)
+  if (player.time->last_logon && (player.time->last_logon < Uptime)) {
+    if ((time(0) - player.time->last_logon) > 36 * SECS_PER_REAL_HOUR)
       wipeCorpseFile(sstring(name).lower().c_str());
     else
       assignCorpsesToRooms();
@@ -2633,8 +2633,8 @@ void setPrompts(fd_set out)
               SET_BIT(update, CHANGED_PERC);
             }
 #endif
-            if (Weather::hourminTime() != d->last.mudtime) {
-              d->last.mudtime = Weather::hourminTime();
+            if (GameTime::hourminTime() != d->last.mudtime) {
+              d->last.mudtime = GameTime::hourminTime();
               SET_BIT(update, CHANGED_MUD);
             }
             if (update || ch->fight()) {

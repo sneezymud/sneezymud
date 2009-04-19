@@ -65,9 +65,6 @@ class Weather {
   static void AlterWeather(changeWeatherT *);
   static void calcNewSunRise();
   static void calcNewSunSet();
-  static int hourminTime();
-  static sstring hmtAsString(int);
-  static void anotherHour();
   static void weatherChange();
   static void GetMonth(int);
   static void sunriseAndSunset();
@@ -82,8 +79,6 @@ class Weather {
   static int addWetness(TBeing *ch, int diffWet);
   static void update_world_weather();
   static int getWeather(int);
-  static bool is_daytime();
-  static bool is_nighttime();
   static weatherT getWeather(const TRoom &);
   static void fixSunlight();
   static void sendWeatherMessage(weatherMessT);
@@ -104,6 +99,7 @@ class Weather {
   static void setSunlight(sunT s){ sunlight=s; } 
   static void setSky(skyT s){ sky=s; }
   static void setMoon(int m){ moontype=m; }
+  static void addToMoon(int m){ moontype+=m; }
 
  private:
   Weather();
@@ -120,15 +116,6 @@ class Weather {
   static int si_sunRise;
   static int si_sunSet;
 };
-
-
-// this represents the arbitrary starting point for mud-time functions
-// It is Fri Aug 10 18:05:15 1990  (Gamma 0.0 release?)
-// If people care, May 1, 1992 is around 704700000 (SneezyMUD opening)
-const unsigned long BEGINNING_OF_TIME      =650336715;
-
-// Beginning_OF_TIME will be Jan 1, year 0 + YEAR_ADJUST
-const int YEAR_ADJUST            =550;
 
 
 extern int getRoomWetness(TRoom*);

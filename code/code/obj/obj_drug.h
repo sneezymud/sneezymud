@@ -10,7 +10,7 @@
 #define __DRUG_H
 
 #include "obj.h"
-
+#include "gametime.h"
 
 enum drugTypeT {
      DRUG_NONE,

@@ -261,7 +261,7 @@ void SwitchStuff(TBeing *giver, TBeing *taker, bool setStats)
 
   taker->age_mod = giver->age_mod;
   taker->desc = giver->desc;
-  taker->player.time = giver->player.time;
+  *taker->player.time = *giver->player.time;
 
   taker->setSex(giver->getSex());
 

@@ -152,8 +152,8 @@ static ubyte credit_factor(const TBeing *ch)
   struct time_info_data playing_time; 
   float playtime, levelfactor;
 
-  realTimePassed((time(0) - ch->player.time.logon) +
-                                  ch->player.time.played, 0, &playing_time);
+  GameTime::realTimePassed((time(0) - ch->player.time->logon) +
+                                  ch->player.time->played, 0, &playing_time);
   playtime = (float) playing_time.day;
   playtime += (float) playing_time.hours / 24.0;
   if (playtime <= 0.0)
@@ -2757,7 +2757,7 @@ void TPerson::loadRent()
   // a kludge
   // we get called by the char gen routine AFTER we gave char newbie gear
   // and saved.  We would wind up double loading, so avoid this by:
-  if (time(0) - tmp->player.time.birth <= 3)
+  if (time(0) - tmp->player.time->birth <= 3)
     return;
 
   sprintf(buf, "rent/%c/%s", LOWER(tmp->name[0]), sstring(tmp->name).lower().c_str());

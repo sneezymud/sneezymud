@@ -910,8 +910,8 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
             graveDesc += "by ";
             graveDesc += getName();
             graveDesc += format(" this %s day of %s, Year %d P.S.\n\r") %
-                   numberAsString(time_info.day+1) %
-                   month_name[time_info.month] %  time_info.year;
+                   numberAsString(GameTime::getDay()+1) %
+                   month_name[GameTime::getMonth()] %  GameTime::getYear();
 
             grave->swapToStrung();
             extraDescription *ed;

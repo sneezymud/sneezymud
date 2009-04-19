@@ -84,9 +84,9 @@ time_info_data whenDue(time_t granted, int term)
 {
   time_info_data due;
 
-  mudTimePassed(granted, BEGINNING_OF_TIME, &due);
+  GameTime::mudTimePassed(granted, GameTime::getBeginningOfTime(), &due);
 
-  due.year += YEAR_ADJUST;
+  due.year += GameTime::getYearAdjust();
   due.year += term;
   
   return due;
@@ -96,7 +96,7 @@ int calcInterest(int amt, time_t granted, int term, float rate, float def_charge
 {
   time_info_data due;
 
-  mudTimePassed(time(NULL), granted, &due);
+  GameTime::mudTimePassed(time(NULL), granted, &due);
   due.year++;
 
   if(due.year > term) // overdue!

@@ -246,7 +246,7 @@ void TPerson::resetChar()
   if (!no_mail && has_mail(recipient) && gamePort != BUILDER_GAMEPORT)
     sendTo(format("\n\rYou have %sMAIL%s.\n\r") % bold() % norm());
 
-  time_t ct = player.time.last_logon ? player.time.last_logon : time(0);
+  time_t ct = player.time->last_logon ? player.time->last_logon : time(0);
   tmstr = (char *) asctime(localtime(&ct));
   *(tmstr + strlen(tmstr) - 1) = '\0';
   if (*lastHost)
@@ -431,13 +431,13 @@ void TPerson::storeToSt(charFile *st)
       st->skills[mappedskill] = getRawNatSkillValue(snt);
   }
 
-  st->birth = player.time.birth;
-  st->played = player.time.played;
-  st->played += (long) (time(0) - player.time.logon);
+  st->birth = player.time->birth;
+  st->played = player.time->played;
+  st->played += (long) (time(0) - player.time->logon);
   st->last_logon = time(0);
 
-  player.time.played = st->played;
-  player.time.logon = time(0);
+  player.time->played = st->played;
+  player.time->logon = time(0);
 
   st->hometown = player.hometown;
   st->hometerrain = ubyte(player.hometerrain);
@@ -697,10 +697,10 @@ void TPerson::loadFromSt(charFile *st)
   player.hometown = st->hometown;
   player.hometerrain = territoryT(st->hometerrain);
 
-  player.time.birth = st->birth;
-  player.time.played = st->played;
-  player.time.logon = time(0);
-  player.time.last_logon = st->last_logon;
+  player.time->birth = st->birth;
+  player.time->played = st->played;
+  player.time->logon = time(0);
+  player.time->last_logon = st->last_logon;
 
   
   

@@ -2098,37 +2098,37 @@ void TBeing::doTime(const char *argument)
     desc->saveAccount();
     return;
   }
-  buf = format("It is %s, on ") % Weather::hmtAsString(Weather::hourminTime());
+  buf = format("It is %s, on ") % GameTime::hmtAsString(GameTime::hourminTime());
 
-  weekday = ((28 * time_info.month) + time_info.day + 1) % 7;        // 28 days in a month 
+  weekday = ((28 * GameTime::getMonth()) + GameTime::getDay() + 1) % 7;        // 28 days in a month 
 
   buf += weekdays[weekday];
   buf += "\n\r";
   sendTo(buf);
 
-  day = time_info.day + 1;        // day in [1..28] 
+  day = GameTime::getDay() + 1;        // day in [1..28] 
 
   sendTo(format("The %s day of %s, Year %d P.S.\n\r") % 
            numberAsString(day) %
-           month_name[time_info.month] % time_info.year);
+           month_name[GameTime::getMonth()] % GameTime::getYear());
 
   tmp2 = Weather::sunTime(Weather::Weather::SUN_TIME_RISE);
   buf = format("The sun will rise today at:   %s.\n\r") %
-    Weather::hmtAsString(tmp2);
+    GameTime::hmtAsString(tmp2);
   sendTo(buf);
 
   tmp2 = Weather::sunTime(Weather::Weather::SUN_TIME_SET);
-  buf = format("The sun will set today at:    %s.\n\r") % Weather::hmtAsString(tmp2);
+  buf = format("The sun will set today at:    %s.\n\r") % GameTime::hmtAsString(tmp2);
   sendTo(buf);
 
   tmp2 = Weather::moonTime(Weather::MOON_TIME_RISE);
   buf = format("The moon will rise today at:  %s    (%s).\n\r") %
-       Weather::hmtAsString(tmp2) % Weather::moonType();
+       GameTime::hmtAsString(tmp2) % Weather::moonType();
   sendTo(buf);
 
   tmp2 = Weather::moonTime(Weather::MOON_TIME_SET);
   buf = format("The moon will set today at:   %s.\n\r") %
-       Weather::hmtAsString(tmp2);
+       GameTime::hmtAsString(tmp2);
   sendTo(buf);
 
   time_t ct;
@@ -2168,7 +2168,7 @@ void TBeing::doWeather(const char *arg)
     else if (Weather::getWeather(*roomp) == Weather::CLOUDY)
       strcpy(buf,"The sky is cloudy");
     else if (Weather::getWeather(*roomp) == Weather::CLOUDLESS) {
-      if (Weather::is_nighttime())
+      if (GameTime::is_nighttime())
         strcpy(buf,"A <K>dark sky<1> stretches before you");
       else
         strcpy(buf,"A <b>clear blue sky<1> stretches before you");
@@ -2235,8 +2235,8 @@ void TBeing::doWeather(const char *arg)
         sendTo("<num> must be in range 1-12.\n\r");
         return;
       }
-      time_info.month = num - 1 ;
-      sendTo(format("You set the month to: %s\n\r") % month_name[time_info.month]);
+      GameTime::setMonth(num-1);
+      sendTo(format("You set the month to: %s\n\r") % month_name[GameTime::getMonth()]);
       return;
     } else if (is_abbrev(buffer, "moon")) {
       arg = one_argument(arg, buffer, cElements(buffer));

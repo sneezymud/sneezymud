@@ -14,6 +14,7 @@
 #include "guild.h"
 #include "configuration.h"
 #include "weather.h"
+#include "gametime.h"
 
 static void showStatsTo(const Descriptor *d, const TBeing *ch, bool hidden_stuff)
 {
@@ -23,7 +24,7 @@ static void showStatsTo(const Descriptor *d, const TBeing *ch, bool hidden_stuff
   char buf3[12], buf4[12];
   sstring str;
 
-  realTimePassed((time(0) - d->session.connect),0, &playing_time);
+  GameTime::realTimePassed((time(0) - d->session.connect),0, &playing_time);
   if (playing_time.day)
     playing_time.hours += playing_time.day * 24;
   sprintf(time_buf, "%d hour%s, %d minute%s and %d second%s", 
@@ -149,8 +150,8 @@ static void showStatsTo(const Descriptor *d, const TBeing *ch, bool hidden_stuff
   else
     sprintf(buffer, "\n\rIn %s's career:\n\r%s has", victim->getName(), victim->getName());
   str += buffer;
-  realTimePassed((time(0) - victim->player.time.logon) +
-                                victim->player.time.played, 0, &playing_time);
+  GameTime::realTimePassed((time(0) - victim->player.time->logon) +
+                                victim->player.time->played, 0, &playing_time);
 
   sprintf(buffer, " been playing for %s%d%s days and %s%d%s hours.\n\r",
       ch->purple(), playing_time.day, ch->norm(),
@@ -531,8 +532,8 @@ void TBeing::doAttribute(const char *arg)
     }
   }
   if (is_abbrev(cmdbuf, "personal")) {
-    mudTimePassed(player.time.birth, BEGINNING_OF_TIME, &birth_data);
-    birth_data.year += YEAR_ADJUST;
+    GameTime::mudTimePassed(player.time->birth, GameTime::getBeginningOfTime(), &birth_data);
+    birth_data.year += GameTime::getYearAdjust();
     birth_data.year -= getBaseAge();
 
     day = birth_data.day + 1;        // day in [1..35] 

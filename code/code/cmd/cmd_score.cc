@@ -65,7 +65,7 @@ void TBeing::doScore()
     }
 
 
-    realTimePassed((time(0) - desc->session.connect), 0, &playing_time);
+    GameTime::realTimePassed((time(0) - desc->session.connect), 0, &playing_time);
     if (playing_time.day)
       playing_time.hours += playing_time.day * 24;
 
@@ -75,7 +75,7 @@ void TBeing::doScore()
          purple() % int(playing_time.seconds) % norm() % (playing_time.seconds == 1 ? "" : "s"));
   }
 
-  realTimePassed((time(0) - player.time.logon) + player.time.played,
+  GameTime::realTimePassed((time(0) - player.time->logon) + player.time->played,
                  0, &playing_time);
 
   sendTo(format("For a lifetime total of %s%d%s day%s and %s%d%s hour%s.\n\r") %

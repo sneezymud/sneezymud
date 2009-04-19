@@ -124,7 +124,7 @@ int nightBlade(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 
   if (!ch->outside())
     return false;
-  if (!Weather::is_nighttime())
+  if (!GameTime::is_nighttime())
     return false;
 
   act("A pulse of darkness as black as the new moon travels up the blade of $p.",
@@ -161,7 +161,7 @@ int daySword(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 
   if (!ch->outside())
     return false;
-  if (!Weather::is_daytime())
+  if (!GameTime::is_daytime())
     return false;
 
   act("A pulse of light as bright as the sun travels up the blade of $p.",

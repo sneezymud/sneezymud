@@ -1439,7 +1439,7 @@ int TBeing::updateHalfTickStuff()
             (vnum == MOB_MALE_CHURCH_GOER) || (vnum == MOB_FEMALE_CHURCH_GOER))
           return DELETE_THIS;
 
-        if (Weather::is_daytime()) {
+        if (GameTime::is_daytime()) {
           if (loadRoom == ROOM_NOCTURNAL_STORAGE) {
             return DELETE_THIS;
             vlogf(LOG_BUG, format("NOC:DIU: %s has oldRoom equal to %d") %  getName() % loadRoom);
@@ -1475,7 +1475,7 @@ int TBeing::updateHalfTickStuff()
              act(tString, TRUE, this, 0, 0, TO_ROOM);
           }
         }
-      } else if (!Weather::is_daytime() && ((vnum == MOB_FREEZING_MIST) || !specials.hunting)) {
+      } else if (!GameTime::is_daytime() && ((vnum == MOB_FREEZING_MIST) || !specials.hunting)) {
         if (vnum == MOB_FREEZING_MIST) {
           act("$n is dispersed by the coming of morning.", 
               TRUE, this, 0, 0, TO_ROOM);
@@ -1508,7 +1508,7 @@ int TBeing::updateHalfTickStuff()
       }
     } else if (IS_SET(specials.act, ACT_NOCTURNAL) && !isAffected(AFF_CHARM)) {
       if ((in_room == ROOM_NOCTURNAL_STORAGE)) {
-        if (!Weather::is_nighttime()) {
+        if (!GameTime::is_nighttime()) {
           if ((vnum == MOB_MALE_HOPPER) || (vnum == MOB_FEMALE_HOPPER) ||
               (vnum == MOB_MALE_CHURCH_GOER) || (vnum == MOB_FEMALE_CHURCH_GOER))
             return DELETE_THIS;
@@ -1551,7 +1551,7 @@ int TBeing::updateHalfTickStuff()
             act(tString, TRUE, this, 0, 0, TO_ROOM);
           }
         }
-      } else if (!Weather::is_nighttime() && 
+      } else if (!GameTime::is_nighttime() && 
                    ((vnum == MOB_FREEZING_MIST) || !specials.hunting)) {
         if (vnum == MOB_FREEZING_MIST) {
           act("$n is dispersed by the coming of morning.", 
@@ -1651,15 +1651,15 @@ int TBeing::updateHalfTickStuff()
 	}
 	if(desc->drugs[i].total_consumed>0){
 	  hours_first=
-	    (((time_info.year - desc->drugs[i].first_use.year) * 12 * 28 * 24) +
-	     ((time_info.month - desc->drugs[i].first_use.month) * 28 * 24) +
-	     ((time_info.day - desc->drugs[i].first_use.day) * 24) +
-	     time_info.hours - desc->drugs[i].first_use.hours);
+	    (((GameTime::getYear() - desc->drugs[i].first_use.year) * 12 * 28 * 24) +
+	     ((GameTime::getMonth() - desc->drugs[i].first_use.month) * 28 * 24) +
+	     ((GameTime::getDay() - desc->drugs[i].first_use.day) * 24) +
+	     GameTime::getHours() - desc->drugs[i].first_use.hours);
 	  hours_last=
-	    (((time_info.year - desc->drugs[i].last_use.year) * 12 * 28 * 24) +
-	     ((time_info.month - desc->drugs[i].last_use.month) * 28 * 24) +
-	     ((time_info.day - desc->drugs[i].last_use.day) * 24) +
-	     time_info.hours - desc->drugs[i].last_use.hours);
+	    (((GameTime::getYear() - desc->drugs[i].last_use.year) * 12 * 28 * 24) +
+	     ((GameTime::getMonth() - desc->drugs[i].last_use.month) * 28 * 24) +
+	     ((GameTime::getDay() - desc->drugs[i].last_use.day) * 24) +
+	     GameTime::getHours() - desc->drugs[i].last_use.hours);
 	  
 	  if(hours_first>((30*24)+hours_last))
 	    hours_first=(30*24)+hours_last;
@@ -1726,10 +1726,10 @@ int TBeing::updateHalfTickStuff()
       }
     }
     if (roomp && (roomp->getSectorType() == SECT_DESERT) &&
-        (getPosition() > POSITION_STUNNED) && Weather::is_daytime())
+        (getPosition() > POSITION_STUNNED) && GameTime::is_daytime())
       sendTo("The desert heat makes you uncomfortably warm.\n\r");
     else if (roomp && (roomp->getSectorType() == SECT_JUNGLE) &&
-        (getPosition() > POSITION_STUNNED) && Weather::is_daytime())
+        (getPosition() > POSITION_STUNNED) && GameTime::is_daytime())
       sendTo("The jungle humidity causes you to sweat uncontrollably.\n\r");
     else if (roomp && (getPosition() > POSITION_STUNNED)) {
       // At the end of this if we do the elemental 'drain' checks.  Regardless of

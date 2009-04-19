@@ -3192,7 +3192,7 @@ void TPerson::doStart()
   welcomeNewPlayer(this);
 
   // this is needed to prevent double loading of newbie eq
-  player.time.birth = time(0);
+  player.time->birth = time(0);
 
   doSave(SILENT_NO);
 
@@ -3856,7 +3856,7 @@ void TPerson::doAccess(const sstring &arg)
     birth = asctime(localtime(&(st.birth)));
     *(birth + strlen(birth) - 1) = '\0';
     strcpy(birth_buf, birth);
-    realTimePassed(st.played, 0, &playing_time);
+    GameTime::realTimePassed(st.played, 0, &playing_time);
     ct = st.last_logon;
     tmstr = (char *) asctime(localtime(&ct));
     *(tmstr + strlen(tmstr) - 1) = '\0';
@@ -5901,7 +5901,7 @@ void TBeing::doHeaven(const sstring &arg)
 
   sendTo("You move the heavens and the world.\n\r");
   for (int i = 0; i < num; i++){
-    Weather::anotherHour();
+    GameTime::anotherHour();
     Weather::weatherChange();
     Weather::sunriseAndSunset();
   }

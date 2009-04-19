@@ -99,13 +99,13 @@ void TLight::extinguishWater()
 void TLight::lampLightStuff(TMonster *ch)
 {
   // if lamp is on during day, turn off
-  if (Weather::is_daytime() && isLit()) {
+  if (GameTime::is_daytime() && isLit()) {
     ch->doExtinguish(fname(name));
   }
   // if off at night, turn on
   // we use !isday rather than isnight so that dawn/twilight will cause
   // lights to be turned on
-  if (!Weather::is_daytime() && !isLit())  {
+  if (!GameTime::is_daytime() && !isLit())  {
     ch->doLight(fname(name));
   }
   // refill if < 90% full.  val1 = max, val2 = current

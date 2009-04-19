@@ -922,16 +922,16 @@ void TBeing::statBeing(TBeing *k)
   if (k->isPc()) {
     sstring birth_buf, logon_buf;
 
-    birth_buf = asctime(localtime(&(k->player.time.birth)));
+    birth_buf = asctime(localtime(&(k->player.time->birth)));
     // Chop off trailing \n from the output of localtime
     birth_buf = birth_buf.substr(0, birth_buf.length() - 1);
 
-    logon_buf = asctime(localtime(&(k->player.time.logon)));
+    logon_buf = asctime(localtime(&(k->player.time->logon)));
     // Chop off trailing \n from the output of localtime
     logon_buf = logon_buf.substr(0, logon_buf.length() - 1);
 
-    realTimePassed((time(0) - k->player.time.logon) +
-                    k->player.time.played, 0, &playing_time);
+    GameTime::realTimePassed((time(0) - k->player.time->logon) +
+			     k->player.time->played, 0, &playing_time);
     str += format("%sBirth       : %s%s     %sLogon:%s %s\n\r") %
       cyan() % norm() % birth_buf % cyan() % norm() % logon_buf;
     str += format("%sPlaying time:%s %d days, %d hours.      %sBase age:%s %d    %sAge Mod:%s %d\n\r") %

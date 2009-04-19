@@ -35,8 +35,10 @@ class TBaseClothing;
 class TQuiver;
 class TCommodity;
 class TRoom;
-
 class objCost;
+struct time_data;
+class time_info_data;
+
 extern TBeing *character_list;
 extern long mobCount;
 extern std::vector<mobIndexData>mob_index;
@@ -226,7 +228,7 @@ class playerData
    byte doneBasic[MAX_SAVED_CLASSES];
    unsigned short hometown;  
    territoryT hometerrain;
-   struct time_data time;
+   time_data * const time;
    
    int player_id;
    int account_id;

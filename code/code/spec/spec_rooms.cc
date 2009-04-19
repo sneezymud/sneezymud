@@ -67,7 +67,7 @@ int oft_frequented_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     case ROOM_KINDRED_INN:
     case ROOM_GREEN_DRAGON_INN:
       // enter between 7PM and 10PM
-      if ((time_info.hours >= 19) && (time_info.hours <= 22)) {
+      if ((GameTime::getHours() >= 19) && (GameTime::getHours() <= 22)) {
         q = ::number(1, 2);
         for (i = 1; i <= q; i++) {
           if (::number(0,10))
@@ -87,8 +87,8 @@ int oft_frequented_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     case ROOM_PEW2:
     case ROOM_PEW3:
     case ROOM_PEW4:
-      if (!((time_info.day + 1) % 7) &&  // on Sunday
-          (time_info.hours == 10)) {  // at 10
+      if (!((GameTime::getDay() + 1) % 7) &&  // on Sunday
+          (GameTime::getHours() == 10)) {  // at 10
         for (i = 1; i <= 8; i++) {
           if (::number(0,9))
             continue;
@@ -104,7 +104,7 @@ int oft_frequented_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
       break;
     case ROOM_TOP_OF_TREE:
       // april 4th at noon
-      if ((time_info.month == 3) && (time_info.day == 3) && (time_info.hours == 12)) {
+      if ((GameTime::getMonth() == 3) && (GameTime::getDay() == 3) && (GameTime::getHours() == 12)) {
         int rom = real_mobile(MOB_SONGBIRD);
         if (mob_index[rom].getNumber() > 100)
           break;
@@ -1173,7 +1173,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
     case 7268:
       if (cmd == CMD_GENERIC_PULSE) {
         // automatic shift change at 6AM and 6PM
-        if (time_info.hours != 6 && time_info.hours != 18)
+        if (GameTime::getHours() != 6 && GameTime::getHours() != 18)
           return FALSE;
 
         if (obj_index[real_object(7214)].getNumber())
@@ -1522,7 +1522,7 @@ int duergarWater(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     return FALSE;
 
   if(rp->number>=13755 && rp->number<=13771){
-    switch((time_info.hours)%12){
+    switch((GameTime::getHours())%12){
       case 0:
 	if(rp->getSectorType()!=SECT_TEMPERATE_RIVER_SURFACE){
 	  // send message here
@@ -1557,7 +1557,7 @@ int duergarWater(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 	break;
     }
   } else if(rp->number>=13738 && rp->number<=13754){
-    switch((time_info.hours)%12){
+    switch((GameTime::getHours())%12){
       case 1:
 	if(rp->getSectorType()!=SECT_TEMPERATE_RIVER_SURFACE){
 	  //send message here
@@ -1598,7 +1598,7 @@ int duergarWater(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     }
     return FALSE;
   } else if(rp->number==13773){
-    switch((time_info.hours)%12){
+    switch((GameTime::getHours())%12){
       case 2:
 	if(rp->getSectorType()!=SECT_TEMPERATE_RIVER_SURFACE){
 	  //send message here
@@ -1614,7 +1614,7 @@ int duergarWater(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     }
     return FALSE;
   } else if(rp->number==13772){
-    switch((time_info.hours)%12){
+    switch((GameTime::getHours())%12){
       case 2:
 	if(rp->getSectorType()!=SECT_TEMPERATE_RIVER_SURFACE){
 	  //send message here
@@ -1636,7 +1636,7 @@ int duergarWater(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     }
     return FALSE;
   } else if(rp->number==13731){
-    switch((time_info.hours)%12){
+    switch((GameTime::getHours())%12){
       case 3:
 	if(rp->getSectorType()!=SECT_TEMPERATE_RIVER_SURFACE){
 	  //send message here
@@ -1915,8 +1915,8 @@ int dayGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     }
   }
   //vlogf(LOG_DASH, format("daygate proc: found: %s") %  found ? "true" : "false");
-  //vlogf(LOG_DASH, format("daygate proc: hmt: %d  suntime: %d") %  Weather::hourminTime() % sunTime(Weather::SUN_TIME_DAY));
-  if (Weather::hourminTime() > 50   || Weather::hourminTime() < 46) {
+  //vlogf(LOG_DASH, format("daygate proc: hmt: %d  suntime: %d") %  GameTime::hourminTime() % sunTime(Weather::SUN_TIME_DAY));
+  if (GameTime::hourminTime() > 50   || GameTime::hourminTime() < 46) {
     // code to remove gate
     if (found && to) {
       //     vlogf(LOG_DASH, "daygate proc found gate, removing");
@@ -1971,7 +1971,7 @@ int moonGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
       break;
     }
   }
-  if ( Weather::hourminTime() > 2 && Weather::hourminTime() < 94) {
+  if ( GameTime::hourminTime() > 2 && GameTime::hourminTime() < 94) {
     // code to remove gate
     if (found && to) {
       //     vlogf(LOG_DASH, "moongate proc found moongate, removing");
