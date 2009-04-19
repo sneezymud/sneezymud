@@ -22,7 +22,7 @@ bool twitterShout(sstring from, sstring msg)
   struct curl_slist *headerlist=NULL;
   static const char buf[] = "Expect:";
 
-  from=stripColorCodes(from);
+  from=stripColorCodes(from).cap();
   msg=stripColorCodes(msg);
 
   curl_global_init(CURL_GLOBAL_ALL);

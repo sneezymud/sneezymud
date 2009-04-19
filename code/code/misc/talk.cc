@@ -270,7 +270,7 @@ void Descriptor::sendShout(TBeing *ch, const sstring &arg)
         if (IS_SET(b->desc->plr_color, PLR_COLOR_MOBS)) {
           namebuf = format("%s%s%s") % green() % shouter.cap() % norm();
         } else {
-          namebuf = shouter;
+          namebuf = shouter.cap();
         }
       }
 
