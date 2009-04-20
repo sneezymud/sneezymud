@@ -8,70 +8,59 @@
 #ifndef __ACCOUNT_H
 #define __ACCOUNT_H
 
-#include "structs.h"
 #include "sstring.h"
-#include "connect.h"
+#include "connect.h" // termTypeT
 
-class TAccountStats
+
+class AccountStats
 {
-  public:
-    unsigned int account_number;
-    unsigned int player_count;
-    unsigned int active_player7;
-    unsigned int active_account7;
-    unsigned int active_player30;
-    unsigned int active_account30;
-    unsigned int player_num;
-    unsigned int max_player_since_reboot;
+ public:
+  static unsigned int account_number;
+  static unsigned int player_count;
+  static unsigned int active_player7;
+  static unsigned int active_account7;
+  static unsigned int active_player30;
+  static unsigned int active_account30;
+  static unsigned int player_num;
+  static unsigned int max_player_since_reboot;
 
-    TAccountStats() :
-      account_number(0),
-      player_count(0),
-      active_player7(0),
-      active_account7(0),
-      active_player30(0),
-      active_account30(0),
-      player_num(0),
-      max_player_since_reboot(0)
-    {}
+ private:
+  AccountStats();
 };
-extern TAccountStats accStat;
 
 class TAccount
 {
-  public:
-    byte status;
-    sstring email;
-    sstring passwd;
-    sstring name;
-    long birth;
-    long login;
-    termTypeT term;
-    Descriptor *desc;
-    byte time_adjust;
-    unsigned int flags;
-	int account_id;
-    time_t last_logon;
-
-    bool fileRead(const sstring &);
-    bool fileWrite(const sstring &);
-    bool read(const sstring &);
-    bool write(const sstring &);
-
-    
-    TAccount();
-    TAccount(const TAccount &a);
-    TAccount & operator=(const TAccount &a);
-    ~TAccount();
+ public:
+  // list of account flags
+  static const unsigned int BOSS;
+  static const unsigned int IMMORTAL;
+  static const unsigned int BANISHED;
+  static const unsigned int EMAIL;
+  static const unsigned int MSP;
+  static const unsigned int ALLOW_DOUBLECLASS;
+  static const unsigned int ALLOW_TRIPLECLASS;
+  
+  int status;
+  sstring email;
+  sstring passwd;
+  sstring name;
+  long birth;
+  long login;
+  termTypeT term;
+  Descriptor *desc;
+  int time_adjust;
+  unsigned int flags;
+  int account_id;
+  time_t last_logon;
+  
+  bool read(const sstring &);
+  bool write(const sstring &);
+  
+  TAccount();
+  TAccount(const TAccount &a);
+  TAccount & operator=(const TAccount &a);
+  ~TAccount();
 };
 
-// list of account flags
-const unsigned int ACCOUNT_BOSS     = (1<<0);
-const unsigned int ACCOUNT_IMMORTAL = (1<<1);
-const unsigned int ACCOUNT_BANISHED = (1<<2);
-const unsigned int ACCOUNT_EMAIL    = (1<<3);
-const unsigned int ACCOUNT_MSP      = (1<<4);
-const unsigned int ACCOUNT_ALLOW_DOUBLECLASS      = (1<<5);
-const unsigned int ACCOUNT_ALLOW_TRIPLECLASS      = (1<<6);
 
 #endif

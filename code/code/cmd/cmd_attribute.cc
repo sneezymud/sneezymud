@@ -913,9 +913,9 @@ void TBeing::doAttribute(const char *arg)
 
     if (getWimpy())
       sendTo(format("You are in wimpy mode, and will flee at %d hit points.\n\r") % getWimpy());
-    if (IS_SET(desc->account->flags, ACCOUNT_BOSS))
+    if (IS_SET(desc->account->flags, TAccount::BOSS))
       sendTo("Your account is in boss-mode.\n\r");
-    if (IS_SET(desc->account->flags, ACCOUNT_MSP))
+    if (IS_SET(desc->account->flags, TAccount::MSP))
       sendTo("Your account has MUD Sound Protocol enabled.\n\r");
   
     describeLimbDamage(this);

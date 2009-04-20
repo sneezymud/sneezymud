@@ -2299,7 +2299,7 @@ void TPerson::doUsers(const sstring &argument)
         line="UNDEFINED       : ";
 
       // don't let newbie gods blab who imm's mortals are
-      if (d->account && IS_SET(d->account->flags, ACCOUNT_IMMORTAL) && 
+      if (d->account && IS_SET(d->account->flags, TAccount::IMMORTAL) && 
             !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
         line += "*** Information Concealed ***\n\r";
       } else {
@@ -2349,7 +2349,7 @@ void TPerson::doUsers(const sstring &argument)
             line="UNDEFINED       : ";
 
           // don't let newbie gods blab who imm's mortals are
-          if (d->account && IS_SET(d->account->flags, ACCOUNT_IMMORTAL) && 
+          if (d->account && IS_SET(d->account->flags, TAccount::IMMORTAL) && 
                 !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
             line += "*** Information Concealed ***\n\r";
           } else {
@@ -2371,7 +2371,7 @@ void TPerson::doUsers(const sstring &argument)
              (k = get_pc_world(this, arg1, EXACT_NO))) {
     if (k->desc) {
       // don't let newbie gods blab who imm's mortals are
-      if (k->desc->account && IS_SET(k->desc->account->flags, ACCOUNT_IMMORTAL) && 
+      if (k->desc->account && IS_SET(k->desc->account->flags, TAccount::IMMORTAL) && 
             !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
         sendTo(COLOR_MOBS, format("\n\r%-16.16s : *******Information Concealed*******\n\r") % k->getName());
       } else {
@@ -3296,19 +3296,19 @@ void TBeing::doWorld()
   str += format("Total number of objects in shops:%s             %ld%s\n\r") %
     green() % convertTo<int>(db["count"]) % norm();
   str += format("Total number of registered accounts:%s          %d%s\n\r") %
-    blue() % accStat.account_number % norm();
+    blue() % AccountStats::account_number % norm();
   str += format("Total number of registered players:%s           %d%s\n\r") % 
-    blue() % accStat.player_count % norm();
+    blue() % AccountStats::player_count % norm();
   
   if (hasWizPower(POWER_WIZARD)) {
     str += format("Total number of 7-day active accounts:%s        %d%s\n\r") %
-      blue() % accStat.active_account7 % norm();
+      blue() % AccountStats::active_account7 % norm();
     str += format("Total number of 7-day active players:%s         %d%s\n\r") %
-      blue() % accStat.active_player7 % norm();
+      blue() % AccountStats::active_player7 % norm();
     str += format("Total number of 30-day active accounts:%s       %d%s\n\r") %
-      blue() % accStat.active_account30 % norm();
+      blue() % AccountStats::active_account30 % norm();
     str += format("Total number of 30-day active players:%s        %d%s\n\r") %
-      blue() % accStat.active_player30 % norm();
+      blue() % AccountStats::active_player30 % norm();
   }
 
   char timebuf[256];

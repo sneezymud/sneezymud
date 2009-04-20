@@ -130,9 +130,9 @@ void TBeing::doSave(silentTypeT silent, const char *tArg)
     if (!tArg || !*tArg) {
       wizFileSave();
 
-      if (!IS_SET(desc->account->flags, ACCOUNT_IMMORTAL)) {
+      if (!IS_SET(desc->account->flags, TAccount::IMMORTAL)) {
         // log the account as an immortal one.
-        SET_BIT(desc->account->flags, ACCOUNT_IMMORTAL);
+        SET_BIT(desc->account->flags, TAccount::IMMORTAL);
         desc->saveAccount();
       }
     } else {

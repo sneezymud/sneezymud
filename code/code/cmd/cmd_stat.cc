@@ -908,7 +908,7 @@ void TBeing::statBeing(TBeing *k)
     cyan() % norm() % home_terrains[k->player.hometerrain];
 
   if (k->desc && k->desc->account) {
-    if (IS_SET(k->desc->account->flags, ACCOUNT_IMMORTAL) &&
+    if (IS_SET(k->desc->account->flags, TAccount::IMMORTAL) &&
         !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
       str += "Account : *** Information Concealed ***\n\r";
     } else {

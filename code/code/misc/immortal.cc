@@ -788,8 +788,8 @@ TO_CHAR);
       return;
     }
 
-    if (IS_SET(victim->desc->account->flags, ACCOUNT_IMMORTAL)) {
-      REMOVE_BIT(victim->desc->account->flags, ACCOUNT_IMMORTAL);
+    if (IS_SET(victim->desc->account->flags, TAccount::IMMORTAL)) {
+      REMOVE_BIT(victim->desc->account->flags, TAccount::IMMORTAL);
       act("$N is no longer flagged as an immortal.", false, this, 0, victim, TO_CHAR);
       victim->doSave(SILENT_YES);
     } else
@@ -3221,7 +3221,7 @@ void TBeing::doWiznews()
   if (!desc || desc->connected)
     return;
 
-  if (isImmortal() || IS_SET(desc->account->flags, ACCOUNT_IMMORTAL)) {
+  if (isImmortal() || IS_SET(desc->account->flags, TAccount::IMMORTAL)) {
     wiznews_used_num++;
     desc->start_page_file(WIZNEWS_FILE, "No news for the immorts!\n\r");
   } else 
@@ -3918,7 +3918,7 @@ void TPerson::doAccess(const sstring &arg)
     if(!account.read(st.aname)){
       buf+="Cannot open account for player! Tell a coder!\n\r";
     } 
-    if ((account.flags & ACCOUNT_IMMORTAL) &&
+    if ((account.flags & TAccount::IMMORTAL) &&
           !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
       buf+="Account name: ***, Account email address : ***\n\r";
       buf+="Account flagged immortal.  Remaining Information Restricted.\n\r";
@@ -3927,9 +3927,9 @@ void TPerson::doAccess(const sstring &arg)
       buf+=tmpbuf;
 
       sstring lStr = "";
-      if (IS_SET(account.flags, ACCOUNT_BANISHED))
+      if (IS_SET(account.flags, TAccount::BANISHED))
         lStr += "<R><f>Account is banished<z>\n\r";
-      if (IS_SET(account.flags, ACCOUNT_EMAIL))
+      if (IS_SET(account.flags, TAccount::EMAIL))
         lStr += "<R><f>Account is email-banished<z>\n\r";
 
       listAccount(account.name, lStr);
@@ -4376,8 +4376,8 @@ void TBeing::doInfo(const char *arg)
       }
     } else if (is_abbrev(arg1, "numbers")) {
       sendTo("Player number info:\n\r");
-      sendTo(format("  Current number of players: %u.\n\r") % accStat.player_num);
-      sendTo(format("  Max number since reboot : %u.\n\r") % accStat.max_player_since_reboot);
+      sendTo(format("  Current number of players: %u.\n\r") % AccountStats::player_num);
+      sendTo(format("  Max number since reboot : %u.\n\r") % AccountStats::max_player_since_reboot);
       sendTo(format("  Max descriptors is presently: %d.\n\r") % maxdesc);
       sendTo(format("  Average faction_power is: %.4f\n\r") % avg_faction_power);
       sendTo(format("  Number of room-specials: %u\n\r") % roomspec_db.size());
@@ -5959,12 +5959,12 @@ void TBeing::doAccount(const sstring &arg)
   if (hasWizPower(POWER_ACCOUNT)) {
     my_arg = one_argument(arg, buf2);
     if (is_abbrev(my_arg, "banished")) {
-      if (IS_SET(account.flags, ACCOUNT_BANISHED)) {
-        REMOVE_BIT(account.flags, ACCOUNT_BANISHED);
+      if (IS_SET(account.flags, TAccount::BANISHED)) {
+        REMOVE_BIT(account.flags, TAccount::BANISHED);
         sendTo(format("You have unbanished the %s account.\n\r") % account.name);
         vlogf(LOG_MISC, format("%s unbanished account '%s'") % getName() % account.name);
       } else {
-        SET_BIT(account.flags, ACCOUNT_BANISHED);
+        SET_BIT(account.flags, TAccount::BANISHED);
         sendTo(format("You have set the %s account banished.\n\r") % account.name);
         vlogf(LOG_MISC, format("%s banished account '%s'") % getName() % account.name);
       }
@@ -5972,12 +5972,12 @@ void TBeing::doAccount(const sstring &arg)
       account.write(namebuf);
       return;
     } else if (is_abbrev(my_arg, "email")) {
-      if (IS_SET(account.flags, ACCOUNT_EMAIL)) {
-        REMOVE_BIT(account.flags, ACCOUNT_EMAIL);
+      if (IS_SET(account.flags, TAccount::EMAIL)) {
+        REMOVE_BIT(account.flags, TAccount::EMAIL);
         sendTo(format("You have un-email-banished the %s account.\n\r") % account.name);
         vlogf(LOG_MISC, format("%s un-email-banished account '%s'") % getName() % account.name);
       } else {
-        SET_BIT(account.flags, ACCOUNT_EMAIL);
+        SET_BIT(account.flags, TAccount::EMAIL);
         sendTo(format("You have set the %s account email-banished.\n\r") % account.name);
         vlogf(LOG_MISC, format("%s email-banished account '%s'") % getName() % account.name);
       }
@@ -5989,11 +5989,11 @@ void TBeing::doAccount(const sstring &arg)
         return;
       }
   
-      if (IS_SET(account.flags, ACCOUNT_ALLOW_DOUBLECLASS)) {
-        REMOVE_BIT(account.flags, ACCOUNT_ALLOW_DOUBLECLASS);
+      if (IS_SET(account.flags, TAccount::ALLOW_DOUBLECLASS)) {
+        REMOVE_BIT(account.flags, TAccount::ALLOW_DOUBLECLASS);
         sendTo(format("You revoke the %s account's ability to double-class.\n\r") % account.name);
       } else {
-        SET_BIT(account.flags, ACCOUNT_ALLOW_DOUBLECLASS);
+        SET_BIT(account.flags, TAccount::ALLOW_DOUBLECLASS);
         sendTo(format("You grant the %s account the ability to double-class.\n\r") % account.name);
       }
       
@@ -6004,11 +6004,11 @@ void TBeing::doAccount(const sstring &arg)
         return;
       }
   
-      if (IS_SET(account.flags, ACCOUNT_ALLOW_TRIPLECLASS)) {
-        REMOVE_BIT(account.flags, ACCOUNT_ALLOW_TRIPLECLASS);
+      if (IS_SET(account.flags, TAccount::ALLOW_TRIPLECLASS)) {
+        REMOVE_BIT(account.flags, TAccount::ALLOW_TRIPLECLASS);
         sendTo(format("You revoke the %s account's ability to triple-class.\n\r") % account.name);
       } else {
-        SET_BIT(account.flags, ACCOUNT_ALLOW_TRIPLECLASS);
+        SET_BIT(account.flags, TAccount::ALLOW_TRIPLECLASS);
         sendTo(format("You grant the %s account the ability to triple-class.\n\r") % account.name);
       }
 
@@ -6022,7 +6022,7 @@ void TBeing::doAccount(const sstring &arg)
         return;
       }
 
-      // Given that ACCOUNT_IMMORTAL prevents imms from violating our own
+      // Given that TAccount::IMMORTAL prevents imms from violating our own
       // rules, it's a bit too tempting for folks to turn off the automatic
       // checks.  I'm cynical and don't trust anyone but myself, so sue me.
 
@@ -6042,12 +6042,12 @@ void TBeing::doAccount(const sstring &arg)
         return;
       }
   
-      if (IS_SET(account.flags, ACCOUNT_IMMORTAL)) {
-        REMOVE_BIT(account.flags, ACCOUNT_IMMORTAL);
+      if (IS_SET(account.flags, TAccount::IMMORTAL)) {
+        REMOVE_BIT(account.flags, TAccount::IMMORTAL);
         sendTo(format("You un-flag the %s account immortal.\n\r") % account.name);
         vlogf(LOG_MISC, format("%s making account='%s' non-immortal") %  getName() % account.name);
       } else {
-        SET_BIT(account.flags, ACCOUNT_IMMORTAL);
+        SET_BIT(account.flags, TAccount::IMMORTAL);
         sendTo(format("You flag the %s account as immortal.\n\r") % account.name);
         vlogf(LOG_MISC, format("%s making account='%s' immortal") %  getName() % account.name);
       }
@@ -6067,16 +6067,16 @@ void TBeing::doAccount(const sstring &arg)
   str += tmpbuf;
   
 
-  if ((account.flags & ACCOUNT_IMMORTAL) && !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
+  if ((account.flags & TAccount::IMMORTAL) && !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
     str += "This account belongs to an immortal.\n\r";
     str += "*** Information Concealed ***\n\r";
     desc->page_string(str);
     return;
   }
 
-  if (IS_SET(account.flags, ACCOUNT_BANISHED))
+  if (IS_SET(account.flags, TAccount::BANISHED))
     str += "<R><f>Account is banished<z>\n\r";
-  if (IS_SET(account.flags, ACCOUNT_EMAIL))
+  if (IS_SET(account.flags, TAccount::EMAIL))
     str += "<R><f>Account is email-banished<z>\n\r";
 
   listAccount(account.name, str);

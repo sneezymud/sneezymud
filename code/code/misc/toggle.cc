@@ -492,8 +492,8 @@ void TBeing::doToggle(const char *arg2)
     sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------------------------<1>\n\r");
     sendTo(COLOR_BASIC, format("Screensize        : <G>%-3i<1>  | ") % desc->screen_size);
     sendTo(COLOR_BASIC, format("Terminal          : <G>%-5s<1>| ") % termnames[playerTerm]);
-    sendTo(COLOR_BASIC, format("Boss Mode         : %s\n\r") % on_or_off(IS_SET(desc->account->flags, ACCOUNT_BOSS)));
-    sendTo(COLOR_BASIC, format("MSP Sound         : %s  | ") % on_or_off(IS_SET(desc->account->flags, ACCOUNT_MSP)));
+    sendTo(COLOR_BASIC, format("Boss Mode         : %s\n\r") % on_or_off(IS_SET(desc->account->flags, TAccount::BOSS)));
+    sendTo(COLOR_BASIC, format("MSP Sound         : %s  | ") % on_or_off(IS_SET(desc->account->flags, TAccount::MSP)));
     sendTo(COLOR_BASIC, format("Account Terminal  : <G>%-5s<1>| ") % termnames[desc->account->term]);
     sendTo(COLOR_BASIC, format("Allow Pinging     : %s\n\r") % on_or_off(isPlayerAction(PLR_PING)));
     sendTo(COLOR_BASIC, format("Brief             : %s  | ") % on_or_off(isPlayerAction(PLR_BRIEF)));
@@ -740,23 +740,23 @@ void TBeing::doToggle(const char *arg2)
     sendTo(format("You will now flee at %d hit points!\n\r") % num);
     setWimpy(num);
   } else if (is_abbrev(arg, "boss")) {
-    if (!IS_SET(desc->account->flags, ACCOUNT_BOSS)) {
-      SET_BIT(desc->account->flags, ACCOUNT_BOSS);
+    if (!IS_SET(desc->account->flags, TAccount::BOSS)) {
+      SET_BIT(desc->account->flags, TAccount::BOSS);
       sendTo("You are now in boss mode.\n\r");
     } else {
-      REMOVE_BIT(desc->account->flags, ACCOUNT_BOSS);
+      REMOVE_BIT(desc->account->flags, TAccount::BOSS);
       sendTo("You are no longer in boss mode.\n\r");
     }
     desc->saveAccount();
   } else if (is_abbrev(arg, "msp")) {
-    if (!IS_SET(desc->account->flags, ACCOUNT_MSP)) {
-      SET_BIT(desc->account->flags, ACCOUNT_MSP);
+    if (!IS_SET(desc->account->flags, TAccount::MSP)) {
+      SET_BIT(desc->account->flags, TAccount::MSP);
       sendTo("MUD Sound Protocol enabled.\n\r");
       // we need to set the default download directory, so do that by doing
       // a stopsound which will transmit the MSP U= command
       stopsound();
     } else {
-      REMOVE_BIT(desc->account->flags, ACCOUNT_MSP);
+      REMOVE_BIT(desc->account->flags, TAccount::MSP);
       sendTo("MUD Sound Protocol disabled.\n\r");
     }
     desc->saveAccount();

@@ -33,7 +33,7 @@ extern "C" {
 #include "database.h"
 #include "materials.h"
 
-TAccountStats accStat;
+
 wizListInfo *wiz;
 
 // defined in gaining.cc
@@ -1000,7 +1000,7 @@ void TBeing::wipeChar(int)
 
   DeleteHatreds(this, NULL);
 
-  accStat.player_count--;
+  AccountStats::player_count--;
 }
 
 
@@ -1136,7 +1136,7 @@ void do_the_player_stuff(const char *name)
     return;
   }
 
-  accStat.player_count++;
+  AccountStats::player_count++;
 
   if (load_char(name, &st)) {
     byte max_level = 0;
@@ -1186,9 +1186,9 @@ void do_the_player_stuff(const char *name)
 
     // count active
     if ((time(0) - st.last_logon) <= (7 * SECS_PER_REAL_DAY))
-      accStat.active_player7++;
+      AccountStats::active_player7++;
     if ((time(0) - st.last_logon) <= (30 * SECS_PER_REAL_DAY))
-      accStat.active_player30++;
+      AccountStats::active_player30++;
     
     if (Config::AutoDeletion()){
       time_t ltime = time(0);
@@ -1440,8 +1440,8 @@ void fixup_players(void)
 
   bootPulse(NULL, true);
 
-  vlogf(LOG_FILE, format("7-Day:  There are %d active players in %d active accounts.") %  accStat.active_player7 % accStat.active_account7);
-  vlogf(LOG_FILE, format("30-Day: There are %d active players in %d active accounts.") %  accStat.active_player30 % accStat.active_account30);
+  vlogf(LOG_FILE, format("7-Day:  There are %d active players in %d active accounts.") %  AccountStats::active_player7 % AccountStats::active_account7);
+  vlogf(LOG_FILE, format("30-Day: There are %d active players in %d active accounts.") %  AccountStats::active_player30 % AccountStats::active_account30);
   return;
 }
 

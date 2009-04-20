@@ -307,7 +307,7 @@ int Descriptor::read_client(char *str2)
 
       output.clear();
       if (account) {
-        if (IS_SET(account->flags, ACCOUNT_IMMORTAL)) 
+        if (IS_SET(account->flags, TAccount::IMMORTAL)) 
           vlogf(LOG_PIO, "Client Connection from *****Masked*****");
         else 
           vlogf(LOG_PIO, format("Client Connection from %s") %  host);
@@ -653,7 +653,7 @@ int Descriptor::read_client(char *str2)
           if (should_be_logged(character)) {
             objCost cost;
 
-            if (IS_SET(account->flags, ACCOUNT_IMMORTAL)) 
+            if (IS_SET(account->flags, TAccount::IMMORTAL)) 
               vlogf(LOG_PIO, format("%s[*masked*] has reconnected (client)  (account: *masked*).") %  ch->getName());
             else 
               vlogf(LOG_PIO, format("%s[%s] has reconnected (client)  (account: %s).") %  ch->getName() % host % account->name);
@@ -792,7 +792,7 @@ int Descriptor::read_client(char *str2)
           account = NULL;
           clientf(format("%d|0|%d") % CLIENT_CHECKACCOUNTNAME % ERR_BADACCOUNT_PASSWORD);
         }
-        if (IS_SET(account->flags, ACCOUNT_BANISHED)) {
+        if (IS_SET(account->flags, TAccount::BANISHED)) {
           writeToQ("Your account has been flagged banished.\n\r");
           sprintf(buf, "If you do not know the reason for this, contact %s\n\r",
                 MUDADMIN_EMAIL);
@@ -800,7 +800,7 @@ int Descriptor::read_client(char *str2)
           outputProcessing();
           return DELETE_THIS;
         }
-        if (IS_SET(account->flags, ACCOUNT_EMAIL)) {
+        if (IS_SET(account->flags, TAccount::EMAIL)) {
           writeToQ("The email account you entered for your account is thought to be bogus.\n\r");
           sprintf(buf, "You entered an email address of: %s\n\r", account->email.c_str());
           writeToQ(buf);
@@ -814,7 +814,7 @@ int Descriptor::read_client(char *str2)
         // let's yank the password out of their history list
         strcpy(history[0], "");
 
-        if (WizLock && !IS_SET(account->flags, ACCOUNT_IMMORTAL)) {
+        if (WizLock && !IS_SET(account->flags, TAccount::IMMORTAL)) {
           writeToQ("The game is currently wiz-locked.\n\r^G^G^G^G^G");
           if (!lockmess.empty()) {
             page_string(lockmess, SHOWNOW_YES);
@@ -835,7 +835,7 @@ int Descriptor::read_client(char *str2)
         }
 
         account->status = TRUE;
-        if (!IS_SET(account->flags, ACCOUNT_BOSS)) {
+        if (!IS_SET(account->flags, TAccount::BOSS)) {
         }
         clientf(format("%d|1") % CLIENT_CHECKACCOUNTNAME);
       }
@@ -918,7 +918,7 @@ int Descriptor::read_client(char *str2)
 
       // Save all information
       account->write(aname);    
-      accStat.account_number++;
+      AccountStats::account_number++;
     
       vlogf(LOG_MISC, format("New Client Account: '%s' with email '%s'") %  account->name % account->email);
       clientf(format("%d|1") % CLIENT_CHECKACCOUNTNAME);
@@ -1196,7 +1196,7 @@ int Descriptor::client_nanny(char *arg)
       if (should_be_logged(character)) {
         objCost cost;
 
-        if (IS_SET(account->flags, ACCOUNT_IMMORTAL)) {
+        if (IS_SET(account->flags, TAccount::IMMORTAL)) {
           vlogf(LOG_PIO, format("%s[*masked*] has reconnected (client 2)  (account: *masked*).") % 
                 character->getName());
         } else {
@@ -1233,7 +1233,7 @@ int Descriptor::client_nanny(char *arg)
     }
   }
   if (should_be_logged(character)) {
-    if (IS_SET(account->flags, ACCOUNT_IMMORTAL)) {
+    if (IS_SET(account->flags, TAccount::IMMORTAL)) {
       vlogf(LOG_PIO, format("%s[*masked*] has connected (client)  (account: *masked*).") % 
             character->getName());
     } else {
@@ -1430,7 +1430,7 @@ int Descriptor::clientCreateAccount(char *arg)
     return FALSE;
   }
 
-  accStat.account_number++;
+  AccountStats::account_number++;
 
   vlogf(LOG_MISC, format("New Client Account: '%s' with email '%s'") %  account->name % account->email);
 
@@ -1655,7 +1655,7 @@ int Descriptor::clientCreateChar(char *arg)
   enum connectStateT oldconnected = connected;
   connected = CON_PLYNG;
   ch->desc = this;
-  accStat.player_count++;
+  AccountStats::player_count++;
 
   dynamic_cast<TPerson *>(ch)->doStart();
   ch->saveChar(ROOM_AUTO_RENT);

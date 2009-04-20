@@ -1081,7 +1081,7 @@ static bool immortalityNukeCheck(TBeing *ch, TObj * new_obj, bool corpse)
 {
   return false;
 
-  bool immortal = ((ch && ch->desc) ? IS_SET(ch->desc->account->flags, ACCOUNT_IMMORTAL) : FALSE);
+  bool immortal = ((ch && ch->desc) ? IS_SET(ch->desc->account->flags, TAccount::IMMORTAL) : FALSE);
 
   if (!corpse && immortal && shouldRecycle(new_obj->getItemIndex())) {
     char buf[1200];
@@ -3656,13 +3656,13 @@ void countAccounts(const char *arg)
     if (!accountActive7) {
       if (time(0) - theStat.st_mtime <= (7 * SECS_PER_REAL_DAY)) {
         accountActive7 = true;
-        accStat.active_account7++;
+        AccountStats::active_account7++;
       }
     }
     if (!accountActive30) {
       if (time(0) - theStat.st_mtime <= (30 * SECS_PER_REAL_DAY)) {
         accountActive30 = true;
-        accStat.active_account30++;
+        AccountStats::active_account30++;
       }
     }
   }
@@ -3689,7 +3689,7 @@ void countAccounts(const char *arg)
   }
   // each time this is called, we have another account
   // no need to really do anything, besides just count number of calls
-  accStat.account_number++;
+  AccountStats::account_number++;
 }
 
 static void deleteDuringRead(TMonster *mob)
@@ -4235,7 +4235,7 @@ void chargeRent(const char *who)
     fclose(fp);
     return;
   }
-  immortal = IS_SET(account.flags, ACCOUNT_IMMORTAL);
+  immortal = IS_SET(account.flags, TAccount::IMMORTAL);
 
   days_passed = ((time(0) - h.last_update) / SECS_PER_REAL_DAY);
   secs_lost = ((time(0) - h.last_update) % SECS_PER_REAL_DAY);

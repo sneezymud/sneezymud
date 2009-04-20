@@ -194,7 +194,7 @@ void TRoom::stopsound() const
 void TBeing::stopmusic()
 {
   if (desc) {
-    if (IS_SET(desc->account->flags, ACCOUNT_MSP) || desc->m_bIsClient) {
+    if (IS_SET(desc->account->flags, TAccount::MSP) || desc->m_bIsClient) {
       // the U= command for MSP is supposed to set a default download
       // directory, so it oonly needs to be sent once, prior to all downloads
       // we will send a stopsound() when they enable MSP
@@ -218,7 +218,7 @@ void TBeing::playmusic(musicNumT music, const sstring &type, int vol, int cont, 
   };
 
   if (desc) {
-    if ((IS_SET(desc->account->flags, ACCOUNT_MSP) || desc->m_bIsClient) &&
+    if ((IS_SET(desc->account->flags, TAccount::MSP) || desc->m_bIsClient) &&
         music >= MIN_MUSIC_NUM && music < MAX_MUSIC_NUM) {
       // please note, we do NOT send the U= command intentionally.
       // According to Zugg (of zMud), the U is meant to set a default
@@ -237,7 +237,7 @@ void TBeing::playmusic(musicNumT music, const sstring &type, int vol, int cont, 
 void TBeing::stopsound()
 {
   if (desc) {
-    if (IS_SET(desc->account->flags, ACCOUNT_MSP) || desc->m_bIsClient) {
+    if (IS_SET(desc->account->flags, TAccount::MSP) || desc->m_bIsClient) {
       // the U= command for MSP is supposed to set a default download
       // directory, so it oonly needs to be sent once, prior to all downloads
       // we will send a stopsound() when they enable MSP
@@ -444,7 +444,7 @@ void TBeing::playsound(soundNumT sound, const sstring &type, int vol, int prior,
   };
 
   if (desc) {
-    if ((desc->account && IS_SET(desc->account->flags, ACCOUNT_MSP) || desc->m_bIsClient) &&
+    if ((desc->account && IS_SET(desc->account->flags, TAccount::MSP) || desc->m_bIsClient) &&
         sound >= MIN_SOUND_NUM && sound < MAX_SOUND_NUM) {
       // please note, we do NOT send the U= command intentionally.
       // According to Zugg (of zMud), the U is meant to set a default

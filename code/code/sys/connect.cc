@@ -1011,7 +1011,7 @@ int Descriptor::nanny(sstring arg)
         return FALSE;
       }
 
-      if (IS_SET(account->flags, ACCOUNT_EMAIL)) {
+      if (IS_SET(account->flags, TAccount::EMAIL)) {
         // too bad they can't do this from the menu, but they won't get this
         // far if this was set anyway
         writeToQ("The email account you entered for your account is thought to be bogus.\n\r");
@@ -1161,7 +1161,7 @@ int Descriptor::nanny(sstring arg)
           if (should_be_logged(character)) {
             objCost cost;
 
-            if (IS_SET(account->flags, ACCOUNT_IMMORTAL)) {
+            if (IS_SET(account->flags, TAccount::IMMORTAL)) {
               vlogf(LOG_PIO, format("%s[%s] has reconnected  (account: %s).") % 
 	             character->getName() % host % account->name);
 
@@ -1200,7 +1200,7 @@ int Descriptor::nanny(sstring arg)
         }
       }
       if (should_be_logged(character)) {
-        if (IS_SET(account->flags, ACCOUNT_IMMORTAL)) {
+        if (IS_SET(account->flags, TAccount::IMMORTAL)) {
 	  vlogf(LOG_PIO, format("%s[%s] has connected  (account: %s).") %  character->getName() % host % account->name);
         } else {
           vlogf(LOG_PIO, format("%s[%s] has connected  (account: %s).") %  character->getName() % host % account->name);
@@ -1293,7 +1293,7 @@ int Descriptor::nanny(sstring arg)
               if (should_be_logged(character)) {
                 objCost cost;
 
-                if (IS_SET(account->flags, ACCOUNT_IMMORTAL)) 
+                if (IS_SET(account->flags, TAccount::IMMORTAL)) 
 		  vlogf(LOG_PIO, format("%s[%s] has reconnected  (account: %s).") %  tmp_ch->getName() % host % account->name);
                 else 
                   vlogf(LOG_PIO, format("%s[%s] has reconnected  (account: %s).") %  tmp_ch->getName() % host % account->name);
@@ -1482,10 +1482,10 @@ int TPerson::genericLoadPC()
 
       rp = real_roomp((desc ? desc->office : ROOM_IMPERIA));
 
-      if (!IS_SET(desc->account->flags, ACCOUNT_IMMORTAL)) {
+      if (!IS_SET(desc->account->flags, TAccount::IMMORTAL)) {
         vlogf(LOG_BUG, format("%s is immortal but account isn't set immortal.  Setting now.") % 
               getName());
-        SET_BIT(desc->account->flags, ACCOUNT_IMMORTAL);
+        SET_BIT(desc->account->flags, TAccount::IMMORTAL);
       }
 
       if (!rp) {
@@ -3293,7 +3293,7 @@ int Descriptor::doAccountStuff(char *arg)
         return FALSE;
       }
       saveAccount();
-      accStat.account_number++;
+      AccountStats::account_number++;
 
       vlogf(LOG_MISC, format("New Account: '%s' with email '%s'") %  account->name % account->email);
 
@@ -3318,7 +3318,7 @@ int Descriptor::doAccountStuff(char *arg)
       vlogf(LOG_MISC, "Person entering game by entering wizlock password.");
 
       account->status = TRUE;
-      if (!IS_SET(account->flags, ACCOUNT_BOSS)) {
+      if (!IS_SET(account->flags, TAccount::BOSS)) {
         if (account->term != TERM_ANSI) {
           screen_size = 40;  // adjust for the size of the menu bar temporarily
           start_page_file(NORM_OPEN, "");
@@ -3347,7 +3347,7 @@ int Descriptor::doAccountStuff(char *arg)
         account = NULL;
         return (sendLogin("1"));
       }
-      if (IS_SET(account->flags, ACCOUNT_BANISHED)) {
+      if (IS_SET(account->flags, TAccount::BANISHED)) {
         writeToQ("Your account has been flagged banished.\n\r");
         sprintf(buf, "If you do not know the reason for this, contact %s\n\r",
               MUDADMIN_EMAIL);
@@ -3355,7 +3355,7 @@ int Descriptor::doAccountStuff(char *arg)
         outputProcessing();
         return DELETE_THIS;
       }
-      if (IS_SET(account->flags, ACCOUNT_EMAIL)) {
+      if (IS_SET(account->flags, TAccount::EMAIL)) {
         writeToQ("The email account you entered for your account is thought to be bogus.\n\r");
         sprintf(buf, "You entered an email address of: %s\n\r", account->email.c_str());
         writeToQ(buf);
@@ -3369,7 +3369,7 @@ int Descriptor::doAccountStuff(char *arg)
       // let's yank the password out of their history list
       strcpy(history[0], "");
 
-      if (WizLock && !IS_SET(account->flags, ACCOUNT_IMMORTAL)) {
+      if (WizLock && !IS_SET(account->flags, TAccount::IMMORTAL)) {
         writeToQ("The game is currently wiz-locked.\n\r");
         if (!lockmess.empty()) {
           page_string(lockmess, SHOWNOW_YES);
@@ -3423,7 +3423,7 @@ int Descriptor::doAccountStuff(char *arg)
         }
       }
       account->status = TRUE;
-      if (!IS_SET(account->flags, ACCOUNT_BOSS)) {
+      if (!IS_SET(account->flags, TAccount::BOSS)) {
         if (account->term != TERM_ANSI) {
           screen_size = 40;  // adjust for the size of the menu bar temporarily
           start_page_file(NORM_OPEN, "");
@@ -3791,7 +3791,7 @@ int Descriptor::doAccountMenu(const char *arg)
       break;
     default:
       count = ::number(1,3);
-      if (!IS_SET(account->flags, ACCOUNT_BOSS)) {
+      if (!IS_SET(account->flags, TAccount::BOSS)) {
         if (account->term == TERM_ANSI) {
           screen_size = 40;  // adjust for the size of the menu bar temporarily
          
@@ -3890,7 +3890,7 @@ void Descriptor::deleteAccount()
 
   sprintf(buf, "account/%c/%s", LOWER(account->name[0]), sstring(account->name).lower().c_str());
   rmdir(buf);
-  accStat.account_number--;
+  AccountStats::account_number--;
   closedir(dfd);
 }
 

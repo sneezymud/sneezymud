@@ -214,8 +214,8 @@ void TBeing::doWho(const char *argument)
         }
       }
     }
-    accStat.max_player_since_reboot = max(accStat.max_player_since_reboot, count);
-    buf = format("\n\rTotal Players : [%d] Max since last reboot : [%d] Avg Players : [%.1f]\n\r") % count % accStat.max_player_since_reboot % (stats.useage_iters ? (float) stats.num_users / stats.useage_iters : 0);
+    AccountStats::max_player_since_reboot = max(AccountStats::max_player_since_reboot, count);
+    buf = format("\n\rTotal Players : [%d] Max since last reboot : [%d] Avg Players : [%.1f]\n\r") % count % AccountStats::max_player_since_reboot % (stats.useage_iters ? (float) stats.num_users / stats.useage_iters : 0);
     sb += buf;
     if (desc)
       desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
@@ -555,20 +555,20 @@ void TBeing::doWho(const char *argument)
       return;
     }
   }
-  accStat.max_player_since_reboot = max(accStat.max_player_since_reboot, count);
+  AccountStats::max_player_since_reboot = max(AccountStats::max_player_since_reboot, count);
   if (isImmortal()) {
     if (!listed)
       buf = format("\n\rTotal players / Link dead [%d/%d] (%2.0f%c)\n\rMax since Reboot [%d]  Avg Players : [%.1f]\n\r") %
 	count % lcount % (((double) lcount / (int) count) * 100) % '%' %
-	accStat.max_player_since_reboot %
+	AccountStats::max_player_since_reboot %
 	(stats.useage_iters ? (float) stats.num_users / stats.useage_iters : 0);
     else
       buf = format("\n\rTotal players / Link dead [%d/%d] (%2.0f%c)\n\rNumber Listed: %d  Max since Reboot [%d]  Avg Players : [%.1f]\n\r") %
 	count % lcount % (((double) lcount / (int) count) * 100) % '%' % listed %
-	accStat.max_player_since_reboot %
+	AccountStats::max_player_since_reboot %
 	(stats.useage_iters ? (float) stats.num_users / stats.useage_iters : 0);
   } else {
-    buf = format("\n\rTotal Players : [%d] Max since last reboot : [%d] Avg Players : [%.1f]\n\r") % count % accStat.max_player_since_reboot % (stats.useage_iters ? (float) stats.num_users / stats.useage_iters : 0);
+    buf = format("\n\rTotal Players : [%d] Max since last reboot : [%d] Avg Players : [%.1f]\n\r") % count % AccountStats::max_player_since_reboot % (stats.useage_iters ? (float) stats.num_users / stats.useage_iters : 0);
   }
   sb += buf;
   if (desc)
