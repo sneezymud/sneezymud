@@ -549,7 +549,7 @@ class Descriptor
     byte point_roll;
     time_t talkCount;
     bool m_bIsClient;
-    sh_int bad_login;              // login catches for hackers 
+    short bad_login;              // login catches for hackers 
     int severity;
     int office;
     int blockastart;

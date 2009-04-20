@@ -461,7 +461,7 @@ void TPerson::storeToSt(charFile *st)
 
   
   st->practices = practices;
-  sh_int tmp=0;
+  short tmp=0;
   // these pracs are switched in the actual pfiles for some dumb reason
   tmp=st->practices.prac[WARRIOR_LEVEL_IND];
   st->practices.prac[WARRIOR_LEVEL_IND]=st->practices.prac[THIEF_LEVEL_IND];
@@ -647,7 +647,7 @@ void TPerson::loadFromSt(charFile *st)
 
   practices = st->practices;
 
-  sh_int tmp=0;
+  short tmp=0;
   // these pracs are switched in the actual pfiles for some dumb reason
   tmp=practices.prac[WARRIOR_LEVEL_IND];
   practices.prac[WARRIOR_LEVEL_IND]=practices.prac[THIEF_LEVEL_IND];
@@ -907,7 +907,7 @@ void TBeing::saveChar(int load_room)
   }
 
   memset(&st, 0, sizeof(charFile));
-  st.load_room = (sh_int) load_room;
+  st.load_room = (short) load_room;
 
   if (!tmp)
     dynamic_cast<TPerson *>(this)->storeToSt(&st);

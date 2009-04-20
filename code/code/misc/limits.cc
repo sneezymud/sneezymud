@@ -570,9 +570,9 @@ double TBeing::pracsPerLevel(classIndT Class, bool forceBasic)
   return num;
 }
 
-sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
+short TBeing::calcNewPracs(classIndT Class, bool forceBasic)
 {
-  sh_int prac;
+  short prac;
   double num;
 
   num = pracsPerLevel(Class, forceBasic);
@@ -607,7 +607,7 @@ sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
   return prac;
 }
 
-void TBeing::setPracs(sh_int prac, classIndT Class)
+void TBeing::setPracs(short prac, classIndT Class)
 {
   if(Class >= MAX_CLASSES)
     vlogf(LOG_BUG, "Bad class in setPracs");
@@ -615,7 +615,7 @@ void TBeing::setPracs(sh_int prac, classIndT Class)
     practices.prac[Class]=prac;
 }
 
-sh_int TBeing::getPracs(classIndT Class)
+short TBeing::getPracs(classIndT Class)
 {
   if(Class >= MAX_CLASSES)
     vlogf(LOG_BUG, "Bad class in getPracs");
@@ -625,7 +625,7 @@ sh_int TBeing::getPracs(classIndT Class)
   return 0;
 }
 
-void TBeing::addPracs(sh_int pracs, classIndT Class)
+void TBeing::addPracs(short pracs, classIndT Class)
 {
   setPracs(getPracs(Class) + pracs, Class);
 }
@@ -743,7 +743,7 @@ void TPerson::fixPracs()
   }
   
   // figure out the right number of pracs
-  sh_int expected = expectedPracs();
+  short expected = expectedPracs();
   actual = pracsSoFar();
   diff = expected-actual; // >0 if they didn't get enough pracs
         
@@ -777,7 +777,7 @@ void TPerson::fixPracs()
 
 // calculates the number of pracs this character should have
 // by averaging number of pracs over 10x
-sh_int TBeing::meanPracsSoFar()
+short TBeing::meanPracsSoFar()
 {
   int repeats = 10;
   int sum = 0;
@@ -785,14 +785,14 @@ sh_int TBeing::meanPracsSoFar()
   for (int i=0; i<repeats; i++)
     sum += pracsSoFar();
 
-  return (sh_int) sum/repeats;
+  return (short) sum/repeats;
 }
 
 // TBeing::pracsSoFar
 // gets the total number of practices probably used by this character
-sh_int TBeing::pracsSoFar()
+short TBeing::pracsSoFar()
 {
-  sh_int pracs = 0;
+  short pracs = 0;
   int spentPracs = 0;
 
   for (classIndT Class = MIN_CLASS_IND; Class < MAX_CLASSES; Class++) {
@@ -812,7 +812,7 @@ sh_int TBeing::pracsSoFar()
 }
 
 
-sh_int TBeing::expectedPracs(){
+short TBeing::expectedPracs(){
   int i, level=0;
   double lvlStart, lvlEnd, fraction;
   double pracs = 0, gain = 0;
@@ -858,7 +858,7 @@ sh_int TBeing::expectedPracs(){
     }
   }
 //  vlogf(LOG_MAROR, format("----------------------------------"));
-  return (sh_int) pracs;
+  return (short) pracs;
 }
 
 // tForm == false = update title

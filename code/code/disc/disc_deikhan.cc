@@ -13,7 +13,7 @@
 
 extern void startChargeTask(TBeing *, const char *);
 
-int synostodweomer(TBeing *caster, TBeing *v, int level, sh_int bKnown)
+int synostodweomer(TBeing *caster, TBeing *v, int level, short bKnown)
 {
   int hitp = 0, vlevel = 0;
   affectedData aff;

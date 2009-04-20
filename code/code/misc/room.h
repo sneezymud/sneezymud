@@ -130,19 +130,19 @@ class TRoom : public TThing {
   private:
     sectorTypeT sectorType;
     dirTypeT riverDir;      // River flows toward this exit direction
-    sh_int riverSpeed;        // River flows with this speed
-    sh_int hasWindow;         // whether or not room has a window   
-    sh_int teleLook;          // do a do_look or not when teleported 
+    short riverSpeed;        // River flows with this speed
+    short hasWindow;         // whether or not room has a window   
+    short teleLook;          // do a do_look or not when teleported 
     zoneData *zone;         // Room zone (for resetting)          
-    sh_int teleTime;        // time to a teleport                
+    short teleTime;        // time to a teleport                
     int teleTarg;        // target room of a teleport       
-    ush_int moblim;           // # of mobs allowed in room.       
+    unsigned short moblim;           // # of mobs allowed in room.       
     int roomHeight;         // room height
     unsigned int roomFlags; // Bitvector os flags for room
     long descPos;           // File offset for the description.
     int x, y, z;            // x,y,z location in the world
-    ush_int fished;           // how fished out the room is
-    ush_int logsHarvested;           // how deforested the room is
+    unsigned short fished;           // how fished out the room is
+    unsigned short logsHarvested;           // how deforested the room is
     int treetype;          // the kind of tree growing in the room
 
   public:
@@ -189,7 +189,7 @@ class TRoom : public TThing {
     void setTeleTime(int t_time) {
       teleTime = t_time;
     }
-    void setMoblim(ush_int limit) {
+    void setMoblim(unsigned short limit) {
       moblim = limit;
     }
     void setRoomFlagBit(unsigned int i) {
@@ -223,13 +223,13 @@ class TRoom : public TThing {
     int getZoneNum() const {
       return zone?zone->zone_nr:-1;
     }
-    ush_int getMoblim() const {
+    unsigned short getMoblim() const {
       return moblim;
     }
     int getTeleTarg() const {
       return teleTarg;
     }
-    sh_int getTeleTime() const {
+    short getTeleTime() const {
       return teleTime;
     }
     unsigned int getRoomFlags() const {
@@ -300,21 +300,21 @@ class TRoom : public TThing {
     sectorTypeT getArcticSectorType() const;
     void setSectorType(sectorTypeT type);
     dirTypeT getRiverDir() const;
-    sh_int getRiverSpeed() const;
+    short getRiverSpeed() const;
 
     int getRoomHeight() const {
       return roomHeight;
     }
-    sh_int getHasWindow() const {
+    short getHasWindow() const {
       return hasWindow;
     }
     void setHasWindow(int window) {
       hasWindow = window;
     }
-    sh_int getTeleLook() const {
+    short getTeleLook() const {
       return teleLook;
     }
-    void setTeleLook(sh_int look) {
+    void setTeleLook(short look) {
       teleLook = look;
     }
     void decrementWindow() {

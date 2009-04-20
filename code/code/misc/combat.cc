@@ -1078,7 +1078,7 @@ int TBeing::damageHand(TBeing *v, wearSlotT part_hit)
   return FALSE;
 }
 
-int TObj::damageItem(sh_int amt)
+int TObj::damageItem(short amt)
 {
   if(amt < 0){
     vlogf(LOG_BUG, format("%s::damageItem(%i) got passed a negative number!") %

@@ -1147,7 +1147,7 @@ void TBeing::addToLifeforce(int lifeforce)
   int total = points.lifeforce + lifeforce;
   total = max(0,total);
   total = min(total, SHRT_MAX);
-  points.lifeforce = (sh_int) total;
+  points.lifeforce = (short) total;
 }
 
 bool TBeing::noLifeforce(int lifeforce) const
@@ -1615,9 +1615,9 @@ int getIronFleshArmor(wearSlotT slot){
 }
 
 
-sh_int TBeing::getArmor() const
+short TBeing::getArmor() const
 {
-  sh_int armor= getMyRace()->getBaseArmor();
+  short armor= getMyRace()->getBaseArmor();
   affectedData *af;
   TObj *to;
   int i;
@@ -1647,7 +1647,7 @@ sh_int TBeing::getArmor() const
 
   // mobs have a different base AC
   if((tm=dynamic_cast<const TMonster *>(this))){
-    sh_int num = 600 - ((sh_int) (20 * tm->getACLevel()));
+    short num = 600 - ((short) (20 * tm->getACLevel()));
 
     // mobs get either their default AC or their normal calculated AC,
     // whichever is better.
@@ -1663,7 +1663,7 @@ sh_int TBeing::getArmor() const
   return armor;
 }
 
-void TBeing::setArmor(sh_int armor)
+void TBeing::setArmor(short armor)
 {
   vlogf(LOG_PEEL, format("Something called setArmor(%i) on %s") % 
 	armor % getName());
@@ -1687,22 +1687,22 @@ TBeing * TBeing::fight() const
   return specials.fighting;
 }
 
-ush_int TBeing::getLevel(classIndT i) const
+unsigned short TBeing::getLevel(classIndT i) const
 {
   return player.level[i];
 }
 
-ush_int TBeing::getClass() const
+unsigned short TBeing::getClass() const
 {
   return player.Class;
 }
 
-ush_int TBeing::GetMaxLevel() const
+unsigned short TBeing::GetMaxLevel() const
 {
   return player.max_level;
 }
 
-void TBeing::setMaxLevel(ush_int num)
+void TBeing::setMaxLevel(unsigned short num)
 {
   player.max_level = num;
 }
@@ -1742,12 +1742,12 @@ sstring TBeing::displayExp() const
   return xp_sstring;
 }
 
-sh_int TBeing::getProtection() const
+short TBeing::getProtection() const
 {
   return my_protection;
 }
 
-void TBeing::setProtection(sh_int num)
+void TBeing::setProtection(short num)
 {
   my_protection = num;
 }
@@ -1759,7 +1759,7 @@ void TBeing::addToProtection(short num)
 
 // returns the number of points of AC we think is right based on what was
 // set-up in the balance discussions.  This is AC from EQ only.
-sh_int TBeing::suggestArmor() const
+short TBeing::suggestArmor() const
 {
   double lev = GetMaxLevel() - getLevMod(getClass(), GetMaxLevel());
   int suggest = (int) (500 + 25*lev);

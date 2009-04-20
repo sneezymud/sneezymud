@@ -55,7 +55,7 @@ class Stats {
   friend class TPerson;
 
   private:
-    sh_int values[MAX_STATS];
+    short values[MAX_STATS];
 
   public: 
     Stats();
@@ -66,9 +66,9 @@ class Stats {
   Stats operator+(const Stats &operand);
   Stats operator-(const Stats &operand);
   
-  sh_int get(statTypeT stat) const;
-  sh_int set(statTypeT stat, sh_int val);
-  sh_int add(statTypeT stat, sh_int mod);
+  short get(statTypeT stat) const;
+  short set(statTypeT stat, short val);
+  short add(statTypeT stat, short mod);
 
   void zero();
   int total() const;

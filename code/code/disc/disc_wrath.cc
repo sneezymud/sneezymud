@@ -11,7 +11,7 @@
 #include "obj_magic_item.h"
 #include "weather.h"
 
-int plagueOfLocusts(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
+int plagueOfLocusts(TBeing *caster, TBeing *victim, int level, short bKnown)
 {
   TMonster *locusts;
   affectedData aff; 
@@ -194,7 +194,7 @@ int plagueOfLocusts(TBeing * caster, TBeing * victim)
   return rc;
 }
  
-int pillarOfSalt(TBeing * caster, TBeing * victim, int level, sh_int bKnown, int adv_learn)
+int pillarOfSalt(TBeing * caster, TBeing * victim, int level, short bKnown, int adv_learn)
 {
   wearSlotT slot = WEAR_NOWHERE;
   char buf[256], limb[256];
@@ -344,7 +344,7 @@ int pillarOfSalt(TBeing * caster, TBeing * victim)
   return rc;
 }
 
-int rainBrimstone(TBeing * caster, TBeing * victim, int level, sh_int bKnown, spellNumT spell, int adv_learn)
+int rainBrimstone(TBeing * caster, TBeing * victim, int level, short bKnown, spellNumT spell, int adv_learn)
 {
   level = min(level, 10);
 
@@ -454,7 +454,7 @@ int rainBrimstone(TBeing * caster, TBeing * victim)
   return rc;
 }
 
-int curse(TBeing * caster, TObj * obj, int, sh_int bKnown, spellNumT spell)
+int curse(TBeing * caster, TObj * obj, int, short bKnown, spellNumT spell)
 {
   if (caster->bSuccess(bKnown, caster->getPerc(), spell)) {
     obj->addObjStat(ITEM_NODROP);
@@ -518,7 +518,7 @@ void curse(TBeing * caster, TObj * obj)
     caster->sendTo("Nothing seems to happen.\n\r");
 }
 
-int curse(TBeing * caster, TBeing * victim, int level, sh_int bKnown, spellNumT spell)
+int curse(TBeing * caster, TBeing * victim, int level, short bKnown, spellNumT spell)
 {
   if (caster->isNotPowerful(victim, level, spell, SILENT_NO)) 
     return SPELL_FAIL;
@@ -585,7 +585,7 @@ void curse(TBeing * caster, TBeing * victim)
   return;
 }
 
-int earthquake(TBeing *caster, int level, sh_int bKnown, spellNumT spell, int adv_learn)
+int earthquake(TBeing *caster, int level, short bKnown, spellNumT spell, int adv_learn)
 {
   int rc;
   TBeing *tmp_victim, *temp;
@@ -725,7 +725,7 @@ int earthquake(TBeing *caster)
   return FALSE;
 }
 
-int callLightning(TBeing *caster, TBeing *victim, int level, sh_int bKnown, spellNumT spell, int adv_learn)
+int callLightning(TBeing *caster, TBeing *victim, int level, short bKnown, spellNumT spell, int adv_learn)
 {
   int rc;
 
@@ -835,7 +835,7 @@ int callLightning(TBeing *caster, TBeing *victim)
   return rc;
 }
 
-int spontaneousCombust(TBeing *caster, TBeing *victim, int level, sh_int bKnown, int adv_learn)
+int spontaneousCombust(TBeing *caster, TBeing *victim, int level, short bKnown, int adv_learn)
 {
   int rc;
 
@@ -997,7 +997,7 @@ int spontaneousCombust(TBeing *caster, TBeing *victim)
   return rc;
 }
 
-int flamestrike(TBeing *caster, TBeing *victim, int level, sh_int bKnown, int adv_learn)
+int flamestrike(TBeing *caster, TBeing *victim, int level, short bKnown, int adv_learn)
 {
   int ret = 0;
 

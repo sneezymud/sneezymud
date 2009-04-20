@@ -193,7 +193,7 @@ double getLevMod(unsigned short int Class, unsigned int lev)
   return lev_mod;
 }
 
-unsigned int rent_credit(ush_int Class, unsigned int orig_lev, unsigned int numClasses)
+unsigned int rent_credit(unsigned short Class, unsigned int orig_lev, unsigned int numClasses)
 {
 #ifdef FREE_RENT
   // for 5.2 we're going for 0 base rent credit for all classes, then charging on basis of max exists
@@ -3236,7 +3236,7 @@ void TBeing::makeRentNote(TBeing *recip)
 int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TObj *o)
 {
   objCost cost;
-  sh_int save_room;
+  short save_room;
   char buf[256];
   dirTypeT dir;
   roomDirData *exitp;

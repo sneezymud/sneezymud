@@ -66,7 +66,7 @@ static void adjustHealHp(const TBeing *caster, int &hp, int durat)
   }
 }
 
-int healLight(TBeing *caster, TBeing * victim, int level, sh_int bKnown, spellNumT spell, int adv_learn)
+int healLight(TBeing *caster, TBeing * victim, int level, short bKnown, spellNumT spell, int adv_learn)
 {
   int hp = caster->getSkillDam(victim, spell, level, adv_learn);
   adjustHealHp(caster, hp, discArray[spell]->lag);
@@ -160,7 +160,7 @@ int castHealLight(TBeing *caster, TBeing *victim)
   return ret;
 }
 
-int healSerious(TBeing *caster, TBeing * victim, int level, sh_int bKnown, spellNumT spell, int adv_learn)
+int healSerious(TBeing *caster, TBeing * victim, int level, short bKnown, spellNumT spell, int adv_learn)
 {
   int hp = caster->getSkillDam(victim, spell, level, adv_learn);
   adjustHealHp(caster, hp, discArray[spell]->lag);
@@ -279,7 +279,7 @@ int castHealFullSpray(TBeing *caster, TBeing *victim)
   return FALSE;
 }
 
-int healCritical(TBeing *caster, TBeing *victim, int level, sh_int bKnown, spellNumT spell, int adv_learn)
+int healCritical(TBeing *caster, TBeing *victim, int level, short bKnown, spellNumT spell, int adv_learn)
 {
   int hp = caster->getSkillDam(victim, spell, level, adv_learn);
   adjustHealHp(caster, hp, discArray[spell]->lag);
@@ -372,7 +372,7 @@ int castHealCritical(TBeing *caster, TBeing *victim)
   return ret;
 }
 
-int heal(TBeing * caster, TBeing * victim, int level, sh_int bKnown, spellNumT spell, int adv_learn)
+int heal(TBeing * caster, TBeing * victim, int level, short bKnown, spellNumT spell, int adv_learn)
 {
   int hp = caster->getSkillDam(victim, spell, level, adv_learn);
   adjustHealHp(caster, hp, discArray[spell]->lag);
@@ -465,7 +465,7 @@ int castHeal(TBeing *caster, TBeing *victim)
   return ret;
 }
 
-int healFull(TBeing * caster, TBeing * victim, int level, sh_int bKnown, int adv_learn)
+int healFull(TBeing * caster, TBeing * victim, int level, short bKnown, int adv_learn)
 {                                                                               
   int hp = caster->getSkillDam(victim, SPELL_HEAL_FULL, level, adv_learn);
   adjustHealHp(caster, hp, discArray[SPELL_HEAL_FULL]->lag);
@@ -563,7 +563,7 @@ int castHealFull(TBeing *caster, TBeing *victim)
   return ret;                                                                   
 }  
 
-int healCritSpray(TBeing * caster, int level, sh_int bKnown, int adv_learn)
+int healCritSpray(TBeing * caster, int level, short bKnown, int adv_learn)
 {
   int hp_tmp;
   //  bool healed_evil = FALSE;
@@ -663,7 +663,7 @@ int ret;
   }
 }
 
-int healSpray(TBeing * caster, int level, sh_int bKnown, int adv_learn)
+int healSpray(TBeing * caster, int level, short bKnown, int adv_learn)
 {
   int hp = caster->getSkillDam(NULL, SPELL_HEAL_SPRAY, level, adv_learn);
   int hp_tmp;
@@ -763,7 +763,7 @@ void healSpray(TBeing * caster, TMagicItem * obj)
 }
 
 
-int healFullSpray(TBeing * caster, int level, sh_int bKnown, int adv_learn)
+int healFullSpray(TBeing * caster, int level, short bKnown, int adv_learn)
 {
   int hp = caster->getSkillDam(NULL, SPELL_HEAL_FULL_SPRAY, level, adv_learn);
   int hp_tmp;
@@ -866,7 +866,7 @@ void healFullSpray(TBeing * caster, TMagicItem * obj)
 }
 
 
-int knitBone(TBeing * caster, TBeing * victim, int, sh_int bKnown)
+int knitBone(TBeing * caster, TBeing * victim, int, short bKnown)
 {
   char buf[256], limb[256];
   wearSlotT slot;
@@ -923,7 +923,7 @@ void knitBone(TBeing * caster, TBeing *victim)
   }
 }
 
-int clot(TBeing * caster, TBeing * victim, int, sh_int bKnown, spellNumT spell)
+int clot(TBeing * caster, TBeing * victim, int, short bKnown, spellNumT spell)
 {
   char buf[256], limb[256];
   wearSlotT slot;
@@ -999,7 +999,7 @@ void clot(TBeing * caster, TBeing * victim, TMagicItem * obj, spellNumT spell)
   clot(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness(), spell);
 }
 
-int restoreLimb(TBeing *caster, TBeing *victim, int, sh_int bKnown)
+int restoreLimb(TBeing *caster, TBeing *victim, int, short bKnown)
 {
   char buf[256], limb[256];
   wearSlotT slot, num;
@@ -1093,7 +1093,7 @@ void restoreLimb(TBeing *caster, TBeing *victim)
   }
 }
 
-int sterilize(TBeing * caster, TBeing * victim, int, sh_int bKnown, spellNumT spell)
+int sterilize(TBeing * caster, TBeing * victim, int, short bKnown, spellNumT spell)
 {
   char buf[256], limb[256];
   wearSlotT slot;
@@ -1179,7 +1179,7 @@ bool salve_bruise(TBeing * caster, TBeing * victim, byte bKnown, spellNumT spell
 }
 
 
-int salve(TBeing * caster, TBeing * victim, int level, sh_int bKnown, spellNumT spell)
+int salve(TBeing * caster, TBeing * victim, int level, short bKnown, spellNumT spell)
 {
   int hurting = 0, soothing = 0, fixed = 0;
   wearSlotT slot;
@@ -1287,7 +1287,7 @@ void salve(TBeing * caster, TBeing * victim, TMagicItem * obj, spellNumT spell)
   salve(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness(), spell);
 }
 
-int expel(TBeing * caster, TBeing * victim, int, sh_int bKnown, spellNumT spell)
+int expel(TBeing * caster, TBeing * victim, int, short bKnown, spellNumT spell)
 {
   char buf[256], limb[256];
   wearSlotT slot;

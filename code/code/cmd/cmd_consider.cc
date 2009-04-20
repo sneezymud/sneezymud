@@ -95,7 +95,7 @@ void TBeing::doConsider(const char *argument)
   } else if (dynamic_cast<TPerson *>(victim) || isname("[clone]", victim->name)) {
     if (isImmortal() && hasWizPower(POWER_IMM_EVAL)) {
       diff       = (int) (victim->getArmor());
-      sh_int suggest = victim->suggestArmor();
+      short suggest = victim->suggestArmor();
       int prefArmorC = (1000 - suggest);
 
       sendTo(format("You consider %s's equipment...\n\r") % victim->getName());

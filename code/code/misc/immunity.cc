@@ -82,14 +82,14 @@ immuneTypeT Immunities::convert(const sstring & immunity) const
 }
 
 // setImmunity() assigns a percentage to a particular immunity.
-void Immunities::setImmunity(const sstring &whichImmunity, sh_int percent)
+void Immunities::setImmunity(const sstring &whichImmunity, short percent)
 {
   immuneTypeT itt = convert(whichImmunity);
   ImmunityArray[itt] = percent;
 }
 
 // getImmunity() returns the value of the particular immunity.
-sh_int Immunities::getImmunity(immuneTypeT whichImmunity) const
+short Immunities::getImmunity(immuneTypeT whichImmunity) const
 {
   return ImmunityArray[whichImmunity];
 }
@@ -171,12 +171,12 @@ short TBeing::getImmunity(immuneTypeT type) const
   return imm;
 }
 
-void TBeing::setImmunity(immuneTypeT type, sh_int amt)
+void TBeing::setImmunity(immuneTypeT type, short amt)
 {
   immunities.immune_arr[type] = amt;
 }
 
-void TBeing::addToImmunity(immuneTypeT type, sh_int amt)
+void TBeing::addToImmunity(immuneTypeT type, short amt)
 {
   immunities.immune_arr[type] = min(max(immunities.immune_arr[type] + amt, -100), 100);
 }

@@ -225,7 +225,7 @@ void generate_obj_index()
 
     // use 327 so we don't go over 32765 in calculation
     if (tmpi->max_exist < 327) {
-      tmpi->max_exist *= (sh_int) (stats.max_exist * 100);
+      tmpi->max_exist *= (short) (stats.max_exist * 100);
       tmpi->max_exist /= 100;
     }
     if (tmpi->max_exist)

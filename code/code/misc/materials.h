@@ -127,19 +127,19 @@ const int    MAX_MAT_METAL       =28;      //Move and change  (max+1 - 150)
 
 struct material_type_numbers
 {
-  sh_int cut_susc;
-  sh_int smash_susc;
-  sh_int burned_susc;
-  sh_int pierced_susc;
-  sh_int hardness;
-  ush_int water_susc;
-  ush_int fall_susc;
-  ush_int float_weight;
-  sh_int noise;
-  ush_int vol_mult;
-  ush_int conductivity;
+  short cut_susc;
+  short smash_susc;
+  short burned_susc;
+  short pierced_susc;
+  short hardness;
+  unsigned short water_susc;
+  unsigned short fall_susc;
+  unsigned short float_weight;
+  short noise;
+  unsigned short vol_mult;
+  unsigned short conductivity;
   int flammability;
-  ush_int acid_susc;
+  unsigned short acid_susc;
   float price;
   int (*repair_proc)(TBeing *,TObj *o);
   char mat_name[20];

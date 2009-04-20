@@ -702,7 +702,7 @@ void TCommodity::setWeight(const float w)
     updateDesc();
 }
 
-void TCommodity::setMaterial(ush_int num)
+void TCommodity::setMaterial(unsigned short num)
 {
   TObj::setMaterial(num);
 

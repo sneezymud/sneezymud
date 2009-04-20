@@ -432,7 +432,7 @@ void TMonster::setACFromACLevel()
 {
   // this is based on the balance doctrine
   // AC should be 600 - 20*level
-  //  sh_int num = (sh_int) (20 * getACLevel());
+  //  short num = (short) (20 * getACLevel());
   //  setArmor(600 - num);
 }
 
@@ -503,12 +503,12 @@ void TMonster::setDamLevel(float n)
   damLevel = n;
 }
 
-ush_int TMonster::getDamPrecision() const
+unsigned short TMonster::getDamPrecision() const
 {
   return damPrecision;
 }
 
-void TMonster::setDamPrecision(ush_int n)
+void TMonster::setDamPrecision(unsigned short n)
 {
   damPrecision = n;
 }

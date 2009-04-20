@@ -125,16 +125,16 @@ typedef struct _app_typ {
 extern APP_type apply_types[MAX_APPLY_TYPES];
 
 /* 'class' for PC's */
-const ush_int CLASS_MAGE         = (1<<0);   // 1
-const ush_int CLASS_CLERIC       = (1<<1);   // 2
-const ush_int CLASS_WARRIOR      = (1<<2);   // 4
-const ush_int CLASS_THIEF        = (1<<3);   // 8
-const ush_int CLASS_SHAMAN       = (1<<4);   // 16 
-const ush_int CLASS_DEIKHAN      = (1<<5);   // 32
-const ush_int CLASS_MONK         = (1<<6);   // 64
-const ush_int CLASS_RANGER       = (1<<7);   // 128
-const ush_int CLASS_COMMONER     = (1<<8);   // 256
-const ush_int CLASS_ALL          = (1<<9)-1;
+const unsigned short CLASS_MAGE         = (1<<0);   // 1
+const unsigned short CLASS_CLERIC       = (1<<1);   // 2
+const unsigned short CLASS_WARRIOR      = (1<<2);   // 4
+const unsigned short CLASS_THIEF        = (1<<3);   // 8
+const unsigned short CLASS_SHAMAN       = (1<<4);   // 16 
+const unsigned short CLASS_DEIKHAN      = (1<<5);   // 32
+const unsigned short CLASS_MONK         = (1<<6);   // 64
+const unsigned short CLASS_RANGER       = (1<<7);   // 128
+const unsigned short CLASS_COMMONER     = (1<<8);   // 256
+const unsigned short CLASS_ALL          = (1<<9)-1;
 
 /* Bitvector for 'affected_by' */
 const uint64_t AFF_BLIND             = uint64_t(1<<0);
@@ -224,7 +224,7 @@ class playerData
    ubyte level[MAX_SAVED_CLASSES];   
    ubyte max_level;
 
-   ush_int Class;
+   unsigned short Class;
    byte doneBasic[MAX_SAVED_CLASSES];
    unsigned short hometown;  
    territoryT hometerrain;
@@ -244,24 +244,24 @@ class charFile;    // defined below
 
 class pointData { // NOTE: pointdata is saved directly into charfile SO YOU CAN NOT CHANGE THIS SHIT
  public:// without charfile conversion or wipe or whatnot. 
-   sh_int mana;         
-   sh_int maxMana;
+   short mana;         
+   short maxMana;
    double piety;
-   sh_int lifeforce;
-   sh_int hit;   
-   sh_int maxHit;      
-   sh_int move;  
-   sh_int maxMove;     
+   short lifeforce;
+   short hit;   
+   short maxHit;      
+   short move;  
+   short maxMove;     
 
    int money;        
    int bankmoney;        
    double exp;             
    double max_exp;
 
-   sh_int spellHitroll;
-   sh_int hitroll;     
+   short spellHitroll;
+   short hitroll;     
    sbyte damroll;  
-   sh_int armor;   // technically, in range -1000 to 1000
+   short armor;   // technically, in range -1000 to 1000
 
    pointData();
    pointData(const pointData &a);
@@ -288,7 +288,7 @@ class specialData {
     byte editFriend;
     unsigned long act;
     int was_in_room;
-    sh_int zone;
+    short zone;
 
     specialData();
     ~specialData();
@@ -330,7 +330,7 @@ class factionData {
 
 class pracData {
   public:
-  sh_int prac[MAX_SAVED_CLASSES];
+  short prac[MAX_SAVED_CLASSES];
   
   pracData();
   pracData(const pracData &a);
@@ -342,7 +342,7 @@ class bodyPartsDamage {
   private:
     unsigned short int flags;
     TThing *stuckIn;
-    ush_int health;
+    unsigned short health;
 
   public:
     bodyPartsDamage();
@@ -356,9 +356,9 @@ class bodyPartsDamage {
     void remFlags(unsigned short int num) { flags &= ~num; }
     TThing *getStuckIn() const { return stuckIn; }
     void setStuckIn(TThing *t) { stuckIn = t; }
-    ush_int getHealth() const { return health; }
-    void setHealth(ush_int num) { health = num; }
-    void addHealth(ush_int num) { health += num; }
+    unsigned short getHealth() const { return health; }
+    void setHealth(unsigned short num) { health = num; }
+    void addHealth(unsigned short num) { health += num; }
 };
 
 class followData {
@@ -530,13 +530,13 @@ class TBeing : public TThing {
     CMasterDiscipline *discs;
     bool inPraying;
     bool inQuaffUse;
-    sh_int attackers;
+    short attackers;
     short visionBonus;
-    sh_int age_mod;
+    short age_mod;
     short cantHit; 
-    sh_int wait;   // this goes up in multiples of COMBAT_ROUND (=20)
+    short wait;   // this goes up in multiples of COMBAT_ROUND (=20)
     polyTypeT polyed;         
-    sh_int hunt_dist;    // used by track, mob-hunting, etc
+    short hunt_dist;    // used by track, mob-hunting, etc
     short wimpy;        
     bool delaySave; // used as a hack to get around saving a char multiple times when doing things like sell all.commod 
     
@@ -630,10 +630,10 @@ class TBeing : public TThing {
 
     sstring getInsult(TBeing *);
     
-    ush_int getMaterial(wearSlotT) const;
+    unsigned short getMaterial(wearSlotT) const;
 
-    ush_int GetMaxLevel() const;
-    void setMaxLevel(ush_int num);
+    unsigned short GetMaxLevel() const;
+    void setMaxLevel(unsigned short num);
     sstring const getProfName() const;
     const char * const getProfAbbrevName() const;
     void deityIgnore(silentTypeT = SILENT_NO) const;
@@ -831,9 +831,9 @@ class TBeing : public TThing {
     int getClassNum(const char *, exactTypeT);
     int getClassNum(classIndT);
     classIndT getClassIndNum(const char *, exactTypeT);
-    classIndT getClassIndNum(ush_int, exactTypeT);
+    classIndT getClassIndNum(unsigned short, exactTypeT);
     bool hasClass(const char *, exactTypeT) const;
-    bool hasClass(ush_int, exactTypeT = EXACT_NO) const;
+    bool hasClass(unsigned short, exactTypeT = EXACT_NO) const;
     void setQuaffUse(bool tmp) { inQuaffUse = tmp; }
     bool getQuaffUse() const { return inQuaffUse; }
     void convertAbilities();
@@ -946,7 +946,7 @@ class TBeing : public TThing {
     short getRawSkillValue(spellNumT) const;
     virtual immortalTypeT isImmortal(int = GOD_LEVEL1) const { return IMMORTAL_NO; }
 
-    virtual ush_int getBaseAge() const {
+    virtual unsigned short getBaseAge() const {
       // ideally this should be a pure virtual with this functionality
       // in TMonster.  ~TBeing() makes use of age (via affectTotal) so
       // some functionality is needed here.
@@ -976,10 +976,10 @@ class TBeing : public TThing {
     int calcRaiseDisc(discNumT, bool) const;
     int pracsBetween(discNumT, int) const;
     double pracsPerLevel(classIndT Class, bool forceBasic);
-    sh_int calcNewPracs(classIndT, bool);
-    sh_int getPracs(classIndT);
-    void setPracs(sh_int, classIndT);
-    void addPracs(sh_int, classIndT);
+    short calcNewPracs(classIndT, bool);
+    short getPracs(classIndT);
+    void setPracs(short, classIndT);
+    void addPracs(short, classIndT);
     dirTypeT findDoor(const char *, const char *, doorIntentT, silentTypeT silent = SILENT_YES);
 
     // this can't be const due to list_thing_in_heap
@@ -1263,10 +1263,10 @@ class TBeing : public TThing {
     int checkForSkillAttempt(spellNumT);
     void removeSkillAttempt(spellNumT);
 
-    int removeCurseObj(TObj *, int, sh_int, spellNumT);
+    int removeCurseObj(TObj *, int, short, spellNumT);
     void removeCurseObj(TObj *);
     void removeCurseObj(TObj *, TMagicItem *, spellNumT);
-    int removeCurseBeing(TBeing *, int, sh_int, spellNumT);
+    int removeCurseBeing(TBeing *, int, short, spellNumT);
     void removeCurseBeing(TBeing *);
     void removeCurseBeing(TBeing *, TMagicItem *, spellNumT);
 
@@ -1590,7 +1590,7 @@ class TBeing : public TThing {
     int rawKill(spellNumT, TBeing * = NULL, float = 0);
     bool validMove(dirTypeT);
     const sstring movementType(bool) const;
-    ush_int getMaxLimbHealth(wearSlotT) const;
+    unsigned short getMaxLimbHealth(wearSlotT) const;
     bool removeAllCasinoGames() const;
     bool checkHearts(bool = false) const;
     bool checkCrazyEights(bool = false) const;
@@ -1616,8 +1616,8 @@ class TBeing : public TThing {
     virtual bool isPc() const {
       return ((specials.act & ACT_POLYSELF) != 0);
     }
-    void setCurLimbHealth(wearSlotT, ush_int);
-    ush_int getCurLimbHealth(wearSlotT) const;
+    void setCurLimbHealth(wearSlotT, unsigned short);
+    unsigned short getCurLimbHealth(wearSlotT) const;
     void addCurLimbHealth(wearSlotT, int);
     TThing * getStuckIn(wearSlotT limb) const;
     void setStuckIn(wearSlotT limb, TThing *item);
@@ -1634,14 +1634,14 @@ class TBeing : public TThing {
         return (getHit() - dam <= 0);
     }
     bool willKill(TBeing *, int dam, spellNumT, bool);
-    ush_int getLevel(classIndT i) const;
-    void setLevel(classIndT i, ush_int);
-    ush_int getClass() const;
-    void setClass(ush_int num);
+    unsigned short getLevel(classIndT i) const;
+    void setLevel(classIndT i, unsigned short);
+    unsigned short getClass() const;
+    void setClass(unsigned short num);
 
-    sh_int pracsSoFar();
-    sh_int meanPracsSoFar();
-    sh_int expectedPracs();
+    short pracsSoFar();
+    short meanPracsSoFar();
+    short expectedPracs();
 
     bool isLinkdead() const;
     double deathExp();
@@ -1677,9 +1677,9 @@ class TBeing : public TThing {
     void setInvisLevel(short num);
     double getMult() const;
     void setMult(double mult);
-    sh_int getArmor() const;
-    void setArmor(sh_int armor);
-    sh_int suggestArmor() const;
+    short getArmor() const;
+    void setArmor(short armor);
+    short suggestArmor() const;
     int getHit() const;
     void addToHit(int add);
     void setHit(int newhit);
@@ -1717,8 +1717,8 @@ class TBeing : public TThing {
     bool isAffected(uint64_t bv) const;
     unsigned int rentCredit() const;
     short getProtection() const;
-    void setProtection(sh_int num);
-    void addToProtection(sh_int num);
+    void setProtection(short num);
+    void addToProtection(short num);
 
     int getHeroNum() const {
       return heroNum;
@@ -2039,7 +2039,7 @@ class TBeing : public TThing {
     void doTestCode(const char *);
     int doGoto(const sstring &);
     int doMortalGoto(const sstring &);
-    void doNewbieEqLoad(race_t, ush_int, bool);
+    void doNewbieEqLoad(race_t, unsigned short, bool);
     virtual void doLoad(const char *);
     int doDisguise(const char *);
     int doPoisonWeapon(sstring);

@@ -7,7 +7,7 @@ std::vector<discNumT>disclist;
 void TBeing::assignSkillsClass()
 {
   int i;
-  sh_int pracs;
+  short pracs;
   classIndT Class;
   discNumT prim;
   int value;

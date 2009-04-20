@@ -40,10 +40,10 @@ private:
 
     int beastSoother(TBeing *, TBeing *);
     int beastSoother(TBeing *, TBeing *, TMagicItem *);
-    int beastSoother(TBeing *, TBeing *, int, sh_int);
+    int beastSoother(TBeing *, TBeing *, int, short);
  
     int beastSummon(TBeing *, const char *);
-    int beastSummon(TBeing *, const char *, int, sh_int);
+    int beastSummon(TBeing *, const char *, int, short);
 
 
 #endif

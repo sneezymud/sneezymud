@@ -23,9 +23,9 @@ class charFile {
    byte screen;
    attack_mode_t attack_type;
    float weight;
-   ush_int height;
+   unsigned short height;
    byte  doneBasic[MAX_SAVED_CLASSES];
-   ush_int Class;
+   unsigned short Class;
    int played;    /* Number of secs played in total */
    int body_flags[MAX_HUMAN_WEAR];
    int conditions[MAX_COND_TYPE];
@@ -41,36 +41,36 @@ class charFile {
    char description[500];
    char lastHost[40];
    char obsolete_prompt_colors[200];
-   sh_int hometown;
+   short hometown;
    ubyte hometerrain;
-   sh_int load_room;            /* Which room to place char in  */
-   sh_int body_health[MAX_HUMAN_WEAR];
+   short load_room;            /* Which room to place char in  */
+   short body_health[MAX_HUMAN_WEAR];
    unsigned int obsolete_p_type;
-   sh_int bad_login;
-   ush_int base_age;
-   sh_int age_mod;
-   ush_int wimpy;
+   short bad_login;
+   unsigned short base_age;
+   short age_mod;
+   unsigned short wimpy;
    unsigned int autobits;
    unsigned int best_rent_credit;
 
-   sh_int stats[MAX_STATS];
+   short stats[MAX_STATS];
    // pointData data
-   sh_int mana;
-   sh_int maxMana;
+   short mana;
+   short maxMana;
    double piety;
-   sh_int lifeforce;
-   sh_int hit;
-   sh_int maxHit;
-   sh_int move;
-   sh_int maxMove;
+   short lifeforce;
+   short hit;
+   short maxHit;
+   short move;
+   short maxMove;
    int money;
    int bankmoney;
    double exp;
    double max_exp;
-   sh_int spellHitroll;
-   sh_int hitroll;
+   short spellHitroll;
+   short hitroll;
    sbyte damroll;
-   sh_int armor;   
+   short armor;   
    // end of pointData data
    ubyte fatigue;
    int hero_num;

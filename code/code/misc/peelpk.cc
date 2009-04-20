@@ -21,7 +21,7 @@
 struct TPeelPk {
   int zones;
   bool cutdam;
-  sh_int zone[4];
+  short zone[4];
   int respawns[2];
   int respawn[2][4];
   int respawnlag;

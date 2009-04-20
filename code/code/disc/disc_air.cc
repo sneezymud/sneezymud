@@ -16,7 +16,7 @@
 #include "obj_magic_item.h"
 #include "combat.h"
 
-int gust(TBeing * caster, TBeing * victim, int level, sh_int bKnown, int adv_learn)
+int gust(TBeing * caster, TBeing * victim, int level, short bKnown, int adv_learn)
 {
   int rc;
   TThing *ch;
@@ -175,7 +175,7 @@ int gust(TBeing * caster, TBeing *victim,  TMagicItem * obj)
   return retCode;
 }
 
-int immobilize(TBeing * caster, TBeing * victim, int level, sh_int bKnown)
+int immobilize(TBeing * caster, TBeing * victim, int level, short bKnown)
 {
   int rc;
   TThing *ch;
@@ -352,7 +352,7 @@ int castImmobilize(TBeing * caster, TBeing * victim)
   return rc;
 }
 
-int suffocate(TBeing * caster, TBeing * victim, int level, sh_int bKnown) 
+int suffocate(TBeing * caster, TBeing * victim, int level, short bKnown) 
 {
   affectedData aff;
   int duration;
@@ -483,7 +483,7 @@ int castSuffocate(TBeing * caster, TBeing * victim)
   }
 }
 
-int dustStorm(TBeing * caster, int level, sh_int bKnown, int adv_learn)
+int dustStorm(TBeing * caster, int level, short bKnown, int adv_learn)
 {
   TThing *t=NULL;
   TBeing *tmp_victim = NULL;
@@ -587,7 +587,7 @@ int castDustStorm(TBeing * caster)
   return TRUE;
 }
 
-int tornado(TBeing * caster, int level, sh_int bKnown, int adv_learn)
+int tornado(TBeing * caster, int level, short bKnown, int adv_learn)
 {
   TThing *t, *ch;
   TBeing *tb;
@@ -797,7 +797,7 @@ int castTornado(TBeing * caster)
   return FALSE;
 }
 
-int featheryDescent(TBeing * caster, TBeing * victim, int, affectedData * aff, sh_int bKnown)
+int featheryDescent(TBeing * caster, TBeing * victim, int, affectedData * aff, short bKnown)
 {
   caster->reconcileHelp(victim,discArray[SPELL_FEATHERY_DESCENT]->alignMod);
 
@@ -891,7 +891,7 @@ int castFeatheryDescent(TBeing * caster, TBeing * victim)
   return TRUE;
 }
 
-int fly(TBeing * caster, TBeing * victim, int, affectedData * aff, sh_int bKnown)
+int fly(TBeing * caster, TBeing * victim, int, affectedData * aff, short bKnown)
 {
   caster->reconcileHelp(victim,discArray[SPELL_FLY]->alignMod);
 
@@ -993,7 +993,7 @@ int castFly(TBeing * caster, TBeing * victim)
   return TRUE;
 }
 
-int antigravity(TBeing *caster, int, affectedData *aff, sh_int bKnown)
+int antigravity(TBeing *caster, int, affectedData *aff, short bKnown)
 {
   TThing *t=NULL;
   TBeing *vict = NULL;
@@ -1079,7 +1079,7 @@ int castAntigravity(TBeing * caster)
     return TRUE;
 }
 
-int conjureElemAir(TBeing * caster, int level, sh_int bKnown)
+int conjureElemAir(TBeing * caster, int level, short bKnown)
 {
   affectedData aff;
   TMonster * victim;
@@ -1199,7 +1199,7 @@ int castConjureElemAir(TBeing * caster)
 }
 
 
-int levitate(TBeing * caster, TBeing * victim, int level, sh_int bKnown)
+int levitate(TBeing * caster, TBeing * victim, int level, short bKnown)
 {
   affectedData aff;
 
@@ -1275,7 +1275,7 @@ void levitate(TBeing * caster, TBeing * victim)
   return;
 }
 
-int falconWings(TBeing * caster, TBeing * victim, int level, sh_int bKnown)
+int falconWings(TBeing * caster, TBeing * victim, int level, short bKnown)
 {
   affectedData aff;
 
@@ -1372,7 +1372,7 @@ int castFalconWings(TBeing * caster, TBeing * victim)
   return FALSE;
 }
 
-int protectionFromAir(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
+int protectionFromAir(TBeing *caster, TBeing *victim, int level, short bKnown)
 {
   affectedData aff;
  

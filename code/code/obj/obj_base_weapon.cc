@@ -154,7 +154,7 @@ sstring TBaseWeapon::displayFourValues()
   return tString;
 }
 
-int TBaseWeapon::galvanizeMe(TBeing *caster, sh_int bKnown)
+int TBaseWeapon::galvanizeMe(TBeing *caster, short bKnown)
 {
   if (getMaxStructPoints() < 2) {
     act("$p is as solid as it is possible.",
@@ -709,7 +709,7 @@ void TBaseWeapon::divinateMe(TBeing *caster) const
 #endif
 }
 
-int TBaseWeapon::enhanceMe(TBeing *caster, int level, sh_int bKnown)
+int TBaseWeapon::enhanceMe(TBeing *caster, int level, short bKnown)
 {
   int i;
 

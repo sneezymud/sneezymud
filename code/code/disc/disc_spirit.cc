@@ -52,7 +52,7 @@ int castKnot(TBeing *caster, TBeing *victim)
   return rc;
 }
 
-int knot(TBeing *caster, TBeing *victim, int, sh_int bKnown)
+int knot(TBeing *caster, TBeing *victim, int, short bKnown)
 {
   int rc;
   TThing *t;
@@ -117,7 +117,7 @@ int knot(TBeing *caster, TBeing *victim, int, sh_int bKnown)
 }
 
 
-int silence(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
+int silence(TBeing *caster, TBeing *victim, int level, short bKnown)
 {
   affectedData aff;
 
@@ -210,7 +210,7 @@ int ret,level;
   return TRUE;
 }
 
-int slumber(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
+int slumber(TBeing *caster, TBeing *victim, int level, short bKnown)
 {
   int ret= FALSE, rc = FALSE;
   bool found = false;
@@ -375,7 +375,7 @@ int castSlumber(TBeing *caster, TBeing *victim)
   return rc;
 }
 
-int ensorcer(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
+int ensorcer(TBeing *caster, TBeing *victim, int level, short bKnown)
 {
   affectedData aff;
   int again;
@@ -601,7 +601,7 @@ int ret,level;
   return TRUE;
 }
 
-int cloudOfConcealment(TBeing *caster, int level, sh_int bKnown)
+int cloudOfConcealment(TBeing *caster, int level, short bKnown)
 {
   TBeing *tmp_victim;
   TThing *t;
@@ -686,7 +686,7 @@ int ret,level;
   return TRUE;
 }
 
-int dispelInvisible(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
+int dispelInvisible(TBeing *caster, TBeing *victim, int level, short bKnown)
 {
   if (caster->isNotPowerful(victim, level, SPELL_DISPEL_INVISIBLE, SILENT_NO)) {
     return SPELL_FAIL;
@@ -768,7 +768,7 @@ int castDispelInvisible(TBeing *caster, TBeing *victim)
   return FALSE;
 }
 
-int dispelInvisible(TBeing *caster, TObj * obj, int, sh_int bKnown)
+int dispelInvisible(TBeing *caster, TObj * obj, int, short bKnown)
 {
   if (caster->bSuccess(bKnown, SPELL_DISPEL_INVISIBLE)) {
     if (obj->isObjStat(ITEM_INVISIBLE)) {
@@ -823,7 +823,7 @@ static struct PolyType PolyList[] =
   {"\n"        , -1,  -1,    -1, DISC_SPIRIT, RACE_NORACE}
 };
 
-int polymorph(TBeing *caster, int level, sh_int bKnown)
+int polymorph(TBeing *caster, int level, short bKnown)
 {
   int i, ret = 0;
   bool nameFound = FALSE;
@@ -1002,7 +1002,7 @@ int castPolymorph(TBeing *caster)
   return TRUE;
 }
 
-int stealth(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
+int stealth(TBeing *caster, TBeing *victim, int level, short bKnown)
 {
   affectedData aff;
 
@@ -1086,7 +1086,7 @@ int castStealth(TBeing *caster, TBeing *victim)
   return TRUE;
 }
 
-int accelerate(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
+int accelerate(TBeing *caster, TBeing *victim, int level, short bKnown)
 {
   affectedData aff;
 
@@ -1164,7 +1164,7 @@ int ret,level;
   return TRUE;
 }
 
-int haste(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
+int haste(TBeing *caster, TBeing *victim, int level, short bKnown)
 {
   affectedData aff;
 
@@ -1238,7 +1238,7 @@ int castHaste(TBeing *caster, TBeing *victim)
   return TRUE;
 }
 
-int calm(TBeing *caster, TBeing *victim, int, sh_int bKnown)
+int calm(TBeing *caster, TBeing *victim, int, short bKnown)
 {
   affectedData aff;
 
@@ -1347,7 +1347,7 @@ static bool invisibilityCheck(TBeing *caster, TObj *obj)
   return false;
 }
 
-int invisibility(TBeing *caster, TObj * obj, int, sh_int bKnown)
+int invisibility(TBeing *caster, TObj * obj, int, short bKnown)
 {
   if (invisibilityCheck(caster, obj))
     return SPELL_FAIL;
@@ -1413,7 +1413,7 @@ int castInvisibility(TBeing *caster, TObj *obj)
   return TRUE;
 }
 
-int invisibility(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
+int invisibility(TBeing *caster, TBeing *victim, int level, short bKnown)
 {
   affectedData aff;
 
@@ -1514,7 +1514,7 @@ int castInvisibility(TBeing *caster, TBeing *victim)
   return TRUE;
 }
 
-int senseLife(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
+int senseLife(TBeing *caster, TBeing *victim, int level, short bKnown)
 {
   affectedData aff;
 
@@ -1591,7 +1591,7 @@ int castSenseLife(TBeing *caster, TBeing *victim)
   return TRUE;
 }
 
-int detectInvisibility(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
+int detectInvisibility(TBeing *caster, TBeing *victim, int level, short bKnown)
 {
   affectedData aff;
 
@@ -1663,7 +1663,7 @@ int castDetectInvisibility(TBeing *caster, TBeing *victim)
   return TRUE;
 }
 
-int trueSight(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
+int trueSight(TBeing *caster, TBeing *victim, int level, short bKnown)
 {
   affectedData aff;
   caster->reconcileHelp(victim, discArray[SPELL_TRUE_SIGHT]->alignMod);
@@ -1731,7 +1731,7 @@ int castTrueSight(TBeing *caster, TBeing *victim)
     return TRUE;
 }
 
-int telepathy(TBeing *caster, int, sh_int bKnown)
+int telepathy(TBeing *caster, int, short bKnown)
 {
   Descriptor *i;
   const char *msg = caster->spelltask->orig_arg;
@@ -1803,7 +1803,7 @@ int ret,level;
   return TRUE;
 }
 
-int fear(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
+int fear(TBeing *caster, TBeing *victim, int level, short bKnown)
 {
   int rc;
 
@@ -1905,7 +1905,7 @@ int castFear(TBeing *caster, TBeing *victim)
   return rc;
 }
 
-int fumble(TBeing *caster, TBeing *victim, int level, sh_int bKnown) 
+int fumble(TBeing *caster, TBeing *victim, int level, short bKnown) 
 {
   bool drop = FALSE;
   wearSlotT toDrop = WEAR_NOWHERE;

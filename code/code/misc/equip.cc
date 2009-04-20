@@ -47,9 +47,9 @@ int GetItemClassRestrictions(const TObj *obj)
   return (total);
 }
 
-bool IsRestricted(ush_int mask, ush_int Class)
+bool IsRestricted(unsigned short mask, unsigned short Class)
 {
-  ush_int i;
+  unsigned short i;
 
   for (i = CLASS_MAGE; i <= CLASS_THIEF; i *= 2) {
     if (IS_SET(i, mask) && !IS_SET(i, Class))

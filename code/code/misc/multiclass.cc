@@ -167,7 +167,7 @@ classIndT TBeing::getClassIndNum(const char *arg, exactTypeT exact)
 }
 
 
-classIndT TBeing::getClassIndNum(ush_int which, exactTypeT exact)
+classIndT TBeing::getClassIndNum(unsigned short which, exactTypeT exact)
 {
   classIndT res = MIN_CLASS_IND;
 
@@ -219,7 +219,7 @@ bool TBeing::hasClass(const char *arg, exactTypeT exact) const
 
 }
 
-bool TBeing::hasClass(ush_int bit, exactTypeT exact) const
+bool TBeing::hasClass(unsigned short bit, exactTypeT exact) const
 {
   if (!exact) {
     if (getClass() & bit) 
@@ -328,7 +328,7 @@ classIndT TBeing::bestClass() const
   return(Class);
 }
 
-void TBeing::setLevel(classIndT i, ush_int lev)
+void TBeing::setLevel(classIndT i, unsigned short lev)
 {
   if (i >= MAX_CLASSES) {
     vlogf(LOG_BUG, "Bad class value");
@@ -398,7 +398,7 @@ const char * const TBeing::getProfAbbrevName() const
     return "";
 }
 
-void TBeing::setClass(ush_int num)
+void TBeing::setClass(unsigned short num)
 {
   player.Class = num;
 }

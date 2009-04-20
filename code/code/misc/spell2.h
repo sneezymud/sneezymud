@@ -451,11 +451,11 @@ class spellInfo {
     unsigned int toggle;
     discNumT disc;
     discNumT assDisc;
-    sh_int startLearnDo;
-    sh_int amtLearnDo;
+    short startLearnDo;
+    short amtLearnDo;
     int learnDoDiff;
-    sh_int secStartLearnDo;
-    sh_int secAmtLearnDo;
+    short secStartLearnDo;
+    short secAmtLearnDo;
     std::map<int, int>sectorData;
     std::map<int, int>weatherData;
 

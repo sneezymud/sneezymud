@@ -167,7 +167,7 @@ time_info_data *TBeing::age() const
   // this is for the psionics skill mind preservation
   // reduces age by up to 20%
   if(isPc() && discs && doesKnowSkill(SKILL_MIND_PRESERVATION)){
-    player_age.year = (sh_int)((float)player_age.year * (float)
+    player_age.year = (short)((float)player_age.year * (float)
               ((100.0 - (getSkillValue(SKILL_MIND_PRESERVATION)/5.0))/100.0));
   }
 
@@ -1045,7 +1045,7 @@ bool can_see_char_other_room(const TBeing *ch, TBeing *victim, TRoom *)
   if (ch->isAffected(AFF_BLIND))
     return FALSE;
 
-  sh_int sight = ch->eyeSight(victim->roomp);
+  short sight = ch->eyeSight(victim->roomp);
 
   if ((sight >= victim->visibility()) || victim->roomp->isRoomFlag(ROOM_ALWAYS_LIT))
     return TRUE;

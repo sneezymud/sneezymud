@@ -26,7 +26,7 @@ Stats Stats::operator-(const Stats &operand)
   return diff;
 }
 
-sh_int Stats::get(statTypeT stat) const
+short Stats::get(statTypeT stat) const
 {
   mud_assert(((stat >= MIN_STAT) && (stat < MAX_STATS)),
         "Something tried to access an invalid stat.");
@@ -34,7 +34,7 @@ sh_int Stats::get(statTypeT stat) const
   return values[stat];
 }
 
-sh_int Stats::set(statTypeT stat, sh_int val)
+short Stats::set(statTypeT stat, short val)
 {
   mud_assert(((stat >= MIN_STAT) && (stat < MAX_STATS)),
         "Something tried to access an invalid stat.");
@@ -42,7 +42,7 @@ sh_int Stats::set(statTypeT stat, sh_int val)
   return values[stat] = val;
 }
 
-sh_int Stats::add(statTypeT stat, sh_int mod)
+short Stats::add(statTypeT stat, short mod)
 {
   mud_assert(((stat >= MIN_STAT) && (stat < MAX_STATS)),
 	"Something tried to access an invalid stat.");

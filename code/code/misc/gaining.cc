@@ -1955,7 +1955,7 @@ int GenericGuildMaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, 
     return false;
 
   classIndT cit=me->bestClass();
-  ush_int Class=me->getClass();
+  unsigned short Class=me->getClass();
   sstring argument=arg;
   int practices = 0;
 

@@ -14,7 +14,7 @@
 #include "disc_earth.h"
 #include "obj_magic_item.h"
 
-int slingShot(TBeing * caster, TBeing * victim, int level, sh_int bKnown, int adv_learn)
+int slingShot(TBeing * caster, TBeing * victim, int level, short bKnown, int adv_learn)
 {
 
   level = min(level, 10);
@@ -109,7 +109,7 @@ int castSlingShot(TBeing * caster, TBeing * victim)
   return rc;
 }
 
-int graniteFists(TBeing * caster, TBeing * victim, int level, sh_int bKnown, int adv_learn)
+int graniteFists(TBeing * caster, TBeing * victim, int level, short bKnown, int adv_learn)
 {
   level = min(level, 25);
 
@@ -204,7 +204,7 @@ int castGraniteFists(TBeing * caster, TBeing * victim)
   return rc;
 }
 
-int pebbleSpray(TBeing * caster, int level, sh_int bKnown, int adv_learn)
+int pebbleSpray(TBeing * caster, int level, short bKnown, int adv_learn)
 {
   TThing *t;
   TBeing *vict = NULL;
@@ -283,7 +283,7 @@ int castPebbleSpray(TBeing * caster)
   return rc;
 }
 
-int sandBlast(TBeing * caster, int level, sh_int bKnown, int adv_learn)
+int sandBlast(TBeing * caster, int level, short bKnown, int adv_learn)
 {
   TThing *t;
   TBeing *vict = NULL;
@@ -383,7 +383,7 @@ int castSandBlast(TBeing * caster)
   return rc;
 }
 
-int lavaStream(TBeing * caster, int level, sh_int bKnown, int adv_learn)
+int lavaStream(TBeing * caster, int level, short bKnown, int adv_learn)
 {
   TThing * t;
   TBeing *vict = NULL;
@@ -485,7 +485,7 @@ int castLavaStream(TBeing * caster)
   return rc;
 }
 
-int meteorSwarm(TBeing * caster, TBeing * victim, int level, sh_int bKnown, int adv_learn)
+int meteorSwarm(TBeing * caster, TBeing * victim, int level, short bKnown, int adv_learn)
 {
   char buf[81];
 
@@ -622,7 +622,7 @@ int castMeteorSwarm(TBeing * caster, TBeing * victim)
   return rc;
 }
 
-int stoneSkin(TBeing * caster, TBeing * victim, int level, sh_int bKnown)
+int stoneSkin(TBeing * caster, TBeing * victim, int level, short bKnown)
 {
   affectedData aff1, aff2;
 
@@ -721,7 +721,7 @@ int castStoneSkin(TBeing * caster, TBeing * victim)
   return TRUE;
 }
 
-int trailSeek(TBeing * caster, TBeing * victim, int level, sh_int bKnown)
+int trailSeek(TBeing * caster, TBeing * victim, int level, short bKnown)
 {
   affectedData aff;
 
@@ -813,7 +813,7 @@ int castTrailSeek(TBeing * caster, TBeing * victim)
   return TRUE;
 }
 
-int conjureElemEarth(TBeing * caster, int level, sh_int bKnown)
+int conjureElemEarth(TBeing * caster, int level, short bKnown)
 {
   affectedData aff;
   TMonster * victim;
@@ -932,7 +932,7 @@ int ret,level;
   return TRUE;
 }
 
-int protectionFromEarth(TBeing *caster, TBeing *victim, int level, sh_int bKnown)
+int protectionFromEarth(TBeing *caster, TBeing *victim, int level, short bKnown)
 {
   affectedData aff;
  

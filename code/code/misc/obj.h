@@ -511,9 +511,9 @@ class objFlagData {
     unsigned int wear_flags;     /* Where you can wear it            */
     int cost;           /* Value when sold (gp.)            */
     long bitvector;     /* To set chars bits                */
-    sh_int decay_time;
-    sh_int struct_points;
-    sh_int max_struct_points;
+    short decay_time;
+    short struct_points;
+    short max_struct_points;
     int volume;
 
   objFlagData();
@@ -590,32 +590,32 @@ private:
     }
 
     bool isUnique() const;
-    sh_int getStructPoints() const {
+    short getStructPoints() const {
       return obj_flags.struct_points;
     }
-    void setStructPoints(sh_int num) {
+    void setStructPoints(short num) {
       obj_flags.struct_points = num;
     }
-    void addToStructPoints(sh_int num) {
+    void addToStructPoints(short num) {
       obj_flags.struct_points += num;
     }
-    sh_int getMaxStructPoints() const {
+    short getMaxStructPoints() const {
       return obj_flags.max_struct_points;
     }
-    void setMaxStructPoints(sh_int num) {
+    void setMaxStructPoints(short num) {
       obj_flags.max_struct_points = num;
     }
-    void addToMaxStructPoints(sh_int num) {
+    void addToMaxStructPoints(short num) {
       obj_flags.max_struct_points += num;
     }
-    sh_int getDepreciation() const {
+    short getDepreciation() const {
       return 0;
       //      return obj_flags.depreciation;
     }
-    void setDepreciation(sh_int num) {
+    void setDepreciation(short num) {
       obj_flags.depreciation = num;
     }
-    void addToDepreciation(sh_int num) {
+    void addToDepreciation(short num) {
       obj_flags.depreciation += num;
     }
 
@@ -684,7 +684,7 @@ private:
     virtual void thingDumped(TBeing *, int *);
     virtual void junkMe(TBeing *);
     virtual int scavengeMe(TBeing *, TObj **);
-    virtual int illuminateMe(TBeing *, int, sh_int);
+    virtual int illuminateMe(TBeing *, int, short);
     virtual int personalizedCheck(TBeing *);
     virtual void describeMe(TBeing *) const;
     virtual void giveToRepair(TMonster *, TBeing *, int *);
@@ -720,12 +720,12 @@ private:
     virtual int sellMe(TBeing *, TMonster *, int, int);
     virtual void valueMe(TBeing *, TMonster *, int, int);
     virtual const sstring shopList(const TBeing *, const sstring &, int, int, int, int, int, unsigned long int) const;
-    virtual int damageItem(sh_int);
+    virtual int damageItem(short);
     virtual bool makeScraps();
     virtual int shopPrice(int, int, float, const TBeing *) const;
     virtual int sellPrice(int ,int, float, const TBeing *);
     virtual void divinateMe(TBeing *) const;
-    virtual int copyMe(TBeing *, sh_int);
+    virtual int copyMe(TBeing *, short);
     virtual int changeItemVal2Check(TBeing *, int);
     virtual int changeItemVal3Check(TBeing *, int);
     virtual int changeItemVal4Check(TBeing *, int);
@@ -736,7 +736,7 @@ private:
     //virtual void changeBaseWeaponValue3(TBeing *, const char *, editorEnterTypeT) {}
     virtual void objMenu(const TBeing *) const;
     virtual int rentCost() const;
-    virtual int galvanizeMe(TBeing *, sh_int);
+    virtual int galvanizeMe(TBeing *, short);
     virtual int grenadeHit(TTrap *);
     int burnObject(TBeing *, int);
     int meltObject(TBeing *, int);

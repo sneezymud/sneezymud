@@ -44,11 +44,11 @@ struct appliedCreate_struct
 class CreateEngineData
 {
   public:
-    ush_int   eClass;
+    unsigned short   eClass;
         int   ceType;
-     sh_int   skCEMin;
-    sh_int skCEMax;
-    sh_int skCERounds;
+     short   skCEMin;
+    short skCEMax;
+    short skCERounds;
     spellNumT skCESkillNum;
     char     *ceName,
              *ceStartMsg,
@@ -61,7 +61,7 @@ class CreateEngineData
     int (*cePerMesg)(int, TBeing *, TObj *);
     int (*ceEnding )(int, TBeing *, TObj *);
 
-    CreateEngineData(ush_int, int, sh_int, sh_int, sh_int, spellNumT, const char *, const char *, const char *, 
+    CreateEngineData(unsigned short, int, short, short, short, spellNumT, const char *, const char *, const char *, 
                      const char *, const char *, const char *, const char *, const char *, long, long, long, long, long,
                      long, long, long, long, long, long, int (*)(int, TBeing *, TObj *),
                      int (*)(int, TBeing *, TObj *), int (*)(int, TBeing *, TObj *));

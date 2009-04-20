@@ -31,7 +31,7 @@
 using std::vector;
 using std::deque;
 
-int identify(TBeing *caster, TObj *obj, int, sh_int bKnown)
+int identify(TBeing *caster, TObj *obj, int, short bKnown)
 {
   sstring buf, buf2;
   int x, y;
@@ -206,7 +206,7 @@ static sstring identifyBeingStuff(const TBeing *caster, TBeing *victim, showMeT 
   return str;
 }
 
-int identify(TBeing *caster, TBeing * victim, int, sh_int bKnown)
+int identify(TBeing *caster, TBeing * victim, int, short bKnown)
 {
   if (caster->bSuccess(bKnown, SPELL_IDENTIFY)) {
     if (caster->desc) {
@@ -261,7 +261,7 @@ void TObj::divinateMe(TBeing *caster) const
   caster->sendTo("You can't discern anything but the obvious in regards to its type.\n\r");
 }
 
-int divinationObj(TBeing *caster, const TObj *obj, int, sh_int bKnown)
+int divinationObj(TBeing *caster, const TObj *obj, int, short bKnown)
 {
   sstring buf;
   int i, found = FALSE;
@@ -370,7 +370,7 @@ int castDivinationObj(TBeing *caster, const TObj *obj)
      return ret;
 }
 
-int divinationBeing(TBeing *caster, TBeing * victim, int, sh_int bKnown)
+int divinationBeing(TBeing *caster, TBeing * victim, int, short bKnown)
 {
   if (caster->bSuccess(bKnown, SPELL_DIVINATION)) {
     if (caster->desc) {
@@ -474,7 +474,7 @@ sstring genPathString(deque<pathData *> path)
   return result;
 }
 
-int eyesOfFertuman(TBeing *caster, TBeing* victim, int level, sh_int bKnown)
+int eyesOfFertuman(TBeing *caster, TBeing* victim, int level, short bKnown)
 {
   sstring exitNames;
   TPerson *person;
@@ -825,7 +825,7 @@ int castEyesOfFertuman(TBeing *caster, TBeing* v)
   return ret;
 }
 
-int TThing::powerstoneMe(TBeing *caster, int, sh_int)
+int TThing::powerstoneMe(TBeing *caster, int, short)
 {
   act("It is too late before you realize your blunder -- that's no opal!", 
             FALSE, caster, NULL, NULL, TO_CHAR);
@@ -833,7 +833,7 @@ int TThing::powerstoneMe(TBeing *caster, int, sh_int)
   return SPELL_FAIL;
 }
 
-int TOpal::powerstoneMe(TBeing *caster, int, sh_int bKnown)
+int TOpal::powerstoneMe(TBeing *caster, int, short bKnown)
 {
   int str;
   sstring buf;
@@ -913,7 +913,7 @@ int TOpal::powerstoneMe(TBeing *caster, int, sh_int bKnown)
   }
 }
 
-int powerstone(TBeing *caster, TObj *obj, int x, sh_int bKnown)
+int powerstone(TBeing *caster, TObj *obj, int x, short bKnown)
 {
   return obj->powerstoneMe(caster, x, bKnown);
 }
@@ -942,7 +942,7 @@ int castPowerstone(TBeing *caster, TObj *obj)
      return ret;
 }
 
-int shatter(TBeing *caster, TBeing * victim, int level, sh_int bKnown)
+int shatter(TBeing *caster, TBeing * victim, int level, short bKnown)
 {
   bool scrap_it = FALSE;
   wearSlotT hand;
@@ -1027,7 +1027,7 @@ int castShatter(TBeing *caster, TBeing * victim)
     return ret;
 }
 
-int farlook(TBeing *caster, TBeing * victim, int level, sh_int bKnown)
+int farlook(TBeing *caster, TBeing * victim, int level, short bKnown)
 {
   std::vector<TBeing *>tBeing(0);
 
@@ -1182,12 +1182,12 @@ int castFarlook(TBeing *caster, TBeing * victim)
   return ret;
 }
 
-int illuminate(TBeing *caster, TObj *obj, int x, sh_int bKnown)
+int illuminate(TBeing *caster, TObj *obj, int x, short bKnown)
 {
   return obj->illuminateMe(caster, x, bKnown);
 }
 
-int TObj::illuminateMe(TBeing *caster, int level, sh_int bKnown)
+int TObj::illuminateMe(TBeing *caster, int level, short bKnown)
 {
   int i;
 
@@ -1275,7 +1275,7 @@ int castIlluminate(TBeing *caster, TObj *obj)
   return ret;
 }
 
-int detectMagic(TBeing *caster, TBeing * victim, int level, sh_int bKnown)
+int detectMagic(TBeing *caster, TBeing * victim, int level, short bKnown)
 {
   affectedData aff;
 // COMMENTED OUT FOR DURATIONS
@@ -1350,7 +1350,7 @@ int castDetectMagic(TBeing *caster, TBeing * victim)
     return ret;
 }
 
-int dispelMagic(TBeing *caster, TObj * obj, int, sh_int bKnown)
+int dispelMagic(TBeing *caster, TObj * obj, int, short bKnown)
 {
   int i;
 
@@ -1425,7 +1425,7 @@ int castDispelMagic(TBeing *caster, TObj *obj)
   return ret;
 }
 
-int dispelMagic(TBeing *caster, TBeing * victim, int, sh_int bKnown)
+int dispelMagic(TBeing *caster, TBeing * victim, int, short bKnown)
 {
   caster->reconcileHurt(victim,discArray[SPELL_DISPEL_MAGIC]->alignMod);
 
@@ -1680,12 +1680,12 @@ int generic_dispel_magic(TBeing *caster, TBeing *victim, int, immortalTypeT immo
   return FALSE;
 }
 
-int enhanceWeapon(TBeing *caster, TObj *obj, int level, sh_int bKnown)
+int enhanceWeapon(TBeing *caster, TObj *obj, int level, short bKnown)
 {
   return obj->enhanceMe(caster, level, bKnown);
 }
 
-int TThing::enhanceMe(TBeing *caster, int, sh_int)
+int TThing::enhanceMe(TBeing *caster, int, short)
 {
   caster->sendTo("Uhh, you can't enhance something that isn't a weapon...\n\r");
   caster->nothingHappens(SILENT_YES);
@@ -1879,7 +1879,7 @@ bool alchemy_create_deny(int numberx)
   return true;
 }
         
-int materialize(TBeing *caster, TObj **obj, int, const char * name, sh_int bKnown)
+int materialize(TBeing *caster, TObj **obj, int, const char * name, short bKnown)
 {
   unsigned int numberx;
 
@@ -1981,7 +1981,7 @@ int castMaterialize(TBeing *caster, const char * name)
   return TRUE;
 }
 
-int spontaneousGeneration(TBeing *caster, TObj **obj, const char * name, int, sh_int bKnown)
+int spontaneousGeneration(TBeing *caster, TObj **obj, const char * name, int, short bKnown)
 {
   unsigned int numberx;
 
@@ -2090,19 +2090,19 @@ int castSpontaneousGeneration(TBeing *caster, const char * name)
   return TRUE;
 }
 
-int TObj::copyMe(TBeing *caster, sh_int)
+int TObj::copyMe(TBeing *caster, short)
 {
   caster->sendTo("That's not a scroll!\n\r");
   caster->nothingHappens(SILENT_YES);
   return SPELL_FAIL;
 }
 
-int copy(TBeing *caster, TObj *obj, int, sh_int bKnown)
+int copy(TBeing *caster, TObj *obj, int, short bKnown)
 {
   return obj->copyMe(caster, bKnown);
 }
 
-int TScroll::copyMe(TBeing *caster, sh_int bKnown)
+int TScroll::copyMe(TBeing *caster, short bKnown)
 {
   TObj *new_obj;
   int x, spell1, spell2, spell3;
@@ -2177,7 +2177,7 @@ int castCopy(TBeing *caster, TObj *obj)
   return TRUE;
 }
 
-int galvanize(TBeing *caster, TObj *obj, int, sh_int bKnown)
+int galvanize(TBeing *caster, TObj *obj, int, short bKnown)
 {
   return obj->galvanizeMe(caster, bKnown);
 }
@@ -2244,7 +2244,7 @@ int castGalvanize(TBeing *caster, TObj *obj)
   return FALSE;
 }
 
-int ethrealGate(TBeing *caster, TObj *obj, int, sh_int bKnown)
+int ethrealGate(TBeing *caster, TObj *obj, int, short bKnown)
 {
   return SPELL_FALSE;
 }

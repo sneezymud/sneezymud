@@ -678,7 +678,7 @@ mob->getName());
           
           int diff = expectedPracs-actualPracs;
           if (diff >= 0) {
-            mob->practices.prac[parm2] = (sh_int) diff;
+            mob->practices.prac[parm2] = (short) diff;
             sendTo(COLOR_MOBS, format("Setting char %s's extra practices to %d (was %d) to go along with level in class %s.\n\r") 
                 % mob->getName() % mob->practices.prac[parm2] % 
                 oldPracs % classInfo[parm2].name);
@@ -710,7 +710,7 @@ mob->getName());
 
           int diff = expectedPracs-actualPracs;
           if (diff >= 0) {
-            mob->practices.prac[parm2] = (sh_int) diff;
+            mob->practices.prac[parm2] = (short) diff;
             sendTo(COLOR_MOBS, format("Setting char %s's extra practices to %d (was %d) to go along with level in class %s.\n\r") 
                 % mob->getName() % mob->practices.prac[parm2] % 
                 oldPracs % classInfo[parm2].name);

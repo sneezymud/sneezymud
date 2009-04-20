@@ -409,7 +409,7 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
   return TRUE;
 }
 
-static void simple_deity_poof(TMonster *deity, sh_int targ_rm)
+static void simple_deity_poof(TMonster *deity, short targ_rm)
 {
   if (deity->inRoom() == targ_rm)
     return;

@@ -216,12 +216,12 @@ void TThing::setRoom(int room)
   in_room = room;
 }
 
-void TThing::setMaterial(ush_int num)
+void TThing::setMaterial(unsigned short num)
 {
   material_type = convertV9MaterialToV10(num);
 }
 
-ush_int TThing::getMaterial() const
+unsigned short TThing::getMaterial() const
 {
   return material_type;
 }

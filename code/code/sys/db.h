@@ -270,7 +270,7 @@ class objIndexData : public indexData
     extraDescription *ex_description;  // extra descriptions
     objAffData affected[MAX_OBJ_AFFECT];
     byte max_struct;
-    sh_int armor;
+    short armor;
     unsigned int where_worn;
     ubyte itemtype;
     int value;

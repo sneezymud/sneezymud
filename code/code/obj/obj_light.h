@@ -15,7 +15,7 @@ class TLight : public TBaseLight {
     virtual itemTypeT itemType() const { return ITEM_LIGHT; }
 
     virtual int chiMe(TBeing *);
-    virtual int illuminateMe(TBeing *, int, sh_int);
+    virtual int illuminateMe(TBeing *, int, short);
     virtual void refuelMeLight(TBeing *, TThing*);
     virtual int objectDecay();
     virtual void unequipMe(TBeing *);

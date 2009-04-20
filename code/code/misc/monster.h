@@ -46,7 +46,7 @@ class opinionData {
     charList *clist;
     sexTypeT sex;
     race_t race;
-    sh_int Class;
+    short Class;
     short vnum;
 
   opinionData();
@@ -59,15 +59,15 @@ class Mobile_Attitude {
   friend class TMonster;
 
   private:
-    ush_int suspicion;          /* current suspicion value */
-    ush_int greed;              /* current greed value */
-    ush_int malice;             /* current malice value */
-    ush_int anger;              /* current anger value */
+    unsigned short suspicion;          /* current suspicion value */
+    unsigned short greed;              /* current greed value */
+    unsigned short malice;             /* current malice value */
+    unsigned short anger;              /* current anger value */
   
-    ush_int def_suspicion;      /* the various default values */
-    ush_int def_greed;
-    ush_int def_malice;
-    ush_int def_anger;
+    unsigned short def_suspicion;      /* the various default values */
+    unsigned short def_greed;
+    unsigned short def_malice;
+    unsigned short def_anger;
   
     TBeing *target;             /* the target of the mobs opinions */
   public:
@@ -86,18 +86,18 @@ class TMonster : public TBeing {
     Mobile_Attitude opinion; 
     opinionData hates;
     opinionData fears;
-    sh_int persist;
+    short persist;
     int oldRoom;
     int brtRoom;
     unsigned short hatefield;
     unsigned short fearfield;
-    ush_int moneyConst;
+    unsigned short moneyConst;
 
     const char *sounds;
     const char *distantSnds;
     float hpLevel;
     float damLevel;
-    ush_int damPrecision;
+    unsigned short damPrecision;
     float acLevel;
     sstring procData;
     bool stolenFrom;
@@ -224,8 +224,8 @@ class TMonster : public TBeing {
     void setHPLevel(float);
     float getDamLevel() const;
     void setDamLevel(float);
-    ush_int getDamPrecision() const;
-    void setDamPrecision(ush_int);
+    unsigned short getDamPrecision() const;
+    void setDamPrecision(unsigned short);
     int getMobDamage() const;
 
     int aiSocialSwitch(TBeing *, TBeing *, cmdTypeT, aiTarg);

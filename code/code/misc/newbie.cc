@@ -15,10 +15,10 @@
 #include "cmd_message.h"
 #include "spec_mobs.h"
 
-void TBeing::doNewbieEqLoad(race_t num, ush_int num2, bool initNum)
+void TBeing::doNewbieEqLoad(race_t num, unsigned short num2, bool initNum)
 {
   race_t raceNum;
-  ush_int classNum;
+  unsigned short classNum;
 
   if (isImmortal() || !isPc()) {
     if (!initNum) {

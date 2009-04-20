@@ -53,7 +53,7 @@ typedef StuffListConst::const_iterator StuffIterConst;
 class TThing {
   private:
     float weight;              // Weight in pounds
-    sh_int light;
+    short light;
     ubyte material_type;
     float carried_weight;
     int carried_volume;
@@ -171,8 +171,8 @@ class TThing {
     void setLight(int num);
     void addToLight(int num);
     void setRoom(int room);
-    virtual void setMaterial(ush_int num);
-    ush_int getMaterial() const;
+    virtual void setMaterial(unsigned short num);
+    unsigned short getMaterial() const;
     virtual void setWeight(const float w);
     void addToWeight(const float w);
     float getCarriedWeight() const;
@@ -270,8 +270,8 @@ class TThing {
     virtual int moneyMeBeing(TThing *, TThing *) { return FALSE; }
     virtual int moneyMeMoney(TBeing *, TThing *) { return FALSE; }
     virtual void logMe(const TBeing *, const char *) const;
-    virtual int powerstoneMe(TBeing *, int, sh_int);
-    virtual int divineMe(TBeing *, int, sh_int);
+    virtual int powerstoneMe(TBeing *, int, short);
+    virtual int divineMe(TBeing *, int, short);
     virtual void postMe(TBeing *, const char *, TBoard *);
     virtual void giveToRepairNote(TMonster *, TBeing *, int *) {}
     virtual void describeMe(TBeing *) const {}
@@ -355,7 +355,7 @@ class TThing {
     virtual void curseMe() {}
     virtual int poisonWeaponWeapon(TBeing *, TThing *);
     virtual int smiteWithMe(TBeing *, TBeing *);
-    virtual int enhanceMe(TBeing *, int, sh_int);
+    virtual int enhanceMe(TBeing *, int, short);
     virtual void moneyMove(TBeing *);
     virtual bool isRentable() const { return FALSE; }
     virtual float blowCountSplitter(const TBeing *, bool) const;

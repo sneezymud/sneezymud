@@ -441,7 +441,7 @@ int faerie_mound(TBeing *, cmdTypeT, const char *, TRoom *)
 int personalHouse(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
 {
   char buf[80];
-  sh_int save_room;
+  short save_room;
   objCost cost;
   TPerson *pers;
 

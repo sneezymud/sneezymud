@@ -574,7 +574,7 @@ bool TObj::canGetMeDeny(const TBeing *, silentTypeT) const
   return false;
 }
 
-int TObj::galvanizeMe(TBeing *caster, sh_int bKnown)
+int TObj::galvanizeMe(TBeing *caster, short bKnown)
 {
   caster->sendTo("You can't galvanize that!\n\r");
   caster->nothingHappens(SILENT_YES);

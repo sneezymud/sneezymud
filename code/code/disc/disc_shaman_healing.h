@@ -67,9 +67,9 @@ private:
    void healingGrasp(TBeing *, TBeing *);
    int castHealingGrasp(TBeing *, TBeing *);
    void healingGrasp(TBeing *, TBeing *, TMagicItem *, spellNumT);
-   int healingGrasp(TBeing *, TBeing *, int, sh_int, spellNumT, int=0);
+   int healingGrasp(TBeing *, TBeing *, int, short, spellNumT, int=0);
 
-   int enliven(TBeing *, TBeing *, int, sh_int);
+   int enliven(TBeing *, TBeing *, int, short);
    void enliven(TBeing *, TBeing *, TMagicItem *);
    int enliven(TBeing *, TBeing *);
    int castEnliven(TBeing *, TBeing *);

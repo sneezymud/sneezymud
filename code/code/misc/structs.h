@@ -67,8 +67,6 @@ const int MAX_BUF_LENGTH              = 240;
 
 typedef signed char sbyte;
 typedef unsigned char ubyte;
-typedef short int sh_int;
-typedef unsigned short int ush_int;
 typedef signed char byte;
 
 extern void vlogf(logTypeT, const sstring &);
@@ -205,9 +203,9 @@ class cBetData {
 
 class lastChangeData {
   public:
-    sh_int hit;
-    sh_int mana;
-    sh_int move;
+    short hit;
+    short mana;
+    short move;
     double piety;
     int money;
     double exp;
@@ -217,7 +215,7 @@ class lastChangeData {
     int minute;
     int fighting;
     byte full, thirst, pos;
-    sh_int lifeforce;
+    short lifeforce;
     lastChangeData();
     lastChangeData(const lastChangeData &a);
     ~lastChangeData();
@@ -248,10 +246,10 @@ class roomDirData {
     const char *keyword;             // keyword for opening and closing doors
     doorTypeT door_type;           // type of door
     unsigned int condition;           // bitvector for door status
-    sh_int lock_difficulty;      // how hard to open, -1 = unlockable
-    sh_int weight;               // how heavy door is, -1 = no door
-    sh_int trap_info;            // Trap flags
-    sh_int trap_dam;           // Damage trap will do
+    short lock_difficulty;      // how hard to open, -1 = unlockable
+    short weight;               // how heavy door is, -1 = no door
+    short trap_info;            // Trap flags
+    short trap_dam;           // Damage trap will do
     int key;                // Number of object that opens door
     int to_room;            // What room we exit to. -1 means no exit
 

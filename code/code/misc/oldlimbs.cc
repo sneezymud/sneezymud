@@ -13,14 +13,14 @@
 #include "limbs.h"
 #include "materials.h"
 
-void TBeing::setCurLimbHealth(wearSlotT slot, ush_int num)
+void TBeing::setCurLimbHealth(wearSlotT slot, unsigned short num)
 {
   body_parts[slot].setHealth(num);
 }
 
-ush_int TBeing::getCurLimbHealth(wearSlotT slot) const
+unsigned short TBeing::getCurLimbHealth(wearSlotT slot) const
 {
-  return min(getMaxLimbHealth(slot), (ush_int)body_parts[slot].getHealth());
+  return min(getMaxLimbHealth(slot), (unsigned short)body_parts[slot].getHealth());
 }
 
 void TBeing::addCurLimbHealth(wearSlotT slot, int num)
@@ -69,7 +69,7 @@ bool TBeing::isLimbFlags(wearSlotT limb, int num) const
   return ((body_parts[limb].getFlags() & num) != 0);
 }
 
-ush_int TBeing::getMaxLimbHealth(wearSlotT limb) const
+unsigned short TBeing::getMaxLimbHealth(wearSlotT limb) const
 {
   int health;
 

@@ -25,7 +25,7 @@ bool appliedSubstanceCheckList(TBeing *, const char *, char **, TThing **, int),
 CreateEngineData *AppliedCreate[MAX_APPLIED_SUBSTANCES];
 
 CreateEngineData::CreateEngineData(
- ush_int neClass, int nceType, sh_int nskCEMin, sh_int nskCEMax, sh_int nskCERounds,
+ unsigned short neClass, int nceType, short nskCEMin, short nskCEMax, short nskCERounds,
  spellNumT nskCESkillNum, const char * nceName, const char * nceStartMsg, const char * nceEndMsg,
  const char * nceMessageA, const char * nceMessageB, const char * nceMessageC, const char * nceMessageD,
  const char * nceMessageE,

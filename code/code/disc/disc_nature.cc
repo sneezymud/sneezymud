@@ -17,7 +17,7 @@
 
 
 
-int barkskin(TBeing * caster, TBeing * victim, int level, sh_int bKnown)
+int barkskin(TBeing * caster, TBeing * victim, int level, short bKnown)
 {
   affectedData aff;
 
@@ -166,7 +166,7 @@ int TObj::treeMe(TBeing *, const char *, int, int *)
   return FALSE;
 }
 
-int treeWalk(TBeing * caster, const char * arg, int, sh_int bKnown)
+int treeWalk(TBeing * caster, const char * arg, int, short bKnown)
 {
   TBeing *ch = NULL;
   TObj *o;

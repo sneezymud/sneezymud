@@ -1402,7 +1402,7 @@ bool TBeing::doesKnowSkill(spellNumT skill) const
   return doesKnow(getMaxSkillValue(skill));
 }
 
-sh_int TBeing::getRawSkillValue(spellNumT skill) const
+short TBeing::getRawSkillValue(spellNumT skill) const
 {
   CSkill *sk;
 
@@ -1412,7 +1412,7 @@ sh_int TBeing::getRawSkillValue(spellNumT skill) const
   return sk->getLearnedness();
 }
 
-sh_int TBeing::getSkillValue(spellNumT skill) const
+short TBeing::getSkillValue(spellNumT skill) const
 {
   int value;
   int iMax;
@@ -1464,7 +1464,7 @@ void TBeing::setSkillValue(spellNumT skill, int lValue)
   sk->setLearnedness(newValue);
 }
 
-sh_int TBeing::getRawNatSkillValue(spellNumT skill) const
+short TBeing::getRawNatSkillValue(spellNumT skill) const
 {
   CSkill *sk;
 
@@ -1521,7 +1521,7 @@ int TBeing::getAdvLearning(spellNumT skill) const
   return 0;
 }
 
-sh_int TBeing::getNatSkillValue(spellNumT skill) const
+short TBeing::getNatSkillValue(spellNumT skill) const
 {
   int value;
   int iMax;

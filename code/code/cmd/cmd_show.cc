@@ -555,7 +555,7 @@ void TPerson::doShow(const sstring &argument)
               obj_index[objectIndex].max_exist %
               getObjLoadPotential(obj_index[objectIndex].virt) %
               obj_index[objectIndex].max_struct %
-              max(obj_index[objectIndex].armor, (sh_int) 0) %
+              max(obj_index[objectIndex].armor, (short) 0) %
               obj_index[objectIndex].value %
               buf;
         }
@@ -615,7 +615,7 @@ void TPerson::doShow(const sstring &argument)
           obj_index[objnx].max_exist %
           getObjLoadPotential(obj_index[objnx].virt) %
           obj_index[objnx].max_struct %
-          max(obj_index[objnx].armor, (sh_int) 0) %
+          max(obj_index[objnx].armor, (short) 0) %
           obj_index[objnx].value %
           buf2;
       }
@@ -835,7 +835,7 @@ void TPerson::doShow(const sstring &argument)
         obj_index[objnx].virt % obj_index[objnx].getNumber() %
         obj_index[objnx].max_exist %
         obj_index[objnx].max_struct %
-        max(obj_index[objnx].armor, (sh_int) 0) %
+        max(obj_index[objnx].armor, (short) 0) %
         obj_index[objnx].value %
         buf2;
     }
@@ -859,7 +859,7 @@ void TPerson::doShow(const sstring &argument)
         obj_index[objnx].virt % obj_index[objnx].getNumber() %
         obj_index[objnx].max_exist %
         obj_index[objnx].max_struct %
-        max(obj_index[objnx].armor, (sh_int) 0) %
+        max(obj_index[objnx].armor, (short) 0) %
         obj_index[objnx].value %
         buf2;
     }

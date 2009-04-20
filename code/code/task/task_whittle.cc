@@ -190,10 +190,10 @@ void task_whittlePulse(TBeing *ch, TArrow *tArrow, whittlePulseT tWhitLevel)
       // max((getMaxStructPoints()-10), 0) * 2.0 / 3.0;
       tValue = (((tValue * 3.0) / 2.0) + 10);
 
-      tArrow->setMaxStructPoints((sh_int)tValue);
+      tArrow->setMaxStructPoints((short)tValue);
       tTemp  = (tValue * (tSkill / 100));
       tTemp += (double)::number(0, (int)((tValue - tTemp) / 2));
-      tArrow->setStructPoints((sh_int)tTemp);
+      tArrow->setStructPoints((short)tTemp);
       break;
     case WHITTLE_PULSE_SCRAPED: // Set Sharpness
       tValue = (tSkill / 100);

@@ -17,7 +17,7 @@ extern Descriptor *next_to_process;
 
 class TPerson : public TBeing {
   private:
-    ush_int base_age;
+    unsigned short base_age;
     TPerson();  // made private to make it uncallable
 
   public:
@@ -37,10 +37,10 @@ class TPerson : public TBeing {
 
     virtual const char *getName() const { return name; }
 
-    void setBaseAge(ush_int num) {
+    void setBaseAge(unsigned short num) {
       base_age = num;
     }
-    virtual ush_int getBaseAge() const {
+    virtual unsigned short getBaseAge() const {
       return base_age;
     }
     virtual int getWait() const {

@@ -2279,7 +2279,7 @@ int TBeing::terrainSpecial()
     disease_start(this, &af);
   }
 
-  Weather::getWet(this, roomp, SILENT_NO);
+  Weather::getWet(this, roomp);
 
   return FALSE;
 }

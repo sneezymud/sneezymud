@@ -23,8 +23,8 @@ void TBeing::doPracInfo(sstring arg) {
     return;
   if (powerCheck(POWER_ACCESS) || powerCheck(POWER_SET))
     return;
-  sh_int expected = ch->expectedPracs();
-  sh_int actual = ch->meanPracsSoFar();
+  short expected = ch->expectedPracs();
+  short actual = ch->meanPracsSoFar();
   buf = format("Practice info for %s:\n\r") % ch->getName();
   buf += format("\tExpected pracs for level: %d \n\r")
     % expected;
