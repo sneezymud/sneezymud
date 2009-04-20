@@ -8,8 +8,6 @@
 #ifndef __H
 #define __H
 
-#include "enum.h"
-
 class TBeing;
 class TRoom;
 class sstring;
@@ -73,7 +71,7 @@ class Weather {
   static bool moonIsUp();
   static int sunTime(sunTimeT);
   static bool sunIsUp();
-  static int getWet(TBeing *ch, TRoom* room, silentTypeT silent);
+  static void getWet(TBeing *ch, TRoom* room);
   static const sstring describeWet(int wetness);
   static const sstring describeWet(const TBeing *ch);
   static int addWetness(TBeing *ch, int diffWet);

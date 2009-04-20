@@ -8,7 +8,17 @@ then
   if [ "$pid" == "" ]
   then
     echo "Starting scons, output to file.mak.";
-    (/mud/build/scons/bin/scons -k --no-progress) >& file.mak &
+    (/mud/build/scons/bin/scons -k -j 1 --no-progress) >& file.mak &
+  else
+    echo "You are already running scons."
+  fi
+elif [ "$1" = "lint" ]
+then
+  pid=`pgrep -U $whoami -f "scons"`
+  if [ "$pid" == "" ]
+  then
+    echo "Starting scons, output to lint.out.";
+    (/mud/build/scons/bin/scons -k -j 1 --no-progress lint) >& lint.out &
   else
     echo "You are already running scons."
   fi

@@ -8,6 +8,7 @@
 
 #include <cmath>
 
+#include "weather.h"
 #include "room.h"
 #include "extern.h"
 #include "being.h"
@@ -16,7 +17,6 @@
 #include "monster.h"
 #include "obj_trash_pile.h"
 #include "process.h"
-#include "weather.h"
 
 // static data defs
 int Weather::pressure;
@@ -988,7 +988,7 @@ int getWetness(const TBeing *ch)
 
 // apply wetness code here
 // we either add more wetness, or we 'dry' the character out (remove wetness)
-int Weather::getWet(TBeing *ch, TRoom* room, silentTypeT silent)
+void Weather::getWet(TBeing *ch, TRoom* room)
 {
   sstring better, worse;
   int maxWet = getRoomWetness(ch, room, better, worse);
@@ -1014,44 +1014,39 @@ int Weather::getWet(TBeing *ch, TRoom* room, silentTypeT silent)
     wetness = maxWet-oldWet;
 
   // add new wetness affect
-  if (wetness != 0 && oldWet != maxWet && (wetness > 0 || oldWet > 0))
-  {
+  if (wetness != 0 && oldWet != maxWet && (wetness > 0 || oldWet > 0)){
     int newWet = addWetness(ch, wetness);
     if (newWet == oldWet)
-      return 0;
+      return;
 
-    if (silent == SILENT_NO)
-    {
-      sstring wetShow;
-        
-      if (wetness > 0 && oldWet <= 0)
-        wetShow = format("You begin to get wet from staying %s %s") %
-          TerrainInfo[room->getSectorType()]->prep %
-          sstring(TerrainInfo[room->getSectorType()]->name).lower();
-      else if (newWet == 0)
-        wetShow = "You feel completely dried off now";
-      else
-        wetShow = format("Your time %s %s means you %s") %
-          TerrainInfo[room->getSectorType()]->prep %
-          sstring(TerrainInfo[room->getSectorType()]->name).lower() %
-          (wetness > 0 ? "get wetter" : "dry off some");
-
-      if (!better.empty())
-      {
-        wetShow += (wetness < 0) ? ", in part because " : " even though ";
-        wetShow += better;
-      }
-      if (!worse.empty())
-      {
-        wetShow += (wetness > 0) ? ", in part because " : " even though ";
-        wetShow += worse;
-      }
-      wetShow += ".\n\r";
-      act(wetShow, false, ch, NULL, NULL, TO_CHAR);
+    sstring wetShow;
+    
+    if (wetness > 0 && oldWet <= 0){
+      wetShow = format("You begin to get wet from staying %s %s") %
+	TerrainInfo[room->getSectorType()]->prep %
+	sstring(TerrainInfo[room->getSectorType()]->name).lower();
+    } else if (newWet == 0){
+      wetShow = "You feel completely dried off now";
+    } else {
+      wetShow = format("Your time %s %s means you %s") %
+	TerrainInfo[room->getSectorType()]->prep %
+	sstring(TerrainInfo[room->getSectorType()]->name).lower() %
+	(wetness > 0 ? "get wetter" : "dry off some");
     }
+    
+    if (!better.empty()){
+      wetShow += (wetness < 0) ? ", in part because " : " even though ";
+      wetShow += better;
+    }
+    if (!worse.empty()){
+      wetShow += (wetness > 0) ? ", in part because " : " even though ";
+      wetShow += worse;
+    }
+    wetShow += ".\n\r";
+    act(wetShow, false, ch, NULL, NULL, TO_CHAR);
   }
 
-  return 0;
+  return;
 }
 
 // describes wetness for a char
