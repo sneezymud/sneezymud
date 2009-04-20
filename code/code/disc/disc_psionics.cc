@@ -156,6 +156,8 @@ int TBeing::doPTell(const char *arg, bool visible){
   if (rc)
     return FALSE;
 
+  learnFromDoing(SKILL_PSITELEPATHY, SILENT_NO, 0);
+
   mud_str_copy(capbuf, vict->pers(this), 256);  // Use Someone for tells (invis gods, etc)
 
   char garbedBuf[256];
@@ -240,6 +242,8 @@ int TBeing::doPSay(const char *arg){
   if (!*arg)
     sendTo("Yes, but WHAT do you want to say telepathically?\n\r");
   else {
+
+    learnFromDoing(SKILL_PSITELEPATHY, SILENT_NO, 0);
 
     mud_str_copy(garbed, garble(NULL, arg, SPEECH_SAY), 256);
 
@@ -354,6 +358,8 @@ void TBeing::doPShout(const char *msg){
     sendTo("What do you wish to broadcast to the world?\n\r");
     return;
   } else {
+    learnFromDoing(SKILL_PSITELEPATHY, SILENT_NO, 0);
+
     mud_str_copy(garbed, garble(NULL, msg, SPEECH_SHOUT, GARBLE_SCOPE_EVERYONE), 256);
 
     sendTo(COLOR_SPELLS, format("You telepathically send the message, \"%s<z>\"\n\r") % garbed);
