@@ -37,11 +37,14 @@ LDFLAGS = [
     '-lares',
     '-lboost_regex',
     '-lboost_program_options',
-    '-lcurl'
+    '-lcurl',
+    '-ltcmalloc',
+#    '-lprofiler',
     ]
 
 LIBPATH = [
     '/usr/local/lib',
+    '/mud/build/google-perftools/lib'
     ]
 
 # build environment

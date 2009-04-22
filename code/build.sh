@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export LD_LIBRARY_PATH="/mud/build/google-perftools/lib";
+
 whoami=`whoami`
 
 if [ "$1" = "start" ]
