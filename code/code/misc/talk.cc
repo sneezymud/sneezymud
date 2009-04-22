@@ -698,11 +698,11 @@ sstring TellToComm::getXML(){
   return buf;
 }
 
-TBeing *findTellTarget(TBeing *me, const sstring &name, bool visible){
+TBeing *findTellTarget(TBeing *me, const sstring &name, bool visible, bool mobs){
   TBeing *vict;
 
   if (!(vict = get_pc_world(me, name, EXACT_YES, INFRA_NO, visible)))
-    if (!(vict = get_pc_world(me, name, EXACT_NO, INFRA_NO, visible)))
+    if (!(vict = get_pc_world(me, name, EXACT_NO, INFRA_NO, visible)) && mobs)
       if (!(vict = get_char_vis_world(me, name, NULL, EXACT_YES)))
 	vict = get_char_vis_world(me, name, NULL, EXACT_NO);
 
@@ -743,13 +743,13 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
       desc->output.putInQ(new CmdMsgComm("tell", "Whom do you wish to tell what??\n\r"));
     return FALSE;
   } else {
-    if(!(vict=findTellTarget(this, name, visible))){
+    if(!(vict=findTellTarget(this, name, visible, true))){
       if(isImmortal()){
 	TDatabase db(DB_SNEEZY);
 	db.query("select p1.name as name from player p1, player p2, account a where p2.name='%s' and a.account_id=p2.account_id and p1.account_id=a.account_id", name.c_str());
 
 	while(db.fetchRow()){
-	  if((vict=findTellTarget(this, db["name"], visible))){
+	  if((vict=findTellTarget(this, db["name"], visible, false))){
 	    break;
 	  }
 	}
