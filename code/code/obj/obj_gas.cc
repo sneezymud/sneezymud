@@ -278,16 +278,12 @@ void TGas::doDrift()
         if (!(t=*(it++)))
           continue;
 
-        if ((tp=dynamic_cast<TPortal *>(t))){
-          seen++;
-          if (dir == seen) {
-            if((rp=real_roomp(tp->getTarget()))){
-              act(format("$n drifts into %s.") % tp->getName(), FALSE, this, 0, 0, TO_ROOM);
-              --(*this);
-              *rp += *this;
-              act(format("$n drifts in from %s.") % tp->getName(), FALSE, this, 0, 0, TO_ROOM);
-            }
-          }
+        if ((tp=dynamic_cast<TPortal *>(t)) && dir == seen && (rp=real_roomp(tp->getTarget()))){
+          act(format("$n drifts into %s.") % tp->getName(), FALSE, this, 0, 0, TO_ROOM);
+          --(*this);
+          *rp += *this;
+          act(format("$n drifts in from %s.") % tp->getName(), FALSE, this, 0, 0, TO_ROOM);
+          break;
         }
       }
     } else if (dir >= MIN_DIR && dir != DIR_DOWN && 
