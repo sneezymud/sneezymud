@@ -62,6 +62,7 @@ env=Environment(CXXFLAGS=CXXFLAGS,
                 INSTALLSTR = "\033[33mInstalling\033[0m '$SOURCE' as '$TARGET'",
                 )
 
+env['ENV']['LD_LIBRARY_PATH']='/mud/build/google-perftools/lib'
 
 Export('env')
 
