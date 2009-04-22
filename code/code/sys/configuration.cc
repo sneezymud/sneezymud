@@ -27,6 +27,7 @@ bool Config::NO_DAMAGED_ITEMS_SHOP;
 bool Config::auto_deletion;
 bool Config::rent_only_deletion;
 bool Config::nuke_inactive_mobs;
+bool Config::load_on_death;
 
 const int PROD_GAMEPORT = 7900;
 const int PROD_XMLPORT = 7901;
@@ -121,6 +122,9 @@ bool Config::doConfiguration(int argc, char *argv[])
      "see configuration.h")
     ("nuke_inactive_mobs",
      po::value<bool>(&nuke_inactive_mobs)->default_value(false),
+     "see configuration.h")
+    ("load_on_death",
+     po::value<bool>(&load_on_death)->default_value(false),
      "see configuration.h")
     ;
 

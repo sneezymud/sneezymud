@@ -33,6 +33,7 @@
 #include "monster.h"
 #include "person.h"
 #include "low.h"
+#include "configuration.h"
 
 double balanceCorrectionForLevel(double level)
 {
@@ -533,13 +534,13 @@ double TMonster::determineExp()
 
   d_exp = mob_exp(real_level);
 
-  if (!loadOnDeath)
+  if (!Config::LoadOnDeath())
     calculateGoldFromConstant();
 
   if (specials.act & ACT_AGGRESSIVE)
     d_exp *= 1.05;
 
-  // what about LoadOnDeath here?
+  // what about Config::LoadOnDeath() here?
   if (!getMoney() && (GetMaxLevel() < 12))
     d_exp += (d_exp * (double) ::number(1,5)) / 100.;   // 1% to 5% increase
 

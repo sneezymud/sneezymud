@@ -28,9 +28,6 @@ extern const char * const MUD_NAME;
 extern const char * const MUD_NAME_VERS;
 extern bool bootTime;
 
-// true if we should load eq for mobs when they die, instead of at zone load
-const bool loadOnDeath = false;
-
 const int MAX_OBJ_AFFECT = 5;
 
 const char * const SIGN_MESS = "/mud/sign/currentMess";

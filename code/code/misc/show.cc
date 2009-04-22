@@ -32,6 +32,7 @@
 #include "database.h"
 #include "obj_base_container.h"
 #include "obj_open_container.h"
+#include "configuration.h"
 #include "weather.h"
 
 void TThing::showMe(TBeing *ch) const
@@ -1225,19 +1226,19 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
 
       bool success = ch->isAffected(AFF_SCRYING);
       int skill = success ? ch->getSkillValue(SKILL_SPY) : 0;
-      const TMonster * monster = loadOnDeath ? dynamic_cast<const TMonster*>(this) : NULL;
+      const TMonster * monster = Config::LoadOnDeath() ? dynamic_cast<const TMonster*>(this) : NULL;
       int money = monster ? (int)monster->getLoadMoney() : getMoney();
       int moneyGuess = (money * ::number(skill/10, (20-skill/10))) / 10;
 
       // show if they've been stolen from before
-      if (success && loadOnDeath && getStolenFrom())
+      if (success && Config::LoadOnDeath() && getStolenFrom())
         ch->sendTo(COLOR_MOBS, "\n\rIt looks like someone has already gone through their pockets.");
 
       // show money guestimate
       ch->sendTo(COLOR_MOBS,format("\n\rYou estimate %s has %d talen%s.\n\r") % getName() % moneyGuess % (moneyGuess != 1 ? "s" : ""));
 
       // show items you can get from a good steal
-      if (loadOnDeath)
+      if (Config::LoadOnDeath())
         ch->sendTo(COLOR_MOBS,format("You suspect their pockets contain %s.\n\r") % (success ? getStealLootNames() : "nothing"));
 
       // if they are carrying stuff, show

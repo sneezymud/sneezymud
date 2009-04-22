@@ -2840,7 +2840,7 @@ void runResetCmdE(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   // end sanity checks
 
   // OK, actually do the equip
-  if (loadOnDeath && !(flags & resetFlagAlwaysEquip))
+  if (Config::LoadOnDeath() && !(flags & resetFlagAlwaysEquip))
     *mob += *obj;
   else
     mob->equipChar(obj, realslot);
@@ -2853,7 +2853,7 @@ void runResetCmdE(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   double grl = mob->getRealLevel();
   if (al > (grl + 1))
     vlogf(LOG_LOW, format("Mob (%s:%d) of level %.1f loading item (%s:%d) thought to be level %.1f.") %  mob->getName() % mob->mobVnum() % grl % obj->getName() % obj->objVnum() % al);
-  if (!loadOnDeath && !mob->equipment[realslot])
+  if (!Config::LoadOnDeath() && !mob->equipment[realslot])
     vlogf(LOG_LOW, format("Zone-file %s (%d) failed to equip %s (%d)") % mob->getName() % mob->mobVnum() % obj->getName() % obj->objVnum());
 
   last_cmd = true;
@@ -2917,7 +2917,7 @@ void runResetCmdM(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
     return;
   }
 
-  if (!loadOnDeath)
+  if (!Config::LoadOnDeath())
     mob->createWealth();
 
   // add mob to room
@@ -3301,7 +3301,7 @@ void runResetCmdY(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
 
   mob->loadSetEquipment(rs.arg1, NULL, (rs.arg2 >= 98) ? rs.arg2 : fixed_chance);
 
-  if (!loadOnDeath && mob->hasClass(CLASS_MAGE)) {
+  if (!Config::LoadOnDeath() && mob->hasClass(CLASS_MAGE)) {
     TSpellBag *tBagA = NULL,
               *tBagB = NULL;
     TThing    *tThing=NULL;
@@ -3979,7 +3979,7 @@ bool resetCom::usesRandomRoom()
 // lastComStuck - true if the previous resetCom before this one was 'stuck' to a mob
 bool resetCom::shouldStickToMob(bool &lastComStuck)
 {
-  if (!loadOnDeath)
+  if (!Config::LoadOnDeath())
     return lastComStuck = false;
 
   // special case: since V's modify a potentially stuck (non-existant) obj, we need to stick ?'s for V's too

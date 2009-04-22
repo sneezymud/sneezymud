@@ -15,6 +15,7 @@
 #include "loadset.h"
 #include "person.h"
 #include "monster.h"
+#include "configuration.h"
 
 // We sometimes use steal as a mechanism to reposess items from mortals
 // invisibly.  Not a great thing to do, but necessary and has a valid
@@ -356,11 +357,11 @@ static int steal(TBeing * thief, TBeing * victim)
 
   /* Steal some money */
   // set the flag noting this mob has been pilfered
-  if (loadOnDeath)
+  if (Config::LoadOnDeath())
     victim->setStolenFrom(true);
 
   // generate money
-  int money = loadOnDeath && mob ? (int)mob->getLoadMoney() : victim->getMoney();
+  int money = Config::LoadOnDeath() && mob ? (int)mob->getLoadMoney() : victim->getMoney();
   gold = (int) ((money * ::number(1, 10)) / 10);
   gold = min(5000, gold);
   LogDam(thief, SKILL_STEAL,gold);
@@ -371,14 +372,14 @@ static int steal(TBeing * thief, TBeing * victim)
   }
 
   // git da money, dolla-dolla-bill y'all
-  if (!victim->isPc() && loadOnDeath && victim->getMoney() < gold)
+  if (!victim->isPc() && Config::LoadOnDeath() && victim->getMoney() < gold)
     victim->setMoney(gold);
   victim->giveMoney(thief, gold, GOLD_INCOME);
   thief->sendTo(format("You have just stolen %d talen%s from %s.\n\r") % gold % 
         ((gold > 1) ? "s" : "") % victim->getName());
 
   // if you crit, you nab a free item
-  if (mob && loadOnDeath && critSuccess(thief, SKILL_STEAL) != CRIT_S_NONE)
+  if (mob && Config::LoadOnDeath() && critSuccess(thief, SKILL_STEAL) != CRIT_S_NONE)
   {
     TObj *objLoot = generateStealLoot(mob);
     
