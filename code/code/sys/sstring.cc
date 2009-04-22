@@ -6,6 +6,7 @@
 #include "extern.h"
 #include "ansi.h"
 #include "parse.h"
+#include <iostream>
 
 const sstring sstring::escape(stringEscapeT escape_type) const
 {
@@ -17,104 +18,181 @@ const sstring sstring::escape(stringEscapeT escape_type) const
     mysql_escape_string(buf, c_str(), strlen(c_str()));
     oBuf=(sstring)buf;
   } else if(escape_type==XML){
-    oBuf=*this;
+    boost::regex e("(^|[^<])<.>");
+    boost::sregex_iterator m((*this).begin(), (*this).end(), e);
+    boost::sregex_iterator last_m;
+    boost::sregex_iterator end;
+    char code;
+    oBuf="";
 
-    // process mud color codes
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<h>"), 
-		       ("$1"+(sstring)MUD_NAME));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<H>"), 
-		       ("$1"+(sstring)MUD_NAME_VERS));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<R>"), 
-		       ("$1"+(sstring)ANSI_RED_BOLD));
+    for(;m!=end;++m){
+      oBuf.append((*m).prefix());
+      oBuf.append((*m)[1]);
+      
+      if((*m)[0].str()[1]=='<')
+	code=(*m)[0].str()[2];
+      else
+	code=(*m)[0].str()[1];
 
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<r>"), 
-		       ("$1"+(sstring)(ANSI_NORMAL)+(sstring)(ANSI_RED)));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<G>"), 
-		       ("$1"+(sstring)ANSI_GREEN_BOLD));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<g>"), 
-		       ("$1"+(string)(ANSI_NORMAL)+(sstring)(ANSI_GREEN)));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<y>"), 
-		       ("$1"+(sstring)ANSI_ORANGE_BOLD));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<Y>"), 
-		       ("$1"+(sstring)ANSI_ORANGE_BOLD));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<o>"), 
-		       ("$1"+(sstring)(ANSI_NORMAL)+(sstring)(ANSI_ORANGE)));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<O>"), 
-		       ("$1"+(sstring)(ANSI_NORMAL)+(sstring)(ANSI_ORANGE)));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<B>"), 
-		       ("$1"+(sstring)ANSI_BLUE_BOLD));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<b>"), 
-		       ("$1"+(sstring)(ANSI_NORMAL)+(sstring)(ANSI_BLUE)));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<P>"), 
-		       ("$1"+(sstring)ANSI_PURPLE_BOLD));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<p>"), 
-		       ("$1"+(sstring)(ANSI_NORMAL)+(sstring)(ANSI_PURPLE)));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<C>"), 
-		       ("$1"+(sstring)ANSI_CYAN_BOLD));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<c>"), 
-		       ("$1"+(sstring)(ANSI_NORMAL)+(sstring)(ANSI_CYAN)));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<W>"), 
-		       ("$1"+(sstring)ANSI_WHITE_BOLD));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<w>"), 
-		       ("$1"+(sstring)(ANSI_NORMAL)+(sstring)(ANSI_WHITE)));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<k>"), 
-		       ("$1"+(sstring)(VT_BOLDTEX)+(sstring)(ANSI_BLACK)));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<K>"), 
-		       ("$1"+(sstring)(ANSI_NORMAL)+(sstring)(ANSI_BLACK)));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<A>"), 
-		       ("$1"+(sstring)(VT_BOLDTEX)+(sstring)(ANSI_UNDER)));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<a>"), 
-		       ("$1"+(sstring)ANSI_UNDER));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<D>"), 
-		       ("$1"+(sstring)VT_BOLDTEX));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<d>"), 
-		       ("$1"+(sstring)VT_BOLDTEX));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<F>"), 
-		       ("$1"+(sstring)ANSI_FLASH));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<f>"), 
-		       ("$1"+(sstring)ANSI_FLASH));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<i>"), 
-		       ("$1"+(sstring)VT_INVERTT));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<I>"), 
-		       ("$1"+(sstring)VT_INVERTT));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<e>"), 
-		       ("$1"+(sstring)ANSI_BK_ON_WH));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<E>"), 
-		       ("$1"+(sstring)ANSI_BK_ON_WH));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<j>"), 
-		       ("$1"+(sstring)ANSI_BK_ON_BK));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<J>"), 
-		       ("$1"+(sstring)ANSI_BK_ON_BK));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<l>"), 
-		       ("$1"+(sstring)ANSI_WH_ON_RD));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<L>"), 
-		       ("$1"+(sstring)ANSI_WH_ON_RD));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<q>"), 
-		       ("$1"+(sstring)ANSI_WH_ON_GR));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<Q>"), 
-		       ("$1"+(sstring)ANSI_WH_ON_GR));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<t>"), 
-		       ("$1"+(sstring)ANSI_WH_ON_OR));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<T>"), 
-		       ("$1"+(sstring)ANSI_WH_ON_OR));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<u>"), 
-		       ("$1"+(sstring)ANSI_WH_ON_BL));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<U>"), 
-		       ("$1"+(sstring)ANSI_WH_ON_BL));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<v>"), 
-		       ("$1"+(sstring)ANSI_WH_ON_PR));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<V>"), 
-		       ("$1"+(sstring)ANSI_WH_ON_PR));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<x>"), 
-		       ("$1"+(sstring)ANSI_WH_ON_CY));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<X>"), 
-		       ("$1"+(sstring)ANSI_WH_ON_CY));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<z>"), 
-		       ("$1"+(sstring)ANSI_NORMAL));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<Z>"), 
-		       ("$1"+(sstring)ANSI_NORMAL));
-    oBuf=regex_replace(oBuf, boost::regex("(^|[^<])<1>"), 
-		       ("$1"+(sstring)ANSI_NORMAL));    
+
+      switch(code){
+	case 'h':
+	  oBuf.append(MUD_NAME);
+	  break;
+	case 'H':
+	  oBuf.append(MUD_NAME_VERS);
+	  break;
+	case 'R':
+	  oBuf.append(ANSI_RED_BOLD);
+	  break;
+	case 'r':
+	  oBuf.append(ANSI_NORMAL);
+	  oBuf.append(ANSI_RED);
+	  break;
+	case 'G':
+	  oBuf.append(ANSI_GREEN_BOLD);
+	  break;
+	case 'g':
+	  oBuf.append(ANSI_NORMAL);
+	  oBuf.append(ANSI_GREEN);
+	  break;
+	case 'y':
+	  oBuf.append(ANSI_ORANGE_BOLD);
+	  break;
+	case 'Y':
+	  oBuf.append(ANSI_ORANGE_BOLD);
+	  break;
+	case 'o':
+	  oBuf.append(ANSI_NORMAL);
+	  oBuf.append(ANSI_ORANGE);
+	  break;
+	case 'O':
+	  oBuf.append(ANSI_NORMAL);
+	  oBuf.append(ANSI_ORANGE);
+	  break;
+	case 'B':
+	  oBuf.append(ANSI_BLUE_BOLD);
+	  break;
+	case 'b':
+	  oBuf.append(ANSI_NORMAL);
+	  oBuf.append(ANSI_BLUE);
+	  break;
+	case 'P':
+	  oBuf.append(ANSI_PURPLE_BOLD);
+	  break;
+	case 'p':
+	  oBuf.append(ANSI_NORMAL);
+	  oBuf.append(ANSI_PURPLE);
+	  break;
+	case 'C':
+	  oBuf.append(ANSI_CYAN_BOLD);
+	  break;
+	case 'c':
+	  oBuf.append(ANSI_NORMAL);
+	  oBuf.append(ANSI_CYAN);
+	  break;
+	case 'W':
+	  oBuf.append(ANSI_WHITE_BOLD);
+	  break;
+	case 'w':
+	  oBuf.append(ANSI_NORMAL);
+	  oBuf.append(ANSI_WHITE);
+	  break;
+	case 'k':
+	  oBuf.append(VT_BOLDTEX);
+	  oBuf.append(ANSI_BLACK);
+	  break;
+	case 'K':
+	  oBuf.append(ANSI_NORMAL);
+	  oBuf.append(ANSI_BLACK);
+	  break;
+	case 'A':
+	  oBuf.append(VT_BOLDTEX);
+	  oBuf.append(ANSI_UNDER);
+	  break;
+	case 'a':
+	  oBuf.append(ANSI_UNDER);
+	  break;
+	case 'D':
+	  oBuf.append(VT_BOLDTEX);
+	  break;
+	case 'd':
+	  oBuf.append(VT_BOLDTEX);
+	  break;
+	case 'F':
+	  oBuf.append(ANSI_FLASH);
+	  break;
+	case 'f':
+	  oBuf.append(ANSI_FLASH);
+	  break;
+	case 'i':
+	  oBuf.append(VT_INVERTT);
+	  break;
+	case 'I':
+	  oBuf.append(VT_INVERTT);
+	  break;
+	case 'e':
+	  oBuf.append(ANSI_BK_ON_WH);
+	  break;
+	case 'E':
+	  oBuf.append(ANSI_BK_ON_WH);
+	  break;
+	case 'j':
+	  oBuf.append(ANSI_BK_ON_BK);
+	  break;
+	case 'J':
+	  oBuf.append(ANSI_BK_ON_BK);
+	  break;
+	case 'l':
+	  oBuf.append(ANSI_WH_ON_RD);
+	  break;
+	case 'L':
+	  oBuf.append(ANSI_WH_ON_RD);
+	  break;
+	case 'q':
+	  oBuf.append(ANSI_WH_ON_GR);
+	  break;
+	case 'Q':
+	  oBuf.append(ANSI_WH_ON_GR);
+	  break;
+	case 't':
+	  oBuf.append(ANSI_WH_ON_OR);
+	  break;
+	case 'T':
+	  oBuf.append(ANSI_WH_ON_OR);
+	  break;
+	case 'u':
+	  oBuf.append(ANSI_WH_ON_BL);
+	  break;
+	case 'U':
+	  oBuf.append(ANSI_WH_ON_BL);
+	  break;
+	case 'v':
+	  oBuf.append(ANSI_WH_ON_PR);
+	  break;
+	case 'V':
+	  oBuf.append(ANSI_WH_ON_PR);
+	  break;
+	case 'x':
+	  oBuf.append(ANSI_WH_ON_CY);
+	  break;
+	case 'X':
+	  oBuf.append(ANSI_WH_ON_CY);
+	  break;
+	case 'z':
+	  oBuf.append(ANSI_NORMAL);
+	  break;
+	case 'Z':
+	  oBuf.append(ANSI_NORMAL);
+	  break;
+	case '1':
+	  oBuf.append(ANSI_NORMAL);    
+	  break;
+      }      
+      last_m=m;
+    }
+    oBuf.append((*last_m).suffix());
+
 
     oBuf.inlineReplaceString("<<", "<");
     
@@ -128,7 +206,6 @@ const sstring sstring::escape(stringEscapeT escape_type) const
     oBuf.inlineReplaceString(ANSI_UNDER, "<font style=\"under\" />");
     oBuf.inlineReplaceString(VT_INVERTT, "<font style=\"invert\" />");
     oBuf.inlineReplaceString(ANSI_FLASH, "<font style=\"flash\" />");
-
     // ansi font colors
     oBuf.inlineReplaceString(ANSI_WHITE, "<font color=\"white\" />");
     oBuf.inlineReplaceString(ANSI_BLACK, "<font color=\"black\" />");
