@@ -221,16 +221,19 @@ class CommTest : public CxxTest::TestSuite
 
     for(dirTypeT dir=MIN_DIR;dir<MAX_DIR;dir++){
       rec->exits[dir].exit=false;
+      rec->exits[dir].door=false;
+      rec->exits[dir].open=false;
     }
 
     rec->exits[DIR_NORTH].exit=true;
+    rec->exits[DIR_NORTH].door=true;
     rec->exits[DIR_NORTH].open=true;
-
-    testPerson->sendTo(rec);
     
-    c=testPerson->desc->output.takeFromQ();
+    testPerson->sendTo(rec);
 
+    c=testPerson->desc->output.takeFromQ();
     TS_ASSERT_EQUALS(c->getComm(Comm::XML), "<roomexits>\n  <exit>\n    <direction>north</direction>\n    <door>\n      <open>true</open>\n    </door>\n  </exit>\n</roomexits>\n");
+
     
   }
 
