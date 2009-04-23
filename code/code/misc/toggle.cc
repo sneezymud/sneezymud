@@ -490,7 +490,7 @@ void TBeing::doToggle(const char *arg2)
     int playerTerm = ansi() ? TERM_ANSI : vt100() ? TERM_VT100 : TERM_NONE;
     sendTo(COLOR_BASIC, "\n\r<c>Terminal Toggles<1>\n\r");
     sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------------------------<1>\n\r");
-    sendTo(COLOR_BASIC, format("Screensize        : <G>%-3i<1>  | ") % desc->screen_size);
+    sendTo(COLOR_BASIC, format("Screensize        : <G>%-3i<1>  | ") % int(desc->screen_size));
     sendTo(COLOR_BASIC, format("Terminal          : <G>%-5s<1>| ") % termnames[playerTerm]);
     sendTo(COLOR_BASIC, format("Boss Mode         : %s\n\r") % on_or_off(IS_SET(desc->account->flags, TAccount::BOSS)));
     sendTo(COLOR_BASIC, format("MSP Sound         : %s  | ") % on_or_off(IS_SET(desc->account->flags, TAccount::MSP)));
