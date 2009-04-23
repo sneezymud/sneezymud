@@ -191,7 +191,8 @@ const sstring sstring::escape(stringEscapeT escape_type) const
       }      
       last_m=m;
     }
-    oBuf.append((*last_m).suffix());
+    if(last_m!=m)
+      oBuf.append((*last_m).suffix());
 
 
     oBuf.inlineReplaceString("<<", "<");
