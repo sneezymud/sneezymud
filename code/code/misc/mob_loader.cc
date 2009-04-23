@@ -420,82 +420,14 @@ bool isMobComponentSeller(int comp, int mvn)
   return false;
 }
 
-// returns 0 for a failed get
-int getRandomMageComp(int maxCost)
-{
-  static weightedRandomizer wr;
-
-  // initialize - only done once per boot
-  if (!wr.size())
-  {
-    for(unsigned int i = 0; i < (unsigned int)CompIndex.size(); i++)
-    {
-      spellNumT spell = CompIndex[i].spell_num;
-      int comp = CompIndex[i].comp_vnum;
-      int cost = obj_index[real_object(comp)].value;
-      int percent = 100;
-    
-      if (spell < TYPE_UNDEFINED || spell >= MAX_SKILL) {
-        vlogf(LOG_BUG, format("Component (%d) defined with bad spell (%d).  num=%d") % comp % spell % i);
-        continue;
-      }
-
-      if (spell <= TYPE_UNDEFINED || spell >= MAX_SKILL || !discArray[spell])
-        continue;
-      if (hideThisSpell(spell))
-        continue;
-      // only load mage spell component
-      if (discArray[spell]->typ != SPELL_MAGE)
-    	  continue;
-      // no dissectable comps please
-      if (isDissectComponent(comp))
-        continue;
-      if (comp == -1) {
-        vlogf(LOG_BUG, format("Bogus component on spell %d (%s)") % spell % discArray[spell]->name);
-        continue;
-      }
-
-      // we'll make utility comps more rare so that relatively speaking
-      // the comps for offensive spells are more prevalent
-      if (!(discArray[spell]->targets & TAR_VIOLENT))
-        percent = 30;
-
-      // special-case certain components
-      switch (comp)
-      {
-        case COMP_FARLOOK:
-        case COMP_INVISIBILITY:
-        case COMP_LEVITATE:
-        case COMP_TRUE_SIGHT:
-        case COMP_HASTE:
-          // these are also "utility" comps, but players have asked for a
-          // slightly higher load rate on them
-          percent = 50;
-          break;
-        case COMP_GALVANIZE:
-          // keep fairly rare
-          percent = 5;
-          break;
-        case COMP_ENHANCE_WEAPON:
-          // keep VERY rare
-          percent = 3;
-          break;
-        default:      
-          break;
-      }
-      wr.add(comp, cost, percent);
-    }
-  }
-  return wr.getRandomItem(maxCost);
-}
-
-
 
 void TMonster::mageComponentLoader(void)
 {
   int wealth = getMoney();
   TObj *obj,
        *bag = NULL;
+  int num = -1, iters = 0;  
+  spellNumT spell;  
   int comp = 0;
   int bag_num = 0;
   bool found = FALSE;
@@ -516,33 +448,128 @@ void TMonster::mageComponentLoader(void)
     return;
 
   while (::number(0,3) && (wealth > 10)) { 
-
-    comp = getRandomMageComp(wealth*priceAdjust);
-    if (comp <= 0)
-      continue;
-
-    if (isInkComponent(comp))
-      inksloaded++;
-
-    // don't allow more than 3 inks in a bag
-    if (inksloaded > 3)
-      continue;
-
-    // this check is to prevent a mob that "sells" comps via responses
-    // from loading the comp they sell, and hence preventing the response
-    // load from working
-    if (!Config::LoadOnDeath() && isMobComponentSeller(comp, mobVnum()))
-      continue;
+    iters = 0;  
+    num = -1;  
+    while ((num == -1) && (iters < 25)) {  
+      num = ::number(0, CompIndex.size() - 1);  
+      spell = CompIndex[num].spell_num;  
+      comp = CompIndex[num].comp_vnum;  
+      iters++;  
+      
+      if (spell < TYPE_UNDEFINED || spell >= MAX_SKILL) {  
+        vlogf(LOG_BUG, format("Component (%d) defined with bad spell (%d).  num=%d") %  comp % spell % num);  
+        continue;  
+      }  
+      if (spell != TYPE_UNDEFINED && hideThisSpell(spell)) {  
+        num = -1;  
+        continue;  
+      }  
+      // only load mage spell component  
+      if (spell != TYPE_UNDEFINED && discArray[spell]->typ != SPELL_MAGE) {  
+        num=-1;  
+        continue;  
+      }  
+     
+      if (isDissectComponent(comp))  
+        num = -1;  
+     
+      if (isInkComponent(comp) && ++inksloaded>3)  
+        num = -1;  
+     
+      // disallow certain components  
+      switch (comp) {  
+        case COMP_FEATHERY_DESCENT:  
+        case COMP_FALCON_WINGS:  
+        case COMP_ANTIGRAVITY:  
+        case COMP_POWERSTONE:  
+        case COMP_SHATTER:  
+        case COMP_ILLUMINATE:  
+        case COMP_DETECT_MAGIC:  
+        case COMP_DISPEL_MAGIC:  
+        case COMP_COPY:  
+        case COMP_TRAIL_SEEK:  
+        case COMP_FLARE:  
+        case COMP_ANIMATE:  
+        case COMP_BIND:  
+        case COMP_TELEPORT:  
+        case COMP_SENSE_LIFE:  
+        case COMP_SILENCE:  
+        case COMP_STEALTH:  
+        case COMP_CALM:  
+        case COMP_ENSORCER:  
+        case COMP_FEAR:  
+        case COMP_CLOUD_OF_CONCEAL:  
+        case COMP_DETECT_INVIS:  
+        case COMP_DETECT_SHADOW:  
+        case COMP_DISPEL_INVIS:  
+        case COMP_TELEPATHY:  
+        case COMP_POLYMORPH:  
+        case COMP_GILLS_OF_FLESH:  
+        case COMP_BREATH_SARAHAGE:  
+        case COMP_INFRAVISION:  
+        case COMP_FLIGHT:  
+          // we'll make utility comps more rare so that relatively speaking  
+          // the comps for offensive spells are more prevalent  
+          if (::number(0,2))  
+         num = -1;  
+          break;  
+        case COMP_FARLOOK:  
+        case COMP_INVISIBILITY:  
+        case COMP_LEVITATE:  
+        case COMP_TRUE_SIGHT:  
+          // these are also "utility" comps, but players have asked for a  
+          // slightly higher load rate on them  
+          if (::number(0,9) < 5)  
+         num = -1;  
+          break;  
+        case COMP_GALVANIZE:  
+          // keep fairly rare  
+          if (::number(0,19))  
+         num = -1;  
+          break;  
+        case COMP_ENHANCE_WEAPON:  
+          // keep VERY rare  
+          if (::number(0,29))  
+         num = -1;  
+          break;  
+        default:  
+          break;  
+      }  
+      if (num == -1)  
+        continue;  
+     
+      // this check is to prevent a mob that "sells" comps via responses  
+      // from loading the comp they sell, and hence preventing the response  
+      // load from working  
+      if (!Config::LoadOnDeath() && isMobComponentSeller(comp, mobVnum()))  
+        num = -1;  
+     
+      if (num == -1)  
+        continue;  
+     
+      if (comp == -1) {  
+        vlogf(LOG_BUG, format("Bogus component on spell %d (%s)") %   
+              spell % discArray[spell]->name);  
+        continue;  
+      }  
+    }  
+    if (num == -1)  
+      continue; 
 
     // gets here if component is valid for mob
     if (!(obj = read_object(comp,VIRTUAL)))
       continue;
 
     TComponent *tcom =dynamic_cast<TComponent *>(obj);
-
-    if (!tcom)
-      continue;
-    if (!tcom->isComponentType(COMP_SPELL) || tcom->isComponentType(COMP_POTION)) {
+    spell = CompIndex[num].spell_num;  
+     
+    if (tcom && tcom->isComponentType(COMP_SPELL) && spell == TYPE_UNDEFINED) {  
+      num = -1;  
+      delete tcom;  
+      continue;  
+    }  
+    if (tcom->isComponentType(COMP_POTION)) {  
+      num = -1;  
       delete tcom;
       continue;
     }
