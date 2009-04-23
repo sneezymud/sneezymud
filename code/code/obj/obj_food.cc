@@ -398,8 +398,8 @@ void TObj::eatMe(TBeing *ch)
       ch->sendTo("You can't eat an object that's been marked no-junk.\n\r");
       return;
     } else if (isObjStat(ITEM_BURNING) || isObjStat(ITEM_PROTOTYPE) ||
-              isObjStat(ITEM_NOPURGE) || isObjStat(ITEM_NORENT) || getLocked() ||
-              stuckIn || equippedBy || tied_to || riding) {
+              isObjStat(ITEM_NOPURGE) || isObjStat(ITEM_NORENT) || isObjStat(ITEM_ATTACHED) ||
+              getLocked() || stuckIn || equippedBy || tied_to || riding) {
       ch->sendTo("You can't eat that, it just wouldn't be right!\n\r");
       return;
     } else if (isObjStat(ITEM_NODROP)) {
@@ -407,6 +407,9 @@ void TObj::eatMe(TBeing *ch)
       return;
     } else if (getStructPoints() > 20 || getVolume() > 1728) {
       ch->sendTo("There is simply too much of that to eat in one bite.\n\r");
+      return;
+    } else if (!canWear(ITEM_TAKE)) {
+      ch->sendTo("How can you eat that?  You can't even pick it up!\n\r");
       return;
     } else if (dynamic_cast<const TPCorpse*>(this)) {
       ch->sendTo("You probably shouldn't be eating player corpses.\n\r");
