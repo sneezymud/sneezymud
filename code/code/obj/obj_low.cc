@@ -416,14 +416,23 @@ Tier ArmorEvaluator::getTier()
   static unsigned int lightFlags = ITEM_ANTI_MAGE | ITEM_ANTI_SHAMAN; // thieves and monks are light
   static unsigned int mediumFlags = ITEM_ANTI_MONK | ITEM_ANTI_THIEF | lightFlags; // clerics and rangers are med
   static unsigned int heavyFlags = ITEM_ANTI_CLERIC | ITEM_ANTI_RANGER | mediumFlags; // diekhan and warriors are heavy
+  unsigned int objStat = m_clothing->getObjStat() & heavyFlags;
+
+  // some classes impose even more restrictions than simple obj flags
+  if (m_clothing->monkRestrictedItem(NULL))
+    objStat |= ITEM_ANTI_MONK;
+  if (m_clothing->shamanRestrictedItem(NULL))
+    objStat |= ITEM_ANTI_SHAMAN;
+  if (m_clothing->rangerRestrictedItem(NULL))
+    objStat |= ITEM_ANTI_RANGER;
 
   if (NULL != dynamic_cast<const TJewelry *>(m_clothing))
     return Tier_Jewelry;
-  else if ((m_clothing->getObjStat() & heavyFlags) == heavyFlags)
+  else if ((objStat & heavyFlags) == heavyFlags)
     return  Tier_Heavy;
-  else if ((m_clothing->getObjStat() & mediumFlags) == mediumFlags)
+  else if ((objStat & mediumFlags) == mediumFlags)
     return  Tier_Medium;
-  else if ((m_clothing->getObjStat() & lightFlags) == lightFlags)
+  else if ((objStat & lightFlags) == lightFlags)
     return  Tier_Light;
   return Tier_Clothing;
 }
