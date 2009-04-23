@@ -454,7 +454,7 @@ const char *dirname(dirTypeT dir)
 	return dirs[dir];
 }
 
-sstring genPathString(deque<pathData *> path)
+sstring genPathString(pathDataList path)
 {
   sstring result;
 

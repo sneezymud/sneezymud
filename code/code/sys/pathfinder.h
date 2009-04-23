@@ -2,6 +2,8 @@
 #define __PATHFINDER_H
 
 #include <deque>
+#include <boost/shared_ptr.hpp>
+
 
 class TPathTarget {
  public:
@@ -164,7 +166,8 @@ class pathData {
       checked(pd->checked), distance(pd->distance) {}
 };
 
-
+typedef boost::shared_ptr<pathData> pathDataPtr;
+typedef std::deque <pathDataPtr> pathDataList;
 
 class TPathFinder {
  private:
@@ -175,12 +178,13 @@ class TPathFinder {
   bool stay_zone;
   bool no_mob;
   bool ship_only;
+  bool use_cached;
 
   int dest;
   int dist;
 
  public:
-  std::deque <pathData *> path;
+  pathDataList path;
 
   void setRange(int);
   void setThruDoors(bool t){ thru_doors=t; }
@@ -188,6 +192,7 @@ class TPathFinder {
   void setUsePortals(bool t){ use_portals=t; }
   void setNoMob(bool t){ no_mob=t; }
   void setShipOnly(bool t){ ship_only=t; }
+  void setUseCached(bool t){ use_cached=t; }
 
   int getDest(){ return dest; }
   int getDist(){ return dist; }
@@ -198,8 +203,6 @@ class TPathFinder {
   TPathFinder(int depth);
 
   ~TPathFinder();
-
-  void Clear();
 };
 
 // based on TPathFinder, it combines up a path to the target(s)

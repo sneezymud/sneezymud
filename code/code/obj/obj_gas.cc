@@ -262,13 +262,17 @@ void TGas::doDrift()
     act("$n drifts in from below.",FALSE, this, 0, 0, TO_ROOM); 
   } else {
     dirTypeT dir;
-    TPathFinder path;
 
-    path.setUsePortals(true);
-    path.setNoMob(false);
-    path.setThruDoors(false);
-    path.setRange(25);
-    dir=path.findPath(inRoom(), findOutdoors());
+    if(!driftPath){
+      driftPath=new TPathFinder();
+      driftPath->setUsePortals(true);
+      driftPath->setNoMob(false);
+      driftPath->setThruDoors(false);
+      driftPath->setRange(25);
+      driftPath->setUseCached(true);
+    }
+
+    dir=driftPath->findPath(inRoom(), findOutdoors());
 
     if(dir >= MAX_DIR){
       dir=dirTypeT(dir-MAX_DIR+1);
@@ -297,17 +301,22 @@ void TGas::doDrift()
   }
 }
 
+TGas::~TGas(){
+  delete driftPath;
+}
 
 TGas::TGas(gasTypeT gasType) :
   TObj()
 {
   type = gasType;
+  driftPath=NULL;
 }
 
 TGas::TGas(const TGas &a) :
   TObj(a)
 {
   type = a.type;
+  driftPath=NULL;
 }
 
 void TGas::setVolume(int n)

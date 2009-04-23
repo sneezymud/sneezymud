@@ -85,9 +85,15 @@ static int findSomeClutter(TMonster *myself)
 {
   dirTypeT dir;
   int rc;
-  TPathFinder path;
+  TPathFinder *path;
 
-  dir=path.findPath(myself->inRoom(), findClutter(myself));
+  if(!myself->act_ptr)
+    myself->act_ptr=new TPathFinder();
+
+  path=static_cast<TPathFinder *>(myself->act_ptr);
+  path->setUseCached(true);
+
+  dir=path->findPath(myself->inRoom(), findClutter(myself));
 
   if (dir >= MIN_DIR) {
     rc = myself->goDirection(dir);
@@ -114,9 +120,15 @@ static int findSomeClutterPrison(TMonster *myself)
 {
   dirTypeT dir;
   int rc;
-  TPathFinder path;
+  TPathFinder *path;
 
-  dir=path.findPath(myself->inRoom(), findClutterPrison(myself));
+  if(!myself->act_ptr)
+    myself->act_ptr=new TPathFinder();
+
+  path=static_cast<TPathFinder *>(myself->act_ptr);
+  path->setUseCached(true);
+
+  dir=path->findPath(myself->inRoom(), findClutterPrison(myself));
 
   if (dir >= MIN_DIR) {
     rc = myself->goDirection(dir);
@@ -138,9 +150,15 @@ static int findSomeClutterAmber(TMonster *myself)
 {
   dirTypeT dir;
   int rc;
-  TPathFinder path;
+  TPathFinder *path;
 
-  dir=path.findPath(myself->inRoom(), findClutterAmber(myself));
+  if(!myself->act_ptr)
+    myself->act_ptr=new TPathFinder();
+
+  path=static_cast<TPathFinder *>(myself->act_ptr);
+  path->setUseCached(true);
+
+  dir=path->findPath(myself->inRoom(), findClutterAmber(myself));
 
   if (dir >= MIN_DIR) {
     rc = myself->goDirection(dir);
@@ -163,9 +181,15 @@ static int findSomeClutterBrightmoon(TMonster *myself)
 {
   dirTypeT dir;
   int rc;
-  TPathFinder path;
+  TPathFinder *path;
 
-  dir=path.findPath(myself->inRoom(), findClutterBrightmoon(myself));
+  if(!myself->act_ptr)
+    myself->act_ptr=new TPathFinder();
+
+  path=static_cast<TPathFinder *>(myself->act_ptr);
+  path->setUseCached(true);
+
+  dir=path->findPath(myself->inRoom(), findClutterBrightmoon(myself));
 
   if (dir >= MIN_DIR) {
     rc = myself->goDirection(dir);

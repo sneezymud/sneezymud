@@ -431,35 +431,33 @@ bool findEquipment::checkOwner(TObj *o) const
 
 TPathFinder::~TPathFinder()
 {
-  Clear();
 }
 
-TPathFinder::TPathFinder()
+TPathFinder::TPathFinder() :
+  thru_doors(true),
+  use_portals(true),
+  range(5000),
+  stay_zone(false),
+  no_mob(true),
+  ship_only(false),
+  use_cached(false),
+  dest(ROOM_NOWHERE),
+  dist(0)
 {
-  Clear();
 }
 
-TPathFinder::TPathFinder(int depth)
+TPathFinder::TPathFinder(int depth) :
+  thru_doors(true),
+  use_portals(true),
+  range(5000),
+  stay_zone(false),
+  no_mob(true),
+  ship_only(false),
+  use_cached(false),
+  dest(ROOM_NOWHERE),
+  dist(0)
 {
-  Clear();
   setRange(depth);
-}
-
-void TPathFinder::Clear()
-{
-  thru_doors=true;
-  use_portals=true;
-  range=5000;
-  stay_zone=false;
-  no_mob=true;
-  ship_only=false;
-  dest=ROOM_NOWHERE;
-  dist = 0;
-
-  std::deque<pathData *>::iterator it;
-  for(it=path.begin();it!=path.end();++it){
-    delete *it;
-  }
 }
 
 void TPathFinder::setRange(int d){ 
@@ -483,8 +481,19 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
     return DIR_NONE;
   }
 
-  // create this room as a starting point
+  if(use_cached && (path.size()>0 && pt.isTarget(path[path.size()-1]->room))){
+    for(unsigned int i=0;i<path.size();++i){
+      // reached end of path, but let's re-calc it before we report that
+      // the target was found - it may have moved
+      if(i==path.size()-1)
+	break;
 
+      if(path[i]->room==here)
+	return path[i+1]->direct;
+    }
+  }
+
+  // create this room as a starting point
   std::map<int, pathData *>path_map;
   path_map[here] = new pathData(here, DIR_NONE, -1, false, 0);
 
@@ -548,13 +557,14 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
 	    // found our target, walk our list backwards
 	    dest = exitp->to_room;
 	    dist = distance;
-	    
-	    path.push_front(new pathData(exitp->to_room, dir,
-					 CI->first, false, distance+1));
+
+
+	    path.push_front(pathDataPtr(new pathData(exitp->to_room, dir,
+					 CI->first, false, distance+1)));
 
 	    pd = CI->second;
 	    for (;;) {
-	      path.push_front(new pathData(pd));
+	      path.push_front(pathDataPtr(new pathData(pd)));
 
 	      if (pd->source == -1) {
 		      // clean up allocated memory
@@ -610,13 +620,13 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
 	    dest = tmp_room;
 	    dist = distance;
 
-	    path.push_front(new pathData(tmp_room, dir,
-					 CI->first, false, distance+1));
+	    path.push_front(pathDataPtr(new pathData(tmp_room, dir,
+					 CI->first, false, distance+1)));
 
             pd = CI->second;
 	    dirTypeT tmpdir=dir;
             for (;;) {
-	      path.push_front(new pathData(pd));
+	      path.push_front(pathDataPtr(new pathData(pd)));
               if (pd->source == -1) {
                 // clean up allocated memory
                 for (CI = path_map.begin(); CI != path_map.end(); ++CI)

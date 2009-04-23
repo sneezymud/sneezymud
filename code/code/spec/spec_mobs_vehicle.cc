@@ -18,9 +18,6 @@ int trolleyBoatCaptain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, T
   int *job=NULL;
   int i;
   TVehicle *vehicle=NULL;
-  TPathFinder path;
-  path.setUsePortals(false);
-  path.setThruDoors(true);
 
   if(cmd != CMD_GENERIC_PULSE)
     return FALSE;
@@ -135,12 +132,13 @@ int fishingBoatCaptain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, T
   static int timer;
   TObj *boat=NULL;
   TRoom *boatroom=real_roomp(cockpit);
-  int *job=NULL;
   int i;
   TVehicle *vehicle=NULL;
-  TPathFinder path;
-  path.setUsePortals(false);
-  path.setThruDoors(false);
+
+  struct fishingData {
+    int target;
+    TPathFinder *path;
+  } *job;
 
   if(cmd != CMD_GENERIC_PULSE)
     return FALSE;
@@ -202,31 +200,31 @@ int fishingBoatCaptain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, T
 
   // first, get out action pointer, which tells us which way to go
   if (!myself->act_ptr) {
-    if (!(myself->act_ptr = new int)) {
-     perror("failed new of fishing boat.");
-     exit(0);
-    }
-    job = static_cast<int *>(myself->act_ptr);
-    *job=13108;
+    myself->act_ptr = new fishingData();
+    job = static_cast<fishingData *>(myself->act_ptr);
+    job->target=13108;
+    job->path=new TPathFinder();
+    job->path->setUsePortals(false);
+    job->path->setThruDoors(false);
   } else {
-    job = static_cast<int *>(myself->act_ptr);
+    job = static_cast<fishingData *>(myself->act_ptr);
   }
 
-  if(boat->in_room == *job){
+  if(boat->in_room == job->target){
     myself->doDrive("stop");
     myself->doSay("Crew, pull us in to dock and hold her steady.");
     myself->doSay("Passengers, feel free to stick around for another sail.");
 
-    if(*job==15150){
-      *job=13108;
+    if(job->target==15150){
+      job->target=13108;
     } else {
       timer=50;
-      *job=15150;
+      job->target=15150;
     }
     return TRUE;
   }
 
-  i=path.findPath(boat->in_room, findRoom(*job));
+  i=job->path->findPath(boat->in_room, findRoom(job->target));
 
   if(i==DIR_NONE){
     vlogf(LOG_BUG, "fishing boat lost");

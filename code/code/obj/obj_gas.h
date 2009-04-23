@@ -12,6 +12,8 @@
 #include "obj_mergeable.h"
 #include "handler.h"
 
+class TPathFinder;
+
 // All gasses operate the same way somewhat.  They behavior is
 // differentiated by their gasTypeT.  All sorts of data can be stored
 // on a TGas mostly withour worrying about serialization, since the
@@ -39,6 +41,7 @@ class TGas : public TMergeable {
 
     TGas(gasTypeT gasType = GAS_UNDEFINED);
     TGas(const TGas &a);
+    ~TGas();
 
     void setType(gasTypeT newType) { type = newType; }
     gasTypeT getType() const { return type; }
@@ -49,6 +52,9 @@ class TGas : public TMergeable {
 protected:
     gasTypeT type;
     sstring creator;
+
+ private:
+    TPathFinder *driftPath;
 };
 
 
