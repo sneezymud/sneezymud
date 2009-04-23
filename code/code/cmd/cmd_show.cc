@@ -552,10 +552,10 @@ void TPerson::doShow(const sstring &argument)
             sb += format("%5d %5d     %5d %5d %3d %3d %5d %s\n\r") %
               obj_index[objectIndex].virt %
               obj_index[objectIndex].getNumber() %
-              obj_index[objectIndex].max_exist %
+              int(obj_index[objectIndex].max_exist) %
               getObjLoadPotential(obj_index[objectIndex].virt) %
-              obj_index[objectIndex].max_struct %
-              max(obj_index[objectIndex].armor, (short) 0) %
+              int(obj_index[objectIndex].max_struct) %
+              int(max(obj_index[objectIndex].armor, (short) 0)) %
               obj_index[objectIndex].value %
               buf;
         }
@@ -612,10 +612,10 @@ void TPerson::doShow(const sstring &argument)
         sb += format("%5d %5d     %5d %5d %3d %3d %5d %s\n\r") % 
           obj_index[objnx].virt %
           obj_index[objnx].getNumber() %
-          obj_index[objnx].max_exist %
+          int(obj_index[objnx].max_exist) %
           getObjLoadPotential(obj_index[objnx].virt) %
-          obj_index[objnx].max_struct %
-          max(obj_index[objnx].armor, (short) 0) %
+          int(obj_index[objnx].max_struct) %
+          int(max(obj_index[objnx].armor, (short) 0)) %
           obj_index[objnx].value %
           buf2;
       }
