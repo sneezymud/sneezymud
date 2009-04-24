@@ -264,7 +264,7 @@ static void save_repairman_file(TBeing *repair, TBeing *buyer, TObj *o, int iTim
     return;
   }
   if (!buyer->isPc()) {
-    vlogf(LOG_BUG, format("Non-PC got into save_repairman_file() somehow!!! BUG BRUTIUS!!") %  buyer->getName());
+    vlogf(LOG_BUG, format("Non-PC (%s) got into save_repairman_file() somehow!!! BUG BRUTIUS!!") %  buyer->getName());
     return;
   }
 
@@ -379,7 +379,7 @@ static int getRepairItem(TBeing *repair, TBeing *buyer, int ticket, TNote *obj)
 
   // load the item
   if(!(fixed_obj=loadRepairItem(repair, ticket, tmp, tmp_cost, version))){
-    repair->doSay(format("Either that item has been lost or I must have considered the item abandoned and got rid of it, sorry.") % ticket);
+    repair->doSay("Either that item has been lost or I must have considered the item abandoned and got rid of it, sorry.");
     vlogf(LOG_FILE, format("Player (%s) tried to load deleted/expired repair object: %i") % buyer->name % ticket);
     return TRUE;
   }
