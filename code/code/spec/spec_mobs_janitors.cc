@@ -216,6 +216,12 @@ int janitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   char buf[256];  
   bool trashpile=false;
 
+  if (cmd == CMD_GENERIC_DESTROYED) {
+    delete static_cast<TPathFinder *>(myself->act_ptr);
+    myself->act_ptr=NULL;    
+    return FALSE;
+  }
+
   if ((cmd != CMD_GENERIC_PULSE) || !ch->awake() || ch->fight())
     return FALSE;
 
@@ -301,6 +307,12 @@ int prisonJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
   int DUMP=31905;
   bool trashpile=false;
 
+  if (cmd == CMD_GENERIC_DESTROYED) {
+    delete static_cast<TPathFinder *>(myself->act_ptr);
+    myself->act_ptr=NULL;
+    return FALSE;
+  }
+
   if ((cmd != CMD_GENERIC_PULSE) || !ch->awake() || ch->fight())
     return FALSE;
 
@@ -375,6 +387,12 @@ int amberJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj 
   int DUMP=33281;
   bool trashpile=false;
 
+  if (cmd == CMD_GENERIC_DESTROYED) {
+    delete static_cast<TPathFinder *>(myself->act_ptr);
+    myself->act_ptr=NULL;
+    return FALSE;
+  }
+
   if ((cmd != CMD_GENERIC_PULSE) || !ch->awake() || ch->fight())
     return FALSE;
 
@@ -444,6 +462,12 @@ int brightmoonJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, 
   int DUMP=1385;
   bool trashcan=false;
   bool trashpile=false;
+
+  if (cmd == CMD_GENERIC_DESTROYED) {
+    delete static_cast<TPathFinder *>(myself->act_ptr);
+    myself->act_ptr=NULL;
+    return FALSE;
+  }
 
   if ((cmd != CMD_GENERIC_PULSE) || !ch->awake() || ch->fight())
     return FALSE;
