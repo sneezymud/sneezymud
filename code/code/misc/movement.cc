@@ -2636,9 +2636,9 @@ void TBeing::doSit(const sstring & argument)
     sstring str;
 
     if (sstringncmp(arg, "on ", 3) == 0)
-      str = string(arg, 3);
+      str = std::string(arg, 3);
     else if (sstringncmp(arg, "in ", 3) == 0)
-      str = string(arg, 3);
+      str = std::string(arg, 3);
     else
       str = arg;
 
@@ -2735,9 +2735,9 @@ void TBeing::doRest(const sstring & argument)
     sstring str;
 
     if (sstringncmp(arg, "on ", 3) == 0)
-      str = string(arg, 3);
+      str = std::string(arg, 3);
     else if (sstringncmp(arg, "in ", 3) == 0)
-      str = string(arg, 3);
+      str = std::string(arg, 3);
     else
       str = arg;
 
@@ -2829,9 +2829,9 @@ void TBeing::doSleep(const sstring & argument)
     sstring str;
 
     if (sstringncmp(arg, "on ", 3) == 0)
-      str = string(arg, 3);
+      str = std::string(arg, 3);
     else if (sstringncmp(arg, "in ", 3) == 0)
-      str = string(arg, 3);
+      str = std::string(arg, 3);
     else
       str = arg;
 

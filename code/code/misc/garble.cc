@@ -410,8 +410,8 @@ sstring garble_innuendo(const TBeing *from, TBeing *to, const sstring &arg, SPEE
     lastChar = '.';
 
     // remove all trailing punctuation
-  string::size_type st = arg.find_last_not_of("?!,./;:'\"]}[{\\|=+-_`~@#$%^&*()");
-  if (st != string::npos)
+  sstring::size_type st = arg.find_last_not_of("?!,./;:'\"]}[{\\|=+-_`~@#$%^&*()");
+  if (st != sstring::npos)
     buf.erase(st+1);
 
   buf += ", if you know what I mean";
@@ -429,10 +429,10 @@ sstring garble_excited(const TBeing *from, TBeing *to, const sstring &arg, SPEEC
     buf = buf.upper();
 
   // remove trailing punctuation
-  string::size_type st = arg.find_last_not_of(",./;:'\"]}[{\\|=+-_`~@#$%^&*()");
+  sstring::size_type st = arg.find_last_not_of(",./;:'\"]}[{\\|=+-_`~@#$%^&*()");
   if (buf[st] == '?')
     exclamations += 2;
-  else if (st != string::npos)
+  else if (st != sstring::npos)
     buf.erase(st+1);
 
   // add us some exclamations
@@ -701,13 +701,13 @@ sstring garble_pirate(const TBeing *from, TBeing *to, const sstring &arg, SPEECH
   garble += " ";
 
   // do all of the string replacements, yar!
-  string::size_type start = 0;
+  sstring::size_type start = 0;
   for(unsigned int iReplace = 0; iReplace < cElements(pirate_replace);)
   {
     start = garble.find(pirate_replace[iReplace][0], start);
 
     // nothing found? go to the next word
-    if (start == string::npos)
+    if (start == sstring::npos)
     {
       iReplace++;
       start = 0;

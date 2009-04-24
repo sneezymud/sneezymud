@@ -3,25 +3,24 @@
 
 
 #include <boost/format.hpp>
-using boost::format;
-using std::string;
 
+extern boost::format format(const std::string &);
 
-class sstring : public string {
+class sstring : public std::string {
 public:
   enum stringEscapeT { XML, SQL };
 
   // constructors
-  sstring() : string(){}
-  sstring(const char *str) : string(str?str:"") {}
-  sstring(const string &str) : string(str) {}
-  sstring(boost::format &a) : string(a.str()) {}
+  sstring() : std::string(){}
+  sstring(const char *str) : std::string(str?str:"") {}
+  sstring(const std::string &str) : std::string(str) {}
+  sstring(boost::format &a) : std::string(a.str()) {}
 
-  const sstring & operator=(const format &a);
-  const sstring & operator+=(const format &a);
+  const sstring & operator=(const boost::format &a);
+  const sstring & operator+=(const boost::format &a);
   const sstring & operator+=(const char &a);
   const sstring & operator+=(const char *a);
-  const sstring & operator+=(const string &a);
+  const sstring & operator+=(const std::string &a);
 
   char &operator[](unsigned int i);
   const char &operator[](unsigned int i) const;
@@ -58,9 +57,9 @@ public:
   void convertStringColor(const sstring replacement);
 
   // inlines
-  void inlineReplaceString(const string f, const string r) {
-    string::size_type start = 0;
-    while(string::npos != (start = find(f, start)))
+  void inlineReplaceString(const std::string f, const std::string r) {
+    std::string::size_type start = 0;
+    while(std::string::npos != (start = find(f, start)))
     {
       replace(start, f.length(), r.c_str(), r.length());
       start += r.length();

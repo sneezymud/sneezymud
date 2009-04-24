@@ -36,7 +36,7 @@ sstring randommessage(sstring from)
   for(int i=0;i < ::number(1,3);++i){
     r=::number(0,sentences.size()-1);
     buf=sentences[r];
-    format fmt(buf);
+    boost::format fmt(buf);
     for(int j=(int)count(buf.begin(), buf.end(), '%');j>0;--j)
       fmt % RandomWord();
 

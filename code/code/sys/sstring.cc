@@ -1,3 +1,4 @@
+#include <iostream>
 #include <stdexcept>
 #include <mysql/mysql.h>
 #include <boost/regex.hpp>
@@ -6,7 +7,7 @@
 #include "extern.h"
 #include "ansi.h"
 #include "parse.h"
-#include <iostream>
+#include "configuration.h"
 
 const sstring sstring::escape(stringEscapeT escape_type) const
 {
@@ -476,18 +477,18 @@ const char *sstring::c_str() const
   // we say greater than here, because a string might have nulls in it, which
   // cause strlen to come up short. we're only interested if std::string::c_str
   // gives us a too-long string.
-  if(strlen(string::c_str()) > length())
+  if(strlen(std::string::c_str()) > length())
     throw std::runtime_error(format("corruption in sstring::c_str").str());
 
-  return string::c_str();
+  return std::string::c_str();
 }
 
 const sstring & sstring::operator+=(const char &a){
-  string::operator+=(a);
+  std::string::operator+=(a);
   return *this;
 }
 
-const sstring & sstring::operator+=(const string &a){
+const sstring & sstring::operator+=(const std::string &a){
   this->append(a);
   return *this;
 }
@@ -498,13 +499,13 @@ const sstring & sstring::operator+=(const char *a)
   return *this;
 }
 
-const sstring & sstring::operator+=(const format &a)
+const sstring & sstring::operator+=(const boost::format &a)
 {
   this->append(a.str());
   return *this;
 }
 
-const sstring & sstring::operator=(const format &a)
+const sstring & sstring::operator=(const boost::format &a)
 {
   this->assign(a.str());
   return *this;
@@ -593,7 +594,7 @@ int sstring::split(const char delimit, sstring *data) const
 // given a sentence, try to match to the same case structure
 const sstring sstring::matchCase(const sstring match) const
 {
-  string out = *this;
+  std::string out = *this;
   int iOut = 0, iMatch = 0;
 
   while(iMatch < (int)match.length() && iOut < (int)out.length())
@@ -732,4 +733,18 @@ bool isvowel(const char c)
       return false;
     }
 }
+
+
+boost::format format(const std::string &f_string){
+  boost::format fmter(f_string);
+  if(Config::ThrowFormatExceptions()){
+    fmter.exceptions(boost::io::all_error_bits);
+  } else {
+    fmter.exceptions(boost::io::no_error_bits);
+  }
+  return fmter;
+}
+
+
+
 

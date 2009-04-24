@@ -1053,7 +1053,7 @@ int targetDummy(TBeing *character, cmdTypeT cmd, const char *argIn, TMonster *my
     myself->genericRestore(RESTORE_FULL);
 
     // we will wait for 4 generic ticks before printing status report (we use spaces as tick marks)
-    if (cmd == CMD_GENERIC_PULSE && string::npos == myself->procData.find("    ", myself->procData.length()-4))
+    if (cmd == CMD_GENERIC_PULSE && sstring::npos == myself->procData.find("    ", myself->procData.length()-4))
     {
       myself->procData += " ";
       return TRUE;
@@ -1192,8 +1192,8 @@ int targetDummy(TBeing *character, cmdTypeT cmd, const char *argIn, TMonster *my
   }
 
   // we are beginning practice combat
-  if ((cmd == CMD_MOB_COMBAT_ONATTACKED && string::npos == myself->procData.find(character->name)) ||
-      ((cmd == CMD_MOB_COMBAT || cmd == CMD_MOB_COMBAT2) && myself->fight() && string::npos == myself->procData.find(myself->fight()->name)))
+  if ((cmd == CMD_MOB_COMBAT_ONATTACKED && sstring::npos == myself->procData.find(character->name)) ||
+      ((cmd == CMD_MOB_COMBAT || cmd == CMD_MOB_COMBAT2) && myself->fight() && sstring::npos == myself->procData.find(myself->fight()->name)))
   {
     TBeing *attacker = (cmd == CMD_MOB_COMBAT_ONATTACKED) ? character : myself->fight();
     sstring attackerName = attacker->name;

@@ -2133,7 +2133,7 @@ sstring one_argument(sstring argument, sstring & first_arg)
 
 
   // strip leading whitespace from argument
-  if((bgin = argument.find_first_not_of(whitespace))!= string::npos){
+  if((bgin = argument.find_first_not_of(whitespace))!= sstring::npos){
     a2 = argument.substr(bgin);
     argument = a2;
   }
@@ -3388,7 +3388,7 @@ int sstringncmp(const sstring str1, const sstring str2, unsigned int len)
   // I've hacked this together cuz I think it's needed
 
   // trunc down to length and compare
-  return string(str1, 0, len).compare(string(str2, 0, len));
+  return std::string(str1, 0, len).compare(std::string(str2, 0, len));
 }
 
 commandInfo::~commandInfo()

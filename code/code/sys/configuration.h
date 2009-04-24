@@ -99,13 +99,20 @@ class Config {
   // improves CPU performance.
   static bool nuke_inactive_mobs;
 
-  // Causes mobs to drop their zonefile loaded gear and randomly generated loot
-  // when they die, and not when they spawn.  the skills spy and steal also trigger
-  // off of this setting to make their behavior usful when mobs have no gear.
-  // turning this on makes checking loot loads impossible, makes loot appear more 'random'
-  // reduces server memory footprint,  reduces load time (from having to calculate loot
-  // at spawn), and keeps loot items from scapping during a fight
+  // Causes mobs to drop their zonefile loaded gear and randomly
+  // generated loot when they die, and not when they spawn.  the
+  // skills spy and steal also trigger off of this setting to make
+  // their behavior usful when mobs have no gear.  turning this on
+  // makes checking loot loads impossible, makes loot appear more
+  // 'random' reduces server memory footprint, reduces load time (from
+  // having to calculate loot at spawn), and keeps loot items from
+  // scapping during a fight
   static bool load_on_death;
+
+  // whether or not boost::format will throw exceptions for bad format
+  // strings, extra or missing arguments etc.  false for maximum
+  // stability, true for maximum bug detection.
+  static bool throw_format_exceptions;
 
  public:
   static bool doConfiguration(int argc=0, char *argv[]=0);
@@ -129,6 +136,7 @@ class Config {
   static bool RentOnlyDeletion(){ return rent_only_deletion; }
   static bool NukeInactiveMobs(){ return nuke_inactive_mobs; }
   static bool LoadOnDeath(){ return load_on_death; }
+  static bool ThrowFormatExceptions(){ return throw_format_exceptions; }
 };
 
 

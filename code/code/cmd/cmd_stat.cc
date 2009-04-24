@@ -2382,7 +2382,7 @@ void TPerson::doStat(const sstring &argument)
   tmp_arg = one_argument(tmp_arg, arg2);
   sstring whitespace = " \n\r\t";
   size_t start = tmp_arg.find_first_not_of(whitespace);
-  if (start != string::npos) {
+  if (start != sstring::npos) {
     size_t end = tmp_arg.find_last_not_of(whitespace);
     arg3 = tmp_arg.substr(start, end - start + 1);
   } else {

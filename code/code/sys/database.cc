@@ -11,7 +11,7 @@ TDatabaseConnection database_connection;
 // we return this instead of null if they try to fetch an invalid column
 const sstring empty="";
 
-std::vector <string> db_hosts(DB_MAX);
+std::vector <std::string> db_hosts(DB_MAX);
 
 const char * db_connect[DB_MAX] = {
   NULL, // depends on game port

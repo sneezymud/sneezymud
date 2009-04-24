@@ -24,7 +24,7 @@ class SString : public CxxTest::TestSuite
     sstring foo;
     TS_ASSERT_THROWS(foo[0]='x', std::out_of_range);
 
-    string bar;
+    std::string bar;
     bar[0]='x';
     
     sstring baz;
