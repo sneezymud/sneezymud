@@ -182,6 +182,10 @@ bool Config::doConfiguration(int argc, char *argv[])
   po::notify(vm);
   std::ifstream ifs(configFile.c_str());
   
+  if(!ifs.is_open()){
+    std::cout << format("Failed to open config file '%s'\n") % configFile;
+  }
+
   po::store(parse_config_file(ifs, config_options), vm);
   po::notify(vm);
   
