@@ -162,10 +162,7 @@ bool Config::doConfiguration(int argc, char *argv[])
   cmdline_options.add(cmdline).add(config).add(databases);
 
   po::options_description config_options;
-  config_options.add(config).add(databases);
-
-  po::options_description config_only_options;
-  config_only_options.add(configOnly);
+  config_options.add(config).add(databases).add(configOnly);
 
   po::options_description visible("Allowed options");
   visible.add(cmdline).add(config).add(databases).add(configOnly);
@@ -178,22 +175,16 @@ bool Config::doConfiguration(int argc, char *argv[])
   po::variables_map vm;
 
 
-  try {
-    if(argc){
-      po::store(po::command_line_parser(argc, argv).
-		options(cmdline_options).positional(p).run(), vm);
-    }
-    po::notify(vm);
-    std::ifstream ifs(configFile.c_str());
-
-    po::store(parse_config_file(ifs, config_options), vm);
-    po::store(parse_config_file(ifs, config_only_options), vm);
-    po::notify(vm);
-  } catch(po::unknown_option){
-    sendHelp(visible);
-    return false;    
+  if(argc){
+    po::store(po::command_line_parser(argc, argv).
+	      options(cmdline_options).positional(p).run(), vm);
   }
-
+  po::notify(vm);
+  std::ifstream ifs(configFile.c_str());
+  
+  po::store(parse_config_file(ifs, config_options), vm);
+  po::notify(vm);
+  
   if(vm.count("help")){
     sendHelp(visible);
     return false;
