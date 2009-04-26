@@ -17,6 +17,7 @@
 #include "shop.h"
 #include "shopowned.h"
 #include "spec_mobs.h"
+#include "person.h"
 
 int poison_price(TBeing *ch, affectedData *, int shop_nr)
 {
@@ -585,97 +586,103 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
   return FALSE;
 }
 
+TMonster* getDoctor(int hospital_room, int &shop_nr)
+{
+  int doctor_room;
+
+  // find the doctor
+  switch(hospital_room){
+    case 416:
+    case 418: // emergency room
+      shop_nr=144; // gh
+      doctor_room=419;
+      break;
+    case 1353:
+      shop_nr=147; // bm
+      doctor_room=1352;
+      break;
+    case 3736:
+      shop_nr=146; // logrus
+      doctor_room=3753;
+      break;
+    case 16206:
+    case 16231: // emergency room
+      shop_nr=145; // amber
+      doctor_room=16200;
+      break;
+    default:
+      return NULL;
+  }
+
+  TRoom *oproom = real_roomp(doctor_room);
+  if (!oproom)
+    return NULL;
+
+  TThing *t = NULL;
+  for(StuffIter it=oproom->stuff.begin();it!=oproom->stuff.end() && (t=*it);++it){
+    TMonster* doctor = dynamic_cast<TMonster*>(t);
+    if(doctor->number==shop_index[shop_nr].keeper)
+      return doctor;
+  }
+  return NULL;
+}
+
+
 int healing_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 {
   TThing *t=NULL;
-  TBeing *healed, *doctor;
-  int num, cost, shop_nr=-1;
+  TPerson *healed;
+  TMonster *doctor = NULL;
+  int num, cost, shop_nr = -1;
 
   if (cmd != CMD_GENERIC_PULSE)
     return FALSE;
 
-  // find the doctor
-
-  switch(rp->number){
-    case 416:
-      shop_nr=144; // gh
-      break;
-    case 1353:
-      shop_nr=147; // bm
-      break;
-    case 3736:
-      shop_nr=146; // logrus
-      break;
-    case 16206:
-      shop_nr=145; // amber
-      break;
-  }
-  for(doctor=character_list;shop_nr>=0 && doctor;doctor=doctor->next){
-    if(doctor->number==shop_index[shop_nr].keeper)
-      break;
-  }
-  
-  if(!doctor && gamePort != GAMMA_GAMEPORT){
-    vlogf(LOG_BUG, format("couldn't find doctor for shop_nr=%i!") % shop_nr);
-    return FALSE;
-  }
-
-
   for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
-    healed = dynamic_cast<TBeing *>(t);
+    healed = dynamic_cast<TPerson *>(t);
     if (!healed)
       continue;
     if (healed->fight())
       continue;
 
-    if (!number(0, 12)) {
-      if (healed->getHit() >= healed->hitLimit()) {
-        if (!number(0, 10))
-          healed->sendTo("Since you require no healing, you are not charged for staying in the hospital.\n\r");
-        continue;
-      }
-      num = 25 + number(1, healed->GetMaxLevel() / 2);
-      num = min(num, (healed->hitLimit() - healed->getHit()));
-
-      cost = num * healed->GetMaxLevel() * healed->GetMaxLevel() / 100;
-      if (cost > healed->getMoney()) {
-        healed->sendTo("The hospital doesn't accept any medicare or insurance plans.\n\r");
-        healed->sendTo("You are tossed out of the hospital for being a vagrant.\n\r");
-        switch (healed->in_room) {
-          case 416:
-            --(*healed);
-            thing_to_room(healed, 108);
-            return TRUE; // stop the loop, since we changed rp->stuff
-          case 1353:
-            --(*healed);
-            thing_to_room(healed, 1303);
-            return TRUE; // stop the loop, since we changed rp->stuff
-          case 3736:
-            --(*healed);
-            thing_to_room(healed, 3710);
-            return TRUE; // stop the loop, since we changed rp->stuff
-	        case 16206:
-	          --(*healed);
-	          thing_to_room(healed, 16239);
-	          return TRUE; // stop the loop, since we changed rp->stuff
-          default:
-            vlogf(LOG_PROC, format("Undefined room %d in healing_room") %  healed->in_room);
-          }
-        } else {
-	        if(doctor->getMoney() < cost){
-	          doctor->doTell(healed->getName(), "I don't have enough money to cover my operating expenses!");
-	          return TRUE;
-	      }
-
-        TShopOwned tso(shop_nr, dynamic_cast<TMonster *>(doctor), healed);
-        tso.doBuyTransaction(cost, "healing", TX_BUYING_SERVICE);
-
-        healed->sendTo("The hospital works wonders on your body.\n\r");
-        healed->addToHit(num);
-        healed->sendTo(format("The charge for the healing is %d talens.\n\r") % cost);
-      }
+    if (healed->getHit() >= healed->hitLimit()) {
+      if (!number(0, 10))
+        healed->sendTo("Since you require no healing, you are not charged for staying in the hospital.\n\r");
+      continue;
     }
-  }
+
+    num = 25 + number(1, healed->GetMaxLevel() / 2);
+    num = min(num, (healed->hitLimit() - healed->getHit()));
+    cost = num * healed->GetMaxLevel() * healed->GetMaxLevel() / 100;
+
+    if (cost > healed->getMoney()) {
+      healed->sendTo("The hospital doesn't accept credit.\n\r");
+      healed->sendTo("You are directed toward an exit out of the hospital for being a vagrant.\n\r");
+      continue;
+    }
+
+    if (!doctor)
+      doctor = getDoctor(rp->in_room, shop_nr);
+
+    if(!doctor){
+      if (gamePort != GAMMA_GAMEPORT)
+        vlogf(LOG_BUG, format("Couldn't find doctor for shop_nr=%i!") % shop_nr);
+      return FALSE;
+    }
+
+    if(doctor->getMoney() < cost) {
+      doctor->doTell(healed->getName(), "I don't have enough money to cover my operating expenses!");
+      return TRUE;
+    }
+
+    TShopOwned tso(shop_nr, doctor, healed);
+    tso.doBuyTransaction(cost, "healing", TX_BUYING_SERVICE);
+
+    healed->sendTo("The hospital works wonders on your body.\n\r");
+    healed->addToHit(num);
+    healed->sendTo(format("The charge for the healing is %d talens.\n\r") % cost);
+
+  } // end for
   return FALSE;
 }
 
@@ -686,32 +693,11 @@ int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
   wearSlotT i;
   TBeing *doctor;
 
+  if (cmd != CMD_BUY && cmd != CMD_LIST)
+    return FALSE;
+
   if (!ch || dynamic_cast<TMonster *>(ch))
     return FALSE;
-
-  // find the doctor
-  switch(rp->number){
-    case 418:
-      shop_nr=144; // gh
-      break;
-    case 16231:
-      shop_nr=145; // amber
-      break;
-  }
-
-  for(doctor=character_list;shop_nr>=0 && doctor;doctor=doctor->next){
-    if(doctor->number==shop_index[shop_nr].keeper)
-      break;
-  }
-
-  
-  if(!doctor){
-    vlogf(LOG_BUG, format("couldn't find doctor for shop_nr=%i!") % shop_nr);
-    ch->sendTo("Couldn't find the doctor, tell a god!");
-    return FALSE;
-  }
-
-  TShopOwned tso(shop_nr, dynamic_cast<TMonster *>(doctor), ch);
 
   cost = 150 * ch->GetMaxLevel();
   if (cmd == CMD_LIST) {
@@ -721,6 +707,15 @@ int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
     ch->sendTo(format("Any of these for %d talens.\n\r") % cost);
     return TRUE;
   } else if (cmd == CMD_BUY) {        /* Buy */
+    // find the doctor
+    doctor = getDoctor(rp->in_room, shop_nr);
+    
+    if(!doctor){
+      vlogf(LOG_BUG, format("couldn't find doctor for shop_nr=%i!") % shop_nr);
+      ch->sendTo("Couldn't find the doctor, tell a god!");
+      return FALSE;
+    }
+    TShopOwned tso(shop_nr, dynamic_cast<TMonster *>(doctor), ch);
     arg = one_argument(arg, buf, cElements(buf));
     opt = convertTo<int>(buf);
     if (cost > ch->getMoney()) {
@@ -751,7 +746,7 @@ int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 
           // this was added due to fighting in/near the hospitals
           ch->addToWait(combatRound(6));
-	  tso.doBuyTransaction(cost, "full heal", TX_BUYING_SERVICE);
+	        tso.doBuyTransaction(cost, "full heal", TX_BUYING_SERVICE);
           break;
         case 2:
           ch->setMana(ch->manaLimit());
@@ -760,7 +755,7 @@ int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 
           // this was added due to fighting in/near the hospitals
           ch->addToWait(combatRound(6));
-	  tso.doBuyTransaction(cost, "full mana", TX_BUYING_SERVICE);
+	        tso.doBuyTransaction(cost, "full mana", TX_BUYING_SERVICE);
           break;
         case 3:
           ch->setLifeforce(500);
@@ -769,7 +764,7 @@ int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 
           // this was added due to fighting in/near the hospitals
           ch->addToWait(combatRound(6));
-	  tso.doBuyTransaction(cost, "full life force", TX_BUYING_SERVICE);
+	        tso.doBuyTransaction(cost, "full life force", TX_BUYING_SERVICE);
           break;
         default:
           ch->sendTo("That's not available at THIS hospital!\n\r");
