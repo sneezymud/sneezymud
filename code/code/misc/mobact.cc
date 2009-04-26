@@ -839,10 +839,15 @@ int TMonster::senseWimps()
     !fight()->isPet(PETTYPE_PET|PETTYPE_CHARM|PETTYPE_THRALL) && !fight()->isPc()) {
     bool beingUsed = false;
     // if a PC using me to tank?
-    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it)
-      if (wimp = dynamic_cast<TBeing*>(t))
-        beingUsed = (wimp != this && wimp->isPc() && wimp->fight() &&
-                      (wimp->fight() == this || wimp->fight() == fight()));
+    for(StuffIter it=roomp->stuff.begin();!beingUsed && it!=roomp->stuff.end() && (t=*it);++it) {
+
+      if (!(wimp = dynamic_cast<TBeing*>(t)))
+        continue;
+      if (wimp == this || wimp->isPc() || wimp->fight())
+        continue;
+
+      beingUsed = (wimp->fight() == this || wimp->fight() == fight());
+    }
 
     if (beingUsed) {
       if (!isDumbAnimal()) 
