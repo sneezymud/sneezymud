@@ -13,24 +13,6 @@
 // interest rate
 // risk
 
-TMonster *findSBA()
-{
-  int shop_nr=160;
-  TMonster *keeper;
-  TBeing *t;
-
-  for(t=character_list;t;t=t->next){
-    if(t->number==shop_index[shop_nr].keeper)
-      break;
-  }
-
-  if(t && (keeper=dynamic_cast<TMonster *>(t))){
-    return keeper;
-  }
-
-  return NULL;
-}
-
 
 
 void loanBuy(TBeing *ch, TMonster *myself, sstring arg)
@@ -79,7 +61,7 @@ void loanBuy(TBeing *ch, TMonster *myself, sstring arg)
 #if 0  
   TMonster *sba;
   // give loan amount to SBA
-  if(!(sba=findSBA())){
+  if(!(sba=shop_index[SBA_SHOP_NR].getKeeper())){
     vlogf(LOG_BUG, "couldn't find SBA!");
     return;
   }

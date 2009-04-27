@@ -32,6 +32,8 @@ const unsigned int MAX_SHOP_INVENTORY = 2500;
 
 const unsigned int GH_MAIL_SHOP = 161;
 
+const unsigned int SBA_SHOP_NR = 160;
+
 struct shop_pricing {
   int obj_vnum;
   int num_sold;
@@ -61,7 +63,6 @@ extern TObj *loadRepairItem(TBeing *, int, long &, int &, unsigned char &);
 extern void factoryProduction(int);
 extern void shoplog(int, TBeing *, TMonster *, const sstring &, int, const sstring &);
 extern unsigned int find_shop_nr(int);
-
 
 class shopData {
   public:
@@ -106,6 +107,8 @@ class shopData {
     double getExpenseRatio() { return ensureCache() ? expense_ratio : 0; }
     int getInventoryCount() { return ensureCache() ? inventory_count : 0; }
     void addToInventoryCount(int add) { ensureCache(); inventory_count += add; }
+    TMonster *getKeeper();
+    void clearKeeper() { mkeeper = NULL; }
 
     shopData();
     ~shopData();
@@ -116,6 +119,7 @@ class shopData {
     bool ensureCache();
 
 private:
+    TMonster *mkeeper;
     bool isCached;
     std::map<int,float> buy_ratios_cache;
     std::map<sstring,float> buy_matches_cache;

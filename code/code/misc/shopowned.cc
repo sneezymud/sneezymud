@@ -165,21 +165,16 @@ int TShopOwned::doExpenses(int cashCost, TObj *obj)
 {
   double profit_buy=shop_index[shop_nr].getProfitBuy(obj, ch);
   double ratio=getExpenseRatio();
-  int sba_nr=160;
   TMonster *sba;
-  TBeing *t;
   double value;
 
   if(ratio == 0)
     return 0;
 
-// find the sba shopkeeper
-  for(t=character_list;t;t=t->next){
-    if(t->number==shop_index[sba_nr].keeper)
-      break;
-  }
+  // find the sba shopkeeper
+  sba = shop_index[SBA_SHOP_NR].getKeeper();
 
-  if(t && (sba=dynamic_cast<TMonster *>(t))){
+  if(sba){
     value=((double)cashCost/profit_buy) * ratio;
 
     if(keeper->getMoney() < value)
@@ -187,7 +182,7 @@ int TShopOwned::doExpenses(int cashCost, TObj *obj)
     
     keeper->giveMoney(sba, (int)value, GOLD_SHOP);
     shoplog(shop_nr, sba, keeper, "talens", (int)-value, "expenses");
-    shoplog(sba_nr, keeper, sba, "talens", (int)value, "expenses");
+    shoplog(SBA_SHOP_NR, keeper, sba, "talens", (int)value, "expenses");
     sba->saveItems(shop_nr);
     return (int)value;
   }
@@ -246,29 +241,14 @@ TShopOwned::TShopOwned(int shop_nr, TBeing *ch)
 {
   this->shop_nr=shop_nr;
   this->ch=ch;
-  this->keeper = NULL;
-
-  for(TBeing *t=character_list;t;t=t->next){
-    if(t->number==shop_index[shop_nr].keeper){
-      keeper=dynamic_cast<TMonster *>(t);
-      break;
-    }
-  }
+  this->keeper = shop_index[shop_nr].getKeeper();
   this->owned=shop_index[shop_nr].isOwned();
 }
 
 TShopOwned::TShopOwned(int shop_nr)
 {
   this->shop_nr=shop_nr;
-  this->keeper = NULL;
-
-  for(TBeing *t=character_list;t;t=t->next){
-    if(t->number==shop_index[shop_nr].keeper){
-      keeper=dynamic_cast<TMonster *>(t);
-      break;
-    }
-  }
-
+  this->keeper = shop_index[shop_nr].getKeeper();
   this->ch=keeper;
   this->owned=shop_index[shop_nr].isOwned();
 }
@@ -313,35 +293,25 @@ int TShopOwned::chargeTax(int cost, const sstring &name, TObj *o)
 
   cost = (int)((float)cost * shop_index[tax_office].getProfitBuy(o, ch));
 
-  TBeing *t;
-  for(t=character_list;t;t=t->next){
-    if(t->mobVnum()==mob_index[shop_index[tax_office].keeper].virt)
-      break;
-  }
-
-  TBeing *taxman;
-  if(!t || !(taxman=dynamic_cast<TMonster *>(t))){
+  TMonster *taxman = shop_index[tax_office].getKeeper();
+  if(!taxman){
     vlogf(LOG_BUG, format("taxman not found %i") % 
 	  shop_index[tax_office].keeper);
     return 0;
   }
 
-
-
   keeper->giveMoney(taxman, cost, GOLD_SHOP);
   keeper->saveItems(shop_nr);
-  dynamic_cast<TMonster *>(taxman)->saveItems(tax_office);
+  taxman->saveItems(tax_office);
 
   shoplog(shop_nr, keeper, keeper, name, 
 	  -cost, "paying tax");
-  shoplog(tax_office, keeper, dynamic_cast<TMonster *>(taxman),
+  shoplog(tax_office, keeper, taxman,
 	  name, cost, "tax");
 
-
-  TShopOwned tso(tax_office, dynamic_cast<TMonster *>(taxman), keeper);
+  TShopOwned tso(tax_office, taxman, keeper);
   tso.journalize(keeper->getName(), "tax", TX_BUYING_SERVICE, cost, 0, 0, 0);
   tso.doReserve();
-
 
   return cost;
 }
@@ -393,22 +363,19 @@ int TShopOwned::doReserve()
   int even=min + (int)((max-min)/2);
   int money=keeper->getMoney();
   int amt=0;
-  TBeing *banker;
+  TMonster *banker;
   int bank_nr=corp.getBank();
 
   if(min<=0 || max<=0 || min>max || (max-min)<100000)
     return 0;
 
-  for(banker=character_list;banker;banker=banker->next){
-    if(banker->number==shop_index[bank_nr].keeper)
-      break;
-  }
+  banker = shop_index[bank_nr].getKeeper();
   if(!banker){
     vlogf(LOG_BUG, format("couldn't find banker for shop_nr=%i!") % bank_nr);
     return 0;
   }
 
-  TShopOwned tso(bank_nr, dynamic_cast<TMonster *>(banker), keeper);
+  TShopOwned tso(bank_nr, banker, keeper);
 
   if(money < min){
     amt=even-money;
@@ -526,23 +493,20 @@ int TShopOwned::doDividend(int cost, const sstring &name)
     int div=(int)((double)cost * getDividend());
     TCorporation corp(getCorpID());
     div=max(0, min(div,cost));
-    TBeing *banker;
+    TMonster *banker;
     int bank_nr=corp.getBank();
 
-    for(banker=character_list;banker;banker=banker->next){
-      if(banker->number==shop_index[bank_nr].keeper)
-	break;
-    }
+    banker = shop_index[bank_nr].getKeeper();
     if(!banker){
       vlogf(LOG_BUG, format("couldn't find banker for shop_nr=%i!") % bank_nr);
       return 0;
     }
 
-    TShopOwned tso(bank_nr, dynamic_cast<TMonster *>(banker), keeper);
+    TShopOwned tso(bank_nr, banker, keeper);
 
     keeper->giveMoney(banker, div, GOLD_SHOP);
-    dynamic_cast<TMonster *>(banker)->saveItems(shop_nr);
-    shoplog(bank_nr, keeper,  dynamic_cast<TMonster *>(banker), "talens", div, "dividend");
+    banker->saveItems(shop_nr);
+    shoplog(bank_nr, keeper, banker, "talens", div, "dividend");
 
     keeper->saveItems(shop_nr);
     shoplog(shop_nr, ch, keeper, name, -div, "dividend");

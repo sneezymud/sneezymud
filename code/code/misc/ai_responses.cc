@@ -719,20 +719,13 @@ int doRandCmd(cmdTypeT cmd, int choice, sstring parsedArgs) {
 
 void responseTransaction(TBeing *speaker, TMonster *tm, int value)
 {
-  int shop_nr=160;
-  TMonster *keeper;
-  TBeing *t;
+  TMonster *keeper = shop_index[SBA_SHOP_NR].getKeeper();
 
-  for(t=character_list;t;t=t->next){
-    if(t->number==shop_index[shop_nr].keeper)
-      break;
-  }
-
-  if(t && (keeper=dynamic_cast<TMonster *>(t))){
+  if(keeper){
     keeper->addToMoney(value, GOLD_SHOP);
-    shoplog(shop_nr, speaker, keeper, tm->getName(), 
+    shoplog(SBA_SHOP_NR, speaker, keeper, tm->getName(), 
 	    value, "giving");
-    keeper->saveItems(shop_nr);
+    keeper->saveItems(SBA_SHOP_NR);
   }
 }
 

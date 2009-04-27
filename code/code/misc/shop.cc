@@ -2154,181 +2154,180 @@ void shopping_kill(const char *, TBeing *ch, TBeing *keeper, int shop_nr)
 }
 
 
-int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *o)
+// todo: this should really call kick_mobs_from_shop, but keep for now to
+// preserve functionality
+int kickFromShop(TMonster *keeper, TBeing *vagrant)
 {
-  int rc;
-  dirTypeT dir = DIR_NONE;
-  unsigned int shop_nr;
-  TBeing *tbt = NULL;
+	for (dirTypeT dir = MIN_DIR; dir < MAX_DIR; dir++) {
+	  if (exit_ok(keeper->exitDir(dir), NULL)) {
 
-  if (cmd == CMD_GENERIC_PULSE) {
-    TThing *t=NULL;
-    TBeing *tbt;
-
-    // Toss out idlers
-
-    for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (t=*it);++it){
-      if((tbt=dynamic_cast<TBeing *>(t)) && 
-	 tbt->getTimer()>1 && !tbt->isImmortal()){
-        if ((tbt->master) && tbt->master->inRoom() == tbt->inRoom()) {
-          //vlogf(LOG_DASH, format("saving %s from loitering code, master is %s, room is (%d == %d)") % tbt->getName() %
-          //      tbt->master->getName() % tbt->inRoom() % tbt->master->inRoom());
-	  continue;
-	}
-	myself->doSay("Hey, no loitering!  Make room for the other customers.");
-	for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
-	  if (exit_ok(myself->exitDir(dir), NULL)) {
 	    // at least one valid dir exists
 	    // select the true direction at random
 	    do {
 	      dir = dirTypeT(::number(MIN_DIR, MAX_DIR-1));
-	    } while (!exit_ok(myself->exitDir(dir), NULL));
+	    } while (!exit_ok(keeper->exitDir(dir), NULL));
 	    
-	    act("$n throws you from $s shop.",
-		FALSE, myself, 0, tbt, TO_VICT);
-	    act("$n throws $N from $s shop.",
-		FALSE, myself, 0, tbt, TO_NOTVICT);
+	    act("$n throws you from $s shop.", FALSE, keeper, 0, vagrant, TO_VICT);
+	    act("$n throws $N from $s shop.", FALSE, keeper, 0, vagrant, TO_NOTVICT);
 
-	    myself->throwChar(tbt, dir, FALSE, SILENT_NO, true);
+	    keeper->throwChar(vagrant, dir, FALSE, SILENT_NO, true);
 	    return TRUE;
 	  }
 	}
+  return FALSE;
+}
+
+
+// produce items for this shop
+int shopping_produce(TMonster *keeper)
+{
+  unsigned int shop_nr = find_shop_nr(keeper->number);
+  TMonster *sbaKeeper = NULL;
+  std::vector<int>::iterator iter;
+
+  if (!keeper)
+    return FALSE;
+  if (!shop_index[shop_nr].producing.size())
+    return FALSE;
+
+  sbaKeeper = shop_index[SBA_SHOP_NR].getKeeper();
+  if(!sbaKeeper)
+    return FALSE;
+
+  TShopOwned tso(shop_nr, keeper, sbaKeeper);
+
+  // loop through items to produce
+  for(iter=shop_index[shop_nr].producing.begin();iter!=shop_index[shop_nr].producing.end();++iter){
+
+    TObj *o;
+
+    if(*iter <= -1)
+      continue;
+
+    if (!(o = read_object(*iter, REAL))) {
+      vlogf(LOG_BUG, format("Shopkeeper %d couldn't load produced item.") %  
+      shop_nr);
+      return FALSE;
+    }
+
+    TDatabase db(DB_SNEEZY);
+    db.query("select count(*) as count from rent where owner_type='shop' and owner=%i and vnum=%i", shop_nr, o->objVnum());
+    db.fetchRow();
+    int count=convertTo<int>(db["count"]);
+    
+    if(count >= tso.getMaxNum(NULL, o, 10)){
+      delete o;
+      continue;
+    }
+
+    int cost=o->getValue();
+
+    // obviously we shouldn't have to pay a million talens to create a
+    // million talen casino chip
+    if(dynamic_cast<TCasinoChip *>(o))
+      cost=1;
+
+    if(keeper->getMoney() < cost) {
+      delete o;
+      continue;
+    }
+
+    // money goes to sba
+    tso.doSellTransaction(cost, o->getName(), TX_PRODUCING);
+    shoplog(SBA_SHOP_NR, keeper, sbaKeeper, o->getName(), cost, "producing");
+
+    keeper->saveItem(shop_nr, o);
+    delete o;
+  }
+
+  return FALSE;
+}
+
+
+
+int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *o)
+{
+  int rc;
+  unsigned int shop_nr;
+
+  // clear pointers that cache myself
+  if (cmd == CMD_GENERIC_DESTROYED) {
+    shop_nr=find_shop_nr(myself->number);
+    shop_index[shop_nr].clearKeeper();
+    return FALSE;
+  }
+
+  // Toss out idlers
+  if (cmd == CMD_GENERIC_PULSE) {
+    TThing *t=NULL;
+    TBeing *tbt;
+
+    for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (t=*it);++it){
+      if((tbt=dynamic_cast<TBeing *>(t)) && tbt->getTimer()>1 && !tbt->isImmortal()){
+        if ((tbt->master) && tbt->master->inRoom() == tbt->inRoom()) {
+	        continue;
+	      }
+	      myself->doSay("Hey, no loitering!  Make room for the other customers.");
+        kickFromShop(myself, tbt);
+        return TRUE; // only kick one per pulse to avoid StuffIter issues
       }
     }
     return TRUE;
   }  
 
-  // determine shop_nr here to avoid overhead before CMD_GENERIc_PULSE
-  shop_nr=find_shop_nr(myself->number);
-
-
+  // sanity check - shop mobs are unique
   if (cmd == CMD_GENERIC_INIT) {
     if (!myself->isUnique()) {
       vlogf(LOG_BUG, format("Warning!  %s attempted to be loaded, when not unique.") %  myself->getName());
       return TRUE;
-    } else
-      return FALSE;
-#ifdef UNUSED
-  } else if(cmd == CMD_GENERIC_CREATED && 0){
-    // this is for conversion to new shop code, only will be run once
-    myself->loadItems(format("%s/%d") % SHOPFILE_PATH % shop_nr);
-
-    TThing *t, *t2;
-    for(StuffIter it=myself->stuff.begin();it!=myself->stuff.end();){
-      t=*(it++);
-      --(*t);
-      myself->saveItem(shop_nr, dynamic_cast<TObj *>(t));
-      delete t;
-    }      
+    }
     return FALSE;
-#endif
-  } else if (cmd == CMD_MOB_VIOLENCE_PEACEFUL) {
+  }
+
+  // kick fighting mobs out of the shop
+  if (cmd == CMD_MOB_VIOLENCE_PEACEFUL) {
     myself->doSay("Hey!  Take it outside.");
+
     // o is really a being, so downcast, and then bring it back up
     TThing *ttt = o;
-    tbt = dynamic_cast<TBeing *>(ttt);
+    if (!ttt)
+      return FALSE;
+    TBeing *tbt = dynamic_cast<TBeing *>(ttt);
+    if (!tbt)
+      return FALSE;
 
-    for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
-      if (exit_ok(myself->exitDir(dir), NULL)) {
-        // at least one valid dir exists
-        // select the true direction at random
-        do {
-          dir = dirTypeT(::number(MIN_DIR, MAX_DIR-1));
-        } while (!exit_ok(myself->exitDir(dir), NULL));
+    kickFromShop(myself, ch);
+    kickFromShop(myself, tbt);
 
-        act("$n throws you from $s shop.",
-               FALSE, myself, 0, ch, TO_VICT);
-        act("$n throws $N from $s shop.",
-               FALSE, myself, 0, ch, TO_NOTVICT);
-        myself->throwChar(ch, dir, FALSE, SILENT_NO, true);
-        act("$n throws you from $s shop.",
-               FALSE, myself, 0, tbt, TO_VICT);
-        act("$n throws $N from $s shop.",
-               FALSE, myself, 0, tbt, TO_NOTVICT);
-        myself->throwChar(tbt, dir, FALSE, SILENT_NO, true);
-        return TRUE;
-      }
-    }
     return TRUE;
-  } else if (cmd == CMD_MOB_MOVED_INTO_ROOM &&  (myself->in_room == shop_index[shop_nr].in_room)) {
+  }
+  
+  // keep mobs out of our room
+  if (cmd == CMD_MOB_MOVED_INTO_ROOM) {
 
-    return kick_mobs_from_shop(myself, ch, (int)o);
+    shop_nr=find_shop_nr(myself->number);
+    if (myself->in_room == shop_index[shop_nr].in_room)
+      return kick_mobs_from_shop(myself, ch, (int)o);
+    return FALSE;
+  }
+  
+  // produce stuff I'm supposed to have
+  if (cmd == CMD_MOB_ALIGN_PULSE) {
 
-  } else if (cmd == CMD_MOB_ALIGN_PULSE) {
     // called on a long period....
-
     if (::number(0,10))
       return FALSE;
 
     // produce new items
-    
-    std::vector<int>::iterator iter;
-    TObj *o;
-    int count=0;
-    // find the sba shopkeeper
-    TMonster *sba=NULL;
-    int sba_nr=160;
-    for(TBeing *t=character_list;t;t=t->next){
-      if(t->number==shop_index[sba_nr].keeper){
-	sba=dynamic_cast<TMonster *>(t);
-	break;
-      }
-    }
-    if(!sba)
-      return FALSE;
-    
-    
-    TShopOwned tso(shop_nr, myself, sba);
+    return shopping_produce(myself);
+  }
 
-    for(iter=shop_index[shop_nr].producing.begin();iter!=shop_index[shop_nr].producing.end();++iter){
-      if(*iter <= -1)
-        continue;
-
-      if (!(o = read_object(*iter, REAL))) {
-        vlogf(LOG_BUG, format("Shopkeeper %d couldn't load produced item.") %  
-	      shop_nr);
-        return FALSE;
-      }
-
-      TDatabase db(DB_SNEEZY);
-      db.query("select count(*) as count from rent where owner_type='shop' and owner=%i and vnum=%i", shop_nr, o->objVnum());
-      db.fetchRow();
-      count=convertTo<int>(db["count"]);
-      
-      if(count >= tso.getMaxNum(ch, o, 10)){
-        delete o;
-        continue;
-      }
-
-      int cost=o->getValue();
-
-      // obviously we shouldn't have to pay a million talens to create a
-      // million talen casino chip
-      if(dynamic_cast<TCasinoChip *>(o))
-        cost=1;
-
-      if(myself->getMoney() < cost) {
-        delete o;
-        continue;
-      }
-
-      //      vlogf(LOG_LOW, format("%s loading produced object %s") %
-      //      myself->getName() % o->getName());
-
-      // money goes to sba
-      tso.doSellTransaction(cost, o->getName(), TX_PRODUCING);
-      shoplog(sba_nr, myself, sba, o->getName(), cost, "producing");
-
-      myself->saveItem(shop_nr, o);
-      delete o;
-
-      //      *myself += *o;
-
-    }
-
+  // from here we begin the processing main set of shop commands
+  if (cmd >= MAX_CMD_LIST)
     return FALSE;
-  } else if (cmd >= MAX_CMD_LIST)
-    return FALSE;
+
+  // init shop_nr here
+  shop_nr=find_shop_nr(myself->number);
 
   if ((cmd == CMD_BUY) && (ch->in_room == shop_index[shop_nr].in_room)) {
     if (!safe_to_save_shop_stuff(myself))
@@ -2656,6 +2655,7 @@ shopData::shopData() :
   open2(0),
   close1(0),
   close2(0),
+  mkeeper(NULL),
   isCached(false)
 {
 }
@@ -2689,6 +2689,7 @@ shopData::shopData(const shopData &t) :
   open2(t.open2),
   close1(t.close1),
   close2(t.close2),
+  mkeeper(NULL),
   isCached(false)
 {
   unsigned int i;
@@ -2759,10 +2760,36 @@ shopData & shopData::operator =(const shopData &t)
   close1 = t.close1;
   close2 = t.close2;
   shop_nr = t.shop_nr;
+  // don't copy mkeeper - this is a cache value
 
   clearCache();
 
   return *this;
+}
+
+TMonster *shopData::getKeeper()
+{
+  if (mkeeper)
+    return mkeeper;
+
+  TRoom *r = real_roomp(in_room);
+  if (!r)
+    return NULL;
+
+  // uncached: find the shopkeeper
+  for(StuffIter it=r->stuff.begin();it!=r->stuff.end();++it){
+    TThing *t = *it;
+    if (!t)
+      continue;
+    mkeeper = dynamic_cast<TMonster*>(t);
+    if (!mkeeper)
+      continue;
+    if (mkeeper->number == keeper)
+      break;
+    mkeeper = NULL;
+  }
+
+  return mkeeper;
 }
 
 
@@ -2781,18 +2808,10 @@ void factoryProduction(int shop_nr)
   if (!keeper) // keeper is null on test ports
     return;
 
-    // find the sba shopkeeper
-    TMonster *sba=NULL;
-    int sba_nr=160;
-    for(TBeing *t=character_list;t;t=t->next){
-      if(t->number==shop_index[sba_nr].keeper){
-	sba=dynamic_cast<TMonster *>(t);
-	break;
-      }
-    }
-    if(!sba)
-      return;
-
+  // find the sba shopkeeper
+  TMonster *sba = shop_index[SBA_SHOP_NR].getKeeper();
+  if(!sba)
+    return;
 
   db_vnum.query("select fp.vnum as vnum, count(r.vnum) as count from factoryproducing fp left outer join rent r on (fp.vnum=r.vnum and r.owner_type='shop' and r.owner=fp.shop_nr) where fp.shop_nr=%i group by fp.vnum", shop_nr);
 
@@ -2828,7 +2847,7 @@ void factoryProduction(int shop_nr)
     keeper->setMoney(keeper->getMoney()-obj->productionPrice());
 
     // money goes to sba
-    shoplog(sba_nr, keeper, sba, obj->getName(), 
+    shoplog(SBA_SHOP_NR, keeper, sba, obj->getName(), 
 	    obj->productionPrice(), "producing");
     
     // subtract raw materials
