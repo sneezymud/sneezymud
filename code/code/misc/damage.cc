@@ -577,7 +577,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
       if (af->be == this && v->getPosition() == POSITION_DEAD) {
         // successfully solo killed
         vlogf(LOG_MISC, format("%s successfully killed %s") %  getName() % v->getName());
-        vlogf(LOG_MISC, format("Removing combat bit (%d) from: %s") %  af->level % v->getName());
+        vlogf(LOG_MISC, format("Removing combat bit (%d) from: %s") % int(af->level) % v->getName());
         v->affectRemove(af);
 
         if (dynamic_cast<TMonster*>(v))
