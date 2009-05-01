@@ -588,7 +588,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 
 TMonster* getDoctor(int hospital_room, int &shop_nr)
 {
-  int doctor_room;
+  int doctor_room = -1;
 
   // find the doctor
   switch(hospital_room){
@@ -621,7 +621,7 @@ TMonster* getDoctor(int hospital_room, int &shop_nr)
   TThing *t = NULL;
   for(StuffIter it=oproom->stuff.begin();it!=oproom->stuff.end() && (t=*it);++it){
     TMonster* doctor = dynamic_cast<TMonster*>(t);
-    if(doctor->number==shop_index[shop_nr].keeper)
+    if(doctor && doctor->number==shop_index[shop_nr].keeper)
       return doctor;
   }
   return NULL;
