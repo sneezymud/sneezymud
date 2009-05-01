@@ -41,7 +41,7 @@ static const char* defaultPage[DB_MAX] = {
   NULL,
   NULL,
   NULL,
-  "Help", // mortal
+  "Help_files", // mortal
   "Buildhelp", // builder
   "Wizhelp", // admin
 };
@@ -372,9 +372,10 @@ sstring wiki_to_text(const Descriptor *desc, sstring titleIn, const sstring modi
   sstring bold = desc->whiteBold();
   sstring blue = desc->blueBold();
   sstring norm = desc->norm();
+  sstring cyan = desc->cyanBold();
 
   // print title
-  sstring textOut = format("%s%-30.30s (Last Updated: %s/%s, %s)%s\n\r") % desc->green() %
+  sstring textOut = format("%s%-30.30s (Last Updated: %s/%s, %s)%s\n") % desc->green() %
     titleIn % modified.substr(4,2) % modified.substr(6,2) % modified.substr(0,4) % desc->norm();
   textOut += textIn;
 
@@ -408,7 +409,8 @@ sstring wiki_to_text(const Descriptor *desc, sstring titleIn, const sstring modi
   textOut.inlineReplaceString("]]", norm);
 
   // fixup header and bold with emphasis
-  textOut.inlineReplaceMarkup("==", "==", bold, norm);
+  textOut.inlineReplaceMarkup("\n==", "==\n", "\n" + bold, norm + "\n");
+  textOut.inlineReplaceMarkup("\n=", "=\n", "\n" + cyan, norm + "\n");
   textOut.inlineReplaceMarkup("'''", "'''", bold, norm);
 
   // remove italics
@@ -421,7 +423,9 @@ sstring wiki_to_text(const Descriptor *desc, sstring titleIn, const sstring modi
   textOut.inlineTrimWhiteLines();
 
   // normalize linefeeds
+  textOut.inlineReplaceString("<br>\n", "\n");
   textOut.inlineReplaceString("<br>", "\n");
+  textOut.inlineReplaceString("\r", "");
   textOut.inlineReplaceString("\n\n\n", "\n\n");
   textOut.inlineReplaceString("\n", "\n\r");
 
@@ -488,9 +492,13 @@ void wiki_findTitle(const TBeing *ch, dbTypeT type, const sstring argIn, bool li
   {
     int categWidth = 0;
     int childWidth = 0;
+    int pageNs = listArticles ? 0 : convertTo<int>(db["page_namespace"]);
+    // limit 201 means listing articles with listArticles will only show the first 201 articles
+    const int articleMax = 201;
 
     db.query("SELECT cl_sortkey, page_namespace FROM mw_page, mw_categorylinks WHERE cl_from = page_id AND \
-                cl_to = '%s' and page_title != '%s' ORDER BY cl_sortkey LIMIT 201;", title.c_str(), title.c_str());
+                cl_to = '%s' AND page_title != '%s' AND page_namespace = %i ORDER BY cl_sortkey LIMIT %i;",
+                title.c_str(), title.c_str(), pageNs, articleMax);
     while (db.fetchRow())
     {
       int page_namespace = convertTo<int>(db["page_namespace"]);
@@ -521,6 +529,11 @@ void wiki_findTitle(const TBeing *ch, dbTypeT type, const sstring argIn, bool li
       (*pList) += add;
       *pWidth += add.length() + 2;
     }
+
+    if (cArticles == articleMax)
+      childArticles += ", More...";
+    if (cCategories == articleMax)
+      subCategories += ", More...";
   }
 
   // unescape title
@@ -659,17 +672,17 @@ void TBeing::doHelp(const char *arg)
 
   one_argument(arg, searchBuf, cElements(searchBuf));
 
-  if (isImmortal() && !strncmp(searchBuf, "-l", 2)) {
+  if (!strncmp(searchBuf, "-l", 2)) {
     wiki_findTitle(this, DB_WIKI_MORTAL, arg+2, true);
     return;
   } 
 
-  if (isImmortal() && !strncmp(searchBuf, "-w", 2)) {
+  if (!strncmp(searchBuf, "-w", 2)) {
     wiki_findTitle(this, DB_WIKI_MORTAL, arg+2, false);
     return;
   } 
 
-  if (isImmortal() && !strncmp(searchBuf, "-s", 2)) {
+  if (!strncmp(searchBuf, "-s", 2)) {
     wiki_searchText(this, DB_WIKI_MORTAL, arg+2);
     return;
   } 
