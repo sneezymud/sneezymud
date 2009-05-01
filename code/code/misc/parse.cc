@@ -2360,11 +2360,23 @@ int TBeing::triggerSpecial(TThing *ch, cmdTypeT cmd, const char *arg)
     return TRUE;
 
   if (roomp) {
-    // special in mobile/object present? 
+    // special in mobile/object present?
+    std::vector<TThing *> things;
 
+    // NOTE: we iterate through objects and get a list of things
+    // then we iterate that list seperately.  This way checkSpec
+    // can alterate roomp->stuff and we wont crash
     for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
       if (!(t=*(it++)))
         continue;
+      things.push_back(t);
+    }
+
+    for(unsigned int iThing = 0; iThing < things.size(); iThing++) {
+      t = things[iThing];
+      if (!t || t->in_room != roomp->number)
+        continue;
+
       // note this is virtual function call
       rc = t->checkSpec(this, cmd, arg, ch);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
