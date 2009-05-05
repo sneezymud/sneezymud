@@ -29,6 +29,7 @@
 #include "spec_rooms.h"
 #include "person.h"
 #include "weather.h"
+#include "rent.h"
 
 int TRoom::checkSpec(TBeing *ch, cmdTypeT cmd, const char *arg, TThing *)
 
@@ -832,17 +833,12 @@ int wierdCircle(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 {
   char buf[256];
   TBeing *mob;
-  int mobnum = real_mobile(17111);  // 17111
   TObj *obj;
-
-  if (mobnum < 0) {
-    vlogf(LOG_PROC, "Bogus mob specified in wierdCircle.");
-    return FALSE;
-  }
 
   if (cmd == CMD_ENTER) {
     one_argument(arg, buf, cElements(buf));
     if (is_abbrev(buf, "circle")) {
+      int mobnum = real_mobile(17111);  // 17111
       if (mob_index[mobnum].getNumber() != 0)
         return FALSE;   // already loaded
 
@@ -855,7 +851,7 @@ int wierdCircle(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
       act("$n looks in your direction.", TRUE, mob, 0, ch, TO_VICT);
       act("$n looks in $N's direction.", TRUE, mob, 0, ch, TO_NOTVICT);
       
-      if (!(obj = ch->findMostExpensiveItem()))
+      if (!(obj = findMostExpensiveItem(ch)))
         return TRUE;
       mob->doSay("And I see you've brought me a gift.");
       mob->doSay("Allow me to remove you of the burden.");
@@ -871,8 +867,13 @@ int wierdCircle(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
     }
     return FALSE;
   }
-  if (cmd == CMD_GENERIC_PULSE) {
-    if (mob_index[mobnum].getNumber() && !::number(0,29)) {
+  if (cmd == CMD_GENERIC_PULSE && !::number(0,29)) {
+    int mobnum = real_mobile(17111);  // 17111
+    if (mobnum < 0) {
+      vlogf(LOG_PROC, "Bogus mob specified in wierdCircle.");
+      return FALSE;
+    }
+    if (mob_index[mobnum].getNumber()) {
       // keeps it around roughly 60 secs
       if (!(mob = get_char_room(mob_index[mobnum].name, rp->number)))
         return FALSE;

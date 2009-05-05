@@ -2652,49 +2652,34 @@ void TMonster::loadItems(const sstring &filepath)
 #endif
 }
 
-TObj *TBeing::findMostExpensiveItem()
+/*--------------------------------------------------
+findMostExpensiveItem
+--------------------------------------------------*/
+void setMostExpensiveItem(TObj *look, TObj *&found)
 {
-  int i, high = 0;
-  TObj *o = NULL;
-  TThing *t=NULL, *t2=NULL;
+  if (!look)
+    return;
+  for(StuffIter it=look->stuff.begin();it!=look->stuff.end() && *it;++it) {
+    setMostExpensiveItem(dynamic_cast<TObj *>(*it), found);
+  }
+  if (look->rentCost() <= found->rentCost())
+    return;
+  found = look;
+}
 
-  for(i = MIN_WEAR; i < MAX_WEAR; i++) {
-    TObj *obj = dynamic_cast<TObj *>(equipment[i]);
-    if (obj) {
-      if (obj->rentCost() > high) {
-        o = obj;
-        high = obj->rentCost();
-      }
-      for(StuffIter it=obj->stuff.begin();it!=obj->stuff.end() && (t2=*it);++it) {
-        obj = dynamic_cast<TObj *>(t2);
-        if (!obj)
-          continue;
-        if (obj->rentCost() > high) {
-          o = obj;
-          high = obj->rentCost();
-        }
-      }
-    }
-  }
-  for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
-    TObj *obj = dynamic_cast<TObj *>(t);
-    if (!obj)
+TObj *findMostExpensiveItem(TBeing *b)
+{
+  TObj *found = NULL;
+
+  for(int i = MIN_WEAR; i < MAX_WEAR; i++) {
+    if (!b->equipment[i])
       continue;
-    if (obj->rentCost() > high) {
-      o = obj;
-      high = obj->rentCost();
-    }
-    for(StuffIter it=t->stuff.begin();it!=t->stuff.end() && (t2=*it);++it) {
-      obj = dynamic_cast<TObj *>(t2);
-      if (!obj)
-        continue;
-      if (obj->rentCost() > high) {
-        o = obj;
-        high = obj->rentCost();
-      }
-    }
+    setMostExpensiveItem(dynamic_cast<TObj*>(b->equipment[i]), found);
   }
-  return o;
+  for(StuffIter it=b->stuff.begin();it!=b->stuff.end() && *it;++it) {
+    setMostExpensiveItem(dynamic_cast<TObj *>(*it), found);
+  }
+  return found;
 }
 
 void TThing::moneyMove(TBeing *ch)
@@ -2865,7 +2850,7 @@ void TPerson::loadRent()
           removeFollowers();
         }
 
-        while (getMoney() < 0 && (i = findMostExpensiveItem())) {
+        while (getMoney() < 0 && (i = findMostExpensiveItem(this))) {
           amt = i->obj_flags.cost;
           addToMoney(amt, GOLD_SHOP);
 

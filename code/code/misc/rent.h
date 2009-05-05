@@ -162,5 +162,5 @@ class ItemLoadDB {
   ~ItemLoadDB();
 };
 
-
+extern TObj *findMostExpensiveItem(TBeing *);
 #endif
