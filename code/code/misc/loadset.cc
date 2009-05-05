@@ -187,7 +187,7 @@ bool loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstrin
     }
     */
     TObj *obj = NULL;
-    if (!Config::LoadOnDeath() || chance == 101)
+    if (!Config::LoadOnDeath() || chance == 101 || (flags & resetFlagPropLoad))
       obj = read_object(rob, REAL);
     else
       obj = read_object_buy_build(ch, rob, REAL);
@@ -200,7 +200,7 @@ bool loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstrin
       {
         delete obj;  // avoid double loads of pants
         return false;
-      } else if ((Config::LoadOnDeath() || chance == 101) && !(flags & resetFlagAlwaysEquip))
+      } else if ((Config::LoadOnDeath() || chance == 101) && !(flags & resetFlagPropLoad))
         *ch += *obj;
       else if (ch->equipment[slot]){
 	      delete obj;

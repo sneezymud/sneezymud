@@ -90,7 +90,7 @@ typedef unsigned int resetFlag;
 const resetFlag resetFlagNone = 0;
 const resetFlag resetFlagBootTime = 1<<0;
 const resetFlag resetFlagFindLoadPotential = 1<<1;
-const resetFlag resetFlagAlwaysEquip = 1<<2;
+const resetFlag resetFlagPropLoad = 1<<2;
 
 const resetFlag resetFlagCount = 3;
 const resetFlag resetFlagMax = 1<<resetFlagCount;

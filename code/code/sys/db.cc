@@ -2787,12 +2787,18 @@ void runResetCmdE(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   // when computing the odds of the normalized load potential.
   // vlogf(LOG_MISC, format("(10000000 * adj_obj_lp_ratio / obj_lp_ratio * stats.equip) = %d") % (int) (10000000 * adj_obj_lp_ratio / obj_lp_ratio * stats.equip));
   if(!((obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist) &&
-     (::number(0, 9999999) < (int)(10000000*adj_obj_lp_ratio / obj_lp_ratio*stats.equip)) &&
-	   (obj = read_object_buy_build(mob, rs.arg1, REAL))))
+     (::number(0, 9999999) < (int)(10000000*adj_obj_lp_ratio / obj_lp_ratio*stats.equip))))
   {
-    repoCheck(mob, rs.arg1);
-    last_cmd = objload = false;
-    return;
+    if (!(flags & resetFlagPropLoad))
+      obj = read_object_buy_build(mob, rs.arg1, REAL);
+    else
+      obj = read_object(rs.arg1, REAL);
+
+    if (!obj) {
+      repoCheck(mob, rs.arg1);
+      last_cmd = objload = false;
+      return;
+    }
   }
 
   // so now we've loaded the item, lets place it
@@ -2840,7 +2846,7 @@ void runResetCmdE(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   // end sanity checks
 
   // OK, actually do the equip
-  if (Config::LoadOnDeath() && !(flags & resetFlagAlwaysEquip))
+  if (Config::LoadOnDeath() && !(flags & resetFlagPropLoad))
     *mob += *obj;
   else
     mob->equipChar(obj, realslot);
@@ -3397,10 +3403,11 @@ void markProp(TObj *obj)
   obj->obj_flags.cost = 0;
 }
 
-// loads eq, just like 'E' command and then marks as 'prop' (counts as regular eq: best to load specailized eq)
+// loads eq, just like 'E' command and then marks as 'prop' (counts as regular eq: best to load specialized eq)
+// note: this eq loads without buy_build operations and equips it even if LoadOnDeath is configured on
 void runResetCmdI(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
 {
-  runResetCmdE(zone, rs, flags & resetFlagAlwaysEquip, mobload, mob, objload, obj, last_cmd);
+  runResetCmdE(zone, rs, flags & resetFlagPropLoad, mobload, mob, objload, obj, last_cmd);
   if (obj && last_cmd)
     markProp(obj);
 }
@@ -3419,7 +3426,7 @@ void runResetCmdJ(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   if (mob && mobload && rs.arg1 >=0)
     for (wearSlotT i = MIN_WEAR; i < MAX_WEAR; i++)
       if (zone.armorSets.getArmor(rs.arg1, i) != 0)
-        if (loadsetCheck(mob, zone.armorSets.getArmor(rs.arg1, i),(rs.arg2 >= 98) ? rs.arg2 : fixed_chance, i, "(null... for now)"))
+        if (loadsetCheck(mob, zone.armorSets.getArmor(rs.arg1, i),(rs.arg2 >= 98) ? rs.arg2 : fixed_chance, i, "(null... for now)", flags & resetFlagPropLoad))
           markProp(dynamic_cast<TObj*>(mob->equipment[i])); // assume: loadsetCheck returning true = obj on mob in that slot
 }
 
