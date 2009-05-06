@@ -2662,7 +2662,7 @@ void setMostExpensiveItem(TObj *look, TObj *&found)
   for(StuffIter it=look->stuff.begin();it!=look->stuff.end() && *it;++it) {
     setMostExpensiveItem(dynamic_cast<TObj *>(*it), found);
   }
-  if (look->rentCost() <= found->rentCost())
+  if (found && look->rentCost() <= found->rentCost())
     return;
   found = look;
 }
