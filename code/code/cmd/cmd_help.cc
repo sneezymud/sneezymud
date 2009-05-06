@@ -485,20 +485,30 @@ void wiki_findTitle(const TBeing *ch, dbTypeT type, const sstring argIn, bool li
   int cArticles = 0, cCategories = 0;
   sstring subCategories;
   sstring childArticles;
+  bool isRoot = title == sstring(helpCategory[type]);
 
   // All categories are articles too, so there is a chance we have a categ.
   // We should query all pages which may be part of this category
   if (title.length() > 0 && convertTo<int>(db["page_namespace"]) > 0)
   {
-    int categWidth = 0;
-    int childWidth = 0;
-    int pageNs = listArticles ? 0 : convertTo<int>(db["page_namespace"]);
     // limit 201 means listing articles with listArticles will only show the first 201 articles
     const int articleMax = 201;
+    int categWidth = 0;
+    int childWidth = 0;
+    sstring pageNs = "";
 
+    // if listArticles then only query namespace == 0
+    // else if !isRoot then we should query all
+    // else query just for categories
+    if (listArticles)
+      pageNs = "AND page_namespace = " + db["page_namespace"];
+    else if (isRoot)
+      pageNs = "AND page_namespace != 0";
+
+    // do the query for subarticles/categories
     db.query("SELECT cl_sortkey, page_namespace FROM mw_page, mw_categorylinks WHERE cl_from = page_id AND \
-                cl_to = '%s' AND page_title != '%s' AND page_namespace = %i ORDER BY cl_sortkey LIMIT %i;",
-                title.c_str(), title.c_str(), pageNs, articleMax);
+                cl_to = '%s' AND page_title != '%s' %s ORDER BY cl_sortkey LIMIT %i;",
+                title.c_str(), title.c_str(), pageNs.c_str(), articleMax);
     while (db.fetchRow())
     {
       int page_namespace = convertTo<int>(db["page_namespace"]);
@@ -548,7 +558,7 @@ void wiki_findTitle(const TBeing *ch, dbTypeT type, const sstring argIn, bool li
   if (cCategories > 0)
     article += format("\n\r%sThere are %i subcategories under the category '%s':%s\n\r\%s\n\r") % ch->desc->orangeBold() %
                     cCategories % title % ch->desc->norm() % subCategories;
-  if (listArticles && cArticles > 0)
+  if (cArticles > 0 && (listArticles || (!isRoot && !cCategories)))
     article += format("\n\r%sThere are %i articles under the category '%s':%s\n\r\%s\n\r") % ch->desc->orangeBold() %
                     cArticles % title % ch->desc->norm() % childArticles;
 
