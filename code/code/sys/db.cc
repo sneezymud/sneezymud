@@ -2786,19 +2786,21 @@ void runResetCmdE(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   // chance of loading an object.  This has to be taken into account
   // when computing the odds of the normalized load potential.
   // vlogf(LOG_MISC, format("(10000000 * adj_obj_lp_ratio / obj_lp_ratio * stats.equip) = %d") % (int) (10000000 * adj_obj_lp_ratio / obj_lp_ratio * stats.equip));
-  if(!((obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist) &&
-     (::number(0, 9999999) < (int)(10000000*adj_obj_lp_ratio / obj_lp_ratio*stats.equip))))
+  bool loadFail = true;
+  if((obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist) &&
+     (::number(0, 9999999) < (int)(10000000*adj_obj_lp_ratio / obj_lp_ratio*stats.equip)))
   {
     if (!(flags & resetFlagPropLoad))
       obj = read_object_buy_build(mob, rs.arg1, REAL);
     else
       obj = read_object(rs.arg1, REAL);
+    loadFail = obj == NULL;
+  }
 
-    if (!obj) {
-      repoCheck(mob, rs.arg1);
-      last_cmd = objload = false;
-      return;
-    }
+  if (loadFail) {
+    repoCheck(mob, rs.arg1);
+    last_cmd = objload = false;
+    return;
   }
 
   // so now we've loaded the item, lets place it
