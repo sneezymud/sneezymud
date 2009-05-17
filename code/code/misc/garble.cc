@@ -175,7 +175,7 @@ int getLanguageChance(const TBeing *from, TBeing *to, int length, spellNumT lang
 {
   int learning = to ? to->getSkillValue(language) : 0;
   int difficulty = max(0, length-learning);
-  int bonus = to && to->bSuccess(difficulty, language) ? learning/5 : 0;
+  int bonus = to && to->bSuccess(difficulty, language) ? learning/2 : 0;
   int chance = from ? 100 - from->plotStat(STAT_CURRENT, STAT_INT, 0, 100, 50) : 25;
   return min(100, max(0, chance - bonus));
 }
@@ -1409,7 +1409,7 @@ sstring garble_gutter(const TBeing *from, TBeing *to, const sstring &arg, SPEECH
 
   for(int i=0;i < (int)cElements(replace);i++)
   {
-    if (i > 9 && !(chance > number(0, 100)))
+    if (i > 9 && chance <= number(0, 100))
       continue;
     out.inlineReplaceString(replace[i][0], replace[i][1]);
   }
