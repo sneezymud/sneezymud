@@ -12,8 +12,7 @@ size_t dummyWriter(void *, size_t size, size_t nmemb, void *){
 bool twitterShout(sstring from, sstring msg)
 {
   CURL *curl;
-  CURLcode res;
-  
+
   if(gamePort!=PROD_GAMEPORT)
     return false;
 
@@ -25,38 +24,33 @@ bool twitterShout(sstring from, sstring msg)
   from=stripColorCodes(from).cap();
   msg=stripColorCodes(msg);
 
-  curl_global_init(CURL_GLOBAL_ALL);
+  // manpages: curl_global_init(CURL_GLOBAL_ALL) is not required for simple calls
+  // of curl - curl_easy_init will end up doing the alloc for us if needed
+  // this may save us a tiny amount of time on the init call
 
-  curl_formadd(&formpost, &lastptr, 
-	       CURLFORM_COPYNAME, "status",
-	       CURLFORM_COPYCONTENTS, 
-	       (format("%s: %s")% from% msg).str().c_str(),
-	       CURLFORM_END);
-	       
   curl = curl_easy_init();
+  curl_formadd(&formpost, &lastptr, 
+              CURLFORM_COPYNAME, "status",
+              CURLFORM_COPYCONTENTS, 
+              (format("%s: %s")% from% msg).str().c_str(),
+              CURLFORM_END);
+
   headerlist = curl_slist_append(headerlist, buf);
 
   curl_easy_setopt(curl, CURLOPT_URL, 
-		   "http://twitter.com/statuses/update.xml");
+                  "http://twitter.com/statuses/update.xml");
   curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerlist);
   curl_easy_setopt(curl, CURLOPT_USERPWD, "sneezymud:kegenlgn");
-  //  curl_easy_setopt(curl, CURLOPT_USERNAME, "sneezymud");
-  //  curl_easy_setopt(curl, CURLOPT_PASSWORD, "kegenlgn");
   curl_easy_setopt(curl, CURLOPT_HTTPPOST, formpost);
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, dummyWriter);
+  curl_easy_setopt(curl, CURLOPT_TIMEOUT, 1l); // at most take 1 sec
 
-  res = curl_easy_perform(curl);
+  curl_easy_perform(curl);
 
   curl_easy_cleanup(curl);
   curl_formfree(formpost);
   curl_slist_free_all (headerlist);
 
-  if(res){
-    vlogf(LOG_PEEL, format("curl failed: %i") % res);
-  }
-
-
   return true;
-
 }
 
