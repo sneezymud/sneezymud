@@ -2021,7 +2021,7 @@ void TRoom::loadItems()
   // neat and tidy.  We also look for the link-note that we put inside
   // the bag and purge the bag if it's here for too long.
   if (number == ROOM_STORAGE) {
-    vlogf(LOG_LOW, "Storage: Booting Storage Room");
+    /*vlogf(LOG_LOW, "Storage: Booting Storage Room");
 
     TThing * tThing,
       * tCont=NULL;
@@ -2232,7 +2232,7 @@ void TRoom::loadItems()
       tBag->name = mud_str_dup(tStString);
 
       *this += *tBag;
-    }
+    }*/
   }
 
 }

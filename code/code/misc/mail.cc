@@ -13,6 +13,7 @@
 #include "obj_trap.h"
 #include "obj_open_container.h"
 #include "spec_mobs.h"
+#include "combat.h"
 
 // may not exceed NAME_SIZE (15) chars
 static const char * const SNEEZY_ADMIN = "SneezyMUD Administration";
@@ -140,7 +141,114 @@ void postmasterValue(TBeing *ch, TBeing *postmaster, const char *arg)
 }
 
 
-int postmaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
+int postmasterGiven(TBeing *ch, TMonster *me, TObj *o)
+{
+  if (!o || o->objVnum() != GENERIC_L_TOKEN) {
+    me->doTell(ch->getName(), "What in the hells is this?!");
+    me->doGive(ch, o);
+    return 0;
+  }
+
+  // the following code extracts out properties from the name
+  sstring nameLower = sstring(ch->getName()).lower();
+  sstring objName = o->name;
+  sstring playerTag = "[link$" + nameLower + "$";
+  size_t startTag = objName.find(playerTag);
+  if (startTag == sstring::npos) {
+    me->doTell(ch->getName(), "Are you sure this is your token? It doesn't look right...");
+    me->doGive(ch, o);
+    return 0;
+  }
+  size_t dueTag = objName.find("$", startTag+playerTag.length());
+  if (dueTag == sstring::npos)
+    return 0;
+  size_t endTag = objName.find("]", dueTag+1);
+  if (endTag == sstring::npos)
+    return 0;
+  
+  // raw data
+  sstring fullToken = objName.substr(startTag, endTag-startTag+1); // includes [] brackets
+  sstring deathDate = objName.substr(startTag+playerTag.length(), dueTag-startTag-playerTag.length());
+  sstring dueDate = objName.substr(dueTag+1, endTag-dueTag-1);
+  time_t dueTime = convertTo<time_t>(dueDate.c_str());
+
+  vlogf(LOG_BUG, fullToken);
+  vlogf(LOG_BUG, deathDate);
+  vlogf(LOG_BUG, dueDate);
+
+  // dueDate is uninitialized
+  if (dueTime == 0) {
+    time_t ct = time(0);
+    ct += 10*60; // add 10 minutes
+
+    delete o->name;
+    dueDate = format("%i") % int(ct);
+    objName.replace(dueTag+1, endTag-dueTag-1, dueDate.c_str(), dueDate.length());
+    o->name = mud_str_dup(objName.c_str());
+
+    me->doTell(ch->getName(), "It appears your belongings are arriving via magical transport in ten minutes.");
+    me->doTell(ch->getName(), "In the meantime, hold on to this token and give it to me when your package has arrived.");
+    me->doGive(ch, o);
+    ch->doQueueSave();
+
+    return 0;
+
+  // duedate hasnt expired yet
+  } else if (dueTime > time(0)) {
+
+    time_t ct = dueTime - time(0);
+    int minutes = ct / 60;
+    int seconds = ct % 60;
+
+    me->doTell(ch->getName(), "Sorry, your object hasn't materialized from voidspace yet.");
+    me->doTell(ch->getName(), format("It looks like it won't be ready for another %i minutes and %i seconds.") % minutes % seconds);
+    me->doGive(ch, o);
+
+    return 0;
+
+  // item is ready
+  } else {
+
+    TRoom *rp = real_roomp(ROOM_STORAGE);
+    if (!rp)
+      return 0;
+    fullToken.inlineReplaceString(dueDate, "bag");
+    vlogf(LOG_BUG, "Looking for " + fullToken);
+    TObj *linkbag = NULL;
+    for(StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && *it; it++) {
+      TObj *stored = dynamic_cast<TObj*>(*it);
+      if (!stored)
+        continue;
+      vlogf(LOG_BUG, "Scanning " + sstring(stored->name)); 
+      if (sstring(stored->name).find(fullToken) == sstring::npos)
+        continue;
+      linkbag = stored;
+    }
+    if (!linkbag) {
+      me->doTell(ch->getName(), "Well that's strange; you don't have a linkbag.  Use the 'report' command for help.");
+      me->doGive(ch, o); 
+      ch->doQueueSave();
+      return 0;
+    }
+
+    --(*linkbag);
+    *(ch->roomp) += *linkbag;
+    linkbag->addObjStat(ITEM_NORENT | ITEM_NEWBIE);
+    linkbag->obj_flags.decay_time = MAX_PC_CORPSE_EQUIPPED_TIME;
+    linkbag->obj_flags.wear_flags &= ~ITEM_TAKE;
+
+    me->doTell(ch->getName(), "Great!  It looks like your things are ready.");
+    me->doTell(ch->getName(), "I'll just drop them here in the room.  Please take out your items and clean up.");
+    ch->doQueueSave();
+
+    return DELETE_ITEM;
+  }
+
+  return 0;
+}
+
+
+int postmaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *o)
 {
   if (!ch->desc)
     return FALSE;               /* so mobs don't get caught here */
@@ -160,6 +268,8 @@ int postmaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj
     case CMD_VALUE:
       postmasterValue(ch, myself, arg);
       return TRUE;
+    case CMD_MOB_GIVEN_ITEM:
+      return postmasterGiven(ch, myself, o);
     default:
       return FALSE;
   }
@@ -427,14 +537,14 @@ void TBeing::postmasterReceiveMail(TMonster *me)
   }
 }
 
-void autoMail(TBeing *ch, const char *targ, const char *msg)
+void autoMail(TBeing *ch, const char *targ, const char *msg, int m, int r)
 {
   // from field limited to 15 chars by mail structure
 
   if (ch)
-    store_mail(ch->getName(), SNEEZY_ADMIN, msg, 0, 0);
+    store_mail(ch->getName(), SNEEZY_ADMIN, msg, m, r);
   else if (targ)
-    store_mail(targ, SNEEZY_ADMIN, msg, 0, 0);
+    store_mail(targ, SNEEZY_ADMIN, msg, m, r);
   else
     vlogf(LOG_BUG, "Error in autoMail");
 

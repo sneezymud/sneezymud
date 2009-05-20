@@ -181,6 +181,7 @@ const int OBJ_ANGEL_HEART = 9634;
 const int MYSTERY_POTION = 31300;
 const int OBJ_IMMORTAL_EXCHANGE_COIN = 37142;
 const int OBJ_PREEN_FEATHER = 44845;
+const int GENERIC_L_TOKEN = 9995;
 // ------------------------- MOBS
 
 const int MOB_ANY            = -1;

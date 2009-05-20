@@ -36,6 +36,7 @@
 #include "obj_base_clothing.h"
 #include "cmd_trophy.h"
 #include "obj_base_cup.h"
+#include "rent.h"
 
 #define DAMAGE_DEBUG 0
 
@@ -4548,123 +4549,152 @@ int TBeing::tellStatus(int dam, bool same, bool flying)
 
 void TBeing::catchLostLink(TBeing *vict)
 {
-  char buf[1024];
-  TObj *note, *bag;
+  sstring buf;
+  TObj *note, *bag, *token;
   TMoney *money;
-  TThing *o;
-  time_t ct;
-  char *tmstr;
   TRoom *rp;
+  int tokenRent = 0;
 
   if (vict->affectedBySpell(AFFECT_PLAYERKILL) ||
       vict->affectedBySpell(AFFECT_PLAYERLOOT)) {
     return;
   }
 
-  *buf = '\0';
-
   act("$n is rescued by divine forces.", TRUE, vict, 0, 0, TO_ROOM);
   vlogf(LOG_COMBAT, format("%s lost link while fighting %s (%d)") %  vict->getName() % getName() % in_room);
-
   vict->specials.was_in_room = vict->in_room;
   if (vict->in_room != ROOM_NOWHERE)
     --(*vict);
   rp = real_roomp(ROOM_STORAGE);
   *rp += *vict;
 
-  if (((vict->getHit() < (vict->hitLimit() / 2)) ||
-     vict->isCombatMode(ATTACK_BERSERK)) && (vict->GetMaxLevel() <= MAX_MORT)) {
-    vlogf(LOG_COMBAT, format("Creating link-loss bag for %s") %  vict->getName());
-    ct = time(0);
-    tmstr = asctime(localtime(&ct));
-    *(tmstr + strlen(tmstr) - 1) = '\0';
-    sprintf(buf, "Current time is: %s (PST)\n\r", tmstr);
-
-    sprintf(buf + strlen(buf), "%s hp when link lost : %d/%d\n\r", vict->getName(), vict->getHit(), vict->hitLimit());
-    if (vict->isCombatMode(ATTACK_BERSERK))
-      sprintf(buf + strlen(buf), "%s was berserking (link loss is only way to flee)\n\r", vict->getName());
-    if (vict->eitherArmHurt())
-      sprintf(buf + strlen(buf), "%s had at least one busted arm.\n\r", vict->getName());
-    if (vict->eitherLegHurt())
-      sprintf(buf + strlen(buf), "%s had at least one busted leg.\n\r", vict->getName());
-
-    sprintf(buf + strlen(buf), "Opponent (%s) hp when link lost : %d/%d.\n\r", getName(), getHit(), hitLimit());
-    sprintf(buf + strlen(buf), "Time was %s when this happened.\n\r", tmstr);
-
-    if (!(note = read_object(GENERIC_NOTE, VIRTUAL))) {
-      vlogf(LOG_COMBAT, "Had trouble loading note in catch_lost_link(). Returning out.");
-      return;
-    }
-    if (!(bag = read_object(GENERIC_L_BAG, VIRTUAL))) {
-      vlogf(LOG_COMBAT, "Had trouble loading bag in catch_lost_link(). Returning out.");
-      return;
-    }
-    bag->swapToStrung();
-    note->swapToStrung();
-    bag->addObjStat(ITEM_NOPURGE);
-
-//    bag->addObjStat(ITEM_NORENT);    // norent prevents saveRooms
-//    note->addObjStat(ITEM_NORENT);   // norent prevents saveRooms
-
-    delete [] note->action_description;
-    note->action_description = mud_str_dup(buf);
-    delete [] note->name;
-    note->name = mud_str_dup("note check link lost");
-
-    sprintf(buf, "A linkbag containing %s's belongings sits here.", vict->getName());
-    delete [] bag->getDescr();
-    bag->setDescr(mud_str_dup(buf));
-    sprintf(buf, "linkbag %s", sstring(vict->getName()).lower().c_str());
-    delete [] bag->name;
-    bag->name = mud_str_dup(buf);
-
-    for(StuffIter it=vict->stuff.begin();it!=vict->stuff.end();){
-      o=*(it++);
-      (*o)--;
-      *bag += *o;
-    }
-  
-    if (vict->getMoney() > 0) {
-      money = create_money(vict->getMoney());
-      vict->setMoney(0);
-      *bag += *money;
-    }
-    wearSlotT ij;
-    for (ij = MIN_WEAR; ij < MAX_WEAR; ij++) {
-      if (vict->equipment[ij])
-        *bag += *(vict->unequip(ij));
-    }
-    vict->removeRent();
-    *bag += *note;
-    *rp += *bag;
-
-    bag->parent = NULL;
-    bag->equippedBy = NULL;
-    bag->stuckIn = NULL;
-
-    bag->parent = NULL;
-
-    // keep from being aggro'd on return
-    DeleteHatreds(this, NULL);
-    if (attackers && !isPc()) {
-      TMonster *tmons = dynamic_cast<TMonster *>(this);
-      tmons->setAnger(0);
-      tmons->setMalice(0);
-    }
-
-    sprintf(buf, "%s detected you lost link while fighting an apparently superior opponent\n\r", MUD_NAME);
-    sprintf(buf + strlen(buf), "(%s).  Under such circumstances, the policy is to\n\r", getName());
-    sprintf(buf + strlen(buf), "confiscate your items and gold pending a review of the incident by an immortal.\n\r");
-    sprintf(buf + strlen(buf), "To get your items back, you will have to speak with a god.  Be advised that if\n\r");
-    sprintf(buf + strlen(buf), "it appears you were truly in a losing situation, the god has been instructed to\n\r");
-    sprintf(buf + strlen(buf), "deduct 1 death's worth of xp and confiscate an item or two.  The rationale for\n\r");
-    sprintf(buf + strlen(buf), "this policy is to discourage people from dropping link in order to avoid death.\n\r\n\r");
-    sprintf(buf + strlen(buf), "If you have questions or comments regarding this policy, please contact a god.\n\r");
-    sprintf(buf + strlen(buf), "Type WHO -G to see if any gods are presently connected.\n\r");
-    sprintf(buf + strlen(buf), "\n\r\n\rThis message was automatically generated.\n\r");
-    autoMail(vict, NULL, buf);
-
+  // no linkbag if they were close to winning
+  if (!(((vict->getHit() < (vict->hitLimit() / 2)) ||
+     vict->isCombatMode(ATTACK_BERSERK)) && (vict->GetMaxLevel() <= MAX_MORT))) {
+       return;
   }
+
+  // create the linkloss string for note
+  vlogf(LOG_COMBAT, format("Creating link-loss bag for %s") %  vict->getName());
+  time_t ct = time(0);
+  char *tmstr = asctime(localtime(&ct));
+  *(tmstr + strlen(tmstr) - 1) = '\0';
+  buf = format("Current time is: %s (PST)\n\r") % tmstr;
+  buf += format("%s hp when link lost : %d/%d\n\r") % vict->getName() % vict->getHit() % int(vict->hitLimit());
+  if (vict->isCombatMode(ATTACK_BERSERK))
+    buf += format("%s was berserking (link loss is only way to flee)\n\r") % vict->getName();
+  if (vict->eitherArmHurt())
+    buf += format("%s had at least one busted arm.\n\r") % vict->getName();
+  if (vict->eitherLegHurt())
+    buf += format("%s had at least one busted leg.\n\r") % vict->getName();
+  buf += format("Opponent (%s) hp when link lost : %d/%d.\n\r") % getName() % getHit() % int(hitLimit());
+  buf += format("Time was %s when this happened.\n\r") % tmstr;
+
+  // generate linkbag items
+  if (!(note = read_object(GENERIC_NOTE, VIRTUAL))) {
+    vlogf(LOG_COMBAT, "Had trouble loading note in catch_lost_link(). Returning out.");
+    return;
+  }
+  if (!(bag = read_object(GENERIC_L_BAG, VIRTUAL))) {
+    vlogf(LOG_COMBAT, "Had trouble loading bag in catch_lost_link(). Returning out.");
+    return;
+  }
+  if (!(token = read_object(GENERIC_L_TOKEN, VIRTUAL))) {
+    vlogf(LOG_COMBAT, "Had trouble loading token in catch_lost_link(). Returning out.");
+    return;
+  }
+
+  // set flags on linkbag stuff
+  bag->swapToStrung();
+  note->swapToStrung();
+  token->swapToStrung();
+  bag->addObjStat(ITEM_NOPURGE);
+  bag->obj_flags.wear_flags &= ~ITEM_TAKE; // no picking this thing up
+  token->canBeSeen = 0;
+
+  sstring nameLower = sstring(vict->getName()).lower();
+  sstring linkId = format("link$%s$%i$") % nameLower.c_str() % int(ct);
+
+  // string note
+  delete [] note->action_description;
+  delete [] note->name;
+  note->action_description = mud_str_dup(buf);
+  note->name = mud_str_dup("note check link lost");
+
+  // string linkbag
+  delete [] bag->descr;
+  delete [] bag->name;
+  delete [] bag->shortDescr;
+  bag->descr = mud_str_dup(format("A linkbag containing %s's belongings sits here.") % vict->getName());
+  bag->name = mud_str_dup(format("bag linkbag %s [%sbag]") % nameLower.c_str() % linkId.c_str());
+  bag->shortDescr = mud_str_dup(format("A linkbag belonging to %s") % vict->getName());
+  bag->obj_flags.cost = 0;
+
+  // string the token
+  delete [] token->getDescr();
+  delete [] token->name;
+  delete [] token->shortDescr;
+  token->setDescr(mud_str_dup(format("A linkbag token for %s's belongings has been left here.") % vict->getName()));
+  token->name = mud_str_dup(format("token linkbag %s [%s0]") % nameLower.c_str() % linkId.c_str());
+  token->shortDescr = mud_str_dup(format("a linkbag token with '%s' on it") % vict->getName());
+  token->obj_flags.cost = 0;
+
+  // load up the bag with items, money
+  for(StuffIter it=vict->stuff.begin();it!=vict->stuff.end();){
+    TThing *o=*(it++);
+    if (!o)
+      continue;
+    (*o)--;
+    *bag += *o;
+  }
+  if (vict->getMoney() > 0) {
+    money = create_money(vict->getMoney());
+    vict->setMoney(0);
+    *bag += *money;
+  }
+  for (wearSlotT ij = MIN_WEAR; ij < MAX_WEAR; ij++) {
+    if (vict->equipment[ij])
+      *bag += *(vict->unequip(ij));
+  }
+  vict->removeRent();
+
+  // drop bag
+  *bag += *note;
+  *rp += *bag;
+  bag->parent = NULL;
+  bag->equippedBy = NULL;
+  bag->stuckIn = NULL;
+  bag->parent = NULL;
+
+  // keep from being aggro'd on return
+  DeleteHatreds(this, NULL);
+  if (attackers && !isPc()) {
+    TMonster *tmons = dynamic_cast<TMonster *>(this);
+    tmons->setAnger(0);
+    tmons->setMalice(0);
+  }
+
+  // rent the token
+  ItemSaveDB is("mail", GH_MAIL_SHOP);
+  tokenRent = is.raw_write_item(token, -1 , 0);
+  delete token;
+
+  // gen mail
+  buf = MUD_NAME;
+  buf += " detected you lost link while fighting an apparently superior opponent\n\r(";
+  buf += getName();
+  buf += ").  Under such circumstances, the policy is to\n\r";
+  buf += "confiscate your items and gold for a short period of time.\n\r";
+  buf += "To get your items back, hand the linkbag token contained in this mail\n\r";
+  buf += "to any postmaster.  Then wait at least ten minutes.  Then\n\r";
+  buf += "hand the linkbag token back to the postmaster agian, who will retrieve\n\r";
+  buf += "the appropriate linkbag for you and place it in the mail room.  Be advised\n\r";
+  buf += "that if you lose link too often in a short period of time, your items\n\r";
+  buf += "may be confiscated permanently.  The rationale for this policy is\n\r";
+  buf += "to discourage people from dropping link in order to avoid death.\n\r\n\r";
+  buf += "\n\r\n\rThis message was automatically generated.\n\r";
+
+  autoMail(vict, NULL, buf.c_str(), 0, tokenRent);
 }
 
 // return DELETE_THIS if this dies
