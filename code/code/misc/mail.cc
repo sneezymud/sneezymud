@@ -27,15 +27,22 @@ int mail_ok(TBeing *ch)
   return TRUE;
 }
 
-bool TObj::canBeMailed() const
+bool TObj::canBeMailed(sstring name) const
 {
-  return !isObjStat(ITEM_ATTACHED) && !isObjStat(ITEM_NORENT) &&
+  bool canMail = !isObjStat(ITEM_ATTACHED) && !isObjStat(ITEM_NORENT) &&
           !isObjStat(ITEM_BURNING) && !isObjStat(ITEM_PROTOTYPE) &&
           !isObjStat(ITEM_NOPURGE) && !isObjStat(ITEM_NEWBIE) &&
-          !isObjStat(ITEM_NODROP) && !isMonogrammed() && stuff.empty() &&
+          !isObjStat(ITEM_NODROP) && stuff.empty() &&
           !dynamic_cast<const TTrap*>(this) &&
           (!dynamic_cast<const TOpenContainer*>(this) ||
           !dynamic_cast<const TOpenContainer*>(this)->isContainerFlag(CONT_TRAPPED));
+
+  if (canMail && !name.empty()) {
+    sstring owner = monogramOwner();
+    canMail = owner.empty() || name.lower() == owner.lower();
+  }
+
+  return canMail;
 }
 
 bool has_mail(const sstring recipient)
@@ -122,18 +129,23 @@ void postmasterValue(TBeing *ch, TBeing *postmaster, const char *arg)
   {
     TThing *thing = get_thing_on_list_vis(ch, item.c_str(), ch->stuff.front());
     TObj *obj = thing ? dynamic_cast<TObj*>(thing) : NULL;
+    int cost = int((float)STAMP_PRICE * profit_buy * (obj->getWeight() + 3));
     if (obj == NULL)
     {
       postmaster->doTell(fname(ch->name), "I don't see that item on you.");
       return;
     }
-    if (!obj->canBeMailed())
+    if (obj->isMonogrammed())
+    {
+      postmaster->doTell(fname(ch->name), "This item appears to be monogrammed.  You may only mail it to its owner.");
+      cost = STAMP_PRICE;
+    }
+    if (!obj->canBeMailed(""))
     {
       postmaster->doTell(fname(ch->name), "Sorry, I can't ship that.");
       return;
     }
-    postmaster->doTell(fname(ch->name), format("Shipping %s will cost you %d talens.") % obj->getName() %
-      int((float)STAMP_PRICE * profit_buy * (obj->getWeight() + 3)));
+    postmaster->doTell(fname(ch->name), format("Shipping %s will cost you %d talens.") % obj->getName() % cost);
     return;
   }
 
@@ -361,16 +373,21 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
       return;
     }
 
-    amt = (int)((float)STAMP_PRICE * profit_buy * (obj->getWeight() + 3));
-    if (amt > getMoney() && !imm) {
-      me->doTell(fname(name), format("Mailing this item plus a stamp costs a total of %d talens.") % amt);
-      me->doTell(fname(name), "...which I see you can't afford.");
+    // check for item flags that will stop the deal
+    if (!obj->canBeMailed(recipient)) {
+      me->doTell(fname(name), "You can't mail that item!");
       return;
     }
 
-    // check for item flags that will stop the deal
-    if (!obj->canBeMailed()) {
-      me->doTell(fname(name), "You can't mail that item!");
+    // calculate mailing price (monogrammed items are free+letter to mail to owner)
+    amt = (int)((float)STAMP_PRICE * profit_buy * (obj->getWeight() + 3));
+    if (obj->isMonogrammed())
+      amt = STAMP_PRICE;
+
+    // verify they have the money
+    if (amt > getMoney() && !imm) {
+      me->doTell(fname(name), format("Mailing this item plus a stamp costs a total of %d talens.") % amt);
+      me->doTell(fname(name), "...which I see you can't afford.");
       return;
     }
 

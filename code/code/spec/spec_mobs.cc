@@ -6173,6 +6173,11 @@ bool okForCommodMaker(TObj *o, sstring &ret)
       return false;
     }
     
+    if(o->isMonogrammed()){
+      ret=format("%s: Sorry, I don't convert monogrammed items.") % o->getName();
+      return false;
+    }
+
     if(dynamic_cast<TComponent *>(o)){
       ret=format("%s: Sorry, I cannot convert magical components.") % o->getName();
       return false;
@@ -6204,6 +6209,11 @@ bool okForCommodMaker(TObj *o, sstring &ret)
         return false;
       }
       
+      if(obj->isMonogrammed()){
+        ret=format("%s: Sorry, I don't convert monogrammed items.") % o->getName();
+        return false;
+      }
+
       if(dynamic_cast<TComponent *>(obj)){
         ret=format("%s: Sorry, I cannot convert magical components.") % obj->getName();
         return false;

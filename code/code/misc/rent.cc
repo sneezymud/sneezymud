@@ -1523,7 +1523,7 @@ void TBeing::addObjCost(TBeing *re, TObj *obj, objCost *cost, sstring &str)
   if (desc && IS_SET(desc->autobits, AUTO_NOSPAM))
     silent = SILENT_YES;
   
-  if (obj->isRentable()) {
+  if (obj->isRentable() && obj->isMonogramOwner(this)) {
     temp = max(0, obj->rentCost());
 #ifdef FREE_RENT
     // in sneezy 5.2 we don't want to charge for anything that isn't limited. -dash 01/01
@@ -1539,20 +1539,16 @@ void TBeing::addObjCost(TBeing *re, TObj *obj, objCost *cost, sstring &str)
     if (re) {
       if (desc && desc->m_bIsClient) {
         if(!FreeRent) {
-	  sprintf(buf, "%-30s : %d talens/day\n\r", 
-		  obj->getName(), temp);
-	} else
-	  sprintf(buf, "%-30s \n\r",
-		  obj->getName());
-      }
-
+	        sprintf(buf, "%-30s : %d talens/day\n\r", obj->getName(), temp);
+	      } else
+	        sprintf(buf, "%-30s \n\r", obj->getName());
+        }
         str += buf;
     } else if (!silent && re) {
         if (!FreeRent) 
-	  sendTo(COLOR_OBJECTS, format("%-30s : %d talens/day\n\r") % obj->getName() % temp);
-	else
-	  sendTo(COLOR_OBJECTS, format("%-30s \n\r") % obj->getName());
-
+	        sendTo(COLOR_OBJECTS, format("%-30s : %d talens/day\n\r") % obj->getName() % temp);
+	      else
+	        sendTo(COLOR_OBJECTS, format("%-30s \n\r") % obj->getName());
     }
     if (temp<=100)
       cost->lowrentobjs++;
@@ -1593,8 +1589,6 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
       desc->clientf(format("%d") % CLIENT_RENT_END);
     }
   }
-
-  return TRUE;
 
   // add up cost for the player
   addObjCost(recep, stuff, cost, str);
@@ -1803,8 +1797,8 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
       if (client && recep) {
     processStringForClient(str);
    
-    if (str.length() > 9000) // max send length for the clients rent dialog is somewhere under 10k
-      str.resize(9000);
+    if (str.length() > 4000) // max send length for the clients rent dialog is somewhere under 10k
+      str.resize(4000);
 
     desc->clientf(format("%d") % CLIENT_RENT);
     sendTo(str);
@@ -2963,7 +2957,7 @@ int TComponent::noteMeForRent(sstring &tStString, TBeing *ch, StuffList tList, i
 
   tBuffer = format("%c-%ds : ") % '%' % (30 + (strlen(getName()) - getNameNOC(ch).length()));
 
-  if (isRentable()) {
+  if (isRentable() && isMonogramOwner(ch)) {
     tBuffer+="%5d talens/day";
     *tCount = *tCount + 1;
     lCount++;
@@ -3021,7 +3015,7 @@ int TObj::noteMeForRent(sstring &tStString, TBeing *ch, StuffList, int *tCount)
 
   sprintf(tBuffer, "%%-%ds : ", (30 + (strlen(getName()) - strlen(getNameNOC(ch).c_str()))));
 
-  if (isRentable()) {
+  if (isRentable() && isMonogramOwner(ch)) {
     if (!FreeRent) 
       strcat(tBuffer, "%5d talens/day\n\r");
     else
@@ -3414,38 +3408,38 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
     }
     if (ch->recepOffer(recep, &cost)) {
       if (ch->desc && !ch->desc->m_bIsClient) {
-	if (ch->GetMaxLevel() > 5) {
-	  TShopOwned tso(shop_nr, recep, ch);
+	      if (ch->GetMaxLevel() > 5) {
+	        TShopOwned tso(shop_nr, recep, ch);
 	  
-	  float multiplier = (shop_index[shop_nr].getProfitBuy(NULL, ch));
-	  int tax = (int)((float) ch->GetMaxLevel() * multiplier);
+	        float multiplier = (shop_index[shop_nr].getProfitBuy(NULL, ch));
+	        int tax = (int)((float) ch->GetMaxLevel() * multiplier);
 
-	  sstring msg = shop_index[shop_nr].message_buy;
+	        sstring msg = shop_index[shop_nr].message_buy;
 
-	  if (ch->getMoney() < tax) {
-	    recep->doTell(ch->getName(), 
-			  format("The mayor has issued a %d talen hospice tax, which I see you can't afford.") 
-			  % tax);
-	    recep->doAction("", CMD_SIGH);
-	    recep->doTell(ch->getName(), 
-			  "Sorry. Come back when you can pay your taxes.");
-	    for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
-	      if (exit_ok(exitp = recep->exitDir(dir), NULL)) {
-		act("$n throws you from the inn.",
-		    FALSE, recep, 0, ch, TO_VICT);
-		act("$n throws $N from the inn.",
-		    FALSE, recep, 0, ch, TO_NOTVICT);
-		recep->throwChar(ch, dir, FALSE, SILENT_NO, true);
+	        if (ch->getMoney() < tax) {
+	          recep->doTell(ch->getName(), 
+			        format("The mayor has issued a %d talen hospice tax, which I see you can't afford.") 
+			        % tax);
+	          recep->doAction("", CMD_SIGH);
+	          recep->doTell(ch->getName(), 
+			        "Sorry. Come back when you can pay your taxes.");
+	          for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
+	            if (exit_ok(exitp = recep->exitDir(dir), NULL)) {
+		            act("$n throws you from the inn.",
+		              FALSE, recep, 0, ch, TO_VICT);
+		            act("$n throws $N from the inn.",
+		              FALSE, recep, 0, ch, TO_NOTVICT);
+		            recep->throwChar(ch, dir, FALSE, SILENT_NO, true);
 
-		return TRUE;
-	      }
-	    }
-	  } else {
-	    recep->doTell(ch->getName(), format(msg) % tax);
-	    tso.doBuyTransaction(tax, "paying rent", TX_BUYING_SERVICE);
+		            return TRUE;
+              }
+            }
+          } else {
+            recep->doTell(ch->getName(), format(msg) % tax);
+            tso.doBuyTransaction(tax, "paying rent", TX_BUYING_SERVICE);
             vlogf(LOG_PIO, format("%s being charged %d talens rent tax by %s") % ch->getName() % tax % recep->getName());
-	  }
-	}
+          }
+        }
         act("$n stores your stuff in the safe, and shows you to your room.", FALSE, recep, 0, ch, TO_VICT);
         act("$n shows $N to $S room.", FALSE, recep, 0, ch, TO_NOTVICT);
     

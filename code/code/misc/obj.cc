@@ -585,19 +585,27 @@ void TObj::onObjLoad()
 {
 }
 
-
-bool TObj::isMonogrammed() const 
+//returns who owns this monogram (or empty)
+sstring TObj::monogramOwner() const 
 {
   char namebuf[MAX_INPUT_LENGTH];
   /* added an 'immortal' type monogram to differentiate between engraver & immortal monogramming */
   /* so %*s might read 'personalized' or 'immortalized' */
   if(action_description && 
      (sscanf(action_description, "This is the %*s object of %s.", namebuf) == 1))
-    return true;
+    return sstring(namebuf);
 
-  return false;
+  return "";
 }
 
+//returns true if this being is the monogram owner
+bool TObj::isMonogramOwner(TBeing *b) const
+{
+  sstring o = monogramOwner();
+  return o.empty() || sstring(b->name).lower() == o.lower();
+}
+
+//checks for special-case monogramming (a subset of regular monogram)
 bool TObj::isImmMonogrammed() const 
 {
   char namebuf[MAX_INPUT_LENGTH];

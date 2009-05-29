@@ -467,7 +467,7 @@ int Descriptor::read_client(char *str2)
       }
       buffer[j] = '\0';
 
-      if (obj && obj->canBeMailed())
+      if (obj && obj->canBeMailed(sstring(name)))
       {
         ItemSaveDB is("mail", GH_MAIL_SHOP);
         rent_id = is.raw_write_item(obj, -1 /*NORMAL_SLOT*/, 0);

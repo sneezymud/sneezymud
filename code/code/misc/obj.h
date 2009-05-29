@@ -562,7 +562,9 @@ private:
     virtual itemTypeT itemType() const = 0;
     // END VIRTUAL FUNCTIONS
 
-    bool isMonogrammed() const;
+    sstring monogramOwner() const;
+    bool isMonogrammed() const { return !monogramOwner().empty(); }
+    bool isMonogramOwner(TBeing *b) const;
     bool isImmMonogrammed() const;
     bool deMonogram(bool erase_imm_monogram);
     
@@ -635,7 +637,7 @@ private:
       isLocked = l;
     }
 
-    bool canBeMailed() const;
+    bool canBeMailed(sstring to) const;
     void releaseObject(TBeing *);
     virtual int checkFalling();
     void checkObjStats();

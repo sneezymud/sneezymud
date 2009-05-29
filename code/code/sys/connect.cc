@@ -2211,7 +2211,7 @@ void Descriptor::sstring_add(char *s)
       else if (terminator)
       {
         int rent_id = 0;
-        if (obj && obj->canBeMailed())
+        if (obj && obj->canBeMailed(name))
         {
           ItemSaveDB is("mail", GH_MAIL_SHOP);
           rent_id = is.raw_write_item(obj, -1 , 0);
