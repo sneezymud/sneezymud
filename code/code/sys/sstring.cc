@@ -345,6 +345,9 @@ const sstring sstring::cap() const
   int counter = 0;
   sstring s=*this;
 
+  if (s.length() <= 0)
+    return s;
+
   if(s.length()>0 && s[0] != '<'){
     s[0]=toupper(s[0]);
   } else {
@@ -371,6 +374,9 @@ const sstring sstring::uncap() const
 {
   int counter = 0;
   sstring s=*this;
+
+  if (s.length() <= 0)
+    return s;
 
   if (s[0] != '<') {
     s[0] = tolower(s[0]);
