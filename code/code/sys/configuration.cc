@@ -126,7 +126,7 @@ bool Config::doConfiguration(int argc, char *argv[])
      po::value<bool>(&nuke_inactive_mobs)->default_value(false),
      "see configuration.h")
     ("load_on_death",
-     po::value<bool>(&load_on_death)->default_value(false),
+     po::value<bool>(&load_on_death)->default_value(true),
      "see configuration.h")
     ("throw_format_exceptions",
      po::value<bool>(&throw_format_exceptions)->default_value(true),
