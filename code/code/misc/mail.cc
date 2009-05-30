@@ -129,12 +129,12 @@ void postmasterValue(TBeing *ch, TBeing *postmaster, const char *arg)
   {
     TThing *thing = get_thing_on_list_vis(ch, item.c_str(), ch->stuff.front());
     TObj *obj = thing ? dynamic_cast<TObj*>(thing) : NULL;
-    int cost = int((float)STAMP_PRICE * profit_buy * (obj->getWeight() + 3));
     if (obj == NULL)
     {
       postmaster->doTell(fname(ch->name), "I don't see that item on you.");
       return;
     }
+    int cost = int((float)STAMP_PRICE * profit_buy * (obj->getWeight() + 3));
     if (obj->isMonogrammed())
     {
       postmaster->doTell(fname(ch->name), "This item appears to be monogrammed.  You may only mail it to its owner.");
