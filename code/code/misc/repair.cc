@@ -415,26 +415,18 @@ static int getRepairItem(TBeing *repair, TBeing *buyer, int ticket, TNote *obj)
 		 buyer->getName() % fixed_obj->shortDescr);
   repair->doSay("Thank you for your business!");
 
-
   obj_index[fixed_obj->getItemIndex()].addToNumber(-1);
   fixed_obj->setStructPoints(fixed_obj->maxFix(repair, DEPRECIATION_YES));
   fixed_obj->remObjStat(ITEM_RUSTY);
   
   *buyer += *fixed_obj;
-  buyer->doSave(SILENT_YES);
-  buyer->logItem(fixed_obj, CMD_NORTH);   // cmd indicates repair-retrieval
 
-  unsigned int shop_nr;
-  for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != repair->number); shop_nr++);
-  
-  if (shop_nr >= shop_index.size()) {
-    vlogf(LOG_BUG, format("Warning... shop # for mobile %d (real nr) not found.") %  mob_index[repair->number].virt);
-  }
-
-  TShopOwned tso(shop_nr, dynamic_cast<TMonster *>(repair), buyer);
+  TShopOwned tso(dynamic_cast<TMonster *>(repair), buyer);
   tso.doBuyTransaction(tmp_cost, "repair", TX_BUYING_SERVICE);
-  
-  
+
+  buyer->doSave(SILENT_YES);
+  buyer->logItem(fixed_obj, CMD_NORTH);   // cmd indicates repair-retrieval 
+
   // acknowledge the depreciation after all work is done
   // this way the price doesn't change during the process
   // and also makes the first repair "depreciation free"

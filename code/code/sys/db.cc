@@ -2928,6 +2928,9 @@ void runResetCmdM(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   if (!Config::LoadOnDeath())
     mob->createWealth();
 
+  if (mob->isShopkeeper())
+    mob->calculateGoldFromConstant();
+
   // add mob to room
   if (rs.command == 'M' && (mob->isNocturnal() || mob->isDiurnal()))
     *real_roomp(ROOM_NOCTURNAL_STORAGE) += *mob;

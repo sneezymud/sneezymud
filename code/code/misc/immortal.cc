@@ -2360,6 +2360,8 @@ void TPerson::doLoad(const char *argument)
       mob->oldRoom = inRoom();
       if (!Config::LoadOnDeath())
         mob->createWealth();
+      if (mob->isShopkeeper())
+        mob->calculateGoldFromConstant();
 
       act("$n makes a quaint, magical gesture with one hand.", TRUE, this, 0, 0, TO_ROOM);
       act(msgVariables(MSG_LOAD_MOB, mob), TRUE, this, 0, mob, TO_ROOM);
