@@ -348,18 +348,18 @@ const sstring sstring::cap() const
   if (s.length() <= 0)
     return s;
 
-  if(s.length()>0 && s[0] != '<'){
+  if(s[0] != '<'){
     s[0]=toupper(s[0]);
   } else {
-// Accounting for Items with color strings and % as first character
+    // Accounting for Items with color strings and % as first character
     for(sstring::size_type i=0;i<s.length();++i){
       if (s[i] == '<')
-	counter = 0;
+        counter = 0;
       else 
-	counter++;
+        counter++;
 
       if (counter == 3) {
-	s[i] = toupper(s[i]);
+        s[i] = toupper(s[i]);
         return s;
       }
     }
@@ -381,20 +381,19 @@ const sstring sstring::uncap() const
   if (s[0] != '<') {
     s[0] = tolower(s[0]);
   } else {
-// Accounting for Items with color sstrings and % as first character
+    // Accounting for Items with color sstrings and % as first character
     for(sstring::size_type i=0;i<s.length();++i){
       if (s[i] == '<')
-	counter = 0;
+	      counter = 0;
       else
-	counter++;
+	      counter++;
       
       if (counter == 3) {
-	s[i] = tolower(s[i]);
+	      s[i] = tolower(s[i]);
         return s;
       }
     }
   }
-
 
   return s;
 }
@@ -419,9 +418,9 @@ const sstring sstring::word(int i) const
     if(!i--){
       // if nothing found, we're on the last word, no trailing whitespace
       if(copy_end == sstring::npos)
-	return substr(copy_begin);
+        return substr(copy_begin);
       else
-	return substr(copy_begin, copy_end-copy_begin);
+        return substr(copy_begin, copy_end-copy_begin);
     }
   }
 
