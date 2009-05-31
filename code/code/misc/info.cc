@@ -169,6 +169,27 @@ static const sstring describe_part_wounds(const TBeing *ch, wearSlotT pos)
     return ("");
 }
 
+int findComponentCharges(TThing *t, spellNumT spell)
+{
+  if (!t)
+    return 0;
+
+  TComponent * comp = dynamic_cast<TComponent *>(t);
+  if (comp && comp->isComponentType(COMP_SPELL) && comp->getComponentSpell() == spell)
+    return comp->getComponentCharges();
+
+  TOpenContainer * cont = dynamic_cast<TOpenContainer *>(t);
+  TBeing * b = dynamic_cast<TBeing *>(t);
+  if (!b && (!cont || cont->isClosed()))
+    return 0;
+
+  int count = 0;
+  for (StuffIter it=t->stuff.begin();it!=t->stuff.end();++it) {
+    count += findComponentCharges(*it, spell);
+  }
+  return count;
+}
+
 // rp is the room looking at
 // can't use roomp since spying into other room possible
 void TBeing::listExits(const TRoom *rp) const
@@ -5408,8 +5429,6 @@ void TBeing::doSpells(const sstring &argument)
   TComponent *item=NULL;
   int totalcharges;
   wizardryLevelT wizlevel = getWizardryLevel();
-  TThing *t1;
-  TOpenContainer *tContainer;
 
   struct {
     TThing *where;
@@ -5557,19 +5576,7 @@ void TBeing::doSpells(const sstring &argument)
       
       for (l = 0; l < 7; l++) {
         if (search[l].where && wizlevel >= search[l].wizlevel) {
-	  t1=search[l].where;
-	  if (!(item = dynamic_cast<TComponent *>(t1)) &&
-	      (!(tContainer = dynamic_cast<TOpenContainer *>(item)) ||
-	       !tContainer->isClosed())) {
-	    for(StuffIter it=t1->stuff.begin();it!=t1->stuff.end();++it) {
-	      if ((item = dynamic_cast<TComponent *>(*it)) &&
-		  item->getComponentSpell() == i && 
-		  item->isComponentType(COMP_SPELL))
-		totalcharges += item->getComponentCharges();
-	    }
-	  } else if (item->getComponentSpell() == i && 
-		     item->isComponentType(COMP_SPELL))
-	    totalcharges += item->getComponentCharges();
+          totalcharges += findComponentCharges(search[l].where, i);
         }
       }
 
@@ -5647,8 +5654,6 @@ void TBeing::doRituals(const sstring &argument)
   TComponent *item=NULL;
   int totalcharges;
   ritualismLevelT ritlevel = getRitualismLevel();
-  TThing *t1;
-  TOpenContainer *tContainer;
 
   struct {
     TThing *where;
@@ -5796,19 +5801,7 @@ void TBeing::doRituals(const sstring &argument)
       
       for (l = 0; l < 7; l++) {
         if (search[l].where && ritlevel >= search[l].ritlevel) {
-	  t1=search[l].where;
-	  if (!(item = dynamic_cast<TComponent *>(t1)) &&
-	      (!(tContainer = dynamic_cast<TOpenContainer *>(item)) ||
-	       !tContainer->isClosed())) {
-	    for(StuffIter it=t1->stuff.begin();it!=t1->stuff.end();++it) {
-	      if ((item = dynamic_cast<TComponent *>(*it)) &&
-		  item->getComponentSpell() == i && 
-		  item->isComponentType(COMP_SPELL))
-		totalcharges += item->getComponentCharges();
-	    }
-	  } else if (item->getComponentSpell() == i && 
-		     item->isComponentType(COMP_SPELL))
-	    totalcharges += item->getComponentCharges();
+          totalcharges += findComponentCharges(search[l].where, i);
         }
       }
 
@@ -5887,8 +5880,6 @@ void TBeing::doPrayers(const sstring &argument)
   TComponent *item = NULL;
   int totalcharges;
   wizardryLevelT wizlevel = getWizardryLevel();
-  TThing *t1;
-  TOpenContainer *tContainer;
 
   struct {
     TThing *where;
@@ -6018,25 +6009,12 @@ void TBeing::doPrayers(const sstring &argument)
       totalcharges = 0;
       item = NULL;
         
-      for (l = 0; l < 7; ++l){
+      for (l = 0; l < 7; l++) {
         if (search[l].where && wizlevel >= search[l].wizlevel) {
-	  t1=search[l].where;
-	  
-	  if(!(item=dynamic_cast<TComponent *>(t1)) &&
-	     (!(tContainer = dynamic_cast<TOpenContainer *>(item)) ||
-	      !tContainer->isClosed())) {
-	    for(StuffIter it=t1->stuff.begin();it!=t1->stuff.end();++it) {
-	      if ((item=dynamic_cast<TComponent *>(*it)) &&
-                  item->getComponentSpell() == i && 
-                  item->isComponentType(COMP_SPELL))
-		totalcharges += item->getComponentCharges();
-	    }
-	  } else if(item->getComponentSpell() == i && 
-		    item->isComponentType(COMP_SPELL))
-	    totalcharges += item->getComponentCharges();
-	  
-	}
+          totalcharges += findComponentCharges(search[l].where, i);
+        }
       }
+
       if ((getSkillValue(i) <= 0) &&
           (!tmp_var || (discArray[i]->start - tmp_var) > 0)) {
 	
