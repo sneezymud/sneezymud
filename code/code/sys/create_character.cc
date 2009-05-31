@@ -688,6 +688,7 @@ connectStateT nannyLaunchpad_input(Descriptor * desc, sstring & output, const ss
           desc->character->desc->account->name);
       if (num_fifties > 0)
       {
+        num_fifties = min(num_fifties, 26);
         desc->character->addToRandomStat(50+(num_fifties-1)*2);
       }
     }
