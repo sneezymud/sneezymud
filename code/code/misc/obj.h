@@ -564,7 +564,7 @@ private:
 
     sstring monogramOwner() const;
     bool isMonogrammed() const { return !monogramOwner().empty(); }
-    bool isMonogramOwner(TBeing *b) const;
+    bool isMonogramOwner(TBeing *b, bool crossAccount) const;
     bool isImmMonogrammed() const;
     bool deMonogram(bool erase_imm_monogram);
     

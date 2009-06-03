@@ -3151,21 +3151,36 @@ bool Descriptor::checkForAccount(char *arg, bool silent)
   return FALSE;
 }
 
-bool Descriptor::checkForCharacter(char *arg)
+bool Descriptor::hasCharacterInAccount(const sstring name) const
+{
+  sstring namelow = name.lower();
+  std::vector<sstring> list = listAccountCharacters(account->name);
+
+  for(unsigned int i = 0; i < list.size(); i++)
+    if (list[i].lower() == namelow)
+      return true;
+
+  return false;
+}
+
+
+bool Descriptor::checkForCharacter(const sstring arg, bool silent)
 {
   char buf[256];
   struct stat timestat;
 
-  sprintf(buf, "player/%c/%s", LOWER(arg[0]), sstring(arg).lower().c_str());
+  if (arg.length() <= 0)
+    return FALSE;
+
+  sprintf(buf, "player/%c/%s", LOWER(arg[0]), arg.lower().c_str());
  
   if (!stat(buf, &timestat)) {
-    if (!m_bIsClient)
+    if (!m_bIsClient && !silent)
       writeToQ("Character already exists, enter another name.\n\r--> ");
     return TRUE;
   }
   return FALSE;
 }
-
 
 
 // return DELETE_THIS

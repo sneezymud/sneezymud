@@ -582,7 +582,8 @@ class Descriptor
     int sendLogin(const sstring &arg);
     bool checkForMultiplay();
     bool checkForAccount(char *, bool silent = FALSE);
-    bool checkForCharacter(char *);
+    bool checkForCharacter(const sstring, bool silent = FALSE);
+    bool hasCharacterInAccount(const sstring name) const;
     int doAccountStuff(char *);
     int clientCreateAccount(char *);
     int clientCreateChar(char *);

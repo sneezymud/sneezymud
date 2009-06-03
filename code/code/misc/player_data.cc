@@ -2209,8 +2209,10 @@ if (current_version < 13) {
   fclose(fp);
 }
 
-int listAccount(sstring name, sstring &buf)
+std::vector<sstring> listAccountCharacters(sstring name)
 {
+  std::vector<sstring> list;
+
   sstring fileName = "account/";
   fileName += LOWER(name[0]);
   fileName += "/";
@@ -2218,37 +2220,45 @@ int listAccount(sstring name, sstring &buf)
 
   DIR *dfd;
   struct dirent *dp;
-  int count = 0;
 
   if (!(dfd = opendir(fileName.c_str()))) {
     vlogf(LOG_FILE, format("Unable to walk directory for character listing (%s account)") %  name);
-    return 0;
+    return list;
   }
-  buf += "The following characters are in the ";
-  buf += name;
-  buf += " account.\n\r";
-  buf += "--------------------------------------------------\n\r";
+
   while ((dp = readdir(dfd))) {
     if (!strcmp(dp->d_name, "account") || !strcmp(dp->d_name, "comment") ||
         !strcmp(dp->d_name, ".") || !strcmp(dp->d_name, ".."))
       continue;
+    list.push_back(sstring(dp->d_name));
+  }
+  closedir(dfd);
+  return list;
+}
 
-    char buf2[256];
+int listAccount(sstring name, sstring &buf)
+{
+  std::vector<sstring> chars = listAccountCharacters(name);
+  int count = 0;
+
+  buf += "The following characters are in the ";
+  buf += name;
+  buf += " account.\n\r";
+  buf += "--------------------------------------------------\n\r";
+  for(unsigned int iChar = 0; iChar < chars.size(); iChar++) {
     charFile st;
 
-    load_char(dp->d_name, &st);
+    load_char(chars[iChar], &st);
     byte max_level = 0;
-    for (classIndT i = MIN_CLASS_IND; i < MAX_SAVED_CLASSES; i++)
-      max_level = max(max_level, st.level[i]);
+    for (classIndT iClass = MIN_CLASS_IND; iClass < MAX_SAVED_CLASSES; iClass++)
+      max_level = max(max_level, st.level[iClass]);
 
     time_t ct = st.last_logon;
     char * tmstr = (char *) asctime(localtime(&ct));
     *(tmstr + strlen(tmstr) - 1) = '\0';
-
-    sprintf(buf2, "%d) %s (L%d) %s\n\r", ++count, dp->d_name, max_level, tmstr);
-    buf += buf2;
+    
+    buf += format("%d) %s (L%d) %s\n\r") % ++count % chars[iChar].c_str() % int(max_level) % tmstr;
   }
-  closedir(dfd);
   return count;
 }
 

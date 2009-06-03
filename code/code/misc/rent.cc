@@ -1523,7 +1523,7 @@ void TBeing::addObjCost(TBeing *re, TObj *obj, objCost *cost, sstring &str)
   if (desc && IS_SET(desc->autobits, AUTO_NOSPAM))
     silent = SILENT_YES;
   
-  if (obj->isRentable() && obj->isMonogramOwner(this)) {
+  if (obj->isRentable() && obj->isMonogramOwner(this, true)) {
     temp = max(0, obj->rentCost());
 #ifdef FREE_RENT
     // in sneezy 5.2 we don't want to charge for anything that isn't limited. -dash 01/01
@@ -2957,7 +2957,7 @@ int TComponent::noteMeForRent(sstring &tStString, TBeing *ch, StuffList tList, i
 
   tBuffer = format("%c-%ds : ") % '%' % (30 + (strlen(getName()) - getNameNOC(ch).length()));
 
-  if (isRentable() && isMonogramOwner(ch)) {
+  if (isRentable() && isMonogramOwner(ch, true)) {
     tBuffer+="%5d talens/day";
     *tCount = *tCount + 1;
     lCount++;
@@ -3015,7 +3015,7 @@ int TObj::noteMeForRent(sstring &tStString, TBeing *ch, StuffList, int *tCount)
 
   sprintf(tBuffer, "%%-%ds : ", (30 + (strlen(getName()) - strlen(getNameNOC(ch).c_str()))));
 
-  if (isRentable() && isMonogramOwner(ch)) {
+  if (isRentable() && isMonogramOwner(ch, true)) {
     if (!FreeRent) 
       strcat(tBuffer, "%5d talens/day\n\r");
     else

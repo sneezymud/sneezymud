@@ -599,10 +599,18 @@ sstring TObj::monogramOwner() const
 }
 
 //returns true if this being is the monogram owner
-bool TObj::isMonogramOwner(TBeing *b) const
+//can check for all characters on this account
+bool TObj::isMonogramOwner(TBeing *b, bool crossAccount) const
 {
   sstring o = monogramOwner();
-  return o.empty() || sstring(b->name).lower() == o.lower();
+  if (o.empty())
+    return true;
+  if (sstring(b->name).lower() == o.lower())
+    return true;
+  if (crossAccount && b->desc && b->desc->hasCharacterInAccount(o))
+    return true;
+
+  return false;
 }
 
 //checks for special-case monogramming (a subset of regular monogram)
