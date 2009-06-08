@@ -292,9 +292,6 @@ void TMonster::createWealth(void)
   if (Config::LoadOnDeath())
     calculateGoldFromConstant();
 
-  if (getMoney() <= 0)
-    return;
-
   // execute our post-load commands
   if (Config::LoadOnDeath() && loadCom.size() > 0) {
     bool last_cmd = true;
@@ -310,6 +307,10 @@ void TMonster::createWealth(void)
       if (!loadCom[iLoad].execute(*zone, resetFlagNone, mobload, myself, objload, obj, last_cmd))
         break;
   }
+
+  // skip special loads here - if we skip too early then zonefile loads are affected
+  if (getMoney() <= 0)
+    return;
 
   // rare and random chance at hitting the Jackpot!
   if (!::number(0,1000)) {
