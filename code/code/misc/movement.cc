@@ -38,6 +38,7 @@
 #include "obj_wagon.h"
 #include "game_crazyeights.h"
 #include "game_drawpoker.h"
+#include "configuration.h"
 
 void TBeing::goThroughPortalMsg(const TPortal *o) const
 {
@@ -2156,6 +2157,7 @@ bool has_key(TBeing *ch, int key)
   TThing *t=NULL, *t2=NULL;
   TKeyring *ring;
 
+  // check inv
   for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end() && (t=*it);++it) {
     o = dynamic_cast<TObj *>(t);
     if (!o)
@@ -2169,26 +2171,49 @@ bool has_key(TBeing *ch, int key)
     for(StuffIter it=ring->stuff.begin();it!=ring->stuff.end() && (t2=*it);++it) {
       o = dynamic_cast<TObj *>(t2);
       if (!o)
-	continue;
+        continue;
       if (keyCheck(o, key))
-	return (1);
+        return (1);
     }
   }
 
+  // check held
   if ((t = ch->heldInPrimHand())) {
     o = dynamic_cast<TObj *>(t);
     if (keyCheck(o, key))
       return (1);
   }
 
+  // check worn
   for(wearSlotT i=WEAR_HEAD;i<MAX_WEAR;i++){
     if(ch->equipment[i]){
       o = dynamic_cast<TObj *>(ch->equipment[i]);
       if(keyCheck(o, key))
-	return (1);
+	      return (1);
     }
   }
   
+  // check potential loads in inventory
+  TMonster *mob = dynamic_cast<TMonster*>(ch);
+  if (Config::LoadOnDeath() && mob && mob->loadCom.size() > 0) {
+    for(unsigned int iCom = 0; iCom < mob->loadCom.size(); iCom++) {
+      resetCom com = mob->loadCom[iCom];
+
+      // only inventory loads will be checked for keys
+      if (com.command != 'G')
+        continue;
+
+      // skip invalid items
+      if (com.arg1 < 0 || com.arg1 > (signed int)obj_index.size())
+        continue;
+
+      // check to see if this is our key
+      if (obj_index[com.arg1].virt == key)
+        return (1);
+    }
+
+  }
+
   return (0);
 }
 
