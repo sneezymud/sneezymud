@@ -569,9 +569,9 @@ enum spellNumT {
      SKILL_GNOLL_JARGON,
      SKILL_TROGLODYTE_PIDGIN,
      SKILL_TROLLISH,
-     SKILL_BULLYWUG,
+     SKILL_BULLYWUGCROAK,
      SKILL_AVIAN,
-     SKILL_KALYSIAN,
+     SKILL_FISHBURBLE,
 
      // end of generic
 

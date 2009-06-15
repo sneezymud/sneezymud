@@ -1069,11 +1069,11 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDAdvAdventuring *) cd)->skFishlore;
     case SKILL_TROLLISH:
       return &((CDAdvAdventuring *) cd)->skTrollish;
-    case SKILL_BULLYWUG:
+    case SKILL_BULLYWUGCROAK:
       return &((CDAdvAdventuring *) cd)->skBullywug;
     case SKILL_AVIAN:
       return &((CDAdvAdventuring *) cd)->skAvian;
-    case SKILL_KALYSIAN:
+    case SKILL_FISHBURBLE:
       return &((CDAdvAdventuring *) cd)->skKalysian;
 
       // adventuring

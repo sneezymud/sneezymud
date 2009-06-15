@@ -992,11 +992,11 @@ int mapSpellnumToFile(spellNumT stt)
       return 714;
     case SKILL_TROLLISH:
       return 715;
-    case SKILL_BULLYWUG:
+    case SKILL_BULLYWUGCROAK:
       return 716;
     case SKILL_AVIAN:
       return 717;
-    case SKILL_KALYSIAN:
+    case SKILL_FISHBURBLE:
       return 718;
     case AFFECT_DISEASE:
       return 2500;
@@ -2072,11 +2072,11 @@ spellNumT mapFileToSpellnum(int stt)
     case 715:
       return SKILL_TROLLISH;
     case 716:
-      return SKILL_BULLYWUG;
+      return SKILL_BULLYWUGCROAK;
     case 717:
       return SKILL_AVIAN;
     case 718:
-      return SKILL_KALYSIAN;
+      return SKILL_FISHBURBLE;
     case 2500:
       return AFFECT_DISEASE;
     case 2501:

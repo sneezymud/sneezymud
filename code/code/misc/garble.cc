@@ -794,7 +794,7 @@ sstring garble_fishtalk(const TBeing *from, TBeing *to, const sstring &arg, SPEE
   };
   sstring out;
   int iWord = 0;
-  int chance = getLanguageChance(from, to, arg.length(), SKILL_KALYSIAN);
+  int chance = getLanguageChance(from, to, arg.length(), SKILL_FISHBURBLE);
 
   for(sstring word = arg.word(iWord); !word.empty(); word = arg.word(++iWord))
   {
@@ -1277,7 +1277,7 @@ sstring garble_frogtalk(const TBeing *from, TBeing *to, const sstring &arg, SPEE
   sstring out = " ";
   out += arg.lower();
   out += " ";
-  int chance = getLanguageChance(from, to, arg.length(), SKILL_BULLYWUG);
+  int chance = getLanguageChance(from, to, arg.length(), SKILL_BULLYWUGCROAK);
 
   // non-native frogtalkers must have gotten this via some drug or enchantment.  100% messup chance
   if (from && !(from->getMyRace()->getGarbles() & GARBLE_FLAG_FROGTALK))

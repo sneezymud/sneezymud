@@ -1862,9 +1862,9 @@ void TBeing::statBeing(TBeing *k)
       case SKILL_GNOLL_JARGON:
       case SKILL_TROGLODYTE_PIDGIN:
       case SKILL_TROLLISH:
-      case SKILL_BULLYWUG:
+      case SKILL_BULLYWUGCROAK:
       case SKILL_AVIAN:
-      case SKILL_KALYSIAN:
+      case SKILL_FISHBURBLE:
 #if 1
       case SPELL_EARTHMAW:
       case SPELL_CREEPING_DOOM:
