@@ -276,6 +276,25 @@ static const char *learn_name(byte num)
     return "very fast";
 }
 
+static const sstring wikiColors[][2] = {
+  { "darkred", "<R>" },
+  { "red", "<r>" },
+  { "darkblue", "<B>" },
+  { "blue", "<b>" },
+  { "darkgreen", "<G>" },
+  { "green", "<g>" },
+  { "cyan", "<c>" },
+  { "turquoise", "<C>" },
+  { "magenta", "<p>" },
+  { "purple", "<P>" },
+  { "orange", "<o>" },
+  { "yellow", "<y>" },
+  { "gray", "<k>" },
+  { "black", "<K>" },
+  { "ghostwhite", "<w>" },
+  { "white", "<W>" },
+  { "invert", "<i>" },
+};
 
 // sucks the data out of wiki tables and re-gens them for text
 void replaceWikiTable(sstring &data)
@@ -317,35 +336,24 @@ void replaceWikiTable(sstring &data)
     cData = table.split('\255', rgTableData);
     cCols = cData / cRows;
 
-    // re-generate table as text into tableReplace
-    // find the width of each column
-    int sumWidth = 0;
+    // trim strings, calc width for each column
     int *rgWidth = new int[cCols];
-    for(int iCol = 0; iCol < cCols; iCol++)
+    memset(rgWidth, 0, sizeof(rgWidth)*cCols);
+    for(int iWidth = 0;iWidth < cData; iWidth++)
     {
-      rgWidth[iCol] = 0;
-      for(int iRow = 0; iRow < cRows && ((iRow*cCols)+iCol) < cData; iRow++)
-        rgWidth[iCol] = max(rgWidth[iCol], int(rgTableData[(iRow*cCols)+iCol].trim().length()));
-      sumWidth += rgWidth[iCol];
-    }
-    // add row delimiter padding
-    sumWidth += (cCols - 1) * 3;
-
-    // get the column format (different for each colum)
-    sstring *rgRowFmt = new sstring[cCols];
-    for(int iFmt = 0; iFmt < cCols; iFmt++)
-    {
-      rgRowFmt[iFmt] = colColorHdr[iFmt%cElements(colColorHdr)];
-      rgRowFmt[iFmt] += "%-";
-      rgRowFmt[iFmt] += (format("%i.%is") % rgWidth[iFmt] % rgWidth[iFmt]).str();
-      rgRowFmt[iFmt] += colColorFtr[iFmt%cElements(colColorFtr)];
+      rgTableData[iWidth] = rgTableData[iWidth].trim();
+      rgWidth[iWidth%cCols] = max(rgWidth[iWidth%cCols], int(rgTableData[iWidth].lengthNoColor()));
     }
 
     // write the table
     for(int iData = 0;iData < cData; iData++)
     {
-      tableReplace += format(rgRowFmt[iData % cCols]) % rgTableData[iData].trim();
-      if (iData % cCols == cCols-1)
+      int iCol = iData % cCols;
+      rgTableData[iData].resize(rgTableData[iData].length() +
+                                rgWidth[iCol] - rgTableData[iData].lengthNoColor(), ' ');
+      tableReplace += format("%s%s%s") % colColorHdr[iCol%cElements(colColorHdr)] %
+                        rgTableData[iData] % colColorFtr[iCol%cElements(colColorFtr)];
+      if (iCol == cCols-1)
         tableReplace += "\n";
       else
         tableReplace += " : ";
@@ -354,7 +362,8 @@ void replaceWikiTable(sstring &data)
     // cleanup, replace
     delete[] rgTableData;
     delete[] rgWidth;
-    delete[] rgRowFmt;
+
+    // re-generate table as text into tableReplace
     data.replace(tablePos, tableEnd-tablePos+2, tableReplace.c_str(), tableReplace.length());
 
     tablePos = data.find("{|", tablePos + tableReplace.length());
@@ -398,8 +407,11 @@ sstring wiki_to_text(const Descriptor *desc, sstring titleIn, const sstring modi
   textOut.inlineReplaceString("[[:Category:", "[[");
   textOut.inlineReplaceString("[[:category:", "[[");
 
-  // fixup tables
-  replaceWikiTable(textOut);
+  // replace wiki colors with mud color markup
+  for(unsigned int iColor = 0; iColor < cElements(wikiColors); iColor++)
+    textOut.inlineReplaceMarkup("<span style=\"color:" + wikiColors[iColor][0], "\">", wikiColors[iColor][1], "");
+  textOut.inlineRemoveBetween("<span style=\"color:", "\">", true, true); // remove all others
+  textOut.inlineReplaceString("</span>", "<z>"); // normal
 
   // fixup internal links with color
   textOut.inlineReplaceString("]]", "}}]]");
@@ -418,6 +430,9 @@ sstring wiki_to_text(const Descriptor *desc, sstring titleIn, const sstring modi
 
   // replace html quote with ascii
   textOut.ascify();
+
+  // fixup tables
+  replaceWikiTable(textOut);
 
   // trim whitespace-only lines
   textOut.inlineTrimWhiteLines();

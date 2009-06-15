@@ -398,6 +398,23 @@ const sstring sstring::uncap() const
   return s;
 }
 
+// returns length of the string, skipping color codes
+const size_t sstring::lengthNoColor() const
+{
+  const char *sz = c_str();
+  size_t len = length();
+  size_t cleanLen = 0;
+
+  for (size_t iScan = 0; iScan < len; iScan++)
+    if (sz[iScan] == '<' && (iScan+2) <= len && sz[(iScan+2)] == '>')
+      iScan += 2;
+    else
+      cleanLen++;
+
+  return cleanLen;
+}
+
+
 // splits the string up by whitespace and returns the i'th "word"
 const sstring sstring::word(int i) const
 {
