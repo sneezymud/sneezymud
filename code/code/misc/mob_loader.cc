@@ -289,8 +289,11 @@ void TMonster::createWealth(void)
   if (UtilMobProc(this))
     return;
 
-  if (Config::LoadOnDeath())
-    calculateGoldFromConstant();
+  int cashOnHand = 0;
+  if (Config::LoadOnDeath()) {
+    cashOnHand = getMoney();
+    calculateGoldFromConstant(); // can reset money
+  }
 
   // execute our post-load commands
   if (Config::LoadOnDeath() && loadCom.size() > 0) {
@@ -309,8 +312,10 @@ void TMonster::createWealth(void)
   }
 
   // skip special loads here - if we skip too early then zonefile loads are affected
-  if (getMoney() <= 0)
+  if (getMoney() <= 0) {
+    setMoney(cashOnHand);
     return;
+  }
 
   // rare and random chance at hitting the Jackpot!
   if (!::number(0,1000)) {
@@ -377,6 +382,9 @@ void TMonster::createWealth(void)
       bag->setContainerTrapDam(min(150, ::number(1 * GetMaxLevel(), 3 * GetMaxLevel())));
     }
   }
+
+  // restore held cash so it doesnt count as load cash for purposes of commod/tool loads
+  setMoney(getMoney() + cashOnHand);
 
   return;
 }
