@@ -883,7 +883,7 @@ void TPerson::doShow(const sstring &argument)
       room_iterate(room_db, print_noflee_room, sb, NULL);
     else if (is_abbrev(zonenum, "arena"))
       room_iterate(room_db, print_arena_room, sb, NULL);
-    else if (isalpha(zonenum[0])){
+    else if (zonenum.length() > 0 && isalpha(zonenum[0])){
       register int i;
       for (i = 0; i < WORLD_SIZE; i++) {
 	TRoom *temp = real_roomp(i);
