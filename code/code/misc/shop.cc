@@ -706,8 +706,11 @@ bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int shop_nr)
 {
   sstring buf;
 
-  if (!ch->isImmortal() && temp1->objectSell(ch, keeper)) {
-    return TRUE;
+  if(temp1->objectSell(ch, keeper)){
+    if(ch->isImmortal())
+      keeper->doTell(ch->getName(), "Since you're immortal, I'll make an exception.");
+    else 
+      return TRUE;
   }
   if(Config::NoDamagedItemsShop()){
     if (temp1->getStructPoints() != temp1->getMaxStructPoints()) {
