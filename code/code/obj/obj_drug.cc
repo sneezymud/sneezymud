@@ -168,8 +168,10 @@ void TDrug::lowCheck()
 
 int TDrug::objectSell(TBeing *ch, TMonster *keeper)
 {
-  keeper->doTell(ch->getName(), "I'm sorry, I don't buy back drugs.");
-  return TRUE;
+  return false;
+
+  //  keeper->doTell(ch->getName(), "I'm sorry, I don't buy back drugs.");
+  //  return TRUE;
 }
 
 sstring TDrug::statObjInfo() const
