@@ -518,7 +518,7 @@ void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
         if (!istick && consumed > 0)
         {
           const static applyTypeT locations[5] = { APPLY_NONE, APPLY_GARBLE, APPLY_GARBLE, APPLY_GARBLE, APPLY_GARBLE };
-          const static long modifiers[5] = { 0, GARBLE_FROGTALK, GARBLE_FROGTALK, GARBLE_FROGTALK, GARBLE_FROGTALK };
+          const static long modifiers[5] = { 0, Garble::TYPE_FROGTALK, Garble::TYPE_FROGTALK, Garble::TYPE_FROGTALK, Garble::TYPE_FROGTALK };
           const static uint64_t bitvectors[5] = { 0, 0, AFF_SENSE_LIFE, AFF_SENSE_LIFE, AFF_SENSE_LIFE };
 
           applyTypeT location = locations[consumed-1];
@@ -540,7 +540,7 @@ void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
 
             // keep the sick affect
             location = APPLY_GARBLE;
-            modifier = GARBLE_CRAZYFROG;
+            modifier = Garble::TYPE_CRAZYFROG;
             bitvector = 0;
           }
           else if (ch->desc->drugs[drug].current_consumed > potency)
@@ -549,7 +549,7 @@ void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
             ch->doAction("", CMD_PUKE);
             ch->dropPool(7, LIQ_VOMIT);
             location = APPLY_GARBLE;
-            modifier = GARBLE_CRAZYFROG;
+            modifier = Garble::TYPE_CRAZYFROG;
             bitvector = 0;
             act("Woah!  You feel a bit sick.", TRUE, ch, 0, 0, TO_CHAR);
           }

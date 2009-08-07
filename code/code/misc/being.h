@@ -2073,8 +2073,8 @@ class TBeing : public TThing {
 
     // Garble code, contained in garble.h and garble.cc
     int getGarbles(TBeing *to) const;
-    int toggleGarble(GARBLETYPE garble);
-    sstring garble(TBeing *to, const sstring &arg, SPEECHTYPE speechType, GARBLESCOPE garbleScope = GARBLE_SCOPE_ALL) const;
+    int toggleGarble(Garble::TYPE garble);
+    sstring garble(TBeing *to, const sstring &arg, Garble::SPEECHTYPE speechType, Garble::SCOPE garbleScope = Garble::SCOPE_ALL) const;
 
     // used by doReset
     bool resetPractices(classIndT resetClass, int &practices, bool reset = true);

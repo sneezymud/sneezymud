@@ -1751,7 +1751,7 @@ int telepathy(TBeing *caster, int, short bKnown)
       caster->sendTo("Telepathy is a nice spell, but you need to send some sort of message!\n\r");
       caster->nothingHappens(SILENT_YES);
     } else {
-      garbled = caster->garble(NULL, msg, SPEECH_SHOUT, GARBLE_SCOPE_EVERYONE);
+      garbled = caster->garble(NULL, msg, Garble::SPEECH_SHOUT, Garble::SCOPE_EVERYONE);
       caster->sendTo(COLOR_SPELLS, format("You telepathically send the message, \"%s<z>\"\n\r") % msg);
       for (i = descriptor_list; i; i = i->next) {
         if (i->character && (i->character != caster) &&
@@ -1761,7 +1761,7 @@ int telepathy(TBeing *caster, int, short bKnown)
               !i->character->isPlayerAction(PLR_GODNOSHOUT))) {
 
           i->character->sendTo(COLOR_SPELLS, format("Your mind is flooded with a telepathic message from %s.\n\r") % caster->getName());
-          pgbuf = caster->garble(i->character, garbled, SPEECH_SHOUT, GARBLE_SCOPE_INDIVIDUAL);
+          pgbuf = caster->garble(i->character, garbled, Garble::SPEECH_SHOUT, Garble::SCOPE_INDIVIDUAL);
           i->character->sendTo(COLOR_SPELLS, format("The message is, \"%s%s\"\n\r") % pgbuf % i->character->norm());
           if (!i->m_bIsClient && IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
           i->clientf(format("%d|%s|%s") % CLIENT_TELEPATHY % colorString(i->character, i, caster->getName(), NULL, COLOR_NONE, FALSE) % colorString(i->character, i, pgbuf, NULL, COLOR_NONE, FALSE));

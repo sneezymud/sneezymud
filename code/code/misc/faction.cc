@@ -526,7 +526,7 @@ void sendToFaction(factionTypeT fnum, const TBeing *who, const char *arg)
         !tmpch->hasWizPower(POWER_SEE_FACTION_SENDS))
       continue;
 
-    garble = who->garble(tmpch, arg, SPEECH_SHOUT, GARBLE_SCOPE_INDIVIDUAL);
+    garble = who->garble(tmpch, arg, Garble::SPEECH_SHOUT, Garble::SCOPE_INDIVIDUAL);
 
     d->character->sendTo(COLOR_SHOUTS, format("<g>%s <c>%s<1>: %s\n\r") %
 			 FactionInfo[fnum].faction_name % who->name % garble);
@@ -634,7 +634,7 @@ void TBeing::doSend(sstring arg)
 
   addToWait(combatRound(0.5));
 
-  msg = garble(NULL, msg, SPEECH_SHOUT, GARBLE_SCOPE_EVERYONE);
+  msg = garble(NULL, msg, Garble::SPEECH_SHOUT, Garble::SCOPE_EVERYONE);
 
   sendToFaction(fnum, this, msg.c_str());
 }

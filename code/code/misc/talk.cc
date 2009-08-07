@@ -98,7 +98,7 @@ int TBeing::doSay(const sstring &arg)
     return FALSE;
   }
 
-  garbleRoom = garble(NULL, arg, SPEECH_SAY, GARBLE_SCOPE_EVERYONE);
+  garbleRoom = garble(NULL, arg, Garble::SPEECH_SAY, Garble::SCOPE_EVERYONE);
   
   sendTo(COLOR_COMM, format("<g>You say, <z>\"%s%s\"\n\r") % 
    colorString(this, desc, garbleRoom, NULL, COLOR_BASIC, FALSE) %
@@ -125,7 +125,7 @@ int TBeing::doSay(const sstring &arg)
         continue;
 
       // note: this means only PCs get individualed garbles in a 'say'
-      sstring garbleTo = garble(mob, garbleRoom, SPEECH_SAY, GARBLE_SCOPE_INDIVIDUAL);
+      sstring garbleTo = garble(mob, garbleRoom, Garble::SPEECH_SAY, Garble::SCOPE_INDIVIDUAL);
 
       if (hasColorStrings(NULL, capbuf, 2)) {
         if (IS_SET(mob->desc->plr_color, PLR_COLOR_MOBS)) {
@@ -206,9 +206,9 @@ void Descriptor::sendShout(TBeing *ch, const sstring &arg)
   Descriptor *i;
   const char *action = "shouts";
   int garbleFlags = ch->getGarbles(NULL);
-  if (garbleFlags & GARBLE_FLAG_BLAHBLAH)
+  if (garbleFlags & Garble::TYPE_FLAG_BLAHBLAH)
     action = "whines";
-  else if (garbleFlags & GARBLE_FLAG_WAHWAH)
+  else if (garbleFlags & Garble::TYPE_FLAG_WAHWAH)
     action = "cries";
 
   for (i = descriptor_list; i; i = i->next) {
@@ -257,7 +257,7 @@ void Descriptor::sendShout(TBeing *ch, const sstring &arg)
 
       sstring namebuf, namebufc, argbuf, messagebuf;
 
-      argbuf = ch->garble(b, arg, SPEECH_SHOUT, GARBLE_SCOPE_INDIVIDUAL);
+      argbuf = ch->garble(b, arg, Garble::SPEECH_SHOUT, Garble::SCOPE_INDIVIDUAL);
 
       namebufc = colorString(b, i, shouter.cap(), NULL, COLOR_NONE, FALSE);
       if (hasColorStrings(NULL, shouter, 2)) {
@@ -360,7 +360,7 @@ void TBeing::doShout(const sstring &arg)
     return;
   }
 
-  sstring garbled = garble(NULL, arg, SPEECH_SHOUT, GARBLE_SCOPE_EVERYONE);
+  sstring garbled = garble(NULL, arg, Garble::SPEECH_SHOUT, Garble::SCOPE_EVERYONE);
 
   sendTo(COLOR_COMM, format("<g>You shout<Z>, \"%s%s\"\n\r") % 
    colorString(this, desc, garbled, NULL, COLOR_BASIC, FALSE) % norm());
@@ -416,7 +416,7 @@ void TBeing::doGrouptell(const sstring &arg)
     return;
   } else {
 
-    garbled = garble(NULL, arg, SPEECH_GROUPTELL, GARBLE_SCOPE_EVERYONE);
+    garbled = garble(NULL, arg, Garble::SPEECH_GROUPTELL, Garble::SCOPE_EVERYONE);
 
     garbled.convertStringColor("<r>");
 
@@ -429,7 +429,7 @@ void TBeing::doGrouptell(const sstring &arg)
     // a crash bug lies here....cut and paste from windows notepad
     // plays with the next few lines for some reason
     if (!k->desc || !k->desc->ignored.isIgnored(desc)) {
-      garbledTo = garble(k, garbled, SPEECH_GROUPTELL, GARBLE_SCOPE_INDIVIDUAL);
+      garbledTo = garble(k, garbled, Garble::SPEECH_GROUPTELL, Garble::SCOPE_INDIVIDUAL);
       buf = format("$n: %s%s%s") % k->red() % colorString(this, k->desc, garbledTo, NULL, COLOR_COMM, FALSE) % k->norm();
       act(buf, 0, this, 0, k, TO_VICT);
     }
@@ -441,7 +441,7 @@ void TBeing::doGrouptell(const sstring &arg)
         continue;
 
       // garble this string for the individual recipient
-      garbledTo = garble(f->follower, garbled, SPEECH_GROUPTELL, GARBLE_SCOPE_INDIVIDUAL);
+      garbledTo = garble(f->follower, garbled, Garble::SPEECH_GROUPTELL, Garble::SCOPE_INDIVIDUAL);
 
       if (f->follower->desc && (f->follower->desc->m_bIsClient || IS_SET(f->follower->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))) {
         f->follower->desc->clientf(format("%d|%s|%s") % CLIENT_GROUPTELL % colorString(this, k->desc, getName(), NULL, COLOR_NONE, FALSE) % colorString(this, f->follower->desc, garbledTo, NULL, COLOR_NONE, FALSE));
@@ -603,7 +603,7 @@ int TBeing::doSign(const sstring &arg)
     return FALSE;
   }
 
-  buf = garble(NULL, arg, SPEECH_SIGN, GARBLE_SCOPE_EVERYONE);
+  buf = garble(NULL, arg, Garble::SPEECH_SIGN, Garble::SCOPE_EVERYONE);
 
   sendTo(format("You sign, \"%s\"\n\r") % arg);
   if (buf!=arg)
@@ -624,7 +624,7 @@ int TBeing::doSign(const sstring &arg)
     if (ch != this && ch->doesKnowSkill(SKILL_SIGN)) {
       if (bSuccess(SKILL_SIGN))
       {
-        sstring bufToVict = garble(ch, buf, SPEECH_SIGN, GARBLE_SCOPE_INDIVIDUAL);
+        sstring bufToVict = garble(ch, buf, Garble::SPEECH_SIGN, Garble::SCOPE_INDIVIDUAL);
         act(bufToVict, TRUE, this, 0, ch, TO_VICT);
       }
         if (isPc() && !ch->isPc()) { 
@@ -841,7 +841,7 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
 
   int drunkNum = getCond(DRUNK);
   sstring garbed;
-  garbed = garble(vict, message, SPEECH_TELL);
+  garbed = garble(vict, message, Garble::SPEECH_TELL);
 
   if(vict->isImmortal() && drunkNum>0)
     garbed=message;
@@ -955,7 +955,7 @@ int TBeing::doWhisper(const sstring &arg)
   }
 
   sstring garbed;
-  garbed= garble(vict, message, SPEECH_WHISPER);
+  garbed= garble(vict, message, Garble::SPEECH_WHISPER);
 
   buf = format("$n whispers to you, \"%s\"") % colorString(this, vict->desc, garbed, NULL, COLOR_COMM, TRUE);
 
@@ -1036,7 +1036,7 @@ int TBeing::doAsk(const sstring &arg)
     act("$n quietly asks $mself a question.", TRUE, this, 0, 0, TO_ROOM);
     sendTo("You think about it for a while...\n\r");
   } else {
-    garbled=garble(vict, message, SPEECH_ASK);
+    garbled=garble(vict, message, Garble::SPEECH_ASK);
 
     buf = format("$n asks you, \"%s\"") % garbled;
     if (!vict->desc || !vict->desc->ignored.isIgnored(desc))

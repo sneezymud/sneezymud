@@ -1427,8 +1427,8 @@ static void change_obj_applys(TBeing *ch, TObj *o, const char *arg, editorEnterT
     } else if (att == APPLY_GARBLE && num != 2) {
       ch->sendTo("Syntax: %d <garble number>\n\r");
       return;
-    } else if (att == APPLY_GARBLE && (number1 < 0 || number1 >= GARBLE_MAX)) {
-      ch->sendTo(format("Illegal Garble!  Please choose a number between 0 and %d\n\r") % (GARBLE_MAX-1));
+    } else if (att == APPLY_GARBLE && (number1 < 0 || number1 >= Garble::TYPE_MAX)) {
+      ch->sendTo(format("Illegal Garble!  Please choose a number between 0 and %d\n\r") % (Garble::TYPE_MAX-1));
       return;
     } else if (num == 2) 
       number2 = 0;

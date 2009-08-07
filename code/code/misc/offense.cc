@@ -689,7 +689,7 @@ int TBeing::doOrder(const char *argument)
     }
   } else {
     // This is order "followers" 
-    sstring garbled = garble(NULL, format("$n issues the order '%s'.") % message, SPEECH_SAY);
+    sstring garbled = garble(NULL, format("$n issues the order '%s'.") % message, Garble::SPEECH_SAY);
 
     // there is a possibility that the order would change our room
     // which might have drastic consequences, so we do this check

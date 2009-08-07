@@ -1247,7 +1247,7 @@ int rombler(TBeing *caster, int, short bKnown)
     return SPELL_FAIL;
   }
 
-  msg = caster->garble(NULL, msg, SPEECH_SHOUT, GARBLE_SCOPE_EVERYONE);
+  msg = caster->garble(NULL, msg, Garble::SPEECH_SHOUT, Garble::SCOPE_EVERYONE);
 
   if (caster->bSuccess(bKnown, SPELL_ROMBLER)) {
     if (msg.size() < 0) {
@@ -1263,7 +1263,7 @@ int rombler(TBeing *caster, int, short bKnown)
               !i->character->isPlayerAction(PLR_GODNOSHOUT))) {
         if (i->character->doesKnowSkill(SPELL_ROMBLER) || i->character->isImmortal()) {
 
-          pgbuff = caster->garble(i->character, msg, SPEECH_SHOUT, GARBLE_SCOPE_INDIVIDUAL);
+          pgbuff = caster->garble(i->character, msg, Garble::SPEECH_SHOUT, Garble::SCOPE_INDIVIDUAL);
           i->character->sendTo(COLOR_SPELLS, format("<Y>%s<z> rombles, \"<o>%s%s\"\n\r") % caster->getName() % pgbuff % i->character->norm());
           if (!i->m_bIsClient && IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
             i->clientf(format("%d|%s|%s") % CLIENT_ROMBLER % colorString(i->character, i, caster->getName(), NULL, COLOR_NONE, FALSE) % colorString(i->character, i, pgbuff, NULL, COLOR_NONE, FALSE));

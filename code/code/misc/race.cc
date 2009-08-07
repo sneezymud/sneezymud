@@ -370,7 +370,7 @@ void Race::initRace(const char *whichRace)
     else if (!strcasecmp(keyword, "garble")) {
       one_argument(buf, value, cElements(value));
       int iGarble = convertTo<int>(value);
-      if (iGarble >= 0 && iGarble < GARBLE_MAX)
+      if (iGarble >= 0 && iGarble < Garble::TYPE_MAX)
         garbles |= (1<<iGarble);
     }
     // toggles

@@ -717,17 +717,17 @@ void TBeing::doEgoTrip(const char *arg)
     // list garbles if target is empty
     if (garblePerson == NULL) {
       sendTo("The list of available garbles to apply:\n\r");
-      for (int iGarble=0; iGarble < GARBLE_MAX; iGarble++)
+      for (int iGarble=0; iGarble < Garble::TYPE_MAX; iGarble++)
         sendTo(format(GarbleData[iGarble].automatic ? "  %s : %s (auto)\n\r" : "  %s : %s \n\r") % GarbleData[iGarble].name % GarbleData[iGarble].description);
       return;
     }
 
     // toggle that persons garbles
     if (!garble.empty()) {
-      for (int iToggGarble=0; iToggGarble < GARBLE_MAX; iToggGarble++) {
+      for (int iToggGarble=0; iToggGarble < Garble::TYPE_MAX; iToggGarble++) {
         if (is_abbrev(garble, GarbleData[iToggGarble].name)) {
           sendTo(format("Toggling garble \"%s\" on %s.\n\r") % GarbleData[iToggGarble].name % garblePerson->name);
-          garblePerson->toggleGarble((GARBLETYPE)iToggGarble);
+          garblePerson->toggleGarble((Garble::TYPE)iToggGarble);
           break;
         }
       }
@@ -736,7 +736,7 @@ void TBeing::doEgoTrip(const char *arg)
     // list the target's garbles
     sstring printout = format("%s has the following set of garbles applied: ") % garblePerson->name;
     int garbles = garblePerson->getGarbles(NULL);
-    for (int iTargetGarble=0; iTargetGarble < GARBLE_MAX; iTargetGarble++) {
+    for (int iTargetGarble=0; iTargetGarble < Garble::TYPE_MAX; iTargetGarble++) {
       if (garbles & (1<<iTargetGarble)) {
         printout += GarbleData[iTargetGarble].name;
         printout += GarbleData[iTargetGarble].automatic ? "* " : " ";
