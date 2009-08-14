@@ -71,7 +71,7 @@ std::map <sstring,sstring> parse_data_file(const sstring &file, int num)
       
   while(num--){
     while(getline(ifile, buf)){
-      if(buf[0]=='-'){
+      if(buf.size()>0 && buf[0]=='-'){
 	values["DATATYPE"]=buf.substr(2);
 	break;
       }
@@ -80,7 +80,7 @@ std::map <sstring,sstring> parse_data_file(const sstring &file, int num)
 
 
   while(getline(ifile, buf)){
-    if(buf[0]=='-')
+    if(buf.size()<=0 || buf[0]=='-')
       break;
 
     if(!isalpha(buf[0]))
