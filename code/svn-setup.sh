@@ -2,7 +2,7 @@
 
 SVNROOT="http://svn.sneezymud.com/repos/source/trunk/code"
 cd $HOME
-svn checkout $SVNROOT
-ln -s /mud/build/lib code/lib
-echo "Your dev environment is now in $HOME/code."
-echo "An SVN tutorial is available: $HOME/code/svntutorial.txt"
+svn checkout $SVNROOT sneezy
+ln -s /mud/build/lib sneezy/lib
+echo "Your dev environment is now in $HOME/sneezy."
+echo "An SVN tutorial is available: $HOME/sneezy/svntutorial.txt"
