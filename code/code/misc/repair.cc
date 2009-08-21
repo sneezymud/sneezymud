@@ -83,34 +83,44 @@ int findRepairMaterials(unsigned int shop_nr, TBeing *repair, TBeing *buyer, uby
 
   TShopOwned tso(commod_shop, repair);
 
-  // look through the commod shop inventory
-  // REVIEW: this won't work - we should be using database for this not inventory
-#if 0
-  for(t=tso.getStuff();t;t=t->nextThing){
-    // find the appropriate commodity
-    if((commod=dynamic_cast<TCommodity *>(t)) && commod->getMaterial() == mat){
-      // get the price of the commods we need
-      if(commod->numUnits() > mats_needed){
-        mat_price += commod->shopPrice(mats_needed, commod_shop, 0, buyer);
-        if(purchase){
-          tso.doBuyTransaction(mat_price, commod->getName(), TX_BUYING, commod);
-          shoplog(shop_nr, buyer, dynamic_cast<TMonster *>(repair), commod->getName(), -mat_price, "buying materials");
-          commod->setWeight(commod->getWeight() - mats_needed/10.0);
-        }
-        mats_needed=0;
-      } else {
-        mat_price += commod->shopPrice(commod->numUnits(), commod_shop, 0, buyer);
-        if(purchase){
-          tso.doBuyTransaction(mat_price, commod->getName(), TX_BUYING, commod);
-          shoplog(shop_nr, buyer, dynamic_cast<TMonster *>(repair), commod->getName(), -mat_price, "buying materials");
-          delete commod;
-        }
-        mats_needed-=commod->numUnits();
+  TDatabase db(DB_SNEEZY);
+
+  db.query("select r.rent_id from rent r, obj o where r.owner=%i and r.owner_type='shop' and o.vnum=r.vnum and o.type=%i and r.material=%i", commod_shop, ITEM_RAW_MATERIAL, mat);
+
+  while(db.fetchRow()){
+    int rent_id=convertTo<int>(db["rent_id"]);
+
+    TObj *obj=tso.getKeeper()->loadItem(commod_shop, rent_id);
+    TCommodity *commod=dynamic_cast<TCommodity *>(obj);
+
+    if(!commod)
+      continue;
+
+    if(commod->numUnits() > mats_needed){
+      mat_price += commod->shopPrice(mats_needed, commod_shop, 0, buyer);
+      if(purchase){
+	tso.doBuyTransaction(mat_price, commod->getName(), TX_BUYING, commod);
+	shoplog(shop_nr, buyer, dynamic_cast<TMonster *>(repair), 
+		commod->getName(), -mat_price, "buying materials");
+	commod->setWeight(commod->getWeight() - mats_needed/10.0);
       }
-      break;
+      mats_needed=0;      
+      tso.getKeeper()->deleteItem(commod_shop, rent_id);
+      tso.getKeeper()->saveItem(commod_shop, commod);
+      delete commod;
+    } else {
+      mat_price += commod->shopPrice(commod->numUnits(), commod_shop, 0, buyer);
+      if(purchase){
+	tso.doBuyTransaction(mat_price, commod->getName(), TX_BUYING, commod);
+	shoplog(shop_nr, buyer, dynamic_cast<TMonster *>(repair), 
+		commod->getName(), -mat_price, "buying materials");
+	tso.getKeeper()->deleteItem(commod_shop, rent_id);
+	delete commod;
+      }
+      mats_needed-=commod->numUnits();
     }
   }
-#endif
+
 
   return mat_price;
 }
