@@ -2257,6 +2257,9 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
   } else if (best_disc == DISC_SHAMAN_SKUNK) {
     // AREA AFFECT
     if (ch.attackers >= 2 && ::number(0, ch.attackers - 1)) {
+      spell = SPELL_DEATH_MIST;
+      if (deathMistCheck(ch, vict, spell))
+        return spell;
     }
     // REGULAR
     spell = SPELL_BLOOD_BOIL;
@@ -2283,9 +2286,6 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
                TRUE, &ch, 0, 0, TO_ROOM);
       return spell;
     }
-    spell = SPELL_DEATH_MIST;
-    if (deathMistCheck(ch, vict, spell))
-      return spell;
     spell = SPELL_LICH_TOUCH;
     if (!::number(0, 3) &&
            (cutoff < discArray[spell]->start) &&
