@@ -49,17 +49,17 @@ void TSession::sendLoginPage(sstring url)
   cout << html() << head() << title("SneezyMUD Web Login") << endl;
   cout << head() << body() << endl;
 
-  cout << "<form action=\"" << url << "\" method=post>" << endl;
+  cout << "<form action=\"" << url << "\" method=\"post\">" << endl;
   cout << "<table>" << endl;
-  cout << "<tr><td colspan=2>" << endl;
-  cout << "<img src=\"/sneezy_forum_logo.gif\">" << endl;
+  cout << "<tr><td colspan=\"2\">" << endl;
+  cout << "<img src=\"/sneezy_forum_logo.gif\" /></td></tr>" << endl;
   cout << "<tr><td>Account</td>" << endl;
-  cout << "<td><input type=text name=account></td></tr>" << endl;
+  cout << "<td><input type=\"text\" name=\"account\" /></td></tr>" << endl;
   cout << "<tr><td>Password</td>" << endl;
-  cout << "<td><input type=password name=passwd></td></tr>" << endl;
-  cout << "<tr><td><input type=checkbox name=autologin></td>" << endl;
+  cout << "<td><input type=\"password\" name=\"passwd\" /></td></tr>" << endl;
+  cout << "<tr><td><input type=\"checkbox\" name=\"autologin\" /></td>" << endl;
   cout << "<td>Log me on permanently.</td></tr>" << endl;
-  cout << "<tr><td colspan=2><input type=submit name=Login value=Login></td></tr>" <<endl;
+  cout << "<tr><td colspan=\"2\"><input type=\"submit\" name=\"Login\" value=\"Login\" /></td></tr>" <<endl;
   cout << "</table>" << endl;
   cout << "</form>" << endl;
 
