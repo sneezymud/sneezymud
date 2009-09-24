@@ -1,5 +1,6 @@
 #include "database.h"
 #include "session.cgi.h"
+#include "extern.h"
 
 #include "cgicc/Cgicc.h"
 #include "cgicc/HTTPHTMLHeader.h"
@@ -15,6 +16,7 @@
 #include <openssl/md5.h>
 
 using namespace cgicc;
+using namespace std;
 
 bool TSession::hasWizPower(wizPowerT wp)
 {

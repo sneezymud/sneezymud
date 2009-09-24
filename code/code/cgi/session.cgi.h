@@ -2,7 +2,8 @@
 #define __SESSION_CGI_H
 
 #include <cgicc/Cgicc.h>
-
+#include "sstring.h"
+#include "wiz_powers.h"
 
 
 // TSession is a class for handling session authentication in cgi
@@ -74,7 +75,6 @@ public:
   void doLogin(cgicc::Cgicc, sstring);
   void sendLoginCheck(cgicc::Cgicc, sstring);
   void sendLoginPage(sstring);
-
 
   TSession(cgicc::Cgicc, sstring);
 };

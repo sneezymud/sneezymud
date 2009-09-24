@@ -14,7 +14,7 @@ libtask=env.SharedLibrary(target='task', source=Glob('task/*.cc'))
 
 libs=[libcmd, libdisc, libgame, libmisc,
       libobj, libspec, libsys, libtask,
-      'libares']
+      'libares', 'libcgicc']
 
 # main binary
 sneezy=env.Program('sneezy', 'main.cc', LIBS=[libs, 'libares'])
@@ -39,6 +39,14 @@ env.Install('../lowtools', [amap, sqladdmobs, sqladdobjs, sqladdresp,
                             sqladdwld, sqledimmobj, sqledmob, sqledobj,
                             sqledresp, sqledshop, sqledwld])
 env.Alias('lowtools', '../lowtools')
+
+# cgi
+cgi=env.Object('cgi/session.cgi.cc')
+
+mudmail=env.Program(['cgi/mudmail.cgi.cc', cgi], LIBS=libs)
+
+env.Install('../cgi', [mudmail])
+env.Alias('cgi', '../cgi')
 
 # unit tests
 env.SConscript('tests/SConscript',

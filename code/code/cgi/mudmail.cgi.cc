@@ -1,5 +1,9 @@
 #include "database.h"
 #include "session.cgi.h"
+#include "configuration.h"
+#include "toggle.h"
+#include "parse.h"
+#include "extern.h"
 
 #include <map>
 #include "sstring.h"
@@ -14,7 +18,7 @@
 #include <sys/types.h>
 
 using namespace cgicc;
-
+using namespace std;
 
 void sendJavaScript();
 
@@ -27,6 +31,7 @@ void sendMail(Cgicc cgi, TSession);
 
 int main(int argc, char **argv)
 {
+  Config::doConfiguration();
   // trick the db code into using the prod database
   gamePort = PROD_GAMEPORT;
   toggleInfo.loadToggles();
@@ -132,7 +137,7 @@ void sendMail(Cgicc cgi, TSession session)
     return;
   }
 
-  store_mail((**player_name).c_str(), (**from).c_str(), (**content).c_str());
+  store_mail((**player_name).c_str(), (**from).c_str(), (**content).c_str(), 0, 0);
 
 
   cout << HTTPHTMLHeader() << endl;
