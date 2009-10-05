@@ -453,7 +453,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
   for (t = v->rider; t; t = t2) {
     t2 = t->nextRider;
     TBeing *tb = dynamic_cast<TBeing *>(t);
-    // force a doublly failed rideCheck for riders of victim
+    // force a doubly failed rideCheck for riders of victim
     if (tb &&
         !tb->rideCheck(-3) && 
         !tb->rideCheck(-3)) {
@@ -471,8 +471,25 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
     positionTypeT pos = v->getPosition();
     v->setPosition(POSITION_STANDING); // temporarily set to allow scripts to drop items, etc
     rc = dynamic_cast<TMonster*>(v)->checkResponses(this, 0, "", CMD_RESP_KILLED);
-    if (Config::LoadOnDeath())
-      dynamic_cast<TMonster*>(v)->createWealth();
+    if (Config::LoadOnDeath()) {
+      // Don't create wealth unless one of the attackers is a player
+      TBeing *attacker = NULL;
+      TThing *t = NULL;
+      bool found_pc = FALSE;
+
+      for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+        t=*(it++);
+        attacker = dynamic_cast<TBeing *>(t);
+        if (!attacker)
+          continue;
+        if ((attacker->fight() == v) && (attacker->isPc())) {
+          found_pc = TRUE;
+          break;
+        }
+      }
+      if (found_pc)
+        dynamic_cast<TMonster*>(v)->createWealth();
+    }
     v->setPosition(pos);
   }
 
