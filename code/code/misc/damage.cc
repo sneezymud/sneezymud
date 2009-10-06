@@ -475,19 +475,33 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
       // Don't create wealth unless one of the attackers is a player
       TBeing *attacker = NULL;
       TThing *t = NULL;
-      bool found_pc = FALSE;
+      bool found_pc = FALSE, found_mob = FALSE;
 
-      for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
+      for (StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();) {
         t=*(it++);
         attacker = dynamic_cast<TBeing *>(t);
+
         if (!attacker)
           continue;
-        if ((attacker->fight() == v) && (attacker->isPc())) {
-          found_pc = TRUE;
-          break;
+
+        if ((attacker->fight() == v)) {
+          // We found someone attacking us
+          if (attacker->isPc()) {
+            // ... it was a player, so stop looking!
+            found_pc = TRUE;
+            break;
+          } else {
+            // If it's not a player, it must be a mob...
+            found_mob = TRUE;
+          }
         }
       }
+
       if (found_pc)
+        // We found a player at the scene
+        dynamic_cast<TMonster*>(v)->createWealth();
+      else if (!found_mob)
+        // The mob died while not fighting another mob
         dynamic_cast<TMonster*>(v)->createWealth();
     }
     v->setPosition(pos);
