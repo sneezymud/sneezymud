@@ -491,8 +491,16 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
             found_pc = TRUE;
             break;
           } else {
-            // If it's not a player, it must be a mob...
-            found_mob = TRUE;
+            // Check what type of mob did the hitting
+            TMonster *tmons = dynamic_cast<TMonster *> (t);
+            if (tmons && tmons->isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL)) {
+              // ... it was a player's pet, treat like a player and stop looking!
+              found_pc = TRUE;
+              break;
+            } else {
+              // If it's not a player or a pet, it must be a mob...
+              found_mob = TRUE;
+            }
           }
         }
       }
@@ -503,6 +511,9 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
       else if (!found_mob)
         // The mob died while not fighting another mob
         dynamic_cast<TMonster*>(v)->createWealth();
+      else
+        vlogf(LOG_MISC, format("%s skipped by load on death code at %s (%d).") %
+            v->getName() % v->roomp->name % v->inRoom());
     }
     v->setPosition(pos);
   }
