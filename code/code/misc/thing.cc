@@ -61,7 +61,8 @@ bool TThing::inGrimhaven() const
   return ((inRoom() >= 100 && inRoom() < 650) ||
           (inRoom() >= 750 && inRoom() < 950) ||
           (inRoom() >= 25400 && inRoom() <= 25499) ||
-	  (inRoom() >= 4400 && inRoom() <= 4699));
+	      (inRoom() >= 4400 && inRoom() <= 4699) ||
+	      (inRoom() == 15346));  // Grimhaven portal room
 }
 
 bool TThing::inAmber() const
@@ -70,18 +71,21 @@ bool TThing::inAmber() const
 	  (inRoom() >= 8700 && inRoom() <= 8899) ||
 	  (inRoom() >= 16200 && inRoom() <= 16249) ||
 	  (inRoom() >= 27800 && inRoom() <= 27899));
+  // 33760 is Amber's portal room, but it's outside the town proper
 }
 
 bool TThing::inLogrus() const
 {
   return ((inRoom() >= 3700 && inRoom() <= 3899) ||
-	  (inRoom() >= 26650 && inRoom() <= 26699));
+	  (inRoom() >= 26650 && inRoom() <= 26699) ||
+	  (inRoom() == 15348));  // Logrus portal room
 }
 
 bool TThing::inBrightmoon() const
 { 
   return ((inRoom() >= 1200 && inRoom() <= 1399) ||
-	  (inRoom() >= 16450 && inRoom() <= 16499));
+	  (inRoom() >= 16450 && inRoom() <= 16499) ||
+	  (inRoom() == 15347));  // Brightmoon portal room
 }
 
 bool TThing::inLethargica() const
