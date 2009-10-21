@@ -1497,6 +1497,8 @@ void procWeightVolumeFumble::run(int) const
 {
   Descriptor *d;
   TBeing *ch;
+  TThing *t;
+  int loop_check=0;
 
   for (d = descriptor_list; d; d = d->next) {
     if(!(ch=d->character) || d->connected || 
@@ -1507,9 +1509,22 @@ void procWeightVolumeFumble::run(int) const
        ch->getCarriedWeight() > ch->carryWeightLimit())
       ch->sendTo("You are carrying too much and lose control of your inventory!\n\r");
 
+    loop_check=0;
+    
     while(ch->getCarriedVolume() > ch->carryVolumeLimit() ||
 	  ch->getCarriedWeight() > ch->carryWeightLimit()){
-      ch->doDrop("", ch->stuff.front(), true);
+      t=ch->stuff.front();
+
+      ch->doDrop("", t, true);
+
+      if(ch->stuff.front() == t){
+	// drop failed; cursed or something
+	ch->stuff.pop_front();
+	ch->stuff.push_back(t);
+      }
+
+      if(++loop_check > 100)
+	break;
     }
   }
 }
