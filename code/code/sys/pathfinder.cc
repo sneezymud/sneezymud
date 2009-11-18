@@ -599,7 +599,7 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
             continue;
           int tmp_room = tp->getTarget();   // next room
           TRoom *hp = real_roomp(tmp_room);
-          if (!hp) {
+          if (!hp || hp->isRoomFlag(ROOM_NO_MOB)) {
             continue;
           }
 
