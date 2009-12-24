@@ -433,12 +433,24 @@ int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
     // to prevent certain aggresive behaviors when outside of ch's birthzone (or guard station)
     // we don't want people using guards as free tanks
     TRoom *rp1 = NULL, *rp2 = NULL;
-    bool hasWandered = FALSE;
+    bool hasWandered = FALSE, targetHasWandered = FALSE;
     if ((rp1 = ch->roomp) && (rp2 = real_roomp(ch->brtRoom))) {
       if (IS_SET(ch->specials.act, ACT_STAY_ZONE) && rp1->getZoneNum() != rp2->getZoneNum())
         hasWandered = TRUE;
       if (IS_SET(ch->specials.act, ACT_SENTINEL) && rp1 != rp2)
         hasWandered = TRUE;
+      if (IS_SET(ch->specials.act, ACT_HUNTING))
+        hasWandered = TRUE;
+    }
+    if (TMonster *m = dynamic_cast<TMonster *>(tch)) {
+      if ((rp1 = m->roomp) && (rp2 = real_roomp(m->brtRoom))) {
+        if (rp1->getZoneNum() != rp2->getZoneNum())
+          targetHasWandered = TRUE;
+        if (IS_SET(m->specials.act, ACT_SENTINEL) && rp1 != rp2)
+          targetHasWandered = TRUE;
+        if (IS_SET(m->specials.act, ACT_HUNTING))
+          targetHasWandered = TRUE;
+      }
     }
     
     if (!ch->isUndead() && !ch->isDiabolic()) {
@@ -449,7 +461,7 @@ int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
       //	continue;
       
       if ((tch->isUndead() || tch->isDiabolic()) && (!tch->inGrimhaven() || tch->isPc())){
-        if (!hasWandered) {
+        if (!hasWandered && !targetHasWandered) {
           if (!ch->checkSoundproof())
             act("$n screams 'Get thee back to the underworld that spawned you!!!!'", FALSE, ch, 0, 0, TO_ROOM);
 
@@ -466,7 +478,7 @@ int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
         return TRUE;
         
       } else if ((tch->hasDisease(DISEASE_LEPROSY) || tch->spec==SPEC_LEPER) && !tch->isPc()) {
-        if (!hasWandered) {
+        if (!hasWandered && !targetHasWandered) {
           if(!ch->checkSoundproof())
             act("$n screams 'There is no mercy for your kind, leper!'", FALSE, ch, 0, 0, TO_ROOM);
 
@@ -486,7 +498,7 @@ int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
     } else {
       // an undead or demon guard
       if (!tch->isUndead() && !tch->isDiabolic()) {
-        if (!hasWandered) {
+        if (!hasWandered && !targetHasWandered) {
           if (!ch->checkSoundproof())
             act("$n screams 'This place belongs to the UnLiving!!!!'", FALSE, ch, 0, 0, TO_ROOM);
 
@@ -506,7 +518,7 @@ int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
     if (ch->roomp->isCitySector() && !(ch->specials.act & ACT_AGGRESSIVE) && 
          (tch->specials.act & ACT_AGGRESSIVE) && 
          !(tch->specials.act & ACT_WIMPY) && ch->canSee(tch)) {
-      if (!hasWandered) {
+      if (!hasWandered && !targetHasWandered) {
         if (!ch->checkSoundproof())
           act("$n screams 'Protect the innocent!!!'",FALSE,ch,0,0,TO_ROOM);
 
