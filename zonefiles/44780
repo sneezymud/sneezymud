@@ -142,5 +142,8 @@ M 0 44790 5 44794       a devotee
 M 0 44792 5 44794       a handmaiden to the acolyte
 M 0 44793 5 44794       a handmaiden to the acolyte
 M 0 44794 1 44794       a blessed acolyte
-
+K 0 44793 5 44794       a handmaiden to the acolyte
+K 0 44792 5 44794	a handmaiden to the acolyte
+K 0 44784 4 44794       a gray rabbit
+K 0 44783 11 44794      a brown rabbit
 S
