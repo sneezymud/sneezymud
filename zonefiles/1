@@ -376,65 +376,65 @@ O 0 1865 1 28860 	Petrified in Undead Graveyard
 **************************
 
 * Trader elves
-M 0 3905 1 238           a fat helper elf (1 - candy cane trader) 
-M 0 3906 1 851           a fat helper elf (2 - jingle bell collar trader)
-M 0 3907 1 339           a fat helper elf (3 - scroll case trader)
+*M 0 3905 1 238           a fat helper elf (1 - candy cane trader) 
+*M 0 3906 1 851           a fat helper elf (2 - jingle bell collar trader)
+*M 0 3907 1 339           a fat helper elf (3 - scroll case trader)
 
 * Low level holiday elves, empty handed
-M 0 3901 9999 13700      a cheery holiday elf (level 10)
+*M 0 3901 9999 13700      a cheery holiday elf (level 10)
 
 * Low level holiday elves, with a candy cane
-M 0 3901 9999 13700      a cheery holiday elf (level 10)
-G 1 3961 9999                 candy cane
+*M 0 3901 9999 13700      a cheery holiday elf (level 10)
+*G 1 3961 9999                 candy cane
 
 * * Low level holiday elves, with a candy cane and champagne
-M 0 3901 9999 13700      a cheery holiday elf (level 10)
-G 1 3961 9999                 candy cane
-G 1 3959 9999                 a cheery holiday flask (champagne)
+*M 0 3901 9999 13700      a cheery holiday elf (level 10)
+*G 1 3961 9999                 candy cane
+*G 1 3959 9999                 a cheery holiday flask (champagne)
 
 * Mid level holiday elves, empty handed
-M 0 3902 9999 13700      a cheery holiday elf (level 25)
+*M 0 3902 9999 13700      a cheery holiday elf (level 25)
 
 * Mid level holiday elves, with a candy cane
-M 0 3902 9999 13700      a cheery holiday elf (level 25)
-G 1 3961 9999                 candy cane
+*M 0 3902 9999 13700      a cheery holiday elf (level 25)
+*G 1 3961 9999                 candy cane
 
 * Mid level holiday elves, with a candy cane and champage
-M 0 3902 9999 13700      a cheery holiday elf (level 25)
-G 1 3961 9999                 candy cane
-G 1 3959 9999                 a cheery holiday flask (champagne)
+*M 0 3902 9999 13700      a cheery holiday elf (level 25)
+*G 1 3961 9999                 candy cane
+*G 1 3959 9999                 a cheery holiday flask (champagne)
 
 * Mid-high level holiday elves, empty handed
-M 0 3903 9999 13700      a cheery holiday elf (level 40)
+*M 0 3903 9999 13700      a cheery holiday elf (level 40)
 
 * Mid-high level holiday elves, with a candy cane
-M 0 3903 9999 13700      a cheery holiday elf (level 40)
-G 1 3961 9999                 candy cane
+*M 0 3903 9999 13700      a cheery holiday elf (level 40)
+*G 1 3961 9999                 candy cane
 
 * Mid-high level holiday elves, with a candy cane and potion of mystery
-M 0 3903 9999 13700      a cheery holiday elf (level 40)
-G 1 3961 9999                 candy cane
-G 1 3958 9999                 cheery holiday flask (potion of mystery)
+*M 0 3903 9999 13700      a cheery holiday elf (level 40)
+*G 1 3961 9999                 candy cane
+*G 1 3958 9999                 cheery holiday flask (potion of mystery)
 
 * High level holiday elves, empty handed
-M 0 3904 9999 13700      a cheery holiday elf (level 60)
+*M 0 3904 9999 13700      a cheery holiday elf (level 60)
 
 * High level holiday elves, with a candy cane
-M 0 3904 9999 13700      a cheery holiday elf (level 60)
-G 1 3961 9999                 candy cane
+*M 0 3904 9999 13700      a cheery holiday elf (level 60)
+*G 1 3961 9999                 candy cane
 
 * High level holiday elves, with a candy cane and potion of mystery
-M 0 3904 9999 13700      a cheery holiday elf (level 60)
-G 1 3961 9999                 candy cane
-G 1 3958 9999                 cheery holiday flask (potion of mystery)
+*M 0 3904 9999 13700      a cheery holiday elf (level 60)
+*G 1 3961 9999                 candy cane
+*G 1 3958 9999                 cheery holiday flask (potion of mystery)
 
 * Reindeer (no loads)
-M 0 3908 9999 13700     a reindeer
+*M 0 3908 9999 13700     a reindeer
 
 * Reindeer (jingle bell collars)
-M 0 3908 9999 13700     a reindeer
-? 0 100 0 E                  load collar 100% of the time
-E 1 3960 9999 3              a jingle bell collar
+*M 0 3908 9999 13700     a reindeer
+*? 0 100 0 E                  load collar 100% of the time
+*E 1 3960 9999 3              a jingle bell collar
 
 **********************************
 * END OF  December holiday quest *
