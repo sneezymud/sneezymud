@@ -276,6 +276,7 @@ void TPlant::updateDesc()
     setDescr(mud_str_dup(buf));
   }
 
+
   if(plantindex == 3 && !::number(0,3)){
     TThing *t;
     int count=0;
@@ -283,11 +284,10 @@ void TPlant::updateDesc()
     for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it){
       ++count;
     }
-    
+
     if(count<=4 && 
        (obj_index[real_object(plantfruits[getType()])].getNumber() < 
-       obj_index[real_object(plantfruits[getType()])].max_exist) &&
-       obj_index[real_object(plantfruits[getType()])].max_exist < 9999){
+	obj_index[real_object(plantfruits[getType()])].max_exist)){
       t=read_object(plantfruits[getType()], VIRTUAL);
       *this += *t;
       setYield(getYield() + 1);
