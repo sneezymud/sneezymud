@@ -308,6 +308,24 @@ void TPlant::updateDesc()
       setYield(getYield() + 1);
     }
   }
+
+  if(roomp){
+    TObj *o;
+    for(StuffIter it=stuff.begin();it!=stuff.end();++it){
+      if((o=dynamic_cast<TObj *>(*it)) &&
+	 (o->obj_flags.decay_time >= 0) && // only drop if it will decay
+	 !::number(0,40)){
+	--(*o);
+	*roomp+=*o;
+	sendrpf(roomp, "%s falls to the ground.\n\r", 
+		sstring(o->getName()).cap().c_str());
+	break; // iterator is invalidated
+      }
+    }
+  }
+
+
+
   /*
   if (roomp && getType() == 13 && plantindex > 1) {
 	  // candy trees spawn rainbow-rats, which eat the candy
