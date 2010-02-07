@@ -314,7 +314,7 @@ void TPlant::updateDesc()
     for(StuffIter it=stuff.begin();it!=stuff.end();++it){
       if((o=dynamic_cast<TObj *>(*it)) &&
 	 (o->obj_flags.decay_time >= 0) && // only drop if it will decay
-	 !::number(0,40)){
+	 !::number(0,150)){
 	--(*o);
 	*roomp+=*o;
 	sendrpf(roomp, "%s falls to the ground.\n\r", 
