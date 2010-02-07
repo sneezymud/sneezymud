@@ -288,6 +288,8 @@ itemTypeT mapFileToItemType(int num)
       return ITEM_WAGON;
     case 75:
       return ITEM_MONEYPOUCH;
+    case 76:
+      return ITEM_FRUIT;
   }
   vlogf(LOG_BUG, format("Unknown type %d in map file") %  num);
   return ITEM_UNDEFINED;
@@ -448,6 +450,8 @@ int mapItemTypeToFile(itemTypeT itt)
       return 74;
     case ITEM_MONEYPOUCH:
       return 75;
+    case ITEM_FRUIT:
+      return 76;
     case MAX_OBJ_TYPES:
       break;
   }
