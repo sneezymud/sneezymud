@@ -436,11 +436,11 @@ void TObj::eatMe(TBeing *ch)
 }
 
 
-void foodPoisoned(TFood *food, TBeing *ch, int dur)
+void TFood::Poisoned(TBeing *ch, int dur)
 {
   affectedData af;
 
-  if (food->isFoodFlag(FOOD_POISON) && 
+  if (isFoodFlag(FOOD_POISON) && 
       !ch->isAffected(AFF_POISON)) {
     if (ch->getMyRace()->hasTalent(TALENT_GARBAGEEATER)) {
       act("Mmm, that had a bit of a kick to it!", FALSE, ch, 0, 0, TO_CHAR);
@@ -459,11 +459,11 @@ void foodPoisoned(TFood *food, TBeing *ch, int dur)
   }
 }
 
-void foodSpoiled(TFood *food, TBeing *ch, int dur)
+void TFood::Spoiled(TBeing *ch, int dur)
 {
   affectedData af;
 
-  if (food->isFoodFlag(FOOD_SPOILED)) {
+  if (isFoodFlag(FOOD_SPOILED)) {
     if (ch->getMyRace()->hasTalent(TALENT_GARBAGEEATER)) {
       ch->sendTo("Mmm, that was tangy!\n\r");
     } else if (ch->isImmune(IMMUNE_POISON, WEAR_BODY)) {
@@ -537,8 +537,8 @@ void TFood::eatMe(TBeing *ch)
     act("You are full.", FALSE, ch, 0, 0, TO_CHAR);
 
   if (!ch->isImmortal()) {
-    foodPoisoned(this, ch, getFoodFill());
-    foodSpoiled(this, ch, getFoodFill());
+    Poisoned(ch, getFoodFill());
+    Spoiled(ch, getFoodFill());
   }
   delete this;
 }
@@ -870,7 +870,7 @@ void TFood::tasteMe(TBeing *ch)
     act("You are full.", FALSE, ch, 0, 0, TO_CHAR);
 
   if (!ch->isImmortal()) {
-    foodPoisoned(this, ch, 1);
+    Poisoned(ch, 1);
   }
   if (isFoodFlag(FOOD_SPOILED)) {
     ch->sendTo("Blah, that food is spoiled!\n\r");

@@ -46,6 +46,9 @@ class TFood : public TObj {
     void addFoodFlags(unsigned int r);
     void remFoodFlags(unsigned int r);
 
+    void Spoiled(TBeing *, int);
+    void Poisoned(TBeing *, int);
+
     TFood();
     TFood(const TFood &a);
     TFood & operator=(const TFood &a);
