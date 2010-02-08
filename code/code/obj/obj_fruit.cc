@@ -92,6 +92,7 @@ void TFruit::createSeeds(){
     
     seed->setToolMaxUses(nseeds);
     seed->setToolUses(nseeds);
+    seed->obj_flags.decay_time = 50;
     
     seed->addObjStat(ITEM_STRUNG);
     seed->ex_description = NULL;
