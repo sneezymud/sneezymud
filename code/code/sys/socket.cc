@@ -60,6 +60,8 @@ int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 #include "shopowned.h"
 #include "obj_commodity.h"
 #include "low.h"
+#include "obj_tool.h"
+#include "obj_plant.h"
 
 int maxdesc, avail_descs;  
 bool Shutdown = 0;               // clean shutdown
@@ -1245,6 +1247,44 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
 	}
       }
 
+      
+      // seeds sitting on the ground will sometimes auto-plant themselves
+      TTool *seed=dynamic_cast<TTool *>(obj);
+      if(seed && seed->getToolType()==TOOL_SEED &&
+	 !::number(0,100) &&
+	 seed->roomp &&
+	 !(seed->roomp->isFallSector() || 
+	   seed->roomp->isWaterSector() || 
+	   seed->roomp->isIndoorSector() || 
+	   seed->roomp->isUnderwaterSector())){
+
+	int count=0;
+	for(StuffIter it=seed->roomp->stuff.begin();
+	    it!=seed->roomp->stuff.end();++it){
+	  if(dynamic_cast<TPlant *>(*it))
+	    ++count;
+	}    
+	
+	if(count<8){
+	  TObj *tp;
+	  TPlant *tplant;
+	  tp = read_object(OBJ_GENERIC_PLANT, VIRTUAL);
+	  if((tplant=dynamic_cast<TPlant *>(tp))){
+	    tplant->setType(seed_to_plant(obj->objVnum()));
+	    tplant->updateDesc();
+	  
+	    *seed->roomp += *tp;
+	    
+	    seed->addToToolUses(-1);
+	    
+	    if (seed->getToolUses() <= 0) {
+	      delete obj;
+	      obj = NULL;
+	      continue;
+	    }
+	  }
+	}
+      }      
     }
 
 
