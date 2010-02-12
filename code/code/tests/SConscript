@@ -2,6 +2,7 @@
 
 Import(['env', 'libs'])
 
+env.CxxTest('Fruit.h', LIBS=libs, CXXTEST_SKIP_ERRORS=True)
 env.CxxTest('DBTest.h', LIBS=libs, CXXTEST_SKIP_ERRORS=True)
 env.CxxTest('CommTest.h', LIBS=libs, CXXTEST_SKIP_ERRORS=True)
 env.CxxTest('SString.h', LIBS=libs, CXXTEST_SKIP_ERRORS=True)
