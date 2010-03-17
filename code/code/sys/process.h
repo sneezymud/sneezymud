@@ -4,21 +4,7 @@
 #include "sstring.h"
 #include "comm.h"
 
-// This is the template of a process.
-class TProcess {
- public:
-  int trigger_pulse;
-  sstring name;
-
-  // in general, you shouldn't have to override should_run()
-  virtual bool should_run(int) const;
-
-  virtual void run(int) const = 0;
-
-  virtual ~TProcess(){}
-};
-
-class TPulseList {
+class TPulse {
 public:  
   int pulse;
   bool teleport, combat, drowning, special_procs, update_stuff;
@@ -61,7 +47,7 @@ public:
     init(pulse);
   }
 
-  TPulseList & operator=(const TPulseList &a){
+  TPulse & operator=(const TPulse &a){
     if (this == &a) return *this;    
     pulse=a.pulse;
     teleport=a.teleport;
@@ -76,6 +62,22 @@ public:
     return *this;
   }
 };
+
+
+// This is the template of a process.
+class TProcess {
+ public:
+  int trigger_pulse;
+  sstring name;
+
+  // in general, you shouldn't have to override should_run()
+  virtual bool should_run(int) const;
+
+  virtual void run(int) const = 0;
+
+  virtual ~TProcess(){}
+};
+
 
 
 //// processes
@@ -322,7 +324,7 @@ class TScheduler {
   std::vector<TProcess *>procs;
 
  public:
-  TPulseList pulseList;
+  TPulse pulseList;
 
   void add(TProcess *);
   void run(int);

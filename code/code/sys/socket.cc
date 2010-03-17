@@ -553,7 +553,7 @@ void pulseLog(sstring name, TTiming timer, int pulse)
 }
 
 
-int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
+int TMainSocket::characterPulse(TPulse &pl, int realpulse)
 {
   TBeing *temp;
   int rc, count, retcount;
@@ -999,7 +999,7 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
 }
 
 
-int TMainSocket::roomPulse(TPulseList &pl, int realpulse)
+int TMainSocket::roomPulse(TPulse &pl, int realpulse)
 {
   int count=0;
 
@@ -1026,7 +1026,7 @@ int TMainSocket::roomPulse(TPulseList &pl, int realpulse)
   return count;
 }
 
-int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
+int TMainSocket::objectPulse(TPulse &pl, int realpulse)
 {
   TVehicle *vehicle;
   int rc, count, retcount;

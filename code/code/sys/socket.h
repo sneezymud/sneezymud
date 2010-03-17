@@ -40,9 +40,9 @@ class TMainSocket {
   void closeAllSockets();
   void initSocket(int);
   int gameLoop();
-  int objectPulse(TPulseList &, int);
-  int characterPulse(TPulseList &, int);
-  int roomPulse(TPulseList &, int);
+  int objectPulse(TPulse &, int);
+  int characterPulse(TPulse &, int);
+  int roomPulse(TPulse &, int);
   void dequeueBeing(TBeing* being);
 
   TMainSocket();
