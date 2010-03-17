@@ -555,32 +555,6 @@ void pulseLog(sstring name, TTiming timer, int pulse)
 
 
 
-int TMainSocket::roomPulse(TPulse &pl, int realpulse)
-{
-  int count=0;
-
-  for(int i=0;i<WORLD_SIZE;i++){
-    TRoom *rp = real_roomp(i);
-    
-    if(!rp)
-      continue;
-
-    //    ++count;
-
-    // rain
-    if(pl.mobstuff){
-      if((Weather::getWeather(*rp)==Weather::RAINY ||
-	  Weather::getWeather(*rp)==Weather::LIGHTNING) &&
-	 !::number(0,999)){
-	rp->dropPool(::number(2,5), LIQ_WATER);
-	++count;
-      }
-    }
-  }
-
-
-  return count;
-}
 
 // procPingData
 procPingData::procPingData(const int &p)
@@ -856,9 +830,9 @@ procObjectPulse::procObjectPulse(const int &p)
   trigger_pulse=p;
   name="procObjectPulse";
 
-  placeholder=read_object(1, VIRTUAL); // hairball, dummy object
+  placeholder=read_object(42, VIRTUAL);
 
-  //  *(real_roomp(0)) += *placeholder;
+  *(real_roomp(0)) += *placeholder;
 
   // don't think we can recover from this
   mud_assert(placeholder!=NULL, "couldn't load placeholder object");
@@ -1589,6 +1563,38 @@ void procCharacterPulse::run(const TPulse &pl) const
   //  return retcount-count;
 }
 
+procRoomPulse::procRoomPulse(const int &p)
+{
+  trigger_pulse=p;
+  name="procRoomPulse";
+}
+
+void procRoomPulse::run(const TPulse &pl) const
+{
+  int count=0;
+
+  for(int i=0;i<WORLD_SIZE;i++){
+    TRoom *rp = real_roomp(i);
+    
+    if(!rp)
+      continue;
+
+    //    ++count;
+
+    // rain
+    if(pl.mobstuff){
+      if((Weather::getWeather(*rp)==Weather::RAINY ||
+	  Weather::getWeather(*rp)==Weather::LIGHTNING) &&
+	 !::number(0,999)){
+	rp->dropPool(::number(2,5), LIQ_WATER);
+	++count;
+      }
+    }
+  }
+
+  //  return count;
+}
+
 
 int TMainSocket::gameLoop()
 {
@@ -1617,6 +1623,7 @@ int TMainSocket::gameLoop()
   scheduler.add(new procPerformViolence(PULSE_COMBAT));
   scheduler.add(new procWeightVolumeFumble(PULSE_COMBAT));
   scheduler.add(new procQueryQueue(PULSE_COMBAT));
+  scheduler.add(new procRoomPulse(PULSE_COMBAT));
 
   // pulse update  (36 seconds)
   scheduler.add(new procGlobalRoomStuff(PULSE_UPDATE));
@@ -1683,42 +1690,9 @@ int TMainSocket::gameLoop()
 
     scheduler.run(pulse);
 
-
     if(toggleInfo[TOG_GAMELOOP]->toggle)
-      vlogf(LOG_MISC, format("%i %i) normal pulses: %s") % 
+      vlogf(LOG_MISC, format("%i %i) pulses: %s") % 
 	    pulse % (pulse%12) % scheduler.pulse.showPulses());
-
-    // since we're operating on non-multiples of 12 pulses, we need to
-    // temporarily put the pulse at the next multiple of 12
-    // this is pretty klugey
-    int oldpulse=pulse;
-    while(pulse % 12)
-      ++pulse;
-
-    // reset the pulse flags
-    scheduler.pulse.init(pulse);
-
-    if(toggleInfo[TOG_GAMELOOP]->toggle){
-      vlogf(LOG_MISC, format("%i %i) split pulses: %s") % 
-	    oldpulse % (oldpulse%12) % scheduler.pulse.showPulses());
-
-      pulseLog("gameLoop1", t, oldpulse);
-    }
-
-
-    // handle pulse stuff for rooms
-    count=roomPulse(scheduler.pulse, (pulse % 2400));
-
-    if(toggleInfo[TOG_GAMELOOP]->toggle)
-      vlogf(LOG_MISC, format("%i %i) roomPulse: %i, %i rooms") %
-	    (oldpulse % 2400) % (oldpulse%12) % 
-	    (int)(t.getElapsedReset()*1000000) % count);
-
-
-    // reset the old values from the artifical pulse
-    pulse=oldpulse;
-    scheduler.pulse.init(pulse);
-
 
 
     // get some lag info

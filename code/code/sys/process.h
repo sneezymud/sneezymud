@@ -81,6 +81,12 @@ class TProcess {
 
 
 //// processes
+class procRoomPulse : public TProcess {
+ public:
+  void run(const TPulse &) const;
+  procRoomPulse(const int &);
+};
+
 class procCharacterPulse : public TProcess {
  public:
   void run(const TPulse &) const;

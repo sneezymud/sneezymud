@@ -36,7 +36,6 @@ class TMainSocket {
   void closeAllSockets();
   void initSocket(int);
   int gameLoop();
-  int roomPulse(TPulse &, int);
 
   TMainSocket();
   ~TMainSocket();
