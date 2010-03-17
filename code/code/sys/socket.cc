@@ -1026,281 +1026,6 @@ int TMainSocket::roomPulse(TPulse &pl, int realpulse)
   return count;
 }
 
-int TMainSocket::objectPulse(TPulse &pl, int realpulse)
-{
-  TVehicle *vehicle;
-  int rc, count, retcount;
-  TObj *obj;
-
-  if(!placeholder){
-    placeholder=read_object(1, VIRTUAL); // hairball, dummy object
-    // get an iterator for our placeholder
-    iter=find(object_list.begin(), object_list.end(), placeholder);
-  }
-
-  // note on this loop
-  // it is possible that next_thing gets deleted in one of the sub funcs
-  // we don't get acknowledgement of this in any way.
-  // to avoid problems this might cause, we reinitialize at
-  // the end (eg, before any deletes, or before we come back around)
-  // bottom line is that next_thing keeps getting set because it might be
-  // bogus after the function call.
-
-  ++vehiclepulse;
-
-
-  // we want to go through 1/12th of the object list every pulse
-  // obviously the object count will change, so this is approximate.
-  retcount=count=(int)((float)objCount/11.5);
-  
-  while(count--){
-    // remove placeholder from object list and increment iterator
-    object_list.erase(iter++);
-    
-    // set object to be processed
-    obj=(*iter);
-    
-    // move to front of list if we reach the end
-    // otherwise just stick the placeholder in
-    if(++iter == object_list.end()){
-      object_list.push_front(placeholder);
-      iter=object_list.begin();
-    } else {
-      object_list.insert(iter, placeholder);
-      --iter;
-    }
-
-
-    if (!dynamic_cast<TObj *>(obj)) {
-      vlogf(LOG_BUG, format("Object_list produced a non-obj().  rm: %d") %  obj->in_room);
-      vlogf(LOG_BUG, format("roomp %s, parent %s") %  
-	    (obj->roomp ? "true" : "false") %
-	    (obj->parent ? "true" : "false"));
-      // bogus objects tend to have garbage in obj->next
-      // it would be dangerous to continue with this loop
-      // this is called often enough that one skipped iteration should
-      // not be noticed.  Therefore, break out.
-      break;
-    }
-
-    // vehicle movement
-    if((vehicle=dynamic_cast<TVehicle *>(obj)))
-      vehicle->vehiclePulse(vehiclepulse);
-	
-    // this stuff all happens every time we go through here, which is
-    // about every 12 pulses, ie "combat" or "teleport" pulse
-    rc = obj->detonateGrenade();
-    if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      delete obj;
-      continue;
-    }
-    rc = obj->checkFalling();
-    if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      delete obj;
-      continue;
-    }
-    if (pl.teleport)
-      rc = obj->riverFlow(realpulse);
-    if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      delete obj;
-      continue;
-    }
-    if (pl.teleport)
-      rc = obj->teleportRoomFlow(realpulse);
-    if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      delete obj;
-      continue;
-    }
-
-    if (obj->spec) {
-      rc = obj->checkSpec(NULL, CMD_GENERIC_QUICK_PULSE, "", NULL);
-      if (IS_SET_DELETE(rc, DELETE_ITEM)) {
-	delete obj;
-	continue;
-      }
-      if (rc) {
-	continue;
-      }
-    }
-    // end 12 pulse
-
-    if (pl.special_procs) { // 36
-      // sinking
-      check_sinking_obj(obj, obj->in_room);
-
-      // procs
-      if (obj->spec) {
-	rc = obj->checkSpec(NULL, CMD_GENERIC_PULSE, "", NULL);
-	if (IS_SET_DELETE(rc, DELETE_ITEM)) {
-	  delete obj;
-	  obj = NULL;
-	  continue;
-	}
-	if (rc) {
-	  continue;
-	}
-      }
-
-      // burning
-      rc = obj->updateBurning();
-      if (IS_SET_DELETE(rc, DELETE_THIS)) {
-	delete obj;
-	obj = NULL;
-	continue;
-      }
-
-      // fun with smoke
-      TGas *gas=dynamic_cast<TGas *>(obj);
-      if (gas){
-        gas->doDrift();
-        gas->doSpecials();
-      }
-
-      // fun with pools
-      TPool *pool=dynamic_cast<TPool *>(obj);
-      if(pool){
-	pool->overFlow();
-      }
-
-      // trash piles
-      if(!::number(0,999))
-	obj->joinTrash();
-      
-      TTrashPile *pile=dynamic_cast<TTrashPile *>(obj);
-      if(pile){
-	// delete empty piles
-	if(pile->stuff.empty()){
-	  delete obj;
-	  obj = NULL;
-	  continue;
-	} else {
-	  pile->overFlow();
-	  pile->updateDesc();
-	  pile->doDecay();
-	}
-      }
-    }
-
-    if(pl.pulse_tick){
-      // rust
-      if(!::number(0,99) && obj->canRust()){
-	TRoom *rp=NULL;
-	
-	if(obj->equippedBy)
-	  rp=obj->equippedBy->roomp;
-
-	if(dynamic_cast<TBeing *>(obj->parent))
-	  rp=obj->parent->roomp;
-
-	if(obj->roomp)
-	  rp=obj->roomp;
-
-	if(rp && (Weather::getWeather(*rp)==Weather::RAINY ||
-		  Weather::getWeather(*rp)==Weather::LIGHTNING ||
-		  rp->isWaterSector())){
-	  obj->addObjStat(ITEM_RUSTY);
-	}
-      }
-      
-
-      // freezing
-      // find base cups that are either in an arctic room, or in the inventory
-      // of a being in an arctic room, with < 10 drunk
-      // note we're avoid frostEngulfed() because it is a bit extreme for this
-      // thawing is done with thawEngulfed() in characterPulse
-      TBaseCup *cup=dynamic_cast<TBaseCup *>(obj);
-      if(cup){
-	TRoom *r=NULL;
-	TThing *t;
-	TBeing *ch=NULL;
-	
-	if((t = cup->equippedBy) || (t = cup->parent)){
-	  ch = dynamic_cast<TBeing *>(t);
-	  if(ch)
-	    r=ch->roomp;
-	} else
-	  r = cup->roomp;
-
-	if(r && (!ch || !ch->affectedBySpell(AFFECT_WAS_INDOORS))){
-	  if(r->isArcticSector() && cup->getDrinkUnits() > 0 && 
-	     cup->getLiqDrunk() < 7 && !cup->isDrinkConFlag(DRINK_FROZEN)){
-	    int rc=cup->freezeObject(ch, 0);
-	    if (IS_SET_DELETE(rc, DELETE_THIS)) {
-	      delete cup;
-	      cup = NULL;
-	      continue;
-	    }
-	    
-	    // freeze any pools that were dropped
-	    TPool *tp;
-	    for(StuffIter it=r->stuff.begin();it!=r->stuff.end() && (t=*it);++it){
-	      if((tp=dynamic_cast<TPool *>(t)) && tp->getLiqDrunk() < 7 &&
-		 !tp->isDrinkConFlag(DRINK_FROZEN))
-		tp->freezeObject(ch, 0);
-	    }
-	  }
-	}
-	
-	if(cup->roomp && !cup->roomp->isArcticSector() &&
-	   cup->isDrinkConFlag(DRINK_FROZEN)){
-	  cup->thawObject(ch, 0);
-	}
-      }
-
-      
-      // seeds sitting on the ground will sometimes auto-plant themselves
-      TTool *seed=dynamic_cast<TTool *>(obj);
-      if(seed && seed->getToolType()==TOOL_SEED &&
-	 !::number(0,100) &&
-	 seed->roomp &&
-	 !(seed->roomp->isFallSector() || 
-	   seed->roomp->isWaterSector() || 
-	   seed->roomp->isIndoorSector() || 
-	   seed->roomp->isUnderwaterSector())){
-
-	int count=0;
-	for(StuffIter it=seed->roomp->stuff.begin();
-	    it!=seed->roomp->stuff.end();++it){
-	  if(dynamic_cast<TPlant *>(*it))
-	    ++count;
-	}    
-	
-	if(count<8){
-	  TObj *tp;
-	  TPlant *tplant;
-	  tp = read_object(OBJ_GENERIC_PLANT, VIRTUAL);
-	  if((tplant=dynamic_cast<TPlant *>(tp))){
-	    tplant->setType(seed_to_plant(obj->objVnum()));
-	    tplant->updateDesc();
-	  
-	    *seed->roomp += *tp;
-	    
-	    seed->addToToolUses(-1);
-	    
-	    if (seed->getToolUses() <= 0) {
-	      delete obj;
-	      obj = NULL;
-	      continue;
-	    }
-	  }
-	}
-      }      
-    }
-
-
-    if (pl.pulse_mudhour) { // 1440
-      rc = obj->objectTickUpdate(realpulse);
-      if (IS_SET_DELETE(rc, DELETE_THIS)) {
-	delete obj;
-	obj = NULL;
-	continue;
-      }
-    }
-  } // object list
-
-  return retcount-count;
-}
-
 // procPingData
 procPingData::procPingData(const int &p)
 {
@@ -1569,16 +1294,291 @@ void procWeightVolumeFumble::run(const TPulse &) const
   }
 }
 
-/*
+
 procObjectPulse::procObjectPulse(const int &p)
 {
   trigger_pulse=p;
   name="procObjectPulse";
+
+  placeholder=read_object(1, VIRTUAL); // hairball, dummy object
+
+  //  *(real_roomp(0)) += *placeholder;
+
+  // don't think we can recover from this
+  mud_assert(placeholder!=NULL, "couldn't load placeholder object");
+
 }
 
-void procObjectPulse::run(const TPulse &) const
+void procObjectPulse::run(const TPulse &pl) const
 {
-}*/
+  TVehicle *vehicle;
+  int rc, count, retcount;
+  TObj *obj;
+  static int vehiclepulse=0;
+  static TObjIter iter=find(object_list.begin(), object_list.end(), placeholder);
+
+  // note on this loop
+  // it is possible that next_thing gets deleted in one of the sub funcs
+  // we don't get acknowledgement of this in any way.
+  // to avoid problems this might cause, we reinitialize at
+  // the end (eg, before any deletes, or before we come back around)
+  // bottom line is that next_thing keeps getting set because it might be
+  // bogus after the function call.
+
+  ++vehiclepulse;
+
+
+  // we want to go through 1/12th of the object list every pulse
+  // obviously the object count will change, so this is approximate.
+  retcount=count=(int)((float)objCount/11.5);
+  
+  while(count--){
+    // remove placeholder from object list and increment iterator
+    object_list.erase(iter++);
+    
+    // set object to be processed
+    obj=(*iter);
+    
+    // move to front of list if we reach the end
+    // otherwise just stick the placeholder in
+    if(++iter == object_list.end()){
+      object_list.push_front(placeholder);
+      iter=object_list.begin();
+    } else {
+      object_list.insert(iter, placeholder);
+      --iter;
+    }
+
+
+    if (!dynamic_cast<TObj *>(obj)) {
+      vlogf(LOG_BUG, format("Object_list produced a non-obj().  rm: %d") %  obj->in_room);
+      vlogf(LOG_BUG, format("roomp %s, parent %s") %  
+	    (obj->roomp ? "true" : "false") %
+	    (obj->parent ? "true" : "false"));
+      // bogus objects tend to have garbage in obj->next
+      // it would be dangerous to continue with this loop
+      // this is called often enough that one skipped iteration should
+      // not be noticed.  Therefore, break out.
+      break;
+    }
+
+    // vehicle movement
+    if((vehicle=dynamic_cast<TVehicle *>(obj)))
+      vehicle->vehiclePulse(vehiclepulse);
+	
+    // this stuff all happens every time we go through here, which is
+    // about every 12 pulses, ie "combat" or "teleport" pulse
+    rc = obj->detonateGrenade();
+    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+      delete obj;
+      continue;
+    }
+    rc = obj->checkFalling();
+    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+      delete obj;
+      continue;
+    }
+    if (pl.teleport)
+      rc = obj->riverFlow(pl.pulse);
+    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+      delete obj;
+      continue;
+    }
+    if (pl.teleport)
+      rc = obj->teleportRoomFlow(pl.pulse);
+    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+      delete obj;
+      continue;
+    }
+
+    if (obj->spec) {
+      rc = obj->checkSpec(NULL, CMD_GENERIC_QUICK_PULSE, "", NULL);
+      if (IS_SET_DELETE(rc, DELETE_ITEM)) {
+	delete obj;
+	continue;
+      }
+      if (rc) {
+	continue;
+      }
+    }
+    // end 12 pulse
+
+    if (pl.special_procs) { // 36
+      // sinking
+      check_sinking_obj(obj, obj->in_room);
+
+      // procs
+      if (obj->spec) {
+	rc = obj->checkSpec(NULL, CMD_GENERIC_PULSE, "", NULL);
+	if (IS_SET_DELETE(rc, DELETE_ITEM)) {
+	  delete obj;
+	  obj = NULL;
+	  continue;
+	}
+	if (rc) {
+	  continue;
+	}
+      }
+
+      // burning
+      rc = obj->updateBurning();
+      if (IS_SET_DELETE(rc, DELETE_THIS)) {
+	delete obj;
+	obj = NULL;
+	continue;
+      }
+
+      // fun with smoke
+      TGas *gas=dynamic_cast<TGas *>(obj);
+      if (gas){
+        gas->doDrift();
+        gas->doSpecials();
+      }
+
+      // fun with pools
+      TPool *pool=dynamic_cast<TPool *>(obj);
+      if(pool){
+	pool->overFlow();
+      }
+
+      // trash piles
+      if(!::number(0,999))
+	obj->joinTrash();
+      
+      TTrashPile *pile=dynamic_cast<TTrashPile *>(obj);
+      if(pile){
+	// delete empty piles
+	if(pile->stuff.empty()){
+	  delete obj;
+	  obj = NULL;
+	  continue;
+	} else {
+	  pile->overFlow();
+	  pile->updateDesc();
+	  pile->doDecay();
+	}
+      }
+    }
+
+    if(pl.pulse_tick){
+      // rust
+      if(!::number(0,99) && obj->canRust()){
+	TRoom *rp=NULL;
+	
+	if(obj->equippedBy)
+	  rp=obj->equippedBy->roomp;
+
+	if(dynamic_cast<TBeing *>(obj->parent))
+	  rp=obj->parent->roomp;
+
+	if(obj->roomp)
+	  rp=obj->roomp;
+
+	if(rp && (Weather::getWeather(*rp)==Weather::RAINY ||
+		  Weather::getWeather(*rp)==Weather::LIGHTNING ||
+		  rp->isWaterSector())){
+	  obj->addObjStat(ITEM_RUSTY);
+	}
+      }
+      
+
+      // freezing
+      // find base cups that are either in an arctic room, or in the inventory
+      // of a being in an arctic room, with < 10 drunk
+      // note we're avoid frostEngulfed() because it is a bit extreme for this
+      // thawing is done with thawEngulfed() in characterPulse
+      TBaseCup *cup=dynamic_cast<TBaseCup *>(obj);
+      if(cup){
+	TRoom *r=NULL;
+	TThing *t;
+	TBeing *ch=NULL;
+	
+	if((t = cup->equippedBy) || (t = cup->parent)){
+	  ch = dynamic_cast<TBeing *>(t);
+	  if(ch)
+	    r=ch->roomp;
+	} else
+	  r = cup->roomp;
+
+	if(r && (!ch || !ch->affectedBySpell(AFFECT_WAS_INDOORS))){
+	  if(r->isArcticSector() && cup->getDrinkUnits() > 0 && 
+	     cup->getLiqDrunk() < 7 && !cup->isDrinkConFlag(DRINK_FROZEN)){
+	    int rc=cup->freezeObject(ch, 0);
+	    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+	      delete cup;
+	      cup = NULL;
+	      continue;
+	    }
+	    
+	    // freeze any pools that were dropped
+	    TPool *tp;
+	    for(StuffIter it=r->stuff.begin();it!=r->stuff.end() && (t=*it);++it){
+	      if((tp=dynamic_cast<TPool *>(t)) && tp->getLiqDrunk() < 7 &&
+		 !tp->isDrinkConFlag(DRINK_FROZEN))
+		tp->freezeObject(ch, 0);
+	    }
+	  }
+	}
+	
+	if(cup->roomp && !cup->roomp->isArcticSector() &&
+	   cup->isDrinkConFlag(DRINK_FROZEN)){
+	  cup->thawObject(ch, 0);
+	}
+      }
+
+      
+      // seeds sitting on the ground will sometimes auto-plant themselves
+      TTool *seed=dynamic_cast<TTool *>(obj);
+      if(seed && seed->getToolType()==TOOL_SEED &&
+	 !::number(0,100) &&
+	 seed->roomp &&
+	 !(seed->roomp->isFallSector() || 
+	   seed->roomp->isWaterSector() || 
+	   seed->roomp->isIndoorSector() || 
+	   seed->roomp->isUnderwaterSector())){
+
+	int count=0;
+	for(StuffIter it=seed->roomp->stuff.begin();
+	    it!=seed->roomp->stuff.end();++it){
+	  if(dynamic_cast<TPlant *>(*it))
+	    ++count;
+	}    
+	
+	if(count<8){
+	  TObj *tp;
+	  TPlant *tplant;
+	  tp = read_object(OBJ_GENERIC_PLANT, VIRTUAL);
+	  if((tplant=dynamic_cast<TPlant *>(tp))){
+	    tplant->setType(seed_to_plant(obj->objVnum()));
+	    tplant->updateDesc();
+	  
+	    *seed->roomp += *tp;
+	    
+	    seed->addToToolUses(-1);
+	    
+	    if (seed->getToolUses() <= 0) {
+	      delete obj;
+	      obj = NULL;
+	      continue;
+	    }
+	  }
+	}
+      }      
+    }
+
+
+    if (pl.pulse_mudhour) { // 1440
+      rc = obj->objectTickUpdate(pl.pulse);
+      if (IS_SET_DELETE(rc, DELETE_THIS)) {
+	delete obj;
+	obj = NULL;
+	continue;
+      }
+    }
+  } // object list
+
+  //  return retcount-count;
+}
 
 
 int TMainSocket::gameLoop()
@@ -1595,7 +1595,7 @@ int TMainSocket::gameLoop()
   // pulse every (1/10th of a second), but these processes distribute their
   // work over a 1.2 second cycle, so while they are called every pulse,
   // the pulse is artificially set to a combat pulse each time
-  //  scheduler.add(new procObjectPulse(PULSE_EVERY_DISTRIBUTED));
+  scheduler.add(new procObjectPulse(PULSE_EVERY_DISTRIBUTED));
 
   // pulse every  (1/10th of a second)
   scheduler.add(new procSetZoneEmpty(PULSE_EVERY));
@@ -1694,15 +1694,6 @@ int TMainSocket::gameLoop()
 
       pulseLog("gameLoop1", t, oldpulse);
     }
-
-    // handle pulse stuff for objects
-    count=objectPulse(scheduler.pulse, (pulse % 2400));
-
-    if(toggleInfo[TOG_GAMELOOP]->toggle)
-      vlogf(LOG_MISC, format("%i %i) objectPulse: %i, %i objs") % 
-	    (oldpulse % 2400) % (oldpulse%12) % 
-	    (int)(t.getElapsedReset()*1000000) % count);
-    
 
     // handle pulse stuff for mobs and players
     count=characterPulse(scheduler.pulse, (pulse % 2400));
@@ -2063,8 +2054,6 @@ TSocket::~TSocket()
 TMainSocket::TMainSocket()
 {
   tmp_ch=NULL;
-  placeholder=NULL;
-  vehiclepulse=0;
 }
 
 TMainSocket::~TMainSocket()

@@ -26,9 +26,6 @@ class TMainSocket {
   std::vector <int> m_sock;
   std::vector <int> m_port;
   TBeing *tmp_ch;
-  TObj *placeholder;
-  TObjIter iter;
-  int vehiclepulse;
 
   struct timeval handleTimeAndSockets();
   bool handleShutdown();
@@ -40,7 +37,6 @@ class TMainSocket {
   void closeAllSockets();
   void initSocket(int);
   int gameLoop();
-  int objectPulse(TPulse &, int);
   int characterPulse(TPulse &, int);
   int roomPulse(TPulse &, int);
   void dequeueBeing(TBeing* being);

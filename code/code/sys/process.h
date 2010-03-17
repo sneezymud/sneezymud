@@ -81,12 +81,14 @@ class TProcess {
 
 
 //// processes
-/*
+
 class procObjectPulse : public TProcess {
+  TObj *placeholder;
+
  public:
-  void run(TPulse) const;
+  void run(const TPulse &) const;
   procObjectPulse(const int &);
-  };*/
+};
 
 class procWeightVolumeFumble : public TProcess {
  public:
