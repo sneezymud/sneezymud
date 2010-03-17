@@ -1568,6 +1568,7 @@ void procWeightVolumeFumble::run(int) const
     }
   }
 }
+
 /*
 procObjectPulse::procObjectPulse(const int &p)
 {
@@ -1575,17 +1576,10 @@ procObjectPulse::procObjectPulse(const int &p)
   name="procObjectPulse";
 }
 
-void procObjectPulse::run(int) const
+void procObjectPulse::run(int pulse) const
 {
-  // handle pulse stuff for objects
-  count=objectPulse(pl, (pulse % 2400));
-  
-  if(toggleInfo[TOG_GAMELOOP]->toggle)
-    vlogf(LOG_MISC, format("%i %i) objectPulse: %i, %i objs") % 
-	  (oldpulse % 2400) % (oldpulse%12) % 
-	  (int)(t.getElapsedReset()*1000000) % count);
-}
-*/
+}*/
+
 
 int TMainSocket::gameLoop()
 {
@@ -1598,13 +1592,16 @@ int TMainSocket::gameLoop()
   TTiming t;
   TScheduler scheduler;
 
+  // pulse every (1/10th of a second), but these processes distribute their
+  // work over a 1.2 second cycle, so while they are called every pulse,
+  // the pulse is artificially set to a combat pulse each time
+  //  scheduler.add(new procObjectPulse(PULSE_EVERY_DISTRIBUTED));
+
   // pulse every  (1/10th of a second)
   scheduler.add(new procSetZoneEmpty(PULSE_EVERY));
   scheduler.add(new procCallRoomSpec(PULSE_EVERY));
   scheduler.add(new procDoRoomSaves(PULSE_EVERY));
   scheduler.add(new procDoPlayerSaves(PULSE_EVERY));
-
-  //  scheduler.add(new procObjectPulse(PULSE_EVERY));
 
   // pulse combat  (1.2 seconds)
   scheduler.add(new procPerformViolence(PULSE_COMBAT));

@@ -69,6 +69,7 @@ const int PULSE_TICK        =1;
 
 const int ONE_SECOND        =10;
 const int PULSE_EVERY       =1;
+const int PULSE_EVERY_DISTRIBUTED = 1;
 const int PULSE_MOBACT      =(int)((float)ONE_SECOND * 1.2);
 const int PULSE_TELEPORT    =(int)((float)ONE_SECOND * 1.2);
 const int PULSE_COMBAT      =(int)((float)ONE_SECOND * 1.2);

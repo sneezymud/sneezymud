@@ -107,7 +107,13 @@ void TScheduler::run(int pulse)
       if(toggleInfo[TOG_GAMELOOP]->toggle)
 	timer.start();
 
+      if((*iter)->trigger_pulse == PULSE_EVERY_DISTRIBUTED)
+	pulseList.init12(pulse);
+
       (*iter)->run(pulse % 2400);
+
+      if((*iter)->trigger_pulse == PULSE_EVERY_DISTRIBUTED)
+	pulseList.init(pulse);
       
       if(toggleInfo[TOG_GAMELOOP]->toggle){
 	timer.end();
