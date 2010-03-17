@@ -574,7 +574,7 @@ procUpdateTime::procUpdateTime(const int &p)
   name="procUpdateTime";
 }
 
-void procUpdateTime::run(int pulse) const
+void procUpdateTime::run(const TPulse &) const
 {
   return;
 #if 0
@@ -2503,7 +2503,7 @@ procZoneUpdate::procZoneUpdate(const int &p)
   name="procZoneUpdate";
 }
 
-void procZoneUpdate::run(int pulse) const
+void procZoneUpdate::run(const TPulse &) const
 {
 // update zone ages, queue for reset if necessary, and dequeue when possible
   unsigned int i;

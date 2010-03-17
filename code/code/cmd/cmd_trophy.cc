@@ -53,7 +53,7 @@ procTrophyDecay::procTrophyDecay(const int &p)
   name="procTrophyDecay";
 }
 
-void procTrophyDecay::run(int) const
+void procTrophyDecay::run(const TPulse &) const
 {
   TDatabase db(DB_SNEEZY);
   float dec=0.25;

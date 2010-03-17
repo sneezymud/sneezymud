@@ -288,7 +288,7 @@ procWholistAndUsageLogs::procWholistAndUsageLogs(const int &p)
   name="procWholistAndUsageLogs";
 }
 
-void procWholistAndUsageLogs::run(int pulse) const
+void procWholistAndUsageLogs::run(const TPulse &) const
 {
   int count=updateWholist();
   updateUsagelogs(count);
@@ -303,7 +303,7 @@ procNukeInactiveMobs::procNukeInactiveMobs(const int &p)
   name="procNukeInactiveMobs";
 }
 
-void procNukeInactiveMobs::run(int pulse) const
+void procNukeInactiveMobs::run(const TPulse &) const
 {
   unsigned int i;
 
@@ -329,7 +329,7 @@ procUpdateAvgPlayers::procUpdateAvgPlayers(const int &p)
   name="procUpdateAvgPlayers";
 }
 
-void procUpdateAvgPlayers::run(int pulse) const
+void procUpdateAvgPlayers::run(const TPulse &) const
 {
 // update the average players displayed in "who"
   // statistics stuff
@@ -1308,7 +1308,7 @@ procPingData::procPingData(const int &p)
   name="procPingData";
 }
 
-void procPingData::run(int pulse) const
+void procPingData::run(const TPulse &) const
 {
   static FILE *p;
   Descriptor *d;
@@ -1341,7 +1341,7 @@ procSetZoneEmpty::procSetZoneEmpty(const int &p)
   name="procSetZoneEmpty";
 }
 
-void procSetZoneEmpty::run(int pulse) const 
+void procSetZoneEmpty::run(const TPulse &) const 
 {
   // set zone emptiness flags
   for (unsigned int i = 0; i < zone_table.size(); i++)
@@ -1357,7 +1357,7 @@ procMobHate::procMobHate(const int &p)
   name="procMobHate";
 }
 
-void procMobHate::run(int pulse) const
+void procMobHate::run(const TPulse &) const
 {
   TBeing * b = NULL;
   
@@ -1401,7 +1401,7 @@ procTweakLoadRate::procTweakLoadRate(const int &p)
   name="procTweakLoadRate";
 }
 
-void procTweakLoadRate::run(int) const
+void procTweakLoadRate::run(const TPulse &) const
 {
   if(stats.equip <= 0.046){
     vlogf(LOG_BUG, "procTweakLoadRate: desired load rate achieved.");
@@ -1420,7 +1420,7 @@ procCheckTriggerUsers::procCheckTriggerUsers(const int &p)
   name="procCheckTriggerUsers";
 }
 
-void procCheckTriggerUsers::run(int) const
+void procCheckTriggerUsers::run(const TPulse &) const
 {
   Descriptor *d;
   sstring buf;
@@ -1483,7 +1483,7 @@ procCloseAccountingBooks::procCloseAccountingBooks(const int &p)
   name="procCloseAccountingBooks";
 }
 
-void procCloseAccountingBooks::run(int) const
+void procCloseAccountingBooks::run(const TPulse &) const
 {
   // close out the accounting year.
   TDatabase db(DB_SNEEZY);
@@ -1500,7 +1500,7 @@ procRecordCommodPrices::procRecordCommodPrices(const int &p)
   name="procRecordCommodPrices";
 }
 
-void procRecordCommodPrices::run(int) const
+void procRecordCommodPrices::run(const TPulse &) const
 {
 #if 0
   TDatabase db(DB_SNEEZY);
@@ -1533,7 +1533,7 @@ procWeightVolumeFumble::procWeightVolumeFumble(const int &p)
   name="procWeightVolumeFumble";
 }
 
-void procWeightVolumeFumble::run(int) const
+void procWeightVolumeFumble::run(const TPulse &) const
 {
   Descriptor *d;
   TBeing *ch;
@@ -1576,7 +1576,7 @@ procObjectPulse::procObjectPulse(const int &p)
   name="procObjectPulse";
 }
 
-void procObjectPulse::run(int pulse) const
+void procObjectPulse::run(const TPulse &) const
 {
 }*/
 
@@ -1676,7 +1676,7 @@ int TMainSocket::gameLoop()
 
     if(toggleInfo[TOG_GAMELOOP]->toggle)
       vlogf(LOG_MISC, format("%i %i) normal pulses: %s") % 
-	    pulse % (pulse%12) % scheduler.pulseList.showPulses());
+	    pulse % (pulse%12) % scheduler.pulse.showPulses());
 
     // since we're operating on non-multiples of 12 pulses, we need to
     // temporarily put the pulse at the next multiple of 12
@@ -1686,17 +1686,17 @@ int TMainSocket::gameLoop()
       ++pulse;
 
     // reset the pulse flags
-    scheduler.pulseList.init(pulse);
+    scheduler.pulse.init(pulse);
 
     if(toggleInfo[TOG_GAMELOOP]->toggle){
       vlogf(LOG_MISC, format("%i %i) split pulses: %s") % 
-	    oldpulse % (oldpulse%12) % scheduler.pulseList.showPulses());
+	    oldpulse % (oldpulse%12) % scheduler.pulse.showPulses());
 
       pulseLog("gameLoop1", t, oldpulse);
     }
 
     // handle pulse stuff for objects
-    count=objectPulse(scheduler.pulseList, (pulse % 2400));
+    count=objectPulse(scheduler.pulse, (pulse % 2400));
 
     if(toggleInfo[TOG_GAMELOOP]->toggle)
       vlogf(LOG_MISC, format("%i %i) objectPulse: %i, %i objs") % 
@@ -1705,7 +1705,7 @@ int TMainSocket::gameLoop()
     
 
     // handle pulse stuff for mobs and players
-    count=characterPulse(scheduler.pulseList, (pulse % 2400));
+    count=characterPulse(scheduler.pulse, (pulse % 2400));
 
     if(toggleInfo[TOG_GAMELOOP]->toggle)
       vlogf(LOG_MISC, format("%i %i) characterPulse: %i, %i chars") %
@@ -1713,7 +1713,7 @@ int TMainSocket::gameLoop()
 	    (int)(t.getElapsedReset()*1000000) % count);
 
     // handle pulse stuff for rooms
-    count=roomPulse(scheduler.pulseList, (pulse % 2400));
+    count=roomPulse(scheduler.pulse, (pulse % 2400));
 
     if(toggleInfo[TOG_GAMELOOP]->toggle)
       vlogf(LOG_MISC, format("%i %i) roomPulse: %i, %i rooms") %
@@ -1723,7 +1723,7 @@ int TMainSocket::gameLoop()
 
     // reset the old values from the artifical pulse
     pulse=oldpulse;
-    scheduler.pulseList.init(pulse);
+    scheduler.pulse.init(pulse);
 
 
 

@@ -17,7 +17,7 @@ procFactoryProduction::procFactoryProduction(const int &p)
   name="procFactoryProduction";
 }
 
-void procFactoryProduction::run(int pulse) const
+void procFactoryProduction::run(const TPulse &) const
 {
   TDatabase db(DB_SNEEZY);
 
@@ -35,7 +35,7 @@ procSaveFactions::procSaveFactions(const int &p)
   name="procSaveFactions";
 }
 
-void procSaveFactions::run(int pulse) const
+void procSaveFactions::run(const TPulse &) const
 {
   save_factions();
 }
@@ -47,7 +47,7 @@ procSaveNewFactions::procSaveNewFactions(const int &p)
   name="procSaveNewFactions";
 }
 
-void procSaveNewFactions::run(int pulse) const
+void procSaveNewFactions::run(const TPulse &) const
 {
   save_guilds();
 }
@@ -59,7 +59,7 @@ procDoComponents::procDoComponents(const int &p)
   name="procDoComponents";
 }
 
-void procDoComponents::run(int pulse) const
+void procDoComponents::run(const TPulse &) const
 {
   do_components(-1);
 }
@@ -72,9 +72,9 @@ procPerformViolence::procPerformViolence(const int &p)
   name="procPerformViolence";
 }
 
-void procPerformViolence::run(int pulse) const
+void procPerformViolence::run(const TPulse &pl) const
 {
-  perform_violence(pulse);
+  perform_violence(pl.pulse);
 }
 
 ///////
@@ -95,30 +95,30 @@ void TScheduler::add(TProcess *p)
 
 // we have some legacy code here, in that many processes expect pulse
 // to be mod 2400.  So we use the real pulse, but pass mod 2400.
-void TScheduler::run(int pulse)
+void TScheduler::run(int pulseNum)
 {
   TTiming timer;
   std::vector<TProcess *>::iterator iter;
 
-  pulseList.init(pulse);
+  pulse.init(pulseNum);
 
   for(iter=procs.begin();iter!=procs.end();++iter){
-    if((*iter)->should_run(pulse)){
+    if((*iter)->should_run(pulseNum)){
       if(toggleInfo[TOG_GAMELOOP]->toggle)
 	timer.start();
 
       if((*iter)->trigger_pulse == PULSE_EVERY_DISTRIBUTED)
-	pulseList.init12(pulse);
+	pulse.init12(pulseNum);
 
-      (*iter)->run(pulse % 2400);
+      (*iter)->run(pulse);
 
       if((*iter)->trigger_pulse == PULSE_EVERY_DISTRIBUTED)
-	pulseList.init(pulse);
+	pulse.init(pulseNum);
       
       if(toggleInfo[TOG_GAMELOOP]->toggle){
 	timer.end();
 	vlogf(LOG_MISC, format("%i %i) %s: %i") % 
-	      (pulse % 2400) % (pulse%12) % (*iter)->name % 
+	      (pulseNum % 2400) % (pulseNum%12) % (*iter)->name % 
 	      (int)(timer.getElapsed()*1000000));
       }
     }
@@ -131,7 +131,7 @@ procSeedRandom::procSeedRandom(const int &p)
   name="procSeedRandom";
 }
 
-void procSeedRandom::run(int) const
+void procSeedRandom::run(const TPulse &) const
 {
   srand(time(0));
   vlogf(LOG_SILENT, "procSeedRandom: Generated new seed.");

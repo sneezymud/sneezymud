@@ -11,7 +11,7 @@ procCheckForRepo::procCheckForRepo(const int &p)
   name="procCheckForRepo";
 }
 
-void procCheckForRepo::run(int pulse) const 
+void procCheckForRepo::run(const TPulse &) const 
 {
   TBeing *tmp_ch, *temp;
 

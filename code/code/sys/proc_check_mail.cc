@@ -11,7 +11,7 @@ procCheckMail::procCheckMail(const int &p)
   name="procCheckMail";
 }
 
-void procCheckMail::run(int pulse) const
+void procCheckMail::run(const TPulse &) const
 {
   Descriptor *d;
 

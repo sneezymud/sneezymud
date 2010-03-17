@@ -562,7 +562,7 @@ procFishRespawning::procFishRespawning(const int &p)
   name="procFishRespawning";
 }
 
-void procFishRespawning::run(int pulse) const
+void procFishRespawning::run(const TPulse &) const
 {
   std::map <int, bool> ::iterator tIter     = mRoomsFished.begin(),
                              tLastGood = mRoomsFished.begin();

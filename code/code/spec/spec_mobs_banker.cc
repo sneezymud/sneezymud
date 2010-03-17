@@ -14,7 +14,7 @@ procBankInterest::procBankInterest(const int &p)
   name="procBankInterest";
 }
 
-void procBankInterest::run(int pulse) const 
+void procBankInterest::run(const TPulse &) const 
 {
   TDatabase db(DB_SNEEZY), in(DB_SNEEZY), out(DB_SNEEZY);
   double profit_sell;

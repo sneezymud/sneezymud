@@ -1424,7 +1424,7 @@ procRecalcFactionPower::procRecalcFactionPower(const int &p)
   name="procRecalcFactionPower";
 }
 
-void procRecalcFactionPower::run(int pulse) const
+void procRecalcFactionPower::run(const TPulse &) const
 {
   factionTypeT i;
 
@@ -1608,7 +1608,7 @@ procLaunchCaravans::procLaunchCaravans(const int &p)
   name="procLaunchCaravans";
 }
 
-void procLaunchCaravans::run(int pulse) const
+void procLaunchCaravans::run(const TPulse &) const
 {
   factionTypeT i;
   TMonster *mob;

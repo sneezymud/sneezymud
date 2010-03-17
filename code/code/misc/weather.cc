@@ -102,7 +102,7 @@ procWeatherAndTime::procWeatherAndTime(const int &p)
   name="procWeatherAndTime";
 }
 
-void procWeatherAndTime::run(int pulse) const
+void procWeatherAndTime::run(const TPulse &) const
 {
   GameTime::anotherHour();
   Weather::weatherChange();

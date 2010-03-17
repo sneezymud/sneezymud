@@ -74,7 +74,7 @@ procUpdateAuction::procUpdateAuction(const int &p)
   name="procUpdateAuction";
 }
 
-void procUpdateAuction::run(int pulse) const
+void procUpdateAuction::run(const TPulse &) const
 {
 // called once per mud day
   TDatabase db(DB_SNEEZY);

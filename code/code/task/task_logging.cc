@@ -283,7 +283,7 @@ procReforestation::procReforestation(const int &p)
   name="procReforestation";
 }
 
-void procReforestation::run(int pulse) const
+void procReforestation::run(const TPulse &) const
 {
   std::map <int, bool> ::iterator tIter     = mRoomsLogsHarvested.begin(),
                              tLastGood = mRoomsLogsHarvested.begin();

@@ -654,7 +654,7 @@ procCheckGoldStats::procCheckGoldStats(const int &p)
   name="procCheckGoldStats";
 }
 
-void procCheckGoldStats::run(int pulse) const
+void procCheckGoldStats::run(const TPulse &) const
 {
   // insure we have enough data to take accurate reading
   unsigned int pos_gold = getPosGoldGlobal();

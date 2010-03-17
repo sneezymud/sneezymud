@@ -43,7 +43,7 @@ procGlobalRoomStuff::procGlobalRoomStuff(const int &p)
 }
 
 
-void procGlobalRoomStuff::run(int pulse) const
+void procGlobalRoomStuff::run(const TPulse &) const
 {
   int i;
   TRoom *rp;
@@ -194,7 +194,7 @@ procDeityCheck::procDeityCheck(const int &p)
   name="procDeityCheck";
 }
 
-void procDeityCheck::run(int pulse) const
+void procDeityCheck::run(const TPulse &) const
 {
 // this function gets called ever 120 pulse (30 secs?)
 // it should randomly load a deity and/or extract extra deitys
@@ -246,7 +246,7 @@ procApocCheck::procApocCheck(const int &p)
   name="procApocCheck";
 }
 
-void procApocCheck::run(int pulse) const
+void procApocCheck::run(const TPulse &) const
 {
   int num, rc;
   TMonster *mob;
@@ -288,7 +288,7 @@ procCallRoomSpec::procCallRoomSpec(const int &p)
   name="procCallRoomSpec";
 }
 
-void procCallRoomSpec::run(int pulse) const
+void procCallRoomSpec::run(const TPulse &) const
 {
 // this simplifies room specials since we have a huge number of rooms
 // and only a handful have specs
@@ -311,7 +311,7 @@ procDoPlayerSaves::procDoPlayerSaves(const int &p)
   name="procDoPlayerSaves";
 }
 
-void procDoPlayerSaves::run(int pulse) const
+void procDoPlayerSaves::run(const TPulse &) const
 {
   Descriptor *d;
 
@@ -336,7 +336,7 @@ procQueryQueue::procQueryQueue(const int &p)
   name="procQueryQueue";
 }
 
-void procQueryQueue::run(int pulse) const
+void procQueryQueue::run(const TPulse &) const
 {
   TDatabase db(DB_SNEEZY);
   TTiming t;
@@ -357,7 +357,7 @@ procDoRoomSaves::procDoRoomSaves(const int &p)
   name="procDoRoomSaves";
 }
 
-void procDoRoomSaves::run(int pulse) const
+void procDoRoomSaves::run(const TPulse &) const
 {
   // this is not a very good implementation of this idea, but I don't have time
   // to work on it - this is an emergency patch for a dupe bug
@@ -2451,7 +2451,7 @@ procAutoTips::procAutoTips(const int &p)
   name="procAutoTips";
 }
 
-void procAutoTips::run(int pulse) const
+void procAutoTips::run(const TPulse &) const
 {
   // first, get a tip...
   FILE *fp = fopen("tipsfile", "r");
