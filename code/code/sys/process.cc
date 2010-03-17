@@ -100,6 +100,8 @@ void TScheduler::run(int pulse)
   TTiming timer;
   std::vector<TProcess *>::iterator iter;
 
+  pulseList.init(pulse);
+
   for(iter=procs.begin();iter!=procs.end();++iter){
     if((*iter)->should_run(pulse)){
       if(toggleInfo[TOG_GAMELOOP]->toggle)

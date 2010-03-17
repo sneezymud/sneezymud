@@ -1568,15 +1568,29 @@ void procWeightVolumeFumble::run(int) const
     }
   }
 }
+/*
+procObjectPulse::procObjectPulse(const int &p)
+{
+  trigger_pulse=p;
+  name="procObjectPulse";
+}
 
-
-
+void procObjectPulse::run(int) const
+{
+  // handle pulse stuff for objects
+  count=objectPulse(pl, (pulse % 2400));
+  
+  if(toggleInfo[TOG_GAMELOOP]->toggle)
+    vlogf(LOG_MISC, format("%i %i) objectPulse: %i, %i objs") % 
+	  (oldpulse % 2400) % (oldpulse%12) % 
+	  (int)(t.getElapsedReset()*1000000) % count);
+}
+*/
 
 int TMainSocket::gameLoop()
 {
   Descriptor *point;
   int pulse = 0;
-  TPulseList pl;
   time_t lagtime_t = time(0);
   sstring str;
   int count;
@@ -1589,6 +1603,8 @@ int TMainSocket::gameLoop()
   scheduler.add(new procCallRoomSpec(PULSE_EVERY));
   scheduler.add(new procDoRoomSaves(PULSE_EVERY));
   scheduler.add(new procDoPlayerSaves(PULSE_EVERY));
+
+  //  scheduler.add(new procObjectPulse(PULSE_EVERY));
 
   // pulse combat  (1.2 seconds)
   scheduler.add(new procPerformViolence(PULSE_COMBAT));
@@ -1657,15 +1673,13 @@ int TMainSocket::gameLoop()
     
     // setup the pulse boolean flags
     pulse++;
-    pl.init(pulse);
-
 
     scheduler.run(pulse);
 
 
     if(toggleInfo[TOG_GAMELOOP]->toggle)
       vlogf(LOG_MISC, format("%i %i) normal pulses: %s") % 
-	    pulse % (pulse%12) % pl.showPulses());
+	    pulse % (pulse%12) % scheduler.pulseList.showPulses());
 
     // since we're operating on non-multiples of 12 pulses, we need to
     // temporarily put the pulse at the next multiple of 12
@@ -1675,25 +1689,26 @@ int TMainSocket::gameLoop()
       ++pulse;
 
     // reset the pulse flags
-    pl.init(pulse);
+    scheduler.pulseList.init(pulse);
 
     if(toggleInfo[TOG_GAMELOOP]->toggle){
       vlogf(LOG_MISC, format("%i %i) split pulses: %s") % 
-	    oldpulse % (oldpulse%12) % pl.showPulses());
+	    oldpulse % (oldpulse%12) % scheduler.pulseList.showPulses());
 
       pulseLog("gameLoop1", t, oldpulse);
     }
 
     // handle pulse stuff for objects
-    count=objectPulse(pl, (pulse % 2400));
+    count=objectPulse(scheduler.pulseList, (pulse % 2400));
 
     if(toggleInfo[TOG_GAMELOOP]->toggle)
       vlogf(LOG_MISC, format("%i %i) objectPulse: %i, %i objs") % 
 	    (oldpulse % 2400) % (oldpulse%12) % 
 	    (int)(t.getElapsedReset()*1000000) % count);
     
+
     // handle pulse stuff for mobs and players
-    count=characterPulse(pl, (pulse % 2400));
+    count=characterPulse(scheduler.pulseList, (pulse % 2400));
 
     if(toggleInfo[TOG_GAMELOOP]->toggle)
       vlogf(LOG_MISC, format("%i %i) characterPulse: %i, %i chars") %
@@ -1701,7 +1716,7 @@ int TMainSocket::gameLoop()
 	    (int)(t.getElapsedReset()*1000000) % count);
 
     // handle pulse stuff for rooms
-    count=roomPulse(pl, (pulse % 2400));
+    count=roomPulse(scheduler.pulseList, (pulse % 2400));
 
     if(toggleInfo[TOG_GAMELOOP]->toggle)
       vlogf(LOG_MISC, format("%i %i) roomPulse: %i, %i rooms") %
@@ -1711,7 +1726,7 @@ int TMainSocket::gameLoop()
 
     // reset the old values from the artifical pulse
     pulse=oldpulse;
-    pl.init(pulse);
+    scheduler.pulseList.init(pulse);
 
 
 
