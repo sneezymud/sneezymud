@@ -292,9 +292,6 @@ TBeing::~TBeing()
     }
   }
 
-  if (gSocket)
-    gSocket->dequeueBeing(this);
-
   //  setArmor(1000);
 
   // OK, technically, this is all Descriptor maintained stuff...

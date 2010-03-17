@@ -81,6 +81,11 @@ class TProcess {
 
 
 //// processes
+class procCharacterPulse : public TProcess {
+ public:
+  void run(const TPulse &) const;
+  procCharacterPulse(const int &);
+};
 
 class procObjectPulse : public TProcess {
   TObj *placeholder;

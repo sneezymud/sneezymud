@@ -25,7 +25,6 @@ class TMainSocket {
  private:
   std::vector <int> m_sock;
   std::vector <int> m_port;
-  TBeing *tmp_ch;
 
   struct timeval handleTimeAndSockets();
   bool handleShutdown();
@@ -37,9 +36,7 @@ class TMainSocket {
   void closeAllSockets();
   void initSocket(int);
   int gameLoop();
-  int characterPulse(TPulse &, int);
   int roomPulse(TPulse &, int);
-  void dequeueBeing(TBeing* being);
 
   TMainSocket();
   ~TMainSocket();
