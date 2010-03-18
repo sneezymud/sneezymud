@@ -123,6 +123,12 @@ void TScheduler::runObj(int pulseNum)
   // obviously the object count will change, so this is approximate.
   count=(int)((float)objCount/11.5);
 
+  if(toggleInfo[TOG_GAMELOOP]->toggle){
+    for(std::vector<TObjProcess *>::iterator iter=obj_procs.begin();
+	iter!=obj_procs.end();++iter)
+      (*iter)->timing=0;
+  }
+
   while(count--){
     // remove placeholder from object list and increment iterator
     object_list.erase(objIter++);
@@ -268,6 +274,11 @@ void TScheduler::run(int pulseNum)
 
   pulse.init(pulseNum);
 
+  if(toggleInfo[TOG_GAMELOOP]->toggle)
+    vlogf(LOG_MISC, format("%i %i) pulses: %s") % 
+	  pulse.pulse % (pulse.pulse%12) % pulse.showPulses());
+
+
   // run general processes
   for(std::vector<TProcess *>::iterator iter=procs.begin();
       iter!=procs.end();++iter){
@@ -287,6 +298,10 @@ void TScheduler::run(int pulseNum)
   }
 
   pulse.init12(pulseNum);
+
+  if(toggleInfo[TOG_GAMELOOP]->toggle)
+    vlogf(LOG_MISC, format("%i %i) distributed pulses: %s") % 
+	  pulse.pulse % (pulse.pulse%12) % pulse.showPulses());
 
   // run object processes
   runObj(pulseNum);

@@ -1896,10 +1896,6 @@ int TMainSocket::gameLoop()
   while (!handleShutdown()) {
     scheduler.run(++pulse);
     
-    if(toggleInfo[TOG_GAMELOOP]->toggle)
-      vlogf(LOG_MISC, format("%i %i) pulses: %s") % 
-	    pulse % (pulse%12) % scheduler.pulse.showPulses());
-
     tics++;			// tics since last checkpoint signal 
   }
   ares_destroy(channel);
