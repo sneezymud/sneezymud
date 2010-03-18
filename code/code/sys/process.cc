@@ -92,6 +92,9 @@ void TScheduler::add(TProcess *p)
   procs.push_back(p);
 }
 
+TScheduler::TScheduler(){
+  pulse.init(0);
+}
 
 // we have some legacy code here, in that many processes expect pulse
 // to be mod 2400.  So we use the real pulse, but pass mod 2400.

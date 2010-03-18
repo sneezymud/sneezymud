@@ -30,8 +30,12 @@ class TMainSocket {
   bool handleShutdown();
   TSocket *newConnection(int, int);
   int newDescriptor(int, int);
+  timeval sleeptime;
 
  public:
+  friend class procHandleTimeAndSockets;
+  friend class procIdle;
+
   void addNewDescriptorsDuringBoot(sstring);
   void closeAllSockets();
   void initSocket(int);

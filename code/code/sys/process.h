@@ -7,12 +7,13 @@
 class TPulse {
 public:  
   int pulse;
-  bool teleport, combat, drowning, special_procs, update_stuff;
+  bool every, teleport, combat, drowning, special_procs, update_stuff;
   bool pulse_mudhour, mobstuff, pulse_tick, wayslowpulse;
 
   sstring showPulses(){
     sstring buf;
 
+    buf += (every?"every ":"");
     buf += (teleport?"teleport ":"");
     buf += (combat?"combat ":"");
     buf += (drowning?"drowning ":"");
@@ -28,6 +29,7 @@ public:
 
   void init(int pulse){
     this->pulse=pulse;
+    every = !(pulse % PULSE_EVERY);
     teleport = !(pulse % PULSE_TELEPORT);
     combat = !(pulse % PULSE_COMBAT);
     drowning = !(pulse % PULSE_DROWNING);
@@ -50,6 +52,7 @@ public:
   TPulse & operator=(const TPulse &a){
     if (this == &a) return *this;    
     pulse=a.pulse;
+    every=a.every;
     teleport=a.teleport;
     combat=a.combat;
     drowning=a.drowning;
@@ -81,6 +84,30 @@ class TProcess {
 
 
 //// processes
+class procIdle : public TProcess {
+ public:
+  void run(const TPulse &) const;
+  procIdle(const int &);
+};
+
+class procHandleTimeAndSockets : public TProcess {
+ public:
+  void run(const TPulse &) const;
+  procHandleTimeAndSockets(const int &);
+};
+
+class procLagInfo : public TProcess {
+ public:
+  void run(const TPulse &) const;
+  procLagInfo(const int &);
+};
+
+class procCheckTask : public TProcess {
+ public:
+  void run(const TPulse &) const;
+  procCheckTask(const int &);
+};
+
 class procRoomPulse : public TProcess {
  public:
   void run(const TPulse &) const;
@@ -341,6 +368,8 @@ class TScheduler {
 
   void add(TProcess *);
   void run(int);
+
+  TScheduler();
 };
 
 

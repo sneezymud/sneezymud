@@ -458,8 +458,7 @@ struct timeval TMainSocket::handleTimeAndSockets()
   }
 
   // this regulates the speed of the mud
-  sleep(timeout.tv_sec);
-  usleep(timeout.tv_usec);
+  sleeptime=timeout;
 
   // this isn't working under linux
   //  if (select(0, 0, 0, 0, &timeout) < 0) {
@@ -1595,16 +1594,69 @@ void procRoomPulse::run(const TPulse &pl) const
   //  return count;
 }
 
+procCheckTask::procCheckTask(const int &p)
+{
+  trigger_pulse=p;
+  name="procCheckTask";
+}
+
+void procCheckTask::run(const TPulse &pl) const
+{
+  systask->CheckTask();
+}
+
+procLagInfo::procLagInfo(const int &p)
+{
+  trigger_pulse=p;
+  name="procLagInfo";
+}
+
+void procLagInfo::run(const TPulse &pl) const
+{
+  static time_t lagtime_t = time(0);
+  // get some lag info
+  // this needs to remain at pulse%100
+  if (!(pl.pulse %100)){
+    int which=(pl.pulse/100)%10;
+    
+    lag_info.current=lag_info.lagtime[which]=time(0)-lagtime_t;
+    lagtime_t=time(0);
+    lag_info.lagcount[which]=1;
+    
+    lag_info.high = max(lag_info.lagtime[which], lag_info.high);
+    lag_info.low = min(lag_info.lagtime[which], lag_info.low);
+  }
+}
+
+procHandleTimeAndSockets::procHandleTimeAndSockets(const int &p)
+{
+  trigger_pulse=p;
+  name="procHandleTimeAndSockets";
+}
+
+void procHandleTimeAndSockets::run(const TPulse &pl) const
+{
+  gSocket->handleTimeAndSockets();
+}
+
+procIdle::procIdle(const int &p)
+{
+  trigger_pulse=p;
+  name="procIdle";
+}
+
+void procIdle::run(const TPulse &pl) const
+{
+  sleep(gSocket->sleeptime.tv_sec);
+  usleep(gSocket->sleeptime.tv_usec);
+}
+
 
 int TMainSocket::gameLoop()
 {
   Descriptor *point;
   int pulse = 0;
-  time_t lagtime_t = time(0);
   sstring str;
-  int count;
-  struct timeval timespent;
-  TTiming t;
   TScheduler scheduler;
 
   // pulse every (1/10th of a second), but these processes distribute their
@@ -1614,10 +1666,14 @@ int TMainSocket::gameLoop()
   scheduler.add(new procCharacterPulse(PULSE_EVERY_DISTRIBUTED));
 
   // pulse every  (1/10th of a second)
+  scheduler.add(new procHandleTimeAndSockets(PULSE_EVERY));
+  scheduler.add(new procIdle(PULSE_EVERY));
   scheduler.add(new procSetZoneEmpty(PULSE_EVERY));
   scheduler.add(new procCallRoomSpec(PULSE_EVERY));
   scheduler.add(new procDoRoomSaves(PULSE_EVERY));
   scheduler.add(new procDoPlayerSaves(PULSE_EVERY));
+  scheduler.add(new procCheckTask(PULSE_EVERY));
+  scheduler.add(new procLagInfo(PULSE_EVERY));
 
   // pulse combat  (1.2 seconds)
   scheduler.add(new procPerformViolence(PULSE_COMBAT));
@@ -1675,44 +1731,13 @@ int TMainSocket::gameLoop()
       point->sendLogin("1");
 
   while (!handleShutdown()) {
-    timespent=handleTimeAndSockets();
+    scheduler.run(++pulse);
     
-    if(toggleInfo[TOG_GAMELOOP]->toggle){
-      count=((timespent.tv_sec*1000000)+timespent.tv_usec);
-      
-      vlogf(LOG_MISC, format("%i %i) handleTimeAndSockets: %i (sleep = %i)") %
-	    (pulse % 2400) % (pulse%12) % 
-	    (int)((t.getElapsedReset()*1000000)-count) % count);
-    }
-    
-    // setup the pulse boolean flags
-    pulse++;
-
-    scheduler.run(pulse);
-
     if(toggleInfo[TOG_GAMELOOP]->toggle)
       vlogf(LOG_MISC, format("%i %i) pulses: %s") % 
 	    pulse % (pulse%12) % scheduler.pulse.showPulses());
 
-
-    // get some lag info
-    // this needs to remain at pulse%100
-    if (!(pulse %100)){
-      int which=(pulse/100)%10;
-      
-      lag_info.current=lag_info.lagtime[which]=time(0)-lagtime_t;
-      lagtime_t=time(0);
-      lag_info.lagcount[which]=1;
-
-      lag_info.high = max(lag_info.lagtime[which], lag_info.high);
-      lag_info.low = min(lag_info.lagtime[which], lag_info.low);
-    }
-
-    pulseLog("lag_info", t, pulse);
-
-    systask->CheckTask();
     tics++;			// tics since last checkpoint signal 
-    pulseLog("CheckTask", t, pulse);
   }
   ares_destroy(channel);
   return TRUE;
