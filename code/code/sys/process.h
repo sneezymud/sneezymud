@@ -88,7 +88,7 @@ class TProcess : public TBaseProcess {
 };
 
 class TObjProcess : public TBaseProcess {
-  TTiming timer;
+  double timing;
   
  public:
   friend class TScheduler;
@@ -97,7 +97,161 @@ class TObjProcess : public TBaseProcess {
   virtual bool run(const TPulse &, TObj *) const = 0;
 };
 
+class TCharProcess : public TBaseProcess {
+  double timing;
+
+ public:
+  friend class TScheduler;
+
+  // returns true if character is to be deleted
+  virtual bool run(const TPulse &, TBeing *) const = 0;
+};
+
 //// processes
+class procCharSpecProcs : public TCharProcess {
+ public:
+  bool run(const TPulse &, TBeing *) const;
+  procCharSpecProcs(const int &);
+};
+
+class procCharDrowning : public TCharProcess {
+ public:
+  bool run(const TPulse &, TBeing *) const;
+  procCharDrowning(const int &);
+};
+
+class procCharResponses : public TCharProcess {
+ public:
+  bool run(const TPulse &, TBeing *) const;
+  procCharResponses(const int &);
+};
+
+class procCharSinking : public TCharProcess {
+ public:
+  bool run(const TPulse &, TBeing *) const;
+  procCharSinking(const int &);
+};
+
+class procCharFalling : public TCharProcess {
+ public:
+  bool run(const TPulse &, TBeing *) const;
+  procCharFalling(const int &);
+};
+
+class procCharMobileActivity : public TCharProcess {
+ public:
+  bool run(const TPulse &, TBeing *) const;
+  procCharMobileActivity(const int &);
+};
+
+class procCharTasks : public TCharProcess {
+ public:
+  bool run(const TPulse &, TBeing *) const;
+  procCharTasks(const int &);
+};
+
+class procCharImmLeash : public TCharProcess {
+ public:
+  bool run(const TPulse &, TBeing *) const;
+  procCharImmLeash(const int &);
+};
+
+class procCharSpellTask : public TCharProcess {
+ public:
+  bool run(const TPulse &, TBeing *) const;
+  procCharSpellTask(const int &);
+};
+
+class procCharAffects : public TCharProcess {
+ public:
+  bool run(const TPulse &, TBeing *) const;
+  procCharAffects(const int &);
+};
+
+class procCharRegen : public TCharProcess {
+ public:
+  bool run(const TPulse &, TBeing *) const;
+  procCharRegen(const int &);
+};
+
+class procCharCantHit : public TCharProcess {
+ public:
+  bool run(const TPulse &, TBeing *) const;
+  procCharCantHit(const int &);
+};
+
+class procCharRiverFlow : public TCharProcess {
+ public:
+  bool run(const TPulse &, TBeing *) const;
+  procCharRiverFlow(const int &);
+};
+
+class procCharTeleportRoom : public TCharProcess {
+ public:
+  bool run(const TPulse &, TBeing *) const;
+  procCharTeleportRoom(const int &);
+};
+
+class procCharNoise : public TCharProcess {
+ public:
+  bool run(const TPulse &, TBeing *) const;
+  procCharNoise(const int &);
+};
+
+class procCharHalfTickUpdate : public TCharProcess {
+ public:
+  bool run(const TPulse &, TBeing *) const;
+  procCharHalfTickUpdate(const int &);
+};
+
+class procCharTickUpdate : public TCharProcess {
+ public:
+  bool run(const TPulse &, TBeing *) const;
+  procCharTickUpdate(const int &);
+};
+
+class procCharThaw : public TCharProcess {
+ public:
+  bool run(const TPulse &, TBeing *) const;
+  procCharThaw(const int &);
+};
+
+class procCharLightning : public TCharProcess {
+ public:
+  bool run(const TPulse &, TBeing *) const;
+  procCharLightning(const int &);
+};
+
+class procCharNutrition : public TCharProcess {
+ public:
+  bool run(const TPulse &, TBeing *) const;
+  procCharNutrition(const int &);
+};
+
+class procCharLycanthropy : public TCharProcess {
+ public:
+  bool run(const TPulse &, TBeing *) const;
+  procCharLycanthropy(const int &);
+};
+
+class procCharSpecProcsQuick : public TCharProcess {
+ public:
+  bool run(const TPulse &, TBeing *) const;
+  procCharSpecProcsQuick(const int &);
+};
+
+class procCharScreenUpdate : public TCharProcess {
+ public:
+  bool run(const TPulse &, TBeing *) const;
+  procCharScreenUpdate(const int &);
+};
+
+class procCharVampireBurn : public TCharProcess {
+ public:
+  bool run(const TPulse &, TBeing *) const;
+  procCharVampireBurn(const int &);
+};
+
 class procObjVehicle : public TObjProcess {
  public:
   bool run(const TPulse &, TObj *) const;
@@ -223,12 +377,6 @@ class procRoomPulse : public TProcess {
  public:
   void run(const TPulse &) const;
   procRoomPulse(const int &);
-};
-
-class procCharacterPulse : public TProcess {
- public:
-  void run(const TPulse &) const;
-  procCharacterPulse(const int &);
 };
 
 class procWeightVolumeFumble : public TProcess {
@@ -466,15 +614,22 @@ class procDoComponents : public TProcess {
 class TScheduler {
   std::vector<TProcess *>procs;
   std::vector<TObjProcess *>obj_procs;
+  std::vector<TCharProcess *>char_procs;
 
   TObj *placeholder;
   TObjIter objIter;
+
+  TBeing *tmp_ch;
+
+  void runObj(int);
+  void runChar(int);
 
  public:
   TPulse pulse;
 
   void add(TProcess *);
   void add(TObjProcess *);
+  void add(TCharProcess *);
   void run(int);
 
   TScheduler();

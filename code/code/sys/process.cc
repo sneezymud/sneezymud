@@ -7,6 +7,7 @@
 #include "extern.h"
 #include "toggle.h"
 #include "guild.h"
+#include "being.h"
 
 ///////////
 
@@ -97,6 +98,11 @@ void TScheduler::add(TObjProcess *p)
   obj_procs.push_back(p);
 }
 
+void TScheduler::add(TCharProcess *p)
+{
+  char_procs.push_back(p);
+}
+
 TScheduler::TScheduler(){
   pulse.init(0);
   placeholder=read_object(42, VIRTUAL);
@@ -104,40 +110,14 @@ TScheduler::TScheduler(){
   mud_assert(placeholder!=NULL, "couldn't load placeholder object");
   *(real_roomp(0)) += *placeholder;
   objIter=find(object_list.begin(), object_list.end(), placeholder);
+  tmp_ch=NULL;
 }
 
-void TScheduler::run(int pulseNum)
+void TScheduler::runObj(int pulseNum)
 {
-  TTiming timer;
-
-  pulse.init(pulseNum);
-
-  for(std::vector<TProcess *>::iterator iter=procs.begin();
-      iter!=procs.end();++iter){
-    if((*iter)->should_run(pulse.pulse)){
-      if(toggleInfo[TOG_GAMELOOP]->toggle)
-	timer.start();
-
-      if((*iter)->trigger_pulse == PULSE_EVERY_DISTRIBUTED)
-	pulse.init12(pulseNum);
-
-      (*iter)->run(pulse);
-
-      if((*iter)->trigger_pulse == PULSE_EVERY_DISTRIBUTED)
-	pulse.init(pulseNum);
-
-      if(toggleInfo[TOG_GAMELOOP]->toggle){
-	timer.end();
-	vlogf(LOG_MISC, format("%i %i) %s: %i") % 
-	      (pulseNum % 2400) % (pulseNum%12) % (*iter)->name % 
-	      (int)(timer.getElapsed()*1000000));
-      }
-    }
-  }
-
-  pulse.init12(pulseNum);
   int count;
   TObj *obj;
+  TTiming timer;
 
   // we want to go through 1/12th of the object list every pulse
   // obviously the object count will change, so this is approximate.
@@ -179,19 +159,19 @@ void TScheduler::run(int pulseNum)
 	iter!=obj_procs.end();++iter){
       if((*iter)->should_run(pulse.pulse)){
 	if(toggleInfo[TOG_GAMELOOP]->toggle)
-	  (*iter)->timer.start();
+	  timer.start();
 	      
 	if((*iter)->run(pulse, obj)){
 	  delete obj;
 
 	  if(toggleInfo[TOG_GAMELOOP]->toggle)
-	    (*iter)->timer.end();
+	    (*iter)->timing+=timer.getElapsed();
 
 	  break;
 	}
 	
 	if(toggleInfo[TOG_GAMELOOP]->toggle)
-	  (*iter)->timer.end();
+	  (*iter)->timing+=timer.getElapsed();
       }
     }
   }
@@ -202,10 +182,119 @@ void TScheduler::run(int pulseNum)
       if((*iter)->should_run(pulse.pulse)){
 	vlogf(LOG_MISC, format("%i %i) %s: %i") % 
 	      (pulseNum % 2400) % (pulseNum%12) % (*iter)->name % 
-	      (int)((*iter)->timer.getElapsedReset()*1000000));
+	      (int)((*iter)->timing*1000000));
+	(*iter)->timing=0;
       }
     }
   }
+}
+
+void TScheduler::runChar(int pulseNum)
+{
+  TBeing *temp;
+  int count;
+  TTiming timer;
+
+  // we've already finished going through the character list, so start over
+  if(!tmp_ch)
+    tmp_ch=character_list;
+
+  count=max((int)((float)mobCount/11.5), 1);
+
+  if(toggleInfo[TOG_GAMELOOP]->toggle)
+    for(std::vector<TCharProcess *>::iterator iter=char_procs.begin();
+	iter!=char_procs.end();++iter)
+      (*iter)->timing=0;
+    
+
+  for (; tmp_ch; tmp_ch = temp) {
+    temp = tmp_ch->next;  // just for safety
+
+    if(!count--)
+      break;
+
+    if (tmp_ch->getPosition() == POSITION_DEAD) {
+      vlogf(LOG_BUG, format("Error: dead creature (%s at %d) in character_list, removing.") % 
+	    tmp_ch->getName() % tmp_ch->in_room);
+      delete tmp_ch;
+      continue;
+    }
+    if ((tmp_ch->getPosition() < POSITION_STUNNED) &&
+	(tmp_ch->getHit() > 0)) {
+      vlogf(LOG_BUG, format("Error: creature (%s) with hit > 0 found with position < stunned") % 
+	    tmp_ch->getName());
+      vlogf(LOG_BUG, "Setting player to POSITION_STANDING");
+      tmp_ch->setPosition(POSITION_STANDING);
+    }
+
+    
+    for(std::vector<TCharProcess *>::iterator iter=char_procs.begin();
+	iter!=char_procs.end();++iter){
+      if((*iter)->should_run(pulse.pulse)){
+	if(toggleInfo[TOG_GAMELOOP]->toggle)
+	  timer.start();
+	      
+	if((*iter)->run(pulse, tmp_ch)){
+	  delete tmp_ch;
+
+	  if(toggleInfo[TOG_GAMELOOP]->toggle)
+	    (*iter)->timing+=timer.getElapsed();
+
+	  break;
+	}
+	
+	if(toggleInfo[TOG_GAMELOOP]->toggle)
+	  (*iter)->timing+=timer.getElapsed();
+      }
+    }
+  }
+
+  if(toggleInfo[TOG_GAMELOOP]->toggle){
+    for(std::vector<TCharProcess *>::iterator iter=char_procs.begin();
+	iter!=char_procs.end();++iter){
+      if((*iter)->should_run(pulse.pulse)){
+	vlogf(LOG_MISC, format("%i %i) %s: %i") % 
+	      (pulseNum % 2400) % (pulseNum%12) % (*iter)->name % 
+	      (int)((*iter)->timing*1000000));
+      }
+    }
+  }
+
+}
+
+void TScheduler::run(int pulseNum)
+{
+  TTiming timer;
+
+  pulse.init(pulseNum);
+
+  // run general processes
+  for(std::vector<TProcess *>::iterator iter=procs.begin();
+      iter!=procs.end();++iter){
+    if((*iter)->should_run(pulse.pulse)){
+      if(toggleInfo[TOG_GAMELOOP]->toggle)
+	timer.start();
+
+      (*iter)->run(pulse);
+
+      if(toggleInfo[TOG_GAMELOOP]->toggle){
+	timer.end();
+	vlogf(LOG_MISC, format("%i %i) %s: %i") % 
+	      (pulseNum % 2400) % (pulseNum%12) % (*iter)->name % 
+	      (int)(timer.getElapsed()*1000000));
+      }
+    }
+  }
+
+  pulse.init12(pulseNum);
+
+  // run object processes
+  runObj(pulseNum);
+
+  // run character processes
+  runChar(pulseNum);
+
+  pulse.init(pulseNum);
 }
 
 procSeedRandom::procSeedRandom(const int &p)
