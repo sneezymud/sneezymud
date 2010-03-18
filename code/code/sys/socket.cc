@@ -824,289 +824,342 @@ void procWeightVolumeFumble::run(const TPulse &) const
 }
 
 
-procObjectPulse::procObjectPulse(const int &p)
+procObjVehicle::procObjVehicle(const int &p)
 {
   trigger_pulse=p;
-  name="procObjectPulse";
-
-  placeholder=read_object(42, VIRTUAL);
-
-  *(real_roomp(0)) += *placeholder;
-
-  // don't think we can recover from this
-  mud_assert(placeholder!=NULL, "couldn't load placeholder object");
-
+  name="procObjVehicle";
 }
 
-void procObjectPulse::run(const TPulse &pl) const
+bool procObjVehicle::run(const TPulse &pl, TObj *obj) const
 {
   TVehicle *vehicle;
-  int rc, count, retcount;
-  TObj *obj;
-  static int vehiclepulse=0;
-  static TObjIter iter=find(object_list.begin(), object_list.end(), placeholder);
 
-  // note on this loop
-  // it is possible that next_thing gets deleted in one of the sub funcs
-  // we don't get acknowledgement of this in any way.
-  // to avoid problems this might cause, we reinitialize at
-  // the end (eg, before any deletes, or before we come back around)
-  // bottom line is that next_thing keeps getting set because it might be
-  // bogus after the function call.
+  // vehicle movement
+  if((vehicle=dynamic_cast<TVehicle *>(obj)))
+    vehicle->vehiclePulse(pl.pulse);
 
-  ++vehiclepulse;
+  return false;
+}
+
+procObjDetonateGrenades::procObjDetonateGrenades(const int &p)
+{
+  trigger_pulse=p;
+  name="procObjDetonateGrenades";
+}
+
+bool procObjDetonateGrenades::run(const TPulse &pl, TObj *obj) const
+{
+  // this stuff all happens every time we go through here, which is
+  // about every 12 pulses, ie "combat" or "teleport" pulse
+  int rc = obj->detonateGrenade();
+  if (IS_SET_DELETE(rc, DELETE_THIS)) 
+    return true;
+  return false;
+}
+
+procObjFalling::procObjFalling(const int &p)
+{
+  trigger_pulse=p;
+  name="procObjFalling";
+}
+
+bool procObjFalling::run(const TPulse &pl, TObj *obj) const
+{
+  int rc = obj->checkFalling();
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    return true;
+  return false;
+}
+
+procObjRiverFlow::procObjRiverFlow(const int &p)
+{
+  trigger_pulse=p;
+  name="procObjRiverFlow";
+}
+
+bool procObjRiverFlow::run(const TPulse &pl, TObj *obj) const
+{
+  int rc = obj->riverFlow(pl.pulse);
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    return true;
+  return false;
+}
+
+procObjTeleportRoom::procObjTeleportRoom(const int &p)
+{
+  trigger_pulse=p;
+  name="procObjTeleportRoom";
+}
+
+bool procObjTeleportRoom::run(const TPulse &pl, TObj *obj) const
+{
+  int rc = obj->teleportRoomFlow(pl.pulse);
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    return true;
+  return false;
+}
+
+procObjSpecProcsQuick::procObjSpecProcsQuick(const int &p)
+{
+  trigger_pulse=p;
+  name="procObjSpecProcsQuick";
+}
+
+bool procObjSpecProcsQuick::run(const TPulse &pl, TObj *obj) const
+{
+  if (obj->spec) {
+    int rc = obj->checkSpec(NULL, CMD_GENERIC_QUICK_PULSE, "", NULL);
+    if (IS_SET_DELETE(rc, DELETE_ITEM))
+      return true;
+  }
+  return false;
+}
 
 
-  // we want to go through 1/12th of the object list every pulse
-  // obviously the object count will change, so this is approximate.
-  retcount=count=(int)((float)objCount/11.5);
+procObjTickUpdate::procObjTickUpdate(const int &p)
+{
+  trigger_pulse=p;
+  name="procObjTickUpdate";
+}
+
+bool procObjTickUpdate::run(const TPulse &pl, TObj *obj) const
+{
+  int rc = obj->objectTickUpdate(pl.pulse);
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    return true;
+  return false;
+}
+
+
+procObjRust::procObjRust(const int &p)
+{
+  trigger_pulse=p;
+  name="procObjRust";
+}
+
+bool procObjRust::run(const TPulse &pl, TObj *obj) const
+{
+  // rust
+  if(!::number(0,99) && obj->canRust()){
+    TRoom *rp=NULL;
+    
+    if(obj->equippedBy)
+      rp=obj->equippedBy->roomp;
+    
+    if(dynamic_cast<TBeing *>(obj->parent))
+      rp=obj->parent->roomp;
+    
+    if(obj->roomp)
+      rp=obj->roomp;
+    
+    if(rp && (Weather::getWeather(*rp)==Weather::RAINY ||
+	      Weather::getWeather(*rp)==Weather::LIGHTNING ||
+	      rp->isWaterSector())){
+      obj->addObjStat(ITEM_RUSTY);
+    }
+  }
+  return false;
+}
+      
+procObjFreezing::procObjFreezing(const int &p)
+{
+  trigger_pulse=p;
+  name="procObjFreezing";
+}
+
+bool procObjFreezing::run(const TPulse &pl, TObj *obj) const
+{
+  // freezing
+  // find base cups that are either in an arctic room, or in the inventory
+  // of a being in an arctic room, with < 10 drunk
+  // note we're avoid frostEngulfed() because it is a bit extreme for this
+  // thawing is done with thawEngulfed() in characterPulse
+  TBaseCup *cup=dynamic_cast<TBaseCup *>(obj);
+  if(cup){
+    TRoom *r=NULL;
+    TThing *t;
+    TBeing *ch=NULL;
+    
+    if((t = cup->equippedBy) || (t = cup->parent)){
+      ch = dynamic_cast<TBeing *>(t);
+      if(ch)
+	r=ch->roomp;
+    } else
+      r = cup->roomp;
+    
+    if(r && (!ch || !ch->affectedBySpell(AFFECT_WAS_INDOORS))){
+      if(r->isArcticSector() && cup->getDrinkUnits() > 0 && 
+	 cup->getLiqDrunk() < 7 && !cup->isDrinkConFlag(DRINK_FROZEN)){
+	int rc=cup->freezeObject(ch, 0);
+	if (IS_SET_DELETE(rc, DELETE_THIS))
+	  return true;
+	
+	// freeze any pools that were dropped
+	TPool *tp;
+	for(StuffIter it=r->stuff.begin();it!=r->stuff.end() && (t=*it);++it){
+	  if((tp=dynamic_cast<TPool *>(t)) && tp->getLiqDrunk() < 7 &&
+	     !tp->isDrinkConFlag(DRINK_FROZEN))
+	    tp->freezeObject(ch, 0);
+	}
+      }
+    }
+    
+    if(cup->roomp && !cup->roomp->isArcticSector() &&
+       cup->isDrinkConFlag(DRINK_FROZEN)){
+      cup->thawObject(ch, 0);
+    }
+  }
+  return false;
+}
+ 
+procObjAutoPlant::procObjAutoPlant(const int &p)
+{
+  trigger_pulse=p;
+  name="procObjAutoPlant";
+}
+
+bool procObjAutoPlant::run(const TPulse &pl, TObj *obj) const
+{     
+  // seeds sitting on the ground will sometimes auto-plant themselves
+  TTool *seed=dynamic_cast<TTool *>(obj);
+  if(seed && seed->getToolType()==TOOL_SEED &&
+     !::number(0,100) &&
+     seed->roomp &&
+     !(seed->roomp->isFallSector() || 
+       seed->roomp->isWaterSector() || 
+       seed->roomp->isIndoorSector() || 
+       seed->roomp->isUnderwaterSector())){
+    
+    int count=0;
+    for(StuffIter it=seed->roomp->stuff.begin();
+	it!=seed->roomp->stuff.end();++it){
+      if(dynamic_cast<TPlant *>(*it))
+	++count;
+    }    
+    
+    if(count<8){
+      TObj *tp;
+      TPlant *tplant;
+      tp = read_object(OBJ_GENERIC_PLANT, VIRTUAL);
+      if((tplant=dynamic_cast<TPlant *>(tp))){
+	tplant->setType(seed_to_plant(obj->objVnum()));
+	tplant->updateDesc();
+	
+	*seed->roomp += *tp;
+	
+	seed->addToToolUses(-1);
+	
+	if (seed->getToolUses() <= 0) 
+	  return true;
+      }
+    }
+  }      
+  return false;
+}
+
+procObjSmoke::procObjSmoke(const int &p)
+{
+  trigger_pulse=p;
+  name="procObjSmoke";
+}
+
+bool procObjSmoke::run(const TPulse &pl, TObj *obj) const
+{
+  // fun with smoke
+  TGas *gas=dynamic_cast<TGas *>(obj);
+  if (gas){
+    gas->doDrift();
+    gas->doSpecials();
+  }
+  return false;
+}
+
+procObjPools::procObjPools(const int &p)
+{
+  trigger_pulse=p;
+  name="procObjPools";
+}
+
+bool procObjPools::run(const TPulse &pl, TObj *obj) const
+{
+  // fun with pools
+  TPool *pool=dynamic_cast<TPool *>(obj);
+  if(pool)
+    pool->overFlow();
+
+  return false;
+}
+
+procObjTrash::procObjTrash(const int &p)
+{
+  trigger_pulse=p;
+  name="procObjTrash";
+}
+
+bool procObjTrash::run(const TPulse &pl, TObj *obj) const
+{
+  // trash piles
+  if(!::number(0,999))
+    obj->joinTrash();
   
-  while(count--){
-    // remove placeholder from object list and increment iterator
-    object_list.erase(iter++);
-    
-    // set object to be processed
-    obj=(*iter);
-    
-    // move to front of list if we reach the end
-    // otherwise just stick the placeholder in
-    if(++iter == object_list.end()){
-      object_list.push_front(placeholder);
-      iter=object_list.begin();
+  TTrashPile *pile=dynamic_cast<TTrashPile *>(obj);
+  if(pile){
+    // delete empty piles
+    if(pile->stuff.empty()){
+      return true;
     } else {
-      object_list.insert(iter, placeholder);
-      --iter;
+      pile->overFlow();
+      pile->updateDesc();
+      pile->doDecay();
     }
+  }
+  return false;
+}
 
 
-    if (!dynamic_cast<TObj *>(obj)) {
-      vlogf(LOG_BUG, format("Object_list produced a non-obj().  rm: %d") %  obj->in_room);
-      vlogf(LOG_BUG, format("roomp %s, parent %s") %  
-	    (obj->roomp ? "true" : "false") %
-	    (obj->parent ? "true" : "false"));
-      // bogus objects tend to have garbage in obj->next
-      // it would be dangerous to continue with this loop
-      // this is called often enough that one skipped iteration should
-      // not be noticed.  Therefore, break out.
-      break;
-    }
+procObjSinking::procObjSinking(const int &p)
+{
+  trigger_pulse=p;
+  name="procObjSinking";
+}
 
-    // vehicle movement
-    if((vehicle=dynamic_cast<TVehicle *>(obj)))
-      vehicle->vehiclePulse(vehiclepulse);
-	
-    // this stuff all happens every time we go through here, which is
-    // about every 12 pulses, ie "combat" or "teleport" pulse
-    rc = obj->detonateGrenade();
-    if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      delete obj;
-      continue;
-    }
-    rc = obj->checkFalling();
-    if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      delete obj;
-      continue;
-    }
-    if (pl.teleport)
-      rc = obj->riverFlow(pl.pulse);
-    if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      delete obj;
-      continue;
-    }
-    if (pl.teleport)
-      rc = obj->teleportRoomFlow(pl.pulse);
-    if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      delete obj;
-      continue;
-    }
+bool procObjSinking::run(const TPulse &pl, TObj *obj) const
+{
+  // sinking
+  check_sinking_obj(obj, obj->in_room);
+  return false;
+}
 
-    if (obj->spec) {
-      rc = obj->checkSpec(NULL, CMD_GENERIC_QUICK_PULSE, "", NULL);
-      if (IS_SET_DELETE(rc, DELETE_ITEM)) {
-	delete obj;
-	continue;
-      }
-      if (rc) {
-	continue;
-      }
-    }
-    // end 12 pulse
+procObjSpecProcs::procObjSpecProcs(const int &p)
+{
+  trigger_pulse=p;
+  name="procObjSpecProcs";
+}
 
-    if (pl.special_procs) { // 36
-      // sinking
-      check_sinking_obj(obj, obj->in_room);
+bool procObjSpecProcs::run(const TPulse &pl, TObj *obj) const
+{
+  // procs
+  if (obj->spec) {
+    int rc = obj->checkSpec(NULL, CMD_GENERIC_PULSE, "", NULL);
+    if (IS_SET_DELETE(rc, DELETE_ITEM))
+      return true;
+  }
+  return false;
+}
 
-      // procs
-      if (obj->spec) {
-	rc = obj->checkSpec(NULL, CMD_GENERIC_PULSE, "", NULL);
-	if (IS_SET_DELETE(rc, DELETE_ITEM)) {
-	  delete obj;
-	  obj = NULL;
-	  continue;
-	}
-	if (rc) {
-	  continue;
-	}
-      }
+procObjBurning::procObjBurning(const int &p)
+{
+  trigger_pulse=p;
+  name="procObjBurning";
+}
 
-      // burning
-      rc = obj->updateBurning();
-      if (IS_SET_DELETE(rc, DELETE_THIS)) {
-	delete obj;
-	obj = NULL;
-	continue;
-      }
-
-      // fun with smoke
-      TGas *gas=dynamic_cast<TGas *>(obj);
-      if (gas){
-        gas->doDrift();
-        gas->doSpecials();
-      }
-
-      // fun with pools
-      TPool *pool=dynamic_cast<TPool *>(obj);
-      if(pool){
-	pool->overFlow();
-      }
-
-      // trash piles
-      if(!::number(0,999))
-	obj->joinTrash();
-      
-      TTrashPile *pile=dynamic_cast<TTrashPile *>(obj);
-      if(pile){
-	// delete empty piles
-	if(pile->stuff.empty()){
-	  delete obj;
-	  obj = NULL;
-	  continue;
-	} else {
-	  pile->overFlow();
-	  pile->updateDesc();
-	  pile->doDecay();
-	}
-      }
-    }
-
-    if(pl.pulse_tick){
-      // rust
-      if(!::number(0,99) && obj->canRust()){
-	TRoom *rp=NULL;
-	
-	if(obj->equippedBy)
-	  rp=obj->equippedBy->roomp;
-
-	if(dynamic_cast<TBeing *>(obj->parent))
-	  rp=obj->parent->roomp;
-
-	if(obj->roomp)
-	  rp=obj->roomp;
-
-	if(rp && (Weather::getWeather(*rp)==Weather::RAINY ||
-		  Weather::getWeather(*rp)==Weather::LIGHTNING ||
-		  rp->isWaterSector())){
-	  obj->addObjStat(ITEM_RUSTY);
-	}
-      }
-      
-
-      // freezing
-      // find base cups that are either in an arctic room, or in the inventory
-      // of a being in an arctic room, with < 10 drunk
-      // note we're avoid frostEngulfed() because it is a bit extreme for this
-      // thawing is done with thawEngulfed() in characterPulse
-      TBaseCup *cup=dynamic_cast<TBaseCup *>(obj);
-      if(cup){
-	TRoom *r=NULL;
-	TThing *t;
-	TBeing *ch=NULL;
-	
-	if((t = cup->equippedBy) || (t = cup->parent)){
-	  ch = dynamic_cast<TBeing *>(t);
-	  if(ch)
-	    r=ch->roomp;
-	} else
-	  r = cup->roomp;
-
-	if(r && (!ch || !ch->affectedBySpell(AFFECT_WAS_INDOORS))){
-	  if(r->isArcticSector() && cup->getDrinkUnits() > 0 && 
-	     cup->getLiqDrunk() < 7 && !cup->isDrinkConFlag(DRINK_FROZEN)){
-	    int rc=cup->freezeObject(ch, 0);
-	    if (IS_SET_DELETE(rc, DELETE_THIS)) {
-	      delete cup;
-	      cup = NULL;
-	      continue;
-	    }
-	    
-	    // freeze any pools that were dropped
-	    TPool *tp;
-	    for(StuffIter it=r->stuff.begin();it!=r->stuff.end() && (t=*it);++it){
-	      if((tp=dynamic_cast<TPool *>(t)) && tp->getLiqDrunk() < 7 &&
-		 !tp->isDrinkConFlag(DRINK_FROZEN))
-		tp->freezeObject(ch, 0);
-	    }
-	  }
-	}
-	
-	if(cup->roomp && !cup->roomp->isArcticSector() &&
-	   cup->isDrinkConFlag(DRINK_FROZEN)){
-	  cup->thawObject(ch, 0);
-	}
-      }
-
-      
-      // seeds sitting on the ground will sometimes auto-plant themselves
-      TTool *seed=dynamic_cast<TTool *>(obj);
-      if(seed && seed->getToolType()==TOOL_SEED &&
-	 !::number(0,100) &&
-	 seed->roomp &&
-	 !(seed->roomp->isFallSector() || 
-	   seed->roomp->isWaterSector() || 
-	   seed->roomp->isIndoorSector() || 
-	   seed->roomp->isUnderwaterSector())){
-
-	int count=0;
-	for(StuffIter it=seed->roomp->stuff.begin();
-	    it!=seed->roomp->stuff.end();++it){
-	  if(dynamic_cast<TPlant *>(*it))
-	    ++count;
-	}    
-	
-	if(count<8){
-	  TObj *tp;
-	  TPlant *tplant;
-	  tp = read_object(OBJ_GENERIC_PLANT, VIRTUAL);
-	  if((tplant=dynamic_cast<TPlant *>(tp))){
-	    tplant->setType(seed_to_plant(obj->objVnum()));
-	    tplant->updateDesc();
-	  
-	    *seed->roomp += *tp;
-	    
-	    seed->addToToolUses(-1);
-	    
-	    if (seed->getToolUses() <= 0) {
-	      delete obj;
-	      obj = NULL;
-	      continue;
-	    }
-	  }
-	}
-      }      
-    }
-
-
-    if (pl.pulse_mudhour) { // 1440
-      rc = obj->objectTickUpdate(pl.pulse);
-      if (IS_SET_DELETE(rc, DELETE_THIS)) {
-	delete obj;
-	obj = NULL;
-	continue;
-      }
-    }
-  } // object list
-
-  //  return retcount-count;
+bool procObjBurning::run(const TPulse &pl, TObj *obj) const
+{
+  // burning
+  int rc = obj->updateBurning();
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    return true;
+  return false;
 }
 
 
@@ -1194,6 +1247,8 @@ void procCharacterPulse::run(const TPulse &pl) const
     }
 
     if (pl.mobstuff) {
+      if(tmp_ch->isPc())
+
       if (toggleInfo[TOG_GRAVITY]->toggle) {
 	tmp_ch->checkSinking(tmp_ch->in_room);
 
@@ -1662,7 +1717,6 @@ int TMainSocket::gameLoop()
   // pulse every (1/10th of a second), but these processes distribute their
   // work over a 1.2 second cycle, so while they are called every pulse,
   // the pulse is artificially set to a combat pulse each time
-  scheduler.add(new procObjectPulse(PULSE_EVERY_DISTRIBUTED));
   scheduler.add(new procCharacterPulse(PULSE_EVERY_DISTRIBUTED));
 
   // pulse every  (1/10th of a second)
@@ -1680,6 +1734,20 @@ int TMainSocket::gameLoop()
   scheduler.add(new procWeightVolumeFumble(PULSE_COMBAT));
   scheduler.add(new procQueryQueue(PULSE_COMBAT));
   scheduler.add(new procRoomPulse(PULSE_COMBAT));
+  scheduler.add(new procObjVehicle(PULSE_COMBAT));
+  scheduler.add(new procObjDetonateGrenades(PULSE_COMBAT));
+  scheduler.add(new procObjFalling(PULSE_COMBAT));
+  scheduler.add(new procObjRiverFlow(PULSE_COMBAT));
+  scheduler.add(new procObjTeleportRoom(PULSE_COMBAT));
+  scheduler.add(new procObjSpecProcsQuick(PULSE_COMBAT));
+
+  // pulse spec_procs (3.6 seconds)
+  scheduler.add(new procObjBurning(PULSE_SPEC_PROCS));
+  scheduler.add(new procObjSinking(PULSE_SPEC_PROCS));
+  scheduler.add(new procObjSpecProcs(PULSE_SPEC_PROCS));
+  scheduler.add(new procObjSmoke(PULSE_SPEC_PROCS));
+  scheduler.add(new procObjPools(PULSE_SPEC_PROCS));
+  scheduler.add(new procObjTrash(PULSE_SPEC_PROCS));
 
   // pulse update  (36 seconds)
   scheduler.add(new procGlobalRoomStuff(PULSE_UPDATE));
@@ -1689,6 +1757,10 @@ int TMainSocket::gameLoop()
   scheduler.add(new procSaveNewFactions(PULSE_UPDATE));
   scheduler.add(new procWeatherAndTime(PULSE_UPDATE));
   scheduler.add(new procWholistAndUsageLogs(PULSE_UPDATE));
+  scheduler.add(new procObjRust(PULSE_UPDATE));
+  scheduler.add(new procObjFreezing(PULSE_UPDATE));
+  scheduler.add(new procObjAutoPlant(PULSE_UPDATE));
+
 
   // pulse mudhour  (144 seconds (2.4 mins))
   scheduler.add(new procFishRespawning(PULSE_MUDHOUR));
@@ -1704,6 +1776,7 @@ int TMainSocket::gameLoop()
   scheduler.add(new procUpdateTime(PULSE_MUDHOUR));
   scheduler.add(new procMobHate(PULSE_MUDHOUR));
   scheduler.add(new procDoComponents(PULSE_MUDHOUR));
+  scheduler.add(new procObjTickUpdate(PULSE_MUDHOUR));
 
   // pulse wayslow  (240 seconds (4 mins))
   scheduler.add(new procCheckForRepo(PULSE_WAYSLOW));

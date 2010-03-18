@@ -3,6 +3,8 @@
 
 #include "sstring.h"
 #include "comm.h"
+#include "obj.h"
+#include "timing.h"
 
 class TPulse {
 public:  
@@ -68,22 +70,131 @@ public:
 
 
 // This is the template of a process.
-class TProcess {
+class TBaseProcess {
  public:
   int trigger_pulse;
   sstring name;
 
   // in general, you shouldn't have to override should_run()
   virtual bool should_run(int) const;
+  
+  virtual ~TBaseProcess(){}
+};
 
+class TProcess : public TBaseProcess {
+ public:
   virtual void run(const TPulse &) const = 0;
 
-  virtual ~TProcess(){}
+};
+
+class TObjProcess : public TBaseProcess {
+  TTiming timer;
+  
+ public:
+  friend class TScheduler;
+
+  // returns true if object is to be deleted
+  virtual bool run(const TPulse &, TObj *) const = 0;
+};
+
+//// processes
+class procObjVehicle : public TObjProcess {
+ public:
+  bool run(const TPulse &, TObj *) const;
+  procObjVehicle(const int &);
+};
+
+class procObjDetonateGrenades : public TObjProcess {
+ public:
+  bool run(const TPulse &, TObj *) const;
+  procObjDetonateGrenades(const int &);
+};
+
+class procObjFalling : public TObjProcess {
+ public:
+  bool run(const TPulse &, TObj *) const;
+  procObjFalling(const int &);
+};
+
+class procObjRiverFlow : public TObjProcess {
+ public:
+  bool run(const TPulse &, TObj *) const;
+  procObjRiverFlow(const int &);
+};
+
+class procObjTeleportRoom : public TObjProcess {
+ public:
+  bool run(const TPulse &, TObj *) const;
+  procObjTeleportRoom(const int &);
+};
+
+class procObjSpecProcsQuick : public TObjProcess {
+ public:
+  bool run(const TPulse &, TObj *) const;
+  procObjSpecProcsQuick(const int &);
 };
 
 
+class procObjTickUpdate : public TObjProcess {
+ public:
+  bool run(const TPulse &, TObj *) const;
+  procObjTickUpdate(const int &);
+};
 
-//// processes
+class procObjBurning : public TObjProcess {
+ public:
+  bool run(const TPulse &, TObj *) const;
+  procObjBurning(const int &);
+};
+
+class procObjSinking : public TObjProcess {
+ public:
+  bool run(const TPulse &, TObj *) const;
+  procObjSinking(const int &);
+};
+
+class procObjSpecProcs : public TObjProcess {
+ public:
+  bool run(const TPulse &, TObj *) const;
+  procObjSpecProcs(const int &);
+};
+
+class procObjSmoke : public TObjProcess {
+ public:
+  bool run(const TPulse &, TObj *) const;
+  procObjSmoke(const int &);
+};
+
+class procObjPools : public TObjProcess {
+ public:
+  bool run(const TPulse &, TObj *) const;
+  procObjPools(const int &);
+};
+
+class procObjTrash : public TObjProcess {
+ public:
+  bool run(const TPulse &, TObj *) const;
+  procObjTrash(const int &);
+};
+
+class procObjRust : public TObjProcess {
+ public:
+  bool run(const TPulse &, TObj *) const;
+  procObjRust(const int &);
+};
+
+class procObjFreezing : public TObjProcess {
+ public:
+  bool run(const TPulse &, TObj *) const;
+  procObjFreezing(const int &);
+};
+
+class procObjAutoPlant : public TObjProcess {
+ public:
+  bool run(const TPulse &, TObj *) const;
+  procObjAutoPlant(const int &);
+};
+
 class procIdle : public TProcess {
  public:
   void run(const TPulse &) const;
@@ -118,14 +229,6 @@ class procCharacterPulse : public TProcess {
  public:
   void run(const TPulse &) const;
   procCharacterPulse(const int &);
-};
-
-class procObjectPulse : public TProcess {
-  TObj *placeholder;
-
- public:
-  void run(const TPulse &) const;
-  procObjectPulse(const int &);
 };
 
 class procWeightVolumeFumble : public TProcess {
@@ -362,11 +465,16 @@ class procDoComponents : public TProcess {
 
 class TScheduler {
   std::vector<TProcess *>procs;
+  std::vector<TObjProcess *>obj_procs;
+
+  TObj *placeholder;
+  TObjIter objIter;
 
  public:
   TPulse pulse;
 
   void add(TProcess *);
+  void add(TObjProcess *);
   void run(int);
 
   TScheduler();

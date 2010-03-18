@@ -79,7 +79,7 @@ void procPerformViolence::run(const TPulse &pl) const
 
 ///////
 
-bool TProcess::should_run(int p) const
+bool TBaseProcess::should_run(int p) const
 {
   if(!(p % trigger_pulse))
     return true;
@@ -92,21 +92,29 @@ void TScheduler::add(TProcess *p)
   procs.push_back(p);
 }
 
-TScheduler::TScheduler(){
-  pulse.init(0);
+void TScheduler::add(TObjProcess *p)
+{
+  obj_procs.push_back(p);
 }
 
-// we have some legacy code here, in that many processes expect pulse
-// to be mod 2400.  So we use the real pulse, but pass mod 2400.
+TScheduler::TScheduler(){
+  pulse.init(0);
+  placeholder=read_object(42, VIRTUAL);
+  // don't think we can recover from this
+  mud_assert(placeholder!=NULL, "couldn't load placeholder object");
+  *(real_roomp(0)) += *placeholder;
+  objIter=find(object_list.begin(), object_list.end(), placeholder);
+}
+
 void TScheduler::run(int pulseNum)
 {
   TTiming timer;
-  std::vector<TProcess *>::iterator iter;
 
   pulse.init(pulseNum);
 
-  for(iter=procs.begin();iter!=procs.end();++iter){
-    if((*iter)->should_run(pulseNum)){
+  for(std::vector<TProcess *>::iterator iter=procs.begin();
+      iter!=procs.end();++iter){
+    if((*iter)->should_run(pulse.pulse)){
       if(toggleInfo[TOG_GAMELOOP]->toggle)
 	timer.start();
 
@@ -117,12 +125,84 @@ void TScheduler::run(int pulseNum)
 
       if((*iter)->trigger_pulse == PULSE_EVERY_DISTRIBUTED)
 	pulse.init(pulseNum);
-      
+
       if(toggleInfo[TOG_GAMELOOP]->toggle){
 	timer.end();
 	vlogf(LOG_MISC, format("%i %i) %s: %i") % 
 	      (pulseNum % 2400) % (pulseNum%12) % (*iter)->name % 
 	      (int)(timer.getElapsed()*1000000));
+      }
+    }
+  }
+
+  pulse.init12(pulseNum);
+  int count;
+  TObj *obj;
+
+  // we want to go through 1/12th of the object list every pulse
+  // obviously the object count will change, so this is approximate.
+  count=(int)((float)objCount/11.5);
+
+  while(count--){
+    // remove placeholder from object list and increment iterator
+    object_list.erase(objIter++);
+    
+    // set object to be processed
+    obj=(*objIter);
+    
+    // move to front of list if we reach the end
+    // otherwise just stick the placeholder in
+    if(++objIter == object_list.end()){
+      object_list.push_front(placeholder);
+      objIter=object_list.begin();
+    } else {
+      object_list.insert(objIter, placeholder);
+      --objIter;
+    }
+    
+    
+    if (!dynamic_cast<TObj *>(obj)) {
+      vlogf(LOG_BUG, format("Object_list produced a non-obj().  rm: %d") %
+	    obj->in_room);
+      vlogf(LOG_BUG, format("roomp %s, parent %s") %  
+	    (obj->roomp ? "true" : "false") %
+	    (obj->parent ? "true" : "false"));
+      // bogus objects tend to have garbage in obj->next
+      // it would be dangerous to continue with this loop
+      // this is called often enough that one skipped iteration should
+      // not be noticed.  Therefore, break out.
+      break;
+    }
+
+
+    for(std::vector<TObjProcess *>::iterator iter=obj_procs.begin();
+	iter!=obj_procs.end();++iter){
+      if((*iter)->should_run(pulse.pulse)){
+	if(toggleInfo[TOG_GAMELOOP]->toggle)
+	  (*iter)->timer.start();
+	      
+	if((*iter)->run(pulse, obj)){
+	  delete obj;
+
+	  if(toggleInfo[TOG_GAMELOOP]->toggle)
+	    (*iter)->timer.end();
+
+	  break;
+	}
+	
+	if(toggleInfo[TOG_GAMELOOP]->toggle)
+	  (*iter)->timer.end();
+      }
+    }
+  }
+
+  if(toggleInfo[TOG_GAMELOOP]->toggle){
+    for(std::vector<TObjProcess *>::iterator iter=obj_procs.begin();
+	iter!=obj_procs.end();++iter){
+      if((*iter)->should_run(pulse.pulse)){
+	vlogf(LOG_MISC, format("%i %i) %s: %i") % 
+	      (pulseNum % 2400) % (pulseNum%12) % (*iter)->name % 
+	      (int)((*iter)->timer.getElapsedReset()*1000000));
       }
     }
   }
