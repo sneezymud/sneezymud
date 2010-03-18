@@ -1091,8 +1091,9 @@ int TObj::damageItem(short amt)
   addToStructPoints(max(-amt, -getStructPoints()));
 
   if(getStructPoints() <= 0){
-    if (makeScraps())
+    if (!makeScraps()){
       return DELETE_THIS;
+    }
     return TRUE;
   }
 
