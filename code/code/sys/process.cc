@@ -253,6 +253,7 @@ void TScheduler::runChar(int pulseNum)
 	  (*iter)->timing+=timer.getElapsed();
       }
     }
+    temp = tmp_ch->next;  // just for safety
   }
 
   if(toggleInfo[TOG_GAMELOOP]->toggle){
