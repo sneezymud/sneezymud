@@ -896,7 +896,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
     } else if (chance == 24) {
       taunt_buf=format("Your pets will love new %s brand kibble!") % v->getName();
     } else if (chance == 25) {
-      taunt_buf=format("%s-lite, now with 100% less hitpoints!") % v->getName();
+      taunt_buf=format("%s-lite, now with 100%% less hitpoints!") % v->getName();
     } else if (chance == 26) {
       taunt_buf=format("Ouch! Does someone have a relive for %s?") % v->getName();
 	  } else {
