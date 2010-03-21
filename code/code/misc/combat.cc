@@ -1134,14 +1134,14 @@ bool scrapMonogrammed(TObj *o)
       *ch->roomp += *o;
     else
       *ch += *o;
-    return false;
+    return true;
   } else if ((chb = o->stuckIn)) {
     chb->setStuckIn(o->eq_stuck, NULL);
     if (chb->roomp)
       *chb->roomp += *o;
     else 
       *chb += *o;
-    return false;
+    return true;
   } else if ((ch = o->equippedBy)) {
     TBeing * tbt = dynamic_cast<TBeing *>(ch);
     o->scrapMe(tbt);
@@ -1149,14 +1149,14 @@ bool scrapMonogrammed(TObj *o)
     o2 = tbt->unequip(o->eq_pos);
     // unequip deletes bandages
     if (!o2)
-      return false;
+      return true;
 
     if (tbt->roomp) 
       *tbt->roomp += *o;
     else 
       *tbt += *o;
     
-    return false;
+    return true;
   }
   // at this point, "this" is guaranteed to be in roomp
 
@@ -1165,10 +1165,10 @@ bool scrapMonogrammed(TObj *o)
     --(*x);
     *o->roomp += *x;
   }
-  return false;
+  return true;
 }
 
-// all calls to this function should delete obj afterwards
+// return false to delete object
 bool TObj::makeScraps()
 {
   TTrash *o = NULL;
