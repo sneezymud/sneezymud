@@ -675,7 +675,7 @@ void TShopOwned::showInfo()
     }
   } else if(keeper->spec==SPEC_TAXMAN){
     keeper->doTell(ch->getName(),
-		   format("My interest rate paid out is %f.") %
+		   format("The tax rate is %f.") %
 		   (shop_index[shop_nr].profit_buy));
   } else if(keeper->spec==SPEC_CENTRAL_BANKER){
     keeper->doTell(ch->getName(),
