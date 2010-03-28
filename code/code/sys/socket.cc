@@ -1892,6 +1892,7 @@ int TMainSocket::gameLoop()
   scheduler.add(new procObjAutoPlant(PULSE_UPDATE));
   scheduler.add(new procCharHalfTickUpdate(PULSE_UPDATE));
   scheduler.add(new procCharThaw(PULSE_UPDATE));
+  scheduler.add(new procDoubleXP(PULSE_UPDATE));
 
   // pulse mudhour  (144 seconds (2.4 mins))
   scheduler.add(new procFishRespawning(PULSE_MUDHOUR));
@@ -1913,7 +1914,6 @@ int TMainSocket::gameLoop()
   // pulse wayslow  (240 seconds (4 mins))
   scheduler.add(new procCheckForRepo(PULSE_WAYSLOW));
   scheduler.add(new procCheckMail(PULSE_WAYSLOW));
-  scheduler.add(new procDoubleXP(PULSE_WAYSLOW));
   //  scheduler.add(new procCheckTriggerUsers(PULSE_WAYSLOW));
   
   // pulse mudday   (3456 seconds (57.6 mins))
