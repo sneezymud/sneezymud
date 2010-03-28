@@ -6774,6 +6774,7 @@ extern int objWornAstralWalk(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *
 extern int objWornMinorAstralWalk(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 extern int objWornPortal(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 extern int comboEQCast(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
+extern int ofManyPotions(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 
 // assign special procedures to objects
 
@@ -6935,5 +6936,6 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "rubik's cube", rubiksCube},
   {FALSE, "Immortal Exchange Computer", ieComputer}, 
   {FALSE, "liquid source", liquidSource}, // 155
+  {FALSE, "of many potions", ofManyPotions},
   {FALSE, "last proc", bogusObjProc}
 };
