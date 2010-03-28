@@ -1776,6 +1776,48 @@ void procIdle::run(const TPulse &pl) const
   usleep(gSocket->sleeptime.tv_usec);
 }
 
+procDoubleXP::procDoubleXP(const int &p)
+{
+  trigger_pulse=p;
+  name="procDoubleXP";
+}
+
+void procDoubleXP::run(const TPulse &pl) const
+{
+  time_t ct = time(0) + (24*60*60);
+  struct tm today = *localtime(&ct);
+  ct = time(0) + (24*60*60*7);
+  struct tm next_week = *localtime(&ct);
+  ct = time(0) + (24*60*60*6);
+  struct tm next_week_minus_1 = *localtime(&ct);
+  ct = time(0) + (24*60*60*5);
+  struct tm next_week_minus_2 = *localtime(&ct);
+
+  static bool turnedOn=false;
+  
+
+  enum tm_days {
+    Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday
+  };
+
+  if(/* if today is friday and next friday (+7 days) is a different month */
+     (today.tm_wday==Friday && next_week.tm_mon!=today.tm_mon) ||
+     /* if today is saturday, and next friday (+6 days) is a different month */
+     (today.tm_wday==Saturday && next_week_minus_1.tm_mon!=today.tm_mon) ||
+     /* if today is sunday, and next friday (+5 days) is a different month */
+     (today.tm_wday==Sunday && next_week_minus_2.tm_mon!=today.tm_mon)){
+    vlogf(LOG_PEEL, "turning double exp on");
+    toggleInfo[TOG_DOUBLEEXP]->toggle = true;
+    turnedOn=true;
+  } else if(turnedOn){
+    vlogf(LOG_PEEL, "turning double exp off");
+    toggleInfo[TOG_DOUBLEEXP]->toggle = false;
+    turnedOn=false;
+  }
+}
+
+
+
 
 int TMainSocket::gameLoop()
 {
@@ -1879,6 +1921,7 @@ int TMainSocket::gameLoop()
   scheduler.add(new procCloseAccountingBooks(PULSE_MUDDAY));
   scheduler.add(new procRecordCommodPrices(PULSE_MUDDAY));
   scheduler.add(new procFactoryProduction(PULSE_MUDDAY));
+  scheduler.add(new procDoubleXP(PULSE_MUDDAY));
 
   // pulse realhour
 //  scheduler.add(new procTweakLoadRate(PULSE_REALHOUR)); // desired load rate achieved

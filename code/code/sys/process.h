@@ -349,6 +349,12 @@ class procObjAutoPlant : public TObjProcess {
   procObjAutoPlant(const int &);
 };
 
+class procDoubleXP : public TProcess {
+ public:
+  void run(const TPulse &) const;
+  procDoubleXP(const int &);
+};
+
 class procIdle : public TProcess {
  public:
   void run(const TPulse &) const;
