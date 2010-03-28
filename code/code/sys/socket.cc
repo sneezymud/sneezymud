@@ -1784,7 +1784,7 @@ procDoubleXP::procDoubleXP(const int &p)
 
 void procDoubleXP::run(const TPulse &pl) const
 {
-  time_t ct = time(0) + (24*60*60);
+  time_t ct = time(0);
   struct tm today = *localtime(&ct);
   ct = time(0) + (24*60*60*7);
   struct tm next_week = *localtime(&ct);
