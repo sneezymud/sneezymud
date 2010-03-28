@@ -1806,11 +1806,9 @@ void procDoubleXP::run(const TPulse &pl) const
      (today.tm_wday==Saturday && next_week_minus_1.tm_mon!=today.tm_mon) ||
      /* if today is sunday, and next friday (+5 days) is a different month */
      (today.tm_wday==Sunday && next_week_minus_2.tm_mon!=today.tm_mon)){
-    vlogf(LOG_PEEL, "turning double exp on");
     toggleInfo[TOG_DOUBLEEXP]->toggle = true;
     turnedOn=true;
   } else if(turnedOn){
-    vlogf(LOG_PEEL, "turning double exp off");
     toggleInfo[TOG_DOUBLEEXP]->toggle = false;
     turnedOn=false;
   }
