@@ -146,21 +146,6 @@ void TScheduler::runObj(int pulseNum)
       --objIter;
     }
     
-    
-    if (!dynamic_cast<TObj *>(obj)) {
-      vlogf(LOG_BUG, format("Object_list produced a non-obj().  rm: %d") %
-	    obj->in_room);
-      vlogf(LOG_BUG, format("roomp %s, parent %s") %  
-	    (obj->roomp ? "true" : "false") %
-	    (obj->parent ? "true" : "false"));
-      // bogus objects tend to have garbage in obj->next
-      // it would be dangerous to continue with this loop
-      // this is called often enough that one skipped iteration should
-      // not be noticed.  Therefore, break out.
-      break;
-    }
-
-
     for(std::vector<TObjProcess *>::iterator iter=obj_procs.begin();
 	iter!=obj_procs.end();++iter){
       if((*iter)->should_run(pulse.pulse)){
