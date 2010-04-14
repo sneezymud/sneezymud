@@ -302,7 +302,7 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
       act("$p falls to the $g harmlessly.", FALSE, ch, the_arrow, NULL, TO_ROOM);
       --(*the_arrow);
       *ch->roomp += *the_arrow;
-      if (makeScraps())
+      if (!makeScraps())
         return DELETE_THIS;
       return FALSE;
     } else {

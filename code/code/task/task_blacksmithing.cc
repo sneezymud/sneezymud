@@ -137,7 +137,7 @@ bool BaseRepair::DamageTool(bool primary, TObj *o, bool makeScraps)
   {
     act(primary ? DiePToolMsgC() : DieSToolMsgC(), FALSE, m_ch, o, tool, TO_CHAR);
     act(primary ? DiePToolMsgR() : DieSToolMsgR(), FALSE, m_ch, o, tool, TO_ROOM);
-    if (!makeScraps || tool->makeScraps())
+    if (!makeScraps || !tool->makeScraps())
       delete tool;
     m_ch->stopTask();
     return true;
@@ -318,7 +318,7 @@ int BaseRepair::PumpMessage(cmdTypeT cmd, int pulse)
       {
         act("$n screws up repairing $p and wrecks it.", FALSE, m_ch, o, NULL, TO_ROOM);
         act("You screw up your job by dropping $p and wrecking it.", FALSE, m_ch, o, NULL, TO_CHAR);
-        if (o->makeScraps())
+        if (!o->makeScraps())
           delete o;
 
         m_ch->stopTask();

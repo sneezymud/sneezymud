@@ -406,9 +406,10 @@ int TBeing::doGet(const char *argument)
           // get all has no lag, is this needed?
           // addToWait(ONE_SECOND);
           if (IS_SET_DELETE(rc, DELETE_ITEM)) {
-            if (t->makeScraps())
+            if (!t->makeScraps()){
               delete t;
-            t = NULL;
+	      t = NULL;
+	    }
           }
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             return DELETE_THIS;
@@ -543,14 +544,16 @@ int TBeing::doGet(const char *argument)
           // addToWait(ONE_SECOND);
 
           if (IS_SET_DELETE(rc, DELETE_ITEM)) {
-            if (t->makeScraps())
+            if (!t->makeScraps()){
               delete t;
-            t = NULL;
+	      t = NULL;
+	    }
           }
           if (IS_SET_DELETE(rc, DELETE_VICT)) {
-            if (sub->makeScraps())
+            if (!sub->makeScraps()){
               delete sub;
-            sub = NULL;
+	      sub = NULL;
+	    }
           }
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             return DELETE_THIS;
@@ -565,14 +568,16 @@ int TBeing::doGet(const char *argument)
           // addToWait(ONE_SECOND);
 
           if (IS_SET_DELETE(rc, DELETE_ITEM)) {
-            if (t->makeScraps())
+            if (!t->makeScraps()){
               delete t;
-            t = NULL;
+	      t = NULL;
+	    }
           }
           if (IS_SET_DELETE(rc, DELETE_VICT)) {
-            if (sub->makeScraps())
+            if (!sub->makeScraps()){
               delete sub;
-            sub = NULL;
+	      sub = NULL;
+	    }
           }
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             return DELETE_THIS;

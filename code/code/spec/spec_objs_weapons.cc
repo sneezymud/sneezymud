@@ -285,7 +285,7 @@ int blazeOfGlory(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
       o->addToStructPoints(-5);
       o->setDepreciation(o->getDepreciation() + 5);
       if (o->getStructPoints() <= 0) {
-	      if (o->makeScraps())
+	if (!o->makeScraps())
           delete o;
       }
       int rc2 = ch->reconcileDamage(ch, dam, DAMAGE_FIRE);

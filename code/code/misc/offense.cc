@@ -1387,7 +1387,7 @@ int TObj::burnObject(TBeing *ch, int perc)
         }
       }
     }
-    if (makeScraps())
+    if (!makeScraps())
       return DELETE_THIS;
     return TRUE;
   } else {
@@ -1672,7 +1672,7 @@ int TObj::freezeObject(TBeing *ch, int perc)
       } else {
         act("The chill freezes $n and it shatters.",TRUE,this,0,0,TO_ROOM);
       }
-      if (makeScraps())
+      if (!makeScraps())
         return DELETE_THIS;
       return TRUE;
     case MAT_MICA:
@@ -2099,7 +2099,7 @@ int TBeing::shieldAbsorbDamage(int dam)
     act("$p partially blocks the blast but is utterly destroyed at the same time.",TRUE,
          this,shield, 0,TO_ROOM);
     unequip(slot);
-    if (shield->makeScraps())
+    if (!shield->makeScraps())
       delete shield;
     shield = NULL;
   } else {

@@ -513,7 +513,7 @@ int TThing::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int mdis
             if (tobj->getStructPoints() <= 0) {
               if (!ch->sameRoom(*tbt))
                 act("In the distance, $p is destroyed.",TRUE,ch,tobj,0,TO_CHAR);
-              if (tobj->makeScraps())
+              if (!tobj->makeScraps())
                 ADD_DELETE(resCode, DELETE_ITEM);
             }
           }

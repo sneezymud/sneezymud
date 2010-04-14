@@ -2274,8 +2274,8 @@ int keyInKnife(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     act("The entire $o splits down the center, revealing a <Y>golden key<1>.<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
     act("$n fiddles with the hilt of $p. *click*.",TRUE,ch,o,NULL,TO_ROOM,NULL);
     act("The entire $o splits down the center, revealing a small <Y>golden<1> object.",TRUE,ch,o,NULL,TO_ROOM,NULL);
-    o->makeScraps();
-    delete o;
+    if(!o->makeScraps())
+      delete o;
     return TRUE;
   }
   return FALSE;
@@ -5660,8 +5660,8 @@ int statueArmTwist(TBeing *me, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     *me->roomp += *packet;
     act("The statue was not well made and starts to crumble as you watch.", TRUE, me, 0, 0, TO_CHAR);
     act("The statue was not well made and starts to crumble as you watch.", TRUE, me, 0, 0, TO_ROOM);
-    o->makeScraps();
-    delete o;
+    if(!o->makeScraps())
+      delete o;
     return TRUE;
   }
   return FALSE;
