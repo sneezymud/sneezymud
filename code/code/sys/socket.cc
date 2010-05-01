@@ -1786,12 +1786,17 @@ void procDoubleXP::run(const TPulse &pl) const
 {
   time_t ct = time(0);
   struct tm today = *localtime(&ct);
+  ct = time(0) - (24*60*60*1);
+  struct tm today_m1 = *localtime(&ct);
+  ct = time(0) - (24*60*60*2);
+  struct tm today_m2 = *localtime(&ct);
+
   ct = time(0) + (24*60*60*7);
   struct tm next_week = *localtime(&ct);
   ct = time(0) + (24*60*60*6);
-  struct tm next_week_minus_1 = *localtime(&ct);
+  struct tm next_week_m1 = *localtime(&ct);
   ct = time(0) + (24*60*60*5);
-  struct tm next_week_minus_2 = *localtime(&ct);
+  struct tm next_week_m2 = *localtime(&ct);
 
   static bool turnedOn=false;
   
@@ -1803,9 +1808,9 @@ void procDoubleXP::run(const TPulse &pl) const
   if(/* if today is friday and next friday (+7 days) is a different month */
      (today.tm_wday==Friday && next_week.tm_mon!=today.tm_mon) ||
      /* if today is saturday, and next friday (+6 days) is a different month */
-     (today.tm_wday==Saturday && next_week_minus_1.tm_mon!=today.tm_mon) ||
+     (today.tm_wday==Saturday && next_week_m1.tm_mon!=today_m1.tm_mon) ||
      /* if today is sunday, and next friday (+5 days) is a different month */
-     (today.tm_wday==Sunday && next_week_minus_2.tm_mon!=today.tm_mon)){
+     (today.tm_wday==Sunday && next_week_m2.tm_mon!=today_m2.tm_mon)){
     toggleInfo[TOG_DOUBLEEXP]->toggle = true;
     turnedOn=true;
   } else if(turnedOn){
