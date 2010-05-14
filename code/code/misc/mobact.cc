@@ -2340,22 +2340,20 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
 int TMonster::dynamicComponentLoader(spellNumT spell, int loadrate)
 {
   TComponent *tcomp;
-  TThing *t=NULL;
   unsigned int comp;
 
   for (comp = 0; (comp < CompInfo.size()) &&
-	 (spell != CompInfo[comp].spell_num);comp++);
+    (spell != CompInfo[comp].spell_num); comp++);
   if (comp == CompInfo.size() || CompInfo[comp].comp_num < 0) 
     return FALSE;
 
-  if(!(tcomp = findComponent(spell))){
-    for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it);
-    if(t && (::number(1,100)<=loadrate)) {
+  if (!(tcomp = findComponent(spell))) {
+    if (::number(1,100) <= loadrate) {
       tcomp = dynamic_cast<TComponent *>(read_object(CompInfo[comp].comp_num, VIRTUAL));
       if (!tcomp)
         return FALSE;
       tcomp->setComponentCharges(::number(0, tcomp->getComponentCharges() - 1));
-      *t += *tcomp;
+      *this += *tcomp;
     } else
       return FALSE;
   } else {

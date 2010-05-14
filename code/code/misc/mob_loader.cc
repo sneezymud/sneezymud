@@ -940,10 +940,8 @@ void TMonster::clericSymbolLoader(void)
 
 void TMonster::buffMobLoader()
 {
-  const int level_min = 20;
+  const int level_min = 40;
   if (GetMaxLevel() < level_min)
-    return;
-  if (GetMaxLevel() > 75)
     return;
 
   // value of 99  : 5 potions, 7770 mobs : 6.43e-4
@@ -952,7 +950,7 @@ void TMonster::buffMobLoader()
     return;
 
   // level based chance
-  if (::number(0,9999) > (GetMaxLevel() + 10) * (GetMaxLevel() + 10))
+  if (::number(0, max(0, 10000 - GetMaxLevel() * GetMaxLevel())))
     return;
 
   int vnums[19], num = 0;
