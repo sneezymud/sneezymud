@@ -616,16 +616,37 @@ class procDoComponents : public TProcess {
 /////////////////////
 
 
+class TProcTop {
+  std::map<sstring,bool>added;
+
+  char *shm;
+  char *shm_ptr;
+  int shmid;
+
+ public:
+  const static int shm_size=1024;
+
+  void clear();
+  void add(const sstring &);
+
+  TProcTop();
+};
+
 
 class TScheduler {
+  // process lists
   std::vector<TProcess *>procs;
   std::vector<TObjProcess *>obj_procs;
   std::vector<TCharProcess *>char_procs;
 
+  // object process data
   TObj *placeholder;
   TObjIter objIter;
 
+  // char process data
   TBeing *tmp_ch;
+
+  TProcTop top;
 
   void runObj(int);
   void runChar(int);
