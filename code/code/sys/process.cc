@@ -109,22 +109,28 @@ void TScheduler::add(TCharProcess *p)
 TProcTop::TProcTop(){
   if((shmid=shmget(gamePort, shm_size, IPC_CREAT | 0666)) < 0){
     vlogf(LOG_BUG, "failed to get shared memory segment in TScheduler()");
+    shm=NULL;
   } else if((shm = (char *)shmat(shmid, NULL, 0)) == (char *) -1){
     vlogf(LOG_BUG, "failed to attach shared memory segment in TScheduler()");
+    shm=NULL;
   }  
 }
 
 void TProcTop::clear(){
-  memset(shm, 0, shm_size);
-  shm_ptr=shm;
-  added.clear();
+  if(shm){
+    memset(shm, 0, shm_size);
+    shm_ptr=shm;
+    added.clear();
+  }
 }
 
 void TProcTop::add(const sstring &s){
-  if(added.find(s)==added.end()){
-    strcpy(shm_ptr, s.c_str());
-    shm_ptr+=s.length()+1;
-    added[s]=true;
+  if(shm){
+    if(added.find(s)==added.end()){
+      strcpy(shm_ptr, s.c_str());
+      shm_ptr+=s.length()+1;
+      added[s]=true;
+    }
   }
 }
 
