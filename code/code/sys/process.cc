@@ -125,12 +125,12 @@ void TProcTop::clear(){
 }
 
 void TProcTop::add(const sstring &s){
-  if(shm){
-    if(added.find(s)==added.end()){
-      strcpy(shm_ptr, s.c_str());
-      shm_ptr+=s.length()+1;
-      added[s]=true;
-    }
+  if(shm && 
+     ((unsigned int)(shm_size-(shm_ptr-shm)) > (s.length()+1)) &&
+     (added.find(s)==added.end())){
+    strcpy(shm_ptr, s.c_str());
+    shm_ptr+=s.length()+1;
+    added[s]=true;
   }
 }
 
