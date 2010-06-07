@@ -48,6 +48,13 @@ mudmail=env.Program(['cgi/mudmail.cgi.cc', cgi], LIBS=libs)
 env.Install('../cgi', [mudmail])
 env.Alias('cgi', '../cgi')
 
+# shell tools
+econ=env.Program(['shell/econ.cc'], LIBS=libs)
+
+env.Install('../shell', [econ])
+env.Alias('shell', '../shell')
+
+
 # unit tests
 env.SConscript('tests/SConscript',
                exports='libs')
