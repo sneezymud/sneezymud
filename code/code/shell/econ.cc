@@ -221,6 +221,6 @@ int main(int argc, char *argv[]){
   if(cogs_detail!=-1)
     check_cogs_detail(cogs_detail);
 
-  if(vm.count("help"))  
+  if(argc<=1 || vm.count("help"))  
      cout << cmdline_options;
 }
