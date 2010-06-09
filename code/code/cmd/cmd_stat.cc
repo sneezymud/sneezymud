@@ -21,6 +21,7 @@
 #include "person.h"
 #include "guild.h"
 #include "skills.h"
+#include "shop.h"
 
 extern int eqHpBonus(const TPerson *);
 extern int baseHp();
@@ -374,6 +375,15 @@ void TBeing::statRoom(TRoom *rmp)
   str += format("%sRoom Coords:%s %d, %d, %d\n\r") %
     cyan() % norm() %
     rmp->getXCoord() % rmp->getYCoord() % rmp->getZCoord();
+
+  unsigned int shop_nr=0;
+  for (shop_nr = 0; (shop_nr < shop_index.size()) && 
+	 (shop_index[shop_nr].in_room != rmp->number); shop_nr++);
+
+  if (shop_nr < shop_index.size())
+    str += format("%sShop Number:%s %i, %sShop Keeper:%s %i\n\r") %
+      cyan() % norm() % shop_nr % cyan() % norm() % 
+      mob_index[shop_index[shop_nr].keeper].virt;
 
   str += format("%sSector type:%s %s") %
     cyan() % norm() % TerrainInfo[rmp->getSectorType()]->name;
