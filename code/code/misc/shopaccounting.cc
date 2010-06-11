@@ -119,12 +119,19 @@ void TShopJournal::closeTheBooks()
 
   TShopOwned tso(shop_nr, NULL, NULL);
 
+  //// assets
   // carryover entry for cash
   tso.journalize_debit(100, "Accountant", "Year End Accounting", 
 			getValue("Cash"), true);
   // carryover entry for inventory
   tso.journalize_debit(130, "Accountant", "Year End Accounting", 
 			getValue("Inventory"));
+
+  //// liabilities
+  // carryover entry for deposits
+  tso.journalize_credit(310, "Accountant", "Year End Accounting",
+			getValue("Deposits"));
+
   // carryover entry for PIC
   tso.journalize_credit(300, "Accountant", "Year End Accounting", 
 			getValue("Paid-in Capital"));
