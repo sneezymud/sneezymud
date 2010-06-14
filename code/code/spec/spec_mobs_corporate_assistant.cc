@@ -4,6 +4,7 @@
 #include "database.h"
 #include "corporation.h"
 #include "shop.h"
+#include "shopowned.h"
 
 void corpListing(TBeing *ch, TMonster *me)
 {
@@ -262,19 +263,14 @@ void corpDeposit(TBeing *ch, TMonster *me, int gold, sstring arg)
 
   me->doTell(ch->getName(), format("Ok, you are depositing %i gold.") % gold);
 
-  // transfer
-  ch->giveMoney(banker, gold, GOLD_XFER);
 
   corp.setMoney(corp.getMoney() + gold);
   corp.corpLog(ch->getName(), "deposit", gold);
   
-  // save
-  dynamic_cast<TMonster *>(banker)->saveItems(shop_nr);
-
-  // log
-  shoplog(shop_nr, ch, dynamic_cast<TMonster *>(banker), "talens", gold, "corporate deposit");
-
   me->doTell(ch->getName(), format("Your balance is %i.") % corp.getMoney());
+
+  TShopOwned tso(shop_nr, dynamic_cast<TMonster *>(banker), ch);
+  tso.doBuyTransaction(gold, "talens", TX_DEPOSIT);
 }
 
 
@@ -345,18 +341,14 @@ void corpWithdraw(TBeing *ch, TMonster *me, int gold, sstring arg)
     return;
   }
 
-
   corp.setMoney(corp.getMoney() - gold);
   corp.corpLog(ch->getName(), "withdrawal", -gold);
-
-  banker->giveMoney(ch, gold, GOLD_XFER);
-
-  dynamic_cast<TMonster *>(banker)->saveItems(shop_nr);
 
   me->doTell(ch->getName(), format("Ok, here is %i talens.") % gold);
   me->doTell(ch->getName(), format("Your balance is %i.") % (tmp-gold));
 
-  shoplog(shop_nr, ch, dynamic_cast<TMonster *>(banker), "talens", -gold, "corporate withdrawal");
+  TShopOwned tso(shop_nr, dynamic_cast<TMonster *>(banker), ch);
+  tso.doSellTransaction(gold, "talens", TX_WITHDRAWAL);
 }
 
 
