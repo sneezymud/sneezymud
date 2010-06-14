@@ -16,7 +16,7 @@ bool okForJanitor(TMonster *myself, TObj *obj)
   // only things that can be taken, and that are not pools
   if (!obj->canWear(ITEM_TAKE) && !dynamic_cast<TPool *>(obj))
     return false;
-  if (!myself->canSee(obj) || (obj->in_room == ROOM_DONATION))
+  if (!myself->canSee(obj) || (obj->in_room == Room::DONATION))
     return false;
   // monogrammed valuables have important owners - leave them alone
   if (obj->isMonogrammed())
@@ -29,7 +29,7 @@ bool okForJanitor(TMonster *myself, TObj *obj)
 
   TBaseCorpse *corpse = dynamic_cast<TBaseCorpse *>(obj);
   // Don't let them try corpses in gh at all - there are other mobs for that
-  if ((myself->mobVnum() == MOB_SWEEPER || myself->mobVnum() == MOB_SWEEPER2)
+  if ((myself->mobVnum() == Mob::SWEEPER || myself->mobVnum() == Mob::Mob::SWEEPER2)
     && corpse)
     return false;
   // Don't let them try and get corpses that are being skinned.
@@ -236,10 +236,10 @@ int janitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     if (!obj)
       continue;
 
-    if (myself->inRoom() == ROOM_DONATION)
+    if (myself->inRoom() == Room::DONATION)
       break;
 
-    if(obj->objVnum()==GENERIC_TRASH_PILE && !obj->stuff.empty())
+    if(obj->objVnum()==Obj::GENERIC_TRASH_PILE && !obj->stuff.empty())
       trashpile=true;
 
     if (!trashpile && !okForJanitor(myself, obj))
@@ -271,7 +271,7 @@ int janitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       act("$n picks up $p.", FALSE, myself, obj, 0, TO_ROOM);
       --(*obj);
       *myself += *obj; 
-      if(obj->objVnum() == OBJ_PILE_OFFAL)
+      if(obj->objVnum() == Obj::PILE_OFFAL)
 	delete obj;
     }
     return TRUE;
@@ -279,9 +279,9 @@ int janitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 
   // we only get here if there is nothing in my room worth picking up
 
-  if (myself->mobVnum() == MOB_SWEEPER || myself->mobVnum() == MOB_SWEEPER2) {
+  if (myself->mobVnum() == Mob::SWEEPER || myself->mobVnum() == Mob::Mob::SWEEPER2) {
     if (!myself->stuff.empty()) {
-      rc = myself->doDonate(ROOM_DONATION);
+      rc = myself->doDonate(Room::DONATION);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         return DELETE_THIS;
       }
@@ -332,7 +332,7 @@ int prisonJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
     if(obj->objVnum() == 26688)
       continue;
 
-    if(obj->objVnum()==GENERIC_TRASH_PILE && !obj->stuff.empty())
+    if(obj->objVnum()==Obj::GENERIC_TRASH_PILE && !obj->stuff.empty())
       trashpile=true;
 
     if (!trashpile && !okForJanitor(myself, obj))
@@ -351,7 +351,7 @@ int prisonJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
       act("$n picks up $p.", FALSE, myself, obj, 0, TO_ROOM);
       --(*obj);
       *myself += *obj; 
-      if(obj->objVnum() == OBJ_PILE_OFFAL)
+      if(obj->objVnum() == Obj::PILE_OFFAL)
 	delete obj;
     }
     return TRUE;
@@ -409,7 +409,7 @@ int amberJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj 
     if (myself->inRoom() == DUMP)
       break;
 
-    if(obj->objVnum()==GENERIC_TRASH_PILE && !obj->stuff.empty())
+    if(obj->objVnum()==Obj::GENERIC_TRASH_PILE && !obj->stuff.empty())
       trashpile=true;
 
     if (!trashpile && !okForJanitor(myself, obj))
@@ -428,7 +428,7 @@ int amberJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj 
       act("$n picks up $p.", FALSE, myself, obj, 0, TO_ROOM);
       --(*obj);
       *myself += *obj; 
-      if(obj->objVnum() == OBJ_PILE_OFFAL)
+      if(obj->objVnum() == Obj::PILE_OFFAL)
 	delete obj;
     }
     return TRUE;
@@ -485,10 +485,10 @@ int brightmoonJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, 
     if (myself->inRoom() == DUMP)
       break;
 
-    if(obj->objVnum()==OBJ_BM_TRASHCAN && !obj->stuff.empty())
+    if(obj->objVnum()==Obj::BM_TRASHCAN && !obj->stuff.empty())
       trashcan=true;
 
-    if(obj->objVnum()==GENERIC_TRASH_PILE && !obj->stuff.empty())
+    if(obj->objVnum()==Obj::GENERIC_TRASH_PILE && !obj->stuff.empty())
       trashpile=true;
 
     if (!trashcan && !trashpile && !okForJanitor(myself, obj))
@@ -512,7 +512,7 @@ int brightmoonJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, 
       act("$n picks up $p.", FALSE, myself, obj, 0, TO_ROOM);
       --(*obj);
       *myself += *obj; 
-      if(obj->objVnum() == OBJ_PILE_OFFAL)
+      if(obj->objVnum() == Obj::PILE_OFFAL)
 	delete obj;
     }
     return TRUE;
@@ -732,7 +732,7 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
   }
 
   // allow us to abort it.
-  if (myself->inRoom() == ROOM_HELL)
+  if (myself->inRoom() == Room::HELL)
     return FALSE;
 
   // speed
@@ -836,7 +836,7 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
 	moveCart(myself, cart);
       break;
     case STATE_TROLLEY_TO:
-      if(myself->inRoom()==ROOM_TROLLEY){
+      if(myself->inRoom()==Room::TROLLEY){
         exitp = myself->roomp->exitDir(DIR_NORTH);
 
 	if(exitp->to_room == 1303){
@@ -878,10 +878,10 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
 	moveCart(myself, cart);
       break;
     case STATE_TROLLEY_RET:
-      if(myself->inRoom()==ROOM_TROLLEY){
+      if(myself->inRoom()==Room::TROLLEY){
         exitp = myself->roomp->exitDir(DIR_NORTH);
 
-	if(exitp->to_room == ROOM_CS){
+	if(exitp->to_room == Room::CS){
 	  rc=myself->goDirection(DIR_NORTH);
 	  if (IS_SET_DELETE(rc, DELETE_THIS)) {
 	    return DELETE_THIS;

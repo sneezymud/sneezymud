@@ -519,7 +519,7 @@ int determineSkinningItem(TBaseCorpse * corpse, int * amount, char * msg, char *
       case 12404:  // dragon-aquatic Dukashakin
         num = 2474;
         break;
-      case MOB_AQUATIC_DRAGON:  // dragon-aquatic
+      case Mob::AQUATIC_DRAGON:  // dragon-aquatic
         num = 2479;
         break;
       case 12402:  // leviathin
@@ -538,10 +538,10 @@ int determineSkinningItem(TBaseCorpse * corpse, int * amount, char * msg, char *
       case 14361:  // firedrake
         num = 2478;
         break;
-      case MOB_CHAMELEON:
+      case Mob::CHAMELEON:
         num = COMP_POLYMORPH;
         break;
-      case MOB_DOPPLEGANGER:
+      case Mob::DOPPLEGANGER:
         num = COMP_COPY;
         break;
     }

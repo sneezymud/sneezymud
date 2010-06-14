@@ -2856,7 +2856,7 @@ void TBeing::aiWear(TObj *obj)
     vlogf(LOG_MOB_AI, "AI_wear called with bad declarations.");
     return;
   }
-  if (inRoom() == ROOM_NOWHERE)
+  if (inRoom() == Room::NOWHERE)
     return;
 
   for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (tmp=*it);++it) {

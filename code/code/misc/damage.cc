@@ -188,13 +188,13 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
     // special code for quest mobs
     questmob = v->mobVnum();
     switch (questmob) {
-      case MOB_TROLL_GIANT:
-      case MOB_CAPTAIN_RYOKEN:
-      case MOB_TREE_SPIRIT:
-      case MOB_JOHN_RUSTLER:
-      case MOB_ORC_MAGI:
-      case MOB_CLERIC_VOLCANO:
-      case MOB_CLERIC_ARDEN:
+      case Mob::TROLL_GIANT:
+      case Mob::CAPTAIN_RYOKEN:
+      case Mob::TREE_SPIRIT:
+      case Mob::JOHN_RUSTLER:
+      case Mob::ORC_MAGI:
+      case Mob::CLERIC_VOLCANO:
+      case Mob::CLERIC_ARDEN:
         found = TRUE;
         break;
       default:
@@ -218,30 +218,30 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
             // Receiving help
 //            vlogf(LOG_BUG, format("%s received help from %s killing %s") %  tbt->getName() % getName() % v->getName());
             switch (questmob) {
-              case MOB_TROLL_GIANT:
+              case Mob::TROLL_GIANT:
                 tbt->setQuestBit(TOG_AVENGER_CHEAT);
                 tbt->remQuestBit(TOG_AVENGER_HUNTING);
                 break;
-              case MOB_CAPTAIN_RYOKEN:
+              case Mob::CAPTAIN_RYOKEN:
                 tbt->remQuestBit(TOG_VINDICATOR_HUNTING_1);
                 tbt->setQuestBit(TOG_VINDICATOR_CHEAT);
                 break;
-              case MOB_TREE_SPIRIT:
+              case Mob::TREE_SPIRIT:
                 tbt->remQuestBit(TOG_VINDICATOR_HUNTING_2);
                 tbt->setQuestBit(TOG_VINDICATOR_CHEAT_2);
                 break;
-  	      case MOB_JOHN_RUSTLER:
+  	      case Mob::JOHN_RUSTLER:
 		sendTo("You have failed to kill the rustler without aid, you must try again, but without assistance.\n\r");
 		break;
-	      case MOB_ORC_MAGI:
+	      case Mob::ORC_MAGI:
 		sendTo("<c>You realize you did not follow the guidelines of your quest, so this fight will be for naught.<1>\n\r");
 		tbt->setQuestBit(TOG_FAILED_TO_KILL_MAGI);
 		break;
-       	      case MOB_CLERIC_VOLCANO:
+       	      case Mob::CLERIC_VOLCANO:
 	        sendTo("<c>You realize you did not follow the guidelines of your quest, so this fight will be for naught.<1>\n\r");
 	        tbt->setQuestBit(TOG_FAILED_CLERIC_V);
 	        break;
-	      case MOB_CLERIC_ARDEN:
+	      case Mob::CLERIC_ARDEN:
 	        sendTo("<c>You realize you did not follow the guidelines of your quest, so this fight will be for naught.<1>\n\r");
 	        tbt->setQuestBit(TOG_FAILED_CLERIC_A);
 	        break;
@@ -629,35 +629,35 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
        // assert for no DELETE_THIS, DELETE_TARGET
 
         switch (questmob) {
-          case MOB_ENSLAVED_PALADIN:
+          case Mob::ENSLAVED_PALADIN:
             setQuestBit(TOG_KILLED_PALADIN);
             break;
-          case MOB_TROLL_GIANT:
+          case Mob::TROLL_GIANT:
             setQuestBit(TOG_AVENGER_SOLO);
             remQuestBit(TOG_AVENGER_HUNTING);
             break;
-          case MOB_CAPTAIN_RYOKEN:
+          case Mob::CAPTAIN_RYOKEN:
             remQuestBit(TOG_VINDICATOR_HUNTING_1);
             setQuestBit(TOG_VINDICATOR_SOLO_1);
-            *v += *read_object(OBJ_QUEST_ORE, VIRTUAL);
+            *v += *read_object(Obj::QUEST_ORE, VIRTUAL);
             break;
-          case MOB_TREE_SPIRIT:
+          case Mob::TREE_SPIRIT:
             remQuestBit(TOG_VINDICATOR_HUNTING_2);
             setQuestBit(TOG_VINDICATOR_SOLO_2);
             break;
-          case MOB_JOHN_RUSTLER:
+          case Mob::JOHN_RUSTLER:
             setQuestBit(TOG_RANGER_FIRST_KILLED_OK);
             remQuestBit(TOG_RANGER_FIRST_FARMHAND);
             break;
-          case MOB_ORC_MAGI:
+          case Mob::ORC_MAGI:
             setQuestBit(TOG_KILLED_ORC_MAGI);
             remQuestBit(TOG_SEEKING_ORC_MAGI);
             break;
-          case MOB_CLERIC_VOLCANO:
+          case Mob::CLERIC_VOLCANO:
             setQuestBit(TOG_KILLED_CLERIC_V);
             remQuestBit(TOG_STARTED_RANGER_L21);
             break;
-          case MOB_CLERIC_ARDEN:
+          case Mob::CLERIC_ARDEN:
             setQuestBit(TOG_KILLED_CLERIC_A);
             remQuestBit(TOG_SEEKING_CLERIC_A);
             break;
@@ -677,7 +677,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
       questmob = 0;
 
     switch (questmob) {
-      case MOB_TROLL_GIANT:
+      case Mob::TROLL_GIANT:
         if (v->hasQuestBit(TOG_AVENGER_HUNTING)) {
           vlogf(LOG_MISC, format("%s died in quest and flags being reset/removed") %  v->getName());
           v->remQuestBit(TOG_AVENGER_HUNTING);
@@ -687,7 +687,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
           v->remPlayerAction(PLR_SOLOQUEST);
         }
         break;
-      case MOB_CAPTAIN_RYOKEN:
+      case Mob::CAPTAIN_RYOKEN:
         if (v->hasQuestBit(TOG_VINDICATOR_HUNTING_1)) {
           vlogf(LOG_MISC, format("%s died in quest and flags being reset/removed") %  v->getName());
           v->remQuestBit(TOG_VINDICATOR_HUNTING_1);
@@ -697,7 +697,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
           v->remPlayerAction(PLR_SOLOQUEST);
         }
         break;
-      case MOB_TREE_SPIRIT:
+      case Mob::TREE_SPIRIT:
         if (v->hasQuestBit(TOG_VINDICATOR_HUNTING_2)) {
           vlogf(LOG_MISC, format("%s died in quest and flags being reset/removed") %  v->getName());
           v->remQuestBit(TOG_VINDICATOR_HUNTING_2);
@@ -707,7 +707,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
           v->remPlayerAction(PLR_SOLOQUEST);
         }
         break;
-      case MOB_ORC_MAGI:
+      case Mob::ORC_MAGI:
 	if (hasQuestBit(TOG_SEEKING_ORC_MAGI) &&
 	    !hasQuestBit(TOG_FAILED_TO_KILL_MAGI) &&
 	    !hasQuestBit(TOG_PROVING_SELF)){
@@ -715,7 +715,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 	  setQuestBit(TOG_FAILED_TO_KILL_MAGI);
 	}
 	break;
-      case MOB_CLERIC_VOLCANO:
+      case Mob::CLERIC_VOLCANO:
         if (hasQuestBit(TOG_STARTED_RANGER_L21) &&
 	    !hasQuestBit(TOG_FAILED_CLERIC_V) &&
 	    !hasQuestBit(TOG_PENANCE_R21_1)){
@@ -723,7 +723,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
   	  setQuestBit(TOG_FAILED_CLERIC_V);
         }
         break;
-      case MOB_CLERIC_ARDEN:
+      case Mob::CLERIC_ARDEN:
         if (hasQuestBit(TOG_SEEKING_CLERIC_A) &&
 	    !hasQuestBit(TOG_FAILED_CLERIC_A) &&
 	    !hasQuestBit(TOG_PENANCE_R21_2)){
@@ -935,15 +935,15 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 #if 1
 // builder port uses stripped down database which was causing problems
 // hence this setup instead.
-          int robj = real_object(OBJ_GENERIC_GRAVE);
+          int robj = real_object(Obj::GENERIC_GRAVE);
           if (robj < 0 || robj >= (signed int) obj_index.size()) {
-            vlogf(LOG_BUG, format("damageEpilog(): No object (%d) in database!") %  OBJ_GENERIC_GRAVE);
+            vlogf(LOG_BUG, format("damageEpilog(): No object (%d) in database!") %  Obj::GENERIC_GRAVE);
             return false;
           }
 
           TObj * grave = read_object(robj, REAL);
 #else
-          TObj * grave = read_object(OBJ_GENERIC_GRAVE, VIRTUAL);
+          TObj * grave = read_object(Obj::GENERIC_GRAVE, VIRTUAL);
 #endif
           if (grave) {
             sstring graveDesc = "Here lies ";
@@ -1084,7 +1084,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
       {
 
       tp=dynamic_cast<TPerson *>(this);
-      if (tp && v->mobVnum()==MOB_LEPER) {
+      if (tp && v->mobVnum()==Mob::LEPER) {
 	if(tp->hasQuestBit(TOG_MONK_PURPLE_LEPER_KILLED4)) {
 	  tp->remQuestBit(TOG_MONK_PURPLE_LEPER_KILLED4);
 	  tp->setQuestBit(TOG_MONK_PURPLE_FINISHED);

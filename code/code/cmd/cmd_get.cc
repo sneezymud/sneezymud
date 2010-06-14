@@ -174,7 +174,7 @@ int get(TBeing *ch, TThing *ttt, TThing *sub, getTypeT tType, bool isFirst)
       return DELETE_THIS;
 
   } else {
-    if (ttt->inRoom() == ROOM_NOWHERE)
+    if (ttt->inRoom() == Room::NOWHERE)
       ttt->setRoom(ch->inRoom());
 
     rc = ch->checkForGetTrap(ttt);
@@ -492,7 +492,7 @@ int TBeing::doGet(const char *argument)
           return FALSE;
 
         if (dynamic_cast<TBeing *>(riding) &&
-             (sub->inRoom() != ROOM_NOWHERE)) {
+             (sub->inRoom() != Room::NOWHERE)) {
           act("You can't get things from $p while mounted!", 
                FALSE, this, sub, 0, TO_CHAR);
           return FALSE;

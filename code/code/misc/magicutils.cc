@@ -428,8 +428,8 @@ int TBeing::checkDecharm(forceTypeT force, safeTypeT safe)
 
   if (!isPc()) {
     int  mVn         = mobVnum();
-    bool isElemental = (mVn == FIRE_ELEMENTAL  || mVn == WATER_ELEMENTAL ||
-                        mVn == EARTH_ELEMENTAL || mVn == AIR_ELEMENTAL);
+    bool isElemental = (mVn == Mob::FIRE_ELEMENTAL  || mVn == Mob::WATER_ELEMENTAL ||
+                        mVn == Mob::EARTH_ELEMENTAL || mVn == Mob::AIR_ELEMENTAL);
     TMonster *tMon = dynamic_cast<TMonster *>(this);
     if (force) {
       release = TRUE;
@@ -2177,7 +2177,7 @@ int lycanthropeTransform(TBeing *ch)
   if (!(mob = read_mobile(23204, VIRTUAL))) {
     return FALSE;
   }
-  thing_to_room(mob,ROOM_VOID);
+  thing_to_room(mob,Room::VOID);
   mob->swapToStrung();
 
   act("The presence of the full moon forces you into transformation!",
@@ -2191,7 +2191,7 @@ int lycanthropeTransform(TBeing *ch)
   --(*mob);
   *ch->roomp += *mob;
   --(*ch);
-  thing_to_room(ch, ROOM_POLY_STORAGE);
+  thing_to_room(ch, Room::POLY_STORAGE);
   
   // stop following whoever you are following.
   if (ch->master)

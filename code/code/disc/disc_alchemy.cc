@@ -665,10 +665,10 @@ int eyesOfFertuman(TBeing *caster, const char * tofind, int level, byte bKnown)
 	if (obj->obj_flags.cost > 5000)
 	  continue;
 
-	if (obj->objVnum() == YOUTH_POTION ||
-            obj->objVnum() == STATS_POTION ||
-            obj->objVnum() == MYSTERY_POTION ||
-	    obj->objVnum() == LEARNING_POTION ||
+	if (obj->objVnum() == Obj::YOUTH_POTION ||
+            obj->objVnum() == Obj::STATS_POTION ||
+            obj->objVnum() == Obj::MYSTERY_POTION ||
+	    obj->objVnum() == Obj::LEARNING_POTION ||
 	    obj->objVnum() == 23091 || // for brick quest
             obj->parent    == caster       ||
             (tMon && tMon->isShopkeeper()))
@@ -700,7 +700,7 @@ int eyesOfFertuman(TBeing *caster, const char * tofind, int level, byte bKnown)
         } else {
           strcpy(capbuf, obj->getName());
           sprintf(capbuf, colorString(caster, caster->desc, capbuf, NULL, COLOR_OBJECTS, TRUE).c_str());
-          if (obj->in_room == ROOM_NOWHERE || !caster->canSee(obj)) {
+          if (obj->in_room == Room::NOWHERE || !caster->canSee(obj)) {
             act("$p is in use but you can't tell the location.", TRUE, caster, obj,NULL, TO_CHAR);
           } else if (obj->inImperia() && !caster->isImmortal()) {
             continue;
@@ -734,7 +734,7 @@ int eyesOfFertuman(TBeing *caster, const char * tofind, int level, byte bKnown)
 #if 1
         strcpy(capbuf, ch->getName());
         sprintf(capbuf, colorString(caster, caster->desc, capbuf, NULL, COLOR_MOBS, TRUE).c_str());
-        if (ch->in_room == ROOM_NOWHERE || !caster->canSee(ch)) {
+        if (ch->in_room == Room::NOWHERE || !caster->canSee(ch)) {
           act("$N is somewhere but you can't tell the location.", TRUE, caster, NULL, ch, TO_CHAR);
         } else if (ch->inImperia() && !caster->isImmortal()) {
 	  continue;
@@ -1041,61 +1041,61 @@ int farlook(TBeing *caster, TBeing * victim, int level, short bKnown)
  
   target = victim->roomp->number;
 
-  if (target == ROOM_NOCTURNAL_STORAGE) {
+  if (target == Room::NOCTURNAL_STORAGE) {
     caster->nothingHappens(SILENT_YES);
     act("You can't seem to look there right now.",
         false, caster, 0, 0, TO_CHAR);
     return SPELL_FAIL;
   }
-  if (target == ROOM_VOID) {
+  if (target == Room::VOID) {
     caster->nothingHappens(SILENT_YES);
     act("You can't seem to look there right now.",
         false, caster, 0, 0, TO_CHAR);
     return SPELL_FAIL;
   }
-  if (target == ROOM_IMPERIA) {
+  if (target == Room::IMPERIA) {
     caster->nothingHappens(SILENT_YES);
     act("You can't seem to look there right now.",
         false, caster, 0, 0, TO_CHAR);
     return SPELL_FAIL;
   }
-  if (target == ROOM_HELL) {
+  if (target == Room::HELL) {
     caster->nothingHappens(SILENT_YES);
     act("You can't seem to look there right now.",
         false, caster, 0, 0, TO_CHAR);
     return SPELL_FAIL;
   }
-  if (target == ROOM_STORAGE) {
+  if (target == Room::STORAGE) {
     caster->nothingHappens(SILENT_YES);
     act("You can't seem to look there right now.",
         false, caster, 0, 0, TO_CHAR);
     return SPELL_FAIL;
   }
-  if (target == ROOM_POLY_STORAGE) {
+  if (target == Room::POLY_STORAGE) {
     caster->nothingHappens(SILENT_YES);
     act("You can't seem to look there right now.",
         false, caster, 0, 0, TO_CHAR);
     return SPELL_FAIL;
   }
-  if (target == ROOM_CORPSE_STORAGE) {
+  if (target == Room::CORPSE_STORAGE) {
     caster->nothingHappens(SILENT_YES);
     act("You can't seem to look there right now.",
         false, caster, 0, 0, TO_CHAR);
     return SPELL_FAIL;
   }
-  if (target == ROOM_Q_STORAGE) {
+  if (target == Room::Q_STORAGE) {
     caster->nothingHappens(SILENT_YES);
     act("You can't seem to look there right now.",
         false, caster, 0, 0, TO_CHAR);
     return SPELL_FAIL;
   }
-  if (target == ROOM_DONATION) {
+  if (target == Room::DONATION) {
     caster->nothingHappens(SILENT_YES);
     act("You can't seem to look there right now.",
         false, caster, 0, 0, TO_CHAR);
     return SPELL_FAIL;
   }
-  if (target == ROOM_DUMP) {
+  if (target == Room::DUMP) {
     caster->nothingHappens(SILENT_YES);
     act("You can't seem to look there right now.",
         false, caster, 0, 0, TO_CHAR);

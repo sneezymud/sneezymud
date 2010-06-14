@@ -20,7 +20,7 @@ BjGame gBj;
 
 bool TBeing::checkBlackjack(bool inGame) const
 {
-  if (in_room == ROOM_BLACKJACK && (inGame || (gBj.index(this) > -1)))
+  if (in_room == Room::BLACKJACK && (inGame || (gBj.index(this) > -1)))
     return true;
   else
     return false;

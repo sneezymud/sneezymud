@@ -63,7 +63,7 @@ findClutter::findClutter(TBeing *tb)
 
 bool findClutter::isTarget(int room) const
 {
-  if (room == ROOM_DONATION)
+  if (room == Room::DONATION)
     return false;
 
   TRoom *rp = real_roomp(room);
@@ -160,7 +160,7 @@ bool findClutterBrightmoon::isTarget(int room) const
     TObj * obj = dynamic_cast<TObj *>(t);
     if (!obj)
       continue;
-    if(obj->objVnum()==OBJ_BM_TRASHCAN && !obj->stuff.empty())
+    if(obj->objVnum()==Obj::BM_TRASHCAN && !obj->stuff.empty())
       return true;
     if(!okForJanitor((TMonster *) myself, obj))
       continue;
@@ -221,7 +221,7 @@ findCorpse::findCorpse(){
 bool findCorpse::isTarget(int room) const
 {
   // don't track corpses in the morgue
-  if (room == ROOM_MORGUE)
+  if (room == Room::MORGUE)
     return FALSE;
   
   TRoom *rp = real_roomp(room);
@@ -441,7 +441,7 @@ TPathFinder::TPathFinder() :
   no_mob(true),
   ship_only(false),
   use_cached(false),
-  dest(ROOM_NOWHERE),
+  dest(Room::NOWHERE),
   dist(0)
 {
 }
@@ -454,7 +454,7 @@ TPathFinder::TPathFinder(int depth) :
   no_mob(true),
   ship_only(false),
   use_cached(false),
-  dest(ROOM_NOWHERE),
+  dest(Room::NOWHERE),
   dist(0)
 {
   setRange(depth);
@@ -656,7 +656,7 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
 
   
   // if we failed to find any new rooms, abort, or be in an endless loop
-  dest=ROOM_NOWHERE;
+  dest=Room::NOWHERE;
   dist=distance;
   
   // clean up allocated memory

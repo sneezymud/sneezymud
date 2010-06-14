@@ -20,7 +20,7 @@ bool TBeing::checkHoldem(bool inGame) const
 {
   gHoldem.linkPlayers();
 
-  if (in_room == ROOM_HOLDEM && (inGame || gHoldem.isPlaying(this)))
+  if (in_room == Room::HOLDEM && (inGame || gHoldem.isPlaying(this)))
     return true;
   else
     return false;
@@ -322,7 +322,7 @@ void HoldemGame::linkPlayers()
 {
   for(int i=0;i<MAX_HOLDEM_PLAYERS;++i){
     if(players[i]){
-      if(!(players[i]->ch=get_char_room(players[i]->name, ROOM_HOLDEM))){
+      if(!(players[i]->ch=get_char_room(players[i]->name, Room::HOLDEM))){
 	delete players[i];
 	players[i]=NULL;
       }

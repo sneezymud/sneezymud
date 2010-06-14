@@ -71,7 +71,7 @@ TObj *createletter(sstring from)
 {
   TObj *note, *envelope;
 
-  if (!(note = read_object(GENERIC_NOTE, VIRTUAL))) {
+  if (!(note = read_object(Obj::GENERIC_NOTE, VIRTUAL))) {
     vlogf(LOG_BUG, "Couldn't make a note for mail!");
     return NULL;
   }

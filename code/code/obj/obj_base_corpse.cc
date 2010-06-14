@@ -84,7 +84,7 @@ TBaseCorpse::~TBaseCorpse()
     // junk newbie objects
     TObj *o = dynamic_cast<TObj *>(t);
     if (o && o->isObjStat(ITEM_NEWBIE) && o->stuff.empty() && 
-	(this->in_room > 80) && (this->in_room != ROOM_DONATION)){
+	(this->in_room > 80) && (this->in_room != Room::DONATION)){
       sendrpf(this->roomp, "The %s explodes in a flash of white light!\n\r", fname(o->name).c_str());
       delete o;
       o = NULL;

@@ -298,7 +298,7 @@ void TBed::sitMe(TBeing *ch)
       ch->mount(this);
       break;
     case POSITION_STANDING:
-      if (objVnum() == OBJ_BATS_JACUZZI) {
+      if (objVnum() == Obj::BATS_JACUZZI) {
         act("You climb into $p and sit down.", FALSE, ch, this, 0, TO_CHAR);
         act("$n climbs into $p and sits down.", TRUE, ch, this, 0, TO_ROOM);
       } else {
@@ -315,7 +315,7 @@ void TBed::sitMe(TBeing *ch)
       ch->sendTo("You're sitting already.\n\r");
       break;
     case POSITION_RESTING:
-      if (objVnum() == OBJ_BATS_JACUZZI) {
+      if (objVnum() == Obj::BATS_JACUZZI) {
         act("You sit up, but still find $p comfortable.", 
               FALSE, ch, this, 0, TO_CHAR);
         act("$n sits up in $p.", TRUE, ch, this, 0, TO_ROOM);
@@ -377,7 +377,7 @@ void TBed::restMe(TBeing *ch)
         ch->mount(this);
       break;
     case POSITION_STANDING:
-      if (objVnum() == OBJ_BATS_JACUZZI) {
+      if (objVnum() == Obj::BATS_JACUZZI) {
         act("You climb into $p and allow yourself to relax.", 
                 FALSE, ch, this, 0, TO_CHAR);
         act("$n climbs into $p and relaxes.", 
@@ -397,7 +397,7 @@ void TBed::restMe(TBeing *ch)
     case POSITION_SITTING:
       if (ch->checkBlackjack())
         gBj.exitGame(ch);
-      if (objVnum() == OBJ_BATS_JACUZZI) {
+      if (objVnum() == Obj::BATS_JACUZZI) {
         act("You sit back and allow yourself to relax.", 
                 FALSE, ch, this, 0, TO_CHAR);
         act("$n leans back in $p and relaxes.", TRUE, ch, this, 0, TO_ROOM);

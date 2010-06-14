@@ -1119,9 +1119,9 @@ void TBeing::equipChar(TThing *obj, wearSlotT pos, silentTypeT silent)
     vlogf(LOG_BUG, "EQUIP: Obj is in something when equip.");
     obj->parent = NULL;
   }
-  if (obj->in_room != ROOM_NOWHERE) {
+  if (obj->in_room != Room::NOWHERE) {
     vlogf(LOG_BUG, "EQUIP: Obj is in_room when equip.");
-    obj->in_room = ROOM_NOWHERE;
+    obj->in_room = Room::NOWHERE;
     return;
   }
   if (obj->stuckIn) {
@@ -1258,7 +1258,7 @@ TThing *TBeing::unequip(wearSlotT pos)
 
   o = equipment.remove(pos);
 
-  if (o->parent || o->riding || (o->in_room != ROOM_NOWHERE))
+  if (o->parent || o->riding || (o->in_room != Room::NOWHERE))
     vlogf(LOG_BUG, "Item was two places(or more) in unequip()");
 
   o->equippedBy = NULL;
@@ -1308,7 +1308,7 @@ TThing *unequip_char_for_save(TBeing *ch, wearSlotT pos)
 
   o = ch->equipment.remove(pos);
 
-  if (o->parent || o->riding || (o->in_room != ROOM_NOWHERE))
+  if (o->parent || o->riding || (o->in_room != Room::NOWHERE))
     vlogf(LOG_BUG, "Item was two places(or more) in unequip()");
 
   o->equippedBy = NULL;
@@ -1713,7 +1713,7 @@ void extract_edit_char(TMonster *ch)
   // stick me back in the list so I can be safely delete
   ch->next = character_list;
   character_list = ch;
-  thing_to_room(ch, ROOM_VOID);
+  thing_to_room(ch, Room::VOID);
 
   delete ch;
   ch = NULL;

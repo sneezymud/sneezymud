@@ -345,7 +345,7 @@ int TBeing::doDrop(const sstring &argument, TThing *tng, bool forcedDrop)
         logItem(t, CMD_DROP);
         TObj *tobj = dynamic_cast<TObj *>(t);
         if (tobj && tobj->isObjStat(ITEM_NEWBIE) && tobj->stuff.empty() &&
-              (in_room > 80) && (in_room != ROOM_DONATION)) {
+              (in_room > 80) && (in_room != Room::DONATION)) {
           sendrpf(roomp, "The %s explodes in a flash of white light!\n\r", fname(tobj->name).c_str());
           delete tobj;
           tobj = NULL;
@@ -447,7 +447,7 @@ int TBeing::doDrop(const sstring &argument, TThing *tng, bool forcedDrop)
         logItem(tmp, CMD_DROP);
 
         if (tobj && tobj->isObjStat(ITEM_NEWBIE) && tobj->stuff.empty() &&
-              (in_room > 80) && (in_room != ROOM_DONATION)) {
+              (in_room > 80) && (in_room != Room::DONATION)) {
           sendrpf(roomp, "The %s explodes in a flash of white light!\n\r", fname(tobj->name).c_str());
           if (tobj == tng)
             return DELETE_ITEM;
@@ -905,8 +905,8 @@ int TBeing::doGive(const sstring &oarg, giveTypeT flags)
 
     giveMoney(vict, amount, GOLD_XFER);
 
-    saveChar(ROOM_AUTO_RENT);
-    vict->saveChar(ROOM_AUTO_RENT);
+    saveChar(Room::AUTO_RENT);
+    vict->saveChar(Room::AUTO_RENT);
     if ((vict->getMoney() > 500000) && (amount > 100000))
       vlogf(LOG_MISC,format("%s gave %d talens to %s.") %  getName() % amount % vict->getName());
 
@@ -1439,7 +1439,7 @@ int TTable::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
       if (ch->fight())
         return TRUE;  // don't fall through
     }
-    if (dynamic_cast<TBeing *>(ch->riding) && (in_room != ROOM_NOWHERE)) {
+    if (dynamic_cast<TBeing *>(ch->riding) && (in_room != Room::NOWHERE)) {
       act("You can't get things from $p while mounted!", 
            FALSE, ch, this, 0, TO_CHAR);
       return TRUE;
@@ -1470,7 +1470,7 @@ int TTable::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
       if (ch->fight())
         return TRUE;  // don't fall through
     }
-    if (dynamic_cast<TBeing *>(ch->riding) && (in_room != ROOM_NOWHERE)) {
+    if (dynamic_cast<TBeing *>(ch->riding) && (in_room != Room::NOWHERE)) {
       act("You can't get things from $p while mounted!", 
            FALSE, ch, this, 0, TO_CHAR);
       return TRUE;
@@ -1511,7 +1511,7 @@ int TBed::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
       if (ch->fight())
         return TRUE;  // don't fall through
     }
-    if (dynamic_cast<TBeing *>(ch->riding) && (in_room != ROOM_NOWHERE)) {
+    if (dynamic_cast<TBeing *>(ch->riding) && (in_room != Room::NOWHERE)) {
       act("You can't get things from $p while mounted!", 
            FALSE, ch, this, 0, TO_CHAR);
       return TRUE;
@@ -1542,7 +1542,7 @@ int TBed::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
       if (ch->fight())
         return TRUE;  // don't fall through
     }
-    if (dynamic_cast<TBeing *>(ch->riding) && (in_room != ROOM_NOWHERE)) {
+    if (dynamic_cast<TBeing *>(ch->riding) && (in_room != Room::NOWHERE)) {
       act("You can't get things from $p while mounted!", 
            FALSE, ch, this, 0, TO_CHAR);
       return TRUE;
@@ -1667,7 +1667,7 @@ int TThing::putSomethingIntoContainer(TBeing *ch, TOpenContainer *cont)
 	TRUE, ch, this, cont, TO_ROOM);
   } else if(dynamic_cast<TToothNecklace *>(cont) &&
      dynamic_cast<TObj *>(this) &&
-     dynamic_cast<TObj *>(this)->objVnum()==GENERIC_TOOTH){
+     dynamic_cast<TObj *>(this)->objVnum()==Obj::GENERIC_TOOTH){
     act("You attach $p to $P.",
 	TRUE, ch, this, cont, TO_CHAR);
     act("$n attaches $p to $P.",
@@ -1897,7 +1897,7 @@ void TPerson::dropItemsToRoom(safeTypeT ok, dropNukeT actually_nuke)
       --(*i);
       TObj *tobj = dynamic_cast<TObj *>(i);
         if (tobj && tobj->isObjStat(ITEM_NEWBIE) && tobj->stuff.empty() &&
-          (in_room > 80) && (in_room != ROOM_DONATION)) {
+          (in_room > 80) && (in_room != Room::DONATION)) {
         delete tobj;
         tobj = NULL;
       } else {
@@ -2010,9 +2010,9 @@ int TBeing::doDonate(const char *argument)
         logItem(t, CMD_DONATE);
 
       --(*t_o);
-      thing_to_room(t_o, ROOM_DONATION);
+      thing_to_room(t_o, Room::DONATION);
       sprintf(buf,"A small portal appears for an instant, dropping %s in the room.\n\r",t_o->getName());
-      sendToRoom(COLOR_OBJECTS,buf, ROOM_DONATION);
+      sendToRoom(COLOR_OBJECTS,buf, Room::DONATION);
     }
 
     if (num > 0)

@@ -467,7 +467,7 @@ int enthrallSpectre(TBeing * caster, int level, short bKnown)
   affectedData aff;
   TMonster * victim;
 
-  if (!(victim = read_mobile(THRALL_SPECTRE, VIRTUAL))) {
+  if (!(victim = read_mobile(Mob::THRALL_SPECTRE, VIRTUAL))) {
     caster->sendTo("You cannot summon a being of that type.\n\r");
     return SPELL_FAIL;
   }
@@ -553,7 +553,7 @@ int enthrallSpectre(TBeing * caster)
     return FALSE;
   }
 
-  if (real_mobile(THRALL_SPECTRE) < 0) {
+  if (real_mobile(Mob::THRALL_SPECTRE) < 0) {
     caster->sendTo("You cannot call upon a being of that type.\n\r");
     return FALSE;
   }
@@ -591,7 +591,7 @@ int enthrallGhast(TBeing * caster, int level, short bKnown)
   affectedData aff;
   TMonster * victim;
 
-  if (!(victim = read_mobile(THRALL_GHAST, VIRTUAL))) {
+  if (!(victim = read_mobile(Mob::THRALL_GHAST, VIRTUAL))) {
     caster->sendTo("You cannot summon a being of that type.\n\r");
     return SPELL_FAIL;
   }
@@ -680,7 +680,7 @@ int enthrallGhast(TBeing * caster)
     return FALSE;
   }
 
-  if (real_mobile(THRALL_GHAST) < 0) {
+  if (real_mobile(Mob::THRALL_GHAST) < 0) {
     caster->sendTo("You cannot call upon a being of that type.\n\r");
     return FALSE;
   }
@@ -2248,7 +2248,7 @@ int enthrallGhoul(TBeing * caster, int level, short bKnown)
   affectedData aff;
   TMonster * victim;
 
-  if (!(victim = read_mobile(THRALL_GHOUL, VIRTUAL))) {
+  if (!(victim = read_mobile(Mob::THRALL_GHOUL, VIRTUAL))) {
     caster->sendTo("You cannot summon a being of that type.\n\r");
     return SPELL_FAIL;
   }
@@ -2337,7 +2337,7 @@ int enthrallGhoul(TBeing * caster)
     return FALSE;
   }
 
-  if (real_mobile(THRALL_GHOUL) < 0) {
+  if (real_mobile(Mob::THRALL_GHOUL) < 0) {
     caster->sendTo("You cannot call upon a being of that type.\n\r");
     return FALSE;
   }

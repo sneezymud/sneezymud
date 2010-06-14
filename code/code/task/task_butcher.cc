@@ -168,14 +168,14 @@ int TThing::butcherPulse(TBeing *ch, TBaseCorpse *corpse)
 #if 1
     // builder port uses stripped down database which was causing problems
     // hence this setup instead.
-    int robj = real_object(GENERIC_STEAK);
+    int robj = real_object(Obj::GENERIC_STEAK);
     if (robj < 0 || robj >= (signed int) obj_index.size()) {
-      vlogf(LOG_BUG, format("butcherPulse: No object (%d) in database!") %  GENERIC_STEAK);
+      vlogf(LOG_BUG, format("butcherPulse: No object (%d) in database!") %  Obj::GENERIC_STEAK);
       return false;
     }
     item = read_object(robj, REAL);
 #else
-    item = read_object(GENERIC_STEAK, VIRTUAL);
+    item = read_object(Obj::GENERIC_STEAK, VIRTUAL);
 #endif
     steak = dynamic_cast<TFood *>(item);
     if (!steak)
@@ -383,9 +383,9 @@ int bareHandsButcherPulse(TBeing *ch, TBaseCorpse *corpse)
   if(!steak)
   {
     // check4errors
-    int robj = real_object(GENERIC_STEAK);
+    int robj = real_object(Obj::GENERIC_STEAK);
     if (robj < 0 || robj >= (signed int) obj_index.size()) {
-      vlogf(LOG_BUG, format("bareHandsButcherPulse: No object (%d) in database!") %  GENERIC_STEAK);
+      vlogf(LOG_BUG, format("bareHandsButcherPulse: No object (%d) in database!") %  Obj::GENERIC_STEAK);
       return false;
     }
     item = read_object(robj, REAL);

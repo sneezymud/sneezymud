@@ -238,7 +238,7 @@ void TBeing::deathCry()
   TThing *i=NULL;
   dirTypeT door;
 
-  if ((in_room == ROOM_NOWHERE) || !roomp)
+  if ((in_room == Room::NOWHERE) || !roomp)
     return;
 
 #if 1
@@ -630,7 +630,7 @@ int TBeing::die(spellNumT dam_type, TBeing *tKiller)
       exp_lost=deathExp();
     }
   } else {
-    vlogf(LOG_COMBAT, format("Death called with ch (%s) in ROOM_NOWHERE!") %  getName());
+    vlogf(LOG_COMBAT, format("Death called with ch (%s) in Room::NOWHERE!") %  getName());
     gain_exp(this, -deathExp(), -1);
     exp_lost=deathExp();
   }
@@ -1482,35 +1482,35 @@ void TBeing::checkForQuestTog(TBeing *vict)
   affectedData *aff = NULL;
 
   switch (vict->mobVnum()) {
-    case MOB_TROLL_GIANT:
+    case Mob::TROLL_GIANT:
       if (hasQuestBit(bitnum = TOG_AVENGER_HUNTING))
         found = TRUE;
       break;
-    case MOB_CAPTAIN_RYOKEN:
+    case Mob::CAPTAIN_RYOKEN:
       if (hasQuestBit(bitnum = TOG_VINDICATOR_HUNTING_1))
         found = TRUE;
       break;
-    case MOB_TREE_SPIRIT:
+    case Mob::TREE_SPIRIT:
       if (hasQuestBit(bitnum = TOG_VINDICATOR_HUNTING_2))
         found = TRUE;
       break;
-    case MOB_JOHN_RUSTLER:
+    case Mob::JOHN_RUSTLER:
       if (hasQuestBit(bitnum = TOG_RANGER_FIRST_FARMHAND))
 	found = TRUE;
       break;
-    case MOB_ORC_MAGI:
+    case Mob::ORC_MAGI:
       if (hasQuestBit(bitnum = TOG_SEEKING_ORC_MAGI) &&
 	  !hasQuestBit(TOG_FAILED_TO_KILL_MAGI) &&
 	  !hasQuestBit(TOG_PROVING_SELF))
 	found = TRUE;
       break;
-    case MOB_CLERIC_VOLCANO:
+    case Mob::CLERIC_VOLCANO:
       if (hasQuestBit(bitnum = TOG_STARTED_RANGER_L21) &&
           !hasQuestBit(TOG_FAILED_CLERIC_V) &&
           !hasQuestBit(TOG_PENANCE_R21_1))
         found = TRUE;
       break;
-    case MOB_CLERIC_ARDEN:
+    case Mob::CLERIC_ARDEN:
       if (hasQuestBit(bitnum = TOG_SEEKING_CLERIC_A) &&
           !hasQuestBit(TOG_FAILED_CLERIC_A) &&
           !hasQuestBit(TOG_PENANCE_R21_2))
@@ -1564,25 +1564,25 @@ void TBeing::sendCheatMessage(char *cheater)
 
   sprintf(nameBuf, "%s", cheater);
   switch (mobVnum()) {
-    case MOB_TROLL_GIANT:
-    case MOB_CAPTAIN_RYOKEN:
-    case MOB_TREE_SPIRIT:
+    case Mob::TROLL_GIANT:
+    case Mob::CAPTAIN_RYOKEN:
+    case Mob::TREE_SPIRIT:
       doTell(nameBuf, "You have failed to defeat me in single combat.");
       doTell(nameBuf, "An honorable deikhan would allow me to heal completely before attacking again.");
       break;
-    case MOB_JOHN_RUSTLER:
+    case Mob::JOHN_RUSTLER:
       doTell(nameBuf, "You have failed to defeat me in single combat.");
       doTell(nameBuf, "An honorable ranger would allow me to heal completely before attacking again.");
       break;      
-    case MOB_ORC_MAGI:
+    case Mob::ORC_MAGI:
       sendTo("<c>You realize you did not follow the guidelines of your quest, so this fight will be for naught.<1>\n\r");
       setQuestBit(TOG_FAILED_TO_KILL_MAGI);
       break;
-    case MOB_CLERIC_VOLCANO:
+    case Mob::CLERIC_VOLCANO:
       doTell(nameBuf, "You have failed to defeat me in single combat.");
       doTell(nameBuf, "An honorable ranger would allow me to heal completely before attacking again.");
       break;
-    case MOB_CLERIC_ARDEN:
+    case Mob::CLERIC_ARDEN:
       doTell(nameBuf, "You have failed to defeat me in single combat.");
       doTell(nameBuf, "An honorable ranger would allow me to heal completely before attacking again.");
       break;
@@ -4564,9 +4564,9 @@ void TBeing::catchLostLink(TBeing *vict)
   act("$n is rescued by divine forces.", TRUE, vict, 0, 0, TO_ROOM);
   vlogf(LOG_COMBAT, format("%s lost link while fighting %s (%d)") %  vict->getName() % getName() % in_room);
   vict->specials.was_in_room = vict->in_room;
-  if (vict->in_room != ROOM_NOWHERE)
+  if (vict->in_room != Room::NOWHERE)
     --(*vict);
-  rp = real_roomp(ROOM_STORAGE);
+  rp = real_roomp(Room::STORAGE);
   *rp += *vict;
 
   // no linkbag if they were close to winning
@@ -4592,15 +4592,15 @@ void TBeing::catchLostLink(TBeing *vict)
   buf += format("Time was %s when this happened.\n\r") % tmstr;
 
   // generate linkbag items
-  if (!(note = read_object(GENERIC_NOTE, VIRTUAL))) {
+  if (!(note = read_object(Obj::GENERIC_NOTE, VIRTUAL))) {
     vlogf(LOG_COMBAT, "Had trouble loading note in catch_lost_link(). Returning out.");
     return;
   }
-  if (!(bag = read_object(GENERIC_L_BAG, VIRTUAL))) {
+  if (!(bag = read_object(Obj::GENERIC_L_BAG, VIRTUAL))) {
     vlogf(LOG_COMBAT, "Had trouble loading bag in catch_lost_link(). Returning out.");
     return;
   }
-  if (!(token = read_object(GENERIC_L_TOKEN, VIRTUAL))) {
+  if (!(token = read_object(Obj::GENERIC_L_TOKEN, VIRTUAL))) {
     vlogf(LOG_COMBAT, "Had trouble loading token in catch_lost_link(). Returning out.");
     return;
   }

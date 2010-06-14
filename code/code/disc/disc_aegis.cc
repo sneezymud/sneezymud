@@ -21,7 +21,7 @@ void relive(TBeing *ch, TBeing *vict)
 
   // need to be holding angel heart
   o=dynamic_cast<TObj *>(ch->equipment[HOLD_LEFT]);
-  if(!o || o->objVnum() != OBJ_ANGEL_HEART){
+  if(!o || o->objVnum() != Obj::ANGEL_HEART){
     ch->sendTo("You lack an appropriate object to focus this prayer with.\n\r");
     return;
   }

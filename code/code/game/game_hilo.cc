@@ -22,7 +22,7 @@ bool HiLoGame::enter(const TBeing *ch)
 
 bool TBeing::checkHiLo(bool inGame) const
 {
-  if (in_room == ROOM_HILO && (inGame || (gHiLo.index(this) > -1)))
+  if (in_room == Room::HILO && (inGame || (gHiLo.index(this) > -1)))
     return true;
   else
     return false;

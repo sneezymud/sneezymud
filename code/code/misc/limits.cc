@@ -1269,7 +1269,7 @@ void TBeing::gainCondition(condTypeT condition, int value)
   if ((condition == FULL) && desc && (desc->autobits & AUTO_EAT) && awake() &&
       (!task || task->task == TASK_SIT || task->task == TASK_REST)) {
     // Check to see if they are in center square to use statue Russ 01/06/95
-    if ((in_room == ROOM_CS) && (GetMaxLevel() <= 3)) {
+    if ((in_room == Room::CS) && (GetMaxLevel() <= 3)) {
       // execute instantly, makes no sense to que this
       parseCommand("pray statue", FALSE);
       return;
@@ -1377,12 +1377,12 @@ int TBeing::checkIdling()
   if (desc && desc->connected >= CON_REDITING)
     return FALSE;
 
-  if (isImmortal() || inRoom() == ROOM_STORAGE)
+  if (isImmortal() || inRoom() == Room::STORAGE)
     return FALSE;
 
   if (getTimer() == 10) {
-    if (specials.was_in_room == ROOM_NOWHERE &&
-        inRoom() != ROOM_NOWHERE && inRoom() != ROOM_STORAGE) {
+    if (specials.was_in_room == Room::NOWHERE &&
+        inRoom() != Room::NOWHERE && inRoom() != Room::STORAGE) {
       specials.was_in_room = in_room;
       if (fight()) {
         if (fight()->fight())
@@ -1392,16 +1392,16 @@ int TBeing::checkIdling()
       act("$n disappears into the void.", TRUE, this, 0, 0, TO_ROOM);
       sendTo("You have been idle, and are pulled into a void.\n\r");
       --(*this);
-      thing_to_room(this, ROOM_VOID);
+      thing_to_room(this, Room::VOID);
       doSave(SILENT_NO);
     }
   } else if (getTimer() == 20) {
-    if (in_room != ROOM_STORAGE) {
-      if (in_room != ROOM_NOWHERE)
+    if (in_room != Room::STORAGE) {
+      if (in_room != Room::NOWHERE)
         --(*this);
 
       vlogf(LOG_SILENT, format("%s booted from game for inactivity.") %  getName());
-      thing_to_room(this, ROOM_DUMP);
+      thing_to_room(this, Room::DUMP);
 
       // this would be done by ~TPerson
       // but generates an error.  So we do it here in "safe" mode instead

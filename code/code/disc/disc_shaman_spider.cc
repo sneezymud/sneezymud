@@ -357,15 +357,15 @@ int sticksToSnakes(TBeing * caster, TBeing * victim, int level, short bKnown)
   followData *k, *n;
 
   if (level < 26) {
-     mobile = MOB_SNAKES25;
+     mobile = Mob::Mob::SNAKES25;
   } else if (level < 31) {
-     mobile = MOB_SNAKES30;
+     mobile = Mob::Mob::SNAKES30;
   } else if (level < 36) {
-     mobile = MOB_SNAKES35;
+     mobile = Mob::Mob::SNAKES35;
   } else if (level < 41) {
-     mobile = MOB_SNAKES40;
+     mobile = Mob::Mob::SNAKES40;
   } else {
-     mobile = MOB_SNAKES50;
+     mobile = Mob::Mob::SNAKES50;
   }
 
 
@@ -485,7 +485,7 @@ int sticksToSnakes(TBeing * caster, TBeing * victim, int level, short bKnown)
     act("The snake seems to have no interest in $n!", TRUE, caster, 0, snake, TO_ROOM);
     caster->sendTo("The snake reverts back into sticks.\n\r");
     act("$N reverts back into the sticks from which it came.", TRUE, caster, 0, snake, TO_ROOM);
-    *snake->roomp += *read_object(OBJ_INERT_STICK, VIRTUAL);
+    *snake->roomp += *read_object(Obj::INERT_STICK, VIRTUAL);
     delete snake;
     snake = NULL;
     return SPELL_FAIL;

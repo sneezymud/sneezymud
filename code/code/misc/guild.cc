@@ -316,7 +316,7 @@ bool TBeing::canCreateGuild(bool silent = false) {
   char buf[256];
   if(isImmortal())
     return TRUE;
-  if(inRoom() != ROOM_GUILD_BUREAU) {
+  if(inRoom() != Room::GUILD_BUREAU) {
     if (!silent) {
       sendTo("You must be in the Grimhaven Bureau of Guilds to create a new guild\n\r");
     }
@@ -379,13 +379,13 @@ int guildRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, 
       myself->doTell(fname(ch->name), "Actually... for an immortal I think I can skip the paperwork.");
       myself->doAction(fname(ch->name), CMD_SMILE);
     } else {
-      if(ch->inRoom() != ROOM_GUILD_BUREAU) {
+      if(ch->inRoom() != Room::GUILD_BUREAU) {
 	myself->doAction("", CMD_BLINK);
 	myself->doSay("Uh, it seem I've misplaced my office.");
 	myself->doTell(fname(ch->name), "Tell ya what, I'll meet you there, and then we'll go over your paperwork.");
 	act("$n hurries off back to $s office.", 0, myself, 0, 0, TO_ROOM);
 	--(*myself);
-	*real_roomp(ROOM_GUILD_BUREAU) += *myself;
+	*real_roomp(Room::GUILD_BUREAU) += *myself;
 	act("$n hurries into the office.", 0, myself, 0, 0, TO_ROOM); 
 	return TRUE;
       }

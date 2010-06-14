@@ -1205,7 +1205,7 @@ int fireballWeapon(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
           }
         } else
           act("You are able to avoid the flames!", FALSE, ch, NULL, tmp_victim, TO_VICT);
-      } else if ((ch != tmp_victim) && (tmp_victim->in_room != ROOM_NOWHERE) &&
+      } else if ((ch != tmp_victim) && (tmp_victim->in_room != Room::NOWHERE) &&
                  (rp->getZoneNum() == tmp_victim->roomp->getZoneNum())) {
         if (tmp_victim->awake())
           tmp_victim->sendTo("You hear a loud explosion and feel a gust of hot air.\n\r");
@@ -2365,7 +2365,7 @@ int gnomeTenderizer(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
               continue;
             }
           }
-        } else if ((ch != tmp_victim) && (tmp_victim->in_room != ROOM_NOWHERE) &&
+        } else if ((ch != tmp_victim) && (tmp_victim->in_room != Room::NOWHERE) &&
             (ch->roomp->getZoneNum() == tmp_victim->roomp->getZoneNum())) {
           if (tmp_victim->awake())
             tmp_victim->sendTo("*BRRAAACK* You hear a loud percussive noise coming from nearby.\n\r");

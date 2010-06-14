@@ -240,7 +240,7 @@ int check_sinking_obj(TObj *obj, int room)
 {
   TRoom *rp;
 
-  if (room == ROOM_NOWHERE)
+  if (room == Room::NOWHERE)
     return FALSE;
   if (!(rp = obj->roomp) || !rp->isWaterSector())
     return FALSE;
@@ -616,7 +616,7 @@ int TBeing::checkFalling()
   
     if (!(rp = real_roomp(new_room = rp->dir_option[DIR_DOWN]->to_room))) {
       vlogf(LOG_BUG, format("illegal room number for falling - %d") %  rp->dir_option[DIR_DOWN]->to_room);
-      thing_to_room(this, ROOM_VOID);
+      thing_to_room(this, Room::VOID);
       return FALSE;
     }
     *rp += *this;

@@ -211,7 +211,7 @@ int enthrallDemon(TBeing * caster, int level, short bKnown)
   affectedData aff;
   TMonster * victim;
 
-  if (!(victim = read_mobile(THRALL_DEMON, VIRTUAL))) {
+  if (!(victim = read_mobile(Mob::THRALL_DEMON, VIRTUAL))) {
     caster->sendTo("You cannot summon a being of that type.\n\r");
     return SPELL_FAIL;
   }
@@ -298,7 +298,7 @@ int enthrallDemon(TBeing * caster)
     return FALSE;
   }
 
-  if (real_mobile(THRALL_DEMON) < 0) {
+  if (real_mobile(Mob::THRALL_DEMON) < 0) {
     caster->sendTo("You cannot call upon a being of that type.\n\r");
     return FALSE;
   }
@@ -342,7 +342,7 @@ int createWoodGolem(TBeing * caster, int level, short bKnown)
   affectedData aff;
   TMonster * victim;
 
-  if (!(victim = read_mobile(WOOD_GOLEM, VIRTUAL))) {
+  if (!(victim = read_mobile(Mob::WOOD_GOLEM, VIRTUAL))) {
     caster->sendTo("You cannot summon a being of that type.\n\r");
     return SPELL_FAIL;
   }
@@ -429,7 +429,7 @@ int createWoodGolem(TBeing * caster)
     return FALSE;
   }
 
-  if (real_mobile(WOOD_GOLEM) < 0) {
+  if (real_mobile(Mob::WOOD_GOLEM) < 0) {
     caster->sendTo("You cannot call upon a being of that type.\n\r");
     return FALSE;
   }
@@ -468,7 +468,7 @@ int createRockGolem(TBeing * caster, int level, short bKnown)
   affectedData aff;
   TMonster * victim;
 
-  if (!(victim = read_mobile(ROCK_GOLEM, VIRTUAL))) {
+  if (!(victim = read_mobile(Mob::ROCK_GOLEM, VIRTUAL))) {
     caster->sendTo("You cannot summon a being of that type.\n\r");
     return SPELL_FAIL;
   }
@@ -554,7 +554,7 @@ int createRockGolem(TBeing * caster)
     return FALSE;
   }
 
-  if (real_mobile(ROCK_GOLEM) < 0) {
+  if (real_mobile(Mob::ROCK_GOLEM) < 0) {
     caster->sendTo("You cannot call upon a being of that type.\n\r");
     return FALSE;
   }
@@ -595,7 +595,7 @@ int createIronGolem(TBeing * caster, int level, short bKnown)
   affectedData aff;
   TMonster * victim;
 
-  if (!(victim = read_mobile(IRON_GOLEM, VIRTUAL))) {
+  if (!(victim = read_mobile(Mob::IRON_GOLEM, VIRTUAL))) {
     caster->sendTo("You cannot summon a being of that type.\n\r");
     return SPELL_FAIL;
   }
@@ -680,7 +680,7 @@ int createIronGolem(TBeing * caster)
     return FALSE;
   }
 
-  if (real_mobile(IRON_GOLEM) < 0) {
+  if (real_mobile(Mob::IRON_GOLEM) < 0) {
     caster->sendTo("You cannot call upon a being of that type.\n\r");
     return FALSE;
   }
@@ -721,7 +721,7 @@ int createDiamondGolem(TBeing * caster, int level, short bKnown)
   affectedData aff;
   TMonster * victim;
 
-  if (!(victim = read_mobile(DIAMOND_GOLEM, VIRTUAL))) {
+  if (!(victim = read_mobile(Mob::DIAMOND_GOLEM, VIRTUAL))) {
     caster->sendTo("You cannot summon a being of that type.\n\r");
     return SPELL_FAIL;
   }
@@ -806,7 +806,7 @@ int createDiamondGolem(TBeing * caster)
     return FALSE;
   }
 
-  if (real_mobile(DIAMOND_GOLEM) < 0) {
+  if (real_mobile(Mob::DIAMOND_GOLEM) < 0) {
     caster->sendTo("You cannot call upon a being of that type.\n\r");
     return FALSE;
   }

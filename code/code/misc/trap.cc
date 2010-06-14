@@ -2602,128 +2602,128 @@ bool TBeing::hasTrapComps(const char *type, trap_targ_t targ, int amt, int *pric
   int item1 = 0, item2 = 0, item3 = 0, item4 = 0;
 
   if (is_abbrev(type, "fire")) {
-    item1 = ST_FLINT;
-    item2 = ST_SULPHUR;
-    item3 = ST_BAG;
+    item1 = Obj::ST_FLINT;
+    item2 = Obj::ST_SULPHUR;
+    item3 = Obj::ST_BAG;
   } else if (is_abbrev(type, "explosive")) {
-    item1 = ST_FLINT;
-    item2 = ST_SULPHUR;
-    item3 = ST_HYDROGEN;
+    item1 = Obj::ST_FLINT;
+    item2 = Obj::ST_SULPHUR;
+    item3 = Obj::ST_HYDROGEN;
   } else if (is_abbrev(type, "poison")) {
     if (targ == TRAP_TARG_DOOR ||
         targ == TRAP_TARG_CONT) {
-      item1 = ST_NEEDLE;
-      item2 = ST_SPRING;
-      item3 = ST_POISON;
+      item1 = Obj::ST_NEEDLE;
+      item2 = Obj::ST_SPRING;
+      item3 = Obj::ST_POISON;
     } else if (targ == TRAP_TARG_MINE ||
                targ == TRAP_TARG_GRENADE) {
-      item1 = ST_CANISTER;
-      item2 = ST_SPRING;
-      item3 = ST_CON_POISON;
+      item1 = Obj::ST_CANISTER;
+      item2 = Obj::ST_SPRING;
+      item3 = Obj::ST_CON_POISON;
     }
   } else if (is_abbrev(type, "sleep")) {
-    item1 = ST_NOZZLE;
-    item2 = ST_GAS;
-    item3 = ST_HOSE;
+    item1 = Obj::ST_NOZZLE;
+    item2 = Obj::ST_GAS;
+    item3 = Obj::ST_HOSE;
   } else if (is_abbrev(type, "acid")) {
     if (targ == TRAP_TARG_DOOR ||
         targ == TRAP_TARG_CONT) {
-      item1 = ST_NOZZLE;
-      item2 = ST_ACID_VIAL;
-      item3 = ST_BELLOWS;
+      item1 = Obj::ST_NOZZLE;
+      item2 = Obj::ST_ACID_VIAL;
+      item3 = Obj::ST_BELLOWS;
     } else if (targ == TRAP_TARG_MINE ||
                targ == TRAP_TARG_GRENADE) {
-      item1 = ST_CANISTER;
-      item2 = ST_SPRING;
-      item3 = ST_ACID_VIAL;
+      item1 = Obj::ST_CANISTER;
+      item2 = Obj::ST_SPRING;
+      item3 = Obj::ST_ACID_VIAL;
     }
   } else if (is_abbrev(type, "spore")) {
     if (targ == TRAP_TARG_DOOR ||
         targ == TRAP_TARG_CONT) {
-      item1 = ST_FUNGUS;
-      item2 = ST_NOZZLE;
-      item3 = ST_BELLOWS;
+      item1 = Obj::ST_FUNGUS;
+      item2 = Obj::ST_NOZZLE;
+      item3 = Obj::ST_BELLOWS;
     } else if (targ == TRAP_TARG_MINE ||
                targ == TRAP_TARG_GRENADE) {
-      item1 = ST_CANISTER;
-      item2 = ST_SPRING;
-      item3 = ST_FUNGUS;
+      item1 = Obj::ST_CANISTER;
+      item2 = Obj::ST_SPRING;
+      item3 = Obj::ST_FUNGUS;
     }
   } else if (is_abbrev(type, "spike")) {
     if (targ != TRAP_TARG_DOOR &&
         targ != TRAP_TARG_CONT) 
       vlogf(LOG_MISC, format("spike trap being set  with trap targ: %d") % targ);
 
-    item1 = ST_SPIKE;
-    item2 = ST_SPRING;
-    item3 = ST_TRIPWIRE;
+    item1 = Obj::ST_SPIKE;
+    item2 = Obj::ST_SPRING;
+    item3 = Obj::ST_TRIPWIRE;
   } else if (is_abbrev(type, "bolt")) {
     if (targ != TRAP_TARG_MINE && 
         targ != TRAP_TARG_GRENADE) 
       vlogf(LOG_MISC, format("bolt trap being set  with trap targ: %d") % targ);
 
-    item1 = ST_TUBING;
-    item2 = ST_CGAS;
-    item3 = ST_BOLTS;
+    item1 = Obj::ST_TUBING;
+    item2 = Obj::ST_CGAS;
+    item3 = Obj::ST_BOLTS;
   } else if (is_abbrev(type, "blade")) {
     if (targ != TRAP_TARG_DOOR &&
         targ != TRAP_TARG_CONT)
       vlogf(LOG_MISC, format("blade trap being set  with trap targ: %d") % targ);
 
-    item1 = ST_RAZOR_BLADE;
-    item2 = ST_SPRING;
-    item3 = ST_TRIPWIRE;
+    item1 = Obj::ST_RAZOR_BLADE;
+    item2 = Obj::ST_SPRING;
+    item3 = Obj::ST_TRIPWIRE;
   } else if (is_abbrev(type, "disk")) {
     if (targ != TRAP_TARG_MINE &&
         targ != TRAP_TARG_GRENADE)
       vlogf(LOG_MISC, format("disk trap being set  with trap targ: %d") % targ);
 
-    item1 = ST_RAZOR_DISK;
-    item2 = ST_SPRING;
-    item3 = ST_CANISTER;
+    item1 = Obj::ST_RAZOR_DISK;
+    item2 = Obj::ST_SPRING;
+    item3 = Obj::ST_CANISTER;
   } else if (is_abbrev(type, "hammer")) {
     if (targ != TRAP_TARG_DOOR) 
       vlogf(LOG_MISC, format("hammer trap being set  with trap targ: %d") % targ);
 
-    item1 = ST_CONCRETE;
-    item2 = ST_WEDGE;
-    item3 = ST_TRIPWIRE;
+    item1 = Obj::ST_CONCRETE;
+    item2 = Obj::ST_WEDGE;
+    item3 = Obj::ST_TRIPWIRE;
   } else if (is_abbrev(type, "pebble")) {
     if (targ != TRAP_TARG_CONT && 
         targ != TRAP_TARG_MINE && 
         targ != TRAP_TARG_GRENADE) 
       vlogf(LOG_MISC, format("pebble trap being set  with trap targ: %d") % targ);
 
-    item1 = ST_TUBING;
-    item2 = ST_CGAS;
-    item3 = ST_PEBBLES;
+    item1 = Obj::ST_TUBING;
+    item2 = Obj::ST_CGAS;
+    item3 = Obj::ST_PEBBLES;
   } else if (is_abbrev(type, "frost")) {
-    item1 = ST_NOZZLE;
-    item2 = ST_HOSE;
-    item3 = ST_FROST;
+    item1 = Obj::ST_NOZZLE;
+    item2 = Obj::ST_HOSE;
+    item3 = Obj::ST_FROST;
   } else if (is_abbrev(type, "teleport")) {
     if (targ == TRAP_TARG_DOOR ||
         targ == TRAP_TARG_CONT) {
-      item1 = ST_PENTAGRAM;
-      item2 = ST_TRIPWIRE;
-      item3 = ST_BLINK;
+      item1 = Obj::ST_PENTAGRAM;
+      item2 = Obj::ST_TRIPWIRE;
+      item3 = Obj::ST_BLINK;
     } else if (targ == TRAP_TARG_MINE ||
                targ == TRAP_TARG_GRENADE) {
-      item1 = ST_PENTAGRAM;
-      item2 = ST_CRYSTALINE;
-      item3 = ST_BLINK;
+      item1 = Obj::ST_PENTAGRAM;
+      item2 = Obj::ST_CRYSTALINE;
+      item3 = Obj::ST_BLINK;
     }
   } else if (is_abbrev(type, "power")) {
     if (targ == TRAP_TARG_DOOR ||
         targ == TRAP_TARG_CONT) {
-      item1 = ST_PENTAGRAM;
-      item2 = ST_TRIPWIRE;
-      item3 = ST_ATHANOR;
+      item1 = Obj::ST_PENTAGRAM;
+      item2 = Obj::ST_TRIPWIRE;
+      item3 = Obj::ST_ATHANOR;
     } else if (targ == TRAP_TARG_MINE ||
                targ == TRAP_TARG_GRENADE) {
-      item1 = ST_PENTAGRAM;
-      item2 = ST_CRYSTALINE;
-      item3 = ST_ATHANOR;
+      item1 = Obj::ST_PENTAGRAM;
+      item2 = Obj::ST_CRYSTALINE;
+      item3 = Obj::ST_ATHANOR;
     }
   } else {
     vlogf(LOG_MISC, format("Bad call to hasTrapComps() : %s") %  type);
@@ -2736,11 +2736,11 @@ bool TBeing::hasTrapComps(const char *type, trap_targ_t targ, int amt, int *pric
   TThing *com4 = NULL;
 
   if (targ == TRAP_TARG_MINE) {
-    item4 = ST_CASE_MINE;
+    item4 = Obj::ST_CASE_MINE;
     item4 = real_object(item4);
     com4 = searchLinkedListVis(this, obj_index[item4].name, stuff);
   } else if (targ == TRAP_TARG_GRENADE) {
-    item4 = ST_CASE_GRENADE;
+    item4 = Obj::ST_CASE_GRENADE;
     item4 = real_object(item4);
     com4 = searchLinkedListVis(this, obj_index[item4].name, stuff);
   }

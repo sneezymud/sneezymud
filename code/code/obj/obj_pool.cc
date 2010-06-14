@@ -301,15 +301,15 @@ int TRoom::dropPool(int amt, liqTypeT liq)
 #if 1
 // builder port uses stripped down database which was causing problems
 // hence this setup instead.
-    int robj = real_object(GENERIC_POOL);
+    int robj = real_object(Obj::GENERIC_POOL);
     if (robj < 0 || robj >= (signed int) obj_index.size()) {
-      vlogf(LOG_BUG, format("dropPool(): No object (%d) in database!") %  GENERIC_POOL);
+      vlogf(LOG_BUG, format("dropPool(): No object (%d) in database!") %  Obj::GENERIC_POOL);
       return false;
     }
 
     obj = read_object(robj, REAL);
 #else
-    obj = read_object(GENERIC_POOL, VIRTUAL);
+    obj = read_object(Obj::GENERIC_POOL, VIRTUAL);
 #endif
     pool = dynamic_cast<TPool *>(obj);
     if (!pool)
@@ -348,15 +348,15 @@ int TBeing::dropPool(int amt, liqTypeT liq)
 #if 1
 // builder port uses stripped down database which was causing problems
 // hence this setup instead.
-    int robj = real_object(GENERIC_POOL);
+    int robj = real_object(Obj::GENERIC_POOL);
     if (robj < 0 || robj >= (signed int) obj_index.size()) {
-      vlogf(LOG_BUG, format("dropPool(): No object (%d) in database!") %  GENERIC_POOL);
+      vlogf(LOG_BUG, format("dropPool(): No object (%d) in database!") %  Obj::GENERIC_POOL);
       return false;
     }
 
     obj = read_object(robj, REAL);
 #else
-    obj = read_object(GENERIC_POOL, VIRTUAL);
+    obj = read_object(Obj::GENERIC_POOL, VIRTUAL);
 #endif
     pool = dynamic_cast<TPool *>(obj);
     if (!pool)

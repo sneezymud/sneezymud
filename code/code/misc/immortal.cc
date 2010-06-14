@@ -1039,7 +1039,7 @@ void TPerson::doTrans(const char *argument)
 static bool isSpammyRoom(int tRoom)
 {
   switch (tRoom) {
-    case ROOM_NOCTURNAL_STORAGE:
+    case Room::NOCTURNAL_STORAGE:
       return TRUE;
   }
 
@@ -1095,7 +1095,7 @@ int TBeing::doAt(const char *argument, bool isFarlook)
     location = mob->in_room;
   } else if ((obj = get_obj_vis_world(this, loc, NULL, EXACT_YES)) ||
              (obj = get_obj_vis_world(this, loc, NULL, EXACT_NO))) {
-    if (obj->in_room != ROOM_NOWHERE)
+    if (obj->in_room != Room::NOWHERE)
       location = obj->in_room;
     else {
       sendTo("The object is not available.\n\r");
@@ -1135,7 +1135,7 @@ int TBeing::doAt(const char *argument, bool isFarlook)
     strcat(com_buf, tStArgument.c_str());
   }
 
-  if (location == ROOM_STORAGE && !hasWizPower(POWER_GOTO_IMP_POWER)) {
+  if (location == Room::STORAGE && !hasWizPower(POWER_GOTO_IMP_POWER)) {
     sendTo("You are forbidden to do this.  Sorry.\n\r");
     return FALSE;
   }
@@ -1204,7 +1204,7 @@ int TBeing::doGoto(const sstring & argument)
   if (buf.empty()) {
     char tString[10];
 
-    sprintf(tString, "%d", (desc ? desc->office : ROOM_IMPERIA));
+    sprintf(tString, "%d", (desc ? desc->office : Room::IMPERIA));
     buf = tString;
   } else if (buf == "help" && desc) {
     sendTo("Useful rooms:\n\r____________________\n\r");
@@ -1216,11 +1216,11 @@ int TBeing::doGoto(const sstring & argument)
     if (desc->blockbstart)
       sendTo(format("%6d - %6d: Your Secondary Room Block\n\r") % desc->blockbstart % desc->blockbend);
 
-    sendTo(format("         %6d: Wizard Board\n\r") % ROOM_IMPERIA);
+    sendTo(format("         %6d: Wizard Board\n\r") % Room::IMPERIA);
     sendTo("              9: Lab\n\r");
     sendTo("              2: Builder's Lounge/Board\n\r");
     sendTo("              8: Reimbursement/Enforcement Board\n\r");
-    sendTo(format("         %6d: Center Square\n\r") % ROOM_CS);
+    sendTo(format("         %6d: Center Square\n\r") % Room::CS);
     sendTo("             77: Slap on the Wrist (First Offense)\n\r");
     sendTo("             70: Hell\n\r");
     sendTo("             81: Conference Room\n\r");
@@ -1255,7 +1255,7 @@ int TBeing::doGoto(const sstring & argument)
     location = target_mob->in_room;
   else if ((target_obj = get_obj_vis_world(this, buf.c_str(), NULL, EXACT_YES)) ||
            (target_obj = get_obj_vis_world(this, buf.c_str(), NULL, EXACT_NO))) {
-    if (target_obj->in_room != ROOM_NOWHERE)
+    if (target_obj->in_room != Room::NOWHERE)
       location = target_obj->in_room;
     else {
       sendTo("The object is not available.\n\r");
@@ -1277,7 +1277,7 @@ int TBeing::doGoto(const sstring & argument)
     return FALSE;
   }
 
-  if (location == ROOM_STORAGE && !hasWizPower(POWER_GOTO_IMP_POWER)) {
+  if (location == Room::STORAGE && !hasWizPower(POWER_GOTO_IMP_POWER)) {
     sendTo("You are forbidden to do this.  Sorry.\n\r");
     return FALSE;
   }
@@ -1368,7 +1368,7 @@ int TBeing::doGoto(const sstring & argument)
   if (!desc || !desc->poof.poofin) {
     act("$n appears with an explosion of rose-petals.",
         TRUE, this, 0, v, TO_ROOM, NULL, (hasStealth ? MAX_MORT : 0));
-    *roomp += *read_object(OBJ_ROSEPETAL, VIRTUAL);
+    *roomp += *read_object(Obj::ROSEPETAL, VIRTUAL);
   } else if (*desc->poof.poofin != '!') {
     for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       TBeing *tbt = dynamic_cast<TBeing *>(t);
@@ -2151,7 +2151,7 @@ void TBeing::doReturn(const char * buffer, wearSlotT limb, bool tell, bool delet
       if (mob->roomp)
         *mob->roomp += *per;
       else {
-        rp = real_roomp(ROOM_CS);
+        rp = real_roomp(Room::CS);
         *rp += *per;
       }
 
@@ -2172,7 +2172,7 @@ void TBeing::doReturn(const char * buffer, wearSlotT limb, bool tell, bool delet
       mob = NULL;
     } else if (IS_SET(specials.act, ACT_POLYSELF)) { // move mob to room 72
       --(*mob);
-      rp = real_roomp(ROOM_POLY_STORAGE);
+      rp = real_roomp(Room::POLY_STORAGE);
       *rp += *mob;
     }
       
@@ -2386,22 +2386,22 @@ void TPerson::doLoad(const char *argument)
     }
     if (!hasWizPower(POWER_LOAD_IMP_POWER)) {
       switch (obj_index[numx].virt) {
-        case DEITY_TOKEN:
+        case Obj::DEITY_TOKEN:
           sendTo("Tokens can't be reimbursed.\n\r");
           return;
-        case YOUTH_POTION:
+        case Obj::YOUTH_POTION:
           sendTo("Youth potions are unloadable.\n\r");
           return;
-        case STATS_POTION:
+        case Obj::STATS_POTION:
           sendTo("Stat potions are unloadable.\n\r");
           return;
-  case LEARNING_POTION:
+  case Obj::LEARNING_POTION:
     sendTo("Learning potions are unloadable.\n\r");
     return;
-  case MYSTERY_POTION:
+  case Obj::MYSTERY_POTION:
     sendTo("Mystery potions are unloadable.\n\r");
     return;
-        case CRAPS_DICE:
+        case Obj::CRAPS_DICE:
           sendTo("These dice are unloadable by anyone but Brutius. More than one pair in the game could wreck havok!\n\r");
           return;
       }
@@ -2456,7 +2456,7 @@ static void purge_one_room(int rnum, TRoom *rp, int *range)
   for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
     t=*(it++);
     --(*t);
-    thing_to_room(t, ROOM_VOID);
+    thing_to_room(t, Room::VOID);
 
     TBeing *tbt = dynamic_cast<TBeing *>(t);
     if (tbt) {
@@ -3126,17 +3126,17 @@ void TPerson::doStart()
 #endif
   // give a weapon
   if (hasClass(CLASS_WARRIOR) || hasClass(CLASS_RANGER) || hasClass(CLASS_DEIKHAN)) {
-    if ((r_num = real_object(WEAPON_T_SWORD)) >= 0) {
+    if ((r_num = real_object(Obj::WEAPON_T_SWORD)) >= 0) {
       obj = read_object(r_num, REAL);
       *this += *obj;    // newbie sword
     }
   } else if (!hasClass(CLASS_CLERIC) && !hasClass(CLASS_MONK) && !hasClass(CLASS_SHAMAN)) {
-    if ((r_num = real_object(WEAPON_T_DAGGER)) >= 0) {
+    if ((r_num = real_object(Obj::WEAPON_T_DAGGER)) >= 0) {
       obj = read_object(r_num, REAL);
       *this += *obj;    // newbie dagger
     }
   } else {
-    if ((r_num = real_object(WEAPON_T_STAFF)) >= 0) {
+    if ((r_num = real_object(Obj::WEAPON_T_STAFF)) >= 0) {
       obj = read_object(r_num, REAL);
       *this += *obj;    // newbie staff 
     }
@@ -3562,7 +3562,7 @@ int TBeing::doExits(const char *argument, cmdTypeT cmd)
           sendTo(format("%s - swirling chaos of #%d\n\r") % exits[door] % exitdata->to_room);
           found = TRUE;
         }  
-      } else if (exitdata->to_room != ROOM_NOWHERE &&
+      } else if (exitdata->to_room != Room::NOWHERE &&
                      (canSeeThruDoor(exitdata) || isImmortal())) {
         if (rp->pitchBlackDark() &&
              !rp->isRoomFlag(ROOM_ALWAYS_LIT) &&
@@ -3616,7 +3616,7 @@ int TBeing::doExits(const char *argument, cmdTypeT cmd)
             found = TRUE;
           }
         }
-      } else if (exitdata->to_room != ROOM_NOWHERE &&
+      } else if (exitdata->to_room != Room::NOWHERE &&
             !IS_SET(exitdata->condition, EX_SECRET)) {
         if (darkhere) {
         } else {
@@ -4308,7 +4308,7 @@ void TBeing::doInfo(const char *arg)
       
       for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
 	obj=*iter;
-	if(obj->in_room == ROOM_NOWHERE && !obj->parent &&
+	if(obj->in_room == Room::NOWHERE && !obj->parent &&
 	   !obj->equippedBy && !obj->stuckIn && !obj->riding){
 	  tbuf=format("[%6i] %-17s\n\r") %
 	    i++ % obj->getNameNOC(this);
@@ -4319,7 +4319,7 @@ void TBeing::doInfo(const char *arg)
       TBeing *tb;
       
       for(tb=character_list;tb;tb=tb->next){
-	if(tb->in_room == ROOM_NOWHERE && !tb->parent &&
+	if(tb->in_room == Room::NOWHERE && !tb->parent &&
 	   !tb->equippedBy && !tb->stuckIn && !tb->riding){
 	  tbuf =format("[%6i] %-17s\n\r") %
 	    i++ % tb->getNameNOC(this);
@@ -5518,7 +5518,7 @@ void TBeing::doQuest(const char *argument)
     }
     doEcho(argument);
     --(*vict);
-    thing_to_room(vict, ROOM_Q_STORAGE);
+    thing_to_room(vict, Room::Q_STORAGE);
     vict->doLook("", CMD_LOOK);
     vict->doSay("oops");
   } else {
@@ -6513,7 +6513,7 @@ void TPerson::doBestow(const sstring &argument)
     
     while (number_tried < number_needed) {
       number_tried++;
-      if (obj = read_object(OBJ_IMMORTAL_EXCHANGE_COIN, VIRTUAL)) {
+      if (obj = read_object(Obj::IMMORTAL_EXCHANGE_COIN, VIRTUAL)) {
         // load coin
         coin = dynamic_cast<TTreasure *>(obj);
         if (!coin) {
@@ -6568,7 +6568,7 @@ void TPerson::doBestow(const sstring &argument)
     for(StuffIter it=stuff.begin();it!=stuff.end();){
       t=*(it++);
       coin = dynamic_cast<TTreasure *>(t);
-      if (coin && coin->objVnum() == OBJ_IMMORTAL_EXCHANGE_COIN) {
+      if (coin && coin->objVnum() == Obj::IMMORTAL_EXCHANGE_COIN) {
         /* validity check then redeem the coin */
         number_tried++;
         redeem = TRUE;

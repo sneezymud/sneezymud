@@ -162,7 +162,7 @@ static void update_room_menu(const TBeing *ch)
     };
 
     for (tExit = MIN_DIR; tExit < MAX_DIR; tExit++)
-      if ((tData = ch->roomp->exitDir(tExit)) && tData->to_room != ROOM_NOWHERE) {
+      if ((tData = ch->roomp->exitDir(tExit)) && tData->to_room != Room::NOWHERE) {
         tStString += " ";
         tStString += exDirs[tExit];
       }
@@ -788,7 +788,7 @@ void TPerson::doEdit(const char *arg)
           }
           if (zone_table[newrp->getZoneNum()].enabled &&
               !hasWizPower(POWER_REDIT_ENABLED) &&
-              newrp->getZoneNum() != ROOM_IMPERIA) {
+              newrp->getZoneNum() != Room::IMPERIA) {
             sendTo("I'm afraid you cannot use this field on an enabled zone.\n\r");
             return;
           }
@@ -827,7 +827,7 @@ void TPerson::doEdit(const char *arg)
             }
             if (zone_table[newrpTo->getZoneNum()].enabled &&
                 !hasWizPower(POWER_REDIT_ENABLED) &&
-                newrpTo->getZoneNum() != ROOM_IMPERIA) {
+                newrpTo->getZoneNum() != Room::IMPERIA) {
               sendTo("I'm afraid you cannot use this field on an enabled zone.\n\r");
               return;
             }
@@ -1056,7 +1056,7 @@ void TPerson::doEdit(const char *arg)
           }
           if (zone_table[newrp->getZoneNum()].enabled &&
               !hasWizPower(POWER_REDIT_ENABLED) &&
-              newrp->getZoneNum() != ROOM_IMPERIA) {
+              newrp->getZoneNum() != Room::IMPERIA) {
             sendTo("I'm afraid you cannot use this field on an enabled zone.\n\r");
             continue;
           }
@@ -2836,7 +2836,7 @@ static void DeleteExit(TRoom *rp, TBeing *ch, const char *arg, editorEnterTypeT 
   roomDirData *tData;
 
   for (tExit = MIN_DIR; tExit < MAX_DIR; tExit++)
-    if ((tData = rp->exitDir(tExit)) && tData->to_room != ROOM_NOWHERE) {
+    if ((tData = rp->exitDir(tExit)) && tData->to_room != Room::NOWHERE) {
       ch->sendTo(format("  %2d) %-9s     ") % (tExit + 1) % dirs[tExit]);
 
       if ((tExit % 2))

@@ -587,14 +587,14 @@ int statue_of_feeding(TBeing *ch, cmdTypeT cmd, const char *argum, TObj *me, TOb
 
     for (k = ch->followers; k; k = k->next) {
       if (k->follower && !k->follower->isPc()) {
-        if (k->follower->mobVnum() == FACTION_FAERY) {
+        if (k->follower->mobVnum() == Mob::FACTION_FAERY) {
           ch->sendTo("Your deity ignores you.\n\r");
           return TRUE;
         }
       }
     }
 
-    TBeing *mob = read_mobile(FACTION_FAERY, VIRTUAL);
+    TBeing *mob = read_mobile(Mob::FACTION_FAERY, VIRTUAL);
     if (!mob) {
       ch->sendTo("Problem!  Tell a god.\n\r");
       return FALSE;
@@ -750,7 +750,7 @@ void explode(TObj *obj, int room, int dam)
   TBeing *v = NULL;
 
   if (!(rm = real_roomp(room))) {
-    vlogf(LOG_PROC, "Explosion in room : ROOM_NOWHERE. (explode() spec_objs.c)");
+    vlogf(LOG_PROC, "Explosion in room : Room::NOWHERE. (explode() spec_objs.c)");
     return;
   }
 
@@ -954,7 +954,7 @@ int dispenser(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     if (isname(arg2, o->getName())) {
       act("You get a note from $p.", FALSE, ch, o, 0, TO_CHAR);
       act("$n gets a note from $p.", FALSE, ch, o, 0, TO_ROOM);
-      if (!(note = read_object(GENERIC_NOTE, VIRTUAL))) {
+      if (!(note = read_object(Obj::GENERIC_NOTE, VIRTUAL))) {
         vlogf(LOG_PROC, "Bad note dispenser! NO note can be loaded!");
         return FALSE;
       }
@@ -965,7 +965,7 @@ int dispenser(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     if (isname(arg2, o->getName())) {
       act("You get a quill from $p.", FALSE, ch, o, 0, TO_CHAR);
       act("$n gets a quill from $p.", FALSE, ch, o, 0, TO_ROOM);
-      if (!(quill = read_object(GENERIC_PEN, VIRTUAL))) {
+      if (!(quill = read_object(Obj::GENERIC_PEN, VIRTUAL))) {
         vlogf(LOG_PROC, "Bad quill dispenser! NO quill can be loaded!");
         return FALSE;
       }
@@ -1855,7 +1855,7 @@ int trolley(TBeing *, cmdTypeT cmd, const char *, TObj *myself, TObj *)
 	      34704, 34703, 34702, 34701, 34700, 735, 736, 737,
 	      738, 739, 1381, 1200, 1201, 1204, 1207, 1215, 1218, 1221, 
 	      1301, 1302, 1303, -1};
-  TRoom *trolleyroom=real_roomp(ROOM_TROLLEY);
+  TRoom *trolleyroom=real_roomp(Room::TROLLEY);
   static int timer;
   char buf[256], shortdescr[256];
 

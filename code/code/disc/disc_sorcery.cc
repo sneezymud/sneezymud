@@ -1068,9 +1068,9 @@ int animate(TBeing *caster, int level, short bKnown)
       caster->nothingHappens(SILENT_YES);
       return SPELL_FAIL;
     }
-    gol = read_mobile(MOB_ANIMATION, VIRTUAL);
+    gol = read_mobile(Mob::ANIMATION, VIRTUAL);
     if (!gol) {
-      vlogf(LOG_BUG, format("ERROR! spell 'animate' (in code as create_monster) tried to load mob vnum #%d -- doesn't exist!") %  MOB_ANIMATION);
+      vlogf(LOG_BUG, format("ERROR! spell 'animate' (in code as create_monster) tried to load mob vnum #%d -- doesn't exist!") %  Mob::ANIMATION);
       caster->sendTo("Oops. Buggy spell. Error logged. Sorry.\n\r");
       caster->nothingHappens(SILENT_YES);
       return SPELL_FAIL;

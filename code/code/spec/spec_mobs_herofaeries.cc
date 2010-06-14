@@ -319,7 +319,7 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
     if (targ->getTimer() > MAX_TIME)
       continue;
 
-    if (targ->roomp == real_roomp(ROOM_VOID))
+    if (targ->roomp == real_roomp(Room::VOID))
       continue;
     
     if (targ->desc->autobits & AUTO_NOSPRITE) {

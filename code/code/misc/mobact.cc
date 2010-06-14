@@ -634,7 +634,7 @@ int TMoney::scavengeMe(TBeing *, TObj **best_o)
 
 int TTreasure::scavengeMe(TBeing *, TObj **best_o)
 {
-  if (!objVnum() == OBJ_IMMORTAL_EXCHANGE_COIN)
+  if (!objVnum() == Obj::IMMORTAL_EXCHANGE_COIN)
     *best_o = this;
   return FALSE;
 }
@@ -652,7 +652,7 @@ int TMonster::superScavenger()
 
   if (!hasHands() && !isHumanoid())
     return FALSE;
-  if (in_room == ROOM_DONATION)
+  if (in_room == Room::DONATION)
     return FALSE;
   if (UtilMobProc(this))
     return FALSE;
@@ -3381,7 +3381,7 @@ int TMonster::scavenge()
   int rc;
   TBaseCorpse *corpse;
   
-  if (in_room == ROOM_DONATION)
+  if (in_room == Room::DONATION)
     return FALSE;
   if (UtilMobProc(this))
     return FALSE;
@@ -3610,7 +3610,7 @@ int TMonster::mobileActivity(int pulse)
     return 0;
 #else
   // this is better
-  if(inRoom() == ROOM_NOCTURNAL_STORAGE)
+  if(inRoom() == Room::NOCTURNAL_STORAGE)
     return 0;
 #endif
 
@@ -3625,7 +3625,7 @@ int TMonster::mobileActivity(int pulse)
     return DELETE_THIS;
   }
   // assign old room if not set
-  if (oldRoom == ROOM_NOWHERE)
+  if (oldRoom == Room::NOWHERE)
     oldRoom = inRoom();
 
 #if 0 
@@ -4392,7 +4392,7 @@ int TMonster::assistFriend()
     return FALSE;
 
   if (!roomp) {
-    thing_to_room(this, ROOM_VOID);
+    thing_to_room(this, Room::VOID);
     return FALSE;
   }
   TThing *t;
@@ -4553,7 +4553,7 @@ int TMonster::findABetterWeapon()
         if (master)   // skip charms
           return FALSE;
         // skip training gear
-        if (tobj && tobj->objVnum() == WEAPON_T_DAGGER)
+        if (tobj && tobj->objVnum() == Obj::WEAPON_T_DAGGER)
           return FALSE;
         vlogf(LOG_LOW,format("%s (%d) removed %s (%d : base=%.2f) as hands are better.") % 
                   getName() % mobVnum() % tobj->getName() % tobj->objVnum() % tobj->baseDamage());

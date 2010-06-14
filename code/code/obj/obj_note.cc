@@ -28,7 +28,7 @@ TNote * createNote(char *msg)
   TObj  *obj;
   TNote *note;
 
-  if (!(obj = read_object(GENERIC_NOTE, VIRTUAL))) {
+  if (!(obj = read_object(Obj::GENERIC_NOTE, VIRTUAL))) {
      vlogf(LOG_BUG, "Unable to load note in createNote");
      return NULL;
   }

@@ -55,7 +55,7 @@ void TBaseCup::weightChangeObject(float wgt_amt)
     wgt_amt = -(getWeight() - obj_index[getItemIndex()].weight);
   }
   
-  if (in_room != ROOM_NOWHERE) 
+  if (in_room != Room::NOWHERE) 
     addToWeight(wgt_amt);
   else if ((tmp = parent)) {
     if (dynamic_cast<TBeing *> (tmp)) {
@@ -92,7 +92,7 @@ void TBaseCup::weightChangeObject(float wgt_amt)
 #if DRINK_DEBUG
     // this happens, silly float round off
     vlogf(LOG_BUG, format("DRINK: Bad weight change on %s.  Location %s") %  getName() %
-           (in_room != ROOM_NOWHERE ? roomp->getName() :
+           (in_room != Room::NOWHERE ? roomp->getName() :
            (equippedBy ? equippedBy->getName() :
            parent->getName())));
     vlogf(LOG_BUG, format("DRINK: Orig: %.1f, change %.1f, now %.1f, max %.1f, sips: %d") %  

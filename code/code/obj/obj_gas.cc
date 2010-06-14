@@ -415,7 +415,7 @@ int TThing::dropGas(int amt, gasTypeT type)
   if (!gas)
   {
     TObj *obj = NULL;
-    int robj = real_object(GENERIC_GAS);
+    int robj = real_object(Obj::GENERIC_GAS);
     if (robj < 0 || robj >= (signed int) obj_index.size())
     {
       vlogf(LOG_BUG, format("dropGas(): No object (%d) in database!") %  robj);

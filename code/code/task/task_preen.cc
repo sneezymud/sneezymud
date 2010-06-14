@@ -193,7 +193,7 @@ int task_preen(TBeing *ch, cmdTypeT cmd, const char *arg, int pulse, TRoom *rp, 
       // random chance to drop a feather during grooming (3% chance)
       if (ch->task->timeLeft < 3 && ch->task->timeLeft > 0 && !::number(0, 29))
       {
-        TObj *obj = read_object(OBJ_PREEN_FEATHER, VIRTUAL);
+        TObj *obj = read_object(Obj::PREEN_FEATHER, VIRTUAL);
         if(!obj)
         {
           vlogf(LOG_BUG, "problem loading feather in task_preen()");

@@ -72,7 +72,7 @@ int ascallion(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 
   act("$n spews forth young to protect her!",0, me, 0, 0, TO_ROOM);
   for (i = 0; i < dice(2,3);i++) {
-    if (!(mob = read_mobile(MOB_ASCALLION,VIRTUAL))) {
+    if (!(mob = read_mobile(Mob::ASCALLION,VIRTUAL))) {
       vlogf(LOG_PROC, "Bad mob in ascallion spec_proc");
       return FALSE;
     }
@@ -584,7 +584,7 @@ int Fireballer(TBeing *ch, cmdTypeT cmd, const char *, TMonster *me, TObj *)
     } else if (tmp->isImmortal() && me->sameRoom(*tmp)) {
       act("The Djinn chokes on a hairball.",TRUE,tmp,0,0,TO_CHAR);
       act("$n causes the Djinn to choke on a hairball before it can breathe at $m.",TRUE,tmp,0,0,TO_ROOM);
-    } else if ((me != tmp) && (tmp->in_room != ROOM_NOWHERE) && (rp->getZoneNum() == tmp->roomp->getZoneNum())) {
+    } else if ((me != tmp) && (tmp->in_room != Room::NOWHERE) && (rp->getZoneNum() == tmp->roomp->getZoneNum())) {
       tmp->sendTo("You hear a loud explosion and feel a gust of hot air.\n\r");
     }
   }
@@ -670,7 +670,7 @@ int IceStormer(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
   if (me->getPosition() <= POSITION_SITTING)
     return FALSE;
 
-  if (!me->in_room || me->in_room == ROOM_NOWHERE)
+  if (!me->in_room || me->in_room == Room::NOWHERE)
     return FALSE;
 
   act("$n pulls a small cube of ice from out of a pouch.",TRUE,me,0,0,TO_ROOM);
@@ -875,7 +875,7 @@ int Paralyzer(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
   aff.modifier = 0;
  
   v->affectTo(&aff);
-  *me->roomp += *read_mobile(MOB_SMALL_CAT,VIRTUAL);
+  *me->roomp += *read_mobile(Mob::SMALL_CAT,VIRTUAL);
 
   return TRUE;
 }

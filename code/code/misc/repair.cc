@@ -722,7 +722,7 @@ int repairman_give(const char *arg, TMonster *repair, TBeing *buyer)
 static TObj *make_ticket(TMonster *repair, TBeing *buyer, TObj *repaired, time_t when_ready, int tick_num)
 {
   TObj *tmp_obj;
-  if (!(tmp_obj = read_object(GENERIC_NOTE, VIRTUAL))) {
+  if (!(tmp_obj = read_object(Obj::GENERIC_NOTE, VIRTUAL))) {
     vlogf(LOG_BUG, "Couldn't read in note for make_ticket. BUG BRUTIUS!!!");
     return NULL;
   }
@@ -944,8 +944,8 @@ int repairman(TBeing *buyer, cmdTypeT cmd, const char *arg, TMonster *repair, TO
         return DELETE_THIS;  // buyer is poof
       }
 
-      repair->saveChar(ROOM_AUTO_RENT);
-      buyer->saveChar(ROOM_AUTO_RENT);
+      repair->saveChar(Room::AUTO_RENT);
+      buyer->saveChar(Room::AUTO_RENT);
 
       return TRUE;
     case CMD_REMOVE:

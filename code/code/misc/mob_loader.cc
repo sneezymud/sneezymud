@@ -36,7 +36,7 @@ static void treasureCreate(int num, int mat, int &wealth, TObj *bag, TMonster *c
   }
 
   wealth -= (int)(num * cost);
-  TObj * obj = read_object(GENERIC_COMMODITY, VIRTUAL);
+  TObj * obj = read_object(Obj::GENERIC_COMMODITY, VIRTUAL);
     
   obj->setWeight(num / 10.0);
   obj->setMaterial(mat);
@@ -955,11 +955,11 @@ void TMonster::buffMobLoader()
 
   int vnums[19], num = 0;
   while(num < 5)
-    vnums[num++] = MYSTERY_POTION; // 5 are mystery pot
-  vnums[num++] = LEARNING_POTION;
-  vnums[num++] = YOUTH_POTION;
+    vnums[num++] = Obj::MYSTERY_POTION; // 5 are mystery pot
+  vnums[num++] = Obj::LEARNING_POTION;
+  vnums[num++] = Obj::YOUTH_POTION;
   while(num < (int)cElements(vnums))
-    vnums[num++] = STATS_POTION; // default is stats pot
+    vnums[num++] = Obj::STATS_POTION; // default is stats pot
 
   num = vnums[::number(0, cElements(vnums))];
 
@@ -1066,7 +1066,7 @@ void TMonster::genericMobLoader(TOpenContainer **bag)
  
   TObj *obj;
   // moneypouches are newbie flagged and not sellable, so probably shouldn't buy_build
-  if (!(obj = read_object(GENERIC_MONEYPOUCH, VIRTUAL)) ||
+  if (!(obj = read_object(Obj::GENERIC_MONEYPOUCH, VIRTUAL)) ||
       !(*bag = dynamic_cast<TOpenContainer *>(obj)))
     return;
 

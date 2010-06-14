@@ -644,7 +644,7 @@ void TBeing::statObj(const TObj *j)
     j->getLight() % material_nums[j->getMaterial()].mat_name %
     j->getMaterial();
 
-  if (j->inRoom() != ROOM_NOWHERE)
+  if (j->inRoom() != Room::NOWHERE)
     str += format("In Room: %d\n\r") % j->inRoom();
   else if (j->parent)
     str += format("Inside: %s\n\r") % j->parent->getName();

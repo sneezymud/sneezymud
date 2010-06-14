@@ -121,7 +121,7 @@ int paladinPatrol(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
   }
 
   // allow us to abort it.
-  if (myself->inRoom() == ROOM_HELL)
+  if (myself->inRoom() == Room::HELL)
     return FALSE;
 
   if(::number(0,2))
@@ -180,7 +180,7 @@ int paladinPatrol(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
 	  TThing *t=*(it++);
 	  --(*t);
 	  if(dynamic_cast<TCommodity *>(t) ||
-	     t->number == GENERIC_MONEYPOUCH){
+	     t->number == Obj::GENERIC_MONEYPOUCH){
 	    delete t;
 	  } else {
 	    *myself->roomp += *t;
@@ -200,7 +200,7 @@ int paladinPatrol(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
 	      TThing *t=*(it++);
 	      --(*t);
 	      if(dynamic_cast<TCommodity *>(t) ||
-		 t->number == GENERIC_MONEYPOUCH){
+		 t->number == Obj::GENERIC_MONEYPOUCH){
 		delete t;
 	      } else {
 		*myself->roomp += *t;

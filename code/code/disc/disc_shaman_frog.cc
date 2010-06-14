@@ -37,7 +37,7 @@ int vampireTransform(TBeing *ch)
     ch->sendTo("It didn't seem to work.\n\r");
     return FALSE;
   }
-  thing_to_room(mob,ROOM_VOID);
+  thing_to_room(mob,Room::VOID);
   mob->swapToStrung();
   
 
@@ -52,7 +52,7 @@ int vampireTransform(TBeing *ch)
   --(*mob);
   *ch->roomp += *mob;
   --(*ch);
-  thing_to_room(ch, ROOM_POLY_STORAGE);
+  thing_to_room(ch, Room::POLY_STORAGE);
   
   // stop following whoever you are following.
   if (ch->master)
@@ -620,7 +620,7 @@ int shapeShift(TBeing *caster, int level, short bKnown)
     caster->sendTo("You couldn't summon an image of that creature.\n\r");
     return SPELL_FAIL;
   }
-  thing_to_room(mob,ROOM_VOID);   // just so if extracted it isn't in NOWHERE 
+  thing_to_room(mob,Room::VOID);   // just so if extracted it isn't in NOWHERE 
   mob->swapToStrung();
 
  int duration;
@@ -670,7 +670,7 @@ int shapeShift(TBeing *caster, int level, short bKnown)
     }
   
     --(*caster);
-    thing_to_room(caster, ROOM_POLY_STORAGE);
+    thing_to_room(caster, Room::POLY_STORAGE);
 
     // stop following whoever you are following.. 
     if (caster->master)

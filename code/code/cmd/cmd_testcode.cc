@@ -144,7 +144,7 @@ void TBeing::doTestCode(const char *arg)
 #if 0
   TBeing *ch;
   int i;
-  TRoom * rp = real_roomp(ROOM_VOID);
+  TRoom * rp = real_roomp(Room::VOID);
   for (i = 0; i < mob_index.size(); i++) {
     ch = read_mobile(i, REAL);
     *rp += *ch;

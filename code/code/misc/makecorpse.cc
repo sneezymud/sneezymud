@@ -33,7 +33,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
   TPCorpse *pcorpse = NULL;
   TBaseCorpse *gen_corpse;
 
-  if (specials.was_in_room != ROOM_NOWHERE) {
+  if (specials.was_in_room != Room::NOWHERE) {
     // character was in void
     // bleeding, infected, etc can cause this
 
@@ -45,9 +45,9 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
 
   if (isPc() && !desc && !affectedBySpell(AFFECT_PLAYERKILL)) {
     vlogf(LOG_BUG, format("Character: %s with no link when creating corpse in rm %d") %  getName() % in_room);
-    vlogf(LOG_BUG, format("%s corpse generated in room %d to avoid possible duplication") %  getName() % ROOM_STORAGE);
+    vlogf(LOG_BUG, format("%s corpse generated in room %d to avoid possible duplication") %  getName() % Room::STORAGE);
     --(*this);
-    rp = real_roomp(ROOM_STORAGE);
+    rp = real_roomp(Room::STORAGE);
     *rp += *this;
   }
   sprintf(tmpbuf, "%s", getName());
@@ -626,14 +626,14 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
 
   //load a herald and put on corpse - Russ 010298
   // Grimhaven Newsboy, chance to put herald in corpse
-  if (mobVnum() == MOB_NEWSBOY) { 
+  if (mobVnum() == Mob::NEWSBOY) { 
     if (!::number(0, 10)) 
-      *gen_corpse += *(read_object(OBJ_HERALD, VIRTUAL));
+      *gen_corpse += *(read_object(Obj::HERALD, VIRTUAL));
   } 
 
   // banshee loading banshee larynx (shatter comp)
   // would be better as dissect, but banshee=undead=dustpile=no-dissect
-  if (mobVnum() == MOB_BANSHEE) { 
+  if (mobVnum() == Mob::BANSHEE) { 
     if (!::number(0, 1)) 
       *gen_corpse += *(read_object(COMP_SHATTER, VIRTUAL));
   } 
@@ -657,9 +657,9 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
 //    *roomp += *gen_corpse;
     rp = roomp;
   } else {
-    vlogf(LOG_BUG, format("%s had NULL roomp pointer, moved to room %d.") %  getName() % ROOM_STORAGE);
+    vlogf(LOG_BUG, format("%s had NULL roomp pointer, moved to room %d.") %  getName() % Room::STORAGE);
 
-    rp = real_roomp(ROOM_STORAGE);
+    rp = real_roomp(Room::STORAGE);
 //    *rp += *gen_corpse;
   }
 

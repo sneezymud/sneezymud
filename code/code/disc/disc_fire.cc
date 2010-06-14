@@ -1050,7 +1050,7 @@ int fireball(TBeing *caster, int level, short bKnown, int adv_learn)
           }
         } else
           act("You are able to avoid the flames!", FALSE, caster, NULL, tmp_victim, TO_VICT);
-      } else if ((caster != tmp_victim) && (tmp_victim->in_room != ROOM_NOWHERE) &&
+      } else if ((caster != tmp_victim) && (tmp_victim->in_room != Room::NOWHERE) &&
                  (rp->getZoneNum() == tmp_victim->roomp->getZoneNum())) {
         if (tmp_victim->awake())
           tmp_victim->sendTo("You hear a loud explosion and feel a gust of hot air.\n\r");
@@ -1251,7 +1251,7 @@ int conjureElemFire(TBeing *caster, int level, short bKnown)
   affectedData aff;
   TMonster *victim;
 
-  if (!(victim = read_mobile(FIRE_ELEMENTAL, VIRTUAL))) {
+  if (!(victim = read_mobile(Mob::FIRE_ELEMENTAL, VIRTUAL))) {
     caster->sendTo("There are no elementals of that type available.\n\r");
     return SPELL_FAIL;
   }
@@ -1337,7 +1337,7 @@ int conjureElemFire(TBeing *caster)
     caster->sendTo("You cannot cast that under these wet conditions!\n\r");
     return FALSE;
   }
-  if (real_mobile(FIRE_ELEMENTAL) < 0) {
+  if (real_mobile(Mob::FIRE_ELEMENTAL) < 0) {
     caster->sendTo("There are no elementals of that type available.\n\r");
     return FALSE;
   }
@@ -1399,14 +1399,14 @@ int flare(TBeing *caster, int level, short bKnown)
     if (!o)
       continue;
 
-    if (o->objVnum() == GENERIC_FLARE) {
+    if (o->objVnum() == Obj::GENERIC_FLARE) {
       // lots of flares can overflow room-light buffer
       caster->sendTo("A magical force prevents more than 1 flare in the sky.\n\r");
       return SPELL_FAIL;
     }
   }
 
-  if (!(o = read_object(GENERIC_FLARE, VIRTUAL))) {
+  if (!(o = read_object(Obj::GENERIC_FLARE, VIRTUAL))) {
     caster->sendTo("No flares are available.\n\r");
     return SPELL_FAIL;
   }
@@ -1513,14 +1513,14 @@ int flare(TBeing *caster)
     o = dynamic_cast<TObj *>(t);
     if (!o)
       continue;
-    if (o->objVnum() == GENERIC_FLARE) {
+    if (o->objVnum() == Obj::GENERIC_FLARE) {
       // lots of flares can overflow room-light buffer
       caster->sendTo("A magical force prevents more than 1 flare in the sky.\n\r");
       return FALSE;
     }
   }
 
-  if (!real_object(GENERIC_FLARE)) {
+  if (!real_object(Obj::GENERIC_FLARE)) {
     caster->sendTo("No flares are available.\n\r");
     return FALSE;
   }
@@ -1585,13 +1585,13 @@ int flare(TBeing *caster, TMagicItem * obj)
     o = dynamic_cast<TObj *>(t);
     if (!o)
       continue;
-    if (o->objVnum() == GENERIC_FLARE) {
+    if (o->objVnum() == Obj::GENERIC_FLARE) {
       // lots of flares can overflow room-light buffer
       caster->sendTo("A magical force prevents more than 1 flare in the sky.\n\r");
       return FALSE;
     }
   }
-  if (!real_object(GENERIC_FLARE)) {
+  if (!real_object(Obj::GENERIC_FLARE)) {
     caster->sendTo("No flares are available.\n\r");
     return FALSE;
   }

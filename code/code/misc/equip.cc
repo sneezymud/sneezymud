@@ -1831,7 +1831,7 @@ void TBeing::wearNTear(void)
   if (!isPc())
     return;
 
-  if (inRoom() == ROOM_NOWHERE)
+  if (inRoom() == Room::NOWHERE)
     return;
 
   if (inLethargica())
@@ -1917,13 +1917,13 @@ bool TObj::monkRestrictedItem(const TBeing *ch) const
   if (ch && !ch->hasClass(CLASS_MONK))
     return FALSE;
 
-  if (objVnum() == OBJ_SLEEPTAG_STAFF)
+  if (objVnum() == Obj::SLEEPTAG_STAFF)
     return FALSE;
 
-  if (objVnum() == DEITY_TOKEN)
+  if (objVnum() == Obj::DEITY_TOKEN)
     return FALSE;
 
-  if (objVnum() == CRAPS_DICE)
+  if (objVnum() == Obj::CRAPS_DICE)
     return FALSE;
 
   if (canWear(ITEM_WEAR_FINGERS))
@@ -1956,31 +1956,31 @@ bool TObj::shamanRestrictedItem(const TBeing *ch) const
   if (ch && !ch->hasClass(CLASS_SHAMAN))
     return FALSE;
 
-  if (objVnum() == OBJ_SLEEPTAG_STAFF)
+  if (objVnum() == Obj::SLEEPTAG_STAFF)
     return FALSE;
 
-  if (objVnum() == DEITY_TOKEN)
+  if (objVnum() == Obj::DEITY_TOKEN)
     return FALSE;
 
-  if (objVnum() == CRAPS_DICE)
+  if (objVnum() == Obj::CRAPS_DICE)
     return FALSE;
 
-  if (objVnum() == MASK1)
+  if (objVnum() == Obj::MASK1)
     return FALSE;
 
-  if (objVnum() == MASK2)
+  if (objVnum() == Obj::MASK2)
     return FALSE;
 
-  if (objVnum() == MASK3)
+  if (objVnum() == Obj::MASK3)
     return FALSE;
 
-  if (objVnum() == MASK4)
+  if (objVnum() == Obj::MASK4)
     return FALSE;
 
-  if (objVnum() == MASK5)
+  if (objVnum() == Obj::MASK5)
     return FALSE;
 
-  if (objVnum() == MASK6)
+  if (objVnum() == Obj::MASK6)
     return FALSE;
 
   if (canWear(ITEM_WEAR_FINGERS))

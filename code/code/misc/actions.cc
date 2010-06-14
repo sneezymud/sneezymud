@@ -687,7 +687,7 @@ void TBeing::doPoop(void)
     return;
   }
 
-  if(!(obj=read_object(OBJ_PILE_OFFAL, VIRTUAL))){
+  if(!(obj=read_object(Obj::PILE_OFFAL, VIRTUAL))){
     vlogf(LOG_BUG, "problem loading offal in doPoop()");
     return;
   }

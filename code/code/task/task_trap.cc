@@ -340,7 +340,7 @@ int task_trap_mine(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
 
   if (ch->task->timeLeft < 0)  {
     // Made it to end, set trap 
-    if (!(obj = read_object(ST_LANDMINE, VIRTUAL))) {
+    if (!(obj = read_object(Obj::ST_LANDMINE, VIRTUAL))) {
       vlogf(LOG_BUG, "Unable to load mine for mine creation");
       ch->sendTo("Serious problem, contact a god.\n\r");
       ch->stopTask();
@@ -576,7 +576,7 @@ int task_trap_grenade(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *
 
   if (ch->task->timeLeft < 0)  {
     // Made it to end, set trap 
-    if (!(obj = read_object(ST_GRENADE, VIRTUAL))) {
+    if (!(obj = read_object(Obj::ST_GRENADE, VIRTUAL))) {
       vlogf(LOG_BUG, "Unable to load grenade for grenade creation");
       ch->sendTo("Serious problem, contact a god.\n\r");
       ch->stopTask();

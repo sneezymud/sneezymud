@@ -2172,7 +2172,7 @@ void TBeing::preKillCheck(bool rent)
   if (desc) {
     if (!roomp->isRoomFlag(ROOM_ARENA)) {
       if (!rent)
-        saveChar(ROOM_NOWHERE);
+        saveChar(Room::NOWHERE);
     } else {
       saveChar(in_room);
     }

@@ -31,7 +31,7 @@ playerData::playerData() :
   sex(SEX_NEUTER),
   max_level(0),
   Class(0),
-  hometown(ROOM_NEWBIE),
+  hometown(Room::NEWBIE),
   hometerrain(HOME_TER_NONE),
   time(new time_data())
 {

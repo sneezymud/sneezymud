@@ -744,7 +744,7 @@ int conjureElemWater(TBeing * caster, int level, short bKnown)
   affectedData aff;
   TMonster * victim;
 
-  if (!(victim = read_mobile(WATER_ELEMENTAL, VIRTUAL))) {
+  if (!(victim = read_mobile(Mob::WATER_ELEMENTAL, VIRTUAL))) {
     caster->sendTo("There are no elementals of that type available.\n\r");
     return SPELL_FAIL;
   }
@@ -827,7 +827,7 @@ int conjureElemWater(TBeing * caster)
   TPool *tp;
   TBaseCup *tbc;
 
-  if (real_mobile(WATER_ELEMENTAL) < 0) {
+  if (real_mobile(Mob::WATER_ELEMENTAL) < 0) {
     caster->sendTo("There are no elementals of that type available.\n\r");
     return FALSE;
   }

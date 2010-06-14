@@ -176,12 +176,12 @@ int objWornAstralWalk(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj
     name_end = old_name.word(i);
     location = atoi(name_end.substr(1,name_end.length()-2).c_str());
     if (location == 0) {
-      location = ROOM_TOP_OF_TREE;
+      location = Room::TOP_OF_TREE;
     }
     room = real_roomp(location);
     
     if (!room) {
-      room = real_roomp(ROOM_TOP_OF_TREE);
+      room = real_roomp(Room::TOP_OF_TREE);
       if (!room) {
         vlogf(LOG_BUG, "Attempt to astral to NULL room in objWornAstralWalk.");
         act("Something went wrong with the $o and you don't go anywhere. [BUG]",
@@ -342,7 +342,7 @@ int objWornAstralWalk(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj
       act("Another place drifts across your perception...", 
           TRUE, ch,o,NULL,TO_CHAR,NULL);
       if (location == 0)
-        location = ROOM_TOP_OF_TREE;
+        location = Room::TOP_OF_TREE;
       room = real_roomp(location);
       ch->sendTo(format("%s\n\r") % room->getName());
       return TRUE;
@@ -391,7 +391,7 @@ int objWornMinorAstralWalk(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o,
       return TRUE;
     }
     
-    location = ROOM_TOP_OF_TREE;
+    location = Room::TOP_OF_TREE;
     room = real_roomp(location);
     
     if (!room) {
@@ -519,12 +519,12 @@ int objWornPortal(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     name_end = old_name.word(i);
     location = atoi(name_end.substr(1,name_end.length()-2).c_str());
     if (location == 0) {
-      location = ROOM_TOP_OF_TREE;
+      location = Room::TOP_OF_TREE;
     }
     room = real_roomp(location);
     
     if (!room) {
-      room = real_roomp(ROOM_TOP_OF_TREE);
+      room = real_roomp(Room::TOP_OF_TREE);
       if (!room) {
         vlogf(LOG_BUG, "Attempt to portal to NULL room in objWornPortal.");
         act("Something went wrong with the $o and you don't go anywhere. [BUG]",
@@ -681,7 +681,7 @@ int objWornPortal(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
       act("Another place drifts across your perception...", 
           TRUE, ch,o,NULL,TO_CHAR,NULL);
       if (location == 0)
-        location = ROOM_TOP_OF_TREE;
+        location = Room::TOP_OF_TREE;
       room = real_roomp(location);
       ch->sendTo(format("%s\n\r") % room->getName());
       return TRUE;

@@ -217,7 +217,7 @@ void TBeing::listExits(const TRoom *rp) const
     for (door = MIN_DIR; door < MAX_DIR; door++) {
       exitdata = rp->exitDir(door);
 
-      if (exitdata && (exitdata->to_room != ROOM_NOWHERE)) {
+      if (exitdata && (exitdata->to_room != Room::NOWHERE)) {
 	bool secret=IS_SET(exitdata->condition, EX_SECRET);
 	bool open=!IS_SET(exitdata->condition, EX_CLOSED);
 	bool see_thru=canSeeThruDoor(exitdata);
@@ -271,7 +271,7 @@ void TBeing::listExits(const TRoom *rp) const
     bool open=!IS_SET(exitdata->condition, EX_CLOSED);
     bool see_thru=canSeeThruDoor(exitdata);
 
-    if (exitdata->to_room != ROOM_NOWHERE &&
+    if (exitdata->to_room != Room::NOWHERE &&
 	((!secret || open) || (!secret && see_thru)) ||
 	isImmortal()){
       num = door;
@@ -323,7 +323,7 @@ void TBeing::listExits(const TRoom *rp) const
     if(!(exitdata = rp->exitDir(door)))
       continue;
 
-    if(exitdata->to_room == ROOM_NOWHERE)
+    if(exitdata->to_room == Room::NOWHERE)
       continue;
 
     if (isImmortal()) {
@@ -2681,7 +2681,7 @@ void do_where_thing(const TBeing *ch, const TThing *obj, bool recurse, sstring &
 {
   char buf[256];
 
-  if (obj->in_room != ROOM_NOWHERE) {       // object in a room 
+  if (obj->in_room != Room::NOWHERE) {       // object in a room 
     sprintf(buf, "%s\n\r      - ",
            obj->getNameNOC(ch).c_str());
     sprintf(buf + strlen(buf), "%-35s [%d]\n\r",
@@ -2788,7 +2788,7 @@ void do_where_thing(const TBeing *ch, const TThing *obj, bool recurse, sstring &
     sb += buf;
 
   if (recurse) {
-    if (obj->in_room != ROOM_NOWHERE)
+    if (obj->in_room != Room::NOWHERE)
       return;
     else if (dynamic_cast<TBeing *>(obj->parent))
       do_where_thing(ch, obj->parent, TRUE, sb);
@@ -2903,7 +2903,7 @@ void TBeing::doWhere(const char *argument)
 
       for (d = descriptor_list; d; d = d->next) {
         if ((ch = d->character) && canSeeWho(ch) &&
-            (ch->in_room != ROOM_NOWHERE) &&
+            (ch->in_room != Room::NOWHERE) &&
             (!gods || ch->isImmortal())) {
           if (d->original)
             sprintf(buf, "%-20s - %s [%d] In body of %s\n\r",
@@ -2935,7 +2935,7 @@ void TBeing::doWhere(const char *argument)
       continue;
     }
     if (isname(namebuf, i->name) && canSeeWho(i) && canSee(i)) {
-      if ((i->in_room != ROOM_NOWHERE) && (isImmortal() || (i->roomp->getZoneNum() == roomp->getZoneNum()))) {
+      if ((i->in_room != Room::NOWHERE) && (isImmortal() || (i->roomp->getZoneNum() == roomp->getZoneNum()))) {
         if (!iNum || !(--count)) {
           if (!iNum) {
             sprintf(buf, "[%2d] ", ++count);

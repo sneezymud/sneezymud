@@ -155,7 +155,7 @@ void procGlobalRoomStuff::run(const TPulse &) const
       
       // trash pile creation
       if(trash_count >= 9){
-	o=read_object(GENERIC_TRASH_PILE, VIRTUAL);
+	o=read_object(Obj::GENERIC_TRASH_PILE, VIRTUAL);
 	if(!(pile=dynamic_cast<TTrashPile *>(o))){
 	  vlogf(LOG_BUG, "generic trash pile wasn't a trash pile!");
 	  delete o;
@@ -204,16 +204,16 @@ void procDeityCheck::run(const TPulse &) const
   return;
 #if 0
   TBeing *deity;
-  int num_d = mob_index[real_mobile(MOB_DEITY_JUDGMENT)].number;
-  int num_t = obj_index[real_object(DEITY_TOKEN)].number;
+  int num_d = mob_index[real_mobile(Mob::DEITY_JUDGMENT)].number;
+  int num_t = obj_index[real_object(Obj::DEITY_TOKEN)].number;
 
 
   if (num_d <= 0) {
     if (num_t <= 0) {
       // no tokens, no deitys in game.  chance put in game 
       if (!number(0,300)) {
-        deity = read_mobile(MOB_DEITY_JUDGMENT, VIRTUAL);
-        thing_to_room(deity,ROOM_IMPERIA);
+        deity = read_mobile(Mob::DEITY_JUDGMENT, VIRTUAL);
+        thing_to_room(deity,Room::IMPERIA);
       }
       return;
     }
@@ -223,7 +223,7 @@ void procDeityCheck::run(const TPulse &) const
     // chance of getting rid of extra deity 
     if (!number(0,200)) {
       for (deity = character_list; deity; deity = deity->next) {
-        if (deity->mobVnum() == MOB_DEITY_JUDGMENT)
+        if (deity->mobVnum() == Mob::DEITY_JUDGMENT)
           break;
       }
       if (!deity) {   
@@ -258,10 +258,10 @@ void procApocCheck::run(const TPulse &) const
     return;
 
   // these are in biblical order, shrug, seems to make sense
-  if ((num = real_mobile(APOC_PESTILENCE)) && mob_index[num].getNumber())
-    if ((num = real_mobile(APOC_WAR)) && mob_index[num].getNumber())
-      if ((num = real_mobile(APOC_FAMINE)) && mob_index[num].getNumber())
-        if ((num = real_mobile(APOC_DEATH)) && mob_index[num].getNumber())
+  if ((num = real_mobile(Mob::APOC_PESTILENCE)) && mob_index[num].getNumber())
+    if ((num = real_mobile(Mob::APOC_WAR)) && mob_index[num].getNumber())
+      if ((num = real_mobile(Mob::APOC_FAMINE)) && mob_index[num].getNumber())
+        if ((num = real_mobile(Mob::APOC_DEATH)) && mob_index[num].getNumber())
           return;
 
   if (!num)
@@ -271,7 +271,7 @@ void procApocCheck::run(const TPulse &) const
     vlogf(LOG_BUG, "Bad mob in apocCheck");
     return;
   }  
-  thing_to_room(mob, ROOM_IMPERIA);
+  thing_to_room(mob, Room::IMPERIA);
   rc = mob->genericTeleport(SILENT_NO);
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     delete mob;
@@ -428,7 +428,7 @@ int TBeing::riverFlow(int)
     return FALSE;
   }
 
-  if (!exitDir(rd) || (exitDir(rd)->to_room == ROOM_NOWHERE) ||
+  if (!exitDir(rd) || (exitDir(rd)->to_room == Room::NOWHERE) ||
       IS_SET(exitDir(rd)->condition, EX_CLOSED))
     return FALSE;
 
@@ -564,7 +564,7 @@ int TObj::riverFlow(int)
   if (roomp->getRiverSpeed() <= 0) 
     return FALSE;
 
-  if (this->objVnum() == GENERIC_FLARE)
+  if (this->objVnum() == Obj::GENERIC_FLARE)
     return FALSE;
 
   if (::number(0,roomp->getRiverSpeed()) && ::number(0,roomp->getRiverSpeed()))
@@ -584,7 +584,7 @@ int TObj::riverFlow(int)
     return FALSE;
 
   if (!exitDir(rd) || !exitDir(rd)->to_room ||
-      (exitDir(rd)->to_room == ROOM_NOWHERE) ||
+      (exitDir(rd)->to_room == Room::NOWHERE) ||
       IS_SET(exitDir(rd)->condition, EX_CLOSED))
     return FALSE;
 
@@ -733,7 +733,7 @@ void TMonster::makeNoise()
 
   if (fight() || desc)
     return;
-  if (inRoom() == ROOM_NOCTURNAL_STORAGE)
+  if (inRoom() == Room::NOCTURNAL_STORAGE)
     return;
 
   if (!isPc() && sounds && !rider) {
@@ -1051,7 +1051,7 @@ int TBeing::updateTickStuff()
   } else if (desc && desc->original) {
     if (desc->original->getTimer() < 127)
       desc->original->addToTimer(1);
-  } else if (!desc && !master && (gamePort != PROD_GAMEPORT || in_room != ROOM_NOCTURNAL_STORAGE)) {
+  } else if (!desc && !master && (gamePort != PROD_GAMEPORT || in_room != Room::NOCTURNAL_STORAGE)) {
 #if 1
     bool isAnElemental = isElemental();
     bool hasExp = getExp();
@@ -1235,7 +1235,7 @@ int TBeing::updateHalfTickStuff()
 
   updatePos();
 
-  if (hasClass(CLASS_SHAMAN) && !(roomp->number == ROOM_POLY_STORAGE)) {
+  if (hasClass(CLASS_SHAMAN) && !(roomp->number == Room::POLY_STORAGE)) {
     if ((isPc()) && (GetMaxLevel() < 51)) {
       if (0 >= getLifeforce()) {
 	reconcileDamage(this,::number(0,2),DAMAGE_DRAIN);
@@ -1420,7 +1420,7 @@ int TBeing::updateHalfTickStuff()
     }
   }
   if (roomp && (zone_table[roomp->getZoneNum()].enabled == TRUE) && 
-      (!inImperia() || (in_room == ROOM_NOCTURNAL_STORAGE)) && 
+      (!inImperia() || (in_room == Room::NOCTURNAL_STORAGE)) && 
       ((specials.act & ACT_DIURNAL) || (specials.act & ACT_NOCTURNAL)) &&
        !fight() && (getPosition() > POSITION_STUNNED) &&
        (!::number(0,2)) &&
@@ -1429,22 +1429,22 @@ int TBeing::updateHalfTickStuff()
       (number >= 0)) {
     j = 0; // temp holder
     if (IS_SET(specials.act, ACT_DIURNAL) && !isAffected(AFF_CHARM)) {
-      if ((inRoom() == ROOM_NOCTURNAL_STORAGE)) {
+      if ((inRoom() == Room::NOCTURNAL_STORAGE)) {
 
         // hoppers are a mob that load periodically from spec-room proc
         // they are removed via nocturnal, but we don't want them
         // "reappearing" by waking up, so if they get sucked out, just
         // whack them
-        if ((vnum == MOB_MALE_HOPPER) || (vnum == MOB_FEMALE_HOPPER) ||
-            (vnum == MOB_MALE_CHURCH_GOER) || (vnum == MOB_FEMALE_CHURCH_GOER))
+        if ((vnum == Mob::MALE_HOPPER) || (vnum == Mob::FEMALE_HOPPER) ||
+            (vnum == Mob::MALE_CHURCH_GOER) || (vnum == Mob::FEMALE_CHURCH_GOER))
           return DELETE_THIS;
 
         if (GameTime::is_daytime()) {
-          if (loadRoom == ROOM_NOCTURNAL_STORAGE) {
+          if (loadRoom == Room::NOCTURNAL_STORAGE) {
             return DELETE_THIS;
             vlogf(LOG_BUG, format("NOC:DIU: %s has oldRoom equal to %d") %  getName() % loadRoom);
           }
-          if (!loadRoom || (loadRoom == ROOM_NOWHERE)) {
+          if (!loadRoom || (loadRoom == Room::NOWHERE)) {
             vlogf(LOG_BUG, format("NOC:DIU: %s was %s.") %  getName() %
                   (!loadRoom ? "without loadRoom" : "in room nowhere"));
             return DELETE_THIS;
@@ -1455,7 +1455,7 @@ int TBeing::updateHalfTickStuff()
           }
           --(*this);
           *room += *this;
-          if (vnum == MOB_FREEZING_MIST) {
+          if (vnum == Mob::FREEZING_MIST) {
             act("$n forms in the surrounding air.",
                TRUE, this, 0, 0, TO_ROOM);
 #if 1
@@ -1475,8 +1475,8 @@ int TBeing::updateHalfTickStuff()
              act(tString, TRUE, this, 0, 0, TO_ROOM);
           }
         }
-      } else if (!GameTime::is_daytime() && ((vnum == MOB_FREEZING_MIST) || !specials.hunting)) {
-        if (vnum == MOB_FREEZING_MIST) {
+      } else if (!GameTime::is_daytime() && ((vnum == Mob::FREEZING_MIST) || !specials.hunting)) {
+        if (vnum == Mob::FREEZING_MIST) {
           act("$n is dispersed by the coming of morning.", 
               TRUE, this, 0, 0, TO_ROOM);
 #if 1
@@ -1493,7 +1493,7 @@ int TBeing::updateHalfTickStuff()
           act("$n notices the time, and hurries on $s way.",
                  TRUE, this, 0, 0, TO_ROOM);
         }
-        if (!(room = real_roomp(ROOM_NOCTURNAL_STORAGE))) {
+        if (!(room = real_roomp(Room::NOCTURNAL_STORAGE))) {
            return DELETE_THIS;
         }
         if (riding)
@@ -1507,19 +1507,19 @@ int TBeing::updateHalfTickStuff()
 // not in storage and is daytime -- do nothing
       }
     } else if (IS_SET(specials.act, ACT_NOCTURNAL) && !isAffected(AFF_CHARM)) {
-      if ((in_room == ROOM_NOCTURNAL_STORAGE)) {
+      if ((in_room == Room::NOCTURNAL_STORAGE)) {
         if (!GameTime::is_nighttime()) {
-          if ((vnum == MOB_MALE_HOPPER) || (vnum == MOB_FEMALE_HOPPER) ||
-              (vnum == MOB_MALE_CHURCH_GOER) || (vnum == MOB_FEMALE_CHURCH_GOER))
+          if ((vnum == Mob::MALE_HOPPER) || (vnum == Mob::FEMALE_HOPPER) ||
+              (vnum == Mob::MALE_CHURCH_GOER) || (vnum == Mob::FEMALE_CHURCH_GOER))
             return DELETE_THIS;
         } else {
-          if (loadRoom == ROOM_NOCTURNAL_STORAGE) {
+          if (loadRoom == Room::NOCTURNAL_STORAGE) {
             return DELETE_THIS;
             vlogf(LOG_BUG, format("NOC:DIU: %s has oldRoom equal to %d") %  getName() % loadRoom);
           }
-          if (!loadRoom || (loadRoom == ROOM_NOWHERE)) {
-	    if ((vnum == MOB_MALE_HOPPER) || (vnum == MOB_FEMALE_HOPPER) ||
-		(vnum == MOB_MALE_CHURCH_GOER) || (vnum == MOB_FEMALE_CHURCH_GOER))
+          if (!loadRoom || (loadRoom == Room::NOWHERE)) {
+	    if ((vnum == Mob::MALE_HOPPER) || (vnum == Mob::FEMALE_HOPPER) ||
+		(vnum == Mob::MALE_CHURCH_GOER) || (vnum == Mob::FEMALE_CHURCH_GOER))
 	      return DELETE_THIS; // do this before the check to cut down on hopper bug spam
             vlogf(LOG_BUG, format("NOC:DIU: %s was %s.") %  getName() %
                   (!loadRoom ? "without loadRoom" : "in room nowhere"));
@@ -1531,7 +1531,7 @@ int TBeing::updateHalfTickStuff()
           }
           --(*this);
           *room += *this;
-         if (vnum == MOB_FREEZING_MIST) {
+         if (vnum == Mob::FREEZING_MIST) {
            act("$n forms in the surrounding air.", 
                TRUE, this, 0, 0, TO_ROOM);
 #if 1
@@ -1552,8 +1552,8 @@ int TBeing::updateHalfTickStuff()
           }
         }
       } else if (!GameTime::is_nighttime() && 
-                   ((vnum == MOB_FREEZING_MIST) || !specials.hunting)) {
-        if (vnum == MOB_FREEZING_MIST) {
+                   ((vnum == Mob::FREEZING_MIST) || !specials.hunting)) {
+        if (vnum == Mob::FREEZING_MIST) {
           act("$n is dispersed by the coming of morning.", 
               TRUE, this, 0, 0, TO_ROOM);
 #if 1
@@ -1570,7 +1570,7 @@ int TBeing::updateHalfTickStuff()
           act("$n notices the time, and hurries on $s way.",
                  TRUE, this, 0, 0, TO_ROOM);
         }
-        if (!(room = real_roomp(ROOM_NOCTURNAL_STORAGE))) {
+        if (!(room = real_roomp(Room::NOCTURNAL_STORAGE))) {
            return DELETE_THIS;
         }
         if (riding)
@@ -1806,7 +1806,7 @@ void TPCorpse::decayMe()
   } 
 #endif
 
-  if (inRoom() == ROOM_STORAGE) {
+  if (inRoom() == Room::STORAGE) {
     return;
   }
 
@@ -1818,7 +1818,7 @@ void TPCorpse::decayMe()
 void TObj::decayMe()
 {
   if (obj_flags.decay_time > 0)
-    if (in_room != ROOM_NOWHERE) 
+    if (in_room != Room::NOWHERE) 
       obj_flags.decay_time--;
 }
 

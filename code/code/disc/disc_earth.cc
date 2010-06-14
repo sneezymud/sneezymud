@@ -818,7 +818,7 @@ int conjureElemEarth(TBeing * caster, int level, short bKnown)
   affectedData aff;
   TMonster * victim;
 
-  if (!(victim = read_mobile(EARTH_ELEMENTAL, VIRTUAL))) {
+  if (!(victim = read_mobile(Mob::EARTH_ELEMENTAL, VIRTUAL))) {
     caster->sendTo("There are no elementals of that type available.\n\r");
     return SPELL_FAIL;
   }
@@ -899,7 +899,7 @@ int conjureElemEarth(TBeing * caster, int level, short bKnown)
 
 int conjureElemEarth(TBeing * caster)
 {
-  if (real_mobile(EARTH_ELEMENTAL) < 0) {
+  if (real_mobile(Mob::EARTH_ELEMENTAL) < 0) {
     caster->sendTo("There are no elementals of that type available.\n\r");
     return FALSE;
   }

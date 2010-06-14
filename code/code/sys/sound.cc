@@ -15,7 +15,7 @@
 
 int RecGetObjRoom(const TThing *obj)
 {
-  if (obj->in_room != ROOM_NOWHERE)
+  if (obj->in_room != Room::NOWHERE)
     return(obj->in_room);
   if (dynamic_cast<TBeing *>(obj->parent))
     return(obj->parent->in_room);
@@ -26,7 +26,7 @@ int RecGetObjRoom(const TThing *obj)
   if (obj->riding)
     return(RecGetObjRoom(obj->riding));
 
-  return ROOM_NOWHERE;
+  return Room::NOWHERE;
 }
 
 void MakeRoomNoise(TMonster *mob, int room, const char *local_snd, const char *distant_snd)

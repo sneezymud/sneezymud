@@ -77,7 +77,7 @@ bool TBeing::canRide(const TBeing *horse) const
     return FALSE;
 
   // this is checked for in doMount
-  if (horse->mobVnum()==MOB_ELEPHANT &&
+  if (horse->mobVnum()==Mob::ELEPHANT &&
       hasQuestBit(TOG_MONK_GREEN_STARTED))
     return TRUE;
   if (horse->getHeight() <= (6 * getHeight() / 10))
@@ -371,7 +371,7 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h, silentTypeT silent
 
     //    if (isPlayerAction(PLR_SOLOQUEST) && 
     // !(hasQuestBit(TOG_MONK_GREEN_STARTED) && 
-    //  horse->mobVnum()==MOB_ELEPHANT)){
+    //  horse->mobVnum()==Mob::ELEPHANT)){
     //  sendTo("You are on a solo-quest!  No use of mounts allowed!\n\r");
     //  return FALSE;
     // }
@@ -380,7 +380,7 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h, silentTypeT silent
     // Deikhan skills depend on mounts and whats fair is fair for all classes --jh
 
     // keep these two checks identical to whats in canRide
-    if(!(horse->mobVnum()==MOB_ELEPHANT &&
+    if(!(horse->mobVnum()==Mob::ELEPHANT &&
 	 hasQuestBit(TOG_MONK_GREEN_STARTED))){
       if (horse->getHeight() <= (6 * getHeight() / 10)) {
 	act("$N is too small for you to ride.", FALSE, this, 0, horse, TO_CHAR);
@@ -512,7 +512,7 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h, silentTypeT silent
       return TRUE;
     }
 #else
-    if(!(horse->mobVnum()==MOB_ELEPHANT &&
+    if(!(horse->mobVnum()==Mob::ELEPHANT &&
 	 hasQuestBit(TOG_MONK_GREEN_STARTED)) &&
        horse->GetMaxLevel() > GetMaxLevel()){
       switch (::number(0, 3)) {

@@ -63,14 +63,14 @@ void TBeing::bandage(TBeing *victim,wearSlotT slot)
     vlogf(LOG_BUG, "Null critters passed into bandage_victim");
     return;
   }
-  if ((r_num = real_object(OBJ_BANDAGE)) >= 0) {
+  if ((r_num = real_object(Obj::BANDAGE)) >= 0) {
     bandaid = read_object(r_num, REAL);
   } else {
     vlogf(LOG_BUG, "bogus bandaid!");
     return;
   }
 #if 0
-  if (!(bandaid = read_object(OBJ_BANDAGE, VIRTUAL))) {
+  if (!(bandaid = read_object(Obj::BANDAGE, VIRTUAL))) {
     vlogf(LOG_BUG, "bogus bandaid!");
     return;
   }

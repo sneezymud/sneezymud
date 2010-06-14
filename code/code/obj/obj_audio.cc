@@ -79,12 +79,12 @@ void TAudio::audioCheck(int pulse) const
       room = parent->in_room;
     else if (equippedBy)
       room = equippedBy->in_room;
-    else if (in_room != ROOM_NOWHERE)
+    else if (in_room != Room::NOWHERE)
       room = in_room;
     else
       room = RecGetObjRoom(this);
 
-    if ((room != ROOM_NOWHERE) && action_description)
+    if ((room != Room::NOWHERE) && action_description)
       MakeNoise(room, action_description, action_description);
   }
 }

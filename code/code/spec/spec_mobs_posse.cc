@@ -90,7 +90,7 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
     
     SET_BIT(myself->specials.affectedBy, AFF_GROUP);
     for (i=0;i<3;i++) {
-      if (!(mob = read_mobile(MOB_CITYGUARD, VIRTUAL))) {
+      if (!(mob = read_mobile(Mob::CITYGUARD, VIRTUAL))) {
         vlogf(LOG_BUG, "Bad load of cityguard.");
         continue;
       }
@@ -108,7 +108,7 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
   }
 
   // allow us to abort it.
-  if (myself->inRoom() == ROOM_HELL)
+  if (myself->inRoom() == Room::HELL)
     return FALSE;
 
   // Make sure our criminal is still alive and in the same room

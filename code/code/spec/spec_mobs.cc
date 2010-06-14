@@ -93,12 +93,12 @@ int TMonster::checkSpec(TBeing *t, cmdTypeT cmd, const char *arg, TThing *t2)
   //  if (cmd == CMD_GENERIC_PULSE && spec == SPEC_BOUNTY_HUNTER)
   //    vlogf(LOG_DASH, format("Bounty Hunter spec %d on %s called with CMD_GENERIC_PULSE (checkSpec)") %  spec % getName());
 
-  if(inRoom() == ROOM_NOCTURNAL_STORAGE)
+  if(inRoom() == Room::NOCTURNAL_STORAGE)
     return FALSE;
   // if we move them to hell, it's probably cause there is a problem with
   // the proc, so skip it.  Realize, this may let them leak memory since
   // the destroy message is not called...
-  if (inRoom() == ROOM_HELL && spec != SPEC_TORMENTOR)
+  if (inRoom() == Room::HELL && spec != SPEC_TORMENTOR)
     return FALSE;
 
   // we will use a static cast on t2 as we don't always pass a true
@@ -156,8 +156,8 @@ bool TMonster::isPolice() const
   int num = mobVnum();
 
   return (!isPc() && ((spec == SPEC_CITYGUARD) || 
-                      (num == MOB_BOUNCER) || (num == MOB_BOUNCER2) ||
-                      (num == MOB_BOUNCER_HEAD)));
+                      (num == Mob::BOUNCER) || (num == Mob::Mob::BOUNCER2) ||
+                      (num == Mob::Mob::BOUNCER_HEAD)));
 }
   
 int TMonster::npcSteal(TPerson *victim)
@@ -653,7 +653,7 @@ int newbieEquipper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
             return TRUE;
           }
         } else {
-          if ((r_num = real_object(WEAPON_T_DAGGER)) >= 0) {
+          if ((r_num = real_object(Obj::WEAPON_T_DAGGER)) >= 0) {
             obj = read_object(r_num, REAL);
             *ch += *obj;    // newbie dagger 
           } else {
@@ -911,16 +911,16 @@ int TMonster::findMyHorse()
 
   switch (spec) {
     case SPEC_HORSE_PESTILENCE:
-      horse_num = APOC_PESTHORSE;
+      horse_num = Mob::APOC_PESTHORSE;
       break;
     case SPEC_HORSE_WAR:
-      horse_num = APOC_WARHORSE;
+      horse_num = Mob::Mob::APOC_WARHORSE;
       break;
     case SPEC_HORSE_FAMINE:
-      horse_num = APOC_FAMINEHORSE;
+      horse_num = Mob::Mob::APOC_FAMINEHORSE;
       break;
     case SPEC_HORSE_DEATH:
-      horse_num = APOC_DEATHHORSE;
+      horse_num = Mob::Mob::APOC_DEATHHORSE;
       break;
     default:
       return FALSE;
@@ -1325,7 +1325,7 @@ void TBeing::throwChar(TBeing *v, dirTypeT dir, bool also, silentTypeT silent, b
   if (rp && rp->dir_option[dir] &&
       rp->dir_option[dir]->to_room && 
       !IS_SET(rp->dir_option[dir]->condition, EX_CLOSED) &&
-      (rp->dir_option[dir]->to_room != ROOM_NOWHERE)) {
+      (rp->dir_option[dir]->to_room != Room::NOWHERE)) {
     if (v->fight() && !silent) {
       sendTo("Not while fighting!\n\r");
       return;
@@ -1403,7 +1403,7 @@ void TBeing::throwChar(TBeing *v, int to_room, bool also, silentTypeT silent, bo
   char buf[256];
 
   rp = v->roomp;
-  if (rp && to_room != ROOM_NOWHERE) {
+  if (rp && to_room != Room::NOWHERE) {
     if (v->fight() && !silent) {
       sendTo("Not while fighting!\n\r");
       return;
@@ -2066,7 +2066,7 @@ int lamp_lighter(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     }
     job = static_cast<hunt_struct *>(myself->act_ptr);
     job->cur_pos = 0;
-    if (myself->in_room == ROOM_CS) {
+    if (myself->in_room == Room::CS) {
       job->town = 0;
       job->cur_path = ::number(MIN_GRIM_PATHS, MAX_GRIM_PATHS);
     } else if (myself->in_room == 1303) {
@@ -2107,7 +2107,7 @@ int lamp_lighter(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     // end of path
     job->cur_pos = 0;
 
-    if (myself->in_room == ROOM_CS) {
+    if (myself->in_room == Room::CS) {
       job->cur_path = ::number(MIN_GRIM_PATHS, MAX_GRIM_PATHS);
     } else if (myself->in_room == 1303) {
       job->cur_path = ::number(MIN_BM_PATHS, MAX_BM_PATHS);
@@ -2258,11 +2258,11 @@ static int caravan_stuff(TBeing *car, caravan_struct *job, dirTypeT)
 
     TMonster * mon;
     if (wealth_per > cost_thief_large) {
-      mon = read_mobile(MOB_ROAD_THIEF_LARGE, VIRTUAL);
+      mon = read_mobile(Mob::Mob::ROAD_THIEF_LARGE, VIRTUAL);
     } else if (wealth_per > cost_robber) {
-      mon = read_mobile(MOB_ROAD_ROBBER, VIRTUAL);
+      mon = read_mobile(Mob::ROAD_ROBBER, VIRTUAL);
     } else if (wealth_per > cost_thief) {
-      mon = read_mobile(MOB_ROAD_THIEF, VIRTUAL);
+      mon = read_mobile(Mob::ROAD_THIEF, VIRTUAL);
     } else {
       continue;
     }
@@ -2483,7 +2483,7 @@ int caravan(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     FactionInfo[faction].addToMoney(-amount);
 
     // construct caravan
-    if (!(obj = read_object(OBJ_CARAVAN, VIRTUAL))) {
+    if (!(obj = read_object(Obj::CARAVAN, VIRTUAL))) {
       vlogf(LOG_PROC, "Problem with caravan load (1)");
       return TRUE;
     }
@@ -2658,10 +2658,10 @@ int dagger_thrower(TBeing *pch, cmdTypeT cmd, const char *, TMonster *me, TObj *
 #if 1
 // builder port uses stripped down database which was causing problems
 // hence this setup instead.
-        int robj = real_object(GENERIC_DAGGER);
+        int robj = real_object(Obj::GENERIC_DAGGER);
         if (robj < 0 || robj >= (signed int) obj_index.size()) {
           vlogf(LOG_BUG, format("dagger_thrower(): No object (%d) in database!") % 
-                GENERIC_DAGGER);
+                Obj::GENERIC_DAGGER);
           return FALSE;
         }
     
@@ -2670,7 +2670,7 @@ int dagger_thrower(TBeing *pch, cmdTypeT cmd, const char *, TMonster *me, TObj *
           return FALSE;
         }
 #else
-        dagger = read_object(GENERIC_DAGGER, VIRTUAL);
+        dagger = read_object(Obj::GENERIC_DAGGER, VIRTUAL);
 #endif
 
         if (!me->equipment[HOLD_RIGHT])
@@ -2976,17 +2976,17 @@ int pet_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
     return FALSE;
 
   switch (me->mobVnum()) {
-    case MOB_PETGUY_GH:
-      rp = real_roomp(ROOM_PETS_GH);
+    case Mob::PETGUY_GH:
+      rp = real_roomp(Room::PETS_GH);
       break;
-    case MOB_PETGUY_BM:
-      rp = real_roomp(ROOM_PETS_BM);
+    case Mob::PETGUY_BM:
+      rp = real_roomp(Room::PETS_BM);
       break;
-    case MOB_PETGUY_AMB:
-      rp = real_roomp(ROOM_PETS_AMB);
+    case Mob::PETGUY_AMB:
+      rp = real_roomp(Room::PETS_AMB);
       break;
-    case MOB_PETGUY_LOG:
-      rp = real_roomp(ROOM_PETS_LOG);
+    case Mob::PETGUY_LOG:
+      rp = real_roomp(Room::PETS_LOG);
       break;
     default:
       vlogf(LOG_PROC, "Bogus mob in petguy proc");
@@ -3293,8 +3293,8 @@ void TSymbol::attunerGiven(TBeing *ch, TMonster *me)
     ch->giveMoney(me, cost, GOLD_SHOP_SYMBOL);
     shoplog(find_shop_nr(me->number), ch, me, getName(), 
 	    cost, "attuning");
-    me->saveChar(ROOM_AUTO_RENT);
-    ch->saveChar(ROOM_AUTO_RENT);
+    me->saveChar(Room::AUTO_RENT);
+    ch->saveChar(Room::AUTO_RENT);
 
 
     job->cost = cost;
@@ -3942,7 +3942,7 @@ int war(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
     // calls forth great warriors to protect him 
     for (t = character_list;t;t = next_tar) {
       next_tar = t->next;
-      if (t->mobVnum() == APOC_WARRIOR) {
+      if (t->mobVnum() == Mob::Mob::APOC_WARRIOR) {
         if (!t->sameRoom(*me)) {
           --(*t);
           *me->roomp += *t;
@@ -3957,11 +3957,11 @@ int war(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
         }
       }
     }
-    if (mob_index[real_mobile(APOC_WARRIOR)].getNumber() > 5)
+    if (mob_index[real_mobile(Mob::Mob::APOC_WARRIOR)].getNumber() > 5)
       return FALSE;
 
     act("$n calls forth a great warrior to bring war upon The World!",0, me, 0, 0, TO_ROOM, ANSI_RED);
-    t = read_mobile(APOC_WARRIOR,VIRTUAL);
+    t = read_mobile(Mob::Mob::APOC_WARRIOR,VIRTUAL);
     *me->roomp += *t;
     me->addFollower(t);
     t->reconcileDamage(me->fight(),0,DAMAGE_NORMAL);
@@ -4534,8 +4534,8 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         --(*item);
         *me += *item; 
 
-	me->saveChar(ROOM_AUTO_RENT);
-	ch->saveChar(ROOM_AUTO_RENT);
+	me->saveChar(Room::AUTO_RENT);
+	ch->saveChar(Room::AUTO_RENT);
 
         return TRUE;
       } else {
@@ -4562,7 +4562,7 @@ int fireMaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
     return FALSE;
 
   one_argument(arg, buf, cElements(buf));
-  if (!isname(buf, obj_index[real_object(OBJ_FLAMING_PORTAL)].name))
+  if (!isname(buf, obj_index[real_object(Obj::FLAMING_PORTAL)].name))
     return FALSE;
 
   if (ch != me) {
@@ -4612,7 +4612,7 @@ int TicketGuy(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
   ch->sendTo("Suddenly you find yourself in another plane of existence.\n\r");
   act("$n purchases a ticket and $N transports $m into another plane.",FALSE,ch,0,me,TO_ROOM);
   --(*ch);
-  thing_to_room(ch,ROOM_TICKET_DESTINATION);
+  thing_to_room(ch,Room::TICKET_DESTINATION);
   ch->doLook("", CMD_LOOK);
   act("$n blicks into the room.",TRUE,ch,0,0,TO_ROOM);
   return TRUE;
@@ -4770,7 +4770,7 @@ int banshee(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     if (tbt->isImmortal())
       continue;
     TObj *muff = dynamic_cast<TObj *>(tbt->equipment[WEAR_HEAD]);
-    if (muff && muff->objVnum() == OBJ_EARMUFF)
+    if (muff && muff->objVnum() == Obj::EARMUFF)
       continue;
 
     act("The scream rocks you to your core and you feel more aged.", FALSE, tbt, 0, 0, TO_CHAR);
@@ -5609,8 +5609,8 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       me->doGive(ch,item,GIVE_FLAG_IGN_DEX_TEXT);
 
 
-      me->saveChar(ROOM_AUTO_RENT);
-      ch->saveChar(ROOM_AUTO_RENT);
+      me->saveChar(Room::AUTO_RENT);
+      ch->saveChar(Room::AUTO_RENT);
 
       return TRUE;
     default:
@@ -5836,7 +5836,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
 
       Hi = tbt->getHit();
 
-      if(ch->in_room == ROOM_TROLLEY) {
+      if(ch->in_room == Room::TROLLEY) {
 	
 	sprintf(buf, "From inside the trolley, $N aims a $o at you.");
 	act(buf,FALSE, tbt, bow, ch, TO_CHAR);
@@ -6324,7 +6324,7 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
 			   material_nums[(*iter).first].mat_name,
 			   TX_BUYING_SERVICE);
       
-      commod = read_object(GENERIC_COMMODITY, VIRTUAL);
+      commod = read_object(Obj::GENERIC_COMMODITY, VIRTUAL);
       
       commod->setWeight((*iter).second/10.0);
       commod->setMaterial((*iter).first);
@@ -7130,7 +7130,7 @@ int rationFactory(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj 
     return FALSE;
   }
 
-  if(!o || !o->objVnum()==GENERIC_STEAK || 
+  if(!o || !o->objVnum()==Obj::GENERIC_STEAK || 
      !(food=dynamic_cast<TFood *>(o))){
     me->doSay("What the hell is this?!  That's not going into a ration.");
     me->doDrop("", o);

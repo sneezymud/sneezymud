@@ -172,15 +172,15 @@ int sweepsSplitJoin(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) 
     } else {
       int newobjn = 0;
       if (newname == "PCH") {
-        newobjn = STATS_POTION;
+        newobjn = Obj::STATS_POTION;
       } else if (newname == "PLN") {
-        newobjn = LEARNING_POTION;
+        newobjn = Obj::LEARNING_POTION;
       } else if (newname == "PMS") {
-        newobjn = MYSTERY_POTION;
+        newobjn = Obj::MYSTERY_POTION;
       } else if (newname == "PYT") {
-        newobjn = YOUTH_POTION;
+        newobjn = Obj::YOUTH_POTION;
       } else if (newname == "POO") {
-        newobjn = OBJ_PILE_OFFAL;
+        newobjn = Obj::PILE_OFFAL;
       } else if (newname == "MOP") {
         newobjn = 9083; // a mop
       }

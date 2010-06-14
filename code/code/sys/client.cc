@@ -231,7 +231,7 @@ void Descriptor::send_client_exits()
 
   for (door = MIN_DIR; door < MAX_DIR; door++) {
     if ((exitdata = ch->exitDir(door))){
-      if ((exitdata->to_room != ROOM_NOWHERE) && (!(exitdata->condition & EX_CLOSED) || ch->isImmortal()))
+      if ((exitdata->to_room != Room::NOWHERE) && (!(exitdata->condition & EX_CLOSED) || ch->isImmortal()))
         SET_BIT(bits, (1 << door));
       else if(!(exitdata->condition & EX_SECRET))
         SET_BIT(cbits, (1 << door));
@@ -563,7 +563,7 @@ int Descriptor::read_client(char *str2)
 	  character->next = character_list;
 	  character_list = character;
 	  
-	  character->setRoom(ROOM_NOWHERE);
+	  character->setRoom(Room::NOWHERE);
 	  
 	  delete character;
 	  character = new TPerson(this);
@@ -610,10 +610,10 @@ int Descriptor::read_client(char *str2)
                       ch->orig->getName()))) {
  
           if ((character->inRoom() >= 0) ||
-              (character->inRoom() == ROOM_AUTO_RENT)) {
+              (character->inRoom() == Room::AUTO_RENT)) {
             // loadFromSt will have inRoom() == last rent
             // roomp not set yet, so just clear this value
-            character->setRoom(ROOM_VOID);
+            character->setRoom(Room::VOID);
           }
           // we need to remove the character->desc for some deletion handling
           // to work (true, but why?).  This unfortunately causes it to go
@@ -624,7 +624,7 @@ int Descriptor::read_client(char *str2)
           character->next = character_list;
           character_list = character;
 
-          rp = real_roomp(ROOM_VOID);
+          rp = real_roomp(Room::VOID);
           *rp += *character;
           delete character;
           ch->desc = this;
@@ -1018,13 +1018,13 @@ int Descriptor::client_nanny(char *arg)
     character_list = character;
 
     if ((character->inRoom() >= 0) ||
-        (character->inRoom() == ROOM_AUTO_RENT)) {
+        (character->inRoom() == Room::AUTO_RENT)) {
        //loadFromSt will have inRoom() == last rent
        //roomp not set yet, so just clear this value
-      character->setRoom(ROOM_VOID);
+      character->setRoom(Room::VOID);
     }
 // added 4/1/98 to fix a crash -- cos
-    rp = real_roomp(ROOM_VOID);
+    rp = real_roomp(Room::VOID);
     *rp += *character;
     delete character;
     character = NULL;
@@ -1048,13 +1048,13 @@ int Descriptor::client_nanny(char *arg)
     character_list = character;
 
     if ((character->inRoom() >= 0) ||
-        (character->inRoom() == ROOM_AUTO_RENT)) {
+        (character->inRoom() == Room::AUTO_RENT)) {
       // loadFromSt will have inRoom() == last rent
       // roomp not set yet, so just clear this value
-      character->setRoom(ROOM_VOID);
+      character->setRoom(Room::VOID);
     }
 // added 4/1/98 to fix a crash -- cos
-    rp = real_roomp(ROOM_VOID);
+    rp = real_roomp(Room::VOID);
     *rp += *character;
     delete character;
     character = NULL;
@@ -1079,13 +1079,13 @@ int Descriptor::client_nanny(char *arg)
     character_list = character;
 
     if ((character->inRoom() >= 0) ||
-        (character->inRoom() == ROOM_AUTO_RENT)) {
+        (character->inRoom() == Room::AUTO_RENT)) {
       // loadFromSt will have inRoom() == last rent
       // roomp not set yet, so just clear this value
-      character->setRoom(ROOM_VOID);
+      character->setRoom(Room::VOID);
     }
 // added 4/1/98 to fix a crash -- cos
-    rp = real_roomp(ROOM_VOID);
+    rp = real_roomp(Room::VOID);
     *rp += *character;
     delete character;
     character = NULL;
@@ -1116,7 +1116,7 @@ int Descriptor::client_nanny(char *arg)
       character->next = character_list;
       character_list = character;
       
-      character->setRoom(ROOM_NOWHERE);
+      character->setRoom(Room::NOWHERE);
       
       delete character;
       character = new TPerson(this);
@@ -1150,10 +1150,10 @@ int Descriptor::client_nanny(char *arg)
       //clientf(format("%d|%d") % CLIENT_GLOBAL % 0);
 
       if ((character->inRoom() >= 0) ||
-          (character->inRoom() == ROOM_AUTO_RENT)) {
+          (character->inRoom() == Room::AUTO_RENT)) {
         // loadFromSt will have inRoom() == last rent
         // roomp not set yet, so just clear this value
-        character->setRoom(ROOM_VOID);
+        character->setRoom(Room::VOID);
       }
       // we need to remove the character->desc for some deletion handling
       // to work (true, but why?).  This unfortunately causes it to go
@@ -1164,7 +1164,7 @@ int Descriptor::client_nanny(char *arg)
       character->next = character_list;
       character_list = character;
 
-      rp = real_roomp(ROOM_VOID);
+      rp = real_roomp(Room::VOID);
       *rp += *character;
       delete character;
       tmp_ch->desc = this;
@@ -1456,7 +1456,7 @@ int Descriptor::clientCreateChar(char *arg)
     ch->next = character_list;
     character_list = ch;
 
-    TRoom *rp = real_roomp(ROOM_VOID);
+    TRoom *rp = real_roomp(Room::VOID);
     *rp += *ch;
     delete ch;
     return FALSE;
@@ -1467,7 +1467,7 @@ int Descriptor::clientCreateChar(char *arg)
     ch->next = character_list;
     character_list = ch;
   
-    TRoom *rp = real_roomp(ROOM_VOID);
+    TRoom *rp = real_roomp(Room::VOID);
     *rp += *ch;
     delete ch;
     return FALSE;
@@ -1639,7 +1639,7 @@ int Descriptor::clientCreateChar(char *arg)
     ch->next = character_list;
     character_list = ch;
   
-    TRoom *rp = real_roomp(ROOM_VOID);
+    TRoom *rp = real_roomp(Room::VOID);
     *rp += *ch;
     delete ch;
     return FALSE;
@@ -1658,7 +1658,7 @@ int Descriptor::clientCreateChar(char *arg)
   AccountStats::player_count++;
 
   dynamic_cast<TPerson *>(ch)->doStart();
-  ch->saveChar(ROOM_AUTO_RENT);
+  ch->saveChar(Room::AUTO_RENT);
   connected = oldconnected;
   dynamic_cast<TPerson *>(ch)->dropItemsToRoom(SAFE_YES, NUKE_ITEMS);
 
@@ -1666,7 +1666,7 @@ int Descriptor::clientCreateChar(char *arg)
   ch->next = character_list;
   character_list = ch;
 
-  TRoom *rp = real_roomp(ROOM_VOID);
+  TRoom *rp = real_roomp(Room::VOID);
   *rp += *ch;
   delete ch;
   delete account;

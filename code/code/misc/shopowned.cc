@@ -76,8 +76,8 @@ int TShopOwned::getInventoryCount(const TObj *obj)
 {
   TDatabase db(DB_SNEEZY);
   
-  if (obj->objVnum() == GENERIC_COMMODITY)
-    db.query("select weight*10 as count from rent where vnum=%i and material=%i and owner_type='shop' and owner=%i", GENERIC_COMMODITY, obj->getMaterial(), shop_nr);
+  if (obj->objVnum() == Obj::GENERIC_COMMODITY)
+    db.query("select weight*10 as count from rent where vnum=%i and material=%i and owner_type='shop' and owner=%i", Obj::GENERIC_COMMODITY, obj->getMaterial(), shop_nr);
     else if (obj->isObjStat(ITEM_STRUNG))
     db.query("select count(*) as count from rent r left outer join rent_strung rs on (r.rent_id=rs.rent_id) where r.vnum=%i and rs.short_desc='%s' and r.owner_type='shop' and r.owner=%i and (r.extra_flags & 4) = 4", obj->objVnum(), sstring(obj->shortDescr).trim().c_str(), shop_nr);
   else
@@ -1171,9 +1171,9 @@ int TShopOwned::giveMoney(sstring arg){
 
   if(keeper->getMoney()>=amount){
     keeper->setMoney(keeper->getMoney()-amount);
-    keeper->saveChar(ROOM_AUTO_RENT);
+    keeper->saveChar(Room::AUTO_RENT);
     ch->setMoney(ch->getMoney()+amount);
-    ch->saveChar(ROOM_AUTO_RENT);
+    ch->saveChar(Room::AUTO_RENT);
     
     shoplog(shop_nr, ch, keeper, "talens", -amount, transactionToString(TX_RECEIVING_TALENS));
     journalize(ch->getName(), "talens", TX_RECEIVING_TALENS, amount, 0, 0, 0);

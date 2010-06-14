@@ -47,7 +47,7 @@ recipeTypeT recipes[] =
 ingredientTypeT ingredients[] =
 { 
   // marinated steak
-  {0, 1, 1, TYPE_VNUM, GENERIC_STEAK},  // any steak will do
+  {0, 1, 1, TYPE_VNUM, Obj::GENERIC_STEAK},  // any steak will do
   {0, 2, 3, TYPE_LIQUID, LIQ_WHISKY}, // 3 ounces of whiskey
   {0, 3, 1, TYPE_VNUM, 432}, // 1 orange
   

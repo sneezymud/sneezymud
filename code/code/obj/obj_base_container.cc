@@ -233,7 +233,7 @@ int TBaseContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
       if (ch->fight())                                        
         return TRUE;  // don't fall through                   
     }                                                         
-    if (dynamic_cast<TBeing *>(ch->riding) && (in_room != ROOM_NOWHERE)) {  
+    if (dynamic_cast<TBeing *>(ch->riding) && (in_room != Room::NOWHERE)) {  
       act("You can't get things from $p while mounted!",      
              FALSE, ch, this, 0, TO_CHAR);
       return TRUE;
@@ -294,7 +294,7 @@ int TBaseContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
       if (ch->fight())
         return TRUE;  // don't fall through
     }
-    if (dynamic_cast<TBeing *>(ch->riding) && (ch->in_room != ROOM_NOWHERE)) {
+    if (dynamic_cast<TBeing *>(ch->riding) && (ch->in_room != Room::NOWHERE)) {
       act("You can't get things from $p while mounted!",
            FALSE, ch, this, 0, TO_CHAR);
       return TRUE;

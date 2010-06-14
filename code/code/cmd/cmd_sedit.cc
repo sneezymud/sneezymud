@@ -885,8 +885,8 @@ void sedit(TBeing *ch, TMonster *tMonster)
         descIndex->character->doReturn("", WEAR_NOWHERE, 0);
   }
 
-  if (tMonster->in_room == ROOM_NOWHERE)
-    *(real_roomp(ROOM_VOID)) += *tMonster;
+  if (tMonster->in_room == Room::NOWHERE)
+    *(real_roomp(Room::VOID)) += *tMonster;
 
   while (tMonster->rider)
     tMonster->rider->dismount(POSITION_STANDING);
@@ -928,7 +928,7 @@ void sedit(TBeing *ch, TMonster *tMonster)
     if (tMonster->desc->original)
       tMonster->doReturn("", WEAR_NOWHERE, 0);
 
-    tMonster->saveChar(ROOM_NOWHERE);
+    tMonster->saveChar(Room::NOWHERE);
   }
 
   ch->desc->mob = tMonster;

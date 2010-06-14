@@ -484,8 +484,8 @@ static void medit(TBeing *ch, char *arg)
       if (d->original == mob)
         d->character->doReturn("", WEAR_NOWHERE, 0);
   }
-  if (mob->in_room == ROOM_NOWHERE) {
-    rp = real_roomp(ROOM_VOID);
+  if (mob->in_room == Room::NOWHERE) {
+    rp = real_roomp(Room::VOID);
     *rp += *mob;
   }
 
@@ -521,7 +521,7 @@ static void medit(TBeing *ch, char *arg)
     if (mob->desc->original)
       mob->doReturn("", WEAR_NOWHERE, 0);
 
-    mob->saveChar(ROOM_NOWHERE);
+    mob->saveChar(Room::NOWHERE);
   }
   ch->desc->mob = dynamic_cast<TMonster *>(mob);
   act("$n just went into mobile edit mode.", FALSE, ch, 0, 0, TO_ROOM);

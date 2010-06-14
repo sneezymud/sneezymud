@@ -219,14 +219,14 @@ int slumber(TBeing *caster, TBeing *victim, int level, short bKnown)
   TObj *primary = dynamic_cast<TObj *>(caster->heldInPrimHand());
   TObj *secondary = dynamic_cast<TObj *>(caster->heldInSecHand());
 
-  if ((primary && (primary->objVnum() == OBJ_SLEEPTAG_STAFF)) ||
-      (secondary && (secondary->objVnum() == OBJ_SLEEPTAG_STAFF)))
+  if ((primary && (primary->objVnum() == Obj::SLEEPTAG_STAFF)) ||
+      (secondary && (secondary->objVnum() == Obj::SLEEPTAG_STAFF)))
     found = TRUE;
 
 // sleep tag
   if (victim->GetMaxLevel() < GOD_LEVEL1) {
     if (found) {
-      if (caster->inRoom() == ROOM_SLEEPTAG_CONTROL) {
+      if (caster->inRoom() == Room::SLEEPTAG_CONTROL) {
         caster->sendTo("You can not use that staff here.\n\r");
         return SPELL_FAIL;
       }
@@ -862,7 +862,7 @@ int polymorph(TBeing *caster, int level, short bKnown)
     caster->sendTo("You couldn't summon an image of that creature.\n\r");
     return SPELL_FAIL;
   }
-  thing_to_room(mob,ROOM_VOID);   // just so if extracted it isn't in NOWHERE 
+  thing_to_room(mob,Room::VOID);   // just so if extracted it isn't in NOWHERE 
   mob->swapToStrung();
   
  int duration;
@@ -912,7 +912,7 @@ int polymorph(TBeing *caster, int level, short bKnown)
     }
   
     --(*caster);
-    thing_to_room(caster, ROOM_POLY_STORAGE);
+    thing_to_room(caster, Room::POLY_STORAGE);
 
     // stop following whoever you are following.. 
     if (caster->master)

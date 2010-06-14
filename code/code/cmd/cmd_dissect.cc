@@ -34,14 +34,14 @@ int determineDissectionItem(TBaseCorpse *corpse, int *amount, char *msg, char *g
           sprintf(msg, "You tear $p off of $N.");
           sprintf(gl_msg, "$n tears $p off of $N.");
         } else {
-          num = OBJ_PHOENIX_FEATHER;
+          num = Obj::PHOENIX_FEATHER;
           *amount = 50;
           sprintf(msg, "You pluck $p from $N's wing.");
           sprintf(gl_msg, "$n plucks $p from $N's wing.");
         }
         break;
       case RACE_DEER:
-        num = OBJ_VENISON;
+        num = Obj::VENISON;
         sprintf(msg, "You carve $p from $N.");
         sprintf(gl_msg, "$n carves $p from $N.");
         *amount = 50;
@@ -55,9 +55,9 @@ int determineDissectionItem(TBaseCorpse *corpse, int *amount, char *msg, char *g
     // this switch should ONLY be for VERY special cases now
     // put generic stuff in the dissect file and let the LOWs maintain it
     switch(corpse->getCorpseVnum()) {
-      case MOB_TIGER_SHARK:
+      case Mob::TIGER_SHARK:
 	if(ch && ch->hasQuestBit(TOG_STARTED_MONK_BLUE)){
-	  num = OBJ_MONK_QUEST_DOG_COLLAR;
+	  num = Obj::MONK_QUEST_DOG_COLLAR;
 	  *amount = 100;
 	  sprintf(msg, "You reach deep into $N's maw and pull out $p.");
 	  sprintf(gl_msg, "$n reaches deep into $N's maw and pulls out $p.");

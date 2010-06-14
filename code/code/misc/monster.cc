@@ -167,8 +167,8 @@ TMonster::TMonster() :
   hates(),
   fears(),
   persist(0), 
-  oldRoom(ROOM_NOWHERE),
-  brtRoom(ROOM_NOWHERE),
+  oldRoom(Room::NOWHERE),
+  brtRoom(Room::NOWHERE),
   hatefield(0),
   fearfield(0),
   moneyConst(0),
@@ -341,7 +341,7 @@ TMonster::~TMonster()
 
   TRoom *tRoom;
 
-  if (brtRoom == ROOM_NOWHERE)
+  if (brtRoom == Room::NOWHERE)
     ; // Do nothing.  This triggers on immortal loaded mobs so is cool.
   else if (!(tRoom = real_roomp(brtRoom)))
     vlogf(LOG_BUG, format("Mobile being destroyed with empty birth room! [%s][%i]") %  getName() % brtRoom);

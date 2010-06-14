@@ -643,7 +643,7 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
       }
     }
     room = roomOfObject(temp_obj);
-    if (room == ROOM_STORAGE) {
+    if (room == Room::STORAGE) {
       // item is in a linkdead bag
       // mob will wind up in CS due to teleporter which is sort of bad
       if (temp_obj->parent)
@@ -949,7 +949,7 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
         --(*temp_obj);
         *myself += *temp_obj; 
         act("$n picks up something quickly.", FALSE, myself, NULL, 0, TO_ROOM);
-      } else if (temp_obj->in_room != ROOM_NOWHERE) {
+      } else if (temp_obj->in_room != Room::NOWHERE) {
         --(*temp_obj);
         *myself += *temp_obj;
         act("$n picks up something quickly.", FALSE, myself, NULL, 0, TO_ROOM);

@@ -155,7 +155,7 @@ void postmasterValue(TBeing *ch, TBeing *postmaster, const char *arg)
 
 int postmasterGiven(TBeing *ch, TMonster *me, TObj *o)
 {
-  if (!o || o->objVnum() != GENERIC_L_TOKEN) {
+  if (!o || o->objVnum() != Obj::GENERIC_L_TOKEN) {
     me->doTell(ch->getName(), "What in the hells is this?!");
     me->doGive(ch, o);
     return 0;
@@ -221,7 +221,7 @@ int postmasterGiven(TBeing *ch, TMonster *me, TObj *o)
   // item is ready
   } else {
 
-    TRoom *rp = real_roomp(ROOM_STORAGE);
+    TRoom *rp = real_roomp(Room::STORAGE);
     if (!rp)
       return 0;
     fullToken.inlineReplaceString(dueDate, "bag");
@@ -475,10 +475,10 @@ void TBeing::postmasterReceiveMail(TMonster *me)
 
     // builder port uses stripped down database which was causing problems
     // hence this setup instead.
-    int robj = real_object(GENERIC_NOTE);
+    int robj = real_object(Obj::GENERIC_NOTE);
     if (robj < 0 || robj >= (signed int) obj_index.size()) {
       vlogf(LOG_BUG, format("postmasterReceiveMail(): No object (%d) in database!") %  
-            GENERIC_NOTE);
+            Obj::GENERIC_NOTE);
       return;
     }
 

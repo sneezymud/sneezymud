@@ -180,7 +180,7 @@ void TBeing::doSave(silentTypeT silent, const char *tArg)
     tPerson->recepOffer(NULL, &tCost);
     tPerson->saveRent(&tCost, FALSE, 0);
 
-    saveChar(ROOM_AUTO_RENT);
+    saveChar(Room::AUTO_RENT);
 
     // now that we've saved, put all equipment back on the poly
     for(StuffIter it=tPerson->stuff.begin();it!=tPerson->stuff.end();){
@@ -205,6 +205,6 @@ void TBeing::doSave(silentTypeT silent, const char *tArg)
     recepOffer(NULL, &tCost);
     dynamic_cast<TPerson *>(this)->saveRent(&tCost, FALSE, 0);
 
-    saveChar(ROOM_AUTO_RENT);
+    saveChar(Room::AUTO_RENT);
   }
 }

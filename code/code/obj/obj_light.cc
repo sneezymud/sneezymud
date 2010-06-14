@@ -160,7 +160,7 @@ void TLight::extinguishMe(TBeing *ch)
     ch->sendTo("That light is already extinguished!\n\r");
     return;
   }
-  if (objVnum() == GENERIC_FLARE) {
+  if (objVnum() == Obj::GENERIC_FLARE) {
     sendTo("You jump real high, but your still too far away to do that.\n\r");
     return;
   }

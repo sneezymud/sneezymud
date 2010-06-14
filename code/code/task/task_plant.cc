@@ -211,7 +211,7 @@ int task_plant(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj 
 
     TObj *tp;
     TPlant *tplant;
-    tp = read_object(OBJ_GENERIC_PLANT, VIRTUAL);
+    tp = read_object(Obj::GENERIC_PLANT, VIRTUAL);
     if((tplant=dynamic_cast<TPlant *>(tp))){
       tplant->setType(seed_to_plant(tt->objVnum()));
       tplant->updateDesc();

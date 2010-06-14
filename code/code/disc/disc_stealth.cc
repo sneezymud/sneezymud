@@ -300,7 +300,7 @@ int disguise(TBeing *caster, char * buffer)
     caster->sendTo("You couldn't envision an image of that creature.\n\r");
     return FALSE;
   }
-  thing_to_room(mob,ROOM_VOID);
+  thing_to_room(mob,Room::VOID);
   mob->swapToStrung();
 
   // Check to make sure that there is no snooping going on. 
@@ -387,7 +387,7 @@ int disguise(TBeing *caster, char * buffer)
   --(*mob);
   *caster->roomp += *mob;
   --(*caster);
-  thing_to_room(caster, ROOM_POLY_STORAGE);
+  thing_to_room(caster, Room::POLY_STORAGE);
 
   // stop following whoever you are following.
   if (caster->master)

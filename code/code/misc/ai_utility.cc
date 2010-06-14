@@ -280,7 +280,7 @@ void TMonster::mobAI()
   int aggro_state_1 = aggro();
   int aggro_state_2;
 
-  if (in_room == ROOM_NOWHERE)
+  if (in_room == Room::NOWHERE)
     return;
 
   if (UtilMobProc(this))

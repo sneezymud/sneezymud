@@ -104,24 +104,24 @@ typedef struct _TPlayerRace
 // our list of playable races
 TPlayerRace nannyRaces[] = {
   // base races
-  { RACE_HUMAN, "Human", 0, humanTerr, cElements(humanTerr), ROOM_NEWBIE, "help/territory help human", 0},
-  { RACE_GNOME, "Gnome", 0, gnomeTerr, cElements(gnomeTerr), ROOM_NEWBIE, "help/territory help gnome", 0},
-  { RACE_ELVEN, "Elf", 0, elfTerr, cElements(elfTerr), ROOM_NEWBIE, "help/territory help elf", 0},
-  { RACE_OGRE, "Ogre", 0, ogreTerr, cElements(ogreTerr), ROOM_NEWBIE, "help/territory help ogre", 0},
-  { RACE_DWARF, "Dwarf", 0, dwarfTerr, cElements(dwarfTerr), ROOM_NEWBIE, "help/territory help dwarf", 0},
-  { RACE_HOBBIT, "Hobbit", 0, hobbitTerr, cElements(hobbitTerr), ROOM_NEWBIE, "help/territory help hobbit", 0},
+  { RACE_HUMAN, "Human", 0, humanTerr, cElements(humanTerr), Room::NEWBIE, "help/territory help human", 0},
+  { RACE_GNOME, "Gnome", 0, gnomeTerr, cElements(gnomeTerr), Room::NEWBIE, "help/territory help gnome", 0},
+  { RACE_ELVEN, "Elf", 0, elfTerr, cElements(elfTerr), Room::NEWBIE, "help/territory help elf", 0},
+  { RACE_OGRE, "Ogre", 0, ogreTerr, cElements(ogreTerr), Room::NEWBIE, "help/territory help ogre", 0},
+  { RACE_DWARF, "Dwarf", 0, dwarfTerr, cElements(dwarfTerr), Room::NEWBIE, "help/territory help dwarf", 0},
+  { RACE_HOBBIT, "Hobbit", 0, hobbitTerr, cElements(hobbitTerr), Room::NEWBIE, "help/territory help hobbit", 0},
 
   // extended races
-  { RACE_GOBLIN, "Goblin", 0, goblinTerr, cElements(goblinTerr), ROOM_GH_INN, "help/territory help goblin", 1},
-  { RACE_GNOLL, "Gnoll", 0, gnollTerr, cElements(gnollTerr), ROOM_GH_INN, "help/territory help gnoll", 0},
-  { RACE_TROG, "Troglodyte", 0, troglodyteTerr, cElements(troglodyteTerr), ROOM_GH_INN, "help/territory help troglodyte", 0},
-  { RACE_ORC, "Orc", 0, orcTerr, cElements(orcTerr), ROOM_GH_INN, "help/territory help orc", 1},
+  { RACE_GOBLIN, "Goblin", 0, goblinTerr, cElements(goblinTerr), Room::GH_INN, "help/territory help goblin", 1},
+  { RACE_GNOLL, "Gnoll", 0, gnollTerr, cElements(gnollTerr), Room::GH_INN, "help/territory help gnoll", 0},
+  { RACE_TROG, "Troglodyte", 0, troglodyteTerr, cElements(troglodyteTerr), Room::GH_INN, "help/territory help troglodyte", 0},
+  { RACE_ORC, "Orc", 0, orcTerr, cElements(orcTerr), Room::GH_INN, "help/territory help orc", 1},
 
   // advanced races
-  { RACE_FROGMAN, "Bullywug", 1, frogmanTerr, cElements(frogmanTerr), ROOM_BULLYWUG_INN, "help/territory help bullywug", 0},
-  { RACE_FISHMAN, "Kalysian", 1, fishmanTerr, cElements(fishmanTerr), ROOM_KALYSIA_INN, "help/territory help kalysian", 0},
-  { RACE_BIRDMAN, "Aarakocra", 1, birdmanTerr, cElements(birdmanTerr), ROOM_AERIE_INN, "help/territory help aarakocra", 0},
-  { RACE_TROLL, "Troll", 1, trollTerr, cElements(trollTerr), ROOM_TROLL_INN, "help/territory help troll", 0},
+  { RACE_FROGMAN, "Bullywug", 1, frogmanTerr, cElements(frogmanTerr), Room::BULLYWUG_INN, "help/territory help bullywug", 0},
+  { RACE_FISHMAN, "Kalysian", 1, fishmanTerr, cElements(fishmanTerr), Room::KALYSIA_INN, "help/territory help kalysian", 0},
+  { RACE_BIRDMAN, "Aarakocra", 1, birdmanTerr, cElements(birdmanTerr), Room::AERIE_INN, "help/territory help aarakocra", 0},
+  { RACE_TROLL, "Troll", 1, trollTerr, cElements(trollTerr), Room::TROLL_INN, "help/territory help troll", 0},
 };
 
 // a struct for holding data about customizable stats
@@ -694,7 +694,7 @@ connectStateT nannyLaunchpad_input(Descriptor * desc, sstring & output, const ss
     }
 
     vlogf(LOG_PIO, format("%s [%s] new player.") %  desc->character->getName() % desc->host);
-    desc->character->saveChar(ROOM_AUTO_RENT);
+    desc->character->saveChar(Room::AUTO_RENT);
     db.query("insert into player (name) values (lower('%s'))", desc->character->getName());
     AccountStats::player_count++;
 

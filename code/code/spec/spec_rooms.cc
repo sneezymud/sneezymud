@@ -65,15 +65,15 @@ int oft_frequented_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     return FALSE;
 
   switch (rp->number) {
-    case ROOM_KINDRED_INN:
-    case ROOM_GREEN_DRAGON_INN:
+    case Room::KINDRED_INN:
+    case Room::GREEN_DRAGON_INN:
       // enter between 7PM and 10PM
       if ((GameTime::getHours() >= 19) && (GameTime::getHours() <= 22)) {
         q = ::number(1, 2);
         for (i = 1; i <= q; i++) {
           if (::number(0,10))
             continue;
-          int rmob = real_mobile(::number(0,1) ? MOB_MALE_HOPPER : MOB_FEMALE_HOPPER);  
+          int rmob = real_mobile(::number(0,1) ? Mob::MALE_HOPPER : Mob::FEMALE_HOPPER);  
           int maxMob = (gamePort == BETA_GAMEPORT) ? 25 : mob_index[rmob].max_exist; // beta port sets max_exist to 9999
           if (mob_index[rmob].getNumber() >= maxMob)
              continue;
@@ -84,16 +84,16 @@ int oft_frequented_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
         }
       }
       break;
-    case ROOM_PEW1:
-    case ROOM_PEW2:
-    case ROOM_PEW3:
-    case ROOM_PEW4:
+    case Room::PEW1:
+    case Room::PEW2:
+    case Room::PEW3:
+    case Room::PEW4:
       if (!((GameTime::getDay() + 1) % 7) &&  // on Sunday
           (GameTime::getHours() == 10)) {  // at 10
         for (i = 1; i <= 8; i++) {
           if (::number(0,9))
             continue;
-          int rmob = real_mobile(::number(0,1) ? MOB_MALE_CHURCH_GOER : MOB_FEMALE_CHURCH_GOER);
+          int rmob = real_mobile(::number(0,1) ? Mob::MALE_CHURCH_GOER : Mob::FEMALE_CHURCH_GOER);
           int maxMob = (gamePort == BETA_GAMEPORT) ? 25 : mob_index[rmob].max_exist; // beta port sets max_exist to 9999
           if (mob_index[rmob].getNumber() >= maxMob)
              continue;
@@ -103,10 +103,10 @@ int oft_frequented_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
         }
       }
       break;
-    case ROOM_TOP_OF_TREE:
+    case Room::TOP_OF_TREE:
       // april 4th at noon
       if ((GameTime::getMonth() == 3) && (GameTime::getDay() == 3) && (GameTime::getHours() == 12)) {
-        int rom = real_mobile(MOB_SONGBIRD);
+        int rom = real_mobile(Mob::SONGBIRD);
         if (mob_index[rom].getNumber() > 100)
           break;
         for (i = 1; i <= 200; i++) {
@@ -129,7 +129,7 @@ int oft_frequented_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 
 int isBelimusAlive(void)
 {
-  if (mob_index[real_mobile(MOB_BELIMUS)].getNumber() >= 1)
+  if (mob_index[real_mobile(Mob::BELIMUS)].getNumber() >= 1)
     return TRUE;
   return FALSE;
 }
@@ -209,7 +209,7 @@ int grimhavenDump(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
       continue;
     
     // nor should flares
-    if (obj->objVnum() == GENERIC_FLARE)
+    if (obj->objVnum() == Obj::GENERIC_FLARE)
       continue;
     
     sendrpf(rp, "A %s slides down the chute into the disposal pipe below.\n\r", fname(obj->name).c_str());
@@ -250,7 +250,7 @@ int prisonDump(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
       continue;
     
     // nor should flares
-    if (obj->objVnum() == GENERIC_FLARE)
+    if (obj->objVnum() == Obj::GENERIC_FLARE)
       continue;
     
     sendrpf(rp, "A %s slides down the chute into the disposal pipe below.\n\r", fname(obj->name).c_str());
@@ -285,7 +285,7 @@ int dump(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 	continue;
 
       // nor should flares
-      if (obj->objVnum() == GENERIC_FLARE)
+      if (obj->objVnum() == Obj::GENERIC_FLARE)
         continue;
 
       // refuse haulers cart
@@ -809,7 +809,7 @@ int belimusBlowHole(TBeing *me, cmdTypeT cmd, const char *, TRoom *rp)
       return FALSE;
 
     for (mob = character_list;mob;mob = mob->next) {
-      if (mob->mobVnum() == MOB_BELIMUS) {
+      if (mob->mobVnum() == Mob::BELIMUS) {
         int room2 = mob->in_room;
         rp2 = real_roomp(room2);
         for (int i = 0; i <= 9; i++)
@@ -922,7 +922,7 @@ int elfForest(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
   if (!(mob = read_mobile(10113, VIRTUAL))) {
     return FALSE;
   }
-  thing_to_room(mob, ROOM_VOID);   // safety net to prevent nowhere extract
+  thing_to_room(mob, Room::VOID);   // safety net to prevent nowhere extract
   if (!(bow = read_object(10145, VIRTUAL))) {
     delete mob;
     return FALSE;
@@ -1041,7 +1041,7 @@ int genericSlide(TThing *t, TRoom *rp)
       break;
     default:
       vlogf(LOG_PROC, format("Bogus room for generic slide %d") %  rp->number);
-      thing_to_room(t, ROOM_VOID);
+      thing_to_room(t, Room::VOID);
   }
 
   TBeing *tbt = dynamic_cast<TBeing *>(t);
@@ -1059,8 +1059,8 @@ int genericSlide(TThing *t, TRoom *rp)
   // a special case for Mithros's Penguins
   if (tbt && tbt->in_room == 20412) {
     // at end of slide
-    if (tbt->mobVnum() == MOB_PENGUIN_ADULT ||
-        tbt->mobVnum() == MOB_PENGUIN_YOUNG) {
+    if (tbt->mobVnum() == Mob::PENGUIN_ADULT ||
+        tbt->mobVnum() == Mob::PENGUIN_YOUNG) {
       act("You quickly dive under the water and swim away.",
         FALSE, tbt, 0, 0, TO_CHAR);
       act("$n quickly dives under the water and swims away.",
@@ -1134,14 +1134,14 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
         act("As $n pulls the lever the lift begins to move with a loud creak.", TRUE,ch,0,0,TO_ROOM);
       } else
         return FALSE;
-      if (obj_index[real_object(OBJ_MINELIFT_DOWN)].getNumber() >= 1) {
+      if (obj_index[real_object(Obj::MINELIFT_DOWN)].getNumber() >= 1) {
         act("Nothing seems to happen.", TRUE,ch,0,0,TO_CHAR);
         act("Nothing seems to happen.", TRUE,ch,0,0,TO_ROOM);
         return TRUE;
       }
 
-      if (!(portal = read_object(OBJ_MINELIFT_DOWN, VIRTUAL))) {
-        vlogf(LOG_PROC, format("Problem loading object in SecretPortal. (%d)") %  OBJ_MINELIFT_DOWN);
+      if (!(portal = read_object(Obj::MINELIFT_DOWN, VIRTUAL))) {
+        vlogf(LOG_PROC, format("Problem loading object in SecretPortal. (%d)") %  Obj::MINELIFT_DOWN);
         ch->sendTo("Serious problem, contact a god.\n\r");
         return FALSE;
       }
@@ -1149,7 +1149,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
       // loading the portal
       act("With a loud boom the entry platform is dropped as the lift arrives.",          TRUE,ch,portal,0,TO_CHAR);
       act("With a loud boom the entry platform is dropped as the lift arrives.",          TRUE,ch,portal,0,TO_ROOM);
-      if (obj_index[real_object(OBJ_MINELIFT_UP)].getNumber() >= 1) {
+      if (obj_index[real_object(Obj::MINELIFT_UP)].getNumber() >= 1) {
         other_room = real_roomp(7266);
         temp = NULL;
         found_other = FALSE;
@@ -1158,7 +1158,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 	    temp=*(it++);
             if (!dynamic_cast<TPortal *> (temp))
               continue;
-            if (temp->number == real_object(OBJ_MINELIFT_UP)) {
+            if (temp->number == real_object(Obj::MINELIFT_UP)) {
               delete temp;
               temp = NULL;
               found_other = TRUE;
@@ -1280,14 +1280,14 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
             TRUE,ch,0,0,TO_ROOM);
       } else
         return FALSE;
-      if (obj_index[real_object(OBJ_MINELIFT_UP)].getNumber() >= 1) {
+      if (obj_index[real_object(Obj::MINELIFT_UP)].getNumber() >= 1) {
         act("Nothing seems to happen.", TRUE,ch,0,0,TO_CHAR);
         act("Nothing seems to happen.", TRUE,ch,0,0,TO_ROOM);
         return TRUE;
       }
 
-      if (!(portal = read_object(OBJ_MINELIFT_UP, VIRTUAL))) {
-        vlogf(LOG_PROC, format("Problem loading object in SecretPortal. (%d)") %  OBJ_MINELIFT_DOWN);
+      if (!(portal = read_object(Obj::MINELIFT_UP, VIRTUAL))) {
+        vlogf(LOG_PROC, format("Problem loading object in SecretPortal. (%d)") %  Obj::MINELIFT_DOWN);
         ch->sendTo("Serious problem, contact a god.\n\r");
         return FALSE;
       }
@@ -1297,7 +1297,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
           TRUE,ch,portal,0,TO_CHAR);
       act("With a loud boom the entry platform is dropped as the lift arrives.",
           TRUE,ch,portal,0,TO_ROOM);
-      if (obj_index[real_object(OBJ_MINELIFT_DOWN)].getNumber() >= 1) {
+      if (obj_index[real_object(Obj::MINELIFT_DOWN)].getNumber() >= 1) {
         other_room = real_roomp(7228);
         temp = NULL;
         found_other = FALSE;
@@ -1306,7 +1306,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 	    temp=*(it++);
             if (!dynamic_cast<TPortal *> (temp))
               continue;
-            if (temp->number == real_object(OBJ_MINELIFT_DOWN)) {
+            if (temp->number == real_object(Obj::MINELIFT_DOWN)) {
               delete temp;
               temp = NULL;
               found_other = TRUE;
@@ -1325,7 +1325,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
         return FALSE;
       for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();++it){
         TObj *io = dynamic_cast<TObj *>(*it);
-        if (io && io->objVnum() == ROOM_TREE_BRIDGE)  {
+        if (io && io->objVnum() == Room::TREE_BRIDGE)  {
           portal = io;
           found = TRUE;
         }
@@ -1354,7 +1354,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
           act("As $n pull on the lever some rope releases from above.",
               TRUE,ch,0,0,TO_ROOM);
           act("One of the trees descends to make a bridge across the river.",                 TRUE,ch,0,0,TO_ROOM);
-          portal = read_object(ROOM_TREE_BRIDGE, VIRTUAL);
+          portal = read_object(Room::TREE_BRIDGE, VIRTUAL);
           *ch->roomp += *portal;
           return TRUE;
         }
@@ -1368,14 +1368,14 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
         act("$n pushes the button.", TRUE,ch,0,0,TO_ROOM);
       } else
         return FALSE;
-      if (obj_index[real_object(OBJ_FLAMING_PORTAL)].getNumber() >= 1) {
+      if (obj_index[real_object(Obj::FLAMING_PORTAL)].getNumber() >= 1) {
         act("Nothing seems to happen.", TRUE,ch,0,0,TO_CHAR);
         act("Nothing seems to happen.", TRUE,ch,0,0,TO_ROOM);
         return TRUE;
       }
 
-      if (!(portal = read_object(OBJ_FLAMING_PORTAL, VIRTUAL))) {
-        vlogf(LOG_PROC, format("Problem loading object in SecretPortal. (%d)") %  OBJ_FLAMING_PORTAL);
+      if (!(portal = read_object(Obj::FLAMING_PORTAL, VIRTUAL))) {
+        vlogf(LOG_PROC, format("Problem loading object in SecretPortal. (%d)") %  Obj::FLAMING_PORTAL);
         ch->sendTo("Serious problem, contact a god.\n\r");
         return FALSE;
       }
@@ -1677,7 +1677,7 @@ int monkQuestProcLand(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
 #if 0
   for(t=rp->getStuff();t;t=t->nextThing){
     if((tmon=dynamic_cast<TMonster *>(t)) &&
-       tmon->mobVnum()==MOB_ELEPHANT){
+       tmon->mobVnum()==Mob::ELEPHANT){
       break;
     }
   }
@@ -1698,7 +1698,7 @@ int monkQuestProcFall(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
   if(cmd != CMD_ROOM_ENTERED)
     return FALSE;
   if(!ch->riding || !(tmon=dynamic_cast<TMonster *>(ch->riding)) ||
-     tmon->mobVnum()!=MOB_ELEPHANT)
+     tmon->mobVnum()!=Mob::ELEPHANT)
     return FALSE;
   if(!ch->hasQuestBit(TOG_MONK_GREEN_STARTED))
     return FALSE;
@@ -1910,7 +1910,7 @@ int dayGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     t=*(it++);
     if(!(to=dynamic_cast<TObj *>(t)))
       continue;
-    if(obj_index[to->getItemIndex()].virt == ITEM_DAYGATE) {
+    if(obj_index[to->getItemIndex()].virt == Obj::ITEM_DAYGATE) {
       found = true;
       break;
     }
@@ -1930,7 +1930,7 @@ int dayGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     // code to place gate
     if (!found) {
       //      vlogf(LOG_DASH, "daygate proc didn't find gate, placing");
-      if (!(to = read_object(ITEM_DAYGATE, VIRTUAL))) {
+      if (!(to = read_object(Obj::ITEM_DAYGATE, VIRTUAL))) {
 	vlogf(LOG_LOW, "Error loading daygate");
 	return FALSE;
       }
@@ -1967,7 +1967,7 @@ int moonGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     t=*(it++);
     if(!(to=dynamic_cast<TObj *>(t)))
       continue;
-    if(obj_index[to->getItemIndex()].virt == ITEM_MOONGATE) {
+    if(obj_index[to->getItemIndex()].virt == Obj::ITEM_MOONGATE) {
       found = true;
       break;
     }
@@ -1985,7 +1985,7 @@ int moonGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
   } else {
     // code to place gate
     if (!found) {
-        if (!(to = read_object(ITEM_MOONGATE, VIRTUAL))) {
+        if (!(to = read_object(Obj::ITEM_MOONGATE, VIRTUAL))) {
 	vlogf(LOG_LOW, "Error loading moongate");
 	return FALSE;
       }
@@ -2020,7 +2020,7 @@ int waterfallRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     t=*(it++);
     if(!(to=dynamic_cast<TObj *>(t)))
       continue;
-    if(obj_index[to->getItemIndex()].virt == OBJ_RAINBOW_MIST) {
+    if(obj_index[to->getItemIndex()].virt == Obj::RAINBOW_MIST) {
       found = true;
       break;
     }
@@ -2039,7 +2039,7 @@ int waterfallRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     // code to place rainbow
     if (found || to)
       return FALSE;
-    if (!(to = read_object(OBJ_RAINBOW_MIST, VIRTUAL))) {
+    if (!(to = read_object(Obj::RAINBOW_MIST, VIRTUAL))) {
       vlogf(LOG_LOW, "Error loading rainbow mist object");
       return FALSE;
     }
@@ -2137,7 +2137,7 @@ int boulderRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
     t=*(it++);
     if (!(rock=dynamic_cast<TObj *>(t)))
       continue;
-    if (obj_index[rock->getItemIndex()].virt == BOULDER_ITEM) {
+    if (obj_index[rock->getItemIndex()].virt == Obj::BOULDER_ITEM) {
       found = 1;
       //      vlogf(LOG_LAPSOS, "found assigned to 1");
       break;

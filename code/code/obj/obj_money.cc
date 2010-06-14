@@ -181,7 +181,7 @@ TMoney *create_money(int amount, currencyTypeT currency)
     amount=1;
   }
 
-  obj = read_object(GENERIC_TALEN, VIRTUAL);
+  obj = read_object(Obj::GENERIC_TALEN, VIRTUAL);
   money = dynamic_cast<TMoney *>(obj);
   mud_assert(money != NULL, "create_money created something that was not TMoney.  obj was: %s", obj ? obj->getName() : "NO OBJECT");
 

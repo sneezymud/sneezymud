@@ -78,7 +78,7 @@ void spread_affect(TBeing *ch, int chance_to_spread, bool race, bool not_race, a
 {
   TThing *t=NULL;
   affectedData vaf;
-  if (ch->inRoom() == ROOM_NOCTURNAL_STORAGE)
+  if (ch->inRoom() == Room::NOCTURNAL_STORAGE)
     return;
   int spread_controller = 1; // to reduce rate of spreading in crowds. it gets out of hand.
   int effective_chance = chance_to_spread; // to store the original chance
@@ -110,7 +110,7 @@ void spread_affect(TBeing *ch, int chance_to_spread, bool race, bool not_race, a
     // guess who shouldn't get diseases...
     if (v->spec == SPEC_HORSE_PESTILENCE ||
         v->isShopkeeper() ||
-        v->mobVnum() == APOC_PESTHORSE)
+        v->mobVnum() == Mob::APOC_PESTHORSE)
       continue;
 
     if ((af->type != AFFECT_DISEASE && !v->affectedBySpell(af->type)) ||
@@ -1466,7 +1466,7 @@ int disease_scurvy(TBeing *victim, int message, affectedData *af)
           // tooth falls out
           if (victim->getMyRace()->hasNoBones())
             return FALSE;
-          corpse = read_object(GENERIC_TOOTH, VIRTUAL);
+          corpse = read_object(Obj::GENERIC_TOOTH, VIRTUAL);
           corpse->swapToStrung();
           if ((tooth = dynamic_cast<TCorpse *>(corpse))) {
             tooth->setCorpseRace(victim->getRace());

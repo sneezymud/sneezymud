@@ -2390,7 +2390,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     TRoom * pRoom = real_roomp(ch->in_room);
 
     if (!pRoom || (pRoom->spec != SPEC_ROOM_GH_DUMP)) {
-      // possible alternative would be to move dropped stuff to ROOM_DONATION
+      // possible alternative would be to move dropped stuff to Room::DONATION
       act("$N tells you, 'HEY!  Don't clutter up my shop'.", FALSE, ch, 0, myself, TO_CHAR);
       return TRUE;
     }

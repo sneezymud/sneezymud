@@ -53,10 +53,10 @@ const sstring HeartsGame::hearts_score()
   char buf[256];
   int score1, score2, score3, score4;
 
-  ch1 = get_char_room(names[0], ROOM_HEARTS);
-  ch2 = get_char_room(names[1], ROOM_HEARTS);
-  ch3 = get_char_room(names[2], ROOM_HEARTS);
-  ch4 = get_char_room(names[3], ROOM_HEARTS);
+  ch1 = get_char_room(names[0], Room::HEARTS);
+  ch2 = get_char_room(names[1], Room::HEARTS);
+  ch3 = get_char_room(names[2], Room::HEARTS);
+  ch4 = get_char_room(names[3], Room::HEARTS);
 
   if (!ch1 || !ch2 || !ch3 || !ch4) {
     vlogf(LOG_BUG, "hearts_score() called without four hearts players!");
@@ -81,9 +81,9 @@ bool HeartsGame::get_other_players(const TBeing *ch, TBeing **left, TBeing **acr
   if ((which = index(ch)) < 0) 
     return FALSE;
   
-  *left = get_char_room(names[LEFT(ch)], ROOM_HEARTS);
-  *across = get_char_room(names[ACROSS(ch)], ROOM_HEARTS);
-  *right = get_char_room(names[RIGHT(ch)], ROOM_HEARTS);
+  *left = get_char_room(names[LEFT(ch)], Room::HEARTS);
+  *across = get_char_room(names[ACROSS(ch)], Room::HEARTS);
+  *right = get_char_room(names[RIGHT(ch)], Room::HEARTS);
 
   if (!*left || !*right || !*across)
     return FALSE;
@@ -218,7 +218,7 @@ int HeartsGame::move_card(TBeing *ch, const char *arg)
 
 bool TBeing::checkHearts(bool inGame) const
 {
-  if (in_room == ROOM_HEARTS && (inGame || (gHearts.index(this) > -1)))
+  if (in_room == Room::HEARTS && (inGame || (gHearts.index(this) > -1)))
     return TRUE;
   else
     return FALSE;
@@ -348,10 +348,10 @@ int HeartsGame::new_deal()
     led = 0;
     iplay = 0;
     
-    ch1 = get_char_room(names[0], ROOM_HEARTS);
-    ch2 = get_char_room(names[1], ROOM_HEARTS);
-    ch3 = get_char_room(names[2], ROOM_HEARTS);
-    ch4 = get_char_room(names[3], ROOM_HEARTS);
+    ch1 = get_char_room(names[0], Room::HEARTS);
+    ch2 = get_char_room(names[1], Room::HEARTS);
+    ch3 = get_char_room(names[2], Room::HEARTS);
+    ch4 = get_char_room(names[3], Room::HEARTS);
   
     if (!ch1 || !ch2 || !ch3 || !ch4) {
       vlogf(LOG_BUG, "HeartsGame::new_deal called without four hearts players!");
@@ -407,7 +407,7 @@ int HeartsGame::new_round(TBeing *ch, int *pilex)
       break;
   }
 
-  if (!(won = get_char_room(names[winner], ROOM_HEARTS))) {
+  if (!(won = get_char_room(names[winner], Room::HEARTS))) {
     vlogf(LOG_BUG, "Null character for won in HeartsGame::new_round()");
     return FALSE;
   }

@@ -676,13 +676,13 @@ bool UtilMobProc(TBeing *ch)
   /*
   switch (ch->mobVnum()) {
   	// february quest mobs, we don't want them picking things up...
-  	case MOB_GYPSY_ROMANTIC:
-  	case MOB_FLORIST_BUSY:
-  	case MOB_CLOWN_SCARY:
-  	case MOB_MIME_ANIMATED:
-  	case MOB_GUY_LAZY:
-  	case MOB_WIFE_FARMER:
-  	case MOB_DRUNK_TRADER_RICH:
+  	case Mob::GYPSY_ROMANTIC:
+  	case Mob::FLORIST_BUSY:
+  	case Mob::CLOWN_SCARY:
+  	case Mob::MIME_ANIMATED:
+  	case Mob::GUY_LAZY:
+  	case Mob::WIFE_FARMER:
+  	case Mob::DRUNK_TRADER_RICH:
   		return TRUE;
   	default:
   		break;
@@ -961,7 +961,7 @@ void TObj::checkObjStats()
 #endif
   }
   if (canWear(ITEM_TAKE))
-    if (isObjStat(ITEM_NOPURGE) && (objVnum() != CRAPS_DICE)) {
+    if (isObjStat(ITEM_NOPURGE) && (objVnum() != Obj::CRAPS_DICE)) {
       TPCorpse *tmpcorpse = dynamic_cast<TPCorpse *>(this);
       if (!tmpcorpse)
         vlogf(LOG_LOW,format("item takeable and !purge (%s)") %  getName());
@@ -1398,7 +1398,7 @@ void TBeing::lowRace(const char *arg)
     if ((mob_index[mobnum].level == -99) || (mob_index[mobnum].spec == -99)) {
       // not inited, load to init
       if ((mob = read_mobile(mobnum, REAL)) != NULL) {
-        thing_to_room(mob, ROOM_VOID);   // prevents extracting from "nowhere"
+        thing_to_room(mob, Room::VOID);   // prevents extracting from "nowhere"
         delete mob;
         mob = NULL;
       } else 
@@ -1422,7 +1422,7 @@ void TBeing::lowRace(const char *arg)
          mob->mobVnum(), namebuf.c_str(), mob->GetMaxLevel(), mob->getClass(), mob->getHeight());
     str += buf2;
 
-    thing_to_room(mob,ROOM_VOID);
+    thing_to_room(mob,Room::VOID);
     delete mob;
     mob = NULL;
   }
@@ -1611,7 +1611,7 @@ void TBeing::lowMobs(const char *arg)
     if ((mob_index[mobnum].level == -99) || (mob_index[mobnum].spec == -99))
       // not inited, load to init
       if ((mob = read_mobile(mobnum, REAL)) != NULL) {
-        thing_to_room(mob, ROOM_VOID);      // prevents extracting from "nowhere"
+        thing_to_room(mob, Room::VOID);      // prevents extracting from "nowhere"
         delete mob;
         mob = NULL;
       } else 
@@ -1635,7 +1635,7 @@ void TBeing::lowMobs(const char *arg)
        mob->getFaction());
 
     str += buf2;
-    thing_to_room(mob,ROOM_VOID);
+    thing_to_room(mob,Room::VOID);
     delete mob;
     mob = NULL;
   }

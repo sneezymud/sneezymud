@@ -85,9 +85,9 @@ void TCookware::pourMeIntoDrink2(TBeing *ch, TBaseCup *from)
   }
 
   // get pool object
-  int robj = real_object(GENERIC_POOL);
+  int robj = real_object(Obj::GENERIC_POOL);
   if (robj < 0 || robj >= (signed int) obj_index.size()) {
-    vlogf(LOG_BUG, format("TCookware::pourMeIntoDrink2(): No object (%d) in database!") %  GENERIC_POOL);
+    vlogf(LOG_BUG, format("TCookware::pourMeIntoDrink2(): No object (%d) in database!") %  Obj::GENERIC_POOL);
     return;
   }
   

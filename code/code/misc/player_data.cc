@@ -968,7 +968,7 @@ void TBeing::saveChar(int load_room)
   link(buf, buf2);
 
   // save mobile followers
-  saveFollowers((load_room != ROOM_AUTO_RENT && load_room != ROOM_NOWHERE));
+  saveFollowers((load_room != Room::AUTO_RENT && load_room != Room::NOWHERE));
 
   // save career stats, saves info on desc, no need to use tmp
   saveCareerStats();

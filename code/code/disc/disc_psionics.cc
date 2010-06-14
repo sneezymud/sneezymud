@@ -430,16 +430,16 @@ void TBeing::doTelevision(const char *arg)
 
   target = vict->roomp->number;
 
-  if (target == ROOM_NOCTURNAL_STORAGE ||
-      target == ROOM_VOID ||
-      target == ROOM_IMPERIA ||
-      target == ROOM_HELL ||
-      target == ROOM_STORAGE ||
-      target == ROOM_POLY_STORAGE ||
-      target == ROOM_CORPSE_STORAGE ||
-      target == ROOM_Q_STORAGE ||
-      target == ROOM_DONATION ||
-      target == ROOM_DUMP) {
+  if (target == Room::NOCTURNAL_STORAGE ||
+      target == Room::VOID ||
+      target == Room::IMPERIA ||
+      target == Room::HELL ||
+      target == Room::STORAGE ||
+      target == Room::POLY_STORAGE ||
+      target == Room::CORPSE_STORAGE ||
+      target == Room::Q_STORAGE ||
+      target == Room::DONATION ||
+      target == Room::DUMP) {
     nothingHappens(SILENT_YES);
     act("You can't seem to look there right now.",
         false, this, 0, 0, TO_CHAR);

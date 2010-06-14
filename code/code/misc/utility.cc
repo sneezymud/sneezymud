@@ -362,7 +362,7 @@ bool TThing::hasObject(int ob_num)
 
 int roomOfObject(const TThing *t)
 {
-  if (t->in_room != ROOM_NOWHERE)
+  if (t->in_room != Room::NOWHERE)
     return t->in_room;
   else if (t->equippedBy)
     return t->equippedBy->in_room;
@@ -373,13 +373,13 @@ int roomOfObject(const TThing *t)
   else if (t->stuckIn)
     return t->stuckIn->in_room;
   else
-    return ROOM_NOWHERE;
+    return Room::NOWHERE;
 }
 
 // searches recursively and finds character holding the thing
 TThing *TThing::thingHolding() const
 {
-  if (in_room != ROOM_NOWHERE)
+  if (in_room != Room::NOWHERE)
     return NULL;
   else if (equippedBy)
     return equippedBy;
@@ -964,7 +964,7 @@ bool TObj::canSeeMe(const TBeing *ch, infraTypeT) const
 
   int room = roomOfObject(this);
 
-  if (room == ROOM_NOWHERE)
+  if (room == Room::NOWHERE)
     room = ch->in_room;
 
   if (!(rp = real_roomp(room))) 
@@ -1665,8 +1665,8 @@ void TThing::addToCarriedVolume(int num)
 bool TBeing::isElemental() const
 {
   int  mVn         = mobVnum();
-  bool isElemental = (mVn == FIRE_ELEMENTAL  || mVn == WATER_ELEMENTAL ||
-                        mVn == EARTH_ELEMENTAL || mVn == AIR_ELEMENTAL);
+  bool isElemental = (mVn == Mob::FIRE_ELEMENTAL  || mVn == Mob::WATER_ELEMENTAL ||
+                        mVn == Mob::EARTH_ELEMENTAL || mVn == Mob::AIR_ELEMENTAL);
   return isElemental;
 }
 

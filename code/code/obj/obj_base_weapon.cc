@@ -947,9 +947,9 @@ int TGenWeapon::smiteWithMe(TBeing *ch, TBeing *v)
   affectedData aff;
   byte bKnown = ch->getSkillValue(SKILL_SMITE);
 
-  if ((objVnum() != WEAPON_AVENGER1) &&
-      (objVnum() != WEAPON_AVENGER2) &&
-      (objVnum() != WEAPON_AVENGER3)) {
+  if ((objVnum() != Obj::WEAPON_AVENGER1) &&
+      (objVnum() != Obj::WEAPON_AVENGER2) &&
+      (objVnum() != Obj::WEAPON_AVENGER3)) {
     ch->sendTo(COLOR_OBJECTS, format("%s has no respect for someone using %s.\n\r") %
         sstring(ch->yourDeity(SKILL_SMITE, FIRST_PERSON)).cap() % getName());
     return FALSE;

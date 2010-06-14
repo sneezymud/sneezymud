@@ -765,7 +765,7 @@ int throwThing(TThing *t, dirTypeT dir, int from, TBeing **targ, int dist, int m
   if (!rp) {
     vlogf(LOG_BUG, format("%s thrown into non-existant room #%d") %  capbuf % from);
     --(*t);
-    thing_to_room(t, ROOM_VOID);
+    thing_to_room(t, Room::VOID);
     return FALSE;
   }
   return FALSE;
@@ -1192,13 +1192,13 @@ TThing *has_range_object(TBeing *ch, int *pos)
 int go_ok(roomDirData *exitp)
 {
   return (!IS_SET(exitp->condition, EX_CLOSED | EX_LOCKED | EX_SECRET) &&
-          (exitp->to_room != ROOM_NOWHERE));
+          (exitp->to_room != Room::NOWHERE));
 }
 
 int go_ok_smarter(roomDirData *exitp)
 {
   return (!IS_SET(exitp->condition, EX_LOCKED | EX_SECRET) &&
-          (exitp->to_room != ROOM_NOWHERE));
+          (exitp->to_room != Room::NOWHERE));
 }
 
 

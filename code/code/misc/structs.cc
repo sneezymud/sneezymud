@@ -99,9 +99,9 @@ TBeing::~TBeing()
   TRoom *rp = NULL;
   int rc = 0;
 
-  if ((!roomp || in_room == ROOM_NOWHERE) &&
+  if ((!roomp || in_room == Room::NOWHERE) &&
       (!desc || !desc->connected || desc->connected >= CON_REDITING)) {
-    if (in_room != ROOM_NOWHERE || parent)
+    if (in_room != Room::NOWHERE || parent)
       --(*this);
     else if (stuckIn) {
       if (eq_stuck > WEAR_NOWHERE) {
@@ -124,7 +124,7 @@ TBeing::~TBeing()
 
     // put um somewhere, we use to warn here but I see no good reason for
     // a warning about extracting from NOWHERE
-    thing_to_room(this, ROOM_VOID);
+    thing_to_room(this, Room::VOID);
   }
 
   // yank um out of casino situations
@@ -382,7 +382,7 @@ TObj::~TObj()
     }
   }
 
-  if (in_room != ROOM_NOWHERE || parent)
+  if (in_room != Room::NOWHERE || parent)
     --(*this);
   else if (stuckIn) {
     if (eq_stuck > WEAR_NOWHERE) {
@@ -506,7 +506,7 @@ TRoom::~TRoom()
     TMonster *tMonster = dynamic_cast<TMonster *>(t);
 
     if (tMonster)
-      tMonster->brtRoom = ROOM_NOWHERE;
+      tMonster->brtRoom = Room::NOWHERE;
   }
 
   for(StuffIter it=stuff.begin();it!=stuff.end();){
@@ -681,8 +681,8 @@ TThing& TThing::operator += (TThing& t)
   mud_assert(t.stuckIn == NULL, "TThing += : t.stuckIn existed");
   mud_assert(t.roomp == NULL, "TThing += : t.roomp existed");
   //
-  mud_assert(((t.inRoom() == ROOM_VOID) || (t.inRoom() == ROOM_NOWHERE) ||
-              (t.inRoom() == ROOM_AUTO_RENT)),
+  mud_assert(((t.inRoom() == Room::VOID) || (t.inRoom() == Room::NOWHERE) ||
+              (t.inRoom() == Room::AUTO_RENT)),
       "TThing += with t.inRoom()");
 
   TMergeable *tm=dynamic_cast<TMergeable *>(&t);
@@ -838,7 +838,7 @@ TThing& TThing::operator -- ()
     // obj from obj
     mud_assert(!t_in->stuff.empty(), "TThing -- : parent had no stuff");
     mud_assert(roomp == NULL, "TThing -- : had roomp and parent simultaneously");
-    mud_assert(inRoom() == ROOM_NOWHERE || inRoom() == ROOM_AUTO_RENT, 
+    mud_assert(inRoom() == Room::NOWHERE || inRoom() == Room::AUTO_RENT, 
             "TThing -- : had parent and in room simultaneously");
 
     if (t_in->stuff.front() == this)       
@@ -920,7 +920,7 @@ TThing& TThing::operator -- ()
   equippedBy = NULL;
   stuckIn = NULL;
   parent = NULL;
-  in_room = ROOM_NOWHERE;
+  in_room = Room::NOWHERE;
   roomp = NULL;
 
   return *this;
@@ -1084,7 +1084,7 @@ TThing::TThing() :
   eq_stuck(WEAR_NOWHERE),
   act_ptr(NULL),
   max_exist(9999),
-  in_room(ROOM_NOWHERE),
+  in_room(Room::NOWHERE),
   spec(0),
   snum(-1),
   number(0), 
@@ -1157,7 +1157,7 @@ specialData::specialData() :
   edit(MAIN_MENU),
   editFriend(0),
   act(0),
-  was_in_room(ROOM_NOWHERE),
+  was_in_room(Room::NOWHERE),
   zone(-1)
 {
   for(int i=0;i<MAX_COND_TYPE;++i)

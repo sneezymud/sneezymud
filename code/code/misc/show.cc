@@ -75,7 +75,7 @@ void TObj::show_me_to_char(TBeing *ch, showModeT mode) const
     if (roomp && roomp->isWaterSector() && 
         !isObjStat(ITEM_HOVER) &&
         !isObjStat(ITEM_FLOAT) &&
-        !objVnum() == GENERIC_FLARE ) {
+        !objVnum() == Obj::GENERIC_FLARE ) {
       buffer = format("%s is floating here.") % getName();
       buffer=buffer.cap();
     } else {

@@ -232,7 +232,7 @@ int TStaff::useMe(TBeing *ch, const char * argument)
   bool isViolent = FALSE;
   spellNumT the_spell = getSpell();
   bool sleepTag = FALSE;
-  if (objVnum() == OBJ_SLEEPTAG_STAFF) {
+  if (objVnum() == Obj::SLEEPTAG_STAFF) {
     if (!ch->hasWizPower(POWER_GOD) && !ch->inLethargica()) {
       ch->sendTo("You can only use that staff in Lethargica.\n\r");
       return FALSE;
@@ -249,7 +249,7 @@ int TStaff::useMe(TBeing *ch, const char * argument)
   if (getCurCharges() > 0) {        // Is there any charges left?
     addToCurCharges(-1);
     if (!ch->isLucky(200 + ch->spellLuckModifier(the_spell)) &&
-        (objVnum() != OBJ_SLEEPTAG_STAFF)) {
+        (objVnum() != Obj::SLEEPTAG_STAFF)) {
       act("The $o blows sparks out one end, something went wrong!",TRUE,ch, this,0,TO_CHAR);
       act("$n's $o blows sparks out one end, something went wrong!",TRUE,ch, this,0,TO_ROOM);
       act("You should gain more experience before using such powerful items of magic.",TRUE, ch, this,0,TO_CHAR);

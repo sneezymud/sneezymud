@@ -64,7 +64,7 @@ int TSeeThru::getTarget(int *isRandom) const
 
   if (tValue < 0) {
     int         tExitObject = -(tValue),
-                tExitRoom   = ROOM_NOWHERE,
+                tExitRoom   = Room::NOWHERE,
                 tMatches    = 0;
     const TObj *tObj;
     TRoom      *tRoom;

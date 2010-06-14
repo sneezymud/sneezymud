@@ -69,7 +69,7 @@ int astralWalk(TBeing * caster, TBeing * victim, int level, short bKnown)
 
 
   if((tmon=dynamic_cast<TMonster *>(victim)) && 
-     ((tmon->mobVnum()==MOB_TIGER_SHARK) || (tmon->mobVnum()==MOB_ELEPHANT))){
+     ((tmon->mobVnum()==Mob::TIGER_SHARK) || (tmon->mobVnum()==Mob::ELEPHANT))){
     act("$d refuses to let you astral walk there.", FALSE, caster, 0, 0, TO_CHAR);
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
     return SPELL_FAIL;  
@@ -372,7 +372,7 @@ int wordOfRecall(TBeing * caster, TBeing * victim, int, short bKnown)
     else if (victim->player.hometown)
       location = victim->player.hometown;
     else
-      location = ROOM_CS;
+      location = Room::CS;
     ret=SPELL_SUCCESS;
   } else if (!victim->desc) {
     ret = SPELL_FAIL;
@@ -400,7 +400,7 @@ int wordOfRecall(TBeing * caster, TBeing * victim, int, short bKnown)
 	    room = (!room) ? 0 : (room->isRoomFlag(ROOM_PRIVATE) ? 0 : room);
 #if FACTIONS_IN_USE
         } else {
-          location = ROOM_HELL;
+          location = Room::HELL;
           act("$d is upset with your unwillingness to properly serve!", 
               FALSE, caster, NULL, NULL, TO_CHAR);
           sprintf(buf, "He sends %s to Hell!", (caster == victim) ? "you" : "$N");
@@ -487,8 +487,8 @@ int summon(TBeing * caster, TBeing * victim, int level, short bKnown)
   // check for immunity to summon
   // prevent some mobs used in quests from being moved around
   if(((immun > 0) && ::number(0,100)<=immun) || 
-     (tmon && ((tmon->mobVnum()==MOB_TIGER_SHARK) || 
-	       (tmon->mobVnum()==MOB_ELEPHANT)))){
+     (tmon && ((tmon->mobVnum()==Mob::TIGER_SHARK) || 
+	       (tmon->mobVnum()==Mob::ELEPHANT)))){
     act("You feel unable to summon $N.", FALSE, caster, NULL, victim, TO_CHAR);
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
     return SPELL_FAIL;
@@ -539,7 +539,7 @@ int summon(TBeing * caster, TBeing * victim, int level, short bKnown)
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
     return SPELL_FAIL;
   }
-  if (victim->inRoom() == ROOM_NOWHERE) {
+  if (victim->inRoom() == Room::NOWHERE) {
     act("$N cannot be summoned at the moment!", 
             FALSE, caster, NULL, victim, TO_CHAR);
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);

@@ -30,7 +30,7 @@ void BaccaratGame::baccarat_shuffle(const TBeing *ch)
 
 bool TBeing::checkBaccarat(bool inGame) const
 {
-  if (in_room == ROOM_BACCARAT && (inGame || (gBaccarat.index(this) > -1)))
+  if (in_room == Room::BACCARAT && (inGame || (gBaccarat.index(this) > -1)))
     return true;
   else
     return false;

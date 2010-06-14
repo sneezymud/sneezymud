@@ -50,7 +50,7 @@ int task_scribe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
           ch->sendTo(format("You continue drafting your scroll%s.\n\r") % (how_many == 1 ? "" : "s"));
           ch->addToMana(-resulting);
         } else {
-          obj = read_object(OBJ_GENERIC_SCROLL, VIRTUAL);
+          obj = read_object(Obj::GENERIC_SCROLL, VIRTUAL);
           scroll_obj = dynamic_cast<TScroll *>(obj);
           if (!scroll_obj) {
             vlogf(LOG_BUG, "Error creating generic scroll for scribe skill.");

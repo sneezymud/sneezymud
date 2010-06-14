@@ -2014,12 +2014,12 @@ void TRoom::loadItems()
   // clean up non-linkbag objects and place it into another bag to be
   // neat and tidy.  We also look for the link-note that we put inside
   // the bag and purge the bag if it's here for too long.
-  if (number == ROOM_STORAGE) {
+  if (number == Room::STORAGE) {
     /*vlogf(LOG_LOW, "Storage: Booting Storage Room");
 
     TThing * tThing,
       * tCont=NULL;
-    TObj   * tBag = read_object(GENERIC_L_BAG, VIRTUAL);
+    TObj   * tBag = read_object(Obj::GENERIC_L_BAG, VIRTUAL);
     TBag   * tContainer;
     char     tString[256];
     charFile tSt;
@@ -2408,7 +2408,7 @@ void TBeing::assignCorpsesToRooms()
   ItemLoad il;
 
   sprintf(buf, "corpses/%s", sstring(name).lower().c_str());
-  rp = real_roomp(ROOM_CORPSE_STORAGE);
+  rp = real_roomp(Room::CORPSE_STORAGE);
 
 // HAVE A BEING CALL THIS WHEN LOGGING IN
 //  sprintf(buf, "rent/%c/%s", LOWER(tmp->name[0]), tmp->name.lower());
@@ -2467,20 +2467,20 @@ void TBeing::assignCorpsesToRooms()
 //      corpse->obj_flags.decay_time = max(corpse->obj_flags.decay_time, MAX_PC_CORPSE_EQUIPPED_TIME);
     }
     if (!corpse->getRoomNum()) {
-      rp2 = real_roomp(ROOM_STORAGE);
+      rp2 = real_roomp(Room::STORAGE);
       if (corpse->roomp)
         --(*corpse);
       *rp2 += *corpse; 
-      vlogf(LOG_BUG, format("%s distributed to Storage Room (%d).") %  corpse->getName() % ROOM_STORAGE);
+      vlogf(LOG_BUG, format("%s distributed to Storage Room (%d).") %  corpse->getName() % Room::STORAGE);
       sendTo(COLOR_BASIC, "<r>*** You had a CORPSE placed in the storage area. See a god to get it back. *** <z>\n\r");
     } else {
       rp2 = real_roomp(corpse->getRoomNum());
       if (!rp2) {
-        rp2 = real_roomp(ROOM_STORAGE);
+        rp2 = real_roomp(Room::STORAGE);
         if (corpse->roomp)
           --(*corpse);
         *rp2 += *corpse;
-        vlogf(LOG_BUG, format("%s distributed to Storage Room (%d).") %  corpse->getName() % ROOM_STORAGE);
+        vlogf(LOG_BUG, format("%s distributed to Storage Room (%d).") %  corpse->getName() % Room::STORAGE);
       sendTo(COLOR_BASIC, "<r>*** You had a CORPSE placed in the storage area. See a god to get it back. ***<z>\n\r");
       } else {
         if (corpse->roomp)
@@ -2775,12 +2775,12 @@ void TPerson::loadRent()
 #endif
 
   // Three hour grace period after crash or autorent. 
-  if (!FreeRent && in_room == ROOM_NOWHERE && 
+  if (!FreeRent && in_room == Room::NOWHERE && 
       (il.st.first_update+ 3*SECS_PER_REAL_HOUR > time(0))) {
     vlogf(LOG_PIO, "Character reconnecting inside grace period.");
     sendTo("You connected within the autorent grace period.\n\r");
   } else {
-    if (in_room == ROOM_NOWHERE) {
+    if (in_room == Room::NOWHERE) {
       vlogf(LOG_PIO, "Char reconnecting after autorent");
       applyAutorentPenalties(time(0) - il.st.first_update);
     } else {
@@ -3573,7 +3573,7 @@ void printLimitedInRent(void)
            obj_index[i].virt % obj_index[i].getNumber() % obj_index[i].max_exist);
       if (obj_index[i].getNumber() > obj_index[i].max_exist &&
           obj_index[i].max_exist) {
-        // latter condition is because DEITY_TOKEN max exist = 0
+        // latter condition is because Obj::DEITY_TOKEN max exist = 0
         char buf[1024];
         sprintf(buf, "Item (%s:%d) is over max (%d).  Num: (%d).\n\r", 
             obj_index[i].name, obj_index[i].virt,
@@ -4132,7 +4132,7 @@ float old_ac_lev = mob->getACLevel();
 
       vlogf(LOG_PIO, format("     [%d] - mobile (%s) owned by %s") % 
                      mob->mobVnum() % mob->getName() % arg);
-      thing_to_room(mob, ROOM_VOID);
+      thing_to_room(mob, Room::VOID);
       delete mob;
     }
   }
@@ -4218,8 +4218,8 @@ void chargeRent(const char *who)
 
   days_passed = ((time(0) - h.last_update) / SECS_PER_REAL_DAY);
   secs_lost = ((time(0) - h.last_update) % SECS_PER_REAL_DAY);
-  if (pd.load_room == ROOM_AUTO_RENT) {        // this person was autorented 
-    pd.load_room = ROOM_NOWHERE;
+  if (pd.load_room == Room::AUTO_RENT) {        // this person was autorented 
+    pd.load_room = Room::NOWHERE;
     h.last_update = time(0);
     if (!noteLimitedItems(fp, who, h.version, immortal)) {
       vlogf(LOG_BUG, format("cannot count (1) limited items for %s") %  h.owner);
@@ -4268,7 +4268,7 @@ void chargeRent(const char *who)
                 h.owner % total % (h.gold_left + pd.bankmoney));
       pd.money = 0;
       pd.bankmoney = 0;
-      pd.load_room = ROOM_NOWHERE;
+      pd.load_room = Room::NOWHERE;
       if (!noteLimitedItems(fp, who, h.version, immortal)) {
         vlogf(LOG_BUG, format("cannot count (2) limited items for %s") %  h.owner);
         fclose(fp);

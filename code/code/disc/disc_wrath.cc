@@ -29,15 +29,15 @@ int plagueOfLocusts(TBeing *caster, TBeing *victim, int level, short bKnown)
     return SPELL_FAIL;
   }
   if (level < 26) 
-    swarm = MOB_LOCUSTS25;
+    swarm = Mob::LOCUSTS25;
   else if (level < 31) 
-    swarm = MOB_LOCUSTS30;
+    swarm = Mob::LOCUSTS30;
   else if (level < 36) 
-    swarm = MOB_LOCUSTS35;
+    swarm = Mob::LOCUSTS35;
   else if (level < 41) 
-    swarm = MOB_LOCUSTS40;
+    swarm = Mob::LOCUSTS40;
   else 
-    swarm = MOB_LOCUSTS50;
+    swarm = Mob::LOCUSTS50;
 
   if (!(locusts = read_mobile(swarm, VIRTUAL))) {
     vlogf(LOG_BUG, "Spell PLAGUE_LOCUSTS unable to load mob...");
@@ -241,7 +241,7 @@ int pillarOfSalt(TBeing * caster, TBeing * victim, int level, short bKnown, int 
         act(buf, FALSE, caster, NULL, victim, TO_CHAR);
 
         victim->dropWeapon(slot);
-        *victim->roomp += *read_object(OBJ_SALTPILE, VIRTUAL);
+        *victim->roomp += *read_object(Obj::SALTPILE, VIRTUAL);
 
         break;
       case CRIT_S_TRIPLE:
@@ -669,7 +669,7 @@ int earthquake(TBeing *caster, int level, short bKnown, spellNumT spell, int adv
           }
         }
       } else if ((caster != tmp_victim) &&
-        	 (tmp_victim->in_room != ROOM_NOWHERE) &&
+        	 (tmp_victim->in_room != Room::NOWHERE) &&
 		 (caster->roomp->getZoneNum() == tmp_victim->roomp->getZoneNum())) {
 	tmp_victim->sendTo("The earth shakes for a moment...\n\r");
 	if ((tmp_victim->getPosition() > POSITION_SITTING) &&

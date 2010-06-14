@@ -9,12 +9,12 @@
 // returns DELETE_THIS
 int goToMorgue(TBeing *myself)
 {
-  int room = ROOM_MORGUE;
+  int room = Room::MORGUE;
   dirTypeT dir;
   int rc;
   TPathFinder path;
 
-  if (myself->in_room != ROOM_MORGUE) {
+  if (myself->in_room != Room::MORGUE) {
     if((dir=path.findPath(myself->in_room, findRoom(room))) < 0){
       // unable to find a path 
       if (room >= 0) {
@@ -93,7 +93,7 @@ int coroner(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   }
   
   // pick up corpses
-  if(myself->inRoom() != ROOM_MORGUE && found < 3){
+  if(myself->inRoom() != Room::MORGUE && found < 3){
     // look for a corpse
     for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end();){
       t=*(it++);

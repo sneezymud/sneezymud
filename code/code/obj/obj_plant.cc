@@ -345,7 +345,7 @@ void TPlant::updateDesc()
 		  if (tree_count > 1 && ::number(1, 100000) < (int) ((tree_count / 16) * 200)) {
 			// this is about a 17% chance per MUD day for a room of 8 laden trees
 			// 5% for a room of 2 trees
-			int mob_vnum = MOB_CANDY_HEART_EATER; // sugar-toothed weasel
+			int mob_vnum = Mob::CANDY_HEART_EATER; // sugar-toothed weasel
 		    TBeing *mob = read_mobile(mob_vnum, VIRTUAL);
 		    if (!mob) {
 		      // vlogf(LOG_PROC, format("Failed attempt to spawn a fruit scavenger (%i) in room %i.") % mob_vnum % in_room);

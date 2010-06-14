@@ -268,7 +268,7 @@ bool TBeing::validMove(dirTypeT cmd)
   tbt = dynamic_cast<TBeing *>(riding);
   tmon=dynamic_cast<TMonster *>(riding);
   if(!tmon ||
-     tmon->mobVnum()!=MOB_ELEPHANT ||
+     tmon->mobVnum()!=Mob::ELEPHANT ||
      !hasQuestBit(TOG_MONK_GREEN_STARTED)){
     if (tbt && tbt->willBumpHeadDoor(exitp, &iHeight)) {
       sendTo("Your mount refuses to go that way.\n\r");
@@ -312,11 +312,11 @@ int TBeing::checkPassWard(dirTypeT cmd) const
    }
 
    switch (rp) {
-     case (ROOM_WARD_1):
-     case (ROOM_WARD_2):
+     case (Room::WARD_1):
+     case (Room::WARD_2):
        tmp = dynamic_cast<TObj *>(equipment[WEAR_NECK]);
        if (tmp) {
-         if (tmp->objVnum() == OBJ_TALISMAN) {
+         if (tmp->objVnum() == Obj::TALISMAN) {
            act("There is a disturbance in the air around you.",
                TRUE, this, 0, 0, TO_CHAR);
            act("There is a disturbance in the air around $n.",
@@ -514,7 +514,7 @@ int TBeing::rawMove(dirTypeT dir)
   }
   if (!to_here) {
     --(*this);
-    thing_to_room(this, ROOM_VOID);
+    thing_to_room(this, Room::VOID);
     sendTo(format("Uh-oh.  The %s melts beneath you as you fall into the swirling chaos.\n\r") % roomp->describeGround());
     doLook("room", CMD_LOOK);
     return TRUE;
@@ -1703,11 +1703,11 @@ int TBeing::genericMovedIntoRoom(TRoom *rp, int was_in,
   if (inRoom() == AVENGER_ROOM && hasQuestBit(TOG_AVENGER_HUNTING)) {
     // avenger quest, hunting troll set and got to right room
 
-    if (mob_index[real_mobile(MOB_TROLL_GIANT)].getNumber()) {
+    if (mob_index[real_mobile(Mob::TROLL_GIANT)].getNumber()) {
       // don't load unless unique
       return TRUE;
     }
-    if (!(mob = read_mobile(MOB_TROLL_GIANT, VIRTUAL))) {
+    if (!(mob = read_mobile(Mob::TROLL_GIANT, VIRTUAL))) {
       vlogf(LOG_BUG, "Problem loading mob for quest.");
       return TRUE;
     }
@@ -1719,11 +1719,11 @@ int TBeing::genericMovedIntoRoom(TRoom *rp, int was_in,
 
   if (in_room == ROOM_VINDICATOR_2 && hasQuestBit(TOG_VINDICATOR_HUNTING_2)) {
     // vindicator quest, hunting tree spirit set and got to right room
-    if (mob_index[real_mobile(MOB_TREE_SPIRIT)].getNumber()) {
+    if (mob_index[real_mobile(Mob::TREE_SPIRIT)].getNumber()) {
       // don't load unless unique
       return TRUE;
     }
-    if (!(mob = read_mobile(MOB_TREE_SPIRIT, VIRTUAL))) {
+    if (!(mob = read_mobile(Mob::TREE_SPIRIT, VIRTUAL))) {
       vlogf(LOG_BUG, "Problem loading mob for quest.");
       return TRUE;
     }
@@ -3467,7 +3467,7 @@ int TBeing::doMortalGoto(const sstring & argument)
   if(is_abbrev(arg, "fairfight")){
     fair_fight=true;
   } else if (is_abbrev(arg, "cs") || is_abbrev(arg, "center")) {
-    targ_rm = ROOM_CS;
+    targ_rm = Room::CS;
   } else if (is_abbrev(arg, "mail") || is_abbrev(arg, "postoffice")) {
     targ_rm = 406;
   } else if (is_abbrev(arg, "sharpener") || is_abbrev(arg, "beavis")) {
@@ -3517,7 +3517,7 @@ int TBeing::doMortalGoto(const sstring & argument)
   } else if (is_abbrev(arg, "monogramming") || is_abbrev(arg, "hornsby")) {
     targ_rm = 569;
   } else if (is_abbrev(arg, "donation") || is_abbrev(arg, "surplus")) {
-    targ_rm = ROOM_DONATION;
+    targ_rm = Room::DONATION;
   } else if (is_abbrev(arg, "dump") || is_abbrev(arg, "maurice")) {
     targ_rm = 600;
   } else if (is_abbrev(arg, "newbie") || is_abbrev(arg, "park")) {
@@ -3613,7 +3613,7 @@ int TBeing::doMortalGoto(const sstring & argument)
     targ_ch = 290;
   } else if (is_abbrev(arg, "combat_trainer") ||
              is_abbrev(arg, "combat-trainer")) {
-    targ_ch = MOB_COMBAT_TRAINER;
+    targ_ch = Mob::COMBAT_TRAINER;
   } else if (is_abbrev(arg, "thief_entrance") ||
 	     is_abbrev(arg, "thief-entrance")) {
     targ_rm = 634;

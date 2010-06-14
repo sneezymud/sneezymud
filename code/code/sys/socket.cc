@@ -1040,7 +1040,7 @@ bool procObjAutoPlant::run(const TPulse &pl, TObj *obj) const
     if(count<8){
       TObj *tp;
       TPlant *tplant;
-      tp = read_object(OBJ_GENERIC_PLANT, VIRTUAL);
+      tp = read_object(Obj::GENERIC_PLANT, VIRTUAL);
       if((tplant=dynamic_cast<TPlant *>(tp))){
 	tplant->setType(seed_to_plant(obj->objVnum()));
 	tplant->updateDesc();
@@ -1663,7 +1663,7 @@ bool procCharVampireBurn::run(const TPulse &pl, TBeing *tmp_ch) const
   // check for vampires in daylight
   if(!tmp_ch->roomp->isIndoorSector() && 
      !tmp_ch->roomp->isRoomFlag(ROOM_INDOORS) &&
-     (tmp_ch->inRoom() != ROOM_VOID) && Weather::sunIsUp()){
+     (tmp_ch->inRoom() != Room::VOID) && Weather::sunIsUp()){
     
     if(tmp_ch->hasQuestBit(TOG_VAMPIRE)){
       act("<r>Exposure to sunlight causes your skin to ignite!<1>",

@@ -26,13 +26,13 @@ int personalize_object(TBeing *deity, TBeing *ch, int virt, int decay)
   buf=format("This is the personalized object of %s") % ch->getName();
 
   obj->swapToStrung();
-  if ((virt == WEAPON_AVENGER1) || 
-      (virt == WEAPON_AVENGER2) ||
-      (virt == WEAPON_AVENGER3))
+  if ((virt == Obj::WEAPON_AVENGER1) || 
+      (virt == Obj::WEAPON_AVENGER2) ||
+      (virt == Obj::WEAPON_AVENGER3))
     obj->addObjStat(ITEM_NOPURGE);
 
   // this will make tokens free-rent
-  if (virt == DEITY_TOKEN)
+  if (virt == Obj::DEITY_TOKEN)
     obj->obj_flags.cost = 0;
 
   delete [] obj->action_description;
@@ -80,8 +80,8 @@ int resize_personalize_object(TBeing *deity, TBeing *ch, int virt, int decay)
   // end resize
 
   obj->swapToStrung();
-  if ((virt == WEAPON_AVENGER1) || (virt == WEAPON_AVENGER2) ||
-      (virt == WEAPON_AVENGER3))
+  if ((virt == Obj::WEAPON_AVENGER1) || (virt == Obj::WEAPON_AVENGER2) ||
+      (virt == Obj::WEAPON_AVENGER3))
     obj->addObjStat(ITEM_NOPURGE);
 
   delete [] obj->action_description;
@@ -147,13 +147,13 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
       case 90:
         // Nice token that decays in 100 ticks. 
         deity->doSay("You are a paragon of virtue.");
-        if (personalize_object(deity, ch, DEITY_TOKEN, 100) == DELETE_THIS)
+        if (personalize_object(deity, ch, Obj::DEITY_TOKEN, 100) == DELETE_THIS)
           return DELETE_THIS;
         break;
       case 91:
         // Nice token that decays in 150 ticks. 
         deity->doSay("You are a paragon of virtue.");
-        if (personalize_object(deity, ch, DEITY_TOKEN, 150) == DELETE_THIS)
+        if (personalize_object(deity, ch, Obj::DEITY_TOKEN, 150) == DELETE_THIS)
           return DELETE_THIS;
         break;
       case 92:
@@ -164,7 +164,7 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
           deity->setSkillValue(SPELL_SANCTUARY,120);
 
         sanctuary(deity,ch);
-        if (personalize_object(deity, ch, DEITY_TOKEN, 200) == DELETE_THIS)
+        if (personalize_object(deity, ch, Obj::DEITY_TOKEN, 200) == DELETE_THIS)
           return DELETE_THIS;
         break;
       case 94:
@@ -177,7 +177,7 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
           deity->setSkillValue(SPELL_SANCTUARY,120);
 
         sanctuary(deity,ch);
-        if (personalize_object(deity, ch, DEITY_TOKEN, 200) == DELETE_THIS)
+        if (personalize_object(deity, ch, Obj::DEITY_TOKEN, 200) == DELETE_THIS)
           return DELETE_THIS;
         break;
       case 96:
@@ -190,7 +190,7 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
           deity->setSkillValue(SPELL_SANCTUARY,120);
 
         sanctuary(deity,ch);
-        if (personalize_object(deity, ch, DEITY_TOKEN, 200) == DELETE_THIS)
+        if (personalize_object(deity, ch, Obj::DEITY_TOKEN, 200) == DELETE_THIS)
           return DELETE_THIS;
         break;
       case 98:
@@ -202,7 +202,7 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
           deity->setSkillValue(SPELL_SANCTUARY,120);
 
         sanctuary(deity,ch);
-        if (personalize_object(deity, ch, DEITY_TOKEN, 250) == DELETE_THIS)
+        if (personalize_object(deity, ch, Obj::DEITY_TOKEN, 250) == DELETE_THIS)
           return DELETE_THIS;
         break;
       case 99:
@@ -214,7 +214,7 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
           deity->setSkillValue(SPELL_SANCTUARY,120);
 
         sanctuary(deity,ch);
-        if (personalize_object(deity, ch, DEITY_TOKEN, 300) == DELETE_THIS)
+        if (personalize_object(deity, ch, Obj::DEITY_TOKEN, 300) == DELETE_THIS)
           return DELETE_THIS;
         break;
       case 100:
@@ -226,7 +226,7 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
           deity->setSkillValue(SPELL_SANCTUARY,120);
 
         sanctuary(deity,ch);
-        if (personalize_object(deity, ch, DEITY_TOKEN, 500) == DELETE_THIS)
+        if (personalize_object(deity, ch, Obj::DEITY_TOKEN, 500) == DELETE_THIS)
           return DELETE_THIS;
         break;
       default:

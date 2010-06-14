@@ -19,256 +19,256 @@
 
 TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
 {
-  {"", MOB_NONE},      // 0           Leave Blank
-  {"Avenger Quest: eligible", MOB_NONE},
-  {"Avenger Quest: got rules", MOB_BISHOP_BMOON},
-  {"Avenger Quest: hunting troll", MOB_BISHOP_BMOON},
-  {"Avenger Quest: killed troll", MOB_TROLL_GIANT},
-  {"Avenger Quest: quest finale", MOB_BISHOP_BMOON},    //  5
-  {"Avenger Quest: has avenger", MOB_KING_GH},
-  {"Avenger Quest: failed", MOB_NONE},
-  {"Avenger Quest: penanced", MOB_OLD_WOMAN},
-  {"Vindicator Quest: eligible", MOB_NONE},
-  {"Vindicator Quest: found blacksmith", MOB_FISTLAND}, // 10
-  {"Vindicator Quest: hunting captain", MOB_FISTLAND},
-  {"Vindicator Quest: killed captain", MOB_CAPTAIN_RYOKEN},
-  {"Vindicator Quest: failed task", MOB_NONE},
-  {"Vindicator Quest: right ore", MOB_FISTLAND},
-  {"Vindicator Quest: start (2)", MOB_FISTLAND},  // 15
-  {"Vindicator Quest: seeking phoenix", MOB_FISTLAND},
-  {"Vindicator Quest: phoenix found", MOB_PHOENIX},
-  {"Vindicator Quest: hunting demon", MOB_PHOENIX},
-  {"Vindicator Quest: killed demon", MOB_NONE},
-  {"Vindicator Quest: failed task (2)", MOB_NONE},  // 20
-  {"Vindicator Quest: got feather", MOB_PHOENIX},
-  {"Vindicator Quest: right feather", MOB_FISTLAND},
-  {"Vindicator Quest: has vindicator", MOB_FISTLAND},
-  {"Vindicator Quest: rules dishonor", MOB_FISTLAND},
-  {"Vindicator Quest: seeking penance", MOB_GM_IRIS},  // 25
-  {"Vindicator Quest: got penance object", MOB_NITELLION},
-  {"Vindicator Quest: purified", MOB_GM_IRIS},
-  {"Ranger 1st Quest: Found Hermit", MOB_HERMIT_GHPARK},
+  {"", Mob::NONE},      // 0           Leave Blank
+  {"Avenger Quest: eligible", Mob::NONE},
+  {"Avenger Quest: got rules", Mob::BISHOP_BMOON},
+  {"Avenger Quest: hunting troll", Mob::BISHOP_BMOON},
+  {"Avenger Quest: killed troll", Mob::TROLL_GIANT},
+  {"Avenger Quest: quest finale", Mob::BISHOP_BMOON},    //  5
+  {"Avenger Quest: has avenger", Mob::KING_GH},
+  {"Avenger Quest: failed", Mob::NONE},
+  {"Avenger Quest: penanced", Mob::OLD_WOMAN},
+  {"Vindicator Quest: eligible", Mob::NONE},
+  {"Vindicator Quest: found blacksmith", Mob::FISTLAND}, // 10
+  {"Vindicator Quest: hunting captain", Mob::FISTLAND},
+  {"Vindicator Quest: killed captain", Mob::CAPTAIN_RYOKEN},
+  {"Vindicator Quest: failed task", Mob::NONE},
+  {"Vindicator Quest: right ore", Mob::FISTLAND},
+  {"Vindicator Quest: start (2)", Mob::FISTLAND},  // 15
+  {"Vindicator Quest: seeking phoenix", Mob::FISTLAND},
+  {"Vindicator Quest: phoenix found", Mob::PHOENIX},
+  {"Vindicator Quest: hunting demon", Mob::PHOENIX},
+  {"Vindicator Quest: killed demon", Mob::NONE},
+  {"Vindicator Quest: failed task (2)", Mob::NONE},  // 20
+  {"Vindicator Quest: got feather", Mob::PHOENIX},
+  {"Vindicator Quest: right feather", Mob::FISTLAND},
+  {"Vindicator Quest: has vindicator", Mob::FISTLAND},
+  {"Vindicator Quest: rules dishonor", Mob::FISTLAND},
+  {"Vindicator Quest: seeking penance", Mob::GM_IRIS},  // 25
+  {"Vindicator Quest: got penance object", Mob::NITELLION},
+  {"Vindicator Quest: purified", Mob::GM_IRIS},
+  {"Ranger 1st Quest: Found Hermit", Mob::HERMIT_GHPARK},
 
-  {"Immortal Quest: On Quest", MOB_NONE},
-  {"Silverclaw Quest: find Scar", MOB_SILVERCLAW},  // 30
-  {"Silverclaw Quest: gave collar", MOB_SCAR},
-  {"Silverclaw Quest: find map", MOB_HOBBIT_ADVENTURER},
-  {"Silverclaw Quest: find Gruum", MOB_HOBBIT_ADVENTURER},
-  {"Silverclaw Quest: find Warlord", MOB_GRUUM},   
-  {"Silverclaw Quest: find Bishop", MOB_GRUUM}, // 35 
-  {"Silverclaw Quest: find tablet", MOB_GHOST_BISHOP},
-  {"Silverclaw Quest: on solo", MOB_GHOST_BISHOP},
-  {"Silverclaw Quest: load tablet", MOB_UNDEAD_CHIEF}, 
-  {"Silverclaw Quest: find cloud dragon", MOB_DRAGON_CLOUD},
-  {"Silverclaw Quest: find bronze dragon", MOB_DRAGON_BRONZE}, // 40
-  {"Silverclaw Quest: find worker dragon", MOB_DRAGON_WORKER},  
-  {"Silverclaw Quest: find gold dragon", MOB_DRAGON_GOLD},
-  {"Silverclaw Quest: find silver dragon", MOB_DRAGON_SILVER},
-  {"Silverclaw Quest: find Raliki", MOB_RALIKI},
-  {"Silverclaw Quest: kill Raliki", MOB_RALIKI}, // 45 
-  {"Holy Devastator Quest:  find Miser Ben", MOB_CREED},
-  {"Holy Devastator Quest:  took bribe", MOB_MISER_BEN},
-  {"Holy Devastator Quest:  find opal", MOB_CREED},
-  {"Holy Devastator Quest:  do riddle", MOB_CREED},
-  {"Holy Devastator Quest:  killed Miser Ben", MOB_MISER_BEN},  // 50
-  {"Holy Devastator Quest:  find medicine man", MOB_SPARTAGUS},
-  {"Holy Devastator Quest:  searching for crucifix", MOB_MEDICINE_MAN},
-  {"Holy Devastator Quest:  found crucifix", MOB_PRIEST_HOLY},
-  {"Holy Devastator Quest:  gave crucifix", MOB_MEDICINE_MAN},
-  {"Holy Devastator Quest:  killed Spartagus", MOB_SPARTAGUS}, // 55
-  {"Holy Devastator Quest:  got wine", MOB_WORKER_WINERY},
-  {"Holy Devastator Quest:  answered Taille's riddle", MOB_TAILLE},
-  {"Holy Devastator Quest:  seaching for great sword <r>*Natural Load*<1>", MOB_OVERLORD},
-  {"Holy Devastator Quest:  find polished wooden ring <r>*Natural Load*<1>", MOB_TAILLE},
-  {"Holy Devastator Quest:  forfeit vindicator", MOB_GRIZWALD}, // 60
-  {"Holy Devastator Quest:  did not take gang member's deal", MOB_GANGMEMBER_GIBBETT},
-  {"Holy Devastator Quest:  took gang member's deal", MOB_GANGMEMBER_GIBBETT},
-  {"Holy Devastator Quest:  got deikhan shield info", MOB_ABNOR},
-  {"Holy Devastator Quest:  get flower <r>*Natural Load*<1>", MOB_POACHER},
-  {"Holy Devastator Quest:  answered assassin's riddle", MOB_ASSASSIN}, // 65
-  {"Holy Devastator Quest:  find Lorto", MOB_YOLA},
-  {"Holy Devastator Quest:  deceived Lorto", MOB_LORTO},
-  {"Holy Devastator Quest:  find Sultress", MOB_ABNOR},
-  {"Holy Devastator Quest:  find Bararakna", MOB_JAQUIN},
-  {"Holy Devastator Quest:  received dress of rites", MOB_BARARAKNA}, // 70
-  {"Holy Devastator Quest:  find Sloth", MOB_SULTRESS},
-  {"Holy Devastator Quest:  can get Devastator", MOB_NESMUM},
-  {"Holy Devastator Quest:  cheat Miser Ben", MOB_MISER_BEN},
-  {"Holy Devastator Quest:  cheat Spartagus", MOB_SPARTAGUS},
-  {"Holy Devastator Quest:  cheat Marcus", MOB_MARCUS},    //75
-  {"Holy Devastator Quest:  cheat Taille", MOB_TAILLE},
-  {"Holy Devastator Quest:  cheat Abnor", MOB_ABNOR},
-  {"Holy Devastator Quest:  cheat Sultress", MOB_SULTRESS},
-  {"Holy Devastator Quest:  cheat Nesmum", MOB_NESMUM},
-  {"Has Skill:  Read Magic", MOB_NONE},  //80
-  {"Monk Red Quest: Is Eligible", MOB_MONK_GM_LEVEL50},
-  {"Monk Red Quest: Started Quest", MOB_MONK_GM_LEVEL50},
-  {"Monk Red Quest: Finished Quest", MOB_NONE},
-  {"Monk Red Quest: Has Sash", MOB_MONK_GM_LEVEL50},
-  {"Immortal Skill: Stat", MOB_NONE},     //85
-  {"Immortal Skill: Logs", MOB_NONE},
-  {"Holy Devastator Quest:  find Abnor", MOB_GRIZWALD},
-  {"", MOB_NONE},       // toggles 88-96 are open for future immortal toggles
-  {"", MOB_NONE},
-  {"", MOB_NONE},   //90
-  {"", MOB_NONE},
-  {"", MOB_NONE},
-  {"", MOB_NONE},
-  {"", MOB_NONE},
-  {"", MOB_NONE},   //95
-  {"Holy Devastator Quest:  has Devastator", MOB_CREED},
-  {"Spirit of Warrior Quest:  has ancient symbol", MOB_SPIRIT_OF_WARRIOR},  
-  {"Spirit of Warrior Quest:  has holy white defender", MOB_SPIRIT_OF_WARRIOR},
-  {"Spirit of Warrior Quest:  has moss covered robes", MOB_SPIRIT_OF_WARRIOR},
-  {"Sculpture Quest:  find the high priest", MOB_DWARVEN_AMBASSADOR}, //100
-  {"Sculpture Quest:  has a sculpture", MOB_DWARVEN_HIGH_PRIEST},
-  {"Sculpture Quest:  completed quest already", MOB_LENGE_MERCHANT},
-  {"Is Eligible for Skill: Tornado", MOB_NONE},
-  {"Has Skill:  Tornado", MOB_GERSARD},
-  {"Is Eligible for Skill: Barkskin", MOB_NONE},   //105
-  {"Has Skill:  Barkskin", MOB_FIRST_RANGER_BASIC_TRAINER},
-  {"Is Eligible for Skill: Earthquake", MOB_NONE},
-  {"Has Skill:  Earthquake", MOB_TALAR},
-  {"Is Eligible for Skill:  Dual Wield", MOB_NONE},
-  {"Has Skill: Dual Wield", MOB_FIRST_RANGER_BASIC_TRAINER},  //110
-  {"Is Eligible for Skill:  Shapeshift", MOB_NONE},
-  {"Has Skill: Shapeshift", MOB_FIRST_ANIMAL_TRAINER},
-  {"Is Eligible for Skill:  Fireball", MOB_NONE},
-  {"Has Skill: Fireball", MOB_ASH},
-  {"Is Eligible for Skill:  Ice Storm", MOB_NONE},     //115
-  {"Find Dark Robes:  Ice Storm", MOB_RAULDOPLIC},
-  {"Has Skill:  Ice Storm", MOB_OLD_SAGE},
-  {"Is Eligible for Skill:  Stoneskin", MOB_NONE},
-  {"Find Granite Signet:  Stoneskin", MOB_DAKINOR},
-  {"Has Granite Signet:  Stoneskin", MOB_DAKINOR},  //120
-  {"Has Skill:  Stoneskin", MOB_THALIA},
-  {"Is Eligible for Skill:  Galvanize", MOB_NONE},
-  {"Find Purple Robes:  Galvanize", MOB_BERARDINIS},
-  {"Has Skill:  Galvanize", MOB_BERARDINIS},
-  {"Is Eligible for Skill:  Powerstone", MOB_NONE},      //125
-  {"Find Snakestaff:  Powerstone", MOB_MERRITT},
-  {"Has Skill: Powerstone", MOB_MERRITT},
-  {"Has Skill: Advanced Kick", MOB_FONG_CHUN},
-  {"Has paid toll", MOB_BULGE},
-  {"Is Eligible for Skill:  Advanced Kick", MOB_NONE},  //130
-  {"Eligible to enter Logrus initiation", MOB_NONE},
-  {"Is Eligible for Monk Sash:  White", MOB_NONE},
-  {"Has Started Monk Sash Quest:  White", MOB_MONK_GM_LEVEL15},
-  {"Has Monk Sash:  White", MOB_HUANG_LO},
-  {"Is Eligible for Monk Sash:  Yellow", MOB_NONE},  //135
-  {"Has Finished Monk Sash Quest:  Yellow", MOB_MONK_GM_LEVEL15},
-  {"Has Monk Sash:  Yellow", MOB_MONK_GM_LEVEL15},
-  {"Monk Purple Quest: eligible", MOB_NONE},
-  {"Monk Purple Quest: started", MOB_MONK_GM_LEVEL15},
-  {"Monk Purple Quest: Lepers Killed:  1", MOB_NONE}, // 140
-  {"Monk Purple Quest: Lepers Killed:  2", MOB_NONE},
-  {"Monk Purple Quest: Lepers Killed:  3", MOB_NONE},
-  {"Monk Purple Quest: Lepers Killed:  4", MOB_NONE},
-  {"Monk Purple Quest: complete", MOB_NONE},
-  {"Monk Purple Quest: owned", MOB_MONK_GM_LEVEL15}, // 145
-  {"Is Eligible for Monk Sash:  Blue", MOB_NONE},
-  {"Has Started Monk Sash Quest:  Blue", MOB_MONK_GM_LEVEL40},
-  {"Monk Blue Quest Killed Tiger Shark", MOB_NONE},
-  {"Has Finished Monk Sash Quest:  Blue", MOB_MONK_GM_LEVEL40},
-  {"Has Monk Sash:  Blue", MOB_MONK_GM_LEVEL40},  // 150
-  {"Monk Green Quest: eligible", MOB_NONE},
-  {"Monk Green Quest: started", MOB_MONK_GM_LEVEL40},
-  {"Monk Green Quest: falling", MOB_NONE},
-  {"Monk Green Quest: fallen", MOB_NONE},
-  {"Rat King Quest: Gave Essence to Rat King", MOB_RAT_KING}, // 155
-  {"Monk Green Quest: owned", MOB_MONK_GM_LEVEL40},
-  {"Mage Belt Quest: eligible", MOB_NONE},
-  {"Mage Belt Quest: started", MOB_MAGE_GM_LEVEL15},
-  {"Mage Belt Quest: searching for thread", MOB_MAGE_GM_LEVEL15},
-  {"Mage Belt Quest: owned", MOB_MAGE_GM_LEVEL15},  // 160
-  {"Has Skill: Catfall", MOB_MONK_GM_LEVEL40},
-  {"Ranger 1st Quest: Eligible", MOB_NONE},
-  {"Ranger 1st Quest: Started", MOB_HERMIT_GHPARK},
-  {"Ranger 1st Quest: Talked to Gnome Gnoble of Farmers", MOB_GNOBLE_FARMER},
-  {"Ranger 1st Quest: Talked to Gnome Farmer", MOB_GNOME_FARMER}, // 165
-  {"Ranger 1st Quest: Talked to Gnome Male Child", MOB_GNOME_CHILD},
-  {"Ranger 1st Quest: Talked to Gnome Farmhand", MOB_GNOME_FARMHAND},
-  {"Ranger 1st Quest: Killed John the Rustler", MOB_NONE},
-  {"Ranger 1st Quest: Gave Hermit the Gnomish Cattle Hide", MOB_HERMIT_GHPARK},
-  {"Ranger 1st Quest: Gave Hermit the Squirrel Pelts", MOB_HERMIT_GHPARK}, // 170
-  {"Ranger 1st Quest: Seeking Balcor the Mage", MOB_HERMIT_GHPARK},
-  {"Ranger 1st Quest: Got Scroll from Balcor", MOB_BALCOR},
-  {"Ranger 1st Quest: Finished", MOB_HERMIT_GHPARK},
-  {"Is Eligible for Ranger L14 Quest", MOB_NONE},
-  {"Has Started Ranger L14 Quest", MOB_HERMIT_JED}, // 175
-  {"Has Seen Kobold Poacher", MOB_POACH_KOBOLD}, 
-  {"Seeking Orc Poacher", MOB_HERMIT_JED},
-  {"Has Seen Orc Poacher", MOB_POACH_ORC},
-  {"Seeking Blind Pygmy Bone Woman", MOB_HERMIT_JED},
-  {"Seeking Apple for Bone Woman", MOB_BONE_PYGMY}, // 180
-  {"Got Carved Buckle from Bone Woman", MOB_BONE_PYGMY},
-  {"Seeking Orc Magi", MOB_HERMIT_JED},
-  {"Failed to Kill Orc Magi", MOB_NONE},
-  {"Proving Self", MOB_HERMIT_JED},
-  {"Killed Orc Magi", MOB_NONE}, // 185
-  {"Finished Ranger L14 Quest", MOB_HERMIT_JED},
-  {"Holy Devastator Quest: eligible", MOB_NONE},
-  {"Mage Robe Quest: eligible", MOB_NONE},
-  {"Mage Robe Quest: seeking Druidess", MOB_SIMON_SPELLCRAFTER},
-  {"Mage Robe Quest: getting oil", MOB_SIMON_SPELLCRAFTER},  //190
-  {"Mage Robe Quest: getting symbol", MOB_SIMON_SPELLCRAFTER},
-  {"Mage Robe Quest: getting metal",  MOB_SIMON_SPELLCRAFTER},
-  {"Mage Robe Quest: getting fabric", MOB_SIMON_SPELLCRAFTER},
-  {"Mage Robe Quest: has mage robe", MOB_SIMON_SPELLCRAFTER},
-  {"Ranger L21 Quest: Eligible", MOB_NONE},  //195
-  {"Ranger L21 Quest: Started", MOB_RANGER_AMBER},
-  {"Ranger L21 Quest: Killed Volcano Cleric", MOB_NONE},
-  {"Ranger L21 Quest: Failed to kill Volcano Cleric", MOB_NONE},
-  {"Ranger L21 Quest: Proving self L21A", MOB_RANGER_AMBER},
-  {"Ranger L21 Quest: Seeking Arden Cleric", MOB_RANGER_AMBER},  //200
-  {"Ranger L21 Quest: Killed Arden Cleric", MOB_NONE},
-  {"Ranger L21 Quest: Failed to kill Arden Cleric", MOB_NONE},
-  {"Ranger L21 Quest: Proving self L21B", MOB_RANGER_AMBER},
-  {"Ranger L21 Quest: Seeking Aarakocra Chief", MOB_RANGER_AMBER},
-  {"Ranger L21 Quest: Talked to Aarakocra Chief", MOB_CHIEF_AARAKOCRA},  //205
-  {"Ranger L21 Quest: Got feathers", MOB_CHIEF_AARAKOCRA},
-  {"Ranger L21 Quest: Seeking two rabbit skins", MOB_RANGER_AMBER},
-  {"Ranger L21 Quest: Gave one rbbit skin", MOB_RANGER_AMBER},
-  {"Ranger L21 Quest: Seeking Bullywug Oil", MOB_RANGER_AMBER},
-  {"Ranger L21 Quest: Seeking Bandits in Bullywug", MOB_SHAMAN_BULLY},  //210
-  {"Ranger L21 Quest: Got Bullywug Oil", MOB_SHAMAN_BULLY},
-  {"Ranger L21 Quest: Finished Ranger L21 Quest", MOB_RANGER_AMBER},
-  {"Faction Membership: eligible", MOB_NONE},
-  {"Caldonia: bought her a shot of whisky", MOB_CALDONIA},
-  {"", MOB_NONE},  // 215
-  {"", MOB_NONE},
-  {"", MOB_NONE},
-  {"", MOB_NONE},
-  {"Warrior L40 Quest: Eligible", MOB_NONE},                  
-  {"Warrior L40 Quest: Started", MOB_CHIEF_MALE_VILLAGER}, //220
-  {"Warrior L40 Quest: Killing Chief", MOB_ELDERLY_SHAMAN},
-  {"Warrior L40 Quest: Killing Shaman", MOB_ELDERLY_SHAMAN},
-  {"Warrior L40 Quest: Finished Warrior", MOB_CHIEF_MALE_VILLAGER},
-  {"Shaman L15 Juju: Eligible", MOB_NONE},
-  {"Shaman L15 Juju: Get Thong", MOB_JUJU_SHAMAN_GM}, //225
-  {"Shaman L15 Juju: Get Mare Hide", MOB_JUJU_SHAMAN_GM}, //226
-  {"Shaman L15 Juju: Get Beaded Necklace", MOB_JUJU_SHAMAN_GM}, //227
-  {"Shaman L15 Juju: Received Orb", MOB_JUJU_SHAMAN_GM}, //228
-  {"Shaman L15 Juju: Has Juju", MOB_TOTEM_TRADER}, //229
-  {"Faction: Has paid registration fee", MOB_FACTION_REGISTRAR}, // 230
-  {"Faction: Has created a faction", MOB_FACTION_REGISTRAR},
-  {"Shaman Totem Mask: Eligible", MOB_NONE},
-  {"Shaman Totem Mask: Started", MOB_GANDOLFO},
-  {"Shaman Totem Mask: Find Forsaken", MOB_GANDOLFO},
-  {"Shaman Totem Mask: Find wooden plank", MOB_FORSAKEN}, // 235
-  {"Shaman Totem Mask: Has sapless wood for Ptok", MOB_FORSAKEN},
-  {"Shaman Totem Mask: Find Scaled Hide", MOB_PTOK},
-  {"Shaman Totem Mask: Give Gondolfo covered plank", MOB_PTOK},
-  {"Shaman Totem Mask: Recover vial of sap from Forsaken", MOB_GANDOLFO},
-  {"Shaman Totem Mask: Find Elric for gris gris", MOB_GANDOLFO}, // 240
-  {"Shaman Totem Mask: Kill Baron Samedi", MOB_ELRIC},
-  {"Shaman Totem Mask: Has Baron Samedi's vision", MOB_SAMEDI},
-  {"Shaman Totem Mask: Killed Elric", MOB_ELRIC},
-  {"Shaman Totem Mask: Find Ptok to face true evil", MOB_GANDOLFO},
-  {"Shaman Totem Mask: Killed Father's Spirit", MOB_PTOK}, // 245
-  {"Shaman Totem Mask: Finished", MOB_GANDOLFO},
-  {"Perma Death Character", MOB_NONE},
-  {"Psionicist", MOB_NONE},
+  {"Immortal Quest: On Quest", Mob::NONE},
+  {"Silverclaw Quest: find Scar", Mob::SILVERCLAW},  // 30
+  {"Silverclaw Quest: gave collar", Mob::SCAR},
+  {"Silverclaw Quest: find map", Mob::HOBBIT_ADVENTURER},
+  {"Silverclaw Quest: find Gruum", Mob::HOBBIT_ADVENTURER},
+  {"Silverclaw Quest: find Warlord", Mob::GRUUM},   
+  {"Silverclaw Quest: find Bishop", Mob::GRUUM}, // 35 
+  {"Silverclaw Quest: find tablet", Mob::GHOST_BISHOP},
+  {"Silverclaw Quest: on solo", Mob::GHOST_BISHOP},
+  {"Silverclaw Quest: load tablet", Mob::UNDEAD_CHIEF}, 
+  {"Silverclaw Quest: find cloud dragon", Mob::DRAGON_CLOUD},
+  {"Silverclaw Quest: find bronze dragon", Mob::DRAGON_BRONZE}, // 40
+  {"Silverclaw Quest: find worker dragon", Mob::DRAGON_WORKER},  
+  {"Silverclaw Quest: find gold dragon", Mob::DRAGON_GOLD},
+  {"Silverclaw Quest: find silver dragon", Mob::DRAGON_SILVER},
+  {"Silverclaw Quest: find Raliki", Mob::RALIKI},
+  {"Silverclaw Quest: kill Raliki", Mob::RALIKI}, // 45 
+  {"Holy Devastator Quest:  find Miser Ben", Mob::CREED},
+  {"Holy Devastator Quest:  took bribe", Mob::MISER_BEN},
+  {"Holy Devastator Quest:  find opal", Mob::CREED},
+  {"Holy Devastator Quest:  do riddle", Mob::CREED},
+  {"Holy Devastator Quest:  killed Miser Ben", Mob::MISER_BEN},  // 50
+  {"Holy Devastator Quest:  find medicine man", Mob::SPARTAGUS},
+  {"Holy Devastator Quest:  searching for crucifix", Mob::MEDICINE_MAN},
+  {"Holy Devastator Quest:  found crucifix", Mob::PRIEST_HOLY},
+  {"Holy Devastator Quest:  gave crucifix", Mob::MEDICINE_MAN},
+  {"Holy Devastator Quest:  killed Spartagus", Mob::SPARTAGUS}, // 55
+  {"Holy Devastator Quest:  got wine", Mob::WORKER_WINERY},
+  {"Holy Devastator Quest:  answered Taille's riddle", Mob::TAILLE},
+  {"Holy Devastator Quest:  seaching for great sword <r>*Natural Load*<1>", Mob::OVERLORD},
+  {"Holy Devastator Quest:  find polished wooden ring <r>*Natural Load*<1>", Mob::TAILLE},
+  {"Holy Devastator Quest:  forfeit vindicator", Mob::GRIZWALD}, // 60
+  {"Holy Devastator Quest:  did not take gang member's deal", Mob::GANGMEMBER_GIBBETT},
+  {"Holy Devastator Quest:  took gang member's deal", Mob::GANGMEMBER_GIBBETT},
+  {"Holy Devastator Quest:  got deikhan shield info", Mob::ABNOR},
+  {"Holy Devastator Quest:  get flower <r>*Natural Load*<1>", Mob::POACHER},
+  {"Holy Devastator Quest:  answered assassin's riddle", Mob::ASSASSIN}, // 65
+  {"Holy Devastator Quest:  find Lorto", Mob::YOLA},
+  {"Holy Devastator Quest:  deceived Lorto", Mob::LORTO},
+  {"Holy Devastator Quest:  find Sultress", Mob::ABNOR},
+  {"Holy Devastator Quest:  find Bararakna", Mob::JAQUIN},
+  {"Holy Devastator Quest:  received dress of rites", Mob::BARARAKNA}, // 70
+  {"Holy Devastator Quest:  find Sloth", Mob::SULTRESS},
+  {"Holy Devastator Quest:  can get Devastator", Mob::NESMUM},
+  {"Holy Devastator Quest:  cheat Miser Ben", Mob::MISER_BEN},
+  {"Holy Devastator Quest:  cheat Spartagus", Mob::SPARTAGUS},
+  {"Holy Devastator Quest:  cheat Marcus", Mob::MARCUS},    //75
+  {"Holy Devastator Quest:  cheat Taille", Mob::TAILLE},
+  {"Holy Devastator Quest:  cheat Abnor", Mob::ABNOR},
+  {"Holy Devastator Quest:  cheat Sultress", Mob::SULTRESS},
+  {"Holy Devastator Quest:  cheat Nesmum", Mob::NESMUM},
+  {"Has Skill:  Read Magic", Mob::NONE},  //80
+  {"Monk Red Quest: Is Eligible", Mob::MONK_GM_LEVEL50},
+  {"Monk Red Quest: Started Quest", Mob::MONK_GM_LEVEL50},
+  {"Monk Red Quest: Finished Quest", Mob::NONE},
+  {"Monk Red Quest: Has Sash", Mob::MONK_GM_LEVEL50},
+  {"Immortal Skill: Stat", Mob::NONE},     //85
+  {"Immortal Skill: Logs", Mob::NONE},
+  {"Holy Devastator Quest:  find Abnor", Mob::GRIZWALD},
+  {"", Mob::NONE},       // toggles 88-96 are open for future immortal toggles
+  {"", Mob::NONE},
+  {"", Mob::NONE},   //90
+  {"", Mob::NONE},
+  {"", Mob::NONE},
+  {"", Mob::NONE},
+  {"", Mob::NONE},
+  {"", Mob::NONE},   //95
+  {"Holy Devastator Quest:  has Devastator", Mob::CREED},
+  {"Spirit of Warrior Quest:  has ancient symbol", Mob::SPIRIT_OF_WARRIOR},  
+  {"Spirit of Warrior Quest:  has holy white defender", Mob::SPIRIT_OF_WARRIOR},
+  {"Spirit of Warrior Quest:  has moss covered robes", Mob::SPIRIT_OF_WARRIOR},
+  {"Sculpture Quest:  find the high priest", Mob::DWARVEN_AMBASSADOR}, //100
+  {"Sculpture Quest:  has a sculpture", Mob::DWARVEN_HIGH_PRIEST},
+  {"Sculpture Quest:  completed quest already", Mob::LENGE_MERCHANT},
+  {"Is Eligible for Skill: Tornado", Mob::NONE},
+  {"Has Skill:  Tornado", Mob::GERSARD},
+  {"Is Eligible for Skill: Barkskin", Mob::NONE},   //105
+  {"Has Skill:  Barkskin", Mob::FIRST_RANGER_BASIC_TRAINER},
+  {"Is Eligible for Skill: Earthquake", Mob::NONE},
+  {"Has Skill:  Earthquake", Mob::TALAR},
+  {"Is Eligible for Skill:  Dual Wield", Mob::NONE},
+  {"Has Skill: Dual Wield", Mob::FIRST_RANGER_BASIC_TRAINER},  //110
+  {"Is Eligible for Skill:  Shapeshift", Mob::NONE},
+  {"Has Skill: Shapeshift", Mob::FIRST_ANIMAL_TRAINER},
+  {"Is Eligible for Skill:  Fireball", Mob::NONE},
+  {"Has Skill: Fireball", Mob::ASH},
+  {"Is Eligible for Skill:  Ice Storm", Mob::NONE},     //115
+  {"Find Dark Robes:  Ice Storm", Mob::RAULDOPLIC},
+  {"Has Skill:  Ice Storm", Mob::OLD_SAGE},
+  {"Is Eligible for Skill:  Stoneskin", Mob::NONE},
+  {"Find Granite Signet:  Stoneskin", Mob::DAKINOR},
+  {"Has Granite Signet:  Stoneskin", Mob::DAKINOR},  //120
+  {"Has Skill:  Stoneskin", Mob::THALIA},
+  {"Is Eligible for Skill:  Galvanize", Mob::NONE},
+  {"Find Purple Robes:  Galvanize", Mob::BERARDINIS},
+  {"Has Skill:  Galvanize", Mob::BERARDINIS},
+  {"Is Eligible for Skill:  Powerstone", Mob::NONE},      //125
+  {"Find Snakestaff:  Powerstone", Mob::MERRITT},
+  {"Has Skill: Powerstone", Mob::MERRITT},
+  {"Has Skill: Advanced Kick", Mob::FONG_CHUN},
+  {"Has paid toll", Mob::BULGE},
+  {"Is Eligible for Skill:  Advanced Kick", Mob::NONE},  //130
+  {"Eligible to enter Logrus initiation", Mob::NONE},
+  {"Is Eligible for Monk Sash:  White", Mob::NONE},
+  {"Has Started Monk Sash Quest:  White", Mob::MONK_GM_LEVEL15},
+  {"Has Monk Sash:  White", Mob::HUANG_LO},
+  {"Is Eligible for Monk Sash:  Yellow", Mob::NONE},  //135
+  {"Has Finished Monk Sash Quest:  Yellow", Mob::MONK_GM_LEVEL15},
+  {"Has Monk Sash:  Yellow", Mob::MONK_GM_LEVEL15},
+  {"Monk Purple Quest: eligible", Mob::NONE},
+  {"Monk Purple Quest: started", Mob::MONK_GM_LEVEL15},
+  {"Monk Purple Quest: Lepers Killed:  1", Mob::NONE}, // 140
+  {"Monk Purple Quest: Lepers Killed:  2", Mob::NONE},
+  {"Monk Purple Quest: Lepers Killed:  3", Mob::NONE},
+  {"Monk Purple Quest: Lepers Killed:  4", Mob::NONE},
+  {"Monk Purple Quest: complete", Mob::NONE},
+  {"Monk Purple Quest: owned", Mob::MONK_GM_LEVEL15}, // 145
+  {"Is Eligible for Monk Sash:  Blue", Mob::NONE},
+  {"Has Started Monk Sash Quest:  Blue", Mob::MONK_GM_LEVEL40},
+  {"Monk Blue Quest Killed Tiger Shark", Mob::NONE},
+  {"Has Finished Monk Sash Quest:  Blue", Mob::MONK_GM_LEVEL40},
+  {"Has Monk Sash:  Blue", Mob::MONK_GM_LEVEL40},  // 150
+  {"Monk Green Quest: eligible", Mob::NONE},
+  {"Monk Green Quest: started", Mob::MONK_GM_LEVEL40},
+  {"Monk Green Quest: falling", Mob::NONE},
+  {"Monk Green Quest: fallen", Mob::NONE},
+  {"Rat King Quest: Gave Essence to Rat King", Mob::RAT_KING}, // 155
+  {"Monk Green Quest: owned", Mob::MONK_GM_LEVEL40},
+  {"Mage Belt Quest: eligible", Mob::NONE},
+  {"Mage Belt Quest: started", Mob::MAGE_GM_LEVEL15},
+  {"Mage Belt Quest: searching for thread", Mob::MAGE_GM_LEVEL15},
+  {"Mage Belt Quest: owned", Mob::MAGE_GM_LEVEL15},  // 160
+  {"Has Skill: Catfall", Mob::MONK_GM_LEVEL40},
+  {"Ranger 1st Quest: Eligible", Mob::NONE},
+  {"Ranger 1st Quest: Started", Mob::HERMIT_GHPARK},
+  {"Ranger 1st Quest: Talked to Gnome Gnoble of Farmers", Mob::GNOBLE_FARMER},
+  {"Ranger 1st Quest: Talked to Gnome Farmer", Mob::GNOME_FARMER}, // 165
+  {"Ranger 1st Quest: Talked to Gnome Male Child", Mob::GNOME_CHILD},
+  {"Ranger 1st Quest: Talked to Gnome Farmhand", Mob::GNOME_FARMHAND},
+  {"Ranger 1st Quest: Killed John the Rustler", Mob::NONE},
+  {"Ranger 1st Quest: Gave Hermit the Gnomish Cattle Hide", Mob::HERMIT_GHPARK},
+  {"Ranger 1st Quest: Gave Hermit the Squirrel Pelts", Mob::HERMIT_GHPARK}, // 170
+  {"Ranger 1st Quest: Seeking Balcor the Mage", Mob::HERMIT_GHPARK},
+  {"Ranger 1st Quest: Got Scroll from Balcor", Mob::BALCOR},
+  {"Ranger 1st Quest: Finished", Mob::HERMIT_GHPARK},
+  {"Is Eligible for Ranger L14 Quest", Mob::NONE},
+  {"Has Started Ranger L14 Quest", Mob::HERMIT_JED}, // 175
+  {"Has Seen Kobold Poacher", Mob::POACH_KOBOLD}, 
+  {"Seeking Orc Poacher", Mob::HERMIT_JED},
+  {"Has Seen Orc Poacher", Mob::POACH_ORC},
+  {"Seeking Blind Pygmy Bone Woman", Mob::HERMIT_JED},
+  {"Seeking Apple for Bone Woman", Mob::BONE_PYGMY}, // 180
+  {"Got Carved Buckle from Bone Woman", Mob::BONE_PYGMY},
+  {"Seeking Orc Magi", Mob::HERMIT_JED},
+  {"Failed to Kill Orc Magi", Mob::NONE},
+  {"Proving Self", Mob::HERMIT_JED},
+  {"Killed Orc Magi", Mob::NONE}, // 185
+  {"Finished Ranger L14 Quest", Mob::HERMIT_JED},
+  {"Holy Devastator Quest: eligible", Mob::NONE},
+  {"Mage Robe Quest: eligible", Mob::NONE},
+  {"Mage Robe Quest: seeking Druidess", Mob::SIMON_SPELLCRAFTER},
+  {"Mage Robe Quest: getting oil", Mob::SIMON_SPELLCRAFTER},  //190
+  {"Mage Robe Quest: getting symbol", Mob::SIMON_SPELLCRAFTER},
+  {"Mage Robe Quest: getting metal",  Mob::SIMON_SPELLCRAFTER},
+  {"Mage Robe Quest: getting fabric", Mob::SIMON_SPELLCRAFTER},
+  {"Mage Robe Quest: has mage robe", Mob::SIMON_SPELLCRAFTER},
+  {"Ranger L21 Quest: Eligible", Mob::NONE},  //195
+  {"Ranger L21 Quest: Started", Mob::RANGER_AMBER},
+  {"Ranger L21 Quest: Killed Volcano Cleric", Mob::NONE},
+  {"Ranger L21 Quest: Failed to kill Volcano Cleric", Mob::NONE},
+  {"Ranger L21 Quest: Proving self L21A", Mob::RANGER_AMBER},
+  {"Ranger L21 Quest: Seeking Arden Cleric", Mob::RANGER_AMBER},  //200
+  {"Ranger L21 Quest: Killed Arden Cleric", Mob::NONE},
+  {"Ranger L21 Quest: Failed to kill Arden Cleric", Mob::NONE},
+  {"Ranger L21 Quest: Proving self L21B", Mob::RANGER_AMBER},
+  {"Ranger L21 Quest: Seeking Aarakocra Chief", Mob::RANGER_AMBER},
+  {"Ranger L21 Quest: Talked to Aarakocra Chief", Mob::CHIEF_AARAKOCRA},  //205
+  {"Ranger L21 Quest: Got feathers", Mob::CHIEF_AARAKOCRA},
+  {"Ranger L21 Quest: Seeking two rabbit skins", Mob::RANGER_AMBER},
+  {"Ranger L21 Quest: Gave one rbbit skin", Mob::RANGER_AMBER},
+  {"Ranger L21 Quest: Seeking Bullywug Oil", Mob::RANGER_AMBER},
+  {"Ranger L21 Quest: Seeking Bandits in Bullywug", Mob::SHAMAN_BULLY},  //210
+  {"Ranger L21 Quest: Got Bullywug Oil", Mob::SHAMAN_BULLY},
+  {"Ranger L21 Quest: Finished Ranger L21 Quest", Mob::RANGER_AMBER},
+  {"Faction Membership: eligible", Mob::NONE},
+  {"Caldonia: bought her a shot of whisky", Mob::CALDONIA},
+  {"", Mob::NONE},  // 215
+  {"", Mob::NONE},
+  {"", Mob::NONE},
+  {"", Mob::NONE},
+  {"Warrior L40 Quest: Eligible", Mob::NONE},                  
+  {"Warrior L40 Quest: Started", Mob::CHIEF_MALE_VILLAGER}, //220
+  {"Warrior L40 Quest: Killing Chief", Mob::ELDERLY_SHAMAN},
+  {"Warrior L40 Quest: Killing Shaman", Mob::ELDERLY_SHAMAN},
+  {"Warrior L40 Quest: Finished Warrior", Mob::CHIEF_MALE_VILLAGER},
+  {"Shaman L15 Juju: Eligible", Mob::NONE},
+  {"Shaman L15 Juju: Get Thong", Mob::JUJU_SHAMAN_GM}, //225
+  {"Shaman L15 Juju: Get Mare Hide", Mob::JUJU_SHAMAN_GM}, //226
+  {"Shaman L15 Juju: Get Beaded Necklace", Mob::JUJU_SHAMAN_GM}, //227
+  {"Shaman L15 Juju: Received Orb", Mob::JUJU_SHAMAN_GM}, //228
+  {"Shaman L15 Juju: Has Juju", Mob::TOTEM_TRADER}, //229
+  {"Faction: Has paid registration fee", Mob::FACTION_REGISTRAR}, // 230
+  {"Faction: Has created a faction", Mob::FACTION_REGISTRAR},
+  {"Shaman Totem Mask: Eligible", Mob::NONE},
+  {"Shaman Totem Mask: Started", Mob::GANDOLFO},
+  {"Shaman Totem Mask: Find Forsaken", Mob::GANDOLFO},
+  {"Shaman Totem Mask: Find wooden plank", Mob::FORSAKEN}, // 235
+  {"Shaman Totem Mask: Has sapless wood for Ptok", Mob::FORSAKEN},
+  {"Shaman Totem Mask: Find Scaled Hide", Mob::PTOK},
+  {"Shaman Totem Mask: Give Gondolfo covered plank", Mob::PTOK},
+  {"Shaman Totem Mask: Recover vial of sap from Forsaken", Mob::GANDOLFO},
+  {"Shaman Totem Mask: Find Elric for gris gris", Mob::GANDOLFO}, // 240
+  {"Shaman Totem Mask: Kill Baron Samedi", Mob::ELRIC},
+  {"Shaman Totem Mask: Has Baron Samedi's vision", Mob::SAMEDI},
+  {"Shaman Totem Mask: Killed Elric", Mob::ELRIC},
+  {"Shaman Totem Mask: Find Ptok to face true evil", Mob::GANDOLFO},
+  {"Shaman Totem Mask: Killed Father's Spirit", Mob::PTOK}, // 245
+  {"Shaman Totem Mask: Finished", Mob::GANDOLFO},
+  {"Perma Death Character", Mob::NONE},
+  {"Psionicist", Mob::NONE},
   {"Dragon Armor: red scales", 13732},
   {"Dragon Armor: green scales", 13732}, //250
   {"Dragon Armor: white scales", 13732},
@@ -284,10 +284,10 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"Dragon Armor: talens", 13732},
   {"Dragon Armor: warhammer", 13732},
   {"Dragon Armor: scales", 13732},
-  {"Bitten by vampire", MOB_NONE},
-  {"Vampire", MOB_NONE},  //265
-  {"Lycanthrope", MOB_NONE},
-  {"Transformed Lycanthrope", MOB_NONE},
+  {"Bitten by vampire", Mob::NONE},
+  {"Vampire", Mob::NONE},  //265
+  {"Lycanthrope", Mob::NONE},
+  {"Transformed Lycanthrope", Mob::NONE},
   {"Lycanthropy: virgin flask", 9323},
   {"Lycanthropy: terfefly", 23291},
   {"Lycanthropy: ingredients", 6762}, //270
@@ -295,103 +295,103 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"Lycanthropy: wolvesbane", 6762},
   {"Lycanthropy: silver", 6762},
   {"Lycanthropy: hemlock", 6762},
-  {"BlahBlah Shouts", MOB_NONE},
-  {"Monk: Paid Tabuda", MOB_NONE},
-  {"Has Skill: Catleap", MOB_NONE},
-  {"Trait: Coward", MOB_NONE},
-  {"Trait: Blind", MOB_NONE},
-  {"Trait: Mute", MOB_NONE},
-  {"Trait: Deaf", MOB_NONE},
-  {"Trait: Asthmatic", MOB_NONE},
-  {"Trait: Necrophobic", MOB_NONE},
-  {"Trait: Narcoleptic", MOB_NONE},
-  {"Trait: Combustible", MOB_NONE},
-  {"Trait: Hemophiliac", MOB_NONE},
-  {"Trait: Ambidextrous", MOB_NONE},
-  {"Trait: Disease Resistant", MOB_NONE},
-  {"Trait: Nightvision", MOB_NONE},
-  {"Trait: Alcoholic", MOB_NONE},
-  {"Trait: Tourettes", MOB_NONE},
-  {"PK Character", MOB_NONE},
+  {"BlahBlah Shouts", Mob::NONE},
+  {"Monk: Paid Tabuda", Mob::NONE},
+  {"Has Skill: Catleap", Mob::NONE},
+  {"Trait: Coward", Mob::NONE},
+  {"Trait: Blind", Mob::NONE},
+  {"Trait: Mute", Mob::NONE},
+  {"Trait: Deaf", Mob::NONE},
+  {"Trait: Asthmatic", Mob::NONE},
+  {"Trait: Necrophobic", Mob::NONE},
+  {"Trait: Narcoleptic", Mob::NONE},
+  {"Trait: Combustible", Mob::NONE},
+  {"Trait: Hemophiliac", Mob::NONE},
+  {"Trait: Ambidextrous", Mob::NONE},
+  {"Trait: Disease Resistant", Mob::NONE},
+  {"Trait: Nightvision", Mob::NONE},
+  {"Trait: Alcoholic", Mob::NONE},
+  {"Trait: Tourettes", Mob::NONE},
+  {"PK Character", Mob::NONE},
   {"Lightsaber quest: gave ruby", 13745},
   {"Lightsaber quest: gave bluesteel", 13745},
   {"Lightsaber quest: gave essence", 13745},
   {"Lightsaber quest: gave rockfish", 13745},
   {"Lightsaber quest: gave essence", 13745},
-  {"Creation Choice: Fae Touched", MOB_NONE}, 
-  {"Trait: Real Aging", MOB_NONE},
-  {"No Experience Gain", MOB_NONE},
-  {"Practices Fixed", MOB_NONE},
-  {"Has Right Pegleg", MOB_NONE},
-  {"Has Left Pegleg", MOB_NONE},
-  {"Has Right Hook Hand", MOB_NONE},
-  {"Has Left Hook Hand", MOB_NONE},
-  {"Cyclops Camp Quest: killed paladin", MOB_NONE},
-  {"February Quest: Gave 1 Candy Heart", MOB_GYPSY_ROMANTIC},  //307
-  {"February Quest: Gave 2 Candy Hearts", MOB_GYPSY_ROMANTIC},
-  {"February Quest: Gave 3 Candy Hearts", MOB_GYPSY_ROMANTIC},
-  {"February Quest: Gave 4 Candy Hearts", MOB_GYPSY_ROMANTIC}, //310
-  {"February Quest: Gave 1 box of chocolate", MOB_FLORIST_BUSY},
-  {"February Quest: Gave 2 boxes of chocolates", MOB_FLORIST_BUSY},
-  {"February Quest: Gave 3 boxes of chocolates", MOB_FLORIST_BUSY},
-  {"February Quest: Gave 4 boxes of chocolates", MOB_FLORIST_BUSY},
-  {"February Quest: Gave 5 boxes of chocolates", MOB_FLORIST_BUSY}, //315
-  {"February Quest: Gave 1 tulip", MOB_WIFE_FARMER},
-  {"February Quest: Gave 2 tulips", MOB_WIFE_FARMER},
-  {"February Quest: Gave 3 tulips", MOB_WIFE_FARMER},
-  {"February Quest: Gave 4 tulips", MOB_WIFE_FARMER},
-  {"February Quest: Gave 5 tulips", MOB_WIFE_FARMER}, //320
-  {"February Quest: Gave 1 bouquet", MOB_CLOWN_SCARY}, 
-  {"February Quest: Gave 2 bouquets", MOB_CLOWN_SCARY},
-  {"February Quest: Gave 3 bouquets", MOB_CLOWN_SCARY},
-  {"February Quest: Gave 4 bouquets", MOB_CLOWN_SCARY},
-  {"February Quest: Gave 5 bouquets", MOB_CLOWN_SCARY},//325
-  {"February Quest: Gave 1 balloon", MOB_MIME_ANIMATED},
-  {"February Quest: Gave 2 balloons", MOB_MIME_ANIMATED},
-  {"February Quest: Gave 3 balloons", MOB_MIME_ANIMATED},
-  {"February Quest: Gave 4 balloons", MOB_MIME_ANIMATED},
-  {"Newbie: Found Yun the Grocer", MOB_ANY}, //330
-  {"February Quest: Gave 1 teddy bear", MOB_GUY_LAZY},
-  {"February Quest: Gave 2 teddy bears", MOB_GUY_LAZY},
-  {"February Quest: Gave 3 teddy bears", MOB_GUY_LAZY},
-  {"February Quest: Gave 4 teddy bears", MOB_GUY_LAZY},
-  {"Newbie: Found Surplus", MOB_ANY}, //335
-  {"February Quest: Gave 1 bottle of port", MOB_DRUNK_TRADER_RICH},
-  {"February Quest: Gave 2 bottles of port", MOB_DRUNK_TRADER_RICH},//337
-  {"October Quest: Participant", MOB_NONE}, //338
-  {"December Quest: Gave 1 candy cane", MOB_FAT_ELF_1},//339
-  {"December Quest: Gave 2 candy canes", MOB_FAT_ELF_1},//340
-  {"December Quest: Gave 3 candy canes", MOB_FAT_ELF_1},//341
-  {"December Quest: Gave 4 candy canes", MOB_FAT_ELF_1},//342
-  {"December Quest: Gave 1 jingle bell collar", MOB_FAT_ELF_2}, //343
-  {"December Quest: Gave 2 jingle bell collars", MOB_FAT_ELF_2}, //344
-  {"December Quest: Gave 3 jingle bell collars", MOB_FAT_ELF_2}, //345
-  {"December Quest: Gave 4 jingle bell collars", MOB_FAT_ELF_2}, //346
-  {"December Quest: Gave 1 scroll case", MOB_FAT_ELF_3}, //347
-  {"December Quest: Gave 2 scroll cases", MOB_FAT_ELF_3}, //348
-  {"December Quest: Gave 3 scroll cases", MOB_FAT_ELF_3}, //349
-  {"December Quest: Gave 4 scroll cases", MOB_FAT_ELF_3}, //350
-  {"Practice Reset: Level15", MOB_ANY}, //351
-  {"Practice Reset: Level40", MOB_ANY}, //352
-  {"Practice Reset: Level50", MOB_ANY}, //353
-  {"February Quest: Gave 3 bottles of port", MOB_DRUNK_TRADER_RICH},//354
-  {"February Quest: Gave 4 bottles of port", MOB_DRUNK_TRADER_RICH},//355
-  {"Trait: Pyrophobia", MOB_NONE}, // 356
-  {"Trait: Vicious", MOB_NONE}, // 357
-  {"Trait: Craven", MOB_NONE}, // 358
-  {"Newbie: Doing Newbie Quest", MOB_ANY}, //359
-  {"Newbie: Finding Class Trainer", MOB_ANY}, //360
-  {"Newbie: Found Class Trainer", MOB_ANY}, //361
-  {"Newbie: Finding Secondary Basic Trainer", MOB_ANY}, //362
-  {"Newbie: Found Secondary Basic Trainer", MOB_ANY}, //363
-  {"Newbie: Running First Errand", MOB_ANY}, //364
-  {"Newbie: Ran First Errand", MOB_ANY}, //365
-  {"Newbie: Running Second Errand", MOB_ANY}, //366
-  {"Newbie: Ran Second Errand", MOB_ANY}, //367
-  {"Newbie: Fighting Mouse", MOB_ANY}, //368
-  {"Newbie: Killed Mouse", MOB_ANY}, //369
-  {"Newbie: Has Completed Newbie Quest", MOB_ANY}, //370
-  {"", MOB_NONE}, 
+  {"Creation Choice: Fae Touched", Mob::NONE}, 
+  {"Trait: Real Aging", Mob::NONE},
+  {"No Experience Gain", Mob::NONE},
+  {"Practices Fixed", Mob::NONE},
+  {"Has Right Pegleg", Mob::NONE},
+  {"Has Left Pegleg", Mob::NONE},
+  {"Has Right Hook Hand", Mob::NONE},
+  {"Has Left Hook Hand", Mob::NONE},
+  {"Cyclops Camp Quest: killed paladin", Mob::NONE},
+  {"February Quest: Gave 1 Candy Heart", Mob::GYPSY_ROMANTIC},  //307
+  {"February Quest: Gave 2 Candy Hearts", Mob::GYPSY_ROMANTIC},
+  {"February Quest: Gave 3 Candy Hearts", Mob::GYPSY_ROMANTIC},
+  {"February Quest: Gave 4 Candy Hearts", Mob::GYPSY_ROMANTIC}, //310
+  {"February Quest: Gave 1 box of chocolate", Mob::FLORIST_BUSY},
+  {"February Quest: Gave 2 boxes of chocolates", Mob::FLORIST_BUSY},
+  {"February Quest: Gave 3 boxes of chocolates", Mob::FLORIST_BUSY},
+  {"February Quest: Gave 4 boxes of chocolates", Mob::FLORIST_BUSY},
+  {"February Quest: Gave 5 boxes of chocolates", Mob::FLORIST_BUSY}, //315
+  {"February Quest: Gave 1 tulip", Mob::WIFE_FARMER},
+  {"February Quest: Gave 2 tulips", Mob::WIFE_FARMER},
+  {"February Quest: Gave 3 tulips", Mob::WIFE_FARMER},
+  {"February Quest: Gave 4 tulips", Mob::WIFE_FARMER},
+  {"February Quest: Gave 5 tulips", Mob::WIFE_FARMER}, //320
+  {"February Quest: Gave 1 bouquet", Mob::CLOWN_SCARY}, 
+  {"February Quest: Gave 2 bouquets", Mob::CLOWN_SCARY},
+  {"February Quest: Gave 3 bouquets", Mob::CLOWN_SCARY},
+  {"February Quest: Gave 4 bouquets", Mob::CLOWN_SCARY},
+  {"February Quest: Gave 5 bouquets", Mob::CLOWN_SCARY},//325
+  {"February Quest: Gave 1 balloon", Mob::MIME_ANIMATED},
+  {"February Quest: Gave 2 balloons", Mob::MIME_ANIMATED},
+  {"February Quest: Gave 3 balloons", Mob::MIME_ANIMATED},
+  {"February Quest: Gave 4 balloons", Mob::MIME_ANIMATED},
+  {"Newbie: Found Yun the Grocer", Mob::ANY}, //330
+  {"February Quest: Gave 1 teddy bear", Mob::GUY_LAZY},
+  {"February Quest: Gave 2 teddy bears", Mob::GUY_LAZY},
+  {"February Quest: Gave 3 teddy bears", Mob::GUY_LAZY},
+  {"February Quest: Gave 4 teddy bears", Mob::GUY_LAZY},
+  {"Newbie: Found Surplus", Mob::ANY}, //335
+  {"February Quest: Gave 1 bottle of port", Mob::DRUNK_TRADER_RICH},
+  {"February Quest: Gave 2 bottles of port", Mob::DRUNK_TRADER_RICH},//337
+  {"October Quest: Participant", Mob::NONE}, //338
+  {"December Quest: Gave 1 candy cane", Mob::FAT_ELF_1},//339
+  {"December Quest: Gave 2 candy canes", Mob::FAT_ELF_1},//340
+  {"December Quest: Gave 3 candy canes", Mob::FAT_ELF_1},//341
+  {"December Quest: Gave 4 candy canes", Mob::FAT_ELF_1},//342
+  {"December Quest: Gave 1 jingle bell collar", Mob::FAT_ELF_2}, //343
+  {"December Quest: Gave 2 jingle bell collars", Mob::FAT_ELF_2}, //344
+  {"December Quest: Gave 3 jingle bell collars", Mob::FAT_ELF_2}, //345
+  {"December Quest: Gave 4 jingle bell collars", Mob::FAT_ELF_2}, //346
+  {"December Quest: Gave 1 scroll case", Mob::FAT_ELF_3}, //347
+  {"December Quest: Gave 2 scroll cases", Mob::FAT_ELF_3}, //348
+  {"December Quest: Gave 3 scroll cases", Mob::FAT_ELF_3}, //349
+  {"December Quest: Gave 4 scroll cases", Mob::FAT_ELF_3}, //350
+  {"Practice Reset: Level15", Mob::ANY}, //351
+  {"Practice Reset: Level40", Mob::ANY}, //352
+  {"Practice Reset: Level50", Mob::ANY}, //353
+  {"February Quest: Gave 3 bottles of port", Mob::DRUNK_TRADER_RICH},//354
+  {"February Quest: Gave 4 bottles of port", Mob::DRUNK_TRADER_RICH},//355
+  {"Trait: Pyrophobia", Mob::NONE}, // 356
+  {"Trait: Vicious", Mob::NONE}, // 357
+  {"Trait: Craven", Mob::NONE}, // 358
+  {"Newbie: Doing Newbie Quest", Mob::ANY}, //359
+  {"Newbie: Finding Class Trainer", Mob::ANY}, //360
+  {"Newbie: Found Class Trainer", Mob::ANY}, //361
+  {"Newbie: Finding Secondary Basic Trainer", Mob::ANY}, //362
+  {"Newbie: Found Secondary Basic Trainer", Mob::ANY}, //363
+  {"Newbie: Running First Errand", Mob::ANY}, //364
+  {"Newbie: Ran First Errand", Mob::ANY}, //365
+  {"Newbie: Running Second Errand", Mob::ANY}, //366
+  {"Newbie: Ran Second Errand", Mob::ANY}, //367
+  {"Newbie: Fighting Mouse", Mob::ANY}, //368
+  {"Newbie: Killed Mouse", Mob::ANY}, //369
+  {"Newbie: Has Completed Newbie Quest", Mob::ANY}, //370
+  {"", Mob::NONE}, 
 };
 
 

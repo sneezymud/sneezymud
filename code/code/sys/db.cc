@@ -762,7 +762,7 @@ void bootWorld(void)
     if (rp->isRoomFlag(ROOM_SAVE_ROOM))
       rp->loadItems();
 
-    if ((rp->number == ROOM_NOCTURNAL_STORAGE))
+    if ((rp->number == Room::NOCTURNAL_STORAGE))
       continue;
 
     if (rp->isRoomFlag(ROOM_PEACEFUL) && !rp->isRoomFlag(ROOM_NO_HEAL))
@@ -2934,7 +2934,7 @@ void runResetCmdM(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
 
   // add mob to room
   if (rs.command == 'M' && (mob->isNocturnal() || mob->isDiurnal()))
-    *real_roomp(ROOM_NOCTURNAL_STORAGE) += *mob;
+    *real_roomp(Room::NOCTURNAL_STORAGE) += *mob;
   else
     *rp += *mob;
 
@@ -2943,8 +2943,8 @@ void runResetCmdM(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
 
   if (rs.command == 'M')
   {
-    mob->brtRoom = (rp ? rp->number : ROOM_NOWHERE);
-    mobRepop(mob, zone.zone_nr, (rp ? rp->number : ROOM_NOWHERE));
+    mob->brtRoom = (rp ? rp->number : Room::NOWHERE);
+    mobRepop(mob, zone.zone_nr, (rp ? rp->number : Room::NOWHERE));
   }
   last_cmd = mobload = true;
 }
@@ -2970,8 +2970,8 @@ void runResetCmdC(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   SET_BIT(charmie->specials.affectedBy, AFF_CHARM);
 
   // mob popped
-  charmie->brtRoom = (charmie->roomp ? charmie->roomp->number : ROOM_NOWHERE);
-  mobRepop(charmie, zone.zone_nr, (charmie->roomp ? charmie->roomp->number : ROOM_NOWHERE));
+  charmie->brtRoom = (charmie->roomp ? charmie->roomp->number : Room::NOWHERE);
+  mobRepop(charmie, zone.zone_nr, (charmie->roomp ? charmie->roomp->number : Room::NOWHERE));
   mob = charmie;
   last_cmd = mobload = true;
 }
@@ -2998,8 +2998,8 @@ void runResetCmdK(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   SET_BIT(grouper->specials.affectedBy, AFF_GROUP);
 
   // mob popped
-  grouper->brtRoom = (grouper->roomp ? grouper->roomp->number : ROOM_NOWHERE);
-  mobRepop(grouper, zone.zone_nr, (grouper->roomp ? grouper->roomp->number : ROOM_NOWHERE));
+  grouper->brtRoom = (grouper->roomp ? grouper->roomp->number : Room::NOWHERE);
+  mobRepop(grouper, zone.zone_nr, (grouper->roomp ? grouper->roomp->number : Room::NOWHERE));
   mob = grouper;
   last_cmd = mobload = true;
 }
@@ -3036,7 +3036,7 @@ void runResetCmdR(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
     rider->addFollower(mob);
 
   // needs to be after we are set riding
-  rider->brtRoom = (rider->roomp ? rider->roomp->number : ROOM_NOWHERE);
+  rider->brtRoom = (rider->roomp ? rider->roomp->number : Room::NOWHERE);
   mobRepop(rider, zone.zone_nr);
   mob = rider;
   last_cmd = mobload = true;

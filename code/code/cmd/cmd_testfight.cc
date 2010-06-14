@@ -219,7 +219,7 @@ void test_fight_death(TBeing *ch, TBeing *v, int mod)
 {
   // we can't delete ch or v, but we CAN clean up the void from past fights
   // so do this first..
-  TRoom *rp2 = real_roomp(ROOM_VOID);
+  TRoom *rp2 = real_roomp(Room::VOID);
   TThing *t;
   for(StuffIter it=rp2->stuff.begin();it!=rp2->stuff.end();){
     t=*(it++);
@@ -267,12 +267,12 @@ void test_fight_death(TBeing *ch, TBeing *v, int mod)
 
   // take ch out of room and move to void
   --(*ch);
-  thing_to_room(ch, ROOM_VOID);
+  thing_to_room(ch, Room::VOID);
 
   for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
     t=*(it++);
     --(*t);
-    thing_to_room(t, ROOM_VOID);
+    thing_to_room(t, Room::VOID);
   }
   delete rp;
 }

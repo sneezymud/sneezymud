@@ -82,9 +82,9 @@ void Craps::loseDice()
   TMonster *crap_man;
 
   the_dice = dynamic_cast<TObj *>(m_ch->heldInPrimHand());
-  if (!the_dice || the_dice->objVnum() != CRAPS_DICE) {
+  if (!the_dice || the_dice->objVnum() != Obj::CRAPS_DICE) {
     the_dice = dynamic_cast<TObj *>(m_ch->heldInSecHand());
-    if (!the_dice || the_dice->objVnum() != CRAPS_DICE) {
+    if (!the_dice || the_dice->objVnum() != Obj::CRAPS_DICE) {
       vlogf(LOG_BUG, "loseDice called without dice held???");
     }
   }
@@ -110,22 +110,22 @@ bool TBeing::checkForDiceHeld() const
   t = heldInPrimHand();
   obj = dynamic_cast<TObj *>(t);
   if (obj) {
-    if (obj->objVnum() == CRAPS_DICE)
+    if (obj->objVnum() == Obj::CRAPS_DICE)
       return TRUE;
     for(StuffIter it=obj->stuff.begin();it!=obj->stuff.end() && (t=*it);++it) {
       obj = dynamic_cast<TObj *>(t);
-      if (obj && obj->objVnum() == CRAPS_DICE)
+      if (obj && obj->objVnum() == Obj::CRAPS_DICE)
         return TRUE;
     }
   }
   t = heldInSecHand();
   obj = dynamic_cast<TObj *>(t);
   if (obj) {
-    if (obj->objVnum() == CRAPS_DICE)
+    if (obj->objVnum() == Obj::CRAPS_DICE)
       return TRUE;
     for(StuffIter it=obj->stuff.begin();it!=obj->stuff.end() && (t=*it);++it) {
       obj = dynamic_cast<TObj *>(t);
-      if (obj && obj->objVnum() == CRAPS_DICE)
+      if (obj && obj->objVnum() == Obj::CRAPS_DICE)
         return TRUE;
     }
   }
@@ -140,11 +140,11 @@ TObj *TBeing::checkForDiceInInv() const
   for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
     obj = dynamic_cast<TObj *>(t);
     if (obj) {
-      if (obj->objVnum() == CRAPS_DICE)
+      if (obj->objVnum() == Obj::CRAPS_DICE)
         return obj;
       for(StuffIter it=obj->stuff.begin();it!=obj->stuff.end() && (t2=*it);++it) {
         obj2 = dynamic_cast<TObj *>(t2);
-        if (obj2 && obj2->objVnum() == CRAPS_DICE)
+        if (obj2 && obj2->objVnum() == Obj::CRAPS_DICE)
           return obj2;
       }
     }
@@ -262,8 +262,8 @@ void TBeing::doBet(const char *arg)
 	  if (!(crap_man = FindMobInRoomWithProcNum(in_room, SPEC_CRAPSGUY))) {
 	  } else {
 	    // no dice in world
-	    if (!obj_index[real_object(CRAPS_DICE)].getNumber()) {
-	      the_dice = read_object(CRAPS_DICE, VIRTUAL);
+	    if (!obj_index[real_object(Obj::CRAPS_DICE)].getNumber()) {
+	      the_dice = read_object(Obj::CRAPS_DICE, VIRTUAL);
 	      *crap_man += *the_dice;
 	    }
 	    if (!(the_dice = crap_man->checkForDiceInInv())) {

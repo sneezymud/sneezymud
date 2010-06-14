@@ -663,9 +663,9 @@ Descriptor::~Descriptor()
       if (character->inRoom() >= 0) {
         // loadFromSt will have inRoom() == last rent
         // roomp not set yet, so just clear this value
-        character->setRoom(ROOM_VOID);
+        character->setRoom(Room::VOID);
       }
-      rp = real_roomp(ROOM_VOID);
+      rp = real_roomp(Room::VOID);
       *rp += *character;
       delete character;
       character = NULL;
@@ -991,7 +991,7 @@ int Descriptor::nanny(sstring arg)
   switch (connected) {
     case CON_CONN:
       if (!ac) {
-        rp = real_roomp(ROOM_VOID);
+        rp = real_roomp(Room::VOID);
         *rp += *character;
         delete character;
         character = NULL;
@@ -1020,7 +1020,7 @@ int Descriptor::nanny(sstring arg)
         buf = format("If this address is truly valid, please send a mail from it to: %s") % MUDADMIN_EMAIL;
         writeToQ(buf);
         writeToQ("Otherwise, please change your account email address.\n\r");
-        rp = real_roomp(ROOM_VOID);
+        rp = real_roomp(Room::VOID);
         *rp += *character;
         delete character;
         character = NULL;
@@ -1058,7 +1058,7 @@ int Descriptor::nanny(sstring arg)
         character->next = character_list;
         character_list = character;
 
-        character->setRoom(ROOM_NOWHERE);
+        character->setRoom(Room::NOWHERE);
 
         delete character;
         character = new TPerson(this);
@@ -1078,7 +1078,7 @@ int Descriptor::nanny(sstring arg)
 	  character->next = character_list;
 	  character_list = character;
 	  
-	  character->setRoom(ROOM_NOWHERE);
+	  character->setRoom(Room::NOWHERE);
 	  
 	  delete character;
 	  character = new TPerson(this);
@@ -1114,9 +1114,9 @@ int Descriptor::nanny(sstring arg)
           if (character->inRoom() >= 0) {
             // loadFromSt will have inRoom() == last rent
             // roomp not set yet, so just clear this value
-            character->setRoom(ROOM_VOID);
+            character->setRoom(Room::VOID);
           }
-          thing_to_room(character, ROOM_VOID);
+          thing_to_room(character, Room::VOID);
           delete character;
           tmp_ch->desc = this;
           character = tmp_ch;
@@ -1257,9 +1257,9 @@ int Descriptor::nanny(sstring arg)
               if (character->inRoom() >= 0) {
                 // loadFromSt will have inRoom() == last rent
                 // roomp not set yet, so just clear this value
-                character->setRoom(ROOM_NOWHERE);
+                character->setRoom(Room::NOWHERE);
               }
-              rp = real_roomp(ROOM_VOID);
+              rp = real_roomp(Room::VOID);
               *rp += *character;
               delete character;
               tmp_ch->desc = this;
@@ -1437,7 +1437,7 @@ int TPerson::genericLoadPC()
     else
       assignCorpsesToRooms();
   }
-  saveChar(ROOM_AUTO_RENT);
+  saveChar(Room::AUTO_RENT);
   sendTo(WELC_MESSG);
   next = character_list;
   character_list = this;
@@ -1447,17 +1447,17 @@ int TPerson::genericLoadPC()
     body = new Body(race->getBodyType(), points.maxHit);
   }
 
-  if (in_room == ROOM_NOWHERE || in_room == ROOM_AUTO_RENT) {
+  if (in_room == Room::NOWHERE || in_room == Room::AUTO_RENT) {
     if (banished()) {
-      rp = real_roomp(ROOM_HELL);
+      rp = real_roomp(Room::HELL);
       *rp += *this;
-      player.hometown = ROOM_HELL;
+      player.hometown = Room::HELL;
     } else if (GetMaxLevel() <= MAX_MORT) {
       if (player.hometown != 0xFFFF) {
         rp = real_roomp(player.hometown);
         if (!rp) {
           vlogf(LOG_LOW, format("Player (%s) had non-existant hometown (%d)") %  getName() % player.hometown);
-          rp = real_roomp(ROOM_NEWBIE);
+          rp = real_roomp(Room::NEWBIE);
         }
 
         if (!rp) {
@@ -1467,7 +1467,7 @@ int TPerson::genericLoadPC()
 
         *rp += *this;
       } else {
-        rp = real_roomp(ROOM_NEWBIE);
+        rp = real_roomp(Room::NEWBIE);
 
         if (!rp) {
           vlogf(LOG_LOW, format("Was unable to read center square!  Player being disconnected!  (%s) [2]") % getName());
@@ -1475,12 +1475,12 @@ int TPerson::genericLoadPC()
         }
 
         *rp += *this;
-        player.hometown = ROOM_NEWBIE;
+        player.hometown = Room::NEWBIE;
       }
     } else {
       wizFileRead(); // Needed for office
 
-      rp = real_roomp((desc ? desc->office : ROOM_IMPERIA));
+      rp = real_roomp((desc ? desc->office : Room::IMPERIA));
 
       if (!IS_SET(desc->account->flags, TAccount::IMMORTAL)) {
         vlogf(LOG_BUG, format("%s is immortal but account isn't set immortal.  Setting now.") % 
@@ -1490,7 +1490,7 @@ int TPerson::genericLoadPC()
 
       if (!rp) {
         vlogf(LOG_BUG, format("Attempting to place %s in room that does not exist.\n\r") %  name);
-        rp = real_roomp(ROOM_VOID);
+        rp = real_roomp(Room::VOID);
       }
 
       if (!rp) {
@@ -1498,9 +1498,9 @@ int TPerson::genericLoadPC()
 	return DELETE_THIS;
       }
 
-      in_room = ROOM_NOWHERE;  // change it so it doesn't error in +=
+      in_room = Room::NOWHERE;  // change it so it doesn't error in +=
       *rp += *this;
-      player.hometown = ROOM_IMPERIA;
+      player.hometown = Room::IMPERIA;
       if (!isImmortal())   // they turned it off
 	doToggle("immortal");
 
@@ -1522,32 +1522,32 @@ int TPerson::genericLoadPC()
           return DELETE_THIS;
         }
 
-        in_room = ROOM_NOWHERE;  // change it so it doesn't error in +=
+        in_room = Room::NOWHERE;  // change it so it doesn't error in +=
         *rp += *this;
         player.hometown = in_room;
       } else {
-        rp = real_roomp(ROOM_NEWBIE);
+        rp = real_roomp(Room::NEWBIE);
 
         if (!rp) {
           vlogf(LOG_LOW, format("Was unable to read center square!  Player being disconnected!  (%s) [4]") % getName());
           return DELETE_THIS;
         }
 
-        in_room = ROOM_NOWHERE;  // change it so it doesn't error in +=
+        in_room = Room::NOWHERE;  // change it so it doesn't error in +=
         *rp += *this;
-        player.hometown = ROOM_NEWBIE;
+        player.hometown = Room::NEWBIE;
       }
     } else {
-      rp = real_roomp(ROOM_HELL);
+      rp = real_roomp(Room::HELL);
 
       if (!rp) {
         vlogf(LOG_LOW, format("Was unable to read HELL!  Player being disconnected!  (%s) [5]") % getName());
         return DELETE_THIS;
       }
 
-      in_room = ROOM_NOWHERE;  // change it so it doesn't error in +=
+      in_room = Room::NOWHERE;  // change it so it doesn't error in +=
       *rp += *this;
-      player.hometown = ROOM_HELL;
+      player.hometown = Room::HELL;
     }
   }
 
@@ -2871,11 +2871,11 @@ void processAllInput()
     }
     if ((--(d->wait) <= 0) && (&d->input)->takeFromQ(comm, sizeof(comm))){
       if (d->character && !d->connected && 
-          d->character->specials.was_in_room != ROOM_NOWHERE) {
+          d->character->specials.was_in_room != Room::NOWHERE) {
         --(*d->character);
         rp = real_roomp(d->character->specials.was_in_room);
         *rp += *d->character;
-        d->character->specials.was_in_room = ROOM_NOWHERE;
+        d->character->specials.was_in_room = Room::NOWHERE;
         act("$n has returned.", TRUE, d->character, 0, 0, TO_ROOM);
       }
       d->wait = 1;

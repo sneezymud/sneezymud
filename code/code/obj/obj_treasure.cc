@@ -58,7 +58,7 @@ void TTreasure::getFourValues(int *x1, int *x2, int *x3, int *x4) const
 sstring TTreasure::statObjInfo() const
 {
   sstring a("");
-  if (objVnum() == OBJ_IMMORTAL_EXCHANGE_COIN) {
+  if (objVnum() == Obj::IMMORTAL_EXCHANGE_COIN) {
     if (!getSerialNumber()) {
       a = "\n\r<R>Invalid Immortal Exchange coin: no serial number.<1>\n\r";
     } else {
@@ -85,7 +85,7 @@ sstring TTreasure::statObjInfo() const
 
 void TTreasure::lowCheck()
 {
-  if (objVnum() == OBJ_IMMORTAL_EXCHANGE_COIN) {
+  if (objVnum() == Obj::IMMORTAL_EXCHANGE_COIN) {
     if (getSerialNumber()) {
       TDatabase db(DB_SNEEZY);
       db.query("select k_coin from immortal_exchange_coin where k_coin = %i and date_redeemed is not null", getSerialNumber());

@@ -163,7 +163,7 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   }
 
   // allow us to abort it.
-  if (myself->inRoom() == ROOM_HELL)
+  if (myself->inRoom() == Room::HELL)
     return FALSE;
 
   // if we hate someone, the other guards hate them too
@@ -255,7 +255,7 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       }
       break;
     case STATE_TROLLEY_TO:
-      if(myself->inRoom()==ROOM_TROLLEY){
+      if(myself->inRoom()==Room::TROLLEY){
         exitp = myself->roomp->exitDir(DIR_NORTH);
 
 	if(exitp->to_room == 1303){
@@ -297,10 +297,10 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       }
       break;
     case STATE_TROLLEY_RET:
-      if(myself->inRoom()==ROOM_TROLLEY){
+      if(myself->inRoom()==Room::TROLLEY){
         exitp = myself->roomp->exitDir(DIR_NORTH);
 
-	if(exitp->to_room == ROOM_CS){
+	if(exitp->to_room == Room::CS){
 	  rc=myself->goDirection(money_train_path[job->cur_path][job->cur_pos + 1].direction);
 	  if (IS_SET_DELETE(rc, DELETE_THIS)) {
 	    return DELETE_THIS;

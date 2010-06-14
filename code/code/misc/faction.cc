@@ -1637,7 +1637,7 @@ void procLaunchCaravans::run(const TPulse &) const
     }
     // launch a caravan
     FactionInfo[i].caravan_counter = 0;
-    if (!(mob = read_mobile(MOB_CARAVAN_MASTER, VIRTUAL))) {
+    if (!(mob = read_mobile(Mob::CARAVAN_MASTER, VIRTUAL))) {
       vlogf(LOG_BUG, "No caravan master read in load_caravan");
       return;
     }
