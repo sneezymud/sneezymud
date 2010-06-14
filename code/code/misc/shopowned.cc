@@ -128,10 +128,8 @@ void TShopOwned::doSellTransaction(int cashCost, const sstring &name,
 void TShopOwned::doBuyTransaction(int cashCost, const sstring &name, 
 			       transactionTypeT action, TObj *obj)
 {
-  int expenses=0;
   // take the expense cut out
-  if((expenses=doExpenses(cashCost, obj)) == -1)
-    return;
+  int expenses=doExpenses(cashCost, obj);
 
   // buyer gives money to seller
   if(action != TX_RECYCLING)
@@ -177,9 +175,6 @@ int TShopOwned::doExpenses(int cashCost, TObj *obj)
   if(sba){
     value=((double)cashCost/profit_buy) * ratio;
 
-    if(keeper->getMoney() < value)
-      return -1;
-    
     keeper->giveMoney(sba, (int)value, GOLD_SHOP);
     shoplog(shop_nr, sba, keeper, "talens", (int)-value, "expenses");
     shoplog(SBA_SHOP_NR, keeper, sba, "talens", (int)value, "expenses");
