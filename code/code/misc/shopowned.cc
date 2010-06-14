@@ -184,6 +184,10 @@ int TShopOwned::doExpenses(int cashCost, TObj *obj)
     shoplog(shop_nr, sba, keeper, "talens", (int)-value, "expenses");
     shoplog(SBA_SHOP_NR, keeper, sba, "talens", (int)value, "expenses");
     sba->saveItems(shop_nr);
+
+    TShopOwned tso(SBA_SHOP_NR, sba, keeper);
+    tso.journalize(keeper->getName(), "expenses", TX_BUYING_SERVICE, (int)value, 0, 0, 0);
+
     return (int)value;
   }
 
