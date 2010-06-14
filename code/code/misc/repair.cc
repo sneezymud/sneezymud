@@ -408,6 +408,11 @@ static int getRepairItem(TBeing *repair, TBeing *buyer, int ticket, TNote *obj)
     delete fixed_obj;
     return FALSE;
   }
+
+  if(repair->getMoney() <= 0){
+    repair->doSay("I'm sorry, but I'm on strike until my salary gets paid.");
+    return FALSE;
+  }
   
   // check if the player has enough money to pay for it
   if (tmp_cost > buyer->getMoney()) {
