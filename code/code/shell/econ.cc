@@ -13,14 +13,20 @@ namespace po = boost::program_options;
 
 using namespace std;
 
-int shops[]={0, 1, 2, 4, 5, 8, 9, 10, 11, 12, 14, 36, 44, 73, 84, 85, 
-	     86, 87, 89, 90, 91, 92, 93, 94, 95, 127, 144, 
-	     150, 161, 184, 186, 214, -1};
+//int shops[]={0, 1, 2, 4, 5, 8, 9, 10, 11, 12, 14, 36, 44, 73, 84, 85, 
+//	     86, 87, 89, 90, 91, 92, 93, 94, 95, 127, 144, 
+//	     150, 161, 184, 186, 214, -1};
+
+int shops[]={0, 2, 4, 5, 9, 14, 36, 44, 73, 84, 85, 
+	     86, 87, 89, 90, 91, 92, 93, 94, 95, 
+	     150, 161, 184, 186, -1};
 
 // the purpose of this is to check the sum of the credits and debits in the
 // accounting journal and compare that to the cash that the shop actually has.
 void check_cash_balance(){
   TDatabase db(DB_SNEEZY);
+
+  cout << "Checking cash balances..." << endl;
 
   for(int i=0;shops[i]!=-1;++i){
     db.query("select sum(debit-credit) as sum from shoplogjournal where shop_nr=%i and post_ref=100", shops[i]);
@@ -50,6 +56,8 @@ void check_cash_balance(){
 void check_inventory_cogs(){
   TDatabase db(DB_SNEEZY);
 
+  cout << "Checking COGS against journal entries..." << endl;
+
   for(int i=0;shops[i]!=-1;++i){
     db.query("select sum(debit-credit) as sum from shoplogjournal where shop_nr=%i and post_ref=130", shops[i]);
     db.fetchRow();
@@ -75,6 +83,8 @@ void check_inventory_cogs(){
 // this checks the number of items recorded in COGS versus how many are in rent
 void check_cogs_count(){
   TDatabase db(DB_SNEEZY);
+
+  cout << "Checking COGS against rent..." << endl;
 
   for(int i=0;shops[i]!=-1;++i){
     db.query("select r.name as name from room r, shop s where s.shop_nr=%i and r.vnum=s.in_room", shops[i]);
@@ -149,6 +159,8 @@ void check_cogs_detail(int cogs_detail){
 void check_balance_sheet(){
   TDatabase db(DB_SNEEZY);
 
+  cout << "Checking balance sheet totals..." << endl;
+
   for(int i=0;shops[i]!=-1;++i){
     db.query("select r.name as name from room r, shop s where s.shop_nr=%i and r.vnum=s.in_room", shops[i]);
     db.fetchRow();
@@ -184,10 +196,13 @@ int main(int argc, char *argv[]){
   bool balance_sheet=false;
   bool cogs_count=false;
   int cogs_detail=-1;
+  bool all_checks=false;
 
   po::options_description cmdline("Options");
   cmdline.add_options()
     ("help", "produce help message")
+    ("all_checks,a", po::value<bool>(&all_checks)->zero_tokens(),
+     "run all checks")
     ("cash_balance,c", po::value<bool>(&cash_balance)->zero_tokens(),
      "check cash balances")
     ("inventory_cogs,i", po::value<bool>(&inventory_cogs)->zero_tokens(),
@@ -209,14 +224,13 @@ int main(int argc, char *argv[]){
   }
   po::notify(vm);
 
-
-  if(cash_balance)
+  if(cash_balance || all_checks)
     check_cash_balance();
-  if(inventory_cogs)
+  if(inventory_cogs || all_checks)
     check_inventory_cogs();
-  if(balance_sheet)
+  if(balance_sheet || all_checks)
     check_balance_sheet();
-  if(cogs_count)
+  if(cogs_count || all_checks)
     check_cogs_count();
   if(cogs_detail!=-1)
     check_cogs_detail(cogs_detail);
