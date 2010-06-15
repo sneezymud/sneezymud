@@ -136,7 +136,21 @@ int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       
 
     // do price check, buy commods
-    db.query("select foo.rent_id, r.owner, (foo.weight-min(r.weight))*10 as diff from rent r, (select rent_id, material, weight from rent where vnum=50 and owner_type='shop' and owner=%i) foo where r.vnum=50 and r.owner_type='shop' and r.owner in (%i,%i,%i,%i) and r.material=foo.material group by owner, r.material order by diff desc limit 1", commod_shop_nr[*target_shop_idx], commod_shop_nr[0], commod_shop_nr[1], commod_shop_nr[2], commod_shop_nr[3]);
+    db.query("\
+select here.rent_id, others.owner, \
+  (here.weight-min(others.weight))*10 as diff \
+from \
+  rent others, \
+  (select rent_id, material, weight from rent \
+    where vnum=50 and owner_type='shop' and owner=%i) here \
+where others.vnum=50 and others.owner_type='shop' and \
+  others.owner in (%i,%i,%i,%i) and here.material!=0 \
+  others.material=here.material \
+group by owner, others.material \
+order by diff desc limit 1", 
+	     commod_shop_nr[*target_shop_idx], 
+	     commod_shop_nr[0], commod_shop_nr[1], 
+	     commod_shop_nr[2], commod_shop_nr[3]);
     db.fetchRow();
     
     int diff=(int)(convertTo<float>(db["diff"]));
@@ -146,9 +160,9 @@ int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     vlogf(LOG_PEEL, format("best deal found at (%i): diff=%i") % owner % diff);
 
     // risk mediation, for robbings etc
-    diff=min(1000, diff);
+    diff=min(5000, diff);
     
-    if(diff >= 100 && owner!=commod_shop_nr[*target_shop_idx]){
+    if(diff >= 500 && owner!=commod_shop_nr[*target_shop_idx]){
       // do buy
       TObj *temp1=tso.getKeeper()->loadItem(commod_shop_nr[*target_shop_idx], rent_id);
 
