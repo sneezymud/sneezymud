@@ -200,7 +200,7 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       job->state=STATE_TO_CS; 
       break;
     case STATE_TO_CS:
-      if(myself->walk_path(money_train_path[job->cur_path], job->cur_pos)){
+      if(!myself->walk_path(money_train_path[job->cur_path], job->cur_pos)){
 	if(job->which == BANK_BM){
 	  job->cur_path=1;
 	  job->cur_pos=0;
@@ -217,7 +217,7 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       }
       break;
     case STATE_TO_LOGRUS_BANK:
-      if(myself->walk_path(money_train_path[job->cur_path], job->cur_pos)){
+      if(!myself->walk_path(money_train_path[job->cur_path], job->cur_pos)){
 	phat_lewt(myself);
 
 	act("$n receives several bags of valuables for delivery.",
@@ -229,14 +229,14 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       }
       break;
     case STATE_LOGRUS_TO_CS:
-      if(myself->walk_path(money_train_path[job->cur_path], job->cur_pos)){
+      if(!myself->walk_path(money_train_path[job->cur_path], job->cur_pos)){
 	job->cur_path=3;
 	job->cur_pos=0;
 	job->state=STATE_TO_BANK;
       }
       break;
     case STATE_TO_AMBER_BANK:
-      if(myself->walk_path(money_train_path[job->cur_path], job->cur_pos)){
+      if(!myself->walk_path(money_train_path[job->cur_path], job->cur_pos)){
 	phat_lewt(myself);
 
 	act("$n receives several bags of valuables for delivery.",
@@ -248,7 +248,7 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       }
       break;
     case STATE_AMBER_TO_CS:
-      if(myself->walk_path(money_train_path[job->cur_path], job->cur_pos)){
+      if(!myself->walk_path(money_train_path[job->cur_path], job->cur_pos)){
 	job->cur_path=3;
 	job->cur_pos=0;
 	job->state=STATE_TO_BANK;
@@ -278,7 +278,7 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       }
       break;
     case STATE_BM_DELIVERING:
-      if(myself->walk_path(money_train_path[job->cur_path], job->cur_pos)){
+      if(!myself->walk_path(money_train_path[job->cur_path], job->cur_pos)){
 	phat_lewt(myself);
 
 	act("$n receives several bags of valuables for delivery.",
@@ -290,7 +290,7 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       }
       break;
     case STATE_BM_RETURNING:
-      if(myself->walk_path(money_train_path[job->cur_path], job->cur_pos)){
+      if(!myself->walk_path(money_train_path[job->cur_path], job->cur_pos)){
 	job->cur_path=3;
 	job->cur_pos=0;
 	job->state=STATE_TROLLEY_RET;
@@ -320,7 +320,7 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       }
       break;
     case STATE_TO_BANK:
-      if(myself->walk_path(money_train_path[job->cur_path], job->cur_pos)){
+      if(!myself->walk_path(money_train_path[job->cur_path], job->cur_pos)){
 	for (f = myself->followers; f; f = n) {
 	  n = f->next;
 	  if((vict=f->follower)&& vict->inGroup(*myself) && !vict->fight()){
