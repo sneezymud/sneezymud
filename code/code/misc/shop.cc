@@ -2868,7 +2868,7 @@ void factoryProduction(int shop_nr)
       int num=(*iter).second;
 
       // COGS of this material
-      COGS=tso.COGS_get(name)*num;
+      COGS=tso.COGS_get(name, num);
       total_cogs+=COGS;
       
       // inventory - remove this material

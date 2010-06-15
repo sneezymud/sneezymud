@@ -83,7 +83,7 @@ class TShopOwned {
 			 const sstring &name, int amt, bool new_id=false);
   void COGS_add(const sstring &name, int amt, int num);
   void COGS_remove(const sstring &name, int num);
-  int COGS_get(const sstring &name);
+  int COGS_get(const sstring &name, int num);
 
 
   TShopOwned(int, TMonster *, TBeing *);

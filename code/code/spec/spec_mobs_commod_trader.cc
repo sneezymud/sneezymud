@@ -93,7 +93,7 @@ int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   if(!cart)
     return TRUE;
 
-  if(0 && myself->in_room == commod_shops[*target_shop_idx]){
+  if(myself->in_room == commod_shops[*target_shop_idx]){
     TShopOwned tso(commod_shop_nr[*target_shop_idx], myself);
 
     // get stuff from the cart
@@ -107,7 +107,7 @@ int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     // sell commods
     vlogf(LOG_PEEL, format("In target shop (%i) selling commods") %
 	  commod_shop_nr[*target_shop_idx]);
-    for(StuffIter it=cart->stuff.begin();it!=cart->stuff.end();){
+    for(StuffIter it=myself->stuff.begin();it!=myself->stuff.end();){
       TThing *t=*(it++);
       if((commod=dynamic_cast<TCommodity *>(t))){
 	price=commod->sellPrice(commod->numUnits(), 
@@ -115,15 +115,25 @@ int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 	int rc;
 	if(rc=commod->sellMe(myself, tso.getKeeper(), 
 			  commod_shop_nr[*target_shop_idx], 1)){
-	  homebase.doBuyTransaction(price, format("%s x %i") % 
-				    material_nums[commod->getMaterial()].mat_name % commod->numUnits(), 
-				    TX_SELLING, commod);
+
+	  homebase.journalize(tso.getKeeper()->getName(),
+			      material_nums[commod->getMaterial()].mat_name,
+			      TX_BUYING, price, 0, 0, 0, commod->numUnits());
+
+	  shoplog(250, myself, tso.getKeeper(), 
+		  material_nums[commod->getMaterial()].mat_name, 
+		  price, "selling");
+
+	  vlogf(LOG_PEEL, format("sold %i for %i from %i") %
+		commod->numUnits() % price % commod_shop_nr[*target_shop_idx]);
 
 	  if(IS_SET_DELETE(rc, DELETE_THIS))
 	    delete commod;
 	}
       }
     }
+    
+      
 
     // do price check, buy commods
     db.query("select foo.rent_id, r.owner, (foo.weight-min(r.weight))*10 as diff from rent r, (select rent_id, material, weight from rent where vnum=50 and owner_type='shop' and owner=%i) foo where r.vnum=50 and r.owner_type='shop' and r.owner in (%i,%i,%i,%i) and r.material=foo.material group by owner, r.material order by diff desc limit 1", commod_shop_nr[*target_shop_idx], commod_shop_nr[0], commod_shop_nr[1], commod_shop_nr[2], commod_shop_nr[3]);
@@ -173,9 +183,13 @@ int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       if((commod->buyMe(myself, tso.getKeeper(), commod->numUnits(), 
 			commod_shop_nr[*target_shop_idx])) != -1){
 	// commod is invalid here
-	
-	homebase.doSellTransaction(price, format("%s x %i") % 
-				   commodname % units, TX_BUYING);
+
+	homebase.journalize(tso.getKeeper()->getName(), commodname,
+			    TX_SELLING, price, 0, 0, 0, units);
+
+	shoplog(250, myself, tso.getKeeper(), 
+		commodname, -price, "buying");
+
       } else {
 	vlogf(LOG_PEEL, "buy failed");
       }
@@ -189,9 +203,10 @@ int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 	if(commod_shop_nr[i]==owner)
 	  *target_shop_idx=i;
 
-      vlogf(LOG_PEEL, format("now moving to %i") % commod_shop_nr[*target_shop_idx]);
+      vlogf(LOG_PEEL, format("now moving to %i") % 
+	    commod_shop_nr[*target_shop_idx]);
 
-      for(StuffIter it=cart->stuff.begin();it!=cart->stuff.end();){
+      for(StuffIter it=myself->stuff.begin();it!=myself->stuff.end();){
 	TThing *ttt=*(it++);
 	if(dynamic_cast<TCommodity *>(ttt)){
 	  --(*ttt);

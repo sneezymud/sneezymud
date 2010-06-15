@@ -193,11 +193,11 @@ void TShopOwned::COGS_remove(const sstring &name, int num)
   queryqueue.push(format("update shoplogcogs set total_cost=total_cost-(floor((total_cost/count))*%i), count=count-%i where obj_name='%s' and shop_nr=%i") % num % num % name.escape(sstring::SQL) % shop_nr);
 }
 
-int TShopOwned::COGS_get(const sstring &name)
+int TShopOwned::COGS_get(const sstring &name, int num)
 {
   TDatabase db(DB_SNEEZY);
 
-  db.query("select total_cost/count as cost from shoplogcogs where shop_nr=%i and obj_name='%s'", shop_nr, name.c_str());
+  db.query("select (total_cost/count)*%i as cost from shoplogcogs where shop_nr=%i and obj_name='%s'", num, shop_nr, name.c_str());
   
   if(db.fetchRow())
     return convertTo<int>(db["cost"]);
@@ -279,7 +279,7 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
       } else if(action == TX_BUYING || action == TX_RECYCLING){
 	// now we have to calculate COGS for this item
 	// (COGS = cost of goods sold)
-	COGS=COGS_get(name);
+	COGS=COGS_get(name, num);
 	
 	// now log it
 	// COGS
