@@ -121,11 +121,22 @@ int TCorporation::getAssets()
 std::vector <corp_list_data> getCorpListingData(void)
 {
   TDatabase db(DB_SNEEZY);
-  int corp_id=0, val=0, gold=0, bankowner=0, bankgold=0;
+  int corp_id=0, gold=0, bankowner=0, bankgold=0;
   std::vector <corp_list_data> corp_list;
   corp_list_data corp_list_item;
 
-  db.query("select c.corp_id, c.name, sum(so.gold) as gold, b.talens as bankgold, count(so.shop_nr) as shopcount, sob.corp_id as bankowner, sum(r.price) as assets from ((((corporation c left outer join shopownedcorpbank b on (b.corp_id=c.corp_id and c.bank=b.shop_nr)) left outer join shopowned sob on (sob.shop_nr=c.bank)) left outer join shopowned so on (c.corp_id=so.corp_id)) left outer join shop s on (so.shop_nr=s.shop_nr)) left outer join rent r on (s.shop_nr=r.owner and r.owner_type='shop') group by c.corp_id, c.name, b.talens, sob.corp_id order by sum(so.gold)+b.talens desc");
+  db.query(" \
+select c.corp_id, c.name, sum(so.gold) as gold, b.talens as bankgold, \
+  count(so.shop_nr) as shopcount, sob.corp_id as bankowner \
+from \
+  corporation c \
+  left outer join shopownedcorpbank b \
+    on (b.corp_id=c.corp_id and c.bank=b.shop_nr) \
+  left outer join shopowned sob on (sob.shop_nr=c.bank) \
+  left outer join shopowned so on (c.corp_id=so.corp_id) \
+group by c.corp_id, c.name, b.talens, sob.corp_id \
+order by sum(so.gold)+b.talens desc \
+");
   
   while(db.fetchRow()){
     corp_id=convertTo<int>(db["corp_id"]);
@@ -140,13 +151,11 @@ std::vector <corp_list_data> getCorpListingData(void)
     if(bankowner!=corp_id)
       gold += bankgold;
 
-    val=gold+corp.getAssets();
-
-    corp_list_item.rank=val;
     corp_list_item.corp_id=corp_id;
     corp_list_item.name=db["name"];
     corp_list_item.gold=gold;
-    corp_list_item.assets=convertTo<int>(db["assets"]);
+    corp_list_item.assets=corp.getAssets();
+    corp_list_item.rank=gold+corp_list_item.assets;
     corp_list.push_back(corp_list_item);
   }
 
