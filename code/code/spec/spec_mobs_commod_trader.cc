@@ -175,6 +175,7 @@ order by diff desc limit 1",
       
       // make obj2 the amount we want to buy, then adjust an re-save commod
       TObj *obj2 = read_object(50, VIRTUAL);
+      diff/=2;
       obj2->setWeight(diff/20.0);
       commod->setWeight(commod->getWeight() - obj2->getWeight());
       obj2->setMaterial(commod->getMaterial());
