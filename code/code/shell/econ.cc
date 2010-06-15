@@ -19,7 +19,7 @@ using namespace std;
 
 int shops[]={0, 2, 4, 5, 9, 14, 36, 44, 73, 84, 85, 
 	     86, 87, 89, 90, 91, 92, 93, 94, 95, 
-	     150, 161, 184, 186, -1};
+	     150, 160, 161, 184, 186, 250, -1};
 
 // the purpose of this is to check the sum of the credits and debits in the
 // accounting journal and compare that to the cash that the shop actually has.
