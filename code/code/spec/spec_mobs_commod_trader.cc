@@ -144,7 +144,7 @@ from \
   (select rent_id, material, weight from rent \
     where vnum=50 and owner_type='shop' and owner=%i) here \
 where others.vnum=50 and others.owner_type='shop' and \
-  others.owner in (%i,%i,%i,%i) and here.material!=0 \
+  others.owner in (%i,%i,%i,%i) and here.material!=0 and \
   others.material=here.material \
 group by owner, others.material \
 order by diff desc limit 1", 
