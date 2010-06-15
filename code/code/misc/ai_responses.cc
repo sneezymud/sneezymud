@@ -10,6 +10,7 @@
 #include "shop.h"
 #include "database.h"
 #include "spec_mobs.h"
+#include "shopowned.h"
 
 static char	responseFile[32];
 
@@ -723,6 +724,12 @@ void responseTransaction(TBeing *speaker, TMonster *tm, int value)
 
   if(keeper){
     keeper->addToMoney(value, GOLD_SHOP);
+
+    TShopOwned tso(SBA_SHOP_NR, keeper, tm);
+    // should record object name instead of speaker name here
+    tso.journalize(tm->getName(), speaker->getName(), 
+		   TX_BUYING_SERVICE, value, 0,0,0);
+
     shoplog(SBA_SHOP_NR, speaker, keeper, tm->getName(), 
 	    value, "giving");
     keeper->saveItems(SBA_SHOP_NR);

@@ -2235,8 +2235,12 @@ int shopping_produce(TMonster *keeper)
       continue;
     }
 
-    // money goes to sba
     tso.doSellTransaction(cost, o->getName(), TX_PRODUCING);
+
+    // money goes to sba
+    TShopOwned tsba(SBA_SHOP_NR, sbaKeeper, keeper);
+    tsba.journalize(keeper->getName(), o->getName(), TX_BUYING_SERVICE, 
+		    cost, 0,0,0);
     shoplog(SBA_SHOP_NR, keeper, sbaKeeper, o->getName(), cost, "producing");
 
     keeper->saveItem(shop_nr, o);
@@ -2850,6 +2854,9 @@ void factoryProduction(int shop_nr)
     keeper->setMoney(keeper->getMoney()-obj->productionPrice());
 
     // money goes to sba
+    TShopOwned tsba(SBA_SHOP_NR, sba, keeper);
+    tsba.journalize(keeper->getName(), obj->getName(), TX_BUYING_SERVICE,
+		    obj->productionPrice(), 0,0,0);
     shoplog(SBA_SHOP_NR, keeper, sba, obj->getName(), 
 	    obj->productionPrice(), "producing");
     
