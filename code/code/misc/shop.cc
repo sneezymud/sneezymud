@@ -2243,6 +2243,7 @@ int shopping_produce(TMonster *keeper)
 		    cost, 0,0,0);
     shoplog(SBA_SHOP_NR, keeper, sbaKeeper, o->getName(), cost, "producing");
 
+    sbaKeeper->saveItems(SBA_SHOP_NR);
     keeper->saveItem(shop_nr, o);
     delete o;
   }
@@ -2851,7 +2852,7 @@ void factoryProduction(int shop_nr)
 
     // place in shop
     keeper->saveItem(shop_nr, obj);
-    keeper->setMoney(keeper->getMoney()-obj->productionPrice());
+    keeper->giveMoney(sba, obj->productionPrice(), GOLD_SHOP);
 
     // money goes to sba
     TShopOwned tsba(SBA_SHOP_NR, sba, keeper);
