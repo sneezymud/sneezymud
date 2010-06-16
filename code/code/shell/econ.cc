@@ -62,7 +62,7 @@ void check_inventory_cogs(){
     db.query("select sum(debit-credit) as sum from shoplogjournal where shop_nr=%i and post_ref=130", shops[i]);
     db.fetchRow();
     int inventory=convertTo<int>(db["sum"]);
-    db.query("select sum(total_cost) as sum from shoplogcogs where shop_nr=%i", shops[i]);
+    db.query("select sum(total_cost) as sum from shoplogcogs where shop_nr=%i and count>0", shops[i]);
     db.fetchRow();
     int cogs=convertTo<int>(db["sum"]);
     db.query("select r.name as name from room r, shop s where s.shop_nr=%i and r.vnum=s.in_room", shops[i]);
@@ -87,6 +87,11 @@ void check_cogs_count(){
   cout << "Checking COGS against rent..." << endl;
 
   for(int i=0;shops[i]!=-1;++i){
+    // commod trader doesn't rent items
+    if(shops[i]==250)
+      continue;
+
+
     db.query("select r.name as name from room r, shop s where s.shop_nr=%i and r.vnum=s.in_room", shops[i]);
     db.fetchRow();    
     sstring shop_name=db["name"];
