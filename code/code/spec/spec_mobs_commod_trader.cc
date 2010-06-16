@@ -119,6 +119,7 @@ int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 	  homebase.journalize(tso.getKeeper()->getName(),
 			      material_nums[commod->getMaterial()].mat_name,
 			      TX_BUYING, price, 0, 0, 0, commod->numUnits());
+	  homebase.getKeeper()->saveItems(250);
 
 	  shoplog(250, myself, tso.getKeeper(), 
 		  material_nums[commod->getMaterial()].mat_name, 
@@ -201,6 +202,7 @@ order by diff desc limit 1",
 
 	homebase.journalize(tso.getKeeper()->getName(), commodname,
 			    TX_SELLING, price, 0, 0, 0, units);
+	homebase.getKeeper()->saveItems(250);
 
 	shoplog(250, myself, tso.getKeeper(), 
 		commodname, -price, "buying");
