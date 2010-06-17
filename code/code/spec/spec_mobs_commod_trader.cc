@@ -202,7 +202,6 @@ order by diff desc limit 1",
 
 	homebase.journalize(tso.getKeeper()->getName(), commodname,
 			    TX_SELLING, price, 0, 0, 0, units);
-	homebase.getKeeper()->saveItems(250);
 
 	shoplog(250, myself, tso.getKeeper(), 
 		commodname, -price, "buying");
@@ -212,6 +211,7 @@ order by diff desc limit 1",
       }
       
       myself->giveMoney(homebase.getKeeper(), myself->getMoney(), GOLD_SHOP);
+      homebase.getKeeper()->saveItems(250);
 
       vlogf(LOG_PEEL, format("bought %i for %i from %i") %
 	    units % price % commod_shop_nr[*target_shop_idx]);
