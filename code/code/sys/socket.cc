@@ -1944,6 +1944,14 @@ int TMainSocket::gameLoop()
     
     tics++;			// tics since last checkpoint signal 
   }
+
+  // flush the query queue
+  TDatabase db(DB_SNEEZY);
+  while(!queryqueue.empty()){
+    db.query(queryqueue.front().c_str());
+    queryqueue.pop();
+  }
+
   ares_destroy(channel);
   return TRUE;
 }
