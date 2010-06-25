@@ -15,7 +15,7 @@ void procCheckMail::run(const TPulse &) const
 {
   Descriptor *d;
 
-  if (gamePort == BUILDER_GAMEPORT)
+  if (gamePort == Config::Port::BUILDER)
     return;
   
   for (d = descriptor_list; d; d = d->next) {

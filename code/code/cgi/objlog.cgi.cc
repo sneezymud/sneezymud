@@ -50,7 +50,7 @@ void print_form()
 
 int main(int argc, char **argv)
 {
-  gamePort=PROD_GAMEPORT;
+  gamePort=Config::Port::PROD;
   sstring my_query;
   unsigned int count = 0;
   TSession session(cgi, "SneezyMUD");

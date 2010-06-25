@@ -569,9 +569,9 @@ void procPingData::run(const TPulse &) const
   
   if(p) pclose(p);
   
-  if(gamePort == PROD_GAMEPORT){
+  if(gamePort == Config::Port::PROD){
     p=popen("/mud/prod/lib/bin/ping sneezy", "w");
-  } else if(gamePort == BUILDER_GAMEPORT){
+  } else if(gamePort == Config::Port::BUILDER){
     p=popen("/mud/prod/lib/bin/ping sneezybuilder", "w");
   } else {
     p=popen("/mud/prod/lib/bin/ping sneezybeta", "w");

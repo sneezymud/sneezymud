@@ -3417,7 +3417,7 @@ void TBeing::makeOutputPaged()
   Comm *c;
 
   // don't try to page xml
-  if(desc->socket->port==PROD_XMLPORT)
+  if(desc->socket->port==Config::Port::PROD_XML)
     return;
 
   while(c=desc->output.takeFromQ()){

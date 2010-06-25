@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 
   if (bTrimmed){
     vlogf(LOG_MISC, "Loading as trimmed port.");
-    GAMMA_GAMEPORT = gamePort;
+    gamePort = Config::Port::GAMMA;
   }
 
   Uptime = time(0);
@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 
   WizLock = false;
 
-  if (gamePort == BETA_GAMEPORT) {
+  if (gamePort == Config::Port::BETA) {
     vlogf(LOG_MISC, "Running on beta test site.  Wizlocking by default.");
     WizLock = TRUE;
   }

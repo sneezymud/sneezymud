@@ -1,13 +1,6 @@
 #ifndef __CONFIGURATION_H
 #define __CONFIGURATION_H
 
-// defines the port of the running muds
-extern const int PROD_GAMEPORT;
-extern const int PROD_XMLPORT;
-extern const int BETA_GAMEPORT;
-extern       int GAMMA_GAMEPORT; // quick boot
-extern const int ALPHA_GAMEPORT;
-extern const int BUILDER_GAMEPORT;
 
 class Config {
  private:
@@ -137,6 +130,20 @@ class Config {
   static bool NukeInactiveMobs(){ return nuke_inactive_mobs; }
   static bool LoadOnDeath(){ return load_on_death; }
   static bool ThrowFormatExceptions(){ return throw_format_exceptions; }
+
+
+  // defines the port of the running muds
+  class Port {
+  private:
+    Port();
+  public:
+    static const int PROD;
+    static const int PROD_XML;
+    static const int BETA;
+    static const int GAMMA;
+    static const int ALPHA;
+    static const int BUILDER;
+  };
 };
 
 

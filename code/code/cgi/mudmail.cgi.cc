@@ -33,7 +33,7 @@ int main(int argc, char **argv)
 {
   Config::doConfiguration();
   // trick the db code into using the prod database
-  gamePort = PROD_GAMEPORT;
+  gamePort = Config::Port::PROD;
   toggleInfo.loadToggles();
 
   Cgicc cgi;

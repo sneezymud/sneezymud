@@ -1447,7 +1447,7 @@ bool zoneData::bootZone(int zone_nr)
       break;
     }
 
-    if (rs.command == '*' || gamePort == GAMMA_GAMEPORT) {
+    if (rs.command == '*' || gamePort == Config::Port::GAMMA) {
       fgets(buf, 255, fl);        
       continue;
     }
@@ -2381,7 +2381,7 @@ TObj *read_object(int nr, readFileTypeT type)
     obj->setVolume(convertTo<int>(obj_cache[nr]->s["volume"]));
     obj->setMaterial(convertTo<int>(obj_cache[nr]->s["material"]));
     // beta is used to test LOW loads, so don't let max_exist be a factor
-    obj->max_exist = (gamePort == BETA_GAMEPORT ? 9999 : convertTo<int>(obj_cache[nr]->s["max_exist"]));
+    obj->max_exist = (gamePort == Config::Port::BETA ? 9999 : convertTo<int>(obj_cache[nr]->s["max_exist"]));
 
   } else {
     db.query("select type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist from obj where vnum=%i", obj_index[nr].virt);
@@ -2412,7 +2412,7 @@ TObj *read_object(int nr, readFileTypeT type)
     obj->setVolume(convertTo<int>(db["volume"]));
     obj->setMaterial(convertTo<int>(db["material"]));
     // beta is used to test LOW loads, so don't let max_exist be a factor
-    obj->max_exist = (gamePort == BETA_GAMEPORT ? 9999 : convertTo<int>(db["max_exist"]));
+    obj->max_exist = (gamePort == Config::Port::BETA ? 9999 : convertTo<int>(db["max_exist"]));
   }
   
 
@@ -2824,7 +2824,7 @@ void runResetCmdE(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   if (!mob->canUseEquipment(obj, SILENT_YES))
     vlogf(LOG_LOW, format("'E' command equipping unusable item (%s:%d) on (%s:%d).") % obj->getName() % obj->objVnum() % mob->getName() % mob->mobVnum());
   TBaseClothing *tbc = dynamic_cast<TBaseClothing *>(obj);
-  if (tbc && tbc->canWear(ITEM_WEAR_FINGERS) && gamePort != PROD_GAMEPORT) {
+  if (tbc && tbc->canWear(ITEM_WEAR_FINGERS) && gamePort != Config::Port::PROD) {
     vlogf(LOG_LOW, format("RINGLOAD: [%s][%-6.2f] loading on [%s][%d]") % 
           obj->getName() % tbc->armorLevel(ARMOR_LEV_REAL) %
           mob->getName() % mob->GetMaxLevel());
@@ -2888,7 +2888,7 @@ void runResetCmdM(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
     return;
 
   // catch cases where builder used global max over zonefile max
-  if (rs.arg2 > mob_index[rs.arg1].max_exist && gamePort != BETA_GAMEPORT && rs.arg3 != zone.random_room)
+  if (rs.arg2 > mob_index[rs.arg1].max_exist && gamePort != Config::Port::BETA && rs.arg3 != zone.random_room)
   {
     vlogf(LOG_LOW, format("Mob %s (%i) tried has improper load max (%i) compared to global (%i) in zonefile") %
       mob_index[rs.arg1].short_desc % mob_index[rs.arg1].virt % rs.arg2 % mob_index[rs.arg1].max_exist);
@@ -3072,7 +3072,7 @@ void runResetCmdQMark(zoneData &zone, resetCom &rs, resetFlag flags, bool &moblo
     bool useArgs = (objload && rs.character == 'P') || (mobload && rs.character == 'G');
     int my_chance = useArgs ? rs.arg1 : fixed_chance;
 
-    last_cmd = (rs.arg1 >= 98 || roll <= my_chance || gamePort == BETA_GAMEPORT);
+    last_cmd = (rs.arg1 >= 98 || roll <= my_chance || gamePort == Config::Port::BETA);
     if (!last_cmd) {
       if (rs.character == 'M')
         mobload = 0; // cancel all operations after this 'M' which use the mob ptr by setting !mobload
@@ -3446,7 +3446,7 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
   TObj *obj = NULL;
   resetFlag flags = resetFlagNone;
 
-  if (this->enabled == FALSE && gamePort == PROD_GAMEPORT) {
+  if (this->enabled == FALSE && gamePort == Config::Port::PROD) {
     if (bootTime)
       vlogf(LOG_MISC, "*** Zone was disabled.");
     return;

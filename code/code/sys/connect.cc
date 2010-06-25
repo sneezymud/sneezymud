@@ -278,7 +278,7 @@ bool Descriptor::checkForMultiplay()
     if (!character || !account || !character->name)
       return FALSE;
     
-    if (gamePort == ALPHA_GAMEPORT)
+    if (gamePort == Config::Port::ALPHA)
       return FALSE;
     
     if (character->hasWizPower(POWER_MULTIPLAY))
@@ -322,7 +322,7 @@ bool Descriptor::checkForMultiplay()
       if (d->account->name==account->name) {
 	total += 1;
 	if (total > max_multiplay_chars &&
-	    gamePort == PROD_GAMEPORT){
+	    gamePort == Config::Port::PROD){
 	  vlogf(LOG_CHEAT, format("MULTIPLAY: %s and %s from same account[%s]") % 
 		character->name % ch->name % account->name);
 	  if(Config::ForceMultiplayCompliance()){
@@ -484,7 +484,7 @@ int Descriptor::outputProcessing()
   while (c=output.takeFromQ()) {
     if(m_bIsClient){
       commtype=Comm::CLIENT;
-    } else if(socket->port==PROD_XMLPORT){
+    } else if(socket->port==Config::Port::PROD_XML){
       commtype=Comm::XML;
     } else {
       commtype=Comm::TEXT;

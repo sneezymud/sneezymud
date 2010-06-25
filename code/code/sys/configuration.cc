@@ -30,12 +30,12 @@ bool Config::nuke_inactive_mobs;
 bool Config::load_on_death;
 bool Config::throw_format_exceptions;
 
-const int PROD_GAMEPORT = 7900;
-const int PROD_XMLPORT = 7901;
-const int BETA_GAMEPORT = 5678;
-const int ALPHA_GAMEPORT = 6969;
-const int BUILDER_GAMEPORT = 8900;
-      int GAMMA_GAMEPORT = 6961; // Maror - quick boot! (skips zones) -Updated to allow otf swapping -Lapsos
+const int Config::Port::PROD=7900;
+const int Config::Port::PROD_XML=7901;
+const int Config::Port::BETA=5678;
+const int Config::Port::ALPHA=6969;
+const int Config::Port::BUILDER=8900;
+const int Config::Port::GAMMA=6961;
 
 void sendHelp(po::options_description desc){
   std::cout << "Usage: sneezy [options] [port]" << std::endl;
@@ -64,7 +64,7 @@ bool Config::doConfiguration(int argc, char *argv[])
      "suppress assignment of special routines")
     ("trimmed,t", po::value<bool>(&bTrimmed)->zero_tokens(),
      "load as trimmed port")
-    ("port,p", po::value<int>(&gamePort)->default_value(PROD_GAMEPORT),
+    ("port,p", po::value<int>(&gamePort)->default_value(Config::Port::PROD),
      "game port")
     ;
 

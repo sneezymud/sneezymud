@@ -31,7 +31,7 @@ void sendShowLogsRawArchive(int, int);
 int main(int argc, char **argv)
 {
   // trick the DB code into use prod database
-  gamePort=PROD_GAMEPORT;
+  gamePort=Config::Port::PROD;
 
   Cgicc cgi;
   form_iterator state_form=cgi.getElement("state");

@@ -19,7 +19,7 @@ sstring genericPart(int);
 int main(int argc, char **argv)
 {
   // trick the db code into using the prod database
-  gamePort = PROD_GAMEPORT;
+  gamePort = Config::Port::PROD;
   TDatabase db(DB_SNEEZY);
   
   // get the query string

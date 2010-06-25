@@ -272,7 +272,7 @@ sstring showComponentTechnical(const int tValue)
   // Check for script loads.  This will go through ALL of the scripts and check.
   // We only do this on !PROD because of the lag it will generate, and I do mean a
   // LOT of lag it will make.
-  if (gamePort != PROD_GAMEPORT) {
+  if (gamePort != Config::Port::PROD) {
     if (!(tDirInfo = opendir("mobdata/responses"))) {
       vlogf(LOG_FILE, "Unable to dirwalk directory mobdata/resposnes");
       tStString += "ERROR.  Unable to open mobdata/responses for reading.";
@@ -1400,7 +1400,7 @@ sstring showComponentTechnical(const int tValue)
   // Check for script loads.  This will go through ALL of the scripts and check.
   // We only do this on !PROD because of the lag it will generate, and I do mean a
   // LOT of lag it will make.
-  if (gamePort != PROD_GAMEPORT) {
+  if (gamePort != Config::Port::PROD) {
     if (!(tDirInfo = opendir("mobdata/responses"))) {
       vlogf(LOG_FILE, "Unable to dirwalk directory mobdata/resposnes");
       tStString += "ERROR.  Unable to open mobdata/responses for reading.";

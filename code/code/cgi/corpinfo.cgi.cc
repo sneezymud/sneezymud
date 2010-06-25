@@ -18,7 +18,7 @@ void sendCorporationInfo(int);
 int main(int argc, char **argv)
 {
   // trick the db code into using the prod database
-  gamePort = PROD_GAMEPORT;
+  gamePort = Config::Port::PROD;
   toggleInfo.loadToggles();
   form_iterator corp_id_form=cgi.getElement("corp_id");
 

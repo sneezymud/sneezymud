@@ -194,7 +194,7 @@ void check_balance_sheet(){
 
 int main(int argc, char *argv[]){
   Config::doConfiguration();
-  gamePort=PROD_GAMEPORT;
+  gamePort=Config::Port::PROD;
 
   bool cash_balance=false;
   bool inventory_cogs=false;

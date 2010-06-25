@@ -177,7 +177,7 @@ bool loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstrin
   // 1 - ((1-0.01*n**1/3)^(1/n)) = normalized load rate, less math
   double adj_obj_lp_ratio = 1 - pow((1 - 0.01*cbrt((double)obj_lp)), 1/(double)obj_lp);
   // vlogf(LOG_MISC, format("suitset: (10000000 * adj_obj_lp_ratio * stats.equip) = %d") % (int) (10000000 * adj_obj_lp_ratio * stats.equip));
-  if ((gamePort == BETA_GAMEPORT) ||
+  if ((gamePort == Config::Port::BETA) ||
       (chance >= 99) ||
       (::number(0,9999999) < (int) (10000000 * adj_obj_lp_ratio * stats.equip))) {
     /*

@@ -85,11 +85,11 @@ int run_the_game()
   gSocket = new TMainSocket();
   gSocket->initSocket(gamePort);
 
-  if(gamePort == PROD_GAMEPORT)
-    gSocket->initSocket(PROD_XMLPORT);
+  if(gamePort == Config::Port::PROD)
+    gSocket->initSocket(Config::Port::PROD_XML);
 
   // doh this doesn't work because 23 is a privileged port
-  //  if(gamePort == PROD_GAMEPORT)
+  //  if(gamePort == Config::Port::PROD)
   //    gSocket->initSocket(23); // listen on telnet port too
 
   bootDb();

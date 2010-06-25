@@ -338,7 +338,7 @@ static void fastFight()
   // this will ABSOLUTELY lag the game
 
   // most of this logic is stripped out of socket.cc: gameLoop()
-  if (gamePort == PROD_GAMEPORT)
+  if (gamePort == Config::Port::PROD)
     return;
 
   int pulse = 0;
@@ -418,7 +418,7 @@ static void fastFight()
 
         TMonster * tm = dynamic_cast<TMonster *>(tmp_ch);
         if (tm && !tm->isTestmob()) {
-          if (gamePort == PROD_GAMEPORT) {
+          if (gamePort == Config::Port::PROD) {
             temp = tm->next;
             continue;
           } else {

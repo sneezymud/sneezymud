@@ -2696,7 +2696,7 @@ int horse(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
   int rc;
 
   if (cmd == CMD_GENERIC_PULSE){
-    if (!::number(0,500) && gamePort == PROD_GAMEPORT) {
+    if (!::number(0,500) && gamePort == Config::Port::PROD) {
       me->setCond(POOP, 24);
       me->doPoop();
     }

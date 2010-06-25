@@ -665,7 +665,7 @@ int healing_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
       doctor = getDoctor(rp->in_room, shop_nr);
 
     if(!doctor){
-      if (gamePort != GAMMA_GAMEPORT)
+      if (gamePort != Config::Port::GAMMA)
         vlogf(LOG_BUG, format("Couldn't find doctor for shop_nr=%i!") % shop_nr);
       return FALSE;
     }

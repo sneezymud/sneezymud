@@ -1113,7 +1113,7 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
   if (!num)
     num = 1;
 
-  if (0 && gamePort != PROD_GAMEPORT) {
+  if (0 && gamePort != Config::Port::PROD) {
     sstring         tStString("");
     itemTypeT      tItemType;
     tObjectManipT  tObjectManip;
