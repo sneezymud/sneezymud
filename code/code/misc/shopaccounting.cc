@@ -177,8 +177,11 @@ void TShopOwned::COGS_add(const sstring &name, int amt, int num)
   db.query("select 1 from shoplogcogs where obj_name='%s' and shop_nr=%i", name.c_str(), shop_nr);
 
   if(!db.fetchRow()){
-    //    db.query("insert into shoplogcogs (shop_nr, obj_name, count, total_cost) values (%i, '%s', %i, %i)", shop_nr, name.c_str(), num, amt);
-    queryqueue.push(format("insert into shoplogcogs (shop_nr, obj_name, count, total_cost) values (%i, '%s', %i, %i)") % shop_nr % name.escape(sstring::SQL) % num % amt);
+    // this needs to be done immediately, otherwise there will be multiple
+    // inserts queued up the next time COGS_add() is called, if the queue
+    // hasn't been processed yet.
+    db.query("insert into shoplogcogs (shop_nr, obj_name, count, total_cost) values (%i, '%s', %i, %i)", shop_nr, name.escape(sstring::SQL).c_str(), num, amt);
+    //    queryqueue.push(format("insert into shoplogcogs (shop_nr, obj_name, count, total_cost) values (%i, '%s', %i, %i)") % shop_nr % name.escape(sstring::SQL) % num % amt);
   } else {
     queryqueue.push(format("update shoplogcogs set count=count+%i, total_cost=total_cost+%i where obj_name='%s' and shop_nr=%i") % num % amt % name.escape(sstring::SQL) % shop_nr);
   }
