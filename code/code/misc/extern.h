@@ -411,8 +411,5 @@ extern int atoi_safe(const sstring);
 extern double atof_safe(const sstring);
 extern int GetApprox(int, int);
 extern double GetApprox(double, int);
-
-extern sstring dir;
-extern bool bTrimmed;
 #endif
 

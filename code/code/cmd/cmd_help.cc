@@ -725,7 +725,7 @@ void TBeing::doHelp(const char *arg)
   save_game_stats();
 
   if (!*arg) {
-    desc->start_page_file(HELP_PAGE_FILE, "General help unavailable.\n\r");
+    desc->start_page_file(File::HELP_PAGE, "General help unavailable.\n\r");
     return;
   }
 
@@ -747,12 +747,12 @@ void TBeing::doHelp(const char *arg)
       if (!strcasecmp(arg, immortalIndex[i])) {
         found = TRUE;
         helpnum = i;
-        sprintf(helppath, "%s/%s", IMMORTAL_HELP_PATH, immortalIndex[i]);
+        sprintf(helppath, "%s/%s", Path::IMMORTAL_HELP, immortalIndex[i]);
         break;
       } else if (is_abbrev(arg, immortalIndex[i])) {
         found = TRUE;
         helpnum = i;
-        sprintf(helppath, "%s/%s", IMMORTAL_HELP_PATH, immortalIndex[i]);
+        sprintf(helppath, "%s/%s", Path::IMMORTAL_HELP, immortalIndex[i]);
       }
     }
     if (found) {
@@ -788,12 +788,12 @@ void TBeing::doHelp(const char *arg)
   if (GetMaxLevel() >= GOD_LEVEL1 && isImmortal()) {
     for (i = 0; i < builderIndex.size(); i++) {
       if (!strcasecmp(arg, builderIndex[i])) {
-        sprintf(helppath, "%s/%s", BUILDER_HELP_PATH, builderIndex[i]);
+        sprintf(helppath, "%s/%s", Path::BUILDER_HELP, builderIndex[i]);
         helpnum = i;
         found = TRUE;
         break;
       } else if (is_abbrev(arg, builderIndex[i])) {
-        sprintf(helppath, "%s/%s", BUILDER_HELP_PATH, builderIndex[i]);
+        sprintf(helppath, "%s/%s", Path::BUILDER_HELP, builderIndex[i]);
         helpnum = i;
         found = TRUE;
       }
@@ -837,12 +837,12 @@ void TBeing::doHelp(const char *arg)
         !strcasecmp(arg, "bleed"))
       break;
     if(sstring(arg).lower() == helpIndex[i].lower()){
-      sprintf(helppath, "%s/%s", HELP_PATH, helpIndex[i].c_str());
+      sprintf(helppath, "%s/%s", Path::HELP, helpIndex[i].c_str());
       helpnum = i;
       found = TRUE;
       break;
     } else if (is_abbrev(arg, helpIndex[i], MULTIPLE_YES)) {
-      sprintf(helppath, "%s/%s", HELP_PATH, helpIndex[i].c_str());
+      sprintf(helppath, "%s/%s", Path::HELP, helpIndex[i].c_str());
       helpnum = i;
       found = TRUE;
     }
@@ -858,16 +858,16 @@ void TBeing::doHelp(const char *arg)
     if (!strcasecmp(arg, "steal"))  // stealth
       break;
     if (!strcasecmp(arg, spellIndex[i])) {
-      sprintf(helppath, "%s/%s", SPELL_HELP_PATH, spellIndex[i]);
+      sprintf(helppath, "%s/%s", Path::SPELL_HELP, spellIndex[i]);
       helpnum = i;
       found = TRUE;
       break;
     } else if (is_abbrev(arg, spellIndex[i], MULTIPLE_YES, EXACT_YES)) {
-      sprintf(helppath, "%s/%s", SPELL_HELP_PATH, spellIndex[i]);
+      sprintf(helppath, "%s/%s", Path::SPELL_HELP, spellIndex[i]);
       helpnum = i;
       found = TRUE;
     } else if (is_abbrev(arg, spellIndex[i])) {
-      sprintf(helppath, "%s/%s", SPELL_HELP_PATH, spellIndex[i]);
+      sprintf(helppath, "%s/%s", Path::SPELL_HELP, spellIndex[i]);
       helpnum = i;
       found = TRUE;
     }
@@ -1151,12 +1151,12 @@ void TBeing::doHelp(const char *arg)
     if (!strcasecmp(arg, "cast"))  // casting
       break;
     if (!strcasecmp(arg, skillIndex[i])) {
-      sprintf(helppath, "%s/%s", SKILL_HELP_PATH, skillIndex[i]);
+      sprintf(helppath, "%s/%s", Path::SKILL_HELP, skillIndex[i]);
       helpnum = i;
       found = TRUE;
       break;
     } else if (is_abbrev(arg, skillIndex[i], MULTIPLE_YES)) {
-      sprintf(helppath, "%s/%s", SKILL_HELP_PATH, skillIndex[i]);
+      sprintf(helppath, "%s/%s", Path::SKILL_HELP, skillIndex[i]);
       helpnum = i;
       found = TRUE;
     }
@@ -1407,7 +1407,7 @@ void buildHelpIndex()
   // set a reasonable initial size
   immortalIndex.clear();
   immortalIndex.reserve(128);
-  if (!(dfd = opendir(IMMORTAL_HELP_PATH))) {
+  if (!(dfd = opendir(Path::IMMORTAL_HELP))) {
     vlogf(LOG_FILE, "Can't open immortal help directory for indexing!");
     exit(0);
   }
@@ -1425,7 +1425,7 @@ void buildHelpIndex()
   // set a reasonable initial size
   builderIndex.clear();
   builderIndex.reserve(64);
-  if (!(dfd = opendir(BUILDER_HELP_PATH))) {
+  if (!(dfd = opendir(Path::BUILDER_HELP))) {
     vlogf(LOG_FILE, "Can't open builder help directory for indexing!");
     exit(0);
   }
@@ -1443,7 +1443,7 @@ void buildHelpIndex()
   // set a reasonable initial size
   helpIndex.clear();
   helpIndex.reserve(512);
-  if (!(dfd = opendir(HELP_PATH))) {
+  if (!(dfd = opendir(Path::HELP))) {
     vlogf(LOG_FILE, "Can't open help directory for indexing!");
     exit(0);
   }
@@ -1464,7 +1464,7 @@ void buildHelpIndex()
   // set a reasonable initial size
   skillIndex.clear();
   skillIndex.reserve(256);
-  if (!(dfd = opendir(SKILL_HELP_PATH))) {
+  if (!(dfd = opendir(Path::SKILL_HELP))) {
     vlogf(LOG_FILE, "Can't open skill help directory for indexing!");
     exit(0);
   }
@@ -1482,7 +1482,7 @@ void buildHelpIndex()
   // set a reasonable initial size
   spellIndex.clear();
   spellIndex.reserve(256);
-  if (!(dfd = opendir(SPELL_HELP_PATH))) {
+  if (!(dfd = opendir(Path::SPELL_HELP))) {
     vlogf(LOG_FILE, "Can't open spell help directory for indexing!");
     exit(0);
   }

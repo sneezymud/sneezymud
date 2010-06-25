@@ -175,7 +175,7 @@ class CommTest : public CxxTest::TestSuite
     testPerson->desc->output.putInQ(new UncategorizedComm(testString[1]));
     testPerson->desc->output.putInQ(new UncategorizedComm(testString[2]));
     
-    testSocket->port=PROD_XMLPORT; // makeOutputPaged checks this
+    testSocket->port=Config::Port::PROD_XML; // makeOutputPaged checks this
     testPerson->makeOutputPaged();
 
     // for XML mode it shouldn't do anything
@@ -193,7 +193,7 @@ class CommTest : public CxxTest::TestSuite
     testPerson->desc->output.putInQ(new UncategorizedComm(testString[1]));
     testPerson->desc->output.putInQ(new UncategorizedComm(testString[2]));
 
-    testSocket->port=PROD_GAMEPORT; // makeOutputPaged checks this
+    testSocket->port=Config::Port::PROD; // makeOutputPaged checks this
     testPerson->makeOutputPaged();
     
     c=testPerson->desc->output.takeFromQ();

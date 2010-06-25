@@ -867,9 +867,9 @@ void ShowNewNews(TBeing * tBeing)
   sstring bufStr;
 
   // Report for the NEWS file
-  if (!stat(NEWS_FILE, &tData))
+  if (!stat(File::NEWS, &tData))
     if (tTime - tData.st_mtime <= (3 * SECS_PER_REAL_DAY))
-      if ((tFile = fopen(NEWS_FILE, "r"))) {
+      if ((tFile = fopen(File::NEWS, "r"))) {
         while (!feof(tFile)) {
           fgets(tString, 256, tFile);
 
@@ -938,9 +938,9 @@ void ShowNewNews(TBeing * tBeing)
   tPosted = false;
   tCount  = 0;
 
-  if (tBeing->isImmortal() && !stat(WIZNEWS_FILE, &tData))
+  if (tBeing->isImmortal() && !stat(File::WIZNEWS, &tData))
     if (tTime - tData.st_mtime <= (3 * SECS_PER_REAL_DAY))
-      if ((tFile = fopen(WIZNEWS_FILE, "r"))) {
+      if ((tFile = fopen(File::WIZNEWS, "r"))) {
         while (!feof(tFile)) {
           fgets(tString, 256, tFile);
 
@@ -3089,10 +3089,10 @@ int Descriptor::sendLogin(const sstring &arg)
       } else {
         FILE *signFile;
 
-        if ((signFile = fopen(SIGN_MESS, "r"))) {
+        if ((signFile = fopen(File::SIGN_MESS, "r"))) {
           fclose(signFile);
           sstring iosstring;
-          file_to_sstring(SIGN_MESS, iosstring);
+          file_to_sstring(File::SIGN_MESS, iosstring);
           page_string(iosstring, SHOWNOW_YES);
         }
       }
@@ -3390,20 +3390,20 @@ int Descriptor::doAccountStuff(char *arg)
           page_string(lockmess, SHOWNOW_YES);
         } else {
 #if 0
-          ifstream op(SIGN_MESS, ios::in | ios::nocreate);
+          ifstream op(File::SIGN_MESS, ios::in | ios::nocreate);
           if (op) {
             op.close();
             sstring iosstring;
-            file_to_sstring(SIGN_MESS, iosstring);
+            file_to_sstring(File::SIGN_MESS, iosstring);
             page_string(iosstring, SHOWNOW_YES);
           }
 #else
           FILE *signFile;
 
-          if ((signFile = fopen(SIGN_MESS, "r"))) {
+          if ((signFile = fopen(File::SIGN_MESS, "r"))) {
             fclose(signFile);
             sstring iosstring;
-            file_to_sstring(SIGN_MESS, iosstring);
+            file_to_sstring(File::SIGN_MESS, iosstring);
             page_string(iosstring, SHOWNOW_YES);
           }
 #endif
@@ -3418,20 +3418,20 @@ int Descriptor::doAccountStuff(char *arg)
           page_string(lockmess, SHOWNOW_YES);
         } else {
 #if 0
-          ifstream opp(SIGN_MESS, ios::in | ios::nocreate);
+          ifstream opp(File::SIGN_MESS, ios::in | ios::nocreate);
           if (opp) {
             opp.close();
             sstring iosstring;
-            file_to_sstring(SIGN_MESS, iosstring);
+            file_to_sstring(File::SIGN_MESS, iosstring);
             page_string(iosstring, SHOWNOW_YES);
           }
 #else
           FILE *signFile;
 
-          if ((signFile = fopen(SIGN_MESS, "r"))) {
+          if ((signFile = fopen(File::SIGN_MESS, "r"))) {
             fclose(signFile);
             sstring iosstring;
-            file_to_sstring(SIGN_MESS, iosstring);
+            file_to_sstring(File::SIGN_MESS, iosstring);
             page_string(iosstring, SHOWNOW_YES);
           }
 #endif
@@ -3761,7 +3761,7 @@ int Descriptor::doAccountMenu(const char *arg)
       break;
     case 'N':
     case 'n':
-      start_page_file(NEWS_FILE, "No news today\n\r");
+      start_page_file(File::NEWS, "No news today\n\r");
       break;
     case 'L':
     case 'l':
@@ -4044,12 +4044,12 @@ void Descriptor::sendMotd(int wiz)
 
   sprintf(motd + strlen(motd), "\n\r\n\r     Welcome to %s\n\r     %s\n\r\n\r", MUD_NAME_VERS, version.c_str());
 
-  file_to_sstring(MOTD_FILE, version);
+  file_to_sstring(File::MOTD, version);
   // swap color sstrings
   version = colorString(character, this, version, NULL, COLOR_BASIC,  false);
   strcat(motd, version.c_str());
 
-  if (stat(NEWS_FILE, &timestat)) {
+  if (stat(File::NEWS, &timestat)) {
     vlogf(LOG_BUG, "bad call to news file");
     return;
   }
@@ -4057,11 +4057,11 @@ void Descriptor::sendMotd(int wiz)
   sprintf(motd + strlen(motd), "\n\rREAD the NEWS LAST UPDATED       : %s\n\r",
                                 ctime(&(timestat.st_mtime)));
   if (wiz) {
-    file_to_sstring(WIZMOTD_FILE, version);
+    file_to_sstring(File::WIZMOTD, version);
     // swap color sstrings
     version = colorString(character, this, version, NULL, COLOR_BASIC,  false);
     strcat(motd, version.c_str());
-    if (stat(WIZNEWS_FILE, &timestat)) {
+    if (stat(File::WIZNEWS, &timestat)) {
       vlogf(LOG_BUG, "bad call to wiznews file");
       return;
     }

@@ -26,10 +26,10 @@ int main(int argc, char *argv[])
   if(!Config::doConfiguration(argc, argv))
     return 0;
 
-  if(noSpecials)
+  if(Config::NoSpecials())
     vlogf(LOG_MISC, "Suppressing assignment of special routines.");
 
-  if (bTrimmed){
+  if(Config::bTrimmed()){
     vlogf(LOG_MISC, "Loading as trimmed port.");
     gamePort = Config::Port::GAMMA;
   }
@@ -38,11 +38,11 @@ int main(int argc, char *argv[])
 
   vlogf(LOG_MISC, format("Running %s on port %d.") %  MUD_NAME % gamePort);
 
-  if (chdir(dir.c_str()) < 0) {
+  if (chdir(Config::DataDir().c_str()) < 0) {
     perror("chdir");
     exit(0);
   }
-  vlogf(LOG_MISC, format("Using %s as data directory.") %  dir);
+  vlogf(LOG_MISC, format("Using %s as data directory.") % Config::DataDir());
 
   srand(time(0));
 

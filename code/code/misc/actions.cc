@@ -142,7 +142,7 @@ void bootSocialMessages(void)
   int hide, min_pos;
   char buf[256];
 
-  if (!(fl = fopen(SOCMESS_FILE, "r"))) {
+  if (!(fl = fopen(File::SOCMESS, "r"))) {
     perror("bootSocialMessages");
     exit(0);
   }

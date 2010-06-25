@@ -21,7 +21,7 @@ class Exceptions : public CxxTest::TestSuite
     testDesc=new Descriptor(testSocket);
     testPerson1=new TPerson(testDesc);
     testPerson2=new TPerson(testDesc);
-    gamePort=BETA_GAMEPORT;
+    gamePort=Config::Port::BETA;
   }
 
   // I added an exception throw to out of range access of sstrings,

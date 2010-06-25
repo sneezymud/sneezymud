@@ -49,7 +49,6 @@ SystemTask *systask;
 
 // local globals 
 
-bool noSpecials = false;		// Suppress ass. of special routines 
 time_t Uptime;			// time that the game has been up 
 
 char hostlist[MAX_BAN_HOSTS][40];	// list of sites to ban

@@ -30,32 +30,41 @@ extern bool bootTime;
 
 const int MAX_OBJ_AFFECT = 5;
 
-const char * const SIGN_MESS = "/mud/sign/currentMess";
+class File {
+  private:
+  File();
+  
+ public:
+  static const char * const SIGN_MESS;
+  static const char * const MOB;
+  static const char * const ZONE;
+  static const char * const CREDITS;
+  static const char * const NEWS;
+  static const char * const STORY;
+  static const char * const WIZNEWS;
+  static const char * const MOTD;
+  static const char * const WIZMOTD;
+  static const char * const TIME;
+  static const char * const IDEA;
+  static const char * const TYPO;
+  static const char * const BUG;
+  static const char * const SOCMESS;
+  static const char * const HELP_PAGE;
+  static const char * const WIZLIST;
+};
 
-const char * const DFLT_DIR  ="lib";           /* default data directory     */
+class Path {
+ private:
+  Path();
 
-const char * const MOB_FILE         ="tinymob.use"; /* monster prototypes*/
-const char * const ZONE_FILE ="tinyworld.zon"; /* zone defs & command tables */
-
-const char * const CREDITS_FILE="txt/credits";   /* for the credits command */
-const char * const NEWS_FILE        ="txt/news";  /* for the 'news' command */
-const char * const STORY_FILE ="txt/story";     /* Stargazers pimpy story     */
-const char * const WIZNEWS_FILE	 ="txt/wiznews";
-const char * const MOTD_FILE  ="txt/motd";      /* messages of today */
-const char * const WIZMOTD_FILE     ="txt/wizmotd";   /* MOTD for immorts */
-
-const char * const TIME_FILE        ="time"; /* game calendar information  */
-const char * const IDEA_FILE        ="txt/ideas"; /* for the 'idea'-command */
-const char * const TYPO_FILE        ="txt/typos";     /*         'typo'     */
-const char * const BUG_FILE         ="txt/bugs";      /*         'bug'      */
-const char * const SOCMESS_FILE ="actions"; /* messgs for social acts     */
-const char * const HELP_PATH	 ="help/";   /* for HELP <keywrd>          */
-const char * const IMMORTAL_HELP_PATH="help/_immortal";
-const char * const BUILDER_HELP_PATH="help/_builder";
-const char * const SKILL_HELP_PATH  ="help/_skills";
-const char * const SPELL_HELP_PATH  ="help/_spells";
-const char * const HELP_PAGE_FILE   ="help/general";  /* for HELP <CR> */
-const char * const WIZLIST_FILE     ="txt/wizlist";   /* for WIZLIST   */
+ public:
+  static const char * const HELP;
+  static const char * const DATA;
+  static const char * const IMMORTAL_HELP;
+  static const char * const BUILDER_HELP;
+  static const char * const SKILL_HELP;
+  static const char * const SPELL_HELP;
+};  
 
 const char * const MUDADMIN_EMAIL   ="mudadmin@sneezymud.com";
 const char * const CODERS_EMAIL     ="mudadmin@sneezymud.com";

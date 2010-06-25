@@ -102,8 +102,6 @@ const int UPDATES_PER_MUDHOUR = (PULSE_MUDHOUR/PULSE_COMBAT);
 
 extern const char * const prompt_mesg[];
 extern void signalSetup(void);
-extern bool noSpecials;
-
 
 ////
 

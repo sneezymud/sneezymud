@@ -2656,7 +2656,7 @@ void TBeing::doEquipment(const sstring &arg)
 void TBeing::doCredits()
 {
   if (desc)
-    desc->start_page_file(CREDITS_FILE, "Credits file being revised!\n\r");
+    desc->start_page_file(File::CREDITS, "Credits file being revised!\n\r");
 }
 
 void TBeing::doWizlist()
@@ -2665,12 +2665,12 @@ void TBeing::doWizlist()
     FILE   *tFile;
     sstring  tStString("");
 
-    if (!(tFile = fopen(WIZLIST_FILE, "r")))
+    if (!(tFile = fopen(File::WIZLIST, "r")))
       sendTo("Sorry, wizlist under construction!\n\r");
     else {
       wizlist_used_num++;
 
-      file_to_sstring(WIZLIST_FILE, tStString);
+      file_to_sstring(File::WIZLIST, tStString);
       desc->page_string(tStString);
       fclose(tFile);
     }

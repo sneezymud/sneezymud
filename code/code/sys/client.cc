@@ -821,10 +821,10 @@ int Descriptor::read_client(char *str2)
           } else {
             FILE *signFile;
   
-            if ((signFile = fopen(SIGN_MESS, "r"))) {
+            if ((signFile = fopen(File::SIGN_MESS, "r"))) {
               fclose(signFile);
               sstring iosstring;
-              file_to_sstring(SIGN_MESS, iosstring);
+              file_to_sstring(File::SIGN_MESS, iosstring);
               page_string(iosstring, SHOWNOW_YES);
             }
           }

@@ -1303,7 +1303,7 @@ void fixup_players(void)
   bootPulse(".", false);
 
   // make the wizlist
-  if (!(fp = fopen(WIZLIST_FILE,"w"))) {
+  if (!(fp = fopen(File::WIZLIST,"w"))) {
     vlogf(LOG_FILE,"ERROR: Error opening wizlist");
     return;
   }

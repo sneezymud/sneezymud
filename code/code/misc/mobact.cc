@@ -34,6 +34,7 @@
 #include "obj_base_clothing.h"
 #include "obj_gas.h"
 #include "weather.h"
+#include "configuration.h"
 
 // returns DELETE_THIS if this has to be deleted
 int TMonster::mobileGuardian()
@@ -3813,7 +3814,7 @@ int TMonster::mobileActivity(int pulse)
       bumpHead(&iHeight);
   }
 
-  if (isShopkeeper() && !(pulse %(200*PULSE_MOBACT)) && !noSpecials){
+  if (isShopkeeper() && !(pulse %(200*PULSE_MOBACT)) && !Config::NoSpecials()){
     unsigned int shop_nr;
     
     for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != number); shop_nr++);
@@ -3858,7 +3859,8 @@ int TMonster::mobileActivity(int pulse)
     }
   }
 
-  if (spec && !(pulse %(50*PULSE_MOBACT)) && !::number(0, 1) && !noSpecials) {
+  if (spec && !(pulse %(50*PULSE_MOBACT)) && !::number(0, 1) && 
+      !Config::NoSpecials()) {
     rc = checkSpec(this, CMD_MOB_ALIGN_PULSE, "", NULL);
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return DELETE_THIS;
@@ -3868,7 +3870,7 @@ int TMonster::mobileActivity(int pulse)
   // trigger spec_procs
 
   // should do this in socket.cc
-  if (spec && !(pulse %(2 * PULSE_MOBACT)) && !noSpecials) {
+  if (spec && !(pulse %(2 * PULSE_MOBACT)) && !Config::NoSpecials()) {
     rc = checkSpec(this, CMD_GENERIC_PULSE, "", NULL);
     if (IS_SET_DELETE(rc, DELETE_VICT) || IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;

@@ -60,7 +60,7 @@ void TBeing::doNews(const char *argument)
 
   vecFiles.clear();
 
-  dfd = opendir(HELP_PATH);
+  dfd = opendir(Path::HELP);
   if (!dfd) {
     vlogf(LOG_FILE, "doNews: Failed opening directory.");
     return;
@@ -74,7 +74,7 @@ void TBeing::doNews(const char *argument)
         !strcmp(dp->d_name, "_skills"))
       continue;
 
-    sprintf(buf, "%s/%s", HELP_PATH, dp->d_name);
+    sprintf(buf, "%s/%s", Path::HELP, dp->d_name);
     if (!stat(buf, &theStat)) {
       if (now - theStat.st_mtime <= (3 * SECS_PER_REAL_DAY)) {
         newsFileList nfl(dp->d_name, theStat.st_mtime, "help ");
@@ -85,7 +85,7 @@ void TBeing::doNews(const char *argument)
   }
   closedir(dfd);
 
-  dfd = opendir(SKILL_HELP_PATH);
+  dfd = opendir(Path::SKILL_HELP);
   if (!dfd) {
     vlogf(LOG_FILE, "doNews: Failed opening directory.");
     return;
@@ -95,7 +95,7 @@ void TBeing::doNews(const char *argument)
         !strcmp(dp->d_name, ".."))
       continue;
 
-    sprintf(buf, "%s/%s", SKILL_HELP_PATH, dp->d_name);
+    sprintf(buf, "%s/%s", Path::SKILL_HELP, dp->d_name);
     if (!stat(buf, &theStat)) {
       if (now - theStat.st_mtime <= (3 * SECS_PER_REAL_DAY)) {
         newsFileList nfl(dp->d_name, theStat.st_mtime, "help ");
@@ -105,7 +105,7 @@ void TBeing::doNews(const char *argument)
   }
   closedir(dfd);
 
-  dfd = opendir(SPELL_HELP_PATH);
+  dfd = opendir(Path::SPELL_HELP);
   if (!dfd) {
     vlogf(LOG_FILE, "doNews: Failed opening directory.");
     return;
@@ -115,7 +115,7 @@ void TBeing::doNews(const char *argument)
         !strcmp(dp->d_name, ".."))
       continue;
 
-    sprintf(buf, "%s/%s", SPELL_HELP_PATH, dp->d_name);
+    sprintf(buf, "%s/%s", Path::SPELL_HELP, dp->d_name);
     if (!stat(buf, &theStat)) {
       if (now - theStat.st_mtime <= (3 * SECS_PER_REAL_DAY)) {
         newsFileList nfl(dp->d_name, theStat.st_mtime, "help ");
@@ -126,7 +126,7 @@ void TBeing::doNews(const char *argument)
   closedir(dfd);
 
   if (GetMaxLevel() > MAX_MORT && isImmortal()) {
-    dfd = opendir(BUILDER_HELP_PATH);
+    dfd = opendir(Path::BUILDER_HELP);
     if (!dfd) {
       vlogf(LOG_FILE, "doNews: Failed opening directory.");
       return;
@@ -136,7 +136,7 @@ void TBeing::doNews(const char *argument)
           !strcmp(dp->d_name, ".."))
         continue;
 
-      sprintf(buf, "%s/%s", BUILDER_HELP_PATH, dp->d_name);
+      sprintf(buf, "%s/%s", Path::BUILDER_HELP, dp->d_name);
       if (!stat(buf, &theStat)) {
         if (now - theStat.st_mtime <= (3 * SECS_PER_REAL_DAY)) {
           newsFileList nfl(dp->d_name, theStat.st_mtime, "help ");
@@ -148,7 +148,7 @@ void TBeing::doNews(const char *argument)
   }
 
   if (hasWizPower(POWER_IMMORTAL_HELP) && isImmortal()) {
-    dfd = opendir(IMMORTAL_HELP_PATH);
+    dfd = opendir(Path::IMMORTAL_HELP);
     if (!dfd) {
       vlogf(LOG_FILE, "doNews: Failed opening directory.");
       return;
@@ -158,7 +158,7 @@ void TBeing::doNews(const char *argument)
           !strcmp(dp->d_name, ".."))
         continue;
 
-      sprintf(buf, "%s/%s", IMMORTAL_HELP_PATH, dp->d_name);
+      sprintf(buf, "%s/%s", Path::IMMORTAL_HELP, dp->d_name);
       if (!stat(buf, &theStat)) {
         if (now - theStat.st_mtime <= (3 * SECS_PER_REAL_DAY)) {
           newsFileList nfl(dp->d_name, theStat.st_mtime, "help ");
@@ -170,13 +170,13 @@ void TBeing::doNews(const char *argument)
   }
 
   // motd, and wizmotd
-  if (!stat(MOTD_FILE, &theStat)) {
+  if (!stat(File::MOTD, &theStat)) {
     if (now - theStat.st_mtime <= (3 * SECS_PER_REAL_DAY)) {
       newsFileList nfl("motd", theStat.st_mtime, "");
       vecFiles.push_back(nfl);
     } else if (isImmortal()) {
       // slightly bizarre way of doing this, but wizmotd has same cmd as motd
-      if (!stat(WIZMOTD_FILE, &theStat)) {
+      if (!stat(File::WIZMOTD, &theStat)) {
         if (now - theStat.st_mtime <= (3 * SECS_PER_REAL_DAY)) {
           newsFileList nfl("motd", theStat.st_mtime, "");
           vecFiles.push_back(nfl);
@@ -186,7 +186,7 @@ void TBeing::doNews(const char *argument)
   }
 
   // credits
-  if (!stat(CREDITS_FILE, &theStat)) {
+  if (!stat(File::CREDITS, &theStat)) {
     if (now - theStat.st_mtime <= (3 * SECS_PER_REAL_DAY)) {
       newsFileList nfl("credits", theStat.st_mtime, "");
       vecFiles.push_back(nfl);
@@ -219,7 +219,7 @@ void TBeing::doNews(const char *argument)
 #if 1
 
   if(*arg){
-    std::ifstream news(NEWS_FILE);
+    std::ifstream news(File::NEWS);
     sstring s;
 
     while(news.getline(buf, 256)){
@@ -234,7 +234,7 @@ void TBeing::doNews(const char *argument)
       s+="\n\r";
     }
   } else 
-    file_to_sstring(NEWS_FILE, str, CONCAT_YES);
+    file_to_sstring(File::NEWS, str, CONCAT_YES);
 
   if (desc) {
     news_used_num++;
@@ -244,7 +244,7 @@ void TBeing::doNews(const char *argument)
 #else
   if (desc) {
     news_used_num++;
-    desc->start_page_file(NEWS_FILE, "No news is good news!\n\r");
+    desc->start_page_file(File::NEWS, "No news is good news!\n\r");
   }
 #endif
 }

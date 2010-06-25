@@ -1,6 +1,7 @@
 #ifndef __CONFIGURATION_H
 #define __CONFIGURATION_H
 
+#include "sstring.h"
 
 class Config {
  private:
@@ -107,6 +108,15 @@ class Config {
   // stability, true for maximum bug detection.
   static bool throw_format_exceptions;
 
+  // suppress assigning of special routines
+  static bool no_specials;
+
+  // run as trimmed port
+  static bool b_trimmed;
+
+  // data directory to run in (eg "lib")
+  static sstring data_dir;
+
  public:
   static bool doConfiguration(int argc=0, char *argv[]=0);
   
@@ -130,7 +140,9 @@ class Config {
   static bool NukeInactiveMobs(){ return nuke_inactive_mobs; }
   static bool LoadOnDeath(){ return load_on_death; }
   static bool ThrowFormatExceptions(){ return throw_format_exceptions; }
-
+  static bool NoSpecials(){ return no_specials; }
+  static bool bTrimmed(){ return b_trimmed; }
+  static sstring DataDir(){ return data_dir; }
 
   // defines the port of the running muds
   class Port {
