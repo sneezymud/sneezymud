@@ -243,7 +243,8 @@ void TPerson::resetChar()
     if (isupper(*tmp))
       *tmp = tolower(*tmp);
   }
-  if (!no_mail && has_mail(recipient) && gamePort != Config::Port::BUILDER)
+  if (!Config::NoMail() && has_mail(recipient) && 
+      gamePort != Config::Port::BUILDER)
     sendTo(format("\n\rYou have %sMAIL%s.\n\r") % bold() % norm());
 
   time_t ct = player.time->last_logon ? player.time->last_logon : time(0);

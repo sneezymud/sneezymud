@@ -14,13 +14,14 @@
 #include "obj_open_container.h"
 #include "spec_mobs.h"
 #include "combat.h"
+#include "configuration.h"
 
 // may not exceed NAME_SIZE (15) chars
 static const char * const SNEEZY_ADMIN = "SneezyMUD Administration";
 
 int mail_ok(TBeing *ch)
 {
-  if (no_mail) {
+  if (Config::NoMail()){
     ch->sendTo("Sorry, the mail system is having technical difficulties.\n\r");
     return FALSE;
   }

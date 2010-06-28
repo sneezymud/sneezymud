@@ -137,8 +137,6 @@ long total_bc = 0;
 long roomCount = 0;
 long mobCount = 0;
 long objCount = 0;
-bool no_mail = 0;
-sstring dir;
 unsigned int help_used_num = 0;
 unsigned int news_used_num = 0;
 unsigned int wiznews_used_num = 0;

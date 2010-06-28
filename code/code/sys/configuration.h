@@ -117,6 +117,9 @@ class Config {
   // data directory to run in (eg "lib")
   static sstring data_dir;
 
+  // turn off mail system
+  static bool no_mail;
+
  public:
   static bool doConfiguration(int argc=0, char *argv[]=0);
   
@@ -143,6 +146,7 @@ class Config {
   static bool NoSpecials(){ return no_specials; }
   static bool bTrimmed(){ return b_trimmed; }
   static sstring DataDir(){ return data_dir; }
+  static bool NoMail(){ return no_mail; }
 
   // defines the port of the running muds
   class Port {
