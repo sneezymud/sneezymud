@@ -939,7 +939,8 @@ Y 0 150 1			Crusader set
 
 M 0 6510 1 6503 	Ringer Bell
 ? 0 5 0 E
-E 1 6496 9999 10 		Glove Tattered ? 0 5 0 E
+E 1 6496 9999 10 		Glove Tattered
+? 0 5 0 E
 E 1 6497 9999 16 		Wrist Guard
 
 
