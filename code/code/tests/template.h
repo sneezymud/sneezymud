@@ -23,6 +23,8 @@ class template : public CxxTest::TestSuite
   
   // this is called before EACH test is run
   void setUp(){
+    // If the tests rely on each other, then this stops testing if one fails
+    //    CxxTest::setAbortTestOnFail(true);
   }
 
   // tests
