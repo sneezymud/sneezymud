@@ -2,6 +2,8 @@
 
 Import(['env', 'libs'])
 
+
+env.CxxTest('Pfile.h', LIBS=libs, CXXTEST_SKIP_ERRORS=True)
 env.CxxTest('Fruit.h', LIBS=libs, CXXTEST_SKIP_ERRORS=True)
 env.CxxTest('DBTest.h', LIBS=libs, CXXTEST_SKIP_ERRORS=True)
 env.CxxTest('CommTest.h', LIBS=libs, CXXTEST_SKIP_ERRORS=True)
