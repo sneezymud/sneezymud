@@ -9,13 +9,23 @@ class template : public CxxTest::TestSuite
 {
 
  public:
-  void setUp(){
+  // this function is called once, before any tests are run in this file
+  static template *createSuite(){ 
     Config::doConfiguration();
     freopen("code/tests/output/template.out", "w", stderr);
-    //    generate_obj_index();
-    //    toggleInfo.loadToggles();
+
+    return new template;
+  }
+  // this function is called once, after all tests in this file have been run
+  static void destroySuite(template *suite){ 
+    delete suite; 
+  }
+  
+  // this is called before EACH test is run
+  void setUp(){
   }
 
+  // tests
   void testAddition(){
     TS_ASSERT_EQUALS(1+1, 2);
   }
