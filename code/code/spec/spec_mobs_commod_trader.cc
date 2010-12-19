@@ -63,6 +63,8 @@ int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   TShopOwned homebase(250, myself);
   TDatabase db(DB_SNEEZY);
 
+  return FALSE;
+
   if (cmd == CMD_GENERIC_DESTROYED) {
     delete static_cast<int *>(myself->act_ptr);
     myself->act_ptr = NULL;
