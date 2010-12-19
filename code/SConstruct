@@ -75,7 +75,7 @@ Default('sneezy')
 
 # go into code and start building
 env.SConscript('code/SConscript',
-               build_dir='objs',
+               variant_dir='objs',
                duplicate=0,
                exports='env')
 
