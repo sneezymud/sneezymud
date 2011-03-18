@@ -11,6 +11,7 @@
 #include <csignal>
 #include <cstdarg>
 #include <errno.h>
+#include <stdio.h>
 
 extern "C" {
 #include <unistd.h>
@@ -1960,11 +1961,7 @@ int TMainSocket::gameLoop()
 TSocket *TMainSocket::newConnection(int t_sock, int port)
 {
   struct sockaddr_in isa;
-#if defined(LINUX)
-  unsigned int i;
-#else
-  int i;
-#endif
+  socklen_t i;
   TSocket *s;
 
   i = sizeof(isa);
@@ -2083,11 +2080,7 @@ void gethostbyaddr_cb(void *arg, int status, struct hostent *host_ent)
 
 int TMainSocket::newDescriptor(int t_sock, int port)
 {
-#if defined(LINUX)
-  unsigned int size;
-#else
-  int size;
-#endif
+  socklen_t size;
   Descriptor *newd;
   struct sockaddr_in saiSock;
   TSocket *s = NULL;
