@@ -1,24 +1,4 @@
-#if 0
-extern "C" {
 #include <stdio.h>
-
-#include <unistd.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <sys/wait.h>
-#include <netdb.h>
-#include <fcntl.h>
-#include <sys/resource.h>
-#include <sys/syscall.h>
-#include <sys/param.h>
-
-#ifdef SOLARIS
-#include <sys/file.h>
-#endif
-
-int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
-}
-#endif
 
 #include "extern.h"
 #include "handler.h"
