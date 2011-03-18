@@ -511,6 +511,7 @@ int disease_infection(TBeing *victim, int message, affectedData * af)
 {
   char buf[256];
   wearSlotT slot = wearSlotT(af->level);
+  int level, dam, rc;
 
   if(slot < MIN_WEAR || slot >= MAX_WEAR){
     vlogf(LOG_BUG, format("disease_infection called with bad slot: %i") % slot);
@@ -535,16 +536,15 @@ int disease_infection(TBeing *victim, int message, affectedData * af)
         af->duration = 100;
       }
       // level of infection dictates damage rate
-			int level = af->modifier2;
+      level = af->modifier2;
       if (!number(0, max(14, 35 - (int) ((double) level / 3.2)))) {
         victim->sendTo(format("Your %s shakes and twinges as the infection in it festers.\n\r") % victim->describeBodySlot(slot));
         sprintf(buf, "$n's %s shakes and twinges as the infection in it festers.", victim->describeBodySlot(slot).c_str());
         act(buf, TRUE, victim, NULL, NULL, TO_ROOM);
-        int rc = victim->hurtLimb(1, slot);
+        rc = victim->hurtLimb(1, slot);
         if (IS_SET_DELETE(rc, DELETE_THIS))
           return DELETE_THIS;
 
-        int dam;
         dam = (VITAL_PART(slot) ? 3 : 1);
         if (victim->reconcileDamage(victim, dam, SPELL_INFECT) == -1)
           return DELETE_THIS;
@@ -1658,6 +1658,8 @@ int disease_dysentery(TBeing *victim, int message, affectedData *af)
 int disease_pneumonia(TBeing *victim, int message, affectedData *af)
 {
   affectedData vaf;
+  int dam;
+
   // -moves, coughing & suffocation damage
   switch (message) {
     case DISEASE_BEGUN:
@@ -1701,7 +1703,7 @@ int disease_pneumonia(TBeing *victim, int message, affectedData *af)
           break;
         case 4:
           // suffocation: suffocation damage
-          int dam = ::number(5, 15);
+          dam = ::number(5, 15);
           dam *= (100 - victim->getImmunity(IMMUNE_SUFFOCATION));
           dam /= 100;
           if (dam <= 0)
