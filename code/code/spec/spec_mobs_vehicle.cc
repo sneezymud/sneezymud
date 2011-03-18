@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "room.h"
 #include "extern.h"
 #include "handler.h"

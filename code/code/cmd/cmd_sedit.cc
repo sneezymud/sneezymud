@@ -16,6 +16,7 @@ extern "C" {
 }
 
 #include <algorithm>
+#include <stdio.h>
 
 #include "extern.h"
 #include "handler.h"

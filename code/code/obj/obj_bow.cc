@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "extern.h"
 #include "range.h"
 #include "colorstring.h"

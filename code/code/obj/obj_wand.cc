@@ -1,5 +1,7 @@
 // wand.cc
 
+#include <stdio.h>
+
 #include "extern.h"
 #include "monster.h"
 #include "handler.h"

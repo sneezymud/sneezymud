@@ -44,6 +44,8 @@
     - SO BASICALLY, THIS VALUE IS WORTHLESS
 */
 
+#include <stdio.h>
+
 #include "being.h"
 #include "discipline.h"
 #include "room.h"

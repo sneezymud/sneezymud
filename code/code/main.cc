@@ -10,6 +10,8 @@
 #include "extern.h"
 #include "enum.h"
 
+#include <stdio.h>
+
 extern "C" {
 #include <unistd.h>
 }

@@ -1,6 +1,8 @@
 #if defined LINUX
 // Linux systems will reset the signal after it gets raised
 // According to the man page, we can get around this by using different include
+#include <stdio.h>
+
 // #include <bsd/signal.h>    doesn't seem to compile though
 //#include <bsd/signal.h>
 #include <csignal>

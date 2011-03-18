@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "extern.h"
 #include "obj_handgonne.h"
 #include "obj_general_weapon.h"

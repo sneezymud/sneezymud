@@ -1,5 +1,7 @@
 // base_clothing.cc
 
+#include <stdio.h>
+
 #include <cmath>
 
 #include "comm.h"

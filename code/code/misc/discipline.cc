@@ -1,5 +1,7 @@
 // discipline.cc
 
+#include <stdio.h>
+
 #include <cmath>
 #include "extern.h"
 #include "room.h"

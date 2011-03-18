@@ -5,6 +5,8 @@
     All rights reserved.
 ******************************************************************** */
 
+#include <stdio.h>
+
 #include "extern.h"
 #include "handler.h"
 #include "being.h"

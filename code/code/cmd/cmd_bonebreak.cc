@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "handler.h"
 #include "being.h"
 #include "combat.h"

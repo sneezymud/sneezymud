@@ -8,6 +8,8 @@
 // bag.cc
 //
 
+#include <stdio.h>
+
 #include "monster.h"
 #include "obj_bag.h"
 #include "connect.h"

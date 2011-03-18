@@ -1,5 +1,7 @@
 // magicutils.cc
 
+#include <stdio.h>
+
 #include <cmath>
 
 #include "extern.h"

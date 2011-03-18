@@ -8,6 +8,8 @@
 // container.cc
 //
 
+#include <stdio.h>
+
 #include "handler.h"
 #include "low.h"
 #include "monster.h"

@@ -8,6 +8,8 @@
 // portal.cc
 //
 
+#include <stdio.h>
+
 #include "room.h"
 #include "handler.h"
 #include "obj_portal.h"

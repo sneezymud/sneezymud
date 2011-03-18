@@ -6,6 +6,8 @@
 
 
 // symbol.cc
+#include <stdio.h>
+
 #include <cmath>
 
 

@@ -1,5 +1,7 @@
 // magic_item.cc
 
+#include <stdio.h>
+
 #include "monster.h"
 #include "obj_magic_item.h"
 

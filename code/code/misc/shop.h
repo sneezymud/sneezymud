@@ -11,6 +11,7 @@
 
 #include <map>
 #include <vector>
+#include <time.h>
 
 const unsigned int SHOPACCESS_OWNER   = (1<<0);
 const unsigned int SHOPACCESS_INFO    = (1<<1);

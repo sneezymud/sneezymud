@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "being.h"
 #include <errno.h>
 #include "low.h"

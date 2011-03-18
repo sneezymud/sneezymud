@@ -8,6 +8,8 @@
 // base_cup.cc
 // An abstract class to model drink containers, pools, vials, etc upon
 
+#include <stdio.h>
+
 #include "colorstring.h"
 #include "monster.h"
 #include "obj_base_cup.h"

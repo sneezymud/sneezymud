@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "room.h"
 #include "low.h"
 #include "monster.h"

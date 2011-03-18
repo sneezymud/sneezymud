@@ -1,5 +1,7 @@
 // book.cc
 
+#include <stdio.h>
+
 #include "client.h"
 #include "being.h"
 #include "obj_book.h"

@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include <cmath>
 
 #include "extern.h"

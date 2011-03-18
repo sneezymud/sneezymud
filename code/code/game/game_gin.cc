@@ -9,6 +9,8 @@
 //                                                                           //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <stdio.h>
+
 #include "monster.h"
 #include "games.h"
 #include "extern.h"

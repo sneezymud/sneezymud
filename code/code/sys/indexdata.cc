@@ -5,6 +5,8 @@
 //////////////////////////////////////////////////////////////////////////
 
 
+#include <stdio.h>
+
 #include "extern.h"
 #include "configuration.h"
 #include "statistics.h"

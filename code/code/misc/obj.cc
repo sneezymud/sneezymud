@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "shop.h"
 #include "shopowned.h"
 #include "corporation.h"

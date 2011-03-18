@@ -7,6 +7,8 @@
 
 // flame.cc
 
+#include <stdio.h>
+
 #include "handler.h"
 #include "extern.h"
 #include "room.h"

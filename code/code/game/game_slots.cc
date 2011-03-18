@@ -8,6 +8,8 @@
 
 *************************************************************************/
 
+#include <stdio.h>
+
 #include "being.h"
 #include "games.h"
 #include "obj_money.h"

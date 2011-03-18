@@ -1,5 +1,7 @@
 // other_obj.cc
 
+#include <stdio.h>
+
 #include "obj_other_obj.h"
 #include "extern.h"
 

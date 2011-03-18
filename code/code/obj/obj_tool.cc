@@ -1,5 +1,7 @@
 // tool.cc
 
+#include <stdio.h>
+
 #include "monster.h"
 #include "obj_tool.h"
 

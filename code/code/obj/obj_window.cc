@@ -1,6 +1,8 @@
 // window.cc
 //
 
+#include <stdio.h>
+
 #include "extern.h"
 #include "handler.h"
 #include "room.h"

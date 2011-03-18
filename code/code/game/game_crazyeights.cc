@@ -9,6 +9,8 @@
 
 ******************************************************************************/
 
+#include <stdio.h>
+
 #include "being.h"
 #include "monster.h"
 #include "games.h"

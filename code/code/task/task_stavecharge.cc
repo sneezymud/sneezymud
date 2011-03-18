@@ -16,6 +16,8 @@
 
 ******************************************************************************/
 
+#include <stdio.h>
+
 #include "room.h"
 #include "being.h"
 #include "obj_component.h"

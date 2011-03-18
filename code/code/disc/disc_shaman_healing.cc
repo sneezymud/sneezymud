@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "colorstring.h"
 #include "disease.h"
 #include "combat.h"

@@ -7,6 +7,8 @@
 
 // audio.cc
 
+#include <stdio.h>
+
 #include "low.h"
 #include "extern.h"
 #include "obj_audio.h"

@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include <cmath>
 #include <unistd.h>
 #include <algorithm>

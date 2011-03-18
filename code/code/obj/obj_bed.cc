@@ -1,5 +1,7 @@
 // bed.cc
 
+#include <stdio.h>
+
 #include "low.h"
 #include "monster.h"
 #include "games.h"

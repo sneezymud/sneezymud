@@ -198,7 +198,7 @@ extern int numberLogHosts;
 extern long roomCount;
 extern int script_on_command(TBeing *, char *, int);
 extern void initWhittle();
-extern std::vector<zoneData>zone_table;
+  //extern std::vector<zoneData>zone_table;
 extern void DeleteHatreds(const TBeing *, const char *);
 extern void DeleteFears(const TBeing *, const char *);
 extern bool UtilProcs(int);

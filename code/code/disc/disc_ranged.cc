@@ -5,6 +5,8 @@
 //////////////////////////////////////////////////////////////////////////
 
 
+#include <stdio.h>
+
 #include "being.h"
 #include "disc_ranged.h"
 #include "obj_bow.h"

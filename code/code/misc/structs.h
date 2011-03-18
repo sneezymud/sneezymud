@@ -5,6 +5,9 @@
 #include <time.h>
 #endif
 
+#include <string.h>
+#include <stdint.h>
+
 #include "parse.h"
 #include "spells.h"
 

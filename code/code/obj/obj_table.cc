@@ -1,6 +1,8 @@
 // table.cc
 //
 
+#include <stdio.h>
+
 #include "extern.h"
 #include "obj_table.h"
 #include "handler.h"

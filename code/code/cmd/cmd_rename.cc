@@ -7,6 +7,7 @@
 
 #include <unistd.h>
 #include <errno.h>
+#include <stdio.h>
 
 #include "extern.h"
 #include "handler.h"

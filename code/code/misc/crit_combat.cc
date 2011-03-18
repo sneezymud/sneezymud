@@ -5,6 +5,8 @@
 //      "crit_combat.cc" - All functions and routines related to combat
 //
 //////////////////////////////////////////////////////////////////////////
+#include <stdio.h>
+
 #include <cmath>
 
 #include "extern.h"

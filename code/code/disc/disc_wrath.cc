@@ -1,6 +1,8 @@
 // DISC_WRATH.cc
 // Part of SneezyMUD
 
+#include <stdio.h>
+
 #include "room.h"
 #include "low.h"
 #include "monster.h"

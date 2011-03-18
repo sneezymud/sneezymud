@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "being.h"
 #include "create_engine.h"
 #include "extern.h"

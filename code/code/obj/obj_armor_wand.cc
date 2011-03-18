@@ -11,6 +11,8 @@
 // TWand.  It is possible since TArmor uses no 4-values
 //
 
+#include <stdio.h>
+
 #include "comm.h"
 #include "handler.h"
 #include "materials.h"

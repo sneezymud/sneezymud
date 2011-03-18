@@ -1,5 +1,7 @@
 // scroll.cc
 
+#include <stdio.h>
+
 #include "extern.h"
 #include "monster.h"
 #include "materials.h"

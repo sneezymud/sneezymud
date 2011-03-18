@@ -6,6 +6,8 @@
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
+#include <stdio.h>
+
 #include "being.h"
 #include "account.h"
 #include "ansi.h"

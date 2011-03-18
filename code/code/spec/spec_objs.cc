@@ -59,6 +59,8 @@
 //    if item1 goes poof, return DELETE_THIS
 //  
 
+#include <stdio.h>
+
 #include <cmath>
 
 #include "handler.h"

@@ -7,6 +7,8 @@
 
 // statue.cc
 
+#include <stdio.h>
+
 #include "obj_statue.h"
 #include "extern.h"
 

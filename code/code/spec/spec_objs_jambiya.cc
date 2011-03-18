@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "comm.h"
 #include "obj_base_weapon.h"
 #include "being.h"

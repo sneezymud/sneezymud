@@ -7,6 +7,8 @@
  *                                                                 *
  *******************************************************************/
  
+#include <stdio.h>
+
 #include "room.h"
 #include "disease.h"
 #include "combat.h"

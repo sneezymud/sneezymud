@@ -7,6 +7,8 @@
 
 // organic.cc
 
+#include <stdio.h>
+
 #include "monster.h"
 #include "shop.h"
 #include "extern.h"
