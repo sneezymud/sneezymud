@@ -1365,7 +1365,7 @@ void TBeing::doWizhelp(const char *arg)
         (commandArray[i]->minLevel > MAX_MORT) &&
         ((tPower = wizPowerFromCmd(cmdTypeT(i))) == MAX_POWER_INDEX ||
          hasWizPower(tPower)))
-      tLength = max(strlen(commandArray[i]->name), (unsigned) tLength);
+      tLength = max(strlen(commandArray[i]->name), (size_t) tLength);
   }
 
   tString = format("%c-%ds") % '%' % (tLength + 1);
