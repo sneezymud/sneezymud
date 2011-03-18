@@ -6,6 +6,7 @@
 
 
 #include <stdio.h>
+#include <limits.h>
 
 #include "room.h"
 #include "being.h"
