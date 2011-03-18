@@ -1,0 +1,19 @@
+Syntax: repair <item>
+
+With the proper tools, a warrior has the ability to repair
+his or her own equipment. The art of repairing is a tedious
+and tiresome task, but it is a fundamental skill all warriors
+should learn eventually.
+
+The appropriate tools must be held and in the room and the item
+you wish to repair must be in your inventory in order to repair
+it.
+
+Only metal equipment can be repaired using smythe.
+
+Tools necessary:
+     Primary:   hammer
+     Secondary: tongs
+     In-room:   forge
+     In-room:   anvil
+

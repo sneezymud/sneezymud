@@ -1,0 +1,29 @@
+filename RACE_LAMIA
+singName lamia
+plurName lamias
+propName Lamia
+lore OTHER
+age 50+1d10
+maleHt 62+1d17
+maleWt 140+6d10
+femaleHt 60+1d12
+femaleWt 100+4d10
+body Lamia
+moveIn stalks in
+moveOut stalks
+hpMod 2
+manaMod 1
+search 1
+STR 140
+BRA 120
+CON 130
+DEX 120
+AGI 120
+INT 110
+WIS 110
+FOC 110
+PER 110
+CHA 85
+KAR 120
+SPE 140
+Ridable

@@ -1,0 +1,6 @@
+The counter move skill works automatically in response to hand to hand combat.
+Any attempt to initiate various brawling skills against the monk will have a
+chance of being countered.  The chance of successfully countering the move
+depends on the learnedness of the monk at countering and the skill of the
+person attempting the hand-to-hand combat.  If successfully countered, the move
+will either fail outright or be turned so that it backfires on the brawler.

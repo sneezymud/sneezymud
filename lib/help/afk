@@ -1,0 +1,15 @@
+Syntax: afk
+Syntax: toggle afk
+
+The afk command will cause you to go into afk mode. When in
+this mode, you will send an AFK message to persons who attempt
+to tell to you. 
+
+Any command entered while in afk mode will bring you out of afk 
+mode.
+
+The afk toggle will allow the MUD to automatically set your AFK
+status if you are idle.
+
+See Also: TOGGLE
+Related Topics: COMMUNICATIONS

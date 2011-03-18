@@ -1,0 +1,37 @@
+<h> Characteristics
+-------------------------
+
+The HELP CHARACTERISTICS file contains good background information on
+what characteristics are, and what they affect.  Since there is a lot
+of information in there for the Newbie, here are the things to consider.
+
+Base characteristics are locked in at character generation time.  New players
+are encouraged to set some characteristics and try them out, you will
+undoubtedly want to experiment with some numbers before finally committing
+yourself to any one setup.  Accept the fact that you may have to create a
+number of characters before you get a set of characteristics you will be happy
+with happy with over your whole career.
+
+There is no "perfect" setup for characteristics.  This is largely an exercise
+in personal preference and making acceptable tradeoffs.  On a final note, it
+is not advisable to set as many characteristics to max as possible; you will
+find that a near maxed characteristic is virtually identical to the maxed
+quantities, while the sacrificed characteristics vary radically at the low
+numbers (ie., diminishing returns).  That is, it may not be advantageous to
+max a stat in detriment of others, you may suffer rather then benefit in the
+end.
+
+Lastly, realize that the natural and adjusted characteristics are the two key
+ones.  If you chose a race that has a high natural strength, you probably do
+NOT need to raise that strength further with your chosen characteristics.
+This is a common mistake, usually made because of ignorance.  Example:
+I want to make a warrior.  Warriors need good brawn.  If I am human, I will
+probably want to put points into brawn since humans aren't that brawny.
+However, if I opt for a dwarf or an ogre, I can get away without adding
+more brawn points.  In fact, such a warrior may want to DECREASE their
+brawn, in order to have spare points to offset the penalties those races have
+in things like agility and dexterity.
+
+Related Helpfiles: CHARACTERISTICS OVERVIEW, STRENGTH, BRAWN, CONSTITUTION,
+DEXTERITY, AGILITY, INTELLIGENCE, WISDOM, FOCUS, PERCEPTION, CHARISMA,
+KARMA, SPEED, CLASS, RACE

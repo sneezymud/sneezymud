@@ -1,0 +1,17 @@
+Skinning allows a ranger to skin a creature that has been slain and
+obtain its hide.  Hides have a reasonable value in the herbal and
+organic markets of The World.
+
+The time it takes to skin a creature is dependent on its size.
+
+Skinning only works on appropriate creatures.
+
+Once you begin to skin a creature, you can STOP at any time.  Also a
+corpse can be left half skinned then returned to later, as long as it
+is still around.
+
+Skinning can be dangerous, failure can both dull a weapon and hurt the
+person performing the task.
+
+If you have auto-dissect on, it will tell you if a corpse is able to be
+skinned or not.   See HELP TOGGLE for more information on this.

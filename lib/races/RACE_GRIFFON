@@ -1,0 +1,32 @@
+filename RACE_GRIFON
+singName griffon
+plurName griffons
+propName Griffons
+lore OTHER
+age 50+1d10
+maleHt 66+2d2
+maleWt 1200+3d25
+femaleHt 64+2d2
+femaleWt 1100+3d25
+body Griffon
+moveIn has arrived
+moveOut leaves
+hpMod 2
+moveMod 50 
+search 3
+STR 180
+BRA 175
+CON 150
+DEX 160
+AGI 90
+INT 100
+WIS 100
+FOC 120
+PER 90
+CHA 105
+KAR 120
+SPE 120
+Winged
+Ridable
+AFF_FLYING
+

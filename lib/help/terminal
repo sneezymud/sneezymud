@@ -1,0 +1,52 @@
+Syntax: toggle terminal <arguments>
+
+This command allows players to change their terminal type and
+screen size from within the game. 
+
+Valid arguments to use with the terminal command are :
+1) Ansi
+   Syntax : toggle terminal Ansi
+   This will put you in Ansi terminal mode, with a status
+   bar at the bottom of your screen.
+
+2) VT100
+   Syntax : toggle terminal VT100
+   This will put you in VT100 terminal mode, with a status
+   bar at the bottom of your screen.
+
+3) none
+   Syntax : toggle terminal none
+   This will take you out of either Ansi or VT100 terminal
+   mode and put you back in regular mode.
+
+4) screensize
+   Syntax : toggle terminal screensize <number>
+   Number is the number of lines your screen has. Your
+   screen size is used anytime that a function sends a
+   PRESS RETURN message, to determine how many lines to
+   send between each PRESS RETURN message. It is also used
+   to determine where on the screen to put your status bar
+   in Ansi or VT100 mode.
+
+5) account
+   Syntax : toggle terminal account <Ansi | VT100 | none>
+   This changes your accounts terminal mode.  The account's terminal mode
+   determines what the default terminal type will be for your characters as
+   well as whether the main menu and title screens are colorized.
+
+Additional toggles that affect your terminal include:
+
+1) boss
+   Syntax: toggle boss
+   Turns boss-mode on/off for all characters in your account.  Boss mode
+   causes suppression of the ASCII login screens.  Please note that this
+   also suppresses the listing of the options, so you should have some
+   familiarity with the game before you make this active.
+
+2) MSP
+   Syntax: toggle MSP
+   Toggles MUD Sound Protocol, MSP, on and off.  You will need to be using a
+   MSP capable client to take advantage of MSP.
+
+See Also: STATUS BAR, CLS, COLOR, PROMPT, TOGGLE
+Related Topics: SCREEN

@@ -1,0 +1,11 @@
+Horn is one of the one-roll bets used at the craps table.  The horn pays out
+if the roll is a 2, 3, 11 or 12.
+
+roll is:          payoff:
+2                  7:1
+3                  7:2
+11                 7:2
+12                 7:1
+
+See Also: CRAPS
+Related Topics: CASINO

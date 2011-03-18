@@ -1,0 +1,6 @@
+/* Go mortal to gain mortal version of this help file */
+
+Syntax: attribute <player>
+
+This will yield <player's> statistic attributes.  As ad additional benefit,
+the data is in raw form rather than the qualitative values that mortals see.

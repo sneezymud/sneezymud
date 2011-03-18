@@ -1,0 +1,34 @@
+filename RACE_LAMMASU
+singName lammasu
+plurName lammasus
+propName Lammasus
+lore GIANT
+age 50+1d10
+maleHt 65+1d5
+maleWt 200+2d10
+femaleHt 64+1d4
+femaleWt 180+2d10
+body Lammasu
+moveIn has arrived
+moveOut leaves
+hpMod 2
+moveMod 40 
+search 3
+STR 120
+BRA 120
+CON 120
+DEX 130
+AGI 90
+INT 130
+WIS 150
+FOC 150
+PER 140
+CHA 140
+KAR 120
+SPE 130
+Winged
+Ridable
+AFF_FLYING
+DISSECT_INFO 1416 4 50
+DISSECT_MSGA You snip $p from $N.
+DISSECT_MSGB $n cuts $p from $N.

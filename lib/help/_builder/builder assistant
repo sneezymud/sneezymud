@@ -1,0 +1,38 @@
+The Builder Assistant is a chunk of code to assistant in the
+builders work.
+
+To toggle it off/on:
+  prompt builder_assistant
+
+When it is on you will get one extra line of information on look
+and another two lines of information on your prompt:
+
+Room Title
+{ Room_Flags }
+  if No room flags: Room_Flags = --none--
+  if None of the following room flags: Room_Flags = --others--
+    Always Lit  : [Light]
+    No Mob      : [!Mob]
+    Indoors     : [Indoors]
+    Peaceful    : [Peaceful]
+    No Steal    : [!Steal]
+    No Summon   : [!Summon]
+    No Magic    : [!Magic]
+    No Portal   : [!Portal]
+    Silent      : [Silent]
+    No Order    : [!Order]
+    No Flee     : [!Flee]
+    Have-To-Walk: [Have-To-Walk]
+
+Z: ? Pr: ? L: ? H: ? C: ? S: ???
+Prompt >
+  Z  = Zone Number
+  Pr = Has Procedure?
+  L  = Light Number
+  H  = Room Height
+  C  = Room Capacity
+  S  = Sector Type
+
+The prompt part of the Builder Assistant will not work in any terminal
+mode other than terminal none.  You must be in terminal none to toggle
+the assistant on and off.

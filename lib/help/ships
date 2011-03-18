@@ -1,0 +1,45 @@
+For those players that have obtained control of a ship with a captain 
+there are several useful commands available to exploit the captain's 
+abilities. These are employed by simply speaking the command:
+
+<c>Captain, destination<1>
+        The captain will list out all known destinations.
+
+<c>Captain, destination <destination><1>
+        Saves the current location as a new destination.
+
+<c>Captain, forget <destination><1>
+        Removes a destination from the list of known locations.
+
+<c>Captain, <sail | cruise> <destination> <destination>...<1>
+        Sail for the requested destination. If more than one is listed, 
+        the captain will sail to each destination in the order requested.
+        If the <c>cruise<1> option is used instead of <c>sail<1>, the captain will 
+        sail in a loop of all requested destinations.
+
+<c>Captain, go <slow | medium | fast><1>
+        The captain will change the speed of the ship.
+
+<c>Captain, stop<1>
+        The captain will stop the ship and clear the current destination.
+
+<c>Captain, take five<1>
+        The captain will stop the ship and hand over the ship's "key", 
+        allowing the player to control the ship directly with the <c>drive<1>
+        command.
+
+<c>Captain, obey<1>
+        List out the players which have been given limited permissions to 
+        control the captain.
+
+<c>Captain, obey <player name><1>
+        Give limited control to another player, i.e. a "guest commander".
+
+<c>Captain, ignore <player name><1>
+        Remove the named player's privileges (player must be online).
+
+Players with control via the <g>obey<1> option will not be able to alter 
+the list of known destinations, the list of "guest commanders" or to force 
+the captain to hand over control of the ship.
+
+See also: DRIVE

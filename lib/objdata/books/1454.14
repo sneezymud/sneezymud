@@ -1,0 +1,35 @@
+The 'H' & 'F' commands
+causes a mob to hate or fear another creature
+
+You may only assign 1 hate and 1 fear per mob.
+Hates cause the mob to attack, while fears will make them flee.
+
+H <if_flag> <type> <parameter>
+F <if_flag> <type> <parameter>
+
+<if_flag> should be 1 (only apply it if the mob to put it on loaded)
+<type> see the list at the end
+<parameter> is dependent on <type>
+
+M 0 100 1 101         orc
+H 1 1 2                  hate-female
+G 1 102 1                brown key
+
+Hates and fears should be directly under the command to make the mob before
+any commands dealing with inventory or equipment.
+
+<type>:
+#define OP_SEX   1
+   0 = other 1 = male  2 = female
+#define OP_RACE  2
+   same numbers from MEDIT (minus 1; so that race_unused = 0)
+#define OP_CHAR  3
+   ask LOW before using
+#define OP_CLASS 4
+   1=mage, 2=cleric, 3=warrior, 4=thief, 5=anti, 6=pal, 7=monk, 8=ranger
+#define OP_EVIL  5
+#define OP_GOOD  6
+   obsolete as of version 4.0
+#define OP_VNUM  7
+   ask LOW before using
+

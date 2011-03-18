@@ -1,0 +1,53 @@
+Building: Objects
+
+The easiest way to create an object is to load one that is similar to what
+you want and modify it.
+
+To see a list of existing objects in the world, use SHOW OBJECT <obj>. For
+example:
+	show obj sword
+	show obj table
+
+To modify the equipment you have two options:
+	a. Using the CGI object editor located at
+http://www.sneezymud.com/cgi-bin/objeditor.cgi (not IE compatible);
+	b. Using the OEDIT editor.
+
+The editor has the handy ability to clone objects from existing objects in 
+the world. In the vnum box enter the number under which the new objects will
+be saved (should be within your zone range number) and in the template box
+enter the number of object you're cloning. And start editing!
+
+To use the OED editor in game, a few more steps are required.
+
+Load an object similiar to what you want using LOAD OBJ <obj>, where <obj>
+can either be the object's name or vnumber. For example:
+	load obj long-sword
+	load obj 300
+
+Before you modify it though, save the object in your OED directory. To do
+so, type OED SAVE <obj> <vnum>, where <vnum> is the number under which the
+object will be saved. It should be a number within your zone range numbers.
+For example:
+	oed save sword 1111
+
+To use the OEDIT editor, first load the object you just saved to modify it.
+Type OED LOAD <vnum>, where <vnum> is the number used to save the object.
+For example:
+	oed load 1111
+
+Then type OED MODIFY <obj> to go into the editor screen. Make the changes
+you want, and when you're done and you're out of the editor screen, save
+your work with OED RESAVE <obj>.
+
+TIPS
+------------
+Read the OEDIT editor book, even if you are using the CGI utility. They
+are available in the bookshelf in the Builder's Lounge (room 2).
+
+Make sure you save items like chest closed. And if they are lockable,
+lock them before you save.
+
+OED AVERAGE is a handy way to adjust an equipment's level/damage. Check
+out the help file. You can also use the equipment calculator in
+http://www.sneezymud.com/cgi-bin/eqcalc.cgi.

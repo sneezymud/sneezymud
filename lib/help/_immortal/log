@@ -1,0 +1,10 @@
+Syntax : log -(w) (name)
+
+Log used with the -w parameter will list out all PC's that are logged and
+currently playing.
+
+Log used with a player name as a parameter will act as a toggle to turn
+logging of that player on/off.
+
+Logs do tend to eat up disk space so use sparingly and/or turn it off after
+you don't need it anymore. 

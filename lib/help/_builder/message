@@ -1,0 +1,62 @@
+Syntax: message
+Syntax: message <field>
+Syntax: message <field> <text/"default">
+Syntax: message list
+
+  The message command allows you to setup various message throughout the game,
+that pertain to you, to something other than the default type.  
+
+  'message list' lists all the fields that correspond to powers that you have,
+and their current settings.  The possible fields are:
+
+        title : Special title used by some upper immortals
+        purge : General purge message shown to room
+ purge-target : Message people see when you purge a mobile specifically
+        rload : Message people see in a room you change with rload
+  load-object : Message people see when you load an object
+  load-mobile : Message people see when you load a mobile
+        MEDIT : Message people see when you load a mobile through MEDIT
+        OEDIT : Message people see when you load an object through OEDIT
+switch-target : Message display to-room on 'switch load <monster>'
+      move-in : Message displayed to people when you move in The World
+                  north, southeast, up, down
+       *** What people see when you Leave a room
+     move-out : Message displayed to people when you move in The World
+                  the north, the southeast, above, below
+       *** What people see when you Enter a room
+         slay : Message others see when you slay something
+  slay-target : Message target sees when you slay them
+        force : Message people see when you force them to do something.
+
+
+  Now keep in mind that not all fields are available to you.  If you don't have
+the command(s) related to the message then you will be unable to set the
+message.
+
+These are things that can be used in the messages:
+  Any color code.
+  <<n> = Your name.
+  <<N> = Target name, when applicable mobile or object.
+  <<a> = Arguments, used in 'force'
+  <<d> = Direction of travel, used in move-in/move-out
+  <<m> = him, her, it based on your sex.
+  <<M> = him, her, it based on Target's sex.
+  <<e> = he, she, it based on your sex.
+  <<E> = he, she, it based on Target's sex.
+  <<s> = his, her, its based on your sex.
+  <<S> = his, her, its based on Target's sex.
+
+  Now some fields require some of the above codes to work properly.  Also not
+all of the fields can be used in every instance.  Example is the sex terms based
+on target's sex in a field like 'move-in/move-out' where there Is no target.
+
+  Another important thing to remember is that:
+1) You DO NOT have to set these.  If you wish there are default ones for
+   all of them that work just fine.
+2) You may or may not be able to set some of these.  If your curious just try
+   setting it and if you cannot it'll let you know.
+3) Color codes do not count towards field length but do count towards total
+   length.  Ex:
+     message title Jack of Trades       <- this is legal
+     message title Jack of all Trades   <- this is illegal(title is max 14)
+     message title <r>Jack<z> of Trades <- this is legal

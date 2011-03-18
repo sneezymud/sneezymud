@@ -1,0 +1,17 @@
+Syntax: rituals <offensive|utility> <targeted|nontargeted> <all>
+
+The rituals command allows you to view your rituals by category.  The targeted/
+nontargeted options refer to whether or not the ritual targets an individual
+person.  Rituals that target objects are considered to be nontargeted.  The all
+option shows all the spells of a particular type, whether or not you have
+learned them yet.
+
+Each line lists the spell name, your current learnedness of the ritual, your
+max learnedness of the ritual, the number of component charges for the spell
+that you have available and the name of the required component.
+
+Usage examples:
+
+rituals offensive
+rituals offensive targeted
+rituals utility nontargeted all

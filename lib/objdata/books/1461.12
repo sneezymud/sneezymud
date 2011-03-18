@@ -1,0 +1,19 @@
+Action: link
+---------------------
+ 
+ex:
+<trigger 1> { "<arguments 1>";
+       <actions>;
+     }
+
+<trigger 2> { "<arguments 2>";
+       link <trigger 1> <arguments 1>;
+     }
+
+The link action allows for a secondary trigger to use the same actions as
+another response.  For instance, if you wanted both "say goodbye" and "say
+later" to respond in the same fashion, you could link one of them to the other.
+eg.  Under "say goodbye" you would detail all the actions that should be
+performed.  Then under "say later" you would put a single action:
+    link say goodbye;
+which when triggered would hand control over to the "say goodbye" action.

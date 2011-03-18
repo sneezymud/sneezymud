@@ -1,0 +1,80 @@
+<h> 5.0 help for choosing your race :
+
+Race on <h> impacts certain physical qualities (height, weight, age, etc).
+In addition, certain races have benefits and detriments that will impact what
+that race is and is not capable of.  
+
+Please be aware that The World is predominantly human which makes playing
+a non-human more of a challenge.  New players are encouraged to play humans
+until you become accustomed to <h>.
+
+Complete details on any of these races is available once you are logged in
+by typing HELP <race>.  For now, here is a quick summary:  Average is based
+upon human stats.  So well above average means well above the human norm. 
+Well below average means, just the opposite.  This is to give one a quick feel
+for how races compare to humans.  Remember that <h> now uses a
+new rating system for stats (30-180 for player races), and that human stats
+fall around the average value of 105.
+
+-----------------------------
+
+HUMANS:
+  Average:  all stats
+  No special abilities are granted to humans, but their ability to be good at
+  all classes and their access to ample amounts of equipment make them
+  a favorable class to play overall.
+
+DWARVES:
+  Well above average:  Constitution
+  Above average:  Strength, Brawn, Karma
+  Average:  Wisdom, Focus
+  Below Average:  Dexterity, Agility, Intelligence, Perception, Charisma
+  Well Below Average: Speed
+ -resistant to poison, charm, sleep, and energy.
+ -have infravision
+ -fast food metabolism, slow drink metabolism
+ -height and weight make dwarves heavier than water
+ 
+ELVES:
+  Well above average:  Intelligence
+  Above average:  Dexterity, Agility, Focus, Speed
+  Average:  Wisdom, Charisma
+  Below Average:  Strength, Perception, Karma
+  Well Below Average: Brawn, Constitution
+ -resistant to charm, paralysis, sleep
+ -very slow food metabolism, very fast drink metabolism
+  
+GNOMES:
+  Well Above Average:  Intelligence, Wisdom, Focus
+  Above Average:  Perception, Charisma
+  Below Average:  Brawn, Constitution, Dexterity, Agility
+  Well Below Average:  Strength, Karma, Speed
+ -resistant to energy
+ -have infravision
+ -fast food metabolism, slow drink metabolism
+ 
+HOBBITS:
+  Well Above Average:  Dexterity, Agility, Speed
+  Average:  Perception, Charisma, Karma
+  Below Average:  Constitution, Wisdom, Focus
+  Well Below Average:  Strength, Brawn, Intelligence
+ -resistant to poison
+ -have infravision
+ -very fast food metabolism, slow drink metabolism
+ -cultural bias against footwear
+ 
+OGRES:
+  Well Above Average:  Strength, Brawn
+  Above Average:  Constitution, Karma
+  Average: Perception
+  Below Average:  Dexterity, Agility, Intelligence, Wisdom, Focus, Speed
+  Well Below Average: Charisma
+ -resistant to heat, cold, poison
+ -slow food metabolism, fast drink metabolism
+ 
+Note:  After choosing your race, realize that the above information refers to
+the average norm for a race.  This means, what a race has if you do not modify
+any stat and go directly to the game.  If you modify the value of a stat during
+character generation, realize that you also may change the above relationships.
+Also note, that average does not mean plain and boring.  Average implies that
+a stat will not suffer any penalties nor bonuses.

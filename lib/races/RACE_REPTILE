@@ -1,0 +1,29 @@
+filename RACE_REPTILE
+singName reptile
+plurName reptiles
+propName Reptilian
+lore REPTILE
+age 5+1d3
+maleHt 4+2d4
+maleWt 30+1d5
+femaleHt 3+2d4
+femaleWt 25+1d5
+body reptile
+moveIn has arrived
+moveOut leaves
+STR 140
+BRA 140
+CON 130
+DEX 140
+AGI 145
+INT 55
+WIS 55
+FOC 55
+PER 55
+CHA 55
+KAR 90
+SPE 140
+DumbAnimal
+ColdBlooded
+Fourlegged
+Ridable

@@ -1,0 +1,20 @@
+Trigger:  say
+---------------------
+ 
+ex:
+say  { "text";
+       <action>;
+       <action>;
+     }
+
+Say will trigger whenever a person says something matching "text".
+Asks or whispers to the response mob will also be handled by this same
+response.  Tells and shouts will NOT function due to the global nature
+of these commands.
+
+The comparison will be done in a case-insensitive format.  ie, Mountain,
+MOUNTAIN, mountain, and MoUnTaIn are all identical.  
+
+"text" will also be checked as a substring against what was actually said.
+Thus, if the trigger is "small key" and the person says, "where is the 
+small key", the response will trigger.

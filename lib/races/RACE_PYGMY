@@ -1,0 +1,26 @@
+filename RACE_PYGMY
+singName pygmy
+plurName pygmies
+propName Pygmy
+lore PEOPLE
+age 25+1d4
+maleHt 46+1d4
+maleWt 60+1d10
+femaleHt 44+1d4
+femaleWt 58+1d10
+body Humanoid
+moveIn has arrived
+moveOut leaves
+search 1
+STR 100
+BRA 100
+CON 120
+DEX 150
+AGI 160
+INT 120
+WIS 120
+FOC 120
+PER 110
+CHA 110
+KAR 120
+SPE 150

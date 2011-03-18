@@ -1,0 +1,16 @@
+Tells you the location of a monster, a player or an object. Examples:
+where torch
+where dragon
+where 4.ring       (gives you the container traceback so you can find
+                    out WHO has that One Ring)
+
+Where with no arguments will reveal the location of all players.
+where -g will reveal the location of all immortals.
+You may NOT abbreviate with where, its too easy to generate lag otherwise.
+
+  Creatores have 2 other options with the command:
+where owners <character>
+where engraved <character>
+
+See Also: WHO
+Related Topics: GOD 

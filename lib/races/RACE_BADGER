@@ -1,0 +1,29 @@
+filename RACE_BADGER
+singName badger
+plurName badgers
+propName Badger
+lore ANIMAL
+age 1+1d5
+maleHt 24+1d2
+maleWt 40+1d5
+femaleHt 20+1d2
+femaleWt 38+1d5
+body FourLegs
+moveIn has arrived
+moveOut leaves
+moveMod 20
+STR 110
+BRA 100
+CON 110
+DEX 130
+AGI 150
+INT 60
+WIS 60
+FOC 60
+PER 65
+CHA 65
+KAR 130
+SPE 180
+DumbAnimal
+Fourlegged
+AFF_SWIM

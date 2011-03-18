@@ -1,0 +1,12 @@
+  clone <playername> <mob vnum>
+
+  This command will create a look-alike of the named player, including
+  equipment (flagged norent).  The 'access' wizpower is required for its
+  use.
+
+  The name of the mob is the player name, with "[clone]" appended.
+  Use "name-[clone]" for manipulation of the clone.
+
+  The clone currently retains mob stats.  This means that it has very
+  high hp and very low damage compared to PCs of its level.
+

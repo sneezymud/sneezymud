@@ -1,0 +1,20 @@
+Short Description
+
+The short description of the mob is the shortest display of text that will
+be used to indicate the monster.  The short description is used in places like
+"you hit (short description)"  "(short) slithers east."
+
+Don't confuse this with the name field.  Name is used to refer to the mob,
+short is used to display it.  eg
+> hit (name)    <-- looks for a match in the name field
+You hit (short) hard.  <-- displays short to tell player what was hit
+
+Make sure the short description starts with a lower case letter.  The code
+knows when to capitalize appropriately. The only words that should 
+be capitalized are proper names and maybe some titles.  Also, don't put
+periods at the end of the short description.
+
+good shorts:
+Batopr, Lord of Worlds
+a cityguard
+the raccoon of doom

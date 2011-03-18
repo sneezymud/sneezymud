@@ -1,0 +1,31 @@
+This command will provide some basic information about certain things depending
+on the parameter passed.  Valid parameters:
+
+	Commands, Numbers, Skills, Gold, Piety, Objects, Unlinked
+
+Objects:
+Shows a list of all objects types and the count of objects of that type.
+
+Unlinked:
+Shows a list of all objects and mobs that do not appear to exist
+anywhere in the game.  Generally, these are the result of programming
+errors.
+
+
+Info GOLD:
+   Tracks the economy for balancing.  Statistics are broken down into 6 fields
+   for a variety of player levels.  Positive values indicates player gained
+   cash, negative indicates an expense.
+  -income: Generic income that includes money gathered directly from corpses.
+      Should in general be a positive value.  Splitting, dropping or giving
+      coins will decrement this counter.  Also, dying or quitting will 
+      decrement this counter to avoid double counting when they corpse retrieve.
+      Theft of coins is also figured in here for both target and thief.
+  -comm: trade with a commodity merchant
+  -repair: repair shops and sharpeners
+  -shop: trade with other shopkeepers
+  -gamble: gambling winnings or losses
+  -hospit: Hospital costs as well as other miscellaneous (mail, fortune, etc)
+
+See Also: SYSTEM, GAMESTAT, WORLD
+Related Topics: GOD

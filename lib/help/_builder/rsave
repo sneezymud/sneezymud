@@ -1,0 +1,21 @@
+Syntax: rsave <1/2>
+Syntax: rsave backup <1/2>
+
+  This command is used to save your work so you can come back to it later
+should something happen to the mud, such as a crash or a reboot.
+
+  You can use 'goto help' to get a list of your blocks (and other information).
+To save your PRIMARY room block, do "rsave" or "rsave 1".  To save your
+SECONDARY room block, do "rsave 2".
+
+  If you fail to rsave your rooms and we crash the work you had is lost for
+good.  So make sure to rsave whenever you finish a decent amount of work.
+
+  Everytime you perform an rsave a backup file is automatically made.  But
+you can also create a 'special backup' by using the 2nd Syntax.  These both
+can be then loaded through rload.
+
+  ALWAYS RLOAD BEFORE RSAVING!  Saving an empty set of rooms will give you
+exactly that, and that's almost never what you want.
+
+SEE ALSO: rload

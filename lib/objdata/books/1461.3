@@ -1,0 +1,26 @@
+Actions and Triggers:
+--------------------
+
+Each response block consists of one trigger, some trigger parameters and
+a series of actions to perform if the trigger goes off.
+
+say { "next guildmaster";
+        tell %n "Finding your next guildmaster is part of your training.";
+        tell %n "However, I can give you a hint...";
+        tell %n "The one you seek is a farmboy at heart.....";
+        tell %n "and he is very fond of the pipe.";
+	}
+
+In this situation, the response is triggered by the say command.  The trigger
+text is "next guildmaster".  That is, if a pc says next guildmaster, our
+response will trigger.  Only a handful of valid triggers have been set up.
+Please see the following chapters to get a list of valid trigger commands.
+
+The next 4 lines represents the actions of the response.  That is, when someone
+says next guildmaster, then this response-mob is going to tell to them four
+times.  Responses, for the most part, are any valid mud command and take the
+same form as you are familiar with.  That is, smile will cause the mob
+to smile, kill will make it attack, give will exchange goods, etc.
+
+Take note of the %n.  This indicates a replacement string that may be
+used in all actions.  %n will be replaced with the speaker's name.

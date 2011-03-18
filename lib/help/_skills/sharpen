@@ -1,0 +1,16 @@
+Syntax: sharpen <item>
+
+The sharpen skill permits the user to repair the quality of <item>.  "Sharpen"
+in this sense is a generic term, and means that slash style weapons are
+sharpened or pierce style are made more pointy.
+
+The <item> must be a weapon and it must be held in the primary hand.  
+Additionally, a whetstone of some sort must be in your inventory.  The
+whetstone will slowly be used up with the amount being determined by how 
+much "sharpening" must be done.  Lastly, sharpening will require a decent 
+amount of time to complete, the amount is proportional to how much sharpening 
+must be done.
+
+Sharpening blunt weapons is not permitted.
+
+See Also: CUTLERY, ITEM DAMAGE, SMOOTH

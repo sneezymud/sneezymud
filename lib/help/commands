@@ -1,0 +1,15 @@
+Syntax: commands
+Syntax: commands -<letter>
+
+Displays all accessible commands you can execute.
+
+Since there are a large number of possible commands, it may be worthwhile
+to specify the first <letter> of the commands you are interested in.  i.e.,
+to see all commands beginning with the letter x, you would enter:
+    command -x
+
+So typing command -ab would list out every command you have that starts
+with a or b.
+
+See Also: HELP
+Related Topics: UTILITY

@@ -1,0 +1,13 @@
+To drive any vehicle, the proper key is needed.
+
+<c>drive <north | south | etc.><1>
+        Point your vehicle in the direction given.
+
+<c>drive speed <stop | slow | medium | fast><1>
+        Change the speed of the vehicle or come to a stop.
+
+<c>drive exit<1>
+        Exit the vehicle.
+
+<c>drive look<1>
+        Look outside the vehicle into whatever room it is currently in.

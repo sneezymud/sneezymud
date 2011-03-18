@@ -1,0 +1,35 @@
+ACT_STRINGS_CHANGED      1
+ACT_SENTINEL             2
+ACT_SCAVENGER            4
+ACT_DISGUISED            8
+ACT_NICE_THIEF           16
+ACT_AGGRESSIVE           32
+ACT_STAY_ZONE            64
+ACT_WIMPY                128
+ACT_ANNOYING             256
+ACT_HATEFUL              512
+ACT_AFRAID               1024
+ACT_IMMORTAL             2048
+ACT_HUNTING              4096
+ACT_DEADLY               8192
+ACT_POLYSELF             16384
+ACT_GUARDIAN             32768
+ACT_SKELETON             65536
+ACT_ZOMBIE               131072
+ACT_GHOST                262144
+ACT_DIURNAL              524288
+ACT_NOCTURNAL            1048576
+ACT_PROTECTOR            2097152
+ACT_PROTECTEE            4194304
+ACT_HIT_BY_PK            8388608
+
+
+To hand modify mobile actions simply add the number corresponding to the flags
+that you want and add them together.
+
+Ex: To flag a mobile sentinal and aggressive add 32 and 2 together, thus, the 
+correct flag becomes 34.
+
+
+Please update as new mobile action flags are added.
+

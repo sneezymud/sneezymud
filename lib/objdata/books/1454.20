@@ -1,0 +1,48 @@
+The 'X' and 'Z' commands
+Dynamic set creation/loading.
+
+The 'X' command defines a piece of a dynamic (local) eq set.
+
+X <local set number> <slot number> <vnum>
+
+The local set number is 0-15 and is local to your zone.  Sets can be partial
+or full, and they can be changed as many times as you wish in your zonefile.
+Once a local set has been defined, the 'Z' command is used to load it.  The
+'Z' command is identical to the 'Y' command, but operates on local sets only.
+
+Z <if_flag> <set number> <percentage>
+
+<if_flag>       should be 0
+<macro-number>  Defines the type of set being loaded (see below)
+<percentage>    A percentage chance (recalculated for all slots)
+
+X 10 4 1102              platemail suit
+X 10 6 1107              platemail legging
+X 10 7 1107              platemail legging
+M 0 102 1 104            Elite
+Z 0 10 5                 5% chance of our custom 3 piece platemail set
+
+Note 1:
+if-flag should be 0.  This is so if equipment loads prior to the Z, the Z
+will not be bypassed if equipment prior to it fails to load.  You may still
+use an if-flag of 1 if you truly wish the load of the set of armor dependent
+on the previous command, although I can't see why you would want to do this.
+
+Note 2:
+Z re-rolls the <percentage> for all slots.  It is essentially the
+equivalent of doing multiple '?', 'E', '?', 'E', '?', 'E' commands
+
+Note 3:
+Z should be the LAST equipment command on a given mob.  Any slot that has
+already been equipped prior to the Z command execution will be skipped.
+This is so you can put specific single items on the creature and then flesh
+out all other slots with stock-equipment.
+
+Note 4:
+Be careful when setting load rates for armor. An acceptable load rate on a
+Z load should be 5 or less as we do not want players cashing in on load
+rates.  Speak with a LOW if you want armor above 5% chance load.
+
+Note 5:
+Z loads are still subject to max_exist.  If an item is at or over
+max_exist, it will not be loaded by a Z command.

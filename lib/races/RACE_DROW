@@ -1,0 +1,32 @@
+filename RACE_DROW
+singName drow
+plurName drow elves
+propName Drow
+lore PEOPLE
+age 100+5d6
+maleHt 46+1d11
+maleWt 90+3d10
+femaleHt 44+1d11
+femaleWt 70+3d10
+body Humanoid
+moveIn strides in
+moveOut strides
+moveMod 20
+manaMod 1
+search 3
+sight 5
+STR 100
+BRA 100
+CON 100
+DEX 140
+AGI 135
+INT 145
+WIS 125
+FOC 145
+PER 80
+CHA 165
+KAR 125
+SPE 145
+IMMUNE_CHARM 65
+IMMUNE_PARALYSIS 50
+AFF_INFRAVISION

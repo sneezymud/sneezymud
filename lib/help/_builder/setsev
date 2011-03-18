@@ -1,0 +1,50 @@
+  Turns log types on and off.  All logs are display as:
+// <log message>
+
+Syntax:
+  setsev <message-type>
+
+Available Types:
+  miscellaneous:
+    Contains a large chunk of the log messages.  This is any log that
+    isn't contained in one of the lowers.
+  low:
+    Contains low specific log messages.  Only really useful to Lows
+    and builders.
+  file:
+    System level 'file' bugs.  Only relevant to coders.
+  bug:
+    General Bugs.  Only relevant to coders.
+  procedure:
+    Bugs revolving around mob/obj/room spec-procs.
+  player:
+    Player logins/logouts and other such messages.
+  immortal:
+    Immortal Info
+  client:
+    Client bugs/reports.
+  combat:
+    Combat bugs/reports.
+  cheat:
+    All 'cheating' alerts.
+  faction:
+    Faction bugs/reports.
+  mobile:
+    Mobile specific bugs/reports.
+  mob-AI:
+    Mobile AI bugs/report.
+  mobresp:
+    Mobile Response Scripts bugs/reports.
+  object:
+    Object specific bugs/reports.
+  editor:
+    edit/redit/OEDIT/MEDIT/SEDIT bugs/reports.
+
+
+  While most of the options are only relevant to coders and
+lows it is very important that they be watched nevertheless.
+It is vital to alert the coders/lows to bugs/problems that
+could be arising that they might not already be aware of.
+
+See Also: -
+Related Topics: GOD

@@ -1,0 +1,29 @@
+NOTE regarding percentile loads
+
+Percentile loads are an excellent way to control the amount of equipment
+that enters the game.  They also randomize what equipment a creature has to
+introduce variety into a creature's possession.  Percentile loads are done
+using the 'Y' command or some combination involving a '?' command.
+
+There is a tendency among inexperienced builders to avoid or use excessively
+high percentile loads.  This results in massive equipment buildups.  THIS
+SHOULD BE AVOIDED.  In general, all equipment loading should involve a
+percentile load of some sort (possible exception for keys).  That means all
+'E' commands should be paired with a '?' before it.
+
+Also, the correct <percent> chances are typically in the range 2-7.  Yes,
+I mean 7%.  Yes, really.  Below is a simple chart of the mob having ANY
+piece of equipment based on an X chance of equipment on all 17 slots.
+
+17 slots (full equipment minus 2 holds)
+1% load percentage --> 1-(0.99)^17  = 15.7% of having some sort of equipment
+2% load percentage --> 1-(0.98)^17  = 29.1% of having some sort of equipment
+3% load percentage --> 1-(0.97)^17  = 40.4% of having some sort of equipment
+4% load percentage --> 1-(0.96)^17  = 50.0% of having some sort of equipment
+5% load percentage --> 1-(0.95)^17  = 58.2% of having some sort of equipment
+6% load percentage --> 1-(0.94)^17  = 65.1% of having some sort of equipment
+7% load percentage --> 1-(0.93)^17  = 70.9% of having some sort of equipment
+
+Hopefully, you'll agree that setting percentage loads of 1-4% is probably
+what you want to do.  About the only time you should contemplate a double-digit
+percentage is if its for an item that loads on a single mob.

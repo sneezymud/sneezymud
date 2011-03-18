@@ -1,0 +1,25 @@
+Automatic Character Deletion
+----------------------------
+
+<h> is rather space intensive easily requiring 70 MB of disk space
+for all of the files and databases.  Obviously, we try to keep this size
+in control, and one of the ways this is accomplished is by removing files
+of inactive characters.
+
+Additionally, since the <h> economy is driven by limited quantities of
+equipment, it is not fair to have certain items tied up on inactive
+players.
+
+All of this requires the game maintainers to delete old characters in order
+to conserve disk space and insure that items circulate.  We balance this
+need with the desire of players to have their files be preserved for when
+they want to play.  The following seems to be the fairest compromise:
+
+At boottime, the mud will automatically examine how long it has been since the
+character was last played.  A character is safe from deletion for level
+number of days, or 1 week, whichever is more.  Hence a 4th level player has
+7 days of inactivity before he will be deleted, while a 21st has 3 weeks.
+
+Since a large number of users are from colleges, this auto deletion code
+is automatically turned off between December 25th and January 15th (Christmas
+Break) and between May 1st and September 15th (Summer break).

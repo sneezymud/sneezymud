@@ -1,0 +1,13 @@
+Syntax: value <object>
+
+In a shop, this command will tell you what the shopkeeper is willing
+to pay for the item or how much it will cost to have work done (repair,
+cutlery, etc).
+
+In a post office, this command will tell you how much sending mail,
+talens, an item or mailing your faction will cost.  Simply use the same
+syntax as the 'mail' command but omit the person and use 'value' instead
+of 'mail'.
+
+See Also: SELL
+Related Topics: SHOPS, CUTLERY, REPAIR SHOPS

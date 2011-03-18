@@ -1,0 +1,29 @@
+filename RACE_MOSS
+singName moss
+plurName moss
+propName Moss
+lore VEGGIE
+age 1+1d5
+maleHt 12+2d2
+maleWt 20+2d2
+femaleHt 10+2d2
+femaleWt 18+2d2
+body Moss
+moveIn slowly advances
+moveOut slowly leaves
+moveMod -40
+STR 60
+BRA 60
+CON 60
+DEX 60
+AGI 55
+INT 55
+WIS 55
+FOC 55
+PER 55
+CHA 55
+KAR 70
+SPE 55
+DumbAnimal
+Invertibrate
+IMMUNE_BONE_COND 100

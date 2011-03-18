@@ -1,0 +1,25 @@
+Syntax: compare <mob1> <mob2>
+
+This is a simplistic combat comparison utility for doing rough calculations
+on two mobs.  It is intended for use on mobs, and if used on players will
+probably return inaccurate results.
+
+Compare will determine the hit rate of mob1 and mob2.  That is, how often
+is mob1 able to hit mob2 and vice versa.  There is a degree of randomization
+in this calculation.
+
+It then goes on to display the average dam per round that mob1 and mob2 do.
+That is, (avg_dam_per_hit + damroll) * number_attacks.
+
+The modified dam per round is simply the average dam per round multiplied
+by the hit rate.
+
+It then goes on to divide mob2's HP by mob1's modified dam per round to
+determine how many rounds it would take mob1 to kill mob2 (and vice versa).
+
+Be advised that special attacks, special procedures and other considerations
+are NOT brought into play in this calculation.  This is simply a first order
+approximation.
+
+See Also: TESTFIGHT
+Related Topics: GOD

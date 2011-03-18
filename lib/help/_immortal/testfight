@@ -1,0 +1,26 @@
+Syntax: testfight <mob vnum> <mob vnum>
+
+A truly cool, but resource intensive command.
+
+Given two vnums, the mud will cause 1000 fights between the two to be
+started.  The first vnum will hit the second vnum in all cases.  Also,
+the two mobs will invoke the defensive routines prior to the fights starting.
+
+Each fight is set up in a separate, closed room.  These rooms are created
+from any free rooms between 0 and 30000.  DO NOT start fights if people
+are rloading builder rooms.  Each room is created at the outset, and destroyed
+when the fight is complete.  DO NOT GO AND WITNESS ANY OF THE FIGHTS, you will
+be toasted as well.
+
+DO NOT PURGE ANY FIGHTS, or statistics won't clean up properly.
+
+When all fights are complete, statistics are returned.
+Statistics are of the form: "left/total (percent%) (num)" for each mob
+  For each win the mob has, 1 is added to "num" and "left" is incremented by
+  the number of hp the mob had left.  "total" is incremented regardless of
+  win/loss by the max number of HP the mob has.  "percent" is left/total as a
+  percentage.
+
+Obviously, it may take a few minutes for all fights to complete.  Just be
+patient.  Starting all the fights takes a lot of resources, and the combat
+processing is very intensive for this number of fights.  Use sensibly!!!

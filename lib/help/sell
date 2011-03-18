@@ -1,0 +1,16 @@
+Syntax: sell <item>
+
+This command is used to sell things in any of the many shops around
+The World.  Shops will only purchase certain items (generally, they
+will only purchase items that they can turn around and sell themselves).
+In addition, shopkeepers have finite amounts of money, they may refuse
+to purchase items if business is bad for them.
+
+Variations:
+sell sword		: sells first sword in inventory
+sell short sword	: sells first short sword in inventory
+sell 3.sword            : sells third sword in your inventory
+sell all.commodities    : sells all commodities even ones in bags
+
+See Also: LIST, BUY, VALUE
+Related Topics: SHOPS, OBJECT MANIPULATION

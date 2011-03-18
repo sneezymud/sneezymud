@@ -1,0 +1,11 @@
+Syntax: newmember <person>
+
+Newmember is used to add <person> to <faction>.  This will change person's
+allegiance to <faction>.  As a new member, <person> will have a 0.00% faction
+allegiance.  Newmember may only be done by a leader in the faction.
+
+<person> must be presently "Unaffiliated" and have their autojoin bit set "on"
+to be added.  Also, <person> needs to be online at the time.
+
+See Also: RMEMBER, MAKELEADER
+Related Topics: FACTION LEADERS

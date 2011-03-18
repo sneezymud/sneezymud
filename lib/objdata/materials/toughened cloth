@@ -1,0 +1,42 @@
+;Slash Susceptability
+SLASH 
+;Blunt Susceptability
+BLUNT 
+;Fire Susceptability
+FIRE 
+;Pierce Susceptability
+PIERCE 
+;Hardness
+HARDNESS 
+;Water Susceptability
+WATER 
+;Fall Susceptability
+FALL 
+;Float Weight
+FLOAT 
+;Noise Generation
+NOISE 
+;Volume Multiplier
+VOLUME 
+;Conductability
+CONDUC 
+;Flamability
+FLAME 
+;Acid Susceptability
+ACID 
+;Price Per Unit
+PRICE 
+;Rarity/Availability
+AVAIL 
+;Repair Proc Name
+REPPROC 
+;Remove the ; on the following line if this is a metal
+;ISMETAL
+;Remove the ; on the following line if this is a mineral
+;ISMINERAL
+;Remove the ; on the following line if this is an organic
+;ISORGANIC
+;Remove the ; on the following line if this is rustable
+;ISRUSTABLE
+;Remove the ; on the following line if this is see-thru
+;ISOPAQUE

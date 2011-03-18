@@ -1,0 +1,17 @@
+Syntax: spells <offensive|utility> <targeted|nontargeted> <all>
+
+The spells command allows you to view your spells by category.  The targeted/
+nontargeted options refer to whether or not the spell targets an individual
+person.  Spells that target objects are considered to be nontargeted.  The all
+option shows all the spells of a particular type, whether or not you have
+learned them yet.
+
+Each line lists the spell name, your current learnedness of the spell, your max
+learnedness of the spell, the number of component charges for the spell that
+you have available and the name of the required component.
+
+Usage examples:
+
+spells offensive
+spells offensive targeted
+spells utility nontargeted all

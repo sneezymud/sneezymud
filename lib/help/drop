@@ -1,0 +1,31 @@
+Syntax: drop <something>
+Syntax: drop <"hold-left" | "hold-right">
+
+Drop does basically what it sounds like, it causes you to drop a piece
+of your inventory.  Needless to say, dropped objects will turn up on the
+ground of where they are dropped (or plummet earthward if you happen to
+be flying).
+
+Note that certain places (dumps, junkyards, etc) are so cluttered that
+anything dropped is absorbed into the general clutter and thus lost forever.
+
+Also note that mobs tend to be greedy and have been known to pick up
+anything they find of use to them on the ground.
+
+Drop can also be used to drop held items without first removing them.  Please
+note, unlike most other commands, <something> will be looked for in your
+inventory before checks are made on held items.
+
+Variations:
+drop all		: drops everything in your inventory
+drop all.bottle		: drops anything with the name bottle in it
+			Abbreviations apply, so anything that "bottle"
+			is an abbreviation for will also be dropped
+drop 9*bottle		: drops the first 9 bottles in your inventory
+drop 9.bottle		: drops the ninth bottle in your inventory
+
+There is no reimbursement for dropped items if the mud crashes or for
+errors in what item was dropped by you.
+
+See also: GET, JUNK
+Related Topics: OBJECT MANIPULATION

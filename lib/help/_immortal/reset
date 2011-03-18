@@ -1,0 +1,26 @@
+Syntax: reset practices
+Syntax: reset shops
+Syntax: reset gold
+Syntax: reset zone <zone>
+Syntax: reset levels
+Syntax: reset logins
+
+Resetting practices will set all of the players disciplines down to 0 learm.
+This works exactly like the 'gain reset' command mortals can do at their
+guildmaster.  The players skills and skill-toggles are not reset.
+Disciplines which automatically raise (adventuring, etc) are not reset.
+
+Resetting shops will cause all shopkeepers to junk all inventory, and then
+auto-create themselves.  This essentially reverts them so they ONLY possess
+unlimited items.
+
+Resetting gold will zero out the economic data shown in "info gold".
+
+Reseting a zone will force it to go through a repop.  Players sometime ask for
+this, but it should be avoided.  This command is designed with testing LOW
+related things in mind.  You can give it the "all" property for <zone>
+
+Reseting levels resets the stats about leveling speed that gets preserved 
+through reboots.
+
+Reseting logins will reset the number of logins counter (world command) to 0.

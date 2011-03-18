@@ -1,0 +1,50 @@
+The governments of SneezyMUD are controlled by players.  Specifically,
+Mayors control each of the four main cities on the mud.
+
+-The Mayors
+Every 4 mud years (2 real life months) there is an election to elect
+Mayors for the four major cities: Grimhaven, Brightmoon, Logrus and
+Amber.  The Mayors control the city treasury as well as any shops
+owned by the city.  They are responsible for setting prices on basic
+services such as repairs and engraving, as well as paying out interest
+on bank accounts (if they choose), and even charging sales tax.  They
+control much of the basic economy of the mud.
+
+While different Mayors may have different political theories, the
+general goal is to take money out of the economy and put it to use
+expanding the cities.  In addition to controlling the shops and
+services owned by the city, the Mayors may choose to spend money on
+various other city related expansions.  Additional guard patrols,
+garbage disposal systems, Mayoral mansions and so on are all
+possibilities.
+
+-The Cities
+Each of the four major cities has a corporation setup for managing the
+city treasury, shops and services.  See "help corporations" for more
+details on how corporations work.
+
+The elected Mayor of each city has full control over the city
+corporation and thus full control over each of the shops and services
+owned by the city.  The Mayor may grant access to the individual shops
+to other players.  Other government positions may be assigned in this
+manner - for example, the Mayor might create a Minister of Foreign
+Affairs, who would have ownership access to all city owned shops that
+are outside of the city.  See "help shop ownership" for more details
+on shop specific commands.
+
+-The Shops and Services
+The cities may own any type of shop that players own, as well as
+several others.  Some of the shops and services that cities control
+are:
+* Tax Office - Mayors may alter the rate of sales tax.
+* Post Offices - Mayors may alter the price of stamps.
+* Banks - Mayors may alter the rate of interest paid out, as well as
+  temporarily utilize deposited funds.
+* Repair shops - Mayors may alter the cost, speed and quality of
+  repairs.
+* Hospitals, Divination, Engraving, Sharpening, Attuning, Pets - Mayors may
+  alter of all of these services.
+
+Future Mayors may come up with other types of shops and services.
+Immortals will do their best to support Mayors in their endeavours
+with new code and world changes, in exchange for talens.

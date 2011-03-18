@@ -1,0 +1,42 @@
+filename RACE_DRAGONNE
+singName dragonne
+plurName dragonnes
+propName Dragonne
+lore REPTILE
+age 201+20d10
+maleHt 65+1d5
+maleWt 200+2d10
+femaleHt 64+1d4
+femaleWt 180+2d10
+body Dragonne
+moveIn stomps in
+moveOut stomps
+hpMod 3
+moveMod 40 
+manaMod 2
+search 5
+STR 205
+BRA 205
+CON 170
+DEX 155
+AGI 110
+INT 150
+WIS 150
+FOC 160
+PER 140
+CHA 160
+KAR 165
+SPE 90
+Winged
+Ridable
+IMMUNE_HEAT 25
+IMMUNE_COLD 25
+IMMUNE_FEAR 100
+IMMUNE_CHARM 100
+IMMUNE_SLEEP 100
+IMMUNE_NONMAGIC 50
+AFF_FLYING
+AFF_DRAGON_RIDE
+AFF_DETECT_INVIS
+AFF_SENSE_LIFE
+

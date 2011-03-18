@@ -1,0 +1,15 @@
+Syntax: smooth <item>
+
+The smooth skill permits the user to repair the quality of <item> for
+blunt-type <item>s
+
+The <item> must be a weapon and it must be held in the primary hand.  
+Additionally, a file of some sort must be in your inventory.  The
+file will slowly be used up with the amount being determined by how 
+much "smoothing" must be done.  Lastly, smoothing will require a decent 
+amount of time to complete, the amount is proportional to how much smoothing
+must be done.
+
+Smoothing pierce or slash weapons is not permitted.
+
+See Also: CUTLERY, ITEM DAMAGE, SHARPEN

@@ -1,0 +1,16 @@
+Syntax: change
+
+Change will swap items in your hands. (i.e. move what's in your left 
+hand to the right and vice versa.)
+
+(immortal version)
+Syntax: change <command> <new level>
+
+Change when immortal and level > 57 will allow you to change a given commands
+minimum level.  For example, if there is a crash bug in headbutt, make it
+impossible to headbutt by doing : change headbutt 60
+You can only change the level on a command that you can presently use and the
+new level can be no higher then 60.
+
+See Also: -
+Related Topics: OBJECT MANIPULATION

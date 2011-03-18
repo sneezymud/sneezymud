@@ -1,0 +1,35 @@
+filename RACE_ELVEN
+singName elf
+plurName elven
+propName Elven
+lore PEOPLE
+age 100+5d6
+maleHt 52+1d6
+maleWt 90+3d10
+femaleHt 51+1d6
+femaleWt 70+3d10
+body Humanoid
+moveIn strides in
+moveOut strides
+moveMod 25
+manaMod 1
+search 2
+sight 5
+foodMod 1.5
+drinkMod 0.5
+STR 80
+BRA 45
+CON 45
+DEX 130
+AGI 120
+INT 130
+WIS 155
+FOC 145
+PER 75
+CHA 100
+KAR 85
+SPE 125
+IMMUNE_CHARM 65
+IMMUNE_PARALYSIS 50
+IMMUNE_SLEEP 65
+talent ranged weapons

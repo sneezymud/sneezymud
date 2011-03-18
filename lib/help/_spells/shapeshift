@@ -1,0 +1,13 @@
+Shapeshift gives the shaman the ability to assume the shape and abilities
+of simple creatures.  The shape will only last a short while.
+
+Methods to switch into the following creatures are known:
+horsefly	slug		chicken		snake
+dolphin		bear		crow 		hawk
+spider
+
+The ability to shapeshift into these creatures depends on the shaman's
+level and learnedness in the discipline and spell. Each attempt at
+shapeshift is draining to a shaman and may only be done once in a 
+while.
+

@@ -1,0 +1,12 @@
+How fast do bugs and other things get fixed?
+--------------------------------------------
+
+This really depends on what it is.  The implementation team does read through
+everything put into the BUG, IDEA and TYPO list, and we generally cull from
+that a to-do list.  Obviously, the bigger the problem (as decided by the
+imps), the higher priority it receives.  Also, simpler fixes generally get
+solved faster than long-complicated ones that require hours of debugging.
+This generally takes an average of a day or so from the time it was reported
+unless the problem is long and involved in which case it may have to wait until
+one of the coders decides they have free time and the inclination to fix 
+said problem.

@@ -1,0 +1,26 @@
+Syntax: close <something>
+
+Close pretty much does what it says, it closes something.
+It is appropriate to use this on a wide variety of things: bags, chests,
+doors, portals, gates, desks, wine skins, etc.
+
+If the item is an object of some sort, you may use standard referencing
+format to differentiate multiple, similar objects.
+eg.
+close 1.chest		close chest large
+close 2.chest 		close chest small
+close 3.chest 		close 2.chest small
+
+If the item is an exit (door, gate, etc), and you close it, it will no longer
+appear on the list of exits in a room until it is reopened.  Exits may be 
+differentiated by doing:
+close door north 	close door wooden 
+close door east		close door steel
+close door sw		close door large
+
+Close will try and determine what you mean if you give it an ambiguous target.
+That is, it will attempt to close the first <something> that is closeable and
+not presently closed already that it can find.
+
+See Also: OPEN, LOCK, UNLOCK
+Related Topics: OBJECT MANIPULATION, MOVEMENT

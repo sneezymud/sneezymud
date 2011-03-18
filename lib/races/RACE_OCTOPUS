@@ -1,0 +1,34 @@
+filename RACE_OCTOPUS
+singName octopus
+plurName octopi
+propName Cephalopod
+lore ANIMAL
+age 5+1d3
+maleHt 72+1d6
+maleWt 150+2d10
+femaleHt 70+1d6
+femaleWt 130+2d10
+body Octopus
+moveIn swims in
+moveOut swims
+hpMod 2
+moveMod 10 
+STR 180
+BRA 180
+CON 170
+DEX 170
+AGI 70
+INT 55
+WIS 55
+FOC 55
+PER 55
+CHA 55
+KAR 105
+SPE 150
+DumbAnimal
+Invertibrate
+Aquatic
+IMMUNE_BONE_COND 100
+AFF_WATERBREATH
+AFF_SWIM
+

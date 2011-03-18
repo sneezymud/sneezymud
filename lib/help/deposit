@@ -1,0 +1,8 @@
+Syntax: deposit <amount>
+Syntax: deposit all
+
+Transfers money from on-hand into a bank's vault.  Can only be done at a
+bank.
+
+See Also: BALANCE, WITHDRAW, TITHE
+Related Topics: BANKS

@@ -1,0 +1,32 @@
+<h> has built in commands duplicating commands found in the
+commonly used Unix shells.  The available features are:
+
+!!           	- Repeat your last command
+!<num>         	- Repeat number num command from your history
+^<exp>^<exp2> 	- Search the last command for exp, and replace it with exp2
+!<exp>        	- repeat last command started with <exp>
+
+For instance, if your history looks like this :
+
+[0] say hi
+[1] say hi again
+[2] say This is a test
+[3] get all corpse
+[4] laugh Nosferatu
+[5] shout Congratulations!
+[6] think
+[7] eat ration
+[8] say Where is the fountain?
+[9] history
+
+!1 would result in : "say hi again"
+!say would result in : "say Where is the fountain?"
+!say hi would result in : "say hi again"
+^h^t would result in "tistory"
+
+If you have any questions about shell capabilities, ask an immortal.
+
+!NOTE! : The ^ ability is not supported at this time
+
+See Also: HISTORY
+Related Topics: UTILITY

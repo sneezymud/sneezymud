@@ -1,0 +1,31 @@
+filename RACE_BAANTA
+singName baanta
+plurName baantas
+propName Baantan
+lore ANIMAL
+age 5+1d3
+maleHt 78+1d6
+maleWt 1000+30d10
+femaleHt 74+1d6
+femaleWt 1000+25d10
+body Baanta
+moveIn runs in
+moveOut runs
+moveMod 50
+STR 150
+BRA 150
+CON 205
+DEX 140
+AGI 90
+INT 45
+WIS 45
+FOC 45
+PER 45
+CHA 45
+KAR 100
+SPE 150
+DumbAnimal
+Ridable
+IMMUNE_COLD 10
+IMMUNE_HEAT -10
+

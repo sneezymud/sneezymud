@@ -1,0 +1,48 @@
+Disciplines represent the sum total body of knowledge in a given area
+of study.  This knowledge is encapsulated in a series of trainers spread
+through The World who may be willing to train worthy adventurers.
+
+Disciplines are generally divided into basic, utility, weapons and
+advanced/specialization skill/spell disciplines.  The basic disciplines
+are Combat, Lore, Theology and a <class> abilities discipline (one for
+each class).  These disciplines are learned first and taught by trainers 
+in and around the newbie and low/mid level areas of The World.  The
+utility discipline are Adventuring, Wizardry and Faith and are generally 
+learned from the players guildmasters naturally over time.  Weapon skills
+are taught after combat and taught by trainers in The World but do not
+have <class> abilities as a prereq.  Last, the advanced spell/skill
+disciplines require an adventurer to first complete his basic training
+(Combat, Lore, Theology, or a combination) and class discipline before 
+a trainer will teach you a deeper knowledge in a given specialty.
+
+Within each discipline, there are smaller sub-areas of knowledge that are
+generally referred to as skills, spells or prayers.  For example, one
+discipline is water-magic representing advanced learning in water magic as
+taught and learned by the World's master water mages.  As a person learns
+more about water-magic, they would gradually have access to various
+advanced spells not available to those who have not specialized in water
+magic. In addition, the more one knew about water-magic, the better their
+ability in various basic water spells could become.  Advanced learning
+can both increase the power of basic skills/spells associated with that
+advanced disciplines and provide new skills/spells to the adventurer.
+
+Obviously, this advanced learning is not accessible to the neophyte as
+they are beyond their abilities.  Advanced trainers assume a base
+knowledge that not everyone may have and will not spend their time
+teaching the unprepared or unqualified.  For example, water-magic assumes
+the student has an understanding of all the basic magical principles and
+hence, non magicians and beginning mages would be unable to train in it at
+all.  Likewise, hand-to-hand combat assumes a knowledge about basic
+fighting techniques.
+
+Various trainers around The World offer training in a variety of disciplines.
+The best trainers tend to be a bit reclusive though.  You must also possess
+practice sessions to train with them.  After a trainer has given you his
+knowledge, it will be up to you to learn the skill taught to you.
+
+Note that practices are only one aspect of learning.  Almost all skill
+learning is a combination of training at a trainer and improvement by
+using the skill.
+
+See Also: PRACTICE, GAIN, PREREQS
+Related Topics: CLASSES, LEARNING

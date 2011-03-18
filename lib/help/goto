@@ -1,0 +1,38 @@
+Syntax: goto <place>
+Syntax: goto fairfight
+
+To help you to learn your way around our main city of Grimhaven, you may
+use the "goto" command to get step-by-step directions to many major land-
+marks and important destinations.
+
+Example: goto cs
+Will output: You can get to Center Square by going <direction(s)>.
+
+The "goto" command will only work while in Grimhaven and only for   
+destinations within Grimhaven.  If you're too far away or inside some  
+of Grimhaven's bigger structures, you may find you're just not familiar
+enough with the area to get your bearings.
+
+Some sample destinations:
+Inn, rent, cs, center square, armor, weapon, food, drink, repair, sharpener, 
+mail, symbol, commodity, component, supply, light, doctor, bank, attuner, 
+tanner, Quazar, Taloc, Prigon, surplus, park, newbie area.
+
+To find your class trainer, type "goto trainer".
+To find another discipline's trainer, type "goto <discipline>".
+To find your guildmaster to accept a quest, type "goto <class>"
+     or "goto guildmaster"
+     Important note about guildmasters: They only give out quests, they
+     cannot train you in any disciplines.  Type "goto trainer" to find
+     your class trainer.
+
+Only basic trainers can be found using "goto".  Your first trainer will
+give you hints on finding the second trainer, and a certain whiskey-loving
+barfly will sing you a song to help you find advanced discipline trainers.
+
+You may also use goto to locate the closest mob that is the same level
+you are. Type "goto fairfight" to be directed to the nearest mob that
+considers at "fair fight" for your level.
+
+See Also: MOVEMENT
+Related Topics: NEWBIE

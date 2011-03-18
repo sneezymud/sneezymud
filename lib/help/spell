@@ -1,0 +1,10 @@
+CAST		PRAY		BREW		POTIONS
+QUAFF		SCRIBE		SCROLLS		RECITE
+READ MAGIC	USE		WANDS		MAGIC
+MEDITATE	AREA EFFECT	COMPONENTS	HOLY SYMBOLS
+MAGES 		MANA		PIETY		DIFFICULTY LEVEL		
+
+Help files on each spell also exist:
+help (spell name)
+
+See HELP for other major fields of information.

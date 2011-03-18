@@ -1,0 +1,36 @@
+   Used to close the game to users for various reasons.
+parameters:
+   wizlock all     
+      will only allow a person of god level in
+   wizlock add (alpha or numeric site address)
+      will lock out ALL users from that site.  Partial 
+      strings are allowed.  (i.e. Ohio.edu will lockout
+      any site with Ohio.edu in name.)
+   wizlock rem (alpha or numeric site address)
+      will remove a site (allow entry) from a currently
+      locked out site.
+   wizlock list
+      will display what sites are locked out.
+   wizlock message
+      This will change the message sent to mortals when
+      they get caught in wizlock. It can be changed online
+      to tell the exact reason the game is wizlocked. To
+      use this command, write the new message on a note,
+      and then just type wizlock message, and the message
+      from the note will be transfered to the wizlock message.
+
+IF you wizlock the game, please do the following:
+1.) kick all current mortals out (trans and force rent)
+2.) cut all mortal links, purge, etc. (you can still reconnect otherwise)
+3.) EMAIL BRUTIUS!!!  address is in credits
+	be sure to mention why you did it.  i.e.  It crashed 5 times
+	in 20 minutes is sufficient, but if you know or suspect a reason
+	mention that too.
+4.) post a wizlock message.  No need to be specific, but do be polite.
+	"some random crash bug.  We'll be done at least 20 minutes, sorry"
+	is perfectly fine.
+5.) leave a note on the wiz board so gods coming in after you know that
+	we are wizlocked and why (if you know).
+
+See Also: -
+Related Topics: GOD

@@ -1,0 +1,97 @@
+SEDIT is the one stop mobile Response Script Quest editor/generator.
+
+Syntax: SEDIT <field> <arguments>
+
+Available types:
+  SEDIT modify <mobile> - Go into the menu system to modify
+  SEDIT add <mobile> <{trigger}> <entry> - Add an entry to a trigger
+  SEDIT delete <mobile> <{trigger}> <entry> - Delete an entry from a trigger or
+                                            the trigger.
+  SEDIT display <mobile> <tofind> - Display current triggers on <mobile>
+  SEDIT save <mobile> - Save triggers on <mobile> to your personal directory
+  SEDIT load <mobile> - Load triggers for <mobile> from your personal directory
+  SEDIT clear <mobile> - Remove all triggers on <mobile> (PLEASE Read Below)
+  SEDIT list - List all saved scripts in your personal directory
+  SEDIT purge! - Purge *ALL* scripts in your directory (PLEASE Read Below)
+
+  Note:
+    The {} in <{trigger}> are required.  Format of trigger is:
+      {command arguments}
+    Ex:
+      {say hello}
+      {give -100}
+      {roomenter}
+      {say can you help me}
+      {say i have arrived}
+
+Breakdown:
+
+Syntax: SEDIT modify <mobile>
+    The SEDIT menu interface is the cleanest way to interact with this system.
+  But is not the only way.  Avoid using the command line until you have a good
+  grasp of the menu system though.
+
+  Ex:
+    SEDIT modify elite-cityguard
+
+Syntax: SEDIT add <mobile> <{trigger}> <entry>
+    This will add <{trigger}> to <mobile>, if it doesn't exist, and append
+  <entry> at the end of the trigger's block.  At current there is no way to
+  insert an entry partway through a trigger from the command line.  So if you
+  mess up you will need to enter the menu system and modify it from there.
+
+  Ex:
+    SEDIT add elite-cityguard {say hello} say what might I do for you?
+
+Syntax: SEDIT delete <mobile> <{trigger}> <entry>
+    If you do not define <entry> then the entire <{trigger}> is deleted.  Else
+  just <entry>, should it exist in <{trigger}>, is removed From <{trigger}>.
+
+  Ex:
+    SEDIT delete elite-cityguard {say hello}
+    SEDIT delete elite-cityguard {say hello} say what might I do for you?
+
+Syntax: SEDIT display <mobile> <tofind>
+    This is a quick and easy way to check for what triggers are on your mobile.
+  There is a variety of ways to utilize this extension:
+
+  Ex:
+    SEDIT display elite-cityguard
+    SEDIT display elite-cityguard hello
+    SEDIT display elite-cityguard -say
+
+Syntax: SEDIT save <mobile>
+    This will save down all the current triggers on <mobile> to your personal
+  directory.  These files are archived based on what the mobile number is.  So
+  if you create a mob make sure to Med Save it and Med Load it so the number
+  is appropriate to the mobile.
+
+  Ex:
+    SEDIT save elite-cityguard
+
+Syntax: SEDIT load <mobile>
+    This will load up any triggers that can be found for <mobile> in you
+  personal directory.
+
+  Ex:
+    SEDIT load elite-cityguard
+
+Syntax: SEDIT clear <mobile>
+    This will clear all triggers that are on <mobile> And remove any triggers
+  you might have stored for it in your personal directory.  Once removed you
+  Can Not Get Them Back.  So use this with extreme caution.
+
+  Ex:
+    SEDIT clear elite-cityguard
+
+Syntax: SEDIT list
+    This will go through your personal directory and list all trigger files
+  that exist indexed by mobile vnum.  This means if you have a mobile,
+    a big hairy ogre [saved under vnum 15900]
+  and you have triggers for it then It's triggers will be listed under:
+    15900 # A big hairy ogre
+
+Syntax: SEDIT purge
+    This will remove *ALL* stored scripts in your directory.  Every last one
+  of them.  This will permanently remove them.  That means after this you Can
+  Not Get Them Back.  So use this with extreme caution.

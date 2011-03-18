@@ -1,0 +1,32 @@
+filename RACE_DEER
+singName deer
+plurName deer
+propName Deer
+lore ANIMAL
+age 5+1d3
+maleHt 48+2d3
+maleWt 250+2d10
+femaleHt 44+2d3
+femaleWt 230+2d10
+body FourHoof
+moveIn strides in
+moveOut strides
+moveMod 50
+STR 150
+BRA 120
+CON 215
+DEX 135
+AGI 110
+INT 55
+WIS 55
+FOC 55
+PER 55
+CHA 55
+KAR 110
+SPE 90
+DumbAnimal
+Fourlegged
+Ridable
+DISSECT_INFO 3114 4 50
+DISSECT_MSGA You carve a piece of $p from $N.
+DISSECT_MSGB $n carves a piece of $p from $N.

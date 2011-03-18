@@ -1,0 +1,29 @@
+Volume
+
+The volume of an object is how much room it occupies. The main effect of
+volume is that it determines the size of the item and thus, which race(s)
+can wear an item.  The second effect is that volume determines the amount
+of free space the item will take up in a players inventory. In this
+regard, bags and chests have a built in compression ratio (based on
+material type) that allows them to "fold the item up and squeeze it into a
+bag". Please set the items volume off of the LARGEST size the item could
+occupy and let the code do the compressing. 
+
+We expect realistic volume setting.  Please be aware that 1 unit = 1 cubic
+inch.  Hence something that is a foot on a side is 12 * 12 * 12 = 1728
+units. Use some common sense when setting item volume and be accurate
+about it. 
+
+See the note about race and item size (below) to find out about setting 
+armor size for particular races to wear..
+
+NOTES:
+
+COMMON BUILDER ERRORS:  Forgetting to set volume at all or setting 
+totally unrealistic volume.  Both add a lot of work to the balancing 
+process.
+
+PAIRED ITEMS:  These require double volume of single items.
+
+VOLUME:  Remember that volume sets which race can wear an item.
+

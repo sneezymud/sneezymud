@@ -1,0 +1,10 @@
+Syntax: wear <object>
+Syntax: wear all
+
+Wear is used to equip yourself with an <object>.  There are some objects
+you can not wear in combat but you will be able to disengage to wear them.
+Wearing an object can add command lockout and can add a period where the
+wearer can not hit in combat.
+
+See also: REMOVE, WIELD, EQUIPMENT
+Related Topics: OBJECT MANIPULATION

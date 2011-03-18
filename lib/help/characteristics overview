@@ -1,0 +1,50 @@
+<h> help for setting characteristics :
+
+Characteristics are a measure of how good a given character is in a certain
+quality.  The higher the number, the better that characteristic is.
+
+You may continue increasing characteristics until you max it, or you run out of
+free points.  To gain more free points, you must lower some other
+characteristic.  Raising and lowering of characteristics is done by typing:
+   SYNTAX: +{amount}<characteristic>
+   SYNTAX: -{amount}<characteristic>
+Where <characteristic> is the letter of the characteristic you wish to change,
+and {amount} is a number representing how much to raise or lower the
+<characteristic>.
+
+For example, +3s will raise strength by 3 points.  {amount}, if not specified,
+will default to 1.  Characteristics are limited to the range -25 to +25.  To
+simplify character design, you may take free points negative, however, you
+will not be able to proceed onward until free points are non-negative.
+
+Be aware that characteristics come in three flavors: chosen, natural and
+current.  What you are setting here at character generation are your
+"chosen stats".  The natural stats are simply the chosen stats adjusted
+for racial modifiers.  For example, if an elf chooses to set 0 for his
+brawn, and an ogre sets 0 for her brawn, the ogre will wind up with a higher
+"natural brawn" due to the racial modifier on brawn that an ogre receives.
+Current stats contain the effects of any transient change in the stat the
+character may have in effect.  This includes magical effects, items worn,
+age modifiers, and the like.
+
+That is:
+Chosen  : The values you choose here at character generation
+Natural : Static values based on race, age, home territory, etc.
+Current : Natural + Chosen + transients (eq, spells, etc).
+
+You are free to adjust your characteristics to whatever configuration you
+desire, but once you begin play, there is no way to change your chosen
+characteristics at a later point in time.  New players are encouraged to set
+some characteristics and try them out, you will undoubtedly want to experiment
+with some numbers before finally committing yourself to any one setup.
+
+There is no "perfect" setup for characteristics.  This is largely an exercise
+in personal preference and making acceptable tradeoffs.  On a final note, it
+is not advisable to set as many characteristics to max as possible; you will
+find that a near maxed characteristic is virtually identical to the maxed
+quantities, while the sacrificed characteristics vary radically at the low
+numbers (ie., diminishing returns).   That is, it may not be advantageous to
+max a stat in detriment of other stats, you may suffer more then you benefit.
+Still, realize that the stat range has grown a lot, so small modifications will
+probably not yield a significant difference, though this is not an absolute
+rule.

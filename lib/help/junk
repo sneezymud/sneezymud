@@ -1,0 +1,14 @@
+Syntax: junk <item>
+
+If you feel an item is so worthless that it isn't even worth dropping and
+leaving for some other lucky adventurer to find, use the junk command.  
+Junk will totally destroy the object with no chance of recovery.
+
+!!!!!!! NOTE !!!!!!!!!!!!
+No reimbursement is given for junking something by accident, be explicit
+when you type junk so that typos do not cause problems.  We have spent
+some time trying to coordinate object manipulation and junk, but
+regardless, there is no reimbursement if the coordination is off.
+
+See Also: DROP
+Related Topics: OBJECT MANIPULATION

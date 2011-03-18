@@ -1,0 +1,21 @@
+Syntax: rload <1/2>
+Syntax: rload backup <1/2> <"standard">
+
+  This command allows you to load previous work that you have RSAVED to
+continue working on it.  If you failed to rsave before then this command
+will not work as you might expect it to.
+
+  In combination with the backup files created with rsave it is possible
+to load either the standard or builder backups at your whim:
+  rload backup 1
+    ::Will load backups made by rsave backup for block1.
+  rload backup 1 standard
+    ::Will load backups made by rsave for block1.
+
+  In general the backup extension is usually not used unless you really
+mess up.
+
+  Use 'goto help' to get a list of your blocks.  Use 'rload 1' to load your
+PRIMARY block, and 'rload 2' to load your SECONDARY block.
+
+SEE ALSO: rsave

@@ -1,0 +1,20 @@
+Use this command to "possess" the body of any mobile in the game.
+To return to your normal body, use the "return" command.
+
+Syntax:  switch <name_of_mob>
+Syntax:  switch load <name_of_mob>
+To get back: return
+
+Before causing a mob to do anything, be sure to read help roleplay.  You are
+held responsible for any actions a mob does due to your forces or switched
+presence.
+
+switch load <name_of_mob> is identical to switch except it loads the mob
+before switching into it.
+
+Please note: Mobs prompts are fixed and are not configurable.  Some display
+issues crop up if switching with term=VT or term=Ansi.  You may need to 
+do a CLS to clear things up.
+
+See Also: RETURN, ROLE PLAY
+Related Topics: GOD

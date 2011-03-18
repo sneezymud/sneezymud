@@ -1,0 +1,13 @@
+Currently, a player may be any of the following classes:
+WARRIOR		CLERIC		MAGE		MONK
+DEIKHAN		THIEF		SHAMAN
+
+You may type HELP <CLASS> to get more info on a particular class.
+
+
+Also ee help files on:
+RACES		DISCIPLINES	PRACTICE	CHARACTERISTICS
+LEVELS		XP		FACTIONS
+
+
+See HELP INDEX for a list of other major fields of information.	

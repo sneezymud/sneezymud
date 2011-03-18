@@ -1,0 +1,20 @@
+Advanced Action: personalize
+---------------------
+ 
+ex:
+<trigger> { "<arguments>";
+       <other actions>;
+       personalize <number>; 
+       <other actions>;
+     }
+
+Personalize is an action that will load the item given by <number> as a vnum,
+personalize it to be the person who did the trigger's items, and give it to
+the person.
+
+At the end of the personalize action, the item will be in the performer's
+inventory, so you do NOT need to do a separate give.  Personalize also loads
+so do NOT do a separate load.
+
+There is text associated with personalizing automatically done.  You do not
+need separate echos for loading, stringing and giving.

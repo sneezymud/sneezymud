@@ -1,0 +1,94 @@
+Hearts is a four person card game (yes, you'll have to find opponents) played
+with a standard deck of 52 cards (4 suits (ether, water, earth, fire) of
+13 cards (ace, 2 - 10, jack, queen, king) each.)  
+
+General idea:
+------------
+  The idea of hearts is to avoid taking "points".  Each card of the "fire" suit
+counts as ONE point.  Additionally, the QUEEN OF PURPLE ETHER is 13 points.
+that makes for a total of 26 possible points.  Should one person manage to
+accumulate all 26 points (shooting the moon) instead of receiving +26, they
+are given -26 points (beneficial).  Shooting the moon is rather chancy, but the
+payoffs are big.  Remember, points are BAD.
+
+Dealing and passing:
+-------------------
+  A game of hearts is to 100 points.  Lowest score when someone obtains
+100 points wins.  A game of hearts is made up of a number of rounds of
+hearts.
+  Each round of Hearts, all 52 cards are dealt.  In one round of hearts,
+there are 26 possible points (see above).  Each player is dealt 13 cards
+in a round of hearts and there is a passing round before the play for
+that round begins.
+  The passing round consists of taking 3 cards and giving them to an opponent
+and at the same time receiving 3 cards from another opponent.  The actual
+pattern of passing cycles.  The first round of hearts it is left, 2nd right,
+3rd across, 4th none, 5th left, 6th right...
+left: A passes to B, B passes to C, C passes to D, D passes to A
+right: A passes to D, B passes to A, C passes to B, D passes to C
+across: A and C exchange 3 cards.  B and D exchange
+none: no passing at all
+once passing is complete, the round of hearts commences.
+  A round of hearts is broken into 13 hands.  A hand of hearts consists of
+one person leading a "trump card".  Play then proceeds clockwise until
+everyone has played one card.  The winner of the hand is the player who
+has played the highest card of the trump suit.
+
+Rules on Play:
+-------------
+  If you have a card of the trump suit, you MUST play it.  You are not required
+to play your highest trump-suit card though.
+  If you have no cards of the trump-suit, you may play any other card in your
+hand.
+
+Rules on Leading:
+----------------
+  On the first hand of Hearts, whomever has the TWO of BLUE leads, and must
+lead the BLUE TWO.
+  The leader of subsequent rounds is whomever won the preceding round.
+  The person who leads is not permitted to lead a heart (point card) until
+"hearts are broken".  ie. until someone has played a heart in a previous hand,
+hearts can not be the trump-suit.
+
+Remember, the winner of a hand is the person who played the highest card of
+the trump suit.  That person takes all four cards played that hand and any
+points that go with those 4 cards.  
+
+Scoring:
+  At the end of 13 hands (1 round), all the cards are used up.  At this point
+the round is over and points are awarded.  1 point is given for each heart
+a person ended up with and whomever got the QUEEN of ETHER receives an
+additional 13.  If one person took all 26 points, there score goes DOWN 26
+points instead.
+
+Winning:
+  The person with the lowest score once someone has 100+ points wins.
+
+Etiquette:
+  Serious hearts players generally get annoyed by comments like: "so and so
+is trying to shoot the moon, watch them".  It is each person's job to pay
+attention to who took points and be wary of moon shooters.
+
+PEEK   
+  Looks at the cards in your hand. 
+
+LOOK AT PILE
+  Looks at what the last discarded card was
+
+LOOK AT TABLE
+  Displays last discard AND the current score.  Useful for determining
+relative positions of the players at the table for passing purposes or
+to know when it's your turn to play.
+
+PUT (old card slot#) (new card slot#) 
+  Moves a card from old slot# into the new slot# and resorts all the other 
+cards down 1 slot.
+
+PLAY (slot#)
+  Discards the card in slot#
+
+COMMENTS 
+  The hearts table will automatically sort your cards by suit when dealt.
+
+See Also: -
+Related Topics: CASINO

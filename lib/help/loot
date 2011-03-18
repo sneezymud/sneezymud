@@ -1,0 +1,18 @@
+Syntax: toggle loot-money
+Syntax: toggle loot-all
+
+The loot-money and loot-all toggles allow you to select from automatically
+looting talens, all items including talens or no items from the corpse of 
+the mob you have slain.
+
+Most players keep loot-all toggled to on in order to take everything from
+a corpse.
+
+Toggling loot-all off is useful in situations where the corpse may contain
+undesirable items or you have limited inventory and wish to selectively
+loot individual items from a corpse.   Pairing loot-all off with loot-money
+on will allow you to automatically get all talens off a corpse but leave
+all items intact on the corpse for you to loot at your leisure.
+
+See Also: TOGGLE, GET
+Related Topics: OBJECT MANIPULATION

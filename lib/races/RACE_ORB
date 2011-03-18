@@ -1,0 +1,33 @@
+filename RACE_ORB
+singName floating orb
+plurName floating orbs
+propName Floating Orbs
+lore OTHER
+age 100+5d6
+maleHt 34+2d4
+maleWt 10+1d3
+femaleHt 30+2d4
+femaleWt 9+1d3
+body Orb
+moveIn floats in
+moveOut floats
+hpMod 2
+moveMod 20 
+manaMod 2
+search 3
+STR 100
+BRA 100
+CON 60
+DEX 75
+AGI 65
+INT 140
+WIS 120
+FOC 140
+PER 110
+CHA 80
+KAR 120
+SPE 150
+Invertibrate
+IMMUNE_BONE_COND 100
+AFF_FLYING
+

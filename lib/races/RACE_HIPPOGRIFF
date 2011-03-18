@@ -1,0 +1,31 @@
+filename RACE_HIPPOGRIFF
+singName hippogriff
+plurName hippogriffs
+propName Hippogriff
+lore OTHER
+age 50+1d10
+maleHt 72+1d12
+maleWt 1000+5d20
+femaleHt 68+1d12
+femaleWt 900+5d20
+body Hippogriff
+moveIn flies in 
+moveOut flies
+moveMod 40
+search 2
+STR 170
+BRA 160
+CON 215
+DEX 140
+AGI 80
+INT 80
+WIS 80
+FOC 100
+PER 80
+CHA 60
+KAR 105
+SPE 130
+Winged
+Ridable
+AFF_FLYING
+DumbAnimal

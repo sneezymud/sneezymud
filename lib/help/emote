@@ -1,0 +1,18 @@
+Syntax: emote <message>
+Syntax: : <message>
+Syntax: , <message>
+
+The emote command allows you to display whatever you want to the other users
+in the room.  What is displayed will be your name followed by the <message>.
+You may use ':' or ',' as short cuts for the emote command.
+
+eg. if JoeBlow typed emote jumps up and down excitedLY!
+Each user in the room then sees:
+JoeBlow jumps up and down excitedLY!
+
+Emotes are considered a form of communications and is subject to the various
+problems and results that communications may cause.  Emote presumes that an
+action is taking place, as such, it is hard to emote when drunk.  
+
+See Also: -
+Related Topics: COMMUNICATIONS

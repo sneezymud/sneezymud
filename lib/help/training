@@ -1,0 +1,60 @@
+<c>How does training work on SneezyMUD?<z>
+
+SneezyMUD is a discipline based mud.  That is, all skills, spells
+and prayers are organized into broad categories called disciplines.  
+
+You earn practices as you gain experience (the number of practices
+you receive is based on your intelligence), and practices can be
+spent learning about the discipline from the discipline trainers.
+As your learning in the discipline increases, you gain new skills 
+and improve the old ones.
+
+Practicing a discipline increases your potential for learning the
+various skills in the discipline.  For example, if you are a 
+warrior and have put a few practices into your basic warrior class
+discipline, you may see that you have the "kick" skill, but the
+best proficiency you can achieve is "so-so".  As you add more
+practices to the warrior class discipline, the more proficient you
+can become at the skills in the discipline.
+
+Most skills, spells, prayers and rituals are "learn-by-doing",
+which means that in order to become better at your skills, you must
+use them.  As you use your skills, you will receive alerts that you
+have "honed" your skill.  This happens at a rate determined by your
+wisdom.
+
+
+<c>How do I spend my practices to learn disciplines?<z>
+
+You must find the appropriate trainer for the discipline you wish
+to train in.  For basic disciplines, you may use the "goto" command
+to help you find your trainer.  Type HELP GOTO to learn more.
+
+Once you are at the appropriate trainer, you can use the "practice"
+command to spend your practices.  Type HELP PRACTICE to learn more.
+
+The basic trainers are particular about only training those who are
+diligent in keeping up on all their disciplines to become a well-
+rounded adventurer.  At some point, the basic trainers will be unable
+to teach you more and will require you to seek out the next trainer
+for that discipline.  They will give you hints as to where the next
+trainer lives.
+
+
+<c>How many practices does it take to max out my disciplines?<z>
+
+Basic disciplines and combat will give you one degree of increase for
+each practice.  Thus, it takes 100 practices to max combat and 100 to 
+max your class abilities.  The basic disciplines are required to 
+continue on to more advanced disciplines.  Advanced disciplines require
+less practices to max and give variable increase. 
+
+The degree of increase in the advanced disciplines per practice point
+spent is related to the present learning in the discipline.  At low
+learnednesses, it is possible to go up 2-3% per practice spent, while 
+once the discipline approaches maximum, it will be rare to get more 
+than 1%.  The actual degree of increase is somewhat random, but geared 
+toward 60 practices to get 100% in any discipline.
+
+See also: PRACTICE, DISCIPLINES, LEARNING, INTELLIGENCE, WISDOM
+Related Topics: CLASSES, GOTO

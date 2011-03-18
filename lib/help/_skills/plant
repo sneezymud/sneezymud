@@ -1,0 +1,8 @@
+Just as a thief can pick pockets a skilled thief can also plant
+objects on a person undetected.
+
+Syntax: plant <object> <victim>
+
+This command is also used to plant seeds.
+
+Syntax: plant <seed>

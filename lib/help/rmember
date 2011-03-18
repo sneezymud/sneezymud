@@ -1,0 +1,13 @@
+Syntax: rmember <person>
+
+Rmember is used to forcibly remove <person> from a faction.  Rmember may only
+be done by one of the faction leaders.
+
+You should use the disband command if you are trying to remove yourself from
+a faction.  <person> must be a present member in the faction.
+
+Rmember will set <person>'s allegiance back to "Unaffiliated" and reset their
+faction percentage to 0.00%.
+
+See Also: NEWMEMBER, MAKELEADER, DISBAND
+Related Topics: FACTION LEADERS

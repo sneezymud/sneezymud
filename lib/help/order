@@ -1,0 +1,19 @@
+Syntax: order <follower> <command>
+Syntax: order <all | followers> <command>
+Syntax: order <all | follower | followers> "return"
+
+Order can be used to make an NPC do your bidding.  Only those creatures
+actively following you will respond.  Note that undead thralls will
+accept any order without question, but other beings have a modest
+sense of self-preservation while charmed.  Hence ridden creatures or
+pets may refuse some orders.
+
+The order followers <command> will make all of your followers do the
+same thing simultaneously.  Alternatively, you can do: order all <command>.
+
+Order "return" must be typed in full. It will cause followers to release
+themselves from your control in various ways.  Elementals will return to
+planes, charms will break charm, etc. 
+
+See Also: FOLLOW
+Related Topics: MOVEMENT

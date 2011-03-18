@@ -1,0 +1,11 @@
+Topic: pulse
+--------------------
+
+Ex:
+pulse { "";
+	...responses...;
+	}
+
+  The pulse block is triggered everytime the mobile sound is called.
+This is not meant as a replacement for mobile sounds only a way to
+do more with them.

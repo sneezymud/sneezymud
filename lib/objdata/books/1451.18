@@ -1,0 +1,12 @@
+Can be Seen
+
+This number is the minimum amount of light in the room necessary for the item
+to show up.  Most items should be > 0.  Remember that setting the item glow
+will automatically reduce the CBS.
+
+Lanterns produce 7-10 units of light
+Broad daylight is 25 units of light
+
+NOTES:
+
+SET REASONABLY: Only thing here is to set reasonably.

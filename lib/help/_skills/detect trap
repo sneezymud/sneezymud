@@ -1,0 +1,3 @@
+Detect trap permits the looter to discover a trap before they stumble into it.
+Detect trap operates automatically whenever a trap is present.  Success will 
+reveal the presence of the trap, failure will leave it concealed.

@@ -1,0 +1,19 @@
+Syntax: immortal
+
+The immortal command will toggle your immortality on and off.  Note that
+this command is designed to allow a builder to do a walk-through of their
+area as mortal.  As such, not everything is "as a mortal", ie. you can
+still do things like goto, load, etc.  But darkness, teleporters, doors
+and the like are as-if-mortal.  Combat is also enabled while mortal, since
+you could theoretically die, your gold is removed and restored as you move
+in and out of immortal-mode.
+
+NOTE: if you do die, please make sure you eliminate your corpse and any
+equipment it may have had.  We don't need players looting god's corpses.
+
+Immortality is turned back on automatically after dying or a reboot.
+
+I don't want gods going around getting killed or attacked by players, do
+not entice them to!
+
+Related Topics: GOD

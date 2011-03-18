@@ -1,0 +1,31 @@
+filename RACE_DINOSAUR
+singName dinosaur
+plurName dinosaurs
+propName Dinosaur
+lore REPTILE
+age 1000+5d100
+maleHt 288+9d8
+maleWt 1500+5d4
+femaleHt 228+9d8
+femaleWt 1400+5d40
+body dinosaur
+moveIn stomps in
+moveOut stomps
+hpMod 2
+moveMod 30
+search 1
+STR 190
+BRA 200
+CON 180
+DEX 140
+AGI 95
+INT 55
+WIS 55
+FOC 55
+PER 55
+CHA 55
+KAR 80
+SPE 110
+DumbAnimal
+ColdBlooded
+FourLegged

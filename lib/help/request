@@ -1,0 +1,41 @@
+Syntax:	request
+
+This will drop you into	a simple editor	similar	to the in-MUD mail system.
+
+Type ~ and return on a blank line to send your request, or ` on a blank line to       
+cancel your help request.
+
+The request command is for any and all types of request you may have of staff!
+Things like requesting reimbursements, reporting problems with a coded quest, 
+nominating yourself or others for SneezyMUD community points, asking for a news-
+letter bulletin to be written to advertise your event, or just getting stuck on
+some particular command or how-to and needing a bit of help.
+
+In a nutshell, if you would like to communicate with one of the SneezyMUD staff,
+this command will get their attention quickly!
+
+The staff monitors the request queue on a very regular basis and attempts to
+respond to all requests in a timely manner.  Sometimes you may not receive a
+response immediately; this may be because your issue is being discussed among
+staff and there is no answer for you yet.  We do try to drop you a line to let
+you know that as well, but it doesn't always happen.  Rest assured, though; if
+you make a request using this command, we're listening!
+
+Of course, not all requests are guaranteed to be granted.  We may deny a request
+for one reason or another, and we will inform you of the approval or denial of
+your request as soon as possible.
+
+Please include your preferred method of contact if you believe your request may
+require some further discussion; MUDmail can get clunky and playing tell-tag is
+nobody's idea of a good time, so if you would like for us to contact you by email,
+let us know.  Be sure your account email is up to date ('help email' for more 
+info).  Also: IMPORTANT: If your request is specific to a particular character,
+PLEASE specify the character affected.
+
+Alternatively, you may visit http://www.sneezymud.com/Contact_Us.html and fill 
+out the	web form to make your request.  You may find this preferable for longer
+requests.
+
+See Also: BUG, TYPO, IDEA
+Related Topics: UTILITY
+

@@ -1,0 +1,19 @@
+See help files on:
+Moving about:
+NORTH           SOUTH           EAST            WEST            UP
+DOWN            NORTHEAST       NORTHWEST       SOUTHEAST       SOUTHWEST
+ENTER		LEAVE		SWIM		CLIMB		CRAWL
+DRAG	        TRACK    	SNEAK		HIDE		FOLLOW
+GROUP		ORDER		SIT		REST		SLEEP
+WAKE		STAND		MOUNT		RIDE		DISMOUNT
+EXPLORATION	DESCEND		DISBAND		FLY		LAND
+GOTO		
+
+Looking about:
+EXITS		LOOK		SPY             SCAN
+
+Interacting with the terrain:
+CLOSE		OPEN    	LOCK		UNLOCK        PICKLOCK
+RETURN		SEARCH		SHOVE		DOORBASH
+
+See HELP for other major fields of information.

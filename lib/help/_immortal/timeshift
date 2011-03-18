@@ -1,0 +1,24 @@
+This command allows you to move the mud backward in time and should be used
+to cancel the effects of mud down-time/inaccessibility.
+
+Syntax:  timeshift (minutes to shift)
+
+Each player in rent will be credit gold for the time shifted.  Each player
+on-line will receive additional gold (in-hand) in proportion to their rent
+cost and time-shift amount.  Additionally, the mud-time will move backwards
+in accordance with the timeshift.
+
+theoretical problems not dealt with:
+1.) online characters gold-adjustment is based on current items worth.
+Character's who have dropped or gained equipment between logging in and
+time when function called will receive bogus amount.
+2.) Obviously characters losing an item to the pawn-shop for rent reasons also
+won't be credited for having said item when the function is called.
+3.) It's possible to come in with negative rent charges if the amount of
+time you are rented is less then the timeshift.  If the timeshift is done
+properly, this should not be a major problem.
+
+Bottom Line here: use this kludge function sparingly as it probably introduces
+as many problems as it tries to solve.
+
+Related Topics: GOD

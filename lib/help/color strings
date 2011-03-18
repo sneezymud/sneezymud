@@ -1,0 +1,47 @@
+Certain <h> commands allow you to send ANSI color codes to others set
+up to properly interpret them.  This is done by entering a replacement string
+that will be changed to the equivalent color string.  To do this, surround the
+color character with < and >.   
+
+  <<r>)  <r>RED<z>       <<R>)<R> BOLD RED<z>       <<b>) <b>BLUE<z>      <<B>) <B>BOLD BLUE<z> 
+  <<g>)  <g>GREEN<z>     <<G>)<G> BOLD GREEN<z>     <<c>) <c>CYAN<z>      <<C>) <C>BOLD CYAN<z>
+  <<p>)  <p>PURPLE<z>    <<P>) <P>BOLD PURPLE<z>    <O/o>) <o>ORANGE<z>  <Y/y>) <y>YELLOW<z>
+  <<k>)   <k>GRAY<z>     <<K>) <K>BLACK<z>          <<w>) <w>WHITE<1>     <<W>) <W>BOLD WHITE<z>
+  <D/d>) <d>BOLD<z>     <I/i>) <i>INVERT<z>       <Z/z/1>) TERMINATE/NORMAL
+
+  n/N) your name
+    * - for notes/mail/etc., this will be the name of the reader.
+
+  Note: to actually show a < character, type it twice.  e.g. <<<1> for <<1>
+
+IMMORTAL ONLY:
+
+  <F/f>)  <f>FLASHING<z>       <E/e>)  <e>BLACK_ON_WHITE<z>   <J/j>)  <j>BLACK_ON_BLACK<z>
+  <L/l>)  <l>WHITE_ON_RED<z>   <Q/q>)  <q>WHITE_ON_GREEN<z>   <T/t>)  <t>WHITE_ON_ORANGE<z> 
+  <U/u>)  <u>WHITE_ON_BLUE<z>  <V/v>)  <v>WHITE_ON_PURPLE<z>  <x/X>)  <x>WHITE_ON_CYAN<z>
+
+
+For example :
+    say I am a <<r>killer!!<<z>
+    would cause you to say "I am a <r>killer!!<z>"
+
+Abuse of color codes to annoy or harass others will probably lead to
+limitations being put into effect.  Let's all play nice and not try to 
+blind each other.  Long descriptions of simple objects should be one color
+or white.  Short descriptions should generally not be more than 2 colors
+and white.   Rooms should not be rainbows nor should most objects unless
+it really makes sense.  If you use a color word in the object like
+a red potion, make the object red.
+
+Note: The yellow and orange codes are actually identical.  Certain ANSI capable
+interpreters will display it one way, others in the other way.
+
+Note: Be careful in the use of bold (% D/d).  You *will* need to terminate it
+if you want a non bold color to follow.
+
+Note: The quality of ANSI displays depends heavily on communication and
+terminal software.  Not all programs support the full range of Ansi options
+(eg. red and red-bold appear identical).
+
+See Also: COLOR
+Related Topics: SCREEN

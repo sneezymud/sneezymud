@@ -1,0 +1,27 @@
+filename RACE_GREMLIN
+singName gremlin
+plurName gremlins
+propName Gremlins
+lore DIABOLIC
+age 25+1d4
+maleHt 24+4d2
+maleWt 20+3d2
+femaleHt 20+4d2
+femaleWt 16+3d2
+body Humanoid
+moveIn has arrived
+moveOut leaves
+manaMod 2
+search 1
+STR 80
+BRA 80
+CON 80
+DEX 80
+AGI 140
+INT 170
+WIS 170
+FOC 170
+PER 150
+CHA 55
+KAR 125
+SPE 100

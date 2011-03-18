@@ -1,0 +1,26 @@
+filename RACE_PANTATH
+singName pantathian
+plurName pantathians
+propName Pantathian
+lore REPTILE
+age 24+1d5
+maleHt 62+1d17
+maleWt 140+6d10
+femaleHt 60+1d12
+femaleWt 100+4d10
+body Humanoid 
+moveIn has arrived
+moveOut leaves
+search 1
+STR 120
+BRA 120
+CON 110
+DEX 140
+AGI 105
+INT 80
+WIS 80
+FOC 80
+PER 80
+CHA 55
+KAR 65
+SPE 105

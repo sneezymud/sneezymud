@@ -1,0 +1,16 @@
+Scribing allows the alchemist to create magical scrolls from base components.
+
+In order to scribe, the alchemist will have to gather 3 separate items.  The
+first is a simple blank parchment suitable for scribing.  Such parchments must 
+have been specially prepared or the magical properties of the scroll will fade,
+so not just any parchment may be used.  The parchment is used to write the scroll.
+
+Secondly, a spell component corresponding to the scroll being created must
+be obtained.  One charge of the spell component will be utilized during
+scribing.
+
+Lastly, a special type of ink will also have to be obtained.  The entire
+contents of the vial of ink will be used up during the scribing process.
+
+Scribing takes time and concentration.  Any interruption in the process will
+destroy the work in progress and the components involved will be useless.

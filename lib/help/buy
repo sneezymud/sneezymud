@@ -1,0 +1,23 @@
+Syntax: buy <item>
+
+This command is used in shops to do just what it says: purchase objects.
+You can use the LIST command to determine what is available for buying.
+
+A variety of argument can be used with the buy command.
+
+buy sword      : buys the first sword in the shopkeeper's inventory
+buy short sword: buys the first short sword in the shopkeeper's inventory
+buy 3.dagger   : buys the 3rd dagger in the shopkeeper's inventory
+buy 38         : buys the 38th thing in the shopkeeper's inventory
+buy 3*dagger   : buys the first 3 daggers in the shopkeeper's inventory,
+                 or as many daggers as the shopkeeper has up to a total
+                 of three.
+
+Theoretically, you could also do:
+buy 3*38   or    buy 3*3.dagger
+But, since each time an item is purchased, the numbers in the list are
+reshuffled, these will most likely cause you to buy something you did
+not intend to.  Consider yourself warned.
+
+See Also: SELL, LIST, VALUE
+Related Topics: SHOPS

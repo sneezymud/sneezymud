@@ -1,0 +1,13 @@
+Syntax: toggle noshout
+
+The noshout toggle will allow you to play without hearing shouts 
+or telepathic messages.  At the same time, you will be prevented 
+from shouting.
+
+Toggling noshout off will restore shout ability and display other
+shouts to you.  You can not prevent shouts from gods (52+) from
+displaying, although if a god's shout is annoying you, a friendly tell
+to them will usually bring relief.
+
+See Also: SHOUT
+Related Topics: COMMUNICATIONS

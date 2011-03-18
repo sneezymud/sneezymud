@@ -1,0 +1,15 @@
+Syntax: breath <fire | frost | acid | lightning | chlorine> <victim>
+
+Breath will permit the user to breath like a dragon.  There are some things
+to know about this:
+  1: damage afflicted = XdY   where X = level - 50
+  2: additional damage accrues depending on what victim is wearing
+  3: item damage occurs for everything victim owns
+  4: item damage ALSO occurs for every loose object in the room.
+
+Realize this is meant as just a fun thing to play around with, use with
+caution though.  Indiscriminate use versus mortal players is grounds for
+demotion, unless that mortal is a total twit  :)
+
+See Also: -
+Related Topics: GOD

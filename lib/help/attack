@@ -1,0 +1,18 @@
+Syntax: attack <mode>
+
+The attack command is used to change your mode of attack. As of now
+you can choose from offense, defense, and normal. 
+
+NORMAL		:  no bonuses tohit, no detriments to armor
+OFFENSE		:  You will hit monsters more easily, and be hit by them
+                   more easily in return.
+DEFENSE		:  You will be hit less often but also hit monsters less
+                   often.
+
+Newbie note: fight aggressively!  Defensive mode prolongs the fight and
+in a 1-on-1 fight, you will most likely take more damage than you would
+otherwise.  Defensive mode pays off if you have group mates or are highly
+armored/skilled though.
+
+See Also: BERSERK
+Related Topics: COMBAT

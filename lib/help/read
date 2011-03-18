@@ -1,0 +1,17 @@
+Syntax: read <book>
+Syntax: read chapter <chap. #> <book>
+        read chapter <chap #>  (defaults to first book)
+
+When you want to read something.  The <h> book system uses this
+command to read the various books.  Some very long books have multiple
+chapters.
+
+Reading requires that you have a certain minimum intellect.
+
+Programatically, read is usually the the same as "look at".  You may
+discover that "read mail" will cause you to look at your chainMAIL boot
+(or whatever).  Use the read 2.mail, 3.mail, etc method to distinguish the
+proper one.  This should not happen with books
+
+See Also: READ MAGIC, RECITE
+Related Topics: OBJECT MANIPULATION

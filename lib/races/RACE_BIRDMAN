@@ -1,0 +1,35 @@
+filename RACE_BIRDMAN
+singName aarakocra
+plurName aarakocra
+propName Aarakocra
+lore PEOPLE
+age 9+1d5
+maleHt 60+5d4
+maleWt 80+6d4
+femaleHt 60+4d4
+femaleWt 80+8d4
+body Humanoid
+moveIn has arrived
+moveOut leaves
+moveMod -10
+foodMod 4
+drinkMod .75
+search 4
+sight 5
+vision 4
+STR 60
+BRA 60
+CON 75
+DEX 155
+AGI 155
+INT 80
+WIS 80
+FOC 90
+PER 155
+CHA 125
+KAR 100
+SPE 155
+IMMUNE_BONE_COND -20
+Winged
+Feathered
+garble 20

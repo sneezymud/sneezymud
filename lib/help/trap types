@@ -1,0 +1,123 @@
+This is a short description of the possible trap types for set traps as well
+as a list of the items necessary to set each trap.
+
+------
+Type "fire":
+  Door Trap Materials:      Flint, Sulphur, Trap Bag
+  Container Trap Materials: Flint, Sulphur, Trap Bag
+  Arrow Trap Materials:     Flint, Sulphur, Trap Bag
+  Mine Trap Materials:      Flint, Sulphur, Trap Bag, Mine Casing
+  Grenade Trap Materials:   Flint, Sulphur, Trap Bag, Grenade Casing
+  The victim will be hit by a small fiery blast.
+
+Type "explosive":
+  Door Trap Materials:      Flint, Sulphur, Hydrogen
+  Container Trap Materials: Flint, Sulphur, Hydrogen
+  Arrow Trap Materials:     Flint, Sulphur, Hydrogen
+  Mine Trap Materials:      Flint, Sulphur, Hydrogen, Mine Casing
+  Grenade Trap Materials:   Flint, Sulphur, Hydrogen, Grenade Casing
+  A massive explosion will destroy the trapped item, engulfing the victim in
+  flame and spraying all occupants of the room with shrapnel.  For door traps,
+  occupants on both sides of the door will be affected by the shrapnel.
+
+Type "poison":
+  Door Trap Materials:      Needle, Spring, Vial of Poison
+  Container Trap Materials: Needle, Spring, Vial of Poison
+  Mine Trap Materials:      Trap Canister, Spring, Contact Poison, Mine Casing
+  Grenade Trap Materials:   Trap Can., Spring, Contact Poison, Grenade Casing
+  The oldest trap in the book, the poison-needle will induce poison in the
+  hapless victim.  The mine and grenade variety of this trap uses a contact
+  poison that is sprayed throughout a room when the trap canister detonates.
+
+Type "sleep":
+  Door Trap Materials:      Nozzle, Gas, Hose
+  Container Trap Materials: Nozzle, Gas, Hose
+  Arrow Trap Materials:     Nozzle, Gas, Hose
+  Mine Trap Materials:      Nozzle, Gas, Hose, Mine Casing
+  Grenade Trap Materials:   Nozzle, Gas, Hose, Grenade Casing
+  A sleep-inducing gas will surround the victim.
+
+Type "acid":
+  Door Trap Materials:      Nozzle, Bellows, Vial of Acid
+  Container Trap Materials: Nozzle, Bellows, Vial of Acid
+  Arrow Trap Materials:     Nozzle, Bellows, Vial of Acid
+  Mine Trap Materials:      Trap Canister, Spring, Vial of Acid, Mine Casing
+  Grenade Trap Materials:   Trap Canister, Spring, Vial of Acid, Grenade Casing
+  Bathes the victim in caustic acid, some of which will splash onto everyone
+  in the room.  For door traps, occupants on both sides of the door will be
+  coated.
+
+Type "spore":
+  Door Trap Materials:      Nozzle, Bellows, Fungus
+  Container Trap Materials: Nozzle, Bellows, Fungus
+  Arrow Trap Materials:     Nozzle, Bellows, Fungus
+  Mine Trap Materials:      Trap Canister, Spring, Fungus, Mine Casing
+  Grenade Trap Materials:   Trap Canister, Spring, Fungus, Grenade Casing
+  Spreads a plume of disease-inducing spores throughout the room.
+
+Type "frost":
+  Door Trap Materials:      Nozzle, Hose, Liquid Frost
+  Container Trap Materials: Nozzle, Hose, Liquid Frost
+  Arrow Trap Materials:     Nozzle, Hose, Liquid Frost
+  Mine Trap Materials:      Nozzle, Hose, Liquid Frost, Mine Casing
+  Grenade Trap Materials:   Nozzle, Hose, Liquid Frost, Grenade Casing
+  A hyper-chilled liquid will spray into the room, inducing great damage.
+  The victim will be engulfed by the frosty air, while others may simply be
+  touched by it.  For door traps, occupants on both sides of the door will be
+  affected.
+
+Type "spike":
+  Door Trap Materials:      Spike, Spring, Tripwire
+  Container Trap Materials: Spike, Spring, Tripwire
+  Arrow Trap Materials:     Spike, Spring, Tripwire
+  A large, sharpened spike will spring outward, impaling the hapless victim.
+
+Type "bolt":
+  Mine Trap Materials:      Tubing, Compressed Gas, Box of Bolts, Mine Casing
+  Grenade Trap Materials:   Tubing, Comp. Gas, Box of Bolts, Grenade Casing
+  Dozens of tiny, sharpened spikes will fly outward, puncturing all nearby.
+
+Type "blade":
+  Door Trap Materials:      Tripwire, Spring, Razor Blade
+  Container Trap Materials: Tripwire, Spring, Razor Blade
+  Similar to the spike trap, this one uses a slashing blade to slice into
+  the victim.
+
+Type "disk":
+  Mine Trap Materials:      Trap Canister, Spring, Razor Disks, Mine Casing
+  Grenade Trap Materials:   Trap Canister, Spring, Razor Disks, Grenade Casing
+  Flings tiny sharpened disks in all directions to slice the foes nearby.
+
+Type "hammer":
+  Door Trap Materials:      Concrete Blocks, Frame Wedge, Tripwire
+  The poor man's blade trap.  Large weights fall or are thrust at the victim
+  to pummel them.  Limited damage, but much cheap to construct.
+
+Type "pebble":
+  Container Trap Materials: Tubing, Compressed Gas, Trap Pebbles
+  Arrow Trap Materials:     Tubing, Compressed Gas, Trap Pebbles
+  Mine Trap Materials:      Tubing, Compressed Gas, Trap Pebbles, Mine Casing
+  Grenade Trap Materials:   Tubing, Compressed Gas, Trap Pebbles, Grenade Casing
+  A cheap variation of the bolt and blade trap, the pebble trap uses ordinary
+  pebbles for the damage, and even replaces the explosive canisters with less
+  expensive tubing and compressed gas apparatus.  It doesn't do much damage,
+  but its cheap cost makes it attractive to the thief on a budget.
+
+Type "power":
+  Door Trap Materials:      Tripwire, Pentagram, Refined Athanor
+  Container Trap Materials: Tripwire, Pentagram, Refined Athanor
+  Arrow Trap Materials:     Tripwire, Pentagram, Refined Athanor
+  Mine Trap Materials:      Crystalline, Pentagram, Ref. Athanor, Mine Casing
+  Grenade Trap Materials:   Crystalline, Pentagram, Ref. Athanor, Grenade Casing
+  An incredibly destructive trap, the motive force relies on magic.  The victim
+  will suffer great damage, while other occupants of the room will also be
+  affected.  Door traps will affect members on both sides of the door.
+
+Type "teleport":
+  Door Trap Materials:      Tripwire, Pentagram, Blink Powder
+  Container Trap Materials: Tripwire, Pentagram, Blink Powder
+  Arrow Trap Materials:     Tripwire, Pentagram, Blink Powder
+  Mine Trap Materials:      Crystalline, Pentagram, Blink Powder, Mine Casing
+  Grenade Trap Materials:   Crystalline, Pentagram, Blink Powder, Grenade Casing
+  A non-destructive trap that causes the victim to be transported to some
+  far off land.

@@ -1,0 +1,11 @@
+Syntax: wield <weapon> {left | right}
+
+When you get tired of bashing monsters with your fists, you might consider
+wielding a weapon.  It is much more effective to wield a weapon in your
+primary hand.  Wield will automatically try to put the item in your primary
+hand, if possible.  The slot must be working and free if {slot} is specified.
+Both slots must be available if <weapon> is two-handed.  Wielding can add
+command lock out and add periods where the wielder can't hit. 
+
+See also: CHANGE, HOLD, REMOVE, EQUIPMENT
+Related Topics: COMBAT, OBJECT MANIPULATION

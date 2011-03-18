@@ -1,0 +1,46 @@
+This command is used in any of the various shops around The World in order
+to see what items are available for sale.  It will list item type, condition
+(if appropriate), value, and number of the item the shopkeeper has for sale.
+
+A variety of parameters can be used to simplify shopping for certain things
+in the larger shops.  Some examples to illustrate:
+
+list 10 100          : lists all items having a price between 10 and 100
+                       talens (inclusive)
+list 100             : identical to "list 0 100"
+list helm            : lists all items with the keyword of "helm" (or that
+                       "helm" is a valid abbreviation thereof).
+list fit             : lists only those items that are useable by you.
+                       In component shops, lists only components for spells
+                       known.
+list <type>          : lists items of a given type.  Type is one of:
+                       slash, pierce, blunt, body, finger, wrist, legs, arms,
+                       neck, feet, hands, head, back, waist, glowing, shadowy,
+                       paired
+                       Please note: lists of this type do NOT check
+                       wearability (e.g. list head = lists items of all sizes
+                       that can be worn on the head).  
+
+All of these options can be used together:
+
+list              : list every item the keeper has for sale.
+list leather      : list every item containing the word leather in it.
+list glowing      : list everything that glows
+list glowing neck : list everything that glows and fits on the neck.
+list glowing 1000 : list everything that glows and costs no more than 1000
+list 100 1000     : list everything that costs at least 100 but no more
+                    than 1000
+list glowing neck leather 10000
+                    list everything that glows, fits on the neck, has the
+                    word leather in it but costs no more than 10000
+list pierce glow  : list all pierce weapons that glow
+list fit head     : list all items that fit Your character and can be
+                    worn on the head
+
+The price of items in a store fluxuate depending on market trends.  Items
+that sell well may rise in price, while the price of dogs will decline.
+Item's that don't sell for a long time get marked down temporarily.  You
+can spot such items by looking for a (*) next to its price.
+
+See Also: VALUE, BUY, SELL
+Related Topics: SHOPS

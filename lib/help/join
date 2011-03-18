@@ -1,0 +1,12 @@
+Syntax: toggle join
+
+The join toggle will mark whether you are willing to join a faction
+at this time.  Faction leaders will be unable to add you as a member
+of their faction if join is toggled off.  
+
+Keep this toggled off if you have no intention of joining a faction.
+Be sure to toggle it on if you decide you would like to join a faction
+in order to allow your faction leader to add you to the faction.
+
+See Also: TOGGLE
+Related Topics: FACTION OVERVIEW

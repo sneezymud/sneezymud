@@ -1,0 +1,6 @@
+Syntax: sooth <animal>
+
+The beast soothing ability allows a ranger to calm a wild beast.  In order
+to be effective, the beast must not be fighting.  Beast soother will only
+have an effect on dumb animals.  Failed attempts tend to enrage the beast
+further.

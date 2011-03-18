@@ -1,0 +1,39 @@
+Factions represent a political/religious organization dedicated to some cause
+or bringing about some event.  Each faction has its own beliefs, hierarchy and
+rules of conduct.  
+
+At present, the following factions are officially recognized:
+     Brotherhood of Galek
+     Cult of Logrus
+     Order of the Serpents
+
+A person not belonging to any faction is considered Unaffiliated.  Any currently
+affiliated member may leave their present faction by disbanding.  Any change
+in affiliation will cause that person's faction percentage to drop.
+
+It is not necessary to join any given faction.  While factions do receive
+some benefits, there are also detriments involved in membership.  If you
+choose not to join, remember to set your auto-join bit off.
+
+The faction's current power is indicated by its potency.  Since to a large
+degree, faction's influence rises and falls on the actions of its deities
+(and the clerics they act through), it is important to keep the faction's
+potency relative to others high.
+
+Factions are also important in the attuning of holy symbols although
+symbols can be attuned to unaffiliated clerics use.
+
+    ===================================================================
+For further information about factions:
+
+General Information:
+BROTHERHOOD OF GALEK	CULT OF LOGRUS		ORDER OF THE SERPENTS,
+UNAFFILIATED		DEITIES			POTENCY
+FACTION LEADERS		FACTION RULES		CARAVANS
+HOLY SYMBOLS		ATTUNE			FACTION PERCENT
+
+Commands:
+TOGGLE		FACTION		DISBAND		
+    ===================================================================
+
+Related Topics: CLASSES

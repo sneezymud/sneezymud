@@ -1,0 +1,25 @@
+The cast command allows spell users to perform magic.
+Syntax: cast <spell> <target>
+
+<spell> may be abbreviated, although realize the dangers of thinking that
+something like dis was "dispel magic" when in reality it might be
+"disintegrate".  Multiple word spells (dispel magic, magic darts, etc.) 
+you can abbreviate both words.  eg. cast mag dar <target>
+
+Not all spells require a <target>.  If no target is specified, <target> is
+either the person you are fighting (offensive magic) or the person casting
+the spell.
+
+Unlike DIKUs, <h>'s spell system does not require the use of a ' to
+surround the spells.  Clerical casters will use pray <spell> <target>
+rather than "cast".  While casting or praying, the caster will have
+reduced defensive capabilities and be more vulnerable to physical attacks.
+
+Casting will generally take mana although it may also take other items
+like vitality, components, and/or hit points.  Some utility spells maybe
+renewed during the life of the spell.  Information about the ability to be renewed
+of a specific spell is shown in attribute condition.
+
+Each spell should have its own help file.  help <spell>
+See Also: MAGIC
+Related Topics: SPELL INFO, PRAY

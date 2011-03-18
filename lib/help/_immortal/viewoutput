@@ -1,0 +1,9 @@
+NAME
+    viewoutput - views your output file
+
+SYNOPSIS
+    viewoutput
+
+DESCRIPTION
+    Some commands create too much output and will not be sent to your screen or
+    loaded into a note.  Viewoutput will page through the output file.

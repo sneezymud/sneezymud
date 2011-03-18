@@ -1,0 +1,20 @@
+Syntax: attribute <personal | condition | stats>
+
+The attribute command will displays extended information about
+your character.  Please note that some of the extended information
+is restricted to characters over a given level.
+
+The personal section lists basic information about your person.  Age,
+background, allegiance, etc. is contained herein.
+
+The condition section displays information of a more transitory
+nature.  Spells in effect, major limb damage, current characteristics,
+position, etc are all contained in this section.  The primary bonuses
+or penalties you get from the majority of your characteristics will
+also be displayed if you are of high enough level.
+
+The stats section is used to keep track of career and session information
+and is used mostly as bragging rights.
+
+See also:  SCORE
+Related Topics: GENERAL INFO

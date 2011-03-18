@@ -1,0 +1,9 @@
+The MOTD command will display the current MOTD (message of the day)
+which is displayed as you log in.
+
+Syntax: motd message
+54th level immortals may alter the motd by writing a note with the new message
+and using this syntax.
+
+See Also: NEWS
+Related Topics: UTILITY

@@ -1,0 +1,41 @@
+If something totally bizarre occurs and you lose exp (death, etc) as a result
+of it, you MUST talk to a 58+ god.  Bizarre occurrences can be broken into two
+categories: random flukes and bona-fide bugs.  Random flukes are those
+situations caused by a normal (if rare) combination of events.  Bugs are
+situations that are 1.) unexpected and generally a side-effect to some new
+code, 2.) repeatable at will (this is key) and 3.) do not perform as 
+planned/designed by the coder.  We tend to be a lot more stringent about
+reimbursing experience points lost than about items simply because to do
+otherwise would be to invalidate the hard work that was involved in designing
+the code/rules of the game.
+
+To be reimbursed exp, you must describe the situation that occurred.  In
+addition, describe how what happened was not a valid outcome.  "bugbears
+never killed me before", "I've never seen trolls in that room before" and
+the like don't cut it.  "I had nokill on and typed bodyslam Brutius and it let
+me making all the guards attack me" is a valid bug since nokill is designed
+to prevent that attack.  Lastly, bugs MUST be repeatable.  That is,
+your description of how the event occurred must be such that the immortal can
+cause the same result that happened originally to happen again.  It's only
+a bug if we can fix it, and to do that, we have to know how it works.
+
+Example 1:  (player-file corruption)
+Mysteriously you log in one day and the game doesn't recognize your player's
+name.  Chances are your file has become corrupted.  Complete reimbursement
+should be expected but it may require a high level god to carry this out.
+Auto-wiped characters who are deleted for failure to log in at all within a
+set amount of time are a gray area and will be handled on a case by case basis.
+
+Example 2:  (auto-rent)
+Your link has lagged all day and during a long stretch, you give up and break
+link.  Whatever happens to you after this point is your responsibility.  You
+will eventually be rented after being in game for and inactive, but
+during that time should you die (starvation, hating mob catching up to you
+while you are away, etc.) you're basically at the mercy of whatever immortal
+hears your plea.  Breaking link is NOT a recommended way of leaving the game.
+We have installed a few safeguards for character safety, but if all those
+fail, you're on your own.  Rent out when finished playing for the night, we
+guarantee the safety of that (provided you can afford rent of course).
+
+See Also: LOSING LINK
+Related Topics: RULES

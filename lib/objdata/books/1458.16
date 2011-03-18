@@ -1,0 +1,30 @@
+The <h> system of lighting and vision
+-------------------------------------------
+
+The system of lighting on <h> is most probably different from any
+other MUD lighting system you have experienced. 
+
+All objects, characters and mobs are rated for how much light
+is required to notice them.  Light is produced by the sun
+(various amounts depending on time of day and only outside),
+lanterns, light posts, torches, glowing objects, etc.  The
+actual amount varies from light-source to light-source.  If
+the amount of total light in a room exceeds something's "can-be-
+seen" factor, then you will be able to notice it.
+
+There are a few more quirks though.  For instance, some magic items
+can cause your sight to improve, effectively giving you night vision
+to one extent or another.  Also, some races have infravision which permits
+HEAT sources to be seen (objects have no intrinsic heat though).
+
+Realize that just because you can see SOME things in a room, does NOT mean
+that everything is visible.  It's fairly easy to lose track of something in
+dim lighting so you may actually want to bring multiple lanterns while
+adventuring (put a few on the ground and light them, then hold another one
+in your hand).
+
+Finally, this light system works both ways.  Some dangerous mobs can be
+bypassed by going by them at night in the dark.  Don't rely too much on this
+as a lot of creatures can see in the dark.
+
+Related Helpfiles: LIGHT

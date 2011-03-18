@@ -1,0 +1,7 @@
+Syntax: save
+Syntax: save <thing> <vnum>
+
+  Without any arguments it will act just like the mortal save command.
+
+  With <thing> and <vnum> it will determine if <thing> is an object or
+mobile and use 'MEDIT save'/'OEDIT save' to save down the item logically.

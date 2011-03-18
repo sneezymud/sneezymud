@@ -1,0 +1,12 @@
+Syntax: whisper <person> <message>
+
+A generic way to communicate with other people in <h>.
+Some rooms will prevent this command due to a magical dweomer of silence.
+
+Whisper will transmit a message to the person referenced and in addition
+lets everyone in the room know that a conversation is going on, but not
+what was said.
+   EX: whisper joeblow quiet down, we're in a library
+
+See Also: SHOUT
+Related Topics: COMMUNICATIONS

@@ -1,0 +1,21 @@
+The combat discipline contains skills vital to your ability to engage
+in direct hand to hand or ranged combat.   The discipline also contains
+skills to allow you to care for the sharpness or bluntness of your own
+weapons without having to take it to a cutlery shop.
+
+You may type "practice combat" to see your proficiency in the skills 
+contained in the discipline.  They include slash, pierce, blunt, 
+barehand and ranged proficiency as well as sharpen and smooth.
+
+See Also: SLASH, PIERCE, BLUNT, RANGED, SHARPEN, SMOOTH, 
+WEAPON SPECIALIZATION, WEAPON PROFICIENCY, ITEM DAMAGE
+
+General combat-related help files:
+KILL	   ATTACK	FLEE	     ASSIST     CONSIDER
+HIT        THROW        BLOAD        SHOOT
+
+Related Topics: 
+EXP	   TANKING      LIMBS	     WIMPY	TOGGLE
+GLANCE	   LOOK	        IMMUNITIES	    
+
+See HELP for other major fields of information

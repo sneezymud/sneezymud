@@ -1,0 +1,22 @@
+Should you happen to be at a loss for a piece of equipment, a weapon,
+or perhaps you lost that oh so valuable copy of the newbie guide, then
+the Grimhaven Welfare Department is here to help.  Visit the welfare
+office, and the workers there will be happy to give you give you those
+items that you need, you need only say what it is that you want.
+
+Examples:
+
+say equipment : Will get you all the equipment (pants, helm, gloves, etc) that
+you started the game with.
+
+say weapon    : Will gt you a weapon suitable to your class if you do not
+already have one.
+
+say symbol    : If you are a cleric, you can get a new wooden holy symbol this
+way. Does not work if you already have a symbol.
+
+say guide     : Gets you a conversion guide.
+
+say newbie    : Will get you a SneezyMud new player's guide.
+
+(this helpfile courtesy of Boynk)

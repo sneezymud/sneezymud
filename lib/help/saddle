@@ -1,0 +1,17 @@
+Syntax: saddle <horse> <saddle>
+
+Saddle will put <saddle> onto <horse>'s back so that it might be ridden
+more easily.  Saddles dramatically increase a rider's chance of staying
+mounted under adverse conditions such as combat.  You must have the <saddle>
+in your inventory.
+
+Saddlebags and paniers or packs may also be saddled onto a mount, and thier
+inventory can be accessed using GET <obj> <horse> and PUT <obj> <horse>.
+
+Objects stored this way are subject to loss over a crash, and are not
+subject to reimbursment.
+
+Some saddlebags can be used as a saddle as well.
+
+See Also: UNSADDLE, RIDE
+Related Topics: OBJECT MANIPULATION

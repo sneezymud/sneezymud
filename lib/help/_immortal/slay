@@ -1,0 +1,7 @@
+   Instantly causes the argument of this command to be killed
+   Useful for destroying a mob or player without the hassle of 
+   fighting it.  Things slain will yield a corpse complete with 
+   equipment and gold, but will yield no xp to the slayer nor
+   will PC's lose any xp by being slain.
+
+  "kill" and "slay" are synonymous.  If you wish to fight, use hit.

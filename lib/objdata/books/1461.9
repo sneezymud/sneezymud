@@ -1,0 +1,37 @@
+Action: tovict
+---------------------
+ 
+ex:
+<trigger> { "<arguments>";
+       <other actions>;
+       tovict <string>;
+       <other actions>;
+     }
+
+The tovict action is an advanced emote or echo command.  It will send <string>
+to just the person doing performing the trigger.  In general, any place you use
+a tovict action should also have a tonotvict action for everyone else.
+
+The beauty of tovict is that it allows you to use replacement characters
+that will be filled in when it is actually performed based on who did the
+trigger and with what.
+
+Replacement strings:
+$n  = the trigger-mobs name
+$e  = "he", "she" or "it" based on sex of trigger-mob
+$m  = "him", "her", "it" based on sex of trigger-mob
+$s  = "his", "hers", "its" based on sex of trigger-mob
+
+performer = person who triggered the action
+$N  = the performer's name
+$E  = "he", "she" or "it" based on sex of performer
+$M  = "him", "her", "it" based on sex of performer
+$S  = "his", "hers", "its" based on sex of performer
+
+$o  = the first word in the name of the trigger-object (for give)
+$p  = the full name of the trigger-object
+
+Example:
+tovict $n puts $s hand on your back.
+becomes
+A lazy thief puts his hand on your back.

@@ -1,0 +1,18 @@
+Syntax: north		Syntax: northeast		Syntax: up
+Syntax: east		Syntax: northwest		Syntax: down
+Syntax: south		Syntax: southeast
+Syntax: west		Syntax: southwest
+
+To move in a given direction, these commands may be employed.  Most folks
+find it significantly easier to use the 1 or 2 letter abbreviations
+however: N, E, S, W, U, D, NE, NW, SE, SW
+
+Note that movement requires the ability to move as well as a valid place
+to move into.  Hence, things like broken limbs, paralyzation, bad position
+(resting, sitting...), etc may prevent you from trying to move or cause
+other effects in the attempt to do so.  Additionally, the place you are trying
+to go must be ok.  Low ceilings, tight rooms and the like are common
+impediments to movement.
+
+See Also: ENTER, LEAVE, EXITS, EXPLORATION, DESCEND
+Related Topics: MOVEMENT

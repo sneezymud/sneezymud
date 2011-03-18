@@ -1,0 +1,19 @@
+Four values
+
+These are 4 separate integer values.  What the 4-values correspond to depends
+on the items type.  For instance, a weapon references sharpness, damage and
+weapon type; whereas bags need to know how much volume and weight can be put
+into it.
+
+The OEDIT editor will tell you what the 4 values reference.
+
+Please use some caution when setting 4-value figures.  The code can become
+confused by bogus values and it may cause a crash.
+
+
+NOTES:
+
+CHECK CAREFULLY: Make sure the items that require value setting have 
+their values set after you make them.
+
+ZERO VALUES IF YOU CHANGE ITEM TYPE OF AN OBJECT

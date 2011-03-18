@@ -1,0 +1,10 @@
+Syntax: pick <chest>
+Syntax: pick <door> {direction}
+
+Picking locks is one of the staples in a thief's bag of tricks.  It requires a 
+lockpick be held in the primary hand to attempt.  Successfully picking a lock
+is dependent on the difficulty of the lock and the skill of the thief.  Not
+all locks can be picked, but the longer a thief spends on a given lock, the
+better their chance of getting it to open.  Note that the lock pick will
+eventually snap, or the lock jam, but it is usually worthwhile to keep after
+a lock once started.

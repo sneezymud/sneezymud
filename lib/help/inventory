@@ -1,0 +1,12 @@
+Syntax: inventory <filter>
+
+The inventory command will list what items you are carrying.  Note that
+you must actually be able to see the item, so if low light conditions are
+present, you may actually have the item but be unable to see it and hence
+not have it displayed when you use use the inventory command.
+
+If the optional filter argument is used, only items whose keywords match 
+the filter will be listed.
+
+See also: EQUIPMENT
+Related Topics: OBJECT MANIPULATION

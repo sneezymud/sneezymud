@@ -1,0 +1,7 @@
+Syntax: stay
+
+Stay is used in the blackjack game. It will stay your cards, and let the 
+dealer take cards to end the game.
+
+See Also: HIT, BET, PEEK
+Related Topics: BLACKJACK

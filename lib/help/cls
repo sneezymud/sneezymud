@@ -1,0 +1,7 @@
+Syntax: cls
+
+The CLS, for clear-screen, command is a utility feature that will force 
+<h> to refresh your terminal screen.
+
+See Also: MARGINS
+Related Topics: SCREEN

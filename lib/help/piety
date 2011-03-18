@@ -1,0 +1,21 @@
+Piety represents the internal store of energy with which a cleric or deikhan
+prays.  All prayers require some piety to be consumed, the exact amount
+depends on the supplicant's level and how powerful the desired prayer is.
+
+All supplicants, regardless of level, are limited to a maximum piety of 100.0
+points.  Although as indicated above, the piety cost per prayer decreases as
+the supplicant gains in power.
+
+Regeneration of piety depends on both the relative power of the supplicant's
+deities (in relation to other deities) as well as how worthy the supplicant is
+in the eyes of their deities.  If the deity's power is below average, the
+deity may refuse to regenerate the piety of supplicants that have not been
+living up to the deity's ideals.  Conversely, a very powerful deity will grant
+tremendous regeneration to a very devout supplicant.
+
+Unaffiliated players will regenerate piety at a fixed rate.  This rate is below
+what it would be for an affiliated player, but ignores the fluxuating power
+of the various deities.
+
+See Also: CLERICS, DEIKHANS, DEITIES, POTENCY, FACTION PERCENT
+Related Topics: SPELL INFO

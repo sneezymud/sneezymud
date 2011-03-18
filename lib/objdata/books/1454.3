@@ -1,0 +1,22 @@
+The zonefile consists of the header (previous chapter), a long list of
+commands, and the EOF marker.
+
+In short, your file will look like the following with all your zone 
+instructions substituted in for <command>.  There is no limit to the  
+size of your file or the number of elements you can build into your zone.
+
+#<number>
+<name>
+<room> <lifespan> <reset> <enabled>
+
+<command>
+<command>
+.
+.
+.
+<command>
+S
+
+The 'S' at the end of the zonefile is critical as it marks the end of file
+(EOF marker).  Please remember to have it and make sure all the commands in
+your zone are between the header and the EOF.

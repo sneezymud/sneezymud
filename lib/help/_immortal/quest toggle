@@ -1,0 +1,303 @@
+Below is a list of all quest toggles. Please update this list
+if any are added.
+______________________________________________________________
+  1.  Avenger Quest: eligible
+  2.  Avenger Quest: got rules
+  3.  Avenger Quest: hunting troll
+  4.  Avenger Quest: killed troll
+  5.  Avenger Quest: quest finale
+  6.  Avenger Quest: has avenger
+  7.  Avenger Quest: failed
+  8.  Avenger Quest: penanced
+  9.  Vindicator Quest: eligible
+ 10.  Vindicator Quest: found blacksmith
+ 11.  Vindicator Quest: hunting captain
+ 12.  Vindicator Quest: killed captain
+ 13.  Vindicator Quest: failed task
+ 14.  Vindicator Quest: right ore
+ 15.  Vindicator Quest: start (2)
+ 16.  Vindicator Quest: seeking phoenix
+ 17.  Vindicator Quest: phoenix found
+ 18.  Vindicator Quest: hunting demon
+ 19.  Vindicator Quest: killed demon
+ 20.  Vindicator Quest: failed task (2)
+ 21.  Vindicator Quest: got feather
+ 22.  Vindicator Quest: right feather
+ 23.  Vindicator Quest: has vindicator
+ 24.  Vindicator Quest: rules dishonor
+ 25.  Vindicator Quest: seeking penance
+ 26.  Vindicator Quest: got penance object
+ 27.  Vindicator Quest: purified
+ 28.  Ranger 1st Quest: Found Hermit
+ 29.  Immortal Quest: On Quest
+ 30.  Silverclaw Quest: find Scar
+ 31.  Silverclaw Quest: gave collar
+ 32.  Silverclaw Quest: find map
+ 33.  Silverclaw Quest: find Gruum
+ 34.  Silverclaw Quest: find Warlord
+ 35.  Silverclaw Quest: find Bishop
+ 36.  Silverclaw Quest: find tablet
+ 37.  Silverclaw Quest: on solo
+ 38.  Silverclaw Quest: load tablet
+ 39.  Silverclaw Quest: find cloud dragon
+ 40.  Silverclaw Quest: find bronze dragon
+ 41.  Silverclaw Quest: find worker dragon
+ 42.  Silverclaw Quest: find gold dragon
+ 43.  Silverclaw Quest: find silver dragon
+ 44.  Silverclaw Quest: find Raliki
+ 45.  Silverclaw Quest: kill Raliki
+ 46.  Holy Devastator Quest:  find Miser Ben
+ 47.  Holy Devastator Quest:  took bribe
+ 48.  Holy Devastator Quest:  find opal
+ 49.  Holy Devastator Quest:  do riddle
+ 50.  Holy Devastator Quest:  killed Miser Ben
+ 51.  Holy Devastator Quest:  find medicine man
+ 52.  Holy Devastator Quest:  searching for crucifix
+ 53.  Holy Devastator Quest:  found crucifix
+ 54.  Holy Devastator Quest:  gave crucifix
+ 55.  Holy Devastator Quest:  killed Spartagus
+ 56.  Holy Devastator Quest:  got wine
+ 57.  Holy Devastator Quest:  answered Taille's riddle
+ 58.  Holy Devastator Quest:  seaching for great sword <r>*Natural Load*<1>
+ 59.  Holy Devastator Quest:  find polished wooden ring <r>*Natural Load*<1>
+ 60.  Holy Devastator Quest:  forfeit vindicator
+ 61.  Holy Devastator Quest:  did not take gang member's deal
+ 62.  Holy Devastator Quest:  took gang member's deal
+ 63.  Holy Devastator Quest:  got deikhan shield info
+ 64.  Holy Devastator Quest:  get flower <r>*Natural Load*<1>
+ 65.  Holy Devastator Quest:  answered assassin's riddle
+ 66.  Holy Devastator Quest:  find Lorto
+ 67.  Holy Devastator Quest:  deceived Lorto
+ 68.  Holy Devastator Quest:  find Sultress
+ 69.  Holy Devastator Quest:  find Bararakna
+ 70.  Holy Devastator Quest:  received dress of rites
+ 71.  Holy Devastator Quest:  find Sloth
+ 72.  Holy Devastator Quest:  can get Devastator
+ 73.  Holy Devastator Quest:  cheat Miser Ben
+ 74.  Holy Devastator Quest:  cheat Spartagus
+ 75.  Holy Devastator Quest:  cheat Marcus
+ 76.  Holy Devastator Quest:  cheat Taille
+ 77.  Holy Devastator Quest:  cheat Abnor
+ 78.  Holy Devastator Quest:  cheat Sultress
+ 79.  Holy Devastator Quest:  cheat Nesmum
+ 80.  Has Skill:  Read Magic
+ 81.  Monk Red Quest: Is Eligible
+ 82.  Monk Red Quest: Started Quest
+ 83.  Monk Red Quest: Finished Quest
+ 84.  Monk Red Quest: Has Sash
+ 85.  Immortal Skill: Stat
+ 86.  Immortal Skill: Logs
+ 87.  Holy Devastator Quest:  find Abnor
+ 96.  Holy Devastator Quest:  has Devastator
+ 97.  Spirit of Warrior Quest:  has ancient symbol
+ 98.  Spirit of Warrior Quest:  has holy white defender
+ 99.  Spirit of Warrior Quest:  has moss covered robes
+100.  Sculpture Quest:  find the high priest
+101.  Sculpture Quest:  has a sculpture
+102.  Sculpture Quest:  completed quest already
+103.  Is Eligible for Skill: Tornado
+104.  Has Skill:  Tornado
+105.  Is Eligible for Skill: Barkskin
+106.  Has Skill:  Barkskin
+107.  Is Eligible for Skill: Earthquake
+108.  Has Skill:  Earthquake
+109.  Is Eligible for Skill:  Dual Wield
+110.  Has Skill: Dual Wield
+111.  Is Eligible for Skill:  Shapeshift
+112.  Has Skill: Shapeshift
+113.  Is Eligible for Skill:  Fireball
+114.  Has Skill: Fireball
+115.  Is Eligible for Skill:  Ice Storm
+116.  Find Dark Robes:  Ice Storm
+117.  Has Skill:  Ice Storm
+118.  Is Eligible for Skill:  Stoneskin
+119.  Find Granite Signet:  Stoneskin
+120.  Has Granite Signet:  Stoneskin
+121.  Has Skill:  Stoneskin
+122.  Is Eligible for Skill:  Galvanize
+123.  Find Purple Robes:  Galvanize
+124.  Has Skill:  Galvanize
+125.  Is Eligible for Skill:  Powerstone
+126.  Find Snakestaff:  Powerstone
+127.  Has Skill: Powerstone
+128.  Has Skill: Advanced Kick
+129.  Has paid toll
+130.  Is Eligible for Skill:  Advanced Kick
+131.  Eligible to enter Logrus initiation
+132.  Is Eligible for Monk Sash:  White
+133.  Has Started Monk Sash Quest:  White
+134.  Has Monk Sash:  White
+135.  Is Eligible for Monk Sash:  Yellow
+136.  Has Finished Monk Sash Quest:  Yellow
+137.  Has Monk Sash:  Yellow
+138.  Monk Purple Quest: eligible
+139.  Monk Purple Quest: started
+140.  Monk Purple Quest: Lepers Killed:  1
+141.  Monk Purple Quest: Lepers Killed:  2
+142.  Monk Purple Quest: Lepers Killed:  3
+143.  Monk Purple Quest: Lepers Killed:  4
+144.  Monk Purple Quest: complete
+145.  Monk Purple Quest: owned
+146.  Is Eligible for Monk Sash:  Blue
+147.  Has Started Monk Sash Quest:  Blue
+148.  Monk Blue Quest Killed Tiger Shark
+149.  Has Finished Monk Sash Quest:  Blue
+150.  Has Monk Sash:  Blue
+151.  Monk Green Quest: eligible
+152.  Monk Green Quest: started
+153.  Monk Green Quest: falling
+154.  Monk Green Quest: fallen
+155.  Rat King Quest: Gave Essence to Rat King
+156.  Monk Green Quest: owned
+157.  Mage Belt Quest: eligible
+158.  Mage Belt Quest: started
+159.  Mage Belt Quest: searching for thread
+160.  Mage Belt Quest: owned
+161.  Has Skill: Catfall
+162.  Ranger 1st Quest: Eligible
+163.  Ranger 1st Quest: Started
+164.  Ranger 1st Quest: Talked to Gnome Gnoble of Farmers
+165.  Ranger 1st Quest: Talked to Gnome Farmer
+166.  Ranger 1st Quest: Talked to Gnome Male Child
+167.  Ranger 1st Quest: Talked to Gnome Farmhand
+168.  Ranger 1st Quest: Killed John the Rustler
+169.  Ranger 1st Quest: Gave Hermit the Gnomish Cattle Hide
+170.  Ranger 1st Quest: Gave Hermit the Squirrel Pelts
+171.  Ranger 1st Quest: Seeking Balcor the Mage
+172.  Ranger 1st Quest: Got Scroll from Balcor
+173.  Ranger 1st Quest: Finished
+174.  Is Eligible for Ranger L14 Quest
+175.  Has Started Ranger L14 Quest
+176.  Has Seen Kobold Poacher
+177.  Seeking Orc Poacher
+178.  Has Seen Orc Poacher
+179.  Seeking Blind Pygmy Bone Woman
+180.  Seeking Apple for Bone Woman
+181.  Got Carved Buckle from Bone Woman
+182.  Seeking Orc Magi
+183.  Failed to Kill Orc Magi
+184.  Proving Self
+185.  Killed Orc Magi
+186.  Finished Ranger L14 Quest
+187.  Holy Devastator Quest: eligible
+188.  Mage Robe Quest: eligible
+189.  Mage Robe Quest: seeking Druidess
+190.  Mage Robe Quest: getting oil
+191.  Mage Robe Quest: getting symbol
+192.  Mage Robe Quest: getting metal
+193.  Mage Robe Quest: getting fabric
+194.  Mage Robe Quest: has mage robe
+195.  Ranger L21 Quest: Eligible
+196.  Ranger L21 Quest: Started
+197.  Ranger L21 Quest: Killed Volcano Cleric
+198.  Ranger L21 Quest: Failed to kill Volcano Cleric
+199.  Ranger L21 Quest: Proving self L21A
+200.  Ranger L21 Quest: Seeking Arden Cleric
+201.  Ranger L21 Quest: Killed Arden Cleric
+202.  Ranger L21 Quest: Failed to kill Arden Cleric
+203.  Ranger L21 Quest: Proving self L21B
+204.  Ranger L21 Quest: Seeking Aarakocra Chief
+205.  Ranger L21 Quest: Talked to Aarakocra Chief
+206.  Ranger L21 Quest: Got feathers
+207.  Ranger L21 Quest: Seeking two rabbit skins
+208.  Ranger L21 Quest: Gave one rbbit skin
+209.  Ranger L21 Quest: Seeking Bullywug Oil
+210.  Ranger L21 Quest: Seeking Bandits in Bullywug
+211.  Ranger L21 Quest: Got Bullywug Oil
+212.  Ranger L21 Quest: Finished Ranger L21 Quest
+213.  Faction Membership: eligible
+214.  Caldonia: bought her a shot of whisky
+219.  Warrior L40 Quest: Eligable
+220.  Warrior L40 Quest: Started
+221.  Warrior L40 Quest: Killing Chief
+222.  Warrior L40 Quest: Killing Shaman
+223.  Warrior L40 Quest: Finished Warrior
+224.  Shaman L15 Juju: Eligable
+225.  Shaman L15 Juju: Get Thong
+226.  Shaman L15 Juju: Get Mare Hide
+227.  Shaman L15 Juju: Get Sinew
+228.  Shaman L15 Juju: Get Beaded Necklace
+229.  Shaman L15 Juju: Has Juju
+230.  Faction: Has paid registration fee
+231.  Faction: Has created a faction
+232.  Shaman Totem Mask: Eligable
+233.  Shaman Totem Mask: Started
+234.  Shaman Totem Mask: Find Forsaken
+235.  Shaman Totem Mask: Find wooden plank
+236.  Shaman Totem Mask: Has sapless wood for Ptok
+237.  Shaman Totem Mask: Find Scaled Hide
+238.  Shaman Totem Mask: Give Gondolfo covered plank
+239.  Shaman Totem Mask: Recover vial of sap from Forsaken
+240.  Shaman Totem Mask: Find Elric for gris gris
+241.  Shaman Totem Mask: Kill Baron Samedi
+242.  Shaman Totem Mask: Has Baron Samedi's vision
+243.  Shaman Totem Mask: Killed Elric
+244.  Shaman Totem Mask: Find Ptok to face true evil
+245.  Shaman Totem Mask: Killed Father's Spirit
+246.  Shaman Totem Mask: Finished
+247.  Perma Death Character
+248.  Psionicist
+249.  Dragon Armor: red scales
+250.  Dragon Armor: green scales
+251.  Dragon Armor: white scales
+252.  Dragon Armor: tungsten suit
+253.  Dragon Armor: huge opal
+254.  Dragon Armor: 1 vial of dragon bone
+255.  Dragon Armor: 2 vials of dragon bone
+256.  Dragon Armor: 3 vials of dragon bone
+257.  Dragon Armor: 4 vials of dragon bone
+258.  Dragon Armor: 5 vials of dragon bone
+259.  Dragon Armor: sinew
+260.  Dragon Armor: thread element
+261.  Dragon Armor: talens
+262.  Dragon Armor: warhammer
+263.  Dragon Armor: scales
+264.  Bitten by vampire
+265.  Vampire
+266.  Lycanthrope
+267.  Transformed Lycanthrope
+268.  Lycanthropy: virgin flask
+269.  Lycanthropy: terfefly
+270.  Lycanthropy: ingredients
+271.  Lycanthropy: urine
+272.  Lycanthropy: wolvesbane
+273.  Lycanthropy: silver
+274.  Lycanthropy: hemlock
+275.  BlahBlah Shouts
+276.  Monk: Paid Tabuda
+277.  Has Skill: Catleap
+278.  Trait: Coward
+279.  Trait: Blind
+280.  Trait: Mute
+281.  Trait: Deaf
+282.  Trait: Asthmatic
+283.  Trait: Necrophobic
+284.  Trait: Narcoleptic
+285.  Trait: Combustible
+286.  Trait: Hemophiliac
+287.  Trait: Ambidextrous
+288.  Trait: Disease Resistant
+289.  Trait: Nightvision
+290.  Trait: Alcoholic
+291.  Trait: Tourettes
+292.  PK Character
+293.  Lightsaber quest: gave ruby
+294.  Lightsaber quest: gave bluesteel
+295.  Lightsaber quest: gave essence
+296.  Lightsaber quest: gave rockfish
+297.  Lightsaber quest: gave essence
+298.  Creation Choice: Fae Touched
+299.  Trait: Real Aging
+300.  No Experience Gain
+301.  Practices Fixed
+
+Toggles 88-95 & 215-218 are open for future immortal toggles
+
+
+
+
+
+
+
+
+

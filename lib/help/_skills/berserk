@@ -1,0 +1,22 @@
+Berserk is actually an advanced combat attack state (of which the other ones
+are defensive, normal, offensive - see HELP ATTACK).  Berserk mode is
+like super-offensive in which the berserker disregards personal danger in
+order to attack.  Berserkers will attack anything and everything within
+easy reach, except obvious friends.  Anything that wanders in while a
+berserker is still enraged will find itself fighting before too long.
+
+Berserkers are fairly easy to hit as they make few defensive moves, although
+the more skilled at berserking someone is, they are able to manage some
+defense.  On the other hand, a berserker's fury grants them an additional
+attack per combat round (extra 50% chance of swing from each hand), so
+beware their wrath.  The berserker will also have more capacity to withstand
+damage since in their rage they don't feel it.
+
+A berserker is incapable of fleeing from combat.  Once berserking has begun,
+it wears off a few moments after combat has stopped and there is nothing
+left to kill.
+
+Berserking characters will receive the same benefits (in terms of tohit
+bonuses) as a person in offensive attack mode.
+
+Failed berserk attempts prevent further attempts to berserk for 5 mud hours.

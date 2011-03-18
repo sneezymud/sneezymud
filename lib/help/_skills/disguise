@@ -1,0 +1,15 @@
+Syntax: disguise <creature>
+
+Disguise permits the thief to alter their appearance so as to appear
+as if they were a <creature>.  Since disguising yourself as something
+out of the ordinary would induce stares, there are only certain
+<creature>s endorsed by the thieves guild as legitimate disguises.
+Most of these disguises are known only to the thieves that train
+others in the ways of the skill but even more have been left to
+discover.  The ability to disguise depends greatly on one's level and
+learning in the discipling and skills themselves.  Unfortunately the
+act is greatly taxing on the thief so time must be spent between
+attempts.
+
+Doing disguise with no arguments will tell you what general disguises
+you can use.

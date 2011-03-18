@@ -1,0 +1,12 @@
+Syntax: change
+
+Change will swap items in your hands. (i.e. move what's in your left 
+hand to the right and vice versa.)  If only 1 hand is in use, the item will be
+swapped to other hand.
+
+Syntax: change <suitcase>
+
+This usage will swap your outfit for one that is in a suitcase.
+
+See Also: -
+Related Topics: OBJECT MANIPULATION

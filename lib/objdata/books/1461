@@ -1,0 +1,43 @@
+Creating Response Quests
+
+Created: Tuesday, 27 August 1996
+Modified: Friday, 30 July 1999
+
+Use command: READ CHAPTER (#) OF RESPONSE where (#) is one of:
+
+ 1.) What is a Response Quest
+ 2.) Example Response File
+ 3.) Actions and Triggers
+ 4.) Trigger: say
+ 5.) Trigger: give
+ 6.) Trigger: roomenter
+ 7.) Trigger: socials
+ 8.) Action: toroom
+ 9.) Action: tovict
+10.) Action: tonotvict
+11.) Action: load
+12.) Action: link
+13.) Action: buy
+14.) Action: list
+15.) Action: pulse
+31.) pulse, destination, moveto, checkperson
+
+Advanced topics:
+16.) Trigger: package
+17.) Action: flag
+18.) Action: unflag
+19.) Action: personalize
+20.) Action: resize
+21.) Action: special
+22.) Action: checkroom
+23.) Action: checkzone, checknotzone
+24.) Substring: OBJCOST
+32.) Random actions
+
+Toggles:
+25.) Quest Toggles
+26.) Best Practices
+27.) Action: toggle
+28.) Action: untoggle
+29.) Action: checktoggle
+30.) Action: checkuntoggle

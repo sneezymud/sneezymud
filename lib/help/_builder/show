@@ -1,0 +1,20 @@
+   Used by a god to gain info about The World.   The names and virtual numbers
+   of the various zones can be obtained by SHOW ZONES.  The various types of
+   monsters/objects available can also be listed.  SHOW ROOMS will yield a 
+   quick listing of the rooms in a zone# or of a certain type (death/private)
+
+examples :
+
+show free obj 1  : Shows all free object slots in zone 1, if zone 1 is enabled.
+show free mob 3  : Shows all free mobile slots in zone 3, if zone 3 is enabled.
+show zones       : Shows all zones complete with names and room numbers.
+show zones disabled : Shows all disabled zones
+show zones active : Shows all zones with players in them
+show rooms 4     : Shows all rooms in zone 4 with all flags and names.
+show rooms       : Shows all rooms in your current zone
+show rooms lair  : Shows all rooms with "lair" in the name.  Case sensitive.
+show obj 4       : Shows all objects in zone 4 with all names and numbers.
+show obj         : Shows all the objects in your current zone
+show obj sword   : Shows all objects with the word sword in their name.
+show mob chicken : Shows all mobs with the word chicken in their name.
+show mob         : Show all mobs in your current zone

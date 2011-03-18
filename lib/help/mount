@@ -1,0 +1,28 @@
+Syntax: mount <mount>
+Syntax: ride <mount>
+
+The mount and ride commands are synonymous and allow the adventurer
+to mount a horse or similar mount for riding.
+
+Riding creatures takes a fair amount of skill both to merely stay
+atop them as well as to induce them to travel in the desired direction.
+Failed attempts generally lead to falling flat on your face, and can
+also cause the mount to become enraged.  A good deal of trial and error
+is to be expected.
+
+Certain skills are not possible from the mounted position.  Additionally,
+being mounted significantly raises the level of your head, which while
+advantageous for vision makes you a much more visible to your foes and
+can be a problem if the ceilings are low.
+
+Mounts can be induced to follow very basic orders from their master,
+however they have no special affinity to their rider and will flee
+quite readily from a life threatening situation, generally dislodging
+their rider abruptly.
+
+It is not possible to mount a creature that is higher level than you. It
+is very difficult to mount a creature that is involved in a fight but its
+not impossible. Karma plays a certain role in determining ride success. 
+
+See Also: DISMOUNT
+Related Topics: MOVEMENT

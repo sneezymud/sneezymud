@@ -1,0 +1,24 @@
+Toggle flips the state of some flags used during internal use.
+syntax:  toggle <flag abbreviation>
+
+Currently, the only flags that may be toggled are:
+
+Silence - changes the state of whether mortals may shout
+     or not.  Default is player shouting on hence players may shout to their
+     heart's content.  This replaces the old SILENCE wizcommand.
+
+Sleep - makes sleep spell offensive or not.  for Sleep-tag.
+
+invis - allows gods to go invis
+
+newbiepk - allows newbies to be PK'ed
+
+Wiznet - if off, level 51's can not HEAR the wiznet  (51's can always send
+      over the wiznet). if on it lets 51's hear it
+
+Clients - if off, will prohibit connections via Russ's client.  
+
+TestCode - If on, Batopr is screwing with his lame-ass code again.
+
+See Also:  -
+Related Topics GODS

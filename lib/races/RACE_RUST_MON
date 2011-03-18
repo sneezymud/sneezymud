@@ -1,0 +1,30 @@
+filename RACE_RUST_MON
+singName rust monster
+plurName rust monsters
+propName Rust Monsters
+lore OTHER
+age 25+1d4
+maleHt 60+1d5
+maleWt 220+2d10
+femaleHt 58+1d5
+femaleWt 200+2d10
+body FourLegs
+moveIn has arrived
+moveOut leaves
+hpMod 2
+moveMod -10 
+search 1
+STR 165
+BRA 175
+CON 180
+DEX 150
+AGI 80
+INT 60
+WIS 60
+FOC 60
+PER 60
+CHA 55
+KAR 105
+SPE 90
+DumbAnimal
+IMMUNE_ACID 100

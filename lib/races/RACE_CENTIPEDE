@@ -1,0 +1,29 @@
+filename RACE_CENTIPEDE
+singName centipede
+plurName centipedes
+propName Centipede
+lore ANIMAL
+age 1+1d5
+maleHt 24+2d3
+maleWt 20+1d5
+femaleHt 20+2d3
+femaleWt 18+1d5
+body Centipede
+moveIn scuttles in
+moveOut scuttles
+moveMod 20
+search 1
+STR 60
+BRA 60
+CON 110
+DEX 150
+AGI 160
+INT 55
+WIS 55
+FOC 55
+PER 55
+CHA 55
+KAR 125
+SPE 150
+DumbAnimal
+CanClimb

@@ -1,0 +1,35 @@
+Quest Toggles
+-----------------
+
+Quest toggles are hard coded state variables that allow a response quest to
+be set up and run automatically.  They are best illustrated through example.
+
+At level 10, a person becomes eligible for a given quest.  The guildmaster
+would be set up to set quest-toggle 10 on this person and to go see a certain
+mob.
+
+The mob indicated could then be set up with a roomenter response.  The first
+action would be checktoggle 10.  Subsequent actions would be says, tells, etc.
+Thus, if a person comes in and has the quest-toggle 10 set, the mob will
+talk to them.  Otherwise, it probably will do nothing.
+
+Eventually, the mob would describe some chore the person is to perform.  If
+the person accepts the task, the mob could untoggle 10 and toggle 11.
+A new response could be set up for if person comes back in with 11 set.
+  checktoggle 11;
+  say %n, why are you back here?  Go and finish your task.;
+
+Thus by checking toggles, setting new toggles and unsetting old toggle, the
+person can proceed through the quest and have things occur at the proper time.
+
+Quest toggles are saved in the person's playerfile.  They will last through
+reboot and rent.  Multiple people can be on the same quest simultaneously.
+
+Toggle quests may need code in order to have the initial toggle assigned at
+a certain time (gained a level, reached a learningness).  Other code may be
+required if exotic events (like combat with a given mob) need to check, set
+and unset toggles.
+
+The toggle numbers have to be assigned by the coder (so they are linked
+properly to the proper bit on the player's file).
+

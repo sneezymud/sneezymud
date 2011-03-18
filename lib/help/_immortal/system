@@ -1,0 +1,18 @@
+Syntax: system
+Syntax: system <message>
+
+This command sends a message to all the users on the mud.  Use of this command
+should be limited to extreme emergencies, and the taunting of Mithros.  Using
+this command to screw with player's minds is a good way to get demoted.
+
+System without parameters will list out data about the current session
+
+system				: general info
+system Mithros is a weeny 	: displays "Mithros is a weeny" on every
+				player's screen
+
+System messages from mid-level gods will display the text:  "The following
+is an important message from (your name):" to prevent abuse.
+
+See Also: GAMESTAT, WORLD, INFO
+Related Topics: GOD

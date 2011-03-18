@@ -1,0 +1,19 @@
+Syntax: drag <object|person> <direction>
+
+Drag allows a person to move the incapacitated or unconscious out of harm's
+way or to a place where they may be mended.  The <person> must be sleeping
+or otherwise unconscious and the person attempting the drag must be fairly
+strong.  Note that drag can cause added damage to <person> and/or infections
+to begin in already open wounds so should only be done with good cause.
+
+If a person slips unconscious in a no-magic area, drag may be their only
+hope of survival.
+
+Note that drag is NOT an aggressive act as it assumes that anyone that
+can be dragged is incapable of protest.  Nor is it a skill, for similar
+reasonings.
+
+Drag also works on objects, such as corpses.
+
+See Also: SHOVE
+Related Topics: MOVEMENT

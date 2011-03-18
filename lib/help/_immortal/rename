@@ -1,0 +1,12 @@
+Syntax: rename <person> <new name>
+
+Namechange allows you to change <person>'s name into <new name>.  It
+should rewrite <person>'s name, force a save on them and then delete
+that person's old player-file and rent-file (since they are now saved
+under the <new name>).
+
+This command is NOT heavily tested.  It is recommended that you have
+the person rent all the way out and come back in just to be safe.
+
+See Also: -
+Related Topics: GOD

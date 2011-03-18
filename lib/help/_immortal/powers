@@ -1,0 +1,8 @@
+Syntax: powers [person]
+
+Powers with no arguments will list all the wizpowers that you have.
+
+Powers [person] will list person's powers.
+
+See Also: SET
+Related Topics: GOD

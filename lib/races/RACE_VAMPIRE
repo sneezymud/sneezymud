@@ -1,0 +1,36 @@
+filename RACE_VAMPIRE
+singName vampire
+plurName vampires
+propName Vampire
+lore UNDEAD
+age 100+5d10
+maleHt 62+1d17
+maleWt 100+5d10
+femaleHt 60+1d12
+femaleWt 80+5d10
+body Humanoid
+moveIn has arrived
+moveOut leaves
+moveMod -20
+STR 170 
+BRA 160
+CON 160
+DEX 140
+AGI 100
+INT 55
+WIS 55
+FOC 80
+PER 55
+CHA 55
+KAR 80
+SPE 140
+ColdBlooded
+IMMUNE_DRAIN 100
+IMMUNE_BLEED 100
+IMMUNE_POISON 100
+IMMUNE_SLEEP 100
+IMMUNE_DISEASE 100
+IMMUNE_SUFFOCATION 100
+IMMUNE_FEAR 100
+AFF_INFRAVISION
+

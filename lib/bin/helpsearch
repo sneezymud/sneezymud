@@ -1,0 +1,5 @@
+#
+#  Grep stuff from the logs.
+#
+cd /mud/prod/lib/help
+eval /bin/grep -i "$@"

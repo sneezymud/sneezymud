@@ -1,0 +1,17 @@
+Faction Leaders are the political heads of their respective factions.  They
+are responsible for maintaining the various rules and bylaws of the faction,
+promoting the beliefs of the faction, and handling membership of the faction.
+
+To that end, they have special commands which are only available to faction
+leaders.  Not all commands are usable by all leaders, some require a higher
+degree of authority.
+
+Faction Leader Commands:
+ADJUST		MAKELEADER	NEWMEMBER	RMEMBER		SEND
+
+Faction Leaders are NOT the <h> Immortals/Gods/Implementors.  Problems
+regarding faction's policies or actions should be directed to the faction
+leadership.  As with most actions amongst mortals, the gods will not interfere.
+
+See Also: -
+Related Topics: FACTIONS

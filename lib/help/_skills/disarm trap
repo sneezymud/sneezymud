@@ -1,0 +1,8 @@
+Syntax: disarm <trap>
+Syntax: disarm <trapped-item>
+Syntax: disarm <exit>
+
+Disarm trap will disarm a <trap> (ground trap), <trapped-item> (chest), or
+<exit> (door).  Success is based on difficulty of the trap to disarm and
+the looter's knowledge about disarming.  Failure typically causes the trap
+to go off.

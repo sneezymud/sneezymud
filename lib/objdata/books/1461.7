@@ -1,0 +1,27 @@
+Trigger: socials
+---------------------
+ 
+ex:
+<social> { "<none | self | me | other>";
+       <action>;
+       <action>;
+     }
+
+All socials (puke, smile, etc) will operate as triggers.  Put the social you
+wish to have used in for <social>.
+
+The trigger arguments may be "none", "self", "me" or "other".  These may be
+used in combination, eg. "none other" will be triggered for either none or
+other.
+
+As you are aware, socials may take arguments.  For example, I can smile, or I
+can smile at somebody.  The first is the situation where the user does not
+specify a target (User smiles.).  This situation triggers if "none" is in
+the trigger arguments.  The "self" condition operates if user does the social at
+himself (User smiles at himself.)  The "me" operates if the trigger mob is
+the one the social is targeted at.  The "other" condition is basically if
+user has done the social on someone other than the response mob or himself.
+
+Realize some socials are set up so that they can't be done without arguments
+(wave, thank) or can't be done with arguments (burp, snore).  Use common
+sense when devising trigger arguments for the various socials.

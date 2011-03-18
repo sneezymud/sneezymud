@@ -1,0 +1,9 @@
+Sometimes I cast, and I still have the component when I am all done?
+--------------------------------------------------------------------
+
+Components have a number of uses (or charges).  Each casting of a spell
+will use up one charge, when all charges are used up, the component is
+typically discarded automatically.  However, if the component started
+with more than one charge when the spell was cast, it will still be in
+existence (minus one charge).  To view the charges a given component has,
+merely look at it.

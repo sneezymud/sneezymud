@@ -1,0 +1,22 @@
+
+	Peel's player killing quest code (peelpk) is an immortal
+command line setup for player killing. This code, when invoked,
+will allow for player killing in a designated zone in the current 
+world. The immortal running this type of quest will state instructions
+during the corse of the quest. Please listen closely to the quest
+master during such an event.
+
+	Player killing quests will NOT affect your experience or age
+in any way. This is meant strictly for fun. You may join or leave a
+player killing quest at the discretion of the quest master. 
+
+	At anytime during the quest you may use the 'peelpk' command 
+to display your current score in the games. The score at different 
+times will be displayed to you by the quest master.
+
+	Syntax: peelpk
+
+Generally, quest prizes and wishes are NOT granted for this type of quest. 
+
+
+Related Topic: QUEST

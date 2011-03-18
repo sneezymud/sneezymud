@@ -1,0 +1,25 @@
+Action: load
+---------------------
+ 
+ex:
+<trigger> { "<arguments>";
+       <other actions>;
+       load <number>;
+       <other actions>;
+     }
+
+Load will allow the trigger-mob to create items.  <number> must be positive
+and represents the vnum of the object that should be created.  The loaded
+item will end up in the trigger mobs inventory (for subsequent giving, etc).
+
+Use good judgment about what is loaded.  Limited items, items from other 
+people's zone used without permission, etc will all cause problems.
+
+To prevent load piling up objects, if the mob already has the item indicated
+in inventory, load will do nothing.  If you really want to load 2 (or more)
+items, load one, drop it, load the next, then get the item.  This trick is not
+recommended since volume/weight may still cause problems.
+
+A negative number is interpreted as a positive number of talens to load.
+
+At this time, it is not possible to create other creatures.

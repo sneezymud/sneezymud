@@ -1,0 +1,36 @@
+Corporations exist to organize business, primarily shops.  Information
+on corporations can be found in the GH Corporate Offices, which are
+located in the Grimhaven Bank, in the north end of the lobby.  There
+are also likely to be Corporate Offices available in other cities.
+
+The primary purpose of corporations is to bundle shops together and
+facilitate easy monitoring as well as automatic monetary transactions.
+
+See the CORPORATE ENTITIES help file for some information on existing
+corporations.
+
+You may also wish to read the "shop owner" help file, which has a few
+related commands, such as "dividend" and "reserve".
+
+-list [[<logs> [<daily>]] <corp_id>] 
+List will show a 1 line summary for each corporation, when used with
+no arguments.  You may pass an optional corporation id number to get
+more detailed information.  If you are a corporate officer, you may
+pass the keyword "logs" to see the corporate bank account logs.  You
+may also pass the "daily" argument to see a simple daily log summary.
+ex: list 27
+ex: list logs 27
+ex: list logs daily 27
+
+-withdraw <talens> [<corp_id>]
+Withdraws money from the corporate account.  Corp_id is only required
+if you belong to more than one corporation.
+
+-deposit <talens> [<corp_id>]
+Deposit money into the corporate account.  Corp_id is only required
+if you belong to more than one corporation.
+
+-balance [<corp_id>]
+
+There is also a cgi utility which may be to used to access some information:
+http://sneezy.saw.net/corpinfo.cgi

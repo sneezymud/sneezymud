@@ -1,0 +1,20 @@
+Syntax: attune <item>
+
+The attune skill permits attuning of a symbol to the attuners faction.
+The symbol will be unusable before attuning and usable only by
+faction members after the attuning process is complete.
+
+The item must be a symbol and it must be held in the primary hand.
+Additionally, the attuner must have some holy water in inventory
+sufficient for the task.
+
+This water will be used up in the attuning proportional to the value of
+the symbol.  Lastly, attuning will require a decent amount of time to
+complete, the amount is variable and depends on skill and value of
+the symbol.
+
+Alternatively, a cleric or deikhan can get symbols attuned from attuners
+in The World.  This will be cheaper and faster usually but the skill can
+be used by players in the wild.
+
+See Also: HOLY SYMBOLS, FACTIONS, PRAY

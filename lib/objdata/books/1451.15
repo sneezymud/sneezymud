@@ -1,0 +1,35 @@
+Extra descriptions
+
+Used to store extra text associated with the object.  If you want something
+shown when people look at (object) you must set up extra descriptions.  
+This works similar to room extra descriptions except that all items 
+should have extra descriptions of some kind even if it is just a sentence 
+description.
+
+The keyword is a space separated list of words used to reference the object.
+ie, look at (x) where (x) must be in the extra-description's keyword list.  In
+general the keywords should match the items name field.
+
+ex:
+name:  chest giant
+short: a giant chest
+extra desc -
+  keywords: chest giant
+The giant chest seems made of wood and is almost 5 feet tall.  On the front
+is a brass latch.
+
+extra desc -
+  keywords: latch brass
+The brass latch is as big as your arm.  It seems to conceal a small needle
+with poison in it.
+
+
+NOTES:
+
+MAKE SURE YOU SET THEM: Every item should have an extra description set 
+on it so players can look at the object.
+
+CONFLICTS WITH ROOM EXTRA DESCRIPTIONS:  Make sure you check that there are no
+conflicts between your item extra descriptions and your room extras.
+
+ZERO/DELETE ALL EXTRA DESCRIPTIONS BEFORE BUILDING WHEN BUILDING FROM A TEMPLATE

@@ -1,0 +1,20 @@
+Syntax: zones
+
+Lists all zones in The World along with an indication of what level the zone
+is for.  This information is NOT meant as a recommendation of where to go
+adventuring and should be used only for informational purposes.  Use it at
+your own risk.
+
+Passing a number argument will show information about a single zone.
+
+If you use the "mid" or "median" argument with this command, the output will
+be sorted by median average of levels.  Normally the zones are sorted by mean
+average with a standard deviation.
+
+Examples:
+  zones
+  zones median
+  zones 14
+
+See Also: EXPLORATION, TROPHY
+Related Topics: GENERAL INFORMATION

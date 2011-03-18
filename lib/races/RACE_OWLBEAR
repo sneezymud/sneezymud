@@ -1,0 +1,27 @@
+filename RACE_OWLBEAR
+singName owlbear
+plurName owlbears
+propName Owlbears
+lore OTHER
+age 25+1d4
+maleHt 60+4d2
+maleWt 200+2d10
+femaleHt 56+4d2
+femaleWt 180+2d10
+body owlbear
+moveIn has arrived
+moveOut leaves
+moveMod 20
+search 1
+STR 160
+BRA 150
+CON 150
+DEX 150
+AGI 90
+INT 80
+WIS 80
+FOC 100
+PER 80
+CHA 60
+KAR 100
+SPE 120

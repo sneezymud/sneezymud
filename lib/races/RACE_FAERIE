@@ -1,0 +1,31 @@
+filename RACE_FAERIE
+singName faerie
+plurName faeries
+propName Faerie
+lore PEOPLE
+age 100+5d6
+maleHt 18+6d4
+maleWt 25+1d4
+femaleHt 12+6d4
+femaleWt 20+1d4
+body Humanoid
+moveIn strides in
+moveOut strides
+moveMod 20
+manaMod 2
+search 3
+STR 80
+BRA 80
+CON 80
+DEX 140
+AGI 135
+INT 145
+WIS 125
+FOC 145
+PER 80
+CHA 165
+KAR 125
+SPE 145
+IMMUNE_CHARM 65
+IMMUNE_PARALYSIS 50
+

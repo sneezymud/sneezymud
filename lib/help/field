@@ -1,0 +1,10 @@
+Field is one of the one-roll bets used at the craps table.  The field pays out
+if the roll is a 2, 3, 4, 9, 10, 11 or 12.
+
+roll is:          payoff:
+2                  2:1
+12                 2:1
+Other winners      1:1
+
+See Also: CRAPS
+Related Topics: CASINO

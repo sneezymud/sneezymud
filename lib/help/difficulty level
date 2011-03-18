@@ -1,0 +1,15 @@
+The difficulty level of a spell is a value that depicts how easy or how
+difficult it is to cast a spell with a high level of efficiency to produce
+the desired results.  The range of values is TRIVIAL, EASY, NORMAL, DIFFICULT, 
+and DANGEROUS.  These values dictate the spell caster's chances of
+successfully casting the spell, casting the spell perfectly (gaining bonuses),
+or accidentally screwing up, which could lead to unwanted results, like 
+possible death, dismemberment or backfiring on the caster.
+
+It should also be noted that circumstances under which the spell is cast
+often modify the difficulty level.  For example, a high level player casting
+a basic spell may receive a benefit.  Likewise, being constrained (knocked
+over, drunk, etc) may impede the chances for success.
+
+See Also: MAGIC - RITUAL
+Related Topics: SPELL INFO

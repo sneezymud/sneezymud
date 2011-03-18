@@ -1,0 +1,21 @@
+The Chrism spell will seek the aid of the loa for a minor affect.
+The loa will create a special item for you to wear. The item will
+bestow the blessing upon the shaman when worn.
+
+The invoking of this ritual has a monitary cost of 250 talens. 
+
+Creatable Items:		Affect of Item:
+~~~~~~~~~~~~~~~~		~~~~~~~~~~~~~~~
+beaded-neckwrap (neck)		minor random heal
+money-doll      (hold)          minor aid in commerce
+harlequin-doll  (hold)          minor blessing from the loa
+totem-wooden    (hold)          sacrifice tool
+moistened-neckwrap (neck)	minor random move regeneration
+goofer-dust (drop item)         chance to make victim or hunter fall
+
+These items are wearable by anyone but will only benefit the Shaman.
+It will be to the detriment others when wearing these items if the ways
+of the ancestors are unknown to them.
+
+NOTE: Sacrifice tools that can be created with this ritual will tend to
+      decay quickly.

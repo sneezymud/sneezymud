@@ -1,0 +1,29 @@
+Syntax: flee {direction}
+
+If you are in a fight and things are beginning to get a little uncomfortable
+just type 'flee' and you will run from the room in a random direction.
+
+You must be physically able to leave the room and there must be a suitable
+exit.  The flee command will attempt to make you stand in order to escape,
+but this is not always successful.  Broken limbs or other maladies may
+further prevent your escape.  If you are mounted, you will generally leap 
+from off your mount in order to flee.
+
+Be wary of your surroundings when fleeing to minimize the chances that you
+will end up going from the frying pan to the fire.  Also remember that if
+you've hit the mob, it will track you, so you may not be safe for long.
+
+Flee has a chance of causing the loss of experience points as it is considered
+an ignoble disgrace (but better than dying).  The retreat skill can help reduce
+this chance somewhat.
+
+You may specify {direction} to flee in, but there is no guarantee that that is
+the actual direction you will head in.  Your chance of going in the desired
+direction is proportional to your learnedness in retreat.
+
+If you are not tanking, you can use the disengage command to get out of combat.
+Flee can be used while casting but will add command lockout.
+
+
+See Also: RETREAT, DISENGAGE
+Related Topics: COMBAT

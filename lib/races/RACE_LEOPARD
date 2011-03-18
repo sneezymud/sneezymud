@@ -1,0 +1,29 @@
+filename RACE_LEOPARD
+singName leopard
+plurName leopards
+propName Leopards
+lore ANIMAL
+age 5+1d3
+maleHt 28+1d5
+maleWt 320+5d6
+femaleHt 26+1d5
+femaleWt 300+5d6
+body FourLegs
+moveIn stalks in
+moveOut stalks
+moveMod 40
+STR 180
+BRA 170
+CON 210
+DEX 140
+AGI 120
+INT 55
+WIS 55
+FOC 55
+PER 55
+CHA 55
+KAR 110
+SPE 125
+DumbAnimal
+Fourlegged
+Ridable

@@ -1,0 +1,48 @@
+filename RACE_DRAGON
+singName dragon
+plurName dragons
+propName Dragon
+lore REPTILE
+age 201+20d10
+maleHt 288+9d8
+maleWt 1500+5d40
+femaleHt 228+9d8
+femaleWt 1400+5d40
+body Dragon
+moveIn stomps in
+moveOut stomps
+hpMod 2
+moveMod 40
+manaMod 2
+search 5
+STR 215 
+BRA 215
+CON 175
+DEX 155
+AGI 110
+INT 160
+WIS 160
+FOC 160
+PER 140
+CHA 160
+KAR 165
+SPE 85
+Winged
+Ridable
+IMMUNE_HEAT 25
+IMMUNE_COLD 25
+IMMUNE_SLEEP 100
+IMMUNE_CHARM 100
+IMMUNE_FEAR 100
+IMMUNE_NONMAGIC 50
+AFF_DETECT_MAGIC
+AFF_DETECT_INVISIBLE
+AFF_INFRAVISION
+AFF_FLYING
+AFF_DRAGONRIDE
+DISSECT_INFO 1412 1 50
+DISSECT_MSGA You tear $p off of $N.
+DISSECT_MSGB $n tears $p off of $N.
+DISSECT_INFO 1418 1 50
+DISSECT_MSGA You pluck $n from $N.
+DISSECT_MSGB $n plucks $p from $N.

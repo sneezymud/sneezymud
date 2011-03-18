@@ -1,0 +1,9 @@
+To view mortal version of this help file: go mortal.
+
+Syntax: offer <person>
+
+Must be done at a receptionist.  Will cause the receptionist to prepare a
+rent note on <person>, but give the note to you.  <Person> must be in
+The World, but does not need to be at your (or the receptionist's) location.
+
+Related Topics: GOD

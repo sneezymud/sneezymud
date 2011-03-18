@@ -1,0 +1,7 @@
+Syntax: restring <bow> <string>
+
+Restring allows you to restring a <bow> in your inventory with <string> in
+your inventory.  Bows with snapped bowstring can not fire and must be restrung.
+
+See Also: BLOAD, REMOVE, SHOOT, RANGED WEAPONS
+Related Topics: OBJECT MANIPULATION

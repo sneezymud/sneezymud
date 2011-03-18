@@ -1,0 +1,15 @@
+Syntax: comment <player>
+
+Comment can be used to store information about <player>.  For example, if you
+give a player a warning about breaking the rules, it would be a good idea to
+add a comment saying you did so.  This way other immortals know who has been
+warned about what, and by whom.
+
+Comments will be displayed when the player is accessed.
+
+Comments are stored on a per account basis.
+
+Since comments are maintained indefinitely, and the admins don't want to be
+hassled by having to go thru and delete things, please don't comment stupid
+things.  Commenting that Brutius has smelly breath will probably get you
+demoted.

@@ -1,0 +1,12 @@
+Syntax: kill <creature>
+Syntax: toggle kill
+
+A good way to start a fight.  You will be unable to attack certain
+creatures (immortals, deities, etc.)
+
+The kill toggle will let you select whether you will continnue to attack
+mortally wounded creatures or whether you will stop fighting once they
+have reached mortally wounded.
+
+See Also: TOGGLE, HIT, ENGAGE, ASSIST
+Related Topics: COMBAT

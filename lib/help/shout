@@ -1,0 +1,45 @@
+Syntax: shout <message>
+
+Shouting will send a message to everyone who is within the mud, but is not
+without its consequences. Shouting takes much energy, and therefore
+costs some movement per shout. Also because of the awesome drain on
+your body caused by shouting, you will be stuck for 4 seconds.
+
+There are some pieces of etiquette that are maintained.  These policies
+are enforced principally because of the global nature of shout.  Some people
+may want to figure some things out for themselves, and someone shouting 
+something may hamper this opportunity for them.
+
+1.) Avoid offending large segments of the population.  You are not
+required to be politically correct and obscenities are OK (within reason) 
+but realize that shouting insults does not endear you to either the other
+players or the gods.
+
+2.) "Spam" is generally frowned upon.  Yelling "Level!" or messages over and
+over again generally irritates people.
+
+3.) Using shout as a crutch to avoid exploration is frowned upon by the gods.
+Asking "where is the (key, piece of equipment, guildmaster)" is a good way
+to lose shout.  You may talk (or tell) but please don't shout as we want you
+to explore.
+
+4.) Asking "how do I get back from (or to)" some place is also bad.  Explore!
+If you didn't map your way in, that's your fault.  There are few places 
+intentionally designed to confuse mappers (no teleport mazes and the like)
+and few rooms where going north then south doesn't return to original room.
+Make a map!
+
+5.) Do not ask for, or reveal stats on items.  Finding out what items are
+useful and what aren't is part of the fun (and challenge).  The only
+exception to this rule is if you are auctioning an item, you may reveal
+what you think the stats are to improve the sale price.
+
+6.) If a God asks you not to shout a specific thing, because it is irritating
+you are expected to comply.
+ 
+The ability to shout is considered a privilege.  It is generally granted
+upon obtaining level 2, but may be revoked on an individual basis for
+failure to follow the guidelines above. 
+
+See Also: TOGGLE (noshout), TELEPATHY, TELL
+Related Topics: COMMUNICATIONS

@@ -1,0 +1,29 @@
+filename RACE_FROG
+singName frog
+plurName frogs
+propName Frog
+lore ANIMAL
+age 1+1d5
+maleHt 6+1d2
+maleWt 16+1d2
+femaleHt 5+1d2
+femaleWt 14+1d2
+body Frog
+moveIn hops in
+moveOut hops
+moveMod 10
+STR 70
+BRA 70
+CON 60
+DEX 200
+AGI 200
+INT 55
+WIS 55
+FOC 55
+PER 55
+CHA 55
+KAR 105
+SPE 220
+DumbAnimal
+AFF_SWIM
+Ridable

@@ -1,0 +1,13 @@
+Syntax: follow <person>
+Syntax: follow me
+
+Follow allows you to match the moves of <person> so that anywhere <person>
+goes, you will go too.  That is assuming that you are actually able to
+follow them there.  ie. lack of vitality, broken limbs, obstacles, etc
+will keep you busy while <person> goes merrily off on their way.
+
+To stop following someone, either "follow <your name>" or "follow me"
+will work.
+
+See Also: GROUP
+Related Topics: MOVEMENT

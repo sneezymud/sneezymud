@@ -1,0 +1,17 @@
+It won't let me move on the diagonals!?!
+----------------------------------------
+(TinTin and #speedwalk)
+
+A common complaint typically traced to people using a client.  Standard
+DIKU's do not have the northeast, southeast, southwest, northwest directions,
+hence many clients interpret "ne" as "go north then go east".  This causes
+problems on <h> if you mean "ne" as "go northeast".
+
+Under TinTin, you can disable the problem feature by typing
+#speedwalk
+and turning it OFF.
+Alternatively, some people prefer to leave speedwalk on and walk on
+the diagonals by using "Ne", "nE" or "NE", etc.
+
+You should probably consult the help files that are with your client if
+this doesn't solve the problem.

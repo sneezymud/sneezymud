@@ -1,0 +1,95 @@
+SneezyMUD's official website is at <Y>http://www.sneezymud.com<z> - check out the mortal interviews and help section.
+
+Sneezy's Wiki is a quickly growing encyclopedia of info about SneezyMUD: <Y>http://wiki.sneezymud.com<z>
+
+The SneezyMUD forums are a great place for discussion.  Come share your stories: <y>http://forums.sneezymud.com<z> 
+
+Check out the Visual New User's Guide: <Y>http://www.sneezymud.com/Help.html<z>
+
+Check out the updated Newbie Guide.  If you lost yours, get another at the welfare office.
+
+Are you wearing all your equipment yet?   Type "<c>wear all<z>"!
+
+Check the status of your worn equipment by typing "<c>equipment<z>".
+
+Check the status of your limbs by typing "<c>limbs<z>"
+
+What do you have in your inventory?  Type "<c>inventory<z>" to find out.  Or shorten it to just "<c>inv<z>".
+
+Surplus is a place to pick up random stuff of varying value.   Find out for yourself by typing "<c>goto surplus<z>".
+
+Where can you get food and drink?  Center Square, of course!  Type "<c>goto cs<z>" and then <c>pray<z> at the statue.
+
+Find more food at Froddor's Foodstuffs or the Kindred Pub? "<c>goto food<z>" or "<c>goto pub<z>"
+
+The park is a lovely newbie area.  Type "<c>goto newbie<z>" for directions.  Watch out for brawls!
+
+Aunt Dee can tell you valuable information.  She even has cookies and milk. "<c>goto dee<z>"
+
+The world outside of Grimhaven is scary! And dark! Don't wander out until you're at least level 5.
+
+The world outside of Grimhaven is scary! And dark! Buy lights! "<c>goto light<z>" to pick up some lanterns.
+
+Talens burning a hole in your pocket? Upgrade your armor: <c>goto armor<z>, or check out the south marketplace.
+
+There's a lot of fun shops to browse in the south marketplace. Goto Torkyn, Felicia, Milo Blinks, Nynaeve and others!
+
+CONSIDER!!! This command will save your life.  Use it before every mob you fight.  HELP CONSIDER.
+
+Seriously, you should consider every mob before you try to fight it.  Type "consider <mob>" and then decide.
+
+We only repeat ourselves because we love you. Consider any mob before you fight it and have one less death.
+
+Do you bravely run away?  Set your wimpy!  HELP WIMPY.
+
+This armor too restrictive, need to take it of to go to the bathroom?  HELP REMOVE.
+
+Check out what kind of customization you can do with toggles. HELP TOGGLE.
+
+Need help?  Some folks flag themselves (Newbie-Helpers).  You can locate them by doing "who -l".
+
+Need help?  See if Aunt Dee will help you. "<c>goto dee<z>".
+
+Need help? Nobody around to help? Immortals AFK? Leave us a message. <Y>http://www.sneezymud.com/Contact_Us.html<z>
+
+Check out the who list to see is in your level range. who -l  Maybe someone wants to group!
+
+Have you read the rules?  We recommend you do.  HELP RULES.  ...or else.
+
+Got practices to spend? Don't even know what they ARE? Type HELP PRACTICE and HELP TRAINING for more info.
+
+Find your trainers by using the <c>goto<z> command.  For example, "goto trainer" or "goto combat"!
+
+The newbie guide has a map of the city of Grimhaven in it.
+
+Aunt Dee will give you a map of Grimhaven if you've lost the one in your newbie guide.
+
+Want to speak your mind?  Use the "<c>say<z>" command.  HELP SAY
+
+Want to speak your mind to someone who isn't in the same room with you?  Use the "<c>tell<z>" command. HELP TELL
+
+Visit our website at: <Y>http://www.sneezymud.com<z>
+
+Have you signed up for our newsletter yet? Find out more on our webpage at <Y>http://www.sneezymud.com<z>
+
+It's considered poor mud etiquette to attack a creature if another PC entered the room before you.
+
+Are you lost?  Don't know where to go?  Use the GOTO command.  HELP GOTO.
+
+Visit the repairman to fix your damaged gear. Type "<c>goto repair<z>"
+
+Got a booboo? Visit the hospital! "<c>goto hospital<z>" will lead you to the exam room.
+
+Need a quick boost in HP?  Visit the hospital and explore the area for other rooms to relax.
+
+Playing from work?  You may want to set "boss" mode on.  HELP TERMINAL
+
+Are there some colors you can't see well? You can replace them. HELP COLOR SUBSTITUTE and HELP COLOR REPLACE
+
+Looking for the trainer for a certain discipline?  Type "<c>goto <discipline><z>".  Like, "goto combat"
+
+Looking for a mob around your level to fight?  Use "<c>goto fairfight<z>"
+
+Want to stop seeing these tips?  Toggle tips off.  HELP TOGGLE
+
+Want to see all the tips?  HELP TIPS

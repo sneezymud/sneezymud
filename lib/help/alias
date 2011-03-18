@@ -1,0 +1,22 @@
+Syntax: alias <alias> <thing for alias to do>
+        clear <alias #> will clear the alias for you.
+
+Aliases allow you to carry out a complex command with few keystrokes.
+The <h> alias system can hold up to 16 aliases and commands of
+30 characters or less.
+
+eg.:	alias cl cast cure light
+	After setting this alias up, you could type:
+	cl JoeBlow, and cure him instead of typing the whole spell out.
+
+To view your present aliases, type ALIAS with no parameters.
+Syntax: alias
+
+If you really like aliases or would like to get more advanced with
+aliases or triggers, we recommend you find yourself a mud client
+available on the web.  You may also be interested in the SneezyMUD
+client available on our website.
+
+
+See Also: CLEAR, CLIENT, WEBSITE
+Related Topics: UTILITY

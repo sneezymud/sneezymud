@@ -1,0 +1,26 @@
+Ranged weapons are those weapons that can be used to affect creatures in rooms
+other than the one you are presently in.  The most common forms of these are
+bow & arrows and certain thrown weapon types (daggers, axes).  Ranged weapons
+tend to do decent damage upon impact but the true worth of a ranged weapon
+is in its ability embed itself in an enemy.  The chance of embedding with
+a ranged weapon is roughly related to the weapon's sharpness and such an
+embedded weapon can do additional damage if it is extracted in the wrong way
+(ripped from the body) or if it left embedded for a long time (festering in
+the wound).
+
+Ranged weapons cannot be used in a peaceful room or against a target in a
+peaceful room.  Also, since some rooms are off-limits to mobs, ranged weapons
+can not pass through such rooms.
+
+Thrown weapons typically have a short range and low damage, but require
+no or little training.  Bows tend to shoot further and do higher damage.
+Damage incurred is a function of the weapon's natural damage, the force
+with which it was launched and how close to the target it was fired from.
+The best damage would be from a powerful weapon, fired very close to the
+target using a weapon that could go very far total.
+
+Specialization in ranged weapons will permit increased accuracy as well as
+the use of more complicated and bigger bows.
+
+See Also: BLOAD, SHOOT, THROW, RESTRING
+Related Topics: COMBAT

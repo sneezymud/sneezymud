@@ -1,0 +1,27 @@
+Filename RACE_UNIDENT
+singName unidentifiable
+plurName unidentifiables
+propName Unidentifiable
+lore OTHER
+age 15+1d4
+maleHt 62+1d17
+maleWt 140+8d10
+femaleHt 60+1d12
+femaleWt 100+4d10
+body Humanoid
+moveIn has arrived
+moveOut leaves
+STR 110
+BRA 110
+CON 110
+DEX 110
+AGI 110
+INT 110
+WIS 110
+FOC 110
+PER 110
+CHA 110
+KAR 110
+SPE 110
+Invertibrate
+IMMUNE_BONE_COND 100

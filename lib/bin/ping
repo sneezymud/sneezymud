@@ -1,0 +1,19 @@
+#!/usr/bin/perl
+
+# this is called in socket.cc to generate pings for players
+# - peel
+
+while(<STDIN>){
+  if(/^EOM$/){ last; }
+  chop;
+  $hostlist=join(' ', split(' ', $hostlist), $_);
+}
+
+open(SQL, "|/usr/local/bin/mysql $ARGV[0]");
+print SQL "delete from pings;\n";
+foreach(`/usr/local/sbin/fping -c 10 -q $hostlist 2>&1`){
+  if(m#^(\S*).*min/avg/max = [^/]*/([^/]*)/#){
+     print SQL "insert into pings (host, pingtime) values ('$1', $2);\n";
+   }
+}
+close(SQL);

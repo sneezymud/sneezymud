@@ -1,0 +1,31 @@
+Syntax: trap mine <trap type>
+Syntax to activate: Syntax: drop <mine>
+
+Mine traps are the most difficult to set.  Successful completion will create
+a land mine that can be placed in any location of the looter's choosing.
+Land mines trigger whenever someone moves out of the room with the land mine.
+The trapper, and those grouped with the trapper are of course immune to
+triggering the land mine (note: the immunity is to triggering it, not to the
+effects if someone else triggers it).  Land mines are not 100% reliable, often
+people will walk through regions with them without triggering them simply by
+not stepping on them due to blind luck.  Damage on a mine trap is quite high,
+often killing the target outright.  Additionally, some mines spray their
+effects throughout the room.
+
+Set traps allows a skillful looter from dissuading an overeager pursuer from
+following or to protect the looter's booty.  Traps come in 4 varieties, 
+exit traps, container traps and land mines and grenades.
+
+All traps take time to set.  Improper training may cause the trap to backfire
+on the looter during the trapping process.  The damage the trap will do depends
+on the trapper's level, the trapper's skill, the variety of trap, and the trap
+type.  <trap type>'s are located in a separate help file.
+
+Note: "damage" as used below is a generic term.  For trap types that don't do
+physical harm (sleep, poison, etc), greater "damage" reflects an increased
+chance to be affected by the trap.  eg.  A higher immunity to poison would be
+needed to dodge the effects of a "high damage" poison trap.  Obviously,
+everyone that doesn't save, will be affected by the sleep, poison, etc.
+equally.
+
+See Also: TRAP TYPES

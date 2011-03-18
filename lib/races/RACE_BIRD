@@ -1,0 +1,32 @@
+filename RACE_BIRD
+singName bird
+plurName birds
+propName Avian
+lore ANIMAL
+age 1+1d5
+maleHt 8+2d5
+maleWt 8+1d2
+femaleHt 6+2d5
+femaleWt 6+1d2
+body Bird
+moveIn flies in
+moveOut flies
+moveMod 40
+search 3
+STR 60
+BRA 60
+CON 80
+DEX 165
+AGI 170
+INT 80
+WIS 80
+FOC 110
+PER 215
+CHA 150
+KAR 120
+SPE 170
+DumbAnimal
+Winged
+CanClimb
+Feathered
+AFF_FLYING

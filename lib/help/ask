@@ -1,0 +1,11 @@
+Syntax: ask <person> <message>
+
+A generic way to communicate with other people in <h>.
+Some rooms will prevent this command due to a magical dweomer of silence.
+
+Ask displays the question to the person it is asked of.  They must be in
+the same room.
+   EX: ask joeblow are you busy?
+
+See Also: SHOUT
+Related Topics: COMMUNICATIONS

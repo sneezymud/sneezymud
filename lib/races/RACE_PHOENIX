@@ -1,0 +1,38 @@
+filename RACE_PHOENIX
+singName phoenix
+plurName phoenixes
+propName Phoenix
+lore GIANT
+age 500+5d10
+maleHt 65+1d5
+maleWt 140+2d10
+femaleHt 64+1d4
+femaleWt 120+2d10
+body Bird
+moveIn flies in
+moveOut flies
+hpMod 2
+moveMod 20 
+manaMod 2
+search 3
+STR 140
+BRA 90
+CON 120
+DEX 160
+AGI 170
+INT 130
+WIS 140
+FOC 140
+PER 120
+CHA 110
+KAR 120
+SPE 160
+Winged
+IMMUNE_HEAT 100
+AFF_FLYING
+DISSECT_INFO 228 2 50
+DISSECT_MSGA You tear $p off of $N.
+DISSECT_MSGB $n years $p off of $N.
+DISSECT_INFO 4847 2 50
+DISSECT_MSGA You pluck $p from $N's wing.
+DISSECT_MSGB $n plucks $p from $N's wing.

@@ -1,0 +1,37 @@
+filename RACE_KUOTOA
+singName kuo-toa
+plurName kuo-toas
+propName Ku-toan
+lore PEOPLE
+age 25+1d4
+maleHt 62+1d17
+maleWt 110+10d4
+femaleHt 60+1d12
+femaleWt 100+10d4
+body Kuotoa
+moveIn has arrived
+moveOut leaves
+hpMod 1
+search 1
+STR 160
+BRA 140
+CON 140
+DEX 130
+AGI 120
+INT 55
+WIS 55
+FOC 80
+PER 55
+CHA 65
+KAR 110
+SPE 120
+DumbAnimal
+Aquatic
+IMMUNE_ELECTRICITY 50
+IMMUNE_HEAT -20
+IMMUNE_POISON 100
+IMMUNE_PARALYSIS 100
+AFF_WATERBREATH
+AFF_SWIM
+AFF_INFRAVISION
+AFF_TRUE_SIGHT

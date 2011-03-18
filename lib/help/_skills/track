@@ -1,0 +1,23 @@
+Syntax: track
+Syntax: track <creature>
+Syntax: toggle hunt
+
+Track will attempt to find a path from your present location to <person>
+The distance it will work over is limited by the player's level and skill 
+rating.  Doors and other barriers sometimes prevent track from finding a
+path.  
+
+Track does not necessarily find a safe path, or even a path that is 
+traversable (ie, it could lead over water or through the air).  Track will
+locate the closest match it can find, so it may be necessary to refine
+your search criteria.
+
+Track with no parameters, or tracking something while already tracking, will
+terminate the present track.
+
+Turning the hunt toggle on will cause you to automatically towards the
+creature you are tracking.  Note that track does not find a safe path, and
+automatically hunting does not do any sanity checks and is perfectly happy
+to automatically walk you right off a cliff.  Tracker beware.
+
+See Also: TOGGLE

@@ -1,0 +1,19 @@
+Skills and spells are learned in two ways.  First, one is taught a
+skill by a trainer.  This provides the theoretical knowledge that you 
+as a player could have.  However, as in life, you do not really know
+some things until you use them.
+
+Not everything requires that you use them, but most of the skills and
+spells do. Whether something is learned by doing will show up in the help
+file of the skill.
+
+If it is not learned by doing, your learning of the skill will be what the
+trainer teaches you.
+
+If it is learned by doing, your learning will start at a constant number
+and increase from there naturally with use.  There are time components in
+the skill learning to prevent power leveling skills by kicking mice over
+and over.  Wisdom directly affects your learning rates.
+
+See Also: WISDOM
+Related Topics: GAIN, PRACTICE, CHARACTERISTICS

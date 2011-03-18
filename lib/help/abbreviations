@@ -1,0 +1,17 @@
+<h> allows virtually anything you type to be abbreviated.  For
+example, if you wanted to tell Beelzebub 'hi', you need not type:
+	tell beezlebub hi
+But instead can get away with:
+	tell beezl hi
+
+Any mobile, person or object name can be abbreviated in most
+situations and commands. Be careful though, to not abbreviate too 
+much. Typing 'tell b hi' might tell Beatrice hi instead of Beelzebub. 
+Always try to use an abbreviation that will make sure your command is 
+done correctly.
+
+Newbie Caveat: attacking citizens by doing 'kil cit' works well up
+until you encounter your first CITyguard and quickly realize the danger
+abbreviations can cause...
+
+Related Topics: GENERAL INFO

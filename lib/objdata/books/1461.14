@@ -1,0 +1,24 @@
+Topic: list
+--------------------
+
+Ex:
+list { "<words>";
+	...responses...;
+	}
+
+<words> = Text to match.
+
+Ex:
+  list { "";
+
+Would be caught by:
+  list
+
+Ex:
+  list { "dinner";
+
+Would be caught by:
+  list dinner
+
+  The list command, like the buy command, allows you to give mobiles
+a more shopkeeper like feel.

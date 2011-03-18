@@ -1,0 +1,26 @@
+The 'T' command
+Trap a chest or door
+
+This command is atypical in terms of format so be careful.
+An if_flag of 0 means trap a door, otherwise it traps the last referenced
+object.  Remember to trap both sides of a door (2 zone commands).
+
+T 0 <room with door> <dir> <type> <damage>
+T 1 <type> <damage>
+
+<type>:
+#define DOOR_TRAP_POISON  1
+#define DOOR_TRAP_BLADE   2
+#define DOOR_TRAP_SLEEP   3
+#define DOOR_TRAP_TNT     4
+#define DOOR_TRAP_SLASH   5
+#define DOOR_TRAP_FIRE    6
+#define DOOR_TRAP_ACID    7
+#define DOOR_TRAP_DISEASE 8
+
+<damage>
+The amount of damage the trap causes in multiples of d8.  ie, if you enter "4"
+your trap will cause 4d8 damage.  You are only allowed to enter whole numbers
+and the d8 is fixed.
+
+NOTE: not extensively utilized, may have bugs

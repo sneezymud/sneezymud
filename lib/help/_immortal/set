@@ -1,0 +1,59 @@
+Allows a high-level god to manipulate a pc or mobs stats.  Indiscriminate
+use of this where mortals are concerned is a good way to get demoted.
+
+Syntax:   @set <field> <name> <value> <value2>
+ 
+  <name> is the name of the PC/MOB being @set
+
+The following are valid <fields>:
+
+  str, bra, con, dex, agi, int, wis, foc, per, char, kar, spe
+  faction, leader
+  title
+  thirst, hunger, drunk
+  lifeforce, piety, mana, mmana, move, mmove, hit, mhit * the m specifies the max
+  ac, exp, tohit, todam
+  gold, bank
+  height, weight
+  donebasic   *no idea what this one does as of yet*
+  office
+  blocka, blockb (value 1=start room | 0 to remove, value 2=end room of block)
+  class     (as a bitvector: 1=mu, 2=cl, 4=wa, 8=th, 16=az, 32=de, 64=mo,128=ra)
+  level     (value 1=level, value2=class: 0 mag, 1 cler, 2 war, 3 thi, 4 sha,
+     5 deik, 6 mo, 7 ra, 8 commoner) * will automatically adjust experience and
+     practices to match given level
+  race      (number of race - see show races)
+  age       (number of years to add or subtract)
+  sex       (male, female, neuter)
+  stuck     :sticking an item in something
+  skill, disc :set the learningness in a skill | disc (value 1=disc | skill number,
+     value 2=learningness)
+  playtime  :adds minutes to person's playtime
+  toggle    :sets various (quest) toggles on the player - see show toggle
+  wizpower  :sets various wiz powers for L51+ (please see note below) 
+  power     :sets faction power for a faction
+  bodyflags :setting limbs bleeding, paralyzed, etc. (value=limb#, value2=flag)
+	
+NOTES:
+mhit, mmana and mmove:
+Fields are also affected by age.  All we can affect is the non-age related part of
+these fields. Realize the <pc> will remove 1 extra point for each year over their
+base-age they are.
+
+wizpower:
+Wizpowers can be toggled on and off by the number or by set. Available sets are:
+  basic, rooms, mobs, objs, demi, quest, trust, allpowers
+Please note that each set needs to be toggled on or off individually, as one set
+does not include the powers of the other ones, except for the "allpower" set.
+
+** need to check this info **
+skill maximum: @set "skill maximum" <percent>
+This will approximate learn by doing learning.  It will go through the PC's
+skills and give percent of the current max-Learning or any boosts that should  be 
+given to a pc.  Thus if a percent is 50 and the disc learning has max
+at 80, this will set the learn by doing to 40.  If the spell is boosted
+to 50, he will get the full 50
+*****************************
+
+See Also:  MED, RESTORE
+Related Topics: GOD

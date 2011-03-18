@@ -1,0 +1,32 @@
+filename RACE_PENGUIN
+singName penguin
+plurName penguins
+propName Penguin
+lore ANIMAL
+age 1+1d5
+maleHt 8+2d5
+maleWt 8+1d2
+femaleHt 6+2d5
+femaleWt 6+1d2
+body Bird
+moveIn waddles in
+moveOut waddles
+moveMod 40
+search 3
+STR 60
+BRA 60
+CON 90
+DEX 110
+AGI 150
+INT 80
+WIS 80
+FOC 110
+PER 80
+CHA 130
+KAR 120
+SPE 160
+DumbAnimal
+IMMUNE_COLD 50
+AFF_WATERBREATH
+AFF_SWIM
+#intentionally NOT winged so can't fly

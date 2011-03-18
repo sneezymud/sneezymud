@@ -1,0 +1,7 @@
+Syntax: toggle pg13
+
+The PG13 toggle will filter coarse language from shouts, tells, says and
+other player to player communication.
+
+See Also: TOGGLE
+Related Topics: COMMUNICATIONS

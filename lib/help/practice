@@ -1,0 +1,36 @@
+Syntax: practice
+Syntax: practice <discipline>
+Syntax: practice <discipline> {number}
+Syntax: practice skill <skill>
+Syntax: practice class <class>
+
+The practice command can be used to view your available disciplines and
+your current learning in them, to view skills within a discipline or to
+learn more about a discipline from the appropriate trainer.  Additionally,
+the practice command may be used to view your current learning in a skill
+or to view all the available disciplines for a specific class.
+
+Example: practice
+This will display all your available disciplines, differentiate between
+your basic disciplines, automatically learned disciplines and advanced
+disciplines, as well as display any available practices you have.
+
+Example: practice combat
+This will display all the skills in the combat discipline, how well you
+know them or when you might learn them and displays how many available 
+practices you have.
+
+Example: practice combat 3
+If you are in the same room with the correct combat trainer and have the
+available practices to spend, this will cause the combat trainer to
+teach you more about the combat discipline. 
+
+Example: practice skill kick
+If you have the skill "kick," you will see your current proficiency and
+potential for the skill.
+
+Example: practice class warrior
+This will display all the disciplines available to the warrior class.
+
+See also: TRAINING, DISCIPLINES, LEARNING, INTELLIGENCE, WISDOM
+Related Topics: CLASSES, GOTO

@@ -1,0 +1,61 @@
+Caravans are sent back and forth between the various parts of civilization
+to conduct trade between neighboring allies.  They carry wealth in the form
+of trade goods from one city to another.  As they tend to have abundant
+wealth, they are often the targets of thieves and marauders.
+
+Each faction supports their own caravans and trade routes.  The faction
+leadership is able to determine what cities their faction will trade with,
+how often caravans will be sent, how much wealth they will carry, and how
+much defense (in the form of mercenaries) they will provide the caravan.
+
+Caravans will deplete the wealth of their source city as they are created.
+A caravan that successfully reaches its destination will earn a profit on
+the number of wares that successfully reach market.  In addition, the
+destination city also benefits from the caravan when it arrives due to the
+trade goods now being for sale.
+
+Caravans move at a fairly slow pace and may require many hours to cross
+the vast distances between the cities and the towns.  Because of this, and
+the fact that they might hold large amounts of treasure, unscrupulous forces
+have been known to attack caravans in search of wealth.  The larger the booty
+within the caravan, the more likely it will be a target.  To counteract this,
+most faction leaders demand the caravan masters hire mercenaries to act as
+caravan guards for the duration of the voyage.  While this does cut into the
+profit ratio, it also raises the likelihood that the caravan will arrive safe
+and sound.
+
+Military forces have also been known to assault caravans of enemy cities in
+order to damage the economics of opposition cities and towns.  A faction
+unable to get its caravans successfully to their destinations will soon run
+out of talens and be unable to pay for that faction's luxuries.
+
+Faction leaders should pay close attention to their caravans, and insure they
+have adequate defenses.  Similarly, they should urge their own members to
+provide support to friendly caravans, and to impede the caravans of the enemy.
+
+---------------------
+Adjusting caravan properties:
+
+Wealth carried:
+  adjust caravan wealth <amount>
+      Faction wealth decreased by <amount> per caravan sent and turned into
+      trade goods.
+Mercenaries hired:
+  adjust caravan defense <amount>
+      Each caravan will use <amount> of faction wealth to hire mercenaries.
+      The larger the <amount> spent, the better the mercenaries will be.
+Destinations:
+  adjust caravan destination <city>
+      Only certain cities are allowed for each faction.  Those that are
+      allowed can be enabled or disabled depending on the current politics.
+      When a caravan forms, it selects a random destination from all cities
+      currently enabled.  Having no destination cities enabled will prevent
+      caravans from forming automatically.
+Interval:
+  adjust caravan interval <time>
+      <time> is the number of mud ticks (30 mud minutes) between caravan
+      formations.  You can set <time> to -1 to prevent caravans from forming
+      automatically.
+
+See Also: ADJUST
+Related Topics: FACTIONS

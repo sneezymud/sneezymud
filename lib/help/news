@@ -1,0 +1,25 @@
+Syntax: news <search>
+
+This command will show you the current edition of "The <h>
+news", a publication dedicated to news and useful information about
+this world. It is a VERY good idea to check it out once in a while.
+
+News will detail the most recent changes and is maintained more diligently
+than the help files.  News supersedes any help file, but the help files
+are usually updated as a news item becomes aged.
+
+Most changes made in the code will be put here with date the change was made.  
+Changes of a textual (spelling/grammar errors, etc) will not be reported.
+Changes to infrastructure (improved efficiency of code base, etc) will not
+be reported provided the change is thought to have no impact on game play.
+Changes that merely provide extra, or reorganize information will also not
+be reported (self-evident).
+
+Passing an argument will cause only entries that contain that string
+to be displayed.
+
+Example: news repair
+This command would display all news entries containing the word "repair".
+
+See Also: MOTD, MEWSLETTER
+Related Topics: GENERAL INFO

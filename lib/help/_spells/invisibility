@@ -1,0 +1,10 @@
+Invisibility bestows the target with the gift of invisibility.  Invisible
+creatures or items require special magic in order to be detected.  When cast
+on an object, the effect is permanent until dispelled.  On creatures, the
+duration is in the neighborhood of 12 hours.  Invisible creatures have a much
+lower armor class.  Invisible creatures will lose their invisibility if they
+enter combat.
+
+Once affected by the spell of invisibility the target can switch to and from
+the state through the use of the 'invisible' and 'visible' commands.  The
+switching drains the duration so be wary.

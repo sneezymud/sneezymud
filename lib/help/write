@@ -1,0 +1,18 @@
+Syntax: write <note> <quill>
+
+In order to write a note, you need a piece of blank paper (or similar), and
+a pen of some sort. You can then type something like "write on the paper
+with the pen", whereupon you will be asked to begin writing your note.
+
+If you don't specify a quill or a note and a quill, then your
+inventory will be search and the first ones found will be used.
+
+Notes and quill are provided free of charge near most public bulletin
+boards.  There is a public bulletin board directly above the inn in
+Grimhaven, and there are more limited-access boards provided in the
+larger, high-level cities.
+
+To get in touch with a single person in a more private manner, use mail.
+
+See Also: MAIL, POST
+Related Topics: COMMUNICATIONS, OBJECT MANIPULATION

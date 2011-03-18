@@ -1,0 +1,20 @@
+Sharpeners are weapon smiths skilled in returning the edge to a blade,
+restoring the point to a weapon or smoothing a weapon's surface.  In short,
+they improve the quality of the weapon.  (Do not confuse this with a
+weapon's structure which represents the durability of the item.  See help
+repair shops)
+
+Weapons that have low quality will do less damage, and are less likely to
+lop off limbs, behead, etc.  The best way to see a weapon's quality is to
+look at it.
+syntax: look <weapon>
+
+Cutlery shops will return your weapon to full quality for a modest fee in
+a short amount of time (while'U-wait).  Valid commands at a cutlery shop:
+
+VALUE <weapon>     : will show you how much it will cost to fix the weapon.
+GIVE <weapon> <sharpener>    : hands the weapon to the sharpener for fixing.
+                               Payment is automatic.
+
+See Also: SHARPEN, ITEM DAMAGE, VALUE, GIVE
+Related Topics: GENERAL INFO

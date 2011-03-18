@@ -1,0 +1,21 @@
+Syntax: assist <person>
+
+Assist causes you to begin fighting the same creature that person is fighting.
+Assist is similar to the rescue skill except the <person> continues fighting
+and tanking.  It is better than kill in many cases because you do not have to
+choose between 1.golem and 2.golem (or 1.lamia that just entered the room).
+
+Fast Typer Caveat:  When a mob starts a fight, it picks the last person
+who hit it as the one to attack.  This means that if Tank attacks Mob, and
+Dummy assists in the split second before the Mob picks its attacker, the
+Mob will wind up fighting Dummy.  Bottom line, assisting before the first
+full combat round goes by is dangerous.
+
+Solo casters without weapons will default to "engaged" status on
+assisting.  If you do not want to merely engage, you can wield a weapon or
+type hit after assisting.  Fighters (and wielding casters) will default to
+hitting on assists and can then disengage if they do not wish to hit.
+
+
+See also: RESCUE, KILL, ENGAGE
+Related Topics: COMBAT

@@ -1,0 +1,26 @@
+The 'A' command
+Area randomizer.
+
+Declares the boundary of a random area.  For example, if you want something
+to load in a random spot within a block of rooms, you can use the 'A'
+command.
+
+Syntax: A 0 <start> <end>
+
+<Start> must be less than, and different from, <end>.
+
+The A command only DECLARES the random room.  To actually use the room
+declared, set -99 for the room in the pertinent command.
+
+example:
+A 0 100 245
+M 0 103 1 -99
+
+The mob #103 will be loaded somewhere in the range 100-245.
+
+Please note that once something is loaded using the random area declared, the
+area is "forgotten".  You will need to redeclare the range in order to reuse
+it (in which case a brand new room is chosen).
+
+Any room within the range is selected.  There is no way to skip certain rooms.
+Rooms that are blank will NOT be chosen.

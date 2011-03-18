@@ -1,0 +1,29 @@
+filename RACE_GIRAFFE
+singName giraffe
+plurName giraffes
+propName Giraffe
+lore ANIMAL
+age 5+1d3
+maleHt 240+2d12
+maleWt 500+5d10
+femaleHt 220+2d12
+femaleWt 450+5d10
+body FourHoof
+moveIn lopes in
+moveOut lopes
+moveMod 30
+STR 150
+BRA 150
+CON 215
+DEX 120
+AGI 80
+INT 55
+WIS 55
+FOC 55
+PER 55
+CHA 55
+KAR 125
+SPE 150
+DumbAnimal
+Fourlegged
+Ridable

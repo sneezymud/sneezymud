@@ -1,0 +1,10 @@
+Syntax: clear <alias # | all>
+
+Unwanted aliases can be freed up using the clear command. Clear all will 
+clear all aliases.
+
+Use the alias command to display your list of aliases and determine the
+numbers associated with them.
+
+See Also: ALIAS
+Related Topics: UTILITY

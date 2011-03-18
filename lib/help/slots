@@ -1,0 +1,15 @@
+Slot machines are located in the Golden Treasure Casino.  You must be
+sitting at the slot machine to begin play.
+
+Syntax: play slots <number>
+
+The number parameter is a digit from 1-5 indicating both the amount
+that you will bet as well as the amount you will receive if the slot
+machine hits.
+
+Slot machines will take money from your on-hand cash automatically.  If
+you win at the slot machine, the winnings are in the slot machine's
+tray, so be sure to GET TALENS SLOT before leaving.
+
+See Also: -
+Related Topics: CASINO

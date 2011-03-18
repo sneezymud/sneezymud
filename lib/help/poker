@@ -1,0 +1,30 @@
+The poker table is located in the casino.  You must sit at the
+poker table to start.  You must place a bet to get the cards dealt.
+Syntax: BET <chip>
+
+The object of poker is to form a high scoring poker hand.  You will be
+dealt five cards, and you may discard any or all of them and receive
+new cards.  Your final hand determines your winnings.
+
+To discard, use the play command.
+Syntax: PLAY <1|2|3|4|5>
+
+You can also discard multiple cards at the same, ex "play 1 2 4"
+
+To receive new cards to replace your discarded cards, use the stay
+command.
+Syntax: STAY
+
+Payouts:
+Royal Flush - 800 to 1
+Straight Flush - 50 to 1
+Four of a Kind - 25 to 1
+Full House - 9 to 1
+Flush - 6 to 1
+Straight - 4 to 1
+Three of a Kind - 3 to 1
+Two Pair - 2 to 1
+Pair, Jacks or higher - 1 to 1
+
+See Also: BET, STAY, PEEK, PLAY
+Related Topics: CASINO

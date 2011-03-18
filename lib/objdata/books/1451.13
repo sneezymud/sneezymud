@@ -1,0 +1,29 @@
+Max structure
+
+The maximum structure the item can have.  Structure corresponds to the 
+strength of the item and how much damage it can take.  Damage and repair 
+are some of the primary economic regulators of the mud so structure 
+numbers should be looked at carefully.  
+
+One of the most common errors is to equate AC and high structure. 
+Although there will in general be a reasonable convergence, the two should
+not be thought of as identical.  Items can give good protection but damage
+easily. 
+
+The affect of this error in thinking is that there is a tendency to have 
+high structures on robes and other non-tank items worn by casters.  Mana 
+items must have considerably lower structure than tanking gear.  We do 
+not want casters walking around in high AC, high mana, high structure items.
+You must put in trade-offs between these three object features. 
+
+You can use super low structure to make fragile items with decent affects 
+that will circulate more than other items.  However, be aware that 
+players tend to keep such items in bags and not wear them so do not think 
+of a super low structure as a trade off for a big item affect.
+
+NOTES:
+
+CHECK YOUR FIGURES AGAINST ITEMS IN THE WORLD:  Pretty self explanatory.
+
+ROBES AND OTHER MANA ITEMS:  Remember to set mana objects to lower 
+structure than tanking items.  Keep structures reasonable.

@@ -1,0 +1,17 @@
+Syntax: findemail <address>
+
+findemail attempts to locate all accounts that use <address>.  It will look for
+substrings, so please avoid doing stupid things like "findemail edu".
+
+To simplify execution, the account files (where email address is stored) are
+not formally opened, read and closed.  Instead, a simple grep for the <address>
+is done on the binary account file.  It is possible that a false-positive
+result will be returned if the <address> string somehow matched other binary
+data within the account file.
+
+Findemail will return a list of all accounts that had a match for <address>.
+You will have to cross-reference with the account or access commands to 
+find out what the actual address being used is.
+
+See Also: ACCOUNT, ACCESS
+Related Topics: GOD

@@ -1,0 +1,21 @@
+Syntax: adjust <help | harm> <versus faction> <value>
+Syntax: adjust <tithe> <value>
+Syntax: adjust caravan ...
+
+The adjust utility allows a faction leader(s) to adjust various values
+related to their faction.
+
+The help, and harm contribution <value>s in relation to <versus faction>. 
+The contribution <value>s affect the rate of growth or decline in that
+faction's members faction percentage for actions for or against <versus
+faction>.  This <value> also affects the faction power and indirectly the
+rate of piety regeneration for the faction's clerics.
+
+The tithe <value> is adjusted similarly and affects how much money is
+automatically collected from all faction members.
+
+The properties of the caravans are set similarly.  Caravans are treated
+in more depth in their own help file.
+
+See Also: PIETY, CARAVANS
+Related Topics: UTILITY

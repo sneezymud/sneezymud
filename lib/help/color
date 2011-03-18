@@ -1,0 +1,65 @@
+syntax: color 
+syntax: color <category>
+syntax: color test
+syntax: color replace <color>
+syntax: color substitute <color>
+
+Currently supported <categories>:
+    enabled/disabled 
+       - turns the use of all colors on/off
+    communications, objects, creatures, rooms, room_name, shouts, spells 
+       - turns the use of color in these categories on/off.
+    all, none 
+       - turns all categories on/off
+Currently supported <colors>:
+    none, black, red, green, orange, blue, purple, cyan, white, yellow,
+    gray, bold_red, bold_green, bold_blue, bold_purple, bold_cyan, 
+    bold_white, and bold.
+
+Users with ANSI-capable MUD clients or terminals may choose to play with
+color enabled.  Color has been organized into categories so players may
+pick and choose what elements of the MUD are in color.
+
+Color may be toggled on or off with "color enable" or "color disable".
+You may choose to selectively view color by the categories listed above.
+Use "color all" to select all categories.  "Color none" will disable
+all color.
+
+"Color test" will show all colors used so you may see how each color
+displays on your terminal.
+
+Additionally, hard to see colors may be	replaced with ones more	easily
+viewed with the	use of COLOR SUBSTITUTE	and COLOR REPLACE.
+
+Type "color sub <color>" to choose a substitute color, then type "color 
+replace <color>" to replace colors you cannot easily see with the color 
+you've chosen as a substitute.
+
+Example: If your terminal is white-on-black, you may not be able to see
+the colors black and grey.  Type "color sub white" to choose white as
+your replacement color, then type "color replace black" and "color replace
+grey" to replace black and grey with your substitute color.
+
+To clear your substitute color, choose "none" as your substitute color.
+To toggle replacement of a color, type "color replace <color>".
+
+The MUD has color on by default, so if you have a terminal that does
+not suppor color, disable color.  This decreases processing and band-
+width usage.
+
+You may use color yourself in says, tells, shouts, titles, notes and
+mail. To do so, type HELP COLOR STRING for more info.
+
+If you feel something should (or should not) be colorized, please feel
+free to make use of the IDEA command.
+
+Finally, <h> uses the ANSI standard for transmission of color to the 
+end user. Only ANSI-capable clients or terminals will interpret color
+codes correctly.  If you find not all colors show up and your substitute
+and replace settings are correct, it's more likely to be your terminal 
+and not <h>.  Depending on your display, client or terminal, you may 
+also note variations in hue or intensity.  
+
+See Also: TERMINAL, STATUS BAR, PROMPT, COLOR STRING, COLOR SUBSTITUTE,
+COLOR REPLACE
+Related Topics: SCREEN

@@ -1,0 +1,19 @@
+How do I refer to something when there is more than one in the room?
+--------------------------------------------------------------------
+
+You will often see something like:
+A hard roll is here. [2]
+
+This denotes that there are 2 (number in brackets) of the item specified.
+Similarly:
+A barhopper wanders the streets.  [4]
+implies 4 barhoppers are in the room with you.
+
+The default reference is the first one in the room.  If you want to
+reference the 2nd, 3rd, ... object, use this format:
+
+(command) 2.(object)    <-- references the 2nd thing of type (object)
+eg.
+get 2.roll
+kick 3.guard
+buy 7.sword

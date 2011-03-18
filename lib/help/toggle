@@ -1,0 +1,52 @@
+Syntax: toggle
+Syntax: toggle {parameter}
+
+The toggle command allows you to configure several automatic actions that
+can make playing easier, as well as some terminal configuration options.
+The toggle command with no parameters will show the status of all toggles.
+
+Parameters:
+spam:         on = won't see combat "misses" or hits that do 0 damage.
+loot-money:   on = will loot the talens from a corpse.
+loot-all:     on = will loot everything from a corpse, including talens.
+noshout:      on = will be unable to shout or hear shouts.
+pouch:        on = moneypouches automatically opened, looted and dropped.
+engage:       on = will enter engaged mode during any fight you start.
+engage-all:   on = will enter engaged mode during any fight.
+nospells:     on = won't see any mid round casting messages.
+halfspells:   on = will only see half of all mid-round casting messages.
+tips:         on = will see periodic newbie tips.
+hero-sprite:  on = hero sprites will no longer follow you.
+newbiehelper: on = will flag you as a newbie helper.
+autoeat:      on = will automatically eat and drink when hungry/thirsty.
+afk:          on = will send an "AFK" message when you are inactive.
+join:         on = permits entrance to factions.
+trophy:       on = will check trophy after kills.
+wimpy:        <number> = you will flee when your HP drops below <number>.
+anonymous:    on = will hide your class and level information in the who list.
+kill:         on = will continue to attack stunned creatures until they die.
+noharm:       on = will be unable to INTENTIONALLY attack another PC.
+split:        on = will split talens gained with group members.
+dissect:      on = will dissect items from corpses killed.
+                   will also tell of skins that may be obtained from corpse.
+hunt:         on = will automatically move toward anything you are tracking.
+limbs:        on = will see the tank's limb status after each fight.
+pg13:         on = will no longer see vulgarity.
+deny:         on = will deny other players from looting your corpse.
+
+screensize:   <number> = sets your screen size to <number> rows.
+msp:          on = enables MSP sound protocol.
+brief:        on = will no longer see room descriptions
+terminal:     <ansi/vt100/none> = sets current terminal type.
+compact:      on = removes extra newline after output to your screen.
+boss:         on = does not display welcome screen ANSI art.
+ping:         on = allows the mud to ping you to determine network lag.
+showsaves:    on = shows player file save notifications.
+
+For more detailed information on these parameters, please consult the 
+helpfiles in the "See Also" section.
+
+See Also: SPAM, LOOT, NOSHOUT, POUCH, ENGAGE, HERO SPRITE, EAT, AFK,
+JOIN, TROPHY, WIMPY, KILL, NOHARM, SPLIT, DISSECT, TRACK, LIMBS, PG13, 
+PLOOT, TERMINAL, SAVE, REDUCING SPAM
+Related Topics: SCREEN, NEWBIE

@@ -1,0 +1,26 @@
+filename RACE_RATMAN
+singName ratman
+plurName ratmen
+propName Rodentine
+lore PEOPLE
+age 1+1d5
+maleHt 12+1d3
+maleWt 20+2d2
+femaleHt 10+1d3
+femaleWt 16+2d2
+body Humanoid
+moveIn scuttles in
+moveOut scuttles
+moveMod 10
+STR 120
+BRA 120
+CON 100
+DEX 100
+AGI 140
+INT 70
+WIS 70
+FOC 70
+PER 70
+CHA 40
+KAR 80
+SPE 120

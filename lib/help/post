@@ -1,0 +1,14 @@
+Syntax: post <note> <message title>
+
+Provided you have a note (upon which your message should exist)
+and a place to put it (bulletin board) is in the room, you may post
+the note.  Note that the note should have the relevant message already
+on it before you post it.
+
+Usually there will be a note and pen dispenser with an endless
+supply of notes and pens that you can get. You can write your
+note on these notes with the pen, and then post your note to the
+board.
+
+See Also: WRITE
+Related Topics: COMMUNICATIONS, OBJECT MANIPULATION

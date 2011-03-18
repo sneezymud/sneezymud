@@ -1,0 +1,10 @@
+Syntax: divine <drink container>
+
+Divination allows the ranger to seek out underground water sources in the
+ranger's immediate location.  Success depends on the ranger's training while
+quantity of the water source depends on the local terrain and the ranger's level.
+
+Any water located will be put into <drink container> which must be held by or in
+the inventory of the ranger.
+
+Divining can only be done once every 12 hours.

@@ -1,0 +1,40 @@
+Syntax: who {-?}
+Syntax: who {-begolnpqrtuw} 
+Syntax: who <name>
+Syntax: who <level>
+Syntax: who <level1> <level2>
+
+The who command will display all players who are presently connected and
+active.  You must be able to see in order to view the who list (blindness,
+or darkness may prevent).
+
+With no parameters, it will list everyone.  The -? flag will list the
+available flags.  
+
+Specifying, who <name> will list some info about <name> if they are active, 
+additionally, it will list anyone with <name> as an abbreviation.  Hence,
+"who joe" would display "Joe", "Joey" and "JoeBlow".
+
+Specifying, who <level> will list out all players at or above <level>.
+Specifying, who <level1> <level2> will list out all players between the two
+levels, inclusive.
+
+The flags are as follows, and may be combined:
+parameters:		b - builders (level 51s)	g - gods
+o - mortals		l - levels			q - questers
+p - groups              z - seeksgroup
+
+e - elves               u - humans                      r - ogres
+w - dwarves             t - hobbits                     n - gnomes
+
+For example :
+who -l		: lists out everyone by their levels
+who -el		: lists out all elves as well as their levels
+who -le 	: same as who -el
+
+A (Seeks Group) will be appended if that person has toggled that group option
+on.  See the group command help file to see how to set this option.
+
+
+See Also: TITLE, SCAN, GROUP, TOGGLE
+Related Topics: GENERAL INFO

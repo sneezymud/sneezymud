@@ -1,0 +1,207 @@
+EXAMPLE ZONE FILE - Lionheart
+Note: not every tip was followed in this example, but it should give you
+a rough idea of how to do a zonefile.
+
+#32
+Lionheart - Minion~
+3299 20 2 2
+D 0 3166 1 1            Door into tavern
+D 0 3167 3 1
+D 0 3167 0 1            Door into peepshow
+D 0 3177 2 1
+D 0 3186 1 1            Door into theater
+D 0 3187 3 1
+D 0 3208 2 1            Door into jail
+D 0 3198 0 1
+D 0 3198 1 2            Door into east cell
+D 0 3199 3 2
+D 0 3198 3 2            Door into west cell
+D 0 3197 1 2
+D 0 3179 3 1            Door into dressing room
+D 0 3178 1 1
+O 0 3130 1 3101         Sign
+O 0 3131 1 3102         Sign
+O 0 3132 1 3177         Window
+O 0 3133 1 3168         Bar
+P 1 3134 5 3133           Ale
+O 0 3135 1 3100         Bed
+O 0 3139 1 3206         Sign
+O 0 3140 1 3206         Gibbet
+O 0 3141 1 3156         Sign
+O 0 3142 1 3166         Sign
+O 0 3143 1 3158         Table
+O 0 3143 1 3167         Table
+O 0 3143 3 3168         Table
+O 0 3144 1 3158         Chair
+O 0 3144 2 3158         Chair
+O 0 3144 3 3167         Chair
+O 0 3144 4 3167         Chair
+O 0 3144 5 3168         Chair
+O 0 3144 6 3168         Chair
+O 0 3144 7 3198         Chair
+O 0 3145 1 3198         Desk
+O 0 3146 1 3238         Throne
+O 0 3147 1 3285         Stone
+O 0 3148 1 3169         Gravestone
+O 0 3149 1 3149         Sign
+M 0 3100 1 3290        Hood the Bandit
+? 1 20 0 E
+E 1 3100 1 5             horned skull
+? 0 20 0 E
+E 1 3101 1 19            blade configuration
+? 0 15 0 E
+E 1 3150 1 4             blue armor
+M 0 3101 1 3178        Tuck the Bandit
+? 1 20 0 E
+E 1 3102 1 4             Skimpy Suit
+? 0 20 0 E
+E 1 3103 1 3             Heavy Cloak
+? 0 20 0 E
+E 1 3104 2 19            Paired Epee
+M 0 3102 1 3239        Major Oak
+? 1 20 0 E
+E 1 3105 1 18            Huge Sword
+? 0 20 0 E
+E 1 3106 50 4            Animal Hides
+? 0 20 0 E
+E 1 3107 100 8           Heavy Boot
+? 0 20 0 E
+E 1 3107 100 9           Heavy Boot
+M 0 3103 1 3239        Wizard
+? 1 20 0 E
+E 1 3108 1 5             Terrifying Helmet
+? 0 20 0 E
+E 1 3109 1 4             Terrifying Armor
+? 0 20 0 E
+E 1 3110 2 8             Terrifying Boot
+? 0 20 0 E
+E 1 3110 2 9             Terrifying Boot
+M 0 3104 1 3285        Shadowfoot the Bandit
+? 1 20 0 E
+E 1 3111 40 4            Camouflage Vest
+? 0 20 0 E
+E 1 3112 40 6            Camouflage Pants
+? 0 20 0 E
+E 1 3113 20 19           Brief Blade
+M 0 3105 1 3229        Falstaff the Huscarl
+? 1 20 0 E
+E 1 3106 50 4            Animal Hides
+? 0 20 0 E
+E 1 3107 100 8           Heavy Boot
+? 0 20 0 E
+E 1 3107 100 9           Heavy Boot
+M 0 3106 1 3285        Much the Bandit
+? 1 20 0 E
+E 1 3111 40 4            Camouflage Vest
+? 0 20 0 E
+E 1 3112 40 6            Camouflage Pants
+? 0 20 0 E
+E 1 3113 20 19           Brief Blade
+M 0 3107 1 3159        Yorick the Undead
+? 1 20 0 E
+E 1 3126 3 3             Medallion of Aym
+M 0 3108 1 3285        OUNary the Bandit
+? 1 20 0 E
+E 1 3111 40 4            Camouflage Vest
+? 0 20 0 E
+E 1 3112 40 6            Camouflage Pants
+? 0 20 0 E
+E 1 3113 20 19           Brief Blade
+M 0 3109 5 3234        old buck
+? 1 50 0 G
+G 1 3114 100             venison
+? 0 20 0 E
+E 1 3115 5              antlers
+M 0 3110 9 3206        dactyl
+M 0 3111 1 3285        Took the Bandit
+? 1 20 0 E
+E 1 3111 40 4            Camouflage Vest
+? 0 20 0 E
+E 1 3112 40 6            Camouflage Pants
+? 0 20 0 E
+E 1 3113 20 19           Brief Blade
+M 0 3112 20 3216       a huscarl
+? 1 20 0 E
+E 1 3106 50 4            Animal Hides
+? 0 20 0 E
+E 1 3107 100 8           Heavy Boot
+? 0 20 0 E
+E 1 3107 100 9           Heavy Boot
+M 0 3112 20 3177       a huscarl
+? 1 20 0 E
+E 1 3106 50 4            Animal Hides
+? 0 20 0 E
+E 1 3107 100 8           Heavy Boot
+? 0 20 0 E
+E 1 3107 100 9           Heavy Boot
+M 0 3113 1 3228        Evelyn Necker
+? 1 10 0 E
+E 1 3123 4 4             Aym Armor
+? 0 10 0 E
+E 1 3124 8 12            Aym Sleeve
+? 0 10 0 E
+E 1 3124 8 13            Aym Sleeve
+? 0 10 0 E
+E 1 3129 4 6             Aym Leggings
+M 0 3114 20 3109       young buck
+? 1 50 0 G
+G 1 3114 100             venison
+M 0 3115 1 3100        tavern wench
+E 1 3136 5 15            warm blanket
+? 0 50 0 G
+G 1 3138 10              lionseed
+M 0 3116 9 3103        sister
+? 1 20 0 E
+E 1 3116 36 4            Nun Robe
+? 0 10 0 O
+O 1 3122 18 3103           Hassock
+M 0 3117 1 3187        Will Wavepyke
+? 1 20 0 E
+E 1 3117 50 4            shirt
+? 0 20 0 E
+E 1 3118 50 6            pants
+? 0 20 0 E
+E 1 3119 10 19           dirk
+M 0 3118 1 3189        Noah
+? 1 20 0 E
+E 1 3117 50 4            shirt
+? 0 20 0 E
+E 1 3118 50 6            pants
+? 0 20 0 E
+E 1 3119 10 19           dirk
+M 0 3119 10 3210       gangmember
+? 1 20 0 E
+E 1 3117 50 4            shirt
+? 0 20 0 E
+E 1 3118 50 6            pants
+? 0 20 0 E
+E 1 3119 10 19           dirk
+M 0 3119 10 3210       gangmember
+? 1 20 0 E
+E 1 3117 50 4            shirt
+? 0 20 0 E
+E 1 3118 50 6            pants
+? 0 20 0 E
+E 1 3119 10 19           dirk
+M 0 3120 10 3168       serving wench
+? 1 20 0 E
+E 1 3120 50 4            low-cut blouse
+? 0 20 0 E
+E 1 3121 50 6            short skirt
+M 0 3120 10 3168       serving wench
+? 1 20 0 E
+E 1 3120 50 4            low-cut blouse
+? 0 20 0 E
+E 1 3121 50 6            short skirt
+M 0 3121 4 3178        actress
+? 1 20 0 G
+G 1 3137 12              lionsblood
+M 0 3121 4 3178        actress
+? 1 20 0 G
+G 1 3137 12              lionsblood
+M 0 3122 1 3238        Roderick
+? 1 20 0 E
+E 1 3127 20 4            regal robes
+? 0 20 0 E
+E 1 3128 20 18           sceptre
+S

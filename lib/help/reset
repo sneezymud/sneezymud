@@ -1,0 +1,17 @@
+Syntax: gain reset
+
+If you have spent practices accidentally or just changed your mind, you can
+always reset your practices at your guildmaster.
+
+Resetting practices allows you to zero out your present disciplines (except those
+that are learned automatically). After resetting, you will have to go
+back to your trainers and re-practice.
+
+Your skill learnedness before the reset will not be altered, so re-gaining a
+discipline after a reset will restore your current level of learnedness.
+
+There is a cost associated with this service.  Your guildmaster will tell you
+how much if you use the 'gain' command.
+
+See Also: GAIN, PRACTICE
+Related Topics: CLASS

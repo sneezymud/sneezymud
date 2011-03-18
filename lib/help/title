@@ -1,0 +1,26 @@
+Syntax: title {string}
+
+The title command can be used to set your title.  You must be at least
+5th level to use this command.  Title changes the statement that is shown
+when people use the WHO command.
+
+The string can be any statement you would like, with the only restriction
+being that you MUST put <<n> somewhere in it.  The <<n> is replaced with
+the characters name when it appears.  You can also enter color codes
+using the standard color string < > syntax.
+
+For example :
+    title I am a killer, says <<n>. 
+	would set your title to be :
+    I am a killer, says ,<player name>.
+
+    title I am a <<r>killer<<z>, says <<n>. 
+	would set your title to be :
+    I am a <r>killer<z>, says <player name>.
+
+It is generally considered poor etiquette to have obnoxious, denigrating
+or exceptionally long titles.  Really cool people have titles that are
+surreal and bizarre.
+
+See Also: WHO, COLOR STRINGS
+Related Topics: UTILITY

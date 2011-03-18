@@ -1,0 +1,32 @@
+Syntax: repair <item>
+
+Monks lead a simple life, at many times alone and far from others.  Thus, it
+has become necessary for them to learn the skills needed to repair their own
+equipment.  As such, all monks are taught sometime during their training to
+learn to mend their armor, which often consists of leathers, living materials,
+and hides.
+
+The appropriate tools must be held and in the room and the item you wish to
+repair must be in your inventory in order to repair it.
+
+Monk can repair equipment made of wood.
+
+Tools necessary:
+ Primary:   ladle
+ Secondary: manure
+ Room-type: forest  
+
+
+Monk can repair equipment made of some types of organic material.
+
+Tools necessary:
+ Primary:   ladle
+ Secondary: oil
+ Room-type: water  
+
+
+Monks can mend equipment made of leather and hide.
+
+Tools necessary:
+ Primary:   punch
+ Secondary: cording

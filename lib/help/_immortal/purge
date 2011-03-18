@@ -1,0 +1,29 @@
+A way to make The World a little cleaner.
+Usage:
+  purge                         To empty a room of monsters and objects.
+  purge <character>             To remove a living thing. Kicks out a player.
+  purge <object>                Figure this one out yourself.
+  purge zone <zone #>           Purges all mobs in a zone and makes it inactive
+  purge links                   See below             
+  purge ldead
+
+The purge command, when first gotten, will only permit you to purge specific
+items (ie. no general "purge").
+
+Purging a character that is actively playing is not a good idea.  It will
+kill their link, push them out of the game, and drop stuff to ground.  Very
+similar to if they had quit.  There is no xp lost from this, but mortals tend
+to find it objectionable.
+
+Purge links is an emergency scram command.  It will kick all players less than
+50th level out of the game.  Probably used in conjunction with a wizlock...
+Purge ldead will go thru all characters and eliminate the link deads including
+the bodies of immortals that would normally bypass the timeout clock.
+
+Purge zone will destroy all mobs (and associated items) from <zone #>.  You 
+can get the zone numbers from show zones.  It also deactivates the zone.
+Purge zone all will remove all mobs in all zones who's activity is less then
+the maximum. (ie, all active, but idling zones).
+
+See Also: -
+Related Topics: GOD

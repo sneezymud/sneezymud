@@ -1,0 +1,7 @@
+Syntax: examine <something>
+
+Examine causes you to look at <something> in detail.  It may be used
+on items or on people.  Examine is synonymous with "look at".
+
+See also: LOOK, READ
+Related Topics: OBJECT MANIPULATION

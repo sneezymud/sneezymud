@@ -1,0 +1,8 @@
+
+syntax: nojunk <object>
+
+This command will set or remove a 'no-junk' flag on an object, which
+will prevent it from being junked when set.  It will also prevent the
+object from being carried down dump chutes and forming in trash piles.
+
+Anyone can set or remove this flag from any object.

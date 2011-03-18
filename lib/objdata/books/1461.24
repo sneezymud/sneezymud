@@ -1,0 +1,38 @@
+SUBSTRING: OBJCOST
+---------------------
+ 
+ex:
+give { "-#OBJCOST( 300, 10)#";
+       <action>;
+	say "I received #OBJCOST( 300, 10)# talens!";
+       <action>;
+     }
+
+The OBJCOST substring was developed in response to the large number of
+response mobs that were acting as traders.  In essence, it allows you
+to embed the price of an object into a script.  Obviously, item prices
+tend to fluxuate over the long haul, so this is a good way to let the
+scripts adjust for this possible change.
+
+The string MUST follow a certain syntax.  That syntax is:
+#OBJCOST( obj_vnum, markup_percent)#
+
+obj_vnum is the virtual number of the item in question.  In this example,
+item #300 is a long sword.
+
+Markup is an int allowing for the cost to be incremented slightly over its
+true cost.  In this example, we are indicating we want the price to be 10%
+more than its true cost.
+
+When this mob is loaded, it will determine what the current market value
+of a sword is (plus 10%), and derive the proper response.  For instance, if
+a long sword's price (in the tinyfile) was 1000 talens, the following 
+response would be created:
+
+give { "-1100";
+	say I have been given 1100 talens;
+	}
+
+Thus, the substring has been replaced by the derived pricing.  And if a
+subsequent change is made to the item that affects its price, your script
+will not need to be updated. 

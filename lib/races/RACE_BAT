@@ -1,0 +1,33 @@
+filename RACE_BAT
+singName bat
+plurName bats
+propName Bat
+lore ANIMAL
+age 1+1d5
+maleHt 8+1d4
+maleWt 7+1d3
+femaleHt 6+1d4
+femaleWt 5+1d3
+body Bat
+moveIn flies in
+moveOut flies
+moveMod 40
+vision -1
+STR 60
+BRA 60
+CON 60
+DEX 160
+AGI 180
+INT 55
+WIS 55
+FOC 55
+PER 55
+CHA 55
+KAR 80
+SPE 160
+DumbAnimal
+Winged
+CanClimb
+AFF_FLYING
+AFF_INFRAVISION
+

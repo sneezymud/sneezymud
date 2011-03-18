@@ -1,0 +1,40 @@
+The 'O' command
+Load objects
+
+This command loads items directly into the room.  It is generally used to 
+insert furniture into the room.  All 'O' commands are only executed at
+boot_time  (when the game reboots).  All furniture loads should be 
+bunched together and follow your door (D) commands.  
+
+Sample usage:
+
+O <if_flag> <obj vnum> <number> <room vnum>
+
+<if_flag> is generally 0  (always load)
+<obj vnum> is the vnum that you saved the object as.
+<number> number of objects to load in the room
+<room vnum> is the vnum of the room to put the object in.
+
+example:
+O 0 100 9 103             guard's cots
+O 0 100 9 104
+O 0 100 9 105
+
+These commands load cots successively in rooms 103, 104, 105.  Comment the
+item (100) only once and keep all loads for the item together.  
+
+
+NOTES:
+
+USING OBJECTS FROM OTHER ZONES:  You are able to use simple objects from
+other zones in your zones.  However, you should not use *any* limited
+items from other zones in your zones.  Understand that your loading of
+such objects may interfere with loading in other zones if the items are
+limited.  Moreover, you should inform the LOW on zone file submission if 
+you are using items from other zones.
+
+*All new equipment created by the builder such as weapons and armor must be
+informed to the LOW _BEFORE_ it's creation.  You will save yourself a lot of
+work if you inform the LOW.  This is not to say new item's will be denied
+but this policy is to ensure balance within the game.
+

@@ -1,0 +1,25 @@
+syntax: FLAG [player name] [flag type]
+
+Available flag types:
+
+1) banished
+  Banished can only be set by a god.  A banished player will automatically
+  enter the game at 70 (Hell) where there should be a tormenter waiting.
+  Low level players who appear to merely be playing for the sake of causing
+  mischief (harassment/spamming) should be banished.
+2) solo
+3) group
+  These two flags are new quest flags. The solo flag will make the person
+  work totally solo. It prevents any following of the person flagged, and
+  also prevent any spells being cast on the person. The group flag does 
+  essentially the same thing, but allows interaction between others with
+  the group quest flag.
+4) newbiehelper
+  Flags these people as likely to assist newbies.  Probably should only be done
+  with that person's permission.  Reserved as a god command so that we can place
+  some controls on who gets it.  The newbie helper flag shows up in WHO.
+5) nosnoop
+  Prevents anyone from snooping this character.  There is no good reason
+  to set this.
+6) killable
+  Use this to let people kill a newbie. 

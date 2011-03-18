@@ -1,0 +1,28 @@
+Flags
+
+Room flags denote characteristics the room has.  They are mostly used
+internally by the code.  Do not think you have to make extensive use of
+these flags to build a good zone.  They should be used sparingly and in
+context.  In addition, some of the flags should not be used in your zone
+at all (private) and some only in conjunction with others
+(i.e..peaceful/noheal). 
+
+always lit:	AVOID setting - make lamps, torches etc if you want light
+death:	kills creatures that enter.   somewhat frowned upon
+nomob:	mobs won't wander into these rooms. They can ride or track into
+indoors:	no weather displayed, set if the room has a ceiling of any kind
+peaceful:	prevents combat
+noheal:	mana/hp regen does not occur - should be set if room is peaceful
+hospital:	accelerated healing and regeneration
+nosteal:	prevents the steal command from working
+no_sum:	can not summon a creature OUT of this room
+no_portal:	no magical way to LEAVE this kind of room
+have_to_walk:	no magical way to ENTER this kind of room
+no_magic:	can not use magic in this room.  mob procs WILL work here
+private:	prevents a god from goto'ing this room if 2 creatures in it
+silence:	prevents say and shout
+no_order:	no ordering charms and mounts here
+no_flee:	prevents fleeing from the room
+arena:	characters will not lose xp for dying in this room
+save_rooms:	items will be stored and reloaded after reboot, should always
+		be set

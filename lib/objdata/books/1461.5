@@ -1,0 +1,26 @@
+Trigger: give
+---------------------
+ 
+ex:
+give { "<number>";
+       <action>;
+       <action>;
+     }
+
+The give trigger permits the response mob to perform actions when things are
+given to the creature.  <number> should be an actual number like -8 or 405.
+
+<number>, if positive, will be treated as a vnum of an object that will
+trigger the response.  Thus, if <number> = 352, then when item 352 is given,
+the actions will be performed.  NOTE: The item is automatically junked by
+default (without any text).  You may wish to have some sort of emote in
+the action to make players aware that the item is gone.  If you need the
+item, you will have to reload the item in the action script.
+
+<number>, if negative, will be regarded as a number of talens.  Thus, if
+<number> = -100, then the trigger goes off when someone gives 100 (or more)
+talens to the mob.  The trigger will not go off if they give 1 talen 100
+times, it has to be received in one lump sum.  NOTE: the talens are not added
+to the mob's money.
+
+At this time, it is not possible to use combination of items as triggers.

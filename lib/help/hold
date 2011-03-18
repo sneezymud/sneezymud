@@ -1,0 +1,20 @@
+Syntax: grab <object> {left | right}
+Syntax: hold <object> {left | right}
+
+The grab and hold commands are synonymous and are used to put
+<object> into your hand.  The {left} and {right} parameters may
+be used to specify which hand explicitly, but if ignored will
+cause the <object> to be put into a free hand, starting with the
+primary hand.
+
+Certain items are two-handed and hence must be held in both hands.
+
+It is recommended that you use your primary hand for your weapon and
+use your second hand for utility purposes (shield, lantern, 2nd weapon).
+
+You are able to hold something provided that you are strong enough to
+swing it about (a function of your strength).  Note that your primary
+hand has a higher capacity for held weight than secondary.
+
+See also: WEAR, WIELD, REMOVE
+Related Topics: OBJECT MANIPULATION

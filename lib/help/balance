@@ -1,0 +1,7 @@
+Syntax: balance
+
+For use in one of the many banks in the land.  Displays how much 
+cash the banks are holding in your name.
+
+See Also: WITHDRAW, DEPOSIT
+Related Topics: BANKS

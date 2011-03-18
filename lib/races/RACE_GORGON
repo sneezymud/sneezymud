@@ -1,0 +1,34 @@
+filename RACE_GORGON
+singName gorgon
+plurName gorgons
+propName Gorgon
+lore OTHER
+age 50+1d10
+maleHt 62+1d17
+maleWt 130+2d10
+femaleHt 60+1d12
+femaleWt 110+2d10
+body Humanoid
+moveIn has arrived
+moveOut leaves
+hpMod 2 
+moveMod 20
+manaMod 2
+search 2
+STR 140
+BRA 120
+CON 120
+DEX 130
+AGI 110
+INT 140
+WIS 140
+FOC 140
+PER 120
+CHA 60
+KAR 120
+SPE 120
+IMMUNE_FEAR 100
+IMMUNE_CHARM 100
+IMMUNE_SLEEP 100
+AFF_INFRAVISION
+

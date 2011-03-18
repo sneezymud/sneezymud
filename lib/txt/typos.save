@@ -1,0 +1,83 @@
+LOW: (Mithros/Omen/Sidartha)
+----------------------------
+
+Consolidated:
+-------------
+OMEN: Keep an eye out for any non-rentable quest prop items,
+      **I fixed a few of my own personal quests like this (mith)
+SID: Find out for sure what Stone wanted his molten gear sized.
+     If he did want dwarf let him resize armor and hell spawns
+SID: Check over "rumors" for currentness.
+
+Grimhaven Pathway: Few desc errors due to east gate not being in, 
+                   will leave for now with the hopes that east gate will
+                   be completed soon.  (4461, 4462, ect)
+
+- Add locking option to GH gates, some sort of bar which can
+  only be used for quests and only lockable from inside walls
+
+
+General:
+----------------------------
+****** Typo from (immortal) in room 170 on Fri Nov  5 20:34:55 1999:
+Subject: [Typo] Skinning and Snow Leopards
+The corpse of a snow leopard can not be skinned. Why not?  I thought a skin was made for this animal. 
+[Dolgan] This is mine...seems we don't have a hide for the snow leopard.
+Damm, I thought Knighit made hides for every concievable creature. Duh!
+****** Typo from Narrelus in room 240 (client) on Fri Jan 28 20:34:45 2000:
+Subject: charge changes
+Whoever changed charge from X mob doesnt give you room to charge to 'there isnt enough room.' (which was my idea, thanks)    The new sentance goes something like this There isn't enough room.MOB_NAME stays close to you.  Between the period and the MOB_NAM
+
+E there should be a space, there isn't.   
+****** Typo from Tem in room 9051 (client) on Sun Jan 30 12:02:26 2000:
+Subject: floor name in 2nd floor of the church
+at least this room is "street"
+****** Typo from Tem in room 100 (client) on Sun Jan 30 17:35:29 2000:
+Subject: town crier
+A town criers (sic) notices your arrival.
+****** Typo from (immortal) in room 20613 (client) on Sun Jan 30 20:00:06 2000:
+Subject: mith - tome alchemy load
+yeah you know what this means
+****** Typo from Truck in room 15351 (client) on Mon Jan 31 05:45:54 2000:
+Subject: A dark gray reptillian male is here, scowling at you.
+In the 'look' desc: His smooth grayish green scales shimmer with a ranbow like radiance 
+****** Typo from Zuuz in room 176 (client) on Wed Feb  2 01:22:27 2000:
+Subject: granite fist corpse
+It appears an elven traveler was punched by someone incredibly hard.   Should be ...was punched incredibly hard by someone.  The way it appears makes me, the killer. sound hard. Heh, I wont go into that.  
+****** Typo from (immortal) in room 20417 (client) on Thu Feb  3 15:05:36 2000:
+Subject: wild sea lion in jansee river
+this mob's name bleeds.
+****** Typo from (immortal) in room 574 on Thu Feb  3 15:24:09 2000:
+Subject: [Typo] rock giant long desc
+*Appearing none to smart a rock giant looks for boulders to play with. shoult be none TOO smart 
+****** Typo from Zuuz in room 240 (client) on Sun Feb  6 01:40:31 2000:
+Subject: typo on ident spell
+You sense that he is a very low level humans.  keeps giving plural
+****** Typo from Tem in room 5387 (client) on Sun Feb  6 09:44:37 2000:
+Subject: composite crossbow
+Is that really thematic?  How do you get composites into a medieval theme?  Just wondering.
+****** Typo from (immortal) in room 240 (client) on Sun Feb  6 15:59:52 2000:
+Subject: aquatic elf female
+checkzone on female elf. diving under the water and getting brain coral when someone has summoned her is just twisted :")
+****** Typo from (immortal) in room 28 on Sun Feb  6 19:37:25 2000:
+Subject: [Typo] 7268-7257, missing return up direction
+
+****** Typo from (immortal) in room 28 on Thu Feb 10 10:33:52 2000:
+Subject: [Typo] runed obs sword... (no affects after h/d loss)
+upgrade sword with new magical affects to be appropriate for its desc. 
+****** Typo from (immortal) in room 28 on Sat Feb 12 07:55:49 2000:
+Subject: [Typo] barkskin sellable to delayne....
+
+****** Typo from (immortal) in room 28 on Sat Feb 12 08:01:41 2000:
+Subject: [Typo] gnome farmhand / key / ranger l7 quest
+Add trigger to give key again even after talking to if they need it due to key lost in crash/rent 
+****** Typo from Tem in room 11388 (client) on Sat Feb 12 17:51:41 2000:
+Subject: typo
+run mares (sic) the wall (should be "mars") 
+****** Typo from Tem in room 11433 (client) on Sat Feb 12 17:57:06 2000:
+Subject: punctuation
+If you're going to add an escape route from the bridge dex check, you should end the sentence with a period.
+****** Typo from (immortal) in room 9903 on Tue Feb 15 02:01:09 2000:
+Subject: [Typo] FEMALE NPC - Name : trainer mage drow priestess basic advanced [M-Num: 218]
+how about giving the priestess 
+defrocked in her name? say its one of the main things in her short descript that defines her from the other priestess's of drow. 'defrocked' that is. 

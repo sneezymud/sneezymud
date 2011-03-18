@@ -1,0 +1,32 @@
+The following takes effect upon any link-loss:
+
+If you are following someone, you will cease to follow.  This will also
+shatter any grouping relationship.  Magically charmed creatures will not
+stop following as a result of this.
+
+If you have pets or other NPC charms, they will have their save file removed.
+That is, the pet (and any equipment of the pet) remains in the game.  If you
+do not go back into the game, the pet will be lost.
+
+Combat normally ceases, although only after you take one more hit.  Since
+this is easily abused, although necessary to prevent obvious problems,
+see below for how such situations are handled.
+
+----------------------------------------------
+As many people felt compelled to attempt to avoid death by losing link
+at opportune moments, <h> has attempted to counteract this method
+of cheating with some unique code.
+
+Should you be linkdead and involved in a fight (either by dumping link
+while still fighting, or by having an angry mob track down your linkless
+body), the game will automatically rescue you.  The penalty for this is
+that (depending on how damaged you were), the game may confiscate your
+equipment and inventory.  Any confiscated items are placed in a holding
+room together with the details of what triggered the confiscation.
+You will need to seek out a god to reclaim them as well as be sanctioned
+if it is warranted.
+
+The moral of the story : don't lose link to avoid death, it will
+be much more hassle than it's worth.
+
+Related Topics: RULES

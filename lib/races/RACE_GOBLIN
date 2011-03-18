@@ -1,0 +1,40 @@
+filename RACE_GOBLIN
+singName goblin
+plurName goblins
+propName Goblin
+lore GIANT
+age 25+1d4
+maleHt 31+1d8
+maleWt 70+1d11
+femaleHt 29+1d7
+femaleWt 60+1d10
+body Humanoid
+moveIn scurries in
+moveOut scurries
+manaMod 1
+moveMod -25
+foodMod 0.8
+drinkMod 1.2 
+search 3
+vision 2
+STR 75 
+BRA 55
+CON 65
+DEX 125
+AGI 125
+INT 125
+WIS 115
+FOC 125
+PER 115
+CHA 105
+KAR 90
+SPE 115
+AFF_INFRAVISION
+IMMUNE_ENERGY 10
+IMMUNE_SLEEP 25
+IMMUNE_FEAR -25
+IMMUNE_BLEED 15
+IMMUNE_SKIN_COND -15
+garble 21
+toggle 358
+

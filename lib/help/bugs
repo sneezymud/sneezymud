@@ -1,0 +1,22 @@
+Syntax: bug
+
+This will drop you into a simple editor similar to the in-MUD mail system.
+
+Type ~ and return on a blank line to send your bug, or ` on a blank line to
+cancel your bug report.
+
+Typically, BUGS are obvious unintended problems for the game.  Use IDEA for
+suggestions, TYPO for typos and REQUEST for all other help requests.
+
+Bug reports display who gave the report as well as where in the game the bug
+is being reported from, so this information can be left out of a report.
+
+We appreciate the reporting of bugs, this allows us to improve the quality of
+the game.  It is expected that once a bug is known the player will report the
+bug and refrain from using it to their advantage.
+
+Alternatively, you may visit http://www.sneezymud.com/Contact_Us.html and fill
+out the web form to report your bug. 
+
+See Also: REQUEST, TYPO, IDEA
+Related Topics: UTILITY

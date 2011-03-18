@@ -1,0 +1,36 @@
+Deathcheck is useful to determine the validity of a player's statements
+in a reimbursement situation.  This command will show when a player died
+and what killed it.  Note, you will have to check through a number of logs
+in most cases.
+
+format: DEATHCHECK [player name] [log name]
+
+note: capitalization of the player's name is important
+
+EXAMPLES:
+
+To see if Kalvrik died since the last reboot, you would use:
+
+H:32016 R:1000>deathcheck Kalvrik current
+Tue May 11 08:04:46 1993 :: Kalvrik killed by a goblin at Hallway
+
+To see if Upset died on 5/11/93 during a particular 'uptime'
+(in this case, the time right before the 7:09 reboot/crash)
+
+H:32016 R:1000> deathcheck Upset 051193.0709
+Your search-string was not found.
+(so I guess we could assume he didn't die.)
+
+But, if you wanted to check ALL the reboots for a particular day,
+(lets say 5/11/93), you could do:
+
+H:32016 R:1000> deathcheck Upset 051193*
+
+or to check the whole month, you could do:
+
+H:32016 R:1000> deathcheck Upset 05*
+
+(Please note that checking that many files can take awhile!  Use
+sparingly as you will lag the mud.)
+
+See Also: LOGLIST

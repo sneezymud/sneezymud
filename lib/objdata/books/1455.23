@@ -1,0 +1,20 @@
+How do I remove something in the dark?
+--------------------------------------
+
+While you do need to be able to see an object on your body in order to
+remove it by name: "remove glove", "remove sword", you are able to
+remove whatever it is you are wearing on your "hand" simply because you
+know where your hand is.  Logical, no?
+
+To do this though, use the following syntax:
+remove (slot-name)
+
+eg:
+remove head
+remove waist
+remove hand-left        <-- for gloves
+remove leg-right
+remove hold-right       <-- for weapons/shields
+
+You should be able to remove some weapon, then hold your lantern and light it.
+This will hopefully make it no longer dark.

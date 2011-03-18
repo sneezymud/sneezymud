@@ -1,0 +1,29 @@
+EXTRA FLAGS
+
+Extra flags determine criteria that the item may have associated with it.
+The ANTI-(x) stuff determines who is prevented from wearing the object.
+A multi-class can wear an object provided that any one of their classes
+is allowed to wear it.  The following are some flags that you will be 
+able to set on an object with some explanation.
+
+PAIRED: this causes the item to be worn in both left and right slots.  It is
+   only valid for leg (pair of pants) and hold (2 handed sword).  You can't make
+   a "pair of shoes", sorry.
+GLOW: setting this bit causes the item to produce light.  (in proportion to
+   its volume), adds the text "(glowing)" to the name and reduces the canbeseen
+   This is the only way to set an object to providing light unless it is 
+   explicitly item_type light.
+SHADOWY: This is the opposite of Glow
+NO_RENT & NO_PURGE: set these flags on all items you are using as furniture
+   eq. shrubs, trees, desks, tables, beds, chests, rugs, statues, etc...
+   Some items like keys should not be rent-able.
+MAGIC: set this if the item has any special magic affects other than AC.
+STRUNG: Mostly for internal record keeping.  Similar objects use shared
+   memory for text strings.  This bit is set automatically whenever the
+   strings are disassociated from heap memory.  It is unlikely that a
+   builder will need to change this field ever.
+PROTOTYPE: Set on all objects when OEDITed.  Prevents them from falling into
+   mortal hands.  57th level gods can remove this bit for quests, etc.
+BURNING: A burning item made out of a non-flammable material will not spread
+   fire (so make campfires out of rocks, if you are going to be a responsible
+   builder!).

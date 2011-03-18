@@ -1,0 +1,17 @@
+Syntax: backstab <victim>
+
+Backstab is an exceptionally powerful attack whereby a small, pierce-style
+weapon is thrust violently into the victim's back.
+
+Only certain weapons may be used to backstab with (small and pointy) and in
+addition, the attacker MUST be moving silently enough to be undetected.  A
+victim in a fight is slightly easier to hit.  A thief must be sneaking to
+successfully backstab and a thief's chances to hit a backstab will dramatically
+improve if the thief is silent.
+
+Backstabbing is a physical attack, and as such, requires the murderer be able
+to successfully hit the victim.  Failure to do so will cause the attempt to
+fail.
+
+If <victim> is not specified, you will attempt to backstab any creature in your
+room with which a groupmate is fighting.

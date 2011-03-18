@@ -1,0 +1,25 @@
+Syntax: lock <something>
+
+Lock pretty much does what it says, it locks something.  The item must be
+lockable and you must possess the proper key to unlock the item.  It is
+appropriate to use this on a wide variety of things: chests, doors, portals,
+gates, desks, etc.
+
+If the item is an object of some sort, you may use standard referencing
+format to differentiate multiple, similar objects.
+eg.
+lock 1.chest		lock chest large
+lock 2.chest 		lock chest small
+lock 3.chest 		lock 2.chest small
+
+Exits may be differentiated by doing:
+lock door north 	lock door wooden 
+lock door east		lock door steel
+lock door sw		lock door large
+
+Lock will try and determine what you mean if you give it an ambiguous target.
+That is, it will attempt to lock the first <something> that is lockable and not
+presently locked already that it can find.
+
+See Also: OPEN, CLOSE, UNLOCK
+Related Topics: OBJECT MANIPULATION, MOVEMENT

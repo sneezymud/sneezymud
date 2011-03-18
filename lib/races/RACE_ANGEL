@@ -1,0 +1,27 @@
+filename RACE_ANGEL
+singName angel
+plurName angels
+propName Angel
+lore DIABOLIC
+age 24+1d5
+maleHt 62+1d17
+maleWt 140+6d10
+femaleHt 60+1d12
+femaleWt 100+4d10
+body Humanoid
+moveIn floats in
+moveOut floats
+moveMod 10
+search 1
+STR 120
+BRA 150
+CON 160
+DEX 140
+AGI 95
+INT 110
+WIS 110
+FOC 110
+PER 110
+CHA 105
+KAR 110
+SPE 110

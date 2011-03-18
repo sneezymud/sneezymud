@@ -1,0 +1,141 @@
+<h>'s Revamped Spell and Prayer System
+--------------------------------------------
+
+The spell system in place for <h> is one that hopefully you'll find
+more realistic than most mud magic systems.  (If you're having trouble
+thinking of "magic" as "realistic" then you haven't been mudding enough.)
+
+Overview
+-------- 
+Casting a spell requires none, one, or any combination of multiple 
+components, each component of type verbal, gestural, or material.  Cleric 
+prayers are granted success by their deities and will never require either a 
+material component or a gestural component, but a cleric must always 
+have a holy symbol to pray for any clerical prayer.  That holy symbol must 
+either be held or worn at the time.  (See HELP HOLY SYMBOL and HELP 
+DEVOTION.)
+
+Also, each spell or prayer has a difficulty level (a value that dictates
+the chance a cleric or mage has at successfully completing that spell) and a
+mana or piety level (the amount of mana or piety drained from the 
+magic-user to invoke the spell).  Based upon the difficulty level of a 
+spell, the competence of the magic-user in the spell, the casters focus
+and a random factor, the cast will result either in a success or
+failure. However, it can also result unusually in either a critical
+success or a critical failure.  
+
+A critical success would result in extra damage done to the victim on an 
+offensive spell (for example), while a critical failure could result in 
+damage to the spell-caster and embarrassment at his lack of ability to 
+perform the function of his life-training in front of others :)
+
+Components - General
+--------------------
+Each spell requires none, one, or any combination of multiple 
+components.  These components will each be of type verbal, 
+gestural, or material.  A spell not properly prepared for by 
+ignoring some or all the components is a wasted spell, and the 
+caster is still required to pay the mana price -- the idea is 
+that the caster went through the mind-numbing experience of 
+attempting to draw upon pent up inherent energies from the ether 
+and channel them into a useful force to do his bidding, except he 
+screwed up and forgot a component.  The lesson is to be careful 
+when preparing to mess with these forces and make sure the caster 
+is properly prepared for spell-casting before he starts.  A mage
+can change his level of ability in the "wizardry" skill (see also
+HELP WIZARDRY) and not be required to perform as many gestural
+and verbal components of a spell, restricting him less in tight
+situations where his hands may be needed for something other than
+arm-waving -- perhaps to wield a weapon or hold a torch.  The
+player can determine the components required for each spell by
+getting help on that spell (e.g., help fly).
+
+Components - Verbal
+-------------------
+A verbal component is the spoken element of the spell-casting 
+process.  It requires that the caster be able to speak, i.e., not 
+magically silenced or in a silent room.  The mage can learn to cast
+spells without any verbal incantation if necessary (see HELP WIZARDRY).
+
+Components - Gestural
+---------------------
+A gestural component is the "arm waving" element of the spell
+process.  It requires that the caster has usable arms and 
+hands and is not holding anything in those hands.  There are four 
+exceptions to this rule.  1) Clerics may hold a holy symbol in a 
+hand while praying with a gestural component.  2) Material
+components for a spell are required to be held in either the caster's
+hand or in a component bag, which the caster must also hold in his
+hand.  3) The mage's level of ability in the "wizardry" skill can
+affect all of the above (see HELP WIZARDRY).  4) A cleric's level of 
+ability in the "devotion" skill can affect the requirement of where he 
+must hold or wear the holy symbol.
+
+The player may assume that all verbal and gestural components are 
+learned at the time of the character's training for them when he 
+gains a level.  The human behind the keyboard is not required to 
+type in a string of magical characters after a "say" command.
+
+Components - Material
+---------------------
+A material component is a sacrificial item that is destroyed when 
+the spell is cast.  A material component must be held by the 
+caster in his hand at casting time but can alternatively be 
+stored inside a component bag, which must be held by the caster.  
+The individual material components required for various spells 
+are all available around Grimhaven and its surrounding 
+adventuring areas.  The mage can learn to use components
+that are inside a component bag on his belt (see HELP WIZARDRY).
+
+Holy Symbols - General
+----------------------
+ While a cleric will generally not be required to supply a material
+component or perform a physical gesture to pray for a spell, a cleric will
+always be required to have a holy symbol to cast any clerical spell.  A
+holy symbol is the device through which a cleric's deity delivers a portion
+of his power to the cleric to enable him to cast a spell.  Holy symbols must
+be either held in a hand, worn or in inventory.  A cleric's holy symbol must
+be attuned to the clerics faction to be usable by the cleric.  Once attuned,
+it is not possible to un-attune or change the attunement of a holy symbol.
+(See HELP DEVOTION, HELP ATTUNE and HELP HOLY SYMBOL) 
+
+Holy Symbols - Strength
+-----------------------
+Each holy symbol has a strength level.  Each time a spell is channeled 
+through a holy symbol, its structure is weakened.  Eventually, 
+after enough use, the use of a holy symbol during prayer 
+will cause the holy symbol to shatter.  The player will have to find 
+another holy symbol before he can pray for another spell.  There are 
+holy symbols of various strength levels scattered throughout 
+Grimhaven and its surrounding adventuring areas for either 
+purchase or discovery.  A good indication of a holy symbol's 
+initial strength is the type of material it is made of.
+
+Difficulty Level
+----------------
+The difficulty level of a spell is a value that depicts how easy 
+or how difficult it is to successfully use a spell with a high level of 
+efficiency to produce the desired results.  The range of values 
+is TRIVIAL, EASY, NORMAL, DIFFICULT, and DANGEROUS.  These values 
+dictate the magic-user's chances of successfully creating the 
+spell, creating the spell perfectly (gaining bonuses), or 
+accidentally screwing up, which could lead to unwanted results, 
+like possible death or dismemberment :)
+
+Mana, Piety, Meditation and Penance
+-----------------------------------
+Mages, also known as mana users, use their mana points to cast their 
+spells. Certain spells will cost more mana points than others, and most 
+spells decrease in cost upon reaching higher levels. The fastest way for 
+a mana user to regain lost spell points is through focused meditation.  
+This requires absolute silence in the room around the mana user.
+
+Clerics use the power channeled to them from their deity, known as piety, 
+to invoke their prayers.  Each prayer will cost the cleric a certain amount 
+of piety, and like mana, most prayers decrease in cost upon reaching higher 
+levels. The fastest way for a cleric to regain lost piety is through 
+focused penance.  This requires absolute silence in the room around the 
+cleric.
+
+SEE HELP: meditate, mana, cast, piety, pray, magic, wizardry, devotion, 
+penance

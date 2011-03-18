@@ -1,0 +1,28 @@
+filename RACE_RODENT
+singName rodent
+plurName rats
+propName Rodentine
+lore ANIMAL
+age 1+1d5
+maleHt 12+1d3
+maleWt 20+2d2
+femaleHt 10+1d3
+femaleWt 16+2d2
+body FourLegs
+moveIn scuttles in
+moveOut scuttles
+moveMod 10
+STR 120
+BRA 120
+CON 100
+DEX 100
+AGI 140
+INT 55
+WIS 55
+FOC 55
+PER 55
+CHA 55
+KAR 80
+SPE 80
+DumbAnimal
+Fourlegged

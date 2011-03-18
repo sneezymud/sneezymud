@@ -1,0 +1,5 @@
+Cure paralysis will permit a paralyzed creature to move freely again.  
+
+Cure paralysis does not affect a paralyzed limb; it only handles complete
+paralysis of the body.  Limb paralysis may be treated with the restore limb
+prayer.

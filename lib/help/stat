@@ -1,0 +1,50 @@
+Usage :
+        stat mob <name or vnum>
+        stat obj <name or vnum>
+        stat room
+        stat zone <number>
+        stat zone mobs <number>
+        stat zone objs <number>
+        stat <name>
+        stat <name> discipline <name or number>
+        stat <name> skill <name or number>
+        stat <name> donebasic
+
+The perhaps overloaded stat command returns a trove of detailed information on a 
+variety of subjects.  It is used to view the properties of things.
+
+Exact matching must be used on the first argument if you wish to use any of the 
+<g>obj<1>, <g>mob<1>, <g>room<1> or <g>zone<1> switches.  Other arguments may always be abbreviated.  
+Generally, a number may be prefixed to the target argument to search deeper into a 
+stack.  For example, <g>stat 10.coral<1> should ignore the first 9 coral matches.
+
+<c>stat mob <name or vnum><1> or <c>stat obj <name or vnum><1> 
+Provides data on objects or mobs as specified.  If the name is used, the command 
+will search the World for the target.  If a Vnum is entered the target does not 
+need to be in the game.
+
+<c>stat room<1>  Returns data for whatever room in which you are located.
+
+<c>stat zone <number><1>  Returns a summary of zone contents.  Used without a number 
+argument it will return data on your current zone.
+
+<c>stat zone mobs <number><1> or <c>stat zone objs <number><1>  
+Returns a summary of all mobs or objects loaded in the zonefile.  Used without a 
+number argument it will return data on your current zone.
+
+<c>stat <name><1>  Will search for the name target in the following order: 
+1) mobiles (or character) in your current room
+2) objects in your current room
+3) mobiles (or characters) in the World
+4) objects in the World
+As soon as a match is found it will return detailed data for that being or object.
+
+<c>stat <name> discipline <name or number><1>  Searches as above except for mobiles and 
+characters only.  The 3rd argument may be a discipline name or number.  Without a 
+3rd argument, it returns a summary of known disciplines for the name target.  
+
+<c>stat <name> skill <name or number><1>  Like the discipline search above except 
+that the 3rd argument is required.  The skill may be referenced by name or number.
+
+<c>stat <name> donebasic<1>  Returns the level at which the target finished basic 
+training in the relevant class or classes.

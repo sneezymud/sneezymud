@@ -1,0 +1,2 @@
+cd /mud/prod/lib/logs
+/bin/ls -C *

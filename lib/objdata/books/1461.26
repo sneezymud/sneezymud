@@ -1,0 +1,80 @@
+Quest Toggles : Best Practices
+------------------------------
+
+The following guidelines are recommended procedures for creating good,
+bug-proof quests.
+
+1.) Plot the quest out sequentially at the outset before you start writing
+quest scripts.  Ideally, you should identify the number of toggles that
+you will need before you begin.
+
+2.) Quests should proceed linearly.  You should be turning a toggle off each
+time you turn a toggle on.  Think of toggles as "milestones" along the quest.
+
+3.) Obviously, most quests will have forks.  Maybe they killed the mob, maybe
+they got help.  Either way, the quest should still be linear!  Turn off
+the toggle that says they were ready to attack the mob, and turn on the
+toggle that says they killed it ok OR turn on the toggle saying they failed.
+Yes, the quest branches, but use the toggle to indicate which branch they
+are now on.
+
+4.) Remember to put checktoggles on any trigger that is for a quest.  Double
+check each trigger!  If you forget a checktoggle, it is quite possible that
+ANYONE can step into the quest midway, and it's always great to see mages
+walking around with monk's belts, etc.
+
+5.) If you are going to flag a player solo on the quest, check all possible
+paths beyond to insure that they become unflagged on each possible path.
+
+6.) Don't unflag or untoggle bits "just to be safe".  If you aren't sure if
+a bit is on, or if they are flagged, then you haven't planned the quest
+adequately.  If you, the designer, aren't sure if the quester would have
+a toggle, or a flag at that point, then there will almost certainly be
+problems for players and for the debugger of the quest.
+
+7.) If you are permitting questers to "take a break", the response must be
+performed by the creature who first set the toggle that you are backing them
+up to.  One, and only one, creature is allowed to turn a toggle on.  You
+can NOT have mob B set a toggle originally set by mob A!
+
+7b.) To get around this limitation, you are advised to have two toggles
+anytime the mob shifts from one mob to another.  That is, mob A sets "seeking
+mob B" toggle, and mob B sets "mob B found" (unsetting the seeking of course).
+This way, if the next toggle is "on nasty quest for mob B", you can let mob
+B respond to "take a break" which will unset "nasty quest", and set "found B".
+The newbie mistake is to try and get away without "found B", which results in
+"take a break" dropping back to "seeking B" (which is an error, B can't set
+bit also set by A).
+
+8.) Do not underestimate the package command.  Frequently, you want the same
+"say" actions from multiple states (toggles).  Putting the says into a
+package, and having trigger#1="checktoggle X, link package" and trigger#2=
+"checktoggle Y, link package" accomplishes this.  The says will only be
+said if at the points on the quest where it is appropriate.
+
+8b.) The old way of doing this was to create some multi-state triggers.  This
+is a bad idea.  For instance, a single toggle that said "I am on this quest"
+would be set simultaneously with toggles marking the checkpoints along the
+quest.  Some actions would look to see if they were on the quest, and react
+according to that.  This is toggle abuse, and requires multiple toggles to
+be activated at any one moment in time for a given quest.  Use the package
+method instead, and set up links from as many separate triggers as are needed.
+
+9.) Be careful about combining materials and toggles as part of a quest.
+(eg. retrieve a stone gained from killing a mob).  In an ideal world,
+they would receive a new toggle when they get the stone and you need only
+design a trigger for "give stone".  Unfortunately, what happens if they
+were find the stone for sale in a store (stone, but no toggle), or lose the
+stone after getting it (toggle, but no stone)...?  A well designed quest
+will not forget to handle such problems.
+
+10.) Make triggers simple!  Make it easy for players to figure out what the
+proper trigger is!  Nothing sucks more than KNOWING you are at the right place
+with the correct answer and not being able to get the creature to respond
+properly!
+
+11.) Beware the ambiguous trigger.  Trigger#1="say boat", Trigger#2="say 
+big boat".  If I say "where is the big boat", which trigger will I get?
+This is dependant on implementation (which obviously might change, so just
+because it works correctly now....).  Obviously, avoid say triggers that
+are abbreviations of other say triggers.

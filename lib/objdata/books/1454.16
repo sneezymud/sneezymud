@@ -1,0 +1,18 @@
+The 'V' command
+Change an objects special values
+
+This allows you to set different 4-values onto an object at time of loading.
+The reason this is helpful is for items like windows that need to look into
+various rooms dependent on where the window is.  Rather than making 5
+different "windows", make one window and merely change the 4-value on each one
+so that they look into 5 separate rooms.  'V' is always applied to last
+object referenced.
+
+V <if_flag> <4-value> <new value>
+
+<if_flag> should be 1   (do not do it if obj did not load)
+<4-value> should be either 0, 1, 2 or 3
+<new value> is whatever new value should be
+
+O 0 110 1 104            window
+V 1 0 100                    looking into room 100

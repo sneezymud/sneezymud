@@ -1,0 +1,132 @@
+OEDIT is the all purpose object editor/saving/loading command. 
+
+Syntax is : OEDIT <type> <flags>
+
+Available types are :
+
+ 1) save
+ 2) load
+ 3) modify
+ 4) list
+ 5) remove
+ 6) create
+
+:: You should never use these options unless you are familiar with
+:: the OEDIT menu system and can undo any damage you might do to
+:: an object.
+ 7) name
+ 8) long_desc
+ 9) short_desc
+10) max_struct
+11) cur_struct
+12) weight
+13) volume
+14) cost
+15) decay_time
+16) extra   *** Extra Descriptions, see Below
+17) can_be_seen
+18) max_exist
+19) default_ac_str
+20) replace
+21) resave
+22) average
+
+OEDIT SAVE
+
+  The save function is used to save an edited object to disk. The syntax
+for this is :
+ 
+   OEDIT save <object name> <vnum>
+
+Object name is just simply the name of the object you want to save. Vnum
+is the number you assign the object to save to disk with. This should
+be the vnum you want it to be when it gets in the real object file.
+
+OEDIT LOAD
+
+  The load function is used to retrieve any saved object from disk. The syntax
+for this is :
+  
+  OEDIT load <vnum>
+
+So if you save an object as vnum 29, and later you want to reload that object
+for testing purposes, you would type OEDIT load 29.
+
+OEDIT MODIFY
+
+   The modify function will put you in a full screen VT100 object editor.
+This is where you can edit your objects to save them like you want for your 
+areas.
+
+  OEDIT modify <object name>
+
+OEDIT LIST
+  
+   The list function will list out every object you have saved on disk for
+easy reference.
+
+  OEDIT list
+
+OEDIT REMOVE
+
+   The remove function will remove certain objects from disk. The syntax is :
+
+   OEDIT remove <vnum>
+
+   Once removed, the objects are gone, so don't use this unless you are sure
+you want to remove it.
+
+OEDIT CREATE
+
+   The create function will create a prototype object that you can edit
+as you like and save to disk. These objects cannot be used by anyone.
+ 
+   OEDIT create
+
+Notes : All commands can be abbreviated. I.e. 
+   OEDIT mo potion is the same thing as OEDIT modify potion. 
+
+OEDIT EXTRA
+
+  Add/Modify extra descriptions.  If no argument is passed, objects current
+name is used.  If you enter a name that already exists it will display it
+to you then let you modify it.  Be careful, once you choose to modify an
+existing extra description the original text Will Be Lost.  To remove an
+extra description please use the menu interface of OEDIT.
+
+  OEDIT extra <object> argument-names
+    Ex:
+  OEDIT extra hairball hairball small
+
+OEDIT DEFAULT_AC_STR
+
+  Set the AC STR of a piece of armor to default values.  Values are more
+  accurate at higher levels but pretty close at lower ones.
+
+  OEDIT default_ac_str <object> <level>
+
+OEDIT REPLACE
+
+  This allows you to search for a string in either long or extra and
+  replace it with something else.
+    OEDIT replace <object> <long/extra> <"extra"/"text"> <"text"> <"text">
+  The "" are Required to keep the strings separate.
+    Types:
+  OEDIT replace <object> <long> <"text"> <"text">
+  OEDIT replace <object> <extra> <"extra"> <"text"> <"text">
+
+OEDIT RESAVE
+
+  If you OEDIT load an object to make changes and wish to save it back under
+  the vnum you initially saved it under this is the directive for you. It
+  will auto-save back to the proper vnum instead of you having to specify
+  it again.
+
+OEDIT AVERAGE
+
+  Some object types can be averaged out, examples of this being weapons
+  and armor.  By using this command you can set general values to make
+  those objects equal to the level you request.
+
+  Syntax:
+    OEDIT average <object> <level>

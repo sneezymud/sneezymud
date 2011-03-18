@@ -1,0 +1,9 @@
+Syntax: margins
+
+The margins command is useful for Ansi or VT100 users who are bothered
+by the menu bar remaining active when they dump link.  It forces the
+mud to reset your margins to their original values.  You can reset your
+menu bar after a margins command through the CLS command.
+
+See Also: CLS
+Related Topics: SCREEN

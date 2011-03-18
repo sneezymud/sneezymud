@@ -1,0 +1,12 @@
+Constitution represents a player's strength of character and physical
+endurance.
+
+In game terms, constitution is heavily used in regeneration formulas
+(how fast health is restored) as well as a bonus number of points in
+the hit points received at leveling time.  It also determines a player's
+shock resistance to major blows which can both prevent critical effects
+and reduce damage.
+
+See Also: STRENGTH, INTELLIGENCE, WISDOM, DEXTERITY, KARMA, BRAWN, FOCUS,
+          AGILITY, CHARISMA, PERCEPTION, SPEED
+Related Topics: CHARACTERISTICS

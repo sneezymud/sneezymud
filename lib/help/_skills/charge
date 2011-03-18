@@ -1,0 +1,24 @@
+Syntax: charge <target>
+Syntax: charge <direction> <target> <distance>
+
+Charge is a legendary mounted attack whereby the rider and mount barrel down
+upon their foe attempting to inflict massive damage.  While the attack itself
+is incredibly destructive, the mount and rider must sacrifice some of their
+normal combat attacks in order to recover from the charge.  Additionally, if
+the charge is executed while the rider is already in combat, the rider and
+mount will lose attacks as they extricate themselves in battle and get set up
+for the charge.  Typically, foes will be knocked off their feet as well.
+
+Charge is only possible from horseback.  It is very difficult to perform when
+engaged in fighting and even harder when tanking.  It is most successful when
+used as an opening move in a fight although it is possible to use it at other
+times.
+
+To avoid trampling an innocent bystander, you may only charge targets that have
+no other attackers, or if all the target's attackers are in your group.  All
+other attackers of a charged target will be forced to scatter and will lose a
+few rounds of attacks while they regroup.
+
+Note on ranged charging:
+  <distance> is not required.  If used it will travel that far then charge,
+ignoring any matches it might have run into before that point.

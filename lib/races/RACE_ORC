@@ -1,0 +1,36 @@
+filename RACE_ORC
+singName orc
+plurName orcs
+propName Orc
+lore PEOPLE
+age 15+1d4
+maleHt 62+1d17
+maleWt 140+6d10
+femaleHt 60+1d12
+femaleWt 100+4d10
+body Humanoid
+moveIn marches in
+moveOut marches
+hpMod 1
+manaMod -1
+STR 115
+BRA 115
+CON 115
+DEX 105
+AGI 105
+INT 100
+WIS 100
+FOC 105
+PER 100
+CHA 100
+KAR 85
+SPE 105
+AFF_INFRAVISION
+IMMUNE_SLEEP -25
+IMMUNE_FEAR 25
+IMMUNE_BLEED -15
+IMMUNE_SKIN_COND 15
+garble 21
+toggle 357
+talent tattooed
+

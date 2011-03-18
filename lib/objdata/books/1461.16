@@ -1,0 +1,30 @@
+Trigger: package
+---------------------
+ 
+ex:
+package { "<number>";
+       <action>;
+       <action>;
+     }
+
+<trigger> { "";
+	link package <number>;
+	}
+
+The package trigger was designed to handle places where duplicate functionality
+was required.  That is, if I want a number of responses all to do the same
+thing, rather than create highly redundant functionality in many responses,
+I can create a single "package" with the actions that will be repeated, and
+link to this package via the "link" action.
+
+There is no direct way to call a package.  The only way a package is
+accessible is via a "link" to it.  You can link to a package any number
+of times.
+
+The <number> argument is used to uniquely identify any number of packages on
+the same mob.  Thus, you can have "package 1" and "package 2" that are
+separate responses called from separate locations.  Obviously, indeterminate
+results would occur if you had two "package 1"s on the same creature.
+
+Packages are unique to each mob.  There is no way to call a package on a
+different mob.

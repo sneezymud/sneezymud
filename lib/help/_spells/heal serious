@@ -1,0 +1,11 @@
+The heal prayers will allow the cleric's deity to offer succor to the prayer's
+target causing the restoration of lost hit points.  Each of the various prayers
+returns a different amount of hit points based on the cleric's level.  
+
+From least powerful to most powerful, the prayers are:
+            heal-light, heal-serious, heal-critical, heal, heal-full 
+There are also room-effective sprays that bring the benefit to all creatures in
+the cleric's immediate vicinity.
+
+The number of hit points returned is heavily dependent on the cleric's faction
+rating and how closely the target and the cleric's beliefs coincide.

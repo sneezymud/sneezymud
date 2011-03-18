@@ -1,0 +1,12 @@
+Syntax: slit <victim>
+
+Throat slitting is an exceptionally powerful attack used by a masterful thief
+to attempt deadly murder upon a victim.
+
+The thief is required to move in stealthfully behind his/her victim and is
+required to use a small weapon as is done with backstabbing. A thief's chance
+at success depends on the victims height as well as the amount of noise the
+thief makes.
+
+If <creature> is not specified, you will attempt to slice the throat of any 
+creature in your room with which a groupmate is fighting.

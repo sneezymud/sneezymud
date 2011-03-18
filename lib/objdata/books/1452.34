@@ -1,0 +1,30 @@
+Resistance, Immunities, Susceptibilities
+
+IMM_FIRE        1
+IMM_COLD        2
+IMM_ELEC        4
+IMM_ENERGY      8
+IMM_BLUNT      16
+IMM_PIERCE     32
+IMM_SLASH      64
+IMM_ACID      128
+IMM_POISON    256
+IMM_DRAIN     512
+IMM_SLEEP    1024
+IMM_CHARM    2048
+IMM_HOLD     4096
+IMM_NONMAG   8192
+IMM_PLUS1   16384
+IMM_PLUS2   32768
+IMM_PLUS3   65536
+IMM_PLUS4  131072
+
+Each of these fields uses what is called a bitvector.  In order to have
+multiple resistances, you merely set the mob resistant to the sum of the
+various resistances.  For example, to create a char this is immune to
+fire (1), poison (256) and charm (2048), set immunity = 2305.  Likewise,
+if susceptibility = 2305, the mob would be susceptible to fire, poison and
+charm.
+
+Note: The bit for NONMAG prevents a weapon that is not at least +1 tohit from
+damaging, the PLUS1 bit prevents ONLY +1 tohit weapons from damaging, etc.

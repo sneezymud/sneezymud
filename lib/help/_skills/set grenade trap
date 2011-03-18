@@ -1,0 +1,30 @@
+Syntax: trap grenade <trap type>
+Syntax to activate: Syntax: throw <grenade> <dir>
+Syntax to activate: Syntax: drop <grenade>
+
+Successful completion of the trapping routine will create a grenade the looter
+may use at any point in time at their discretion.  Grenades need to be held,
+and thrown in a direction to be activated.  They automatically detonate a few
+seconds later striking everyone in their immediate location.  Be warned that
+grenades can be thrown back at the looter, or if the looter is careless, they
+could walk into the room with the grenade and be hit by their own trap.
+Grenades can only be thrown 1 room.  Grenades do a moderate amount of damage
+to everyone in the room at the time of detonation.
+
+Set traps allows a skillful looter from dissuading an overeager pursuer from
+following or to protect the looter's booty.  Traps come in 4 varieties, 
+exit traps, container traps and land mines and grenades.
+
+All traps take time to set.  Improper training may cause the trap to backfire
+on the looter during the trapping process.  The damage the trap will do depends
+on the trapper's level, the trapper's skill, the variety of trap, and the trap
+type.  <trap type>'s are located in a separate help file.
+
+Note: "damage" as used below is a generic term.  For trap types that don't do
+physical harm (sleep, poison, etc), greater "damage" reflects an increased
+chance to be affected by the trap.  eg.  A higher immunity to poison would be
+needed to dodge the effects of a "high damage" poison trap.  Obviously,
+everyone that doesn't save, will be affected by the sleep, poison, etc.
+equally.
+
+See Also: TRAP TYPES

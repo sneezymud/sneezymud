@@ -1,0 +1,7 @@
+  This wizard command moves a character into the same room with the
+wizard.  You can also transfer monsters with this command, but be
+careful when using this command near aggressive monsters.  Getting a
+player killed is NOT good form.
+
+  trans Brutius             (you better have a good reason)
+  trans 4.chicken           (this monster is aggressive, watch it)

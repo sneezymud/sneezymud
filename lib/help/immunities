@@ -1,0 +1,18 @@
+Every creature is rated for its natural resistance to each of a large number
+of damage types.  For instance, something like a gelatinous cube (having no
+skeleton) would be 100% immune to bone-damage attacks.  Likewise, a frost
+giant might be 80% resistant to cold, but at the same time would be -50%
+resistant (or +50% susceptible) to flame due to the climate it is used to.
+
+All creatures are somewhere in the range -100% to +100% immune.  Basically,
+the 0% rating is considered the human norm.
+
+Any damage of a given immunity type suffered will be reduced (or increased
+if negative) by the percent resistant.  Thus, a 10% immune to flame creature
+would only suffer 90% of the full damage from a fireball, while a -15%
+resistant ice-lizard would receive 115% the normal effects.
+
+Not all types of damage have an immunity type.
+
+See Also: -
+Related Topics: COMBAT, GENERAL INFO

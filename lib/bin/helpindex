@@ -1,0 +1,63 @@
+#!/usr/bin/perl
+# peel
+# feeling kind of lazy, this isn't exactly grade a code here
+
+
+if($ARGV[0] eq "web"){
+  $web=1;
+}
+
+print "ALPHABETICAL INDEX OF HELP TOPICS";
+
+$dirhead="/mud/prod/lib/help";
+
+opendir(DIR, "/mud/prod/lib/help") || die $!;
+
+@files=sort readdir(DIR);
+
+$c=80;
+
+foreach $f (@files){
+  if(-d "$dirhead/$f"){
+    next;
+  }
+
+  $letter=(split(//, $f))[0];
+  if($letter ne $lastletter){
+    print "\n\r\n\r"; # blank line
+    print " "x30;
+    if(!$web){ print "<p>"; }
+    print "-"x8;
+    print " ".uc $letter." ";
+    print "-"x8;
+    if(!$web){ print "<1>"; }
+    print " "x30;
+    print "\n\r";
+
+    $lastletter=$letter;
+    $c=80;
+  }
+
+  if($web){
+    $flength=length($f)+1;
+    $flink=$f;
+    $flink=~s/\s/\+/g;
+    $f="<a href=\"http://sneezy.stanford.edu/cgi-bin/help.cgi?page=$flink\">$f</a>";
+
+  } else {
+    if($f=~/\s/){
+      $f="\"$f\"";
+    }
+    $flength=length($f)+1;
+  }
+
+  if($flength < $c){
+    print "$f ";
+    $c-=$flength;
+  } else {
+    print "\n\r$f ";
+    $c=80-$flength;
+  }
+}
+
+print "\n\r";

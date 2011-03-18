@@ -1,0 +1,27 @@
+filename RACE_OTYUGH
+singName otyugh
+plurName otyughs
+propName Otyughs
+lore OTHER
+age 25+1d4
+maleHt 62+1d17
+maleWt 120+2d10
+femaleHt 60+1d12
+femaleWt 100+2d10
+body Otyugh
+moveIn has arrived
+moveOut leaves
+search 1
+STR 120
+BRA 120
+CON 120
+DEX 120
+AGI 120
+INT 120
+WIS 120
+FOC 120
+PER 120
+CHA 120
+KAR 120
+SPE 120
+DumbAnimal

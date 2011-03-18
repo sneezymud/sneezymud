@@ -1,0 +1,14 @@
+For loading new objects or characters from the database. The format is:
+  load <type> <number>
+Where <type> is either 'obj' or 'char', and number is the number of the object
+or character you wish to create.
+
+For a single room load, load room <number> will also work.  
+Identical to: RLOAD <num> <num>
+
+Certain suits of armor may also be loaded via: load set <name of suit>.
+The supported suits include all common sets: soft, hard, studded, chain,
+metal, platemail as well as many more.  A full list can be found in help
+loadset.
+
+See ALSO : SHOW LOADSET LOADSUIT

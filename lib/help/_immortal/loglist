@@ -1,0 +1,13 @@
+NAME
+    loglist - list the logs
+
+SYNOPSIS
+    loglist
+
+DESCRIPTION
+    Loglist will list all of the log files.
+
+    This is a task.
+
+SEE ALSO
+    TASKS, LOGLIST, DEATHCHECK

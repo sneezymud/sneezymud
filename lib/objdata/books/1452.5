@@ -1,0 +1,18 @@
+Action flags
+
+Tells the mud how the mob should behave.
+
+CHANGED_STRINGS: causes the mob to refer to heap instead of global memory.
+  Use caution when setting this, can mess up the entire mob index.
+SENTINEL: mob won't wander.
+SCAVENGER: Increases the mobs greed factor causing them to loot.
+STAY_ZONE: mob won't wander outside your area.
+WIMPY: mob will flee if hp falls below 1/6 of max.
+AGGRESSIVE: Increases anger and malice factors resulting in mob attacking
+  more often without provocation.
+ANNOYING:  A mob set aggressive will attack an annoying mob.
+PROTECTOR: Will protect (assist) in order 1. any protectee, 2. mobs of 
+  same faction against players of different factions 3. same faction and
+  race.  
+PROTECTEE: Will get assist from 1. Protectors, 2. Any mobs of same
+faction

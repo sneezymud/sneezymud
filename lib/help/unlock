@@ -1,0 +1,26 @@
+Unlock pretty much does what it says, it unlocks something.
+Syntax: unlock <something>
+
+The item must be locked and you must possess the proper key to unlock
+the item.  It is appropriate to use this on a wide variety of things: chests,
+doors, portals, gates, desks, etc.  Unlocking a trapped item may cause the
+trap to go off.
+
+If the item is an object of some sort, you may use standard referencing
+format to differentiate multiple, similar objects.
+eg.
+unlock 1.chest		unlock chest large
+unlock 2.chest 		unlock chest small
+unlock 3.chest 		unlock 2.chest small
+
+Exits may be differentiated by doing:
+unlock door north 	unlock door wooden 
+unlock door east	unlock door steel
+unlock door sw		unlock door large
+
+Unlock will try and determine what you mean if you give it an ambiguous target.
+That is, it will attempt to unlock the first <something> that is locked that
+it can find.
+
+See Also: OPEN, CLOSE, LOCK, PICK LOCKS
+Related Topics: OBJECT MANIPULATION, MOVEMENT

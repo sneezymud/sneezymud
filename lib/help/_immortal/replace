@@ -1,0 +1,17 @@
+Replace transfers an old backup of a player's character, equipment, or account
+into the working directory.  The player must be offline completely for this
+to work (so force them to rent).
+
+Backups are made automatically (generally at midnight) each day.  Today's
+backup represents the last midnight, yesterday's backup would be 1 day earlier.
+Due to space limitations, only 2 backups are kept for online restoration.
+
+Syntax:
+replace <player> <"player" | "rent" | "account"> <"today" | "yesterday">
+
+eg.
+replace Mithros rent yesterday
+
+Realize that replace erases any mistakes that player might have made, like
+deaths or selling equipment.  You should make an effort to check for deaths
+or look into artifacts that appear due to replaces.

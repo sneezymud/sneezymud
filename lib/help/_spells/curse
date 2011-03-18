@@ -1,0 +1,11 @@
+Curse permits the cleric to imbue a character or an object with a powerful
+geas.
+
+A cursed object can not be dropped.  Additionally, if the item is a weapon, it
+will permanently become worse off in terms of damage.  A curse on an object
+is permanent.  A remove curse will allow the item to be dropped, but will
+not repair the damage done to a weapon.
+
+A cursed character will not hit as well in combat (fewer successful
+hits, but same damage per hit), and will be more susceptible to paralyzation.
+The curse on the character usually wears off naturally in 2 to 4 days.

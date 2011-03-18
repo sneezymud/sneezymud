@@ -1,0 +1,14 @@
+Room flags are used by the code to set room affects on PC's.  Most of the 
+affects are pretty obvious from the name of the room flag.
+
+You should edit room flags in REDIT where you can see the full extent 
+of flags available to you.  However, if you know the numbers, you 
+may be able to set them using the Edit command.  Be aware that room flags 
+are bitvectors.
+
+Some sectors require certain room flags notably indoor room sectors 
+require you to set the indoor room flag.  Also do not set a peace room 
+without making it no-heal.  Do not make death rooms or save rooms 
+without the explicit approval of the LOW and do not make any permanent 
+rooms in the mud private.
+

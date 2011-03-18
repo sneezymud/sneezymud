@@ -1,0 +1,12 @@
+Syntax: glance <creature>
+
+Glance is a useful command to look at a creature's condition without all
+the needless spam of seeing its description and items worn.  Glance displays
+condition as well as major wounds or diseases.
+
+This is a useful command for use in the heat of battle for players with
+slow modems, although the addition of "prompt opponent" has mostly
+superseded it.
+
+See Also: PROMPT
+Related Topics: COMBAT

@@ -1,0 +1,8 @@
+Syntax: score
+
+The score command is used to display critical information about your
+character.  It shows basic information about health, wealth, progress
+toward your next level and a few other things of importance.
+
+See Also: ATTRIBUTE
+Related Topics: GENERAL INFO

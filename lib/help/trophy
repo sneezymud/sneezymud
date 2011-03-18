@@ -1,0 +1,23 @@
+Syntax: trophy
+Syntax: trophy <mob name>
+Syntax: trophy zone <zone name>
+Syntax: trophy summary
+Syntax: toggle trophy
+
+The trophy system records every mob kill that you make.  After killing
+a particular mob a number of times, you will get less and less
+experience with each kill.
+
+The trophy command will list every mob you have killed, along with a
+description of the amount of experience you would receive killing the
+mob.  This amount is ONLY based on the number of times you have killed
+that mob, it has no relation to the level of the mob or anything else.
+
+Using consider on a mob will also show your trophy rating for that
+mob.
+
+The trophy toggle will report after each kill the relative amount of 
+experience you can still attain from the mob.
+
+See Also: TOGGLE, ZONES
+Related Topics: -

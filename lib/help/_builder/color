@@ -1,0 +1,75 @@
+alias: color 
+alias: color <category>
+alias: color test
+alias: color replace <color>
+alias: color substitute <color>
+
+Currently supported <categories>:
+    enabled, disabled - turns the use of all colors on/off
+    communications, objects, creatures, rooms, room_name shouts, spells -
+          turns the use of color in these categories on/off.
+    every, none - turns all categories on/off
+
+Immortals also have the following two options: codes and logs.  Logs is
+self explanatory.  Codes will skip color code replacement and stripping
+and will actually let you see the color codes in the text.
+
+Users with Ansi-capable monitors and terminal emulation may take advantage
+of <h>'s color.  Color has been organized into categories so that
+people who like some things colored and not others, can customize as
+desired.  Additionally, hard to see colors may be replaced with ones more
+easily viewed.
+
+
+To see any color at all, you must enable the basic color.  (The enabled
+option).  You can extend color by additionally activating other categories
+of color.  For instance, to see colorized objects, turn color objects on.
+The "every" and "none" options can be used to quickly turn the whole list
+of categories on or off.
+
+The "test" option can be quickly used to see how given colors display on
+your terminal. 
+
+The "room_name" option will give you extra color in room names.  Basic
+room name which comes with the basic color package (color enabled)
+
+Additionally, you can replace any color difficult to see, and substitute
+it with one more easily viewed.  You may replace as many colors as you
+wish, but all replaced colors will use the same substitute color. 
+Syntax: color replace <color>
+Syntax: color substitute <color>
+Where <color> is one of:
+none, black, red, green, orange, blue, purple, cyan, white, yellow, gray,
+bold_red, bold_green, bold_blue, bold_purple, bold_cyan, bold_white, and
+bold.
+
+To clear a color replace or substitute you can toggle the color or use
+the <none> option
+
+It is recommended that if you do NOT have color capability, that you not
+enable any of the color settings.  It both consumes processing time for
+the mud, as well as requires more information be sent to you.  This
+effects your character's performance. 
+
+We also allow you to colorize elements of your output to the mud. 
+Currently, most of *your* output text (say, shout, tell) can be colorized
+by you as well as your titles.  Thus you can say, shout, whisper, and tell
+in color. You can also use color in notes and mail.  For help on how to
+colorize text, see HELP COLOR STRING. 
+
+If you feel something should (or should not be colorized), please feel
+free to make use of the IDEA command.
+
+Finally, <h> uses the ANSI standard for transmission of color to the
+end user.  Only a terminal program or client capable of interpreting the
+ANSI color strings will be able to make sense of the color codes
+output.  If you find that not all colors are showing up, it is most
+likely due to your communications software, and not <h>.  Also, the
+ANSI standard does NOT the properties of "red", "green" etc.  Depending on
+the program, you may observe changes (hue, intensity, etc) in how they
+each display the various colors.  Not all communications programs support
+all ANSI options.  Window 95 shell-account users might wish to use NetTerm
+4.2.1 or the <h> client. 
+
+See Also: TERMINAL, STATUS BAR, PROMPT, COLOR STRING
+Related Topics: SCREEN

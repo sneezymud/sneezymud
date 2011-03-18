@@ -1,0 +1,27 @@
+The 'R' Command
+make a mob ride another mob
+
+The 'R' command loads a mob and causes it to ride the last mob referenced.
+
+R <if_flag> <mob vnum> <max_exist> <room vnum>
+
+<if_flag> is typically 1  (only load it if the previous "mount" loaded)
+<mob vnum> is vnum mob is saved as
+<max_exist> max# of mob allowed in room
+	- see note on end for tips on setting
+<room vnum> is the room to put the mob in
+
+M 0 101 4 102        horse
+R 1 100 4 102        orc riding
+
+Loads a horse into room 102 then puts an orc on it.  Note that if the max exist
+for the orc prevents the command, it will still make the horse (although it will
+be rider-less).
+
+This command is somewhat obsolete as there is code to cause humanoid creatures
+to attempt to ride any mountable creature they come across.  This command 
+forces the action though so you could conceivably force a creature to ride an 
+unmountable mount.  It does look stupid though, but you could do it.
+
+Also, avoid putting items onto the mount or the if_flag on the R will be 
+dependent on those items being loaded onto the mount.

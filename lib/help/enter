@@ -1,0 +1,12 @@
+Syntax: enter
+
+The enter command may be used anywhere outdoors.  When used, it will
+automatically move you into the most obvious indoor room available.
+
+Syntax: enter <something>
+
+Alternatively, the enter command may be used to step into or through
+an object (often a magic portal).
+
+See Also: LEAVE
+Related Topics: MOVEMENT

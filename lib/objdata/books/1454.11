@@ -1,0 +1,57 @@
+The 'E' command
+Equip a mob with an object
+
+The 'E' command gives an item to the last mob referenced
+
+E <if_flag> <obj vnum> <max_exist> <slot>
+
+<if_flag> is typically 1   (only if the mob it should be given to exists)
+<obj vnum> is vnum obj is saved as
+<max_exist> load if fewer than this # of item in world 
+	- see note on end for tips on setting
+<slot> is the slot to put the item in.  see notes on slot at end
+
+M 0 100 4 102        orc
+E 1 105 10 1             aluminum ring
+
+These commands would load an orc and then put a ring on his finger (slot 1).
+See the list at the end for what slots are what.  It only will equip if the mob
+loaded.  Indent the comment for the object slightly from the comment regarding
+the mob.
+
+TIP: if you are using 'G' and 'E' in conjunction, put all the 'G's before you
+do 'E's.
+
+NOTE:   Mobs are LEFT handed, put weapons on left (unless paired), shields 
+        on right.
+NOTE:   All paired items go on RIGHT!
+NOTE:   Do not have a dual-wielding mob!  Dual-wield causes them to have
+        twice as many attacks as was defined on the mob.  (THIS IS BAD)
+NOTE:   Don't assign multiple items to the same slot.  You can not have
+        a mob pick (probably randomly via '?') from a set of weapons.
+        The exception to this rule is that you CAN mix bulk loads and general
+        loads so that a mob can wear a given helm (specific), and be
+        fleshed out on all other slots with chain (bulk).
+
+----------------
+slot:
+    Equipment position is one of:
+       WEAR_FINGER_R   1
+       WEAR_FINGER_L   2
+       WEAR_NECK       3
+       WEAR_BODY       4
+       WEAR_HEAD       5
+       WEAR_LEGS_R     6
+       WEAR_LEGS_L     7
+       WEAR_FOOT_R     8
+       WEAR_FOOT_L     9
+       WEAR_HAND_R     10
+       WEAR_HAND_L     11
+       WEAR_ARM_R      12
+       WEAR_ARM_L      13
+       WEAR_BACK       14
+       WEAR_WAISTE     15
+       WEAR_WRIST_R    16
+       WEAR_WRIST_L    17
+       HOLD_RIGHT      18
+       HOLD_LEFT       19

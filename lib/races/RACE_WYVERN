@@ -1,0 +1,42 @@
+filename RACE_WYVERN
+singName wyvern
+plurName wyverns
+propName Wyvern
+lore REPTILE
+age 201+20d10
+maleHt 250+10d3
+maleWt 1300+5d40
+femaleHt 240+10d3
+femaleWt 1100+5d40
+body Wyvern
+moveIn stomps in
+moveOut stomps
+moveMod 40
+manaMod 2
+search 5
+vision 1
+STR 200
+BRA 200
+CON 170
+DEX 155
+AGI 110
+INT 160
+WIS 160
+FOC 160
+PER 140
+CHA 160
+KAR 165
+SPE 90
+Winged
+Ridable
+IMMUNE_HEAT 25
+IMMUNE_COLD 25
+IMMUNE_FEAR 100
+IMMUNE_CHARM 100
+IMMUNE_SLEEP 100
+IMMUNE_NONMAGIC 50
+AFF_FLYING
+AFF_DRAGON_RIDE
+AFF_INFRAVISION
+AFF_DETECT_MAGIC
+

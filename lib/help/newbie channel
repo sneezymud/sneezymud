@@ -1,0 +1,8 @@
+Syntax: newbie {text}
+
+Use this command to ask or answer questions on the newbie channel.  All brand 
+new accounts are automatically added to this channel.  All players who have 
+marked themselves as (Newbie Helper) will also be on this channel.
+
+See Also: TOGGLE, REQUEST
+Related Topics: NEWBIE, COMMUNICATIONS

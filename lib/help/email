@@ -1,0 +1,11 @@
+Syntax: email <address>
+
+The email command is used to alter the email address stored with your account.
+<address> must be a valid address less then 60 characters in length.  Altering
+your email address will affect all characters in your account.
+
+Email with no arguments will show you the present email address we have for
+you.
+
+See Also: -
+Related Topics: UTILITY

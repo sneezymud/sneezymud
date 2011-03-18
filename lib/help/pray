@@ -1,0 +1,38 @@
+Syntax: pray <prayer> {target}
+        pray <prayer> me
+        pray <prayer> self
+        pray <prayer> tank
+
+The pray command allows clerics or deikhans to beseech their deity for aid 
+provided the supplicant has sufficient piety to make the request.
+
+<prayer> may be abbreviated, although realize the dangers of thinking that
+something like CUR was "cure poison" when in reality it might be "curse".  For
+multiple word prayers (heal light, word of recall, etc.) you can abbreviate all
+words.  eg. pray hea lig {target}
+
+Not all prayers require a {target}.  If no target is specified but one is 
+needed, {target} is either the person you are fighting (offensive prayer) or 
+the cleric.
+
+Unlike DIKUs, <h>'s spell system does not require the use of a ' to surround
+the prayers.
+
+Some prayers have their effect at the end of a praying period. Some are 
+immediate and some give effects while the Cleric is praying.  The latter type
+of prayer can generally be made to "stop" or "continue".  Continuing a spell
+will make it of indefinite duration till it is stopped, continue finished or
+the cleric has run out of Piety.
+
+Generally, all prayers require the use of an attuned holy symbol and use piety.
+However, some prayers require other material components and take hit points or
+vitality.  If a cleric runs out of piety, the gods may take vitality until the
+Cleric is exhausted. 
+
+When you are grouped with someone in a fight you can use "tank" as the target
+name to auto-select whomever your enemy is bashing away at.
+
+Each prayer should have its own help file.  help <prayer>
+
+See Also: PIETY, DEITIES, HOLY SYMBOL, CONTINUE
+Related Topics: SPELL INFO

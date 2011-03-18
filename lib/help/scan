@@ -1,0 +1,19 @@
+Syntax: scan {direction}
+
+The scan command will let you look 'into' rooms that are linearly
+adjacent to you.  You can scan either in a direction, or in general.
+Scanning with no parameters will cause you to look in all ten directions.
+Scanning in a <direction> will cause you only to scan in that direction.
+
+Scan range is a function of your eyesight and is modified for the amount
+of clutter in the way.  Eyesight is a function of natural vision, age
+and is modified both for race (elven is quite good), as well as for height
+(being able to see over things helps).  Clutter is measured in terms
+of how dense the terrain (forest vs. plains) as well as modified for things
+already seen that block further vision.  Certain spells also contribute.
+
+Scans will show you creatures and items visible within your scan range as
+well as their relative range from you.
+
+See Also: LOOK, WHO
+Related Topics: GENERAL INFO

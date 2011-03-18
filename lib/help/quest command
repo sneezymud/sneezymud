@@ -1,0 +1,14 @@
+Syntax: quest
+Syntax: quest <value>
+
+  This command is a quick way to get help on some of the internal
+quests you might find.  Examples of these include mage spell quests
+as well as the deikhan weapon quests.
+
+  <value>:
+    This represents nth quest checks:
+
+quest = display highest quest number you have
+quest 2 = display 2nd highest quest number you have
+quest 3 = display 3rd highest quest number you have
+Etc...

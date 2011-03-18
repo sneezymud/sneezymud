@@ -1,0 +1,67 @@
+
+  Peel's player kill (peelpk) will allow the user to run player
+killing quests without player experience loss or age affects. 
+The player kill quest is set up as two teams. (0 and 1) Each
+teams objective is to kill the members of thier opposing team.
+This code proves to be flexable and can be used in many ways 
+manually to add flavor or different circumstance to the player
+killing quest.
+
+Please be sure to fill in all the needed variables before you
+let anyone kill each other. Giving players reimbursments for 
+your mistake can prove to be a very time consuming process.
+
+Syntax : peelpk <command> 
+Syntax : peelpk <variable|command> <value> 
+Syntax : peelpk <variable|command> <index> <value> 
+Variables : zones, zone, respawns, respawn, announce, holding, 
+            settimer, respawnlag, default_respawn 
+Commands : addmember, remmember, echoscore, checktime, resetscore, 
+           resetteam, toholding, torespawn
+
+
+zones :  This variable allows the setting of the number of zones used
+         in the player killing quest. You can use up to 4 zones.
+
+zone :  This variable will allow the zones to be assigned. 
+        Syntax: peelpk <0|1|2|3> <zone number>
+                (NOTE: zone number is as shown in show zones) 
+             
+holding :  This variable defines the room vnum that will serve as a teams
+           starting point.
+           Syntax: peelpk <0|1> <room-vnum>
+
+toholding : This command will send the teams to thier holding rooms.
+            Syntax: peelpk toholding <0|1>
+
+settimer: This will set the duration of the quest round.
+          Syntax: peelpk settimer <minutes>
+
+addmember/
+remmember : These commands will add and remove the player involved from a 
+            team.
+            Syntax: peelpk addmember <0|1> <player>
+                    peelpk remmember <0|1> <player>
+
+checktime : This command will display the time remaining in the session. 
+            Syntax: peelpk checktime
+ 
+echoscore : This command will echo the score to the zone(s) defined as the
+            quest zone.
+            Syntax: peelpk echoscore
+
+default_respawn : This sets the default respawn room for BOTH teams involved.
+                  Syntax: peelpk default_respawn <vnum>
+
+respawns : This variable defines the number of valid respawn rooms.
+           Syntax: peelpk respawns <0|1> <num respawn rooms>
+
+respawn : This sets a teams respawn rooms to specific vnums.
+          Syntax: peelpk respawn ____ <0|1> <vnum>
+
+respawnlag : Adds time lag to a player during respawn.
+             Syntax: peelpk respawnlag <time(seconds)>
+
+***NOTE: Be sure not to abbreviate commands, variables, or names. 
+
+ 

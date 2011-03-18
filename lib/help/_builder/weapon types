@@ -1,0 +1,35 @@
+For editing objects, weapon types and frequencies are stored as 8 bit
+numbers, crammed together into two 4 byte numbers.  To set the first
+two types and frequencies, use this formula:
+type1 + (freq1 * 256) + (type2 * 256 * 256) + (freq2 * 256 * 256 * 256)
+To set the last type and frequency use this formula:
+type3 + (freq3 * 256)
+For example, if I want type 1 to be slash with frequency 50 and type 2
+to be cleave with frequency 50, I would:
+3 + (50 * 256) + (5 * 256 * 256) + (50 * 256 * 256 * 256) = 839201283
+So 839201283 would be the value I enter.
+Sorry for the complexity, hopefully the editor can be tidied up later.
+
+
+EDIT:  just go here - http://sneezy.saw.net/dash/weapontype.php
+
+
+         NUMBER  CATEGORY
+            1  : Stab     : pierce              19  : Strike   : blunt
+            2  : Whip     : blunt               20  : Club     : blunt
+            3  : Slash    : SLASH               21  : Slice    : SLASH
+            4  : Smash    : blunt               22  : Pound    : blunt
+            5  : Cleave   : SLASH               23  : Thrust   : pierce 
+            6  : Crush    : blunt               24  : Spear    : pierce
+            7  : Bludgeon : blunt               25  : Smite    : blunt
+            8  : Claw     : SLASH		26  : Peck     : pierce
+            9  : Bite     : pierce              27  : Dust     : Air
+           10  : Sting    : pierce              28  : Rock     : Earth
+           11  : Pierce   : pierce              29  : Torch    : Fire
+           12  : Pummel   : blunt               30  : Splash   : Water
+           13  : Flail    : blunt
+           14  : Beat     : blunt
+           15  : Thrash   : blunt
+           16  : Thump    : blunt
+           17  : Wallop   : blunt
+           18  : Batter   : blunt

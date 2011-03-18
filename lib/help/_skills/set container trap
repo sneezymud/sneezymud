@@ -1,0 +1,25 @@
+Syntax: trap container <item> <trap type>
+
+Container traps may be placed on chests, bags or other containers.  They
+require a higher skill to do properly due to the higher degree of jostling
+a container is expected to take when being moved about.  Container traps
+trigger whenever someone opens the container.  Container traps do a moderate
+to high degree of damage to the person opening the trap.
+
+Set traps allows a skillful looter from dissuading an overeager pursuer from
+following or to protect the looter's booty.  Traps come in 4 varieties, 
+exit traps, container traps, land mines and grenades.
+
+All traps take time to set.  Improper training may cause the trap to backfire
+on the looter during the trapping process.  The damage the trap will do depends
+on the trapper's level, the trapper's skill, the variety of trap, and the trap
+type.  <trap type>'s are located in a separate help file.
+
+Note: "damage" as used below is a generic term.  For trap types that don't do
+physical harm (sleep, poison, etc), greater "damage" reflects an increased
+chance to be affected by the trap.  e.g.  A higher immunity to poison would be
+needed to dodge the effects of a "high damage" poison trap.  Obviously,
+everyone that doesn't save, will be affected by the sleep, poison, etc. 
+equally.
+
+See Also: TRAP TYPES

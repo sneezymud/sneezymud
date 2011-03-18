@@ -1,0 +1,30 @@
+filename RACE_FELINE
+singName cat
+plurName cats
+propName Feline
+lore ANIMAL
+age 1+1d5
+maleHt 10+1d2
+maleWt 20+2d3
+femaleHt 8+1d2
+femaleWt 18+2d3
+body feline
+moveIn has arrived
+moveOut leaves
+moveMod 10
+STR 80
+BRA 80
+CON 70
+DEX 160
+AGI 175
+INT 105
+WIS 105
+FOC 55
+PER 55
+CHA 55
+KAR 140
+SPE 180
+DumbAnimal
+CanClimb
+Fourlegged
+Ridable

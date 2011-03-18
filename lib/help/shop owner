@@ -1,0 +1,157 @@
+Every shop in the game can be owned by players.  When you purchase a
+shop, you pay for the value of the inventory, the value of the gold
+the shopkeeper has and a large amount of non-refundable tax to the
+king.  This means that you will initially be in debt when you purchase
+the shop.
+
+You will also have to pay a salary to keep the shop running, so you
+will need a constant profit in order to break even.  If your
+shopkeeper runs out of cash while paying the salary, he will drop
+items in the dump to pay for it.  If there is no money and no
+inventory, the shop will be automatically repossessed by the
+shopkeeper.  You will receive no cash from this transaction.
+
+Selling and buying from your shop are untaxed.  Unlimited items that a
+shop produces cost a certain amount to produce.  Therefore, if your
+profit_buy is lower than 1.0, you will lose money on unlimited items.
+
+You may whisper various commands to the shopkeepers:
+
+-info
+Get some information from the shopkeeper about the value of his/her
+inventory, buy/sell ratios, types of objects they deal in and the
+purchase price of the shop, if it is available for sale.  This command
+is not available unless the shop is for sale, or the owner of the shop
+has specifically given you permission to view the shop info.
+
+example: whisper Dwayne info
+
+-buy
+Buy the shop.  You must have enough cash on hand to cover the cost.
+The price of the shop is determined by the cost of the inventory, the
+amount of gold the shopkeeper has on hand, a flat surcharge paid to
+the king and a percentage of the shop value, also paid to the king.
+Once you purchase a shop, the money that goes to the king is GONE
+FOREVER.  You will have to recover that money in sales in order to
+break even.
+
+example: whisper Dwayne buy
+
+-sell 
+Sell the shop.  You will receive the value of the gold the shopkeeper
+on hand but no value for the inventory.  The shop will immediately
+become available for re-sale.  There is no tax for selling a shop.
+
+example: whisper Dwayne sell
+
+-setrates <profit_buy> <profit_sell> <max_num> <default|match|item|player> [keyword]
+Set the buy/sell profit ratios and max_num of the shop.  These
+determine what percentage of the object value the shop will buy and
+sell items for and the max number of items it will carry.  You can
+also set the ratios for individual items (only for items in your inventory),
+or list all of the items with individual ratios, or for keywords.
+
+example: whisper Dwayne setrates 1.1 0.9 10 default
+example: whisper Dwayne setrates 1.8 0.9 10 studded-shield
+example: whisper Dwayne setrates 1.8 0.9 10 match studded-leather
+example: whisper Dwayne setrates 5.0 0.1 1 player Peel
+example: whisper Dwayne setrates clear all
+example: whisper Dwayne setrates clear studded-shield
+example: whisper Dwayne setrates clear match studded-leather
+example: whisper Piggot setrates 1.0 1.0 0 repair
+example: whisper Monti setrates 4 5000000 6 loanrate
+example: whisper Dwayne setrates
+
+Note that all shops have a limit to the number of items they can have in
+their inventory.  Currently this limit is 2500.
+
+-give <amount>
+Order the shopkeeper to hand over some of his gold.  You may use this
+to reap your profits.  Don't forget that the shopkeeper needs some
+gold available in order to buy items from players.
+
+example: whisper Dwayne give 1000
+
+-logs
+See the transaction logs for the shop.  Every sale and purchase is
+recorded, along with the talen amounts and value of the shop.  You can
+also choose to clear the logs or see some summaries or see logs for a
+particular player.
+
+You can also view your shop logs on the web, including a comma
+delimited format that can be imported into a spreadsheet, here:
+http://sneezy.saw.net/shopinfo.cgi
+
+example: whisper Dwayne logs
+example: whisper Dwayne logs clear
+example: whisper Dwayne logs summaries
+example: whisper Dwayne logs Peel
+example: whisper Dwayne logs balance
+
+-statements <year>
+Ask for an income statement and a balance sheet for the given year.  If no
+year is specified you will receive one for the current year to date.  The
+year is specified in Sneezy time, and one Sneezy year is approximately
+14.5 days.  These financial statements are made using standard GAAP 
+accounting as much as possible.
+
+example: whisper Dwayne statements
+example: whisper Dwayne statements 988
+
+-dividend <dividend>
+Change the dividend rate for this shop.  This is the percentage of each
+sale that will be kicked back up to the corporate bank account.  For
+example, if you set the dividend to 0.10, and then sell an item for
+5000 talens, your shopkeeper will immediately deposit 500 talens into
+the corporate account.  The practical max dividend is 1.0.
+
+example: whisper Dwayne dividend 0.10
+
+-reserve <min> <max>
+Change the reserve range for the shop.  Anytime the shop talens are less
+than the min reserve money will be withdrawn from the owning corporation.
+Anytime the shop talens are more than the max reserve, money will be
+deposited to the corporation.  The balance amount is the mid-point between
+the min and max.  For example, if the min is 900000 and the max is 1100000,
+then a reserve adjustment will leave it at 1000000 if possible.  Setting
+either to 0 disables this feature.  This feature relies on ownership
+for permission.
+
+example: whisp Dwayne reserve 900000 1100000
+example: whisp Dwayne reserve 0 0
+
+-string (<which> <string>)
+Change a response string for the shopkeeper.  With no arguments, the
+shopkeeper will list out each string and what the current response is.
+
+example: whisp Dwayne string missing_cash2 You be straight trippin' dog!
+example: whisp Dwayne string message_buy Sweet, now I can afford the %d talen
+				full service from your mom!
+
+-access (<player> (<access code>))
+Change the permissions for other players to access your shop.  You
+determine the access code by adding the values of the permissions you
+want for a player.  The permissions are:
+
+Owner, 1 - The owner of the shop has ALL of the permissions available,
+except sell, regardless of other settings.  There may be more than one owner.
+Info, 2 - Allow use of the info command.
+Profits, 4 - Allow setting of buy/sell ratios.
+Give, 8 - Allow use of the give command.
+Sell, 16 - Allow the player to sell the shop.
+Access, 32 - Allow the player to changed access permissions.
+Logs, 64 - Allow the player to see the shop transaction logs.
+Dividend, 128 - Allow the player to set the dividend rate
+
+You can also issue the access command without an argument to list all
+of the current players with access to the shop.
+
+example: whisp Dwayne access Peel
+example: whisp Dwayne access
+example: whisp Dwayne access Peel 14
+(give Peel permission to use info, set profit ratios and use the give command)
+
+
+
+
+

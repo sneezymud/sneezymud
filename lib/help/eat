@@ -1,0 +1,21 @@
+Syntax: eat <something>
+Syntax: toggle eat
+
+This command will allow you to attempt to eat an item should you be
+hungry.  Not all races will be able to stomach or be satiated by the
+same types of food.  
+
+Once you are full, you cannot eat any more until
+you are hungry again.  The "score" command will report your current
+levels of hunger and thirst.
+
+Food has a tendency to spoil after awhile.  It is often a good idea to
+examine or taste your food before eating it to determine whether it is
+safe to consume.  Food poisoning is an unpleasant experience.
+
+You may choose to automatically eat and drink by turning the "eat"
+toggle on.  Your character will not check for food or drink spoilage
+when automatically eating or drinking.
+
+See Also: TASTE, DRINK, TOGGLE, SCORE
+Related Topics: OBJECT MANIPULATION

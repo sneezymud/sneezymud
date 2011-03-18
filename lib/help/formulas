@@ -1,0 +1,57 @@
+Note:
+MIN(x,y) is defined as the lesser of x or y.
+MAX(X,Y) is the greater of x, y.
+MOBXP(x) is the amount of XP a mob of level X has.  This is an irregular curve
+  that roughly doubles every 2-3 levels
+
+Death: xp loss
+  loss = lesser of:
+       1/5 your current xp, or
+       25 * MOBXP(your current level)
+ 
+Rent Credit:
+  /* rent is currently deactivated */
+  Type: "rent credit" for further information.
+  Rent credit is based on the theory that the appropriate gear for your class
+  and level should be rented for free.  Allowances are made for the cost of
+  a weapon, the cost of the AC and durability that equipment provides, the
+  cost of sundries (bags, lanterns, etc), and the cost of class-based items
+  (components, symbols, etc).  Rent credit is simply the sum of the prices for
+  all the component pieces, each with their own quirks.  Unfortunately, such
+  a setup prevents a simple algorhythm from being provided for a rent credit
+  formula.
+  Roughly speaking, it is level based, and adjusted for class.  Additionally,
+  to discourage power leveling a storage character, playtime is a factor
+  (downward) in setting rent credit.
+  Rent credit will only increase and never decreases.
+
+Repair item deletion:
+   items left 15 days past finish time will be deleted.
+
+Player-File deletion:
+   /* Automatic player deletion is currently deactivated */
+   Player files will be deleted if last login was more than
+   MAX (21, current_level) days ago.
+   Player deletion is disabled between December 25th-Jan 15th and
+      May 15th-September 14th.
+   Players that need file protection outside of the above periods should
+   contact one of the gods.
+
+Rent-File deletion:
+   /* Automatic rent deletion is currently deactivated */
+   Rent file deletion follows the same rules as player-file deletion.
+
+XP Sharing for Group:
+  xp received = xp_for_hit * personal_share / group_total_shares
+   xp_for_hit = current_xp_of_mob * dam_of_hit / current_hp_of_mob
+    personal_share = MOBXP(current_level of PC)
+    total_shares = sum of all personal_shares
+
+Basic Pre-reqs:
+  Must maintain ((3.5* level) -4) in combat or theology/lore 
+  Must finish combat to go into a weapon specialty
+  Must finish basic class discipline and 100 combined training
+     in lore/theology/combat to continue into advanced training.
+
+See Also: -
+Related Topics: GENERAL INFO

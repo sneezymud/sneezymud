@@ -1,0 +1,15 @@
+Topic: checkroom
+--------------------
+
+Ex:
+<block> { "<args>";
+	...responses...;
+	checkroom <room>;
+	...responses...;
+	}
+
+<room> = Room the mobile should be in.
+
+  This will check the script mobs current room and make sure the
+current one, plus the passed <room> one, match up.  If they do not
+then execution of the script is stopped.

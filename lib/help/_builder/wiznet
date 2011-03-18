@@ -1,0 +1,12 @@
+Syntax: wiznet <message>
+Syntax: wiznet @<level> <message>
+
+A private line of communication that is only accessible to a god or goddess.
+It may be used by builders if a god turns it on.  (HELP TOGGLE)
+
+The <level> parameter may be used to force a wiznet to go to only certain
+<level> gods and above.  Please note the @ symbol is required.  eg.
+wiznet @60 Only Brutius can hear this.
+  
+See Also: TOGGLE
+Related TOPICS: BUILDERS

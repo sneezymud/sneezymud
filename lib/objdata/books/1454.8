@@ -1,0 +1,35 @@
+The 'P' Command
+put an item in another item
+
+P commands should be grouped with the command that loaded the item to put
+the item into.
+
+P <if> <obj vnum> <max_exist> <container vnum>
+
+<if_flag> for 'P' commands is usually 1  (only execute it if the 
+    container loaded)
+<obj vnum> the vnum the object was saved under
+<max_exist> see appendix at end for tips on setting
+<container vnum> vnum the container is saved under
+
+O 0 100 1 101            chest
+P 1 101 2 100               black potions inside chest
+P 1 101 2 100               
+
+These command would load a chest (item 100) then put 2 black potions (item 101)
+into it.  The 'P' command looks for the last item with the proper <container
+vnum> and puts the stuff in it.  The second 'P' command only executes if
+the one above it it (due to if_flag) and the first only executes if the command
+that loaded the chest did.  This is why its important to group 'P' commands
+with their respective 'O' containers.
+
+NOTES:
+
+CONTAINERS: Only use put with containers.
+
+RESETTING ITEMS: You can reload items in containers (like locked chests)
+each zone reset by using an if_flag of 0.  Only do this if you carefully
+control the max_exist of the load so people can't just camp for items and 
+design your zone so that groups would have to kill the same mobs over 
+again to reach the same point. 
+

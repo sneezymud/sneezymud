@@ -1,0 +1,21 @@
+I got attacked for no reason, what happened?
+--------------------------------------------
+(Artificial Interactions and Brawls)
+
+Implementor Batopr has taken upon the chore of making mobs behave more 
+intelligently.  Mobs will react to insulting, aggressive or suspicious
+behavior and often as a result will attack preemptively.  Obviously,
+if someone puked on you intentionally, this would piss you off, likewise
+with mobs.  To a limited degree, they have memories as well.  Just because
+it doesn't attack you at the time you upset it doesn't mean that a few 
+minutes later it won't decide you are some twit that needs to be taught a 
+lesson.  This sort of AI code continues to get more complex, but is a 
+leading cause of mobs becoming enraged and going on killing sprees, so
+be warned.
+
+Also, any given fight has the possibility of turning into a brawl unexpectedly.
+Watching a fight between two creatures may result in the spectator suddenly
+being caught up in the battle.  Likewise, fighting a given mob may cause
+other creatures in the room to either jump in on one side or the other or
+be caught up in it randomly.  Town and cityguards have the tendency to call for
+assistance from a distance - be careful if taking on the cops.

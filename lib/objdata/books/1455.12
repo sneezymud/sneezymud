@@ -1,0 +1,17 @@
+What is a Client?
+-----------------
+
+Clients are external programs that assist the player by handling tedious
+chores for them.  They typically offer aliases (the ability to substitute
+a pattern of keystrokes for a much longer series: eg: FOOD = get food bag,
+eat food, burp), actions (the ability to automatically perform some
+action when certain text is sent to the character: eg: "You are hungry" =
+eat bread) and other features (substitutions, highlights, gagging and
+ease of playing multiple characters from one terminal).
+
+The implementors do recommend their use although they do require some
+skill to use well and may just confuse the beginner.  UNIX users should
+probably use TinTin++ available via anonymous FTP from:
+   ftp.math.okstate.edu:/pub/muds/clients/UnixClients/
+other systems (VMS, DOS, ...) available from:
+   ftp.math.okstate.edu:/pub/mud/clients/

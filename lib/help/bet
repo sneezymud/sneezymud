@@ -1,0 +1,9 @@
+Bet is used to bet money in the casino.    Certain games (craps) require
+you to specify what you are placing the bet on.
+
+Ex: bet 100000		-blackjack
+Ex: bet come 100000	-a pass bet at the craps table
+Ex: bet craps 100	-a no-pass bet at the craps table
+
+See Also: -
+Related Topics: CASINO

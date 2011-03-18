@@ -1,0 +1,6 @@
+Syntax: hide
+
+Hide makes the thief more difficult to be seen.  The degree to which the thief
+is able to hide is dependent on lighting conditions, terrain, weather (snow
+leaves tracks, etc), and natural concealment.  The hide will last up until the
+thief enters another command.

@@ -1,0 +1,35 @@
+filename RACE_TROG
+singName troglodyte
+plurName troglodytes
+propName Troglodyte
+lore REPTILE
+age 6+1d5
+maleHt 31+1d4
+maleWt 100+6d5
+femaleHt 30+1d4
+femaleWt 100+5d5
+body Humanoid
+moveIn has arrived
+moveOut leaves
+hpMod 2
+manaMod -2
+foodMod 0.75
+drinkMod 1.25
+moveMod -35
+STR 140
+BRA 120
+CON 150
+DEX 80
+AGI 100
+INT 90
+WIS 90
+FOC 110
+PER 90
+CHA 80
+KAR 80
+SPE 80
+AFF_INFRAVISION
+IMMUNE_SUFFOCATION 20
+garble 22
+talent musk
+

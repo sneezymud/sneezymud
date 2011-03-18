@@ -1,0 +1,34 @@
+filename RACE_SIMAL
+singName simal
+plurName simal
+propName Simal
+lore OTHER
+age 30+1d10
+maleHt 82+1d10
+maleWt 500+20d5
+femaleHt 80+1d10
+femaleWt 450+20d5
+body Simal
+moveIn stalks in
+moveOut stalks
+hpMod 2
+moveMod 50 
+search 2
+STR 160
+BRA 170
+CON 175
+DEX 160
+AGI 170
+INT 110
+WIS 110
+FOC 120
+PER 110
+CHA 110
+KAR 115
+SPE 140
+Fourlegged
+Ridable
+IMMUNE_SLEEP 80
+IMMUNE_CHARM 70
+IMMUNE_FEAR 60
+AFF_SENSE_LIFE

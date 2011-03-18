@@ -1,0 +1,35 @@
+filename RACE_LYCANTH
+singName lycanthrope
+plurName were-critters
+propName Lycanthrope
+lore DIABOLIC
+age 25+5d4
+maleHt 90+1d5
+maleWt 500+9d10
+femaleHt 80+1d5
+femaleWt 450+6d10
+body Humanoid
+moveIn has arrived
+moveOut leaves
+hpMod 1
+moveMod 20
+manaMod 0
+search 1
+STR 170
+BRA 170
+CON 165
+DEX 150
+AGI 120
+INT 140
+WIS 140
+FOC 140
+PER 55
+CHA 55
+KAR 120
+SPE 140
+IMMUNE_NONMAGIC 100
+IMMUNE_PLUS1 50
+IMMUNE_SLEEP 30
+IMMUNE_CHARM 30
+IMMUNE_FEAR 30
+AFF_INFRAVISION

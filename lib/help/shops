@@ -1,0 +1,26 @@
+Shops are places where the adventurer may purchase equipment for their 
+travels, and where they may sell their treasure if they should manage to
+survive the perils with their life and sanity intact. Many shops trade
+only in a specific type of merchandise. Thus, a baker may well refuse
+to buy your armor, even if it is of high quality.
+
+Shops on <h> are different from what you are probably used to on other
+MUDs.  Our shops here on <h>, save their contents through crashes and 
+reboots. What this means is once an item is sold to a shopkeeper, they will
+have that item until it sells to someone else.  Also, once it is bought
+the shop won't have it again until someone sells it back to them.  Certain
+items that the shopkeepers 'produce' which they have an 'infinite' supply.
+Most items though, are not this way, and are sold/bought just like a real
+shop would.
+
+Shops typically will not purchase items for the same rate that they sell them.
+Consider your purchases carefully, shop around for the best price, and make
+sure you know what the item does before you waste money on it.
+
+Prices will fluctuate over time and will be influenced by the general
+economy.  Items that don't sell well maybe put on sale which is designated
+by a (*) next to their price.
+
+
+See also: BUY, SELL, LIST, VALUE, LOOK
+Related Topics: GENERAL INFO

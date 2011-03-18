@@ -1,0 +1,7 @@
+The retreat skill is utilized during a flee from combat to maintain a fighting
+withdrawal while escaping.  A successful retreat will not invoke panic in the
+person fleeing, give greater control over which direction they are able to
+escape in and minimize the losses (xp, etc) that may occur due to fleeing.
+Retreating is handled automatically anytime you flee.
+
+See Also: FLEE

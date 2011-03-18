@@ -1,0 +1,8 @@
+Decay time
+
+This should be set on items that will rot or decay.  A value <0 means it
+never decays.  Each decay unit corresponds to a half-tick (37.5 seconds in
+a lag less world).
+
+Decays should be set on all organic items and food.  This is a tool for 
+enforcing circulation of items and can be used on magic items.

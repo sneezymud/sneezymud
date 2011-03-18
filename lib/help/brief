@@ -1,0 +1,16 @@
+Syntax: brief
+
+Toggles "brief mode".  When in brief mode, you do not see the description of
+the room you are in; only the name of the room, and the people and objects 
+present will be shown.  Brief mode also affects how exits are displayed.
+
+Unless you are very familiar with the surroundings in which you travel, it
+is not advisable to use this command.  Frequently, you will find small, but
+vital hints in the descriptions of the rooms: an extra peek at your
+surroundings could mean the difference between life and death.
+
+You can force a look at the room's description while brief mode is on by using
+the "look room" command.
+
+See also: COMPACT, TOGGLE, LOOK
+Related Topics: SCREEN

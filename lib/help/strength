@@ -1,0 +1,13 @@
+Strength represents a character's physical might.
+
+In game terms, strength is utilized for manipulating "weight".  eg.
+Stronger characters are able to lift heavier loads, wield heavier
+weapons, open larger doors or shove/drag larger creatures.  There are
+also some combat bonuses associated with above average strength. 
+
+note: do not confuse "weight" with "volume".  See dexterity for more
+details.
+
+See Also: INTELLIGENCE, WISDOM, DEXTERITY, CONSTITUTION, KARMA,
+          BRAWN, FOCUS, AGILITY, SPEED, CHARISMA, PERCEPTION
+Related Topics: CHARACTERISTICS

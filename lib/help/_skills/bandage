@@ -1,0 +1,15 @@
+Syntax: bandage <person> <location>
+
+Bandaging will allow you to cover <person>'s body <location> with a bandage.
+The <location> may not have any equipment on it, and the person doing the
+bandaging must possess enough bandages to cover the <location>.  (ie,
+a finger requires fewer bandages then the body itself).
+
+Bandaged limbs will cease bleeding and will regenerate more health.
+Bandages once removed are useless.
+
+Any <location> may be bandaged at any time.  You should be as specific about
+<location> as possible (ie, use finger-left, wrist-right syntax).
+
+Note that bandaging animals has tricky syntax.  Some examples: "bandage bear
+foot-right", "bandage bear foot-back-left", "bandage horse leg-back-right"

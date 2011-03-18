@@ -1,0 +1,7 @@
+Syntax: level <class>
+
+The level command will display the necessary experience point ranges for 
+<class> to level.
+
+See Also: -
+Related Topics: CLASSES

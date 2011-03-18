@@ -1,0 +1,10 @@
+Swindling is an attempt to improve the price the thief gets when buying or
+selling an item to a shopkeeper by making the thief seem more endearing to
+the shopkeeper.  The swindle is handled automatically during the buying
+or selling transaction.
+
+Swindling has NO EFFECT on prices quoted when listing or valuing.  If the
+swindle is successful, the thief will receive more money then what the item
+valued at (or pay less then what it listed at).  Of course there is no way
+prior to actually buying or selling the item to know if the swindle is going
+to be successful.

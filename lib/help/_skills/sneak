@@ -1,0 +1,16 @@
+Syntax: sneak <option>
+Options: off, stop, retry
+
+Sneaking allows a character to move more silently in the hopes of approaching
+without being detected.  Sneaking requires a good bit of endurance both to
+just attempt it, as well as to continue moving stealthily.  Obviously, the
+chance of approaching undetected is affected by the amount of noise your
+armor makes, although race and terrain also plays a role.
+
+Sneaking makes a character harder to see, although not as much as if they 
+were hiding.  Sleeping and resting will remove sneak.
+
+To stop sneaking, just type "sneak off" or "sneak stop".  To re-attempt
+sneak, type "sneak retry".  Sneaking is impossible while fighting or
+mounted. 
+

@@ -1,0 +1,8 @@
+The illuminate spell causes an object to turn its material strength into
+light.  The item will begin to glow, but the glow is fed by the strength of
+the item which slowly dissipates.   Ultimately, the item will decay as
+its strength is used up.
+
+Magical items are too powerful to have this spell cast on them.  Sources
+of light (lanterns, and the like) will also not work.  The candle power
+of the illumination is dependent on the caster's level.

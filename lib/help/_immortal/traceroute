@@ -1,0 +1,21 @@
+NAME
+    traceroute - prints the route that packets take to a network host
+
+SYNOPSIS
+    traceroute host
+
+DESCRIPTION
+    The traceroute command traces the route that the Internet protocol
+    (IP) uses when sending a packet from the local system to the given
+    remote host.  This command depends on aspects of IP that do not exist
+    in every environment; therefore, it does not display hops through a
+    system whose IP does not support this feature.  traceroute continues
+    until the remote host is reached.  Hosts whose IP does not support the
+    necessary feature show up as hops displayed as all * (asterisks).
+    traceroute traces the route only from the local system to the remote
+    host.
+
+    This is a task.
+
+SEE ALSO
+   TASKS

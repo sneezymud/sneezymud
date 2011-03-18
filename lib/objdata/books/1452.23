@@ -1,0 +1,5 @@
+Class:
+
+The mobs class.  The code gets incredibly confused if you attempt to make
+a multi-class mob.  Please choose only 1.  Each class has a generic special
+proc for it so that warrior mobs will kick/bash, etc and mages will cast.

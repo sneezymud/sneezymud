@@ -1,0 +1,16 @@
+Syntax: put <something> {in} <container>
+
+For putting stuff in containers.  The {in} is assumed if it is left out.
+
+In the case of saddlebags or other containers saddled on a horse, use the
+terminology "put <object> <horse>" to add objects to the container.
+
+Variations:
+put dagger in bag 		: puts one dagger in a bag
+put all.bread in bag 		: puts all your bread into a bag
+put 9*bread in bag 		: puts 9 of your bread in a bag
+put all bag           		: puts entire inventory into a bag
+put sword horse			: puts a sword into a container on horse
+       
+See also: GET, DROP
+Related Topics: OBJECT MANIPULATION

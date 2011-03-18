@@ -1,0 +1,47 @@
+Throughout <h> there are mobiles that perform specialized functions that
+require player interaction.  We call these QUEST MOBS.  In general a quest mob 
+can be activated in a number of ways.  Some respond to being given an
+item.  Some respond to being asked a question or asked about a name.
+Others respond to a specific keyword or the word "Hello".  A lot of the
+trainers and guildmaster will respond to the keywords "next trainer" and
+"next guildmaster".
+
+From the response that the quest mob gives in response to the initial prompt
+the player is expected to figure out what to say or do to trigger the next 
+response from the quest mob.  In addition to "say" try using "ask" to ask 
+questions of quest mobs.  Generally quest mobs will not respond while in
+combat.
+
+Quest mobs will also react to being given specific items and money. The
+will generally also know what state of a quest you are on in a multi part
+quest and will not react to an object that they may react to later in the
+same quest.  Quest mobs will *not* give objects back to you if you give
+them the object so be careful with what you give them.  There is no
+reimbursement for items given to a quest mob.
+
+Some mobs will answer under only certain conditions and depending on how
+far you have progressed on a quest.  <h> does keeps track of your
+progress on quests.
+
+Quest mobs are used extensively in the skill system to have you learn
+quest skills. Generally, you will be started on a quest by you guildmaster
+on obtaining a certain level and must just follow instructions. 
+
+Some of the common functions of the quest mob are:
+   To run built-in quests
+   To give information about a specific subject
+   To trade items for money
+   To trade items for items or change an item.
+   To provide quests for learning skills and spells.
+
+Some examples to look for as you explore are:
+   Guildmasters and trainers
+   Newsboys and orc merchants in Grimhaven
+
+Quest mobs will become an increasing part of <h> in this and future 
+versions so keep an eye out for new ways that they may be being used.
+
+Good luck in your adventures.
+
+See Also:
+Related Topics: QUESTS

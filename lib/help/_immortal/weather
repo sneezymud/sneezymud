@@ -1,0 +1,19 @@
+Syntax: weather
+Syntax: weather <"better" | "worse">
+Syntax: weather <"month"> <num>
+Syntax: weather <"moon"> <num>
+
+Weather displays the present weather conditions as well as a theoretical
+prediction about the future.
+
+Immortals can pass the "better" or "worse" parameters to change the weather as
+necessary.
+
+The "month" parameter is used to change the current mud month.  <num> should
+be 1-12, inclusive.
+
+The "moon" parameter will change the state of the moon.  <num> should be 1-28,
+inclusive.
+
+See Also: TIME
+Related Topics: GENERAL INFO

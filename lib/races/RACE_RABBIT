@@ -1,0 +1,28 @@
+filename RACE_RABBIT
+singName rabbit
+plurName rabbits
+propName Rabbit
+lore ANIMAL
+age 1+1d5
+maleHt 6+1d2
+maleWt 3+1d2
+femaleHt 5+1d2
+femaleWt 2+1d2
+body FourLegs
+moveIn hops in
+moveOut hops
+moveMod 20
+STR 60
+BRA 60
+CON 60
+DEX 150
+AGI 210
+INT 55
+WIS 55
+FOC 55
+PER 55
+CHA 85
+KAR 220
+SPE 220
+DumbAnimal
+Fourlegged

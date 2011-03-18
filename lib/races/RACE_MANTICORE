@@ -1,0 +1,28 @@
+filename RACE_MANTICORE
+singName manticore
+plurName manticores
+propName Manticore
+lore OTHER
+age 75+1d25
+maleHt 62+1d17
+maleWt 140+6d10
+femaleHt 60+1d12
+femaleWt 100+4d10
+body Manticore
+moveIn has arrived
+moveOut leaves
+manaMod 1
+search 1
+STR 110
+BRA 110
+CON 105
+DEX 120
+AGI 120
+INT 140
+WIS 105
+FOC 120
+PER 90
+CHA 90
+KAR 110
+SPE 110
+Ridable

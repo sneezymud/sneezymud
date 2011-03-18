@@ -1,0 +1,94 @@
+NEWBIE OVERVIEW:
+
+Since <h> was started in 1992, it has gone through massive changes and
+complete rewrites, and it's in many ways very different from other muds
+out there. Because of that, it's important you take some time to get set
+up and get familiar with The World of <h>.
+
+Note that a tutorial very similar to this has been written, drawn, voice
+reorded and submitted to Youtube.  Presenting the SneezyMUD visual new 
+users guide:  http://www.youtube.com/watch?v=pukslQWRMTU
+
+Also, Aunt Dee above the inn is our tutorial NPC who will go over the same
+topics, but in an interactive fashion, giving you tasks to complete and 
+rewards for comppleting them.
+
+Continue reading for a condensed quickie summary!
+
+<c>Getting set up<1>
+<c>1.<1> Set your toggles properly. Read HELP TOGGLE for an extensive
+list of options and parameters. To see your current set up, type
+TOGGLE. Make sure your terminal type is correct, read HELP TERMINAL.
+
+<c>2.<1> Colorize it! Colors are a good way to bring your attention to
+important things. You can color diferent categories and substitute hard
+to see colors with ones that are easily viewed. Read HELP COLOR for more.
+
+<c>Preparing for battle<1>
+<c>3.<1> Configure your prompt. Make sure all the relevant information for your
+character is there. Read HELP PROMPT for more information and type PROMPT with
+no parameters to see your current configuration.
+
+<c>4.<1> WEAR ALL before you pick a fight. You can see what you're wearing
+by typing EQUIPMENT and what you're carrying by typing INVENTORY. There's
+more info on HELP OBJECT MANIPULATION.
+
+<c>5.<1> Practice before you fight. As is, you are unlearned in the ways of
+your class, but you have been given some practices that you can use at your
+trainer. You can see a list of disciplines available to your class by typing
+PRACTICE, and the skill in each discipline by typing PRACTICE <disciplline>.
+When in the presence of an appropriate trainer, use PRACTICE
+<discipline> {number} {class} to actually use practice points and learn
+things. Read HELP PRACTICE and HELP DISCIPLINE for more information. See
+the next topic for help in locating your trainer.
+
+<c>6.<1> Find your bearings. You have been placed in the great city of Grimhaven,
+the central city of <h>. To assist you in getting around, read HELP GOTO.
+There's valuable information there on how to get to places where you can eat,
+drink, practice and fight.
+
+<c>Lets get down to business!<1>
+<c>7.<1> Assuming you're dressed up for battle and have used up all your practices,
+it's time to spread havoc! CONSIDER mobs before you attack them. It'll give
+you some information on your odds at winning that fight. When you think you've
+found a good target, HIT or KILL <mob>. If you feel like your life is in danger,
+you can always just FLEE. Some mobs will try to track you down and finish off
+the fight though, so be careful!
+
+<c>8.<1> If you got badly injured in a fight, seek the hospital for fast healing.
+You won't be charged for the doctor services while you're a newbie, so make use
+of it! GOTO HOSPITAL will give you directions.
+
+<c>9.<1> Dealing with a death. So you picked a bad fight and ended up dead. You'll
+be taken back to the login screen where you should log your character back into
+the game. When you died, a corpse was generated in the room you died with all your
+belongings in it. When you log back in you'll notice you have no equipment and
+possibly only 1 hit point. Get yourself healed (remember the hospital?) and do a
+corpse retrieval to collect your stuff. When you've found your corpse, type GET
+ALL CORPSE to get your things.
+
+<c>Logging out of the game<1>
+<c>10.<1> You need to find an inn and RENT in order to have your character properly
+saved for the next time you come back. GOTO INN will give you directions to the
+closest inn. Please note that dropping link is not adviseable.  
+
+<c>Getting more help<1>
+Virtually every command you can type has a help file associated with it, but
+if you feel you need live assistance, please contact a newbie helper. You can
+see who these are by typing WHO, they will have the (Newbie-Helper) flag next to
+their name.
+
+<c>Final notes<1>
+The immortal staff of <h> is actively working in making the mud newbie-friendly,
+please feel free to contact the immortal staff if you have any ideas that will
+make your stay with us more enjoyable.
+
+Last, you are expected to know the RULES of SneezyMUD, specially the ones regarding
+MULTIPLAY and CHARACTER USAGE. Read those help files at some point too!
+
+<c>Have fun!<1>
+
+See Also: TOGGLE, TERMINAL, COLOR, PROMPT, EQUIPMENT, WEAR, 
+OBJECT MANIPULATION, PRACTICE, DISCIPLINE, GOTO, CONSIDER,
+HIT, KILL, FLEE, RENT, RULES, MULTIPLAY, CHARACTER USAGE
+Related Topics: NEWBIE

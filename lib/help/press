@@ -1,0 +1,7 @@
+Syntax: press <something>
+
+Press causes you to press on <something>.  It may cause something to
+happen.
+
+See Also: PUSH, PULL
+Related Topics: OBJECT MANIPULATION

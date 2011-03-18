@@ -1,0 +1,18 @@
+Resize will resize a piece of equipment to fit a target.  If that target is
+an invidual player, it will also personalize the item.  There are three target
+options; a character name, a race or a specific height in inches.  To see a
+list of available races and their corresponding numbers use the SHOW RACE
+command.
+
+Syntax: resize <object> <character>
+        resize <object> race <race number>
+        resize <object> height <height>
+
+The object must be in your inventory.  If you are resizing to fit a specific
+character, they must be online.
+
+Resizing by race or height is intended as a building tool.  You should resize
+for a particular character if you are using it as a reward.
+
+See Also: -
+Related Topics: GOD

@@ -1,0 +1,34 @@
+filename RACE_SNAKE
+singName snake
+plurName snakes
+propName Snake
+lore REPTILE
+age 1+1d5
+maleHt 4+1d2
+maleWt 150+5d10
+femaleHt 3+1d2
+femaleWt 100+5d10
+body Snake
+moveIn slithers in
+moveOut slithers
+moveMod 20
+search 1
+STR 120
+BRA 120
+CON 140
+DEX 165
+AGI 170
+INT 60
+WIS 60
+FOC 60
+PER 55
+CHA 55
+KAR 100
+SPE 165
+DumbAnimal
+Invertibrate
+ColdBlooded
+Ridable
+IMMUNE_BONE_COND 100
+IMMUNE_COLD -35
+AFF_SENSE_LIFE

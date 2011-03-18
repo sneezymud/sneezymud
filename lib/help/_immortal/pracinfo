@@ -1,0 +1,29 @@
+The pracinfo command calculates the number of practices a player is expected
+to have for his/her class, level (current experience), and current intelligence,
+and compares this to an estimate of how many the player actually received.  The
+estimate is an average of 10 trials, and appears to be correct within 1 practice
+the majority of the time.
+
+Things that may affect total practices include:
+- aging effects were removed, but used to affect practices; therefore there may
+  be many older characters whose numbers are somewhat off in one direction or
+  the other (the old practice of wearing rings that aged a player while they
+  gained their level (before practices were awarded continuously) also comes
+  in here)
+- disciplines have been added, and the number of practices that a player
+  receives between the level when they finish basic training and level 50 is a
+  direct function of the number and type of advanced disciplines they have
+  available to them; for this reason most older players, especially in classes
+  that used to have fewer weapon specializations available, will have
+  greater practice deficits
+- potions of learning
+- a coder fiddling with the 'class tweak' for the fraction of advanced
+  learning that each class gets
+- the @set command
+- random chance:  players have a random chance to get their fractional practices
+  at the end of each level, and can 'get lucky' (or unlucky)
+
+SYNTAX:  pracinfo <playername>
+
+NOTE:  The player must be online for this command to function.
+

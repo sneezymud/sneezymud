@@ -1,0 +1,11 @@
+If you feel benevolent, you may give stuff to someone in need.  In the
+shops, you may give an item to the shopkeeper in order to get work done.
+
+Examples:
+    give bread beggar       : Gives one bread to the beggar.
+    give 10 talens wombat   : Gives 10 talens to the wombat.
+    give all.bread JoeBlow  : Give all your bread to JoeBlow.
+    give 5*bread JoeBlow    : Give 5 breads to JoeBlow.
+
+See Also: DROP, PUT
+Related Topics: OBJECT MANIPULATION, CUTLERY, REPAIR SHOPS

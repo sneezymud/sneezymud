@@ -1,0 +1,29 @@
+filename RACE_BEAR
+singName bear
+plurName bears
+propName Bear
+lore ANIMAL
+age 5+1d3
+maleHt 72+1d9
+maleWt 1900+4d10
+femaleHt 70+1d9
+femaleWt 1800+5d10
+body FourLegs
+moveIn lumbers in
+moveOut lumbers
+moveMod 50
+STR 170
+BRA 180
+CON 205
+DEX 140
+AGI 100
+INT 45
+WIS 45
+FOC 45
+PER 45
+CHA 45
+KAR 105
+SPE 80
+DumbAnimal
+Fourlegged
+Ridable

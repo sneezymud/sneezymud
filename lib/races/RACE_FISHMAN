@@ -1,0 +1,38 @@
+filename RACE_FISHMAN
+singName kalysian
+plurName kalysians
+propName Kalysian
+lore PEOPLE
+age 24+1d5
+maleHt 41+1d6
+maleWt 140+4d10
+femaleHt 41+1d6
+femaleWt 145+4d10
+body Fishman
+moveIn glides in
+moveOut glides
+moveMod -30
+manaMod 2
+foodMod 1.5
+drinkMod 0.5
+search 1
+STR 75
+BRA 90
+CON 75
+DEX 125
+AGI 125
+INT 110
+WIS 125
+FOC 155
+PER 80
+CHA 75
+KAR 110
+SPE 130
+Aquatic
+ColdBlooded
+IMMUNE_WATER 20
+IMMUNE_PARALYSIS 50
+AFF_WATERBREATH
+AFF_SWIM
+talent fish_eater
+garble 12

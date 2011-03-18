@@ -1,0 +1,136 @@
+Med is the all purpose mobile editor/saving/loading command. 
+
+Syntax is : med <type> <flags>
+
+Available types are :
+
+ 1) save
+ 2) load
+ 3) modify
+ 4) list
+ 5) remove
+
+:: You should never use these options unless you are familiar with
+:: the MEDIT menu system and can undo any damage you might do to
+:: a mobile.
+ 6) name
+ 7) short_desc
+ 8) long_desc
+ 9) description
+10) level
+11) attacks
+12) hitroll
+13) armor_class
+14) hp_bonus
+15) faction    *** See Below
+16) bare_hand  *** See Below
+17) money_constant
+18) race
+19) sex
+20) max_exist
+21) default_pos
+22) height
+23) weight
+24) class
+25) vision
+26) can_be_seen
+27) room_sound
+28) oroom_sound
+29) replace
+31) resave
+32) average
+
+MED SAVE
+
+  The save function is used to save an edited mobile to disk. The syntax
+for this is :
+ 
+   med save <mobile name> <vnum>
+
+Mobile name is just simply the name of the mobile you want to save. Vnum
+is the number you assign the mobile to save to disk with. This should
+be the vnum you want it to be when it gets in the real mob file.
+
+MED LOAD
+
+  The load function is used to retrieve any saved mobile from disk. The syntax
+for this is :
+  
+  med load <vnum>
+
+So if you save a mobile as vnum 29, and later you want to reload that mobile 
+for testing purposes, you would type med load 29.
+
+MED MODIFY
+
+   The modify function will put you in a full screen VT100 mobile editor.
+This is where you can edit your mobs to save them like you want for your 
+areas.
+
+  med modify <mob name>
+
+MED LIST
+  
+   The list function will list out every mob you have saved on disk for
+easy reference.
+
+  med list
+
+MED REMOVE
+
+   The remove function will remove certain mobs from disk. The syntax is :
+
+   med remove <vnum>
+
+   Once removed, the mobs are gone, so don't use this unless you are sure
+you want to remove it.
+
+MED CREATE
+
+   Unlike OEDIT, there is no "create" option for mobs.  You should consider
+using a mob similar to the one you are attempting to create, loading that
+mob (load m xxx), and modifying it as appropriate.  You may wish to use the
+testmobs (load m testmob-lx) where x is a number from 1-50 as these mobs are
+kept with statistics of exactly the level in question.
+
+Notes : All commands can be abbreviated. I.e. 
+   med mo gnome is the same thing as med modify gnome. 
+
+MED FACTION
+
+  When setting faction you do:
+    med faction mobile FACTION_TYPE FACTION_PERCENT
+
+MED BARE_HAND
+
+  Setting bare hand damage through the command line is the same as in
+  the editor:
+    med bare_hand mobile DICEdSIZE+BONUS
+    med bare_hand elite 3d10+3
+
+MED REPLACE
+
+  This allows you to search for a string in either long or description and
+  replace it with something else.
+    med replace <mobile> <long/desc> <"text"> <"text">
+  The "" are Required to keep the strings separate.
+
+MED RESAVE
+
+  If you med load a mobile to make changes and wish to save it back under
+  the vnum you initially saved it under this is the directive for you. It
+  will auto-save back to the proper vnum instead of you having to specify
+  it again.
+
+MED AVERAGE
+
+  By using this command you can average a mob to match a specific level.
+  Certain things factor into this formula so it isn't a perfect matchup but
+  will get incredibly close to the desired level.
+
+  Syntax:
+    med average <mobile> <level> <class>
+  Note:
+    The <class> field is fully optional.  If you specify a class then it
+  will set the chosen stats of the mobile to some basic 'class similar'
+  values.

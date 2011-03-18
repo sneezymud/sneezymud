@@ -1,0 +1,37 @@
+filename RACE_ELEMENT
+singName elemental
+plurName elementals
+propName Elemental
+lore DIABOLIC
+age 1+1d5
+maleHt 62+1d17
+maleWt 140+6d10
+femaleHt 60+1d12
+femaleWt 100+4d10
+body Elemental
+moveIn has arrived
+moveOut leaves
+moveMod 20
+search 1
+STR 145
+BRA 145
+CON 145
+DEX 145
+AGI 150
+INT 55
+WIS 55
+FOC 110
+PER 80
+CHA 55
+KAR 105
+SPE 80
+Invertibrate
+ExtraPlanar
+IMMUNE_BONE_COND 100
+IMMUNE_DRAIN 60
+IMMUNE_BLEED 100
+IMMUNE_SKIN_COND 100
+IMMUNE_SLEEP 100
+IMMUNE_POISON 100
+IMMUNE_FEAR 100
+IMMUNE_SUFFOCATION 100

@@ -1,0 +1,20 @@
+syntax: quest <victim> <message>
+
+Effectively, this will echo <message> to the room, and then move <victim>
+to room 76 (quest storage room).  Its chief advantage is that you can
+do an echo and a trans in one shot and don't get "disappears in a cloud
+of smoke"
+
+This is meant as a roleplaying command.  Let's say StupidPC whips out his
+sword and starts fighting the king before the king can tell the quest group
+the info he is supposed to.  This lets you do something like:
+
+quest StupidPC the guardsmen jump StupidPC and tear him limb from limb for daring to attack the king.
+
+The victim is put in a Hell-like room (can't do anything).  It is assumed that
+whoever used the quest command will let them out, once time permits and after
+doing something appropriate.  (in the above example, probably killing)
+
+NOTE:
+  If you use the quest command in mortal form you can use:
+  quest <qnum> to get help on the qnum quest flag, should it exist.

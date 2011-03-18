@@ -1,0 +1,37 @@
+At the top of the zonefile are some very basic pieces of information.
+Start by writing the following three lines:
+
+#<zone number>
+<builder - zone title>~
+<last room> <lifespan> <reset mode> <enabled>
+
+The <zone number> is the first room in your zone.
+So if your zone has rooms 10100 to 10399, your zone number is 10100
+
+<zone title> is whatever you want it to be.  Additionally, please put your
+immortal's character name so we know who did the zone later on.
+
+<Last room> is the highest assigned room in the zone regardless of
+whether you have used it or not.
+
+<Lifespan> of the zone is the number of ticks between calls to reset_zone.
+I recommend at least 20 and no more than 60.  between 30-40 is best.
+
+<Reset mode> is a number between 0 and 2.
+0:  never reset the zone
+1:  reset zone only if zone is deserted  (no players in area)
+2:  RECOMMENDED:  reset zone as soon as lifetime (time from last reset) exceed
+       lifespan.  Does not care if people are in it or not.
+
+<enabled> indicates whether the zone is actually "in the game".  Builders should
+always set this value to 0 until the LOW activates the zone.
+
+Example:
+#100
+Batopr - Super Test Zone~
+10099 27 2
+
+NOTES:
+
+USE RIGHT ZONE NUMBER:  This is not the same number as in "show zone".  
+Room numbers will be the same numbers that are in your world files.

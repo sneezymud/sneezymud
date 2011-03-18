@@ -1,0 +1,21 @@
+Syntax: transform <limb>
+Currently Supported Limbs: Hands, Head, Arms, Neck, Legs 
+
+A dedicated player is able to harness the power of the chameleon to
+transform certain of his or her limbs own limbs into those of various
+animals. The limbs allow the player certain abilities but also restrict
+the player in various ways. 
+
+Currently, the following limbs are supported: arms, legs, hands, neck, and
+head.  The transformability of a limb depends on both the level and
+learningness of a player.  When cast the players limbs will transform, all
+equipment on those limbs transformed may suffer damage or destruction. 
+
+Transformed limbs last for a period of time or a player can transform
+specific limbs (or all) back by using return <limb names> or by returning
+all. In addition, the limbs require connection with the outdoors.
+Equipment is forbidden to the transformed limb and they will only survive
+outdoors or in water.  One can fight with a transformed limb although some
+of one's fighting ability may be limited by the abilities of the limb and
+the lack of equipment may restrict the player's abilities further. 
+

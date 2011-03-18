@@ -1,0 +1,59 @@
+- look at fireball quest, if you KNOW it, can skip going to Ash
+- magicians belt quest, mob asks you to get large spellbag, but never takes?
+- Check over deikhan quests for errors, especially toggle checks/setting
+ ****** Bug from Lemsip in room 8677 on Mon Jun 21 17:23:40 1999: 
+Subject:[Bug] Break from Quest
+I started the Deikhan quest for holy devastator. I wanted to take a break
+part way through... Went to medicine man in Veldt and said.. <1>  "Take a
+break" <1> And I get... <1>  A medicine man shrugs helplessly.  <c>A
+medicine man says, <1>"Fine with me, get some rest, then return to me."
+Something bad happened, tell a god. <1> The quest flag remained. <1>
+Lemsip /s 
+  - change the quest around so that the guy who "undoes" the quest is the
+  same one setting the bit.  Wrong mob (a medicine man:8677) toggling toggle 51.
+****** Bug from (immortal) in room 27 on Mon Jul 12 19:24:33 1999:
+Subject: [Bug] Third Deikhan Quest
+Bararakna is not loading the item to give to the players (dress of rites,
+14414). When you run the script, you get the following message:  //
+Problem in script.  Trying to load 14414 on Bararakna. Not sure what the
+problem is, unless it's that the dress is female only and Bararakna is male. 
+  - This is because the robe has a value of 0
+
+****** Bug from Navarre in room 1396 on Wed Aug  4 13:35:36 1999:
+Subject: [Bug] Vindicator quest
+after i fininsh the quest to get my honor back and tryed to restart the
+quest of vindicator i was not allowed to do nothing. Any of the trigger
+that i used at the 1st part of the quest worked. i tryed "Holy
+Vindicator" "continue" "ready" and so on. and no thing matchs. My quest
+command is enpty and i dont know what to do now. i need to restart the
+quest, but i cant find how...  Fistandantilus the blacksmith says, "But
+you will have to start the tasks again. Fistandantilus the blacksmith
+says, "When you want to begin again, let me know." Fistandantilus the
+blacksmith just removed your solo quest flag. Fistandantilus the
+blacksmith says, "It looks like you have made up for your pre vious
+dishonor." <- this is the 1st thing that he told me. i need something to
+continue. mudmail me please. 
+****** Bug from (immortal) in room 2495 (client) on Tue Apr 11 23:51:44 2000:
+Subject: yola - devastator quest
+Yola is in the fog islands (a zone thats disabled, unconnected, but a jolly king, and yola themselves are loaded in,) need a cleric to portal in to get there, this seems odd to me. 
+****** Bug from (immortal) in room 7531 on Tue Apr 11 23:41:14 2000:
+Subject: [Bug] temple of unicorn - Nesmum - devastator quest
+nesmum is part of the devastator quest (sloth)  araxus is working on the volcano so he is not reachable poss to move him somewhere appropriate for the quest until araxus is finished. 
+****** Bug from Smyth in room 557 on Sun Apr  9 03:40:01 2000:
+Subject: [Bug] Vindicator Quest
+The Ryoken Captain cons at "Shall I tie one hand..." but he fights more like Bring Friends I'm level 46, but I can barely dent him. Got him all the way down to good before I had to bug out. 
+****** Bug from Elthane in room 903 (client) on Sun Mar 12 19:49:44 2000:
+Subject: Devastator quest
+Two parts. The first is when you reach the dark overlord the keyword is Mallard. Mallard was the answer to the prior part of the quest. The key word should be Lady Jezebel. The second part is the quest requires a great sword to be given to the dark overlord and there is none in any shops or on any mobs. Could it be possible to add a part into the quest getting the greatsword from a mob that loads only for the quest.  
+****** Bug from Jillian in room 11388 on Tue Feb  8 19:34:11 2000:
+Subject: [Bug] Ranger quest and the use of ranged combat
+I fought the Magi on the Rangers quest using arrows. It didn't count. As a ranger, I thought I should be able to use all my combat skills - including range.
+****** Bug from Erin in room 8765 on Mon Jun  5 21:12:39 2000:
+Subject: [Bug] Spartagus and devastator quest
+I was on the devastator quest and typed take a break to spartagus and it said "something happened, tell a god"  and then spartagus proceeded to tell me that  i was off the quest and when i wanted to resume i had to mention miser ben he said he would take off the solo quest flag but that never happened and when i mentioned miser ben it didnt trigger any response .  
+****** Bug from Erin in room 1024 on Wed Jun  7 02:46:02 2000:
+Subject: [Bug] Devastator quest bug
+the small crucifix that the priest in the leper colony hands you doesnt have the take flag set so that if you drop it, die or put it in a bag you cant take it again 
+****** Bug from Kelranth in room 22590 on Sun Jun 25 10:01:15 2000:
+Subject: [Bug] quests
+This problem was taken care of before but its back, it monk quest of the leper colony is listed as a quest for me and I am a thief. 

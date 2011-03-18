@@ -1,0 +1,10 @@
+Syntax: trip <victim>
+
+The trip skill lets the warrior attempt to trip an opponent to the ground.
+Triping is a physical attack, and requires the warrior to be able to
+successfully hit the victim.  The closer you are to your target the easier it
+is to trip them so that person most directly fighting will have the best chance
+of success.  Balance is key for the trip skill and improper use may cause the
+warrior to fall over.
+
+See Also: BASH

@@ -1,0 +1,12 @@
+Syntax: equipment
+Syntax: equipment damaged
+
+The equipment command will print out what pieces of armor, weapons,
+or other knick-knacks you happen to be using at the moment.  It will
+also display critical limb damage.  If insufficient light is present to
+see an item, it may not be displayed.
+
+With the "damaged" parameter, only damaged pieces of equipment will be listed.
+
+See also: INVENTORY
+Related Topics: OBJECT MANIPULATION

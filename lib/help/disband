@@ -1,0 +1,16 @@
+Syntax: disband
+
+Disband is used to remove yourself from your present faction.  Obviously, you
+must presently be a member in a faction for this to work.
+
+You must be a member in a faction to disband, i.e., you can not disband from
+"Unaffiliated".  Disbanding will return your faction allegiance to 
+"Unaffiliated" and reset faction percentages to 0.00%.
+
+If you accidentally disband yourself, only a faction's leadership can reassign
+you to the faction.  Please do not ask gods to do this for you.
+
+To prevent from being admitted to a faction, set your autojoin bit off.
+
+See Also: TOGGLE
+Related Topics: MOVEMENT

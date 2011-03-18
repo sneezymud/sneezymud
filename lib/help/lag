@@ -1,0 +1,43 @@
+Lag is the result of an over-strained Internet.  It comes in two
+varieties, machine lag in which the machine <h> runs on is
+overburdened, and network lag caused by a poor network connection
+between the end-user and the <h> host machine.
+
+Machine lag can be created by other processes gobbling up CPU processing
+time or RAM, or simply by trying to run an overly exotic MUD on an
+inadequate machine.  Machine lag will cause all actions to be slowed
+down, but for the most part everything is slowed down equally.  Machine
+lag can be fixed by upgrading the hardware the MUD uses or by the MUD
+implementors better optimizing the MUD.
+
+Network lag is typically the result of a breakdown or bottleneck
+somewhere on the Internet.  Massive or rerouted traffic on the Internet
+as a whole will cause traffic jams that make communicating between the
+MUD and the end-user difficult.  Typically, the communications problem is
+sporadic and the lag will come and go in "bursts".  Multiple commands
+will go through simultaneously, followed by a period when seemingly no
+response occurs.  Network lag is sometimes caused by the MUD's machine
+if the MUD has an inadequate hookup to the Internet.  Utilities like
+PING and TRACEROUTE are good for tracking down the location of network
+lag.
+
+The two types of lag have different effects on the MUDder.  Since
+machine lag slows everything down, all actions take longer.  Machine lag
+is essentially like operating in slow motion.  There is little real
+danger (other than becoming inattentive from boredom) to machine lag
+since you essentially have a longer reaction time.  Network lag, on the
+other hand, is MUCH worse.    It may take many seconds, even minutes,
+for a command to be entered, be processed and the response to that
+action to come back to the user.  Obviously, the situation could have
+dramatically changed in the meantime.  In short, the user might be
+responding to an event that the MUD thinks happened many seconds in the
+past.  Or more to the point, you might already be dead before you even
+register that you should be thinking about fleeing.
+
+As lag is essentially beyond the control of the implementors, effects that
+it may cause are not deemed reimbursable in accordance with <h> policy.
+<h> regrets this, but there is simply no way for anyone to verify
+if someone was lagged or not.
+
+See Also: REIMBURSEMENT
+Related Topics: GENERAL INFORMATION

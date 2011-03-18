@@ -1,0 +1,20 @@
+Syntax: chi all
+Syntax: chi <person>
+Syntax: chi <object>
+
+A monk may project his life force in a variety of ways to produce a
+number of different effects.  The exact effects possible depend primarily
+on the monk's skill in using chi and the Meditation and Internal Abilities
+discipline.
+
+Chi <person> attacks that <person> with a mental blast of energy.
+
+Chi all is a more advanced form of "chi <person>" effectively attacking
+everyone in the room not in your group with a lower damage mental blast.
+
+Chi, on yourself, will protect you from other chi attacks, and also protects
+slightly from frost and cold.
+
+Chi, on an object, will have an effect that is dependant on the object type.
+For example, it can light, and extinguish lights.  It may have other effects
+too, depending on the object type.

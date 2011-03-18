@@ -1,0 +1,10 @@
+Syntax: guard <on | off>
+
+The guard command causes a pet or charmed follower to protect its
+master (order followers guard on).
+
+Guard has no effect when used by a PC as it is assumed they are alert
+enough to guard who they want, when they want.
+
+See Also: ORDER
+Related Topics: COMBAT

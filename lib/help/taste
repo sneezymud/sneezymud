@@ -1,0 +1,7 @@
+Syntax: taste <food>
+
+Taste is similar to eat except that it neither fills you up as much nor does
+it cause as much risk if the <food> turns out to be harmful.
+
+See Also: EAT
+Related Topics: OBJECT MANIPULATION

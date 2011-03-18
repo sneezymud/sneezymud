@@ -1,0 +1,19 @@
+The Hi-Lo table is located in the casino.  You must sit at the
+Hi-Lo table to start.  You must place a bet to get the cards dealt.
+Syntax: BET <chip>
+
+The object of Hi-Lo is to guess whether the next card drawn will be higher
+or lower than the current card.  The more guesses you get in a row, the more
+money you win.  Any wrong guess means you lose your entire winnings up to
+that point.  The percentage you win doubles with each correct guess.
+Once a card has been drawn, use the bet command to bet whether the next card
+will be higher or lower.
+Syntax: BET hi
+Syntax: BET lo
+
+Anytime after the first hi/lo bet, you may stay to take your current
+winnings.  You will be paid out and the game will reset.
+Syntax: STAY
+
+See Also: BET, STAY, PEEK
+Related Topics: CASINO

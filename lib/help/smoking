@@ -1,0 +1,9 @@
+To smoke a pipe:
+
+1.  refuel <pipe> <leaf>
+2.  light <pipe>
+3.  smoke <pipe>
+
+WARNING:  Smoking is bad for your health.
+
+(Note:  not all pipes in the game are functional.)

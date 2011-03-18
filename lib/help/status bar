@@ -1,0 +1,15 @@
+In ANSI or VT100 terminal modes, <h> will generate a status bar
+at the bottom of your screen and fill it with useful game statistics
+to help you better keep track of things.
+
+The ANSI status bar has color as well as features a graphical representation
+of your hit points.  ie. the number of '>'s change color so that as your
+stat drops, the bar decreases.
+
+Both status bars contain the following information:  health, mana, move,
+talens, exp, faction percentage, opponent prompt (while fighting only) in
+the lower left, real-time clock in the lower right and a game-time clock
+in the lower middle representing the time of day that the mud is at.
+
+See Also: CLS, TERMINAL, COLOR, PROMPT
+Related Topics: SCREEN

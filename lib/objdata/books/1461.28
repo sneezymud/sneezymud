@@ -1,0 +1,12 @@
+Advanced Action: untoggle
+---------------------
+ 
+ex:
+<trigger> { "<arguments>";
+       <other actions>;
+       untoggle <number>; 
+       <other actions>;
+     }
+
+untoggle will unset quest-toggle <number> on the performer.  Quest-toggles are
+hard coded so talk with a coder before using this command.

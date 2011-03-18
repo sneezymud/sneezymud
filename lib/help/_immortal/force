@@ -1,0 +1,22 @@
+   Allows a god of sufficient level to make a mob or pc do his bidding.
+   You may only force a PC of lower level then you.  Indiscriminate use of
+   this power where players are concerned (forcing them to drop all at dump)
+   is a good way to get demoted.
+
+   syntax:
+   force <target> <action>
+
+   <target> may be one of the following:
+
+(creature name)/(player name) - it will search your present room first, if it
+    does not find said target in your room, it will display a message to
+    that effect and then look through world for an appropriate match.  You may
+    identify a specific monster by using 1.name 2.name 3.name etc with default
+    being 1.name if no number is specified.
+all - forces all PC's to do the action.  Force all save is a good idea since
+    players tend to forget.
+mobs - forces all mobs in your room to do the action
+room - forces all mobs and PC's in your room to do the action.
+
+See Also: -
+Related Topics: GOD

@@ -1,0 +1,4 @@
+Victim's afflicted with the slumber spell will suffer from a magical sleep.
+The duration of the slumber is proportional to the caster's level, but is
+never less than 2 hours.  The slumber will keep the victim asleep, although
+being attacked or a dispel magic will remove the effects immediately.

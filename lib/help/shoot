@@ -1,0 +1,22 @@
+Syntax: shoot <direction> <creature> <distance>
+
+Shoot is the command used to shoot bows.  Shooting properly takes some
+training and not everyone is able to shoot well. 
+
+If no <direction> is specified, you will shoot at the first such <person>
+seen in the directions: n, e, s, w, u, d, ne, nw, se, sw
+
+The <distance> parameter allows you to force the arrow to stop looking for
+targets after going <distance>.  eg. if there is a peasant 2 squares away
+and another one 7 squares and you want to ignore the furthest one, you would
+do: SHOOT <dir> PEASANT 3
+
+You must have previously loaded (BLOAD) your bow with an arrow.  Different
+bows are capable of different maximum ranges.
+
+The amount of learning will set what kind of weapon you can shoot.
+Players do not start with bow knowledge but must develop that
+through the learning system.
+
+See Also : BLOAD, RANGED WEAPONS, RESTRING
+Related Topics: COMBAT

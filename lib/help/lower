@@ -1,0 +1,7 @@
+Syntax: lower <something>
+
+Lower causes you to attempt to lower <something>.  It may cause something
+else to happen, and the success of the command is often strength dependent.
+
+See Also: RAISE, LIFT
+Related Topics: OBJECT MANIPULATION

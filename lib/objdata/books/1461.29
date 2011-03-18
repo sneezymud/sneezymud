@@ -1,0 +1,17 @@
+Advanced Action: checktoggle
+---------------------
+ 
+ex:
+<trigger> { "<arguments>";
+       <other actions>;
+       checktoggle <number>; 
+       <other actions>;
+     }
+
+Checktoggle is used to check for the presence of a given quest-toggle before
+performing additional actions.  Actions after the checktoggle are only
+performed if the performer has the given toggle bit set.  Otherwise, the 
+subsequent actions are ignored.  If the bit is not set, the other responses the
+mob has will be compared to allow 1 trigger to have separate actions based
+on presence of quest bits (you would need multiple response blocks set up
+though).

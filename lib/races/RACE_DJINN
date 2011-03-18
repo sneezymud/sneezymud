@@ -1,0 +1,31 @@
+filename RACE_DJINN
+singName djinn
+plurName djinni
+propName Djin
+lore OTHER
+age 201+20d10
+maleHt 65+1d5
+maleWt 200+2d10
+femaleHt 64+1d4
+femaleWt 180+2d10
+body Djinn
+moveIn floats in
+moveOut floats
+hpMod 2
+moveMod 20 
+manaMod 2
+search 4
+STR 150
+BRA 140
+CON 120
+DEX 150
+AGI 90
+INT 170
+WIS 170
+FOC 170
+PER 140
+CHA 60
+KAR 140
+SPE 120
+AFF_FLYING
+

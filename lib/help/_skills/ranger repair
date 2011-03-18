@@ -1,0 +1,33 @@
+Syntax: repair <item>
+
+At some point in their training all rangers learn the skills to keep thier
+equipment in good shape while out in the wilderness.  They have become
+particularily proficient in mending equipment made of leather, hide, living
+material, and some types of stone.
+
+The appropriate tools must be held and in the room and the item you wish to
+repair must be in your inventory in order to repair it.
+
+Rangers can repair equipment made of some types of organic material:
+
+Tools necessary:
+ Primary:   ladle
+ Secondary: oil
+ Room-type: water  
+
+
+Rangers can repair equipment made of some types of stone:
+
+Tools necessary:
+ Primary:   chisel
+ Secondary: silicon
+ In-room:   pentagram
+
+
+Rangers are skilled at mending leather and hide:
+
+Tools necessary:
+ Primary:   punch
+ Secondary: cording
+
+

@@ -1,0 +1,15 @@
+Syntax: charge
+Syntax: charge <spell>
+
+  With a greater understanding of a spell, a lot of the component and an
+applicable staff it is possible for a mage to charge the various staves of The
+World with power.  This is usually limited to what the stave was originally
+used for but there are ones out there that are raw and unrefined.  But the
+cost of such a feat is quite draining on the mage and could drain all of the
+mana from their body.  Be forewarned that this ability is held only by those
+who master the arts of the magic they wish to charge.
+
+  Since the arts of staffs and wands are so chancy only certain objects have
+been mastered.  At current only those objects that are Staffs, not wands, may
+be charged.  And you must be holding the staff you wish to charge.  When
+recharging an older staff simply execute charge.

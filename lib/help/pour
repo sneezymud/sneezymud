@@ -1,0 +1,12 @@
+Syntax: pour <container> <other container>
+Syntax: pour <container> out
+
+Pour allows you to move a liquid from <container> into <other container>
+or <out> to effectively empty <container>.  Obviously you can't fill
+a container with more then it can hold.
+
+Mixing liquid types (water and wine for instance) will lead to a yucky,
+unpalatable sludge that is better left undrunk.
+
+See Also: FILL
+Related Topics: OBJECT MANIPULATION

@@ -1,0 +1,46 @@
+Syntax: group <person>
+Syntax: group <all | followers>
+Syntax: group share <person> <amount>
+Syntax: group seeksgroup
+Syntax: group name <name>
+Syntax: group <amtank | amnottank>
+Syntax: group lots
+
+Grouping allows multiple people to coordinate their activities.  In order
+to group someone, they must be following you.  Anyone who is following you
+may be grouped, but you must be grouped yourself first.  To ungroup someone,
+type "group <person>" again.  To disband the entire group, ungroup yourself.
+The <all> or <followers> parameter will allow you to add any person following
+you but not already grouped to be grouped; this is useful in large, confusing
+groups.
+
+Grouping allows all party members to share experience points for kills while
+grouped.  Additionally, the gtell (group tell) command is available for all
+group members.
+
+Group with no parameters will display who is in the group.  The present
+condition and present share is also displayed for each group member that 
+is in the room.
+
+The group leader may set the individual shares for various party members in
+the leader's group.   Only PCs may have their shares set.  <amount> should
+be a number between 1 and 10 shares.  Realize that when a split occurs, the
+amount split will be divided by the total number of shares (rounded down).
+Thus, if the group's total shares is greater than the amount split, each
+share will be zero talens.  Note that these shares only apply to talens
+(when split), not to xp. 
+
+If the group leader dies while the group is formed, the group will reform
+on the last member of the group to follow the leader.
+
+The "seeksgroup" parameter acts as a toggle that will cause (Seeks Group) to
+be appended to your display when people use the WHO command.
+
+The "lots" parameter will cause lots to be thrown, choosing 1 group member.
+
+The "amtank" parameter will give those highly skilled in switch and rescue
+tactics a chance to block a mob's attempt to switch to someone else in their
+group while the person flagged "amtank" is tanking.
+
+See Also: XP, FOLLOW, WHO
+Related Topics: MOVEMENT

@@ -1,0 +1,26 @@
+filename RACE_LIZARD_MAN
+singName lizard man
+plurName lizard men
+propName Lizard Man
+lore REPTILE
+age 24+1d5
+maleHt 62+1d17
+maleWt 140+6d10
+femaleHt 60+1d12
+femaleWt 100+4d10
+body Humanoid
+moveIn has arrived
+moveOut leaves
+search 1
+STR 130
+BRA 130
+CON 140
+DEX 120
+AGI 120
+INT 90
+WIS 90
+FOC 110
+PER 90
+CHA 60
+KAR 110
+SPE 120

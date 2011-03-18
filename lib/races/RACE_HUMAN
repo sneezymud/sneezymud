@@ -1,0 +1,27 @@
+filename RACE_HUMAN
+singName human
+plurName humans
+propName Human
+lore PEOPLE
+age 15+1d4
+maleHt 62+1d17
+maleWt 140+6d10
+femaleHt 60+1d12
+femaleWt 100+4d10
+body Humanoid
+moveIn has arrived
+moveOut leaves
+search 1
+STR 105
+BRA 105
+CON 105
+DEX 105
+AGI 105
+INT 105
+WIS 105
+FOC 105
+PER 105
+CHA 105
+KAR 105
+SPE 105
+talent Jack of all Trades

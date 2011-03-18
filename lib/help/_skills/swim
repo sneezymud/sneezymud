@@ -1,0 +1,13 @@
+Swim permits you to move through regions of water.  Not everyone is capable of
+swimming, most notably, dwarves have an aversion to water.  The chance of 
+successfully swimming is based predominantly on your swimming ability, but is
+also modified for factors such as water condition (rough vs calm sea), 
+currents, how much weight you are trying to drag around, and whether your limbs
+are functioning and free to move.  Failed swims can cause drowning to occur.
+
+Swimming is done automatically anytime a character attempts to move through
+water.  You do NOT need to type "swim east" or whatever.
+
+Note that it is possible to walk out into deep water, but swimming is
+required if you want to move back to land.  Watch where you are going if you
+can't swim.

@@ -1,0 +1,28 @@
+Syntax: throw <object> {direction} {character | distance}
+
+Throw is the command used to throw things in an aggressive manner.
+You must specify what is to be thrown, and that <object> must be both
+held in your primary hand as well as adequately designed to be thrown.
+
+The other two parameters will yield a larger chance of hitting who you
+intended.
+
+throw dagger 		: This would throw the dagger in a random direction
+               		  from your room
+throw dagger west 	: The dagger would be thrown west, but would
+			  not be aimed at anything specific or thrown
+			  with any specific range.
+throw dagger west guard : This would throw your dagger west at the
+                          first guard you can see to your west.
+throw dagger west 1     : This would throw your dagger west one room
+                          at no one in particular.
+
+Thrown items have a small chance of hitting the wrong person, if
+that person 'gets in the way' of the thrown item.
+
+Beware that even though you don't specify a victim, a thrown object
+always has the chance to hit someone of something in its path. You
+might hit something you don't want to hit by throwing an object.
+
+See Also: SHOOT, RANGED WEAPONS
+Related Topics: COMBAT

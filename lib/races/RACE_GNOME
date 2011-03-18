@@ -1,0 +1,33 @@
+filename RACE_GNOME
+singName gnome
+plurName gnomes
+propName Gnome
+lore PEOPLE
+age 60+3d12
+maleHt 33+1d8
+maleWt 72+1d7
+femaleHt 30+1d8
+femaleWt 68+1d7
+body Humanoid
+moveIn has arrived
+moveOut leaves
+moveMod -35
+manaMod 2
+search 3
+foodMod 0.8
+drinkMod 1.2
+STR 77
+BRA 80
+CON 85
+DEX 80
+AGI 80
+INT 155
+WIS 130
+FOC 145
+PER 130
+CHA 130
+KAR 75
+SPE 60
+IMMUNE_ENERGY 30
+AFF_INFRAVISION
+talent innate abilty to detect magic

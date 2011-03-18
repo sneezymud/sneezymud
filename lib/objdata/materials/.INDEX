@@ -1,0 +1,115 @@
+; Make sure to read the .README file if this is your first entry.
+
+;GENERAL
+START 0
+undefined
+paper
+cloth
+wax
+glass
+wood
+silk
+foodstuff
+plasic
+rubber
+cardboard
+string
+plasma
+toughened cloth
+coral
+horsehair
+hair
+ash\powder
+pumice
+laminate
+
+;ORGANIC
+START 50
+general organic
+leather
+toughened leather
+dragon scale
+wool
+fur
+feathered
+water\liquid
+fire\flaming
+earth\stone
+generic elemental
+ice
+lightning
+chaos
+clay
+porcelain
+straw
+pearl
+flesh
+cat fur
+dog fur
+rabbit fur
+ghostly
+dwarven leather
+soft leather
+fishscale
+ogre hide
+hemp
+
+;MINERAL
+START 100
+general mineral
+jeweled
+runed
+crystal
+diamond
+ebony
+emerald
+ivory
+obsidian
+onyx
+opal
+ruby
+sapphire
+marble
+stone
+skull\bone
+jade
+amber
+turqoise
+amethyst
+mica
+dragonbone
+malachite
+granite
+quartz
+jet
+corundum
+
+;METAL
+START 150
+generic metal
+copper
+scale
+banded
+chain
+plate
+bronze
+brass
+iron
+steel
+mithril
+admantium
+silver
+gold
+platinum
+titanium
+aluminum
+ringmail
+gnomemail
+electrum
+athanor
+tin
+tungstan
+admintite
+terbium
+elven mail
+elven steel

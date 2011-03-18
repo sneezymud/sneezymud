@@ -1,0 +1,30 @@
+NOTE regarding max_exist
+
+The <max_exist> field is a semi confusing field, especially in light of
+the fact that max_exists are declared separately on the individual mob and
+obj files as well.  Please make sure you understand the following before
+creating a zone file, or the Lord of Worlds may ask you to redo it.
+
+Max-Exist in mob/obj file:
+This number is the absolute, positive max for the item or creature.  It is
+a world wide total and includes what has been stored in rent.  There is no
+possible (outside of a bug) way for the number of creatures or items
+to exceed this value.
+
+Max-exist in the zone file (objects):
+This is also an absolute "world" limit.  The item will not load if there
+are more than this number of objects in The World.  Except for limited
+objects, or objects you want to control loading location, it should
+default to 9999.
+
+Max-exist in the zone file (mobs only):
+This represents a regional limit.  It is used to indicate the maximum
+number of the given mob that will be allowed to load in the indicated
+room.
+
+Example (mobs only):
+Lets say we want a dozen guards equally distributed to 4 city gates.  On
+the mob file, we define max = 12.  In the zone file, we have 4 'M'
+commands (one for each of the gates) loading that guard with a max defined
+of 3.  This allows a maximum of 12 total ever to exist, and no more than 3
+will repop in any given gate room.

@@ -1,0 +1,4 @@
+Player corpses will save over reboots/crashes if they have equipment in
+them.  If they decay before the crash, there is no reimbursement allowed.
+The mud has some protections against decay while there are problems on the
+Internet but we do not guarantee that such protections will be absolute.

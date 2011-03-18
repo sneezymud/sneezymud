@@ -1,0 +1,19 @@
+Access command provides some generic data to be pulled up on a character that
+is offline including last connection date and time as well as site.  This
+command may also be used with discretion by 58+ gods to alter a player's
+password or level.  If you change a L3+ character's password 
+or who has 3 hours of playing time please post a note to the wiz board with
+reasons why it was necessary.  It is not possible to change the password of
+someone of higher level than yourself.  (so much for hacking Brutius with this
+eh?) Access can only be done on a character that is not connected.
+
+syntax:
+  access <player name>                          - general info
+  access <player name> passwd <new password>    - password changing
+  access <player name> level <new level> <class>  - level changing
+
+Accessing with parameters (passwd, level) is only possible for high level
+gods.
+
+See Also: STAT
+Related Topics: GOD

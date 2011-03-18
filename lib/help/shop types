@@ -1,0 +1,86 @@
+All shop types use the standard shop interface as described in HELP
+SHOP OWNER.  Some shop types have special commands and slight
+modifications to the standard interface.
+
+
+# These shops all use the standard interface, and probably work as expected.
+Standard shop.
+Doctor.
+Divination man.
+Attuner.
+Engraver.
+Sharpener.
+Postmaster.
+Pet Keeper.
+Sign maker.
+
+
+# Repair man.
+Notes:
+Repair shops have 2 additional values for quality and speed.  These
+affect the maximum repair quality and the speed of repairs,
+respectively.  Less than 1 in either value decreases the cost of
+repairs, greater than 1 increases the cost.
+
+Repair shops currently make use of the expense ratio value, and should
+always have this set to 1.
+
+Special commands:
+list -	Shows a list of all equipment currently under repair at this
+	shop, along with the ticket number and cost of repairs.  This command
+	is currently immortal only.
+
+
+
+# Loan shark.
+Notes:
+The profit_buy value represents the defaulting penalty and the
+profit_sell value is the base interest rate.  The setrates/loanrate
+command is used to set the loan term length, the maximum talens loaned
+per level (X) and the maximum loan at level 50 (Y) (the previous two values
+define the loan curve based on level; the formula is
+"(pow(ch->GetMaxLevel(), X) / pow(50, X) * Y)" ).
+
+Special commands:
+list loans - Shows a list of all current outstanding loans, with the
+	loanee, amount owed, interest rate, when the loan is/was due and
+	current amount owed.  This command requires the INFO privilege.
+list repo - Shows a list of collection options for outstanding loans.
+	This is currently unimplemented.
+
+# Central Banker.
+Notes:
+The profit_buy value is the reserve deposit requirement for banks.
+The profit_sell value is the rate of new money printed (which is distributed
+soley via mobs at the moment).
+
+Special commands:
+list - Shows a list of all banks that are part of the central reserve system.
+
+# Banker.
+Notes:
+The profit_sell value is the interest rate that the bank pays out.
+The equity value reported by the info command is the cash on hand,
+minus the value of all accounts.  A negative equity value means the
+bank cannot cover all of its accounts (this is normal for a real life
+bank), a positive value means that the bank has somehow made a profit.
+
+Banks hold accounts both for players as well as corporations.  These
+are listed together and for most purposes work transparently.
+Corporate accounts withdraw/deposit at the corporate assistant.
+
+Special commands:
+list - Shows a list of all bank accounts held at this bank.
+
+
+# Tax collector.
+Notes:
+The profit_buy value is the rate of tax that is charged.
+
+Special commands:
+list - Shows a list of all shops that are taxed by this collector.
+
+
+# Receptionist.
+Notes:
+The profit_buy value is the talens per level to charge for renting.

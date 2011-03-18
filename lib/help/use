@@ -1,0 +1,12 @@
+Syntax: use <object> {target}
+
+Use is used to activate special <objects>.  Some <objects> need to be
+used on a {target}.  Use generally requires the <object> be held, often
+in the primary hand.
+
+The most commonly used <objects> are staffs and wands.  Typically, used
+<objects> have a number of charges (uses) that once used up may cause
+some effect of the <object>.
+
+See Also: STAFFS, WANDS
+Related Topics: OBJECT MANIPULATION, SPELL INFO

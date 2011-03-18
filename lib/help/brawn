@@ -1,0 +1,13 @@
+Brawn represents one's overall physique.
+
+Brawn will affect the amount of resistance one has to physical blows.  A higher
+brawn means the player will take less damage from mundane physical attacks, a
+very low brawn means the player will take higher than normal damage.
+
+Brawn also affects some skills.
+
+See Also:  STRENGTH, AGILITY, DEXTERITY, SPEED, INTELLIGENCE, WISDOM,
+           FOCUS, PERCEPTION, CHARISMA, KARMA, FOCUS
+Related Topics:  CHARACTERISTICS
+
+

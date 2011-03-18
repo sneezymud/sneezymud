@@ -1,0 +1,24 @@
+Advanced Action: resize
+---------------------
+ 
+ex:
+<trigger> { "<arguments>";
+       <other actions>;
+       resize <number>; 
+       <other actions>;
+     }
+
+Resize is an action that will load the item given by <number> as a vnum,
+resize it to fit the person who did the trigger's items, personalize
+the item, and then give it to the person.
+
+At the end of the resize action, the item will be in the performer's
+inventory, so you do NOT need to do a separate give.  Resize also loads
+so do NOT do a separate load.
+
+There is text associated with resizing automatically done.  You do not
+need separate echos for loading, stringing and giving.
+
+Note - this action should be used VERY sparingly, and only with the
+express permission of the LOW.  We have sized objects and set race heights
+the way they are for a reason and too much resizing will unbalance things.

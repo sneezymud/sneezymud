@@ -1,0 +1,34 @@
+This file and all god-only commands are only viewable to 52+ flagged IMMORTAL.
+
+NEW GODS: check wizhelp to see what commands you have.  Read the IMMORTAL RULES
+file and get any questions answered as you are still on probation.
+
+Common Commands:
+AS		AT		ATTRIBUTES(!)			COMMENT
+CUTLINK		DEATHCHECK	ECHO		EQUIPMENT(!)	EXEC
+FLAG(!)		GAMESTAT	HEAVEN		HOSTLOG		IMMORTAL
+INFO		INVENTORY(!)	LOG		LOGLIST		LOW
+MID		NOHASSLE	NOSHOUT(!)	OFFER(!)	PEE
+POWERS		PURGE		QUEST		SETSEV		SHOW
+SNOWBALL	STAT		STEALTH		SWITCH		TASKS
+TOGGLE		TRACEROUTE	TRANSFER	USERS		VIEWOUTPUT
+WEATHER(!)	WHERE		WIZHELP		WIZLOCK		WIZNET
+
+Mid-Level Commands
+ACCESS		ACCOUNT		BREATHE		CHANGE(!)	CHECKLOG
+COMPARE		CRIT		EGOTRIP		FINDEMAIL 	FORCE
+LOAD		MOTD(!)		PURGE(!)	REPLACE		RESET
+RESIZE		RESTORE		SHUTDOWN	SLAY		SNOOP
+SYSTEM
+
+Implementor Commands:
+ACCESS(!)	BRUTTEST	GAMESTAT(!)	RENAME(!)	SET (@set)
+SYSTEM(!)	TESTCODE	TESTFIGHT	TIMESHIFT	WIPE
+
+Info files:
+BOUNTY HUNTER	CACAODEMON	CREATE GOLEM	MAJOR WISH	MINOR WISH
+ROLE PLAY	RULES
+
+(!) indicates additional capability with an old command.
+See HELP for other major fields of information.
+See HELP BUILDER for some files applying to 51+ level.

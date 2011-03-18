@@ -1,0 +1,61 @@
+The craps table is located in the casino.
+Standard Vegas rules for craps are used.
+
+BETTING:
+   syntax:  bet <come | crap> <bet amount>
+Come implies that you believe the roller will win; crap implies you feel
+the roller will fail.  The first bet made MUST be a come bet and the person
+making such a bet is given the dice by the craps man.
+
+ROLLING:
+  syntax:  hold dice
+  syntax:  throw dice
+Only the roller needs do this and only after the craps man has closed the
+betting may the roller start throwing the dice.  The dice are standard six
+sided die.  All at the table will see the result of the craps roll.  You only
+need hold the dice the first time you are given them, after that, just type
+THROW DICE each time you want to make a new throw.
+
+CRAPS RULES:
+Craps is played with 2 standard, fair dice.  After all bets have been placed,
+the roller rolls the dice for the point roll (point roll = first roll).
+The roller wins automatically if the two die total either 7 or 11 on the
+point roll.  The roller loses automatically if they come up "snake eyes"
+(both 1s:total 2), "box cars" (both 6s: total 12), or totalling 3. Any
+other result yields what the point number for the game will be.  That is,
+if the dice are a 4 and a 1 then the "point is 5" (4+1 = 5).
+
+Assuming that the game is not won or lost on the point roll then the game
+continues.  The goal of the roller now is to hit their "point" again before
+they roll a 7.  That is, if the point is 5 then the roller is hoping to get
+(2 3) (3 2) (4 1) or a (1 4)  before they roll something totalling 7 i.e.
+(6 1) (1 6) (2 5) (5 2) (3 4) or a (4 3).  Any roll that isn't either the point
+roll (a win) or a 7 (a loss) does nothing and the roller continues rolling
+until they either hit their point or crap out with a 7 roll.
+
+If the roller makes their point or wins on the point-roll, all come bets pay
+1:1.  If the roller craps out all crap bets pay 1:1.
+
+ADVANCED RULES:  (one-roll betting)
+It is also possible to bet on a certain result being the outcome of the VERY
+NEXT roll.  Doing so is done by making a one-roll bet.  Typing BET ONEROLL will
+display options and odds.  All one-roll bets are paid out as soon as the roll
+is made and last only 1 roll.
+  syntax: bet <one roll field> <bet amount>
+
+valid one roll fields:
+Two   : Bet on a one roll snake eyes (2).           Pays 30 to 1.
+Three : Bet on a one roll acey deucy (3).           Pays 15 to 1.
+Eleven: Bet on a one roll eleven (11).              Pays 15 to 1.
+Twelve: Bet on a one roll box-cars (12).            Pay 30 to 1.
+Craps : Bet on a one roll craps roll (2, 3, or 12). Pays 7 to 1.
+Seven : Bet on a one roll seven roll.               Pays 4 to 1.
+Horn  : Bet on a one roll horn bet. Type help horn for help on the horn bet.
+Field : Bet on a one roll field bet. Type help field for help on this bet.
+
+e.g.  doing BET ELEVEN 100 would place a 100 coin bet that the very next roll
+would be an 11 roll (6 5) (5 6).  If it is, you would win 1500 coins, if not, 
+you lose your 100 coins. 
+
+See Also: BET, HORN, FIELD
+Related Topics: CASINO

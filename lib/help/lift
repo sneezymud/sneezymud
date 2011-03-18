@@ -1,0 +1,8 @@
+Syntax: lift <something>
+
+Lift causes you to attempt to raise <something> off the ground.  It may 
+cause something to happen, but is often dependent on your strength or other
+mitigating factors.
+
+See Also: RAISE, LOWER
+Related Topics: OBJECT MANIPULATION

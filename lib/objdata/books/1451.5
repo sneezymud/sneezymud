@@ -1,0 +1,32 @@
+Weight
+
+This is the items weight in pounds.  Please make an attempt to be accurate
+in setting equipment weight.  Suits of platemail should weigh 50-70 pounds,
+yet folks tend to make them lighter then air  :).  
+
+For drink containers, this value should represent the container's EMPTY
+weight.  Liquid weight is handled automatically.
+
+Weapons should weigh 2*avg_base_damage of the weapon.  The relation 
+between strength of pc and wield-ability is as follows:
+  strength 3 to 17         : weight = strength
+  strength 18/0            : weight = 20 lbs.
+  strength 18/01 - 18/50   : weight = 22 lbs.
+  strength 18/51 - 18/75   : weight = 24 lbs.
+  strength 18/76 - 18/90   : weight = 26 lbs.
+  strength 18/91 - 18/99   : weight = 28 lbs.
+  strength 18/100          : weight = 30 lbs.
+  strength 19              : weight = 32 lbs.
+  strength 20+             : weight = 40 lbs.
+
+(1) non-primary max weight is 1/2 the shown value.
+(2) paired max weight is 3/2 the shown value.
+(3) weapon proficiency may reduce the max weight to some degree.
+(4) minimum max weight (regardless of strength/proficiency is 4 lbs).
+(5) max weight for blunt weapons is 4/3 value shown.
+
+NOTES:
+
+COMMON BUILDER ERRORS:  Forgetting to set weight at all or setting 
+totally unrealistic weights.  Both add a lot of work to the balancing 
+process.

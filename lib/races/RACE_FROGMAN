@@ -1,0 +1,34 @@
+filename RACE_FROGMAN
+singName bullywug
+plurName bullywugs
+propName Bullywug
+lore REPTILE
+age 15+1d4
+maleHt 51+1d4
+maleWt 125+5d2
+femaleHt 53+1d5
+femaleWt 135+5d2
+body Frogman
+moveIn hops in
+moveOut hops
+moveMod 35
+search 1
+STR 120
+BRA 135
+CON 125
+DEX 135
+AGI 135
+INT 80
+WIS 90
+FOC 80
+PER 100
+CHA 65
+KAR 105
+SPE 105
+IMMUNE_POISON 40
+IMMUNE_BONE_COND 20
+AFF_SWIM
+talent limb_regrowth
+talent insect_eater
+talent frogslime_skin
+garble 19

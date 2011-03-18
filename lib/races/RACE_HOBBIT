@@ -1,0 +1,32 @@
+filename RACE_HOBBIT
+singName hobbit
+plurName hobbits
+propName Hobbit
+lore PEOPLE
+age 20+3d4
+maleHt 30+1d5
+maleWt 20+5d4
+femaleHt 28+1d5
+femaleWt 18+5d4
+body Humanoid
+moveIn has arrived
+moveOut leaves
+moveMod 40
+search 5
+foodMod 0.5
+drinkMod 1.3
+STR 55
+BRA 55
+CON 80
+DEX 155
+AGI 155
+INT 83
+WIS 83
+FOC 80
+PER 115
+CHA 110
+KAR 120
+SPE 155
+IMMUNE_POISON 40
+AFF_INFRAVISION
+talent plus sneak, hide, search, detect trap

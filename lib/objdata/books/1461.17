@@ -1,0 +1,17 @@
+Advanced Action: flag
+---------------------
+ 
+ex:
+<trigger> { "<arguments>";
+       <other actions>;
+      flag %n;
+       <other actions>;
+     }
+
+The flag command will make the trigger-mob flag someone with the solo-quest
+flag.  This is the same as if a god had done flag <person> solo so see
+HELP FLAG for effects of such a flag.
+
+It is advised that you make sure the player understands he is about to be
+flagged, effects of the flag (no grouping, following, riding, spells cast on,
+etc) and that they acknowledge these facts PRIOR to actually being flagged.

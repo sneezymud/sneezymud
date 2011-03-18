@@ -1,0 +1,44 @@
+Components come in three varieties: gestural, verbal and material.
+Any spell will require some combination of the above in order to be
+properly cast.  A spell not properly prepared for (by ignoring some or all
+of the components) is a wasted spell, and because the caster has already 
+drawn forth the mana to cast said spell, the mana is generally lost as well.
+
+VERBAL: The verbal component of a spell is the mantra, cantrip or incantation
+that must be spoken in order to carry off a spell.  Very advanced magicians
+often learn to sub-vocalize their spells, and can often disregard the verbal
+component altogether.
+
+GESTURAL: Gestural components encompass everything from hand-motions to
+arm waving and also include any body motions or jumping about required.
+Since a certain nimbleness is required to carry off spells, mages generally
+prefer loose fitting clothing lest their gestural spells be screwed up.
+Gestural spells are always impeded by broken or heavily damaged limbs and
+items held often prevent the complicated hand-motions required.  Very advanced
+wizards can sometimes escape the limitations of the gestural component as well.
+
+MATERIAL: The material component of a spell is any physical object that is
+needed to bring the spell about.  Material components facilitate a spell's
+completion, but are generally consumed wholly or partially in the casting of
+the spell and so must be replenished.  Only the very simplest of spells will
+need no material component.  Material components must be held by the caster
+at the time of casting, although wizards have discovered ways to allow
+spells to be successfully completed with components in the secondary hand or
+even in special spell bags.
+
+---------------------------------------------------------------
+In game terms, the verbal and gestural components of a spell are handled
+automatically.  If you are unable to speak or move, your spells will
+fail.  Anything that might impede speaking or moving (gags, heavy clothing,
+etc.) will cause a chance of that component (and hence the spell) from
+failing.  Material components must be maintained by the adventuring spell
+caster both in terms of supply as well as in placement on the body.
+Mages are encouraged to keep their eyes out for the components they might
+need for the various spells at their command.
+
+The individual help files on the spells detail which components are
+necessary for a given spell as well as what the material component
+might be.
+
+See Also: WIZARDRY
+Related Topics: SPELL INFO

@@ -1,0 +1,12 @@
+Syntax: refuel <light> <fuel> {"held" | "room"}
+
+This command is used to refuel lamps of all things.  The <light> must
+be extinguished before refueling may begin.  The <light> must be
+held, in your inventory or in the room, and the <fuel> must be in your
+inventory or held.
+
+The "held" and "room" argument may be used to limit your search for <light>
+to your inventory/equipment or the room you are in respectively.
+
+See Also : LIGHT, EXTINGUISH
+Related Topics: OBJECT MANIPULATION

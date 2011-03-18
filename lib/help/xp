@@ -1,0 +1,22 @@
+Experience points are awarded each time you damage a creature.  The amount
+of experience a given monster has is a function based on how well it hits,
+how well it is armored, and how long it is likely to last in combat, as
+well as whether it has any special abilities.  In general, two mobs of
+equivalent difficulty will award the same exp.  If you do 1% damage to a
+monster in battle, you receive 1% of its exp.  If you are grouped, that 1%
+of the exp is split over the group according to a number of formula. (See
+help file on Formulas). 
+
+Additionally, you only receive your "share" of the experience divided by the
+number of classes that you are.  i.e.  double class get half, triple receive 
+one third.
+
+It is important to note that exp is awarded for directly damaging a
+creature's main hit points.  Since damage to limbs only does a small
+amount of damage to a creature's main hit points, limb damage yields
+small amounts of xp.  Also, indirect or time-delay damage (bleeding,
+starving, suffocating, etc) will yield no exp although some ranged 
+attacks will.
+
+See also: GROUP
+Related Topics: COMBAT, CLASS

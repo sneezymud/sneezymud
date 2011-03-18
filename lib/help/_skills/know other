@@ -1,0 +1,6 @@
+The various know skills provide additional information about a creature that is
+being considered.  The amount and accuracy of the information depends on the
+appropriate learnedness.  Realize that a certain amount of inaccuracy will
+always be present in any consider.
+
+See Also: CONSIDER

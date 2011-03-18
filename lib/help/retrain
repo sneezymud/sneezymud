@@ -1,0 +1,17 @@
+Syntax: retrain <NPC name>
+
+Retrain allows an adventurer to re-acquire a pet after the adventurer dies. 
+For the most part it only works with purchased pets although there may be
+some exceptions for other types of pets. 
+
+The ability to retrain has some limitations. First, it is on a timer. You
+will only have a reasonable period of time to reclaim your pet.  In
+addition, there is a chance of failing the retrain. If the retraining
+fails, the pet will be fully returned to the wild and will no longer be
+retrainable.  Last, you can not retrain another adventurers pet for them.
+
+CAVEAT: CRASHED orphan pets will not be reload in mud and are not
+reimbursable.  So get back on and get your pets retrained fast.
+
+See Also: FOLLOWERS, PETS
+Related Topics: GENERAL INFORMATION

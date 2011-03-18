@@ -1,0 +1,21 @@
+#
+#  Mail Immortal Directory
+#
+
+cd immortals
+
+MAILER=/usr/bin/mailx
+LIST=`cat ../maillist`
+
+IMM=$1
+LOG=$2
+
+if [ ! -d $IMM ]; then
+  echo You have no directory.
+  exit
+fi
+
+tar -cvf - $IMM 2>$LOG | gzip -c > /tmp/mid.$$
+uuencode /tmp/mid.$$ $IMM.tgz | $MAILER -s "$IMM's immort directory" $LIST >> $LOG 2>&1
+
+/bin/rm -f /tmp/mid.$$

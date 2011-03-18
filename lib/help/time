@@ -1,0 +1,20 @@
+Syntax: time
+Syntax: time <difference>
+
+The time command tells you the time of day the game is currently in.
+It has no relationship on the real world.  Game time controls such things
+as sunlight, shop opening and closing times.
+
+The time in the real world is also shown.  This time is based on the mud's
+host clock and adjusted based on the time-adjustment you set (see below).
+
+If the game is in shutdown-mode, the time remaining until the shutdown will
+occur is also shown.
+
+Time with a parameter will alter the time-adjustment between your local site
+and the site at which <h> is run.  This is used to control the display of
+real time clocks and such.  <h> is presently run on the west coast.  The
+east coast is +3 (time 3) hours difference.
+
+See Also: WORLD
+Related Topics: GENERAL INFO

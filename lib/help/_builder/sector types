@@ -1,0 +1,12 @@
+Sector types are used by the code to set room affects on PC's.  The type 
+of sector you set will now or in the future affect moves, weather, scanning, 
+ranged weapons, lighting, and tiredness.  It also affects whether a room 
+is an air or a water room requiring fly or waterbreath/swim.
+
+You should edit sector types in REDIT where you can see the full extent 
+of Sector types available to you.  However, if you know the numbers, you 
+may be able to set them using the Edit command.
+
+Some sectors require certain room flags notably indoor room sectors 
+require you to set the indoor room flag.
+

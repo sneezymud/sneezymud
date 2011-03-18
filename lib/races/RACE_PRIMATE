@@ -1,0 +1,29 @@
+filename RACE_PRIMATE
+singName primate
+plurName primates
+propName PRIMATE
+lore ANIMAL
+age 15+1d4
+maleHt 60+1d8
+maleWt 180+20d3
+femaleHt 60+1d6
+femaleWt 150+10d3
+body Humanoid
+moveIn charges in
+moveOut charges
+moveMod 10
+search 1
+STR 125
+BRA 125
+CON 120
+DEX 110
+AGI 110
+INT 110
+WIS 110
+FOC 110
+PER 110
+CHA 110
+KAR 110
+SPE 120
+CanClimb
+DumbAnimaL

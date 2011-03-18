@@ -1,0 +1,34 @@
+Topic: checkzone
+--------------------
+
+Ex:
+<block> { "<args>";
+	...responses...;
+	checkzone <room>;
+	...responses...;
+	}
+
+<room> = Room inside zone that mobile should be in.
+
+  This will check the mobiles current inRoom zone and verify that
+it matches up with the zone <room> is in.  If not then parsing is
+stopped.
+
+  'checknotzone' checks the mobiles current inRoom zone and verifies
+that it does not match with the zone <room> is in.  If it does match,
+parsing is stopped.
+
+Notes:
+  <room> == Factual room, not zone number.  If you see this in
+  show zones:
+    0 Void                                     25m   17m      0-0
+    1 Immortal Zone                              25m   17m      1-99
+    2 Grimhaven Roads                           5m    3m    100-249
+    3 Royal Barracks                           15m    7m    250-299
+    4 TB Sheldon Auditorium                    25m   17m    300-349
+    5 King's Palace                            25m   17m    350-399
+  Then to make sure a mobile is Only being triggered in zone 5,
+  King's Palace, you would do:
+    checkzone 350;
+  Not:
+    checkzone 5;

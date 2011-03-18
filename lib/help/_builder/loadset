@@ -1,0 +1,71 @@
+The 'Y' command
+Load a set of gear.  Bulk loader.
+
+This command is useful for quickly loading a complete set of a certain armor
+on a given creature.
+
+Y <if_flag> <macro-number> <percentage>
+
+<if_flag>       should be 0
+<macro-number>  Defines the type of set being loaded (see below)
+<percentage>    A percentage chance (recalculated for all slots)
+
+M 0 102 1 104            Elite
+Y 0 10 5                    5% chance at metal
+
+Note 1:
+if-flag should be 0.  This is so if equipment loads prior to the Y, the Y
+will not be bypassed if equipment prior to it fails to load.  You may still
+use an if-flag of 1 if you truly wish the load of the set of armor dependent
+on the previous command, although I can't see why you would want to do this.
+
+Note 2:
+Y re-rolls the <percentage> for all slots.  It is essentially the
+equivalent of doing multiple '?', 'E', '?', 'E', '?', 'E' commands
+
+Note 3:
+Y should be the LAST equipment command on a given mob.  Any slot that has
+already been equipped prior to the Y command execution will be skipped.
+This is so you can put specific single items on the creature and then flesh
+out all other slots with stock-equipment.
+
+Note 4:
+Be careful when setting load rates for armor. An acceptable load rate on a
+Y load should be 5 or less as we do not want players cashing in on load
+rates.  Speak with a LOW if you want armor above 5% chance load.
+
+Note 5:
+Y loads are still subject to max_exist.  If an item is at or over
+max_exist, it will not be loaded by a Y command.
+
+--------------
+Macro types:
+1   soft (leather)      2   dwarven (leather)      3   munchkin
+4   ogre                5   horsehair              6   repcloth
+7   hard (leather)      8   studded (leather)      9   chainmail
+10  metal               11  platemail              12  ivory
+13  jeweled             14  diamond                15  gleaming
+16  blackened           17  runic                  18  shark
+19  cyclops             20  whitescale             21  blackscale
+22  frogskin            23  laminated              24  bone
+25  mithril             26  runed (red)            27  mica
+28  turquoise           29  obsidian               30  onyx
+31  admantium           32  marble                 33  ionic
+34  emerald             35  banded                 36  steel (hard)
+37  spirit              38  crude (metal)          39  ornamented
+40  fishscale (silvery) 41  ring mail              42  field (plate)
+43  hobchain            44  gnome mail             45  wax
+46  supple (leather)    47  coral                  48  hobstud
+49  aluminum (elf)      50  bronze plate           51  torn leather
+52  orc mail            53  flowwhite(elf)         54  spiked metal(ogre)
+55  rawhide(ogre)       56  glowwhite(elf mage)    57  splint hide(gnome)
+58  goblin              59  dwarf stud             60  obs scale (human)
+61  elf stud            62  shiny metal(dwarf)     63  sturdy iron (ogre)
+64  mole skin (gnome)	65  toughened (dwarf)	   66  blue dragon
+67  battle (dwarf)      68  deerskin (elf)         69  dark blue (elf)
+70  exoskeleton (gnome) 71  sheepskin (elf)        72  Azurite (dwarf)
+73  white metal         74  dark grey (elf)        75  dark camo (hobbit)
+76  athanor             77  tungsten               78  sapphire (dwarf)
+79  ruffled             80  wide-leather           81  blackleather
+82  molten              83  greenscale (elf)       84  eelskin (human)
+85  forest              86  brigantine (gnome)     87  splintmail (gnome)

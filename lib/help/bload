@@ -1,0 +1,10 @@
+Syntax: bload <bow> <arrow>
+
+Bload is the command to load an arrow into a bow.  Once a bow is loaded,
+you will automatically hold the bow.  Hence, you may not use the bload
+command unless both hands are free.
+
+Bload will also check any held/worn quivers for the arrow.
+
+See Also : SHOOT, REMOVE, RESTRING, RANGED WEAPONS
+Related Topics: COMBAT

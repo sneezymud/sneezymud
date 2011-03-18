@@ -1,0 +1,8 @@
+Default Position
+
+This is the position the mob will load in.  It is also the mobs
+preferred position, ie, it will stand/sit/rest etc if it can in order
+to re-achieve this position.
+
+The creature's long description is shown only if its position is the same
+as its default position.

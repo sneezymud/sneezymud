@@ -1,0 +1,21 @@
+    Equipment position is one of:
+       WEAR_FINGER_R   1
+       WEAR_FINGER_L   2
+       WEAR_NECK       3
+       WEAR_BODY       4
+       WEAR_HEAD       5
+       WEAR_LEGS_R     6
+       WEAR_LEGS_L     7
+       WEAR_FOOT_R     8
+       WEAR_FOOT_L     9
+       WEAR_HAND_R     10
+       WEAR_HAND_L     11
+       WEAR_ARM_R      12
+       WEAR_ARM_L      13
+       WEAR_BACK       14
+       WEAR_WAISTE     15
+       WEAR_WRIST_R    16
+       WEAR_WRIST_L    17
+       HOLD_RIGHT      18
+       HOLD_LEFT       19
+

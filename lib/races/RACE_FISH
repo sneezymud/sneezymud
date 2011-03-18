@@ -1,0 +1,32 @@
+filename RACE_FISH
+singName fish
+plurName fishes
+propName Fish
+lore ANIMAL
+age 1+1d5
+maleHt 8+1d2
+maleWt 6+1d2
+femaleHt 6+1d2
+femaleWt 6+1d2
+body Fish
+moveIn swims in
+moveOut swims
+moveMod 20
+search 2
+STR 85
+BRA 80
+CON 65
+DEX 160
+AGI 170
+INT 55
+WIS 55
+FOC 55
+PER 55
+CHA 55
+KAR 145
+SPE 170
+DumbAnimal
+Aquatic
+IMMUNE_WATER 100
+AFF_WATER_BREATH
+AFF_SWIM

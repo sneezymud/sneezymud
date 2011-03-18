@@ -1,0 +1,43 @@
+AFF_BLIND              1
+AFF_INVISIBLE          2
+AFF_SWIM               4
+AFF_DETECT_INVISIBLE   8
+AFF_DETECT_MAGIC       16
+AFF_SENSE_LIFE         32
+AFF_LEVITATING         64
+AFF_SANCTUARY          128
+AFF_GROUP              256
+AFF_WEB                512
+AFF_CURSE              1024
+AFF_FLYING             2048
+AFF_POISON             4096
+AFF_STUNNED            8192
+AFF_PARALYSIS          16384
+AFF_INFRAVISION        32768
+AFF_WATERBREATH        65536
+AFF_SLEEP              131072
+AFF_SCRYING            262144
+AFF_SNEAK              524288
+AFF_HIDE               1048576
+AFF_SHOCKED            2097152
+AFF_CHARM              4194304
+AFF_SYPHILIS           8388608
+AFF_SHADOW_WALK        16777216
+AFF_TRUE_SIGHT         33554432
+AFF_MUNCHING_CORPSE    67108864
+AFF_RIPOSTE            134217728
+AFF_SILENT             268435456
+AFF_ENGAGER            436870912
+AFF_AGGRESSOR          873741824 (set automatically)
+AFF_CLARITY           = (unsigned)(1<<31);
+
+To hand modify affected flags on mobiles simply add the desired flag numbers
+together and assign.
+
+Ex: To affect a mobile by sanctuary and syphilis simply add the numbers 8388608
+and 128 together, thus, the affected bit number becomes 8388736.
+
+Please update as new affect flags are implemented.
+
+NOTE: Clarity and True Sight are more or less the same so if either is desired
+use True Sight to avoid the unsigned bitvector.

@@ -1,0 +1,30 @@
+filename RACE_BASILISK
+singName basilisk
+plurName basilisks
+propName Basilisks
+lore OTHER
+age 50+1d10
+maleHt 35+1d5
+maleWt 150+3d10
+femaleHt 30+3d2
+femaleWt 130+3d10
+body reptile
+moveIn slinks in
+moveOut slinks
+hpMod 1
+moveMod 10 
+manaMod 1
+search 1
+STR 140
+BRA 140
+CON 150
+DEX 120
+AGI 100
+INT 90
+WIS 90
+FOC 110
+PER 60
+CHA 60
+KAR 120
+SPE 140
+Ridable

@@ -1,0 +1,27 @@
+Use the "goto" command to find your class trainer by typing:
+"<c>goto trainer<z>"
+
+Follow the directions until you are standing in the same room 
+with your thief trainer.
+
+Note: As a thief, your trainer is wisely in hiding and it is
+up to you to properly find him.  The goto command will lead
+you one room away, and you must find the hidden entrance.
+
+The room your trainer is in is dimly lit, so it is suggested
+that you bring and light a torch to see properly.
+
+Once you're there, use some of your practices by typing:
+"<c>practice <discipline> <# of practices><z>"
+
+Since you're a thief, type this while with your trainer:
+<c>practice thief 3<z>
+
+This will use three of your practices in the thief discipline.  
+Use about half your practices at this trainer and save the other 
+half for your other basic trainer.
+
+To return to Aunt Dee, type "<c>goto dee<z>" and it will 
+give you directions.
+
+

@@ -1,0 +1,12 @@
+Money Constant
+
+Not all mobs should carry gold, most animals should not.  The value set here
+is dependant on the mob's level and also controls potion and component loads.
+
+Adjust the level down substantially if the mob has equipment, treasure or
+other booty.
+
+NOTES:
+
+ANIMALS:  You should not give an animal money, however you can load with 
+other treasures and sell-able equipment.

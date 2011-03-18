@@ -1,0 +1,2231 @@
+:Format: [the : at the start of each line means comment,
+:         you don't add these to the entries.           ]
+:
+:#<suitname>
+:$<suitrace>[ogre, human, elf, dwarf, hobbit, gnome]
+:head     = <vnum>
+:neck     = <vnum>
+:body     = <vnum>
+:arm      = <vnum>
+:hand     = <vnum>
+:waist    = <vnum>
+:wrist    = <vnum>
+:leg      = <vnum>
+:foot     = <vnum>
+:finger   = <vnum>
+:shield   = <vnum>
+:back     = <vnum>
+:Set #
+:#
+:$
+:head     = 
+:neck     = 
+:body     = 
+:arm      = 
+:hand     = 
+:waist    = 
+:wrist    = 
+:leg      = 
+:foot     = 
+:finger   = 
+:shield   = 
+:back     = 
+// Paste below this line.
+:Set #156
+#grizzled
+$ogre
+head     = 5003
+neck     = 5008
+body     = 5002
+arm      = 5004
+hand     = 5005
+waist    = 5025
+wrist    = 5006
+leg      = 5026
+foot     = 5007
+finger   = 5009
+back     = 5001
+:Set #155
+#ragged
+$hobbit
+head     = 32773
+neck     = 32774
+body     = 32775
+back     = 32776
+arm      = 32777
+wrist    = 32778
+hand     = 32779
+finger   = 32780
+waist    = 32781
+leg      = 32782
+:Set #154 
+#thin_elven_chain 
+$elf
+head     = 34094 
+neck     = 34093 
+body     = 34095 
+arm      = 34097 
+hand     = 34099 
+waist    = 34090 
+wrist    = 34098 
+leg      = 34100 
+foot     = 34096 
+finger   = 34092 
+shield   = 34101 
+back     = 34091
+:Set #153
+#jellyfish
+$dwarf
+head     = 6590
+neck     = 6597
+body     = 6591
+arm      = 6593
+hand     = 6598
+waist    = 7401
+wrist    = 6599
+leg      = 6596
+foot     = 6595
+finger   = 6594
+shield   = 6592
+back     = 6589
+:Set #152
+#shadowy_fire
+$hobbit
+head     = 6541
+neck     = 6533
+body     = 6540
+arm      = 6539
+hand     = 6538
+waist    = 6537
+wrist    = 6536
+leg      = 6535
+back     = 6534 
+:Set #151
+#purple_mithril
+$elf
+head     = 6518
+neck     = 6508
+body     = 6517
+arm      = 6516
+hand     = 6515
+waist    = 6514
+wrist    = 6513
+leg      = 6512
+foot     = 6511
+finger   = 6509
+back     = 6510
+:Set #150
+#crusader
+$human
+head     = 6486
+neck     = 6495
+body     = 6492
+arm      = 6494
+hand     = 6493
+waist    = 6491
+wrist    = 6490
+leg      = 6489
+foot     = 6488
+finger   = 6487
+shield   = 6485
+back     = 6484
+:set #149 
+#shady
+$hobbit
+head     = 6453
+neck     = 6461
+body     = 6454
+arm      = 6458
+hand     = 6460
+waist    = 6455
+wrist    = 6459
+leg      = 6457
+back     = 6456
+:set #148 
+#cluttered
+$gnome
+head     = 6441
+body     = 6442
+arm      = 6444
+hand     = 6446
+waist    = 6447
+wrist    = 6445 
+leg      = 6448
+foot     = 6449
+back     = 6443
+:set #147 
+#white_marble
+$dwarf
+head     = 6438
+neck     = 6428
+arm      = 6437
+hand     = 6436
+waist    = 6435
+wrist    = 6434
+leg      = 6433
+foot     = 6432
+finger   = 6430
+shield   = 6429
+back     = 6431
+:set #146 
+#ceremonial
+$gnome
+head     = 6389
+neck     = 6392
+body     = 6387
+arm      = 6396
+hand     = 6393
+waist    = 6390
+wrist    = 6397
+leg      = 6395
+foot     = 6394
+finger   = 6388
+shield   = 6398
+back     = 6391
+:set #145 
+#black_chain
+$elf
+head     = 6408
+neck     = 6413
+body     = 6409
+arm      = 6411
+hand     = 6407
+waist    = 6406
+wrist    = 6412
+leg      = 6405
+foot     = 6404
+back     = 6410	
+:set #144 
+#malachite
+$human
+head     = 6348
+neck     = 6353
+body     = 6349
+arm      = 6367
+hand     = 6354
+waist    = 6352
+wrist    = 6368
+leg      = 6366
+foot     = 6355
+finger   = 6350
+back     = 6351
+shield   = 6369
+:set #143
+#xanesla_guard
+$ogre
+head     = 6326
+neck     = 6331
+body     = 6327
+arm      = 6335
+hand     = 6332
+waist    = 6330
+wrist    = 6336
+leg      = 6334
+foot     = 6333
+finger   = 6328
+shield   = 6337
+back     = 6329
+:set #142 
+#turtle_Shell
+$ogre
+head     = 6311
+body     = 6310
+arm      = 6314
+hand     = 6313
+waist    = 6309
+wrist    = 6315
+leg      = 6308
+foot     = 6307
+shield   = 6316
+back     = 6312
+:set #141
+#bleached
+$hobbit
+head     = 6549
+neck     = 6557
+body     = 6550
+arm      = 6554
+hand     = 6556
+waist    = 6551
+wrist    = 6555
+leg      = 6553
+foot     = 6552
+back     = 6548
+:Set #140
+#frost tipped
+$ogre
+head     = 33782 
+neck     = 33787
+body     = 33783
+arm      = 33786
+hand     = 33790
+waist    = 33784
+wrist    = 33789
+leg      = 33785
+foot     = 33788
+back     = 33781
+:set #139
+#ebony
+$elf
+head     = 24675
+neck     = 24676
+body     = 24677
+arm      = 24679
+hand     = 24681
+waist    = 24683
+wrist    = 24680
+leg      = 24684
+foot     = 24685
+finger   = 24682
+shield   = 24686
+back     = 24678
+:Set #138
+#lightweight
+$hobbit
+head     = 15480
+neck     = 15481
+body     = 15471
+arm      = 15478
+hand     = 15477
+waist    = 15476
+wrist    = 15475
+leg      = 15473
+finger   = 15472
+shield   = 15479
+back     = 15470
+:Set #137
+#luna_silk
+$elf
+head     = 15487
+neck     = 15488
+body     = 15486
+arm      = 15489
+hand     = 15490
+waist    = 15495
+wrist    = 15491
+leg      = 15492
+foot     = 15493
+finger   = 15494
+back     = 15485
+:Set #136
+#elven_chain
+$elf
+head     = 33482
+body     = 33483
+arm      = 33478
+hand     = 33477
+waist    = 33481
+wrist    = 33480
+leg      = 33476
+foot     = 33475
+back     = 33479
+:Set #135
+#eternium_plate
+$elf
+head     = 33451
+neck     = 33452
+body     = 33450
+arm      = 33458
+hand     = 33459
+waist    = 33453
+wrist    = 33456
+leg      = 33460
+foot     = 33461
+finger   = 33455
+back     = 33457
+:Set #134
+#tiny_torn
+$hobbit
+head     = 35708
+neck     = 35709
+body     = 35705
+arm      = 35707
+hand     = 35706
+waist    = 35704
+wrist    = 35703
+leg      = 35702
+foot     = 35701
+back     = 35700
+:Set #133
+#topaz
+$hobbit
+head     = 35410
+neck     = 35409
+body     = 35408
+arm      = 35407
+hand     = 35406
+waist    = 35405
+wrist    = 35404
+leg      = 35416
+foot     = 35403
+finger   = 35402
+shield   = 35411
+back     = 35401
+:Set #132
+#tarred
+$elf
+head     = 24755
+neck     = 24759
+body     = 24754
+arm      = 24753
+hand     = 24752
+waist    = 24758
+wrist    = 24756
+leg      = 24751
+foot     = 24750
+finger   = 24757
+shield   = 24749
+back     = 24748
+:Set #131
+#inkblack
+$hobbit
+head     = 24746
+neck     = 24747
+body     = 24745
+arm      = 24743
+hand     = 24741
+waist    = 24739
+wrist    = 24742
+leg      = 24738
+finger   = 24740
+back     = 24744
+:Set #130
+#lily
+$gnome
+head     = 24737
+neck     = 24736
+body     = 24735
+arm      = 24734
+hand     = 24733
+waist    = 24732
+wrist    = 24731
+leg      = 24730
+foot     = 24729
+finger   = 24728
+shield   = 24727
+back     = 24726
+:Set #129
+#caimanrush
+$hobbit
+head     = 24713
+neck     = 24720
+body     = 24712
+arm      = 24717
+hand     = 24722
+waist    = 24714
+wrist    = 24715
+leg      = 24716
+finger   = 24718
+shield   = 24721
+back     = 24711
+:Set #128
+#werewolf hide
+$elf
+head     = 16263
+neck     = 16264
+body     = 16265
+arm      = 16267
+hand     = 16269
+waist    = 16270
+wrist    = 16268
+leg      = 16271
+foot     = 16272
+finger   = 16273
+back     = 16266
+:Set #127
+#green scaled
+$human
+head     = 16250
+neck     = 16251
+body     = 16252
+arm      = 16254
+hand     = 16256
+waist    = 16257
+wrist    = 16255
+leg      = 16258
+foot     = 16259
+finger   = 16260
+shield   = 16262
+back     = 16253
+:Set #126
+#purple-shadowy
+$gnome
+head      = 22783
+body      = 22786
+arm       = 22791
+hand      = 22781
+waist     = 22788
+wrist     = 22782
+leg       = 22784
+foot      = 22787
+back      = 22789
+:Set #125
+#shaman
+$human
+head      = 24796
+neck      = 24798
+body      = 24791
+arm       = 24792
+waist     = 24793
+wrist     = 24794
+leg       = 24795
+foot      = 24797
+back      = 24799
+:Set #124
+#spiked-titanium
+$ogre
+head      = 15163
+neck      = 15162
+body      = 15161
+arm       = 15159
+hand      = 15157
+waist     = 15156
+wrist     = 15158
+leg       = 15155
+foot      = 15154
+back      = 15160
+shield    = 15153
+:Set #123
+#admintite
+$human
+head      = 30703
+neck      = 30706
+body      = 30702
+arm       = 30707
+hand      = 30704
+waist     = 30708
+wrist     = 30709
+leg       = 30710
+foot      = 30711
+back      = 30712
+shield    = 30705
+:Set #122
+#tooled
+$human
+head      = 30746
+neck      = 30744
+body      = 30733
+arm       = 30731
+hand      = 30732
+waist     = 30730
+wrist     = 30729
+leg       = 30728
+foot      = 30727
+shield    = 30745
+back      = 30726
+:Set #121
+#kid-hide
+$gnome
+head      = 4170
+neck      = 4171
+body      = 4173
+arm       = 4175
+hand      = 4174
+waist     = 4178
+wrist     = 4176
+leg       = 4179
+foot      = 4180
+finger    = 4177
+back      = 4172
+:Set #120
+#goat-hide
+$human
+head      = 4140
+neck      = 4141
+body      = 4142
+arm       = 4144
+hand      = 4146
+waist     = 4148
+wrist     = 4145
+leg       = 4149
+foot      = 4150
+finger    = 4147
+back      = 4143
+:Set #119
+#stained-leather
+$ogre
+head      = 28927
+neck      = 28926
+body      = 28928
+arm       = 28929
+hand      = 28930
+waist     = 28931
+leg       = 28932
+foot      = 28933
+finger    = 28936
+back      = 28934
+:Set #118
+#gnickel-plate
+$gnome
+head      = 16315
+neck      = 16316
+body      = 16317
+arm       = 16319
+hand      = 16321
+waist     = 16323
+wrist     = 16320
+leg       = 16324
+foot      = 16325
+finger    = 16322
+shield    = 16326
+back      = 16318
+:Set #117
+#sandworm-hide
+$hobbit
+head   = 16628
+neck   = 16634
+body   = 16626
+arm    = 16631
+hand   = 16630
+waist  = 16633
+wrist  = 16632
+leg    = 16629
+back   = 16627
+:Set #116
+# sylvan-silk
+$ elf
+head     = 10620
+neck     = 10621
+body     = 10622
+arm      = 10623
+hand     = 10626
+waist    = 10627
+wrist    = 10625
+leg      = 10628
+foot     = 10629
+finger   = 10630
+shield   = 10631
+back     = 10624
+:Set #115
+#sylvan-plate
+$elf
+head     = 10600
+neck     = 10601
+body     = 10602
+arm      = 10603
+hand     = 10606
+waist    = 10607
+wrist    = 10605
+leg      = 10608
+foot     = 10609
+finger   = 10610
+shield   = 10611
+back     = 10604
+:Set #114
+#pearl-studded
+$hobbit
+head     = 14131
+neck     = 14132
+body     = 14133
+arm      = 14134
+hand     = 14135
+waist    = 14136
+wrist    = 14137
+leg      = 14138
+foot     = 14139
+finger   = 14130
+shield   = 14140
+back     = 14141
+:Set #113
+#runed-flesh
+$hobbit 
+head     = 14121
+neck     = 14122
+body     = 14123
+arm      = 14124
+hand     = 14125
+waist    = 14126
+wrist    = 14127
+leg      = 14128
+foot     = 14129
+finger   = 14120
+shield   = 14119
+back     = 14118
+:Set #112
+#gnight-blackened
+$gnome
+head     = 22451
+neck     = 22452
+body     = 22453
+arm      = 22454
+hand     = 22455
+waist    = 22456
+wrist    = 22457
+leg      = 22458
+foot     = 22459
+finger   = 22460
+shield   = 22461
+back     = 22462
+:Set #111
+#gnight-basic
+$gnome
+head     = 24447
+neck     = 24488
+body     = 24446
+arm      = 24489
+hand     = 24490
+waist    = 24491
+wrist    = 24492
+leg      = 24493
+foot     = 24494
+finger   = 24495
+shield   = 24496
+back     = 24498
+:Set #110
+#spirit-cloth
+$gnome
+head     = 7580
+neck     = 7581
+body     = 7582
+arm      = 7584
+hand     = 7586
+waist    = 7588
+wrist    = 7585
+leg      = 7589
+foot     = 7590
+finger   = 7587
+shield   = 7591
+back     = 7583
+:Set #109
+#studded-othora-hide
+$human
+head     = 20830
+neck     = 20831
+body     = 20832
+arm      = 20834
+hand     = 20836
+waist    = 20833
+wrist    = 20835
+leg      = 20837
+foot     = 20838
+finger   = 20840
+shield   = 20841
+back     = 20839
+:Set #108
+#makeshift-othora-hide
+$hobbit
+head     = 20800
+neck     = 20801
+body     = 20802
+arm      = 20804
+hand     = 20806
+waist    = 20803
+wrist    = 20805
+leg      = 20807
+foot     = 20808
+finger   = 20810
+shield   = 20811
+back     = 20809
+:Set #107
+#othora-hide
+$human
+head     = 20820
+neck     = 20821
+body     = 20822
+arm      = 20824
+hand     = 20826
+waist    = 20823
+wrist    = 20825
+leg      = 20827
+foot     = 20828
+finger   = 20818
+shield   = 20819 
+back     = 20829
+:Set #106
+#pumice
+$human
+head     = 5742
+neck     = 5712
+body     = 5781
+arm      = -1
+hand     = -1
+waist    = 5710
+wrist    = 5784
+leg      = 5783
+foot     = -1
+finger   = -1
+shield   = 5705
+back     = 5782
+:Set #105
+#black-silk
+$human
+head     = 730
+neck     = 731
+body     = 732
+arm      = 733
+hand     = 734
+waist    = 735
+wrist    = 736
+leg      = 737
+foot     = 738
+finger   = 740
+shield   = 741
+back     = 739
+:Set #104
+#black-cloth
+$human
+head     = 710
+neck     = 711
+body     = 712
+arm      = 713
+hand     = 714
+waist    = 715
+wrist    = 716
+leg      = 717
+foot     = 718
+finger   = 720
+shield   = 721
+back     = 719
+:Set #103
+#spider-silk
+$gnome
+head     = 23340
+neck     = 23341
+body     = 23342
+arm      = 23343
+hand     = 23344
+waist    = 23345
+wrist    = 23346
+leg      = 23347
+foot     = 23348
+finger   = 23349
+shield   = 23351
+back     = 23350
+:Set #102
+#charred-leather
+$gnome
+head     = 22440
+neck     = 22441
+body     = 22442
+arm      = 22443
+hand     = 22444
+waist    = 22445
+wrist    = 22446
+leg      = 22447
+foot     = 22448
+finger   = 22449
+shield   = 22450
+back     = 22439
+:Set #101
+#mesh black
+$human
+head     = 20500
+neck     = 20501
+body     = 20502
+arm      = 20504
+hand     = 20506
+waist    = 20503
+wrist    = 20505
+leg      = 20507
+foot     = 20508
+finger   = 20510
+shield   = 20511
+back     = 20509
+:Set #100
+#black-runed
+$elf
+head     = 20520
+neck     = 20521
+body     = 20522
+arm      = 20524
+hand     = 20526
+waist    = 20523
+wrist    = 20525
+leg      = 20527
+foot     = 20528
+finger   = 20530
+shield   = 20531
+back     = 20529
+:Set #99
+#hide-dyed
+$ogre
+head     = 20600
+neck     = 20601
+body     = 20602
+arm      = 20604
+hand     = 20606
+waist    = 20603
+wrist    = 20605
+leg      = 20607
+foot     = 20608
+finger   = 20610
+shield   = 20611
+back     = 20609
+:Set 98
+#whaleskin skin
+$elf
+head     = 9603
+neck     = 9611
+body     = 9606
+arm      = 9604
+hand     = 9602
+waist    = 9610
+wrist    = 9605
+leg      = 9609
+foot     = 9608
+finger   = 9600
+shield   = 9607
+back     = 9601
+:Set 97
+#terbium
+$ogre
+head     = 27932
+neck     = 27931
+body     = 27930
+arm      = 27929
+hand     = 27928
+waist    = 27927
+wrist    = 27926
+leg      = 27925
+foot     = 27924
+finger   = -1    
+shield   = 27923
+back     = 27922
+:Set 96
+#heavy cloth monk          
+$human
+head     = 25577
+neck     = 25576
+body     = 25578
+arm      = 25572
+hand     = 25574
+waist    = 25575
+wrist    = 25573
+leg      = 25579
+foot     = 25580
+finger   = -1
+shield   = -1
+back     = 25581
+:Set 95
+#gemstone-black   
+$human
+head     = 12038
+neck     = 12037
+body     = 12036
+arm      = 12035
+hand     = 12034
+waist    = 12033
+wrist    = 12032
+leg      = 12031
+foot     = 12030
+finger   = 12029
+shield   = 12028
+back     = 12027
+:Set 94
+#ice
+$hobbit
+head     = 27887
+neck     = 27886
+body     = 27888
+arm      = 27889
+hand     = 27890
+waist    = 27891
+wrist    = 27892
+leg      = 27893
+foot     = -1
+finger   = 27885
+shield   = -1
+back     = 27895
+#tuxedo
+$human
+head     = -1
+neck     = 8872
+body     = 8875
+arm      = -1
+hand     = -1
+waist    = 8871
+wrist    = -1
+leg      = 8873
+foot     = 8870
+finger   = -1
+shield   = -1
+back     = 8874
+#bark
+$hobbit
+head     = 8913
+neck     = 8916
+body     = 8914
+arm      = 8915
+hand     = 8918
+waist    = 8919
+wrist    = 8920
+leg      = 8917
+foot     = -1
+finger   = 8926
+shield   = 8921
+back     = 8922
+#tattered leather
+$elf
+head     = 10154
+neck     = 10153
+body     = 10152
+arm      = 10157
+hand     = 10155
+waist    = 10151
+wrist    = 10156
+leg      = 10149
+foot     = 10148
+finger   = 10150
+shield   = 10147
+back     = 10146
+#behirscale scale
+$dwarf
+head     = 13703
+neck     = 13707
+body     = 13700
+arm      = 13706
+hand     = 13702
+waist    = 13708
+wrist    = 13705
+leg      = 13710
+foot     = 13709
+finger   = 13704
+shield   = 13701
+back     = 13712
+#xornscale scale
+$dwarf
+head     = 13723
+neck     = 13724
+body     = 13722
+arm      = 13721
+hand     = 13720
+waist    = 13719
+wrist    = 13718
+leg      = 13717
+foot     = 13716
+finger   = -1
+shield   = 13715
+back     = 13714
+#corundum
+$dwarf
+head     = 13751
+neck     = 13750
+body     = 13740
+arm      = 13749
+hand     = 13748
+waist    = 13747
+wrist    = 13746
+leg      = 13745
+foot     = 13744
+finger   = 13743
+shield   = 13742
+back     = 13741
+#splintmail mail
+$gnome
+head     = 24480
+neck     = 24484
+body     = 24481
+arm      = 24482
+hand     = 24483
+waist    = 24475
+wrist    = 24476
+leg      = 24477
+foot     = 24478
+finger   = -1
+shield   = -1
+back     = 24479
+#brigandine
+$gnome
+head     = 24459
+neck     = 24464
+body     = 24465
+arm      = 24463
+hand     = 24462
+waist    = 24461
+wrist    = 24460
+leg      = 24458
+foot     = 24467
+finger   = -1
+shield   = 24468
+back     = 24466
+#forest
+$dwarf
+head     = 5375
+neck     = 5385
+body     = 5387
+arm      = 5383
+hand     = 5378
+waist    = 5382
+wrist    = 5384
+leg      = 5376
+foot     = 5379
+finger   = 5386
+shield   = -1
+back     = 5377
+#eelskin skin
+$human
+head     = 5507
+neck     = 5508
+body     = 5510
+arm      = 5511
+hand     = 5514
+waist    = 5512
+wrist    = 5513
+leg      = 5515
+foot     = 5520
+finger   = 5518
+shield   = 5516
+back     = 5517
+#greenscale scale
+$elf
+head     = 12410
+neck     = 12411
+body     = 12412
+arm      = 12413
+hand     = 12414
+waist    = 12415
+wrist    = 12416
+leg      = 12417
+foot     = 12422
+finger   = 12420
+shield   = -1
+back     = 12419
+#molten
+$human
+head     = 12010
+neck     = 12009
+body     = 12008
+arm      = 12007
+hand     = 12006
+waist    = 12005
+wrist    = 12004
+leg      = 12003
+foot     = 12002
+finger   = 12000
+shield   = 12001
+back     = 12011
+#black-leather 
+$human
+head     = 7719
+neck     = 7720
+body     = 7721
+arm      = 7722
+hand     = 7723
+waist    = 7724
+wrist    = 7725
+leg      = 7726
+foot     = 7727
+finger   = 7729
+shield   = 7740
+back     = 7728
+#wideleather leather
+$human
+head     = 1670
+neck     = 1671
+body     = 1672
+arm      = 1673
+hand     = 1674
+waist    = 1675
+wrist    = 1676
+leg      = 1677
+foot     = 1678
+finger   = -1
+shield   = -1
+back     = 1679
+#ruffled
+$hobbit
+head     = 12023
+neck     = 12022
+body     = 12021
+arm      = 12020
+hand     = 12019
+waist    = 12018
+wrist    = 12017
+leg      = 12016
+foot     = 12015
+finger   = 12014
+shield   = -1
+back     = 12013
+#sapphire
+$dwarf
+head     = 25563
+neck     = 25566
+body     = 25567
+arm      = 25560
+hand     = 25559
+waist    = 25562
+wrist    = 25561
+leg      = 25558
+foot     = 25557
+finger   = -1
+shield   = 25564
+back     = 25565
+#tungsten
+$human
+head     = 25527
+neck     = 25533
+body     = 25531
+arm      = 25534
+hand     = 25532
+waist    = 25530
+wrist    = 25535
+leg      = 25528
+foot     = 25529
+finger   = 25538
+shield   = 25536
+back     = 25537
+#athanor
+$human
+head     = 25515
+neck     = 25521
+body     = 25519
+arm      = 25522
+hand     = 25520
+waist    = 25518
+wrist    = 25523
+leg      = 25516
+foot     = 25517
+finger   = -1
+shield   = 25524
+back     = 25525
+#darkcamo camoflauge
+$hobbit
+head     = 22654
+neck     = 22656
+body     = 22652
+arm      = 22657
+hand     = 22659
+waist    = 22655
+wrist    = 22658
+leg      = 22660
+foot     = -1
+finger   = -1
+shield   = -1
+back     = 22653
+#darkgrey grey
+$elf
+head     = 8837
+neck     = 8844
+body     = 8838
+arm      = 8845
+hand     = 8840
+waist    = 8846
+wrist    = 8849
+leg      = 8841
+foot     = 8842
+finger   = 8850
+shield   = -1
+back     = 8839
+#whitemetal metal
+$human
+head     = 8736
+neck     = 8735
+body     = 8734
+arm      = 8733
+hand     = 8732
+waist    = 8731
+wrist    = 8730
+leg      = 8729
+foot     = 8728
+finger   = 8727
+shield   = 8726
+back     = 8725
+#azurite
+$dwarf
+head     = 8807
+neck     = 8806
+body     = 8805
+arm      = 8808
+hand     = 8809
+waist    = 8804
+wrist    = 8810
+leg      = 8811
+foot     = 8812
+finger   = 8803
+shield   = 8802
+back     = 8801
+#sheepskin skin
+$elf
+head     = 1810
+neck     = 1811
+body     = 1812
+arm      = 1813
+hand     = 1814
+waist    = 1815
+wrist    = 1816
+leg      = 1817
+foot     = 1818
+finger   = 1029
+shield   = 1030
+back     = 1819
+#exoskeleton
+$gnome
+head     = 23300
+neck     = 23301
+body     = 23302
+arm      = 23305
+hand     = 23306
+waist    = 23304
+wrist    = 23309
+leg      = 23307
+foot     = 23308
+finger   = -1
+shield   = -1
+back     = 23303
+#darkblue blue
+$elf
+head     = 23215
+neck     = 23214
+body     = 23216
+arm      = 23218
+hand     = 23220
+waist    = 23221
+wrist    = 23219
+leg      = 23222
+foot     = 23223
+finger   = 23229
+shield   = 23233
+back     = 23217
+#deerskin skin
+$elf
+head     = 23200
+neck     = 23202
+body     = 23201
+arm      = 23204
+hand     = 23205
+waist    = 23210
+wrist    = 23206
+leg      = 23207
+foot     = 23208
+finger   = 23230
+shield   = 23231
+back     = 23203
+#battle armor
+$dwarf
+head     = 8709
+neck     = -1
+body     = 8708
+arm      = -1
+hand     = 8711
+waist    = -1
+wrist    = -1
+leg      = -1
+foot     = 8710
+finger   = -1
+shield   = -1
+back     = 8712
+#bluedragon dragon
+$human
+head     = 8701
+neck     = -1
+body     = 8704
+arm      = 8706
+hand     = -1
+waist    = -1
+wrist    = -1
+leg      = 8705
+foot     = -1
+finger   = -1
+shield   = -1
+back     = 8707
+#toughened-leather
+$dwarf
+head     = 1711
+neck     = 1021
+body     = 1712
+arm      = 1713
+hand     = 1714
+waist    = 1715
+wrist    = 1716
+leg      = 1717
+foot     = 1719
+finger   = -1
+shield   = -1
+back     = 1718
+#moleskin mole skin
+$gnome
+head     = 1807
+neck     = 1806
+body     = 1805
+arm      = 1804
+hand     = 1803
+waist    = 1802
+wrist    = 1801
+leg      = 1799
+foot     = 1800
+finger   = 1833
+shield   = 1832
+back     = 1798
+#sturdyiron iron
+$ogre
+head     = 1797
+neck     = 1796
+body     = 1795
+arm      = 1794
+hand     = 1793
+waist    = 1809
+wrist    = 1792
+leg      = 1791
+foot     = 1790
+finger   = -1
+shield   = 1789
+back     = 1788
+#shinymetal metal
+$dwarf
+head     = 1787
+neck     = 1786
+body     = 1780
+arm      = 1785
+hand     = 1784
+waist    = 1783
+wrist    = 1808
+leg      = 1782
+foot     = 1781
+finger   = -1
+shield   = -1
+back     = 1779
+#elfstud elven studded leather
+$elf
+head     = 1778
+neck     = 1770
+body     = 1777
+arm      = 1776
+hand     = 1775
+waist    = 1774
+wrist    = 1773
+leg      = 1772
+foot     = 1771
+finger   = 1049
+shield   = 1866
+back     = 1769
+#obsscale obsidian scale
+$human
+head     = 7070
+neck     = 7071
+body     = 7072
+arm      = 7073
+hand     = 7074
+waist    = 7075
+wrist    = 7076
+leg      = 7077
+foot     = 7078
+finger   = 7079
+shield   = 7080
+back     = 7081
+#dwarfstud dwarven studded leather
+$dwarf
+head     = 1768
+neck     = -1
+body     = 1767
+arm      = 1766
+hand     = 1762
+waist    = 1765
+wrist    = 1764
+leg      = 1763
+foot     = 1761
+finger   = -1
+shield   = -1
+back     = 1760
+#goblin dirty metal
+$dwarf
+head     = 5400
+neck     = 5401
+body     = 5403
+arm      = 5404
+hand     = 5402
+waist    = 5406
+wrist    = 5410
+leg      = 5405
+foot     = 5407
+finger   = 5413
+shield   = -1
+back     = 5414
+#splinthide hide
+$gnome
+head     = 15116
+neck     = 15123
+body     = 15122
+arm      = 15121
+hand     = 15120
+waist    = 15119
+wrist    = 15118
+leg      = 15117
+foot     = 15125
+finger   = -1
+shield   = 15126
+back     = 15124
+#glowwhite glowing white
+$elf
+head     = 1694
+neck     = 1698
+body     = 1690
+arm      = 1696
+hand     = 1697
+waist    = 1693
+wrist    = 1691
+leg      = 1692
+foot     = 1695
+finger   = 1699
+shield   = -1
+back     = 1689
+#rawhide
+$ogre
+head     = 1730
+neck     = 1739
+body     = 1738
+arm      = 1731
+hand     = 1732
+waist    = 1737
+wrist    = 1736
+leg      = 1735
+foot     = 1734
+finger   = 1870
+shield   = 1871
+back     = 1733
+#spikedmetal metal
+$ogre
+head     = 1727
+neck     = 1874
+body     = 1728
+arm      = 1729
+hand     = 1726
+waist    = 1725
+wrist    = 1724
+leg      = 1723
+foot     = 1722
+finger   = 1875
+shield   = 1721
+back     = 1720
+#flowwhite flowing white
+$elf
+head     = 1745
+neck     = 1756
+body     = 1741
+arm      = 1747
+hand     = 1748
+waist    = 1744
+wrist    = 1742
+leg      = 1743
+foot     = 1746
+finger   = 1749
+shield   = -1
+back     = 1740
+#orcmail mail
+$human
+head     = 1688
+neck     = -1
+body     = 1687
+arm      = 1685
+hand     = 1684
+waist    = 1683
+wrist    = 1682
+leg      = 1681
+foot     = 1680
+finger   = -1
+shield   = -1
+back     = 1686
+#tornleather leather
+$ogre
+head     = 17124
+neck     = 17138
+body     = 17125
+arm      = 17126
+hand     = 17142
+waist    = 17139
+wrist    = 17119
+leg      = 17127
+foot     = 17141
+finger   = 17128
+shield   = 17140
+back     = 17123
+#bronzeplate plate
+$ogre
+head     = 17133
+neck     = 17144
+body     = 17136
+arm      = 17131
+hand     = 17130
+waist    = 17135
+wrist    = 17137
+leg      = 17132
+foot     = 17134
+finger   = 17145
+shield   = 17146
+back     = 17143
+#elven-mail elfmail
+$elf
+head     = 1820
+neck     = 1821
+body     = 1822
+arm      = 1823
+hand     = 1824
+waist    = 1825
+wrist    = 1826
+leg      = 1827
+foot     = 1828
+finger   = 1829
+shield   = 1830
+back     = 1831
+#hobstud hobbit studded leather
+$hobbit
+head     = 14301
+neck     = 1041
+body     = 14302
+arm      = 14305
+hand     = 14306
+waist    = 14307
+wrist    = 14308
+leg      = 14303
+foot     = -1
+finger   = 14309
+shield   = 1050
+back     = 14304
+#coral
+$human
+head     = 5756
+neck     = 5758
+body     = -1
+arm      = -1
+hand     = -1
+waist    = 5760
+wrist    = 5757
+leg      = -1
+foot     = -1
+finger   = -1
+shield   = 5755
+back     = -1
+#supple leather
+$human
+head     = 1660
+neck     = 1661
+body     = 1662
+arm      = 1663
+hand     = 1664
+waist    = 1665
+wrist    = 1666
+leg      = 1667
+foot     = 1668
+finger   = -1
+shield   = -1
+back     = 1669
+#wax
+$ogre
+head     = 3350
+neck     = 3351
+body     = 3352
+arm      = 3353
+hand     = 3354
+waist    = 3355
+wrist    = 3356
+leg      = 3357
+foot     = 3358
+finger   = 3363
+shield   = 3368
+back     = 3359
+#gnomemail mail
+$gnome
+head     = 22410
+neck     = 22411
+body     = 22412
+arm      = 22413
+hand     = 22414
+waist    = 22415
+wrist    = 22416
+leg      = 22417
+foot     = 22418
+finger   = 22409
+shield   = 22408
+back     = 22419
+#hobchain hobbit chainmail
+$hobbit
+head     = 14310
+neck     = 1061
+body     = 14311
+arm      = 14314
+hand     = 14315
+waist    = 14316
+wrist    = 14317
+leg      = 14312
+foot     = -1
+finger   = 14318
+shield   = 1070
+back     = 14313
+#field light
+$human
+head     = 11316
+neck     = 11322
+body     = 11317
+arm      = 11321
+hand     = 11319
+waist    = 11323
+wrist    = 11325
+leg      = 11318
+foot     = 11320
+finger   = -1
+shield   = -1
+back     = 11324
+#ringmail mail
+$elf
+head     = 6120
+neck     = 6121
+body     = 6122
+arm      = 6123
+hand     = 6124
+waist    = 6125
+wrist    = 6126
+leg      = 6127
+foot     = 6128
+finger   = 6133
+shield   = 6119
+back     = 6129
+#fishscale silvery
+$dwarf
+head     = 14170
+neck     = 14171
+body     = 14172
+arm      = 14173
+hand     = 14174
+waist    = 14175
+wrist    = 14176
+leg      = 14177
+foot     = 14178
+finger   = 14180
+shield   = 14181
+back     = 14179
+#ornamented bone
+$human
+head     = 9315
+neck     = 9308
+body     = 9306
+arm      = 9313
+hand     = 9307
+waist    = -1
+wrist    = 9309
+leg      = 9316
+foot     = -1
+finger   = -1
+shield   = 9314
+back     = -1
+#crude metal
+$dwarf
+head     = 1032
+neck     = 1033
+body     = 1034
+arm      = -1
+hand     = -1
+waist    = 1035
+wrist    = -1
+leg      = -1
+foot     = -1
+finger   = -1
+shield   = -1
+back     = -1
+#spirit-armor
+$gnome
+head     = 14250
+neck     = 14251
+body     = 14252
+arm      = 14253
+hand     = 14254
+waist    = 14255
+wrist    = 14256
+leg      = 14257
+foot     = 14258
+finger   = 14260
+shield   = 14261
+back     = 14259
+#steel
+$dwarf
+head     = 1052
+neck     = 1036
+body     = 1053
+arm      = 1059
+hand     = 1056
+waist    = 1055
+wrist    = 1058
+leg      = 1037
+foot     = 1054
+finger   = -1
+shield   = -1
+back     = 1057
+#banded mail
+$human
+head     = 23610
+neck     = 23611
+body     = 23612
+arm      = 23614
+hand     = 23616
+waist    = 23617
+wrist    = 23615
+leg      = 23618
+foot     = 23619
+finger   = 23664
+shield   = 23666
+back     = 23613
+#emerald
+$elf
+head     = 10049
+neck     = 10050
+body     = 10051
+arm      = 10052
+hand     = 10053
+waist    = 10054
+wrist    = 10055
+leg      = 10056
+foot     = 10057
+finger   = 10062
+shield   = -1
+back     = 10058
+#ionic
+$human
+head     = 6980
+neck     = 6979
+body     = 6978
+arm      = 6982
+hand     = 6983
+waist    = -1
+wrist    = -1
+leg      = 6981
+foot     = 6985
+finger   = 6999
+shield   = -1
+back     = -1
+#marble
+$dwarf
+head     = 2126
+neck     = 2130
+body     = 2127
+arm      = 2129
+hand     = 2135
+waist    = 2132
+wrist    = 2134
+leg      = 2128
+foot     = 2131
+finger   = 2136
+shield   = 2137
+back     = 2133
+#admantium
+$human
+head     = 1120
+neck     = 1121
+body     = 1122
+arm      = 1123
+hand     = 1124
+waist    = 1125
+wrist    = 1126
+leg      = 1127
+foot     = 1128
+finger   = 1129
+shield   = 1130
+back     = 1131
+#onyx
+$human
+head     = 3812
+neck     = 3809
+body     = 3810
+arm      = 3806
+hand     = 3804
+waist    = 3800
+wrist    = 3805
+leg      = 3811
+foot     = 3807
+finger   = 3803
+shield   = 3802
+back     = 3801
+#obsidian-runed
+$human
+head     = 10715
+neck     = 10719
+body     = 10783
+arm      = 10721
+hand     = 10707
+waist    = 10720
+wrist    = 10716
+leg      = 10706
+foot     = 10711
+finger   = 10710
+shield   = 10704
+back     = 10709
+#turquoise
+$hobbit
+head     = 5733
+neck     = 5732
+body     = 5724
+arm      = 5725
+hand     = 5729
+waist    = 5727
+wrist    = 5730
+leg      = 5726
+foot     = 5728
+finger   = 5731
+shield   = -1
+back     = 5774
+#mica
+$human
+head     = -1
+neck     = 11011
+body     = 11009
+arm      = 11014
+hand     = 11010
+waist    = 11006
+wrist    = 11013
+leg      = 11007
+foot     = 11012
+finger   = 11015
+shield   = 11005
+back     = 11008
+#red-runed
+$human
+head     = 11107
+neck     = 11100
+body     = 11104
+arm      = 11143
+hand     = 11141
+waist    = 11139
+wrist    = 11120
+leg      = 11138
+foot     = 11140
+finger   = -1
+shield   = -1
+back     = 11142
+#mithril
+$elf
+head     = 10124
+neck     = 10125
+body     = 10126
+arm      = 10129
+hand     = 10139
+waist    = 10127
+wrist    = 10141
+leg      = 10135
+foot     = 10140
+finger   = 10144
+shield   = 10143
+back     = 10128
+#bone
+$elf
+head     = 3311
+neck     = 3315
+body     = 3310
+arm      = 3312
+hand     = 3313
+waist    = 3304
+wrist    = 3314
+leg      = 3326
+foot     = 3336
+finger   = 3347
+shield   = 3316
+back     = 3369
+#laminated
+$hobbit
+head     = 14320
+neck     = 14328
+body     = 14321
+arm      = 14324
+hand     = 14325
+waist    = 14326
+wrist    = 14327
+leg      = 14322
+foot     = -1
+finger   = 14319
+shield   = 14329
+back     = 14323
+#frogskin skin
+$hobbit
+head     = 4310
+neck     = -1
+body     = 4312
+arm      = 4313
+hand     = 4314
+waist    = 4315
+wrist    = 4316
+leg      = 4317
+foot     = 4318
+finger   = -1
+shield   = -1
+back     = 4319
+#blackscaled scaled
+$elf
+head     = 9951
+neck     = 9949
+body     = 9952
+arm      = 9953
+hand     = 9956
+waist    = 9957
+wrist    = 9954
+leg      = 9958
+foot     = 9955
+finger   = 9948
+shield   = 9950
+back     = 9947
+#whitescale scale
+$human
+head     = -1
+neck     = -1
+body     = 2859
+arm      = 2860
+hand     = -1
+waist    = -1
+wrist    = -1
+leg      = 2861
+foot     = -1
+finger   = -1
+shield   = -1
+back     = -1
+#cyclops hide
+$ogre
+head     = 22500
+neck     = 22512
+body     = 22502
+arm      = 22503
+hand     = 22504
+waist    = 22505
+wrist    = 22506
+leg      = 22507
+foot     = 22508
+finger   = 22511
+shield   = 22510
+back     = 22509
+#sharkskin skin
+$ogre
+head     = 12430
+neck     = 12431
+body     = 12432
+arm      = 12433
+hand     = 12434
+waist    = 12435
+wrist    = 12436
+leg      = 12437
+foot     = 12438
+finger   = 12470
+shield   = 12469
+back     = 12439
+#runic
+$human
+head     = 1140
+neck     = 1141
+body     = 1142
+arm      = 1143
+hand     = 1144
+waist    = 1145
+wrist    = 1146
+leg      = 1147
+foot     = 1148
+finger   = 1149
+shield   = 1150
+back     = 1151
+#blackened
+$human
+head     = 5765
+neck     = -1
+body     = 5766
+arm      = -1
+hand     = -1
+waist    = -1
+wrist    = 5762
+leg      = -1
+foot     = 5763
+finger   = -1
+shield   = -1
+back     = 5761
+#gleaming
+$human
+head     = 5716
+neck     = 5775
+body     = 5717
+arm      = 5777
+hand     = 5778
+waist    = 5779
+wrist    = 5713
+leg      = 5776
+foot     = 5714
+finger   = -1
+shield   = 5780
+back     = 5711
+#diamond
+$human
+head     = 1180
+neck     = 1181
+body     = 1182
+arm      = 1183
+hand     = 1184
+waist    = 1185
+wrist    = 1186
+leg      = 1187
+foot     = 1188
+finger   = 1189
+shield   = 1190
+back     = 1191
+#jeweled
+$human
+head     = 1160
+neck     = 1161
+body     = 1162
+arm      = 1163
+hand     = 1164
+waist    = 1165
+wrist    = 1166
+leg      = 1167
+foot     = 1168
+finger   = 1169
+shield   = 1170
+back     = 1171
+#ivory
+$gnome
+head     = 2114
+neck     = 2118
+body     = 2115
+arm      = 2117
+hand     = 2123
+waist    = 2120
+wrist    = 2122
+leg      = 2116
+foot     = 2119
+finger   = 2124
+shield   = 2125
+back     = 2121
+#platemail mail
+$human
+head     = 1100
+neck     = 1101
+body     = 1102
+arm      = 1103
+hand     = 1104
+waist    = 1105
+wrist    = 1106
+leg      = 1107
+foot     = 1108
+finger   = 1109
+shield   = 1110
+back     = 1111
+#metal
+$human
+head     = 1080
+neck     = 1081
+body     = 1082
+arm      = 1083
+hand     = 1084
+waist    = 1085
+wrist    = 1086
+leg      = 1087
+foot     = 1088
+finger   = 1089
+shield   = 1090
+back     = 1091
+#chainmail mail
+$human
+head     = 1060
+neck     = 1061
+body     = 1062
+arm      = 1063
+hand     = 1064
+waist    = 1065
+wrist    = 1066
+leg      = 1067
+foot     = 1068
+finger   = 1069
+shield   = 1070
+back     = 1071
+#studded leather
+$human
+head     = 1040
+neck     = 1041
+body     = 1042
+arm      = 1043
+hand     = 1044
+waist    = 1045
+wrist    = 1046
+leg      = 1047
+foot     = 1048
+finger   = 1049
+shield   = 1050
+back     = 1051
+#hard leather
+$human
+head     = 1020
+neck     = 1021
+body     = 1022
+arm      = 1023
+hand     = 1024
+waist    = 1025
+wrist    = 1026
+leg      = 1027
+foot     = 1028
+finger   = 1029
+shield   = 1030
+back     = 1031
+#repcloth cloth training
+$elf
+head     = 950
+neck     = 1001
+body     = 952
+arm      = 953
+hand     = 954
+waist    = 955
+wrist    = 956
+leg      = 957
+foot     = 958
+finger   = 1009
+shield   = 1010
+back     = 959
+#horsehair hair training
+$gnome
+head     = 960
+neck     = 1001
+body     = 962
+arm      = 963
+hand     = 964
+waist    = 965
+wrist    = 966
+leg      = 967
+foot     = 968
+finger   = 1009
+shield   = 1010
+back     = 969
+#ogre cloth training
+$ogre
+head     = 970
+neck     = 1001
+body     = 972
+arm      = 973
+hand     = 974
+waist    = 975
+wrist    = 976
+leg      = 977
+foot     = 978
+finger   = 1009
+shield   = 1010
+back     = 979
+#munchkin training
+$hobbit
+head     = 980
+neck     = 1001
+body     = 982
+arm      = 983
+hand     = 984
+waist    = 985
+wrist    = 986
+leg      = 987
+foot     = 988
+finger   = 1009
+shield   = 1010
+back     = 989
+#dwarven leather training
+$dwarf
+head     = 990
+neck     = 1001
+body     = 992
+arm      = 993
+hand     = 994
+waist    = 995
+wrist    = 996
+leg      = 997
+foot     = 998
+finger   = 1009
+shield   = 1010
+back     = 999
+#soft leather training
+$human
+head     = 1000
+neck     = 1001
+body     = 1002
+arm      = 1003
+hand     = 1004
+waist    = 1005
+wrist    = 1006
+leg      = 1007
+foot     = 1008
+finger   = 1009
+shield   = 1010
+back     = 1011
+!*EOF* <- This Must Be The Last Line In The File!

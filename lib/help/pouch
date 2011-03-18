@@ -1,0 +1,11 @@
+Syntax: toggle pouch
+
+Toggling pouch on will cause you to automatically open, loot and drop any
+monepouches you pick up or loot from corpses.   Toggling pouch off will
+allow you to simply collect moneypouches in your inventory.
+
+NOTE: Some moneypouches may be booby-trapped.  Automatically opening all
+moneypouches may put you at risk.
+
+See Also: TOGGLE, DISARM TRAP, GET
+Related Topics: OBJECT MANIPULATION

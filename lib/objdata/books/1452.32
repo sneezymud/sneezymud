@@ -1,0 +1,9 @@
+MED AVERAGE is a command you can use to match a mob to a specific level, up
+to level 60. After 60, you need to set HP, damage level and others by hand
+to match the level you want.
+
+Syntax is:    med average <mobile> <level> <class>
+
+*** The <class> field is optional.  If you specify a class then it will set
+the chosen stats of the mobile to some basic 'class similar' values.
+

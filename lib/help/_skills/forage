@@ -1,0 +1,9 @@
+Forage allows the ranger to gather sustenance while in nature.  When a ranger
+forages, the ranger's surroundings will be immediately searched for available
+food sources.
+
+Rangers can only forage in nature which generally means outdoors and not in a
+city or on a road.  
+
+After foraging, the ranger must wait a few hours for nature to replenish
+itself before foraging again.

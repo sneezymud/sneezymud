@@ -1,0 +1,50 @@
+The '?' command
+give following command a random probability
+
+This is a command you should use extensively, especially where equipment
+is concerned.
+
+? 0 <chance> 0 <command>
+
+Note that what is usually the if_flag is not important and can be ignored.
+Additionally, don't miss the 2nd 0.  This 2nd zero MUST be a 0.
+
+<chance> is how many chances out of 100 it has of occurring.
+    for equipment use values in the range 3-7 for restricted stuff
+                                          8-15 for plentiful items
+                                          20+ is exceptionally high
+<command> is what to apply it to
+
+M 0 100 0 103        orc
+? 0 10 0 E
+E 1 103 1 19            sword
+
+Loads the orc (vnum 100) into room 103 then gives it a 10% chance of having
+a sword (vnum 103) in its hand (slot 19).  Note the E command still needs to
+pass the check on max_exist as well.
+
+Note: ANY command that a '?' is operating on should have an if_flag of 1
+This is so the command does NOT operate if the ? didn't work.
+
+example 1:
+M ....
+? 0 10 0 E
+E 1 ....
+E 1 ....
+
+This causes it to look at the ? command.  If the ? passes, it will load all of
+the E below it.
+
+example 2:
+M ....
+? 0 10 0 E
+E 1 ....
+? 0 10 0 E
+E 1 ....
+
+This looks at the first ?, if it passes it will load the first piece of eq.
+Regardless of whether the first piece of eq loaded (successful 1st ? and
+sufficient max_exist) it will do a new roll for the second ?.  The chief 
+difference is example 1 will cause it to have a ton of stuff when the ? passes
+while the second example (preferred method) will give it a shot at everything
+possible  (1: all or nothing, 2: randomized)

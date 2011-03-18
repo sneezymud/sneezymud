@@ -1,0 +1,66 @@
+#!/bin/csh
+
+setenv PS_PERSONALITY BSD
+
+set CODE_ROOT=/mud/build
+set PROD_ROOT=/mud/prod
+
+set OUTPUT=$PROD_ROOT/lib/statistics.file
+
+rm -f $OUTPUT
+
+set up=`date +%m%d%y.%H%M`
+echo "Statistics as of:                $up[1]" > $OUTPUT
+
+set up=`ps aux | grep $PROD_ROOT/sneezy | grep -v grep | awk '{print $5}'`
+echo "Executable size (running prod):  $up[1] K" >> $OUTPUT
+
+echo " " >> $OUTPUT
+set up=`du -sk $CODE_ROOT`
+echo "Size of source code:             $up[1] K" >> $OUTPUT
+set up=`wc -l $CODE_ROOT/*.cc $CODE_ROOT/*.h | grep total`
+echo "Lines of source code:            $up[1] lines" >> $OUTPUT
+
+echo " " >> $OUTPUT
+echo "Related Files:" >> $OUTPUT
+
+set up=`du -sk $PROD_ROOT/lib/player`
+echo "Size of player files:            $up[1] K" >> $OUTPUT
+
+set up=`du -sk $PROD_ROOT/lib/rent`
+echo "Size of rent files:              $up[1] K" >> $OUTPUT
+
+set up=`du -sk $PROD_ROOT/lib/account`
+echo "Size of account files:           $up[1] K" >> $OUTPUT
+
+set up=`du -sk $PROD_ROOT/lib/SCCS`
+echo "Size of backup files:            $up[1] K" >> $OUTPUT
+
+set up=`du -sk $PROD_ROOT/lib/immortals`
+echo "Size of immortals files:         $up[1] K" >> $OUTPUT
+
+set up=`du -sk $PROD_ROOT/lib/help`
+echo "Size of help files:              $up[1] K" >> $OUTPUT
+
+set up=`du -sk $PROD_ROOT/lib/objdata`
+echo "Size of objdata files:           $up[1] K" >> $OUTPUT
+
+set up=`du -sk $PROD_ROOT/lib/mobdata`
+echo "Size of mobdata files:           $up[1] K" >> $OUTPUT
+
+set up=`du -sk $PROD_ROOT/lib/roomdata`
+echo "Size of roomdata files:          $up[1] K" >> $OUTPUT
+
+set up=`du -sk $PROD_ROOT/lib/tinyworld.mob`
+echo "Size of tinyworld.mob file:      $up[1] K" >> $OUTPUT
+
+#set up=`ls -s $PROD_ROOT/lib/tinyworld.obj | awk '{print $1}'`
+#echo "Size of tinyworld.obj file:      $up[1] K" >> $OUTPUT
+
+#set up=`ls -s $PROD_ROOT/lib/tinyworld.wld | awk '{print $1}'`
+#echo "Size of tinyworld.wld file:      $up[1] K" >> $OUTPUT
+
+#set up=`ls -s $PROD_ROOT/lib/tinyworld.shp | awk '{print $1}'`
+#echo "Size of tinyworld.shp file:      $up[1] K" >> $OUTPUT
+
+cat $OUTPUT

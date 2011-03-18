@@ -1,0 +1,403 @@
+[0m------------------------------------------------------------------------
+
+	+---------------------------------------+
+	|      Mages Sorcery Based Spells       |
+	+---------------------------------------+
+
+[0m------------------------------------------------------------------------
+
+[32mSORCERERS GLOBE                (Last Updated: Fri Feb 12 22:59:45 1999)
+
+[35mDiscipline       : [0mMage Abilities[35m    (disc: 0, spell 6)
+Specialization   : [0mSorcery[35m    (disc: 5)
+Learned in Disc. : [0m1%
+[34mNOTE: [0m1% Mage/thief basic 
+
+[0m------------------------------------------------------------------------
+
+[32mPROTECTION FROM ELEMENTS       (Last Updated: Fri Feb 12 22:59:45 1999)[0m
+
+[35mDiscipline       : [0mMage Abilities[35m    (disc: 0, spell 16)[35m
+Specialization   : [0mSorcery[35m    (disc: 5)
+Learned in Disc. : [0m28%[35m
+[34mNOTE: [0m56% Mage/thief basic 
+
+[0m------------------------------------------------------------------------
+
+[32mBIND                           (Last Updated: Fri Feb 19 06:24:49 1999)[0m
+
+[35mDiscipline       : [0mSorcery[35m    (disc: 5, spell 80)[35m
+Specialization   : [0mSorcery[35m    (disc: 5)
+Learned in Disc. : [0m1%[35m
+[34mNOTE: [0m1% Mage/thief basic 
+
+[0m------------------------------------------------------------------------
+[0m
+	+---------------------------------------+
+	|      Mages Alchemy Based Spells       |
+	+---------------------------------------+
+
+[0m------------------------------------------------------------------------
+
+[32mILLUMINATE                     (Last Updated: Fri Feb 12 22:59:45 1999)
+
+[35mDiscipline       : [0mMage Abilities[35m    (disc: 0, spell 8)
+Specialization   : [0mAlchemy[35m    (disc: 2)
+Learned in Disc. : [0m3%
+[34mNOTE: [0m6% Mage/thief basic 
+
+[0m------------------------------------------------------------------------
+
+[32mDETECT MAGIC                   (Last Updated: Fri Feb 12 22:59:45 1999)
+
+[35mDiscipline       : [0mMage Abilities[35m    (disc: 0, spell 9)[35m
+Specialization   : [0mAlchemy[35m    (disc: 2)
+Learned in Disc. : [0m5%[35m
+[34mNOTE: [0m10% Mage/thief basic 
+
+[0m------------------------------------------------------------------------
+
+[32mMATERIALIZE                    (Last Updated: Fri Feb 12 22:59:45 1999)[0m
+
+[35mDiscipline       : [0mMage Abilities[35m    (disc: 0, spell 11)[35m
+Specialization   : [0mAlchemy[35m    (disc: 2)
+Learned in Disc. : [0m15%[35m
+[34mNOTE: [0m30% Mage/thief basic 
+
+[0m------------------------------------------------------------------------
+
+[32mIDENTIFY                       (Last Updated: Fri Feb 12 22:59:45 1999)[0m
+
+[35mDiscipline       : [0mMage Abilities[35m    (disc: 0, spell 21)[35m
+Specialization   : [0mAlchemy[35m    (disc: 2)
+Learned in Disc. : [0m40%[35m
+[34mNOTE: [0m80% Mage/thief basic 
+
+[0m------------------------------------------------------------------------
+
+[32mDISPEL MAGIC                   (Last Updated: Wed Jul 21 06:32:06 1999)[0m
+
+[35mDiscipline       : [0mMage Abilities[35m    (disc: 0, spell 42)[35m
+Specialization   : [0mAlchemy[35m    (disc: 2)
+Learned in Disc. : [0m61%[35m
+[34mNOTE: [0m22% Mage/thief advanced discipline 
+
+[0m------------------------------------------------------------------------
+
+[32mFARLOOK                        (Last Updated: Fri Feb 12 22:59:45 1999)[0m
+
+[35mDiscipline       : [0mMage Abilities[35m    (disc: 0, spell 53)[35m
+Specialization   : [0mAlchemy[35m    (disc: 2)
+Learned in Disc. : [0m75%[35m
+[34mNOTE: [0m50% Mage/thief advanced discipline
+
+[0m------------------------------------------------------------------------
+
+[32mSPONTANEOUS GENERATION         (Last Updated: Fri Feb 12 22:59:45 1999)[0m
+
+[35mDiscipline       : [0mAlchemy[35m    (disc: 2, spell 67)[35m
+Specialization   : [0mAlchemy[35m    (disc: 2)
+Learned in Disc. : [0m25%[35m
+[34mNOTE: [0m50% Mage/thief advanced discipline 
+
+[0m------------------------------------------------------------------------
+
+[32mDIVINATION                     (Last Updated: Fri Feb 12 22:59:45 1999)[0m
+
+[35mDiscipline       : [0mAlchemy[35m    (disc: 2, spell 64)[35m
+Specialization   : [0mAlchemy[35m    (disc: 2)
+Learned in Disc. : [0m68%[35m
+[34mNOTE: [0m75% Mage/thief advanced 
+
+[0m------------------------------------------------------------------------
+[0m
+	+---------------------------------------+
+	|        Mages Fire Based Spells        |
+	+---------------------------------------+
+
+[0m------------------------------------------------------------------------
+
+[32mFLARE                          (Last Updated: Fri Feb 12 22:59:45 1999)[0m
+
+[35mDiscipline       : [0mMage Abilities[35m    (disc: 0, spell 5)[35m
+Specialization   : [0mFire Magic[35m    (disc: 4)
+Learned in Disc. : [0m6%[35m
+[34mNOTE: [0m12% Mage/thief basic 
+
+[0m------------------------------------------------------------------------
+
+[32mFAERIE FIRE                    (Last Updated: Sun Jan 23 08:42:26 2000)[0m
+
+[35mDiscipline       : [0mMage Abilities[35m    (disc: 0, spell 7)[35m
+Specialization   : [0mFire Magic[35m    (disc: 4)
+Learned in Disc. : [0m15%[35m
+[34mNOTE: [0m30% Mage/thief basic 
+
+[0m------------------------------------------------------------------------
+
+[32mPROTECTION FROM FIRE           (Last Updated: Fri Feb 12 22:59:45 1999)[0m
+
+[35mDiscipline       : [0mMage Abilities[35m    (disc: 0, spell 14)[35m
+Specialization   : [0mFire Magic[35m    (disc: 4)
+Learned in Disc. : [0m25%[35m
+[34mNOTE: [0m50% Mage/thief basic 
+
+[0m------------------------------------------------------------------------
+
+[32mINFRAVISION                    (Last Updated: Fri Feb 12 22:59:45 1999)[0m
+
+[35mDiscipline       : [0mMage Abilities[35m    (disc: 0, spell 20)[35m
+Specialization   : [0mFire Magic[35m    (disc: 4)
+Learned in Disc. : [0m44%[35m
+[34mNOTE: [0m88% Mage/thief basic 
+
+[0m------------------------------------------------------------------------
+[0m
+	+---------------------------------------+
+	|      Mages Spirit Based Spells        |
+	+---------------------------------------+
+
+[0m------------------------------------------------------------------------
+
+[32mDETECT INVISIBILITY            (Last Updated: Wed Jun 13 10:51:48 2001)[0m
+
+[35mDiscipline       : [0mMage Abilities[35m    (disc: 0, spell 45)[35m
+Specialization   : [0mSpirit Magic[35m    (disc: 6)
+Learned in Disc. : [0m12%[35m
+[34mNOTE: [0m24% Mage/thief basic 
+
+[0m------------------------------------------------------------------------
+
+[32mSENSE LIFE                     (Last Updated: Fri Feb 12 22:59:45 1999)[0m
+
+[35mDiscipline       : [0mMage Abilities[35m    (disc: 0, spell 25)[35m
+Specialization   : [0mSpirit Magic[35m    (disc: 6)
+Learned in Disc. : [0m24%[35m
+[34mNOTE: [0m48% Mage/thief basic 
+
+[0m------------------------------------------------------------------------
+
+[32mACCELERATE                     (Last Updated: Fri Feb 12 22:59:45 1999)[0m
+
+[35mDiscipline       : [0mMage Abilities[35m    (disc: 0, spell 27)[35m
+Specialization   : [0mSpirit Magic[35m    (disc: 6)
+Learned in Disc. : [0m32%[35m
+[34mNOTE: [0m64% Mage/thief basic 
+
+[0m------------------------------------------------------------------------
+
+[32mSTEALTH                        (Last Updated: Fri Feb 12 22:59:45 1999)[0m
+
+[35mDiscipline       : [0mMage Abilities[35m[35m
+Specialization   : [0mSpirit Magic[35m
+Learned in Disc. : [0m47%[35m
+[34mNOTE: [0m84% Mage/thief basic 
+
+[0m------------------------------------------------------------------------
+
+[32mDISPEL INVISIBLE               (Last Updated: Fri Feb 12 22:59:45 1999)[0m
+
+[35mDiscipline       : [0mMage Abilities[35m    (disc: 0, spell 46)[35m
+Specialization   : [0mSpirit Magic[35m    (disc: 6)
+Learned in Disc. : [0m50%[35m
+[34mNOTE: [0m99% Mage/thief basic 
+
+[0m------------------------------------------------------------------------
+
+[32mTRUE SIGHT                     (Last Updated: Fri Feb 12 22:59:45 1999)[0m
+
+[35mDiscipline       : [0mSpirit Magic[35m    (disc: 6, spell 82)[35m
+Specialization   : [0mSpirit Magic[35m    (disc: 6)
+Learned in Disc. : [0m1%[35m
+[34mNOTE: [0m40% Mage/thief advanced discipline 
+
+[0m------------------------------------------------------------------------
+
+[32mFUMBLE                         (Last Updated: Fri Feb 12 22:59:45 1999)[0m
+
+[35mDiscipline       : [0mSpirit Magic[35m    (disc: 6, spell 81)[35m
+Specialization   : [0mSpirit Magic[35m    (disc: 6)
+Learned in Disc. : [0m60%[35m
+[34mNOTE: [0m80% Mage/thief advanced discipline 
+
+[0m------------------------------------------------------------------------
+[0m
+	+---------------------------------------+
+	|        Mages Air Based Spells         |
+	+---------------------------------------+
+
+[0m------------------------------------------------------------------------
+
+[32mFEATHERY DESCENT               (Last Updated: Wed May 26 10:00:19 1999)[0m
+
+[35mDiscipline       : [0mMage Abilities[35m    (disc: 0, spell 30)[35m
+Specialization   : [0mAir Magic[35m    (disc: 1)
+Learned in Disc. : [0m20%[35m
+[34mNOTE: [0m40% Mage/thief basic 
+
+[0m------------------------------------------------------------------------
+
+[32mPROTECTION FROM AIR            (Last Updated: Fri Feb 12 22:59:45 1999)[0m
+
+[35mDiscipline       : [0mMage Abilities[35m    (disc: 0, spell 13)[35m
+Specialization   : [0mAir Magic[35m    (disc: 1)
+Learned in Disc. : [0m25%[35m
+[34mNOTE: [0m50% Mage/thief basic 
+
+[0m------------------------------------------------------------------------
+
+[32mLEVITATE                       (Last Updated: Fri Feb 12 22:59:45 1999)[0m
+
+[35mDiscipline       : [0mMage Abilities[35m    (disc: 0, spell 29)[35m
+Specialization   : [0mAir Magic[35m    (disc: 1)
+Learned in Disc. : [0m32%[35m
+[34mNOTE: [0m64% Mage/thief basic 
+
+[0m------------------------------------------------------------------------
+
+[32mANTIGRAVITY                    (Last Updated: Fri Feb 12 22:59:45 1999)[0m
+
+[35mDiscipline       : [0mAir Magic[35m    (disc: 1, spell 63)[35m
+Specialization   : [0mAir Magic[35m    (disc: 1)
+Learned in Disc. : [0m67%[35m
+[34mNOTE: [0m80% Mage/thief advanced discipline 
+
+[0m------------------------------------------------------------------------
+[0m
+	+---------------------------------------+
+	|       Mages Earth Based Spells        |
+	+---------------------------------------+
+
+[0m------------------------------------------------------------------------
+
+[32mPROTECTION FROM EARTH          (Last Updated: Fri Feb 12 22:59:45 1999)[0m
+
+[35mDiscipline       : [0mMage Abilities[35m    (disc: 0, spell 12)[35m
+Specialization   : [0mEarth Magic[35m    (disc: 3)
+Learned in Disc. : [0m24%[35m
+[34mNOTE: [0m50% Mage/thief basic 
+
+
+[0m------------------------------------------------------------------------
+[0m
+	+---------------------------------------+
+	|       Mages Water Based Spells        |
+	+---------------------------------------+
+
+[0m------------------------------------------------------------------------
+
+[32mPROTECTION FROM WATER          (Last Updated: Fri Feb 12 22:59:45 1999)[0m
+
+[35mDiscipline       : [0mMage Abilities[35m    (disc: 0, spell 15)[35m
+Specialization   : [0mWater Magic[35m    (disc: 7)
+Learned in Disc. : [0m27%[35m
+[34mNOTE: [0m50% Mage/thief basic 
+
+[0m------------------------------------------------------------------------
+
+[32mGILLS OF FLESH                 (Last Updated: Fri Mar  3 08:39:18 2000)[0m
+
+[35mDiscipline       : [0mMage Abilities[35m    (disc: 0, spell 34)[35m
+Specialization   : [0mWater Magic[35m    (disc: 7)
+Learned in Disc. : [0m26%[35m
+[34mNOTE: [0m55% Mage/thief basic 
+
+[0m------------------------------------------------------------------------
+
+[32mBREATH OF SARAHAGE             (Last Updated: Fri Feb 12 22:59:45 1999)[0m
+
+[35mDiscipline       : [0mWater Magic[35m    (disc: 7, spell 88)[35m
+Specialization   : [0mWater Magic[35m    (disc: 7)
+Learned in Disc. : [0m1%[35m
+[34mNOTE: [0m10% Mage/thief advanced discipline 
+
+[0m------------------------------------------------------------------------
+[0m
+	+---------------------------------------+
+	|      Thief Looting Based Skills       |
+	+---------------------------------------+
+
+[0m------------------------------------------------------------------------
+
+[32mSWINDLE                        (Last Updated: Fri Feb 12 22:59:45 1999)[0m
+
+[35mDiscipline       : [0mThief Abilities[35m    (disc: 40, skill 272)[35m
+Specialization   : [0mLooting Skills[35m    (disc: 43)[0m[35m
+Start Learning   : [0m1%[35m
+[34mNOTE: [0m1% Mage/thief basic 
+
+[0m------------------------------------------------------------------------
+[0m
+	+---------------------------------------+
+	|      Thief Stealth Based Skills       |
+	+---------------------------------------+
+
+[0m------------------------------------------------------------------------
+
+[32mSNEAK                          (Last Updated: Fri Feb 12 22:59:45 1999)[0m
+
+[35mDiscipline       : [0mThief Abilities[35m    (disc: 40, skill 273)[35m
+Specialization   : [0mStealth[35m    (disc: 45)[0m[35m
+Start Learning   : [0m1%[35m
+[34mNOTE: [0m1% Mage/thief basic 
+
+[0m------------------------------------------------------------------------
+
+[32mSPY                            (Last Updated: Fri Feb 12 22:59:45 1999)[0m
+
+[35mDiscipline       : [0mThief Abilities[35m    (disc: 40, skill 280)[35m
+Specialization   : [0mStealth[35m    (disc: 45)[0m[35m
+Start Learning   : [0m61%[35m
+[34mNOTE: [0m10% Mage/thief advanced discipline
+
+[0m------------------------------------------------------------------------
+[0m
+	+---------------------------------------+
+	|       Thief Murder Based Skills       |
+	+---------------------------------------+
+
+[0m------------------------------------------------------------------------
+
+[32mBACKSTAB                       (Last Updated: Fri Mar 26 06:49:45 1999)[0m
+
+[35mDiscipline       : [0mThief Abilities[35m    (disc: 40, skill 278)[35m
+Specialization   : [0mMurder[35m    (disc: 42)[0m[35m
+Start Learning   : [0m1%[35m
+[34mNOTE: [0m1% Mage/thief basic 
+
+[0m------------------------------------------------------------------------
+
+[32mSTAB                           (Last Updated: Fri Feb 12 22:59:45 1999)[0m
+
+[35mDiscipline       : [0mThief Abilities[35m    (disc: 40, skill 274)[35m
+Specialization   : [0mMurder[35m    (disc: 42)[0m[35m
+Start Learning   : [0m33%[35m
+[34mNOTE: [0m60% Mage/thief basic 
+
+[0m------------------------------------------------------------------------
+[0m
+	+---------------------------------------+
+	|    Other Type Appropriate Skills      |
+	+---------------------------------------+
+
+[0m------------------------------------------------------------------------
+
+[32mRETREAT                        (Last Updated: Fri Feb 12 22:59:45 1999)[0m
+
+[35mDiscipline       : [0mHand to Hand Abilities[35m    (disc: 15, skill 158)[35m
+Specialization   : [0mHand to Hand Abilities[35m    (disc: 15)[0m[35m
+Start Learning   : [0m1%[35m
+[34mNOTE: [0m1% Mage/thief basic 
+
+[0m------------------------------------------------------------------------
+
+[32mPOISON WEAPONS                 (Last Updated: Fri Feb 12 22:59:45 1999)[0m
+
+[35mDiscipline       : [0mPoisons[35m    (disc: 44, skill 288)[35m
+Specialization   : [0mPoisons[35m    (disc: 44)[0m[35m
+Start Learning   : [0m1%[35m
+[34mNOTE: [0m1% Mage/thief advanced discipline
+
+[0m------------------------------------------------------------------------
+
+[0m

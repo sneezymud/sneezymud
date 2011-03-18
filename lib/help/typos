@@ -1,0 +1,23 @@
+Syntax:	typo
+
+This will drop you into	a simple editor	similar	to the in-MUD mail system.
+
+Type ~ and return on a blank line to report the typo, or ` on a blank line to       
+cancel your typo report.
+
+Typos generally do not receive responses.  If you have a bug to report, an idea
+to suggest or any other type of help request, use the BUG, IDEA or REQUEST
+commands, respectively.
+
+Typo reports display who gave the report as well as where in the game the typo
+is being reported from, so this information can be left out of a report.
+
+We appreciate the reporting of typos.  Obviously, we try to avoid them, but
+sometimes they just slip in.  We're grateful for your sharp eyes and willingness 
+to spend a bit of your time alerting us to our error!
+
+Alternatively, you may visit http://www.sneezymud.com/Contact_Us.html and fill 
+out the	web form to report the typo.
+
+See Also: REQUEST, BUG, IDEA
+Related Topics: UTILITY

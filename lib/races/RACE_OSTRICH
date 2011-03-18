@@ -1,0 +1,29 @@
+filename RACE_OSTRICH
+singName ostrich
+plurName ostrichs
+propName Ostrich
+lore ANIMAL
+age 1+1d5
+maleHt 8+2d5
+maleWt 8+1d2
+femaleHt 6+2d5
+femaleWt 6+1d2
+body Bird
+moveIn enters in
+moveOut leaves
+moveMod 40
+search 3
+STR 200
+BRA 60
+CON 80
+DEX 105
+AGI 100
+INT 55
+WIS 55
+FOC 100
+PER 100
+CHA 55
+KAR 110
+SPE 200
+DumbAnimal
+#intentionally NOT winged so can't fly

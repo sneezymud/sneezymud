@@ -1,0 +1,19 @@
+Syntax: sit {object}
+
+Sit causes you to sit down and get comfortable.  While sitting, you receive
+the benefit of an increased regeneration rate for the duration that you
+remain sitting.
+
+Various objects can be sat on.  These objects will increase your
+regeneration even further as they provide a comfortable place to sit.
+Obviously, the object must be big enough to sit on, as you can't stretch
+out and get comfortable on just anything.  Also, objects designed for
+small creatures may prove to be a bit too uncomfortable to provide any
+benefit.  Note that SIT BED will sit on the first unoccupied BED in the room.
+
+To stop sitting, merely stand up or change to some other position.
+
+<R>WARNING:<z> Sitting can be detrimental to the lifeforce of a Shaman.
+
+See Also: SLEEP, REST, STAND, CRAWL, LIFEFORCE
+Related Topics: MOVEMENT

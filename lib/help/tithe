@@ -1,0 +1,14 @@
+Syntax: tithe <amount>
+
+Tithing is the method by which a faction raises wealth.  Tithing transfers
+money from you directly to the faction's treasury.  A faction may require
+an automatic tithe which will be deducted whenever you get talens.  The
+required tithe is displayed in the information when you "list factions".
+
+Additionally, in any major bank of The World, you may make a donation of any
+amount you feel is appropriate.  <amount> will be subtracted from your money
+and added to the faction's treasury.  A faction leader may make withdrawals
+from the faction treasury by specifying a negative <amount>.
+
+See Also: LIST, WITHDRAW, DEPOSIT
+Related Topics: BANKS

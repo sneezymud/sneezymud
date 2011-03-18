@@ -1,0 +1,2387 @@
+Consolidated Bugs/Inconsistencies
+
+CODE:
+~~~~~
+-Disappearing mobs:
+	when an elemental pet is killed by a mob (kick?) and
+looted, the 
+killing
+	mob is deleted for some reason.
+-Lockout of mobs:
+	robbers being able to backstab immediately?
+-Check to see that mobs retain lag
+-Should boot to the head stun?
+-Falcon wings cannot be renewed
+-Have the meeting organizer let people stand
+-Idea: Auto eat shouldn't take you out of afk mode
+-Elementals not recovering when brought down to 0 hp.
+-Charm effects buggy. Not wearing off, transfering,
+etc.
+-Splitting gold with mounts/elementals?
+-Spellbag weight mods not working properly when
+loading from rent
+-Failed summons should eventually leave.
+-Check corpse flags on skinning and sacrifice
+-Flares drift with water current
+-Chi check for corpses and objects before player
+names?
+-Setting objects on fire should set contents aflame as
+well
+-Calm should stop berserk or make berserkers !calm
+-Masters of charms that pkill with charms should have
+pkill flag
+-glow/shadowy/humming immune to flames?
+-transform limb on rangers (dolphin tail dont allow
+swim)
+-warm/busy messages are whacky (Roughly 3000000.0
+seconds to go)
+-smythe needs to destroy items when smyth completes
+trashing an item
+-don't let mobs start flying while fighting
+-check flee for fleeing into flight needed rooms
+-broken body has no affect
+
+L.O.W.:
+~~~~~~~
+-'wrought iron key' oversized?
+-Stone figure is an elemental so cannot be dissected,
+however it has a 
+dissect attached to it
+-Sturdy flask of conjure elemental earth not working
+-Room 'top of the tree' is inside.
+-Fix mage belt quest to use all objects asked for
+-Make Grisham a cleric
+-beige cleric's robe has no-take flag set
+-underwater vendors say glub glub
+-room 4434 is connected to the mud but has no exits or
+desc
+-deolate beach area in sea of sorrows is classified as
+indoors, so I 
+cant use outdoor spells like meteor swarm here 
+
+****** Bug from Kualteck in room 8785 (client) on Fri
+Sep 14 15:49:23 
+2001:
+Subject: Disguise
+There are disguises that your guildmaster says you can
+use and 
+disguises listed in stealth that are supposed to be
+able to use but simply dont 
+work 
+
+
+
+****** Bug from Narrelus in room 22482 on Wed Oct 10
+00:00:53 2001:
+Subject: [Bug] hiking boots quest
+the keywords are all messed up, few are bold the rest
+are very 
+ambigious 
+ 
+
+ 
+
+****** Bug from (immortal) in room 11823 on Thu Oct 18
+12:58:42 2001:
+Subject: [Bug] mob kills thrall, mob loots thrall, mob
+and thrall 
+corpse disappear
+I don't know what causes this bug, but it sure does
+stink sometimes. 
+(see subject) happens sporadically 
+ 
+
+****** Bug from (immortal) in room 5617 on Wed Oct 24
+16:06:33 2001:
+Subject: [Bug] potentially messed up room exits in
+lan'quin, dire 
+wolves in ruins near gobs
+go north from ruins, then back south lands you not
+back at ruins but at 
+the head of this little zonelet (where the secret is
+to get in) 
+ 
+
+
+****** Bug from TheGodfather in room 385 on Fri Nov  2
+02:38:10 2001:
+Subject: [Bug] yellow sash quest
+i'm currently on the yellow sash quest for the monk
+but nothing shows 
+up by the quest command.. don't know if that s a bug
+or what 
+
+ 
+
+
+****** Bug from Antonius in room 324 on Sat Dec  1
+01:07:00 2001:
+Subject: [Bug] room overlap
+the Dressing Room  in the theater overlaps one section
+of Perimeter 
+Road particularly in the SSE corner...  Thank you and
+goodnight 
+
+ 
+
+ 
+****** Bug from Ragamuffin in room 554 (client) on Tue
+Dec 25 23:59:13 
+2001:
+Subject: Game crash (client)
+type out a bug report which maxes out the bug report
+dialog using the 
+client.  hit ok, and itll crash the cliient.
+
+
+
+
+------
+
+
+****** Bug from (immortal) in room 240 (client) on Sun
+Jan  6 00:24:17 
+2002:
+Subject: whittle items
+Some items you can whittle (chest, chai etc) are
+flagged so as you 
+cannot pick them up. so if you put one of these into a
+bag etc it would be 
+stuck there and only an immortal could remove it.
+
+
+****** Bug from (immortal) in room 601 (client) on Mon
+Jan  7 04:21:26 
+2002:
+Subject: auto noharm
+auto noharm now stop you from casting offensive spells
+of players. So 
+basically if a play attacks you and you cast a spell
+to defend yourself 
+it automatically fails.  Thats kinda bogus, seeing how
+to defend myself 
+I would first have to turn off auto noharm and then
+cast.
+confirmed
+
+
+****** Bug from (immortal) in room 166 (client) on Thu
+Jan 10 04:58:54 
+2002:
+Subject: death from removal of weapon from foot
+When I removed an inlaid sword from my foot, I died. 
+When I went back 
+to retrieve my corpse it was gone (the sword) but the
+corpse was 
+intact.  
+Nobody willing to let me test it on them!
+
+
+****** Bug from Ratfink in room 12279 (client) on Sun
+Jan 13 16:36:25 
+2002:
+Subject: The Furry Trading post not working
+This merchant doesnt work, zone Inverse GH, low level
+(im in that room 
+right now) you cant buy, sell, list, etc.
+confirmed
+
+
+
+ 
+
+****** Bug from (immortal) in room 240 (client) on Wed
+Jan 16 07:10:39 
+2002:
+Subject: death to belimus
+if belimus kills someone, and swallows there corpse,
+killing belimus 
+should get those corpses out of him, even if there is
+a zone inside of 
+him... the zone kills everything in it slowly and
+there is only 50% 
+chance of surviving going in.
+ 
+
+****** Bug from Bloodfuse in room 240 (client) on Thu
+Jan 17 17:13:49 
+2002:
+Subject: Shaman with TS and Clarity
+Apparantly, when a shaman has both TS and Clarity,
+they cancel each 
+other out, leaving the shaman with normal vision.  I
+died because of this 
+today in antriders.
+
+
+****** Bug from (immortal) in room 8735 on Wed Jan 23
+16:23:27 2002:
+Subject: [Bug] Dragon breath attack harms group
+I lost a red corundum shield due to breath attack of
+my dragon mount.  
+I had the dragon grouped and It still caused my shield
+to be destroyed 
+when it used breath attack. .
+
+     .    
+****** Bug from TheGodfather in room 16355 on Thu Jan
+24 00:45:30 2002:
+Subject: [Bug] The corpse of a wild tiger: Someone
+else is already 
+butchering this.
+was attacked while butchering and the corpse got stuck
+in a being 
+butchered state? 
+
+
+
+****** Bug from Ratfink in room 503 (client) on Sat
+Feb  2 18:52:41 
+2002:
+Subject: Heal potions are valued too highly
+Take a look at heal light's value -- the spell has
+weakened alot since 
+the potions values were set.
+ 
+
+
+
+
+****** Bug from Spiff in room 108 (client) on Tue Feb 
+5 04:56:37 2002:
+Subject: leprosy on player
+dude lost an arm due to leprosy, showed he had it in
+his other limbs, 
+but i couldn't clear it, because when cure disease was
+applied, it said 
+he wasn't afflicted.
+
+
+
+
+****** Bug from (immortal) in room 3701 (client) on
+Sun Feb 10 19:47:07 
+2002:
+Subject: Player corpse
+Yesterday I died. when I looted my corpse my magicians
+belt was to 
+heavy to pick up out of the corpse (but I knew it was
+possible to pick it 
+up off floor)  so I burnt my corpse, got the belt, and
+went on my merry 
+way.  game reboots.  I re-log on frobozz and get a msg
+telling me my 
+corpse has been restored in the world (because it was
+destroyed with 
+stuff in it I guess)  I go back to wear I died and
+sure enough there is my 
+corpse and a magicians belt in it.  I could duplicate
+Anything with 
+this bug. just by dieing and then burning the full
+corpse, waiting for 
+reboot and coming back on.  Frobozz
+
+
+****** Bug from Darkling in room 14163 (client) on Mon
+Feb 11 20:48:29 
+2002:
+Subject: quest bug
+was talking and lost my quest, You say, "nope" Baron
+Samedi says, "Well 
+then piss off Darkling, I am busy." Baron Samedi says,
+"Such a shame 
+you have failed your quest." Something bad happened,
+tell a god. 
+
+
+****** Bug from (immortal) in room 557 on Mon Feb 11
+22:35:54 2002:
+Subject: [Bug] pkill
+A thief can pkill when disguised, then return and
+rent. 
+
+
+****** Bug from (immortal) in room 240 (client) on Wed
+Feb 13 06:05:32 
+2002:
+Subject: Polymorph Bug
+whenever you polymorph into something and then return
+to your body all 
+the spells you have that are quest generated become
+crap  (stone skin, 
+galvanize, powerstone etc) 
+
+****** Bug from (immortal) in room 118 on Fri Feb 22
+02:24:44 2002:
+Subject: [Bug] land mines
+If you drop a land mine, get on your horse, and try to
+ride out, and 
+the horse dies, it spams the gods with errors and
+kicks you out of the 
+game. 
+
+
+****** Bug from (immortal) in room 118 on Fri Feb 22
+02:25:16 2002:
+Subject: [Bug] making traps (grenade) while resting
+trap grenade fire, while resting, generates an error 
+
+
+
+
+
+
+****** Bug from Allaron in room 8903 (client) on Sun
+Mar  3 20:29:37 
+2002:
+Subject: problem renting
+I put in a bug on this a few weeks ago, when I rent
+wearing my heavy 
+gi, when I come back I'm no longer wearing it. I
+bugged this and then it 
+got fixed, now it's back and I go off thinking I'm
+wearing it but it is 
+in my inventory instead.
+
+****** Bug from (immortal) in room 23643 on Tue Mar  5
+14:19:20 2002:
+Subject: [Bug] shaman help file is missing 'healing'
+discipline
+add 'healing' discipline to the advanced disciplines
+in 'help shaman' 
+ 
+
+ 
+
+****** Bug from (immortal) in room 23668 on Wed Mar  6
+13:47:58 2002:
+Subject: [Bug] charge
+When hasted, I have a 2.5 sec stated charge lockout. 
+The next line 
+tells me that I have 2.8 sec till I orient myself
+again - i.e. my real 
+lockout is 3.4 sec, but my state lockout is 2.5 sec.
+Clearly, I'd rather 
+have the 2.5 sec lockout. 
+
+
+
+****** Bug from (immortal) in room 24493 on Thu Mar  7
+19:25:46 2002:
+Subject: [Bug] flying in small rooms
+when fly, i can enter rooms that i normally cant when
+i am 
+walking/crawling
+ 
+
+
+****** Bug from Mouse in room 238 on Fri Mar  8
+22:39:31 2002:
+Subject: [Bug] leprosy limb eval refers to player in
+the third person
+when doing limb for leprosy, I am referred to in the
+third person in my 
+readout: Leprosy has set into her body! 
+  
+
+
+ 
+ 
+
+
+****** Bug from (immortal) in room 31399 on Tue Mar 12
+01:56:50 2002:
+Subject: [Bug] shaman juju quest
+It is possible to skip parts of the quest. I got fed
+up after failing 
+dissect on the blue mare 5 times, and tried saying
+'third riddle'.  To 
+my surprise, it worked, and I received my juju bag
+without ever 
+successfully dissecting the mare. I assume you can
+skip the first riddle as 
+well. 
+
+
+****** Bug from (immortal) in room 551 (client) on Tue
+Mar 12 05:58:55 
+2002:
+Subject: Pious Products - plat symbols.
+Looking at my logs I found that whenever someone buys
+a plat symbol I 
+loose money.  in the logs it shows me gaining money
+for the sale, but on 
+the next purchase in logs a drop in cash is shown.
+
+
+****** Bug from (immortal) in room 7737 on Wed Mar 13
+13:27:37 2002:
+Subject: [Bug] clerics prayers
+clerics say invis even after succeeding at offensive
+prayers... not to 
+mention that mobs never aggro for being infected,
+poisoned, diseased, 
+etc. diseased, etc. 
+confirmed
+
+****** Bug from (immortal) in room 14151 on Wed Mar 13
+17:40:31 2002:
+Subject: [Bug] distort (shaman ritual)
+tried distort on a mob (immunity type:  energy) got
+the message:  <mob> 
+is immune to draining (mob was a calm spirit) 
+
+
+****** Bug from (immortal) in room 236 on Thu Mar 14
+17:30:01 2002:
+Subject: [Bug] djalla's protection
+After a successful cast of djalla's protection, there
+are sometimes 
+(always?) 4 lines of "You can't increase the duration
+of that effect any 
+further." I have no idea what's going on, but
+something ain't right. 
+
+
+****** Bug from Kered in room 16121 on Sat Mar 16
+03:24:10 2002:
+Subject: [Bug] riding largewarhorse upstairs
+tried to ride upstairs in fort message  yhou can't
+ride your a on a 
+staircase 
+
+
+
+****** Bug from Eeize in room 572 on Thu Mar 21
+01:05:00 2002:
+Subject: [Bug] delayn's
+he givves you offers for stuff but then when you sell
+sometimes doesn't 
+buy the item (with no error or explanation whatsoever)
+so basically it 
+seems like he should either a.) buy the item or b.)
+tell you what's up 
+or c.) tell you to piss off 
+
+
+
+
+
+****** Bug from Aezeotrope in room 6197 (client) on
+Thu Apr  4 06:39:33 
+2002:
+Subject: crashbug
+ok....2nd time this particular scenario has ended in a
+crash.  charmed 
+a crime boss, gave him a dagger, had him use slit  to
+kill 
+mobs...mostly lowbie mobs, but nontheless killing with
+slit.  charmed the 
+pantathian ranger, killed the doppleganger, skinned
+corpse with ranger, right 
+after ranger is done with skinning, or boss slit
+ranger, boss slits 
+ranger killing him...crash.
+
+
+
+
+****** Bug from (immortal) in room 506 (client) on Mon
+Apr 15 17:21:26 
+2002:
+Subject: store logs.
+when someone buys multiple items (eg buy 2*file) in
+the logs the cash 
+is around the wrong way (1st book shows the money made
+for purchasing 
+both items, next log shows the price of 1 book, makes
+it look like you 
+lost cash)
+
+  
+
+****** Bug from Lidda in room 611 on Fri Apr 19
+12:28:48 2002:
+Subject: [Bug] Unable to slit a tall humans throat
+when they are 
+sleeping/resting/sitting.  Also unable to slit a short
+humans throat
+
+****** Bug from (immortal) in room 240 on Tue Apr 23
+12:24:10 2002:
+Subject: [Bug] scribe
+Ichiban says, "even failures work... i think its a
+bug"  more than one 
+mage has told me this about scribe 
+
+
+****** Bug from (immortal) in room 236 on Tue Apr 30
+21:46:17 2002:
+Subject: [Bug] thralls are totally messed up
+they aren't progressive any more, it seems - my
+spectre just beat the 
+crap out of a ghoul (same as an air elemental beating
+the crap out of an 
+earth) also, lower level guys spin and stuff - just
+tested this a bit, 
+insufficient life force to do it hundreds of times 
+
+
+****** Bug from (immortal) in room 238 (client) on Fri
+May  3 09:45:00 
+2002:
+Subject: horseman of the apocalypse.
+all the horsemen of the apocalypse are too low level
+to ride there 
+mounts.
+
+
+ 
+
+****** Bug from (immortal) in room 23361 on Sat May 11
+12:47:34 2002:
+Subject: [Bug] shaman brew comps - have ranks in brew,
+and can't eval 
+them
+Don't seem to be able to eval brew comps - didn't this
+work at some 
+point? I'll check later if mages can - I _think_ they
+can, but I'm not 
+sure. - Czaka 
+
+****** Bug from Tenbutts in room 8684 on Fri May 31
+14:23:31 2002:
+Subject: [Bug] monk catfall quest
+i can trigger the quest, but elephants are several
+levels to high to 
+ride (what are they, like 40th now?).
+ 
+
+****** Bug from (immortal) in room 406 on Mon Jun 10
+21:33:18 2002:
+Subject: [Bug] level '30' shaman quest
+ptok is unresponsive at the end of the quest, and I
+couldn't complete 
+the quest - I also mailed jesus re. this problem. This
+problem existed 
+when Mephisto did the quest, and if it was fixed is
+broke again. Czaka 
+
+****** Bug from (immortal) in room 3853 on Wed Jun 12
+20:04:36 2002:
+Subject: [Bug] lich touch - bug?
+seems to give back lf but not hp: H:206 LF:1958 V:129
+T:559989 
+N:1,071,552  <ninja=wounded>  <diamond/tank=injured> >
+ A ninja pounds a 
+diamond golem's right leg hard. You smash a ninja's
+neck hard with your maul. 
+You hold your hands up high and call upon your
+ancestors for power. 
+Crying out, you can feel the power of your ancestors
+flow. A ninja groans 
+in pain as life is drawn from his body! H:206 LF:2129
+V:128 T:559989 
+N:1,071,552  <ninja=bad> <diamond/tank=injured> > 
+vamp and life leech 
+currently return a little of each. 
+
+
+
+
+****** Bug from Aezeotrope in room 2143 (client) on
+Tue Jun 18 23:44:55 
+2002:
+Subject: mob disappearing acts
+fighting snow elf, snow elf spins an elemental, spin
+kills elemental, 
+snow elf disappears.
+
+
+
+****** Bug from Magnito in room 177 on Wed Jun 19
+13:18:20 2002:
+Subject: [Bug] Severed limbs problem.
+You can wear eq on limbs which are missing.  I had an
+arm chopped off, 
+eq fell to the ground.  I picked it up and put it back
+on 
+arm/wrist/hand.   The only thingwhich worked was my
+not being able to hold a weapon, 
+but  other pieces, I could wear and they stayed. 
+
+
+****** Bug from Shifty in room 238 on Thu Jun 20
+22:29:23 2002:
+Subject: [Bug] Thief goto command
+It seems that the goto command doesn't work for the
+1st level theif GM 
+now that there's been commercial growth.  Don't know
+if that was 
+intended. confirmed
+
+****** Bug from (immortal) in room 7702 (client) on
+Sat Jun 22 10:17:48 
+2002:
+Subject: con/mob level
+con doesnt seem to be effective anymore, the level
+that mobs con at is 
+incorrect for their resistances.  most shaman trainers
+con as hands 
+behind backs or something simular but at the same time
+are too high to 
+farlook,  many mobs that con as your level or a little
+lowere are 
+undisarmable (instant fail msg, my level 50 warrior
+couldnt disarm an elite 
+village guard in the se of the veldt)
+
+
+
+****** Bug from (immortal) in room 15128 on Wed Jul  3
+12:01:22 2002:
+Subject: [Bug] Mobs disapear
+Mobs will dissapear every time they kill one of my
+thralls. 
+ 
+
+
+****** Bug from (immortal) in room 67 on Thu Jul 11
+11:58:02 2002:
+Subject: [Bug] distort and death wave are energy
+spells, but resisted 
+by drain resist
+When distort or death wave (listed as
+energy/thaumaturgy spells) are 
+case erm, cast on drain resistant mobs, the 'you can
+affect his mob' 
+warning comes up telling you that the mob is drain
+resistant. 
+ 
+
+
+****** Bug from Gondo in room 168 on Sun Jul 21
+21:27:01 2002:
+Subject: [Bug] disarm
+<default event reaction>elite can disarm me even when
+lep has cancelled 
+his arms (he can't hit me but he can disarm?) hrm 
+
+
+
+
+
+
+
+****** Bug from Kagato in room 557 (client) on Sat Jul
+27 04:13:21 
+2002:
+Subject: Character creation bug
+Everytime you make a new char, they start out hurt,
+and all limbs are 
+in extreamly bad shape..  anyone wanna fix that?
+
+
+ 
+
+****** Bug from Antonius in room 103 on Thu Aug  1
+05:23:18 2002:
+Subject: [Bug] drunken death
+died while drunk when came back I was still drunk....
+shouldn't this 
+condition clear after dying? 
+
+
+****** Bug from Ahmen in room 240 on Thu Aug  8
+01:44:03 2002:
+Subject: [Bug] Town Crier/Disguise
+if a disguised thief runs by the town crier, the town
+crier will tell 
+to someone else.  Presumably the last person to have
+passed by the 
+towncrier...   
+-- the problem here is we use %n in the response scripts for both
+-- the formal name (short descr: "a lady-of-the-evening") as well as
+-- for keywords (name: "lady evening").  When we send a room echo
+-- or say someones name, we get "a lady-of-the-evening", which works fine
+-- but if we tried to tell to them "tell a lady-of-the-evening", obviously
+-- we have problems.  we would have to replace all the keyword usages
+-- with another variable, like %k, then change the code to reflect that
+-- variable as keywords only.
+
+
+****** Bug from (immortal) in room 15950 (beta)
+(client) on Mon Sep  2 
+17:18:04 2002:
+Subject: shaman? hes a cleric
+VNUM  level class aff names 27150  28     2    2
+shaman orcish  [Z:129 
+Pr:N L:9 H:-1 C:0 S:Temperate Road] R:15950 >  You
+bring forth an 
+orcish shaman from the cosmic ether.  [Z:129 Pr:N L:9
+H:-1 C:0 S:Temperate 
+Road] R:15950 >  MALE NPC - Name : shaman orcish
+[M-Num: 3135]      
+In-Room[15950] Old-Room[15950] Birth-Room[-1]
+V-Number[27150] 
+-----------------------------------------------------------------------------
+Short 
+description: an orcish shaman Long description: An
+orcish shaman is in 
+a religious frenzy, beseeching his deities.  Class :
+Cleric                      
+Level   : [M0 C32 W0 T0 S0 D0 K0 R0]
+
+
+****** Bug from Kered in room 238 (client) on Tue Sep 
+3 11:14:17 2002:
+Subject: ring of many gadgets doesnt change your
+height
+ring of many gadgets  has +3 height  wearing ring  im
+75 inches tall 
+without ring   im 75 inches tall   just in case u want
+to know
+confirmed
+
+****** Bug from Kered in room 557 on Fri Sep 13
+22:49:47 2002:
+Subject: [Bug] flying mounts when coming out of rent
+are flying instead 
+of on ground
+I was riding my forest wyvern when renting.. after
+coming back the 
+wyvern is flying and my skill is too low to ride.. 
+how bout having the 
+mount on ground.. m 
+
+****** Bug from Philena in room 5320 on Wed Sep 18
+06:17:32 2002:
+Subject: [Bug] Exit mess up 
+I have found an exit link that is not matched
+correctly. At Grisham the 
+theology trainer if you go 1.n then 1.sw the room has
+exits to the nw 
+where you just c ame through North and east. Go 1.n
+and you will see 
+this room has exits to the south and Northwest. Now go
+back 1.south and 
+you will find yourself supposedly  standing in the
+room you just left but 
+you will see there is only one exit to the North now
+Not the orginal 
+room with exits to the north east and northwest.
+standing in the room you 
+just left but you will see there is only one exit to
+the North now Not 
+the orginal room with exits to the north east and
+northwest. 
+
+****** Bug from Grod in room 25409 (client) on Wed Sep
+18 12:43:26 
+2002:
+Subject: reading help files lowers a shamans Loa
+1) Have a shaman with some Loa - check Loa for value X
+2) Type 'help 
+chrism' 3) Press return for next page 4) Check Loa --
+it should be X-1  
+This sucks..  It's not even an gameplay thing and I'm
+losing Loa? 
+
+
+****** Bug from Manual in room 25410 on Tue Oct  8
+19:35:28 2002:
+Subject: [Bug] Shaman Sacrifice Bug
+If I'm sacrificing, say, a small brown dog corpse that
+is in the room 
+with me, and before that sacrifice finishes, I drop
+another brown dog 
+corpse, the corpse that gets removed at the end will
+be the one I 
+dropped.  The corpse I was sacrificing gets left
+behind, and cannot be 
+sacrificed because technically it's already being
+sacrificed. . . 
+
+****** Bug from (immortal) in room 23273 on Thu Oct 10
+11:39:59 2002:
+Subject: [Bug] spy and disguise
+If spy is 'on' when you either disguise or return from
+disguise, you 
+cannot use the skill in your new form. confirmed
+
+****** Bug from Shambles in room 238 (client) on Thu
+Oct 10 19:11:43 
+2002:
+Subject: meat rate is too low
+150 pound corpse makes 300 dretchels of meat.  Thats a
+pretty sad 
+percent.  Make it a bit more than that.  A 150 pound
+animal should feed 2-5 
+people (however much meat that is).  confirmed
+
+****** Bug from Shambles in room 238 (client) on Thu
+Oct 10 19:16:01 
+2002:
+Subject: hmm a 0 vol 0 weight item?
+You see nothing special. The corpse of a filthy dog is
+a dead body made 
+of dog fur. It weighs about 55 pounds and occupies
+roughly 1300 cubic 
+inches. It is in brand new condition. When you look
+inside, you see: The 
+corpse of a filthy dog contains: Nothing. >  A
+Grimhaven youth has 
+arrived from the north. An old woman leaves north. > 
+There is nothing in 
+your right hand. >  You hold a small dagger in your
+right hand. > You 
+start butchering the corpse. >  You continue to
+butcher the corpse of a 
+filthy dog. >  You feel confident that you got all the
+meat off of this 
+one. >  You stop using a small dagger. >  You see
+nothing special. A 
+flank steak of dog meat is something edible made of
+foodstuff. It weighs 
+about 0 drechels and occupies roughly 0 cubic inches.
+It is in brand 
+new condition. >  You eat the meat.  confirmed
+
+****** Bug from Dalan in room 244 on Wed Oct 16
+18:02:29 2002:
+Subject: [Bug] missing AUTO help
+simply enough, the AUTO help file is mentioned in the
+newb guide and 
+elsewhere but it does not exist :) confirmed think
+book needs to reflect toggle now
+
+
+****** Bug from Jacob in room 167 on Fri Oct 18
+10:53:13 2002:
+Subject: [Bug] auto engage all, doesn't stop you
+hitting elementals
+when i fail a conj elem i get attacked and apparently
+somewhere in the 
+scuffle i hit the element this occurs even though i
+have auto engage 
+all toggled.  Is this normal or is it a bug.    
+
+
+
+****** Bug from Dragonfly in room 472 on Sat Oct 26
+09:50:42 2002:
+Subject: [Bug] Caldonia's help text
+Caldonia says your syntax when asking her for a hint
+should be "say 
+trainer (discipline) (class)" but in practice, the
+last two arguments are 
+reversed. The parser seems to expect "say trainer
+(class) (discipline)" 
+confirmed
+
+****** Bug from Feno in room 7328 on Thu Oct 31
+07:04:57 2002:
+Subject: [Bug] disguise
+When I disguise myself as a male citizen my V jumps up
+to 360something 
+but when i return to my normaly body my v stays up at
+360, not that im 
+complaining. =)
+
+
+****** Bug from Slab in room 6129 on Sun Nov  3
+11:39:47 2002:
+Subject: [Bug] this room description
+The 7th line of this room's desc is too long.
+confirmed
+
+
+
+****** Bug from (immortal) in room 238 on Thu Nov  7
+15:36:17 2002:
+Subject: [Bug] Dancing bones
+Dancing bone will create a skeleton and leave the
+corpse if you already 
+have maximum followers.  Apparently the corpse doesn't
+ disapear until 
+the mob follows you. 
+
+ 
+****** Bug from (immortal) in room 25549 on Sat Nov  9
+08:53:51 2002:
+Subject: [Bug] trip
+trip needs a counter move for monks 
+
+****** Bug from (immortal) in room 409 on Sat Nov  9
+15:26:23 2002:
+Subject: [Bug] thralls killed by special attacks
+When a thrall is killed by a special (this time
+stomp), the mob that 
+killed the thrall disappears into the ether. This
+stinks :( (especially 
+when you've been waiting for a load, which, of course,
+is always when it 
+happens) 
+
+
+
+****** Bug from (immortal) in room 238 on Mon Nov 11
+04:34:30 2002:
+Subject: [Bug] repair
+Shouldn't 'generic mineral' be repairable under 'stone
+repair'? 
+
+****** Bug from Slab in room 5424 on Mon Nov 18
+10:29:48 2002:
+Subject: [Bug] berserk
+probably shouldn't be able to smythe while berserking
+:)confirmed
+
+ 
+****** Bug from (immortal) in room 12728 on Mon Nov 18
+17:08:42 2002:
+Subject: [Bug] sea lions load cash
+they saving up for something? 
+
+
+****** Bug from Delta in room 168 on Fri Nov 22
+17:00:32 2002:
+Subject: [Bug] Second armadillio trainer clue
+Zendra doesnt give a clue as to wearabouts of second
+armadillo trainer. 
+Also Caldonia doesnt give a clue as to wearabouts of
+first shaman 
+healing abilities trainer 
+
+
+****** Bug from Wesson in room 10246 (client) on Sat
+Nov 23 08:40:52 
+2002:
+Subject: trying to over-specialize
+a little one:  at 95% slash specialization.  Tell cap 
+"prac slash 2" I 
+get one prac and he says go find the next trainer. I
+say "next 
+trainer".  No response  ( naturally ) I say "prac
+slash 1" he says I'm fully 
+trained  ( which I am )
+
+
+****** Bug from Kualteck in room 238 (client) on Sun
+Dec 29 19:19:48 
+2002:
+Subject: Disguise
+Well, as is normal, let's chaulk another thing up that
+you CANNOT DO 
+while disguised.  Besides interacting with mobs in
+most any way, buying 
+things, participating in quests, renting, using the
+hospitals, etc etc.  
+Add to the list that you cannot extinguish yourself
+(ie: extinguish me) 
+when disguised, and as a result you lose precious eq. 
+Is this really a 
+bug?  Probably not since the person who originally
+coded disguise 
+didn't think of these things in the first place. 
+Forgive my sarcasm.  I do 
+realize that it isn't helping my cause but, really,
+disguise issues 
+have been around for a long.....long time.  Drink
+beer. 
+
+
+****** Bug from Frost in room 15136 on Mon Feb 17
+23:25:10 2003:
+Subject: [Bug] Character creation left-overs
+A friend of mine created a character, Kazin, and
+levelled him up to 3rd 
+level as an elf.  Dissatisfied, he deleted the char
+and started over as 
+a 1st level warrior.  The title of the new char was
+still set to "Kazin 
+the 3rd level elf" though, even though he was a 1st
+level human.  Also, 
+mobs that were hunting him were still hunting the new,
+recreated Kazin. 
+Not tested, but several bugs about this.
+
+
+
+****** Bug from Kered in room 238 (client) on Wed Mar
+12 21:16:28 2003:
+Subject: time offline doesnt count for paralyze spell
+on my mount my battle griffon has been rented with me for 5 days real
+time and is still gimped from last week..  should paralyze wear off
+after time in the inn?
+
+
+****** Bug from Kualteck in room 23684 (client) on Thu
+Mar 13 11:46:46 
+2003:
+Subject: spy
+
+ I try to spy and I get the following message.  H:206
+P:100.0 
+N:135,812,107 >  You are already doing your best spy
+imitation.  When I do an SC 
+to see what affects I have...no spy...when I look at a
+mob I cannot see 
+their inventory.  H:206 P:100.0 N:135,812,107 >  You
+have 206/249 hit 
+points, 150/378 moves and 100/100 mana. You are
+slightly tired. You have 
+537,291,355 exp, and have 74973 talens plus 0 talens
+in the bank. You 
+have earned 7,116,214.69 exp this session. You have
+been playing for 0 
+hours, 20 minutes and 28 seconds in this session. For
+a lifetime total 
+of 9 days and 6 hours. Your level: Thief lev 47       
+  This ranks you 
+as: Kualteck You need 135,812,107.45 experience points
+to be a Level 48 
+Thief. Your throat is very dry. Your hunger is the
+least of your 
+worries. You are here, riding a draft horse. You are
+in defensive attack 
+mode. You are in wimpy mode, and will flee at 100 hit
+points. Skill 
+Attempt: 'disguise': Time Left : 1 day, 12 minutes  
+This may be a result of 
+spying when disguised...then returning from disguise.
+
+
+Subject: Shaman lifeforce drain
+Shaman lifeforce drain per move has increased from 1 LF to 3 LF per
+room.  It's almost as if lifeforce and moves are being treated the
+same way.
+
+
+****** Bug from Shandon in room 1249 on Fri Mar 21
+11:07:37 2003:
+Subject: [Bug] Door doesn't open from inside
+If you have a key you can unlock the door.. but once the door closes
+and you are on the other side of it.. you can no longer open it.  Door
+doesn't have any keyholes on the other side :)
+
+
+****** Bug from Wick in room 238 on Sat Mar 22
+14:27:33 2003:
+Subject: [Bug] Tell-an-immort-you-saw-this (unused1)
+H:224 T:10891 N:1 > ttr pers H:224 T:10891 433 > ttr pers H:224
+T:10891 296 > ttr pers You were born on the 9th of September in the
+year 857 P.S. You grew up as a maritime hobbit and began adventuring
+at the age of 28. You are 40 years and 0 months old 33 inches tall and
+you weigh 34 lbs. Your social flags are: Color Ansi Right-Handed
+Tell-an-immort-you-saw-this (unused1) You are allied to The
+Unaffiliated.
+ 
+
+
+****** Bug from IRS in room 175 on Mon Apr 28 09:51:49 2003:
+Subject: [Bug] Astral to an Immortal
+Allows the cleric to beseech his/her deity, resulting in a failure and
+used piety. When one attempts to astral to an immortal mob, it doesn't
+even let one try it.
+
+
+****** Bug from Thelonious in room 5700 on Tue May 13
+10:54:23 2003:
+Subject: [Bug] Equipment material type
+The high level monk garb for humans is the heavyweight
+gi/backplate/sigil headband/etc. Its all made of toughened cloth -
+fixable only by the Mend command (not implemented). This equipment
+should be altered to fit within Monk Repair (as it is monk eq). To do
+this, something as simple as changing it to toughened leather, or some
+other material type fixable by monks.  Im sure such a change could be
+made without any serious balance problems.  Thanks.
+
+****** Bug from Sularia in room 116 on Sat Jun  7
+06:20:03 2003:
+Subject: [Bug] Er.. strange death
+Went to loot my corpse, my shield was burning, with 1 hp I picked up n
+wore my stuff.. uhm.. shield burned me, died, came back without having
+to log back in, as myself, looting my corpse.. I recieved full
+experience for killing myself.. looted all the stuff from my corpse as
+if autoloot.. lost the exp for the death, started at 1 hp again.. But
+never had to log back in, didn't get RIP message, nothin.. was
+very... er..  strange... chain of 3 deaths, very lame.
+
+****** Bug from (immortal) in room 5246 on Mon Jun 16
+15:19:58 2003:
+Subject: [Bug] veggie trips
+veggies such as slime, maggots (yes they are defined as veggies) slugs
+etc should not have a leg to stick out and trip confirmed
+
+****** Bug from Merkaba in room 416 (client) on Tue
+Jun 17 19:30:42 
+2003:
+Subject: broken hand bug?
+a simple elven traveler got a broken hand in a brawled fight. as i
+assisted all was well, eventually she fled. When I attacked her, she
+could hit me back with the healthy hand (i suppose). When she flees
+away at wounded, let's say. No big deal. When we get back in the same
+room she screams, I'm gonna kill you! But nothing happens. When I
+attack her we both fight and she can hit me. I don't understand why
+when she aggros me, we didn't begin the fight even though she has no
+problem fighting when I start it.  confirmed
+
+**********************  LEAVE THIS MARKER HERE ********************************
+****** Bug from DeLorn in room 9555 (client) on Tue Jul  1 15:11:50 2003:
+Subject: Engage command
+The engage command seems to be a little messed up right now. Players will start out engaged in a fight, only to begin attacking a few rounds later for no apparent reason. Even when using the toggle engage-all they will still hit things when attacked. The entire command seems to be all bugged up atm. Request to repair this code error as soon as possible.  Thanks!   -D'Lorn
+****** Bug from Bluehair in room 1635 (client) on Fri Jul 11 08:38:33 2003:
+Subject: shaman mask quest
+this quest is really buggy and has been giving me lots of trouble. ptok isnt responding to any ofthe commands that he should be.
+****** Bug from Ryoko in room 238 (client) on Sat Jul 19 00:56:05 2003:
+Subject: Strange Deaths?
+I had just remade my char, and so thusly was trying to get in a few levels. I was on the wall, and another of the watchmen I was killing walked in as I flee'd to bs. Needless to say he was pissed when I missed, and since there were now 2 of them, they thusly killed me. Now the problem is, when I came back to do a CR, he said, "Time to die Ryoko!" and seeing as I had 5 hp at the time, I went down at an incredible rate. Don't know how common this bug is, but I was hoping, if nothing else, I could get reimbursed for one of those deaths. *beg* Thx :)
+****** Bug from Ranma in room 573 (client) on Sat Jul 19 03:47:56 2003:
+Subject: Auto Eat
+It is interesting to me, that the auto eat skill can alow a starving char to pull a comb of honey, a poisoned mushroom even, from thier bag and eat it, yet cannot pull a provision out. I starved to 2 hp w.o pulling out a provision, because there were no other items in my inv. Yet on other occasions, when I've had other edibles,  I've seen him pull out other various items to eat. In addition to this, it would be nice if the code went for iron provsions, rations, etc before going for honey combs, poisoned mushrooms, etc. Just a thought.
+****** Bug from Solarius in room 557 on Mon Jul 21 14:27:27 2003:
+Subject: [Bug] protection from <element> scrolls (via scribe)
+These don't work, can you fix it? :-) 
+****** Bug from Thelonious in room 519 on Thu Jul 24 13:27:04 2003:
+Subject: [Bug] Mob Spell Selection
+First of all, there seems to be little variation in mob spell selection. Well, most of the time anyhow - there are exceptions.  Anyhow - just fought Aeris (dean of air - gh mage acad). He ff'd me - but then tried to cast metero swarm 4 times in a row. Being that he is indoors, his spells didnt have much effect.  You might that a teacher of Air Magic might know that won't work.  
+****** Bug from (immortal) in room 240 on Fri Jul 25 23:09:38 2003:
+Subject: [Bug] leprosy and trophy.
+bug to get around trophy.  apparently if you leper up a mob. then summon elite. elite kills limbless mobs. you kill elite and get elite exp + all leper mobs he has killed. 
+****** Bug from HammondHammonds in room 4669 (client) on Sun Jul 27 11:49:29 2003:
+Subject: missing ladder?
+Warehouse    You find yourself in the southwest corner of this large dusty building. Stacks of crates occupy most of the space on the hard stone floor.  A row of dirty windows inset high along the top of the stout wooden walls allow a bare minimum of light to filter in from the outside.  The building continues to the north and east.  A loft runs above your head, along the western wall of the building.  A ladder leads upward to the loft. This area is barely lit.  You can see exits to the north, east and northeast.   There is no ladder here to go up. 
+****** Bug from Octogal in room 6164 on Tue Jul 29 13:33:36 2003:
+Subject: [Bug] If you send char(128), 137 to the mud, you can rent anywhere...
+
+****** Bug from Merkaba in room 8950 (client) on Wed Jul 30 19:37:48 2003:
+Subject: cage and ramp broken?
+i think the ramp doesn't work right. Raise ramp...It seems to be locked. unlock ramp....that is not a container..
+****** Bug from HammondHammonds in room 557 (client) on Wed Jul 30 21:59:29 2003:
+Subject: wait, where'd my spellbag go?
+Can't explain it besides that I log in today and my mediumspellbag is gone with all my compoents.  My last run was from Bullywugs to GH, so I doubt it got stolen.  Teufel the shaman (around my level) also had a similar thing happen to him.  Is this a rogue thief stealing stuff or some odd bug to make our component bag disappear?  Odd. Dunno what to say besides I have to log off and hope to see some free compoents in surplus or i'm a broke dick dog :... :)
+****** Bug from Slugblame in room 25434 on Thu Jul 31 14:28:52 2003:
+Subject: [Bug] powerstone
+i'm told that you can eek out multiple powerstone charges by placing them in bags and removing them to charge/to use on the first one in your inventory, instead of as intended only one per magic user. 
+
+Subject: hint giver broken?
+Caldonia seems to be broken (Snake pit ... the lady you buy  a shot of whiskey for help on a trainer location)  i say "trainer cures cleric" Caldonia tells you, "Yes, but which class".  err
+****** Bug from Merkaba in room 472 (client) on Sun Aug  3 21:38:56 2003:
+Subject: hint giver ...sorta not right
+okay, although the syntax she TELLS you to do is "trainer aegis cleric", it must come out as "trainer cleric aegis"
+****** Bug from Lucifer in room 10238 (client) on Tue Aug  5 22:06:43 2003:
+Subject: Disarm
+Btw, mobs can still disarm while holding things..
+****** Bug from Chaos in room 851 (client) on Wed Aug  6 03:11:02 2003:
+Subject: Parry
+Unconsious mobs with shields still parry.
+****** Bug from Entropy in room 22444 on Thu Aug  7 05:18:48 2003:
+Subject: [Bug] gnome outcasts
+why are they aggro? they should fancy being free not sitting in the damp filthy cells and actually join me instead of attacking 
+****** Bug from Entropy in room 24482 on Thu Aug  7 13:46:42 2003:
+Subject: [Bug] fortune
+inv: A fortune eval fortune gives an empty line 
+****** Bug from Entropy in room 24400 on Sat Aug  9 12:10:50 2003:
+Subject: [Bug] command parsing
+it changes me into name even in say eg 'me results in Entropy says, "Entropy" 
+****** Bug from (immortal) in room 238 on Sun Aug 10 12:56:40 2003:
+Subject: [Bug] flasks for shaman brew aren't loading
+flasks for shaman brew aren't loading 
+****** Bug from Entropy in room 9540 on Mon Aug 11 06:07:20 2003:
+Subject: [Bug] disarm help file
+ help file says Specialization   : Balance and Leverage Skill but it's in Monk Standard Stuff category in fact 
+
+****** Bug from Errol in room 10179 on Mon Aug 11 19:25:50 2003:
+Subject: [Bug] Bad room location
+the room to the southwest of here has an exit to its SE that connects to the room 1s of here. 
+****** Bug from Errol in room 10181 on Mon Aug 11 19:26:23 2003:
+Subject: [Bug] bad room in wood elves
+the previous bug refers to this room 
+****** Bug from Errol in room 10180 on Mon Aug 11 19:26:48 2003:
+Subject: [Bug] bad room in wood elves
+the other room in woodelves that was refered to 
+****** Bug from DeLorn in room 7139 (client) on Tue Aug 12 20:01:30 2003:
+Subject: Portal
+If you misspell the target of the portal it should say "portal to where? " rather then using piety on nothing since we decided you can only portal to portal rooms now.
+****** Bug from Entropy in room 8908 on Thu Aug 14 03:51:17 2003:
+Subject: [Bug] butcher
+i s'pose the butchered meat doesn't fill my stomach? 
+****** Bug from Kagato in room 244 (client) on Thu Aug 14 10:24:09 2003:
+Subject: COPY
+There seems to be a bug with the copy spell.. ever since it was changed to spells we know, its just stopped working.. I know the atomize spell, yet i cant copy dusties scrolls. Plz fix STAT! Thx.                                                                       -Kagato
+****** Bug from (immortal) in room 3 on Thu Aug 14 17:18:13 2003:
+Subject: [Bug] strange ring
+is listed as clothing, not jewelry
+****** Bug from Errol in room 4632 on Fri Aug 15 19:33:52 2003:
+Subject: [Bug] exit missing from the exits list
+this room apparently has an exit to the north, but the exits line when you enter dosnt show it. Typing exits shows a exit north 
+****** Bug from Errol in room 4635 on Fri Aug 15 19:36:02 2003:
+Subject: [Bug] funky exit
+with reference to previous bug, the exit is here, but behaves in a strange way, may or may not be intended, if intended, please ignore. 
+****** Bug from Kagato in room 10254 (client) on Sat Aug 16 12:14:32 2003:
+Subject: Dissappearing Mobs?
+An air elemental misses a frontier guardsman. A frontier guardsman slashes an air elemental's air incredibly well with his sword. An air elemental swings wildly, but misses a frontier guardsman. An air elemental misses a frontier guardsman. A frontier guardsman swings wildly, but misses an air elemental. An air elemental misses a frontier guardsman. Although you no longer need to, you begin an incantation to facilitate your spell. You concentrate intently upon the magical task at hand... You concentrate intensely on a frontier guardsman. A frontier guardsman senses your offensive magic is directed at him. Your opal goes completely black. An air elemental swings wildly, but misses a frontier guardsman. A frontier guardsman slashes an air elemental's air incredibly well with his sword. An air elemental is incapacitated and will slowly die, if not aided. An air elemental tries to rescue an air elemental but fails. You add another line to the magic rune you have been tracing. Your words form the pattern calling on the magic to be unleashed. A frontier guardsman kicks an air elemental in the side. An air elemental is dead! R.I.P. A frontier guardsman starts getting items from a small uncontrolled tornado. An air elemental stops following you. You stop casting as your target is no longer there. You focus and slowly vanish.               QUESTION: Where did the guard go???  
+****** Bug from (immortal) in room 10178 on Sun Aug 17 15:16:04 2003:
+Subject: [Bug] paralyze limb cure
+after having a limb paralyzed, and then cured.  i get this message under att con Skill Attempt: 'paralyze limb': Time Left : 1 day, 10 hours, 19 minutes that does not appear correct... 
+****** Bug from Blast in room 28992 on Tue Aug 19 22:06:11 2003:
+Subject: [Bug] overlapping room
+this room overlaps with another in this general area 
+****** Bug from Blast in room 28943 on Tue Aug 19 22:06:56 2003:
+Subject: [Bug] overlapping room
+this is the forementioned overlapped room 
+****** Bug from (immortal) in room 3742 on Wed Aug 20 07:26:28 2003:
+Subject: [Bug] shop setrates doesn't interpolate name variables
+Nekcihc tells you "1.200000 0.800000 10 $$al potion" 
+****** Bug from Thelonious in room 6121 on Wed Aug 20 13:33:51 2003:
+Subject: [Bug] Paralysis Resistance
+Supposedly, monks are "majorly resistant to Paralysis". This may be true for resisting clerical spells (numb, para limb, etc), However this does not seem to be the case for mob procs - ie. guardian serpent in Pantathia.  Kind of annoying to narrowly avoid death by fleeing after being paralyzed by a mob of a much lower level, especially when you are supposed to be "majorly resistant" to such things. 
+****** Bug from Kasumi in room 238 on Thu Aug 21 17:57:03 2003:
+Subject: [Bug] monk resis II (paralysis)
+I'm currently 83%-ish resistant to paralysis. Doesn't seem to help whatsoever. Mob paralysis procs always get me. 
+****** Bug from Garush in room 8767 on Fri Aug 22 08:20:39 2003:
+Subject: [Bug] who command
+"who" without any parameters shows invisible and pc's who are too sneaky to be seen without true sight. add -l or any parameters after "who" command does not show the invisible and sneaky pc's.  inconsistent behavior. 
+****** Bug from Garush in room 2216 on Sun Aug 24 17:44:19 2003:
+Subject: [Bug] paralyze limb related prayers
+dwarven cleric became "un-gimpable" after it used a restore prayer on itself.  once restored, mobs should be "gimpable" again. 
+****** Bug from Garush in room 10255 on Sun Aug 24 21:08:37 2003:
+Subject: [Bug] berserk
+used word of recall on Apollyon while he was berserking; had really weird effects. Apollyon kept berserk hp and status but would not aggro mobs afterwards. so pretty much had a warrior with 616hp due to zerk without penalties of zerk. He usually has around 400ish hp. 
+****** Bug from (immortal) in room 67 on Sun Aug 31 16:54:30 2003:
+Subject: [Bug] / Enkidu got to bad place in start_task (41).  Tell Brutius or Batopr
+bug was generated while  Enkidu was flying and trying to put himself out. Bug spammed (20x?) during this process. 
+****** Bug from (immortal) in room 14152 on Mon Sep  1 21:49:14 2003:
+Subject: [Bug] eagles and knees
+A large eagle tries to hit you with his knee, but you dodge it... that just wrong 
+****** Bug from Adoresqua in room 240 on Wed Sep  3 01:56:00 2003:
+Subject: [Bug] Copy spell
+I know the spell energy drain, however, cannot copy it. 
+****** Bug from Beth in room 16162 on Sat Sep  6 00:15:49 2003:
+Subject: [Bug] or whatever you wanna make of it
+You peer through _fake_window_... Fire Vault     [NOHEAL] This room is made from fire. The walls are fire the ceiling is fire and the floor is fire. The floor is made of some type of solid fire but the ceiling and walls are not. A pile of talens sits here. [2] A fire elemental is flying about. .....a fire elemental is flying around. A flaming portal is here leading somewhere.... (glowing)  _fake_window_  
+****** Bug from Garush in room 228 on Sat Sep  6 12:40:59 2003:
+Subject: [Bug] divine shop
+divined dragon wing cloak got a Magic Affect by 2048 should list the name of the spell instead of the number 
+****** Bug from (immortal) in room 67 on Wed Sep 10 17:50:02 2003:
+Subject: [Bug] There are 2 drakkalans
+
+****** Bug from (immortal) in room 67 on Wed Sep 10 18:24:25 2003:
+Subject: [Bug] / NOC:DIU: a bar hopper was in room nowhere.
+
+****** Bug from (immortal) in room 449 on Wed Sep 10 18:34:31 2003:
+Subject: [Bug] blackridge lodge (34018) outside the range of birth rooms for pcs
+real fix requires pfile conversion, moved to room 449 for now 
+****** Bug from (immortal) in room 15258 on Wed Sep 10 21:23:07 2003:
+Subject: [Bug] cheval
+Cheval says the loa is growing tired when it ends.  it should saw have grown tired.  and cheval should have a warning like all the  other spells/rituals. 
+****** Bug from (immortal) in room 67 on Thu Sep 11 20:57:12 2003:
+Subject: [Bug] fumble
+fumble works on mobs greater than a mage's level, counter to the help file and also to the disarm skill file and also to the disarm skill 
+****** Bug from (immortal) in room 601 on Sat Sep 13 06:39:12 2003:
+Subject: [Bug] postmasters riding and trying to deliver to shop owners...
+get that horse out of my shop.. it creates ALOT of repeated and perpetual spam 
+****** Bug from Blast in room 28370 on Sun Sep 14 12:34:54 2003:
+Subject: [Bug] no exit NE (one of two)
+there is no exit NE here, when there is no obvious reason why. 
+****** Bug from Blast in room 28039 on Sun Sep 14 12:35:24 2003:
+Subject: [Bug] no exit NE (one of two)
+this is where the exit would go to, if it was in 
+****** Bug from Blast in room 28371 on Sun Sep 14 12:36:06 2003:
+Subject: [Bug] no exit NE (two of two)
+there is no exit NE here, when there is no obvious reason why. 
+****** Bug from Blast in room 28040 on Sun Sep 14 12:36:23 2003:
+Subject: [Bug] no exit NE (two of two)
+this is where the exit would go to, if it was in 
+****** Bug from Blast in room 28371 on Sun Sep 14 12:36:52 2003:
+Subject: [Bug] no exit N here
+there is no exit N here, when there is no obvious reason why not. 
+****** Bug from Blast in room 28039 on Sun Sep 14 12:37:09 2003:
+Subject: [Bug] no exit N here
+this is where the exit would go to, if it was in 
+****** Bug from Blast in room 28406 on Sun Sep 14 14:02:05 2003:
+Subject: [Bug] one way exit in sea of sorrows
+The exit SE is one way 
+****** Bug from Blast in room 28421 on Sun Sep 14 14:02:27 2003:
+Subject: [Bug] one way exit in sea of sorrows
+this is the room which the oneway exit leads to 
+****** Bug from Blast in room 28403 on Sun Sep 14 14:06:51 2003:
+Subject: [Bug] one way exit in sea of sorrows
+the exit SW is one way 
+****** Bug from Blast in room 28416 on Sun Sep 14 14:07:35 2003:
+Subject: [Bug] one way exit in sea of sorrows
+here is the room without a NE exit 
+****** Bug from Blast in room 28427 on Sun Sep 14 14:09:17 2003:
+Subject: [Bug] one way exit in sea of sorrows
+this room has a one way exit NE 
+****** Bug from Blast in room 28415 on Sun Sep 14 14:09:58 2003:
+Subject: [Bug] one way exit in sea of sorrows
+here is the room without a SW exit 
+****** Bug from Blast in room 28145 on Sun Sep 14 14:17:16 2003:
+Subject: [Bug] bad exit in sea of sorrows
+the exit SW connects to the room to the east of here. 
+****** Bug from Blast in room 28146 on Sun Sep 14 14:17:38 2003:
+Subject: [Bug] bad exit in sea of sorrows
+this is the room previous bug reported. 
+****** Bug from Aiolos in room 72 on Mon Sep 15 00:10:34 2003:
+Subject: [Bug] DROPPING LINK AS A WEREWOLF
+I was transformed into a werewolf, went to wear all my eq, accidentaly wore my bodybag, got paralyzed, then dropped link. Somehow I ended up in the polymorph room, and I am pretty sure I am not supposed to be here. I cannot be summoned, nor can I eat or drink, as i have none with me, I WILL DIE HERE PLEASE FIX THIS 
+****** Bug from Thelonious in room 9019 on Tue Sep 16 12:03:47 2003:
+Subject: [Bug] Trophy List - Chaos Garrison Dungeon (Shota)
+The trophy list seems to only load 8 mobs in this zone, but but trophy indicates that there should be 9.  Hence 8/9 mobs on the trophy list is the best you can do.  It is possible that there is a hidden room/ hidden mob here, however, I have dont my best to scour this zone for the final mob, and been unable to find it.  It may load elsewhere in the game, and I have yet to come across it whereever it might be located.  But it is a rather small, starter type zone that I would not assume to be overly intricate enough to place a mob outside its own zone borders.  If there is some problem, and the last mob is not loading in the game, either have the mob load, remove it (somehow) from the trophy list for the Chaos Garrison Dungeon (perhaps moving it to a newly created "unused mob" section would be easier?)   There are other issues with trophy, certain disabled zones still count for trophy purposes (most notably the numerous chaos plains, etc zones by mithros).  Yet those mobs were once in the game, and there are people who have killed those mobs in this version, so I dont think they should be removed.  However, it would be nice to potentially get to 100% killed in any enabled zones - some of which include trainers, and are artifically inflated with mobs.  I think one zone may also include "testmobs" of all levels, but those mobs get used from time to time at least.  Once of my characters has killed one in helping with some experiment.  Perhaps those should be reclassified or something...  Obviously, this is not a pressing issue, but its something that bothers me - any potential trophy list errors, etc.  When stuck one mob short, and investing way too much time looking for a mob, merely because it doesnt load, and thus cannot be found.  Shopkeepers/noheal mobs are a separate issue - sinec they are in the game, but I at least, havent found a way to get them out to fight them. 
+****** Bug from Thelonious in room 9544 on Tue Sep 16 12:06:39 2003:
+Subject: [Bug] Trophy List - Theater Basement (Jaxom)
+Similar to my previous bug msg re: chaos garrison dungeon. Stuck at 18/19 mobs here - scoured the zone, and have been unable to locate the 19th mob.   Curious to whether or not it actually loads into the game.  Might be elsewhere, and yet unfound by me. Just wondering. 
+****** Bug from Aiolos in room 240 on Wed Sep 17 04:58:53 2003:
+Subject: [Bug] lycanthropy again
+I see the bug i posted earlier about the polymorph room has not been fixed. I'm not sure if this is because of problems or difficulties fixing it or just not bothering. Please don't take this the wrong way, its just really annoying as now I have lost a further 60,000 talens and 50 million or so exp. 
+****** Bug from (immortal) in room 5424 on Wed Sep 17 10:36:03 2003:
+Subject: [Bug] lighting in forge rooms
+forges should give off enough light to make the rooms not dark at night
+****** Bug from Blast in room 22452 on Fri Sep 19 05:19:45 2003:
+Subject: [Bug] too shot a path
+the road here is 3 rooms long, where as the road from the level below is 5 rooms long. ie if I walked in a circle, I would go n,n,n,n,u,s,s,d and be back to the samw room. 
+****** Bug from Blast in room 10960 on Fri Sep 19 05:38:10 2003:
+Subject: [Bug] one way exit in the campers 1
+the exit nw is one way 
+****** Bug from Blast in room 10967 on Fri Sep 19 05:38:44 2003:
+Subject: [Bug] one way exit in the campers 1
+this is the destination of the one way bug 1 n w 
+****** Bug from Blast in room 10974 on Fri Sep 19 05:39:10 2003:
+Subject: [Bug] one way exit in the campers 2
+the exit SE is one way 
+****** Bug from Blast in room 10967 on Fri Sep 19 05:39:27 2003:
+Subject: [Bug] one way exit in the campers 2
+this is the destination of the one way bug 2 
+****** Bug from (immortal) in room 15259 on Wed Sep 24 12:14:24 2003:
+Subject: [Bug] Poacher bridge
+The poacher bridge leaves your mount behind when entered, even though it states you urge your mount across the bridge. 
+****** Bug from Demo in room 338 on Thu Sep 25 13:33:56 2003:
+Subject: [Bug] berserk does not attack mobs resting on items
+You go berserk! Berserking increases your ability to withstand damage! You go berserk on a small cat. H:350 V:100 T:54262 N:3,842,048  <cat=perfect> > You slice a small cat's body into a bloody pulp with your axe. A small cat is dead! R.I.P. You will gain little experience when fighting a small cat. You start getting items from the corpse of a small cat. You can get nothing more from the corpse of a small cat! H:350 V:100 T:54262 N:3,842,047 > You are way too blood crazed at the moment to be dissecting stuff. H:350 V:100 T:54262 N:3,842,047 > l Inside a Messy House  This area is brightly lit. [Exits: ] A rumpled, sleepy man is sleeping on a bed. A small cat's corpse lies here, slashed in many places. H:350 V:100 T:54262 N:3,842,047 > l You finally calm down and stop berserking. --> Attack mode set to: offense. You feel drained as the bloodlust leaves you. 
+****** Bug from (immortal) in room 7450 on Fri Sep 26 12:47:05 2003:
+Subject: [Bug] Clarity/true sight
+Clarity wore off, I have true sight yet I can't see anything. 
+****** Bug from Gniederlander in room 22401 on Fri Sep 26 16:24:42 2003:
+Subject: [Bug] missing exit?
+if this exit is not missing i think it is too hard to find. i searched here before then today slugblame came out of it *surprise!* through a knot entrance. from a gnome outcasts rooms downstairs somewhere. the room description specifically says there is a tunnel cut through a tree into the woods east. but i cant find any action to enter open or in any way manipulate a tree a colossal-tree a tunnel a door a gate attack forest (its very dark and forboding) or any bunch of crap i tried.  *WHINE!*  
+****** Bug from (immortal) in room 177 on Sat Sep 27 16:23:13 2003:
+Subject: [Bug] paralyze limb on birds.
+I have practiced this quite a bit, and you only ever damage a leg. what about a wing?  perhaps I am just not high enough.  however, it would seem that you should be able to gimp a wing and preclude them from flying
+****** Bug from (immortal) in room 34664 on Sat Sep 27 18:47:27 2003:
+Subject: [Bug] riding
+a mule can carry my wight but a 1750 lb moose cannot? 
+****** Bug from (immortal) in room 7358 on Mon Sep 29 16:15:17 2003:
+Subject: [Bug] cleric and sneaky people i cannot see
+i have infravision.  tank is shadowy thief that i can only see as blob. I can pray heal tank's name. I have to pray salve blob. (name i cannot see for salve, where i can for heal)  not really a huge issue, but should be consistent 
+****** Bug from Ferry in room 531 on Wed Oct  1 02:32:50 2003:
+Subject: [Bug] missing colors
+hmm i think you used to look at this mirror and see the colors now you dont see the colors to know about the windows you can look through 
+****** Bug from (immortal) in room 1208 on Thu Oct  2 14:34:53 2003:
+Subject: [Bug] key to this room
+i do not believe this key loads #1208 
+****** Bug from (immortal) in room 100 on Fri Oct  3 18:13:35 2003:
+Subject: [Bug] birds don't have hand but can steal
+I felt a marsh hen's fingers in my pocket today (race = bird) Animals without fingers shouldn't be able to attempt steal. 
+****** Bug from Fedaykin in room 573 (client) on Sat Oct  4 21:29:40 2003:
+Subject: Death while polymorphed
+I was in the shape of a horsefly, and i got killed by an idiot who didn't realise that i was actually a PC.  It made the mud crash, thought you might like to know.  Maror said that the last thing that the mud did before it crashed was resolve a polymorphed corpse.  Cheers,           Fedaykin/GoldLama/etc. etc.
+****** Bug from Ferry in room 8969 on Wed Oct  8 17:01:53 2003:
+Subject: [Bug] slab
+this room would be fixed if you just removed the slab object so the explorin' fool didnt have to realize and open 2.slab / open slab 'down' for it to work 
+****** Bug from Hammah in room 107 on Thu Oct  9 14:04:29 2003:
+Subject: [Bug] cityguard break-up code
+when the GH cityguards try to break up a fight, the mob just re-starts it. 
+****** Bug from BoulderNoggin in room 453 on Fri Oct 10 19:07:17 2003:
+Subject: [Bug] adders
+install a light in the servinstation 
+****** Bug from Gniederlander in room 24488 on Sat Oct 11 01:08:33 2003:
+Subject: [Bug] bed sizes
+will you please fix these bed sizses! gosh i'd like to sleep in the first bed i seee 
+****** Bug from Grandma in room 472 on Sat Oct 11 11:19:03 2003:
+Subject: [Bug] caldonia
+doesnt respond to 'trainer fighting deikhan' properly she says "but for which class? 
+****** Bug from Demo in room 898 on Sat Oct 11 14:29:52 2003:
+Subject: [Bug] get all all.corpse 
+It looks like this command did not loot all the corpses in the room: You start getting items from the corpse of an officer. You can get nothing more from the corpse of an officer! You start getting items from the corpse of a wall watchman. You can get nothing more from the corpse of an officer!   On the City Wall   Dark clouds cover the sky. This area is brightly lit. [Exits: NE SW ] An officer's corpse lies here, slashed in many places. A wall watchman's corpse lies here, slashed in many places.    get all 2.corp You start getting items from the corpse of a wall watchman. You get a small moneypouch from the corpse of a wall watchman. You get a studded leather sleeve from the corpse of a wall watchman. You can get nothing more from the corpse of a wall watchman!  
+****** Bug from (immortal) in room 34029 on Tue Oct 14 16:12:27 2003:
+Subject: [Bug] secret here needs to be changed
+change this secret to type rubble can see through it atm change this secret to type rubble can see through it atm 
+****** Bug from (immortal) in room 34031 on Tue Oct 14 16:16:33 2003:
+Subject: [Bug] the secret here cannot be found with search
+it is an up exit in an outdoor room 
+****** Bug from (immortal) in room 1671 on Tue Oct 14 21:07:34 2003:
+Subject: [Bug] weird character?
+Mouldan looks at hims and says "Where'd dunno is that'll turn out ... between 'hims' and 'and says' there is a weird character instead of 'elf' 
+****** Bug from (immortal) in room 240 on Thu Oct 16 16:06:48 2003:
+Subject: [Bug] smoke
+a huge cloud of smoke really should impede scan
+****** Bug from (immortal) in room 3 on Thu Oct 23 20:16:11 2003:
+Subject: [Bug] mobs picking up lanterns
+they stay lit in the mobs inventory.
+****** Bug from Demo in room 503 on Mon Oct 27 15:53:44 2003:
+Subject: [Bug] repair does not search inventory
+I had two boots in my inventory, I wanted to repair the second. I did: repair 2.boot and was told that I had to have the item in my inventory to repair it.  This is the advanced smythe skill. 
+****** Bug from Jimbus in room 659 on Tue Oct 28 20:31:19 2003:
+Subject: [Bug] the south exit here
+the south exit here 
+****** Bug from Jimbus in room 660 on Tue Oct 28 20:31:57 2003:
+Subject: [Bug] used to go here
+used to go here and still should according to the description 
+****** Bug from (immortal) in room 3 on Thu Oct 30 12:04:05 2003:
+Subject: [Bug] vampire undo quest
+if you give the meat (3rd item to druindar) he will unvamp you without requiring the cash or the vampiure bat wing...
+****** Bug from (immortal) in room 3 on Fri Oct 31 11:21:43 2003:
+Subject: [Bug] auto formatting
+is all messed up for quotation marks
+****** Bug from Demo in room 578 on Fri Oct 31 20:25:07 2003:
+Subject: [Bug] red runed sleeve which is Anit-Mage loaded on a mage in the academy basement
+
+****** Bug from Terror in room 557 (client) on Sat Nov  1 16:31:43 2003:
+Subject: subject client
+cannot rent while using client
+****** Bug from (immortal) in room 16220 on Sun Nov  2 17:52:36 2003:
+Subject: [Bug] monk counter moves on paralyzed legs.
+she did this without the use of her left leg. Thao grabs your knee, and hits you in the side with a powerful roundhouse kick. Ooof! That knocked some wind out of you... that is really imrpessive :)
+****** Bug from Demo in room 5424 on Mon Nov  3 10:40:38 2003:
+Subject: [Bug] vision and repairing
+you should have to be able to see the item you are repairing:  You allow something to heat in something. You carefully examine something.  You continue to let something heat in something. You remove something with a pair of steel tongs, as it glows red hot. You carefully examine something. 
+****** Bug from Fedaykin in room 240 (client) on Tue Nov  4 03:57:53 2003:
+Subject: Brewing
+While brewing, if you type stop, and then brew another potion, rather than brew 5 ounces and take a while to do it, it brews 0 ounces, and fails almost imeediatley.  Just a waste of components really, thought you should know
+****** Bug from Demo in room 873 on Thu Nov  6 13:37:46 2003:
+Subject: [Bug] Warrior Dual Wield
+I have dual wield: dual wield                  Current:  (terrible)  Potential:  (good)        And I've spent a lot of time with a tattoo needle in my off hand but have yet to see a single increase. 
+****** Bug from (immortal) in room 175 on Fri Nov  7 15:06:32 2003:
+Subject: [Bug] relive
+relive exp on corpses doesn't save over crash/reboot 
+****** Bug from (immortal) in room 3 on Sat Nov  8 07:09:42 2003:
+Subject: [Bug] monk crit kill- ripping heart out
+should not be applied to undead mobs and mobs that are immune to bleeding. ie seklor, which apparently happened.
+****** Bug from Baroccio in room 177 (client) on Sat Nov  8 17:44:35 2003:
+Subject: sold comps - didnt get paid
+I sold comps at the grim comp shop and didnt get paid:  You take a cake of soap from a small grenulpa bag. The shopkeeper now has a cake of soap. etc.  I have a list of the stuff i've sold  Baroccio (redcrosse@hotmail.com)
+****** Bug from Raven in room 240 on Sun Nov  9 12:28:41 2003:
+Subject: [Bug] scribe
+When you scribe a scroll you use up all of your parchments and all of your inks for one attempt. 
+****** Bug from Merkaba in room 4673 (client) on Tue Nov 11 20:11:00 2003:
+Subject: firepole
+firepole doesn't work right.  I think it should be placed in the room upstairs
+****** Bug from (immortal) in room 749 on Thu Nov 13 09:08:53 2003:
+Subject: [Bug] this room...
+ine. The road continues to the north and south. Dark clouds cover the sky. This area is lit. You see an exit north.   no exit to the south, contrary to the description...
+****** Bug from (immortal) in room 34767 on Thu Nov 13 09:20:02 2003:
+Subject: [Bug] flee when mounted with adv retreat
+if you fall of your mount you end up sitting in the next room. i think you should either fail flee and end up sitting in the room  you were fighting in or stumble off the mount, and end up standing in the next room (this only happens when you are mounted, fall and  flee at once)
+****** Bug from Merkaba in room 12257 (client) on Fri Nov 14 23:56:19 2003:
+Subject: room overlay
+this shop overlays over another room, from my point of view :)... or the other room overlays this shop...
+****** Bug from Merkaba in room 12320 (client) on Fri Nov 14 23:56:55 2003:
+Subject: room overlay (the other point of view)
+okay, this room overlays that shop i talked about earlier
+****** Bug from Merkaba in room 9070 (client) on Tue Nov 18 23:07:25 2003:
+Subject: text not right on sign
+room needs auto format so 'look text' looks right
+****** Bug from Fedaykin in room 433 (client) on Thu Nov 20 16:00:14 2003:
+Subject: Shadow Walk
+Not sure if this is a bug, but it seems like one, then again, knowing Jesus maybe not.  With Shadow Walk, i can walk through some barriers, and generally not locked ones, but 99% of the time, i can walk both ways through barriers.  I've found, (most unfortunatley for my death count) that i can't walk back through some passages once i've gone through one way - like the barrier to the south magical land, and on the way to the Obsidian Citadel, i walked through a locked door, to find i couldn't walk past, and there was another locked door behind it, which i could also not walk through.  I was stuck, and it was a no-recall room.  Just wondering if that's a bug, or if that's deliberate?
+****** Bug from Nobody in room 853 on Thu Nov 20 17:49:10 2003:
+Subject: [Bug] chi corpses
+chiing corpses to set them ablaze should actually set them afire - with smoke and all that. 
+****** Bug from Merkaba in room 22785 (client) on Thu Nov 20 19:42:08 2003:
+Subject: Weird text in insulter code?
+dunno why it looks like this but is he looking at "himself?" or what's this "hims*#&||" text?  H:238 P:88.4 V:150 T:6890 E:70,830,713 N:14,751,679 >  A salty scout looks at you and says, "Where'd you get that equipment?  I've seen better stuff in a dump!!!!"  H:238 P:88.4 V:150 T:6890 E:70,830,713 N:14,751,679 >  A salty scout looks at you and says, "Hey dirt-for-brains, bite me!!" Leaves rustle in the trees nearby, but it is not in phase with the breeze.  H:238 P:88.4 V:150 T:6890 E:70,830,713 N:14,751,679 >  A salty scout looks at him and says, "I could have been your father if I'd've had change for a talen!!"  H:238 P:88.4 V:150 T:6890 E:70,830,713 N:14,751,679 >  Leaves rustle in the trees nearby, but it is not in phase with the breeze.  H:238 P:88.4 V:150 T:6890 E:70,830,713 N:14,751,679 >  A salty scout looks at him and says, "Hey scout, is it true your IQ is the same as your shoe size!!!!"  H:238 P:88.4 V:150 T:6890 E:70,830,713 N:14,751,679 >  A salty scout looks at him and says, "Mangy boogerdin!!!!"  
+****** Bug from Merkaba in room 22751 (client) on Thu Nov 20 19:48:21 2003:
+Subject: 2nd room i've seen vials of holy water in room
+Zone file I think is making vials of holy water load in the room? Can you check?
+****** Bug from Merkaba in room 15912 (client) on Thu Nov 20 21:33:59 2003:
+Subject: No door but he bumps his head on a door?
+ H:227 P:61.0 V:172 T:8367 E:71,114,941 N:14,467,450 >  [0;1mA Cave Of Stone[0m    The walls here are a little dusty but very old.  The ceiling is riveted by rocky spikes and clumps of dirt fall onto the floor every now and then.  The floor has a few specks of sand but mostly its covered in dirt and rock.  The way northwest leads into another section of the cave while the way east leads deeper into the cave. This area is lit. A donkey stands here idly awaiting a rider.  You can see exits to the east and northwest. H:227 P:61.0 V:169 T:8367 E:71,114,941 N:14,467,450 >   [0;1mDeeper Into The Cave[0m    The walls in this room are rough and dirty.  The ceiling is roughly six or so feet above the floor and is even more dirty than the walls.  The floor is dotted with splotches of sand and rock with the occasional dirt pile.  The way north leads towards the mouth of the cave while the way southeast leads deeper into the cave.  A small beam of light creeps in from the west. This area is lit. A pile of dust is here.  You can see exits to the north, west and southeast. H:227 P:61.0 V:166 T:8367 E:71,114,941 N:14,467,450 >  You rest and begin to chant.   PIETY : 60.98 >  H:227 P:61.0 V:166 T:8367 E:71,114,941 N:14,467,450 >  Your repentance has been accepted by Mezan, the father. Thelonious bumps his head on the door.  That had to hurt. Thelonious has arrived from the southeast.   PIETY : 68.52 >  H:227 P:68.5 V:166 T:8367 E:71,114,941 N:14,467,450 >  Thelonious raises an eyebrow.   PIETY : 68.52 > H:227 P:68.5 V:166 T:8367 E:71,114,941 N:14,467,450 >  You break your focus... I see no door here.  H:227 P:68.5 V:166 T:8367 E:71,114,941 N:14,467,450 >  I see no door here.  H:227 P:68.5 V:166 T:8367 E:71,114,941 N:14,467,450 >  Beloc has arrived from the southeast.  H:227 P:68.5 V:166 T:8367 E:71,114,941 N:14,467,450 >  You say, "bumps his head on the door?" 
+****** Bug from (immortal) in room 3 on Fri Nov 21 09:39:55 2003:
+Subject: [Bug] lanterns underwater
+ext in your hand, but you can light them on the ground.
+****** Bug from (immortal) in room 3 on Fri Nov 21 09:40:25 2003:
+Subject: [Bug] er clarification on lants underwater
+it only allows lit lants in dd when the tide comes up over them
+****** Bug from Onion in room 338 on Fri Nov 21 21:07:04 2003:
+Subject: [Bug] rumpled man
+i think the rumpled man is broken.. (he's awake but) he wont respond to 'script' to get the script for the directors quest 
+****** Bug from Fedaykin in room 633 (client) on Mon Nov 24 01:33:57 2003:
+Subject: Selling Potions in Shops
+Not a big thing, just kind of annoying that i can't change it - i have access to Crossroads of the Arkane (from MS, 6s, 2e) - i can change the price of all scrolls and other potions, but i brewed 10 rusty potions, and i can't change the price on them - they're stuck at 37k.  If this problem cannot be fixed so that i can change the price, please set the price of rusty potions to 22,000 talens or there abouts.  Cheers, Fedaykin
+****** Bug from Oakk in room 6758 (client) on Tue Nov 25 20:27:54 2003:
+Subject: object messes up secret door here
+check out that there is a crate here (object) and one for the special description.  you need to move 2.crate to open the secret entrance. But there's really only 1 crate supposed to be here
+****** Bug from (immortal) in room 573 on Wed Nov 26 23:39:55 2003:
+Subject: [Bug] Comp Loads
+some comps no longer load thanks to the comp change. for example the room where dryad footprints are supposed to load and the amber fisherman doesnt load his whale grease no more. 
+****** Bug from (immortal) in room 9004 on Fri Nov 28 16:37:08 2003:
+Subject: [Bug] this room was set to no-autoformat, i think it should be off
+
+****** Bug from Khor in room 600 on Sat Nov 29 06:46:24 2003:
+Subject: [Bug] postmen at garbage dump
+they keep going in and getting kicked out because they are riding a mule but I gues the want to deliver a message to the garbage man so it goes on forever 
+****** Bug from (immortal) in room 7310 on Sun Nov 30 11:04:40 2003:
+Subject: [Bug] assisting vampire pc
+cannot do it... 
+****** Bug from (immortal) in room 11234 on Sun Nov 30 16:29:52 2003:
+Subject: [Bug] path master/ vella island..
+green yellow green takes you to ryoken
+****** Bug from (immortal) in room 161 on Tue Dec  2 21:50:45 2003:
+Subject: [Bug] scan/fog
+fog can be so bad you cannot see mobs in your room with scan... yet you can see them when you look... odd
+****** Bug from (immortal) in room 3 on Fri Dec  5 15:58:35 2003:
+Subject: [Bug] obsidian carved staff
+allows the mage to area affect stoneskin. does not allow stoneskin on a specific target does not allow stoneskin on self, even when area. 
+****** Bug from (immortal) in room 3348 on Sat Dec  6 15:29:19 2003:
+Subject: [Bug] prac ritu
+the ritualism status "component=any hand or inventory" does not report your restrictions (whether you must still have a hand free). i forget if it lets you know no restrictions later, but presently, so  a young shaman would know, it should say "any hand or inventory, one hand free" something like that. 
+****** Bug from Kasumi in room 13717 on Sun Dec  7 21:36:16 2003:
+Subject: [Bug] 100% immunity to suffocation and water drowning
+Being a vampire, and immune to suffocation... Why do I still take damage when underwater? 
+****** Bug from (immortal) in room 16201 on Wed Dec 10 22:11:42 2003:
+Subject: [Bug] setrates on potions
+potion stores setrates no longer work. even for unlimited items. 
+****** Bug from (immortal) in room 28952 on Sun Dec 14 14:28:17 2003:
+Subject: [Bug] room description
+you notice some etchings a small distance up the tree....  yet no extra...
+****** Bug from (immortal) in room 15182 (client) on Sun Dec 14 16:40:26 2003:
+Subject: paralyzed players while in group
+when being paralyzed, the paralyzee should not be able to move out of the room with the rest of the group...
+****** Bug from (immortal) in room 3437 on Mon Dec 15 22:19:11 2003:
+Subject: [Bug] should this room be indoors?
+****** Bug from (immortal) in room 62 on Fri Dec 19 13:45:53 2003:
+Subject: [Bug] hmm
+void (room 0) is an outdoor room apparently, kills idling vampires 
+****** Bug from Thelonious in room 8949 on Fri Dec 19 14:14:33 2003:
+Subject: [Bug] NonEuclidean stuff
+The down exit from this room is linked wrong. This is the NW corner of the canopy, but the down link goes to the NE corner of the Under a TreeHouse.  It should be linked to the NW corner of Under a Tree House. 
+****** Bug from Thelonious in room 11421 on Sat Dec 20 12:05:02 2003:
+Subject: [Bug] Non Euclidean Stuff
+Malithean mines This room has secret door west (edges) to room "Entrance to the Mine" However, the exit does not line up It appears that this room needs to me moved : 1 down, 2 east, 1 north in order to line up properly.  The connecting passage from the sinkhole to the se can easily be altered to account for this discrepancy. 
+****** Bug from (immortal) in room 4864 on Sun Dec 28 19:44:01 2003:
+Subject: [Bug] extra space in hippogriff flying?
+H:274 N:10 > n H:274 572 > n H:274 875 > n Pathway You are on a path that runs between some hills.  There is a gentle breeze blowing from the north and you hear the sounds of bird calls from the north as well. Dark clouds cover the sky. This area is lit. You can see exits to the south and northeast. An old plow-horse trots in from the south. A hippogriff flies in  from the south. H:274 N:10 > ne H:274 572 > ne H:274 875 > ne Pathway You are on a path that runs between some hills.  There is a gentle breeze blowing from the north and you hear the sounds of bird calls from the north as well. Dark clouds cover the sky. This area is lit. You can see exits to the northwest and southwest. An old plow-horse trots in from the southwest. A hippogriff flies in  from the southwest. 
+****** Bug from (immortal) in room 244 on Mon Dec 29 19:44:59 2003:
+2.axe and invetory.
+i have an axe in hand and one in invetory. look at defaults to the inventory one. it should be the one in hand, allowing me to see whether it needs to be sharpened.  plus, sharp 1.axe goes to the one in hand.  looks is inverted.  i demand consistency!!!
+****** Bug from Thelonious in room 601 on Wed Dec 31 04:15:47 2003:
+Weight Issues
+ Some silk cording is a tool made of silk.  It weighs about 5 pounds and occupies roughly 200 cubic inches.  It appears some silk cording is almost new.  5lbs per cording? - Im carrying 55lbs of cording - yikes. 
+****** Bug from (immortal) in room 419 on Thu Jan  1 23:15:28 2004:
+werewolf bugs
+1. doc-grim killed merkaba the werewolf, was still pissed after the fact at merkaba (still hates)  2. the old crier/jural. sestrel polymorph message going to person last told to by werewolf is present. 
+****** Bug from (immortal) in room 27992 on Fri Jan  2 00:41:03 2004:
+why isn't this room indoors
+it's a cave 
+****** Bug from (immortal) in room 34111 (client) on Sat Jan  3 21:41:00 2004:
+Subject: Window is an object i just picked up apparantly
+Norman's Road    A road of white cobbled stones runs northwest and east through low hills and pastures.  The windows and terraces of hobbit burrows dot the hillsides, one such window overlooking the road immediately southwest.  Not far to the east, the road crosses a small bridge as it heads into a shire. Dark clouds cover the sky. This area is bright as day. There is a gold holy symbol lying here. A puddle of vomit is here. A hoydenish hobbit lass is scraping mud from her knees. .....a hoydenish hobbit lass blindly stumbles around!  You can see exits to the east and northwest.  H:236 P:39.0 V:178 T:13663 E:94,226,198 N:10,047,922 >  You hold a large scraps bag in both your hands.  H:236 P:39.0 V:178 T:13663 E:94,226,198 N:10,047,922 >  You start picking up things from the room. You get a gold holy symbol. You get a window to the southwest. There is nothing more to get here!
+****** Bug from (immortal) in room 10511 on Sun Jan  4 15:40:15 2004:
+stern shepherd response quest
+ok 'give me the key' is a littlle hard to figure out how about adding 'i need a key' or just 'key' to get it started 
+****** Bug from (immortal) in room 243 (client) on Sun Jan  4 18:28:01 2004:
+Subject: missing help file "Hungan"?
+In the help file 'Ritual' for shamans, it mentions another helpfile called 'help Hungan'. But there is no such help file available, the MUD says.
+****** Bug from (immortal) in room 107 (client) on Sun Jan  4 20:25:59 2004:
+Subject: Charged me talens outside the hospital after I left examination room?
+H:37 LF:240 V:98 T:9766 E:6,936 N:102  <patient=bad> >  You parry a patient's blow with a hard leather shield. You miss a patient. Hospital    This is the intersection where you choose which type of health care you need. You can go east into the Examination Room, southeast into the Operating Room, or south into the Intensive Care Unit.  To the north lies a small door.  A rickety staircase leads down into the City Morgue. This area is brightly lit. A rank smelling pile of offal is here stinking up the place. [2] Surprisingly still standing a small pony is here looking quite old. An operating table is here, ready for use. Panic-stricken, you flee west.  You can see exits to the north, east, south, west, down and southeast.  <w> H:37 LF:239 V:96 T:9766 E:6,936 N:102 >  Hospital Waiting Room    You are in the Hospital waiting room.  Here is where you can wait for your friends while they are patched up by the fine doctors at this Hospital.  You can visit them to the east or get yourself fixed up while you are here.  There is a small stairway here, leading up to the second floor, and also a door leading into a hallway to the north. This area is brightly lit.  You can see exits to the north, east, south and up.  <s> H:37 LF:238 V:94 T:9766 E:6,936 N:102 >  Hospital Reception    You are standing in the entrance to the Grimhaven Hospital.  The facilities here are inadequate, but they will have to do.  To the north is what looks like the waiting room, and to the south you see King's Way. This area is brightly lit.  You can see exits to the north and south.  <s> H:37 LF:237 V:92 T:9766 E:6,936 N:102 >  East King's Way    This east-west road is wide and clean.  To the north is the entrance to the Grimhaven Hospital.  To the south is the entrance to the Mage's Academy. Dark clouds cover the sky. This area is brightly lit. A tiny cloud of smoke has gathered here. A lamppost is here.  You can see exits to the north, east, south and west.  H:37 LF:236 V:91 T:9766 E:6,936 N:102 >  The hospital works wonders on your body. The charge for the healing is 6 talens. A patient screams 'I'm gonna kill you!' You are missed by a patient.  H:64 LF:236 V:91 T:9760 E:6,936 N:102  <patient=good> >  You parry a patient's blow with a hard leather shield. You miss a patient.  H:64 LF:236 V:89 T:9760 E:6,936 N:102  <patient=good> >  You swing wildly, but miss a patient. You parry a patient's blow with a hard leather shield. A patient pounds your body lightly.  H:61 LF:236 V:89 T:9760 E:6,936 N:102  <patient=good> >  You crush a patient's right arm lightly with your star.  <look> H:61 LF:237 V:89 T:9760 E:6,936 N:102  <patient=good> >  East King's Way    This east-west road is wide and clean.  To the north is the entrance to the Grimhaven Hospital.  To the south is the entrance to the Mage's Academy. Dark clouds cover the sky. This area is brightly lit. A patient is here, fighting  YOU! .....a patient is surrounded by a fog of stupidity! A tiny cloud of smoke has gathered here. A lamppost is here.
+****** Bug from (immortal) in room 105 (client) on Sun Jan  4 20:38:16 2004:
+Subject: is my thrall following me?
+voodoo'd rat does not show to be following me in the text, but it is there always in the room.
+****** Bug from Garush in room 628 on Wed Jan  7 01:07:14 2004:
+runed red bone bazuband
+The size appears to be too small for gnome or hobbit sized equipment.  Descriptions say its 200 cubic inches.  This looks like the size for a hobbit's wrist.  Laminated bracers are 200 cubic inches. 
+****** Bug from Garush in room 557 on Wed Jan  7 01:11:10 2004:
+runed red bone bazuband
+Error in my last bug report.  200 cubic inces is size of gnome wrist eq. 
+****** Bug from DunRingill in room 107 (client) on Thu Jan  8 17:29:31 2004:
+Subject: sacrifice message not accurate
+when you accidentally try to start to sacrifice the next corpse in a room before you finish with the one you're on, you sometimes get this message when you try to start on it after you completed the first corpse. "someone must be sacrificing the corpse of a fuzzy mouse already."  But no one else is in the room. 
+****** Bug from Thane in room 91 on Wed Jan 14 17:45:12 2004:
+compare
+you can't compare cloth vs armor. even for the same body slot.  
+****** Bug from Suruman in room 557 (client) on Fri Jan 23 08:07:04 2004:
+Subject: remove cloth when log in the MUD
+I have a heavy weight gi and everytime I enter the MUD, the item shows in my inventory. If I type "wear gi", rent and reconnect, the item is back to the inventory.  Thanks Suruman
+****** Bug from Ragamuffin in room 33407 (client) on Fri Jan 23 21:49:02 2004:
+Subject: teleport spell
+this spell defaults to yourself while in combat -- I think it should default to your opponent.  Right?
+****** Bug from DunRingill in room 650 (client) on Sun Jan 25 18:41:39 2004:
+Subject: sign formatting not right
+signpost south of GH needs to not have auto-format i think.  Check it out
+****** Bug from Hobble in room 5571 on Mon Jan 26 21:38:10 2004:
+metal rings
+why do bent metal rings in goblin outpost weigh 15 pounds???????? 
+****** Bug from IRS in room 28952 on Thu Jan 29 12:38:29 2004:
+extra descriptions
+The description in this room says "You notice some etchings a small distance up the tree."  However, "etchings" or "etching" is not a keyword for extra descriptions 
+****** Bug from Bump in room 13859 on Sat Jan 31 10:37:42 2004:
+dragon quest comps
+if you hand him a vial with mutiple charges, regardless of the number, he treats it as one now.  may want to look into what other areas this has become a problem since the combining of comps 
+****** Bug from Jokyl in room 27103 on Wed Feb  4 10:45:26 2004:
+no door name
+there doesn't appear to be a door name for the secret door here: Secret  found down! 
+****** Bug from Narrelus in room 240 on Sat Feb  7 21:58:11 2004:
+transform limb at max
+will not transform head, legs, etc . exit quit stop  damn 
+****** Bug from Bump in room 34770 on Sat Feb  7 23:14:32 2004:
+this room..........
+was an exit from the knot
+****** Bug from Narrelus in room 7335 (client) on Sun Feb  8 02:50:54 2004:
+Subject: blackened sword
+blackened sword should not be so dark.  8 lants to see it in the day? Come on guys lets be realistic.  Mike 
+****** Bug from Narrelus in room 7384 (client) on Sun Feb  8 03:37:14 2004:
+Subject: sword stuck in foot light
+A anti-light sword stuck in foot cannot be seen, period.
+****** Bug from Slugblame in room 27857 on Mon Feb  9 21:47:07 2004:
+gangway
+this room makes no sense there is no ship here this room makes no sense there's no ship here! 
+****** Bug from Pornking in room 9999 (client) on Tue Feb 10 04:30:33 2004:
+Subject: wandering mobs?
+not sure wth is going on with it...but i am pretty sure i was in a safe spot 'outside' drow....a head happened to wander out and attack me while i was sleeping and afk.....i came back to find the battle..heh  no, it wasn't mad and tracking me or anyone else for that matter, i sit alone on the mud at 6 am.
+****** Bug from GoldLama in room 12814 (client) on Thu Feb 12 03:44:17 2004:
+Subject: Ensorcer
+please fix ensorcer bugs.  It was removed almost a year ago.  cheers.
+****** Bug from Merkaba in room 11042 (client) on Thu Feb 12 20:46:30 2004:
+Subject: Cimea white telescope
+<look white> for the telescope brings back no information about the telescope. "You see nothing special." But if you <look 2.telescope> it will bring back a description
+****** Bug from Merkaba in room 11042 (client) on Thu Feb 12 20:47:53 2004:
+Subject: missing 'look amber' effect in the cimea telescope
+for the black telescope it says to 'look amber/pink/grey/red'.  the effect for <look amber> is not working, unlike pink, grey and red.
+****** Bug from Leri in room 5519 on Fri Feb 13 02:33:46 2004:
+bleeding colors
+notably with say but seen with other uses of color colors bleed into the next line. i've seen the entire output of who -l appear as the color of an immediately preceding tell. solution perhaps would be to send < z> (or ansi color equivalent) after each line? 
+****** Bug from Slugblame in room 6601 on Sat Feb 14 16:08:52 2004:
+no clue
+theres no clue about 'ceiling' here 
+****** Bug from Slugblame in room 6601 on Sat Feb 14 16:09:02 2004:
+floor
+er.. floor 
+****** Bug from Slugblame in room 22576 on Sun Feb 15 11:41:52 2004:
+outlet
+no clue for 'outlet' ? 
+****** Bug from Supernaut in room 24778 on Mon Feb 16 07:30:43 2004:
+door problem in shaman encampment
+in this room there is a door called mat in the down direction. "open mat" returns " That's not a container." wvwn though I have no "mat"s in my inventory (I went one room east and did a "look mat" to be sure). 
+****** Bug from Leri in room 30724 on Mon Feb 16 18:58:40 2004:
+trophy lists 3 more pages than actual
+for me trophy says there are 39 pages but only 36 appear. bouldernoggin said that his trophy listed 27 pages but only 24 actual.    
+****** Bug from Leri in room 7355 on Tue Feb 17 12:25:39 2004:
+help dual wield only talks about rangers
+fighting skills for thieves has the skill 'dual wield'.  the help file for dual wield only talks about ranger dual wield hence a thief can't find out what percentage of fighting skills is necessary to start learning and more importantly can't find out what the learning rate is. 
+****** Bug from DunRingill in room 24404 (client) on Sat Feb 21 22:31:05 2004:
+Subject: sign formatting off in gnath town well
+autoformat shouldn't be set up for this room i think.  Check out 'look sign'
+****** Bug from Leri in room 433 on Sat Feb 21 23:29:05 2004:
+remade character shows more kills on board than on trophy
+in grimhaven morgue trophy board leri is at #24 with 1535 (51%) life forms. leri was remade a month ago and trophy only shows 818 life forms killed (roughly 25%). te morgue board is showing about double what it should which would fit in with this being a bug since lerthe first leri went to level 30 before being deleted and this leri is level 31.    btw bug says Write the subject of your bug then hit return.   but hitting return isn't exiting i need to hit 
+****** Typo from Merkaba in room 633 (client) on Tue Aug  5 18:42:54 2003:
+Subject: ya sell potions, not clothing
+Crossroads of the Arcane [NOHEAL]  sell comp Sian Ki'zibian tells you, "Hey! What kind of clothing is this?!"  list  potions potions potions. heh ...clothing?
+****** Typo from (immortal) in room 16463 on Fri Nov 14 14:43:08 2003:
+Subject: [Typo] trapped in here
+H:201 M:264 V:25 T:892542 N:28,141,961 > u It's a pretty low ceiling.  Maybe crawling would help. H:201 M:264 V:25 T:892542 N:28,141,961 > crawl You can't crawl while climbing.  
+****** Typo from (immortal) in room 240 on Fri Nov 28 22:51:57 2003:
+Subject: [Typo] Rind wraps his tentacles around Frobozz's head and begins to devour his energy.
+An elite cityguard is dead! R.I.P. 
+****** Bug from Merkaba in room 6919 (client) on Sun Feb 29 16:45:38 2004:
+Subject: overlapped rooms
+room overlaps hallway to the west here
+****** Bug from Maror in room 67 on Sun Feb 29 19:56:42 2004:
+Crash bug - chest object value 2
+using oed to add traps to chests or using 'stat' to look at chests with traps results in the mud crashing. - Maror 
+****** Bug from Peewee in room 563 (client) on Mon Mar  1 22:21:18 2004:
+Subject: lamest long description ever...
+"The poachers have hidden a raft here."  OMG.  Wow.
+****** Bug from Dot in room 240 on Tue Mar  2 17:41:29 2004:
+room
+connecting with windows telnet also displayes the inn as screwed up just FYI 
+****** Bug from Ragamuffin in room 3724 (client) on Sat Mar  6 12:35:07 2004:
+Subject: Inferno -> Fire in room
+Inside the West Gate of Logrus    You are standing just inside the western town gates.  Something eerie begins tingling your neck, but you can't quite place your finger on it.  The guards look over at you warily from on the battlements, and then go back to their post.  As you look towards the gates themselves, they are wrought of pure iron, with a large oaken beam barring entrance.  A building stands to the north. Dark clouds cover the sky. This area is bright as day. A huge inferno is here, blazing away. A rank smelling pile of offal is here stinking up the place. [25] A large dire wolf is prowling here. The corpse of a dire wolf lying on the ground looks bashed and bludgeoned. [2] A smoldering pile of cinders is here. [2] A grungy looking orc dressed in black mail stands watch here. [3] A wan smoky light comes off a lit fire-pot resting on the street.  >  Although you no longer need to, you begin an incantation to facilitate your spell. You concentrate intently upon the magical task at hand... There doesn't seem to be enough fire around to conjure a fire elemental. Your opal darkens slightly.
+****** Bug from Ragamuffin in room 10134 (client) on Sat Mar  6 20:06:29 2004:
+Subject: RQ for satyr repeats itself
+>  You say, "price" A lecherous satyr grins evilly at you. A lecherous satyr says, "Well let's see." A lecherous satyr says, "It will cost you either, 612 talens, or..." A lecherous satyr says, "...a good bottle of Bayle's Wine." A lecherous satyr says, "The red mind you, none of that sissy white stuff." A lecherous satyr grins evilly at you. A lecherous satyr says, "Well let's see." A lecherous satyr says, "It will cost you either, 612 talens, or..." A lecherous satyr says, "...a good bottle of Bayle's Wine." A lecherous satyr says, "The red mind you, none of that sissy white stuff." 
+****** Bug from Peewee in room 242 (client) on Sun Mar  7 12:46:48 2004:
+Subject: What kinda zombie is this?  What life did a 5inch, 3lb person lead?
+>  An obedient zombie strides in from the south.  >   This obedient zombie once lived a fruitful life, and now serves  his master cleaning the streets of Grimhaven of its corpses. .....an obedient zombie is enveloped by a thick green mist. An obedient zombie looks healthy. An obedient zombie seems peaceful. He is frail, agile, and is well-favored. He is about 0'5" tall and weighs around 3 pounds. 
+****** Bug from DunRingill in room 433 (client) on Mon Mar  8 20:49:28 2004:
+Subject: dancing bones problem
+weird,  used dancing bones to get a skeleton of an obedient zombie to follow me. I 'group all' and it says 'there is no one else to group'. I move one room, he disappears apparantly.. .just not there no more.  So I go to antoher corpse and cast dancing bones again. The skeleton of a small crow is created, but says it refuses to group with a group of my size. But there's no one grouped with me!   bug me if you see me and i'll try it again  thanks
+****** Bug from Dot in room 574 on Sat Mar 13 12:41:33 2004:
+group lots
+group lots works even when people are not in group, but merely following. 
+****** Bug from Peewee in room 34138 (client) on Sun Mar 14 22:22:17 2004:
+Subject: This mob's name is "little bigfoot" -- How can you tell from Long desc?
+Norman's Road    A pale gravel road makes its way southwest and east trough low scrub and brush.  The occasional copse of trees dots the landscape.  While the road is worn with well established wagon grooves, patches of hardy grass shoot up here and there. Dark clouds cover the sky. This area is brightly lit. A short fellow with huge hairy feet is here.  
+****** Bug from Merkaba in room 472 (client) on Wed Mar 17 19:54:40 2004:
+Subject: Caldonia the trainer clue helper is broken?
+caldonia does not give a clue for 'trainer mounted' for the deikhan discipline
+****** Bug from Bump in room 553 on Wed Mar 24 08:29:30 2004:
+Jurall
+both beef and milk are 27 talens.  thus you can never get milk 
+****** Bug from Merkaba in room 11039 (client) on Fri Mar 26 18:09:26 2004:
+Subject: bourbon doesn't taste like bourbon anymore? or scotch?
+bought a glass of bourbon and a glass of scotch at Sexur's place in Cimea.  "You sip from the scotch. It tastes like firebreather."  "You sip from the bourbon. It tastes like firebreather".  Is firebreather a brand name now? :)
+****** Bug from Garush in room 240 on Sat Mar 27 14:30:23 2004:
+cleric disease prayer
+cleric disease plus guard proc that makes guards attack mobs with leprosy needs to be fixed.  Leading high level mobs to a city with guards, like Brightmoon, is too easy of a method to acquire high level equipment without any risk to the cleric pc.  Another problem is giving a mob that loaded leprosy then log off.  After a few hours, the mob's limbs will have fallen off so it cannot fight back.  While the current cleric fixes balanced the class a lot, the disease prayer has not been addressed.  There should be a check against the level of the mob to see whether the disease prayer succeeeds or not, as the other prayers within affliction currently works. 
+****** Bug from Beloc in room 240 on Sat Mar 27 23:55:20 2004:
+multiplay
+have a thief repair an item hours later have mage galanize item item dissolves in my hands. the original owner   fucking lame code dorks
+****** Bug from Garush in room 557 on Mon Mar 29 06:51:05 2004:
+killing mobs and transfering eq
+Currently, if someone uses a high level pc to kill a mob that loaded good eq then leave the eq in the corpse for the person's lowbie to loot, the eq disappears because of multiplay.  Clerics have a way around this.  By giving the mob infect then hurting the mob up to near death, clerics can have the mob die from bleeding or infection.  Then the cleric's lowbie pc can come and loot it without this scenario falling under the multiplay code that makes eq disintegrate. 
+****** Bug from Zankou in room 240 on Mon Mar 29 22:47:50 2004:
+catch your breath from 2 rooms away...
+H:91 V:71 T:131326 E:41,623,032 N:5,064,110  <Surak=hurt> <Zankou/tank=bad> > flee Surak utters the words, 'Catch your Breath!' Surak stares off into space, concentrating on something... Surak gazes intensely at you. You sense offensive magic directed at you. H:91 V:71 T:131326 E:41,623,032 N:5,064,110  <Surak=hurt> <Zankou/tank=bad> >  Surak pounds your right arm very hard. You miss Surak. You miss Surak. Surak pounds your body severely. Surak pounds your body severely. You miss Surak. H:69 V:68 T:131326 E:41,623,032 N:5,064,110  <Surak=hurt> <Zankou/tank=awful> >  Life glows briefly with a cobalt blue hue. H:69 V:68 T:131326 E:41,623,032 N:5,064,110  <Surak=hurt> <Zankou/tank=awful> > PANIC! Y ou couldn't escape! H:69 V:68 T:131326 E:41,623,032 N:5,064,110  <Surak=hurt> <Zankou/tank=awful> > fleeYou miss Surak. You miss Surak. Surak pounds your body very severely. Your next queued command is a flee. You miss Surak. Surak pounds your neck severely. Your next queued command is a flee. Surak pounds your left arm very hard. You miss Surak. You miss Surak. Master Chamber  You have entered the master chamber in the ruined castle.  This part of the castle is nothing like the rest of it.  While the whole castle is in ruins, the corridor north of here and this chamber is splendidly furnished, almost to the point of royalty.  A crimson red carpet covers the floor here and the walls seem to glow with a soft light.  A heavy stone door is set in the west wall, while a heavy wooden door, wrought in gold, leads into a small chamber to the east. There is a rusty, iron door in the southern wall of the chamber. This area is dimly lit. You can see exits to the north, east, *south, and west. An empty potion lies here. (empty) (glowing) [4] You retreat skillfully east. H:49 V:64 T:131326 E:41,623,032 N:5,064,110 > You turn tail and attempt to run away. The Master Bedroom  You have wandered into the Zombie Master's bedroom.  From just looking around, you could not tell that this is the room of the master of this castle, but you sense great magic all around that tells you that the occupant of this room could be none other.  You wonder if it is better to come face to face with the zombie master or to leave his room unnoticed?  A stone door leads into a large chamber to the east. This area is barely lit. You see an exit east. Surak is here, casting a spell. .....Surak is flying around. .....Surak is surrounded by a few effects. .....Surak is surrounded by a dark, forboding red aura! Goldlama is here, reciting a prayer. .....Goldlama glows with a bright light! .....Goldlama seems coated in a thin veneer. .....Goldlama is surrounded by a couple of spiritual effects. Raven is sitting here. .....Raven is busy meditating. .....Raven glows with a bright light! .....Raven is surrounded by a few effects. Life is flying about. .....Life is flying around. .....Life glows with a bright light! .....Life is surrounded by a few effects. .....Life is surrounded by a couple of spiritual effects. BlindFate is flying about. .....BlindFate is flying around. .....BlindFate glows with a bright light! .....BlindFate is surrounded by a couple of effects. .....BlindFate is surrounded by a couple of spiritual effects. What used to be a mica holy symbol lies here, shattered. What used to be a vermilion potion lies here, shattered. [2] A tiny puddle of vermilion potion has gathered here. What used to be a blue potion lies here, shattered. A tiny puddle of blue potion has gathered here. What used to be a cyan potion lies here, shattered. A tiny puddle of cyan potion has gathered here. A portal going to Grimhaven Portal Room is in the room. [2] Garush (invisible) is resting here. .....Garush is busy repenting. .....Garush glows with a bright light! .....Garush is surrounded by a couple of effects. You nearly hurt yourself as you fled madly westwards. 
+****** Bug from Garlic in room 15349 on Wed Apr 21 17:06:59 2004:
+can't see current fishing total
+in fishing shop i 'whisper fishmaster garlic'. nothing happens. whisper fishmaster records works as does topten. 
+****** Bug from Spiff in room 7237 (client) on Wed Apr 21 21:37:00 2004:
+Subject: lift doesn't work
+lift in obsidian mines, broke...enter it...it's supposed to go....it doesn't, you can't leave...it's a no-astral, no-word, no-portal zone.
+****** Bug from Peewee in room 558 (client) on Thu Apr 22 21:01:07 2004:
+Subject: fix this long desc
+>  Prigon's Precious Gems and Metals     [NOHEAL]   This store sends shivers up your spine!  All the shiny and beautiful gems and metals that are bought and sold here could buy Grimhaven!  A spiral stair leads up to another store above. This area is brightly lit. An empty potion lies here. (empty) (glowing) [2] An empty potion lies here. (empty) (glowing) A nice sized spellbag is here on the floor. (opened) (empty) A crumpled, yellow note is here, looking discarded. A small grenulpa bag is here on the floor. (opened) (empty) [8] A small spellbag is here on the floor. (opened) (empty) [2] Prigon is here to offer her goods.  >   >   >  You don't see a crumpled here.  >  You don't see a yellow here.  >  You don't see a note here.  > 
+****** Bug from Beloc in room 3770 on Sun May  9 15:15:33 2004:
+logrus town crier
+The town crier whispers to you, Personally, I'm happy right here in Grimhaven" bah! 
+****** Bug from Beloc in room 7407 on Sat May 15 09:01:28 2004:
+icy grip from mobs..
+i dont think there is a defense check... there probably should be.. mobs never fail 
+****** Bug from Bump in room 3 on Mon May 24 16:40:45 2004:
+eq dupe
+if you kill a mob close to a reboot, and loot it, you loot the items, keep them, and then the items are in the corpse around the reboot time...   could probably kill something stash items in there and dupe them if you could time reboots etc..
+****** Bug from Karla in room 2353 (client) on Thu Jun 10 01:37:30 2004:
+Subject: Orange 1k talen casino chip
+this is the second time the unlimeted orange 1k talens chip has ran out of it's unlimitedness
+****** Bug from Filo in room 9527 on Fri Jun 11 07:16:06 2004:
+dark grey robe - i have a dark grey robe that reverts into my inventory every
+time i rent i have a dark grey robe that reverts into my inventory every time i rent   s dark grey robe   stop 
+****** Bug from BloodBath in room 23637 (client) on Sun Jun 13 09:07:18 2004:
+Subject: Tendon ripping
+shouldn't the messahe "you rip through the tendons in the mob's leg" disable the leg?  Or at least greatly damage it? 
+****** Bug from Aiolos in room 27856 on Tue Jun 15 18:28:49 2004:
+buggy down exit
+down exit in amber bay, really just leads a few squares away to the southwest (I think) 
+****** Bug from Terror in room 9571 (client) on Wed Jun 16 07:24:33 2004:
+Subject: cant see tattoos under inviz eq
+if you have inviz eq on, ppl without detect inviz should be able to see your tattoos
+****** Bug from Kalzaar in room 433 (client) on Thu Jun 24 21:16:53 2004:
+Subject: "Bug Maror if you get thismessage."
+Sacrificing corpses in the morgue, came up with the message. 
+****** Bug from Ampad in room 102 (client) on Sun Jun 27 08:11:32 2004:
+Subject: shaman
+maror my shaman ampad is getting the sac bug 
+****** Bug from Thark in room 236 on Wed Jun 30 19:16:57 2004:
+want monk repair
+want monk repair, please?  
+****** Bug from Rekres in room 358 on Sun Jul  4 23:04:27 2004:
+open door vs open doorframe wedge
+when I type in 'open door' I expect it to open the door in the room... instead it keeps trying to open the silly doorframe wedge in my inventory...  ugh! 
+****** Bug from Kelranth in room 9003 on Tue Jul 13 18:46:52 2004:
+poison, corpses, butcher
+If a mob dies of poison and you butcher the corpse the meat is not poisoned or tainted in any way.  Even if the mobs doesn't actually die from the poison the meat should be poisoned or at least spoiled. 
+****** Bug from OgreX in room 1096 (client) on Wed Jul 14 18:28:11 2004:
+Subject: Summoning: Sharks
+I went just north of GH and summoned some sharks they appered and imidatly disapperiad
+****** Bug from Thelonious in room 25529 on Sat Jul 17 11:11:33 2004:
+Non Euclidean Exit
+From this desert room there is a NE exit into the garrison that should not exist. There is no corresponding exit inside the garrison. Delete the NE exit in this room to fix problem.  
+****** Bug from Kelranth in room 101 on Sat Jul 24 13:10:57 2004:
+Jurall, green dragon tavern
+When you try to buy a glass of milk it keeps buying dried beef. 
+****** Bug from Solarius in room 558 on Mon Jul 26 17:42:14 2004:
+value terbium-chunk
+Prigon tells you, "Hmm, I'd give you %d talens for that." 
+****** Bug from Zankou in room 7391 on Sun Aug  1 11:05:55 2004:
+looting keys
+if your inventory is full on the first attempt to loot a key you dont get the failed loot message for they key- so you'd never know there was a key in the corpse.... 
+****** Bug from Thark in room 9019 on Wed Aug  4 05:12:16 2004:
+fire and light
+If there is a large pile of burning objects in the room, shouldn't it increase the light level by a few notches? 
+****** Bug from Intuition in room 238 on Sun Aug 22 00:40:18 2004:
+invisible eq
+My dark blue eq is not staying invisible after I cast invis on them.  My mithril mesh helm stayed invis, as well as my magician's belt. My emerald necklace was already invis when i got it and it has stayed that way. Thankyou! 
+****** Bug from Chaos in room 23221 (client) on Sun Aug 22 02:50:00 2004:
+Subject: parry bug
+how does a cudgeled mob parry your blow with his shield?
+****** Bug from Scarlett in room 553 on Tue Aug 24 22:32:12 2004:
+Alcohol purchase
+For some unknown reason, a shot of whiskey can not be purchased. I tried twice, and Antonius confirms it doesnt work. thank you. ** look  ? q /q shout how do I get out of a writing buffer please?? /? x P.S Sorry for all the gibberesh! a newbie helper had to tell me from Hattie how to get out ! LOL! 
+- jurall had an empty shot of whiskey in inventory, apparently
+- screwed things up, dunno why - peel
+****** Bug from Grimm in room 871 on Mon Aug 30 13:09:01 2004:
+corpse getting mobs dont lag
+You kick a shifty looter's left leg severely. A shifty looter pounds your waist lightly. You smite a shifty looter's left arm very hard. You kick a shifty looter's body very hard. You are missed by a shifty looter as she swings wildly. You kick a shifty looter's neck very hard. You smite a shifty looter's body very hard. You kick a shifty looter's body very hard. H:135 M:331 V:102 T:218118 E:10,405,640 N:2,374,658  <looter=wounded> <Grimm/tank=excell ent> <0.9 secs lockout> >  A shifty looter gets the corpse of a battle-mage. H:135 M:331 V:102 T:218118 E:10,405,640 N:2,374,658  <looter=wounded> <Grimm/tank=excell ent> <0.8 secs lockout> > chop You smite a shifty looter's head severely. A shifty looter hits you, but fails to penetrate your thick armor. You kick a shifty looter's right wrist severely. You are missed by a shifty looter. You kick a shifty looter's left foot severely. You smite a shifty looter's body severely. You kick a shifty looter's body se  he had not lag after doing that. 
+****** Bug from Grimm in room 889 on Mon Aug 30 13:17:56 2004:
+mob looting
+if you are fighting a mob that gets a corpse. when you kill the mob, both corpses hit the floor. the new mob becomes 2.corpse, so stuff does not get looted. should probably renumber that 
+****** Bug from Wick in room 7317 on Wed Sep  1 20:20:50 2004:
+jeez vampire hiling bug
+jeez would you please finally fix the thing where you hel as a bat then transform back to the vampire and lose the health you gained? it's so frustrating!  i thought it was fixed 
+****** Bug from Kittyhawk in room 9009 on Fri Sep  3 12:50:44 2004:
+Disarm while mounted
+(1) You can't disarm an enemy while mounted. (2) You can be disarmed by an enemy while mounted.  Can we at least be consistent here please? 
+****** Bug from Grimm in room 108 on Sat Sep 11 14:14:35 2004:
+zombies take away burning corpses..
+with no oven  mitts even
+****** Bug from Zankou in room 8729 on Sun Sep 12 10:37:04 2004:
+cudgeled guard mobs
+will say i will come to they aid when they are the only mob in the room and are stunned 
+****** Bug from Buckstar in room 875 on Wed Sep 15 13:33:30 2004:
+Holding forbidden items
+It seems like it should be possible to hold a forbidden object if that object is not something that is a hand-held item.  For  instance, I should be able to hold a "hobbit-size studded leather vest" even though I can't equip it on my body. 
+****** Bug from Kelranth in room 4626 on Thu Sep 16 20:03:41 2004:
+disguise
+normally to see the list of disguises you type disguise. If you are under the lockout and type disguise to see the  list it says you are not prepared to disguise yourself  again so soon. 
+****** Bug from Elon in room 114 on Tue Sep 21 20:24:27 2004:
+goto command
+using the goto thief or thief_trainer leads you to Jennica's Exotic Imports shop, which is not a trainer/GM  
+****** Bug from Antonius in room 4340 on Tue Sep 21 21:59:55 2004:
+mapping error bullywug
+west exit of this room leads 2w instead of 1w  Thank you 
+****** Bug from Buckstar in room 177 on Thu Sep 23 12:04:37 2004:
+Sleeping mobs returning at night
+This seems like a bug - how could a sleeping mob notice the time?   South Main Street Dark clouds cover the sky. This area is bright as day. An obedient zombie is sleeping here. A royal page is sleeping here. A small crow is sleeping here. A street sweeper is sleeping here. A glowing flare hangs well overhead in the sky, descending slowly as you watch. A lamppost is here. South Main Street Dark clouds cover the sky. This area is bright as day.  
+****** Bug from Buckstar in room 863 on Fri Sep 24 09:30:19 2004:
+engaged but getting you didn't hit messages with a broken arm
+You shouldn't get 'You didn't hit here because your arm is damaged.' messages if you are engaged.  Its spammy and annoying.   Also, one message a round would seem to be sufficent, I don't see why it is so many 
+****** Bug from Nystul in room 31072 on Tue Sep 28 11:00:09 2004:
+stunned mobs not recovering
+My elemental was stunned in a fight (down to -1.2% hp) and has recovered to 3.5% hp, but it is still stunned.  I keep getting these messages - messages - A water elemental shakes the fuzziness from its head and sits up.  but the elemental is still stunned: A water elemental (thrall) is lying here, stunned.  A water element  0 shares talens, 21.0% shares XP A water element 3.5%hp 29.0%m. A water elemental looks totally rested. 0 shares talens, 21.0% shares XP  
+****** Bug from Nystul in room 14352 on Thu Sep 30 05:51:19 2004:
+falcon wings
+The help file for falcon wings says: should the recipient get into a fight, the wings immediately revert to their former shape and the power of flight is lost  however, this seems to only apply to physical combat.  I fought 4 mobs casting only and didn't lose flight until I hit a stunned  mob.  Also, they hit me quite a bit and I didn't lose flight. 
+****** Bug from Nystul in room 4557 on Fri Oct  1 09:56:31 2004:
+stopping fights and casting mages
+when a guard stops a fight, it should stop an offensive spell that is being cast as well.   
+****** Bug from Nystul in room 9922 on Mon Oct  4 11:04:24 2004:
+Falcon Wings
+Doesn't seem to be renewable  Affected : 'falcon wings'       : Time Left : 1 hour, 9 minutes (Renewable)  > cast fal You are already affected by a some type of flight spell. 
+****** Bug from Kasumi in room 2207 on Wed Oct  6 12:02:28 2004:
+'prompt none' kills 'tog term ansi'
+WIJS 
+****** Bug from Gunther in room 240 on Thu Oct  7 07:46:44 2004:
+perma death / partial death
+I'm not sure what the intention is for perma-death characters that drop link with negative hit points, but through some nasty nasty lag/server problems earlier, this happened to me.  I was docked a partial death, but can still play the character. 
+****** Bug from Kelranth in room 33275 on Thu Oct  7 17:34:18 2004:
+connecting passage in amber
+When in the corporate offices there is an exit to the west, if you go west into the connecting passage there is a door to the east and the west.  The door  should either be in both the passage or the office or neither, 
+****** Bug from Peewee in room 506 (client) on Sun Oct 10 19:16:08 2004:
+Subject: List in sethlors causes 2-second lag
+just doing a list in this shop causes a 2 second lag.
+****** Bug from Nystul in room 31079 on Mon Oct 11 12:08:04 2004:
+Quaff/Drink/Sip Inconsistant
+You can quaff a potion during combat, but you can't sip or drink 
+****** Bug from Nystul in room 686 on Tue Oct 12 06:45:41 2004:
+Parsing cast conjure spells
+cast conjure elem war -- parses to cast conjure elemental earth (should be an error) cast conjure elem  fire -- parses to cast conjure elem earth (because of the two spaces) 
+****** Bug from Datilus in room 6134 on Wed Oct 13 06:25:19 2004:
+Hit Points
+I am level 24 and my hitpoints are only 175.  I am ogre with high CON. My human thief at level 18 has more hp.  Last level I ding'ed, I gained 0 HP. 
+****** Bug from Antonius in room 31750 on Wed Oct 13 19:32:43 2004:
+HELP SOCIAL and TRIP
+Trip is a warrior attack and should be listed under HELP SOCIALS...  thankyouverymuch 
+****** Bug from Laif in room 4458 on Fri Oct 15 12:22:30 2004:
+Stunned elementals
+When I have a summoned elemental, and it tanks and takes damage down to when it's stunned, then I kill the mob we're fighting, the elemental begins to behave strangely.  It can get hps back, but it never becomes unstunned.  every time it gains hps, I see the message "An air elemental shakes the fuzziness from its head and sits up." but, in fact is hasnt, and it still just sits there stunned.  Even if I pour it a healing potin and get its hps back up to 50% or so, it still wont unstun.  I usually just have to kill it. 
+****** Bug from Nystul in room 10002 on Sat Oct 16 06:10:16 2004:
+feathery decent
+You lose your grip and begin to plummet earthward! The world spins, as you sky-dive OUT OF CONTROL!!!!! You feel you have more control over the powers of feathery descent.  I didn't have feathery decent cast.... 
+****** Bug from Nystul in room 6628 on Wed Oct 20 05:30:16 2004:
+Paralyze and casting
+It appears that paralyze doesnt stop casting.  The black widow in the sewers bit and paralyzed me, but my spell finished (though, I didn't see the spell messages).  I've pasted the log  <ENGAGED spider=perfect> >> Although you no longer need to, you begin an incantation to facilitate your spell. You concentrate intently upon the magical task at hand... You concentrate intensely on a black-widow. A black-widow senses your offensive magic is directed at it. <ENGAGED spider=perfect> >>  You begin to feel your spell taking form. <ENGAGED spider=perfect> >>  A black-widow bites you! You freeze up.  You can't seem to move at all. <ENGAGED spider=perfect> >>  The effects of paralyze can now be renewed. <ENGAGED spider=hurt> >> cast f s You are paralyzed, you can't do much of anything! Your body unstiffens and you can feel the blood circulating again. You can move again. 
+****** Bug from Nystul in room 7728 on Wed Oct 20 05:33:47 2004:
+Cannibal Children
+Cannibal children only load elf ears on mud reboot.  I killed them right after reboot and got ears off of all of them, but after 2 repops, I haven't got any more 
+****** Bug from Kelranth in room 9058 on Wed Oct 20 17:07:14 2004:
+burning items
+Burning items do not appear to affect the light levels of a room even when multiple items are burning.  Also smoke should lower  like levels in the room. 
+****** Bug from Kelranth in room 8841 on Mon Oct 25 17:27:25 2004:
+buying multiple items
+when you buy x*item you always buy x-1 of the item 
+****** Bug from Chaos in room 240 (client) on Thu Oct 28 09:47:35 2004:
+Subject: Grey Potion
+Although drinking from this potion will grant the armor spell as intended, it does not give a notification upon imbibing of the spell effect having been granted. (a grey potion)
+****** Bug from Intuition in room 240 on Thu Oct 28 15:27:52 2004:
+silver lined wrist pouch
+whenever i'm going through my spellbags and i type "get all spell" it gets all from the wristpouch. Would appreciate it if it did not get all from the wristpouch when we type get all spell. Thankyou! 
+****** Bug from Nicoli in room 236 on Sat Oct 30 03:11:05 2004:
+pipes
+stay lit for a while after weeds smoked (bowl empty) I guess this is intentional to not keep lighting it over and over but it should burn the bag its in while lit or something rt? I keep putting mine away lit and forgetting about it shrugs didnt know if this was a bug or not ...cheers folks thanks for a GREAT MUD you guys/gals are the best 
+****** Bug from Kagato in room 34700 (client) on Mon Nov  1 07:37:01 2004:
+Subject: Paladins
+That damn group of paladins clearing cyclops etc is sooo fuggin buggy. They dont stay still in combat. They just walk away. No fleeing, nothing. They dont just clear the roads either.. they also attack people at random. Cult members is understandable, but i mean unfactioned people. Today it got a little out of hand.
+****** Bug from Nicoli in room 569 on Thu Nov  4 23:22:26 2004:
+can drop things in hornsby's..dropped a doorframe wedge
+can drop things in hornsby's..dropped a doorframe wedge 
+****** Bug from Nicoli in room 157 on Thu Nov  4 23:24:11 2004:
+books and combat
+can read books in combat 
+****** Bug from Nicoli in room 611 on Fri Nov  5 01:52:32 2004:
+zombies etc
+they hover around player corpses near grim or on the outer perim path like 8-10 of em all out of town not doing their jobs, standing around some newly created character's corpse, waiting to grab the corpse but cannot because of the training eq inside. they go for players corpses over the piles im making in the streets, it seems (shrugs) and they gang up and just stand there hehe good for harvesting, having em all in one place though ;-) 
+****** Bug from Lucivar in room 574 (client) on Fri Nov  5 11:30:25 2004:
+Subject: (empty)
+If there are multiple amounts of the same item on the ground, inventory, etc, even if say 4 vials of holy water are full, and one is empty, they all stack to say empty. This should not come up unless all of the items concerned are indeed empty. 
+****** Bug from Lotus in room 6130 on Fri Nov  5 11:58:51 2004:
+seeing as spell such as Fireball sets stuff on fire, why does artic blast
+or ice storm not extinguish the fire. 
+****** Bug from Nicoli in room 110 on Fri Nov  5 13:14:15 2004:
+getting things from containers
+get all from mon (the from is no longer accessible) not sure if this is a syntax thing im screwing up or what thanks 
+****** Bug from Nicoli in room 512 on Fri Nov  5 17:17:35 2004:
+mage casting
+I'm drawing lines of patterns wielding two weapons ponder :) 
+****** Bug from Nicoli in room 25439 on Fri Nov  5 18:41:19 2004:
+flare
+in this room <above a treetop> flare bounces off and explodes perhaps thats correct, just checking..it works in the other trees in grim park well one of em hehe tanks 
+****** Bug from Nicoli in room 244 on Sat Nov  6 19:40:07 2004:
+invis
+i attacked, lost invis, but still "am effected" by it in score understood if its non-renewable, but it should say so then instead of making you think you are still invis thanks for a great mud and all your work nic 
+****** Bug from Nicoli in room 9537 on Sat Nov  6 20:15:35 2004:
+wall torch under theatr
+You can't light a wall torch, it's not flammable! shrugs 
+****** Bug from Nicoli in room 9538 on Sat Nov  6 20:19:08 2004:
+air ele after dead
+shows A small uncontrolled tornado is here. like its aliv but its dead 
+****** Bug from Euler in room 9573 on Sun Nov  7 22:51:44 2004:
+Changes to Hurl- Good job, but one problem:
+So I'm fully cool with the addition of command lockout to hurl, but- if you try to hurl a mob that is on the ground, it displays the message 'you can't hurl X when they are on the floor!', which again, is fine except that it still gives you the 2.8 second lockout. Shouldn't do that in this case, since no actual attempt to hurl has been made.  Cheers 
+****** Bug from Kelranth in room 553 on Wed Nov 10 17:33:23 2004:
+items on shop floor
+Items can be dragged into shops that do not allow items to be dropped. Also items can be dropped in the pet shop. 
+****** Bug from Malloy in room 409 on Sun Nov 14 05:39:16 2004:
+dunno if its a bug...Piggot can do business with invis players
+ 
+****** Bug from Kelranth in room 100 on Tue Nov 16 16:53:47 2004:
+purchased signs
+I had purchased a sign for GH CS, the writing that was on the sign  is now gone.  The sign itself is still there. 
+****** Bug from Lucivar in room 7322 (client) on Thu Jan 20 11:09:28 2005:
+Subject: group bug?
+Derf leaves north. You follow Derf. Sorry, I didn't understand that.          Leaving me stranded there, not following my groupleader. 
+****** Bug from Grimm in room 7341 on Fri Jan 21 20:17:23 2005:
+getting this spam...
+H:160 M:99 V:135 T:296996 E:47,631,043 N:9,633,211 >  Shandon leaves west. You follow Shandon. Sorry, I didn't understand that! 
+****** Bug from Grimm in room 7455 on Sun Jan 23 17:55:09 2005:
+burning trash piles...
+not sure, but might want to check whether non-flamable items will burn if part of a trash pile.. 
+****** Bug from Grimm in room 7359 on Fri Jan 28 17:39:12 2005:
+fire doesnt give off light
+got 14 logs, 3 corpses, and a bunch of trash burning and the light does not improve in the room 
+****** Bug from Apostle in room 8941 on Sat Jan 29 12:39:51 2005:
+oil lamps in accesss tunnels of mudworkers burn out and can't be refueled
+   
+****** Bug from Pobre in room 10193 on Wed Feb  2 12:31:37 2005:
+I will come to thy aid!
+Killing el elf.  My standard way is cudgle, then slit.  If slit doesn't kill, a few rounds after the mob wakes up, he/she says "I will come to thy aid!" even if they are the only mob in the room. 
+****** Bug from Releep in room 26650 (client) on Thu Feb  3 13:26:50 2005:
+Subject: Disguise
+When disguised any spells cast on you dont work if they were cast befor the disguise 
+****** Bug from Lucivar in room 5550 (client) on Thu Feb 17 14:23:12 2005:
+Subject: missing people
+Theres missgintext in the client which can be fixed by changing fonts, however, now even doing this does not help in the case of looking in the room you are in, and peoples names are missing. You cannot see some people.   Here lies an empy potion (empty)  ......Bogob is here meditating. 
+****** Bug from Shandon in room 24416 on Fri Feb 18 11:57:43 2005:
+room title
+when standing in this room and looking east the title is empty.  when you enter the room, it's the right title.  gnorr street. 
+****** Bug from Lucivar in room 5558 (client) on Fri Feb 18 15:18:57 2005:
+Subject: PI
+Cleric mobs have infinite piety. 300 should be sufficient to make up for thier apparent stupidity.
+****** Bug from Ranma in room 2159 (client) on Wed Mar  2 08:11:11 2005:
+Subject: scrolls
+scrolls will expend themselves at retarded times, such as on the tooth of a mob, rather than the mob that leaves the room just as the recite scroll command is used. 
+****** Bug from Ranma in room 2113 (client) on Sun Mar  6 10:19:37 2005:
+Subject: retarded scrolls
+Protection from fire scrolls are not casting on Ranma for some reason. It is not a fail. I've wasted a dozen scrolls testing this. Please fiz as soon as possible, so I dont have to lose anymore eq to flamestriking level 50 clerics.. which is also retarded. Why dont they use pillar of salt?
+****** Bug from Gon in room 10636 (client) on Thu Mar 10 13:28:40 2005:
+Subject: drinking bug
+there's a drinking bug when you drink surrounding..you can do it an infinte number of times w/o getting full
+****** Bug from Lucifer in room 24452 (client) on Sun Mar 13 07:22:19 2005:
+Subject: Insta-Grab
+I thought this bit of code was already fixed, but it seems that it needs to be re-checked. I got in a fight with an elite dwarven guard, and when I was disarmed, his friend the other elite grabed my mace before it even hit the ground. Insta-grab. 
+****** Bug from Lucifer in room 24452 (client) on Sun Mar 13 07:23:36 2005:
+Subject: vampire death
+I have a couple vampires in my account, and I've noticed that vampire corpses cannot be relived. Doesnt want to work for some reason. It would be nice if us vampires could get a relive too.
+****** Bug from Kagato in room 240 (client) on Sun Mar 13 08:16:06 2005:
+Subject: combined spells
+TS/Clarity together cause subject to lose the effect of both spells untill one of the spells wears off. Same with DI/DS 
+****** Bug from Lucifer in room 2231 (client) on Sun Mar 13 08:40:11 2005:
+Subject: teleport
+If we cant teleport out of a zone, why would a moneypouch trap be able to teleport us out of it?
+****** Bug from Lucifer in room 2211 (client) on Sun Mar 13 08:43:21 2005:
+Subject: equality
+If we have to wear a symbol round the neck or have one held in our hand, why should cleric mobs be exempt?
+****** Bug from Lucifer in room 11040 (client) on Sun Mar 13 11:04:50 2005:
+Subject: invis aggro
+How does a mob without di attack someone who is invisible? Summoning a mob into a room does not give them the ability to see me, nor dispel my invisibility
+****** Bug from Ranma in room 558 (client) on Mon Mar 14 05:14:33 2005:
+Subject: ignite
+Sunlight damage to vampires has become extreamly intense for some reason. Even with protection from fire spells, sanctuary, shield of mists etc (assuming these things help) and iron will maxed, I still took 181 hp of dmg instantly. I could not even run from the inn to Roth. I think there should be some small time, like 1second at least before we get burned, as well as dmg slightly reduced. 
+****** Bug from Kelranth in room 100 on Mon Mar 14 16:41:21 2005:
+trapped doors
+If a door is already trapped and a thief tries to trap the door  the existing trap will go off and open the door even if the  door is locked.  If the door is closed it can't be opened( remains locked).  A good way to force open any door you can trap  like player houses and such. 
+****** Bug from Thark in room 168 on Tue Mar 15 00:46:13 2005:
+trait coward
+To be really effect (er nasty) the trait coward should refigure wimpy for each bump in defense 
+****** Bug from Kittycat in room 108 (client) on Thu Mar 17 04:19:14 2005:
+Subject: Leprosy
+Leprosy is out of control. First off, it sets into limbs way too quickly. Took less then 2 mins to set into 6 parts of the body. Then when I went to the doctor (cause even a lvl 40 cleric cant get rid of it that fast unless they've like, maxed cure disease) It counts as a disease per limb, and a limb is infected. IE: I had an infected right arm, and also 1 count of leprosy. Times 6 body parts.
+****** Bug from Absolut in room 1385 on Thu Mar 17 11:20:20 2005:
+trash mobs in this room
+i wannt know how the vultures et al figured out how to use the portal to find this trash 
+****** Bug from Gon in room 7742 (client) on Fri Mar 18 17:25:51 2005:
+Subject: money bug
+everytime you die in the mage arena, and i heard from others other deaths too, such like vamp deaths, money gets duped, or you get more money. i tested it out..i got like 1000ish talens from arena deaths
+****** Bug from Shandon in room 1072 on Fri Mar 25 10:40:41 2005:
+when stealing from a postman, his title is goofed.
+You have just stolen 56 talens from a Bpostman1. 
+****** Bug from Lotus in room 10144 on Wed Mar 30 08:07:31 2005:
+Powerstones do NOT work
+Powerstones are not working properly.  Mine is fully charged, yet it does not store mana 
+****** Bug from Antonius in room 433 on Fri Apr  8 15:18:27 2005:
+obedient zombies stealing corpses
+Could you please put a lockout on the obedient zombies so that they can't grab a corpse until at least a minute has passed.  I hate killing something to practice dissect only to have the corpse yanked the exact second it is dead.  Thank you in advance, -- Antonius 
+****** Bug from Petrovich in room 100 on Sat Apr  9 21:17:31 2005:
+lepers in CS
+Is it possible to code the town crier to toss out any lepers that get stuck in the Center Square of GH? Thank you 
+****** Bug from Antonius in room 9532 on Fri Apr 15 22:03:17 2005:
+lumber, logs, and trash piles
+Would it be possible to excempt lumber and logs and other naturally accumulating items from being adding to trash piles?  That would prevent certain areas from piling up on lepers, rats, and beggars when it doesn't make any sense for them to be there. One such area is the GH Theater basement.... which has a large supply of lumber whish is used for building sets and props.  It doesn't make any sense for these to be considered 'trash'.... *shrug*  Thank you  
+****** Bug from Kelranth in room 5193 on Thu Apr 21 18:48:31 2005:
+beheading of mob without  head
+I beheaded a maggot which only have body as a hit location The "head" was called bogus slot and said to bug it 
+****** Bug from Sage in room 529 (client) on Fri Apr 22 11:22:25 2005:
+Subject: Krandar gives incorrect message
+Krandar, the earth mage teacher, says that he cannot teach me because i've been neglecting my studies.  He says I need to train more lore or combat.  My lore is 95%, and combat is 26%.  Talking to Angus, I confirmed what another player told me -- that to train advanced mage, you only need combat+lore=100, and mage maxed.  So, Krandar's message was misleading for me.  Instead of telling me that I need more lore or combat training, he should have told me that I need to train more in mage.  Please correct so another player is not misled.  Thanks!
+****** Bug from Cerium in room 10144 on Mon Apr 25 20:19:46 2005:
+gnomish book of history
+invent picked it up and tried to read chapter 1, and game crashed. then later on i tried to read chapter 1 again and game crashed again.  *  
+****** Bug from Pirvan in room 31758 on Tue May  3 20:55:06 2005:
+I am at corporate headquarters in GH, and the logrus faction corporate account
+is showing that I have no talens in either of my two shops, Skull Duggories or Adriel'z chest. I can't get ahold of any immortals at the moment, so please help me take care of this, I have a limited time of being on here every day.  Adrielz' Chest should have had more thana million on him.. round a mill and a half and Turk shoulda had about 800k on him. Pirvan 
+****** Bug from Ariadne in room 34171 on Wed May  4 20:35:52 2005:
+this room
+is messed up .. can't see anything, item, that is here.  i killed 3 mobs. none of them show up, but i can chi them .. set them on fire.  they're burning.. but i can't see them.  i have ts and di. 
+****** Bug from Ariadne in room 34161 on Wed May  4 20:38:04 2005:
+this room too
+this room does the same thing.  corpses, items do not show up.. but are really there.  freaky. 
+****** Bug from Chaos in room 433 (client) on Fri May  6 01:02:03 2005:
+Subject: shaman bug
+Well, im not really sure if this is a bug, but chaos is a lvl 43 shaman, with maxed sacrifice.. i got a the load demands you stop your vain sacrifice message and took all my LF. shrug
+****** Bug from Porch in room 28960 on Sat May  7 03:31:17 2005:
+small beds
+i'm sooo tired and want to sleep in beds on this trolloc infested farmstead and gnath.  i have aksed many times for them to be enlargened so that they can be slept in properly.  if you don't have time just tell me what to do i have an immort weed i just don't know how to fix them or if i have permission to do so.  unrealistically small bed sizes must end! 
+****** Bug from Chaos in room 433 (client) on Sun May  8 01:54:49 2005:
+Subject: sacrifice
+Every so often, the sacrifce has gotten stuck so that Im technically still sacrificing long after i should be done. THe only way to finish it is to type stop.
+****** Bug from Zigzag in room 10250 (client) on Tue May 10 21:02:58 2005:
+Subject: Hones from Potions
+You sip from the potion. It tastes like golden potion. You feel your deity favoring you more in respects to heal critical. You glow briefly with an indigo hue. An empty potion is completely empty.
+****** Bug from Burglar in room 2360 (client) on Fri May 13 20:42:24 2005:
+Subject: Casino Bug
+I was in the casino, playing blackjack, 500k on the line, i typed stay with 19 and it dealt me another card. Is there any chance for reimbursement of the original 500k?
+****** Bug from Petrovich in room 433 on Fri May 13 20:47:13 2005:
+piles of dust and corpse
+Would it be possible to alter the piles of dust so that they aren't confused with a corpse.  If I type sacrifice corpse, I mean the CORPSE not the pile of dust. if I had wanted to try to sacrifice the pile I would have typed that... *shrug*  Thank you -- Antonius/Petrovich  
+****** Bug from Lucivar in room 238 (client) on Sun May 15 23:02:13 2005:
+Subject: fishing
+Wimpy does not kick in if fishing. Command is not flushed.
+****** Bug from Sage in room 558 on Sun May 22 21:20:58 2005:
+Printf without any agruments after format
+Prigon tells you, "Hmm, I'd give you %d talens for that." when I say "value gold"  \
+****** Bug from Lucivar in room 238 (client) on Sat May 28 11:21:06 2005:
+Subject: bio-degrading comps
+This is getting a little fuggin insane. Comps are degrading after maybe a day or two of having them. In spellbags. I had 170casts of cloud foam, 88casts of blank parchment, and 576 casts of porous bedrock to name a few. Not to mention countless comps ive gathered over the last few weeks on various load runs. It just keeps dissappearing. This is a serious problem. Many thanks.  -Luc
+****** Bug from Porch in room 5424 on Sun May 29 13:37:03 2005:
+moves on repair
+sharpening and smoothing seem to take up more moves than smythe.. seems like smythe used to take up more moves.. appropriately i'd say? 
+****** Bug from Porch in room 118 on Sun May 29 13:53:55 2005:
+headbutt
+headbutt doesn't work like the helpfile says - we can't really headbutt taller victims i don't think. 
+****** Bug from Porch in room 115 on Sun May 29 13:54:50 2005:
+headbutt
+er.. yeah i guess we can.. duh nevermind 
+****** Bug from Lapsos in room 48 on Wed Jun  1 17:01:53 2005:
+\
+
+****** Bug from Chaos in room 416 (client) on Thu Jun  2 00:59:28 2005:
+Subject: sacrifice bug
+I hate it when I get stuck on a friggin sacrifice.. stupid bug. Im stuck sacrificing one corpse for like 50 rounds.
+****** Bug from Blood in room 10949 (client) on Sun Jun  5 01:04:24 2005:
+Subject: decay
+Potions/Comps have been degrading lately. I've been losing all kinds of stuff, and its getting REALLY annoying.
+****** Bug from Kagato in room 28286 (client) on Mon Jun  6 18:28:37 2005:
+Subject: Ocean Death
+I died in the ocean while afk and my corpse was left there for around 6 hours. By the time I got back, the corpse, and everything in the corpse had completely dissolved. Which is really stupid, and unrealistic. A real corpse in the ocean takes months to decay, and coins (talens) takes hundreds of years.  I can see how SOME components, like cloud foam could be easily dissolvable, but things like vials of dragon bone? I cant see salt water eating through a glass vial anytime soon. Come on, ocean water isnt made of acid. True I probably shouldnt have walked away from my char that long, under any circumstance, but everything I own, including my money dissolving within a few hours is REALLY gay. I hope the issue is addressed soon. Thanks. -Kagato
+****** Bug from Sage in room 572 on Sun Jun 26 23:42:29 2005:
+printf format problem
+Delayn tells you, "Thanks, here's your 8 talen%s."  \
+****** Bug from Chaos in room 573 (client) on Sat Jul  2 23:46:39 2005:
+Subject: sacrifice
+There is still a problem with sacrifice. It will get stuck on a sacrifice, seemingly at random. The only way to end the sacrifice is to type stop. Its like it falls into a loop. Really annoying.
+****** Bug from BlackMage in room 647 (client) on Wed Jul  6 23:00:51 2005:
+Subject: Auto Eat
+Auto eat is STILL buggy, as it has been for years. It always goes for honey combs or mushrooms or any other edible food sorce, rather then the normal food we have for eating such as iron field provisions. I have 9 provisions in my inventory, but instead it triggers to a mushroom in my bag? Need to change the string in that bit of code slightly so it can be useable. Thanks. :)
+****** Bug from Theef in room 10266 (client) on Sun Jul 10 18:18:12 2005:
+
+
+****** Bug from Sage in room 25471 (client) on Wed Jul 13 18:31:24 2005:
+Subject: Wrong short description when I "look up"
+When I look up from this room, it gives a short description of "Empty", but it should be "Above a Treetop"
+****** Bug from Sage in room 7723 on Thu Jul 14 22:13:43 2005:
+small fire should be fire for fire elemental
+There doesn't seem to be enough fire around to conjure a fire elemental. A small fire is here sending smoke up wards and providing illumination. (glowing) \
+****** Bug from BlackMage in room 409 (client) on Fri Jul 15 09:48:44 2005:
+Subject: Ghost Items
+About half the eq Im wearing, to include 5 pieces of dark blue, a chain of tarnished silver, and a cloak with a crab shaped brooch have been having some problems. No matter how many times I cast invis on them, or set the nojunk flag on them, it always goes back to the way it was if I rent, drop it, or die. I leave some of this stuff in my apt, and when I come back, its nearly all degraded in a trash pile. Help.
+****** Bug from Arbese in room 240 (client) on Thu Jul 28 15:55:16 2005:
+Subject: cash outta nowhere
+i logged in this evening and had more money than when i logged off, i think. i can't be certain of how much, but it is a noteable amount.  i am not sure how to destroy talens, so i will just avoid spending money on this pc until someone contacts me.  shakudo/princess/kerjat
+****** Bug from Maror in room 67 on Mon Aug  1 13:58:15 2005:
+poison weapon
+does it ever fail? 
+****** Bug from Maror in room 67 on Sun Aug  7 18:26:08 2005:
+nightvision
+nightvision trait appears to give an insane vision bonus - just statted someone without spells with 50 vision 
+****** Bug from Shylewryn in room 3353 on Thu Aug 11 13:33:14 2005:
+odd placement of weapon on mob death
+kira died by ripping the dagger out, it was on the ground, not in the corpse, no message of dropping or anything  
+****** Bug from Petrovich in room 31061 on Fri Aug 19 03:06:31 2005:
+agro mobs
+Don't put agro mobs on main roads. 
+****** Bug from Petrovich in room 31056 on Fri Aug 19 05:28:52 2005:
+argo mobs
+Agro mobs should not be placed on main roads.... 
+****** Bug from Shatter in room 8902 on Sat Aug 20 15:32:18 2005:
+monk reapir wood items
+The monk repair wood does not  have the same telling the condition of item like other repairs. 
+****** Bug from Sage in room 25451 on Wed Aug 24 13:34:59 2005:
+Top of Tree is indoors?
+You are standing at the top of a huge Elm tree. eval room Judging by the trees you bet you're in a forest. You are indoors. \
+****** Bug from Sage in room 501 on Fri Aug 26 13:53:43 2005:
+copy spell
+I try to copy an atomize scroll.  The scroll is 50 level, and maxed.  My skill for atomize is also maxed.  Skill for copy is very low (I think no hones yet)  When I cast copy on it, it says:You can only copy scrolls of spells that you know.  Is that a general message for saying that the copy didn't work?  If so, I will just keep honing it.  But, it sounds like the message says that even if I had max copy skill, I couldn't copy cause I don't know the spell.  That doesn't make sense to me cause I max the atomize spell.  Please let me know by mail if this is a bug or if I misread the message. \
+****** Bug from Sage in room 241 on Thu Sep  1 02:08:25 2005:
+backfire spell doesn't trigger wimpy
+I cast blast of fury while using physical attacks. My fighting distracted me and the spell failed and backfired. I went from about 266 hp, to 6 hp.  One round later, the mage I was fighting finished an area effect and put my hp to 0.  When I took the backfire damage, I think I should have fled.  My wimpy is set to trigger at 50hp. \
+****** Bug from Thuahthstle in room 238 on Fri Sep  2 11:13:58 2005:
+people not showing up
+people don't show up in the room "look" somtimes.. only a blank line calia and icky in particular have i noticed this on.. sometimes.. maybe it's something to do with thieves.. dunno 
+****** Bug from Petrovich in room 1297 on Fri Sep  9 04:18:06 2005:
+Mapping Brightmoon
+Is there any possibility in the near future that Brightmoon will be re-done so that it maps out properly?  There are numerous overlapping rooms and roads are a different length inside the city as opposed to outside.  Just curious... :) 
+****** Bug from Frobozz in room 579 on Wed Sep 14 20:13:48 2005:
+worthless items
+yun the grocer sees his menu book and his multipurpose iron cook pot as worthless and junks them when you list his inventory 
+****** Bug from Petrovich in room 119 on Tue Sep 27 01:43:14 2005:
+MSP incorrect URL
+The MSP command to turn off the music/midi at the end of combat has the wrong URL, forcing my client to keep entering the wrong URL in the preferences...  It still has the old sneezy.stanford.edu  address instead of the new sneezy.saw.net  Thank you in advance, -- Petrovich/Antonius 
+****** Bug from Balrick in room 4467 on Tue Sep 27 14:01:59 2005:
+cant set 'terminal ansi' per help file
+I have tried as a level 1 char and a level 2 char and cannot set my terminal type. it keeps saying Incorrect command. Please see help file if you need assitance. THe help file says 'terminal Ansi' should work.     .  help . . . exit quit stop return                                      .    
+****** Bug from Sage in room 5411 on Thu Sep 29 15:08:43 2005:
+Famine and golden carrots
+Famine not only gets rid of food and water, but he also takes away all my golden carrots.  If that was intended, then okay.  But, I guess that you didn't mean to remove all the charges of that comp. \ / \
+****** Bug from Frobozz in room 2398 on Sat Oct  1 22:41:06 2005:
+fishing in a room your not in
+when fishing in another room if you type exit it seems to reset the room your fishing in into the room your in or at least, if your on land you get the message: You can't fish on land!  
+****** Bug from Balrick in room 22492 on Wed Oct  5 20:39:23 2005:
+talk to gods
+gods can talk to me while I sleep, but I can't talk to them.   
+****** Bug from Narayan in room 8936 (client) on Tue Oct 11 12:17:38 2005:
+
+
+****** Bug from Antonius in room 5131 on Mon Oct 17 21:06:35 2005:
+were-rat
+during a recent fight... A were-rat is using: <Worn on BOGUS slot - Bug this!>A filthy dirk (brand new)  just following directions... :) 
+****** Bug from Merkaba in room 35701 (client) on Tue Nov  8 22:06:30 2005:
+Subject: secret exit not so secret
+thought the secret entrance wasn't opened yet, and the exits only showed one to the north when you 'look' at the room, typing 'exit' showed exits to the north & south.  Then i opened the secret :)
+****** Bug from Merkaba in room 35724 (client) on Tue Nov  8 22:17:29 2005:
+Subject: misplaced room?
+I think this room is in the wrong place on the map. Room description and actual exits don't match. I believe the room should be northeast from this room's stated exit of southwest.
+****** Bug from Merkaba in room 35722 (client) on Tue Nov  8 22:18:23 2005:
+Subject: room exits not correct 
+yeah this room desc says there's a room to the NE but there is one to the NW. So exits for these rooms were off.
+****** Bug from Merkaba in room 35718 (client) on Tue Nov  8 22:20:11 2005:
+Subject: exit & desc dont match
+room desc doesn't match actual exit
+****** Bug from Merkaba in room 35772 (client) on Tue Nov  8 22:28:42 2005:
+Subject: room desc doesnt match actual exit again
+room desc doesnt match exit (northwest/northeast??)
+****** Bug from Merkaba in room 35776 (client) on Tue Nov  8 22:29:50 2005:
+Subject: anothe room desc & exits not matching
+here's another one with room desc & exits not same
+****** Bug from Merkaba in room 6280 (client) on Fri Nov 11 19:02:20 2005:
+Subject: room desc needs updating to match new exit
+might wanna redo this room desc. the way west is now open
+****** Bug from Queef in room 114 on Tue Dec 13 16:24:49 2005:
+1
+
+****** Bug from Eno in room 240 on Mon Dec 19 16:20:20 2005:
+mute character emotes
+mute characters can't talk or emote... so they shouldn't be able to groan or cry.   
+****** Bug from Eno in room 563 on Mon Dec 19 16:23:37 2005:
+marijuana bud description
+the last line in the description of this bud is: You can tell that a large bud from a marijuana plant has almost all of its of its marijuana left. "of its of its" should be "of its". 
+****** Bug from River in room 559 on Thu Dec 22 14:33:38 2005:
+list cudgel
+list cudgel isn't working.. appears to be listening everything 
+****** Bug from Tenbutts in room 11042 on Tue Dec 27 19:17:26 2005:
+telescope in upper cimea
+the amber one is busted!
+****** Bug from River in room 616 on Tue Dec 27 19:46:58 2005:
+attack knotted cudgel
+wtf would a <o>kn<r>o<o>tted cudgel<z> be thief forbidden 
+****** Bug from River in room 100 on Tue Dec 27 23:39:36 2005:
+cure poison potions
+you really should be able to sip while poisoned so you can take the white potions to cure the poison it's been mentioned before.. fix it 
+****** Bug from River in room 627 on Wed Dec 28 00:29:44 2005:
+attack sigil inscribed headband
+aren't yin and yang a little real worldly to be in this item's description? 
+****** Bug from River in room 4456 on Sun Jan  1 03:15:55 2006:
+night patrolmen
+shouldn't the grimhaven night patrolmen be able to see in the dark.. selected for their adequate night vision?  hmm 
+****** Bug from Eldon in room 8904 on Sat Jan 14 14:06:46 2006:
+this room
+should be indoors
+****** Bug from River in room 9070 on Sun Jan 15 19:37:57 2006:
+opening made of wood
+even though this portal should realistically be made of wood it burns up and leaves no exit when really there should be a hole you can jump through if it burned up eh and it happens sometimes people run out here lit on fire from those priests north of here 
+****** Bug from River in room 568 on Mon Jan 16 18:50:33 2006:
+alias output
+it looks like there's some bug with alias output.  the first one is grey the rest are blue and it looks like so using plain telnet.  H:181 T:91428 N:193,902 > alias Your list of aliases.....  1) bs                  [0m backstab  2) fs                  [0m alias f flee  3) f                   [0m flee n  4) ts                  [0m alias t  5) t2s                 [0m alias t2  6) t3s                 [0m alias t3  7) t                   [0m open moneyp  8) t2                  [0m get all moneyp  9) t3                  [0m drop moneyp 10) rw                  [0m rem hold-left 11) r2                  [0m rem hold 12) sn                  [0m sneak 13) kts                 [0m alias kt kill 14) kt                  [0m kill tired-female 15)                     [0m  16)                     [0m 
+****** Bug from River in room 1087 on Mon Jan 23 19:30:32 2006:
+sip & eat
+you should be able to sip and taste while food poisoned 
+****** Bug from Troy in room 3774 (client) on Thu Jan 26 16:34:51 2006:
+Subject: Trash piles in rooms
+to whom it may concern:  trash piles are starting in my tower, with gear that has been nojunked... i only have 5 pieces of sylvan gear in my room, and i keep having to nojunk it over and over, ninjas also, and a couple other items.. the stuff is getting destroyed in the trash piles, please help fix this, i am not leaving stuff in that room so that it can be destroyed after i ward it from doing so.  if i wanted this eq to go to shit, i'd give it to someone stupid who would in turn, lose it or destroy it for me.  Frank 
+****** Bug from River in room 553 on Thu Jan 26 19:17:46 2006:
+jurall's milk
+typing  buy milk buy glass-milk and buy glass all bought me dried beef  WTF 
+****** Bug from River in room 682 on Mon Jan 30 17:46:21 2006:
+fishing boat
+this fishing boat has been sitting out in the flats for weeks 
+****** Bug from Troy in room 9582 on Sat Feb  4 08:29:24 2006:
+can't pull flap in death head pete's room.
+ 
+****** Bug from Troy in room 13111 on Sat Feb  4 08:37:16 2006:
+can't go down into kelp forest to get into sunken ship
+ 
+****** Bug from Pirvan in room 10112 on Sat Feb  4 09:48:52 2006:
+the sprite is not giving me the spells she normally does, she is following me,
+but not doing anything for me.  
+****** Bug from Pirvan in room 10110 on Sat Feb  4 09:49:14 2006:
+yeah, ok, as soon as i sent that, she did it, i just waited an hour
+ 
+****** Bug from Hendan in room 9538 on Wed Feb 15 15:55:22 2006:
+theater basement
+the mobs in theater basement are super hard on weapons they damage weapons almost as often as staues in tanelorn, should their skin be this hard?    end  stop quit 
+****** Bug from Aiolos in room 4504 on Thu Feb 23 23:54:23 2006:
+bug Alchemical Treats
+with the door closed Wiwina can't throw you out for loitering.  
+****** Bug from Bloodfuse in room 557 (client) on Sun Feb 26 11:36:45 2006:
+Subject: problem with bloodfuse character
+I get this message when I log in with Bloodfuse for the account "shade".  "Something has gone drastically wrong with your practice allocation.  Experience gain has been disabled for this player.  Contact a creator."  Could someone please fix this?  Thanks.
+****** Bug from Pirvan in room 3870 (client) on Sun Mar 19 14:22:35 2006:
+Subject: Got wiped in Rent
+I just rented at my butler in Logrus, I offered, looked at the note, then rented.. when i came back in, my inventory was cleaned out, and i had a blank note in the inventory.  Please help me with this, I had a portable hole in my inventory, and needless to say, it vanished. 
+****** Bug from Sponge in room 114 on Fri Apr  7 18:42:17 2006:
+gren bag gone
+had an odd situation where i was casting shield of mists cagrane entered the room and i cast shield on him, the gren bag that was being held was zapped away (even though the screen cap does not show this (i have a copy of the exact text) somehow the gren bag gets zapped if you cast a non-offensive on an immort character? 
+****** Bug from River in room 11234 on Tue Apr 18 21:52:50 2006:
+zone
+isn't this listed backwards isn't royken the name of the zone and wrayth the author 
+****** Bug from River in room 5367 on Sat Apr 22 02:55:53 2006:
+undefined bottles
+bottles of bayles and water bottles are made of undefined i think that makes them unexplodable from freezing etc. 
+****** Bug from Bbarrett in room 5408 on Sun Apr 30 17:07:07 2006:
+fishing
+if you scan while fishing it then says "you can't fish on land" and aborts 
+****** Bug from Slayne in room 8938 on Sun Apr 30 20:25:37 2006:
+blacksmithing
+there doesn't seem to be any help file for blacksmithing.  nothing under blacksmithing, smything, blacksmything, warrior repair, or repair.   
+****** Bug from Pibroch in room 8756 (client) on Mon May  1 22:06:21 2006:
+Subject: banker says it twice
+He says it twice after i entered "withdraw 10"  A banker tells you, "You don't have an account here." A banker tells you, "To open an account, type 'buy account'." A banker tells you, "The new account fee is 100 talens." A banker tells you, "You don't have an account here." A banker tells you, "To open an account, type 'buy account'." A banker tells you, "The new account fee is 100 talens." Sorry, but you cannot do that here!  
+****** Bug from Pibroch in room 9540 (client) on Mon May 15 11:29:14 2006:
+Subject: rooms catching fire in theatre basement
+why does this room catch fire but the room to the west does not? There is no direct exit to the original room that's on fire  
+****** Bug from Pibroch in room 1091 (client) on Tue May 16 22:29:05 2006:
+Subject: description doesnt match exits
+room description speaks of a room to the south. I think this exit was removed
+****** Bug from Euler in room 33427 on Fri May 19 20:03:14 2006:
+exit on kranor river links to marshland/ossuary room
+the northeast exit in this room heads to 'A Quiet Home', and is one-way only cheers 
+****** Bug from Sahl in room 553 (client) on Mon May 22 22:34:31 2006:
+
+
+****** Bug from Pibroch in room 6157 (client) on Tue May 23 19:03:11 2006:
+Subject: pantathian wizard eyepiece?
+Descriptions says there is an eyepiece one can look-through. "look in eyepiece" command does not work. Is something missing or not working?
+****** Bug from Pibroch in room 28952 (client) on Wed May 24 20:52:10 2006:
+Subject: what etchings?
+Room desc says "You notice some etchings a small distance up a tree".  look etchings look tree  nothing  what gives?
+****** Bug from Pibroch in room 3341 (client) on Thu May 25 11:36:11 2006:
+Subject: Fish thief
+Angler fish in tanelorn  He's a thief and trying to pick my pockets
+****** Bug from Laren in room 100 on Fri May 26 15:24:19 2006:
+help terminal
+needs a bit of updating - have n00b who got a bit lost.  :) it's a toggle now. 
+****** Bug from Chiaro in room 100 on Fri May 26 15:25:22 2006:
+help terminal needs updated
+'help termina *sigh* 'help terminal' needs to be updated for 'toggle' still telling people to use 'termainal screensize N' fo r example  hmm, now how do i quit this 
+****** Bug from Belisama in room 103 on Sun Jun 11 13:17:40 2006:
+He is asleep, shhh.
+When I try to tell to someone I cannot see, it says, "He is asleep, shhh."  I know for a fact he is not asleep, as in one case I was in the same room as he was and he was not sleeping. :) 
+****** Bug from Reginard in room 28952 on Tue Jun 13 10:03:13 2006:
+This room is lacking an extra-description.
+It says, "You notice some etchings a small distance up the tree", but no resonse when I do "look etchings" 
+****** Bug from Animus in room 1094 (client) on Thu Jul 13 12:16:45 2006:
+Subject: Glowglobes and vision
+when the glowglobes burn out in your inventory, some vision is lost. i was registering the mud workers as super dark when two globes in my inventory went out.
+****** Bug from Animus in room 22605 (client) on Thu Jul 13 13:15:27 2006:
+Subject: trash merging
+i was sitting on a sleeping bag and it merged with trash pile.
+****** Bug from Finkel in room 416 (client) on Mon Jul 31 11:01:54 2006:
+Subject: no healing in hospital
+I've been sitting in the GH hospital for a couple of minutes, but I didn't get any healing (usually they come within seconds)
+****** Bug from Feathers in room 244 on Mon Aug 14 18:05:36 2006:
+Captured by the cityguard while sleeping
+I already sent a email to the mudadmin@sneezy.saw.net about this but might as well put on here too since I've been stuck for about 30mins.. I was sleeping, the head of the cityguard captured me and now I can't wake up, can't send tells, can't do much of anything other than who and help files... and this bug report thingie.. so basically the gist of it is this:  I got captured while asleep, now I'm stuck captured and asleep.  
+****** Bug from Feathers in room 244 on Mon Aug 14 18:31:33 2006:
+I'm trapped and dying
+Same problem as before I was sleeping and captured by the head of the cityguard Now I'm slowly dying of thirst and probally soon hunger.. 
+****** Bug from Hatfield in room 558 on Mon Aug 14 22:09:57 2006:
+Getting %d variable when asking for VALUE
+I don't recall this being the case the last time I was on.  When I type VAL <item> in the appropriate shop, the response the shopkeeper is giving me is "Hmm, I'd give you %d talens for that." The shopkeeper DOES give the value if I sell an item... "Thanks, here's your 15 talens." Just thought to let someone know.  I would have just told a god were one on...but no one appears to be around this evening.  @ ** 
+Springleap****** Bug from Bumblebee in room 7778 on Tue Aug 15 00:47:05 2006:
+springleap
+Springleap can be used to bypass the pk restriction. 
+****** Bug from Epithet in room 304 on Thu Aug 17 06:58:58 2006:
+coward wimpy calculation
+wimpy calculation should not include hp bonuses from eq as it can be defeated by removing said eq. It should be derived from base or natural hp 
+****** Bug from Animus in room 108 (client) on Tue Aug 22 14:28:48 2006:
+Subject: Caprtivity code bug
+was resting on a sleeping bag in gh. Guards captured me and left. I remain locked on the bag on the floor, unable to move.
+****** Bug from Feathers in room 227 on Tue Aug 22 23:42:28 2006:
+I am stuck captured.
+Yeah, the head of the cityguard captured me, walked around and then decided he was tired of looking for criminals, now I'm sitting here and I can't move. 
+****** Bug from Tenbutts in room 238 on Tue Aug 29 01:02:30 2006:
+crawling and riding
+I can't ride Laren when she's crawling... 
+****** Bug from Bruno in room 240 (client) on Tue Aug 29 13:38:57 2006:
+Subject: Frozen Potions
+all of a sudden with this new update I can't use specific named potions, for example I can't get all.cyan bag and get all my cyan potions, I can't get gold-pot bag and get all my gold, it just says it's not there anymore.
+
+****** Bug from Thale in room 243 on Sun Oct  1 23:09:18 2006:
+incorrect mud admin e-mail listed
+In newbie guide, chapter 23 lists a mud admin account - I believe it's the old account, and not current  
+****** Bug from Smoldaeron in room 240 on Wed Oct 11 14:22:24 2006:
+Feathery decent
+Hey all feathery decent aint workin just though you should know Myself mko and aezer all tested it the hard way aezer got useless limbs from it and mko almost died  

@@ -1,0 +1,20 @@
+Syntax: split <amount>
+Syntax: split hide <amount>
+Syntax: split component <charges>
+Syntax: toggle split
+
+Split will take <amount> and divide that amount of your talens among all
+current group members giving 1 share to each person (including yourself).
+
+Split can be used to make one hide into a few smaller ones, but this will 
+also cause some of the hide to be lost in the process.
+
+Split can also be used to separate a spell component into two.  This new
+component will have the number of charges specified.
+
+Turning the split toggle on will cause you to automatically split all
+talens you acquire with the rest of your group.
+
+
+See Also: GIVE, TOGGLE
+Related Topics: OBJECT MANIPULATION

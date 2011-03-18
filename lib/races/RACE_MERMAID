@@ -1,0 +1,34 @@
+filename RACE_MERMAID
+singName mercreature
+plurName mercreatures
+propName Mermaid
+lore OTHER
+age 24+1d5
+maleHt 62+1d17
+maleWt 140+6d10
+femaleHt 60+1d12
+femaleWt 100+4d10
+body Mermaid
+moveIn swims in
+moveOut swims
+hpMod 1
+moveMod 20 
+manaMod 2
+search 2
+STR 120
+BRA 120
+CON 110
+DEX 145
+AGI 160
+INT 100
+WIS 100
+FOC 110
+PER 105
+CHA 160
+KAR 140
+SPE 120
+Aquatic
+IMMUNE_WATER 25
+AFF_SWIM
+AFF_WATERBREATH
+

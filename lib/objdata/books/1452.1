@@ -1,0 +1,25 @@
+Name
+
+This is probably THE most confusing field on monsters so please be sure you
+read carefully in order for things to work properly.
+
+The name field is used internally in order to reference the creature.  This
+means that if you type "hit balrog", it looks for a match of "balrog" in the
+creature's name field.  However, the text shown (external use) comes from the
+short description (see below).
+
+The name field should be a space separated list of keywords for the mob.
+DO NOT include words like "a", "an", "the", "of" etc.
+DO NOT add punctuation.  Drop any quote marks, dashes, etc.
+DO NOT capitalize any word, except proper names.
+DO NOT include words that are abbreviations of other keywords already listed.
+If the mob is "the merchant's wife", its name should be "wife merchants" ("the"
+should be dropped, and "merchant" is an abbreviation of merchants).
+
+Additionally, the first keyword is sometimes used externally.  It is
+important that the first keyword identify the creature from those that will
+be around it to avoid player confusion.  For instance, if I am making elves,
+I would make "wife elven elf", "male elven elf", "husband elven elf", etc.
+(note that "elf" is not an abbreviation of "elven", so is necessary in this
+case).  In such situations, "wife", "male" and "husband" will be shown which
+is clearer than "elf", "elf" and "elf" if I had chosen some other order.

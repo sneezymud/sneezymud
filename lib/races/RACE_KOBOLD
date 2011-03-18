@@ -1,0 +1,30 @@
+filename RACE_KOBOLD
+singName kobold
+plurName kobolds
+propName Kobolds
+lore GIANT
+age 25+1d4
+maleHt 84+1d11
+maleWt 180+10d11
+femaleHt 82+1d11
+femaleWt 150+10d10
+body Humanoid
+moveIn has arrived
+moveOut leaves
+moveMod 10
+search 1
+vision 1
+STR 165
+BRA 125
+CON 150
+DEX 140
+AGI 140
+INT 90
+WIS 90
+FOC 110
+PER 90
+CHA 80
+KAR 80
+SPE 120
+AFF_INFRAVISION
+

@@ -1,0 +1,46 @@
+Applys
+
+Applys are abilities or affects that accrue to whomever is using the item.
+Applys only accrue if the item is worn or held.  Inventory doesn't count.
+
+You should adjust the item cost depending on the applys it has.
+
+LIGHT: don't set this, make it (glow) and things will be set correctly.
+	The only time you should set this is if you are making a lamppost, etc
+AC:   puts AC on the item
+HIT:  adds hit points to the wearer
+MANA: adds mana to the wearer (If you apply this, you need to set lower 
+	structure than you otherwise might)
+SKILLS AND SPELLS: affects the wearer/use the skill or spell number 
+	(see help <skill/spell> files)
+IMMUNITIES: these are already set by material type but you can add some
+	immunity affects if they make sense.
+VISION: adds to the vision bonus of the wearer
+CAN BE SEEN: adds to the can be seen of the wearer (how much light is needed
+	for them to be seen)
+TOHIT: alters characters ability to hit others in combat  (restrictions apply)
+TODAM: alters amount of damage done in combat.  (restrictions apply)
+
+	slot:   TOHIT MAX      TODAM MAX
+	finger      3              3                 items greater then 1/2
+	hold/weapon 4              4                 the max must be made as
+	back        2              2                 artifacts.
+	hand        2              2
+	wrist       1              0
+	arm         1              0
+
+
+NOTES:
+
+APPLY_AC: Remember to give all worn items an apply_armor even if just 1
+
+APPLY LIGHT: Do not set apply light on any item that is not a light. If 
+you want the item to give off light, set its affect flag to glow.
+
+APPLY SPARINGLY: Use applys other than apply AC sparingly.  
+
+APPLY IMMUNITY and DISC: DO NOT SET THIS WITHOUT LOW CONSENT.
+
+COMPLIANCE: Your equipment has to comply with the limits set by the calculator
+	http://www.sneezymud.com/cgi-bin/eqcalc.cgi
+or you'll be asked to make changes.

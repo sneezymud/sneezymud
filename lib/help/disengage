@@ -1,0 +1,13 @@
+Syntax: disengage
+
+Disengage is a way to stop fighting without fleeing.  It will stop you
+from both hitting and from mere engaging status.  
+
+Disengaging from full combat will give you a 1 round combat lag and stop
+you from hitting.  Disengaging from "engaged combat" will lag you one
+round and remove you from engaged combat. You can not disengage from a
+fight totally if you are tanking.
+
+See Also: CHANGE, TOGGLE (nokill), ASSIST, HIT, KILL
+Related Topics: COMBAT, FLEE
+

@@ -1,0 +1,36 @@
+filename RACE_ARACHNID
+singName spider
+plurName spiders
+propName Arachnid
+lore Animal
+age 2+2d4
+maleHt 48+1d12
+maleWt 70+5d6
+femaleHt 36+1d12
+femaleWt 60+5d4
+body Spider
+moveIn skitters in
+moveOut skitters
+moveMod 40
+search 1
+vision 1
+STR 120
+BRA 90
+CON 120
+DEX 160
+AGI 160
+INT 55
+WIS 55
+FOC 100
+PER 55
+CHA 55
+KAR 120
+SPE 160
+DumbAnimal
+invertibrate
+CanClimb
+ColdBlooded
+Fourlegged
+Ridable
+IMMUNE_BONE_COND 100
+AFF_INFRAVISION

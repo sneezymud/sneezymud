@@ -1,0 +1,12 @@
+Syntax: exits
+Syntax: exit <portal>
+
+The exits command will display all available exits from your location.
+Realize that it only lists exits accessible at that time, so if a door
+is closed, it is not accessible and hence not listed.
+
+Exit with a parameter allows you to leave via a portal, gateway or other
+non-standard exit that is in the room.
+
+See Also: EXPLORATION
+Related Topics: MOVEMENT

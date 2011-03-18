@@ -1,0 +1,16 @@
+Syntax:	idea
+
+This will drop you into	a simple editor	similar	to the in-MUD mail system.
+
+Type ~ and return on a blank line to send your idea, or ` on a blank line to       
+cancel your idea submission.
+
+Though all suggestions are welcomed, most suggestions do not receive responses
+unless staff needs additional info.  To report a bug, use the BUG command.
+Likewise, use TYPO to report a TYPO, and REQUEST for all other help requests.
+
+Alternatively, you may visit http://www.sneezymud.com/Contact_Us.html and fill 
+out the	web form to explain your idea.
+
+See Also: REQUEST, TYPO, BUG
+Related Topics: UTILITY

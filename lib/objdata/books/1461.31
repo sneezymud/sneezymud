@@ -1,0 +1,23 @@
+Someone make this pretty.
+
+
+pulse { "";
+  say "I'm on my way to center square"
+  destination 100;
+  moveto;
+}
+
+
+also
+destination Peel;
+destination drunk;
+
+
+and
+
+checkperson Peel;
+
+works like checkroom, so you can track to someone, then do something
+when you're in the room with them.
+
+whatever

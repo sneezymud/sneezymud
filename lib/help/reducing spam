@@ -1,0 +1,53 @@
+SneezyMUD is a very fast-paced text based game, and it can be hard to keep up
+with all the words scrolling by as fast as they do.
+
+Here are a few tips on how to reduce spam and help you to zero in on the
+important information you need to see while ignoring information that may not
+be as helpful in that moment.
+
+Set up your terminal:
+Type HELP TERMINAL to see your options.
+  *  Set your screensize correctly.  Toggle screensize <number>
+  *  If possible, use the status bar offered by the ANSI or VT100 terminals,
+as the status bar will never scroll off your screen.
+
+Turn color on:
+Type HELP COLOR to see your options.
+  *  SneezyMUD is colorized to highlight important details and to help give
+extra information with less words.  For instance, when your opponent hits
+you, the hit keyword is in red.  When you hit your opponent, the keyword is
+in green.  These clues allow you to quickly see how well the fight is going.
+As one player put it, when there's more red than green, the fight isn't
+going so well.
+
+Set up your prompt:
+Type HELP PROMPT to see your options.
+  *  Even if you are using the status bar, it can help to include a couple of
+the most important pieces of information on your prompt, such as hit points.
+You can even colorize your prompt to make these things stand out even more.
+
+Set your toggles:
+Type HELP TOGGLE to see your options.
+There are several toggles that will help you reduce the spam you see.
+  *  The first is obviously the spam control toggle.  Toggle this on to filter
+out combat misses and compact other combat-related information.
+  *  Select nospells or halfspells to reduce the spam that casting creates.
+Each round of casting generally has some kind of information on how successful
+the caster is in casting the spell.  This can be valuable information, but it
+does create a lot of extra text.
+  *  Toggle compact to reduce the amount of white space.  White space can help
+you see better in some cases, but in others it just causes more scrolling.
+  *  Turn off any automatic functions like eating, dissecting or opening
+moneypouches.  
+  *  Turn off extra informational toggles such as tips, trophy, limbs or
+showsaves. 
+  *  The hero sprites are valuable mobs who cast spells on you, but if you are
+desperate to reduce the spam, you can toggle hero-sprite to repel them.
+
+For advanced players only:
+  *  Toggle brief will eliminate the room descriptions and extra visual
+information about players or mobs in the room with you.  This can be helpful
+in large groups, but confusing for new users or when exploring.
+
+See Also: TOGGLE, TERMINAL, COLOR, PROMPT
+Related Topics: SCREEN

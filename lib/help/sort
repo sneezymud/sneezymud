@@ -1,0 +1,8 @@
+Syntax: sort <ascending | descending>
+
+The sort command is used at the gin or hearts table to sort your cards.
+An argument of ascending will sort your hand into suits in ascending
+order. Descending will sort into suits in descending order.
+
+See Also: GIN, HEARTS
+Related Topics: CASINO

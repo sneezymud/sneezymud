@@ -1,0 +1,8 @@
+Syntax: world
+
+Useful for finding out about the current status of the mud.  The bootup
+time of the current session as well as a whole slew of information concerning
+the number of rooms, objects and monsters in The World presently.
+
+See Also: -
+Related Topics: GENERAL INFO, UTILITY

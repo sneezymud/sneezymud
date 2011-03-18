@@ -1,0 +1,35 @@
+Syntax: outfit <mobile> <object>
+
+  This will allow you to equip a mobile with an object you have previously
+created.  This is mainly geared towards assisting in the zonefile creation
+process but can have other applications.
+
+You've Been Warned:
+  Do not use this command on mortals.
+  Do not use this on mobiles in the active world.
+  Do not use this on a mobile then move them to the active world.
+    You can not do these things anyways but keep in mind that this is not the
+    purpose of this command.
+
+Need To Know:
+--------------------------------------------------------------------------------
+  Just like the mortal outfit command this command determines, based on object
+wear flags, where the object should be placed.  But unlike the mortal outfit
+command this will place objects without wear flags in the mobiles inventory.
+Keep in mind that outside of switch/give and the like there is no quick way to
+retrieve objects from mobiles.  Make absolutely sure you have saved(OEDIT save)
+the object first and have also loaded(OEDIT load) the object to verify it's
+number is correct.  Failure to do this will have bad results when you try and
+save your zonefile.
+
+Important:
+  When doing this to setup a zone for the 'save zonefile' command make sure you
+have saved down and Re-Loaded(OEDIT load) all the objects.  Otherwise the numbers
+Will Not Be Correct.
+
+Notes:
+  This command requires that the wizpower 'Imm-Outfit' be set on you.  If you do
+not have this power and need it then seek a god who has the power to set you with
+it.  This is usually best to be asked of a Low.
+
+*** If you wish to see the mortal outfit helpfile please go mortal.

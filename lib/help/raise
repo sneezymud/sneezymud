@@ -1,0 +1,8 @@
+Syntax: raise <something>
+
+Raise causes you to attempt to raise <something> off the ground.  It may 
+cause something to happen, but is often dependent on your strength or other
+mitigating factors.
+
+See Also: LIFT, LOWER
+Related Topics: OBJECT MANIPULATION

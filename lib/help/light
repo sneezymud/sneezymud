@@ -1,0 +1,15 @@
+Syntax: light <light source> {room | held}
+
+The light command is used to light a light source or, under the right
+circumstances, light an object on fire.
+
+The optional second argument is used to distinguish between objects in the room
+and those equipped by the player.  If not specified, the command will look for
+an object in the room first.
+
+For example, if one lantern were on a table in the room and a player had
+another in their hand, 'light lantern'  or 'light lantern room' would light the
+lantern on the table and 'light lantern held' would light the equipped lantern.
+
+See Also : EXTINGUISH, REFUEL
+Related Topics: OBJECT MANIPULATION

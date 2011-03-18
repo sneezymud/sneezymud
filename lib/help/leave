@@ -1,0 +1,9 @@
+Syntax: leave
+Syntax: leave <portal>
+
+Leave allows the adventurer to move from where they are indoors to the
+most accessible outdoor room nearby.  Leave can also be used to exit a
+region via a portal, gateway or other non-standard exit present in the room.
+
+See Also: ENTER
+Related Topics: MOVEMENT

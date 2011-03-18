@@ -1,0 +1,8 @@
+Syntax: withdraw <amount>
+Syntax: withdraw all
+
+For use in one of the many banks in the land.  Transfers money which the
+central bank is holding in your name into your hands.
+
+See Also: BALANCE, DEPOSIT, TITHE
+Related Topics: BANKS

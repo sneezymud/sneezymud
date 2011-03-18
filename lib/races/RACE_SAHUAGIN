@@ -1,0 +1,32 @@
+filename RACE_SAHUAGIN
+singName sahuagin
+plurName sahuagins
+propName Sahuagin
+lore OTHER
+age 25+1d4
+maleHt 84+1d11
+maleWt 180+10d11
+femaleHt 82+1d11
+femaleWt 150+10d10
+body Frogman
+moveIn has arrived
+moveOut leaves
+manaMod 1
+search 1
+STR 160
+BRA 120
+CON 140
+DEX 140
+AGI 140
+INT 110
+WIS 110
+FOC 110
+PER 105
+CHA 85
+KAR 120
+SPE 120
+Aquatic
+IMMUNE_WATER 25
+AFF_WATERBREATH
+AFF_SWIM
+

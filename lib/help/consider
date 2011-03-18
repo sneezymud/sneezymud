@@ -1,0 +1,24 @@
+Usage : consider <monster>
+
+This command will initially only provide a comparison of your level versus 
+the monster being considered.  This is a VERY ROUGH estimate of the degree of
+difficulty.  More information may be obtained by improving your consider 
+skills.  A certain person skilled in the ways of monsters around Grimhaven
+can help improve your ability to consider.
+
+Know that on balance we expect a solo player in a fair fight to lose as
+often as they win.  As the player increases in level and can be expected
+to group more, fair fight mobiles will become stronger than players.  The
+class of the player and his opponent will also throw off the value of the
+consider command in any given circumstance. One class's fair fight maybe
+another's easy fight. Another could find the opponent unkillable.
+
+This means that the consider command should not be used as a predictor of
+whether you will win or lose but will just give you some information about
+your foe.
+
+You can also consider yourself to get an idea if your current armor is right
+for you.
+
+See Also: KNOW
+Related Topics: COMBAT, GENERAL INFO

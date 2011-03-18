@@ -1,0 +1,7 @@
+Syntax: outfit <item> <person>
+
+The outfit command is used to equip <person> with <item>.  <Person> must be
+following you.
+
+See Also: SADDLE, WEAR, REMOVE
+Related Topics: OBJECT MANIPULATION

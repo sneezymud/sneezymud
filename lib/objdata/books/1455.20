@@ -1,0 +1,21 @@
+How come I can't pick something up?
+-----------------------------------
+(weight and volume)
+
+Every object in the game is rated for two qualities.  Its weight (a function
+of mass) and its volume (a function of size).
+
+You must be able to both lift the object (sufficient strength for the weight)
+and handle it (sufficient dexterity for the volume).  Failing either check
+will prevent you from getting an item.
+
+If something is too heavy, consider dropping something you are carrying that 
+is heavy.  Remember that items worn or held do NOT contribute to carried
+weight.  Hence, you can free up strength by putting items on otherwise, drop
+something heavy.
+
+If something is too bulky, free up volume by dropping something of large
+size.  Alternatively, items get compressed when put into containers depending
+on the material they are made from.  One note, having your hands tied up with
+weapons, shields, etc lessens the amount of volume you can manipulate.  You
+can sometimes solve volume problems simply by removing your weapon temporarily.

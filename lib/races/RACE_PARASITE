@@ -1,0 +1,28 @@
+filename RACE_PARASITE
+singName parasite
+plurName parasites
+propName Parasite
+lore VEGGIE
+age 1+1d2
+maleHt 12+3d4
+maleWt 15+1d5
+femaleHt 12+3d3
+femaleWt 10+1d5
+body Parasite
+moveIn has arrived
+moveOut leaves
+STR 60
+BRA 60
+CON 55
+DEX 55
+AGI 170
+INT 150
+WIS 80
+FOC 160
+PER 55
+CHA 55
+KAR 60
+SPE 150
+DumbAnimal
+Invertibrate
+IMMUNE_BONE_COND 100

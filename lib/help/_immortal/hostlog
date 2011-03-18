@@ -1,0 +1,8 @@
+Syntax : hostlog {add <host> | rem <host> | list}
+
+Hostlog is similar to the wizlock command in syntax. Wild-cards are 
+allowed, i.e putting the host iup.edu will log anyone with a host-name
+that contains iup.edu
+
+Anyone doing something stupid with this command (logging .com) will lose
+privileges.

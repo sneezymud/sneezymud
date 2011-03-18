@@ -1,0 +1,550 @@
+
+12-24-01 : You can now chop flying creatures if you are flying.
+
+12-14-01 : New adventuring skill: Butcher: Will allow the butchering of
+	   corpses. Butchering will create food (steak/meat) objects in
+	   your inventory that you can...yup...thats right...eat.
+
+12-14-01 : Rejoice, for emote actions now on objects.  This might cause some
+           odd grammar, but I think it works right for the most part.
+
+12-12-01 : Added "help index".  The web based help has been updated as well.
+
+11-16-01 : Ranger enhancement: Barkskin now lasts a longer duration
+           (based on level)
+
+11-16-01 : Made arrows sharpen twice as fast as before. Arrows, since
+           they only need the tips sharpened, should sharpen faster than
+	   large swords.
+
+11-16-01 : Added argument "all" to the clear command to clear all 
+           aliases
+
+11-11-01 : Upped the maximum screensize based on popular demand to 128.
+         
+11-10-01 : The world command now shows the number of mobs that have never
+           been killed by any player, since trophy was started.  Yes, more
+           than 1/5 of mobs have never even been attacked.
+
+11-09-01 : Shop ownership functions are now restricted to one character 
+           per account.  Only permissions for the FIRST character set
+           per account will be valid.
+
+11-06-01 : Due to a lot of inquiry about charm reimbursals I have updated
+           HELP PET to reflect what is in other helpfiles on the subject
+           of reimbursement of pets or thier belongings.
+
+11-02-01 : Clarification added to some rules files with support in
+           character creation.  It would be a good idea to reread and
+           become familiar with the rules of the game.  This action has
+           been prompted by repeat multiplaying offenses.  There will
+           be no warnings. Use of the mud is considered agreement to
+           adhere to the regulations of SneezyMUD.
+
+10-29-01 : Fixed affects that modify max hp.  I think this is only for
+           berserk.
+
+10-28-01 : Added a new sort of shop to Grimhaven. Explore the market and
+	   SPEND DAT LOOT!
+
+10-23-01 : The Grimhaven Anti-Fraud Commission now requires all shopkeepers
+           to divulge their profit ratios and the type of products they
+           carry, even if they are privately owned.
+
+10-17-01 : Added profit ratio setting for individual items for owned shops,
+           check shop owner help file for details. 
+
+10-17-01 : You should be able to "whisper" commands to all shops now.
+
+10-17-01 : Fixed some shops that weren't working at all.
+
+10-16-01 : Update to sacrifice and a bug fix. Sacrificing with a totem
+           will now require the totem to be held in your right hand.
+           See help SACRIFICE.
+
+10-16-01 : NEW SHAMAN RITUAL: Cleanse. It will remove syphilis. Please
+           see the help file.
+
+10-14-01 : Syphilis Update: Removed it from being a generic infection
+	   and moved it into death mists affects. In the future it will
+	   cureable by shaman. Help DEATH MIST will give a clue as to
+	   how one can gt syphilis. 
+
+10-10-01 : BLOOD DRINKERS BEWARE! Added syphilis to the game as an
+           infectuous disease. Possible to get by cleric prayer, object
+           proceedure, or DRINKING POOLS OF BLOOD. Don't complain...this
+           is your warning.
+
+10-03-01 : NEW SHAMAN RITUAL: Chase spirits. Please see the help file.
+
+10-03-01 : Added immunity failure messages to shaman rituals.
+
+10-03-01 : Djalla's and Legba's protections will now show all affects.
+
+10-03-01 : Dispel Magic modification: The spell now includes affects 
+	   invoked by shaman.
+
+09-20-01 : Spin modification: Spin is 50% more difficult to execute on a
+           victim that is flying.
+
+09-20-01 : Non-player owned shops now save their talens and will not reset
+           at boot time.  This will probably fux0r everything up, but it's
+           just an experiment.  If things go badly we'll switch back.
+           Shop taxes have been turned off temporarily.
+
+09-18-01 : Added a new item to the whittle list, and removed the 
+           ability to kill oneself by whittling ( no more slipping 
+           with the knife, costing valuable hp ).
+
+09-18-01 : The Grimhaven Stock Exchange has finished setting up their office,
+           south of the House of Sale.  Although stock purchasing is not
+           yet allowed, you can view the various stocks offered.
+
+09-18-01 : The fishmasters topten list now shows the number of records each
+           player has as well as the total weight of caught fish.
+
+09-16-01 : Catching fish now gives you a tiny amount of experience.
+
+09-16-01 : Fishing now looks for bait anywhere in inventory (bags etc)
+           as well as worn equipment (fishing vest).
+
+09-15-01 : Added some new regional fish types.
+
+09-15-01 : Keirk the fisherman has built a small dock under his fishing shop,
+           and now runs a chartered fishing boat from there.
+
+09-14-01 : Fixed the scribe skill for mages. It is limited to spells
+           known by the mage. No cross class spells were included.
+
+09-09-01 : The fishmaster now gives a bounty on caught fish.  100 talens
+           per pound for record breakers and 2 talens per pound for regular.
+
+09-08-01 : The fishmaster now tracks the largest fish caught for each type.
+           Whisper "records" to him for a list.
+
+09-08-01 : Changed the "big one" fishing code around a bit.  There is now
+           much larger range of extra big fish, with varying degrees of
+           chance.
+
+09-07-01 : Oddly enough, the recent rent change broke fishing.  Even more
+           oddly, I lowered the fishing supply prices at almost exactly
+           the same time, by coincidence.  Ain't that funny.  Sorry for
+           the mixup, fishing should work now.  Condolences to Colossus
+           who spent like forever fishing and didn't catch anything.
+
+09-06-01 : New functionality for trophy: "trophy summary"!  Woo!
+
+09-06-01 : Alcohol tolerance as a result of the alcoholism skill has been
+           greatly increased!  Woo!
+
+09-06-01 : All fishing supplies cut in price by 90%!  Woo!
+
+09-06-01 : SNEEZY BOD change:  The rent system has been redone,
+           everything is now free to rent.  However, there are some
+           quirks.  Very high level equipment will not be as effective
+           on low level players, and there is a chance repo mobs will
+           hunt down higher level equipment on low level players.
+
+09-05-01 : Crit head crush death and beheading now ALWAYS check for eq.
+           Before, there was a 33% chance of instant death regardless
+           of eq worn.
+
+09-04-01 : Everyone can look into adjacent rooms now, just like 'spy'.
+           I found this on my todo list from 1998 and Cosmo said it was
+           a good idea.  Better late than never.
+
+08-30-01 : Permadeath monument now supports color.  Yey.
+
+08-26-01 : For all you slow people, the preceeding news item was a joke.
+           Now really, I wouldn't do something mean like that. :)
+
+08-17-01 : Removed the exp cap in favor of a more indirect method of
+           plevel control.  Now, if you fight stuff that you would have
+           hit the exp cap on, you get crit killed.  Enjoy.
+
+08-17-01 : Fixed a bug with invis that allowed you to stay invisible
+           while fighting.
+
+08-16-01 : There's a statue in market square, with a plaque listing
+           the 10 highest level perma-death characters.
+
+08-16-01 : Shaman Adjustment: Added a little bit of newbie protection to
+	   shaman. When lifeforce was down to 0 natural drain demanded
+	   hitpoint drain in place of the lack of lifeforce. This is no
+	   longer true to shaman level 5 or below. Once you get above
+	   level 5 your hitpoints will be at risk if your lifeforce is
+	   at 0. A shaman level 5 or belowwill no longer die from a lack 
+	   of lifeforce. (or shouldn't)
+
+08-15-01 : Added a new character creation option: Perma Death.  If you
+           select this option while creating a character, then that char
+           will only be allowed to die once and then become inaccessible.
+           Who's got the cojones to play perma death?  Oh, "who -x" will
+           show perma death players.
+
+08-14-01 : There has been a slight problem with duplicate spell components.
+	   I removed the duplicates and replaced them with hairballs. If 
+	   anyone has any hairballs please junk them and tell Jesus how many
+	   you junked. Jesus will replace with the component intended. 
+	   Sorry for the inconveinence.
+
+08-14-01 : Shaman are now enabled. Please heed the warning in character
+	   creation about the class. If there are any problems with the
+	   class (bugwise) mudmail directly to Jesus for the time being.
+	   Enjoy!
+
+07-17-01 : Factored age adjustments back into the hp formula.
+
+07-16-01 : New hp code is in.  Cringe.
+
+07-15-01 : Adjusted the hp formula again.  I think this may be the final
+           adjustment, so if all goes well this may be moved in.  Also,
+           a defense discipline was added, which will go into affect with
+           the new hp system.
+
+07-14-01 : Adjusted the hp formula mentioned below.
+
+07-14-01 : Added a line to 'score' to show what your max hp would be if
+           I implement the skill based HP code.  More details can be found
+           here: http://grimhaven.org/peel/#skillhp
+
+07-13-01 : Messed around with the burn code a bit.  The burn ticks now
+           go a little faster, furniture will now catch on fire as a
+           result of room flaming (fireball etc), and burning objects
+           can now sometimes catch other objects in the room on fire.
+
+07-09-01 : Today is double exp/no repop/no trophy day!  That's right,
+           all exp is double, no zones will repop and trophy will not
+           limit your exp (although it still tallies), all day long,
+           or until we run out of mobs and get bored.  Enjoy.
+
+07-03-01 : Tweaked the time system some more.  Most stuff should be as
+	   before.  Damage and exp rates lowered again.
+
+07-03-01 : I shuffled some things around for shaman that may have some affect 
+           on mages or clerics. If you notice anything strange when you
+	   list your faith or wizardry disc/spells, let me know as soon
+           as possible so I can fix. This only applies to learning and 
+           and skill level. -Jesus
+
+07-02-01 : Fixed a bug with the mob hate code.  In short, if a mob hated
+           someone who was both a player and mob (ie, polymorph, immortal
+           'switch', disguise, that new shaman skill, etc) then they
+           wouldn't be able to attack them.  And yes, I found this bug as 
+           a result of Skirmish walking around the bank disguised and not
+           getting attacked.  If anyone wants a specific technical
+           description involving bad choices of C++ virtual function 
+           overloading, feel free to give me a tell.
+
+07-02-01 : MAJOR GAMEPLAY CHANGE:
+	   Game speed has been adjusted... combat has been slowed down,
+           and damage/exp rates have been turned up.  Hopefully these
+	   factors will cancel out and keep overall gains for your time
+	   the same, but there may be complications.  Bug problems and
+           expect mild/minor tweaking over the next week or so.
+
+07-02-01 : I put the burn code back to the way it was, setting equipment
+           on fire instead of destroying it.  I also cut the initial
+           eq damage by 80%, so less eq will get destroyed.
+
+07-02-01 : 'paying tax' no longer shows in shop logs, however it will still
+           be shown in log summaries.
+
+07-01-01 : Fixed a speed bug which was hounding us for a while... regen
+	   tasks such as yoginsa, penance, meditate, were going way too
+           fast, so you will notice an obvious decrease in speed now.
+           This is intended.
+
+07-01-01 : Shaman mobile use of thralls temporarily disabled.
+
+07-01-01 : Below news item reverted.
+
+07-01-01 : Mobile action was slowed down a bit. This change will affect
+	   tasking, mob aggro, mob sounds. Everything passing through
+           Mobile Action will be affected so things may seem slower. This
+           change has to do with the new machine we are housed on. Trying
+	   to compensate for the larger CPU and more RAM memory.
+
+06-24-01 : Shaman mobiles will now use charms/thralls. Be aware.
+
+06-23-01 : Due to popular player request, flamestrike has been reverted
+           to the old behavior of simply destroying eq instead of
+           setting it on fire.  Enjoy.  (No I don't understand why you
+           guys asked for this, but who am I to argue)
+
+06-23-01 : Redid the zones command a bit.
+
+06-20-01 : 'trophy zone' will now show stats for the zone you are in.
+
+06-12-01 : Beware of smarter shaman mobs. I posted a warning in the news
+           a while ago. This will remind you. I have been adding new spells
+           to shaman and shaman mobs WILL utilize these spells. You have
+           been warned.
+
+06-11-01 : Trophy output reformatted a bit.  You can also do
+           'trophy zone grimhaven' for example, to search zone names.
+
+06-07-01 : Component shops will now buy and sell partially used components.
+
+06-07-01 : Shop rent taxes have increased by 300%.
+
+06-05-01 : Reworked cudgel a little bit.  Mobs where you fail the cudgel
+           are more alert and expecting an attack, which makes later
+           attempts more difficult.  Same for backstabs.
+
+05-29-01 : Small bug with stealing from cudgeled mobs should be fixed.
+     
+05-27-01 : It's 4:50 in the morning and I fixed the antigravity crash
+           bug.  I highly doubt anyone will either notice, or care.
+
+05-24-01 : The hard limit on the experience cap has been removed.  Have fun.
+
+05-24-01 : Components will no longer decay when held by a shopkeeper.
+
+05-22-01 : Owned shops will now charge the right prices for stuff.  Basically,
+           I screwed up the formula that calculates the charisma bonus, so
+           everyone effectively had negative charisma in regard to owned
+           shops.  Oops.  Also, I uncovered the "disappearing money" bug:
+           owned shops are charged a tax every tick, which I wasn't logging
+           and had forgotten about.  It is now recorded in the shop logs.
+
+05-21-01 : Shop ownership is now ON for public beta testing.  In other
+           words, it probably works, but don't blame me if it's messed up.
+
+05-21-01 : Due to an oversight, the chance of eq catching on fire was way 
+           too high.  Fixed. 
+
+05-20-01 : All shops in the world are currently run by governments or
+           wealthy private parties, usually at a loss.  In order to
+           save money for Grimhaven, the King has begun testing the
+           possibility of private shop ownership.  The King will help
+           fund a single business venture and if it works out, all shops
+           may be available for private ownership.
+
+05-19-01 : RANGERS: Examine the nature discipline for reissue of the
+           old ranger spells "Tree Walk" and "Living Vines".
+
+05-17-01 : We now have workable spellbags for neck and wrist slots.
+
+05-15-01 : Added a few mobs to the Grimhaven area. These mobs are shaman.
+           Just be aware if you see them doing unfamiliar things.
+
+05-11-01 : Added a player settable 'nojunk' flag to objects to protect
+	   valueables from being inadvertantly junked.  HELP NOJUNK
+	   for details.
+
+05-11-01 : Rooms can be "fished out".  Catch some fish = no more fish
+           in that room.  Resets on reboot.
+
+05-06-01 : Tweaked the price of potions/scrolls.  It went up.
+
+04-28-01 : Shaman mobs are actually shaman class now, be careful of the
+           unexpected.
+
+04-25-01 : The portal prayer will now target only special rooms designed
+           to be portal destination rooms.  You will be able to open
+           portals to those rooms from anywhere.  The rooms will be
+           obvious when you encounter them, but will be fairly limited
+           in number.  To start with, try: "pray portal grimhaven".
+
+04-25-01 : Split and auto split will no longer count pets and
+           charmed mobs as having a share. 
+
+04-25-01 : Stand will now stop the extinguish command.
+
+04-24-01 : Fixed a long time bug in social targetting where the
+           mud would not check for exact name of target first.
+
+04-22-01 : Updated the extinguish code a little more. Extinguishing yourself
+           should be a bit faster and the damage a bit less. 
+           YES...you can attempt to extinguish yourself when not on fire.
+           NO....I'm not sure I want to change that.
+           YES...you still have to stop yourself from the task when done.
+           NO....I'm not sure that I want to change that either.
+           Please direct other questions about the task to the mob that
+           invoked the flamestrike on you. :)
+
+04-22-01 : Fixed a typo Damescena really hated.
+
+04-21-01 : Updated the affects of the flame code a bit more. Spellbags
+           and other component containers will now be virtually immune
+           to the flame code. Also, the chances of flames entering other
+           containers was reduced a little.
+
+04-21-01 : The extinguish command has been altered. "Extinguish me" will
+           now make a player stop, drop, and roll to extinguish burning
+           equipment that is worn. This task WILL NOT affect a players
+           inventory, those items will have to be extinguished by dropping
+           them on the ground and extinguishing them individually.
+
+04-20-01 : There is now a fishmaster in the fishing shop, look at him for
+           more info.  Also, thanks to the people who looked up fish and bait
+           information for me, I appreciate the help.
+
+04-19-01 : Ok, NOW the fishing code is in.  It might still be a little
+           buggy and it'll need some tweaking, but it's in.  Look for a 
+           fishing shop near a river, to the south of GH.
+
+04-19-01 : In case you hadn't noticed, beta testing has begun on the
+           new fishing code.  Stop bugging me about when it's going
+           to go in, I'll let you know, trust me.
+
+04-18-01 : Audible alert added to flame code to let you know when
+           your on fire.....more to come.
+
+04-17-01 : Charred equipment light bug has been squashed.
+
+04-16-01 : Repair tickets for limited items now cost the same rent
+ 	   the item would.
+
+04-16-01 : Identify will no longer show a rent cost on items that
+	   don't cost rent.
+
+04-16-01 : Fixed the bug with burning equipment.
+
+04-15-01 : Changed the way mobs develop hatreds slightly.  They
+           should no longer hate you unless you do something
+           harmful/offensive to them
+
+04-15-01 : Scrolls produced from copy now slowly disintegrate.
+           Actual speed for disintegration depends on skill of the
+           caster.
+
+04-14-01 : New skill added to adventuring discipline: alcoholism.  
+	   First person to max it gets a special item, talk to Peel.
+
+04-14-01 : Level 40 warriors will now have a class quest available
+           to them.
+
+04-13-01 : Cityguards will no longer attract help without shouting.
+
+04-10-01 : Rate of passing out as a result of being drunk lowered.
+
+04-09-01 : Response mobs will now drop an object if they cannot give
+	   it to you. Yay!
+
+04-09-01 : Repair times were rounding down to the last 30 second
+           mark. (ie, all repair times were multiples of 30 seconds)
+           so I fixed this.  Thus, you may notice a slight (< 30 sec)
+           increase in repair times
+
+04-09-01 : I tweaked the way things burn a little to make a flame
+           engulfing attacks less devestating in terms of eq damage.
+           Also, this means you can now repair charred items, HOWEVER
+           an item being charred SEVERLY effects how well it can be
+           repaired.
+
+04-07-01 : Hunting mobs no longer say "Time to die, someone" if they
+	   can't see who you are.  They still attack if they have
+	   infravision, however.
+
+04-07-01 : The number of mobs killed in the TROPHY command now shows
+	   two decimal places.
+
+04-07-01 : Aggro mobs who wander out of their 'home' areas are now
+           nicer to lowbies.  Also, aggro mobs wont attack players
+	   much higher than they are.
+
+04-07-01 : Slight discrepancy between objects that cost rent and
+	   objects that SAY they cost rent fixed. :)
+
+04-07-01 : Sword in foot crit does less raw damage, but more damage
+	   to foot.
+
+04-03-01 : Examination of items will now show whether or not you
+           will have to pay to rent them.
+
+03-31-01 : Whales no longer disarm.
+
+03-26-01 : Made retreating a little bit nicer.  It should kick in
+	   a little better now.
+
+03-26-01 : Did you know you could track through portals?  I didn't,
+	   so this is news to me.  
+
+03-26-01 : Mounts should no longer get brawled.
+
+03-26-01 : Um. Clientmessage does shout now.
+
+03-26-01 : Fixed the mobs with wolverine healing ability bug.
+	   MOB REGEN is being tweaked a little to find a good value,
+	   please bear with us as this code is being playtested and
+	   feedback is very welcome.
+
+03-26-01 : Made mobs flee a little bit less insanely now, and also
+	   fixed it so their fears turn into hatreds correctly.
+	
+03-26-01 : Reworked some of the damage rates vs blunt for fabric
+	   material types.  Feedback welcome.
+
+03-26-01 : Mob were healing a bit during fights while PCs were not.
+	   Whoops.  Mobs no longer heal during fights, but they also
+	   heal faster when not fighting.
+
+03-26-01 : The way mobs track has been adjusted slightly.  They track
+	   slower at all levels, but at higher levels they track
+	   through more rooms each tick.
+
+03-26-01 : Fixed a slight hosing of yoginsa. This is still not totally
+           correct so it is subject to minor change.
+
+03-25-01 : Fixed some rounding errors in prac and hp gains.
+
+03-20-01 : Fixed a slight problem in the way karma was being worked
+	   into crit hit rates.
+
+03-20-01 : Reworked HP and practice gaining formulas.  Its hard to
+	   say exactly what the result of these changes will be,
+	   because of the nature of the previous formulas.
+
+03-20-01 : Fixed a rather large inconsistancy in the way stats were
+	   factored into gameplay.  The problem affected only your
+	   sub par stats, and in a negative way.  Thus, this change
+	   will help you.
+
+03-19-01 : Slightly modified the power of healing spells/skills to
+	   account for the v5.2 damage rate changes.
+
+03-19-01 : The loitering code will no longer hit non-leading group
+	   members unless the group leader is also idle.
+
+03-19-01 : Monsters will now hunt people they hate out of zones,
+	   even if they would not usually wander out of it.
+
+03-19-01 : Fixed a bug in stealing equipment. (Not that any of you
+	   even have the ability to steal equipment yet)
+
+03-18-01 : Tweaked aggro code a bit.  Hopefully agroes will not be
+	   as bad as before, but still something to watch out for.
+	   they will also be more likely to attack loners than folks
+	   travelling in groups.  Feedback is welcome.
+
+03-18-01 : Fixed a weird crash bug that has been hounding us for a
+	   while.
+
+03-17-01 : Removed a redundant bonus in the monk damage code, dex was
+	   being factored in twice.
+
+03-13-01 : WELCOME TO GRIMHAVEN v5.2
+	   Old news file has been moved to HELP OLDNEWS.
+
+03-13-01 : Character creation has been changed, stats are now split
+	   into groups of three, and speed has been moved to the
+	   physicals group.
+
+03-13-01 : Trophy system is now in.  Consider a mob or type 'trophy'
+	   to see how much exp you'll get for a kill.
+
+03-13-01 : Multiclasses have been removed.
+
+03-13-01 : The economy has been reset.
+
+03-13-01 : Rent system has been redone, you now do not get charged
+	   rent except for limited items, and you get no rent credit.
+
+03-13-01 : Game difficulty has been tweaked, do not be surprised if
+	   the MUD does not play the same as in previous versions.
+
+03-13-01 : Steal has been tweaked, you can no longer steal equipment
+	   from the more difficult body slots unless your target is
+	   drunk, alseep, unconscious, etc.

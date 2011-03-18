@@ -1,0 +1,8 @@
+Syntax : restore <player/mob> <full | partial>
+
+
+  A partial restore will restore all hit points, mana and movement to mortals.
+A full restore will restore all limbs, and cure the mortal of all diseases.
+If used on an immortal, it will reset certain values to their default numbers.
+Indiscriminate use of this in the mortal realm is illegal.  Do not restore
+mobs or players without GOOD reason. 

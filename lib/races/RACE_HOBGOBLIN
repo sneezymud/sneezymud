@@ -1,0 +1,30 @@
+filename RACE_HOBGOBLIN
+singName hobgoblin
+plurName hobgoblins
+propName Hobgoblin
+lore GIANT
+age 25+1d4
+maleHt 74+1d11
+maleWt 200+1d11
+femaleHt 62+1d11
+femaleWt 180+1d10
+body Humanoid
+moveIn has arrived
+moveOut leaves
+hpMod 2
+moveMod 20 
+search 1
+vision 1
+STR 165 
+BRA 165
+CON 120
+DEX 110
+AGI 80
+INT 75
+WIS 75
+FOC 90
+PER 55
+CHA 55
+KAR 80
+SPE 65
+AFF_INFRAVISION

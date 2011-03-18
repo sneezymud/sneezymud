@@ -1,0 +1,22 @@
+NAME
+    checklog - check log(s) for specific messages
+
+SYNOPSIS
+    checklog "string" log
+
+DESCRIPTION
+    Checklog allows you access to the logs that the server creates during
+    a game session.  At reboot the old log is renamed and a new one is
+    created.
+
+    String is a string of characters to look for.  The search is not case
+    sensitive and you know how to use Unix regular expressions you have
+    limited access to them.
+
+    Log is the name of the log you want to check.  You also have limited
+    Unix regular expressions access.
+
+    This is a task.
+
+SEE ALSO
+    TASKS, LOGLIST, DEATHCHECK

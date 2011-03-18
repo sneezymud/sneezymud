@@ -1,0 +1,29 @@
+filename RACE_SLIME
+singName slime
+plurName slimes
+propName Slime
+lore VEGGIE
+age 1+1d2
+maleHt 1+1d2
+maleWt 0+1d1
+femaleHt 1+1d2
+femaleWt 0+1d1
+body Slime
+moveIn oozes in
+moveOut oozes
+moveMod -40
+STR 55
+BRA 55
+CON 55
+DEX 105
+AGI 55
+INT 55
+WIS 55
+FOC 55
+PER 55
+CHA 55
+KAR 55
+SPE 55
+DumbAnimal
+Invertibrate
+IMMUNE_BONE_COND 100

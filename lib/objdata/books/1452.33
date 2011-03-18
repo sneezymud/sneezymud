@@ -1,0 +1,18 @@
+These tips will work well as long as your mob is >= 5th level and is
+a warrior-class mob.
+
+step 1: pick the approximate level the mob should be
+step 2: set the mob's class to warrior and the mobs level
+step 3: set the AC as 60 - 2* level
+step 4: set the barehand dam and num of attacks so that the average dam
+        per round is    level/1.1
+step 5: give it 11 * level hp as a bonus
+  or
+step 5: give it a sanct and 3.25 * level hp as a bonus
+
+--------------
+You can get a feel for the level your mob is by using the following formula:
+if exp is less then 8000, its level should be:
+    level = square_root (xp/20)
+else
+    level = cube_root (xp)

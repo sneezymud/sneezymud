@@ -1,0 +1,4 @@
+Current structure
+
+The current structure the item has.  Unless you are going for an effect,
+you should set this to the same number as the max structure.

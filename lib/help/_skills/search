@@ -1,0 +1,8 @@
+Syntax: search {direction}
+
+Search permits a thief to search the area for signs of traps or concealed
+exits.  The search is somewhat exhausting regardless of whether a trap or
+door is found.  Success at detecting an exit is dependent on the ability
+of the thief.
+
+Search with no parameter will cause you to look in all directions.

@@ -1,0 +1,31 @@
+filename RACE_SHEDU
+singName shedu
+plurName shedus
+propName Shedu
+lore GIANT
+age 50+1d10
+maleHt 65+1d5
+maleWt 200+2d10
+femaleHt 60+1d5
+femaleWt 180+2d10
+body Shedu
+moveIn has arrived
+moveOut leaves
+hpMod 2
+moveMod 20 
+search 3
+STR 140
+BRA 140
+CON 120
+DEX 130
+AGI 100
+INT 130
+WIS 150
+FOC 150
+PER 130
+CHA 60
+KAR 120
+SPE 120
+Winged
+Ridable
+AFF_FLYING

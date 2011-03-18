@@ -1,0 +1,16 @@
+Syntax: recite <scroll> {target}
+        recite <scroll> me
+        recite <scroll> self
+        recite <scroll> tank
+
+Recite is used to "read" a magic <scroll>.  If {target} is ignored, the default
+target will be your combat opponent, if you have one.  You may explicitly
+indicate an object or character as the {target} of the <scroll>.
+
+When you are grouped with someone in a fight you can use "tank" as the target
+name to auto-select whomever your enemy is bashing away at.
+
+Recite requires that you possess the ability to read magic.
+
+See Also: READ MAGIC, SCROLL
+Related Topics: SPELL INFO

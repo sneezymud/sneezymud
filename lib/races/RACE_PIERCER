@@ -1,0 +1,29 @@
+filename RACE_PIERCER
+singName piercer
+plurName piercers
+propName Piercer
+lore GIANT
+age 75+5d5
+maleHt 60+5d2
+maleWt 150+10d10
+femaleHt 55+5d2
+femaleWt 145+10d10
+body Piercer
+moveIn slowly advances
+moveOut slowly leaves
+hpMod 2
+moveMod -40 
+STR 140
+BRA 140
+CON 160
+DEX 140
+AGI 70
+INT 80
+WIS 80
+FOC 80
+PER 55
+CHA 55
+KAR 80
+SPE 60
+Invertibrate
+IMMUNE_BONE_COND 100

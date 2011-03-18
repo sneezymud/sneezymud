@@ -1,0 +1,20 @@
+Syntax: sleep {object}
+
+Sleep causes you to stretch yourself and lose consciousness.  Sleeping
+provides the best regeneration possible, but the risk is that you are
+completely unaware of your surroundings.  It is generally advisable to
+only sleep somewhere you feel perfectly safe.
+
+Various objects can be slept on.  These objects will increase your
+regeneration even further as they provide a comfortable place to sleep.
+Obviously, the object must be big enough to sleep on, as you can't stretch
+out and get comfortable on just anything.  Also, objects designed for
+small creatures may prove to be a bit too uncomfortable to provide any
+benefit.
+
+To stop sleeping, merely wake up.
+
+<R>WARNING:<z> Sleeping can be detrimental to the liforce of a Shaman.
+
+See Also: WAKE, REST, SIT, STAND, CRAWL, LIFEFORCE
+Related Topics: MOVEMENT

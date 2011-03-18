@@ -1,0 +1,26 @@
+Syntax: engage <mob>
+Syntax: toggle engage
+Syntax: toggle engage-all
+
+Engage is a way to enter into a fight without physically 
+attacking the mob.  If engage is used to start a fight, the
+mob engaged will still physically attack the PC it is engaged
+in battle with.
+
+Engage is handy for magic users that wish to save their 
+concentration and focus for their prayers, spells or rituals
+without being as distracted by physical combat.
+
+Players may choose to disengage from the fight by using the 
+"disengage" command.  To begin physically attacking the
+opponent, use the "hit" command.
+
+Toggling engage on will cause you to enter engaged mode during
+any fight you start.
+
+Toggling engage-all on will cause you to enter engaged mode
+during any fight, including those started by aggressive mobs.
+
+See Also: TOGGLE, DISENGAGE, HIT, KILL
+Related Topics: COMBAT
+

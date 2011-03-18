@@ -1,0 +1,8 @@
+Syntax: sip <liquid>
+
+Sip will cause you to taste a bit of the <liquid>.  It will give you an
+idea of the flavor and has less risk of damaging you if <liquid> is dangerous,
+but does not fill you up as much as if you had drunk fully.
+
+See Also: DRINK, QUAFF
+Related Topics: OBJECT MANIPULATION

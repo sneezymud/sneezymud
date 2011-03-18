@@ -1,0 +1,53 @@
+Syntax: look
+
+The look command is useful for studying your surroundings or for examining
+something in detail.  Look with no parameters will cause you to take another
+peek at the present room you are in.
+
+======================================================
+Syntax: look room
+
+The "look room" command is used to force a look at the room description and is
+most handy when brief mode is being used.
+
+======================================================
+Syntax: look <direction>
+
+Looking in a <direction> will show you as much information as can easily be
+discerned about what lies off in that direction.
+
+======================================================
+Syntax: look <something>
+Syntax: look at <something>
+
+The following syntaxes are all equivalent:
+   look at <something>
+   look <something>
+   examine <something>
+
+The obvious details of <something> will be revealed.
+
+In most shops, you may look at the shopkeeper's inventory.  This is done
+by doing look <obj> or look <item #>.
+
+The order of precedence for look <x> is the following:  1. Mobs, 
+2. Inventory objects, 3. Worn Objects, 4. Room Objects, 5. Room Extra
+Descriptions.  This should work similar to other object manipulation
+functions.
+
+======================================================
+Syntax: look in <something>
+
+The contents of a container may be displayed by looking in them.  
+
+The special case "look in all.corpse" is supported.  Contents of all corpses
+in the room will be revealed.
+
+======================================================
+Syntax: look through <something>
+
+Some objects may be looked through.  Windows, telescopes, and the like are
+good examples.
+
+See also : EXAMINE, READ, SCAN, BRIEF
+Related Topics: OBJECT MANIPULATION, MOVEMENT

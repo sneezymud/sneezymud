@@ -1,0 +1,37 @@
+filename RACE_TROLL
+singName troll
+plurName trolls
+propName Troll
+lore GIANT
+age 25+1d4
+maleHt 84+1d11
+maleWt 200+2d11
+femaleHt 82+1d11
+femaleWt 190+2d10
+body Humanoid
+moveIn lumbers in
+moveOut lumbers
+hpMod 1
+manaMod 1
+moveMod 30
+foodMod .5
+vision 3
+STR 120
+BRA 125
+CON 155
+DEX 80
+AGI 80
+INT 125
+WIS 120
+FOC 130
+PER 90
+CHA 75
+KAR 90
+SPE 80
+AFF_INFRAVISION
+IMMUNE_HEAT -20
+IMMUNE_FEAR 75
+talent fast_regen
+talent meat_eater
+toggle 356
+garble 18

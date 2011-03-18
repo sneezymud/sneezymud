@@ -1,0 +1,21 @@
+Syntax: hit <creature>
+
+A good way to start a fight.  You will be unable to attack certain
+creatures (immortals, deities, etc.)  Hit will also allow you to hit after
+being engaged.
+
+You will be able to switch your status back and forth between 1) 
+disengaged, 2) engaged, and 3) hitting by the use of the commands "hit",  
+"engage" and "disengage".  If you are engaged, you can start physically
+attacking by typing hit <target>.  If you are hitting, you can stop 
+hitting (but still be in the fight) by the use of "engage" or "disengage"
+and you can disengage totally from the fight from engaged status with
+"disengage".  You can not fully disengage from a fight if you are tanking.
+
+
+Syntax: hit
+
+Hit also is used at the blackjack table to take an additional card.
+
+See Also: CHANGE, TOGGLE (nokill), ASSIST
+Related Topics: COMBAT, BLACKJACK

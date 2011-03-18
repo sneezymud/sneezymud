@@ -1,0 +1,13 @@
+Syntax: extinguish <light source | me> {room | held}
+
+The extinguish command is used to put out a light source or fire.  The object
+must either be equipped or in the room.  If the first argument is 'me' rather
+than an object, the player will attempt to put out any equipped items that are
+burning.
+
+The optional second argument is used to distinguish between objects in the room
+and those equipped by the player.  If not specified, the command will look for
+an object in the room first.
+
+See Also : LIGHT, REFUEL
+Related Topics: OBJECT MANIPULATION

@@ -1,0 +1,29 @@
+filename RACE_VEGGIE
+singName vegetable
+plurName vegetables
+propName Vegetable
+lore VEGGIE
+age 1+1d2
+maleHt 4+2d4
+maleWt 1+1d2
+femaleHt 4+2d4
+femaleWt 1+1d2
+body Veggie
+moveIn slowly advances
+moveOut slowly leaves
+moveMod -50
+STR 110
+BRA 110
+CON 95
+DEX 105
+AGI 55
+INT 55
+WIS 55
+FOC 55
+PER 55
+CHA 80
+KAR 110
+SPE 55
+DumbAnimal
+Invertibrate
+IMMUNE_BONE_COND 100

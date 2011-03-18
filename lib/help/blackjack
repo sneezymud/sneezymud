@@ -1,0 +1,27 @@
+The blackjack table is located in the casino.  You must sit at the
+blackjack table to start.  You must place a bet to get the cards dealt.
+Syntax: BET <chip>
+
+The object of blackjack is to acquire cards totalling as close to 21 points
+as possible without going over ("bust").  Cards count their face value,
+face cards are 10 points, aces can be counted as either 1 or 11 points.
+A blackjack occurs if one player receives an ace and a face card on the
+deal (11 + 10 = 21).  A blackjack is an automatic win for that person.
+
+You can take as many cards as you want by "hitting".  This will give you
+an additional card.  You can take as many hits as you want.
+Syntax: HIT
+
+You stop taking cards by "staying pat".  Once you stay, the dealer has
+the opportunity to hit.
+Syntax: STAY
+
+After the dealer has hit himself sufficiently, the cards are revealed.
+Whoever came closer to 21, wins.  If someone busted while hitting, the
+other person automatically wins.
+
+The dealer is required to hit while his cards are 16 or less, and must
+stay on 17 or greater.  The house will pay 1:1 on a push.  (Vegas rules)
+
+See Also: BET, HIT, STAY, PEEK
+Related Topics: CASINO

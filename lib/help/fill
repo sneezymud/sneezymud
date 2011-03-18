@@ -1,0 +1,18 @@
+Syntax: fill <container> {other container}
+
+Fill allows you to move liquid from {other container} to <container>.
+In general, <container> must be in your inventory, but {other container}
+in certain cases need not be.  The {other container} parameter may be
+omitted if there is a large source of liquid immediately available (ie.
+fountain, lake, pond, stream, river...).  Fill will attempt to put as
+much of {other container}'s contents into <container>, filling it if
+possible.
+
+You are able to fill <container>s from natural sources of freshwater
+such as rivers and streams.
+
+Mixing liquid types (water and wine for instance) will lead to a yucky,
+disgusting sludge that is best not drunk.
+
+See Also: POUR
+Related Topics: OBJECT MANIPULATION

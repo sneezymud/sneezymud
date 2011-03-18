@@ -1,0 +1,10 @@
+Syntax: drink <liquid> {container}
+Syntax: quaff <liquid> {container}
+
+The drink and quaff command are synonymous and are used to quench a thirst.  
+You must have a drink container or other liquid container handy.  
+Alternatively, you may drink from some large liquid-container in the region
+such as a lake, pond, stream or fountain.
+
+See Also: SIP, EAT, POTIONS
+Related Topics: OBJECT MANIPULATION

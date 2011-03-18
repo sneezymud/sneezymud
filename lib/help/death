@@ -1,0 +1,28 @@
+There are three types of deaths on <h>, complete, partial and reconnect.
+
+A complete death results whenever a character's hit points reach -10 or
+fewer.  This is most often the result of combat, but may occur under other
+circumstances, such as walking off a cliff and falling.  Starvation and
+drowning are the other chief culprits.  A complete death results in the
+following penalties:  loss of XP (amount based on formula in HELP FORMULAS),
+the creation of a corpse with all equipment and talens in it, a slight
+increase in player's age (random).  Typically, a complete death will
+repair the victim of any ailments (poison, bleeding, etc) and fill the
+stomach with food and drink.  Additionally, pets and other NPC followers
+will abandon you following a complete death.
+
+A partial death is the result of entering a deadly situation in which (in the
+opinion of the implementors), a complete death was not warranted.  Partial
+deaths generally cause the creation of a corpse, but do not effect xp or
+age.  Partial deaths are the result of stumbling into a deathtrap or 
+encountering other instantaneous-death situations.  Like a complete death,
+NPC followers will abandon you following a complete death.
+
+A reconnect death is the result of reconnecting with negative hit points.
+Reconnect deaths will incur loss of xp and age increase but will not create
+a corpse.  Reconnect deaths are automatically generated whenever certain
+conditions are met.  The announcement of such an event is shown at the time
+of the reconnect.  Reconnect deaths do not result in the loss of NPC followers.
+
+See Also: FORMULAS
+Related Topics: GENERAL INFORMATION

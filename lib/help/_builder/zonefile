@@ -1,0 +1,61 @@
+Syntax:
+  zonefile
+  zonefile <directive>
+
+  This command is used to handle the various online work that revolves
+around the zonefile.
+
+                         **** PLEASE READ *****
+  This command (zonefile save) causes drastic lag on the mud even on a
+small zone.  So PLEASE Do Not Use this during peak times but instead
+wait until there are few people on or when you think you can sneak it
+in without much affect.
+                         **********************
+
+  With zonefile it will create a basic zonefile and email it to the address
+noted on your account.  Notes:
+  Things that will be recorded in the zonefile:
+    'D' commands depending on if a door is closed and/or locked.
+    'O' commands for Objects in rooms set no-take.
+    'P' commands to put objects in 'O' objects.
+    'B' commands for Objects in rooms set take.
+    'P' commands to put objects in 'B' objects.
+    'M' commands for Mobiles in rooms.
+    'G' commands for Objects in Mobiles.
+    'E' commands for Objects Equipped by Mobiles.
+  Things Not recorded or checked for in the zonefile:
+    Objects in Objects in/equipped-by mobiles
+    'R' commands for ride directives.
+    'C' & 'K' commands for charm/group directives.
+    'H' & 'F' commands for hate/fear directives.
+    'T' commands for trap setting.
+    'V' commands for 4-value modifications.
+    '?' commands for randomizer directive.
+    'Y' commands for bulk-suit loads.
+    'A' commands for area randomizer directive.
+    'X' & 'Z' commands for local bulk-suit setting/loading.
+
+  Keep in mind this command is Not a way to skip the zonefile process.  It
+  is simply a way to make it easier for you by doing a lot of the grunt work
+  and leaving the technical details to you.
+
+  Note that the O, P, B, M, G and E commands rely on the vnum that the object
+  was loaded under: [pretend session]
+    load obj 100  <- Lets say this is a 'black-collar-dog'
+    OEDIT save black-collar-dog 101
+    drop black-collar-dog
+    OEDIT load 101
+    drop black-collar-dog
+    zonefile save
+  In this example you would have 2 Objects saved down.  One would be obj
+  100 and the other 101.  Why?  Because the first object was Not an OEDIT load
+  of 101.  Make Sure to OEDIT/med load your objects before doing the save and
+  not rely on just 'loading, modifying, saving, dropping and saving.
+
+
+
+
+
+zonefile save
+  Used to save the current stat of one of your zone blocks.  It saves
+  the zonefile to the zone you are Currently In.

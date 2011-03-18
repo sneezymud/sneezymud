@@ -1,0 +1,16 @@
+Syntax: tell <person> <message>
+
+A generic way to communicate with other people in <h>.
+Some rooms will prevent this command due to a magical dweomer of silence.
+
+Tell will send a message strictly to the person referenced, regardless of
+where they are in the mud.  It does require that you can actually "see"
+the recipient.  ie, being blinded or in the dark will prevent.
+   EX: tell joeblow meet me at center square
+
+Using tell to flood a person's screen with spam is in poor taste.  Likewise,
+using tell to be offensive or obnoxious will be dimly viewed by the game
+maintainers and may lead to sanctions.
+
+See Also: SHOUT
+Related Topics: COMMUNICATIONS

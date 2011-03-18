@@ -1,0 +1,33 @@
+filename RACE_OGRE
+singName ogre
+plurName ogres
+propName Ogre
+lore GIANT
+age 25+1d4
+maleHt 84+1d11
+maleWt 280+12d12
+femaleHt 82+1d11
+femaleWt 250+12d12
+body Humanoid
+moveIn lumbers in
+moveOut lumbers
+hpMod 4
+moveMod 40
+foodMod 1.25
+drinkMod 0.75
+STR 165
+BRA 155
+CON 125
+DEX 80
+AGI 80
+INT 80
+WIS 80
+FOC 80 
+PER 105
+CHA 55
+KAR 130
+SPE 80
+IMMUNE_HEAT 25
+IMMUNE_COLD 25
+IMMUNE_POISON 33
+talent plusses on brawling skills

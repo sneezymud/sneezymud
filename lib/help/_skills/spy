@@ -1,0 +1,7 @@
+Syntax: spy
+
+When looking at characters, the thief will be able to look at the inventory
+that creature is carrying.  An evaluation of the creature's wealth will also be
+reported.  Accuracy of the report is based on the learning in spy.  In
+addition, the character looked at will not notice that they are being scoped
+out.

@@ -1,0 +1,13 @@
+Syntax: say <message>
+Syntax: ' <message
+
+A generic way to communicate with other people in <h>.
+Some rooms will prevent these commands due to a magical dweomer of silence.
+
+Say shows the text to everyone in the room.  You can use ' as a shorthand
+notation for "say".
+   EX: say hello world
+       ' hello world
+
+See Also: ASK, TELL, SHOUT, WHISPER, COLOR STRINGS
+Related Topics: COMMUNICATIONS

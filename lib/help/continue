@@ -1,0 +1,19 @@
+Syntax: continue <argument>
+
+arguments: 
+   <no argument> -- Will make a spell or prayer become of indefinite duration
+in its chant.  Not every spell or prayer will respond to this command.
+
+   # -- specify a number to have a prayer or spell go an addition
+number of rounds.  Example: "continue 6" would make the spell go 
+another 6 rounds.
+
+   finish/stop -- This will make an indefinite length spell/prayer start to
+wrap up.  It will become a spell/prayer with at least the number of casting
+rounds the spell or prayer started with. Example: "continue finish" will make
+a spell wrap up.
+
+** Note, that you can always just stop to abort a spell.
+
+See Also: - STOP
+Related Topics: UTILITY

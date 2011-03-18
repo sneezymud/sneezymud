@@ -1,0 +1,25 @@
+syntax: color replace <color>
+syntax: color substitute <color>
+
+Currently supported <colors>:
+    none, black, red, green, orange, blue, purple, cyan, white, yellow,
+    gray, bold_red, bold_green, bold_blue, bold_purple, bold_cyan, 
+    bold_white, and bold.
+
+Type "color substitute <color>" to choose a substitute color, then type 
+"color replace <color>" to replace a color with the color you've chosen as
+a substitute.
+
+Example: If your terminal is white-on-black, you may not be able to see
+the colors black and grey.  Type "color substitute white" to choose white as
+your replacement color, then type "color replace black" and "color replace
+grey" to replace black and grey with your substitute color.
+
+To clear your substitute color, choose "none" as your substitute color.
+To toggle replacement of a color, type "color replace <color>".
+
+Use "color test" to see all current colors displayed.
+
+
+See Also: COLOR, TERMINAL
+Related Topics: SCREEN

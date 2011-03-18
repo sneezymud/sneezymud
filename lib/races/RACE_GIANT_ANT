@@ -1,0 +1,32 @@
+filename RACE_GIANT_ANT
+singName giant ant
+plurName giant ants
+propName Giant Ant
+lore ANIMAL
+age 5+1d6
+maleHt 54+6d2
+maleWt 500+10d10
+femaleHt 50+6d2
+femaleWt 450+10d10
+body Humanoid
+moveIn scuttles in
+moveOut scuttles
+hpMod 1
+moveMod 30 
+search 1
+STR 160
+BRA 150
+CON 180
+DEX 140
+AGI 80
+INT 110
+WIS 110
+FOC 110
+PER 80
+CHA 100
+KAR 100
+SPE 140
+ColdBlooded
+CanClimb
+Ridable
+AFF_SENSE_LIFE

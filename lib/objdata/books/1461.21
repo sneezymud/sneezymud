@@ -1,0 +1,17 @@
+Advanced Action: special
+---------------------
+ 
+ex:
+<trigger> { "<arguments>";
+       <other actions>;
+       special <number>; 
+       <other actions>;
+     }
+
+Special is used to cause the response to hand control over to a hard coded
+event (special response) handler.  What the special does depends on what 
+<number> is sent.  Please check with the LOW and/or a coder before setting
+up a "special" in your responses.
+
+The main use of special is to allow for things that the standard response
+actions do not handle to occur.

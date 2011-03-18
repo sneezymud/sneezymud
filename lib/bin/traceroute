@@ -1,0 +1,4 @@
+/usr/sbin/traceroute $1 |
+	/usr/bin/sed 's/[^ ]*\.saw.net/????.saw.net/g' |
+	/usr/bin/sed 's/36.220.[0-9]*.[0-9]*/36.220.???.???/g' |
+	/usr/bin/sed 's/ (ttl=[0-9]*\!)//g'

@@ -1,0 +1,13 @@
+Syntax: crit {victim} <crit number>
+
+Crit allows you to instantly obtain a critical combat hit of any type
+against an opponent.  If victim is not specified, it is assumed to be the
+person you are fighting.
+
+The weapon-type is dependent on your primary hand.  The part hit (if not
+forced by the crit-number, is random based on the victim's race.  Damage
+is dependent on the weapon-type.
+
+A list of what each crit-number corresponds to can be found in
+combat.cc::critSuccessChances().  If you don't have access to this, 
+don't use this command.

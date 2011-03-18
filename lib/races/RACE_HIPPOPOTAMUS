@@ -1,0 +1,26 @@
+Filename RACE_HIPPOPOTAMUS
+singName hippopotamus
+plurName hippopotami
+propName Hippopotamus
+lore ANIMAL
+age 15+1d4
+maleHt 62+1d17
+maleWt 140+8d10
+femaleHt 60+1d12
+femaleWt 100+4d10
+body FourHoof
+moveIn has arrived
+moveOut leaves
+STR 160
+BRA 150
+CON 130
+DEX 100
+AGI 100
+INT 90
+WIS 90
+FOC 100
+PER 70
+CHA 80
+KAR 100
+SPE 70
+DumbAnimal

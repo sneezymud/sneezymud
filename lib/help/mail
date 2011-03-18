@@ -1,0 +1,30 @@
+Syntax: mail <person>
+
+Mail permits you to send <h> mail to <person>.  When done, you will
+be charged a small amount for the stamp, and then prompted for the
+message you wish to include on the mail.  Type the message in with
+appropriate carriage-returns and hit ~ to end the message.
+
+You must be in the presence of a postmaster (in the post office) for
+this to work.  Most major towns have a post office.
+
+You must be level 2 to send mail.  Mail left over 30 days is deleted.
+
+Mailing to an immortal is free;  the stamp cost is generally 50 talens.
+You can money to someone; the shipping cost is about 150 talens.
+You can an item to someone by using the syntax: 'mail <person> <item>'.
+The cost will vary depending on the weight of the item. You can send
+mail to everyone in your faction by mailing to "faction". The cost is
+5000 talens.  To see how much mailing something will cost, you may use
+the 'value' command.
+
+Syntax: mail <person>
+        mail <person> <number> talens
+        mail <person> <item>
+        mail faction
+
+The <h> mailing system is a rewrite of Rasmussen from the now
+defunct CircleMUD and also of the now defunct JediMUD.
+
+See Also: CHECK, RECEIVE, VALUE
+Related Topics: POST OFFICE

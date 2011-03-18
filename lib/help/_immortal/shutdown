@@ -1,0 +1,11 @@
+
+Syntax: shutdown 
+Syntax: shutdown abort
+Syntax: shutdown <minutes>
+
+Shuts the mud down.  Shutdown with no arguments will do an immediate shutdown.
+Shutdown <minutes> will allow a delayed shutdown with global messages as the
+time ticks down.  Shutdown abort can be used to cancel a delayed shutdown.
+
+In general, <h> is on a rebooter so that if the mud is shutdown, it will
+be brought back online as fast as a reboot can take place.

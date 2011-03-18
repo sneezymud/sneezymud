@@ -1,0 +1,26 @@
+Syntax: repair <item>
+
+One of the basic skills all mages learn during their training
+is the ability to magically mend some types of equipment.  Mages
+have become particularily adept at repairing objects made of
+various magical materials and some types of stone.
+
+The appropriate tools must be held and in the room and the item
+you wish to repair must be in your inventory in order to repair
+it.
+
+Mages can repair equipment made of magical material:
+
+Tools necessary:
+ Primary:   runes
+ Secondary: energy
+ In-room:   pentagram
+
+
+Mages can repair equipment made of some types of stone:
+
+Tools necessary:
+ Primary:   chisel
+ Secondary: silicon
+ In-room:   pentagram
+

@@ -1,0 +1,11 @@
+Syntax: conceal {target}
+Syntax: conceal stop {target}
+
+Conceal is the attempt to eliminate your trail and prevent others from
+tracking you.  Success is based on the player's training as well as the
+tracking ability of the hunter.
+
+At high learnedness, the player may attempt to conceal other people's
+trails for them.
+
+The "stop" argument allows you to stop concealment.

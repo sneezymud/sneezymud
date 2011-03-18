@@ -1,0 +1,85 @@
+Gin is a two person card game (yes, you'll have to find a partner) played
+with a standard deck of 52 cards (4 suits (ether, water, earth, fire) of
+13 cards (ace, 2 - 10, jack, queen, king) each.)  
+
+Rules of the game:
+One player deals the cards (usually the loser of the last hand).  Dealer gets
+10 cards, opponent gets 11 (but opens the game by discarding not picking from
+the deck).  The object of the game is to get all your cards into groupings.
+Groupings are 3 (or more) cards that are either BOOKS (cards of the same
+number, eg. the two of ether, the two of fire and the two of earth make a book)
+or a STRAIGHT (numerically adjacent cards of the same suit, eg. the five of
+water, the six of water, and the seven of water make a straight 5-7 of water.)
+In order to win, you must have your cards in either:
+          Two groups of 3 and a group of 4, or
+          Two groups of 5 (obviously both groups would have to be straights)
+
+It does not matter what the groups are.  They could all be books, all be 
+straights or be some combination of them.  One note before leaving the topic:
+standard gin rules dictate that the ace of a suit is always low.  Therefore,
+queen, king, ace is NOT a valid straight.
+
+The game play:
+The person who is dealt to goes first (i.e. the person who is dealt 11 cards).
+They must discard one card.  Once they discard, it is the dealer's turn and 
+the dealer may either pick up the top card on the pile (other person's discard)
+or pick a new card from the deck.  Once the dealer picks, they must then discard
+one of their 11 cards.  Play alternates until one person wins.
+
+Winning the game:
+You can win the game in one of two ways, ginning or knocking.  GINNING is where
+you have set up 10 of your cards into groups, you then discard the extra and
+declare gin.  eg. a book of 3, a straight of 3, a book of 4, and a leftover
+8 of water is 11 cards.  You could discard the 8 and declare a gin hand.
+KNOCKING is where you have at least two groups of 3 cards AND the total point
+value of the rest of your cards is less than 10.  Point value of the ungrouped
+cards is the sum of their face values with face cards (jack,queen,king) being
+10.  eq. ungrouped 3,7,and king is 3+7+10 = 20 points.  The winner of a knock
+is the person with the least number of points in their hand, of course, since
+you have to have less than 10 to knock, it is usually the knocker.
+
+Scoring:
+In a gin game:
+               25 + number of leftover points in opponents hand
+In a knock game:
+              difference in leftover points
+              +10 points if person who won is NOT person who knocked
+A standard game is to 100 points.
+
+Game commands from within <h>-environment:
+  There are 11 'slots' for cards.  All card handling is done by slot number.
+Newly drawn cards go into slot-11.  Cards are always shuffled toward higher
+number so swapping a card into slot-4 moves the old slot-4 card to slot-5,
+the old slot-5 card to slot-6, etc.
+  To play the game, both players must be seated at the gin table.  Standing
+up terminates the game. 
+
+PEEK   
+  Looks at the cards in your hand. 
+
+LOOK AT PILE
+  Looks at what the last discarded card was
+
+LOOK AT TABLE
+  Displays last discard AND the current score.
+
+PUT (old card slot#) (new card slot#) 
+  Moves a card from old slot# into the new slot# and resorts all the other 
+cards down 1 slot.
+
+PICK PILE
+  Picks up the last card played (other person's discard)
+
+PICK DECK
+  Picks a new card from the deck of cards.
+
+PLAY (slot#)
+  Discards the card in slot#
+
+PLAY GIN (slot#)
+  Used to EITHER knock or to gin.  Will score by gin or knock rules accordingly
+or give an error message if used at a time when ginning or knocking is not
+possible for that player.  Scoring is automatic.
+
+See Also: -
+Related Topics: CASINO

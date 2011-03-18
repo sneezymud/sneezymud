@@ -1,0 +1,15 @@
+<h> offers a wide variety of features for handling screen-displays.
+
+PROMPT 		: used to control your prompt shown
+TERMINAL	: used to set terminal type as well as screen-size
+BRIEF		: controls text outputting
+TOGGLE		: controls certain automatic features (spam, shout, etc)
+COMPACT		: eliminates excess whitespace
+CLS		: clears your screen and redraws any menu bars
+MARGINS		: resets screen boundaries
+STATUS BAR      : help file on customizing the status bar
+COLOR           : generic information on color
+COLOR CODES     : replacement strings for showing color to others
+
+See Also: -
+Related Topics: UTILITY

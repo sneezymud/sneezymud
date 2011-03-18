@@ -1,0 +1,27 @@
+Syntax: account <account>
+
+Lists all characters within <account>.  You may NOT abbreviate <account>.
+
+==================================================================
+Syntax: account <account> banished
+
+The banished option will deny the account from logging in and direct the
+user to contact mudadmin for details as to the reason for the banishing.
+
+==================================================================
+Syntax: account <account> email
+
+The email option will deny the account from logging in and indicate that
+the email address they entered is bogus.
+
+==================================================================
+Syntax: account <account> double
+Syntax: account <account> triple
+
+Toggles the <account>'s ability to create new double-class or triple-class
+characters.
+
+==================================================================
+Syntax: account <account> immortal
+
+Toggles the <account> immortal/mortal

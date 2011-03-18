@@ -1,0 +1,19 @@
+Syntax:
+  loot load <min-level> <max-level>
+  loot list <min-level> <max-level> spell <spell-name> type <item-type>
+
+Load:
+  This allows you to simulate the L zonefile directive.  Main difference
+is that all valid objects are loaded, not just 1.  As in the syntax this
+option Only supports the level limits.  No option is Required.
+
+List:
+  Use this to get an expanded list of possible items.  When using the
+spell and type directives you Must put the literal word spell or type
+followed by a spell-name or item-type.  No option is Required.
+
+Zonefile Command Syntax:
+L <if> <min-level> <max-level> 0 <0=mob/1=obj/other=room>
+
+The L command MUST come RIGHT after the container load if a container is
+being used.  

@@ -1,0 +1,18 @@
+Why am I gaining 1 point of hp/mana/move every so often?
+--------------------------------------------------------
+(tasked regeneration)
+
+On <h>, the actions of sitting, resting or sleeping are handled as
+tasks for purposes of increasing the regeneration rates.  The tick-time
+regeneration rate is independent of position (ie, you get a flat amount
+at tick time).  However, if you rest for a set amount of time, then you
+are awarded 1 point of mana/move and hp.  The time between these regenerative
+pulses is different for the various positions.  Sleeping will restore you
+very quickly, while sitting is less slow.
+
+This method was instituted as one of the favorite tricks of clients is to
+keep track of when the regenerative pulses would occur.  If they could be
+sleeping at exactly the right second, it would treat them as if they had
+been sleeping for the entire tick.  Under tasked regeneration rules, this
+trick no longer exists.  Plus, it means you need not rest the entire tick
+if all you need is 1 or 2 hit points.

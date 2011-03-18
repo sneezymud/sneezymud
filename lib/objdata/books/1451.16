@@ -1,0 +1,12 @@
+Material type
+
+What the item is made from.  Material type affects the following:
+	compression ratio for bags
+	susceptibility to slash style attacks
+	susceptibility to blunt style attacks
+	susceptibility to pierce style attacks
+	susceptibility to fire style attacks
+	chance of and amount of object damage taken in falls
+	noise produced
+
+Just set it appropriately and it'll be fine.

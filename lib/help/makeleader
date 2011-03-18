@@ -1,0 +1,15 @@
+Syntax: makeleader <person> <leader slot #>
+
+Makeleader is used by faction leaders to alter current leader settings for
+a faction.  You can only set leadership in your own faction, and can not
+adjust leadership above you (lower in number).  i.e.  Leader #2 can not set
+leader #1, but can set either leader #2 or #3.
+
+The advantage of leadership is that certain capabilities are restricted to the
+faction's leadership.
+
+<person> must be a currently registered PC, or "noone" if you wish to leave
+the slot vacant.  <leader slot #> is a value from 0 to 3.
+
+See Also: -
+Related Topics: FACTION LEADERS

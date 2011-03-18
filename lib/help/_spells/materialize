@@ -1,0 +1,6 @@
+Syntax: cast materialize <object-name>
+
+The materialize spell will bring simple objects into being.  Materialize
+can create any item up to 100 talens in value.  While the spell has no
+formal component, 100 talens is typically used up in the creation of the item.
+Materialize can not create food items which is the province of clerics.

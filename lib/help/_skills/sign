@@ -1,0 +1,9 @@
+Syntax: sign <message>
+
+Signing allows communication between two characters without the use of words.
+In order for a message to be successfully passed, the signer must known sign in
+order to form an intelligible message and those that see it must know sign in 
+order to understand it.
+
+Unlike many skills, almost everyone is able to sign.  Of course, not knowing
+the skill means your message is pretty much gibberish to everyone else.

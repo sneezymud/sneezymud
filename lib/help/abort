@@ -1,0 +1,14 @@
+Syntax: abort
+
+The stop and abort commands are synonymous.
+Many commands on <h> require a set amount of time to carry out
+and require the character performing the task to maintain focused on
+the task.  If events require the task to be stopped, these commands
+can be used.
+
+Aborting or stopping a task will cause any progress on the task to be
+lost.  IE. You can not partially do a task, stop it and then pick up
+where you left off.  Once stopped, you'd restart from the beginning.
+
+See Also: -
+Related Topics: UTILITY

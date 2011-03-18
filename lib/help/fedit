@@ -1,0 +1,46 @@
+To create, join, or see faction info, visit the faction registrar.
+
+Fedit commands:
+
+-Syntax: fedit <field> <value>
+-fedit
+Display current faction information.
+
+-fedit save
+-fedit name <string>
+-fedit shortname <string>
+-fedit keywords <string>
+-fedit password <string>
+-fedit numranks <number>
+-fedit ranks <rank#> <title>
+-fedit affiliation <faction>
+
+-fedit permissions <rank#> <permission string (see below)>
+Permissions list:
+r = recruit
+p = promote
+t = treasurer
+e = edit
+l = lock
+a = ambassador
+s = scribe
+
+-fedit colors <color1> <color2> <color3>
+
+-fedit flags <flag>
+Flag list:
+active      - sets faction to active, immortal only
+locked      - locks faction, immortal only
+recruitment - sets faction as currently recruiting
+hidden      - hides faction from non-members
+members     - hides membership from non-members
+ranks       - hides rank infomation from non-members
+
+-fedit relations <target faction> [ war | peace | none ]
+
+-fedit patron <patron>
+See "help pantheon" for a list of deities.
+
+
+
+

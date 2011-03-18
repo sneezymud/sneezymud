@@ -1,0 +1,26 @@
+This is a short list of the most commonly used room's virtual numbers (vnums)
+goto (vnum) or at (vnum) (command) will work assuming you have those commands.
+
+IMPERIA                 1    (wizboard)
+BUILDER LOUNGE          2
+TESTING LAB             9
+CHAT ROOM              69
+HELL                   70
+STORAGE                71    (linkdead's bag room)
+QUEST STORAGE          76
+SLAP ON THE WRIST      77
+SLEEP TAG CONTROL    23599
+Brutius's office         5    (The imp)
+Batopr's office         13   
+Dirk's office           24  
+
+Center Square          100   (Grimhaven fountain)
+Brightmoon area       1200
+Logrus                3701
+Reading room           567   (mortal board)
+donation               563
+Grimhaven inn          557
+Amber                 2765
+
+If you need some other room, use a combination of show zones and 
+show rooms (zone number) to get its vnum.

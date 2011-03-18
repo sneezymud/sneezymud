@@ -1,0 +1,33 @@
+filename RACE_INSECT
+singName insect
+plurName insects
+propName Insectoid
+lore ANIMAL
+age 1+1d5
+maleHt 20+3d2
+maleWt 20+1d5
+femaleHt 16+3d2
+femaleWt 15+1d5
+body Insectoid
+moveIn skitters in
+moveOut skitters
+moveMod 40
+search 1
+vision 1
+STR 100
+BRA 95
+CON 120
+DEX 140
+AGI 160
+INT 55
+WIS 55
+FOC 55
+PER 55
+CHA 120
+KAR 120
+SPE 150
+DumbAnimal
+Invertibrate
+ColdBlooded
+IMMUNE_BONE_COND 100
+AFF_INFRAVISION

@@ -1,0 +1,9 @@
+Syntax: report <person>
+
+Report causes your present condition (hp, mana, movement) to be displayed
+to a single person or all the people in your room.  If you try to report
+someone in the room and either make a typo or don't find that person, the
+report will goto the room.
+
+See Also: GLANCE
+Related Topics: COMMUNICATIONS

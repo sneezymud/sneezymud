@@ -1,0 +1,22 @@
+Brewing allows the alchemist to create magical potions from base components.
+
+In order to brew, the alchemist will have to gather 3 separate items.  The
+first is a simple empty flask suitable for brewing.  Such flasks must have
+been specially prepared or the magical properties of the potion will fade,
+so not just any flask may be used.  The flask is used to hold the potion.
+
+Secondly, a spell component corresponding to the potion being created must
+be obtained.  One charge of the spell component will be utilized during
+brewing.
+
+Lastly, a special brew component will also have to be obtained.  The entire
+brew component will be used up during the brewing process.
+
+The brewing component serves two purposes during the brewing process.  First
+it binds the magical properties of the spell to the liquid.  Secondly,
+it serves as a catalyst that permits more than one potion to be created.
+The number of potions created during the brewing process is strictly determined
+by the quality of the brewing component.
+
+Brewing takes time and concentration.  Any interruption in the process will
+destroy the work in progress and the components involved will be useless.

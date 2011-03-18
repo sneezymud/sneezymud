@@ -1,0 +1,18 @@
+Portal type determines the text used when entering and exiting the
+portal.  You can NOT mix and match.  Pick the one that fits best.
+
+   to user          others as user enters    to others as user exits
+0 = enter		enters   		exits
+1 = step into		steps into		steps out of
+2 = step onto  		steps onto		steps off of
+3 = climb down		climbs down		climbs up from
+4 = climb up		climbs up		climbs down from
+5 = slide down		slides down		climbs off of
+6 = are sucked into	is sucked into		is thrown into the room from
+7 = are swallowed by	is swallowed by		is spit out of
+8 = are flushed down	is flushed down		is spewed out of
+9 = fall into		falls into		climbs out of
+10 = step through	steps through		steps from
+11 = fall down		falls down		climbs out of
+12 = climb over		climbs over		climbs down from
+13 = climb into         climbs into             climbs out of

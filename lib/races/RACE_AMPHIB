@@ -1,0 +1,28 @@
+filename RACE_AMPHIB
+singName amphibian
+plurName amphibians
+propName Amphibian
+lore REPTILE
+age 1+1d5
+maleHt 12+2d6
+maleWt 16+1d2
+femaleHt 10+2d6
+femaleWt 14+1d2
+body Amphibean
+moveIn has arrived
+moveOut leaves
+STR 80 
+BRA 80
+CON 65
+DEX 150
+AGI 170
+INT 55
+WIS 55
+FOC 55
+PER 55
+CHA 55
+KAR 10
+SPE 160
+AFF_SWIM
+DumbAnimal
+Ridable

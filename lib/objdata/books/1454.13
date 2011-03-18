@@ -1,0 +1,27 @@
+The 'C' and 'K' Commands
+make a mob be a charm or group member of another mob
+
+These commands load a mob and cause it to follow the last mob referenced.
+'C' makes the mob a charm, 'K' makes the mob a group member.
+
+C <if_flag> <mob vnum> <max_exist> <room vnum>
+K <if_flag> <mob vnum> <max_exist> <room vnum>
+
+<if_flag> is typically 1  (only load it if the previous "master" loaded)
+<mob vnum> is vnum mob is saved as
+<max_exist> see note on end for tips on setting
+<room vnum> is the room to put the mob in
+
+M 0 101 4 102        mage
+C 1 100 4 102        orc follower
+
+This makes a mage and then an orc to follow the mage.  The orc responds as if
+it was charmed.  Realize if the master has equipment then the if_flag=1 only
+loads the charm if all equipment on the master loaded.  This is somewhat 
+awkward.  A way around this is to place a percentage load of a Give
+command as the last command before Charm command.  Just give them a 
+basic unlimited item like a waterskin or a ration with a 99% chance to
+load it.  You have to use the ? command with a 99% chance to perform the G
+command.  Just the G command only won't satisfy the if-flag of the command.
+
+NOTE: These commands have not been heavily utilized.  They may have bugs.

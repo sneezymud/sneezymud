@@ -1,0 +1,21 @@
+Repair shops are located around The World and will gladly fix damage
+that has occurred to your items for a price.  It does take awhile for
+the blacksmith to complete the object, so you may want to have stuff
+repaired while you are not playing.  Valid commands in the repair shop:
+
+VALUE:	gets the cost and estimated time to complete repairs on the item
+GIVE (item) (repairman): gives the item to the blacksmith who immediately
+	starts to repair it.  He will give you a ticket that must be kept
+	in order to pick the item up again.  Payment is due upon completion
+	and the item will be given to whomever has the ticket and can afford
+	to pay, so pay attention to where your tickets go.
+GIVE TICKET (repairman): gives a ticket to the blacksmith.  Provided you
+	can afford to pay the cost of the item that was repaired, he will
+	return the item to you once repairs are complete.
+GIVE ALL.DAMAGED : gives everything that has suffered damage to the repairman.
+GIVE ALL.TICKET : gives all tickets to the repairman.
+
+NOTE: Items left 15 days past their due date will be deleted.
+
+See Also: SMYTHE, ITEM DAMAGE
+Related Topics: GENERAL INFO

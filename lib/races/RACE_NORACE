@@ -1,0 +1,25 @@
+Filename RACE_NORACE
+singName norace
+plurName noraces
+propName Norace
+lore PEOPLE
+age 15+1d4
+maleHt 62+1d17
+maleWt 140+8d10
+femaleHt 60+1d12
+femaleWt 100+4d10
+body Humanoid
+moveIn has arrived
+moveOut leaves
+STR 110
+BRA 110
+CON 110
+DEX 110
+AGI 110
+INT 110
+WIS 110
+FOC 110
+PER 110
+CHA 110
+KAR 110
+SPE 110

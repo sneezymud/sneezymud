@@ -1,0 +1,41 @@
+filename RACE_BAT
+singName vampire bat
+plurName vampire bats
+propName Vampire Bat
+lore UNDEAD
+age 1+1d5
+maleHt 8+1d4
+maleWt 7+1d3
+femaleHt 6+1d4
+femaleWt 5+1d3
+body Bat
+moveIn flies in
+moveOut flies
+moveMod 40
+vision -1
+STR 80
+BRA 80
+CON 80
+DEX 170
+AGI 190
+INT 75
+WIS 75
+FOC 75
+PER 75
+CHA 75
+KAR 90
+SPE 170
+DumbAnimal
+Winged
+CanClimb
+ColdBlooded
+IMMUNE_DRAIN 100
+IMMUNE_BLEED 100
+IMMUNE_POISON 100
+IMMUNE_SLEEP 100
+IMMUNE_DISEASE 100
+IMMUNE_SUFFOCATION 100
+IMMUNE_FEAR 100
+AFF_FLYING
+AFF_INFRAVISION
+

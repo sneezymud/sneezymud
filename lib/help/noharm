@@ -1,0 +1,10 @@
+Syntax: toggle noharm
+
+The noharm toggle will prevent you from inentionally attacking another PC.
+You will be prevented from engaging, killing or performing any special moves
+or offensive spells on any other player character.
+
+The noharm toggle is unable to prevent accidental damage to another player.
+
+See Also: TOGGLE, KILL, HIT, ENGAGE, PVP
+Related Topics: RULES

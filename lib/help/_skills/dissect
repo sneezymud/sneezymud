@@ -1,0 +1,15 @@
+Syntax: dissect <corpse>
+Syntax: toggle dissect
+
+Dissection permits the adventurer to extract useful body parts from dead
+creatures.  Whether a given corpse has anything useful is dictated by what
+creature the corpse came from originally.  Useful items may include food,
+spell components and other items used for magical purposes.
+
+Dissection can only be done once per corpse.
+
+Toggling dissect on will cause you to automatically attempt to dissect all
+corpses of mobs you slay.  It will also inform you of any usable hide you
+may be able to skin from the corpse.
+
+See Also: TOGGLE

@@ -1,0 +1,15 @@
+Syntax: gain
+
+Whenever you have gained a new level through experience, you can visit
+your guildmaster for some sage advice and tutelage.  If you are a new
+adventurer still exploring grimhaven, you may use the 'goto guildmaster'
+command to find your guildmaster.  Once you are at your guildmaster, simply
+type 'gain'.  They will then give you advice on how to spend your practices,
+new quests available to you, and other guidance.
+
+Not all guildmasters are alike.  Eventually, you will need to explore the
+world about you in order to find a person who will be capable of teaching you
+the more advanced lessons.
+
+See Also: GOTO, XP, LEVEL, PRACTICE, RESET
+Related Topics: CLASS

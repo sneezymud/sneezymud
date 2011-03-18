@@ -1,0 +1,16 @@
+Syntax: quit!
+
+Note that because many terminal programs use "quit" as a way to exit them,
+we changed this command to "quit!" hopefully to avoid accidental use.
+
+Quit is a command that should almost never be employed by a good adventurer.
+You must type the full word "quit!" because it has drastic results and we
+don't want you to have it happen accidentally.  Basically, quit makes you
+drop all of your items (worn and inventory) in the present square and makes
+you leave the game out to the main option menu screen.  Because of the fact
+that all of your items are dropped, it is not a recommended way of leaving
+the game.  If for some reason, you have no items, it is a perfectly acceptable
+way of leaving.
+
+See Also: RENT
+Related Topics: UTILITY

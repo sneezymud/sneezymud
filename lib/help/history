@@ -1,0 +1,12 @@
+Syntax: history
+
+The history command will list out all the commands in your history. Your
+history is composed of the 10 most recent commands you have entered. History
+is useful in conjunction with the shell capability of the mud.
+
+The most useful feature of the history command is the ability to redo a 
+previous command.  This is done via !<num> where <num> is the number of the
+command from your history.
+
+See Also: SHELL
+Related Topics: UTILITY

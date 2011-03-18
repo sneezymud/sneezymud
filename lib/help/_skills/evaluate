@@ -1,0 +1,32 @@
+Syntax: evaluate <item>
+Syntax: evaluate room
+
+Evaluate will yield extended information about <item>.  Accuracy and type of
+information yielded is related to how well learned the evaluator is.  There is
+a degree of randomness built into each evaluation, so do not be surprised to
+see the information change with each evaluation.
+
+Evaluation works on armor, clothing, weapons, bows, arrows, components,
+staves, traps, wands, potions, scrolls, and symbols.
+
+Not all classes are able to evaluate all items and some classes will evaluate
+certain items better than others (at the same degree of learnedness in the
+skill). 
+
+NOTE ON MAGIC ITEM EVALUATION:
+Evaluation of magic items (wands, staves, potions, scrolls and components)
+require knowledge about the identify spell.  You aren't required to actually
+cast identify on the item, although your learnedness in this spell will
+factor into your knowledge when evaluating.
+
+NOTE ON ARMOR EVALUATION:
+Evaluate uses an absolute yardstick; trying to compare objects of different
+types (eg. helm vs shield) in terms of armor or structure has little practical
+use as the two body slots (head and hold) are on separate relative scales.
+
+In shops, it is possible to evaluate items for sale.  This is done by doing
+evaluate <item> or evaluate <item #>.
+
+NOTE ON ROOM EVALUATION:
+This will give you quick information about the room you are in and will allow
+rangers to know if they're in a nature area.

@@ -1,0 +1,84 @@
+                             SneezyMUD v5.2
+                          Founded: May 1, 1992
+
+-------------------------------------------------------------------------------
+SneezyMud 1.0:    May 1st, 1992
+SneezyMud 2.0:    September, 1992
+Motel VI  2.1:    November, 1992
+SneezyMud 2.5:    January, 1993
+SneezyMud 3.0:    December 15th, 1993
+SneezyMud 3.1:    July 25th, 1994
+SneezyMUD 4.0:    January 1st, 1996
+SneezyMUD 4.1:    August 1st, 1996
+SneezyMUD 4.5:    November 20th, 1997
+SneezyMUD 5.0:    August 25th, 1998
+Grimhaven 5.0:    February 12th, 1999
+Grimhaven 5.1:    May 8th, 1999
+SneezyMUD 5.2:    March 13th, 2001
+------------------------------------------------------------------------------
+SneezyMUD v5.2:
+Russ Russell  (Brutius)    : Founder, Coder, Partner      (retired)    
+Travis Nelson (Peel)       : Coder, Partner
+Jeff Bennett (Batopr)      : Coder, Partner               (retired)
+Ben Sarnoff  (Cosmo)       : Coder, Partner               (retired)
+
+Matthew Wilson (Mercury)   : Sysadmin  & Site Provider    
+
+Retired members of the MUD Admin:
+(Vasco)                    : Lord of Worlds               (retired)
+(Metrohep)                 : Coder	                  (retired)
+(Deirdre)                  : Webmaster & Quest Manager 	  (retired)
+C. Roudebush (Magdalena)   : Lady of Worlds	          (retired)
+Dave Arthur (Bump)         : MUDAdmin's Monkey	          (retired)
+G. Messmer (Eliar)         : Systems Administrator	  (retired)
+Gabriel	Rotberg	(Dash) 	   : Coder     	       	       	  (retired)
+Katia Shnaptis (Coral) 	   : Lady of Worlds    	       	  (retired)
+Jeff Stout    (Trinity)    : 2.1 - 3.0 Coder              (retired)
+Ben Youngdahl (Stargazer)  : 2.1 - 3.0 Coder              (retired)
+Mark Larimer  (Quazi)      : 2.5 - 3.0 Coder              (retired)
+Todd Hauschildt (Bartruce) : 3.0 Coder and Lord of Worlds (retired)
+Greg Ota      (Dirk)       : 3.1 - 4.0 Coder              (retired) 
+Jon Driegert  (Phenohol)   : 4.0 Lord of Worlds           (retired)
+Sean Baumann  (Macross)    : 4.1 Coder                    (retired)
+Cory Tsang    (Speef)      : 4.5 Coder                    (retired)
+Christina Hicks (Rixanne)  : 4.5 Junior Coder             (retired)
+Eddie Perez   (Stonecold)  : 4.5 Junior LOW               (retired)
+Tim Nixon    (Dolgan)      : 4.5 - 5.0 Lord of Worlds     (retired)
+Dave Robel   (Gringar)     : 4.5 - 5.0 Junior LOW         (retired)
+Jason Carpenter (Mithros)  : 5.0 - 5.1 Lord of Worlds     (retired)
+William Perrotto (Lapsos)  : 5.0 - 5.1 Coder              (retired)
+Joe Fiorenza (Sidartha)    : 5.0 - 5.1 Junior LOW         (retired)
+Kane Spinato (Kriebly)     : ? - 5.2 Site Provider        (retired)
+John Hines (Jesus)         : 5.1 - 5.2 Coder              (retired)
+Deric Panet-Raymond(Glint) : 5.2 Jr. Coder                (retired)
+William Perrotto (Lapsos)  : 5.2 Coder                    (retired)
+Devin Phinney (Ekeron)     : 5.2 Coder                    (retired)
+Mark Engelhardt (Maror)    : 5.2 LOW and Coder            (retired)
+Alice Hines (Damescena)    : 5.2 Lady of Worlds           (retired)
+Rob Brunk (Angus)          : 5.2 Coder                    (retired)
+
+
+For complete and current credits on world areas, type "zones"
+
+Title Screen Design        : Smyrke
+Menu Designs               : Pappy     (adventurer near mountain)
+                           : Bartruce  (scroll)
+                           : Mithros   (adventurer near castle)
+
+Past Webmaster Contributions:
+                           : Omen: v5.0 - v5.1
+                           : Mithros: v3.1 - v5.0
+                           : Marsh: v4.5 - v5.0
+                           : Dash: v5.1 - 5.2
+
+
+The present version of SneezyMUD represents completely original code.  The
+SneezyMUD development team reserves all rights to all aspects of SneezyMUD,
+including but not limited to the code, the libraries, the various databases,
+all documentation and any information provided on the website (SneezyMUD
+Properties).  The SneezyMUD development team is grateful to the DIKU genre
+of MUDs and emulates their general look and feel
+
+All aspects of all versions of SneezyMUD Properties are copyrighted.
+Copyright (c) 1992-2007, SneezyMUD development team
+All Rights Reserved.

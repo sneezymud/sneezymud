@@ -1,0 +1,31 @@
+filename RACE_NAGA
+singName naga
+plurName nagas
+propName Naga
+lore REPTILE
+age 25+1d4
+maleHt 48+2d3
+maleWt 200+2d20
+femaleHt 46+2d3
+femaleWt 180+2d20
+body Naga
+moveIn slithers in
+moveOut slithers
+moveMod 10
+search 1
+STR 110
+BRA 110
+CON 120
+DEX 140
+AGI 110
+INT 130
+WIS 130
+FOC 130
+PER 120
+CHA 100
+KAR 80
+SPE 140
+Invertibrate
+ColdBlooded
+IMMUNE_BONE_COND 100
+IMMUNE_COLD -35

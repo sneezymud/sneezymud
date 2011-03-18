@@ -1,0 +1,27 @@
+Topic: buy
+--------------------
+
+Ex:
+buy { "<cost> <index> <name>";
+	...responses...;
+	}
+
+<cost>  = Price to be subtracted from buyer
+<index> = Object list number
+<name>  = Object name
+
+Ex:
+buy { "100 10 orc-leg-stewed";
+
+Would be triggered with:
+  buy orc
+  buy 10
+  buy orc-stewed
+
+Would Not be triggered with:
+  buy 1
+  buy 1-orc
+
+  The buy command simply allows you to give the mobs a shop
+like feel to them.  The <cost> is automatically deducted from
+the buyer so no special work is needed in that respects.

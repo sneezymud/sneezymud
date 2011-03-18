@@ -1,0 +1,26 @@
+Syntax: tasks
+Syntax: tasks enable
+Syntax: tasks disable
+Syntax: tasks note
+
+    To avoid having the mud hang while certain long system processes are being
+    invoked, such processes are forked off by <h>.  The tasks command
+    gives an interface to this forking.
+
+    With no arguments, all presently running tasks are shown.
+    The "enable" and "disable" parameters will permit/disallow tasking.
+
+    When the forked process completes, its output is dumped to a note and
+    given to whomever started the task.  To avoid consuming massive resources
+    with this command, output over a given length is not dumped to a note,
+    but instead to an offline file viewable through the "viewoutput" command.
+    The "note" parameter displays this threshold value.
+
+NOTE: This command is somewhat of a misnomer.  It really deals with forked
+    processes (checklog, loglist, etc) and has nothing to do with mud tasks
+    (sharpen, meditate, etc).
+
+These commands utilize forking:
+  MID, checklog, deathcheck, findemail, traceroute, "gamestat statistics"
+
+See Also: VIEWOUTPUT

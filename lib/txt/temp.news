@@ -1,0 +1,40 @@
+The SneezyMUD++ 4.5 News
+------------------------
+
+Any changes made in the code will be put here with date the change was made.  
+Changes of a textual (spelling/grammer errors, etc) will not be reported.
+
+08-23-98 : All of the skills in the deikhan mounted discipline are now
+           implemented.
+08-22-98 : Added some skill templates to deikhan mounted discipline.  They 
+           are not yet implemented, but are being worked on.
+08-08-98 : Yoginsa regens mana now.  Also fixed a bug/typo that was causing
+           it fail about twice as much as it should.
+08-06-98 : New monk skill: chi
+07-30-98 : Shadowy equipment will now affect light(This is just a test).
+07-24-98 : Some light changes to the success/fail formula for skills/spells
+           Some of the easier spells should show slightly less fails
+           as you get more learned in them.  They will still fail and focus
+           plays a part (see below) but the easy ones should fail less.
+           Also remember that your faction percentage has a slight 
+           affect on your skill/spell success percentage.  Mostly this
+           affects clerics but everyone will be affected somewhat if you
+           are low.  This phases in over level.  
+07-17-98 : Shoulder throw has been "balanced".
+07-17-98 : New monk skill: Critical Hitting
+07-07-98 : Yoginsa and wohlin now on learn from doing.
+           Fixed a bug that was preventing lower level monks from learning.
+           Advanced kicking is no longer learned automatically, you must
+           seek out a teacher.  Your guildmaster will have additional info
+           for you when the time is right...
+06-04-98 : Death xp loss formulas altered.
+06-01-98 : Slight boost in exp for really low level mobs. It should be
+            possible to recommend the park for newbies now.
+05-29-98 : Home territory (chosen during character generation) has been
+           reworked.  In the interest of time, no conversion of old
+           values was done, so if it bugs you, feel free to recreate.
+03-08-98 : Kubo damage has been adjusted to be more consistant with the 
+           new combat formulas and weapon damages.
+03-07-98 : Monks: Oomlat is learned more slowly now.  Jirin is learned
+           earlier on.
+12-07-97 : Arm Block and Leg Block influences monk combat *a little*.

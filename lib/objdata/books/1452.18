@@ -1,0 +1,8 @@
+Max Exist
+
+Will set the absolut max number of mobs that can exist anywhere in The
+World (rented or loaded). 
+
+
+NOTE ON UNIQUE MOBS: Remember that mobs wonder, get summoned, teleported 
+etc.  Set to 1 if it's an unique mob.

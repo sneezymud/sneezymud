@@ -1,0 +1,26 @@
+
+Syntax: limbs <target>
+Syntax: toggle limbs
+
+The limbs command is used to view the health of yours or someone else's limbs.
+
+Severely damaged limbs may become useless and inoperable.  Inoperable limbs
+will cause you obvious problems (inability to cast spells requiring gestures, 
+inability to hold weapons, problems standing or walking).
+
+Additionally, limbs may have afflictions (bleeding, infected, paralyzed).  
+These afflictions may cause problems as time goes by (an arm that continues to
+bleed may cause blood loss and eventual death if not treated, a foot with
+an infection may rot and fall off).
+
+Combat damage is the most common way limbs become damaged, but certain
+spells can have devastating affects as well.  Time will heal damage
+but not major afflictions.  It is a good idea to have critical damage
+looked at by a cleric or physician.  Physicians can be found in most of 
+the major towns and cities of The World.
+
+Using the limbs toggle will allow you to automatically evaluate the tank's
+limbs after every battle.
+
+See Also: TOGGLE
+Related Topics: COMBAT, GENERAL INFO

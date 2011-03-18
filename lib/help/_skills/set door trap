@@ -1,0 +1,25 @@
+Syntax: trap exit <direction> <trap type>
+
+Exit traps may be placed on doors, gates, or other barriers along the direction
+of travel.  They are easy to set (and relatively easy to detect).  Exit traps
+are triggered when the exit is opened.  Exit traps do a moderate amount of
+damage to the victim opening them, and may also lightly harm others in the
+vicinity.
+
+Set traps allows a skillful looter from dissuading an overeager pursuer from
+following or to protect the looter's booty.  Traps come in 4 varieties, 
+exit traps, container traps and land mines and grenades.
+
+All traps take time to set.  Improper training may cause the trap to backfire
+on the looter during the trapping process.  The damage the trap will do depends
+on the trapper's level, the trapper's skill, the variety of trap, and the trap
+type.  <trap type>'s are located in a separate help file.
+
+Note: "damage" as used below is a generic term.  For trap types that don't do
+physical harm (sleep, poison, etc), greater "damage" reflects an increased
+chance to be affected by the trap.  eg.  A higher immunity to poison would be
+needed to dodge the effects of a "high damage" poison trap.  Obviously,
+everyone that doesn't save, will be affected by the sleep, poison, etc.
+equally.
+
+See Also: TRAP TYPES

@@ -1,0 +1,153 @@
+          The above values for drunkness/fullness/thirst are used per
+          four "units" drunk. The values are expressed in HOURS!
+          Example:
+            Dragon empties a bottle (say 7 units) of saltwater.
+            His Drunkness is not changed ((7/4)*0)
+            His Fullness increases by ((7/4)*1) hours
+            His Thirst increases by ((7/4)*-2) hours, thus making
+               him More thirsty.
+
+          The hours above are numbers between 0 and 24. 24 hours is
+          maximum for drunkness/fullness/thirst. When hours are zero
+          for any drunkness/fullness/thirst the person will be
+          sober, hungry, or thirsty respectively.
+
+
+ Num.   Type              Effects:  Drunk   Fullness   Thirst   Potion   Poisoned
+-----------------------------------------------------------------------------------
+  0.    LIQ_WATER                     0        0         10       No        No
+  1.    LIQ_BEER                      5        -2        7        No        No
+  2.    LIQ_WINE                      4        -1        6        No        No
+  3.    LIQ_ALE                       6        -3        5        No        No
+  4.    LIQ_DARKALE                   5        -1        5        No        No
+  5.    LIQ_WHISKY                    10       0         1        No        No
+  6.    LIQ_LEMONADE                  0        1         8        No        No
+  7.    LIQ_FIREBRT                   15       0         -3       No        No
+  8.    LIQ_LOCALSPC                  8        -1        2        No        No
+  9.    LIQ_SLIME                     0        1         8        No        No
+ 10.    LIQ_MILK                      0        2         6        No        No
+ 11.    LIQ_TEA                       -1       -1        6        No        No
+ 12.    LIQ_COFFEE                    -2       -3        5        Yes       No
+ 13.    LIQ_BLOOD                     0        2         -1       Yes       No
+ 14.    LIQ_SALTWATER                 0        1         -5       No        No
+ 15.    LIQ_MEAD                      2        2         4        No        No
+ 16.    LIQ_VODKA                     12       -3        -1       No        No
+ 17.    LIQ_RUM                       11       -3        -1       No        No
+ 18.    LIQ_BRANDY                    8        1         3        No        No
+ 19.    LIQ_RED_WINE                  7	       -1        6        No        No
+ 20.    LIQ_WARM_MEAD                 2        1         5        No        No
+ 21.    LIQ_CHAMPAGNE                 6        -2        4        No        No
+ 22.    LIQ_HOLYWATER                 0        1         10       Yes       No
+ 23.    LIQ_PORT                      8        -1        5        No        No
+ 24.    LIQ_MUSHROOM_ALE              7        -1        5        No        No
+ 25.    LIQ_VOMIT                     8        -1        5        No        No
+ 26.    LIQ_COLA                      -1       2         5        No        No
+ 27.    LIQ_STRAWBERRY_MARGARITA      -1       2         5        No        No
+ 28.    LIQ_BLUE_MARGARITA            -1       2         5        No        No
+ 29.    LIQ_GOLD_MARGARITA            -1       2         5        No        No
+ 30.    LIQ_STRAWBERRY_DAIQUIRI       -1       2         5        No        No
+ 31.    LIQ_BANANA_DAIQUIRI           -1       2         5        No        No
+ 32.    LIQ_PINA_COLADA               -1       2         5        No        No
+ 33.    LIQ_TEQUILA_SUNRISE           -1       2         5        No        No
+ 34.    LIQ_ISLA_VERDE                -1       2         5        No        No
+ 35.    LIQ_POT_CURE_POISON           -1       -1        1        Yes       No
+ 36.    LIQ_POT_HEAL_LIGHT            -1       -1        1        Yes       No
+ 37.    LIQ_POT_HEAL_CRIT             -1       -1        1        Yes       No
+ 38.    LIQ_POT_HEAL                  -1       -1        1        Yes       No
+ 39.    LIQ_POT_SANCTUARY             -1       -1        1        Yes       No
+ 40.    LIQ_POT_FLIGHT                -1       -1        1        Yes       No
+ 41.    LIQ_POT_BIND                  -1       -1        1        Yes       No
+ 42.    LIQ_POT_BLINDNESS             -1       -1        1        Yes       No
+ 43.    LIQ_POT_ARMOR                 -1       -1        1        Yes       No
+ 44.    LIQ_POT_REFRESH               -1       -1        1        Yes       No
+ 45.    LIQ_POT_SECOND_WIND           -1       -1        1        Yes       No
+ 46.    LIQ_POT_CURSE                 -1       -1        1        Yes       No
+ 47.    LIQ_POT_DETECT_INVIS          -1       -1        1        Yes       No
+ 48.    LIQ_POT_BLESS                 -1       -1        1        Yes       No
+ 49.    LIQ_POT_INVIS                 -1       -1        1        Yes       No
+ 50.    LIQ_POT_HEAL_FULL             -1       -1        1        Yes       No
+ 51.    LIQ_POT_SUFFOCATE             -1       -1        1        Yes       No
+ 52.    LIQ_POT_FEATHERY_DESCENT      -1       -1        1        Yes       No
+ 53.    LIQ_POT_DETECT_MAGIC          -1       -1        1        Yes       No
+ 54.    LIQ_POT_DISPEL_MAGIC          -1       -1        1        Yes       No
+ 55.    LIQ_POT_STONE_SKIN            -1       -1        1        Yes       No
+ 56.    LIQ_POT_TRAIL_SEEK            -1       -1        1        Yes       No
+ 57.    LIQ_POT_FAERIE_FIRE           -1       -1        1        Yes       No
+ 58.    LIQ_POT_FLAMING_FLESH         -1       -1        1        Yes       No
+ 59.    LIQ_POT_CONJURE_ELE_EARTH     -1       -1        1        Yes       No
+ 60.    LIQ_POT_SENSE_LIFE            -1       -1        1        Yes       No
+ 61.    LIQ_POT_STEALTH               -1       -1        1        Yes       No
+ 62.    LIQ_POT_TRUE_SIGHT            -1       -1        1        Yes       No
+ 63.    LIQ_POT_ACCELERATE            -1       -1        1        Yes       No
+ 64.    LIQ_POT_INFRAVISION           -1       -1        1        Yes       No
+ 65.    LIQ_POT_SORC_GLOBE            -1       -1        1        Yes       No
+ 66.    LIQ_POT_POISON                -1       -1        1        Yes       No
+ 67.    LIQ_POT_BONE_BREAKER          -1       -1        1        Yes       No
+ 68.    LIQ_POT_AQUALUNG              -1       -1        1        Yes       No
+ 69.    LIQ_POT_HASTE                 -1       -1        1        Yes       No
+ 70.    LIQ_POT_TELEPORT              -1       -1        1        Yes       No
+ 71.    LIQ_POT_GILLS_OF_FLESH        -1       -1        1        Yes       No
+ 72.    LIQ_POT_CURE_BLINDNESS        -1       -1        1        Yes       No
+ 73.    LIQ_POT_CURE_DISEASE          -1       -1        1        Yes       No
+ 74.    LIQ_POT_SHIELD_OF_MISTS       -1       -1        1        Yes       No
+ 75.    LIQ_POT_SENSE_PRESENCE        -1       -1        1        Yes       No
+ 76.    LIQ_POT_CHEVAL                -1       -1        1        Yes       No
+ 77.    LIQ_POT_DJALLAS_PROTECTION    -1       -1        1        Yes       No
+ 78.    LIQ_POT_LEGBAS_GUIDANCE       -1       -1        1        Yes       No
+ 79.    LIQ_POT_DETECT_SHADOW         -1       -1        1        Yes       No
+ 80.    LIQ_POT_CELERITE              -1       -1        1        Yes       No
+ 81.    LIQ_POT_CLARITY               -1       -1        1        Yes       No
+ 82.    LIQ_POT_BOILING_BLOOD         -1       -1        1        Yes       No
+ 83.    LIQ_POT_STUPIDITY             -1       -1        1        Yes       No
+ 84.    LIQ_POT_SLUMBER               -1       -1        1        Yes       No
+ 85.    LIQ_POT_HEAL2                 -1       -1        1        Yes       No
+ 86.    LIQ_POT_FEATHERY_DESCENT2     -1       -1        1        Yes       No
+ 87.    LIQ_POT_SANCTUARY2            -1       -1        1        Yes       No
+ 88.    LIQ_POT_STONE_SKIN2           -1       -1        1        Yes       No
+ 89.    LIQ_POT_INFRAVISION2          -1       -1        1        Yes       No
+ 90.    LIQ_POT_HEAL_LIGHT2           -1       -1        1        Yes       No
+ 91.    LIQ_POT_GILLS_OF_FLESH2       -1       -1        1        Yes       No
+ 92.    LIQ_POT_CELERITE2             -1       -1        1        Yes       No
+ 93.    LIQ_POT_CELERITE3             -1       -1        1        Yes       No
+ 94.    LIQ_POT_TELEPORT2             -1       -1        1        Yes       No
+ 95.    LIQ_POT_BLESS2                -1       -1        1        Yes       No
+ 96.    LIQ_POT_SECOND_WIND2          -1       -1        1        Yes       No
+ 97.    LIQ_POT_MULTI1                -1       -1        1        Yes       No
+ 98.    LIQ_POT_MULTI2                -1       -1        1        Yes       No
+ 99.    LIQ_POT_MULTI3                -1       -1        1        Yes       No
+100.    LIQ_POT_MULTI4                -1       -1        1        Yes       No
+101.    LIQ_POT_MULTI5                -1       -1        1        Yes       No
+102.    LIQ_POT_MULTI6                -1       -1        1        Yes       No
+103.    LIQ_POT_MULTI7                -1       -1        1        Yes       No
+104.    LIQ_POT_MULTI8                -1       -1        1        Yes       No
+105.    LIQ_POT_MULTI9                -1       -1        1        Yes       No
+106.    LIQ_POT_MULTI10               -1       -1        1        Yes       No
+107.    LIQ_POT_MULTI11               -1       -1        1        Yes       No
+108.    LIQ_POT_YOUTH                 -1       -1        1        Yes       No
+109.    LIQ_POT_STAT                  -1       -1        1        Yes       No
+110.    LIQ_POT_LEARNING              -1       -1        1        Yes       No
+111.    LIQ_POISON_STANDARD           -1       -1        1        Yes       Yes
+112.    LIQ_POISON_CAMAS              -1       -1        1        Yes       Yes
+113.    LIQ_POISON_ANGEL              -1       -1        1        Yes       Yes
+114.    LIQ_POISON_JIMSON             -1       -1        1        Yes       Yes
+115.    LIQ_POISON_HEMLOCK            -1       -1        1        Yes       Yes
+116.    LIQ_POISON_MONKSHOOD          -1       -1        1        Yes       Yes
+117.    LIQ_POISON_GLOW_FISH          -1       -1        1        Yes       Yes
+118.    LIQ_POISON_SCORPION           -1       -1        1        Yes       Yes
+119.    LIQ_POISON_VIOLET_FUNGUS      -1       -1        1        Yes       Yes
+120.    LIQ_POISON_DEVIL_ICE          -1       -1        1        Yes       Yes
+121.    LIQ_POISON_FIREDRAKE          -1       -1        1        Yes       Yes
+122.    LIQ_POISON_INFANT             -1       -1        1        Yes       Yes
+123.    LIQ_POISON_PEA_SEED           -1       -1        1        Yes       Yes
+124.    LIQ_POISON_ACACIA             -1       -1        1        Yes       Yes
+125.    LIQ_LUBRICATION               -1       -1        1        No        No
+126.    LIQ_MAGICAL_ELIXIR            -1       -1        1        Yes       No
+127.    LIQ_URINE                     0        1         -5       No        No
+128.    LIQ_POT_HEALING_GRASP         100      0         1        Yes       No
+129.    LIQ_POT_CLEANSE               100      0         1        Yes       No
+130.    LIQ_POT_QUICKSILVER           -1       -1        -1       Yes       No
+131.    LIQ_POT_MYSTERY               -1       -1        1        Yes       No
+132.    LIQ_MUD                       -1       -1        1        No        No
+
+
+

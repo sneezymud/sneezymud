@@ -1,0 +1,94 @@
+Provided your situation warrants it, equipment is typically reimbursed
+by loading up the last backup file for that character.  This backup file
+is typically less then 24 hours old, but you may lose some recently acquired
+equipment.  In general, equipment reimbursement is only done if large portions
+(or all) of your equipment is missing; single item loss is not reimbursable.
+Please note, we only keep backup files for 2 days so object reimbursements
+from times beyond this period are more difficult to do, and hence less likely
+to be done.
+
+Example 1:  (corpse loss due to reboot)
+You die, and 30 secs later (before you can get back to corpse), the game
+crashes or reboots.  Our fault.  Talk to a 54+ god.  They'll remake all your
+items and either return it to you or put it at the spot you died for you to
+attempt the recovery.  However, if in the opinion of the immortal sufficient
+time passed between when you died and when game went down (30-45 minutes),
+they may not feel so benevolent about a reimbursement.
+
+Example 2:  (fighting while linkdead)
+The game kicks you out (lost link).  You log back in and find yourself without
+armor, talens or weapons.  You've only been gone a few seconds.  Chances are
+HELP LOSING LINK will answer your questions.
+
+Example 3:  (item confiscation due to rent charges)
+It's 2 am and the game crashes.  You decide to call it a night and go to bed.
+You log in the next day and are informed that you ran up 50000 coins rent
+which you can't afford and your items have been confiscated.  Damn, you forgot
+about that extra Sword of Damocles you were meaning to auction before you
+left.  Boy those things are expensive!  Reimbursable?  No, your fault.  There
+is a 30 minute grace period following a reboot for people to log back in and
+be charged no rent, after that, rent is full price.  Since the game reboots in
+about 3 minutes, there is no real reason to fall victim to this problem save
+impatience and/or ignorance.
+
+Example 4:  (rent file corruption)
+Administrative problems have been known to generate corrupted data in the
+rent file.  This is typically denoted by the player when they realize a large
+portion of what they rented out with did not load.  Complete reimbursement
+should be expected but it may require a high level god to carry this out.
+Auto-wiped characters who are deleted for failure to log in at all within a
+set amount of time are a gray area and will be handled on a case by case basis.
+However, just because you can't find something that you think you rented out
+with after you rent back in does NOT mean your file has become corrupted.  A
+god can verify that the number of items loaded equaled the number rented with;
+if they match, then you should suspect that either rent charges caused 
+confiscation (you would have been notified of this), or that you didn't have
+the item (theft, etc) like you thought you did when you logged out.
+
+Example 5:  (auto-rent)
+Your link has lagged all day and during a long stretch, you give up and break
+link.  Whatever happens to you after this point is your responsibility.  You
+will eventually be rented after being in game for and inactive, but
+during that time should you die (starvation, hating mob catching up to you
+while you are away, etc.) you're basically at the mercy of whatever immortal
+hears your plea.  Breaking link is NOT a recommended way of leaving the game.
+We have installed a few safeguards for character safety, but if all those
+fail, you're on your own.  Rent out when finished playing for the night, we
+guarantee the safety of that (provided you can afford rent of course).
+
+Example 6:  (follower's equipment)
+You give a spare obsidian longsword to your charmed golem.  The game crashes
+or reboots and when you reconnect, your golem no longer has the sword.  No
+reimbursement allowed.  Equipment given to NPC's is not eligible for
+reimbursement.  NPC's covers any creature that is not a real person (mounts,
+charms, pets, thralls, etc).
+
+Example 7:  (dropped items)
+Due to volume/weight problems, you drop a bag in order to sort things out.
+Wham!  Crash-a-rama!  No reimb allowed.  Don't drop it unless you are willing
+to lose it forever.  Please note, this case is a catch-all for anything that
+causes an item to leave your hands and end up on the ground (disarm, fumble,
+etc) or otherwise not in your possession (impaled weapons, etc).
+
+Example 8:  (single item loss)
+You notice your ring of the ancients is missing.  Everything else seems ok
+though.  Damn, rent must have eaten it, right?  Not necessarily.  Immortals
+will verify that the number of items rented out with equals the number you
+loaded with.  If there is a discrepancy, restitution will be made.  In other
+situations, single-item reimbursement are not allowed as they are generally
+the result of non-code related issues (thieves, dropped weapons, burned
+tickets, misjunked items, wear and tear, scrapping, etc).
+
+Example 9:  (single item loss due to mud functionality)
+The ONE exception to the above two examples comes in if an item was removed
+from your possession because it was in the possession of one of the utility
+mobs.  For example, if Beavis has your sword for sharpening at the time of
+the crash, or if an item is being engraved when it goes down, it will be
+replaced.  This exception does NOT cover any mob picking the item up, just
+the utility mobs doing their utility functions (sharpener/engraver).  It is
+also only for crashes, timed shutdowns are not covered.  Lastly, restitution
+for this is at the immortals discretion.  It should be verifiable that you gave
+the item away, but if not then no reimbursement.
+
+See Also: LOSING LINK
+Related Topics: RULES

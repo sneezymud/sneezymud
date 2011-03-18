@@ -1,0 +1,29 @@
+filename RACE_OX
+singName ox
+plurName oxen
+propName Oxen
+lore ANIMAL
+age 5+1d3
+maleHt 72+1d12
+maleWt 1000+30d10
+femaleHt 68+1d12
+femaleWt 1000+25d10
+body FourHoof
+moveIn plods in
+moveOut plods
+moveMod 30
+STR 160
+BRA 165
+CON 210
+DEX 130
+AGI 80
+INT 55
+WIS 55
+FOC 55
+PER 55
+CHA 55
+KAR 80
+SPE 100
+DumbAnimal
+Fourlegged
+Ridable

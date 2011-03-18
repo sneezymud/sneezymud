@@ -1,0 +1,32 @@
+Syntax : toggle wimpy <argument>
+
+Possible arguments :
+
+toggle wimpy off	: turns your wimpy mode off
+toggle wimpy <number> 	: sets your wimpy mode to flee at <number> hit points
+toggle wimpy max        : Sets your wimpy value to the maximum allowed value
+
+Wimpy mode causes flees to be attempted should your hit points fall below the
+critical <number>.  Any combat damage (starvation, bleeding, drowning, etc is
+ignored) incurred will cause a "flee" to be added to your command queue.  This
+flee attempt will be executed as soon as you are able to do your next command.
+It is NOT an automatic flee as it waits until command-lockout (from being bashed
+or from past skill attempts) clears.  Wimpy ONLY kicks in when you are hit
+below your wimpy value (ie, if the opponent is missing, you will not flee).
+
+When wimpy kicks in, it will flush any outstanding commands in your input queue.
+This will cause all things (leftover kicks, attempts to cast, tells, says, etc)
+in the queue to be lost and go unexecuted.  Obviously, if you're about to die,
+all actions flushed would be of secondary importance to saving your skin.
+
+Like all flees, wimpy does not guarantee that the flee will succeed.  Also,
+wimpy may take you from the frying pan into the fire (you may want to turn
+wimpy off if the surrounding regions are dangerous).
+
+You can only set your wimpy value to LESS THAN 1/2 your max hit points.
+e.g.   You have 24 hit points.  You can set wimpy to 11.  (12 is half max,
+but you must be less than 1/2).  Use the "wimpy max" command if you don't
+want to do the math.
+
+See Also: TOGGLE, FLEE
+Related Topics: COMBAT

@@ -1,0 +1,16 @@
+Syntax: help
+Syntax: help <topic>
+Syntax: help index
+
+<h>'s online help files are carefully maintained and cross-referenced
+for ease of use.  Additionally, it has been indexed so that similar topics
+can be found easily.
+
+The top of the index can be seen by typing 'help' and will list the major
+sub-indexes.  The sub-indexes should list all available help topics in that
+category.
+
+If you remain confused about anything, it may be worthwhile to find a FAQ and
+read it as it goes into more depth on esoteric subjects.
+
+Related Topics: GENERAL INFO

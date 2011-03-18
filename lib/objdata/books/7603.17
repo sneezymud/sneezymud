@@ -1,0 +1,46 @@
+The <h> combat system
+---------------------------
+
+<h> has a limb-based combat system.  What does this mean?
+
+It means that instead of just hitting and missing in combat, you
+actually hit a specific body part. Your hit points now represent
+the health in your vital areas. (Body, head, neck) Your limbs and
+other body parts have their own 'health points' that get taken away
+when the limb is hit. Your limbs can become damaged to the point of
+uselessness and can become completely severed. Various spells can 
+also affect/heal your limbs. 
+
+With the ranged weapon system, weapons can be thrown from room to room.
+These weapons can 'stick in' your body. Just as in real life, if 
+something remains 'stuck' in your body, the body part can become 
+infected. Your body parts can become infected, bleeding, and various
+other 'bad' things. (Just like in real life).  If a part of your body
+is infected and not healed quickly and properly, it could cause a loss
+of total hit points, and inevitably death. Various clerical spells can
+be used to heal/infect wounds in your limbs.  
+
+A critical success/failure system has also been put in. Similar to the
+D&D system of critical successes and failures, a certain die roll in
+the combat functions can result in a crit. Critical successes range
+from double or triple damage, to a rare automatic death. Failures
+range from missing and hitting yourself, to a very rare self-killing.
+
+Combat in <h> will stop when your opponent becomes stunned
+or incapacitated. You can choose at that time to take your victory,
+or you can choose to do your opponent in for good. (See HELP AUTO)
+
+Weapon Specialization:  Apart from just learning a specific weapon class to
+proficiency, one may choose to specialize in it.  By spending extra 
+practices on a weapon class after proficiency is obtained, one may become
+specialized in a weapon class and thereby gain bonuses when using that
+particular weapon type.
+
+SEE HELP: auto, limbs
+
+SIDENOTE : Since experience is given on a per hit basis, the old trick
+of getting a monster down to stunned to let a newbie get the final blow
+will do no good. 
+
+This limb based system opens up a whole new realm of possibilities
+for <h>. It should be a very fun and realistic system to play!

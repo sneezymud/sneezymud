@@ -1,0 +1,28 @@
+filename RACE_SQUIRREL
+singName squirrel
+plurName squirrels
+propName Squirrel
+lore ANIMAL
+age 1+1d5
+maleHt 5+1d4
+maleWt 10+1d2
+femaleHt 4+1d4
+femaleWt 8+1d2
+body FourLegs
+moveIn scurries in
+moveOut scurries
+moveMod 20
+STR 70
+BRA 70
+CON 70
+DEX 205
+AGI 205
+INT 55
+WIS 55
+FOC 55
+PER 55
+CHA 55
+KAR 125
+SPE 210
+DumbAnimal
+Fourlegged

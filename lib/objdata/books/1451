@@ -1,0 +1,28 @@
+OBJECT FILE CREATION
+
+Created: Saturday, 12 Nov 1993
+Modified: Friday, 27 Oct 2006
+
+OEDIT is the online object editor for creating new items for use in
+the <h> world.  HELP OEDIT exists but may be poorly written or
+out of date.
+
+There's also the online web editor at 
+	http://www.sneezymud.com/cgi-bin/objeditor.cgi
+
+
+Use command: READ CHAPTER (#) OF OBJ where (#) is one of:
+ 1) Name                         2) Short Description
+ 3) Item Type                    4) Long Description
+ 5) Weight                       6) Volume
+ 7) Extra Flags                  8) Take Flags
+ 9) Unused                      10) Cost/Value
+11) Four Values                 12) Decay time
+13) Max struct points           14) Struct points
+15) Extra Description           16) Material type
+17) Applys                      18) Can be seen
+19) Delete all extra descs      20) Special Procedures
+21) Max_exists
+	22) A NOTE ON RACE AND ITEM SIZE
+	23) BUILDING POLICY GUIDELINES
+

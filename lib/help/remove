@@ -1,0 +1,33 @@
+Syntax: remove <item> {person}
+Syntax: remove <slot>
+Syntax: remove all
+Syntax: remove all.damaged
+
+Remove is used to take an <item> off (remove from equipment).  Generally,
+<item> must be visible to be removed, although in low light conditions,
+you may specify merely the body slot you wish to remove equipment from.
+
+Note that the following formats are all valid:
+	wrist, wrist-right, wrist-left
+
+Note that the 'held' slots are formatted like:
+        hold (defaults to primary hand) hold-right hold-left
+
+The 'remove all' variation will remove all equipment quickly.
+The 'remove all.damaged' variation will remove any damaged equipment.
+
+You can optionally specify a {person} to remove the <item> from.  This is
+essentially the reverse of outfit.  This only works if {person} will let you
+remove their equipment (enthralled, a pet, a captive, etc).
+
+You will not be able to remove some items while in combat but can
+disengage to remove them.  Sometimes removing items can add command
+lockout and can place the remover in a position which he can't hit for a
+small period of time.
+
+Syntax: remove <arrow> <bow>
+An arrow loaded into a bow may be removed this way.  Note that <bow> must
+be held for this to work.
+
+See Also: WEAR, WIELD, BLOAD, OUTFIT
+Related Topics: COMBAT, OBJECT MANIPULATION

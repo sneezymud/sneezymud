@@ -1,0 +1,10 @@
+Tells you who is logged on to the game, and where they are playing from.
+
+Syntax : users (no argument list all users)
+         users <player name>
+         users site <site name>
+
+The site name can be abbreviated just like when you wizlock.
+
+See Also: WHERE
+Related Topics: GOD

@@ -1,0 +1,28 @@
+SECRET DOORS:
+
+Secret doors have their place in a FRP environment, however, don't get
+carried away with these.  The ONLY way to detect these at present is via
+the thief SEARCH command.  Secret doors are an option in both the REDIT
+editor and the edit command.
+
+If you have a secret door, you MUST do the following if you want PC's to have
+any chance at all of finding your door.
+
+Something in the room description should be eyecatching or out of the
+ordinary.  "The walls are made of stucco."
+
+An extra description must be set up that reveals something a LOT out of the
+ordinary, or a series of descriptions must be set up.
+
+walls stucco:  "Millions of tiny bumps dot the wall.  The bumps on one part
+   of the wall seem to have been rubbed smooth."
+bumps smooth part: "The stucco here has been rubbed smooth.  Probably because
+   there is a button concealed nearby."
+button: "Pushing the button would OPEN THE STUCCO wall."
+---> the secret doors name would then be "stucco".
+
+You MUST have at bare minimum ONE extra description for each secret door.
+Also remember the "other" side of the door will be secret too, so you may
+want to say something in the room description on the far-side too like:
+"The secret passage through the stucco wall you passed through lies somewhere
+around here.  Now where did it go?"

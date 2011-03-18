@@ -1,0 +1,10 @@
+  This wizard command allows you to move about without walking.  You
+can either supply a room VNUM, a player name, a monster name
+(lamia, 34.lamia), or an object name (corpse, 5.corpse).  You will
+disappear and reappear in the target room.
+
+  If a room is flagged PRIVATE and there is more than one person in
+it, additional people will not be able to GOTO there.  Get an
+inhabitant to TRANSFER you in.
+
+See also: TRANSFER

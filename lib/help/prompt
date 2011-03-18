@@ -1,0 +1,44 @@
+Syntax: prompt <field>
+Syntax: prompt all
+Syntax: prompt color <field> <color>
+Syntax: prompt color off
+
+Valid <fields> include:
+* hit: hit points       * opponent: status of current opponent
+* mana                  * room : virtual room # (51+'s only)
+* movement              * tank: status of current tank (includes self)
+* talens                * tank-other: status of current tank (exclude self)
+* exp: Experience       * exp_tolevel: Experience to next level
+* color                 * lifeforce
+
+The PROMPT <field> command will toggle the <field>'s presence in the prompt
+on and off.  The PROMPT ALL command will add all available <fields> to your
+prompt.
+
+Example: prompt	hit
+This would add hit points to your prompt.  Prompt is a toggle command and
+each argument must be used individually (in other words, you cannot select
+multiple fields	in the same prompt command).
+
+Colorizing the various prompts is also possible.  Available <colors> are :
+* <b>blue<1>                  * <p>purple<1>
+* <r>red<1>                   * <g>green<1>
+* <o>orange<1>                * <c>cyan<1>
+* <Y>yellow<1>                * <k>charcoal<1>
+* <C>boldcyan<1>              * <W>white<1> (bright/bold)
+* <R>boldred<1>               * <G>boldgreen<1>
+* <B>boldblue<1>              * <P>boldpurple<1>
+* <u>white_on_blue<1>         * <v>white_on_purple<1>
+* <l>white_on_red<1>          * <q>white_on_green<1>
+* <t>white_on_yellow<1>       * <x>white_on_cyan<1>
+* <i>inverted<1>   
+
+Obviously, only use colors you can see and like.  These colors do not
+work with color replace and substitute so you get what you set. 
+
+To turn the color-prompts off, use "prompt color off".  
+To turn off color on just one prompt, use "prompt color <field> off". 
+
+See Also: TERMINAL, COLOR, STATUS BAR, TOGGLE
+Related Topics: SCREEN
+

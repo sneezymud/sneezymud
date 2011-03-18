@@ -1,0 +1,33 @@
+filename RACE_MFLAYER
+singName mindflayer
+plurName mindflayers
+propName Mindflayer
+lore Diabolic
+age 50+1d10
+maleHt 48+1d13
+maleWt 90+3d10
+femaleHt 46+1d13
+femaleWt 70+3d10
+body Humanoid
+moveIn has arrived
+moveOut leaves
+hpMod 1
+moveMod 10 
+manaMod 2
+search 3
+vision 1
+STR 145
+BRA 145
+CON 135
+DEX 165
+AGI 145
+INT 135
+WIS 140
+FOC 150
+PER 110
+CHA 55
+KAR 110
+SPE 125
+IMMUNE_ELECTRICITY 50
+AFF_INFRAVISION
+

@@ -1,0 +1,22 @@
+Syntax: get <object> {container}
+
+The get and take commands are synonymous and are used to move <object>
+into your inventory.  If the {container} parameter is skipped, it is
+assumed that <object> is on the ground in the room.
+
+Note that when you kill a creature, its corpse becomes a {container} for the
+items it had before it died.  Hence "get <object> corpse" is valid.
+
+Obviously, you need to possess the strength (for weight) and dexterity (for
+volume) to carry the <object> in order to succeed.
+
+Variations:
+get sword		: gets a sword off the ground
+get sword bag		: gets a sword out of a bag
+get all			: gets everything off the ground
+get all.sword		: gets everything for which sword is an abbreviation
+get 9*sword		: gets the first 9 swords in the room
+get 9.sword		: gets the ninth sword in the room
+
+See also: DROP, PUT, STRENGTH, DEXTERITY
+Related Topics: OBJECT MANIPULATION

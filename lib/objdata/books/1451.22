@@ -1,0 +1,42 @@
+Race and item sizing
+
+The code does internal checks on item size and player size to determine if
+a character can fit into an item.  Here's how the system works.
+
+For any item worn (except neck, finger and wielded/held) it determines the
+items percent size (%size).  Its %size is the ratio of its volume to a defined
+100% size.  The 100% sizes are as follows:
+  head:   2500        waist:    4000
+  body:  11000        back:     2500
+  arm:    2000        leg:      6000
+  wrist:   400        foot:     1600
+  hand:    800
+
+If the item is paired (pants), it doubles the 100% value before calculating
+the %size.
+
+Next it calculates the characters %height.  A character's %height is HEIGHT
+divided by 70 inches (average human male height).
+
+A character can wear the item provided:
+
+1.15 * %size > %height > %size * 0.85
+
+The formula is actually this:
+
+perc = height/70 * human-size
+if vol > perc/0.85, too big
+if vol < perc/1.15, too small
+
+
+
+When MAKING objects, just do this.  Get the character's height that should be able
+to wear it, divide by 70.  Multiply this number by the 100% value listed
+above and use the result as the object's volume.
+
+NOTES:
+
+PAIRED OBJECTS:  Remember to double volume
+
+CONSISTENCY WITH MOB: Make sure the mob on which it will load is the 
+right height to wear an object. 

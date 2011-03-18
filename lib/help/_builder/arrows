@@ -1,0 +1,14 @@
+Arrow Type for both arrows and bows is used to keep a little
+bit of logic in sizes:
+
+Type 0 : Long Stalk    : Hunting Arrows   (Long  Range)
+     1 : Short Stalk   : Fighting Arrows  (Close Range)
+     2 : Long Quarrel  : Squabble Fights  (Long  Range)
+     3 : Short Quarrel : Common Crossbow  (Close Range)
+     4 : Long Dart     : Sniper Blowgun   (Long  Range)
+     5 : Short Dart    : Common Blowgun   (Close Range)
+     6 : Large Pellet  : Heavy Slingshot  (Long  Range)
+     7 : Small Pellet  : Common Slingshot (Close Range)
+
+A bow cannot be used to fire an arrow unless the arrow types
+on both are the same.

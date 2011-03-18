@@ -1,0 +1,29 @@
+Your deities' potency represents the status of your faction in relation to
+the other factions, as well as how powerful your deities are compared to
+other faction's deities.  While it may seem like a trivial thing, it actually
+can have profound effects on the members of the faction.
+
+For instance, a potent faction will permit that faction's clerics to regenerate
+piety at an accelerated rate.  Conversely, a below average power deity will not
+regenerate the piety of followers.  Additionally, interventions (fate rescuing
+from nasty effects) increase.
+
+It is a foolhardy faction that allows their potency to drop too low.
+
+Your deities' potency is related to the performance of all members of that
+faction as well as the actions that have been performed against that faction.
+For instance, as you do well (killing the enemies of the faction and aiding
+your allies), you not only raise your faction percentage, but also raise your
+deities' potency.  Similarly, potency will drop if you allow your faction
+percentage to drop.  At the same time, helping another faction will raise the
+potency of the helped faction, or lower it if they were harmed.  Realize though,
+faction percentage is specific to you, while all members of a faction contribute
+to the potency.
+
+Potency is drained somewhat each time the deity interferes in the mortal
+realm.  The most common way this happens is in the regeneration of piety
+to that faction's clerics, but Miracles and the like also have their effect
+on potency.
+
+See Also: PIETY, DEITY, FACTION PERCENT
+Related Topics: FACTIONS

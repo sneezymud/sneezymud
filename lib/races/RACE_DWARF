@@ -1,0 +1,37 @@
+filename RACE_DWARF
+singName dwarf
+plurName dwarves
+propName Dwarven
+lore PEOPLE
+age 40+5d6
+maleHt 40+1d9
+maleWt 130+4d10
+femaleHt 38+1d9
+femaleWt 105+4d10
+body Humanoid
+moveIn has arrived
+moveOut leaves
+hpMod 1
+moveMod -20
+manaMod -1
+search 4
+foodMod 0.75
+drinkMod 1.25
+STR 130
+BRA 130
+CON 155
+DEX 85
+AGI 85
+INT 80
+WIS 95
+FOC 105
+PER 80
+CHA 80
+KAR 130
+SPE 55
+IMMUNE_POISON 40
+IMMUNE_CHARM 75
+IMMUNE_SLEEP 75
+IMMUNE_ENERGY 10
+AFF_INFRAVISION
+talent smythe

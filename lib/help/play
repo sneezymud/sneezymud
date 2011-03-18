@@ -1,0 +1,10 @@
+Syntax: play <game> {option}
+
+This command is used in the casinos to work the slot machines.
+Games include : Slots, Roulette (not functional)
+
+Typing PLAY (game) will show the options for each game provided you are
+in the room the game is played in.
+
+See Also: BET
+Related Topics: CASINO

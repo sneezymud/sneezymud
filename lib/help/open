@@ -1,0 +1,29 @@
+Syntax: open <something>
+
+Open pretty much does what it says, it opens something.  It is appropriate
+to use this on a wide variety of things: bags, chests, doors, portals,
+gates, desks, wine skins, etc.
+
+If the item is an object of some sort, you may use standard referencing
+format to differentiate multiple, similar objects.
+eg.
+open 1.chest		open chest large
+open 2.chest 		open chest small
+open 3.chest 		open 2.chest small
+
+Exits may be differentiated by doing:
+open door north 	open door wooden 
+open door east		open door steel
+open door sw		open door large
+Not all exits are opened through the exit command, sometimes something 
+mechanical must be manipulated to operate these exits.
+
+Note that opening some things may cause a trap to go off.  It pays
+to have a thief examine suspicious devices.
+
+Open will try and determine what you mean if you give it an ambiguous target.
+That is, it will attempt to open the first <something> that is openable and not
+presently open already that it can find.
+
+See Also: CLOSE, LOCK, UNLOCK
+Related Topics: OBJECT MANIPULATION, MOVEMENT

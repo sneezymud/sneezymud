@@ -1,0 +1,12 @@
+Advanced Action: unflag
+---------------------
+ 
+ex:
+<trigger> { "<arguments>";
+     <other actions>;
+     unflag %n; 
+     <other actions>;
+     }
+
+Unflag basically does the opposite of flag, it takes the solo-quest flag
+off of the person.

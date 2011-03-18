@@ -1,0 +1,29 @@
+filename RACE_PIG
+singName pig
+plurName pigs
+propName Pig
+lore ANIMAL
+age 1+1d5
+maleHt 24+1d2
+maleWt 350+5d10
+femaleHt 20+1d2
+femaleWt 300+5d10
+body Pig
+moveIn has arrived
+moveOut leaves
+moveMod 20
+STR 120
+BRA 140
+CON 140
+DEX 130
+AGI 130
+INT 65
+WIS 65
+FOC 65
+PER 65
+CHA 65
+KAR 135
+SPE 115
+DumbAnimal
+Fourlegged
+Ridable

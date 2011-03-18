@@ -1,0 +1,7 @@
+Syntax:  heaven <num>
+
+The heaven command allows the god to move the heavens and earth forward in time
+(causing the weather to change, the suns to set, etc.).  This does NOT force
+a tick to occur, merely changes the game time.  Nice for WOWING the yokels.
+
+Time will move forward 1/2 hour per num entered.

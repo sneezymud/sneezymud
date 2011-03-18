@@ -1,0 +1,8 @@
+Syntax: noshout {player}
+
+Without a {player}, operates identical to mortal noshout, ie you no longer
+hear or can send shouts.  With a {player} specified, removes {players} ability
+to shout and emote.  Also means {player} may only tell to a 52+.  Effectively
+means they can only communicate via say.
+
+Related Topics: GOD

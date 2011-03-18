@@ -1,0 +1,34 @@
+filename RACE_SPHINX
+singName sphinx
+plurName sphinxes
+propName Sphinxian
+lore GIANT
+age 500+5d10
+maleHt 65+1d4
+maleWt 205+2d10
+femaleHt 62+1d4
+femaleWt 185+2d10
+body Sphinx
+moveIn has arrived
+moveOut leaves
+hpMod 2
+moveMod 50 
+manaMod 2
+search 3
+STR 160
+BRA 160
+CON 150
+DEX 80
+AGI 60
+INT 170
+WIS 170
+FOC 170
+PER 140
+CHA 60
+KAR 140
+SPE 80
+Winged
+Ridable
+IMMUNE_SLASH 50
+AFF_FLYING
+Ridable

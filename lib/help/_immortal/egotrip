@@ -1,0 +1,31 @@
+This command is used for the immortal that feels like a little egotripping.
+Various tricks exist, some helpful, some harmful.  Don't abuse the command
+as it should be used seldomly.
+
+Deity:
+  Forces any deity of judgment in The World to "pulse" and consequently
+  invoke their reward/punishment routine.
+
+Bless:
+  Causes you to cast bless on every PC in The World.
+
+Blast:   syntax: egotrip blast <target>
+  Sends a bolt of non-lethal lightning to blast <target>.  Hopefully they
+  will get whatever point is being made.
+
+Damn:  syntax: egotrip damn <target>
+  Inflicts faerie fire and curse on <target>.
+
+Hate:  syntax: egotrip hate <target>
+  Causes all mobs in room to hate <target>
+  Assuming that <target> is a PC, will cause the mob(s) to start hunting
+  that PC.
+
+Cleanse:
+  Will cause all disease in the lands, for both PCs and NPCs, to be cured.
+
+Wander:
+  Simulates a "wander" pulse for NPCs in your current room.
+
+Garble:
+  Adds a garble effect to the player (only blahblah and pg13 will persist over rent)

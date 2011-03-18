@@ -1,0 +1,20 @@
+Syntax: save
+Syntax: toggle showsaves
+
+Saves your character. This includes experience points, characteristics, 
+current skill proficiencies, talens, equipment and the like.
+
+Saving should be done after anything beneficial happens to you to ensure
+that the fact that it happened is registered by the updater.  Saving is done
+automatically whenever you: drop an item, get an item, sell an item, gain a 
+level, interact with a shop, or die.  Additionally, if you haven't saved in 
+quite some time you will be saved automatically.
+
+You should definitely save after retrieving your corpse following a death or
+any other landmark achievement.
+
+The showsaves toggle will display "Saving." every time the game automatically
+saves your character for you.
+
+See Also: TOGGLE, RENT
+Related Topics: UTILITY

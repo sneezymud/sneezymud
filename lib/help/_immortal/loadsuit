@@ -1,0 +1,37 @@
+Syntax:
+  load set <suit>
+  load set <suit> <limb>
+  load set information <others>:
+    <level-min> <level-max> <race> <suit-name> missing
+
+'load set' with no <suit> will list all current suits.
+
+'load set <suit> <limb>' will load the gear of <suit> that fits on <limb>.
+
+<others>:
+  <level>
+    Will list out all suits which have a level within +-2 of <level>
+    [ load set level 10  will list all suits with levels 8-12 ]
+  <level-min> <level-max>
+    First number found is always <level-min> any after that is <level-max>.
+    Will list suits with levels between <level-min> and <level-max>
+
+  <suit-name>
+    Will give detailed information about the pieces of the suit.
+
+  <race>
+    Will list only suits that are specified to be of <race>
+
+  <class>
+    Will display any suits that <class> can wear.  There is a notable
+    difference between thief and Thief.  If the first letter is capitlized
+    it displays only those suits that Every piece can be worn by that class.
+
+  missing
+    Will display any 'missing slots' in displayed suits.
+
+Valid Classes: warrior, thief, mage, cleric, ranger, monk,
+               deikhan, shaman
+Valid Races: ogre, human, elf, dwarf, gnome, hobbit.
+Value Limbs: head, neck, body, arm, hand, waist, wrist, 
+             leg, foot, finger, shield, back

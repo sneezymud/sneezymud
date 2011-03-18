@@ -1,0 +1,9 @@
+Syntax: gtell <message>
+
+Gtell will cause <message> to be sent to everyone in your group.  It is
+useful for coordinating actions among group members.
+
+ex. gt I had to flee guys, ill be back in a sec.
+
+See Also: TELL, GROUP
+Related Topics: COMMUNICATIONS

@@ -1,0 +1,37 @@
+Requires a modifier, specifically your immortal player name, 
+and a command to be executed.  Allows a god who has "switch"ed 
+into a mob to force his immortal character, who is temporarily 
+in storage, to perform some wizard command not available to the 
+mob you have switched into.  This allows you to do things like 
+force a mob to say something while you're switched into another 
+mob, or have your immortal "restore" the mob you have switched into.
+
+More specifically, the following events occurs when the "as" 
+command is used: the switched-into mob performs the "as" command, 
+the immortal character is moved to the same room as the mob, 
+the immortal character performs the command, the immortal 
+character is moved back to his original location.  For this
+ reason, it is best to be invisible and silent when switching 
+into a mob so future uses of the "as" command does not result 
+in messages going out to others announcing the actions of your 
+immortal character, who happens to temporarily be in the same 
+room as them.
+
+Usage: as <immortal-name> <command>
+
+Warning: Do *NOT* use the following commands as parameters to the 
+"as" command: quit, rent, cutlink, or anything else that could 
+cause your immortal to leave the game while you are switched 
+into the mob.  Doing so will lead to evil results.
+
+Example: I'm playing Quazi.
+> invis 59
+> stealth
+> switch mayor
+> say I am the mayor. You are scum. Guards, take this man to prison.
+> as Quazi force watchman say Come with me or die.
+> as Quazi force watchman kill stargazer
+> cackle
+> as Quazi at 10 load o white-potion
+> as Quazi give potion mayor
+> quaff potion

@@ -1,0 +1,5 @@
+Armor Level
+
+The mobs armor level.  Set the level for the mob and the mud will assign
+the apropriate AC.  Note that equipment won't affect the mob's AC, so
+set the appropriate number here.

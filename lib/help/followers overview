@@ -1,0 +1,33 @@
+Followers come in three varieties:
+
+1.) Pets.  These are NPCs that have been purchased, or otherwise acquired,
+to serve as their master's companion.  They will typically aid the master out
+of simple loyalty, but may refuse orders that obviously put their own life
+at risk.
+
+2.) Charms.  An NPC that is under a magical compulsion to follow the orders
+of the master that controls it.  Typically, the master of a charm must expend
+mental energies to retain the charm as it is assumed that the NPC is an
+unwilling follower seeking to break free.  A charm may resist some orders,
+especially those that put the life of the charm in jeopardy.
+
+3.) Thralls.  A thrall is an NPC that has no will of its own, and in most
+circumstances, is a lifeform that the master created.  Golems, elementals
+and zombies are obvious examples (although they may actually be charms if
+the master has taken over someone else's thrall).  Thralls obey all orders
+that they understand without question or reservation.
+
+Followers may be given names via the rename command.
+
+Followers may be given orders via the order command.
+
+Followers will be preserved when you save (or rent), and will reload upon your
+return to <h>.  Like equipment, followers will cost some money to rent.
+Only followers that are in the same location as you are saved, so if you
+leave a pet behind, it will NOT be saved.
+
+Items that followers are carrying are ONLY saved when you rent out.  Items
+carried by pets cost their normal rental cost to rent out on a pet.
+
+See Also: ORDER, RENAME, REIMBURSEMENT
+Related Topics: FOLLOWERS

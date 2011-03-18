@@ -1,0 +1,28 @@
+filename RACE_MEDUSA
+singName Medusa
+plurName Medusas
+propName Medusa
+lore DIABOLIC
+age 15+1d4
+maleHt 62+1d17
+maleWt 140+6d10
+femaleHt 60+1d12
+femaleWt 100+4d10
+body Medusa
+moveIn has arrived
+moveOut leaves
+search 1
+STR 120
+BRA 120
+CON 120
+DEX 120
+AGI 120
+INT 105
+WIS 105
+FOC 115
+PER 105
+CHA 115
+KAR 110
+SPE 115
+talent Jack of all Trades
+

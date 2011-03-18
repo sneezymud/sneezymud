@@ -1,0 +1,20 @@
+The Baccarat table is located in the casino.  You must sit at the
+Baccarat table to start.  You must place a bet to get the cards dealt.
+Syntax: BET <chip> <player|dealer|tie>
+
+The object of Baccarat is to guess which hand (yours or the dealers)
+will come out closer to 9, or if there will be a tie.  Aces count for
+1, 10 and higher counts as 0.  The first digit of a 2 digit score is
+discarded.  Thus, if you draw a 5 and 7, your score is 2.
+
+After your cards are dealt, you may choose to draw another card.
+Syntax: HIT
+
+After you choose whether or not to take a hit, you must stay to see
+the final hands.
+Syntax: STAY
+
+Payout for a tie is 8 to 1, other payouts are 2 to 1.
+
+See Also: BET, STAY, PEEK
+Related Topics: CASINO

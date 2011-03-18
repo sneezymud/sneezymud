@@ -1,0 +1,12 @@
+Syntax: auto {parameter} 
+
+/* YOU MAY WANT TO GO MORTAL and read mortal version for other parameters */
+
+IMMORTAL:
+success:   on = all skills will succeed or fail automatically based on nohassle
+                condition.  nohassle on = auto-success, nohassle off = 
+                auto-fail.
+           off = mortal style success/failure.  ie. random
+
+See Also: -
+Related Topics: UTILITY, SCREEN

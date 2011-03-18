@@ -1,0 +1,72 @@
+This command offers some information used by the L.O.W. but it has informative
+value to others as well.  In general, you can obtain information on mobs
+weapons, or objs.  This command also gives online access to the L.O.W. task
+list database.
+
+Syntax for objs: low objs <body slot>
+Examines all items in the database and displays them in a sorted fashion.
+Only those items that are armor or worn and are wearable in the <body slot>
+are displayed.  <body slot> is of the form "head", "arm", "body" etc.
+Sorting is based on items AC followed by its max_structure.  Additional
+info is added for price, %size and applys.  Note that finger, hold and
+neck slots are all 100% as those slots are exempt from size restrictions.
+
+Syntax for objs: low objs <body slot> race <race#>
+Same as above but only shows objects that fit the given race.
+
+Syntax for weapons: low weapons <blunt | slash | pierce>
+Examines all weapons of the given attack type and displays in a sorted
+fashion.  Information is displayed regarding item damage, attack type,
+sharpness, price and effects.
+
+Syntax for mobs: low mob <mob level>
+Scrolls thru the mob database and picks out any mob that has a level equal to
+<mob level>.  Some mobs (guildmasters, shopkeepers and the like) are ignored
+and not listed.  Note that it does not sort the mobs in any fashion.  
+Information displayed includes AC, number of attacks, +tohit and barehand
+damage.  Hit point bonus is also displayed.  Note that level d8 hp are added
+to hitBonus before the mob actually loads.  Note also that it doesn't note if
+the mob is sancted.  There is also a field for the class bitvector.
+class bitvector: (1=mage, 2 = cleric, 4 = warrior, 8 = thief, 16 = azruzi, 
+32 = deikhan, 64 = monk, 128 = ranger)
+
+Syntax for race: low race <race#> {section}
+Displays a list of all mobs of a given <race#> and their characteristics.
+Since some <race#> have a large number of members, and only a finite number
+of mobs may be displayed at one time, you may specify an optional parameter
+{section} to get the next grouping of mobs for that <race#>.
+
+Syntax: low statbonus
+Displays a summary of stat bonuses that eq gives.
+
+Syntax: low statcharts
+Displays a summary of character race and home territory stats.
+
+Task List Syntax:
+
+low task list [name]
+Displays the list of pending tasks, sorted by priority (0 being high priority
+9 being low)  If used with the [name] option, only those tasks assigned to
+[name] will be displayed.
+
+low task add <priority> <task>
+Adds a new task to the LOW task list, with <priority>.  The task will be
+assigned by default to the god adding the task.
+
+low task assign <task ID> <name>
+Will assign the task corresponding to <task ID> to <name>.  Use low task list
+to get the task ID.
+
+low task status <task ID> <status>
+Will change the task status of the <task ID> to <status>.  Use low task list
+to get the task ID.
+
+low task priority <task ID> <priority>
+Will change the priority of <task ID> to <priority>. 0 for high priority, 9
+for very low.  Use low task list to get the task ID.
+
+The task list is also displayed on the web at:
+	 spasm.stanford.edu/projectstatus.php
+
+See Also: -
+Related Topics: GODS

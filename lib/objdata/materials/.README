@@ -1,0 +1,43 @@
+  This file will explain in quick terms how to add a new material to the game.
+Start by being in the lib/objdata/materials directory and:
+  cp .TEMPLATE <material name>
+Ex:
+  cp .TEMPLATE "elven mail"
+
+  Now open up the <material name> file and add the values appropriate to the
+material.  There is comments above each entry so it should be easy to do.
+
+  Once that is done edit the .INDEX file and locate the header that reflects
+the new entry:
+  If it is a mineral then goto:
+;MINERAL
+  If it is a metal then goto:
+;METAL
+  If it is an organic then goto:
+;ORGANIC
+
+  Now locate the last entry under that header, but before the next one, and
+place the name of the material on the next line:
+
+  This:
+rubber
+
+;METAL
+iron
+steel
+
+;MINERAL
+
+  Would become:
+rubber
+
+;METAL
+iron
+steel
+elven mail
+
+;MINERAL
+
+
+  That is it.
+	-Lapsos

@@ -1,0 +1,6 @@
+Syntax: unsaddle <horse>
+
+Unsaddle will remove <horse>'s saddle.
+
+See Also: SADDLE
+Related Topics: OBJECT MANIPULATION

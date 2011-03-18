@@ -1,0 +1,1288 @@
+==========================================================================
+03-04-05 : Mobiles will now slowly forget people they are angry with.
+
+03-04-05 : Protection from fire scrolls should work as expected now.
+
+02-15-05 : Made a first attempt at fixing the bug that generates an error
+           message when trying to look at a room.
+
+01-22-04 : Merged in changes that were lost in the crash.  Primarily, this
+           means a few warrior disciplines have been renamed and skills
+           shuffled slightly.
+
+11-29-04 : Trash piles are now in.
+
+11-23-04 : A property clerk has setup an office in the GH bank.  Information
+           about owned homes is now publically available through the clerk.
+           If you own a home and are not listed, please let someone know so
+           you can be added to the list.  If you don't, you may be subject
+           to repossession in the future.
+
+11-23-04 : Fishing spots will now respawn naturally.  This is a slow process
+           so don't expect to be able to fish at the same spots forever.
+
+11-14-04 : On leveling you will now get a message if there are any new quests
+           available to you.
+
+11-07-04 : Hurl now adds lag, even if the attempt didn't succeed.
+
+11-04-04 : Minor adjustment to the below change to allow dropping in the
+           dump.
+
+11-03-04 : You can no longer drop trash in shops, this should help with the
+           clutter.
+
+10-21-04 : You can now use 'value all.damaged' in a repair shop to get a listing
+           of items and costs plus a total cost at the end.  This only works with
+           items in your inventory and nothing currently worn or in containers.
+
+10-12-04 : Changed command parsing a little.  Say "me" now says "me" and not
+           your name.  You can recite scrolls on "me" or "self" or "tank" now.
+           Although the "tank" target only works if the tank is in your group
+           and fighting.  Report bugs with command parsing to Angus.
+
+           Monks will now see the effect of learning weapon specializations,
+           just like all the other classes.
+
+09-22-04 : The "fished out" status of rooms is no longer revealed.
+
+09-20-04 : Liquids will now dilute in fountains and the like.
+
+09-11-04 : Mobiles carrying corpses will now be placed on top of the room
+           list when killed, instead of below the said corpses.
+
+09-08-04 : Prayers including, but not limited to, blind, curse, wither limb,
+           numb, and paralyze will now cause the victim to hate, even if the
+           prayer doesn't succeed.  Reciting faerie fire scrolls and icy grip
+           scrolls will now cause the victim to hate the caster.  The ranger
+           repair skill has been removed from rangers.  Monks now can also
+           repair organic and wood materials.  A crash bug with mob hating is
+           now fixed.
+
+09-07-04 : Cure disease, and wohlin, now have a slim chance of removing
+           leprosy from limbs.
+
+09-02-04 : Lifeforce is now capped at 32000.  This should prevent the loop
+           issue.  Report any strange reactions to your nearest coder if
+           any unforeseen side effects spawn from this.
+
+09-01-04 : No-heal rooms are now described separately from peaceful rooms.
+
+08-31-04 : Added 3 new lines of information to the zone command, when used
+           with an argument.
+
+08-31-04 : Corrected an issue with the zones command that was preventing some
+           zones to be viewable when used with an argument.  Also added an
+           index value to each entry, shown to the left, that can be used to
+           look at said zone without having to type the zonename.
+
+08-29-04 : Taloc now sells teeth necklaces.  You can put teeth on'em.  They
+           don't really do anything yet, but they will.
+
+08-29-04 : Increased the chance of shove success.  Give it a try and let
+           me know how it is.
+
+08-28-04 : When looking at a creature with spy activated there is a chance
+           to increase your spy level.  Spy must be active for this to work.
+
+08-28-04 : The assist command will now automatically assist the first person
+           in your group involved in a fight, when no argument is given.
+
+08-26-04 : Advanced adventuring trainer is now in.  You can find the clue
+           at the usual places.
+
+08-26-04 : Any class may now whittle bows and arrows.
+
+08-24-04 : Added an advanced adventuring discipline.  This discipline is
+           20 pracs, available to all classes, and containts a few skills
+           formerly belonging to rangers.  It requires that the Adventuring
+           discipline be learned to a high level first.  There isn't a 
+           trainer yet, but there will be soon.
+
+08-24-04 : The concealment skill has been moved to the Stealth discipline.
+           The track skill has been moved to the Thief discipline.
+
+08-24-04 : Changed the few remaining non-thief bows to be usable by thieves.
+
+08-24-04 : Added a "set arrow trap" skill to the traps discipline.  This
+           allows you to set most of the standard trap types on arrows,
+           that trigger when the arrow hits.
+
+08-21-04 : Casting from the wrist should now work.
+
+08-20-04 : The Blunt, Pierce, Slash and Ranged Specialization disciplines 
+           have been added to all classes.
+
+08-17-04 : Player corpses are no longer saved with special code, but now
+           rely on the standard room saving code.  This means that you
+           can now also rent player corpses.
+
+08-16-04 : Fixed a very old bug in Inverse Grimhaven.  Access to the theater
+           is now possible.
+
+08-15-04 : Walking barefoot while levitating should no longer hurt your feet.
+
+08-13-04 : Disease should no longer spread in peaceful rooms.
+
+08-13-04 : Rescue without any arguments will now default to the first person
+           tanking in your current group.  You and the person tanking must
+           both be grouped for this to work.
+
+08-02-04 : You can now ask the fishmaster 'score' to get a listing of your
+           personal fishing scores.
+
+08-02-04 : Immortal mobiles should no longer gain hatreds for players.
+
+07-31-04 : Changed fishing exp formula to be level based - in theory you
+           could fish your way to level 50.
+
+07-31-04 : Potions don't glow anymore.
+
+07-31-04 : You can now pour liquids into the mouths of unconscious
+           people.  Sleeping doesn't count.
+
+07-31-04 : You can now practice the adventure discipline if you want.
+           There's not much reason to do this unless you're a pacifist.
+
+07-31-04 : Player corpses don't go into quick decay when empty now.
+
+07-31-04 : Rate of tool loads has been reduced.
+
+07-31-04 : Knocked out teeth are rentable now (really).  Fix a small
+           memory leak with knocked out teeth as well.
+
+07-31-04 : Heart rip crit now leaves heart in your hand.
+
+07-31-04 : You can now use diagonal abbreviations with search.
+
+07-31-04 : Talen piles now merge automatically.
+
+07-31-04 : Chalk now loads in colored variants.
+
+07-31-04 : Poisoned weapons now work with backstab and slit.
+
+07-31-04 : The last changes with talens was reverted due to unexpected bugs.
+
+07-28-04 : Talens are now handled like real objects, kept in your inventory,
+           bags, etc.  You will still see a talen count in your prompt and
+           in score, which is a tally of talens in your inventory.  This is
+           a fairly complex change, so there may be some bugs.  In the future
+           we may be able to have various denominations of talen, as well
+           possibly adding other currencies.  As a result of this conversion,
+           all of your talens have been moved to your bank account (in
+           Grimhaven if you previously didn't have one).
+
+07-25-04 : 'score' will now show what your maximum experience was since
+           before your last death.  If your current exp is higher than it
+           was it will not show it.
+
+07-19-04 : You will now see the item and it's condition in your prompt when
+           repairing.
+
+07-19-04 : When viewing a room in brief mode you will now see closed exits
+           regardless of your perception, just like in non-brief mode.
+
+07-14-04 : Minor changes made to critical hitting.  You can no longer remove
+           the hearts of Skeletons, sever the tendons of Skeletons/Ghosts or
+           like critical hits.  This affects Ghosts, Zombies and Skeletons.
+           Also zombie hearts will now have poison, not blood, so be wary
+           you bloodlusters.
+
+07-14-04 : "eval room" now shows if you are inside or outside.
+
+07-12-04 : Withdraw all and deposit all should work at the bank again.
+
+07-02-04 : Trash collection mobs should no longer 'collect' things being
+           used, such as sleeping bags.
+
+07-02-04 : Minor adjustment to the 'chi corpse' messages when the corpse
+           is already burning.  Also adjusted the failure message for said
+           chi situation to be a bit more logical.
+
+07-01-04 : The output of scan is now colorized.
+
+06-20-04 : Weapons with the fireball proc should no longer cause the mud
+           to crash.
+
+06-19-04 : Mobiles will no longer ride mounts following you.
+
+06-19-04 : The postman will no longer get caught in a loop when trying to
+           deliver a letter to a shop while mounted.
+
+06-17-04 : Dissect will now search the room first and your inventory second.
+
+06-17-04 : The people have spoken and the old deathcry message has been put
+           back in place.
+
+06-17-04 : Adjustments to the new ansi/vt100 bar to better span the information
+           across the screen area.  Also fixed the dangling tank in said bar.
+
+06-15-04 : Any class based quests missed before gaining level 50 are now
+           doable.
+
+06-12-04 : Some fixes and internal changes to the shaman sacrifice code.
+           Let Maror know if something unexpected happens.
+
+06-10-04 : Removed tax for player selling, still taxed for shop selling.
+
+06-10-04 : The King has decided on a 5% sales tax for all shop transactions.
+           The tax is paid automatically by shopkeepers on both sales and
+           purchases.  The proceeds will be used to buy expensive beer for
+           the King.  And maybe the High Tabuda, if he isn't busy.  And some
+           hookers.  And pipeweed.
+
+06-10-04 : The Union of Sweepers and Collectors and the Grimhaven Coroner
+           Group have reached a division of labor agreement with respect to
+           corpses.
+
+06-03-04 : Recoded the way item stacking works a little bit.  It should work
+           better now.  Let me (Peel) know if you find items that are the same
+           but aren't stacking correctly.
+
+06-01-04 : While striking an opponent in battle you will now have a slim
+           chance of increasing the appropriate 'know' skill.  This only
+           pertains to standard combat swings and then only if they do
+           damage.
+
+06-01-04 : Corporate bank accounts are now actually stored in the banks.
+           This doesn't affect anything really, except the total talens in
+           the banks.  All corporations were set to use the GH Bank as their
+           corporate bank, let me know if you want to change yours.  You
+           still access the bank account through the corporate assistant.
+
+05-27-04 : The Grimhaven dump no longer gives out a reward for dumped items.
+           However, a new waste disposal pipe has been installed under GH,
+           and any items on the dump are swept through the pipe out to the
+           river.  If you dump something by accident, you can go swimming
+           after it!
+
+05-27-04 : The banks of the world have been privatized!  Sort of.  The
+           four main banks are now corporations and are now totally
+           seperate from each other.  This means your bank account is
+           stored as part of the bank it is at, rather than your pfile.
+           Everyone that has money in the bank has been given a free account
+           at the Grimhaven bank and had their money transfered there.
+
+05-25-04 : Item limits have been removed on all items except for unique,
+           or artifact, items.
+
+05-24-04 : Shop owners may now change the response strings of their
+           shopkeepers.  See shop owner help file for details.
+
+05-23-04 : Pets now use their masters trophy settings when gaining exp.
+
+05-23-04 : Had to do a file conversion for pets.  All pets were lost.
+           *mourn*
+
+05-21-04 : Mobs can now gain exp and level, just like players.  This includes
+           pets!  Please let me know if this turns out to be too exploitable.
+
+05-20-04 : Expanded object persistency to the entire game.
+
+05-20-04 : Player planted plants now grow old and die.
+
+05-18-04 : Offal decays much faster now.
+
+05-18-04 : Redid how the in-room object loader works.  There shouldn't be
+           any change, but if you notice excess or missing in-room loads,
+           you may want to bug it or let an imm know.
+
+05-18-04 : Mobs in the world have recently become very frightened of dragons.
+           If they happen to be in the same room when a dragon uses its breath
+           weapon, they are now very likely to flee before they get hit by it.
+
+05-13-04 : We're trying a little experiment: objects will now save over
+           reboots, in most of the rooms in Grimhaven.  No-rent objects
+           won't save, but anything else sitting on the ground will.
+           I have no idea if this is a good idea or not, but I figured
+           we'd try it out and see what people think.
+
+05-11-04 : Food style liquid containers no longer decay.
+
+05-05-04 : Trophy is now scaled based on the number of each mob that loads.
+           In other words, you will trophy 10 times slower on a mob if 
+           there are 10 copies of that mob loading, rather than 1.
+
+04-16-04 : A stock listing board has been added to the bank lobby,
+           temporarily.  I will continue development on the stock market
+           concept and hopefully you will be able to purchase stocks soon.
+
+04-13-04 : The Grimhaven-Brightmoon trolley now has an engineer and runs
+           much faster than before.
+
+04-13-04 : A loan shop has been opened, located in the Grimhaven Bank.
+           You can get a loan offer by typing "list" and take out a loan
+           by typing "buy loan" or "buy loan <amount>".
+
+04-13-04 : The corporate offices have been moved to the Grimhaven Bank.
+           You can get information on the various corporations by using
+           "list" and "list number" in the room with the corporate assistant.
+
+03-30-04 : Equipment and money sharing between your characters is now
+           permitted.  All other multiplay rules remain in effect.
+
+03-29-04 : Powerstones no longer hold a charge, but just add to your max
+           mana.
+
+03-28-04 : Removed class restriction on charging powerstones.  Powerstones
+           now contribute directly to mana, as shown in score and your
+           prompt.
+
+03-16-04 : Disarm is now a 'dangerous' skill, which means that it will fail
+           more often.
+
+03-10-04 : Added some more data to the trophy board in the morgue.
+
+02-28-04 : Slight increase in the rate of opal charging using 'chi'.
+
+02-28-04 : Added some minimal constraints to trip.  I doubt many of you will
+           run into them in your epic battles, but there ya go.
+
+02-28-04 : Internal change to processing of spaces in text.  Should be fine,
+           but please bug Maror if something weird turns up.
+
+02-28-04 : Checks for 'are you immune or not' now work in a straightforward
+           way.
+
+02-26-04 : Fixed listing in 'prac frog' of what forms a shaman is able to shift
+           into.  Shamans are limited by both level and skill at shapeshift, as
+           previously.
+
+02-26-04 : Lycanthropes will transform only when it is both night and the moon
+           is up.
+
+02-24-04 : Famine will no longer mess with your potions.
+
+02-21-04 : You can now vandalize the mud with chalk.  We'll see how it goes...
+
+02-19-04 : Shop owners must now pay a salary to their shopkeepers.  See
+           shop ownership helpfile for details.
+
+02-19-04 : Two shop ownership changes: First, it is no longer allowed to set
+           the profit_buy ratio lower than the profit_sell ratio.  We've had
+           a few incidents of screwups costing people large sums of cash, and
+           there's really no legitimate reason to do this on purpose.  Second,
+           you can now set pricing ratios on a per player basis, so you can
+           make things really expensive for Dyehead.  Just as an example.
+
+02-18-04 : New monk skill: catleap
+
+02-18-04 : Fixed the periodic spell component loader.  Stuff should load now
+           like it used to long ago.  The fertile soil in Brazzed-Dum has
+           begun growing more mushrooms lately.  When components that decay
+           merge together, the decay rate of the resulting component will be
+           calculated using the weighted average of the charges.
+
+02-14-04 : Shops:  Maurice ran low on funds, as no one ever purchased anything
+           from him, and has lowered his buy prices.  Potions should now
+           be sellable.  Changed some of the code involved in item values to
+           make potions work - should all be fine, but bug Maror if anything
+           seems odd.
+
+02-13-04 : You're not going to believe this, seriously.  At some point in
+           time, someone *cough Batopr* removed the attack bonus for
+           advanced kicking for monks and never accounted for it anywhere.
+           So, henceforth, advanced kicking now grants an extra attack.
+           Happy Friday the 13th!  *mutter*
+
+02-13-04 : Higher level mage mobs that can't fly and are hunting will now cast
+           flight on themselves before they go looking for their quarry.
+           Vampire mobs are now quite a bit less likely to perform their
+           dreaded bloodsucking bite, and the victim gets a chance to save
+           against the attack.
+
+02-12-04 : Thief mobs will now occasionally load trap components.
+
+02-10-04 : Monk changes.  Fixed a bug with iron body where an incorrect
+           AC bonus was given to characters using paired items (e.g. pants).
+           Slightly improved the ability to yoginsa without food and water
+           for very skilled practitioners of wohlin.
+
+02-10-04 : Added 'group lots' command.  For those who want to group more.
+           (That's not really it - read the helpfile).
+
+02-08-04 : Fixed bug where paired item effects disappeared.
+
+02-08-04 : Disabled age effects on line of sight, regen, and base moves.
+           Disabled age effects on movement while flying.
+
+02-05-04 : The frankenstein games have begun.
+           http://sneezy.saw.net/phpBB2/viewtopic.php?t=1646&highlight=
+
+02-02-04 : The King has picked up the tab on the limb and corpse collector
+           in Grimhaven.  So beat those zombies to the action!
+
+02-01-04 : It's now much harder to disarm a shield.  Mobs will also think
+           twice before trying.
+
+01-28-04 : All affects of age have been disabled.  No more movement
+           penalties and no more stat changes, until further notice.
+
+01-28-04 : Player killing and player looting are now against the rules.
+           HELP PLOOT and HELP PKILL have been updated.
+
+01-23-04 : Made many internal changes to the main game loop to help
+           regulate CPU usage.  Hopefully we should be running smoother now,
+           and with less overall lag.
+
+01-23-04 : Burning is now about 3 times as slow as before.
+
+01-13-04 : A magical sweepstakes is sweeping the land.
+
+01-10-04 : The guard command is now active again.  PC pets will no longer
+           rescue you automatically, unless you order them to turn guard
+           mode on.
+
+01-08-04 : Heal spray spells will now heal within groups only.
+
+01-08-04 : Potion shops no longer carry unlimited potions.  To offset
+           this, mobs now load what were previously unlimited potions.
+           This is a random load on all mobs based on level, much like
+           commodities.
+
+01-07-04 : Rewrote how the zones command calculates average level.  It
+           should now be more accurate - input needed on this please!
+           (It now displays the average level of mobs in the zone that
+           are within 1 standard deviation of the overall average level
+           of mobs in the zone, in case you were wondering).
+
+01-07-04 : Rewrote much of the mob pathfinding code.  Not entirely sure
+           what affect this will have, but be wary.  Mobs may be tracking
+           much more intelligently (but not any faster or slower).
+
+01-06-04 : Scrapped liquid containers will now dump their contents into
+	   the room.
+
+01-05-04 : Mobs will now track through portals.
+
+01-05-04 : Fixed the infinite poo bug.
+
+01-04-04 : Fixed problem with curse.
+
+01-04-04 : Removed number-of-attackers limitations on combat skills and spells.
+
+01-03-04 : Stupidity is now an offensive spell.
+
+01-02-04 : Improved likelihood of cursing your opponent.
+
+01-02-04 : Re-added a bonus for advanced learning in level comparison checks.
+           This is an interim change pending further adjustments.  Advanced
+           disciplines will continue to be important.
+
+01-02-04 : Curse and faerie fire are now offensive spells.
+
+12-31-03 : Fumble, calm, and silence are now offensive spells.
+
+12-31-03 : Disarm can now sometimes affects mobs of higher level.  So can other
+           skills.  Level comparisons in general work a little differently.
+           Bug Maror if something is working a LOT less than it should.  Bug
+           Bump if you just want to bitch about it.
+
+12-31-03 : Feral wrath no longer gives hp as a bonus.  This is a hitting spell,
+           after all.
+
+12-29-03 : Clarified error message for rangers casting in combat.  Note:
+           rangers must have their components held in their hands to cast
+           in combat.
+
+12-29-03 : Shamans can now evaluate comps to determine what spell they are
+           used for.
+
+12-28-03 : fixed some typos
+
+12-28-03 : lockout for thief disguise no longer increases with increasing level
+
+12-28-03 : spell effects that change AC will now affect mobs
+
+12-28-03 : Polymorph/shapechange/disguise/lycanthropy/vampiricism changes: name
+           retention, trophy retention, forced return when spell runs out, 
+           AC/hp/damage corrections, keep spells when switching, don't reset 
+           quest skills when switching, fixed moves, fixed riding bug, fixed 
+           experience reset bug, fixed a bunch of crash bugs
+
+12-28-03 : Started making some equipment changes.  Don't be surprised if
+           something is better, worse, or fits different classes.
+
+12-25-03 : Added some new smoke dynamics, so that smoke will drift around
+           now.
+
+12-25-03 : The Grimhaven Fire Department has stepped up their fire prevention
+           activities and deployed more firemen.
+
+12-19-03 : Additional features for corporations, details in the (new)
+           corporation help file and the shop owner help file.
+
+12-15-03 : Added a dividend kickback option to owned shops.  More details
+           in 'help shop owner'.
+
+12-15-03 : Changed the way unlimited items work in shops.  From a customer
+           point of view, it is pretty much the same.  For shop owners:
+           You will no longer get "wholesale" prices for buying unlimited
+           items.  You will also no longer have to pay to produce the
+           items - unless you only have one left.  In other words,
+           unlimited items are just like other items, except when you 
+           hit 1 item, in which case you pay to produce them so you
+           don't run out.
+
+12-15-03 : Disabled transform for now, due to a bug with it messing up
+           your exp.
+
+12-05-03 : Added some beta code for corporations.  Some info is available
+           in the new corporate offices above the inn.
+           P.S. Peel's birthday is coming up soon.
+
+11-27-03 : No trophy, double exp, no repop, increase POS, POY and POL
+           loads, for Turkey Day.  Enjoy!
+
+11-15-03 : Gimped crit hitting and power move slightly.
+
+11-15-03 : It turns out that iron fist and the voplat damage bonus weren't
+           working at all - fixed.
+
+11-13-03 : Changed component shops to deal in units of charges.  You can now
+           buy 5*component to get a component with 5 charges on it.  Same with
+           selling.  The shopkeepers will enforce inventory limits on the total
+           number of charges of each component.
+           Also, you can do: sell 25*all.comp to sell up to 25 charges of every
+           component in your inventory, provided your comps have that many
+           charges and the shopkeeper's inventory limit isn't reached.
+           Scribe has been fixed.  You can now do: scribe 3*haste to get 3
+           haste scrolls.  All 3 will be rentable because 3 charges from each
+           of the required components will have been consumed.
+
+11-08-03 : By the way, so you don't have to buy an expensive spell component
+           with hundreds of charges on it from a shop, you can do:
+           buy 5*component to purchase an appropriately priced component
+           with 5 charges on it.
+
+11-08-03 : Spell components that are added into something that already
+           contains a similar component will now automatically be merged into
+           a single component that is the sum of the two.  To split a
+           component up, do: "split component #-of-charges" on a component
+           that's in your inventory.  The new component will be inserted
+           after the old one, so repeated split commands will work more
+           conveniently.
+
+11-05-03 : New characters now start off with a base number of practices.
+
+11-04-03 : Put in some code to alleviate lag when players log in with
+           a large number of objects *cough mages*.
+
+11-04-03 : Added a new crit type for monks with critical hitting.
+
+11-03-03 : Gaining levels is now done automatically when you gain exp.
+           You now learn your basic class training at your guildmaster,
+           rather than the old trainers.  You also need to see your
+           guildmaster for any quest information.
+
+11-03-03 : Teeth can now be rented.
+
+10-27-03 : Ok, level 50's no longer need to be set by hand.  It will
+           be done automatically.  Cheers.
+
+10-27-03 : Practices are now gained based on experience rather than
+           level and you will gain them automatically as you gain
+           experience.  Additionally, you can now gain practices past
+           level 50 simply by continuing to acrue experience.  The
+           post-50 practices will be gained on the same experience curve
+           as if you had continued leveling.  The 1.3 billion experience
+           point cap has been removed.  Current level 50's may have their
+           experience reset to 1 billion, however you MUST ASK BEFORE
+           you gain a single point of experience, OTHERWISE YOUR EXPERIENCE
+           WILL NOT BE RESET.  I suggest you remain in the inn until
+           an immortal can reset your experience.  Enjoy.
+
+10-16-03 : Relive no longer has a permanent aging penalty.  Rejoice.
+
+10-12-03 : Disguise, polymorph, and shapeshift will no longer result
+           in a move bonus.  Shapeshift will preserve life force now -
+           this may be revoked, or shapeshift revised, if it proves
+           too beneficial.
+
+10-08-03 : Upped rent item limit to 10k again.  Last time, this caused
+           crashes, but I want to give it another go.  Perhaps we can
+           work through the bugs.
+
+10-06-03 : Many internal changes, probably a few bugs.  Be wary.
+
+10-02-03 : The total weight of your worn eq is now displayed in the
+           equipment command.
+
+10-02-03 : The trophy board in the morgue no longer uses total mob count
+           for percentages.  Instead, it compares everyone to the leader,
+           currently Frobozz.
+
+10-01-03 : Trophy now ignores mobs that don't load.
+
+09-25-03 : Fixed an error in mob hp calculation.  Mobs between level 71
+           and 82 will no longer be pre-chewed.
+
+09-24-03 : The learning rate on read magic has been adjusted.  Recite
+           now consumes the scroll if you fail the read magic check.
+           Recite now causes lag equal to the spell that the scroll
+           cases.  Scribe now does a read magic check.  Mages now get
+           a 50% bonus to read magic when reciting.
+
+09-19-03 : Internal changes to and cleaning up of response scripts.  Many
+           scripts were modified - bug Maror if there's a problem.
+
+09-09-03 : A cure for lycanthropy has been added.
+
+09-09-03 : Many of the roads in the world have been greatly extended and
+           the world has been generally more spread out.  This will 
+	   facilitate the addition of more zones (we were getting rather
+	   cramped) as well as possible thematic rearrangment in the near
+           future.  It should also provide a greater sense of distance 
+	   and realism.
+
+08-21-03 : Added a garbageman to the GH dump.  He will buy some items,
+           such as armor, clothing, weapons and jewelry for premium
+           over the normal dump pay out.  Over time, he will recycle
+           these objects, selling them for raw materials, and thus
+           refilling his cash, allowing more items to be bought.  This
+           is an experimental measure to stimulate the economy.
+
+08-19-03 : Vampirism and lycanthropy are now in the game.  Note that
+           there is currently no cure for lycanthropy - be careful
+           around those were-creatures!
+
+08-16-03 : Inventory can be seen now if you have true sight, even if
+           blinded.
+
+08-12-03 : Fixed problems with brew.  It should work reasonably well
+           now.
+
+08-12-03 : Added new AI code for monk and mage mobs.  They will now
+           do some new things during combat, etc.  Also, critical hits
+           will no longer necessarily scrap equipment.  When someone
+           gets a tooth knocked out, others in the room will now see
+           who made the hit.  Fixed a few miscellaneous typos.
+	   
+07-31-03 : Added a Texas Hold'em table to the casino.  Currently you
+           must play with other players, but I will eventually add
+           a couple of house AI players (hopefully).  This game is
+           probably very buggy.
+
+07-25-03 : Buying iced tea at Sestrel's will no longer result in
+           a glass of milk.
+
+07-22-03 : Added vampire and vampire bat mob races.
+           No vampirism as of yet.
+
+07-21-03 : Repair tickets will now become invalid after 180 days.
+
+07-17-03 : You will no longer hit innocents in the same room as you
+           with ranged attacks.
+
+07-16-03 : I've put in a bag shop where portable holes, bags of holding
+           and a few other new bags may be purchased.  Please do not
+           ask me where the shop is - it will be found eventually.
+           There is a small quest required to enter the shop.
+
+07-15-03 : Increased ranged damage and decreased chance to hit innocents.
+
+07-15-03 : Increased monk damage a bit.  This is an experimental change.
+
+07-14-03 : Changed the format of the owned shop "logs summaries" command.
+
+07-10-03 : The GK Highrollers Casino now sells scratch lottery tickets.
+           The tickets may be purchased at the cashier's cage and
+           redeemed with the casino pit boss.
+
+07-02-03 : Consider and evaluate are now more accurate.
+
+06-25-03 : Added a "show saves" toggle, that will give you a "Saving."
+           message everytime your pfile is saved if it is toggled on.
+
+06-19-03 : Added peeing and pooping.  Yeah.
+
+06-10-03 : Added a utility to allow shop owners to download shop logs
+           in comma delimited format.  Read "help shop own" to see
+           how to set a password with the access command, then visit
+	   http://sneezy.saw.net/shoplog.cgi to download shop logs.
+
+05-29-03 : Fixed a bunch of typos.
+
+05-24-03 : Playing around with shadowwalk a little.  The shadowwalker
+           will become visible when shadows in the room become too
+           scarce to walk across - ie brightly lit and above.
+
+05-02-03 : Made several small changes to the world map for consistency.
+           You may find that some paths have changed slightly and that
+           some speedwalks may not work.
+
+04-23-03 : Copy only works on spells that the cast knows now.
+
+04-23-03 : Word of recall will no longer work in no-portal rooms.
+
+04-23-03 : Ranged damage has been increased.
+
+04-23-03 : Disguise and polymorph no longer protect you from mobs that
+           totally aggro.  No change has been made to mobs that are not
+           normally aggressive.
+
+04-17-03 : Added about 15 new fish types for fishing.
+
+04-14-03 : Did some optimizing and re-design on the shop ownership database
+           code.  The lag you get when you type "list" at big shops should
+           be greatly reduced.
+
+04-14-03 : Re-designed the boot time object caching routine to use the
+           cache for more objects.  This should reduce the boot time
+           considerably.  Also, welcome to the new server. :)
+
+03-20-03 : The fishing boat code has been rewritten.  Enjoy.
+
+03-13-03 : Huge sweeping internal changes that will probably result in
+           a few bugs.  Sorry.  It's really for the best in the long run.
+
+03-12-03 : Added fortune cookies.  Let Peel know if you want one.
+
+02-28-03 : Fixed up reply a little bit, should work better on disguised
+           people and mobs that immortals are switched into.
+
+02-26-03 : New shaman spell: embalm
+
+02-21-03 : Brew has been re-enabled.
+
+02-20-03 : Rolled back the part of the internal changes that I think was
+           causing the bugs.  Everything should be ok now.
+
+02-18-03 : Small change to sacrifice. Read the help file.
+
+02-14-03 : Made a whole lot of internal changes.  Let me know if something
+           isn't working, mainly regarding command arguments.
+
+02-14-03 : Fixed up shop max_num stuff.  Many items weren't being restricted
+           by the shop max, but they will be now.  Taloc, for example, has
+           over 3000 ball pein hammers, which is incorrect.
+
+02-11-03 : Symbol shops will now purchase holy water vials, but only if
+           they are full and (obviously) contain holy water.
+
+02-11-03 : Fixed a TON of typos.  The typo file is practically empty.
+           Rejoice.
+
+02-10-03 : Mucked around with how exp is represented internally.  You may
+           find that exp values are shifted slightly.  It should be very
+           minor.
+
+02-07-03 : New thief skill 'plant' in the looting disc is now in.
+
+02-07-03 : Thief shops will now buy/sell poisons.  Other shops will not.
+
+01-19-03 : Added a 'poison arrow' skill for rangers.
+
+01-03-03 : The doctor will now cure poison.  Also, several small bug
+           fixes have been made.
+
+12-30-02 : I should point out that the conversion of poisons and
+           potions to true liquids combined with the rewrite of the
+           poison weapon skill now allows you to poison a weapon with
+           ANY liquid.  Mundane liquids like water or beer won't do
+           anything... but potions will.
+
+12-29-02 : Added a "(empty)" string to liquid containers that are empty.
+
+12-29-02 : Rewrote the method for poisoning weapons to work better with
+           liquid poisons.  You can now poison a weapon with any liquid
+           type, although only poisons will have any actual affect.
+
+12-29-02 : Poisons have been converted to be true liquid types.
+           Everything should work pretty much the same, except now you 
+           can move the poison around, hold it in a water skin, drink
+           it, etc.  The company assumes no responsibility should you
+           choose to drink poison.
+
+12-28-02 : All fountains have been converted to normal liquid containers.
+
+12-28-02 : Rewrote the walking-around-barefoot stumble code to be less
+           of a pain in the ass.
+
+12-28-02 : Removed slipping-on-offal proc.
+
+12-15-02 : Evaluate has been integrated into look.  Whenever you look
+           at something (except rooms) you will receive the additional
+           evaluate information as well.  In most cases, it's only 3
+           extra lines, but if it is too spammy, I can put in an
+           auto-eval toggle.
+
+12-14-02 : You can now mail "faction" to send bulk mail to everyone in
+           your faction.  The cost is 5000 talens.
+
+12-08-02 : All potions have been converted to true liquid types now.
+           This means you can pour them out, fill up water skins with
+           them, sip them, etc.  Brew has been temporarily disabled
+           until I can rewrite it to use the new potion type.  There
+           are probably some bugs to work out.
+
+12-06-02 : Tattoos are now displayed as "Tattooed on .." instead of
+           "Worn on .." as they were.  They also show up red instead
+           of cyan.
+
+12-04-02 : The travel agent in Amber now sells passes for Serpents to
+           travel to Logrus.
+
+11-27-02 : Rewrote the cleric symbol loader, so there should be a lot
+           more symbols loading.  I've also removed the unlimited symbols
+           from the shop - it is up to players to stock them now.
+
+11-27-02 : You can now use the setrates command to clear ratios for
+           individual items or keywords.  See helpfile for examples.
+           Also, setting max_num of 0 for an item or a keyword will
+           cause no items of that type to be purchased (previously
+           it was allowing 1 item to be purchased).
+
+11-24-02 : Materialize and spontaneous generation have been re-enabled, but
+           now only work for a very small range of items.
+
+11-24-02 : Setting max num for owned shops should work now.  It might be
+           a little buggy, so keep your eyes out.  Ditto with the matching.
+
+11-24-02 : Materialize and spontaneous generation have been disabled
+           pending a rewrite.
+
+11-23-02 : Keyword matching for shop profit ratios should be working now.
+
+11-22-02 : Consolidated "set profit_buy" and "set profit_sell" into a new
+           command, "setrates".  "shop owner" help file has been updated,
+           read it for syntax. max_num and keyword matching are not currently
+           functional.
+
+11-21-02 : Fixed a bug with the display of shop logs - you should be able
+           to see your logs correctly now, no matter how long they are.
+
+11-20-02 : New shaman ritual in the healing discipline. See help
+           ENLIVEN for details.
+
+11-20-02 : You should not be able to tell the difference between a
+           successfully poisoned weapon and an unsuccessfully poisoned
+           weapon now.
+
+11-20-02 : You can now specify a poison with poison weapon.
+
+11-15-02 : Poisoned arrows now work correctly.
+
+11-15-02 : Reimplemented the mystery potion. Like before, it may be good
+           or it may be bad. Quaff at your own risk etc.
+
+11-15-02 : You can poison magic weapons now.  Be aware that some poisons
+           may not function to full affect with used with some weapons.
+
+11-15-02 : Added several new poisons for poison weapon, which will load
+           on thief mobs.
+
+11-14-02 : Added a crit fail to poison weapon.  Increased the affect
+           of poison weapon.  Poison weapon overhaul in progress,
+           more to come.
+
+11-14-02 : Fixed some bugs with the mystic man below Camron's.  He
+           should always give back items now.
+
+11-12-02 : Rewrote the practice distribution function for mobs.  Rather
+           than just randomly practicing disciplines, they will now be
+           a little bit smarter about it.  For example, the same mob
+           may load as either a fire mage or a water mage, depending
+           on what they "decide" when they load.  Also, fixed a dumb
+           bug with toggle.  And I added something else, but it's a
+           secret.
+
+11-11-02 : Totally rewrote the practice calculation formula.  I also
+           fixed a huge bug with mob pracs in the process.  Mobs 
+	   (particularly mages) will have a lot less pracs - in fact,
+           they should have pracs appropriate for their levels.
+           You may notice a slight change in the number of pracs you
+           get as a player.  Also, intelligence now has a greater
+           affect on practices.
+
+11-06-02 : Added a trip skill for warriors. Help file is there but
+           come on, I think you know what tripping someone is.
+
+11-02-02 : Added "group name".
+
+11-02-02 : "Prac stealth" no longer shows a list of valid disguises.
+           Disguise with no arguments will show a list of valid
+           disguises - and it's actually accurate now.
+
+11-01-02 : Fixed some bugs with special attacks code.  Cudgel uses a
+           different hitting mechanism now, I'm not sure how the hit
+           rate will be affected.
+
+10-30-02 : Ranged specialization and fast load now allow for multiple
+           shots in quick succession.
+
+10-30-02 : Mobs that have been made wary now have a better chance of
+           avoiding arrows.  This is similar to how backstab works.
+
+10-30-02 : Fixed a bunch of crash bugs.
+
+10-24-02 : Redid the ranged damage formula slightly.  Previously, if
+           you had a low ranged proficiency, you would get a damage
+           penalty.  That penalty is gone, so lower level rangers
+           should do more damage.
+
+10-23-02 : Few shaman tweaks. There are some other features that have 
+           become random somehow with shaman that I will address as I
+           can. 
+
+10-23-02 : Evaluate was too slow to increase and it doesn't make sense 
+           that evaluate and examine give you alot of the same infor-
+           mation SO I will examine and evaluate evaluate and examine
+           and possibly change them to make the evaluate skill a bit
+           more worth learning for non-casting classes. I also increased
+           the learn rate on evaluate a little.
+
+10-18-02 : The tattoo artist in Amber now sells tattoos.
+
+10-17-02 : Maror was kind enough to point out that the global shop price
+           modifier was still in place for owned shops - that is, your
+           profit_sell modifier was being changed transparently by the
+           mud.  This has been removed.  You may wish to re-examine the
+           price of items in your shop as this will cause a global
+           decrease in price of about 41%.
+
+10-15-02 : Mud is now using dynamically linked libraries rather than
+           statically linked objects.  I don't expect any problems to
+           arise but I thought you'd like to know.
+
+10-15-02 : Removed a damage bonus from archery.  A multiplier of up to
+           500% was being added, depending on range.  I think this is
+           the cause of ranged damage being so high.
+
+10-15-02 : 'shoot' now works as described in the help file - if you shoot
+           in a direction without specifying a target, you will shoot
+           at the first target in that direction.
+
+10-14-02 : The news command can now take an argument to search entries.
+
+10-10-02 : Fixed a bug with weapon damage, a big one.  Pierce and slash
+           weapons should be doing a lot more damage now.
+
+10-09-02 : The disease prayer will now only inflict a disease if the
+           victim does not already have the disease.
+
+09-13-02 : Disabled repo.  Yay!
+
+09-09-02 : Monks with iron skin suffer less chance of hurting themselves
+           when running around without gear.
+
+09-05-02 : Hobbits will no longer break their feet if they don't wear
+	   shoes.
+
+09-04-02 : Fixed a crash bug in conceal.
+
+09-04-02 : Changed butcher to take the size of the corpse into account
+           when determining how much food you get out of it.
+
+09-04-02 : Cudgeled cityguards will no longer try to assist themselves 
+	   (or others)
+
+09-04-02 : Made elementals a lil weaker again.
+
+08-28-02 : Deaths up to and including level 10 no longer result in
+           any age gain.  Cheers.
+
+08-28-02 : The Grimhaven Casino has bankrupted and closed it's doors.  Word
+           has it that two prominent investors are planning on rebuilding.
+
+08-27-02 : Added tell history to the history command.
+
+08-22-02 : Removed bank deposit limits.
+
+08-09-02 : Removed ensorcer.  But I also made it so you can get 2 thralls
+           at upper levels and even 3 at high high levels if you're
+           charismatic.  Elementals are also a bit buffer and vary from type
+           to type more, in terms of offensive/defensive capability.
+
+08-09-02 : Fixed a crash bug in repair.
+
+08-09-02 : Containers that are empty will display (empty), but only if they
+           are currently open (so you can easily see the contents, or lack of).
+
+08-08-02 : Disabled junk command.  If you want to get rid of something, take
+           it to the dump, or just throw it on the ground like the no-good
+           littering slob that you are.  Nojunk still works, and will protect
+           from certain things like accidentily dropping at the dump etc.
+
+08-08-02 : Put in most of the repair objs.  Big thankye to Maror for doing
+           them for lazy me.
+
+08-08-02 : Calmed mobs can now use special moves/cast etc if they are
+           fighting, but they can't initiate anything on their own.
+
+08-06-02 : Changed the max charmie/thrall etc to one.
+
+07-29-02 : Added actual drink types to all the drinks in Kavod's shop.
+
+07-27-02 : Added brief and compact to the toggle command.  Reformated the
+           toggle list to fit more toggles on a line.
+
+07-19-02 : Fixed my 'tweak' of fastload.  Ha ha.  (oops)
+
+07-17-02 : Changed Order of the Snakes leader names, per faction
+           request.
+
+07-16-02 : Lowered rent limit back 1k, it was causing problems.
+
+07-15-02 : Fixed a crash bug thats been haunting us.
+
+07-15-02 : Tweaked fastload for rangers.  Should be faster than it was
+	   before, but I slowed down normal loading for rangers, so the
+           change sorta favors rangers.  As it should.
+
+07-13-02 : Fix a bunch of bugs.  See SneezyMUD forums for details
+           (http://www.grimhaven.org/phpBB2/)
+	   Some of what was fixed: charmed clerics not healing masters,
+	   polymorph resetting quest skills, idle repo mobs, various
+           sacrifice bugs, switching/rescuing mob bug, a really big
+           ruler, flying/bash quirks, innkeepers pushing people around,
+           and the room description of some whittled objects.
+           Cheers.
+
+07-13-02 : Players can now fly during combat, mobs who can't see
+           invis will no longer bash invis clerics or mages or whatever.
+
+07-13-02 : Tweaked some of the wrath cleric prayers.
+
+07-12-02 : Added a couple of new fish to catch.
+
+07-10-02 : You can use springleap to initiate combat now.
+
+07-07-02 : Added a new toggle: trophy.  When on, you will see your trophy
+           status for mobs that you kill automatically.
+
+07-05-02 : Added new crit type.
+
+07-04-02 : Cut repair costs, cut damage rates, removed depreciation.
+	   Put wear and tear back in, and lengthened repair times.
+
+07-04-02 : Added a bunch of repair skills for all the classes, and an
+	   advanced repair skill for warriors.  Also a mend skill in
+       	   basic adventuring, but its disabled.  None of this really
+           matters though, because the tools aren't in the game yet.
+           Enjoy!
+
+07-04-02 : Added a 'ping' toggle.  It will be off by default.  If you want
+           the mud to ping you to determine your network lag (as shown in
+           the 'world' command), then you need to toggle this on.  If
+           you've got a really slow connection or if you're playing in
+           a "sensitive" environment (read: not allowed to mud at work)
+           then you may wish to leave it off.
+
+07-02-02 : Monks have been tweaked somewhat.  Blur will now trigger more
+           often, critical hitting will cause more damage, voplat will
+           cause more damage, wohlin meditation will increase healing
+           rate and there is a new skill: chain attack.
+
+06-30-02 : Grapple tweaked slightly.
+
+06-29-02 : Second attempt at object caching to increase boot speed.  Seems
+           to be working ok and cuts off about 2 minutes.
+
+06-27-02 : Adjusted object burning/freezing/acid dissolving again.  The
+           chances are much lower now without a protection spell and
+           extremely low with a protection spell.
+
+06-22-02 : New mage spell: knot.
+
+06-19-02 : Consolidated auto, terminal, flag  and wimpy into the toggle
+           command.
+
+06-13-02 : Increased rent item limit from 1k to 10k.
+
+06-12-02 : Several changes to smythe based on Laren's feedback.
+
+06-12-02 : Made some changes to the way weight and volume are calculated.
+
+06-07-02 : Receiving a tell will no longer break meditation.  Who's idea was
+           that anyway?
+
+06-06-02 : Multiple weapon types are now in.
+
+06-06-02 : Turned on rent deletion for 3 month inactive players but ONLY
+           if every character in the players account is inactive.
+
+06-04-02 : In order to encourage Grimhaven's economic growth, the King has
+           ordered that the slums be demolished and a new market district be
+           built in its place.  Although no shops have taken up residence in
+           the new area yet, new owners are expected to move in soon.  See
+           the message board for details.
+
+06-04-02 : Added the ability to have multiple weapon types.  We have two
+           builders working on actually setting weapons with multiple types,
+           so you won't see any change as of yet.  This code move is to make
+           sure that the supporting code functions correctly.  Please keep
+           an eye out for odd weapon types, incorrect proficiency hones, etc.
+
+05-22-02 : Added a toggle for fun....you'll see :)
+
+05-20-02 : Ok the caching thing didn't work at all, back to the drawing board.
+
+05-20-02 : I added a smoove object caching trick to the boot time zone
+           resetting.  This should give us a huge decrease in boot time, but
+           we'll have to try it out and see.  It works pretty well on beta.
+
+05-20-02 : Re-wrote the mail system to use the database.  I removed about 380
+           lines of ancient file I/O routines and replaced them with about 10
+           lines of database code.  Just thought you'd like to know.  Let's
+           hope it actually works.  Any mail not received by the time this
+           change goes in will be lost.  Sorry.
+
+05-08-02 : Bags won't burn now.  This code was already in, but it wasn't
+           working right I guess.
+
+04-25-02 : Added a new disc for monks: iron body.  Before you ask, no, there
+           won't be any practice reimbursements or shuffling or anything.
+
+04-25-02 : Added new skill for mages, in the magic lore discipline, called
+           mana.  As you might expect, mage mana is now determined by this
+           skill instead of level.  If you're a mage give me (Peel) a tell
+           I'll set your skill up a bit.
+
+04-24-02 : Renamed some of the logrus faction leader slots, per faction
+           request.
+
+03-25-02 : Charmed clerics will only heal thier masters.
+
+03-19-02 : Tweaked mage elementals to be stronger hitters, worse tanks.
+
+03-18-02 : Apparently people weren't enjoying the repo code as much as
+	   I'd hoped.  Disabled.  Normal repo (max exist repoes) remain
+	   unchanged, as before.
+
+03-18-02 : 2nd bump in monster level.
+
+03-16-02 : Added the money train.  Choo choo.
+
+03-12-02 : Modified the shop logs a bit.  All negative cost logs will now
+           actually be recorded as negative cost (shop sells an item, cost
+           is positive, shop buys an item, cost is negative).  Added a
+           balance sheet to logs summaries.  Added 3 additional shop logs:
+           repo, producing (price paid for producing an unlimited item),
+           and wholesale (price gained for buy a produced item).  Added
+           the ability to see logs for particular players (eg logs peel).
+
+03-11-02 : Fixed a bunch of issues with repo - including mobs attacking
+	   prematurely, mobs that can't speak repoing, etc.  Lowbies
+	   will also not be killed, as will afk people.  If you try and
+	   hide in a peaceful, mobs will also push you multiple rooms till
+           you are in a non-peaceful room.
+
+03-02-02 : We're on postgresql now.  Enjoy.  Hope it works.
+
+03-01-02 : ATTENTION - IMPORTANT ANNOUNCEMENT: Over the next few weeks,
+	   mobs will be slowly going up in level.  This will do two things,
+           it will make them more difficult, and it will make them worth
+           more experience.  This is a warning to STAY ON YOUR TOES.  The
+           mud is not getting any easier or harder through this change,
+           but specific zones may not be as easy or appropriate for the
+           same levels they used to be.
+
+02-28-02 : Bounty Hunters have been tweaked a bit.  They will now come more
+           frequently, and will be a little bit nicer about asking for loot
+           before they attack.  They will also be a bit harder to get away
+           from in the event you don't give them what they want.
+
+02-28-02 : Adding a message whenever you tithe talens.  This should clear up
+           all of those annoying "I did X and I'm losing money" questions, 
+           where X is picking up money, stealing, etc.  If your faction
+           has a tithe percent set, you tithe talens automatically.
+
+02-28-02 : Adding a cooking command.  You can't use it though, because there
+           is no cookware or recipe books in the game.  Hahaha suckers.
+
+02-28-02 : You can now put containers into other containers, but only if
+           they're empty.
+
+02-25-02 : Fixed a bug that has been lurking in the damage code for a
+           long time.  Dex was being factored in to damage under special
+           circumstances when it should not have been.  The bug has been
+           fixed, so you may notice a slight decrease in your combat
+           damage, especially if you used pierce weapons.  Sorry for the
+           belated news entry.
+
+02-25-02 : Added some stat info to "att cond".
+
+02-22-02 : Converted 'who' to use strings instead of char pounters.  This
+           will cut down on our crashes some.  Let me know if you see 
+           something funky with 'who'.
+
+02-20-02 : New shaman healing disc with a new skill 'healing grasp'.
+
+02-20-02 : Major slip up fixed. When I added mage scribe to the game I 
+	   never set the learning rate and start to what it was intended.
+	   This is fixed so you may want to check your skill level and
+	   re-evaluate the worth of the skill. The rate that was set was 
+	   intended as a testing level. (so I could see increases etc.)
+
+02-13-02 : Modified some prompt stuff, so all your prompt configurations
+           are probably corrupt.  Hopefully I converted the pfiles right,
+           so that the prompts are the only things corrupted.  Cross your
+           fingers.
+
+02-13-02 : Adjusted the faction score board formulas slightly and added
+           a help file "faction score" to explain them.  It might take 
+           awhile to get these working well.
+
+02-10-02 : Due to repeated attacks, the city of Brightmoon has begun
+	   training paladins into archers and crossbowmen to man their walls.
+	   Logrites beware, for they are proven to be rather excitable.
+
+02-10-02 : Earthmaw, Sky Spirit, and Feral Wrath ranger skills have
+	   been implemented.
+
+02-08-02 : Ok you freaking whiners, consider now gives a special message when
+           you've never fought the mob before.
+
+02-06-02 : There is a new faction scoreboard in the Kindred Pub.  More
+           scoring components will be added when it becomes feasible.
+           Player files are NOT stored in the database, so it is difficult
+           to use statistics based on player wealth etc.
+
+02-05-02 : Consider will now say that you will gain full experience
+           for mobs that you have never fought, whereas previously
+           it would simply omit that line until you had attacked them.
+
+02-05-02 : Added a Logrus faction board, somewhere in Logrus.
+
+02-04-02 : Re-wrote the database interface and converted a bunch of the
+           code to use it.  If you see anything wacked out, let me know.
+
+02-02-02 : Opps forgot to mention that eyes of fertuman is now somewhat
+           limited in the items that it can detect.
+
+01-31-02 : The shop change mentioned on the board is now in place.  When
+           selling a shop, you no longer receive money for the shops 
+           inventory.
+
+01-29-02 : There is a new informational board in the GH Casino.
+
+01-20-02 : Added a new thief skill to the murder disc. Throat slitting is
+	   an opening move that could be considered an advanced opening
+	   combat maneuver. Help SLIT for details.
+
+01-20-02 : The permadeath monument has been a little wacky lately, putting
+           names on for people that aren't permadeath etc.  I think I got
+           the bug fixed.
+
+01-17-02 : Added a shop just north and east of GH that sells seeds to
+           various plants.  You can use the "plant" command to plant them.
+
+01-12-02 : Fixed a small bug with the permadeath monument.  Note that
+           if you delete a dead permadeath and remake, you will lose your
+           spot on the monument as soon as you gain to second level.
+
+01-10-02 : There is a new informational board in the lobby of the GH Bank.
+
+01-10-02 : Added a couple of bells and whistles to butcher.
+
+01-10-02 : There is a new informational board in the GH Morgue.
+
+01-07-02 : "help multiplaying" updated.
+
+01-04-02 : AC is now dynamically generated.  What does this mean to you?
+           Nothing really, but if really really really think your AC or 
+           a mobs AC is wacked out, please tell Peel.
+
+01-03-02 : Peel now has a miniature idol that you can whittle.
+           Happy now Frobozz?

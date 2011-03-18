@@ -1,0 +1,34 @@
+Example Response File:
+---------------------
+ 
+A response file consists of a header, comments, and multiple response
+blocks.  The header consist of 4 lines, each starting with a #.  The first
+line is the mob's name associated with the file, the second is the quest
+name, the third is the creator and the fourth is copyright information.
+Comments give more information about a file and also start with a #.  Each
+response block indicates all actions to be associated with a given
+trigger.
+
+
+example file:
+-------------
+
+# Princess of Grimhaven		<--- Mobs name
+# Generic Quest			<--- Quest to which mob belongs
+# Created by Dolgan		<--- Person who created quest (with date)
+# Copyright 1998, <h> Development Team.  All rights reserved.
+
+say { "hello";              <--- this is the trigger line
+        smile %n;                <----- these are the actions to perform
+        toroom $n kisses $N.;    <---|
+        tovict $n kisses you.;   <---|
+        }
+
+# Directions to L40 Mage Guildmaster	<--- Comment
+
+say { "next guildmaster";
+        tell %n "Finding your next guildmaster is part of your training.";
+        tell %n "However, I can give you a hint...";
+        tell %n "The one you seek is a farmboy at heart.....";
+        tell %n "and he is very fond of the pipe.";
+	}

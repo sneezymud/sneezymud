@@ -1,0 +1,31 @@
+ZONEFILE CREATION
+
+Created: Saturday, 13 Nov 1993
+Modified: Friday, 10 July 1998
+
+Use command: READ CHAPTER (#) OF zone where (#) is one of:
+
+ 1: What is a zonefile?
+ 2: Zonefile header
+ 3: General format and layout
+ 4: Zonefile Commands
+ 5: Command D: doors
+ 6: Command O: objects
+ 7: Command B: booty
+ 8: Command P: put
+ 9: Command M: mob
+10: Command G: give
+11: Command E: equip
+12: Command R: ride
+13: Command C & K: charm and group
+14: Command H & F: hate and fear
+15: Command T: trap
+16: Command V: value change
+17: Command ?: randomizer
+18: Command Y: bulk (set) equipment load
+19: Command A: area randomizer
+20: Command X & Z: Define/Load local set
+21: A NOTE REGARDING MAX_EXIST
+22: A NOTE REGARDING PERCENTILE LOADS
+23: Appendix: slots for eq
+24: EXAMPLE ZONE FILE

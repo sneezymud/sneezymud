@@ -1,0 +1,12 @@
+Syntax: shove <victim> <direction>
+
+Shove is a way to bodily move a person or creature from where they are into an
+adjacent location.  It can not be done while either the shover or shovee is
+fighting.  The shover can not shove while mounted, nor can a horse be moved
+while ridden.  Failed shoves will cause a fight, as will shoves that push the
+target into a wall or other non-exit.  Monks have a reputation for dodging
+shoves.
+
+Anyone, including the untrained, can attempt to push a rider off their mount.
+Success is based on the shover's strength, rider's dexterity and the rider's
+control over the mount.  Failure may lead to combat.

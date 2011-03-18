@@ -1,0 +1,6 @@
+Syntax: summon <animal>
+
+Rangers are able to summon wild creatures from the region around them.  The
+exact number summoned, as well as how far away the creature(s) will come
+from is dependent on the level of the ranger.  Note that it may take awhile
+for the summoned creatures to actually arrive.

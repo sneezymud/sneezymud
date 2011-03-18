@@ -1,0 +1,31 @@
+filename RACE_TURTLE
+singName turtle
+plurName turtles
+propName Turtle
+lore ANIMAL
+age 50+5d10
+maleHt 16+1d2
+maleWt 16+2d2
+femaleHt 14+1d2
+femaleWt 14+2d2
+body Turtle
+moveIn slowly advances
+moveOut slowly leaves
+STR 60
+BRA 200
+CON 200
+DEX 80
+AGI 60
+INT 55
+WIS 100
+FOC 100
+PER 55
+CHA 100
+KAR 190
+SPE 55
+DumbAnimal
+Fourlegged
+AFF_WATERBREATH
+AFF_SWIM
+Ridable
+

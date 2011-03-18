@@ -1,0 +1,8 @@
+Syntax: toggle spam
+
+The spam control toggle will prevent you from seeing combat "misses" and other
+hits that do zero damage.  It will also compact some other combat-related
+information.
+
+See Also: TOGGLE, REDUCING SPAM
+Related Topics: SCREEN, NEWBIE 

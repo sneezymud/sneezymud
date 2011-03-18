@@ -1,0 +1,7 @@
+Syntax: climb {object}
+
+Permits you to climb up some object or thing.  The climbing skill may be
+applicable.  Failure to climb the object often causes you to fall.
+
+See Also: UP, CLIMBING
+Related Topics: MOVEMENT
