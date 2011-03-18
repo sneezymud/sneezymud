@@ -67,6 +67,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
          tStSucker(""),
          tStArgument(arg);
   TPathFinder path;
+  TThing *tThing;
 
   if (!awake())
     return TRUE;
@@ -338,7 +339,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
       tStObj=tStArgument.word(0);
       tStSucker=tStArgument.word(1);
 
-      TThing *tThing = searchLinkedList(tStObj, stuff, TYPEOBJ);
+      tThing = searchLinkedList(tStObj, stuff, TYPEOBJ);
 
       if (!mob || !tThing)
         vlogf(LOG_BUG, format("Error in response script junk command:%s%s Mob[%s]") % 
@@ -351,27 +352,6 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
       
       break;
     case CMD_GIVE:
-#if 0
-      tStObj=tStArgument.word(0);
-      tStSucker=tStArgument.word(1);
-
-      TThing *tThing = searchLinkedList(tStObj, stuff, TYPEOBJ);
-
-      if (mob && tThing && canSee(mob))
-        rc = doGive(mob, tThing, GIVE_FLAG_DROP_ON_FAIL);
-      else if (!mob || !tThing)
-        vlogf(LOG_BUG, format("Error in doGive:%s%s Mob[%s]") % 
-              (mob ? "" : " !mob") %
-              (tThing ? "" : " !tThing") %
-              getNameNOC(this));
-
-      if (tThing && tThing->parent == this && roomp) {
-        doSay("Well I guess I'll just drop it here...");
-        --(*tThing);
-        *roomp += *tThing;
-      
-      }
-#else
       //    Force the mob to drop if the give fails
       rc = doGive(arg, GIVE_FLAG_DROP_ON_FAIL);
       // the force drop shit is lame, so another safety check here. give SHOULD return 
@@ -380,7 +360,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
       tStSucker=tStArgument.word(1);
 
       if (!rc) {
-	TThing *tThing = searchLinkedList(tStObj, stuff, TYPEOBJ);
+	tThing = searchLinkedList(tStObj, stuff, TYPEOBJ);
 	if (tThing && tThing->parent == this && roomp) {
 	  doSay("Well I guess I'll just drop it here...");
 	  --(*tThing);
@@ -393,7 +373,6 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
 
 	}
       }
-#endif
       break;
     case CMD_RESP_CHECKROOM:
       value = convertTo<int>(arg);
