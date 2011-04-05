@@ -1509,7 +1509,7 @@ int brokenBottle(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 int boneStaff(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 {
   TBeing *ch;
-  wearSlotT part_hit = wearSlotT((int) arg);
+  wearSlotT part_hit = wearSlotT((long int) arg);
 
   ch = genericWeaponProcCheck(vict, cmd, o, 0);
   if (!ch)
@@ -2273,7 +2273,7 @@ int gnomeTenderizer(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
     if (!vict || !(vict == ch->fight()))
       return FALSE;
     
-    wearSlotT part = wearSlotT(int(arg));
+    wearSlotT part = wearSlotT((long int)arg);
     
     act("A bar from $p swings around and meets $N's flesh flush at its slightly-hollowed end.",
         false, ch, o, vict, TO_CHAR, ANSI_CYAN);

@@ -363,7 +363,7 @@ int rumorMonger(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *
         return TRUE;
       }
     } else if (cmd == CMD_MOB_GIVEN_COINS) {
-      if ((amt = (int) o) < type) {
+      if ((amt = (long int) o) < type) {
         myself->doSay("Those that are GENEROUS are often rewarded.");
         fclose(fp);
         return TRUE;
@@ -3633,7 +3633,7 @@ int sharpener(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       return FALSE;
     case CMD_MOB_MOVED_INTO_ROOM:
 
-      return kick_mobs_from_shop(me, ch, (int)o);
+      return kick_mobs_from_shop(me, ch, (long int)o);
 
     case CMD_MOB_VIOLENCE_PEACEFUL:
       ttt = o;
@@ -4297,7 +4297,7 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       return FALSE;
     case CMD_MOB_MOVED_INTO_ROOM:
 
-        return kick_mobs_from_shop(me, ch, (int)o);
+        return kick_mobs_from_shop(me, ch, (long int)o);
 
     case CMD_MOB_VIOLENCE_PEACEFUL:
       ttt = o;
@@ -5511,7 +5511,7 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       return FALSE;
     case CMD_MOB_MOVED_INTO_ROOM:
 
-      return kick_mobs_from_shop(me, ch, (int)o);
+      return kick_mobs_from_shop(me, ch, (long int)o);
 
     case CMD_MOB_VIOLENCE_PEACEFUL:
       ttt = o;
@@ -7054,7 +7054,7 @@ int idCardProvider(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
   if(cmd != CMD_MOB_GIVEN_COINS)
     return FALSE;
 
-  amt=(int)o;
+  amt=(long int)o;
 
   if(amt < 50){
     me->doSay("Uh... thanks for the tip.  If you want an ID card it'll be 50 talens.");

@@ -918,7 +918,7 @@ int repairman(TBeing *buyer, cmdTypeT cmd, const char *arg, TMonster *repair, TO
       return FALSE;
     case CMD_MOB_MOVED_INTO_ROOM:
 
-      return kick_mobs_from_shop(repair, buyer, (int)o);
+      return kick_mobs_from_shop(repair, buyer, (long int)o);
 
     case CMD_MOB_VIOLENCE_PEACEFUL:
       repair->doSay("Hey!  Take it outside.");
