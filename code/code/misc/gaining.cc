@@ -1439,7 +1439,7 @@ int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline,
 {
   char buf[256];
   sstring tmp_buf;
-  bool found = FALSE;
+  int found = 0;
   int combat = 0;
   bool combatLearn = FALSE;
   int WEAPON_GAIN_LEARNEDNESS = 92;
