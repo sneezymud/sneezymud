@@ -38,7 +38,7 @@ int task_scribe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
     return FALSE;
 
   switch(cmd) {
-  case CMD_TASK_CONTINUE:
+    case CMD_TASK_CONTINUE: {
       how_many = ch->task->status;
       w2 = ch->task->flags;
       which = spellNumT(w2);
@@ -121,6 +121,7 @@ int task_scribe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
       }
       ch->task->timeLeft++;
       break;
+    }
   case CMD_ABORT:
   case CMD_STOP:
       ch->stopTask();

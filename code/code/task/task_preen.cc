@@ -165,7 +165,7 @@ int task_preen(TBeing *ch, cmdTypeT cmd, const char *arg, int pulse, TRoom *rp, 
     preenChance = 2;
 
   switch (cmd) {
-    case CMD_TASK_CONTINUE:
+    case CMD_TASK_CONTINUE: {
       ch->task->calcNextUpdate(pulse, PULSE_MOBACT * 5);
 
       // valid timeleft states are 3, 2, 1, 0
@@ -239,6 +239,7 @@ int task_preen(TBeing *ch, cmdTypeT cmd, const char *arg, int pulse, TRoom *rp, 
       else if (ch->task->timeLeft > 0 && ::number(0,preenChance))
         ch->task->timeLeft--;
       break;
+    }
     case CMD_ABORT:
     case CMD_STOP:
       act(preenAct[15], FALSE, ch, NULL, target, TO_CHAR);

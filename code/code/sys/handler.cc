@@ -460,7 +460,7 @@ void TBeing::affectModify(applyTypeT loc, long mod, long mod2, uint64_t bitv, bo
     case APPLY_PROTECTION:
       addToProtection(mod);
       return;
-    case APPLY_GARBLE:
+    case APPLY_GARBLE: {
       // keep this code in line with toggleGarble
       int myGarbles = my_garbleFlags;
       if (hasQuestBit(TOG_BLAHBLAH))
@@ -476,6 +476,7 @@ void TBeing::affectModify(applyTypeT loc, long mod, long mod2, uint64_t bitv, bo
       if (myGarbles != my_garbleFlags)
         toggleGarble(mod > 0? (Garble::TYPE)mod : (Garble::TYPE)-mod);
       return;
+    }
     case MAX_APPLY_TYPES:
       break;
   }
