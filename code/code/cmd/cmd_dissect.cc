@@ -75,8 +75,8 @@ int determineDissectionItem(TBaseCorpse *corpse, int *amount, char *msg, char *g
     if (CT != dissect_array.end()) {
       num = CT->second.loadItem;
       *amount = CT->second.amount;
-      sprintf(msg, CT->second.message_to_self.c_str());
-      sprintf(gl_msg, CT->second.message_to_others.c_str());
+      sprintf(msg, "%s", CT->second.message_to_self.c_str());
+      sprintf(gl_msg, "%s", CT->second.message_to_others.c_str());
     }
   }
 

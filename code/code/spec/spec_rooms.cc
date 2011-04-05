@@ -454,7 +454,7 @@ int personalHouse(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
   if (!pers)
     return FALSE;
 
-  sprintf(buf, fname(rp->name).c_str());
+  sprintf(buf, "%s", fname(rp->name).c_str());
 
   if (strcmp(buf, pers->getName()))
     return FALSE;

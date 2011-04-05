@@ -267,14 +267,14 @@ void TPlant::updateDesc()
     sprintf(buf, plantdesc[plantindex], planttypes[getType()]);
     setDescr(mud_str_dup(buf));
   } else {
-    sprintf(buf, plantkeywords[plantindex]);
+    sprintf(buf, "%s", plantkeywords[plantindex]);
     delete [] name;
     name = mud_str_dup(buf);
 
-    sprintf(buf, plantname[plantindex]);
+    sprintf(buf, "%s", plantname[plantindex]);
     shortDescr = mud_str_dup(buf);
     
-    sprintf(buf, plantdesc[plantindex]);
+    sprintf(buf, "%s", plantdesc[plantindex]);
     setDescr(mud_str_dup(buf));
   }
 

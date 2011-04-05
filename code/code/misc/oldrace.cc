@@ -732,7 +732,7 @@ const sstring TBeing::describeBodySlot(wearSlotT i) const
   else if (isLimbFlags(i, PART_TRANSFORMED)) {
     sprintf(buf, "%s", describeTransBodySlot(i).c_str());
   } else 
-    sprintf(buf, describeBodySlot2(i).c_str());
+    sprintf(buf, "%s", describeBodySlot2(i).c_str());
 
   return buf;
 }
