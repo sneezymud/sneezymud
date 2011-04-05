@@ -491,7 +491,7 @@ sstring TBeing::getInsult(TBeing *vict)
       buf = "Ugh, here's a tissue. Cover your face with it";
       break;
     default:
-      return FALSE;
+      return "I can't think of an insult right now";
   }
 
   for (insult=1; insult <= ::number(1,5); insult++)
