@@ -3015,7 +3015,7 @@ int TObj::noteMeForRent(sstring &tStString, TBeing *ch, StuffList, int *tCount)
   char tString[256],
        tBuffer[256];
 
-  sprintf(tBuffer, "%%-%ds : ", (30 + (strlen(getName()) - strlen(getNameNOC(ch).c_str()))));
+  sprintf(tBuffer, "%%-%lus : ", (30 + (strlen(getName()) - strlen(getNameNOC(ch).c_str()))));
 
   if (isRentable() && isMonogramOwner(ch, true)) {
     if (!FreeRent) 

@@ -438,7 +438,7 @@ void TBeing::doCommand(const char *arg)
       str += "\n\r";
   }
 
-  sprintf(buf, "\n\r\n\rTotal number of commands: %u\n\r", cmdVec.size());
+  sprintf(buf, "\n\r\n\rTotal number of commands: %zu\n\r", cmdVec.size());
   str += buf;
 
   desc->page_string(str);
