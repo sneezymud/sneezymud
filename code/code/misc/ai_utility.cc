@@ -204,6 +204,7 @@ int TBeing::socialLimbBad(TBeing *mob, cmdTypeT cmd)
         break;
     }
   }
+  /*
   if (!mob->hasHands()) {
     switch (cmd) {
       case -1:
@@ -214,6 +215,7 @@ int TBeing::socialLimbBad(TBeing *mob, cmdTypeT cmd)
         break;
     }
   }
+  */
   if (!mob->canUseLimb(WEAR_HAND_L) || !mob->canUseLimb(WEAR_HAND_R) || !mob->canUseLimb(WEAR_ARM_L) || !mob->canUseLimb(WEAR_ARM_R)) {
     switch (cmd) {
       case CMD_DANCE:
