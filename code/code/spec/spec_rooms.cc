@@ -15,6 +15,7 @@
 
 
 #include <cmath>
+#include <cstdio>
 
 #include "extern.h"
 #include "room.h"

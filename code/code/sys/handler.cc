@@ -7,6 +7,7 @@
 
 #include <cstdarg>
 #include <cmath>
+#include <cstdio>
 
 extern "C" {
 #include <unistd.h>

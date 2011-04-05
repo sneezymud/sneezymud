@@ -5,6 +5,7 @@
 #include "stats.h"
 
 #include <cmath>
+#include <cstdio>
 
 Stats Stats::operator+(const Stats &operand)
 {

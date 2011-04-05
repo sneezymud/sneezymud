@@ -4,6 +4,8 @@
 #include <mysql/mysql.h>
 #include <queue>
 #include <map>
+#include <cstdio>
+#include <cstring>
 
 class sstring;
 
