@@ -2685,22 +2685,22 @@ void setPrompts(fd_set out)
 	    int room=ch->roomp->number;
 
 	    sprintf(promptbuf + strlen(promptbuf), 
-		    getTimePrompt(ch, d, ct).c_str());
+		    "%s", getTimePrompt(ch, d, ct).c_str());
 	    sprintf(promptbuf + strlen(promptbuf),
-		    getHitPointsPrompt(ch, d, hp).c_str());
+		    "%s", getHitPointsPrompt(ch, d, hp).c_str());
 	    sprintf(promptbuf + strlen(promptbuf),
-		    getManaPrompt(ch, d, mana).c_str());
+		    "%s", getManaPrompt(ch, d, mana).c_str());
 	    sprintf(promptbuf + strlen(promptbuf),
-		    getPietyPrompt(ch, d, piety).c_str());
+		    "%s", getPietyPrompt(ch, d, piety).c_str());
 	    sprintf(promptbuf + strlen(promptbuf),
-		    getLFPrompt(ch, d, lifeforce).c_str());
+		    "%s", getLFPrompt(ch, d, lifeforce).c_str());
 	    sprintf(promptbuf + strlen(promptbuf),
-		    getMovesPrompt(ch, d, moves).c_str());
+		    "%s", getMovesPrompt(ch, d, moves).c_str());
 	    sprintf(promptbuf + strlen(promptbuf),
-		    getMoneyPrompt(ch, d, gold).c_str());
+		    "%s", getMoneyPrompt(ch, d, gold).c_str());
 	    sprintf(promptbuf + strlen(promptbuf),
-		    getRoomPrompt(ch, d, room).c_str());
-
+		    "%s", getRoomPrompt(ch, d, room).c_str());
+	    
 	    if (IS_SET(d->prompt_d.type, PROMPT_EXP)) {
 	      strcpy(tString, ch->displayExp().comify().c_str());
 	      sprintf(promptbuf + strlen(promptbuf),

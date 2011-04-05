@@ -3340,7 +3340,7 @@ void TBeing::doRestore(const char *argument)
       fclose(fp);
       return;
     }
-    fprintf(fp2,buf);
+    fprintf(fp2,"%s", buf);
     
     while(strcmp(buf, "END")) {
       if (fgets(buf,60,fp) == NULL) {
@@ -3360,12 +3360,12 @@ void TBeing::doRestore(const char *argument)
   strncpy(name2, name, sizeof(name));
   pracs2 = pracs;
       } else {
-  fprintf(fp2,buf);
+	fprintf(fp2,"%s", buf);
       }
     }
     strncpy(name, name2, sizeof(name2));
     pracs = pracs2;
-    fprintf(fp2,buf);
+    fprintf(fp2,"%s", buf);
     fclose(fp);
     fclose(fp2);
     char buf2[256];

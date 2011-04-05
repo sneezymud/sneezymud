@@ -646,41 +646,41 @@ void TCommodity::updateDesc()
   }
 
   if(isMineral()){
-    sprintf(buf, ((sstring)(format("commodity %s %s") % mineralname[sizeindex] %
+    sprintf(buf, "%s", ((sstring)(format("commodity %s %s") % mineralname[sizeindex] %
 	    material_nums[getMaterial()].mat_name)).c_str());
     name = mud_str_dup(buf);
     
-    sprintf(buf, ((sstring)(format("a %s of rough %s") % mineralname[sizeindex] %
+    sprintf(buf, "%s", ((sstring)(format("a %s of rough %s") % mineralname[sizeindex] %
 		  material_nums[getMaterial()].mat_name)).c_str());
     shortDescr = mud_str_dup(buf);
     
-    sprintf(buf, ((sstring)(format("A %s of rough %s has been left here.  What luck!") %
+    sprintf(buf, "%s", ((sstring)(format("A %s of rough %s has been left here.  What luck!") %
 		  mineralname[sizeindex] %
 		  material_nums[getMaterial()].mat_name)).c_str());
     setDescr(mud_str_dup(buf));
   } else if (isMetal()) {
-    sprintf(buf, ((sstring)(format("commodity %s %s") % metalname[sizeindex] %
+    sprintf(buf, "%s", ((sstring)(format("commodity %s %s") % metalname[sizeindex] %
 	    material_nums[getMaterial()].mat_name)).c_str());
     name = mud_str_dup(buf);    
 
-    sprintf(buf, ((sstring)(format("a %s of %s") % metalname[sizeindex] %
+    sprintf(buf, "%s", ((sstring)(format("a %s of %s") % metalname[sizeindex] %
 		  material_nums[getMaterial()].mat_name)).c_str());
     shortDescr = mud_str_dup(buf);
     
-    sprintf(buf, ((sstring)(format("A %s of %s has been left here.  What luck!") %
+    sprintf(buf, "%s", ((sstring)(format("A %s of %s has been left here.  What luck!") %
 		  metalname[sizeindex] %
 		  material_nums[getMaterial()].mat_name)).c_str());
     setDescr(mud_str_dup(buf));
   } else {
-    sprintf(buf, ((sstring)(format("commodity %s %s") % miscname[sizeindex] %
+    sprintf(buf, "%s", ((sstring)(format("commodity %s %s") % miscname[sizeindex] %
 	    material_nums[getMaterial()].mat_name)).c_str());
     name = mud_str_dup(buf);    
 
-    sprintf(buf, ((sstring)(format("a %s of %s") % miscname[sizeindex] %
+    sprintf(buf, "%s", ((sstring)(format("a %s of %s") % miscname[sizeindex] %
 		  material_nums[getMaterial()].mat_name)).c_str());
     shortDescr = mud_str_dup(buf);
     
-    sprintf(buf, ((sstring)(format("A %s of %s has been left here.  What luck!") %
+    sprintf(buf, "%s", ((sstring)(format("A %s of %s has been left here.  What luck!") %
 		  miscname[sizeindex] %
 		  material_nums[getMaterial()].mat_name)).c_str());
     setDescr(mud_str_dup(buf));

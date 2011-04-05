@@ -3403,7 +3403,7 @@ int TBeing::checkShield(TBeing *v, TThing *weapon, wearSlotT part_hit, spellNumT
       continue;
     if (!other->awake())
       continue;
-    sprintf(namebuf, other->pers(this));
+    sprintf(namebuf, "%s", other->pers(this));
     sstring equipBuf = colorString(other, other->desc, shield->getName(), NULL, COLOR_OBJECTS, TRUE);
     if (!other->desc || !(other->desc->autobits & AUTO_NOSPAM))
       other->sendTo(COLOR_MOBS, format("%s parries %s's blow with %s.\n\r") %

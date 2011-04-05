@@ -933,7 +933,7 @@ void TBeing::doAdjust(const char *arg)
       return;
     }
     char oldname[256];
-    sprintf(oldname, FactionInfo[fnum].faction_name);
+    sprintf(oldname, "%s", FactionInfo[fnum].faction_name);
     for (; arg && *arg && isspace(*arg);arg++);
 
     if (!arg || !*arg) {
@@ -945,7 +945,7 @@ void TBeing::doAdjust(const char *arg)
     sendTo(format("You change the name of the faction from %s to %s.\n\r") %
           oldname % arg);
     sendTo("Remember to update factionNumber() in faction.cc with the new abbreviations.\n\r");
-    sprintf(FactionInfo[fnum].faction_name, arg);
+    sprintf(FactionInfo[fnum].faction_name, "%s", arg);
     save_factions();
     return;
   }
