@@ -1,7 +1,5 @@
 #!/bin/bash
 
-export LD_LIBRARY_PATH="/mud/build/google-perftools/lib";
-
 whoami=`whoami`
 
 if [ "$1" = "start" ]
@@ -10,7 +8,7 @@ then
   if [ "$pid" == "" ]
   then
     echo "Starting scons, output to file.mak.";
-    (/mud/build/scons/bin/scons -k --no-progress) >& file.mak &
+    (scons -k --no-progress) >& file.mak &
   else
     echo "You are already running scons."
   fi
