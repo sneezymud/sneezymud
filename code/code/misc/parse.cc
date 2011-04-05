@@ -3204,7 +3204,7 @@ sstring sprintbit_64(uint64_t vektor, const char * const names[])
   sstring result;
 
   for (nr = 0; vektor; vektor >>= 1) {
-    if (IS_SET(vektor, 0x0000000000000001LLU))
+    if (IS_SET(vektor, (uint64_t)0x0000000000000001))
       if (*names[nr]) {
         result += names[nr];
         result += " ";
