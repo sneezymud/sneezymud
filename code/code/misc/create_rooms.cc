@@ -1903,8 +1903,6 @@ static void ChangeExitSlopedStatus(TRoom *rp, TBeing *ch, const char *arg, edito
       dir = DIR_SOUTHWEST;
       break;
     case MAX_DIR:
-    case DIR_NONE:
-    case DIR_BOGUS:
       ChangeExitSlopedStatus(rp, ch, "", ENTER_CHECK);
     default:
       return;
@@ -2346,8 +2344,6 @@ static void ChangeExitCondition(TRoom *rp, TBeing *ch, const char *arg, editorEn
       dir = DIR_SOUTHWEST;
       break;
     case MAX_DIR:
-    case DIR_NONE:
-    case DIR_BOGUS:
       ChangeExitCondition(rp, ch, "", ENTER_CHECK);
       return;
     default:
