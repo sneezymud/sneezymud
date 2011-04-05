@@ -91,8 +91,9 @@ void Descriptor::Edit(char *arg)
         connected = CON_PLYNG;
   
         EchoOn();
-        write(socket->m_sock, test, 4);
-        write(socket->m_sock, test2, 4);
+        if(write(socket->m_sock, test, 4)==-1 ||
+	   write(socket->m_sock, test2, 4)==-1)
+	  vlogf(LOG_FILE, "Failed to write to socket in Descriptor::edit");
         break;
       case ('M' & 037):
         writeToQ("\n\r");

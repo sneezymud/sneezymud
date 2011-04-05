@@ -2464,7 +2464,10 @@ void procAutoTips::run(const TPulse &) const
   // skip any comments
   char buf[256];
   do {
-    fgets(buf, 255, fp);
+    if(!fgets(buf, 255, fp)){
+      vlogf(LOG_FILE, "Unexpected read error on tipsfile");
+      break;
+    }
   } while (*buf == '#');
 
   // how many tips do we have?
@@ -2483,7 +2486,10 @@ void procAutoTips::run(const TPulse &) const
   rewind(fp);
   numtips = 0;
   do {
-    fgets(buf, 255, fp);
+    if(!fgets(buf, 255, fp)){
+      vlogf(LOG_FILE, "Unexpected read error on tipsfile");
+      break;
+    }
     if (*buf != '#')
       numtips++;
   } while (numtips < num);

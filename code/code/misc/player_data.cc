@@ -968,7 +968,8 @@ void TBeing::saveChar(int load_room)
   else
     sprintf(buf2, "player/%c/%s", LOWER(tmp->name[0]), sstring(tmp->name).lower().c_str());
 
-  link(buf, buf2);
+  if(link(buf, buf2))
+    vlogf(LOG_BUG, format("link failed in saveChar for %s") % name);
 
   // save mobile followers
   saveFollowers((load_room != Room::AUTO_RENT && load_room != Room::NOWHERE));

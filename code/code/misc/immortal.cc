@@ -4027,7 +4027,8 @@ void TBeing::doReplace(const sstring &argument)
       vsystem(buf);
       sprintf(buf, "account/%c/%s/%s", LOWER(st.aname[0]),sstring(st.aname).lower().c_str(),arg1.c_str());
       sprintf(dir2, "player/%c/%s",  arg1[0], arg1.c_str());
-      link(buf, dir2); 
+      if(link(buf, dir2))
+	vlogf(LOG_BUG, format("link failed in doReplace() for %s") % arg1);
       sendTo("Done.\n\r");
     }
     if (!dontMove) {

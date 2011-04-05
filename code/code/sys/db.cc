@@ -1141,7 +1141,8 @@ void setup_dir(FILE * fl, int room, dirTypeT dir, TRoom *tRoom)
   rp->dir_option[dir]->description = fread_string(fl);
   rp->dir_option[dir]->keyword = fread_string(fl);
 
-  fscanf(fl, " %d ", &tmp);
+  if(fscanf(fl, " %d ", &tmp)==EOF)
+    vlogf(LOG_FILE, "Unexpected read error in setup_dir");
   if (tmp < 0 || tmp >= MAX_DOOR_TYPES) {
     vlogf(LOG_LOW,format("bogus door type (%d) in room (%d) dir %d.") % 
         tmp % room % dir);
@@ -1156,16 +1157,21 @@ void setup_dir(FILE * fl, int room, dirTypeT dir, TRoom *tRoom)
     vlogf(LOG_LOW,format("door with no name in room %d") % room);
   }
 
-  fscanf(fl, " %d ", &tmp);
+  if(fscanf(fl, " %d ", &tmp)==EOF)
+    vlogf(LOG_FILE, "Unexpected read error in bootZone");
   rp->dir_option[dir]->condition = tmp;
-  fscanf(fl, " %d ", &tmp);
+  if(fscanf(fl, " %d ", &tmp)==EOF)
+    vlogf(LOG_FILE, "Unexpected read error in bootZone");
   rp->dir_option[dir]->lock_difficulty= tmp;
-  fscanf(fl, " %d ", &tmp);
+  if(fscanf(fl, " %d ", &tmp)==EOF)
+    vlogf(LOG_FILE, "Unexpected read error in bootZone");
   rp->dir_option[dir]->weight= tmp;
-  fscanf(fl, " %d ", &tmp);
+  if(fscanf(fl, " %d ", &tmp)==EOF)
+    vlogf(LOG_FILE, "Unexpected read error in bootZone");
   rp->dir_option[dir]->key = tmp;
 
-  fscanf(fl, " %d ", &tmp);
+  if(fscanf(fl, " %d ", &tmp)==EOF)
+    vlogf(LOG_FILE, "Unexpected read error in bootZone");
   rp->dir_option[dir]->to_room = tmp;
 
   if (IS_SET(rp->dir_option[dir]->condition, EX_SECRET) && 
@@ -1444,7 +1450,8 @@ bool zoneData::bootZone(int zone_nr)
     return false;
   }
 
-  fscanf(fl, " #%d\n", &bottom);
+  if(fscanf(fl, " #%d\n", &bottom)==EOF)
+    vlogf(LOG_FILE, "Unexpected read error in bootZone");
   check = fread_string(fl);
   
   name = check;
@@ -1465,8 +1472,10 @@ bool zoneData::bootZone(int zone_nr)
   for (;;) {
     resetCom rs;
     
-    fscanf(fl, " ");                
-    fscanf(fl, "%c", &rs.command);
+    if(fscanf(fl, " ")==EOF)
+      vlogf(LOG_FILE, "Unexpected read error in bootZone");
+    if(fscanf(fl, "%c", &rs.command)==EOF)
+      vlogf(LOG_FILE, "Unexpected read error in bootZone");
     
     if (rs.command == 'S') {
       cmd.push_back(rs);
@@ -1474,7 +1483,8 @@ bool zoneData::bootZone(int zone_nr)
     }
 
     if (rs.command == '*' || gamePort == Config::Port::GAMMA) {
-      fgets(buf, 255, fl);        
+      if(!fgets(buf, 255, fl))
+	vlogf(LOG_FILE, "Unexpected read error in bootZone");
       continue;
     }
 
@@ -1542,7 +1552,8 @@ bool zoneData::bootZone(int zone_nr)
     
     cmd.push_back(rs);
 
-    fgets(buf, 255, fl);        
+    if(!fgets(buf, 255, fl))
+      vlogf(LOG_FILE, "Unexpected read error in bootZone");
   }
 
   fclose(fl);
@@ -3679,7 +3690,8 @@ bool file_to_sstring(const char *name, sstring &buf, concatT concat)
     return false;
   }
   do {
-    fgets(tmp, 256, fl);
+    if(!fgets(tmp, 256, fl))
+      vlogf(LOG_FILE, "Unexpected read error in file_to_sstring");
 
     if (!feof(fl)) {
       *(tmp + strlen(tmp) + 1) = '\0';

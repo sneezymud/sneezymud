@@ -3745,7 +3745,8 @@ static void parseFollowerRent(FILE *fp, TBeing *ch, const char *arg)
     }
     mob->setMult((double) att);
   
-    fscanf(fp, "\n");
+    if(fscanf(fp, "\n")==EOF)
+      vlogf(LOG_FILE, "Unexpected read error on follower data");
   
     if (fscanf(fp, " %d ", &tmp) != 1) {
       vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (6)") %  arg % num);
@@ -3871,7 +3872,8 @@ float old_ac_lev = mob->getACLevel();
     mob->setHeight(tmp);
 
     for (iStat=MIN_STAT;iStat<MAX_STATS_USED;iStat++) {
-      fscanf(fp, " %d ", &tmp);
+      if(fscanf(fp, " %d ", &tmp)==EOF)
+	vlogf(LOG_FILE, "Unexpected read error in follower data");
       mob->setStat(STAT_CHOSEN, iStat, tmp);
     }
 

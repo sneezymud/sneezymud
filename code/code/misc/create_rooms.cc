@@ -1209,7 +1209,8 @@ void TPerson::doEdit(const char *arg)
 
         while (!feof(tFile)) {
           if (fscanf(tFile, "#%d\n\r", &cRoom) != 1) {
-            fgets(tString, 256, tFile);
+            if(!fgets(tString, 256, tFile))
+	      vlogf(LOG_FILE, "Unexpected read error in doEdit");
             continue;
           }
 
@@ -3256,7 +3257,8 @@ void TRoom::loadOne(FILE *fl, bool tinyfile)
   setDescr(fread_string(fl));
 
   if (!zone_table.empty()) {
-    fscanf(fl, " %*d ");
+    if(fscanf(fl, " %*d ")==EOF)
+      vlogf(LOG_FILE, "Unexpected read error in zone file");
     unsigned int z;
     for (z = 0; number > zone_table[z].top && z < zone_table.size(); z++);
 
@@ -3266,19 +3268,25 @@ void TRoom::loadOne(FILE *fl, bool tinyfile)
     }
     zone = &zone_table[z];
   }
-  fscanf(fl, " %d ", &tmp);
+  if(fscanf(fl, " %d ", &tmp)==EOF)
+    vlogf(LOG_FILE, "Unexpected read error in zone file");
   roomFlags = tmp;
 
-  fscanf(fl, " %d ", &tmp);
+  if(fscanf(fl, " %d ", &tmp)==EOF)
+    vlogf(LOG_FILE, "Unexpected read error in zone file");
 
   if (tmp == -1) {
-    fscanf(fl, " %d", &tmp);
+    if(fscanf(fl, " %d", &tmp)==EOF)
+      vlogf(LOG_FILE, "Unexpected read error in zone file");
     teleTime = tmp;
-    fscanf(fl, " %d", &tmp);
+    if(fscanf(fl, " %d", &tmp)==EOF)
+      vlogf(LOG_FILE, "Unexpected read error in zone file");
     teleTarg = tmp;
-    fscanf(fl, " %d", &tmp);
+    if(fscanf(fl, " %d", &tmp)==EOF)
+      vlogf(LOG_FILE, "Unexpected read error in zone file");
     teleLook = tmp;
-    fscanf(fl, " %d", &tmp);
+    if(fscanf(fl, " %d", &tmp)==EOF)
+      vlogf(LOG_FILE, "Unexpected read error in zone file");
   } else {
     teleTime = 0;
     teleTarg = 0;
@@ -3286,13 +3294,17 @@ void TRoom::loadOne(FILE *fl, bool tinyfile)
   }
   setSectorType(mapFileToSector(tmp));
 
-  fscanf(fl, " %d ", &tmp);
+  if(fscanf(fl, " %d ", &tmp)==EOF)
+    vlogf(LOG_FILE, "Unexpected read error in zone file");
   riverSpeed = tmp;
-  fscanf(fl, " %d ", &tmp);
+  if(fscanf(fl, " %d ", &tmp)==EOF)
+    vlogf(LOG_FILE, "Unexpected read error in zone file");
   riverDir = mapFileToDir(tmp);
-  fscanf(fl, " %d ", &tmp);
+  if(fscanf(fl, " %d ", &tmp)==EOF)
+    vlogf(LOG_FILE, "Unexpected read error in zone file");
   moblim = tmp;
-  fscanf(fl, " %d ", &tmp);
+  if(fscanf(fl, " %d ", &tmp)==EOF)
+    vlogf(LOG_FILE, "Unexpected read error in zone file");
   setRoomHeight(tmp);
   spec = 0;
   setLight(0);

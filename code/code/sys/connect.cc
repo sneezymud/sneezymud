@@ -873,7 +873,8 @@ void ShowNewNews(TBeing * tBeing)
     if (tTime - tData.st_mtime <= (3 * SECS_PER_REAL_DAY))
       if ((tFile = fopen(File::NEWS, "r"))) {
         while (!feof(tFile)) {
-          fgets(tString, 256, tFile);
+          if(!fgets(tString, 256, tFile))
+	    vlogf(LOG_FILE, "Unexpected read error in ShowNewNews");
 
           if (sscanf(tString, "%d-%d-%d : ", &tMon, &tDay, &tYear) != 3)
             continue;
@@ -909,7 +910,8 @@ void ShowNewNews(TBeing * tBeing)
     if (tTime - tData.st_mtime <= (3 * SECS_PER_REAL_DAY))
       if ((tFile = fopen("help/nextversion", "r"))) {
         while (!feof(tFile)) {
-          fgets(tString, 256, tFile);
+          if(!fgets(tString, 256, tFile))
+	    vlogf(LOG_FILE, "Unexpected read error in help/nextversion");
 
           if (sscanf(tString, "%d-%d-%d : ", &tMon, &tDay, &tYear) != 3)
             continue;
@@ -944,7 +946,8 @@ void ShowNewNews(TBeing * tBeing)
     if (tTime - tData.st_mtime <= (3 * SECS_PER_REAL_DAY))
       if ((tFile = fopen(File::WIZNEWS, "r"))) {
         while (!feof(tFile)) {
-          fgets(tString, 256, tFile);
+          if(!fgets(tString, 256, tFile))
+	    vlogf(LOG_FILE, "Unexpected read error in wiznews");
 
           if (sscanf(tString, "%d-%d-%d : ", &tMon, &tDay, &tYear) != 3)
             continue;
@@ -1580,7 +1583,8 @@ void Descriptor::EchoOn()
 
   char echo_on[6] = {IAC, WONT, TELOPT_ECHO, '\n', '\r', '\0'};
 
-  write(socket->m_sock, echo_on, 6);
+  if(write(socket->m_sock, echo_on, 6)==-1)
+    vlogf(LOG_FILE, "Unexpected read error in EchoOn");
 }
 
 void Descriptor::EchoOff()
@@ -1590,7 +1594,8 @@ void Descriptor::EchoOff()
 
   char echo_off[4] = {IAC, WILL, TELOPT_ECHO, '\0'};
 
-  write(socket->m_sock, echo_off, 4);
+  if(write(socket->m_sock, echo_off, 4)==-1)
+    vlogf(LOG_FILE, "Unexpected write error in EchoOff()");
 }
 
 bool Descriptor::start_page_file(const char *fpath, const char *errormsg)
@@ -2137,14 +2142,14 @@ void Descriptor::sstring_add(char *s)
           writeToQ(buf);
           t = *str;
           strncpy(buf, t, cElements(buf));
-          strncat(buf, s, cElements(buf));
+          strncat(buf, s, cElements(buf)-1);
           *str=mud_str_dup(buf);
           delete [] t;
         } else {
           // body of idea
           const char *t = *str;
 	        strncpy(buf, t, cElements(buf));
-	        strncat(buf, s, cElements(buf));
+	        strncat(buf, s, cElements(buf)-1);
 	        *str=mud_str_dup(buf);
           if (!m_bIsClient)
             delete [] t;
@@ -3056,7 +3061,8 @@ int Descriptor::sendLogin(const sstring &arg)
     if (!fp) {
       vlogf(LOG_FILE, "No version file found");
     } else {
-      fgets(buf, 79, fp);
+      if(!fgets(buf, 79, fp))
+	vlogf(LOG_FILE, "Unexpected read error in txt/version");
       // strip off the terminating newline char
       buf[strlen(buf) - 1] = '\0';
 

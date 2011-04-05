@@ -120,7 +120,8 @@ char *fread_action(FILE *fl)
   char buf[MAX_STRING_LENGTH];
 
   for (;;) {
-    fgets(buf, MAX_STRING_LENGTH, fl);
+    if(!fgets(buf, MAX_STRING_LENGTH, fl))
+      vlogf(LOG_FILE, "Unexpected read error in fread_action");
 
     if (feof(fl)) {
       vlogf(LOG_FILE, "Fread_action - unexpected EOF.");
@@ -150,14 +151,17 @@ void bootSocialMessages(void)
   }
 
   for (;;) {
-    fscanf(fl, " %s ", buf);
+    if(fscanf(fl, " %s ", buf)==EOF)
+      vlogf(LOG_FILE, "Unexpected read error in bootSocialMessages");
     cmdTypeT tmp = searchForCommandNum(buf);
 
     if (tmp >= MAX_CMD_LIST)
       break;
 
-    fscanf(fl, " %d ", &hide);
-    fscanf(fl, " %d \n", &min_pos);
+    if(fscanf(fl, " %d ", &hide)==EOF)
+      vlogf(LOG_FILE, "Unexpected read error in bootSocialMessages");
+    if(fscanf(fl, " %d \n", &min_pos)==EOF)
+      vlogf(LOG_FILE, "Unexpected read error in bootSocialMessages");
 
     socialMessg sm;
     sm.hide = hide;

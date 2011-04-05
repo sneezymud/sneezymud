@@ -623,7 +623,8 @@ void loadSetClass::SetupLoadSetSuits()
   }
 
   while (1) {
-    fgets(tString, 256, suitFile);
+    if(!fgets(tString, 256, suitFile))
+      vlogf(LOG_FILE, format("Unexpected read error on '%s'") % suitFilePath);
 
     if (tString[0] == ':')
       continue;

@@ -1031,10 +1031,10 @@ void seditList(TBeing *ch)
     tStBuffer += "/";
     tStBuffer += tDir->d_name;
 
-    if (!(tFile = fopen(tStBuffer.c_str(), "r")))
+    if (!(tFile = fopen(tStBuffer.c_str(), "r")) ||
+	!fgets(tBuffer, 256, tFile)){
       tStString += " Unknown...\n\r";
-    else {
-      fgets(tBuffer, 256, tFile);
+    } else { 
       tStString += " ";
       tStString += tBuffer;
       tStString += "\r";

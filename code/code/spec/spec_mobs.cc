@@ -289,7 +289,8 @@ int rumorMonger(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *
   }
 
   do {
-    fgets(buf, 255, fp);
+    if(!fgets(buf, 255, fp))
+      vlogf(LOG_FILE, "Unexpected read error in rumor file");
   } while (*buf == '#');
 
   if (sscanf(buf, "%d %d\n", &type, &room) != 2) {
@@ -333,12 +334,14 @@ int rumorMonger(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *
     rewind(fp);
     // skip over type
     do {
-      fgets(buf, 255, fp);
+      if(!fgets(buf, 255, fp))
+	vlogf(LOG_FILE, "Unexpected read error in rumor file");
     } while (*buf == '#');
 
     numrumors = 0;
     while (numrumors < num) {
-      fgets(buf, 255, fp);
+      if(!fgets(buf, 255, fp))
+	vlogf(LOG_FILE, "Unexpected read error in rumor file");
       if (*buf != '#')
         numrumors++;
     }
@@ -414,16 +417,19 @@ int rumorMonger(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *
     rewind(fp);
 
     do {
-      fgets(buf, 255, fp); // skip over type
+      if(!fgets(buf, 255, fp)) // skip over type
+	vlogf(LOG_FILE, "Unexpected read error in rumor file");	
     } while (*buf == '#');
 
     do {
-      fgets(buf, 255, fp); // skip over list sstring
+      if(!fgets(buf, 255, fp)) // skip over list sstring
+	vlogf(LOG_FILE, "Unexpected read error in rumor file");
     } while (*buf == '#');
 
     numrumors = 0;
     while (numrumors < num) {
-      fgets(buf, 255, fp);
+      if(!fgets(buf, 255, fp))
+	vlogf(LOG_FILE, "Unexpected read error in rumor file");
       if (*buf != '#')
         numrumors++;
     }
