@@ -707,7 +707,7 @@ bool GuildMobProc(TBeing *ch)
 void TMonster::checkMobStats(tinyfileTypeT forReal)
 {
   int sumstat;
-  char *s;
+  const char *s;
 
   if (getLongDesc() && (strlen(getLongDesc()) > 2) &&
       ((getLongDesc()[strlen(getLongDesc()) - 1] != '\r') ||
@@ -844,7 +844,7 @@ void TMonster::checkMobStats(tinyfileTypeT forReal)
 void TObj::checkObjStats()
 {
   int i;
-  char *s;
+  const char *s;
 
   if (getDescr() && (strlen(getDescr()) > 2) &&
       (getDescr()[strlen(getDescr()) - 1] == '\r') &&

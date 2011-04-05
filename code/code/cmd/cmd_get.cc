@@ -243,8 +243,10 @@ static bool getAllObjChecks(TBeing *ch)
 }
 
 // might return DELETE_THIS (for traps)
-int TBeing::doGet(const char *argument)
+int TBeing::doGet(const char *a)
 {
+  sstring arg=a;
+  char argument[256];
   char arg1[160], arg2[160], newarg[100];
   const char *tmp_desc = NULL;
   char *tptr;
@@ -258,10 +260,11 @@ int TBeing::doGet(const char *argument)
   int p;
   getTypeT type = GETALLALL;
 
-  if ((tptr = strstr(argument, "-autoloot")) != NULL){
+  if(arg.find("-autoloot")){
     autoloot=TRUE;
-    *tptr='\0';
+    arg.replaceString("-autoloot", "");
   }
+  strcpy(argument, arg.c_str());
 
   argument_interpreter(argument, arg1, cElements(arg1), arg2, cElements(arg2));
 

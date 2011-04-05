@@ -2982,16 +2982,14 @@ static void RoomSave(TBeing *ch, int start, int end, int useSecond)
 	  temp[x] = '\0';
 	}
 
-	if (rdd->keyword) {
-	  if (strlen(rdd->keyword) > 0) {
-	    // strip off unwanted carriage returns. - Russ 
-	    newline = strchr(rdd->keyword, '\n');
-	    newline = '\0';
-	  }
-	}
 
 	sstring keyword=rdd->keyword;
 	sstring descr=temp;
+
+	if(keyword.length() > 0){
+	  keyword.replaceString("\n", "");
+	}
+
 
 	db.query("insert into roomexit (owner,block, vnum,direction,name,description,type,condition_flag,lock_difficulty,weight,key_num,destination) values ('%s', %i, %i, %i,'%s','%s',%i,%i,%i,%i,%i,%i)", 
 		 ch->getName(), useSecond,
