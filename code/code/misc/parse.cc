@@ -2973,7 +2973,7 @@ bool _parse_name_safe(const char *arg, char *name, unsigned int nameLen)
   }
   if (!toggleInfo[TOG_MOBNAMES]->toggle) {
     for (i= 0; i < mob_index.size(); i++) {
-      snprintf(buf, cElements(buf), fname(mob_index[i].name).c_str());
+      snprintf(buf, cElements(buf), "%s", fname(mob_index[i].name).c_str());
       if (!strcasecmp(buf, arg))
         return TRUE;
     }

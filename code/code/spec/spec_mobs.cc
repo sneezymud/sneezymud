@@ -2914,7 +2914,7 @@ int petVeterinarian(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TOb
       
       // remake the short desc
       //      sprintf(tmpbuf2, stripColorCodes(pet->getName()).c_str());
-      sprintf(tmpbuf2, pet->getName());
+      sprintf(tmpbuf2, "%s", pet->getName());
       one_argument(tmpbuf2, buf, cElements(buf));
       if (!strcmp(buf, "a") || !strcmp(buf, "an"))
 	tmpbuf=format("\"%s\", the %s") % sstring(new_name).cap() %
