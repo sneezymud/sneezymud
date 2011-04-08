@@ -249,7 +249,6 @@ int TBeing::doGet(const char *a)
   char argument[256];
   char arg1[160], arg2[160], newarg[100];
   const char *tmp_desc = NULL;
-  char *tptr;
   TObj *sub;
   TThing *t;
   bool found = FALSE, autoloot = FALSE;
@@ -407,7 +406,7 @@ int TBeing::doGet(const char *a)
         if (canGet(t, SILENT_NO)) {
           rc = get(this,t, NULL, GETOBJ, found);
           // get all has no lag, is this needed?
-          // addToWait(ONE_SECOND);
+          // addToWait(Pulse::ONE_SECOND);
           if (IS_SET_DELETE(rc, DELETE_ITEM)) {
             if (!t->makeScraps()){
               delete t;
@@ -544,7 +543,7 @@ int TBeing::doGet(const char *a)
           rc = get(this, t, sub, GETOBJOBJ, found);
 
           // none of the other gets apply wait, so justify this if restored
-          // addToWait(ONE_SECOND);
+          // addToWait(Pulse::ONE_SECOND);
 
           if (IS_SET_DELETE(rc, DELETE_ITEM)) {
             if (!t->makeScraps()){
@@ -568,7 +567,7 @@ int TBeing::doGet(const char *a)
           rc = get(this, t, sub, GETOBJOBJ, found);
 
           // none of the other gets apply wait, so justify this if restored
-          // addToWait(ONE_SECOND);
+          // addToWait(Pulse::ONE_SECOND);
 
           if (IS_SET_DELETE(rc, DELETE_ITEM)) {
             if (!t->makeScraps()){

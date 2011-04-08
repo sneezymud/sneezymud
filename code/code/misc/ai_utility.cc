@@ -313,11 +313,12 @@ void TMonster::mobAI()
         setSusp(defsusp());
       }
     } else {
-      if (!::number(0,4)) 
+      if (!::number(0,4)) {
         if (::number(0,1)) 
           US(2);
         else
           DS(2);
+      }
     } 
   }
   // Greed should be fairly obvious.  it starts at 50%, very high greed implies
@@ -336,11 +337,12 @@ void TMonster::mobAI()
         setGreed(defgreed());
       }
     } else {
-      if (!::number(0,4))
+      if (!::number(0,4)){
         if (::number(0,1))
           UG(2);
         else
           DG(2);
+      }
     }
   }
   // Anger is a "how pissed am I?" ::number.  It should go up and down in "big"
@@ -358,11 +360,12 @@ void TMonster::mobAI()
         setAnger(defanger());
       }
     } else {
-      if (!::number(0,4))
+      if (!::number(0,4)){
         if (::number(0,1))
           UA(2);
         else
           DA(2);
+      }
     }
   }
   // Malice is a mobs disposition.  50% base (higher for aggros) so things
@@ -383,11 +386,12 @@ void TMonster::mobAI()
         setMalice(defmalice());
       }
     } else {
-      if (!::number(0,4))
+      if (!::number(0,4)){
         if (::number(0,1))
           UM(2);
         else
           DMal(2);
+      }
     }
   }
   // turn off targets if set by mistake 

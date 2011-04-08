@@ -376,7 +376,7 @@ int spy(TBeing *thief)
   // not set the AFF_SCRYING bit so check for isAff(scry) in code to
   // see if spying
   aff.type = SKILL_SPY;
-  aff.duration = (((int) bKnown/ 10) + 1) * UPDATES_PER_MUDHOUR;
+  aff.duration = (((int) bKnown/ 10) + 1) * Pulse::UPDATES_PER_MUDHOUR;
   aff.modifier = 0;
   aff.location = APPLY_NONE;
 

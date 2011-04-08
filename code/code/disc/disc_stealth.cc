@@ -132,7 +132,7 @@ int conceal(TBeing *caster, TBeing *vict)
   }
 
   aff.type = SKILL_CONCEALMENT;
-  aff.duration = (level/2 + 1) * UPDATES_PER_MUDHOUR;
+  aff.duration = (level/2 + 1) * Pulse::UPDATES_PER_MUDHOUR;
   aff.be = caster;
 
   if (caster->bSuccess(lnd, SKILL_CONCEALMENT)) {
@@ -320,7 +320,7 @@ int disguise(TBeing *caster, char * buffer)
 
   aff.type = AFFECT_SKILL_ATTEMPT;
   aff.location = APPLY_NONE;
-  aff.duration = (2 + (level/5)) * UPDATES_PER_MUDHOUR;
+  aff.duration = (2 + (level/5)) * Pulse::UPDATES_PER_MUDHOUR;
   aff.bitvector = 0;
   aff.modifier = SKILL_DISGUISE;
 
@@ -340,22 +340,22 @@ int disguise(TBeing *caster, char * buffer)
   switch (critSuccess(caster, SKILL_DISGUISE)) {
     case CRIT_S_KILL:
       CS(SKILL_DISGUISE);
-      duration = 20 * UPDATES_PER_MUDHOUR;
+      duration = 20 * Pulse::UPDATES_PER_MUDHOUR;
       break;
     case CRIT_S_TRIPLE:
       if (caster->getSkillLevel(SKILL_DISGUISE) > 20)
         CS(SKILL_DISGUISE);
 
-      duration = 15 * UPDATES_PER_MUDHOUR;
+      duration = 15 * Pulse::UPDATES_PER_MUDHOUR;
       break;
     case CRIT_S_DOUBLE:
       if (caster->getSkillLevel(SKILL_DISGUISE) > 40)
         CS(SKILL_DISGUISE);
 
-      duration = 15 * UPDATES_PER_MUDHOUR;
+      duration = 15 * Pulse::UPDATES_PER_MUDHOUR;
       break;
     default:
-      duration = 10 * UPDATES_PER_MUDHOUR;
+      duration = 10 * Pulse::UPDATES_PER_MUDHOUR;
       break;
   }
   act("You apply your skills and make yourself look like $N.", 
@@ -364,12 +364,12 @@ int disguise(TBeing *caster, char * buffer)
        TRUE, caster, NULL, mob, TO_ROOM);
 
 // first add the attempt -- used to regulate attempts
-  aff.duration = duration + (2 * UPDATES_PER_MUDHOUR);
+  aff.duration = duration + (2 * Pulse::UPDATES_PER_MUDHOUR);
   caster->affectTo(&aff, -1);
 
   aff3.type = AFFECT_SKILL_ATTEMPT;
   aff3.location = APPLY_NONE;
-  aff3.duration = duration + (2 * UPDATES_PER_MUDHOUR);
+  aff3.duration = duration + (2 * Pulse::UPDATES_PER_MUDHOUR);
   aff3.bitvector = 0;
   aff3.modifier = SKILL_DISGUISE;
   mob->affectTo(&aff3, -1);

@@ -886,7 +886,7 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
   queryqueue.push(format("insert into tellhistory (tellfrom, tellto, tell, telltime) values ('%s', '%s', '%s', now())") % capbuf.cap().escape(sstring::SQL) % ((sstring)vict->getName()).escape(sstring::SQL) % garbed.escape(sstring::SQL));
 
 
-  if (d && d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
+  if ((d && d->m_bIsClient) || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
     garbedBuf = format("<c>%s<z>") % garbed;
     d->clientf(format("%d|%s|%s") % CLIENT_TELL %
         colorString(vict, vict->desc, capbuf, NULL, COLOR_NONE, FALSE) %

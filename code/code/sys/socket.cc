@@ -216,8 +216,8 @@ int updateWholist()
   sstring wholist = "";
 
   for (p = descriptor_list; p; p = p->next) {
-    if (p && p->connected == CON_PLYNG || p->connected > MAX_CON_STATUS && p->character && 
-	p->character->name && p->character->isPc() && !p->character->isLinkdead() && p->character->polyed == POLY_TYPE_NONE) {
+    if ((p && p->connected == CON_PLYNG) || (p->connected > MAX_CON_STATUS && p->character && 
+					     p->character->name && p->character->isPc() && !p->character->isLinkdead() && p->character->polyed == POLY_TYPE_NONE)) {
       if ((p2 = dynamic_cast<TPerson *>(p->character))) {
 	wholist += p2->getName();
       }
@@ -234,8 +234,8 @@ int updateWholist()
     
     //  vlogf(LOG_DASH, format("Updating who table for port %d") %  gamePort);
   for (p = descriptor_list; p; p = p->next) {
-    if (p && p->connected == CON_PLYNG || p->connected > MAX_CON_STATUS && p->character &&
-        p->character->name && p->character->isPc() && !p->character->isLinkdead() && p->character->polyed == POLY_TYPE_NONE) {
+    if ((p && p->connected == CON_PLYNG) || (p->connected > MAX_CON_STATUS && p->character &&
+					     p->character->name && p->character->isPc() && !p->character->isLinkdead() && p->character->polyed == POLY_TYPE_NONE)) {
       if ((p2 = dynamic_cast<TPerson *>(p->character))) {
 	  db.query("insert into wholist (name, title, port, invis) VALUES('%s', '%s', %i, %i)", p2->getName(), p2->title,  gamePort, (p2->getInvisLevel() >MAX_MORT)?1:0);
 	  count++;
@@ -1831,106 +1831,106 @@ int TMainSocket::gameLoop()
   TScheduler scheduler;
 
   // pulse every  (1/10th of a second)
-  scheduler.add(new procHandleTimeAndSockets(PULSE_EVERY));
-  scheduler.add(new procIdle(PULSE_EVERY));
-  scheduler.add(new procSetZoneEmpty(PULSE_EVERY));
-  scheduler.add(new procCallRoomSpec(PULSE_EVERY));
-  scheduler.add(new procDoRoomSaves(PULSE_EVERY));
-  scheduler.add(new procDoPlayerSaves(PULSE_EVERY));
-  scheduler.add(new procCheckTask(PULSE_EVERY));
-  scheduler.add(new procLagInfo(PULSE_EVERY));
-  scheduler.add(new procCharScreenUpdate(PULSE_EVERY));
+  scheduler.add(new procHandleTimeAndSockets(Pulse::EVERY));
+  scheduler.add(new procIdle(Pulse::EVERY));
+  scheduler.add(new procSetZoneEmpty(Pulse::EVERY));
+  scheduler.add(new procCallRoomSpec(Pulse::EVERY));
+  scheduler.add(new procDoRoomSaves(Pulse::EVERY));
+  scheduler.add(new procDoPlayerSaves(Pulse::EVERY));
+  scheduler.add(new procCheckTask(Pulse::EVERY));
+  scheduler.add(new procLagInfo(Pulse::EVERY));
+  scheduler.add(new procCharScreenUpdate(Pulse::EVERY));
 
   // pulse combat  (1.2 seconds)
-  scheduler.add(new procPerformViolence(PULSE_COMBAT));
-  scheduler.add(new procWeightVolumeFumble(PULSE_COMBAT));
-  scheduler.add(new procQueryQueue(PULSE_COMBAT));
-  scheduler.add(new procRoomPulse(PULSE_COMBAT));
-  scheduler.add(new procObjVehicle(PULSE_COMBAT));
-  scheduler.add(new procObjDetonateGrenades(PULSE_COMBAT));
-  scheduler.add(new procObjFalling(PULSE_COMBAT));
-  scheduler.add(new procObjRiverFlow(PULSE_COMBAT));
-  scheduler.add(new procObjTeleportRoom(PULSE_COMBAT));
-  scheduler.add(new procObjSpecProcsQuick(PULSE_COMBAT));
-  scheduler.add(new procCharVampireBurn(PULSE_COMBAT));
-  scheduler.add(new procCharSinking(PULSE_COMBAT));
-  scheduler.add(new procCharFalling(PULSE_COMBAT));
-  scheduler.add(new procCharMobileActivity(PULSE_COMBAT));
-  scheduler.add(new procCharTasks(PULSE_COMBAT));
-  scheduler.add(new procCharImmLeash(PULSE_COMBAT));
-  scheduler.add(new procCharSpellTask(PULSE_COMBAT));
-  scheduler.add(new procCharAffects(PULSE_COMBAT));
-  scheduler.add(new procCharRegen(PULSE_COMBAT));
-  scheduler.add(new procCharCantHit(PULSE_COMBAT));
-  scheduler.add(new procCharRiverFlow(PULSE_COMBAT));
-  scheduler.add(new procCharTeleportRoom(PULSE_COMBAT));
-  scheduler.add(new procCharLightning(PULSE_COMBAT));
-  scheduler.add(new procCharLycanthropy(PULSE_COMBAT));
-  scheduler.add(new procCharSpecProcsQuick(PULSE_COMBAT));
+  scheduler.add(new procPerformViolence(Pulse::COMBAT));
+  scheduler.add(new procWeightVolumeFumble(Pulse::COMBAT));
+  scheduler.add(new procQueryQueue(Pulse::COMBAT));
+  scheduler.add(new procRoomPulse(Pulse::COMBAT));
+  scheduler.add(new procObjVehicle(Pulse::COMBAT));
+  scheduler.add(new procObjDetonateGrenades(Pulse::COMBAT));
+  scheduler.add(new procObjFalling(Pulse::COMBAT));
+  scheduler.add(new procObjRiverFlow(Pulse::COMBAT));
+  scheduler.add(new procObjTeleportRoom(Pulse::COMBAT));
+  scheduler.add(new procObjSpecProcsQuick(Pulse::COMBAT));
+  scheduler.add(new procCharVampireBurn(Pulse::COMBAT));
+  scheduler.add(new procCharSinking(Pulse::COMBAT));
+  scheduler.add(new procCharFalling(Pulse::COMBAT));
+  scheduler.add(new procCharMobileActivity(Pulse::COMBAT));
+  scheduler.add(new procCharTasks(Pulse::COMBAT));
+  scheduler.add(new procCharImmLeash(Pulse::COMBAT));
+  scheduler.add(new procCharSpellTask(Pulse::COMBAT));
+  scheduler.add(new procCharAffects(Pulse::COMBAT));
+  scheduler.add(new procCharRegen(Pulse::COMBAT));
+  scheduler.add(new procCharCantHit(Pulse::COMBAT));
+  scheduler.add(new procCharRiverFlow(Pulse::COMBAT));
+  scheduler.add(new procCharTeleportRoom(Pulse::COMBAT));
+  scheduler.add(new procCharLightning(Pulse::COMBAT));
+  scheduler.add(new procCharLycanthropy(Pulse::COMBAT));
+  scheduler.add(new procCharSpecProcsQuick(Pulse::COMBAT));
 
   // pulse spec_procs (3.6 seconds)
-  scheduler.add(new procObjBurning(PULSE_SPEC_PROCS));
-  scheduler.add(new procObjSinking(PULSE_SPEC_PROCS));
-  scheduler.add(new procObjSpecProcs(PULSE_SPEC_PROCS));
-  scheduler.add(new procObjSmoke(PULSE_SPEC_PROCS));
-  scheduler.add(new procObjPools(PULSE_SPEC_PROCS));
-  scheduler.add(new procObjTrash(PULSE_SPEC_PROCS));
-  scheduler.add(new procCharSpecProcs(PULSE_SPEC_PROCS));
-  scheduler.add(new procCharDrowning(PULSE_SPEC_PROCS));
-  scheduler.add(new procCharResponses(PULSE_SPEC_PROCS));
+  scheduler.add(new procObjBurning(Pulse::SPEC_PROCS));
+  scheduler.add(new procObjSinking(Pulse::SPEC_PROCS));
+  scheduler.add(new procObjSpecProcs(Pulse::SPEC_PROCS));
+  scheduler.add(new procObjSmoke(Pulse::SPEC_PROCS));
+  scheduler.add(new procObjPools(Pulse::SPEC_PROCS));
+  scheduler.add(new procObjTrash(Pulse::SPEC_PROCS));
+  scheduler.add(new procCharSpecProcs(Pulse::SPEC_PROCS));
+  scheduler.add(new procCharDrowning(Pulse::SPEC_PROCS));
+  scheduler.add(new procCharResponses(Pulse::SPEC_PROCS));
 
   // pulse noises (4.8 seconds)
-  scheduler.add(new procCharNoise(PULSE_NOISES));
-  scheduler.add(new procCharNutrition(PULSE_NOISES));
+  scheduler.add(new procCharNoise(Pulse::NOISES));
+  scheduler.add(new procCharNutrition(Pulse::NOISES));
 
   // pulse update  (36 seconds)
-  scheduler.add(new procGlobalRoomStuff(PULSE_UPDATE));
-  scheduler.add(new procDeityCheck(PULSE_UPDATE));
-  scheduler.add(new procApocCheck(PULSE_UPDATE));
-  scheduler.add(new procSaveFactions(PULSE_UPDATE));
-  scheduler.add(new procSaveNewFactions(PULSE_UPDATE));
-  scheduler.add(new procWeatherAndTime(PULSE_UPDATE));
-  scheduler.add(new procWholistAndUsageLogs(PULSE_UPDATE));
-  scheduler.add(new procObjRust(PULSE_UPDATE));
-  scheduler.add(new procObjFreezing(PULSE_UPDATE));
-  scheduler.add(new procObjAutoPlant(PULSE_UPDATE));
-  scheduler.add(new procCharHalfTickUpdate(PULSE_UPDATE));
-  scheduler.add(new procCharThaw(PULSE_UPDATE));
-  scheduler.add(new procDoubleXP(PULSE_UPDATE));
+  scheduler.add(new procGlobalRoomStuff(Pulse::UPDATE));
+  scheduler.add(new procDeityCheck(Pulse::UPDATE));
+  scheduler.add(new procApocCheck(Pulse::UPDATE));
+  scheduler.add(new procSaveFactions(Pulse::UPDATE));
+  scheduler.add(new procSaveNewFactions(Pulse::UPDATE));
+  scheduler.add(new procWeatherAndTime(Pulse::UPDATE));
+  scheduler.add(new procWholistAndUsageLogs(Pulse::UPDATE));
+  scheduler.add(new procObjRust(Pulse::UPDATE));
+  scheduler.add(new procObjFreezing(Pulse::UPDATE));
+  scheduler.add(new procObjAutoPlant(Pulse::UPDATE));
+  scheduler.add(new procCharHalfTickUpdate(Pulse::UPDATE));
+  scheduler.add(new procCharThaw(Pulse::UPDATE));
+  scheduler.add(new procDoubleXP(Pulse::UPDATE));
 
   // pulse mudhour  (144 seconds (2.4 mins))
-  scheduler.add(new procFishRespawning(PULSE_MUDHOUR));
-  scheduler.add(new procReforestation(PULSE_MUDHOUR));
-  scheduler.add(new procZoneUpdate(PULSE_MUDHOUR));
-  scheduler.add(new procLaunchCaravans(PULSE_MUDHOUR));
-  scheduler.add(new procUpdateAvgPlayers(PULSE_MUDHOUR));
-  scheduler.add(new procCheckGoldStats(PULSE_MUDHOUR));
-  scheduler.add(new procAutoTips(PULSE_MUDHOUR));
-  scheduler.add(new procPingData(PULSE_MUDHOUR));
-  scheduler.add(new procRecalcFactionPower(PULSE_MUDHOUR));
-  scheduler.add(new procNukeInactiveMobs(PULSE_MUDHOUR));
-  scheduler.add(new procUpdateTime(PULSE_MUDHOUR));
-  scheduler.add(new procMobHate(PULSE_MUDHOUR));
-  scheduler.add(new procDoComponents(PULSE_MUDHOUR));
-  scheduler.add(new procObjTickUpdate(PULSE_MUDHOUR));
-  scheduler.add(new procCharTickUpdate(PULSE_MUDHOUR));
+  scheduler.add(new procFishRespawning(Pulse::MUDHOUR));
+  scheduler.add(new procReforestation(Pulse::MUDHOUR));
+  scheduler.add(new procZoneUpdate(Pulse::MUDHOUR));
+  scheduler.add(new procLaunchCaravans(Pulse::MUDHOUR));
+  scheduler.add(new procUpdateAvgPlayers(Pulse::MUDHOUR));
+  scheduler.add(new procCheckGoldStats(Pulse::MUDHOUR));
+  scheduler.add(new procAutoTips(Pulse::MUDHOUR));
+  scheduler.add(new procPingData(Pulse::MUDHOUR));
+  scheduler.add(new procRecalcFactionPower(Pulse::MUDHOUR));
+  scheduler.add(new procNukeInactiveMobs(Pulse::MUDHOUR));
+  scheduler.add(new procUpdateTime(Pulse::MUDHOUR));
+  scheduler.add(new procMobHate(Pulse::MUDHOUR));
+  scheduler.add(new procDoComponents(Pulse::MUDHOUR));
+  scheduler.add(new procObjTickUpdate(Pulse::MUDHOUR));
+  scheduler.add(new procCharTickUpdate(Pulse::MUDHOUR));
 
   // pulse wayslow  (240 seconds (4 mins))
-  scheduler.add(new procCheckForRepo(PULSE_WAYSLOW));
-  scheduler.add(new procCheckMail(PULSE_WAYSLOW));
-  //  scheduler.add(new procCheckTriggerUsers(PULSE_WAYSLOW));
+  scheduler.add(new procCheckForRepo(Pulse::WAYSLOW));
+  scheduler.add(new procCheckMail(Pulse::WAYSLOW));
+  //  scheduler.add(new procCheckTriggerUsers(Pulse::WAYSLOW));
   
   // pulse mudday   (3456 seconds (57.6 mins))
-  scheduler.add(new procUpdateAuction(PULSE_MUDDAY));
-  scheduler.add(new procBankInterest(PULSE_MUDDAY));
-  scheduler.add(new procCloseAccountingBooks(PULSE_MUDDAY));
-  scheduler.add(new procRecordCommodPrices(PULSE_MUDDAY));
-  scheduler.add(new procFactoryProduction(PULSE_MUDDAY));
+  scheduler.add(new procUpdateAuction(Pulse::MUDDAY));
+  scheduler.add(new procBankInterest(Pulse::MUDDAY));
+  scheduler.add(new procCloseAccountingBooks(Pulse::MUDDAY));
+  scheduler.add(new procRecordCommodPrices(Pulse::MUDDAY));
+  scheduler.add(new procFactoryProduction(Pulse::MUDDAY));
 
   // pulse realhour
-//  scheduler.add(new procTweakLoadRate(PULSE_REALHOUR)); // desired load rate achieved
-  scheduler.add(new procTrophyDecay(PULSE_REALHOUR));
-  scheduler.add(new procSeedRandom(PULSE_REALHOUR));
+//  scheduler.add(new procTweakLoadRate(Pulse::REALHOUR)); // desired load rate achieved
+  scheduler.add(new procTrophyDecay(Pulse::REALHOUR));
+  scheduler.add(new procSeedRandom(Pulse::REALHOUR));
 
   avail_descs = 150;		
 

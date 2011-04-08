@@ -142,7 +142,7 @@ void TBeing::stopFollower(bool remove, stopFollowerT textLimits) // default argu
     // make pet retrainable 
     aff.type = AFFECT_ORPHAN_PET;
     aff.level = 0;
-    aff.duration  = 80 * UPDATES_PER_MUDHOUR;
+    aff.duration  = 80 * Pulse::UPDATES_PER_MUDHOUR;
     aff.location = APPLY_NONE;
     aff.modifier = 0;   
     aff.bitvector = 0;
@@ -1187,7 +1187,7 @@ int TBeing::parseTarget(spellNumT which, char *n, TThing **ret)
 	ok = TRUE;
       }
     }
-    if (!ok && (discArray[which]->targets & TAR_CHAR_VIS_WORLD) || (discArray[which]->targets & TAR_CHAR_WORLD)) {
+    if ((!ok && (discArray[which]->targets & TAR_CHAR_VIS_WORLD)) || (discArray[which]->targets & TAR_CHAR_WORLD)) {
       if ((ch = get_pc_world(this, n, EXACT_YES, INFRA_NO, (discArray[which]->targets & TAR_CHAR_VIS_WORLD))) ||
           (ch = get_pc_world(this, n, EXACT_NO, INFRA_NO, (discArray[which]->targets & TAR_CHAR_VIS_WORLD)))) {
         if (ch->isPlayerAction(PLR_SOLOQUEST) && (ch != this) &&

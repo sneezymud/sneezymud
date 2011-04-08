@@ -14,7 +14,7 @@ libtask=env.SharedLibrary(target='task', source=Glob('task/*.cc'))
 
 libs=[libcmd, libdisc, libgame, libmisc,
       libobj, libspec, libsys, libtask,
-      'libares', 'libcgicc']
+      'libares' ]
 
 # main binary
 sneezy=env.Program('sneezy', 'main.cc', LIBS=[libs, 'libares'])

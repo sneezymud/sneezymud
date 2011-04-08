@@ -237,8 +237,6 @@ bool getall(const char *name, char *newname)
 
   if (prd != '.')
     return FALSE;
-  if (!tmpname)
-    return FALSE;
   if (strcmp(arg, "all"))
     return FALSE;
 
@@ -1378,7 +1376,7 @@ bool TBeing::tooManyFollowers(const TBeing *pet, newFolTypeT type) const
 
 int TBeing::followTime() const
 {
-  return (plotStat(STAT_CURRENT, STAT_CHA, 6, 36, 22) * (UPDATES_PER_MUDHOUR / 2));
+  return (plotStat(STAT_CURRENT, STAT_CHA, 6, 36, 22) * (Pulse::UPDATES_PER_MUDHOUR / 2));
 }
 
 // a higher value = harder to see
@@ -1971,7 +1969,7 @@ char ISNEWL(char ch)
 
 int combatRound(double n)
 {
-  return (int) (n * PULSE_COMBAT);
+  return (int) (n * Pulse::COMBAT);
 }
 
 bool TBeing::checkBusy(const sstring &buf)
@@ -1996,8 +1994,8 @@ bool TBeing::checkBusy(const sstring &buf)
   sendTo(format(" (Roughly %d round%s to go)\n\r") % tmpnum % (tmpnum > 1) ? "s" : "");
 #else
   float tmpnum = (hitsPerRound ? (cantHit/hitsPerRound) : 1000000); 
-  tmpnum *= PULSE_COMBAT;
-  tmpnum /= ONE_SECOND;
+  tmpnum *= Pulse::COMBAT;
+  tmpnum /= Pulse::ONE_SECOND;
 
   sendTo(format(" (Roughly %.1f seconds to go)\n\r") % tmpnum);
 #endif

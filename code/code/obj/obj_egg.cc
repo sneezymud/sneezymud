@@ -60,7 +60,7 @@ void eggPoisoned(TEgg *egg, TBeing *ch, int dur)
       act("That tasted rather strange!", FALSE, ch, 0, 0, TO_CHAR);
       act("$n coughs and utters some strange sounds.", FALSE, ch, 0, 0, TO_ROOM);
       af.type = SPELL_POISON;
-      af.duration = dur * UPDATES_PER_MUDHOUR;
+      af.duration = dur * Pulse::UPDATES_PER_MUDHOUR;
       af.modifier = 0;
       af.location = APPLY_NONE;
       af.bitvector = AFF_POISON;
@@ -85,7 +85,7 @@ void eggSpoiled(TEgg *egg, TBeing *ch, int dur)
       af.type = AFFECT_DISEASE;
       af.level = 0;
      // Added /4 because of player complaints of food poisoning - Russ 04/28/96
-      af.duration = dur * UPDATES_PER_MUDHOUR;
+      af.duration = dur * Pulse::UPDATES_PER_MUDHOUR;
       af.modifier = DISEASE_FOODPOISON;
       af.location = APPLY_NONE;
       af.bitvector = 0;

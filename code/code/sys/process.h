@@ -31,15 +31,15 @@ public:
 
   void init(int pulse){
     this->pulse=pulse;
-    every = !(pulse % PULSE_EVERY);
-    teleport = !(pulse % PULSE_TELEPORT);
-    combat = !(pulse % PULSE_COMBAT);
-    drowning = !(pulse % PULSE_DROWNING);
-    special_procs = !(pulse % PULSE_SPEC_PROCS);
-    update_stuff = !(pulse % PULSE_NOISES);
-    pulse_mudhour = !(pulse % PULSE_MUDHOUR);
-    mobstuff = !(pulse % PULSE_MOBACT);
-    pulse_tick = !(pulse % PULSE_UPDATE);
+    every = !(pulse % Pulse::EVERY);
+    teleport = !(pulse % Pulse::TELEPORT);
+    combat = !(pulse % Pulse::COMBAT);
+    drowning = !(pulse % Pulse::DROWNING);
+    special_procs = !(pulse % Pulse::SPEC_PROCS);
+    update_stuff = !(pulse % Pulse::NOISES);
+    pulse_mudhour = !(pulse % Pulse::MUDHOUR);
+    mobstuff = !(pulse % Pulse::MOBACT);
+    pulse_tick = !(pulse % Pulse::UPDATE);
     wayslowpulse = !(pulse % 2400);
   }
 

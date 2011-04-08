@@ -46,7 +46,7 @@ int tunnelerEarthquake(TBeing *ch, cmdTypeT tCmd, const char *tArg, TMonster *tM
     for(StuffIter it=tMyself->roomp->stuff.begin();it!=tMyself->roomp->stuff.end();){
       tThing=*(it++);
 
-      if ((tBeing = dynamic_cast<TBeing *>(tThing)))
+      if ((tBeing = dynamic_cast<TBeing *>(tThing))){
         if (tBeing->isFlying())
           act("The ground, far below you, shakes violently.",
               FALSE, tBeing, NULL, NULL, TO_CHAR);
@@ -63,13 +63,15 @@ int tunnelerEarthquake(TBeing *ch, cmdTypeT tCmd, const char *tArg, TMonster *tM
 
           tDamage = max(4, (tMyself->GetMaxLevel() / 4));
 
-          if (tBeing->fight() == tMyself)
+          if (tBeing->fight() == tMyself){
             if (tMyself->reconcileDamage(tBeing, tDamage, SPELL_EARTHQUAKE) == -1) {
               delete tBeing;
               tBeing = NULL;
             } else
               tFighters++;
+	  }
         }
+      }
     }
 
     // We only switch if our attackers are more than 3.

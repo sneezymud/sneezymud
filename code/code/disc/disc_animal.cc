@@ -347,7 +347,7 @@ int TBeing::doFeralWrath(const char *argument)
   affectedData aff, aff2;
   aff.type = SPELL_FERAL_WRATH;
   aff.location = APPLY_ARMOR;
-  aff.duration = max(min(level/5, 5), 1) * UPDATES_PER_MUDHOUR;
+  aff.duration = max(min(level/5, 5), 1) * Pulse::UPDATES_PER_MUDHOUR;
   aff.bitvector = 0;
   aff.modifier = 200;
 

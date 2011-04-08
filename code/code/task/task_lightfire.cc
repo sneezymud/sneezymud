@@ -93,7 +93,7 @@ int task_lightfire(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
   switch (cmd) {
   case CMD_TASK_CONTINUE:
     // low flammability is very slow (10), wood is about 3
-      ch->task->calcNextUpdate(pulse, PULSE_MOBACT *
+      ch->task->calcNextUpdate(pulse, Pulse::MOBACT *
              (10-(material_nums[obj->getMaterial()].flammability/70)));
 
       flintsteel->addToToolUses(-1);

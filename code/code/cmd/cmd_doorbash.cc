@@ -33,7 +33,7 @@ int TBeing::slamIntoWall(roomDirData * exitp)
     affectedData aff;
 
     aff.type = SKILL_DOORBASH;
-    aff.duration = 2 * UPDATES_PER_MUDHOUR / 3;
+    aff.duration = 2 * Pulse::UPDATES_PER_MUDHOUR / 3;
     aff.bitvector = AFF_STUNNED;
     affectTo(&aff, -1);
   }

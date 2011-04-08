@@ -247,13 +247,14 @@ int sleepTagRoom(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoom)
             tPerson->setCond(FULL, 20);
             tPerson->setCond(THIRST, 24);
 
-            if (tPerson->isAffected(AFF_SLEEP))
+            if (tPerson->isAffected(AFF_SLEEP)){
               if ((tRP = real_roomp(SLEEPTAG_CONTROL_ROOM))) {
                 --(*tPerson);
                 *tRP += *tPerson;
                 tPerson->affectFrom(SPELL_SLUMBER);
               } else
                 vlogf(LOG_PROC, format("Unable to load room %d for sleeptag move!") %  SLEEPTAG_CONTROL_ROOM);
+	    }
 
             sleepTagReport(tRoom->getZoneNum(), "%s has lost this game...", tPerson->getName());
           } else {

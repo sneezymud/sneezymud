@@ -32,14 +32,14 @@ int deathMist(TBeing *caster, int level, short bKnown)
 
     aff.type = SPELL_DEATH_MIST;
     aff.level = 30;
-    aff.duration = (25) * UPDATES_PER_MUDHOUR;
+    aff.duration = (25) * Pulse::UPDATES_PER_MUDHOUR;
     aff.modifier = -10;
     aff.location = APPLY_STR;
     aff.bitvector = AFF_SYPHILIS;
 
     aff2.type = AFFECT_DISEASE;
     aff2.level = 30;
-    aff2.duration = (25) * UPDATES_PER_MUDHOUR;
+    aff2.duration = (25) * Pulse::UPDATES_PER_MUDHOUR;
     aff2.modifier = DISEASE_SYPHILIS;
     aff2.location = APPLY_NONE;
     aff2.bitvector = AFF_SYPHILIS;
@@ -160,7 +160,7 @@ int cleanse(TBeing *caster, TBeing * victim, int level, short learn, spellNumT s
         CF(spell);
         aff.type = SPELL_DEATH_MIST;
         aff.level = level;
-        aff.duration = (aff.level << 1) * UPDATES_PER_MUDHOUR;
+        aff.duration = (aff.level << 1) * Pulse::UPDATES_PER_MUDHOUR;
         aff.modifier = -10;
         aff.location = APPLY_STR;
         aff.bitvector = AFF_SYPHILIS;

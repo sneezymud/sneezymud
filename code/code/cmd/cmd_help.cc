@@ -1032,7 +1032,7 @@ void TBeing::doHelp(const char *arg)
     } else {
       lag_t lag = discArray[skill]->lag;
       if (lag > LAG_0) {
-        sprintf(buf2, "%sCommand lock-out :%s %.1f seconds",purple(), norm(), lagAdjust(lag) * combatRound(1)/ONE_SECOND);
+        sprintf(buf2, "%sCommand lock-out :%s %.1f seconds",purple(), norm(), lagAdjust(lag) * combatRound(1)/Pulse::ONE_SECOND);
         str += buf2;
 
         if (isImmortal()) {
@@ -1283,7 +1283,7 @@ void TBeing::doHelp(const char *arg)
     lag_t lag = discArray[skill]->lag;
     if (lag > LAG_0) {
       sprintf(buf2, "%sCommand lock-out :%s %.1f seconds",
-         purple(), norm(), lagAdjust(lag) * combatRound(1)/ONE_SECOND);
+	      purple(), norm(), lagAdjust(lag) * combatRound(1)/Pulse::ONE_SECOND);
       str += buf2;
 
       if (isImmortal()) {

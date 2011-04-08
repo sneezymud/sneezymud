@@ -648,7 +648,7 @@ int TBeing::teleportRoomFlow(int pulse)
   if (!roomp || roomp->getTeleTarg() <= 0 || roomp->getTeleTime() <= 0)
     return FALSE;
 
-  // pulse will be a multiple of PULSE_TELEPORT
+  // pulse will be a multiple of Pulse::TELEPORT
   if (pulse % roomp->getTeleTime())
     return FALSE;
 
@@ -701,7 +701,7 @@ int TObj::teleportRoomFlow(int pulse)
   if(roomp->number == roomp->getTeleTarg())
     return FALSE;
 
-  // pulse will be a multiple of PULSE_TELEPORT
+  // pulse will be a multiple of Pulse::TELEPORT
   if (pulse % roomp->getTeleTime())
     return FALSE;
 
@@ -828,7 +828,7 @@ int TBeing::updateAffects()
                     (this, DISEASE_PULSE, af);
         if (IS_SET_DELETE(rc, DELETE_THIS))
           return DELETE_THIS;
-      } else if (af->duration == 1 * UPDATES_PER_MUDHOUR) {
+      } else if (af->duration == 1 * Pulse::UPDATES_PER_MUDHOUR) {
         // some spells have > 1 effect, do not show 2 messages
         if (af->shouldGenerateText())
           spellWearOffSoon(af->type);
@@ -1998,7 +1998,7 @@ int TObj::objectTickUpdate(int pulse)
       int myTimer=egg->eggIncubate();
       TRoom *rp;
       TBeing *ch;
-	  if (ch = dynamic_cast<TBeing *>(egg->equippedBy)) {
+      if ((ch = dynamic_cast<TBeing *>(egg->equippedBy))){
         rp = ch->roomp;
       } else {
         if (!(rp = roomp)) {
@@ -2254,7 +2254,7 @@ int TBeing::terrainSpecial()
     affectedData aff;
     aff.type = AFFECT_WAS_INDOORS;
     aff.level = 50;
-    aff.duration = UPDATES_PER_MUDHOUR * 12;
+    aff.duration = Pulse::UPDATES_PER_MUDHOUR * 12;
     affectJoin(this, &aff, AVG_DUR_NO, AVG_EFF_YES, FALSE);
   }
 

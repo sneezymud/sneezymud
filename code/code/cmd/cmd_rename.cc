@@ -63,7 +63,7 @@ void TBeing::doNameChange(const char *argument)
   argument = one_argument(argument, orig_name, cElements(orig_name));
   argument = one_argument(argument, new_name, cElements(new_name));
 
-  if (!orig_name || !*orig_name || !new_name || !*new_name) {
+  if (!*orig_name || !*new_name) {
     sendTo("Syntax: rename <person> <new_name>\n\r");
     return;
   }

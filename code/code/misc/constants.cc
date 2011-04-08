@@ -421,7 +421,7 @@ void assign_item_info()
      "Vnum of key that unlocks.  -1 == none", WORLD_SIZE - 1, -1,
      "Volume bag can hold", 10000000, 1);
   ItemInfo[ITEM_CORPSE] = new itemInfo("Corpse","a dead body",
-     "Flags", 1<<MAX_CORPSE_FLAGS - 1, 0,
+				       "Flags", 1<<(MAX_CORPSE_FLAGS - 1), 0,
      "Former Race", MAX_RACIAL_TYPES -1, 1,
      "Former Level", 0, 0,
      "Former Vnum", 0, 0);
@@ -516,7 +516,7 @@ void assign_item_info()
      "Liquid type - see help liquids", MAX_DRINK_TYPES - 1, 0,
      "1 = Poisoned, 2 = Unlimited drinks, 4 = Spillable, 8 = Frozen", 7, 0);
   ItemInfo[ITEM_PCORPSE] = new itemInfo("Player Corpse","a player's dead body",
-     "Flags", 1<<MAX_CORPSE_FLAGS - 1, 0,
+					"Flags", 1<<(MAX_CORPSE_FLAGS - 1), 0,
      "Former Race", MAX_RACIAL_TYPES -1, 1,
      "Former Level", 0, 0,
      "Former Vnum", 0, 0);

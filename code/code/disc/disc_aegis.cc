@@ -60,7 +60,7 @@ void relive(TBeing *ch, TBeing *vict)
 
 
     aff.type = SPELL_RELIVE;
-    aff.duration = 24 * UPDATES_PER_MUDHOUR;
+    aff.duration = 24 * Pulse::UPDATES_PER_MUDHOUR;
     aff.modifier = -50;
     aff.location = APPLY_STR;
     vict->affectJoin(ch, &aff, AVG_DUR_NO, AVG_EFF_YES);
@@ -111,7 +111,7 @@ int cureBlindness(TBeing *c, TBeing * victim, int level, short learn)
     checkFactionHelp(c,victim);
     return SPELL_SUCCESS;
   } else {
-    int duration = (level/10 + 1) * UPDATES_PER_MUDHOUR;
+    int duration = (level/10 + 1) * Pulse::UPDATES_PER_MUDHOUR;
     duration = (int) (c->percModifier() * duration);
 
     switch (critFail(c, SPELL_CURE_BLINDNESS)) {
@@ -415,7 +415,7 @@ int curePoison(TBeing *c, TBeing * victim, int level, short learn, spellNumT spe
         CF(spell);
         aff.type = SPELL_POISON;
         aff.level = level;
-        aff.duration = (aff.level << 1) * UPDATES_PER_MUDHOUR;
+        aff.duration = (aff.level << 1) * Pulse::UPDATES_PER_MUDHOUR;
         aff.modifier = -20;
         aff.location = APPLY_STR;
         aff.bitvector = AFF_POISON;
@@ -906,7 +906,7 @@ int TBeing::removeCurseBeing(TBeing * victim, int level, short learn, spellNumT 
 
       aff.type = SPELL_CURSE;
       aff.level = level;
-      aff.duration = 24 * 3 * UPDATES_PER_MUDHOUR; // 3 Days 
+      aff.duration = 24 * 3 * Pulse::UPDATES_PER_MUDHOUR; // 3 Days 
       aff.modifier = -10;
       aff.location = APPLY_SPELL_HITROLL;
       aff.bitvector = AFF_CURSE;
@@ -963,7 +963,7 @@ int armor(TBeing *c, TBeing * victim, int level, short learn, spellNumT spell)
 
   aff.type = SPELL_ARMOR;
   aff.level = level;
-  aff.duration = (3 + (aff.level / 2)) * UPDATES_PER_MUDHOUR;
+  aff.duration = (3 + (aff.level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
   aff.location = APPLY_ARMOR;
   aff.bitvector = 0;
 
@@ -1102,7 +1102,7 @@ int sanctuary(TBeing *c, TBeing *victim, int level, short learn)
 
   aff.type = SPELL_SANCTUARY;
   aff.level = level;
-  aff.duration = ((level <= MAX_MORT) ? 3 : level) * UPDATES_PER_MUDHOUR;
+  aff.duration = ((level <= MAX_MORT) ? 3 : level) * Pulse::UPDATES_PER_MUDHOUR;
   aff.location = APPLY_PROTECTION;
   aff.modifier = min(level, 50);
   aff.bitvector = AFF_SANCTUARY;
@@ -1118,7 +1118,7 @@ int sanctuary(TBeing *c, TBeing *victim, int level, short learn)
       case CRIT_S_TRIPLE:
       case CRIT_S_DOUBLE:
         CS(SPELL_SANCTUARY);
-        aff.duration = ((level <= MAX_MORT) ? 5 : level) * UPDATES_PER_MUDHOUR;
+        aff.duration = ((level <= MAX_MORT) ? 5 : level) * Pulse::UPDATES_PER_MUDHOUR;
         if (!victim->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES))
           return SPELL_FAIL;
         return SPELL_CRIT_SUCCESS;

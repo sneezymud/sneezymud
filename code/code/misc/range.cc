@@ -1265,7 +1265,7 @@ int TBeing::doShoot(const char *arg)
     return FALSE;
   }
 
-  if (arg1 && *arg1 &&
+  if (*arg1 &&
    !(targ = get_char_vis_direction(this, arg1, dir, iDist, TRUE, &count))) {
     sendTo("No creature with that name in that room.\n\r");
     sendTo("Syntax : shoot <direction> <creature> <max-distance>\n\r");

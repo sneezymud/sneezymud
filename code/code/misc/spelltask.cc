@@ -85,7 +85,7 @@
 #include "being.h"
 #include "obj_symbol.h"
 
-// FYI: CMD_TASK_CONTINUE is checked once per PULSE_COMBAT
+// FYI: CMD_TASK_CONTINUE is checked once per Pulse::COMBAT
 void spellTaskData::getNextUpdate(int pulse, int interval) 
 {
 
@@ -560,7 +560,7 @@ int TBeing::cast_spell(TBeing *ch, cmdTypeT cmd, int pulse)
 
   switch (cmd) {
     case CMD_TASK_CONTINUE:
-      ch->spelltask->getNextUpdate(pulse, PULSE_COMBAT);
+      ch->spelltask->getNextUpdate(pulse, Pulse::COMBAT);
       roll = ::number(0, min(435, (35 + ((status +1) * 50))));
 
 //      roll = min(300,(::number(1,((status + 1) *50))));

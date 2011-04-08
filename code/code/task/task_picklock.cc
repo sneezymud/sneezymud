@@ -138,7 +138,7 @@ int task_picklock(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TO
         return FALSE;
       }
       pulses_to_wait = 1;
-      ch->task->calcNextUpdate(pulse, max(pulses_to_wait, 1) * PULSE_MOBACT);
+      ch->task->calcNextUpdate(pulse, max(pulses_to_wait, 1) * Pulse::MOBACT);
       pick->pickPulse(ch);
       return FALSE;
     case CMD_ABORT:

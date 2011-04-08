@@ -149,7 +149,7 @@ int TBeing::doApplyHerbs(const sstring &tArg)
   // pass tArrow which is either a 'TArrow' or a pointer to 'vict'
   nRc = asHerb->applyMe(this, tArrow);
 
-  if (IS_SET_DELETE(nRc, DELETE_VICT))
+  if (IS_SET_DELETE(nRc, DELETE_VICT)){
     if (this == tArrow)
       return DELETE_THIS;
     else {
@@ -157,6 +157,7 @@ int TBeing::doApplyHerbs(const sstring &tArg)
       tArrow = NULL;
       REM_DELETE(nRc, DELETE_VICT);
     }
+  }
 
   return nRc;
 }

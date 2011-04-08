@@ -82,7 +82,7 @@ int iceStaff(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
         return FALSE;
       }
 
-      ch->addObjUsed(o, UPDATES_PER_MUDHOUR);
+      ch->addObjUsed(o, Pulse::UPDATES_PER_MUDHOUR);
 
       act("$n's $o glows <b>a cold blue<1> as $e growls a <p>word of power<1>.",TRUE,ch,o,NULL,TO_ROOM,NULL);
       act("$n steps back and points $p at $N!<1>",TRUE,ch,o,vict,TO_NOTVICT,NULL);
@@ -422,13 +422,13 @@ int elementalWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
       aff.level = 0;
       aff.location = APPLY_NONE;
       aff.bitvector = 0;
-      aff.duration = 24 * UPDATES_PER_MUDHOUR;
+      aff.duration = 24 * Pulse::UPDATES_PER_MUDHOUR;
       aff.modifier = SPELL_CONJURE_WATER;
       aff2.type = SPELL_CONJURE_WATER;
       aff2.level = 0;
       aff2.location = APPLY_NONE;
       aff2.bitvector = 0;
-      aff2.duration = 2 * UPDATES_PER_MUDHOUR;
+      aff2.duration = 2 * Pulse::UPDATES_PER_MUDHOUR;
       aff2.modifier = 0;
       if (!(ch->isImmortal())) ch->affectTo(&aff);
       ch->affectTo(&aff2);
@@ -455,13 +455,13 @@ int elementalWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
       aff.level = 0;
       aff.location = APPLY_NONE;
       aff.bitvector = 0;
-      aff.duration = 24 * UPDATES_PER_MUDHOUR;
+      aff.duration = 24 * Pulse::UPDATES_PER_MUDHOUR;
       aff.modifier = SPELL_CONJURE_FIRE;
       aff2.type = SPELL_CONJURE_FIRE;
       aff2.level = 0;
       aff2.location = APPLY_NONE;
       aff2.bitvector = 0;
-      aff2.duration = 2 * UPDATES_PER_MUDHOUR;
+      aff2.duration = 2 * Pulse::UPDATES_PER_MUDHOUR;
       aff2.modifier = 0;
       if (!(ch->isImmortal())) ch->affectTo(&aff);
       ch->affectTo(&aff2);
@@ -487,13 +487,13 @@ int elementalWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
       aff.level = 0;
       aff.location = APPLY_NONE;
       aff.bitvector = 0;
-      aff.duration = 24 * UPDATES_PER_MUDHOUR;
+      aff.duration = 24 * Pulse::UPDATES_PER_MUDHOUR;
       aff.modifier = SPELL_CONJURE_AIR;
       aff2.type = SPELL_CONJURE_AIR;
       aff2.level = 0;
       aff2.location = APPLY_NONE;
       aff2.bitvector = 0;
-      aff2.duration = 2 * UPDATES_PER_MUDHOUR;
+      aff2.duration = 2 * Pulse::UPDATES_PER_MUDHOUR;
       aff2.modifier = 0;
       if (!(ch->isImmortal())) ch->affectTo(&aff);
       ch->affectTo(&aff2);
@@ -590,7 +590,7 @@ int berserkerWeap(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 	act("$p<1> glows with a <c>soft blue light<1>, and lends new energy to $n's attacks!",TRUE,ch,o,vict,TO_ROOM,NULL);
 	aff.type = SPELL_HASTE;
 	aff.level = 45;
-	aff.duration = ONE_SECOND * 12; // seconds are weird so this is a 1 min cast of haste
+	aff.duration = Pulse::ONE_SECOND * 12; // seconds are weird so this is a 1 min cast of haste
 	aff.modifier = 0;
 	aff.location = APPLY_NONE;
 	aff.bitvector = 0;
@@ -939,7 +939,7 @@ int frostSpear(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
         return FALSE;
       }
       
-      ch->addObjUsed(o, UPDATES_PER_MUDHOUR);
+      ch->addObjUsed(o, Pulse::UPDATES_PER_MUDHOUR);
       
       act("The point of $n's $o glows <b>a cold blue<1> as $e growls a <p>word of power<1>.",TRUE,ch,o,NULL,TO_ROOM,NULL);
       act("$n steps back and points $p at $N!<1>",TRUE,ch,o,vict,TO_NOTVICT,NULL);
@@ -1239,7 +1239,7 @@ int poisonViperBlade(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   if (!::number(0,36)) {
     aff.type = SPELL_POISON;
     aff.level = 15;
-    aff.duration = (25) * UPDATES_PER_MUDHOUR;
+    aff.duration = (25) * Pulse::UPDATES_PER_MUDHOUR;
     aff.modifier = -25;
     aff.location = APPLY_STR;
     aff.bitvector = AFF_POISON;
@@ -1346,7 +1346,7 @@ int poisonSap(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   if (!::number(0,49)) {
     aff.type = SPELL_POISON;
     aff.level = 10;
-    aff.duration = (20) * UPDATES_PER_MUDHOUR;
+    aff.duration = (20) * Pulse::UPDATES_PER_MUDHOUR;
     aff.modifier = -20;
     aff.location = APPLY_STR;
     aff.bitvector = AFF_POISON;
@@ -1794,7 +1794,7 @@ int poisonWhip(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   if (!::number(0,49)) {
     aff.type = SPELL_POISON;
     aff.level = 10;
-    aff.duration = (20) * UPDATES_PER_MUDHOUR;
+    aff.duration = (20) * Pulse::UPDATES_PER_MUDHOUR;
     aff.modifier = -20;
     aff.location = APPLY_STR;
     aff.bitvector = AFF_POISON;

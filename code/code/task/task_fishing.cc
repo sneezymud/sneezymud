@@ -359,7 +359,7 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
 
   switch (cmd) {
     case CMD_TASK_CONTINUE:
-      ch->task->calcNextUpdate(pulse, PULSE_MOBACT * 5);
+      ch->task->calcNextUpdate(pulse, Pulse::MOBACT * 5);
 
       switch (ch->task->timeLeft) {
 	case 2:

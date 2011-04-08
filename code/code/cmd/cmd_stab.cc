@@ -195,11 +195,12 @@ spellNumT doStabMsg(TBeing *tThief, TBeing *tSucker, TGenWeapon *tWeapon, wearSl
       act(tStringMess, FALSE, tThief, tWeapon, tSucker, TO_ROOM);
     }
 
-    if (tLimb == WEAR_NECK)
+    if (tLimb == WEAR_NECK){
       if (tDamageType == DAMAGE_BEHEADED)
         tSucker->makeBodyPart(WEAR_HEAD, tThief);
       else
         tSucker->dropPool(50, LIQ_BLOOD);
+    }
   } else {
     // Apply some limb damage and have a *Very* remote chance of whacking the limb off.
 
@@ -236,7 +237,7 @@ spellNumT doStabMsg(TBeing *tThief, TBeing *tSucker, TGenWeapon *tWeapon, wearSl
       // not bleeding  == poison victim
       // limb bleeding == infect limb
       for (int tSwingIndex = 0; tSwingIndex < MAX_SWING_AFFECT; tSwingIndex++) {
-        int tDuration = (tThief->GetMaxLevel() * UPDATES_PER_MUDHOUR);
+        int tDuration = (tThief->GetMaxLevel() * Pulse::UPDATES_PER_MUDHOUR);
 
   
 	if(tWeapon->isPoisoned()){

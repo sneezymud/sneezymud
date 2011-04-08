@@ -38,7 +38,7 @@ int task_brew(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *
       w2 = ch->task->flags;
       which = spellNumT(w2);
 
-      ch->task->calcNextUpdate(pulse, 7 * PULSE_MOBACT);
+      ch->task->calcNextUpdate(pulse, 7 * Pulse::MOBACT);
 
       // init timeLeft to 0 and increment by 1 each iteration
       if (ch->task->timeLeft) {

@@ -870,12 +870,12 @@ int vending_machine2(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *o
     arg = one_argument(arg, arg2, cElements(arg2));
     arg = one_argument(arg, arg3, cElements(arg3));
     if ((is_abbrev(arg1, "button") || is_abbrev(arg1, "machine") || is_abbrev(arg1, "vending")) &&
-	(!is_abbrev(arg2, "button") || !is_abbrev(arg2, "machine") || !is_abbrev(arg2, "vending")) && arg2)
+	(!is_abbrev(arg2, "button") || !is_abbrev(arg2, "machine") || !is_abbrev(arg2, "vending")))
       strncpy(drink, arg2, sizeof(drink));
     else if ((is_abbrev(arg1, "button") || is_abbrev(arg1, "machine") || is_abbrev(arg1, "vending")) &&
-	     (is_abbrev(arg2, "button") || is_abbrev(arg2, "machine") || is_abbrev(arg2, "vending")) && arg3)
+	     (is_abbrev(arg2, "button") || is_abbrev(arg2, "machine") || is_abbrev(arg2, "vending")))
       strncpy(drink, arg3, sizeof(drink));
-    else if (arg1)
+    else if (*arg1)
       strncpy(drink, arg1, sizeof(drink));
     else
       return FALSE;
@@ -1107,7 +1107,7 @@ int lightning_hammer(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 #endif
     if (!ch->isImmortal()) {
       af.type = SPELL_LIGHTNING_BOLT;
-      af.duration = 168 * UPDATES_PER_MUDHOUR;
+      af.duration = 168 * Pulse::UPDATES_PER_MUDHOUR;
       af.modifier = 0;
       af.location = APPLY_NONE;
       af.bitvector = 0;
@@ -1584,7 +1584,7 @@ int newbieHelperWProc(TBeing *vict, cmdTypeT cmd, const char *Parg, TObj *o, TOb
 
   switch (cmd) {
     case CMD_SAY:
-      if (is_abbrev(PargA, "help"))
+      if (is_abbrev(PargA, "help")){
         if (!*Topic) {
           ch->sendTo(format("%s: Hello %s.  I am a newbie helper weapon.\n\r") %
                      o->getName() % ch->getName());
@@ -1720,6 +1720,7 @@ int newbieHelperWProc(TBeing *vict, cmdTypeT cmd, const char *Parg, TObj *o, TOb
           } else return FALSE; // He didn't call on us for help, maybe another player?
           return TRUE; // If we got here, we had a topic so lets eat the command.
         }
+      }
       return FALSE;
     case CMD_LIST:
       if (!*Topic) {
@@ -2386,14 +2387,14 @@ int stoneSkinAmulet(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
       // ARMOR APPLY
       aff1.type = SPELL_STONE_SKIN;
       aff1.level = 30;
-      aff1.duration = 8 * UPDATES_PER_MUDHOUR;
+      aff1.duration = 8 * Pulse::UPDATES_PER_MUDHOUR;
       aff1.location = APPLY_ARMOR;
       aff1.modifier = -75;
       
       // PIERCE IMMUNITY
       aff2.type = SPELL_STONE_SKIN;
       aff2.level = 30;
-      aff2.duration = 8 * UPDATES_PER_MUDHOUR;
+      aff2.duration = 8 * Pulse::UPDATES_PER_MUDHOUR;
       aff2.location = APPLY_IMMUNITY;
       aff2.modifier = IMMUNE_PIERCE;
       aff2.modifier2 = 15;
@@ -2401,7 +2402,7 @@ int stoneSkinAmulet(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
       // SKILL ATTEMPT (PREVENT IMMEDIATE RE-USE)
       aff3.type = AFFECT_SKILL_ATTEMPT;
       aff3.level = 0;
-      aff3.duration = 24 * UPDATES_PER_MUDHOUR;
+      aff3.duration = 24 * Pulse::UPDATES_PER_MUDHOUR;
       aff3.location = APPLY_NONE;
       aff3.modifier = SPELL_STONE_SKIN;
       
@@ -3331,7 +3332,7 @@ int travelGear(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 
     aff.type = SPELL_SORCERERS_GLOBE;
     aff.level = 37;
-    aff.duration = ONE_SECOND * 2;
+    aff.duration = Pulse::ONE_SECOND * 2;
     aff.location = APPLY_ARMOR;
     aff.modifier = -100;
     aff.bitvector = 0;
@@ -3930,7 +3931,7 @@ int force(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
         return FALSE;
       }
 
-      ch->addObjUsed(o, UPDATES_PER_MUDHOUR * 24);
+      ch->addObjUsed(o, Pulse::UPDATES_PER_MUDHOUR * 24);
 
       act("$n holds $p aloft, shouting a <p>word of power<1>.",TRUE,ch,o,NULL,TO_ROOM,NULL);
       act("<c>The air around <1>$n<c> seems to waver and suddenly solidifies, expanding in a wave of force!<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
@@ -3969,7 +3970,7 @@ int force(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 	affectedData aff;
 
 	aff.type = SKILL_DOORBASH;
-	aff.duration = ONE_SECOND;
+	aff.duration = Pulse::ONE_SECOND;
 	aff.bitvector = AFF_STUNNED;
 	vict->affectTo(&aff, -1);
 	if (vict->fight())
@@ -4067,13 +4068,13 @@ int fireArmor(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TObj *weapon)
       // ARMOR APPLY
       aff1.type = SPELL_FLAMING_FLESH;
       aff1.level = 30;
-      aff1.duration = 12 * UPDATES_PER_MUDHOUR;
+      aff1.duration = 12 * Pulse::UPDATES_PER_MUDHOUR;
       aff1.location = APPLY_ARMOR;
       aff1.modifier = -75;
 
 
       ch->affectTo(&aff1);
-      ch->addObjUsed(o, 24 * UPDATES_PER_MUDHOUR);
+      ch->addObjUsed(o, 24 * Pulse::UPDATES_PER_MUDHOUR);
       ch->addToWait(combatRound(3));
       return TRUE;
     }
@@ -4133,7 +4134,7 @@ int arcticHeart(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
         return FALSE;
       }
 
-      ch->addObjUsed(o, UPDATES_PER_MUDHOUR);
+      ch->addObjUsed(o, Pulse::UPDATES_PER_MUDHOUR);
 
       act("$n grips $p in one hand, and utters the word, '<b>blizzard soul<1>'.",TRUE,ch,o,NULL,TO_ROOM,NULL);
       act("<c>The $o glows for a moment, and a powerful <b>chill<1><c>runs through the room.<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
@@ -4193,7 +4194,7 @@ int symbolBlindingLight(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj
       
       act("$N is blinded by the light!", FALSE, tmp_victim, NULL, tmp_victim, TO_NOTVICT);
       act("You are blinded by the light!", FALSE, tmp_victim, NULL, NULL, TO_CHAR);
-      tmp_victim->rawBlind(100, UPDATES_PER_MUDHOUR / 4, SAVE_NO);
+      tmp_victim->rawBlind(100, Pulse::UPDATES_PER_MUDHOUR / 4, SAVE_NO);
       
     }
 
@@ -4226,7 +4227,7 @@ int blizzardRing(TBeing *being, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
         return FALSE;
       }
 
-      ch->addObjUsed(o, UPDATES_PER_MUDHOUR * 24);
+      ch->addObjUsed(o, Pulse::UPDATES_PER_MUDHOUR * 24);
 
       act("$n's $o glows <b>a cold blue<1> as $e yells a <p>word of power<1>.",TRUE,ch,o,NULL,TO_ROOM,NULL);
       act("<c>The air around <1>$n<c> seems to waver, then becomes <B>extremely cold<1><c>!<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
@@ -4277,7 +4278,7 @@ int blizzardRing(TBeing *being, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
         affectedData aff;
 
         aff.type = SKILL_DOORBASH;
-        aff.duration = ONE_SECOND;
+        aff.duration = Pulse::ONE_SECOND;
         aff.bitvector = AFF_STUNNED;
         vict->affectTo(&aff, -1);
         if (vict->fight())
@@ -4815,7 +4816,7 @@ int HSPendant(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   act("$n's $o shines with a <p>violet<1> aura briefly.",TRUE,ch,o,vict,TO_NOTVICT,NULL);
 
   aff.type = SPELL_PLASMA_MIRROR;
-  aff.duration = UPDATES_PER_MUDHOUR/2;
+  aff.duration = Pulse::UPDATES_PER_MUDHOUR/2;
   aff.modifier = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = 0;
@@ -5184,14 +5185,14 @@ int stimPack(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TObj *weapon)
 	
 	aff.type = AFFECT_DRUG;
 	aff.level = 50;
-	aff.duration = 2 * UPDATES_PER_MUDHOUR;
+	aff.duration = 2 * Pulse::UPDATES_PER_MUDHOUR;
 	aff.modifier = ::number(10,20);
 	aff.location = APPLY_SPE;
 	aff.bitvector = 0;
 	ch->affectTo(&aff, -1);
 	aff.type = AFFECT_DRUG;
 	aff.level = 50;
-	aff.duration = 2 * UPDATES_PER_MUDHOUR;
+	aff.duration = 2 * Pulse::UPDATES_PER_MUDHOUR;
 	aff.modifier = 0 - ::number(10,20);
 	aff.location = APPLY_CON;
 	aff.bitvector = 0;
@@ -5199,7 +5200,7 @@ int stimPack(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TObj *weapon)
 	if (charge == 1000) {  // give an extra boost when stimming from full 
 	  aff.type = SPELL_HASTE;
 	  aff.level = 50;
-	  aff.duration =  1 * UPDATES_PER_MUDHOUR;
+	  aff.duration =  1 * Pulse::UPDATES_PER_MUDHOUR;
 	  aff.modifier = 0;
 	  aff.location = APPLY_NONE;
 	  aff.bitvector = 0;
@@ -6066,7 +6067,7 @@ int dwarfPower(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     TBaseClothing *armor;
     double item_level;
     
-    if (armor = dynamic_cast<TBaseClothing *>(o)) {
+    if ((armor = dynamic_cast<TBaseClothing *>(o))) {
       item_level = armor->armorLevel(ARMOR_LEV_REAL);
     } else {
       // this part is meant for worn gear

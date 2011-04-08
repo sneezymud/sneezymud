@@ -169,7 +169,7 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
 
   // all durations & level are the same
   aff.level = level;
-  aff.duration = (1+level)*UPDATES_PER_MUDHOUR;
+  aff.duration = (1+level)*Pulse::UPDATES_PER_MUDHOUR;
 
   // each imm blessing is a spell affect + a stat modifier
   // apply stat modifier first
@@ -278,7 +278,7 @@ void TBeing::doEgoTrip(const char *arg)
     aff.level = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = 0;
-    aff.duration = min((int) sufferer->GetMaxLevel(), (int) GetMaxLevel()) * UPDATES_PER_MUDHOUR / 3;
+    aff.duration = min((int) sufferer->GetMaxLevel(), (int) GetMaxLevel()) * Pulse::UPDATES_PER_MUDHOUR / 3;
     aff.modifier2 = sufferer->GetMaxLevel();
     
     if (is_abbrev(disease, "cold")) {

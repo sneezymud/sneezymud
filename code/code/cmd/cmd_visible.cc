@@ -108,7 +108,7 @@ void TPerson::doInvis(const char *)
     affectedData invisAff;
     invisAff.type = SPELL_INVISIBILITY;
     invisAff.level = 5;
-    invisAff.duration = PULSE_UPDATE / (3*ONE_SECOND);
+    invisAff.duration = Pulse::UPDATE / (3*Pulse::ONE_SECOND);
     invisAff.modifier = 0;
     invisAff.location = APPLY_ARMOR;
     invisAff.bitvector = AFF_INVISIBLE;
@@ -117,7 +117,7 @@ void TPerson::doInvis(const char *)
     // add 1-day cooldown
     invisAff.type = AFFECT_SKILL_ATTEMPT;
     invisAff.level = 0;
-    invisAff.duration = 24 * UPDATES_PER_MUDHOUR;
+    invisAff.duration = 24 * Pulse::UPDATES_PER_MUDHOUR;
     invisAff.modifier = SPELL_INVISIBILITY;
     invisAff.location = APPLY_NONE;
     invisAff.bitvector = 0;

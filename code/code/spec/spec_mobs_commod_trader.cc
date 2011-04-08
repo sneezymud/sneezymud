@@ -115,8 +115,8 @@ int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 	price=commod->sellPrice(commod->numUnits(), 
 				commod_shop_nr[*target_shop_idx], -1, myself);
 	int rc;
-	if(rc=commod->sellMe(myself, tso.getKeeper(), 
-			  commod_shop_nr[*target_shop_idx], 1)){
+	if((rc=commod->sellMe(myself, tso.getKeeper(), 
+			      commod_shop_nr[*target_shop_idx], 1))){
 
 	  homebase.journalize(tso.getKeeper()->getName(),
 			      material_nums[commod->getMaterial()].mat_name,

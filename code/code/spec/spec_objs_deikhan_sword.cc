@@ -70,7 +70,7 @@ void doBlind(TBeing *ch, TBeing *vict, TObj *o)
     act("The world goes white then black as a searing light shines from $n's $p.",
         FALSE, ch, o, vict, TO_VICT);
 
-    int       tDuration = (int)(tWeap->weaponLevel() * UPDATES_PER_MUDHOUR);
+    int       tDuration = (int)(tWeap->weaponLevel() * Pulse::UPDATES_PER_MUDHOUR);
     saveTypeT tSave     = SAVE_NO;
 
     vict->rawBlind((int)tWeap->weaponLevel(), tDuration, tSave);
@@ -84,7 +84,7 @@ void doSanc(TBeing *ch, TObj *o)
 
   aff.type = SPELL_SANCTUARY;
   aff.level = level;
-  aff.duration = UPDATES_PER_MUDHOUR/4;
+  aff.duration = Pulse::UPDATES_PER_MUDHOUR/4;
   aff.location = APPLY_PROTECTION;
   aff.modifier = level;
   aff.bitvector = AFF_SANCTUARY;

@@ -110,7 +110,7 @@ int task_trap_door(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
     case CMD_TASK_CONTINUE:
       learning = ch->getDoorTrapLearn(doorTrapT(ch->task->status));
       ch->task->calcNextUpdate(pulse, 
-                 PULSE_MOBACT * (5 + ((100 - learning)/3)));
+                 Pulse::MOBACT * (5 + ((100 - learning)/3)));
 
       switch (ch->task->timeLeft) {
 	case 3:
@@ -217,7 +217,7 @@ int task_trap_container(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
     case CMD_TASK_CONTINUE:
       learning = ch->getContainerTrapLearn(doorTrapT(ch->task->status));
       ch->task->calcNextUpdate(pulse, 
-                 PULSE_MOBACT * (5 + ((100 - learning)/3)));
+                 Pulse::MOBACT * (5 + ((100 - learning)/3)));
 
       switch (ch->task->timeLeft) {
 	case 3:
@@ -354,7 +354,7 @@ int task_trap_mine(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
     case CMD_TASK_CONTINUE:
       learning = ch->getMineTrapLearn(doorTrapT(ch->task->status));
       ch->task->calcNextUpdate(pulse, 
-                 PULSE_MOBACT * (5 + ((100 - learning)/3)));
+                 Pulse::MOBACT * (5 + ((100 - learning)/3)));
 
       switch (ch->task->timeLeft) {
 	case 3:
@@ -464,7 +464,7 @@ int task_trap_arrow(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, 
     case CMD_TASK_CONTINUE:
       learning = ch->getArrowTrapLearn(doorTrapT(ch->task->status));
       ch->task->calcNextUpdate(pulse, 
-                 PULSE_MOBACT * (5 + ((100 - learning)/3)));
+                 Pulse::MOBACT * (5 + ((100 - learning)/3)));
 
       switch (ch->task->timeLeft) {
 	case 3:
@@ -591,7 +591,7 @@ int task_trap_grenade(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *
     case CMD_TASK_CONTINUE:
       learning = ch->getGrenadeTrapLearn(doorTrapT(ch->task->status));
       ch->task->calcNextUpdate(pulse, 
-                 PULSE_MOBACT * (5 + ((100 - learning)/3)));
+                 Pulse::MOBACT * (5 + ((100 - learning)/3)));
 
       switch (ch->task->timeLeft) {
 	case 3:

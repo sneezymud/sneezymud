@@ -1589,7 +1589,7 @@ void TPerson::doSwitch(const char *argument)
   // see spec_objs.cc
   
   if ((!isImmortal() && !hasSwiO) || 
-      (isImmortal()) && powerCheck(POWER_SWITCH))
+      (isImmortal() && powerCheck(POWER_SWITCH)))
   {
     sendTo(format("%sIncorrect%s command. Please see help files if you need assistance!\n\r") % red() % norm());
     return;
@@ -2114,7 +2114,7 @@ void TBeing::doReturn(const char * buffer, wearSlotT limb, bool tell, bool delet
 
   strcpy(argument, buffer);
 
-  if (!limb && argument) {
+  if (!limb){
     if (hasTransformedLimb()) {
       while (!found) {
         if (is_abbrev(argument,TransformLimbList[X].name)) {
@@ -3524,7 +3524,6 @@ int TBeing::doExits(const char *argument, cmdTypeT cmd)
   char buf[1024];
   roomDirData *exitdata;
   int darkhere = FALSE;
-  TThing *t=NULL;
   TRoom *rp;
   char nameBuf[256];
 
@@ -3532,7 +3531,7 @@ int TBeing::doExits(const char *argument, cmdTypeT cmd)
   memset(nameBuf, '\0', sizeof(nameBuf));
 
   one_argument(argument, buf, cElements(buf));
-  if (buf && *buf ) {
+  if (*buf ) {
     int rc = portalLeaveCheck(buf, cmd);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
@@ -3557,6 +3556,7 @@ int TBeing::doExits(const char *argument, cmdTypeT cmd)
       darkhere = TRUE;
     }
   }
+  sstring slopedData="";
   for (door = MIN_DIR; door < MAX_DIR; door++) {
     if ((exitdata = exitDir(door)) != NULL) {
       if (!(rp = real_roomp(exitdata->to_room))) {
@@ -3574,19 +3574,19 @@ int TBeing::doExits(const char *argument, cmdTypeT cmd)
               found = TRUE;
           }
         } else {
-    sstring slopedData="";
-
-          if (door != DIR_UP && door != DIR_DOWN)
-            if ((exitdata->condition & EX_SLOPED_UP))
-        slopedData += " (ascending)";
-            else if ((exitdata->condition & EX_SLOPED_DOWN))
-        slopedData += " (descending)";
-    
-    if(rp->isIndoorSector() ||
-       rp->isRoomFlag(ROOM_INDOORS))
-      slopedData += " (indoors)";
-    else
-      slopedData += " (outside)";
+	  if (door != DIR_UP && door != DIR_DOWN){
+	    if ((exitdata->condition & EX_SLOPED_UP))
+	      slopedData += " (ascending)";
+	    else if ((exitdata->condition & EX_SLOPED_DOWN))
+	      slopedData += " (descending)";
+	  }
+	  
+	  if(rp->isIndoorSector() ||
+	     rp->isRoomFlag(ROOM_INDOORS))
+	    slopedData += " (indoors)";
+	  else
+	    slopedData += " (outside)";
+	  
 
 
           if (IS_SET(desc->plr_color, PLR_COLOR_ROOM_NAME)) {
@@ -3637,6 +3637,7 @@ int TBeing::doExits(const char *argument, cmdTypeT cmd)
   }
 
 // check for portals and add it if one is enterable
+  TThing *t;
   for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
     TPortal *tp = dynamic_cast<TPortal *>(t);  
     if (!tp)
@@ -5314,20 +5315,20 @@ void TBeing::doTimeshift(const char *arg)
 // so this is semi-pointless
 // I'll leave it in the hopes that in the future, mud-time will actually
 // be preserved from reboot to reboot and not based on the real world at all
-    if (tmp/SECS_PER_MUD_YEAR) {
-      time_info.year -= tmp/SECS_PER_MUD_YEAR;
-      tmp %= SECS_PER_MUD_YEAR;
+    if (tmp/Pulse::SECS_PER_MUD_YEAR) {
+      time_info.year -= tmp/Pulse::SECS_PER_MUD_YEAR;
+      tmp %= Pulse::SECS_PER_MUD_YEAR;
     }
-    if (tmp/SECS_PER_MUD_MONTH) {
-      time_info.month -= tmp/SECS_PER_MUD_MONTH;
+    if (tmp/Pulse::SECS_PER_MUD_MONTH) {
+      time_info.month -= tmp/Pulse::SECS_PER_MUD_MONTH;
       if (time_info.month < 0) {
         time_info.year -= 1;
         time_info.month += 12;
       }
-      tmp %= SECS_PER_MUD_MONTH;
+      tmp %= Pulse::SECS_PER_MUD_MONTH;
     }
-    if (tmp/SECS_PER_MUD_DAY) {
-      time_info.day -= tmp/SECS_PER_MUD_DAY;
+    if (tmp/Pulse::SECS_PER_MUD_DAY) {
+      time_info.day -= tmp/Pulse::SECS_PER_MUD_DAY;
       if (time_info.day < 0) {
         time_info.month -= 1;
         time_info.day += 28;
@@ -5336,10 +5337,10 @@ void TBeing::doTimeshift(const char *arg)
         time_info.year -= 1;
         time_info.month += 12;
       }
-      tmp %= SECS_PER_MUD_DAY;
+      tmp %= Pulse::SECS_PER_MUD_DAY;
     }
-    if (tmp/SECS_PER_MUD_HOUR) {
-      time_info.hours -= tmp/SECS_PER_MUD_HOUR;
+    if (tmp/Pulse::SECS_PER_MUD_HOUR) {
+      time_info.hours -= tmp/Pulse::SECS_PER_MUD_HOUR;
       if (time_info.hours < 0) {
         time_info.day -= 1;
         time_info.hours += 48;
@@ -6516,7 +6517,7 @@ void TPerson::doBestow(const sstring &argument)
     
     while (number_tried < number_needed) {
       number_tried++;
-      if (obj = read_object(Obj::IMMORTAL_EXCHANGE_COIN, VIRTUAL)) {
+      if ((obj = read_object(Obj::IMMORTAL_EXCHANGE_COIN, VIRTUAL))){
         // load coin
         coin = dynamic_cast<TTreasure *>(obj);
         if (!coin) {

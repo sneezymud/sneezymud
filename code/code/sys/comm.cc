@@ -64,6 +64,46 @@ extern ares_channel channel;
 extern int ares_status;
 
 
+
+const int Pulse::COMMAND     =0;
+const int Pulse::TICK        =1;
+const int Pulse::ONE_SECOND  =10;
+const int Pulse::EVERY       =1;
+const int Pulse::MOBACT      =(int)((float)Pulse::ONE_SECOND * 1.2);
+const int Pulse::TELEPORT    =(int)((float)Pulse::ONE_SECOND * 1.2);
+const int Pulse::COMBAT      =(int)((float)Pulse::ONE_SECOND * 1.2);
+const int Pulse::DROWNING    =(int)((float)Pulse::ONE_SECOND * 3.6);
+const int Pulse::SPEC_PROCS  =(int)((float)Pulse::ONE_SECOND * 3.6);
+const int Pulse::NOISES      =(int)((float)Pulse::ONE_SECOND * 4.8);
+const int Pulse::WAYSLOW     =2400;
+const int Pulse::REALHOUR    =Pulse::ONE_SECOND * 60 * 60;
+const int Pulse::REALDAY     =Pulse::ONE_SECOND * 60 * 60 * 24;
+
+// Altering Pulse::UPDATES will speed up ticks, but also causes "mud time"
+// to totally recalculate (making it shorter will age people).
+// use caution!
+const int Pulse::UPDATE      =Pulse::ONE_SECOND * 36;
+const int Pulse::MUDHOUR     =Pulse::UPDATE * 4;
+const int Pulse::MUDDAY      =Pulse::MUDHOUR * 24;
+
+const int Pulse::SECS_PER_UPDATE  = Pulse::UPDATE/Pulse::ONE_SECOND;
+
+const int Pulse::SECS_PER_MUDHOUR  = Pulse::MUDHOUR/Pulse::ONE_SECOND;
+const int Pulse::SECS_PER_MUD_DAY   = (24*Pulse::SECS_PER_MUDHOUR);
+const int Pulse::SECS_PER_MUD_MONTH = (28*Pulse::SECS_PER_MUD_DAY);
+const int Pulse::SECS_PER_MUD_YEAR  = (12*Pulse::SECS_PER_MUD_MONTH);
+
+// updateAffects() is called on combat counter (socket.cc)
+// this will tell us how many combat-calls needed to simulate a "tick"
+// The reason for this is that we sometimes want to say "it takes a mud-hour"
+// and the mud-hour must be represented as a number of combat-pulse calls
+//const int Pulse::UPDATES_PER_TICK = (Pulse::UPDATE/Pulse::COMBAT);
+const int Pulse::UPDATES_PER_MUDHOUR = (Pulse::MUDHOUR/Pulse::COMBAT);
+
+
+
+
+
 // Init sockets, run game, and cleanup sockets 
 int run_the_game()
 {

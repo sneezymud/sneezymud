@@ -98,7 +98,7 @@ int secs_to_level(int lev)
   float rounds_combat = avg_mob_hp / dam_level;
 
   // converted to number of seconds
-  int time_combat = (int) (rounds_combat * PULSE_COMBAT / ONE_SECOND);
+  int time_combat = (int) (rounds_combat * Pulse::COMBAT / Pulse::ONE_SECOND);
 
   // now figure out regen
   // assume that a fiar fight consumes 100% of players HP each kill
@@ -111,7 +111,7 @@ int secs_to_level(int lev)
 
   float ticks_regen = (float) avg_pc_hp / (float) regen_per_tick;
 
-  int secs_regen = (int) (ticks_regen * (PULSE_UPDATE/2) / ONE_SECOND);
+  int secs_regen = (int) (ticks_regen * (Pulse::UPDATE/2) / Pulse::ONE_SECOND);
 
   int tot_time = secs_regen + time_combat;
 

@@ -418,7 +418,7 @@ void TBeing::doWho(const char *argument)
                   break;
                 case 'h':
                   if (!iPoints) {
-                    if (isImmortal())
+                    if (isImmortal()){
                       if (p->hasClass(CLASS_CLERIC)||p->hasClass(CLASS_DEIKHAN))
                         buf = format("%sHit:[%-3d] Pty:[%-.2f] Move:[%-3d], Talens:[%-8d], Bank:[%-8d]") % 
 			  buf % p->getHit() % p->getPiety() % p->getMove() %
@@ -431,6 +431,7 @@ void TBeing::doWho(const char *argument)
 			buf = format("%sHit:[%-3d] Mana:[%-3d] Move:[%-3d], Talens:[%-8d], Bank:[%-8d]") % 
 			  buf % p->getHit() % p->getMana() % p->getMove() %
 			  p->getMoney() % p->getBank();
+		    }
                   }
                   iPoints = TRUE;
                   break;

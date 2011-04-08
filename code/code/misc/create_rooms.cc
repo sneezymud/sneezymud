@@ -1928,11 +1928,12 @@ static void ChangeExitSlopedStatus(TRoom *rp, TBeing *ch, const char *arg, edito
       SET_BIT(rp->dir_option[dir]->condition, newBit);
 
     if (IS_SET(rp->dir_option[dir]->condition, EX_SLOPED_UP) &&
-        IS_SET(rp->dir_option[dir]->condition, EX_SLOPED_DOWN))
+        IS_SET(rp->dir_option[dir]->condition, EX_SLOPED_DOWN)){
       if (newBit == EX_SLOPED_UP)
         REMOVE_BIT(rp->dir_option[dir]->condition, EX_SLOPED_DOWN);
       else
         REMOVE_BIT(rp->dir_option[dir]->condition, EX_SLOPED_UP);
+    }
   } else if (!rp->dir_option[dir]) {
     rp->dir_option[dir] = new roomDirData();
     rp->dir_option[dir]->condition = 0;
@@ -2922,7 +2923,6 @@ static void RoomSave(TBeing *ch, int start, int end, int useSecond)
   extraDescription *exptr;
   TRoom *rp;
   roomDirData *rdd;
-  char *newline;
   TDatabase db(DB_IMMORTAL);
 
   rstart = start;
@@ -2963,7 +2963,7 @@ static void RoomSave(TBeing *ch, int start, int end, int useSecond)
 
     db.query("insert into room (owner, block, vnum,x,y,z,name,description,room_flag,sector,teletime,teletarg,telelook,river_speed,river_dir,capacity,height) values ('%s',%i,%i,%i,%i,%i, '%s','%s',%i,%i,%i,%i,%i,%i,%i,%i,%i)",
 	     ch->getName(), useSecond,
-	     rp->number, 0, 0, 0, rp->name, temp?temp:"", 
+	     rp->number, 0, 0, 0, rp->name, temp,
 	     rp->getRoomFlags(),
 	     mapSectorToFile(rp->getSectorType()), 
 	     rp->getTeleTime(), rp->getTeleTarg(),

@@ -36,7 +36,7 @@ int task_meditate(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TO
         ch->stopTask();
         return TRUE;
     }
-      ch->task->calcNextUpdate(pulse, 4 * PULSE_MOBACT);
+      ch->task->calcNextUpdate(pulse, 4 * Pulse::MOBACT);
       if (!ch->task->status) {
         if (!ch->roomp->isRoomFlag(ROOM_NO_HEAL)) {
           learn = ch->getSkillValue(SKILL_MEDITATE);

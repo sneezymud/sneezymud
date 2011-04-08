@@ -798,8 +798,9 @@ void HoldemGame::flop(TBeing *ch)
   better=firstbetter;
 
   if(players[better]->hand[0]==NULL)
-    if((better=nextBetter(better))==-1)
-      advanceRound(players[better]->ch);
+    if((better=nextBetter(better))==-1){
+      advanceRound(players[firstbetter]->ch);
+    }
 
 
   act("The bet moves to $n.",
@@ -826,8 +827,10 @@ void HoldemGame::turn(TBeing *ch)
 
   better=firstbetter;
   if(players[better]->hand[0]==NULL)
-    if((better=nextBetter(better))==-1)
-      advanceRound(players[better]->ch);
+    if((better=nextBetter(better))==-1){
+      advanceRound(players[firstbetter]->ch);
+      return;
+    }
 
 
   act("The bet moves to $n.",
@@ -854,8 +857,10 @@ void HoldemGame::river(TBeing *ch)
   
   better=firstbetter;
   if(players[better]->hand[0]==NULL)
-    if((better=nextBetter(better))==-1)
-      advanceRound(players[better]->ch);
+    if((better=nextBetter(better))==-1){
+      advanceRound(players[firstbetter]->ch);
+      return;
+    }
 
 
   act("The bet moves to $n.",

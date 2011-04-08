@@ -93,7 +93,7 @@ int TBeing::doTaunt(const sstring &arg)
 
     af.type = SKILL_TAUNT;
     af.level = getSkillValue(SKILL_TAUNT);
-    af.duration = PULSE_COMBAT * ::number(1, (int)(af.level/10));// 1-10 rounds
+    af.duration = Pulse::COMBAT * ::number(1, (int)(af.level/10));// 1-10 rounds
     af.location = APPLY_NONE;
     af.modifier = 0;
     af.bitvector = 0;

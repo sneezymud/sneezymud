@@ -533,11 +533,12 @@ void sendToFaction(factionTypeT fnum, const TBeing *who, const char *arg)
     d->character->sendTo(COLOR_SHOUTS, format("<g>%s <c>%s<1>: %s\n\r") %
 			 FactionInfo[fnum].faction_name % who->name % garble);
 
-    if (!d->m_bIsClient && IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT))
+    if (!d->m_bIsClient && IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)){
       if (d->character->isImmortal())
         d->clientf(format("%d|%d|%s|%s") % CLIENT_FTELL % fnum % who % arg);
       else
         d->clientf(format("%d|%s|%s") % CLIENT_FTELL % who % arg);
+    }
   }
 }
 

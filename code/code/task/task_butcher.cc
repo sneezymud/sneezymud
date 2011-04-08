@@ -479,7 +479,7 @@ int task_butchering(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, 
     }
     // each pulse is constatnt duration apart
     // the # of pulses was set in start_task as based on skill
-      ch->task->calcNextUpdate(pulse, PULSE_MOBACT);
+      ch->task->calcNextUpdate(pulse, Pulse::MOBACT);
       if (knife)
         rc = knife->butcherPulse(ch, corpse);
       else

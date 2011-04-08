@@ -119,15 +119,15 @@ void TBeing::lookDir(int keyword_no)
 	}
       }
 
-      if (keyword_no != DIR_UP && keyword_no != DIR_DOWN)
+      if (keyword_no != DIR_UP && keyword_no != DIR_DOWN){
 	if ((exitp->condition & EX_SLOPED_UP))
 	  sendTo("The way seems sloped up in that direction.\n\r");
 	else if ((exitp->condition & EX_SLOPED_DOWN))
 	  sendTo("The way seems sloped down in that direction.\n\r");
-
-      if (!(rp = real_roomp(exitp->to_room)))
+      }
+      if (!(rp = real_roomp(exitp->to_room))){
         sendTo("You see swirling chaos.\n\r");
-      else {
+      } else {
         if (!isPlayerAction(PLR_BRIEF))
           sendRoomDesc(rp);
 

@@ -66,7 +66,7 @@ static int quiveringPalm(TBeing *c, TBeing *v)
     act("$n touches $N, but $E ignores it.", 
          FALSE, c, NULL, v, TO_NOTVICT);
     aff.type = AFFECT_SKILL_ATTEMPT;
-    aff.duration = 10 * UPDATES_PER_MUDHOUR;
+    aff.duration = 10 * Pulse::UPDATES_PER_MUDHOUR;
     aff.modifier = SKILL_QUIV_PALM;
     aff.location = APPLY_NONE;
     aff.bitvector = 0;
@@ -93,7 +93,7 @@ static int quiveringPalm(TBeing *c, TBeing *v)
     }
 
     aff.type = SKILL_QUIV_PALM;
-    aff.duration = 4 * UPDATES_PER_MUDHOUR;
+    aff.duration = 4 * Pulse::UPDATES_PER_MUDHOUR;
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = 0;
@@ -105,7 +105,7 @@ static int quiveringPalm(TBeing *c, TBeing *v)
     c->sendTo("The vibrations fade ineffectively.\n\r");
 
     aff.type = AFFECT_SKILL_ATTEMPT;
-    aff.duration = 4 * UPDATES_PER_MUDHOUR;
+    aff.duration = 4 * Pulse::UPDATES_PER_MUDHOUR;
     aff.modifier = SKILL_QUIV_PALM;
     aff.location = APPLY_NONE;
     aff.bitvector = 0;

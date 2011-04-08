@@ -166,7 +166,7 @@ int task_preen(TBeing *ch, cmdTypeT cmd, const char *arg, int pulse, TRoom *rp, 
 
   switch (cmd) {
     case CMD_TASK_CONTINUE: {
-      ch->task->calcNextUpdate(pulse, PULSE_MOBACT * 5);
+      ch->task->calcNextUpdate(pulse, Pulse::MOBACT * 5);
 
       // valid timeleft states are 3, 2, 1, 0
       if (ch->task->timeLeft > 3 || ch->task->timeLeft < 0)
@@ -207,7 +207,7 @@ int task_preen(TBeing *ch, cmdTypeT cmd, const char *arg, int pulse, TRoom *rp, 
 
       if (ch->task->timeLeft <= 0)
       {
-        int duration = UPDATES_PER_MUDHOUR * 8;
+        int duration = Pulse::UPDATES_PER_MUDHOUR * 8;
         if (target != ch)
           duration *= 2;
 

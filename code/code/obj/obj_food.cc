@@ -243,7 +243,7 @@ int TBaseCup::drinkMe(TBeing *ch)
       act("Oops, it tasted rather strange?!!?", FALSE, ch, 0, 0, TO_CHAR);
       act("$n chokes and utters some strange sounds.", TRUE, ch, 0, 0, TO_ROOM);
       af.type = SPELL_POISON;
-      af.duration = amount * 3 * UPDATES_PER_MUDHOUR;
+      af.duration = amount * 3 * Pulse::UPDATES_PER_MUDHOUR;
       af.modifier = -20;
       af.location = APPLY_STR;
       af.bitvector = AFF_POISON;
@@ -300,7 +300,7 @@ int TBaseCup::drinkMe(TBeing *ch)
       aff3.level = 0;
       aff3.location = APPLY_NONE;
       aff3.bitvector = 0;
-      aff3.duration = amount * 3 * UPDATES_PER_MUDHOUR;
+      aff3.duration = amount * 3 * Pulse::UPDATES_PER_MUDHOUR;
       aff3.duration *= (100 - ch->getImmunity(IMMUNE_DISEASE));
       aff3.duration /= 100;
       aff3.modifier = DISEASE_DYSENTERY;
@@ -452,7 +452,7 @@ void TFood::Poisoned(TBeing *ch, int dur)
       act("That tasted rather strange !!", FALSE, ch, 0, 0, TO_CHAR);
       act("$n coughs and utters some strange sounds.", FALSE, ch, 0, 0, TO_ROOM);
       af.type = SPELL_POISON;
-      af.duration = dur * UPDATES_PER_MUDHOUR;
+      af.duration = dur * Pulse::UPDATES_PER_MUDHOUR;
       af.modifier = 0;
       af.location = APPLY_NONE;
       af.bitvector = AFF_POISON;
@@ -474,7 +474,7 @@ void TFood::Spoiled(TBeing *ch, int dur)
       af.type = AFFECT_DISEASE;
       af.level = 0;
      // Added /4 because of player complaints of food poisoning - Russ 04/28/96
-      af.duration = dur * UPDATES_PER_MUDHOUR;
+      af.duration = dur * Pulse::UPDATES_PER_MUDHOUR;
       af.modifier = DISEASE_FOODPOISON;
       af.location = APPLY_NONE;
       af.bitvector = 0;
@@ -772,7 +772,7 @@ void TBaseCup::sipMe(TBeing *ch)
     else {
       act("But it also had a strange aftertaste!", FALSE, ch, 0, 0, TO_CHAR);
       af.type = SPELL_POISON;
-      af.duration = 3 * UPDATES_PER_MUDHOUR;
+      af.duration = 3 * Pulse::UPDATES_PER_MUDHOUR;
       af.modifier = 0;
       af.location = APPLY_NONE;
       af.bitvector = AFF_POISON;

@@ -25,7 +25,7 @@ int task_spell_friends(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom 
   }
   switch (cmd) {
   case CMD_TASK_CONTINUE:
-      ch->task->calcNextUpdate(pulse, 2 * PULSE_MOBACT);
+      ch->task->calcNextUpdate(pulse, 2 * Pulse::MOBACT);
       switch (ch->task->timeLeft) {
 
       case 5:

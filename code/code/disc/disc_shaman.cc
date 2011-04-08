@@ -387,7 +387,7 @@ int shieldOfMists(TBeing *caster, TBeing *victim, int level, short bKnown)
 
   aff.type = SPELL_SHIELD_OF_MISTS;
   aff.level = level;
-  aff.duration = (3 + (aff.level / 2)) * UPDATES_PER_MUDHOUR;
+  aff.duration = (3 + (aff.level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
   aff.location = APPLY_ARMOR;
   aff.modifier = -80;
   aff.bitvector = 0;
@@ -398,7 +398,7 @@ int shieldOfMists(TBeing *caster, TBeing *victim, int level, short bKnown)
       case CRIT_S_TRIPLE:
       case CRIT_S_DOUBLE:
         CS(SPELL_SHIELD_OF_MISTS);
-        aff.duration = (12 + (level / 2)) * UPDATES_PER_MUDHOUR;
+        aff.duration = (12 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
         if (caster != victim)
           aff.modifier *= 2;
         break;
@@ -1054,7 +1054,7 @@ int cheval(TBeing *caster, TBeing *victim, int level, short bKnown)
   if (caster->bSuccess(bKnown, SPELL_CHEVAL)) {
     aff.type = SPELL_CHEVAL;
     aff.level = level;
-    aff.duration = (aff.level / 3) * UPDATES_PER_MUDHOUR;
+    aff.duration = (aff.level / 3) * Pulse::UPDATES_PER_MUDHOUR;
     aff.modifier = -50;
     aff.location = APPLY_ARMOR;
     aff.bitvector = 0;
@@ -1356,7 +1356,7 @@ TO_NOTVICT, ANSI_YELLOW_BOLD);
       // we need a way to make the fear last a little while....
       affectedData aff;
       aff.type = SPELL_INTIMIDATE;
-      aff.duration = level * UPDATES_PER_MUDHOUR / 2;
+      aff.duration = level * Pulse::UPDATES_PER_MUDHOUR / 2;
       aff.renew = aff.duration;  // renewable immediately
 
     // we've made raw immunity check, but allow it to reduce effects too
@@ -1431,7 +1431,7 @@ int senseLifeShaman(TBeing *caster, TBeing *victim, int level, short bKnown)
 
   if (caster->bSuccess(bKnown, SPELL_SENSE_LIFE_SHAMAN)) {
     aff.type = SPELL_SENSE_LIFE_SHAMAN;
-    aff.duration = (((level*2)/3) * UPDATES_PER_MUDHOUR);
+    aff.duration = (((level*2)/3) * Pulse::UPDATES_PER_MUDHOUR);
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = AFF_SENSE_LIFE;
@@ -1511,7 +1511,7 @@ int detectShadow(TBeing *caster, TBeing *victim, int level, short bKnown)
 
   if (caster->bSuccess(bKnown, SPELL_DETECT_SHADOW)) {
     aff.type = SPELL_DETECT_SHADOW;
-    aff.duration = (((level * 3)/2) * UPDATES_PER_MUDHOUR);
+    aff.duration = (((level * 3)/2) * Pulse::UPDATES_PER_MUDHOUR);
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = AFF_DETECT_INVISIBLE;
@@ -1582,7 +1582,7 @@ int djallasProtection(TBeing *caster, TBeing *victim, int level, short bKnown)
 
   aff.type = SPELL_DJALLA;
   aff.level = level;
-  aff.duration = (3 + (level / 2)) * UPDATES_PER_MUDHOUR;
+  aff.duration = (3 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
   aff.location = APPLY_IMMUNITY;
   aff.modifier = IMMUNE_SUMMON;
   aff.modifier2 = ((level * 2) / 3);
@@ -1590,7 +1590,7 @@ int djallasProtection(TBeing *caster, TBeing *victim, int level, short bKnown)
 
   aff2.type = SPELL_DJALLA;
   aff2.level = level;
-  aff2.duration = (3 + (level / 2)) * UPDATES_PER_MUDHOUR;
+  aff2.duration = (3 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
   aff2.location = APPLY_IMMUNITY;
   aff2.modifier = IMMUNE_POISON;
   aff2.modifier2 = ((level * 2) / 3);
@@ -1598,7 +1598,7 @@ int djallasProtection(TBeing *caster, TBeing *victim, int level, short bKnown)
 
   aff3.type = SPELL_DJALLA;
   aff3.level = level;
-  aff3.duration = (3 + (level / 2)) * UPDATES_PER_MUDHOUR;
+  aff3.duration = (3 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
   aff3.location = APPLY_IMMUNITY;
   aff3.modifier = IMMUNE_DRAIN;
   aff3.modifier2 = ((level * 2) / 3);
@@ -1606,7 +1606,7 @@ int djallasProtection(TBeing *caster, TBeing *victim, int level, short bKnown)
 
   aff4.type = SPELL_DJALLA;
   aff4.level = level;
-  aff4.duration = (3 + (level / 2)) * UPDATES_PER_MUDHOUR;
+  aff4.duration = (3 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
   aff4.location = APPLY_IMMUNITY;
   aff4.modifier = IMMUNE_ENERGY;
   aff4.modifier2 = ((level * 2) / 3);
@@ -1618,13 +1618,13 @@ int djallasProtection(TBeing *caster, TBeing *victim, int level, short bKnown)
       case CRIT_S_TRIPLE:
       case CRIT_S_KILL:
         CS(SPELL_DJALLA);
-        aff.duration = (10 + (level / 2)) * UPDATES_PER_MUDHOUR;
+        aff.duration = (10 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
         aff.modifier2 = (level * 2);
-        aff2.duration = (10 + (level / 2)) * UPDATES_PER_MUDHOUR;
+        aff2.duration = (10 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
         aff2.modifier2 = (level * 2);
-        aff3.duration = (10 + (level / 2)) * UPDATES_PER_MUDHOUR;
+        aff3.duration = (10 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
         aff3.modifier2 = (level * 2);
-        aff4.duration = (10 + (level / 2)) * UPDATES_PER_MUDHOUR;
+        aff4.duration = (10 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
         aff4.modifier2 = (level * 2);
 	act("$n becomes one with the spirits.", FALSE, victim, NULL, NULL, TO_ROOM, ANSI_GREEN);
 	act("You have been greatly blessed with the protection of Djalla!", FALSE, victim, NULL, NULL, TO_CHAR, ANSI_GREEN);
@@ -1688,7 +1688,7 @@ int legbasGuidance(TBeing *caster, TBeing *victim, int level, short bKnown)
 
   aff.type = SPELL_LEGBA;
   aff.level = level;
-  aff.duration = (3 + (level / 2)) * UPDATES_PER_MUDHOUR;
+  aff.duration = (3 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
   aff.location = APPLY_IMMUNITY;
   aff.modifier = IMMUNE_BLEED;
   aff.modifier2 = ((level * 2) / 3);
@@ -1696,7 +1696,7 @@ int legbasGuidance(TBeing *caster, TBeing *victim, int level, short bKnown)
 
   aff2.type = SPELL_LEGBA;
   aff2.level = level;
-  aff2.duration = (3 + (level / 2)) * UPDATES_PER_MUDHOUR;
+  aff2.duration = (3 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
   aff2.location = APPLY_IMMUNITY;
   aff2.modifier = IMMUNE_EARTH;
   aff2.modifier2 = ((level * 2) / 3);
@@ -1704,7 +1704,7 @@ int legbasGuidance(TBeing *caster, TBeing *victim, int level, short bKnown)
 
   aff3.type = SPELL_LEGBA;
   aff3.level = level;
-  aff3.duration = (3 + (level / 2)) * UPDATES_PER_MUDHOUR;
+  aff3.duration = (3 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
   aff3.location = APPLY_IMMUNITY;
   aff3.modifier = IMMUNE_CHARM;
   aff3.modifier2 = ((level * 2) / 3);
@@ -1712,7 +1712,7 @@ int legbasGuidance(TBeing *caster, TBeing *victim, int level, short bKnown)
 
   aff4.type = SPELL_LEGBA;
   aff4.level = level;
-  aff4.duration = (3 + (level / 2)) * UPDATES_PER_MUDHOUR;
+  aff4.duration = (3 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
   aff4.location = APPLY_IMMUNITY;
   aff4.modifier = IMMUNE_SLEEP;
   aff4.modifier2 = ((level * 2) / 3);
@@ -1724,13 +1724,13 @@ int legbasGuidance(TBeing *caster, TBeing *victim, int level, short bKnown)
       case CRIT_S_TRIPLE:
       case CRIT_S_KILL:
         CS(SPELL_LEGBA);
-        aff.duration = (10 + (level / 2)) * UPDATES_PER_MUDHOUR;
+        aff.duration = (10 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
         aff.modifier2 = (level * 2);
-        aff2.duration = (10 + (level / 2)) * UPDATES_PER_MUDHOUR;
+        aff2.duration = (10 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
         aff2.modifier2 = (level * 2);
-        aff3.duration = (10 + (level / 2)) * UPDATES_PER_MUDHOUR;
+        aff3.duration = (10 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
         aff3.modifier2 = (level * 2);
-        aff4.duration = (10 + (level / 2)) * UPDATES_PER_MUDHOUR;
+        aff4.duration = (10 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
         aff4.modifier2 = (level * 2);
 	act("$n becomes one with the spirits.", FALSE, victim, NULL, NULL, TO_ROOM, ANSI_GREEN);
 	act("You have been greatly blessed with the protection of Legba!", FALSE, victim, NULL, NULL, TO_CHAR, ANSI_GREEN);
@@ -2399,7 +2399,7 @@ int stupidity(TBeing *caster, TBeing *victim, int level, short bKnown)
   aff.bitvector = 0;
 
   // we'd like it to last about 10 minutes
-  aff.duration = 10 * UPDATES_PER_MUDHOUR / 2;
+  aff.duration = 10 * Pulse::UPDATES_PER_MUDHOUR / 2;
 
   // let the affect be level dependant
   aff.modifier = -(aff.level/4);

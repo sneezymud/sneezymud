@@ -44,7 +44,7 @@ int task_scribe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
       which = spellNumT(w2);
       int scribe_ticks = ch->isImmortal() ? 1 : 7;
 
-      ch->task->calcNextUpdate(pulse, scribe_ticks * PULSE_MOBACT);
+      ch->task->calcNextUpdate(pulse, scribe_ticks * Pulse::MOBACT);
 
       // init timeLeft to 0 and increment by 1 each iteration
       if (ch->task->timeLeft) {

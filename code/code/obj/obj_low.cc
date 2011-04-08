@@ -340,11 +340,12 @@ int ObjectEvaluator::getStatPointsRaw()
 
   // add in object flags
   for(int iFlag = 0; iFlag < MAX_OBJ_STAT; iFlag++)
-    if (m_obj->getObjStat() & (1 << iFlag))
+    if (m_obj->getObjStat() & (1 << iFlag)){
       if (flagCost[iFlag] >= 0)
         positiveStats += flagCost[iFlag];
       else
         negativeStats += -flagCost[iFlag];
+    }
 
   // don't allow negative points to be > 1/2 positive
   negativeStats = min(negativeStats, positiveStats/2.0);
@@ -478,11 +479,12 @@ int ArmorEvaluator::getMainPointsRaw()
 
   // add up all armor (turn it positive)
   for (int iAff = 0; iAff < MAX_OBJ_AFFECT; iAff++)
-    if (m_clothing->affected[iAff].location == APPLY_ARMOR)
+    if (m_clothing->affected[iAff].location == APPLY_ARMOR){
       if (m_clothing->affected[iAff].modifier < 0) // armor bonus
         points += -(m_clothing->affected[iAff].modifier);
       else // armor penalty
         neg_points += m_clothing->affected[iAff].modifier;
+    }
 
   // don't allow negative points to be > 1/2 positive
   neg_points = min(neg_points, points/2.0);

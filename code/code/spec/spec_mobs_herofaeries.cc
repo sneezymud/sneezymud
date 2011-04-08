@@ -79,7 +79,7 @@ void addUniqueTrophyEffects(TBeing *faerie, TBeing *targ)
       break;
   }
   aff2.type = SPELL_FERAL_WRATH;
-  aff2.duration = 2*UPDATES_PER_MUDHOUR;
+  aff2.duration = 2*Pulse::UPDATES_PER_MUDHOUR;
   aff2.bitvector = 0;
 
   if (!targ->affectJoin(targ, &aff2, AVG_DUR_NO, AVG_EFF_YES)) {
@@ -168,7 +168,7 @@ void addPermaDeathEffects(TBeing *faerie, TBeing *targ)
  
   aff.type = SKILL_BARKSKIN;
   aff.location = APPLY_ARMOR;
-  aff.duration = 2*UPDATES_PER_MUDHOUR;
+  aff.duration = 2*Pulse::UPDATES_PER_MUDHOUR;
   aff.bitvector = 0;
   aff.modifier = -90;
 

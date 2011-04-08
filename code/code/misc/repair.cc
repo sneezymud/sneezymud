@@ -247,7 +247,7 @@ static int repair_time(TBeing *keeper, const TObj *o)
   // it should be 4 + struct / 0.3 as the average amount of ticks to repair the object
   // because the approximate average here is 2 * (successrate - .5)  (we ignore the 1/101 chance of failure)
   iTime = 4 + (structs / 0.3);
-  iTime *= (PULSE_MOBACT/ONE_SECOND); // seconds per player repair pulse
+  iTime *= (Pulse::MOBACT/Pulse::ONE_SECOND); // seconds per player repair pulse
 
   // adjust this time by a const to represent the lameness of paying for something you should do yourself
   iTime *= 1.25;

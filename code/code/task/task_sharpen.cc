@@ -66,7 +66,7 @@ int task_sharpening(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, 
         stop_sharpen(ch);
         return FALSE;  // returning FALSE lets command be interpreted
     }
-      ch->task->calcNextUpdate(pulse, 2 * PULSE_MOBACT);
+      ch->task->calcNextUpdate(pulse, 2 * Pulse::MOBACT);
       w->sharpenPulse(ch, o);
       return FALSE;
   case CMD_ABORT:

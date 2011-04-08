@@ -95,7 +95,7 @@ int task_staveChargingCompSkim(TBeing *ch, TThing *tThing, bool tDestroy,
   TComponent *tComponent;
 
   while ((tThing = comp_from_object(tThing, spellNumT(tSpell)))) {
-    if ((tComponent = dynamic_cast<TComponent *>(tThing)))
+    if ((tComponent = dynamic_cast<TComponent *>(tThing))){
       if (tDestroy) {
         if (!tIteration) {
           act("$p shatters from the charge effect.",
@@ -117,6 +117,7 @@ int task_staveChargingCompSkim(TBeing *ch, TThing *tThing, bool tDestroy,
       } else {
         tValue += tComponent->getComponentCharges();
       }
+    }
   }
 
   return tValue;
@@ -207,7 +208,7 @@ void TBeing::doChargeStave(sstring tStString)
     return;
   }
 
-  if (riding)
+  if (riding){
     if (dynamic_cast<TBeing *>(riding)) {
       sendTo("Dismounting first might help some.\n\r");
       return;
@@ -215,6 +216,7 @@ void TBeing::doChargeStave(sstring tStString)
       sendTo("You stand up as you're current position is incorrect.\n\r");
       doStand();
     }
+  }
 
   if (fight() || (task && getPosition() > POSITION_SITTING)) {
     sendTo("Something tells me you are kind of busy at the moment.\n\r");

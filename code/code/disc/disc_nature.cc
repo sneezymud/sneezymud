@@ -38,7 +38,7 @@ int barkskin(TBeing * caster, TBeing * victim, int level, short bKnown)
 
   aff.type = SKILL_BARKSKIN;
   aff.location = APPLY_ARMOR;
-  aff.duration = max(min(level/2, 25), 1) * UPDATES_PER_MUDHOUR;
+  aff.duration = max(min(level/2, 25), 1) * Pulse::UPDATES_PER_MUDHOUR;
   aff.bitvector = 0;
   aff.modifier = -90;
 

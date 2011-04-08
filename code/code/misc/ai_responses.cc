@@ -575,7 +575,7 @@ bool TMonster::checkResponsesPossible(cmdTypeT tCmd, const sstring &tSaid, TBein
   // might exist in the body of the trigger.  We don't care about those
   // here, tho.  We only care if the general stuff matches up.
   for (tResp = resps->respList; tResp; tResp = tResp->next)
-    if (tResp->cmd == tCmd)
+    if (tResp->cmd == tCmd){
       if (tCmd == CMD_SAY) {
         if (strcasestr(tSaid.c_str(), tResp->args))
           return true;
@@ -584,6 +584,7 @@ bool TMonster::checkResponsesPossible(cmdTypeT tCmd, const sstring &tSaid, TBein
           return true;
       } else
         return true;
+    }
 
   return false;
 }
@@ -1452,7 +1453,7 @@ resp * TMonster::readCommand(std::istringstream &is)
   }
 
   // store trigger in lower case format for easy comparison
-  for (i = 0;buf && buf[i]; i++)
+  for (i = 0;buf[i]; i++)
     buf[i] = LOWER(buf[i]);
 
   newResp = new resp( cmd, buf);
@@ -1751,7 +1752,7 @@ int specificCode(TMonster *mob, TBeing *ch, int which, const resp * respo)
         act("A blue-white ball of lightning surrounds $n!",
             TRUE, FDt->follower, NULL, NULL, TO_ROOM);
 
-        tAff.duration  = ((ONE_SECOND * 60) * 60) * ::number(12, 24);
+        tAff.duration  = ((Pulse::ONE_SECOND * 60) * 60) * ::number(12, 24);
         tAff.modifier2 = ::number(25, 75);
         FDt->follower->affectJoin(FDt->follower, &tAff, AVG_DUR_NO, AVG_EFF_YES);
       }
@@ -1760,7 +1761,7 @@ int specificCode(TMonster *mob, TBeing *ch, int which, const resp * respo)
           FALSE, ch, NULL, NULL, TO_CHAR);
       act("A blue-white ball of lightning surrounds $n!",
           TRUE, ch, NULL, NULL, TO_ROOM);
-      tAff.duration  = ((ONE_SECOND * 60) * 60) * ::number(12, 24);
+      tAff.duration  = ((Pulse::ONE_SECOND * 60) * 60) * ::number(12, 24);
       tAff.modifier2 = ::number(25, 75);
         ch->affectJoin(ch, &tAff, AVG_DUR_NO, AVG_EFF_YES);
 
@@ -1769,7 +1770,7 @@ int specificCode(TMonster *mob, TBeing *ch, int which, const resp * respo)
             FALSE, ch->master, NULL, NULL, TO_CHAR);
         act("A blue-white ball of lightning surrounds $n!",
             TRUE, ch->master, NULL, NULL, TO_ROOM);
-        tAff.duration  = ((ONE_SECOND * 60) * 60) * ::number(12, 24);
+        tAff.duration  = ((Pulse::ONE_SECOND * 60) * 60) * ::number(12, 24);
         tAff.modifier2 = ::number(25, 75);
         ch->master->affectJoin(ch->master, &tAff, AVG_DUR_NO, AVG_EFF_YES);
       }

@@ -424,7 +424,7 @@ inline int GET_BITS_CORRECT(int a, int p, int n)
   int x, y;
   x = (a >> (p+1-n));
   y = ~(~0 <<n);
-  if (n > 7 && x & 1<<n-1) // preserve negative values for bytes and up
+  if (n > 7 && x & 1<<(n-1)) // preserve negative values for bytes and up
     return (x & y) ^ ~y;
   return x & y;
 }

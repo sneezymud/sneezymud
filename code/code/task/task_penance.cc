@@ -38,7 +38,7 @@ int task_penance(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
         ch->stopTask();
         return TRUE;
     }
-      ch->task->calcNextUpdate(pulse, 5 * PULSE_MOBACT);
+      ch->task->calcNextUpdate(pulse, 5 * Pulse::MOBACT);
       ch->task->timeLeft++;
       val = (double) ch->task->timeLeft * 0.3;
       if (!ch->task->status) {

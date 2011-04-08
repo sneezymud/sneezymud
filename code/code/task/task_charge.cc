@@ -549,7 +549,7 @@ int TBeing::ChargePulse(TBeing *ch)
 
   if (ch->task->timeLeft > 0) {
     if (!(rExit = ch->roomp->dir_option[ch->task->flags]) ||
-        IS_SET(rExit->condition, EX_CLOSED) && IS_SET(rExit->condition, EX_SECRET))
+        (IS_SET(rExit->condition, EX_CLOSED) && IS_SET(rExit->condition, EX_SECRET)))
       return ChargeHitWall(ch);
 
     if (IS_SET(rExit->condition, EX_CLOSED  ) ||
@@ -583,7 +583,7 @@ int TBeing::ChargePulse(TBeing *ch)
 
     if (ch->task->timeLeft < 0) {
       if (!(rExit = ch->roomp->dir_option[ch->task->flags]) ||
-          IS_SET(rExit->condition, EX_CLOSED) && IS_SET(rExit->condition, EX_SECRET))
+          (IS_SET(rExit->condition, EX_CLOSED) && IS_SET(rExit->condition, EX_SECRET)))
         return ChargeHitWall(ch);
 
       if (IS_SET(rExit->condition, EX_CLOSED  ) ||
@@ -707,7 +707,7 @@ int task_charge(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
 
   switch (cmd) {
     case CMD_TASK_CONTINUE:
-      ch->task->calcNextUpdate(pulse, PULSE_MOBACT);
+      ch->task->calcNextUpdate(pulse, Pulse::MOBACT);
       return Mount->ChargePulse(ch);
       break;
     case CMD_ABORT:

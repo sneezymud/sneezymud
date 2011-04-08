@@ -2052,7 +2052,7 @@ int TBeing::hit(TBeing *target, int pulse)
 
   // this function is called by perform_violence and other functions
   // that start a fight or call combat each round
-  int len_rnd = PULSE_COMBAT;
+  int len_rnd = Pulse::COMBAT;
 
   // This will eventually be replaced by limb code.  At least some of it.
   // Instead of arbitrarily choosing how many attacks, it will cycle through
@@ -2080,7 +2080,7 @@ int TBeing::hit(TBeing *target, int pulse)
 
 
   // we come in here multiple times
-  // 1 round is PULSE_COMBAT long
+  // 1 round is Pulse::COMBAT long
   // we should get fx hits per round, and fy hits per round with offhand
   // we ought to be able to simply calculate if a hit should occur here
   // and if so, pass fx/fy as either 0.0 or 1.0 without concerning ourselves
@@ -3352,12 +3352,13 @@ void TBeing::combatFatigue(TThing *o)
   if (tbw && tbw->isPaired()) {
     if (::number(1,100) <= (int) (50 * 2 * tbw->getWeight() / (num * 3)))
       addToMove(-1);
-  } else if (tbw && !tbw->isPaired()) 
+  } else if (tbw && !tbw->isPaired()) {
     if (::number(1,100) <= (int) (50 * 2 * tbw->getWeight() / ( 3 * num * 3 / 2))) {
       addToMove(-1);
-  } else {
-    if (::number(1, 50) < (int) o->getWeight()) 
-      addToMove(-1);
+    } else {
+      if (::number(1, 50) < (int) o->getWeight()) 
+	addToMove(-1);
+    }
   }
 }
 
@@ -4925,7 +4926,7 @@ void perform_violence(int pulse)
   // simply passing "pulse" (rather then "tmp_pulse" to hit()
   // oh yeah, have to make call to perform_violence done every "pulse" too
   // it was spammy and confusing as hell though.
-  for (tmp_pulse=0; tmp_pulse < PULSE_COMBAT; tmp_pulse++) {
+  for (tmp_pulse=0; tmp_pulse < Pulse::COMBAT; tmp_pulse++) {
 
     for (ch = gCombatList; ch; ch = gCombatNext) {
       gCombatNext = ch->next_fighting;

@@ -610,7 +610,7 @@ void TBeing::doReport(const char *argument)
     t=*(it++);
     TBeing *tb = dynamic_cast<TBeing *>(t);
     if (!tb) continue;
-    if (!found && tb->desc && target) {
+    if (!found && tb->desc) {
       if (is_abbrev(target, tb->getName())) {
           found = TRUE;
           targ = tb;
@@ -1708,12 +1708,12 @@ void TBeing::doGroup(const char *argument, bool silent)
       return;
     }
     argument = one_argument(argument, namebuf, cElements(namebuf));
-    if (!namebuf || !*namebuf) {
+    if (!*namebuf) {
       sendTo("Syntax: group share <target> <amount>\n\r");
       return;
     }
     argument = one_argument(argument, buf, cElements(buf));
-    if (!buf || !*buf) {
+    if (!*buf) {
       sendTo("Syntax: group share <target> <amount>\n\r");
       return;
     }
@@ -2068,7 +2068,7 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
 {
   int rc=0, i;
   int level=max(30, amt*6), learn=max(100, amt*20);
-  int duration = (level << 2) * UPDATES_PER_MUDHOUR;
+  int duration = (level << 2) * Pulse::UPDATES_PER_MUDHOUR;
   affectedData aff, aff5[5];
   statTypeT whichStat;
 
@@ -2101,28 +2101,28 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
     case LIQ_COFFEE:
       aff.type = AFFECT_DRUG;
       aff.level = level;
-      aff.duration = UPDATES_PER_MUDHOUR;
+      aff.duration = Pulse::UPDATES_PER_MUDHOUR;
       aff.modifier = 3;
       aff.location = APPLY_SPE;
       vict->affectJoin(NULL, &aff, AVG_DUR_NO, AVG_EFF_YES, FALSE);
 
       aff.type = AFFECT_DRUG;
       aff.level = level;
-      aff.duration = UPDATES_PER_MUDHOUR;
+      aff.duration = Pulse::UPDATES_PER_MUDHOUR;
       aff.modifier = 3;
       aff.location = APPLY_FOC;
       vict->affectJoin(NULL, &aff, AVG_DUR_NO, AVG_EFF_YES, FALSE);
 
       aff.type = AFFECT_DRUG;
       aff.level = level;
-      aff.duration = UPDATES_PER_MUDHOUR;
+      aff.duration = Pulse::UPDATES_PER_MUDHOUR;
       aff.modifier = -5;
       aff.location = APPLY_CHA;
       vict->affectJoin(NULL, &aff, AVG_DUR_NO, AVG_EFF_YES, FALSE);
 
       aff.type = AFFECT_DRUG;
       aff.level = level;
-      aff.duration = UPDATES_PER_MUDHOUR;
+      aff.duration = Pulse::UPDATES_PER_MUDHOUR;
       aff.modifier = -3;
       aff.location = APPLY_DEX;
       vict->affectJoin(NULL, &aff, AVG_DUR_NO, AVG_EFF_YES, FALSE);
@@ -2149,7 +2149,7 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
     case LIQ_POT_FLIGHT:
       aff.type = SPELL_FLY;
       aff.level = level;
-      aff.duration = 1 * UPDATES_PER_MUDHOUR * level;
+      aff.duration = 1 * Pulse::UPDATES_PER_MUDHOUR * level;
       aff.modifier = 0;
       aff.location = APPLY_NONE;
       aff.bitvector = AFF_FLYING;
@@ -2334,7 +2334,7 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
 
       aff.type = SPELL_HASTE;
       aff.level = level;
-      aff.duration = UPDATES_PER_MUDHOUR * 10;
+      aff.duration = Pulse::UPDATES_PER_MUDHOUR * 10;
       aff.modifier = 50;
       aff.location = APPLY_SPE;
       vict->affectJoin(NULL, &aff, AVG_DUR_NO, AVG_EFF_YES);
@@ -2375,7 +2375,7 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
     case LIQ_POT_MULTI4: // flight, gills of flesh
       aff.type = SPELL_FLY;
       aff.level = level;
-      aff.duration = 1 * UPDATES_PER_MUDHOUR * level;
+      aff.duration = 1 * Pulse::UPDATES_PER_MUDHOUR * level;
       aff.modifier = 0;
       aff.location = APPLY_NONE;
       aff.bitvector = AFF_FLYING;
@@ -2502,20 +2502,20 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
 	case 2:
 	  aff.type = SPELL_STONE_SKIN;
 	  aff.level = 30;
-	  aff.duration = 8 * UPDATES_PER_MUDHOUR;
+	  aff.duration = 8 * Pulse::UPDATES_PER_MUDHOUR;
 	  aff.location = APPLY_ARMOR;
 	  aff.modifier = -75;
 	  ch->affectTo(&aff);
 	  aff.type = SPELL_STONE_SKIN;
 	  aff.level = 30;
-	  aff.duration = 8 * UPDATES_PER_MUDHOUR;
+	  aff.duration = 8 * Pulse::UPDATES_PER_MUDHOUR;
 	  aff.location = APPLY_IMMUNITY;
 	  aff.modifier = IMMUNE_PIERCE;
 	  aff.modifier2 = 15;
 	  ch->affectTo(&aff);
 	  aff.type = AFFECT_SKILL_ATTEMPT;
 	  aff.level = 0;
-	  aff.duration = 24 * UPDATES_PER_MUDHOUR;
+	  aff.duration = 24 * Pulse::UPDATES_PER_MUDHOUR;
 	  aff.location = APPLY_NONE;
 	  aff.modifier = SPELL_STONE_SKIN;
 	  ch->sendTo("Your skin becomes as hard as stone!\n\r");
@@ -2537,7 +2537,7 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
 	case 4:
 	  aff.type = SPELL_POISON;
 	  aff.level = 10;
-	  aff.duration = (20) * UPDATES_PER_MUDHOUR;
+	  aff.duration = (20) * Pulse::UPDATES_PER_MUDHOUR;
 	  aff.modifier = -20;
 	  aff.location = APPLY_STR;
 	  aff.bitvector = AFF_POISON;
@@ -3622,8 +3622,8 @@ void TBeing::doStop(const sstring &tStArg)
       !tBeing->isPc())
     return;
 
-  if (tBeing->isImmortal() &&
-      (!isImmortal()) || GetMaxLevel() < tBeing->GetMaxLevel()) {
+  if ((tBeing->isImmortal() &&
+      !isImmortal()) || GetMaxLevel() < tBeing->GetMaxLevel()) {
     sendTo("You just don't have the heart, or the guts, to tell them to stop.\n\r");
     return;
   }
@@ -4309,7 +4309,7 @@ void TBeing::makeWary()
   affectedData aff;
 
   aff.type = AFFECT_WARY;
-  aff.duration = 2 * UPDATES_PER_MUDHOUR;
+  aff.duration = 2 * Pulse::UPDATES_PER_MUDHOUR;
   affectTo(&aff);
 
 }

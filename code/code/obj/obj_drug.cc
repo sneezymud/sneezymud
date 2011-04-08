@@ -280,7 +280,7 @@ void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
   potency=drugTypes[drug].potency;
   if(consumed>potency) consumed=potency;
 
-  duration1hit=drugTypes[drug].duration * UPDATES_PER_MUDHOUR / 2;
+  duration1hit=drugTypes[drug].duration * Pulse::UPDATES_PER_MUDHOUR / 2;
 
   switch(drug){
     case DRUG_PIPEWEED:
@@ -536,7 +536,7 @@ void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
             sleep.location = APPLY_NONE;
             sleep.modifier = 0;
             sleep.bitvector = AFF_SLEEP;
-            sleep.duration = UPDATES_PER_MUDHOUR;
+            sleep.duration = Pulse::UPDATES_PER_MUDHOUR;
             act("Your vision turns all sorts of colors and then everything goes white!", TRUE, ch, 0, 0, TO_CHAR);
             ch->affectTo(&sleep);
 
@@ -604,7 +604,7 @@ void applyAddictionAffects(TBeing *ch, drugTypeT drug, int severity){
 	aff.bitvector = 0;
 	aff.modifier2 = drug;
 	aff.modifier = -severity;
-	aff.duration = PULSE_MUDHOUR;
+	aff.duration = Pulse::MUDHOUR;
 	aff.location = APPLY_FOC;
 
 	if(!(affptr=findDrugAffect(ch, DRUG_PIPEWEED, APPLY_FOC))){
@@ -621,7 +621,7 @@ void applyAddictionAffects(TBeing *ch, drugTypeT drug, int severity){
 	aff.bitvector = 0;
 	aff.modifier2 = drug;
 	aff.modifier = -10;
-	aff.duration = PULSE_MUDHOUR;
+	aff.duration = Pulse::MUDHOUR;
 	aff.location = APPLY_FOC;
 
 	if(!(affptr=findDrugAffect(ch, DRUG_PIPEWEED, APPLY_FOC))){
@@ -644,7 +644,7 @@ void applyAddictionAffects(TBeing *ch, drugTypeT drug, int severity){
         aff.bitvector = 0;
         aff.modifier2 = drug;
         aff.modifier = -severity;
-        aff.duration = PULSE_MUDHOUR;
+        aff.duration = Pulse::MUDHOUR;
         aff.location = APPLY_FOC;
 
         if(!(affptr=findDrugAffect(ch, DRUG_POT, APPLY_FOC))){
@@ -661,7 +661,7 @@ void applyAddictionAffects(TBeing *ch, drugTypeT drug, int severity){
         aff.bitvector = 0;
         aff.modifier2 = drug;
         aff.modifier = -10;
-        aff.duration = PULSE_MUDHOUR;
+        aff.duration = Pulse::MUDHOUR;
         aff.location = APPLY_FOC;
 
         if(!(affptr=findDrugAffect(ch, DRUG_POT, APPLY_FOC))){

@@ -68,7 +68,7 @@ static void addTorment(TBeing * victim, spellNumT spell)
   affectedData hjp;
   hjp.type = AFFECT_SKILL_ATTEMPT;
   hjp.modifier = spell;
-  hjp.duration = 30 * UPDATES_PER_MUDHOUR;
+  hjp.duration = 30 * Pulse::UPDATES_PER_MUDHOUR;
 
   victim->affectTo(&hjp);
 }
@@ -263,7 +263,7 @@ int poison(TBeing * caster, TBeing * victim, int level, short bKnown, spellNumT 
 
   aff.type = SPELL_POISON;
   aff.level = level;
-  aff.duration = (2 + level/10) * UPDATES_PER_MUDHOUR;
+  aff.duration = (2 + level/10) * Pulse::UPDATES_PER_MUDHOUR;
   aff.modifier = -20;
   aff.location = APPLY_STR;
   aff.bitvector = AFF_POISON;
@@ -502,7 +502,7 @@ void blindness(TBeing * caster, TBeing * victim, TMagicItem * obj)
 
   ret = blindness(caster, victim, level, obj->getMagicLearnedness());
 
-  duration = (obj->getMagicLevel()/10 + 1) * UPDATES_PER_MUDHOUR;
+  duration = (obj->getMagicLevel()/10 + 1) * Pulse::UPDATES_PER_MUDHOUR;
   saveTypeT save = SAVE_NO;
   if (IS_SET(ret, SPELL_SAVE)) 
     save = SAVE_YES;
@@ -591,7 +591,7 @@ void blindness(TBeing * caster, TBeing * victim)
 
   int ret = blindness(caster, victim, level, caster->getSkillValue(SPELL_BLINDNESS));
 
-  int duration = (level/10 + 1) * UPDATES_PER_MUDHOUR;
+  int duration = (level/10 + 1) * Pulse::UPDATES_PER_MUDHOUR;
   duration = (int) (caster->percModifier() * duration);
 
   saveTypeT save = SAVE_NO;

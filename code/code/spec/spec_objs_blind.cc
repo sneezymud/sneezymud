@@ -62,7 +62,7 @@ int weaponBlinder(TBeing *tVictim, cmdTypeT tCmd, const char *, TObj *tObj, TObj
     act("The world goes white then black as a seering light shines from $n's $p.",
         FALSE, ch, tObj, tVictim, TO_VICT);
 
-    int       tDuration = (int)(tWeap->weaponLevel() * UPDATES_PER_MUDHOUR);
+    int       tDuration = (int)(tWeap->weaponLevel() * Pulse::UPDATES_PER_MUDHOUR);
     saveTypeT tSave     = SAVE_NO;
 
     tVictim->rawBlind((int)tWeap->weaponLevel(), tDuration, tSave);

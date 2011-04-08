@@ -3445,7 +3445,7 @@ int TMonster::notFightingMove(int pulse)
     }
   } 
 
-  if (!(pulse%(7*PULSE_MOBACT))) {
+  if (!(pulse%(7*Pulse::MOBACT))) {
     rc = lookForHorse();
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
@@ -3489,7 +3489,7 @@ int TMonster::notFightingMove(int pulse)
     }
   }
 
-  if (!(pulse%(11*PULSE_MOBACT))) {
+  if (!(pulse%(11*Pulse::MOBACT))) {
     if (greed() > 90) {
       if (isSmartMob(10) && !hasClass(CLASS_MONK)) {
         rc = superScavenger();
@@ -3507,7 +3507,7 @@ int TMonster::notFightingMove(int pulse)
     }
   }
 
-  if (hasClass(CLASS_THIEF) && !(pulse%(13*PULSE_MOBACT))) {
+  if (hasClass(CLASS_THIEF) && !(pulse%(13*Pulse::MOBACT))) {
     for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       cons = dynamic_cast<TPerson *>(t);
       if (!cons)
@@ -3521,7 +3521,7 @@ int TMonster::notFightingMove(int pulse)
     }
   }
 
-  if (IS_SET(specials.act, ACT_HUNTING) && !(pulse%(4*PULSE_MOBACT))) {
+  if (IS_SET(specials.act, ACT_HUNTING) && !(pulse%(4*Pulse::MOBACT))) {
     // this was pulse/5 but was too slow
     rc = hunt();
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -3553,7 +3553,7 @@ int TMonster::notFightingMove(int pulse)
     }
   }
 
-  if (!(pulse%(9*PULSE_MOBACT)) &&
+  if (!(pulse%(9*Pulse::MOBACT)) &&
       !spelltask) {
     rc = defendSelf(pulse);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -3579,7 +3579,7 @@ int TMonster::notFightingMove(int pulse)
   }
 
   // if I need to preen to be able to fly, let's keep ourselves flight-ready
-  if (!(pulse%(9*PULSE_MOBACT)) && !spelltask && !task && canFly() &&
+  if (!(pulse%(9*Pulse::MOBACT)) && !spelltask && !task && canFly() &&
     race->isWinged() && race->isFeathered() && !isAffected(AFF_FLIGHTWORTHY)) {
     sstring self = "";
     doPreen(self);
@@ -3588,8 +3588,8 @@ int TMonster::notFightingMove(int pulse)
   return FALSE;
 }
 
-// this function is called once per mob every PULSE_MOBACT
-// The best way to use "pulse" is to make it refer to PULSE_MOBACT so that
+// this function is called once per mob every Pulse::MOBACT
+// The best way to use "pulse" is to make it refer to Pulse::MOBACT so that
 // events occur every call, every xth call, etc.
 // Also, since this routine is VERY-HIGH USE, this function is *CRUCIAL*!!!
 // to the overall mud performance.  Code extremely tightly anything inside
@@ -3678,7 +3678,7 @@ int TMonster::mobileActivity(int pulse)
   }
   // handle NPCs skill/spell lag
   if (getWait() > 0) {
-    wait -= min(wait, (short int) PULSE_MOBACT);
+    wait -= min(wait, (short int) Pulse::MOBACT);
     return FALSE;
   }
 
@@ -3692,14 +3692,14 @@ int TMonster::mobileActivity(int pulse)
     if ((spec == SPEC_ATTUNER) && !fight()) {
       static attune_struct *job;
       job = (struct attune_struct *) act_ptr;
-      if (!job || (!(job->hasJob) && !(pulse%(1 * PULSE_MOBACT)))) {
+      if (!job || (!(job->hasJob) && !(pulse%(1 * Pulse::MOBACT)))) {
         if (!isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL) && ::number(0, 1)) {
           rc = standUp();
           if (rc)
             return FALSE;
         }
       }
-    } else if (!(pulse%(1 * PULSE_MOBACT))) {
+    } else if (!(pulse%(1 * Pulse::MOBACT))) {
       if (!isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL) && ::number(0, 1)) {
         rc = standUp(); 
         if (rc)
@@ -3713,14 +3713,14 @@ int TMonster::mobileActivity(int pulse)
     if ((spec == SPEC_ATTUNER) && !fight()) {
       static attune_struct *job;
       job = (struct attune_struct *) act_ptr;
-      if (!job || (!(job->hasJob) && !(pulse%(1 * PULSE_MOBACT)))) {
+      if (!job || (!(job->hasJob) && !(pulse%(1 * Pulse::MOBACT)))) {
         if (!isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL) && ::number(0, 1)) {
           rc = standUp();/* stand up and fight like a mob */
           if (rc)
             return FALSE;
         }
       }
-    } else if (!(pulse%(1 * PULSE_MOBACT))) {
+    } else if (!(pulse%(1 * Pulse::MOBACT))) {
       if (!isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL) && ::number(0, 1)) {
         rc = standUp();            /* stand up and fight like a mob */
         if (rc)
@@ -3734,7 +3734,7 @@ int TMonster::mobileActivity(int pulse)
       if (rc)
         return FALSE;
     } 
-    if (!(pulse%(36*PULSE_MOBACT)) &&
+    if (!(pulse%(36*Pulse::MOBACT)) &&
         !riding &&
         !fight() &&
         (getHit() >= hitLimit()) &&
@@ -3757,7 +3757,7 @@ int TMonster::mobileActivity(int pulse)
               !IS_SET(specials.act, ACT_HUNTING) &&
               (getHit() >= hitLimit()) &&
               (spec != SPEC_BOUNTY_HUNTER)) {
-    if (!(pulse%(30 * PULSE_MOBACT))) {
+    if (!(pulse%(30 * Pulse::MOBACT))) {
       if (default_pos == POSITION_SITTING)
         doSit("");
       else if (default_pos == POSITION_RESTING)
@@ -3770,7 +3770,7 @@ int TMonster::mobileActivity(int pulse)
     }
   }
 
-  if (!(pulse%(2 * PULSE_MOBACT))) {
+  if (!(pulse%(2 * Pulse::MOBACT))) {
     // rescue group members if needed
     // this needs high priority so we put it here instead of fighterMove
     if(hasClass(CLASS_WARRIOR) && isAffected(AFF_GROUP) &&
@@ -3797,7 +3797,7 @@ int TMonster::mobileActivity(int pulse)
     }
   }
 
-  if (!(pulse%(5 * PULSE_MOBACT))) {
+  if (!(pulse%(5 * Pulse::MOBACT))) {
     rc = charmeeStuff();
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
@@ -3814,7 +3814,7 @@ int TMonster::mobileActivity(int pulse)
       bumpHead(&iHeight);
   }
 
-  if (isShopkeeper() && !(pulse %(200*PULSE_MOBACT)) && !Config::NoSpecials()){
+  if (isShopkeeper() && !(pulse %(200*Pulse::MOBACT)) && !Config::NoSpecials()){
     unsigned int shop_nr;
     
     for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != number); shop_nr++);
@@ -3859,7 +3859,7 @@ int TMonster::mobileActivity(int pulse)
     }
   }
 
-  if (spec && !(pulse %(50*PULSE_MOBACT)) && !::number(0, 1) && 
+  if (spec && !(pulse %(50*Pulse::MOBACT)) && !::number(0, 1) && 
       !Config::NoSpecials()) {
     rc = checkSpec(this, CMD_MOB_ALIGN_PULSE, "", NULL);
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
@@ -3870,7 +3870,7 @@ int TMonster::mobileActivity(int pulse)
   // trigger spec_procs
 
   // should do this in socket.cc
-  if (spec && !(pulse %(2 * PULSE_MOBACT)) && !Config::NoSpecials()) {
+  if (spec && !(pulse %(2 * Pulse::MOBACT)) && !Config::NoSpecials()) {
     rc = checkSpec(this, CMD_GENERIC_PULSE, "", NULL);
     if (IS_SET_DELETE(rc, DELETE_VICT) || IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
@@ -3884,7 +3884,7 @@ int TMonster::mobileActivity(int pulse)
     return FALSE;
 
   // yank out stuck-in
-  if (!(pulse%(16 * PULSE_MOBACT))) {
+  if (!(pulse%(16 * Pulse::MOBACT))) {
     rc = remove();
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
@@ -3896,7 +3896,7 @@ int TMonster::mobileActivity(int pulse)
   if (getPosition() <= POSITION_SITTING)
     return FALSE;
 
-  if (!(pulse%(5 * PULSE_MOBACT))) {
+  if (!(pulse%(5 * Pulse::MOBACT))) {
     if (isSmartMob(15))
       if (senseWimps())
         return TRUE;

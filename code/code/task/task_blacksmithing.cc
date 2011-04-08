@@ -279,9 +279,9 @@ int BaseRepair::PumpMessage(cmdTypeT cmd, int pulse)
 
   learning = m_ch->getSkillValue(m_skill);
   didSucceed = m_ch->bSuccess(learning, m_skill);
-  m_ch->task->calcNextUpdate(pulse, 2 * PULSE_MOBACT);
+  m_ch->task->calcNextUpdate(pulse, 2 * Pulse::MOBACT);
 
-  if (m_ch->task->status && didSucceed || !m_ch->task->status) 
+  if ((m_ch->task->status && didSucceed) || !m_ch->task->status) 
   {
     if (OnDrain(o))
     {

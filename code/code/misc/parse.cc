@@ -3422,7 +3422,7 @@ void TBeing::makeOutputPaged()
   if(desc->socket->port==Config::Port::PROD_XML)
     return;
 
-  while(c=desc->output.takeFromQ()){
+  while((c=desc->output.takeFromQ())){
     str += c->getComm(Comm::TEXT);
     delete c;
   }

@@ -344,7 +344,7 @@ int task_skinning(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TO
     }
     // each pulse is constatnt duration apart
     // the # of pulses was set in start_task as based on skill
-      ch->task->calcNextUpdate(pulse, PULSE_MOBACT);
+      ch->task->calcNextUpdate(pulse, Pulse::MOBACT);
       rc = knife->skinPulse(ch, corpse);
       // knife may be invalid here
       return rc;

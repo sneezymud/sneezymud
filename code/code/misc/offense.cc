@@ -140,9 +140,9 @@ int TBeing::doHit(const sstring &argument, TBeing *vict)
       }
 
     // trigger specials for starting a fight
-    if (rc = checkSpec(victim, CMD_MOB_COMBAT_ONATTACK, NULL, NULL))
+    if ((rc = checkSpec(victim, CMD_MOB_COMBAT_ONATTACK, NULL, NULL)))
       return rc;
-    if (rc = victim->checkSpec(this, CMD_MOB_COMBAT_ONATTACKED, NULL, NULL))
+    if ((rc = victim->checkSpec(this, CMD_MOB_COMBAT_ONATTACKED, NULL, NULL)))
       return rc;
 
     // put if statement back in if doesnt work right
@@ -197,9 +197,9 @@ int TBeing::doHit(const sstring &argument, TBeing *vict)
           if (victim->attackers < MAX_COMBAT_ATTACKERS) {
 
             // trigger specials for starting a fight (switching counts as a new attack)
-            if (rc = checkSpec(victim, CMD_MOB_COMBAT_ONATTACK, NULL, NULL))
+            if ((rc = checkSpec(victim, CMD_MOB_COMBAT_ONATTACK, NULL, NULL)))
               return rc;
-            if (rc = victim->checkSpec(this, CMD_MOB_COMBAT_ONATTACKED, NULL, NULL))
+            if ((rc = victim->checkSpec(this, CMD_MOB_COMBAT_ONATTACKED, NULL, NULL)))
               return rc;
 
             if (isAffected(AFF_ENGAGER)) {
@@ -1955,7 +1955,7 @@ int TBeing::chlorineEngulfed()
 
   af.type = SPELL_POISON;
   af.level = 51;
-  af.duration = (60) * UPDATES_PER_MUDHOUR;
+  af.duration = (60) * Pulse::UPDATES_PER_MUDHOUR;
   af.modifier = -20;
   af.location = APPLY_STR;
   af.bitvector = AFF_POISON;

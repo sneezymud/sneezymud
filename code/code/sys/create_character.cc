@@ -622,7 +622,7 @@ bool nannyLaunchpad_allowdone(Descriptor * desc, sstring & output)
 
   // check for a trait which you arent qualified for
   for(int iTrait = 1; iTrait < MAX_TRAITS+1; iTrait++)
-    if (desc->character->hasQuestBit(traits[iTrait].tog))
+    if (desc->character->hasQuestBit(traits[iTrait].tog)){
       if (traits[iTrait].num50any > num50any)
       {
         output = format("The %s trait requires more level 50 characters than you have.") % traits[iTrait].name;
@@ -641,6 +641,7 @@ bool nannyLaunchpad_allowdone(Descriptor * desc, sstring & output)
         output = format("The %s trait is not allowed for %ss.") % traits[iTrait].name % nannyRaces[iRace].name;
         return false;
       }
+    }
 
   // check for negative stats
   int extra = desc->bonus_points.total - desc->totalChosenStats();

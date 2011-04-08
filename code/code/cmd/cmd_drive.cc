@@ -47,10 +47,10 @@ void TBeing::doDrive(sstring arg)
   // direction is entered we can fall through to non-keys commands
   for(dirTypeT dir=DIR_NORTH;dir<MAX_DIR;dir++){
     if(is_abbrev(buf, dirs[dir]) ||
-       (dirs[dir]=="northwest" && buf=="nw") ||
-       (dirs[dir]=="southwest" && buf=="sw") ||
-       (dirs[dir]=="northeast" && buf=="ne") ||
-       (dirs[dir]=="southeast" && buf=="se")){
+       ((sstring)(dirs[dir])=="northwest" && buf=="nw") ||
+       ((sstring)(dirs[dir])=="southwest" && buf=="sw") ||
+       ((sstring)(dirs[dir])=="northeast" && buf=="ne") ||
+       ((sstring)(dirs[dir])=="southeast" && buf=="se")){
       if(!has_key(this, vehicle->getPortalKey())){
 	sendTo("You need the keys to drive this vehicle!\n\r");
 	return;

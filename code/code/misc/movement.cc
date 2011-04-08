@@ -2420,7 +2420,7 @@ int TBeing::portalLeaveCheck(char *argum, cmdTypeT cmd)
   for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
     o = dynamic_cast<TPortal *>(t);
     if (o &&
-           (((cmd == CMD_LEAVE) && (!arg || !*arg || isname(arg,o->name))) || 
+           (((cmd == CMD_LEAVE) && (!*arg || isname(arg,o->name))) || 
             ((cmd == CMD_EXITS) && *arg && isname(arg, o->name))) ) {
       break;
     }
@@ -2450,7 +2450,7 @@ int TBeing::doLeave(const char *argument)
 
   *arg = '\0';
   one_argument(argument, arg, cElements(arg));
-  if (arg || *arg) {
+  if (*arg) {
     rc = portalLeaveCheck(arg, CMD_LEAVE);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
@@ -2705,7 +2705,7 @@ void TBeing::doRest(const sstring & argument)
     sendTo("Why don't we land first...\n\r");
     return;
   }
-  if (!hasBoat() && roomp->isWaterSector() || roomp->isUnderwaterSector()) {
+  if ((!hasBoat() && roomp->isWaterSector()) || roomp->isUnderwaterSector()) {
     sendTo("You can't rest in the water.\n\r");
     return;
   }

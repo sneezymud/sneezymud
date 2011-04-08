@@ -632,19 +632,19 @@ int shapeShift(TBeing *caster, int level, short bKnown)
       case CRIT_S_KILL:
       case CRIT_S_TRIPLE:
       case CRIT_S_DOUBLE:
-        duration = (2 + level / 5) * UPDATES_PER_MUDHOUR;
+        duration = (2 + level / 5) * Pulse::UPDATES_PER_MUDHOUR;
         CS(SPELL_SHAPESHIFT);
         ret = SPELL_CRIT_SUCCESS;
       case CRIT_S_NONE:
       default:
-        duration = (1 + level / 10) * UPDATES_PER_MUDHOUR;
+        duration = (1 + level / 10) * Pulse::UPDATES_PER_MUDHOUR;
         break;
    }
 
   // first add the attempt -- used to regulate attempts
   aff.type = AFFECT_SKILL_ATTEMPT;
   aff.location = APPLY_NONE;
-  aff.duration = duration + UPDATES_PER_MUDHOUR;
+  aff.duration = duration + Pulse::UPDATES_PER_MUDHOUR;
   aff.bitvector = 0;
   aff.modifier = SPELL_SHAPESHIFT;
   caster->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);

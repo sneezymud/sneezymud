@@ -1863,7 +1863,7 @@ int TBeing::trapSleep(int amt)
 
   if (!isLucky(levelLuckModifier(GetMaxLevel()))) {
     // at 2 minutes per mudhour, let's not make this too painful
-    rc = rawSleep(0, (2 * UPDATES_PER_MUDHOUR), 1, SAVE_NO);
+    rc = rawSleep(0, (2 * Pulse::UPDATES_PER_MUDHOUR), 1, SAVE_NO);
   } else
     sendTo("You feel sleepy, but you recover.\n\r");
 
@@ -1879,7 +1879,7 @@ void TBeing::trapDisease(int amt)
   aff.level = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = 0;
-  aff.duration = 4 * UPDATES_PER_MUDHOUR;
+  aff.duration = 4 * Pulse::UPDATES_PER_MUDHOUR;
 
   if (isImmortal() ||
       isImmune(IMMUNE_DISEASE, WEAR_BODY)) {
@@ -1908,7 +1908,7 @@ void TBeing::trapPoison(int amt)
   affectedData af, af2;
 
   af.type = SPELL_POISON;
-  af.duration = 12 * UPDATES_PER_MUDHOUR;
+  af.duration = 12 * Pulse::UPDATES_PER_MUDHOUR;
   af.modifier = -20;
   af.location = APPLY_STR;
   af.bitvector = AFF_POISON;

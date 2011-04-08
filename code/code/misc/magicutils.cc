@@ -1987,23 +1987,23 @@ bool genericBless(TBeing *c, TBeing *v, int level, bool crit)
 
   aff1.type = SPELL_BLESS;
   aff1.level = level;
-  aff1.duration = (1 + level) * UPDATES_PER_MUDHOUR;
+  aff1.duration = (1 + level) * Pulse::UPDATES_PER_MUDHOUR;
   aff1.location = APPLY_SPELL_HITROLL;
   aff1.modifier = 10;
   aff1.bitvector = 0;
 
   aff2.type = aff1.type;
   aff2.level = level;
-  aff2.duration = (1 + level) * UPDATES_PER_MUDHOUR;
+  aff2.duration = (1 + level) * Pulse::UPDATES_PER_MUDHOUR;
   aff2.location = APPLY_IMMUNITY;
   aff2.modifier = IMMUNE_NONMAGIC;
   aff2.modifier2 = 5;
   aff2.bitvector = 0;
 
   if (crit) {
-    aff1.duration += 9 * UPDATES_PER_MUDHOUR;
+    aff1.duration += 9 * Pulse::UPDATES_PER_MUDHOUR;
     aff1.modifier = 2;
-    aff2.duration += 9 * UPDATES_PER_MUDHOUR;
+    aff2.duration += 9 * Pulse::UPDATES_PER_MUDHOUR;
     aff2.modifier2 *= 2;
   }
 
@@ -2029,7 +2029,7 @@ bool genericDisease(TBeing *caster, TBeing *vict, int level)
   aff.level = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = 0;
-  aff.duration = level * UPDATES_PER_MUDHOUR / 3;
+  aff.duration = level * Pulse::UPDATES_PER_MUDHOUR / 3;
   aff.modifier2 = level;
 	
   std::vector <diseaseTypeT> diseases; // possible disease types
@@ -2123,7 +2123,7 @@ void genericCurse(TBeing *c, TBeing *v, int level, spellNumT spell)
 
   aff1.type = spell;
   aff1.level = level;
-  aff1.duration = 12 * UPDATES_PER_MUDHOUR;
+  aff1.duration = 12 * Pulse::UPDATES_PER_MUDHOUR;
   aff1.bitvector = AFF_CURSE;
   aff1.location = APPLY_SPELL_HITROLL;
   aff1.modifier = - min(5, level/3);

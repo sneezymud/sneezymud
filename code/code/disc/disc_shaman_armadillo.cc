@@ -178,7 +178,7 @@ int thornflesh(TBeing *caster, int level, short bKnown)
   }
 
   aff.type = SPELL_THORNFLESH;
-  aff.duration = max(min(level/10, 5), 1) * UPDATES_PER_MUDHOUR;
+  aff.duration = max(min(level/10, 5), 1) * Pulse::UPDATES_PER_MUDHOUR;
   aff.modifier = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = 0;
@@ -236,7 +236,7 @@ int aqualung(TBeing * caster, TBeing * victim, int level, short bKnown)
     caster->reconcileHelp(victim,discArray[SPELL_AQUALUNG]->alignMod);
     aff.type = SPELL_AQUALUNG;
     aff.level = level;
-    aff.duration = 8 * UPDATES_PER_MUDHOUR;
+    aff.duration = 8 * Pulse::UPDATES_PER_MUDHOUR;
     aff.modifier = 0;
     aff.renew = aff.duration;
     aff.location = APPLY_NONE;
@@ -325,7 +325,7 @@ TO_CHAR);
   if (caster->bSuccess(bKnown, SPELL_SHADOW_WALK)) {
     aff.type = SPELL_SHADOW_WALK;
     aff.level = level;
-    aff.duration = 18 * UPDATES_PER_MUDHOUR;
+    aff.duration = 18 * Pulse::UPDATES_PER_MUDHOUR;
     aff.modifier = -40;
     aff.location = APPLY_ARMOR;
     aff.bitvector = AFF_SHADOW_WALK;
@@ -335,7 +335,7 @@ TO_CHAR);
       case CRIT_S_TRIPLE:
       case CRIT_S_KILL:
         CS(SPELL_SHADOW_WALK);
-        aff.duration = 28 * UPDATES_PER_MUDHOUR;
+        aff.duration = 28 * Pulse::UPDATES_PER_MUDHOUR;
         aff.modifier = -60;
         break;
       case CRIT_S_NONE:
@@ -420,7 +420,7 @@ int celerite(TBeing *caster, TBeing *victim, int level, short bKnown)
   if (caster->bSuccess(bKnown, SPELL_CELERITE)) {
     aff.type = SPELL_CELERITE;
     aff.level = level;
-    aff.duration = (aff.level / 3) * UPDATES_PER_MUDHOUR;
+    aff.duration = (aff.level / 3) * Pulse::UPDATES_PER_MUDHOUR;
     aff.modifier = -100;
     aff.location = APPLY_ARMOR;
     aff.bitvector = 0;

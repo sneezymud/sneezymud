@@ -68,7 +68,7 @@ int task_dulling(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
         stop_dull(ch);
         return FALSE;  // returning FALSE lets command be interpreted
     }
-      ch->task->calcNextUpdate(pulse, 2 * PULSE_MOBACT);
+      ch->task->calcNextUpdate(pulse, 2 * Pulse::MOBACT);
       w->dullPulse(ch, o);
       return FALSE;
   case CMD_ABORT:

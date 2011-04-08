@@ -106,7 +106,7 @@ bool loadSetClass::suitLoad(const char *argument, TBeing *ch, loadSetTypeT tPiec
 
           if (pieceIndex == LST_SLEEVE   || pieceIndex == LST_GLOVE   ||
               pieceIndex == LST_BRACELET || pieceIndex == LST_LEGGING ||
-              pieceIndex == LST_BOOT     || pieceIndex == LST_RING)
+              pieceIndex == LST_BOOT     || pieceIndex == LST_RING){
             if (findLoadPotential) {
               tallyObjLoadPotential(suits[suitIndex].equipment[pieceIndex]);
             } else {
@@ -114,6 +114,7 @@ bool loadSetClass::suitLoad(const char *argument, TBeing *ch, loadSetTypeT tPiec
                            tChance, getSlotFromLST(loadSetTypeT(pieceIndex), ch, true),
                            suitPieceNames[pieceIndex]);
             }
+	  }
         }
       } else
         if (findLoadPotential) {
@@ -243,7 +244,7 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance, bool findLoadPote
   const char   *tArg         = NULL;
   loadSetTypeT  tPiece       = LST_ALL;
   sstring        StString("");
-  int           tCount;
+  int           tCount=0;
 
   if (num < 0 && (!arg || !*arg) && tChance != 101)
     return;

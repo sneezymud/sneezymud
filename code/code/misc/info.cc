@@ -80,11 +80,11 @@ sstring describeDuration(const TBeing *ch, int dur)
     dur = max(1, dur);
   }
 
-  // aff->dur decrements once per PULSE_COMBAT
+  // aff->dur decrements once per Pulse::COMBAT
   // total duration (in pulses) it lasts is dur*COMBAT
 
-  hours = dur * PULSE_COMBAT / PULSE_MUDHOUR;
-  mins = ((dur * PULSE_COMBAT) % PULSE_MUDHOUR) * 60 / PULSE_MUDHOUR;
+  hours = dur * Pulse::COMBAT / Pulse::MUDHOUR;
+  mins = ((dur * Pulse::COMBAT) % Pulse::MUDHOUR) * 60 / Pulse::MUDHOUR;
 
   if (hours >= 24) {
     days = hours/24;
@@ -273,8 +273,8 @@ void TBeing::listExits(const TRoom *rp) const
     bool open=!IS_SET(exitdata->condition, EX_CLOSED);
     bool see_thru=canSeeThruDoor(exitdata);
 
-    if (exitdata->to_room != Room::NOWHERE &&
-	((!secret || open) || (!secret && see_thru)) ||
+    if ((exitdata->to_room != Room::NOWHERE &&
+	((!secret || open) || (!secret && see_thru))) ||
 	isImmortal()){
       num = door;
       count++;
@@ -2849,7 +2849,7 @@ void TBeing::doWhere(const char *argument)
         while (tTmpBuffer && *tTmpBuffer) {
           tTmpBuffer = one_argument(tTmpBuffer, tTmpString, cElements(tTmpString));
 
-          if (!tTmpString || !*tTmpString)
+          if (!*tTmpString)
             continue;
 
           if (!is_abbrev(tStName, tTmpString))
@@ -2858,17 +2858,18 @@ void TBeing::doWhere(const char *argument)
           break;
         }
 
-        if (!tTmpString || !*tTmpString || !is_abbrev(tStName, tTmpString))
+        if (!*tTmpString || !is_abbrev(tStName, tTmpString))
           continue;
       }
 
-      if (is_abbrev(tStArg, "engraved"))
+      if (is_abbrev(tStArg, "engraved")){
         if (!k->action_description)
           continue;
         else if ((sscanf(k->action_description, "This is the personalized object of %s.", buf)) != 1)
           continue;
         else if (!is_abbrev(tStName, buf))
           continue;
+      }
 
       sprintf(buf, "[%2d] ", ++count);
       sb += buf;
@@ -3591,7 +3592,7 @@ void TBeing::doAlias(const char *argument)
     return;
   }
   half_chop(argument, arg1, arg2);
-  if ((!arg2) || (!*arg2)) {
+  if ((!*arg2)) {
     sendTo("You need a second argument.\n\r");
     return;
   }
@@ -3952,7 +3953,7 @@ void TBeing::doEvaluate(const char *argument)
       rNatureCount = 0;
 
   strncpy(arg, argument, cElements(arg));
-  if (!arg || !*arg) {
+  if (!*arg) {
     sendTo("Evaluate what?\n\r");
     return;
   }
@@ -4190,11 +4191,12 @@ void TBeing::doEvaluate(const char *argument)
 
     for (int Runner = MIN_DIR; Runner < MAX_DIR; Runner++)
       if (Runner != DIR_UP && Runner != DIR_DOWN && roomp->dir_option[Runner] &&
-          real_roomp((count = roomp->dir_option[Runner]->to_room)))
+          real_roomp((count = roomp->dir_option[Runner]->to_room))){
         if (real_roomp(count)->notRangerLandSector())
           rNatureCount--;
         else
           rNatureCount++;
+      }
 
     if (roomp->notRangerLandSector()) {
       if (rNatureCount > 6)

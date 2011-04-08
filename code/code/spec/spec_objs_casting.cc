@@ -18,7 +18,7 @@ int objCastFaerieFire(TObj *o, TBeing *targ)
   aff.level = 50;
   aff.location = APPLY_ARMOR;
   aff.bitvector = 0;
-  aff.duration = 10 * UPDATES_PER_MUDHOUR; // 4x longer than normal
+  aff.duration = 10 * Pulse::UPDATES_PER_MUDHOUR; // 4x longer than normal
   aff.modifier = 100 + (aff.level*4);
   targ->affectJoin(NULL, &aff, AVG_DUR_NO, AVG_EFF_YES);
   act("A faint pink outline puffs out around $N!",
@@ -40,7 +40,7 @@ int objCastSorcGlobe(TObj *o, TBeing *targ)
   aff.level = 50;
   aff.location = APPLY_ARMOR;
   aff.bitvector = 0;
-  aff.duration = (3 + (aff.level / 2)) * UPDATES_PER_MUDHOUR;
+  aff.duration = (3 + (aff.level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
   aff.modifier = -100;
   targ->affectJoin(NULL, &aff, AVG_DUR_NO, AVG_EFF_YES);
 
@@ -220,7 +220,7 @@ int objWornAstralWalk(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj
     // SKILL ATTEMPT (PREVENT IMMEDIATE RE-USE)
     aff.type = AFFECT_SKILL_ATTEMPT;
     aff.level = 0;
-    aff.duration = 24*UPDATES_PER_MUDHOUR;
+    aff.duration = 24*Pulse::UPDATES_PER_MUDHOUR;
     aff.location = APPLY_NONE;
     aff.modifier = SPELL_ASTRAL_WALK;
     
@@ -431,7 +431,7 @@ int objWornMinorAstralWalk(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o,
     // SKILL ATTEMPT (PREVENT IMMEDIATE RE-USE)
     aff.type = AFFECT_SKILL_ATTEMPT;
     aff.level = 0;
-    aff.duration = 24*UPDATES_PER_MUDHOUR;
+    aff.duration = 24*Pulse::UPDATES_PER_MUDHOUR;
     aff.location = APPLY_NONE;
     aff.modifier = SPELL_ASTRAL_WALK;
     
@@ -563,7 +563,7 @@ int objWornPortal(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     // SKILL ATTEMPT (PREVENT IMMEDIATE RE-USE)
     aff.type = AFFECT_SKILL_ATTEMPT;
     aff.level = 0;
-    aff.duration = 24*UPDATES_PER_MUDHOUR;
+    aff.duration = 24*Pulse::UPDATES_PER_MUDHOUR;
     aff.location = APPLY_NONE;
     aff.modifier = SPELL_PORTAL;
 

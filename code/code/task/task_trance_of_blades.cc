@@ -43,7 +43,7 @@ int task_trance_of_blades(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRo
     return FALSE;
   switch (cmd) {
   case CMD_TASK_CONTINUE:
-    ch->task->calcNextUpdate(pulse, PULSE_MOBACT);
+    ch->task->calcNextUpdate(pulse, Pulse::MOBACT);
     if (!(o = ch->heldInPrimHand())) {
       act("Loss of your weapon causes you to snap out of your trance.",
           FALSE, ch, 0, 0, TO_CHAR, ANSI_RED);

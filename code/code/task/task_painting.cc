@@ -90,7 +90,7 @@ int task_painting(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, 
 
   switch (cmd) {
     case CMD_TASK_CONTINUE:
-      ch->task->calcNextUpdate(pulse, PULSE_MOBACT * 5);
+      ch->task->calcNextUpdate(pulse, Pulse::MOBACT * 5);
       break;
     case CMD_ABORT:
     case CMD_STOP:

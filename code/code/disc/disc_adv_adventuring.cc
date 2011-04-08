@@ -128,7 +128,7 @@ int forage(TBeing *caster, short bKnown)
     }
     aff.type = SKILL_FORAGE;
     aff.location = APPLY_NONE;
-    aff.duration = 4 * UPDATES_PER_MUDHOUR;
+    aff.duration = 4 * Pulse::UPDATES_PER_MUDHOUR;
     aff.bitvector = 0;
     aff.modifier = 0;
     caster->affectTo(&aff, -1);
@@ -136,7 +136,7 @@ int forage(TBeing *caster, short bKnown)
   } else {
     aff.type = AFFECT_SKILL_ATTEMPT;
     aff.location = APPLY_NONE;
-    aff.duration = 2 * UPDATES_PER_MUDHOUR;
+    aff.duration = 2 * Pulse::UPDATES_PER_MUDHOUR;
     aff.bitvector = 0;
     aff.modifier = SKILL_FORAGE;
 
@@ -268,7 +268,7 @@ int forage_insect(TBeing *caster)
 
   aff.type = AFFECT_SKILL_ATTEMPT;
   aff.location = APPLY_NONE;
-  aff.duration = UPDATES_PER_MUDHOUR;
+  aff.duration = Pulse::UPDATES_PER_MUDHOUR;
   aff.bitvector = 0;
   aff.modifier = SKILL_FORAGE;
   caster->affectTo(&aff, -1);
@@ -1126,7 +1126,7 @@ int TDrinkCon::divineMe(TBeing *caster, int, short bKnown)
 
   aff.type = SKILL_DIVINATION;
   aff.location = APPLY_NONE;
-  aff.duration = 12 * UPDATES_PER_MUDHOUR;
+  aff.duration = 12 * Pulse::UPDATES_PER_MUDHOUR;
   aff.bitvector = 0;
   aff.modifier = 0;
 

@@ -483,7 +483,7 @@ int Descriptor::outputProcessing()
 
   memset(i, '\0', sizeof(i));
   // Take everything from queued output
-  while (c=output.takeFromQ()) {
+  while((c=output.takeFromQ())){
     if(m_bIsClient){
       commtype=Comm::CLIENT;
     } else if(socket->port==Config::Port::PROD_XML){
@@ -2773,7 +2773,7 @@ void setPrompts(fd_set out)
                 }
               }
             if (d->wait > 1) {
-              float waittime = (float) (d->wait - 1) / ONE_SECOND;
+              float waittime = (float) (d->wait - 1) / Pulse::ONE_SECOND;
 
               sprintf(promptbuf + strlen(promptbuf),
                       StPrompts[11],
@@ -2821,12 +2821,13 @@ void afterPromptProcessing(fd_set out)
 
   for (d = descriptor_list; d; d = next_d) {
     next_d = d->next;
-    if (FD_ISSET(d->socket->m_sock, &out) && d->output.getBegin())
+    if(FD_ISSET(d->socket->m_sock, &out) && d->output.getBegin()){
       if (d->outputProcessing() < 0) {
         delete d;
         d = NULL;
       } else
         d->prompt_mode = 0;
+    }
   }
 }
 
@@ -4206,7 +4207,7 @@ int TBeing::applyRentBenefits(int secs)
   int amt, transFound = FALSE;
 
   // award healing for every 3 ticks gone gone
-  local_tics = secs / SECS_PER_UPDATE;
+  local_tics = secs / Pulse::SECS_PER_UPDATE;
   local_tics /= 3;  // arbitrary
 
   vlogf(LOG_PIO, format("%s was rented for %d secs, counting as %d tics out-of-game") % 
@@ -4246,7 +4247,7 @@ int TBeing::applyRentBenefits(int secs)
 
     if (af->duration == PERMANENT_DURATION)
       continue;
-    if ((af->duration - (local_tics * UPDATES_PER_MUDHOUR)) <= 0) {
+    if ((af->duration - (local_tics * Pulse::UPDATES_PER_MUDHOUR)) <= 0) {
       if (((af->type >= MIN_SPELL) && (af->type < MAX_SKILL)) ||
           ((af->type >= FIRST_TRANSFORMED_LIMB) && (af->type < LAST_TRANSFORMED_LIMB)) ||
           ((af->type >= FIRST_BREATH_WEAPON) && (af->type < LAST_BREATH_WEAPON)) ||
@@ -4271,7 +4272,7 @@ int TBeing::applyRentBenefits(int secs)
         affectRemove(af);
       }
     } else 
-      af->duration -= local_tics * UPDATES_PER_MUDHOUR;
+      af->duration -= local_tics * Pulse::UPDATES_PER_MUDHOUR;
   }
   if (transFound)
     transformLimbsBack("", MAX_WEAR, FALSE);

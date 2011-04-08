@@ -1204,7 +1204,7 @@ int sorcerersGlobe(TBeing *caster, TBeing *victim, int level, short bKnown)
 
   aff.type = SPELL_SORCERERS_GLOBE;
   aff.level = level;
-  aff.duration = (3 + (aff.level / 2)) * UPDATES_PER_MUDHOUR;
+  aff.duration = (3 + (aff.level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
   aff.location = APPLY_ARMOR;
   aff.modifier = -100;
   aff.bitvector = 0;
@@ -1215,7 +1215,7 @@ int sorcerersGlobe(TBeing *caster, TBeing *victim, int level, short bKnown)
       case CRIT_S_TRIPLE:
       case CRIT_S_DOUBLE:
         CS(SPELL_SORCERERS_GLOBE);
-        aff.duration = (12 + (level / 2)) * UPDATES_PER_MUDHOUR;
+        aff.duration = (12 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
         if (caster != victim)
           aff.modifier *= 2;
         break;
@@ -1292,14 +1292,14 @@ int bind(TBeing *caster, TBeing *victim, int level, short bKnown)
   aff1.bitvector = AFF_WEB;
   aff1.location = APPLY_ARMOR;
   aff1.modifier = (level / 2) + 5;
-  aff1.duration = level * UPDATES_PER_MUDHOUR;
+  aff1.duration = level * Pulse::UPDATES_PER_MUDHOUR;
 
   aff2.type = SPELL_BIND;
   aff2.level = level;
   aff2.bitvector = AFF_WEB;
   aff2.location = APPLY_SPELL_HITROLL;
   aff2.modifier = (-level * 2);
-  aff2.duration = level * UPDATES_PER_MUDHOUR;
+  aff2.duration = level * Pulse::UPDATES_PER_MUDHOUR;
 
   if (caster->bSuccess(bKnown, SPELL_BIND)) {
     caster->reconcileHurt(victim, discArray[SPELL_BIND]->alignMod);
@@ -1496,7 +1496,7 @@ int protectionFromElements(TBeing *caster, TBeing *victim, int level, short bKno
  
   aff.type = SPELL_PROTECTION_FROM_ELEMENTS;
   aff.level = level;
-  aff.duration = (3 + (level / 2)) * UPDATES_PER_MUDHOUR;
+  aff.duration = (3 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
   aff.location = APPLY_IMMUNITY;
   aff.modifier = IMMUNE_ACID;
   aff.modifier2 = ((level * 2) / 3);
@@ -1504,7 +1504,7 @@ int protectionFromElements(TBeing *caster, TBeing *victim, int level, short bKno
 
   aff2.type = SPELL_PROTECTION_FROM_ELEMENTS;
   aff2.level = level;
-  aff2.duration = (3 + (level / 2)) * UPDATES_PER_MUDHOUR; 
+  aff2.duration = (3 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR; 
   aff2.location = APPLY_IMMUNITY;
   aff2.modifier = IMMUNE_ELECTRICITY;
   aff2.modifier2 = ((level * 2) / 3);
@@ -1518,7 +1518,7 @@ int protectionFromElements(TBeing *caster, TBeing *victim, int level, short bKno
       case CRIT_S_TRIPLE:
       case CRIT_S_KILL:
         CS(SPELL_PROTECTION_FROM_ELEMENTS);
-        aff.duration = (10 + (level / 2)) * UPDATES_PER_MUDHOUR;
+        aff.duration = (10 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
         aff.modifier2 = (level * 2);
         aff2.duration = aff.duration;
         aff2.modifier2 = (level * 2);

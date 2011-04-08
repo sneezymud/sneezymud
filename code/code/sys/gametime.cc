@@ -166,22 +166,22 @@ void GameTime::mudTimePassed(time_t t2, time_t t1, struct time_info_data *now)
 
   secs = (long) (t2 - t1);
 
-  now->minutes = (secs / SECS_PER_UPDATE) % 4;	
-  secs -= SECS_PER_UPDATE * now->minutes;
+  now->minutes = (secs / Pulse::SECS_PER_UPDATE) % 4;	
+  secs -= Pulse::SECS_PER_UPDATE * now->minutes;
 
   // values are 0, 15, 30, 45...
   now->minutes *= 15;
 
-  now->hours = (secs / SECS_PER_MUDHOUR) % 24;	
-  secs -= SECS_PER_MUDHOUR * now->hours;
+  now->hours = (secs / Pulse::SECS_PER_MUDHOUR) % 24;	
+  secs -= Pulse::SECS_PER_MUDHOUR * now->hours;
 
-  now->day = (secs / SECS_PER_MUD_DAY) % 28;	
-  secs -= SECS_PER_MUD_DAY * now->day;
+  now->day = (secs / Pulse::SECS_PER_MUD_DAY) % 28;	
+  secs -= Pulse::SECS_PER_MUD_DAY * now->day;
 
-  now->month = (secs / SECS_PER_MUD_MONTH) % 12;		
-  secs -= SECS_PER_MUD_MONTH * now->month;
+  now->month = (secs / Pulse::SECS_PER_MUD_MONTH) % 12;		
+  secs -= Pulse::SECS_PER_MUD_MONTH * now->month;
 
-  now->year = (secs / SECS_PER_MUD_YEAR);	
+  now->year = (secs / Pulse::SECS_PER_MUD_YEAR);	
 
   return;
 }

@@ -1192,7 +1192,7 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
   }
 
   arg = one_argument(arg, discbuf, cElements(discbuf));
-  if (!discbuf || !*discbuf || !is_abbrev(discbuf , TrainerInfo[offset].abbrev)) {
+  if (!*discbuf || !is_abbrev(discbuf , TrainerInfo[offset].abbrev)) {
     sprintf(buf, "I teach %s.", TrainerInfo[offset].art);
     me->doSay(buf);
     sprintf(buf,

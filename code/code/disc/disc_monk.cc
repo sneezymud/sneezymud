@@ -103,7 +103,7 @@ int task_yoginsa(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
         ch->stopTask();
         return TRUE;
       }
-      ch->task->calcNextUpdate(pulse, 4 * PULSE_MOBACT);
+      ch->task->calcNextUpdate(pulse, 4 * Pulse::MOBACT);
       if (!ch->task->status) {
         if (!ch->roomp->isRoomFlag(ROOM_NO_HEAL)) {
 	  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_YOGINSA, 20);
@@ -298,7 +298,7 @@ int springleap(TBeing * caster, TBeing * victim, bool should_lag)
 
   if (caster->bSuccess(bKnown + percent, SKILL_SPRINGLEAP)) {
     if ((i = caster->specialAttack(victim,SKILL_SPRINGLEAP)) || (i == GUARANTEED_SUCCESS)) {
-      if (victim->getPosition() > POSITION_DEAD)
+      if (victim->getPosition() > POSITION_DEAD){
 	if (!(d = caster->getActualDamage(victim, NULL, caster->getSkillLevel(SKILL_SPRINGLEAP) >> 1, SKILL_KICK))) {
 	  act("You attempt to kick $N but lose your balance and fall face down in some mud that has suddenly appeared.", FALSE, caster, NULL, victim, TO_CHAR);
 	  act("When $n tries to kick you, you quickly make $m fall in some mud you create.", FALSE, caster, NULL, victim, TO_VICT);
@@ -313,6 +313,7 @@ int springleap(TBeing * caster, TBeing * victim, bool should_lag)
 	  act("You're hit in the solar plexus, wow, this is breathtaking!", FALSE, caster, NULL, victim, TO_VICT);
 	  act("$n kicks $N in the solar plexus, $N is rendered breathless.", FALSE, caster, NULL, victim, TO_NOTVICT);
 	}
+      }
       if (caster->reconcileDamage(victim, d, iSkill) == -1)
 	return DELETE_VICT;
     } else {

@@ -96,7 +96,7 @@ int TBeing::doTurn(const char *argument, TBeing *vict)
 	  act("$N is blinded!", FALSE, this, 0, victim, TO_VICT);
 	  act("$N is blinded!", FALSE, this, 0, victim, TO_CHAR);
 
-          victim->rawBlind(GetMaxLevel(), GetMaxLevel() * UPDATES_PER_MUDHOUR, SAVE_YES);
+          victim->rawBlind(GetMaxLevel(), GetMaxLevel() * Pulse::UPDATES_PER_MUDHOUR, SAVE_YES);
 
 	  if (reconcileDamage(victim, (4 * getLevel(SHAMAN_LEVEL_IND)),DMG_DISINT) == -1) {
             if (vict)

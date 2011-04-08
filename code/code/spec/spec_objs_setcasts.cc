@@ -72,7 +72,7 @@ int doFeralEQCast(TBeing *ch, TObj *o) {
       break;
   }
   aff2.type = SPELL_FERAL_WRATH;
-  aff2.duration = 2*UPDATES_PER_MUDHOUR;
+  aff2.duration = 2*Pulse::UPDATES_PER_MUDHOUR;
   aff2.bitvector = 0;
 
   if (!ch->affectJoin(ch, &aff2, AVG_DUR_NO, AVG_EFF_YES)) {
@@ -154,12 +154,12 @@ int doFlyingEQCast(TBeing *ch, TObj *o) {
     case 1:
       aff2.type = SPELL_FLY;
       aff2.bitvector = AFF_FLYING;
-      aff2.duration = 2 * UPDATES_PER_MUDHOUR;
+      aff2.duration = 2 * Pulse::UPDATES_PER_MUDHOUR;
       break;
     case 2:
       aff2.type = SPELL_LEVITATE;
       aff2.bitvector = AFF_LEVITATING;
-      aff2.duration = 3 * UPDATES_PER_MUDHOUR;
+      aff2.duration = 3 * Pulse::UPDATES_PER_MUDHOUR;
       break;
   }
   aff2.location = APPLY_NONE;
@@ -234,7 +234,7 @@ int doACEQCast(TBeing *ch, TObj *o) {
       aff2.type = SPELL_ARMOR;
       aff2.level = 35;
       aff2.bitvector = 0;
-      aff2.duration = 3 * UPDATES_PER_MUDHOUR;
+      aff2.duration = 3 * Pulse::UPDATES_PER_MUDHOUR;
       aff2.location = APPLY_ARMOR;
       aff2.modifier = -75; // deikhan armor, not cleric
       break;
@@ -242,7 +242,7 @@ int doACEQCast(TBeing *ch, TObj *o) {
       aff2.type = SPELL_SANCTUARY;
       aff2.level = 35;
       aff2.bitvector = AFF_SANCTUARY;
-      aff2.duration = 3 * UPDATES_PER_MUDHOUR;
+      aff2.duration = 3 * Pulse::UPDATES_PER_MUDHOUR;
       aff2.location = APPLY_PROTECTION;
       aff2.modifier = 50;
       break;

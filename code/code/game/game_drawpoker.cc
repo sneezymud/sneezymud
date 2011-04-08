@@ -274,7 +274,7 @@ void DrawPokerGame::deal(TBeing *ch, const char *tArg)
 
   for (int cardIndex = 0; cardIndex < 5; cardIndex++)
     for(int playerIndex = 0; playerIndex < 6; playerIndex++)
-      if (tChar[playerIndex] && inuse[playerIndex])
+      if (tChar[playerIndex] && inuse[playerIndex]){
         if ((tChar[playerIndex]->getMoney() < anteCost) && !silentBets) {
           ch->sendTo(format("You can not cover the ante of %d talens, your forced to sit out.\n\r") %
                      anteCost);
@@ -286,6 +286,7 @@ void DrawPokerGame::deal(TBeing *ch, const char *tArg)
           if (!silentBets)
             playerante[playerIndex] += anteCost;
         }
+      }
 
   game = true;
 
@@ -557,7 +558,7 @@ int DrawPokerGame::new_deal()
           winnerList[6] = {-1, -1, -1, -1, -1, -1},
           totalWinners  = 1,
           whType        = 0;
-  TBeing *tChar[6];
+  TBeing *tChar[7];
   char    tString[256],
           tColor        = 'n';
 
@@ -1205,7 +1206,7 @@ bool DrawPokerGame::isPair(int playerNum, int wantThis, int *highCard,
     if (matchCards[matchIndex][0] == -1)
       return false;
 
-    if (matchCards[matchIndex][1] == wantThis)
+    if (matchCards[matchIndex][1] == wantThis){
       if (doublePair) {
         doublePair = false;
         *secondHighCard = matchCards[matchIndex][0];
@@ -1228,6 +1229,7 @@ bool DrawPokerGame::isPair(int playerNum, int wantThis, int *highCard,
 
         return true;
       }
+    }
   }
 
   return false;

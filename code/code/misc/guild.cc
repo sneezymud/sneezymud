@@ -204,7 +204,7 @@ void TBeing::addOffer(TGuild * f) {
   affectedData aff;
 
   aff.type = AFFECT_OFFER;
-  aff.duration = UPDATES_PER_MUDHOUR * 24;
+  aff.duration = Pulse::UPDATES_PER_MUDHOUR * 24;
   aff.modifier = f->ID;
   aff.location = APPLY_NONE;
 
@@ -226,7 +226,7 @@ void TBeing::setDefected() {
   affectedData aff;
 
   aff.type = AFFECT_DEFECTED;
-  aff.duration = UPDATES_PER_MUDHOUR * 24;
+  aff.duration = Pulse::UPDATES_PER_MUDHOUR * 24;
 
   affectTo(&aff);
   return;

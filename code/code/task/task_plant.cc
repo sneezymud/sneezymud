@@ -230,7 +230,7 @@ int task_plant(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj 
 
   switch (cmd) {
     case CMD_TASK_CONTINUE:
-      ch->task->calcNextUpdate(pulse, PULSE_MOBACT * 3);
+      ch->task->calcNextUpdate(pulse, Pulse::MOBACT * 3);
 
       switch (ch->task->timeLeft) {
 	case 2:

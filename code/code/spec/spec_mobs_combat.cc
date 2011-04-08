@@ -47,7 +47,7 @@ int kraken(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       opp->sendTo("You have been BLINDED!\n\r");
 
       opp->rawBlind(myself->GetMaxLevel(), 
-                    (myself->GetMaxLevel()/20 + 1) * UPDATES_PER_MUDHOUR,
+                    (myself->GetMaxLevel()/20 + 1) * Pulse::UPDATES_PER_MUDHOUR,
                     SAVE_YES);
     }
     return TRUE;
@@ -131,7 +131,7 @@ int poisonHit(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   affectedData aff;
   aff.type = SPELL_POISON;
   aff.level = myself->GetMaxLevel();
-  aff.duration = (aff.level) * UPDATES_PER_MUDHOUR;
+  aff.duration = (aff.level) * Pulse::UPDATES_PER_MUDHOUR;
   aff.modifier = -20;
   aff.location = APPLY_STR;
   aff.bitvector = AFF_POISON;
@@ -166,7 +166,7 @@ int poisonBite(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   affectedData aff;
   aff.type = SPELL_POISON;
   aff.level = myself->GetMaxLevel();
-  aff.duration = (aff.level) * UPDATES_PER_MUDHOUR;
+  aff.duration = (aff.level) * Pulse::UPDATES_PER_MUDHOUR;
   aff.modifier = -20;
   aff.location = APPLY_STR;
   aff.bitvector = AFF_POISON;

@@ -210,7 +210,7 @@ sstring TMessages::getImmortalTitles(TBeing *tChar)
   if (tLevel < 0 || tLevel > 9)
     return "    Unknown   ";
 
-  if (tLevel == 1 || tLevel == 3 || tLevel == 4)
+  if (tLevel == 1 || tLevel == 3 || tLevel == 4){
     if (tChar->getSex() == SEX_FEMALE) {
       if (tLevel == 1)
         return "    Heroine   ";
@@ -226,7 +226,7 @@ sstring TMessages::getImmortalTitles(TBeing *tChar)
       else
         return "      God     ";
     }
-
+  }
   return levelMessages[tLevel];
 }
 

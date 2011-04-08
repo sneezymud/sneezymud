@@ -51,7 +51,7 @@
 
 #include "being.h"
 
-//FYI: CMD_TASK_CONTINUE is checked once per PULSE_MOBACT
+//FYI: CMD_TASK_CONTINUE is checked once per Pulse::MOBACT
 
 taskData::taskData() :
   task(TASK_BOGUS),

@@ -1287,7 +1287,7 @@ int detectMagic(TBeing *caster, TBeing * victim, int level, short bKnown)
   }
 
   aff.type = SPELL_DETECT_MAGIC;
-  aff.duration = level * 2 * UPDATES_PER_MUDHOUR;
+  aff.duration = level * 2 * Pulse::UPDATES_PER_MUDHOUR;
   aff.modifier = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = AFF_DETECT_MAGIC;
@@ -2296,7 +2296,7 @@ void TBeing::doScribe(const char *arg)
 
   // for (;arg && *arg && isspace(*arg); arg++);
 
-  if (!*argm || !argm) {
+  if (!*argm){
     sendTo("You need to specify a scroll type to scribe!\n\r");
     return;
   }

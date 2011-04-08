@@ -197,7 +197,7 @@ int TBaseContainer::getAllFrom(TBeing *ch, const char *argument)
     affectedData tAff;
 
     tAff.type     = AFFECT_PLAYERLOOT;
-    tAff.duration = (24 * UPDATES_PER_MUDHOUR);
+    tAff.duration = (24 * Pulse::UPDATES_PER_MUDHOUR);
     ch->affectJoin(ch, &tAff, AVG_DUR_NO, AVG_EFF_NO);
     vlogf(LOG_CHEAT, format("Adding PLoot Flag To: %s (1)") %  ch->getName());
   }
@@ -265,7 +265,7 @@ int TBaseContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
       affectedData tAff;
 
       tAff.type     = AFFECT_PLAYERLOOT;
-      tAff.duration = (24 * UPDATES_PER_MUDHOUR);
+      tAff.duration = (24 * Pulse::UPDATES_PER_MUDHOUR);
       ch->affectJoin(ch, &tAff, AVG_DUR_NO, AVG_EFF_NO);
       vlogf(LOG_CHEAT, format("Adding PLoot Flag To: %s (2)") %  ch->getName());
     }
@@ -327,7 +327,7 @@ int TBaseContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
       affectedData tAff;
 
       tAff.type     = AFFECT_PLAYERLOOT;
-      tAff.duration = (24 * UPDATES_PER_MUDHOUR);
+      tAff.duration = (24 * Pulse::UPDATES_PER_MUDHOUR);
       ch->affectJoin(ch, &tAff, AVG_DUR_NO, AVG_EFF_NO);
       vlogf(LOG_CHEAT, format("Adding PLoot Flag To: %s (3)") %  ch->getName());
     }
@@ -433,9 +433,10 @@ bool TBaseContainer::fitsSellType(tObjectManipT tObjectManip,
 
 int TBaseContainer::isSaddle() const
 {
-  if(dynamic_cast<const TSaddlebag *>(this))
+  if(dynamic_cast<const TSaddlebag *>(this)){
     if (isname ("[CAN_RIDE]",name))
       return 1;
     else return 2;
+  }
   return FALSE;
 }

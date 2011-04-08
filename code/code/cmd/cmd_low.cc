@@ -1093,7 +1093,7 @@ void TBeing::doCompare(const char *arg)
   one_argument(arg, mArg2, cElements(mArg2));
 
   TBeing *mob1, *mob2 = NULL;
-  if (mArg1 && *mArg1) {
+  if (*mArg1) {
     mob1 = get_char_vis_world(this, mArg1, NULL, EXACT_YES);
     if (!mob1) {
       mob1 = get_char_vis_world(this, mArg1, NULL, EXACT_NO);
@@ -1107,7 +1107,7 @@ void TBeing::doCompare(const char *arg)
     return;
   }
 
-  if (mArg2 && *mArg2) {
+  if (*mArg2) {
     mob2 = get_char_vis_world(this, mArg2, NULL, EXACT_YES);
     if (!mob2) {
       mob2 = get_char_vis_world(this, mArg2, NULL, EXACT_NO);
@@ -1609,7 +1609,7 @@ void TBeing::lowMobs(const char *arg)
 
   unsigned int mobnum;
   for (mobnum = 0; mobnum < mob_index.size();mobnum++) {
-    if ((mob_index[mobnum].level == -99) || (mob_index[mobnum].spec == -99))
+    if ((mob_index[mobnum].level == -99) || (mob_index[mobnum].spec == -99)){
       // not inited, load to init
       if ((mob = read_mobile(mobnum, REAL)) != NULL) {
         thing_to_room(mob, Room::VOID);      // prevents extracting from "nowhere"
@@ -1617,6 +1617,7 @@ void TBeing::lowMobs(const char *arg)
         mob = NULL;
       } else 
         vlogf(LOG_BUG,format("BOGUS LOAD of mob %d") % mobnum);
+    }
     if (mob_index[mobnum].level != level)
       continue;
     if (UtilProcs(mob_index[mobnum].spec))

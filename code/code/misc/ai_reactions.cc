@@ -133,7 +133,7 @@ int TMonster::aiFag(TBeing *homo,int self)
   char buf[160];
   char sex[10], sex2[10];
 
-  if (!self && (GetMaxLevel() < 10) || ::number(0,4))
+  if ((!self && (GetMaxLevel() < 10)) || ::number(0,4))
     return FALSE;
 
   if (homo->getSex() == SEX_MALE)

@@ -938,7 +938,7 @@ int TBaseCup::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
   level = ch->getSkillValue (skill) / 2;
   int bKnown = ch->getSkillValue (skill);
 
-  duration = (level << 2) * UPDATES_PER_MUDHOUR;
+  duration = (level << 2) * Pulse::UPDATES_PER_MUDHOUR;
   if (ch->bSuccess(bKnown, skill)) {
     for (j = 0; j < MAX_SWING_AFFECT; j++) {
       if (weapon->isPoisoned()) {
@@ -1306,13 +1306,13 @@ int cudgel(TBeing *thief, TBeing *victim)
 
       affectedData aff;
       aff.type = SKILL_CUDGEL;
-      aff.duration = UPDATES_PER_MUDHOUR / 3;
+      aff.duration = Pulse::UPDATES_PER_MUDHOUR / 3;
       aff.bitvector = AFF_STUNNED;
       victim->affectTo(&aff, -1);
 
       // Add the restrict XP affect, so that you cannot twink newbies with this skill
       // this affect effectively 'marks' the mob as yours
-      restrict_xp(thief, victim, UPDATES_PER_MUDHOUR / 3);
+      restrict_xp(thief, victim, Pulse::UPDATES_PER_MUDHOUR / 3);
 
       return TRUE;
     }

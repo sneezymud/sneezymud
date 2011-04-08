@@ -156,7 +156,7 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
 // only want to do this fleeing if they have a bow
   for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end();++it) {
     if ((tbt = dynamic_cast<TBeing *>(*it))) {
-      if (tbt->isPc() && (IS_SET(ch->specials.act, ACT_AGGRESSIVE)) ||
+      if ((tbt->isPc() && (IS_SET(ch->specials.act, ACT_AGGRESSIVE))) ||
           ch->Hates(tbt, NULL))
         ch->doFlee("");
       if (!ch->canSee(bow) || !ch->canSee(ammo)) // fled to darker spot

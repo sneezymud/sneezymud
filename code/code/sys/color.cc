@@ -459,7 +459,7 @@ void TBeing::doPrompt(const char *arg)
       }
       break;
     case 15:
-      if (isImmortal())
+      if (isImmortal()){
         if (IS_SET(desc->prompt_d.type, PROMPT_BUILDER_ASSISTANT)) {
           sendTo("Shutting builder assistant down.\n\r");
           REMOVE_BIT(desc->prompt_d.type, PROMPT_BUILDER_ASSISTANT);
@@ -467,6 +467,7 @@ void TBeing::doPrompt(const char *arg)
           sendTo("Builder assistant activated.\n\r");
           SET_BIT(desc->prompt_d.type, PROMPT_BUILDER_ASSISTANT);
         }
+      }
       break;
     case 16:
       if (IS_SET(desc->prompt_d.type, PROMPT_EXPTONEXT_LEVEL)) {
@@ -478,7 +479,7 @@ void TBeing::doPrompt(const char *arg)
       }
       break;
     case 17:
-      if (ansi() || vt100())
+      if (ansi() || vt100()){
         if (IS_SET(desc->prompt_d.type, PROMPT_VTANSI_BAR)) {
           REMOVE_BIT(desc->prompt_d.type, PROMPT_VTANSI_BAR);
           cls();
@@ -492,7 +493,8 @@ void TBeing::doPrompt(const char *arg)
           doCls(false);
           sendTo("Initilizing ansi/vt100 information bar.\n\r");
         }
-        break;
+      }
+      break;
     case 19:
       if (IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
         sendTo("Disabling client style code sends.\n\r");
@@ -530,7 +532,7 @@ void TBeing::doPrompt(const char *arg)
       }
       break;
     case 20:
-      if ((ansi() || vt100()) && IS_SET(desc->prompt_d.type, PROMPT_VTANSI_BAR))
+      if ((ansi() || vt100()) && IS_SET(desc->prompt_d.type, PROMPT_VTANSI_BAR)){
         if (IS_SET(desc->prompt_d.type, PROMPT_CLASSIC_ANSIBAR)) {
           REMOVE_BIT(desc->prompt_d.type, PROMPT_CLASSIC_ANSIBAR);
           cls();
@@ -544,6 +546,7 @@ void TBeing::doPrompt(const char *arg)
           doCls(false);
           sendTo("Changing to the classic vt100/ansi bar.\n\r");
         }
+      }
       break;
     default:
       sendTo("Invalid argument(s) to prompt command. See help file for PROMPT for more information.\n\r");

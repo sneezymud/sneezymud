@@ -319,7 +319,7 @@ void TVehicle::vehiclePulse(int pulse)
     return;
 
   // this is where we regulate speed
-  if(pulse % max(1, (ONE_SECOND*10)/getSpeed()))
+  if(pulse % max(1, (Pulse::ONE_SECOND*10)/getSpeed()))
     return;
 
   if(getDir() == DIR_NONE)

@@ -1009,11 +1009,12 @@ tObjectManipT ObjectManipType(sstring tStString, sstring & tStBuffer, itemTypeT 
 
   tStBuffer = one_argument(tStString, tStType);
   tStPassed = tStType;
-  if (!tStPassed.empty())
+  if (!tStPassed.empty()){
     if (!tStPassed.find("."))
       tStPassed = "";
     else
       tStPassed.erase(0, (tStPassed.find(".") + 1));
+  }
 
   if (!tStType.empty() && tStType.find("."))
     tStType.erase(tStType.find("."), (tStPassed.length() + 1));
@@ -1565,7 +1566,7 @@ const sstring TObj::shopList(const TBeing *ch, const sstring &arg, int iMin, int
 
   strcpy(wcolor, ANSI_NORMAL);
 
-  if (isWearable)
+  if (isWearable){
     if (tWeapon) {
       if (isPaired() || (tbc && tbc->isShield()) || compareWeights(getWeight(), ch->maxWieldWeight(this, HAND_TYPE_SEC) == -1))
         strcpy(wcolor, ch->greenBold());
@@ -1578,6 +1579,7 @@ const sstring TObj::shopList(const TBeing *ch, const sstring &arg, int iMin, int
       else
         strcpy(wcolor, ch->green());
     }
+  }
 
   for (counter = 0; counter < max_trade; counter++) {
     if ((shop_index[shop_nr].type[counter] == ITEM_WORN) ||

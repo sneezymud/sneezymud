@@ -51,7 +51,7 @@ void TNote::showMe(TBeing *ch) const
     sb += HEADER_TXT_NOTE;
     sb += action_description;
 
-    if (ch->desc)
+    if (ch->desc){
       if (!ch->desc->m_bIsClient) {
         ch->desc->page_string(sb);
       } else {
@@ -60,6 +60,7 @@ void TNote::showMe(TBeing *ch) const
         ch->sendTo(format("%s") % sb);  // tmpbuf may have "%" in it, do it this way
         ch->desc->clientf(format("%d") % CLIENT_NOTE_END);
       }
+    }
   } else
     ch->sendTo("It's blank.\n\r");
   return;
@@ -1283,11 +1284,12 @@ void TBeing::show_me_mult_to_char(TBeing *ch, showModeT, unsigned int num) const
         sprintf(buffer,"A few blobs of heat are here in the shape of %s.\n\r",
           getMyRace()->getPluralName().c_str());
       ch->sendTo(buffer);
-    } else if (ch->isAffected(AFF_SENSE_LIFE) && (GetMaxLevel() < 51))
+    } else if (ch->isAffected(AFF_SENSE_LIFE) && (GetMaxLevel() < 51)){
       if (num == 1)
         ch->sendTo("You sense a hidden life form in the room.\n\r");
       else
         ch->sendTo("You sense hidden life forms in the room.\n\r");
+    }
     return;
   }
   const TMonster *tm = dynamic_cast<const TMonster *>(this);

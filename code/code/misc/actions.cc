@@ -1096,7 +1096,7 @@ int TBeing::doBite(const sstring &arg)
 	affectedData aff;
 	aff.type = AFFECT_BITTEN_BY_VAMPIRE;
 	aff.location = APPLY_NONE;
-	aff.duration = 24 * UPDATES_PER_MUDHOUR;
+	aff.duration = 24 * Pulse::UPDATES_PER_MUDHOUR;
 	
 	b->affectTo(&aff);
       }

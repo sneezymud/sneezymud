@@ -634,7 +634,7 @@ int newbieEquipper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
         me->doTell(ch->getName(), "May it serve you well. Be more careful next time!");
         found = 2;
         if (ch->hasClass(CLASS_CLERIC))
-          duration = max(1, (ch->GetMaxLevel() / 3)) * 48 * UPDATES_PER_MUDHOUR;
+          duration = max(1, (ch->GetMaxLevel() / 3)) * 48 * Pulse::UPDATES_PER_MUDHOUR;
       }
       break;
     case 3:
@@ -673,7 +673,7 @@ int newbieEquipper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
         act("$n smiles and hands $p to you.", TRUE, me, obj, ch,TO_VICT);
         me->doTell(ch->getName(), "May it serve you well. Be more careful next time!");
         found = 2;
-        duration = max(1, (ch->GetMaxLevel() / 3)) * 48 * UPDATES_PER_MUDHOUR;
+        duration = max(1, (ch->GetMaxLevel() / 3)) * 48 * Pulse::UPDATES_PER_MUDHOUR;
       }
       break;
     default:
@@ -688,7 +688,7 @@ int newbieEquipper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
       if (duration)
         af.duration = duration; 
       else
-        af.duration = 4 * UPDATES_PER_MUDHOUR;
+        af.duration = 4 * Pulse::UPDATES_PER_MUDHOUR;
       ch->affectTo(&af);
     }
     vlogf(LOG_MISC,format("%s was given newbie gear by %s case %d") %  ch->getName() % me->getName() % request);
@@ -809,7 +809,7 @@ int librarian(TBeing *ch, cmdTypeT cmd, const char * arg, TMonster *myself, TObj
       act("$n smiles with satisfaction!", TRUE, myself, 0, ch, TO_VICT);
       aff.type = SPELL_SILENCE;
       aff.level = 0;
-      aff.duration =  12 * UPDATES_PER_MUDHOUR;
+      aff.duration =  12 * Pulse::UPDATES_PER_MUDHOUR;
       aff.modifier = 0;
       aff.location = APPLY_NONE;
       aff.bitvector = AFF_SILENT;
@@ -1111,7 +1111,7 @@ int siren(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = AFF_CHARM;
-    aff.duration  =  level/5 * PULSE_COMBAT;
+    aff.duration  =  level/5 * Pulse::COMBAT;
 
     vict->affectTo(&aff);
   }

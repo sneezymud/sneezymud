@@ -974,7 +974,7 @@ int TGenWeapon::smiteWithMe(TBeing *ch, TBeing *v)
   }
 
   aff.type = AFFECT_SKILL_ATTEMPT;
-  aff.duration = 2 * UPDATES_PER_MUDHOUR;
+  aff.duration = 2 * Pulse::UPDATES_PER_MUDHOUR;
   aff.modifier = SKILL_SMITE;
   aff.location = APPLY_NONE;
   aff.bitvector = 0;
@@ -999,7 +999,7 @@ int TGenWeapon::smiteWithMe(TBeing *ch, TBeing *v)
   }
 
   aff.type = SKILL_SMITE;
-  aff.duration = 30 * UPDATES_PER_MUDHOUR;
+  aff.duration = 30 * Pulse::UPDATES_PER_MUDHOUR;
   aff.modifier = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = 0;

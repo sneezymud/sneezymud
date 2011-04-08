@@ -587,7 +587,7 @@ bool TObj::checkOwnersList(const TPerson *ch, bool tPreserve)
 
   while (tmpbuf && *tmpbuf) {
     tmpbuf = one_argument(tmpbuf, indiv, cElements(indiv));
-    if (!indiv || !*indiv)
+    if (!*indiv)
       continue;
     
     // don't bother to check if it got given to myself

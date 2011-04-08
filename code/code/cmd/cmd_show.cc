@@ -598,9 +598,9 @@ void TPerson::doShow(const sstring &argument)
     unsigned int objnx;
     for (objnx = 0; objnx < obj_index.size(); objnx++) {
 
-      if (zone > 0 && 
-          (obj_index[objnx].virt < bottom || obj_index[objnx].virt > top) 
-       || zone <= 0 && !isname(zonenum, obj_index[objnx].name))
+      if ((zone > 0 && 
+	   (obj_index[objnx].virt < bottom || obj_index[objnx].virt > top))
+	  || (zone <= 0 && !isname(zonenum, obj_index[objnx].name)))
         continue;
 
       obj = read_object(objnx, REAL);
@@ -800,7 +800,7 @@ void TPerson::doShow(const sstring &argument)
     unsigned int objnx;
     for (objnx = 0; objnx < mob_index.size(); objnx++) {
 
-      if (zone > 0 && (mob_index[objnx].virt < bottom || mob_index[objnx].virt > top) || zone <= 0 && !isname(zonenum, mob_index[objnx].name))
+      if ((zone > 0 && (mob_index[objnx].virt < bottom || mob_index[objnx].virt > top)) || (zone <= 0 && !isname(zonenum, mob_index[objnx].name)))
     continue;
 
       if (!hasWizPower(POWER_SHOW_TRUSTED)) {

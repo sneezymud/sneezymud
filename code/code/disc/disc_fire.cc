@@ -325,7 +325,7 @@ int faerieFire(TBeing *caster, TBeing *victim, int level, short bKnown)
   aff.bitvector = 0;
 
   // we'd like it to last about 5 minutes
-  aff.duration = 5 * UPDATES_PER_MUDHOUR / 2;
+  aff.duration = 5 * Pulse::UPDATES_PER_MUDHOUR / 2;
 
   // let the affect be level dependant
   aff.modifier = 100 + (aff.level*4);
@@ -1156,7 +1156,7 @@ int flamingFlesh(TBeing *caster, TBeing *victim, int level, short bKnown)
     // ARMOR APPLY
     aff1.type = SPELL_FLAMING_FLESH;
     aff1.level = level;
-    aff1.duration = aff1.level * UPDATES_PER_MUDHOUR;
+    aff1.duration = aff1.level * Pulse::UPDATES_PER_MUDHOUR;
     aff1.location = APPLY_ARMOR;
     aff1.modifier = -75;
 
@@ -1637,7 +1637,7 @@ int infravision(TBeing *caster, TBeing *victim, int level, short bKnown)
   if (caster->bSuccess(bKnown, SPELL_INFRAVISION)) {
     ret = SPELL_SUCCESS;
     aff.type = SPELL_INFRAVISION;
-    aff.duration = (level * UPDATES_PER_MUDHOUR)+level;
+    aff.duration = (level * Pulse::UPDATES_PER_MUDHOUR)+level;
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = AFF_INFRAVISION;
@@ -1820,7 +1820,7 @@ int protectionFromFire(TBeing *caster, TBeing *v,int level, short bKnown)
  
   aff.type = SPELL_PROTECTION_FROM_FIRE;
   aff.level = level;
-  aff.duration = (3 + (level / 2)) * UPDATES_PER_MUDHOUR;
+  aff.duration = (3 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
   aff.location = APPLY_IMMUNITY;
   aff.modifier = IMMUNE_HEAT; 
   aff.modifier2 = ((level * 2)/3);
@@ -1834,7 +1834,7 @@ int protectionFromFire(TBeing *caster, TBeing *v,int level, short bKnown)
       case CRIT_S_TRIPLE:
       case CRIT_S_KILL:
         CS(SPELL_PROTECTION_FROM_FIRE);
-        aff.duration = (10 + (level / 2)) * UPDATES_PER_MUDHOUR;
+        aff.duration = (10 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
         aff.modifier2 = (level * 2);
         break;
       case CRIT_S_NONE:

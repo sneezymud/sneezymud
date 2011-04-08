@@ -140,7 +140,7 @@ void initWhittle()
 
 void stop_whittling(TBeing *ch)
 {
-  if (ch->task->obj)
+  if (ch->task->obj){
     if (whittleItems[ch->task->flags].affectValue) {
       ch->sendTo("Even if partly finished this item is still good.\n\r");
       act("$n stores $s unfinished object.",
@@ -154,6 +154,7 @@ void stop_whittling(TBeing *ch)
       delete ch->task->obj;
       ch->task->obj = NULL;
     }
+  }
 
   ch->sendTo("You stop what you are doing and look around.\n\r");
   act("$n stops what $e is doing and looks around.",

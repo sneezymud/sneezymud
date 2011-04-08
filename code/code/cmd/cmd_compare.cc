@@ -273,7 +273,7 @@ sstring TBaseWeapon::compareMeAgainst(TBeing *ch, TObj *tObj)
     StString += ".\n\r";
   }
 
-  if (ch->getSkillValue(SKILL_EVALUATE) > 5)
+  if (ch->getSkillValue(SKILL_EVALUATE) > 5){
     if (isBluntWeapon() && tWeapon->isBluntWeapon()) {
       StString += sstring(getName()).cap();
       StString += bluntnessLevels[tMessage1];
@@ -290,6 +290,7 @@ sstring TBaseWeapon::compareMeAgainst(TBeing *ch, TObj *tObj)
       StString += tWeapon->getName();
       StString += ".\n\r";
     }
+  }
 
   return StString;
 }

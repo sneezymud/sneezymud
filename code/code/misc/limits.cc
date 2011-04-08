@@ -1525,7 +1525,7 @@ int TBeing::regenTime()
   // iTime now holds the lesser of my mana/move/hp gain (per update)
   // regen time for 1 point should simply be the inverse multiplied
   // by how long a points-update is
-  iTime = PULSE_UPDATE / iTime;
+  iTime = Pulse::UPDATE / iTime;
   return iTime;
 }
 
