@@ -8,11 +8,12 @@ CXXFLAGS = [
     '-DFAST',         # compiling on a fast processor machine
     '-O2',            # optimize code
     '-Wall',                  # all rec. warnings shown (includes all above)
+#    '-Wextra',                # include some extra warnings
     '-Wpointer-arith',        # looks for things that depend on sizeof()
     '-Wcast-qual',            # Warns about using casting to remove const
     '-Wcast-align',           # a pointer cast changes alignment
     '-Wwrite-strings',        # looks for formal const char* sent to char*
-    '-Wconversion',           # bad conversions
+#    '-Wconversion',           # bad conversions
     '-Woverloaded-virtual',   # virtual without a declaration in base class
     '-Werror',                # turns a warning into an error
     ]
@@ -31,7 +32,6 @@ CPPPATH = [
 
 LDFLAGS = [
     '-lstdc++',
-    '/usr/lib/libcrypt.a', # enable for insight
     '-g', # enable core debugging
     '-lmysqlclient',
     '-lares',
@@ -40,12 +40,11 @@ LDFLAGS = [
     '-lboost_date_time',
     '-lcurl',
     '-ltcmalloc',
+    '-lcrypt',
 #    '-lprofiler',
     ]
 
 LIBPATH = [
-    '/usr/local/lib',
-    '/mud/build/google-perftools/lib'
     ]
 
 # build environment
@@ -63,12 +62,11 @@ env=Environment(CXXFLAGS=CXXFLAGS,
                 INSTALLSTR = "\033[33mInstalling\033[0m '$SOURCE' as '$TARGET'",
                 )
 
-env['ENV']['LD_LIBRARY_PATH']='/mud/build/google-perftools/lib'
 
 Export('env')
 
 # getting some problems with this
-CacheDir('/mud/build/cache')
+#CacheDir('/mud/build/cache')
 
 # build the sneezy exe by default, see the help below for other targets
 Default('sneezy')
