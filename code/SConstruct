@@ -20,6 +20,7 @@ CXXFLAGS = [
 
 CPPPATH = [
     '/usr/local/include',
+    '/usr/include/boost141',
     '#/code/cmd',
     '#/code/disc',
     '#/code/game',
@@ -34,7 +35,7 @@ LDFLAGS = [
     '-lstdc++',
     '-g', # enable core debugging
     '-lmysqlclient',
-    '-lares',
+    '-lcares',
     '-lboost_regex',
     '-lboost_program_options',
     '-lboost_date_time',
@@ -45,6 +46,8 @@ LDFLAGS = [
     ]
 
 LIBPATH = [
+    '/usr/lib64/boost141',
+    '/usr/lib64/mysql'
     ]
 
 # build environment
