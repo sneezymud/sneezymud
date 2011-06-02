@@ -4291,7 +4291,7 @@ int TBeing::applyRentBenefits(int secs)
 bool illegalEmail(char *buf, Descriptor *desc, silentTypeT silent)
 {
   sstring arg, username, host;
-  unsigned int str_length = 0;
+  size_t str_length = 0;
 
   arg = buf;
 

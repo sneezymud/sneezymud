@@ -418,7 +418,7 @@ const size_t sstring::lengthNoColor() const
 // splits the string up by whitespace and returns the i'th "word"
 const sstring sstring::word(int i) const
 {
-  unsigned int copy_begin=0, copy_end=0;
+  size_t copy_begin=0, copy_end=0;
   sstring whitespace=" \f\n\r\t\v"; // taken from isspace() man page
   
   while(1){
@@ -546,7 +546,7 @@ char & sstring::operator[](unsigned int i)
 // removes leading and trailing whitespace
 const sstring sstring::trim() const
 {
-  unsigned int iStart, iEnd;
+  size_t iStart, iEnd;
   sstring whitespace = " \f\n\r\t\v"; // same as word whitespace
 
   iStart = find_first_not_of(whitespace);

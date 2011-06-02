@@ -55,7 +55,7 @@ const sstring fname(const char *namelist)
 // TODO: move into sstring class
 int split_string(const sstring &str, const sstring &sep, std::vector<sstring> &argv)
 {
-  unsigned int pos=0, last=0;
+  size_t pos=0, last=0;
 
   while((pos=str.find_first_of(sep,last)) != sstring::npos){
     argv.push_back(str.substr(last,pos-last));

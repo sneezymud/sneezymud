@@ -2252,7 +2252,7 @@ sstring add_bars(const sstring &s){
   sstring whitespace=" \f\n\r\t\v";
   sstring stmp=s;
 
-  for(unsigned int pos=stmp.find_first_of(whitespace);
+  for(size_t pos=stmp.find_first_of(whitespace);
       pos != sstring::npos;
       pos=stmp.find_first_of(whitespace, pos)){
     // replace any contiguous string of white space with a single -

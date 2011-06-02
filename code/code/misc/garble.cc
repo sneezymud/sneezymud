@@ -234,7 +234,7 @@ int getLanguageChance(const TBeing *from, TBeing *to, int length, spellNumT lang
 sstring garble_blahblah(const TBeing *from, TBeing *to, const sstring &arg, Garble::SPEECHTYPE speechType)
 {
   sstring obuf, buf, blah, word;
-  unsigned int loc;
+  size_t loc;
   buf=obuf=arg;
 
   for(int i=0;!arg.word(i).empty();++i)
@@ -322,7 +322,7 @@ sstring garble_olddrunk(const TBeing *from, TBeing *to, const sstring &arg, Garb
 {
   int chance = from->getCond(DRUNK);
   sstring obuf, buf, latin, word;
-  unsigned int loc;
+  size_t loc;
   buf=obuf=arg;
 
   // if this garble was applied without us being drunk, assume an average drunkenness
@@ -423,7 +423,7 @@ sstring garble_sign(const TBeing *from, TBeing *to, const sstring &arg, Garble::
 {
   sstring word, garble;
   sstring whitespace = " \f\n\r\t\v";
-  unsigned int pos = 0;
+  size_t pos = 0;
   TBeing * tFrom = const_cast<TBeing *>(from); // sorry, but we want to check skill in here
 
   // work through the arg, word by word.  if you fail your
@@ -502,7 +502,7 @@ sstring garble_ghost(const TBeing *from, TBeing *to, const sstring &arg, Garble:
 {
   sstring buf, word;
   static const sstring whitespace = " \f\n\r\t\v";
-  unsigned int pos = 0;
+  size_t pos = 0;
 
   // work through the arg, word by word and make into ghosty sounds
   while(pos != sstring::npos)
@@ -527,7 +527,7 @@ sstring garble_wahwah(const TBeing *from, TBeing *to, const sstring &arg, Garble
 {
   sstring buf, word;
   static const sstring whitespace = " \f\n\r\t\v";
-  unsigned int pos = 0;
+  size_t pos = 0;
 
   // work through the arg, word by word.  Convert to Wa+h
   while(pos != sstring::npos)
@@ -1130,7 +1130,7 @@ sstring garble_drunk(const TBeing *from, TBeing *to, const sstring &arg, Garble:
       word += tail;
 
       // replace original with new word
-      unsigned int iFound = out.find(original, iReplace);
+      size_t iFound = out.find(original, iReplace);
       if(iFound != sstring::npos)
       {
         out.erase(iFound, original.length());
@@ -1505,7 +1505,7 @@ sstring garble_trogtalk(const TBeing *from, TBeing *to, const sstring &arg, Garb
       end--;
     }
 
-    unsigned int iFound = out.find(original, iReplace);
+    size_t iFound = out.find(original, iReplace);
     if(iFound != sstring::npos)
     {
       out.erase(iFound, original.length());
