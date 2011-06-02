@@ -5126,7 +5126,7 @@ void TBeing::doClone(const sstring &arg)
       vlogf(LOG_BUG, format("did not add no-rent flag to item %s in slot %d when cloning") % mob->equipment[ij]->name % (int) ij);
   }
   
-  TThing *i, *j, *tmp;
+  TThing *i, *j;
   TObj *bo;
 //  TBaseContainer *b1;
   
@@ -5162,7 +5162,6 @@ void TBeing::doClone(const sstring &arg)
           j=*(it++);
           j->makeScraps();
           delete j;
-          j = tmp;
           continue;
         }
         j=*(it++);
