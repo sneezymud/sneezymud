@@ -26,7 +26,7 @@ class BaseRepair
 {
 public:
   BaseRepair(TBeing *ch, spellNumT skill) { m_ch = ch; m_skill = skill; }
-  virtual ~BaseRepair();
+  virtual ~BaseRepair(){};
 
   // tools - override these
   virtual int GetPrimaryToolId() { return 0; }

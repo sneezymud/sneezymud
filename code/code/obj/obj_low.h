@@ -49,7 +49,7 @@ class ObjectEvaluator
 {
 public:
   ObjectEvaluator(const TObj *o);
-  virtual ~ObjectEvaluator();
+  virtual ~ObjectEvaluator(){};
 
   sstring getTierString();
   int getPointValue(PointType type = PointType_All);
@@ -74,7 +74,7 @@ class ArmorEvaluator : public ObjectEvaluator
 {
 public:
   ArmorEvaluator(const TBaseClothing *o);
-  virtual ~ArmorEvaluator();
+  virtual ~ArmorEvaluator(){};
 
 private:
   const TBaseClothing *m_clothing;
@@ -92,7 +92,7 @@ class WeaponEvaluator : public ObjectEvaluator
 {
 public:
   WeaponEvaluator(const TBaseWeapon *o);
-  virtual ~WeaponEvaluator();
+  virtual ~WeaponEvaluator(){};
 
 private:
   const TBaseWeapon *m_weap;
