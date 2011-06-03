@@ -166,17 +166,17 @@ handle_core()
     chmod 660 ${PROD_CORE}
   fi
 
-  # Post core analysis to forums
-  if [ -f "${PROD_CORE}" ]
-  then
-    {
-    DETAB=/usr/local/bin/detab.pl
-    echo -n "SUBJ=Stacktrace of core.${DATE_STAMP}&"
-    echo -n "MSG="
-    # URL encode the gdb output so that &'s don't get confused by HTTP POST
-    gdb -q -x core_display.txt "${SNEEZY}" "${PROD_CORE}" | sed -e "/^Reading symbols from/d" -e "/^Loaded symbols for/d" | ${DETAB} | od -t x1 -A n | tr " " % | tr -d "\n"
-    } | curl --silent --max-time 30 --data-binary @- http://forums.sneezymud.com/post/core.php
-  fi
+#  # Post core analysis to forums
+#  if [ -f "${PROD_CORE}" ]
+#  then
+#    {
+#    DETAB=/usr/local/bin/detab.pl
+#    echo -n "SUBJ=Stacktrace of core.${DATE_STAMP}&"
+#    echo -n "MSG="
+#    # URL encode the gdb output so that &'s don't get confused by HTTP POST
+#    gdb -q -x core_display.txt "${SNEEZY}" "${PROD_CORE}" | sed -e "/^Reading symbols from/d" -e "/^Loaded symbols for/d" | ${DETAB} | od -t x1 -A n | tr " " % | tr -d "\n"
+#    } | curl --silent --max-time 30 --data-binary @- http://forums.sneezymud.com/post/core.php
+#  fi
 }
 
 # Main program logic starts here
@@ -201,9 +201,9 @@ do
     exit
   fi
 
-  echo -n "Booting ${SNEEZY} ${PROD_PORT} on $(date)" >> ${REBOOTER_LOG}
+  echo -n "Booting ${SNEEZY} -c ${PROD_DIR}/sneezy.cfg ${PROD_PORT} on $(date)" >> ${REBOOTER_LOG}
   {
-    ${SNEEZY} ${PROD_PORT} > "${SNEEZY_LOG}" 2>&1 &
+    ${SNEEZY} -c ${PROD_DIR}/sneezy.cfg ${PROD_PORT} > "${SNEEZY_LOG}" 2>&1 &
   } >> ${REBOOTER_LOG} 2>&1
   PROD_PID="$!"
   echo ", pid=${PROD_PID}" >> ${REBOOTER_LOG}

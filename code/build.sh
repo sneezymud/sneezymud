@@ -8,7 +8,7 @@ then
   if [ "$pid" == "" ]
   then
     echo "Starting scons, output to file.mak.";
-    (scons -k --no-progress) >& file.mak &
+    (scons -k -j 2 --no-progress) >& file.mak &
   else
     echo "You are already running scons."
   fi

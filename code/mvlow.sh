@@ -43,7 +43,7 @@ for i in obj objextra objaffect \
          mob mob_imm mob_extra mobresponses;
 do 
   echo Copying $i table.
-  mysqldump -u sneezy -h db.sneezymud.com sneezybeta $i | mysql -u sneezy -h db.sneezymud.com sneezyq
+  mysqldump -u sneezy sneezybeta $i | mysql -u sneezy sneezyq
 done
 
 
