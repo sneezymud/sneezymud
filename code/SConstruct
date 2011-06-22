@@ -3,6 +3,7 @@ from SCons.Script.SConscript import SConsEnvironment
 import os.path;
 
 CXXFLAGS = [
+    '-m32',
     '-g',             # debugger
     '-DLINUX',        # compiling on Linux
     '-DFAST',         # compiling on a fast processor machine
@@ -16,6 +17,7 @@ CXXFLAGS = [
 #    '-Wconversion',           # bad conversions
     '-Woverloaded-virtual',   # virtual without a declaration in base class
     '-Werror',                # turns a warning into an error
+#    '-mtune=amdfam10'         # optimize for amd family 10 cpu
     ]
 
 CPPPATH = [
@@ -32,6 +34,7 @@ CPPPATH = [
     ]
 
 LDFLAGS = [
+    '-m32',
     '-lstdc++',
     '-g', # enable core debugging
     '-lmysqlclient',
@@ -46,8 +49,10 @@ LDFLAGS = [
     ]
 
 LIBPATH = [
-    '/usr/lib64/boost141',
-    '/usr/lib64/mysql'
+#    '/usr/lib64/boost141',
+#    '/usr/lib64/mysql'
+    '/usr/lib/boost141',
+    '/usr/lib/mysql'
     ]
 
 # build environment
@@ -56,8 +61,10 @@ env=Environment(CXXFLAGS=CXXFLAGS,
                 CPPPATH=CPPPATH,
                 LIBPATH=LIBPATH,
                 tools=['default', 'cxxtest'],
-                CXX = 'g++44',
-                SHCXX = 'g++44',
+#                CXX = 'g++44 -m32',
+#                SHCXX = 'g++44 -m32',
+                CXX = 'g++',
+                SHCXX = 'g++',
 
                 #prettified output
                 SHCXXCOMSTR = "\033[35mCompiling\033[0m $SOURCE",
