@@ -27,7 +27,7 @@ void TPerson::doSet(const char *argument)
   char field[20], namebuf[20], parmstr[50];
   char obj_name[128];
   TBeing *mob = NULL;
-  int i, foundNum = 0, doneBasic = 0,parm = 0, value = 0, parm2 = 0;
+  int i, foundNum = 0, parm = 0, value = 0, parm2 = 0;
   int parm3 = 0, amt = 0, initial = 0;
   float percent;
   char buf2[256];
@@ -127,7 +127,6 @@ void TPerson::doSet(const char *argument)
          if (value > (MAX_DISC_LEARNEDNESS + tper->getCombatPrereqNumber(p2ci))) {
            if (!tper->player.doneBasic[p2ci]) {
              tper->player.doneBasic[p2ci] = tper->getLevel(p2ci);
-             doneBasic = tper->getLevel(p2ci);
            }
          }
        }

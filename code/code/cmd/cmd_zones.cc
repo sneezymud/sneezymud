@@ -60,7 +60,6 @@ void TBeing::doZonesSingle(sstring tStString)
 
     strcpy(buf, zd.name);
     char *s = strchr(buf, '-');
-    char *n = buf;
 
     if (s) {
       --s;       // get the space before the -
@@ -70,7 +69,6 @@ void TBeing::doZonesSingle(sstring tStString)
       ++s;
     } else {
       s = buf;
-      n = NULL;
     }
 
     if (!s || !zd.enabled || !zd.num_mobs || !is_abbrev(tStString, s))
@@ -207,7 +205,6 @@ void TBeing::doZonesSingle(sstring tStString)
       strcpy(buf, zd.name);
 
       char *s = strchr(buf, '-');
-      char *n = buf;
 
       if (s) {
 	--s;       // get the space before the -
@@ -217,7 +214,6 @@ void TBeing::doZonesSingle(sstring tStString)
 	++s;
       } else {
 	s = buf;
-	n = NULL;
       }
 
       // buf is now the builder name, s is the zone name

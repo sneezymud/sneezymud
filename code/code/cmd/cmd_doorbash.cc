@@ -56,7 +56,6 @@ static int doorbash(TBeing * caster, dirTypeT dir)
   char buf[256];
   roomDirData *exitp;
   TRoom *rp;
-  int level;
   int rc;
   int dam;
   int height;
@@ -113,7 +112,6 @@ static int doorbash(TBeing * caster, dirTypeT dir)
   if (!caster->isImmortal())
     caster->addToMove(-10);
   
-  level = caster->getSkillLevel(SKILL_DOORBASH);
   int bKnown = caster->getSkillValue(SKILL_DOORBASH);
 
   if ((2*exitp->weight > caster->maxWieldWeight(NULL, HAND_TYPE_PRIM)) ||

@@ -367,7 +367,6 @@ void TBeing::lookingAtObj(TThing *specific)
 {
   char *tmp=NULL;
   const char *tmp_desc;
-  int found;
   TObj *tmpObj = dynamic_cast<TObj *> (specific);
 
   if (!canSee(tmpObj)) {
@@ -379,7 +378,6 @@ void TBeing::lookingAtObj(TThing *specific)
     if ((tmp_desc = tmpObj->ex_description->findExtraDesc(tmp))) {
       sstring tmp_desc_str = tmp_desc;
       desc->page_string(tmp_desc_str.toCRLF());
-      found = TRUE;
       describeObject(tmpObj);
       if (tmpObj->riding)
 	sendTo(COLOR_OBJECTS, format("%s is on %s.") % tmpObj->getName() % tmpObj->riding->getName());
@@ -405,7 +403,6 @@ void TBeing::doLook(const sstring &argument, cmdTypeT cmd, TThing *specific)
   int keyword_no, j, found, totalFound = 0, iNum = 0;
   unsigned int bits = 0;
   TThing *t = NULL, *t2 = NULL;
-  TObj *o = NULL;
   TObj *o2 = NULL;
   TBeing *tmp_char = NULL;
 
@@ -505,7 +502,6 @@ void TBeing::doLook(const sstring &argument, cmdTypeT cmd, TThing *specific)
 
   // sendrpf(COLOR_NONE, roomp, "arg2=[%s]\n\r", arg2.c_str());
   found = FALSE;
-  o = NULL;
   tmp_desc = NULL;
 
   switch (keyword_no) {
