@@ -102,7 +102,7 @@ int beastSoother(TBeing * caster, TBeing * victim, int tWand, short bKnown)
 
 int TBeing::doSoothBeast(const char *argument)
 {
-  int level, ret = 0;
+  int ret = 0;
   int rc = 0;
   TBeing *victim = NULL;
   char namebuf[256];
@@ -123,8 +123,6 @@ int TBeing::doSoothBeast(const char *argument)
     return FALSE;
   }
 
-  level = getSkillLevel(SKILL_BEAST_SOOTHER);
-
   ret=beastSoother(this,victim,0,getSkillValue(SKILL_BEAST_SOOTHER));
   if (IS_SET(ret, VICTIM_DEAD))
     ADD_DELETE(rc, DELETE_VICT);
@@ -136,10 +134,8 @@ int TBeing::doSoothBeast(const char *argument)
 
 int beastSoother(TBeing * caster, TBeing * victim)
 {
-  int level, ret;
+  int ret;
   int rc = 0;
-
-  level = caster->getSkillLevel(SKILL_BEAST_SOOTHER);
 
   ret=beastSoother(caster,victim,0,caster->getSkillValue(SKILL_BEAST_SOOTHER));
   if (IS_SET(ret, VICTIM_DEAD))

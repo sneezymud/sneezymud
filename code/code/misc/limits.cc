@@ -920,7 +920,6 @@ void gain_exp(TBeing *ch, double gain, int dam)
 {
   classIndT Class;
   double newgain = 0;
-  double oldcap = 0;
   bool been_here = false;
   double j;
   bool fae_reduction_done = false;
@@ -972,7 +971,6 @@ void gain_exp(TBeing *ch, double gain, int dam)
       newgain = ((double)(dam)*(peak-curr))/(gainmod*(double)(ch->howManyClasses()*10000)) + 1.0;
 	
       // 05/24/01 - adding a 'soft' cap here
-      oldcap = newgain;
       double softmod = (1.0 - pow( 1.1 , -1.0*(gain/newgain))) + 1.0;     
 	
       // this gives us a range of 1-2

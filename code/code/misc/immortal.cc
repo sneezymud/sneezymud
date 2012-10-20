@@ -5257,7 +5257,6 @@ void TBeing::doTimeshift(const char *arg)
   char buf[256];
   TBeing *i;
   objCost cost;
-  int tmp;
 
   if (!isImmortal())
     return;
@@ -5307,7 +5306,6 @@ void TBeing::doTimeshift(const char *arg)
       i->recepOffer(NULL,&cost);
       i->addToMoney(max(0,(&cost)->total_cost * deltatime * SECS_PER_REAL_MIN/SECS_PER_REAL_DAY), GOLD_RENT);
     }
-    tmp = deltatime * SECS_PER_REAL_MIN;
 
 #if 0
 // there's no good reason to do this

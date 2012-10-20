@@ -836,7 +836,6 @@ int TThing::powerstoneMe(TBeing *caster, int, short)
 
 int TOpal::powerstoneMe(TBeing *caster, int, short bKnown)
 {
-  int str;
   sstring buf;
 
   if ((psGetStrength() == psGetCarats()) || (psGetConsecFails() >= 2)) {
@@ -859,7 +858,6 @@ int TOpal::powerstoneMe(TBeing *caster, int, short bKnown)
     // Raise the strength by one.
     psAddStrength(1);
     psSetConsecFails(0);
-    str = psGetStrength();
 
     // **NOTE** If you change this value please aleart the LOWs of it.
 

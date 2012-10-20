@@ -507,13 +507,6 @@ bool enforceHolySym(const TBeing *ch, spellNumT spell, bool checkDamage)
   int sym_stress = level * level;
 
   char buf[128];
-  bool tasking = FALSE;
-  int rounds = 0;
-
-  if (IS_SET(discArray[spell]->comp_types, SPELL_TASKED_EVERY)) {
-    tasking = TRUE;
-    rounds = discArray[spell]->lag;
-  }
 
   if (requireHolySym(ch)) {
     TSymbol * holy = ch->findHolySym(SILENT_NO);

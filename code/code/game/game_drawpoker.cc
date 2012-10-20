@@ -853,13 +853,9 @@ void DrawPokerGame::stop(const TBeing *ch)
 
 int DrawPokerGame::look(const TBeing *ch, const char *tArg)
 {
-  int playerNum;
-
   for (; isspace(*tArg); tArg++);
   if (!*tArg)
     return FALSE;
-
-  playerNum = index(ch);
 
   if (is_abbrev(tArg, "table")) {
     if (!game)
@@ -994,8 +990,7 @@ int DrawPokerGame::findWinner(int *PlyWin1, int *PlyWin2, int *PlyWin3,
                               int *winningHandType)
 {
   int handScores[6] = {11, 11, 11, 11, 11, 11},
-      handHighs[6][2] = {{-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}},
-      handWinner;
+    handHighs[6][2] = {{-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}};
   int *PlyWinLs[6];
 
   PlyWinLs[0] = &(*PlyWin1 = -1);
@@ -1049,9 +1044,6 @@ int DrawPokerGame::findWinner(int *PlyWin1, int *PlyWin2, int *PlyWin3,
     else
       handScores[playerIndex] = 10;
   }
-
-  handWinner = (min(handScores[0], min(handScores[1], min(handScores[2],
-                min(handScores[3], min(handScores[4], handScores[5]))))));
 
   int winnerNum   = 11,
       winnerPly   = 0,

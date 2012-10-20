@@ -332,11 +332,6 @@ int disguise(TBeing *caster, char * buffer)
     return TRUE;
   }
 
-  int awesom = TRUE;
-
-  if ((critFail(caster, SKILL_DISGUISE) != CRIT_F_NONE))
-    awesom = FALSE;
-
   switch (critSuccess(caster, SKILL_DISGUISE)) {
     case CRIT_S_KILL:
       CS(SKILL_DISGUISE);

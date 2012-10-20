@@ -316,8 +316,7 @@ TO_CHAR);
 
 void wordOfRecall(TBeing * caster, TBeing * victim, TMagicItem * obj)
 {
-int ret;
-  ret=wordOfRecall(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
+  wordOfRecall(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
 }
 
 int wordOfRecall(TBeing * caster, TBeing * victim, int, short bKnown)

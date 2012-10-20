@@ -189,7 +189,7 @@ int TBeing::aiHurl(dirTypeT dr, TBeing *victim)
 int hurl(TBeing *caster, TBeing *victim, char *direction)
 {
   int percent;
-  int i = 0,level;
+  int i = 0;
   int rc;
   const int THROW_MOVE        = 10;
  
@@ -281,7 +281,6 @@ int hurl(TBeing *caster, TBeing *victim, char *direction)
   }
 
   percent = 0;               
-  level = caster->getSkillLevel(SKILL_HURL);
   int bKnown = caster->getSkillValue(SKILL_HURL);
   if (!caster->isImmortal())
     caster->addToMove(-THROW_MOVE); 
@@ -417,7 +416,7 @@ int shoulderThrowHit(TBeing *caster, TBeing *victim, int)
 int shoulderThrow(TBeing *caster, TBeing *victim)
 {
   int percent;
-  int i = 0,level;
+  int i = 0;
   int rc;
   const int THROW_MOVE        = 10;
  
@@ -489,7 +488,6 @@ int shoulderThrow(TBeing *caster, TBeing *victim)
     return FALSE;
   }
   percent = 0;               
-  level = caster->getSkillLevel(SKILL_SHOULDER_THROW);
   int bKnown = caster->getSkillValue(SKILL_SHOULDER_THROW);
   if (!caster->isImmortal())
     caster->addToMove(-THROW_MOVE); 
@@ -644,7 +642,7 @@ static int defenestrateHit(TBeing *caster, TBeing *victim, int to_room, TWindow 
 int defenestrate(TBeing *caster, TBeing *victim, sstring direction)
 {
   int percent;
-  int i = 0,level;
+  int i = 0;
   int rc;
   const int THROW_MOVE        = 10;
  
@@ -746,7 +744,6 @@ int defenestrate(TBeing *caster, TBeing *victim, sstring direction)
   }
 
   percent = 0;               
-  level = caster->getSkillLevel(SKILL_DEFENESTRATE);
   int bKnown = caster->getSkillValue(SKILL_DEFENESTRATE);
   if (!caster->isImmortal())
     caster->addToMove(-THROW_MOVE); 

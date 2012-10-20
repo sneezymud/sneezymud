@@ -388,7 +388,6 @@ int disease_numbed(TBeing *victim, int message, affectedData *af)
 
 int disease_bruised(TBeing *victim, int message, affectedData *af)
 {
-  int j;
   char buf[256];
   // defines the limb that is bruised
   wearSlotT i = wearSlotT(af->level);
@@ -408,9 +407,6 @@ int disease_bruised(TBeing *victim, int message, affectedData *af)
       victim->addToLimbFlags(i, PART_BRUISED);
       break;
     case DISEASE_PULSE:
-      // defines the severity of the bruise
-      j = af->modifier2;
-
       // check to see if somehow the bruised bit got taken off
       if (!victim->hasPart(i) || !victim->isLimbFlags(i, PART_BRUISED)) {
         af->duration = 0;

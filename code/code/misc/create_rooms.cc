@@ -1465,6 +1465,7 @@ void TPerson::doRload(const char *argument)
         return;
       }
     }
+    (void)tStandard; // stop GCC from giving a warning about an unread variable. Proper fix requires restructuring above code a bit.
 
     // backup is a normal save with block+100
     if (!tSec){

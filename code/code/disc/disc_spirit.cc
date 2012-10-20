@@ -514,8 +514,6 @@ int ensorcer(TBeing *caster, TBeing *victim, int level, short bKnown)
 
 void ensorcer(TBeing *caster, TBeing *victim, TMagicItem * obj)
 {
-  int ret;
-  
   if (caster != victim) {
     act("$p attempts to bend $N to your will.",
           FALSE, caster, obj, victim, TO_CHAR, ANSI_WHITE_BOLD);
@@ -529,7 +527,7 @@ void ensorcer(TBeing *caster, TBeing *victim, TMagicItem * obj)
     act("$p tries to get $n to control $mself.",
           FALSE, caster, obj, 0, TO_ROOM, ANSI_WHITE_BOLD);
   }
-  ret=ensorcer(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
+  ensorcer(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
 
   return;
 }
@@ -538,9 +536,7 @@ int ensorcer(TBeing *caster, TBeing *victim)
 {
   char buf[256];
   taskDiffT diff;
-  int level, again;
-
-  level = caster->getSkillLevel(SPELL_ENSORCER);
+  int again;
 
   if (victim == caster) {
     sprintf(buf, "You tell yourself, \"Gosh darnit! I'm a pretty okay %s!\"", (!caster->getSex() ? "eunuch" : (caster->getSex() == 1 ? "guy" : "gal")));
@@ -827,7 +823,7 @@ static struct PolyType PolyList[] =
 
 int polymorph(TBeing *caster, int level, short bKnown)
 {
-  int i, ret = 0;
+  int i;
   bool nameFound = FALSE;
   bool found = FALSE;
   TMonster *mob;
@@ -876,7 +872,6 @@ int polymorph(TBeing *caster, int level, short bKnown)
       case CRIT_S_DOUBLE:
         duration = (2 + level / 5) * Pulse::UPDATES_PER_MUDHOUR;
         CS(SPELL_POLYMORPH);
-        ret = SPELL_CRIT_SUCCESS;
       case CRIT_S_NONE:
       default:
         duration = (1 + level / 10) * Pulse::UPDATES_PER_MUDHOUR;
@@ -1632,9 +1627,7 @@ int detectInvisibility(TBeing *caster, TBeing *victim, int level, short bKnown)
 
 void detectInvisibility(TBeing *caster, TBeing *victim, TMagicItem * obj)
 {
-  int ret;
-
-  ret=detectInvisibility(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
+  detectInvisibility(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
 }
 
 int detectInvisibility(TBeing *caster, TBeing *victim)
@@ -1724,13 +1717,13 @@ int trueSight(TBeing *caster, TBeing *victim)
 
 int castTrueSight(TBeing *caster, TBeing *victim)
 {
-  int ret,level;
+  int level;
 
   level = caster->getSkillLevel(SPELL_TRUE_SIGHT);
   int bKnown = caster->getSkillValue(SPELL_TRUE_SIGHT);
 
-  ret=trueSight(caster,victim,level,bKnown);
-    return TRUE;
+  trueSight(caster,victim,level,bKnown);
+  return TRUE;
 }
 
 int telepathy(TBeing *caster, int, short bKnown)

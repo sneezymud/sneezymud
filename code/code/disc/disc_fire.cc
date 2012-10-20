@@ -1235,14 +1235,14 @@ int flamingFlesh(TBeing *caster, TBeing *victim)
 
 int castFlamingFlesh(TBeing *caster, TBeing *victim)
 {
-  int ret,level;
+  int level;
   level = caster->getSkillLevel(SPELL_FLAMING_FLESH);
 
   act("$n calls upon the powers of the elementals of fire.",
             FALSE, caster, NULL, 0, TO_ROOM);
   act("You call upon the powers of the elementals of fire.",
             FALSE, caster, NULL, 0, TO_CHAR);
-  ret=flamingFlesh(caster,victim,level,caster->getSkillValue(SPELL_FLAMING_FLESH));
+  flamingFlesh(caster,victim,level,caster->getSkillValue(SPELL_FLAMING_FLESH));
   return TRUE;
 }
 

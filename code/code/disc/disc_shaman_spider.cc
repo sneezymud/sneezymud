@@ -24,7 +24,7 @@
 
 int transfix(TBeing * caster, TBeing * victim, int level, short bKnown)
 {
-  int dif, rc;
+  int rc;
   affectedData aff;
 
 #if 0
@@ -52,8 +52,6 @@ int transfix(TBeing * caster, TBeing * victim, int level, short bKnown)
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
     return SPELL_FAIL;
   }
-
-  dif = level - victim->GetMaxLevel();
 
   if (caster->bSuccess(bKnown, caster->getPerc(), SKILL_TRANSFIX) && 
            !victim->isLucky(caster->spellLuckModifier(SKILL_TRANSFIX))) {
@@ -516,13 +514,13 @@ rounds, caster->in_room, 0, 0,TRUE, 0);
 
 int castSticksToSnakes(TBeing *caster, TBeing *victim)
 {
-  int ret,level;
+  int level;
 
   level = caster->getSkillLevel(SPELL_STICKS_TO_SNAKES);
   int bKnown = caster->getSkillValue(SPELL_STICKS_TO_SNAKES);
 
-  ret=sticksToSnakes(caster,victim,level,bKnown);
-    return TRUE;
+  sticksToSnakes(caster,victim,level,bKnown);
+  return TRUE;
 }
 
 // END STICKS TO SNAKES
@@ -643,13 +641,13 @@ void controlUndead(TBeing *caster, TBeing *victim, TMagicItem * obj)
 
 int castControlUndead(TBeing *caster, TBeing *victim)
 {
-  int ret,level;
+  int level;
 
   level = caster->getSkillLevel(SPELL_CONTROL_UNDEAD);
   int bKnown = caster->getSkillValue(SPELL_CONTROL_UNDEAD);
 
-  ret=controlUndead(caster,victim,level,bKnown);
-    return TRUE;
+  controlUndead(caster,victim,level,bKnown);
+  return TRUE;
 }
 
 int controlUndead(TBeing *caster, TBeing *victim)
@@ -730,13 +728,13 @@ rounds, caster->in_room, 0, 0,TRUE, 0);
 
 int castClarity(TBeing *caster, TBeing *victim)
 {
-  int ret,level;
+  int level;
 
   level = caster->getSkillLevel(SPELL_CLARITY);
   int bKnown = caster->getSkillValue(SPELL_CLARITY);
 
-  ret=clarity(caster,victim,level,bKnown);
-    return TRUE;
+  clarity(caster,victim,level,bKnown);
+  return TRUE;
 }
 // END CLARITY
 
@@ -880,8 +878,6 @@ ANSI_RED_BOLD);
 
 void hypnosis(TBeing *caster, TBeing *victim, TMagicItem * obj)
 {
-  int ret;
-  
   if (caster != victim) {
     act("$p attempts to hypnotize $N to your will.",
           FALSE, caster, obj, victim, TO_CHAR, ANSI_RED_BOLD);
@@ -895,7 +891,7 @@ void hypnosis(TBeing *caster, TBeing *victim, TMagicItem * obj)
     act("$p tries to get $n to control $mself.",
           FALSE, caster, obj, 0, TO_ROOM, ANSI_RED_BOLD);
   }
-  ret=hypnosis(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
+  hypnosis(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
 
   return;
 }
@@ -904,9 +900,6 @@ int hypnosis(TBeing *caster, TBeing *victim)
 {
   char buf[256];
   taskDiffT diff;
-  int level;
-
-  level = caster->getSkillLevel(SPELL_HYPNOSIS);
 
   if (victim == caster) {
     sprintf(buf, "You don't want to hypnotize yourself...that would be dumb.");

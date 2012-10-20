@@ -918,8 +918,6 @@ void TMonster::raiseLevel(classIndT Class)
 
 void TPerson::raiseLevel(classIndT Class)
 {
-  int maxhit;
-
   if (getExp() < getExpClassLevel(Class, getLevel(Class) + 1)){
     vlogf(LOG_BUG, format("raiseLevel() called on %s when exp too low") %  getName());
     return;
@@ -932,7 +930,6 @@ void TPerson::raiseLevel(classIndT Class)
   //The fix statement below set the client who window with correct level
   fixClientPlayerLists(TRUE);
 
-  maxhit=points.maxHit;
   advanceLevel(Class);
 
   fixClientPlayerLists(FALSE);
@@ -1604,7 +1601,6 @@ int TBeing::doTraining(TBeing *ch, TMonster *me, classIndT accclass, int offset,
   act ("$n places both $s hands on $N's head for a second.", FALSE, me, 0, ch, TO_NOTVICT);
 
   for (j = 0;j < pracs; j++) {
-    int bump = 0;
     // since things went up > 1% per prac, verify we didn't hit any hard limits
     // basic level check
     if ((ch->getDiscipline(TrainerInfo[offset].disc))->getNatLearnedness() >=
@@ -1634,7 +1630,6 @@ int TBeing::doTraining(TBeing *ch, TMonster *me, classIndT accclass, int offset,
     initial = (ch->getDiscipline(TrainerInfo[offset].disc))->getNatLearnedness();
     ch->raiseDiscOnce(TrainerInfo[offset].disc);
     final = (ch->getDiscipline(TrainerInfo[offset].disc))->getNatLearnedness();
-    bump = final-initial;
 
     for (i = MIN_SPELL; i < MAX_SKILL; i++) {
       if (hideThisSpell(i))

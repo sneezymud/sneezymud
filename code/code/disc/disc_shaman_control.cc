@@ -137,7 +137,7 @@ int resurrection(TBeing * caster, TObj * obj, int level, short bKnown)
 
 void resurrection(TBeing *caster, TObj *obj, TMagicItem * obj_mi)
 {
-  int ret, level;
+  int level;
 
   level = caster->getSkillLevel(SPELL_VOODOO);
   int bKnown = caster->getSkillValue(SPELL_VOODOO);
@@ -145,7 +145,7 @@ void resurrection(TBeing *caster, TObj *obj, TMagicItem * obj_mi)
           FALSE, caster, obj_mi, obj, TO_CHAR);
   act("$n directs a strange beam of energy at $p.",
           FALSE, caster, obj_mi, obj, TO_ROOM);
-  ret=resurrection(caster,obj,level,bKnown);
+  resurrection(caster,obj,level,bKnown);
 }
 
 int castResurrection(TBeing * caster, TObj * obj)

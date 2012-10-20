@@ -5430,7 +5430,6 @@ void TBeing::doSpells(const sstring &argument)
   TThing *juju=equipment[WEAR_NECK];
   TThing *wristpouch=equipment[WEAR_WRIST_R];
   TThing *wristpouch2=equipment[WEAR_WRIST_L];
-  TComponent *item=NULL;
   int totalcharges;
   wizardryLevelT wizlevel = getWizardryLevel();
 
@@ -5576,7 +5575,6 @@ void TBeing::doSpells(const sstring &argument)
         continue;
 
       totalcharges = 0;
-      item = NULL;
       
       for (l = 0; l < 7; l++) {
         if (search[l].where && wizlevel >= search[l].wizlevel) {
@@ -5655,7 +5653,6 @@ void TBeing::doRituals(const sstring &argument)
   TThing *juju=equipment[WEAR_NECK];
   TThing *wristpouch=equipment[WEAR_WRIST_R];
   TThing *wristpouch2=equipment[WEAR_WRIST_L];
-  TComponent *item=NULL;
   int totalcharges;
   ritualismLevelT ritlevel = getRitualismLevel();
 
@@ -5801,7 +5798,6 @@ void TBeing::doRituals(const sstring &argument)
         continue;
 
       totalcharges = 0;
-      item = NULL;
       
       for (l = 0; l < 7; l++) {
         if (search[l].where && ritlevel >= search[l].ritlevel) {
@@ -5881,7 +5877,6 @@ void TBeing::doPrayers(const sstring &argument)
   TThing *juju = equipment[WEAR_NECK];
   TThing *wristpouch = equipment[WEAR_WRIST_R];
   TThing *wristpouch2 = equipment[WEAR_WRIST_L];
-  TComponent *item = NULL;
   int totalcharges;
   wizardryLevelT wizlevel = getWizardryLevel();
 
@@ -6011,7 +6006,6 @@ void TBeing::doPrayers(const sstring &argument)
         continue;
 
       totalcharges = 0;
-      item = NULL;
         
       for (l = 0; l < 7; l++) {
         if (search[l].where && wizlevel >= search[l].wizlevel) {

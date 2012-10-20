@@ -160,7 +160,7 @@ int voodoo(TBeing *caster, TObj *obj, int level, short bKnown)
 
 void voodoo(TBeing *caster, TObj *corpse, TMagicItem *obj)
 {
-  int ret, level;
+  int level;
 
   level = caster->getSkillLevel(SPELL_VOODOO);
   int bKnown = caster->getSkillValue(SPELL_VOODOO);
@@ -168,7 +168,7 @@ void voodoo(TBeing *caster, TObj *corpse, TMagicItem *obj)
           FALSE, caster, obj, corpse, TO_CHAR);
   act("$n directs a strange beam of energy at $p.",
           FALSE, caster, obj, corpse, TO_ROOM);
-  ret=voodoo(caster,corpse,level,bKnown);
+  voodoo(caster,corpse,level,bKnown);
 }
 
 int castVoodoo(TBeing * caster, TObj * corpse)
@@ -339,7 +339,7 @@ int dancingBones(TBeing * caster, TObj * obj, int level, short bKnown)
 
 void dancingBones(TBeing *caster, TObj *corpse, TMagicItem *obj)
 {
-  int ret, level;
+  int level;
 
   level = caster->getSkillLevel(SPELL_DANCING_BONES);
   int bKnown = caster->getSkillValue(SPELL_DANCING_BONES);
@@ -347,7 +347,7 @@ void dancingBones(TBeing *caster, TObj *corpse, TMagicItem *obj)
           FALSE, caster, obj, corpse, TO_CHAR);
   act("$n directs a strange beam of energy at $p.",
           FALSE, caster, obj, corpse, TO_ROOM);
-  ret=dancingBones(caster,corpse,level,bKnown);
+  dancingBones(caster,corpse,level,bKnown);
 }
 
 int castDancingBones(TBeing * caster, TObj * corpse)
@@ -432,9 +432,7 @@ NULL, NULL, TO_CHAR);
 
 void shieldOfMists(TBeing *caster, TBeing *victim, TMagicItem * obj)
 {
-int ret;
-
-ret=shieldOfMists(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
+  shieldOfMists(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
 }
 
 int shieldOfMists(TBeing *caster, TBeing *victim)
@@ -1542,9 +1540,7 @@ int detectShadow(TBeing *caster, TBeing *victim, int level, short bKnown)
 
 void detectShadow(TBeing *caster, TBeing *victim, TMagicItem * obj)
 {
-  int ret;
-
-  ret=detectShadow(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
+  detectShadow(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
 }
 
 int detectShadow(TBeing *caster, TBeing *victim)
@@ -1805,11 +1801,11 @@ int embalm(TBeing *caster, TObj *corpse)
 
 int castEmbalm(TBeing *caster, TObj *corpse)
 {
-  int ret = 0,level;
+  int level;
 
   level = caster->getSkillLevel(SPELL_EMBALM);
 
-  ret=embalm(caster,corpse,level,caster->getSkillValue(SPELL_EMBALM));
+  embalm(caster,corpse,level,caster->getSkillValue(SPELL_EMBALM));
 
   return FALSE;
 }

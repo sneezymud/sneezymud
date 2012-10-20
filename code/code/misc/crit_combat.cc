@@ -494,7 +494,7 @@ void TBeing::critHitEqDamage(TBeing *v, TThing *obj, int eqdam)
 // mod is -1 from generic combat, mod == crit desired from immortal command.
 int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, spellNumT wtype, int *dam, int mod)
 {
-  int crit_num = 0, dicenum, crit_chance, new_wtype;
+  int crit_num = 0, dicenum, crit_chance;
   affectedData *adp;
 
   if (isAffected(AFF_ENGAGER))
@@ -523,9 +523,6 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
     }
     v->affectFrom(AFFECT_DUMMY);
   }
-
-  // get wtype back so it fits in array  
-  new_wtype = wtype - TYPE_HIT;
 
   stats.combat_crit_suc++;
 

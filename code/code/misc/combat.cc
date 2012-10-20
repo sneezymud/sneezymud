@@ -3695,8 +3695,6 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
   //   hit() to save resources 
   int myLevel = 0;
   myLevel = GetMaxLevel();
-  int tarLevel = 0;
-  tarLevel = vict->GetMaxLevel();
   bool victimCanAttack = FALSE;
 
   if (vict->isPc() && vict->desc) {

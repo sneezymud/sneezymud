@@ -263,7 +263,6 @@ int TBeing::doBackstab(const char *argument, TBeing *vict)
 int backstab(TBeing *thief, TBeing * victim)
 {
   int base = 0;
-  int level;
   int rc = 0;
 
   if (thief->checkPeaceful("You cannot backstab in a peaceful room!\n\t"))
@@ -352,7 +351,6 @@ int backstab(TBeing *thief, TBeing * victim)
   else
     base = 4;
 
-  level = thief->getSkillLevel(SKILL_BACKSTAB);
   int bKnown = thief->getSkillValue(SKILL_BACKSTAB);
 
   if ((thief->bSuccess(bKnown, SKILL_BACKSTAB) || !victim->awake())) {
@@ -613,7 +611,6 @@ int TBeing::doThroatSlit(const char *argument, TBeing *vict)
 int throatSlit(TBeing *thief, TBeing * victim)
 {
   int base = 0;
-  int level;
   int rc = 0;
 
   if (thief->checkPeaceful("You cannot murder in a peaceful room!\n\t"))
@@ -708,7 +705,6 @@ int throatSlit(TBeing *thief, TBeing * victim)
   else
     base = 4;
 
-  level = thief->getSkillLevel(SKILL_THROATSLIT);
   int bKnown = thief->getSkillValue(SKILL_THROATSLIT);
 
   if ((thief->bSuccess(bKnown, SKILL_THROATSLIT) || !victim->awake())) {
@@ -925,8 +921,6 @@ bool addPoison(affectedData aff[5],
 int TBaseCup::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
 {
   int j;
-  int level;
-  int duration;
   sstring s;
   spellNumT skill=SKILL_POISON_WEAPON;
     
@@ -935,10 +929,8 @@ int TBaseCup::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
        TRUE, ch, this, 0, TO_CHAR);
     return FALSE;
   }
-  level = ch->getSkillValue (skill) / 2;
   int bKnown = ch->getSkillValue (skill);
 
-  duration = (level << 2) * Pulse::UPDATES_PER_MUDHOUR;
   if (ch->bSuccess(bKnown, skill)) {
     for (j = 0; j < MAX_SWING_AFFECT; j++) {
       if (weapon->isPoisoned()) {

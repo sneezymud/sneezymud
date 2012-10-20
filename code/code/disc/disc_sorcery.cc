@@ -537,7 +537,6 @@ int colorSpray(TBeing *caster)
   TThing *t;
   TBeing *victim, *vict = NULL;
   taskDiffT diff;
-  bool found=FALSE;
 
   if (!bPassMageChecks(caster, SPELL_COLOR_SPRAY, vict))
     return TRUE;
@@ -554,7 +553,6 @@ int colorSpray(TBeing *caster)
       continue;
     if (!caster->inGroup(*victim) && !victim->isImmortal()) {
     }
-    found = TRUE;
   }
   return TRUE;
 }
@@ -1250,8 +1248,7 @@ int sorcerersGlobe(TBeing *caster, TBeing *victim, int level, short bKnown)
 
 void sorcerersGlobe(TBeing *caster, TBeing *victim, TMagicItem * obj)
 {
-int ret;
-  ret=sorcerersGlobe(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
+  sorcerersGlobe(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
 }
 
 int sorcerersGlobe(TBeing *caster, TBeing *victim)
@@ -1547,8 +1544,7 @@ int protectionFromElements(TBeing *caster, TBeing *victim, int level, short bKno
 }
 void protectionFromElements(TBeing *caster, TBeing *victim, TMagicItem * obj)
 {
-int ret;
-  ret=protectionFromElements(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
+  protectionFromElements(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
 }
 
 int protectionFromElements(TBeing *caster, TBeing *victim)
