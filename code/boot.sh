@@ -48,6 +48,9 @@ case $USER in
   staffa)
     PORT=6900
     ;;
+  *)
+    PORT=4000
+    ;;
 
 esac
 
