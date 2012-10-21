@@ -1,7 +1,3 @@
-drop table rent;
-drop table rent_obj_aff;
-drop table rent_strung;
-
 create table rent (
   rent_id integer primary key auto_increment,
   owner_type ENUM('player', 'shop', 'room', 'mail'),
