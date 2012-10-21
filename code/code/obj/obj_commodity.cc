@@ -265,7 +265,6 @@ int TCommodity::shopPrice(int num, int shop_nr, float, const TBeing *ch) const
 int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
 {
   int price, vnum;
-  float cost_per;
   TObj *obj2;
 
   // note that commods have a constant volume, so this check isn't needed
@@ -296,7 +295,6 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     num = (int) (numUnits());
     keeper->doTell(ch->getName(), format("I don't have that much %s.  Here's the %d that I do have.") % fname(name) % num);
   }
-  cost_per = pricePerUnit();
   price = shopPrice(num, shop_nr, -1, ch);
   vnum = objVnum();
 

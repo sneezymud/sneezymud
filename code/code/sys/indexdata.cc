@@ -385,8 +385,11 @@ void generate_mob_index()
     // end stat counters
   }
   // and push the last one into the stack
-  mob_index.push_back(*tmpi);
-  delete tmpi;
+  // ... if it exists, ie. we have at least one mob.
+  if (tmpi) {
+    mob_index.push_back(*tmpi);
+    delete tmpi;
+  }
   
 
   return;

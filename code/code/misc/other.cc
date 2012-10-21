@@ -862,7 +862,6 @@ void TBeing::doPractice(const char *argument)
   char buf[MAX_STRING_LENGTH * 2];
   char arg[256];
   char skillbuf[40];
-  int first, last;
   discNumT i;
   Descriptor *d;
   CDiscipline *cd;
@@ -998,7 +997,6 @@ void TBeing::doPractice(const char *argument)
   bool found = FALSE;
   bool match = FALSE;
   classNum = FALSE;
-  first = last = TRUE;
 
   discNumT dnt = DISC_NONE;
   for (i=MIN_DISC; i < MAX_DISCS; i++) {

@@ -266,7 +266,7 @@ void reapplyDrugAffect(TBeing *ch, affectedData *affptr,
 
 void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
   unsigned int consumed, potency;
-  int duration1hit, rc;
+  int duration1hit;
   affectedData aff, *affptr;
 
   // Create/increase affect(s)
@@ -297,7 +297,7 @@ void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
 	      TRUE,ch,0,0,TO_CHAR);
 	  if (ch->riding) {
 	    act("$n sways then crumples as $e passes out.",TRUE,ch,0,0,TO_ROOM);
-	    rc = ch->fallOffMount(ch->riding, POSITION_RESTING);
+	    ch->fallOffMount(ch->riding, POSITION_RESTING);
 	  } else
 	    act("$n stumbles then crumples as $e passes out.",TRUE,ch,0,0,TO_ROOM);
 	  ch->setPosition(POSITION_SLEEPING);
@@ -376,7 +376,7 @@ void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
 	      TRUE,ch,0,0,TO_CHAR);
 	  if (ch->riding) {
 	    act("$n coughs and the momentum knmocks $m off $s mount.",TRUE,ch,0,0,TO_ROOM);
-	    rc = ch->fallOffMount(ch->riding, POSITION_RESTING);
+	    ch->fallOffMount(ch->riding, POSITION_RESTING);
 	  } else
 	    act("$n ignores you and decides to crash.",TRUE,ch,0,0,TO_ROOM);
 	  ch->setPosition(POSITION_SLEEPING);

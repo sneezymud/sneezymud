@@ -769,10 +769,6 @@ int TBeing::updateAffects()
   if (!affected) 
     return FALSE;
 
-  if (isPc()) {
-    int test = TRUE;
-    test = FALSE;
-  }
   for (af = affected; af; af = next_af_dude) {
     next_af_dude = af->next;
     bool couldBeRenewed = af->canBeRenewed();
@@ -1226,7 +1222,6 @@ int TBeing::updateHalfTickStuff()
 {
   int foodReject = FALSE;
   int rc = FALSE;
-  int j;
   TRoom *room = NULL;
   int loadRoom = 0;
   int vnum = mobVnum();
@@ -1429,7 +1424,6 @@ int TBeing::updateHalfTickStuff()
        !act_ptr &&  // prevents hornsby taking off
        (getHit() >= hitLimit()) &&
       (number >= 0)) {
-    j = 0; // temp holder
     if (IS_SET(specials.act, ACT_DIURNAL) && !isAffected(AFF_CHARM)) {
       if ((inRoom() == Room::NOCTURNAL_STORAGE)) {
 

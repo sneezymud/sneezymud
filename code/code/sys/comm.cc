@@ -562,7 +562,6 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
   char lastColor[3];
   const char *codes = NULL;
   const char *codes2 = NULL;
-  int hasLast = FALSE;
   int x = 0;
   personTypeT per;
   const TObj *tobj = NULL;
@@ -634,10 +633,6 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
               lastColor[0] = '<';
               lastColor[1] = *codes2;
               lastColor[2] = '>';
-
-//            sprintf(lastColor, "<%s>", *codes2);
-//            lastColor = codes2;
-            hasLast = TRUE;
           }
         }
 	if (*strp == '$') {

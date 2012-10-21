@@ -1115,7 +1115,6 @@ int targetDummy(TBeing *character, cmdTypeT cmd, const char *argIn, TMonster *my
 
       float meleedprout = 0, specialdprout = 0, meleedprin = 0, specialdprin = 0;
       float dprout = 0, dprin = 0;
-      int specialperout = 0, meleeperout = 0, specialperin = 0, meleeperin = 0;
       int hitperout = 0, hitperin = 0;
 
       if (roundstotalout > 0)
@@ -1130,16 +1129,6 @@ int targetDummy(TBeing *character, cmdTypeT cmd, const char *argIn, TMonster *my
       }
       dprout = meleedprout + specialdprout;
       dprin = meleedprin + specialdprin;
-      if ((meleetotalout + specialtotalout) > 0)
-      {
-        specialperout = int((float(specialtotalout) / float(meleetotalout + specialtotalout)) * 100.0);
-        meleeperout =  int((float(meleetotalout) / float(meleetotalout + specialtotalout)) * 100.0);
-      }
-      if ((meleetotalin + specialtotalin) > 0)
-      {
-        specialperin = int((float(specialtotalin) / float(meleetotalin + specialtotalin)) * 100.0);
-        meleeperin =  int((float(meleetotalin) / float(meleetotalin + specialtotalin)) * 100.0);
-      }
       if (swingstotalout > 0)
         hitperout = int((float(hitstotalout) / float(swingstotalout)) * 100.0);
       if (swingstotalin > 0)

@@ -1407,7 +1407,6 @@ void TBeing::throwChar(TBeing *v, dirTypeT dir, bool also, silentTypeT silent, b
 void TBeing::throwChar(TBeing *v, int to_room, bool also, silentTypeT silent, bool forceStand)
 {
   TRoom *rp;
-  int oldr;
   char buf[256];
 
   rp = v->roomp;
@@ -1458,7 +1457,6 @@ void TBeing::throwChar(TBeing *v, int to_room, bool also, silentTypeT silent, bo
       sprintf(buf, "$N is pushed out of the room by $n.");
       act(buf, TRUE, this, 0, v, TO_NOTVICT);
     }
-    oldr = v->in_room;
     --(*v);
     if (also) {
       --(*this);
@@ -2646,14 +2644,13 @@ void CallForGuard(TBeing *ch, TBeing *vict, int lev)
 int dagger_thrower(TBeing *pch, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 {
   TObj *dagger;
-  TBeing *tmp_ch, *ch, *temp;
+  TBeing *tmp_ch, *temp;
   int range;
   dirTypeT dir;
   sstring buf;
 
   if ((cmd != CMD_GENERIC_PULSE) || !pch->awake())
     return (FALSE);
-  ch = pch;
 
   for (tmp_ch = character_list; tmp_ch; tmp_ch = temp) {
     temp = tmp_ch->next;

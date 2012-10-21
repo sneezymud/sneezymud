@@ -18,27 +18,21 @@
 void TBeing::doNewbieEqLoad(race_t num, unsigned short num2, bool initNum)
 {
   race_t raceNum;
-  unsigned short classNum;
 
   if (isImmortal() || !isPc()) {
     if (!initNum) {
       raceNum = num;
-      classNum = num2;
     } else {
       raceNum = getRace();
-      classNum = getClass();
     }
   } else if (desc) {
     if (spec && spec == SPEC_NEWBIE_EQUIPPER) {
       raceNum = num;
-      classNum = num2;
     } else {
       raceNum = getRace();
-      classNum = getClass();
     }
   } else if (spec && spec == SPEC_NEWBIE_EQUIPPER) {
     raceNum = num;
-    classNum = num2;
   } else {
     vlogf(LOG_BUG, format("Something called doNewbieEqLoad when it shouldnt %s") %  getName());
     return;

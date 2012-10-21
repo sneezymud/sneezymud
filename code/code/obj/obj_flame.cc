@@ -618,7 +618,6 @@ void TBeing::igniteObject(const char *argument, TThing *fObj)
 int TBeing::pourWaterOnMe(TBeing *ch, TObj *sObj)
 {
   liqTypeT type  = LIQ_WATER;
-  int drunk = 0;
   int size  = 0,
     rc    = 1;
   char Buf[256];
@@ -640,8 +639,6 @@ int TBeing::pourWaterOnMe(TBeing *ch, TObj *sObj)
     ch->sendTo("Come now...  You are a bit busy for that, don't you think??\n\r");
     return true;
   }
-
-  drunk = liquidInfo[(type = dContainer->getDrinkType())]->drunk;
 
   if(getPosition() <= POSITION_STUNNED){
     // unconscious person, let's pour it in their mouth instead

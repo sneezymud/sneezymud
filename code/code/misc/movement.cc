@@ -1112,7 +1112,7 @@ int TBeing::moveOne(dirTypeT dir)
 // returns DELETE_THIS
 int TBeing::moveGroup(dirTypeT dir)
 {
-  int was_in, heap_top, result, rc;
+  int was_in, result, rc;
   followData *k, *n;
 
   was_in = in_room;
@@ -1129,7 +1129,6 @@ int TBeing::moveGroup(dirTypeT dir)
     if (rc == 2)
       return FALSE;  // move got aborted, no follower motion
     if (followers) {
-      heap_top = 0;
       for (k = followers; k; k = n) {
         n = k->next;
         TBeing *tft = k->follower;

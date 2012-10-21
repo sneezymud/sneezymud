@@ -123,7 +123,6 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
   sstring temp, buf;
   int count = 0, numsimilar, range;
   int which;
-  int Hi = 0, Hf = 0; //hp initial, hp final
   dirTypeT i;
   TBeing *tbt = NULL;
   TBeing *tbt2 = NULL;
@@ -296,7 +295,6 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
       return FALSE; // in case bload fails for some reason
     
     // shoot target and remove bow
-    Hi = tbt->getHit();
   
     // text to character
         
@@ -332,8 +330,6 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
         
-      Hf = tbt->getHit();
-  
 #if 0
         vlogf(LOG_MAROR, format("archer: %d->%d, temp/name: (%s)/(%s), tbt?: %s") % 
             Hi % Hf % temp % (tbt->getName() ? tbt->getName() : "(NULL)") % (tbt ? "exists" : "(NULL)"));

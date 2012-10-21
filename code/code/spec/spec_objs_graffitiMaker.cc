@@ -101,6 +101,7 @@ int graffitiMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
   // this clunky block of code moves the message directly beneath
   // any existing message
+  /*
   TThing *last=NULL, *first=NULL;
   TObj *obj;
   for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end();++it){
@@ -111,6 +112,7 @@ int graffitiMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   }
 
   *ch->roomp += *gfti;
+  */ // To me it looks like this clunky block of code does nothing at all.
   //////
 
   tool->addToToolUses(-1);

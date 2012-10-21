@@ -2,7 +2,6 @@
 #include "colorstring.h"
 #include "configuration.h"
 #include <curl/curl.h>
-#include <curl/types.h>
 #include <curl/easy.h>
 
 size_t dummyWriter(void *, size_t size, size_t nmemb, void *){
