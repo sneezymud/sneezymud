@@ -14,10 +14,10 @@ libtask=env.SharedLibrary(target='task', source=Glob('task/*.cc'))
 
 libs=[libcmd, libdisc, libgame, libmisc,
       libobj, libspec, libsys, libtask,
-      'libares' ]
+      'libcares' ]
 
 # main binary
-sneezy=env.Program('sneezy', 'main.cc', LIBS=[libs, 'libares'])
+sneezy=env.Program('sneezy', 'main.cc', LIBS=[libs, 'libcares'])
 env.InstallAs('../sneezy', sneezy)
 
 # low tools
