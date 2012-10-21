@@ -994,6 +994,7 @@ double TBeing::plotStat(statSetT whichSet, statTypeT whichStat, double min_value
   // as such, it behooves us to try and limit the impact
   // since it also uses nasty math functions, lets save results
   // as they get discovered
+#if 0
   static bool cleared = false;
   static double storedPlots[250];
   if (!cleared) {
@@ -1001,6 +1002,7 @@ double TBeing::plotStat(statSetT whichSet, statTypeT whichStat, double min_value
       storedPlots[i] = -10;
     cleared = true;
   }
+#endif
  
   int MAXSTAT = 205;
   int MINSTAT = 005;

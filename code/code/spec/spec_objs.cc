@@ -3493,14 +3493,12 @@ int totemMask(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *weapon)
 {
   TBeing *ch;
   int rc, dam, chance, result;
-  wearSlotT t;
 
   if(cmd != CMD_OBJ_BEEN_HIT || !v || !o)
     return FALSE;
   if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
     return FALSE;     
 
-  t=((!weapon || (weapon->eq_pos==HOLD_RIGHT))?WEAR_HAND_R:WEAR_HAND_L);
   chance = ::number(0, 99);
   result = ::number(5, 16);
 

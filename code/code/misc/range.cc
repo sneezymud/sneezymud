@@ -413,10 +413,7 @@ int TThing::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int mdis
   bool true_targ;
   int i;
   int resCode = 0;
-  int damtype;
   int range;
-
-  damtype = getWtype();
 
   for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
     c=*(it++);

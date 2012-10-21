@@ -1196,8 +1196,6 @@ void do_the_player_stuff(const char *name)
     
     if (Config::AutoDeletion()){
       time_t ltime = time(0);
-      tm *curtime;
-      curtime = localtime(&ltime);
       time_t lastlogin=lastAccountLogin(st.aname);
       unsigned int elapsed_time = (ltime - lastlogin) / SECS_PER_REAL_DAY;
 

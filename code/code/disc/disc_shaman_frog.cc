@@ -269,8 +269,8 @@ int transformLimb(TBeing * caster, const char * buffer, int level, short bKnown)
         return SPELL_CRIT_FAIL;
       default:
         return SPELL_FAIL;
-      caster->sendTo("Nothing seems to happen.\n\r");
-      act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+	// caster->sendTo("Nothing seems to happen.\n\r"); // why after return?
+	// act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM); // why after return?
     }
   }
 }

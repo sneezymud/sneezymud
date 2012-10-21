@@ -2505,7 +2505,6 @@ void TPCorpse::saveCorpseToFile()
   TPCorpse *firstCorpse = NULL;
   TPCorpse *tmpCorpse = NULL;
   int numCorpses = 0;
-  bool onlyCorpse = FALSE;
   ItemSave is;
 
   if (fileName.empty()) {
@@ -2519,7 +2518,6 @@ void TPCorpse::saveCorpseToFile()
 
   if(!is.openFile(buf)){
     vlogf(LOG_FILE, format("Failed to open file '%s' in saveCorpseToFile() call.") % buf);
-    onlyCorpse = TRUE; 
   }
 
   firstCorpse = this;
@@ -3353,7 +3351,6 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
 #endif
 
   bool   autoHates  = false,
-         autoLikes  = false,
          hatesMe[2] = {false, false};
   sstring tStString("");
 
@@ -3363,7 +3360,6 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
 
     if (SIKHates[tCounter].isHate) {
       tStString = SIKHates[tCounter].tStMessage;
-      autoLikes = true;
 
       if (SIKHates[tCounter].tRace == ch->getRace()) {
         tStString = SIKHates[tCounter].tStMessage;
@@ -4169,7 +4165,6 @@ void chargeRent(const char *who)
 {
   char fileName[128];
   rentHeader h;
-  long days_passed, secs_lost, total;
   FILE *fp;
   charFile pd;
   TAccount account;
@@ -4220,8 +4215,6 @@ void chargeRent(const char *who)
   }
   immortal = IS_SET(account.flags, TAccount::IMMORTAL);
 
-  days_passed = ((time(0) - h.last_update) / SECS_PER_REAL_DAY);
-  secs_lost = ((time(0) - h.last_update) % SECS_PER_REAL_DAY);
   if (pd.load_room == Room::AUTO_RENT) {        // this person was autorented 
     pd.load_room = Room::NOWHERE;
     h.last_update = time(0);
@@ -4243,70 +4236,13 @@ void chargeRent(const char *who)
     }
     vlogf(LOG_PIO, format("   De-autorented %s") %  h.owner);
   } else {   // this person was rented as normal 
-    total = (h.total_cost * days_passed);
 
-#if 1
     if (!noteLimitedItems(fp, who, h.version, immortal)) {
       vlogf(LOG_BUG, format("cannot count (2) limited items for %s") %  h.owner);
       fclose(fp);
       return;
     }
     fclose(fp);
-#else
-
-
-    // note, use of float required
-    // 20K rent/day * 80K secs/day > max(long)
-    total += (int) (h.total_cost * ((float) secs_lost / (float) SECS_PER_REAL_DAY));
-
-    // this is a kludge cuz total is going negative sometimes somehow - Bat 
-    if (total < 0) {
-      total = -total;  
-      vlogf(LOG_BUG,format("ERROR: total rent charged negative for %s.") % h.owner);
-      vlogf(LOG_BUG,format("ERROR: %s   daily cost: %d    days: %d    secs: %d    total: %d") % h.owner %h.total_cost %days_passed %secs_lost %-total);
-    }
-
-    if (total > (h.gold_left + pd.bankmoney)) {
-      vlogf(LOG_MISC, format("   %s will run out of money on login.") %  h.owner);
-      vlogf(LOG_MISC, format("   %s had %d total cost and %d gold left(including bank)") % 
-                h.owner % total % (h.gold_left + pd.bankmoney));
-      pd.money = 0;
-      pd.bankmoney = 0;
-      pd.load_room = Room::NOWHERE;
-      if (!noteLimitedItems(fp, who, h.version, immortal)) {
-        vlogf(LOG_BUG, format("cannot count (2) limited items for %s") %  h.owner);
-        fclose(fp);
-        return;
-      }
-      fclose(fp);
-      if (!raw_save_char(who, &pd)) {
-        vlogf(LOG_BUG, format("Error updating player-file entry for %s in chargeRent.") %  h.owner);
-        return;
-      }
-    } else {
-      if (!noteLimitedItems(fp, who, h.version, immortal)) {
-        vlogf(LOG_BUG, format("cannot count (3) limited items for %s") %  h.owner);
-        fclose(fp);
-        return;
-      }
-      h.gold_left -= total;
-      h.last_update = time(0);
-      rewind(fp);
-      if (fwrite(&h, sizeof(rentHeader), 1, fp) != 1) {
-        vlogf(LOG_BUG, format("Cannot write updated rent file header for %s") %  h.owner);
-        fclose(fp);
-        return;
-      }
-      fclose(fp);
-#if 0
-// redundant
-      if (!days_passed)
-        vlogf(LOG_SILENT, format("   same day %d coin update of %s") %  total % h.owner);
-#endif
-
-      vlogf(LOG_PIO, format("   charged %s %d talens rent.  (%d per day)(left: %d)(bank: %d)") %  h.owner % total % h.total_cost % h.gold_left % pd.bankmoney);
-    }
-#endif
   }
   chargeMobileRent(who);
 }

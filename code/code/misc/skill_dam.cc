@@ -11,6 +11,7 @@
 
 double getSkillDiffModifier(spellNumT skill)
 {
+#if 0
   int amt = 0;
   switch (discArray[skill]->task) {
     case TASK_TRIVIAL:
@@ -35,12 +36,12 @@ double getSkillDiffModifier(spellNumT skill)
       amt = 25;
       break;
   }
-#if 1
+  return amt;
+
+#else
   // for time being, make everything "easy".
   // too much complaining about skill failure, so screw it  - bat 2/3/00
   return 100;
-#else
-  return amt;
 #endif
 }
 

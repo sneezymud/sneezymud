@@ -2024,7 +2024,6 @@ TObj *read_object_buy_build(TBeing *buyer, int nr, readFileTypeT type)
 int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing *ch)
 {
   long tmp; //, tmp2;
-  int calc_level; // tmp3, 
   // float att;
   int rc;
   char letter;
@@ -2086,8 +2085,6 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing *ch)
       
       setDamLevel(convertTo<float>(mob_cache[nr]->s["damage_level"]));
       setDamPrecision(convertTo<int>(mob_cache[nr]->s["damage_precision"]));
-      
-      calc_level = (int) (getHPLevel() + getACLevel() + getDamLevel())/3;
       
       setMana(10);
       setMaxMana(10);
@@ -2256,8 +2253,6 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing *ch)
       
       setDamLevel(convertTo<float>(db["damage_level"]));
       setDamPrecision(convertTo<int>(db["damage_precision"]));
-      
-      calc_level = (int) (getHPLevel() + getACLevel() + getDamLevel())/3;
       
       setMana(10);
       setMaxMana(10);

@@ -650,7 +650,7 @@ void TBeing::doWhittle(const char *tArg)
         return;
       }
 
-      int knownLevel = 0;
+      // int knownLevel = 0; I assume this is a bug. this knownLevel overrides the function-scoped one.
 
       if (tArrow->isArrowFlag(ARROW_CARVED))
         knownLevel = 5;

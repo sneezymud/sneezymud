@@ -96,7 +96,7 @@ typedef struct _TPlayerRace
   int num50any;
   territoryT *territories;
   int cTerritories;
-  short hometown;
+  unsigned short hometown;
   const sstring terrHelp;
   int disableTrait; // change to array if more are needed
 } TPlayerRace;

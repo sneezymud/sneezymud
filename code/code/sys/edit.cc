@@ -42,8 +42,8 @@ bool Descriptor::isEditing()
 void Descriptor::Edit(char *arg)
 {
   char buf[256] = "\0";
-  char test[] = {IAC, WONT, '\x03', '\0'};
-  char test2[] = {IAC, DO, '\x18', '\0'};
+  char test[] = {static_cast<char>(IAC), static_cast<char>(WONT), '\x03', '\0'};
+  char test2[] = {static_cast<char>(IAC), static_cast<char>(DO), '\x18', '\0'};
 
   if (!*arg || !arg)
     return;

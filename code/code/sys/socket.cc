@@ -256,7 +256,6 @@ void updateUsagelogs(int count)
 {
   time_t ct=time(0);
   static time_t logtime;
-  static time_t lastlog;
 
   int TIME_BETWEEN_LOGS = 300;
   
@@ -273,7 +272,6 @@ void updateUsagelogs(int count)
     
     if (logtime != 0) logtime += TIME_BETWEEN_LOGS;
     else logtime = ct;
-    lastlog = ct;
     db.query("insert into usagelogs (time, players, port) VALUES(%i, %i, %i)", logtime, count, gamePort);
     // delete logs older than two months
     db.query("insert into usagelogsarchive select * from usagelogs where port=%i and time>%i", gamePort, logtime + 5184000);

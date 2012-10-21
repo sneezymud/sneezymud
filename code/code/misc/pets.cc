@@ -343,7 +343,6 @@ bool TBeing::restorePetToPc(TBeing *ch)
 
 bool TMonster::restorePetToPc(TBeing *ch)
 {
-  TRoom *rp = NULL;
   affectedData *aff = NULL, *an = NULL;
   char * affName = NULL;
   TThing *t = NULL;
@@ -373,7 +372,6 @@ bool TMonster::restorePetToPc(TBeing *ch)
   // **semicolon added to end of line**
   // **aff.be changed to aff->be**
   affName = (char *) aff->be;
-  rp = roomp;
 
   for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
     if (!(pc = dynamic_cast<TBeing *>(t)))

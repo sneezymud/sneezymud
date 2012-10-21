@@ -504,8 +504,8 @@ void TBeing::affectTotal()
   TThing *t;
   TObj *o = NULL;
   CDiscipline *cd = NULL;
-  bool discAdd = FALSE, skillAdd = FALSE;
-  bool skillAfAdd = FALSE, discAfAdd = FALSE;
+  bool discAdd = FALSE; // , skillAdd = FALSE;
+  bool discAfAdd = FALSE; // skillAfAdd = FALSE
   
   wearSlotT i;
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
@@ -517,8 +517,8 @@ void TBeing::affectTotal()
       if (!affectShouldApply(o, i))
         continue;
       for (j = 0; j < MAX_OBJ_AFFECT; j++) {
-        if (o->affected[j].location == APPLY_SPELL)
-          skillAdd = TRUE;
+	//        if (o->affected[j].location == APPLY_SPELL)
+        //  skillAdd = TRUE;
         if (o->affected[j].location == APPLY_DISCIPLINE)
           discAdd = TRUE;
         affectModify(o->affected[j].location,
@@ -529,8 +529,8 @@ void TBeing::affectTotal()
     }
   }
   for (af = affected; af; af = af->next) {
-    if (af->location == APPLY_SPELL)
-      skillAfAdd = TRUE;
+    //     if (af->location == APPLY_SPELL)
+    //  skillAfAdd = TRUE;
     if (af->location == APPLY_DISCIPLINE)
       discAfAdd = TRUE;
     affectModify(af->location, af->modifier, af->modifier2, af->bitvector, FALSE, SILENT_YES);

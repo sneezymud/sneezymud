@@ -1581,7 +1581,7 @@ void Descriptor::EchoOn()
   if (m_bIsClient)
     return;
 
-  char echo_on[6] = {IAC, WONT, TELOPT_ECHO, '\n', '\r', '\0'};
+  unsigned char echo_on[6] = {IAC, WONT, TELOPT_ECHO, '\n', '\r', '\0'};
 
   if(write(socket->m_sock, echo_on, 6)==-1)
     vlogf(LOG_FILE, "Unexpected read error in EchoOn");
@@ -1592,7 +1592,7 @@ void Descriptor::EchoOff()
   if (m_bIsClient)
     return;
 
-  char echo_off[4] = {IAC, WILL, TELOPT_ECHO, '\0'};
+  unsigned char echo_off[4] = {IAC, WILL, TELOPT_ECHO, '\0'};
 
   if(write(socket->m_sock, echo_off, 4)==-1)
     vlogf(LOG_FILE, "Unexpected write error in EchoOff()");

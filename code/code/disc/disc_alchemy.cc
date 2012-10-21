@@ -1312,7 +1312,7 @@ int detectMagic(TBeing *caster, TBeing * victim, int level, short bKnown)
     }
     // to make compile uncommented 2 lines below
     return SPELL_SUCCESS;
-    victim->affectTo(&aff);
+    // victim->affectTo(&aff); // Why was this thing after a return?
   } else {
     // to make compile uncommented 2 lines below
     caster->nothingHappens();
