@@ -76,6 +76,7 @@ Database
  cd ..
  mkdir corpses
  mkdir -p mobdata/repairs
+ mkdir immortals
 
 * Create a configuration
 
