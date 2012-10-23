@@ -3685,7 +3685,7 @@ bool file_to_sstring(const char *name, sstring &buf, concatT concat)
     return false;
   }
   do {
-    if(!fgets(tmp, 256, fl))
+    if(!fgets(tmp, 256, fl) && !feof(fl))
       vlogf(LOG_FILE, "Unexpected read error in file_to_sstring");
 
     if (!feof(fl)) {
