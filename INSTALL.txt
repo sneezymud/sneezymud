@@ -1,0 +1,90 @@
+NB! This stuff is written down by memory, after a bunch of experimenting.
+It's likely to be incomplete and incorrect.
+
+
+
+Prerequisites
+=============
+
+* gcc, namely g++ -- I'm using version 4.7
+* scons -- I'm using version 2.2.0 on Python 2.7
+* MySQL server and libmysqlclient. You need at least one database, "sneezymud",
+  better also "sneezybeta". Maybe more, I'm still figuring it out. The username
+  is hardcoded to be "sneezy" -- I'm using libmysqlclient 5.5.28-1
+* gperftools -- I'm using 2.0. I strongly suspect that this one is not
+  absolutely necessary.
+* c-ares -- mine is 1.9.0. I've had compatibility issues, there seem to be
+  different versions around with different APIs. The adaptation to mine was
+  easy, though.
+* Boost -- mine is 1.50.0
+
+Installation
+============
+
+TODO: create simpler, more explicit instructions
+
+Compiling
+~~~~~~~~~
+  mkdir -p /mud/build/cache-new
+  cd code; scons -j2 where 2 is the number of parallel jobs
+
+Database
+~~~~~~~~
+
+* Sneezy connects to MySQL over TCP, so enable this.
+* Create user sneezy without password.
+* Create some databases. TODO: figure out which ones you need. I think immortal
+  and sneezy.
+    ("sneezy_db", po::value<string>(&db_hosts[DB_SNEEZY]),
+     "host for sneezy database")
+    ("sneezybeta_db", po::value<string>(&db_hosts[DB_SNEEZYBETA]),
+     "host for sneezybeta database (unused)")
+    ("immortal_db", po::value<string>(&db_hosts[DB_IMMORTAL]),
+     "host for immortal database")
+    ("sneezyglobal_db", po::value<string>(&db_hosts[DB_SNEEZYGLOBAL]),
+     "host for sneezyglobal database")
+    ("sneezyprod_db", po::value<string>(&db_hosts[DB_SNEEZYPROD]),
+     "host for sneezyprod database (unused)")
+    ("sneezybuilder_db", po::value<string>(&db_hosts[DB_SNEEZYBUILDER]),
+     "host for sneezybuilder database (unused)")
+    ("wiki_mortal_db", po::value<string>(&db_hosts[DB_WIKI_MORTAL]),
+     "host for mortal wiki database")
+    ("wiki_builder_db", po::value<string>(&db_hosts[DB_WIKI_BUILDER]),
+     "host for builder wiki database")
+    ("wiki_admin_db", po::value<string>(&db_hosts[DB_WIKI_ADMIN]),
+     "host for admin wiki database")
+    ("forums_admin_db", po::value<string>(&db_hosts[DB_FORUMS_ADMIN]),
+     "host for admin forums database")
+
+* Import tables:
+  in data/immortal and data/sneezy, run this:
+
+  for i in *;do echo "Importing $i"; mysql -u sneezy sneezy < $i;done
+
+* Create directories:
+  TODO: make a script for this ASAP
+
+ cd lib
+ mkdir -p roomdata/saved
+ mkdir rent
+ cd rent
+ for i in {a..z};do mkdir $i;done
+ cd ..
+ mkdir account
+ cd account
+ for i in {a..z};do mkdir $i;done
+ cd ..
+ mkdir corpses
+ mkdir -p mobdata/repairs
+
+* Create a configuration
+
+  cp sneezy_prod.cfg sneezy.cfg
+
+Running
+~~~~~~~
+
+The sneezy binary should have the "lib" directory at cwd. So make a soft
+link or move it there.
+start with ./sneezy
+It'll listen on port 5678 (if you're using sneezybeta).
