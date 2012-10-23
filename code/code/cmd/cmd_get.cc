@@ -261,7 +261,7 @@ int TBeing::doGet(const char *a)
 
   if(arg.find("-autoloot")){
     autoloot=TRUE;
-    arg.replaceString("-autoloot", "");
+    arg = arg.replaceString("-autoloot", "");
   }
   strcpy(argument, arg.c_str());
 
