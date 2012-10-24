@@ -83,7 +83,7 @@ public:
       skChop(a.skChop),
       skChi(a.skChi),
       skDisarmMonk(a.skDisarmMonk),
-      skCatfall(a.skDisarmMonk),
+      skCatfall(a.skCatfall),
       skRepairMonk(a.skRepairMonk),
       skCatleap(a.skCatleap){
     }
