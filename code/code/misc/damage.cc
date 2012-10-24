@@ -1081,30 +1081,32 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 	       v->getName());
       }
 
+      if (dynamic_cast<TMonster*>(v))
+	rc = dynamic_cast<TMonster*>(v)->checkResponses(this, 0, "", CMD_RESP_KILLED);
       // more quest stuff
-      if (!rc)
-      {
+      if (!rc) {
 
-      tp=dynamic_cast<TPerson *>(this);
-      if (tp && v->mobVnum()==Mob::LEPER) {
-	if(tp->hasQuestBit(TOG_MONK_PURPLE_LEPER_KILLED4)) {
-	  tp->remQuestBit(TOG_MONK_PURPLE_LEPER_KILLED4);
-	  tp->setQuestBit(TOG_MONK_PURPLE_FINISHED);
-	} else if(tp->hasQuestBit(TOG_MONK_PURPLE_LEPER_KILLED3)) {
-	  tp->remQuestBit(TOG_MONK_PURPLE_LEPER_KILLED3);
-	  tp->setQuestBit(TOG_MONK_PURPLE_LEPER_KILLED4);
-	} else if(tp->hasQuestBit(TOG_MONK_PURPLE_LEPER_KILLED2)) {
-	  tp->remQuestBit(TOG_MONK_PURPLE_LEPER_KILLED2);
-	  tp->setQuestBit(TOG_MONK_PURPLE_LEPER_KILLED3);
-	} else if(tp->hasQuestBit(TOG_MONK_PURPLE_LEPER_KILLED1)) {
-	  tp->remQuestBit(TOG_MONK_PURPLE_LEPER_KILLED1);
-	  tp->setQuestBit(TOG_MONK_PURPLE_LEPER_KILLED2);
-	} else if(tp->hasQuestBit(TOG_MONK_PURPLE_STARTED)) {
-	  tp->setQuestBit(TOG_MONK_PURPLE_LEPER_KILLED1);
-	  tp->remQuestBit(TOG_MONK_PURPLE_STARTED);
-  }
+	tp=dynamic_cast<TPerson *>(this);
+	if (tp && v->mobVnum()==Mob::LEPER) {
+	  if(tp->hasQuestBit(TOG_MONK_PURPLE_LEPER_KILLED4)) {
+	    tp->remQuestBit(TOG_MONK_PURPLE_LEPER_KILLED4);
+	    tp->setQuestBit(TOG_MONK_PURPLE_FINISHED);
+	  } else if(tp->hasQuestBit(TOG_MONK_PURPLE_LEPER_KILLED3)) {
+	    tp->remQuestBit(TOG_MONK_PURPLE_LEPER_KILLED3);
+	    tp->setQuestBit(TOG_MONK_PURPLE_LEPER_KILLED4);
+	  } else if(tp->hasQuestBit(TOG_MONK_PURPLE_LEPER_KILLED2)) {
+	    tp->remQuestBit(TOG_MONK_PURPLE_LEPER_KILLED2);
+	    tp->setQuestBit(TOG_MONK_PURPLE_LEPER_KILLED3);
+	  } else if(tp->hasQuestBit(TOG_MONK_PURPLE_LEPER_KILLED1)) {
+	    tp->remQuestBit(TOG_MONK_PURPLE_LEPER_KILLED1);
+	    tp->setQuestBit(TOG_MONK_PURPLE_LEPER_KILLED2);
+	  } else if(tp->hasQuestBit(TOG_MONK_PURPLE_STARTED)) {
+	    tp->setQuestBit(TOG_MONK_PURPLE_LEPER_KILLED1);
+	    tp->remQuestBit(TOG_MONK_PURPLE_STARTED);
+	  }
+	}
       }
-      }
+
       // make mob-killed corpses un-dissectable
       if (!isPc() && !isAffected(AFF_CHARM)) {
         TBaseCorpse *corpse = NULL;
