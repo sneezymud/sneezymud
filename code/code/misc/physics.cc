@@ -806,10 +806,14 @@ bool TBeing::canFly() const
   return FALSE;
 }
 
+// If someone's flying but can't really fly, and the room doesn't
+// force to fly, then crash land.
 int TBeing::flightCheck()
 {
   if (isFlying() && !canFly() && !roomp->isFlyingSector()) {
-    int rc = crashLanding(POSITION_SITTING);
+    // last argument is true: force landing, don't recheck.
+    // avoids infinite recursion.
+    int rc = crashLanding(POSITION_SITTING, false, true, true);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
   }

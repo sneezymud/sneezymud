@@ -3327,10 +3327,8 @@ void TBeing::doLand()
   return;
 }
 
-int TBeing::crashLanding(positionTypeT pos, bool force, bool dam)
+int TBeing::crashLanding(positionTypeT pos, bool force, bool dam, bool falling)
 {
-  int rc = FALSE;
-
   if (force) {
 // option to force this
     setPosition(pos);
@@ -3347,8 +3345,7 @@ int TBeing::crashLanding(positionTypeT pos, bool force, bool dam)
       setPosition(POSITION_FLYING);
       return FALSE;
     } else if (roomp->isFallSector()) {
-      rc = checkFalling();
-      if (IS_SET_DELETE(rc, DELETE_THIS))
+      if (falling || IS_SET_DELETE(checkFalling(), DELETE_THIS))
         return DELETE_THIS;
       return TRUE;
     }
@@ -3368,8 +3365,7 @@ int TBeing::crashLanding(positionTypeT pos, bool force, bool dam)
     }
   } else if (roomp->isFallSector()) {
     setPosition(pos);
-    rc = checkFalling();
-    if (IS_SET_DELETE(rc, DELETE_THIS))
+    if (falling || IS_SET_DELETE(checkFalling(), DELETE_THIS))
       return DELETE_THIS;
     return TRUE;
   } else if (doesKnowSkill(SKILL_CATFALL) && bSuccess(SKILL_CATFALL)){

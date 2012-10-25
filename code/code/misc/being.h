@@ -1404,7 +1404,7 @@ class TBeing : public TThing {
     void doScribe(const char *);
     void doFly();
     void doLand();
-    int crashLanding(positionTypeT, bool force = FALSE, bool dam = TRUE);
+    int crashLanding(positionTypeT, bool force = FALSE, bool dam = TRUE, bool falling = false);
     int doTurn(const char *, TBeing *);
     virtual void doMedit(const char *);
     virtual void doSEdit(const char *);
