@@ -13,6 +13,8 @@
 #ifndef __IMMUNITY_H
 #define __IMMUNITY_H
 
+class sstring;
+
 enum immuneTypeT {
      IMMUNE_NONE = -1,
      IMMUNE_HEAT = 0,

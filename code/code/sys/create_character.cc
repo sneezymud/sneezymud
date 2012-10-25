@@ -14,6 +14,8 @@
 #include "cmd_trophy.h"
 #include "database.h"
 #include "colorstring.h"
+#include "toggle.h"
+#include "being.h"
 
 // General arrays used for character creation
 

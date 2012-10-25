@@ -9,9 +9,11 @@
 #define __STATS_H
 
 #include <algorithm>
+#include <string.h>
+#include <time.h>
 
 #include "enum.h"
-#include "being.h"
+#include "defs.h"
 
 using std::min;
 using std::max;
