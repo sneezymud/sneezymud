@@ -1,8 +1,3 @@
-NB! This stuff is written down by memory, after a bunch of experimenting.
-It's likely to be incomplete and incorrect.
-
-
-
 Prerequisites
 =============
 
@@ -11,12 +6,12 @@ Prerequisites
 * MySQL server and libmysqlclient. You need at least one database, "sneezymud",
   better also "sneezybeta". Maybe more, I'm still figuring it out. The username
   is hardcoded to be "sneezy" -- I'm using libmysqlclient 5.5.28-1
-* gperftools -- I'm using 2.0. I strongly suspect that this one is not
-  absolutely necessary.
+* gperftools -- I'm using 2.0. This one is not absolutely necessary. If you
+  don't have it, just remove -ltcmalloc from code/SConstruct.
 * c-ares -- mine is 1.9.0. I've had compatibility issues, there seem to be
   different versions around with different APIs. The adaptation to mine was
   easy, though.
-* Boost -- mine is 1.50.0
+* Boost -- Tried 1.40.0 and 1.50.0
 
 Installation
 ============
@@ -33,8 +28,9 @@ Database
 
 * Sneezy connects to MySQL over TCP, so enable this.
 * Create user sneezy without password.
-* Create some databases. TODO: figure out which ones you need. I think immortal
-  and sneezy.
+* Create some databases. I'm not sure which databases you actually
+  need. My current instance runs with sneezy, sneezyglobal and
+  immortal. Here's a list of databases mentioned in code:
     ("sneezy_db", po::value<string>(&db_hosts[DB_SNEEZY]),
      "host for sneezy database")
     ("sneezybeta_db", po::value<string>(&db_hosts[DB_SNEEZYBETA]),
@@ -57,12 +53,18 @@ Database
      "host for admin forums database")
 
 * Import tables:
-  in data/immortal and data/sneezy, run this:
+
+  in code/sql, run the same stuff as below.
+
+  in data/immortal, run this:
+
+  for i in *;do echo "Importing $i"; mysql -u sneezy immortal < $i;done
+
+  in data/sneezy:
 
   for i in *;do echo "Importing $i"; mysql -u sneezy sneezy < $i;done
 
 * Create directories:
-  TODO: make a script for this ASAP
 
  cd lib
  mkdir -p roomdata/saved
@@ -74,6 +76,10 @@ Database
  cd account
  for i in {a..z};do mkdir $i;done
  cd ..
+ mkdir player
+ cd player
+ for i in {a..z};do mkdir $i;done
+ cd ..
  mkdir corpses
  mkdir -p mobdata/repairs
  mkdir immortals
@@ -82,10 +88,10 @@ Database
 
   cp sneezy_prod.cfg sneezy.cfg
 
+  Edit the configuration to point into the correct lib/ directory.
+
 Running
 ~~~~~~~
 
-The sneezy binary should have the "lib" directory at cwd. So make a soft
-link or move it there.
 start with ./sneezy
-It'll listen on port 5678 (if you're using sneezybeta).
+It'll listen on port 5678 (if you're using sneezybeta), or 7900 otherwise.
