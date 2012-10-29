@@ -7,6 +7,9 @@
 #include <sys/stat.h>
 #include <errno.h>
 
+#define __STDC_FORMAT_MACROS
+#include <inttypes.h>
+
 #include "extern.h"
 #include "room.h"
 #include "being.h"
@@ -3013,7 +3016,7 @@ int TObj::noteMeForRent(sstring &tStString, TBeing *ch, StuffList, int *tCount)
   char tString[256],
        tBuffer[256];
 
-  sprintf(tBuffer, "%%-%us : ", (30 + (strlen(getName()) - strlen(getNameNOC(ch).c_str()))));
+  sprintf(tBuffer, "%%-%zus : ", (30 + (strlen(getName()) - strlen(getNameNOC(ch).c_str()))));
 
   if (isRentable() && isMonogramOwner(ch, true)) {
     if (!FreeRent) 
@@ -4423,7 +4426,7 @@ bool TBeing::saveFollowers(bool rent_time)
 
     found = TRUE;
     fprintf(fp, "#%d\n", mob->mobVnum());
-    fprintf(fp, "%ld %llu %d %.1f %.1f\n",
+    fprintf(fp, "%ld %" PRIu64 " %d %.1f %.1f\n",
             mob->specials.act,
             mob->specials.affectedBy,
             mob->getFaction(), (double) mob->getPerc(),
@@ -4465,7 +4468,7 @@ bool TBeing::saveFollowers(bool rent_time)
     affectedData *af;
     for (af = a_list, i = 0; i < MAX_AFFECT; i++) {
       if (af) {
-        fprintf(fp, "%d %d %d %ld %ld %d %llu\n",
+        fprintf(fp, "%d %d %d %ld %ld %d %" PRIu64 "\n",
                mapSpellnumToFile(af->type),
                af->level,
                af->duration,

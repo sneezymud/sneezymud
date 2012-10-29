@@ -3,11 +3,10 @@ from SCons.Script.SConscript import SConsEnvironment
 import os.path;
 
 CXXFLAGS = [
-    '-m32',
     '-g',             # debugger
     '-DLINUX',        # compiling on Linux
     '-DFAST',         # compiling on a fast processor machine
-    '-O2',            # optimize code
+    '-O0',            # optimize code
     '-Wall',                  # all rec. warnings shown (includes all above)
 #    '-Wextra',                # include some extra warnings
     '-Wpointer-arith',        # looks for things that depend on sizeof()
@@ -34,7 +33,6 @@ CPPPATH = [
     ]
 
 LDFLAGS = [
-    '-m32',
     '-lstdc++',
     '-g', # enable core debugging
     '-lmysqlclient',
@@ -43,7 +41,7 @@ LDFLAGS = [
     '-lboost_program_options',
     '-lboost_date_time',
     '-lcurl',
-    '-ltcmalloc',
+    #'-ltcmalloc',
     '-lcrypt',
 #    '-lprofiler',
     ]
@@ -77,7 +75,7 @@ env=Environment(CXXFLAGS=CXXFLAGS,
 Export('env')
 
 # getting some problems with this
-CacheDir('/mud/build/cache-new')
+#CacheDir('/mud/build/cache-new')
 
 # build the sneezy exe by default, see the help below for other targets
 Default('sneezy')
