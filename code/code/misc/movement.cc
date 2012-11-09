@@ -1652,7 +1652,7 @@ int TBeing::genericMovedIntoRoom(TRoom *rp, int was_in,
       continue;
 
     if (was_in != -1) {
-      rc = tmons->checkSpec(this, CMD_MOB_MOVED_INTO_ROOM, "", (TObj *) was_in);
+      rc = tmons->checkSpec(this, CMD_MOB_MOVED_INTO_ROOM, "", reinterpret_cast<TObj *>(static_cast<intptr_t>(was_in))); // casts: int was_in is passed in a pointer field
       if (rc) {
         // if TRUE, was prevented from entering.  
         // will have been put back into original room

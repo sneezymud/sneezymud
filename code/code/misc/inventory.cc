@@ -986,7 +986,7 @@ int TBeing::doGive(const sstring &oarg, giveTypeT flags)
     }
 
     if (vict) {
-      rc = vict->checkSpec(this, CMD_MOB_GIVEN_COINS, arg.c_str(), (TObj *) amount);
+      rc = vict->checkSpec(this, CMD_MOB_GIVEN_COINS, arg.c_str(), reinterpret_cast<TObj *>(static_cast<intptr_t>(amount))); // casts: int amount is passed through what is normally a pointer argument, so cast it to a wider type (should be safe, unless the proc tries to cast it back to a pointer. Right now they don't.)
 
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete vict;
