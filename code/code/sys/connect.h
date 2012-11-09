@@ -25,6 +25,7 @@ const unsigned int PROMPT_VTANSI_BAR        = (1<<15);
 const unsigned int PROMPT_PIETY             = (1<<16);
 const unsigned int PROMPT_LIFEFORCE         = (1<<17);
 const unsigned int PROMPT_TIME              = (1<<18);
+const unsigned int PROMPT_CR                = (1<<19);
 // Add new prompt options here.
 const unsigned int PROMPT_CLASSIC_ANSIBAR   = (1<<30);
 const unsigned int PROMPT_CLIENT_PROMPT     = (unsigned)(1<<31);

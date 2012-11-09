@@ -74,6 +74,7 @@ void TBeing::doPrompt(const char *arg)
     "client-prompt",
     "classic-ansi-bar",
     "time",
+    "cr",
     "\n"
   };
 
@@ -104,6 +105,7 @@ void TBeing::doPrompt(const char *arg)
       IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT),
       IS_SET(desc->prompt_d.type, PROMPT_CLASSIC_ANSIBAR),
       IS_SET(desc->prompt_d.type, PROMPT_TIME),
+      IS_SET(desc->prompt_d.type, PROMPT_CR),
     };
 
     tStString += "Prompt Line Options:\n\r--------------------\n\r";
@@ -181,6 +183,10 @@ void TBeing::doPrompt(const char *arg)
 
     sprintf(str, "Client Prompts: %s\n\r", (tPrompts[18] ? "On" : "Off"));
     tStString += str;
+
+    sprintf(str, "Carriage Return: %s\n\r", (tPrompts[21] ? "On" : "Off"));
+    tStString += str;
+
 
     tStString += "--------------------\n\r";
 
@@ -273,6 +279,16 @@ void TBeing::doPrompt(const char *arg)
 	SET_BIT(desc->prompt_d.type, PROMPT_TIME);
       }
       break;
+    case 22:
+      if(IS_SET(desc->prompt_d.type, PROMPT_CR)){
+	sendTo("Taking carriage return out of prompt.\n\r");
+	REMOVE_BIT(desc->prompt_d.type, PROMPT_CR);
+      } else {
+	sendTo("Adding carriage return to prompt.\n\r");
+	SET_BIT(desc->prompt_d.type, PROMPT_CR);
+      }
+      break;
+
     case 7:
       sscanf(str, "%s %s ", caStat, caColor);
       if (is_abbrev(caStat, "off")) {

@@ -2783,7 +2783,13 @@ void setPrompts(fd_set out)
                       (IS_SET(d->autobits, AUTO_NOSPAM) ? "" : " secs lockout"));
             }
 
-            strcat(promptbuf, "> ");
+            strcat(promptbuf, ">");
+            if (IS_SET(d->prompt_d.type, PROMPT_CR)) {
+	      strcat(promptbuf, "\n\r");
+	    } else {
+	      strcat(promptbuf, " ");
+	    }
+
 
 	    RoomExitComm *comm=new RoomExitComm();
 	    roomDirData *exitData;
