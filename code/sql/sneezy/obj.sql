@@ -22,3 +22,6 @@ CREATE TABLE obj (
     volume integer DEFAULT '0' NOT NULL,
     material integer DEFAULT '0' NOT NULL
 );
+
+INSERT INTO `obj` VALUES
+(42,'placeholder object list silver orb small','<w>a small silver orb<1>','<w>A small silver orb floats here ominously.<1>','',12,2098240,16385,0,0,0,0,10,1,3,0,1,1,1,-1,1,63);
