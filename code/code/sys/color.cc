@@ -75,6 +75,8 @@ void TBeing::doPrompt(const char *arg)
     "classic-ansi-bar",
     "time",
     "cr",
+    "roomname",
+    "zone",
     "\n"
   };
 
@@ -106,6 +108,8 @@ void TBeing::doPrompt(const char *arg)
       IS_SET(desc->prompt_d.type, PROMPT_CLASSIC_ANSIBAR),
       IS_SET(desc->prompt_d.type, PROMPT_TIME),
       IS_SET(desc->prompt_d.type, PROMPT_CR),
+      IS_SET(desc->prompt_d.type, PROMPT_ROOM_NAME),
+      IS_SET(desc->prompt_d.type, PROMPT_ZONE_NUM)
     };
 
     tStString += "Prompt Line Options:\n\r--------------------\n\r";
@@ -288,6 +292,25 @@ void TBeing::doPrompt(const char *arg)
 	SET_BIT(desc->prompt_d.type, PROMPT_CR);
       }
       break;
+    case 23:
+      if(IS_SET(desc->prompt_d.type, PROMPT_ROOM_NAME)){
+	sendTo("Taking room name out of prompt.\n\r");
+	REMOVE_BIT(desc->prompt_d.type, PROMPT_ROOM_NAME);
+      } else {
+	sendTo("Adding room name to prompt.\n\r");
+	SET_BIT(desc->prompt_d.type, PROMPT_ROOM_NAME);
+      }
+      break;
+    case 24:
+      if(IS_SET(desc->prompt_d.type, PROMPT_ZONE_NUM)){
+	sendTo("Taking zone number out of prompt.\n\r");
+	REMOVE_BIT(desc->prompt_d.type, PROMPT_ZONE_NUM);
+      } else {
+	sendTo("Adding zone number to prompt.\n\r");
+	SET_BIT(desc->prompt_d.type, PROMPT_ZONE_NUM);
+      }
+      break;
+
 
     case 7:
       sscanf(str, "%s %s ", caStat, caColor);
@@ -425,7 +448,12 @@ void TBeing::doPrompt(const char *arg)
       }
       break;
     case 8:
-      if (isImmortal()) {
+      // Henceforth everybody shall see room vnums.
+      // Peel said "They're never been secret"
+      // and there are currently other means of finding them out.
+      //
+      // Elmo on 2012-11-10
+      // if (isImmortal()) {
         if (IS_SET(desc->prompt_d.type, PROMPT_ROOM)) {
           sendTo("Taking room out of prompt.\n\r");
           REMOVE_BIT(desc->prompt_d.type, PROMPT_ROOM);
@@ -433,7 +461,7 @@ void TBeing::doPrompt(const char *arg)
           sendTo("Adding room to prompt.\n\r");
           SET_BIT(desc->prompt_d.type, PROMPT_ROOM);
         }
-      }
+	//}
       break;
     case 9:
       sendTo("Setting prompt to none.\n\r");
@@ -446,7 +474,8 @@ void TBeing::doPrompt(const char *arg)
                     PROMPT_GOLD | PROMPT_EXP | PROMPT_OPPONENT |
                     PROMPT_TANK_OTHER | PROMPT_EXPTONEXT_LEVEL |
 	            PROMPT_PIETY | PROMPT_LIFEFORCE | PROMPT_TIME |
-                    (isImmortal() ? PROMPT_ROOM : 0);
+                    PROMPT_ROOM | PROMPT_ROOM_NAME | PROMPT_ZONE_NUM |
+	            PROMPT_CR;
       break;
     case 11:
       sendTo("Setting prompt to none.\n\r");

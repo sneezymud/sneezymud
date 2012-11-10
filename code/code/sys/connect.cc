@@ -2323,20 +2323,22 @@ void Descriptor::fdSocketClose(int desc)
 
 const char *StPrompts[] =
   {
-    "[Z:%d Pr:%s L:%d H:%d C:%d S:%s]\n\r", // Builder Assistant
-    "%sH:%d%s ",           // Hit Points
-    "%sP:%.1f%s ",         // Piety
+    "[Z:%d Pr:%s L:%d H:%d C:%d S:%s]\n\r", // 0 Builder Assistant
+    "%sH:%d%s ",           // 1 Hit Points
+    "%sP:%.1f%s ",         // 2 Piety
     "%sM:%d%s ",           // Mana
     "%sV:%d%s ",           // Moves
-    "%sT:%d%s ",           // Talens
+    "%sT:%d%s ",           // 5 Talens
     "%sR:%d%s ",           // Room
     "%sE:%s%s ",           // Exp
-    "%sN:%s%s ",           // Exp Tnl
+    "%sN:%s%s ",           // 8 Exp Tnl
     "%s%s<%s%s=%s>%s ",    // Opponent
     "%s%s<%s/tank=%s>%s ", // Tank / Tank-Other
-    "%s<%.1f%s> ",         // Lockout
+    "%s<%.1f%s> ",         // 11 Lockout
     "%sLF:%d%s ",          // Lifeforce
-    "%s%02i:%02i:%02i%s "            // time
+    "%s%02i:%02i:%02i%s ", // time
+    "Rn: |%s|",                // 14 Room name
+    "Z: %d %s|"                 // 15 Zone ID
   };
 
 
@@ -2406,9 +2408,27 @@ sstring getManaPrompt(TBeing *ch, Descriptor *d, int mana){
       (IS_SET(d->prompt_d.type, PROMPT_COLOR) ? d->prompt_d.manaColor : "") %
       mana %
       ch->norm();
-  }
+   }
 
   return promptbuf;
+}
+
+sstring getRoomNamePrompt(TBeing *ch, Descriptor *d){
+  if (IS_SET(d->prompt_d.type, PROMPT_ROOM_NAME)) {
+    return format(StPrompts[14])
+      % ch->roomp->name;
+  }
+  return sstring();
+}
+
+sstring getZoneIdPrompt(TBeing *ch, Descriptor *d){
+  if (IS_SET(d->prompt_d.type, PROMPT_ZONE_NUM)) {
+    return format(StPrompts[15])
+      % ch->roomp->getZone()->zone_nr
+      % ch->roomp->getZone()->name;
+
+  }
+  return sstring();
 }
 
 sstring getHitPointsPrompt(TBeing *ch, Descriptor *d, int hp){
@@ -2703,6 +2723,10 @@ void setPrompts(fd_set out)
 		    "%s", getMovesPrompt(ch, d, moves).c_str());
 	    sprintf(promptbuf + strlen(promptbuf),
 		    "%s", getMoneyPrompt(ch, d, gold).c_str());
+	    sprintf(promptbuf + strlen(promptbuf),
+		    "%s", getRoomNamePrompt(ch, d).c_str());
+	    sprintf(promptbuf + strlen(promptbuf),
+		    "%s", getZoneIdPrompt(ch, d).c_str());
 	    sprintf(promptbuf + strlen(promptbuf),
 		    "%s", getRoomPrompt(ch, d, room).c_str());
 	    
