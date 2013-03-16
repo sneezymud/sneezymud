@@ -820,13 +820,13 @@ void TBeing::doToggle(const char *arg2)
       if (isdigit(*arg2)) {
 	desc->screen_size = min(128, convertTo<int>(arg2));
 	doCls(false);
-	sendTo(format("Your screensize has been set to: %d\n\r") % desc->screen_size);
+	sendTo(format("Your screensize has been set to: %d\n\r") % static_cast<int>(desc->screen_size));
       } else {
-	sendTo(format("Your current screensize is set to: %d\n\r") % desc->screen_size);
+	sendTo(format("Your current screensize is set to: %d\n\r") % static_cast<int>(desc->screen_size));
           sendTo("Screensize needs to be a number from 1-128.\n\r");
       }
     } else {
-      sendTo(format("Your current screensize is set to: %d\n\r") % desc->screen_size);
+      sendTo(format("Your current screensize is set to: %d\n\r") % static_cast<int>(desc->screen_size));
     }
   } else if (is_abbrev(arg, "autokill") || is_abbrev(arg, "kill")) {
     if (IS_SET(desc->autobits, AUTO_KILL)) {
