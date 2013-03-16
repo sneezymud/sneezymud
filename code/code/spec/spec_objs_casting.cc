@@ -117,7 +117,7 @@ int marukalia(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   act("<B>Blue flames erupt around $p.<z>", \
     TRUE, targ, o, NULL, TO_CHAR);
   // delete all items in container
-  TThing *next = table->rider->nextRider;
+  TThing *next = table->rider ? table->rider->nextRider : NULL;
   for (t = table->rider; t; t = next) {
     next = t->nextRider;
     act("<b>The flames incinerate $p.<z>", TRUE, targ, t, NULL, TO_CHAR);
