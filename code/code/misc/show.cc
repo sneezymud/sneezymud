@@ -774,7 +774,7 @@ static void describeSpellEffects(const TBeing *me, const TBeing *ch, bool verbos
 void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
 {
   char buffer[10000];
-  char buf[80], capbuf[256];
+  char buf[80], capbuf[2560];
   int found, percent;
   TThing *t=NULL;
 
@@ -1017,7 +1017,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
       describeSpellEffects(this, ch, FALSE);
   } else if (mode == SHOW_MODE_SHORT_PLUS) {
     if (getDescr()) {
-      sprintf(capbuf, "%s", addNameToBuf(ch, ch->desc, this, getDescr(), COLOR_MOBS).c_str());
+      snprintf(capbuf, sizeof(capbuf), "%s", addNameToBuf(ch, ch->desc, this, getDescr(), COLOR_MOBS).c_str());
       sstring cStrbuf = capbuf;
       while (cStrbuf.find("$$g") != sstring::npos)
         cStrbuf.replace(cStrbuf.find("$$g"), 3,
