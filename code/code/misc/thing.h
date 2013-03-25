@@ -116,7 +116,7 @@ class TThing {
     virtual const char *hssh() const { return "it"; }
     virtual const char *hmhr() const { return "it"; }
     virtual int checkSpec(TBeing *, cmdTypeT, const char *, TThing *) { return 0; }
-    virtual const char *getName() const { return name; }
+    virtual const char *getName() const { return name ? name : ""; }
     virtual bool shouldntBeShown(wearSlotT) const;
     virtual int checkFalling() { return 0;}
     virtual float carryWeightLimit() const { return 0.0; }

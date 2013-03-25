@@ -35,7 +35,7 @@ class TPerson : public TBeing {
     TPerson & operator=(const TPerson &);
     virtual ~TPerson();
 
-    virtual const char *getName() const { return name; }
+    virtual const char *getName() const { return name ? name : ""; }
 
     void setBaseAge(unsigned short num) {
       base_age = num;

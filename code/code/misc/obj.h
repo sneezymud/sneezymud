@@ -548,7 +548,7 @@ private:
     virtual sstring showModifier(showModeT, const TBeing *) const { return ""; }
     virtual bool isPersonalized() { return action_description != NULL; }
     virtual int getVolume() const { return (obj_flags.volume); }
-    virtual const char *getName() const { return shortDescr; }
+    virtual const char *getName() const { return shortDescr ? shortDescr : ""; }
     virtual int getSnum() const { return (snum > -1 ? snum : objVnum()); };
 
     virtual roomDirData *exitDir(dirTypeT door) const;
