@@ -172,6 +172,7 @@ bool TDatabase::query(const char *query,...)
 	  if(!from){
 	    vlogf(LOG_DB, "null argument for format specifier 's'");
 	    vlogf(LOG_DB, format("%s") % qsave);	    
+	    return FALSE;
 	  }
 
 	  fromlen=strlen(from);
