@@ -1349,7 +1349,7 @@ int get_number(char **name)
   if ((ppos = (char *) strchr(*name, '.')) && ppos[1]) {
     *ppos++ = '\0';
     strncpy(numx, *name, cElements(numx));
-    strcpy(*name, ppos);
+    memmove(*name, ppos, strlen(ppos)+1);
 
     for (i = 0; *(numx + i); i++) {
       if (*(numx + i) == ' ')
