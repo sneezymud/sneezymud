@@ -142,7 +142,7 @@ bool TOpenContainer::isContainerFlag(int r) const
 
 doorTrapT TOpenContainer::getContainerTrapType() const
 {
-  return ((trap_type>=MAX_TRAP_TYPES)?DOOR_TRAP_NONE:trap_type);
+  return ((trap_type < DOOR_TRAP_NONE || trap_type>=MAX_TRAP_TYPES)?DOOR_TRAP_NONE:trap_type);
 }
 
 void TOpenContainer::setContainerTrapType(doorTrapT r)
