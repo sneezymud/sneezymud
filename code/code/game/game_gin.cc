@@ -728,7 +728,7 @@ int GinGame::recursive_gin_search(TBeing *ch, Hand *hs, int *hand)
     if (!new_hs.num)
       total = min(total, tmp_total);
     else {
-      memcpy(tmp_left, left, sizeof(left));
+      memcpy(tmp_left, left, 10);
       total = min(total, recursive_gin_search(ch, &new_hs, tmp_left));
     }
     if (!(run = !run))
