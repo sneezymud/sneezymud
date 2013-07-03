@@ -259,7 +259,7 @@ int TBeing::doGet(const char *a)
   int p;
   getTypeT type = GETALLALL;
 
-  if(arg.find("-autoloot")){
+  if(arg.find("-autoloot") != std::string::npos){
     autoloot=TRUE;
     arg = arg.replaceString("-autoloot", "");
   }
