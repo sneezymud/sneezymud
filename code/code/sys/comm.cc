@@ -1013,7 +1013,7 @@ void Descriptor::updateScreenVt100(unsigned int update)
         ratio = fname(f->name).length() + strlen(prompt_mesg[ratio]);
 
 	while (ratio < 25) {
-          strncat(buf, " ", cElements(buf));
+          strncat(buf, " ", cElements(buf)-1);
           ratio++;
 	}
       }
