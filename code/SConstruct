@@ -7,6 +7,7 @@ CXXFLAGS = [
     '-DLINUX',        # compiling on Linux
     '-DFAST',         # compiling on a fast processor machine
     '-O0',            # optimize code
+    '-march=native',
     '-Wall',                  # all rec. warnings shown (includes all above)
 #    '-Wextra',                # include some extra warnings
     '-Wpointer-arith',        # looks for things that depend on sizeof()
