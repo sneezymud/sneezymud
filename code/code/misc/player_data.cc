@@ -968,6 +968,9 @@ void TBeing::saveChar(int load_room)
   else
     sprintf(buf2, "player/%c/%s", LOWER(tmp->name[0]), sstring(tmp->name).lower().c_str());
 
+  if (unlink(buf2))
+    vlogf(LOG_BUG, format("unlink failed in saveChar for %s") % name);
+
   if(link(buf, buf2))
     vlogf(LOG_BUG, format("link failed in saveChar for %s") % name);
 
