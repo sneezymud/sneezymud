@@ -32,7 +32,8 @@ CREATE TABLE `factoryproducing` (
 
 /*!40000 ALTER TABLE `factoryproducing` DISABLE KEYS */;
 LOCK TABLES `factoryproducing` WRITE;
-INSERT INTO `factoryproducing` VALUES (251,403),(251,404);
+INSERT INTO `factoryproducing` VALUES (251,403),
+(251,404);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `factoryproducing` ENABLE KEYS */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

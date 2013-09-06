@@ -34,7 +34,30 @@ CREATE TABLE `corpaccess` (
 
 /*!40000 ALTER TABLE `corpaccess` DISABLE KEYS */;
 LOCK TABLES `corpaccess` WRITE;
-INSERT INTO `corpaccess` VALUES (28,1,1658,'maror'),(2,1,2466,'knuckles'),(17,1,828,'ragamuffin'),(27,1,2308,'damescena'),(11,1,1330,'laren'),(4,1,1903,'frobozz'),(11,1,1928,'poppin'),(17,1,10170,'sephie'),(13,1,1917,'goldlama'),(3,1,1653,'birch'),(24,1,4061,'immorality'),(17,1,5868,'taenryl'),(17,1,4017,'legato'),(3,1,669,'fitz'),(8,1,2052,'adoresqua'),(24,1,553,'pirvan'),(12,1,553,'pirvan'),(6,1,1951,'spiff'),(30,1,9229,'sage'),(7,1,669,'fitz'),(7,1,1330,'laren'),(7,1,1932,'tenbutts'),(7,1,2466,'knuckles'),(21,1,2155,'peel');
+INSERT INTO `corpaccess` VALUES (28,1,1658,'maror'),
+(2,1,2466,'knuckles'),
+(17,1,828,'ragamuffin'),
+(27,1,2308,'damescena'),
+(11,1,1330,'laren'),
+(4,1,1903,'frobozz'),
+(11,1,1928,'poppin'),
+(17,1,10170,'sephie'),
+(13,1,1917,'goldlama'),
+(3,1,1653,'birch'),
+(24,1,4061,'immorality'),
+(17,1,5868,'taenryl'),
+(17,1,4017,'legato'),
+(3,1,669,'fitz'),
+(8,1,2052,'adoresqua'),
+(24,1,553,'pirvan'),
+(12,1,553,'pirvan'),
+(6,1,1951,'spiff'),
+(30,1,9229,'sage'),
+(7,1,669,'fitz'),
+(7,1,1330,'laren'),
+(7,1,1932,'tenbutts'),
+(7,1,2466,'knuckles'),
+(21,1,2155,'peel');
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `corpaccess` ENABLE KEYS */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

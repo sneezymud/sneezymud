@@ -34,7 +34,39 @@ CREATE TABLE `ship_destinations` (
 
 /*!40000 ALTER TABLE `ship_destinations` DISABLE KEYS */;
 LOCK TABLES `ship_destinations` WRITE;
-INSERT INTO `ship_destinations` VALUES (19000,'Fishingshack',15150),(19000,'Mansion',26869),(19000,'Garbageisland',12623),(19000,'Citadel',10847),(19000,'Gnath',2400),(19000,'Whirlpool',12814),(19000,'WhirlpoolVortex',12781),(19000,'StrangeIsland',13142),(19000,'NorthEastMyrian',12545),(19000,'creed',2495),(19000,'poachers',15294),(19000,'WestGrimhaven',5417),(19000,'JungleBeach',12643),(19000,'SpiritBeach',14114),(19000,'Yola',12889),(19000,'siren',12874),(19000,'LazyGuy',13106),(19000,'Benjamin',12854),(19000,'Xanesla',6301),(19000,'sunkenship',13111),(19000,'lotsofcrap',12607),(19000,'smalltropicalisland',12802),(15375,'cardac',2471),(15375,'garbage',12623),(15375,'kalysia',14117),(15375,'fishmaster',15150),(15375,'Neghya',27274),(15375,'Brazzed',2492),(15375,'DD',13899),(15375,'Waterfall',15286),(15375,'Ranger',5408),(15375,'Xanesla',6301),(15375,'fog',13280);
+INSERT INTO `ship_destinations` VALUES (19000,'Fishingshack',15150),
+(19000,'Mansion',26869),
+(19000,'Garbageisland',12623),
+(19000,'Citadel',10847),
+(19000,'Gnath',2400),
+(19000,'Whirlpool',12814),
+(19000,'WhirlpoolVortex',12781),
+(19000,'StrangeIsland',13142),
+(19000,'NorthEastMyrian',12545),
+(19000,'creed',2495),
+(19000,'poachers',15294),
+(19000,'WestGrimhaven',5417),
+(19000,'JungleBeach',12643),
+(19000,'SpiritBeach',14114),
+(19000,'Yola',12889),
+(19000,'siren',12874),
+(19000,'LazyGuy',13106),
+(19000,'Benjamin',12854),
+(19000,'Xanesla',6301),
+(19000,'sunkenship',13111),
+(19000,'lotsofcrap',12607),
+(19000,'smalltropicalisland',12802),
+(15375,'cardac',2471),
+(15375,'garbage',12623),
+(15375,'kalysia',14117),
+(15375,'fishmaster',15150),
+(15375,'Neghya',27274),
+(15375,'Brazzed',2492),
+(15375,'DD',13899),
+(15375,'Waterfall',15286),
+(15375,'Ranger',5408),
+(15375,'Xanesla',6301),
+(15375,'fog',13280);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `ship_destinations` ENABLE KEYS */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

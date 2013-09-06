@@ -35,7 +35,11 @@ CREATE TABLE `lowtasks` (
 
 /*!40000 ALTER TABLE `lowtasks` DISABLE KEYS */;
 LOCK TABLES `lowtasks` WRITE;
-INSERT INTO `lowtasks` VALUES (1,0,'Dash',' develop suit stat standards',''),(2,8,'Dash',' brightmoon city',''),(3,2,'Dash',' jungle canyon zone',''),(4,3,'Dash',' glodson mining camp zone',''),(5,4,'Dash',' rouge halo zone','');
+INSERT INTO `lowtasks` VALUES (1,0,'Dash',' develop suit stat standards',''),
+(2,8,'Dash',' brightmoon city',''),
+(3,2,'Dash',' jungle canyon zone',''),
+(4,3,'Dash',' glodson mining camp zone',''),
+(5,4,'Dash',' rouge halo zone','');
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `lowtasks` ENABLE KEYS */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

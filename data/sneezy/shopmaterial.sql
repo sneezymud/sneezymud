@@ -32,7 +32,28 @@ CREATE TABLE `shopmaterial` (
 
 /*!40000 ALTER TABLE `shopmaterial` DISABLE KEYS */;
 LOCK TABLES `shopmaterial` WRITE;
-INSERT INTO `shopmaterial` VALUES (85,75),(85,115),(86,18),(87,67),(90,2),(91,51),(91,52),(91,74),(92,54),(93,6),(94,163),(95,162),(96,157),(99,100),(100,9),(101,4),(102,8),(103,3),(98,55),(98,69),(98,70),(98,71);
+INSERT INTO `shopmaterial` VALUES (85,75),
+(85,115),
+(86,18),
+(87,67),
+(90,2),
+(91,51),
+(91,52),
+(91,74),
+(92,54),
+(93,6),
+(94,163),
+(95,162),
+(96,157),
+(99,100),
+(100,9),
+(101,4),
+(102,8),
+(103,3),
+(98,55),
+(98,69),
+(98,70),
+(98,71);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `shopmaterial` ENABLE KEYS */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

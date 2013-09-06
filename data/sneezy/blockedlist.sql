@@ -32,7 +32,21 @@ CREATE TABLE `blockedlist` (
 
 /*!40000 ALTER TABLE `blockedlist` DISABLE KEYS */;
 LOCK TABLES `blockedlist` WRITE;
-INSERT INTO `blockedlist` VALUES (3096,'~dopeman'),(3096,'~eternal'),(5605,'~dyehead'),(5605,'~eternal'),(5548,'waut'),(50015,'ac'),(3096,'~thirdrail'),(116300,'ri'),(3096,'~afterlife'),(3096,'~crucial'),(99214,'ren'),(3096,'~afterlife'),(3096,'~crucial'),(3096,'~dopeman'),(3096,'~eternal');
+INSERT INTO `blockedlist` VALUES (3096,'~dopeman'),
+(3096,'~eternal'),
+(5605,'~dyehead'),
+(5605,'~eternal'),
+(5548,'waut'),
+(50015,'ac'),
+(3096,'~thirdrail'),
+(116300,'ri'),
+(3096,'~afterlife'),
+(3096,'~crucial'),
+(99214,'ren'),
+(3096,'~afterlife'),
+(3096,'~crucial'),
+(3096,'~dopeman'),
+(3096,'~eternal');
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `blockedlist` ENABLE KEYS */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

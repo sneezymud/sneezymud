@@ -33,7 +33,8 @@ CREATE TABLE `factoryblueprint` (
 
 /*!40000 ALTER TABLE `factoryblueprint` DISABLE KEYS */;
 LOCK TABLES `factoryblueprint` WRITE;
-INSERT INTO `factoryblueprint` VALUES (403,1,18),(404,1,18);
+INSERT INTO `factoryblueprint` VALUES (403,1,18),
+(404,1,18);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `factoryblueprint` ENABLE KEYS */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
