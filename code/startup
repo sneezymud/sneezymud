@@ -1,0 +1,84 @@
+#!/bin/bash
+
+EXE=sneezy
+if [ -n "$1" ]; then
+	PORT="$1"
+else
+	PORT="7900"
+fi
+
+CORESDIR=dumped_cores
+
+if [ ! -f ${EXE} ]; then
+	echo "Couldn't find executable ./${EXE}"
+	exit 1
+fi
+
+# Figure out a run ID
+i=1
+function get_id() {
+	while ((1))
+	do
+		mkdir -p log
+		LOG_NAME=log/$i..log
+		CORE_NAME=${CORESDIR}/$i..
+		ROM_NAME=${CORESDIR}/$i..rom
+		REV_NAME=${CORESDIR}/$i..revision
+		# If none of the files exist, then we've found a free number
+		if [ ! -e ${LOG_NAME} ] && [ ! -e ${CORE_NAME}core* ] && [ ! -e ${ROM_NAME} ]; then
+			break
+		fi
+		i=$((i + 1))
+	done
+}
+
+# Run the MUD in an infinite loop
+while ((1))
+do
+	CORE=$(ls -1 lib/core* 2>/dev/null)
+	if [ $? -eq 0 ]; then
+		echo "Old cores are lying around. I'm going to delete them in 5 seconds. Cancel this script with ctrl-c if you don't want this."
+		sleep 5
+		rm -f core*
+	fi
+	get_id
+	echo "Going to run the MUD. The log is ${LOG_NAME}"
+	echo "In case the MUD crashes, the code name will be ${CORE_NAME}core.something and the executable name will be ${ROM_NAME}"
+	./${EXE} ${PORT} > ${LOG_NAME} 2>&1
+
+	# The MUD shut down
+	if [[ -e shutdown.txt ]]; then
+		rm -f shutdown.txt
+		echo "The MUD shut down."
+		exit 0
+	fi
+
+	# The MUD crashed
+	echo "The MUD crashed."
+	mkdir -p ${CORESDIR}
+	CORE=$(ls -1 lib/core* 2>/dev/null)
+	if [[ $? -eq 0 ]]; then
+		echo "Found core files. and moved it to ${CORE_NAME}core.something together with a backup copy of the MUD at ${ROM_NAME}"
+		cd lib
+		for j in core*; do
+			mv "$j" "../code/${CORE_NAME}$j"
+		done
+		cd ..
+		cp ${EXE} ${ROM_NAME}
+		if [[ -d ../.git ]]; then
+			REV=$(git rev-parse HEAD)
+		elif [[ -d .svn ]]; then
+			REV=$(svn info | grep Revision: | cut -d " " -f 2)
+		elif [[ -d ../.hg ]]; then
+			REV=$(hg id -i)
+		fi
+		echo "The revision ID, saved in file ${REV_NAME} for this crash is ${REV}"
+		echo "Revision: ${REV}" > ${REV_NAME}
+	else
+		echo "Core file not found."
+	fi
+	echo ""
+	echo ""
+	echo ""
+	sleep 1
+done
