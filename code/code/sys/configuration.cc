@@ -170,35 +170,28 @@ bool Config::doConfiguration(int argc, char *argv[])
   database_names.add_options()
     ("sneezy_db", po::value<string>(&db_names[DB_SNEEZY]),
      "name for sneezy database")
-    ("sneezybeta_db", po::value<string>(&db_names[DB_SNEEZYBETA]),
-     "name for sneezybeta database (unused)")
-    ("immortal_db", po::value<string>(&db_names[DB_IMMORTAL]),
-     "name for immortal database")
-    ("sneezyglobal_db", po::value<string>(&db_names[DB_SNEEZYGLOBAL]),
-     "name for sneezyglobal database")
-    ("sneezyprod_db", po::value<string>(&db_names[DB_SNEEZYPROD]),
-     "name for sneezyprod database (unused)")
-    ("sneezybuilder_db", po::value<string>(&db_names[DB_SNEEZYBUILDER]),
-     "name for sneezybuilder database (unused)")
-    ("wiki_mortal_db", po::value<string>(&db_names[DB_WIKI_MORTAL]),
-     "name for mortal wiki database")
-    ("wiki_builder_db", po::value<string>(&db_names[DB_WIKI_BUILDER]),
-     "name for builder wiki database")
-    ("wiki_admin_db", po::value<string>(&db_names[DB_WIKI_ADMIN]),
-     "name for admin wiki database")
-    ("forums_admin_db", po::value<string>(&db_names[DB_FORUMS_ADMIN]),
-     "name for admin forums database")
     ;
 
+  po::options_description database_users("Database usernames");
+  database_users.add_options()
+    ("sneezy_user", po::value<string>(&db_users[DB_SNEEZY]),
+     "sneezy database username")
+    ;
+
+  po::options_description database_passwords("Database passwords");
+  database_users.add_options()
+    ("sneezy_password", po::value<string>(&db_passwords[DB_SNEEZY]),
+     "sneezy database password")
+    ;
 
   po::options_description cmdline_options;
-  cmdline_options.add(cmdline).add(config).add(database_names).add(database_hosts);
+  cmdline_options.add(cmdline).add(config).add(database_names).add(database_hosts).add(database_users).add(database_passwords);
 
   po::options_description config_options;
-  config_options.add(config).add(database_names).add(database_hosts).add(configOnly);
+  config_options.add(config).add(database_names).add(database_hosts).add(database_users).add(database_passwords).add(configOnly);
 
   po::options_description visible("Allowed options");
-  visible.add(cmdline).add(config).add(database_names).add(database_hosts).add(configOnly);
+  visible.add(cmdline).add(config).add(database_names).add(database_hosts).add(database_users).add(database_passwords).add(configOnly);
 
 
   // first positional argument is port number

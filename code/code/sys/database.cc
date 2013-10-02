@@ -13,6 +13,8 @@ const sstring empty="";
 
 std::vector <std::string> db_hosts(DB_MAX);
 std::vector <std::string> db_names(DB_MAX);
+std::vector <std::string> db_users(DB_MAX);
+std::vector <std::string> db_passwords(DB_MAX);
 
 const char * db_connect[DB_MAX] = {
   NULL, // depends on game port
@@ -39,11 +41,31 @@ const char *TDatabaseConnection::getConnectParam(dbTypeT type)
   const char *ret = db_connect[type];
   if (ret)
     return ret;
+  if (db_names[type] != "")
+    return db_names[type].c_str();
   if (gamePort == Config::Port::PROD)
     return db_connect[DB_SNEEZYPROD];
   if (gamePort == Config::Port::BUILDER)
     return db_connect[DB_SNEEZYBUILDER];
   return db_connect[DB_SNEEZYBETA];
+}
+
+
+static const char* getUser(dbTypeT type)
+{
+  if (db_users[type] != "")
+    return db_users[type].c_str();
+  else
+    return NULL;
+}
+
+
+static const char* getPass(dbTypeT type)
+{
+  if (db_passwords[type] != "")
+    return db_passwords[type].c_str();
+  else
+    return NULL;
 }
 
 
@@ -58,7 +80,7 @@ MYSQL *TDatabaseConnection::getDB(dbTypeT type)
     databases[type] = mysql_init(NULL);
     
     vlogf(LOG_DB, "Connecting to database.");
-    if(!mysql_real_connect(databases[type], db_hosts[type].c_str(), "sneezy", NULL, getConnectParam(type), 0, NULL, 0))
+    if(!mysql_real_connect(databases[type], db_hosts[type].c_str(), getUser(type), getPass(type), getConnectParam(type), 0, NULL, 0))
     {
       vlogf(LOG_DB, format("Could not connect to database '%s'.") % getConnectParam(type));
       vlogf(LOG_DB, format("%s") % mysql_error(databases[type]));
