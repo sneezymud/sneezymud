@@ -159,6 +159,7 @@ class TDatabaseConnection
 };
 
 extern std::vector <std::string> db_hosts;
+extern std::vector <std::string> db_names;
 extern std::queue<sstring> queryqueue;
 extern TDatabaseConnection database_connection;
 

@@ -12,6 +12,7 @@ TDatabaseConnection database_connection;
 const sstring empty="";
 
 std::vector <std::string> db_hosts(DB_MAX);
+std::vector <std::string> db_names(DB_MAX);
 
 const char * db_connect[DB_MAX] = {
   NULL, // depends on game port

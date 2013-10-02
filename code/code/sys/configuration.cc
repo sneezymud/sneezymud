@@ -141,38 +141,64 @@ bool Config::doConfiguration(int argc, char *argv[])
     ;
 
   // database options
-  po::options_description databases("Databases");
-  databases.add_options()
-    ("sneezy_db", po::value<string>(&db_hosts[DB_SNEEZY]),
+  po::options_description database_hosts("Database hosts");
+  database_hosts.add_options()
+    ("sneezy_host", po::value<string>(&db_hosts[DB_SNEEZY]),
      "host for sneezy database")
-    ("sneezybeta_db", po::value<string>(&db_hosts[DB_SNEEZYBETA]),
+    ("sneezybeta_host", po::value<string>(&db_hosts[DB_SNEEZYBETA]),
      "host for sneezybeta database (unused)")
-    ("immortal_db", po::value<string>(&db_hosts[DB_IMMORTAL]),
+    ("immortal_host", po::value<string>(&db_hosts[DB_IMMORTAL]),
      "host for immortal database")
-    ("sneezyglobal_db", po::value<string>(&db_hosts[DB_SNEEZYGLOBAL]),
+    ("sneezyglobal_host", po::value<string>(&db_hosts[DB_SNEEZYGLOBAL]),
      "host for sneezyglobal database")
-    ("sneezyprod_db", po::value<string>(&db_hosts[DB_SNEEZYPROD]),
+    ("sneezyprod_host", po::value<string>(&db_hosts[DB_SNEEZYPROD]),
      "host for sneezyprod database (unused)")
-    ("sneezybuilder_db", po::value<string>(&db_hosts[DB_SNEEZYBUILDER]),
+    ("sneezybuilder_host", po::value<string>(&db_hosts[DB_SNEEZYBUILDER]),
      "host for sneezybuilder database (unused)")
-    ("wiki_mortal_db", po::value<string>(&db_hosts[DB_WIKI_MORTAL]),
+    ("wiki_mortal_host", po::value<string>(&db_hosts[DB_WIKI_MORTAL]),
      "host for mortal wiki database")
-    ("wiki_builder_db", po::value<string>(&db_hosts[DB_WIKI_BUILDER]),
+    ("wiki_builder_host", po::value<string>(&db_hosts[DB_WIKI_BUILDER]),
      "host for builder wiki database")
-    ("wiki_admin_db", po::value<string>(&db_hosts[DB_WIKI_ADMIN]),
+    ("wiki_admin_host", po::value<string>(&db_hosts[DB_WIKI_ADMIN]),
      "host for admin wiki database")
-    ("forums_admin_db", po::value<string>(&db_hosts[DB_FORUMS_ADMIN]),
+    ("forums_admin_host", po::value<string>(&db_hosts[DB_FORUMS_ADMIN]),
      "host for admin forums database")
     ;
 
+  // database options
+  po::options_description database_names("Database names");
+  database_names.add_options()
+    ("sneezy_db", po::value<string>(&db_names[DB_SNEEZY]),
+     "name for sneezy database")
+    ("sneezybeta_db", po::value<string>(&db_names[DB_SNEEZYBETA]),
+     "name for sneezybeta database (unused)")
+    ("immortal_db", po::value<string>(&db_names[DB_IMMORTAL]),
+     "name for immortal database")
+    ("sneezyglobal_db", po::value<string>(&db_names[DB_SNEEZYGLOBAL]),
+     "name for sneezyglobal database")
+    ("sneezyprod_db", po::value<string>(&db_names[DB_SNEEZYPROD]),
+     "name for sneezyprod database (unused)")
+    ("sneezybuilder_db", po::value<string>(&db_names[DB_SNEEZYBUILDER]),
+     "name for sneezybuilder database (unused)")
+    ("wiki_mortal_db", po::value<string>(&db_names[DB_WIKI_MORTAL]),
+     "name for mortal wiki database")
+    ("wiki_builder_db", po::value<string>(&db_names[DB_WIKI_BUILDER]),
+     "name for builder wiki database")
+    ("wiki_admin_db", po::value<string>(&db_names[DB_WIKI_ADMIN]),
+     "name for admin wiki database")
+    ("forums_admin_db", po::value<string>(&db_names[DB_FORUMS_ADMIN]),
+     "name for admin forums database")
+    ;
+
+
   po::options_description cmdline_options;
-  cmdline_options.add(cmdline).add(config).add(databases);
+  cmdline_options.add(cmdline).add(config).add(database_names).add(database_hosts);
 
   po::options_description config_options;
-  config_options.add(config).add(databases).add(configOnly);
+  config_options.add(config).add(database_names).add(database_hosts).add(configOnly);
 
   po::options_description visible("Allowed options");
-  visible.add(cmdline).add(config).add(databases).add(configOnly);
+  visible.add(cmdline).add(config).add(database_names).add(database_hosts).add(configOnly);
 
 
   // first positional argument is port number
