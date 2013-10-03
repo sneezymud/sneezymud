@@ -79,9 +79,15 @@ void TTrophy::addToCount(int vnum, double add){
     db->query("insert into trophy values (%i, %i, %f, %f)",
         player_id, vnum, add, (add>0 ? add : 0));
   }
-  
-  db->query("update trophyplayer set total=total+%f where player_id=%i",
-     add, player_id);
+
+  db->query("update trophyplayer set count=(select count(0) from trophy where player_id = %i), total=total+%f where player_id=%i",
+	    player_id, add, player_id);
+  if (db->rowCount() == 0) {
+    // no row for this player so do an insert instead
+    db->query("insert into trophyplayer values (%i, (select count(0) from trophy where player_id = %i), %f)",
+	      player_id, player_id, 1, add);
+  }
+
 }
 
 
