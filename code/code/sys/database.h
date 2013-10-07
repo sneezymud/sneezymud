@@ -1,12 +1,7 @@
 #ifndef __DATABASE_H
 #define __DATABASE_H
 
-#include <mysql/mysql.h>
-#include <queue>
-#include <map>
-#include <cstdio>
 #include <cstring>
-#include <string>
 
 class sstring;
 
@@ -113,14 +108,10 @@ struct ltstr
   }
 };
 
+class TDatabasePimpl;
+
 class TDatabase
 {
-  MYSQL_RES *res;
-  MYSQL_ROW row;
-  MYSQL *db;
-  long row_count;
-  std::map <const char *, int, ltstr> column_names;
-  
  public:
   void setDB(dbTypeT);
   bool query(const char *,...);
@@ -129,42 +120,17 @@ class TDatabase
   const sstring operator[] (unsigned int) const;
   bool isResults();
   long rowCount();
-  long lastInsertId() { return db ? mysql_insert_id(db) : 0; }
+  long lastInsertId();
+  unsigned long escape_string(char *to, const char *from, unsigned long length);
+  static unsigned long escape_string_ugly(char *to, const char *from, unsigned long length);
 
   TDatabase();
   TDatabase(dbTypeT);
   ~TDatabase();
-};
 
-// maintain instances of sneezydb and immodb
-class TDatabaseConnection
-{
-  MYSQL *databases[DB_MAX];
-
- public:
-  TDatabaseConnection();
-
-  const char *getConnectParam(dbTypeT type);
-  MYSQL *getDB(dbTypeT type);
-
-  void clearConnections(){ for(int i=0;i<DB_MAX;++i) databases[i]=NULL; }
-
-  // shortcuts - not sure if they are really needed...
-  MYSQL *getSneezyDB() { return getDB(DB_SNEEZY); }
-  MYSQL *getSneezyProdDB() { return getDB(DB_SNEEZYPROD); }
-  MYSQL *getSneezyBetaDB() { return getDB(DB_SNEEZYBETA); }
-  MYSQL *getImmoDB() { return getDB(DB_IMMORTAL); }
-  MYSQL *getSneezyGlobalDB() { return getDB(DB_SNEEZYGLOBAL); }
+ private:
+  TDatabasePimpl* pimpl;
 
 };
-
-extern std::vector <std::string> db_hosts;
-extern std::vector <std::string> db_names;
-extern std::vector <std::string> db_users;
-extern std::vector <std::string> db_passwords;
-extern std::queue<sstring> queryqueue;
-extern TDatabaseConnection database_connection;
 
 #endif
-
-

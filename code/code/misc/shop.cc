@@ -2051,7 +2051,7 @@ static bool shopping_look(const char *arg, TBeing *ch, TMonster *keeper, int sho
     arg_words=arg_words.replaceString("-"," ");
 
     for(int i=0;!arg_words.word(i).empty();++i){
-      mysql_escape_string(buf, arg_words.word(i).c_str(), arg_words.word(i).length());
+      db.escape_string(buf, arg_words.word(i).c_str(), arg_words.word(i).length());
 
       query += format("and ((rs.name is not null and rs.name like '%s%s%s') or (o.name like '%s%s%s'))") % 
 	"%%" % buf % "%%" %
@@ -2118,7 +2118,7 @@ static bool shopping_evaluate(const char *arg, TBeing *ch, TMonster *keeper, int
     arg_words=arg_words.replaceString("-"," ");
 
     for(int i=0;!arg_words.word(i).empty();++i){
-      mysql_escape_string(buf, arg_words.word(i).c_str(), arg_words.word(i).length());
+      db.escape_string(buf, arg_words.word(i).c_str(), arg_words.word(i).length());
 
       query += format("and ((rs.name is not null and rs.name like '%s%s%s') or (o.name like '%s%s%s'))") % 
 	"%%" % buf % "%%" %

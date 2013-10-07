@@ -41,6 +41,12 @@ const int Config::Port::ALPHA=6969;
 const int Config::Port::BUILDER=8900;
 const int Config::Port::GAMMA=6961;
 
+extern std::vector <std::string> db_hosts;
+extern std::vector <std::string> db_names;
+extern std::vector <std::string> db_users;
+extern std::vector <std::string> db_passwords;
+
+
 void sendHelp(po::options_description desc){
   std::cout << "Usage: sneezy [options] [port]" << std::endl;
   std::cout << desc;  

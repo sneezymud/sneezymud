@@ -1,6 +1,5 @@
 #include <iostream>
 #include <stdexcept>
-#include <mysql/mysql.h>
 #include <boost/regex.hpp>
 #include "sstring.h"
 #include "db.h"
@@ -8,6 +7,13 @@
 #include "ansi.h"
 #include "parse.h"
 #include "configuration.h"
+#include "database.h"
+
+
+void br()
+{
+    vlogf(LOG_BUG, "sstring::escape(): TODO implement");
+}
 
 const sstring sstring::escape(stringEscapeT escape_type) const
 {
@@ -16,7 +22,7 @@ const sstring sstring::escape(stringEscapeT escape_type) const
 
   if(escape_type==SQL){
     char buf[MY_MAX_STRING_LENGTH];
-    mysql_escape_string(buf, c_str(), strlen(c_str()));
+    TDatabase::escape_string_ugly(buf, c_str(), strlen(c_str()));
     oBuf=(sstring)buf;
   } else if(escape_type==XML){
     boost::regex e("(^|[^<])<.>");

@@ -20,6 +20,7 @@
 #include "sstring.h"
 
 #include <map>
+#include <queue>
 
 // Strings for the mud name
 // also: WELC_MESSG needs to be updated if these change
@@ -315,5 +316,7 @@ class resetQElement
   {
   }
 };
+
+extern std::queue<sstring>queryqueue;
 
 #endif

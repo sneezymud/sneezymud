@@ -1,12 +1,11 @@
 #include <stdarg.h>
+#include <mysql/mysql.h>
 
 #include "configuration.h"
 #include "extern.h"
 #include "database.h"
 #include "timing.h"
 #include "toggle.h"
-
-TDatabaseConnection database_connection;
 
 // we return this instead of null if they try to fetch an invalid column
 const sstring empty="";
@@ -30,6 +29,26 @@ const char * db_connect[DB_MAX] = {
   };
 
 
+// maintain instances of sneezydb and immodb
+class TDatabaseConnection
+{
+  MYSQL *databases[DB_MAX];
+ public:
+  TDatabaseConnection();
+
+  const char *getConnectParam(dbTypeT type);
+  MYSQL *getDB(dbTypeT type);
+
+  void clearConnections(){ for(int i=0;i<DB_MAX;++i) databases[i]=NULL; }
+
+  // shortcuts - not sure if they are really needed...
+  MYSQL *getSneezyDB() { return getDB(DB_SNEEZY); }
+  MYSQL *getSneezyProdDB() { return getDB(DB_SNEEZYPROD); }
+  MYSQL *getSneezyBetaDB() { return getDB(DB_SNEEZYBETA); }
+  MYSQL *getImmoDB() { return getDB(DB_IMMORTAL); }
+  MYSQL *getSneezyGlobalDB() { return getDB(DB_SNEEZYGLOBAL); }
+};
+
 TDatabaseConnection::TDatabaseConnection()
 {
   memset(databases, 0, sizeof(databases));
@@ -50,6 +69,25 @@ const char *TDatabaseConnection::getConnectParam(dbTypeT type)
   return db_connect[DB_SNEEZYBETA];
 }
 
+
+TDatabaseConnection database_connection;
+
+
+class TDatabasePimpl {
+public:
+  MYSQL_RES *res;
+  MYSQL_ROW row;
+  MYSQL *db;
+  long row_count;
+  std::map <const char *, int, ltstr> column_names;
+
+  TDatabasePimpl() :
+    res(NULL),
+    row(NULL),
+    db(NULL)
+  {
+  }
+};
 
 static const char* getUser(dbTypeT type)
 {
@@ -91,67 +129,81 @@ MYSQL *TDatabaseConnection::getDB(dbTypeT type)
 }
 
 
-TDatabase::TDatabase() : 
-  res(NULL), 
-  row(NULL),
-  db(NULL)
+TDatabase::TDatabase()
 {
-  row_count = 0;
+  pimpl = new TDatabasePimpl();
+  pimpl->row_count = 0;
 }
 
-TDatabase::TDatabase(dbTypeT tdb) :
-  res(NULL),
-  row(NULL),
-  db(NULL)
+TDatabase::TDatabase(dbTypeT tdb)
 {
+  pimpl = new TDatabasePimpl();
   setDB(tdb);
-  row_count = 0;
+  pimpl->row_count = 0;
 }
 
 TDatabase::~TDatabase(){
-  mysql_free_result(res);
+  mysql_free_result(pimpl->res);
+  delete pimpl;
+}
+
+long TDatabase::lastInsertId()
+{
+ return pimpl->db ? mysql_insert_id(pimpl->db) : 0;
 }
 
 void TDatabase::setDB(dbTypeT tdb){
-  db = database_connection.getDB(tdb);
+  pimpl->db = database_connection.getDB(tdb);
 }
 
 // advance to the next row of the current query
 // this is a little funky under postgres.  we initialize row to -1 when
 // we do a query, then fetchRow increments it each time.
 bool TDatabase::fetchRow(){
-  if(!res)
+  if(!pimpl->res)
     return FALSE;
   
-  if(!(row=mysql_fetch_row(res)))
+  if(!(pimpl->row=mysql_fetch_row(pimpl->res)))
     return FALSE;
   
   return TRUE;
 }
 
+unsigned long TDatabase::escape_string(char *to, const char *from, unsigned long length)
+{
+  return mysql_real_escape_string(pimpl->db, to, from, length);
+}
+
+unsigned long TDatabase::escape_string_ugly(char *to, const char *from, unsigned long length)
+{
+  TDatabase sn(DB_SNEEZY);
+  return sn.escape_string(to, from, length);
+}
+
+
 const sstring TDatabase::operator[] (unsigned int i) const
 {
-  if(res && i > (mysql_num_fields(res)-1)){
+  if(pimpl->res && i > (mysql_num_fields(pimpl->res)-1)){
     vlogf(LOG_DB, format("TDatabase::operator[%i] - invalid column index") % i);
     return empty;
   } else {
-    return row[i];
+    return pimpl->row[i];
   }
 }
 
 const sstring TDatabase::operator[] (const sstring &s) const
 {
-  if(!res || !row)
+  if(!pimpl->res || !pimpl->row)
     return NULL;
 
-  std::map<const char*, int, ltstr>::const_iterator cur=column_names.find(s.lower().c_str());
+  std::map<const char*, int, ltstr>::const_iterator cur = pimpl->column_names.find(s.lower().c_str());
 
-  if(cur == column_names.end()){
+  if(cur == pimpl->column_names.end()){
     vlogf(LOG_DB, format("TDatabase::operator[%s] - invalid column name") %  s);
     return empty;
   }
 
-  return row[(*cur).second];
+  return pimpl->row[(*cur).second];
 }
 
 
@@ -169,7 +221,7 @@ bool TDatabase::query(const char *query,...)
   t.start();
 
   // no db set yet
-  if(!db)
+  if(!pimpl->db)
     return FALSE;
 
   va_start(ap, query);
@@ -208,7 +260,7 @@ bool TDatabase::query(const char *query,...)
 	    return FALSE;
 	  }
 	  
-	  mysql_escape_string(to, from, strlen(from));
+	  escape_string(to, from, strlen(from));
 	  buf += to;
 	  break;
 	case 'i':
@@ -231,35 +283,35 @@ bool TDatabase::query(const char *query,...)
   } while(*query++);
   va_end(ap);
 
-  if(mysql_query(db, buf.c_str())){
-    vlogf(LOG_DB, format("query failed: %s") % mysql_error(db));
+  if(mysql_query(pimpl->db, buf.c_str())){
+    vlogf(LOG_DB, format("query failed: %s") % mysql_error(pimpl->db));
     vlogf(LOG_DB, format("%s") % buf);
     return FALSE;
   }
-  restmp=mysql_store_result(db);
+  restmp=mysql_store_result(pimpl->db);
 
   // if there is supposed to be some results from this query,
   // free the previous results (if any) and assign the new results
   // if there aren't supposed to be results (update, insert, delete, etc)
   // then don't do anything with the results, they might still be used
   if(restmp){
-    if(res)
-      mysql_free_result(res);
-    res=restmp;
+    if(pimpl->res)
+      mysql_free_result(pimpl->res);
+    pimpl->res=restmp;
   }
   
   // capture rowcount here, because the db pointer state changes when
   // db timing is on
-  row_count = (long) mysql_affected_rows(db);
+  pimpl->row_count = (long) mysql_affected_rows(pimpl->db);
 
   // store the column names and offsets
-  if(res){
-    column_names.clear();
-    unsigned int num_fields=mysql_num_fields(res);
-    MYSQL_FIELD *fields=mysql_fetch_fields(res);
+  if(pimpl->res){
+    pimpl->column_names.clear();
+    unsigned int num_fields=mysql_num_fields(pimpl->res);
+    MYSQL_FIELD *fields=mysql_fetch_fields(pimpl->res);
     
     for(unsigned int i=0;i<num_fields;++i)
-      column_names[fields[i].name]=i;
+      pimpl->column_names[fields[i].name]=i;
   }
 
 
@@ -287,7 +339,7 @@ bool TDatabase::query(const char *query,...)
     buf = format("insert into querytimes (query, secs) values ('%s', %f)") % 
       buf % t.getElapsed();
 
-    mysql_query(db, buf.c_str());
+    mysql_query(pimpl->db, buf.c_str());
   }
 
 
@@ -298,7 +350,7 @@ bool TDatabase::query(const char *query,...)
 }
 
 bool TDatabase::isResults(){
-  if(res && mysql_num_rows(res))
+  if(pimpl->res && mysql_num_rows(pimpl->res))
     return TRUE;
 
   return FALSE;
@@ -310,5 +362,5 @@ long TDatabase::rowCount(){
   
   // this gets set in TDatabase::query
   // because the db pointer will have changed state if query timing is on
-  return row_count;
+  return pimpl->row_count;
 }
