@@ -123,8 +123,8 @@ int run_the_game()
   gSocket = new TMainSocket();
   gSocket->initSocket(gamePort);
 
-  if(gamePort == Config::Port::PROD)
-    gSocket->initSocket(Config::Port::PROD_XML);
+  // if(gamePort == Config::Port::PROD)
+  //   gSocket->initSocket(Config::Port::PROD_XML);
 
   // doh this doesn't work because 23 is a privileged port
   //  if(gamePort == Config::Port::PROD)
