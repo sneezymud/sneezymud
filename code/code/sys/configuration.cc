@@ -176,18 +176,25 @@ bool Config::doConfiguration(int argc, char *argv[])
   database_names.add_options()
     ("sneezy_db", po::value<string>(&db_names[DB_SNEEZY]),
      "name for sneezy database")
+    ("immortal_db", po::value<string>(&db_names[DB_IMMORTAL]),
+     "name for immortal database")
+
     ;
 
   po::options_description database_users("Database usernames");
   database_users.add_options()
     ("sneezy_user", po::value<string>(&db_users[DB_SNEEZY]),
      "sneezy database username")
+    ("immortal_user", po::value<string>(&db_users[DB_IMMORTAL]),
+     "immortal database username")
     ;
 
   po::options_description database_passwords("Database passwords");
   database_users.add_options()
     ("sneezy_password", po::value<string>(&db_passwords[DB_SNEEZY]),
      "sneezy database password")
+    ("immortal_password", po::value<string>(&db_passwords[DB_IMMORTAL]),
+     "immortal database password")
     ;
 
   po::options_description cmdline_options;
