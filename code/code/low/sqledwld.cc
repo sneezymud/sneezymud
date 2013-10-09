@@ -1,3 +1,5 @@
+#include <cstdio>
+
 #include "configuration.h"
 #include "database.h"
 #include "toggle.h"

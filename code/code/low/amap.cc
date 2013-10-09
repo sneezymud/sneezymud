@@ -803,7 +803,7 @@ int main(int argc, char **argv)
 	  roomrange[roomrange_t[i]]=true;
 
 	use_range=true;
-	printf("%i rooms in custom range\n", roomrange_t.size());
+	printf("%zu rooms in custom range\n", roomrange_t.size());
 	break;
       case 'f':
 	infile=optarg;

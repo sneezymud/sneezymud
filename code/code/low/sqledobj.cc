@@ -1,3 +1,5 @@
+#include <cstdio>
+
 #include "toggle.h"
 #include "sstring.h"
 #include "configuration.h"
