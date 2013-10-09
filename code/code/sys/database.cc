@@ -40,13 +40,6 @@ class TDatabaseConnection
   MYSQL *getDB(dbTypeT type);
 
   void clearConnections(){ for(int i=0;i<DB_MAX;++i) databases[i]=NULL; }
-
-  // shortcuts - not sure if they are really needed...
-  MYSQL *getSneezyDB() { return getDB(DB_SNEEZY); }
-  MYSQL *getSneezyProdDB() { return getDB(DB_SNEEZYPROD); }
-  MYSQL *getSneezyBetaDB() { return getDB(DB_SNEEZYBETA); }
-  MYSQL *getImmoDB() { return getDB(DB_IMMORTAL); }
-  MYSQL *getSneezyGlobalDB() { return getDB(DB_SNEEZYGLOBAL); }
 };
 
 TDatabaseConnection::TDatabaseConnection()
