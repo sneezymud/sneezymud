@@ -6,18 +6,17 @@ Import('env');
 libcmd=env.SharedLibrary(target='cmd', source=Glob('cmd/*.cc'))
 libdisc=env.SharedLibrary(target='disc', source=Glob('disc/*.cc'))
 libgame=env.SharedLibrary(target='game', source=Glob('game/*.cc'))
-libmisc=env.SharedLibrary(target='misc', source=Glob('misc/*.cc'))
+libmisc=env.SharedLibrary(target='misc', source=Glob('misc/*.cc'), LIBS=['curl'])
 libobj=env.SharedLibrary(target='obj', source=Glob('obj/*.cc'))
 libspec=env.SharedLibrary(target='spec', source=Glob('spec/*.cc'))
-libsys=env.SharedLibrary(target='sys', source=Glob('sys/*.cc'))
+libsys=env.SharedLibrary(target='sys', source=Glob('sys/*.cc'), LIBS=['crypt'])
 libtask=env.SharedLibrary(target='task', source=Glob('task/*.cc'))
 
-libs=[libcmd, libdisc, libgame, libmisc,
-      libobj, libspec, libsys, libtask,
-      'libcares' ]
+libs=[libsys, libmisc, libcmd, libdisc, libgame,
+      libobj, libspec, libtask]
 
 # main binary
-sneezy=env.Program('sneezy', 'main.cc', LIBS=[libs, 'libcares'])
+sneezy=env.Program('sneezy', 'main.cc', LIBS=libs + ['cares', 'boost_program_options', 'mysqlclient', 'boost_regex'])
 env.InstallAs('../sneezy', sneezy)
 
 # low tools

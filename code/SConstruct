@@ -34,25 +34,10 @@ CPPPATH = [
     ]
 
 LDFLAGS = [
-    '-lstdc++',
     '-g', # enable core debugging
-    '-lmysqlclient',
-    '-lcares',
-    '-lboost_regex',
-    '-lboost_program_options',
-    '-lboost_date_time',
-    '-lcurl',
-    #'-ltcmalloc',
-    '-lcrypt',
-#    '-lprofiler',
     ]
 
-LIBPATH = [
-#    '/usr/lib64/boost141',
-#    '/usr/lib64/mysql'
-    '/usr/lib/boost141',
-    '/usr/lib/mysql'
-    ]
+LIBPATH = []
 
 # build environment
 env=Environment(CXXFLAGS=CXXFLAGS,
