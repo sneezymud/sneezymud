@@ -19,7 +19,6 @@ const char * db_connect[DB_MAX] = {
   NULL, // depends on game port
   "sneezybeta",
   "immortal",
-  "sneezyglobal",
   "sneezy", 
   "sneezybuilder",
   "wikidb",

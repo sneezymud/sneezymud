@@ -155,8 +155,6 @@ bool Config::doConfiguration(int argc, char *argv[])
      "host for sneezybeta database (unused)")
     ("immortal_host", po::value<string>(&db_hosts[DB_IMMORTAL]),
      "host for immortal database")
-    ("sneezyglobal_host", po::value<string>(&db_hosts[DB_SNEEZYGLOBAL]),
-     "host for sneezyglobal database")
     ("sneezyprod_host", po::value<string>(&db_hosts[DB_SNEEZYPROD]),
      "host for sneezyprod database (unused)")
     ("sneezybuilder_host", po::value<string>(&db_hosts[DB_SNEEZYBUILDER]),
