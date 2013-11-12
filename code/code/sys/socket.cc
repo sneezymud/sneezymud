@@ -2072,7 +2072,7 @@ void gethostbyaddr_cb(void *arg, int status, int timeouts, struct hostent *host_
     }
   }
 
-  delete (char *)arg;
+  delete[] (char *)arg;
 }      
 
 int TMainSocket::newDescriptor(int t_sock, int port)

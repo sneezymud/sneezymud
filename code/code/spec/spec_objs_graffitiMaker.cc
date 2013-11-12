@@ -25,15 +25,15 @@ int graffitiMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     o->swapToStrung();
 
     buf=o->name;
-    delete o->name;
+    delete[] o->name;
     o->name=mud_str_dup(format("%s %s") % buf % colors[c]);
 
     buf=o->shortDescr;
-    delete o->shortDescr;
+    delete[] o->shortDescr;
     o->shortDescr=mud_str_dup(format("%s%s<1>") % ccodes[c] % buf);
     
     buf=o->descr;
-    delete o->descr;
+    delete[] o->descr;
     o->descr=mud_str_dup(format("%s%s<1>") % ccodes[c] % buf);
     return FALSE;
   }

@@ -326,6 +326,8 @@ static void save_repairman_file(TBeing *repair, TBeing *buyer, TObj *o, int iTim
 
   // Save the repair number so we can keep up with it.
   save_game_stats();
+  fclose(fp);
+  is.setFile(NULL);
 }
 
 TObj *loadRepairItem(TBeing *repair, int ticket, 

@@ -314,7 +314,7 @@ void Race::initRace(const char *whichRace)
   
   while (fgets(buf, 256, raceFile)) {
     buf2 = one_argument(buf, keyword, cElements(keyword));
-    strcpy(buf, buf2);
+    memmove(buf, buf2, strlen(buf2));
     if (!*keyword || *keyword == '#')
       continue;
 
