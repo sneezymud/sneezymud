@@ -125,6 +125,8 @@ class TDatabase
 
   TDatabase();
   TDatabase(dbTypeT);
+  TDatabase(TDatabase const&);
+  TDatabase& operator=(TDatabase const&);
   ~TDatabase();
 
  private:

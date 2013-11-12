@@ -134,6 +134,19 @@ TDatabase::TDatabase(dbTypeT tdb)
   pimpl->row_count = 0;
 }
 
+TDatabase::TDatabase(TDatabase const& other)
+{
+  pimpl = new TDatabasePimpl(*other.pimpl);
+}
+
+TDatabase& TDatabase::operator=(TDatabase const& other)
+{
+  mysql_free_result(pimpl->res);
+  delete pimpl;
+  pimpl = new TDatabasePimpl(*other.pimpl);
+  return *this;
+}
+
 TDatabase::~TDatabase(){
   mysql_free_result(pimpl->res);
   delete pimpl;
@@ -213,6 +226,8 @@ bool TDatabase::query(const char *query,...)
   t.start();
 
   // no db set yet
+  if (!pimpl)
+    return FALSE;
   if(!pimpl->db)
     return FALSE;
 
