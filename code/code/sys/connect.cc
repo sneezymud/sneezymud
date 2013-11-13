@@ -294,18 +294,18 @@ bool Descriptor::checkForMultiplay()
     // established maximums based on player load thresholds
     unsigned int max_multiplay_chars;
     if (tot_descs < 15)
-      max_multiplay_chars = 1;
+      max_multiplay_chars = 10;
     else if (tot_descs < 30)
-      max_multiplay_chars = 1;
+      max_multiplay_chars = 3;
     else if (tot_descs < 60)
-      max_multiplay_chars = 1;
+      max_multiplay_chars = 2;
     else
       max_multiplay_chars = 1;
     
-    // for first 30 mins after a reboot, limit to 1 multiplay
+    // for first 5 mins after a reboot, limit to 1 multiplay
     // this prevents a "race to login" from occurring.
     time_t diff = time(0) - Uptime;
-    if (diff < (30 * SECS_PER_REAL_MIN))
+    if (diff < (5 * SECS_PER_REAL_MIN))
       max_multiplay_chars = 1;
     
     for (d = descriptor_list; d; d = d->next) {
