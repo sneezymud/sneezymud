@@ -98,7 +98,7 @@ static const sstring getWhoLevel(const TBeing *ch, TBeing *p)
 
   // Do it this way so you get the default-titles also.
   if (p && p->GetMaxLevel() > MAX_MORT) {
-    sstring str = p->msgVariables(MSG_IMM_TITLE);
+    sstring str = stripColorCodes(p->msgVariables(MSG_IMM_TITLE));
     unsigned int len = str.size();
     unsigned int padding = 14-len;
     unsigned int frontpadding = padding/2;
