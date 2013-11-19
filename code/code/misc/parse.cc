@@ -1501,6 +1501,9 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
       case CMD_FORCE:
   doForce(newarg.c_str());
   break;
+      case CMD_DISTRIBUTE:
+  doDistribute(newarg.c_str());
+  break;
       case CMD_COLOR:
   doColor(newarg.c_str());
   addToLifeforce(1);
@@ -2446,6 +2449,7 @@ void buildCommandArray(void)
   commandArray[CMD_SLEEP] = new commandInfo("sleep", POSITION_SLEEPING, 0);
   commandArray[CMD_WAKE] = new commandInfo("wake", POSITION_SLEEPING, 0);
   commandArray[CMD_FORCE]=new commandInfo("force",POSITION_SLEEPING,GOD_LEVEL1);
+  commandArray[CMD_DISTRIBUTE]=new commandInfo("distribute",POSITION_SLEEPING,GOD_LEVEL1);
   commandArray[CMD_TRANSFER]=new commandInfo("transfer",POSITION_SLEEPING,GOD_LEVEL1);
   commandArray[CMD_HUG] = new commandInfo("hug", POSITION_RESTING, 0);
   commandArray[CMD_SNUGGLE] = new commandInfo("snuggle", POSITION_RESTING, 0);

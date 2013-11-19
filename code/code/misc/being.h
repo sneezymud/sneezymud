@@ -1811,6 +1811,7 @@ class TBeing : public TThing {
     int doSay(const char *fmt, ...);
     int doSay(const sstring &);
     virtual void doForce(const char *);
+    virtual void doDistribute(const char *);
     void doCommune(const sstring &);
     virtual void doShutdow();
     virtual void doShutdown(const char *);

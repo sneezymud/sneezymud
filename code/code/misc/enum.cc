@@ -1086,6 +1086,8 @@ int mapWizPowerToFile(wizPowerT att)
       return 110;
     case POWER_CLONE:
       return 111;
+    case POWER_DISTRIBUTE:
+      return 112;
     case MAX_POWER_INDEX:
       break;
   }
@@ -1320,6 +1322,8 @@ wizPowerT mapFileToWizPower(int att)
       return POWER_NO_LIMITS;
     case 111:
       return POWER_CLONE;
+    case 112:
+      return POWER_DISTRIBUTE;
     default:
       break;
   }

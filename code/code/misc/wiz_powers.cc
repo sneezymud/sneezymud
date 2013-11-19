@@ -265,6 +265,7 @@ void setWizPowers(const TBeing *doer, TBeing *ch, const sstring &arg)
     ch->setWizPower(POWER_RESTORE_MORTAL);
     ch->setWizPower(POWER_IMM_EVAL);
     ch->setWizPower(POWER_FORCE);
+    ch->setWizPower(POWER_DISTRIBUTE);
     ch->setWizPower(POWER_LOG);
     ch->setWizPower(POWER_PURGE_PC);
     ch->setWizPower(POWER_PURGE_ROOM);
@@ -283,6 +284,7 @@ void setWizPowers(const TBeing *doer, TBeing *ch, const sstring &arg)
     ch->remWizPower(POWER_RESTORE_MORTAL);
     ch->remWizPower(POWER_IMM_EVAL);
     ch->remWizPower(POWER_FORCE);
+    ch->setWizPower(POWER_DISTRIBUTE);
     ch->remWizPower(POWER_LOG);
     ch->remWizPower(POWER_PURGE_PC);
     ch->remWizPower(POWER_PURGE_ROOM);
@@ -632,6 +634,8 @@ const sstring getWizPowerName(wizPowerT wpt)
       return "Egotrip";
     case POWER_FORCE:
       return "Force";
+    case POWER_DISTRIBUTE:
+      return "Distribute";
     case POWER_SNOOP:
       return "Snoop";
     case POWER_CHANGE:

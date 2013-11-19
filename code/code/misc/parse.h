@@ -83,6 +83,7 @@ enum cmdTypeT {
      CMD_SLEEP,
      CMD_WAKE,
      CMD_FORCE,
+     CMD_DISTRIBUTE,
      CMD_TRANSFER,
      CMD_HUG,
      CMD_SNUGGLE,

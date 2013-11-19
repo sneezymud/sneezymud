@@ -101,6 +101,7 @@ class TPerson : public TBeing {
     virtual void doSnoop(const char *);
     virtual void doSwitch(const char *);
     virtual void doForce(const char *);
+    virtual void doDistribute(const char *);
     virtual void doLoad(const char *);
     virtual int doRent(const sstring &);
     virtual void doCutlink(const char *);

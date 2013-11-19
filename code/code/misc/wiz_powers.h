@@ -124,6 +124,8 @@ enum wizPowerT {
      POWER_ZONEFILE_UTILITY,
      POWER_IDLED,
      POWER_NO_LIMITS, // this lets gods edit/goto/blah outside thier blocks/imperia
+     POWER_DISTRIBUTE, // lets you distribute objects on mobs, on mud-wide scale
+
 
      MAX_POWER_INDEX
 };
