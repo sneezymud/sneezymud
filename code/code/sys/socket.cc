@@ -1956,19 +1956,19 @@ int TMainSocket::gameLoop()
 }
 
 
-TSocket *TMainSocket::newConnection(int t_sock, int port)
+TSocket *TMainSocket::newConnection(int v6_sock, int port)
 {
-  struct sockaddr_in isa;
+  struct sockaddr_in6 v6_isa;
   socklen_t i;
   TSocket *s;
 
-  i = sizeof(isa);
-  if (getsockname(t_sock, (struct sockaddr *) &isa, &i)) {
+  i = sizeof(v6_isa);
+  if (getsockname(v6_sock, (struct sockaddr *) &v6_isa, &i)) {
     perror("getsockname");
     return NULL;
   }
   s = new TSocket();
-  if ((s->m_sock = accept(t_sock, (struct sockaddr *) (&isa), &i)) < 0) {
+  if ((s->m_sock = accept(v6_sock, (struct sockaddr *) (&v6_isa), &i)) < 0) {
     perror("Accept");
     return NULL;
   }
@@ -1977,16 +1977,14 @@ TSocket *TMainSocket::newConnection(int t_sock, int port)
   return (s);
 }
 
-static const sstring IP_String(in_addr &_a)
+static const sstring IP_String(in6_addr &_a)
 {
-  sstring buf;
-  int n1, n2, n3, n4; 
-  n1 = _a.s_addr >> 24;
-  n2 = (_a.s_addr >> 16) - (n1 * 256);
-  n3 = (_a.s_addr >> 8) - (n1 * 65536) - (n2 * 256);
-  n4 = (_a.s_addr) % 256;
-  buf = format("%d.%d.%d.%d") % n4 % n3 % n2 % n1;
-  return buf;
+  char buf[INET6_ADDRSTRLEN] = {0};
+  if (!inet_ntop(AF_INET6, &_a, buf, INET6_ADDRSTRLEN)) {
+    perror("inet_ntop");
+    return sstring("inet_ntop error");
+  }
+  return sstring(buf);
 }
 
 void sig_alrm(int){return;}
@@ -2067,15 +2065,15 @@ void gethostbyaddr_cb(void *arg, int status, int timeouts, struct hostent *host_
   delete[] (char *)arg;
 }      
 
-int TMainSocket::newDescriptor(int t_sock, int port)
+int TMainSocket::newDescriptor(int v6_sock, int port)
 {
   socklen_t size;
   Descriptor *newd;
-  struct sockaddr_in saiSock;
+  struct sockaddr_in6 v6_saiSock;
   TSocket *s = NULL;
   char *ip_cstr;
 
-  if (!(s = newConnection(t_sock, port))) 
+  if (!(s = newConnection(v6_sock, port)))
     return 0;
 
   if ((maxdesc + 1) >= avail_descs) {
@@ -2090,8 +2088,8 @@ int TMainSocket::newDescriptor(int t_sock, int port)
 
   newd = new Descriptor(s);
 
-  size = sizeof(saiSock);
-  if (getpeername(s->m_sock, (struct sockaddr *) &saiSock, &size) < 0) {
+  size = sizeof(v6_saiSock);
+  if (getpeername(s->m_sock, (struct sockaddr *) &v6_saiSock, &size) < 0) {
     perror("getpeername");
     newd->host = "";
   } else {
@@ -2100,12 +2098,13 @@ int TMainSocket::newDescriptor(int t_sock, int port)
     // entry, but the mud's site has not updated the new list yet.
     signal(SIGALRM, sig_alrm);
     
-    newd->setHostResolved(false, IP_String(saiSock.sin_addr) + "...");
+    newd->setHostResolved(false, IP_String(v6_saiSock.sin6_addr) + "...");
 
-    ip_cstr = mud_str_dup(IP_String(saiSock.sin_addr));
-    memcpy(&ares_addr, &saiSock.sin_addr, sizeof(struct in_addr));
+    // XXX: Is this enough?
+    ip_cstr = mud_str_dup(IP_String(v6_saiSock.sin6_addr));
+    memcpy(&ares_addr, &v6_saiSock.sin6_addr, sizeof(struct in6_addr));
 
-    ares_gethostbyaddr(channel, &ares_addr, sizeof(ares_addr), AF_INET, gethostbyaddr_cb, ip_cstr);
+    ares_gethostbyaddr(channel, &ares_addr, sizeof(ares_addr), AF_INET6, gethostbyaddr_cb, ip_cstr);
   }
 
   if (newd->inputProcessing() < 0) {
@@ -2179,44 +2178,39 @@ void TSocket::nonBlock()
 
 void TMainSocket::initSocket(int t_port)
 {
-  const char *opt = "1";
-  struct sockaddr_in sa;
-  struct hostent *hp;
+  int reuseaddr = 1;
+  struct sockaddr_in6 v6_sa;
   struct linger ld;
-  int t_sock;
+  int v6_sock;
 
-  memset((char *) &sa, 0, sizeof(sa));
+  memset((char *) &v6_sa, 0, sizeof(v6_sa));
+  v6_sa.sin6_family = AF_INET6;
+  v6_sa.sin6_port = htons(t_port);
+  v6_sa.sin6_addr = in6addr_any;
 
-  if (!(hp = gethostbyname("localhost"))) {
-    vlogf(LOG_BUG, format("failed getting hostname structure.  hostname: %s") %  "localhost");
-    perror("gethostbyname");
-    exit(1);
-  }
-  sa.sin_family = hp->h_addrtype;
-  sa.sin_port = htons(t_port);
-  if ((t_sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+  if ((v6_sock = socket(PF_INET6, SOCK_STREAM, IPPROTO_TCP)) < 0) {
     perror("Init-socket");
     exit(1);
   }
-  if (setsockopt(t_sock, SOL_SOCKET, SO_REUSEADDR, (char *) &opt, sizeof(opt)) < 0) {
+  if (setsockopt(v6_sock, SOL_SOCKET, SO_REUSEADDR, &reuseaddr, sizeof(SO_REUSEADDR)) < 0) {
     perror("setsockopt REUSEADDR");
     exit(1);
   }
   ld.l_linger = 1000;
   ld.l_onoff = 0;
-  if (setsockopt(t_sock, SOL_SOCKET, SO_LINGER, (char *) &ld, sizeof(ld)) < 0) {
+  if (setsockopt(v6_sock, SOL_SOCKET, SO_LINGER, (char *) &ld, sizeof(ld)) < 0) {
     perror("setsockopt LINGER");
     exit(1);
   }
-  if (bind(t_sock, (struct sockaddr *) &sa, sizeof(sa)) < 0) {
+  if (bind(v6_sock, reinterpret_cast<struct sockaddr*>(&v6_sa), sizeof(v6_sa)) < 0) {
     perror("bind");
     vlogf(LOG_BUG, format("initSocket: bind: errno=%d") %  errno);
-    close(t_sock);
+    close(v6_sock);
     exit(0);
   }
-  listen(t_sock, 3);
+  listen(v6_sock, 10);
 
-  m_sock.push_back(t_sock);
+  m_sock.push_back(v6_sock);
   m_port.push_back(t_port);
 }
 
