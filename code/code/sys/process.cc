@@ -234,6 +234,13 @@ void TScheduler::runChar(int pulseNum)
   for (; tmp_ch; tmp_ch = temp) {
     temp = tmp_ch->next;  // just for safety
 
+    if (tmp_ch->roomp == NULL || tmp_ch->getName() == NULL)
+    {
+      vlogf(LOG_BUG, "Error: character_list contains a bogus item, removing.");
+      tmp_ch = temp;
+      temp = temp->next;
+    }
+
     if(!count--)
       break;
 

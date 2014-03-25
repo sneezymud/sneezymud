@@ -4978,6 +4978,9 @@ void TBeing::doClone(const sstring &arg)
   int ci, num_read = 0;
   ItemLoad il;
 
+  sendTo("Nope. Disabled for causing hangs.\n\r");
+  return;
+
   if (powerCheck(POWER_CLONE)) {
     return;
   }

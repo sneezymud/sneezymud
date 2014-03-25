@@ -172,6 +172,9 @@ int TMonster::remHatred(unsigned short bitv)
 
 bool TMonster::multiHates(const TBeing *v, bool silent)
 {
+  // Disabled.
+  return FALSE;
+
   if (!hatefield)
     return FALSE;
     

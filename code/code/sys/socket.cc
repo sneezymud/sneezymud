@@ -1483,6 +1483,12 @@ procCharLightning::procCharLightning(const int &p)
 bool procCharLightning::run(const TPulse &pl, TBeing *tmp_ch) const
 {
     // lightning strikes
+  if (tmp_ch->roomp == NULL)
+  {
+    vlogf(LOG_MISC, "BUG! Lightning proc processing a nonexistent being");
+    return false;
+  }
+
   if(!tmp_ch->roomp->isIndoorSector() &&
      !tmp_ch->roomp->isRoomFlag(ROOM_INDOORS) &&
      Weather::getWeather(*tmp_ch->roomp) == Weather::LIGHTNING){
