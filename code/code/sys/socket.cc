@@ -1980,20 +1980,12 @@ TSocket *TMainSocket::newConnection(int t_sock, int port)
 static const sstring IP_String(in_addr &_a)
 {
   sstring buf;
-#if (defined SUN)
-  sprintf( buf, "%d.%d.%d.%d", 
-          _a.S_un.S_un_b.s_b1,
-          _a.S_un.S_un_b.s_b2,
-          _a.S_un.S_un_b.s_b3,
-          _a.S_un.S_un_b.s_b4);
-#else
   int n1, n2, n3, n4; 
   n1 = _a.s_addr >> 24;
   n2 = (_a.s_addr >> 16) - (n1 * 256);
   n3 = (_a.s_addr >> 8) - (n1 * 65536) - (n2 * 256);
   n4 = (_a.s_addr) % 256;
   buf = format("%d.%d.%d.%d") % n4 % n3 % n2 % n1;
-#endif
   return buf;
 }
 
@@ -2188,25 +2180,15 @@ void TSocket::nonBlock()
 void TMainSocket::initSocket(int t_port)
 {
   const char *opt = "1";
-  char hostname[MAXHOSTNAMELEN];
   struct sockaddr_in sa;
   struct hostent *hp;
   struct linger ld;
   int t_sock;
 
-#if defined(SUN)
-  bzero((char *) &sa, sizeof(struct sockaddr_in));
-#else
   memset((char *) &sa, 0, sizeof(sa));
-#endif
 
-#if 0
-  gethostname(hostname, MAXHOSTNAMELEN);
-  if (!(hp = gethostbyname(hostname))) {
-#else
   if (!(hp = gethostbyname("localhost"))) {
-#endif
-    vlogf(LOG_BUG, format("failed getting hostname structure.  hostname: %s") %  hostname);
+    vlogf(LOG_BUG, format("failed getting hostname structure.  hostname: %s") %  "localhost");
     perror("gethostbyname");
     exit(1);
   }
@@ -2222,11 +2204,7 @@ void TMainSocket::initSocket(int t_port)
   }
   ld.l_linger = 1000;
   ld.l_onoff = 0;
-#ifdef OSF
-  if (setsockopt(t_sock, SOL_SOCKET, SO_LINGER, &ld, sizeof(ld)) < 0) {
-#else
   if (setsockopt(t_sock, SOL_SOCKET, SO_LINGER, (char *) &ld, sizeof(ld)) < 0) {
-#endif
     perror("setsockopt LINGER");
     exit(1);
   }

@@ -4379,23 +4379,6 @@ bool illegalEmail(char *buf, Descriptor *desc, silentTypeT silent)
     return TRUE;
   }
 
-#if 0
-// This works, but was deemed a bad idea...
-  char tempBuf[256]; 
-  struct hostent *hst;
-
-  hst = gethostbyname(host);
-  if (!hst) {
-    if (desc && !silent) {
-      sprintf(tempBuf, "Host '%s' does not seem to be valid.\n\r", host); 
-      desc->writeToQ(tempBuf);
-      sprintf(tempBuf, "If this is a valid host, please send e-mail to %s\n\r\n\r\n\r", MUDADMIN_EMAIL);
-      desc->writeToQ(tempBuf);
-    }
-    return TRUE;
-  }
-#endif
-
   return FALSE;
 }
 
