@@ -1,6 +1,7 @@
 #!/bin/bash
 
 EXE=sneezy
+LIB=../lib
 if [ -n "$1" ]; then
 	PORT="$1"
 else
@@ -35,7 +36,7 @@ function get_id() {
 # Run the MUD in an infinite loop
 while ((1))
 do
-	CORE=$(ls -1 lib/core* 2>/dev/null)
+	CORE=$(ls -1 $LIB/core* 2>/dev/null)
 	if [ $? -eq 0 ]; then
 		echo "Old cores are lying around. I'm going to delete them in 5 seconds. Cancel this script with ctrl-c if you don't want this."
 		sleep 5
@@ -56,10 +57,10 @@ do
 	# The MUD crashed
 	echo "The MUD crashed."
 	mkdir -p ${CORESDIR}
-	CORE=$(ls -1 lib/core* 2>/dev/null)
+	CORE=$(ls -1 $LIB/core* 2>/dev/null)
 	if [[ $? -eq 0 ]]; then
 		echo "Found core files. and moved it to ${CORE_NAME}core.something together with a backup copy of the MUD at ${ROM_NAME}"
-		cd lib
+		cd $LIB
 		for j in core*; do
 			mv "$j" "../code/${CORE_NAME}$j"
 		done
