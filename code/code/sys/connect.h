@@ -507,8 +507,6 @@ public:
 // Descriptor class
 class Descriptor
 {
-  private:
-    bool host_resolved;           // hostname has been resolved by DNS
   public:
     TSocket *socket;
     editStuff edit;
@@ -628,8 +626,6 @@ class Descriptor
     void add_comment(const char *, const char *);
     void send_feedback(const char *subject, const char *msg);
     void cleanUpStr();
-    bool getHostResolved();
-    void setHostResolved(bool, const sstring &);
     void beep() {
       writeToQ("");
     }

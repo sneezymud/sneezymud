@@ -37,7 +37,6 @@ extern "C" {
 #include <sys/syscall.h>
 #include <sys/param.h>
 #include <arpa/inet.h>
-#include <ares.h>
 }
 
 const int PACKET_BUFFER_SIZE = 40960;
@@ -60,8 +59,6 @@ int gamePort;
 
 extern void save_all();
 extern int run_the_game();
-extern ares_channel channel;
-extern int ares_status;
 
 
 
@@ -110,14 +107,6 @@ int run_the_game()
 
   vlogf(LOG_MISC, "Signal trapping.");
   signalSetup();
-
-  vlogf(LOG_MISC, "run_the_game: calling ares_init");
-  ares_status = ares_init(&channel);
-  vlogf(LOG_MISC, "run_the_game: finished calling ares_init");
-  if (ares_status != ARES_SUCCESS) {
-    vlogf(LOG_BUG, format("fatal error in ares_init: %s") % ares_strerror(ares_status));
-    return FALSE;
-  }
 
   vlogf(LOG_MISC, "Opening mother connection.");
   gSocket = new TMainSocket();

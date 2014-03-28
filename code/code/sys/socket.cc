@@ -26,7 +26,6 @@ extern "C" {
 #include <sys/resource.h>
 #include <sys/syscall.h>
 #include <sys/param.h>
-#include <ares.h>
 
 #ifdef SOLARIS
 #include <sys/file.h>
@@ -69,9 +68,6 @@ bool Shutdown = 0;               // clean shutdown
 int tics = 0;
 TMainSocket *gSocket;
 long timeTill = 0;
-ares_channel channel;
-struct in_addr ares_addr;
-int ares_status, nfds;
 Descriptor *descriptor_list = NULL, *next_to_process; 
 
 struct timeval timediff(struct timeval *a, struct timeval *b)
@@ -185,20 +181,6 @@ void TMainSocket::addNewDescriptorsDuringBoot(sstring tStString)
         point = NULL;
       }
     }
-  }
-  ////////////////////////////////////////////
-  // process async dns queries
-  ////////////////////////////////////////////
-  fd_set read_fds, write_fds;
-  struct timeval *tvp, tv;
-
-  FD_ZERO(&read_fds);
-  FD_ZERO(&write_fds);
-  nfds = ares_fds(channel, &read_fds, &write_fds);
-  if (nfds > 0) {
-    tvp = ares_timeout(channel, NULL, &tv);
-    select(nfds, &read_fds, &write_fds, NULL, tvp);
-    ares_process(channel, &read_fds, &write_fds);
   }
 }
 
@@ -484,23 +466,6 @@ struct timeval TMainSocket::handleTimeAndSockets()
 	  descriptor_list->sendLogin("1");
       }
     }
-  }
-  ////////////////////////////////////////////
-  ////////////////////////////////////////////
-
-  ////////////////////////////////////////////
-  // process async dns queries
-  ////////////////////////////////////////////
-  fd_set read_fds, write_fds;
-  struct timeval *tvp, tv;
-
-  FD_ZERO(&read_fds);
-  FD_ZERO(&write_fds);
-  nfds = ares_fds(channel, &read_fds, &write_fds);
-  if (nfds > 0) {
-    tvp = ares_timeout(channel, NULL, &tv);
-    select(nfds, &read_fds, &write_fds, NULL, tvp);
-    ares_process(channel, &read_fds, &write_fds);
   }
   ////////////////////////////////////////////
   ////////////////////////////////////////////
@@ -1957,7 +1922,6 @@ int TMainSocket::gameLoop()
     queryqueue.pop();
   }
 
-  ares_destroy(channel);
   return TRUE;
 }
 
@@ -1995,89 +1959,12 @@ static const sstring IP_String(in6_addr &_a)
 
 void sig_alrm(int){return;}
 
-void gethostbyaddr_cb(void *arg, int status, int timeouts, struct hostent *host_ent)
-{
-  Descriptor *d;
-  Descriptor *d2;
-  sstring ip_string, pend_ip_string;
-  (void)timeouts; // unused, added to fix compatibility with my c-ares
-
-  ip_string = (char *)arg;
-  pend_ip_string = ip_string + "...";
-
-  if (status != ARES_SUCCESS) {
-
-    vlogf(LOG_MISC, format("gethostbyaddr_cb: %s: %s") % ip_string % ares_strerror(status));
-
-    for (d = descriptor_list; d; d = d2) {
-      d2 = d->next;
-      if (!d->getHostResolved() && d->host == pend_ip_string) {
-        d->setHostResolved(true, ip_string);
-        if (numberhosts) {
-          int a;
-          for (a = 0; a <= numberhosts - 1; a++) {
-            if (isdigit(hostlist[a][0])) {
-              if (d->host.find(hostlist[a], 0) != sstring::npos) {
-                d->socket->writeToSocket("Sorry, your site is banned.\n\r");
-                d->socket->writeToSocket("Questions regarding this may be addressed to: ");
-                d->socket->writeToSocket(MUDADMIN_EMAIL);
-                d->socket->writeToSocket(".\n\r");
-                if (!lockmess.empty())
-                  d->socket->writeToSocket(lockmess.c_str());
-
-                // descriptor deletion handles socket closing
-                delete d;
-              }
-            }
-          }
-        }
-      }
-    }
-  } else {
-    char **p;
-    struct in_addr addr;
-    sstring resolved_name;
-
-    p = host_ent->h_addr_list;
-    memcpy(&addr, *p, sizeof(struct in_addr));
-    resolved_name = sstring(host_ent->h_name).lower();
-
-    vlogf(LOG_MISC, format("gethostbyaddr_cb: %s resolved to %-32s") % ip_string % resolved_name);
-
-    for (d = descriptor_list; d; d = d2) {
-      d2 = d->next;
-      if (!d->getHostResolved() && d->host == pend_ip_string) {
-        d->setHostResolved(true, resolved_name);
-        if (numberhosts) {
-          int a;
-          for (a = 0; a <= numberhosts - 1; a++) {
-            if (d->host.find(sstring(hostlist[a]).lower(), 0) != sstring::npos) {
-              d->socket->writeToSocket("Sorry, your site is banned.\n\r");
-              d->socket->writeToSocket("Questions regarding this may be addressed to: ");
-              d->socket->writeToSocket(MUDADMIN_EMAIL);
-              d->socket->writeToSocket(".\n\r");
-              if (!lockmess.empty())
-                d->socket->writeToSocket(lockmess.c_str());
-
-              // descriptor deletion handles socket closing
-              delete d;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  delete[] (char *)arg;
-}      
-
 int TMainSocket::newDescriptor(int v6_sock, int port)
 {
   socklen_t size;
   Descriptor *newd;
   struct sockaddr_in6 v6_saiSock;
   TSocket *s = NULL;
-  char *ip_cstr;
 
   if (!(s = newConnection(v6_sock, port)))
     return 0;
@@ -2105,12 +1992,6 @@ int TMainSocket::newDescriptor(int v6_sock, int port)
     signal(SIGALRM, sig_alrm);
     
     newd->setHostResolved(false, IP_String(v6_saiSock.sin6_addr) + "...");
-
-    // XXX: Is this enough?
-    ip_cstr = mud_str_dup(IP_String(v6_saiSock.sin6_addr));
-    memcpy(&ares_addr, &v6_saiSock.sin6_addr, sizeof(struct in6_addr));
-
-    ares_gethostbyaddr(channel, &ares_addr, sizeof(ares_addr), AF_INET6, gethostbyaddr_cb, ip_cstr);
   }
 
   if (newd->inputProcessing() < 0) {

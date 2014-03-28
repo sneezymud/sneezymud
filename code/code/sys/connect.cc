@@ -69,7 +69,6 @@ Descriptor::Descriptor() :
 }
 
 Descriptor::Descriptor(TSocket *s) :
-  host_resolved(false),
   socket(s),
   edit(),
   connected(CON_CREATION_START),
@@ -130,7 +129,6 @@ Descriptor::Descriptor(TSocket *s) :
 }
 
 Descriptor::Descriptor(const Descriptor &a) :
-  host_resolved(a.host_resolved),
   socket(a.socket),
   edit(a.edit),
   connected(a.connected),
@@ -206,7 +204,6 @@ Descriptor & Descriptor::operator=(const Descriptor &a)
   // str is most likely also screwy
   vlogf(LOG_BUG, "Inform Batopr immediately that Descriptor operator= was called.");
 
-  host_resolved = a.host_resolved;
   socket = a.socket;
   edit = a.edit;
   connected = a.connected;
@@ -2881,17 +2878,6 @@ void Descriptor::worldSend(const sstring &text, TBeing *ch)
   }
 }
 
-bool Descriptor::getHostResolved()
-{
-  return host_resolved;
-}
-
-void Descriptor::setHostResolved(bool flag, const sstring &h)
-{
-  host = h;
-  host_resolved = flag;
-}
-
 void processAllInput()
 {
   Descriptor *d;
@@ -2902,11 +2888,6 @@ void processAllInput()
   for (d = descriptor_list; d; d = next_to_process) {
     next_to_process = d->next;
 
-    // this is where PC wait gets handled
-    if (!d->getHostResolved()) {
-      d->output.putInQ(new UncategorizedComm("\n\rWaiting for DNS resolution...\n\r"));
-      continue;
-    }
     if ((--(d->wait) <= 0) && (&d->input)->takeFromQ(comm, sizeof(comm))){
       if (d->character && !d->connected && 
           d->character->specials.was_in_room != Room::NOWHERE) {
