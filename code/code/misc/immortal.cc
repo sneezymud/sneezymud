@@ -1441,13 +1441,13 @@ sstring shutdown_or_reboot()
  
 void TPerson::doShutdown(const char *argument)
 {
-  char buf[1000], arg[256];
-  int num;
+  char buf[1000] = {0}, arg[256] = {0};
+  int num = 0;
 
   if (powerCheck(POWER_SHUTDOWN))
     return;
 
-  argument = one_argument(argument, arg, cElements(buf));
+  argument = one_argument(argument, arg, cElements(arg));
 
   if (!*arg) {
     if (gamePort == Config::Port::PROD || gamePort == Config::Port::BUILDER) {
