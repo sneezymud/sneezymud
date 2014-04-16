@@ -64,7 +64,7 @@ do
 		for j in core*; do
 			mv "$j" "../code/${CORE_NAME}$j"
 		done
-		cd ..
+		cd -
 		cp ${EXE} ${ROM_NAME}
 		if [[ -d ../.git ]]; then
 			REV=$(git rev-parse HEAD)
