@@ -37,7 +37,9 @@ LDFLAGS = [
     '-g', # enable core debugging
     ]
 
-LIBPATH = []
+LIBPATH = [
+    '/usr/lib64/mysql',
+]
 
 # build environment
 env=Environment(CXXFLAGS=CXXFLAGS,
