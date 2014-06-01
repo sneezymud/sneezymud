@@ -1,0 +1,209 @@
+Detailed News regarding the 3.1 --> 4.1 upgrade.  
+This has been loosely organized by topic.
+
+Character Generation
+--------------------
+1.) Non human classes prevented from becoming hybrid classes (monk, ranger,
+    azruzi, deikhan).
+2.) Some common sense adjustments made to racial stats to bring them into
+    balance.  Max's/ min's adjusted.
+3.) Non-human height and weight adjusted to prevent an overlap with humans.
+4.) Organization of characters into accounts instituted for better 
+    administration.
+5.) New screen for folks to indicate their time differential between
+    themselves and <h>'s home site added.   (New Accounts only)
+6.) New screen for indicating a characters upbringing (wilderness,
+    urban, maritime, mountain).
+7.) New screen for legal disclaimer added.
+8.) Initial equipment loaded has changed somewhat.  Each race has its own
+    equipment type and rations are no longer given out.
+9.) Many adjustments made in hp, mana, move gain formulas for rebalancing.
+10.) Automatic file deletion instituted for inactivity.  Info is in the 
+     online FAQ.
+11.) Karma implemented.  See HELP KARMA.
+12.) Some automatic configuring set for newbies  (terminal type, prompts)
+13.) Mage/Cleric multiclass eliminated.
+14.) Stat (str, int, wis...) fluctuation with age.
+
+Mages
+-----
+All disciplines available and functional.
+Some disciplines do not have full complement of offensive spells.
+Some skills (brew/scribe) have not been converted to 4.1 functionality (yet).
+1.) Many new spells
+
+Clerics
+-------
+All disciplines available and functional.
+1.) Converted from using mana to piety.  HELP PIETY.
+2.) Many new spells
+3.) New skill: penance
+
+Warriors
+--------
+All disciplines available and functional.
+1.) Forthcoming skill: evaluate
+2.) Enhanced skills: doorbash, kick
+
+Thieves
+-------
+All disciplines available and functional.
+1.) New skills: disguise, stab, poison weapons, garrotte
+2.) Enhanced skills: pick locks
+
+Monks
+-----
+CLASS NEARLY FULLY IMPLEMENTED 
+Class is slightly under-powered but will be brought to full strength ASAP.
+1.) Restrictions on monk wearable equipment loosened.  Still unable to
+    wear actual armor, but items restricted to other classes are not 
+    automatically anti-monk any longer.
+
+Rangers
+-------
+CLASS NOT FULLY IMPLEMENTED (yet)
+No real enhancements over 3.1 class at present time.
+Class is available for play, but not recommended.
+Resolution of problems in this class is low priority at present time.
+1.) Forthcoming skills: forage, encamp
+
+Deikhans
+--------
+CLASS NOT FULLY IMPLEMENTED (yet)
+Class not available for general play at present time
+1.) Increased number of weapons of power.
+2.) New skills: charge, chivalry, smite
+
+Azruzis
+------- 
+CLASS NOT FULLY IMPLEMENTED (yet)
+Class not available for general play at present time
+
+Faction and Alignment
+---------------------
+1.) References to alignments largely removed in anticipation of the
+    faction system.  Base code for factions in place for future 
+    implementation.
+2.) Faction percentage formulas adjusted to handle future faction code.
+3.) Mob allegiance changed to match PC allegiance system.  Mob allegiances
+    being worked out so that they may be assigned to appropriate factions.
+4.) Deity power formulas instituted.  See HELP DEITIES.
+5.) Piety installed for clerical invoking of prayers.  See HELP PIETY.
+
+The World
+---------
+1.) Many new areas added (or being added).  Sorry, no spoilers, you'll have
+    to go exploring yourself.
+2.) Infrastructure improvements to the major cities and towns of The World
+    to eliminate gross inequities.
+3.) Some redistricting done in Grimhaven.  Many new inhabitants.  Much has 
+    changed.
+4.) Improved handling of doors and locks.  Many different door styles
+    (trapdoors, grates, drawbridges, etc) with different qualities.
+5.) Room height added.  Capability to crawl also instituted with appropriate
+    side effects on combat and movement.
+
+Weather and Terrain
+-------------------
+1.) Weather adjusted for tropical and arctic terrains.  No more desert
+    snowstorms.
+2.) Adverse weather conditions are now more obvious to the observer.
+3.) Increased effect of percipitation on movement, visibility and other
+    obvious areas.
+4.) Many new terrain-specific effects implemented.  Evaporation in the 
+    desert, etc.
+
+Visibility and Sound
+--------------------
+1.) Advancements made in handling a character's eyesight as well as how
+    well someone is concealed.  Weather, terrain, race, clothing and 
+    illumination all come into play.
+2.) Racial adjustments made for eyesight, noise emitted and visibility.
+3.) Far fewer ALWAYS_LIT rooms.
+
+Repair
+------
+1.) Repair speed sped up (time required much shorter).
+2.) Give all.damaged and all.ticket now work.
+
+Food and Drink
+--------------
+1.) Adjustments made in how hunger and thirst is used as a person moves.
+2.) Increased negative effects for drunkenness added, especially in combat.
+    Passing out is also possible.
+3.) Food that has been around too long will spoil and become dangerous to
+    consume.  Food poisoning is a nasty thing.
+
+Mobs
+----
+1.) Many new mob races added.
+2.) Improved limb-handling for non-humanoid shaped races.
+3.) Advanced handling of undead types.  Skeletal, zombie and ghostly types
+    for all races added.
+4.) Mobs now rated for their karma.
+5.) Some mobs are now diurnal while others are nocturnal.
+6.) All Guildmasters and Trainers are killable although buff
+
+Objs
+----
+1.) Many new material types added.
+2.) Added new qualities (conductivity, acidic resistance, etc) to materials.
+3.) Updated old materials with more logical quality assignments.
+4.) Basic information about an object now shows up when object is examined.
+5.) Weapon quality now rated for all weapons (not just slash).
+6.) Some spell-casting weapons have lost this ability.
+7.) Much more diverse range of object magic affects.
+8.) Spell-casting items (scrolls, wands...) have both a level and learnedness
+    of how well/powerful their spells will be.  Item magic could fail and/or
+    backfire.
+
+Combat
+------
+1.) Many new possible critical success and failure possibilities.  Lots of
+    limb severing, bizarre and comical fumbles and the like are in there.
+2.) Improved ANSI color handling for distinguishing important events.
+3.) Wider variety of combat result messages (misses, etc.).
+4.) Ranged combat will now show the result of the ranged weapon to the
+    attacker.
+5.) Special Utility Mobs (guildmasters, trainers, etc) should stay out of
+    combat and be unattackable.
+6.) Certain hand-to-hand skills now check height difference before permitting
+    them to occur.
+
+Economy
+-------
+1.) Now based on the gold Talen for all transactions.
+2.) Creature's wealth is now comprised of other commodities besides just
+    talens.  These items can be bartered or sold for talens, but also have
+    worth in their own right in some skills and spells.
+3.) Automatic component loading routine instituted to supply mage mobs
+    with components.  While mage mobs still do not require components to cast
+    spells, this at least will provide a source for components to enter the
+    game.
+4.) Shops only deal in perfect equipment now.  Lessens the amount of shop
+    list spam.
+5.) Armor and weapon shops are now more profit greedy in the hopes that
+    equipment will be auctioned to a greater degree.  Unlimited equipment
+    is no longer available in armor and weapon stores.
+
+Miscellaneous
+-------------
+1.) MUCH, MUCH, MUCH improved terminal bars for VT-100 and Ansi terminals.
+    Many new features: mud clock, realtime clock, faction percent display,
+    tank status display.  Definitely recommend using them if you are able to.
+2.) Tasking code improved so that utility commands (history, news, world, 
+    etc.) are all possible.  Please note that actions that require your 
+    character to actually physically do something may still be prevented 
+    (intentionally).
+3.) Improved SCORE and ATTRIBUTE commands for showing session and lifetime
+    stats.  Removed the display of non-intuitive data.
+4.) Improved title command.  Class, and faction no longer displayed 
+    automatically.  Capability to add color to your own title added.
+5.) Sitting, Resting and Sleeping now tasked for regeneration
+    purposes.
+6.) Immunity and resistance code much expanded.
+7.) Autobits feature set up.  SEE HELP AUTO
+8.) Help files will now automatically update certain information as it
+    changes.
+
+

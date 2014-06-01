@@ -1,0 +1,27 @@
+Topic: random actions
+---------------------
+
+<block> { "<args>";
+  ...responses...;
+  random <number>;
+  randoption 1;
+  ...responses...;
+  randoption 2;
+  ...responses...;
+  randoption ...;
+  ...responses...;
+  donerand;
+  ...responses...;
+  }
+
+The combination of the three commands "random", "randoption", and
+"donerand" makes it possible to perform random interactions in
+response to an action.
+
+<number> should be an integer greater than 1.
+
+The numbers after 'randoption' determine to what point the response will
+jump.  The commands before the next 'randoption' call will execute.
+
+At any rate, all responses after 'donerand' will execute.
+
