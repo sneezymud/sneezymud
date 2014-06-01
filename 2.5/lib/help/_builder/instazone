@@ -1,9 +1,0 @@
-INSTAZONE
-
-   For zone-builders but not recommended.  Will create a zone file by typing
-   instazone <min vnum> <max vnum>
-   and will save the current postitions and states of everything in that zone.
-   DO NOT do this except in your own zone EVER.  Not recommended when you
-   have mobs that are non-sentinel as they will wander out of position between
-   being loaded and instazoning.  (make zonefile off-line, it's easier)
-

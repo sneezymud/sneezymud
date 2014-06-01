@@ -1,7 +1,0 @@
-CUTLINK
- 
-   A player who is "stuck" logged in (player has lost connection to local
-   host process, but local host is still connected to mud and player can
-   not resume) can have their connection cut.  This command will take any
-   character and kick it all the way out of the game.
-

@@ -1,8 +1,0 @@
-PUT
-
-For putting stuff in containers. Example: "Put the dagger in the bag".
-  Put all.bread in bag
-  Put 9*bread in bag.
-
-See also: GET, DROP
-Related Topics: OBJECT MANIPULATION

@@ -1,8 +1,0 @@
-SEND
-
-    The send command send messages on your new radios.
-
-ex: SEND howdy all, i like my radio!
-
-See Also: RADIO, CHANNEL
-Related Topics: COMMUNICATIONS

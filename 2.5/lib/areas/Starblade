@@ -1,4399 +1,0 @@
-#22000
-On a Sandy Beach~
-     You are washed ashore a beach with most the grotesque litter you
-have ever seen. All around you are bleached bones and skulls and they
-are not of animals either! To the east and west are is more beach and
-to the distant north you make out a large complex.
-~
-76 0 5
-D0
-~
-~
-0 0 22001
-D1
-~
-~
-0 0 22003
-D2
-~
-~
-0 0 13697
-D3
-~
-~
-0 0 22007
-S
-#22001
-Sand Dunes~
-     Strecthing out before you is more sand, sand, sand. The complex
-you saw earlier seems closer and hope it is because the bilstering
-sun rains down on you with a fury unto itself. You need to find succor
-from the fatal heat which saps at your strength.
-~
-76 0 5
-D0
-~
-~
-0 0 22002
-D1
-~
-~
-0 0 22004
-D2
-~
-~
-0 0 22000
-D3
-~
-~
-0 0 22008
-S
-#22002
-Sand Dunes~
-     As you stumble across the sand dunes you spy, to your relief, the
-entrance of some sort of complex just north of here. All other directions l     
-lead to sand and sun.
-~
-76 0 5
-D0
-~
-~
-0 0 22013
-D1
-~
-~
-0 0 22010
-D2
-~
-~
-0 0 22001
-D3
-~
-~
-0 0 22009
-S
-#22003
-On a Sandy Beach~
-     Strecthing out before you is miles and miles of sand. Littering the
-the beach are the remains of animals, both of beasts and of men. In the
-distant north-west you see a large complex. To the east, west, and north is
-more sand and surf. To the south is the turbulent Dragon Sea. You debate
-whether you would have a better chance of survial in the sea rather
-than this Gods-forsaken island.
-~
-76 0 5
-D0
-~
-~
-0 0 22004
-D1
-~
-~
-0 0 22005
-D3
-~
-~
-0 0 22000
-S
-#22004
-Sand Dunes~
-     More sand beckons you to the north and the west. To the east and south
-the are the outer edges of the island. You wished you had brought your
-suntan lotion, the ozone layer seems to be particularly thin here. As the
-sand fills your shoes you wonder if you have a little annex to Hell.
-~
-76 0 5
-D0
-~
-~
-0 0 22010
-D1
-~
-~
-0 0 22006
-D2
-~
-~
-0 0 22003
-D3
-~
-~
-0 0 22001
-S
-#22005
-On a Sandy Beach~
-     This is the southeastern corner of of the island. To the distant
-north you can see huge rocky cliffs. To the west is more sand and surf
-and to north you see a strange sculpture of sand.
-~
-76 0 5
-D0
-~
-~
-0 0 22006
-D3
-~
-~
-0 0 22003
-S
-#22006
-On a Sandy Shore~
-     Standing here is an odd sculpture of a gigantic man sitting on an glass
-pedestal. It seems remarkably life-like in all detail, including a huge
-sand-club. To the west are sand dunes and further north cliffs can be seen.
-To the south is another corner of beach. Darn, the sun must be
-playing tricks on you eyes you could swear that the sculpture just moved!
-~
-76 0 5
-D0
-~
-~
-0 0 22011
-D2
-~
-~
-0 0 22005
-D3
-~
-~
-0 0 22004
-D5
-~
-pedestal glass
-~
-1 22006 22145
-S
-#22007
-On a Sandy Beach~
-     On this southeastern corner of the beach you can gaze out into the
-blazing radiance of the sun. As the glare makes your eyes water you can make
-out some sort of Stand to the north. You hear the pounding of the surf upon
-the sand in all directions.
-~
-76 0 -1 10 22153 1 5
-D0
-~
-~
-0 0 22008
-D1
-~
-~
-0 0 22000
-S
-#22008
-On a Sandy Beach~
-     You don't know if it's a mirage or reality but whatever it is this
-Lemonade Stand on stilts draws you like flies on a putrid corpse..........
-or is that the smell that emanates from this area? Upwards leads to some
-relief from the unforgiving sun. To the north and the south stretches
-more coastline. While to the east the interior of the island can be found,
-although, it looks more like a giant kitty litter box to you.
-~
-76 0 5
-D0
-~
-~
-0 0 22009
-D1
-~
-~
-0 0 22001
-D2
-~
-~
-0 0 22007
-D4
-~
-~
-0 0 22191
-S
-#22009
-On a Sandy Shore~
-     This space has been left blank intentionally.
-~
-76 0 5
-D0
-~
-~
-0 0 22012
-D1
-~
-~
-0 0 22002
-D2
-~
-~
-0 0 22008
-S
-#22010
-Sand Dunes~
-     To the north you can make out the towering walls of a huge building.
-To the west and south is more sand for you to trudge through. To the east
-you hear the pounding surf.
-~
-76 0 5
-D0
-~
-~
-0 0 22014
-D1
-~
-~
-0 0 22011
-D2
-~
-~
-0 0 22004
-D3
-~
-~
-0 0 22002
-S
-#22011
-On a Sandy Shore~
-     Here along the shore you are almost blinded by the sparkling waters of
-the Dragon Sea. The Dragon Sea extends eastward as far you can see. The shore
-meanders to south and sand dunes can be seen to the west. To the north is
-a very tall wall with some sort tower on top of it.
-~
-76 0 5
-D0
-~
-~
-0 0 22015
-D2
-~
-~
-0 0 22006
-D3
-~
-~
-0 0 22010
-S
-#22012
-Southwestern Seawall~
-     At this corner of the obrate wall of colrless and seamlessness
-you find that you can see the beginnings of a lush tropical forest.
-The startling contrast between the desert of sand and the "ocean" of
-trees is quite remarkable! The southern direction will lead you back
-into the sands while west will lead you to the entrance to this complex.
-The wall extends to the north and westerly movement is impossible. You also
-notice an odd pool of water by your feet. It might be possible to enter
-it.
-~
-76 0 5
-D0
-~
-~
-0 0 22016
-D1
-~
-~
-0 0 22013
-D2
-~
-~
-0 0 22009
-D5
-~
-~
-0 0 22064
-E
-pool~
-     Admist the sands is this funny sort of pool. As you peer deep into
-it you can see a cave. the wierd thing is that you can swear there are
-balloons in it!
-~
-S
-#22013
-Gates of Obsidian~
-     You stand before the massive gates of this complex. The gates are
-crafted the the blackest obsidian. The very sunlight is sucked between
-these gates. Runic symbols of the finest silver adorn the gates. These
-"wards" were meant either to keep you out or to keep something or someone
-in. Heaven, Hell, Purgatory, or something even more mysertious awaits beyond
-these gates. To the west and east the wall continues. South will lead you
-back into the sands.
-~
-76 0 5
-D1
-~
-~
-0 0 22014
-D2
-~
-~
-0 0 22002
-D3
-~
-~
-0 0 22012
-S
-#22014
-Colourless Wall~
-     A colourless and seamless wall impedes northernly movement. You wonder,
-as you stare at the wall, what manner of being could have crafted such a 
-structure. You have mixed feelings of intrigue and foreboding to what inhabits
-the otherworld edifice. The wall extends to the west and the east. To the
-south, the sands beckon you.
-~
-76 0 5
-D1
-~
-~
-0 0 22015
-D2
-~
-~
-0 0 22010
-D3
-~
-~
-0 0 22013
-S
-#22015
-Southeastern Seawall~
-     You have reached the corner wall of a huge complex. The wall itself is
-most unusual. The two thing things you find wierd about the wall, its
-seamlessness and its utter lack of colour. The wall is neither white nor
-transparent it simply lacks any colour at all! The wall extends deep into
-the rocks and appears to delve into the Dragon Sea. The "Wall" extends to
-the east and the north. To the south you see more of this island's
-meandering coastline. The pounding waves inhibits any easternly movement.
-~
-76 0 5
-D0
-~
-~
-0 0 22063
-D2
-~
-~
-0 0 22011
-D3
-~
-~
-0 0 22014
-S
-#22016
-Colourless Wall~
-     This "wall" of everything and nothing continues its existence to the
-north and to the south. To the west you may or may not wish to enter the wilds
-of a tropical forest.
-~
-76 0 3
-D0
-~
-~
-0 0 22023
-D2
-~
-~
-0 0 22012
-D3
-~
-~
-0 0 22017
-S
-#22017
-In a tropical forest~
-    You find yourself engulfed in the tropical forest. All directions lead
-deeper into this mass of flora. To the east you can see a wall rising
-above the trees.
-~
-76 0 3
-D0
-~
-~
-0 0 22022
-D1
-~
-~
-0 0 22016
-D2
-~
-~
-0 0 22018
-D3
-~
-~
-0 0 22018
-S
-#22018
-In a tropical forest~
-     All directions lead into deeper into the forest. You are either lost
-or slightly misplaced............perhaps you should find a guide?
-~
-76 0 3
-D0
-~
-~
-0 0 22021
-D1
-~
-~
-0 0 22017
-D2
-~
-~
-0 0 22019
-D3
-~
-~
-0 0 22019
-S
-#22019
-In a tropical forest~
-     Yup......you are lost
-~
-76 0 3
-D0
-~
-~
-0 0 22020
-D1
-~
-~
-0 0 22018
-D2
-~
-~
-0 0 22028
-D3
-~
-~
-0 0 22021
-S
-#22020
-In a tropical forest~
-     You are surrounded by the tropical forest in all direction.
-~
-76 0 3
-D0
-~
-~
-0 0 22027
-D1
-~
-~
-0 0 22021
-D2
-~
-~
-0 0 22019
-D3
-~
-~
-0 0 22022
-S
-#22021
-In a tropical forest~
-     You are surrounded by the tropical forest in all directions.
-~
-76 0 3
-D0
-~
-~
-0 0 22020
-D1
-~
-~
-0 0 22022
-D2
-~
-~
-0 0 22027
-D3
-~
-~
-0 0 22020
-S
-#22022
-In a tropical forest~
-     You are surrounded by the tropical forest in all directions.
-~
-76 0 3
-D0
-~
-~
-0 0 22025
-D1
-~
-~
-0 0 22028
-D2
-~
-~
-0 0 22017
-D3
-~
-~
-0 0 22019
-S
-#22023
-Colourless Wall~
-     To the west begins the a lush tropical forest. To the north and south
-the "wall" continues. You feel a twitch between your shoulder blades as if
-someone was watching you. As you look up you notice the overhanging branches
-of a large tree.
-~
-76 0 4
-D0
-~
-~
-0 0 22024
-D2
-~
-~
-0 0 22016
-D3
-~
-~
-0 0 22022
-D4
-~
-~
-0 0 22186
-S
-#22024
-Colourless Wall~
-     A deep and mysterious tropical forest can be seen to the west. To the
-north and the south the wall continues its passage.
-~
-76 0 4
-D0
-~
-~
-0 0 22031
-D2
-~
-~
-0 0 22023
-D3
-~
-~
-0 0 22025
-S
-#22025
-In a tropical forest~
-     You are surrounded by the tropical forest in all directions.
-~
-76 0 4
-D0
-~
-~
-0 0 22030
-D1
-~
-~
-0 0 22027
-D2
-~
-~
-0 0 22022
-D3
-~
-~
-0 0 22021
-S
-#22026
-Lagoon~
-     As you move through this labrinyth of a jungle you come to a small
-lagoon. However, it doesn't look like you would like to go swimming here! The
-water in the lagoon is so opaque that you can't even see your hands when you put
-them in it! Various skeletons and garbage litter this little "oasis".
-~
-76 0 -1 15 22153 1 4
-D0
-~
-~
-0 0 22029
-D1
-~
-~
-0 0 22025
-D2
-~
-~
-0 0 22021
-D3
-~
-~
-0 0 22027
-D5
-~
-~
-0 0 22066
-E
-Lagoon~
-     As you look into the waters of the lagoon you think you see some sort
-of animal swimming underneath it.
-~
-S
-#22027
-In a tropical forest~
-     You are surrounded by the tropical forest in all directions. However,
-you see some sort of clearing to the east.
-~
-76 0 3
-D0
-~
-~
-0 0 22028
-D1
-~
-~
-0 0 22026
-D2
-~
-~
-0 0 22020
-D3
-~
-~
-0 0 22018
-S
-#22028
-In a tropical forest~
-     You are surrounded by the tropical forest in all directions.
-~
-76 0 3
-D0
-~
-~
-0 0 22022
-D1
-~
-~
-0 0 22029
-D2
-~
-~
-0 0 22027
-D3
-~
-~
-0 0 22022
-S
-#22029
-In a tropical forest~
-     You are surrounded by the tropical forest in all directions.
-~
-76 0 3
-D0
-~
-~
-0 0 22028
-D1
-~
-~
-0 0 22030
-D2
-~
-~
-0 0 22027
-D3
-~
-~
-0 0 22028
-S
-#22030
-In a tropical forest~
-     Civilization or rather the "wall" can be found to the east. All other
-directions lead into the tropical forest.
-~
-76 0 3
-D0
-~
-~
-0 0 22020
-D1
-~
-~
-0 0 22031
-D2
-~
-~
-0 0 22025
-D3
-~
-~
-0 0 22029
-S
-#22031
-Colourless Wall~
-    As you walk the perimeter of this complex you wonder how big it really
-is? It strecthes to the north and the south. It's like it partially in this
-reality and partially in someone's or something's reality. This "wall" can
-only hint at the "otherworldness" of this building. Any movement to the
-west will lead you into a tropical forest.
-~
-76 0 -1 10 22153 1 4
-D0
-~
-~
-0 0 22032
-D2
-~
-~
-0 0 22024
-D3
-~
-~
-0 0 22030
-S
-#22032
-Northwestern Seawall~
-     At this corner of the wall you can see the rising cliffs and rocky
-terrain to the north. To the east and the south is the (now becoming)
-familiar "wall". To the west is a whirlpool of gigantic porpotions.
-~
-76 0 -1 10 22032 0 6
-D0
-~
-~
-0 0 22033
-D2
-~
-~
-0 0 22031
-D3
-~
-~
-0 0 22185
-S
-#22033
-Steep Trail~
-     To the north you can see a long stretch of treachous land. To the
-east you can see the base of tall cliffs and to the south will bring
-you back to a seawall. 
-~
-76 0 5
-D0
-~
-~
-0 0 22034
-D1
-~
-~
-0 0 22038
-D2
-~
-~
-0 0 22032
-S
-#22034
-The Long Haul~
-     After pumping you legs through this tough terrain you can see some
-sort of bridge to the north. To the east you see some pretty strange  
-statues and if you wish to get another workout you can go south to a
-steep trail.
-~
-76 0 5
-D0
-~
-~
-0 0 22035
-D1
-~
-~
-0 0 22037
-D2
-~
-~
-0 0 22033
-S
-#22035
-Bone Bridge~
-     You find yourself on a bridge entirely composed of bones. The
-skulls of which form the railguards of the bridge glow blow red as you
-wall across it. As you look down from the bridge you see the remains
-of shipwrecked sailors. You can go north to what "appears" to be a 
-lighthouse or go back the way you came from. Whatever you do, you better
-do it quickly the bridge feels like it's moving!
-
-~
-76 0 5
-D0
-~
-~
-0 0 22184
-D2
-~
-~
-0 0 22034
-S
-#22036
-Rocky Cliffs~
-     Here atop the cliff you can look out and see all the splendor of the
-Dragon Sea. The climb to get here was well worth the effort. You stand
-before the seemingly endless sapphire coloured waters of the Dragon Sea. 
-No poet in the world or muds could describe the beauty of the a ewind b    
-brought wave or sunlight carressing the waters as intimately as a lover.
-You may go down, back to this hell-bent island or go westward across the
-cliffs.
-~
-76 0 -1 30 22154 1 5
-D1
-~
-~
-0 0 22043
-D5
-~
-~
-0 0 22037
-S
-#22037
-Rock Garden~
-     This garden is filled with beautiful statues. All about you are
-incrediblly detailed stone figures. You could try climbing up the rock
-surface or try to find the artist of this most beautous garden. Hmm....
-a woman-shaped veiled figure. As she starts moving towards you; you
-wonder why her hair to moving?
-~
-76 0 5
-D2
-~
-~
-0 0 22038
-D3
-~
-~
-0 0 22034
-D4
-~
-~
-0 0 22036
-S
-#22038
-Rock Wall~
-     You have reached a hard place! It seems that vandalism is in on 
-Devil's Island! The wall is covered with graffiti, everything from
-crude and dehumanizing pictures of women to the lastest idea for getting
-Chonny Chung pregnant! One particulary large mammary could be a doorknob.
-~
-76 0 5
-D0
-~
-~
-0 0 22037
-D3
-~
-~
-0 0 22033
-D5
-~
-breast door
-~
-1 0 22039
-S
-#22039
-Metallic Entrance~
-     What comes to attention here are the two metallic doors which face you.
-You can not understand who they could be crafted which such a smooth finish.
-~
-76 0 0
-D1
-~
-metallic door
-~
-1 22039 22040
-D4
-~
-rock door
-~
-1 0 22038
-S
-#22040
-Gremlins' Command Center~
-     You have found the secret lair of the Gremlins! This is where the Gremlins
-go to crash the Muds. You are surrounded by fancy electronic gadetry and
-other mechanical paraphanalia. All around you lights flash and speakers
-hum with anticipation for the next crash! On the Crash Console you see some
-writing.
-~
-76 0 0
-D1
-~
-~
-0 0 22047
-D3
-~
-metallic door
-~
-1 22039 22039
-E
-console~
-     This console is a computer nerd's dream of a lifetime! It is filled
-with all the last components! Including the dreaded Muds Reboot Button!
-~
-E
-writing~
-     Next Project:
-                   Global Deletion Of User Files
-
-
-~
-S
-#22041
-Hall of Blood & Guts~
-     As your slosh through the entrails which cover the entire floor. You
-notice the neato blood smear finger paintings on the walls. Gee, and you
-thought the Fleshereater were uncultured! There are steps which lead down
-to the World Reknown Laboratory of Hannibal the Cannibal. If he is in a 
-good mood maybe he will make you a meal?
-~
-76 0 0
-D0
-~
-~
-0 0 22042
-D5
-~
-~
-0 0 22065
-S
-#22042
-Entrance to the Flesheater's Guild~
-     You have reached the entrance of the infamous Flesheater's Guild. The
-entrance is decorated with leering visages filled with very very sharp teeth.
-It might not be a good idea to enter this guild. You might lose more than
-you would "gain" here. The guildmaster's bite is worse than his bark.
-~
-76 0 5
-D0
-~
-~
-0 0 22043
-D2
-~
-~
-0 0 22041
-S
-#22043
-Rocky Cliffs~
-     If you have to look at one more cliff you swear you are gonna blow
-chunks. To the south is some sort of building. Strange, there are a lot
-of bones around here. All of them are so clean of flesh and sinew. To the
-edge of the cliff you can see passage downward.
-~
-76 0 -1 10 22043 0 5
-D2
-~
-~
-0 0 22042
-D3
-~
-~
-0 0 22036
-D5
-~
-~
-0 0 22044
-S
-#22044
-Craggy Footholds~
-     You are at the base of cliff. It may be possible to climb up by
-using the craggy footholds that pockmark the face of this cliff.
-~
-76 0 5
-D2
-~
-~
-0 0 22045
-D4
-~
-~
-0 0 22043
-S
-#22045
-Narrow Ledge~
-     I wouldn't look down if I were you! Well, ok if you insist, looking
-downward you see some very very hard and sharp rocks if you slip up here all
-that will be left of you will be a bloody splat!
-~
-76 0 5
-D0
-~
-~
-0 0 22044
-D2
-~
-~
-0 0 22046
-S
-#22046
-The Wall~
-     This wall is a tribute to the most excellent band Pink Floyd. If you
-like Pink Floyd then kudos if not please leave this room immediately!
-~
-76 0 -1 10 22153 1 5
-D0
-~
-~
-0 0 22045
-D2
-~
-~
-0 0 22047
-S
-#22047
-Northeastern Seawall~
-     As you round the bend of the wall and move away from the treachous
-swamp you can see rising cliffs to the distant north. A rocky climb awaits
-your pleasure as you comtemplate the rocky anterior of this island.
-~
-76 0 5
-D0
-~
-~
-0 0 22046
-D2
-~
-~
-0 0 22048
-S
-#22048
-Colourless Wall~
-     You are at the corner of this great complex. To the north and south the
-stretches across the land. To the east, bog mist obscurses your vision.
-~
-76 0 3
-D0
-~
-~
-0 0 22047
-D1
-~
-~
-0 0 22049
-D2
-~
-~
-0 0 22055
-S
-#22049
-Lost in the Swamp~
-     As you tread your way through the Swamp, the feeling that someone is
-watching still persists. Although, the only thing you can see through the
-bog mists is glowing phoserences and swampy flora. All directions will
-lead you deeper into the swamp.
-~
-76 0 3
-D0
-~
-~
-0 0 22058
-D1
-~
-~
-0 0 22050
-D2
-~
-~
-0 0 22054
-D3
-~
-~
-0 0 22058
-S
-#22050
-Lost in the Swamp~
-     Between dodging the hungry jaws of alligators and the constant biting
-of mosquitoes you try to catch your breath while trying to find your way
-through this swamp.
-~
-76 0 3
-D0
-~
-~
-0 0 22061
-D1
-~
-~
-0 0 22051
-D2
-~
-~
-0 0 22053
-D3
-~
-~
-0 0 22049
-S
-#22051
-Lost in the Swamp~
-     This swamp seems to be neverending! It extends in all directions. From
-side to side you see some glowing lights within the mist.
-~
-76 0 3
-D0
-~
-~
-0 0 22060
-D1
-~
-~
-0 0 22061
-D2
-~
-~
-0 0 22052
-D3
-~
-~
-0 0 22050
-S
-#22052
-Lost in the Swamp~
-     The swamp has seemingly engulfed you in its great maw. There seems to
-be no exit from this swamp. All directions lead you deeper into mists and
-bogs.
-~
-76 0 3
-D0
-~
-~
-0 0 22051
-D1
-~
-~
-0 0 22057
-D2
-~
-~
-0 0 22059
-D3
-~
-~
-0 0 22053
-S
-#22053
-Lost in the Swamp~
-     Dredging through the wilds of the swamp is good exercise for your
-thews. However, on the downside, between the ever-biting mosquitoes and
-sucking leeches you feel a tad dizzy. Better get some iron pills cause
-these blood-suckers seem to like you!
-~
-76 0 3
-D0
-~
-~
-0 0 22050
-D1
-~
-~
-0 0 22052
-D2
-~
-~
-0 0 22058
-D3
-~
-~
-0 0 22054
-S
-#22054
-Lost in the Swamp~
-     The mist has drenched your skin and clothes making it even more difficult
-to move about. The swamp leads out in all directions.
-~
-76 0 4
-D0
-~
-~
-0 0 22049
-D1
-~
-~
-0 0 22053
-D2
-~
-~
-0 0 22057
-D3
-~
-~
-0 0 22055
-S
-#22055
-Colourless Wall~
-     As you walk along the wall you can a dark and mysterious swamp to the
-east. The smell of rotting flesh and decaying flora wafts up through the bogs.
-~
-76 0 3
-D0
-~
-~
-0 0 22048
-D1
-~
-~
-0 0 22054
-D2
-~
-~
-0 0 22056
-S
-#22056
-Colourless Wall~
-     The wall continues to the north and south. To the east you can see some
-vague shapes. The bog mist seems to pervade through every inch of the air
-around you.
-~
-76 0 3
-D0
-~
-~
-0 0 22055
-D1
-~
-~
-0 0 22057
-D2
-~
-~
-0 0 22063
-S
-#22057
-Lost in the Swamp~
-     As you blindy work your way through this dismal swamp you feel the eyes
-watching your. Something or someone is following your every movement. You
-start to move faster to get out of this swamp.
-~
-76 0 -1 10 22153 1 4
-D0
-~
-~
-0 0 22054
-D1
-~
-~
-0 0 22058
-D2
-~
-~
-0 0 22062
-D3
-~
-~
-0 0 22052
-S
-#22058
-Lost in the Swamp~
-     As you fight your way through the brush and bogs you feel as if something
-is watching. Maybe it's parnoia, maybe it's your imagination, or maybe it
-was that last beer you had? The brush seem uncommonly thick here as if
-something is hidden behind it.
-~
-76 0 3
-D0
-~
-~
-0 0 22053
-D1
-~
-~
-0 0 22059
-D2
-~
-~
-0 0 22061
-D3
-~
-~
-0 0 22059
-D5
-~
-door brush
-~
-1 0 22188
-S
-#22059
-Lost in the Swamp~
-     As the mosquitos buzz in your ears and the cicadeas sing there mournful
-dirges you wonder what the hell possesed you to enter this swamp! The swamp
-does not give up its prey without a fight!
-~
-76 0 4
-D0
-~
-~
-0 0 22052
-D1
-~
-~
-0 0 22058
-D2
-~
-~
-0 0 22060
-D3
-~
-~
-0 0 22058
-S
-#22060
-Lost in the Swamp~
-     YOur vision is so obscured because of the bog mist you can't even see
-your hands in front of your face. In all directions this gods-blasted swamp
-stretchs out before you.
-~
-76 0 4
-D0
-~
-~
-0 0 22059
-D1
-~
-~
-0 0 22062
-D2
-~
-~
-0 0 22062
-D3
-~
-~
-0 0 22061
-S
-#22061
-Bottomless Bog~
-     Desperately seeking an exit out of this stinking swamp you run wildly
-in all directions. Unfortunately, you find walk right into a sinking bog.
-You slowly sink into the soft terra to your demise.
-~
-76 2 0
-D0
-~
-~
-0 0 22061
-D1
-~
-~
-0 0 22061
-D2
-~
-~
-0 0 22061
-D3
-~
-~
-0 0 22061
-S
-#22062
-Lost in the Swamp~
-     As you stumble through this swampy area your fleet slosh through
-the soggy land in search of more solid land.
-~
-76 0 4
-D0
-~
-~
-0 0 22057
-D1
-~
-~
-0 0 22061
-D2
-~
-~
-0 0 22061
-D3
-~
-~
-0 0 22063
-S
-#22063
-Colourless Wall~
-     As you trace the wall's path you notice to the east marsh mist rising
-up from the murky confines of a swamp. As you try to look into the swamp
-all you can see are will-o-wisps and the deep bogs.
-~
-76 0 3
-D0
-~
-~
-0 0 22056
-D1
-~
-~
-0 0 22062
-D2
-~
-~
-0 0 22015
-S
-#22064
-Pennywise's Grotto~
-     You find yourself surrounded by hundreds of balloons of every colour.
-There pressence is quite uncomfortable and unbearable. As you try to make
-your way through the balloons, you are confronted by a gigantic clown!
-This is not your fun 'n games sort of clown. Dressed in black and crimson,
-he glares at you with alien silver eyes. As you try to find your voice, the
-clown speaks, 'The balloons float down here...and so will you!'
-~
-76 9 6
-D4
-~
-~
-0 0 22012
-S
-#22065
-Hannibal the Cannibal's Laboratory~
-     This is Hannibal's Feasting eerr Experiments (yeah Experiments)
-Labortory. Nice shiny knives, forks, and a huge tenderizer clutter
-a huge oak table. There are some sort of red stains on table, proably
-from Hannibal's latest experiment. You see a gibbering slab of meat
-in the corner of the room. Hrm.....it might be alive or then again
-it might be Hannibal's experiment into beef flavored jello? There is
-cupboard boltes to the wall and a tall cage welded directly to the
-west wall.
-~
-76 0 0
-D3
-~
-door
-~
-2 22065 22187
-D4
-~
-~
-0 0 22041
-S
-#22066
-Underneath the Black Lagoon~
-     Being stupid enuff to dive into these waters you now notice that this
-lagoon is filled with toxic wastes from magical experiments. As you to swim
-back to the surface you come to face to face to a hideous scaly lagoon m      
-monster!
-~
-76 1 9
-D0
-~
-~
-0 0 22159
-D4
-~
-~
-0 0 22026
-S
-#22067
-Stairs to Guard Tower~
-     The stoneworks feels cool and soothing as you lean upon the wall.....
-trying to catch both you breath and sanity. There is a spiraling staircase
-which will take you to the top of the guard tower. In the mean time the
-you may rest here. You wonder why the stonework feel so different from the
-rest of this terrible place
-~
-76 0 0
-D0
-~
-secret
-~
-1 22013 22074
-D1
-~
-~
-0 0 22068
-D4
-~
-~
-0 0 22115
-S
-#22068
-Barracks~
-     This simply decorated room is filled with sturdy bunk beds and large
-trunks. The wall paper is consists of old tattered posters from playboy
-magazines. Before depression sets in as you try to picture yourself living
-such a depressing existence several crazed guards leap from their beds
-trying sucrease their own pain and longing by beating you up into a bloody
-pulp.
-~
-76 0 0
-D1
-~
-~
-0 0 22069
-D3
-~
-door
-~
-0 0 22067
-S
-#22069
-Hallway~
-     As you walk through this hallway you can hear the muffled sound of many
-voices screaming in unison. You try to avoidlooking at the walls of the
-hallway because the are filled the horribly - beautiful painting. 
-Pain, agony, suffering......a deep unbearably torment fills the the spaces
-of the walls. Your eyes begin to tear as your mind comprehends the meaning
-of these dreadful frescoes. ou try to summon some resemblance of 
-courage when you try to imagine what kind of being could depicts
-the essence of a soul in such obvious eternal pain.....The PAIN 
-is as tangible as any monster could possbily be. It attacks you in
-waves of agongy and despair. Yot know not where you find the strength
-to continue your exploration into the ultimate horror.
-~
-76 0 0
-D0
-~
-~
-0 0 22076
-D1
-~
-door
-~
-0 0 22070
-D3
-~
-~
-0 0 22068
-S
-#22070
-Entrance Checkpoint~
-     As you through the Gates you find yourself a guard checkpoint. As you
-look closer you notice some strange things about these guards. Unlike the
-usual clean and daper look most guards these are quite unkempt and in all
-honestly stink! You notice some red fluid on their tunics which might be
-blood! As you reach the checkpoint one of the guards screams, "More jailbait!"
-~
-76 8 0
-D0
-~
-~
-0 0 22077
-D1
-~
-~
-0 0 22071
-D3
-~
-~
-0 0 22069
-S
-#22071
-Kennel~
-     As you enter this room you are overwhelmed by the smell of offal and
-wastes. Admist the offal, bones and skulls litter floor. As you look about
-you see many cages filled with large slavering dog like beasts. At the far
-end of the room you see some sort of collars on wodden pegs. All of a 
-sudden the cages begin to open all by themselves! You are surrounded
-these hungry beasts! It appears to be feeding time in the kennel! 
-Prepare to be Hel Hound kibble!
-~
-76 8 0
-D3
-~
-~
-0 0 22070
-S
-#22072
-Ghostly Armory~
-     The walls are covered with various instruments of mayhem. It wouldn't
-be advisable to touch them because they all glow with green oily sheen. In
-fact, it could be quite unhealthy! To the east up can see a staircase.
-As you eye the weapons with great caution you notice one off them
-Twitching? Twitching! ARGH!!!!!!!!!!!!!!!!!!
-~
-76 0 0
-D0
-~
-gate
-~
-1 22013 22128
-D1
-~
-~
-0 0 22073
-S
-#22073
-Crumbling Staircase~
-     This delipidated staircase doesn't like ** stick out ** in this
-island of sheer madness. While it looks quite unsafe (then again most things)
-here do!, it might even be more unsafe to find out what's on the other
-side of the staircase. 
-~
-76 0 0
-D3
-~
-~
-0 0 22072
-D4
-~
-~
-0 0 22116
-S
-#22074
-Devil's Island Imporium~
-     Here at the Devil's Imporium the finest of prison quality goods
-and commodities are bought and sold. The Satanic Shopkeeper has 
-decorated his shop in the hues of brimstone and crimson. You notice
-a banner with the words "No Refunds or Exchanges on Souls". Would
-you care to deal with this most devilish purveyor of mechandise?
-~
-76 0 0
-D2
-~
-secret
-~
-1 22013 22067
-S
-#22075
-Cellblock I Checkpoint~
-     As you come to the end of the corridor you are abrubtly stopped by
-a pair of sturdy gates. A pair of guards are standing here seemingly
-unaware of your pressence. However, closer examination shows that they
-are quite dead and are decomposing very nicely. As you breath a sigh
-of relief (and exhale the smell of rotting flesh) the "guards" begin to
-move! The pair speak in unison, "Where is your clearance pass"! 
-Branishing their icy blue blades they charge at you!
-~
-76 0 0
-D0
-~
-gate
-~
-1 22013 22082
-D1
-~
-~
-0 0 22076
-S
-#22076
-Hallway to Cellblock I~
-     The atonal screamings of 1001 shattered minds and souls assaults your
-very being. You try to shut theincreasingly louder voices of these poor
-dregs of society. To the west you see another checkpoint. More crazed
-guards and other misfits of disaster await your pleasure.
-~
-76 0 0
-D2
-~
-~
-0 0 22069
-D3
-~
-~
-0 0 22075
-S
-#22077
-Entrance to Rock Yard~
-     As sunlight pours from the north you can hear the sounds of metal
-upon hard rock. To the soruth will lead you back to the checkpoint and
-to the north will bring you to the source of whatever is bearing down
-upon the rocks in such a frenzy!
-~
-76 8 0
-D0
-~
-~
-0 0 22084
-D2
-~
-~
-0 0 22070
-S
-#22078
-Elegant Staircase~
-
-This staircase is breathtakingly beautiful in its splendid elegance.
-Fine oak, worried with black rubies and adamantite scroll-work. Perhaps,
-this is the egress from the madhouse of monstrosities and mystery?
-<Yeah right - what do you think?>
-~
-76 0 0
-D1
-~
-~
-0 0 22128
-D4
-~
-~
-0 0 22119
-S
-#22079
-End of Cellblock IV Hallway~
-     For some strange reason you begin to feel very very nasuseous...As if
-you just eat some very bad pork on something... The closer you get to the cell
-to your east the greater this feeling becomes. Up ahead you see a massive
-gate blocking your path to the south.
-~
-76 0 0
-D0
-~
-~
-0 0 22086
-D1
-~
-door
-~
-1 22013 22080
-D2
-~
-~
-0 0 22128
-S
-#22080
-The Brady Bunch's Cell~
-     You cringe with true fear as that old re-runned to death Tv program
-suddenly comes to life right in front of your face! Eeeeeeeeekkkkkk Only
-now they have a bad attitude too! It would appear that Muds not only brought
-them to life but also mutated them because when Jan opens her big mouth
-metallic spike bearing braces almost decapitate you! While dodging Jan's
-attack you notice that the rest of the Bunch are similarly mutated.
-~
-76 0 0
-D3
-~
-door
-~
-1 22013 22079
-S
-#22081
-Lizzy Borden's Cell~
-     Lizzy Borden took an axe and gave her mother 40 whacks when she saw
-what she had done she gave her father 41. After rampaging through the
-country-side she came to Migaard ready to reside.....hacking and chopping
-pc's. Finally, She was caught by the cityguards to and placed here
-to hack and slash no more. Here in here cell ... she has chosen her own
-little hell ... making dolls from cloth and shash and slicing their heads
-with her ever - sharp axe. Lizzy Borden is very pleased to meet your
-aquaintice she has developed her technique to an artform. Do you wish to be
-sliced lengthwise or widthwise?
-~
-76 0 0
-D1
-~
-door
-~
-1 22013 22082
-S
-#22082
-Cellblock I Hallway~
-     As you walk through the corridor your eardrums are continually
-assulted by the ranting and ravings of the these creatures of the 
-damned. To the west is a sturdy wooden door to a cell which probably
-holds some vaunted monster of dementia.
-~
-76 0 0
-D0
-~
-~
-0 0 22089
-D2
-~
-gate
-~
-1 22013 22075
-D3
-~
-door
-~
-1 22013 22081
-S
-#22083
-Southwestern Corner of Rock Yard~
-     AS your feet pound down upon the rock hard floor you notice how the
-you wonder what these humanoids did to deserve this enternity of
-confinement and hard labor. However, while deep with your contemplations
-you do notice several of the convicted slowly edge towards you. Hrm....
-maybe it eould be a good idea to move a tad faster.
-~
-76 0 0
-D0
-~
-~
-0 0 22090
-D1
-~
-~
-0 0 22084
-S
-#22084
-The Rock Yard~
-     You stand in the middle of an open yard. All around are large
-black boulders. As you look around you see humanoids chained to the
-floor. They all carry little picks in their hands and seem to be wildly
-pounding on the boulders. However, while the humanoids have not noticed
-you arrival large rock like Guard Golems have! This open air yard continues
-to the north, west, east. To the south will bring you back to the hallway.
-~
-76 0 0
-D0
-~
-~
-0 0 22091
-D1
-~
-~
-0 0 22085
-D2
-~
-~
-0 0 22077
-D3
-~
-~
-0 0 22083
-S
-#22085
-Southeastern Corner of Rock Yard~
-     This part of the room seems almost empty except for a beatifully
-sclupture of a winged snake. At least the convicts use there time
-constructively! It appears most life-like down to the very smallest
-scale.
-~
-76 0 0
-D0
-~
-~
-0 0 22092
-D3
-~
-~
-0 0 22084
-S
-#22086
-Cellblock IV Hallway~
-     Up ahead you can see the end of this hally but to the east you see
-door with the Words -- I'm Here -- on it.....Oh....sheit wonder what's
-in there don't yah?
-~
-76 0 0
-D0
-~
-~
-0 0 22093
-D1
-~
-door
-~
-1 22013 22087
-D2
-~
-~
-0 0 22079
-S
-#22087
-Waldo's Hiding Place~
-     Where's Waldo you might ask? Well the stupid lamer escaped from 
-the Tv cartoon and pop-up books and came to Muds to terrorize us with
-his mondo bizzaro puzzles of perception... Ever wanted to kill a 
-childhood companion? Here's your chance!
-~
-76 0 0
-D3
-~
-door
-~
-1 22013 22086
-S
-#22088
-The Computer Hacker's Cell~
-     You have entered a Sysadmin's worst nightmare. You are surrounded by
-tons of electronics equipment. Most of the cell's space is taken up by
-a large screen and some sort of strange computer. There is one of those
-ergonomic chairs with its back to you. Wailing from the chair is a smallish
-nerd. The nerd incessantly screams about a "password"? In his hand his a
-slide ruler. Although it doesn't seem to be too dangerous, it glows with
-an eldritch green sheen. The 4 foot blunder hops off his chair and whirls
-around to meet you face to kneecap. In a high squeeky voice the hacker
-says, ' I want the PASSWORD!' With the dextretity that only a Computer
-Hacker could attain he springs into your face.................
-/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
-Mental Note: While nerds are usually not aggressive when they transmorgify
-to Computer Hackdom they become what is known as Berskerus Geekus ---
-A very nasty creature of the dimbulb species.
-~
-76 0 0
-D1
-~
-door
-~
-1 22013 22089
-S
-#22089
-Cellblock I Hallway~
-     At this point of the hallway you can see a greenish glow coming from
-the door to the west. You can also hear the sounds of someone or
-something muttering about 'The password damnit! The password!'. To the north
-the hallway continues into madness.
-~
-76 0 0
-D0
-~
-~
-0 0 22096
-D2
-~
-~
-0 0 22082
-D3
-~
-door
-~
-1 22013 22088
-S
-#22090
-Northwestern Corner of Rock Yard~
-    From this point of the yard you can hear strange chanting in foreign
-tongues to the north. There is not a lot to see except for the estoric
-sigils which adorn the door to the north.
-~
-76 0 0
-D0
-~
-~
-0 22013 22097
-D1
-~
-~
-0 0 22091
-D2
-~
-~
-0 0 22083
-E
-sigils~
-     Your eyes blur as you try to decipher the the sigils. All you
-can make out is
-
-                 Beware the dog
-~
-S
-#22091
-The Rock Yard~
-     Skirting passed one of the convicts who tries to make a grab at your
-ankle you collide headon into a stout wooden door. You put your eat to
-the door and hear the sound of metal scraping into the hard wood wood
-of the very door you are standing next to! Something or someone wants out!
-~
-76 0 0
-D0
-~
-door
-~
-1 22013 22098
-D1
-~
-~
-0 0 22092
-D2
-~
-~
-0 0 22084
-D3
-~
-~
-0 0 22090
-S
-#22092
-Northeastern Corner of Rock Yard~
-     At this most northeasternly corner of the yard is  a white door with
-the the intials M.D. neatly engraved on it. As you study the door further
-you notice some writing on it.
-~
-76 0 0
-D0
-~
-door~
-1 22013 22099
-D2
-~
-~
-0 0 22085
-D3
-~
-~
-0 0 22091
-E
-writing~
-
-             The Doctor Is In
-~
-S
-#22093
-Cellblock IV Hallway~
-     This Space is for Rent --:) Contact Loki for more details
-~
-76 0 0
-D0
-~
-~
-0 0 22100
-D1
-~
-door
-~
-1 22013 22094
-D2
-~
-~
-0 0 22086
-S
-#22094
-Empty Cell~
-     This cell is strangly empty and lacking of any particulat being
-of malevance... Aside for a swampy type smell waffing up from the bed-bug
-ridden cot this room is essentially bare.
-~
-76 0 0
-D3
-~
-door
-~
-1 22013 22093
-D5
-~
-cot
-~
-1 0 22189
-S
-#22095
-The Hillside Strangler's Cell~
-     Old newspaper clipping of this monster within a man's shell descorate
-the walls of this cell like badges of honor. The cell reeks of chloraform
-and essence. As you look around to find the occupant of this cell. An almost
-invisible shimmering leaps out at you!
-~
-76 0 0
-D1
-~
-door
-~
-1 22013 22096
-S
-#22096
-Cellblock I Hallway~
-     As you move cautiously through the hallway, you try to shrug of
-the sense of impending doom which almost eclipses all hope of escaping
-this madhouse. There is another cell door to the west and the end of the
-hallway to the north.
-~
-76 0 0
-D0
-~
-~
-0 0 22102
-D2
-~
-~
-0 0 22089
-D3
-~
-door
-~
-1 22013 22095
-S
-#22097
-Son Of Sam's Cell~
-      YOu have entered Son of Sam's Cell. The walls are splattered with
-with a collage of satanic scriptures and pictographs. The room is adorned
-with goat head idols and and a deadly looking athame.
-~
-76 0 0
-D2
-~
-door
-~
-1 22013 22090
-S
-#22098
-Capt'n Hook's Cell~
-     You always wondered what happened to Capt'n Hook after he was 
-deafeated by Peter Pan. It seems that he was sentenced to this hell hole
-to serve some time. This is not a very happy camper! The room is in a
-total disarray. The bedding is shredded better than any Politican's 
-mechanical shredder. It would appear that Capt'n Hook would like to try his
-namesake on you!
-~
-76 0 0
-D2
-~
-door
-~
-1 22013 22091
-S
-#22099
-Jack the Ripper's Cell~
-     You enter a room which is done totally in white. The walls are 
-streaked with amazely accurate sketches of human anatomy. In the far
-corner you see a figure dressed in green and has a white surgical mask
-of his head. Although, you aren't into medical fashion you can only be
-impressed by the long sharp scalpel which the "Doctor" has clenched
-in his gloved covered hand. As you start to back out of the cell, the
-figure speaks, "Welcome to Operating Theater"!
-
-There is a very high proability that you are the intended guest for
-tonite's show. Having your heart removed as the show will be great
-for the ratings!
-~
-76 0 0
-D2
-~
-door
-~
-1 22013 22092
-S
-#22100
-Cellblock IV Hallway~
-   Your eardrums begin to bleed as music which is slightly off track roars
-through the lead proof cell door. You shiver as the the blood-curdling
-lyrics of some stupid teeny-booping, mother-pecked, not even good enuff
-to be called a band does major damage to your aura and coolness factor!
-~
-76 0 0
-D0
-~
-~
-0 0 22106
-D1
-~
-door
-~
-1 22013 22190
-D2
-~
-~
-0 0 22093
-S
-#22101
-Ungrateful Mortals' Cell~
-     This is the cell where the Gods put mortals who piss them off.
-~
-76 2 0
-D1
-~
-door
-~
-1 0 22102
-S
-#22102
-End of Cellblock I Hallway~
-     As you stop at the end of this hallway to the west you is a steel belted
-door with some arcane inscription on it.....As you try to decipher it the
-gist of it seems to be "DO NOT ENTER". To the north you can see massive
-gates which mark the beginning of another trial of maddness and mayhem.
-~
-76 0 0
-D0
-~
-~
-0 0 22109
-D2
-~
-~
-0 0 22096
-D3
-~
-door
-~
-1 22013 22101
-S
-#22103
-Skeletor's Crib~
-     The room is cluttered with bones and and a lot of turtle wax...Obviously
-even evil, demented super villians like to look clean and spiffy too! The
-intricate "webbing" of bones above you could almost pass for a quite
-sharp and quite deadly blade of bone.
-~
-76 0 0
-D0
-~
-door
-~
-1 22013 22110
-E
-note~
-                     Do Not Disturb
-~
-S
-#22104
-The Net Lag Lord's Cell~
-     As you try to move through the mists that envelop this room
-you can't see much of anything except for the a slight humming sound
-coming from the back of the cell. Silver silky threads of time and space
-begin to twine around you!
-~
-76 0 0
-D0
-~
-door
-~
-1 22013 22111
-S
-#22105
-The Boston Strangler's Cell~
-         The room is filled with long brush strokes of angry hues
-of crimson and cobalt. The patterns displlayed on the walls are almost
-hypnotic. The cell seems to be empty, however, it is hard to tell with
-your eyes so bedazzled!
-~
-76 0 0
-D0
-~
-door
-~
-1 22013 22112
-S
-#22106
-Cellblock IV Hallway~
-     From the room to the east you hear the sounds of whining, complaining,
-and bullshitting.. As the voice continues to drone on about utterly nonsense
-You get the feeling that the inhabintant shouldhave gotten the Death
-sentence instead of simple lock-up!
-~
-76 0 0
-D0
-~
-gate
-~
-1 22013 22113
-D1
-~
-door
-~
-1 22013 22107
-D2
-~
-~
-0 0 22100
-S
-#22107
-The Problem Mudder's Cell~
-     A poster saying Dan Quayle for President is the 1st thing you see as
-you enter this room... As you look about around you spot such praphanelia
-as a Blow-up Girlie, a How to Pick up Women and be cool Hanbook, and a
-lifetime subscription to Boy's life. Yup, i'd be scared to share a cell
-with this dude too!
-~
-76 0 0
-D3
-~
-door
-~
-1 22013 22106
-S
-#22108
-Stairs to Guard Tower~
-     There is nothing unusal about this room except for the abundance
-of large rotting feathers. They seem to all around you and within every
-nook and crany of the room. As you look upwards you can see nothing at all
-the entire exit seems to be cloaked in darkness!
-~
-76 0 0
-D1
-~
-~
-0 0 22109
-D4
-~
-~
-0 0 22118
-S
-#22109
-Cellblock III Checkpoint~
-     This checkpoint looks remarkably quit, with the exception large mirror
-where you reflection stares back at you. Very Very strange although you
-aren't glaring at the mirror your reflection is! The looking glass begins
-to glow and pulse with a life of its own.
-~
-76 0 0
-D1
-~
-gate
-~
-1 22013 22110
-D2
-~
-~
-0 0 22102
-D3
-~
-~
-0 0 22108
-S
-#22110
-Cellblock III Hallway~
-     This hallway continues into the the far east. To the west is the
-checkpoint...while to the south is yet another cell door containing
-some creature of vileness. You need not worry about light because the
-walls glow with an eriee purple glow. The cell door is riddle with 
-silver glyphs...There is definetly something nasty in that cell.
-~
-76 0 0
-D1
-~
-~
-0 0 22111
-D2
-~
-door
-~
-1 22013 22103
-D3
-~
-gate
-~
-1 22013 22109
-S
-#22111
-Cellblock III Hallway~
-     Swirling through the cacophony of madness you can see the end of this
-hallway to the east. However, this part of the hallway is strangely
-different (as if that were possible) that what you have traversed through
-so far. You feel somewhat slower....Movement, speech, even thought seems
-to be impaired by some outside force. To the south is another cell.
-~
-76 0 0
-D1
-~
-~
-0 0 22112
-D2
-~
-door
-~
-1 22013 22104
-D3
-~
-~
-0 0 22110
-S
-#22112
-End of Cellblock III Hallway~
-     Edging across the smooth stonework you can see yet another checkpoint
-to the east of here. To the south is another cell. The walls here are covered
-with some sort of goo....It seems to slide up and down the crevaices of the
-wall.
-~
-76 0 0
-D1
-~
-~
-0 0 22113
-D2
-~
-door
-~
-1 22013 22105
-D3
-~
-~
-0 0 22111
-S
-#22113
-Cellblock IV Checkpoint~
-     The goo's source seems to be coming from a crack in the ceiling. As
-it splatters upon the ebony floor and makes a titilating snap crackle
-and pop sound.....Some of the goo seems to be headed your way!
-~
-76 0 0
-D1
-~
-~
-0 0 22114
-D2
-~
-gate
-~
-1 22013 22106
-D3
-~
-~
-0 0 22112
-S
-#22114
-The Mess Hall~
-     The Creator of this area doesn't kid around when he names a room...
-Pure chaos best describes the room... Sewage seeps up from the ground while
-icy bile-black fungi mold drop from the ceiling... We won't even talk about 
-the tables and chairs! A staircase leads up into the kitchen of the master of
-this disaster.
-~
-76 0 0
-D3
-~
-~
-0 0 22113
-D4
-~
-~
-0 0 22117
-S
-#22115
-Top of Guard Tower~
-     You feel the breath of freedom here. As a cool wind flows through your
-hair you try to your travails behind you. Unfortunately, the Sentienls are
-strident in their duties. Explorer/prisoner/doomed it makes no difference
-to these inhuman guards. They level their crossbows at you......
-~
-76 0 0
-D5
-~
-~
-0 0 22067
-S
-#22116
-Captain's Quarters~
-     This room is entirely empty except for the northern wall which is
-completely composed of flawless amber. While blue flickering flames lick
-the silver-marbled floor you are move towards a strange depression in the
-amber.
-~
-76 0 0
-D5
-~
-~
-0 0 22073
-E
-amber wall~
-    In this spot of the wall you can see ?movement? as if something or
-someone is waiting....waiting to with prenatural certainly to do you
-BODILY HARM!
-~
-S
-#22117
-The Voddoo Chef's Kitchen~
-     The Getty Mambo is In
-
-African masks and shelves lined with dreadful
-elixers fill every nook and crany of this room.
-                      On the floor is a blood-drawn Veve' depicting
-                      the blood-rites of the Bocor.
-~
-76 0 0
-D5
-~
-~
-0 0 22114
-S
-#22118
-In the Roc's Tailfeathers~
-     YOu find yourself in the posteirer of a roc! Between the feathers and
-stench you see that the roc must have been roosting here for some time. 
-Unfortunately, the local natives or rather the local maniacs decided to
-kill it. You are standing in the rotting decayed corpse of a gigantic
-corpse. There is nothing else here of interesting except for the slight
-rustling inside the corpse. Perhaps, it would be good idea to leave
-whatever parasite that is in the corpse to its business before it decides
-it would like live meat instead.
-~
-76 0 0
-D5
-~
-~
-0 0 22108
-S
-#22119
-Elegant Staircase Landing~
-     You arrive at the top of the staircase, as you look around you can
-see strange emanations coming from the north. To the west you feel fresh air
-blowing in. To the south is a door with a shiny brass plaque on affixed to
-it and to the east you see BLOOD dripping at the bottom of the door!
-~
-76 0 0
-D0
-~
-~
-0 0 22120
-D1
-~
-door
-~
-1 0 22197
-D2
-~
-bronzed
-~
-1 0 22132
-D3
-~
-~
-0 0 22131
-D5
-~
-~
-0 0 22078
-E
-plaque~
-
-
-The Warden's Office
-
-********Over 2 millions souls in Hell*********
-~
-S
-#22120
-Death's Row Checkpoint~
-                 _   ____
-                 \\ (((  )
-                  \\ c ..
-                   \\(  >
-                    \\ - )
-                   /-\\V---\
-                   | |\\  | |
-                   | | \\ | |
-                    \===\\|/         \
-                     ---O\\          ||
-                     |  | \\         '/
-                     |  | |\\       '/
-                     |  | | \\     '/
-                     L__)__) \\   '/
-                              \\-'/
-                               \_/
-A statue stands here....not pretty to look at but has a very sharp scythe
-in its hands. Death's Row right? Maybe this is memorial for the great guy
-of mayhem? Or maybe it's NOT!
-The Grim Reaper's eyes begin to glow as the scythe comes down on you!
-
-~
-76 0 0
-D0
-~
-gate
-~
-1 22013 22125
-D2
-~
-~
-0 0 22119
-S
-#22121
-(null)~
-Empty
-~
-76 0 0
-D3
-~
-door
-~
-1 22013 22125
-S
-#22122
-(null)~
-Empty
-~
-76 0 0
-D1
-~
-door
-~
-1 22013 22125
-S
-#22123
-22123~
-Empty
-~
-76 0 0
-S
-#22124
-22124~
-Empty
-~
-76 0 0
-S
-#22125
-Death's Row~
-                         ABADON ALL HOPE!
-
-Only Death Awaits You On The Path That You Tread!
-~
-76 0 0
-D0
-~
-~
-0 0 22126
-D2
-~
-gate
-~
-1 22013 22120
-S
-#22126
-Choose Your Own Death Room~
-     So you want to be a Hero?
-
-Well it looks like you lose!
-
-
-
-
-
-Well maybe not....but choose well....Great Rewards or Great Scarifices
-will be made with you decision. Will it be Door #1, Door #2, or Door #3?
-~
-76 0 0
-D0
-~
-door
-~
-1 0 22130
-D1
-~
-door
-~
-1 0 22127
-D3
-~
-door
-~
-1 9 22129
-S
-#22127
-Gas Chamber~
-
-
-                 Wrong Choice!
-
-               Sorry! You lose!
-~
-76 2 0
-S
-#22128
-Master Lockup Post~
-     You bang you face into this gate as it springs into existence all
-of a sudden. There seems to be no guiarding the gate, unless you count the
-ghostly Renevants who start gliding towards you with swords in hand.
-~
-76 0 0
-D0
-~
-~
-0 0 22079
-D2
-~
-Gate
-~
-1 22013 22072
-D3
-~
-gate
-~
-1 22013 22078
-S
-#22129
-The Axman's Gallery~
-     What a nice gallery! Heads of inmates, guards, and even my Calculus
-Prof.! As you shamble your way across the room a great brute of a man
-rises up from a newly sheared body! He holds in his head a large bloodied
-AXE! In a deep baritone voice he says, 'Ahh just a little off the top right?'
-With that he moves towards you!
-~
-76 0 0
-D0
-~
-bloodied-door door bloodied~
-2 22126 22196
-S
-#22130
-The Room of Many Volts~
-    The first thing you notice when you walk into this room is a figure in
-a chair. The room itself is nothing special (aside from the burn marks all
-over the walls?). The cowled figured rises to greet you. Ever courteous,
-you put you hand out to shake his! WRONG! as he moves closer flaring
-electricity surrounds his body!
-~
-76 0 0
-D0
-~
-singed
-~
-2 22130 22196
-S
-#22131
-Stairwell to Roof~
-     More fresh air bellows from the top of the stair. Its unually peaceful
-here. However, you can hear the flapping of wings and odd squawking noises
-coming from the roof. Perhaps, some type of pigeon is roosting up there?
-~
-76 0 0
-D1
-~
-~
-0 0 22119
-D4
-~
-~
-0 0 22135
-S
-#22132
-The Waiting Room~
-     You are standing in a nicely paneled room. Wooden chairs shaped like
-Imps stand along the walls and a long ivory desk with a cat - o - nine tails
-and handcuffs placed on the it. A lucious woman with cat-like features
-sits at the desk preening herself in hand mirror. There is a plaque on the
-desk.
-~
-76 0 0
-D0
-~
-bronzed
-~
-1 0 22119
-D2
-~
-marked
-~
-1 0 22133
-E
-plaque~
-
-
-
-
-                       Succubus
-~
-S
-#22133
-The Warden's Office~
-     A hush fills the room...............................................
-In the background strains of Danse Macabre wafts up to your ears.
-A darkness of the soul, a blight of humanity, a very nasty Demon with an
-attitude. Eldritch flames fill the room. Suddenly eveything stops! A voice
-which sounds like Ed MacMahon says 'Here's Johnny!' With that a saturine type
-man walks out of the shadows. 'Well what do we have here? Are you a good
-adventurer or a bad adventurer? Well it matters not to me! i will take you
-anyway!'
-~
-76 0 0
-D0
-~
-marked
-~
-1 0 22132
-D2
-~
-south
-~
-2 22133 22193
-D3
-~
-~
-0 0 22195
-S
-#22134
-Free-Falling Chute~
-     As you step into the room you notice it has no floor!...............
-You begin a suprisingly slow descent in the mystery of darkness and chaos.
-~
-76 0 -1 20 22151 1 0
-S
-#22135
-On the Roof~
-     CAUTION:
-
-     Has always been one of the main conceits in Mudding and AD&d
-this being the mainstream you sneak a look of the roof from the stairwell.
-WHat you see is truly news of the wierd. The roof is filled with men :)
-Men with wings! They flap in gyrate like sun-crazed dervishes. I wouldn't
-disturb the dance of the Birdmen of Devil's Island if i were you!
-~
-76 0 0
-D0
-~
-~
-0 0 22162
-D5
-~
-~
-0 0 22131
-S
-#22136
-Jason's Room of Slashing
-~
-     A Hockey Mask comes out of the darkness, attached to it is a 6ft 11inch
-body. Slasher music begins to play in the background. A gleaming butcher
-knife materializes in the brute's hand! Uh Oh........Jason's baaaacccck!
-~
-76 0 0
-D1
-~
-door
-~
-1 22151 22147
-S
-#22137
-Freddy in Solitary or How to Bottle Up A Dream Demon
-~
-     Ssssssssssssssccccccccccccrrrrrrrrrrrreeeeeeeeeeeeeeeccccccccchhhhhhhh!
-Razor on Metal assaults your ears. You quickly turn around and find the door
-closed. The smell of burnt flesh and filth causes your stomach to churn and
-make you gag. '1, 2 Freddy is gonna get you!'
-~
-76 0 0
-D3
-~
-west door
-~
-1 22151 22151
-S
-#22138
-The Infirmary~
-     You walk into a well lit room. Surprisingly, this room is sparkling
-clean and free of and debris, PLUS it is monster free! The Nurse's Office
-is to the east and the Doctor's Office is to the south.
-~
-76 0 0
-D0
-~
-north
-~
-1 0 22151
-D1
-~
-east
-~
-1 0 22139
-D2
-~
-south
-~
-1 0 22140
-S
-#22139
-The Nurse's Office or Norman Bates' New Occupation~
-     The Transvestite Pyscho Slasher was able to land a job as the
-Prison's Nurse! She? uh He? uh It? says 'my mother told me you were coming!'
-With that He? jumps across his? desk advances towards you!
-~
-76 0 0
-D3
-~
-west door
-~
-1 0 22138
-S
-#22140
-Dr. Frankenstein's Laboratory~
-     The room is filled all sorts of contraptions, vials, and electrical
-paraphanalia. The big guy (Frankie's monster) is sitting at a long table
-reading Keats? WELL WHAT DID YOU THINK A MONSTER WOULD READ? Poor insane
-Frakenstein is moaning in the corner, 'It's Alive! and it wants to Party!'
-There is a large green door to the south but 1st it would be a good idea
-to dispatch the towering monster which is about to make you go splat!
-~
-76 0 0
-D0
-~
-north
-~
-1 0 22138
-D2
-~
-south green 
-~
-2 22140 22141
-S
-#22141
-ACME MAGIC TELEPORTER~
-     You have a fraction of a second before your molecules are ripped
-apart and transported ELSEWHERE.
-~
-76 0 -1 10 22142 1 0
-S
-#22142
-Treasury~
-     Here lies the the wealth which the Sand Lord accumulated throughout the
-centries. Gold, jewels, and arcane items shine enticingly in your eyes
-~
-76 0 0
-D0
-~
-door
-~
-2 22142 22143
-S
-#22143
-The Guardian's Lair~
-     You enter a room where the sand is blasted by the hate and power of
-the Guardian's force. The southern door beckons you but first you must
-defeat the Guardian.
-~
-76 0 0
-D0
-~
-north
-~
-1 0 22144
-D2
-~
-south
-~
-2 22142 22142
-S
-#22144
-Seashell Hall~
-     The Sand Lord's taste in decor is impeccable. Shells of all colours
-decorate the entire room. One incredibly large and incredibly beautiful
-shell catches your eye. A throne of made entirely out of opal stands before.
-~
-76 0 0
-D0
-~
-north door
-~
-1 0 22145
-D2
-~
-shell secret
-~
-2 22144 22143
-S
-#22145
-The Sun Room~
-     Luckily for you the Sand Knight's are baking in the sun which streams
-in from the high pane glass in the ceiling. To the south is a large ornate
-door, and to the west is a door covered with arcane runes.
-~
-76 0 0
-D1
-~
-east
-~
-1 0 22153
-D2
-~
-south
-~
-1 0 22144
-D3
-~
-west arcane
-~
-1 0 22148
-S
-#22146
-Maximum Security Checkpoint~
-     Nothing hinders your way...Nothing Would, who would be stupid enough to
-enter Maximun Security?
-~
-76 0 0
-D0
-~
-gate
-~
-2 22151 22147
-D2
-~
-~
-0 0 22151
-S
-#22147
-Dark Hallway~
-Lights Out ----:)Loki didn't play the electric bill again
-~
-76 0 0
-D0
-~
-door
-~
-2 22151 22150
-D1
-~
-door
-~
-2 22151 22149
-D2
-~
-gate
-~
-2 22151 22146
-D3
-~
-West
-~
-1 22151 22136
-S
-#22148
-Sand Sorcerer's Shoppe~
-     The room is filled with all our magical and clerical needs. The Sand
-Sorcerer keeps a full larder of vials and potions. To the south is a small
-gate.
-~
-76 16 0
-D1
-~
-east
-~
-1 0 22145
-D2
-~
-gate small south
-~
-1 0 22152
-S
-#22149
-Buffalo Bill's Cell~
-    Meat racks are filled with decaying corpses. The flesh carved from
-the corpses in steak-like sizes. A hollow chuckle comes from the corner
-of the room? 'Would you like to join my eatery?'
-~
-76 0 0
-D3
-~
-door
-~
-2 22151 22147
-S
-#22150
-Michael Myer's Cell~
-     A dry whisper carreses your ears like a poisoness viper. The room is
-bare accept for the motionless figure whose eyes bore into your very being.
-Death...Death Incarnated....in the shell of a man.
-~
-76 0 0
-D2
-~
-door
-~
-2 22151 22147
-S
-#22151
-Darkness~
-    Darkness Spreads out from the north, east and south. Throughout the
-finite void of some Netherdaemon's imagination springs the Underdark, the
-terror of silence surrounds you. This is the basement level of the prison
-This is the basement level of Hell Or perhaps the basement level of our own 
-Nightmare!
-~
-76 0 0
-D0
-~
-~
-0 0 22146
-D1
-~
-East
-~
-1 22151 22137
-D2
-~
-south
-~
-1 0 22138
-S
-#22152
-Portal Room~
-      This room is filled with doors in all directions. Perhaps, an egress
-can be found through one of these?
-~
-76 0 0
-D0
-~
-north
-~
-0 0 13769
-D1
-~
-east
-~
-0 0 3014
-D2
-~
-west
-~
-0 0 22179
-D3
-~
-west
-~
-0 0 25000
-S
-#22153
-Holding Room~
-     CAPTURED!
-The Sand Lord's Knights have captured you while you were traveling through
-the island. Strangely, enough the door to the west in unlock and unattended!
-~
-76 16 -1 10 22153 1 0
-D3
-~
-door west
-~
-1 0 22145
-S
-#22154
-Baba Yaga's Larder~
-     Bam! You saw a dot in the sky and now Baba Yaga has decided to add you
-to her larder. Being plucked out of the sky by an evil Witch is not a good
-way to start off the day!
-~
-76 0 0
-D1
-~
-door
-~
-1 22154 22155
-S
-#22155
-Inside Baba Yaga's Hut~
-     Simply disgusting! Baba hasn't had a maid up here in a long time. Filth
-is an understatment. A ratty looking rug looks almost alive with teeming
-lice. Skulls, bones, and 10 year old bread mold decorate the walls. Oh...
-let's not forget Baba herself!...The crone advances!
-~
-76 0 0
-D3
-~
-door west
-~
-1 22154 22154
-D5
-~
-rug
-~
-1 0 22156
-S
-#22156
-Passing Over A Roof~
-     As you step out into thin air you see a roof coming into view...
-~
-76 0 -1 10 22162 1 0
-S
-#22157
-Davy Jone's Locker~
-     This water-filled locker seems to have a sliding panel in the back!
-~
-76 1 9
-D0
-~
-panel north
-~
-1 0 22158
-D2
-~
-door south
-~
-1 0 22173
-S
-#22158
-Underwater Intersection~
-     You feel great turberlance from up above...while passageways continue
-on from west, north and south.
-~
-76 1 9
-D0
-~
-~
-0 0 22160
-D2
-~
-panel door south
-~
-1 0 22157
-D3
-~
-~
-0 0 22159
-D4
-~
-~
-0 0 22185
-S
-#22159
-Underwater Corridor~
-     The passageway continues to the south and the east.
-~
-76 1 9
-D1
-~
-~
-0 0 22158
-D2
-~
-~
-0 0 22066
-S
-#22160
-Musty Corridor~
-     Phew! Break out the Arm 'n Hammer! The corridor continues to the north
-and south.
-~
-76 1 0
-D0
-~
-~
-0 0 22161
-D2
-~
-~
-0 0 22159
-S
-#22161
-Sea Witch's Lair~
-     A huge chair made completely out of seaweed and pearls stands before you.
-The walls are covered with paintings depiction the dismemberement of an
-adventurer. Wait! that adventurer is you! EEEEEKkkkkkk The Sea Witch
-materializes before you.
-~
-76 0 0
-D2
-~
-~
-0 0 22160
-S
-#22162
-Edge of the Roof~
-     You almost fall off the roof but luckily you manage to hang up just
-a little bit longer!
-~
-76 0 0
-D2
-~
-~
-0 0 22135
-S
-#22163
-22163~
-Empty
-~
-76 0 0
-S
-#22164
-22164~
-Empty
-~
-76 0 0
-S
-#22165
-22165~
-Empty
-~
-76 0 0
-S
-#22166
-22166~
-Empty
-~
-76 0 0
-S
-#22167
-22167~
-Empty
-~
-76 0 0
-S
-#22168
-22168~
-Empty
-~
-76 0 0
-S
-#22169
-22169~
-Empty
-~
-76 0 0
-S
-#22170
-22170~
-Empty
-~
-76 0 0
-S
-#22171
-Top of the Lighthouse~
-     At the top of this lighthouse you find yourself in complete darkness!
-No moon, no stars, it is as if you have stepped into a great void of
-empty space. However, as you try to cut through the lightlessness of the
-room your ears are brutalized by the high pitch keenings of the Banshee!
-~
-76 1 0
-D5
-~
-~
-0 0 22172
-S
-#22172
-On the Staircase~
-     As you climb the staircase, you begin to wonder about what happened to
-the caretakers of this lighthouse. You feel the heavy dampness of the ocean
-air, the top of the lighthouse must be near. You hear a wailing sound from
-up above.
-~
-76 0 0
-D4
-~
-~
-0 0 22171
-D5
-~
-~
-0 0 22175
-S
-#22173
-Pyrate's Treasure Trove~
-     You have found the treasure trove which the evil Pyrates have amassed
-through their pillaging and plundering. Chests overflowing with gold, jewels,
-weapons, and finely crafted armor are strewen across the floor like so much
-of baubles and gettygaws. Towards the back of the room you see some sort of
-metal door.
-~
-76 0 0
-D0
-~
-door north
-~
-1 0 22157
-D2
-~
-~
-0 0 22174
-S
-#22174
-Watery Grave~
-     You are in a room which is half-filled with water. You find yourself
-surrounded by the bloat decomposing corpses of the doomed sailor who were
-killed by the Pyrates. The misama of the death seems to fill your very pores.
-AS you look around you can sense some pervading evil encompasing the
-area.
-~
-76 1 0
-D0
-~
-~
-0 0 22173
-D4
-~
-~
-0 0 22175
-S
-#22175
-Stairwell~
-      The staircase appears to be made totally out of ivory. It is smooth
-to the touch and is a creamy white colour. This staricase leads both
-up and down.
-~
-76 0 0
-D2
-~
-secret door hidden south
-~
-1 0 22178
-D4
-~
-~
-0 0 22172
-D5
-~
-~
-0 0 22174
-S
-#22176
-Dusty Room~
-     Achoo!!!!!!!!! all this dust plays havoc on your sinuses. This room is
-filled with old funitures. With a thick layer of dust covering not only
-the funiture but the walls, ceiling, and the floor.
-~
-76 0 -1 10 22153 1 0
-D1
-~
-door
-~
-1 0 22178
-S
-#22177
-Dusty Room~
-     This room epitomizes bad housekeeping. There are so many housekeeping
-don't here it would take forever to clean this room. While taking
-a studious view of this room you fail to notice that the entrance you
-came through has disappeared! Oh well....while the you were rambling on
-the Killer Dust Bunnies have come!
-~
-76 2 0
-D3
-~
-~
-0 0 22178
-S
-#22178
-Ground Floor~
-     You find yourself in a room with 3 doors in it. The southern door will
-take you out of the lighthouse while the doors to the east and the west take
-you deeper into the lighthouse. To the north is a dull grey stone wall. It
-seems out of place here because it is remarkably clean and free of dust. 
-As if magic preserves it..............
-~
-76 0 0
-D0
-~
-secret
-~
-1 0 22175
-D1
-~
-east
-~
-1 0 22177
-D2
-~
-door
-~
-1 0 22183
-D3
-~
-west
-~
-1 0 22176
-S
-#22179
-On the Rocks?~
-     AS you breathe in the ocean mist you contemplate the mysteries of life
-......What the meaning of life is, what is beer foam made of, and why the
-God that made this area is rambling on so? To the west and south you can
-go more on the rocks.
-~
-76 0 5
-D2
-~
-~
-0 0 22181
-D3
-~
-~
-0 0 22180
-S
-#22180
-On the Rocks?~
-     Yeah big rocks aren't they?
-~
-76 0 5
-D1
-~
-~
-0 0 22184
-D3
-~
-~
-0 0 22179
-S
-#22181
-On the Rocks?~
-     Here upon the rocks the surf whips an ocean spray across you face.
-There is much here to see but the cool ocean air here feels good. You
-may continue on the rocks to the north or go west back to the trail of
-the lighthouse.
-~
-76 0 5
-D1
-~
-~
-0 0 22179
-D3
-~
-~
-0 0 22184
-S
-#22182
-22182~
-Empty
-~
-76 0 0
-D1
-~
-door
-~
-1 0 22183
-S
-#22183
-Entrance to Farpoint Lighthouse~
-     Here at the entrance to the lighthouse you a see a sign staked deep into
-the hard ground. The walls of the lighthouse are covered with vines and grime.
-The door to the entrance is made from stoat oak and even witht he obvious
-age of this building could proably withstand just about anything. You may
-wimp out be going south or try you luck in the lighthouse.
-~
-76 0 5
-D0
-~
-door
-~
-1 22183 22178
-D2
-~
-door
-~
-0 0 22184
-E
-sign~
-     Here be the Farpoint Lighthouse. Once the savior for all ships who
-traveled the Dragon Sea. Now, it lies codemned forevermore because
-of the Pyrates who took it over and turned into a sailor's worst nightmare.
-                                               Astinus the Historian
-~
-S
-#22184
-Path To Lighthouse~
-     As you walk closer to the Lighthouse you notice that to the west and
-east are large rocks which you could walk across. To the north is the
-Lighthouse and to the south you may be able to get back to the mainland.
-~
-76 0 5
-D0
-~
-door
-~
-1 22184 22183
-D1
-~
-~
-0 0 22181
-D2
-~
-~
-0 0 22035
-D3
-~
-~
-0 0 22180
-S
-#22185
-Giant Whirlpool~
-     The powerful undercurrents of the whirlpool rip your body limb from
-limb. This is not a good place to good swimming! Pieces of your bodies
-spin around in this whirlpool like vegatables in a food proccesor.
-~
-76 2 0
-S
-#22186
-Treetops~
-    Here in the boughs of this great tree you are almost level with the level
-with the roof of the complex. It might be possible to jump over to it. 
-But before you can do that you must fend of these 
-vicious-vampiric-spider monkeys who didn't invite you into their home!
-~
-76 0 3
-D1
-~
-~
-0 0 22135
-D5
-~
-~
-0 0 22023
-S
-#22187
-The Cage
-~
-     Hey Vern, this is a cage.......
-~
-76 0 0
-D1
-~
-door
-~
-2 22065 22065
-S
-#22188
-Underground Crawlway~
-     Will-o-Wisp lights beckon you from above, while an increasingly dreadful
-premonition comes from the west.
-~
-76 257 0 0 
-D3
-~
-~
-0 0 22189
-D4
-~
-~
-0 0 22058
-S
-#22189
-Underground Crawlway~
-     Crawling on your hands and knees you see a light coming from above you
-and swamp stench to the east.
-~
-76 257 0 0 
-D1
-~
-~
-0 0 22188
-D4
-~
-~
-0 0 22094
-S
-#22190
-The New Kids On the Block's Cell~
-     Johniee, Bobbie, uuuuh Sneazy, Dopey, and Dummy are here practicing
-there lip-synching... They were not only given life sentences but also
-given bad haircuts! Posters, dolls, and cds clutter of this washed-up band
-fill the room.
-~
-76 0 0
-D3
-~
-door
-~
-1 22013 22100
-S
-#22191
-Giant Kitty Litter Box~
-Half-eaten dolphins, sea serpents, etc... litter the box... a terrible
-stench exudes from every part of the box... You see a round ball in the
-corner WAIT! that's not a ball it's a skull of some large creature. All
-in all this is not a nice place to visit!
-~
-76 0 0
-D5
-~
-~
-0 0 22008
-S
-#22192
-The Warden's Bedroom~
-Empty
-~
-76 0 0
-D1
-~
-door
-~
-1 0 22193
-S
-#22193
-The Warden's Work Room~
-     As you edge around the pentegram, which seems to have been blasted into
-the sold stonework, You notice a red painted door and a blue steel door.
-There is some writing on the red door to the south.
-~
-76 0 0
-D0
-~
-south
-~
-2 22133 22133
-D1
-~
-east
-~
-1 0 22134
-D2
-Do Not Enter!
-~
-Red Door
-~
-1 22193 2
-E
-red~
-Do Not Enter!
-~
-S
-#22194
-The Warden's Playroom~
-Empty
-~
-76 0 0
-D3
-~
-door
-~
-2 22133 22133
-S
-#22195
-Balcony~
-     As the heat pounds down upon your hard head you gaze downward looking at 
-the inmates slave and toil under the lash of the guards. Unfortunately, as
-your attention strayed some bird decided to drop its load on you!
-Yuck all over your clothes!
-~
-76 0 0
-D1
-~
-~
-0 0 22133
-S
-#22196
-Non-Descriptive Room~
-     Nimrod, look at the name of the room!
-~
-76 0 -1 20 22119 1 0
-S
-#22197
-Parole Board~
-     The Bleeding Heart Liberals stand with the orfices flowing a steady
-supply blood, messing up not only the room but also society by letting
-criminals leave on parole and trying to get rid of the Death Penalty.
-Although, these species are generally squemish in dealing with criminals
-they don't mind attacking those who don't accept their views. One Liberal
-carries a Sharpened post from his latest demostration. He will demostrate it
-on you!
-~
-76 0 0
-D3
-~
-door
-~
-1 0 22119
-S
-#22198
-22198~
-Empty
-~
-76 0 0
-S
-#22199
-Starblade's Ekele~
-     You find yourself inside a hollowed tree. The interior is so lovingly
-sculptured that only magic could have brought about such workmenship
-and natural beauty. The walls are decorated with Ravenwing Masks and
-finely wrought tapestries depicting the history of the greatest of the
-Hawkbrothers. What sits in the center of the ekele leaves you in awe.
-The great Hearthstone of eldritch power shimmers through the veils of
-reality in its majestic glory!
-~
-76 512 0
-D0
-~
-~
-0 0 22000
-D1
-~
-~
-0 0 9300
-D3
-~
-~
-0 0 1200
-D5
-~
-~
-0 0 3008
-E
-Stallion~
-    As you look closer at the Stallion you marvel at the tight muscles
-and smooth flanks. Then you notice the Stallion's silver - blond mane
-which shines with a life of it's own. This Stallion epitomizes the
-greatest qualities of Horsekind.
-~
-S
-#22200
-Treetop Vine Bridge~
-A bridge made out vines spands out to the west and to the east. Tropical
-flowers and exoctic looking fruit decorate the railings.
-~
-76 0 0
-D1
-~
-~
-0 0 22186
-D3
-~
-~
-0 0 22201
-S
-#22201
-Treetop Central~
-From this platform you see a some sort of treehouse to the north. The vines
-turn an odd red color as they branch off to the west while to the south
-there is an odd metallic ladder.
-~
-76 0 0
-D0
-~
-~
-0 0 22203
-D1
-~
-~
-0 0 22200
-D2
-~
-~
-0 0 22204
-D3
-~
-~
-0 0 22202
-S
-#22202
-22202~
-Empty
-~
-76 0 0
-S
-#22203
-22203~
-Empty
-~
-76 0 0
-S
-#22204
-22204~
-Empty
-~
-76 0 0
-S
-#22205
-22205~
-Empty
-~
-76 0 0
-S
-#22206
-22206~
-Empty
-~
-76 0 0
-S
-#22207
-22207~
-Empty
-~
-76 0 0
-S
-#22208
-22208~
-Empty
-~
-76 0 0
-S
-#22209
-22209~
-Empty
-~
-76 0 0
-S
-#22210
-22210~
-Empty
-~
-76 0 0
-S
-#22211
-22211~
-Empty
-~
-76 0 0
-S
-#22212
-22212~
-Empty
-~
-76 0 0
-S
-#22213
-22213~
-Empty
-~
-76 0 0
-S
-#22214
-22214~
-Empty
-~
-76 0 0
-S
-#22215
-22215~
-Empty
-~
-76 0 0
-S
-#22216
-22216~
-Empty
-~
-76 0 0
-S
-#22217
-22217~
-Empty
-~
-76 0 0
-S
-#22218
-22218~
-Empty
-~
-76 0 0
-S
-#22219
-22219~
-Empty
-~
-76 0 0
-S
-#22220
-22220~
-Empty
-~
-76 0 0
-S
-#22221
-22221~
-Empty
-~
-76 0 0
-S
-#22222
-22222~
-Empty
-~
-76 0 0
-S
-#22223
-22223~
-Empty
-~
-76 0 0
-S
-#22224
-22224~
-Empty
-~
-76 0 0
-S
-#22225
-22225~
-Empty
-~
-76 0 0
-S
-#22226
-22226~
-Empty
-~
-76 0 0
-S
-#22227
-22227~
-Empty
-~
-76 0 0
-S
-#22228
-22228~
-Empty
-~
-76 0 0
-S
-#22229
-22229~
-Empty
-~
-76 0 0
-S
-#22230
-22230~
-Empty
-~
-76 0 0
-S
-#22231
-22231~
-Empty
-~
-76 0 0
-S
-#22232
-22232~
-Empty
-~
-76 0 0
-S
-#22233
-22233~
-Empty
-~
-76 0 0
-S
-#22234
-22234~
-Empty
-~
-76 0 0
-S
-#22235
-22235~
-Empty
-~
-76 0 0
-S
-#22236
-22236~
-Empty
-~
-76 0 0
-S
-#22237
-22237~
-Empty
-~
-76 0 0
-S
-#22238
-22238~
-Empty
-~
-76 0 0
-S
-#22239
-22239~
-Empty
-~
-76 0 0
-S
-#22240
-22240~
-Empty
-~
-76 0 0
-S
-#22241
-22241~
-Empty
-~
-76 0 0
-S
-#22242
-22242~
-Empty
-~
-76 0 0
-S
-#22243
-22243~
-Empty
-~
-76 0 0
-S
-#22244
-22244~
-Empty
-~
-76 0 0
-S
-#22245
-22245~
-Empty
-~
-76 0 0
-S
-#22246
-22246~
-Empty
-~
-76 0 0
-S
-#22247
-22247~
-Empty
-~
-76 0 0
-S
-#22248
-22248~
-Empty
-~
-76 0 0
-S
-#22249
-22249~
-Empty
-~
-76 0 0
-S
-#22250
-22250~
-Empty
-~
-76 0 0
-S
-#22251
-22251~
-Empty
-~
-76 0 0
-S
-#22252
-22252~
-Empty
-~
-76 0 0
-S
-#22253
-22253~
-Empty
-~
-76 0 0
-S
-#22254
-22254~
-Empty
-~
-76 0 0
-S
-#22255
-22255~
-Empty
-~
-76 0 0
-S
-#22256
-22256~
-Empty
-~
-76 0 0
-S
-#22257
-22257~
-Empty
-~
-76 0 0
-S
-#22258
-22258~
-Empty
-~
-76 0 0
-S
-#22259
-22259~
-Empty
-~
-76 0 0
-S
-#22260
-22260~
-Empty
-~
-76 0 0
-S
-#22261
-22261~
-Empty
-~
-76 0 0
-S
-#22262
-22262~
-Empty
-~
-76 0 0
-S
-#22263
-22263~
-Empty
-~
-76 0 0
-S
-#22264
-22264~
-Empty
-~
-76 0 0
-S
-#22265
-22265~
-Empty
-~
-76 0 0
-S
-#22266
-22266~
-Empty
-~
-76 0 0
-S
-#22267
-22267~
-Empty
-~
-76 0 0
-S
-#22268
-22268~
-Empty
-~
-76 0 0
-S
-#22269
-22269~
-Empty
-~
-76 0 0
-S
-#22270
-22270~
-Empty
-~
-76 0 0
-S
-#22271
-22271~
-Empty
-~
-76 0 0
-S
-#22272
-22272~
-Empty
-~
-76 0 0
-S
-#22273
-22273~
-Empty
-~
-76 0 0
-S
-#22274
-22274~
-Empty
-~
-76 0 0
-S
-#22275
-22275~
-Empty
-~
-76 0 0
-S
-#22276
-22276~
-Empty
-~
-76 0 0
-S
-#22277
-22277~
-Empty
-~
-76 0 0
-S
-#22278
-22278~
-Empty
-~
-76 0 0
-S
-#22279
-22279~
-Empty
-~
-76 0 0
-S
-#22280
-22280~
-Empty
-~
-76 0 0
-S
-#22281
-22281~
-Empty
-~
-76 0 0
-S
-#22282
-22282~
-Empty
-~
-76 0 0
-S
-#22283
-22283~
-Empty
-~
-76 0 0
-S
-#22284
-22284~
-Empty
-~
-76 0 0
-S
-#22285
-22285~
-Empty
-~
-76 0 0
-S
-#22286
-22286~
-Empty
-~
-76 0 0
-S
-#22287
-22287~
-Empty
-~
-76 0 0
-S
-#22288
-22288~
-Empty
-~
-76 0 0
-S
-#22289
-22289~
-Empty
-~
-76 0 0
-S
-#22290
-22290~
-Empty
-~
-76 0 0
-S
-#22291
-22291~
-Empty
-~
-76 0 0
-S
-#22292
-22292~
-Empty
-~
-76 0 0
-S
-#22293
-22293~
-Empty
-~
-76 0 0
-S
-#22294
-22294~
-Empty
-~
-76 0 0
-S
-#22295
-22295~
-Empty
-~
-76 0 0
-S
-#22296
-22296~
-Empty
-~
-76 0 0
-S
-#22297
-22297~
-Empty
-~
-76 0 0
-S
-#22298
-22298~
-Empty
-~
-76 0 0
-S
-#22299
-22299~
-Empty
-~
-76 0 0
-S

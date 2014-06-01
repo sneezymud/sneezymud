@@ -1,9 +1,0 @@
-PLAY
-
-This command is used in the casino's to work the slot machines.
-Syntax <play game options>
-Games include : Craps, Roulette, Slots, and 21
-Typing <play game> will show the options for each game.
-
-See Also: BET
-Related Topics: CASINO

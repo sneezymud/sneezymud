@@ -1,4 +1,37 @@
 ==========================================================================
+4-17-14  : Applied new updates to system courtesy of Elmo Todurov. 
+	   -Multiplay cleaned up
+           -Database fixes
+           -Sprite Fixed
+           -Boards Fixed
+           -Various Bug Fixes
+            
+           Some promosing other technical fixes that could be used in
+           the future IPv6 and Sneezy Application monitoring. Needs some
+           tweaking to be used in this edition.	   
+
+4-16-14  : Fixed a bug that was causing the game to crash. However, this
+           maybe a wider scale problem. Any mob description greater than 
+           10 lines is causing crashes. Either I will need to determine 
+           the cause or shorten the descriptions for those exceeding 10
+           lines. 
+
+4-11-14  : Sneezy crashed last night. I've setup processes to auto restart
+           when this occurs. If you are able to determine what the source
+           of a crash (like bieng able to repeat it) contact support at
+	   support@grimhavenmud.com. I'll see what I can do about fixing
+           the problem. If you lost equipment use that same address and
+           give me a time you will be available (provide your time zone).
+
+4-05-14  : Sneezy restored
+          
+           Sneezy Restored Status: Previous player files are not available. 
+           We will however restore/load up to 5 items excluding artifacts 
+           and +50 level gear. Custom items obtain by quests/events/coins 
+           made for players will be returned. Players with homes will be 
+           provided keys to their homes.
+
+
 05-13-10 : Fixed up spell component loading so that it no longer attaches
            them to objects in a mob's inventory.
 

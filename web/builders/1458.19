@@ -1,0 +1,26 @@
+The <h> Volume System
+---------------------------
+
+Volume is how much space an item takes up, and every item in the game has a
+volume value.  Your character can carry a certain amount of volume and still
+maintain enough control of himself to move efficiently.  It makes sense that
+a player carrying a 'very large chest' is not going to be able to manage much
+else, so a large chest would have a very high volume.  Holding items in your
+hands decreases the amount of volume you can manage as those hands become
+tied up in holding the object rather than being free to carry other stuff. 
+
+Volume capacity (the max you can carry at the given time) is affected by
+your dexterity and ALSO by what is in your hands.  Obviously, a player
+wielding a sword and holding a shield can't juggle as much volume as they
+could if both hands were free.  
+
+Don't confuse volume (a measure of size) with weight (a measure of mass).
+Weight capacity is a function of strength.
+
+The use of bags, backpacks and other containers will help reduce some items
+volume as they are packed, crammed, and stuffed inside.  Not everything
+is compressed the same; compression depends largely on what sort of material
+the item is made of (cloth compresses, steel doesn't).
+
+
+Related Helpfiles: DEXTERITY, STRENGTH

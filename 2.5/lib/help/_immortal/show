@@ -1,7 +1,0 @@
-SHOW
- 
-   Used by a god to gain info about the world.   The names and virtual numbers
-   of the various zones can be obtained by SHOW ZONES.  The various types of
-   monsters/objects available can also be listed.  SHOW ROOMS will yield a 
-   quick listing of the rooms in a zone# or of a certain type (death/private)
-

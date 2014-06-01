@@ -1,7 +1,0 @@
-TERMINAL
-
-Players may change their terminal type from within the game.  Current choices
-are NONE, VT, and ANSI.  VT and Ansi modes permit use of a status bar.
-
-See Also: STATUS BAR, PROBLEMS, CLS, COLOR, PROMPT
-Related Topics: UTILITY

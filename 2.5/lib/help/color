@@ -1,9 +1,0 @@
-COLOR
-
-  Color is for users with ansi color monitor capabilities. With color, many
-aspects of the mud, including, certain words, your prompts, and tells to
-you when you are fighting, will be in color, to help you keep things straight.
-And it also looks very pretty as well.
-
-See Also: TERMINAL, STATUS BAR, PROBLEMS, CLS, PROMPT
-Related Topics: UTILITY

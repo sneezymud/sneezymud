@@ -1,9 +1,0 @@
-  Spying helps a thief character gain information about the world around 
-him/her.  After one has typed 'spy', one can look in various directions,
-and given that there is an exit in that direction, and nothing blocking
-the way (like a closed door), then the contents of the other room will
-be displayed.
- 
-   It also helps when attempting to value an item carried by another 
-person.  Usually, it will tell that person that you are looking at a particular
-item.. however, if you successfully spy, they won't notice.
