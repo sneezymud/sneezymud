@@ -1,9 +1,0 @@
-TRACK
-
-   This skill allows the user to attempt to find a path leading from where
-   you currently are to where the person or mob named as the qualifier of
-   the command is located.  Track is inhibited by certain terrain types, and
-   other discontinuities (teleport rooms, etc).  There is also a limit to how
-   far away something may be located to successfully track it.
-
-Related Topics: MOVEMENT

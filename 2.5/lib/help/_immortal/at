@@ -1,9 +1,0 @@
-AT 
- 
-   requires a modifier (room virtual number, mob or player name) and a command
-   to be executed.  Allows a god to briefly execute a command at a location 
-   without requiring him to actually go there first.  Useful if he only needs
-   to do something in a remote location briefly.  
-
-   usage:  at Brutius say hello (in Brutius's room it'll show You say,'hello')
- 

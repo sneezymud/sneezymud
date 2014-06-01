@@ -1,9 +1,0 @@
-ARMOR
-
-Usage       : cast 'armor' [target]
-Accumulative: No
-Duration    : 24 Hours
-
-The Armor spell will lower your armor by 20 points.
-
-Related Topics: SPELL INFO

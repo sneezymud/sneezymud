@@ -1,6 +1,0 @@
-RESTORE
-
-  If used on a mortal, it will return all their hit points, mana and movement.
-If used on an immortal, it will reset certain values to their default numbers.
-Indiscriminate use of this in the mortal realm is illegal.  Do not restore
-mobs or players without GOOD reason.

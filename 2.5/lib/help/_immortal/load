@@ -1,7 +1,0 @@
-LOAD
-
-For loading new objects or characters from the database. The format is:
-  load <type> <number>
-Where <type> is either 'obj' or 'char', and number is the number of the object
-or character you wish to create.
-

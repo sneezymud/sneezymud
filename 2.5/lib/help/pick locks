@@ -1,9 +1,0 @@
-PICK LOCKS
-
-For picking locks. Not all locks can be picked.  Success depends on how
-well the skill is learned.
-Ex: pick door
-Ex: pick safe
-
-See Also: DOORBASH, KNOCK, UNLOCK 
-Related Topics: MOVEMENT

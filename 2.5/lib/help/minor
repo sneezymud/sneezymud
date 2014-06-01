@@ -1,6 +1,0 @@
-
-Minor creation creates an object, either a raft, a bag, a sword, a shield, 
-a barrel or a piece of bread.
-ex:
-   cast 'minor' raft
-

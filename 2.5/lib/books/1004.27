@@ -1,7 +1,0 @@
-ITEM_RADIO  (27)
-Value[0];
-Value[1]; Number of channels
-Value[2];  (set this value to 1)
-Value[3];  (set this value to 1)
-
-

@@ -1,8 +1,0 @@
-EXITS
-
-  Gives you a list of the obvious exits from your location. Of course,
-it only shows the exits currently accessible.  If the door is closed, it
-will not show as an exit.
-
-See Also: SEARCH, OPEN
-Related Topics: MOVEMENT

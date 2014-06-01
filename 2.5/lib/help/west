@@ -1,8 +1,0 @@
-NORTH, SOUTH, WEST, EAST, UP, DOWN
-
-To walk in a given direction.
-May be shortened to the first letter of their name (N, E, S, W, U, D)
-
-See Also: ENTER, EXITS
-Related Topics: MOVEMENT
-

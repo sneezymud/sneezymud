@@ -1,9 +1,0 @@
-RECITE, SCROLL
-
-Use : Recite <Scroll> [Target]
-
-Is used to "read" a magical scroll. Target can be an object, character or
-nothing (which may be yourself).
-
-See Also: READ MAGIC
-Related Topics: SPELL INFO

@@ -1,8 +1,0 @@
-PURGE
-
-A way to make the world a little cleaner.
-Usage:
-  purge                         To empty a room of monsters and objects.
-  purge <character>             To remove a living thing. Kicks out a player.
-  purge <object>                Figure this one out yourself.
-
