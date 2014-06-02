@@ -3172,7 +3172,7 @@ int TBeing::addCommandToQue(const sstring &msg)
   if (isPc() && desc){
     if (!isPlayerAction(PLR_MAILING) && 
         desc->connected != CON_WRITING) 
-    desc->input.putInQ(msg);
+    desc->input.push(msg);
   } else {
     rc = parseCommand(msg, TRUE);
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -3420,15 +3420,15 @@ void TBeing::makeOutputPaged()
     return;
 
   sstring str;
-  Comm *c;
 
   // don't try to page xml
-  if(desc->socket->port==Config::Port::PROD_XML)
+  if (desc->socket->port==Config::Port::PROD_XML)
     return;
 
-  while((c=desc->output.takeFromQ())){
+  while (!desc->output.empty()) {
+    CommPtr c = desc->output.front();
+    desc->output.pop();
     str += c->getComm(Comm::TEXT);
-    delete c;
   }
 
   desc->page_string(str);

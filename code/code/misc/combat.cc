@@ -4383,17 +4383,14 @@ int TBeing::damageTrivia(TBeing *vict, TThing *o, int dam, spellNumT type)
   return dam;
 }
 
-void fleeFlush(TBeing *ch)
+static void fleeFlush(TBeing *ch)
 {
   if (ch->desc) {
-    commText *s;
-    while ((s = ch->desc->input.getBegin())) {
-      if (strcmp("flee", s->getText())) {
+    while (!ch->desc->input.empty()) {
+      if (ch->desc->input.front() != "flee") {
         ch->sendTo(format("Flushing input command: '%s'\n\r") % 
-             s->getText());
-        ch->desc->input.setBegin(s->getNext());
-        delete s;
-        s = NULL;
+		   ch->desc->input.front());
+	ch->desc->input.pop();
       } else {
         ch->sendTo(COLOR_BASIC, "<R>Your next queued command is a flee.<1>\n\r");
         break;
@@ -4402,16 +4399,15 @@ void fleeFlush(TBeing *ch)
   }
 }
 
-int fleeCheck(TBeing *ch)
+static int fleeCheck(TBeing *ch)
 {
   if (ch->desc) {
-    commText *s;
-    s = ch->desc->input.getBegin();
-    while (s) {
-      if (!strcmp("flee", s->getText())) {
+    std::queue<sstring> input(ch->desc->input);
+    while (!input.empty()) {
+      if (input.front() == "flee") {
         return TRUE;
       }
-      s = s->getNext();
+      input.pop();
     }
   }
   return FALSE;

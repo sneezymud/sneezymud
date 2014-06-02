@@ -773,7 +773,7 @@ void vlogf(logTypeT tError, const sstring &errorMsg)
       if (i->character->isPlayerAction(PLR_MAILING | PLR_BUGGING))
         continue;
  
-      i->output.putInQ(new SystemLogComm(lt, tError, errorMsg));
+      i->output.push(CommPtr(new SystemLogComm(lt, tError, errorMsg)));
     }
   }
 }

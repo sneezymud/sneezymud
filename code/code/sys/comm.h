@@ -8,6 +8,8 @@
 #ifndef __COMM_H
 #define __COMM_H
 
+#include <boost/shared_ptr.hpp>
+
 #include "ansi.h"
 #include "sstring.h"
 #include "enum.h"
@@ -96,6 +98,8 @@ class Comm
   virtual sstring getClientText() = 0;
   virtual sstring getXML() = 0;
 };
+
+typedef boost::shared_ptr<Comm> CommPtr;
 
 
 class UncategorizedComm : public Comm {

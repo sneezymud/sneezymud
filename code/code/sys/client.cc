@@ -49,7 +49,7 @@ void Descriptor::clientf(const sstring &msg)
 
   // This is the last sanity check.
   if (!msg.empty() && (m_bIsClient || IS_SET(prompt_d.type, PROMPT_CLIENT_PROMPT)))
-    output.putInQ(new UncategorizedComm(format("\200%s\n") % msg));
+    output.push(CommPtr(new UncategorizedComm(format("\200%s\n") % msg)));
 }
 
 void TRoom::clientf(const sstring &msg)
@@ -226,7 +226,7 @@ void Descriptor::send_client_exits()
       cbits = 0;
   roomDirData *exitdata;
   dirTypeT door;
-  RoomExitComm *comm=new RoomExitComm();
+  boost::shared_ptr<RoomExitComm> comm(new RoomExitComm());
 
   if (!(ch = character))
     return;
@@ -307,7 +307,11 @@ int Descriptor::read_client(char *str2)
         outputProcessing();
       }
 
-      output.clear();
+      {
+	std::queue<CommPtr > empty;
+	std::swap(output, empty);
+      }
+
       if (account) {
         if (IS_SET(account->flags, TAccount::IMMORTAL)) 
           vlogf(LOG_PIO, "Client Connection from *****Masked*****");
@@ -1321,30 +1325,30 @@ void TBeing::fixClientPlayerLists(bool lost)
 
       // delete the entry first
       if(d->character->isImmortal())
-	d->output.putInQ(new WhoListComm(getName(), false, GetMaxLevel(),
-					 getTimer(), isLinkdead(), prof, 
-					 title));
+	d->output.push(CommPtr(new WhoListComm(getName(), false, GetMaxLevel(),
+							       getTimer(), isLinkdead(), prof,
+							       title)));
       else 
-	d->output.putInQ(new WhoListComm(getName(), false, -1, -1, false, 
-					 prof, title));
+	d->output.push(CommPtr(new WhoListComm(getName(), false, -1, -1, false, 
+							       prof, title)));
 
       d->prompt_mode = -1;
 
       if (!lost) {
 	if(d->character->isImmortal()){
 	  // immortals get all info
-	  d->output.putInQ(new WhoListComm(getName(), true, GetMaxLevel(),
-					   getTimer(), isLinkdead(), prof,
-					   title));
+	  d->output.push(CommPtr(new WhoListComm(getName(), true, GetMaxLevel(),
+								 getTimer(), isLinkdead(), prof,
+								 title)));
 	} else {
 	  // mortals get filtered info
 	  if (d->character->canSeeWho(this)) {
 	    if (isPlayerAction(PLR_ANONYMOUS)){
-	      d->output.putInQ(new WhoListComm(getName(), true, -1, -1, false,
-					       prof, title));
+	      d->output.push(CommPtr(new WhoListComm(getName(), true, -1, -1, false,
+								     prof, title)));
 	    } else {
-	      d->output.putInQ(new WhoListComm(getName(), true, GetMaxLevel(), 
-					       -1, false, prof, title));
+	      d->output.push(CommPtr(new WhoListComm(getName(), true, GetMaxLevel(), 
+								     -1, false, prof, title)));
 	    }
 	  }
 	}

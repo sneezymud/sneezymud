@@ -200,8 +200,8 @@ void TBeing::stopmusic()
       // the U= command for MSP is supposed to set a default download
       // directory, so it oonly needs to be sent once, prior to all downloads
       // we will send a stopsound() when they enable MSP
-      sendTo(new SoundComm("music", "http://sneezymud.com/sounds/", "Off",
-			   "", -1, -1, -1, -1));
+      sendTo(CommPtr(new SoundComm("music", "http://sneezymud.com/sounds/", "Off",
+				   "", -1, -1, -1, -1)));
     }
   }
 }
@@ -229,8 +229,8 @@ void TBeing::playmusic(musicNumT music, const sstring &type, int vol, int cont, 
       // the other options should only get sent if they differ from the
       // defaults (to lessen spam)
 
-      sendTo(new SoundComm("music", "", musicStruct[music], type,
-			   vol, -1, loop, cont));
+      sendTo(CommPtr(new SoundComm("music", "", musicStruct[music], type,
+				   vol, -1, loop, cont)));
       
     }
   }
@@ -243,8 +243,8 @@ void TBeing::stopsound()
       // the U= command for MSP is supposed to set a default download
       // directory, so it oonly needs to be sent once, prior to all downloads
       // we will send a stopsound() when they enable MSP
-      sendTo(new SoundComm("sound", "http://sneezymud.com/sounds/", "Off", 
-			   "", -1,-1,-1, -1));
+      sendTo(CommPtr(new SoundComm("sound", "http://sneezymud.com/sounds/", "Off", 
+				   "", -1,-1,-1, -1)));
     }
   }
 }
@@ -459,8 +459,8 @@ void TBeing::playsound(soundNumT sound, const sstring &type, int vol, int prior,
       // with other text and missed by the client interpreter - Russ 061299
       desc->outputProcessing();
 
-      sendTo(new SoundComm("sound", "", soundStruct[sound], type,
-			   vol, prior, loop, -1));
+      sendTo(CommPtr(new SoundComm("sound", "", soundStruct[sound], type,
+				   vol, prior, loop, -1)));
     }
   }
 }

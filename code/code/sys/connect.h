@@ -1,10 +1,12 @@
 #ifndef __CONNECT_H
 #define __CONNECT_H
 
+#include <deque>
+
 #include "obj_drug.h"
 #include "stats.h"
 #include "comm.h"
-#include <deque>
+
 
 const unsigned int PROMPT_HIT               = (1<<0);
 const unsigned int PROMPT_MANA              = (1<<1);
@@ -120,86 +122,6 @@ enum connectStateT {
 class TAccount;
 class TPerson;
 class TSocket;
-
-// This stuff has to be here because we include connect.h
-// in being.h, so it tries to use these before they are declared.
-
-class commText
-{
-  private:
-    char *text;
-    commText *next;
-  public:
-    char * getText() {
-      return text;
-    }
-    void setText(char * n) {
-      text = n;
-    }
-    commText * getNext() {
-      return next;
-    }
-    void setNext( commText * n) {
-      next = n;
-    }
-   
-    commText();
-    commText(const commText &a);
-    commText & operator=(const commText &a);
-    ~commText();
-};
-
-
-class outputQ
-{
- private:
-  std::deque <Comm *> queue;
-  
- public:
-  Comm *getBegin();
-  Comm *getEnd();
-  void clear(){
-    queue.clear();
-  }
-
-  outputQ() {};
-  ~outputQ();
-  
-  Comm *takeFromQ();
-  void putInQ(Comm *);
-};
-
-class inputQ
-{
-  private:
-    commText *begin;
-    commText *end;
-
-  public:
-    commText * getBegin() {
-      return begin;
-    }
-    void setBegin(commText *n) {
-      begin = n;
-    }
-    commText * getEnd() {
-      return end;
-    }
-    void setEnd(commText *n) {
-      end = n;
-    }
-
-  private:
-    inputQ() {} // prevent use
-  public:
-    inputQ(bool);
-    inputQ(const inputQ &a);
-    inputQ & operator=(const inputQ &a);
-    ~inputQ();
-
-    bool takeFromQ(char *dest, int destsize);
-    void putInQ(const sstring &txt);
-};
 
 class editStuff
 {
@@ -521,8 +443,8 @@ class Descriptor
     int max_str;
     int prompt_mode;              // control of prompt-printing 
     char m_raw[4096];               // buffer for raw input    
-    outputQ output;                 // q of sstrings to send    
-    inputQ input;                  // q of unprocessed input  
+    std::queue<CommPtr> output;                 // q of sstrings to send
+    std::queue<sstring> input;                  // q of unprocessed input
     sessionData session;          // data for this session
     careerData career;            // data for career
     bonusStatPoints bonus_points;

@@ -369,7 +369,7 @@ void Weather::sendWeatherMessage(weatherMessT num)
         }
 
         sstring buf = colorString(ch, i, text, NULL, COLOR_BASIC, FALSE);
-        i->output.putInQ(new UncategorizedComm(buf));
+        i->output.push(CommPtr(new UncategorizedComm(buf)));
       }
     }
   }

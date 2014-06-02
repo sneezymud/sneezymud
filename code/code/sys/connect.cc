@@ -61,7 +61,6 @@ const char * const MUD_NAME_VERS = "SneezyMUD v5.2";
 static const char * const WELC_MESSG = "\n\rWelcome to SneezyMUD 5.2! May your journeys be enjoyable!\n\r\n\r";
 
 Descriptor::Descriptor() :
-  input(false),
   ignored(this)
 {
   // this guy is private to prevent being called
@@ -80,7 +79,6 @@ Descriptor::Descriptor(TSocket *s) :
   max_str(0),
   prompt_mode(0),
   output(),
-  input(true),
   session(),
   career(),
   autobits(0),
@@ -470,7 +468,6 @@ int Descriptor::outputProcessing()
   char i[MAX_STRING_LENGTH + MAX_STRING_LENGTH];
   int counter = 0;
   char buf[MAX_STRING_LENGTH + MAX_STRING_LENGTH];
-  Comm *c;
   Comm::commTypeT commtype;
   TBeing *ch = original ? original : character;
 
@@ -480,7 +477,9 @@ int Descriptor::outputProcessing()
 
   memset(i, '\0', sizeof(i));
   // Take everything from queued output
-  while((c=output.takeFromQ())){
+  while(!output.empty()){
+    CommPtr c(output.front());
+    output.pop();
     if(m_bIsClient){
       commtype=Comm::CLIENT;
     } else if(socket->port==Config::Port::PROD_XML){
@@ -502,7 +501,10 @@ int Descriptor::outputProcessing()
       vlogf(LOG_BUG, format("i = %s, last i= %s") %  buf2 % buf); 
       // Set everything to NULL, might lose memory but we dont wanna try
       // a delete cause it might crash/ - Russ
-      output.clear();
+      {
+	std::queue<CommPtr> empty;
+	std::swap(output, empty);
+      }
       break;
     } 
     // recall that in inputProcessing we have mangaled any '$' character into
@@ -523,7 +525,7 @@ int Descriptor::outputProcessing()
     }
     strcpy(buf, i);
     if (snoop.snoop_by && snoop.snoop_by->desc) {
-      snoop.snoop_by->desc->output.putInQ(new SnoopComm(ch->getName(), i));
+      snoop.snoop_by->desc->output.push(CommPtr(new SnoopComm(ch->getName(), i)));
     }
 
     // color processing
@@ -536,7 +538,6 @@ int Descriptor::outputProcessing()
       socket->writeNull();
 
     memset(i, '\0', sizeof(i));
-    delete c;
   }
   return (1);
 }
@@ -749,17 +750,17 @@ void Descriptor::cleanUpStr()
 
 void Descriptor::flushInput()
 {
-  char dummy[MAX_STRING_LENGTH];
-
-  while (input.takeFromQ(dummy, sizeof(dummy)));
+  std::queue<sstring> empty;
+  std::swap(input, empty);
 }
 
 void Descriptor::flush()
 {
-  char dummy[MAX_STRING_LENGTH];
+  std::queue<sstring> empty;
+  std::swap(input, empty);
 
-  output.clear();
-  while (input.takeFromQ(dummy, sizeof(dummy)));
+  std::queue<CommPtr> empty2;
+  std::swap(output, empty2);
 }
 
 void Descriptor::add_to_history_list(const char *arg)
@@ -2038,7 +2039,7 @@ void Descriptor::show_string(const char *the_input, showNowT showNow, allowRepla
 
 void Descriptor::writeToQ(const sstring &arg)
 {
-  output.putInQ(new UncategorizedComm(arg));
+  output.push(CommPtr(new UncategorizedComm(arg)));
 }
 
 
@@ -2523,34 +2524,34 @@ void setPrompts(fd_set out)
 
   for (d = descriptor_list; d; d = nextd) {
     nextd = d->next;
-    if ((FD_ISSET(d->socket->m_sock, &out) && d->output.getBegin()) || d->prompt_mode) {
+    if ((FD_ISSET(d->socket->m_sock, &out) && !(d->output.empty())) || d->prompt_mode) {
       update = 0;
       ch = d->character;
 
       if (!d->connected && ch && ch->isPc() &&
           !(ch->isPlayerAction(PLR_COMPACT)) && d->prompt_mode != DONT_SEND)
-        d->output.putInQ(new UncategorizedComm("\n\r"));
+        d->output.push(CommPtr(new UncategorizedComm("\n\r")));
 
 
       if (ch && ch->task) {
         if (ch->task->task == TASK_PENANCE) {
           sprintf(promptbuf, "\n\rPIETY : %5.2f > ", ch->getPiety());
-          d->output.putInQ(new UncategorizedComm(sstring(promptbuf).cap()));
+          d->output.push(CommPtr(new UncategorizedComm(sstring(promptbuf).cap())));
         } else
 
         if (ch->task->task == TASK_MEDITATE) {
           sprintf(promptbuf, "\n\rMANA : %d > ", ch->getMana());
-          d->output.putInQ(new UncategorizedComm(sstring(promptbuf).cap()));
+          d->output.push(CommPtr(new UncategorizedComm(sstring(promptbuf).cap())));
         } else
 
         if (ch->task->task == TASK_SACRIFICE) {
           sprintf(promptbuf, "\n\rLIFEFORCE : %d > ", ch->getLifeforce());
-          d->output.putInQ(new UncategorizedComm(sstring(promptbuf).cap()));
+          d->output.push(CommPtr(new UncategorizedComm(sstring(promptbuf).cap())));
         } else
 
         if (((ch->task->task == TASK_SHARPEN) || (ch->task->task == TASK_DULL)) && (obj = ch->heldInPrimHand())) {
           sprintf(promptbuf, "\n\r%s > ", ch->describeSharpness(obj).c_str());
-          d->output.putInQ(new UncategorizedComm(promptbuf));
+          d->output.push(CommPtr(new UncategorizedComm(promptbuf)));
         } else
 
         if ((ch->task->task == TASK_BLACKSMITHING)            || (ch->task->task == TASK_REPAIR_DEAD)     ||
@@ -2570,17 +2571,17 @@ void setPrompts(fd_set out)
 
           if (tObj) {
             sprintf(promptbuf, "\n\r%s (%s) > ", sstring(tObj->getName()).cap().c_str(), tObj->equip_condition(-1).c_str());
-            d->output.putInQ(new UncategorizedComm(colorString(ch, d, promptbuf, NULL, COLOR_BASIC, FALSE)));
+            d->output.push(CommPtr(new UncategorizedComm(colorString(ch, d, promptbuf, NULL, COLOR_BASIC, FALSE))));
           } else {
             strcat(promptbuf, "\n\rERROR!  Unable to find repair target! > ");
-            d->output.putInQ(new UncategorizedComm(promptbuf));
+            d->output.push(CommPtr(new UncategorizedComm(promptbuf)));
             vlogf(LOG_OBJ, format("Unable to find repair item for (%s) for prompt report (%s)") % ch->getName() % ch->task->orig_arg);
           }
 	}
       }
 
       if (d->str && (d->prompt_mode != DONT_SEND)) {
-          d->output.putInQ(new UncategorizedComm("-> "));
+	d->output.push(CommPtr(new UncategorizedComm("-> ")));
       } else if (d->pagedfile && (d->prompt_mode != DONT_SEND)) {
         sprintf(promptbuf, "\n\r[ %sReturn%s to continue, %s(r)%sefresh, %s(b)%sack, page %s(%d/%d)%s, or %sany other key%s to quit ]\n\r", 
             d->green(),  d->norm(),
@@ -2589,7 +2590,7 @@ void setPrompts(fd_set out)
             d->green(),  
             d->cur_page, d->tot_pages, d->norm(),
             d->green(),  d->norm());
-        d->output.putInQ(new UncategorizedComm(promptbuf));
+        d->output.push(CommPtr(new UncategorizedComm(promptbuf)));
       } else if (!d->connected) {
         if (!ch) {
           vlogf(LOG_BUG, "Descriptor in connected mode with NULL desc->character.");
@@ -2603,7 +2604,7 @@ void setPrompts(fd_set out)
             d->green(),  
             d->cur_page, d->tot_pages, d->norm(),
             d->green(),  d->norm());
-          d->output.putInQ(new UncategorizedComm(promptbuf));
+          d->output.push(CommPtr(new UncategorizedComm(promptbuf)));
         } else {
           if (((d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) ||
                (ch->isPlayerAction(PLR_VT100 | PLR_ANSI) && IS_SET(d->prompt_d.type, PROMPT_VTANSI_BAR)))) {
@@ -2675,7 +2676,7 @@ void setPrompts(fd_set out)
             /*
             if (d->prompt_mode != DONT_SEND && d->m_bIsClient) {
               strcpy(promptbuf, "> ");
-              d->output.putInQ(promptbuf);
+              d->output.push(CommPtr(promptbuf));
             }
             */
           }
@@ -2832,9 +2833,9 @@ void setPrompts(fd_set out)
 	    }
 	    
 
-            d->output.putInQ(new PromptComm(ct, hp, mana, piety, lifeforce,
-					    moves, gold, room, promptbuf));
-	    d->output.putInQ(comm);
+            d->output.push(CommPtr(new PromptComm(ct, hp, mana, piety, lifeforce,
+						  moves, gold, room, promptbuf)));
+	    d->output.push(CommPtr(comm));
           }
         }
       }
@@ -2848,7 +2849,7 @@ void afterPromptProcessing(fd_set out)
 
   for (d = descriptor_list; d; d = next_d) {
     next_d = d->next;
-    if(FD_ISSET(d->socket->m_sock, &out) && d->output.getBegin()){
+    if(FD_ISSET(d->socket->m_sock, &out) && !(d->output.empty())){
       if (d->outputProcessing() < 0) {
         delete d;
         d = NULL;
@@ -2874,7 +2875,7 @@ void Descriptor::worldSend(const sstring &text, TBeing *ch)
 
   for (d = descriptor_list; d; d = d->next) {
     if (!d->connected)
-      d->output.putInQ(new UncategorizedComm(colorString(ch, d, text, NULL, COLOR_BASIC, TRUE)));
+      d->output.push(CommPtr(new UncategorizedComm(colorString(ch, d, text, NULL, COLOR_BASIC, TRUE))));
   }
 }
 
@@ -2888,7 +2889,9 @@ void processAllInput()
   for (d = descriptor_list; d; d = next_to_process) {
     next_to_process = d->next;
 
-    if ((--(d->wait) <= 0) && (&d->input)->takeFromQ(comm, sizeof(comm))){
+    if ((--(d->wait) <= 0) && !d->input.empty()) {
+      strncpy(comm, d->input.front().c_str(), sizeof(comm));
+      d->input.pop();
       if (d->character && !d->connected && 
           d->character->specials.was_in_room != Room::NOWHERE) {
         --(*d->character);
@@ -3066,7 +3069,7 @@ int Descriptor::sendLogin(const sstring &arg)
     writeToQ("Note that the only password protection is at the account level.  Do not\n\r");
     writeToQ("reveal your password to others or they have access to ALL of your characters.\n\r\n\r");
 
-    output.putInQ(new LoginComm("user", "Type NEW to generate a new account.\n\rLogin: "));
+    output.push(CommPtr(new LoginComm("user", "Type NEW to generate a new account.\n\rLogin: ")));
     return FALSE;
   } else if (my_arg == "1") {
     FILE * fp = fopen("txt/version", "r");
@@ -3094,12 +3097,12 @@ int Descriptor::sendLogin(const sstring &arg)
       years_of_service -=  92;
     }
     sprintf(buf2 + strlen(buf2), "Celebrating %d years of quality mudding (est. 1 May 1992)\n\r\n\r", years_of_service);
-    output.putInQ(new UncategorizedComm(buf2));
+    output.push(CommPtr(new UncategorizedComm(buf2)));
 
     outputBuf="Please type NEW (case sensitive) for a new account, or ? for help.\n\r";
     outputBuf+=format("If you need assistance you may email %s.\n\r\n\r") % MUDADMIN_EMAIL;
     outputBuf+="\n\rLogin: ";
-    output.putInQ(new LoginComm("user", outputBuf));
+    output.push(CommPtr(new LoginComm("user", outputBuf)));
     return FALSE;
   } else if (my_arg == "NEW") {
     if (WizLock) {
@@ -3116,13 +3119,13 @@ int Descriptor::sendLogin(const sstring &arg)
           page_string(iosstring, SHOWNOW_YES);
         }
       }
-      output.putInQ(new LoginComm("wizlock", "Wiz-Lock password: "));
+      output.push(CommPtr(new LoginComm("wizlock", "Wiz-Lock password: ")));
 
       account = new TAccount();
       connected = CON_WIZLOCKNEW;
     } else {
       account = new TAccount();
-      output.putInQ(new UncategorizedComm("Enter a login name for your account -> "));
+      output.push(CommPtr(new UncategorizedComm("Enter a login name for your account -> ")));
       connected = CON_NEWLOG;
     }
     return FALSE;
@@ -3132,7 +3135,7 @@ int Descriptor::sendLogin(const sstring &arg)
       my_arg = my_arg.substr(1);
 
     if (bogusAccountName(my_arg.c_str())) {
-      output.putInQ(new UncategorizedComm("Illegal account name.\n\r"));
+      output.push(CommPtr(new UncategorizedComm("Illegal account name.\n\r")));
       delete account;
       account = NULL;
       return (sendLogin("1"));
@@ -3145,7 +3148,7 @@ int Descriptor::sendLogin(const sstring &arg)
     } else 
       *pwd = '\0';
  
-    output.putInQ(new LoginComm("pass", "Password: "));
+    output.push(CommPtr(new LoginComm("pass", "Password: ")));
     EchoOff();
     connected = CON_ACTPWD;
   }
@@ -3232,16 +3235,16 @@ int Descriptor::doAccountStuff(char *arg)
         return DELETE_THIS;
       
       if (checkForAccount(arg)) {
-        output.putInQ(new UncategorizedComm("Please enter a login name -> "));
+        output.push(CommPtr(new UncategorizedComm("Please enter a login name -> ")));
         return FALSE;
       } 
       if (strlen(arg) >= 10) {
-        output.putInQ(new UncategorizedComm("Account names must be 9 characters or less.\n\r"));
-        output.putInQ(new UncategorizedComm("Please enter a login name -> "));
+        output.push(CommPtr(new UncategorizedComm("Account names must be 9 characters or less.\n\r")));
+        output.push(CommPtr(new UncategorizedComm("Please enter a login name -> ")));
         return FALSE;
       }
       account->name=arg;
-      output.putInQ(new UncategorizedComm("Now enter a password for your new account\n\r-> "));
+      output.push(CommPtr(new UncategorizedComm("Now enter a password for your new account\n\r-> ")));
       EchoOff();
 
       connected = CON_NEWACTPWD;
@@ -3343,7 +3346,7 @@ int Descriptor::doAccountStuff(char *arg)
 
       vlogf(LOG_MISC, "Person making new character after entering wizlock password.");
 
-      output.putInQ(new UncategorizedComm("Enter a login name for your account -> "));
+      output.push(CommPtr(new UncategorizedComm("Enter a login name for your account -> ")));
       connected = CON_NEWLOG;
       break;
     case CON_WIZLOCK:
@@ -4018,12 +4021,12 @@ int Descriptor::inputProcessing()
         add_to_history_list(tmp);
       }
 
-      input.putInQ(tmp);
+      input.push(sstring(tmp));
 
       if (snoop.snoop_by && snoop.snoop_by->desc) {
 	sstring outputBuf=tmp;
 	outputBuf+="\n\r";
-	snoop.snoop_by->desc->output.putInQ(new SnoopComm(ch->getName(), outputBuf));
+	snoop.snoop_by->desc->output.push(CommPtr(new SnoopComm(ch->getName(), outputBuf)));
       }
       if (flag) {
         sprintf(buffer, "Line too long. Truncated to:\n\r%s\n\r", tmp);
@@ -4105,99 +4108,6 @@ void Descriptor::sendMotd(int wiz)
     }
     processStringForClient(sb);
     clientf(format("%d|%s") % CLIENT_MOTD % sb);
-  }
-}
-
-Comm *outputQ::getBegin()
-{
-  if(!queue.empty()){
-    return queue.front();
-  }
-
-  return NULL;
-}
-
-Comm *outputQ::getEnd()
-{
-  if(!queue.empty()){
-    return queue.back();
-  }
-
-  return NULL;
-}
-
-
-Comm *outputQ::takeFromQ()
-{
-  Comm *c=NULL;
-
-  if(!queue.empty()){
-    c=queue.front();
-    queue.pop_front();
-  }
-
-  return c;
-}
-
-void outputQ::putInQ(Comm *c)
-{
-  queue.push_back(c);
-}
-
-bool inputQ::takeFromQ(char *dest, int destsize)
-{
-  commText *tmp = NULL;
-
-  // Are we empty?
-  if (!begin)
-    return (0);
- 
-  if (begin->getText())
-    strncpy(dest, begin->getText(), destsize-1);
-  else {
-    vlogf(LOG_BUG, "There was a begin with no text but a next");
-    return (0);
-  }
-  // store it off for later
-  tmp = begin;
-
-  // update linked list-- added the if 12/02/97 cos
-  if ((begin = begin->getNext())) {
-    if (begin->getNext() == begin) {
-      begin->setNext(NULL);
-      begin = NULL;
-      vlogf(LOG_BUG, "Tell a coder, begin->next = begin");
-    }
-  } else {
-    begin = NULL;
-    end = NULL;
-  }
-
-  // trash the old text q : causes the old begin->text to be deleted
-  delete tmp;
-  tmp = NULL;
-
-  return (1);
-}
-
-void inputQ::putInQ(const sstring &txt)
-{
-  commText *n;
- 
-  n = new commText();
-  if (!n) {
-    vlogf(LOG_BUG, "Failed mem alloc in putInQ()");
-    return;
-  }
-  char *tx = mud_str_dup(txt);
-  n->setText(tx);
-  n->setNext(NULL);
- 
-  if (!begin) {
-    begin = end = n;
-  } else {
-    end->setNext(n);
-    end = n;
   }
 }
 
@@ -4361,107 +4271,6 @@ bool illegalEmail(char *buf, Descriptor *desc, silentTypeT silent)
   }
 
   return FALSE;
-}
-
-commText::commText()
-      : text(NULL), next(NULL)
-{
-}
-
-commText::commText(const commText &a)
-{
-  text = mud_str_dup(a.text);
-  if (a.next)
-    next = new commText(*a.next);
-  else
-    next = NULL;
-}
-
-commText & commText::operator=(const commText &a)
-{
-  if (this == &a) return *this;
-
-  delete [] text;
-  text = mud_str_dup(a.text);
-
-  commText *ct;
-  while ((ct = next)) {
-    next = ct->next;
-    delete ct;
-  }
-
-  if (a.next)
-    next = new commText(*a.next);
-  else
-    next = NULL;
-  return *this;
-}
-
-commText::~commText()
-{
-  if (text) {
-    delete [] text;
-    text = NULL;
-  }
-}
-
-inputQ::inputQ(bool n) :
-  begin(NULL),
-  end(NULL)
-{
-}
-
-inputQ::inputQ(const inputQ &a) :
-  begin(NULL),
-  end(NULL)
-{
-  if (a.begin)
-    begin = new commText(*a.begin);
-  else
-    begin = NULL;
-
-  if (a.begin) {
-    commText *ct = NULL;
-    for (ct = begin; ct->getNext(); ct = ct->getNext());
-    end = ct;
-  } else
-    end = NULL;
-}
-
-inputQ & inputQ::operator=(const inputQ &a)
-{
-  if (this == &a) return *this;
-  commText *ct, *ct2;
-  for (ct = begin; ct; ct = ct2) {
-    ct2 = ct->getNext();
-    delete ct;
-  }
-  if (a.begin)
-    begin = new commText(*a.begin);
-  else
-    begin = NULL;
-
-  if (a.begin) {
-    for (ct = begin; ct->getNext(); ct = ct->getNext());
-    end = ct;
-  } else
-    end = NULL;
-
-  return *this;
-}
-
-inputQ::~inputQ()
-{
-  commText *ct, *ct2;
-  for (ct = begin; ct; ct = ct2) {
-    ct2 = ct->getNext();
-    delete ct;
-  }
-}
-
-outputQ::~outputQ()
-{
-  queue.clear();
 }
 
 editStuff::editStuff()
