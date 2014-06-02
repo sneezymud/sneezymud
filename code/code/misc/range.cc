@@ -941,6 +941,11 @@ int clearpath(int room, dirTypeT dir)
 }
 
 
+static bool wordBeginsWith(sstring const& haystack, sstring const& needle) {
+  size_t pos = haystack.lower().find(needle.lower());
+  return pos != sstring::npos && (pos == 0 || haystack[pos-1] == ' ');
+}
+
 void TBeing::doScan(const char *argument)
 {
   const char *rng_desc[] =
@@ -978,6 +983,7 @@ void TBeing::doScan(const char *argument)
   bool found = FALSE;
   TThing *t=NULL;
   bool all = FALSE;
+  sstring grepBy;
 
   argument_split_2(argument, arg1, arg2);
   float swt;
@@ -985,6 +991,7 @@ void TBeing::doScan(const char *argument)
   dirTypeT sd = getDirFromChar(arg1);
   dirTypeT smin, smax;
   if (sd == DIR_NONE) {
+    grepBy = arg1;
     smin = MIN_DIR;
     smax = dirTypeT(MAX_DIR-1);
     swt = 1.5;
@@ -1022,7 +1029,7 @@ void TBeing::doScan(const char *argument)
         continue;
       if (t == this)
         continue;
-      if (canSee(t)) {
+      if (canSee(t) && wordBeginsWith(t->name, grepBy)) {
         sstring nc_name = format("%30s") % t->getNameNOC(this);
         int name_pos = nc_name.find_first_not_of(" ");
 
@@ -1030,7 +1037,7 @@ void TBeing::doScan(const char *argument)
 
         sendTo(COLOR_MOBS, format("%s : right here\n\r") % nc_name);
         found = TRUE;
-      } else if (canSee(t, INFRA_YES)) {
+      } else if (canSee(t, INFRA_YES) && wordBeginsWith(t->name, grepBy)) {
         sendTo(COLOR_MOBS, format("%30s : right here\n\r") % "A blob of heat");
         found = TRUE;
       }
@@ -1078,7 +1085,7 @@ void TBeing::doScan(const char *argument)
           TBeing *tbt = dynamic_cast<TBeing *>(t);
           if (!tbt)
             continue;
-          if (can_see_char_other_room(this, tbt, real_roomp(rm))) {
+          if (can_see_char_other_room(this, tbt, real_roomp(rm)) && wordBeginsWith(t->name, grepBy)) {
             sstring nc_name = format("%30s") % tbt->getNameNOC(this);
             int name_pos = nc_name.find_first_not_of(" ");
 
@@ -1091,7 +1098,7 @@ void TBeing::doScan(const char *argument)
               hindered = TRUE;
               break;
             }
-          } else if (canSee(tbt, INFRA_YES)) {
+          } else if (canSee(tbt, INFRA_YES) && wordBeginsWith(t->name, grepBy)) {
             sendTo(COLOR_MOBS, format("%30s : %s %s\n\r") % "A blob of heat" % rng_desc[range] % dirs_to_blank[i]);
             nfnd++;
             found = TRUE;
