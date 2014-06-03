@@ -28,8 +28,8 @@ Database
 ~~~~~~~~
 
 * Sneezy connects to MySQL over TCP, so enable this.
-* Create database sneezy
-* Create user sneezy and grant some privileges on sneezy db
+* Create database sneezy: create database sneezy;
+* Create user sneezy and grant some privileges on sneezy db: CREATE USER 'sneezy'@'localhost' IDENTIFIED BY '$uper$ecret'; GRANT ALL ON sneezy.* TO 'sneezy@'localhost';
 
 * Import tables:
 
