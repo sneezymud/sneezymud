@@ -29,7 +29,7 @@ class GameTime {
  private:
   GameTime();
 
-  static struct time_info_data time_info;
+  static time_info_data time_info;
 
   // this represents the arbitrary starting point for mud-time functions
   // It is Fri Aug 10 18:05:15 1990  (Gamma 0.0 release?)
@@ -45,8 +45,8 @@ class GameTime {
   static void anotherHour();
   static bool is_daytime();
   static bool is_nighttime();
-  static void realTimePassed(time_t, time_t, struct time_info_data *);
-  static void mudTimePassed(time_t, time_t, struct time_info_data *);
+  static void realTimePassed(time_t, time_t, time_info_data *);
+  static void mudTimePassed(time_t, time_t, time_info_data *);
   static void reset_time(void);
 
   // accessors

@@ -898,7 +898,7 @@ void nannyStats_output(Descriptor * desc)
                           desc->getTerritoryStat(stats[iStat].stat) +
                           statAmount;
     realStatAmount -= 100;
-    const sstring statDesc[MAX_STATS] = realStatAmount < 0 ? statDescNeg : statDescPos;
+    sstring const* statDesc = realStatAmount < 0 ? statDescNeg : statDescPos;
     int iAdj = max(realStatAmount, -realStatAmount) / cElements(statAmountAdj);
 
     output += format(stats[iStat].shortName) % desc->cyan() % desc->norm() % desc->cyan() % desc->norm();

@@ -384,7 +384,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
     case CMD_RESP_CHECKNROOM:
       value = convertTo<int>(arg);
 
-      if ((in_room == value))
+      if (in_room == value)
         return RET_STOP_PARSING;
 
       break;

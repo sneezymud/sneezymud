@@ -946,7 +946,7 @@ void TPerson::raiseLevel(classIndT Class)
   // note, we use "50" instead of a macro due to how the array is declared
   if (getLevel(Class) -1 < 50) {
     long mins;
-    struct time_info_data playing_time;
+    time_info_data playing_time;
 
     GameTime::realTimePassed((time(0) - player.time->logon) +
 			     player.time->played, 0, &playing_time);

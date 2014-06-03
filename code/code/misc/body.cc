@@ -29,8 +29,7 @@ const char *bodyNames[MAX_BODY_TYPES]={"BODY_NONE","HUMANOID",
 Body::Body(body_t body_type, int hitpoints)
   : Limb(),
   bodyType(body_type),
-  attack(NULL),
-  hit(hitpoints)
+  attack(NULL)
 {
 
   for(int mainLimb=LIMB_HEAD; mainLimb < MAX_MAIN_LIMBS; mainLimb++) {
@@ -49,8 +48,7 @@ Body::Body(body_t body_type, int hitpoints)
 Body::Body()
   : Limb(),
   bodyType(BODY_NONE),
-  attack(NULL),
-  hit(0)
+  attack(NULL)
 {
 
   for(int mainLimb=LIMB_HEAD; mainLimb < MAX_MAIN_LIMBS; mainLimb++) {

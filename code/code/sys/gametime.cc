@@ -4,7 +4,7 @@
 #include "person.h"
 
 // static defs
-struct time_info_data GameTime::time_info;
+time_info_data GameTime::time_info;
 const unsigned long GameTime::BEGINNING_OF_TIME=650336715;
 const int GameTime::YEAR_ADJUST=550;
 
@@ -137,7 +137,7 @@ time_info_data::~time_info_data()
 }
 
 // Calculate the REAL time passed over the last t2-t1 centuries (secs) 
-void GameTime::realTimePassed(time_t t2, time_t t1, struct time_info_data *now)
+void GameTime::realTimePassed(time_t t2, time_t t1, time_info_data *now)
 {
   long secs;
 
@@ -160,7 +160,7 @@ void GameTime::realTimePassed(time_t t2, time_t t1, struct time_info_data *now)
 }
 
 // Calculate the MUD time passed over the last t2-t1 centuries (secs) 
-void GameTime::mudTimePassed(time_t t2, time_t t1, struct time_info_data *now)
+void GameTime::mudTimePassed(time_t t2, time_t t1, time_info_data *now)
 {
   long secs;
 

@@ -746,7 +746,7 @@ void TPerson::doColor(const char *buf)
       if (!(isPlayerAction(PLR_COLOR))) 
         addPlayerAction(PLR_COLOR);
       
-      if (!IS_SET(desc->prompt_d.type, PROMPT_COLOR)); 
+      if (!IS_SET(desc->prompt_d.type, PROMPT_COLOR))
         SET_BIT(desc->prompt_d.type, PROMPT_COLOR);
     } else {
       SET_BIT(desc->plr_color, PLR_COLOR_BASIC);
@@ -755,7 +755,7 @@ void TPerson::doColor(const char *buf)
       if (!(isPlayerAction(PLR_COLOR))) 
         addPlayerAction(PLR_COLOR);
       
-      if (!IS_SET(desc->prompt_d.type, PROMPT_COLOR)); 
+      if (!IS_SET(desc->prompt_d.type, PROMPT_COLOR))
         SET_BIT(desc->prompt_d.type, PROMPT_COLOR);
     }
   } else if (is_abbrev(arg, "disabled") || is_abbrev(arg, "off")) {
@@ -765,14 +765,14 @@ void TPerson::doColor(const char *buf)
       if (isPlayerAction(PLR_COLOR)) 
         remPlayerAction(PLR_COLOR);
       
-      if (IS_SET(desc->prompt_d.type, PROMPT_COLOR)); 
+      if (IS_SET(desc->prompt_d.type, PROMPT_COLOR))
         REMOVE_BIT(desc->prompt_d.type, PROMPT_COLOR);
     } else {
       sendTo("Your color is already turned off.\n\r");
       if (isPlayerAction(PLR_COLOR)) 
         remPlayerAction(PLR_COLOR);
       
-      if (IS_SET(desc->prompt_d.type, PROMPT_COLOR)); 
+      if (IS_SET(desc->prompt_d.type, PROMPT_COLOR))
         REMOVE_BIT(desc->prompt_d.type, PROMPT_COLOR);
     }
   } else if (is_abbrev(arg, "everything") || is_abbrev(arg, "all")) {

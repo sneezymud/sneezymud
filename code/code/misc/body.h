@@ -46,8 +46,6 @@ private:
   Limb *body[MAX_MAIN_LIMBS];
   Limb *attack;
 
-  short hit;
-
   TThing *sheathSlots[MAX_SHEATH];
 
 public:

@@ -23,12 +23,6 @@ class charFile;
 using std::min;
 using std::max;
 
-extern "C" {
-#if 0
-// disabled functions
-extern int max_stat(race_t, statTypeT);
-extern int min_stat(race_t, statTypeT);
-#endif
 extern wearSlotT slot_from_bit(int);
 extern void cleanCharBuf(char *);
 extern int split_string(const sstring &str, const sstring &sep, std::vector<sstring> &argv);
@@ -236,12 +230,6 @@ extern long lrand48(void);
 extern int strncasecmp(char *, char *, int);
 #endif
 
-#ifndef _CRYPT_H
-#if defined(LINUX) || defined(SUN) || defined(SOLARIS)
-extern char *crypt(const char *, const char *) throw();
-#endif
-#endif
-
 #if defined(SUN)
 extern int bind(int, const struct sockaddr *, int namelen);
 extern int gethostname(char *, int);
@@ -402,7 +390,6 @@ extern const sstring getSectorNameColor(sectorTypeT, TRoom *);
 extern const sstring getSectorDescrColor(sectorTypeT, TRoom *);
 extern spellNumT mapWeaponT(weaponT w);
 extern spellNumT getWtype_kluge(weaponT t);
-}
 
 // these needs C++ linkage to avoid conflict with functions in stdlib
 extern int remove(TBeing *, TThing *);

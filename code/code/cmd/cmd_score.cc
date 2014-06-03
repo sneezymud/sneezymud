@@ -13,7 +13,7 @@
 
 void TBeing::doScore()
 {
-  struct time_info_data playing_time;
+  time_info_data playing_time;
   sstring Buf, tString;
 
   sendTo(format("You have %s%d%s/%s%d%s hit points, %s%d%s/%s%d%s moves and ") %	 red() % getHit() % norm() %

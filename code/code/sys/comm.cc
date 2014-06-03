@@ -39,10 +39,6 @@ extern "C" {
 #include <arpa/inet.h>
 }
 
-const int PACKET_BUFFER_SIZE = 40960;
-const int MAX_HOSTNAME =   256;
-const int MAX_SOCKET_WRITE =  40960;
-
 const int PROMPT_DONT_SEND = -1;
 
 SystemTask *systask;

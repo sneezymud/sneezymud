@@ -39,8 +39,8 @@ extern std::vector<TDrugInfo>drugTypes;
 
 class drugData {
  public:
-    struct time_info_data first_use;
-    struct time_info_data last_use;
+    time_info_data first_use;
+    time_info_data last_use;
     unsigned int total_consumed;
     unsigned int current_consumed;
 

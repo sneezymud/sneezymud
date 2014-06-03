@@ -195,11 +195,13 @@ class TGoldModifier {
     float   operator  =(float tCheck) { return valAssign(tCurrent =  tCheck); }
     float   operator +=(float tCheck) { return valAssign(tCurrent += tCheck); }
     float   operator -=(float tCheck) { return valAssign(tCurrent -= tCheck); }
+    /*
     bool    operator ==(float tCheck) { return valAssign(tCurrent == tCheck); }
     bool    operator > (float tCheck) { return (tCurrent >  tCheck); }
     bool    operator >=(float tCheck) { return (tCurrent >= tCheck); }
     bool    operator < (float tCheck) { return (tCurrent >  tCheck); }
     bool    operator <=(float tCheck) { return (tCurrent >= tCheck); }
+    */
 
     float   getVal() { return tCurrent; }
     void    setMM(float tNMin, float tNMax) {

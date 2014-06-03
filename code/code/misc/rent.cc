@@ -154,7 +154,7 @@ static ubyte credit_factor(const TBeing *ch)
   // I have basically graphed the curve to be playtime in days = (L/10) ^ 2
   // this should return a value between 0-100
 
-  struct time_info_data playing_time; 
+  time_info_data playing_time; 
   float playtime, levelfactor;
 
   GameTime::realTimePassed((time(0) - ch->player.time->logon) +

@@ -20,7 +20,7 @@
 
 static void showStatsTo(const Descriptor *d, const TBeing *ch, bool hidden_stuff)
 {
-  struct time_info_data playing_time;
+  time_info_data playing_time;
   char time_buf[160];
   char buffer[256];
   char buf3[12], buf4[12];
@@ -504,8 +504,8 @@ const char *statBonusDescr(int percent)
 void TBeing::doAttribute(const char *arg)
 {
   sstring buf, buf2, cmdbuf;
-  struct time_info_data playing_time;
-  struct time_info_data birth_data;
+  time_info_data playing_time;
+  time_info_data birth_data;
   int day;
   Descriptor *d;
 

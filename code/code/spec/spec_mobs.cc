@@ -7064,7 +7064,7 @@ int idCardProvider(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
     return FALSE;
   }
 
-  struct time_info_data birth_data;
+  time_info_data birth_data;
   GameTime::mudTimePassed(ch->player.time->birth, GameTime::getBeginningOfTime(), &birth_data);
   birth_data.year += GameTime::getYearAdjust();
   birth_data.year -= ch->getBaseAge();

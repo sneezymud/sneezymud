@@ -3795,7 +3795,7 @@ void TPerson::doAccess(const sstring &arg)
   charFile st;
   int which, lev, Class, ci;
   time_t ct;
-  struct time_info_data playing_time;
+  time_info_data playing_time;
   FILE *fp;
   TDatabase db(DB_SNEEZY);
   TAccount account;

@@ -834,7 +834,7 @@ void TBeing::statBeing(TBeing *k)
   resp *respy;
   followData *fol;
   charList *list;
-  struct time_info_data playing_time;
+  time_info_data playing_time;
   int objused;
   int i;
 
