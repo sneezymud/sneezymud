@@ -113,7 +113,7 @@ void TBeing::doScore()
 
   for (i = MAGE_LEVEL_IND; i < MAX_CLASSES; i++) {
     if (getLevel(i) && getLevel(i) < MAX_MORT) {
-      double need = getExpClassLevel(i, getLevel(i) + 1) - getExp();
+      double need = getExpClassLevel(getLevel(i) + 1) - getExp();
       tString = ((sstring)(format("%.2f") % need)).comify();
 
       if (allClassesSame) {

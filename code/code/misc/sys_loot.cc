@@ -207,7 +207,7 @@ bool sysLootLoad(resetCom & rs, TBeing *tBeing, TObj *tObj, bool isImmortal)
 
       long tObjn = tTLoot->tRNum;
 
-      if (tObjn < 0 || tObjn >= obj_index.size() ||
+      if (tObjn < 0 || (size_t)tObjn >= obj_index.size() ||
           !(tObj = read_object(tObjn, REAL))) {
         vlogf(LOG_LOW, format("Error in Loot Loader: %d") %  tTLoot->tRNum);
         return false;

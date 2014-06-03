@@ -2937,7 +2937,7 @@ int petVeterinarian(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TOb
     pet->balanceMakeNPCLikePC();
 
     // raiseLevel() aborts if there isn't enough exp, so...
-    pet->setExp(getExpClassLevel(pet->bestClass(),level));
+    pet->setExp(getExpClassLevel(level));
 
     for(int i=pet->GetMaxLevel();i<level;++i)
       pet->raiseLevel(pet->bestClass());

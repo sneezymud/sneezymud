@@ -2409,7 +2409,7 @@ void TPerson::doStat(const sstring &argument)
       // check by vnum
       TMonster *tMonster;
       long rnum = real_mobile(parm);
-      if (rnum >= 0 && rnum < mob_index.size()) {
+      if (rnum >= 0 && (size_t)rnum < mob_index.size()) {
         if ((tMonster = read_mobile(rnum, REAL))) {
           statBeing(tMonster);
           delete tMonster;
@@ -2447,7 +2447,7 @@ void TPerson::doStat(const sstring &argument)
       // check by vnum
       TObj *tObj;
       long rnum = real_object(parm);
-      if (rnum >= 0 && rnum < obj_index.size()) {
+      if (rnum >= 0 && (size_t)rnum < obj_index.size()) {
         if ((tObj = read_object(rnum, REAL))) {
           statObj(tObj);
           delete tObj;

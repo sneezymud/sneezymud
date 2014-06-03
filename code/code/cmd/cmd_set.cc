@@ -118,7 +118,7 @@ void TPerson::doSet(const char *argument)
       }
      }
 #endif
-     double f_amt = getExpClassLevel(p2ci, parm) + 0.0001;
+     double f_amt = getExpClassLevel(parm) + 0.0001;
      tper->setExp(f_amt); 
      amt = tper->checkDoneBasic(tper, p2ci, FALSE, TRUE);
      for (i = initial; i < parm; i++) {
@@ -667,8 +667,8 @@ mob->getName());
           sendTo(COLOR_MOBS, format("Setting char %s to level %d in class %s.\n\r") % mob->getName() % parm % classInfo[parm2].name);
 
           
-          mob->setExp(1+getExpClassLevel(classIndT(parm2), parm));
-          mob->setMaxExp(1+getExpClassLevel(classIndT(parm2), parm));
+          mob->setExp(1+getExpClassLevel(parm));
+          mob->setMaxExp(1+getExpClassLevel(parm));
           sendTo(COLOR_MOBS, format("Setting experience to %.1f.\n\r") %
               mob->getExp());
           int oldPracs = mob->practices.prac[parm2];
@@ -699,8 +699,8 @@ mob->getName());
           mob->calcMaxLevel();
           sendTo(COLOR_MOBS, format("Setting char %s to level %d in class %s.\n\r") % mob->getName() % parm % classInfo[parm2].name);
 
-          mob->setExp(1+getExpClassLevel(classIndT(parm2), parm));
-          mob->setMaxExp(1+getExpClassLevel(classIndT(parm2), parm));
+          mob->setExp(1+getExpClassLevel(parm));
+          mob->setMaxExp(1+getExpClassLevel(parm));
           sendTo(COLOR_MOBS, format("Setting experience to %.1f.\n\r") %
               mob->getExp());
           int oldPracs = mob->practices.prac[parm2];

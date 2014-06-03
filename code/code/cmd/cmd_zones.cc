@@ -34,7 +34,7 @@ bool zoneSorter::operator()  (const zoneSorter &x, const zoneSorter &y) const
 
 void TBeing::doZonesSingle(sstring tStString)
 {
-  long iZone        = 0/*,
+  size_t iZone        = 0/*,
 	       iZoneIter    = 0*/;
   char         tString[256] = "\0",
                tBuffer[256] = "\0",

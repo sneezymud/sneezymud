@@ -514,7 +514,7 @@ void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
           "You feel like you can hear the throbbing of the colors in this room!" // 5
           };
 
-        mud_assert(consumed >= 0 && consumed < cElements(buzzes), "consumed or potency of DRUG_FROGSLIME is set wrong!");
+        mud_assert(consumed >= 0 && (size_t)consumed < cElements(buzzes), "consumed or potency of DRUG_FROGSLIME is set wrong!");
 
         // we are using the drug right now
         if (!istick && consumed > 0)
