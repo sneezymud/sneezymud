@@ -497,7 +497,7 @@ void TBeing::doSplit(const char *argument, bool tell)
       no_members += splitShares(this, f->follower);
       // took out splitting with pets 4/25/01 -- cos
         // still need loop no matter what, the no_members tracks total
-      if ((k == this)) {
+      if (k == this) {
         if (f->follower->desc)
 	  num_pc_foll++;
       }
@@ -1041,7 +1041,6 @@ bool skillSorter::operator() (const skillSorter &x, const skillSorter &y) const
 }
 
 extern struct PolyType DisguiseList[];
-static const int MaxDisguiseType = 10; // Non-Race Specific Ones
 
 extern struct PolyType ShapeShiftList[];
 static const int MaxShapeShiftType = 10;
@@ -1107,7 +1106,7 @@ void TBeing::sendSkillsList(discNumT which)
       } else {
 	strcpy(how_long, "(Learned: When Teacher is Found)");
       }
-    } else if ((i == SKILL_WIZARDRY)) {
+    } else if (i == SKILL_WIZARDRY) {
       wizardryLevelT wiz_lev = getWizardryLevel();
       if (wiz_lev < WIZ_LEV_COMP_PRIM_OTHER_FREE) {
         if (isRightHanded())
@@ -1136,7 +1135,7 @@ void TBeing::sendSkillsList(discNumT which)
       } else if (wiz_lev >= WIZ_LEV_COMP_WRIST) {
         strcpy(how_long, "\tcomponent=any hand, inventory, waist, wrist, or neck; no speak; no gestures");
       }
-    } else if ((i == SKILL_RITUALISM)) {
+    } else if (i == SKILL_RITUALISM) {
       ritualismLevelT wiz_lev = getRitualismLevel();
       if (wiz_lev < RIT_LEV_COMP_PRIM_OTHER_FREE) {
         if (isRightHanded())
@@ -1286,7 +1285,7 @@ void TBeing::doPracSkill(const char *argument, spellNumT skNum)
   if (!*argument && skNum == TYPE_UNDEFINED) 
     return;
 
-  if ((skNum == SKILL_WIZARDRY)) {
+  if (skNum == SKILL_WIZARDRY) {
     if (hasClass(CLASS_MAGE) ||
 	hasClass(CLASS_RANGER)) {
       found=2;
@@ -1295,7 +1294,7 @@ void TBeing::doPracSkill(const char *argument, spellNumT skNum)
       sendTo("You do not know about Wizardry.\n\r");
       found = 1;
     }
-  } else if ((skNum == SKILL_RITUALISM)) {
+  } else if (skNum == SKILL_RITUALISM) {
     if (hasClass(CLASS_SHAMAN)) {
       found=2;
       wiz = 1;
@@ -1531,7 +1530,7 @@ void TPerson::doFeedback(const sstring &type, int clientCmd, const sstring &arg)
     sendTo(format("Write your %s report. Use ~ when done, or ` to cancel.\n\r") % type.lower());
     addPlayerAction(PLR_BUGGING);
     desc->connected = CON_WRITING;
-    desc->str = new const char *('\0');
+    desc->str = new const char *("\0");
     desc->max_str = MAX_MAIL_SIZE;
   }
   else
@@ -3652,17 +3651,17 @@ void TBeing::doContinue(const char *argument)
   spellType = getSpellType(discArray[spelltask->spell]->typ);
   argument = one_argument(argument, arg, cElements(arg));
 
-  if ((spellType == SPELL_PRAYER)) {
+  if (spellType == SPELL_PRAYER) {
     if (!reconcilePiety(spelltask->spell, TRUE)) {
       sendTo("You can not continue a prayer when you are low on piety.\n\r");
       return;
     }
-  } else if ((spellType == SPELL_CASTER)) {
+  } else if (spellType == SPELL_CASTER) {
     if (!reconcileMana(spelltask->spell, TRUE)) {
       sendTo("You can not continue a spell when you are low on mana.\n\r");
       return;
     }
-  } else if ((spellType == SPELL_DANCER)) {
+  } else if (spellType == SPELL_DANCER) {
     if (!reconcileLifeforce(spelltask->spell, TRUE)) { 
       // will need to change to lifeforce
       sendTo("You can not continue a invokation without enough lifeforce.\n\r");

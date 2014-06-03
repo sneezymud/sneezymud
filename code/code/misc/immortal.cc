@@ -6452,7 +6452,7 @@ void TBeing::doComment(const char *argument)
   strcpy(desc->name, "Comment");
   strcpy(desc->delname, st.aname);
 
-  desc->str = new const char *('\0');
+  desc->str = new const char *("\0");
 
   desc->max_str = MAX_MAIL_SIZE;
   if (desc->m_bIsClient)

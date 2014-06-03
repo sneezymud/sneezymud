@@ -2003,7 +2003,7 @@ static void change_obj_spec(TBeing *ch, TObj *obj, const char *arg, editorEnterT
 
 void change_chest_value2(TBeing *ch, TOpenContainer *o, const char *arg, editorEnterTypeT type)
 {
-  unsigned int loc_update;
+  long loc_update;
   int row;
   unsigned int i;
   char buf[256];

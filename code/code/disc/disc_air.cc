@@ -413,7 +413,7 @@ void suffocate(TBeing * caster, TBeing *victim,  TMagicItem * obj)
   level = obj->getMagicLevel();
 
   ret=suffocate(caster,victim,level,obj->getMagicLearnedness());
-  if ((ret==SPELL_SUCCESS)) {
+  if (ret==SPELL_SUCCESS) {
     if (caster == victim) {
       act("<W>Don't you feel stupid. You begin to choke!<z>", 
           FALSE, caster, NULL, NULL, TO_CHAR);

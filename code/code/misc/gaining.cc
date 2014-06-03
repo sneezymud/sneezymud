@@ -705,7 +705,7 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
 
         if (gm)
 	  setQuestBit(TOG_RANGER_FIRST_ELIGIBLE);
-        else if (getLevel(Class) == 7);
+        else if (getLevel(Class) == 7)
           bHasQuestAvailable = true;
       }
       if (getLevel(Class) >= 14 &&
@@ -774,7 +774,7 @@ void TPerson::advanceSelectDisciplines(classIndT Class, int numx, silentTypeT si
   int i, count, initial, final;
 
   for (i = 0; i < numx; i++) {
-    if ((Class == MAGE_LEVEL_IND)) {
+    if (Class == MAGE_LEVEL_IND) {
       CDiscipline *cd = getDiscipline(DISC_WIZARDRY);
       if (cd) {
         initial = cd->getNatLearnedness();
@@ -795,7 +795,7 @@ void TPerson::advanceSelectDisciplines(classIndT Class, int numx, silentTypeT si
         }
       }
     }
-    if ((Class == SHAMAN_LEVEL_IND)) {
+    if (Class == SHAMAN_LEVEL_IND) {
       CDiscipline *cd = getDiscipline(DISC_RITUALISM);
       if (cd) {
         initial = cd->getNatLearnedness();
@@ -887,7 +887,7 @@ void TBeing::raiseLevel(classIndT)
 
 void TMonster::raiseLevel(classIndT Class)
 {
-  if (getExp() < getExpClassLevel(Class, getLevel(Class) + 1)){
+  if (getExp() < getExpClassLevel(getLevel(Class) + 1)){
     vlogf(LOG_BUG, format("raiseLevel() called on %s when exp too low") %
 	  getName());
     return;
@@ -918,7 +918,7 @@ void TMonster::raiseLevel(classIndT Class)
 
 void TPerson::raiseLevel(classIndT Class)
 {
-  if (getExp() < getExpClassLevel(Class, getLevel(Class) + 1)){
+  if (getExp() < getExpClassLevel(getLevel(Class) + 1)){
     vlogf(LOG_BUG, format("raiseLevel() called on %s when exp too low") %  getName());
     return;
   }
@@ -1258,7 +1258,7 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
       }
     }
 
-    if(accclass==-1) {
+    if((int)accclass==-1) {
       act("$n growls, \"Get real, $N. I'm not an idiot!\"", 
                    FALSE, me, 0, ch, TO_ROOM);
       return TRUE;
@@ -1894,14 +1894,14 @@ int TBeing::initiateSkillsLearning(discNumT discipline, int initial, int final)
         value = min(value, (int) MAX_SKILL_LEARNEDNESS);
         setNatSkillValue(i, value);
         setSkillValue(i,value);
-      } else if ((discArray[i]->startLearnDo == 0)) {
+      } else if (discArray[i]->startLearnDo == 0) {
         value = max(1, discArray[i]->learn);
         value = max(value, (int) getRawNatSkillValue(i));
         value = max(value, 1);
         value = min(value, (int) MAX_SKILL_LEARNEDNESS);
         setNatSkillValue(i, value);
         setSkillValue(i,value);
-      } else if ((discArray[i]->startLearnDo < 0)) {
+      } else if (discArray[i]->startLearnDo < 0) {
         value = max(1, (amount*discArray[i]->learn));
         value = max(value, (int) getRawNatSkillValue(i));
         value = max(value, 1);
@@ -2197,7 +2197,7 @@ void TBeing::pracPath(TMonster *gm, classIndT Class)
   return;
 }
 
-double getExpClassLevel(classIndT Class, int level)
+double getExpClassLevel(int level)
 {
   // developed: 10-3-97  batopr
   // formulatic method for getting exp for each class for each level.
@@ -2215,7 +2215,7 @@ double getExpClassLevel(classIndT Class, int level)
   if (level == MAX_MORT)
     return 1000000000;
 
-  exp_amt = getExpClassLevel(Class, level-1);
+  exp_amt = getExpClassLevel(level-1);
 
   double M = mob_exp(level - 1);
 

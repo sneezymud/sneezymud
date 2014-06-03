@@ -175,7 +175,7 @@ TBeing *findNextOpponent(TBeing *ch, TBeing *cur)
     if (!tmp)
       continue;
 
-    if ((tmp == ch)) // skip ourselves
+    if (tmp == ch) // skip ourselves
       continue;
 
     if((dynamic_cast<TPerson *>(tmp))) // skip players

@@ -35,8 +35,6 @@ extern int kick_mobs_from_shop(TMonster *myself, TBeing *ch, int from_room);
 
 std::vector<shopData>shop_index(0);
 
-const unsigned int SHOP_DUMP = 124;
-
 // A note on gold_modifier[GOLD_SHOP] :
 // This is a global variable used to keep economy in check
 // it serves as a multiplier to raise/lower the price a shop buys an item
@@ -1140,9 +1138,6 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
         if (!(tThing = ch->equipment[tWear]) ||
             !(tObj   = dynamic_cast<TObj *>(tThing)))
           continue;
-
-        if (tObj->fitsSellType(tObjectManip, ch, tKeeper, tStString, tItemType, tCount, tShop));
-          //generic_sell(ch, tKeeper, tObj, tShop);
       }
 
     for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end();){

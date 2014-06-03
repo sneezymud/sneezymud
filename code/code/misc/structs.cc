@@ -1986,7 +1986,7 @@ affectedData::affectedData(const affectedData &a) :
     // this affect has reinterpreted "be" to be a char *
     // and has allocated memory to it.  Member copying is
     // inappropriate for this cast, so...
-    be = (TThing *) mud_str_dup((char *) a.be);
+    be = reinterpret_cast<TThing *>(mud_str_dup((char *) a.be));
   }
 }
 
@@ -2040,7 +2040,7 @@ affectedData & affectedData::operator=(const affectedData &a)
     // this affect has reinterpreted "be" to be a char *
     // and has allocated memory to it.  Member copying is
     // inappropriate for this cast, so...
-    be = (TThing *) mud_str_dup((char *) a.be);
+    be = reinterpret_cast<TThing *>(mud_str_dup((char *) a.be));
   }
 
   return *this;

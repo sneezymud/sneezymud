@@ -545,7 +545,7 @@ bool TBeing::isTransformableLimb(wearSlotT limb, int paired)
               break;
             }
           case WEAR_NECK:
-            if ((slot == WEAR_NECK)){
+            if (slot == WEAR_NECK){
               return FALSE;
             } else {
               break;

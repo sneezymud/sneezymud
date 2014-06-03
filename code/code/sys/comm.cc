@@ -1189,7 +1189,7 @@ void Descriptor::updateScreenVt100(unsigned int update)
 
       for (iClass = MAGE_LEVEL_IND; iClass < MAX_CLASSES; iClass++) {
         if (ch->getLevel(iClass)) {
-          double iNeed = getExpClassLevel(iClass, ch->getLevel(iClass) + 1) - ch->getExp();
+          double iNeed = getExpClassLevel(ch->getLevel(iClass) + 1) - ch->getExp();
 
           snprintf(buf + strlen(buf), cElements(buf) - strlen(buf), VT_CURSPOS, ch->getScreen(), 34);
 
@@ -1583,7 +1583,7 @@ void Descriptor::updateScreenAnsi(unsigned int update)
 
       for (iClass = MAGE_LEVEL_IND; iClass < MAX_CLASSES; iClass++) {
         if (ch->getLevel(iClass)) {
-          double iNeed = getExpClassLevel(iClass, ch->getLevel(iClass) + 1) - ch->getExp();
+          double iNeed = getExpClassLevel(ch->getLevel(iClass) + 1) - ch->getExp();
 
           buf += format(VT_CURSPOS) % ch->getScreen() % 34;
 

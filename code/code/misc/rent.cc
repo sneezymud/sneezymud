@@ -46,7 +46,6 @@
 static const char ROOM_SAVE_PATH[] = "roomdata/saved";
 static const int NORMAL_SLOT   = -1;
 static const int CONTENTS_END  = -2;
-static const int CORPSE_END  = -3;
 
 #define FREE_RENT true
 
@@ -2289,11 +2288,11 @@ void TPCorpse::removeCorpseFromList(bool updateFile)
     found = TRUE;
   } else {
     for (tmpCorpse = pc_corpse_list; tmpCorpse; tmpCorpse = tmpCorpse->nextGlobalCorpse) {
-      if ((tmpCorpse == this)) {
+      if (tmpCorpse == this) {
         vlogf(LOG_BUG,"Error in removeCorpseFromLists");
         break;
       }
-      if ((tmpCorpse->nextGlobalCorpse == this)) {
+      if (tmpCorpse->nextGlobalCorpse == this) {
         if (nextGlobalCorpse)
           tmpCorpse->nextGlobalCorpse = nextGlobalCorpse;
         else
@@ -2367,7 +2366,7 @@ void TPCorpse::addCorpseToLists()
   previousCorpse = NULL;
   nextCorpse = NULL;
   for (tmpCorpse = pc_corpse_list; tmpCorpse; tmpCorpse  = tmpCorpse->nextGlobalCorpse) {
-    if ((tmpCorpse == this))
+    if (tmpCorpse == this)
       continue;
     if (!fileName.compare(tmpCorpse->fileName)) {
       if (tmpCorpse->previousCorpse) {
@@ -3494,8 +3493,6 @@ bool noteLimitedItems(FILE * fp, const char *tag, unsigned char version, bool im
   char c, *n, *s, *d, *ad;
   signed char slot;
 
-  version = version;
-
   while (1) {
     if (fread(&slot, sizeof(signed char), 1, fp) != 1) {
       vlogf(LOG_BUG, "noteLimitedItem: Failed reading slot");
@@ -4122,7 +4119,7 @@ float old_ac_lev = mob->getACLevel();
             (aff->type == AFFECT_ORPHAN_PET) ||
             (aff->type == AFFECT_COMBAT && aff->modifier == COMBAT_RESTRICT_XP)) {
           char * tmp = mud_str_dup(ch->name);
-          aff->be = (TThing *) tmp;
+          aff->be = reinterpret_cast<TThing *>(tmp);
         }
       }
 

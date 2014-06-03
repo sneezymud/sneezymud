@@ -421,7 +421,7 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
     desc->connected = CON_WRITING;
     strncpy(desc->name, recipient.c_str(), cElements(desc->name));
 
-    desc->str = new const char *('\0');
+    desc->str = new const char *("\0");
     desc->max_str = MAX_MAIL_SIZE;
   } else
     desc->clientf(format("%d|%s") % CLIENT_MAIL % recipient);

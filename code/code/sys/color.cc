@@ -153,7 +153,7 @@ void TBeing::doPrompt(const char *arg)
     for (classIndT tClassIndex = MAGE_LEVEL_IND; tClassIndex < MAX_CLASSES; tClassIndex++)
       if (getLevel(tClassIndex) && getLevel(tClassIndex) < MAX_MORT) {
         if (getExp() > desc->prompt_d.xptnl)
-          desc->prompt_d.xptnl = getExpClassLevel(tClassIndex, getLevel(tClassIndex) + 1);
+          desc->prompt_d.xptnl = getExpClassLevel(getLevel(tClassIndex) + 1);
 
         double tNeed = desc->prompt_d.xptnl - getExp();
 

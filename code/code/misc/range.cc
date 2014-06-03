@@ -1125,7 +1125,7 @@ int TBeing::stickIn(TThing *o, wearSlotT pos, silentTypeT silent)
   int rc;
   char buf[80];
 
-  if ((pos == HOLD_RIGHT)) {
+  if (pos == HOLD_RIGHT) {
     pos = WEAR_HAND_R;
   } else if (pos == HOLD_LEFT) {
     pos = WEAR_HAND_L;

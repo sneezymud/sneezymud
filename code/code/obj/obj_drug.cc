@@ -265,7 +265,7 @@ void reapplyDrugAffect(TBeing *ch, affectedData *affptr,
 }
 
 void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
-  unsigned int consumed, potency;
+  long consumed, potency;
   int duration1hit;
   affectedData aff, *affptr;
 

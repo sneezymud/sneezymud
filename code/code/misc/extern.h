@@ -298,7 +298,7 @@ extern double get_doubling_level(float);
 extern double mob_exp(float);
 extern int kills_to_level(int);
 extern int secs_to_level(int);
-extern double getExpClassLevel(classIndT, int);
+extern double getExpClassLevel(int);
 extern int total_ac_obj(TObj *o);
 extern char LOWER(char c);
 extern char UPPER(char c);

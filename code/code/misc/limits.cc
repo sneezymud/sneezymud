@@ -716,7 +716,7 @@ void TBeing::dropLevel(classIndT Class)
   if (points.maxHit < 1)
     points.maxHit = 1;
 
-  setExp( min(getExpClassLevel(Class, getLevel(Class)), getExp()));
+  setExp( min(getExpClassLevel(getLevel(Class)), getExp()));
 
   if (points.exp < 0)
     points.exp = 0;
@@ -733,7 +733,7 @@ void TPerson::fixPracs()
     return;
 
   for(i=1;i<127;i++){
-    if(getExpClassLevel(Class,i) > getMaxExp()){
+    if(getExpClassLevel(i) > getMaxExp()){
       level = i-1;
       break;
     }
@@ -825,15 +825,15 @@ short TBeing::expectedPracs(){
       continue;
       // find level based on experience
     for(i=1;i<127;i++){
-      if(getExpClassLevel(Class,i) > getMaxExp()){
+      if(getExpClassLevel(i) > getMaxExp()){
         level = i-1;
         break;
       }
     }
     if (!level)
       vlogf(LOG_BUG, "Level exceeded 127 in expectedPracs.");
-    lvlStart = getExpClassLevel(Class,level);
-    lvlEnd = getExpClassLevel(Class,level+1);
+    lvlStart = getExpClassLevel(level);
+    lvlEnd = getExpClassLevel(level+1);
     fraction = (getMaxExp()-lvlStart)/(lvlEnd-lvlStart);
     double advancedlevel = 30.0 / getIntModForPracs();
     /*
@@ -959,8 +959,8 @@ void gain_exp(TBeing *ch, double gain, int dam)
       continue;
 
 //    const double peak2 = getExpClassLevel(Class,ch->getLevel(Class) + 2);
-    const double peak = getExpClassLevel(Class,ch->getLevel(Class) + 1);
-    const double curr = getExpClassLevel(Class,ch->getLevel(Class));
+    const double peak = getExpClassLevel(ch->getLevel(Class) + 1);
+    const double curr = getExpClassLevel(ch->getLevel(Class));
     const double gainmod = ((1.15*ch->getLevel(Class)) );
       
     // calculate exp gain
@@ -998,8 +998,8 @@ void gain_exp(TBeing *ch, double gain, int dam)
     // verifies first timers get the practices they deserve - dash
     // oct 2003
     if (ch->isPc() && ch->getMaxExp() == 0) {
-      vlogf(LOG_DASH, format("%s getting exp checked: MaxExp %.2f, Exp %.2f, Current Level Exp %.2f") %  ch->getMaxExp() % ch->getExp() % getExpClassLevel(Class, 50) % curr);
-      ch->setExp(min(ch->getExp(), getExpClassLevel(Class,50)));
+      vlogf(LOG_DASH, format("%s getting exp checked: MaxExp %.2f, Exp %.2f, Current Level Exp %.2f") %  ch->getMaxExp() % ch->getExp() % getExpClassLevel(50) % curr);
+      ch->setExp(min(ch->getExp(), getExpClassLevel(50)));
       ch->setMaxExp(curr);
     }
 
@@ -1072,9 +1072,9 @@ else
   // be with the exp they have and use that for peak and peak2
   // arbitrarily cutting loop off at 127
   for(int i=MAX_MORT;i<127;++i){
-    if(getExpClassLevel(Class,i) > ch->getExp()){
-      t_curr=getExpClassLevel(Class,i-1);
-      t_peak=getExpClassLevel(Class,i);
+    if(getExpClassLevel(i) > ch->getExp()){
+      t_curr=getExpClassLevel(i-1);
+      t_peak=getExpClassLevel(i);
       break;
     }
   }

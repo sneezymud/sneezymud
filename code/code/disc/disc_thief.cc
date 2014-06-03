@@ -539,8 +539,7 @@ void TBeing::doTrack(const char *argument)
     dist /= 2;
   else if (hasClass(CLASS_MAGE))
     dist += getLevel(MAGE_LEVEL_IND);
-  else
-    dist = dist;
+  // else no change
  
   switch (getRace()) {
     case RACE_GIANT:

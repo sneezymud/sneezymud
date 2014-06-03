@@ -183,7 +183,7 @@ void Descriptor::send_client_prompt(int, int update)
       for (iClass = MAGE_LEVEL_IND; iClass < MAX_CLASSES; iClass++) {
 	if (ch->getLevel(iClass)) {
           if (ch->getLevel(iClass) < MAX_MORT) {
-	    double iNeed = getExpClassLevel(iClass, ch->getLevel(iClass) + 1) - ch->getExp();
+	    double iNeed = getExpClassLevel(ch->getLevel(iClass) + 1) - ch->getExp();
             char   StTemp[2048];
 
 	    memset(&StTemp, 0, sizeof(StTemp));

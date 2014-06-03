@@ -145,7 +145,7 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
         ch->task->flags--;
       return FALSE;
   case CMD_SCAN:
-      if (ch->task->flags > -4 && ch->task->flags < 1);
+      if (ch->task->flags > -4 && ch->task->flags < 1)
         ch->task->flags -= 2;
       return FALSE;
   case CMD_TASK_CONTINUE:

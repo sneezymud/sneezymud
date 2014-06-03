@@ -148,7 +148,7 @@ void TBeing::stopFollower(bool remove, stopFollowerT textLimits) // default argu
     aff.bitvector = 0;
     if (master) {
       char * tmp = mud_str_dup(master->name);
-      aff.be = (TThing *) tmp;
+      aff.be = reinterpret_cast<TThing *>(tmp);
     }
     if (roomp) {
       affectTo(&aff, -1);

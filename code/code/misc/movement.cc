@@ -2265,7 +2265,7 @@ void TBeing::doLock(const char *argument)
       sendTo("It's already locked!\n\r");
     else {
       SET_BIT(exitp->condition, EX_LOCKED);
-      act("$n locks the $T.", TRUE, this, 0, (const TThing *) (exitp->getName().c_str()), TO_ROOM);
+      act("$n locks the $T.", TRUE, this, 0, reinterpret_cast<const TThing *>(exitp->getName().c_str()), TO_ROOM);
 
       sendTo("*Click*\n\r");
 
@@ -2323,7 +2323,7 @@ void TBeing::doUnlock(const char *argument)
     else {
       if (fight()) {
         act("You are forced to sacrifice a few rounds to unlock the $T.",
-            TRUE, this, 0, (const TThing *)(exitp->getName().c_str()), TO_CHAR);
+            TRUE, this, 0, reinterpret_cast<const TThing *>(exitp->getName().c_str()), TO_CHAR);
         cantHit += loseRound(5);
       }
       char buf[256];
@@ -2331,9 +2331,9 @@ void TBeing::doUnlock(const char *argument)
       if (realObj < 0)
         return;
       snprintf(buf, cElements(buf), "$n unlocks the $T with %s.", obj_index[realObj].short_desc);
-      act(buf, TRUE, this, 0, (const TThing *) (exitp->getName().c_str()), TO_ROOM);
+      act(buf, TRUE, this, 0, reinterpret_cast<const TThing *>(exitp->getName().c_str()), TO_ROOM);
       snprintf(buf, cElements(buf), "You unlock the $T with %s.", obj_index[realObj].short_desc);
-      act(buf, TRUE, this, 0, (const TThing *) (exitp->getName().c_str()), TO_CHAR);
+      act(buf, TRUE, this, 0, reinterpret_cast<const TThing *>(exitp->getName().c_str()), TO_CHAR);
      
       REMOVE_BIT(exitp->condition, EX_LOCKED);
 

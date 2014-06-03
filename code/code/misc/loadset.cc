@@ -838,8 +838,6 @@ int weightedRandomizer::add(int v, int w, int p)
 
 int weightedRandomizer::getRandomIndex(int weightMax)
 {
-  if (m_items.size() < 0)
-    return -1;
   for(unsigned int c = 0; c < iterMax; c++)
   {
     int i = ::number(0, m_items.size());

@@ -1498,7 +1498,7 @@ int bleed(TBeing * caster, TBeing * victim, int level, short bKnown)
     act("$n's prayer seems to have no effect on $N.", FALSE, caster, NULL, victim, TO_NOTVICT);
     return SPELL_FAIL;
   }
-  if (victim->isImmune(IMMUNE_BLEED, slot)) {
+  if (victim->isImmune(IMMUNE_BLEED, WEAR_BODY)) {
     act("You try to bleed $N, but $S veins are like iron!", FALSE, caster, NULL, victim,TO_CHAR);
     act("$n just tried to bleed you!  Luckily, you are immune.", FALSE, caster, NULL, victim, TO_VICT);
     act("$n's prayer seems to have no effect on $N.", FALSE, caster, NULL, victim, TO_NOTVICT);

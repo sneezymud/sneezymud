@@ -205,7 +205,7 @@ bool sysLootLoad(resetCom & rs, TBeing *tBeing, TObj *tObj, bool isImmortal)
 
       tLoaded = true;
 
-      unsigned int tObjn = tTLoot->tRNum;
+      long tObjn = tTLoot->tRNum;
 
       if (tObjn < 0 || tObjn >= obj_index.size() ||
           !(tObj = read_object(tObjn, REAL))) {

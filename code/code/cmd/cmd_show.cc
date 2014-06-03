@@ -241,7 +241,7 @@ sstring showComponentTechnical(const int tValue)
   // Check for dissection loads.
   // This doesn't check for hard-coded ones such as 'by race' and such.
   for (unsigned int tDissectIndex = 0; tDissectIndex < dissect_array.size(); tDissectIndex++)
-    if ((dissect_array[tDissectIndex].loadItem == (unsigned) tValue)) {
+    if (dissect_array[tDissectIndex].loadItem == (unsigned) tValue) {
       tMobNum = real_mobile(tDissectIndex);
 
       if (tMobNum < 0 || tMobNum > (signed) mob_index.size())
@@ -705,7 +705,7 @@ void TPerson::doShow(const sstring &argument)
         desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
       return;
     } else if (is_abbrev(zonenum, "bounty")) {
-      struct bounty_hunt_struct *job;
+      bounty_hunt_struct *job;
 
       sb += "Bounty Hunter\n\r";
       sb += "-------------------------------------\n\r";

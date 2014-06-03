@@ -2038,7 +2038,7 @@ int warMaker(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
       default:
         return FALSE;
     }
-  } else if ((cmd == CMD_GENERIC_PULSE)) { 
+  } else if (cmd == CMD_GENERIC_PULSE) {
     if (number(0,13))
       return FALSE;
     if (o->in_room != -1) {

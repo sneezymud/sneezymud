@@ -2961,7 +2961,13 @@ int petVeterinarian(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TOb
     aff2.bitvector = 0;
 
     char * tmp = mud_str_dup(ch->name);
-    aff2.be = (TThing *) tmp;
+    // we will cheat here, and steal the "TThing * be" variable, to store
+    // info about our owner.  Obviously, our master might die, so saving
+    // a pointer to him would be a bad idea.  Change the data type and
+    // store the name instead
+    // obviously, since we allocate memory here, we also need some special
+    // handling for this situation in the affectedData functions
+    aff2.be = reinterpret_cast<TThing*>(tmp);
 
     pet->affectTo(&aff2, -1);
   }
@@ -3101,7 +3107,7 @@ int pet_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
     // obviously, since we allocate memory here, we also need some special
     // handling for this situation in the affectedData functions
     char * tmp = mud_str_dup(ch->name);
-    aff.be = (TThing *) tmp;
+    aff.be = reinterpret_cast<TThing *>(tmp);
 
     pet->affectTo(&aff, -1);
     return TRUE;
@@ -3277,7 +3283,7 @@ void TSymbol::attunerGiven(TBeing *ch, TMonster *me)
     return;
   }
   // Now we have a symbol to be attuned
-  job = (struct attune_struct *) me->act_ptr;
+  job = (attune_struct *) me->act_ptr;
 
   // sanity check
   attuneStructSanityCheck(job);
@@ -7135,7 +7141,7 @@ int rationFactory(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj 
     return FALSE;
   }
 
-  if(!o || !o->objVnum()==Obj::GENERIC_STEAK || 
+  if(!o || !(o->objVnum()==Obj::GENERIC_STEAK) || 
      !(food=dynamic_cast<TFood *>(o))){
     me->doSay("What the hell is this?!  That's not going into a ration.");
     me->doDrop("", o);

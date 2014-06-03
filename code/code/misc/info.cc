@@ -3185,7 +3185,7 @@ void TBeing::doLevels(const char *argument)
       else if(i > cLvl) color = orange();
       else color = green();
 
-      sprintf(tString, "%.0f", getExpClassLevel(Class, i));
+      sprintf(tString, "%.0f", getExpClassLevel(i));
       strncpy(tString, sstring(tString).comify().c_str(), cElements(tString));
       sprintf(buf, "%s[%2d]%s %s%13s%s%s", 
             cyan(), i, norm(),
@@ -3198,7 +3198,7 @@ void TBeing::doLevels(const char *argument)
       else if(j > cLvl) color = orange();
       else color = green();
 
-      sprintf(tString, "%.0f", getExpClassLevel(Class, j));
+      sprintf(tString, "%.0f", getExpClassLevel(j));
       strncpy(tString, sstring(tString).comify().c_str(), cElements(tString));
       sprintf(buf, "%s[%2d]%s %s%13s%s%s",
             cyan(), j, norm(),
@@ -3211,7 +3211,7 @@ void TBeing::doLevels(const char *argument)
       else if(k > cLvl) color = orange();
       else color = green();
 
-      sprintf(tString, "%.0f", getExpClassLevel(Class, k));
+      sprintf(tString, "%.0f", getExpClassLevel(k));
       strncpy(tString, sstring(tString).comify().c_str(), cElements(tString));
       sprintf(buf, "%s[%2d]%s %s%13s%s%s",
             cyan(), k, norm(),
@@ -3224,7 +3224,7 @@ void TBeing::doLevels(const char *argument)
       else if(m > cLvl) color = orange();
       else color = green();
 
-      sprintf(tString, "%.0f", getExpClassLevel(Class, m));
+      sprintf(tString, "%.0f", getExpClassLevel(m));
       strncpy(tString, sstring(tString).comify().c_str(), cElements(tString));
       sprintf(buf, "%s[%2d]%s %s%13s%s%s",
             cyan(), m, norm(),
@@ -3634,7 +3634,7 @@ void TBeing::doAlias(const char *argument)
   }
 
   while ((i < 16) && *desc->alias[i].word && strcmp(arg1, desc->alias[i].word));
-  if ((i == 16)) {
+  if (i == 16) {
     sendTo("You have no more space for aliases. You will have to clear an alias before adding another one.\n\r");
     return;
   }

@@ -635,7 +635,7 @@ int TMoney::scavengeMe(TBeing *, TObj **best_o)
 
 int TTreasure::scavengeMe(TBeing *, TObj **best_o)
 {
-  if (!objVnum() == Obj::IMMORTAL_EXCHANGE_COIN)
+  if (!(objVnum() == Obj::IMMORTAL_EXCHANGE_COIN))
     *best_o = this;
   return FALSE;
 }
@@ -3439,7 +3439,7 @@ int TMonster::notFightingMove(int pulse)
 
   if ((spec == SPEC_ATTUNER) && !fight()) {
     static attune_struct *job;
-    job = (struct attune_struct *) act_ptr;
+    job = (attune_struct *) act_ptr;
     if (job && job->hasJob) {
       return FALSE;
     }
@@ -3691,7 +3691,7 @@ int TMonster::mobileActivity(int pulse)
           (fight() || (default_pos > POSITION_SITTING))) {
     if ((spec == SPEC_ATTUNER) && !fight()) {
       static attune_struct *job;
-      job = (struct attune_struct *) act_ptr;
+      job = (attune_struct *) act_ptr;
       if (!job || (!(job->hasJob) && !(pulse%(1 * Pulse::MOBACT)))) {
         if (!isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL) && ::number(0, 1)) {
           rc = standUp();
@@ -3712,7 +3712,7 @@ int TMonster::mobileActivity(int pulse)
     // on a chair, stand up and fight like a mob
     if ((spec == SPEC_ATTUNER) && !fight()) {
       static attune_struct *job;
-      job = (struct attune_struct *) act_ptr;
+      job = (attune_struct *) act_ptr;
       if (!job || (!(job->hasJob) && !(pulse%(1 * Pulse::MOBACT)))) {
         if (!isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL) && ::number(0, 1)) {
           rc = standUp();/* stand up and fight like a mob */

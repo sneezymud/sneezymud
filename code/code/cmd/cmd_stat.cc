@@ -1244,7 +1244,7 @@ void TBeing::statBeing(TBeing *k)
       }
     }
     if (IS_SET(tmons->hatefield, HATE_RACE)) {
-      if (tmons->hates.race != -1) {
+      if ((int)(tmons->hates.race) != -1) {
         str += Races[tmons->hates.race]->getSingularName();
         str += "(Race) ";
       }
@@ -1276,7 +1276,7 @@ void TBeing::statBeing(TBeing *k)
       }
     }
     if (IS_SET(tmons->fearfield, FEAR_RACE)) {
-      if (tmons->fears.race != -1) {
+      if ((int)(tmons->fears.race) != -1) {
         str += Races[tmons->fears.race]->getSingularName();
         str += "(Race) ";
       }
@@ -2408,7 +2408,7 @@ void TPerson::doStat(const sstring &argument)
     if (is_number(arg2) && (parm = convertTo<int>(arg2))) {
       // check by vnum
       TMonster *tMonster;
-      unsigned int rnum = real_mobile(parm);
+      long rnum = real_mobile(parm);
       if (rnum >= 0 && rnum < mob_index.size()) {
         if ((tMonster = read_mobile(rnum, REAL))) {
           statBeing(tMonster);
@@ -2446,7 +2446,7 @@ void TPerson::doStat(const sstring &argument)
     if (is_number(arg2) && (parm = convertTo<int>(arg2))) {
       // check by vnum
       TObj *tObj;
-      unsigned int rnum = real_object(parm);
+      long rnum = real_object(parm);
       if (rnum >= 0 && rnum < obj_index.size()) {
         if ((tObj = read_object(rnum, REAL))) {
           statObj(tObj);

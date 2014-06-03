@@ -83,7 +83,7 @@ int TShopOwned::getInventoryCount(const TObj *obj)
   else
     db.query("select count(*) as count from rent where vnum=%i and owner_type='shop' and owner=%i", obj->objVnum(), shop_nr);
   
-  if (db.fetchRow());
+  if (db.fetchRow())
     return convertTo<int>(db["count"]);
   return 0;
 }

@@ -245,7 +245,7 @@ bool TMonster::Hates(const TBeing *v, const char *n) const
     }
   }
   if (IS_SET(hatefield, HATE_RACE) && v)
-    if (hates.race != -1)
+    if ((int)hates.race != -1)
       if (hates.race == v->getRace())
 	return TRUE;
 
@@ -307,7 +307,7 @@ bool TMonster::Fears(const TBeing *v, const char *s) const
     }
   }
   if (IS_SET(fearfield, FEAR_RACE))
-    if (fears.race != -1)
+    if ((int)fears.race != -1)
       if (fears.race == v->getRace())
 	return TRUE;
 

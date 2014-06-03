@@ -1503,7 +1503,7 @@ int TBeing::updateHalfTickStuff()
 // not in storage and is daytime -- do nothing
       }
     } else if (IS_SET(specials.act, ACT_NOCTURNAL) && !isAffected(AFF_CHARM)) {
-      if ((in_room == Room::NOCTURNAL_STORAGE)) {
+      if (in_room == Room::NOCTURNAL_STORAGE) {
         if (!GameTime::is_nighttime()) {
           if ((vnum == Mob::MALE_HOPPER) || (vnum == Mob::FEMALE_HOPPER) ||
               (vnum == Mob::MALE_CHURCH_GOER) || (vnum == Mob::FEMALE_CHURCH_GOER))

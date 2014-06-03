@@ -2742,7 +2742,7 @@ void setPrompts(fd_set out)
               for (i = MAGE_LEVEL_IND; i < MAX_CLASSES; i++)
                 if (ch->getLevel(i) && ch->getLevel(i) < MAX_MORT) {
                   if (ch->getExp() > d->prompt_d.xptnl)
-                    d->prompt_d.xptnl = getExpClassLevel(i, ch->getLevel(i) + 1);
+                    d->prompt_d.xptnl = getExpClassLevel(ch->getLevel(i) + 1);
 
                   double need = d->prompt_d.xptnl - ch->getExp();
 

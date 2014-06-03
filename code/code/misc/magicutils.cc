@@ -979,7 +979,7 @@ int TBeing::rawSummon(TBeing *v)
 {
   TBeing *tmp = NULL;
   TThing *t;
-  int i, rc;
+  int rc;
   wearSlotT j;
 
   act("You hear a small \"pop\" as $n disappears.", 
@@ -1060,20 +1060,17 @@ int TBeing::rawSummon(TBeing *v)
     if (!(tmp = dynamic_cast<TBeing *>(t)))
       continue;
     if (!tmp->isPc() && ((IS_SET(tmp->specials.act, ACT_AGGRESSIVE)))) {
-      i = ::number(0, 6);
-      if (i || 1) {  // make fairly guaranteed
-        act("$n sneers at you.", 1, tmp, NULL, this, TO_VICT);
-        act("$n sneers at $N. Uh oh...there's gonna be a RUMBLE!", 
-             1, tmp, NULL, this, TO_NOTVICT);
+      act("$n sneers at you.", 1, tmp, NULL, this, TO_VICT);
+      act("$n sneers at $N. Uh oh...there's gonna be a RUMBLE!", 
+	  1, tmp, NULL, this, TO_NOTVICT);
 
-        rc = dynamic_cast<TMonster *>(tmp)->takeFirstHit(*this);
-        if (IS_SET_DELETE(rc, DELETE_VICT)) {
-          return DELETE_THIS;
-        } else if (IS_SET_DELETE(rc, DELETE_THIS)) {
-          delete tmp;
-          tmp = NULL;
-          return FALSE;
-        }
+      rc = dynamic_cast<TMonster *>(tmp)->takeFirstHit(*this);
+      if (IS_SET_DELETE(rc, DELETE_VICT)) {
+	return DELETE_THIS;
+      } else if (IS_SET_DELETE(rc, DELETE_THIS)) {
+	delete tmp;
+	tmp = NULL;
+	return FALSE;
       }
     }
   }

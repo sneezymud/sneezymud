@@ -719,6 +719,12 @@ void TThing::sacrificeMe(TBeing *ch, const char *arg)
   TObj *obj;
   TBeing *dummy;
 
+  // Check to see if argument passed exists in room
+  if (!generic_find(arg, FIND_OBJ_ROOM, ch, &dummy, &obj)) {
+    ch->sendTo(format("You do not see a %s here.\n\r") % arg);
+    return;
+  }
+
   if (ch->getPosition() != POSITION_STANDING) {
     ch->sendTo(COLOR_OBJECTS, format("You must stand to sacrifice %s.\n\r") % obj->getName());
     return;
@@ -728,11 +734,7 @@ void TThing::sacrificeMe(TBeing *ch, const char *arg)
     ch->sendTo(COLOR_OBJECTS, format("The sacrifice of %s requires your total attention.\n\r") % obj->getName());
     return;
   }
-  // Check to see if argument passed exists in room
-  if (!generic_find(arg, FIND_OBJ_ROOM, ch, &dummy, &obj)) {
-    ch->sendTo(format("You do not see a %s here.\n\r") % arg);
-    return;
-  }
+
   // Check to see if corpse is a corpse
   
   if (!(corpse = dynamic_cast<TBaseCorpse *>(obj))) {
@@ -763,6 +765,12 @@ void TTool::sacrificeMe(TBeing *ch, const char *arg)
   TBaseCorpse *corpse;
   TBeing *dummy;
 
+  // Check to see if argument passed exists in room
+  if (!generic_find(arg, FIND_OBJ_ROOM, ch, &dummy, &obj)) {
+    ch->sendTo(format("You do not see a %s here.\n\r") % arg);
+    return;
+  }
+
   if (getToolType() != TOOL_TOTEM) {
     ch->sendTo("You must be holding a totem in your right hand to perform this ritual.\n\r");
     return;
@@ -772,11 +780,6 @@ void TTool::sacrificeMe(TBeing *ch, const char *arg)
     return;
   }
 
-  // Check to see if argument passed exists in room
-  if (!generic_find(arg, FIND_OBJ_ROOM, ch, &dummy, &obj)) {
-    ch->sendTo(format("You do not see a %s here.\n\r") % arg);
-    return;
-  }
   // Check to see if corpse is a corpse
   
   if (!(corpse = dynamic_cast<TBaseCorpse *>(obj))) {
@@ -1250,7 +1253,7 @@ int rombler(TBeing *caster, int, short bKnown)
   msg = caster->garble(NULL, msg, Garble::SPEECH_SHOUT, Garble::SCOPE_EVERYONE);
 
   if (caster->bSuccess(bKnown, SPELL_ROMBLER)) {
-    if (msg.size() < 0) {
+    if (msg.size() == 0) {
       caster->sendTo("Drumming without spirits to send is moot.\n\r");
       caster->nothingHappens(SILENT_YES);
     } else {
@@ -2634,7 +2637,7 @@ int flatulence(TBeing * caster, int level, short bKnown, int adv_learn)
       if (!vict)
         continue;
 
-      if (!caster->inGroup(*vict) && !vict->isImmortal() && !(vict->getImmunity(IMMUNE_SUFFOCATION)) >= 100) {
+      if (!caster->inGroup(*vict) && !(vict->isImmortal()) && !(vict->getImmunity(IMMUNE_SUFFOCATION) >= 100)) {
         caster->reconcileHurt(vict, discArray[SPELL_FLATULENCE]->alignMod);
         act("$n is choked by the natural gasses!", FALSE, vict, NULL, NULL, TO_ROOM);
         act("You are choked by the natural gasses!", FALSE, vict, NULL, NULL, TO_CHAR);

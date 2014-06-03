@@ -164,7 +164,7 @@ void TBeing::doPlay(const char *arg)
       sendTo("Do you have a gambling problem?  There's no slot machine here!\n\r");
       return;
     }
-    if (!getPosition() == POSITION_SITTING) {
+    if (!(getPosition() == POSITION_SITTING)) {
       sendTo("You must sit at the slot machine to play it.\n\r");
       return;
     }

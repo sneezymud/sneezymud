@@ -699,7 +699,7 @@ static void change_mob_act_flags(TBeing *ch, TMonster *mob, const char *arg, edi
 
     if (IS_SET(mob->specials.act, ACT_PROTECTOR) || 
         IS_SET(mob->specials.act, ACT_PROTECTEE)) {
-      if ((i == ACT_IMMORTAL)) {
+      if (i == ACT_IMMORTAL) {
         ch->sendTo("Protections can't be set on immortal mobs. \n\r");
         return;
       }
