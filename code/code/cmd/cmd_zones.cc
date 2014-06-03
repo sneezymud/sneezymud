@@ -34,7 +34,7 @@ bool zoneSorter::operator()  (const zoneSorter &x, const zoneSorter &y) const
 
 void TBeing::doZonesSingle(sstring tStString)
 {
-  size_t iZone        = 0/*,
+  long iZone        = 0/*,
 	       iZoneIter    = 0*/;
   char         tString[256] = "\0",
                tBuffer[256] = "\0",
@@ -277,7 +277,7 @@ void TBeing::doZonesSingle(sstring tStString)
 
   tStBuffer += tBuffer;
 
-  if (iZone >= 0 && iZone < zone_table.size()) {
+  if (iZone >= 0 && (size_t)iZone < zone_table.size()) {
     sprintf(tString, "zoneHelp/%d", (iZone > 0 ? (zone_table[iZone - 1].top + 1) : 0));
 
     if (file_to_sstring(tString, tStTemp)) {

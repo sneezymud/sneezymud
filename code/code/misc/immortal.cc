@@ -831,15 +831,8 @@ int getSockReceiveBuffer(int s)
   if (getsockopt((int) s, (int) SOL_SOCKET, (int) SO_RCVBUF, (char *) &buf, 
           (int *) &size))
     perror("getsockopt 1");
-#elif defined(LINUX)
-  unsigned int size;
-  size = sizeof(buf);
-  // JESUS
-  if (getsockopt(s, SOL_SOCKET, SO_RCVBUF, &buf, (unsigned *) &size))
-    perror("getsockopt 2");
 #else
-  int size;
-  size = sizeof(buf);
+  socklen_t size = sizeof(buf);
 
   if (getsockopt(s, SOL_SOCKET, SO_RCVBUF, &buf, &size))
     perror("getsockopt 3");
@@ -857,14 +850,8 @@ int getSockSendBuffer(int s)
   size = sizeof(buf);
   if (getsockopt(s, SOL_SOCKET, SO_SNDBUF, (char *) &buf, &size))
     perror("getsockopt 4");
-#elif defined(LINUX)
-  unsigned int size;
-  size = sizeof(buf);
-  if (getsockopt(s, SOL_SOCKET, SO_SNDBUF, &buf, &size))
-    perror("getsockopt 5");
 #else
-  int size;
-  size = sizeof(buf);
+  socklen_t size = sizeof(buf);
   if (getsockopt(s, SOL_SOCKET, SO_SNDBUF, &buf, &size))
     perror("getsockopt 6");
 #endif
@@ -873,7 +860,7 @@ int getSockSendBuffer(int s)
 
 const char *getSockOptString(int s, int opt)
 {
-  int size;
+  socklen_t size;
   struct linger ld;
   int result;
 
@@ -883,8 +870,6 @@ const char *getSockOptString(int s, int opt)
 
 #if defined(SOLARIS) || defined(SUN)
     if (getsockopt(s, SOL_SOCKET, opt, (char *) &ld, &size) == -1) {
-#elif defined(LINUX)
-    if (getsockopt(s, SOL_SOCKET, opt, &ld, (unsigned *) &size) == -1) {
 #else
     if (getsockopt(s, SOL_SOCKET, opt, &ld, &size) == -1) {
 #endif
