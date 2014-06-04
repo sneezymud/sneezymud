@@ -488,6 +488,7 @@ class Descriptor
     colorSubT plr_colorSub;
     unsigned int plr_colorOff;
     ignoreList ignored;
+    bool gmcp;
 
     // Functions
   private:

@@ -114,7 +114,8 @@ Descriptor::Descriptor(TSocket *s) :
   plr_color(0),
   plr_colorSub(COLOR_SUB_NONE),
   plr_colorOff(0),
-  ignored(this)
+  ignored(this),
+  gmcp(false)
 {
   int i;
 
@@ -171,7 +172,8 @@ Descriptor::Descriptor(const Descriptor &a) :
   plr_color(a.plr_color),
   plr_colorSub(a.plr_colorSub),
   plr_colorOff(a.plr_colorOff),
-  ignored(this)
+  ignored(this),
+  gmcp(a.gmcp)
 {
   int i;
 
@@ -245,6 +247,7 @@ Descriptor & Descriptor::operator=(const Descriptor &a)
   plr_colorSub = a.plr_colorSub;
   plr_colorOff = a.plr_colorOff;
   amount = a.amount;
+  gmcp = a.gmcp;
 
   delete [] showstr_head;
   showstr_head = mud_str_dup(a.showstr_head);
@@ -2880,6 +2883,116 @@ void Descriptor::worldSend(const sstring &text, TBeing *ch)
   }
 }
 
+namespace {
+  unsigned char GMCP = 201;
+  unsigned char iac = 255;             /* interpret as command: */
+  unsigned char dont = 254;            /* you are not to use option */
+  unsigned char do_ = 253;             /* please, you use option */
+  unsigned char wont = 252;            /* I won't use option */
+  unsigned char will = 251;            /* I will use option */
+  unsigned char sb = 250;              /* interpret as subnegotiation */
+  unsigned char se = 240;              /* end sub negotiation */
+
+
+  void handleGmcpCommand(sstring const& s, Descriptor* d)
+  {
+    vlogf(LOG_MISC, format("Unknown GMCP command '%s' ") % s);
+  }
+
+  sstring handleTelnetOpts(sstring& s, Descriptor* d)
+  {
+    sstring result;
+    size_t iac_pos = s.find(iac);
+    if (iac_pos == sstring::npos)
+      return "";
+
+    // I wonder if this ever happens
+    if (iac_pos > s.length() - 2) {
+      vlogf(LOG_MISC, "truncated Telnet IAC");
+      return "";
+    }
+
+    unsigned char cmd = s[iac_pos + 1];
+
+    if (cmd == will || cmd == do_ || cmd == wont || cmd == dont) {
+      // I wonder if this ever happens
+      if (iac_pos > s.length() - 3) {
+	vlogf(LOG_MISC, "truncated Telnet IAC WILL/DO/WONT/DONT");
+	return "";
+      }
+
+      unsigned char arg = s[iac_pos+2];
+
+      if (cmd == will && arg == GMCP) { // let's have a lil' GMCP
+	// IAC DO GMCP
+	d->gmcp = true;
+	vlogf(LOG_MISC, "Turning on GMCP");
+	result = "\xff\0xfc\xc9";
+      }
+      else if (cmd == do_ && arg == GMCP) { // I can handle GMCP should you wish
+	// IAC WILL GMCP
+	d->gmcp = true;
+	vlogf(LOG_MISC, "Turning on GMCP");
+	result = "\xff\0xfb\xc9";
+      }
+      else if (cmd == will) { // Anything else is unsupported
+	// IAC DONT ...
+	vlogf(LOG_MISC, format("Unsupported protocol request: IAC WILL %x") % arg);
+	result = format("\xff\xfe%c") % arg;
+      }
+      else if (cmd == do_) { // Anything else is unsupported
+	// IAC WONT ...
+	vlogf(LOG_MISC, format("Unsupported protocol request: IAC DO %x") % arg);
+	result = format("\xff\xfd%c") % arg;
+      }
+      else {
+	vlogf(LOG_MISC, format("Unsupported IAC DONT/WONT: %x") % arg);
+      }
+
+      // so that it won't get into general processing
+      s.erase(iac_pos, iac_pos+3);
+      return result + handleTelnetOpts(s, d); // also handle other commands in the same string
+    }
+    else if (cmd == sb) {
+      // eat everything up to and including IAC SE
+
+      // I wonder if this ever happens
+      if (iac_pos > s.length() - 5) {
+	vlogf(LOG_MISC, "truncated Telnet IAC SB");
+	return "";
+      }
+
+      unsigned char arg = s[iac_pos+2];
+      size_t begin = iac_pos + 3;
+      size_t end = begin;
+      while (true) {
+	end = s.find(iac, end);
+	if (end == sstring::npos || end + 1 >= s.length()) {
+	  vlogf(LOG_MISC, "Truncated IAC SB %x");
+	  return "";
+	}
+	if (static_cast<unsigned char>(s[end + 1]) == se)
+	  break;
+	// else retry again farther in string
+      }
+      sstring client_gmcp_cmd = s.substr(begin, end - 3);
+      s.erase(iac_pos, end + 2);
+
+      if (arg == GMCP) {
+	handleGmcpCommand(client_gmcp_cmd, d);
+	return handleTelnetOpts(s, d);
+      }
+      else {
+	vlogf(LOG_MISC, format("Got unhandled IAC SB %d: '%s'") % arg % client_gmcp_cmd);
+	return handleTelnetOpts(s, d);
+      }
+    }
+    else
+      return "";
+
+  }
+};
+
 void processAllInput()
 {
   Descriptor *d;
@@ -2893,6 +3006,7 @@ void processAllInput()
     if ((--(d->wait) <= 0) && !d->input.empty()) {
       strncpy(comm, d->input.front().c_str(), sizeof(comm));
       d->input.pop();
+
       if (d->character && !d->connected && 
           d->character->specials.was_in_room != Room::NOWHERE) {
         --(*d->character);
@@ -3970,6 +4084,13 @@ int Descriptor::inputProcessing()
   for (i = bgin; !ISNEWL(*(m_raw + i)); i++)
     if (!*(m_raw + i))
       return (0);
+
+
+  sstring in(m_raw);
+  sstring reply = handleTelnetOpts(in, this);
+  strncpy(m_raw, in.c_str(), 4096); // write the telnet-stripped string back
+  if (!reply.empty())
+    output.push(CommPtr(new UncategorizedComm(reply)));
 
   for (i = 0, k = 0; *(m_raw + i);) {
     if (!ISNEWL(*(m_raw + i)) && !(flag = (k >= (!m_bIsClient ? (MAX_INPUT_LENGTH - 2) : 4096)))) {
