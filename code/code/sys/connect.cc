@@ -2896,7 +2896,7 @@ namespace {
 
   void handleGmcpCommand(sstring const& s, Descriptor* d)
   {
-    vlogf(LOG_MISC, format("Unknown GMCP command '%s' ") % s);
+    vlogf(LOG_MISC, format("Telnet: Unknown GMCP command '%s' ") % s);
   }
 
   sstring handleTelnetOpts(sstring& s, Descriptor* d)
@@ -2906,9 +2906,12 @@ namespace {
     if (iac_pos == sstring::npos)
       return "";
 
+    // Ugliest hack ever: clients don't bother to negotiate for GMCP. Therefore, if they ever send any Telnet commands, assume they can handle subchannels.
+    d->gmcp = true;
+
     // I wonder if this ever happens
     if (iac_pos > s.length() - 2) {
-      vlogf(LOG_MISC, "truncated Telnet IAC");
+      vlogf(LOG_MISC, "Telnet: truncated Telnet IAC");
       return "";
     }
 
@@ -2917,7 +2920,7 @@ namespace {
     if (cmd == will || cmd == do_ || cmd == wont || cmd == dont) {
       // I wonder if this ever happens
       if (iac_pos > s.length() - 3) {
-	vlogf(LOG_MISC, "truncated Telnet IAC WILL/DO/WONT/DONT");
+	vlogf(LOG_MISC, "Telnet: truncated Telnet IAC WILL/DO/WONT/DONT");
 	return "";
       }
 
@@ -2926,31 +2929,33 @@ namespace {
       if (cmd == will && arg == GMCP) { // let's have a lil' GMCP
 	// IAC DO GMCP
 	d->gmcp = true;
-	vlogf(LOG_MISC, "Turning on GMCP");
+	vlogf(LOG_MISC, "Telnet: Turning on GMCP");
 	result = "\xff\0xfc\xc9";
       }
       else if (cmd == do_ && arg == GMCP) { // I can handle GMCP should you wish
 	// IAC WILL GMCP
 	d->gmcp = true;
-	vlogf(LOG_MISC, "Turning on GMCP");
+	vlogf(LOG_MISC, "Telnet: Turning on GMCP");
 	result = "\xff\0xfb\xc9";
       }
       else if (cmd == will) { // Anything else is unsupported
 	// IAC DONT ...
-	vlogf(LOG_MISC, format("Unsupported protocol request: IAC WILL %x") % arg);
+	vlogf(LOG_MISC, format("Telnet: Unsupported protocol request: IAC WILL 0x%2x") % static_cast<int>(arg));
 	result = format("\xff\xfe%c") % arg;
       }
       else if (cmd == do_) { // Anything else is unsupported
 	// IAC WONT ...
-	vlogf(LOG_MISC, format("Unsupported protocol request: IAC DO %x") % arg);
+	vlogf(LOG_MISC, format("Telnet: Unsupported protocol request: IAC DO 0x%02x") % static_cast<int>(arg));
 	result = format("\xff\xfd%c") % arg;
       }
       else {
-	vlogf(LOG_MISC, format("Unsupported IAC DONT/WONT: %x") % arg);
+	if (arg == GMCP)
+	  d->gmcp = false;
+        // vlogf(LOG_MISC, format("Telnet: Unsupported IAC DONT/WONT: 0x%02x") % static_cast<int>(arg));
       }
 
       // so that it won't get into general processing
-      s.erase(iac_pos, iac_pos+3);
+      s.erase(iac_pos, 3);
       return result + handleTelnetOpts(s, d); // also handle other commands in the same string
     }
     else if (cmd == sb) {
@@ -2958,7 +2963,7 @@ namespace {
 
       // I wonder if this ever happens
       if (iac_pos > s.length() - 5) {
-	vlogf(LOG_MISC, "truncated Telnet IAC SB");
+	vlogf(LOG_MISC, "Telnet: truncated Telnet IAC SB");
 	return "";
       }
 
@@ -2968,22 +2973,23 @@ namespace {
       while (true) {
 	end = s.find(iac, end);
 	if (end == sstring::npos || end + 1 >= s.length()) {
-	  vlogf(LOG_MISC, "Truncated IAC SB %x");
+	  vlogf(LOG_MISC, format("Telnet: Truncated IAC SB 0x%02x") % static_cast<int>(arg));
 	  return "";
 	}
 	if (static_cast<unsigned char>(s[end + 1]) == se)
 	  break;
 	// else retry again farther in string
       }
-      sstring client_gmcp_cmd = s.substr(begin, end - 3);
-      s.erase(iac_pos, end + 2);
+      sstring client_gmcp_cmd = s.substr(begin, end-begin);
+      s.erase(iac_pos, end + 2 - iac_pos);
 
       if (arg == GMCP) {
 	handleGmcpCommand(client_gmcp_cmd, d);
 	return handleTelnetOpts(s, d);
       }
       else {
-	vlogf(LOG_MISC, format("Got unhandled IAC SB %d: '%s'") % arg % client_gmcp_cmd);
+	// vlogf(LOG_MISC, format("Telnet: Got unhandled IAC SB 0x%02x: '%s'")
+	// % static_cast<int>(arg) % client_gmcp_cmd);
 	return handleTelnetOpts(s, d);
       }
     }

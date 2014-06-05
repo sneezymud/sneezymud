@@ -1088,6 +1088,8 @@ class TBeing : public TThing {
     int objDam(spellNumT, int, TThing *);
     int objDamage(spellNumT, int, TThing *);
     virtual void sendTo(CommPtr) const;
+    void sendGmcp(const sstring&) const;
+    void sendRoomGmcp() const;
     virtual void sendTo(colorTypeT, const sstring &) const;
     virtual void sendTo(const sstring &) const;
     void sendRoomName(TRoom *) const;

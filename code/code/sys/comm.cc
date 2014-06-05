@@ -12,6 +12,7 @@
 #include "being.h"
 #include "person.h"
 #include "extern.h"
+#include "low.h"
 #include "monster.h"
 #include "room.h"
 #include "account.h"
@@ -220,6 +221,62 @@ void TBeing::sendTo(const sstring &msg) const
     return;
 
   desc->output.push(CommPtr(new UncategorizedComm(msg)));
+}
+
+void TBeing::sendGmcp(const sstring& msg) const
+{
+  if (!desc->gmcp)
+    return;
+
+  return sendTo(sstring("\xff\xfa\xc9") + msg + sstring("\xff\xf0"));
+}
+
+void TBeing::sendRoomGmcp() const
+{
+  // Should only be sent when changes
+  sstring area = format(
+    "room.area { \"id\":\"%d\", \"name\": \"%s\", \"x\": 0, \"y\": 0, \"z\": 0, \"col\": \"\", \
+\"flags\": \"quiet\" }")
+    % roomp->getZone()->zone_nr
+    % roomp->getZone()->name;
+  sendGmcp(area);
+
+  const char *exDirs[] =
+  {
+    "n", "e", "s", "w", "u",
+    "d", "ne", "nw", "se", "sw"
+  };
+
+  sstring exits;
+  for (dirTypeT door = MIN_DIR; door < MAX_DIR; door++) {
+      roomDirData *exitdata = roomp->exitDir(door);
+
+    if (exitdata && (exitdata->to_room != Room::NOWHERE)) {
+      bool secret=IS_SET(exitdata->condition, EX_SECRET);
+      bool open=!IS_SET(exitdata->condition, EX_CLOSED);
+      bool see_thru=canSeeThruDoor(exitdata);
+      TRoom *exitp = real_roomp(exitdata->to_room);
+      if (!exitp) {
+	vlogf(LOG_LOW, format("Problem with door in room %d") %  roomp->number);
+	return;
+      }
+
+      if (isImmortal()
+	  || (exitdata->door_type != DOOR_NONE && ((!secret || open) || (!secret && see_thru)))
+	  || (exitdata->door_type == DOOR_NONE)) {
+	exits += format(", \"%s\": %d") % exDirs[door] % exitp->number;
+      }
+    }
+  }
+
+  sstring msg = format("room.info { \"num\": %d, \"name\": \"%s\", \"zone\": \"%d\", \"terrain\": \"%s\", \
+\"details\": \"\", \"exits\": { %s }, \"coord\": { \"id\": -1, \"x\": -1, \"y\": -1, \"cont\": 0 } }")
+    % roomp->number
+    % roomp->name
+    % roomp->getZone()->zone_nr
+    % TerrainInfo[roomp->getSectorType()]->name
+    % exits.substr(2);
+  sendGmcp(msg);
 }
 
 void save_all()

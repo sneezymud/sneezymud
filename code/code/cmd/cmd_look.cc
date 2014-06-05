@@ -205,6 +205,8 @@ void TBeing::lookRoom()
 {
   int res;
 
+  sendRoomGmcp();
+
   // purple if color basic, nothing if no color, 
   // varied color if color room name
   sendRoomName(roomp);
