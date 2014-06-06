@@ -2888,7 +2888,7 @@ void Descriptor::sendGmcp(const sstring& msg)
   if (msg.empty())
     return;
 
-  sstring text = sstring("\xff\xfa\xc9") + msg + sstring("\xff\xf0");
+  sstring text = sstring("\xff\xfa\xc9") + stripColorCodes(msg) + sstring("\xff\xf0");
   output.push(CommPtr(new UncategorizedComm(text)));
 }
 
