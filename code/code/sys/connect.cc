@@ -57,9 +57,9 @@ const int DONT_SEND = -1;
 const int FORCE_LOW_INVSTE = 1;
 
 static const char * const WIZLOCK_PASSWORD           = "motelvi";
-const char * const MUD_NAME      = "SneezyMUD";
-const char * const MUD_NAME_VERS = "SneezyMUD v5.2";
-static const char * const WELC_MESSG = "\n\rWelcome to SneezyMUD 5.2! May your journeys be enjoyable!\n\r\n\r";
+const char * const MUD_NAME      = "GrimhavenMUD";
+const char * const MUD_NAME_VERS = "GrimhavenMUD v5.3";
+static const char * const WELC_MESSG = "\n\rWelcome to GrimhavenMUD 5.3! May your journeys be bloody!\n\r\n\r";
 
 Descriptor::Descriptor() :
   ignored(this)

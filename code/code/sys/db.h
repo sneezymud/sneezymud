@@ -67,8 +67,8 @@ class Path {
   static const char * const SPELL_HELP;
 };  
 
-const char * const MUDADMIN_EMAIL   ="mudadmin@sneezymud.com";
-const char * const CODERS_EMAIL     ="mudadmin@sneezymud.com";
+const char * const MUDADMIN_EMAIL   ="support@grimhavenmud.com";
+const char * const CODERS_EMAIL     ="support@grimhavenmud.com";
 
 const int WORLD_SIZE = 50000;
 const int ZONE_ROOM_RANDOM = -99;
