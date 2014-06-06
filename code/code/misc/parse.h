@@ -589,6 +589,7 @@ enum cmdTypeT {
      CMD_NEWBIE,
      CMD_REQUEST,
      CMD_IGNORE,
+     CMD_RUN,
      MAX_CMD_LIST,  // Keep this as last command in regular list
 
        // a variety of "fake" commands used for a variety of purpsoses follow

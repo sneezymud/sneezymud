@@ -1791,6 +1791,10 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
   break;
       case CMD_IGNORE:
     doIgnore(argument);
+    case CMD_RUN:
+      doRun(argument);
+      break;
+
   break;
       case MAX_CMD_LIST:
       case CMD_RESP_TOGGLE:
@@ -2954,6 +2958,7 @@ void buildCommandArray(void)
   commandArray[CMD_NEWBIE] = new commandInfo("newbie", POSITION_RESTING, 0);
   commandArray[CMD_REQUEST] = new commandInfo("request", POSITION_DEAD, 0);
   commandArray[CMD_IGNORE] = new commandInfo("ignore", POSITION_DEAD, 0);
+  commandArray[CMD_RUN] = new commandInfo("run", POSITION_CRAWLING, 0);
 }
 
 bool _parse_name_safe(const char *arg, char *name, unsigned int nameLen)

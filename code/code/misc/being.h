@@ -1854,6 +1854,7 @@ class TBeing : public TThing {
     void doWhozone();
     void doWho(const char *);
     void doIgnore(const sstring &);
+    void doRun(sstring const&);
     void doTime(const char *);
     void doBuildhelp(const char *);
     void doWizhelp(const char *);
