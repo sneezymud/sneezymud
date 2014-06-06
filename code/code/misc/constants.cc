@@ -73,7 +73,7 @@ const int TrapDir[] =
 };
 
 TTerrainInfo *TerrainInfo[MAX_SECTOR_TYPES];
-TTerrainInfo::TTerrainInfo(int m, int t, int hu, int th, int dr, int h, int wet, const char * const n, const char * const p) :
+TTerrainInfo::TTerrainInfo(int m, int t, int hu, int th, int dr, int h, int wet, int col, const char * const n, const char * const p) :
   movement(m),
   thickness(t),
   hunger(hu),
@@ -81,7 +81,7 @@ TTerrainInfo::TTerrainInfo(int m, int t, int hu, int th, int dr, int h, int wet,
   drunk(dr),
   heat(h),
   wetness(wet),
-  color(6),
+  color(col),
   name(n),
   prep(p)
 {
@@ -112,67 +112,67 @@ void assignTerrainInfo()
 #define   cyan 14
 #define   white 15
 
-  TerrainInfo[SECT_SUBARCTIC] = new TTerrainInfo(3,3,2,2,2, -30, -10, "Sub-Arctic Wastes", "in the");
-  TerrainInfo[SECT_ARCTIC_WASTE] = new TTerrainInfo(3,3,2,2,2, -20, -10, "Arctic Wastes", "in the");
-  TerrainInfo[SECT_ARCTIC_CITY] = new TTerrainInfo(1,6,2,2,2, 40,  -20, "Arctic City", "in an");
-  TerrainInfo[SECT_ARCTIC_ROAD] = new TTerrainInfo(1,3,2,2,2, 30,  -10, "Arctic Road", "on an");
-  TerrainInfo[SECT_TUNDRA] = new TTerrainInfo(2,0,2,2,2, -10, -10, "Tundra", "in the");
-  TerrainInfo[SECT_ARCTIC_MOUNTAINS] = new TTerrainInfo(6,6,4,2,2, -50, 0, "Arctic Mountains", "in the");
-  TerrainInfo[SECT_ARCTIC_FOREST] = new TTerrainInfo(4,8,3,2,2, 20, 0, "Arctic Forest", "in an");
-  TerrainInfo[SECT_ARCTIC_MARSH] = new TTerrainInfo(5,5,2,2,2, 30, 20, "Arctic Marsh", "in an");
-  TerrainInfo[SECT_ARCTIC_RIVER_SURFACE] = new TTerrainInfo(3,1,2,1,2, 30, 50, "Arctic River Surface", "on an");
-  TerrainInfo[SECT_ICEFLOW] = new TTerrainInfo(4,2,2,2,2, 0, 50, "Iceflow (ocean)", "on an");
-  TerrainInfo[SECT_COLD_BEACH] = new TTerrainInfo(2,3,2,2,2, 20,  20, "Cold Beach", "on a");
-  TerrainInfo[SECT_SOLID_ICE] = new TTerrainInfo(8,9,2,2,2, -40, 0, "Solid Ice", "on");
-  TerrainInfo[SECT_ARCTIC_BUILDING] = new TTerrainInfo(2,6,2,2,2, 45, -20, "Arctic Building", "in an");
-  TerrainInfo[SECT_ARCTIC_CAVE] = new TTerrainInfo(3,7,2,2,2, 40, -10, "Arctic Cave", "in an");
-  TerrainInfo[SECT_ARCTIC_ATMOSPHERE] = new TTerrainInfo(0,0,2,2,2, 10, -10, "Arctic Atmosphere", "in the");
-  TerrainInfo[SECT_ARCTIC_CLIMBING] = new TTerrainInfo(9,2,3,2,2, 30, -10, "Arctic Vertical", "along an");
-  TerrainInfo[SECT_ARCTIC_FOREST_ROAD] = new TTerrainInfo(2,5,2,2,2, 25, -10, "Arctic Forest Road", "on an");
-  TerrainInfo[SECT_PLAINS] = new TTerrainInfo(2,3,2,2,2, 50, -10, "Plains", "on the");
-  TerrainInfo[SECT_TEMPERATE_CITY] = new TTerrainInfo(1,6,2,2,2, 70,  -20, "Temperate City", "in a");
-  TerrainInfo[SECT_TEMPERATE_ROAD] = new TTerrainInfo(1,3,2,2,2, 60,  -10, "Temperate Road", "on a");
-  TerrainInfo[SECT_GRASSLANDS] = new TTerrainInfo(3,1,2,2,2, 70, -10, "Grasslands", "on some");
-  TerrainInfo[SECT_TEMPERATE_HILLS] = new TTerrainInfo(3,5,3,2,2, 60, -10, "Temperate Hills", "in some");
-  TerrainInfo[SECT_TEMPERATE_MOUNTAINS] = new TTerrainInfo(6,6,4,3,2, 50, -10, "Temperate Mountains", "in some");
-  TerrainInfo[SECT_TEMPERATE_FOREST] = new TTerrainInfo(4,8,3,2,2, 70, -10, "Temperate Forest", "in a");
-  TerrainInfo[SECT_TEMPERATE_SWAMP] = new TTerrainInfo(5,5,2,2,2, 60, 20, "Temperate Swamp", "in a");
-  TerrainInfo[SECT_TEMPERATE_OCEAN] = new TTerrainInfo(4,2,2,2,2, 60, 50, "Temperate Ocean", "on a");
-  TerrainInfo[SECT_TEMPERATE_RIVER_SURFACE] = new TTerrainInfo(3,1,2,1,2, 60, 50, "Temperate River Surface", "on a");
-  TerrainInfo[SECT_TEMPERATE_UNDERWATER] = new TTerrainInfo(8,9,2,1,2, 50, 100, "Temperate Underwater", "in the");
-  TerrainInfo[SECT_TEMPERATE_BEACH] = new TTerrainInfo(2,3,2,2,2, 70, 20, "Temperate Beach", "on a");
-  TerrainInfo[SECT_TEMPERATE_BUILDING] = new TTerrainInfo(2,6,2,2,2, 75, -20, "Temperate Building", "in a");
-  TerrainInfo[SECT_TEMPERATE_CAVE] = new TTerrainInfo(3,7,2,2,2, 70, -10, "Temperate Cave", "in a");
-  TerrainInfo[SECT_TEMPERATE_ATMOSPHERE] = new TTerrainInfo(0,0,2,2,2, 60, -10, "Temperate Atmosphere", "in a");
-  TerrainInfo[SECT_TEMPERATE_CLIMBING] = new TTerrainInfo(9,2,2,2,2, 60, -10, "Temperate Vertical", "along a");
-  TerrainInfo[SECT_TEMPERATE_FOREST_ROAD] = new TTerrainInfo(2,5,2,2,2, 65, -10, "Temperate Forest Road", "on a");
-  TerrainInfo[SECT_DESERT] = new TTerrainInfo(2,3,5,6,2, 120, -40, "Desert", "in the");
-  TerrainInfo[SECT_SAVANNAH] = new TTerrainInfo(3,1,2,5,2, 90, -30, "Savannah", "in the");
-  TerrainInfo[SECT_VELDT] = new TTerrainInfo(3,2,2,4,2, 90, -20, "Veldt", "in the");
-  TerrainInfo[SECT_TROPICAL_CITY] = new TTerrainInfo(1,6,2,3,2, 100, -20, "Tropical City", "in a");
-  TerrainInfo[SECT_TROPICAL_ROAD] = new TTerrainInfo(1,3,2,3,2, 90, -20, "Tropical Road", "on a");
-  TerrainInfo[SECT_JUNGLE] = new TTerrainInfo(5,8,3,3,2, 110, 10, "Jungle", "in the");
-  TerrainInfo[SECT_RAINFOREST] = new TTerrainInfo(4,8,3,2,2, 110,  10, "Rain Forest", "in a");
-  TerrainInfo[SECT_TROPICAL_HILLS] = new TTerrainInfo(3,5,3,3,2, 90, 0, "Tropical Hills", "in some");
-  TerrainInfo[SECT_TROPICAL_MOUNTAINS] = new TTerrainInfo(6,6,4,3,2, 80, 0, "Tropical Mountains", "in some");
-  TerrainInfo[SECT_VOLCANO_LAVA] = new TTerrainInfo(6,6,3,3,2, 140, -100, "Volcano/Lava", "in some");
-  TerrainInfo[SECT_TROPICAL_SWAMP] = new TTerrainInfo(5,5,3,3,2, 90,  20, "Tropical Swamp", "in a");
-  TerrainInfo[SECT_TROPICAL_OCEAN] = new TTerrainInfo(4,2,2,3,2, 90,  50, "Tropical Ocean", "on a");
-  TerrainInfo[SECT_TROPICAL_RIVER_SURFACE] = new TTerrainInfo(3,1,2,2,2, 80,  50, "Tropical River Surface", "on a");
-  TerrainInfo[SECT_TROPICAL_UNDERWATER] = new TTerrainInfo(8,9,2,1,2, 70, 100, "Tropical Underwater", "in the");
-  TerrainInfo[SECT_TROPICAL_BEACH] = new TTerrainInfo(2,3,2,3,2, 80,  20, "Tropical Beach", "on a");
-  TerrainInfo[SECT_TROPICAL_BUILDING] = new TTerrainInfo(2,6,2,3,2, 90, -20, "Tropical Building", "in a");
-  TerrainInfo[SECT_TROPICAL_CAVE] = new TTerrainInfo(3,7,2,3,2, 85, -10, "Tropical Cave", "in a");
-  TerrainInfo[SECT_TROPICAL_ATMOSPHERE] = new TTerrainInfo(0,0,2,3,2, 85,  -10, "Tropical Atmosphere", "in a");
-  TerrainInfo[SECT_TROPICAL_CLIMBING] = new TTerrainInfo(9,2,2,3,2, 85,  -10, "Tropical Vertical", "along a");
-  TerrainInfo[SECT_RAINFOREST_ROAD] = new TTerrainInfo(2,5,2,2,2, 85,  -10, "Rainforest Road", "on a");
-  TerrainInfo[SECT_ASTRAL_ETHREAL] = new TTerrainInfo(0,4,2,2,2, 60,  -10, "Astral/Ethereal Zone", "in a");
-  TerrainInfo[SECT_SOLID_ROCK] = new TTerrainInfo(13,9,5,3,2, 60, -10, "Solid Rock", "inside");
-  TerrainInfo[SECT_FIRE] = new TTerrainInfo(3,6,2,6,2, 500,-100, "Fire", "in a");
-  TerrainInfo[SECT_INSIDE_MOB] = new TTerrainInfo(6,8,3,3,3, 90, 10, "Inside a Mob", "");
-  TerrainInfo[SECT_FIRE_ATMOSPHERE] = new TTerrainInfo(0,0,2,6,2, 500, -100, "Fire Atmosphere", "in the");
-  TerrainInfo[SECT_MAKE_FLY] = new TTerrainInfo(9,2,2,3,2, 85, -10, "Flying Sector", "in a");
-  TerrainInfo[SECT_DEAD_WOODS] = new TTerrainInfo(4,8,3,2,2, 50,  -10, "Dead Woods", "in the");
+  TerrainInfo[SECT_SUBARCTIC] = new TTerrainInfo(3,3,2,2,2, -30, -10, cyan, "Sub-Arctic Wastes", "in the");
+  TerrainInfo[SECT_ARCTIC_WASTE] = new TTerrainInfo(3,3,2,2,2, -20, -10, teal, "Arctic Wastes", "in the");
+  TerrainInfo[SECT_ARCTIC_CITY] = new TTerrainInfo(1,6,2,2,2, 40,  -20, purple, "Arctic City", "in an");
+  TerrainInfo[SECT_ARCTIC_ROAD] = new TTerrainInfo(1,3,2,2,2, 30,  -10, white, "Arctic Road", "on an");
+  TerrainInfo[SECT_TUNDRA] = new TTerrainInfo(2,0,2,2,2, -10, -10, cyan, "Tundra", "in the");
+  TerrainInfo[SECT_ARCTIC_MOUNTAINS] = new TTerrainInfo(6,6,4,2,2, -50, 0, silver, "Arctic Mountains", "in the");
+  TerrainInfo[SECT_ARCTIC_FOREST] = new TTerrainInfo(4,8,3,2,2, 20, 0, green, "Arctic Forest", "in an");
+  TerrainInfo[SECT_ARCTIC_MARSH] = new TTerrainInfo(5,5,2,2,2, 30, 20, olive, "Arctic Marsh", "in an");
+  TerrainInfo[SECT_ARCTIC_RIVER_SURFACE] = new TTerrainInfo(3,1,2,1,2, 30, 50, blue, "Arctic River Surface", "on an");
+  TerrainInfo[SECT_ICEFLOW] = new TTerrainInfo(4,2,2,2,2, 0, 50, white, "Iceflow (ocean)", "on an");
+  TerrainInfo[SECT_COLD_BEACH] = new TTerrainInfo(2,3,2,2,2, 20,  20, gray, "Cold Beach", "on a");
+  TerrainInfo[SECT_SOLID_ICE] = new TTerrainInfo(8,9,2,2,2, -40, 0, cyan, "Solid Ice", "on");
+  TerrainInfo[SECT_ARCTIC_BUILDING] = new TTerrainInfo(2,6,2,2,2, 45, -20, navy, "Arctic Building", "in an");
+  TerrainInfo[SECT_ARCTIC_CAVE] = new TTerrainInfo(3,7,2,2,2, 40, -10, silver, "Arctic Cave", "in an");
+  TerrainInfo[SECT_ARCTIC_ATMOSPHERE] = new TTerrainInfo(0,0,2,2,2, 10, -10, white, "Arctic Atmosphere", "in the");
+  TerrainInfo[SECT_ARCTIC_CLIMBING] = new TTerrainInfo(9,2,3,2,2, 30, -10, cyan, "Arctic Vertical", "along an");
+  TerrainInfo[SECT_ARCTIC_FOREST_ROAD] = new TTerrainInfo(2,5,2,2,2, 25, -10, gray, "Arctic Forest Road", "on an");
+  TerrainInfo[SECT_PLAINS] = new TTerrainInfo(2,3,2,2,2, 50, -10, yellow, "Plains", "on the");
+  TerrainInfo[SECT_TEMPERATE_CITY] = new TTerrainInfo(1,6,2,2,2, 70,  -20, silver, "Temperate City", "in a");
+  TerrainInfo[SECT_TEMPERATE_ROAD] = new TTerrainInfo(1,3,2,2,2, 60,  -10, gray, "Temperate Road", "on a");
+  TerrainInfo[SECT_GRASSLANDS] = new TTerrainInfo(3,1,2,2,2, 70, -10, yellow, "Grasslands", "on some");
+  TerrainInfo[SECT_TEMPERATE_HILLS] = new TTerrainInfo(3,5,3,2,2, 60, -10, green, "Temperate Hills", "in some");
+  TerrainInfo[SECT_TEMPERATE_MOUNTAINS] = new TTerrainInfo(6,6,4,3,2, 50, -10, gray, "Temperate Mountains", "in some");
+  TerrainInfo[SECT_TEMPERATE_FOREST] = new TTerrainInfo(4,8,3,2,2, 70, -10, green, "Temperate Forest", "in a");
+  TerrainInfo[SECT_TEMPERATE_SWAMP] = new TTerrainInfo(5,5,2,2,2, 60, 20, olive, "Temperate Swamp", "in a");
+  TerrainInfo[SECT_TEMPERATE_OCEAN] = new TTerrainInfo(4,2,2,2,2, 60, 50, navy, "Temperate Ocean", "on a");
+  TerrainInfo[SECT_TEMPERATE_RIVER_SURFACE] = new TTerrainInfo(3,1,2,1,2, 60, 50, blue, "Temperate River Surface", "on a");
+  TerrainInfo[SECT_TEMPERATE_UNDERWATER] = new TTerrainInfo(8,9,2,1,2, 50, 100, blue, "Temperate Underwater", "in the");
+  TerrainInfo[SECT_TEMPERATE_BEACH] = new TTerrainInfo(2,3,2,2,2, 70, 20, yellow, "Temperate Beach", "on a");
+  TerrainInfo[SECT_TEMPERATE_BUILDING] = new TTerrainInfo(2,6,2,2,2, 75, -20, purple, "Temperate Building", "in a");
+  TerrainInfo[SECT_TEMPERATE_CAVE] = new TTerrainInfo(3,7,2,2,2, 70, -10, magenta, "Temperate Cave", "in a");
+  TerrainInfo[SECT_TEMPERATE_ATMOSPHERE] = new TTerrainInfo(0,0,2,2,2, 60, -10, cyan, "Temperate Atmosphere", "in a");
+  TerrainInfo[SECT_TEMPERATE_CLIMBING] = new TTerrainInfo(9,2,2,2,2, 60, -10, olive, "Temperate Vertical", "along a");
+  TerrainInfo[SECT_TEMPERATE_FOREST_ROAD] = new TTerrainInfo(2,5,2,2,2, 65, -10, green, "Temperate Forest Road", "on a");
+  TerrainInfo[SECT_DESERT] = new TTerrainInfo(2,3,5,6,2, 120, -40, yellow, "Desert", "in the");
+  TerrainInfo[SECT_SAVANNAH] = new TTerrainInfo(3,1,2,5,2, 90, -30, yellow, "Savannah", "in the");
+  TerrainInfo[SECT_VELDT] = new TTerrainInfo(3,2,2,4,2, 90, -20, green, "Veldt", "in the");
+  TerrainInfo[SECT_TROPICAL_CITY] = new TTerrainInfo(1,6,2,3,2, 100, -20, yellow, "Tropical City", "in a");
+  TerrainInfo[SECT_TROPICAL_ROAD] = new TTerrainInfo(1,3,2,3,2, 90, -20, gray, "Tropical Road", "on a");
+  TerrainInfo[SECT_JUNGLE] = new TTerrainInfo(5,8,3,3,2, 110, 10, green, "Jungle", "in the");
+  TerrainInfo[SECT_RAINFOREST] = new TTerrainInfo(4,8,3,2,2, 110,  10, green, "Rain Forest", "in a");
+  TerrainInfo[SECT_TROPICAL_HILLS] = new TTerrainInfo(3,5,3,3,2, 90, 0, lime, "Tropical Hills", "in some");
+  TerrainInfo[SECT_TROPICAL_MOUNTAINS] = new TTerrainInfo(6,6,4,3,2, 80, 0, olive, "Tropical Mountains", "in some");
+  TerrainInfo[SECT_VOLCANO_LAVA] = new TTerrainInfo(6,6,3,3,2, 140, -100, magenta, "Volcano/Lava", "in some");
+  TerrainInfo[SECT_TROPICAL_SWAMP] = new TTerrainInfo(5,5,3,3,2, 90,  20, olive, "Tropical Swamp", "in a");
+  TerrainInfo[SECT_TROPICAL_OCEAN] = new TTerrainInfo(4,2,2,3,2, 90,  50, teal, "Tropical Ocean", "on a");
+  TerrainInfo[SECT_TROPICAL_RIVER_SURFACE] = new TTerrainInfo(3,1,2,2,2, 80,  50, blue, "Tropical River Surface", "on a");
+  TerrainInfo[SECT_TROPICAL_UNDERWATER] = new TTerrainInfo(8,9,2,1,2, 70, 100, teal, "Tropical Underwater", "in the");
+  TerrainInfo[SECT_TROPICAL_BEACH] = new TTerrainInfo(2,3,2,3,2, 80,  20, yellow, "Tropical Beach", "on a");
+  TerrainInfo[SECT_TROPICAL_BUILDING] = new TTerrainInfo(2,6,2,3,2, 90, -20, lime, "Tropical Building", "in a");
+  TerrainInfo[SECT_TROPICAL_CAVE] = new TTerrainInfo(3,7,2,3,2, 85, -10, gray, "Tropical Cave", "in a");
+  TerrainInfo[SECT_TROPICAL_ATMOSPHERE] = new TTerrainInfo(0,0,2,3,2, 85,  -10, white, "Tropical Atmosphere", "in a");
+  TerrainInfo[SECT_TROPICAL_CLIMBING] = new TTerrainInfo(9,2,2,3,2, 85,  -10, olive, "Tropical Vertical", "along a");
+  TerrainInfo[SECT_RAINFOREST_ROAD] = new TTerrainInfo(2,5,2,2,2, 85,  -10, green, "Rainforest Road", "on a");
+  TerrainInfo[SECT_ASTRAL_ETHREAL] = new TTerrainInfo(0,4,2,2,2, 60,  -10, cyan, "Astral/Ethereal Zone", "in a");
+  TerrainInfo[SECT_SOLID_ROCK] = new TTerrainInfo(13,9,5,3,2, 60, -10, gray, "Solid Rock", "inside");
+  TerrainInfo[SECT_FIRE] = new TTerrainInfo(3,6,2,6,2, 500,-100, red, "Fire", "in a");
+  TerrainInfo[SECT_INSIDE_MOB] = new TTerrainInfo(6,8,3,3,3, 90, 10, magenta, "Inside a Mob", "");
+  TerrainInfo[SECT_FIRE_ATMOSPHERE] = new TTerrainInfo(0,0,2,6,2, 500, -100, red, "Fire Atmosphere", "in the");
+  TerrainInfo[SECT_MAKE_FLY] = new TTerrainInfo(9,2,2,3,2, 85, -10, cyan, "Flying Sector", "in a");
+  TerrainInfo[SECT_DEAD_WOODS] = new TTerrainInfo(4,8,3,2,2, 50,  -10, maroon, "Dead Woods", "in the");
 
 #undef   black
 #undef   maroon

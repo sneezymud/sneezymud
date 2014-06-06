@@ -103,7 +103,7 @@ class TTerrainInfo {
   int color;  // for clients
   const char * const name;
   const char * const prep;
-  TTerrainInfo(int, int, int, int, int, int, int, const char *,const char *);
+  TTerrainInfo(int, int, int, int, int, int, int, int, const char *,const char *);
   ~TTerrainInfo();
   private:
   //    TTerrainInfo() {} // prevent use
