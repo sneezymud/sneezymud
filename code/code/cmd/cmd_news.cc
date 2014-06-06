@@ -195,6 +195,7 @@ void TBeing::doNews(const char *argument)
 
   sstring str;
 
+  /*
   str += "<H> News\n\r";
   str += "------------------------------------------------------\n\r";
 
@@ -215,6 +216,7 @@ void TBeing::doNews(const char *argument)
       str += buf;
     }
   }
+  */
 
 #if 1
 
