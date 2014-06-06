@@ -54,7 +54,6 @@ void TBeing::doNews(const char *argument)
   struct dirent *dp;
   time_t now = time(0);
   char buf[256];
-  char timebuf[256];
   struct stat theStat;
   std::vector<newsFileList>vecFiles(0);
 
@@ -196,6 +195,8 @@ void TBeing::doNews(const char *argument)
   sstring str;
 
   /*
+  char timebuf[256];
+
   str += "<H> News\n\r";
   str += "------------------------------------------------------\n\r";
 
