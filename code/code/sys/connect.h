@@ -499,6 +499,7 @@ class Descriptor
     Descriptor & operator=(const Descriptor &a);
     ~Descriptor();
 
+    void sendGmcp(const sstring& msg);
     int outputProcessing();
     int inputProcessing();
     void flush();

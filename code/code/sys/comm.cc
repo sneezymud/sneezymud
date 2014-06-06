@@ -223,24 +223,9 @@ void TBeing::sendTo(const sstring &msg) const
   desc->output.push(CommPtr(new UncategorizedComm(msg)));
 }
 
-void TBeing::sendGmcp(const sstring& msg) const
-{
-  if (!desc->gmcp)
-    return;
-
-  return sendTo(sstring("\xff\xfa\xc9") + msg + sstring("\xff\xf0"));
-}
 
 void TBeing::sendRoomGmcp() const
 {
-  // Should only be sent when changes
-  sstring area = format(
-    "room.area { \"id\":\"%d\", \"name\": \"%s\", \"x\": 0, \"y\": 0, \"z\": 0, \"col\": \"\", \
-\"flags\": \"quiet\" }")
-    % roomp->getZone()->zone_nr
-    % roomp->getZone()->name;
-  sendGmcp(area);
-
   const char *exDirs[] =
   {
     "n", "e", "s", "w", "u",
@@ -276,7 +261,7 @@ void TBeing::sendRoomGmcp() const
     % roomp->getZone()->zone_nr
     % TerrainInfo[roomp->getSectorType()]->name
     % exits.substr(2);
-  sendGmcp(msg);
+  desc->sendGmcp(msg);
 }
 
 void save_all()

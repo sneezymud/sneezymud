@@ -2883,6 +2883,15 @@ void Descriptor::worldSend(const sstring &text, TBeing *ch)
   }
 }
 
+void Descriptor::sendGmcp(const sstring& msg)
+{
+  if (msg.empty())
+    return;
+
+  sstring text = sstring("\xff\xfa\xc9") + msg + sstring("\xff\xf0");
+  output.push(CommPtr(new UncategorizedComm(text)));
+}
+
 namespace {
   unsigned char GMCP = 201;
   unsigned char iac = 255;             /* interpret as command: */
