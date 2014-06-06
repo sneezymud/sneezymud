@@ -2905,7 +2905,28 @@ namespace {
 
   void handleGmcpCommand(sstring const& s, Descriptor* d)
   {
-    vlogf(LOG_MISC, format("Telnet: Unknown GMCP command '%s' ") % s);
+    if (s == "request sectors") {
+      sstring str;
+      for (int i = 0; i < MAX_SECTOR_TYPES; i++) {
+	str += format(", { \"id\" : %d, \"name\" : \"%s\", \"color\" : %d }")
+	  % i
+	  % TerrainInfo[i]->name
+	  % TerrainInfo[i]->color;
+      }
+      str = sstring("room.sectors { \"sectors\" : [ ") + str.substr(2) + " ] }";
+      d->sendGmcp(str);
+    }
+    else if (s == "request area") {
+      TRoom* roomp = d->character->roomp;
+      sstring area = format(
+	"room.area { \"id\":\"%d\", \"name\": \"%s\", \"x\": 0, \"y\": 0, \"z\": 0, \"col\": \"\", \
+\"flags\": \"quiet\" }")
+	% roomp->getZone()->zone_nr
+	% roomp->getZone()->name;
+      d->sendGmcp(area);
+    }
+    else
+      vlogf(LOG_MISC, format("Telnet: Unknown GMCP command '%s' ") % s);
   }
 
   sstring handleTelnetOpts(sstring& s, Descriptor* d)
