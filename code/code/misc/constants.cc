@@ -73,7 +73,7 @@ const int TrapDir[] =
 };
 
 TTerrainInfo *TerrainInfo[MAX_SECTOR_TYPES];
-TTerrainInfo::TTerrainInfo(int m, int t, int hu, int th, int dr, int h, int wet,const char * const n, const char * const p) :
+TTerrainInfo::TTerrainInfo(int m, int t, int hu, int th, int dr, int h, int wet, const char * const n, const char * const p) :
   movement(m),
   thickness(t),
   hunger(hu),
@@ -81,6 +81,7 @@ TTerrainInfo::TTerrainInfo(int m, int t, int hu, int th, int dr, int h, int wet,
   drunk(dr),
   heat(h),
   wetness(wet),
+  color(6),
   name(n),
   prep(p)
 {
@@ -93,6 +94,24 @@ TTerrainInfo::~TTerrainInfo()
 // movement cost, thickness, hung, thirst, drunk, temp, humidity, name
 void assignTerrainInfo()
 {
+
+#define   black 0
+#define   maroon 1
+#define   green 2
+#define   olive 3
+#define   navy 4
+#define   purple 5
+#define   teal 6
+#define   silver 7
+#define   gray 8
+#define   red 9
+#define   lime 10
+#define   yellow 11
+#define   blue 12
+#define   magenta 13
+#define   cyan 14
+#define   white 15
+
   TerrainInfo[SECT_SUBARCTIC] = new TTerrainInfo(3,3,2,2,2, -30, -10, "Sub-Arctic Wastes", "in the");
   TerrainInfo[SECT_ARCTIC_WASTE] = new TTerrainInfo(3,3,2,2,2, -20, -10, "Arctic Wastes", "in the");
   TerrainInfo[SECT_ARCTIC_CITY] = new TTerrainInfo(1,6,2,2,2, 40,  -20, "Arctic City", "in an");
@@ -154,6 +173,23 @@ void assignTerrainInfo()
   TerrainInfo[SECT_FIRE_ATMOSPHERE] = new TTerrainInfo(0,0,2,6,2, 500, -100, "Fire Atmosphere", "in the");
   TerrainInfo[SECT_MAKE_FLY] = new TTerrainInfo(9,2,2,3,2, 85, -10, "Flying Sector", "in a");
   TerrainInfo[SECT_DEAD_WOODS] = new TTerrainInfo(4,8,3,2,2, 50,  -10, "Dead Woods", "in the");
+
+#undef   black
+#undef   maroon
+#undef   green
+#undef   olive
+#undef   navy
+#undef   purple
+#undef   teal
+#undef   silver
+#undef   gray
+#undef   red
+#undef   lime
+#undef   yellow
+#undef   blue
+#undef   magenta
+#undef   cyan
+#undef   white
 }
 
 const char * const exits[] =
