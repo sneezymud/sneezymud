@@ -42,7 +42,7 @@ void TBeing::doZonesSingle(sstring tStString)
   sstring      tStBuffer(""),
                tStTemp("");
 
-  for (iZone = 0; iZone < zone_table.size(); iZone++) {
+  for (iZone = 0; (size_t)iZone < zone_table.size(); iZone++) {
     // skip the void (0) : this is for misc. mobs
     // skip immort zone (1)
     if (iZone == 0 || iZone == 1)
