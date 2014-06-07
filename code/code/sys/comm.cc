@@ -254,6 +254,9 @@ void TBeing::sendRoomGmcp() const
     }
   }
 
+  if (exits.empty())
+    exits = "  "; // fix substr(2) for case of no exits at all
+
   sstring msg = format("room.info { \"num\": %d, \"name\": \"%s\", \"zone\": \"%d\", \"terrain\": \"%s\", \
 \"details\": \"\", \"exits\": { %s }, \"coord\": { \"id\": -1, \"x\": -1, \"y\": -1, \"cont\": 0 } }")
     % roomp->number
