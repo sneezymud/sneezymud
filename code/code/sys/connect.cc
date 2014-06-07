@@ -115,7 +115,8 @@ Descriptor::Descriptor(TSocket *s) :
   plr_colorSub(COLOR_SUB_NONE),
   plr_colorOff(0),
   ignored(this),
-  gmcp(false)
+  gmcp(false),
+  echo_is_off(false)
 {
   int i;
 
@@ -173,7 +174,8 @@ Descriptor::Descriptor(const Descriptor &a) :
   plr_colorSub(a.plr_colorSub),
   plr_colorOff(a.plr_colorOff),
   ignored(this),
-  gmcp(a.gmcp)
+  gmcp(a.gmcp),
+  echo_is_off(false)
 {
   int i;
 
@@ -248,6 +250,7 @@ Descriptor & Descriptor::operator=(const Descriptor &a)
   plr_colorOff = a.plr_colorOff;
   amount = a.amount;
   gmcp = a.gmcp;
+  echo_is_off = a.echo_is_off;
 
   delete [] showstr_head;
   showstr_head = mud_str_dup(a.showstr_head);
@@ -1587,6 +1590,8 @@ void Descriptor::EchoOn()
 
   if(write(socket->m_sock, echo_on, 6)==-1)
     vlogf(LOG_FILE, "Unexpected read error in EchoOn");
+
+  echo_is_off = false;
 }
 
 void Descriptor::EchoOff()
@@ -1598,6 +1603,8 @@ void Descriptor::EchoOff()
 
   if(write(socket->m_sock, echo_off, 4)==-1)
     vlogf(LOG_FILE, "Unexpected write error in EchoOff()");
+
+  echo_is_off = true;
 }
 
 bool Descriptor::start_page_file(const char *fpath, const char *errormsg)
@@ -2974,9 +2981,12 @@ namespace {
 	result = format("\xff\xfe%c") % arg;
       }
       else if (cmd == do_) { // Anything else is unsupported
-	// IAC WONT ...
-	vlogf(LOG_MISC, format("Telnet: Unsupported protocol request: IAC DO 0x%02x") % static_cast<int>(arg));
-	result = format("\xff\xfd%c") % arg;
+	// After EchoOff(), clients send IAC DO ECHO, so suppress this.
+	if (!d->echo_is_off) {
+	  // IAC WONT ...
+	  vlogf(LOG_MISC, format("Telnet: Unsupported protocol request: IAC DO 0x%02x") % static_cast<int>(arg));
+	  result = format("\xff\xfd%c") % arg;
+	}
       }
       else {
 	if (arg == GMCP)
