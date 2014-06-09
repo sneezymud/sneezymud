@@ -115,8 +115,7 @@ Descriptor::Descriptor(TSocket *s) :
   plr_colorSub(COLOR_SUB_NONE),
   plr_colorOff(0),
   ignored(this),
-  gmcp(false),
-  echo_is_off(false)
+  gmcp(false)
 {
   int i;
 
@@ -174,8 +173,7 @@ Descriptor::Descriptor(const Descriptor &a) :
   plr_colorSub(a.plr_colorSub),
   plr_colorOff(a.plr_colorOff),
   ignored(this),
-  gmcp(a.gmcp),
-  echo_is_off(false)
+  gmcp(a.gmcp)
 {
   int i;
 
@@ -250,7 +248,6 @@ Descriptor & Descriptor::operator=(const Descriptor &a)
   plr_colorOff = a.plr_colorOff;
   amount = a.amount;
   gmcp = a.gmcp;
-  echo_is_off = a.echo_is_off;
 
   delete [] showstr_head;
   showstr_head = mud_str_dup(a.showstr_head);
@@ -1148,7 +1145,7 @@ int Descriptor::nanny(sstring arg)
             tmp_ch->orig = 0;
           }
           connected = CON_PLYNG;
-          EchoOn();
+
           // This is a semi-kludge to fix some extra crap we had being sent
           // upon reconnect - Russ 6/15/96
           flush();
@@ -1292,7 +1289,7 @@ int Descriptor::nanny(sstring arg)
                 tmp_ch->orig = 0;
               }
               connected = CON_PLYNG;
-              EchoOn();
+
               flush();
               writeToQ("Reconnecting.\n\r");
               tmp_ch->initDescStuff(&st);
@@ -1580,32 +1577,6 @@ int TPerson::genericLoadPC()
   return FALSE;
 }
 
-
-void Descriptor::EchoOn()
-{
-  if (m_bIsClient)
-    return;
-
-  unsigned char echo_on[6] = {IAC, WONT, TELOPT_ECHO, '\n', '\r', '\0'};
-
-  if(write(socket->m_sock, echo_on, 6)==-1)
-    vlogf(LOG_FILE, "Unexpected read error in EchoOn");
-
-  echo_is_off = false;
-}
-
-void Descriptor::EchoOff()
-{
-  if (m_bIsClient)
-    return;
-
-  unsigned char echo_off[4] = {IAC, WILL, TELOPT_ECHO, '\0'};
-
-  if(write(socket->m_sock, echo_off, 4)==-1)
-    vlogf(LOG_FILE, "Unexpected write error in EchoOff()");
-
-  echo_is_off = true;
-}
 
 bool Descriptor::start_page_file(const char *fpath, const char *errormsg)
 {
@@ -2981,12 +2952,9 @@ namespace {
 	result = format("\xff\xfe%c") % arg;
       }
       else if (cmd == do_) { // Anything else is unsupported
-	// After EchoOff(), clients send IAC DO ECHO, so suppress this.
-	if (!d->echo_is_off) {
-	  // IAC WONT ...
-	  vlogf(LOG_MISC, format("Telnet: Unsupported protocol request: IAC DO 0x%02x") % static_cast<int>(arg));
-	  result = format("\xff\xfd%c") % arg;
-	}
+	// IAC WONT ...
+	vlogf(LOG_MISC, format("Telnet: Unsupported protocol request: IAC DO 0x%02x") % static_cast<int>(arg));
+	result = format("\xff\xfd%c") % arg;
       }
       else {
 	if (arg == GMCP)
@@ -3310,7 +3278,6 @@ int Descriptor::sendLogin(const sstring &arg)
       *pwd = '\0';
  
     output.push(CommPtr(new LoginComm("pass", "Password: ")));
-    EchoOff();
     connected = CON_ACTPWD;
   }
   return FALSE;
@@ -3406,7 +3373,6 @@ int Descriptor::doAccountStuff(char *arg)
       }
       account->name=arg;
       output.push(CommPtr(new UncategorizedComm("Now enter a password for your new account\n\r-> ")));
-      EchoOff();
 
       connected = CON_NEWACTPWD;
       break;
@@ -3440,7 +3406,6 @@ int Descriptor::doAccountStuff(char *arg)
         return FALSE;
       } else {
         account->passwd=pwd;
-        EchoOn();
         writeToQ("Enter your email address.\n\r");
         writeToQ("E-mail addresses are used strictly for administrative purposes, or for\n\r");
         writeToQ("contacting you in the event of a problem.  The information is never used for\n\r");
@@ -3532,7 +3497,6 @@ int Descriptor::doAccountStuff(char *arg)
       writeToQ("Type 'C' to connect with an existing character, or <enter> to see account menu.\n\r-> ");
       break;
     case CON_ACTPWD:
-      EchoOn();
       if (!*pwd) {
         writeToQ("Incorrect login.\n\r");
         delete account;
@@ -3693,14 +3657,12 @@ int Descriptor::doAccountStuff(char *arg)
       writeToQ("character, you may lose your place on the perma death\n\r");
       writeToQ("monument.  Enter your password to verify or hit enter\n\r");
       writeToQ("to return to the account menu system\n\r-> ");
-      EchoOff();
       strcpy(delname, sstring(arg).lower().c_str());
       
       connected = CON_CHARDELCNF;
       break;
     
     case CON_CHARDELCNF:
-      EchoOn();
       if (!*pwd) {
         writeToQ("Incorrect password.\n\r");
         writeToQ("Which do you want to do?\n\r");
@@ -3773,7 +3735,6 @@ int Descriptor::doAccountStuff(char *arg)
         return DELETE_THIS;
       break; 
     case CON_ACTDELCNF:
-      EchoOn();
       if (!*pwd) {
         writeToQ("Incorrect password.\n\r");
         writeToQ("Which do you want to do?\n\r");
@@ -3806,7 +3767,6 @@ int Descriptor::doAccountStuff(char *arg)
           writeToQ("Doing so will delete all characters and their equipment.\n\r");
           writeToQ("If you are sure, enter your password for verification.\n\r");
           writeToQ("Otherwise hit enter.\n\r-> ");
-          EchoOff();
           connected = CON_ACTDELCNF;
           break;
         case '2':
@@ -3829,7 +3789,6 @@ int Descriptor::doAccountStuff(char *arg)
       }
       break;
     case CON_OLDPWD:
-      EchoOn();
       if (!*pwd) {
         writeToQ("Incorrect password.\n\r");
         writeToQ("[Press return to continue]\n\r");
@@ -3844,43 +3803,35 @@ int Descriptor::doAccountStuff(char *arg)
         break;
       }
       writeToQ("Enter new password -> ");
-      EchoOff();
       connected = CON_NEWPWD;
       break;
     case CON_NEWPWD:
-      EchoOn();
       if (strlen(arg) < 5) {
         writeToQ("Your password must contain at least 5 characters.\n\r");
         writeToQ("Password -> ");
-        EchoOff();
         return FALSE;
       } else if (strlen(arg) > 10) {
         writeToQ("Your password can only contain 10 or fewer characters.\n\r");
         writeToQ("Password -> ");
-        EchoOff();
         return FALSE;
       }
       if (!sstring(arg).hasDigit()) {
         writeToQ("Your password must contain at least one number.\n\r");
         writeToQ("Password -> ");
-        EchoOff();
         return FALSE;
       }
       crypted = (char *) crypt(arg, account->name.c_str());
       strncpy(pwd, crypted, 10);
       *(pwd + 10) = '\0';
       writeToQ("Retype your password for verification -> ");
-      EchoOff();
       connected = CON_RETPWD;
       break;
     case CON_RETPWD:
       crypted = (char *) crypt(arg, pwd);
-      EchoOn();
       if (strncmp(crypted, pwd, 10)) {
         writeToQ("Mismatched Passwords. Try again.\n\r");
         writeToQ("Retype password -> ");
         connected = CON_NEWPWD;
-        EchoOff();
       } else {
         account->passwd=pwd;
         account->status = TRUE;
@@ -3961,7 +3912,6 @@ int Descriptor::doAccountMenu(const char *arg)
     case 'P':
     case 'p':
       writeToQ("Enter old password -> ");
-      EchoOff();
       account->status = FALSE;
       connected = CON_OLDPWD;
       break; 
