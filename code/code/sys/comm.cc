@@ -223,6 +223,17 @@ void TBeing::sendTo(const sstring &msg) const
   desc->output.push(CommPtr(new UncategorizedComm(msg)));
 }
 
+namespace {
+  sstring firstWord(sstring const& s)
+  {
+    size_t space = s.find(' ');
+    if (space != sstring::npos)
+      return s.substr(0, space);
+    else
+      return s;
+  }
+};
+
 
 void TBeing::sendRoomGmcp() const
 {
@@ -233,6 +244,7 @@ void TBeing::sendRoomGmcp() const
   };
 
   sstring exits;
+  sstring exit_kw;
   for (dirTypeT door = MIN_DIR; door < MAX_DIR; door++) {
       roomDirData *exitdata = roomp->exitDir(door);
 
@@ -250,6 +262,9 @@ void TBeing::sendRoomGmcp() const
 	  || (exitdata->door_type != DOOR_NONE && ((!secret || open) || (!secret && see_thru)))
 	  || (exitdata->door_type == DOOR_NONE)) {
 	exits += format(", \"%s\": %d") % exDirs[door] % exitp->number;
+	if (exitdata->door_type != DOOR_NONE) {
+	  exit_kw += format(", \"%s\": \"%s\"") % exDirs[door] % firstWord(exitdata->keyword);
+	}
       }
     }
   }
@@ -257,13 +272,17 @@ void TBeing::sendRoomGmcp() const
   if (exits.empty())
     exits = "  "; // fix substr(2) for case of no exits at all
 
+  if (exit_kw.empty())
+    exit_kw = "  "; // fix substr(2) for case of no exit keywords at all
+
   sstring msg = format("room.info { \"num\": %d, \"name\": \"%s\", \"zone\": \"%d\", \"terrain\": \"%s\", \
-\"details\": \"\", \"exits\": { %s }, \"coord\": { \"id\": -1, \"x\": -1, \"y\": -1, \"cont\": 0 } }")
+\"details\": \"\", \"exits\": { %s }, \"exit_kw\": { %s }, \"coord\": { \"id\": -1, \"x\": -1, \"y\": -1, \"cont\": 0 } }")
     % roomp->number
     % roomp->name
     % roomp->getZone()->zone_nr
     % TerrainInfo[roomp->getSectorType()]->name
-    % exits.substr(2);
+    % exits.substr(2)
+    % exit_kw.substr(2);
   desc->sendGmcp(msg);
 }
 
