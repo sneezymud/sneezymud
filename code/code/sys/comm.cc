@@ -223,17 +223,6 @@ void TBeing::sendTo(const sstring &msg) const
   desc->output.push(CommPtr(new UncategorizedComm(msg)));
 }
 
-namespace {
-  sstring firstWord(sstring const& s)
-  {
-    size_t space = s.find(' ');
-    if (space != sstring::npos)
-      return s.substr(0, space);
-    else
-      return s;
-  }
-};
-
 
 void TBeing::sendRoomGmcp() const
 {
@@ -263,7 +252,7 @@ void TBeing::sendRoomGmcp() const
 	  || (exitdata->door_type == DOOR_NONE)) {
 	exits += format(", \"%s\": %d") % exDirs[door] % exitp->number;
 	if (exitdata->door_type != DOOR_NONE) {
-	  exit_kw += format(", \"%s\": \"%s\"") % exDirs[door] % firstWord(exitdata->keyword);
+	  exit_kw += format(", \"%s\": \"%s\"") % exDirs[door] % sstring(exitdata->keyword).word(1);
 	}
       }
     }
