@@ -2863,7 +2863,7 @@ void Descriptor::worldSend(const sstring &text, TBeing *ch)
 
 void Descriptor::sendGmcp(const sstring& msg)
 {
-  if (msg.empty())
+  if (msg.empty() || !gmcp)
     return;
 
   sstring text = sstring("\xff\xfa\xc9") + stripColorCodes(msg) + sstring("\xff\xf0");
