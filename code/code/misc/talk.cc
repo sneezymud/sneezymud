@@ -208,7 +208,7 @@ namespace {
 
   sstring escapeJsonString(sstring const& input) {
     std::ostringstream ss;
-    for (sstring::const_iterator iter = input.cbegin(); iter != input.cend(); iter++) {
+    for (sstring::const_iterator iter = input.begin(); iter != input.end(); iter++) {
       switch (*iter) {
       case '\\': ss << "\\\\"; break;
       case '"': ss << "\\\""; break;
