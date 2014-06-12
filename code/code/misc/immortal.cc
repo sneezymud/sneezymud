@@ -3956,7 +3956,7 @@ void TPerson::doAccess(const sstring &arg)
     arg2 = format("%s/comment") % arg1;
     if ((fp = fopen(arg2.c_str(), "r"))) {
       while (fgets(filebuf, 255, fp))
-  buf+=filebuf;
+	buf+=filebuf;
       fclose(fp);
     }
 
