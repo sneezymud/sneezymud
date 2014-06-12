@@ -40,6 +40,7 @@ public:
   const sstring capitalizeSentences() const;
   const sstring matchCase(const sstring match) const;
   const sstring escape(stringEscapeT) const;
+  const sstring ansiToAard() const;
   const size_t lengthNoColor() const;
 
   // call this function with NULL data to get alloc size, then agian with alloc'd array

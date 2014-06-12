@@ -156,15 +156,16 @@ int TBeing::doSay(const sstring &arg)
               % garbedBuf);
         }
       }
-    } else {
-      mob->sendTo(COLOR_COMM, format("%s says, \"%s\"\n\r") % sstring(getName()).cap() % 
-            colorString(this, mob->desc, garbleRoom, NULL, COLOR_COMM, FALSE));
+    } else { // mob is not PC
+      sstring msg = format("%s says, \"%s\"\n\r") % sstring(getName()).cap() % 
+	colorString(this, mob->desc, garbleRoom, NULL, COLOR_COMM, FALSE);
+      mob->sendTo(COLOR_COMM, msg);
       if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
         d->clientf(format("%d|%s|%s") % CLIENT_SAY % sstring(getName()).cap() %
        colorString(this, mob->desc, garbleRoom, NULL, COLOR_NONE, FALSE));
       }
-    }
-  }
+    } // is mob PC
+  } // for
   
   // everyone needs to see the say before the response gets triggered
   // loop through the list, get the mobs to trigger, THEN trigger them seperately
@@ -202,6 +203,28 @@ int TBeing::doSay(const sstring &arg)
 
   return FALSE;
 }
+
+namespace {
+
+  sstring escapeJsonString(sstring const& input) {
+    std::ostringstream ss;
+    for (sstring::const_iterator iter = input.cbegin(); iter != input.cend(); iter++) {
+      switch (*iter) {
+      case '\\': ss << "\\\\"; break;
+      case '"': ss << "\\\""; break;
+      case '/': ss << "\\/"; break;
+      case '\b': ss << "\\b"; break;
+      case '\f': ss << "\\f"; break;
+      case '\n': ss << "\\n"; break;
+      case '\r': ss << "\\r"; break;
+      case '\t': ss << "\\t"; break;
+      default: ss << *iter; break;
+      }
+    }
+    return ss.str();
+  }
+
+};
 
 void Descriptor::sendShout(TBeing *ch, const sstring &arg)
 {
@@ -289,8 +312,13 @@ void Descriptor::sendShout(TBeing *ch, const sstring &arg)
       if (i->m_bIsClient || IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
         i->clientf(format("%d|%s|%s") % CLIENT_SHOUT % namebufc % messagebuf);
 
-      b->sendTo(COLOR_SHOUTS, format("%s %s, \"%s%s\"\n\r") %
-        namebuf % action %  messagebuf % norm());
+      sstring msg = format("%s %s, \"%s%s\"\n\r") %
+        namebuf % action %  messagebuf % norm();
+      sstring gmcp = format("comm.channel { \"chan\": \"yell\", \"msg\": \"%s\", \"player\": \"%s\" }")
+	% escapeJsonString(msg.ansiToAard().trim())
+	% escapeJsonString(namebuf.ansiToAard().trim());
+      i->sendGmcp(gmcp);
+      b->sendTo(COLOR_SHOUTS, msg);
     }
   }
 }
@@ -449,6 +477,11 @@ void TBeing::doGrouptell(const sstring &arg)
         f->follower->desc->clientf(format("%d|%s|%s") % CLIENT_GROUPTELL % colorString(this, k->desc, getName(), NULL, COLOR_NONE, FALSE) % colorString(this, f->follower->desc, garbledTo, NULL, COLOR_NONE, FALSE));
       }
       buf = format("$n: %s%s%s") % f->follower->red() % colorString(this, f->follower->desc, garbledTo, NULL, COLOR_COMM, FALSE) % f->follower->norm();
+      sstring gmcp = format("comm.channel { \"chan\": \"gtell\", \"msg\": \"%s\", \"player\": \"%s\" }")
+	% escapeJsonString(buf.ansiToAard().trim())
+	% escapeJsonString(sstring(getName()).ansiToAard().trim());
+      desc->sendGmcp(gmcp);
+
       act(buf, 0, this, 0, f->follower, TO_VICT);
 
     }
@@ -877,10 +910,16 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
   // the stuff we send to the teller.
   garbed.convertStringColor("<c>");
 
-  if(vict->isImmortal() && drunkNum>0)
-    d->output.push(CommPtr(new TellFromComm(vict->getName(), capbuf.cap(), garbed, true, !isPc())));
-  else
-    d->output.push(CommPtr(new TellFromComm(vict->getName(), capbuf.cap(), garbed, false, !isPc())));
+  CommPtr cptr((vict->isImmortal() && drunkNum>0)
+	       ? new TellFromComm(vict->getName(), capbuf.cap(), garbed, true, !isPc())
+	       : new TellFromComm(vict->getName(), capbuf.cap(), garbed, false, !isPc()));
+
+  sstring gmcp = format("comm.channel { \"chan\": \"tell\", \"msg\": \"%s\", \"player\": \"%s\" }")
+    % escapeJsonString(cptr->getComm(Comm::CLIENT).ansiToAard().trim())
+    % escapeJsonString(sstring(getName()).ansiToAard().trim());
+  d->sendGmcp(gmcp);
+
+  d->output.push(cptr);
 
   TDatabase db(DB_SNEEZY);
   queryqueue.push(format("insert into tellhistory (tellfrom, tellto, tell, telltime) values ('%s', '%s', '%s', now())") % capbuf.cap().escape(sstring::SQL) % ((sstring)vict->getName()).escape(sstring::SQL) % garbed.escape(sstring::SQL));

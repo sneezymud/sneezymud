@@ -275,6 +275,254 @@ const sstring sstring::escape(stringEscapeT escape_type) const
 }
 
 
+const sstring sstring::ansiToAard() const
+{
+  sstring oBuf;
+  unsigned int MY_MAX_STRING_LENGTH=MAX_STRING_LENGTH * 2;
+
+  boost::regex e("(^|[^<])<.>");
+  boost::sregex_iterator m((*this).begin(), (*this).end(), e);
+  boost::sregex_iterator last_m;
+  boost::sregex_iterator end;
+  char code;
+  oBuf="";
+
+  for(;m!=end;++m){
+    oBuf.append((*m).prefix());
+    oBuf.append((*m)[1]);
+      
+    if((*m)[0].str()[1]=='<')
+      code=(*m)[0].str()[2];
+    else
+      code=(*m)[0].str()[1];
+
+
+    switch(code){
+    case 'h':
+      oBuf.append(MUD_NAME);
+      break;
+    case 'H':
+      oBuf.append(MUD_NAME_VERS);
+      break;
+    case 'R':
+      oBuf.append(ANSI_RED_BOLD);
+      break;
+    case 'r':
+      oBuf.append(ANSI_NORMAL);
+      oBuf.append(ANSI_RED);
+      break;
+    case 'G':
+      oBuf.append(ANSI_GREEN_BOLD);
+      break;
+    case 'g':
+      oBuf.append(ANSI_NORMAL);
+      oBuf.append(ANSI_GREEN);
+      break;
+    case 'y':
+      oBuf.append(ANSI_ORANGE_BOLD);
+      break;
+    case 'Y':
+      oBuf.append(ANSI_ORANGE_BOLD);
+      break;
+    case 'o':
+      oBuf.append(ANSI_NORMAL);
+      oBuf.append(ANSI_ORANGE);
+      break;
+    case 'O':
+      oBuf.append(ANSI_NORMAL);
+      oBuf.append(ANSI_ORANGE);
+      break;
+    case 'B':
+      oBuf.append(ANSI_BLUE_BOLD);
+      break;
+    case 'b':
+      oBuf.append(ANSI_NORMAL);
+      oBuf.append(ANSI_BLUE);
+      break;
+    case 'P':
+      oBuf.append(ANSI_PURPLE_BOLD);
+      break;
+    case 'p':
+      oBuf.append(ANSI_NORMAL);
+      oBuf.append(ANSI_PURPLE);
+      break;
+    case 'C':
+      oBuf.append(ANSI_CYAN_BOLD);
+      break;
+    case 'c':
+      oBuf.append(ANSI_NORMAL);
+      oBuf.append(ANSI_CYAN);
+      break;
+    case 'W':
+      oBuf.append(ANSI_WHITE_BOLD);
+      break;
+    case 'w':
+      oBuf.append(ANSI_NORMAL);
+      oBuf.append(ANSI_WHITE);
+      break;
+    case 'k':
+      oBuf.append(VT_BOLDTEX);
+      oBuf.append(ANSI_BLACK);
+      break;
+    case 'K':
+      oBuf.append(ANSI_NORMAL);
+      oBuf.append(ANSI_BLACK);
+      break;
+    case 'A':
+      oBuf.append(VT_BOLDTEX);
+      oBuf.append(ANSI_UNDER);
+      break;
+    case 'a':
+      oBuf.append(ANSI_UNDER);
+      break;
+    case 'D':
+      oBuf.append(VT_BOLDTEX);
+      break;
+    case 'd':
+      oBuf.append(VT_BOLDTEX);
+      break;
+    case 'F':
+      oBuf.append(ANSI_FLASH);
+      break;
+    case 'f':
+      oBuf.append(ANSI_FLASH);
+      break;
+    case 'i':
+      oBuf.append(VT_INVERTT);
+      break;
+    case 'I':
+      oBuf.append(VT_INVERTT);
+      break;
+    case 'e':
+      oBuf.append(ANSI_BK_ON_WH);
+      break;
+    case 'E':
+      oBuf.append(ANSI_BK_ON_WH);
+      break;
+    case 'j':
+      oBuf.append(ANSI_BK_ON_BK);
+      break;
+    case 'J':
+      oBuf.append(ANSI_BK_ON_BK);
+      break;
+    case 'l':
+      oBuf.append(ANSI_WH_ON_RD);
+      break;
+    case 'L':
+      oBuf.append(ANSI_WH_ON_RD);
+      break;
+    case 'q':
+      oBuf.append(ANSI_WH_ON_GR);
+      break;
+    case 'Q':
+      oBuf.append(ANSI_WH_ON_GR);
+      break;
+    case 't':
+      oBuf.append(ANSI_WH_ON_OR);
+      break;
+    case 'T':
+      oBuf.append(ANSI_WH_ON_OR);
+      break;
+    case 'u':
+      oBuf.append(ANSI_WH_ON_BL);
+      break;
+    case 'U':
+      oBuf.append(ANSI_WH_ON_BL);
+      break;
+    case 'v':
+      oBuf.append(ANSI_WH_ON_PR);
+      break;
+    case 'V':
+      oBuf.append(ANSI_WH_ON_PR);
+      break;
+    case 'x':
+      oBuf.append(ANSI_WH_ON_CY);
+      break;
+    case 'X':
+      oBuf.append(ANSI_WH_ON_CY);
+      break;
+    case 'z':
+      oBuf.append(ANSI_NORMAL);
+      break;
+    case 'Z':
+      oBuf.append(ANSI_NORMAL);
+      break;
+    case '1':
+      oBuf.append(ANSI_NORMAL);    
+      break;
+    }      
+    last_m=m;
+  }
+  if(last_m!=m)
+    oBuf.append((*last_m).suffix());
+  else
+    oBuf=*this;
+
+  // ansi font styles
+  oBuf.inlineReplaceString(VT_BOLDTEX, "");
+  oBuf.inlineReplaceString(ANSI_UNDER, "");
+  oBuf.inlineReplaceString(VT_INVERTT, "");
+  oBuf.inlineReplaceString(ANSI_FLASH, "");
+  // ansi font colors
+  oBuf.inlineReplaceString(ANSI_WHITE, "@w");
+  oBuf.inlineReplaceString(ANSI_BLACK, "@x000");
+  oBuf.inlineReplaceString(ANSI_RED, "@r");
+  oBuf.inlineReplaceString(ANSI_NORMAL, "@w");
+  oBuf.inlineReplaceString(ANSI_BLUE, "@b");
+  oBuf.inlineReplaceString(ANSI_CYAN, "@c");
+  oBuf.inlineReplaceString(ANSI_GREEN, "@g");
+  oBuf.inlineReplaceString(ANSI_ORANGE, "@y");
+  oBuf.inlineReplaceString(ANSI_PURPLE, "@m");
+
+  // colors with styles
+  oBuf.inlineReplaceString(ANSI_RED_BOLD, 
+			   "@R");
+  oBuf.inlineReplaceString(ANSI_GREEN_BOLD, 
+			   "@G");
+  oBuf.inlineReplaceString(ANSI_ORANGE_BOLD, 
+			   "@Y");
+  oBuf.inlineReplaceString(ANSI_YELLOW_BOLD, 
+			   "@Y");
+  oBuf.inlineReplaceString(ANSI_BLUE_BOLD, 
+			   "@B");
+  oBuf.inlineReplaceString(ANSI_PURPLE_BOLD, 
+			   "@M");
+  oBuf.inlineReplaceString(ANSI_CYAN_BOLD, 
+			   "@C");
+  oBuf.inlineReplaceString(ANSI_WHITE_BOLD, 
+			   "@W");
+
+  // colors with background
+  oBuf.inlineReplaceString(ANSI_BK_ON_BK, 
+			   "@x000");
+  oBuf.inlineReplaceString(ANSI_BK_ON_WH, 
+			   "@w");
+  oBuf.inlineReplaceString(ANSI_WH_ON_BL, 
+			   "@w");
+  oBuf.inlineReplaceString(ANSI_WH_ON_CY, 
+			   "@c");
+  oBuf.inlineReplaceString(ANSI_WH_ON_GR, 
+			   "@g");
+  oBuf.inlineReplaceString(ANSI_WH_ON_OR, 
+			   "@y");
+  oBuf.inlineReplaceString(ANSI_WH_ON_PR, 
+			   "@m");
+  oBuf.inlineReplaceString(ANSI_WH_ON_RD, 
+			   "@r");
+
+
+  if(oBuf.length() == MY_MAX_STRING_LENGTH - 1){
+    vlogf(LOG_BUG, "sstring::escape(): buffer reached MAX_STRING_LENGTH");
+
+    // avoid formatting just to be safe
+    vlogf(LOG_BUG, sstring("sstring::escape(): buffer=")+
+	  oBuf.substr(70));
+  }
+
+  return oBuf;
+}
+
+
 // puts commas every 3rd char, for formatting number strings
 const sstring sstring::comify() const
 {
