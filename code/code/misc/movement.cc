@@ -518,7 +518,7 @@ int TBeing::rawMove(dirTypeT dir)
     --(*this);
     thing_to_room(this, Room::VOID);
     sendTo(format("Uh-oh.  The %s melts beneath you as you fall into the swirling chaos.\n\r") % roomp->describeGround());
-    doLook("room", CMD_LOOK);
+    lookRoom(from_here->getZone() != to_here->getZone());
     return TRUE;
   }
 
@@ -1053,7 +1053,7 @@ int TBeing::rawMove(dirTypeT dir)
         tbt = NULL;
       }
       if (tbt)
-        tbt->doLook("", CMD_LOOK);
+	tbt->lookRoom(from_here->getZone() != to_here->getZone());
     }
   } else {
     if(!rawMoveTied(dir, new_r))
@@ -1068,7 +1068,8 @@ int TBeing::rawMove(dirTypeT dir)
   rc = bumpHeadDoor(from_here->dir_option[dir], &iHeight);
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
-  doLook("", CMD_LOOK);
+  lookRoom(from_here->getZone() != to_here->getZone());
+
 
   // I am in new room and have looked at it
   // but people have not seen me leave or enter yet (displayMove())

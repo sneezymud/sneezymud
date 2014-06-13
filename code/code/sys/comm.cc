@@ -224,18 +224,30 @@ void TBeing::sendTo(const sstring &msg) const
 }
 
 
-void TBeing::sendRoomGmcp() const
+void TBeing::sendRoomGmcp(bool changedZones) const
 {
+  if (desc == NULL)
+    return;
+
+  if (changedZones) {
+    sstring area = format(
+      "room.area { \"id\":\"%d\", \"name\": \"%s\", \"x\": 0, \"y\": 0, \"z\": 0, \"col\": \"\", \
+\"flags\": \"quiet\" }")
+      % roomp->getZone()->zone_nr
+      % roomp->getZone()->name;
+    desc->sendGmcp(area);
+  }
+
   const char *exDirs[] =
-  {
-    "n", "e", "s", "w", "u",
-    "d", "ne", "nw", "se", "sw"
-  };
+    {
+      "n", "e", "s", "w", "u",
+      "d", "ne", "nw", "se", "sw"
+    };
 
   sstring exits;
   sstring exit_kw;
   for (dirTypeT door = MIN_DIR; door < MAX_DIR; door++) {
-      roomDirData *exitdata = roomp->exitDir(door);
+    roomDirData *exitdata = roomp->exitDir(door);
 
     if (exitdata && (exitdata->to_room != Room::NOWHERE)) {
       bool secret=IS_SET(exitdata->condition, EX_SECRET);

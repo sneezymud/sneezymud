@@ -1088,7 +1088,7 @@ class TBeing : public TThing {
     int objDam(spellNumT, int, TThing *);
     int objDamage(spellNumT, int, TThing *);
     virtual void sendTo(CommPtr) const;
-    void sendRoomGmcp() const;
+    void sendRoomGmcp(bool) const;
     virtual void sendTo(colorTypeT, const sstring &) const;
     virtual void sendTo(const sstring &) const;
     void sendRoomName(TRoom *) const;
@@ -1823,7 +1823,7 @@ class TBeing : public TThing {
     void lookDark();
     void lookDir(int);
     void lookInObj(sstring, TThing *, unsigned int, const sstring &, cmdTypeT);
-    void lookRoom();
+    void lookRoom(bool changedZones = false);
     void lookAtRoom();
     void lookAtBeing(TThing *);
     void lookingAtObj(TThing *);

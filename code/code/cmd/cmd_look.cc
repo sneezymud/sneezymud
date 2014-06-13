@@ -201,11 +201,11 @@ void TBeing::lookInObj(sstring arg2, TThing *specific, unsigned int bits, const 
 
 
 // this is just "look" with no arguments
-void TBeing::lookRoom()
+void TBeing::lookRoom(bool changedZones)
 {
   int res;
 
-  sendRoomGmcp();
+  sendRoomGmcp(changedZones);
 
   // purple if color basic, nothing if no color, 
   // varied color if color room name
