@@ -1022,5 +1022,20 @@ boost::format format(const std::string &f_string){
 }
 
 
-
-
+sstring sstring::escapeJson() const {
+  std::ostringstream ss;
+  for (sstring::const_iterator iter = begin(); iter != end(); iter++) {
+    switch (*iter) {
+    case '\\': ss << "\\\\"; break;
+    case '"': ss << "\\\""; break;
+    case '/': ss << "\\/"; break;
+    case '\b': ss << "\\b"; break;
+    case '\f': ss << "\\f"; break;
+    case '\n': ss << "\\n"; break;
+    case '\r': ss << "\\r"; break;
+    case '\t': ss << "\\t"; break;
+    default: ss << *iter; break;
+    }
+  }
+  return ss.str();
+}

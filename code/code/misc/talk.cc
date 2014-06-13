@@ -71,6 +71,9 @@ int TBeing::doSay(const sstring &arg)
   TBeing *mob = NULL;
   int rc;
   Descriptor *d;
+  sstring gmcp_template = isPc()
+    ? "comm.channel { \"chan\": \"say\", \"msg\": \"%s\", \"player\": \"%s\" }"
+    : "comm.channel { \"chan\": \"mobsay\", \"msg\": \"%s\", \"player\": \"%s\" }";
 
   if (desc)
     desc->talkCount = time(0);
@@ -132,13 +135,23 @@ int TBeing::doSay(const sstring &arg)
       if (hasColorStrings(NULL, capbuf, 2)) {
         if (IS_SET(mob->desc->plr_color, PLR_COLOR_MOBS)) {
           tmpbuf = format("%s") % colorString(mob, mob->desc, capbuf, NULL, COLOR_MOBS, FALSE);
-          mob->sendTo(COLOR_COMM, format("%s says, \"%s%s\"\n\r") % tmpbuf % garbleTo % mob->norm());
+	  sstring msg = format("%s says, \"%s%s\"\n\r") % tmpbuf % garbleTo % mob->norm();
+	  sstring gmcp = format(gmcp_template)
+	    % msg.ansiToAard().trim().escapeJson()
+	    % tmpbuf.ansiToAard().trim().escapeJson();
+	  mob->desc->sendGmcp(gmcp);
+          mob->sendTo(COLOR_COMM, msg);
           if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
             garbedBuf = format("%s") % colorString(this, mob->desc, garbleTo, NULL, COLOR_NONE, FALSE);
             d->clientf(format("%d|%s|%s") % CLIENT_SAY % tmpbuf % garbedBuf);
           }
         } else {
-          mob->sendTo(COLOR_COMM, format("<c>%s says, <z>\"%s\"\n\r") % tmpbuf % garbleTo);
+	  sstring msg = format("<c>%s says, <z>\"%s\"\n\r") % tmpbuf % garbleTo;
+	  sstring gmcp = format(gmcp_template)
+	    % msg.ansiToAard().trim().escapeJson()
+	    % tmpbuf.ansiToAard().trim().escapeJson();
+	  mob->desc->sendGmcp(gmcp);
+          mob->sendTo(COLOR_COMM, msg);
             if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
               nameBuf = format("<c>%s<z>") % tmpbuf;
               garbedBuf = format("%s") % colorString(this, mob->desc, garbleTo, NULL, COLOR_NONE, FALSE);
@@ -146,7 +159,13 @@ int TBeing::doSay(const sstring &arg)
             }
         }
       } else {
-        mob->sendTo(COLOR_COMM, format("<c>%s says, <z>\"%s\"\n\r") % tmpbuf % garbleTo);
+	sstring msg = format("<c>%s says, <z>\"%s\"\n\r") % tmpbuf % garbleTo;
+	sstring gmcp = format(gmcp_template)
+	  % msg.ansiToAard().trim().escapeJson()
+	  % tmpbuf.ansiToAard().trim().escapeJson();
+	mob->desc->sendGmcp(gmcp);
+
+        mob->sendTo(COLOR_COMM, msg);
         if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
           nameBuf = format("<c>%s<z>") % tmpbuf;
           garbedBuf = format("%s") % colorString(this, mob->desc, garbleTo, NULL, COLOR_NONE, FALSE);
@@ -159,6 +178,11 @@ int TBeing::doSay(const sstring &arg)
     } else { // mob is not PC
       sstring msg = format("%s says, \"%s\"\n\r") % sstring(getName()).cap() % 
 	colorString(this, mob->desc, garbleRoom, NULL, COLOR_COMM, FALSE);
+      sstring gmcp = format(gmcp_template)
+	% msg.ansiToAard().trim().escapeJson()
+	% tmpbuf.ansiToAard().trim().escapeJson();
+      mob->desc->sendGmcp(gmcp);
+
       mob->sendTo(COLOR_COMM, msg);
       if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
         d->clientf(format("%d|%s|%s") % CLIENT_SAY % sstring(getName()).cap() %
@@ -203,28 +227,6 @@ int TBeing::doSay(const sstring &arg)
 
   return FALSE;
 }
-
-namespace {
-
-  sstring escapeJsonString(sstring const& input) {
-    std::ostringstream ss;
-    for (sstring::const_iterator iter = input.begin(); iter != input.end(); iter++) {
-      switch (*iter) {
-      case '\\': ss << "\\\\"; break;
-      case '"': ss << "\\\""; break;
-      case '/': ss << "\\/"; break;
-      case '\b': ss << "\\b"; break;
-      case '\f': ss << "\\f"; break;
-      case '\n': ss << "\\n"; break;
-      case '\r': ss << "\\r"; break;
-      case '\t': ss << "\\t"; break;
-      default: ss << *iter; break;
-      }
-    }
-    return ss.str();
-  }
-
-};
 
 void Descriptor::sendShout(TBeing *ch, const sstring &arg)
 {
@@ -315,8 +317,8 @@ void Descriptor::sendShout(TBeing *ch, const sstring &arg)
       sstring msg = format("%s %s, \"%s%s\"\n\r") %
         namebuf % action %  messagebuf % norm();
       sstring gmcp = format("comm.channel { \"chan\": \"yell\", \"msg\": \"%s\", \"player\": \"%s\" }")
-	% escapeJsonString(msg.ansiToAard().trim())
-	% escapeJsonString(namebuf.ansiToAard().trim());
+	% msg.ansiToAard().trim().escapeJson()
+	% namebuf.ansiToAard().trim().escapeJson();
       i->sendGmcp(gmcp);
       b->sendTo(COLOR_SHOUTS, msg);
     }
@@ -478,8 +480,8 @@ void TBeing::doGrouptell(const sstring &arg)
       }
       buf = format("$n: %s%s%s") % f->follower->red() % colorString(this, f->follower->desc, garbledTo, NULL, COLOR_COMM, FALSE) % f->follower->norm();
       sstring gmcp = format("comm.channel { \"chan\": \"gtell\", \"msg\": \"%s\", \"player\": \"%s\" }")
-	% escapeJsonString(buf.ansiToAard().trim())
-	% escapeJsonString(sstring(getName()).ansiToAard().trim());
+	% buf.ansiToAard().trim().escapeJson()
+	% sstring(getName()).ansiToAard().trim().escapeJson();
       desc->sendGmcp(gmcp);
 
       act(buf, 0, this, 0, f->follower, TO_VICT);
@@ -915,8 +917,8 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
 	       : new TellFromComm(vict->getName(), capbuf.cap(), garbed, false, !isPc()));
 
   sstring gmcp = format("comm.channel { \"chan\": \"tell\", \"msg\": \"%s\", \"player\": \"%s\" }")
-    % escapeJsonString(cptr->getComm(Comm::CLIENT).ansiToAard().trim())
-    % escapeJsonString(sstring(getName()).ansiToAard().trim());
+    % cptr->getComm(Comm::CLIENT).ansiToAard().trim().escapeJson()
+    % sstring(getName()).ansiToAard().trim().escapeJson();
   d->sendGmcp(gmcp);
 
   d->output.push(cptr);
