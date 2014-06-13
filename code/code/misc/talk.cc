@@ -462,7 +462,11 @@ void TBeing::doGrouptell(const sstring &arg)
     // plays with the next few lines for some reason
     if (!k->desc || !k->desc->ignored.isIgnored(desc)) {
       garbledTo = garble(k, garbled, Garble::SPEECH_GROUPTELL, Garble::SCOPE_INDIVIDUAL);
-      buf = format("$n: %s%s%s") % k->red() % colorString(this, k->desc, garbledTo, NULL, COLOR_COMM, FALSE) % k->norm();
+      buf = format("%s: %s%s%s") % getName() % k->red() % colorString(this, k->desc, garbledTo, NULL, COLOR_COMM, FALSE) % k->norm();
+      sstring gmcp = format("comm.channel { \"chan\": \"gtell\", \"msg\": \"%s\", \"player\": \"%s\" }")
+	% buf.ansiToAard().trim().escapeJson()
+	% sstring(getName()).ansiToAard().trim().escapeJson();
+      k->desc->sendGmcp(gmcp);
       act(buf, 0, this, 0, k, TO_VICT);
     }
   }
@@ -478,11 +482,11 @@ void TBeing::doGrouptell(const sstring &arg)
       if (f->follower->desc && (f->follower->desc->m_bIsClient || IS_SET(f->follower->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))) {
         f->follower->desc->clientf(format("%d|%s|%s") % CLIENT_GROUPTELL % colorString(this, k->desc, getName(), NULL, COLOR_NONE, FALSE) % colorString(this, f->follower->desc, garbledTo, NULL, COLOR_NONE, FALSE));
       }
-      buf = format("$n: %s%s%s") % f->follower->red() % colorString(this, f->follower->desc, garbledTo, NULL, COLOR_COMM, FALSE) % f->follower->norm();
+      buf = format("%s: %s%s%s") % getName() % f->follower->red() % colorString(this, f->follower->desc, garbledTo, NULL, COLOR_COMM, FALSE) % f->follower->norm();
       sstring gmcp = format("comm.channel { \"chan\": \"gtell\", \"msg\": \"%s\", \"player\": \"%s\" }")
 	% buf.ansiToAard().trim().escapeJson()
 	% sstring(getName()).ansiToAard().trim().escapeJson();
-      desc->sendGmcp(gmcp);
+      f->follower->desc->sendGmcp(gmcp);
 
       act(buf, 0, this, 0, f->follower, TO_VICT);
 
