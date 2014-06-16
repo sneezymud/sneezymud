@@ -1949,9 +1949,23 @@ TSocket *TMainSocket::newConnection(int v6_sock, int port)
 
 void sig_alrm(int){return;}
 
+
+static const sstring IP_String(in6_addr &_a)
+{
+  char buf[INET6_ADDRSTRLEN] = {0};
+  if (!inet_ntop(AF_INET6, &_a, buf, INET6_ADDRSTRLEN)) {
+    perror("inet_ntop");
+    return sstring("inet_ntop error");
+  }
+  return sstring(buf);
+}
+
+
 int TMainSocket::newDescriptor(int v6_sock, int port)
 {
+  socklen_t size;
   Descriptor *newd;
+  struct sockaddr_in6 v6_saiSock;
   TSocket *s = NULL;
 
   if (!(s = newConnection(v6_sock, port)))
@@ -1968,6 +1982,19 @@ int TMainSocket::newDescriptor(int v6_sock, int port)
     maxdesc = s->m_sock;
 
   newd = new Descriptor(s);
+
+  size = sizeof(v6_saiSock);
+  if (getpeername(s->m_sock, (struct sockaddr *) &v6_saiSock, &size) < 0) {
+    perror("getpeername");
+    newd->host = "";
+  } else {
+    // we sometimes hang here, so lets log any suspicious events
+    // I _think_ the problem is caused by a site that has changed its DNS
+    // entry, but the mud's site has not updated the new list yet.
+    signal(SIGALRM, sig_alrm);
+
+    newd->host = IP_String(v6_saiSock.sin6_addr);
+  }
 
   if (newd->inputProcessing() < 0) {
     delete newd;
