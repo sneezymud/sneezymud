@@ -1,18 +1,25 @@
      <Y><z>Important game status information:<z>
 
-     <R>Sneezy Restore Status:<z> Previous player files are not available. We will however 
-     restore/load up to 5 items excluding artifacts and +50 level gear. Custom items
-     obtained by quests/events/coins made for players will be returned. Players with homes 
-     will be provided keys to their homes.<z>
+      <R>Sneezy Restore Status:<z> Previous player files are not available 
+      (pre-sneezy.com). View news for upate on player merge with UNDO.IT. 
+      For returing players we will restore/load up to 5 items excluding 
+      artifacts and +50 level gear. Custom items obtained by quests
+      or events made for players will be returned. Players with homes 
+      will be provided keys to their homes.<z>
 
 
      <Y>SNEEZYMUD CONTACT:<z>       <c>support@grimhavenmud.com<z>
     
 
-     <Y>WEBSITE:<z>                <c>Coming Soon!<z>
-     <Y>NEWBIE HELP:<z>            <c>'help newbie'
-     <Y>GAME HELP:<z>              <c>use the in-game commands: REQUEST, BUG, IDEA and TYPO.
+     <Y>WEBSITE:<z>        <c>Wiki Online @ Grimhavenmud.com<z>
+     <Y>NEWBIE HELP:<z>    <c>'help newbie'
+     <Y>GAME HELP:<z>      <c>game commands: REQUEST, BUG, IDEA and TYPO.
 
-     <R>-------------<z>           <W>Multiplay is enabled and allowed. To avoid issues with 
-     <R>CLARIFICATION:<z>          <W>multiplay code please create seperate accounts. Increment<z> 
-     <R>-------------<z>           <W>your accounts numerically. (ie. account, account2, account3)<z>
+     <R>-------------<z>   <W>Multiplay is enabled and allowed. To avoid<z> 
+     <R>  MULTIPLAY  <z>   <W>multiplay code issues please create seperate<z> 
+     <R>CLARIFICATION<z>   <W>accounts. Increment your accounts alpha-<z> 
+     <R>-------------<z>   <W>betically (ie. account, accountb, accountc)<z>
+
+    
+
+==========================================================================
