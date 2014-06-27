@@ -1568,7 +1568,7 @@ int TBeing::hpGainForLevel(classIndT Class) const
 
   hpgain *= (double) getConHpModifier();
 
-  hpgain /= (double) howManyClasses();
+  // hpgain /= (double) howManyClasses();
 
   if(roll_chance(hpgain - (int) hpgain)){
     hpgain += 1.0;

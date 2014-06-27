@@ -235,8 +235,6 @@ bool TBeing::hasClass(unsigned short bit, exactTypeT exact) const
 int TBeing::howManyClasses() const
 {
 
-  return 1;
-
   short tot = 0;
   classIndT i;
 
