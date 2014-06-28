@@ -364,20 +364,22 @@ int TPortal::enterMe(TBeing *ch)
   if (isRandom == -1)
     ch->sendTo("You feel strangly pulled in many directions.\n\r");
 
-  if (tPerson && checkOwnersList(tPerson, true)) {
-    // This is done by clerics who create portals then logon lower
-    // level characters of theirs and use them.  So we are going
-    // to do something VERY crual to them for this.
+  if(Config::ForceMultiplayCompliance()){
+    if (tPerson && checkOwnersList(tPerson, true)) {
+      // This is done by clerics who create portals then logon lower
+      // level characters of theirs and use them.  So we are going
+      // to do something VERY crual to them for this.
 
-    ch->sendTo("Something goes wrong as you enter the portal and you feel torn through the astral plane!\n\r");
-    vlogf(LOG_CHEAT, format("Player using Portal created by other player in same account! (%s)") % 
-          ch->getName());
-    rc = ch->genericTeleport(SILENT_NO, true);
+      ch->sendTo("Something goes wrong as you enter the portal and you feel torn through the astral plane!\n\r");
+      vlogf(LOG_CHEAT, format("Player using Portal created by other player in same account! (%s)") %
+	    ch->getName());
+      rc = ch->genericTeleport(SILENT_NO, true);
 
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_VICT;
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+	return DELETE_VICT;
 
-    return FALSE;
+      return FALSE;
+    }
   }
 
   ch->goThroughPortalMsg(this);
