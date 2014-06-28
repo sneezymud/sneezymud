@@ -10,11 +10,12 @@
 
 #include <stdio.h>
 
-#include "room.h"
+#include "configuration.h"
+#include "extern.h"
 #include "handler.h"
 #include "obj_portal.h"
-#include "extern.h"
 #include "person.h"
+#include "room.h"
 
 
 
