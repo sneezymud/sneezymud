@@ -153,7 +153,7 @@ int repair_number = 0;
 unsigned int total_help_number = 0;
 int faction_number = 0;
 // load rate percentage, overrides rates defined in zonefiles
-int fixed_chance = 1;
+int fixed_chance = 3;
 
 
 const char * const File::SIGN_MESS = "/mud/sign/currentMess";
