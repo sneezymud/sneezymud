@@ -64,7 +64,7 @@ int init_game_stats(void)
   stats.absorb_damage_divisor[MOB_STAT] = 2;
   stats.absorb_damage_divisor[PC_STAT] = 4;
 
-  //stats.equip = 0.7;   // this affects the load rate of things
+  stats.equip = 0.7;   // this affects the load rate of things
   stats.max_exist = 1.2;  // this affects the MAX number of a thing allowed
 
   // 1.40 resulted in 16-20 days playtime to L50
