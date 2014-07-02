@@ -4975,9 +4975,6 @@ void TBeing::doClone(const sstring &arg)
   int ci, num_read = 0;
   ItemLoad il;
 
-  sendTo("Nope. Disabled for causing hangs.\n\r");
-  return;
-
   if (powerCheck(POWER_CLONE)) {
     return;
   }
@@ -5049,22 +5046,7 @@ void TBeing::doClone(const sstring &arg)
   //   hands permanently
   // ALSO - junk notes, and increase object number for these loads (since
   //   they will decrease when purged)
-  wearSlotT ij;
   TObj *o;
-  for (ij = MIN_WEAR; ij < MAX_WEAR; ij++){
-    if((o = dynamic_cast<TObj *>(mob->equipment[ij]))) 
-    {
-      obj_index[o->getItemIndex()].addToNumber(1);
-      o->addObjStat(ITEM_NORENT);
-      if ((dynamic_cast<TNote *>(o)))
-      {
-        o->makeScraps();
-        delete o;
-      }
-    } else if (mob->equipment[ij]) 
-      vlogf(LOG_BUG, format("did not add no-rent flag to item %s in slot %d when cloning") % mob->equipment[ij]->name % (int) ij);
-  }
-  
   TThing *i, *j;
   TObj *bo;
 //  TBaseContainer *b1;
@@ -5098,15 +5080,12 @@ void TBeing::doClone(const sstring &arg)
         
         if ((dynamic_cast<TNote *>(j))) 
         {
-          j=*(it++);
           j->makeScraps();
           delete j;
           continue;
         }
-        j=*(it++);
       }
     }
-    i=*(it++);
   }
 
   // this bit makes the mob TRUE for isPc, and prevents the look responses, etc
