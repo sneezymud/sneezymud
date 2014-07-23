@@ -197,9 +197,9 @@ void ObjLoad(TBeing *ch, int vnum)
   o->snum   = vnum;
   o->number = -1;
 
-  o->name = mud_str_dup(db["name"]);
-  o->shortDescr = mud_str_dup(db["short_desc"]);
-  o->setDescr(mud_str_dup(db["long_desc"]));
+  o->name = db["name"];
+  o->shortDescr = db["short_desc"];
+  o->setDescr(db["long_desc"]);
 
   o->setObjStat(convertTo<int>(db["action_flag"]));
   o->obj_flags.wear_flags = convertTo<int>(db["wear_flag"]);
@@ -217,7 +217,7 @@ void ObjLoad(TBeing *ch, int vnum)
   o->setMaterial(convertTo<int>(db["material"]));
   o->max_exist = convertTo<int>(db["max_exist"]);
   if(!db["action_desc"].empty())
-    o->action_description=mud_str_dup(db["action_desc"]);
+    o->action_description=db["action_desc"];
   else o->action_description=NULL;
 
   o->ex_description = NULL;
@@ -227,8 +227,8 @@ void ObjLoad(TBeing *ch, int vnum)
   
   while(db.fetchRow()){
     new_descr = new extraDescription();
-    new_descr->keyword = mud_str_dup(db["name"]);
-    new_descr->description = mud_str_dup(db["description"]);
+    new_descr->keyword = db["name"];
+    new_descr->description = db["description"];
     new_descr->next = o->ex_description;
     o->ex_description = new_descr;
   }
@@ -416,9 +416,9 @@ static void ocreate(TBeing *ch)
 
   tmp_obj = new TTrash();
 
-  tmp_obj->name = mud_str_dup("dummy item");
-  tmp_obj->shortDescr = mud_str_dup("a dummy item");
-  tmp_obj->setDescr(mud_str_dup("A dummy item lies here."));
+  tmp_obj->name = "dummy item";
+  tmp_obj->shortDescr = "a dummy item";
+  tmp_obj->setDescr("A dummy item lies here.");
 
   tmp_obj->obj_flags.wear_flags = ITEM_TAKE;
   tmp_obj->obj_flags.decay_time = -1;
@@ -790,7 +790,7 @@ void TPerson::doOEdit(const char *argument)
           ed = new extraDescription();
           ed->next = cObj->ex_description;
           cObj->ex_description = ed;
-          ed->keyword = mud_str_dup(sstring);
+          ed->keyword = sstring;
           desc->str = &ed->description;
           break;
         } else if (boost::iequals(ed->keyword, sstring)) {
@@ -1879,7 +1879,7 @@ static void change_obj_extra(TBeing *ch, TObj *o, const char *arg, editorEnterTy
         ed = new extraDescription();
 	ed->next = o->ex_description;
 	o->ex_description = ed;
-        ed->keyword = mud_str_dup(arg);
+        ed->keyword = arg;
 	ed->description = NULL;
 	ch->desc->str = &ed->description;
 	ch->sendTo("Enter the description. Terminate with a '~' on a NEW line.\n\r");
@@ -3045,8 +3045,7 @@ void generic_dirlist(const char *buf, const TBeing *ch)
       int rc = fscanf(fp, "#%d\n", &num);
       if (rc == 1) {
         // only handle if it's of right form
-        char *n;
-        n = fread_string(fp);
+        sstring n = fread_string(fp);
   
         sstring newstr;
         newstr += dp->d_name;
@@ -3055,7 +3054,6 @@ void generic_dirlist(const char *buf, const TBeing *ch)
         newstr += (++totcnt%2 == 0 ? "\n\r" : "\n\r");
 
         sort_str.push_back(newstr);
-        delete [] n;
       }
       fclose(fp);
     }

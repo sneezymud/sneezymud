@@ -23,7 +23,7 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
   TThing *t=NULL;
   TMonster *tmons=NULL;
   TBeing *tb=NULL;
-  char buf[256], *tmp;
+  char buf[256];
   followData *f, *n;
 
   enum posseeStateT {
@@ -441,10 +441,7 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
 	  sprintf(buf, "That's it, %s is coming with us!", 
 		  job->criminal->getName().c_str());
 	  myself->doSay(buf);
-	  tmp=mud_str_dup(job->criminal->name);
-	  strcpy(tmp, add_bars(tmp).c_str());
-	  myself->doCapture(tmp);
-	  delete tmp;
+	  myself->doCapture(add_bars(job->criminal->name));
 	  REMOVE_BIT(job->criminal->specials.act, ACT_DIURNAL);
 	  REMOVE_BIT(job->criminal->specials.act, ACT_NOCTURNAL);
 	  job->state=STATE_BOOK_UM;      

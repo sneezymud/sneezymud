@@ -60,7 +60,7 @@ int TBoard::boardHandler(TBeing *ch, cmdTypeT cmd, const char *arg)
 
 int TBoard::readPost(TBeing *ch, const char *arg)
 {
-  char numb[MAX_INPUT_LENGTH], buffer[MAX_STRING_LENGTH];
+  char numb[MAX_INPUT_LENGTH];
   int post_num;
   sstring sb;
 
@@ -114,17 +114,14 @@ int TBoard::readPost(TBeing *ch, const char *arg)
   if (db.fetchRow()){
      if (ch->desc){
        if (ch->desc->m_bIsClient){
-         sprintf(buffer, "Message %d : [%s] %s (%s)\n\r\n\r%s\n\rEnd of message %d.\n\r", post_num, mud_str_dup(db["date_posted"]), mud_str_dup(db["subject"]), mud_str_dup(db["author"]), mud_str_dup(db["post"]), post_num);
-        
-         sstring sb = buffer;
+         sstring sb = format("Message %d : [%s] %s (%s)\n\r\n\r%s\n\rEnd of message %d.\n\r") % post_num % db["date_posted"] % db["subject"] % db["author"] % db["post"] % post_num;
          processStringForClient(sb);
    
          ch->desc->clientf(format("%d") % CLIENT_NOTE);
          ch->sendTo(COLOR_BASIC, sb);
          ch->desc->clientf(format("%d") % CLIENT_NOTE_END);
        } else {
-         sprintf(buffer, "Message %d : [%s] %s (%s)\n\r\n\r%s\n\r%sEnd of message %d.\n\r", post_num, mud_str_dup(db["date_posted"]), mud_str_dup(db["subject"]), mud_str_dup(db["author"]), mud_str_dup(db["post"]), ch->norm(), post_num);
-         sstring sb = buffer;
+         sstring sb = format("Message %d : [%s] %s (%s)\n\r\n\r%s\n\r%sEnd of message %d.\n\r") % post_num % db["date_posted"] % db["subject"] % db["author"] % db["post"] % ch->norm() % post_num;
          ch->desc->page_string(sb);
        }
        return TRUE;
@@ -338,7 +335,7 @@ int TBoard::removeFromBoard(TBeing *ch, const char *arg)
   db.query("select author, post from board_message where board_vnum = %i and post_num = %i and date_removed is null", objVnum(), post_num);
   if (db.fetchRow()){
     // only the original author, a board police wiz or a faction power wanker at a faction board can remove a note
-    if (strcmp(mud_str_dup(db["author"]), ch->getName().c_str()) && 
+    if (db["author"] != ch->getName() && 
       !ch->hasWizPower(POWER_BOARD_POLICE) && 
       !(objVnum() == FACT_BOARD_SERPENT && ch->getFactionAuthority(FACT_SNAKE, 0)) && 
       !(objVnum() == FACT_BOARD_BROTHER && ch->getFactionAuthority(FACT_BROTHERHOOD, 0)) && 
@@ -347,7 +344,7 @@ int TBoard::removeFromBoard(TBeing *ch, const char *arg)
       return TRUE;
     } else {
       // create the note and give to ch
-      TNote *note = createNote(mud_str_dup(db["post"]));
+      TNote *note = createNote(db["post"]);
       *ch += *note;
       ch->sendTo("You get the note.\n\r");
       act("$n pulls a note off $p.", FALSE, ch, this, 0, TO_ROOM);

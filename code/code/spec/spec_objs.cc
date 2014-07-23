@@ -3268,7 +3268,7 @@ int switchtrack(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
     sprintf(buf,"<k>$n forces the $o into alignment with the %s tunnel.<1>",arg2);
     act(buf, TRUE, ch, myself, NULL, TO_ROOM);
     sprintf(buf,"<k>The switchtracks here are aligned with the %s tunnel.<1>", arg2);
-    myself->setDescr(mud_str_dup(buf));
+    myself->setDescr(buf);
     return TRUE;
   }
 #endif
@@ -5461,7 +5461,7 @@ int fortuneCookie(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
   sstring buf=fortunes[::number(0,fortunes.size()-1)];
 
   // create fortune
-  TNote *fortune = createNote(mud_str_dup(buf));
+  TNote *fortune = createNote(buf);
   fortune->name = "fortune paper strip small";
   fortune->shortDescr = "<W>a fortune<1>"; 
   fortune->setDescr("<W>A small strip of paper lies here.<1>");
@@ -5689,7 +5689,7 @@ int switchObject(TBeing *me, cmdTypeT cmd, const char *, TObj *o, TObj *)
   // I hope there's a better way to do this, but I don't have the time to
   // look for it/make it
   TBeing *mob = read_mobile(obj_index[o->getItemIndex()].virt, VIRTUAL);
-  const char * mob_name = add_bars(mud_str_dup(mob->name)).c_str();
+  const char * mob_name = add_bars(mob->name).c_str();
   delete mob;
   me->doSwitch(mob_name);
   
@@ -6202,7 +6202,7 @@ int mobSpawnGrab(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *cont
     return FALSE;
   
   // first time grab, flag it
-  me->name = mud_str_dup(format("%s [proc_152-%d]") % me->name % time(NULL));
+  me->name = format("%s [proc_152-%d]") % me->name % time(NULL);
   
   // spawn the 3 mobs
   int mob_vnum = 32762; // guard deranged spirit hobbit
@@ -6673,7 +6673,7 @@ int ieComputer(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 				} else {
 					contents += "\n\r<c>No coins on record!<1>\n\r";
 				}
-				note = createNote(mud_str_dup(contents));
+				note = createNote(contents);
 			} else {
 				sstring contents = "<g>Immortal Exchange Coin Distribution<1>\n\r";
 				db.query("select p1.name as created_for, p2.name as created_by, count(*) as coins, date_format(now(), '%%M %%e %%Y %%l:%%i %%p') as date_printed from immortal_exchange_coin c1 left join player p1 on p1.id = c1.created_for left join player p2 on c1.created_by = p2.id group by p1.name, p2.name order by p1.name, p2.name;");
@@ -6687,7 +6687,7 @@ int ieComputer(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 				} else {
 					contents += "\n\r<c>No coins on record!<1>\n\r";
 				}
-				note = createNote(mud_str_dup(contents));
+				note = createNote(contents);
 			}
 			act("A thin arm extends from $p.", FALSE, o, o, 0, TO_ROOM);
 			act("$p gives a note to $n.", FALSE, ch, o, 0, TO_ROOM);

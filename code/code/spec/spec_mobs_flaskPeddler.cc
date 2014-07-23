@@ -58,8 +58,8 @@ int flaskPeddler(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *peddler, T
   }
 
   flask->swapToStrung();
-  flask->name = mud_str_dup(newName);
-  flask->shortDescr = mud_str_dup(newShort);
+  flask->name = newName;
+  flask->shortDescr = newShort;
   
   act("You work your magic on the flask.", TRUE, peddler, flask, 0, TO_CHAR);
   act("$n mumbles something and touches the flask.", TRUE, peddler, flask, 0, TO_ROOM);

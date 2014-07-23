@@ -7091,7 +7091,7 @@ int idCardProvider(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
   buf += format("|                                     |\n\r");
   buf += format("+-------------------------------------+\n\r");
 
-  TNote *card = createNote(mud_str_dup(buf));
+  TNote *card = createNote(buf);
   card->name = "card paper id";
   card->shortDescr = "<W>an ID card<1>"; 
   card->setDescr("<W>An official Kingdom of Grimhaven ID card lies here.<1>");

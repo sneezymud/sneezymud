@@ -259,8 +259,8 @@ void TTrap::dropMe(TBeing *ch, showMeT, showRoomT showroom)
     ed = new extraDescription();
     ed->next = ex_description;
     ex_description = ed;
-    ed->keyword = mud_str_dup(TRAP_EX_DESC);
-    ed->description = mud_str_dup(getName());
+    ed->keyword = TRAP_EX_DESC;
+    ed->description = getName();
 
     // utilize baseclass so we are recursive
     // we already displayed appropriate text (room intentionally concealed)

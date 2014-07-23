@@ -586,7 +586,7 @@ void TPerson::loadFromSt(charFile *st)
 {
   int i;
 
-  name = mud_str_dup(st->name);
+  name = st->name;
 
   setBaseAge(st->base_age);
   age_mod = st->age_mod;
@@ -626,13 +626,13 @@ void TPerson::loadFromSt(charFile *st)
   player.longDescr = NULL;
 #if 0
   if (*st->title) {
-    title = mud_str_dup(st->title);
+    title = st->title;
   } else
     title = NULL;
 #endif
 
   if (*st->description) {
-    setDescr(mud_str_dup(st->description));
+    setDescr(st->description);
   } else
     setDescr(NULL);
 

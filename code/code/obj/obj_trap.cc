@@ -385,8 +385,8 @@ void TTrap::armGrenade(TBeing *ch)
   extraDescription *ed = new extraDescription();
   ed->next = ex_description;
   ex_description = ed;
-  ed->keyword = mud_str_dup(GRENADE_EX_DESC);
-  ed->description = mud_str_dup(ch->getName());
+  ed->keyword = GRENADE_EX_DESC;
+  ed->description = ch->getName();
 
   // somewhat silly, but here to prevent throwing lots of grenades at
   // a single time.

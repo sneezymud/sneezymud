@@ -697,7 +697,7 @@ extern bool _parse_name_safe(const char *arg, char *name, unsigned int nameLen);
 extern bool parse_name_sstring(const sstring arg, sstring & name);
 extern bool is_abbrev(const char *, const char *, multipleTypeT multiple = MULTIPLE_NO, exactTypeT exact = EXACT_NO);
 extern bool is_abbrev(const sstring &, const sstring &, multipleTypeT multiple = MULTIPLE_NO, exactTypeT exact = EXACT_NO);
-extern char *fread_string(FILE *);
+extern sstring fread_string(FILE *);
 extern void trimString(sstring &);
 
 

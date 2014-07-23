@@ -105,7 +105,7 @@ void doSaveZoneFile(TBeing *ch, const sstring & tArg)
 
   sprintf(tString, "#%d\n", roomStart);
   fputs(tString, tFile);
-  sprintf(tString, "%s~\n", zone_table[zValue].name);
+  sprintf(tString, "%s~\n", zone_table[zValue].name.c_str());
   fputs(tString, tFile);
   sprintf(tString, "%d %d %d %d\n", zone_table[zValue].top, 30, 2, 0);
   fputs(tString, tFile);

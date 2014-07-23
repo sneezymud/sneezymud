@@ -79,8 +79,8 @@ int sweepsScratch(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     sstring buf5 = format("tile %s") % buf3;
     sstring buf6 = format("an <b>obsidian tile<z> inscribed with <Y>%s<z>") % buf3;
     newtile->swapToStrung();
-    newtile->name = mud_str_dup(buf5);
-    newtile->shortDescr = mud_str_dup(buf6);
+    newtile->name = buf5;
+    newtile->shortDescr = buf6;
     act(buf4,TRUE,ch,NULL,NULL,TO_CHAR,NULL);
     newtile->obj_flags.decay_time = o->obj_flags.decay_time;
     delete o;
@@ -158,8 +158,8 @@ int sweepsSplitJoin(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) 
     buf5 = format("tile %s") % newname;
     buf6 = format("an <b>obsidian tile<z> inscribed with <Y>%s<z>") % newname;
     tile1->swapToStrung();
-    tile1->name = mud_str_dup(buf5);
-    tile1->shortDescr = mud_str_dup(buf6);
+    tile1->name = buf5;
+    tile1->shortDescr = buf6;
     act(buf4, TRUE,ch,NULL,NULL,TO_CHAR,NULL);
 
     if (newname == "POP") {
@@ -245,15 +245,15 @@ int sweepsSplitJoin(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) 
     buf5 = format("tile %s") % name1;
     buf6 = format("an <b>obsidian tile<z> inscribed with <Y>%s<z>") % name1;
     tile1->swapToStrung();
-    tile1->name = mud_str_dup(buf5);
-    tile1->shortDescr = mud_str_dup(buf6);
+    tile1->name = buf5;
+    tile1->shortDescr = buf6;
 
     // deal with tile2 - new object
     sstring buf5 = format("tile %s") % name2;
     sstring buf6 = format("an <b>obsidian tile<z> inscribed with <Y>%s<z>") % name2;
     tile2->swapToStrung();
-    tile2->name = mud_str_dup(buf5);
-    tile2->shortDescr = mud_str_dup(buf6);
+    tile2->name = buf5;
+    tile2->shortDescr = buf6;
     tile2->obj_flags.decay_time = tile1->obj_flags.decay_time;
     
     if (!left)

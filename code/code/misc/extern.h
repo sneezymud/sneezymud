@@ -311,7 +311,7 @@ extern void generic_sell(TBeing *ch, TMonster *keeper, TObj *obj, int shop_nr);
 extern void generic_num_sell(TBeing *ch, TMonster *keeper, TObj *obj, int shop_nr, int num);
 extern TRoom *room_find_or_create(int);
 class TNote;
-extern TNote *createNote(char *);
+extern TNote *createNote(sstring const&);
 extern sstring secsToString(time_t num);
 extern sstring talenDisplay(int);
 extern sstring volumeDisplay(int);

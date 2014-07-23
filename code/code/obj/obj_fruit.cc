@@ -101,11 +101,11 @@ void TFruit::createSeeds(){
     seed->action_description = NULL;
     
     // apple -> seeds handful apple
-    seed->name = mud_str_dup(format("seeds handful %s") % name);
+    seed->name = format("seeds handful %s") % name;
     // An apple lies here. -> A handful of apple seeds lie here.
-    seed->setDescr(mud_str_dup(format("A handful of %s seeds lie here.") % sstring(shortDescr).word(1)));
+    seed->setDescr(format("A handful of %s seeds lie here.") % sstring(shortDescr).word(1));
     // an apple -> a handful of apple seeds
-    seed->shortDescr = mud_str_dup(format("a handful of %s seeds") % sstring(shortDescr).word(1));
+    seed->shortDescr = format("a handful of %s seeds") % sstring(shortDescr).word(1);
     
     if(equippedBy){
       *equippedBy += *seed;

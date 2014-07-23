@@ -88,9 +88,9 @@ int graffitiMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   sstring newLong = format("Some vandal has left a message: '%s%s<z>'.") % 
     ccodes[color] % buf;
   gfti->swapToStrung();
-  gfti->name = mud_str_dup(newName);
-  gfti->shortDescr = mud_str_dup(newShort);
-  gfti->setDescr(mud_str_dup(newLong));
+  gfti->name = newName;
+  gfti->shortDescr = newShort;
+  gfti->setDescr(newLong);
   
   act("$n scrawls some graffiti with $s $p.", TRUE, ch, o, NULL, TO_ROOM);
   act("You make your mark.", TRUE, ch, o, NULL, TO_CHAR);

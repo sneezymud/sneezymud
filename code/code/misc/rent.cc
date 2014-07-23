@@ -859,22 +859,22 @@ TObj *ItemLoad::raw_read_item()
     if (name)
       o->name = name;
     else
-      o->name = mud_str_dup(obj_index[o->getItemIndex()].name);
+      o->name = obj_index[o->getItemIndex()].name;
     
     if (shortDescr)
       o->shortDescr = shortDescr;
     else
-      o->shortDescr = mud_str_dup(obj_index[o->getItemIndex()].short_desc);
+      o->shortDescr = obj_index[o->getItemIndex()].short_desc;
     
     if (description)
       o->setDescr(description);
     else
-      o->setDescr(mud_str_dup(obj_index[o->getItemIndex()].long_desc));
+      o->setDescr(obj_index[o->getItemIndex()].long_desc);
     
     if (action_description) 
       o->action_description = action_description;
     else if (obj_index[o->getItemIndex()].description) 
-      o->action_description = mud_str_dup(obj_index[o->getItemIndex()].description);
+      o->action_description = obj_index[o->getItemIndex()].description;
     else 
       o->action_description = NULL;
     
@@ -1039,13 +1039,13 @@ TObj *ItemLoadDB::raw_read_item(int rent_id, int &slot)
 
     // set defaults on obj
     if (!name.empty())
-      o->name = mud_str_dup(name.c_str());
+      o->name = name;
     if (!shortDesc.empty())
-      o->shortDescr = mud_str_dup(shortDesc.c_str());
+      o->shortDescr = shortDesc;
     if (!longDesc.empty())
-      o->setDescr(mud_str_dup(longDesc.c_str()));
+      o->setDescr(longDesc);
     if (!actionDesc.empty())
-      o->action_description = mud_str_dup(actionDesc.c_str());
+      o->action_description = actionDesc;
 
     if (obj_index[o->getItemIndex()].ex_description)
       o->ex_description = new extraDescription(*obj_index[o->getItemIndex()].ex_description);
@@ -2225,9 +2225,9 @@ void TRoom::loadItems()
       delete [] tBag->name;
 
       tStString = "A bag containing various junk.";
-      tBag->setDescr(mud_str_dup(tStString));
+      tBag->setDescr(tStString);
       tStString = "bag junk various [wizard]";
-      tBag->name = mud_str_dup(tStString);
+      tBag->name = tStString;
 
       *this += *tBag;
     }*/
@@ -3203,8 +3203,7 @@ void TBeing::makeRentNote(TBeing *recip)
   tStBuffer += "\n\r";
   tStBuffer += longBuf;
 
-  char *dummy = mud_str_dup(tStBuffer);
-  TNote * note = createNote(dummy);
+  TNote * note = createNote(tStBuffer);
   if (!note) {
     return; 
   }

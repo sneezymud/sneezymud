@@ -394,7 +394,7 @@ void TShopOwned::giveStatements(sstring arg)
   buf+=format("%-36s %10s %10i\n\r") %
     "Retained earnings" % "" % tsj.getRetainedEarnings();
   
-  TNote *income_statement = createNote(mud_str_dup(buf));
+  TNote *income_statement = createNote(buf);
   income_statement->name = keywords;
   income_statement->shortDescr = short_desc;
   income_statement->setDescr(long_desc);
@@ -449,7 +449,7 @@ void TShopOwned::giveStatements(sstring arg)
     (tsj.getLiabilities()+tsj.getShareholdersEquity());
 
   
-  TNote *balance_sheet = createNote(mud_str_dup(buf));
+  TNote *balance_sheet = createNote(buf);
   balance_sheet->name = keywords;
   balance_sheet->shortDescr = short_desc;
   balance_sheet->setDescr(long_desc);

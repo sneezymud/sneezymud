@@ -60,8 +60,8 @@ int signMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
   // add the extra description
   sign->swapToStrung();
   extraDescription *new_descr = new extraDescription();
-  new_descr->keyword = mud_str_dup(sign->name);
-  new_descr->description = mud_str_dup(sign_text);
+  new_descr->keyword = sign->name;
+  new_descr->description = sign_text;
   new_descr->next = sign->ex_description;
   sign->ex_description = new_descr;
 

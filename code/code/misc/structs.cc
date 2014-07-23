@@ -451,10 +451,10 @@ TObj::~TObj()
   // so that TThing delete can clean up without problem
   // Also, must use number and not objVnum
   if (!isObjStat(ITEM_STRUNG) && (number != -1)) {
-    name = mud_str_dup(name);
-    setDescr(mud_str_dup(getDescr()));
-    shortDescr = mud_str_dup(shortDescr);
-    action_description = mud_str_dup(action_description);
+    name = name;
+    setDescr(getDescr());
+    shortDescr = shortDescr;
+    action_description = action_description;
 
     if (ex_description)
       ex_description = new extraDescription(*ex_description);
@@ -1300,10 +1300,10 @@ TBeing::TBeing(const TBeing &a) :
 
 
   if (IS_SET(a.specials.act,ACT_STRINGS_CHANGED)) {
-    name = mud_str_dup(a.name);
-    shortDescr = mud_str_dup(a.shortDescr);
-    player.longDescr = mud_str_dup(a.getLongDesc());
-    setDescr(mud_str_dup(a.getDescr()));
+    name = a.name;
+    shortDescr = a.shortDescr;
+    player.longDescr = a.getLongDesc();
+    setDescr(a.getDescr());
 
     if (ex_description)
       ex_description = new extraDescription(*a.ex_description);
@@ -1406,10 +1406,10 @@ TBeing & TBeing::operator=(const TBeing &a)
     spelltask = NULL;
 
   if (IS_SET(a.specials.act,ACT_STRINGS_CHANGED)) {
-    name = mud_str_dup(a.name);
-    shortDescr = mud_str_dup(a.shortDescr);
-    player.longDescr = mud_str_dup(a.player.longDescr);
-    setDescr(mud_str_dup(a.getDescr()));
+    name = a.name;
+    shortDescr = a.shortDescr;
+    player.longDescr = a.player.longDescr;
+    setDescr(a.getDescr());
 
     if (a.ex_description)
       ex_description = new extraDescription(*a.ex_description);
@@ -1496,10 +1496,10 @@ TObj::TObj(const TObj &a) :
     affected[i] = a.affected[i];
   
   if (a.isObjStat(ITEM_STRUNG) || (a.number == -1)) {
-    name = mud_str_dup(a.name);
-    shortDescr = mud_str_dup(a.shortDescr);
-    setDescr(mud_str_dup(a.getDescr()));
-    action_description = mud_str_dup(a.action_description);
+    name = a.name;
+    shortDescr = a.shortDescr;
+    setDescr(a.getDescr());
+    action_description = a.action_description;
 
     if (a.ex_description)
       ex_description = new extraDescription(*a.ex_description);
@@ -1530,10 +1530,10 @@ TObj & TObj::operator= (const TObj &a)
 
   // duplicate necessary sstrings
   if (a.isObjStat(ITEM_STRUNG) || (a.number == -1)) {
-    name = mud_str_dup(a.name);
-    shortDescr = mud_str_dup(a.shortDescr);
-    setDescr(mud_str_dup(a.getDescr()));
-    action_description = mud_str_dup(a.action_description);
+    name = a.name;
+    shortDescr = a.shortDescr;
+    setDescr(a.getDescr());
+    action_description = a.action_description;
 
     if (a.ex_description)
       ex_description = new extraDescription(*a.ex_description);
@@ -1588,8 +1588,8 @@ extraDescription & extraDescription::operator= (const extraDescription &a)
 
 extraDescription::extraDescription(const extraDescription &a)
 {
-  keyword = mud_str_dup(a.keyword);
-  description = mud_str_dup(a.description);
+  keyword = a.keyword;
+  description = a.description;
   if (a.next)
     next = new extraDescription(*a.next);
   else
@@ -1839,6 +1839,8 @@ roomDirData::roomDirData() :
 }
 
 roomDirData::roomDirData(const roomDirData &a) :
+  description(a.description),
+  keyword(a.keyword),
   door_type(a.door_type),
   condition(a.condition),
   lock_difficulty(a.lock_difficulty),
@@ -1848,8 +1850,6 @@ roomDirData::roomDirData(const roomDirData &a) :
   key(a.key),
   to_room(a.to_room)
 {
-  description = mud_str_dup(a.description);
-  keyword = mud_str_dup(a.keyword);
 }
 
 roomDirData & roomDirData::operator=(const roomDirData &a)
@@ -1870,8 +1870,6 @@ roomDirData & roomDirData::operator=(const roomDirData &a)
 
 roomDirData::~roomDirData()
 {
-  description = "";
-  keyword = "";
 }
 
 wizListInfo::wizListInfo()

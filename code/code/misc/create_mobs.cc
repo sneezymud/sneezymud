@@ -2639,8 +2639,8 @@ static void change_mob_sstring_enter(TBeing *ch, TMonster *tMob, const char *tSt
       tExDesc = new extraDescription();
       tExDesc->next = tMob->ex_description;
       tMob->ex_description = tExDesc;
-      tExDesc->keyword = mud_str_dup(tMobStringShorts[tType]);
-      tExDesc->description = mud_str_dup(tStString);
+      tExDesc->keyword = tMobStringShorts[tType];
+      tExDesc->description = tStString;
       break;
     } else if (tExDesc && tExDesc->keyword == tMobStringShorts[tType]) {
       if (*tString == '`') {

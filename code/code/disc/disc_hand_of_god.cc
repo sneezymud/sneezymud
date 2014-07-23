@@ -193,19 +193,19 @@ int createFood(TBeing *c, int level, short bKnown, spellNumT spell)
     fill_amt = 4 + (level/3);
 
     if (level < 15) {
-      o->name = mud_str_dup("wafer food holy small");
-      o->shortDescr = mud_str_dup("a small holy wafer");
-      o->setDescr(mud_str_dup("A small holy wafer lies here."));
+      o->name = "wafer food holy small";
+      o->shortDescr = "a small holy wafer";
+      o->setDescr("A small holy wafer lies here.");
       o->setWeight(.1);
     } else if (level < 35) {
-      o->name = mud_str_dup("wafer food holy medium");
-      o->shortDescr = mud_str_dup("a medium holy wafer");
-      o->setDescr(mud_str_dup("A medium holy wafer lies here."));
+      o->name = "wafer food holy medium";
+      o->shortDescr = "a medium holy wafer";
+      o->setDescr("A medium holy wafer lies here.");
       o->setWeight(.2);
     } else {
-      o->name = mud_str_dup("wafer food holy large");
-      o->shortDescr = mud_str_dup("a large holy wafer");
-      o->setDescr(mud_str_dup("A large holy wafer lies here."));
+      o->name = "wafer food holy large";
+      o->shortDescr = "a large holy wafer";
+      o->setDescr("A large holy wafer lies here.");
       o->setWeight(.4);
     }
     o->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD;

@@ -344,7 +344,7 @@ void TBeing::makeBodyPart(wearSlotT pos, TBeing *opp)
   else
     sbuf = format("%s lost limb %s") % describeBodySlot(pos) % name;
   
-  corpse->name = mud_str_dup(sbuf);
+  corpse->name = sbuf;
   
   if (getMaterial(pos) > MAT_GEN_MINERAL) {
     // made of mineral or metal
@@ -354,7 +354,7 @@ void TBeing::makeBodyPart(wearSlotT pos, TBeing *opp)
     sprintf(buf, "the bloody, mangled %s of %s", 
           describeBodySlot(pos).c_str(), getName().c_str());
   }
-  corpse->shortDescr = mud_str_dup(buf);
+  corpse->shortDescr = buf;
 
   if (getMaterial(pos) > MAT_GEN_MINERAL) {
     // made of mineral or metal
@@ -364,7 +364,7 @@ void TBeing::makeBodyPart(wearSlotT pos, TBeing *opp)
     sprintf(buf, "The bloody, mangled, severed %s of %s is lying here.",
           describeBodySlot(pos).c_str(), getName().c_str());
   }
-  corpse->setDescr(mud_str_dup(buf));
+  corpse->setDescr(buf);
   corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
   corpse->addCorpseFlag(CORPSE_NO_REGEN);
   corpse->obj_flags.decay_time = 3 * (dynamic_cast<TMonster *>(this) ? MAX_NPC_CORPSE_TIME : MAX_PC_CORPSE_EMPTY_TIME);
@@ -398,14 +398,14 @@ void TBeing::makeOtherPart(const char *single, const char *part, TBeing *opp)
   else 
     sbuf = format("%s lost limb %s") % (single ? single : part) % name;
   
-  corpse->name = mud_str_dup(sbuf);
+  corpse->name = sbuf;
 
   sprintf(buf, "%s's bloody %s", getName().c_str(), single ? single : part);
-  corpse->shortDescr = mud_str_dup(buf);
+  corpse->shortDescr = buf;
 
   sprintf(buf, "%s's bloody and ichor coated %s %s here.",
           getName().c_str(), part ? part : single, part ? "lay" : "lies");
-  corpse->setDescr(mud_str_dup(buf));
+  corpse->setDescr(buf);
   corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
   corpse->addCorpseFlag(CORPSE_NO_REGEN);
   corpse->setVolume(getHeight() * 122 / 100);
@@ -425,13 +425,13 @@ void TBeing::makeDiseasedPart(wearSlotT pos)
  
   corpse = new TCorpse();
   sprintf(buf, "%s lost limb %s", describeBodySlot(pos).c_str(), name.c_str());
-  corpse->name = mud_str_dup(buf);
+  corpse->name = buf;
   sprintf(buf, "the diseased %s of %s", describeBodySlot(pos).c_str(), getName().c_str());
-  corpse->shortDescr = mud_str_dup(buf);
+  corpse->shortDescr = buf;
 
   sprintf(buf, "The diseased, puss-covered %s of %s is lying here.",
           describeBodySlot(pos).c_str(), getName().c_str());
-  corpse->setDescr(mud_str_dup(buf));
+  corpse->setDescr(buf);
 
   corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
   corpse->addCorpseFlag(CORPSE_NO_REGEN);

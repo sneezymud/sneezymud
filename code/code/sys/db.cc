@@ -662,8 +662,8 @@ void bootWorld(void)
     rp->setXCoord(convertTo<int>(db["x"]));
     rp->setYCoord(convertTo<int>(db["y"]));
     rp->setZCoord(convertTo<int>(db["z"]));
-    rp->name=mud_str_dup(db["name"]);
-    rp->setDescr(mud_str_dup(db["description"]));
+    rp->name=db["name"];
+    rp->setDescr(db["description"]);
 
     if (!zone_table.empty()) {
       //      fscanf(fl, " %*d ");  // this is the "zone" value - unused?
@@ -704,11 +704,11 @@ void bootWorld(void)
 
     while(convertTo<int>(db_extras["vnum"]) == rp->number){
       new_descr = new extraDescription();
-      new_descr->keyword = mud_str_dup(db_extras["name"]);
+      new_descr->keyword = db_extras["name"];
       if (new_descr->keyword.empty())
         vlogf(LOG_EDIT, format("No keyword in room %d\n") %  rp->number);
       
-      new_descr->description = mud_str_dup(db_extras["description"]);
+      new_descr->description = db_extras["description"];
       if (new_descr->description.empty())
         vlogf(LOG_LOW, format("No desc in room %d\n") %  rp->number);
       
@@ -735,12 +735,12 @@ void bootWorld(void)
       rp->dir_option[dir] = new roomDirData();
 
       if(!db_exits[2].empty())
-        rp->dir_option[dir]->keyword = mud_str_dup(db_exits[2]);
+        rp->dir_option[dir]->keyword = db_exits[2];
       else
         rp->dir_option[dir]->keyword = NULL;
 
       if(!db_exits[3].empty())
-        rp->dir_option[dir]->description = mud_str_dup(db_exits[3]);
+        rp->dir_option[dir]->description = db_exits[3];
       else
         rp->dir_option[dir]->description = NULL;
 
@@ -1438,7 +1438,7 @@ void TBeing::doBoot(const sstring &arg)
 bool zoneData::bootZone(int zone_nr)
 {
   int tmp;
-  char *check, buf[256];
+  char buf[256];
   int i1 = 0, i2, i3, i4;
   int rc;
   FILE *fl=fopen(((sstring)(format("zonefiles/%i") % zone_nr)).c_str(), "r");
@@ -1450,9 +1450,8 @@ bool zoneData::bootZone(int zone_nr)
 
   if(fscanf(fl, " #%d\n", &bottom)==EOF)
     vlogf(LOG_FILE, "Unexpected read error in bootZone");
-  check = fread_string(fl);
-  
-  name = check;
+  name = fread_string(fl);
+
   rc = fscanf(fl, " %d %d %d %d", &i1, &i2, &i3, &i4);
   if (rc == 4) {
     top = i1;
@@ -1461,7 +1460,7 @@ bool zoneData::bootZone(int zone_nr)
     enabled = i4;
     age = 0;
   } else { 
-    vlogf(LOG_LOW, format("Bad zone format for zone %d (%s)") % zone_nr % check);
+    vlogf(LOG_LOW, format("Bad zone format for zone %d (%s)") % zone_nr % name);
     return false;
   }
 
@@ -1598,10 +1597,10 @@ void bootZones(void)
       zd.zone_nr=zon++;
       // note that a zone's zone_nr may change over time if a new zone is inserted before it
       // so update all records in the zone table
-      db.query("update zone set zone_name = '%s', zone_enabled = %i, bottom = %i, top = %i, reset_mode = %i, lifespan = %i, util_flag = 1 where zone_nr = %i", zd.name, (zd.enabled ? 1 : 0), zd.bottom, zd.top, zd.reset_mode, zd.lifespan, zd.zone_nr);
+      db.query("update zone set zone_name = '%s', zone_enabled = %i, bottom = %i, top = %i, reset_mode = %i, lifespan = %i, util_flag = 1 where zone_nr = %i", zd.name.c_str(), (zd.enabled ? 1 : 0), zd.bottom, zd.top, zd.reset_mode, zd.lifespan, zd.zone_nr);
       if (db.rowCount() == 0) {
         // unsuccessful update, do an insert
-        db.query("insert zone (zone_nr, zone_name, zone_enabled, bottom, top, reset_mode, lifespan, util_flag) select %i, '%s', %i, %i, %i, %i, %i, 1", zd.zone_nr, zd.name, (zd.enabled ? 1 : 0), zd.bottom, zd.top, zd.reset_mode, zd.lifespan);
+        db.query("insert zone (zone_nr, zone_name, zone_enabled, bottom, top, reset_mode, lifespan, util_flag) select %i, '%s', %i, %i, %i, %i, %i, 1", zd.zone_nr, zd.name.c_str(), (zd.enabled ? 1 : 0), zd.bottom, zd.top, zd.reset_mode, zd.lifespan);
       }
       zone_table.push_back(zd);
     }
@@ -2156,9 +2155,9 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing *ch)
 	}
       }
       if (mob_cache[nr]->s["local_sound"].length() > 0)
-	sounds=mud_str_dup(mob_cache[nr]->s["local_sound"]);
+	sounds=mob_cache[nr]->s["local_sound"];
       if (mob_cache[nr]->s["adjacent_sound"].length() > 0)
-	distantSnds=mud_str_dup(mob_cache[nr]->s["adjacent_sound"]);
+	distantSnds=mob_cache[nr]->s["adjacent_sound"];
     }
 
     for(unsigned int i=0;i<mob_cache.imm[nr].size();++i){
@@ -2168,8 +2167,8 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing *ch)
     extraDescription *tExDescr;
     for(unsigned int i=0;i<mob_cache.extra[nr].size();++i){
       tExDescr              = new extraDescription();
-      tExDescr->keyword     = mud_str_dup(mob_cache.extra[nr][i]->keyword);
-      tExDescr->description = mud_str_dup(mob_cache.extra[nr][i]->description);
+      tExDescr->keyword     = mob_cache.extra[nr][i]->keyword;
+      tExDescr->description = mob_cache.extra[nr][i]->description;
       tExDescr->next        = ex_description;
       ex_description        = tExDescr;
     }
@@ -2192,10 +2191,10 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing *ch)
     
     if (should_alloc) {
       number = -1;
-      name = mud_str_dup(db["name"]);
-      shortDescr = mud_str_dup(db["short_desc"]);
-      player.longDescr = mud_str_dup(db["long_desc"]);
-      setDescr(mud_str_dup(db["description"]));
+      name = db["name"];
+      shortDescr = db["short_desc"];
+      player.longDescr = db["long_desc"];
+      setDescr(db["description"]);
     } else {
       name = mob_index[number].name;
       shortDescr = mob_index[number].short_desc;
@@ -2324,9 +2323,9 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing *ch)
 	}
       }
       if (db["local_sound"].length() > 0)
-	sounds=mud_str_dup(db["local_sound"]);
+	sounds=db["local_sound"];
       if (db["adjacent_sound"].length() > 0)
-	distantSnds=mud_str_dup(db["adjacent_sound"]);
+	distantSnds=db["adjacent_sound"];
       
     }
     db.query("select * from mob_imm where vnum=%i", virt);
@@ -2338,8 +2337,8 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing *ch)
     extraDescription *tExDescr;
     while(db.fetchRow()){
       tExDescr              = new extraDescription();
-      tExDescr->keyword     = mud_str_dup(db["keyword"]);
-      tExDescr->description = mud_str_dup(db["description"]);
+      tExDescr->keyword     = db["keyword"];
+      tExDescr->description = db["description"];
       tExDescr->next        = ex_description;
       ex_description        = tExDescr;
     }
@@ -3275,7 +3274,7 @@ void runResetCmdT(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
 
 void runResetCmdG(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
 {
-  mud_assert(rs.arg1 >= 0 && rs.arg1 < (signed int) obj_index.size(), "Range error (%d not in obj_index)  G command #%d in %s", rs.arg1, rs.cmd_no, zone.name);
+  mud_assert(rs.arg1 >= 0 && rs.arg1 < (signed int) obj_index.size(), "Range error (%d not in obj_index)  G command #%d in %s", rs.arg1, rs.cmd_no, zone.name.c_str());
   if ((flags & resetFlagFindLoadPotential))
   {
     tallyObjLoadPotential(obj_index[rs.arg1].virt);
@@ -3630,7 +3629,7 @@ void readStringNoAlloc(FILE *fp)
 }
 
 // read and allocate space for a '~'-terminated sstring from a given file 
-char *fread_string(FILE *fp)
+sstring fread_string(FILE *fp)
 {
   char buf[MAX_STRING_LENGTH], *ptr, *marker = NULL;
 
@@ -3646,7 +3645,7 @@ char *fread_string(FILE *fp)
     // strlen because we're not starting at the beggining every time. 
     if((ptr = strchr(ptr, '\000')) == 0) {
       vlogf(LOG_FILE, "fread_string(): read error. ack!");
-      return mud_str_dup("Empty");
+      return "Empty";
     }
     //  Add the return char. 
     *ptr++ = '\r';
@@ -3666,8 +3665,7 @@ char *fread_string(FILE *fp)
       //    }
     if (*buf == 0)
       return NULL;
-    return mud_str_dup(buf);
-    vlogf(LOG_MISC, "mud_str_dup called");
+    return buf;
 }
 
 // read contents of a text file, and place in buf 
@@ -4108,6 +4106,7 @@ zoneData::zoneData() :
 }
 
 zoneData::zoneData(const zoneData &t) :
+  name(t.name),
   zone_nr(t.zone_nr),
   lifespan(t.lifespan),
   age(t.age),
@@ -4127,12 +4126,10 @@ zoneData::zoneData(const zoneData &t) :
   stat_objs_unique(t.stat_objs_unique),
   cmd(t.cmd)
 {
-  name = mud_str_dup(t.name);
 }
 
 zoneData::~zoneData()
 {
-  delete [] name;
   cmd.erase(cmd.begin(), cmd.end());
   stat_mobs.clear();
   stat_objs.clear();
@@ -4142,9 +4139,7 @@ zoneData & zoneData::operator= (const zoneData &t)
 {
   if (this == &t) return *this;
 
-  delete [] name;
-  name = mud_str_dup(t.name);
-
+  name = t.name;
   zone_nr = t.zone_nr;
   lifespan = t.lifespan;
   age = t.age;

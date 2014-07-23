@@ -182,7 +182,7 @@ public:
 class zoneData
 {
   public:
-    char *name;             // name of this zone                  
+    sstring name;             // name of this zone
     int zone_nr;            // number of this zone
     int lifespan;           // how long between resets (minutes)  
     int age;                // current age of this zone (minutes) 

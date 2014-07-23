@@ -206,8 +206,8 @@ TMonster::TMonster(const TMonster &a) :
   else
     resps = NULL;
 
-  sounds = mud_str_dup(a.sounds);
-  distantSnds = mud_str_dup(a.distantSnds);
+  sounds = a.sounds;
+  distantSnds = a.distantSnds;
 }
 
 TMonster & TMonster::operator=(const TMonster &a)
@@ -305,11 +305,7 @@ TMonster::~TMonster()
   int didAloc = FALSE;
   if (!IS_SET(specials.act,ACT_STRINGS_CHANGED)) {
     didAloc = TRUE;
-    name = mud_str_dup(name);
-    char *tc = mud_str_dup(getDescr());
-    setDescr(tc);
-    shortDescr = mud_str_dup(shortDescr);
-    player.longDescr = mud_str_dup(getLongDesc());
+    player.longDescr = getLongDesc();
 
     if (ex_description)
       ex_description = new extraDescription(*ex_description);
@@ -348,10 +344,10 @@ void TMonster::swapToStrung()
 
   // Set flags saying editted and point all sstrings to new stuff - Russ 
   specials.act |= ACT_STRINGS_CHANGED;
-  name = mud_str_dup(mob_index[getMobIndex()].name);
-  shortDescr = mud_str_dup(mob_index[getMobIndex()].short_desc);
-  player.longDescr = mud_str_dup(mob_index[getMobIndex()].long_desc);
-  setDescr(mud_str_dup(mob_index[getMobIndex()].description));
+  name = mob_index[getMobIndex()].name;
+  shortDescr = mob_index[getMobIndex()].short_desc;
+  player.longDescr = mob_index[getMobIndex()].long_desc;
+  setDescr(mob_index[getMobIndex()].description);
 }
 
 // returns the amount of money we're expeted to load with

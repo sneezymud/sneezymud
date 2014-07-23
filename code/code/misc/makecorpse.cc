@@ -563,9 +563,9 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
     }
   }
   if (!specialCorpse) {
-    gen_corpse->setDescr(mud_str_dup(buf));
+    gen_corpse->setDescr(buf);
     sprintf(buf, "the corpse of %s", getName().c_str());
-    gen_corpse->shortDescr = mud_str_dup(buf);
+    gen_corpse->shortDescr = buf;
   }
 
   gen_corpse->setWeight(specialCorpse ? 1.0 : getWeight());

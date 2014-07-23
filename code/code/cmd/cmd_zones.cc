@@ -52,13 +52,13 @@ void TBeing::doZonesSingle(sstring tStString)
     int        iBottom = (iZone ? (zone_table[(iZone - 1)].top + 1) : 0);
 
     // If the string is not in this zone, just continue.
-    if (!strstr(zd.name, tStString.c_str()))
+    if (!strstr(zd.name.c_str(), tStString.c_str()))
       continue;
 
     // Now trim the zonename so it matches what is shown in 'zones'.
     char buf[256];
 
-    strcpy(buf, zd.name);
+    strcpy(buf, zd.name.c_str());
     char *s = strchr(buf, '-');
 
     if (s) {
@@ -74,7 +74,7 @@ void TBeing::doZonesSingle(sstring tStString)
     if (!s || !zd.enabled || !zd.num_mobs || !is_abbrev(tStString, s))
       continue;
 
-    strcpy(tString, zd.name);
+    strcpy(tString, zd.name.c_str());
 
     float avg = (zd.num_mobs ? zd.mob_levels / zd.num_mobs : 0);
     sprintf(tBuffer, "%-30.30s : Level: avg: %3.0f, min: %3.0f, max %3.0f\n\r", tString, avg, zd.min_mob_level, zd.max_mob_level);
@@ -202,7 +202,7 @@ void TBeing::doZonesSingle(sstring tStString)
 	continue;
 
       char buf[256];
-      strcpy(buf, zd.name);
+      strcpy(buf, zd.name.c_str());
 
       char *s = strchr(buf, '-');
 
@@ -334,7 +334,7 @@ void TBeing::doZones(sstring tStString)
     char buf[256],
          buf2[256];
 
-    strcpy(buf, zd.name);
+    strcpy(buf, zd.name.c_str());
     char *s = strchr(buf, '-');
     char *n = buf;
 

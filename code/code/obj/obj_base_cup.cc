@@ -538,8 +538,8 @@ void TBaseCup::updateDesc()
       action_description = "";
     }
 
-    name=mud_str_dup(stripColorCodes(newname));
-    shortDescr=mud_str_dup(short_desc);
-    setDescr(mud_str_dup(long_desc));
+    name=stripColorCodes(newname);
+    shortDescr=short_desc;
+    setDescr(long_desc);
   }
 }

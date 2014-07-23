@@ -282,7 +282,7 @@ connectStateT nannyName_input(Descriptor * desc, sstring & output, const sstring
     output = "That name is already in use, please try another.\n\r";
   else // the name is set
   {
-    desc->character->name = mud_str_dup(sstring(parsed_name).cap());
+    desc->character->name = sstring(parsed_name).cap();
     return desc->connected == CON_CREATION_NAME ? CON_CREATION_DISCLAIM1: CON_CREATION_LAUNCHPAD;
   }
   return desc->connected;

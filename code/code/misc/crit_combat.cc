@@ -1188,20 +1188,20 @@ buf=format("$n's %s shatters one of $N's ribs!") %
       else
         buf = format("heart lost limb %s") % v->name;
 
-      corpse->name = mud_str_dup(buf);
+      corpse->name = buf;
 
       if (IS_SET(v->specials.act, ACT_ZOMBIE)) {
         buf = format("the putrid <r>heart<1> of %s") % v->getName();
-        corpse->shortDescr = mud_str_dup(buf);
+        corpse->shortDescr = buf;
 
         buf = format("The putrid <r>heart<1> of %s lies here.") % v->getName();
-        corpse->setDescr(mud_str_dup(buf));
+        corpse->setDescr(buf);
       } else {
         buf = format("the lifeless <r>heart<1> of %s") % v->getName();
-        corpse->shortDescr = mud_str_dup(buf);
+        corpse->shortDescr = buf;
 
         buf = format("The lifeless <r>heart<1> of %s lies here.") % v->getName();
-        corpse->setDescr(mud_str_dup(buf));
+        corpse->setDescr(buf);
       }
 
 	    corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
@@ -1774,7 +1774,7 @@ buf=format("$n's %s slices into $N from gullet to groin, disembowling $M!") %
       buf = format("genitalia lost limb %s [q] [jumblies] [0] [%d] [%s]") % v->name % v_vnum % getName();
     else
       buf = format("genitalia lost limb %s") % v->name;
-    corpse->name = mud_str_dup(buf);
+    corpse->name = buf;
 		
 	  if (v->getMaterial(WEAR_WAIST) > MAT_GEN_MINERAL) {
 	    // made of mineral or metal
@@ -1782,7 +1782,7 @@ buf=format("$n's %s slices into $N from gullet to groin, disembowling $M!") %
 	  } else {
 	    buf = format("the bloody, mangled genitalia of %s") % v->getName();
 	  }
-	  corpse->shortDescr = mud_str_dup(buf);
+	  corpse->shortDescr = buf;
 		
 	  if (v->getMaterial(WEAR_WAIST) > MAT_GEN_MINERAL) {
 	    // made of mineral or metal
@@ -1790,7 +1790,7 @@ buf=format("$n's %s slices into $N from gullet to groin, disembowling $M!") %
 	  } else {
 	    buf = format("The bloody, mangled, severed genitalia of %s is lying here.") % v->getName();
 	  }
-	  corpse->setDescr(mud_str_dup(buf));
+	  corpse->setDescr(buf);
 		
 	  corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
 	  corpse->addCorpseFlag(CORPSE_NO_REGEN);

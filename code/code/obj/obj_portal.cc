@@ -32,10 +32,10 @@ TPortal::TPortal(const TRoom *rp) :
 
   swapToStrung();
 
-  name = mud_str_dup("portal");
-  shortDescr = mud_str_dup("a magic portal");
+  name = "portal";
+  shortDescr = "a magic portal";
   buf = format("A portal going to %s is in the room.") % rp->name;
-  setDescr(mud_str_dup(buf));
+  setDescr(buf);
   obj_flags.wear_flags = 0;
   obj_flags.decay_time = 5;
   setWeight(0);

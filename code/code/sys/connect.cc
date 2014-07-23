@@ -254,8 +254,6 @@ gmcp = a.gmcp;
 delete [] showstr_head;
 showstr_head = mud_str_dup(a.showstr_head);
 
-//  delete [] str;
-//  str = mud_str_dup(a.str);
 str = NULL;
 
 delete [] pagedfile;

@@ -24,8 +24,7 @@ TNote::TNote(const TNote &a) :
 {
 }
 
-// It is preseumed that msg has already allocated the memory
-TNote * createNote(char *msg)
+TNote * createNote(sstring const& msg)
 {
   TObj  *obj;
   TNote *note;

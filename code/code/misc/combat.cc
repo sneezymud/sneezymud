@@ -1274,15 +1274,15 @@ bool TObj::makeScraps()
   o = new TTrash();
 
   if (isMineral()) {
-    o->name = mud_str_dup("shattered pile");
-    o->shortDescr = mud_str_dup("something shattered");
+    o->name = "shattered pile";
+    o->shortDescr = "something shattered";
     sprintf(buf, "What used to be %s lies here, shattered.", getName().c_str());
-    o->setDescr(mud_str_dup(buf));
+    o->setDescr(buf);
   } else {
-    o->name = mud_str_dup("scraps pile");
-    o->shortDescr = mud_str_dup("a pile of scraps");
+    o->name = "scraps pile";
+    o->shortDescr = "a pile of scraps";
     sprintf(buf, "What used to be %s lies here, scrapped.", shortDescr.c_str());
-    o->setDescr(mud_str_dup(buf));
+    o->setDescr(buf);
   }
   o->obj_flags.wear_flags = obj_flags.wear_flags;
   o->setWeight(getWeight() / 2.0);
@@ -4618,15 +4618,15 @@ void TBeing::catchLostLink(TBeing *vict)
   note->name = "note check link lost";
 
   // string linkbag
-  bag->descr = mud_str_dup(format("A linkbag containing %s's belongings sits here.") % vict->getName());
+  bag->descr = format("A linkbag containing %s's belongings sits here.") % vict->getName();
   bag->name = format("bag linkbag %s [%sbag]") % nameLower.c_str() % linkId.c_str();
   bag->shortDescr = format("A linkbag belonging to %s") % vict->getName();
   bag->obj_flags.cost = 0;
 
   // string the token
-  token->setDescr(mud_str_dup(format("A linkbag token for %s's belongings has been left here.") % vict->getName()));
+  token->setDescr(format("A linkbag token for %s's belongings has been left here.") % vict->getName());
   token->name = format("token linkbag %s [%s0]") % nameLower.c_str() % linkId.c_str();
-  token->shortDescr = mud_str_dup(format("a linkbag token with '%s' on it") % vict->getName());
+  token->shortDescr = format("a linkbag token with '%s' on it") % vict->getName();
   token->obj_flags.cost = 0;
 
   // load up the bag with items, money
