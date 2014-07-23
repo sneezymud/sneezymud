@@ -709,23 +709,23 @@ void TMonster::checkMobStats(tinyfileTypeT forReal)
   int sumstat;
   const char *s;
 
-  if (getLongDesc() && (strlen(getLongDesc()) > 2) &&
-      ((getLongDesc()[strlen(getLongDesc()) - 1] != '\r') ||
-      (getLongDesc()[strlen(getLongDesc()) - 2] != '\n'))) {
+  if ((getLongDesc().length() > 2) &&
+      ((getLongDesc()[getLongDesc().length() - 1] != '\r') ||
+      (getLongDesc()[getLongDesc().length() - 2] != '\n'))) {
     vlogf(LOG_LOW, format("%s (%d) has bad format of longDescr") % 
           getName() % mobVnum());
   }
-  if (getDescr() && (strlen(getDescr()) > 2) &&
-      ((getDescr()[strlen(getDescr()) - 1] != '\r') ||
-      (getDescr()[strlen(getDescr()) - 2] != '\n'))) {
+  if ((getDescr().length() > 2) &&
+      ((getDescr()[getDescr().length() - 1] != '\r') ||
+      (getDescr()[getDescr().length() - 2] != '\n'))) {
     vlogf(LOG_LOW, format("%s (%d) has bad format of descr") % 
           getName() % mobVnum());
   }
-  if (strchr(name, '(') || strchr(name, ')')) {
+  if (name.find_first_of("()") != sstring::npos) {
     vlogf(LOG_LOW, format("%s (%d) has illegal parenthetical in name") % 
           getName() % mobVnum());
   }
-  if ((s = strchr(name, '['))) {
+  if ((s = strchr(name.c_str(), '['))) {
     for (s++;*s != ']';s++) {
       if (isalnum(*s) || *s == '_' || *s == '/')
         continue;
@@ -846,17 +846,17 @@ void TObj::checkObjStats()
   int i;
   const char *s;
 
-  if (getDescr() && (strlen(getDescr()) > 2) &&
-      (getDescr()[strlen(getDescr()) - 1] == '\r') &&
-      (getDescr()[strlen(getDescr()) - 2] == '\n')) {
+  if ((getDescr().length() > 2) &&
+      (getDescr()[getDescr().length() - 1] == '\r') &&
+      (getDescr()[getDescr().length() - 2] == '\n')) {
     vlogf(LOG_LOW, format("%s (%d) has bad format of longDescr") % 
           getName() % objVnum());
   }
-  if (strchr(name, '(') || strchr(name, ')')) {
+  if (strchr(name.c_str(), '(') || strchr(name.c_str(), ')')) {
     vlogf(LOG_LOW, format("%s (%d) has illegal parenthetical in name") % 
           getName() % objVnum());
   }
-  if ((s = strchr(name, '['))) {
+  if ((s = strchr(name.c_str(), '['))) {
     for (s++;*s != ']';s++) {
       if (isalnum(*s) || *s == '_' || *s == '/')
         continue;
@@ -865,7 +865,7 @@ void TObj::checkObjStats()
     }
   }
 
-  if (strlen(getName()) > MAX_NAME_LENGTH-1) {
+  if (getName().length() > MAX_NAME_LENGTH-1) {
     vlogf(LOG_LOW, format("%s (%d) had excessive obj name length.") % 
          getName() % objVnum());
   }
@@ -1413,7 +1413,7 @@ void TBeing::lowRace(const char *arg)
       vlogf(LOG_BUG,format("Error during doLowRace in mob rnum %d") % mobnum);
       continue;     
     }
-    strcpy(namebuf2, mob->getName());
+    strcpy(namebuf2, mob->getName().c_str());
     sstring namebuf = colorString(this, desc, namebuf2, NULL, COLOR_NONE, FALSE);
     if (show_stat)
       sprintf(buf2, "%-17.17s: %60s", 
@@ -1627,7 +1627,7 @@ void TBeing::lowMobs(const char *arg)
       continue;     
     }
 
-    strcpy(namebuf2, mob->getName());
+    strcpy(namebuf2, mob->getName().c_str());
     sstring namebuf = colorString(this, desc, namebuf2, NULL, COLOR_NONE, FALSE);
 
     sprintf(buf2, "%5d %-27.27s : %6d %5.2f %5d  %2d    %.1f %5.2f+%d%% %2d\n\r", 

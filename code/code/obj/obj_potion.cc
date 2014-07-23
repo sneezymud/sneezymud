@@ -48,12 +48,12 @@ bool TPotion::isSimilar(const TThing *t) const
   if (!pot)
     return FALSE;
 
-  if (!getDescr() || !pot->getDescr() ||
-      strcmp(getDescr(), pot->getDescr())){
+  if (getDescr().empty() || pot->getDescr().empty() ||
+     getDescr() != pot->getDescr()){
     return false;
   }
 
-  if (!name || !pot->name ||
+  if (name.empty() || pot->name.empty() ||
       !is_exact_name(name, pot->name)){
     return false;
   }

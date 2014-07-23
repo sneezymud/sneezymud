@@ -93,8 +93,8 @@ class TMonster : public TBeing {
     unsigned short fearfield;
     unsigned short moneyConst;
 
-    const char *sounds;
-    const char *distantSnds;
+    sstring sounds;
+    sstring distantSnds;
     float hpLevel;
     float damLevel;
     unsigned short damPrecision;
@@ -117,7 +117,7 @@ class TMonster : public TBeing {
     virtual int checkSpec(TBeing *, cmdTypeT, const char *, TThing *);
     virtual int mobVnum() const;
 
-    virtual const char *getName() const { return (shortDescr); }
+    virtual sstring const& getName() const { return shortDescr; }
     // END VIRTUAL FUNCTIONS
 
     // pets.cc

@@ -62,7 +62,7 @@ extern APP_type apply_types[MAX_APPLY_TYPES];
 class playerData
 {
   public:
-   const char *longDescr;  
+   sstring longDescr;
 
    sexTypeT sex;         
    ubyte level[MAX_SAVED_CLASSES];   
@@ -420,9 +420,9 @@ class TBeing : public TThing {
 
     // VIRTUAL FUNCTIONS
     virtual int editAverageMe(TBeing *, const char *);
-    virtual const char * getLongDesc() const;
+    virtual sstring const& getLongDesc() const;
     virtual int chiMe(TBeing *);
-    virtual const char *getName() const;
+    virtual sstring const& getName() const { return shortDescr; }
     virtual int getPlayerID() const;
     virtual void remCastingList(TThing *);
     virtual roomDirData *exitDir(dirTypeT door) const;
@@ -1618,7 +1618,7 @@ class TBeing : public TThing {
     virtual bool isLevitating() const;
     bool nomagic(const sstring &, const sstring &msg_rm="") const;
     void dieFollower();
-    int doDiscipline(spellNumT, const char *);
+    int doDiscipline(spellNumT, sstring const&);
     int unloadBow(const char *);
     int legalDeckAddition(int);
 

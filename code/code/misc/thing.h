@@ -29,12 +29,12 @@ enum thingTypeT {
 };
 
 extern bool isname(const sstring &str, const sstring &namelist);
-extern const sstring fname(const char *namelist);
+extern const sstring fname(sstring const&);
 
 class extraDescription {
   public:
-    const char *keyword;
-    const char *description;
+    sstring keyword;
+    sstring description;
     extraDescription *next;
     extraDescription();
     ~extraDescription();
@@ -60,8 +60,8 @@ class TThing {
     TBeing * the_caster;
   public:
     StuffList stuff;
-    const char *descr;             // Description of thing
-    const char *real_descr;        // used with disguise/polymorph
+    sstring descr;             // Description of thing
+    sstring real_descr;        // used with disguise/polymorph
     TBeing *stuckIn;
     TThing *equippedBy;
     TThing *tied_to;
@@ -77,10 +77,10 @@ class TThing {
     int number;              // Number of thing
     int height;              // Height in centimeters
     byte canBeSeen;          
-    const char *name;              // Name of thing
-    const char *real_name;         // used with disguise/polymorph
-    const char *shortDescr;
-    const char *real_shortDescr;   // used with disguise/polymorph
+    sstring name;              // Name of thing
+    sstring real_name;         // used with disguise/polymorph
+    sstring shortDescr;
+    sstring real_shortDescr;   // used with disguise/polymorph
     bool is_disguised;
     int disguise_level;
     int disguise_zone;
@@ -116,7 +116,7 @@ class TThing {
     virtual const char *hssh() const { return "it"; }
     virtual const char *hmhr() const { return "it"; }
     virtual int checkSpec(TBeing *, cmdTypeT, const char *, TThing *) { return 0; }
-    virtual const char *getName() const { return name ? name : ""; }
+    virtual sstring const& getName() const { return name; }
     virtual bool shouldntBeShown(wearSlotT) const;
     virtual int checkFalling() { return 0;}
     virtual float carryWeightLimit() const { return 0.0; }
@@ -157,8 +157,8 @@ class TThing {
     // END VIRTUAL FUNCTIONS
 
     // INLINE FUNCTIONS
-    const char * getDescr() const { return descr; }
-    void setDescr(const char *s) { descr = s; }
+    sstring const& getDescr() const { return descr; }
+    void setDescr(sstring const& s) { descr = s; }
     int getHeight() const{ return height; }
     void setHeight(int h) { height = h; }
     void setCaster(TBeing *c) { the_caster = c; }

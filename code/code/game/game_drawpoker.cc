@@ -100,7 +100,7 @@ const sstring DrawPokerGame::score() const
         !hands[playerIndex])
       continue;
 
-    sprintf(tString, "   %s[%d]", ch[playerIndex]->getName(), scores[playerIndex]);
+    sprintf(tString, "   %s[%d]", ch[playerIndex]->getName().c_str(), scores[playerIndex]);
     tBuffer += tString;
   }
 
@@ -131,7 +131,7 @@ const sstring DrawPokerGame::bets() const
     if (!ch[playerIndex] && inuse[playerIndex])
       continue;
 
-    sprintf(tString, "   %s[%d]", ch[playerIndex]->getName(), playerante[playerIndex]);
+    sprintf(tString, "   %s[%d]", ch[playerIndex]->getName().c_str(), playerante[playerIndex]);
     tBuffer += tString;
   }
 
@@ -465,7 +465,7 @@ int DrawPokerGame::enter(const TBeing *ch)
       }
 
     ch->sendTo("You sit down at the Poker table.\n\r");
-    strcpy(names[playerNum], ch->getName());
+    strcpy(names[playerNum], ch->getName().c_str());
     inuse[playerNum]      = true;
     scores[playerNum]     = 0;
     playerante[playerNum] = 0;
@@ -529,7 +529,7 @@ int DrawPokerGame::exitGame(const TBeing *ch)
 int DrawPokerGame::index(const TBeing *ch) const
 {
   for (int indexPlayer = 0; indexPlayer < 6; indexPlayer++)
-    if (!strcmp(ch->getName(), names[indexPlayer]))
+    if (ch->getName() == names[indexPlayer])
       return indexPlayer;
 
   return -1;

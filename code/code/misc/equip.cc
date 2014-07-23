@@ -202,13 +202,13 @@ int TObj::personalizedCheck(TBeing *ch)
   char namebuf[256];
   TThing *t;
 
-  if (action_description && strcmp(action_description, "")) {
-    strcpy(capbuf, action_description);
+  if (!action_description.empty()) {
+    strcpy(capbuf, action_description.c_str());
     
     if ((sscanf(capbuf, "This is the personalized object of %s.", namebuf)) != 1) {
       vlogf(LOG_BUG, format("Bad personalized item (on %s) with bad action description...extracting from world.") %  ch->getName());
       return DELETE_THIS;
-    } else if (strcmp(namebuf, ch->getName()) && (!ch->isPc() || dynamic_cast<TPerson *>(ch))) {
+    } else if (namebuf != ch->getName() && (!ch->isPc() || dynamic_cast<TPerson *>(ch))) {
       // skips for polys
       act("You shouldn't have $p! It isn't yours!", 0, ch, this, NULL, TO_CHAR);
       sendTo(format("It's the personalized item of %s!\n\r") % namebuf);
@@ -1300,7 +1300,7 @@ void TBeing::doWear(const char *argument)
 
         keyword = tobj->getWearKey();
         if (keyword != WEAR_KEY_NONE) {
-          strcpy(buf, tobj->getName());
+          strcpy(buf, tobj->getName().c_str());
           sendTo(COLOR_OBJECTS,format("%s: ") % sstring(buf).cap());
           rc = wear(tobj, keyword, this);
           if (IS_SET_DELETE(rc, DELETE_ITEM)) {
@@ -1323,7 +1323,7 @@ void TBeing::doWear(const char *argument)
             if (i%3)
               sendTo("\n\r");
           } else {
-            strcpy(buf, o->shortDescr);
+            strcpy(buf, o->shortDescr.c_str());
             sendTo(COLOR_OBJECTS,format("%s: ") % sstring(buf).cap());
             keyword = wearKeyT(sbnum+1);
             rc = wear(o, keyword, this);
@@ -1335,7 +1335,7 @@ void TBeing::doWear(const char *argument)
         } else {
           keyword = o->getWearKey();
 
-          strcpy(buf, o->shortDescr);
+          strcpy(buf, o->shortDescr.c_str());
           sendTo(COLOR_OBJECTS,format("%s: ") % sstring(buf).cap());
           rc = wear(o, keyword, this);
           if (IS_SET_DELETE(rc, DELETE_ITEM)) {

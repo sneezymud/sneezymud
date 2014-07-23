@@ -705,11 +705,11 @@ void bootWorld(void)
     while(convertTo<int>(db_extras["vnum"]) == rp->number){
       new_descr = new extraDescription();
       new_descr->keyword = mud_str_dup(db_extras["name"]);
-      if (!new_descr->keyword || !*new_descr->keyword)
+      if (new_descr->keyword.empty())
         vlogf(LOG_EDIT, format("No keyword in room %d\n") %  rp->number);
       
       new_descr->description = mud_str_dup(db_extras["description"]);
-      if (!new_descr->description || !*new_descr->description)
+      if (new_descr->description.empty())
         vlogf(LOG_LOW, format("No desc in room %d\n") %  rp->number);
       
       new_descr->next = rp->ex_description;
@@ -751,11 +751,11 @@ void bootWorld(void)
         return;
       }
       rp->dir_option[dir]->door_type = doorTypeT(tmp);
-      if ((tmp == DOOR_NONE) && (rp->dir_option[dir]->keyword)){
-        if (strcmp(rp->dir_option[dir]->keyword, "_unique_door_"))
+      if ((tmp == DOOR_NONE) && (rp->dir_option[dir]->keyword.c_str())){
+        if (rp->dir_option[dir]->keyword != "_unique_door_")
           vlogf(LOG_LOW,format("non-door with name in room %d") % rp->number);
       }
-      if ((tmp != DOOR_NONE) && !(rp->dir_option[dir]->keyword)){
+      if ((tmp != DOOR_NONE) && rp->dir_option[dir]->keyword.empty()){
         vlogf(LOG_LOW,format("door with no name in room %d") % rp->number);
       }
 
@@ -1108,11 +1108,9 @@ void TRoom::colorRoom(int title, int full)
 
   buf += "<1>";
   if (title == 1) {
-    delete [] name;
-    name = mud_str_dup(buf);
+    name = buf;
   } else if (title == 2) {
-    delete [] getDescr();
-    setDescr(mud_str_dup(buf));
+    setDescr(buf);
   }
   full = 1;
   return;
@@ -1149,11 +1147,11 @@ void setup_dir(FILE * fl, int room, dirTypeT dir, TRoom *tRoom)
     return;
   }
   rp->dir_option[dir]->door_type = doorTypeT(tmp);
-  if ((tmp == DOOR_NONE) && (rp->dir_option[dir]->keyword)){
-    if (strcmp(rp->dir_option[dir]->keyword, "_unique_door_"))
+  if ((tmp == DOOR_NONE) && !rp->dir_option[dir]->keyword.empty()){
+    if (rp->dir_option[dir]->keyword != "_unique_door_")
       vlogf(LOG_LOW,format("non-door with name in room %d") % room);
   }
-  if ((tmp != DOOR_NONE) && !(rp->dir_option[dir]->keyword)){
+  if ((tmp != DOOR_NONE) && rp->dir_option[dir]->keyword.empty()){
     vlogf(LOG_LOW,format("door with no name in room %d") % room);
   }
 
@@ -2180,7 +2178,7 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing *ch)
   } else {
     if (ch && should_alloc) {
       db = DB_IMMORTAL;
-      db.query("select * from mob where owner = '%s' and vnum = %i", ch->name, virt);
+      db.query("select * from mob where owner = '%s' and vnum = %i", ch->name.c_str(), virt);
     } else {
       db = DB_SNEEZY;
       db.query("select * from mob where vnum = %i", virt);

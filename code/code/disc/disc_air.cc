@@ -1023,7 +1023,7 @@ int antigravity(TBeing *caster, int, affectedData *aff, short bKnown)
           if (caster == vict)
             sprintf(buf, "You are already capable of some form of flight!\n\r");
           else
-            sprintf(buf, "%s is already capable of some form of flight!\n\r",vict->getName());
+            sprintf(buf, "%s is already capable of some form of flight!\n\r",vict->getName().c_str());
           
           caster->sendTo(buf);
           caster->nothingHappens(SILENT_YES);

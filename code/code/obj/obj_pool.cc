@@ -223,48 +223,43 @@ void TPool::updateDesc()
   };
 
   if (isObjStat(ITEM_STRUNG)) {
-    delete [] shortDescr;
-    delete [] descr;
-    delete [] name;
-
     extraDescription *exd;
     while ((exd = ex_description)) {
       ex_description = exd->next;
       delete exd;
     }
     ex_description = NULL;
-    delete [] action_description;
-    action_description = NULL;
+    action_description = "";
   } else {
     addObjStat(ITEM_STRUNG);
     ex_description = NULL;
-    action_description = NULL;
+    action_description = "";
   }
 
   if(isDrinkConFlag(DRINK_FROZEN)){
     buf2 = format("chunk frozen %s %s") %
       stripColorCodes(liquidInfo[getDrinkType()]->name) %
       stripColorCodes(liquidInfo[getDrinkType()]->color);
-    name = mud_str_dup(buf2);
+    name = buf2;
 
     sprintf(buf, "a <C>frozen<1> chunk of %s", liqname);
-    shortDescr = mud_str_dup(buf);
+    shortDescr = buf;
     
     sprintf(buf, "A chunk of <C>frozen<1> %s is here.", liqname);
-    setDescr(mud_str_dup(buf));
+    setDescr(buf);
     
     SET_BIT(obj_flags.wear_flags, ITEM_TAKE);
   } else {
     buf2 = format("pool puddle %s %s") %
       stripColorCodes(liquidInfo[getDrinkType()]->name) %
       stripColorCodes(liquidInfo[getDrinkType()]->color);
-    name = mud_str_dup(buf2);
+    name = buf2;
 
     sprintf(buf, poolname[drinkindex], liqname);
-    shortDescr = mud_str_dup(buf);
+    shortDescr = buf;
     
     sprintf(buf, pooldesc[drinkindex], liqname);
-    setDescr(mud_str_dup(buf));
+    setDescr(buf);
 
     REMOVE_BIT(obj_flags.wear_flags, ITEM_TAKE);
   }

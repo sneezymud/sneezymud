@@ -74,12 +74,12 @@ void TBeing::statZone(const sstring &zoneNumber)
     if ((roomp_current = real_roomp(room_loop))) {
       ++count_rooms;
       
-      if (roomp_current->getDescr() && strncmp(roomp_current->getDescr(), "Empty", 5)) {
+      if (roomp_current->getDescr() != "Empty") {
         // count of non 'Empty' descriptions
         ++count_descriptions;
       }
       
-      if (roomp_current->name) {
+      if (!roomp_current->name.empty()) {
         // count titles
         sstring name_num = format("%d") % roomp_current->number;
         if (name_num.find(roomp_current->name) != sstring::npos) {
@@ -586,10 +586,10 @@ void TBeing::statObj(const TObj *j)
   }
 
   str += format("Short description: %s\n\rLong description:\n\r%s\n\r") %
-    ((j->shortDescr) ? j->shortDescr : "None") %
-    ((j->getDescr()) ? j->getDescr() : "None");
+    ((!j->shortDescr.empty()) ? j->shortDescr.c_str() : "None") %
+    ((!j->getDescr().empty()) ? j->getDescr().c_str() : "None");
 
-  if (j->action_description) {
+  if (!j->action_description.empty()) {
     str += "Action Description: ";
     str += j->action_description;
     str += "\n\r";
@@ -873,10 +873,10 @@ void TBeing::statBeing(TBeing *k)
   if (km) {
     str += format("%sShort description:%s %s\n\r") %
       cyan() % norm() %
-      (km->shortDescr ? km->shortDescr : "NONE");
+      (!km->shortDescr.empty() ? km->shortDescr : "NONE");
     str += format("%sLong description:%s\n\r%s") %
       cyan() % norm() %
-      (km->player.longDescr ? km->player.longDescr : "NONE");
+      (!km->player.longDescr.empty() ? km->player.longDescr : "NONE");
   } else {
     Descriptor *d = k->desc;
 
@@ -2330,12 +2330,12 @@ void TBeing::statBeing(TBeing *k)
   }
   
   if (km) {
-    if (km->sounds) {
+    if (!km->sounds.empty()) {
       str += format("%sLocal Sound:%s\n\r%s") %
         cyan() % norm() %
         km->sounds;
     }
-    if (km->distantSnds) {
+    if (!km->distantSnds.empty()) {
       str += format("%sDistant Sound:%s\n\r%s") %
         cyan() % norm() %
         km->distantSnds;

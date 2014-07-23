@@ -313,7 +313,7 @@ int TBaseWeapon::sharpenerGiveMe(TBeing *ch, TMonster *me)
 
   if (getCurSharp() == getMaxSharp()) {
     me->doTell(ch->getName(), "That item is perfectly ok!");
-    strcpy(buf, name);
+    strcpy(buf, name.c_str());
     strcpy(buf, add_bars(buf).c_str());
     sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
     me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT);
@@ -323,7 +323,7 @@ int TBaseWeapon::sharpenerGiveMe(TBeing *ch, TMonster *me)
 
   if (ch->getMoney() < cost) {
     me->doTell(ch->getName(), "I have to make a living! If you don't have the talens , I don't do the work!");
-    strcpy(buf, name);
+    strcpy(buf, name.c_str());
     strcpy(buf, add_bars(buf).c_str());
     sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
     me->doGive(buf);
@@ -357,9 +357,9 @@ int TBaseWeapon::sharpenerGiveMe(TBeing *ch, TMonster *me)
   } else {
     if (!job->char_name)
       vlogf(LOG_PROC, format("somehow sharpener %s didnt have a name on existing job") %  me->getName());
-    sprintf(buf, "Sorry, %s, but you'll have to wait while I re-edge %s's weapon.", ch->getName(), job->char_name);
+    sprintf(buf, "Sorry, %s, but you'll have to wait while I re-edge %s's weapon.", ch->getName().c_str(), job->char_name);
     me->doSay(buf);
-    strcpy(buf, name);
+    strcpy(buf, name.c_str());
     strcpy(buf, add_bars(buf).c_str());
     sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
     me->doGive(buf);
@@ -826,7 +826,7 @@ void TBaseWeapon::sharpenMeStoneWeap(TBeing *caster, TTool *tool)
   if ((caster->task) && caster->getPosition() <= POSITION_SITTING)
     caster->stopTask();
 
-  start_task(caster, NULL, NULL, TASK_SHARPEN, name, 350, (ushort) caster->in_room, 0, 0, 0);
+  start_task(caster, NULL, NULL, TASK_SHARPEN, name.c_str(), 350, (ushort) caster->in_room, 0, 0, 0);
 }
 
 void TBaseWeapon::dullMeFileWeap(TBeing *caster, TTool *tool)
@@ -857,7 +857,7 @@ void TBaseWeapon::dullMeFileWeap(TBeing *caster, TTool *tool)
   if ((caster->task) && caster->getPosition() <= POSITION_SITTING)
     caster->stopTask();
 
-  start_task(caster, NULL, NULL, TASK_DULL, name, 350, (ushort) caster->in_room, 0, 0, 0);
+  start_task(caster, NULL, NULL, TASK_DULL, name.c_str(), 350, (ushort) caster->in_room, 0, 0, 0);
 }
 
 void TBaseWeapon::changeBaseWeaponValue1(TBeing *ch, const char *arg, editorEnterTypeT type)
@@ -1675,7 +1675,7 @@ sstring TBaseWeapon::getNameForShow(bool useColor, bool useName, const TBeing *c
 {
   char buf2[256];
   sprintf(buf2, "%s (L%d)",
-       useName ? name : (useColor ? getName() : getNameNOC(ch).c_str()),
+       useName ? name.c_str() : (useColor ? getName().c_str() : getNameNOC(ch).c_str()),
        (int) (objLevel() + 0.5));
   return buf2;
 }

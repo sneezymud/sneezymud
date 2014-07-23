@@ -231,7 +231,7 @@ TObj *catch_a_fish(TRoom *rp)
 
     for(StuffIter it=briny_deep->stuff.begin();it!=briny_deep->stuff.end();++it){
       if(!count-- && (fish=dynamic_cast<TObj *>(*it))){
-	sendrpf(briny_deep, "A fishing line with a hook attached descends from above and pulls up %s!\n\r", fish->getName());
+	sendrpf(briny_deep, "A fishing line with a hook attached descends from above and pulls up %s!\n\r", fish->getName().c_str());
 	--(*fish);
 	break;
       }

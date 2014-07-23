@@ -25,17 +25,16 @@ static void renamePersonalizeFix(TThing *t, const char * orig_name, const char *
   if (!obj)
     return;
 
-  if (obj->isPersonalized() && obj->action_description) {
+  if (obj->isPersonalized() && !obj->action_description.empty()) {
     char buf[256], persbuf[256];
-    strcpy(buf, obj->action_description);
+    strcpy(buf, obj->action_description.c_str());
     if ((sscanf(buf, "This is the personalized object of %s.", persbuf)) == 1) {
       if (!strcmp(persbuf, orig_name)) {
         // we are personalized already, so not bothering to swap to strung again
         vlogf(LOG_MISC, format("Personalized object (%s) on %s, being restrung.") % 
            obj->getName() % new_name);
         sprintf(buf, "This is the personalized object of %s", new_name);
-        delete [] obj->action_description;
-        obj->action_description = mud_str_dup(buf);
+        obj->action_description = buf;
       }
     }
   }
@@ -76,7 +75,7 @@ void TBeing::doNameChange(const char *argument)
     return;
   }
   // in case they abbreviated the person's name, grab the true name
-  strcpy(orig_name, vict->getName());
+  strcpy(orig_name, vict->getName().c_str());
 
   TMonster *mons = dynamic_cast<TMonster *>(vict);
   if (!isImmortal() || !hasWizPower(POWER_RENAME)) {
@@ -121,12 +120,11 @@ void TBeing::doNameChange(const char *argument)
 
     //  Remake the pet's name.  
     tmpbuf = format("%s %s") % mons->name % new_name;
-    delete [] mons->name;
-    mons->name = mud_str_dup(tmpbuf);
+    mons->name = tmpbuf;
 
     // remake the short desc
     //    sprintf(tmpbuf2, stripColorCodes(mons->getName()).c_str());
-    sprintf(tmpbuf2, "%s", mons->getName());
+    sprintf(tmpbuf2, "%s", mons->getName().c_str());
     one_argument(tmpbuf2, arg, cElements(arg));
     if (!strcmp(arg, "a") || !strcmp(arg, "an"))
       tmpbuf=format("\"%s\", the %s") % sstring(new_name).cap() %
@@ -134,13 +132,11 @@ void TBeing::doNameChange(const char *argument)
     else
       tmpbuf = format("\"%s\", %s") % sstring(new_name).cap() % mons->getName();
 
-    delete [] mons->shortDescr;
-    mons->shortDescr = mud_str_dup(tmpbuf);
+    mons->shortDescr = tmpbuf;
 
     // remake the long desc
     tmpbuf += " is here.\n\r";
-    delete [] mons->player.longDescr;
-    mons->player.longDescr = mud_str_dup(tmpbuf);
+    mons->player.longDescr = tmpbuf;
 
     act("You grant $N a new name.",
         FALSE, this, 0, mons, TO_CHAR);
@@ -177,8 +173,7 @@ void TBeing::doNameChange(const char *argument)
   }
 
   strcpy(tmp_name, sstring(tmp_name).cap().c_str());
-  delete [] vict->name;
-  vict->name = mud_str_dup(tmp_name);
+  vict->name = tmp_name;
 
   wipePlayerFile(orig_name);
   wipeRentFile(orig_name);
@@ -240,10 +235,7 @@ void TBeing::doDescription()
 #endif
   sendTo("Enter your description. Maximum length is 500 characters\n\r");
   sendTo("End the description with a '~'.  Use '`' to cancel.\n\r");
-  if (getDescr()) {
-    delete [] getDescr();
-    setDescr(NULL);
-  }
+  descr = "";
   desc->connected = CON_WRITING;
   desc->str = &descr;
   desc->max_str = 500;

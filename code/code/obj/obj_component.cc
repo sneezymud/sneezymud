@@ -3190,7 +3190,7 @@ int TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num)
   // check for existing given item
   // review: this should not be needed - shops cant be given objs, and shops dont use inventory
   for(StuffIter it= tKeeper->stuff.begin();it!= tKeeper->stuff.end();++it) {
-    if (((*it)->number == number) && ((*it)->getName() && getName() && !strcmp((*it)->getName(), getName()))) {
+    if (((*it)->number == number) && !((*it)->getName().empty() && !getName().empty() && (*it)->getName() == getName())) {
       if (TComponent *c = dynamic_cast<TComponent *>(*it)) {
         totalInv += c->getComponentCharges();
         remove = c;

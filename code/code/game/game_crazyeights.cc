@@ -68,8 +68,8 @@ const sstring CrazyEightsGame::score()
   }
 
   sprintf(tString, "\n\r%s[%d] %s[%d] %s[%d] %s[%d]\n\r",
-          ch1->getName(), scores[0], ch2->getName(), scores[1],
-          ch3->getName(), scores[2], ch4->getName(), scores[3]);
+          ch1->getName().c_str(), scores[0], ch2->getName().c_str(), scores[1],
+          ch3->getName().c_str(), scores[2], ch4->getName().c_str(), scores[3]);
 
   return tString;
 }
@@ -275,7 +275,7 @@ int CrazyEightsGame::enter(const TBeing *ch)
       }
 
     ch->sendTo("You sit down at the Crazy Eights table.\n\r");
-    strcpy(names[playerNum], ch->getName());
+    strcpy(names[playerNum], ch->getName().c_str());
     inuse[playerNum] = true;
     scores[playerNum] = 0;
     game = false;
@@ -337,7 +337,7 @@ int CrazyEightsGame::exitGame(const TBeing *ch)
 int CrazyEightsGame::index(const TBeing *ch) const
 {
   for (int indexPlayer = 0; indexPlayer < 4; indexPlayer++)
-    if (!strcmp(ch->getName(), names[indexPlayer]))
+    if (ch->getName() == names[indexPlayer])
       return indexPlayer;
 
   return -1;
@@ -473,7 +473,7 @@ void CrazyEightsGame::pass(const TBeing *ch)
     ch->sendTo("You can still draw from the pile, you cannot pass.\n\r");
     return;
   } else {
-    sprintf(tString, "%s has opted to pass %s turn.\n\r", ch->getName(), ch->hshr());
+    sprintf(tString, "%s has opted to pass %s turn.\n\r", ch->getName().c_str(), ch->hshr());
     ch->sendTo("You pass your turn.\n\r");
     ch2->sendTo(tString);
     ch3->sendTo(tString);

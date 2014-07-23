@@ -128,14 +128,13 @@ void setDisguiseCombatStats(TBeing *ch, TBeing *mob)
 // adds player name to disguised / polyed creatures
 void appendPlayerName(TBeing *ch, TBeing *mob)
 {
- if (ch->name) {
+ if (!ch->name.empty()) {
     sstring tStNewNameList(mob->name);
     tStNewNameList += " ";
     tStNewNameList += ch->getNameNOC(ch);
     tStNewNameList += " switched";
 
-    delete [] mob->name;
-    mob->name = mud_str_dup(tStNewNameList);
+    mob->name = tStNewNameList;
   } else vlogf (LOG_BUG, "Entered appendPlayerName with ch->name undefined");
 }
   

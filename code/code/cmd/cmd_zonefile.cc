@@ -47,7 +47,7 @@ void TBeing::doZonefile(const sstring & tStArg)
   if (is_abbrev(tStString, "save")) {
     doSaveZoneFile(this, tStBuffer);
     return;
-  } else if (is_abbrev(tStString, "load") && !strcmp(getName(), "Lapsos")) {
+  } else if (is_abbrev(tStString, "load") && getName() == "Lapsos") {
     doLoadZoneFile(this, tStBuffer);
     return;
   }
@@ -91,7 +91,7 @@ void doSaveZoneFile(TBeing *ch, const sstring & tArg)
     return;
   }
 
-  sprintf(tString, "immortals/%s/zonefile", ch->getName());
+  sprintf(tString, "immortals/%s/zonefile", ch->getName().c_str());
 
   if (!(tFile = fopen(tString, "w"))) {
     ch->sendTo("Something went wrong, tell a coder what you did.\n\r");

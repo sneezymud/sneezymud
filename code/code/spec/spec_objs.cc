@@ -1015,7 +1015,7 @@ int pager(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *ob2)
     return FALSE;
   }
 
-  strcpy(capbuf, ch->getName());
+  strcpy(capbuf, ch->getName().c_str());
 
   if (cmd == CMD_USE || cmd == CMD_OPERATE) {
     if (o->equippedBy != ch)
@@ -1038,7 +1038,7 @@ int pager(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *ob2)
     TThing *ttt = ob2;
     TBeing *tbob2 = dynamic_cast<TBeing *>(ttt);
     t = dynamic_cast<TBeing *>((o->parent) ? o->parent : o->equippedBy);
-    strcpy(capbuf, tbob2->getName());
+    strcpy(capbuf, tbob2->getName().c_str());
 
     if (t->hasColor())
       t->sendTo(format("%s%s%s tells you %s\"%s\"%s % triggering your pager....\n\r") %             t->purple() % sstring(capbuf).cap() % t->norm() % t->cyan() % arg % t->norm());
@@ -1051,7 +1051,7 @@ int pager(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *ob2)
 
     tbob2->sendTo(COLOR_MOBS, format("You tell %s \"%s\".\n\r") % t->getName() % arg);
 
-    strcpy(capbuf, t->getName());
+    strcpy(capbuf, t->getName().c_str());
     act("$n looks startled as $s $o begins to beep!",
          FALSE, t, o, NULL, TO_ROOM);
     return TRUE;
@@ -1750,7 +1750,7 @@ int newbieHelperWProc(TBeing *vict, cmdTypeT cmd, const char *Parg, TObj *o, TOb
                          o->getName());
         ch->sendTo(format("%s: own armor is at the moment for your level.\n\r") %
                          o->getName());
-        sprintf(buf, "consider %s", ch->getName());
+        sprintf(buf, "consider %s", ch->getName().c_str());
         ch->addCommandToQue(buf);
         return TRUE;
       }
@@ -1879,7 +1879,7 @@ int trolley(TBeing *, cmdTypeT cmd, const char *, TObj *myself, TObj *)
     return FALSE;
   }
 
-  strcpy(shortdescr, myself->shortDescr);
+  strcpy(shortdescr, myself->shortDescr.c_str());
   strcpy(shortdescr, sstring(shortdescr).cap().c_str());
 
   if (!myself->act_ptr) {
@@ -2035,7 +2035,7 @@ int fishingBoat(TBeing *, cmdTypeT cmd, const char *, TObj *myself, TObj *)
     return FALSE;
   }
 
-  strcpy(shortdescr, myself->shortDescr);
+  strcpy(shortdescr, myself->shortDescr.c_str());
   strcpy(shortdescr, sstring(shortdescr).cap().c_str());
 
   if (!myself->act_ptr) {
@@ -2293,7 +2293,7 @@ int teleportVial(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   char objname[256],buf[256];
   if (cmd != CMD_THROW) 
     return FALSE;
-  strcpy(objname,o->getName());
+  strcpy(objname,o->getName().c_str());
   one_argument(one_argument(one_argument(objname,buf, cElements(buf)),buf, cElements(buf)),buf, cElements(buf)); //vial
 
   if (sscanf(buf,"%d",&targetroom) != 1) {
@@ -5462,12 +5462,9 @@ int fortuneCookie(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
 
   // create fortune
   TNote *fortune = createNote(mud_str_dup(buf));
-  delete [] fortune->name;
-  fortune->name = mud_str_dup("fortune paper strip small");
-  delete [] fortune->shortDescr;
-  fortune->shortDescr = mud_str_dup("<W>a fortune<1>"); 
-  delete [] fortune->getDescr();
-  fortune->setDescr(mud_str_dup("<W>A small strip of paper lies here.<1>"));
+  fortune->name = "fortune paper strip small";
+  fortune->shortDescr = "<W>a fortune<1>"; 
+  fortune->setDescr("<W>A small strip of paper lies here.<1>");
 
   // convert cookie to food
   TObj *cookie = makeNewObj(ITEM_FOOD);  // new food object

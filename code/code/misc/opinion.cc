@@ -17,7 +17,7 @@ int TMonster::remHated(const TBeing *hatee, const char *n)
   int i;
 
   if (hatee)
-    strcpy(namebuf, hatee->getName());
+    strcpy(namebuf, hatee->getName().c_str());
   else
     strcpy(namebuf, n);
 
@@ -294,7 +294,7 @@ bool TMonster::Fears(const TBeing *v, const char *s) const
   if (!v)
     buf = s;
   else
-    buf = v->getName();
+    buf = v->getName().c_str();
 
   if (!buf)
     return FALSE;
@@ -342,7 +342,7 @@ int TMonster::remFeared(const TBeing *hatee, const char *n)
   char buf[256];
 
   if (hatee)
-    strcpy(buf, hatee->getName());
+    strcpy(buf, hatee->getName().c_str());
   else
     strcpy(buf, n);
  

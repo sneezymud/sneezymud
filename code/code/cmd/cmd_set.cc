@@ -226,7 +226,7 @@ void TPerson::doSet(const char *argument)
       sendTo("Outside of range.\n\r");
       return;
     }
-    if(parm == TOG_PSIONICIST && strcmp("Peel", name)){
+    if(parm == TOG_PSIONICIST && name != "Peel"){
       sendTo("Don't mess with the psionicist toggle.  It's meant to be permanent and if you try to untoggle it, you'll end up corrupting the pfile and crashing the mud.\n\r");
       return;
     }

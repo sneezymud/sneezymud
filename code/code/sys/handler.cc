@@ -38,8 +38,9 @@ extern "C" {
 // fname will look for the first non-alpha character
 // I added - and ' as valid fname chars since this allows us to do better things
 // with items and mobs in the name field.  - Bat 6-30-97
-const sstring fname(const char *namelist)
+const sstring fname(sstring const& name)
 {
+  const char *namelist = name.c_str();
   char holder[60];
   register char *point;
 
@@ -818,7 +819,7 @@ void TBeing::affectTotal()
 
 void TBeing::affectTo(affectedData *af, int renew, silentTypeT silent)
 {
-  mud_assert(af->type != TYPE_UNDEFINED, "applying undefined affect to %s", getName());
+  mud_assert(af->type != TYPE_UNDEFINED, "applying undefined affect to %s", getName().c_str());
 
   affectedData *a;
   int origamt = specials.affectedBy;
@@ -1111,10 +1112,10 @@ void TBeing::equipChar(TThing *obj, wearSlotT pos, silentTypeT silent)
   // put it back on, it should be set to FALSE
   int j;
 
-  mud_assert(pos >= MIN_WEAR && pos < MAX_WEAR, "pos in equip_char(%s %s %d) was out of range!!", getName(), obj->name, pos);
+  mud_assert(pos >= MIN_WEAR && pos < MAX_WEAR, "pos in equip_char(%s %s %d) was out of range!!", getName().c_str(), obj->name.c_str(), pos);
 
   if (equipment[pos]) {
-    vlogf(LOG_BUG, format("equip_char(%s %s %d) called with position already equipped!") %  getName() % obj->name % pos);
+    vlogf(LOG_BUG, format("equip_char(%s %s %d) called with position already equipped!") %  getName().c_str() % obj->name.c_str() % pos);
     return;
   }
   if (obj->parent) {
@@ -1650,7 +1651,7 @@ TBeing *get_char(const char *name, exactTypeT exact)
     return (0);
 
   for (i = character_list, j = 1; i && (j <= numx); i = i->next) {
-    if (i->name) {
+    if (!i->name.empty()) {
       if ((exact && is_exact_name(tmp, i->name)) ||
           (!exact && isname(tmp, i->name))) {
         if (j == numx)
@@ -1938,7 +1939,7 @@ TBeing *get_char_vis_world(const TBeing *ch, const sstring &name, int *count, ex
   j = count ? *count : 1;
 
   for (i = character_list; i && (j <= numx); i = i->next) {
-    if (!i->name) {
+    if (i->name.empty()) {
       vlogf(LOG_BUG, "Something with NULL i->name in get_char_vis_world()");
       continue;
     }
@@ -2068,7 +2069,7 @@ TThing *searchLinkedListVis(const TBeing *ch, sstring name, StuffList list, int 
 
   for(StuffIter it=list.begin();it!=list.end() && (j < numx); ++it){
     t=*it;
-    if (t->name && isname(tmp, t->name)) {
+    if (!t->name.empty() && isname(tmp, t->name)) {
       if (ch->canSee(t)) {
         if (type == TYPETHING || 
               ((type == TYPEBEING) && dynamic_cast<TBeing *>(t)) ||

@@ -82,8 +82,7 @@ int holdemPlayer(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, T
       }
 
       me->swapToStrung();
-      delete me->name;
-      me->name=mud_str_dup(buf);
+      me->name=buf;
 
 
       hpi->name=arg;

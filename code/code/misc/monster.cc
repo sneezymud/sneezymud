@@ -236,10 +236,8 @@ TMonster & TMonster::operator=(const TMonster &a)
   stolenFrom = a.stolenFrom;
   default_pos = a.default_pos;
 
-  delete [] sounds;
-  sounds = mud_str_dup(a.sounds);
-  delete [] distantSnds;
-  distantSnds = mud_str_dup(a.distantSnds);
+  sounds = a.sounds;
+  distantSnds = a.distantSnds;
 
   return *this;
 }
@@ -299,14 +297,8 @@ TMonster::~TMonster()
   if (number > -1)
     mob_index[getMobIndex()].addToNumber(-1);
 
-  if (sounds) {
-    delete [] sounds;
-    sounds = NULL;
-  }
-  if (distantSnds) {
-    delete [] distantSnds;
-    distantSnds = NULL;
-  }
+  sounds = "";
+  distantSnds = "";
 
   // if we are using shared sstrings, reallocate them so ~TThing can purge
   // safely
@@ -325,19 +317,6 @@ TMonster::~TMonster()
       ex_description = NULL;
   }
   mobCount--;
-// Looking for bugs below--cos 8/98
-  if (getDescr() && getDescr() == mob_index[getMobIndex()].description) { 
-    vlogf(LOG_BUG, format("TMonster delete: after allocation, monster still had shared sstring (%s) : descr") %  getName());
-    vlogf(LOG_BUG, format("New Alloc: %s: shared descr is: %s") %  (didAloc ? "True" : "False") % getDescr());
-  }
-  if (name && name == mob_index[getMobIndex()].name) 
-    vlogf(LOG_BUG, format("TMonster delete: after allocation, monster still had shared sstring (%s) : name") %  getName());
-
-  if (shortDescr && shortDescr == mob_index[getMobIndex()].short_desc) 
-    vlogf(LOG_BUG, format("TMonster delete: after allocation, monster still had shared sstring (%s) : short") %  getName());
-
-  if (getLongDesc() && player.longDescr == mob_index[getMobIndex()].long_desc)
-    vlogf(LOG_BUG, format("TMonster delete: after allocation, monster still had shared sstring (%s) : long") %  getName());
 
   TRoom *tRoom;
 

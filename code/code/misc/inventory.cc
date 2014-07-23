@@ -794,15 +794,15 @@ int TBeing::doGive(TBeing *victim, TThing *obj, giveTypeT flags)
     vlogf(LOG_BUG, "Bad give in doGive");
     return FALSE;
   }
-  if (!*victim->name) {
+  if (victim->name.empty()) {
     vlogf(LOG_BUG, "Bad give names in doGive");
     return FALSE;
   }
 
-  strcpy(buf, obj->name);
+  strcpy(buf, obj->name.c_str());
   strcpy(buf, add_bars(buf).c_str());
 
-  strcpy(buf2, victim->name);
+  strcpy(buf2, victim->name.c_str());
   strcpy(buf2, add_bars(buf2).c_str());
   sprintf(arg, "%s %s", buf, buf2);
   
@@ -2013,7 +2013,7 @@ int TBeing::doDonate(const char *argument)
 
       --(*t_o);
       thing_to_room(t_o, Room::DONATION);
-      sprintf(buf,"A small portal appears for an instant, dropping %s in the room.\n\r",t_o->getName());
+      sprintf(buf,"A small portal appears for an instant, dropping %s in the room.\n\r",t_o->getName().c_str());
       sendToRoom(COLOR_OBJECTS,buf, Room::DONATION);
     }
 

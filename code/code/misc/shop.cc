@@ -484,8 +484,7 @@ bool shopData::isProducing(const TObj *item)
       continue;
 
     if (producing[counter] == item->number) {
-      if(obj_index[producing[counter]].name && item->name && 
-	 !strcmp(obj_index[producing[counter]].name, item->name)){
+      if (obj_index[producing[counter]].name == item->name){
         return TRUE;
       }
     }
@@ -503,10 +502,9 @@ static int number_objects_in_list(const TObj *item, const StuffList list)
     if(!(i = dynamic_cast<const TObj *>(*it)))
       continue;
 
-    if ((i->number == item->number) &&
-        (i->getName() && item->getName() &&
-	 !strcmp(i->getName(), item->getName())) &&
-        (i->adjPrice() == item->adjPrice()))
+    if (i->number == item->number &&
+	i->getName() == item->getName() &&
+        i->adjPrice() == item->adjPrice())
       count++;
   }
   return (count);
@@ -638,7 +636,7 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   } else
     tmp = num;
   
-  strcpy(argm, name);
+  strcpy(argm, name.c_str());
   
   strcpy(argm, add_bars(argm).c_str());
   swindle=ch->getSwindleBonus();
@@ -724,7 +722,7 @@ bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int shop_nr)
     return TRUE;
   }
   // Notes have been denied by objectSell() above
-  if (temp1->action_description) {
+  if (!temp1->action_description.empty()) {
     keeper->doTell(ch->getName(), "I'm sorry, I don't buy monogrammed goods.");
     return TRUE;
   }

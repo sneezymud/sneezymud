@@ -741,10 +741,10 @@ int TBeing::doSmoke(const char *argument)
   }
 
   sprintf(buf, "Ok, you smoke the %s from %s.", 
-	 drugTypes[tdc->getDrugType()].name, tdc->getName());
+	 drugTypes[tdc->getDrugType()].name, tdc->getName().c_str());
   act(buf,TRUE,this,0,0,TO_CHAR);
   sprintf(buf, "$n smokes %s from %s.", 
-	  drugTypes[tdc->getDrugType()].name, tdc->getName());
+	  drugTypes[tdc->getDrugType()].name, tdc->getName().c_str());
   act(buf,TRUE,this,0,0,TO_ROOM);
 
   dropGas(::number(1,5), GAS_SMOKE);

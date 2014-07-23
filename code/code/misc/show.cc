@@ -47,7 +47,7 @@ void TNote::showMe(TBeing *ch) const
   sstring sb;
   const char HEADER_TXT_NOTE[] = "There is something written upon it:\n\r\n\r";
 
-  if (action_description) {
+  if (!action_description.empty()) {
     sb += HEADER_TXT_NOTE;
     sb += action_description;
 
@@ -73,7 +73,7 @@ void TObj::show_me_to_char(TBeing *ch, showModeT mode) const
 {
   sstring buffer, buf, capbuf;
 
-  if (mode == SHOW_MODE_DESC_PLUS && getDescr()) {
+  if (mode == SHOW_MODE_DESC_PLUS && !getDescr().empty()) {
 
     if (roomp && roomp->isWaterSector() && 
         !isObjStat(ITEM_HOVER) &&
@@ -95,12 +95,12 @@ void TObj::show_me_to_char(TBeing *ch, showModeT mode) const
     }
   } else if ((mode == SHOW_MODE_SHORT_PLUS || 
               mode == SHOW_MODE_SHORT_PLUS_INV ||
-              mode == SHOW_MODE_SHORT) && getName()) {
+              mode == SHOW_MODE_SHORT) && !getName().empty()) {
     buffer=sstring(getName()).cap();
 
     if(isMonogrammed()){
       char namebuf[256];
-      sscanf(action_description, "This is the personalized object of %s.", 
+      sscanf(action_description.c_str(), "This is the personalized object of %s.", 
 	     namebuf);
       buffer += format(" {%s}") % namebuf;
     }
@@ -172,7 +172,7 @@ void TObj::show_me_mult_to_char(TBeing *ch, showModeT mode, unsigned int num) co
   if (!ch->desc)
     return;
 
-  if (mode == SHOW_MODE_DESC_PLUS && getDescr()) {
+  if (mode == SHOW_MODE_DESC_PLUS && !getDescr().empty()) {
     capbuf = format("%s") % addNameToBuf(ch, ch->desc, this, getDescr(), COLOR_OBJECTS);
     sstring cStrbuf = capbuf;
     while (cStrbuf.find("$$g") != sstring::npos)
@@ -183,7 +183,7 @@ void TObj::show_me_mult_to_char(TBeing *ch, showModeT mode, unsigned int num) co
                       (roomp ? roomp->describeGround().c_str() : "TELL A GOD"));
     capbuf=cStrbuf;
     buffer=capbuf;
-  } else if (getName() && (mode == SHOW_MODE_SHORT_PLUS ||
+  } else if (!getName().empty() && (mode == SHOW_MODE_SHORT_PLUS ||
           mode == SHOW_MODE_SHORT_PLUS_INV || mode == SHOW_MODE_SHORT)) {
     buffer=getName();
   } else if (mode == SHOW_MODE_TYPE) {
@@ -538,7 +538,7 @@ void list_thing_on_heap(const TThing *list, TBeing *ch, bool show_all)
 static sstring displayShowApprox(const TBeing *looked, const TBeing *looker, spellNumT tSkill, float tDiff)
 {
   // This function is still experimental.  Don't use it in the main world yet.
-  if (strcmp(looker->getName(), "Lapsos") != 0 || !looker->isImmortal())
+  if (looker->getName() != "Lapsos" || !looker->isImmortal())
     return ("");
 
   if (!looker->doesKnowSkill(tSkill))
@@ -588,7 +588,7 @@ static void describeSpellEffects(const TBeing *me, const TBeing *ch, bool verbos
   // these are the less common or more urgent affects that we want noticed
   if (me->getCaptiveOf()) {
     char buf[256];
-    sprintf(buf, ".....$n is held captive by %s.",me->getCaptiveOf()->getName());
+    sprintf(buf, ".....$n is held captive by %s.",me->getCaptiveOf()->getName().c_str());
     act(buf, FALSE, me, 0, ch, TO_VICT);
   }
 
@@ -795,7 +795,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
     const TMonster *tm = dynamic_cast<const TMonster *>(this);
     if (riding || spelltask || fight() ||
         (roomp->isWaterSector() && !isAffected(AFF_WATERBREATH)) ||
-        !(getLongDesc()) ||
+        getLongDesc().empty() ||
         (tm && tm->getPosition() != tm->default_pos)) {
       // A player char or a mobile without long descr, or not in default pos. 
       if (hasColorStrings(NULL, getName(), 2)) {
@@ -909,7 +909,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
           case POSITION_SITTING:
             if (riding) {
               strcat(buffer, " is sitting on ");
-              if (riding->getName())
+              if (!riding->getName().empty())
                 strcat(buffer,ch->objs(riding));
               else
                 strcat(buffer, "A bad object");
@@ -923,7 +923,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
               strcat(buffer, "is resting here in the water.");
             else if (riding) {
               strcat(buffer, " is resting on ");
-              if (riding->getName())
+              if (!riding->getName().empty())
                 strcat(buffer,ch->objs(riding));
               else
                 strcat(buffer, "A bad object");
@@ -937,7 +937,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
               strcat(buffer, " is sleeping here in the water.");
             else if (riding) {
               strcat(buffer, " is sleeping on ");
-              if (riding->getName())
+              if (!riding->getName().empty())
                 strcat(buffer,ch->objs(riding));
               else
                 strcat(buffer, "A bad object");
@@ -968,7 +968,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
       if (isPc() && (Strng.find(getName()) == sstring::npos) && ch->isImmortal() &&
           (hasWizPower(POWER_WIZARD) || ch->GetMaxLevel() > GetMaxLevel()) &&
           ch->isPc())
-        sprintf(capbuf + strlen(capbuf), " (%s)", getName());
+        sprintf(capbuf + strlen(capbuf), " (%s)", getName().c_str());
       Strng = capbuf;
       while (Strng.find("$$g") != sstring::npos)
         Strng.replace(Strng.find("$$g"), 3,
@@ -1016,7 +1016,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
     if(!ch->isPlayerAction(PLR_BRIEF))
       describeSpellEffects(this, ch, FALSE);
   } else if (mode == SHOW_MODE_SHORT_PLUS) {
-    if (getDescr()) {
+    if (!getDescr().empty()) {
       snprintf(capbuf, sizeof(capbuf), "%s", addNameToBuf(ch, ch->desc, this, getDescr(), COLOR_MOBS).c_str());
       sstring cStrbuf = capbuf;
       while (cStrbuf.find("$$g") != sstring::npos)
@@ -1042,7 +1042,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
     if (riding && dynamic_cast<TObj *>(riding)) {
       sprintf(buffer, "$n is %s on %s.", 
             sstring(position_types[getPosition()]).uncap().c_str(), 
-            riding->getName());
+            riding->getName().c_str());
       sprintf(buffer,"%s",colorString(ch,ch->desc,buffer,NULL,COLOR_MOBS, TRUE).c_str());
       act(buffer, FALSE, this, 0, ch, TO_VICT);
     }
@@ -1188,7 +1188,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
     TDatabase db(DB_SNEEZY);
     sstring tattoos[MAX_WEAR];
 
-    db.query("select location, tattoo from tattoos where name='%s' order by location",getName());
+    db.query("select location, tattoo from tattoos where name='%s' order by location",getName().c_str());
     while(db.fetchRow()){
       tattoos[convertTo<int>(db["location"])]=db["tattoo"];
       found=true;
@@ -1295,10 +1295,10 @@ void TBeing::show_me_mult_to_char(TBeing *ch, showModeT, unsigned int num) const
   const TMonster *tm = dynamic_cast<const TMonster *>(this);
   if (riding || spelltask || fight() ||
         (roomp->isWaterSector() && !isAffected(AFF_WATERBREATH)) ||
-        !(getLongDesc()) ||
+        getLongDesc().empty() ||
         (tm && tm->getPosition() != tm->default_pos)) {
     // A player char or a mobile without long descr, or not in default pos. 
-    strcpy(buffer, getName());
+    strcpy(buffer, getName().c_str());
     strcpy(buffer, sstring(buffer).cap().c_str());
     if (isAffected(AFF_INVISIBLE))
       strcat(buffer, " (invisible)");
@@ -1361,7 +1361,7 @@ void TBeing::show_me_mult_to_char(TBeing *ch, showModeT, unsigned int num) const
         case POSITION_SITTING:
           if (riding) {
             strcat(buffer, " is sitting here on ");
-            if (riding->getName())
+            if (!riding->getName().empty())
               strcat(buffer,ch->objs(riding));
             else
               strcat(buffer, "A bad object");
@@ -1373,7 +1373,7 @@ void TBeing::show_me_mult_to_char(TBeing *ch, showModeT, unsigned int num) const
         case POSITION_RESTING:
           if (riding) {
             strcat(buffer, " is resting here on ");
-            if (riding->getName())
+            if (!riding->getName().empty())
               strcat(buffer,ch->objs(riding));
             else
               strcat(buffer, "A bad object");
@@ -1385,7 +1385,7 @@ void TBeing::show_me_mult_to_char(TBeing *ch, showModeT, unsigned int num) const
         case POSITION_SLEEPING:
           if (riding) {
             strcat(buffer, " is sleeping here on ");
-            if (riding->getName())
+            if (!riding->getName().empty())
 // COSMO MARKER --test
               if (dynamic_cast<TBeing *>(riding)) {
                 strcat(buffer,ch->objs(riding));
@@ -1528,7 +1528,7 @@ sstring TStaff::getNameForShow(bool useColor, bool useName, const TBeing *ch) co
 {
   char buf2[256];
   sprintf(buf2, "%s [%s]", 
-       useName ? name : (useColor ? getName() : getNameNOC(ch).c_str()),
+       useName ? name.c_str() : (useColor ? getName().c_str() : getNameNOC(ch).c_str()),
        (getSpell() >= 0 ? (discArray[getSpell()] ? discArray[getSpell()]->name : "Unknown") : "None"));
   return buf2;
 }
@@ -1537,7 +1537,7 @@ sstring TScroll::getNameForShow(bool useColor, bool useName, const TBeing *ch) c
 {
   char buf2[256];
   sprintf(buf2, "%s [%s/%s/%s]", 
-       useName ? name : (useColor ? getName() : getNameNOC(ch).c_str()),
+       useName ? name.c_str() : (useColor ? getName().c_str() : getNameNOC(ch).c_str()),
        (getSpell(0) >= 0 ? (discArray[getSpell(0)] ? discArray[getSpell(0)]->name : "Unknown") : "None"),
        (getSpell(1) >= 0 ? (discArray[getSpell(1)] ? discArray[getSpell(1)]->name : "Unknown") : "None"),
        (getSpell(2) >= 0 ? (discArray[getSpell(2)] ? discArray[getSpell(2)]->name : "Unknown") : "None"));

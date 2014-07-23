@@ -58,16 +58,12 @@ void rewrite_obj_file()
     if (obj->isObjStat(ITEM_STRUNG)) {
       obj->remObjStat(ITEM_STRUNG);
 
-      delete [] obj->name;
       obj->name = obj_index[obj->getItemIndex()].name;
 
-      delete [] obj->shortDescr;
       obj->shortDescr = obj_index[obj->getItemIndex()].short_desc;
 
-      delete [] obj->getDescr();
       obj->setDescr(obj_index[obj->getItemIndex()].long_desc);
 
-      delete [] obj->action_description;
       obj->action_description = obj_index[obj->getItemIndex()].description;
     }
 

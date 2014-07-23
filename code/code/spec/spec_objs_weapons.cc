@@ -1386,7 +1386,7 @@ int wickedDagger(TBeing *vict, cmdTypeT cmd, const char *, TObj *me, TObj *ch_ob
 
   if (cmd == CMD_GENERIC_PULSE && !::number(0,5) && vict->roomp) {
     sendrpf(COLOR_OBJECTS, vict->roomp, "%s<k> sheds a light of iniquity.<z>\n\r",
-	    (me->getName() ? sstring(me->getName()).cap().c_str() : "Bogus Object"));
+	    (!me->getName().empty() ? sstring(me->getName()).cap().c_str() : "Bogus Object"));
   }
 
   if (cmd == CMD_OBJ_MISS) {
@@ -2432,8 +2432,7 @@ void lightSaberExtend(TBeing *ch, TGenWeapon *weapon)
   buf = format("%s with a brilliant %s%s<1> blade of light") %
     obj_index[weapon->getItemIndex()].short_desc %
     colorcodes[which_color] % colornames[which_color];
-  delete weapon->shortDescr;
-  weapon->shortDescr = mud_str_dup(buf);
+  weapon->shortDescr = buf;
 }
 
 void lightSaberRetract(TBeing *ch, TGenWeapon *weapon)
@@ -2453,8 +2452,7 @@ void lightSaberRetract(TBeing *ch, TGenWeapon *weapon)
 
   // restore to original description
   buf=obj_index[weapon->getItemIndex()].short_desc;
-  delete weapon->shortDescr;
-  weapon->shortDescr = mud_str_dup(buf);
+  weapon->shortDescr = buf;
 
   if(ch){
     // this is just a way to get a random but consistent color

@@ -395,12 +395,9 @@ void TShopOwned::giveStatements(sstring arg)
     "Retained earnings" % "" % tsj.getRetainedEarnings();
   
   TNote *income_statement = createNote(mud_str_dup(buf));
-  delete [] income_statement->name;
-  income_statement->name = mud_str_dup(keywords);
-  delete [] income_statement->shortDescr;
-  income_statement->shortDescr = mud_str_dup(short_desc);
-  delete [] income_statement->getDescr();
-  income_statement->setDescr(mud_str_dup(long_desc));
+  income_statement->name = keywords;
+  income_statement->shortDescr = short_desc;
+  income_statement->setDescr(long_desc);
 
   *keeper += *income_statement;
   keeper->doGive(ch, income_statement, GIVE_FLAG_DROP_ON_FAIL);
@@ -453,12 +450,9 @@ void TShopOwned::giveStatements(sstring arg)
 
   
   TNote *balance_sheet = createNote(mud_str_dup(buf));
-  delete [] balance_sheet->name;
-  balance_sheet->name = mud_str_dup(keywords);
-  delete [] balance_sheet->shortDescr;
-  balance_sheet->shortDescr = mud_str_dup(short_desc);
-  delete [] balance_sheet->getDescr();
-  balance_sheet->setDescr(mud_str_dup(long_desc));
+  balance_sheet->name = keywords;
+  balance_sheet->shortDescr = short_desc;
+  balance_sheet->setDescr(long_desc);
 
   *keeper += *balance_sheet;
   keeper->doGive(ch, balance_sheet, GIVE_FLAG_DROP_ON_FAIL);

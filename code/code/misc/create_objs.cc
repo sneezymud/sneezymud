@@ -16,6 +16,7 @@ extern "C" {
 }
 
 #include <algorithm>
+#include <boost/algorithm/string.hpp>
 
 #include "extern.h"
 #include "handler.h"
@@ -92,10 +93,17 @@ static void update_obj_menu(const TBeing *ch, const TObj *obj)
   if (IS_SET(ch->desc->autobits, AUTO_TIPS)) {
     char tStringOut[14][256];
 
-    strcpy(tStringOut[0], (obj->name ? obj->name : "Unknown"));
-    strcpy(tStringOut[1], (obj->shortDescr ? obj->shortDescr : "Unknown"));
+    class str_or_unknown_ {
+      public:
+      const char* operator()(const sstring& s) {
+        return !s.empty() ? s.c_str() : "Unknown";
+      }
+    } str_or_unknown;
+
+    strcpy(tStringOut[0], str_or_unknown(obj->name));
+    strcpy(tStringOut[1], str_or_unknown(obj->shortDescr));
     strcpy(tStringOut[2], ItemInfo[itt]->name);
-    strcpy(tStringOut[3], (obj->descr ? obj->descr : "Unknown"));
+    strcpy(tStringOut[3], str_or_unknown(obj->descr));
     sprintf(tStringOut[4], "%.0f", obj->getWeight());
     sprintf(tStringOut[5], "%d", obj->getVolume());
     sprintf(tStringOut[6], "%d", obj->obj_flags.cost);
@@ -168,7 +176,7 @@ void ObjLoad(TBeing *ch, int vnum)
   extraDescription *new_descr;
   TDatabase db(DB_IMMORTAL);
 
-  db.query("select type, name, short_desc, long_desc, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist, action_desc from obj where vnum=%i and owner='%s'", vnum, ch->name);
+  db.query("select type, name, short_desc, long_desc, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist, action_desc from obj where vnum=%i and owner='%s'", vnum, ch->name.c_str());
 
   if(!db.isResults()){
     ch->sendTo("Object not found.\n\r");
@@ -215,7 +223,7 @@ void ObjLoad(TBeing *ch, int vnum)
   o->ex_description = NULL;
 
 
-  db.query("select name, description from objextra where vnum=%i and owner='%s'", vnum, ch->name);
+  db.query("select name, description from objextra where vnum=%i and owner='%s'", vnum, ch->name.c_str());
   
   while(db.fetchRow()){
     new_descr = new extraDescription();
@@ -228,7 +236,7 @@ void ObjLoad(TBeing *ch, int vnum)
   o->setLight(0);
   i=0;
 
-  db.query("select type, mod1, mod2 from objaffect where vnum=%i and owner='%s'", vnum, ch->name);
+  db.query("select type, mod1, mod2 from objaffect where vnum=%i and owner='%s'", vnum, ch->name.c_str());
 
   while(db.fetchRow()){
     o->affected[i].location = mapFileToApply(convertTo<int>(db["type"]));
@@ -284,45 +292,45 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
 
   //  db.query("delete from obj where vnum=%i", vnum);
   if(!db.query("insert into obj (vnum, name, short_desc, long_desc, type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_exist, cur_struct, max_struct, decay, volume, material, owner, action_desc) values (%i, '%s', '%s', '%s', %i, %i, %i, %i, %i, %i, %i, %f, %i, %i, %i, %i, %i, %i, %i, %i, %i, '%s', '%s')", 
-	  vnum, o->name, o->shortDescr, o->getDescr(),o->itemType(), 
+	  vnum, o->name.c_str(), o->shortDescr.c_str(), o->getDescr().c_str(), o->itemType(), 
 	  o->getObjStat(), o->obj_flags.wear_flags, tmp1, tmp2, tmp3, tmp4, 
 	  o->getWeight(), o->obj_flags.cost, o->canBeSeen, o->spec, 
 	  o->max_exist, o->obj_flags.struct_points, 
 	  o->obj_flags.max_struct_points, o->obj_flags.decay_time, 
-		 o->getVolume(), o->getMaterial(), ch->name, 
-	       o->action_description?o->action_description:"")){
+		 o->getVolume(), o->getMaterial(), ch->name.c_str(), 
+	       o->action_description.c_str())){
     ch->sendTo("Unable to save object.  Make sure that an object doesn't already exist in that slot.\n\r");
     //    ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
   }
 
-  db.query("delete from objextra where vnum=%i and owner='%s'", vnum, ch->name);
+  db.query("delete from objextra where vnum=%i and owner='%s'", vnum, ch->name.c_str());
 
   int i, j, k;
   char temp[2048];
   extraDescription *exdes;
   for (exdes = o->ex_description; exdes; exdes = exdes->next) {
     j = 0;
-    if (exdes->description) {
-      for (k = 0; k <= (int) strlen(exdes->description); k++) {
+    if (!exdes->description.empty()) {
+      for (k = 0; k <= (int) exdes->description.length(); k++) {
 	if (exdes->description[k] != 13)
 	  temp[j++] = exdes->description[k];
       }
       temp[j] = '\0';
 
-      if(!db.query("insert into objextra (name, description, owner, vnum) values ('%s', '%s', '%s', %i)", exdes->keyword, temp, ch->name, vnum)){
+      if(!db.query("insert into objextra (name, description, owner, vnum) values ('%s', '%s', '%s', %i)", exdes->keyword.c_str(), temp, ch->name.c_str(), vnum)){
 	ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
 	return;
       }
     } else {
-      if(!db.query("insert into objextra (name, description, owner, vnum) values ('%s', '', '%s')", exdes->keyword, ch->name, vnum)){
+      if(!db.query("insert into objextra (name, description, owner, vnum) values ('%s', '', '%s')", exdes->keyword.c_str(), ch->name.c_str(), vnum)){
 	ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
 	return;
       }
     }
   }
 
-  if(!db.query("delete from objaffect where vnum=%i and owner='%s'", vnum, ch->name)){
+  if(!db.query("delete from objaffect where vnum=%i and owner='%s'", vnum, ch->name.c_str())){
     ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
   }
@@ -337,7 +345,7 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
       if(!db.query("insert into objaffect (type, mod1, mod2, owner, vnum) values (%i, %i, %i, '%s', %i)",
 		 mapApplyToFile(o->affected[i].location), 
 		 applyTypeShouldBeSpellnum(o->affected[i].location) ? mapSpellnumToFile(spellNumT(o->affected[i].modifier)) : o->affected[i].modifier,
-		 o->affected[i].modifier2, ch->name, vnum)){
+		 o->affected[i].modifier2, ch->name.c_str(), vnum)){
 	ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
 	return;
       }
@@ -379,9 +387,9 @@ static void olist(TPerson *ch, bool zone=false)
   TDatabase db(DB_IMMORTAL);
 
   if(zone){
-    db.query("select vnum, name from obj where owner='%s' and vnum>%i and vnum<=%i order by vnum", ch->name, zone_table[ch->roomp->getZone()->zone_nr-1].top, ch->roomp->getZone()->top);
+    db.query("select vnum, name from obj where owner='%s' and vnum>%i and vnum<=%i order by vnum", ch->name.c_str(), zone_table[ch->roomp->getZone()->zone_nr-1].top, ch->roomp->getZone()->top);
   } else {
-    db.query("select vnum, name from obj where owner='%s' order by vnum", ch->name);
+    db.query("select vnum, name from obj where owner='%s' order by vnum", ch->name.c_str());
   }
 
 
@@ -470,16 +478,16 @@ void oremove(TBeing *ch, int vnum)
 {
   TDatabase db(DB_IMMORTAL);
   
-  db.query("select * from obj where vnum=%i and owner='%s'", vnum, ch->name);
+  db.query("select * from obj where vnum=%i and owner='%s'", vnum, ch->name.c_str());
 
   if(!db.isResults()){
     ch->sendTo("Object not found.\n\r");
     return;
   }
 
-  if(!db.query("delete from obj where vnum=%i and owner='%s'", vnum, ch->name) ||
-     !db.query("delete from objaffect where vnum=%i and owner='%s'", vnum, ch->name) ||
-     !db.query("delete from objextra where vnum=%i and owner='%s'", vnum, ch->name)){
+  if(!db.query("delete from obj where vnum=%i and owner='%s'", vnum, ch->name.c_str()) ||
+     !db.query("delete from objaffect where vnum=%i and owner='%s'", vnum, ch->name.c_str()) ||
+     !db.query("delete from objextra where vnum=%i and owner='%s'", vnum, ch->name.c_str())){
     ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
   } else
@@ -605,7 +613,7 @@ void TPerson::doOEdit(const char *argument)
 	// assume that sstring is an object name
 	TDatabase db(DB_IMMORTAL);
 
-	db.query("select vnum, name from obj where owner='%s'", getName());
+	db.query("select vnum, name from obj where owner='%s'", getName().c_str());
   
 	vnum=-1;
 	while(db.fetchRow()){
@@ -686,9 +694,7 @@ void TPerson::doOEdit(const char *argument)
         return;
       }
       cObj->swapToStrung();
-      if (cObj->name)
-        delete [] cObj->name;
-      cObj->name = mud_str_dup(sstring);
+      cObj->name = sstring;
       return;
       break;
     case 8: // Long Description
@@ -698,9 +704,7 @@ void TPerson::doOEdit(const char *argument)
         return;
       }
       cObj->swapToStrung();
-      if (cObj->descr)
-        delete [] cObj->descr;
-      cObj->descr = mud_str_dup(sstring);
+      cObj->descr = sstring;
       return;
       break;
     case 9: // Short Description
@@ -710,9 +714,7 @@ void TPerson::doOEdit(const char *argument)
         return;
       }
       cObj->swapToStrung();
-      if (cObj->shortDescr)
-        delete [] cObj->shortDescr;
-      cObj->shortDescr = mud_str_dup(sstring);
+      cObj->shortDescr = sstring;
       return;
       break;
     case 10: // Max Structure Points
@@ -781,7 +783,7 @@ void TPerson::doOEdit(const char *argument)
       cObj->swapToStrung();
       if (!*sstring) {
         sendTo("Assuming Object name for extra description.\n\r");
-        strcpy(sstring, cObj->name);
+        strcpy(sstring, cObj->name.c_str());
       }
       for (ed = cObj->ex_description; ; ed = ed->next) {
         if (!ed) {
@@ -789,20 +791,17 @@ void TPerson::doOEdit(const char *argument)
           ed->next = cObj->ex_description;
           cObj->ex_description = ed;
           ed->keyword = mud_str_dup(sstring);
-          ed->description = NULL;
           desc->str = &ed->description;
           break;
-        } else if (!strcasecmp(ed->keyword, sstring)) {
+        } else if (boost::iequals(ed->keyword, sstring)) {
           sendTo(format("Extra already exists, Currently is:\n\r%s\n\r") % ed->description);
-          delete [] ed->description;
+          ed->description = "";
         }
       }
       sendTo("Enter extra description.  Terminate with a '~' on a NEW line.\n\r");
       if (desc->m_bIsClient)
         desc->clientf(format("%d") % CLIENT_STARTEDIT % 4000);
-      if (*desc->str)
-        delete [] (*desc->str);
-      *desc->str = 0;
+      *desc->str = NULL;
       desc->max_str = MAX_INPUT_LENGTH;
       return;
       break;
@@ -879,7 +878,7 @@ void TPerson::doOEdit(const char *argument)
       cObj->swapToStrung();
 
       if (is_abbrev(tTextLns[0], "long")) {
-        if (!cObj->descr) {
+        if (cObj->descr.empty()) {
           sendTo("Object doesn't have a description, cannot use replace.\n\r");
           return;
         }
@@ -893,8 +892,7 @@ void TPerson::doOEdit(const char *argument)
 
         tStr.replace(tStr.find(tTextLns[1]), strlen(tTextLns[1]), tTextLns[2]);
 
-        delete [] cObj->descr;
-        cObj->descr = mud_str_dup(tStr);
+        cObj->descr = tStr;
       } else {
         for (ed = cObj->ex_description, zGot = 1; ed; ed = ed->next) {
           if (isname(tTextLns[1], ed->keyword)) {
@@ -918,8 +916,7 @@ void TPerson::doOEdit(const char *argument)
 
         tStr.replace(tStr.find(tTextLns[2]), strlen(tTextLns[2]), tTextLns[3]);
 
-        delete [] ed->description;
-        ed->description = mud_str_dup(tStr);
+        ed->description = tStr;
       }
       return;
       break;
@@ -945,13 +942,13 @@ void TObj::writeAffects(int i, FILE *fp) const
 
 void raw_write_out_object(const TObj *o, FILE *fp, unsigned int vnum)
 {
-  if (o->action_description)
-    fprintf(fp, "#%d\n%s~\n%s~\n%s~\n%s~\n", vnum, o->name,
-	  o->shortDescr, o->getDescr(), 
-          o->action_description ? o->action_description : "");
+  if (!o->action_description.empty())
+    fprintf(fp, "#%d\n%s~\n%s~\n%s~\n%s~\n", vnum, o->name.c_str(),
+	  o->shortDescr.c_str(), o->getDescr().c_str(), 
+          o->action_description.c_str());
   else 
-    fprintf(fp, "#%d\n%s~\n%s~\n%s~\n~\n", vnum, o->name, 
-           o->shortDescr, o->getDescr());
+    fprintf(fp, "#%d\n%s~\n%s~\n%s~\n~\n", vnum, o->name.c_str(), 
+           o->shortDescr.c_str(), o->getDescr().c_str());
   fprintf(fp, "%d %d %d\n", mapItemTypeToFile(o->itemType()),
 	  o->getObjStat(), o->obj_flags.wear_flags);
 
@@ -971,15 +968,15 @@ void raw_write_out_object(const TObj *o, FILE *fp, unsigned int vnum)
   extraDescription *exdes;
   for (exdes = o->ex_description; exdes; exdes = exdes->next) {
     j = 0;
-    if (exdes->description) {
-      for (k = 0; k <= (int) strlen(exdes->description); k++) {
+    if (!exdes->description.empty()) {
+      for (k = 0; k <= (int) exdes->description.length(); k++) {
 	if (exdes->description[k] != 13)
 	  temp[j++] = exdes->description[k];
       }
       temp[j] = '\0';
-      fprintf(fp, "E\n%s~\n%s~\n", exdes->keyword, temp);
+      fprintf(fp, "E\n%s~\n%s~\n", exdes->keyword.c_str(), temp);
     } else
-      fprintf(fp, "E\n%s~\n~\n", exdes->keyword);
+      fprintf(fp, "E\n%s~\n~\n", exdes->keyword.c_str());
   }
   for (i = 0; i < MAX_OBJ_AFFECT; i++) {
     o->writeAffects(i, fp);
@@ -999,8 +996,7 @@ static void change_obj_name(TBeing *ch, TObj *o, const char *arg, editorEnterTyp
       return;
     }
   if (type != ENTER_CHECK) {
-    delete [] o->name;
-    o->name = mud_str_dup(arg);
+    o->name = arg;
     ch->specials.edit = MAIN_MENU;
     update_obj_menu(ch, o);
     return;
@@ -1024,8 +1020,7 @@ static void change_obj_long_desc(TBeing *ch, TObj *o, editorEnterTypeT type)
   ch->sendTo(o->getDescr());
   ch->sendTo("\n\r\n\rNew Object Description:\n\r");
   ch->sendTo("(Terminate with a ~ on the SAME LINE. Press <ENTER> again to continue)\n\r");
-  delete [] o->getDescr();
-  o->setDescr(NULL);
+  o->setDescr("");
   ch->desc->str = &o->descr;
   ch->desc->max_str = MAX_STRING_LENGTH;
   return;
@@ -1101,8 +1096,7 @@ static void change_obj_short_desc(TBeing *ch, TObj *o, editorEnterTypeT type)
   ch->sendTo("\n\r\n\rNew Object Short Description:\n\r");
   ch->sendTo("ALWAYS start the short description with a lowercase letter.\n\r");
   ch->sendTo("(Terminate with a ~ on the SAME LINE. Press <ENTER> again to continue)\n\r");
-  delete [] o->shortDescr;
-  o->shortDescr = NULL;
+  o->shortDescr = "";
   ch->desc->str = &o->shortDescr;
 //  ch->desc->max_str = MAX_STRING_LENGTH;
   ch->desc->max_str = MAX_NAME_LENGTH-1;
@@ -1890,7 +1884,7 @@ static void change_obj_extra(TBeing *ch, TObj *o, const char *arg, editorEnterTy
 	ch->desc->str = &ed->description;
 	ch->sendTo("Enter the description. Terminate with a '~' on a NEW line.\n\r");
 	break;
-      } else if (!strcasecmp(ed->keyword, arg)) {
+      } else if (boost::iequals(ed->keyword, arg)) {
         ch->sendTo(format("Current description:\n\r%s\n\r") % ed->description);
         ch->sendTo("This description has been deleted.  If you needed to modify it, simply readd it.\n\r");
         ch->sendTo("Press return to proceed.\n\r");

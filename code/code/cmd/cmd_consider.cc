@@ -42,7 +42,7 @@ void TBeing::doConsider(const char *argument)
   if (!canSee(victim) && canSee(victim, INFRA_YES)) {
     strcpy(namebuf, "a blob");
   } else {
-    strcpy(namebuf, victim->getName());
+    strcpy(namebuf, victim->getName().c_str());
   }
   if (victim == this) {
       sendTo("You consider yourself...\n\r");

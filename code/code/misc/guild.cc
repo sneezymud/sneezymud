@@ -165,11 +165,11 @@ void TBeing::doRecruit(const char * args) {
     return;
   }
   char buf[256];
-  sprintf(buf, "You extend an offer of recruitment to %s.\n\r", targ->getName());
+  sprintf(buf, "You extend an offer of recruitment to %s.\n\r", targ->getName().c_str());
   sendTo(buf);
   
   sprintf(buf, "<o>%s <o>has extended you an offer of recruitment into %s<o>.<1>\n\r",
-	  this->getName(), newguild()->getName());
+	  this->getName().c_str(), newguild()->getName());
   targ->sendTo(COLOR_BASIC,buf);
   sprintf(buf, "You may accept this offer by typing 'join <guild>'. It will expire in one day.\n\r");
   targ->sendTo(buf);
@@ -400,7 +400,7 @@ int guildRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, 
 	return TRUE;
       }
       if(ch->getGuildID()>=0) {
-	sprintf(buf, "Hmmmn.  %s, it appears you are already a member of a guild.", ch->getName());
+	sprintf(buf, "Hmmmn.  %s, it appears you are already a member of a guild.", ch->getName().c_str());
 	myself->doSay(buf);
 	myself->doAction("", CMD_SHAKE);
 	sprintf(buf, "You must first defect from your current guild before creating another.");

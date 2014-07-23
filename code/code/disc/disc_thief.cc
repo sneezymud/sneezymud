@@ -656,7 +656,7 @@ void TBeing::doTrack(const char *argument)
       addCommandToQue(buf);
     }
   } else if (desc && (desc->autobits & AUTO_HUNT) && t) {
-      strcpy(buf, t->name);
+      strcpy(buf, t->name.c_str());
       strcpy(buf, add_bars(buf).c_str());
       addToWait(combatRound(1));
       sprintf(buf2, "enter %s", buf);
@@ -747,7 +747,7 @@ int TBeing::track(TBeing *vict)
             sendTo(COLOR_OBJECTS, format("%sYou track %s through %s.%s\n\r") % purple() %
                    (isSW ? "some water" : "your quarry") % tp->getName() % norm());
             if (desc && (desc->autobits & AUTO_HUNT)) {
-              strcpy(buf, tp->name);
+              strcpy(buf, tp->name.c_str());
               strcpy(buf, add_bars(buf).c_str());
               sprintf(buf2, "enter %s", buf);
               addCommandToQue(buf2);

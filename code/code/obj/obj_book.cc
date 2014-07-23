@@ -94,7 +94,7 @@ void TBook::lookAtObj(TBeing *ch, const char *arg, showModeT) const
       return;
     }
     sprintf(buf + strlen(buf), "Apparently, %s doesn't have that section.\n\r",
-           getName());
+           getName().c_str());
     ch->desc->page_string(buf);
     return;
   } else {
@@ -126,7 +126,7 @@ void TBook::lookAtObj(TBeing *ch, const char *arg, showModeT) const
       }
       return;
     }
-    sprintf(buf + strlen(buf), "Apparently, %s is blank.\n\r", getName());
+    sprintf(buf + strlen(buf), "Apparently, %s is blank.\n\r", getName().c_str());
     vlogf(LOG_FILE, format("Object %d has no book file!") %  vnum);
     ch->desc->page_string(buf);
     return;

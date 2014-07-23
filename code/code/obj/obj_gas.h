@@ -29,9 +29,9 @@ class TGas : public TMergeable {
     virtual itemTypeT itemType() const { return ITEM_GAS; }
     virtual void setVolume(int);
     virtual void addToVolume(int);
-    const char * getName() const;
-    const char * getDesc() const;
-    const char * getShortName() const;
+    sstring const& getName() const;
+    sstring const& getDesc() const;
+    sstring const& getShortName() const;
     void doSpecials();
     void updateDesc();
     void doDrift();

@@ -39,7 +39,6 @@ TNote * createNote(char *msg)
 
   //  Create the note with the output.
   note->swapToStrung();
-  delete [] note->action_description;
   note->action_description = msg;
 
   return note;
@@ -127,8 +126,8 @@ void TNote::junkMe(TBeing *ch)
   char buf[256];
   int tmpnum;
 
-  if (action_description) {
-    strcpy(buf, getName());
+  if (!action_description.empty()) {
+    strcpy(buf, getName().c_str());
     if (sscanf(buf, "a small ticket marked number %d", &tmpnum) != 1) {
       // some bizarre descript.  possibly mail or a board-note
     } else {

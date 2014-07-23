@@ -597,8 +597,8 @@ sstring TObj::monogramOwner() const
   char namebuf[MAX_INPUT_LENGTH];
   /* added an 'immortal' type monogram to differentiate between engraver & immortal monogramming */
   /* so %*s might read 'personalized' or 'immortalized' */
-  if(action_description && 
-     (sscanf(action_description, "This is the %*s object of %s.", namebuf) == 1))
+  if(!action_description.empty() &&
+     (sscanf(action_description.c_str(), "This is the %*s object of %s.", namebuf) == 1))
     return sstring(namebuf);
 
   return "";
@@ -625,8 +625,8 @@ bool TObj::isImmMonogrammed() const
   char namebuf[MAX_INPUT_LENGTH];
   /* added an 'immortal' type monogram to differentiate between engraver & immortal monogramming */
   /* so %*s might read 'personalized' or 'immortalized' */
-  if(action_description && 
-     (sscanf(action_description, "This is the immortalized object of %s.", namebuf) == 1))
+  if(!action_description.empty() &&
+     (sscanf(action_description.c_str(), "This is the immortalized object of %s.", namebuf) == 1))
     return true;
 
   return false;
@@ -645,21 +645,19 @@ bool TObj::deMonogram(bool erase_imm_monogram)
 		/* trim character's name from obj->name, if it's the last word */
 		/* not convinced that it was a good idea to append the char name in the first place, but will leave that for now */
 		char looking_for_name[MAX_INPUT_LENGTH];
-		if (action_description && (sscanf(action_description, "This is the %*s object of %s.", looking_for_name) == 1)) {
+		if (!action_description.empty() && (sscanf(action_description.c_str(), "This is the %*s object of %s.", looking_for_name) == 1)) {
 			sstring obj_name = name;
 			unsigned int last_space_loc = obj_name.rfind(' ', obj_name.size());
 			if (last_space_loc > 0 && last_space_loc < obj_name.size()) {
 				if (obj_name.substr(last_space_loc + 1, obj_name.size()).compare(looking_for_name) == 0) {
 					// last word matches name, let's strip it off
 					obj_name = obj_name.substr(0, last_space_loc);
-					delete [] name;
-					name = mud_str_dup(obj_name);
+					name = obj_name;
 				}
 			}
 		}
 		
-		delete [] action_description;
-		action_description = NULL;
+		action_description = "";
 		
 		return TRUE;
 		

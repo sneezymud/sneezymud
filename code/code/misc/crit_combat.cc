@@ -1118,7 +1118,7 @@ buf=format("$n's %s shatters one of $N's ribs!") %
     // check to see if this should be a limb quest tooth
     int limb_quest = -1;
     TDatabase db(DB_SNEEZY);
-    db.query("select team from quest_limbs_team where player = '%s'", getName());
+    db.query("select team from quest_limbs_team where player = '%s'", getName().c_str());
     if (db.fetchRow())
       limb_quest = 0;
     buf = format("tooth lost limb %s [q] [tooth] [%d] [%d] [%s]") % v->name % limb_quest % v_vnum % getName();
@@ -1126,16 +1126,13 @@ buf=format("$n's %s shatters one of $N's ribs!") %
     buf = format("tooth lost limb %s") % v->name;
   }
   
-	delete corpse->name;
-	corpse->name = mud_str_dup(buf);
+	corpse->name = buf;
 	
 	buf = format("<W>a <1><r>bloody<1><W> tooth of %s<1>") % v->getName();
-	delete corpse->shortDescr;
-	corpse->shortDescr = mud_str_dup(buf);
+	corpse->shortDescr = buf;
 	
 	buf = format("<W>A <1><r>bloody<1><W> tooth lies here, having been knocked out of %s's mouth.<1>") % v->getName();
-	delete corpse->descr;
-	corpse->setDescr(mud_str_dup(buf));
+	corpse->setDescr(buf);
 	      
 	corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
 	//	corpse->addCorpseFlag(CORPSE_NO_REGEN);

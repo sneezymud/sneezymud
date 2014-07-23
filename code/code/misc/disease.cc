@@ -1471,17 +1471,14 @@ int disease_scurvy(TBeing *victim, int message, affectedData *af)
             tooth->setCorpseLevel(victim->GetMaxLevel());
             tooth->setCorpseVnum(victim->mobVnum());
           }
-          delete corpse->name;
           buf = format("tooth lost limb rotten %s") % victim->name;
-          corpse->name = mud_str_dup(buf);
+          corpse->name = buf;
 
-          delete corpse->shortDescr;
           buf = format("a <k>rotten<1> tooth of %s") % victim->getName();
-          corpse->shortDescr = mud_str_dup(buf);
+          corpse->shortDescr = buf;
 
-          delete corpse->descr;
           buf = format("A <k>rotten<1> tooth lies here, having fallen from %s's mouth.") % victim->getName();
-          corpse->setDescr(mud_str_dup(buf));
+          corpse->setDescr(buf);
 
           corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
           corpse->obj_flags.decay_time=-1;

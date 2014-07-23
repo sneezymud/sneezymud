@@ -14,7 +14,7 @@ void TBeing::assignSkillsClass()
   CDiscipline *cd;
   std::vector<discNumT>favorites;
 
-  mud_assert(discs != NULL, "Somehow got to assignSkillsClass without a discs %s", getName());
+  mud_assert(discs != NULL, "Somehow got to assignSkillsClass without a discs %s", getName().c_str());
 
   // first, lets assign some "free" discs
   // keep track of how much free stuff we gave out though

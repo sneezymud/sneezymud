@@ -366,7 +366,7 @@ void TPerson::doChange(const char *argument)
       return;
     }
     if (cmd >= 0 && GetMaxLevel() < commandArray[cmd]->minLevel) {
-      if (strcmp(getName(), "Batopr")) {
+      if (getName() != "Batopr") {
         sendTo("That command is too high for you to change.\n\r");
         return;
       } else 
@@ -528,7 +528,7 @@ void TBeing::doWizlock(const char *argument)
     TThing *t_note = searchLinkedListVis(this, "note", stuff);
     note = dynamic_cast<TObj *>(t_note);
     if (note) {
-      if (!note->action_description) {
+      if (note->action_description.c_str()) {
         sendTo("Your note has no message for the new lockmess!\n\r");
         return;
       } else {
@@ -1442,7 +1442,7 @@ void TPerson::doShutdown(const char *argument)
       sendTo("Please do a timed shutdown to avoid complaints.\n\r");
       return;
     }
-    sprintf(buf, "<r>%s by %s.<z>\n\r", shutdown_or_reboot().c_str(), getName());
+    sprintf(buf, "<r>%s by %s.<z>\n\r", shutdown_or_reboot().c_str(), getName().c_str());
     descriptor_list->worldSend(buf, this);
     Shutdown = 1;
   } else {
@@ -1463,7 +1463,7 @@ void TPerson::doShutdown(const char *argument)
         timeTill = time(0) + (num * SECS_PER_REAL_MIN);
       }
       sprintf(buf, "<r>******* SYSTEM MESSAGE *******\n\r%s in %d minute%s by %s.<z>\n\r<c>Use the TIME command at any point to see time until %s.<z>\n\r", 
-       shutdown_or_reboot().c_str(), num, (num == 1 ? "" : "s"),getName(),
+       shutdown_or_reboot().c_str(), num, (num == 1 ? "" : "s"),getName().c_str(),
        shutdown_or_reboot().c_str());
       descriptor_list->worldSend(buf, this); 
     } else if (is_abbrev(arg, "abort")) {
@@ -1471,7 +1471,7 @@ void TPerson::doShutdown(const char *argument)
         sendTo("No shutdown has been scheduled.\n\r");
         return;
       }
-      sprintf(buf, "<r>System %s aborted by %s.<z>\n\r", shutdown_or_reboot().c_str(), getName());
+      sprintf(buf, "<r>System %s aborted by %s.<z>\n\r", shutdown_or_reboot().c_str(), getName().c_str());
       descriptor_list->worldSend(buf, this);
       timeTill = 0L;
     } else {
@@ -1516,7 +1516,7 @@ void TPerson::doSnoop(const char *argument)
     sendTo("There's no link.. nothing to snoop.\n\r");
     return;
   }
-  if (victim->isPlayerAction(PLR_NOSNOOP) && strcmp(getName(), victim->getName())) {
+  if (victim->isPlayerAction(PLR_NOSNOOP) && getName() != victim->getName()) {
     sendTo("That person's nosnoop flag is set.\n\r");
     return;
   }
@@ -2526,7 +2526,7 @@ void TPerson::doCutlink(const char *argument)
 
   if (!*name_buf) {
     for (d = descriptor_list; d; d = d->next) {
-      if (!d->character || !d->character->name) {
+      if (!d->character || d->character->name.empty()) {
         sendTo(format("You cut a link from host %s\n\r") %
                (!(d->host.empty()) ? d->host : "Host Unknown"));
 
@@ -2536,7 +2536,7 @@ void TPerson::doCutlink(const char *argument)
   } else {
     for (d = descriptor_list; d; d = d->next) {
       if (d->character) {
-        if (d->character->name && !(sstring(d->character->name).lower()).compare(name_buf)) {
+        if (!d->character->name.empty() && !(d->character->name.lower()).compare(name_buf)) {
           if (d->character == this) {
             sendTo("You can't cut your own link, sorry.\n\r");
             return;
@@ -2682,7 +2682,7 @@ void genericPurgeLdead(TBeing *ch)
   // also do a cutlink
   for (d = descriptor_list; d; d = d2) {
     d2 = d->next;
-    if (!d->character || !d->character->name) {
+    if (!d->character || d->character->name.empty()) {
       delete d;
     }
   }
@@ -3110,7 +3110,7 @@ void TPerson::doStart()
     if (!desc->m_bIsClient)
       sendTo("Setting various autobits with recommended immortal configuration.\n\r");
     setMoney(100000);
-    sprintf(buf, "%s full", getName());
+    sprintf(buf, "%s full", getName().c_str());
     doRestore(buf);
   } else {
     if (!desc->m_bIsClient) {
@@ -3393,7 +3393,7 @@ void TBeing::doRestore(const char *argument)
         fclose(fp);
   return;
       }
-      if (!strcmp(name, victim->getName())) {
+      if (name == victim->getName()) {
   found = TRUE;
   strncpy(name2, name, sizeof(name));
   pracs2 = pracs;
@@ -3718,8 +3718,8 @@ void TBeing::doWipe(const char *argument)
       return;
     }
     sendTo("Ok.\n\r");
-    sprintf(buf, "You hear a cry of anguish as %s screams in agony.\n\r", victim->getName());
-    sprintf(buf + strlen(buf), "%s cackles in triumph as he utterly annihilates %s.\n\r", getName(), victim->getName());
+    sprintf(buf, "You hear a cry of anguish as %s screams in agony.\n\r", victim->getName().c_str());
+    sprintf(buf + strlen(buf), "%s cackles in triumph as he utterly annihilates %s.\n\r", getName().c_str(), victim->getName().c_str());
     descriptor_list->worldSend(buf, this);
     victim->sendTo("We're like closed or something.  Go away.\n\r");
   
@@ -4135,7 +4135,7 @@ void TBeing::doSetsev(const char *arg)
   }
 
   if (tMatch < 1 || tMatch > LOG_MAX) {
-    if (is_abbrev(arg, "batopr") && !strcmp(getName(), "Batopr")) {
+    if (is_abbrev(arg, "batopr") && getName() == "Batopr") {
       if ((d->severity & (1 << LOG_BATOPR)))
         d->severity &= ~(1 << LOG_BATOPR);
       else
@@ -4143,7 +4143,7 @@ void TBeing::doSetsev(const char *arg)
 
       sendTo(format("Your Personal Log Messages are now %s\n\r") %
              ((d->severity & (1 << LOG_BATOPR)) ? "On" : "Off"));
-    } else if (is_abbrev(arg, "brutius") && !strcmp(getName(), "Brutius")) {
+    } else if (is_abbrev(arg, "brutius") && getName() == "Brutius") {
       if ((d->severity & (1 << LOG_BRUTIUS)))
         d->severity &= ~(1 << LOG_BRUTIUS);
       else
@@ -4151,7 +4151,7 @@ void TBeing::doSetsev(const char *arg)
 
       sendTo(format("Your Personal Log Messages are now %s\n\r") %
              ((d->severity & (1 << LOG_BRUTIUS)) ? "On" : "Off"));
-    } else if (is_abbrev(arg, "cosmo") && !strcmp(getName(), "Cosmo")) {
+    } else if (is_abbrev(arg, "cosmo") && getName() == "Cosmo") {
       if ((d->severity & (1 << LOG_COSMO)))
         d->severity &= ~(1 << LOG_COSMO);
       else
@@ -4159,7 +4159,7 @@ void TBeing::doSetsev(const char *arg)
 
       sendTo(format("Your Personal Log Messages are now %s\n\r") %
              ((d->severity & (1 << LOG_COSMO)) ? "On" : "Off"));
-    } else if (is_abbrev(arg, "lapsos") && !strcmp(getName(), "Lapsos")) {
+    } else if (is_abbrev(arg, "lapsos") && getName() == "Lapsos") {
       if ((d->severity & (1 << LOG_LAPSOS)))
         d->severity &= ~(1 << LOG_LAPSOS);
       else
@@ -4167,7 +4167,7 @@ void TBeing::doSetsev(const char *arg)
 
       sendTo(format("Your Personal Log Messages are now %s\n\r") %
              ((d->severity & (1 << LOG_LAPSOS)) ? "On" : "Off"));
-    } else if (is_abbrev(arg, "peel") && !strcmp(getName(), "Peel")) {
+    } else if (is_abbrev(arg, "peel") && getName() == "Peel") {
       if ((d->severity & (1 << LOG_PEEL)))
         d->severity &= ~(1 << LOG_PEEL);
       else
@@ -4175,7 +4175,7 @@ void TBeing::doSetsev(const char *arg)
 
       sendTo(format("Your Personal Log Messages are now %s\n\r") %
              ((d->severity & (1 << LOG_PEEL)) ? "On" : "Off"));
-    } else if (is_abbrev(arg, "jesus") && !strcmp(getName(), "Jesus")) {
+    } else if (is_abbrev(arg, "jesus") && getName() == "Jesus") {
       if ((d->severity & (1 << LOG_JESUS)))
         d->severity &= ~(1 << LOG_JESUS);
       else
@@ -4183,7 +4183,7 @@ void TBeing::doSetsev(const char *arg)
 
       sendTo(format("Your Personal Log Messages are now %s\n\r") %
              ((d->severity & (1 << LOG_JESUS)) ? "On" : "Off"));
-    } else if (is_abbrev(arg, "dash") && !strcmp(getName(), "Dash")) {
+    } else if (is_abbrev(arg, "dash") && getName() == "Dash") {
       if ((d->severity & (1 << LOG_DASH)))
         d->severity &= ~(1 << LOG_DASH);
       else
@@ -4191,13 +4191,13 @@ void TBeing::doSetsev(const char *arg)
 
       sendTo(format("Your Personal Log Messages are now %s\n\r") %
              ((d->severity & (1 << LOG_DASH)) ? "On" : "Off"));
-    } else if (is_abbrev(arg, "maror") && !strcmp(getName(), "Maror")) {
+    } else if (is_abbrev(arg, "maror") && getName() == "Maror") {
       if ((d->severity & (1 << LOG_MAROR))) d->severity &= ~(1 << LOG_MAROR);
       else d->severity |= (1 << LOG_MAROR);
 
       sendTo(format("Your Personal Log Messages are now %s\n\r") %
              ((d->severity & (1 << LOG_MAROR)) ? "On" : "Off"));
-    } else if (is_abbrev(arg, "angus") && !strcmp(getName(), "Angus")) {
+    } else if (is_abbrev(arg, "angus") && getName() == "Angus") {
       if ((d->severity & (1 << LOG_ANGUS))) d->severity &= ~(1 << LOG_ANGUS);
       else d->severity |= (1 << LOG_ANGUS);
 
@@ -4401,8 +4401,8 @@ void TBeing::doInfo(const char *arg)
     } else if (is_abbrev(arg1, "piety")) {
       double total = 0.0;
       for (i = descriptor_list; i; i = i->next) {
-        if (i->character && i->character->name)  {
-          sprintf(buf2, "%20.20s : %10.3f\n\r", i->character->getName(), i->session.perc);
+        if (i->character && !i->character->name.empty())  {
+          sprintf(buf2, "%20.20s : %10.3f\n\r", i->character->getName().c_str(), i->session.perc);
           total += i->session.perc;
           sendTo(buf2);
         }
@@ -4413,7 +4413,7 @@ void TBeing::doInfo(const char *arg)
       for (i = descriptor_list; i; i = i->next) {
         if (i->character)  {
           sprintf(buf2,"[%d] ",i->socket->m_sock);
-          strcat(buf2,((i->character->name) ? i->character->getName() : "unknown"));
+          strcat(buf2,((!i->character->name.empty()) ? i->character->getName().c_str() : "unknown"));
           if (!i->connected)
             strcat(buf2," Connected");
           strcat(buf2,"\n\r");
@@ -5391,7 +5391,7 @@ void TBeing::doTimeshift(const char *arg)
       }
     }
 #endif
-    sprintf(buf,"%s has shifted game time back %d real minutes.",getName(),deltatime);
+    sprintf(buf,"%s has shifted game time back %d real minutes.",getName().c_str(),deltatime);
     doSystem(buf);
     sprintf(buf,"Adjusting mud-time, rent charges for PC's rented and talens for PC's online.");
     doSystem(buf);
@@ -5711,7 +5711,7 @@ void TBeing::doSysChecklog(const sstring &arg)
 void TBeing::doSysViewoutput() 
 {
   char  file[32];
-  sprintf(file, "tmp/%s.output", getName());
+  sprintf(file, "tmp/%s.output", getName().c_str());
 
   if (!desc->m_bIsClient) 
     desc->start_page_file( file, "There is nothing to read.\n\r");
@@ -5746,12 +5746,12 @@ int TBeing::doExec()
     return FALSE;
   }
   //  Make sure there are commands to execute.
-  if (!script->action_description) {
+  if (script->action_description.empty()) {
     sendTo("The script is empty.\n\r");
     return FALSE;
   }
   //  Loop through the commands and execute them.
-  lptr = script->action_description;
+  lptr = script->action_description.c_str();
   while (lptr) {
     //  Scan the command from the command buffer.
     if (sscanf(lptr, "%[^\n]", lbuf) != 1)
@@ -5895,8 +5895,7 @@ void TBeing::doResize(const char *arg)
     //  flag the object as having been resized for an individual 
     if (targ && obj->objVnum() != -1) {
       buf = format("%s [resized]") % obj->name;
-      delete [] obj->name;
-      obj->name = mud_str_dup(buf.c_str());
+      obj->name = buf.c_str();
     }
   } else {
     // else, it is not clothing
@@ -5908,8 +5907,7 @@ void TBeing::doResize(const char *arg)
   if (targ) {
     // personalize it
     buf = format("This is the personalized object of %s") % targ->getName();
-    delete [] obj->action_description;
-    obj->action_description = mud_str_dup(buf.c_str());
+    obj->action_description = buf;
     act("You have resized $p for $N.", FALSE, this, obj, targ, TO_CHAR);
   } else if (race) {
     // resized for a specific race
@@ -6154,7 +6152,7 @@ void TBeing::doClients()
   for (Descriptor *tDesc = descriptor_list; tDesc; tDesc = tDesc->next)
     if (tDesc->m_bIsClient) {
       tString += format("%-16s %-34s\n\r") %
-              ((tDesc->character && tDesc->character->name) ?
+              ((tDesc->character && !tDesc->character->name.empty()) ?
                tDesc->character->name : "UNDEFINED") %
               (!(tDesc->host.empty()) ? tDesc->host : "Host Unknown");
     }
@@ -6314,12 +6312,12 @@ int TBeing::doAsOther(const sstring &tStString)
     return FALSE;
   }
 
-  if (!getName()) {
+  if (getName().empty()) {
     sendTo("O.k.  You have no name, go get one then come back.\n\r");
     return FALSE;
   }
 
-  if(sstring(getName()).lower() == tStNewName.lower()){
+  if(getName().lower() == tStNewName.lower()){
     sendTo("If you want to do it that bad, just do it man!\n\r");
     return FALSE;
   }
@@ -6330,19 +6328,13 @@ int TBeing::doAsOther(const sstring &tStString)
   }
 
   tStOriginalName = getName();
-  delete [] name;
-  name = mud_str_dup(tStNewName.lower().cap());
+  name = tStNewName.lower().cap();
   tStCommand += " ";
   tStCommand += tStArguments;
 
   tRc = parseCommand(tStCommand.c_str(), false);
 
-  // This is more of a sanity check than anything.  Moot in most
-  // senses but still a safty thing.
-  if (this) {
-    delete [] name;
-    name = mud_str_dup(tStOriginalName);
-  }
+  name = tStOriginalName;
 
   return tRc;
 }
@@ -6437,7 +6429,7 @@ void TBeing::doComment(const char *argument)
   strcpy(desc->name, "Comment");
   strcpy(desc->delname, st.aname);
 
-  desc->str = new const char *("\0");
+  desc->str = &desc->mail_bug_str;
 
   desc->max_str = MAX_MAIL_SIZE;
   if (desc->m_bIsClient)

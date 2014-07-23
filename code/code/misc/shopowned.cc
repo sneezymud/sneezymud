@@ -208,7 +208,7 @@ int getShopAccess(int shop_nr, TBeing *ch){
   if(!ch)
     return 0;
 
-  db.query("select access from shopownedaccess where shop_nr=%i and upper(name)=upper('%s')", shop_nr, ch->getName());
+  db.query("select access from shopownedaccess where shop_nr=%i and upper(name)=upper('%s')", shop_nr, ch->getName().c_str());
   
   if(db.fetchRow())
     access=convertTo<int>(db["access"]);

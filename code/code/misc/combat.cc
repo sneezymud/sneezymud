@@ -458,12 +458,12 @@ void logPermaDeathDied(TBeing *ch, TBeing *killer)
 {
   TDatabase db(DB_SNEEZY);
 
-  db.query("update permadeath set died=1 where name='%s'", ch->name);
+  db.query("update permadeath set died=1 where name='%s'", ch->name.c_str());
 
   if(killer)
-    db.query("update permadeath set killer='%s' where name='%s'", killer->getName(), ch->name);
+    db.query("update permadeath set killer='%s' where name='%s'", killer->getName().c_str(), ch->name.c_str());
 
-  db.query("update permadeath set level=%i where name='%s'", ch->GetMaxLevel(), ch->name);
+  db.query("update permadeath set level=%i where name='%s'", ch->GetMaxLevel(), ch->name.c_str());
 }
 
 int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost)
@@ -1276,12 +1276,12 @@ bool TObj::makeScraps()
   if (isMineral()) {
     o->name = mud_str_dup("shattered pile");
     o->shortDescr = mud_str_dup("something shattered");
-    sprintf(buf, "What used to be %s lies here, shattered.", getName());
+    sprintf(buf, "What used to be %s lies here, shattered.", getName().c_str());
     o->setDescr(mud_str_dup(buf));
   } else {
     o->name = mud_str_dup("scraps pile");
     o->shortDescr = mud_str_dup("a pile of scraps");
-    sprintf(buf, "What used to be %s lies here, scrapped.", shortDescr);
+    sprintf(buf, "What used to be %s lies here, scrapped.", shortDescr.c_str());
     o->setDescr(mud_str_dup(buf));
   }
   o->obj_flags.wear_flags = obj_flags.wear_flags;
@@ -4614,26 +4614,18 @@ void TBeing::catchLostLink(TBeing *vict)
   sstring linkId = format("link$%s$%i$") % nameLower.c_str() % int(ct);
 
   // string note
-  delete [] note->action_description;
-  delete [] note->name;
-  note->action_description = mud_str_dup(buf);
-  note->name = mud_str_dup("note check link lost");
+  note->action_description = buf;
+  note->name = "note check link lost";
 
   // string linkbag
-  delete [] bag->descr;
-  delete [] bag->name;
-  delete [] bag->shortDescr;
   bag->descr = mud_str_dup(format("A linkbag containing %s's belongings sits here.") % vict->getName());
-  bag->name = mud_str_dup(format("bag linkbag %s [%sbag]") % nameLower.c_str() % linkId.c_str());
-  bag->shortDescr = mud_str_dup(format("A linkbag belonging to %s") % vict->getName());
+  bag->name = format("bag linkbag %s [%sbag]") % nameLower.c_str() % linkId.c_str();
+  bag->shortDescr = format("A linkbag belonging to %s") % vict->getName();
   bag->obj_flags.cost = 0;
 
   // string the token
-  delete [] token->getDescr();
-  delete [] token->name;
-  delete [] token->shortDescr;
   token->setDescr(mud_str_dup(format("A linkbag token for %s's belongings has been left here.") % vict->getName()));
-  token->name = mud_str_dup(format("token linkbag %s [%s0]") % nameLower.c_str() % linkId.c_str());
+  token->name = format("token linkbag %s [%s0]") % nameLower.c_str() % linkId.c_str();
   token->shortDescr = mud_str_dup(format("a linkbag token with '%s' on it") % vict->getName());
   token->obj_flags.cost = 0;
 
@@ -4887,7 +4879,7 @@ int TBeing::objDamage(spellNumT damtype, int amnt, TThing *t)
   informMess();
 
   if (getPosition() == POSITION_DEAD) {
-    if ((dynamic_cast<TPerson *>(this) || (desc && desc->original)) && roomp && roomp->name) {
+    if ((dynamic_cast<TPerson *>(this) || (desc && desc->original)) && roomp) {
       if (desc && desc->original && desc->original != this) {
         vlogf(LOG_COMBAT, format("%s killed by %s at %s (polyed as a %s)") %  desc->original->getName() % (t ? t->getName() : "a door") % roomp->getName() % getName());
       } else {

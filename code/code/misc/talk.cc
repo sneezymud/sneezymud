@@ -823,7 +823,7 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
   // talked to directly to tell back
   if (!isImmortal() && vict->desc && 
       IS_SET(vict->desc->autobits, AUTO_NOTELL) && 
-      strcmp(vict->desc->last_told, this->name) != 0) {
+      strcmp(vict->desc->last_told, this->name.c_str()) != 0) {
     if(desc)
       desc->output.push(CommPtr(new CmdMsgComm("tell", "That person is not receiving tells. Try again later.\n\r")));
     return FALSE;
@@ -941,11 +941,11 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
   // set up last teller for reply's use
   // If it becomes a "someone tells you", ignore
   if (vict->desc && vict->canSee(this, INFRA_YES) && isPc())
-    strncpy(vict->desc->last_teller, this->name, cElements(vict->desc->last_teller));
+    strncpy(vict->desc->last_teller, this->name.c_str(), cElements(vict->desc->last_teller));
 
   // if you told to someone, remember who you last told to for use later
   if (desc && vict->desc && isPc() && vict->isPc())
-    strncpy(desc->last_told, vict->name, cElements(desc->last_told));
+    strncpy(desc->last_told, vict->name.c_str(), cElements(desc->last_told));
 
   if (desc && inGroup(*vict))
     desc->talkCount = time(0);
@@ -1124,7 +1124,7 @@ void TNote::writeMeNote(TBeing *ch, TPen *)
 {
   const int MAX_NOTE_LENGTH = 10000;   
 
-  if (action_description) {
+  if (!action_description.empty()) {
     ch->sendTo("There's something written on it already.\n\r");
     return;
   } else {

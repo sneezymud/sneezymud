@@ -198,7 +198,7 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
       // get team affiliation for cutesy message below
       sstring team;
       bool samaritan = FALSE;
-      db.query("select (select team from quest_limbs_team where player = '%s') as chopper_team, (select team from quest_limbs_team where player = '%s') as caddy_team", chopper.c_str(), ch->name);
+      db.query("select (select team from quest_limbs_team where player = '%s') as chopper_team, (select team from quest_limbs_team where player = '%s') as caddy_team", chopper.c_str(), ch->name.c_str());
       if (db.fetchRow()) {
         team = db["chopper_team"];
         if (chopper.compare(ch->name)) {

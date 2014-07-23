@@ -1295,7 +1295,7 @@ void TBeing::gainCondition(condTypeT condition, int value)
       addCommandToQue(buf);
 #endif
     } else if (last_good && last_cont) {
-      sprintf(buf, "%s", last_cont->name);
+      sprintf(buf, "%s", last_cont->name.c_str());
       strcpy(buf, add_bars(buf).c_str());
       strcpy(tmpbuf, fname(last_good->name).c_str());
       sprintf(buf2, "get %s %s", tmpbuf, buf);
@@ -1312,7 +1312,7 @@ void TBeing::gainCondition(condTypeT condition, int value)
     for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       if (dynamic_cast<TObj *>(t) && (t->spec == SPEC_FOUNTAIN)) {
         char drinkbuf[256];
-	sprintf(drinkbuf, "drink %s", t->name);
+	sprintf(drinkbuf, "drink %s", t->name.c_str());
 	parseCommand(drinkbuf, FALSE);
         return;
       }
@@ -1346,7 +1346,7 @@ void TBeing::gainCondition(condTypeT condition, int value)
       return;
     }
     if (last_good && last_cont) {
-      sprintf(buf, "%s", last_cont->name);
+      sprintf(buf, "%s", last_cont->name.c_str());
       strcpy(buf, add_bars(buf).c_str());
       if (getPosition() == POSITION_RESTING) 
         addCommandToQue("sit");

@@ -439,7 +439,7 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
 	  break;
         case 3:
 	  sprintf(buf, "That's it, %s is coming with us!", 
-		  job->criminal->getName());
+		  job->criminal->getName().c_str());
 	  myself->doSay(buf);
 	  tmp=mud_str_dup(job->criminal->name);
 	  strcpy(tmp, add_bars(tmp).c_str());

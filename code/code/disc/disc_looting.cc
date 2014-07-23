@@ -103,14 +103,14 @@ int detectSecret(TBeing * thief)
 
       if (!IS_SET(fdd->condition, EX_SECRET) || 
           !IS_SET(fdd->condition, EX_CLOSED) ||
-          !strcmp(fdd->keyword, "_unique_door_"))
+          fdd->keyword == "_unique_door_")
         continue;
 
       if (thief->bSuccess(bKnown,SKILL_SEARCH)) {
 	thief->sendTo(format("Secret door found %s! Door is named %s.\n\r") %
-	      dirs[j] % (fdd->keyword ? fname(fdd->keyword) : "NO NAME. TELL A GOD"));
+	      dirs[j] % (!fdd->keyword.empty() ? fname(fdd->keyword) : "NO NAME. TELL A GOD"));
 	sprintf(buf, "$n exclaims, \"Look %s! A SECRET door named %s!\"\n\r", dirs[j], 
-                       (fdd->keyword ? fname(fdd->keyword).c_str() : "NO NAME. TELL A GOD"));
+                       (!fdd->keyword.empty() ? fname(fdd->keyword).c_str() : "NO NAME. TELL A GOD"));
 	act(buf, FALSE, thief, 0, 0, TO_ROOM);
 	thief->setMove(max(0, (thief->getMove() - 30)));
 	return TRUE;

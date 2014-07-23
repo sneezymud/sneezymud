@@ -245,8 +245,8 @@ class objAffData {
 
 class roomDirData {
   public:
-    const char *description;         // What you see when you look at the direction
-    const char *keyword;             // keyword for opening and closing doors
+    sstring description;         // What you see when you look at the direction
+    sstring keyword;             // keyword for opening and closing doors
     doorTypeT door_type;           // type of door
     unsigned int condition;           // bitvector for door status
     short lock_difficulty;      // how hard to open, -1 = unlockable

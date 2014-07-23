@@ -321,9 +321,8 @@ int objWornAstralWalk(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj
       }
    
       o->swapToStrung();
-      delete [] o->name;
       new_name += format(" [%d]") % location;
-      o->name = mud_str_dup(new_name);
+      o->name = new_name;
       act("Your $o throbs.", 
           TRUE, ch,o,NULL,TO_CHAR,NULL);
       return TRUE;
@@ -660,9 +659,8 @@ int objWornPortal(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
       }
    
       o->swapToStrung();
-      delete [] o->name;
       new_name += format(" [%d]") % location;
-      o->name = mud_str_dup(new_name);
+      o->name = new_name;
       act("Your $o throbs.", 
           TRUE, ch,o,NULL,TO_CHAR,NULL);
       return TRUE;

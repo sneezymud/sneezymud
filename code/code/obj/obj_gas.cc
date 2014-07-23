@@ -14,7 +14,7 @@
 // gas type created in makeNewObj it also makes gasses able to change
 // their type and behavior on the fly, which can be useful if decaying
 typedef void (*specialsFunction)(TGas *myself);
-typedef const char * (*nameFunction)(const TGas *myself);
+typedef sstring const& (*nameFunction)(const TGas *myself);
 
 int getSmokeIndex(int volume)
 {
@@ -134,24 +134,27 @@ void doScent(TGas *myself)
   }
 }
 
-const char * getNameNothing(const TGas *myself)
+sstring const& getNameNothing(const TGas *myself)
 {
-  return "smoke wisps generic";
+  static sstring uglyhack = "smoke wisps generic";
+  return uglyhack;
 }
 
-const char * getDescNothing(const TGas *myself)
+sstring const& getDescNothing(const TGas *myself)
 {
-  return "an unidentified gas cloud is here.";
+  static sstring uglyhack = "an unidentified gas cloud is here.";
+  return uglyhack;
 }
 
-const char * getShortNameNothing(const TGas *myself)
+sstring const& getShortNameNothing(const TGas *myself)
 {
-  return "smoke";
+  static sstring uglyhack = "smoke";
+  return uglyhack;
 }
 
-const char * getNameSmoke(const TGas *myself)
+sstring const& getNameSmoke(const TGas *myself)
 {
-  static const char *smokename [] =
+  static sstring smokename [] =
   {
     "<k>a few wisps of smoke<1>", 
     "<k>a tiny cloud of smoke<1>", 
@@ -168,9 +171,9 @@ const char * getNameSmoke(const TGas *myself)
   return smokename[getSmokeIndex(myself->getVolume())];
 }
 
-const char * getDescSmoke(const TGas *myself)
+sstring const& getDescSmoke(const TGas *myself)
 {
-  static const char *smokedesc [] =
+  static sstring smokedesc [] =
   {
     "<k>A few wisps of smoke are fading fast.<1>",
     "<k>A tiny cloud of smoke has gathered here.<1>",
@@ -187,24 +190,28 @@ const char * getDescSmoke(const TGas *myself)
   return smokedesc[getSmokeIndex(myself->getVolume())];
 }
 
-const char * getShortNameSmoke(const TGas *myself)
+sstring const& getShortNameSmoke(const TGas *myself)
 {
-  return "smoke";
+  static sstring uglyhack = "smoke";
+  return uglyhack;
 }
 
-const char * getNameMusk(const TGas *myself)
+sstring const& getNameMusk(const TGas *myself)
 {
-  return "a cloud of musk";
+  static sstring uglyhack = "a cloud of musk";
+  return uglyhack;
 }
 
-const char * getDescMusk(const TGas *myself)
+sstring const& getDescMusk(const TGas *myself)
 {
-  return "a <Y>yellowish musk cloud<1> is here.";
+  static sstring uglyhack = "a <Y>yellowish musk cloud<1> is here.";
+  return uglyhack;
 }
 
-const char * getShortNameMusk(const TGas *myself)
+sstring const& getShortNameMusk(const TGas *myself)
 {
-  return "musk cloud";
+  static sstring uglyhack = "musk cloud";
+  return uglyhack;
 }
 
 // specials for a gas - choking, stinking, etc
@@ -342,19 +349,19 @@ void TGas::addToVolume(int n)
   }
 }
 
-const char * TGas::getName() const
+sstring const& TGas::getName() const
 {
   static const nameFunction names[GAS_MAX] = { getNameNothing, getNameSmoke, getNameMusk };
   return names[getType()](this);
 }
 
-const char * TGas::getDesc() const
+sstring const& TGas::getDesc() const
 {
   static const nameFunction descs[GAS_MAX] = { getDescNothing, getDescSmoke, getDescMusk };
   return descs[getType()](this);
 }
 
-const char * TGas::getShortName() const
+sstring const& TGas::getShortName() const
 {
   static const nameFunction shortnames[GAS_MAX] = { getShortNameNothing, getShortNameSmoke, getShortNameMusk };
   return shortnames[getType()](this);
@@ -363,8 +370,6 @@ const char * TGas::getShortName() const
 void TGas::updateDesc()
 {
   if (isObjStat(ITEM_STRUNG)) {
-    delete [] shortDescr;
-    delete [] descr;
 
     extraDescription *exd;
     while ((exd = ex_description)) {
@@ -372,17 +377,16 @@ void TGas::updateDesc()
       delete exd;
     }
     ex_description = NULL;
-    delete [] action_description;
-    action_description = NULL;
+    action_description = "";
   } else {
     addObjStat(ITEM_STRUNG);
-    name = mud_str_dup(obj_index[getItemIndex()].name);
+    name = obj_index[getItemIndex()].name;
     ex_description = NULL;
-    action_description = NULL;
+    action_description = "";
   }
 
-  shortDescr = mud_str_dup(getName());
-  setDescr(mud_str_dup(getDesc()));
+  shortDescr = getName();
+  setDescr(getDesc());
 }
 
 bool TGas::isPluralItem() const
@@ -438,14 +442,13 @@ int TThing::dropGas(int amt, gasTypeT type)
     gas->canBeSeen = 1;
     gas->setMaterial(MAT_GHOSTLY);
     gas->setObjStat(ITEM_NORENT);
-    delete [] gas->name;
-    gas->name = mud_str_dup(gas->getShortName());
+    gas->name = gas->getShortName();
 
     *roomp += *gas;
   }
 
   if (!gas->hasCreator(name))
-    gas->addCreator(name);
+    gas->addCreator(name.c_str());
   gas->addToVolume(amt);
 
   return TRUE;

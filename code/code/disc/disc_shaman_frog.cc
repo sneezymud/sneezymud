@@ -749,7 +749,7 @@ int shapeShift(TBeing *caster, const char * buffer)
     return SPELL_FAIL;
   }
   if (caster->desc->snoop.snoop_by)
-    caster->desc->snoop.snoop_by->doSnoop(caster->desc->snoop.snoop_by->getName());
+    caster->desc->snoop.snoop_by->doSnoop(caster->desc->snoop.snoop_by->getName().c_str());
 
   if (!bPassShamanChecks(caster, SPELL_SHAPESHIFT, caster))
     return FALSE;

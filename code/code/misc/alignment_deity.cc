@@ -35,8 +35,7 @@ int personalize_object(TBeing *deity, TBeing *ch, int virt, int decay)
   if (virt == Obj::DEITY_TOKEN)
     obj->obj_flags.cost = 0;
 
-  delete [] obj->action_description;
-  obj->action_description = mud_str_dup(buf);
+  obj->action_description = buf;
 
   if (deity) {
     buf=format("%s %s") % fname(obj->name) % ch->getName();
@@ -84,8 +83,7 @@ int resize_personalize_object(TBeing *deity, TBeing *ch, int virt, int decay)
       (virt == Obj::WEAPON_AVENGER3))
     obj->addObjStat(ITEM_NOPURGE);
 
-  delete [] obj->action_description;
-  obj->action_description = mud_str_dup(buf);
+  obj->action_description = buf;
 
   if (deity) {
     buf=format("%s %s") % fname(obj->name) % ch->getName();

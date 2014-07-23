@@ -206,7 +206,7 @@ int TOrganic::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
         return -1;
     }
   }
-  strcpy(Buf[1], shortDescr);
+  strcpy(Buf[1], shortDescr.c_str());
 
   --(*this);
 

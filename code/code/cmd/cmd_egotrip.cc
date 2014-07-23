@@ -439,7 +439,7 @@ void TBeing::doEgoTrip(const char *arg)
         continue;
 
       for(iter=blessings.begin();iter!=blessings.end();++iter){
-	if(!strcmp(getName(), (*iter).second.name.c_str())){
+	if(getName() == (*iter).second.name.c_str()){
 	  ch->sendTo(COLOR_SPELLS, format("%s has bestowed upon you %s blessing of %s.\n\r") %
 		     sstring(ch->pers(this)).cap() % hshr() %
 		     (*iter).second.msg);
@@ -659,7 +659,7 @@ void TBeing::doEgoTrip(const char *arg)
                  *tAffLast;
 
     for (tBeing = character_list; tBeing; tBeing = tBeing->next) {
-      if (!tBeing->name) {
+      if (tBeing->name.empty()) {
         vlogf(LOG_BUG, "Something with NULL name in world being list.");
         continue;
       }

@@ -184,7 +184,7 @@ void TBeing::doScore()
         if (riding) {
           Buf="You are sleeping on ";
 
-          if (riding->getName())
+          if (!riding->getName().empty())
             Buf+=objs(riding);
           else
             Buf+="A bad object";
@@ -198,7 +198,7 @@ void TBeing::doScore()
       case POSITION_RESTING:
         if (riding) {
           Buf = "You are resting on ";
-          if (riding->getName())
+          if (!riding->getName().empty())
             Buf+=objs(riding);
           else
             Buf+="A horse with a bad short description, BUG THIS!";
@@ -215,7 +215,7 @@ void TBeing::doScore()
       case POSITION_SITTING:
         if (riding) {
           Buf="You are sitting on ";
-          if (riding->getName())
+          if (!riding->getName().empty())
             Buf += objs(riding);
           else
 	    Buf += "A bad object!";

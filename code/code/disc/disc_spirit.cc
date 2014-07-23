@@ -974,7 +974,7 @@ int polymorph(TBeing *caster, const char * buffer)
     return SPELL_FAIL;
   }
   if (caster->desc->snoop.snoop_by)
-    caster->desc->snoop.snoop_by->doSnoop(caster->desc->snoop.snoop_by->name);
+    caster->desc->snoop.snoop_by->doSnoop(caster->desc->snoop.snoop_by->name.c_str());
 
   if (!bPassMageChecks(caster, SPELL_POLYMORPH, caster))
     return FALSE;

@@ -325,7 +325,7 @@ void TVehicle::vehiclePulse(int pulse)
   if(getDir() == DIR_NONE)
     return;
 
-  strcpy(shortdescr, shortDescr);
+  strcpy(shortdescr, shortDescr.c_str());
   strcpy(shortdescr, sstring(shortdescr).cap().c_str());
 
   if(!troom->dir_option[getDir()] ||

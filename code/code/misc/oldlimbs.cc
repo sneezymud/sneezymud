@@ -349,20 +349,20 @@ void TBeing::makeBodyPart(wearSlotT pos, TBeing *opp)
   if (getMaterial(pos) > MAT_GEN_MINERAL) {
     // made of mineral or metal
     sprintf(buf, "the mangled %s of %s", 
-          describeBodySlot(pos).c_str(), getName());
+          describeBodySlot(pos).c_str(), getName().c_str());
   } else {
     sprintf(buf, "the bloody, mangled %s of %s", 
-          describeBodySlot(pos).c_str(), getName());
+          describeBodySlot(pos).c_str(), getName().c_str());
   }
   corpse->shortDescr = mud_str_dup(buf);
 
   if (getMaterial(pos) > MAT_GEN_MINERAL) {
     // made of mineral or metal
     sprintf(buf, "The mangled, severed %s of %s is lying here.",
-          describeBodySlot(pos).c_str(), getName());
+          describeBodySlot(pos).c_str(), getName().c_str());
   } else {
     sprintf(buf, "The bloody, mangled, severed %s of %s is lying here.",
-          describeBodySlot(pos).c_str(), getName());
+          describeBodySlot(pos).c_str(), getName().c_str());
   }
   corpse->setDescr(mud_str_dup(buf));
   corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
@@ -400,11 +400,11 @@ void TBeing::makeOtherPart(const char *single, const char *part, TBeing *opp)
   
   corpse->name = mud_str_dup(sbuf);
 
-  sprintf(buf, "%s's bloody %s", getName(), single ? single : part);
+  sprintf(buf, "%s's bloody %s", getName().c_str(), single ? single : part);
   corpse->shortDescr = mud_str_dup(buf);
 
   sprintf(buf, "%s's bloody and ichor coated %s %s here.",
-          getName(), part ? part : single, part ? "lay" : "lies");
+          getName().c_str(), part ? part : single, part ? "lay" : "lies");
   corpse->setDescr(mud_str_dup(buf));
   corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
   corpse->addCorpseFlag(CORPSE_NO_REGEN);
@@ -424,13 +424,13 @@ void TBeing::makeDiseasedPart(wearSlotT pos)
   char buf[256];
  
   corpse = new TCorpse();
-  sprintf(buf, "%s lost limb %s", describeBodySlot(pos).c_str(), name);
+  sprintf(buf, "%s lost limb %s", describeBodySlot(pos).c_str(), name.c_str());
   corpse->name = mud_str_dup(buf);
-  sprintf(buf, "the diseased %s of %s", describeBodySlot(pos).c_str(), getName());
+  sprintf(buf, "the diseased %s of %s", describeBodySlot(pos).c_str(), getName().c_str());
   corpse->shortDescr = mud_str_dup(buf);
 
   sprintf(buf, "The diseased, puss-covered %s of %s is lying here.",
-          describeBodySlot(pos).c_str(), getName());
+          describeBodySlot(pos).c_str(), getName().c_str());
   corpse->setDescr(mud_str_dup(buf));
 
   corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
@@ -605,7 +605,7 @@ bool TBeing::hasHands() const
 const sstring TBeing::describeTransBodySlot(wearSlotT i) const
 {
   mud_assert(i >= MIN_WEAR && i < MAX_WEAR, 
-         "Bad limb slot, %s %d", getName(), i);
+         "Bad limb slot, %s %d", getName().c_str(), i);
 
   if (!slotChance(i)) {
     vlogf(LOG_BUG, "There is a race problem in describeTransBodySlot");

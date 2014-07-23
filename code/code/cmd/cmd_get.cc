@@ -58,7 +58,7 @@ int TTrap::getMe(TBeing *ch, TThing *sub)
   // erase the trap setter
   for (ed = ex_description, prev = ed; ed; ed = ed2) {
     ed2 = ed->next;
-    if (!strcmp(ed->keyword, TRAP_EX_DESC)) {
+    if (ed->keyword == TRAP_EX_DESC) {
       if (ed == ex_description) {
         // it is the first extra desc, move all pointers to next and delete
         ex_description = ed2;
@@ -452,7 +452,7 @@ int TBeing::doGet(const char *a)
 	      if(dynamic_cast<TBaseCorpse *>(tt) == tbc)
 		break;
 	      if(dynamic_cast<TBaseCorpse *>(tt) &&
-		 !strcmp(tbc->name, tt->name)){
+		 tbc->name == tt->name){
 		++counter;
 	      }
 	    }

@@ -281,7 +281,7 @@ void TBeing::listExits(const TRoom *rp) const
     }
 
     if (IS_SET(exitdata->condition, EX_DESTROYED)) {
-      if (!exitdata->keyword) {
+      if (exitdata->keyword.empty()) {
 	vlogf(LOG_LOW,format("Destroyed door with no name!  Room %d") %  in_room);
       } else if (door == 4) 
 	sendTo(format("%sThe %s in the ceiling has been destroyed.%s\n\r") %
@@ -575,7 +575,7 @@ sstring TBeing::dynColorRoom(TRoom * rp, int title, bool) const
   sstring argument, buf2="   ", buf3="   ";
 
   if (title == 1) {
-    if (rp->getName()) {
+    if (!rp->getName().empty()) {
       argument=rp->getName();
       if (argument[0] == '<') {
           buf3[0] = argument[0];
@@ -590,7 +590,7 @@ sstring TBeing::dynColorRoom(TRoom * rp, int title, bool) const
       return "Bogus Name";
     }
   } else if (title == 2) {
-    if (rp->getDescr()) {
+    if (!rp->getDescr().empty()) {
       argument=rp->getDescr();
       if (argument[0] == '<') {
         buf2[0] = argument[0];
@@ -1058,14 +1058,14 @@ const sstring TBeing::addColorRoom(TRoom * rp, int title) const
   buf3=getSectorDescrColor(sector, rp);
 
   if (title == 1) {
-    if (rp->getName()) {
+    if (!rp->getName().empty()) {
       return buf2;
     } else {
       vlogf(LOG_BUG, "room without a name for dynamic coloring");
       return "";
     }
   } else if (title == 2) {
-    if (rp->getDescr()) 
+    if (!rp->getDescr().empty()) 
       return buf3;
     else {
       vlogf(LOG_BUG, format("room without a descr for dynamic coloring, %s") %  roomp->getName());
@@ -2309,7 +2309,7 @@ void TPerson::doUsers(const sstring &argument)
     sb += USERS_HEADER;
 
     for (d = descriptor_list; d; d = d->next) {
-      if (d->character && d->character->getName()) {
+      if (d->character && !d->character->getName().empty()) {
         if (!d->connected && !canSeeWho(d->character))
           continue;
 
@@ -2360,7 +2360,7 @@ void TPerson::doUsers(const sstring &argument)
       sendTo(USERS_HEADER);
       for (d = descriptor_list; d; d = d->next) {
         if (d->host.lower().find(arg2.lower(), 0) != sstring::npos) {
-          if (d->character && d->character->getName()) {
+          if (d->character && !d->character->getName().empty()) {
             if (!d->connected && !canSeeWho(d->character))
               continue;
 
@@ -2498,7 +2498,7 @@ void TBeing::doEquipment(const sstring &arg)
     TDatabase db(DB_SNEEZY);
     sstring tattoos[MAX_WEAR];
 
-    db.query("select location, tattoo from tattoos where name='%s' order by location",getName());
+    db.query("select location, tattoo from tattoos where name='%s' order by location", getName().c_str());
     while(db.fetchRow()){
       tattoos[convertTo<int>(db["location"])]=db["tattoo"];
     }
@@ -2543,7 +2543,7 @@ void TBeing::doEquipment(const sstring &arg)
       victim = get_char_vis_world(this, argument, NULL, EXACT_NO);
 
     if (victim) {
-      db.query("select location, tattoo from tattoos where name='%s' order by location",victim->getName());
+      db.query("select location, tattoo from tattoos where name='%s' order by location", victim->getName().c_str());
       while(db.fetchRow()){
 	tattoos[convertTo<int>(db["location"])]=db["tattoo"];
       }
@@ -2691,47 +2691,47 @@ void do_where_thing(const TBeing *ch, const TThing *obj, bool recurse, sstring &
 // object carried by monster
  } else if (dynamic_cast<TBeing *>(obj->parent) && obj->parent->roomp) {
     sprintf(buf, "%s\n\r      - carried by %s -", obj->getNameNOC(ch).c_str(), 
-               obj->parent->getName());
+               obj->parent->getName().c_str());
     sprintf(buf + strlen(buf), " %-20s [%d]\n\r",
-               (obj->parent->roomp->getName() ? obj->parent->roomp->getNameNOC(ch).c_str() : "Room Unknown"), 
+               (!obj->parent->roomp->getName().empty() ? obj->parent->roomp->getNameNOC(ch).c_str() : "Room Unknown"), 
                obj->parent->in_room);
   } else if (dynamic_cast<TBeing *>(obj->parent) && obj->parent->riding && obj->parent->riding->roomp) {
     sprintf(buf, "%s\n\r      - carried by %s - ", 
                obj->getNameNOC(ch).c_str(), 
-               obj->parent->getName());
+               obj->parent->getName().c_str());
     sprintf(buf + strlen(buf), "riding %s - ", 
                obj->parent->riding->getNameNOC(ch).c_str());
     sprintf(buf + strlen(buf), "%s [%d]\n\r", 
-               (obj->parent->riding->roomp->getName() ? obj->parent->riding->roomp->getNameNOC(ch).c_str() : "Room Unknown"),
+               (!obj->parent->riding->roomp->getName().empty() ? obj->parent->riding->roomp->getNameNOC(ch).c_str() : "Room Unknown"),
                obj->parent->riding->in_room);
   } else if (dynamic_cast<TBeing *>(obj->parent) && obj->parent->riding) {
     sprintf(buf, "%s\n\r      - carried by %s - ",
-               obj->getNameNOC(ch).c_str(), obj->parent->getName());
+               obj->getNameNOC(ch).c_str(), obj->parent->getName().c_str());
     sprintf(buf + strlen(buf), "riding %s - (Room Unknown)\n\r",
                obj->parent->riding->getNameNOC(ch).c_str());
   } else if (dynamic_cast<TBeing *>(obj->parent)) {  // object carried by monster 
     sprintf(buf, "%s\n\r      - carried by %s (Room Unknown)\n\r", obj->getNameNOC(ch).c_str(), 
-               obj->parent->getName());
+               obj->parent->getName().c_str());
 // object equipped by monster
   } else if (obj->equippedBy && obj->equippedBy->roomp) {
     sprintf(buf, "%s\n\r      - equipped by %s - ", obj->getNameNOC(ch).c_str(), 
-               obj->equippedBy->getName());
+               obj->equippedBy->getName().c_str());
     sprintf(buf + strlen(buf), "%s [%d]\n\r", 
-               (obj->equippedBy->roomp->getName() ? obj->equippedBy->roomp->getNameNOC(ch).c_str() : "Room Unknown"), 
+               (!obj->equippedBy->roomp->getName().empty() ? obj->equippedBy->roomp->getNameNOC(ch).c_str() : "Room Unknown"), 
                obj->equippedBy->in_room);
   } else if (obj->equippedBy) {       // object equipped by monster 
     sprintf(buf, "%s\n\r      - equipped by %s (Room Unknown)\n\r", obj->getNameNOC(ch).c_str(), 
-               obj->equippedBy->getName());
+               obj->equippedBy->getName().c_str());
   } else if (obj->stuckIn && obj->stuckIn->roomp) {
     sprintf(buf, "%s\n\r      - stuck in %s - ",
                obj->getNameNOC(ch).c_str(), 
-               obj->stuckIn->getName());
+               obj->stuckIn->getName().c_str());
     sprintf(buf + strlen(buf), "%s [%d]\n\r",
-               (obj->stuckIn->roomp->getName() ? obj->stuckIn->roomp->getNameNOC(ch).c_str() : "Room Unknown"), 
+               (!obj->stuckIn->roomp->getName().empty() ? obj->stuckIn->roomp->getNameNOC(ch).c_str() : "Room Unknown"), 
                obj->stuckIn->in_room);
   } else if (obj->stuckIn) {
     sprintf(buf, "%s\n\r      - stuck in %s - (Room Unknown)\n\r", obj->getNameNOC(ch).c_str(), 
-               obj->stuckIn->getName());
+               obj->stuckIn->getName().c_str());
 // object in object
   } else if (obj->parent && obj->parent->parent) {
     sprintf(buf, "%s\n\r      - ",
@@ -2741,7 +2741,7 @@ void do_where_thing(const TBeing *ch, const TThing *obj, bool recurse, sstring &
     sprintf(buf + strlen(buf), "in %s - ",
                obj->parent->parent->getNameNOC(ch).c_str());
     sprintf(buf + strlen(buf), "%s [%d]\n\r", 
-            ((obj->parent->parent->roomp && obj->parent->parent->roomp->getName()) ?
+            ((obj->parent->parent->roomp && !obj->parent->parent->roomp->getName().empty()) ?
              obj->parent->parent->roomp->getNameNOC(ch).c_str() : "Room Unknown"),
                obj->parent->parent->in_room);
   } else if (obj->parent && obj->parent->equippedBy) {
@@ -2752,7 +2752,7 @@ void do_where_thing(const TBeing *ch, const TThing *obj, bool recurse, sstring &
     sprintf(buf + strlen(buf), "equipped by %s - ",
                obj->parent->equippedBy->getNameNOC(ch).c_str());
     sprintf(buf + strlen(buf), "%s [%d]\n\r", 
-    ((obj->parent->equippedBy->roomp && obj->parent->equippedBy->roomp->getName()) ?
+    ((obj->parent->equippedBy->roomp && !obj->parent->equippedBy->roomp->getName().empty()) ?
        obj->parent->equippedBy->roomp->getNameNOC(ch).c_str() : "Room Unknown"),
        obj->parent->equippedBy->in_room);
   } else if (obj->parent && obj->parent->stuckIn) {
@@ -2763,7 +2763,7 @@ void do_where_thing(const TBeing *ch, const TThing *obj, bool recurse, sstring &
     sprintf(buf + strlen(buf), "stuck in %s - ",
                obj->parent->stuckIn->getNameNOC(ch).c_str());
     sprintf(buf + strlen(buf), "%s [%d]\n\r", 
-       ((obj->parent->stuckIn->roomp && obj->parent->stuckIn->roomp->getName()) ?
+       ((obj->parent->stuckIn->roomp && !obj->parent->stuckIn->roomp->getName().empty()) ?
         obj->parent->stuckIn->roomp->getNameNOC(ch).c_str() : "Room Unknown"),
         obj->parent->stuckIn->in_room);
 // object in object 
@@ -2834,7 +2834,7 @@ void TBeing::doWhere(const char *argument)
 
     for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
       k=*iter;
-      if (!k->getName()) {
+      if (k->getName().empty()) {
         vlogf(LOG_BUG, format("Item without a name in object_list (doWhere) looking for %s") %  namebuf);
         continue;
       }
@@ -2863,9 +2863,9 @@ void TBeing::doWhere(const char *argument)
       }
 
       if (is_abbrev(tStArg, "engraved")){
-        if (!k->action_description)
+        if (k->action_description.empty())
           continue;
-        else if ((sscanf(k->action_description, "This is the personalized object of %s.", buf)) != 1)
+        else if ((sscanf(k->action_description.c_str(), "This is the personalized object of %s.", buf)) != 1)
           continue;
         else if (!is_abbrev(tStName, buf))
           continue;
@@ -2910,11 +2910,11 @@ void TBeing::doWhere(const char *argument)
             (!gods || ch->isImmortal())) {
           if (d->original)
             sprintf(buf, "%-20s - %s [%d] In body of %s\n\r",
-                    d->original->getNameNOC(ch).c_str(), ch->roomp->getName(),
+                    d->original->getNameNOC(ch).c_str(), ch->roomp->getName().c_str(),
                     ch->in_room, ch->getNameNOC(ch).c_str());
           else
             sprintf(buf, "%-20s - %s [%d]\n\r", ch->getNameNOC(ch).c_str(),
-                    ch->roomp ? ch->roomp->getName() : "Bad room", ch->in_room);
+                    ch->roomp ? ch->roomp->getName().c_str() : "Bad room", ch->in_room);
 
           sb += buf;
         }
@@ -2933,7 +2933,7 @@ void TBeing::doWhere(const char *argument)
   *buf = '\0';
 
   for (i = character_list; i; i = i->next) {
-    if (!i->name) {
+    if (i->name.empty()) {
       vlogf(LOG_BUG, format("Being without a name in character_list (doWhere) looking for %s") %  namebuf);
       continue;
     }
@@ -2976,7 +2976,7 @@ void TBeing::doWhere(const char *argument)
 	  ticket=convertTo<int>(dp->d_name);
 	  
 	  if((k=loadRepairItem(i, ticket, time, cost, version))){
-	    if (!k->getName()) {
+	    if (k->getName().empty()) {
 	      vlogf(LOG_BUG, format("Item without a name in object_list (doWhere) looking for %s") %  namebuf);
 	      continue;
 	    }
@@ -3013,7 +3013,7 @@ void TBeing::doWhere(const char *argument)
       if (k->objVnum()!=-1 && vnums_notmatch[k->objVnum()])
 	continue;
 
-      if (!k->getName()) {
+      if (k->getName().empty()) {
         vlogf(LOG_BUG, format("Item without a name in object_list (doWhere) looking for %s") %  namebuf);
         continue;
       }
@@ -4409,8 +4409,8 @@ void TObj::describeMe(TBeing *ch) const
       act("$p is also being used by $N.", FALSE, ch, this, t2, TO_CHAR);
     }
   }
-  if (action_description) {
-    strncpy(capbuf, action_description, cElements(capbuf));
+  if (!action_description.empty()) {
+    strncpy(capbuf, action_description.c_str(), cElements(capbuf));
     if ((sscanf(capbuf, "This is the personalized object of %s.", name_buf)) == 1)
       sendTo(format("A monogram on it indicates it belongs to %s.\n\r") % name_buf);
   }
@@ -4431,7 +4431,7 @@ sstring TBeing::describeSharpness(const TThing *obj) const
 sstring TThing::describeMySharp(const TBeing *) const
 {
   char buf[256];
-  sprintf(buf, "%s is not a weapon", getName());
+  sprintf(buf, "%s is not a weapon", getName().c_str());
   return buf;
 }
 

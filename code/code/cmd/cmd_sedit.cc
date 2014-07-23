@@ -152,8 +152,8 @@ void TPerson::doSEdit(const char *tArg)
     return;
   }
 
-  if (strcmp(getName(), "Lapsos") != 0 &&
-      strcmp(getName(), "Damescena") != 0) {
+  if (getName() != "Lapsos" &&
+      getName() != "Damescena") {
     sendTo("This code is under development...do not use.\n\r");
     return;
   }

@@ -625,9 +625,9 @@ void TCommodity::updateDesc()
     };
   
   if (isObjStat(ITEM_STRUNG)) {
-    delete [] name;
-    delete [] shortDescr;
-    delete [] descr;
+    name = "";
+    shortDescr = "";
+    descr = "";
 
     extraDescription *exd;
     while ((exd = ex_description)) {
@@ -635,12 +635,11 @@ void TCommodity::updateDesc()
       delete exd;
     }
     ex_description = NULL;
-    delete [] action_description;
-    action_description = NULL;
+    action_description = "";
   } else {
     addObjStat(ITEM_STRUNG);
     ex_description = NULL;
-    action_description = NULL;
+    action_description = "";
   }
 
   if(isMineral()){

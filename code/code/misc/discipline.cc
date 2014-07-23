@@ -2741,7 +2741,7 @@ void TBeing::initSkillsBasedOnDiscLearning(discNumT disc_num)
   int disc_learn = 0, boost = 0, max_amt = 0, value = 0;
   CDiscipline *cd;
 
-  mud_assert(discs != NULL, "Somehow there was a call to initSkillsBasedOnDiscLearning without a discs %s", getName());
+  mud_assert(discs != NULL, "Somehow there was a call to initSkillsBasedOnDiscLearning without a discs %s", getName().c_str());
 
   // mob skills are always maxed for their disc-training
   if (!(cd = getDiscipline(disc_num))) {
@@ -3142,7 +3142,7 @@ CDiscipline * TBeing::getDiscipline(discNumT n) const
     return discs->disc[n];
   } else {
     mud_assert(0,
-    "TBeing had no CMasterDiscipline. '%s'", getName() ? getName() : "NoName");
+    "TBeing had no CMasterDiscipline. '%s'", !getName().empty() ? getName().c_str() : "NoName");
 
     return NULL;
   }

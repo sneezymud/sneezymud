@@ -77,16 +77,11 @@ TObj *createletter(sstring from)
   }
   
   note->swapToStrung();
-  delete [] note->name;
-  note->name = mud_str_dup("letter mail");
-  delete [] note->shortDescr;
-  note->shortDescr = mud_str_dup("<o>a handwritten <W>letter<1>"); 
-  delete [] note->getDescr();
-  note->setDescr(mud_str_dup("A wrinkled <W>letter<1> lies here."));
+  note->name = "letter mail";
+  note->shortDescr = "<o>a handwritten <W>letter<1>";
+  note->setDescr("A wrinkled <W>letter<1> lies here.");
 
-  delete [] note->action_description;
-  sstring msg=randommessage(from);
-  note->action_description = mud_str_dup(msg);
+  note->action_description = randommessage(from);
 
   if (!(envelope = read_object(124, VIRTUAL))) {
     vlogf(LOG_BUG, "Couldn't load object 124!");

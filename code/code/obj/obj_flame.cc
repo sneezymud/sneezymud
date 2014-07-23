@@ -275,19 +275,15 @@ int TFFlame::objectDecay()
   if (!roomp || hasMagBV(TFFLAME_IMMORTAL)) return FALSE;
 
   sendrpf(COLOR_OBJECTS, roomp,
-          "You hear a final crack and pop as the %s dies down.\n\r", shortDescr);
+          "You hear a final crack and pop as the %s dies down.\n\r", shortDescr.c_str());
   putLightOut();
   TTrash *fireAsh;
   fireAsh = new TTrash();
   fireAsh->swapToStrung();
-  delete [] fireAsh->name;
-  delete [] fireAsh->shortDescr;
-  delete [] fireAsh->descr;
   delete [] fireAsh->ex_description;
-  delete [] fireAsh->action_description;
-  fireAsh->name = mud_str_dup("ash soot debris pit fire");
-  fireAsh->shortDescr = mud_str_dup("<k>a pile of ashes<z>");
-  fireAsh->descr = mud_str_dup("<k>A pile of soot and ash is here, <z><r>smoldering<k> away.<z>");
+  fireAsh->name = "ash soot debris pit fire";
+  fireAsh->shortDescr = "<k>a pile of ashes<z>";
+  fireAsh->descr = "<k>A pile of soot and ash is here, <z><r>smoldering<k> away.<z>";
   setMaterial(MAT_POWDER);
   fireAsh->obj_flags.decay_time = 10;
   fireAsh->setWeight((int)(getWeight()*.9));
@@ -366,7 +362,7 @@ void TFFlame::updateFlameInfo()
     }
   if (!lFound)
     vlogf(LOG_BUG, format("TFFlame object with No extra slots for lighting [%s].") % 
-          (shortDescr ? shortDescr : "BAD OBJECT!"));
+          (!shortDescr.empty() ? shortDescr : "BAD OBJECT!"));
 }
 
 // rename the item depending on it's size[determined by decay_time].
@@ -376,29 +372,26 @@ void TFFlame::addFlameMessages()
 
   swapToStrung();
 
-  delete [] name;
-  delete [] shortDescr;
-  delete [] descr;
   if (obj_flags.decay_time <= 25) {
-    name       = mud_str_dup("fire flame wood tiny");
-    shortDescr = mud_str_dup("<r>a tiny fire<z>");
-    descr      = mud_str_dup("<r>A tiny fire is here.<z>");
+    name       = "fire flame wood tiny";
+    shortDescr = "<r>a tiny fire<z>";
+    descr      = "<r>A tiny fire is here.<z>";
   } else if (obj_flags.decay_time <= 50) {
-    name       = mud_str_dup("fire flame wood small");
-    shortDescr = mud_str_dup("<r>a small fire<z>");
-    descr      = mud_str_dup("<r>A small fire is here.<z>");
+    name       = "fire flame wood small";
+    shortDescr = "<r>a small fire<z>";
+    descr      = "<r>A small fire is here.<z>";
   } else if (obj_flags.decay_time <= 100) {
-    name       = mud_str_dup("fire flame wood large");
-    shortDescr = mud_str_dup("<r>a large fire<z>");
-    descr      = mud_str_dup("<r>A large fire is here.<z>");
+    name       = "fire flame wood large";
+    shortDescr = "<r>a large fire<z>";
+    descr      = "<r>A large fire is here.<z>";
   } else if (obj_flags.decay_time <= 150) {
-    name       = mud_str_dup("fire flame wood huge");
-    shortDescr = mud_str_dup("<r>a huge fire<z>");
-    descr      = mud_str_dup("<r>A huge fire is here.<z>");
+    name       = "fire flame wood huge";
+    shortDescr = "<r>a huge fire<z>";
+    descr      = "<r>A huge fire is here.<z>";
   } else {
-    name       = mud_str_dup("fire flame wood inferno huge");
-    shortDescr = mud_str_dup("<r>a huge inferno<z>");
-    descr      = mud_str_dup("<r>A huge inferno is here, blazing away.<z>");
+    name       = "fire flame wood inferno huge";
+    shortDescr = "<r>a huge inferno<z>";
+    descr      = "<r>A huge inferno is here, blazing away.<z>";
   }
   setMaterial(MAT_FIRE);
 }
@@ -547,7 +540,6 @@ void TFFlame::addFlameToMe(TBeing *ch, const char *argument, TThing *fObj, bool 
                             (int) (fireItem->getVolume()/300+ch->GetMaxLevel()/10))));
   } else {
     delete [] ex_description;
-    delete [] action_description;
     if ((ePower = igniteMessage(ch)) == -1) {
       delete this;
       return;

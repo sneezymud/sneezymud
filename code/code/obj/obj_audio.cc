@@ -86,8 +86,8 @@ void TAudio::audioCheck(int pulse) const
     else
       room = RecGetObjRoom(this);
 
-    if ((room != Room::NOWHERE) && action_description)
-      MakeNoise(room, action_description, action_description);
+    if ((room != Room::NOWHERE) && !action_description.empty())
+      MakeNoise(room, action_description.c_str(), action_description.c_str());
   }
 }
 

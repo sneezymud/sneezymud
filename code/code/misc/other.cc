@@ -1530,7 +1530,7 @@ void TPerson::doFeedback(const sstring &type, int clientCmd, const sstring &arg)
     sendTo(format("Write your %s report. Use ~ when done, or ` to cancel.\n\r") % type.lower());
     addPlayerAction(PLR_BUGGING);
     desc->connected = CON_WRITING;
-    desc->str = new const char *("\0");
+    desc->str = &desc->mail_bug_str;
     desc->max_str = MAX_MAIL_SIZE;
   }
   else
@@ -1740,7 +1740,7 @@ void TBeing::doGroup(const char *argument, bool silent)
            victim->isAffected(AFF_GROUP)) {
       victim->desc->session.group_share = amt;
       sprintf(buf, "I have just set %s's group-share to %d.", 
-         victim->getName(), amt);
+         victim->getName().c_str(), amt);
       doGrouptell(buf);
     } else {
       sendTo("That person isn't in your group.\n\r");
@@ -3547,7 +3547,7 @@ void TThing::refuelMeFuel(TBeing *ch, TLight *)
 void TThing::refuelMeDrug(TBeing *ch, TDrugContainer *tdc)
 {
   char buf[256];
-  sprintf(buf, "$p isn't a drug and shouldn't be put into %s.", tdc->getName());
+  sprintf(buf, "$p isn't a drug and shouldn't be put into %s.", tdc->getName().c_str());
   act(buf, FALSE, ch, this, NULL, TO_CHAR);
   return;
 }
@@ -3737,7 +3737,7 @@ void TBeing::doHistory()
 
   sendTo("\n\rYour tell history :\n\r\n\r");
 
-  db.query("select tellfrom, tell from tellhistory where tellto='%s' order by telltime desc limit 25", getName());
+  db.query("select tellfrom, tell from tellhistory where tellto='%s' order by telltime desc limit 25", getName().c_str());
 
   for(i=0;i<25 && db.fetchRow();i++){
     sendTo(COLOR_BASIC, format("[%d] <p>%s<1> told you, \"<c>%s<1>\"\n\r") %
@@ -4120,7 +4120,7 @@ void Descriptor::add_comment(const char *who, const char *msg)
   *(tmstr + strlen(tmstr) - 1) = '\0';
 
   sprintf(buf, "****** Comment from %s on %s:\n",
-       character->getName(), tmstr);
+       character->getName().c_str(), tmstr);
 
   for (i= 0, j=strlen(buf); msg[i];i++) {
     if ((strlen(buf) < (MAX_STRING_LENGTH - 1)) && msg[i] != '\r') {
@@ -4201,7 +4201,7 @@ void Descriptor::send_feedback(const char *subject, const char *msg)
   message.inlineReplaceString("\r\n", "\n");
  
   // add post
-  if (!db.query(addPostQuery, g_smfPrefix, g_smfboardId, subject, message.c_str(), player->getName(), account->email.c_str(), (int)now) ||
+  if (!db.query(addPostQuery, g_smfPrefix, g_smfboardId, subject, message.c_str(), player->getName().c_str(), account->email.c_str(), (int)now) ||
       0 == (postId = db.lastInsertId()))
   {
     vlogf(LOG_BUG, format("Player feedback failed when posting message for %s.") % player->name);

@@ -324,13 +324,13 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
   vlogf(LOG_SILENT, format("%s (%i):%s %s") %  name % in_room % commandArray[cmd]->name % newarg);
 
   if (tPerson)
-    tPerson->logf("%s:%s %s", name, commandArray[cmd]->name, newarg.c_str());
+    tPerson->logf("%s:%s %s", name.c_str(), commandArray[cmd]->name, newarg.c_str());
       } else {
   vlogf(LOG_SILENT, format("%s (%s) (%i):%s %s") %  name % desc->original->name % 
         in_room % commandArray[cmd]->name % newarg);
 
   if (tPerson)
-    tPerson->logf("%s:%s %s", name,
+    tPerson->logf("%s:%s %s", name.c_str(),
       commandArray[cmd]->name, newarg.c_str());
       }
     } else if (ch->isPc() && ch->isPlayerAction(PLR_LOGGED))

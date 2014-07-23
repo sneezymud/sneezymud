@@ -82,7 +82,7 @@ void TBeing::doPreen(sstring &argument)
   }
 
   // start a preen task
-  start_task(this, NULL, roomp, TASK_PREEN, target->name, 3, inRoom(), 0, 0, 5);
+  start_task(this, NULL, roomp, TASK_PREEN, target->name.c_str(), 3, inRoom(), 0, 0, 5);
 }
 
 

@@ -456,7 +456,7 @@ int personalHouse(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
 
   sprintf(buf, "%s", fname(rp->name).c_str());
 
-  if (strcmp(buf, pers->getName()))
+  if (buf != pers->getName())
     return FALSE;
 
   pers->sendTo("You snap your fingers with authority.\n\r");

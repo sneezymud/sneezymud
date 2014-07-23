@@ -530,7 +530,7 @@ bool TObj::joinTrash()
     return false;
 
   sendrpf(COLOR_BASIC, roomp, "%s merges with %s.\n\r",
-    sstring(this->getName()).cap().c_str(), pile->getName());
+    sstring(this->getName()).cap().c_str(), pile->getName().c_str());
 
   // add to trash pile
   --(*this);
@@ -738,16 +738,16 @@ void TMonster::makeNoise()
   if (inRoom() == Room::NOCTURNAL_STORAGE)
     return;
 
-  if (!isPc() && sounds && !rider) {
+  if (!isPc() && !sounds.empty() && !rider) {
     if (default_pos > POSITION_SLEEPING) {
       if (getPosition() > POSITION_SLEEPING) 
-        MakeRoomNoise(this, in_room, sounds, distantSnds);
+        MakeRoomNoise(this, in_room, sounds.c_str(), distantSnds.c_str());
       else if (getPosition() == POSITION_SLEEPING) {
         sprintf(buffer, "%s snores loudly.\n\r", mud_str_dup(sstring(getName()).cap()));
         MakeRoomNoise(this, in_room, buffer, "You hear a loud snore nearby.\n\r");
       }
     } else if (getPosition() == default_pos)
-      MakeRoomNoise(this, in_room, sounds, distantSnds);
+      MakeRoomNoise(this, in_room, sounds.c_str(), distantSnds.c_str());
   }
 
 #if 0
@@ -1023,8 +1023,8 @@ int TBeing::updateTickStuff()
 
     if (desc && (desc->character != this))
       vlogf(LOG_BUG, format("bad desc in updateTickStuff() (%s)(%s)") %
-            (name ? getName() : "unknown") % 
-            (desc->character ? desc->character->name ? desc->character->getName() : "unknown" : "no char"));
+            (!name.empty() ? getName() : "unknown") % 
+            (desc->character ? !desc->character->name.empty() ? desc->character->getName() : "unknown" : "no char"));
     if (desc && vt100())
       desc->updateScreenVt100(CHANGED_MUD);
     else if (desc && ansi())
@@ -1826,7 +1826,7 @@ int TObj::objectTickUpdate(int pulse)
   TEgg *egg;
   int rc;
 
-  if (!name) {
+  if (name.empty()) {
     vlogf(LOG_BUG, format("Object with NULL name in objectTickUpdate() : %d") %  objVnum());
     return DELETE_THIS;
   }

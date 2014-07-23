@@ -1022,7 +1022,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
     }
 
 
-    strcpy(buf2, v->name);
+    strcpy(buf2, v->name.c_str());
     strcpy(buf2, add_bars(buf2).c_str());
 
     rc = v->peelPkRespawn(this, dmg_type);

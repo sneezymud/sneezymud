@@ -109,9 +109,6 @@ playerData & playerData::operator=(const playerData &a)
 
 playerData::~playerData()
 {
-  delete [] longDescr;
-  longDescr = NULL;
-
   delete time;
 }
 
@@ -607,11 +604,6 @@ charFile::~charFile()
 {
 }
 
-
-const char * TBeing::getName() const
-{
-  return (shortDescr ? shortDescr : "");
-}
 
 // this returns the ID in the database, or creates a new one if needed
 int TBeing::getPlayerID() const
@@ -1531,16 +1523,13 @@ void TBeing::peeOnMe(const TBeing *ch)
   act("You relieve yourself on $N's foot.", TRUE, ch, 0, this, TO_CHAR);
 }
 
-const char * TBeing::getLongDesc() const
+sstring const& TBeing::getLongDesc() const
 {
-  if (player.longDescr)
+  if (!player.longDescr.empty())
     return player.longDescr;
 
-  if (msgVariables.tMessages.msgLongDescr &&
-      *msgVariables.tMessages.msgLongDescr)
-    return msgVariables.tMessages.msgLongDescr;
-
-  return NULL;
+  static sstring uglyhack = msgVariables.tMessages.msgLongDescr;
+  return uglyhack;
 }
 
 int TBeing::chiMe(TBeing *tLunatic)
@@ -1721,12 +1710,12 @@ bool TBeing::applyTattoo(wearSlotT slot, const sstring & tat, silentTypeT silent
   TDatabase db(DB_SNEEZY);
   if (tat.length() == 0) {
     // removal
-    db.query("delete from tattoos where name = '%s' and location = %i", getName(), int(slot));
+    db.query("delete from tattoos where name = '%s' and location = %i", getName().c_str(), int(slot));
     if (db.rowCount() > 0)
       return TRUE;
   } else if (tat.length() <= 128) {
     // new tat
-    db.query("insert tattoos (name, tattoo, location) select '%s', '%s', %i", getName(), tat.c_str(), int(slot));
+    db.query("insert tattoos (name, tattoo, location) select '%s', '%s', %i", getName().c_str(), tat.c_str(), int(slot));
     if (db.rowCount() > 0)
       return TRUE;
   }

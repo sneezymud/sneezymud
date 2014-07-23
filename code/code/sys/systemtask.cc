@@ -163,7 +163,7 @@ void SystemTask::CheckTask()
 	  top->owner->sendTo("There was a problem making a note, please tell a god.\n\r");
         }
       } else if (fstatus.st_size > maxnotesize) {
-        sprintf(file, "tmp/%s.output", top->owner->getName());
+        sprintf(file, "tmp/%s.output", top->owner->getName().c_str());
         rename(TMPFILE, file);
         top->owner->sendTo("Your task has completed but is to large to be loaded into a note.  Use\n\rviewoutput to read it.\n\r");
       } else
@@ -195,7 +195,7 @@ sstring SystemTask::Tasks(TBeing *ch, const char *args)
       sprintf(lbuf, "%-10s %s\n\r", "Owner", "Task");
       str = lbuf;
       for(tsk=top; tsk; tsk=tsk->next) {
-        sprintf(lbuf, "%-10s %s\n\r", tsk->owner->getName(), tsk->cmd);
+        sprintf(lbuf, "%-10s %s\n\r", tsk->owner->getName().c_str(), tsk->cmd);
         str += lbuf;
       }
       return str;

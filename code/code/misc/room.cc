@@ -378,13 +378,13 @@ short TRoom::getRiverSpeed() const
   return riverSpeed;
 }
 
-void TRoom::setDescr(const char *tDescription)
+void TRoom::setDescr(sstring const& tDescription)
 {
   descr = tDescription;
 }
 
 
-const char * TRoom::getDescr()
+sstring const& TRoom::getDescr()
 {
   return descr;
 }

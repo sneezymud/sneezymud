@@ -174,17 +174,10 @@ int doppleganger(TBeing *ch, cmdTypeT cmd, const char *tArg, TMonster *tMyself, 
           if ((tSucker = dopplegangerFindTarget(tMyself->roomp))) {
             tMyself->swapToStrung();
 
-            delete [] tMyself->name;
-            tMyself->name = mud_str_dup(tSucker->name);
-
-            delete [] tMyself->shortDescr;
-            tMyself->shortDescr = mud_str_dup(tSucker->shortDescr);
-
-            delete [] tMyself->player.longDescr;
-            tMyself->player.longDescr = mud_str_dup(tSucker->getLongDesc());
-
-            delete [] tMyself->descr;
-            tMyself->descr = mud_str_dup(tSucker->descr);
+            tMyself->name = tSucker->name;
+            tMyself->shortDescr = tSucker->shortDescr;
+            tMyself->player.longDescr = tSucker->getLongDesc();
+            tMyself->descr = tSucker->descr;
 
             tMyself->fixLevels(tSucker->GetMaxLevel());
             tMyself->setMult(2.5);

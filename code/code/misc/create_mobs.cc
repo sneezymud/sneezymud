@@ -115,9 +115,16 @@ static void send_mob_menu(const TBeing *ch, const TMonster *tMon)
   if (IS_SET(ch->desc->autobits, AUTO_TIPS)) {
     char tStringOut[22][256];
 
-    strcpy(tStringOut[0], (tMon->name ? tMon->name : "Unknown"));
-    strcpy(tStringOut[1], (tMon->shortDescr ? tMon->shortDescr : "Unknown"));
-    strcpy(tStringOut[2], (tMon->getLongDesc() ? tMon->getLongDesc() : "Unknown"));
+    class str_or_unknown_ {
+      public:
+      const char* operator()(const sstring& s) {
+        return !s.empty() ? s.c_str() : "Unknown";
+      }
+    } str_or_unknown;
+
+    strcpy(tStringOut[0], str_or_unknown(tMon->name));
+    strcpy(tStringOut[1], str_or_unknown(tMon->shortDescr));
+    strcpy(tStringOut[2], str_or_unknown(tMon->getLongDesc()));
     sprintf(tStringOut[3], "%d %3.2f", tMon->getFaction(), tMon->getPerc());
     sprintf(tStringOut[4], "%.1f", tMon->getMult());
     sprintf(tStringOut[5], "%d", tMon->GetMaxLevel());
@@ -259,13 +266,13 @@ static void TBeingLoad(TBeing *ch, int vnum)
 
 static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
 {
-  if (!mob->name || !mob->getDescr() || !mob->shortDescr || !mob->getLongDesc()) {
+  if (mob->name.empty() || mob->getDescr().empty() || mob->shortDescr.empty() || mob->getLongDesc().empty()) {
     ch->sendTo("Your mob is missing one or more important strings.\n\r");
     ch->sendTo(format("Please update the following before saving:%s%s%s%s\n\r")
-               % (mob->name                 ? "" : " Name")
-               % (mob->shortDescr           ? "" : " Short description")
-               % (mob->getLongDesc()        ? "" : " Long description")
-               % (mob->getDescr()           ? "" : " Description"));
+               % (!mob->name.empty()                 ? "" : " Name")
+               % (!mob->shortDescr.empty()           ? "" : " Short description")
+               % (!mob->getLongDesc().empty()        ? "" : " Long description")
+               % (!mob->getDescr().empty()   ? "" : " Description"));
     return;
   }
 
@@ -275,7 +282,7 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
   // make sure all of our breaks are \n\r
   // most of these will never have a line break, but this is just the save routine so whatever...
   int f, u;
-  for (f = 0, u = 0; u < (int) strlen(mob->name); u++) {
+  for (f = 0, u = 0; u < (int) mob->name.length(); u++) {
     if (mob->name[u] == 10) {
       name[f++] = 10;
       name[f++] = 13;
@@ -285,7 +292,7 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
   }
   name[f] = '\0';
   
-  for (f = 0, u = 0; u < (int) strlen(mob->shortDescr); u++) {
+  for (f = 0, u = 0; u < (int) mob->shortDescr.length(); u++) {
     if (mob->shortDescr[u] == 10) {
       short_desc[f++] = 10;
       short_desc[f++] = 13;
@@ -295,7 +302,7 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
   }
   short_desc[f] = '\0';
 
-  for (f = 0, u = 0; u < (int) strlen(mob->getLongDesc()); u++) {
+  for (f = 0, u = 0; u < (int) mob->getLongDesc().length(); u++) {
     if (mob->getLongDesc()[u] == 10) {
       long_desc[f++] = 10;
       long_desc[f++] = 13;
@@ -305,7 +312,7 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
   }
   long_desc[f] = '\0';
 
-  for (f = 0, u = 0; u < (int) strlen(mob->getDescr()); u++) {
+  for (f = 0, u = 0; u < (int) mob->getDescr().length(); u++) {
     if (mob->getDescr()[u] == 10) {
       description[f++] = 10;
       description[f++] = 13;
@@ -315,8 +322,8 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
   }
   description[f] = '\0';
   
-  if (mob->sounds) {
-    for (f = 0, u = 0; u < (int) strlen(mob->sounds); u++) {
+  if (!mob->sounds.empty()) {
+    for (f = 0, u = 0; u < (int) mob->sounds.length(); u++) {
       if (mob->sounds[u] == 10) {
         local_sound[f++] = 10;
         local_sound[f++] = 13;
@@ -327,8 +334,8 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
     local_sound[f] = '\0';
   }
   
-  if (mob->distantSnds) {
-    for (f = 0, u = 0; u < (int) strlen(mob->distantSnds); u++) {
+  if (!mob->distantSnds.empty()) {
+    for (f = 0, u = 0; u < (int) mob->distantSnds.length(); u++) {
       if (mob->distantSnds[u] == 10) {
         adjacent_sound[f++] = 10;
         adjacent_sound[f++] = 13;
@@ -345,14 +352,14 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
   
   ch->sendTo("Saving.\n\r");
   TDatabase db(DB_IMMORTAL);
-  db.query("delete from mob where owner = '%s' and vnum = %i", ch->name, vnum);
+  db.query("delete from mob where owner = '%s' and vnum = %i", ch->name.c_str(), vnum);
   // (vnum, name, short_desc, long_desc, description, actions, affects, faction, fact_perc, letter, attacks, class, level, tohit, ac, hpbonus, damage_level, damage_precision, gold, race, weight, height, str, bra, con, dex, agi, intel, wis, foc, per, cha, kar, spe, pos, def_position, sex, spec_proc, skin, vision, can_be_seen, max_exist, local_sound, adjacent_sound)
   db.query("insert into mob values (%i, '%s', '%s', '%s', '%s', %i, %i, %i, %i, '%s', %f, %i, %i, %i, %f, %f, %f, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, '%s', '%s', '%s')",
       vnum, 
       name, short_desc, long_desc, description, 
       actions, static_cast<unsigned long>(mob->specials.affectedBy),
       mob->getFaction(), static_cast<int>(mob->getPerc()), 
-      ((mob->sounds || mob->distantSnds) ? "L" : "A"), (float) mob->getMult(), 
+      ((mob->sounds.empty() || !mob->distantSnds.empty()) ? "L" : "A"), (float) mob->getMult(), 
       mob->getClass(), mob->GetMaxLevel(), mob->getHitroll(), 
       mob->getACLevel(), mob->getHPLevel(), mob->getDamLevel(), 
       mob->getDamPrecision(), mob->moneyConst, mob->getRace(), static_cast<int>(mob->getWeight()), mob->getHeight(), 
@@ -370,21 +377,21 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
       mob->getStat(STAT_CHOSEN, STAT_SPE), 
       mapPosToFile(mob->getPosition()), mapPosToFile(mob->default_pos), mob->getSex(), mob->spec, 
       mob->getMaterial(WEAR_BODY), mob->canBeSeen, mob->visionBonus, mob->max_exist, 
-      (mob->sounds ? local_sound : ""), (mob->distantSnds ? adjacent_sound : ""), ch->name);
+      (!mob->sounds.empty() ? local_sound : ""), (!mob->distantSnds.empty() ? adjacent_sound : ""), ch->name.c_str());
   
   // immunties
-  db.query("delete from mob_imm where owner = '%s' and vnum = %i", ch->name, vnum);
+  db.query("delete from mob_imm where owner = '%s' and vnum = %i", ch->name.c_str(), vnum);
   immuneTypeT ij;
   for (ij=MIN_IMMUNE;ij < MAX_IMMUNES;ij++) {
     if (mob->getImmunity(ij) != 0)
-      db.query("insert into mob_imm (owner, vnum, type, amt) values ('%s', %i, %i, %i)", ch->name, vnum, (int) ij, mob->getImmunity(ij));
+      db.query("insert into mob_imm (owner, vnum, type, amt) values ('%s', %i, %i, %i)", ch->name.c_str(), vnum, (int) ij, mob->getImmunity(ij));
   }
 
   // extra messages (repop, bamfout, etc)
-  db.query("delete from mob_extra where owner = '%s' and vnum = %i", ch->name, vnum);
+  db.query("delete from mob_extra where owner = '%s' and vnum = %i", ch->name.c_str(), vnum);
   extraDescription *tExDescr;
   for (tExDescr = mob->ex_description; tExDescr; tExDescr = tExDescr->next) {
-    if (strlen(tExDescr->description)) {
+    if (tExDescr->description.empty()) {
       /*
       int tMarker = 0;
       for (unsigned int tPos = 0; tPos <= strlen(tExDescr->description); tPos++)
@@ -392,7 +399,7 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
           description[tMarker++] = tExDescr->description[tPos];
       description[tMarker] = '\0';
       */
-      db.query("insert into mob_extra (owner, vnum, keyword, description) values ('%s', %i, '%s', '%i')", ch->name, vnum, tExDescr->keyword, tExDescr->description);
+      db.query("insert into mob_extra (owner, vnum, keyword, description) values ('%s', %i, '%s', '%i')", ch->name.c_str(), vnum, tExDescr->keyword.c_str(), tExDescr->description.c_str());
     }
   }
 }
@@ -537,9 +544,9 @@ static void mlist(TPerson *ch, bool zone=false)
   sstring longstr;
   
   if(zone){
-    db.query("select vnum, name, short_desc from mob where owner='%s' and vnum>%i and vnum<=%i order by vnum", ch->name, zone_table[ch->roomp->getZone()->zone_nr-1].top, ch->roomp->getZone()->top);
+    db.query("select vnum, name, short_desc from mob where owner='%s' and vnum>%i and vnum<=%i order by vnum", ch->name.c_str(), zone_table[ch->roomp->getZone()->zone_nr-1].top, ch->roomp->getZone()->top);
   } else {
-    db.query("select vnum, name, short_desc from mob where owner = '%s' order by vnum", ch->name);
+    db.query("select vnum, name, short_desc from mob where owner = '%s' order by vnum", ch->name.c_str());
   }
 
   if(!db.isResults()){
@@ -561,16 +568,16 @@ static void mremove(TBeing *ch, int vnum)
   // delete a mob from a player's immortal file
   TDatabase db(DB_IMMORTAL);
   
-  db.query("select vnum from mob where vnum=%i and owner='%s'", vnum, ch->name);
+  db.query("select vnum from mob where vnum=%i and owner='%s'", vnum, ch->name.c_str());
 
   if(!db.isResults()){
     ch->sendTo("Mob not found.\n\r");
     return;
   }
 
-  if(!db.query("delete from mob where vnum=%i and owner='%s'", vnum, ch->name) ||
-     !db.query("delete from mob_imm where vnum=%i and owner='%s'", vnum, ch->name) ||
-     !db.query("delete from mob_extra where vnum=%i and owner='%s'", vnum, ch->name)){
+  if(!db.query("delete from mob where vnum=%i and owner='%s'", vnum, ch->name.c_str()) ||
+     !db.query("delete from mob_imm where vnum=%i and owner='%s'", vnum, ch->name.c_str()) ||
+     !db.query("delete from mob_extra where vnum=%i and owner='%s'", vnum, ch->name.c_str())){
     ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
   } else
@@ -586,9 +593,7 @@ static void change_mob_name(TBeing *ch, TMonster *mob, const char *arg, editorEn
       return;
     }
   if (type != ENTER_CHECK) {
-    delete [] mob->name;
-    mob->name = NULL;
-    mob->name = mud_str_dup(arg);
+    mob->name = arg;
     ch->specials.edit = MAIN_MENU;
     update_mob_menu(ch, mob);
     return;
@@ -617,8 +622,7 @@ static void change_mob_short_desc(TBeing *ch, TMonster *mob, editorEnterTypeT ty
   ch->sendTo("Unless it is a formal name, like Brutius, or Kalas.\n\r");
   ch->sendTo("This helps us keep the things sent to character formatted nicely.\n\r");
   ch->sendTo("Terminate with a ~ ON THE SAME LINE. Press <ENTER> again to continue.\n\r");
-  delete [] mob->shortDescr;
-  mob->shortDescr = NULL;
+  mob->shortDescr = "";
   ch->desc->str = &mob->shortDescr;
   ch->desc->max_str = MAX_NAME_LENGTH-1;
   return;
@@ -637,8 +641,6 @@ static void change_mob_long_desc(TBeing *ch, TMonster *mob, editorEnterTypeT typ
   ch->sendTo(format("%s") % mob->getLongDesc());
   ch->sendTo("\n\r\n\rNew mob long description:\n\r");
   ch->sendTo("Terminate with a ~ ON A SEPERATE LINE. Press <ENTER> again to continue.\n\r");
-  delete [] mob->player.longDescr;
-  mob->player.longDescr = NULL;
   ch->desc->str = &mob->player.longDescr;
   ch->desc->max_str = MAX_STRING_LENGTH;
   return;
@@ -657,8 +659,6 @@ static void change_mob_desc(TBeing *ch, TMonster *mob, editorEnterTypeT type)
   ch->sendTo(format("%s") % mob->getDescr());
   ch->sendTo("\n\r\n\rNew mob description:\n\r");
   ch->sendTo("Terminate with a ~. Press <ENTER> again to continue.\n\r");
-  delete [] mob->getDescr();
-  mob->setDescr(NULL);
   ch->desc->str = &mob->descr;
   ch->desc->max_str = MAX_STRING_LENGTH;
   return;
@@ -1946,8 +1946,6 @@ static void change_mob_sounds(TBeing *ch, TMonster *mob, const char *arg, editor
         ch->sendTo(format("%s") % mob->sounds);
         ch->sendTo("\n\r\n\rNew room sound:\n\r");
         ch->sendTo("Terminate with a ~ ON A NEW LINE. Press <ENTER> again to continue.\n\r");
-        delete [] mob->sounds;
-        mob->sounds = NULL;
         ch->desc->str = &mob->sounds;
         ch->desc->max_str = MAX_STRING_LENGTH;
         return;
@@ -1957,8 +1955,7 @@ static void change_mob_sounds(TBeing *ch, TMonster *mob, const char *arg, editor
         ch->sendTo(format("%s") % mob->distantSnds);
         ch->sendTo("\n\r\n\rNew distant sound:\n\r");
         ch->sendTo("Terminate with a ~ ON A NEW LINE. Press <ENTER> again to continue.\n\r");
-        delete [] mob->distantSnds;
-        mob->distantSnds = NULL;
+        mob->distantSnds = "";
         ch->desc->str = &mob->distantSnds;
         ch->desc->max_str = MAX_STRING_LENGTH;
         return;
@@ -2222,11 +2219,7 @@ void TPerson::doMedit(const char *argument)
         return;
       }
       cMob->swapToStrung();
-      if (cMob->name) {
-        delete [] cMob->name;
-        cMob->name = NULL;
-      }
-      cMob->name = mud_str_dup(sstring);
+      cMob->name = sstring;
       return;
       break;
     case 7: // Short Description
@@ -2236,9 +2229,7 @@ void TPerson::doMedit(const char *argument)
         return;
       }
       cMob->swapToStrung();
-      if (cMob->shortDescr)
-        delete [] cMob->shortDescr;
-      cMob->shortDescr = mud_str_dup(sstring);
+      cMob->shortDescr = sstring;
       return;
       break;
     case 8: // Long Description
@@ -2248,18 +2239,15 @@ void TPerson::doMedit(const char *argument)
         return;
       }
       cMob->swapToStrung();
-      if (cMob->getLongDesc())
-        delete [] cMob->player.longDescr;
       strcat(sstring, "\n\r");
-      cMob->player.longDescr = mud_str_dup(sstring);
+      cMob->player.longDescr = sstring;
       return;
       break;
     case 9: // Description
       cMob->swapToStrung();
-      if (cMob->descr) {
+      if (!cMob->descr.empty()) {
         sendTo(format("Current Description:\n\r%s\n\r\n\r") % cMob->descr);
-        delete [] cMob->descr;
-        cMob->descr = NULL;
+        cMob->descr = "";
       }
       sendTo("Enter new description, terminate with '~' on a new line.\n\r");
       desc->str = &cMob->descr;
@@ -2489,9 +2477,9 @@ void TPerson::doMedit(const char *argument)
       return;
       break;
     case 27: // Room Sound
-      if (cMob->sounds) {
+      if (!cMob->sounds.empty()) {
         sendTo(format("Current Room Sound:\n\r%s\n\r") % cMob->sounds);
-        delete [] cMob->sounds;
+        cMob->sounds = "";
       }
       sendTo("Enter Room Sound, terminate with a '~' on a NEW line.\n\r");
       desc->str = &cMob->sounds;
@@ -2499,9 +2487,9 @@ void TPerson::doMedit(const char *argument)
       return;
       break;
     case 28: // Other Room Sound
-      if (cMob->distantSnds) {
+      if (!cMob->distantSnds.empty()) {
         sendTo(format("Current Distant Sound:\n\r%s\n\r") % cMob->distantSnds);
-        delete [] cMob->distantSnds;
+        cMob->distantSnds = "";
       }
       sendTo("Enter Distant Room Sound, terminate with a '~' on a NEW line.\n\r");
       desc->str = &cMob->distantSnds;
@@ -2532,7 +2520,7 @@ void TPerson::doMedit(const char *argument)
       cMob->swapToStrung();
 
       if (is_abbrev(tTextLns[0], "long")) {
-        if (!cMob->getLongDesc()) {
+        if (cMob->getLongDesc().empty()) {
           sendTo("Mobile doesn't have a long description, cannot use replace.\n\r");
           return;
         }
@@ -2546,10 +2534,9 @@ void TPerson::doMedit(const char *argument)
 
         tStr.replace(tStr.find(tTextLns[1]), strlen(tTextLns[1]), tTextLns[2]);
 
-        delete [] cMob->player.longDescr;
-        cMob->player.longDescr = mud_str_dup(tStr);
+        cMob->player.longDescr = tStr;
       } else {
-        if (!cMob->descr) {
+        if (cMob->descr.empty()) {
           sendTo("Mobile doesn't have a description, cannot use replace.\n\r");
           return;
         }
@@ -2563,8 +2550,7 @@ void TPerson::doMedit(const char *argument)
 
         tStr.replace(tStr.find(tTextLns[1]), strlen(tTextLns[1]), tTextLns[2]);
 
-        delete [] cMob->descr;
-        cMob->descr = mud_str_dup(tStr);
+        cMob->descr = tStr;
       }
       return;
       break;
@@ -2656,7 +2642,7 @@ static void change_mob_sstring_enter(TBeing *ch, TMonster *tMob, const char *tSt
       tExDesc->keyword = mud_str_dup(tMobStringShorts[tType]);
       tExDesc->description = mud_str_dup(tStString);
       break;
-    } else if (tExDesc && !strcmp(tExDesc->keyword, tMobStringShorts[tType])) {
+    } else if (tExDesc && tExDesc->keyword == tMobStringShorts[tType]) {
       if (*tString == '`') {
         if (tExLast)
           tExLast->next = tExDesc->next;
@@ -2667,8 +2653,7 @@ static void change_mob_sstring_enter(TBeing *ch, TMonster *tMob, const char *tSt
         tExDesc = NULL;
         break;
       } else {
-        delete [] tExDesc->description;
-        tExDesc->description = mud_str_dup(tStString);
+        tExDesc->description = tStString;
         break;
       }
     }

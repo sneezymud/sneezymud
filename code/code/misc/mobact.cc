@@ -712,11 +712,11 @@ int TMonster::superScavenger()
         *this += *best_o;
       }
       if (best_o->canWear(ITEM_HOLD)) {
-        strcpy(buf, best_o->name);
+        strcpy(buf, best_o->name.c_str());
         strcpy(buf, add_bars(buf).c_str());
         doGrab(buf);
       } else {
-        strcpy(buf, best_o->name);
+        strcpy(buf, best_o->name.c_str());
         strcpy(buf, add_bars(buf).c_str());
         doWear(buf);
       }
@@ -761,7 +761,7 @@ int TMonster::superScavenger()
 
   if (best_o) {
     vlogf(LOG_MOB_AI, format("Mob superScavenger: %s picking up %s in room (%d)") % this->name % best_o->name % (roomp ? roomp->in_room : 0));
-    strcpy(buf, best_o->name);
+    strcpy(buf, best_o->name.c_str());
     strcpy(buf, add_bars(buf).c_str());
     rc = doGet(buf);
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -3403,7 +3403,7 @@ int TMonster::scavenge()
       
       if (obj->canWear(ITEM_TAKE) && canCarry(obj, SILENT_YES) &&
           canSee(obj) && 
-          !obj->action_description &&   // checks for personalized
+          obj->action_description.empty() &&   // checks for personalized
           obj->stuff.empty()) {
         if (obj->obj_flags.cost > iMax) {
           best_obj = obj;
@@ -4509,7 +4509,7 @@ int TMonster::findABetterWeapon()
       continue;
     if (!canSee(o))
       continue;
-    if (o->action_description)
+    if (!o->action_description.empty())
       continue;
     if (!canUseEquipment(o, SILENT_YES))
       continue;
@@ -4776,13 +4776,13 @@ vlogf(LOG_BUG, format("Mob invoking (3) prayer %d on other with possibly bad tar
     if (found) {
       if (IS_SET(discArray[spell]->targets, TAR_CHAR_ROOM)) {
         if (spell == SKILL_BARKSKIN)
-          rc = doBarkskin(targ.name);
+          rc = doBarkskin(targ.name.c_str());
         else
           rc = doDiscipline(spell, targ.name);
       } else {
 vlogf(LOG_BUG, format("Mob casting (3) spell %d on other with possibly bad target flags for spell") %  spell);
         if (spell == SKILL_BARKSKIN)
-          rc = doBarkskin(targ.name);
+          rc = doBarkskin(targ.name.c_str());
         else
           rc = doDiscipline(spell, "");
       }
@@ -5288,7 +5288,7 @@ vlogf(LOG_BUG, format("Mob invoking (5) prayer %d on self with possibly bad targ
       dynamicComponentLoader(spell, 10);
       if (IS_SET(discArray[spell]->targets, TAR_SELF_ONLY | TAR_IGNORE | TAR_FIGHT_SELF | TAR_NAME)) {
         if (spell == SKILL_BARKSKIN)
-          rc = doBarkskin(name);
+          rc = doBarkskin(name.c_str());
         else if(spell == SKILL_TRANSFORM_LIMB)
 	  rc = doTransform("hands");
 	else
@@ -5296,7 +5296,7 @@ vlogf(LOG_BUG, format("Mob invoking (5) prayer %d on self with possibly bad targ
       } else {
 vlogf(LOG_BUG, format("Mob casting (5) spell %d on self with possibly bad target flags for spell") %  spell);
         if (spell == SKILL_BARKSKIN)
-          rc = doBarkskin(name);
+          rc = doBarkskin(name.c_str());
 	else if(spell == SKILL_TRANSFORM_LIMB)
 	  rc = doTransform("hands");
         else

@@ -67,7 +67,7 @@ int tattooArtist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TO
     
     TDatabase db(DB_SNEEZY);
     db.query("select 1 from tattoos where name='%s' and location=%i",
-	     ch->getName(), slot);
+	     ch->getName().c_str(), slot);
 
     if(db.fetchRow()){
       myself->doTell(ch->getName(), "You already have a tattoo there.");
@@ -85,7 +85,7 @@ int tattooArtist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TO
     myself->doEmote("takes your money and carefully inks out the tattoo.");
 
 
-    db.query("insert into tattoos (name, tattoo, location) values ('%s', '%s', %i)", ch->getName(), tattoos[i-1], slot);
+    db.query("insert into tattoos (name, tattoo, location) values ('%s', '%s', %i)", ch->getName().c_str(), tattoos[i-1], slot);
 
     myself->doSay("There you go, all set.");
     

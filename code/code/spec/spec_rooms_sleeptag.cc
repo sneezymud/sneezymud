@@ -256,7 +256,7 @@ int sleepTagRoom(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoom)
                 vlogf(LOG_PROC, format("Unable to load room %d for sleeptag move!") %  SLEEPTAG_CONTROL_ROOM);
 	    }
 
-            sleepTagReport(tRoom->getZoneNum(), "%s has lost this game...", tPerson->getName());
+            sleepTagReport(tRoom->getZoneNum(), "%s has lost this game...", tPerson->getName().c_str());
           } else {
             if (tPerson->isAffected(AFF_SLEEP)) {
               --(*tPerson);
@@ -275,7 +275,7 @@ int sleepTagRoom(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoom)
         tBeing->sendTo("Shout is good, but usually you shout something...\n\r");
       else
         sleepTagReport(tRoom->getZoneNum(),
-                       "<g>%s<z> shouts, \"%s<1>\"\n\r", tBeing->getName(), tArg);
+                       "<g>%s<z> shouts, \"%s<1>\"\n\r", tBeing->getName().c_str(), tArg);
 
       return TRUE;
       break;

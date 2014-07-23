@@ -12,6 +12,8 @@
 
 #include <stdio.h>
 
+#include <boost/algorithm/string.hpp>
+
 #include "room.h"
 #include "being.h"
 #include "extern.h"
@@ -311,7 +313,7 @@ void TPerson::doEdit(const char *arg)
             sprintf(sstring,
                     "%d) %s %s -To> %d\n\rLock Diff:%d  Weight:%d  Key:%d\n\rTrap Dam: %d\n\r",
                     dir, dirs[dir],
-                    roomp->dir_option[dir]->keyword,
+                    roomp->dir_option[dir]->keyword.c_str(),
                     roomp->dir_option[dir]->to_room,
                     roomp->dir_option[dir]->lock_difficulty,
                     roomp->dir_option[dir]->weight,
@@ -347,7 +349,7 @@ void TPerson::doEdit(const char *arg)
       if (*tBuf && is_abbrev(tBuf, "copy")) {
         int toRoom = convertTo<int>(tBuf);  // from the <to-room> block
 
-        if (strcmp(getName(), "Lapsos") != 0) {
+        if (getName() == "Lapsos") {
           sendTo("Don't use this option yet.  It is still under development.\n\r");
           return;
         }
@@ -614,7 +616,7 @@ void TPerson::doEdit(const char *arg)
           sendTo("New field.\n\r");
           sendTo("Terminate with a '~' on a NEW LINE.\n\r");
           break;
-        } else if (!strcasecmp(ed->keyword, sstring)) {
+        } else if (boost::iequals(ed->keyword, sstring)) {
           sendTo(format("Current description:\n\r%s\n\r") % ed->description);
           sendTo("This description has been deleted.  If you needed to modify it, simply readd it.\n\r");
           sendTo("Press return to proceed.\n\r");
@@ -923,9 +925,8 @@ void TPerson::doEdit(const char *arg)
       stSpaceOut(tStString);
 
       if (!tStString.empty()) {
-        delete [] roomp->name;
         sendTo(format("New Room Title: %s\n\r") % tStString);
-        roomp->name = mud_str_dup(tStString);
+        roomp->name = tStString;
 
         return;
       }
@@ -1019,12 +1020,12 @@ void TPerson::doEdit(const char *arg)
         return;
       }
       // 1 == Description, do we have one?
-      if ((field == 1) && !roomp->getDescr()) {
+      if ((field == 1) && roomp->getDescr().empty()) {
         sendTo("This room doesn't have a description, nothing to copy!\n\r");
         return;
       }
       // 2 == Name, do we have one?
-      if ((field == 2) && !roomp->name) {
+      if ((field == 2) && roomp->name.empty()) {
         sendTo("No name on this room, nothing to copy!\n\r");
         return;
       }
@@ -1063,15 +1064,11 @@ void TPerson::doEdit(const char *arg)
             continue;
           }
 
-          if (field == 1 || (field == 8 && roomp->getDescr())) { // Description
-            if (newrp->getDescr())
-              delete [] newrp->descr;
-            newrp->descr = mud_str_dup(roomp->getDescr());
+          if (field == 1 || (field == 8 && !roomp->getDescr().empty())) { // Description
+            newrp->descr = roomp->getDescr();
           }
-          if (field == 2 || (field == 8 && roomp->name)) { // Name
-            if (newrp->name)
-              delete [] newrp->name;
-            newrp->name = mud_str_dup(roomp->name);
+          if (field == 2 || (field == 8 && !roomp->name.empty())) { // Name
+            newrp->name = roomp->name;
           }
           if (field == 3 || (field == 8 && roomp->ex_description)) { // Extra Descriptions
             extraDescription *teDesc = NULL;
@@ -1081,7 +1078,7 @@ void TPerson::doEdit(const char *arg)
               // HAS an extra by those trigger words.
               for (prev = newrp->ex_description; prev; teDesc = prev, prev = prev->next) {
                 // Check for simularity.
-                if (!strcasecmp(ed->keyword, prev->keyword)) {
+                if (boost::iequals(ed->keyword, prev->keyword)) {
                   // We need to get rid of this one, because were going to overwrite it.
                   // First alienate it, then delete it.
                   if (teDesc)
@@ -1152,7 +1149,7 @@ void TPerson::doEdit(const char *arg)
       }
 
       if (is_abbrev(tTextLns[0], "description")) {
-        if (!roomp->descr) {
+        if (roomp->descr.empty()) {
           sendTo("Room doesn't have a description, cannot use replace.\n\r");
           return;
         }
@@ -1166,8 +1163,7 @@ void TPerson::doEdit(const char *arg)
 
         tStr.replace(tStr.find(tTextLns[1]), strlen(tTextLns[1]), tTextLns[2]);
 
-        delete [] roomp->descr;
-        roomp->descr = mud_str_dup(tStr);
+        roomp->descr = tStr;
       } else {
         for (ed = roomp->ex_description, s_type = 1; ed; ed = ed->next) {
           if (isname(tTextLns[1], ed->keyword)) {
@@ -1191,8 +1187,7 @@ void TPerson::doEdit(const char *arg)
 
         tStr.replace(tStr.find(tTextLns[2]), strlen(tTextLns[2]), tTextLns[3]);
 
-        delete [] ed->description;
-        ed->description = mud_str_dup(tStr);
+        ed->description = tStr;
       }
       return;
       break;
@@ -1236,7 +1231,7 @@ void TPerson::doEdit(const char *arg)
       break;
     case 16:
       //dash marker
-      if (!roomp->descr) {
+      if (roomp->descr.empty()) {
 	sendTo("Room doesn't have a description, cannot use autoformatter.\n\r");
 	return;
       }
@@ -1295,8 +1290,7 @@ void TPerson::doEdit(const char *arg)
       newDescr += line;
       newDescr += "\n\r";
 
-      delete [] roomp->descr;
-      roomp->descr = mud_str_dup(newDescr);
+      roomp->descr = newDescr;
 
       sendTo("Room has been formatted.\n\r");
 
@@ -1387,9 +1381,6 @@ void TPerson::doEdit(const char *arg)
       break;
   }
 
-  if (*desc->str) 
-    delete [] (*desc->str);
-  
   if (*sstring) {		// there was a sstring in the argument array 
     if (strlen(sstring) > (unsigned int) room_length[field - 1]) {
       sendTo("String too long - truncated.\n\r");
@@ -1685,8 +1676,7 @@ static void ChangeRoomName(TRoom *rp, TBeing *ch, const char *arg, editorEnterTy
       update_room_menu(ch);
       return;
     }
-    delete [] rp->name;
-    rp->name = mud_str_dup(arg);
+    rp->name = arg;
     ch->specials.edit = MAIN_MENU;
     update_room_menu(ch);
     return;
@@ -1717,8 +1707,7 @@ static void ChangeRoomDesc(TRoom *rp, TBeing *ch, const char *, editorEnterTypeT
   ch->sendTo(descr_str.c_str());
   ch->sendTo("\n\r\n\rNew Room Description:\n\r");
   ch->sendTo("(Terminate with a ~ on a NEW LINE. Press <C/R> again to continue)\n\r");
-  delete [] rp->getDescr();
-  rp->setDescr(NULL);
+  rp->setDescr("");
   ch->desc->str = &rp->descr;
   ch->desc->max_str = MAX_STRING_LENGTH;
   return;
@@ -2199,7 +2188,7 @@ static void ChangeExitWeight(TRoom *rp, TBeing *ch, const char *arg, editorEnter
     }
   }
   ch->sendTo(format("\n\r\n\rEnter the weight you wish the %s to have.\n\r") %
-    ((rp->dir_option[dir]->keyword) ? fname(rp->dir_option[dir]->keyword) :
+    ((!rp->dir_option[dir]->keyword.empty()) ? fname(rp->dir_option[dir]->keyword) :
       "BOGUS DOOR KEYWORD"));
   ch->sendTo("\n\rNew Weight: ");
   return;
@@ -2255,9 +2244,7 @@ static void ChangeExitKeyword(TRoom *rp, TBeing *ch, const char *arg, editorEnte
       return;
     }
 
-    delete [] rp->dir_option[dir]->keyword;
-
-    rp->dir_option[dir]->keyword = mud_str_dup(arg);
+    rp->dir_option[dir]->keyword = arg;
 
     switch (dir) {
       case DIR_NORTH:
@@ -2299,7 +2286,7 @@ static void ChangeExitKeyword(TRoom *rp, TBeing *ch, const char *arg, editorEnte
     ChangeExitWeight(rp, ch, "", ENTER_CHECK);
     return;
   }
-  if (rp->dir_option[dir]->keyword) {
+  if (!rp->dir_option[dir]->keyword.empty()) {
     ch->sendTo(format("Former Keywords: %s\n\r") % rp->dir_option[dir]->keyword);
     ch->sendTo("    You will need to retype the Former Keyword if you want to keep it.\n\r");
   }
@@ -2891,7 +2878,7 @@ static void change_room_extra(TRoom *rp, TBeing *ch, const char *arg, editorEnte
 	ch->desc->str = &ed->description;
 	ch->sendTo("Enter the description. Terminate with a '~' on a NEW LINE.\n\r");
 	break;
-      } else if (!strcasecmp(ed->keyword, arg)) {
+      } else if (boost::iequals(ed->keyword, arg)) {
         ch->sendTo(format("Current description:\n\r%s\n\r") % ed->description);
         ch->sendTo("This description has been deleted.  If you needed to modify it, simply readd it.\n\r");
         ch->sendTo("Press return to proceed.\n\r");
@@ -2938,11 +2925,11 @@ static void RoomSave(TBeing *ch, int start, int end, int useSecond)
   strcpy(dots, "\0");
 
   db.query("delete from room where owner='%s' and block=%i", 
-	   ch->getName(), useSecond);
+	   ch->getName().c_str(), useSecond);
   db.query("delete from roomexit where owner='%s' and block=%i",
-	   ch->getName(), useSecond);
+	   ch->getName().c_str(), useSecond);
   db.query("delete from roomextra where owner='%s' and block=%i", 
-	   ch->getName(), useSecond);
+	   ch->getName().c_str(), useSecond);
 
   for (i = rstart; i <= rend; i++) {
     rp = real_roomp(i);
@@ -2953,18 +2940,18 @@ static void RoomSave(TBeing *ch, int start, int end, int useSecond)
 
     x = 0;
 
-    if (!rp->getDescr()) {
+    if (rp->getDescr().empty()) {
       rp->setDescr(mud_str_dup("Empty\n"));
     }
-    for (k = 0; k <= (int) strlen(rp->getDescr()); k++) {
+    for (k = 0; k <= (int) rp->getDescr().length(); k++) {
       if (rp->getDescr()[k] != 13)
 	temp[x++] = rp->getDescr()[k];
     }
     temp[x] = '\0';
 
     db.query("insert into room (owner, block, vnum,x,y,z,name,description,room_flag,sector,teletime,teletarg,telelook,river_speed,river_dir,capacity,height) values ('%s',%i,%i,%i,%i,%i, '%s','%s',%i,%i,%i,%i,%i,%i,%i,%i,%i)",
-	     ch->getName(), useSecond,
-	     rp->number, 0, 0, 0, rp->name, temp,
+	     ch->getName().c_str(), useSecond,
+	     rp->number, 0, 0, 0, rp->name.c_str(), temp,
 	     rp->getRoomFlags(),
 	     mapSectorToFile(rp->getSectorType()), 
 	     rp->getTeleTime(), rp->getTeleTarg(),
@@ -2976,8 +2963,8 @@ static void RoomSave(TBeing *ch, int start, int end, int useSecond)
       rdd = rp->dir_option[j];
       if (rdd) {
 	temp[0]='\0';
-	if (rdd->description) {
-	  for (k = 0, x = 0; k <= (int) strlen(rdd->description); k++) {
+	if (!rdd->description.empty()) {
+	  for (k = 0, x = 0; k <= (int) rdd->description.length(); k++) {
 	    if (rdd->description[k] != 13)
 	      temp[x++] = rdd->description[k];
 	  }
@@ -2994,7 +2981,7 @@ static void RoomSave(TBeing *ch, int start, int end, int useSecond)
 
 
 	db.query("insert into roomexit (owner,block, vnum,direction,name,description,type,condition_flag,lock_difficulty,weight,key_num,destination) values ('%s', %i, %i, %i,'%s','%s',%i,%i,%i,%i,%i,%i)", 
-		 ch->getName(), useSecond,
+		 ch->getName().c_str(), useSecond,
 		 rp->number, mapDirToFile(j), keyword.c_str(),
 		 descr.c_str(),
 		 rdd->door_type, rdd->condition, rdd->lock_difficulty,
@@ -3006,14 +2993,14 @@ static void RoomSave(TBeing *ch, int start, int end, int useSecond)
 
     for (exptr = rp->ex_description; exptr; exptr = exptr->next) {
       x = 0;
-      if (exptr->description) {
-	for (k = 0; k <= (int) strlen(exptr->description); k++) {
+      if (!exptr->description.empty()) {
+	for (k = 0; k <= (int) exptr->description.length(); k++) {
 	  if (exptr->description[k] != 13)
 	    temp[x++] = exptr->description[k];
 	}
 	temp[x] = '\0';
 
-	db.query("insert into roomextra (owner, block, vnum, name, description) values ('%s',%i,%i,'%s','%s')", ch->getName(), useSecond, rp->number, exptr->keyword, temp);
+	db.query("insert into roomextra (owner, block, vnum, name, description) values ('%s',%i,%i,'%s','%s')", ch->getName().c_str(), useSecond, rp->number, exptr->keyword.c_str(), temp);
       }
     }
 
@@ -3038,12 +3025,12 @@ void RoomLoad(TBeing *ch, int start, int end, int useSecond)
 
   ch->sendTo("Searching and loading rooms\n\r");
 
-  db.query("select vnum, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height from room where owner='%s' and block=%i and vnum >= %i and vnum <= %i order by vnum asc", ch->getName(), useSecond, start, end);
+  db.query("select vnum, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height from room where owner='%s' and block=%i and vnum >= %i and vnum <= %i order by vnum asc", ch->getName().c_str(), useSecond, start, end);
 
-  db_exits.query("select vnum, direction, name, description, type, condition_flag, lock_difficulty, weight, key_num, destination from roomexit where owner='%s' and block=%i and vnum >= %i and vnum <= %i order by vnum asc", ch->getName(), useSecond, start, end);
+  db_exits.query("select vnum, direction, name, description, type, condition_flag, lock_difficulty, weight, key_num, destination from roomexit where owner='%s' and block=%i and vnum >= %i and vnum <= %i order by vnum asc", ch->getName().c_str(), useSecond, start, end);
   db_exits.fetchRow();
 
-  db_extras.query("select vnum, name, description from roomextra where owner='%s' and block=%i and vnum >= %i and vnum <= %i order by vnum asc", ch->getName(), useSecond, start, end);
+  db_extras.query("select vnum, name, description from roomextra where owner='%s' and block=%i and vnum >= %i and vnum <= %i order by vnum asc", ch->getName().c_str(), useSecond, start, end);
   db_extras.fetchRow();
 
   while(db.fetchRow()){
@@ -3118,11 +3105,11 @@ void RoomLoad(TBeing *ch, int start, int end, int useSecond)
       while(convertTo<int>(db_extras["vnum"]) == rp2->number){
 	new_descr = new extraDescription();
 	new_descr->keyword = mud_str_dup(db_extras["name"]);
-	if (!new_descr->keyword || !*new_descr->keyword)
+	if (new_descr->keyword.empty())
 	  vlogf(LOG_EDIT, format("No keyword in room %d\n") %  rp2->number);
 
 	new_descr->description = mud_str_dup(db_extras["description"]);
-	if (!new_descr->description || !*new_descr->description)
+	if (new_descr->description.empty())
 	  vlogf(LOG_LOW, format("No desc in room %d\n") %  rp2->number);
 
 	new_descr->next = rp2->ex_description;
@@ -3158,11 +3145,11 @@ void RoomLoad(TBeing *ch, int start, int end, int useSecond)
 	  return;
 	}
 	rp2->dir_option[dir]->door_type = doorTypeT(tmp);
-	if ((tmp == DOOR_NONE) && (rp2->dir_option[dir]->keyword)){
-	  if (strcmp(rp2->dir_option[dir]->keyword, "_unique_door_"))
+	if ((tmp == DOOR_NONE) && !rp2->dir_option[dir]->keyword.empty()){
+	  if (rp2->dir_option[dir]->keyword != "_unique_door_")
 	    vlogf(LOG_LOW,format("non-door with name in room %d") % rp2->number);
 	}
-	if ((tmp != DOOR_NONE) && !(rp2->dir_option[dir]->keyword)){
+	if ((tmp != DOOR_NONE) && rp2->dir_option[dir]->keyword.empty()){
 	  vlogf(LOG_LOW,format("door with no name in room %d") % rp2->number);
 	}
 
@@ -3325,11 +3312,11 @@ void TRoom::loadOne(FILE *fl, bool tinyfile)
       case 'E': // Extra description
         new_descr = new extraDescription();
         new_descr->keyword = fread_string(fl);
-        if (!new_descr->keyword || !*new_descr->keyword)
+        if (new_descr->keyword.empty())
           vlogf(LOG_EDIT, format("No keyword in room %d\n") %  number);
 
         new_descr->description = fread_string(fl);
-        if (!new_descr->description || !*new_descr->description)
+        if (new_descr->description.empty())
           vlogf(LOG_LOW, format("No desc in room %d\n") %  number);
 
         new_descr->next = ex_description;

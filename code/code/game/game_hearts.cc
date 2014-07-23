@@ -70,8 +70,8 @@ const sstring HeartsGame::hearts_score()
   score4 = score[3];
 
   sprintf(buf, "\n\r%s : %d %s : %d %s : %d %s : %d\n\r",
-          ch1->getName(), score1, ch2->getName(), score2,
-          ch3->getName(), score3, ch4->getName(), score4);
+          ch1->getName().c_str(), score1, ch2->getName().c_str(), score2,
+          ch3->getName().c_str(), score3, ch4->getName().c_str(), score4);
 
   return buf;
 }
@@ -248,7 +248,7 @@ int HeartsGame::enter(const TBeing *ch)
       }
     }
     ch->sendTo("You sit down at the hearts table.\n\r");
-    strcpy(names[which], ch->getName());
+    strcpy(names[which], ch->getName().c_str());
     inuse[which] = TRUE;
     score[which] = 0;
     game = FALSE;
@@ -302,7 +302,7 @@ int HeartsGame::index(const TBeing *ch) const
   int i;
 
   for (i = 0; i < 4; i++) {
-    if (!strcmp(ch->getName(), names[i]))
+    if (ch->getName() == names[i])
       return i;
   }
   return -1;
@@ -413,7 +413,7 @@ int HeartsGame::new_round(TBeing *ch, int *pilex)
     vlogf(LOG_BUG, "Null character for won in HeartsGame::new_round()");
     return FALSE;
   }
-  sendrpf(won->roomp, "%s takes the trick with the %s.\n\r", won->getName(), pretty_card_printout(NULL, pilex[wincard]).c_str());
+  sendrpf(won->roomp, "%s takes the trick with the %s.\n\r", won->getName().c_str(), pretty_card_printout(NULL, pilex[wincard]).c_str());
   won->sendTo(format("You take the trick with the %s.\n\r") % pretty_card_printout(ch, pilex[wincard]));
 
   tricks[round][4] = winner;

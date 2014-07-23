@@ -282,7 +282,7 @@ sstring TSymbol::getNameForShow(bool useColor, bool useName, const TBeing *ch) c
 {
   char buf2[256];
   sprintf(buf2, "%s (L%d)",
-       useName ? name : (useColor ? getName() : getNameNOC(ch).c_str()),
+       useName ? name.c_str() : (useColor ? getName().c_str() : getNameNOC(ch).c_str()),
        (int) (getSymbolLevel() + 0.5));
   return buf2;
 }

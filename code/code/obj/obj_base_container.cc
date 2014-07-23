@@ -50,7 +50,7 @@ bool TBaseContainer::engraveMe(TBeing *ch, TMonster *me, bool give)
   me->doTell(ch->getName(), "The powers that be say I can't do that anymore.");
 
   if (give) {
-    strcpy(buf, name);
+    strcpy(buf, name.c_str());
     strcpy(buf, add_bars(buf).c_str());
     sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
     me->doGive(buf);
@@ -138,12 +138,12 @@ void TBaseContainer::logMe(const TBeing *ch, const char *cmdbuf) const
 
   const char *last = NULL;
   if(!stuff.empty())
-    last=stuff.front()->getName();
+    last=stuff.front()->getName().c_str();
   int runcount=1;
   TThing *t;
   for(StuffIter it=stuff.begin();it!=stuff.end(); ++runcount){
     t=*(it++);
-    if(it==stuff.end() || strcmp(last, (*it)->getName())){
+    if(it==stuff.end() || strcmp(last, (*it)->getName().c_str())){
       if(runcount>1){
         vlogf(LOG_SILENT, format("%s%s%s %s containing %s [%i].") %     
               (ch ? ch->getName() : "") %                      
@@ -156,11 +156,11 @@ void TBaseContainer::logMe(const TBeing *ch, const char *cmdbuf) const
           cmdbuf % getName() % t->getName());                   
       runcount=0;                                             
       if(it!=stuff.end())
-        last=(*it)->getName();
+        last=(*it)->getName().c_str();
       else
-        last=t->getName();
+        last=t->getName().c_str();
     } else
-      last=t->getName();
+      last=t->getName().c_str();
   }
 }
 

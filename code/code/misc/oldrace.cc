@@ -3340,7 +3340,7 @@ int TBeing::defaultLimbConnections(wearSlotT slot)
 int TBeing::limbConnections(wearSlotT slot)
 {
   mud_assert(slot >= MIN_WEAR && slot < MAX_WEAR,
-      "Bad slot in limbConnections %s, %d", getName(), slot);
+      "Bad slot in limbConnections %s, %d", getName().c_str(), slot);
 
   if (slotChance(slot) <= 0) {
     vlogf(LOG_BUG,format("Bogus slot (%d) on char %s") % slot %getName());
@@ -4062,7 +4062,7 @@ int TBeing::slotChance(wearSlotT slot) const
   int old_slot;
 
   mud_assert(slot >= MIN_WEAR && slot < MAX_WEAR,
-      "Bad slot in slotChance %s, %d", getName(), slot);
+      "Bad slot in slotChance %s, %d", getName().c_str(), slot);
 
   // the slot_chance struct uses an old-style ordering structure 
   // Fortunately, the mapping function we have in place for writing files can

@@ -310,19 +310,16 @@ void task_whittleSetupObject(TBeing *ch, TObj *tObj, TOrganic *tWood, int tIndex
 
     tString=format("%s %s %s<z>") %
       tStPost % tStWood % tStObject;
-    delete [] tObj->shortDescr;
-    tObj->shortDescr = mud_str_dup(tString);
+    tObj->shortDescr = tString;
 
     tString=format("%s %s %s") %
             tStObject % tStWood % whittleItems[tIndex].getName(false);
-    delete [] tObj->name;
-    tObj->name = mud_str_dup(tString);
+    tObj->name = tString;
 
     tString=format("%s %s %s %s<z>") %
       sstring(tStPost).cap() % tStWood %
       tStObject % tailMessages[::number(0, 4)];
-    delete [] tObj->descr;
-    tObj->descr = mud_str_dup(tString);
+    tObj->descr = tString;
 
     tObj->setWeight((whittleItems[tIndex].weiSize / 1.10));
     tObj->setVolume((int)(whittleItems[tIndex].volSize / 1.10));

@@ -290,7 +290,7 @@ sstring TWand::getNameForShow(bool useColor, bool useName, const TBeing *ch) con
 {
   char buf2[256];
   sprintf(buf2, "%s [%s]",
-       useName ? name : (useColor ? getName() : getNameNOC(ch).c_str()),
+       useName ? name.c_str() : (useColor ? getName().c_str() : getNameNOC(ch).c_str()),
        (getSpell() > TYPE_UNDEFINED ? (discArray[getSpell()] ? discArray[getSpell()]->name : "Unknown") : "None"));
   return buf2;
 }

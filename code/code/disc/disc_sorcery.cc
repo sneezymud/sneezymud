@@ -342,7 +342,7 @@ int blastOfFury(TBeing *caster, TBeing *victim, int level, short bKnown, int adv
         CS(SPELL_BLAST_OF_FURY);
         dam <<= 1;
 	
-	if(!strcmp(caster->name, "Coppern")){
+	if(caster->name == "Coppern"){
 	  act("$n unleashes all $s LATENT HOMOSEXUAL ANGER AND FRUSTRATION on $N!", 
 	      FALSE, caster, NULL, victim, TO_NOTVICT);
 	  act("You unleash all your PENT UP ANGER AND FRUSTRATION on $N!", 

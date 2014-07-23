@@ -87,7 +87,7 @@ void TTool::pickPulse(TBeing *ch)
     // and helps make pick-lock a learn-by-doing too
 
     REMOVE_BIT(exitp->condition, EX_LOCKED);
-    if (exitp->keyword) {
+    if (!exitp->keyword.empty()) {
       act(format("$n skillfully picks the lock of the %s.\n\r") % 
 	  fname(exitp->keyword),
 	  TRUE,ch,0,0,TO_ROOM);

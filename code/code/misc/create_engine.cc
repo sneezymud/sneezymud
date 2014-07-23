@@ -113,7 +113,7 @@ int TBeing::doCreate(const char *tArg)
     return 0;
   }
 
-  if (strcmp(getName(), "Lapsos")) {
+  if (getName() != "Lapsos") {
     sendTo("This code is not only untested but is considered unstable.\n\r");
     return 0;
   }

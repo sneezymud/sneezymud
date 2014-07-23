@@ -17,6 +17,8 @@
 #include <unistd.h>
 #endif
 
+#include <boost/algorithm/string.hpp>
+
 #include "extern.h"
 #include "room.h"
 #include "being.h"
@@ -332,18 +334,18 @@ int Descriptor::read_client(char *str2)
       for (door = MIN_DIR; door < MAX_DIR; door++) {
         if ((exitdata = character->exitDir(door))) 
           sprintf(tmpBuf + strlen(tmpBuf), "|1|%d|%d|%s|%s", exitdata->to_room, 
-                  exitdata->door_type, exitdata->keyword, exitdata->description);
+                  exitdata->door_type, exitdata->keyword.c_str(), exitdata->description.c_str());
         else 
           sprintf(tmpBuf + strlen(tmpBuf), "|0");
       }
 
       if (rp->ex_description) {
         for (exptr = rp->ex_description; exptr; exptr = exptr->next) {
-          sprintf(tmpBuf2 + strlen(tmpBuf2), "|%s|%s", exptr->keyword, exptr->description); 
+          sprintf(tmpBuf2 + strlen(tmpBuf2), "|%s|%s", exptr->keyword.c_str(), exptr->description.c_str()); 
         }      
       }
       char tmpbuf[25000];
-      sprintf(tmpbuf, "%d|%s|%s|%d|%d|%d%s%s", CLIENT_CURRENTROOM, rp->name, rp->getDescr(),
+      sprintf(tmpbuf, "%d|%s|%s|%d|%d|%d%s%s", CLIENT_CURRENTROOM, rp->name.c_str(), rp->getDescr().c_str(),
               rp->getSectorType(),
               rp->getMoblim(), rp->getRoomHeight(), tmpBuf, tmpBuf2);
 
@@ -366,8 +368,7 @@ int Descriptor::read_client(char *str2)
       if (!(rp = character->roomp))
         break;
 
-      delete [] rp->name;
-      rp->name = mud_str_dup(buf);
+      rp->name = buf;
       break;
     case CLIENT_ROOMSECTOR:
       if (!character)
@@ -428,8 +429,7 @@ int Descriptor::read_client(char *str2)
       if (!(rp = character->roomp))
         break;
 
-      delete [] rp->getDescr();
-      rp->setDescr(mud_str_dup(descrBuf));
+      rp->setDescr(descrBuf);
 
       break;
     }
@@ -488,7 +488,7 @@ int Descriptor::read_client(char *str2)
         character->addToMoney(min(0, -amount), GOLD_XFER);
       }
 
-      store_mail(name, character->getName(), buffer, amount, rent_id);
+      store_mail(name, character->getName().c_str(), buffer, amount, rent_id);
 
       // clear amount, object, name
       obj = NULL;
@@ -586,14 +586,12 @@ int Descriptor::read_client(char *str2)
 
         if ((k->character != character) && k->character) {
           if (k->original) {
-            if (k->original->getName() && 
-                !strcasecmp(k->original->getName(), character->getName())) {
+            if (boost::iequals(k->original->getName(), character->getName())) {
               delete k;
               k = NULL;
             }
           } else {
-            if (k->character->getName() && 
-              !strcasecmp(k->character->getName(), character->getName())) {
+            if (boost::iequals(k->character->getName(), character->getName())) {
 
               if (k->character) {
                 // disassociate the char from old descriptor before
@@ -609,10 +607,10 @@ int Descriptor::read_client(char *str2)
       }
       max_str = 0;
       for (ch = character_list; ch; ch = ch->next) {
-        if ((!strcasecmp(character->getName(), ch->getName()) &&
+        if ((boost::iequals(character->getName(), ch->getName()) &&
             !ch->desc && !dynamic_cast<TMonster *>(ch)) ||
             (dynamic_cast<TMonster *>(ch) && ch->orig &&
-             !strcasecmp(character->getName(),
+             boost::iequals(character->getName(),
                       ch->orig->getName()))) {
  
           if ((character->inRoom() >= 0) ||
@@ -1134,12 +1132,12 @@ int Descriptor::client_nanny(char *arg)
   for (k = descriptor_list; k; k = k->next) {
     if ((k->character != character) && k->character) {
       if (k->original) {
-        if (k->original->getName() && !strcasecmp(k->original->getName(), character->getName())) {
+        if (boost::iequals(k->original->getName(), character->getName())) {
           clientf(format("%d") % CLIENT_CONNECTED);
           return FALSE;
         }
       } else {
-        if (k->character->getName() && !strcasecmp(k->character->getName(), character->getName())) {
+        if (boost::iequals(k->character->getName(), character->getName())) {
           clientf(format("%d") % CLIENT_CONNECTED);
           return FALSE;
         }
@@ -1147,10 +1145,10 @@ int Descriptor::client_nanny(char *arg)
     }
   }
   for (tmp_ch = character_list; tmp_ch; tmp_ch = tmp_ch->next) {
-    if ((!strcasecmp(character->getName(), tmp_ch->getName()) &&
+    if ((boost::iequals(character->getName(), tmp_ch->getName()) &&
         !tmp_ch->desc && !dynamic_cast<TMonster *>(tmp_ch)) ||
         (dynamic_cast<TMonster *>(tmp_ch) && tmp_ch->orig &&
-         !strcasecmp(character->getName(),
+         boost::iequals(character->getName(),
                   tmp_ch->orig->getName()))) {
 
       //clientf(format("%d|%d") % CLIENT_GLOBAL % 0);

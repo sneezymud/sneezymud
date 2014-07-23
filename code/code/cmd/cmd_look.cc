@@ -98,7 +98,7 @@ void TBeing::lookDir(int keyword_no)
     return;
   } else {
     if (canSeeThruDoor(exitp)) {
-      if (exitp->description)
+      if (!exitp->description.empty())
 	sendTo(COLOR_ROOMS, exitp->description);
       else {
 	if (exitp->to_room && (rp = real_roomp(exitp->to_room))) {

@@ -42,7 +42,7 @@ bool BjGame::enter(const TBeing *ch)
   int player, inx;
 
   for (player = 0, inx = -1; player < MAX_BLACKJACK; player++) {
-    if (!strcmp(ch->name, name)) {
+    if (ch->name == name) {
       inx = player;
       ch->sendTo("The dealer says, 'Ah, you have returned.'\n\r");
     }
@@ -57,7 +57,7 @@ bool BjGame::enter(const TBeing *ch)
   }
   ch->sendTo("You move up to the blackjack table.\n\r");
   inuse = TRUE;
-  strcpy(name, ch->name);
+  strcpy(name, ch->name.c_str());
   bj_shuffle(inx, ch);
   bet = 0;
   return TRUE;
@@ -381,7 +381,7 @@ int BjGame::index(const TBeing *ch) const
   int player, inx;
 
   for (player = 0, inx = -1; inx < 0 && player < MAX_BLACKJACK; player++) {
-    if (!strcmp(ch->name, name))
+    if (ch->name == name)
       inx = player;
   }
   return inx;

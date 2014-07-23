@@ -114,26 +114,22 @@ void TTrashPile::updateDesc()
   int index=getSizeIndex();
 
   if (isObjStat(ITEM_STRUNG)) {
-    delete [] shortDescr;
-    delete [] descr;
-
     extraDescription *exd;
     while ((exd = ex_description)) {
       ex_description = exd->next;
       delete exd;
     }
     ex_description = NULL;
-    delete [] action_description;
-    action_description = NULL;
+    action_description = "";
   } else {
     addObjStat(ITEM_STRUNG);
-    name=mud_str_dup(obj_index[getItemIndex()].name);
+    name=obj_index[getItemIndex()].name;
     ex_description = NULL;
-    action_description = NULL;
+    action_description = "";
   }
 
-  shortDescr = mud_str_dup(pilename[index]);
-  setDescr(mud_str_dup(piledesc[index]));
+  shortDescr = pilename[index];
+  setDescr(piledesc[index]);
 }
 
 
@@ -282,7 +278,7 @@ void TTrashPile::attractVermin()
 
   *roomp += *mob;
   sendrpf(COLOR_BASIC, roomp, buf.c_str(), 
-	  sstring(mob->getName()).cap().c_str(), getName());
+	  sstring(mob->getName()).cap().c_str(), getName().c_str());
   
 }
 

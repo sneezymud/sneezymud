@@ -18,7 +18,7 @@
 
 const char * TThing::objs(const TThing *t) const
 {
-  return (canSee(t) ? t->getName() : "something");
+  return (canSee(t) ? t->getName().c_str() : "something");
 }
 
 const sstring TThing::objn(const TThing *t) const
@@ -28,17 +28,17 @@ const sstring TThing::objn(const TThing *t) const
 
 const char * TThing::ana() const
 {
-  return (strchr("aeiouyAEIOUY", *name) ? "An" : "A");
+  return (strchr("aeiouyAEIOUY", name[0]) ? "An" : "A");
 }
 
 const char * TThing::sana() const
 {
-  return (strchr("aeiouyAEIOUY", *name) ? "an" : "a");
+  return (strchr("aeiouyAEIOUY", name[0]) ? "an" : "a");
 }
 
 const char * TThing::pers(const TThing *t) const
 {
-  return (canSee(t) ? t->getName() : "someone");
+  return (canSee(t) ? t->getName().c_str() : "someone");
 }
 
 const sstring TThing::persfname(const TThing *t) const

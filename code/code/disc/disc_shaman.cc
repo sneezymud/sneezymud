@@ -92,17 +92,14 @@ int voodoo(TBeing *caster, TObj *obj, int level, short bKnown)
   // set up descriptions and such 
   mob->swapToStrung();
   sprintf(buf, "zombie %s", mob_index[mob->getMobIndex()].name);
-  delete [] mob->name;
-  mob->name = mud_str_dup(buf);
+  mob->name = buf;
   sprintf(buf, "a zombie of %s", mob_index[mob->getMobIndex()].short_desc);
-  delete [] mob->shortDescr;
-  mob->shortDescr = mud_str_dup(buf);
+  mob->shortDescr = buf;
 
-  strcpy(capbuf, mob->getName());
+  strcpy(capbuf, mob->getName().c_str());
   sprintf(buf, "%s is here, obediently following its master.\n\r", 
 	  sstring(capbuf).cap().c_str());
-  delete [] mob->player.longDescr;
-  mob->player.longDescr = mud_str_dup(buf);
+  mob->player.longDescr = buf;
 
   if (caster->tooManyFollowers(mob, FOL_ZOMBIE)) {
     act("$N refuses to enter a group the size of yours!", 
@@ -272,16 +269,13 @@ int dancingBones(TBeing * caster, TObj * obj, int level, short bKnown)
  /* set up descriptions and such */
   mob->swapToStrung();
   sprintf(buf, "skeleton %s", mob_index[mob->getMobIndex()].name);
-  delete [] mob->name;
-  mob->name = mud_str_dup(buf);
+  mob->name = buf;
   sprintf(buf, "a skeleton of %s", mob_index[mob->getMobIndex()].short_desc);
-  delete [] mob->shortDescr;
-  mob->shortDescr = mud_str_dup(buf);
-  strcpy(capbuf, mob->getName());
+  mob->shortDescr = buf;
+  strcpy(capbuf, mob->getName().c_str());
   sprintf(buf, "%s is here, enthralled by it's master.\n\r", 
 	  sstring(capbuf).cap().c_str());
-  delete [] mob->player.longDescr;
-  mob->player.longDescr = mud_str_dup(buf);
+  mob->player.longDescr = buf;
 
   if (caster->tooManyFollowers(mob, FOL_ZOMBIE)) {
     act("$N refuses to enter a group the size of yours!", 

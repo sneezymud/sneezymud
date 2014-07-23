@@ -420,7 +420,7 @@ static int getRepairItem(TBeing *repair, TBeing *buyer, int ticket, TNote *obj)
   
   // check if the player has enough money to pay for it
   if (tmp_cost > buyer->getMoney()) {
-    sprintf(buf, "%s I don't repair items for free! No money, no item!", buyer->getName());
+    sprintf(buf, "%s I don't repair items for free! No money, no item!", buyer->getName().c_str());
     repair->doSay(buf);
     sprintf(buf, "Remember the price is %d.", tmp_cost);
     repair->doSay(buf);
@@ -817,7 +817,7 @@ void TNote::giveToRepairNote(TMonster *repair, TBeing *buyer, int *found)
   // found indicates a ticket was found for give all.ticket
   *found = TRUE;
 
-  if (!action_description) {
+  if (action_description.empty()) {
     repair->doTell(fname(buyer->name), "That ticket is blank!");
     return;
   }
@@ -825,7 +825,7 @@ void TNote::giveToRepairNote(TMonster *repair, TBeing *buyer, int *found)
     repair->doTell(fname(buyer->name), "That isn't one of my tickets!");
     return;
   }
-  strcpy(buf, getName());
+  strcpy(buf, getName().c_str());
   if (sscanf(buf, "a small ticket marked number %d", &iNumber) != 1) {
     repair->doTell(fname(buyer->name), "That ticket isn't from THIS shop!");
   } else {
@@ -1016,14 +1016,11 @@ void TNote::noteMe(TMonster *repair, TBeing *buyer, TObj *repaired, time_t when_
 
   swapToStrung();
 
-  delete [] getDescr();
-  setDescr(mud_str_dup(((sstring)(format("A receipt ticket from %s's shop lies here.") % repair->getName())).c_str()));
+  setDescr(((sstring)(format("A receipt ticket from %s's shop lies here.") % repair->getName())).c_str());
 
-  delete [] shortDescr;
-  shortDescr = mud_str_dup(((sstring)(format("a small ticket marked number %d") % tick_num)).c_str());
+  shortDescr = ((sstring)(format("a small ticket marked number %d") % tick_num)).c_str();
 
-  delete [] name;
-  name = mud_str_dup("ticket");
+  name = "ticket";
 
   buf = format("Ticket number %d from %s's shop:\n\r\n\r") % tick_num % repair->getName();
   buf += format("Item being repaired : %s\n\r") % repaired->shortDescr;
@@ -1033,8 +1030,7 @@ void TNote::noteMe(TMonster *repair, TBeing *buyer, TObj *repaired, time_t when_
   char *ready = asctime(localtime(&when_ready));
   ready[24] = '\0'; // removes the trailing '\n'
   buf += format("Estimated time of finish : %s.\n\r") % ready;
-  delete [] action_description;
-  action_description = mud_str_dup(buf);
+  action_description = buf;
 
   obj_flags.cost = repaired->obj_flags.cost;
   setRepairman(mob_index[repair->getMobIndex()].virt);
@@ -1132,7 +1128,7 @@ int repairMetal(TBeing *ch, TObj *o)
   act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
   act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
 
-  start_task(ch, NULL, NULL, TASK_BLACKSMITHING, o->name, 999, (ushort) ch->in_room, 0, 0, 0);
+  start_task(ch, NULL, NULL, TASK_BLACKSMITHING, o->name.c_str(), 999, (ushort) ch->in_room, 0, 0, 0);
   return 0;
 }
 
@@ -1145,7 +1141,7 @@ int repairDead(TBeing *ch, TObj *o)
   act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
   act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
 
-  start_task(ch, NULL, NULL, TASK_REPAIR_DEAD, o->name, 999, (ushort) ch->in_room, 0, 0, 0);
+  start_task(ch, NULL, NULL, TASK_REPAIR_DEAD, o->name.c_str(), 999, (ushort) ch->in_room, 0, 0, 0);
   return 0;
 }
 
@@ -1158,7 +1154,7 @@ int repairOrganic(TBeing *ch, TObj *o)
   act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
   act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
 
-  start_task(ch, NULL, NULL, TASK_REPAIR_ORGANIC, o->name, 999, (ushort) ch->in_room, 0, 0, 0);
+  start_task(ch, NULL, NULL, TASK_REPAIR_ORGANIC, o->name.c_str(), 999, (ushort) ch->in_room, 0, 0, 0);
   return 0;
 }
 
@@ -1171,7 +1167,7 @@ int repairWood(TBeing *ch, TObj *o)
   act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
   act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
 
-  start_task(ch, NULL, NULL, TASK_REPAIR_WOOD, o->name, 999, (ushort) ch->in_room, 0, 0, 0);
+  start_task(ch, NULL, NULL, TASK_REPAIR_WOOD, o->name.c_str(), 999, (ushort) ch->in_room, 0, 0, 0);
   return 0;
 }
 
@@ -1184,7 +1180,7 @@ int repairMagical(TBeing *ch, TObj *o)
   act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
   act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
 
-  start_task(ch, NULL, NULL, TASK_REPAIR_MAGICAL, o->name, 999, (ushort) ch->in_room, 0, 0, 0);
+  start_task(ch, NULL, NULL, TASK_REPAIR_MAGICAL, o->name.c_str(), 999, (ushort) ch->in_room, 0, 0, 0);
   return 0;
 }
 
@@ -1197,7 +1193,7 @@ int repairRock(TBeing *ch, TObj *o)
   act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
   act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
 
-  start_task(ch, NULL, NULL, TASK_REPAIR_ROCK, o->name, 999, (ushort) ch->in_room, 0, 0, 0);
+  start_task(ch, NULL, NULL, TASK_REPAIR_ROCK, o->name.c_str(), 999, (ushort) ch->in_room, 0, 0, 0);
   return 0;
 }
 
@@ -1210,7 +1206,7 @@ int repairCrystal(TBeing *ch, TObj *o)
   act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
   act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
 
-  start_task(ch, NULL, NULL, TASK_BLACKSMITHING_ADVANCED, o->name, 999, (ushort) ch->in_room, 0, 0, 0);
+  start_task(ch, NULL, NULL, TASK_BLACKSMITHING_ADVANCED, o->name.c_str(), 999, (ushort) ch->in_room, 0, 0, 0);
   return 0;
 }
 
@@ -1223,7 +1219,7 @@ int repairHide(TBeing *ch, TObj *o)
   act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
   act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
 
-  start_task(ch, NULL, NULL, TASK_MEND_HIDE, o->name, 999, (ushort) ch->in_room, 0, 0, 0);
+  start_task(ch, NULL, NULL, TASK_MEND_HIDE, o->name.c_str(), 999, (ushort) ch->in_room, 0, 0, 0);
   return 0;
 }
 
@@ -1236,7 +1232,7 @@ int repairGeneric(TBeing *ch, TObj *o)
   act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
   act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
 
-  start_task(ch, NULL, NULL, TASK_MEND, o->name, 999, (ushort) ch->in_room, 0, 0, 0);
+  start_task(ch, NULL, NULL, TASK_MEND, o->name.c_str(), 999, (ushort) ch->in_room, 0, 0, 0);
   return 0;
 }
 
@@ -1249,7 +1245,7 @@ int repairSpiritual(TBeing *ch, TObj *o)
   act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
   act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
 
-  start_task(ch, NULL, NULL, TASK_REPAIR_SPIRITUAL, o->name, 999, (ushort) ch->in_room, 0, 0, 0);
+  start_task(ch, NULL, NULL, TASK_REPAIR_SPIRITUAL, o->name.c_str(), 999, (ushort) ch->in_room, 0, 0, 0);
   return 0;
 }
 

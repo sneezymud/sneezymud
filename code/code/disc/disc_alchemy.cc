@@ -576,7 +576,7 @@ int eyesOfFertuman(TBeing *caster, TBeing* victim, int level, short bKnown)
   for(int iObj = 0; iObj < eqFinder.getCount(); iObj++) {
     TThing *t = eqFinder.getFound(iObj);
     mud_assert(t != NULL, "Bad object found in Eyes of Fertuman");
-    if (!t->getName())
+    if (t->getName().empty())
       continue;
     caster->sendTo(t->getName());
     TThing *p = t->parent;
@@ -878,8 +878,7 @@ int TOpal::powerstoneMe(TBeing *caster, int, short bKnown)
       buf=name;
       buf+=" stone powerstone power";
       swapToStrung();
-      delete [] name;
-      name = mud_str_dup(buf);
+      name = buf;
 
       addObjStat(ITEM_MAGIC);
       addObjStat(ITEM_GLOW);

@@ -379,7 +379,7 @@ int sticksToSnakes(TBeing * caster, TBeing * victim, int level, short bKnown)
   if ((caster->followers) && (caster->GetMaxLevel() < GOD_LEVEL1))  {
       for (k = caster->followers; k; k = n) {
         n = k->next;
-        if (!strcmp(k->follower->getName(), snake->getName())) {
+        if (k->follower->getName() == snake->getName()) {
           act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
           caster->sendTo("You would have to be immortal to summon another snake!\n\r");
           delete snake;

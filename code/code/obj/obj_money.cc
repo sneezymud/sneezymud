@@ -185,7 +185,7 @@ TMoney *create_money(int amount, currencyTypeT currency)
 
   obj = read_object(Obj::GENERIC_TALEN, VIRTUAL);
   money = dynamic_cast<TMoney *>(obj);
-  mud_assert(money != NULL, "create_money created something that was not TMoney.  obj was: %s", obj ? obj->getName() : "NO OBJECT");
+  mud_assert(money != NULL, "create_money created something that was not TMoney.  obj was: %s", obj ? obj->getName().c_str() : "NO OBJECT");
 
   extraDescription *new_descr;
   sstring buf;
@@ -201,20 +201,17 @@ TMoney *create_money(int amount, currencyTypeT currency)
 
   new_descr = new extraDescription();
 
-  delete [] money->name;
-  delete [] money->shortDescr;
-  delete [] money->getDescr();
   if (amount == 1) {
-    money->name = mud_str_dup(money->getCurrencyName() + " money");
-    money->shortDescr = mud_str_dup("a "+money->getCurrencyName());
-    money->setDescr(mud_str_dup(format("One miserable %s lies here.") % money->getCurrencyName()));
+    money->name = money->getCurrencyName() + " money";
+    money->shortDescr = "a "+money->getCurrencyName();
+    money->setDescr(format("One miserable %s lies here.") % money->getCurrencyName());
 
-    new_descr->keyword = mud_str_dup(money->getCurrencyName() + " money");
-    new_descr->description = mud_str_dup(format("One miserable %s.\n\r") % money->getCurrencyName());
+    new_descr->keyword = money->getCurrencyName() + " money";
+    new_descr->description = format("One miserable %s.\n\r") % money->getCurrencyName();
 
   } else {
-    money->name = mud_str_dup(money->getCurrencyName()+"s money");
-    money->shortDescr = mud_str_dup(format("some %ss") % money->getCurrencyName());
+    money->name = money->getCurrencyName() +"s money";
+    money->shortDescr = format("some %ss") % money->getCurrencyName();
     if (amount > 100000)
       buf=format("A tremendously HUGE pile of %ss lies here.") % money->getCurrencyName();
     else if (amount > 50000)
@@ -232,19 +229,19 @@ TMoney *create_money(int amount, currencyTypeT currency)
     else
       buf=format("A few %ss have been left in a pile here.") % money->getCurrencyName();
 
-    money->setDescr(mud_str_dup(buf));
-    new_descr->keyword = mud_str_dup(money->getCurrencyName()+"s money");
+    money->setDescr(buf);
+    new_descr->keyword = money->getCurrencyName() +"s money";
     if (amount < 10) {
       buf=format("There are %i %ss.\n\r") % amount % money->getCurrencyName();
-      new_descr->description = mud_str_dup(buf);
+      new_descr->description = buf;
     } else if (amount < 100) {
       buf=format("There are about %i %ss.\n\r") % (10 * (amount / 10)) % money->getCurrencyName();
-      new_descr->description = mud_str_dup(buf);
+      new_descr->description = buf;
     } else if (amount < 10000) {
       buf=format("You guess there are %i %ss.\n\r") % (100 * (amount / 100)) % money->getCurrencyName();
-      new_descr->description = mud_str_dup(buf);
+      new_descr->description = buf;
     } else
-      new_descr->description = mud_str_dup(format("There are a LOT of %ss.\n\r") % money->getCurrencyName());
+      new_descr->description = format("There are a LOT of %ss.\n\r") % money->getCurrencyName();
   }
   new_descr->next = NULL;
   money->ex_description = new_descr;
@@ -380,7 +377,7 @@ void TMoney::onObjLoad()
 sstring TMoney::getNameForShow(bool useColor, bool useName, const TBeing *ch) const
 {
   char buf2[256];
-  sprintf(buf2, "%s [%d %ss]", useName ? name : (useColor ? getName() : getNameNOC(ch).c_str()), 
+  sprintf(buf2, "%s [%d %ss]", useName ? name.c_str() : (useColor ? getName().c_str() : getNameNOC(ch).c_str()), 
       getMoney(), getCurrencyName().c_str());
   return buf2;
 }

@@ -34,10 +34,10 @@ void TMonster::loadResponses(int virt, const sstring &immortal)
       return;  // no responses
   }
 
-  mud_assert(resps == NULL, "Mob (%s) already had Responses.", getName());
+  mud_assert(resps == NULL, "Mob (%s) already had Responses.", getName().c_str());
     
   resps = new Responses();
-  mud_assert(resps != NULL, "Mob (%s) failed initing Responses.", getName());
+  mud_assert(resps != NULL, "Mob (%s) failed initing Responses.", getName().c_str());
 
   //
   //    Read the response.

@@ -163,7 +163,7 @@ int GinGame::enter(const TBeing *ch)
       which = 1;
     }
     ch->sendTo(format("You sit down at the gin table. %s sits across from you at the table.\n\r") % (inuse[!which] ? names[!which] : "No one"));
-    strcpy(names[which], ch->getName());
+    strcpy(names[which], ch->getName().c_str());
     inuse[which] = TRUE;
     loser[which] = TRUE;
     return TRUE;
@@ -218,9 +218,9 @@ ch, NULL, NULL, TO_ROOM);
 
 int GinGame::index(const TBeing *ch) const
 {
-  if (!strcmp(ch->getName(), names[0]))
+  if (ch->getName() == names[0])
     return 0;
-  else if (!strcmp(ch->getName(), names[1]))
+  else if (ch->getName() == names[1])
     return 1;
   else
     return -1;
@@ -756,9 +756,9 @@ const sstring GinGame::gin_score()
   score2 = score[1];
 
   if (score1 >= score2)
-    sprintf(buf, "%s : %d to %s : %d", ch1->getName(), score1, ch2->getName(), score2);
+    sprintf(buf, "%s : %d to %s : %d", ch1->getName().c_str(), score1, ch2->getName().c_str(), score2);
   else
-    sprintf(buf, "%s : %d to %s : %d", ch2->getName(), score2, ch1->getName(), score1);
+    sprintf(buf, "%s : %d to %s : %d", ch2->getName().c_str(), score2, ch1->getName().c_str(), score1);
 
   return buf;
 }

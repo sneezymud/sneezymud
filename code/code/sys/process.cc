@@ -234,7 +234,7 @@ void TScheduler::runChar(int pulseNum)
   for (; tmp_ch; tmp_ch = temp) {
     temp = tmp_ch->next;  // just for safety
 
-    if (tmp_ch->roomp == NULL || tmp_ch->getName() == NULL)
+    if (tmp_ch->roomp == NULL || tmp_ch->getName().empty())
     {
       vlogf(LOG_BUG, "Error: character_list contains a bogus item, removing.");
       tmp_ch = temp;
@@ -246,7 +246,6 @@ void TScheduler::runChar(int pulseNum)
 
     if (tmp_ch->getPosition() == POSITION_DEAD) {
       assert(tmp_ch); // I suppose this guy exists if we have already dereferenced it
-      assert(tmp_ch->getName()); // Something caused a crash. getName() is supposed to return a string pointer that is never NULL.
       // even if shortDescr is NULL.
       vlogf(LOG_BUG, format("Error: dead creature (%s at %d) in character_list, removing.") % 
 	    tmp_ch->getName() % tmp_ch->in_room);

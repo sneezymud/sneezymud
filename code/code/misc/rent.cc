@@ -421,7 +421,7 @@ void TBeing::removePlayerFile()
   else
     tmp = dynamic_cast<TPerson *>(this);
 
-  wipePlayerFile(tmp->name);
+  wipePlayerFile(tmp->name.c_str());
 }
 
 void TBeing::removeRent()
@@ -443,7 +443,7 @@ void TBeing::removeRent()
     return;
   }
 
-  wipeRentFile(tmp->name);
+  wipeRentFile(tmp->name.c_str());
 }
 
 static char *raw_read_sstring(FILE * fp)
@@ -652,29 +652,29 @@ bool ItemSave::raw_write_item(TObj *o)
     return FALSE;
   }
   if (IS_SET(item.extra_flags, ITEM_STRUNG)) {
-    if (o->name) {
-      if (fwrite(o->name, strlen(o->name) + 1, 1, fp) != 1) {
+    if (!o->name.empty()) {
+      if (fwrite(o->name.c_str(), o->name.length() + 1, 1, fp) != 1) {
         vlogf(LOG_BUG, "Error writing object name to rent.");
         return FALSE;
       }
     } else
       vlogf(LOG_BUG, format("Object %d has no name!") %  o->objVnum());
 
-    if (fwrite(o->shortDescr, strlen(o->shortDescr) + 1, 1, fp) != 1) {
+    if (fwrite(o->shortDescr.c_str(), o->shortDescr.length() + 1, 1, fp) != 1) {
       vlogf(LOG_BUG, "Error writing object short description to rent.");
       return FALSE;
     }
 
-    if (o->getDescr()) {
-      if (fwrite(o->getDescr(), strlen(o->getDescr()) + 1, 1, fp) != 1) {
+    if (!o->getDescr().empty()) {
+      if (fwrite(o->getDescr().c_str(), o->getDescr().length() + 1, 1, fp) != 1) {
         vlogf(LOG_BUG, "Error writing object description to rent.");
         return FALSE;
       }
     } else {
       vlogf(LOG_BUG, format("object %d has no descr") %  o->objVnum());
     }
-    if (o->action_description) {
-      if (fwrite(o->action_description, strlen(o->action_description) + 1, 1, fp) != 1) {
+    if (!o->action_description.empty()) {
+      if (fwrite(o->action_description.c_str(), o->action_description.length() + 1, 1, fp) != 1) {
         vlogf(LOG_BUG, "Error writing object's action description to rent.");
         return FALSE;
       }
@@ -741,10 +741,10 @@ int ItemSaveDB::raw_write_item(TObj *o, int slot, int container, int rent_id)
   if (IS_SET(o->getObjStat(), ITEM_STRUNG)) {
     db.query("insert into rent_strung (rent_id, name, short_desc, long_desc, action_desc) values (%i, '%s', '%s', '%s', '%s')",
 	     rent_id, 
-	     (o->name?o->name:""), 
-	     (o->shortDescr?o->shortDescr:""),
-	     (o->getDescr()?o->getDescr():""),
-	     (o->action_description?o->action_description:""));
+	     o->name.c_str(),
+	     o->shortDescr.c_str(),
+	     o->getDescr().c_str(),
+	     o->action_description.c_str());
   }
   return rent_id;
 }
@@ -1089,7 +1089,7 @@ static bool immortalityNukeCheck(TBeing *ch, TObj * new_obj, bool corpse)
 
   if (!corpse && immortal && shouldRecycle(new_obj->getItemIndex())) {
     char buf[1200];
-    sprintf(buf, "Item (%s) was automatically recycled due to your immortal status.\n\r", new_obj->getName());
+    sprintf(buf, "Item (%s) was automatically recycled due to your immortal status.\n\r", new_obj->getName().c_str());
     autoMail(ch, NULL, buf);
     vlogf(LOG_SILENT, format("%s's %s being recycled due to immortality.") %  ch->getName() % new_obj->getName());
 
@@ -1543,9 +1543,9 @@ void TBeing::addObjCost(TBeing *re, TObj *obj, objCost *cost, sstring &str)
     if (re) {
       if (desc && desc->m_bIsClient) {
         if(!FreeRent) {
-	        sprintf(buf, "%-30s : %d talens/day\n\r", obj->getName(), temp);
+	        sprintf(buf, "%-30s : %d talens/day\n\r", obj->getName().c_str(), temp);
 	      } else
-	        sprintf(buf, "%-30s \n\r", obj->getName());
+	        sprintf(buf, "%-30s \n\r", obj->getName().c_str());
         }
         str += buf;
     } else if (!silent && re) {
@@ -1631,15 +1631,15 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
     if (recep) {
       if (desc && desc->m_bIsClient) {
         if (!FreeRent) 
-	  sprintf(buf, "%-30s : %d talens/day ********** Storage fee \n\r", ch->getName(), actual_cost);
+	  sprintf(buf, "%-30s : %d talens/day ********** Storage fee \n\r", ch->getName().c_str(), actual_cost);
         else
-	  sprintf(buf, "%-30s - Pet/Charm/Thrall/Mount \n\r", ch->getName());
+	  sprintf(buf, "%-30s - Pet/Charm/Thrall/Mount \n\r", ch->getName().c_str());
 	str += buf;
       } else if (!silent) {
 	if (!FreeRent) 
 	  sendTo(COLOR_OBJECTS, format("%-30s : %d talens/day   ********** Storage fee \n\r") % ch->getName() % actual_cost);
         else
-          sprintf(buf, "%-30s - Pet/Charm/Thrall/Mount \n\r", ch->getName());
+          sprintf(buf, "%-30s - Pet/Charm/Thrall/Mount \n\r", ch->getName().c_str());
 
       }
     }
@@ -2273,7 +2273,7 @@ void TPCorpse::removeCorpseFromList(bool updateFile)
   bool found = FALSE;
   TPCorpse * otherCorpse = NULL;
 
-  if (!name || (name && !(strcmp(name, "corpse player dummy"))) || !isObjStat(ITEM_STRUNG))
+  if (name.empty() || (name == "corpse player dummy") || !isObjStat(ITEM_STRUNG))
     return;
 
   if (!pc_corpse_list) {
@@ -2576,7 +2576,7 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
 	  getName());
     return;
   }
-  strcpy(is.st.owner, getName());
+  strcpy(is.st.owner, getName().c_str());
   is.st.number = (int) cost->no_carried;
   is.st.gold_left = (int) getMoney();
   is.st.original_gold = (int) getMoney();
@@ -2623,7 +2623,7 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
   last_rent = is.st.total_cost;
 
   if (!is.st.number) 
-    wipeRentFile(getName());
+    wipeRentFile(getName().c_str());
 }
 
 // this is used to load the items a shopkeeper has
@@ -2763,7 +2763,7 @@ void TPerson::loadRent()
     vlogf(LOG_BUG, format("Error while reading %s's objects. Prepare for reimb!") % getName());
     return;
   }
-  if (strcmp(name, il.st.owner))
+  if (name == il.st.owner)
     vlogf(LOG_BUG, format("  %s just got %s's objects!") %
 	  getName() % il.st.owner);
 
@@ -2957,7 +2957,7 @@ int TComponent::noteMeForRent(sstring &tStString, TBeing *ch, StuffList tList, i
     }
   }
 
-  tBuffer = format("%c-%ds : ") % '%' % (30 + (strlen(getName()) - getNameNOC(ch).length()));
+  tBuffer = format("%c-%ds : ") % '%' % (30 + (getName().length() - getNameNOC(ch).length()));
 
   if (isRentable() && isMonogramOwner(ch, true)) {
     tBuffer+="%5d talens/day";
@@ -3015,7 +3015,7 @@ int TObj::noteMeForRent(sstring &tStString, TBeing *ch, StuffList, int *tCount)
   char tString[256],
        tBuffer[256];
 
-  sprintf(tBuffer, "%%-%zus : ", (30 + (strlen(getName()) - strlen(getNameNOC(ch).c_str()))));
+  sprintf(tBuffer, "%%-%zus : ", (30 + (getName().length() - getNameNOC(ch).length())));
 
   if (isRentable() && isMonogramOwner(ch, true)) {
     if (!FreeRent) 
@@ -3027,11 +3027,11 @@ int TObj::noteMeForRent(sstring &tStString, TBeing *ch, StuffList, int *tCount)
 #ifdef FREE_RENT
     if(max_exist > LIMITED_RENT_ITEM) tCost = 0;
 #endif
-    sprintf(tString, tBuffer, getName(), tCost);
+    sprintf(tString, tBuffer, getName().c_str(), tCost);
     tStString += tString;
   } else {
     strcat(tBuffer, "NOT RENTABLE\n\r");
-    sprintf(tString, tBuffer, getName());
+    sprintf(tString, tBuffer, getName().c_str());
     tStString += tString;
   }
 
@@ -3101,10 +3101,10 @@ void TBeing::makeRentNote(TBeing *recip)
     if (FreeRent) { 
       temp = 0;
       sprintf(buf, "%-30s : Pet/Charm/Thrall/Mount \n\r",
-              ch->getName());
+              ch->getName().c_str());
     } else {
     sprintf(buf, "%-30s : %5d talens/day ********** Storage fee \n\r",
-              ch->getName(), temp);
+              ch->getName().c_str(), temp);
     }
     longBuf += buf;
     cost.total_cost += temp;
@@ -4321,7 +4321,7 @@ void TBeing::removeFollowers()
   if (!tmp) 
     return;
 
-  wipeFollowersFile(tmp->name);
+  wipeFollowersFile(tmp->name.c_str());
 
   return;
 }
@@ -4377,7 +4377,7 @@ bool TBeing::saveFollowers(bool rent_time)
   sprintf(buf, "rent/%c/%s.fol", LOWER(tmp->name[0]), sstring(tmp->name).lower().c_str());
 
   if (!followers) {
-    wipeFollowersFile(tmp->name);
+    wipeFollowersFile(tmp->name.c_str());
     return FALSE;
   }
   if (!(fp = fopen(buf, "w"))) {
@@ -4562,28 +4562,28 @@ bool TBeing::saveFollowers(bool rent_time)
 
     // save strung mob sstrings
     if (IS_SET(mob->specials.act, ACT_STRINGS_CHANGED)) {
-      for (j = 0, k = 0; k <= (int) strlen(mob->name); k++) {
+      for (j = 0, k = 0; k <= (int) mob->name.length(); k++) {
         if (mob->name[k] != 13)
           temp[j++] = mob->name[k];
       }
       temp[j] = '\0';
       fprintf(fp, "%s~\n", temp);
 
-      for (j = 0, k = 0; k <= (int) strlen(mob->shortDescr); k++) {
+      for (j = 0, k = 0; k <= (int) mob->shortDescr.length(); k++) {
         if (mob->shortDescr[k] != 13)
           temp[j++] = mob->shortDescr[k];
       }
       temp[j] = '\0';
       fprintf(fp, "%s~\n", temp);
 
-      for (j = 0, k = 0; k <= (int) strlen(mob->getLongDesc()); k++) {
+      for (j = 0, k = 0; k <= (int) mob->getLongDesc().length(); k++) {
         if (mob->getLongDesc()[k] != 13)
           temp[j++] = mob->getLongDesc()[k];
       }
       temp[j] = '\0';
       fprintf(fp, "%s~\n", temp);
 
-      for (j = 0, k = 0; k <= (int) strlen(mob->getDescr()); k++) {
+      for (j = 0, k = 0; k <= (int) mob->getDescr().length(); k++) {
         if (mob->getDescr()[k] != 13)
           temp[j++] = mob->getDescr()[k];
       }
@@ -4633,7 +4633,7 @@ bool TBeing::saveFollowers(bool rent_time)
   fclose(fp);
 
   if (!found) {
-    wipeFollowersFile(tmp->name);
+    wipeFollowersFile(tmp->name.c_str());
     return FALSE;
   }
 
@@ -4655,7 +4655,7 @@ bool TBeing::loadFollowers()
   if (!(fp = fopen(buf, "r"))) 
     return FALSE;
   
-  parseFollowerRent(fp, this, tmpPer->name);
+  parseFollowerRent(fp, this, tmpPer->name.c_str());
 
   fclose(fp);
   return TRUE;
@@ -5006,20 +5006,16 @@ void TBeing::doClone(const sstring &arg)
   thing_to_room(mob, in_room);
   mob->swapToStrung();
 
-  delete [] mob->name;
-  mob->name = mud_str_dup(format("%s [clone]") % st1.name);
+  mob->name = format("%s [clone]") % st1.name;
 
-  delete [] mob->shortDescr;
-  mob->shortDescr = mud_str_dup(st1.name);
+  mob->shortDescr = st1.name;
 
-  delete [] mob->player.longDescr;
-  mob->player.longDescr = mud_str_dup(format("<c>%s<1> is standing here.") % st1.name);
+  mob->player.longDescr = format("<c>%s<1> is standing here.") % st1.name;
 
-  delete [] mob->getDescr();
   if(*st1.description)
-    mob->setDescr(mud_str_dup(format("%s\n\r") % st1.description));
+    mob->setDescr(format("%s\n\r") % st1.description);
   else 
-    mob->setDescr(mud_str_dup("You see nothing special about him.\n\r"));
+    mob->setDescr("You see nothing special about him.\n\r");
   
   mob->setSex(sexTypeT(st1.sex));
   mob->setHeight(st1.height);

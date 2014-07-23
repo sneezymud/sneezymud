@@ -278,7 +278,7 @@ int TBeing::getFactionAuthority(factionTypeT fnum, int power)
     return TRUE;
   }
   for (int i = 0;i < FACT_LEADER_SLOTS;i++) {
-    if (!strcmp(getName(),FactionInfo[fnum].leader[i]))
+    if (getName() == FactionInfo[fnum].leader[i])
       return (power >= i);
   }
   return -1;
@@ -454,7 +454,7 @@ void TBeing::doRMember(const char *arg)
     return;
   }
   for (j = 0;j < FACT_LEADER_SLOTS;j++) {
-    if (!strcmp(FactionInfo[fnum].leader[j],vict->getName())) {
+    if (FactionInfo[fnum].leader[j] == vict->getName()) {
       sendTo("Sorry, that person is a leader of that faction and can't be removed.\n\r");
       sendTo(format("Appoint a new leader to slot %d and then you may remove them.\n\r") %j);
       return;
@@ -492,7 +492,7 @@ void TBeing::doDisband()
 
   int ij;
   for (ij = 0;ij < FACT_LEADER_SLOTS;ij++) {
-    if (!strcmp(FactionInfo[fnum].leader[ij],getName())) {
+    if (FactionInfo[fnum].leader[ij] == getName()) {
       sendTo("What?!?  And leave them leaderless?\n\r");
       sendTo(format("Appoint a new leader for slot %d and then you may disband.\n\r") %ij);
       return;
@@ -923,7 +923,7 @@ void TBeing::doAdjust(const char *arg)
     return;
   }
   if (hval == ADJ_NAME) {
-    if (strcmp(getName(), "Batopr")) {
+    if (getName() != "Batopr") {
       // this works, but it screws up factionNumber() functionality.
       sendTo("Contact Batopr to change the name of the faction.\n\r");
       return; 
@@ -1399,7 +1399,7 @@ sstring TBeing::yourDeity(spellNumT skill, personTypeT self, const TBeing *who) 
     if (who) 
       sprintf(buf, "%s's deity", who->pers(this));
     else
-      sprintf(buf, "%s's deity", getName());
+      sprintf(buf, "%s's deity", getName().c_str());
   } 
   return buf;
 }

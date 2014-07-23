@@ -83,7 +83,7 @@ dirTypeT TBeing::findDoor(const char *type, const char *direct, doorIntentT mode
     }
     exitp = exitDir(door);
     if (exitp) {
-      if (!exitp->keyword)
+      if (exitp->keyword.empty())
         return (door);
       if (isname(type, exitp->keyword) && strcmp(type, "_unique_door_"))
         return (door);
@@ -100,8 +100,7 @@ dirTypeT TBeing::findDoor(const char *type, const char *direct, doorIntentT mode
   } else {                        /* try to locate the keyword */
     bool found = FALSE;
     for (door = MIN_DIR; door < MAX_DIR; door++) {
-      if ((exitp = exitDir(door)) && exitp->keyword &&
-           strcmp(exitp->keyword, "_unique_door_")) {
+      if ((exitp = exitDir(door)) && exitp->keyword != "_unique_door_") {
 
         // secret doors can't be abbreviated
         if ((!IS_SET(exitp->condition, EX_SECRET) &&
@@ -305,7 +304,7 @@ void TBeing::rawOpenDoor(dirTypeT dir)
     REMOVE_BIT(back->condition, EX_CLOSED);
     if (IS_SET(back->condition, EX_TRAPPED))
       REMOVE_BIT(back->condition, EX_TRAPPED);
-    strcpy(buf, getName());
+    strcpy(buf, getName().c_str());
     rp2 = real_roomp(exitp->to_room);
     switch (back->door_type) {
       case DOOR_DRAWBRIDGE:
@@ -315,7 +314,7 @@ void TBeing::rawOpenDoor(dirTypeT dir)
         sendrpf(rp2, "The %s %s slides to one side.\n\r", back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
         break;
       case DOOR_SCREEN:  // can see thru
-        sendrpf(rp2, "Nearby, %s slides the %s %s to one side.\n\r", getName(), back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
+        sendrpf(rp2, "Nearby, %s slides the %s %s to one side.\n\r", getName().c_str(), back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
         break;
       case DOOR_RUBBLE:
         sendrpf(rp2,
@@ -331,11 +330,11 @@ void TBeing::rawOpenDoor(dirTypeT dir)
         if (dir == DIR_UP) {
           sendrpf(rp2,
           "Below you, %s reaches up and opens the %s.\n\r",
-              getName(), back->getName().uncap().c_str());
+              getName().c_str(), back->getName().uncap().c_str());
         } else if (dir == DIR_DOWN) {
           sendrpf(rp2,
           "Above you, %s reaches down and lifts the %s open.\n\r",
-              getName(), back->getName().uncap().c_str());
+              getName().c_str(), back->getName().uncap().c_str());
         } else {
           sendrpf(rp2,
           "%s opens the %s %s from the other side.\n\r",
@@ -529,7 +528,7 @@ void TBeing::rawCloseDoor(dirTypeT dir)
       (back = rp->dir_option[rev_dir[dir]]) &&
       (back->to_room == in_room)) {
     SET_BIT(back->condition, EX_CLOSED);
-    strcpy(buf, getName());
+    strcpy(buf, getName().c_str());
     rp2 = real_roomp(exitp->to_room);
     switch (back->door_type) {
       case DOOR_DRAWBRIDGE:
@@ -540,7 +539,7 @@ void TBeing::rawCloseDoor(dirTypeT dir)
       case DOOR_SCREEN:
         sendrpf(rp2,
           "Nearby, %s slides the %s %s closed.\n\r",
-              getName(), back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
+              getName().c_str(), back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
         break;
       case DOOR_PANEL:
         sendrpf(rp2,
@@ -561,11 +560,11 @@ void TBeing::rawCloseDoor(dirTypeT dir)
         if (dir == DIR_UP) {
           sendrpf(rp2,
           "Below you, %s reaches up and closes the %s.\n\r",
-              getName(), back->getName().uncap().c_str());
+              getName().c_str(), back->getName().uncap().c_str());
         } else if (dir == DIR_DOWN) {
           sendrpf(rp2,
           "Above you, %s reaches down and lowers the %s closed.\n\r",
-              getName(), back->getName().uncap().c_str());
+              getName().c_str(), back->getName().uncap().c_str());
         } else {
           sendrpf(rp2,
           "%s closes the %s %s from the other side.\n\r",
@@ -596,11 +595,11 @@ void TBeing::rawCloseDoor(dirTypeT dir)
         if (dir == DIR_UP) {
           sendrpf(rp2,
           "Below you, %s reaches up and closes the %s.\n\r",
-              getName(), back->getName().uncap().c_str());
+              getName().c_str(), back->getName().uncap().c_str());
         } else if (dir == DIR_DOWN) {
           sendrpf(rp2,
           "%s is closed from above by %s.\n\r",
-              back->getName().uncap().c_str(), getName());
+              back->getName().uncap().c_str(), getName().c_str());
         } else {
           sendrpf(rp2,
           "%s closes the %s %s from the other side.\n\r",

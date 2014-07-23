@@ -77,7 +77,8 @@ void TBeing::resetEffectsChar()
 
 void TPerson::resetChar()
 {
-  char recipient[100], *tmp, *tmstr;
+  char *tmstr;
+  sstring recipient;
   affectedData *af;
 
   roomp = NULL;
@@ -239,12 +240,10 @@ void TPerson::resetChar()
 #endif
   classSpecificStuff();
 
-  _parse_name(getName(), recipient);
+  parse_name_sstring(getName(), recipient);
 
-  for (tmp = recipient; *tmp; tmp++) {
-    if (isupper(*tmp))
-      *tmp = tolower(*tmp);
-  }
+  recipient = recipient.lower();
+
   if (!Config::NoMail() && has_mail(recipient) && 
       gamePort != Config::Port::BUILDER)
     sendTo(format("\n\rYou have %sMAIL%s.\n\r") % bold() % norm());
@@ -554,12 +553,12 @@ void TPerson::storeToSt(charFile *st)
 
   strcpy(st->lastHost, lastHost);
 
-  if (getDescr())
-    strcpy(st->description, getDescr());
+  if (!getDescr().empty())
+    strcpy(st->description, getDescr().c_str());
   else
     *st->description = '\0';
 
-  strcpy(st->name, name);
+  strcpy(st->name, name.c_str());
 
   condTypeT ic;
   for (ic = MIN_COND; ic < MAX_COND_TYPE; ++ic)

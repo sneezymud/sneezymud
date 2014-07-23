@@ -415,7 +415,7 @@ bool findEquipment::checkOwner(TObj *o) const
 
   ownerList = one_argument(ownerList, prevOwner);
   while (!prevOwner.empty()) {  
-    if (strcmp(owner->getName(), prevOwner.c_str()) == 0)
+    if (owner->getName() == prevOwner)
       return true;
     ownerList = one_argument(ownerList, prevOwner);
   }

@@ -110,7 +110,7 @@ void portal_flag_change(TPortal *o, unsigned int bit_to_change, const char *mess
   else
     o2->remPortalFlag(bit_to_change);
 
-  strcpy(capbuf, o2->shortDescr);
+  strcpy(capbuf, o2->shortDescr.c_str());
   sprintf(buf, message, sstring(capbuf).cap().c_str());
   sendToRoom(buf, o2->in_room);
 }
@@ -205,7 +205,7 @@ bool TBeing::validMove(dirTypeT cmd)
       sendTo("You make yourself ethereal to pass through the barrier.\n\r");
       return TRUE;
     }
-    if (exitp->keyword) {
+    if (!exitp->keyword.empty()) {
       if (!IS_SET(exitp->condition, EX_SECRET)) {
         char doorbuf[64];
         strcpy(doorbuf, fname(exitp->keyword).c_str());
@@ -1156,7 +1156,7 @@ int TBeing::moveGroup(dirTypeT dir)
         if (tft->master != this) {
           // this happens, but I guess it's safe to just ignore
           vlogf(LOG_BUG, format("ERROR: Bad critter looping through moveGroup()! (this=[%s], badguy=[%s], master=[%s])") %  getName() % 
-		(tft->getName() ? tft->getName() : "NoName") % 
+		(!tft->getName().empty() ? tft->getName() : "NoName") % 
 		(tft->master ? tft->master->getName() : "NoMaster"));
           continue;
         }
@@ -1396,7 +1396,7 @@ int TBeing::displayMove(dirTypeT dir, int was_in, int total)
   rp2 = roomp;
 
   if (!rp1 || !rp2) {
-    if (!getName()) {
+    if (!getName().empty()) {
       vlogf(LOG_BUG, "NULL getName in NULL rp in displayMove()");
       return FALSE;
     }
@@ -1759,8 +1759,8 @@ int AddToCharHeap(TBeing *heap[50], int *top, int total[50], TBeing *k)
     found = FALSE;
     for (i = 0; ((i < *top) && !found); i++) {
       if (*top > 0) {
-        if (dynamic_cast<TMonster *>(k) && (k->number == heap[i]->number) && heap[i]->shortDescr &&
-            !strcmp(k->getName(), heap[i]->getName())) {
+        if (dynamic_cast<TMonster *>(k) && (k->number == heap[i]->number) && !heap[i]->shortDescr.empty() &&
+            k->getName() == heap[i]->getName()) {
           total[i] += 1;
           found = TRUE;
         }
@@ -3910,7 +3910,7 @@ bool TBeing::removeAllCasinoGames() const
 
 const sstring roomDirData::getName() const
 {
-  return (keyword ? fname(keyword) : "door");
+  return (!keyword.empty() ? fname(keyword) : "door");
 }
 
 const sstring roomDirData::closed() const

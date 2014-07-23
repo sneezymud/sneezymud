@@ -58,16 +58,13 @@ void TGun::dropSpentCasing(TRoom *roomp){
   obj->swapToStrung();
   
   sprintf(buf, "casing spent %s", getAmmoDescr(ammo));
-  delete [] obj->name;
-  obj->name = mud_str_dup(buf);
+  obj->name = buf;
   
   sprintf(buf, "<o>a spent %s casing<1>", getAmmoDescr(ammo));
-  delete [] obj->shortDescr;
-  obj->shortDescr = mud_str_dup(buf);
+  obj->shortDescr = buf;
 
   sprintf(buf, "A spent <o>%s casing<1> lies here.", getAmmoDescr(ammo));
-  delete [] obj->descr;
-  obj->setDescr(mud_str_dup(buf));
+  obj->setDescr(buf);
 
   *roomp += *obj;
 
@@ -351,15 +348,13 @@ void TAmmo::getFourValues(int *x1, int *x2, int *x3, int *x4) const
 void TAmmo::setRounds(int r) { 
   if(r<=0){
     char buf[256];
-    sprintf(buf, "%s empty", name);
+    sprintf(buf, "%s empty", name.c_str());
 
-    if(isObjStat(ITEM_STRUNG)){
-      delete [] name;
-    } else {
+    if(!isObjStat(ITEM_STRUNG)){
       swapToStrung();
     }
 
-    name=mud_str_dup(buf);
+    name=buf;
   }
 
   rounds=r; 

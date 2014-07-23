@@ -1134,9 +1134,9 @@ int TBeing::stickIn(TThing *o, wearSlotT pos, silentTypeT silent)
   mud_assert(!o->equippedBy && !o->parent && (o->in_room == -1),
       "stickIn: item had owner at invocation");
   mud_assert(pos >= MIN_WEAR && pos < MAX_WEAR,
-         "Bad slot in stickIn, %s %d", getName(), pos);
+         "Bad slot in stickIn, %s %d", getName().c_str(), pos);
   mud_assert(slotChance(pos),
-         "No slot chance in stickIn, %s %d", getName(), pos);
+         "No slot chance in stickIn, %s %d", getName().c_str(), pos);
   mud_assert(getStuckIn(pos) == NULL,
       "stickIn: bodyPart had item stuckIn already");
   mud_assert(roomp != NULL,

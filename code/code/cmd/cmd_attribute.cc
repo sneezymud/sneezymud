@@ -45,7 +45,7 @@ static void showStatsTo(const Descriptor *d, const TBeing *ch, bool hidden_stuff
   if (d == ch->desc)
     sprintf(buffer, "You have");
   else
-    sprintf(buffer, "%s (L%d:%d) has", victim->getName(), victim->GetMaxLevel(), victim->GetMaxLevel() * 50 / 3);
+    sprintf(buffer, "%s (L%d:%d) has", victim->getName().c_str(), victim->GetMaxLevel(), victim->GetMaxLevel() * 50 / 3);
   str += buffer;
 
   sprintf(buffer, " been playing %s%s%s.\n\r", ch->green(), time_buf, ch->norm());
@@ -150,7 +150,7 @@ static void showStatsTo(const Descriptor *d, const TBeing *ch, bool hidden_stuff
   if (ch->desc == d)
     sprintf(buffer, "\n\rIn your career:\n\rYou have");
   else
-    sprintf(buffer, "\n\rIn %s's career:\n\r%s has", victim->getName(), victim->getName());
+    sprintf(buffer, "\n\rIn %s's career:\n\r%s has", victim->getName().c_str(), victim->getName().c_str());
   str += buffer;
   GameTime::realTimePassed((time(0) - victim->player.time->logon) +
                                 victim->player.time->played, 0, &playing_time);
@@ -833,7 +833,7 @@ void TBeing::doAttribute(const char *arg)
         case POSITION_SLEEPING:
           if (riding) {
             buf="You are sleeping on ";
-            if (riding->getName())
+            if (!riding->getName().empty())
               buf+=objs(riding);
             else
               buf+="A bad object";
@@ -846,7 +846,7 @@ void TBeing::doAttribute(const char *arg)
         case POSITION_RESTING:
           if (riding) {
             buf="You are resting on ";
-            if (riding->getName())
+            if (!riding->getName().empty())
               buf+=objs(riding);
             else
               buf+="A horse with a bad short description, BUG THIS!";
@@ -861,7 +861,7 @@ void TBeing::doAttribute(const char *arg)
         case POSITION_SITTING:
           if (riding) {
             buf="You are sitting on ";
-            if (riding->getName())
+            if (!riding->getName().empty())
               buf+=objs(riding);
             else
               buf+="A bad object!";

@@ -272,7 +272,7 @@ void TBeing::doBet(const char *arg)
 	      // player doesn't have dice, craps doesn't either
 	      // someone else is the roller
 	    } else {
-	      sprintf(buf, "Fine %s, here are the dice!", getName());
+	      sprintf(buf, "Fine %s, here are the dice!", getName().c_str());
 	      crap_man->doSay(buf);
 	      crap_man->doSay("Hold the dice, and throw them when I say it's ok!");
 	      --(*the_dice);
@@ -1016,7 +1016,7 @@ int craps_table_man(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself,
       half_chop(arg, options, amount);
       if (ch->roomp->checkPointroll()) {
 	if (is_abbrev(options, "come")) {
-	  sprintf(buf, "Sorry %s, no bets can be placed on the come", ch->getName());
+	  sprintf(buf, "Sorry %s, no bets can be placed on the come", ch->getName().c_str());
 	  myself->doSay(buf);
 	  myself->doSay("or no-pass after a pointroll has been called.");
 	  return TRUE;

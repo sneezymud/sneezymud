@@ -38,7 +38,7 @@ static void print_room(int rnum, TRoom *rp, sstring &sb, struct show_room_zone_s
 
 
   sprintf(buf, "%5d %4d %-12s     %s\n\r", rp->number, rnum,
-        TerrainInfo[rp->getSectorType()]->name, (rp->name ? rp->name : "Empty"));
+        TerrainInfo[rp->getSectorType()]->name, (!rp->name.empty() ? rp->name.c_str() : "Empty"));
   if (rp->getRoomFlags()) {
     strcat(buf, "    [");
 
@@ -75,10 +75,10 @@ static void show_room_zone(int rnum, TRoom *rp, sstring &, struct
     srzs->sb += buf;
     srzs->blank = 0;
   }
-  if (!rp->name) {
+  if (rp->name.empty()) {
     vlogf(LOG_BUG, format("room %d's name is screwed!\n\r") %  rp->number);
     return;
-  } else if (1 == sscanf(rp->name, "%d", &srzs->lastblank) && srzs->lastblank
+  } else if (1 == sscanf(rp->name.c_str(), "%d", &srzs->lastblank) && srzs->lastblank
 	     == rp->number) {
     if (!srzs->blank) {
       srzs->startblank = srzs->lastblank;

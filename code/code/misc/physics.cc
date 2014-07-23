@@ -394,15 +394,15 @@ int obj_hit_objs(TObj *o, TRoom *rp)
         ((t->getVolume() + o->getVolume() ) > ((dice(1, 500) * 1000)))) {
       d = (min(max(0, ((int) o->getWeight() - 5)), 30) / 6);
       if ((t->obj_flags.struct_points -= d) <= 0) {
-        sendrpf(rp, "%s DESTROYS %s, as it smacks into it!\n\r", o->shortDescr, t->shortDescr);
+        sendrpf(rp, "%s DESTROYS %s, as it smacks into it!\n\r", o->shortDescr.c_str(), t->shortDescr.c_str());
         delete t;
         t = NULL;
         return TRUE;
       }
       if (d)
-        sendrpf(rp, "%s damages %s, as it smacks into it!\n\r", o->shortDescr, t->shortDescr);
+        sendrpf(rp, "%s damages %s, as it smacks into it!\n\r", o->shortDescr.c_str(), t->shortDescr.c_str());
       else
-        sendrpf(rp, "%s bounces off %s, spinning wildly!\n\r", o->shortDescr, t->shortDescr);
+        sendrpf(rp, "%s bounces off %s, spinning wildly!\n\r", o->shortDescr.c_str(), t->shortDescr.c_str());
       return TRUE;
     }
   }

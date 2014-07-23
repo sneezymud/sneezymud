@@ -236,7 +236,7 @@ int factionFaery(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TO
 
     if (ch->isSameFaction(vict)) {
       sprintf(buf, "%s You shouldn't kill %s; %s is the same faction as you.",
-            fname(ch->name).c_str(), vict->getName(), vict->hssh());
+            fname(ch->name).c_str(), vict->getName().c_str(), vict->hssh());
       myself->doWhisper(buf);
     } else {
 #if FACTIONS_IN_USE
@@ -1204,7 +1204,7 @@ int Summoner(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
       if (ch->hates.clist) {
         for (i = ch->hates.clist; i; i = i->next) {
           for (d = descriptor_list; d; d = d->next) {
-            if ((d->connected == CON_PLYNG) && (d->character) && (!strcmp(d->character->getName(), i->name))) {
+            if ((d->connected == CON_PLYNG) && (d->character) && (d->character->getName() == i->name)) {
               targ = d->character;
               break;
             }
@@ -2873,7 +2873,7 @@ int petVeterinarian(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TOb
 	if(aff){
 	  owner=(char *)aff->be;
 	  
-	  if(!strcmp(owner, ch->getName())){
+	  if(owner == ch->getName()){
 	    // get the pet name
 	    sstring short_desc=t->name;
 	    sstring name="";
@@ -2912,12 +2912,11 @@ int petVeterinarian(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TOb
       //  Remake the pet's name.  
       strcpy(new_name, db["name"].c_str());
       tmpbuf = format("%s %s") % pet->name % new_name;
-      delete [] pet->name;
-      pet->name = mud_str_dup(tmpbuf);
+      pet->name = tmpbuf;
       
       // remake the short desc
       //      sprintf(tmpbuf2, stripColorCodes(pet->getName()).c_str());
-      sprintf(tmpbuf2, "%s", pet->getName());
+      sprintf(tmpbuf2, "%s", pet->getName().c_str());
       one_argument(tmpbuf2, buf, cElements(buf));
       if (!strcmp(buf, "a") || !strcmp(buf, "an"))
 	tmpbuf=format("\"%s\", the %s") % sstring(new_name).cap() %
@@ -2925,13 +2924,11 @@ int petVeterinarian(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TOb
       else
 	tmpbuf = format("\"%s\", %s") % sstring(new_name).cap() % pet->getName();
       
-      delete [] pet->shortDescr;
-      pet->shortDescr = mud_str_dup(tmpbuf);
+      pet->shortDescr = tmpbuf;
       
       // remake the long desc
       tmpbuf += " is here.\n\r";
-      delete [] pet->player.longDescr;
-      pet->player.longDescr = mud_str_dup(tmpbuf);
+      pet->player.longDescr = tmpbuf;
     }
 
     pet->balanceMakeNPCLikePC();
@@ -3085,7 +3082,7 @@ int pet_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 //   PET CHANGES
     pet->balanceMakeNPCLikePC();
 
-    sprintf(buf, "May you enjoy your pet, %s", ch->name);
+    sprintf(buf, "May you enjoy your pet, %s", ch->name.c_str());
     me->doSay(buf);
 
     if (ch->desc) {
@@ -3266,7 +3263,7 @@ void TSymbol::attunerGiven(TBeing *ch, TMonster *me)
 
   if (getSymbolFaction() != FACT_UNDEFINED) {
     me->doTell(ch->getName(), "That symbol has already been attuned!");
-    strcpy(buf, name);
+    strcpy(buf, name.c_str());
     strcpy(buf, add_bars(buf).c_str());
     sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
     me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
@@ -3276,7 +3273,7 @@ void TSymbol::attunerGiven(TBeing *ch, TMonster *me)
 
   if (ch->getMoney() < cost) {
     me->doTell(ch->getName(), "I only attune for a reasonable tithe. I am sorry, I do not make exceptions!");
-    strcpy(buf, name);
+    strcpy(buf, name.c_str());
     strcpy(buf, add_bars(buf).c_str());
     sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
     me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT);
@@ -3323,12 +3320,12 @@ void TSymbol::attunerGiven(TBeing *ch, TMonster *me)
     return;
   } else {
     if (ch == job->pc)
-      sprintf(buf, "Sorry, %s, but you'll have to wait while I attune your other symbol.", ch->getName());
+      sprintf(buf, "Sorry, %s, but you'll have to wait while I attune your other symbol.", ch->getName().c_str());
     else 
-      sprintf(buf, "Sorry, %s, but you'll have to wait while I attune %s's symbol.", ch->getName(), job->pc->getName());
+      sprintf(buf, "Sorry, %s, but you'll have to wait while I attune %s's symbol.", ch->getName().c_str(), job->pc->getName().c_str());
 
     me->doSay(buf);
-    strcpy(buf, name);
+    strcpy(buf, name.c_str());
     strcpy(buf, add_bars(buf).c_str());
     sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
     me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT);
@@ -3379,7 +3376,7 @@ int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
   if (!job->hasJob) {
     if (job->sym || job->pc || job->wait || 
                     job->cost || (job->faction > FACT_UNDEFINED)) {
-      if (job->pc && job->pc->name)
+      if (job->pc && !job->pc->name.empty())
         vlogf(LOG_PROC, format("Attuner (%s) seems to have a bad job structure (case 1) see %s.") %  me->getName() % job->pc->getName());
       else
         vlogf(LOG_PROC, format("Attuner (%s) seems to have a bad job structure (case 1A).") %  me->getName());
@@ -3388,9 +3385,9 @@ int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
     }
   }
   if (job->hasJob && (!job->pc || !job->sym ||
-                  (job->sym && !*job->sym->name) ||
-                  (job->pc && !*job->pc->name))) {
-    if (job->pc && *job->pc->name) {
+                  (job->sym && job->sym->name.empty()) ||
+                  (job->pc && job->pc->name.empty()))) {
+    if (job->pc && !job->pc->name.empty()) {
       vlogf(LOG_PROC, format("Attuner (%s) seems to have a bad job structure (case 2) see %s.") %  me->getName() % job->pc->getName());
     } else {
       vlogf(LOG_PROC, format("Attuner (%s) seems to have a bad job structure (case 2A).") %  me->getName());
@@ -3458,7 +3455,7 @@ int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       if (job->wait > 0) {
         job->wait--;
         if (!job->wait) {
-          sprintf(buf, "My prayers are done. Here is your symbol %s!", job->pc->getName());
+          sprintf(buf, "My prayers are done. Here is your symbol %s!", job->pc->getName().c_str());
           me->doSay(buf);
 
           if (!job->pc->desc || !(me->roomp == job->pc->roomp)) {
@@ -3500,7 +3497,7 @@ int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
             me->doStand();
             return FALSE;
           }
-          strcpy(buf, job->sym->name);
+          strcpy(buf, job->sym->name.c_str());
           strcpy(buf, add_bars(buf).c_str());
           sprintf(buf + strlen(buf), " %s", fname(job->pc->name).c_str());
           if (me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT) == DELETE_THIS) {
@@ -3532,12 +3529,12 @@ int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
     case CMD_SE:
     case CMD_NW:
       if (job->pc == ch) {
-        sprintf(buf, "%s! Don't leave until I finish attuning %s!", ch->getName(), job->sym->getName());
+        sprintf(buf, "%s! Don't leave until I finish attuning %s!", ch->getName().c_str(), job->sym->getName().c_str());
         me->doSay(buf);
         return TRUE;
       } else if (job->pc->master) {
         if ((ch == job->pc->master) && (me->roomp == job->pc->roomp) && job->pc->desc && (me->roomp == ch->roomp)) {
-          sprintf(buf, "%s! You can't leave, I am still sanctifying %s's %s!", ch->getName(), job->pc->getName(), job->sym->getName());
+          sprintf(buf, "%s! You can't leave, I am still sanctifying %s's %s!", ch->getName().c_str(), job->pc->getName().c_str(), job->sym->getName().c_str());
           me->doSay(buf);
           return TRUE;
         }
@@ -3567,7 +3564,7 @@ int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         act("$n rejects your attempt to give $s $p.", TRUE, me, t, ch, TO_VICT);
         act("$n refuses to accept $p from $N.", TRUE, me, t, ch, TO_NOTVICT); 
         me->doTell(ch->getName(), "You are not a cleric or Deikhan.  I can not help you.");
-        strcpy(buf, t->name);
+        strcpy(buf, t->name.c_str());
         strcpy(buf, add_bars(buf).c_str());
         sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
         me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT);
@@ -3579,7 +3576,7 @@ int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         act("$n rejects your attempt to give $s $p.", TRUE, me, t, ch, TO_VICT);
         act("$n refuses to accept $p from $N.", TRUE, me, t, ch, TO_NOTVICT);
         me->doTell(ch->getName(), "I can not help you unless you take a position of rest.");
-        strcpy(buf, t->name);
+        strcpy(buf, t->name.c_str());
         strcpy(buf, add_bars(buf).c_str());
         sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
         me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT);
@@ -3605,7 +3602,7 @@ int TThing::sharpenerGiveMe(TBeing *ch, TMonster *me)
   char buf[256];
 
   me->doTell(ch->getName(), "I can only sharpen weapons!");
-  strcpy(buf, name);
+  strcpy(buf, name.c_str());
   strcpy(buf, add_bars(buf).c_str());
   sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
   me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
@@ -3739,8 +3736,8 @@ int sharpener(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       if (!job->char_name) {
         return FALSE;
       }
-      if (!strcmp(job->char_name, ch->getName())) {
-        sprintf(buf, "%s! Don't leave until I finish with this %s!", ch->getName(), job->obj_name);
+      if (job->char_name == ch->getName()) {
+        sprintf(buf, "%s! Don't leave until I finish with this %s!", ch->getName().c_str(), job->obj_name);
         me->doSay(buf);
         return TRUE;
       } else {
@@ -3750,9 +3747,9 @@ int sharpener(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         for (f = ch->followers; f; f = n) {
           n = f->next;
           if ((vict = f->follower)) {
-            if (!strcmp(job->char_name, vict->getName())) {
+            if (vict->getName() == job->char_name) {
               sprintf(buf, "%s! You can't leave! %s has a %s being sharpened!",
-                ch->getName(), vict->getName(), job->obj_name);
+                ch->getName().c_str(), vict->getName().c_str(), job->obj_name);
               me->doSay(buf);
               return TRUE;
             }
@@ -4352,13 +4349,11 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
           final->swapToStrung();
 
           //  Remake the obj name.  
-          sprintf(buf, "%s %s", final->name, job->char_name);
-          delete [] final->name;
-          final->name = mud_str_dup(buf);
+          sprintf(buf, "%s %s", final->name.c_str(), job->char_name);
+          final->name = buf;
 
           sprintf(buf, "This is the personalized object of %s", job->char_name);
-          delete [] final->action_description;
-          final->action_description = mud_str_dup(buf);
+          final->action_description = buf;
 
           if (!(final_pers = get_char_room(job->char_name, me->in_room))) {
             me->doSay("Hmm, I seem to have lost the person I was engraving for.");
@@ -4427,8 +4422,8 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       if (!job->char_name) {
         return FALSE;
       }
-      if (!strcmp(job->char_name, ch->getName())) {
-        sprintf(buf, "%s! Don't leave until I finish with this %s!", ch->getName(), job->obj_name);
+      if (job->char_name == ch->getName()) {
+        sprintf(buf, "%s! Don't leave until I finish with this %s!", ch->getName().c_str(), job->obj_name);
         me->doSay(buf);
         return TRUE;
       } else
@@ -4451,7 +4446,7 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         me->doTell(ch->getName(), "This item is too cheap to be engraved.");
         return TRUE;
       }
-      if (valued->action_description) {
+      if (!valued->action_description.empty()) {
         me->doTell(ch->getName(), "This item has already been engraved!");
         return TRUE;
       }
@@ -4486,15 +4481,15 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 
       if (item->obj_flags.cost <= 500) {
         me->doTell(ch->getName(), "That can't be engraved!");
-        strcpy(buf, item->name);
+        strcpy(buf, item->name.c_str());
         strcpy(buf, add_bars(buf).c_str());
         sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
         me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
         return TRUE;
       }
-      if (item->action_description) {
+      if (!item->action_description.empty()) {
         me->doTell(ch->getName(), "Sorry, but this item has already been engraved!");
-        strcpy(buf, item->name);
+        strcpy(buf, item->name.c_str());
         strcpy(buf, add_bars(buf).c_str());
         sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
         me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
@@ -4502,7 +4497,7 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       }
       if (obj_index[item->getItemIndex()].max_exist <= 10) {
         me->doTell(ch->getName(), "This artifact is too powerful to be engraved!");
-        strcpy(buf, item->name);
+        strcpy(buf, item->name.c_str());
         strcpy(buf, add_bars(buf).c_str());
         sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
         me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
@@ -4510,7 +4505,7 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       }
       if (item->obj_flags.decay_time >= 0) {
         me->doTell(ch->getName(), "This won't be around long enough to bother engraving it!");
-        strcpy(buf, item->name);
+        strcpy(buf, item->name.c_str());
         strcpy(buf, add_bars(buf).c_str());
         sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
         me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
@@ -4521,7 +4516,7 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 
       if (ch->getMoney() < cost) {
         me->doTell(ch->getName(), "I have to make a living! If you don't have the money, I don't do the work!");
-        strcpy(buf, item->name);
+        strcpy(buf, item->name.c_str());
         strcpy(buf, add_bars(buf).c_str());
         sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
         me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
@@ -4538,8 +4533,8 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 			     TX_BUYING_SERVICE);
 
         job->cost = cost;
-        job->char_name = new char[strlen(ch->getName()) + 1];
-        strcpy(job->char_name, ch->getName());
+        job->char_name = new char[ch->getName().length() + 1];
+        strcpy(job->char_name, ch->getName().c_str());
         job->obj_name = new char[fname(item->name).length() + 1];
         strcpy(job->obj_name, fname(item->name).c_str());
         --(*item);
@@ -4550,9 +4545,9 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 
         return TRUE;
       } else {
-        sprintf(buf, "Sorry, %s, but you'll have to wait while I engrave %s's item.", ch->getName(), job->char_name);
+        sprintf(buf, "Sorry, %s, but you'll have to wait while I engrave %s's item.", ch->getName().c_str(), job->char_name);
         me->doSay(buf);
-        strcpy(buf, item->name);
+        strcpy(buf, item->name.c_str());
         strcpy(buf, add_bars(buf).c_str());
         sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
         me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
@@ -4863,15 +4858,15 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *myself
       }
       
       // update total weight caught for player
-      db.query("update fishkeeper set weight=weight+%f where name='%s'", o->getWeight(), ch->name);
+      db.query("update fishkeeper set weight=weight+%f where name='%s'", o->getWeight(), ch->name.c_str());
       if (db.rowCount() == 0) {
         // probably no row for user (first fish!) so try an insert instead
-        db.query("insert into fishkeeper values ('%s', %f)", ch->name, o->getWeight());
+        db.query("insert into fishkeeper values ('%s', %f)", ch->name.c_str(), o->getWeight());
       }
 
       // check for record
       db.query("update fishlargest set name = '%s', weight = %f where vnum = %i and weight < %f", 
-          ch->getName(), o->getWeight(), o->objVnum(), o->getWeight());
+          ch->getName().c_str(), o->getWeight(), o->objVnum(), o->getWeight());
 
       if (db.rowCount() > 0) {
         myself->doSay(format("Oh my, you've broken the record for %s!") % o->shortDescr);
@@ -5560,8 +5555,8 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       if (!job->char_name) {
         return FALSE;
       }
-      if (!strcmp(job->char_name, ch->getName())) {
-        sprintf(buf, "%s! Don't leave until I finish with this %s!", ch->getName(), job->obj_name);
+      if (job->char_name == ch->getName()) {
+        sprintf(buf, "%s! Don't leave until I finish with this %s!", ch->getName().c_str(), job->obj_name);
         me->doSay(buf);
         return TRUE;
       } else
@@ -5615,7 +5610,7 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       ch->sendTo(COLOR_BASIC, format("%s concentrates deeply on %s.\n\r") % me->getName() % item->getName());
       ch->sendTo(format("%s conjures up a cloud of smoke.\n\rInside the cloud of smoke you see...\n\r") % me->getName());
       ch->statObjForDivman(item);
-      sprintf(buf, "Thank you, %s, for your business! Please come again!", ch->getName());
+      sprintf(buf, "Thank you, %s, for your business! Please come again!", ch->getName().c_str());
       me->doSay(buf);
       me->doGive(ch,item,GIVE_FLAG_IGN_DEX_TEXT);
 
@@ -5730,7 +5725,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
       vlogf(LOG_PROC, format("Archer couldn't load his bow %d.  DASH!!!") %  bownum);
       return TRUE;
     }
-    strcpy(temp, bow->name);
+    strcpy(temp, bow->name.c_str());
     strcpy(temp, add_bars(temp).c_str());
     ch->doJunk(temp, NULL); // just in case its loaded, no point making tons
     act("You quickly unpack $p.", FALSE, ch, bow, 0, TO_CHAR);
@@ -5823,7 +5818,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
       // will only aim at the first one.  So we have to figure out which we're aiming at
       // before we can lob one off and hope to hit him.
 
-      strcpy(temp, tbt->name);
+      strcpy(temp, tbt->name.c_str());
       count =0;
       numsimilar = 0;
       for(StuffIter it=real_roomp(rm)->stuff.begin();it!=real_roomp(rm)->stuff.end() && (t=*it);++it) {
@@ -5834,7 +5829,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
           continue;
 	if (tbt->isCult())
 	  count++;
-	if (!strcmp(temp, tbt2->name)) // this mob has the same name as our target, so count him
+	if (temp == tbt2->name) // this mob has the same name as our target, so count him
 	  numsimilar++;
 	if (count == which)
           break;
@@ -5872,7 +5867,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
       sprintf(buf, "%s %d.%s 1", directions[i][0], numsimilar, temp);
       //      vlogf(LOG_DASH, format("Brightmoon Defense: %s shooting at %s (%d.%s)") %  ch->getName() % tbt->getName() % numsimilar % temp);
 
-      strcpy(temp, tbt->getName());
+      strcpy(temp, tbt->getName().c_str());
 
       ch->doShoot(buf);
       //      vlogf(LOG_DASH, "archer shooting at a target");
@@ -5882,7 +5877,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
       //      vlogf(LOG_DASH, format("archer debug: %d->%d, temp/name: (%s)/(%s), tbt?: %s") % 
       //    Hi % Hf % temp % (tbt->getName() ? tbt->getName() : "(NULL)") % (tbt ? "exists" : "(NULL)"));
 #endif
-      if (!tbt->getName()) {
+      if (tbt->getName().empty()) {
         switch(::number(1,7)) {
           case 1:
             ch->doShout("Woo woo!  I got a confirmed kill, yeah!");
@@ -6969,14 +6964,14 @@ int brickCollector(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *mys
 	return FALSE;
       }
 
-      db.query("select 1 from brickquest where name='%s'", ch->name);
+      db.query("select 1 from brickquest where name='%s'", ch->name.c_str());
       if(!db.fetchRow()){
 	db.query("insert into brickquest values (1, '%s')", 
-		 ch->name);
+		 ch->name.c_str());
       } else {
-	db.query("update brickquest set numbricks=numbricks+1 where name='%s'", ch->name);
+	db.query("update brickquest set numbricks=numbricks+1 where name='%s'", ch->name.c_str());
       }
-      db.query("select name, numbricks from brickquest where name='%s'", ch->name);
+      db.query("select name, numbricks from brickquest where name='%s'", ch->name.c_str());
       while (db.fetchRow()) {
 	buf = format("Thanks %s! That makes your total %i bricks. I will update the scores.") % db["name"] % 
 convertTo<int>(db["numbricks"]);
@@ -7097,12 +7092,9 @@ int idCardProvider(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
   buf += format("+-------------------------------------+\n\r");
 
   TNote *card = createNote(mud_str_dup(buf));
-  delete [] card->name;
-  card->name = mud_str_dup("card paper id");
-  delete [] card->shortDescr;
-  card->shortDescr = mud_str_dup("<W>an ID card<1>"); 
-  delete [] card->getDescr();
-  card->setDescr(mud_str_dup("<W>An official Kingdom of Grimhaven ID card lies here.<1>"));
+  card->name = "card paper id";
+  card->shortDescr = "<W>an ID card<1>"; 
+  card->setDescr("<W>An official Kingdom of Grimhaven ID card lies here.<1>");
 
   *me += *card;
   me->doSay("Alright, here you are!");

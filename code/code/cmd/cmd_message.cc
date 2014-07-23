@@ -488,12 +488,12 @@ sstring TMessages::operator()(messageTypeT tValue,
     findAndReplace(tMessage, "<H>", "");
 
     if (tPlayer)
-      findAndReplace(tMessage, "<n>", (tPlayer->getName() ? tPlayer->getName() : "ERROR"));
+      findAndReplace(tMessage, "<n>", (!tPlayer->getName().empty() ? tPlayer->getName() : "ERROR"));
     else
       findAndReplace(tMessage, "<n>", "Someone");
 
     if (tThing)
-      findAndReplace(tMessage, "<N>", (tThing->getName() ? tThing->getName() : "ERROR"));
+      findAndReplace(tMessage, "<N>", (!tThing->getName().empty() ? tThing->getName() : "ERROR"));
     else
       findAndReplace(tMessage, "<N>", "Someone");
   } else {
@@ -598,7 +598,7 @@ sstring fread_tilTilde(FILE *tFile)
 
 void TMessages::initialize()
 {
-  if (!tPlayer || !tPlayer->name) {
+  if (!tPlayer || tPlayer->name.empty()) {
     vlogf(LOG_BUG, "TMessages::initialize() called by Invalid player.");
     return;
   }
@@ -641,7 +641,7 @@ void TMessages::savedown()
       tPlayer->desc->connected != CON_PLYNG)
     return;
 
-  if (!tPlayer->name) {
+  if (tPlayer->name.empty()) {
     vlogf(LOG_BUG, "TMessages::savedown() called by Invalid player.");
     return;
   }

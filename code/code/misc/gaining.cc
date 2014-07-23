@@ -375,7 +375,7 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
           !hasQuestBit(TOG_AVENGER_CHEAT) &&
           !hasQuestBit(TOG_AVENGER_PENANCED)) {
         if (!silent) {
-          sprintf(buf, "Congratulations, %s.", getName());
+          sprintf(buf, "Congratulations, %s.", getName().c_str());
           gm->doSay(buf);
           gm->doSay("Your achievements have earned you the right to quest for a holy avenger.");
           gm->doSay("Seek out the Bishop of Brightmoon and ask him about an avenger quest.");
@@ -408,7 +408,7 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
           !hasQuestBit(TOG_VINDICATOR_GOT_BOOK) &&
           !hasQuestBit(TOG_VINDICATOR_PURIFIED)) {
         if (!silent) {
-          sprintf(buf, "Congratulations, %s.", getName());
+          sprintf(buf, "Congratulations, %s.", getName().c_str());
           gm->doSay(buf);
           gm->doSay("Your achievements have earned you the right to quest for a holy vindicator.");
           gm->doSay("You do not have to quest now. You can wait until you have more power.");
@@ -456,7 +456,7 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
           !hasQuestBit(TOG_DEVASTATOR_CHEAT_SULTRESS) &&
           !hasQuestBit(TOG_DEVASTATOR_CHEAT_NESMUM)) {
         if (!silent) {
-          sprintf(buf, "Congratulations, %s.", getName());
+          sprintf(buf, "Congratulations, %s.", getName().c_str());
           gm->doSay(buf);
           gm->doSay("Your achievements have earned you the right to quest for a holy Devastator.");
           gm->doSay("You do not have to quest now. You can wait until you have more power.");
@@ -618,7 +618,7 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
             !hasQuestBit(TOG_TOTEM_MASK_FINISHED)) {
 	if(!silent){
 	  gm->doAction(name, CMD_BEAM);
-          sprintf(buf, "Excellent %s!", getName());
+          sprintf(buf, "Excellent %s!", getName().c_str());
           gm->doSay(buf);
 	  gm->doSay("Congratulations! You have learned enough of the ways of the Shaman");
 	  gm->doSay("to seek a better way to communicate with the loa!");
@@ -871,13 +871,13 @@ void TPerson::advanceSelectDisciplines(classIndT Class, int numx, silentTypeT si
 
 void logPermaDeathLevel(TBeing *ch){
   TDatabase db(DB_SNEEZY);
-  db.query("delete from permadeath where name='%s'", ch->name);
-  db.query("insert into permadeath (name, level, killer, died) values ('%s', %i, 'no one', 0)", ch->name, ch->GetMaxLevel());
+  db.query("delete from permadeath where name='%s'", ch->name.c_str());
+  db.query("insert into permadeath (name, level, killer, died) values ('%s', %i, 'no one', 0)", ch->name.c_str(), ch->GetMaxLevel());
 }
 
 void clearPermaDeathLevel(TBeing *ch){
   TDatabase db(DB_SNEEZY);
-  db.query("delete from permadeath where name='%s'", ch->name);
+  db.query("delete from permadeath where name='%s'", ch->name.c_str());
 }
 
 
@@ -1671,10 +1671,9 @@ int TBeing::doTraining(TBeing *ch, TMonster *me, classIndT accclass, int offset,
         if (comp != CompInfo.size() && CompInfo[comp].comp_num >= 0) {
           TObj *obj = NULL;
           obj = read_object(CompInfo[comp].comp_num, VIRTUAL);
-          sprintf(buf, "%s personalized %s", obj->name, ch->getName());
+          sprintf(buf, "%s personalized %s", obj->name.c_str(), ch->getName().c_str());
           obj->swapToStrung();
-          delete [] obj->name;
-          obj->name = mud_str_dup(buf);
+          obj->name = buf;
 
           obj->obj_flags.cost = 0;
           dynamic_cast<TComponent *>(obj)->setComponentCharges(10);

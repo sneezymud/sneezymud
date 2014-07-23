@@ -194,10 +194,9 @@ int postmasterGiven(TBeing *ch, TMonster *me, TObj *o)
     time_t ct = time(0);
     ct += 10*60; // add 10 minutes
 
-    delete o->name;
     dueDate = format("%i") % int(ct);
     objName.replace(dueTag+1, endTag-dueTag-1, dueDate.c_str(), dueDate.length());
-    o->name = mud_str_dup(objName.c_str());
+    o->name = objName;
 
     me->doTell(ch->getName(), "It appears your belongings are arriving via magical transport in ten minutes.");
     me->doTell(ch->getName(), "In the meantime, hold on to this token and give it to me when your package has arrived.");
@@ -421,7 +420,7 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
     desc->connected = CON_WRITING;
     strncpy(desc->name, recipient.c_str(), cElements(desc->name));
 
-    desc->str = new const char *("\0");
+    desc->str = &desc->mail_bug_str;
     desc->max_str = MAX_MAIL_SIZE;
   } else
     desc->clientf(format("%d|%s") % CLIENT_MAIL % recipient);
@@ -430,17 +429,15 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
 
 void TBeing::postmasterCheckMail(TMonster *me)
 {
-  char recipient[100], *tmp;
+  sstring recipient;
 
-  _parse_name(getName(), recipient);
+  parse_name_sstring(getName(), recipient);
 
 // added this check - bat
   if (!mail_ok(this))
     return;
 
-  for (tmp = recipient; *tmp; tmp++)
-    if (isupper(*tmp))
-      *tmp = tolower(*tmp);
+  recipient = recipient.lower();
 
   if (has_mail(recipient))
     me->doTell(getName(), "You have mail waiting.");
@@ -489,17 +486,13 @@ void TBeing::postmasterReceiveMail(TMonster *me)
     }
 
     note->swapToStrung();
-    delete [] note->name;
-    note->name = mud_str_dup("letter mail");
-    delete [] note->shortDescr;
-    note->shortDescr = mud_str_dup("<o>a handwritten <W>letter<1>"); 
-    delete [] note->getDescr();
-    note->setDescr(mud_str_dup("A wrinkled <W>letter<1> lies here."));
-    delete [] note->action_description;
-    msg = read_delete(recipient, getName(), from, talens, rent_id);
-    note->action_description = mud_str_dup(msg.c_str());
-    if (!note->action_description)
-      note->action_description = mud_str_dup("Mail system buggy, please report!!  Error #8.\n\r");
+    note->name = "letter mail";
+    note->shortDescr = "<o>a handwritten <W>letter<1>"; 
+    note->setDescr("A wrinkled <W>letter<1> lies here.");
+    msg = read_delete(recipient, getName().c_str(), from, talens, rent_id);
+    note->action_description = msg.c_str();
+    if (note->action_description.empty())
+      note->action_description = "Mail system buggy, please report!!  Error #8.\n\r";
 
     if (talens >= 1000 || rent_id > 0)
       env_vnum = 6600; // crate
@@ -560,7 +553,7 @@ void autoMail(TBeing *ch, const char *targ, const char *msg, int m, int r)
   // from field limited to 15 chars by mail structure
 
   if (ch)
-    store_mail(ch->getName(), SNEEZY_ADMIN, msg, m, r);
+    store_mail(ch->getName().c_str(), SNEEZY_ADMIN, msg, m, r);
   else if (targ)
     store_mail(targ, SNEEZY_ADMIN, msg, m, r);
   else

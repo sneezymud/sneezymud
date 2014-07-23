@@ -122,8 +122,8 @@ int task_search(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
       if (tsSuccess && (fdd = ch->roomp->dir_option[eDirection]) &&
           IS_SET(fdd->condition, EX_SECRET) &&
           IS_SET(fdd->condition, EX_CLOSED) &&
-		  fdd->keyword && 
-          strcmp(fdd->keyword, "_unique_door_")) {
+		  !fdd->keyword.empty() &&
+         fdd->keyword != "_unique_door_") {
 
         const char * foundPrint = "Secret %s found %s!\n\r";
         const char * toRoomPrint = "$n exclaims, \"Look!  A Secret %s found %s!\"\n\r";

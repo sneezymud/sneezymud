@@ -439,7 +439,8 @@ class Descriptor
     char *showstr_head;           // for paging through texts  
     int tot_pages;               // for tracking paged info
     int cur_page;                //       -
-    const char **str;                   // for the modify-str system
+    sstring* str;                   // for the modify-str system. Points to the current string being modified.
+    sstring mail_bug_str;
     int max_str;
     int prompt_mode;              // control of prompt-printing 
     char m_raw[4096];               // buffer for raw input    
@@ -537,7 +538,7 @@ class Descriptor
     void send_client_prompt(int, int);
     void send_client_exits();
     int read_client(char *);
-    void sstring_add(char *);
+    void sstring_add(sstring);
     void fdSocketClose(int);
     void saveAll();
     void worldSend(const sstring &, TBeing *);

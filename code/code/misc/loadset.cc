@@ -493,12 +493,12 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance, bool findLoadPote
                     sprintf(tString, " [R:%6.2f] %s [%s] [%s]\n\r",
                             tBCloth->armorLevel(ARMOR_LEV_REAL),
                             suitClasses,
-                            tBCloth->getName(),
+                            tBCloth->getName().c_str(),
                             material_nums[tBCloth->getMaterial()].mat_name);
                   else
                     sprintf(tString, " [R:      ] %s [%s] [%s]\n\r",
                             suitClasses,
-                            tThing->getName(),
+                            tThing->getName().c_str(),
                             material_nums[tThing->getMaterial()].mat_name);
 
                   StString += tString;

@@ -213,13 +213,13 @@ void TThing::postMe(TBeing *ch, const char *, TBoard *)
 
 void TNote::postMe(TBeing *ch, const char *arg2, TBoard *b)
 {
-  if (!action_description) {
+  if (action_description.empty()) {
     ch->sendTo("Blank notes cannot be posted to the board.\n\r");
     return;
   }
   
   TDatabase db(DB_SNEEZY);
-  db.query("insert board_message (board_vnum, subject, author, post, post_num) select %i, '%s', '%s', '%s', count(*) + 1 from board_message where board_vnum = %i and date_removed is null", b->objVnum(), arg2, ch->getName(), mud_str_dup(action_description), b->objVnum());
+  db.query("insert board_message (board_vnum, subject, author, post, post_num) select %i, '%s', '%s', '%s', count(*) + 1 from board_message where board_vnum = %i and date_removed is null", b->objVnum(), arg2, ch->getName().c_str(), action_description.c_str(), b->objVnum());
   act("You post your note on $p.", TRUE, ch, b, 0, TO_CHAR, NULL);
   act("$n posts a note on $p.", TRUE, ch, b, 0, TO_ROOM);
   delete this;
@@ -338,7 +338,7 @@ int TBoard::removeFromBoard(TBeing *ch, const char *arg)
   db.query("select author, post from board_message where board_vnum = %i and post_num = %i and date_removed is null", objVnum(), post_num);
   if (db.fetchRow()){
     // only the original author, a board police wiz or a faction power wanker at a faction board can remove a note
-    if (strcmp(mud_str_dup(db["author"]), ch->getName()) && 
+    if (strcmp(mud_str_dup(db["author"]), ch->getName().c_str()) && 
       !ch->hasWizPower(POWER_BOARD_POLICE) && 
       !(objVnum() == FACT_BOARD_SERPENT && ch->getFactionAuthority(FACT_SNAKE, 0)) && 
       !(objVnum() == FACT_BOARD_BROTHER && ch->getFactionAuthority(FACT_BROTHERHOOD, 0)) && 

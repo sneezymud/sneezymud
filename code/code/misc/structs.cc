@@ -440,7 +440,7 @@ TObj::~TObj()
   //  object_list.remove(this);
 
   if (number >= 0) {
-    mud_assert(number < (signed int) obj_index.size(), "~TObj: range (%d) beyond obj_index size (%d).  obj=[%s]", number, obj_index.size(), name);
+    mud_assert(number < (signed int) obj_index.size(), "~TObj: range (%d) beyond obj_index size (%d).  obj=[%s]", number, obj_index.size(), name.c_str());
     obj_index[number].addToNumber(-1);
   }
   
@@ -461,10 +461,7 @@ TObj::~TObj()
     else
       ex_description = NULL;
   }
-  if (action_description) {
-    delete [] action_description;
-    action_description = NULL;
-  }
+  action_description = "";
 
   delete [] owners;
   owners = NULL;
@@ -591,7 +588,7 @@ bool TObj::checkOwnersList(const TPerson *ch, bool tPreserve)
       continue;
     
     // don't bother to check if it got given to myself
-    if (!strcmp(indiv, ch->getName())) {
+    if (!strcmp(indiv, ch->getName().c_str())) {
       iHaveOwned = true;
       continue;
     }
@@ -677,7 +674,7 @@ TThing& TThing::operator += (TThing& t)
   if (rp2)
     vlogf(LOG_BUG, "Operator += trying to put a room somewhere");
 
-  mud_assert(t.parent == NULL, ((sstring)(format("TThing += : t.parent existed: %s") % (t.name ? t.name : "null"))).c_str());
+  mud_assert(t.parent == NULL, ((sstring)(format("TThing += : t.parent existed: %s") % (!t.name.empty() ? t.name.c_str() : "null"))).c_str());
   mud_assert(t.equippedBy == NULL, "TThing += : t.equippedBy existed");
   mud_assert(t.stuckIn == NULL, "TThing += : t.stuckIn existed");
   mud_assert(t.roomp == NULL, "TThing += : t.roomp existed");
@@ -1053,21 +1050,9 @@ TThing::~TThing()
     act_ptr = NULL;
 #endif
   }
-  if (name) {
-    delete [] name;
-    name = NULL;
-  }
-  if (shortDescr) {
-    delete [] shortDescr;
-    shortDescr = NULL;
-  }
-  if (descr) {
-    delete [] descr;
-    // as silly as this may seem, we sometimes crash in the below line
-    // I think this is a compiler/linker thing, as there is no good reason
-    // for it, but anyway
-    // descr = NULL;
-  }
+  name = "";
+  shortDescr = "";;
+  descr = "";
 }
 
 TThing::TThing() :
@@ -1388,8 +1373,7 @@ TBeing & TBeing::operator=(const TBeing &a)
   // if player.longDescr is not shared, it has to be deleted
   // player operator= will member copy, not allocate
   if (IS_SET(specials.act,ACT_STRINGS_CHANGED)) {
-    delete [] player.longDescr;
-    player.longDescr = NULL;
+    player.longDescr = "";
   }
   player = a.player;
 
@@ -1579,8 +1563,6 @@ extraDescription::extraDescription() :
 
 extraDescription::~extraDescription()
 {
-  delete [] keyword;
-  delete [] description;
 }
 
 extraDescription & extraDescription::operator= (const extraDescription &a)
@@ -1588,10 +1570,8 @@ extraDescription & extraDescription::operator= (const extraDescription &a)
   if (this == &a)
     return *this;
 
-  delete [] keyword;
-  keyword = mud_str_dup(a.keyword);
-  delete [] description;
-  description = mud_str_dup(a.description);
+  keyword = a.keyword;
+  description = a.description;
 
   extraDescription *ad, *ad2;
   for (ad = next; ad; ad = ad2) {
@@ -1883,19 +1863,15 @@ roomDirData & roomDirData::operator=(const roomDirData &a)
   trap_dam = a.trap_dam;
   key = a.key;
   to_room = a.to_room;
-  delete [] description;
-  description = mud_str_dup(a.description);
-  delete [] keyword;
-  keyword = mud_str_dup(a.keyword);
+  description = a.description;
+  keyword = a.keyword;
   return *this;
 }
 
 roomDirData::~roomDirData()
 {
-  delete [] description;
-  description = NULL;
-  delete [] keyword;
-  keyword = NULL;
+  description = "";
+  keyword = "";
 }
 
 wizListInfo::wizListInfo()
@@ -2086,8 +2062,8 @@ const char * extraDescription::findExtraDesc(const char *word)
   extraDescription *i;
 
   for (i = this; i; i = i->next) {
-    if (i->keyword && isname(word, i->keyword))
-      return (i->description);
+    if (!i->keyword.empty() && isname(word, i->keyword))
+      return (i->description.c_str());
   }
   return NULL;
 }

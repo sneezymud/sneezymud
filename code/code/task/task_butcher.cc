@@ -202,20 +202,17 @@ int TThing::butcherPulse(TBeing *ch, TBaseCorpse *corpse)
     buf=format("meat %s %s") %
       (tpc?namebuf:Races[corpse->getCorpseRace()]->getSingularName()) %
       meats[whichmeat];
-    delete [] steak->name;
-    steak->name = mud_str_dup(buf);
+    steak->name = buf;
 
     buf=format("a %s of %s meat") %
       meats[whichmeat] %
       (tpc?namebuf:Races[corpse->getCorpseRace()]->getSingularName());
-    delete [] steak->shortDescr;
-    steak->shortDescr = mud_str_dup(buf);
+    steak->shortDescr = buf;
 
     buf=format("A %s of %s meat lies here.") %
       meats[whichmeat] %
       (tpc?namebuf:Races[corpse->getCorpseRace()]->getSingularName());
-    delete [] steak->descr;
-    steak->setDescr(mud_str_dup(buf));
+    steak->setDescr(buf);
 
     *ch += *steak;
   }
@@ -415,12 +412,9 @@ int bareHandsButcherPulse(TBeing *ch, TBaseCorpse *corpse)
     }
 
     // set strings
-    delete [] steak->name;
-    steak->name = mud_str_dup(format("meat mangled %s %s") % fromName % meats[whichmeat]);
-    delete [] steak->shortDescr;
-    steak->shortDescr = mud_str_dup(format("a mangled %s of %s meat") % meats[whichmeat] % fromName);
-    delete [] steak->descr;
-    steak->setDescr(mud_str_dup(format("A mangled %s of %s meat lies here.") % meats[whichmeat] % fromName));
+    steak->name = format("meat mangled %s %s") % fromName % meats[whichmeat];
+    steak->shortDescr = format("a mangled %s of %s meat") % meats[whichmeat] % fromName;
+    steak->setDescr(format("A mangled %s of %s meat lies here.") % meats[whichmeat] % fromName);
 
     *ch += *steak;
   }

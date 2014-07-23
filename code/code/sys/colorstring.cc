@@ -136,7 +136,7 @@ sstring addNameToBuf(const TBeing *me, const Descriptor *ch, const TThing *ting,
       switch (arg[(s+1)]) {
         case 'm':
         case 'M':
-          strcpy(tmp, ting->getName());
+          strcpy(tmp, ting->getName().c_str());
           if ((s == 0) || (y && (s == 3))) {
             strcpy(tmp, sstring(tmp).cap().c_str());
           }

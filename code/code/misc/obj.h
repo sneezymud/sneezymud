@@ -530,7 +530,7 @@ class TObj : public TThing {
     objFlagData obj_flags;
     objAffData affected[MAX_OBJ_AFFECT];
 
-    const char *action_description;      /* What to write when used          */
+    sstring action_description;      /* What to write when used          */
     const char * owners;
 private:
     bool isTasked;
@@ -546,9 +546,9 @@ private:
 
     // VIRTUAL FUNCTIONS
     virtual sstring showModifier(showModeT, const TBeing *) const { return ""; }
-    virtual bool isPersonalized() { return action_description != NULL; }
+    virtual bool isPersonalized() { return !action_description.empty(); }
     virtual int getVolume() const { return (obj_flags.volume); }
-    virtual const char *getName() const { return shortDescr ? shortDescr : ""; }
+    virtual sstring const& getName() const { return shortDescr; }
     virtual int getSnum() const { return (snum > -1 ? snum : objVnum()); };
 
     virtual roomDirData *exitDir(dirTypeT door) const;

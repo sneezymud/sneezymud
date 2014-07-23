@@ -557,14 +557,14 @@ void TBeing::doPrompt(const char *arg)
 	  for (d = descriptor_list; d; d = d->next) {
 	    if (d->character) {
 	      if (d->character->isLinkdead() && isImmortal())
-		sprintf(buf, "[%s]", d->character->getName());
+		sprintf(buf, "[%s]", d->character->getName().c_str());
 	      else
-		strcpy(buf, (d->character->getName() ? d->character->getName() : "UNKNOWN NAME"));
+		strcpy(buf, d->character->getName().c_str());
 
 	      if (canSeeWho(d->character)) {
 	        desc->prompt_mode = -1;
 	        desc->clientf(format("%d|%s|%d|0") % CLIENT_WHO % buf % DELETE);
-	        desc->clientf(format("%d|%s|%d|0") % CLIENT_WHO % d->character->getName() % DELETE);
+	        desc->clientf(format("%d|%s|%d|0") % CLIENT_WHO % d->character->getName().c_str() % DELETE);
 
 	        if (d->character->isPlayerAction(PLR_ANONYMOUS) && !isImmortal())
 	          desc->clientf(format("%d|%s|%d|0|1") % CLIENT_WHO % buf % ADD);

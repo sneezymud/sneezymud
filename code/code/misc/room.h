@@ -161,8 +161,8 @@ class TRoom : public TThing {
 
     // Code to load the descs straight from the db file instead of
     // storing those big honkers in the memory.
-    void setDescr(const char *);
-    const char * getDescr();
+    void setDescr(sstring const&);
+    sstring const& getDescr();
 
     int dropPool(int, liqTypeT);
     void flameRoom();

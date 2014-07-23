@@ -7,6 +7,7 @@
 //
 /////////////////////////////////////////////////////////////////
 
+#include <boost/algorithm/string.hpp>
 #include "handler.h"
 #include "extern.h"
 #include "room.h"
@@ -264,7 +265,7 @@ void TBeing::addFollower(TBeing *foll, bool textLimits) // default argument
   if (desc && IS_SET(desc->autobits, AUTO_AUTOGROUP)){
     if (!isAffected(AFF_GROUP))
       SET_BIT(specials.affectedBy, AFF_GROUP);
-    doGroup(foll->name, true);
+    doGroup(foll->name.c_str(), true);
   }
 }
 
@@ -1232,7 +1233,7 @@ int TBeing::parseTarget(spellNumT which, char *n, TThing **ret)
         ok = TRUE;
     }
     if (!ok && (discArray[which]->targets & TAR_OBJ_WORLD)) {
-      if ((o = get_obj_vis(ch, name, NULL, EXACT_NO)))
+      if ((o = get_obj_vis(ch, name.c_str(), NULL, EXACT_NO)))
         ok = TRUE;
     }
     if (!ok && (discArray[which]->targets & TAR_OBJ_EQUIP)) {
@@ -1244,7 +1245,7 @@ int TBeing::parseTarget(spellNumT which, char *n, TThing **ret)
       }
     }
     if (!ok && (discArray[which]->targets & TAR_SELF_ONLY)) {
-      if (!strcasecmp(getName(), n)) {
+      if (boost::iequals(getName(), n)) {
         ch = this;
         ok = TRUE;
       }
@@ -1392,13 +1393,14 @@ int TBeing::preDiscCheck(spellNumT which)
 
 
 // returns DELETE_THIS
-int TBeing::doDiscipline(spellNumT which, const char *n)
+int TBeing::doDiscipline(spellNumT which, sstring const& n1)
 {
   TObj *o = NULL; 
   TThing *t = NULL;
   TBeing *ch = NULL;
   int rc = 0;
   char arg[256];
+  const char* n = n1.c_str();
 
   if (!discArray[which]) {
     vlogf(LOG_BUG, format("doDiscipline called with null discArray[] (%d) (%s)") %  which % getName());

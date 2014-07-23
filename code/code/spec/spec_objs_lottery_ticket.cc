@@ -48,8 +48,7 @@ int lotteryTicket(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   buf=o->name;
   buf += " ";
   buf += prizes[which].name;
-  delete [] o->name;
-  o->name=mud_str_dup(buf);
+  o->name=buf;
 
   // add the prize description to the extra description
   // we just assume that the first extra is the correct one
@@ -68,8 +67,7 @@ int lotteryTicket(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   ch->sendTo(COLOR_BASIC, buf.c_str());
 
   buf = format("%s\n\r%s") % o->ex_description->description % buf;
-  delete o->ex_description->description;
-  o->ex_description->description=mud_str_dup(buf);
+  o->ex_description->description=buf;
 
   
 

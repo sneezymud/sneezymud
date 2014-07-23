@@ -555,7 +555,7 @@ void TBeing::doInsult(const char *argument)
       sendTo("Can't hear you!\n\r");
     else {
       if (victim != this) {
-        sprintf(buf, "You insult %s.\n\r", victim->getName());
+        sprintf(buf, "You insult %s.\n\r", victim->getName().c_str());
         sendTo(buf);
 
         switch (::number(0, 2)) {

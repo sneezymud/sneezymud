@@ -11,7 +11,7 @@ bool voteAdmin(TBeing *ch)
   if(ch->isImmortal())
     return true;
   // this shouldn't be hardcoded, but I'm too lazy to fix it proper
-  if(!strcmp(ch->getName(), "Sidartha"))
+  if(ch->getName() == "Sidartha")
     return true;
   return false;
 }
