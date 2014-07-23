@@ -513,9 +513,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
       else if (!found_mob)
         // The mob died while not fighting another mob
         dynamic_cast<TMonster*>(v)->createWealth();
-      else
-        vlogf(LOG_MISC, format("%s skipped by load on death code at %s (%d).") %
-            v->getName() % v->roomp->name % v->inRoom());
+      // else skipping loading stuff there
     }
     v->setPosition(pos);
   }
