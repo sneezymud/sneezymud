@@ -1982,6 +1982,7 @@ int TMainSocket::newDescriptor(int v6_sock, int port)
     maxdesc = s->m_sock;
 
   newd = new Descriptor(s);
+  newd->startGmcp();
 
   size = sizeof(v6_saiSock);
   if (getpeername(s->m_sock, (struct sockaddr *) &v6_saiSock, &size) < 0) {

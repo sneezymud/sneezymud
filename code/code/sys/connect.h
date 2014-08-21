@@ -501,6 +501,7 @@ class Descriptor
     ~Descriptor();
 
     void sendGmcp(const sstring& msg);
+    void startGmcp();
     int outputProcessing();
     int inputProcessing();
     void flush();

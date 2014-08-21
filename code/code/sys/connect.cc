@@ -2755,6 +2755,12 @@ void Descriptor::sendGmcp(const sstring& msg)
   output.push(CommPtr(new UncategorizedComm(text)));
 }
 
+void Descriptor::startGmcp()
+{
+  sstring text = sstring("\xff\xfb\xc9");
+  output.push(CommPtr(new UncategorizedComm(text)));
+}
+
 namespace {
   unsigned char GMCP = 201;
   unsigned char iac = 255;             /* interpret as command: */
