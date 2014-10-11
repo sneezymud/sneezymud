@@ -486,7 +486,8 @@ void TBeing::doGrouptell(const sstring &arg)
       sstring gmcp = format("comm.channel { \"chan\": \"gtell\", \"msg\": \"%s\", \"player\": \"%s\" }")
 	% buf.ansiToAard().trim().escapeJson()
 	% sstring(getName()).ansiToAard().trim().escapeJson();
-      f->follower->desc->sendGmcp(gmcp);
+      if (f->follower->desc != NULL)
+        f->follower->desc->sendGmcp(gmcp);
 
       act(buf, 0, this, 0, f->follower, TO_VICT);
 
