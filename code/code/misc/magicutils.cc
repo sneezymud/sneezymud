@@ -1998,7 +1998,7 @@ bool genericBless(TBeing *c, TBeing *v, int level, bool crit)
 
   if (crit) {
     aff1.duration += 9 * Pulse::UPDATES_PER_MUDHOUR;
-    aff1.modifier = 2;
+    aff1.modifier *= 2;
     aff2.duration += 9 * Pulse::UPDATES_PER_MUDHOUR;
     aff2.modifier2 *= 2;
   }
