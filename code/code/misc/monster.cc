@@ -302,9 +302,7 @@ TMonster::~TMonster()
 
   // if we are using shared sstrings, reallocate them so ~TThing can purge
   // safely
-  int didAloc = FALSE;
   if (!IS_SET(specials.act,ACT_STRINGS_CHANGED)) {
-    didAloc = TRUE;
     player.longDescr = getLongDesc();
 
     if (ex_description)
