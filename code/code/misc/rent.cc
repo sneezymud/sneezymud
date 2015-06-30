@@ -4561,28 +4561,28 @@ bool TBeing::saveFollowers(bool rent_time)
 
     // save strung mob sstrings
     if (IS_SET(mob->specials.act, ACT_STRINGS_CHANGED)) {
-      for (j = 0, k = 0; k <= (int) mob->name.length(); k++) {
+      for (j = 0, k = 0; k < (int) mob->name.length(); k++) {
         if (mob->name[k] != 13)
           temp[j++] = mob->name[k];
       }
       temp[j] = '\0';
       fprintf(fp, "%s~\n", temp);
 
-      for (j = 0, k = 0; k <= (int) mob->shortDescr.length(); k++) {
+      for (j = 0, k = 0; k < (int) mob->shortDescr.length(); k++) {
         if (mob->shortDescr[k] != 13)
           temp[j++] = mob->shortDescr[k];
       }
       temp[j] = '\0';
       fprintf(fp, "%s~\n", temp);
 
-      for (j = 0, k = 0; k <= (int) mob->getLongDesc().length(); k++) {
+      for (j = 0, k = 0; k < (int) mob->getLongDesc().length(); k++) {
         if (mob->getLongDesc()[k] != 13)
           temp[j++] = mob->getLongDesc()[k];
       }
       temp[j] = '\0';
       fprintf(fp, "%s~\n", temp);
 
-      for (j = 0, k = 0; k <= (int) mob->getDescr().length(); k++) {
+      for (j = 0, k = 0; k < (int) mob->getDescr().length(); k++) {
         if (mob->getDescr()[k] != 13)
           temp[j++] = mob->getDescr()[k];
       }
