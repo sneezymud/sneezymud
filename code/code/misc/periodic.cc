@@ -989,7 +989,7 @@ int TBeing::updateTickStuff()
       wearSlotT possibles[MAX_WEAR-MIN_WEAR];
       int cPoss = 0;
       for (wearSlotT p = MIN_WEAR; p < MAX_WEAR; p++)
-        if (!isCritPart(p) && !notBleedSlot(p) && isLimbFlags(p, PART_MISSING))
+        if (!isVitalPart(p) && !notBleedSlot(p) && isLimbFlags(p, PART_MISSING))
           possibles[cPoss++] = p;
       wearSlotT slot = cPoss > 0 ? possibles[::number(0, cPoss - 1)] : WEAR_NOWHERE;
       if (slot != WEAR_NOWHERE && limbConnections(slot))
@@ -1154,7 +1154,7 @@ int TBeing::updateBodyParts()
           if (IS_SET_ONLY(rc, DELETE_THIS))
             return DELETE_THIS;
         }
-        if (isCritPart(i)) {
+        if (isVitalPart(i)) {
           vlogf(LOG_BUG, format("%s killed by lack of a critical body spot (%d:1) at %s (%d)") % 
             getName() % i % roomp->getName() % inRoom());
           rc = die(DAMAGE_NORMAL);
@@ -1176,7 +1176,7 @@ int TBeing::updateBodyParts()
     if (isLimbFlags(i, PART_GANGRENOUS) && hasPart(i)) {
       addCurLimbHealth(i, -2);
       if (getCurLimbHealth(i) <= 0) {
-        if (isCritPart(i)) {
+        if (isVitalPart(i)) {
           // let go to 0, but don't cause "neck to fall off"
           setCurLimbHealth(i, 0);
         } else {

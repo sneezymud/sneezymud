@@ -13,9 +13,7 @@
 #ifndef __BODY_H
 #define __BODY_H
 
-#ifndef __LIMBS_H
 #include "limbs.h"
-#endif
 
 const int MAX_SHEATH = 3;
 
@@ -38,34 +36,4 @@ enum body_t {
 
 extern const char *bodyNames[MAX_BODY_TYPES];
 
-class Body : public Limb {
-private:
-
-  body_t bodyType;
-
-  Limb *body[MAX_MAIN_LIMBS];
-  Limb *attack;
-
-  TThing *sheathSlots[MAX_SHEATH];
-
-public:
-
-  Body();
-  Body(body_t body_type, int hitpoints);
-  ~Body();
-
-  void loadBody();
-
-  Limb *search(int target, int status);
-  // addLimb() should attempt to add a limb to the body.  It is more like a
-  // request to add a limb.
-  int addLimb(Limb *newLimb);
-
-  int join(class Limb *);
-
-  // Need some method to apply something to all limbs.  Is there a generic
-  // way of doing it or do I have to write special methods for each instance?
-
-  void showBody(TBeing *caller);
-};
 #endif

@@ -541,7 +541,7 @@ int disease_infection(TBeing *victim, int message, affectedData * af)
         if (IS_SET_DELETE(rc, DELETE_THIS))
           return DELETE_THIS;
 
-        dam = (VITAL_PART(slot) ? 3 : 1);
+        dam = (isVitalPart(slot) ? 3 : 1);
         if (victim->reconcileDamage(victim, dam, SPELL_INFECT) == -1)
           return DELETE_THIS;
 
@@ -1383,7 +1383,7 @@ int disease_gangrene(TBeing *victim, int message, affectedData *af)
       act(format("$n's %s has become <k>gangrenous<1>!") % victim->describeBodySlot(slot), TRUE, victim, NULL, NULL, TO_ROOM);
       break;
     case DISEASE_PULSE:
-      if (isCritPart(slot) && victim->getCurLimbHealth(slot) <= 0) {
+      if (isVitalPart(slot) && victim->getCurLimbHealth(slot) <= 0) {
         // do something nasty? crit body parts just stay at 0...
         // vlogf(LOG_MISC, format("%s at 0 on %s") % victim->describeBodySlot(slot) % victim->getName());
       }
@@ -1409,7 +1409,7 @@ int disease_gangrene(TBeing *victim, int message, affectedData *af)
         act("The foul stench of dying flesh surrounds $n.", FALSE, victim, NULL, NULL, TO_ROOM);
 
         // do some damage if it's a critical body part
-        if (isCritPart(slot))
+        if (isVitalPart(slot))
           if (victim->reconcileDamage(victim, ::number(1, 4), SPELL_INFECT) == -1)
             return DELETE_THIS;
 
@@ -1424,7 +1424,7 @@ int disease_gangrene(TBeing *victim, int message, affectedData *af)
     }
 
     // cause flu effect when a critical body part is gangrenous
-    if (isCritPart(slot) && !number(0, 15))
+    if (isVitalPart(slot) && !number(0, 15))
       if (victim->isHumanoid())
         if (IS_SET_DELETE(victim->dummyFlu(), DELETE_THIS))
           return DELETE_THIS;
