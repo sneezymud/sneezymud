@@ -48,9 +48,6 @@ class Config {
   // the max value of a sharpness roll, raising it = weapon blunt DECREASE
   static int WEAPON_DAM_MAX_SHARP;
   
-  // speef is too important for comments so we don't know what this does
-  static bool SPEEF_MAKE_BODY;
-  
   // causes items left in repair to be deleted after a set number of days.
   // Good to keep things circulating, but bad if extended downtime anticipated.
   // Simply deletes the file in mobdata/repairs/, the tickets still exist
@@ -131,7 +128,6 @@ class Config {
   static int WeaponDamMinHardness(){ return WEAPON_DAM_MIN_HARDNESS;}
   static int WeaponDamMaxHardness(){ return WEAPON_DAM_MAX_HARDNESS;}
   static int WeaponDamMaxSharp(){ return WEAPON_DAM_MAX_SHARP;}
-  static bool SpeefMakeBody(){ return SPEEF_MAKE_BODY;}
   static bool NukeRepairItems(){ return NUKE_REPAIR_ITEMS; }
   static bool CheckMultiplay(){ return CHECK_MULTIPLAY; }
   static bool ForceMultiplayCompliance(){return FORCE_MULTIPLAY_COMPLIANCE;}

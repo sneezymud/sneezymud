@@ -17,7 +17,6 @@ bool Config::PENALIZE_FOR_AUTO_RENTING;
 int Config::WEAPON_DAM_MIN_HARDNESS;
 int Config::WEAPON_DAM_MAX_HARDNESS;
 int Config::WEAPON_DAM_MAX_SHARP;
-bool Config::SPEEF_MAKE_BODY;
 bool Config::NUKE_REPAIR_ITEMS;
 bool Config::CHECK_MULTIPLAY;
 bool Config::FORCE_MULTIPLAY_COMPLIANCE;
@@ -104,9 +103,6 @@ bool Config::doConfiguration(int argc, char *argv[])
      "see configuration.h")
     ("weapon_dam_max_sharp",
      po::value<int>(&WEAPON_DAM_MAX_SHARP)->default_value(150),
-     "see configuration.h")
-    ("speef_make_body",
-     po::value<bool>(&SPEEF_MAKE_BODY)->default_value(false),
      "see configuration.h")
     ("nuke_repair_items",
      po::value<bool>(&NUKE_REPAIR_ITEMS)->default_value(true),
