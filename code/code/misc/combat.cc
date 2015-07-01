@@ -902,7 +902,7 @@ int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
   // damage was done, but we return false, because main hp are taken   
   // off with hit to these vital body parts. - Russ                    
 
-  if (isCritPart(part_hit) || !v->slotChance(part_hit))
+  if (isVitalPart(part_hit) || !v->slotChance(part_hit))
     return FALSE;
 
   if (part_hit == WEAR_FINGER_L)
@@ -3156,7 +3156,7 @@ const char *describe_dam(int dam, int dam_capacity, spellNumT wtype)
 
 static int REALNUM(TBeing *ch, wearSlotT part_hit)
 {
-  return (VITAL_PART(part_hit) ? 
+  return (isVitalPart(part_hit) ?
          ch->getHit() + 11 :
          ch->getCurLimbHealth(part_hit));
 }
@@ -3228,7 +3228,7 @@ void TBeing::normalHitMessage(TBeing *v, TThing *weapon, spellNumT w_type, int d
   char colorBuf[40];
 
   if (desc && (dam || !(desc->autobits & AUTO_NOSPAM))) {
-    if (isCritPart(part_hit))
+    if (isVitalPart(part_hit))
       strcpy(colorBuf, greenBold());
     else
       strcpy(colorBuf, green());
@@ -3259,7 +3259,7 @@ void TBeing::normalHitMessage(TBeing *v, TThing *weapon, spellNumT w_type, int d
   }
 
   if (v->desc && (dam || !(v->desc->autobits &AUTO_NOSPAM))) {
-    if (isCritPart(part_hit))
+    if (isVitalPart(part_hit))
       strcpy(colorBuf, v->redBold());
     else
       strcpy(colorBuf, v->red());

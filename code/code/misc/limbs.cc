@@ -231,7 +231,7 @@ bool TBeing::hasPart(wearSlotT part) const
   return TRUE;
 }
 
-wearSlotT TBeing::getRandomPart(int limbflags, bool skipcritpart, bool lookforlimbflag) {
+wearSlotT TBeing::getRandomPart(int limbflags, bool skipvitalpart, bool lookforlimbflag) {
   // exclude pegs/hooks, missing limbs
   // this is to find fleshy parts
   // when lookforlimbflag is false (by default) if passes over that flag(s)
@@ -245,7 +245,7 @@ wearSlotT TBeing::getRandomPart(int limbflags, bool skipcritpart, bool lookforli
       continue;
     if (!lookforlimbflag && isLimbFlags(p, limbflags))
       continue;
-    if (skipcritpart && isCritPart(p))
+    if (skipvitalpart && isVitalPart(p))
       continue;
     if (notBleedSlot(p))
       continue;
@@ -1083,7 +1083,7 @@ int TBeing::getPartMinHeight(int part) const
   }
 }
 
-bool isCritPart(wearSlotT part_hit)
+bool isVitalPart(wearSlotT part_hit)
 {
   switch (part_hit) {
     case WEAR_HEAD:
@@ -1094,12 +1094,6 @@ bool isCritPart(wearSlotT part_hit)
     default:
       return false;
   }
-}
-
-bool VITAL_PART(wearSlotT pos)
-{
-  return ((pos == WEAR_HEAD) || (pos == WEAR_BODY) ||
-          (pos == WEAR_BACK) || (pos == WEAR_NECK));
 }
 
 wearSlotT pickRandomLimb(bool)

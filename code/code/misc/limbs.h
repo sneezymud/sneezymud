@@ -69,8 +69,6 @@ const wearSlotT MAX_HUMAN_WEAR  = wearSlotT(HOLD_LEFT+1);
 extern wearSlotT & operator++(wearSlotT &, int);
 extern wearSlotT pickRandomLimb(bool = false);
 
-extern bool VITAL_PART(wearSlotT pos);
-
 struct TransformLimbType {
   char name[20];
   int  level;
