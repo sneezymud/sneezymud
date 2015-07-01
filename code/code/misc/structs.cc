@@ -39,7 +39,6 @@
 TBeing::TBeing() :
   TThing(),
   race(NULL),
-  body(NULL),
   points(),
   chosenStats(), 
   curStats(),
@@ -272,8 +271,6 @@ TBeing::~TBeing()
     if (getStuckIn(l))
       *rp += *pulloutObj(l, TRUE, &res);
   }
-
-  delete body;
 
   if (!desc || !desc->connected || desc->connected >= CON_REDITING) {
     if (this == character_list)
@@ -1218,7 +1215,6 @@ void TThing::mount(TThing *ch)
 TBeing::TBeing(const TBeing &a) :
   TThing(a),
   race(a.race),
-  body(a.body),
   points(a.points),
   chosenStats(a.chosenStats), 
   curStats(a.curStats),
@@ -1259,11 +1255,6 @@ TBeing::TBeing(const TBeing &a) :
   // pay attention to next, next_fighting, next_caster, etc
 
   race = a.race;
-
-  if (a.body)
-    body = new Body(*a.body);
-  else
-    body = NULL;
 
   for (i = 1; i< MAX_TOG_INDEX; i++) {
     toggles[i] = a.toggles[i];
@@ -1324,11 +1315,6 @@ TBeing & TBeing::operator=(const TBeing &a)
   int i;
 
   race = a.race;
-
-  if (a.body)
-    body = new Body(*a.body);
-  else
-    body = NULL;
 
   points = a.points;
   chosenStats = a.chosenStats;

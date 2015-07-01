@@ -1,13 +1,3 @@
-
-// limbs.h
-//
-// The Limb class will define how we use limbs in Sneezy.
-//
-// What I'd like to do is have an array of limb types with some defaults
-// setup.  When you make a body, you initialize the limb with one of the
-// defined limbs from the array.  Adding the limb will setup limb hps based
-// on the body's hp.
-
 #ifndef __LIMBS_H
 #define __LIMBS_H
 
@@ -33,8 +23,6 @@ const int LIMB_FOOT	= 20;
 
 const int MAX_MAIN_LIMBS = 8;
 const int MAX_LIMB_TYPES = 21;
-
-extern const char *limbNames[MAX_LIMB_TYPES];
 
 const int LIMB_USELESS	 = (1<<0);
 const int LIMB_BROKEN	 = (1<<1);
@@ -93,58 +81,7 @@ struct TransformLimbType {
   discNumT  discipline;
 };
 
-// extern class Limb;
-
-class Limb {
-  friend class Body;
-
-private:
-
-  Limb();
-  Limb(sstring typeOfLimb, sstring connector, sstring desc);
-  virtual ~Limb();
-  virtual void initLimb();
-
-  virtual Limb *search(int target, int status);
-  virtual int join(Limb *newLimb);
-  virtual int toInt(sstring limb_name);
-
-public:
-
-  virtual void applyDamage(int dam) { limbHitPoints -= dam; };
-  virtual void showLimb(TBeing *caller);
-
-private:
-  int limbType;
-  sstring name;
-
-  int limbHitPoints;
-  ubyte limbStatus;
-
-  TThing *equip;
-  TThing *holding;
-  TThing *jewelry;
-  int wornWeight;
-
-  int flags;		//Characteristics
-
-  int connectsTo;	//Type of limb it can connect to.
-  int numSlots;		//Number of slots this limb accepts..normally just 1
-  int slotsFilled;	//Number of sublimbs connected so far.
-
-  Limb *subLimb;	//If another limb can connect to this, put it here.
-  Limb *next;		//For the Body linked list.
-
-};
-
-
-// notes.  Add sheath slots to body and jewelry slot to limb with flag for if
-// it can use jewlery or not.  Get rid of finger as a limb and replace it with
-// a jewelry slot on hand.  Add worn weight field to limb.
-
-
 extern bool has_healthy_body(TBeing *);
 extern void break_bone(TBeing *, wearSlotT which);
-
 
 #endif

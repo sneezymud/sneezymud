@@ -349,7 +349,6 @@ class TBeing : public TThing {
 
   protected:
     Race *race;
-    Body *body;
     pointData points;
     Stats chosenStats;
     Stats curStats;
