@@ -1,4 +1,4 @@
-This is SneezyMUD.
+SneezyMUD is opensource software! See LICENSE.txt for details.
 
 # Prerequisites
 
