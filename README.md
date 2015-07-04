@@ -14,13 +14,15 @@ Run sneezy, logging to stdout. Ctrl-C to exit.
 
 ## Defaults
 
-| Telnet port               | 7900 |
-| Config file (optional)    | `./sneezy.cfg` |
-| Lib directory             | `./lib` |
-| Database names            | `sneezy` and `immortal` |
-| Database hostname         | `localhost` |
-| Database username         | none (see below) |
-| Database password         | none |
+| Configuration             | Default                       |
+|---------------------------|-------------------------------|
+| Telnet port               | 7900                          |
+| Config file (optional)    | `./sneezy.cfg`                |
+| Lib directory             | `./lib`                       |
+| Database names            | `sneezy` and `immortal`       |
+| Database hostname         | `localhost`                   |
+| Database username         | none (see below)              |
+| Database password         | none                          |
 
 Note: when no username is configured, Sneezy's MySQL username defaults to the
 Unix account name of the current user, similar to the mysql commandline
