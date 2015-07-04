@@ -1444,11 +1444,6 @@ int TPerson::genericLoadPC()
   next = character_list;
   character_list = this;
 
-  if(Config::SpeefMakeBody()){
-    vlogf(LOG_MISC, format("Loading a body for %s\n\r") %  name);
-    body = new Body(race->getBodyType(), points.maxHit);
-  }
-
   if (in_room == Room::NOWHERE || in_room == Room::AUTO_RENT) {
     if (banished()) {
       rp = real_roomp(Room::HELL);

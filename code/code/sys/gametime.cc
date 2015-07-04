@@ -24,7 +24,7 @@ sstring GameTime::hmtAsString(int hmt)
   int minute = hmt%4 * 15;
 
   sstring buf;
-  buf = format("%d:%2.2d %s") %
+  buf = format("%d:%02d %s") %
     (!(hour % 12) ? 12 : hour%12) %
     minute %
     ((hour >= 12) ? "PM" : "AM");

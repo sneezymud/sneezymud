@@ -4361,8 +4361,6 @@ bool TBeing::saveFollowers(bool rent_time)
   FILE *fp;
   int i;
   TPerson *tmp;
-  char temp[4096];
-  int j, k;
   bool found = FALSE;
   unsigned char version;
   TObj *obj;
@@ -4561,33 +4559,10 @@ bool TBeing::saveFollowers(bool rent_time)
 
     // save strung mob sstrings
     if (IS_SET(mob->specials.act, ACT_STRINGS_CHANGED)) {
-      for (j = 0, k = 0; k <= (int) mob->name.length(); k++) {
-        if (mob->name[k] != 13)
-          temp[j++] = mob->name[k];
-      }
-      temp[j] = '\0';
-      fprintf(fp, "%s~\n", temp);
-
-      for (j = 0, k = 0; k <= (int) mob->shortDescr.length(); k++) {
-        if (mob->shortDescr[k] != 13)
-          temp[j++] = mob->shortDescr[k];
-      }
-      temp[j] = '\0';
-      fprintf(fp, "%s~\n", temp);
-
-      for (j = 0, k = 0; k <= (int) mob->getLongDesc().length(); k++) {
-        if (mob->getLongDesc()[k] != 13)
-          temp[j++] = mob->getLongDesc()[k];
-      }
-      temp[j] = '\0';
-      fprintf(fp, "%s~\n", temp);
-
-      for (j = 0, k = 0; k <= (int) mob->getDescr().length(); k++) {
-        if (mob->getDescr()[k] != 13)
-          temp[j++] = mob->getDescr()[k];
-      }
-      temp[j] = '\0';
-      fprintf(fp, "%s~\n", temp);
+      fprintf(fp, "%s~\n", mob->name.replaceString("\r", "").c_str());
+      fprintf(fp, "%s~\n", mob->shortDescr.replaceString("\r", "").c_str());
+      fprintf(fp, "%s~\n", mob->getLongDesc().replaceString("\r", "").c_str());
+      fprintf(fp, "%s~\n", mob->getDescr().replaceString("\r", "").c_str());
     }
 
     // throw the affects back onto the mob

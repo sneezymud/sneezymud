@@ -1,4 +1,9 @@
 ==========================================================================
+7-02-15  : Times now display properly as 'X:00' instead of 'X: 0'.
+
+6-30-15  : Fixed a bug where renting with a persistent follower (pet)
+           with a custom name would crash the mud.
+
 6-09-14  : Fixed item repair, any existing ticket from the prior mud will
            be invalid. Drop rates were also fixed at the same time. You
            should now see an increase in loads/drops off mobs.

@@ -588,15 +588,6 @@ void TBeing::doAttribute(const char *arg)
 #endif
     }
     
-    if(Config::SpeefMakeBody()){
-      vlogf(LOG_MISC, format("Attribute argument: %s") % cmdbuf);
-      if(body)
-	body->showBody(this);
-      else
-	sendTo("You have no Body!\n\r");
-      vlogf(LOG_MISC, "I tried to show a body.");
-    }
-
     buf="";
     for(int i=0;i<MAX_TRAITS;++i){
       if(hasQuestBit(traits[i].tog)){
