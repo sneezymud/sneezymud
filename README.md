@@ -1,7 +1,6 @@
 This is SneezyMUD.
 
-Prerequisites
-=============
+# Prerequisites
 
 * gcc, namely g++ -- I'm using version 4.7
 * scons -- I'm using version 2.2.0 on Python 2.7
@@ -15,69 +14,65 @@ Prerequisites
   easy, though.
 * Boost -- Tried 1.40.0 and 1.50.0
 
-Installation
-============
+# Installation
 
 TODO: create simpler, more explicit instructions
 
-Compiling
-~~~~~~~~~
+## Compiling
+
   cd sneezymud/code
   scons -j2
   (2 is the number of parallel compilation jobs to run)
 
-Database
-~~~~~~~~
+## Database
 
 * Sneezy connects to MySQL over TCP, so enable this.
+
 * Create database sneezy: create database sneezy;
+
 * Create user sneezy and grant some privileges on sneezy db: CREATE USER 'sneezy'@'localhost' IDENTIFIED BY '$uper$ecret'; GRANT ALL ON sneezy.* TO 'sneezy@'localhost';
 
 * Import tables:
 
-  in code/sql, run the same stuff as below.
+  In code/sql, run the same stuff as below.  In data/immortal, run this:
 
-  in data/immortal, run this:
+    for i in *;do echo "Importing $i"; mysql -u sneezy immortal < $i;done
 
-  for i in *;do echo "Importing $i"; mysql -u sneezy immortal < $i;done
+  In data/sneezy:
 
-  in data/sneezy:
-
-  for i in *;do echo "Importing $i"; mysql -u sneezy sneezy < $i;done
+    for i in *;do echo "Importing $i"; mysql -u sneezy sneezy < $i;done
 
 * Create directories (use Bash for this, ZSH doesn't work):
 
- cd lib
- mkdir -p roomdata/saved
- mkdir rent
- cd rent
- for i in {a..z};do mkdir $i;done
- cd ..
- mkdir account
- cd account
- for i in {a..z};do mkdir $i;done
- cd ..
- mkdir player
- cd player
- for i in {a..z};do mkdir $i;done
- cd ..
- mkdir corpses
- mkdir -p mobdata/repairs
- mkdir immortals
- cd ..
+  cd lib
+  mkdir -p roomdata/saved
+  mkdir rent
+  cd rent
+  for i in {a..z};do mkdir $i;done
+  cd ..
+  mkdir account
+  cd account
+  for i in {a..z};do mkdir $i;done
+  cd ..
+  mkdir player
+  cd player
+  for i in {a..z};do mkdir $i;done
+  cd ..
+  mkdir corpses
+  mkdir -p mobdata/repairs
+  mkdir immortals
+  cd ..
 
-* Create a configuration
+* Create a configuration:
 
   Edit the configuration sneezy.cfg to point into the correct lib/ directory.
 
-Running
-~~~~~~~
+## Running
 
 start with ./sneezy
 It'll listen on port 5678 (if you're using sneezybeta), or 7900 otherwise.
 
-Running multiple instances in parallel
-======================================
+# Running multiple instances in parallel
 
 You can configure different database names, users and passwords for
 different instances: add sneezy_db = my_sneezy, sneezy_user = my_user,
