@@ -1,79 +1,174 @@
-SneezyMUD is opensource software! See LICENSE.txt for details.
+SneezyMUD is opensource! See LICENSE.txt for details.
 
-# Prerequisites
+# -h|--help)
 
-* gcc, namely g++ -- I'm using version 4.7
-* scons -- I'm using version 2.2.0 on Python 2.7
-* MySQL server and libmysqlclient. You need at least one database, "sneezymud",
-  better also "sneezybeta". Maybe more, I'm still figuring it out. The username
-  is hardcoded to be "sneezy" -- I'm using libmysqlclient 5.5.28-1
-* gperftools -- I'm using 2.0. This one is not absolutely necessary. If you
-  don't have it, just remove -ltcmalloc from code/SConstruct.
-* c-ares -- mine is 1.9.0. I've had compatibility issues, there seem to be
-  different versions around with different APIs. The adaptation to mine was
-  easy, though.
-* Boost -- Tried 1.40.0 and 1.50.0
+```
+Usage: sneezy [-p PORT] [-l LIBDIR] [-c CONFIG]
+
+Run sneezy, logging to stdout. Ctrl-C to exit.
+
+    -p PORT     listen for Telnet connections on PORT
+    -l LIBDIR   use LIBDIR as the lib flatfiles directory
+    -c CONFIG   read configuration from CONFIG
+```
+
+## Defaults
+
+| Telnet port               | 7900 |
+| Config file (optional)    | `./sneezy.cfg` |
+| Lib directory             | `./lib` |
+| Database names            | `sneezy` and `immortal` |
+| Database hostname         | `localhost` |
+| Database username         | none (see below) |
+| Database password         | none |
+
+Note: when no username is configured, Sneezy's MySQL username defaults to the
+Unix account name of the current user, similar to the mysql commandline
+program.
+
+## Configuration
+
+To change the database configuration from the defaults, you must create a
+custom config file. Two example cfg files are located in `code/`. Copy one of
+them to `sneezy.cfg` and edit as needed. If you put it in Sneezy's starting
+directory, it will get loaded automatically, or you can specify it on the
+command line.
+
+**Note:** Port 5678 is special, and when Sneezy is run on this port it enables
+various developer and beta features. Do not use this port for a production MUD
+instance!
+
+# Requirements
+
+## Server Environment
+
+* Modern Unix, probably Linux, typically Ubuntu
+* MySQL server or equivalent, two databases, and a user with table-level
+  table-level access. See below for the defaults for these.
+
+## Build Dependencies
+
+* C++ compiler, probably g++ -- Tested with version 4.7
+* scons -- Tested with version 2.2.0 on Python 2.7
+* libmysqlclient -- Tested with libmysqlclient 5.5.28
+* libc-ares -- Tested with 1.9.0 and 1.10.0.
+* Boost C++ library, with 'program-options', 'regex', and 'exception' modules
+  -- Tested with 1.40, 1.50
+
+## Recommended
+
+* bash shell and sudo root access
 
 # Installation
 
-TODO: create simpler, more explicit instructions
+When these instructions refer to 'Sneezy', they are mainly specifically
+referring to the sneezymud server daemon program.
+
+Shell commands below are assumed to have started in the root of the source
+code directory tree. Substitute any changes from the defaults you require, and
+remove sudo if it's unnecessary. Parts of the command where you must
+substitute arbitrary choices are represented as shell **$VARIABLES**.
 
 ## Compiling
 
-  cd sneezymud/code
-  scons -j2
-  (2 is the number of parallel compilation jobs to run)
+If you need to change build flags, edit the file `code/SConstruct`.
 
-## Database
+  $ cd code
+  # -j sets parallel compilation, nproc reports number of cpus available
+  $ scons -j$(nproc)
 
-* Sneezy connects to MySQL over TCP, so enable this.
+This will output a `code/sneezy` binary, along with some .so files in
+`code/objs/`. These .so files are **required**, and must be located in an
+`objs/` dir relative to the directory Sneezy is started in.
 
-* Create database sneezy: create database sneezy;
+## Installing The Binary
 
-* Create user sneezy and grant some privileges on sneezy db: CREATE USER 'sneezy'@'localhost' IDENTIFIED BY '$uper$ecret'; GRANT ALL ON sneezy.* TO 'sneezy@'localhost';
+If you're copying `code/sneezy` to a different location, you must copy the .so
+files in their `objs` dir along with it. The easiest thing is just to copy the
+whole dir:
 
-* Import tables:
+  $ cd code && cp -r sneezy objs $DEST
 
-  In code/sql, run the same stuff as below.  In data/immortal, run this:
+Optionally delete the extraneous .o files:
 
-    for i in *;do echo "Importing $i"; mysql -u sneezy immortal < $i;done
+  $ rm objs/*.o objs/*/*.o
 
-  In data/sneezy:
+## /lib - Flat Files
 
-    for i in *;do echo "Importing $i"; mysql -u sneezy sneezy < $i;done
+The 'lib' dir, as it is known, contains various text and data files that
+Sneezy reads and occasionally writes. To keep paths simple in the source code,
+Sneezy changes directory to the lib dir on startup. By default, Sneezy looks
+for a `lib/` subdir of the directory it was started in.
 
-* Create directories (use Bash for this, ZSH doesn't work):
+First you'll need to make the required empty directories, because git doesn't
+store them (the .. part of the cmd only works in bash):
 
-  cd lib
-  mkdir -p roomdata/saved
-  mkdir rent
-  cd rent
-  for i in {a..z};do mkdir $i;done
-  cd ..
-  mkdir account
-  cd account
-  for i in {a..z};do mkdir $i;done
-  cd ..
-  mkdir player
-  cd player
-  for i in {a..z};do mkdir $i;done
-  cd ..
-  mkdir corpses
-  mkdir -p mobdata/repairs
-  mkdir immortals
-  cd ..
+  $ cd lib && mkdir -p roomdata/saved corpses immortals \
+      rent/{a..z} account/{a..z} player/{a..z}
 
-* Create a configuration:
+If you are planning to run Sneezy directly from the source tree, you're done.
+Otherwise, copy the lib directory to its new location:
 
-  Edit the configuration sneezy.cfg to point into the correct lib/ directory.
+  $ cp -r lib $DEST/lib
+
+## Database Setup
+
+Sneezy uses both MySQL and flat files to store data, flat files being a
+holdover from its early MUD roots. It connects to MySQL over TCP, so make sure
+your database server's `bind-address` config option is set to `localhost` or
+`127.0.0.1`.
+
+### Create Databases
+
+The names can be changed in the config file:
+
+  $ sudo mysql -e "CREATE DATABASE sneezy ; CREATE DATABASE immortal ;"
+
+### Create User
+
+If you're using the defaults (no username/pw), set `[username]` below to the
+Unix account sneezy will be running as, and create a no-password user:
+
+  $ sudo mysql -e "CREATE USER '$USERNAME'@'localhost'"
+
+Without a password, anyone who can connect to MySQL can log in as this user.
+If this is a problem, set a password for the database user instead:
+
+  $ sudo mysql -e "CREATE USER '$USERNAME'@'localhost' IDENTIFIED BY '$PASSWORD'"
+
+### Set Database Permissions
+
+  $ sudo mysql -e "GRANT ALL on sneezy.* to '$USERNAME'@'localhost' ;" \
+               -e "GRANT ALL on immortal.* to '$USERNAME'@'localhost' ;"
+
+Technically sneezy itself only needs `SELECT, UPDATE, INSERT` permissions, if
+you use some other user to create the tables and populate the initial
+database.
+
+### Initial SQL Data
+
+The initial MUD data is contained in per-table `mysqldump` files, which
+combine table creation and data insertion in the form of a series of valid SQL
+statements. They are found in `_Setup-Data/sql_data`, in per-database
+directories.  Just load these files directly into `mysql` (don't forget to
+specify the database):
+
+  $ for db in immortal sneezy ; do
+      for sql in _Setup-Data/sql_data/$db/*.sql ; do
+        echo ">>>> LOADING '$db'"
+        sudo mysql $db < $sql
+      done
+    done
 
 ## Running
 
-start with ./sneezy
-It'll listen on port 5678 (if you're using sneezybeta), or 7900 otherwise.
+When run, Sneezy will print copious logs to stdout, and can be safely shut
+down using ctrl-C.
 
-# Running multiple instances in parallel
+Run Sneezy in the source tree using the defaults:
 
-You can configure different database names, users and passwords for
-different instances: add sneezy_db = my_sneezy, sneezy_user = my_user,
-sneezy_password = my_password, port=7902 to sneezy.cfg.
+  $ code/sneezy
+
+If you created a custom sneezy.cfg in code/:
+
+  $ cd code && ./sneezy
