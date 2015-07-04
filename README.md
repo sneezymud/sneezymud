@@ -75,9 +75,9 @@ substitute arbitrary choices are represented as shell **$VARIABLES**.
 
 If you need to change build flags, edit the file `code/SConstruct`.
 
-  $ cd code
-  # -j sets parallel compilation, nproc reports number of cpus available
-  $ scons -j$(nproc)
+    $ cd code
+    # -j sets parallel compilation, nproc reports number of cpus available
+    $ scons -j$(nproc)
 
 This will output a `code/sneezy` binary, along with some .so files in
 `code/objs/`. These .so files are **required**, and must be located in an
@@ -89,11 +89,11 @@ If you're copying `code/sneezy` to a different location, you must copy the .so
 files in their `objs` dir along with it. The easiest thing is just to copy the
 whole dir:
 
-  $ cd code && cp -r sneezy objs $DEST
+    $ cd code && cp -r sneezy objs $DEST
 
 Optionally delete the extraneous .o files:
 
-  $ rm objs/*.o objs/*/*.o
+    $ rm objs/*.o objs/*/*.o
 
 ## /lib - Flat Files
 
@@ -105,13 +105,13 @@ for a `lib/` subdir of the directory it was started in.
 First you'll need to make the required empty directories, because git doesn't
 store them (the .. part of the cmd only works in bash):
 
-  $ cd lib && mkdir -p roomdata/saved corpses immortals \
-      rent/{a..z} account/{a..z} player/{a..z}
+    $ cd lib && mkdir -p roomdata/saved corpses immortals \
+        rent/{a..z} account/{a..z} player/{a..z}
 
 If you are planning to run Sneezy directly from the source tree, you're done.
 Otherwise, copy the lib directory to its new location:
 
-  $ cp -r lib $DEST/lib
+    $ cp -r lib $DEST/lib
 
 ## Database Setup
 
@@ -124,24 +124,24 @@ your database server's `bind-address` config option is set to `localhost` or
 
 The names can be changed in the config file:
 
-  $ sudo mysql -e "CREATE DATABASE sneezy ; CREATE DATABASE immortal ;"
+    $ sudo mysql -e "CREATE DATABASE sneezy ; CREATE DATABASE immortal ;"
 
 ### Create User
 
 If you're using the defaults (no username/pw), set `[username]` below to the
 Unix account sneezy will be running as, and create a no-password user:
 
-  $ sudo mysql -e "CREATE USER '$USERNAME'@'localhost'"
+    $ sudo mysql -e "CREATE USER '$USERNAME'@'localhost'"
 
 Without a password, anyone who can connect to MySQL can log in as this user.
 If this is a problem, set a password for the database user instead:
 
-  $ sudo mysql -e "CREATE USER '$USERNAME'@'localhost' IDENTIFIED BY '$PASSWORD'"
+    $ sudo mysql -e "CREATE USER '$USERNAME'@'localhost' IDENTIFIED BY '$PASSWORD'"
 
 ### Set Database Permissions
 
-  $ sudo mysql -e "GRANT ALL on sneezy.* to '$USERNAME'@'localhost' ;" \
-               -e "GRANT ALL on immortal.* to '$USERNAME'@'localhost' ;"
+    $ sudo mysql -e "GRANT ALL on sneezy.* to '$USERNAME'@'localhost' ;" \
+                -e "GRANT ALL on immortal.* to '$USERNAME'@'localhost' ;"
 
 Technically sneezy itself only needs `SELECT, UPDATE, INSERT` permissions, if
 you use some other user to create the tables and populate the initial
@@ -155,12 +155,12 @@ statements. They are found in `_Setup-Data/sql_data`, in per-database
 directories.  Just load these files directly into `mysql` (don't forget to
 specify the database):
 
-  $ for db in immortal sneezy ; do
-      for sql in _Setup-Data/sql_data/$db/*.sql ; do
-        echo ">>>> LOADING '$db'"
-        sudo mysql $db < $sql
+    $ for db in immortal sneezy ; do
+          for sql in _Setup-Data/sql_data/$db/*.sql ; do
+              echo ">>>> LOADING '$db'"
+              sudo mysql $db < $sql
+          done
       done
-    done
 
 ## Running
 
@@ -169,8 +169,8 @@ down using ctrl-C.
 
 Run Sneezy in the source tree using the defaults:
 
-  $ code/sneezy
+    $ code/sneezy
 
 If you created a custom sneezy.cfg in code/:
 
-  $ cd code && ./sneezy
+    $ cd code && ./sneezy
