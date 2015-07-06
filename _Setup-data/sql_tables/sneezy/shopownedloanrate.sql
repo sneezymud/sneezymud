@@ -27,16 +27,7 @@ CREATE TABLE `shopownedloanrate` (
   `term` int(11) default NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `shopownedloanrate`
---
 
-
-/*!40000 ALTER TABLE `shopownedloanrate` DISABLE KEYS */;
-LOCK TABLES `shopownedloanrate` WRITE;
-INSERT INTO `shopownedloanrate` VALUES (136,4,5000000,6);
-UNLOCK TABLES;
-/*!40000 ALTER TABLE `shopownedloanrate` ENABLE KEYS */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -46,4 +37,3 @@ UNLOCK TABLES;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-

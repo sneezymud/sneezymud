@@ -28,15 +28,7 @@ CREATE TABLE `shopownednpcloan` (
   `owner` int(11) default NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `shopownednpcloan`
---
 
-
-/*!40000 ALTER TABLE `shopownednpcloan` DISABLE KEYS */;
-LOCK TABLES `shopownednpcloan` WRITE;
-UNLOCK TABLES;
-/*!40000 ALTER TABLE `shopownednpcloan` ENABLE KEYS */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -46,4 +38,3 @@ UNLOCK TABLES;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-

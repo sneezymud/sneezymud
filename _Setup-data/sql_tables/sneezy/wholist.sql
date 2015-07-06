@@ -27,16 +27,7 @@ CREATE TABLE `wholist` (
   `invis` int(11) default NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `wholist`
---
 
-
-/*!40000 ALTER TABLE `wholist` DISABLE KEYS */;
-LOCK TABLES `wholist` WRITE;
-INSERT INTO `wholist` VALUES ('Deirdre','<Y><n><z> <W>had a moon but she <z><Y>eated it<z>.',7900,0);
-UNLOCK TABLES;
-/*!40000 ALTER TABLE `wholist` ENABLE KEYS */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -46,4 +37,3 @@ UNLOCK TABLES;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
