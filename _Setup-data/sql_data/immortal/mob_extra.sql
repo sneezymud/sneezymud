@@ -16,18 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `mob_extra`
---
-
-DROP TABLE IF EXISTS `mob_extra`;
-CREATE TABLE `mob_extra` (
-  `vnum` int(11) NOT NULL default '0',
-  `keyword` char(32) NOT NULL default '',
-  `description` char(255) default NULL,
-  PRIMARY KEY  (`vnum`,`keyword`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `mob_extra`
 --
 

@@ -16,30 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `roomexit`
---
-
-DROP TABLE IF EXISTS `roomexit`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `roomexit` (
-  `vnum` int(11) NOT NULL,
-  `direction` int(11) NOT NULL,
-  `name` varchar(127) NOT NULL,
-  `description` text NOT NULL,
-  `type` int(11) NOT NULL,
-  `condition_flag` int(11) NOT NULL,
-  `lock_difficulty` int(11) NOT NULL,
-  `weight` int(11) NOT NULL,
-  `key_num` int(11) NOT NULL,
-  `destination` int(11) NOT NULL,
-  `owner` varchar(32) DEFAULT NULL,
-  `block` int(11) DEFAULT NULL,
-  KEY `roomexit_idx` (`vnum`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `roomexit`
 --
 

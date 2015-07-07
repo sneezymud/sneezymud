@@ -16,16 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `shopgoldtmp`
---
-
-DROP TABLE IF EXISTS `shopgoldtmp`;
-CREATE TABLE `shopgoldtmp` (
-  `shop_nr` int(11) default NULL,
-  `gold` int(11) default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `shopgoldtmp`
 --
 

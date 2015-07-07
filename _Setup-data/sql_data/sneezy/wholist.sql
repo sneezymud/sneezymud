@@ -16,18 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `wholist`
---
-
-DROP TABLE IF EXISTS `wholist`;
-CREATE TABLE `wholist` (
-  `name` varchar(80) default NULL,
-  `title` varchar(256) default NULL,
-  `port` int(11) default NULL,
-  `invis` int(11) default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `wholist`
 --
 

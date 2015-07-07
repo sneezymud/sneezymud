@@ -16,22 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `shopownedauction`
---
-
-DROP TABLE IF EXISTS `shopownedauction`;
-CREATE TABLE `shopownedauction` (
-  `shop_nr` int(11) default NULL,
-  `ticket` int(11) default NULL,
-  `bidder` int(11) default NULL,
-  `buyout` int(11) default NULL,
-  `days` int(11) default NULL,
-  `current_bid` int(11) default NULL,
-  `max_bid` int(11) default NULL,
-  `seller` int(11) default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `shopownedauction`
 --
 

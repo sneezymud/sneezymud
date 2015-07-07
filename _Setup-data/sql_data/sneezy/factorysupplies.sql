@@ -16,18 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `factorysupplies`
---
-
-DROP TABLE IF EXISTS `factorysupplies`;
-CREATE TABLE `factorysupplies` (
-  `shop_nr` int(11) default NULL,
-  `supplytype` int(11) default NULL,
-  `supplyname` varchar(16) default NULL,
-  `supplyamt` int(11) default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `factorysupplies`
 --
 

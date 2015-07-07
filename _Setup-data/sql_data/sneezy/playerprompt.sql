@@ -16,28 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `playerprompt`
---
-
-DROP TABLE IF EXISTS `playerprompt`;
-CREATE TABLE `playerprompt` (
-  `player_id` int(11) default NULL,
-  `p_type` int(11) default NULL,
-  `hp` varchar(20) default NULL,
-  `mana` varchar(20) default NULL,
-  `move` varchar(20) default NULL,
-  `money` varchar(20) default NULL,
-  `exp` varchar(20) default NULL,
-  `room` varchar(20) default NULL,
-  `opp` varchar(20) default NULL,
-  `tank` varchar(20) default NULL,
-  `piety` varchar(20) default NULL,
-  `lifeforce` varchar(20) default NULL,
-  `time` varchar(20) default NULL,
-  KEY `ix_playerprompt_player_id` (`player_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `playerprompt`
 --
 

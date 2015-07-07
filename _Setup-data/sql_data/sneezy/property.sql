@@ -16,20 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `property`
---
-
-DROP TABLE IF EXISTS `property`;
-CREATE TABLE `property` (
-  `id` bigint(20) unsigned NOT NULL auto_increment,
-  `name` varchar(80) default NULL,
-  `owner` int(11) default NULL,
-  `key_vnum` int(11) default NULL,
-  `entrance` int(11) default NULL,
-  UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `property`
 --
 

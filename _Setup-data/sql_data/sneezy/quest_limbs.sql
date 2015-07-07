@@ -16,20 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `quest_limbs`
---
-
-DROP TABLE IF EXISTS `quest_limbs`;
-CREATE TABLE `quest_limbs` (
-  `player` varchar(80) NOT NULL,
-  `team` varchar(30) default NULL,
-  `mob_vnum` int(11) NOT NULL,
-  `slot_num` int(11) NOT NULL,
-  `slot_name` varchar(127) default NULL,
-  `date_submitted` timestamp NOT NULL default CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `quest_limbs`
 --
 

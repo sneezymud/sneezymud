@@ -16,17 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `mobresponses`
---
-
-DROP TABLE IF EXISTS `mobresponses`;
-CREATE TABLE `mobresponses` (
-  `vnum` int(11) NOT NULL,
-  `response` longtext NOT NULL,
-  KEY `mobresponses_idx` (`vnum`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `mobresponses`
 --
 

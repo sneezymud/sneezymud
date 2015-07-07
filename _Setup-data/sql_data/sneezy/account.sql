@@ -16,25 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `account`
---
-
-DROP TABLE IF EXISTS `account`;
-CREATE TABLE `account` (
-  `account_id` bigint(20) unsigned NOT NULL auto_increment,
-  `email` varchar(80) default NULL,
-  `passwd` varchar(13) default NULL,
-  `name` varchar(80) default NULL,
-  `birth` int(11) default NULL,
-  `term` int(11) default NULL,
-  `time_adjust` int(11) default NULL,
-  `flags` int(11) default NULL,
-  `last_logon` int(11) default NULL,
-  UNIQUE KEY `account_id` (`account_id`),
-  KEY `ix_account_name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `account`
 --
 

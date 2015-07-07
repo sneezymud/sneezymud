@@ -16,18 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `shopownedbank`
---
-
-DROP TABLE IF EXISTS `shopownedbank`;
-CREATE TABLE `shopownedbank` (
-  `shop_nr` int(11) default NULL,
-  `player_id` int(11) default NULL,
-  `talens` int(11) default NULL,
-  `earned_interest` double default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `shopownedbank`
 --
 

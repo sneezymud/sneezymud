@@ -16,17 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `obj_load_min_level`
---
-
-DROP TABLE IF EXISTS `obj_load_min_level`;
-CREATE TABLE `obj_load_min_level` (
-  `obj_vnum` int(11) default NULL,
-  `mob_vnum` int(11) default NULL,
-  `mob_level` int(11) default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `obj_load_min_level`
 --
 

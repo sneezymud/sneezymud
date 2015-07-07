@@ -16,19 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `globaltoggles`
---
-
-DROP TABLE IF EXISTS `globaltoggles`;
-CREATE TABLE `globaltoggles` (
-  `tog_id` int(11) NOT NULL,
-  `toggle` tinyint(1) default NULL,
-  `testcode` tinyint(1) default NULL,
-  `name` varchar(80) default NULL,
-  `descr` varchar(256) default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `globaltoggles`
 --
 

@@ -16,35 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `shop`
---
-
-DROP TABLE IF EXISTS `shop`;
-CREATE TABLE `shop` (
-  `shop_nr` int(11) NOT NULL default '0',
-  `profit_buy` double NOT NULL default '0',
-  `profit_sell` double NOT NULL default '0',
-  `no_such_item1` varchar(127) NOT NULL default '',
-  `no_such_item2` varchar(127) NOT NULL default '',
-  `do_not_buy` varchar(127) NOT NULL default '',
-  `missing_cash1` varchar(127) NOT NULL default '',
-  `missing_cash2` varchar(127) NOT NULL default '',
-  `message_buy` varchar(127) NOT NULL default '',
-  `message_sell` varchar(127) NOT NULL default '',
-  `temper1` int(11) NOT NULL default '0',
-  `temper2` int(11) NOT NULL default '0',
-  `keeper` int(11) NOT NULL default '0',
-  `flags` int(11) NOT NULL default '0',
-  `in_room` int(11) NOT NULL default '0',
-  `open1` int(11) NOT NULL default '0',
-  `close1` int(11) NOT NULL default '0',
-  `open2` int(11) NOT NULL default '0',
-  `close2` int(11) NOT NULL default '0',
-  `expense_ratio` double default NULL,
-  PRIMARY KEY  (`shop_nr`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `shop`
 --
 

@@ -16,16 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `pings`
---
-
-DROP TABLE IF EXISTS `pings`;
-CREATE TABLE `pings` (
-  `host` text,
-  `pingtime` double default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `pings`
 --
 

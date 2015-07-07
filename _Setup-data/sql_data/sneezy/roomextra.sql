@@ -16,18 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `roomextra`
---
-
-DROP TABLE IF EXISTS `roomextra`;
-CREATE TABLE `roomextra` (
-  `vnum` int(11) NOT NULL,
-  `name` text NOT NULL,
-  `description` text NOT NULL,
-  KEY `roomextra_idx` (`vnum`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `roomextra`
 --
 

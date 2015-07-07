@@ -16,19 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `shopownednpcloan`
---
-
-DROP TABLE IF EXISTS `shopownednpcloan`;
-CREATE TABLE `shopownednpcloan` (
-  `loan_id` int(11) default NULL,
-  `amt` int(11) default NULL,
-  `rate` double default NULL,
-  `risk` double default NULL,
-  `owner` int(11) default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `shopownednpcloan`
 --
 

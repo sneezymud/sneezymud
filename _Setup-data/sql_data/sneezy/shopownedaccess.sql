@@ -16,17 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `shopownedaccess`
---
-
-DROP TABLE IF EXISTS `shopownedaccess`;
-CREATE TABLE `shopownedaccess` (
-  `shop_nr` int(11) NOT NULL default '0',
-  `name` varchar(80) NOT NULL default '',
-  `access` int(11) NOT NULL default '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `shopownedaccess`
 --
 

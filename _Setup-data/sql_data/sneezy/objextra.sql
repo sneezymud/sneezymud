@@ -16,17 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `objextra`
---
-
-DROP TABLE IF EXISTS `objextra`;
-CREATE TABLE `objextra` (
-  `vnum` int(11) NOT NULL default '0',
-  `name` varchar(127) NOT NULL default '',
-  `description` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `objextra`
 --
 

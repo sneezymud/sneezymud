@@ -16,19 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `talenhistory`
---
-
-DROP TABLE IF EXISTS `talenhistory`;
-CREATE TABLE `talenhistory` (
-  `logtime` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  `total` int(11) default NULL,
-  `player` int(11) default NULL,
-  `corp` int(11) default NULL,
-  `shop` int(11) default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `talenhistory`
 --
 

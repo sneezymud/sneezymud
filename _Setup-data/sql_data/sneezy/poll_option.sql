@@ -16,17 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `poll_option`
---
-
-DROP TABLE IF EXISTS `poll_option`;
-CREATE TABLE `poll_option` (
-  `option_id` int(11) NOT NULL,
-  `poll_id` int(11) NOT NULL,
-  `descr` varchar(127) default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `poll_option`
 --
 

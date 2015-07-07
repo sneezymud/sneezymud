@@ -16,17 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `fishkeeper`
---
-
-DROP TABLE IF EXISTS `fishkeeper`;
-CREATE TABLE `fishkeeper` (
-  `name` varchar(80) NOT NULL default '',
-  `weight` double default NULL,
-  KEY `ix_fishkeeper_name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `fishkeeper`
 --
 

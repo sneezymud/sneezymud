@@ -16,17 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `querytimes`
---
-
-DROP TABLE IF EXISTS `querytimes`;
-CREATE TABLE `querytimes` (
-  `query` varchar(512) default NULL,
-  `secs` double default NULL,
-  `date_logged` timestamp NOT NULL default CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `querytimes`
 --
 

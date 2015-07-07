@@ -16,31 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `drug_use`
---
-
-DROP TABLE IF EXISTS `drug_use`;
-CREATE TABLE `drug_use` (
-  `drug_id` int(11) default NULL,
-  `player_id` int(11) default NULL,
-  `first_use_sec` int(11) default NULL,
-  `first_use_min` int(11) default NULL,
-  `first_use_hour` int(11) default NULL,
-  `first_use_day` int(11) default NULL,
-  `first_use_mon` int(11) default NULL,
-  `first_use_year` int(11) default NULL,
-  `last_use_sec` int(11) default NULL,
-  `last_use_min` int(11) default NULL,
-  `last_use_hour` int(11) default NULL,
-  `last_use_day` int(11) default NULL,
-  `last_use_mon` int(11) default NULL,
-  `last_use_year` int(11) default NULL,
-  `total_consumed` int(11) default NULL,
-  `current_consumed` int(11) default NULL,
-  KEY `ix_drug_use_player_id` (`player_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `drug_use`
 --
 

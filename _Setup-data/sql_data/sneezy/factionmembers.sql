@@ -16,17 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `factionmembers`
---
-
-DROP TABLE IF EXISTS `factionmembers`;
-CREATE TABLE `factionmembers` (
-  `name` varchar(80) NOT NULL default '',
-  `faction` varchar(8) default NULL,
-  `level` int(11) default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `factionmembers`
 --
 

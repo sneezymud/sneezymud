@@ -16,25 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `roomexit`
---
-
-DROP TABLE IF EXISTS `roomexit`;
-CREATE TABLE `roomexit` (
-  `vnum` int(11) NOT NULL,
-  `direction` int(11) NOT NULL,
-  `name` varchar(127) NOT NULL,
-  `description` text NOT NULL,
-  `type` int(11) NOT NULL,
-  `condition_flag` int(11) NOT NULL,
-  `lock_difficulty` int(11) NOT NULL,
-  `weight` int(11) NOT NULL,
-  `key_num` int(11) NOT NULL,
-  `destination` int(11) NOT NULL,
-  KEY `roomexit_idx` (`vnum`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `roomexit`
 --
 

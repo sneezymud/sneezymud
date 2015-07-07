@@ -16,18 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `objaffect`
---
-
-DROP TABLE IF EXISTS `objaffect`;
-CREATE TABLE `objaffect` (
-  `vnum` int(11) NOT NULL default '0',
-  `type` int(11) NOT NULL default '0',
-  `mod1` int(11) NOT NULL default '0',
-  `mod2` int(11) NOT NULL default '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `objaffect`
 --
 

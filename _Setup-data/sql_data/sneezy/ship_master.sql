@@ -16,18 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `ship_master`
---
-
-DROP TABLE IF EXISTS `ship_master`;
-CREATE TABLE `ship_master` (
-  `captain_vnum` int(11) NOT NULL,
-  `account_id` int(11) default NULL,
-  `player_id` int(11) default NULL,
-  KEY `ix1_ship_master` (`captain_vnum`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `ship_master`
 --
 

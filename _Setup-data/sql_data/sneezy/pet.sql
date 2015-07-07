@@ -16,19 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `pet`
---
-
-DROP TABLE IF EXISTS `pet`;
-CREATE TABLE `pet` (
-  `player_id` int(11) default NULL,
-  `vnum` int(11) default NULL,
-  `exp` double default NULL,
-  `name` varchar(32) default NULL,
-  `level` int(11) default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `pet`
 --
 

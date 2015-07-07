@@ -16,22 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `board_message`
---
-
-DROP TABLE IF EXISTS `board_message`;
-CREATE TABLE `board_message` (
-  `board_vnum` int(11) NOT NULL,
-  `post_num` int(11) default NULL,
-  `date_posted` timestamp NOT NULL default CURRENT_TIMESTAMP,
-  `date_removed` timestamp NULL default NULL,
-  `subject` varchar(80) default NULL,
-  `author` varchar(80) default NULL,
-  `post` text,
-  KEY `ix__board_message__1` (`board_vnum`,`date_removed`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `board_message`
 --
 

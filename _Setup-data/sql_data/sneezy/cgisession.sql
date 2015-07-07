@@ -16,19 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `cgisession`
---
-
-DROP TABLE IF EXISTS `cgisession`;
-CREATE TABLE `cgisession` (
-  `session_id` varchar(32) default NULL,
-  `account_id` int(11) default NULL,
-  `duration` int(11) default NULL,
-  `timeset` int(11) default NULL,
-  `name` varchar(32) default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `cgisession`
 --
 

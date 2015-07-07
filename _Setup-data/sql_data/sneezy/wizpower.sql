@@ -16,17 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `wizpower`
---
-
-DROP TABLE IF EXISTS `wizpower`;
-CREATE TABLE `wizpower` (
-  `player_id` int(11) default NULL,
-  `wizpower` int(11) default NULL,
-  KEY `wizpower_idx` (`player_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `wizpower`
 --
 

@@ -16,20 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `rent_strung`
---
-
-DROP TABLE IF EXISTS `rent_strung`;
-CREATE TABLE `rent_strung` (
-  `rent_id` int(11) NOT NULL default '0',
-  `name` varchar(127) NOT NULL default '',
-  `short_desc` varchar(127) NOT NULL default '',
-  `long_desc` varchar(255) NOT NULL default '',
-  `action_desc` varchar(255) NOT NULL default '',
-  KEY `rent_strung_idx` (`rent_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `rent_strung`
 --
 

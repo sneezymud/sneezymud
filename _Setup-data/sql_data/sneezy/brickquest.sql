@@ -16,16 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `brickquest`
---
-
-DROP TABLE IF EXISTS `brickquest`;
-CREATE TABLE `brickquest` (
-  `numbricks` int(11) default '0',
-  `name` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `brickquest`
 --
 

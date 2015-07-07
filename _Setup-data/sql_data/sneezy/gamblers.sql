@@ -16,16 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `gamblers`
---
-
-DROP TABLE IF EXISTS `gamblers`;
-CREATE TABLE `gamblers` (
-  `player_id` int(11) NOT NULL,
-  `money` int(11) default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `gamblers`
 --
 

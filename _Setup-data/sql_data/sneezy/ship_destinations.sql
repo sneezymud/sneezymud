@@ -16,18 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `ship_destinations`
---
-
-DROP TABLE IF EXISTS `ship_destinations`;
-CREATE TABLE `ship_destinations` (
-  `vnum` int(11) default NULL,
-  `name` varchar(32) default NULL,
-  `room` int(11) default NULL,
-  KEY `ix1__ship_destinations` (`vnum`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `ship_destinations`
 --
 
