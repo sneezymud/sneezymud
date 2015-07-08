@@ -1,15 +1,42 @@
-alter table mob add owner varchar(80);
-alter table mob_imm add owner varchar(80);
-alter table mob_extra add owner varchar(80);
-alter table mobresponses add owner varchar(80);
+ALTER TABLE `mob`
+    ADD `owner` char(32) default NULL,
+    DROP PRIMARY KEY,
+    ADD PRIMARY KEY  (`owner`,`vnum`);
 
-alter table obj add owner varchar(80);
-alter table objaffect add owner varchar(80);
-alter table objextra add owner varchar(80);
+ALTER TABLE `mob_extra`
+    ADD `owner` varchar(32) default NULL,
+    DROP PRIMARY KEY,
+    ADD PRIMARY KEY  (`owner`,`vnum`,`keyword`);
 
-alter table room add owner varchar(80);
-alter table room add block int;
-alter table roomexit add owner varchar(80);
-alter table roomexit add block int;
-alter table roomextra add owner varchar(80);
-alter table roomextra add block int;
+ALTER TABLE `mob_imm`
+    ADD `owner` varchar(32) default NULL,
+    DROP PRIMARY KEY,
+    ADD PRIMARY KEY  (`owner`,`vnum`,`type`);
+
+ALTER TABLE `mobresponses`
+    ADD `owner` varchar(32) default NULL;
+
+ALTER TABLE `obj`
+    ADD `owner` varchar(32) default NULL,
+    DROP PRIMARY KEY,
+    ADD PRIMARY KEY  (`owner`,`vnum`);
+
+ALTER TABLE `objaffect`
+    ADD `owner` varchar(32) default NULL;
+
+ALTER TABLE `objextra`
+    ADD `owner` varchar(32) default NULL;
+
+ALTER TABLE `room`
+    ADD `owner` varchar(32) default NULL,
+    ADD `block` int(11) default NULL,
+    DROP PRIMARY KEY,
+    ADD PRIMARY KEY  (`owner`,`vnum`);
+
+ALTER TABLE `roomexit`
+    ADD `owner` varchar(32) default NULL,
+    ADD `block` int(11) default NULL;
+
+ALTER TABLE `roomextra`
+    ADD `owner` varchar(32) default NULL,
+    ADD `block` int(11) default NULL;
