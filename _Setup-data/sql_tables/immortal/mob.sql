@@ -21,6 +21,7 @@
 
 DROP TABLE IF EXISTS `mob`;
 CREATE TABLE `mob` (
+  `owner` varchar(32) default NULL,
   `vnum` int(11) NOT NULL,
   `name` char(127) NOT NULL,
   `short_desc` char(127) NOT NULL,
@@ -65,7 +66,7 @@ CREATE TABLE `mob` (
   `max_exist` int(11) NOT NULL,
   `local_sound` char(255) default NULL,
   `adjacent_sound` char(255) default NULL,
-  PRIMARY KEY  (`vnum`)
+  PRIMARY KEY  (`owner`,`vnum`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 

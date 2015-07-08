@@ -21,10 +21,11 @@
 
 DROP TABLE IF EXISTS `mob_extra`;
 CREATE TABLE `mob_extra` (
+  `owner` varchar(32) default NULL,
   `vnum` int(11) NOT NULL default '0',
   `keyword` char(32) NOT NULL default '',
   `description` char(255) default NULL,
-  PRIMARY KEY  (`vnum`,`keyword`)
+  PRIMARY KEY  (`owner`,`vnum`,`keyword`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 

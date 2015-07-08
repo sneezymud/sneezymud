@@ -21,6 +21,7 @@
 
 DROP TABLE IF EXISTS `mobresponses`;
 CREATE TABLE `mobresponses` (
+  `owner` varchar(32) default NULL,
   `vnum` int(11) NOT NULL,
   `response` longtext NOT NULL,
   KEY `mobresponses_idx` (`vnum`)

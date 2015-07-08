@@ -26,8 +26,8 @@ CREATE TABLE `roomextra` (
   `vnum` int(11) NOT NULL,
   `name` text NOT NULL,
   `description` text NOT NULL,
-  `owner` varchar(32) DEFAULT NULL,
-  `block` int(11) DEFAULT NULL,
+  `owner` varchar(32) default NULL,
+  `block` int(11) default NULL,
   KEY `roomextra_idx` (`vnum`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

@@ -21,6 +21,7 @@
 
 DROP TABLE IF EXISTS `obj`;
 CREATE TABLE `obj` (
+  `owner` varchar(32) default NULL,
   `vnum` int(11) NOT NULL default '0',
   `name` varchar(127) NOT NULL default '',
   `short_desc` varchar(127) NOT NULL default '',
@@ -43,7 +44,7 @@ CREATE TABLE `obj` (
   `decay` int(11) NOT NULL default '0',
   `volume` int(11) NOT NULL default '0',
   `material` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`vnum`)
+  PRIMARY KEY  (`owner`,`vnum`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 

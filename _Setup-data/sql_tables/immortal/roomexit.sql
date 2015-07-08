@@ -33,8 +33,8 @@ CREATE TABLE `roomexit` (
   `weight` int(11) NOT NULL,
   `key_num` int(11) NOT NULL,
   `destination` int(11) NOT NULL,
-  `owner` varchar(32) DEFAULT NULL,
-  `block` int(11) DEFAULT NULL,
+  `owner` varchar(32) default NULL,
+  `block` int(11) default NULL,
   KEY `roomexit_idx` (`vnum`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

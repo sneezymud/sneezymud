@@ -40,9 +40,9 @@ CREATE TABLE `room` (
   `capacity` int(11) NOT NULL,
   `height` int(11) NOT NULL,
   `spec` int(11) NOT NULL,
-  `owner` varchar(32) DEFAULT NULL,
-  `block` int(11) DEFAULT NULL,
-  PRIMARY KEY (`vnum`)
+  `owner` varchar(32) default NULL,
+  `block` int(11) default NULL,
+  PRIMARY KEY  (`owner`,`vnum`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 

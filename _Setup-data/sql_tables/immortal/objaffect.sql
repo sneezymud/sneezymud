@@ -21,6 +21,7 @@
 
 DROP TABLE IF EXISTS `objaffect`;
 CREATE TABLE `objaffect` (
+  `owner` varchar(32) default NULL,
   `vnum` int(11) NOT NULL default '0',
   `type` int(11) NOT NULL default '0',
   `mod1` int(11) NOT NULL default '0',

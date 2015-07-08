@@ -21,6 +21,7 @@
 
 DROP TABLE IF EXISTS `objextra`;
 CREATE TABLE `objextra` (
+  `owner` varchar(32) default NULL,
   `vnum` int(11) NOT NULL default '0',
   `name` varchar(127) NOT NULL default '',
   `description` text NOT NULL
