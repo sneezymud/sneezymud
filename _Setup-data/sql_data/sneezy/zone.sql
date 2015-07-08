@@ -16,24 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `zone`
---
-
-DROP TABLE IF EXISTS `zone`;
-CREATE TABLE `zone` (
-  `zone_nr` int(11) NOT NULL,
-  `zone_name` varchar(255) NOT NULL default '',
-  `zone_enabled` int(11) default NULL,
-  `bottom` int(11) default NULL,
-  `top` int(11) default NULL,
-  `reset_mode` int(11) default NULL,
-  `lifespan` int(11) default NULL,
-  `age` int(11) default NULL,
-  `util_flag` int(11) default NULL,
-  PRIMARY KEY  (`zone_nr`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `zone`
 --
 

@@ -16,19 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `shopownedmatch`
---
-
-DROP TABLE IF EXISTS `shopownedmatch`;
-CREATE TABLE `shopownedmatch` (
-  `shop_nr` int(11) default NULL,
-  `match_str` varchar(128) default NULL,
-  `profit_buy` double default NULL,
-  `profit_sell` double default NULL,
-  `max_num` int(11) default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `shopownedmatch`
 --
 

@@ -16,16 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `shopproducing`
---
-
-DROP TABLE IF EXISTS `shopproducing`;
-CREATE TABLE `shopproducing` (
-  `shop_nr` int(11) NOT NULL default '0',
-  `producing` int(11) NOT NULL default '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `shopproducing`
 --
 

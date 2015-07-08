@@ -16,30 +16,13 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `ship_master`
---
-
-DROP TABLE IF EXISTS `ship_master`;
-CREATE TABLE `ship_master` (
-  `captain_vnum` int(11) NOT NULL,
-  `account_id` int(11) default NULL,
-  `player_id` int(11) default NULL,
-  KEY `ix1_ship_master` (`captain_vnum`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `ship_master`
 --
 
 
 /*!40000 ALTER TABLE `ship_master` DISABLE KEYS */;
 LOCK TABLES `ship_master` WRITE;
-INSERT INTO `ship_master` VALUES (19000,664,NULL),
-(19000,1315,NULL),
-(19000,1906,NULL),
-(19000,2138,NULL),
-(15375,2122,NULL),
-(15375,1906,NULL);
+INSERT INTO `ship_master` VALUES (19000,NULL,NULL), (15375,NULL,NULL);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `ship_master` ENABLE KEYS */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

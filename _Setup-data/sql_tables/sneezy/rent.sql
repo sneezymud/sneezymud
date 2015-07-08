@@ -1,42 +1,56 @@
-create table rent (
-  rent_id integer primary key auto_increment,
-  owner_type ENUM('player', 'shop', 'room', 'mail'),
-  owner integer DEFAULT '0' NOT NULL,
-  slot integer DEFAULT '0' NOT NULL,
-  vnum integer DEFAULT '0' NOT NULL,
-  container integer DEFAULT '-1' NOT NULL,
-  val0 integer DEFAULT '0' NOT NULL,
-  val1 integer DEFAULT '0' NOT NULL,
-  val2 integer DEFAULT '0' NOT NULL,
-  val3 integer DEFAULT '0' NOT NULL,
-  extra_flags integer DEFAULT '0' NOT NULL,
-  weight double precision,
-  bitvector integer DEFAULT '0' NOT NULL,
-  decay integer DEFAULT '0' NOT NULL,
-  cur_struct integer DEFAULT '0' NOT NULL,
-  max_struct integer DEFAULT '0' NOT NULL,	
-  material integer DEFAULT '0' NOT NULL,
-  volume integer DEFAULT '0' NOT NULL,
-  price integer DEFAULT '0' NOT NULL,
-  depreciation integer DEFAULT '0' NOT NULL
-);
+-- MySQL dump 10.10
+--
+-- Host: db.sneezymud.com    Database: sneezy
+-- ------------------------------------------------------
+-- Server version	5.0.24a-standard
 
-create table rent_obj_aff (
-  rent_id integer DEFAULT '0' NOT NULL,
-  type integer DEFAULT '0' NOT NULL,
-  level integer DEFAULT '0' NOT NULL,
-  duration integer DEFAULT '0' NOT NULL,
-  renew integer DEFAULT '0' NOT NULL,
-  modifier integer DEFAULT '0' NOT NULL,
-  location integer DEFAULT '0' NOT NULL,
-  modifier2 integer DEFAULT '0' NOT NULL,
-  bitvector integer DEFAULT '0' NOT NULL
-);
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-create table rent_strung (
-  rent_id integer DEFAULT '0' NOT NULL,
-  name varchar(127) DEFAULT '' NOT NULL,
-  short_desc varchar(127) DEFAULT '' NOT NULL,
-  long_desc varchar(255) DEFAULT '' NOT NULL,
-  action_desc varchar(255) DEFAULT '' NOT NULL
-);
+--
+-- Table structure for table `rent`
+--
+
+DROP TABLE IF EXISTS `rent`;
+CREATE TABLE `rent` (
+  `rent_id` int(11) NOT NULL auto_increment,
+  `owner_type` enum('player','shop','room','mail') default NULL,
+  `owner` int(11) NOT NULL default '0',
+  `slot` int(11) NOT NULL default '0',
+  `vnum` int(11) NOT NULL default '0',
+  `container` int(11) NOT NULL default '-1',
+  `val0` int(11) NOT NULL default '0',
+  `val1` int(11) NOT NULL default '0',
+  `val2` int(11) NOT NULL default '0',
+  `val3` int(11) NOT NULL default '0',
+  `extra_flags` int(11) NOT NULL default '0',
+  `weight` double default NULL,
+  `bitvector` int(11) NOT NULL default '0',
+  `decay` int(11) NOT NULL default '0',
+  `cur_struct` int(11) NOT NULL default '0',
+  `max_struct` int(11) NOT NULL default '0',
+  `material` int(11) NOT NULL default '0',
+  `volume` int(11) NOT NULL default '0',
+  `price` int(11) NOT NULL default '0',
+  `depreciation` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`rent_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;

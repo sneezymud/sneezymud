@@ -16,57 +16,43 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `property`
---
-
-DROP TABLE IF EXISTS `property`;
-CREATE TABLE `property` (
-  `id` bigint(20) unsigned NOT NULL auto_increment,
-  `name` varchar(80) default NULL,
-  `owner` int(11) default NULL,
-  `key_vnum` int(11) default NULL,
-  `entrance` int(11) default NULL,
-  UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `property`
 --
 
 
 /*!40000 ALTER TABLE `property` DISABLE KEYS */;
 LOCK TABLES `property` WRITE;
-INSERT INTO `property` VALUES (1,'NW Market Square Apartment',669,562,580),
-(2,'NE Twilight Square Apartment',669,636,618),
-(3,'5 Redlight Lane',669,4474,4626),
-(4,'3 Redlight Lane',326,4624,4624),
-(5,'W Twilight Avenue Apartment',669,642,636),
-(6,'Haon-Dor Treehouse',669,1177,1177),
-(7,'Jungle Flat',7970,35450,9723),
-(8,'Pleasant Acres',2466,18732,18730),
-(9,'Hammer and Fist Construction Co.',2466,8883,33270),
-(10,'Adrielz Tower',553,3866,3867),
-(11,'Skull Duggory\'s Tower',553,3869,3870),
-(12,'Haon-Dor Cabin',326,33290,33290),
-(13,'Ancient Coffin',6062,9648,9649),
-(15,'A Ramshackle Backroom',828,16755,16707),
-(32,'Farm',9279,33579,33577),
-(33,'Farmhouse',9279,33580,33560),
-(34,'The Tequila Sunrise',1932,19003,19000),
-(35,'A Hollow Magma Chamber',31443,33652,9725),
-(36,'A Cramped Attic',9229,16700,16700),
-(37,'Usurped Galek Suite',669,26879,26879),
-(38,'Usurped Unaffliated Suite',669,26880,26880),
-(39,'Usurped Serpent Suite',669,26881,26881),
-(40,'Usurped Logrus Suite',669,26882,26882),
-(41,'Private Room in Frontier Barracks',8152,16724,16702),
-(42,'A Raven\'s Nest',2478,16741,16705),
-(43,'Serpent\'s Overlord Sanctum',557,33295,33295),
-(46,'Unfinished Bungalow On Stilts',31443,16763,16708),
-(47,'Oarsmen Hull',9229,15381,15381),
-(49,'The Great House',31892,16765,10135),
-(50,'A Simple Apartment',1058,16767,16711),
-(51,'Lord Deslok\'s Chamber',47604,16768,16712);
+INSERT INTO `property` VALUES (1,'NW Market Square Apartment',NULL,562,580),
+(2,'NE Twilight Square Apartment',NULL,636,618),
+(3,'5 Redlight Lane',NULL,4474,4626),
+(4,'3 Redlight Lane',NULL,4624,4624),
+(5,'W Twilight Avenue Apartment',NULL,642,636),
+(6,'Haon-Dor Treehouse',NULL,1177,1177),
+(7,'Jungle Flat',NULL,35450,9723),
+(8,'Pleasant Acres',NULL,18732,18730),
+(9,'Hammer and Fist Construction Co.',NULL,8883,33270),
+(10,'Adrielz Tower',NULL,3866,3867),
+(11,'Skull Duggory\'s Tower',NULL,3869,3870),
+(12,'Haon-Dor Cabin',NULL,33290,33290),
+(13,'Ancient Coffin',NULL,9648,9649),
+(15,'A Ramshackle Backroom',NULL,16755,16707),
+(32,'Farm',NULL,33579,33577),
+(33,'Farmhouse',NULL,33580,33560),
+(34,'The Tequila Sunrise',NULL,19003,19000),
+(35,'A Hollow Magma Chamber',NULL,33652,9725),
+(36,'A Cramped Attic',NULL,16700,16700),
+(37,'Usurped Galek Suite',NULL,26879,26879),
+(38,'Usurped Unaffliated Suite',NULL,26880,26880),
+(39,'Usurped Serpent Suite',NULL,26881,26881),
+(40,'Usurped Logrus Suite',NULL,26882,26882),
+(41,'Private Room in Frontier Barracks',NULL,16724,16702),
+(42,'A Raven\'s Nest',NULL,16741,16705),
+(43,'Serpent\'s Overlord Sanctum',NULL,33295,33295),
+(46,'Unfinished Bungalow On Stilts',NULL,16763,16708),
+(47,'Oarsmen Hull',NULL,15381,15381),
+(49,'The Great House',NULL,16765,10135),
+(50,'A Simple Apartment',NULL,16767,16711),
+(51,'Lord Deslok\'s Chamber',NULL,16768,16712);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `property` ENABLE KEYS */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

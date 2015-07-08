@@ -16,32 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `shopowned`
---
-
-DROP TABLE IF EXISTS `shopowned`;
-CREATE TABLE `shopowned` (
-  `shop_nr` int(11) NOT NULL default '0',
-  `profit_buy` double NOT NULL default '0',
-  `profit_sell` double NOT NULL default '0',
-  `max_num` int(11) default NULL,
-  `corp_id` int(11) default NULL,
-  `dividend` double default NULL,
-  `reserve_max` int(11) default NULL,
-  `reserve_min` int(11) default NULL,
-  `no_such_item1` varchar(127) default NULL,
-  `no_such_item2` varchar(127) default NULL,
-  `do_not_buy` varchar(127) default NULL,
-  `missing_cash1` varchar(127) default NULL,
-  `missing_cash2` varchar(127) default NULL,
-  `message_buy` varchar(127) default NULL,
-  `message_sell` varchar(127) default NULL,
-  `tax_nr` int(11) default NULL,
-  `gold` int(11) default NULL,
-  PRIMARY KEY  (`shop_nr`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `shopowned`
 --
 

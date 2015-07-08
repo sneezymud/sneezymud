@@ -16,23 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `roomextra`
---
-
-DROP TABLE IF EXISTS `roomextra`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `roomextra` (
-  `vnum` int(11) NOT NULL,
-  `name` text NOT NULL,
-  `description` text NOT NULL,
-  `owner` varchar(32) DEFAULT NULL,
-  `block` int(11) DEFAULT NULL,
-  KEY `roomextra_idx` (`vnum`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `roomextra`
 --
 

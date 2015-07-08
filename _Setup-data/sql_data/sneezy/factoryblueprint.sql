@@ -16,17 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `factoryblueprint`
---
-
-DROP TABLE IF EXISTS `factoryblueprint`;
-CREATE TABLE `factoryblueprint` (
-  `vnum` int(11) default NULL,
-  `supplytype` int(11) default NULL,
-  `supplyamt` int(11) default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `factoryblueprint`
 --
 

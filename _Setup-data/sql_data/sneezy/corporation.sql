@@ -16,18 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `corporation`
---
-
-DROP TABLE IF EXISTS `corporation`;
-CREATE TABLE `corporation` (
-  `corp_id` bigint(20) unsigned NOT NULL auto_increment,
-  `name` varchar(80) NOT NULL,
-  `bank` int(11) default NULL,
-  UNIQUE KEY `corp_id` (`corp_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `corporation`
 --
 

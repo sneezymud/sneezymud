@@ -16,37 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `obj`
---
-
-DROP TABLE IF EXISTS `obj`;
-CREATE TABLE `obj` (
-  `vnum` int(11) NOT NULL default '0',
-  `name` varchar(127) NOT NULL default '',
-  `short_desc` varchar(127) NOT NULL default '',
-  `long_desc` varchar(255) NOT NULL default '',
-  `action_desc` varchar(255) NOT NULL default '',
-  `type` int(11) NOT NULL default '0',
-  `action_flag` int(11) NOT NULL default '0',
-  `wear_flag` int(11) NOT NULL default '0',
-  `val0` int(11) NOT NULL default '0',
-  `val1` int(11) NOT NULL default '0',
-  `val2` int(11) NOT NULL default '0',
-  `val3` int(11) NOT NULL default '0',
-  `weight` double NOT NULL default '0',
-  `price` int(11) NOT NULL default '0',
-  `can_be_seen` int(11) NOT NULL default '0',
-  `spec_proc` int(11) NOT NULL default '0',
-  `max_exist` int(11) NOT NULL default '0',
-  `max_struct` int(11) NOT NULL default '0',
-  `cur_struct` int(11) NOT NULL default '0',
-  `decay` int(11) NOT NULL default '0',
-  `volume` int(11) NOT NULL default '0',
-  `material` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`vnum`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `obj`
 --
 

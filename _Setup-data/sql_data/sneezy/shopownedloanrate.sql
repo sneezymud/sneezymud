@@ -16,18 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `shopownedloanrate`
---
-
-DROP TABLE IF EXISTS `shopownedloanrate`;
-CREATE TABLE `shopownedloanrate` (
-  `shop_nr` int(11) default NULL,
-  `x` int(11) default NULL,
-  `y` int(11) default NULL,
-  `term` int(11) default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `shopownedloanrate`
 --
 

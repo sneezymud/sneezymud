@@ -16,18 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `permadeath`
---
-
-DROP TABLE IF EXISTS `permadeath`;
-CREATE TABLE `permadeath` (
-  `name` varchar(80) NOT NULL default '',
-  `level` int(11) default NULL,
-  `died` int(11) default NULL,
-  `killer` varchar(80) default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `permadeath`
 --
 

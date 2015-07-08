@@ -16,17 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `shopownedrepair`
---
-
-DROP TABLE IF EXISTS `shopownedrepair`;
-CREATE TABLE `shopownedrepair` (
-  `shop_nr` int(11) default NULL,
-  `speed` double default NULL,
-  `quality` double default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Dumping data for table `shopownedrepair`
 --
 
