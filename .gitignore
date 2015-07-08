@@ -1,11 +1,26 @@
+# scons build output
 /code/.sconsign.dblite
+/code/.sconf_temp/
+/code/config.log
 /code/objs/
-/code/site_scons/site_tools/cxxtest.pyc
 /code/sneezy
-/code/sneezy.cfg
+
+# dynamically changing mud files
 /lib/account/
 /lib/immortals/
 /lib/player/
 /lib/rent/
 /lib/roomdata/
 /lib/txt/stats
+
+# local config file
+sneezy.cfg
+
+# editor tmp files
+.sw?
+.*.sw?
+*~
+
+# python byte cache files
+*.pyc
+*.pyo

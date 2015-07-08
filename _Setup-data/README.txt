@@ -1,1 +1,0 @@
-This is SneezyMUD. See INSTALL.txt on instructions how to get it to run.
