@@ -143,24 +143,32 @@ If this is a problem, set a password for the database user instead:
     $ sudo mysql -e "GRANT ALL on sneezy.* to '$USERNAME'@'localhost' ;" \
                 -e "GRANT ALL on immortal.* to '$USERNAME'@'localhost' ;"
 
-Technically sneezy itself only needs `SELECT, UPDATE, INSERT` permissions, if
-you use some other user to create the tables and populate the initial
-database.
+Technically Sneezy itself (probably) only needs `SELECT, UPDATE, INSERT`
+permissions, if you use some other user to create the tables and populate the
+initial database.
 
 ### Initial SQL Data
 
-The initial MUD data is contained in per-table `mysqldump` files, which
-combine table creation and data insertion in the form of a series of valid SQL
-statements. They are found in `_Setup-Data/sql_data`, in per-database
-directories.  Just load these files directly into `mysql` (don't forget to
-specify the database):
+The initial database contents are loaded from files containing valid SQL, one per file. They are in MySQL dialect (mostly originating from `mysqldump`) and can be loaded simply by piping them into the `mysql` command. The files are grouped by three main phases, which must be loaded in order:
+
+1. Table creation (`sql_tables`)
+2. View creation (`sql_views`)
+3. Data insertion (`sql_data`)
+
+Since Sneezy uses two databases, they are further divided by which database
+they belong to, into `sneezy` and `immortal` dirs. So, we end up with the
+following very complicated chunk of shell code to load it all correctly:
 
     $ for db in immortal sneezy ; do
-          for sql in _Setup-Data/sql_data/$db/*.sql ; do
-              echo ">>>> LOADING '$db'"
-              sudo mysql $db < $sql
-          done
-      done
+        for phase in tables views data ; do
+            [ -d "_Setup-data/sql_$phase/$db" ] || continue
+            for sql in _Setup-data/sql_$phase/$db/*.sql ; do
+                echo "loading '$sql'"
+                mysql $db < $sql
+            done
+        done
+    done
+
 
 ## Running
 
@@ -174,3 +182,17 @@ Run Sneezy in the source tree using the defaults:
 If you created a custom sneezy.cfg in code/:
 
     $ cd code && ./sneezy
+
+# Database Migration
+
+Ongoing changes to the database structure are stored as numbered migrations in
+the `_Sql-data/migrations/` dir, one dir per migration. The naming convention
+should be obvious. The SQL statements are stored in one of `immortal.sql` or
+`sneezy.sql`, depending on which database they are for.
+
+Migrations that have been applied to the initial data contained in this
+repository are located in `_Sql-data/migrations/applied/` and do not need to
+be applied to a fresh installation.
+
+**Note:** there is currently no provision for migrating the _contents_ of
+the databases, such as edits to room descriptions.
