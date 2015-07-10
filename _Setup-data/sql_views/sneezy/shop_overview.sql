@@ -42,7 +42,6 @@ DROP TABLE IF EXISTS `shop_overview`;
 /*!50001 DROP TABLE IF EXISTS `shop_overview`*/;
 /*!50001 DROP VIEW IF EXISTS `shop_overview`*/;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`sneezy`@`192.168.100.12` SQL SECURITY DEFINER */
 /*!50001 VIEW `shop_overview` AS select `s1`.`shop_nr` AS `shop_nr`,`m1`.`name` AS `keeper_name`,`r1`.`name` AS `room_name`,`c1`.`name` AS `corp_name`,`r2`.`name` AS `bank_room`,`r3`.`name` AS `tax_room`,`o1`.`gold` AS `gold`,`s1`.`keeper` AS `keeper`,`s1`.`in_room` AS `in_room`,`o1`.`corp_id` AS `corp_id`,`o1`.`tax_nr` AS `tax_nr` from ((((((((`shop` `s1` left join `mob` `m1` on((`s1`.`keeper` = `m1`.`vnum`))) left join `room` `r1` on((`s1`.`in_room` = `r1`.`vnum`))) left join `shopowned` `o1` on((`s1`.`shop_nr` = `o1`.`shop_nr`))) left join `corporation` `c1` on((`o1`.`corp_id` = `c1`.`corp_id`))) left join `shop` `s2` on((`c1`.`bank` = `s2`.`shop_nr`))) left join `room` `r2` on((`s2`.`in_room` = `r2`.`vnum`))) left join `shop` `s3` on((`o1`.`tax_nr` = `s3`.`shop_nr`))) left join `room` `r3` on((`s3`.`in_room` = `r3`.`vnum`))) */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

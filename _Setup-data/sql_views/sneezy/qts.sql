@@ -35,7 +35,6 @@ DROP TABLE IF EXISTS `qts`;
 /*!50001 DROP TABLE IF EXISTS `qts`*/;
 /*!50001 DROP VIEW IF EXISTS `qts`*/;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`peel`@`localhost` SQL SECURITY DEFINER */
 /*!50001 VIEW `qts` AS select count(0) AS `count`,avg(`querytimes`.`secs`) AS `avg`,sum(`querytimes`.`secs`) AS `sum`,`querytimes`.`query` AS `query` from `querytimes` group by `querytimes`.`query` order by count(0) desc */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
