@@ -4966,7 +4966,7 @@ void TBeing::doClone(const sstring &arg)
     return;
   }
 
-  for(ci = 0;ci <= MAX_SAVED_CLASSES;ci++) {
+  for(ci = 0;ci < MAX_SAVED_CLASSES;ci++) {
     if(st1.level[ci] > GetMaxLevel()) {
       sendTo("You can't clone a player of higher level than you.\n\r");
       return;
