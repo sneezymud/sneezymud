@@ -1478,9 +1478,9 @@ int randomMobDistribution(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 
 int theKnot(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 {
-  static bool done[24];
+  static bool done[25];
   int n=rp->number-2375, exitrnum=0;
-  
+
   if(cmd != CMD_GENERIC_PULSE)
     return FALSE;
 
