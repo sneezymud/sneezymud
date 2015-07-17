@@ -2770,7 +2770,8 @@ void TPerson::loadRent()
   } else {
     if (in_room == Room::NOWHERE) {
       vlogf(LOG_PIO, "Char reconnecting after autorent");
-      applyAutorentPenalties(time(0) - il.st.first_update);
+      vlogf(LOG_PIO, format("%s was autorented for %d secs") % getName() %
+          (time(0) - il.st.first_update));
     } else {
       // char was rented
       applyRentBenefits(time(0) - il.st.first_update);

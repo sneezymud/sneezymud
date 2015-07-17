@@ -4115,16 +4115,6 @@ void Descriptor::sendMotd(int wiz)
   }
 }
 
-int TBeing::applyAutorentPenalties(int secs)
-{
-  if(Config::PenalizeForAutoRenting()){
-    vlogf(LOG_PIO, format("%s was autorented for %d secs") %
-	  getName() % secs);    
-  }
-
-  return FALSE;
-}
-
 int TBeing::applyRentBenefits(int secs)
 {
   int local_tics, rc = 0, lfmod = 1;

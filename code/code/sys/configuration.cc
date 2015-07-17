@@ -10,7 +10,6 @@ namespace po = boost::program_options;
 
 // static data member defs
 int Config::ITEM_DAMAGE_RATE;
-bool Config::PENALIZE_FOR_AUTO_RENTING;
 int Config::WEAPON_DAM_MIN_HARDNESS;
 int Config::WEAPON_DAM_MAX_HARDNESS;
 int Config::WEAPON_DAM_MAX_SHARP;
@@ -79,9 +78,6 @@ bool Config::doConfiguration(int argc, char *argv[])
   configOnly.add_options()
     ("item_damage_rate", 
      po::value<int>(&ITEM_DAMAGE_RATE)->default_value(1),
-     "see configuration.h")
-    ("penalize_for_auto_renting",
-     po::value<bool>(&PENALIZE_FOR_AUTO_RENTING)->default_value(true),
      "see configuration.h")
     ("weapon_dam_min_hardness",
      po::value<int>(&WEAPON_DAM_MIN_HARDNESS)->default_value(20),

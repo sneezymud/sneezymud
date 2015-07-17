@@ -609,7 +609,6 @@ class TBeing : public TThing {
 
     int checkDecharm(forceTypeT, safeTypeT = SAFE_NO);
     int riverFlow(int);
-    int applyAutorentPenalties(int);
     int applyRentBenefits(int);
     void verifyWeightVolume();
     virtual int getVolume() const;

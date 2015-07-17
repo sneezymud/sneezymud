@@ -14,10 +14,6 @@ class Config {
   // 4.1 balanced at 2 prior to depreciation
   static int ITEM_DAMAGE_RATE;
 
-  // causes bad things to happen to player based on time in autorent
-  // there is a grace period to handle crashes
-  static bool PENALIZE_FOR_AUTO_RENTING;
-  
   // the minimum "hardness" for a material to damage/blunt a weapon
   // when hitting.
   static int WEAPON_DAM_MIN_HARDNESS;
@@ -102,7 +98,6 @@ class Config {
   static bool doConfiguration(int argc=0, char *argv[]=0);
   
   static int ItemDamageRate(){ return ITEM_DAMAGE_RATE; }
-  static bool PenalizeForAutoRenting(){ return PENALIZE_FOR_AUTO_RENTING;}
   static int WeaponDamMinHardness(){ return WEAPON_DAM_MIN_HARDNESS;}
   static int WeaponDamMaxHardness(){ return WEAPON_DAM_MAX_HARDNESS;}
   static int WeaponDamMaxSharp(){ return WEAPON_DAM_MAX_SHARP;}
