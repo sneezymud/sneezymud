@@ -317,7 +317,6 @@ class TComponent : public TMergeable {
     virtual int putMeInto(TBeing *, TOpenContainer *);
     virtual void findComp(TComponent **, spellNumT);
     virtual void decayMe();
-    virtual int objectSell(TBeing *, TMonster *);
     virtual bool sellMeCheck(TBeing *, TMonster *, int, int) const;
     virtual int componentSell(TBeing *, TMonster *, int, TThing *);
     virtual int componentNumSell(TBeing *, TMonster *, int, TThing *, int);

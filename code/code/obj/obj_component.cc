@@ -2633,23 +2633,6 @@ void TComponent::lowCheck()
   TObj::lowCheck();
 }
 
-int TComponent::objectSell(TBeing *ch, TMonster *keeper)
-{
-  if (false)
-    return FALSE;
-
-#if 0
-  char buf[256];
-
-  if ((getComponentCharges() != getComponentMaxCharges())) {
-    sprintf(buf, "%s I'm sorry, I don't buy back partially used components.", ch->getName());
-    keeper->doTell(buf);
-    return TRUE;
-  }
-#endif
-  return FALSE;
-}
-
 void TComponent::findComp(TComponent **best, spellNumT spell)
 {
   if (getComponentSpell() == spell &&
