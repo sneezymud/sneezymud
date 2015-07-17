@@ -14,14 +14,6 @@ class Config {
   // 4.1 balanced at 2 prior to depreciation
   static int ITEM_DAMAGE_RATE;
 
-  // used to determine rent credit
-  // credit = level * maxi(20, level) * x
-  // the values of the "model" items (soft leather, plate, etc) were set based
-  // on this rent credit being at 75
-  // 4.0's no rent, and 4.1's big rent credit have distorted this so feel free
-  // to adjust if this no longer works
-  static int RENT_CREDIT_VAL;
-  
   // if player goes over rent, items are "sold" to pay for it
   // this handles what is done with the sold item(s)
   // If turned on, the pawnguy gets them
@@ -121,7 +113,6 @@ class Config {
   static bool doConfiguration(int argc=0, char *argv[]=0);
   
   static int ItemDamageRate(){ return ITEM_DAMAGE_RATE; }
-  static int RentCreditVal(){ return RENT_CREDIT_VAL;}
   static bool RentSellToPawn(){ return RENT_SELL_TO_PAWN;}
   static bool RentRestrictInnsByLevel(){return RENT_RESTRICT_INNS_BY_LEVEL;}
   static bool PenalizeForAutoRenting(){ return PENALIZE_FOR_AUTO_RENTING;}

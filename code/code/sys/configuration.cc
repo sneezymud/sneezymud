@@ -10,7 +10,6 @@ namespace po = boost::program_options;
 
 // static data member defs
 int Config::ITEM_DAMAGE_RATE;
-int Config::RENT_CREDIT_VAL;
 bool Config::RENT_SELL_TO_PAWN;
 bool Config::RENT_RESTRICT_INNS_BY_LEVEL;
 bool Config::PENALIZE_FOR_AUTO_RENTING;
@@ -82,9 +81,6 @@ bool Config::doConfiguration(int argc, char *argv[])
   configOnly.add_options()
     ("item_damage_rate", 
      po::value<int>(&ITEM_DAMAGE_RATE)->default_value(1),
-     "see configuration.h")
-    ("rent_credit_val",
-     po::value<int>(&RENT_CREDIT_VAL)->default_value(75),
      "see configuration.h")
     ("rent_sell_to_pawn",
      po::value<bool>(&RENT_SELL_TO_PAWN)->default_value(false),

@@ -218,13 +218,13 @@ unsigned int rent_credit(unsigned short Class, unsigned int orig_lev, unsigned i
   lev -= lev_mod;
   lev = max(lev, 1.0);
 
-  double num = (lev * max(20.0, lev) * Config::RentCreditVal());
+  double num = lev * max(20.0, lev) * 75;
 
   // next, give credit for a weapon.
   // use the real level rather than the modified level we used above since
   // damage capacity is not class-modified.
   // a weapon should be an extra 20.5% of the price
-  num += (orig_lev * max(20, (int) orig_lev) * Config::RentCreditVal() * .205);
+  num += orig_lev * max(20, (int) orig_lev) * 75 * .205;
 
   // make allowances for sundry items
   // this includes: water skin, food, lanterns, fuel, bags, whetstones, etc
