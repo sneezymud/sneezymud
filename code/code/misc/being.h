@@ -1116,7 +1116,6 @@ class TBeing : public TThing {
     void addObjCost(TBeing *, TObj *, objCost *, sstring &str); 
     void addObjCost(TBeing *, StuffList list, objCost *, sstring &str); 
     bool recepOffer(TBeing *, objCost *);
-    void makeRentNote(TBeing *);
     void removeFollowers();
     void removeRent();
     void removePlayerFile();

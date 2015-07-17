@@ -329,7 +329,6 @@ class TComponent : public TMergeable {
     virtual int suggestedPrice() const;
     virtual void objMenu(const TBeing *) const;
     double priceMultiplier() const;
-    virtual int noteMeForRent(sstring &, TBeing *, StuffList, int *);
     virtual int sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num = 1);
     virtual int buyMe(TBeing *, TMonster *, int, int);
     virtual void valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1);

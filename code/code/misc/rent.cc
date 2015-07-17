@@ -2797,232 +2797,6 @@ void TPerson::loadRent()
   return;
 }
 
-int TComponent::noteMeForRent(sstring &tStString, TBeing *ch, StuffList tList, int *tCount)
-{
-  int         tCost    = 0,
-              lCount   = 0;
-  sstring tString, tBuffer;
-  StuffIter it;
-  TThing     *tMarker;
-  bool        hasPrior = false;
-  TComponent *tObj;
-
-  for(it=tList.begin();it!=tList.end();++it){
-    tMarker=*it;
-
-    if (tMarker == this)
-      break;
-
-    if (!(tObj = dynamic_cast<TComponent *>(tMarker)))
-      continue;
-
-    if (isSimilar(tObj) && rentCost() == tObj->rentCost() &&
-        isRentable() == tObj->isRentable() &&
-        getComponentCharges()    == tObj->getComponentCharges() &&
-        getComponentSpell()      == tObj->getComponentSpell()) {
-      hasPrior = true;
-      break;
-    }
-  }
-
-  if (hasPrior)
-    return 0;
-
-  for(++it;it!=tList.end();++it){
-    tMarker=*it;
-    if (!(tObj = dynamic_cast<TComponent *>(tMarker)))
-      continue;
-
-    if (isSimilar(tObj) && rentCost() == tObj->rentCost() &&
-        isRentable() == tObj->isRentable() &&
-        getComponentCharges()    == tObj->getComponentCharges() &&
-        getComponentSpell()      == tObj->getComponentSpell()) {
-      *tCount = *tCount + 1;
-      lCount++;
-    }
-  }
-
-  tBuffer = format("%c-%ds : ") % '%' % (30 + (getName().length() - getNameNOC(ch).length()));
-
-  if (isRentable() && isMonogramOwner(ch, true)) {
-    tBuffer+="%5d talens/day";
-    *tCount = *tCount + 1;
-    lCount++;
-    tCost = (max(0, rentCost()) * lCount);
-    if(max_exist > LIMITED_RENT_ITEM) tCost = 0;
-    tString = format(tBuffer) % getName() % tCost;
-    if (lCount == 1)
-      tString+="\n\r";
-    else {
-      tBuffer = format("  x%3d\n\r") % lCount;
-      tString+=tBuffer;
-    }
-    //sprintf(tString, "%-30s : %5d talens/day  [x%3d]\n\r", getName(), tCost, lCount);
-    tStString += tString;
-  } else {
-    tBuffer+="NOT RENTABLE";
-    lCount++;
-    tString=format(tBuffer) % getName();
-
-    if (lCount == 1)
-      tString+="\n\r";
-    else {
-      tBuffer = format("      [x%3d]\n\r") % lCount;
-      tString+=tBuffer;
-    }
-
-    //sprintf(tString, "%-30s : NOT RENTABLE  x%3d\n\r", getName(), lCount);
-    tStString += tString;
-  }
-
-  return tCost;
-}
-
-// (int) return : Cost for this item(block)
-// (sstring)     : The running note output sstring.
-// (thing)      : The list the item is in, or the item itself.
-// (tCount)     : A running count of total items.
-int TObj::noteMeForRent(sstring &tStString, TBeing *ch, StuffList, int *tCount)
-{
-  int  tCost = 0;
-  char tString[256],
-       tBuffer[256];
-
-  sprintf(tBuffer, "%%-%zus : ", (30 + (getName().length() - getNameNOC(ch).length())));
-
-  if (isRentable() && isMonogramOwner(ch, true)) {
-    strcat(tBuffer, "\n\r");
-   *tCount = *tCount + 1;
-    tCost = max(0, rentCost());
-    if(max_exist > LIMITED_RENT_ITEM) tCost = 0;
-    sprintf(tString, tBuffer, getName().c_str(), tCost);
-    tStString += tString;
-  } else {
-    strcat(tBuffer, "NOT RENTABLE\n\r");
-    sprintf(tString, tBuffer, getName().c_str());
-    tStString += tString;
-  }
-
-  return tCost;
-}
-
-void TBeing::makeRentNote(TBeing *recip)
-{
-  char        buf[1024];
-  sstring      longBuf("");
-  sstring      tStBuffer("");
-  int         i, temp;
-  objCost     cost;
-  TObj       *obj  = NULL, *tObj = NULL;
-  int         num  = 0;
-  followData *f;
-  TMonster   *ch;
-
-  cost.total_cost = 0;
-
-  for(StuffIter it=stuff.begin();it!=stuff.end();++it)  {
-    if (!(obj = dynamic_cast<TObj *>(*it)))
-      continue;
-
-    cost.total_cost += obj->noteMeForRent(longBuf, this, stuff, &num);
-
-    for(StuffIter itt=obj->stuff.begin();itt!=obj->stuff.end();++itt) {
-      if (!(tObj = dynamic_cast<TObj *>(*itt)))
-        continue;
-
-      cost.total_cost += tObj->noteMeForRent(longBuf, this, obj->stuff, &num);
-    }
-  }
-
-  for (i = MIN_WEAR; i < MAX_WEAR; i++) {
-    if (!(obj = dynamic_cast<TObj *>(equipment[i])))
-      continue;
-
-    if (!(((i == WEAR_LEG_L) && obj->isPaired()) ||
-          ((i == WEAR_EX_LEG_L) && obj->isPaired()) ||
-          ((i == HOLD_LEFT) && obj->isPaired()))) {
-      cost.total_cost += obj->noteMeForRent(longBuf, this, obj->stuff, &num);
-
-      for(StuffIter it=obj->stuff.begin();it!=obj->stuff.end();++it) {
-        if (!(tObj = dynamic_cast<TObj *>(*it)))
-          continue;
-
-        cost.total_cost += tObj->noteMeForRent(longBuf, this, obj->stuff, &num);
-      }
-    }
-  }
-
-  // add up cost for followers
-  for (f = followers; f; f = f->next) {
-    ch = dynamic_cast<TMonster *>(f->follower);
-    if (!ch)
-      continue;
-
-    if (!ch->isSaveMob(this))
-      continue;
-
-    // don't save if not around
-    if (!ch->sameRoom(*this))
-      continue;
-
-    temp = 0;
-    sprintf(buf, "%-30s : Pet/Charm/Thrall/Mount \n\r", ch->getName().c_str());
-
-    longBuf += buf;
-    cost.total_cost += temp;
-
-    for (i = MIN_WEAR; i < MAX_WEAR; i++) {
-      if (!(obj = dynamic_cast<TObj *>(ch->equipment[i])))
-        continue;
-
-      if (!(((i == WEAR_LEG_L) && obj->isPaired()) ||
-           ((i == WEAR_EX_LEG_L) && obj->isPaired()) ||
-          ((i == HOLD_LEFT) && obj->isPaired()))) {
-        cost.total_cost += obj->noteMeForRent(longBuf, this, obj->stuff, &num);
-
-        for(StuffIter it=obj->stuff.begin();it!=obj->stuff.end();++it) {
-          if (!(tObj = dynamic_cast<TObj *>(*it)))
-            continue;
-
-          cost.total_cost += tObj->noteMeForRent(longBuf, this, obj->stuff, &num);
-        }
-      }
-    }
-
-    for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end();++it)  {
-      if (!(obj = dynamic_cast<TObj *>(*it)))
-        continue;
-  
-      cost.total_cost += obj->noteMeForRent(longBuf, this, stuff, &num);
-  
-      for(StuffIter itt=obj->stuff.begin();itt!=obj->stuff.end();++itt) {
-        if (!(tObj = dynamic_cast<TObj *>(*itt)))
-          continue;
-  
-        cost.total_cost += tObj->noteMeForRent(longBuf, this, obj->stuff, &num);
-      }
-    }
-  }
-
-  tStBuffer += "\n\r";
-  sprintf(buf, "%d total items.\n\r", num);
-  tStBuffer += buf;
-
-  // semi-weird : we want the note to have the summary, the itemized list,
-  // and then the summary again...
-  longBuf += tStBuffer;
-  tStBuffer += "\n\r";
-  tStBuffer += longBuf;
-
-  TNote * note = createNote(tStBuffer);
-  if (!note) {
-    return; 
-  }
-  note->addObjStat(ITEM_NEWBIE);
-  *recip += *note;
-  return;
-}
-
 
 int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TObj *o)
 {
@@ -3262,13 +3036,11 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
     if (ch->isImmortal() && *buf) {
       TBeing *vict = get_pc_world(ch, buf, EXACT_NO);
       if (vict) {
-        //vict->makeRentNote(ch);
-        //recep->doTell(ch->getName(), format("Here is a note with %s's items listed.") % vict->getName());
 	TShopOwned tso(shop_nr, recep, vict);	
 	float multiplier = (shop_index[shop_nr].getProfitBuy(NULL, vict));
 	int tax = (int)((float) vict->GetMaxLevel() * multiplier);
 
-	recep->doTell(ch->getName(), format("In addition to any fees"/* listed on that note*/", there is a tax of %i talens.") % tax);
+	recep->doTell(ch->getName(), format("In addition to any fees, there is a tax of %i talens.") % tax);
 	return TRUE;
       }
     }
@@ -3276,9 +3048,7 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
     float multiplier = (shop_index[shop_nr].getProfitBuy(NULL, ch));
     int tax = (int)((float) ch->GetMaxLevel() * multiplier);
 
-    //ch->makeRentNote(ch);
-    //recep->doTell(ch->getName(), "Here is a note with your items listed.");
-    recep->doTell(ch->getName(), format("In addition to any fees"/* listed on that note*/", there is a tax of %i talens.") % tax);
+    recep->doTell(ch->getName(), format("In addition to any fees, there is a tax of %i talens.") % tax);
   }
   return TRUE;
 }
