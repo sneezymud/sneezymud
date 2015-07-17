@@ -85,7 +85,6 @@ output(),
 session(),
 career(),
 autobits(0),
-best_rent_credit(0),
 playerID(0),
 character(NULL),
 account(NULL),
@@ -144,7 +143,6 @@ input(a.input),
 session(a.session),
 career(a.career),
 autobits(a.autobits),
-best_rent_credit(a.best_rent_credit),
 playerID(a.playerID),
 character(a.character),
 account(a.account),
@@ -220,7 +218,6 @@ input = a.input;
 session = a.session;
 career = a.career;
 autobits = a.autobits;
-best_rent_credit = a.best_rent_credit;
 playerID=a.playerID;
 character = a.character;
 account = a.account;

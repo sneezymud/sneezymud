@@ -75,99 +75,6 @@ struct SInnkeeperHate {
   {0, RACE_NORACE, false, "Leave!"} // Add all new entries BEFORE this line.
 };
 
-// this returns a number indicating how long we "think" it should
-// take to get to level "lev"
-// it is somewhat arbitrary
-//
-int secs_to_level(int lev)
-{
-  lev--;
-  if (lev <= 0)
-    return 0;
-
-  // how much damage (average/round) am I doing
-  float dam_level = 0.9 * lev;
-
-  // what is the average mob have for hp
-  float avg_mob_hp = (11.0 + 4.5) * lev;
-
-  // average combat length
-  float rounds_combat = avg_mob_hp / dam_level;
-
-  // converted to number of seconds
-  int time_combat = (int) (rounds_combat * Pulse::COMBAT / Pulse::ONE_SECOND);
-
-  // now figure out regen
-  // assume that a fiar fight consumes 100% of players HP each kill
-  int avg_pc_hp = 15 + (10*lev);
-
-  // numer of hps gained back per tick
-  int regen_per_tick;
-  regen_per_tick = (int) (stats.hit_gained_attempts == 0 ? 1 :
-        ((float) stats.hit_gained / (float) stats.hit_gained_attempts));
-
-  float ticks_regen = (float) avg_pc_hp / (float) regen_per_tick;
-
-  int secs_regen = (int) (ticks_regen * (Pulse::UPDATE/2) / Pulse::ONE_SECOND);
-
-  int tot_time = secs_regen + time_combat;
-
-  // and i have to kill a bunch of mobs
-  tot_time *= kills_to_level(lev);
-
-  // don't forget to add in how long it took me to get to last level.
-  tot_time += secs_to_level(lev);
-
-  return tot_time;
-}
-
-float power_level_number(int lev)
-{
-  float levelfactor;
-
-  // if they were doing it themself, this is the number of days it
-  // should take.
-  levelfactor = (float) secs_to_level(lev) / (float) (60*60*24);
-
-  // make an allowance for somebody being super cool
-  levelfactor *= 0.6;
-
-  // this formula is roughly geared toward the "standard" difficulty
-  // if we have made game harder, adjust accordingly.
-  levelfactor /= stats.xp_modif;
-
-  return  levelfactor;
-}
-
-static ubyte credit_factor(const TBeing *ch)
-{
-  // we are going to modify rent credit to adjust it for players that seem
-  // to have been leveled too fast.  This is somewhat arbitrary
-  // In theory, we want it to take about 1 day of play to hit L10 and
-  // 25 days to hit L50.
-  // I have basically graphed the curve to be playtime in days = (L/10) ^ 2
-  // this should return a value between 0-100
-
-  time_info_data playing_time; 
-  float playtime, levelfactor;
-
-  GameTime::realTimePassed((time(0) - ch->player.time->logon) +
-                                  ch->player.time->played, 0, &playing_time);
-  playtime = (float) playing_time.day;
-  playtime += (float) playing_time.hours / 24.0;
-  if (playtime <= 0.0)
-    playtime = 1.0/24.0;
-
-// Cosmo 12/22/97 the xp_modif changed to apply to levelfactor by dividing
-// done in other function above 
-  levelfactor = power_level_number(ch->GetMaxLevel());
-
-  if (playtime >= levelfactor || levelfactor <= 0.0)
-    return 100;
-
-  return (ubyte) ( 100 * playtime / levelfactor);
-}
-
 double getLevMod(unsigned short int Class, unsigned int lev)
 {
   double lev_mod = 0;  // warriors is 0.0
@@ -190,89 +97,6 @@ double getLevMod(unsigned short int Class, unsigned int lev)
   // this is mostly here so all newbies are essentially the same
   lev_mod = min(lev_mod, lev/3.0);
   return lev_mod;
-}
-
-unsigned int rent_credit(unsigned short Class, unsigned int orig_lev, unsigned int numClasses)
-{
-  // for 5.2 we're going for 0 base rent credit for all classes, then charging on basis of max exists
-  return (unsigned int)0;
-
-  // First, establish credit for the AC and struct of the player's
-  // equipment.
-  // this should be level based, but tweak that level for class since
-  // certain classes ought to be using lower quality AC.
-  double lev = orig_lev;
-
-  // make corrections to lev, based on class wearability
-  // this is here (c.f. balance notes) so that we can restrict the
-  // AC from equipment a given class is able to have.
-  double lev_mod = getLevMod(Class, orig_lev);
-
-  lev -= lev_mod;
-  lev = max(lev, 1.0);
-
-  double num = lev * max(20.0, lev) * 75;
-
-  // next, give credit for a weapon.
-  // use the real level rather than the modified level we used above since
-  // damage capacity is not class-modified.
-  // a weapon should be an extra 20.5% of the price
-  num += orig_lev * max(20, (int) orig_lev) * 75 * .205;
-
-  // make allowances for sundry items
-  // this includes: water skin, food, lanterns, fuel, bags, whetstones, etc
-  // assume need 1000 talens total for this crap
-  num += min((int) orig_lev * 50, 1000);
-
-  // make some allowances for other items a class might need as "appropriate"
-  if (IS_SET(Class, CLASS_MAGE)) {
-    // allowance for components
-    // basically, give them spare capacity for 20 kills
-    // c.f. balance notes for more discussion
-    int amt = 15 * orig_lev * orig_lev;
-
-    // don't be overly generous with this to multiclass
-    amt /= numClasses;
-
-    num += amt;
-  }
-  if (IS_SET(Class, CLASS_CLERIC)) {
-    // allowance for symbols
-    // permit them to carry 1.5 symbols of their level
-    // symbol costs 15 * L^2 (rents for 1/2)
-    int amt = (int) (1.5 * 15 * orig_lev * orig_lev / 2);
-    amt /= numClasses;
-    num += amt;
-  }
-  if (IS_SET(Class, CLASS_DEIKHAN)) {
-    // allowance for symbols
-    // permit them to carry 1.0 symbols of their level
-    // symbol costs 15 * L^2 (rents for 1/2)
-    int amt = (int) (1.0 * 15 * orig_lev * orig_lev / 2);
-    amt /= numClasses;
-    num += amt;
-  }
-  if (IS_SET(Class, CLASS_RANGER)) {
-    // allowance for components
-    // basically, give them spare capacity for 6 kills
-    int amt = 5 * orig_lev * orig_lev;
-    amt /= numClasses;
-    num += amt;
-  }
-
-  return (unsigned int) num;
-}
-
-unsigned int TBeing::rentCredit() const
-{
-  unsigned int num =  rent_credit(getClass(), GetMaxLevel(), howManyClasses());
-
-  // correct for powerleveling
-  ubyte cred = credit_factor(this);
-  num *= cred;
-  num /= 100;
- 
-  return num;
 }
 
 void handleCorrupted(const char *name, char *account)
@@ -1659,11 +1483,6 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
     return FALSE;
   }
   
-  credit = rentCredit();
-  if (desc) {
-    desc->best_rent_credit = max(credit, desc->best_rent_credit);
-    credit = desc->best_rent_credit;
-  }
   credit = 0;
   actual_cost = cost->total_cost - credit;
   cost->total_cost = (actual_cost < 0) ? 0 : actual_cost;

@@ -451,7 +451,6 @@ class Descriptor
     bonusStatPoints bonus_points;
     drugData drugs[MAX_DRUG];
     unsigned int autobits;
-    unsigned int best_rent_credit;
     int playerID;
     char last_teller[128];
     char last_told[128];

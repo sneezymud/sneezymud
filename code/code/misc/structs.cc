@@ -942,7 +942,6 @@ TPerson::TPerson(Descriptor *thedesc) :
   // this resets some values
   // rememebr that it could init some desc stuff, then have new char
   // come in causing bad settings.
-  desc->best_rent_credit = 0;
   desc->session.setToZero();
   desc->prompt_d.xptnl = 0;
 

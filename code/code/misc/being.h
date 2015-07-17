@@ -1556,7 +1556,6 @@ class TBeing : public TThing {
 	      equipment[HOLD_RIGHT]);
     }
     bool isAffected(uint64_t bv) const;
-    unsigned int rentCredit() const;
     short getProtection() const;
     void setProtection(short num);
     void addToProtection(short num);

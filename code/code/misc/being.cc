@@ -513,7 +513,6 @@ charFile::charFile() :
   age_mod(0),
   wimpy(0),
   autobits(0),
-  best_rent_credit(0),
 //  point data members
   mana(0),
   maxMana(0),
