@@ -14,12 +14,6 @@ class Config {
   // 4.1 balanced at 2 prior to depreciation
   static int ITEM_DAMAGE_RATE;
 
-  // if player goes over rent, items are "sold" to pay for it
-  // this handles what is done with the sold item(s)
-  // If turned on, the pawnguy gets them
-  // otherwise they get deleted
-  static bool RENT_SELL_TO_PAWN;
-  
   // causes innkeepers to grant rentCredit based on the innkeepers levels
   // otherwise, it is based on the players level.
   // the chief use of this is to encourage high level pc's to use certain inns
@@ -113,7 +107,6 @@ class Config {
   static bool doConfiguration(int argc=0, char *argv[]=0);
   
   static int ItemDamageRate(){ return ITEM_DAMAGE_RATE; }
-  static bool RentSellToPawn(){ return RENT_SELL_TO_PAWN;}
   static bool RentRestrictInnsByLevel(){return RENT_RESTRICT_INNS_BY_LEVEL;}
   static bool PenalizeForAutoRenting(){ return PENALIZE_FOR_AUTO_RENTING;}
   static int WeaponDamMinHardness(){ return WEAPON_DAM_MIN_HARDNESS;}
