@@ -47,8 +47,6 @@ static const char ROOM_SAVE_PATH[] = "roomdata/saved";
 static const int NORMAL_SLOT   = -1;
 static const int CONTENTS_END  = -2;
 
-#define FREE_RENT true
-
 static const int LIMITED_RENT_ITEM = 9;  
 // in 5.2 anything with max exists <= this number will be charged rent
 
@@ -196,10 +194,8 @@ double getLevMod(unsigned short int Class, unsigned int lev)
 
 unsigned int rent_credit(unsigned short Class, unsigned int orig_lev, unsigned int numClasses)
 {
-#ifdef FREE_RENT
   // for 5.2 we're going for 0 base rent credit for all classes, then charging on basis of max exists
   return (unsigned int)0;
-#endif
 
   // First, establish credit for the AC and struct of the player's
   // equipment.
@@ -1526,7 +1522,6 @@ void TBeing::addObjCost(TBeing *re, TObj *obj, objCost *cost, sstring &str)
   
   if (obj->isRentable() && obj->isMonogramOwner(this, true)) {
     temp = max(0, obj->rentCost());
-#ifdef FREE_RENT
     // in sneezy 5.2 we don't want to charge for anything that isn't limited. -dash 01/01
     if(obj->max_exist > LIMITED_RENT_ITEM) temp = 0;
     //    vlogf(LOG_DASH, format("%s getting cost on %s, max exist %d, limit %d, cost %d") %  getName() % obj->getName() %
@@ -1534,7 +1529,6 @@ void TBeing::addObjCost(TBeing *re, TObj *obj, objCost *cost, sstring &str)
     
     temp = 0;
 
-#endif
     cost->total_cost += temp;
     if (re) {
       if (desc && desc->m_bIsClient) {
@@ -1676,9 +1670,7 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
     desc->best_rent_credit = max(credit, desc->best_rent_credit);
     credit = desc->best_rent_credit;
   }
-#ifdef FREE_RENT
   credit = 0;
-#endif
   actual_cost = cost->total_cost - credit;
   cost->total_cost = (actual_cost < 0) ? 0 : actual_cost;
 
@@ -2857,9 +2849,7 @@ int TComponent::noteMeForRent(sstring &tStString, TBeing *ch, StuffList tList, i
     *tCount = *tCount + 1;
     lCount++;
     tCost = (max(0, rentCost()) * lCount);
-#ifdef FREE_RENT
     if(max_exist > LIMITED_RENT_ITEM) tCost = 0;
-#endif
     tString = format(tBuffer) % getName() % tCost;
     if (lCount == 1)
       tString+="\n\r";
@@ -2904,9 +2894,7 @@ int TObj::noteMeForRent(sstring &tStString, TBeing *ch, StuffList, int *tCount)
     strcat(tBuffer, "\n\r");
    *tCount = *tCount + 1;
     tCost = max(0, rentCost());
-#ifdef FREE_RENT
     if(max_exist > LIMITED_RENT_ITEM) tCost = 0;
-#endif
     sprintf(tString, tBuffer, getName().c_str(), tCost);
     tStString += tString;
   } else {
