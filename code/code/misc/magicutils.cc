@@ -493,11 +493,28 @@ int TBeing::checkDecharm(forceTypeT force, safeTypeT safe)
   return FALSE;
 }
 
+void pick_best_comp(TComponent **best, TThing *item, spellNumT spell)
+{
+    TComponent *comp = dynamic_cast<TComponent *>(item);
+    if (!comp)
+      return;
+
+    // ensure it's the proper component
+    if (!(comp->getComponentSpell() == spell &&
+        comp->isComponentType(COMP_SPELL)))
+      return;
+
+    // use the one with least charges left
+    if (!(*best) ||
+        (comp->getComponentCharges() < (*best)->getComponentCharges()))
+      *best = comp;
+}
+
 TComponent *comp_from_object(TThing *item, spellNumT spell)
 {
   TComponent *ret = NULL;
 
-  item->findComp(&ret, spell);
+  pick_best_comp(&ret, item, spell);
 
   TOpenContainer *trc = dynamic_cast<TOpenContainer *>(item);
   if (trc && trc->isClosed())
@@ -505,7 +522,7 @@ TComponent *comp_from_object(TThing *item, spellNumT spell)
 
   // item is wrong component or spellbag 
   for(StuffIter it=item->stuff.begin();it!=item->stuff.end();++it) 
-    (*it)->findComp(&ret, spell);
+    pick_best_comp(&ret, *it, spell);
 
   return ret;
 }

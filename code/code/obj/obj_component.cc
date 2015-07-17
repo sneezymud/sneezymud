@@ -2633,32 +2633,6 @@ void TComponent::lowCheck()
   TObj::lowCheck();
 }
 
-void TComponent::findComp(TComponent **best, spellNumT spell)
-{
-  if (getComponentSpell() == spell &&
-      isComponentType(COMP_SPELL)) {
-    // it's the proper component
-    if (!*best) {
-      *best = this;
-      return;
-    }
-    // avoid 0-cost components if at all possible
-    // otherwise, use one with least charges left
-    int rc_me = 0;
-    int rc_best = 0;
-    if (rc_best <= 0 && rc_me > 0) {
-      *best = this;
-      return;
-    } else if (rc_best > 0 && rc_me <= 0)
-      return; 
-
-    // check charges ONLY if: both comps are 0 cost, or both are non-0 cost
-    if (getComponentCharges() < (*best)->getComponentCharges()) {
-      *best = this;
-    }
-  }
-}
-
 int TComponent::putMeInto(TBeing *, TOpenContainer *)
 {
   // components can only be put into spellbags

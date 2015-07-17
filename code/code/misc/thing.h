@@ -296,7 +296,6 @@ class TThing {
     virtual void findSomeComponent(TComponent **, TComponent **, TComponent **, spellNumT, int) {}
     virtual bool allowsCast() { return false; }
     virtual int putMeInto(TBeing *, TOpenContainer *);
-    virtual void findComp(TComponent **, spellNumT);
     virtual int componentSell(TBeing *, TMonster *, int, TThing *);
     virtual int componentValue(TBeing *, TMonster *, int, TThing *);
     virtual int removeMe(TBeing *, wearSlotT);
