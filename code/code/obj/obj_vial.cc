@@ -47,7 +47,7 @@ int TVial::objectSell(TBeing *ch, TMonster *keeper)
   sstring buf;
 
   if(getDrinkType()!=LIQ_HOLYWATER){
-    keeper->doTell(ch->getName(), "Hey, that's not holy water!.");
+    keeper->doTell(ch->getName(), "Hey, that's not holy water!");
     return TRUE;
   }
 
