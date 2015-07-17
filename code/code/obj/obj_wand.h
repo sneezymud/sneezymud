@@ -32,7 +32,6 @@ class TWand : public virtual TMagicItem {
     virtual int foodItemUsed(TBeing *ch, const char *arg);
     virtual void lowCheck();
     virtual bool objectRepair(TBeing *, TMonster *, silentTypeT);
-    virtual int rentCost() const;
     virtual int suggestedPrice() const;
     virtual void generalUseMessage(const TBeing *, unsigned int, const TBeing *, const TObj *) const;
 

@@ -2532,17 +2532,6 @@ void TComponent::boottimeInit()
   CompIndex.push_back(ci);
 }
 
-int TComponent::rentCost() const
-{
-  int num = TObj::rentCost();
-
-  num *= getComponentCharges();
-
-  num = (int) (num / priceMultiplier());
-
-  return num;
-}
-
 void TComponent::decayMe()
 {
   TMonster *tm;
@@ -2672,8 +2661,8 @@ void TComponent::findComp(TComponent **best, spellNumT spell)
     }
     // avoid 0-cost components if at all possible
     // otherwise, use one with least charges left
-    int rc_me = rentCost();
-    int rc_best = (*best)->rentCost();
+    int rc_me = 0;
+    int rc_best = 0;
     if (rc_best <= 0 && rc_me > 0) {
       *best = this;
       return;

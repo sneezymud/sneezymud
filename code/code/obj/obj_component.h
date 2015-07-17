@@ -323,7 +323,6 @@ class TComponent : public TMergeable {
     virtual int componentNumSell(TBeing *, TMonster *, int, TThing *, int);
     virtual int componentValue(TBeing*, TMonster *, int, TThing *);
     virtual int componentNumValue(TBeing*, TMonster *, int, TThing *, int);
-    virtual int rentCost() const;
     virtual bool splitMe(TBeing *, const sstring &);
     virtual int putSomethingIntoContainer(TBeing *, TOpenContainer *);
     virtual int suggestedPrice() const;

@@ -1521,12 +1521,6 @@ void TBeing::addObjCost(TBeing *re, TObj *obj, objCost *cost, sstring &str)
     silent = SILENT_YES;
   
   if (obj->isRentable() && obj->isMonogramOwner(this, true)) {
-    temp = max(0, obj->rentCost());
-    // in sneezy 5.2 we don't want to charge for anything that isn't limited. -dash 01/01
-    if(obj->max_exist > LIMITED_RENT_ITEM) temp = 0;
-    //    vlogf(LOG_DASH, format("%s getting cost on %s, max exist %d, limit %d, cost %d") %  getName() % obj->getName() %
-    //	  obj->max_exist % LIMITED_RENT_ITEM % temp);
-    
     temp = 0;
 
     cost->total_cost += temp;
@@ -2563,7 +2557,7 @@ void setMostExpensiveItem(TObj *look, TObj *&found)
   for(StuffIter it=look->stuff.begin();it!=look->stuff.end() && *it;++it) {
     setMostExpensiveItem(dynamic_cast<TObj *>(*it), found);
   }
-  if (found && look->rentCost() <= found->rentCost())
+  if (found)
     return;
   found = look;
 }
@@ -4333,22 +4327,6 @@ int TPerson::doRent(const sstring &argument)
   preKillCheck(TRUE);
 
   return DELETE_THIS;
-}
-
-int TObj::rentCost() const
-{
-  return 0;
-}
-
-int TWand::rentCost() const
-{
-  return 0;
-}
-
-int TMoney::rentCost() const
-{
-  // talens in a bag shouldn't cost anything to rent
-  return 0;
 }
 
 bool TObj::isRentable() const
