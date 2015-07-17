@@ -354,7 +354,6 @@ extern int mapApplyToFile(applyTypeT);
 extern void repoCheck(TMonster *mob, int rnum);
 extern void repoCheckForRent(TBeing *ch, TObj *obj, bool corpse);
 extern double balanceCorrectionForLevel(double);
-extern double getLevMod(unsigned short, unsigned int);
 extern int levelLuckModifier(float);
 extern bool isDissectComponent(int);
 extern bool isInkComponent(int);

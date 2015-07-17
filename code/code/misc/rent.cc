@@ -75,30 +75,6 @@ struct SInnkeeperHate {
   {0, RACE_NORACE, false, "Leave!"} // Add all new entries BEFORE this line.
 };
 
-double getLevMod(unsigned short int Class, unsigned int lev)
-{
-  double lev_mod = 0;  // warriors is 0.0
-  if (IS_SET(Class, CLASS_MAGE))
-    lev_mod = max(lev_mod, 10.0);
-  if (IS_SET(Class, CLASS_CLERIC))
-    lev_mod = max(lev_mod, 7.0);
-  if (IS_SET(Class, CLASS_THIEF))
-    lev_mod = max(lev_mod, 5.0);
-  if (IS_SET(Class, CLASS_DEIKHAN))
-    lev_mod = max(lev_mod, 3.0);
-  if (IS_SET(Class, CLASS_MONK))
-    lev_mod = max(lev_mod, 10.0);
-  if (IS_SET(Class, CLASS_RANGER))
-    lev_mod = max(lev_mod, 3.0);
-  if (IS_SET(Class, CLASS_SHAMAN))
-    lev_mod = max(lev_mod, 10.0);
-
-  // phase in rent credit loss over few levels
-  // this is mostly here so all newbies are essentially the same
-  lev_mod = min(lev_mod, lev/3.0);
-  return lev_mod;
-}
-
 void handleCorrupted(const char *name, char *account)
 {
   char buf[200];
