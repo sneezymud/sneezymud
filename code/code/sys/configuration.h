@@ -14,11 +14,6 @@ class Config {
   // 4.1 balanced at 2 prior to depreciation
   static int ITEM_DAMAGE_RATE;
 
-  // causes innkeepers to grant rentCredit based on the innkeepers levels
-  // otherwise, it is based on the players level.
-  // the chief use of this is to encourage high level pc's to use certain inns
-  static bool RENT_RESTRICT_INNS_BY_LEVEL;
-  
   // causes bad things to happen to player based on time in autorent
   // there is a grace period to handle crashes
   static bool PENALIZE_FOR_AUTO_RENTING;
@@ -107,7 +102,6 @@ class Config {
   static bool doConfiguration(int argc=0, char *argv[]=0);
   
   static int ItemDamageRate(){ return ITEM_DAMAGE_RATE; }
-  static bool RentRestrictInnsByLevel(){return RENT_RESTRICT_INNS_BY_LEVEL;}
   static bool PenalizeForAutoRenting(){ return PENALIZE_FOR_AUTO_RENTING;}
   static int WeaponDamMinHardness(){ return WEAPON_DAM_MIN_HARDNESS;}
   static int WeaponDamMaxHardness(){ return WEAPON_DAM_MAX_HARDNESS;}

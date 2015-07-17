@@ -1704,21 +1704,7 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
     }
   }
   
-  if(Config::RentRestrictInnsByLevel()){
-    // note that you could use autorent to get around this rent credit reduction
-    if (recep && (recep->GetMaxLevel() < GetMaxLevel())) {
-      sprintf(buf,"I can only grant rent credit through level %d.",
-	      recep->GetMaxLevel());
-      recep->doTell(getName(), buf);
-      sprintf(buf,"That's %d talens of credit.",
-	      recep->rentCredit());
-      recep->doTell(getName(), buf);
-      credit = recep->rentCredit();
-    } else
-      credit = rentCredit();
-  } else {
-    credit = rentCredit();  
-  }
+  credit = rentCredit();
   if (desc) {
     desc->best_rent_credit = max(credit, desc->best_rent_credit);
     credit = desc->best_rent_credit;
@@ -3324,19 +3310,6 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
     act("$n motions at you then whispers, \"Someone is after you for the moment and I can not allow you to stay here...Sorry.\"", FALSE, recep, NULL, ch, TO_VICT);
     return TRUE;
   }
-
-#if RENT_RESTRICT_INNS_BY_LEVEL
-  // remnant of code that only let high level pc's rent out of grim
-  if (recep->GetMaxLevel() < ch->GetMaxLevel()) {
-    sprintf(buf,"%s I can only grant rent credit through level %d.",
-           ch->getName(),recep->GetMaxLevel());
-    recep->doTell(buf);
-    sprintf(buf,"%s That's %d talens of credit.",
-            ch->getName(),recep->rentCredit());
-    recep->doTell(buf);
-  }
-
-#endif
 
   bool   autoHates  = false,
          hatesMe[2] = {false, false};
