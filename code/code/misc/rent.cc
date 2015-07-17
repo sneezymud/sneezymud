@@ -1293,8 +1293,8 @@ void ItemSaveDB::objsToStore(signed char slot, StuffList list,
 {
   TObj *o=NULL;
 
-  for(StuffIter it=list.begin();it!=list.end();){
-    if(!(o=dynamic_cast<TObj *>(*(it++))))
+  for(StuffIter it=list.begin();it!=list.end();++it){
+    if(!(o=dynamic_cast<TObj *>(*it)))
       continue;
     
     objToStore(slot, o, ch, d, corpse, container);
@@ -1337,7 +1337,7 @@ void TBeing::addObjCost(TBeing *re, TObj *obj, objCost *cost, sstring &str)
     cost->no_carried++;
   } else {
     if (re) {
-      act("$n tells you 'Sorry!  I refuse to store $p.'", 
+      act("$n tells you, \"Sorry!  I refuse to store $p.\"",
         FALSE, re, obj, this, TO_VICT, ANSI_ORANGE);
     }
     cost->ok = FALSE;
@@ -1362,15 +1362,6 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
   cost->total_cost = 0;
   cost->ok = TRUE;
   cost->no_carried = 0;
-
-  if (recep) {
-    act("$n tells you \"Have a nice stay!\"", FALSE, recep, 0, this, TO_VICT);
-    if (client) {
-      desc->clientf(format("%d") % CLIENT_RENT);
-      sendTo("Rent is free!");
-      desc->clientf(format("%d") % CLIENT_RENT_END);
-    }
-  }
 
   // add up cost for the player
   addObjCost(recep, stuff, cost, str);
@@ -1447,7 +1438,7 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
     return TRUE;
   }
   if (cost->no_carried > MAX_OBJ_SAVE) {
-    sprintf(buf, "$n tells you, \"Sorry, but I can't store more than %d items.\n\rYou have %d items.\"", MAX_OBJ_SAVE, cost->no_carried);
+    sprintf(buf, "$n tells you, \"Sorry, but I can't store more than %d items. You have %d items.\"", MAX_OBJ_SAVE, cost->no_carried);
     if (recep)
       act(buf, FALSE, recep, 0, this, TO_VICT);
     
@@ -1464,7 +1455,7 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
   cost->total_cost = (actual_cost < 0) ? 0 : actual_cost;
 
   if (recep)
-    act("$n tells you \"Have a nice stay!\"", FALSE, recep, 0, this, TO_VICT);
+    act("$n tells you, \"Have a nice stay!\"", FALSE, recep, 0, this, TO_VICT);
 
   if (cost->total_cost > (getMoney() + getBank())) {
     if (recep)
