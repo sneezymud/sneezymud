@@ -1489,49 +1489,6 @@ void ItemSaveDB::clearRent()
 
 }
 
-void TMonster::saveItems(const sstring &filepath)
-{
-  mud_assert(0, "Should be using TMonster::saveItems(int) to save to database!");
-#ifdef UNUSED
-  TObj *obj;
-  ItemSave is;
-
-  if (!is.openFile(filepath)) {
-    vlogf(LOG_FILE, format("Failed to open file '%s' in TMonster::saveItems() call.") % filepath);
-    return;
-  }
-
-  is.writeVersion();
-
-  // store worn objects
-  wearSlotT ij;
-  for (ij = MIN_WEAR; ij < MAX_WEAR; ij++) {
-    obj = dynamic_cast<TObj *>(equipment[ij]);
-    if (!obj)
-      continue;
-    if (!(((ij == WEAR_LEG_L) && obj->isPaired()) ||
-          ((ij == WEAR_EX_LEG_L) && obj->isPaired()) ||
-          ((ij == HOLD_LEFT) && obj->isPaired()))) {
-      is.objToStore(mapSlotToFile(ij), obj, this, FALSE);
-    }
-  }
-
-  // store inventory objects
-  is.objsToStore(NORMAL_SLOT, stuff, this, FALSE);
-
-  // write the rent file footer
-  is.writeFooter();
-
-  // shopkeeper specific stuff - save gold
-  if(isShopkeeper()){
-    TDatabase db(DB_SNEEZY);
-    db.query("update shopowned set gold=%i where shop_nr=%i",
-	     getMoney(), find_shop_nr(number));
-  }
-#endif
-}
-
-
 // returns rent_id in database
 int TMonster::saveItem(int shop_nr, TObj *obj, int container)
 {
@@ -2289,28 +2246,6 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
 
   if (!is.st.number) 
     wipeRentFile(getName().c_str());
-}
-
-// this is used to load the items a shopkeeper has
-void TMonster::loadItems(const sstring &filepath)
-{
-  mud_assert(0, "Should be using TMonster::loadItems(int) to load from database!");
-#ifdef UNUSED
-  int num_read = 0;
-  ItemLoad il;
-
-  if(!il.openFile(filepath)) {
-    vlogf(LOG_FILE, format("Failed to open file '%s' in TMonster::loadItems() call.") % filepath);
-    return;
-  }
-
-  if(!il.readVersion()){
-    vlogf(LOG_BUG, format("Error while reading version from %s.") %  filepath);
-    return;
-  }
-
-  il.objsFromStore(NULL, &num_read, this, NULL, FALSE);
-#endif
 }
 
 /*--------------------------------------------------
