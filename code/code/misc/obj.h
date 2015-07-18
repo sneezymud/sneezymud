@@ -24,18 +24,6 @@
 
 class objIndexData;
 
-class objCost { 
-  public:
-    int total_cost;
-    int no_carried;
-    int lowrentobjs;
-    bool ok;
-    objCost();
-    ~objCost();
-};
-
-
-
 extern std::vector<objIndexData>obj_index;
 
 typedef std::list<TObj *> TObjList;

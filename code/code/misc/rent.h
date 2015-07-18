@@ -155,5 +155,17 @@ class ItemLoadDB {
   ~ItemLoadDB();
 };
 
+class objCost {
+  public:
+    int total_cost;
+    int no_carried;
+    int lowrentobjs;
+    bool ok;
+    objCost();
+    ~objCost();
+    void add(StuffList stuff, TBeing *owner, TBeing *recep);
+    void add(TObj *obj, TBeing *owner, TBeing *recep);
+};
+
 extern TObj *findMostExpensiveItem(TBeing *);
 #endif

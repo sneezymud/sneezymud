@@ -1301,48 +1301,28 @@ void ItemSaveDB::objsToStore(signed char slot, StuffList list,
   }
 }
 
-void TBeing::addObjCost(TBeing *re, StuffList list, objCost *cost, sstring &str)
+void objCost::add(StuffList list, TBeing *owner, TBeing *recep)
 {
-  for(StuffIter it=list.begin();it!=list.end();++it){
-    addObjCost(re, dynamic_cast<TObj *>(*it), cost, str);
-  }
+  for (StuffIter it=list.begin();it!=list.end();++it)
+    add(dynamic_cast<TObj *>(*it), owner, recep);
 }
 
-void TBeing::addObjCost(TBeing *re, TObj *obj, objCost *cost, sstring &str)
+void objCost::add(TObj *obj, TBeing *owner, TBeing *recep)
 {
-  int temp;
-  char buf[256];
-
   if (!obj)
     return;
 
-  silentTypeT silent = SILENT_NO;
-  if (desc && IS_SET(desc->autobits, AUTO_NOSPAM))
-    silent = SILENT_YES;
-  
-  if (obj->isRentable() && obj->isMonogramOwner(this, true)) {
-    temp = 0;
-
-    cost->total_cost += temp;
-    if (re) {
-      if (desc && desc->m_bIsClient) {
-        sprintf(buf, "%-30s \n\r", obj->getName().c_str());
-        str += buf;
-      } else if (!silent) {
-        sendTo(COLOR_OBJECTS, format("%-30s \n\r") % obj->getName());
-      }
-    }
-    if (temp<=100)
-      cost->lowrentobjs++;
-    cost->no_carried++;
+  if (obj->isRentable() && obj->isMonogramOwner(owner, true)) {
+    no_carried++;
+    lowrentobjs++;
   } else {
-    if (re) {
+    if (recep)
       act("$n tells you, \"Sorry!  I refuse to store $p.\"",
-        FALSE, re, obj, this, TO_VICT, ANSI_ORANGE);
-    }
-    cost->ok = FALSE;
+          FALSE, recep, obj, owner, TO_VICT, ANSI_ORANGE);
+    ok = FALSE;
   }
-  addObjCost(re, obj->stuff, cost, str);
+
+  add(obj->stuff, owner, recep);
 }
 
 bool TBeing::recepOffer(TBeing *recep, objCost *cost)
@@ -1364,7 +1344,7 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
   cost->no_carried = 0;
 
   // add up cost for the player
-  addObjCost(recep, stuff, cost, str);
+  cost->add(stuff, this, recep);
 
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
     obj = dynamic_cast<TObj *>(equipment[i]);
@@ -1373,7 +1353,7 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
     if (!(((i == WEAR_LEG_L) && obj->isPaired()) ||
           ((i == WEAR_EX_LEG_L) && obj->isPaired()) ||
           ((i == HOLD_LEFT) && obj->isPaired()))) {
-      addObjCost(recep, obj, cost, str);// equip
+      cost->add(obj, this, recep);// equip
     }
   }
   // add up cost for followers
@@ -1408,7 +1388,7 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
     cost->total_cost += actual_cost;
 
     // mob's inventory
-    addObjCost(recep, ch->stuff, cost, str);
+    cost->add(ch->stuff, this, recep);
 
     // mob's equipment
     for (i = MIN_WEAR; i < MAX_WEAR; i++) {
@@ -1418,7 +1398,7 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
       if (!(((i == WEAR_LEG_L) && obj->isPaired()) ||
             ((i == WEAR_EX_LEG_L) && obj->isPaired()) ||
            ((i == HOLD_LEFT) && obj->isPaired()))) {
-        addObjCost(recep, obj, cost, str);// equip
+        cost->add(obj, this, recep);// equip
       }
     }
   }

@@ -18,6 +18,7 @@
 #include "account.h"
 #include "person.h"
 #include "low.h"
+#include "rent.h"
 
 void doSaveMOEdit(TBeing *ch, const char *tArg)
 {
