@@ -629,10 +629,9 @@ if (character) {
         num++;
       }
     }
-    vlogf(LOG_PIO, format("Link Lost for %s: [%d talens/%d bank/%.2f xps/%d items/%d age-mod/%d rent]") % 
+    vlogf(LOG_PIO, format("Link Lost for %s: [%d talens/%d bank/%.2f xps/%d items/%d age-mod/0 rent]") %
           character->getName() % character->getMoney() % character->getBank() %
-          character->getExp() % num % character->age_mod % 
-          (dynamic_cast<TPerson *>(character)?dynamic_cast<TPerson *>(character)->last_rent:0));
+          character->getExp() % num % character->age_mod);
     character->desc = NULL;
     if((!character->affectedBySpell(AFFECT_PLAYERKILL) &&
         !character->affectedBySpell(AFFECT_PLAYERLOOT)) ||

@@ -24,7 +24,6 @@ class TPerson : public TBeing {
     FILE *tLogFile;
     char lastHost[40];
     char *title; 
-    int last_rent;
     //    bool toggles[MAX_TOG_INDEX];
     bool wizPowers[MAX_POWER_INDEX];
     bool wizPowersOriginal[MAX_POWER_INDEX];

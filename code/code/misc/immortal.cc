@@ -5241,7 +5241,6 @@ static void TimeTravel(const char *ch)
   char fileName[128];
   rentHeader h;
   FILE *fp;
-  long delta;
 
   if (!ch)
     return;
@@ -5267,19 +5266,6 @@ static void TimeTravel(const char *ch)
   // advance the update counter
   h.last_update += deltatime * SECS_PER_REAL_MIN;
 
-  if (h.last_update > time(0)) {
-    // don't advance update counter past the present
-    // give some financial credit instead
-    delta = h.last_update - time(0);
-    h.last_update = time(0);
-    unsigned int amt = h.total_cost * delta / SECS_PER_REAL_DAY;
-    h.gold_left += amt;
-    vlogf(LOG_SILENT, format("Crediting %s with %u gold for downtime. (left=%d)") % 
-        ch % amt % h.gold_left);
-  } else
-    vlogf(LOG_SILENT, format("TimeTravel for %s done as update-advance only. (left=%d)") % 
-        ch % h.gold_left);
-
   rewind(fp);
   if (fwrite(&h, sizeof(h), 1, fp) != 1) {
     vlogf(LOG_MISC, format("Cannot write updated rent file header for %s") %  h.owner);
@@ -5293,7 +5279,6 @@ static void TimeTravel(const char *ch)
 void TBeing::doTimeshift(const char *arg)
 {
   char buf[256];
-  TBeing *i;
   objCost cost;
 
   if (!isImmortal())
@@ -5338,12 +5323,6 @@ void TBeing::doTimeshift(const char *arg)
     dirwalk("rent/x",TimeTravel);
     dirwalk("rent/y",TimeTravel);
     dirwalk("rent/z",TimeTravel);
-    for (i = character_list; i; i = i->next) {
-      if (!i->isPc())
-        continue;
-      i->recepOffer(NULL,&cost);
-      i->addToMoney(max(0,(&cost)->total_cost * deltatime * SECS_PER_REAL_MIN/SECS_PER_REAL_DAY), GOLD_RENT);
-    }
 
 #if 0
 // there's no good reason to do this
@@ -5392,8 +5371,6 @@ void TBeing::doTimeshift(const char *arg)
     }
 #endif
     sprintf(buf,"%s has shifted game time back %d real minutes.",getName().c_str(),deltatime);
-    doSystem(buf);
-    sprintf(buf,"Adjusting mud-time, rent charges for PC's rented and talens for PC's online.");
     doSystem(buf);
   }
 }

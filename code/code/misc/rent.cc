@@ -47,9 +47,6 @@ static const char ROOM_SAVE_PATH[] = "roomdata/saved";
 static const int NORMAL_SLOT   = -1;
 static const int CONTENTS_END  = -2;
 
-static const int LIMITED_RENT_ITEM = 9;  
-// in 5.2 anything with max exists <= this number will be charged rent
-
 struct SInnkeeperHate {
   int    tVNum; // Mobile VNum of the innkeeper in question.
   race_t tRace;  // Race in question
@@ -2242,7 +2239,6 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
         getName() % getMoney() % getBank() % getExp() % is.st.number % 
         age_mod % is.st.total_cost);
   }
-  last_rent = is.st.total_cost;
 
   if (!is.st.number) 
     wipeRentFile(getName().c_str());
