@@ -2015,7 +2015,6 @@ void TPCorpse::addCorpseToLists()
 
 void TBeing::assignCorpsesToRooms() 
 {
-#if 1 
   TRoom *rp = NULL, *rp2 = NULL;
   TThing *tmp;
   TPCorpse *corpse = NULL;
@@ -2117,7 +2116,6 @@ rp2->getName() % corpse->getRoomNum());
     corpse->addCorpseToLists();
   }
   return;
-#endif
 }
 
 void TPCorpse::saveCorpseToFile()
@@ -2363,15 +2361,6 @@ void TPerson::loadRent()
     vlogf(LOG_BUG, format("  %s just got %s's objects!") %
 	  getName() % il.st.owner);
 
-#if 0
-  // A nice idea, but the two are now out of synch since the rent header
-  // has number of my items plus mob follower's items.
-  if (il.st.number != num_read) {
-    vlogf(LOG_BUG, format("Error while reading %s's objects.  %d in rent file, only %d loaded.") %  getName() % il.st.number % num_read);
-    return;
-  }
-#endif
-
     if (in_room == Room::NOWHERE) {
       vlogf(LOG_PIO, "Char reconnecting after autorent");
       vlogf(LOG_PIO, format("%s was autorented for %d secs") % getName() %
@@ -2558,32 +2547,6 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
     }
     return TRUE;
   } else if (cmd == CMD_MOB_MOVED_INTO_ROOM) {
-#if 0
-// works fine, but how am I supposed to rent my horse?
-
-    if (dynamic_cast<TBeing *>(ch->riding)) {
-      sprintf(buf, "Hey, get that damn %s out of my inn!",
-          fname(ch->riding->name));
-      recep->doSay(buf);
-      act("You throw $N out.",
-         FALSE, recep, 0, ch, TO_CHAR);
-      act("$n throws you out of the inn.",
-         FALSE, recep, 0, ch, TO_VICT);
-      act("$n throws $N out of the inn.",
-         FALSE, recep, 0, ch, TO_NOTVICT);
-      --(*ch->riding);
-      thing_to_room(ch->riding, (int) o);
-      --(*ch);
-      thing_to_room(ch, (int) o);
-      return TRUE;
-    } else if (dynamic_cast<TBeing *>(ch->rider)) {
-      --(*ch->rider);
-      thing_to_room(ch->rider, (int) o);
-      --(*ch);
-      thing_to_room(ch, (int) o);
-      return TRUE;
-    }
-#endif
     return FALSE;
   }
 
@@ -3448,16 +3411,11 @@ void chargeRent(const char *who)
     fclose(fp);
     return;
   }
-#if 1
   if (sstring(h.owner).lower().compare(who)) {
     vlogf(LOG_BUG, format("WARNING!  rent file %s holds objects for %s!") %  who % h.owner);
     fclose(fp);
     return;
   }
-#else
-  // a debug case for if we copied someone's rent file for problem resolution
-  strcpy(h.owner, who);
-#endif
   if (!load_char(who, &pd)) {
     vlogf(LOG_BUG, format("Unable to read player file for %s, so deleting rent file.") %  h.owner);
     fclose(fp);
@@ -3838,14 +3796,6 @@ bool TBeing::saveFollowers(bool rent_time)
       else
         a_list = NULL;
     }
-#if 0
-    // we reequipped when we saved objs
-    // and reequip...
-    for (ij = MIN_WEAR; ij < MAX_WEAR; ij++) {
-      if (char_eq[ij])
-        mob->equipChar(char_eq[ij], ij, SILENT_YES);
-    }
-#endif
 
     if (rent_time) {
       act("$n is led off to a storage area.", FALSE, mob, 0, 0, TO_ROOM);
