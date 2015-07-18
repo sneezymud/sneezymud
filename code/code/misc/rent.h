@@ -164,6 +164,4 @@ class objCost {
     void add(StuffList stuff, TBeing *owner, TBeing *recep);
     void add(TObj *obj, TBeing *owner, TBeing *recep);
 };
-
-extern TObj *findMostExpensiveItem(TBeing *);
 #endif

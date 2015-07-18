@@ -2198,36 +2198,6 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
     wipeRentFile(getName().c_str());
 }
 
-/*--------------------------------------------------
-findMostExpensiveItem
---------------------------------------------------*/
-void setMostExpensiveItem(TObj *look, TObj *&found)
-{
-  if (!look)
-    return;
-  for(StuffIter it=look->stuff.begin();it!=look->stuff.end() && *it;++it) {
-    setMostExpensiveItem(dynamic_cast<TObj *>(*it), found);
-  }
-  if (found)
-    return;
-  found = look;
-}
-
-TObj *findMostExpensiveItem(TBeing *b)
-{
-  TObj *found = NULL;
-
-  for(int i = MIN_WEAR; i < MAX_WEAR; i++) {
-    if (!b->equipment[i])
-      continue;
-    setMostExpensiveItem(dynamic_cast<TObj*>(b->equipment[i]), found);
-  }
-  for(StuffIter it=b->stuff.begin();it!=b->stuff.end() && *it;++it) {
-    setMostExpensiveItem(dynamic_cast<TObj *>(*it), found);
-  }
-  return found;
-}
-
 void TThing::moneyMove(TBeing *ch)
 {
   TThing *t;
@@ -2370,7 +2340,7 @@ void TPerson::loadRent()
         objCost curCost;
         recepOffer(NULL, &curCost);
 
-        while (getMoney() < 0 && (i = findMostExpensiveItem(this))) {
+        while (0) {
           amt = i->obj_flags.cost;
           addToMoney(amt, GOLD_SHOP);
 
