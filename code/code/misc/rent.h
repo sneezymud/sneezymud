@@ -72,9 +72,10 @@ class rentHeader {
   public:
     unsigned char version;     /* version # of the rent file */
     char owner[20];    /* Name of player                     */
-    int original_gold; /* For use with total charges on login*/
-    int gold_left;     /* Number of goldcoins left at owner  */
-    int total_cost;    /*    */
+    // these entries were for the since-removed rent charge code
+    int ___unused1;
+    int ___unused2;
+    int ___unused3;
     long last_update;  /* Time in seconds, when last updated */
     long first_update; /* Time in seconds, when first updated*/
     int  number;       /* number of objects */

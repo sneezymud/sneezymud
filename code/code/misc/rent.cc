@@ -2112,9 +2112,6 @@ void TPCorpse::saveCorpseToFile()
 
   strcpy(is.st.owner, fileName.c_str());
   is.st.number = numCorpses;
-  is.st.gold_left = (int) in_room; 
-  is.st.original_gold = 0;
-  is.st.total_cost = 0;
   is.st.first_update = is.st.last_update = (long) time(0);
 
   if(!is.writeHeader()){
@@ -2151,9 +2148,6 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
   }
   strcpy(is.st.owner, getName().c_str());
   is.st.number = (int) cost->no_carried;
-  is.st.gold_left = (int) getMoney();
-  is.st.original_gold = (int) getMoney();
-  is.st.total_cost = 0;
   is.st.first_update = is.st.last_update = (long) time(0);
 
 
@@ -2185,13 +2179,11 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
 
 
   if (msgStatus == 1 && desc) {
-    vlogf(LOG_PIO, format("Saving %s [%d talens/%d bank/%.2f xps/%d items/%d age-mod/%d rent]") %  
-        getName() % getMoney() % getBank() % getExp() % is.st.number % 
-        age_mod % is.st.total_cost);
+    vlogf(LOG_PIO, format("Saving %s [%d talens/%d bank/%.2f xps/%d items/%d age-mod]") %
+        getName() % getMoney() % getBank() % getExp() % is.st.number % age_mod);
   } else if (msgStatus == 2 && desc) {
-    vlogf(LOG_PIO, format("Renting %s [%d talens/%d bank/%.2f xps/%d items/%d age-mod/%d rent]") %  
-        getName() % getMoney() % getBank() % getExp() % is.st.number % 
-        age_mod % is.st.total_cost);
+    vlogf(LOG_PIO, format("Renting %s [%d talens/%d bank/%.2f xps/%d items/%d age-mod]") %
+        getName() % getMoney() % getBank() % getExp() % is.st.number % age_mod);
   }
 
   if (!is.st.number) 
@@ -2203,8 +2195,6 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
 void TPerson::loadRent()
 {
   int num_read = 0;
-  TObj *i = NULL;
-  //char buf[256], wizbuf[256];
   char buf[256];
   objCost cost;
   TPerson *tmp;
@@ -2262,10 +2252,9 @@ void TPerson::loadRent()
 
   actual = meanPracsSoFar();
     
-  vlogf(LOG_PIO, format("Loading %s [%d talens/%d bank/%.2f xps/%d items/%d age-mod/%d rent/%d extra pracs (%d-%d)]") %  
+  vlogf(LOG_PIO, format("Loading %s [%d talens/%d bank/%.2f xps/%d items/%d age-mod/%d extra pracs (%d-%d)]") %  
        getName() % getMoney() % getBank() % getExp() % il.st.number % 
-       age_mod % il.st.total_cost % (actual - expectedPracs()) % 
-       actual % expectedPracs());
+       age_mod % (actual - expectedPracs()) % actual % expectedPracs());
 
   // silly kludge
   // because of the way the "stuff" list is saved, it essentially reverses
@@ -3821,8 +3810,6 @@ pcorpseObject::pcorpseObject() :
 
 rentHeader::rentHeader() :
   version(0),
-  original_gold(0),
-  gold_left(0),
   last_update(0),
   first_update(0),
   number(0)

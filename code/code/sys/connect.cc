@@ -629,7 +629,7 @@ if (character) {
         num++;
       }
     }
-    vlogf(LOG_PIO, format("Link Lost for %s: [%d talens/%d bank/%.2f xps/%d items/%d age-mod/0 rent]") %
+    vlogf(LOG_PIO, format("Link Lost for %s: [%d talens/%d bank/%.2f xps/%d items/%d age-mod]") %
           character->getName() % character->getMoney() % character->getBank() %
           character->getExp() % num % character->age_mod);
     character->desc = NULL;
