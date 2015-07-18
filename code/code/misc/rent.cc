@@ -1405,13 +1405,6 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
     }
     return TRUE;
   }
-  if (cost->no_carried > MAX_OBJ_SAVE) {
-    sprintf(buf, "$n tells you, \"Sorry, but I can't store more than %d items. You have %d items.\"", MAX_OBJ_SAVE, cost->no_carried);
-    if (recep)
-      act(buf, FALSE, recep, 0, this, TO_VICT);
-    
-    return FALSE;
-  }
   
   if (recep)
     act("$n tells you, \"Have a nice stay!\"", FALSE, recep, 0, this, TO_VICT);

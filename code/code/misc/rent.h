@@ -20,9 +20,6 @@ const int CURRENT_RENT_VERSION     =10;
 // 8        5.2 : June 4 2002 : shuffled 4vals for weapons
 // 9........5.2 : November 23, 2007 : Update/Consolidation of material types
 
-// This was 200, but i see no technical reason to not be able to increase it
-const int MAX_OBJ_SAVE =10000;
-
 class pcorpseObject
 {
   public:
