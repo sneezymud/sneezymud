@@ -585,7 +585,6 @@ class TBeing : public TThing {
     void fixClientPlayerLists(bool);
     void gainExpPerHit(TBeing *, double, int);
 
-    void moneyCheck();
     int rideCheck(int);
     spellNumT mountSkillType() const;
     void calmMount(TBeing *);

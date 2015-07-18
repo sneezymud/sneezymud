@@ -41,7 +41,6 @@ class TMoney : public TMergeable {
     virtual int getMe(TBeing *, TThing *);
     virtual int moneyMeMoney(TBeing *, TThing *);
     virtual void logMe(const TBeing *, const char *) const {}
-    virtual void moneyMove(TBeing *);
     virtual bool canCarryMe(const TBeing *, silentTypeT) const;
     virtual bool isPluralItem() const;
     virtual void onObjLoad();

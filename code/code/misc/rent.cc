@@ -2198,49 +2198,11 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
     wipeRentFile(getName().c_str());
 }
 
-void TThing::moneyMove(TBeing *ch)
-{
-  TThing *t;
-  for(StuffIter it=stuff.begin();it!=stuff.end();){
-    t=*(it++);
-    t->moneyMove(ch);
-  }
-}
-
-void TMoney::moneyMove(TBeing *ch)
-{
-  if (equippedBy) {
-    ch->unequip(eq_pos);
-  } else if (parent) {
-    (*this)--;
-  }
-
-  ch->addToMoney(getMoney(), GOLD_XFER);
-  vlogf(LOG_PIO, format("Found %d talens on %s's person during rent check") % 
-            getMoney() % ch->getName()); 
-  delete this;
-}
-
-void TBeing::moneyCheck()
-{
-  int i;
-  TThing *t;
-
-  for (i = MIN_WEAR; i < MAX_WEAR; i++) {
-    if ((t = equipment[i])) {
-      t->moneyMove(this);
-    }
-  }
-  for(StuffIter it=stuff.begin();it!=stuff.end();){
-    t=*(it++);
-    t->moneyMove(this);
-  }
-}
 
 // Somewhere in here, we need to call race->makeBody().
 void TPerson::loadRent()
 {
-  int num_read = 0, timegold, gone, amt;
+  int num_read = 0;
   TObj *i = NULL;
   //char buf[256], wizbuf[256];
   char buf[256];
@@ -2287,93 +2249,16 @@ void TPerson::loadRent()
     vlogf(LOG_BUG, format("  %s just got %s's objects!") %
 	  getName() % il.st.owner);
 
-    if (in_room == Room::NOWHERE) {
-      vlogf(LOG_PIO, "Char reconnecting after autorent");
-      vlogf(LOG_PIO, format("%s was autorented for %d secs") % getName() %
-          (time(0) - il.st.first_update));
-    } else {
-      // char was rented
-      applyRentBenefits(time(0) - il.st.first_update);
-    }
+  if (in_room == Room::NOWHERE) {
+    vlogf(LOG_PIO, "Char reconnecting after autorent");
+    vlogf(LOG_PIO, format("%s was autorented for %d secs") % getName() %
+        (time(0) - il.st.first_update));
+  } else {
+    // char was rented
+    applyRentBenefits(time(0) - il.st.first_update);
+  }
 
-    gone = il.st.original_gold - il.st.gold_left;
-    timegold = (int) (((float) ((float) il.st.total_cost/(float) SECS_PER_REAL_DAY)) * (time(0) - il.st.last_update));
-    // this is a kludge cuz total is going negative sometimes somehow - Bat 
-    if (timegold < 0) {
-      vlogf(LOG_BUG,format("ERROR: timegold rent charged negative for %s.") % il.st.owner);
-      vlogf(LOG_BUG,format("ERROR: %s   daily cost: %d timegold: %d") % il.st.owner %il.st.total_cost %timegold);
-      vlogf(LOG_BUG,format("ERROR: %s   current time: %d, update time: %d") % il.st.owner %time(0) %il.st.last_update);
-      vlogf(LOG_BUG,format("ERROR: %s   time differential: int: %d") % il.st.owner %(time(0) - il.st.last_update));
-      timegold = 0;
-    }
-    vlogf(LOG_PIO, format("%s ran up charges of %d since last update, %d total charges") %  getName() % timegold % (gone + timegold));
-
-    int total_rent=(timegold + gone)>il.st.total_cost?il.st.total_cost:(timegold + gone);
-    addToMoney(-(total_rent), GOLD_RENT);
-
-
-   // NOTE:  I realize we can give out gold doing this, but my guess 
-   // the only way barring bugs is via timeshifting.   
-
-    il.st.first_update = il.st.last_update = time(0);
-
-    if (getMoney() < 0) {
-      addToMoney(points.bankmoney, GOLD_XFER);
-      setBank(0);
-      // silly last ditch effort
-      // it is possible that they have money in a bag, so look
-      // for this and make adjustments
-      moneyCheck();
-
-      if (getMoney() < 0) {
-        vlogf(LOG_PIO, format("%s ran out of money in rent") %  getName());
-        sendTo("You ran out of money in rent.\n\rSome of your belongings were confiscated.\n\r");
-
-        // Rent will now take items one by one to meet the rent requirements
-        // instead of taking all items regardless. - Russ
-
-        // Ideally, we should first take items on followers, then the
-        // follower itself here, before doing my items...
-        // unfortunately, followers have yet to be loaded at this point.
-        // so, we will figure out current rent cost, and compare difference
-        // to achieve a delta, which can only be explained by "followers"
-        objCost curCost;
-        recepOffer(NULL, &curCost);
-
-        while (0) {
-          amt = i->obj_flags.cost;
-          addToMoney(amt, GOLD_SHOP);
-
-          if (i->equippedBy)
-            unequip(i->eq_pos);
-          else if (i->parent)
-            --(*i);
-
-          vlogf(LOG_PIO, format("%s had item '%s' taken by rent.") %  getName() % i->getName());
-          TThing *t;
-	  for(StuffIter it=i->stuff.begin();it!=i->stuff.end();){
-	    t=*(it++);
-            (*t)--;
-            *this += *t;
-          }
-            
-          sprintf(buf, "%s has been confiscated for %d talens to meet your rent obligations.\n\r", sstring(i->getName()).cap().c_str(), amt);
-          lbuf += buf;
-
-          vlogf(LOG_SILENT, format("%s's %s being recycled due to rent obligations.") %  
-              getName() % i->getName());
-          delete i;
-          i = NULL;
-        }
-        autoMail(this, NULL, lbuf.c_str());
-        if (getMoney() < 0)
-          setMoney(0);   //  value of items didn't cover them - Batopr 
-      } else {
-        sendTo("You didn't have enough cash, but your bank account covered the difference.\n\r");
-        sendTo("The remaining bank balance was moved to your character's money.\n\r");
-        vlogf(LOG_PIO, format("Bank account saved %s from losing items.") %  getName());
-      }
-    }
+  il.st.first_update = il.st.last_update = time(0);
 
   actual = meanPracsSoFar();
     
