@@ -1311,7 +1311,6 @@ void objCost::add(TObj *obj, TBeing *owner, TBeing *recep)
 
   if (obj->isRentable() && obj->isMonogramOwner(owner, true)) {
     no_carried++;
-    lowrentobjs++;
   } else {
     if (recep)
       act("$n tells you, \"Sorry!  I refuse to store $p.\"",
@@ -1325,8 +1324,7 @@ void objCost::add(TObj *obj, TBeing *owner, TBeing *recep)
 bool TBeing::recepOffer(TBeing *recep, objCost *cost)
 {
   char buf[256];
-  int i, actual_cost;
-  unsigned int credit;
+  int i;
   TObj *obj;
   sstring str;
   followData *f;
@@ -1336,7 +1334,6 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
 
   bool client = (desc && desc->m_bIsClient);
 
-  cost->total_cost = 0;
   cost->ok = TRUE;
   cost->no_carried = 0;
 
@@ -1366,13 +1363,9 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
     if (!ch->sameRoom(*this))
       continue;
 
-    actual_cost = ch->petPrice() / 4;
-
     silentTypeT silent = SILENT_NO;
     if (desc && IS_SET(desc->autobits, AUTO_NOSPAM))
       silent = SILENT_YES;
-
-    actual_cost = 0;
 
     if (recep) {
       if (desc && desc->m_bIsClient) {
@@ -1382,7 +1375,6 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
         sprintf(buf, "%-30s - Pet/Charm/Thrall/Mount \n\r", ch->getName().c_str());
       }
     }
-    cost->total_cost += actual_cost;
 
     // mob's inventory
     cost->add(ch->stuff, this, recep);
@@ -1404,7 +1396,6 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
       return FALSE;
   }
   if (isImmortal()) {
-    cost->total_cost = 0;
     if (client && recep) {
       processStringForClient(str);
 
@@ -1421,46 +1412,11 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
     
     return FALSE;
   }
-  if (recep && hasClass(CLASS_MONK) && ((cost->no_carried-cost->lowrentobjs) > 35)) {
-    sendTo("You remember your vow not to carry over 35 items, and change your mind.\n\r");
-    sendTo(format("You are currently carrying %d items.\n\r") % (cost->no_carried-cost->lowrentobjs));
-    return FALSE;
-  }
   
-  credit = 0;
-  actual_cost = cost->total_cost - credit;
-  cost->total_cost = (actual_cost < 0) ? 0 : actual_cost;
-
   if (recep)
     act("$n tells you, \"Have a nice stay!\"", FALSE, recep, 0, this, TO_VICT);
 
-  if (cost->total_cost > (getMoney() + getBank())) {
-    if (recep)
-      act("$n tells you 'You don't have enough money on you or in the bank.'",FALSE,recep,0,this,TO_VICT);
-
-    return FALSE;
-  } else if (cost->total_cost > getMoney()) {
-    if (recep) {
-      act("$n tells you '... Your bank account is footing part of the bill.'", FALSE, recep, 0, this, TO_VICT);
-      sprintf(buf, "$n tells you 'You can afford to rent for at most %d day%s.'",
-        (getMoney() + getBank()) / (cost->total_cost),
-        (((getMoney() + getBank()) / (cost->total_cost)) == 1 ? "" : "s"));
-      act(buf, FALSE, recep, 0, this, TO_VICT);
-    }
-  } else if (cost->total_cost) {
-    if (recep) {
-      sprintf(buf, "$n tells you 'You can afford to rent for at most %d day%s.'",
-        (getMoney() + getBank()) / (cost->total_cost),
-        (((getMoney() + getBank()) / (cost->total_cost)) == 1 ? "" : "s"));
-      act(buf, FALSE, recep, 0, this, TO_VICT);
-      sprintf(buf, "$n tells you 'After %d day%s, money will be drawn against your bank balance.",
-              getMoney() / (cost->total_cost),
-              ((getMoney() / (cost->total_cost)) == 1 ? "" : "s"));
-      act(buf, FALSE, recep, 0, this, TO_VICT);
-    }
-  }
-      
-      if (client && recep) {
+  if (client && recep) {
     processStringForClient(str);
    
     if (str.length() > 4000) // max send length for the clients rent dialog is somewhere under 10k
@@ -1471,7 +1427,7 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
     desc->clientf(format("%d") % CLIENT_RENT_END);
   }
       
-      return TRUE;
+  return TRUE;
 }
   
 void ItemSaveDB::clearRent()
@@ -2197,7 +2153,7 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
   is.st.number = (int) cost->no_carried;
   is.st.gold_left = (int) getMoney();
   is.st.original_gold = (int) getMoney();
-  is.st.total_cost = (int) cost->total_cost;
+  is.st.total_cost = 0;
   is.st.first_update = is.st.last_update = (long) time(0);
 
 
@@ -2413,16 +2369,6 @@ void TPerson::loadRent()
         // to achieve a delta, which can only be explained by "followers"
         objCost curCost;
         recepOffer(NULL, &curCost);
-        int diff = il.st.total_cost - curCost.total_cost;
-        if (diff > 0) {
-          vlogf(LOG_PIO, format("%s had followers taken by rent.") %  getName());
-          addToMoney(diff, GOLD_SHOP);
-
-          sprintf(buf, "Your followers, and any items they may have had, were confiscated for %d talens to meet your rent obligations.", diff);
-          lbuf += buf;
-
-          removeFollowers();
-        }
 
         while (getMoney() < 0 && (i = findMostExpensiveItem(this))) {
           amt = i->obj_flags.cost;
@@ -3984,9 +3930,7 @@ bool TObj::isRentable() const
 }
 
 objCost::objCost() :
-  total_cost(0),
   no_carried(0),
-  lowrentobjs(0),
   ok(0)
 {
 }
@@ -4024,7 +3968,6 @@ rentHeader::rentHeader() :
   version(0),
   original_gold(0),
   gold_left(0),
-  total_cost(0),
   last_update(0),
   first_update(0),
   number(0)

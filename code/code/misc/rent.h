@@ -74,7 +74,7 @@ class rentHeader {
     char owner[20];    /* Name of player                     */
     int original_gold; /* For use with total charges on login*/
     int gold_left;     /* Number of goldcoins left at owner  */
-    int total_cost;    /* The cost for all items, per day    */
+    int total_cost;    /*    */
     long last_update;  /* Time in seconds, when last updated */
     long first_update; /* Time in seconds, when first updated*/
     int  number;       /* number of objects */
@@ -157,9 +157,7 @@ class ItemLoadDB {
 
 class objCost {
   public:
-    int total_cost;
     int no_carried;
-    int lowrentobjs;
     bool ok;
     objCost();
     ~objCost();
