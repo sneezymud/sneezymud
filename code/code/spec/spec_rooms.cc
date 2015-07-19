@@ -1478,11 +1478,16 @@ int randomMobDistribution(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 
 int theKnot(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 {
-  static bool done[24];
+  static bool done[25];
   int n=rp->number-2375, exitrnum=0;
-  
+
   if(cmd != CMD_GENERIC_PULSE)
     return FALSE;
+
+  if(n < 0 || n >= 25) {
+    vlogf(LOG_PROC, format("theKnot: %i is outside [0, 25)") % n);
+    return FALSE;
+  }
 
   if(done[n] && ::number(0,9999))
     return FALSE;
