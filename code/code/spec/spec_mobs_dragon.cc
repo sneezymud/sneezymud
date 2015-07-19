@@ -8,7 +8,11 @@
 
 typedef struct breath_struct {
     spellNumT dam_type;
-    const char *to_notvict, *to_char, *to_vict;
+    const char *to_notvict;
+    const char *to_char;
+    const char *to_vict;
+
+    // NOTE this struct has methods
     int engulfBeing(TBeing *vict);
     void engulfRoom(TBeing *ch);
     int attack(TBeing *attacker, TBeing *victim, int lag);
