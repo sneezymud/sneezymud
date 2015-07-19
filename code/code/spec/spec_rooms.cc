@@ -30,34 +30,6 @@
 #include "rent.h"
 
 
-void TObj::thingDumped(TBeing *ch, int *value)
-{
-  int val;
-
-  act("$p vanishes in a puff of smoke.", TRUE, ch, this, 0, TO_ROOM);
-  act("$p vanishes in a puff of smoke.", TRUE, ch, this, 0, TO_CHAR);
-
-  // this will take struct and current street value into account
-  if (!isObjStat(ITEM_NEWBIE)) {
-    val = adjPrice();
-
-    *value += min(1000, max(1, (int) (val *
-           ch->plotStat(STAT_CURRENT, STAT_KAR, 0.05, 0.25, 0.18))));
-  }
-
-  delete this;
-}
-
-
-void TNote::thingDumped(TBeing *ch, int *)
-{
-  act("$p vanishes in a puff of smoke.", TRUE, ch, this, 0, TO_ROOM);
-  act("$p vanishes in a puff of smoke.", TRUE, ch, this, 0, TO_CHAR);
-
-  delete this;
-}
-
-
 int oft_frequented_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 {
   TBeing *mob;
@@ -1953,6 +1925,34 @@ int windGustRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
   }
 
   return TRUE;
+}
+
+
+void TObj::thingDumped(TBeing *ch, int *value)
+{
+  int val;
+
+  act("$p vanishes in a puff of smoke.", TRUE, ch, this, 0, TO_ROOM);
+  act("$p vanishes in a puff of smoke.", TRUE, ch, this, 0, TO_CHAR);
+
+  // this will take struct and current street value into account
+  if (!isObjStat(ITEM_NEWBIE)) {
+    val = adjPrice();
+
+    *value += min(1000, max(1, (int) (val *
+           ch->plotStat(STAT_CURRENT, STAT_KAR, 0.05, 0.25, 0.18))));
+  }
+
+  delete this;
+}
+
+
+void TNote::thingDumped(TBeing *ch, int *)
+{
+  act("$p vanishes in a puff of smoke.", TRUE, ch, this, 0, TO_ROOM);
+  act("$p vanishes in a puff of smoke.", TRUE, ch, this, 0, TO_CHAR);
+
+  delete this;
 }
 
 

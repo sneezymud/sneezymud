@@ -51,14 +51,6 @@ sstring TPen::statObjInfo() const
   return a;
 }
 
-void TPen::thingDumped(TBeing *ch, int *)
-{
-  act("$p vanishes in a puff of smoke.", TRUE, ch, this, 0, TO_ROOM);
-  act("$p vanishes in a puff of smoke.", TRUE, ch, this, 0, TO_CHAR);
-
-  delete this;
-}
-
 void TPen::writeMePen(TBeing *ch, TThing *note)
 {
    note->writeMeNote(ch, this);
