@@ -13,7 +13,7 @@ confused by bogus values and it may cause a crash.
 
 NOTES:
 
-CHECK CAREFULLY: Make sure the items that require value setting have 
+CHECK CAREFULLY: Make sure the items that require value setting have
 their values set after you make them.
 
 ZERO VALUES IF YOU CHANGE ITEM TYPE OF AN OBJECT

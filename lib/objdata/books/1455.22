@@ -5,25 +5,25 @@ Where did my item go, I had it a minute ago?
 <h> attempts to simulate real world lighting conditions as
 much as possible.  Since it can be confusing when what you know you
 possess does not show up, here are some basic facts about lighting:
- 
+
 CBS: The can_be_seen value an item or creature has.  The higher the
 number, the harder it is to see.  Hence small tiny items are difficult
 to perceive, while bright, glowing objects are quite easy.  Obviously,
 if a monster is actively hiding, it will have a high CBS.  And likewise,
 having a rough idea of where something should be (inventory, equipment),
 will reduce its CBS.
- 
+
 EYESIGHT: A value representing the alertness of the person looking.
 It is partially made up of how good their vision is and is adjusted for
 various spells or racial modifiers.
- 
+
 LIGHTING: A number representing how illuminated the room is.  Any and all
 light sources contribute to the lighting in a room.  A bright sunny day
 yields quite a bit of lighting, while torches and lanterns add even more.
 Obviously, the interior of a building with no windows or light sources would
 be quite dark.  Weather (cloud cover, precipitation) also plays a role in
 lighting, and a full moon will yield a tiny amount of light.
- 
+
 Provided that LIGHTING + EYESIGHT >= CBS, the item will be visible.
 ----------------------
 Some exceptions to this rule are of course necessary.  Obviously being

@@ -1,6 +1,6 @@
 Action: tonotvict
 ---------------------
- 
+
 ex:
 <trigger> { "<arguments>";
        <other actions>;
@@ -8,7 +8,7 @@ ex:
        <other actions>;
      }
 
-The tonotvict action is an advanced emote or echo command.  It will send 
+The tonotvict action is an advanced emote or echo command.  It will send
 <string> to everyone in room except the trigger-mob and the person performing
 the trigger..  In general, any place you use a tonotvict action should also
 have a tovict action so everyone sees similar things.

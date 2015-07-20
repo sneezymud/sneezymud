@@ -4,7 +4,7 @@ How come my stats aren't what I chose initially?
 
 This question is commonly asked by players after they view their stats with the
 ATTRIBUTE command.  The short answer to this question is that they are.  The
-real answer is that the stats you set initially are used as a baseline.  
+real answer is that the stats you set initially are used as a baseline.
 However, a slight variation from this baseline is implemented based on the
 player's age.  For instance, a younger PC will have increased strength and
 karma, but lower intelligence and wisdom, while more elderly PC's essentially

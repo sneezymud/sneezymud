@@ -1,8 +1,0 @@
-roomenter { "";
-	say Welcome %n, Do you seek your future?;
-}
-
-say { "future";
-	say I know much of the future.;
-	say Just type buy and I will give you the knowledge that will aid you!;
-}

@@ -6,22 +6,22 @@
 
       Ticks       Heartbeats     Real life         Mud time
       -----       ----------     ---------         ---------
-      1/300th            1     .25 seconds         6 seconds 
+      1/300th            1     .25 seconds         6 seconds
          1             300      75 seconds        30 minutes
         48           14400       1 hour            1 day
        336          100800       7 hours           1 week
       9408          403200       1 day, 4 hours    1 month (28 mud days)
     112896         4838400       2 weeks           1 year  (12 mud months)
-    225792         9676800       1 month           2 years  
+    225792         9676800       1 month           2 years
     451584       125798400       1 year           24 years
 
 
       Periodic events            How often
-      -------------------        ---------   
+      -------------------        ---------
       read player input/
       send player output          1 hb
       teleport rooms             12 hbs
-      river current              12 hbs 
+      river current              12 hbs
       sounds (L-type mobs)       48 hbs
       effects updated            12 hbs
       points updated             48 hbs

@@ -1,10 +1,10 @@
 Advanced Action: resize
 ---------------------
- 
+
 ex:
 <trigger> { "<arguments>";
        <other actions>;
-       resize <number>; 
+       resize <number>;
        <other actions>;
      }
 

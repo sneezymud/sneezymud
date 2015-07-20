@@ -1,8 +1,0 @@
-give { "10";
-	say 10 given;
-	}
-
-give { "-#OBJCOST( 300, 10)#";
-	say objcost;
-	say I received #OBJCOST( 300, 10)# talens;
-	}

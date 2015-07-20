@@ -17,9 +17,9 @@ C 1 100 4 102        orc follower
 
 This makes a mage and then an orc to follow the mage.  The orc responds as if
 it was charmed.  Realize if the master has equipment then the if_flag=1 only
-loads the charm if all equipment on the master loaded.  This is somewhat 
+loads the charm if all equipment on the master loaded.  This is somewhat
 awkward.  A way around this is to place a percentage load of a Give
-command as the last command before Charm command.  Just give them a 
+command as the last command before Charm command.  Just give them a
 basic unlimited item like a waterskin or a ration with a 99% chance to
 load it.  You have to use the ? command with a 99% chance to perform the G
 command.  Just the G command only won't satisfy the if-flag of the command.

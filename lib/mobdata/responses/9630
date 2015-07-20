@@ -1,6 +1,0 @@
-roomenter { "";
-  say Whoa, watch it there.  This ship is a dangerous place.;
-  say If I weren't so drunk I'd slay ya where you stand.;
-  say I'd suggest you be headin' back the way you came, or me mateys will be tearin' you limb from limb.;
-  wink;
-}

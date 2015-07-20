@@ -44,7 +44,7 @@ E 1 ....
 
 This looks at the first ?, if it passes it will load the first piece of eq.
 Regardless of whether the first piece of eq loaded (successful 1st ? and
-sufficient max_exist) it will do a new roll for the second ?.  The chief 
+sufficient max_exist) it will do a new roll for the second ?.  The chief
 difference is example 1 will cause it to have a ton of stuff when the ? passes
 while the second example (preferred method) will give it a shot at everything
 possible  (1: all or nothing, 2: randomized)

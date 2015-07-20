@@ -1,10 +1,10 @@
 Advanced Action: unflag
 ---------------------
- 
+
 ex:
 <trigger> { "<arguments>";
      <other actions>;
-     unflag %n; 
+     unflag %n;
      <other actions>;
      }
 

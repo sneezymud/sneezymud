@@ -1,3 +1,0 @@
-list
-bt 3 full
-quit

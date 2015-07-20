@@ -13,11 +13,11 @@ around these penalties by using their telepathy spell to globally
 communicate.
 
   Although you must be level 2 to use the shout command, there are a few
-instances when shouting is prohibited to everyone.  At times netlag can 
-get very bad and an immortal will often ban shouting until the lag recedes 
+instances when shouting is prohibited to everyone.  At times netlag can
+get very bad and an immortal will often ban shouting until the lag recedes
 a bit. Do understand shouting is seen by every person on the mud who does
 not have their noshout flag set. So your shout is transmitted to every
-person. And as you can probably see, shouting such things as "LAAGGG!!" 
+person. And as you can probably see, shouting such things as "LAAGGG!!"
 when the lag *is* in fact bad, really does nothing but make it worse.
 
 SEE HELP: shout, noshout

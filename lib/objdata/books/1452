@@ -8,7 +8,7 @@ the <h> world.  HELP MEDIT exists but may be poorly written or
 out of date.
 
 Use command: READ CHAPTER (#) OF MOB where (#) is one of:
- 
+
  1) Name                         2) Short Description
  3) Long Description             4) Description
  5) Action flags                 6) Affect flags
@@ -26,4 +26,3 @@ Use command: READ CHAPTER (#) OF MOB where (#) is one of:
 29) Can be seen                 30) Mobile sounds
 	31) Note on creating mobs
 	32) The MED AVERAGE command
-     

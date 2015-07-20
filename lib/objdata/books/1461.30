@@ -1,20 +1,20 @@
 Advanced Action: checkuntoggle
 ---------------------
- 
+
 ex:
 <trigger> { "<arguments>";
        <other actions>;
-       checkuntoggle <number>; 
+       checkuntoggle <number>;
        <other actions>;
      }
 
 Checkuntoggle is used to check for the absence of a given quest-toggle
 before performing additional actions.  Actions after the checkuntoggle are
-only performed if the performer does not have the given toggle bit set. 
+only performed if the performer does not have the given toggle bit set.
 Otherwise, the subsequent actions are ignored.  If the bit is set, the
 other responses the mob has will be compared to allow 1 trigger to have
 separate actions based on presence of quest bits (you would need multiple
-response blocks set up though). 
+response blocks set up though).
 
 Note: This action is deprecated!  In a properly designed quest, you should
 not need to determine if a toggle is *NOT* set.

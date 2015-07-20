@@ -1,25 +1,25 @@
 Cost/value
 
 This is the item's worth.  The code references this to determine how much
-it can be bought or sold for, how much it costs to repair or sharpen.  It 
-should both show what the pc will get for it and also reflect the value 
-the builder and the mud puts on the object so you need to balance these 
+it can be bought or sold for, how much it costs to repair or sharpen.  It
+should both show what the pc will get for it and also reflect the value
+the builder and the mud puts on the object so you need to balance these
 figures very carefully.
 
-The objects rent cost is 0.5 * cost per day.  Currently this figure shows 
+The objects rent cost is 0.5 * cost per day.  Currently this figure shows
 up but is not used by code.
 
 There is no fixed formula for setting an items cost except for some item
 types.  Moreover since all items have different characteristics, values
 maybe slightly subjective.  However, there are the guidelines set by
 existing objects in The World and you should try to fit your items into
-The World. 
+The World.
 
 NOTES:
 
 GIVE ALL ITEMS A VALUE:  Shops will not buy items whose value is <= 1
 coin. Receptionists will not let items whose value is < 0 be rented.  You
 should use the NO_RENT flag to set such items up if you are doing this
-intentionally. 
+intentionally.
 
 CHECK VALUES:  Check your values against other objects in The World

@@ -5,10 +5,10 @@ like, get (x), look at (x), wear (x) it searches the objects in the room
 or inventory for a match of (x) and a word in the name field.
 
 Thus, the name field is used to REFERENCE the object.  Do not confuse this
-with the short_description though (see below).  They will be similar but 
+with the short_description though (see below).  They will be similar but
 not identical in most cases.
 
-It is important to set the space separated list of names up in the correct 
+It is important to set the space separated list of names up in the correct
 order.  The FIRST word in the name field is used by the code in some
 combat situations.  For instance, the item-damage code shows the first word
 as follows:
@@ -22,17 +22,17 @@ eg. a platemail helmet would be: helmet platemail mail
 
 NOTES:
 
-NAMES AND ITEM CONDITION:  Do not use conditions in your item names..like 
-"tattered robe" or "rusted shirt".  We have item condition so this will 
-show as tattered robe (excellent) or rusted shirt (brand new).  Let item 
+NAMES AND ITEM CONDITION:  Do not use conditions in your item names..like
+"tattered robe" or "rusted shirt".  We have item condition so this will
+show as tattered robe (excellent) or rusted shirt (brand new).  Let item
 condition speak for itself.
 
-UNIQUE NAMES:  It is *very* important that your item have the first 2 
-words unique cause of some of the quirks of the shop code.  Shops can not 
-distinguish between chainmail shirt and chainmail shirt hobbit.  The 
+UNIQUE NAMES:  It is *very* important that your item have the first 2
+words unique cause of some of the quirks of the shop code.  Shops can not
+distinguish between chainmail shirt and chainmail shirt hobbit.  The
 solution is to name it chainmail hobbit shirt.
 
-REDUNDANT NAMES:  The code allows abbreviations, hence we don't need both 
+REDUNDANT NAMES:  The code allows abbreviations, hence we don't need both
 "plate" and "platemail", but we do need "platemail" and "mail".
 
 CAPITALIZATION AND TRIVIAL WORDS:  The name field should not be
@@ -43,5 +43,5 @@ REFERENCIAL WORDS:  Sometimes you'll want to add words to an object's name that
 are just for reference. Enclose these words in brackets [ ]. Examples: the
 race/class an aquipment is made for or room number a key is for. "mask cloth
 black ball [human_thief]" or "key sitting room [apartment_above_felicia]".
-This is helpful for finding stuff while preventing the name to overlap with 
+This is helpful for finding stuff while preventing the name to overlap with
 something else.
