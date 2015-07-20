@@ -1,8 +1,0 @@
-# Baten Schwitz (#604) thief shop (locksmith)
-# shopkeeper
-# Created by Maror
-# Copyright 2004 by SneezyMUD Development Team
-
-roomenter {"";
-    say How can I serve your security needs?;
-  }

@@ -1,4 +1,0 @@
-roomenter { "";
-	checktoggle 225;
-	toggle 226;
-	}

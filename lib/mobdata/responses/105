@@ -1,8 +1,0 @@
-# Small Dog, Grimhaven
-# Maror
-# Copyright 2004, SneezyMUD Development Team.  All rights reserved.
-
-pat {"me";
-  tovict $n licks your hand.;
-  tonotvict $n licks %n's hand.;
-}

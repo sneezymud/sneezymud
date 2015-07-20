@@ -1,9 +1,0 @@
-
-pulse {"";
-	checktoggle 245;
-	say Thank you Ptok...;
-	say Now I must kill my own child.;
-	sigh;
-	say The ancestors demand this... I am sorry %n.;
-	kill %n;
-}
