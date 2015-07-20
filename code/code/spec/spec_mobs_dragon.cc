@@ -6,17 +6,16 @@
 #include "disease.h"
 #include "obj_base_clothing.h"
 
-typedef struct breath_struct {
+struct Breath {
     spellNumT dam_type;
     const char *to_notvict;
     const char *to_char;
     const char *to_vict;
 
-    // NOTE this struct has methods
     int engulfBeing(TBeing *vict);
     void engulfRoom(TBeing *ch);
     int attack(TBeing *attacker, TBeing *victim, int lag);
-} Breath;
+};
 
 Breath frost_breath = {
   SPELL_FROST_BREATH,
@@ -88,11 +87,11 @@ void Breath::engulfRoom(TBeing *ch)
   }
 }
 
-typedef struct dragon_struct {
+struct Dragon {
   const int vnum;
   Breath &breath;
   const int lag;
-} Dragon;
+};
 
 Dragon dragons[] = {
   {2107,  frost_breath,     5},
