@@ -523,7 +523,6 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
       case CMD_PUSH:
       case CMD_SELL:
       case CMD_VALUE:
-      case CMD_OFFER:
       case CMD_BALANCE:
       case CMD_WITHDRAW:
       case CMD_DEPOSIT:
@@ -2499,7 +2498,6 @@ void buildCommandArray(void)
   commandArray[CMD_SNOOP] = new commandInfo("snoop", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_FOLLOW] = new commandInfo("follow", POSITION_RESTING, 0);
   commandArray[CMD_RENT] = new commandInfo("rent", POSITION_RESTING, 0);
-  commandArray[CMD_OFFER] = new commandInfo("offer", POSITION_RESTING, 0);
   commandArray[CMD_POKE] = new commandInfo("poke", POSITION_RESTING, 0);
   commandArray[CMD_ACCUSE] = new commandInfo("accuse", POSITION_SITTING, 0);
   commandArray[CMD_GRIN] = new commandInfo("grin", POSITION_RESTING, 0);

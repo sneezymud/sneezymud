@@ -2265,7 +2265,6 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
 {
   objCost cost;
   short save_room;
-  char buf[256];
   dirTypeT dir;
   roomDirData *exitp;
   TDatabase db(DB_SNEEZY);
@@ -2333,7 +2332,7 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
     return FALSE;
   }
 
-  if ((cmd != CMD_RENT) && (cmd != CMD_OFFER))
+  if (cmd != CMD_RENT)
     return FALSE;
 
   // force poly's to return
@@ -2466,26 +2465,6 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
         return DELETE_VICT;
       }
     }
-  } else if (cmd == CMD_OFFER) {
-
-    // get an offer on someone else...
-    one_argument(arg, buf, cElements(buf));
-    if (ch->isImmortal() && *buf) {
-      TBeing *vict = get_pc_world(ch, buf, EXACT_NO);
-      if (vict) {
-	TShopOwned tso(shop_nr, recep, vict);	
-	float multiplier = (shop_index[shop_nr].getProfitBuy(NULL, vict));
-	int tax = (int)((float) vict->GetMaxLevel() * multiplier);
-
-	recep->doTell(ch->getName(), format("In addition to any fees, there is a tax of %i talens.") % tax);
-	return TRUE;
-      }
-    }
-    TShopOwned tso(shop_nr, recep, ch);	
-    float multiplier = (shop_index[shop_nr].getProfitBuy(NULL, ch));
-    int tax = (int)((float) ch->GetMaxLevel() * multiplier);
-
-    recep->doTell(ch->getName(), format("In addition to any fees, there is a tax of %i talens.") % tax);
   }
   return TRUE;
 }
