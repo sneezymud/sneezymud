@@ -3692,21 +3692,6 @@ int TBeing::doRent(const sstring &argument)
 
 int TPerson::doRent(const sstring &argument)
 {
-  if (!argument.empty()) {
-    if (is_abbrev(argument, "credit")) {
-      sstring sb;
-
-      sb = "Rent is free! Who needs credit?\n\r";
-      if (desc)
-        desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
-      return TRUE;
-    } else {
-      sendTo("Syntax: rent credit\n\r");
-      return FALSE;
-    }
-    return FALSE;
-  }
-
   objCost cost;
   unsigned short save_room;
 

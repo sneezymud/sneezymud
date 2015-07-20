@@ -9,22 +9,6 @@ Death: xp loss
        1/5 your current xp, or
        25 * MOBXP(your current level)
  
-Rent Credit:
-  /* rent is currently deactivated */
-  Type: "rent credit" for further information.
-  Rent credit is based on the theory that the appropriate gear for your class
-  and level should be rented for free.  Allowances are made for the cost of
-  a weapon, the cost of the AC and durability that equipment provides, the
-  cost of sundries (bags, lanterns, etc), and the cost of class-based items
-  (components, symbols, etc).  Rent credit is simply the sum of the prices for
-  all the component pieces, each with their own quirks.  Unfortunately, such
-  a setup prevents a simple algorhythm from being provided for a rent credit
-  formula.
-  Roughly speaking, it is level based, and adjusted for class.  Additionally,
-  to discourage power leveling a storage character, playtime is a factor
-  (downward) in setting rent credit.
-  Rent credit will only increase and never decreases.
-
 Repair item deletion:
    items left 15 days past finish time will be deleted.
 
