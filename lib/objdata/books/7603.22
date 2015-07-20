@@ -7,12 +7,12 @@ maintain enough control of himself to move efficiently.  It makes sense that
 a player carrying a 'very large chest' is not going to be able to manage much
 else, so a large chest would have a very high volume.  Holding items in your
 hands decreases the amount of volume you can manage as those hands become
-tied up in holding the object rather than being free to carry other stuff. 
+tied up in holding the object rather than being free to carry other stuff.
 
 Volume capacity (the max you can carry at the given time) is affected by
 your dexterity and ALSO by what is in your hands.  Obviously, a player
 wielding a sword and holding a shield can't juggle as much volume as they
-could if both hands were free.  
+could if both hands were free.
 
 Don't confuse volume (a measure of size) with weight (a measure of mass).
 Weight capacity is a function of strength.

@@ -1,6 +1,6 @@
 Action: link
 ---------------------
- 
+
 ex:
 <trigger 1> { "<arguments 1>";
        <actions>;

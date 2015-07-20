@@ -1,6 +1,6 @@
 Advanced Action: flag
 ---------------------
- 
+
 ex:
 <trigger> { "<arguments>";
        <other actions>;

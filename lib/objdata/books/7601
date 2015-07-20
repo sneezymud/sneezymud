@@ -1,7 +1,7 @@
 Use the "goto" command to find your class trainer by typing:
 "<c>goto trainer<z>"
 
-Follow the directions until you are standing in the same room 
+Follow the directions until you are standing in the same room
 with your class trainer.
 
 Once you're there, use some of your practices by typing:
@@ -11,7 +11,7 @@ For example, if you are a warrior, type this while with your trainer:
 <c>practice warrior 3<z>
 
 This will use three of your practices in the warrior discipline.  Use about
-half your practices at this trainer and save the other half for your other 
+half your practices at this trainer and save the other half for your other
 basic trainer.
 
 To return to Aunt Dee, type "<c>goto dee<z>" and it will give you directions.

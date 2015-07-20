@@ -1,6 +1,6 @@
 Trigger: package
 ---------------------
- 
+
 ex:
 package { "<number>";
        <action>;

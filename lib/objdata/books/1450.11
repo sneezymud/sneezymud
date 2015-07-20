@@ -1,49 +1,49 @@
 Simple Doors:
 
 *** WARNING:  Using edit or REDIT to make a door between rooms creates
-both sides of the exit AND changes room flags in the target room.  SEE 
+both sides of the exit AND changes room flags in the target room.  SEE
 NOTES BELOW. *********************************************************
 
-You will make doors in the REDIT editor or with the edit command.  Please 
-familiarize yourself with REDIT before you play with the edit command 
+You will make doors in the REDIT editor or with the edit command.  Please
+familiarize yourself with REDIT before you play with the edit command
 (mostly so that you can fix anything you cause).
- 
+
 The doors portion of the REDIT editor is easy to get to and for the most
 part self-explanatory. However, you will encounter some menu items that
 may not be immediately clear: name, weight, condition, wards, keys. Door
-type. 
+type.
 
 Door Name: This is the "name" of the door.  It will be used in conjunction
-with the doortype in setting the command to manipulate the door.  Most of 
-your doors will be named "door" so that players will type "open door".  
-If you want more than one name to open the door, you can add names.  Make 
-sure the first word is the one you want echoed to room.  For example 
-naming a door "door iron" will cause player to open door when he types 
-open iron.  Naming it "iron door" will cause him to open iron.  It is 
+with the doortype in setting the command to manipulate the door.  Most of
+your doors will be named "door" so that players will type "open door".
+If you want more than one name to open the door, you can add names.  Make
+sure the first word is the one you want echoed to room.  For example
+naming a door "door iron" will cause player to open door when he types
+open iron.  Naming it "iron door" will cause him to open iron.  It is
 recommended that you use "door" as the first keyword.
 
-Door type: Play around with these. For the most part these affect the 
-text players will see when they open and shut the door.  For example if 
-you use gate, the door will unlatch rather than open.  If you need a new 
+Door type: Play around with these. For the most part these affect the
+text players will see when they open and shut the door.  For example if
+you use gate, the door will unlatch rather than open.  If you need a new
 doortype, talk to Batopr or the LOW.
 
 Weight:  Door weight is related to the player strength attribute.  The
-weight of the door determines what strength is required to open the door. 
+weight of the door determines what strength is required to open the door.
 For the most part up to weight=15 it is linear (i.e. a pc with strength=14
 can not open a door which you have set to 15).  After this the formula
 changes somewhat.  Please be thoughtful about making heavy doors.  In
 addition, although maybe coded in future, players can not at this time
 pool their strengths on a door so the max weight you should set on any
-door would be 19. 
+door would be 19.
 
-Key Number: If you make a locked door, you will encounter "Key Number". 
+Key Number: If you make a locked door, you will encounter "Key Number".
 This refers to the database number (vnum) of the key you will be making to
 open the door.  Only a key with that vnum will open the door.  You will
 make the key later but should assign it a number now.  You should use the
 number of the room for the key for simplicities sake.  For example, if
 your zone is rooms 1900-2100 and you are building a locked door from 1954
 to 1955, you should use key number 1954 or 1955.  Be aware that you will
-have to use this same number later when you make your objects. 
+have to use this same number later when you make your objects.
 
 Other options: You have a number of other exit choices available to you
 other than the simple exits you can make in the room editors.  If you have
@@ -51,7 +51,7 @@ an object in the room which will be the same keyword as the door itself,
 you should see the LOW to get a unique door type made for that room.  In
 addition, subject to the availability of a coder, you can make word doors
 or have special room/exit procedures coded if you have an interesting door
-idea and a coder is willing to undertake the project. 
+idea and a coder is willing to undertake the project.
 
 Using the edit command:  After you have explored your options and have
 become comfortable with using the REDIT room editor, you might want to
@@ -59,13 +59,13 @@ explore the edit command. The edit command is usually used by experienced
 builders to make exits fast without having to go through REDIT menus.  Do
 not use this command till you are comfortable with REDIT and can fix any
 problems you create using the edit command.  There is help edit to help
-you learn this command. 
+you learn this command.
 
 Teleport Rooms: The edit command is also the only way you can make
 teleport rooms which are another exit option.  Teleport rooms are
 described later in this book.  The other options you have for exits are to
 make a room only reachable by magic spells or reachable by flying,
-climbing, swimming, or water-breathing players. 
+climbing, swimming, or water-breathing players.
 
 NOTES:
 
@@ -77,16 +77,16 @@ exit between dissimilar room types.  If you make a mistaken exit, fix the
 room flags and exits in both the room you were in and the room you made an
 exit too.  If you are uncertain, ask a higher level immortal for help or
 leave a note.  Please try not to leave weird room flags in world.  Mortals
-get pissed when The World is not as they expected. 
+get pissed when The World is not as they expected.
 
-OTHER CHAPTERS:  Later in this book, you will see chapters on doors, 
+OTHER CHAPTERS:  Later in this book, you will see chapters on doors,
 secret doors, and teleport rooms that will give some further details.
 
 
 USUAL BUILDER ERRORS:
-               1. Builders forget to check room flags on 
+               1. Builders forget to check room flags on
                   both sides of exit
                2. Builders make exits to void
                3. Builders forget to name Doors
                4. Builders don't explore all exit options
-               
+

@@ -7,7 +7,7 @@ World creation is primarily done through the use of the REDIT command, although
 simple changes can also be done by using the older EDIT line editor.  See
 HELP EDIT for a fairly decent treatment of that command.
 
-There's also the online web editor at 
+There's also the online web editor at
 	http://www.sneezymud.com/cgi-bin/roomeditor.cgi
 
 Created: Wednesday, 30 Mar 1994
@@ -17,9 +17,9 @@ Use command: READ CHAPTER (#) OF WORLD where (#) is one of:
     1) Name                       2) Description
     3) Flags                      4) Sector Type
     5) Exits                      6) Extra Descriptions
-    7) Maximum Capacity           8) Room Height 
+    7) Maximum Capacity           8) Room Height
     9) Delete an exit            10) Delete all extra descs
    11) Building Doors
-        12) NOTE ON SECRET DOORS      
+        12) NOTE ON SECRET DOORS
         13) NOTE ON SAVING AND LOADING ROOMS
         14) NOTE ON THE EXISTING MUD

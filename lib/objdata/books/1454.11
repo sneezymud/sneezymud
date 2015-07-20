@@ -7,7 +7,7 @@ E <if_flag> <obj vnum> <max_exist> <slot>
 
 <if_flag> is typically 1   (only if the mob it should be given to exists)
 <obj vnum> is vnum obj is saved as
-<max_exist> load if fewer than this # of item in world 
+<max_exist> load if fewer than this # of item in world
 	- see note on end for tips on setting
 <slot> is the slot to put the item in.  see notes on slot at end
 
@@ -22,7 +22,7 @@ the mob.
 TIP: if you are using 'G' and 'E' in conjunction, put all the 'G's before you
 do 'E's.
 
-NOTE:   Mobs are LEFT handed, put weapons on left (unless paired), shields 
+NOTE:   Mobs are LEFT handed, put weapons on left (unless paired), shields
         on right.
 NOTE:   All paired items go on RIGHT!
 NOTE:   Do not have a dual-wielding mob!  Dual-wield causes them to have

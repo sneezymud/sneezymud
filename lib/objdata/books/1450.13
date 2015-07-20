@@ -1,7 +1,7 @@
 Saving and loading rooms
 
 The relevant commands are RSAVE and RLOAD.  (See the help files on each)
-These commands have some very important features/problem areas and 
+These commands have some very important features/problem areas and
 are responsible for the most common and costly builder errors.
 
 NOTES:
@@ -14,10 +14,10 @@ Using a RSAVE Macro below) and trying to save a temporary building project
 before the LOW has told you that your rooms have been backed up and it is
 safe to save.  If the LOW gives you an assignment or you need to save
 rooms that you have built *and* you have been working on a zone, do not
-RSAVE these new rooms till the LOW has told you that it is safe to do so. 
+RSAVE these new rooms till the LOW has told you that it is safe to do so.
 
 USE A RSAVE MACRO:  You should ALWAYS RLOAD and RSAVE all rooms in your
 zone.  <h> has on-line aliases and most people use clients.  You should
 only RSAVE and RLOAD using a macro/alias that does your save or load
-accurately each time so that an accidentally typo doesn't cost you. 
+accurately each time so that an accidentally typo doesn't cost you.
 

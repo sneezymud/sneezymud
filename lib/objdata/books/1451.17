@@ -9,9 +9,9 @@ LIGHT: don't set this, make it (glow) and things will be set correctly.
 	The only time you should set this is if you are making a lamppost, etc
 AC:   puts AC on the item
 HIT:  adds hit points to the wearer
-MANA: adds mana to the wearer (If you apply this, you need to set lower 
+MANA: adds mana to the wearer (If you apply this, you need to set lower
 	structure than you otherwise might)
-SKILLS AND SPELLS: affects the wearer/use the skill or spell number 
+SKILLS AND SPELLS: affects the wearer/use the skill or spell number
 	(see help <skill/spell> files)
 IMMUNITIES: these are already set by material type but you can add some
 	immunity affects if they make sense.
@@ -34,10 +34,10 @@ NOTES:
 
 APPLY_AC: Remember to give all worn items an apply_armor even if just 1
 
-APPLY LIGHT: Do not set apply light on any item that is not a light. If 
+APPLY LIGHT: Do not set apply light on any item that is not a light. If
 you want the item to give off light, set its affect flag to glow.
 
-APPLY SPARINGLY: Use applys other than apply AC sparingly.  
+APPLY SPARINGLY: Use applys other than apply AC sparingly.
 
 APPLY IMMUNITY and DISC: DO NOT SET THIS WITHOUT LOW CONSENT.
 
