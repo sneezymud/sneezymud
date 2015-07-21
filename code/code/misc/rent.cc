@@ -2328,8 +2328,6 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
       }
     }
     return TRUE;
-  } else if (cmd == CMD_MOB_MOVED_INTO_ROOM) {
-    return FALSE;
   }
 
   if (cmd != CMD_RENT)
@@ -2337,25 +2335,29 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
 
   // force poly's to return
   if (dynamic_cast<TMonster *>(ch)) {
-    act("$e looks at you and says 'Sleep in the street!'", FALSE, recep, 0, ch, TO_VICT);
-    act("$e looks at $N and says 'Sleep in the street!'", FALSE, recep, 0, ch, TO_NOTVICT);
+    act("$e looks at you and says, 'Sleep in the street!'", FALSE, recep, 0, ch, TO_VICT);
+    act("$e looks at $N and says, 'Sleep in the street!'", FALSE, recep, 0, ch, TO_NOTVICT);
     return TRUE;
   }
+
   if (!recep->awake()) {
     act("$e isn't able to talk to you...", FALSE, recep, 0, ch, TO_VICT);
     return TRUE;
   }
+
   if (!recep->canSee(ch) && !ch->isImmortal()) {
     act("$n says, 'I don't deal with people I can't see!'", FALSE, recep, 0, 0, TO_ROOM);
     return TRUE;
   }
+
   if(ch->affectedBySpell(AFFECT_PLAYERKILL) && !ch->isImmortal()){
     act("$n looks at you and says, 'Murderers are not allowed to stay here!'", FALSE, recep, 0, ch, TO_VICT);
     act("$n looks at $N and says, 'Murderers are not allowed to stay here!'", FALSE, recep, 0, ch, TO_NOTVICT);
     return TRUE;
   }
+
   if (ch->affectedBySpell(AFFECT_PLAYERLOOT) && !ch->isImmortal()) {
-    act("$n motions at you then whispers, \"Someone is after you for the moment and I can not allow you to stay here...Sorry.\"", FALSE, recep, NULL, ch, TO_VICT);
+    act("$n motions at you then whispers, 'Someone is after you for the moment and I cannot allow you to stay here...Sorry.'", FALSE, recep, NULL, ch, TO_VICT);
     return TRUE;
   }
 
@@ -2415,38 +2417,6 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
     }
     if (ch->recepOffer(recep, &cost)) {
       if (ch->desc && !ch->desc->m_bIsClient) {
-	      if (ch->GetMaxLevel() > 5) {
-	        TShopOwned tso(shop_nr, recep, ch);
-	  
-	        float multiplier = (shop_index[shop_nr].getProfitBuy(NULL, ch));
-	        int tax = (int)((float) ch->GetMaxLevel() * multiplier);
-
-	        sstring msg = shop_index[shop_nr].message_buy;
-
-	        if (ch->getMoney() < tax) {
-	          recep->doTell(ch->getName(), 
-			        format("The mayor has issued a %d talen hospice tax, which I see you can't afford.") 
-			        % tax);
-	          recep->doAction("", CMD_SIGH);
-	          recep->doTell(ch->getName(), 
-			        "Sorry. Come back when you can pay your taxes.");
-	          for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
-	            if (exit_ok(exitp = recep->exitDir(dir), NULL)) {
-		            act("$n throws you from the inn.",
-		              FALSE, recep, 0, ch, TO_VICT);
-		            act("$n throws $N from the inn.",
-		              FALSE, recep, 0, ch, TO_NOTVICT);
-		            recep->throwChar(ch, dir, FALSE, SILENT_NO, true);
-
-		            return TRUE;
-              }
-            }
-          } else {
-            recep->doTell(ch->getName(), format(msg) % tax);
-            tso.doBuyTransaction(tax, "paying rent", TX_BUYING_SERVICE);
-            vlogf(LOG_PIO, format("%s being charged %d talens rent tax by %s") % ch->getName() % tax % recep->getName());
-          }
-        }
         act("$n stores your stuff in the safe, and shows you to your room.", FALSE, recep, 0, ch, TO_VICT);
         act("$n shows $N to $S room.", FALSE, recep, 0, ch, TO_NOTVICT);
     
