@@ -105,7 +105,8 @@ for a `lib/` subdir of the directory it was started in.
 First you'll need to make the required empty directories, because git doesn't
 store them (the .. part of the cmd only works in bash):
 
-    $ cd lib && mkdir -p roomdata/saved corpses immortals \
+    $ cd lib && mkdir -p roomdata/saved immortals \
+        corpses/corrupt rent/corrupt player/corrupt \
         rent/{a..z} account/{a..z} player/{a..z}
 
 If you are planning to run Sneezy directly from the source tree, you're done.
