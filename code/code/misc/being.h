@@ -36,7 +36,6 @@ class TBaseClothing;
 class TQuiver;
 class TCommodity;
 class TRoom;
-class objCost;
 struct time_data;
 class time_info_data;
 
@@ -1112,7 +1111,6 @@ class TBeing : public TThing {
     void removeCurseBeing(TBeing *);
     void removeCurseBeing(TBeing *, TMagicItem *, spellNumT);
 
-    bool recepOffer(TBeing *, objCost *);
     void removeFollowers();
     void removeRent();
     void removePlayerFile();

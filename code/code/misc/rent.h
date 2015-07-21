@@ -153,13 +153,4 @@ class ItemLoadDB {
   ~ItemLoadDB();
 };
 
-class objCost {
-  public:
-    int no_carried;
-    bool ok;
-    objCost();
-    ~objCost();
-    void add(StuffList stuff, TBeing *owner, TBeing *recep);
-    void add(TObj *obj, TBeing *owner, TBeing *recep);
-};
 #endif

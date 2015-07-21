@@ -76,7 +76,7 @@ class TPerson : public TBeing {
     void advanceSelectDisciplines(classIndT, int, silentTypeT);
     void doLevelSkillsLearn(discNumT, int, int);
     void setBaseAge();   // sets new base-age
-    void saveRent(objCost *, bool, int);
+    int saveRent(bool d=false, int msgStatus=0);
     void loadRent();
 
     virtual void raiseLevel(classIndT);

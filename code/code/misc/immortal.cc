@@ -5279,7 +5279,6 @@ static void TimeTravel(const char *ch)
 void TBeing::doTimeshift(const char *arg)
 {
   char buf[256];
-  objCost cost;
 
   if (!isImmortal())
     return;

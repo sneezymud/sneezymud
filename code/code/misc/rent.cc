@@ -1298,131 +1298,6 @@ void ItemSaveDB::objsToStore(signed char slot, StuffList list,
   }
 }
 
-void objCost::add(StuffList list, TBeing *owner, TBeing *recep)
-{
-  for (StuffIter it=list.begin();it!=list.end();++it)
-    add(dynamic_cast<TObj *>(*it), owner, recep);
-}
-
-void objCost::add(TObj *obj, TBeing *owner, TBeing *recep)
-{
-  if (!obj)
-    return;
-
-  if (obj->isRentable() && obj->isMonogramOwner(owner, true)) {
-    no_carried++;
-  } else {
-    if (recep)
-      act("$n tells you, \"Sorry!  I refuse to store $p.\"",
-          FALSE, recep, obj, owner, TO_VICT, ANSI_ORANGE);
-    ok = FALSE;
-  }
-
-  add(obj->stuff, owner, recep);
-}
-
-bool TBeing::recepOffer(TBeing *recep, objCost *cost)
-{
-  char buf[256];
-  int i;
-  TObj *obj;
-  sstring str;
-  followData *f;
-
-  if (!cost)
-    return FALSE;
-
-  bool client = (desc && desc->m_bIsClient);
-
-  cost->ok = TRUE;
-  cost->no_carried = 0;
-
-  // add up cost for the player
-  cost->add(stuff, this, recep);
-
-  for (i = MIN_WEAR; i < MAX_WEAR; i++) {
-    obj = dynamic_cast<TObj *>(equipment[i]);
-    if (!obj)
-      continue;
-    if (!(((i == WEAR_LEG_L) && obj->isPaired()) ||
-          ((i == WEAR_EX_LEG_L) && obj->isPaired()) ||
-          ((i == HOLD_LEFT) && obj->isPaired()))) {
-      cost->add(obj, this, recep);// equip
-    }
-  }
-  // add up cost for followers
-  for (f = followers; f; f = f->next) { 
-    TMonster *ch = dynamic_cast<TMonster *>(f->follower);
-    if (!ch)
-      continue;
-    
-    if (!ch->isSaveMob(this))
-      continue;
-
-    // don't save if not around
-    if (!ch->sameRoom(*this))
-      continue;
-
-    silentTypeT silent = SILENT_NO;
-    if (desc && IS_SET(desc->autobits, AUTO_NOSPAM))
-      silent = SILENT_YES;
-
-    if (recep) {
-      if (desc && desc->m_bIsClient) {
-        sprintf(buf, "%-30s - Pet/Charm/Thrall/Mount \n\r", ch->getName().c_str());
-	str += buf;
-      } else if (!silent) {
-        sprintf(buf, "%-30s - Pet/Charm/Thrall/Mount \n\r", ch->getName().c_str());
-      }
-    }
-
-    // mob's inventory
-    cost->add(ch->stuff, this, recep);
-
-    // mob's equipment
-    for (i = MIN_WEAR; i < MAX_WEAR; i++) {
-      obj = dynamic_cast<TObj *>(ch->equipment[i]);
-      if (!obj)
-        continue;
-      if (!(((i == WEAR_LEG_L) && obj->isPaired()) ||
-            ((i == WEAR_EX_LEG_L) && obj->isPaired()) ||
-           ((i == HOLD_LEFT) && obj->isPaired()))) {
-        cost->add(obj, this, recep);// equip
-      }
-    }
-  }
-  if (recep) {
-    if (!cost->ok)
-      return FALSE;
-  }
-  if (isImmortal()) {
-    if (client && recep) {
-      processStringForClient(str);
-
-      desc->clientf(format("%d") % CLIENT_RENT);
-      sendTo(str);
-      desc->clientf(format("%d") % CLIENT_RENT_END);
-    }
-    return TRUE;
-  }
-  
-  if (recep)
-    act("$n tells you, \"Have a nice stay!\"", FALSE, recep, 0, this, TO_VICT);
-
-  if (client && recep) {
-    processStringForClient(str);
-   
-    if (str.length() > 4000) // max send length for the clients rent dialog is somewhere under 10k
-      str.resize(4000);
-
-    desc->clientf(format("%d") % CLIENT_RENT);
-    sendTo(str);
-    desc->clientf(format("%d") % CLIENT_RENT_END);
-  }
-      
-  return TRUE;
-}
-  
 void ItemSaveDB::clearRent()
 {
   TDatabase db(DB_SNEEZY);
@@ -2118,10 +1993,10 @@ void TPCorpse::saveCorpseToFile()
 
 }
 
-// msgStatus = 0, no log.
-// msgStatus = 1, "saving"
-// msgStatus = 2, "renting"
-void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
+
+// msgStatus = 0: no log, 1: "saving", 2: "renting"
+// d = true: prepare player for deletion
+int TPerson::saveRent(bool d /*=false*/, int msgStatus /*=0*/)
 {
   char buf[256];
   TPerson *tmp;
@@ -2137,21 +2012,18 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
   if(!is.openFile(buf)){
     vlogf(LOG_BUG, format("Error opening file for saving %s's objects") %
 	  getName());
-    return;
+    return FALSE;
   }
   strcpy(is.st.owner, getName().c_str());
-  is.st.number = (int) cost->no_carried;
   is.st.first_update = is.st.last_update = (long) time(0);
-
+  is.st.number = 0;
 
   if(!is.writeHeader()){
     vlogf(LOG_BUG, format("Error writing rent header for %s.") %  getName());
-    return;
+    return FALSE;
   }
-  is.st.number = 0;        // reset to count actual # saved 
 
-  wearSlotT ij;
-  for (ij = MIN_WEAR; ij < MAX_WEAR; ij++) {
+  for (wearSlotT ij = MIN_WEAR; ij < MAX_WEAR; ij++) {
     obj = dynamic_cast<TObj *>(equipment[ij]);
     if (!obj)
       continue;
@@ -2170,7 +2042,6 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
   is.objsToStore(NORMAL_SLOT, stuff, this, d);
   is.writeFooter();
 
-
   if (msgStatus == 1 && desc) {
     vlogf(LOG_PIO, format("Saving %s [%d talens/%d bank/%.2f xps/%d items/%d age-mod]") %
         getName() % getMoney() % getBank() % getExp() % is.st.number % age_mod);
@@ -2181,6 +2052,16 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
 
   if (!is.st.number) 
     wipeRentFile(getName().c_str());
+
+  if (d) {
+    short save_room = in_room;
+    saveChar(save_room);
+    in_room = save_room;
+    preKillCheck(TRUE);
+    return DELETE_VICT;
+  }
+
+  return TRUE;
 }
 
 
@@ -2189,7 +2070,6 @@ void TPerson::loadRent()
 {
   int num_read = 0;
   char buf[256];
-  objCost cost;
   TPerson *tmp;
   sstring lbuf;
   ItemLoad il;
@@ -2255,16 +2135,75 @@ void TPerson::loadRent()
   // let's flip the order back...
   stuff.reverse();
 
-  recepOffer(NULL, &cost);
-  saveRent(&cost, FALSE, 0);
-  return;
+  saveRent();
+}
+
+
+bool check_stuff_norent(TObj *obj, TBeing *owner, TBeing *recep)
+{
+  if (!obj)
+    return false;
+  if (obj->isRentable() && obj->isMonogramOwner(owner, true))
+    return false;
+  act("$n tells you, \"Sorry!  I refuse to store $p.\"",
+        false, recep, obj, owner, TO_VICT, ANSI_ORANGE);
+  return true;
+}
+
+bool check_stuff_norent(StuffList list, TBeing *owner, TBeing *recep)
+{
+  bool found = false;
+  for (StuffIter it=list.begin();it!=list.end();++it)
+    if (check_stuff_norent(dynamic_cast<TObj *>(*it), owner, recep))
+      found = true;
+  return found;
+}
+
+bool check_stuff_norent(equipmentData &equipment, TBeing *owner,
+                        TBeing *recep)
+{
+  bool found = false;
+  for (int i = MIN_WEAR; i < MAX_WEAR; i++) {
+    TObj *obj = dynamic_cast<TObj *>(equipment[i]);
+    if (!obj)
+      continue;
+    if (((i == WEAR_LEG_L) && obj->isPaired()) ||
+          ((i == WEAR_EX_LEG_L) && obj->isPaired()) ||
+          ((i == HOLD_LEFT) && obj->isPaired()))
+      continue;
+    if (check_stuff_norent(obj, owner, recep))
+      found = true;
+  }
+  return found;
+}
+
+bool check_stuff_norent(TBeing *holder, TBeing *owner, TBeing *recep)
+{
+  bool found = false;
+
+  if (check_stuff_norent(holder->stuff, owner, recep) ||
+      check_stuff_norent(holder->equipment, owner, recep))
+    found = true;
+
+  for (followData *f = holder->followers; f; f = f->next) {
+    TMonster *mon = dynamic_cast<TMonster *>(f->follower);
+    if (!(mon && mon->isSaveMob(owner) && mon->sameRoom(*owner)))
+      continue;
+    if (check_stuff_norent(f->follower, owner, recep))
+      found = true;
+  }
+
+  return found;
+}
+
+bool check_stuff_norent(TBeing *owner, TBeing *recep)
+{
+  return check_stuff_norent(owner, owner, recep);
 }
 
 
 int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TObj *o)
 {
-  objCost cost;
-  short save_room;
   dirTypeT dir;
   roomDirData *exitp;
   TDatabase db(DB_SNEEZY);
@@ -2288,8 +2227,6 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
 	    tbt->getTimer() > 1 && 
 	    !tbt->isImmortal()) {
 	  if ((tbt->master) && tbt->master->inRoom() == tbt->inRoom()) {
-	    // vlogf(LOG_DASH, format("saving %s from loitering code, master is %s, room is (%d == %d)") % tbt->getName() %
-	    //	tbt->master->getName() % tbt->inRoom() % tbt->master->inRoom());
 	    continue;
 	  }
 	  recep->doSay("Hey, no loitering!  Make room for the other customers.");
@@ -2407,36 +2344,38 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
     return TRUE;
   }
 
-  if (cmd == CMD_RENT) {
-    if (ch->isImmortal()) {
-      ch->sendTo(COLOR_BASIC, "<r>WARNING<z>\n\r----------\n\r");
-      ch->sendTo("Renting will almost certainly destroy your wizfile.  If you are used to\n\r");
-      ch->sendTo("doing this because of mortal life then it's best to get un-used to it.\n\r");
-      ch->sendTo("If you Have to rent out, such as testing, then go mortal first.\n\r");
-      ch->sendTo("----------\n\r");
-    }
-    if (ch->recepOffer(recep, &cost)) {
-      if (ch->desc && !ch->desc->m_bIsClient) {
-        act("$n stores your stuff in the safe, and shows you to your room.", FALSE, recep, 0, ch, TO_VICT);
-        act("$n shows $N to $S room.", FALSE, recep, 0, ch, TO_NOTVICT);
-    
-        dynamic_cast<TPerson *>(ch)->saveRent(&cost, TRUE, 2);
-        save_room = ch->in_room;        // backup what room the PC was in 
-        ch->saveChar(save_room);
-        ch->in_room = save_room;
-        ch->cls();
-        ch->fullscreen();
+  if (!ch->desc)
+    return TRUE;
 
-        // this delete should not save in_room
-        ch->preKillCheck(TRUE);
-        ch->desc->outputProcessing();
-  
-        // we've been rented, notify to destroy ch
-        return DELETE_VICT;
-      }
-    }
+  if (check_stuff_norent(ch, recep))
+    return TRUE;
+
+  if (ch->desc->m_bIsClient)
+    ch->desc->clientf(format("%d") % CLIENT_RENT);
+
+  if (ch->isImmortal()) {
+    ch->sendTo(COLOR_BASIC, "<r>WARNING<z>\n\r----------\n\r");
+    ch->sendTo("Renting will almost certainly destroy your wizfile.  If you are used to\n\r");
+    ch->sendTo("doing this because of mortal life then it's best to get un-used to it.\n\r");
+    ch->sendTo("If you Have to rent out, such as testing, then go mortal first.\n\r");
+    ch->sendTo("----------\n\r");
   }
-  return TRUE;
+
+  act("$n tells you, 'Have a nice stay!'", FALSE, recep, 0, ch, TO_VICT);
+  act("$n stores your stuff in the safe, and shows you to your room.",
+      FALSE, recep, 0, ch, TO_VICT);
+  act("$n shows $N to $S room.", FALSE, recep, 0, ch, TO_NOTVICT);
+
+  if (ch->desc->m_bIsClient) {
+    ch->desc->clientf(format("%d") % CLIENT_RENT_END);
+    return TRUE;
+  }
+
+  ch->cls();
+  ch->fullscreen();
+  ch->desc->outputProcessing();
+
+  return dynamic_cast<TPerson *>(ch)->saveRent(TRUE, 2);
 }
 
 bool noteLimitedItems(FILE * fp, const char *tag, unsigned char version, bool immortal)
@@ -3662,9 +3601,6 @@ int TBeing::doRent(const sstring &argument)
 
 int TPerson::doRent(const sstring &argument)
 {
-  objCost cost;
-  unsigned short save_room;
-
   // note this is sort of a special case
   // special procedures (innkeeper, personalHouse) have already been
   // taken care of before this point
@@ -3675,22 +3611,15 @@ int TPerson::doRent(const sstring &argument)
     doNotHere();
     return FALSE;
   }
-  recepOffer(this, &cost);
   sendTo("You opt to rough it for awhile.\n\r");
   act("$n decides to rough it for awhile.",
        TRUE, this, 0, 0, TO_ROOM);
 
   cls();
   fullscreen();
+  desc->outputProcessing();
 
-  dynamic_cast<TPerson *>(this)->saveRent(&cost, TRUE, 2);
-  save_room = inRoom();  /* backup what room the PC was in */
-  saveChar(save_room);
-  in_room = save_room;
- 
-  preKillCheck(TRUE);
-
-  return DELETE_THIS;
+  return dynamic_cast<TPerson *>(this)->saveRent(TRUE, 2);
 }
 
 bool TObj::isRentable() const
@@ -3698,16 +3627,6 @@ bool TObj::isRentable() const
   if (isObjStat(ITEM_NORENT) || (number < 0))
     return FALSE;
   return TRUE;
-}
-
-objCost::objCost() :
-  no_carried(0),
-  ok(0)
-{
-}
-
-objCost::~objCost() 
-{
 }
 
 rentObject::rentObject() :

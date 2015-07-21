@@ -1159,8 +1159,6 @@ int Descriptor::nanny(sstring arg)
 	  }
 	  
           if (should_be_logged(character)) {
-            objCost cost;
-
             if (IS_SET(account->flags, TAccount::IMMORTAL)) {
               vlogf(LOG_PIO, format("%s[%s] has reconnected  (account: %s).") % 
 	             character->getName() % host % account->name);
@@ -1169,8 +1167,7 @@ int Descriptor::nanny(sstring arg)
               vlogf(LOG_PIO, format("%s[%s] has reconnected  (account: %s).") %  
                      character->getName() % host % account->name);
             }
-            character->recepOffer(NULL, &cost);
-            dynamic_cast<TPerson *>(character)->saveRent(&cost, FALSE, 1);
+            dynamic_cast<TPerson *>(character)->saveRent(FALSE, 1);
           }
           act("$n has reconnected.", TRUE, tmp_ch, 0, 0, TO_ROOM);
           tmp_ch->loadCareerStats();
@@ -1289,15 +1286,11 @@ int Descriptor::nanny(sstring arg)
                 tmp_ch->doCls(false);
   
               if (should_be_logged(character)) {
-                objCost cost;
-
                 if (IS_SET(account->flags, TAccount::IMMORTAL)) 
 		  vlogf(LOG_PIO, format("%s[%s] has reconnected  (account: %s).") %  tmp_ch->getName() % host % account->name);
                 else 
                   vlogf(LOG_PIO, format("%s[%s] has reconnected  (account: %s).") %  tmp_ch->getName() % host % account->name);
-                
-                tmp_ch->recepOffer(NULL, &cost);
-                dynamic_cast<TPerson *>(tmp_ch)->saveRent(&cost, FALSE, 1);
+                dynamic_cast<TPerson *>(tmp_ch)->saveRent(FALSE, 1);
               }
               act("$n has reconnected.", TRUE, tmp_ch, 0, 0, TO_ROOM);
               tmp_ch->loadCareerStats();

@@ -443,8 +443,6 @@ int faerie_mound(TBeing *, cmdTypeT, const char *, TRoom *)
 int personalHouse(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
 {
   char buf[80];
-  short save_room;
-  objCost cost;
   TPerson *pers;
 
   if ((cmd != CMD_RENT) && (cmd != CMD_SNAP))
@@ -463,7 +461,6 @@ int personalHouse(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
   act("$n snaps $s fingers with authority.",
         TRUE, pers, 0,0, TO_ROOM);
 
-  pers->recepOffer(pers, &cost);
   pers->sendTo("Your house swallows you whole.\n\r");
   act("Uh oh, $n's house just swallowed $m.",
         TRUE, pers, 0, 0, TO_ROOM);
@@ -471,14 +468,7 @@ int personalHouse(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
   pers->cls();
   pers->fullscreen();
 
-  pers->saveRent(&cost, TRUE, 2);
-  save_room = pers->in_room;  /* backup what room the PC was in */
-  pers->saveChar(save_room);
-  pers->in_room = save_room;
-
-  pers->preKillCheck(TRUE);
-
-  return DELETE_VICT;
+  return pers->saveRent(TRUE, 2);
 }
 
 int Whirlpool(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
