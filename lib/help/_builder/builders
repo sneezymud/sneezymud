@@ -11,9 +11,9 @@ handle technical questions.  Consultation with players is permitted regarding
 what "items are needed".
 
 Check out help files on the following commands now accessible to you:
-BAMFIN		EDIT		GOTO		INVISIBLE	MED
-NOHASSLE	OEDIT		RLOAD		RSAVE		SETSEV
-SHOW		STAT		WIZHELP		WIZNET
+BAMFIN		EDIT		GOTO		INVISIBLE	NOHASSLE
+OEDIT		RLOAD		RSAVE		SETSEV		SHOW
+STAT		WIZHELP		WIZNET
 
 Building specific help:
 NEWBUILDER	CONDUCT		LIQUIDS		LOADSET		MAGIC AFFECTS

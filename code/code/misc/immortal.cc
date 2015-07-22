@@ -5589,14 +5589,6 @@ void TBeing::doFindEmail(const char *arg)
   systask->AddTask(this, SYSTEM_FIND_EMAIL, argument);
 }
 
-void TBeing::doSysMid() 
-{
-  if (!isImmortal()) 
-    return;
-
-  systask->AddTask(this, SYSTEM_MAIL_IMMORT_DIR, NULL);
-}
-
 void TBeing::doSysTraceroute(const sstring &arg) 
 {
   if (powerCheck(POWER_TRACEROUTE))

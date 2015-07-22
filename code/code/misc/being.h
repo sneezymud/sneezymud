@@ -1622,7 +1622,6 @@ class TBeing : public TThing {
     int legalDeckAddition(int);
 
     // User commands go here
-    void doSysMid();
     void doFindEmail(const char *);
     void doNameChange(const char *);
     void doSysTraceroute(const sstring &);

@@ -477,9 +477,6 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
       case CMD_TRACEROUTE:
   doSysTraceroute(newarg);
   break;
-      case CMD_MID:
-  doSysMid();
-  break;
       case CMD_VIEWOUTPUT:
   doSysViewoutput();
   break;
@@ -2786,7 +2783,6 @@ void buildCommandArray(void)
   commandArray[CMD_HOSTLOG]=new commandInfo("hostlog",POSITION_DEAD,GOD_LEVEL1);
   commandArray[CMD_PRESS] = new commandInfo("press",POSITION_SITTING,0);
   commandArray[CMD_TWIST] = new commandInfo("twist",POSITION_SITTING,0);
-  commandArray[CMD_MID] = new commandInfo("mid",POSITION_DEAD,GOD_LEVEL1);
   commandArray[CMD_TRACEROUTE] = new commandInfo("traceroute", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_TASKS] = new commandInfo("tasks", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_VIEWOUTPUT] = new commandInfo("viewoutput", POSITION_DEAD, GOD_LEVEL1);

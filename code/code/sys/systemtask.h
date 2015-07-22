@@ -8,12 +8,13 @@
 #ifndef __SYSTEMTASK_H
 #define __SYSTEMTASK_H
 
-const int SYSTEM_MAIL_IMMORT_DIR = 1;
-const int SYSTEM_TRACEROUTE = 2;
-const int SYSTEM_LOGLIST = 3;
-const int SYSTEM_CHECKLOG = 4;
-const int SYSTEM_FIND_EMAIL = 5;
-const int SYSTEM_SEARCH_HELP = 7;
+enum systemTaskT {
+  SYSTEM_TRACEROUTE,
+  SYSTEM_LOGLIST,
+  SYSTEM_CHECKLOG,
+  SYSTEM_FIND_EMAIL,
+  SYSTEM_SEARCH_HELP
+};
 
 class TBeing;
 class	_task;

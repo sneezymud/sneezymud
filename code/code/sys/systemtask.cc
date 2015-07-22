@@ -75,15 +75,6 @@ void SystemTask::AddTask(TBeing *own, char tsk, const char *opt)
   
   //  Create the command that is send to the shell.
   switch(tmp->tsk) {
-    case SYSTEM_MAIL_IMMORT_DIR:
-#if 0
-      if (opt && top->owner->GetMaxLevel()) 
-        *opt = toupper(*opt);
-      else
-        sprintf(lbuf, "bin/mid %s", top->owner->getName());
-#endif
-
-      break;
     case SYSTEM_TRACEROUTE:
       sscanf(opt, "%s", opt1);
       sprintf(lbuf, "bin/traceroute %s", opt1);
