@@ -89,8 +89,7 @@ extern TComponent *comp_from_object(TThing *, spellNumT);
 int task_staveChargingCompSkim(TBeing *ch, TThing *tThing, bool tDestroy,
                                int tSpell, int & tCount, bool & tIteration)
 {
-  int tCost  = tCount,
-      tValue = 0;
+  int tValue = 0;
 
   TComponent *tComponent;
 
@@ -103,7 +102,7 @@ int task_staveChargingCompSkim(TBeing *ch, TThing *tThing, bool tDestroy,
           tIteration = true;
         }
 
-        tCost = min(tComponent->getComponentCharges(), tCount);
+        int tCost = min(tComponent->getComponentCharges(), tCount);
         tCount -= tCost;
         tComponent->addToComponentCharges(-tCost);
 

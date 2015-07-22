@@ -332,12 +332,11 @@ void generate_mob_index()
     tmpi->faction = fac;
     
     long Class=convertTo<int>(db["class"]);
-    long lev=convertTo<int>(db["level"]);
     float arm=convertTo<int>(db["ac"]);
     float hp=convertTo<int>(db["hpbonus"]);
     float daml=convertTo<int>(db["damage_level"]);
     
-    lev = (long)((arm + hp + daml) / 3);
+    long lev = (long)((arm + hp + daml) / 3);
     
     tmpi->Class = Class;
     tmpi->level = lev;

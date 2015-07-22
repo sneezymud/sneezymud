@@ -252,7 +252,7 @@ bool TGas::willMerge(TMergeable *tm)
 void TGas::doDrift()
 {
   roomDirData *exitp;
-  TRoom *rp=roomp;
+  TRoom *rp;
   TThing *t;
   TPortal *tp;
 

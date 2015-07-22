@@ -1007,11 +1007,11 @@ void gain_exp(TBeing *ch, double gain, int dam)
     // check for prac gain
     if((ch->getExp() + gain) > ch->getMaxExp()){
       double t_curr=curr, t_peak=peak;
-      double delta_exp = (t_peak - t_curr) / ch->pracsPerLevel(Class, false);
-      double exp = ch->getExp();
       int gain_pracs=0;
       double t_exp=0;
-      double new_exp = ch->getExp() + gain;
+      double delta_exp;
+      double exp;
+      double new_exp;
 
 
 //// BEGIN GAIN IN CURRENT LEVEL BLOCK
