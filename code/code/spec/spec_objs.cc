@@ -1813,7 +1813,7 @@ int teleportingObject(TBeing *, cmdTypeT cmd, const char *arg, TObj *o, TObj *){
     return FALSE;
 
   // don't teleport if it's a portal that is open
-  if((tp=dynamic_cast<TPortal *>(o)) && !tp->isPortalFlag(EX_CLOSED))
+  if(!(tp=dynamic_cast<TPortal *>(o)) || !tp->isPortalFlag(EX_CLOSED))
     return FALSE;
 
   if(!tp->roomp)
