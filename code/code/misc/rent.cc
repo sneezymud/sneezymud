@@ -3668,21 +3668,12 @@ void countAccounts(const char *arg)
   AccountStats::account_number++;
 }
 
-static void deleteDuringRead(TMonster *mob)
-{
-  // we read the act bits early in the read, but don't alter the sstrings
-  // until the end of the read, so this is a good idea
-  REMOVE_BIT(mob->specials.act, ACT_STRINGS_CHANGED);
-
-  delete mob;
-}
-
-static void parseFollowerRent(FILE *fp, TBeing *ch, const char *arg)
+static bool parseFollowerRentEntry(FILE *fp, TBeing *ch, const char *arg, int num)
 {
   TMonster *mob;
   int tmp = 0;
   int tmp2 = 0;
-  int i = 0, num = 0;
+  int i = 0;
   statTypeT iStat;
   float att;
   unsigned char version;
@@ -3692,102 +3683,71 @@ static void parseFollowerRent(FILE *fp, TBeing *ch, const char *arg)
 
   bool fp2_open = false;
   FILE *fp2 = NULL;
-  while (fscanf(fp, "#%d\n", &num) == 1) {
+
+  try {
     if (!(mob = read_mobile(num, VIRTUAL))) {
       vlogf(LOG_BUG, format("Error loading mob %d in loadFollower") %  num);
-      break;
+      return false;
     }
     // Since this mob was in rent, don't double count it.
     mob_index[mob->getMobIndex()].addToNumber(-1);
 
-    if (fscanf(fp, "%d ", &tmp) != 1) {
-      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (1)") %  arg % num);
-      deleteDuringRead(mob);
-      break;
-    }
+    if (fscanf(fp, "%d ", &tmp) != 1)
+      throw "1";
     mob->specials.act = tmp;
 
-    if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (2)") %  arg % num);
-      deleteDuringRead(mob);
-      break;
-    }
+    if (fscanf(fp, " %d ", &tmp) != 1)
+      throw "2";
     mob->specials.affectedBy = tmp;
   
     // technically, we should check for AFF_SANCT here
     // if it had natural sanct, it got set in readMobile
     // if it had been cast, it should be added by the affections loop below
 
-    if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (3)") %  arg % num);
-      deleteDuringRead(mob);
-      break;
-    }
+    if (fscanf(fp, " %d ", &tmp) != 1)
+      throw "3";
     mud_assert(tmp >= MIN_FACTION && tmp < MAX_FACTIONS, "bad value");
     mob->setFaction(factionTypeT(tmp));
 
-    if (fscanf(fp, " %f ", &att) != 1) {
-      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (4)") %  arg % num);
-      deleteDuringRead(mob);
-      break;
-    }
+    if (fscanf(fp, " %f ", &att) != 1)
+      throw "4";
     mob->setPerc((double) att);
 
-    if (fscanf(fp, " %f ", &att) != 1) {
-      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (5)") %  arg % num);
-      deleteDuringRead(mob);
-      break;
-    }
+    if (fscanf(fp, " %f ", &att) != 1)
+      throw "5";
     mob->setMult((double) att);
   
     if(fscanf(fp, "\n")==EOF)
       vlogf(LOG_FILE, "Unexpected read error on follower data");
   
-    if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (6)") %  arg % num);
-      deleteDuringRead(mob);
-      break;
-    }
+    if (fscanf(fp, " %d ", &tmp) != 1)
+      throw "6";
     mob->setClass(tmp);
 
-    if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (7)") %  arg % num);
-      deleteDuringRead(mob);
-      break;
-    }
+    if (fscanf(fp, " %d ", &tmp) != 1)
+      throw "7";
     mob->fixLevels(tmp);
 
-    if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (8)") %  arg % num);
-      deleteDuringRead(mob);
-      break;
-    }
+    if (fscanf(fp, " %d ", &tmp) != 1)
+      throw "8";
     mob->setHitroll(tmp);
   
-    if (fscanf(fp, " %f ", &att) != 1) {
-      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (9)") %  arg % num);
-      deleteDuringRead(mob);
-      break;
-    }
-// this is for old-mob handling
-float old_ac_lev = mob->getACLevel();
+    if (fscanf(fp, " %f ", &att) != 1)
+      throw "9";
+
+    // this is for old-mob handling
+    float old_ac_lev = mob->getACLevel();
     mob->setACLevel(att);
     mob->setACFromACLevel();
 
     // we will let HP Level be whatever the tiny mob is, and just set
     // the actual and max here
-    if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (10)") %  arg % num);
-      deleteDuringRead(mob);
-      break;
-    }
+    if (fscanf(fp, " %d ", &tmp) != 1)
+      throw "10";
     mob->setHit(tmp);
 
-    if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (11)") %  arg % num);
-      deleteDuringRead(mob);
-      break;
-    }
+    if (fscanf(fp, " %d ", &tmp) != 1)
+      throw "11";
     mob->setMaxHit(tmp);
   
     rc = fscanf(fp, " %f+%d \n", &att, &tmp);
@@ -3798,22 +3758,17 @@ float old_ac_lev = mob->getACLevel();
       rc = fscanf(fp, "d%d+%d", &tmp, &tmp2);
       if (rc != 2) {
         vlogf(LOG_BUG, "Unable to fix old-style mob in rent.");
-        deleteDuringRead(mob);
-        break;
       }
       // leave the damage what it is on the mob now
       // HP should be ok since we are saving raw values, not levels
       // fix AC though
       mob->setACLevel(old_ac_lev);
       mob->setACFromACLevel();
-
-    } else if (rc != 2) {
-      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (12)") %  arg % num);
-      deleteDuringRead(mob);
-      break;
-    } else {
+    } else if (rc == 2) {
       mob->setDamLevel(att);
       mob->setDamPrecision(tmp);
+    } else {
+      throw "12";
     }
 
     mob->setLifeforce(9000);
@@ -3824,46 +3779,28 @@ float old_ac_lev = mob->getACLevel();
     //    mob->setMaxMana(10);
     //    mob->setMaxMove(50);
   
-    if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (13)") %  arg % num);
-      deleteDuringRead(mob);
-      break;
-    }
+    if (fscanf(fp, " %d ", &tmp) != 1)
+      throw "13";
     mob->setMoney(tmp);
 
-    if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (14)") %  arg % num);
-      deleteDuringRead(mob);
-      break;
-    }
+    if (fscanf(fp, " %d ", &tmp) != 1)
+      throw "14";
     mob->setExp(tmp);
 
-    if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (14)") %  arg % num);
-      deleteDuringRead(mob);
-      break;
-    }
+    if (fscanf(fp, " %d ", &tmp) != 1)
+      throw "14";
     mob->setMaxExp(tmp);
 
-    if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (15)") %  arg % num);
-      deleteDuringRead(mob);
-      break;
-    }
+    if (fscanf(fp, " %d ", &tmp) != 1)
+      throw "15";
     mob->setRace(race_t(tmp));
 
-    if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (16)") %  arg % num);
-      deleteDuringRead(mob);
-      break;
-    }
+    if (fscanf(fp, " %d ", &tmp) != 1)
+      throw "16";
     mob->setWeight(tmp);
 
-    if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (17)") %  arg % num);
-      deleteDuringRead(mob);
-      break;
-    }
+    if (fscanf(fp, " %d ", &tmp) != 1)
+      throw "17";
     mob->setHeight(tmp);
 
     for (iStat=MIN_STAT;iStat<MAX_STATS_USED;iStat++) {
@@ -3872,41 +3809,26 @@ float old_ac_lev = mob->getACLevel();
       mob->setStat(STAT_CHOSEN, iStat, tmp);
     }
 
-    if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (24)") %  arg % num);
-      deleteDuringRead(mob);
-      break;
-    }
+    if (fscanf(fp, " %d ", &tmp) != 1)
+      throw "24";
     mob->setPosition(mapFileToPos(tmp));
 
-    if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (25)") %  arg % num);
-      deleteDuringRead(mob);
-      break;
-    }
+    if (fscanf(fp, " %d ", &tmp) != 1)
+      throw "25";
     mob->default_pos = mapFileToPos(tmp);
 
-    if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (26)") %  arg % num);
-      deleteDuringRead(mob);
-      break;
-    }
+    if (fscanf(fp, " %d ", &tmp) != 1)
+      throw "26";
     mob->setSexUnsafe(tmp);
 
-    if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (27)") %  arg % num);
-      deleteDuringRead(mob);
-      break;
-    }
+    if (fscanf(fp, " %d ", &tmp) != 1)
+      throw "27";
     mob->spec = tmp;
 
     immuneTypeT ij;
     for (ij=MIN_IMMUNE; ij < MAX_IMMUNES; ij++) {
-      if (fscanf(fp, " %d ", &tmp) != 1) {
-        vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (28)") %  arg % num);
-        deleteDuringRead(mob);
-        break;
-      }
+      if (fscanf(fp, " %d ", &tmp) != 1)
+        throw "28";
       mob->setImmunity(ij, tmp);
     }
 
@@ -3927,58 +3849,37 @@ float old_ac_lev = mob->getACLevel();
 
     affectedData af;
     for (i = 0; i < MAX_AFFECT; i++) {
-      if (fscanf(fp, " %d ", &tmp) != 1) {
-        vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (29)") %  arg % num);
-        deleteDuringRead(mob);
-        break;
-      }
+      if (fscanf(fp, " %d ", &tmp) != 1)
+        throw "29";
       af.type = mapFileToSpellnum(tmp);
 
-      if (fscanf(fp, " %d ", &tmp) != 1) {
-        vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (30)") %  arg % num);
-        deleteDuringRead(mob);
-        break;
-      }
+      if (fscanf(fp, " %d ", &tmp) != 1)
+        throw "30";
       af.level = tmp;
 
-      if (fscanf(fp, " %d ", &tmp) != 1) {
-        vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (31)") %  arg % num);
-        deleteDuringRead(mob);
-        break;
-      }
+      if (fscanf(fp, " %d ", &tmp) != 1)
+        throw "31";
       af.duration = tmp;
 
-      if (fscanf(fp, " %d ", &tmp) != 1) {
-        vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (32)") %  arg % num);
-        deleteDuringRead(mob);
-        break;
-      }
+      if (fscanf(fp, " %d ", &tmp) != 1)
+        throw "32";
       // we can't set this just yet, need to know the location stuff
       int raw_modifier = tmp;
 
-      if (fscanf(fp, " %d ", &tmp) != 1) {
-        vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (33)") %  arg % num);
-        deleteDuringRead(mob);
-        break;
-      }
+      if (fscanf(fp, " %d ", &tmp) != 1)
+        throw "33";
       af.modifier2 = tmp;
 
-      if (fscanf(fp, " %d ", &tmp) != 1) {
-        vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (34)") %  arg % num);
-        deleteDuringRead(mob);
-        break;
-      }
+      if (fscanf(fp, " %d ", &tmp) != 1)
+        throw "34";
       af.location = mapFileToApply(tmp);
-
       if (applyTypeShouldBeSpellnum(af.location))
         af.modifier = mapFileToSpellnum(raw_modifier);
       else
         af.modifier = raw_modifier;
-      if (fscanf(fp, " %d ", &tmp) != 1) {
-        vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (35)") %  arg % num);
-        deleteDuringRead(mob);
-        break;
-      }
+
+      if (fscanf(fp, " %d ", &tmp) != 1)
+        throw "35";
       af.bitvector = tmp;
 
       // end of data
@@ -3993,25 +3894,16 @@ float old_ac_lev = mob->getACLevel();
       // we are reading the ith element of the file
       // find the wear slot that corresponds to i in the file
       wearSlotT mapped_slot = mapFileToSlot(i);
-      if (fscanf(fp, " %d ", &tmp) != 1) {
-        vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (36)") %  arg % num);
-        deleteDuringRead(mob);
-        break;
-      }
+      if (fscanf(fp, " %d ", &tmp) != 1)
+        throw "36";
       mob->setLimbFlags(mapped_slot, tmp);
 
-      if (fscanf(fp, " %d ", &tmp) != 1) {
-        vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (37)") %  arg % num);
-        deleteDuringRead(mob);
-        break;
-      }
+      if (fscanf(fp, " %d ", &tmp) != 1)
+        throw "37";
       mob->setCurLimbHealth(mapped_slot, tmp);
 
-      if (fscanf(fp, " %d ", &tmp) != 1) {
-        vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (37b)") %  arg % num);
-        deleteDuringRead(mob);
-        break;
-      }
+      if (fscanf(fp, " %d ", &tmp) != 1)
+        throw "37b";
       version = tmp;
       if (tmp != -1 && fp2_open == false) {
         char buf[256];
@@ -4042,11 +3934,9 @@ float old_ac_lev = mob->getACLevel();
       mob->setStuckIn(mapped_slot, NULL);
     }
 
-    if (fscanf(fp, " %d ", &tmp) != 1) {
-      vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (37c)") %  arg % num);
-      deleteDuringRead(mob);
-      break;
-    }
+    if (fscanf(fp, " %d ", &tmp) != 1)
+      throw "37c";
+
     while (tmp != -1) {
       version = tmp;
       if (fp2_open == false) {
@@ -4074,11 +3964,8 @@ float old_ac_lev = mob->getACLevel();
           delete new_obj;
         }
       }
-      if (fscanf(fp, " %d ", &tmp) != 1) {
-        vlogf(LOG_BUG, format("Error reading follower data (%s mobs %d) (37d)") %  arg % num);
-        deleteDuringRead(mob);
-        break;
-      }
+      if (fscanf(fp, " %d ", &tmp) != 1)
+        throw "37d";
     }
 
     // configure sstrings if necessary
@@ -4134,7 +4021,26 @@ float old_ac_lev = mob->getACLevel();
       thing_to_room(mob, Room::VOID);
       delete mob;
     }
+    return true;
+  } catch (const char* where) {
+    vlogf(LOG_PIO, format("Error reading follower data (%s mobs %i) (%s)")
+        % arg % num % where);
+    if (mob) {
+      // we read the act bits early in the read, but don't alter the sstrings
+      // until the end of the read, so this is a good idea
+      REMOVE_BIT(mob->specials.act, ACT_STRINGS_CHANGED);
+      delete mob;
+    }
+    return false;
   }
+}
+
+static void parseFollowerRent(FILE *fp, TBeing *ch, const char *arg)
+{
+  int num;
+  while (fscanf(fp, "#%d\n", &num) == 1)
+    if (!parseFollowerRentEntry(fp, ch, arg, num))
+      break;
 }
 
 // this routine simply tracks items and mobs held in rent by players.
