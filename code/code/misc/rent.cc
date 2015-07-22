@@ -3030,30 +3030,7 @@ float old_ac_lev = mob->getACLevel();
   }
 }
 
-// this routine simply tracks items and mobs held in rent by players.
-// the cost of such items and mobs is already calculated in the person's
-// rent, and that has alread been calculated by chargeRent().
-// our main goal here is just to keep up with the max_exists and such for
-// mobile rent
-static void chargeMobileRent(const char *who)
-{
-  char fileName[256];
-  FILE *fp;
-
-  sprintf(fileName, "rent/%c/%s.fol", who[0], who);
-
-  if (!(fp = fopen(fileName, "r"))) {
-    // no follower info
-    return;
-  }
-
-  parseFollowerRent(fp, NULL, who);
-
-  fclose(fp);
-  return;
-}
-
-void chargeRent(const char *who)
+void updateRentFile(const char *who)
 {
   char fileName[128];
   rentHeader h;
@@ -3062,7 +3039,7 @@ void chargeRent(const char *who)
   TAccount account;
   bool immortal;
 
-  mud_assert(who != NULL, "chargeRent called with NULL player name!");
+  mud_assert(who != NULL, "updateRentFile called with NULL player name!");
 
   sprintf(fileName, "rent/%c/%s", who[0], who);
 
@@ -3118,7 +3095,7 @@ void chargeRent(const char *who)
     }
     fclose(fp);
     if (!raw_save_char(who, &pd)) {
-      vlogf(LOG_BUG, format("Error updating player-file entry for %s in chargeRent.") %  h.owner);
+      vlogf(LOG_BUG, format("Error updating player-file entry for %s in updateRentFile.") %  h.owner);
       return;
     }
     vlogf(LOG_PIO, format("   De-autorented %s") %  h.owner);
@@ -3131,63 +3108,68 @@ void chargeRent(const char *who)
     }
     fclose(fp);
   }
-  chargeMobileRent(who);
+
+  sprintf(fileName, "rent/%c/%s.fol", who[0], who);
+  if ((fp = fopen(fileName, "r"))) {
+    parseFollowerRent(fp, NULL, who);
+    fclose(fp);
+  }
 }
 
 void updateRentFiles(void)
 {
   bootPulse(".", false);
-  dirwalk("rent/a", chargeRent);
+  dirwalk("rent/a", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/b", chargeRent);
+  dirwalk("rent/b", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/c", chargeRent);
+  dirwalk("rent/c", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/d", chargeRent);
+  dirwalk("rent/d", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/e", chargeRent);
+  dirwalk("rent/e", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/f", chargeRent);
+  dirwalk("rent/f", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/g", chargeRent);
+  dirwalk("rent/g", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/h", chargeRent);
+  dirwalk("rent/h", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/i", chargeRent);
+  dirwalk("rent/i", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/j", chargeRent);
+  dirwalk("rent/j", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/k", chargeRent);
+  dirwalk("rent/k", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/l", chargeRent);
+  dirwalk("rent/l", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/m", chargeRent);
+  dirwalk("rent/m", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/n", chargeRent);
+  dirwalk("rent/n", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/o", chargeRent);
+  dirwalk("rent/o", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/p", chargeRent);
+  dirwalk("rent/p", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/q", chargeRent);
+  dirwalk("rent/q", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/r", chargeRent);
+  dirwalk("rent/r", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/s", chargeRent);
+  dirwalk("rent/s", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/t", chargeRent);
+  dirwalk("rent/t", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/u", chargeRent);
+  dirwalk("rent/u", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/v", chargeRent);
+  dirwalk("rent/v", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/w", chargeRent);
+  dirwalk("rent/w", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/x", chargeRent);
+  dirwalk("rent/x", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/y", chargeRent);
+  dirwalk("rent/y", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/z", chargeRent);
+  dirwalk("rent/z", updateRentFile);
   bootPulse(NULL, true);
 }
 
