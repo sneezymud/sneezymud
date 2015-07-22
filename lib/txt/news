@@ -1,4 +1,7 @@
 ==========================================================================
+7-22-15  : The ping toggle has been removed, as the mud no longer pings
+           players.
+
 7-02-15  : Times now display properly as 'X:00' instead of 'X: 0'.
 
 6-30-15  : Fixed a bug where renting with a persistent follower (pet)

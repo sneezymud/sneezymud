@@ -553,12 +553,6 @@ class procAutoTips : public TProcess {
   procAutoTips(const int &);
 };
 
-class procPingData : public TProcess {
- public:
-  void run(const TPulse &) const;
-  procPingData(const int &);
-};
-
 class procUpdateAuction : public TProcess {
  public:
   void run(const TPulse &) const;
