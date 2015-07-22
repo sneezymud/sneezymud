@@ -464,7 +464,7 @@ void TBeing::doGamestats(const sstring &arg)
       return;
     }
     lev = convertTo<int>(buf2);
-    if ((lev >= 0) && (lev < 70)) {
+    if ((lev >= 0) && (lev < 71)) {
       sendTo(format("Mobile Deaths for level %d, %ld\n\r") % lev % stats.deaths[lev][1]);
       sendTo(format("PC  Deaths for level %d, %ld\n\r") % lev % stats.deaths[lev][0]);
 
