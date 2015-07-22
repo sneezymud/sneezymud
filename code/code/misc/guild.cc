@@ -237,12 +237,13 @@ void TBeing::setDefected() {
 void TBeing::add_guild(const char * args) {
   int idnum;
   idnum = get_unused_ID();
-  TGuild *f = new TGuild;
   
   if (idnum == -1) {
     sendTo("It appears there is no room for more guilds - sorry.\n\r");
     return;
   }
+
+  TGuild *f = new TGuild;
 
   if (f->keywords)
     delete [] f->keywords;
