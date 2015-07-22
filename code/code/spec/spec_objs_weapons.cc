@@ -291,10 +291,10 @@ int blazeOfGlory(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
           delete o;
       }
       int rc2 = ch->reconcileDamage(ch, dam, DAMAGE_FIRE);
-      act("<R>KA-BOOOOOOOOOOM! You explode in a <O>blaze of glory<R> as you crash into $N<R>!!!<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
-      act("<R>KA-BOOOOOOOOOOM! $n explodes in a <O>blaze of glory<R> as $e crashes into $N<R>!!!<1>",TRUE,ch,o,vict,TO_NOTVICT,NULL);
-      act("<R>KA-BOOOOOOOOOOM! You're covered in <O>searing flames<R> as $e crashes into you!!!<1>",TRUE,ch,o,vict,TO_VICT,NULL);
-    act("<o>With a loud crack, $n<o>'s corpse shatters!<1>",TRUE,ch,o,vict,TO_ROOM,NULL);
+      act("<R>KA-BOOOOOOOOOOM! You explode in a <O>blaze of glory<R> as you crash into $N<R>!!!<1>",TRUE,ch,NULL,vict,TO_CHAR,NULL);
+      act("<R>KA-BOOOOOOOOOOM! $n explodes in a <O>blaze of glory<R> as $e crashes into $N<R>!!!<1>",TRUE,ch,NULL,vict,TO_NOTVICT,NULL);
+      act("<R>KA-BOOOOOOOOOOM! You're covered in <O>searing flames<R> as $e crashes into you!!!<1>",TRUE,ch,NULL,vict,TO_VICT,NULL);
+    act("<o>With a loud crack, $n<o>'s corpse shatters!<1>",TRUE,ch,NULL,vict,TO_ROOM,NULL);
 
 
     dam = min(30000,ch->GetMaxLevel() * 40);
