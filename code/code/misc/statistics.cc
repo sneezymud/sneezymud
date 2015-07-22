@@ -299,7 +299,7 @@ void TBeing::doGamestats(const sstring &arg)
 
 
   if(buf.empty()){
-    sendTo("Syntax: gamestats <attributes | combat | equipment | levels | trivia | statistics>\n\r");
+    sendTo("Syntax: gamestats <attributes | combat | equipment | levels | trivia>\n\r");
     return;
   } else if (is_abbrev(buf, "attributes")) {
     int temp_stat = getStat(STAT_CURRENT, STAT_STR);
@@ -489,11 +489,8 @@ void TBeing::doGamestats(const sstring &arg)
       sendTo("Please use a level from 0 - 70 in your level checking.\n\r");
       return;
     }
-  } else if (is_abbrev(buf, "statistics")) {
-    systask->AddTask(this, SYSTEM_STATISTICS, "");
-    return;
   }
-  sendTo("Syntax: gamestats <attributes | combat | equipment | levels | trivia | statistics>\n\r");
+  sendTo("Syntax: gamestats <attributes | combat | equipment | levels | trivia>\n\r");
   return;
 }
 

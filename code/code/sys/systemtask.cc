@@ -97,9 +97,6 @@ void SystemTask::AddTask(TBeing *own, char tsk, const char *opt)
     case SYSTEM_FIND_EMAIL:
       sprintf(lbuf, "bin/findemail %s", opt);
       break;
-    case SYSTEM_STATISTICS:
-      sprintf(lbuf, "bin/statistics");
-      break;
     case SYSTEM_SEARCH_HELP:
       sprintf(lbuf, "bin/helpsearch %s", opt);
       break;

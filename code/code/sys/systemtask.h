@@ -13,7 +13,6 @@ const int SYSTEM_TRACEROUTE = 2;
 const int SYSTEM_LOGLIST = 3;
 const int SYSTEM_CHECKLOG = 4;
 const int SYSTEM_FIND_EMAIL = 5;
-const int SYSTEM_STATISTICS = 6;
 const int SYSTEM_SEARCH_HELP = 7;
 
 class TBeing;
