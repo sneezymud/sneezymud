@@ -4343,7 +4343,8 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
           if (!(ts = searchLinkedList(job->obj_name, me->stuff)) ||
               !(final = dynamic_cast<TObj *>(ts))) {
             me->doSay("Ack, I lost the item somehow! Tell a god immediately!  ");
-            vlogf(LOG_PROC,format("engraver lost his engraving item (%s)") % final->name);
+            vlogf(LOG_PROC,format("engraver lost his engraving item (%s)") %
+                (final ? final->name : ""));
             return FALSE;
           }
           final->swapToStrung();
