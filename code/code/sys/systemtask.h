@@ -13,7 +13,6 @@ enum systemTaskT {
   SYSTEM_LOGLIST,
   SYSTEM_CHECKLOG,
   SYSTEM_FIND_EMAIL,
-  SYSTEM_SEARCH_HELP
 };
 
 class TBeing;
