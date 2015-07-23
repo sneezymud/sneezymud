@@ -24,7 +24,7 @@ extern "C" {
 extern pid_t vfork(void);
 #endif
 
-const char TMPFILE[] = "/mud/prod/lib/tmp/task.output";
+const char TMPFILE[] = "task.output";
 
 class _task {
   public: 
