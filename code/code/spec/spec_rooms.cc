@@ -2169,6 +2169,16 @@ int collapsingTunnel(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
   if(cmd!=CMD_ROOM_ENTERED)
     return FALSE;
 
+  TRoom *rp2 = NULL;
+  if(ch->in_room == 24643) {
+    rp2 = real_roomp(24674);
+  } else if(ch->in_room == 24674) {
+    rp2 = real_roomp(24643);
+  } else {
+    vlogf(LOG_PROC, format("collapsingTunnel unknown room %i") % ch->in_room);
+    return FALSE;
+  }
+
   act("<k>Rubble<1> collapses <k>behind you, blocking the way you came.<1>", FALSE, ch, NULL, NULL, TO_CHAR);
   int dam = ::number(21,40);
   if(::number(0,100) > ch->plotStat(STAT_CURRENT, STAT_DEX, 0, 100, 50)) {
@@ -2178,20 +2188,6 @@ int collapsingTunnel(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
     dam -= 20;
   }
   
-  TRoom *rp2 = NULL;
-
-
-
-  if(ch->in_room == 24643) {
-
-    rp2 = real_roomp(24674);
-
-  }
-  if(ch->in_room == 24674) {
-
-    rp2 = real_roomp(24643);
-
-  }
   --(*ch);
   *rp2 += *ch;
 
