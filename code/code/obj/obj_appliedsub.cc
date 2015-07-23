@@ -3,7 +3,6 @@
 #include "handler.h"
 #include "room.h"
 #include "being.h"
-#include "create_engine.h"
 #include "extern.h"
 #include "obj_expandable_container.h"
 #include "obj_organic.h"
@@ -354,51 +353,6 @@ bool appliedSubstanceCheckList(TBeing *ch, const char *tArg,
     if (!tObjList[curCount[0]])
       return false;
 #endif
-
-  return true;
-}
-
-// Checks a passed list VS items list VS what-they-have
-// true  = wants and Can use this skill
-// false = Either doesn't want to or doesn't have the stuff for this skill
-bool appliedSubstanceFindMatch(TThing **tObjList, int ceLevel, int LsSize, int skClassAs)
-{
-  bool  asFdMatchList[LsSize],
-        hsFnMatch;
-  int   Runner,
-        tCompListRn;
-  int   tCompListOrig[LsSize];
-  TObj *tObj;
-
-  for (Runner = 0; Runner < LsSize; Runner++) {
-    asFdMatchList[Runner] = false;
-
-    if (skClassAs == CLASS_RANGER)
-      tCompListOrig[Runner] = AppliedCreate[ceLevel]->CompList[Runner];
-    else {
-      vlogf(LOG_BUG, format("Person got to SubstanceFindMatch with wrong skClassAs value [%d]") %  skClassAs);
-      return false;
-    }
-  }
-
-  for (Runner = 0; Runner < LsSize; Runner++) {
-    if (!(tObj = dynamic_cast<TObj *>(tObjList[Runner])))
-      continue;
-
-    for (tCompListRn = 0, hsFnMatch = false; ((tCompListRn < 10) && !hsFnMatch); tCompListRn++) {
-      if (asFdMatchList[tCompListRn] || tCompListOrig[tCompListRn] == -1)
-        continue;
-
-      if (tCompListOrig[tCompListRn] == tObj->objVnum()) {
-        asFdMatchList[tCompListRn] = true;
-        hsFnMatch = true;
-      }
-    }
-  }
-
-  for (Runner = 0; Runner < LsSize; Runner++)
-    if (!asFdMatchList[Runner])
-      return false;
 
   return true;
 }

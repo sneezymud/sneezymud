@@ -1714,10 +1714,6 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
   doZones(newarg.c_str());
   addToLifeforce(1);
   break;
-      case CMD_CREATE:
-  rc = doCreate(newarg.c_str());
-  addToLifeforce(1);
-  break;
       case CMD_POWERS:
   doPowers(newarg.c_str());
   break;
@@ -2920,7 +2916,6 @@ void buildCommandArray(void)
   commandArray[CMD_DONATE] = new commandInfo("donate", POSITION_RESTING, 0);
   commandArray[CMD_ZONES] = new commandInfo("zones", POSITION_SLEEPING, 0);
   commandArray[CMD_FACTIONS] = new commandInfo("factions", POSITION_SLEEPING, 0);
-  commandArray[CMD_CREATE] = new commandInfo("create", POSITION_STANDING, GOD_LEVEL1);
   commandArray[CMD_POWERS] = new commandInfo("powers", POSITION_STANDING, GOD_LEVEL1);
   commandArray[CMD_WHITTLE] = new commandInfo("whittle", POSITION_STANDING, 0);
   commandArray[CMD_MESSAGE] = new commandInfo("message", POSITION_DEAD, GOD_LEVEL1);

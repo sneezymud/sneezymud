@@ -534,7 +534,6 @@ enum cmdTypeT {
      CMD_DONATE,
      CMD_ZONES,
      CMD_FACTIONS,
-     CMD_CREATE,
      CMD_POWERS,
      CMD_WHITTLE,
      CMD_MESSAGE,

@@ -1686,7 +1686,6 @@ class TBeing : public TThing {
     void doTie(const sstring &);
     void doUntie(const sstring &);
     void doHistory();
-    int  doCreate(const char *);
     int  ChargePulse(TBeing *ch);
     int getPosHeight() const;
     int getPartMinHeight(int) const;
