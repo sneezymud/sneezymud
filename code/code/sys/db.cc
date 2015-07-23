@@ -747,10 +747,6 @@ void bootWorld(void)
         return;
       }
       rp->dir_option[dir]->door_type = doorTypeT(tmp);
-      if ((tmp == DOOR_NONE) && (rp->dir_option[dir]->keyword.c_str())){
-        if (rp->dir_option[dir]->keyword != "_unique_door_")
-          vlogf(LOG_LOW,format("non-door with name in room %d") % rp->number);
-      }
       if ((tmp != DOOR_NONE) && rp->dir_option[dir]->keyword.empty()){
         vlogf(LOG_LOW,format("door with no name in room %d") % rp->number);
       }
@@ -1143,10 +1139,6 @@ void setup_dir(FILE * fl, int room, dirTypeT dir, TRoom *tRoom)
     return;
   }
   rp->dir_option[dir]->door_type = doorTypeT(tmp);
-  if ((tmp == DOOR_NONE) && !rp->dir_option[dir]->keyword.empty()){
-    if (rp->dir_option[dir]->keyword != "_unique_door_")
-      vlogf(LOG_LOW,format("non-door with name in room %d") % room);
-  }
   if ((tmp != DOOR_NONE) && rp->dir_option[dir]->keyword.empty()){
     vlogf(LOG_LOW,format("door with no name in room %d") % room);
   }

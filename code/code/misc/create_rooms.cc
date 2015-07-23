@@ -3140,10 +3140,6 @@ void RoomLoad(TBeing *ch, int start, int end, int useSecond)
 	  return;
 	}
 	rp2->dir_option[dir]->door_type = doorTypeT(tmp);
-	if ((tmp == DOOR_NONE) && !rp2->dir_option[dir]->keyword.empty()){
-	  if (rp2->dir_option[dir]->keyword != "_unique_door_")
-	    vlogf(LOG_LOW,format("non-door with name in room %d") % rp2->number);
-	}
 	if ((tmp != DOOR_NONE) && rp2->dir_option[dir]->keyword.empty()){
 	  vlogf(LOG_LOW,format("door with no name in room %d") % rp2->number);
 	}
