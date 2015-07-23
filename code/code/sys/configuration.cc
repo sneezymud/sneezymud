@@ -21,6 +21,7 @@ bool Config::SUPER_REPO_MOBS;
 bool Config::NO_DAMAGED_ITEMS_SHOP;
 bool Config::auto_deletion;
 bool Config::rent_only_deletion;
+bool Config::rent_tax;
 bool Config::nuke_inactive_mobs;
 bool Config::load_on_death;
 bool Config::throw_format_exceptions;
@@ -111,6 +112,9 @@ bool Config::doConfiguration(int argc, char *argv[])
      "see configuration.h")
     ("rent_only_deletion",
      po::value<bool>(&rent_only_deletion)->default_value(false),
+     "see configuration.h")
+    ("rent_tax",
+     po::value<bool>(&rent_tax)->default_value(false),
      "see configuration.h")
     ("nuke_inactive_mobs",
      po::value<bool>(&nuke_inactive_mobs)->default_value(false),

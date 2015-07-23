@@ -1,6 +1,5 @@
-
 #include <stdio.h>
-
+#include <math.h>
 #include <unistd.h>
 #include <dirent.h>
 #include <sys/types.h>
@@ -2201,6 +2200,30 @@ bool check_stuff_norent(TBeing *owner, TBeing *recep)
   return check_stuff_norent(owner, owner, recep);
 }
 
+// The player's level was previously used as the base for rent tax, but this
+// harshly penalizes low-level players since a L10's income is SO much less
+// than 1/5th of a L50's. Instead, use level^3 as it has a most pleasing
+// curve: 0.12 @ l25, 0.5 @ l40 vs 1.0 @ l50, and scale to 2000 tax @ L50.
+void charge_rent_tax(TBeing *ch, TMonster *recep, int shop_nr)
+{
+  const float rate = shop_index[shop_nr].getProfitBuy(NULL, ch);
+  // 100.0 is because rosemary's profit_buy is currently 20
+  const float base = pow(ch->GetMaxLevel(), 3) * 100.0 / pow(MAX_MORT, 3);
+
+  // empty those pockets, but don't overdraw
+  int tax = min((int)(base * rate), ch->getMoney());
+
+  if (!tax)
+    return;
+
+  sstring msg = shop_index[shop_nr].message_buy;
+  recep->doTell(ch->getName(), format(msg) % tax);
+
+  TShopOwned tso(shop_nr, recep, ch);
+  tso.doBuyTransaction(tax, "rent tax", TX_BUYING_SERVICE);
+  vlogf(LOG_PIO, format("%s being charged %d talens rent tax by %s")
+        % ch->getName() % tax % recep->getName());
+}
 
 int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TObj *o)
 {
@@ -2360,6 +2383,9 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
     ch->sendTo("If you Have to rent out, such as testing, then go mortal first.\n\r");
     ch->sendTo("----------\n\r");
   }
+
+  if (Config::RentTax() && ch->GetMaxLevel() > 5)
+    charge_rent_tax(ch, recep, shop_nr);
 
   act("$n tells you, 'Have a nice stay!'", FALSE, recep, 0, ch, TO_VICT);
   act("$n stores your stuff in the safe, and shows you to your room.",

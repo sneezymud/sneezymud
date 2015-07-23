@@ -62,6 +62,9 @@ class Config {
   // file.  Otherwise pfile, rent and account go
   static bool rent_only_deletion;
   
+  // whether to tax rent at the public hostels
+  static bool rent_tax;
+  
   // Causes mobs in inactive zones to be deleted.  Typically, 50% of the mud's
   // mobs would qualify.  Dramatically speeds up the mobileActivity loop and
   // improves CPU performance.
@@ -109,6 +112,7 @@ class Config {
   static bool NoDamagedItemsShop(){ return NO_DAMAGED_ITEMS_SHOP; }
   static bool AutoDeletion(){ return auto_deletion; }
   static bool RentOnlyDeletion(){ return rent_only_deletion; }
+  static bool RentTax(){ return rent_tax; }
   static bool NukeInactiveMobs(){ return nuke_inactive_mobs; }
   static bool LoadOnDeath(){ return load_on_death; }
   static bool ThrowFormatExceptions(){ return throw_format_exceptions; }
