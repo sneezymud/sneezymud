@@ -9,9 +9,9 @@ if($ARGV[0] eq "web"){
 
 print "ALPHABETICAL INDEX OF HELP TOPICS";
 
-$dirhead="/mud/prod/lib/help";
+$dirhead="help";
 
-opendir(DIR, "/mud/prod/lib/help") || die $!;
+opendir(DIR, $dirhead) || die $!;
 
 @files=sort readdir(DIR);
 
