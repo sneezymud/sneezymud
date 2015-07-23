@@ -1227,7 +1227,6 @@ class TBeing : public TThing {
     void doTan();
     void doButcher();
     void doLogging();
-    int  doApplyHerbs(const sstring &);
     void doSkin(const char *);
     void doButcher(const char *);
     int doPlant(sstring);

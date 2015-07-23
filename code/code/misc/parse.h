@@ -477,7 +477,6 @@ enum cmdTypeT {
      CMD_SEEKWATER,
      CMD_CRIT,
      CMD_FORAGE,
-     CMD_APPLY_HERBS,
      CMD_RESET,
      CMD_STOMP,
      CMD_EMAIL,

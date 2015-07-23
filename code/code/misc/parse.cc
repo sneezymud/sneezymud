@@ -1604,9 +1604,6 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
       case CMD_FORAGE:
   doForage();
   break;
-      case CMD_APPLY_HERBS:
-  rc = doApplyHerbs(newarg.c_str());
-  break;
       case CMD_BUTCHER:
   doButcher(newarg.c_str());
   break;
@@ -2846,7 +2843,6 @@ void buildCommandArray(void)
   commandArray[CMD_SEEKWATER]=new commandInfo("seekwater",POSITION_CRAWLING, 0);
   commandArray[CMD_CRIT] = new commandInfo("crit", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_FORAGE] = new commandInfo("forage", POSITION_CRAWLING, 0);
-  commandArray[CMD_APPLY_HERBS] = new commandInfo("apply-herbs", POSITION_CRAWLING, 0);
   commandArray[CMD_RESET] = new commandInfo("reset", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_BOOT] = new commandInfo("boot", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_STOMP] = new commandInfo("stomp", POSITION_FIGHTING, 0);

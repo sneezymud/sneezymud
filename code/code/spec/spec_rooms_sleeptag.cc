@@ -380,7 +380,6 @@ int sleepTagRoom(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoom)
     case CMD_DEFENESTRATE:
     case CMD_SEEKWATER:
     case CMD_FORAGE:
-    case CMD_APPLY_HERBS:
     case CMD_STOMP:
     case CMD_SHOULDER_THROW:
     case CMD_CHOP:
