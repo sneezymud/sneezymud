@@ -118,11 +118,6 @@ extern const char * CaravanDestination(int);
 const char * const FACTION_FILE      = "faction/faction_info";
 const char * const FACTION_BAK       = "faction/faction_info.bak";
 
-
-const char * const FACT_LIST_BROTHER   = "faction/fact_list.1";
-const char * const FACT_LIST_CULT      = "faction/fact_list.2";
-const char * const FACT_LIST_SNAKE     = "faction/fact_list.3";
-
 const int FACT_BOARD_BROTHER=1387;
 const int FACT_BOARD_SERPENT=8878;
 const int FACT_BOARD_LOGRUS =3864;
