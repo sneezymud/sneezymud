@@ -1257,7 +1257,7 @@ void cleanInputBuffer(std::istringstream &is)
 // end of file, chr, or '}'
 
 // should be able to convert this to sstring and find() etc
-int readToChar(std::istringstream &is, char *buf, char chr)
+bool readToChar(std::istringstream &is, char *buf, char chr, bool care=false)
 {
   char *ptr = buf;
   int c;
@@ -1273,17 +1273,14 @@ int readToChar(std::istringstream &is, char *buf, char chr)
       vlogf(LOG_LOW, 
 	    format("Responses::readToChar(): Missing '%c' in %s on line '%s'") % 
              chr % responseFile % buf);
-      return -1;  // return error, notifies for delete of response
+      return false;
     }
 
-    if (c == EOF) {
-      vlogf(LOG_LOW, format("Responses::readToChar(): hit EOF in %s while expecting '%c' on line '%s'") % 
-             responseFile % chr % buf);
-      return -1;  // return error, notifies for delete of response
-    }
+    if (c == EOF)
+      return false;
   }
   *ptr = 0;
-  return 0;
+  return true;
 }
 
 void cleanString(char *sstring)
@@ -1461,7 +1458,7 @@ resp * TMonster::readCommand(std::istringstream &is)
   //  Ok, time to grab the commands.
   //
   prev = NULL;
-  if (readToChar(is, buf, ';') == -1) {
+  if (!readToChar(is, buf, ';')) {
     delete newResp;
     newResp = NULL;
     return 0;
@@ -1469,7 +1466,7 @@ resp * TMonster::readCommand(std::istringstream &is)
   while( *buf != 0) {
     if (*buf == '#') {
       // skip and proceed
-      if (readToChar(is, buf, ';') == -1) {
+      if (!readToChar(is, buf, ';')) {
         delete newResp;
         newResp = NULL;
         return 0;
@@ -1571,7 +1568,7 @@ resp * TMonster::readCommand(std::istringstream &is)
     if( prev != 0)
       prev->next = newCmd;
     prev = newCmd;
-    if (readToChar(is, buf, ';') == -1) {
+    if (!readToChar(is, buf, ';')) {
       delete newResp;
       newResp = NULL;
       return 0;
