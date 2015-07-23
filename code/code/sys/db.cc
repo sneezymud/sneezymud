@@ -156,29 +156,25 @@ int faction_number = 0;
 int fixed_chance = 3;
 
 
-const char * const File::SIGN_MESS = "/mud/sign/currentMess";
-const char * const File::MOB       = "tinymob.use"; /* monster prototypes*/
-const char * const File::ZONE      = "tinyworld.zon"; /* zone defs & command tables */
+const char * const File::BUG       = "txt/bugs";      /*         'bug'      */
 const char * const File::CREDITS   = "txt/credits";   /* for the credits command */
-const char * const File::NEWS      = "txt/news";  /* for the 'news' command */
-const char * const File::STORY     = "txt/story";     /* Stargazers pimpy story     */
-const char * const File::WIZNEWS   = "txt/wiznews";
+const char * const File::HELP_PAGE = "help/general";  /* for HELP <CR> */
+const char * const File::IDEA      = "txt/ideas"; /* for the 'idea'-command */
 const char * const File::MOTD      = "txt/motd";      /* messages of today */
+const char * const File::NEWS      = "txt/news";  /* for the 'news' command */
+const char * const File::SIGN_MESS = "txt/currentmess";
+const char * const File::SOCMESS   = "actions"; /* messgs for social acts     */
+const char * const File::TYPO      = "txt/typos";     /*         'typo'     */
+const char * const File::WIZLIST   = "txt/wizlist";   /* for WIZLIST   */
 const char * const File::WIZMOTD   = "txt/wizmotd";   /* MOTD for immorts */
-const char * const File::TIME      ="time"; /* game calendar information  */
-const char * const File::IDEA      ="txt/ideas"; /* for the 'idea'-command */
-const char * const File::TYPO      ="txt/typos";     /*         'typo'     */
-const char * const File::BUG       ="txt/bugs";      /*         'bug'      */
-const char * const File::SOCMESS   ="actions"; /* messgs for social acts     */
-const char * const File::HELP_PAGE ="help/general";  /* for HELP <CR> */
-const char * const File::WIZLIST   ="txt/wizlist";   /* for WIZLIST   */
+const char * const File::WIZNEWS   = "txt/wiznews";
 
 const char * const Path::DATA          = "lib";  /* default data directory     */
-const char * const Path::HELP	       ="help/";   /* for HELP <keywrd>          */
-const char * const Path::IMMORTAL_HELP ="help/_immortal";
-const char * const Path::BUILDER_HELP  ="help/_builder";
-const char * const Path::SKILL_HELP    ="help/_skills";
-const char * const Path::SPELL_HELP    ="help/_spells";
+const char * const Path::HELP	       = "help/";   /* for HELP <keywrd>          */
+const char * const Path::IMMORTAL_HELP = "help/_immortal";
+const char * const Path::BUILDER_HELP  = "help/_builder";
+const char * const Path::SKILL_HELP    = "help/_skills";
+const char * const Path::SPELL_HELP    = "help/_spells";
 
 
 
