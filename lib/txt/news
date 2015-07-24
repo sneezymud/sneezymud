@@ -1,4 +1,7 @@
 ==========================================================================
+7-23-15  : Ratmen as a race are now properly ratman-sized instead of
+           accidentally defaulting to the Human racial template.
+
 7-22-15  : The ping toggle has been removed, as the mud no longer pings
            players.
 
