@@ -540,7 +540,6 @@ enum cmdTypeT {
      CMD_MESSAGE,
      CMD_SMOKE,
      CMD_CLIENTMESSAGE,
-     CMD_SEDIT,
      CMD_RETRAIN,
      CMD_VISIBLE,
      CMD_TRIGGER,

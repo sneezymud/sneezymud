@@ -85,7 +85,6 @@ class TPerson : public TBeing {
     virtual void doInvis(const char *);
     virtual void doVisible(const char *, bool);
     virtual void doMedit(const char *);
-    virtual void doSEdit(const char *);
     virtual void doOEdit(const char *);
     virtual void doEdit(const char *);
     virtual void doRload(const char *);

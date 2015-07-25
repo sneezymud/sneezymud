@@ -1250,7 +1250,6 @@ class TBeing : public TThing {
     int crashLanding(positionTypeT, bool force = FALSE, bool dam = TRUE, bool falling = false);
     int doTurn(const char *, TBeing *);
     virtual void doMedit(const char *);
-    virtual void doSEdit(const char *);
     void doPreen(sstring &argument);
 
     void setGuildID(int);

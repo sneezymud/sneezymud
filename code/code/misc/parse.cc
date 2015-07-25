@@ -1379,9 +1379,6 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
       case CMD_MEDIT:
   doMedit(newarg.c_str());
   break;
-      case CMD_SEDIT:
-  doSEdit(newarg.c_str());
-  break;
       case CMD_LAYHANDS:
   rc = doLayHands(newarg.c_str());
   break;
@@ -2926,7 +2923,6 @@ void buildCommandArray(void)
   commandArray[CMD_MESSAGE] = new commandInfo("message", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_SMOKE] = new commandInfo("smoke", POSITION_RESTING, 0);
   commandArray[CMD_CLIENTMESSAGE] = new commandInfo("clientmessage", POSITION_RESTING, 60);
-  commandArray[CMD_SEDIT] = new commandInfo("sedit", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_RETRAIN] = new commandInfo("retrain", POSITION_STANDING, 0);
   commandArray[CMD_VISIBLE] = new commandInfo("visible", POSITION_STANDING, 0);
   commandArray[CMD_TRIGGER] = new commandInfo("trigger", POSITION_STANDING, GOD_LEVEL1);
