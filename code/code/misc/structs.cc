@@ -926,7 +926,6 @@ TPerson::TPerson(Descriptor *thedesc) :
   base_age(0),
   tLogFile(NULL),
   title(NULL), 
-  last_rent(0),
   timer(0)
 {
   *lastHost = '\0';
@@ -942,7 +941,6 @@ TPerson::TPerson(Descriptor *thedesc) :
   // this resets some values
   // rememebr that it could init some desc stuff, then have new char
   // come in causing bad settings.
-  desc->best_rent_credit = 0;
   desc->session.setToZero();
   desc->prompt_d.xptnl = 0;
 
@@ -954,7 +952,6 @@ TPerson::TPerson(const TPerson &a) :
   TBeing(a),
   base_age(a.base_age),
   tLogFile(a.tLogFile),
-  last_rent(a.last_rent), 
   timer(a.timer)
 {
   title = mud_str_dup(a.title);
@@ -972,7 +969,6 @@ TPerson & TPerson::operator=(const TPerson &a)
   if (this == &a) return *this;  
   TBeing::operator=(a);
   base_age = a.base_age;
-  last_rent = a.last_rent;
   timer = a.timer;
 
   delete [] title;

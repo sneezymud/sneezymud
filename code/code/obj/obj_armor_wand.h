@@ -21,7 +21,6 @@ class TArmorWand : public virtual TArmor, public virtual TWand
 
     virtual void lowCheck();
     virtual int suggestedPrice() const;
-    virtual int rentCost() const;
     virtual void objMenu(const TBeing *) const;
     virtual void evaluateMe(TBeing *) const;
     virtual void generalUseMessage(const TBeing *, unsigned int, const TBeing *, const TObj *) const;

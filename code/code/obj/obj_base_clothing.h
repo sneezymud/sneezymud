@@ -22,7 +22,6 @@ class TBaseClothing : public virtual TObj
     virtual int editAverageMe(TBeing *, const char *);
     virtual sstring showModifier(showModeT, const TBeing *) const;
     virtual void objMenu(const TBeing *) const;
-    virtual int rentCost() const;
     virtual void lowCheck();
     virtual void descMaxStruct(const TBeing *, int) const;
     virtual bool sellMeCheck(TBeing *, TMonster *, int, int) const;

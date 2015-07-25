@@ -85,7 +85,6 @@ output(),
 session(),
 career(),
 autobits(0),
-best_rent_credit(0),
 playerID(0),
 character(NULL),
 account(NULL),
@@ -144,7 +143,6 @@ input(a.input),
 session(a.session),
 career(a.career),
 autobits(a.autobits),
-best_rent_credit(a.best_rent_credit),
 playerID(a.playerID),
 character(a.character),
 account(a.account),
@@ -220,7 +218,6 @@ input = a.input;
 session = a.session;
 career = a.career;
 autobits = a.autobits;
-best_rent_credit = a.best_rent_credit;
 playerID=a.playerID;
 character = a.character;
 account = a.account;
@@ -628,10 +625,9 @@ if (character) {
         num++;
       }
     }
-    vlogf(LOG_PIO, format("Link Lost for %s: [%d talens/%d bank/%.2f xps/%d items/%d age-mod/%d rent]") % 
+    vlogf(LOG_PIO, format("Link Lost for %s: [%d talens/%d bank/%.2f xps/%d items/%d age-mod]") %
           character->getName() % character->getMoney() % character->getBank() %
-          character->getExp() % num % character->age_mod % 
-          (dynamic_cast<TPerson *>(character)?dynamic_cast<TPerson *>(character)->last_rent:0));
+          character->getExp() % num % character->age_mod);
     character->desc = NULL;
     if((!character->affectedBySpell(AFFECT_PLAYERKILL) &&
         !character->affectedBySpell(AFFECT_PLAYERLOOT)) ||
@@ -1158,8 +1154,6 @@ int Descriptor::nanny(sstring arg)
 	  }
 	  
           if (should_be_logged(character)) {
-            objCost cost;
-
             if (IS_SET(account->flags, TAccount::IMMORTAL)) {
               vlogf(LOG_PIO, format("%s[%s] has reconnected  (account: %s).") % 
 	             character->getName() % host % account->name);
@@ -1168,8 +1162,7 @@ int Descriptor::nanny(sstring arg)
               vlogf(LOG_PIO, format("%s[%s] has reconnected  (account: %s).") %  
                      character->getName() % host % account->name);
             }
-            character->recepOffer(NULL, &cost);
-            dynamic_cast<TPerson *>(character)->saveRent(&cost, FALSE, 1);
+            dynamic_cast<TPerson *>(character)->saveRent(FALSE, 1);
           }
           act("$n has reconnected.", TRUE, tmp_ch, 0, 0, TO_ROOM);
           tmp_ch->loadCareerStats();
@@ -1288,15 +1281,11 @@ int Descriptor::nanny(sstring arg)
                 tmp_ch->doCls(false);
   
               if (should_be_logged(character)) {
-                objCost cost;
-
                 if (IS_SET(account->flags, TAccount::IMMORTAL)) 
 		  vlogf(LOG_PIO, format("%s[%s] has reconnected  (account: %s).") %  tmp_ch->getName() % host % account->name);
                 else 
                   vlogf(LOG_PIO, format("%s[%s] has reconnected  (account: %s).") %  tmp_ch->getName() % host % account->name);
-                
-                tmp_ch->recepOffer(NULL, &cost);
-                dynamic_cast<TPerson *>(tmp_ch)->saveRent(&cost, FALSE, 1);
+                dynamic_cast<TPerson *>(tmp_ch)->saveRent(FALSE, 1);
               }
               act("$n has reconnected.", TRUE, tmp_ch, 0, 0, TO_ROOM);
               tmp_ch->loadCareerStats();
@@ -4106,16 +4095,6 @@ void Descriptor::sendMotd(int wiz)
     processStringForClient(sb);
     clientf(format("%d|%s") % CLIENT_MOTD % sb);
   }
-}
-
-int TBeing::applyAutorentPenalties(int secs)
-{
-  if(Config::PenalizeForAutoRenting()){
-    vlogf(LOG_PIO, format("%s was autorented for %d secs") %
-	  getName() % secs);    
-  }
-
-  return FALSE;
 }
 
 int TBeing::applyRentBenefits(int secs)

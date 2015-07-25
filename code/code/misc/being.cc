@@ -513,7 +513,6 @@ charFile::charFile() :
   age_mod(0),
   wimpy(0),
   autobits(0),
-  best_rent_credit(0),
 //  point data members
   mana(0),
   maxMana(0),
@@ -1498,11 +1497,30 @@ void TBeing::addToProtection(short num)
   my_protection = (byte) min(max((int) (num + my_protection), -100), 100);
 }
 
+double get_class_level_mod(unsigned short int Class)
+{
+  switch (Class) {
+    case CLASS_MAGE:
+    case CLASS_MONK:
+    case CLASS_SHAMAN:
+      return 10.0;
+    case CLASS_CLERIC:
+      return 7.0;
+    case CLASS_THIEF:
+      return 5.0;
+    case CLASS_DEIKHAN:
+    case CLASS_RANGER:
+      return 3.0;
+    default: // warrior
+      return 0.0;
+  }
+}
+
 // returns the number of points of AC we think is right based on what was
 // set-up in the balance discussions.  This is AC from EQ only.
 short TBeing::suggestArmor() const
 {
-  double lev = GetMaxLevel() - getLevMod(getClass(), GetMaxLevel());
+  double lev = GetMaxLevel() - get_class_level_mod(getClass());
   int suggest = (int) (500 + 25*lev);
 
   // because monks need 2 barehands, they can't use shields

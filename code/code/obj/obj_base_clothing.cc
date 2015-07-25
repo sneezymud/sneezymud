@@ -413,7 +413,6 @@ int TBaseClothing::suggestedPrice() const
   // so define lev_modifier as (hitrate-60)/3
   // phase the lev_mod in so that soft-leather is wearable (and appropriate)
   // for all classes
-  // multiply price by the ratio of rentCredit(lev + lev_mod)/rentCredit(lev)
   double lev_mod = 0;
 
   // mage = hit rate of 90%
@@ -449,7 +448,7 @@ int TBaseClothing::suggestedPrice() const
   // phase in with level
   lev_mod = min(lev_mod, lev/3.0);
 
-  // adjust price based on rent credit formula
+  // adjust price based on old rent credit formula
   double modif = (lev + lev_mod) * max(20.0, (lev + lev_mod)) /
                 max(1.0, (lev * max(20.0, lev)));
   modif = min(1.25, modif);
@@ -606,12 +605,6 @@ void TBaseClothing::describeObjectSpecifics(const TBeing *ch) const
             getName() % objVnum());
     }
   }
-}
-
-int TBaseClothing::rentCost() const
-{
-  // silly, but I suspect we want to modify this in the future so I left it in place
-  return TObj::rentCost();
 }
 
 sstring TBaseClothing::showModifier(showModeT mode, const TBeing *ch) const

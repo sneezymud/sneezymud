@@ -31,7 +31,6 @@ class TStaff : public TMagicItem {
     virtual int foodItemUsed(TBeing *ch, const char *arg);
     virtual void lowCheck();
     virtual bool objectRepair(TBeing *, TMonster *, silentTypeT);
-    virtual int rentCost() const;
     virtual int suggestedPrice() const;
 
     virtual int taskChargeMe(TBeing *, spellNumT, int &);

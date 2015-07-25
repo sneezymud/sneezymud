@@ -42,27 +42,12 @@ void TVial::getBestVial(TVial **best)
   return;
 }     
 
-int TVial::rentCost() const
-{
-  int num = TBaseCup::rentCost();
-
-  if (!getDrinkUnits())
-    return 0;
-
-  if (getDrinkType() != LIQ_HOLYWATER)
-    return num;
-
-  num *= getDrinkUnits();
-  num /= max(1, getMaxDrinkUnits());
-  return num;
-}          
-
 int TVial::objectSell(TBeing *ch, TMonster *keeper)
 {
   sstring buf;
 
   if(getDrinkType()!=LIQ_HOLYWATER){
-    keeper->doTell(ch->getName(), "Hey, that's not holy water!.");
+    keeper->doTell(ch->getName(), "Hey, that's not holy water!");
     return TRUE;
   }
 

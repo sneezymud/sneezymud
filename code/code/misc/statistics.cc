@@ -285,6 +285,52 @@ void save_game_stats(void)
   }
 }
 
+// this returns a number indicating how long we "think" it should
+// take to get to level "lev"
+// it is somewhat arbitrary
+//
+int secs_to_level(int lev)
+{
+  lev--;
+  if (lev <= 0)
+    return 0;
+
+  // how much damage (average/round) am I doing
+  float dam_level = 0.9 * lev;
+
+  // what is the average mob have for hp
+  float avg_mob_hp = (11.0 + 4.5) * lev;
+
+  // average combat length
+  float rounds_combat = avg_mob_hp / dam_level;
+
+  // converted to number of seconds
+  int time_combat = (int) (rounds_combat * Pulse::COMBAT / Pulse::ONE_SECOND);
+
+  // now figure out regen
+  // assume that a fiar fight consumes 100% of players HP each kill
+  int avg_pc_hp = 15 + (10*lev);
+
+  // numer of hps gained back per tick
+  int regen_per_tick;
+  regen_per_tick = (int) (stats.hit_gained_attempts == 0 ? 1 :
+        ((float) stats.hit_gained / (float) stats.hit_gained_attempts));
+
+  float ticks_regen = (float) avg_pc_hp / (float) regen_per_tick;
+
+  int secs_regen = (int) (ticks_regen * (Pulse::UPDATE/2) / Pulse::ONE_SECOND);
+
+  int tot_time = secs_regen + time_combat;
+
+  // and i have to kill a bunch of mobs
+  tot_time *= kills_to_level(lev);
+
+  // don't forget to add in how long it took me to get to last level.
+  tot_time += secs_to_level(lev);
+
+  return tot_time;
+}
+
 void TBeing::doGamestats(const sstring &arg)
 {
   sstring buf, buf2;

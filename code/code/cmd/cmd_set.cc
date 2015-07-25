@@ -139,14 +139,6 @@ void TPerson::doSet(const char *argument)
      tper->advanceSelectDisciplines(p2ci, (parm - initial), SILENT_YES);
      if (parm3) {
      }
-#if 0
-// set the players time
-     if (tper->isPc && tper->desc) {
-       (float) val = power_level_number(tper->GetMaxLevel());
-       value = max((tper->player.time.played + ((long) (time(0) - tper->player.time.logon)), value);
-       tper->player.time.played = value;
-     }
-#endif
      sendTo(COLOR_MOBS, format("You have set %s to level %d.\n\r") % tper->getName() % parm);
      sendTo(format("DoneBasic is set at %d for that class.\n\r") % tper->player.doneBasic[p2ci]);
      tper->sendTo(COLOR_MOBS, format("You have been set %s to level %d.\n\r") % tper->getName() % parm);

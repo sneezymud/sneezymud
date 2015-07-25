@@ -110,8 +110,6 @@ void TBeing::doQueueSave()
 
 void TBeing::doSave(silentTypeT silent, const char *tArg)
 {
-  objCost  tCost;
-
   verifyWeightVolume();
 
   if(isPet(PETTYPE_PET))
@@ -179,8 +177,7 @@ void TBeing::doSave(silentTypeT silent, const char *tArg)
     tPerson->setExp(getExp());
     tPerson->setMoney(getMoney());
     tPerson->classSpecificStuff();
-    tPerson->recepOffer(NULL, &tCost);
-    tPerson->saveRent(&tCost, FALSE, 0);
+    tPerson->saveRent();
 
     saveChar(Room::AUTO_RENT);
 
@@ -204,8 +201,7 @@ void TBeing::doSave(silentTypeT silent, const char *tArg)
     return;
   } else {
     classSpecificStuff();
-    recepOffer(NULL, &tCost);
-    dynamic_cast<TPerson *>(this)->saveRent(&tCost, FALSE, 0);
+    dynamic_cast<TPerson *>(this)->saveRent();
 
     saveChar(Room::AUTO_RENT);
   }
