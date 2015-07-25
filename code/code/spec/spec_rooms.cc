@@ -557,63 +557,74 @@ TObj *findMostExpensiveItem(TBeing *vict)
 
 int weirdCircle(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 {
-  char buf[256];
   TBeing *mob;
-  TObj *obj;
 
   if (cmd == CMD_ENTER) {
-    one_argument(arg, buf, cElements(buf));
-    if (is_abbrev(buf, "circle")) {
-      int mobnum = real_mobile(17111);  // 17111
-      if (mob_index[mobnum].getNumber() != 0)
-        return FALSE;   // already loaded
+    sstring buf;
+    one_argument(arg, buf);
+    if (!is_abbrev(buf, "circle"))
+      return FALSE;
 
-      if (!(mob = read_mobile(mobnum, REAL))) {
-        vlogf(LOG_PROC, "bad load of mob in weirdCircle");
-        return FALSE;
-      }
-      *rp += *mob;
-      mob->doSay("Hi there!  It's been quite some time since anyone's come to visit me.");
-      act("$n looks in your direction.", TRUE, mob, 0, ch, TO_VICT);
-      act("$n looks in $N's direction.", TRUE, mob, 0, ch, TO_NOTVICT);
+    int mobnum = real_mobile(17111);
+    if (mob_index[mobnum].getNumber())
+      return FALSE;   // already loaded
+    if (!(mob = read_mobile(mobnum, REAL))) {
+      vlogf(LOG_PROC, "bad load of mob in weirdCircle");
+      return FALSE;
+    }
 
-      if (!(obj = findMostExpensiveItem(ch)))
-        return TRUE;
-      mob->doSay("And I see you've brought me a gift.");
-      mob->doSay("Allow me to remove you of the burden.");
+    *rp += *mob;
+    act("$n steps into the circle from nowhere.", TRUE, mob, 0, NULL, TO_ROOM);
+    mob->doSay("Welcome!  It's been some time since anyone's come to visit me.");
+    act("$n looks in your direction.", TRUE, mob, 0, ch, TO_VICT);
+    act("$n looks in $N's direction.", TRUE, mob, 0, ch, TO_NOTVICT);
 
-      if (obj->parent)
-        --(*obj);
-      else if (obj->eq_pos > WEAR_NOWHERE)
-        ch->unequip(obj->eq_pos);
-
-      *mob += *obj;
-
+    TObj *obj;
+    if (!(obj = findMostExpensiveItem(ch))) {
+      act("$n frowns and turns $s back on you.", TRUE, mob, 0, ch, TO_VICT);
+      act("$n frowns and turns away from $N.", TRUE, mob, 0, ch, TO_NOTVICT);
       return TRUE;
     }
-    return FALSE;
-  }
-  if (cmd == CMD_GENERIC_PULSE && !::number(0,29)) {
-    int mobnum = real_mobile(17111);  // 17111
+
+    mob->doSay("I see you've brought me a gift!");
+    mob->doSay("Allow me to relieve you of your burden.");
+    act("$n claps $s hands together once sharply.", TRUE, mob, 0, NULL, TO_ROOM);
+
+    if (obj->parent)
+      --(*obj);
+    else if (obj->eq_pos > WEAR_NOWHERE)
+      ch->unequip(obj->eq_pos);
+    *mob += *obj;
+    return TRUE;
+
+  // stone oracle hangs around on avg 60 secs
+  } else if (cmd == CMD_GENERIC_PULSE && !::number(0,600)) {
+    int mobnum = real_mobile(17111);
     if (mobnum < 0) {
       vlogf(LOG_PROC, "Bogus mob specified in weirdCircle.");
       return FALSE;
     }
-    if (mob_index[mobnum].getNumber()) {
-      // keeps it around roughly 60 secs
-      if (!(mob = get_char_room(mob_index[mobnum].name, rp->number)))
-        return FALSE;
-      if (!mob->fight()) {
-        mob->doSay("Thanks!  You may leave me to my slumber.");
-	for(StuffIter it=mob->stuff.begin();it!=mob->stuff.end();){
-	  TThing *t=*(it++);
-          delete t;
-        }
-        delete mob;
-        return TRUE;
-      }
+
+    if (!mob_index[mobnum].getNumber() ||
+        !(mob = get_char_room(mob_index[mobnum].name, rp->number)))
+      return FALSE;
+
+    if (mob->fight())
+      return FALSE;
+
+    if (mob->stuff.size())
+      mob->doAction("", CMD_BOW);
+    mob->doSay("Now, please leave me to my slumber.");
+    act("$n fades quickly from the circle.", TRUE, mob, 0, NULL, TO_ROOM);
+
+    for(StuffIter it=mob->stuff.begin();it!=mob->stuff.end();){
+      TThing *t=*(it++);
+      delete t;
     }
+    delete mob;
+    return TRUE;
   }
+
   return FALSE;
 }
 
