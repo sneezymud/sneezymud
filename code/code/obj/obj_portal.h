@@ -36,7 +36,6 @@ class TPortal : public TSeeThru {
     virtual void unlockMe(TBeing *);
     virtual int enterMe(TBeing *);
     virtual int objectDecay();
-    virtual void thingDumped(TBeing *, int *) {}
     virtual int detectMe(TBeing *) const;
     virtual void showMe(TBeing *) const;
 

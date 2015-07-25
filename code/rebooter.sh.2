@@ -174,7 +174,7 @@ handle_core()
 #    echo -n "SUBJ=Stacktrace of core.${DATE_STAMP}&"
 #    echo -n "MSG="
 #    # URL encode the gdb output so that &'s don't get confused by HTTP POST
-#    gdb -q -x core_display.txt "${SNEEZY}" "${PROD_CORE}" | sed -e "/^Reading symbols from/d" -e "/^Loaded symbols for/d" | ${DETAB} | od -t x1 -A n | tr " " % | tr -d "\n"
+#    gdb -q -ex "list" -ex "bt 3 full" -ex "quit" "${SNEEZY}" "${PROD_CORE}" | sed -e "/^Reading symbols from/d" -e "/^Loaded symbols for/d" | ${DETAB} | od -t x1 -A n | tr " " % | tr -d "\n"
 #    } | curl --silent --max-time 30 --data-binary @- http://forums.sneezymud.com/post/core.php
 #  fi
 }

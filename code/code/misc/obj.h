@@ -672,7 +672,6 @@ private:
     virtual void pourMeIntoDrink2(TBeing *, TBaseCup *);
     virtual void pourMeIntoDrink1(TBeing *, TObj *);
     virtual void waterCreate(const TBeing *, int);
-    virtual void thingDumped(TBeing *, int *);
     virtual void junkMe(TBeing *);
     virtual int scavengeMe(TBeing *, TObj **);
     virtual int illuminateMe(TBeing *, int, short);

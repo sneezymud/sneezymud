@@ -1,8 +1,8 @@
 The 'G' command
 
-This command is used to give an object to a mob.  As such it is used for 
-loading almost all key loads as well as loading things into a mobs 
-inventory.  You should not use this command to load armor or worn stuff 
+This command is used to give an object to a mob.  As such it is used for
+loading almost all key loads as well as loading things into a mobs
+inventory.  You should not use this command to load armor or worn stuff
 unless you have a reason.
 
 The 'G' command gives an item to the last mob referenced
@@ -20,11 +20,11 @@ G 1 102 10              bag of garbage
 These commands would load an orc and then give him a bag of garbage.  It only
 tries the 'G' if the orc loaded and only if 9 or fewer bags of garbage exist.
 Note that the comment for the item to be given should be indented slightly from
-the comment of the mob to put it on.  
+the comment of the mob to put it on.
 
 NOTE:
 
 KEYS: Make sure if you are giving a key to a mob that the key command is
 the first conditional command to execute.  ie, if we did orc->garbage->key
-the key would not load if the garbage didn't. 
+the key would not load if the garbage didn't.
 

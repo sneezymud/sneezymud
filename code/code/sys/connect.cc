@@ -586,10 +586,6 @@ if (character) {
       extract_edit_char(mob);
       mob = NULL;
     }
-    if ((connected == CON_SEDITING) && mob) {
-      extract_edit_char(mob);
-      mob = NULL;
-    }
     if (connected == CON_REDITING) 
       character->roomp->removeRoomFlagBit(ROOM_BEING_EDITTED);
     if ((character->checkBlackjack()) &&
@@ -737,8 +733,7 @@ void Descriptor::cleanUpStr()
                   (connected == CON_WRITING ||
                    connected == CON_REDITING ||
                    connected == CON_OEDITING ||
-                   connected == CON_MEDITING ||
-                   connected == CON_SEDITING)) {
+                   connected == CON_MEDITING)) {
       // the str is attached to the mob/obj/room, so this is OK
     } else
       vlogf(LOG_BUG, "Descriptor::cleanUpStr(): Probable memory leak");
@@ -2998,8 +2993,6 @@ void processAllInput()
         obj_edit(d->character, comm);
       else if (d->connected == CON_MEDITING) 
         mob_edit(d->character, comm);
-      else if (d->connected == CON_SEDITING)
-        seditCore(d->character, comm);
       else if (d->showstr_head) {
         d->show_string(comm, SHOWNOW_YES, ALLOWREP_YES);
       } else {

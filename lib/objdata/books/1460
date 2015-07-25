@@ -1,4 +1,4 @@
-Detailed News regarding the 3.1 --> 4.1 upgrade.  
+Detailed News regarding the 3.1 --> 4.1 upgrade.
 This has been loosely organized by topic.
 
 Character Generation
@@ -8,7 +8,7 @@ Character Generation
 2.) Some common sense adjustments made to racial stats to bring them into
     balance.  Max's/ min's adjusted.
 3.) Non-human height and weight adjusted to prevent an overlap with humans.
-4.) Organization of characters into accounts instituted for better 
+4.) Organization of characters into accounts instituted for better
     administration.
 5.) New screen for folks to indicate their time differential between
     themselves and <h>'s home site added.   (New Accounts only)
@@ -18,7 +18,7 @@ Character Generation
 8.) Initial equipment loaded has changed somewhat.  Each race has its own
     equipment type and rations are no longer given out.
 9.) Many adjustments made in hp, mana, move gain formulas for rebalancing.
-10.) Automatic file deletion instituted for inactivity.  Info is in the 
+10.) Automatic file deletion instituted for inactivity.  Info is in the
      online FAQ.
 11.) Karma implemented.  See HELP KARMA.
 12.) Some automatic configuring set for newbies  (terminal type, prompts)
@@ -53,10 +53,10 @@ All disciplines available and functional.
 
 Monks
 -----
-CLASS NEARLY FULLY IMPLEMENTED 
+CLASS NEARLY FULLY IMPLEMENTED
 Class is slightly under-powered but will be brought to full strength ASAP.
 1.) Restrictions on monk wearable equipment loosened.  Still unable to
-    wear actual armor, but items restricted to other classes are not 
+    wear actual armor, but items restricted to other classes are not
     automatically anti-monk any longer.
 
 Rangers
@@ -75,14 +75,14 @@ Class not available for general play at present time
 2.) New skills: charge, chivalry, smite
 
 Azruzis
-------- 
+-------
 CLASS NOT FULLY IMPLEMENTED (yet)
 Class not available for general play at present time
 
 Faction and Alignment
 ---------------------
 1.) References to alignments largely removed in anticipation of the
-    faction system.  Base code for factions in place for future 
+    faction system.  Base code for factions in place for future
     implementation.
 2.) Faction percentage formulas adjusted to handle future faction code.
 3.) Mob allegiance changed to match PC allegiance system.  Mob allegiances
@@ -96,7 +96,7 @@ The World
     to go exploring yourself.
 2.) Infrastructure improvements to the major cities and towns of The World
     to eliminate gross inequities.
-3.) Some redistricting done in Grimhaven.  Many new inhabitants.  Much has 
+3.) Some redistricting done in Grimhaven.  Many new inhabitants.  Much has
     changed.
 4.) Improved handling of doors and locks.  Many different door styles
     (trapdoors, grates, drawbridges, etc) with different qualities.
@@ -110,13 +110,13 @@ Weather and Terrain
 2.) Adverse weather conditions are now more obvious to the observer.
 3.) Increased effect of percipitation on movement, visibility and other
     obvious areas.
-4.) Many new terrain-specific effects implemented.  Evaporation in the 
+4.) Many new terrain-specific effects implemented.  Evaporation in the
     desert, etc.
 
 Visibility and Sound
 --------------------
 1.) Advancements made in handling a character's eyesight as well as how
-    well someone is concealed.  Weather, terrain, race, clothing and 
+    well someone is concealed.  Weather, terrain, race, clothing and
     illumination all come into play.
 2.) Racial adjustments made for eyesight, noise emitted and visibility.
 3.) Far fewer ALWAYS_LIT rooms.
@@ -191,13 +191,13 @@ Miscellaneous
 1.) MUCH, MUCH, MUCH improved terminal bars for VT-100 and Ansi terminals.
     Many new features: mud clock, realtime clock, faction percent display,
     tank status display.  Definitely recommend using them if you are able to.
-2.) Tasking code improved so that utility commands (history, news, world, 
-    etc.) are all possible.  Please note that actions that require your 
-    character to actually physically do something may still be prevented 
+2.) Tasking code improved so that utility commands (history, news, world,
+    etc.) are all possible.  Please note that actions that require your
+    character to actually physically do something may still be prevented
     (intentionally).
 3.) Improved SCORE and ATTRIBUTE commands for showing session and lifetime
     stats.  Removed the display of non-intuitive data.
-4.) Improved title command.  Class, and faction no longer displayed 
+4.) Improved title command.  Class, and faction no longer displayed
     automatically.  Capability to add color to your own title added.
 5.) Sitting, Resting and Sleeping now tasked for regeneration
     purposes.

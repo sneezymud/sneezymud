@@ -1,8 +1,0 @@
-roomenter { "";
-  say Heya, you got some <c>meat<1> to sell me?;
-}
-
-say { "meat";
-  say Yeah, if you've got some extra fresh meat lying around I'll give ya a few coins for it;
-  say Just hand it over.
-}

@@ -2,11 +2,11 @@ Damage Level
 
 This is the amount of damage the mob does when hitting barehand.  It is
 entered in the form X+Y, where X is the damage level and Y is the randomizer,
-meaning Y will make the mob hit + or - Y% the damage of that level.  	
+meaning Y will make the mob hit + or - Y% the damage of that level.  
 
 
 NOTES:
 
-RELATION TO LEVEL:  The barehand damage and number of attacks is the 
-primary determinant of a mobs level although the level is affected by a 
+RELATION TO LEVEL:  The barehand damage and number of attacks is the
+primary determinant of a mobs level although the level is affected by a
 few other stat choices.

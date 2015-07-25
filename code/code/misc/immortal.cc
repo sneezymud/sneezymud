@@ -6218,7 +6218,6 @@ static bool isSanctionedCommand(cmdTypeT tCmd)
     case CMD_MEDIT:
     case CMD_OEDIT:
     case CMD_FEDIT:
-    case CMD_SEDIT:
     case CMD_REDIT:
     case CMD_RLOAD:
     case CMD_RSAVE:

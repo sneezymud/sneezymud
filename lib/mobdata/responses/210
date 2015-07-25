@@ -1,9 +1,0 @@
-# Southern Grimhaven Gatekeeper (inside)
-# General Quest
-# Dash 9/18/00
-# Copyright 2000, Grimhaven Development Team. All Rights Reserved
-
-roomenter { "185";
-       tovict $n notices you coming down the street, and motions for the portcullis to be raised.;
-       raise portcullis;
-     }

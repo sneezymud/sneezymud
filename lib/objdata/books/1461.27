@@ -1,14 +1,14 @@
 Advanced Action: toggle
 ---------------------
- 
+
 ex:
 <trigger> { "<arguments>";
        <other actions>;
-       toggle <number>; 
+       toggle <number>;
        <other actions>;
      }
 
 toggle will set quest-toggle <number> on the performer.  Quest-toggles are
 hard coded so talk with a coder before using this command.  The toggle command
-will verify that the bit is being toggled by the proper mob to avoid 
+will verify that the bit is being toggled by the proper mob to avoid
 mistoggling.

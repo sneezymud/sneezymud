@@ -1,34 +1,34 @@
 Max Exist:
 
-This controls how many of an item will be in world before an item will 
+This controls how many of an item will be in world before an item will
 stop loading and before hunting code will be activated (if relevant).
-This as well as structure and value are the key object values that most 
-influence the mud economy.  Max_exist should be set according to how 
-powerful an item is.  Simple items and general purpose items should be 
-set unlimited (999).  Magic items of any power should be max_exist less 
-than or equal to 5.  Super items should be set Max_exist=1  Other max_exist 
+This as well as structure and value are the key object values that most
+influence the mud economy.  Max_exist should be set according to how
+powerful an item is.  Simple items and general purpose items should be
+set unlimited (999).  Magic items of any power should be max_exist less
+than or equal to 5.  Super items should be set Max_exist=1  Other max_exist
 ranges are in the 20-30 range.
 
-You should carefully examine The World for the max_exist of similar 
-items in The World and set accordingly.  Make good use of LOW command and 
+You should carefully examine The World for the max_exist of similar
+items in The World and set accordingly.  Make good use of LOW command and
 help files under policy.
 
 
 NOTES:
 
-RESTRICT ANY MAGIC ITEM:  You must set a limited max exist if you have 
+RESTRICT ANY MAGIC ITEM:  You must set a limited max exist if you have
 set any form of apply other than simple AC.
 
-SERIOUSLY RESTRICT ARTIFACT QUALITY ITEMS:  You must limit artifacts to 
+SERIOUSLY RESTRICT ARTIFACT QUALITY ITEMS:  You must limit artifacts to
 less than 5 in world.
 
-CONFORM YOUR MAX_EXISTS WITH ZONE FILE:  Your max exist should conform 
+CONFORM YOUR MAX_EXISTS WITH ZONE FILE:  Your max exist should conform
 with your max exist in zone file.
 
 CONFORM YOUR MAX_EXISTS WITH ZONE FILE PERCENT LOADS:  Low max_exist items
-should *not* have hight percentage loads or load on a large number of 
-mobs.  Simple math will show you if you have a max exist of 5 and you 
-load it 40 percent of time on 12 different mobs, you will reach your max 
-exist the first time some group clears a zone.  You should want your 
-items to load sparingly for a long time or groups will just clear the 
+should *not* have hight percentage loads or load on a large number of
+mobs.  Simple math will show you if you have a max exist of 5 and you
+load it 40 percent of time on 12 different mobs, you will reach your max
+exist the first time some group clears a zone.  You should want your
+items to load sparingly for a long time or groups will just clear the
 zone the first week of production and then never come back.

@@ -1,6 +1,6 @@
 SUBSTRING: OBJCOST
 ---------------------
- 
+
 ex:
 give { "-#OBJCOST( 300, 10)#";
        <action>;
@@ -26,7 +26,7 @@ more than its true cost.
 
 When this mob is loaded, it will determine what the current market value
 of a sword is (plus 10%), and derive the proper response.  For instance, if
-a long sword's price (in the tinyfile) was 1000 talens, the following 
+a long sword's price (in the tinyfile) was 1000 talens, the following
 response would be created:
 
 give { "-1100";
@@ -35,4 +35,4 @@ give { "-1100";
 
 Thus, the substring has been replaced by the derived pricing.  And if a
 subsequent change is made to the item that affects its price, your script
-will not need to be updated. 
+will not need to be updated.

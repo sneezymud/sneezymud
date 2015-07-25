@@ -1,19 +1,19 @@
 The actual commands in the zone file have to follow a strict format as
 the mud reads them in and a badly formatted command may cause strange results.
 
-Each command must be on its own line.   Each command will instruct the 
-mud to 1) reset an exit, 2) load and instruct a mob, or load and place an 
+Each command must be on its own line.   Each command will instruct the
+mud to 1) reset an exit, 2) load and instruct a mob, or load and place an
 object.
 
 Also, you will explain the intended purpose of each of your commands in a
 comment following your command (but on the same line) so that if changes
 are required later your zonefile can be read easier.  Otherwise it is just
-a list of numbers.  
+a list of numbers.
 
 The last thing you zone file can contain are non executable comment lines.
 These can be instructions for the LOW, comments about the zone, or a
 command you would like put in later.  To have a non-executed line you need
-to start the line with a *, that line will be then be skipped by the code. 
+to start the line with a *, that line will be then be skipped by the code.
 
 General format of a <command> is:
 <command_type> <if_flag> <arg> <arg> <arg> ...[explanation of command]
@@ -21,22 +21,22 @@ General format of a <command> is:
 COMMAND_TYPE:  Command_type is a single capital letter.  Each will be
 dealt with in depth in later chapters.  In general, it tells the processor
 what it will be doing eg. an M command loads a mob, a D command handles a
-door, an E command equips somebody with something, etc. 
+door, an E command equips somebody with something, etc.
 
 IF_FLAG:  The if_flag is somewhat confusing, so pay attention.  The
-if_flag determines the condition when the command will be operated.  
+if_flag determines the condition when the command will be operated.
 
-	An if_flag of 0 means operate this command regardless of 
-                   circumstances each time the mud resets the zone.  
-	An if_flag of 1 means operate this command ONLY IF the 
-                   previous command was executed. 
+	An if_flag of 0 means operate this command regardless of
+                   circumstances each time the mud resets the zone.
+	An if_flag of 1 means operate this command ONLY IF the
+                   previous command was executed.
 
 Why is this important?  For commands like adding mobs to the room you will
 probably always want to execute the command (if_flag 0).  But for commands
 like adding equipment, where you don't want execution to occur if the mob
 the equipment is on didn't load, use if_flag 1. Screwing up the if_flag
 may cause your equipment to load itself in strange places or crash the
-game. 
+game.
 
 ARGS:  The <args> depend on what command is being used. (See later chapters)
 

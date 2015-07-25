@@ -963,7 +963,6 @@ class TBeing : public TThing {
     int doTrigger(const char *);
     int doStore(const char *);
     int passOut();
-    int shieldAbsorbDamage(int);
     void chlorineRoom();
     int flameEngulfed();
     int frostEngulfed();
@@ -1221,7 +1220,6 @@ class TBeing : public TThing {
     void doTan();
     void doButcher();
     void doLogging();
-    int  doApplyHerbs(const sstring &);
     void doSkin(const char *);
     void doButcher(const char *);
     int doPlant(sstring);
@@ -1244,7 +1242,6 @@ class TBeing : public TThing {
     int crashLanding(positionTypeT, bool force = FALSE, bool dam = TRUE, bool falling = false);
     int doTurn(const char *, TBeing *);
     virtual void doMedit(const char *);
-    virtual void doSEdit(const char *);
     void doPreen(sstring &argument);
 
     void setGuildID(int);
@@ -1679,7 +1676,6 @@ class TBeing : public TThing {
     void doTie(const sstring &);
     void doUntie(const sstring &);
     void doHistory();
-    int  doCreate(const char *);
     int  ChargePulse(TBeing *ch);
     int getPosHeight() const;
     int getPartMinHeight(int) const;

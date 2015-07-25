@@ -73,7 +73,7 @@ proper trigger is!  Nothing sucks more than KNOWING you are at the right place
 with the correct answer and not being able to get the creature to respond
 properly!
 
-11.) Beware the ambiguous trigger.  Trigger#1="say boat", Trigger#2="say 
+11.) Beware the ambiguous trigger.  Trigger#1="say boat", Trigger#2="say
 big boat".  If I say "where is the big boat", which trigger will I get?
 This is dependant on implementation (which obviously might change, so just
 because it works correctly now....).  Obviously, avoid say triggers that

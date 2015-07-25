@@ -233,7 +233,7 @@ void TBeing::doChargeStave(sstring tStString)
     return;
   }
 
-  stSpaceOut(tStString);
+  tStString = tStString.trim();
 
   if (tStString.empty())
     tSpell = tStaff->getSpell();
