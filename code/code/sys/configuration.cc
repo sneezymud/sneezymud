@@ -114,7 +114,7 @@ bool Config::doConfiguration(int argc, char *argv[])
      po::value<bool>(&rent_only_deletion)->default_value(false),
      "see configuration.h")
     ("rent_tax",
-     po::value<bool>(&rent_tax)->default_value(false),
+     po::value<bool>(&rent_tax)->default_value(true),
      "see configuration.h")
     ("nuke_inactive_mobs",
      po::value<bool>(&nuke_inactive_mobs)->default_value(false),
