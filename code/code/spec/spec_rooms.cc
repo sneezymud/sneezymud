@@ -533,6 +533,28 @@ int belimusBlowHole(TBeing *me, cmdTypeT cmd, const char *, TRoom *rp)
 }
 
 
+void findMostExpensiveItem(TObj *item, TObj *&best)
+{
+  if (!item)
+    return;
+  for(StuffIter it=item->stuff.begin();it!=item->stuff.end();++it)
+    findMostExpensiveItem(dynamic_cast<TObj *>(*it), best);
+  if (best && best->obj_flags.cost >= item->obj_flags.cost)
+    return;
+  best = item;
+}
+
+TObj *findMostExpensiveItem(TBeing *vict)
+{
+  TObj *best = NULL;
+  for(int i = MIN_WEAR; i < MAX_WEAR; i++)
+    if (vict->equipment[i])
+      findMostExpensiveItem(dynamic_cast<TObj*>(vict->equipment[i]), best);
+  for(StuffIter it=vict->stuff.begin();it!=vict->stuff.end();++it)
+    findMostExpensiveItem(dynamic_cast<TObj *>(*it), best);
+  return best;
+}
+
 int weirdCircle(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 {
   char buf[256];
