@@ -218,7 +218,6 @@ TaskEntry tasks[NUM_TASKS] =
   {"searching for secret exits", "You are too busy searching for secret exits.\n\r", task_search},
   {"starting a fire", "You are too busy trying to start a fire.\n\r", task_lightfire},
   {"planting seeds", "You are too busy planting some seeds.\n\r", task_plant},
-  {"creating something", "You are too busy trying to create something.\n\r", task_createEngine},
   {"charging", "You are too busy barreling down on someone.\n\r", task_charge},
   {"whittling", "You are too busy using your whittle skills.\n\r", task_whittle},
   {"stave charging", "You are too busy charging a stave.\n\r", task_stavecharging},

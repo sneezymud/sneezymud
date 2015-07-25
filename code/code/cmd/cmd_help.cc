@@ -241,7 +241,6 @@ wizPowerT wizPowerFromCmd(cmdTypeT cmd)
       break;
     case CMD_RELEASE: // ???
     case CMD_CAPTURE: // ???
-    case CMD_CREATE:  // Lapsos
     case CMD_TASKS:
     case CMD_TEST_FIGHT:
     case CMD_PEELPK:

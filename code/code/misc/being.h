@@ -1227,7 +1227,6 @@ class TBeing : public TThing {
     void doTan();
     void doButcher();
     void doLogging();
-    int  doApplyHerbs(const sstring &);
     void doSkin(const char *);
     void doButcher(const char *);
     int doPlant(sstring);
@@ -1685,7 +1684,6 @@ class TBeing : public TThing {
     void doTie(const sstring &);
     void doUntie(const sstring &);
     void doHistory();
-    int  doCreate(const char *);
     int  ChargePulse(TBeing *ch);
     int getPosHeight() const;
     int getPartMinHeight(int) const;
