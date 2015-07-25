@@ -69,11 +69,6 @@ void TArmorWand::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   TWand::getFourValues(x1,x2,x3,x4);
 }
 
-int TArmorWand::rentCost() const
-{
-  return TArmor::rentCost() + TWand::rentCost();
-}
-
 int TArmorWand::suggestedPrice() const
 {
   // (int)(10.0 * getWeight() * material_nums[getMaterial()].price) will get added twice, so remove one

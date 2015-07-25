@@ -24,7 +24,6 @@ class TPerson : public TBeing {
     FILE *tLogFile;
     char lastHost[40];
     char *title; 
-    int last_rent;
     //    bool toggles[MAX_TOG_INDEX];
     bool wizPowers[MAX_POWER_INDEX];
     bool wizPowersOriginal[MAX_POWER_INDEX];
@@ -77,7 +76,7 @@ class TPerson : public TBeing {
     void advanceSelectDisciplines(classIndT, int, silentTypeT);
     void doLevelSkillsLearn(discNumT, int, int);
     void setBaseAge();   // sets new base-age
-    void saveRent(objCost *, bool, int);
+    int saveRent(bool d=false, int msgStatus=0);
     void loadRent();
 
     virtual void raiseLevel(classIndT);

@@ -1657,15 +1657,6 @@ double TBaseWeapon::sharpLevel() const
   return sharp_lev;
 }
 
-int TBaseWeapon::rentCost() const
-{
-  int val = TObj::rentCost();
-
-  // for later use
-
-  return val;
-}
-
 double TBaseWeapon::objLevel() const
 {
   return weaponLevel();

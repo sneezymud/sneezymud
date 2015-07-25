@@ -1,13 +1,14 @@
 Syntax: rent
-Syntax: rent credit
 
 For use in the receptions of inns, in homes or after having successfully
 encamped.  The rent command will store your items and make you leave the 
 game.  The next time you enter, you will start out in the room where you 
-left.  
+left.  Properly rented characters will regenerate hit points, mana, etc.
+while rented out.
 
 This is the recommended way of leaving the game. Simply dropping link
-is risky as it may leave you vulnerable to item or experience point loss. 
+is risky as it may leave you vulnerable to item or experience point loss,
+and it is recommended to use the SAVE command before doing so.
 
 Renting will also keep track of any NPC followers. Such pets, thralls 
 or charms will be available to you when you next log in.  No guarantees 
@@ -17,5 +18,5 @@ made for them.
 We cannot guarantee storage of items on characters rented for over three
 months.  
 
-See also: OFFER
+See also: SAVE
 Related Topic: INNS

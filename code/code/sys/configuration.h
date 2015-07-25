@@ -14,29 +14,6 @@ class Config {
   // 4.1 balanced at 2 prior to depreciation
   static int ITEM_DAMAGE_RATE;
 
-  // used to determine rent credit
-  // credit = level * maxi(20, level) * x
-  // the values of the "model" items (soft leather, plate, etc) were set based
-  // on this rent credit being at 75
-  // 4.0's no rent, and 4.1's big rent credit have distorted this so feel free
-  // to adjust if this no longer works
-  static int RENT_CREDIT_VAL;
-  
-  // if player goes over rent, items are "sold" to pay for it
-  // this handles what is done with the sold item(s)
-  // If turned on, the pawnguy gets them
-  // otherwise they get deleted
-  static bool RENT_SELL_TO_PAWN;
-  
-  // causes innkeepers to grant rentCredit based on the innkeepers levels
-  // otherwise, it is based on the players level.
-  // the chief use of this is to encourage high level pc's to use certain inns
-  static bool RENT_RESTRICT_INNS_BY_LEVEL;
-  
-  // causes bad things to happen to player based on time in autorent
-  // there is a grace period to handle crashes
-  static bool PENALIZE_FOR_AUTO_RENTING;
-  
   // the minimum "hardness" for a material to damage/blunt a weapon
   // when hitting.
   static int WEAPON_DAM_MIN_HARDNESS;
@@ -85,6 +62,9 @@ class Config {
   // file.  Otherwise pfile, rent and account go
   static bool rent_only_deletion;
   
+  // whether to tax rent at the public hostels
+  static bool rent_tax;
+  
   // Causes mobs in inactive zones to be deleted.  Typically, 50% of the mud's
   // mobs would qualify.  Dramatically speeds up the mobileActivity loop and
   // improves CPU performance.
@@ -121,10 +101,6 @@ class Config {
   static bool doConfiguration(int argc=0, char *argv[]=0);
   
   static int ItemDamageRate(){ return ITEM_DAMAGE_RATE; }
-  static int RentCreditVal(){ return RENT_CREDIT_VAL;}
-  static bool RentSellToPawn(){ return RENT_SELL_TO_PAWN;}
-  static bool RentRestrictInnsByLevel(){return RENT_RESTRICT_INNS_BY_LEVEL;}
-  static bool PenalizeForAutoRenting(){ return PENALIZE_FOR_AUTO_RENTING;}
   static int WeaponDamMinHardness(){ return WEAPON_DAM_MIN_HARDNESS;}
   static int WeaponDamMaxHardness(){ return WEAPON_DAM_MAX_HARDNESS;}
   static int WeaponDamMaxSharp(){ return WEAPON_DAM_MAX_SHARP;}
@@ -136,6 +112,7 @@ class Config {
   static bool NoDamagedItemsShop(){ return NO_DAMAGED_ITEMS_SHOP; }
   static bool AutoDeletion(){ return auto_deletion; }
   static bool RentOnlyDeletion(){ return rent_only_deletion; }
+  static bool RentTax(){ return rent_tax; }
   static bool NukeInactiveMobs(){ return nuke_inactive_mobs; }
   static bool LoadOnDeath(){ return load_on_death; }
   static bool ThrowFormatExceptions(){ return throw_format_exceptions; }

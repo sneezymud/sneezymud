@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 #include <unistd.h>
 #include <dirent.h>
 #include <sys/types.h>
@@ -47,14 +48,6 @@ static const char ROOM_SAVE_PATH[] = "roomdata/saved";
 static const int NORMAL_SLOT   = -1;
 static const int CONTENTS_END  = -2;
 
-#define FREE_RENT true
-
-static const int LIMITED_RENT_ITEM = 9;  
-// in 5.2 anything with max exists <= this number will be charged rent
-
-static const bool FreeRent = true;
-//BOD decision 8-28-01
-
 struct SInnkeeperHate {
   int    tVNum; // Mobile VNum of the innkeeper in question.
   race_t tRace;  // Race in question
@@ -79,208 +72,6 @@ struct SInnkeeperHate {
 
   {0, RACE_NORACE, false, "Leave!"} // Add all new entries BEFORE this line.
 };
-
-// this returns a number indicating how long we "think" it should
-// take to get to level "lev"
-// it is somewhat arbitrary
-//
-int secs_to_level(int lev)
-{
-  lev--;
-  if (lev <= 0)
-    return 0;
-
-  // how much damage (average/round) am I doing
-  float dam_level = 0.9 * lev;
-
-  // what is the average mob have for hp
-  float avg_mob_hp = (11.0 + 4.5) * lev;
-
-  // average combat length
-  float rounds_combat = avg_mob_hp / dam_level;
-
-  // converted to number of seconds
-  int time_combat = (int) (rounds_combat * Pulse::COMBAT / Pulse::ONE_SECOND);
-
-  // now figure out regen
-  // assume that a fiar fight consumes 100% of players HP each kill
-  int avg_pc_hp = 15 + (10*lev);
-
-  // numer of hps gained back per tick
-  int regen_per_tick;
-  regen_per_tick = (int) (stats.hit_gained_attempts == 0 ? 1 :
-        ((float) stats.hit_gained / (float) stats.hit_gained_attempts));
-
-  float ticks_regen = (float) avg_pc_hp / (float) regen_per_tick;
-
-  int secs_regen = (int) (ticks_regen * (Pulse::UPDATE/2) / Pulse::ONE_SECOND);
-
-  int tot_time = secs_regen + time_combat;
-
-  // and i have to kill a bunch of mobs
-  tot_time *= kills_to_level(lev);
-
-  // don't forget to add in how long it took me to get to last level.
-  tot_time += secs_to_level(lev);
-
-  return tot_time;
-}
-
-float power_level_number(int lev)
-{
-  float levelfactor;
-
-  // if they were doing it themself, this is the number of days it
-  // should take.
-  levelfactor = (float) secs_to_level(lev) / (float) (60*60*24);
-
-  // make an allowance for somebody being super cool
-  levelfactor *= 0.6;
-
-  // this formula is roughly geared toward the "standard" difficulty
-  // if we have made game harder, adjust accordingly.
-  levelfactor /= stats.xp_modif;
-
-  return  levelfactor;
-}
-
-static ubyte credit_factor(const TBeing *ch)
-{
-  // we are going to modify rent credit to adjust it for players that seem
-  // to have been leveled too fast.  This is somewhat arbitrary
-  // In theory, we want it to take about 1 day of play to hit L10 and
-  // 25 days to hit L50.
-  // I have basically graphed the curve to be playtime in days = (L/10) ^ 2
-  // this should return a value between 0-100
-
-  time_info_data playing_time; 
-  float playtime, levelfactor;
-
-  GameTime::realTimePassed((time(0) - ch->player.time->logon) +
-                                  ch->player.time->played, 0, &playing_time);
-  playtime = (float) playing_time.day;
-  playtime += (float) playing_time.hours / 24.0;
-  if (playtime <= 0.0)
-    playtime = 1.0/24.0;
-
-// Cosmo 12/22/97 the xp_modif changed to apply to levelfactor by dividing
-// done in other function above 
-  levelfactor = power_level_number(ch->GetMaxLevel());
-
-  if (playtime >= levelfactor || levelfactor <= 0.0)
-    return 100;
-
-  return (ubyte) ( 100 * playtime / levelfactor);
-}
-
-double getLevMod(unsigned short int Class, unsigned int lev)
-{
-  double lev_mod = 0;  // warriors is 0.0
-  if (IS_SET(Class, CLASS_MAGE))
-    lev_mod = max(lev_mod, 10.0);
-  if (IS_SET(Class, CLASS_CLERIC))
-    lev_mod = max(lev_mod, 7.0);
-  if (IS_SET(Class, CLASS_THIEF))
-    lev_mod = max(lev_mod, 5.0);
-  if (IS_SET(Class, CLASS_DEIKHAN))
-    lev_mod = max(lev_mod, 3.0);
-  if (IS_SET(Class, CLASS_MONK))
-    lev_mod = max(lev_mod, 10.0);
-  if (IS_SET(Class, CLASS_RANGER))
-    lev_mod = max(lev_mod, 3.0);
-  if (IS_SET(Class, CLASS_SHAMAN))
-    lev_mod = max(lev_mod, 10.0);
-
-  // phase in rent credit loss over few levels
-  // this is mostly here so all newbies are essentially the same
-  lev_mod = min(lev_mod, lev/3.0);
-  return lev_mod;
-}
-
-unsigned int rent_credit(unsigned short Class, unsigned int orig_lev, unsigned int numClasses)
-{
-#ifdef FREE_RENT
-  // for 5.2 we're going for 0 base rent credit for all classes, then charging on basis of max exists
-  return (unsigned int)0;
-#endif
-
-  // First, establish credit for the AC and struct of the player's
-  // equipment.
-  // this should be level based, but tweak that level for class since
-  // certain classes ought to be using lower quality AC.
-  double lev = orig_lev;
-
-  // make corrections to lev, based on class wearability
-  // this is here (c.f. balance notes) so that we can restrict the
-  // AC from equipment a given class is able to have.
-  double lev_mod = getLevMod(Class, orig_lev);
-
-  lev -= lev_mod;
-  lev = max(lev, 1.0);
-
-  double num = (lev * max(20.0, lev) * Config::RentCreditVal());
-
-  // next, give credit for a weapon.
-  // use the real level rather than the modified level we used above since
-  // damage capacity is not class-modified.
-  // a weapon should be an extra 20.5% of the price
-  num += (orig_lev * max(20, (int) orig_lev) * Config::RentCreditVal() * .205);
-
-  // make allowances for sundry items
-  // this includes: water skin, food, lanterns, fuel, bags, whetstones, etc
-  // assume need 1000 talens total for this crap
-  num += min((int) orig_lev * 50, 1000);
-
-  // make some allowances for other items a class might need as "appropriate"
-  if (IS_SET(Class, CLASS_MAGE)) {
-    // allowance for components
-    // basically, give them spare capacity for 20 kills
-    // c.f. balance notes for more discussion
-    int amt = 15 * orig_lev * orig_lev;
-
-    // don't be overly generous with this to multiclass
-    amt /= numClasses;
-
-    num += amt;
-  }
-  if (IS_SET(Class, CLASS_CLERIC)) {
-    // allowance for symbols
-    // permit them to carry 1.5 symbols of their level
-    // symbol costs 15 * L^2 (rents for 1/2)
-    int amt = (int) (1.5 * 15 * orig_lev * orig_lev / 2);
-    amt /= numClasses;
-    num += amt;
-  }
-  if (IS_SET(Class, CLASS_DEIKHAN)) {
-    // allowance for symbols
-    // permit them to carry 1.0 symbols of their level
-    // symbol costs 15 * L^2 (rents for 1/2)
-    int amt = (int) (1.0 * 15 * orig_lev * orig_lev / 2);
-    amt /= numClasses;
-    num += amt;
-  }
-  if (IS_SET(Class, CLASS_RANGER)) {
-    // allowance for components
-    // basically, give them spare capacity for 6 kills
-    int amt = 5 * orig_lev * orig_lev;
-    amt /= numClasses;
-    num += amt;
-  }
-
-  return (unsigned int) num;
-}
-
-unsigned int TBeing::rentCredit() const
-{
-  unsigned int num =  rent_credit(getClass(), GetMaxLevel(), howManyClasses());
-
-  // correct for powerleveling
-  ubyte cred = credit_factor(this);
-  num *= cred;
-  num /= 100;
- 
-  return num;
-}
 
 void handleCorrupted(const char *name, char *account)
 {
@@ -1500,318 +1291,14 @@ void ItemSaveDB::objsToStore(signed char slot, StuffList list,
 {
   TObj *o=NULL;
 
-  for(StuffIter it=list.begin();it!=list.end();){
-    if(!(o=dynamic_cast<TObj *>(*(it++))))
+  for(StuffIter it=list.begin();it!=list.end();++it){
+    if(!(o=dynamic_cast<TObj *>(*it)))
       continue;
     
     objToStore(slot, o, ch, d, corpse, container);
   }
 }
 
-void TBeing::addObjCost(TBeing *re, StuffList list, objCost *cost, sstring &str)
-{
-  for(StuffIter it=list.begin();it!=list.end();++it){
-    addObjCost(re, dynamic_cast<TObj *>(*it), cost, str);
-  }
-}
-
-void TBeing::addObjCost(TBeing *re, TObj *obj, objCost *cost, sstring &str)
-{
-  int temp;
-  char buf[256];
-
-  if (!obj)
-    return;
-
-  silentTypeT silent = SILENT_NO;
-  if (desc && IS_SET(desc->autobits, AUTO_NOSPAM))
-    silent = SILENT_YES;
-  
-  if (obj->isRentable() && obj->isMonogramOwner(this, true)) {
-    temp = max(0, obj->rentCost());
-#ifdef FREE_RENT
-    // in sneezy 5.2 we don't want to charge for anything that isn't limited. -dash 01/01
-    if(obj->max_exist > LIMITED_RENT_ITEM) temp = 0;
-    //    vlogf(LOG_DASH, format("%s getting cost on %s, max exist %d, limit %d, cost %d") %  getName() % obj->getName() %
-    //	  obj->max_exist % LIMITED_RENT_ITEM % temp);
-    
-    // BOD decision 8-28-01 - no rent :)
-    if (FreeRent) temp = 0;
-
-#endif
-    cost->total_cost += temp;
-    if (re) {
-      if (desc && desc->m_bIsClient) {
-        if(!FreeRent) {
-	        sprintf(buf, "%-30s : %d talens/day\n\r", obj->getName().c_str(), temp);
-	      } else
-	        sprintf(buf, "%-30s \n\r", obj->getName().c_str());
-        }
-        str += buf;
-    } else if (!silent && re) {
-        if (!FreeRent) 
-	        sendTo(COLOR_OBJECTS, format("%-30s : %d talens/day\n\r") % obj->getName() % temp);
-	      else
-	        sendTo(COLOR_OBJECTS, format("%-30s \n\r") % obj->getName());
-    }
-    if (temp<=100)
-      cost->lowrentobjs++;
-    cost->no_carried++;
-  } else {
-    if (re) {
-      act("$n tells you 'Sorry!  I refuse to store $p.'", 
-        FALSE, re, obj, this, TO_VICT, ANSI_ORANGE);
-    }
-    cost->ok = FALSE;
-  }
-  addObjCost(re, obj->stuff, cost, str);
-}
-
-bool TBeing::recepOffer(TBeing *recep, objCost *cost)
-{
-  char buf[256];
-  int i, actual_cost;
-  unsigned int credit;
-  TObj *obj;
-  sstring str;
-  followData *f;
-
-  if (!cost)
-    return FALSE;
-
-  bool client = (desc && desc->m_bIsClient);
-
-  cost->total_cost = 0;
-  cost->ok = TRUE;
-  cost->no_carried = 0;
-
-  if (recep) {
-    act("$n tells you \"Have a nice stay!\"", FALSE, recep, 0, this, TO_VICT);
-    if (client) {
-      desc->clientf(format("%d") % CLIENT_RENT);
-      sendTo("Rent is free!");
-      desc->clientf(format("%d") % CLIENT_RENT_END);
-    }
-  }
-
-  // add up cost for the player
-  addObjCost(recep, stuff, cost, str);
-
-  for (i = MIN_WEAR; i < MAX_WEAR; i++) {
-    obj = dynamic_cast<TObj *>(equipment[i]);
-    if (!obj)
-      continue;
-    if (!(((i == WEAR_LEG_L) && obj->isPaired()) ||
-          ((i == WEAR_EX_LEG_L) && obj->isPaired()) ||
-          ((i == HOLD_LEFT) && obj->isPaired()))) {
-      addObjCost(recep, obj, cost, str);// equip
-    }
-  }
-  // add up cost for followers
-  for (f = followers; f; f = f->next) { 
-    TMonster *ch = dynamic_cast<TMonster *>(f->follower);
-    if (!ch)
-      continue;
-    
-    if (!ch->isSaveMob(this))
-      continue;
-
-    // don't save if not around
-    if (!ch->sameRoom(*this))
-      continue;
-
-    actual_cost = ch->petPrice() / 4;
-
-    silentTypeT silent = SILENT_NO;
-    if (desc && IS_SET(desc->autobits, AUTO_NOSPAM))
-      silent = SILENT_YES;
-
-    if (FreeRent) actual_cost = 0;
-
-    if (recep) {
-      if (desc && desc->m_bIsClient) {
-        if (!FreeRent) 
-	  sprintf(buf, "%-30s : %d talens/day ********** Storage fee \n\r", ch->getName().c_str(), actual_cost);
-        else
-	  sprintf(buf, "%-30s - Pet/Charm/Thrall/Mount \n\r", ch->getName().c_str());
-	str += buf;
-      } else if (!silent) {
-	if (!FreeRent) 
-	  sendTo(COLOR_OBJECTS, format("%-30s : %d talens/day   ********** Storage fee \n\r") % ch->getName() % actual_cost);
-        else
-          sprintf(buf, "%-30s - Pet/Charm/Thrall/Mount \n\r", ch->getName().c_str());
-
-      }
-    }
-    cost->total_cost += actual_cost;
-
-    // mob's inventory
-    addObjCost(recep, ch->stuff, cost, str);
-
-    // mob's equipment
-    for (i = MIN_WEAR; i < MAX_WEAR; i++) {
-      obj = dynamic_cast<TObj *>(ch->equipment[i]);
-      if (!obj)
-        continue;
-      if (!(((i == WEAR_LEG_L) && obj->isPaired()) ||
-            ((i == WEAR_EX_LEG_L) && obj->isPaired()) ||
-           ((i == HOLD_LEFT) && obj->isPaired()))) {
-        addObjCost(recep, obj, cost, str);// equip
-      }
-    }
-  }
-  if (recep) {
-    if (!cost->ok)
-      return FALSE;
-  }
-  if (isImmortal()) {
-    if (recep)
-      if (!FreeRent)
-	act("$n tells you 'Considering you're immortal, you can rent for free.'",0, recep, 0, this, TO_VICT);
-
-    cost->total_cost = 0;
-    if (client && recep) {
-      processStringForClient(str);
-
-      desc->clientf(format("%d") % CLIENT_RENT);
-      sendTo(str);
-      desc->clientf(format("%d") % CLIENT_RENT_END);
-    }
-    return TRUE;
-  }
-  if (cost->no_carried > MAX_OBJ_SAVE) {
-    sprintf(buf, "$n tells you, \"Sorry, but I can't store more than %d items.\n\rYou have %d items.\"", MAX_OBJ_SAVE, cost->no_carried);
-    if (recep)
-      act(buf, FALSE, recep, 0, this, TO_VICT);
-    
-    return FALSE;
-  }
-  if (recep && hasClass(CLASS_MONK) && ((cost->no_carried-cost->lowrentobjs) > 35)) {
-    sendTo("You remember your vow not to carry over 35 items, and change your mind.\n\r");
-    sendTo(format("You are currently carrying %d items.\n\r") % (cost->no_carried-cost->lowrentobjs));
-    return FALSE;
-  }
-  if (recep) {
-    if (!FreeRent) {
-      sprintf(buf, "$n tells you, \"That totals to be %d talens.\"", cost->total_cost);
-      act(buf, TRUE, recep, NULL, this, TO_VICT);
-      if (cost->total_cost/GetMaxLevel() > 5000)
-	vlogf(LOG_BUG, format("%s has %d value in equipment and is level %d") %  getName() % cost->total_cost % GetMaxLevel());
-
-      if (cost->no_carried && (cost->no_carried < 10) && (((cost->total_cost)/(cost->no_carried)) > 15000)) 
-	vlogf(LOG_BUG, format("%s has only %d items with an %d average cost, please check") %  
-	      getName() % cost->no_carried % (cost->total_cost/cost->no_carried));
-    }
-  }
-  
-  if(Config::RentRestrictInnsByLevel()){
-    // note that you could use autorent to get around this rent credit reduction
-    if (recep && (recep->GetMaxLevel() < GetMaxLevel())) {
-      sprintf(buf,"I can only grant rent credit through level %d.",
-	      recep->GetMaxLevel());
-      recep->doTell(getName(), buf);
-      sprintf(buf,"That's %d talens of credit.",
-	      recep->rentCredit());
-      recep->doTell(getName(), buf);
-      credit = recep->rentCredit();
-    } else
-      credit = rentCredit();
-  } else {
-    credit = rentCredit();  
-  }
-  if (desc) {
-    desc->best_rent_credit = max(credit, desc->best_rent_credit);
-    credit = desc->best_rent_credit;
-  }
-#ifdef FREE_RENT
-  credit = 0;
-#endif
-  actual_cost = cost->total_cost - credit;
-  cost->total_cost = (actual_cost < 0) ? 0 : actual_cost;
-
-  // sprintf(buf, "$n tells you 'You have been given a rent credit of %d talens.'", credit);
-  //if (recep) 
-  //  act(buf, FALSE, recep, 0, this, TO_VICT);
-  
-  if (FreeRent) {
-    if (recep) {
-      act("$n tells you \"Have a nice stay!\"", FALSE, recep, 0, this, TO_VICT);
-    }
-  } else if (!cost->total_cost) {
-    if (recep) {
-      sprintf(buf, "$n tells you 'That puts your daily rent at %d talens.'", cost->total_cost);
-      act(buf, FALSE, recep, 0, this, TO_VICT);
-      act("$n tells you 'I guess that means you rent free.", FALSE, recep, 0, this, TO_VICT);
-    }
-  } else {
-    int daily_cost = cost->total_cost;
-    int adjusted_cost = (int) (daily_cost * gold_modifier[GOLD_RENT].getVal());
-    cost->total_cost = adjusted_cost;
-
-    if (recep) {
-#if 1
-      //  sprintf(buf, "$n tells you 'Your stuff is %d talens over your credit.'", daily_cost);
-      //act(buf, FALSE, recep, 0, this, TO_VICT);
-      sprintf(buf, "$n tells you 'The current rent multiplier is %.2f.'", gold_modifier[GOLD_RENT].getVal());
-      act(buf, FALSE, recep, 0, this, TO_VICT);
-#endif
-      
-      sprintf(buf, "$n tells you 'That puts your daily rent at %d talens.'", cost->total_cost);
-      act(buf, FALSE, recep, 0, this, TO_VICT);
-      
-#if FACTIONS_IN_USE
-      if (isSameFaction(recep) && !recep->isUnaff()) {
-        act("$n tells you 'Because you are of the same allegiance, I will give you a discount based on your faction percentage.", FALSE, recep, 0, this, TO_VICT);
-        cost->total_cost /= (int) ((double) 200/(200 - (int) getPerc())); 
-        sprintf(buf, "$n tells you 'That puts your daily rent at %d talens.'", cost->total_cost);
-        act(buf, FALSE, recep, 0, this, TO_VICT);
-      }
-#endif
-    }
-  }
-  if (cost->total_cost > (getMoney() + getBank())) {
-    if (recep)
-      act("$n tells you 'You don't have enough money on you or in the bank.'",FALSE,recep,0,this,TO_VICT);
-
-    return FALSE;
-  } else if (cost->total_cost > getMoney()) {
-    if (recep) {
-      act("$n tells you '... Your bank account is footing part of the bill.'", FALSE, recep, 0, this, TO_VICT);
-      sprintf(buf, "$n tells you 'You can afford to rent for at most %d day%s.'",
-        (getMoney() + getBank()) / (cost->total_cost),
-        (((getMoney() + getBank()) / (cost->total_cost)) == 1 ? "" : "s"));
-      act(buf, FALSE, recep, 0, this, TO_VICT);
-    }
-  } else if (cost->total_cost) {
-    if (recep) {
-      sprintf(buf, "$n tells you 'You can afford to rent for at most %d day%s.'",
-        (getMoney() + getBank()) / (cost->total_cost),
-        (((getMoney() + getBank()) / (cost->total_cost)) == 1 ? "" : "s"));
-      act(buf, FALSE, recep, 0, this, TO_VICT);
-      sprintf(buf, "$n tells you 'After %d day%s, money will be drawn against your bank balance.",
-              getMoney() / (cost->total_cost),
-              ((getMoney() / (cost->total_cost)) == 1 ? "" : "s"));
-      act(buf, FALSE, recep, 0, this, TO_VICT);
-    }
-  } else {
-    if (recep && !FreeRent) 
-      act("$n tells you \"You can afford to rent as long as you'd like.\"", FALSE, recep, 0, this, TO_VICT);
-  }
-      
-      if (client && recep) {
-    processStringForClient(str);
-   
-    if (str.length() > 4000) // max send length for the clients rent dialog is somewhere under 10k
-      str.resize(4000);
-
-    desc->clientf(format("%d") % CLIENT_RENT);
-    sendTo(str);
-    desc->clientf(format("%d") % CLIENT_RENT_END);
-  }
-      
-      return TRUE;
-}
-  
 void ItemSaveDB::clearRent()
 {
   TDatabase db(DB_SNEEZY);
@@ -1823,49 +1310,6 @@ void ItemSaveDB::clearRent()
   db.query("delete r from rent r where r.owner=%i and r.owner_type='%s'", owner, owner_type.c_str());
 
 }
-
-void TMonster::saveItems(const sstring &filepath)
-{
-  mud_assert(0, "Should be using TMonster::saveItems(int) to save to database!");
-#ifdef UNUSED
-  TObj *obj;
-  ItemSave is;
-
-  if (!is.openFile(filepath)) {
-    vlogf(LOG_FILE, format("Failed to open file '%s' in TMonster::saveItems() call.") % filepath);
-    return;
-  }
-
-  is.writeVersion();
-
-  // store worn objects
-  wearSlotT ij;
-  for (ij = MIN_WEAR; ij < MAX_WEAR; ij++) {
-    obj = dynamic_cast<TObj *>(equipment[ij]);
-    if (!obj)
-      continue;
-    if (!(((ij == WEAR_LEG_L) && obj->isPaired()) ||
-          ((ij == WEAR_EX_LEG_L) && obj->isPaired()) ||
-          ((ij == HOLD_LEFT) && obj->isPaired()))) {
-      is.objToStore(mapSlotToFile(ij), obj, this, FALSE);
-    }
-  }
-
-  // store inventory objects
-  is.objsToStore(NORMAL_SLOT, stuff, this, FALSE);
-
-  // write the rent file footer
-  is.writeFooter();
-
-  // shopkeeper specific stuff - save gold
-  if(isShopkeeper()){
-    TDatabase db(DB_SNEEZY);
-    db.query("update shopowned set gold=%i where shop_nr=%i",
-	     getMoney(), find_shop_nr(number));
-  }
-#endif
-}
-
 
 // returns rent_id in database
 int TMonster::saveItem(int shop_nr, TObj *obj, int container)
@@ -2396,7 +1840,6 @@ void TPCorpse::addCorpseToLists()
 
 void TBeing::assignCorpsesToRooms() 
 {
-#if 1 
   TRoom *rp = NULL, *rp2 = NULL;
   TThing *tmp;
   TPCorpse *corpse = NULL;
@@ -2498,7 +1941,6 @@ rp2->getName() % corpse->getRoomNum());
     corpse->addCorpseToLists();
   }
   return;
-#endif
 }
 
 void TPCorpse::saveCorpseToFile()
@@ -2539,9 +1981,6 @@ void TPCorpse::saveCorpseToFile()
 
   strcpy(is.st.owner, fileName.c_str());
   is.st.number = numCorpses;
-  is.st.gold_left = (int) in_room; 
-  is.st.original_gold = 0;
-  is.st.total_cost = 0;
   is.st.first_update = is.st.last_update = (long) time(0);
 
   if(!is.writeHeader()){
@@ -2555,10 +1994,10 @@ void TPCorpse::saveCorpseToFile()
 
 }
 
-// msgStatus = 0, no log.
-// msgStatus = 1, "saving"
-// msgStatus = 2, "renting"
-void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
+
+// msgStatus = 0: no log, 1: "saving", 2: "renting"
+// d = true: prepare player for deletion
+int TPerson::saveRent(bool d /*=false*/, int msgStatus /*=0*/)
 {
   char buf[256];
   TPerson *tmp;
@@ -2574,24 +2013,18 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
   if(!is.openFile(buf)){
     vlogf(LOG_BUG, format("Error opening file for saving %s's objects") %
 	  getName());
-    return;
+    return FALSE;
   }
   strcpy(is.st.owner, getName().c_str());
-  is.st.number = (int) cost->no_carried;
-  is.st.gold_left = (int) getMoney();
-  is.st.original_gold = (int) getMoney();
-  is.st.total_cost = (int) cost->total_cost;
   is.st.first_update = is.st.last_update = (long) time(0);
-
+  is.st.number = 0;
 
   if(!is.writeHeader()){
     vlogf(LOG_BUG, format("Error writing rent header for %s.") %  getName());
-    return;
+    return FALSE;
   }
-  is.st.number = 0;        // reset to count actual # saved 
 
-  wearSlotT ij;
-  for (ij = MIN_WEAR; ij < MAX_WEAR; ij++) {
+  for (wearSlotT ij = MIN_WEAR; ij < MAX_WEAR; ij++) {
     obj = dynamic_cast<TObj *>(equipment[ij]);
     if (!obj)
       continue;
@@ -2610,121 +2043,34 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
   is.objsToStore(NORMAL_SLOT, stuff, this, d);
   is.writeFooter();
 
-
   if (msgStatus == 1 && desc) {
-    vlogf(LOG_PIO, format("Saving %s [%d talens/%d bank/%.2f xps/%d items/%d age-mod/%d rent]") %  
-        getName() % getMoney() % getBank() % getExp() % is.st.number % 
-        age_mod % is.st.total_cost);
+    vlogf(LOG_PIO, format("Saving %s [%d talens/%d bank/%.2f xps/%d items/%d age-mod]") %
+        getName() % getMoney() % getBank() % getExp() % is.st.number % age_mod);
   } else if (msgStatus == 2 && desc) {
-    vlogf(LOG_PIO, format("Renting %s [%d talens/%d bank/%.2f xps/%d items/%d age-mod/%d rent]") %  
-        getName() % getMoney() % getBank() % getExp() % is.st.number % 
-        age_mod % is.st.total_cost);
+    vlogf(LOG_PIO, format("Renting %s [%d talens/%d bank/%.2f xps/%d items/%d age-mod]") %
+        getName() % getMoney() % getBank() % getExp() % is.st.number % age_mod);
   }
-  last_rent = is.st.total_cost;
 
   if (!is.st.number) 
     wipeRentFile(getName().c_str());
+
+  if (d) {
+    short save_room = in_room;
+    saveChar(save_room);
+    in_room = save_room;
+    preKillCheck(TRUE);
+    return DELETE_VICT;
+  }
+
+  return TRUE;
 }
 
-// this is used to load the items a shopkeeper has
-void TMonster::loadItems(const sstring &filepath)
-{
-  mud_assert(0, "Should be using TMonster::loadItems(int) to load from database!");
-#ifdef UNUSED
-  int num_read = 0;
-  ItemLoad il;
-
-  if(!il.openFile(filepath)) {
-    vlogf(LOG_FILE, format("Failed to open file '%s' in TMonster::loadItems() call.") % filepath);
-    return;
-  }
-
-  if(!il.readVersion()){
-    vlogf(LOG_BUG, format("Error while reading version from %s.") %  filepath);
-    return;
-  }
-
-  il.objsFromStore(NULL, &num_read, this, NULL, FALSE);
-#endif
-}
-
-/*--------------------------------------------------
-findMostExpensiveItem
---------------------------------------------------*/
-void setMostExpensiveItem(TObj *look, TObj *&found)
-{
-  if (!look)
-    return;
-  for(StuffIter it=look->stuff.begin();it!=look->stuff.end() && *it;++it) {
-    setMostExpensiveItem(dynamic_cast<TObj *>(*it), found);
-  }
-  if (found && look->rentCost() <= found->rentCost())
-    return;
-  found = look;
-}
-
-TObj *findMostExpensiveItem(TBeing *b)
-{
-  TObj *found = NULL;
-
-  for(int i = MIN_WEAR; i < MAX_WEAR; i++) {
-    if (!b->equipment[i])
-      continue;
-    setMostExpensiveItem(dynamic_cast<TObj*>(b->equipment[i]), found);
-  }
-  for(StuffIter it=b->stuff.begin();it!=b->stuff.end() && *it;++it) {
-    setMostExpensiveItem(dynamic_cast<TObj *>(*it), found);
-  }
-  return found;
-}
-
-void TThing::moneyMove(TBeing *ch)
-{
-  TThing *t;
-  for(StuffIter it=stuff.begin();it!=stuff.end();){
-    t=*(it++);
-    t->moneyMove(ch);
-  }
-}
-
-void TMoney::moneyMove(TBeing *ch)
-{
-  if (equippedBy) {
-    ch->unequip(eq_pos);
-  } else if (parent) {
-    (*this)--;
-  }
-
-  ch->addToMoney(getMoney(), GOLD_XFER);
-  vlogf(LOG_PIO, format("Found %d talens on %s's person during rent check") % 
-            getMoney() % ch->getName()); 
-  delete this;
-}
-
-void TBeing::moneyCheck()
-{
-  int i;
-  TThing *t;
-
-  for (i = MIN_WEAR; i < MAX_WEAR; i++) {
-    if ((t = equipment[i])) {
-      t->moneyMove(this);
-    }
-  }
-  for(StuffIter it=stuff.begin();it!=stuff.end();){
-    t=*(it++);
-    t->moneyMove(this);
-  }
-}
 
 // Somewhere in here, we need to call race->makeBody().
 void TPerson::loadRent()
 {
-  int num_read = 0, timegold, gone, amt;
-  TObj *i = NULL;
-  //char buf[256], wizbuf[256];
+  int num_read = 0;
   char buf[256];
-  objCost cost;
   TPerson *tmp;
   sstring lbuf;
   ItemLoad il;
@@ -2767,139 +2113,22 @@ void TPerson::loadRent()
     vlogf(LOG_BUG, format("  %s just got %s's objects!") %
 	  getName() % il.st.owner);
 
-#if 0
-  // A nice idea, but the two are now out of synch since the rent header
-  // has number of my items plus mob follower's items.
-  if (il.st.number != num_read) {
-    vlogf(LOG_BUG, format("Error while reading %s's objects.  %d in rent file, only %d loaded.") %  getName() % il.st.number % num_read);
-    return;
-  }
-#endif
-
-  // Three hour grace period after crash or autorent. 
-  if (!FreeRent && in_room == Room::NOWHERE && 
-      (il.st.first_update+ 3*SECS_PER_REAL_HOUR > time(0))) {
-    vlogf(LOG_PIO, "Character reconnecting inside grace period.");
-    sendTo("You connected within the autorent grace period.\n\r");
+  if (in_room == Room::NOWHERE) {
+    vlogf(LOG_PIO, "Char reconnecting after autorent");
+    vlogf(LOG_PIO, format("%s was autorented for %d secs") % getName() %
+        (time(0) - il.st.first_update));
   } else {
-    if (in_room == Room::NOWHERE) {
-      vlogf(LOG_PIO, "Char reconnecting after autorent");
-      applyAutorentPenalties(time(0) - il.st.first_update);
-    } else {
-      // char was rented
-      applyRentBenefits(time(0) - il.st.first_update);
-    }
-
-    gone = il.st.original_gold - il.st.gold_left;
-    timegold = (int) (((float) ((float) il.st.total_cost/(float) SECS_PER_REAL_DAY)) * (time(0) - il.st.last_update));
-    // this is a kludge cuz total is going negative sometimes somehow - Bat 
-    if (timegold < 0) {
-      vlogf(LOG_BUG,format("ERROR: timegold rent charged negative for %s.") % il.st.owner);
-      vlogf(LOG_BUG,format("ERROR: %s   daily cost: %d timegold: %d") % il.st.owner %il.st.total_cost %timegold);
-      vlogf(LOG_BUG,format("ERROR: %s   current time: %d, update time: %d") % il.st.owner %time(0) %il.st.last_update);
-      vlogf(LOG_BUG,format("ERROR: %s   time differential: int: %d") % il.st.owner %(time(0) - il.st.last_update));
-      timegold = 0;
-    }
-    vlogf(LOG_PIO, format("%s ran up charges of %d since last update, %d total charges") %  getName() % timegold % (gone + timegold));
-
-    int total_rent=(timegold + gone)>il.st.total_cost?il.st.total_cost:(timegold + gone);
-    if (!FreeRent)
-      sendTo(format("You ran up charges of %d talen%s in rent.\n\r") % total_rent %      (((total_rent) == 1) ? "" : "s"));
-    addToMoney(-(total_rent), GOLD_RENT);
-
-
-   // NOTE:  I realize we can give out gold doing this, but my guess 
-   // the only way barring bugs is via timeshifting.   
-
-    il.st.first_update = il.st.last_update = time(0);
-
-    if (getMoney() < 0) {
-      addToMoney(points.bankmoney, GOLD_XFER);
-      setBank(0);
-      // silly last ditch effort
-      // it is possible that they have money in a bag, so look
-      // for this and make adjustments
-      moneyCheck();
-
-      if (getMoney() < 0) {
-        vlogf(LOG_PIO, format("%s ran out of money in rent") %  getName());
-        sendTo("You ran out of money in rent.\n\rSome of your belongings were confiscated.\n\r");
-
-        // Rent will now take items one by one to meet the rent requirements
-        // instead of taking all items regardless. - Russ
-
-        // Ideally, we should first take items on followers, then the
-        // follower itself here, before doing my items...
-        // unfortunately, followers have yet to be loaded at this point.
-        // so, we will figure out current rent cost, and compare difference
-        // to achieve a delta, which can only be explained by "followers"
-        objCost curCost;
-        recepOffer(NULL, &curCost);
-        int diff = il.st.total_cost - curCost.total_cost;
-        if (diff > 0) {
-          vlogf(LOG_PIO, format("%s had followers taken by rent.") %  getName());
-          addToMoney(diff, GOLD_SHOP);
-
-          sprintf(buf, "Your followers, and any items they may have had, were confiscated for %d talens to meet your rent obligations.", diff);
-          lbuf += buf;
-
-          removeFollowers();
-        }
-
-        while (getMoney() < 0 && (i = findMostExpensiveItem(this))) {
-          amt = i->obj_flags.cost;
-          addToMoney(amt, GOLD_SHOP);
-
-          if (i->equippedBy)
-            unequip(i->eq_pos);
-          else if (i->parent)
-            --(*i);
-
-          vlogf(LOG_PIO, format("%s had item '%s' taken by rent.") %  getName() % i->getName());
-          TThing *t;
-	  for(StuffIter it=i->stuff.begin();it!=i->stuff.end();){
-	    t=*(it++);
-            (*t)--;
-            *this += *t;
-          }
-            
-	  if(Config::RentSellToPawn()){
-	    if (pawnman) {
-	      *pawnman += *i;
-	      //	      sprintf(buf, "%s has been sold to %s for %d talens to meet your rent obligations.\n\r", i->getName(.cap()).c_str(), pawnman->getName(), amt);
-	      lbuf += buf;
-	    } else {
-	      vlogf(LOG_BUG, "Pawnman is NULL! Putting rent items in brutius office!");
-	      thing_to_room(i, 5); 
-	    }
-	  } else {
-	    // this just clutters up the pawnguy, plus he has to sell a bunch
-	    // of junk so other people use him as a junkyard.
-	    sprintf(buf, "%s has been confiscated for %d talens to meet your rent obligations.\n\r", sstring(i->getName()).cap().c_str(), amt);
-	    lbuf += buf;
-	    
-	    vlogf(LOG_SILENT, format("%s's %s being recycled due to rent obligations.") %  
-		  getName() % i->getName());
-	    delete i;
-	    i = NULL;
-	  }
-        }
-        autoMail(this, NULL, lbuf.c_str());
-        if (getMoney() < 0)
-          setMoney(0);   //  value of items didn't cover them - Batopr 
-      } else {
-        sendTo("You didn't have enough cash, but your bank account covered the difference.\n\r");
-        sendTo("The remaining bank balance was moved to your character's money.\n\r");
-        vlogf(LOG_PIO, format("Bank account saved %s from losing items.") %  getName());
-      }
-    }
+    // char was rented
+    applyRentBenefits(time(0) - il.st.first_update);
   }
+
+  il.st.first_update = il.st.last_update = time(0);
+
   actual = meanPracsSoFar();
     
-  vlogf(LOG_PIO, format("Loading %s [%d talens/%d bank/%.2f xps/%d items/%d age-mod/%d rent/%d extra pracs (%d-%d)]") %  
+  vlogf(LOG_PIO, format("Loading %s [%d talens/%d bank/%.2f xps/%d items/%d age-mod/%d extra pracs (%d-%d)]") %  
        getName() % getMoney() % getBank() % getExp() % il.st.number % 
-       age_mod % il.st.total_cost % (actual - expectedPracs()) % 
-       actual % expectedPracs());
+       age_mod % (actual - expectedPracs()) % actual % expectedPracs());
 
   // silly kludge
   // because of the way the "stuff" list is saved, it essentially reverses
@@ -2907,317 +2136,99 @@ void TPerson::loadRent()
   // let's flip the order back...
   stuff.reverse();
 
-  recepOffer(NULL, &cost);
-  saveRent(&cost, FALSE, 0);
-  return;
+  saveRent();
 }
 
-int TComponent::noteMeForRent(sstring &tStString, TBeing *ch, StuffList tList, int *tCount)
+
+bool check_stuff_norent(TObj *obj, TBeing *owner, TBeing *recep)
 {
-  int         tCost    = 0,
-              lCount   = 0;
-  sstring tString, tBuffer;
-  StuffIter it;
-  TThing     *tMarker;
-  bool        hasPrior = false;
-  TComponent *tObj;
-
-  for(it=tList.begin();it!=tList.end();++it){
-    tMarker=*it;
-
-    if (tMarker == this)
-      break;
-
-    if (!(tObj = dynamic_cast<TComponent *>(tMarker)))
-      continue;
-
-    if (isSimilar(tObj) && rentCost() == tObj->rentCost() &&
-        isRentable() == tObj->isRentable() &&
-        getComponentCharges()    == tObj->getComponentCharges() &&
-        getComponentSpell()      == tObj->getComponentSpell()) {
-      hasPrior = true;
-      break;
-    }
-  }
-
-  if (hasPrior)
-    return 0;
-
-  for(++it;it!=tList.end();++it){
-    tMarker=*it;
-    if (!(tObj = dynamic_cast<TComponent *>(tMarker)))
-      continue;
-
-    if (isSimilar(tObj) && rentCost() == tObj->rentCost() &&
-        isRentable() == tObj->isRentable() &&
-        getComponentCharges()    == tObj->getComponentCharges() &&
-        getComponentSpell()      == tObj->getComponentSpell()) {
-      *tCount = *tCount + 1;
-      lCount++;
-    }
-  }
-
-  tBuffer = format("%c-%ds : ") % '%' % (30 + (getName().length() - getNameNOC(ch).length()));
-
-  if (isRentable() && isMonogramOwner(ch, true)) {
-    tBuffer+="%5d talens/day";
-    *tCount = *tCount + 1;
-    lCount++;
-    tCost = (max(0, rentCost()) * lCount);
-#ifdef FREE_RENT
-    if(max_exist > LIMITED_RENT_ITEM) tCost = 0;
-#endif
-    tString = format(tBuffer) % getName() % tCost;
-    if (FreeRent) {
-      if (lCount == 1)
-	tString+="\n\r";
-      else {
-	tBuffer = format("  x%3d\n\r") % lCount;
-	tString+=tBuffer;
-      }
-    } else {
-      
-      if (lCount == 1)
-	tString+="\n\r";
-      else {
-	tBuffer = format("  [%5dx%3d]\n\r") % max(0, rentCost()) % lCount;
-	tString+=tBuffer;
-      }
-    }
-    //sprintf(tString, "%-30s : %5d talens/day  [x%3d]\n\r", getName(), tCost, lCount);
-    tStString += tString;
-  } else {
-    tBuffer+="NOT RENTABLE";
-    lCount++;
-    tString=format(tBuffer) % getName();
-
-    if (lCount == 1)
-      tString+="\n\r";
-    else {
-      tBuffer = format("      [x%3d]\n\r") % lCount;
-      tString+=tBuffer;
-    }
-
-    //sprintf(tString, "%-30s : NOT RENTABLE  x%3d\n\r", getName(), lCount);
-    tStString += tString;
-  }
-
-  return tCost;
+  if (!obj)
+    return false;
+  if (obj->isRentable() && obj->isMonogramOwner(owner, true))
+    return false;
+  act("$n tells you, \"Sorry!  I refuse to store $p.\"",
+        false, recep, obj, owner, TO_VICT, ANSI_ORANGE);
+  return true;
 }
 
-// (int) return : Cost for this item(block)
-// (sstring)     : The running note output sstring.
-// (thing)      : The list the item is in, or the item itself.
-// (tCount)     : A running count of total items.
-int TObj::noteMeForRent(sstring &tStString, TBeing *ch, StuffList, int *tCount)
+bool check_stuff_norent(StuffList list, TBeing *owner, TBeing *recep)
 {
-  int  tCost = 0;
-  char tString[256],
-       tBuffer[256];
-
-  sprintf(tBuffer, "%%-%zus : ", (30 + (getName().length() - getNameNOC(ch).length())));
-
-  if (isRentable() && isMonogramOwner(ch, true)) {
-    if (!FreeRent) 
-      strcat(tBuffer, "%5d talens/day\n\r");
-    else
-      strcat(tBuffer, "\n\r");
-   *tCount = *tCount + 1;
-    tCost = max(0, rentCost());
-#ifdef FREE_RENT
-    if(max_exist > LIMITED_RENT_ITEM) tCost = 0;
-#endif
-    sprintf(tString, tBuffer, getName().c_str(), tCost);
-    tStString += tString;
-  } else {
-    strcat(tBuffer, "NOT RENTABLE\n\r");
-    sprintf(tString, tBuffer, getName().c_str());
-    tStString += tString;
-  }
-
-  return tCost;
+  bool found = false;
+  for (StuffIter it=list.begin();it!=list.end();++it)
+    if (check_stuff_norent(dynamic_cast<TObj *>(*it), owner, recep))
+      found = true;
+  return found;
 }
 
-void TBeing::makeRentNote(TBeing *recip)
+bool check_stuff_norent(equipmentData &equipment, TBeing *owner,
+                        TBeing *recep)
 {
-  char        buf[1024];
-  sstring      longBuf("");
-  sstring      tStBuffer("");
-  int         i, temp;
-  objCost     cost;
-  TObj       *obj  = NULL, *tObj = NULL;
-  int         num  = 0;
-  followData *f;
-  TMonster   *ch;
-
-  cost.total_cost = 0;
-
-  for(StuffIter it=stuff.begin();it!=stuff.end();++it)  {
-    if (!(obj = dynamic_cast<TObj *>(*it)))
+  bool found = false;
+  for (int i = MIN_WEAR; i < MAX_WEAR; i++) {
+    TObj *obj = dynamic_cast<TObj *>(equipment[i]);
+    if (!obj)
       continue;
-
-    cost.total_cost += obj->noteMeForRent(longBuf, this, stuff, &num);
-
-    for(StuffIter itt=obj->stuff.begin();itt!=obj->stuff.end();++itt) {
-      if (!(tObj = dynamic_cast<TObj *>(*itt)))
-        continue;
-
-      cost.total_cost += tObj->noteMeForRent(longBuf, this, obj->stuff, &num);
-    }
-  }
-
-  for (i = MIN_WEAR; i < MAX_WEAR; i++) {
-    if (!(obj = dynamic_cast<TObj *>(equipment[i])))
-      continue;
-
-    if (!(((i == WEAR_LEG_L) && obj->isPaired()) ||
+    if (((i == WEAR_LEG_L) && obj->isPaired()) ||
           ((i == WEAR_EX_LEG_L) && obj->isPaired()) ||
-          ((i == HOLD_LEFT) && obj->isPaired()))) {
-      cost.total_cost += obj->noteMeForRent(longBuf, this, obj->stuff, &num);
-
-      for(StuffIter it=obj->stuff.begin();it!=obj->stuff.end();++it) {
-        if (!(tObj = dynamic_cast<TObj *>(*it)))
-          continue;
-
-        cost.total_cost += tObj->noteMeForRent(longBuf, this, obj->stuff, &num);
-      }
-    }
-  }
-
-  // add up cost for followers
-  for (f = followers; f; f = f->next) {
-    ch = dynamic_cast<TMonster *>(f->follower);
-    if (!ch)
+          ((i == HOLD_LEFT) && obj->isPaired()))
       continue;
-
-    if (!ch->isSaveMob(this))
-      continue;
-
-    // don't save if not around
-    if (!ch->sameRoom(*this))
-      continue;
-
-    temp = ch->petPrice() / 4;
-    if (FreeRent) { 
-      temp = 0;
-      sprintf(buf, "%-30s : Pet/Charm/Thrall/Mount \n\r",
-              ch->getName().c_str());
-    } else {
-    sprintf(buf, "%-30s : %5d talens/day ********** Storage fee \n\r",
-              ch->getName().c_str(), temp);
-    }
-    longBuf += buf;
-    cost.total_cost += temp;
-
-    for (i = MIN_WEAR; i < MAX_WEAR; i++) {
-      if (!(obj = dynamic_cast<TObj *>(ch->equipment[i])))
-        continue;
-
-      if (!(((i == WEAR_LEG_L) && obj->isPaired()) ||
-           ((i == WEAR_EX_LEG_L) && obj->isPaired()) ||
-          ((i == HOLD_LEFT) && obj->isPaired()))) {
-        cost.total_cost += obj->noteMeForRent(longBuf, this, obj->stuff, &num);
-
-        for(StuffIter it=obj->stuff.begin();it!=obj->stuff.end();++it) {
-          if (!(tObj = dynamic_cast<TObj *>(*it)))
-            continue;
-
-          cost.total_cost += tObj->noteMeForRent(longBuf, this, obj->stuff, &num);
-        }
-      }
-    }
-
-    for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end();++it)  {
-      if (!(obj = dynamic_cast<TObj *>(*it)))
-        continue;
-  
-      cost.total_cost += obj->noteMeForRent(longBuf, this, stuff, &num);
-  
-      for(StuffIter itt=obj->stuff.begin();itt!=obj->stuff.end();++itt) {
-        if (!(tObj = dynamic_cast<TObj *>(*itt)))
-          continue;
-  
-        cost.total_cost += tObj->noteMeForRent(longBuf, this, obj->stuff, &num);
-      }
-    }
+    if (check_stuff_norent(obj, owner, recep))
+      found = true;
   }
-
-  tStBuffer += "\n\r";
-  sprintf(buf, "%d total items.\n\r", num);
-  tStBuffer += buf;
-
-  if (!FreeRent) {
-#if 1
-    
-    sprintf(buf, "Total cost is : %d\n\r", cost.total_cost);
-    tStBuffer += buf;
-    
-#else
-    
-    sprintf(buf, "My storage fee is : %d\n\r", storageFee(this));
-    tStBuffer += buf;
-    sprintf(buf, "Total cost is : %d\n\r", storageFee(this) + cost.total_cost);
-    tStBuffer += buf;
-    
-#endif
-    unsigned int credit = rentCredit();
-#ifdef FREE_RENT
-    credit = 0;
-#endif
-    if (desc) {
-      if (recip->isImmortal()) {
-	//      sprintf(buf, "Minimal Rent Credit is : %d\n\rActual ", credit);
-	//tStBuffer += buf;
-      }
-      desc->best_rent_credit = max(credit, desc->best_rent_credit);
-      credit = desc->best_rent_credit;
-    }
-#ifdef FREE_RENT
-    credit = 0;
-#endif
-    
-    //  sprintf(buf, "Rent Credit is : %d\n\r", credit);
-    //tStBuffer += buf;
-    if (credit >= (unsigned int) cost.total_cost) {
-      sprintf(buf, "Daily Rent Cost : 0\n\r");
-      tStBuffer += buf;
-    } else {
-      //sprintf(buf, "Equipment Cost : %d\n\r",
-      //           max((int) (cost.total_cost-credit), 0));
-      //tStBuffer += buf;
-      sprintf(buf, "Current Rent Factor : %.2f\n\r",
-	      gold_modifier[GOLD_RENT].getVal());
-      tStBuffer += buf;
-      sprintf(buf, "Daily Rent Cost : %d\n\r",
-	      max((int) ((cost.total_cost-credit)*gold_modifier[GOLD_RENT].getVal()), 0));
-      tStBuffer += buf;
-      sprintf(buf, "Total Days Rentable: On-Hand: %d / Total: %d\n\r",
-	      (int) (getMoney() / ((cost.total_cost - credit) * gold_modifier[GOLD_RENT].getVal())),
-	      (int) ((getMoney() + getBank()) / ((cost.total_cost - credit) * gold_modifier[GOLD_RENT].getVal())));
-      tStBuffer += buf;
-    }
-  }
-  // semi-weird : we want the note to have the summary, the itemized list,
-  // and then the summary again...
-  longBuf += tStBuffer;
-  tStBuffer += "\n\r";
-  tStBuffer += longBuf;
-
-  TNote * note = createNote(tStBuffer);
-  if (!note) {
-    return; 
-  }
-  note->addObjStat(ITEM_NEWBIE);
-  *recip += *note;
-  return;
+  return found;
 }
 
+bool check_stuff_norent(TBeing *holder, TBeing *owner, TBeing *recep)
+{
+  bool found = false;
+
+  if (check_stuff_norent(holder->stuff, owner, recep) ||
+      check_stuff_norent(holder->equipment, owner, recep))
+    found = true;
+
+  for (followData *f = holder->followers; f; f = f->next) {
+    TMonster *mon = dynamic_cast<TMonster *>(f->follower);
+    if (!(mon && mon->isSaveMob(owner) && mon->sameRoom(*owner)))
+      continue;
+    if (check_stuff_norent(f->follower, owner, recep))
+      found = true;
+  }
+
+  return found;
+}
+
+bool check_stuff_norent(TBeing *owner, TBeing *recep)
+{
+  return check_stuff_norent(owner, owner, recep);
+}
+
+// The player's level was previously used as the base for rent tax, but this
+// harshly penalizes low-level players since a L10's income is SO much less
+// than 1/5th of a L50's. Instead, use level^3 as it has a most pleasing
+// curve: 0.12 @ l25, 0.5 @ l40 vs 1.0 @ l50, and scale to 2000 tax @ L50.
+void charge_rent_tax(TBeing *ch, TMonster *recep, int shop_nr)
+{
+  const float rate = shop_index[shop_nr].getProfitBuy(NULL, ch);
+  // 100.0 is because rosemary's profit_buy is currently 20
+  const float base = pow(ch->GetMaxLevel(), 3) * 100.0 / pow(MAX_MORT, 3);
+
+  // empty those pockets, but don't overdraw
+  int tax = min((int)(base * rate), ch->getMoney());
+
+  if (!tax)
+    return;
+
+  sstring msg = shop_index[shop_nr].message_buy;
+  recep->doTell(ch->getName(), format(msg) % tax);
+
+  TShopOwned tso(shop_nr, recep, ch);
+  tso.doBuyTransaction(tax, "rent tax", TX_BUYING_SERVICE);
+  vlogf(LOG_PIO, format("%s being charged %d talens rent tax by %s")
+        % ch->getName() % tax % recep->getName());
+}
 
 int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TObj *o)
 {
-  objCost cost;
-  short save_room;
-  char buf[256];
   dirTypeT dir;
   roomDirData *exitp;
   TDatabase db(DB_SNEEZY);
@@ -3241,8 +2252,6 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
 	    tbt->getTimer() > 1 && 
 	    !tbt->isImmortal()) {
 	  if ((tbt->master) && tbt->master->inRoom() == tbt->inRoom()) {
-	    // vlogf(LOG_DASH, format("saving %s from loitering code, master is %s, room is (%d == %d)") % tbt->getName() %
-	    //	tbt->master->getName() % tbt->inRoom() % tbt->master->inRoom());
 	    continue;
 	  }
 	  recep->doSay("Hey, no loitering!  Make room for the other customers.");
@@ -3281,75 +2290,38 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
       }
     }
     return TRUE;
-  } else if (cmd == CMD_MOB_MOVED_INTO_ROOM) {
-#if 0
-// works fine, but how am I supposed to rent my horse?
-
-    if (dynamic_cast<TBeing *>(ch->riding)) {
-      sprintf(buf, "Hey, get that damn %s out of my inn!",
-          fname(ch->riding->name));
-      recep->doSay(buf);
-      act("You throw $N out.",
-         FALSE, recep, 0, ch, TO_CHAR);
-      act("$n throws you out of the inn.",
-         FALSE, recep, 0, ch, TO_VICT);
-      act("$n throws $N out of the inn.",
-         FALSE, recep, 0, ch, TO_NOTVICT);
-      --(*ch->riding);
-      thing_to_room(ch->riding, (int) o);
-      --(*ch);
-      thing_to_room(ch, (int) o);
-      return TRUE;
-    } else if (dynamic_cast<TBeing *>(ch->rider)) {
-      --(*ch->rider);
-      thing_to_room(ch->rider, (int) o);
-      --(*ch);
-      thing_to_room(ch, (int) o);
-      return TRUE;
-    }
-#endif
-    return FALSE;
   }
 
-  if ((cmd != CMD_RENT) && (cmd != CMD_OFFER))
+  if (cmd != CMD_RENT)
     return FALSE;
 
   // force poly's to return
   if (dynamic_cast<TMonster *>(ch)) {
-    act("$e looks at you and says 'Sleep in the street!'", FALSE, recep, 0, ch, TO_VICT);
-    act("$e looks at $N and says 'Sleep in the street!'", FALSE, recep, 0, ch, TO_NOTVICT);
+    act("$e looks at you and says, 'Sleep in the street!'", FALSE, recep, 0, ch, TO_VICT);
+    act("$e looks at $N and says, 'Sleep in the street!'", FALSE, recep, 0, ch, TO_NOTVICT);
     return TRUE;
   }
+
   if (!recep->awake()) {
     act("$e isn't able to talk to you...", FALSE, recep, 0, ch, TO_VICT);
     return TRUE;
   }
+
   if (!recep->canSee(ch) && !ch->isImmortal()) {
     act("$n says, 'I don't deal with people I can't see!'", FALSE, recep, 0, 0, TO_ROOM);
     return TRUE;
   }
+
   if(ch->affectedBySpell(AFFECT_PLAYERKILL) && !ch->isImmortal()){
     act("$n looks at you and says, 'Murderers are not allowed to stay here!'", FALSE, recep, 0, ch, TO_VICT);
     act("$n looks at $N and says, 'Murderers are not allowed to stay here!'", FALSE, recep, 0, ch, TO_NOTVICT);
     return TRUE;
   }
+
   if (ch->affectedBySpell(AFFECT_PLAYERLOOT) && !ch->isImmortal()) {
-    act("$n motions at you then whispers, \"Someone is after you for the moment and I can not allow you to stay here...Sorry.\"", FALSE, recep, NULL, ch, TO_VICT);
+    act("$n motions at you then whispers, 'Someone is after you for the moment and I cannot allow you to stay here...Sorry.'", FALSE, recep, NULL, ch, TO_VICT);
     return TRUE;
   }
-
-#if RENT_RESTRICT_INNS_BY_LEVEL
-  // remnant of code that only let high level pc's rent out of grim
-  if (recep->GetMaxLevel() < ch->GetMaxLevel()) {
-    sprintf(buf,"%s I can only grant rent credit through level %d.",
-           ch->getName(),recep->GetMaxLevel());
-    recep->doTell(buf);
-    sprintf(buf,"%s That's %d talens of credit.",
-            ch->getName(),recep->rentCredit());
-    recep->doTell(buf);
-  }
-
-#endif
 
   bool   autoHates  = false,
          hatesMe[2] = {false, false};
@@ -3397,92 +2369,41 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
     return TRUE;
   }
 
-  if (cmd == CMD_RENT) {
-    if (ch->isImmortal()) {
-      ch->sendTo(COLOR_BASIC, "<r>WARNING<z>\n\r----------\n\r");
-      ch->sendTo("Renting will almost certainly destroy your wizfile.  If you are used to\n\r");
-      ch->sendTo("doing this because of mortal life then it's best to get un-used to it.\n\r");
-      ch->sendTo("If you Have to rent out, such as testing, then go mortal first.\n\r");
-      ch->sendTo("----------\n\r");
-    }
-    if (ch->recepOffer(recep, &cost)) {
-      if (ch->desc && !ch->desc->m_bIsClient) {
-	      if (ch->GetMaxLevel() > 5) {
-	        TShopOwned tso(shop_nr, recep, ch);
-	  
-	        float multiplier = (shop_index[shop_nr].getProfitBuy(NULL, ch));
-	        int tax = (int)((float) ch->GetMaxLevel() * multiplier);
+  if (!ch->desc)
+    return TRUE;
 
-	        sstring msg = shop_index[shop_nr].message_buy;
+  if (check_stuff_norent(ch, recep))
+    return TRUE;
 
-	        if (ch->getMoney() < tax) {
-	          recep->doTell(ch->getName(), 
-			        format("The mayor has issued a %d talen hospice tax, which I see you can't afford.") 
-			        % tax);
-	          recep->doAction("", CMD_SIGH);
-	          recep->doTell(ch->getName(), 
-			        "Sorry. Come back when you can pay your taxes.");
-	          for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
-	            if (exit_ok(exitp = recep->exitDir(dir), NULL)) {
-		            act("$n throws you from the inn.",
-		              FALSE, recep, 0, ch, TO_VICT);
-		            act("$n throws $N from the inn.",
-		              FALSE, recep, 0, ch, TO_NOTVICT);
-		            recep->throwChar(ch, dir, FALSE, SILENT_NO, true);
+  if (ch->desc->m_bIsClient)
+    ch->desc->clientf(format("%d") % CLIENT_RENT);
 
-		            return TRUE;
-              }
-            }
-          } else {
-            recep->doTell(ch->getName(), format(msg) % tax);
-            tso.doBuyTransaction(tax, "paying rent", TX_BUYING_SERVICE);
-            vlogf(LOG_PIO, format("%s being charged %d talens rent tax by %s") % ch->getName() % tax % recep->getName());
-          }
-        }
-        act("$n stores your stuff in the safe, and shows you to your room.", FALSE, recep, 0, ch, TO_VICT);
-        act("$n shows $N to $S room.", FALSE, recep, 0, ch, TO_NOTVICT);
-    
-        dynamic_cast<TPerson *>(ch)->saveRent(&cost, TRUE, 2);
-        save_room = ch->in_room;        // backup what room the PC was in 
-        ch->saveChar(save_room);
-        ch->in_room = save_room;
-        ch->cls();
-        ch->fullscreen();
-
-        // this delete should not save in_room
-        ch->preKillCheck(TRUE);
-        ch->desc->outputProcessing();
-  
-        // we've been rented, notify to destroy ch
-        return DELETE_VICT;
-      }
-    }
-  } else if (cmd == CMD_OFFER) {
-
-    // get an offer on someone else...
-    one_argument(arg, buf, cElements(buf));
-    if (ch->isImmortal() && *buf) {
-      TBeing *vict = get_pc_world(ch, buf, EXACT_NO);
-      if (vict) {
-        //vict->makeRentNote(ch);
-        //recep->doTell(ch->getName(), format("Here is a note with %s's items listed.") % vict->getName());
-	TShopOwned tso(shop_nr, recep, vict);	
-	float multiplier = (shop_index[shop_nr].getProfitBuy(NULL, vict));
-	int tax = (int)((float) vict->GetMaxLevel() * multiplier);
-
-	recep->doTell(ch->getName(), format("In addition to any fees"/* listed on that note*/", there is a tax of %i talens.") % tax);
-	return TRUE;
-      }
-    }
-    TShopOwned tso(shop_nr, recep, ch);	
-    float multiplier = (shop_index[shop_nr].getProfitBuy(NULL, ch));
-    int tax = (int)((float) ch->GetMaxLevel() * multiplier);
-
-    //ch->makeRentNote(ch);
-    //recep->doTell(ch->getName(), "Here is a note with your items listed.");
-    recep->doTell(ch->getName(), format("In addition to any fees"/* listed on that note*/", there is a tax of %i talens.") % tax);
+  if (ch->isImmortal()) {
+    ch->sendTo(COLOR_BASIC, "<r>WARNING<z>\n\r----------\n\r");
+    ch->sendTo("Renting will almost certainly destroy your wizfile.  If you are used to\n\r");
+    ch->sendTo("doing this because of mortal life then it's best to get un-used to it.\n\r");
+    ch->sendTo("If you Have to rent out, such as testing, then go mortal first.\n\r");
+    ch->sendTo("----------\n\r");
   }
-  return TRUE;
+
+  if (Config::RentTax() && ch->GetMaxLevel() > 5)
+    charge_rent_tax(ch, recep, shop_nr);
+
+  act("$n tells you, 'Have a nice stay!'", FALSE, recep, 0, ch, TO_VICT);
+  act("$n stores your stuff in the safe, and shows you to your room.",
+      FALSE, recep, 0, ch, TO_VICT);
+  act("$n shows $N to $S room.", FALSE, recep, 0, ch, TO_NOTVICT);
+
+  if (ch->desc->m_bIsClient) {
+    ch->desc->clientf(format("%d") % CLIENT_RENT_END);
+    return TRUE;
+  }
+
+  ch->cls();
+  ch->fullscreen();
+  ch->desc->outputProcessing();
+
+  return dynamic_cast<TPerson *>(ch)->saveRent(TRUE, 2);
 }
 
 bool noteLimitedItems(FILE * fp, const char *tag, unsigned char version, bool immortal)
@@ -4044,30 +2965,8 @@ static void parseFollowerRent(FILE *fp, TBeing *ch, const char *arg)
       break;
 }
 
-// this routine simply tracks items and mobs held in rent by players.
-// the cost of such items and mobs is already calculated in the person's
-// rent, and that has alread been calculated by chargeRent().
-// our main goal here is just to keep up with the max_exists and such for
-// mobile rent
-static void chargeMobileRent(const char *who)
-{
-  char fileName[256];
-  FILE *fp;
 
-  sprintf(fileName, "rent/%c/%s.fol", who[0], who);
-
-  if (!(fp = fopen(fileName, "r"))) {
-    // no follower info
-    return;
-  }
-
-  parseFollowerRent(fp, NULL, who);
-
-  fclose(fp);
-  return;
-}
-
-void chargeRent(const char *who)
+void updateRentFile(const char *who)
 {
   char fileName[128];
   rentHeader h;
@@ -4076,7 +2975,7 @@ void chargeRent(const char *who)
   TAccount account;
   bool immortal;
 
-  mud_assert(who != NULL, "chargeRent called with NULL player name!");
+  mud_assert(who != NULL, "updateRentFile called with NULL player name!");
 
   sprintf(fileName, "rent/%c/%s", who[0], who);
 
@@ -4096,16 +2995,11 @@ void chargeRent(const char *who)
     fclose(fp);
     return;
   }
-#if 1
   if (sstring(h.owner).lower().compare(who)) {
     vlogf(LOG_BUG, format("WARNING!  rent file %s holds objects for %s!") %  who % h.owner);
     fclose(fp);
     return;
   }
-#else
-  // a debug case for if we copied someone's rent file for problem resolution
-  strcpy(h.owner, who);
-#endif
   if (!load_char(who, &pd)) {
     vlogf(LOG_BUG, format("Unable to read player file for %s, so deleting rent file.") %  h.owner);
     fclose(fp);
@@ -4137,7 +3031,7 @@ void chargeRent(const char *who)
     }
     fclose(fp);
     if (!raw_save_char(who, &pd)) {
-      vlogf(LOG_BUG, format("Error updating player-file entry for %s in chargeRent.") %  h.owner);
+      vlogf(LOG_BUG, format("Error updating player-file entry for %s in updateRentFile.") %  h.owner);
       return;
     }
     vlogf(LOG_PIO, format("   De-autorented %s") %  h.owner);
@@ -4150,63 +3044,68 @@ void chargeRent(const char *who)
     }
     fclose(fp);
   }
-  chargeMobileRent(who);
+
+  sprintf(fileName, "rent/%c/%s.fol", who[0], who);
+  if ((fp = fopen(fileName, "r"))) {
+    parseFollowerRent(fp, NULL, who);
+    fclose(fp);
+  }
 }
 
 void updateRentFiles(void)
 {
   bootPulse(".", false);
-  dirwalk("rent/a", chargeRent);
+  dirwalk("rent/a", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/b", chargeRent);
+  dirwalk("rent/b", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/c", chargeRent);
+  dirwalk("rent/c", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/d", chargeRent);
+  dirwalk("rent/d", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/e", chargeRent);
+  dirwalk("rent/e", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/f", chargeRent);
+  dirwalk("rent/f", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/g", chargeRent);
+  dirwalk("rent/g", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/h", chargeRent);
+  dirwalk("rent/h", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/i", chargeRent);
+  dirwalk("rent/i", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/j", chargeRent);
+  dirwalk("rent/j", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/k", chargeRent);
+  dirwalk("rent/k", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/l", chargeRent);
+  dirwalk("rent/l", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/m", chargeRent);
+  dirwalk("rent/m", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/n", chargeRent);
+  dirwalk("rent/n", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/o", chargeRent);
+  dirwalk("rent/o", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/p", chargeRent);
+  dirwalk("rent/p", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/q", chargeRent);
+  dirwalk("rent/q", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/r", chargeRent);
+  dirwalk("rent/r", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/s", chargeRent);
+  dirwalk("rent/s", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/t", chargeRent);
+  dirwalk("rent/t", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/u", chargeRent);
+  dirwalk("rent/u", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/v", chargeRent);
+  dirwalk("rent/v", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/w", chargeRent);
+  dirwalk("rent/w", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/x", chargeRent);
+  dirwalk("rent/x", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/y", chargeRent);
+  dirwalk("rent/y", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/z", chargeRent);
+  dirwalk("rent/z", updateRentFile);
   bootPulse(NULL, true);
 }
 
@@ -4486,14 +3385,6 @@ bool TBeing::saveFollowers(bool rent_time)
       else
         a_list = NULL;
     }
-#if 0
-    // we reequipped when we saved objs
-    // and reequip...
-    for (ij = MIN_WEAR; ij < MAX_WEAR; ij++) {
-      if (char_eq[ij])
-        mob->equipChar(char_eq[ij], ij, SILENT_YES);
-    }
-#endif
 
     if (rent_time) {
       act("$n is led off to a storage area.", FALSE, mob, 0, 0, TO_ROOM);
@@ -4628,72 +3519,6 @@ int TBeing::doRent(const sstring &argument)
 
 int TPerson::doRent(const sstring &argument)
 {
-  if (!argument.empty()) {
-    if (is_abbrev(argument, "credit")) {
-      int lev;
-      sstring sb;
-      char buf[256];
-
-      if (FreeRent) {
-	sb = "Rent is free! Who needs credit?\n\r";
-      } else {
-
-	sb = "Rent Credit by level for [";
-	sb += getProfAbbrevName();
-	sb += "]:\n\r\n\r";
-	
-	for (lev = 1; lev <= MAX_MORT/4 + 1; lev++) {
-	  int lev0 = lev;
-	  int lev1 = lev0 + 1*(MAX_MORT/4 +1);
-	  int lev2 = lev0 + 2*(MAX_MORT/4 +1);
-	  int lev3 = lev0 + 3*(MAX_MORT/4 +1);
-	  
-	  if (lev0 <= MAX_MORT) {
-	    sprintf(buf, "%s[%2d]%s %s%10d%s ",
-		    cyan(), lev0, norm(), orange(),
-		    rent_credit(getClass(), lev0, howManyClasses()),
-		    norm());
-	    sb += buf;
-	  }
-	  if (lev1 <= MAX_MORT) {
-	    sprintf(buf, "%s[%2d]%s %s%10d%s ",
-		    cyan(), lev1, norm(), orange(),
-		    rent_credit(getClass(), lev1, howManyClasses()),
-		    norm());
-	    sb += buf;
-	  }
-	  if (lev2 <= MAX_MORT) {
-	    sprintf(buf, "%s[%2d]%s %s%10d%s ",
-		    cyan(), lev2, norm(), orange(),
-		    rent_credit(getClass(), lev2, howManyClasses()),
-		    norm());
-	    sb += buf;
-	  }
-	  if (lev3 <= MAX_MORT) {
-	    sprintf(buf, "%s[%2d]%s %s%10d%s\n\r",
-		    cyan(), lev3, norm(), orange(),
-		    rent_credit(getClass(), lev3, howManyClasses()),
-		    norm());
-	    sb += buf;
-	  } else {
-	    sb += "\n\r";
-	  }
-	}
-	sb += "\n\r";
-      }
-      if (desc)
-        desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
-      return TRUE;
-    } else {
-      sendTo("Syntax: rent credit\n\r");
-      return FALSE;
-    }
-    return FALSE;
-  }
-
-  objCost cost;
-  unsigned short save_room;
-
   // note this is sort of a special case
   // special procedures (innkeeper, personalHouse) have already been
   // taken care of before this point
@@ -4704,44 +3529,15 @@ int TPerson::doRent(const sstring &argument)
     doNotHere();
     return FALSE;
   }
-  recepOffer(this, &cost);
   sendTo("You opt to rough it for awhile.\n\r");
   act("$n decides to rough it for awhile.",
        TRUE, this, 0, 0, TO_ROOM);
 
   cls();
   fullscreen();
+  desc->outputProcessing();
 
-  dynamic_cast<TPerson *>(this)->saveRent(&cost, TRUE, 2);
-  save_room = inRoom();  /* backup what room the PC was in */
-  saveChar(save_room);
-  in_room = save_room;
- 
-  preKillCheck(TRUE);
-
-  return DELETE_THIS;
-}
-
-int TObj::rentCost() const
-{
-  if (FreeRent) return 0;
-  return obj_flags.cost / 2 + obj_flags.cost % 2;
-}
-
-int TWand::rentCost() const
-{
-  if (FreeRent) return 0;
-  int num = TMagicItem::rentCost();
-
-  num *= getCurCharges();
-  num /= max(1, getMaxCharges());
-  return num;
-}
-
-int TMoney::rentCost() const
-{
-  // talens in a bag shouldn't cost anything to rent
-  return 0;
+  return dynamic_cast<TPerson *>(this)->saveRent(TRUE, 2);
 }
 
 bool TObj::isRentable() const
@@ -4749,18 +3545,6 @@ bool TObj::isRentable() const
   if (isObjStat(ITEM_NORENT) || (number < 0))
     return FALSE;
   return TRUE;
-}
-
-objCost::objCost() :
-  total_cost(0),
-  no_carried(0),
-  lowrentobjs(0),
-  ok(0)
-{
-}
-
-objCost::~objCost() 
-{
 }
 
 rentObject::rentObject() :
@@ -4790,9 +3574,6 @@ pcorpseObject::pcorpseObject() :
 
 rentHeader::rentHeader() :
   version(0),
-  original_gold(0),
-  gold_left(0),
-  total_cost(0),
   last_update(0),
   first_update(0),
   number(0)

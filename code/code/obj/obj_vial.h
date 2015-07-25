@@ -19,7 +19,6 @@ class TVial : public TBaseCup {
     virtual bool objectRepair(TBeing *, TMonster *, silentTypeT);
     virtual itemTypeT itemType() const { return ITEM_VIAL; }
 
-    virtual int rentCost() const;
     virtual int suggestedPrice() const;
     virtual void lowCheck();
 

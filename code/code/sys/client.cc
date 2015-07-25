@@ -531,9 +531,6 @@ int Descriptor::read_client(char *str2)
 
       break;
     case CLIENT_RENT: {
-      objCost cost;
-      int save_room;
-
       // if disguised or transformed, we mimic the TMonster::doRent return
       if (character && dynamic_cast<TPerson *>(character) == NULL)
       {
@@ -541,15 +538,9 @@ int Descriptor::read_client(char *str2)
         return 0;
       }
 
-      character->recepOffer(NULL, &cost);
-      dynamic_cast<TPerson *>(character)->saveRent(&cost, TRUE, 2);
-      save_room = character->in_room;        // backup what room the PC was in
-      character->saveChar(save_room);
-      character->in_room = save_room;
-      character->preKillCheck(TRUE);
       sprintf(buf, "$n just rented with the %s client.", MUD_NAME_VERS);
       act(buf, FALSE, character, NULL, NULL, TO_ROOM);
-      return DELETE_VICT;
+      return dynamic_cast<TPerson *>(character)->saveRent(TRUE, 2);
       break;
     }
     case CLIENT_DISCONNECT:
@@ -655,15 +646,12 @@ int Descriptor::read_client(char *str2)
           ch->cls();
 
           if (should_be_logged(character)) {
-            objCost cost;
-
             if (IS_SET(account->flags, TAccount::IMMORTAL)) 
               vlogf(LOG_PIO, format("%s[*masked*] has reconnected (client)  (account: *masked*).") %  ch->getName());
             else 
               vlogf(LOG_PIO, format("%s[%s] has reconnected (client)  (account: %s).") %  ch->getName() % host % account->name);
 
-            ch->recepOffer(NULL, &cost);
-            dynamic_cast<TPerson *>(ch)->saveRent(&cost, FALSE, 1);
+            dynamic_cast<TPerson *>(ch)->saveRent(FALSE, 1);
           }
           act("$n has reconnected.", TRUE, ch, 0, 0, TO_ROOM);
           ch->loadCareerStats();
@@ -1198,8 +1186,6 @@ int Descriptor::client_nanny(char *arg)
       tmp_ch->initDescStuff(&st);
 
       if (should_be_logged(character)) {
-        objCost cost;
-
         if (IS_SET(account->flags, TAccount::IMMORTAL)) {
           vlogf(LOG_PIO, format("%s[*masked*] has reconnected (client 2)  (account: *masked*).") % 
                 character->getName());
@@ -1207,8 +1193,7 @@ int Descriptor::client_nanny(char *arg)
           vlogf(LOG_PIO, format("%s[%s] has reconnected (client 2)  (account: %s).") % 
                      character->getName() % host % account->name);
         }
-        character->recepOffer(NULL, &cost);
-        dynamic_cast<TPerson *>(character)->saveRent(&cost, FALSE, 1);
+        dynamic_cast<TPerson *>(character)->saveRent(FALSE, 1);
       }
       act("$n has reconnected.", TRUE, tmp_ch, 0, 0, TO_ROOM);
       tmp_ch->loadCareerStats();

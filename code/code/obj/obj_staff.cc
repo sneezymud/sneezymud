@@ -193,15 +193,6 @@ bool TStaff::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
 }
 
 
-int TStaff::rentCost() const
-{
-  int num = TMagicItem::rentCost();
-
-  num *= getCurCharges();
-  num /= max(1, getMaxCharges());
-  return num;
-}
-
 int TStaff::suggestedPrice() const
 {
   spellNumT curspell = getSpell();

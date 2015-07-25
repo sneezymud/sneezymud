@@ -50,7 +50,6 @@ class charFile {
    short age_mod;
    unsigned short wimpy;
    unsigned int autobits;
-   unsigned int best_rent_credit;
 
    short stats[MAX_STATS];
    // pointData data

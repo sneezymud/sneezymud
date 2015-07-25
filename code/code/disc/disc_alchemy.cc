@@ -32,10 +32,19 @@
 using std::vector;
 using std::deque;
 
+int round_off(int value)
+{
+    if (value > 100)
+        return (value / 100) * 100;
+    if (value > 10)
+        return (value / 10) * 10;
+    return value;
+}
+
 int identify(TBeing *caster, TObj *obj, int, short bKnown)
 {
   sstring buf, buf2;
-  int x, y;
+  int x;
   double z;
 
   if (caster->bSuccess(bKnown, SPELL_IDENTIFY)) {
@@ -56,19 +65,8 @@ int identify(TBeing *caster, TObj *obj, int, short bKnown)
     else if (obj->obj_flags.decay_time < 800)
       caster->sendTo("around a month.\n\r");
 
-    if (obj->getVolume() > 100)
-      x = ((int) obj->getVolume() / 100) * 100;
-    else if (obj->getVolume() > 10)
-      x = ((int) obj->getVolume() / 10) * 10;
-    else
-      x = obj->getVolume();
-
-    if ((int) obj->getWeight()> 100)
-      z = ((int) obj->getWeight() / 100) * 100;
-    else if ((int) obj->getWeight() > 10)
-      z = ((int) obj->getWeight() / 10) * 10;
-    else
-      z = obj->getWeight();
+    x = round_off(obj->getVolume());
+    z = round_off(obj->getWeight());
 
     if ((z - (int) z) == 0.0) {
       caster->sendTo(format("It seems to be about %d cubic inch%s in volume, and %d pound%s in weight.\n\r") %
@@ -84,37 +82,12 @@ int identify(TBeing *caster, TObj *obj, int, short bKnown)
               (int) (10.0 * (z - (int) z)) % (((int) (10.0 * (z - (int) z)) != 1) ? "s" : ""));
     }
 
-    if (obj->obj_flags.cost > 100)
-      x = ((int) obj->obj_flags.cost / 100) * 100;
-    else if (obj->obj_flags.cost > 10)
-      x = ((int) obj->obj_flags.cost / 10) * 10;
-    else
-      x = obj->obj_flags.cost;
+    x = round_off(obj->obj_flags.cost);
 
-    if (obj->rentCost() > 100)
-      y = (obj->rentCost() / 100) * 100;
-    else if (obj->rentCost() > 10)
-      y = (obj->rentCost() / 10) * 10;
-    else
-      y = obj->rentCost();
-
-    if ((x <= 0) && (y <= 0 || obj->max_exist > 10))
+    if (x <= 0 && obj->max_exist > 10)
       caster->sendTo("You'd judge it to be completely worthless.\n\r");
-#if 0
-    else if (x <= 0)
-      caster->sendTo(format("Although it looks worthless, you'd guess they'll charge you %d talen%s to rent it.\n\r") % y % (y != 1) ? "s" : "");
-    else if (y <= 0)
-      caster->sendTo(format("Although it looks worth at least %d talen%s, you guess its unrentable.\n\r") % x % (x != 1) ? "s" : "");
-    else
-      caster->sendTo(format("You'd judge its worth to be about %d talen%s.  Rent, around %d.\n\r") % x % (x != 1) ? "s" : "" % y);
-#else
-    else if(obj->max_exist <= 10 && x <= 0)
-      caster->sendTo(format("Although it looks worthless, you'd guess they'll charge you %d talen%s to rent it.\n\r") % y % ((y !=1) ? "s" : ""));
-    else if(obj->max_exist <= 10 && x > 0)
-      caster->sendTo(format("You'd judge its worth to be about %d talen%s.  Rent, around %d.\n\r") % x % ((x != 1) ? "s" : "") % y);
     else
       caster->sendTo(format("You'd judge its worth to be about %d talen%s.\n\r") % x % ((x != 1) ? "s" : ""));
-#endif
     return SPELL_SUCCESS;
   } else {
     caster->nothingHappens();

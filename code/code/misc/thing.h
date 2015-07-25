@@ -295,7 +295,6 @@ class TThing {
     virtual void findSomeComponent(TComponent **, TComponent **, TComponent **, spellNumT, int) {}
     virtual bool allowsCast() { return false; }
     virtual int putMeInto(TBeing *, TOpenContainer *);
-    virtual void findComp(TComponent **, spellNumT);
     virtual int componentSell(TBeing *, TMonster *, int, TThing *);
     virtual int componentValue(TBeing *, TMonster *, int, TThing *);
     virtual int removeMe(TBeing *, wearSlotT);
@@ -355,7 +354,6 @@ class TThing {
     virtual int poisonWeaponWeapon(TBeing *, TThing *);
     virtual int smiteWithMe(TBeing *, TBeing *);
     virtual int enhanceMe(TBeing *, int, short);
-    virtual void moneyMove(TBeing *);
     virtual bool isRentable() const { return FALSE; }
     virtual float blowCountSplitter(const TBeing *, bool) const;
     virtual void bloadBowArrow(TBeing *, TThing *);
