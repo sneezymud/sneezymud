@@ -2532,17 +2532,6 @@ void TComponent::boottimeInit()
   CompIndex.push_back(ci);
 }
 
-int TComponent::rentCost() const
-{
-  int num = TObj::rentCost();
-
-  num *= getComponentCharges();
-
-  num = (int) (num / priceMultiplier());
-
-  return num;
-}
-
 void TComponent::decayMe()
 {
   TMonster *tm;
@@ -2642,49 +2631,6 @@ void TComponent::lowCheck()
   }
 
   TObj::lowCheck();
-}
-
-int TComponent::objectSell(TBeing *ch, TMonster *keeper)
-{
-  if (false)
-    return FALSE;
-
-#if 0
-  char buf[256];
-
-  if ((getComponentCharges() != getComponentMaxCharges())) {
-    sprintf(buf, "%s I'm sorry, I don't buy back partially used components.", ch->getName());
-    keeper->doTell(buf);
-    return TRUE;
-  }
-#endif
-  return FALSE;
-}
-
-void TComponent::findComp(TComponent **best, spellNumT spell)
-{
-  if (getComponentSpell() == spell &&
-      isComponentType(COMP_SPELL)) {
-    // it's the proper component
-    if (!*best) {
-      *best = this;
-      return;
-    }
-    // avoid 0-cost components if at all possible
-    // otherwise, use one with least charges left
-    int rc_me = rentCost();
-    int rc_best = (*best)->rentCost();
-    if (rc_best <= 0 && rc_me > 0) {
-      *best = this;
-      return;
-    } else if (rc_best > 0 && rc_me <= 0)
-      return; 
-
-    // check charges ONLY if: both comps are 0 cost, or both are non-0 cost
-    if (getComponentCharges() < (*best)->getComponentCharges()) {
-      *best = this;
-    }
-  }
 }
 
 int TComponent::putMeInto(TBeing *, TOpenContainer *)

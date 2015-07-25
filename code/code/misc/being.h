@@ -36,7 +36,6 @@ class TBaseClothing;
 class TQuiver;
 class TCommodity;
 class TRoom;
-class objCost;
 struct time_data;
 class time_info_data;
 
@@ -585,7 +584,6 @@ class TBeing : public TThing {
     void fixClientPlayerLists(bool);
     void gainExpPerHit(TBeing *, double, int);
 
-    void moneyCheck();
     int rideCheck(int);
     spellNumT mountSkillType() const;
     void calmMount(TBeing *);
@@ -609,7 +607,6 @@ class TBeing : public TThing {
 
     int checkDecharm(forceTypeT, safeTypeT = SAFE_NO);
     int riverFlow(int);
-    int applyAutorentPenalties(int);
     int applyRentBenefits(int);
     void verifyWeightVolume();
     virtual int getVolume() const;
@@ -1113,10 +1110,6 @@ class TBeing : public TThing {
     void removeCurseBeing(TBeing *);
     void removeCurseBeing(TBeing *, TMagicItem *, spellNumT);
 
-    void addObjCost(TBeing *, TObj *, objCost *, sstring &str); 
-    void addObjCost(TBeing *, StuffList list, objCost *, sstring &str); 
-    bool recepOffer(TBeing *, objCost *);
-    void makeRentNote(TBeing *);
     void removeFollowers();
     void removeRent();
     void removePlayerFile();
@@ -1555,7 +1548,6 @@ class TBeing : public TThing {
 	      equipment[HOLD_RIGHT]);
     }
     bool isAffected(uint64_t bv) const;
-    unsigned int rentCredit() const;
     short getProtection() const;
     void setProtection(short num);
     void addToProtection(short num);

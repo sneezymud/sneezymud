@@ -129,7 +129,6 @@ enum cmdTypeT {
      CMD_SNOOP,
      CMD_FOLLOW,
      CMD_RENT,
-     CMD_OFFER,
      CMD_POKE,
      CMD_ACCUSE,
      CMD_GRIN,

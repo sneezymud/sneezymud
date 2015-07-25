@@ -627,9 +627,9 @@ void TBeing::statObj(const TObj *j)
 
   str += format("Can be seen   : %d\n\r") % int(j->canBeSeen);
 
-  str += format("Volume: %d, Weight: %.1f, Value: %d, Cost/day: %d\n\r") %
-    j->getVolume() % j->getWeight() %
-    j->obj_flags.cost % j->rentCost();
+  // Cost/day remnant of the old rent charge code
+  str += format("Volume: %d, Weight: %.1f, Value: %d, Cost/day: 0\n\r") %
+    j->getVolume() % j->getWeight() % j->obj_flags.cost;
 
   str += format("Indexed Cost: %d, Suggested Price: %d, Material Value: %d\n\r") %
     obj_index[j->getItemIndex()].value % j->suggestedPrice() %

@@ -4360,22 +4360,6 @@ void TObj::describeMe(TBeing *ch) const
 	     sstring(buf).uncap());
 
   if (ch->isImmortal() || canWear(ITEM_TAKE)) {
-#if 0
-    if (10 >= max_exist) {
-      ch->sendTo("This item is considered limited and will cost a rental fee.\n\r");
-
-    }
-#endif
-#if 0
-    if (isRentable()) {
-      int temp = max(0, rentCost());
-  
-      ch->sendTo(format("It has a rental cost of %d talen%s.\n\r") %
-          temp, (temp != 1 ? "s" : ""));
-    } else 
-      ch->sendTo("It can't be rented.\n\r");
-#endif
-
     // weight >= 1.0
     float wgt = getTotalWeight(TRUE);
 

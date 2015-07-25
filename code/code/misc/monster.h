@@ -532,11 +532,9 @@ class TMonster : public TBeing {
     bool isTestmob() const;
     int wanderAround();
     void quickieDefend();
-    void saveItems(const sstring &);
     void saveItems(int);
     int saveItem(int, TObj *, int=0);
     int saveItem(int, int, TObj *, int=0);
-    void loadItems(const sstring &);
     TObj *loadItem(int, int);
     void deleteItem(int, int);
     bool isSmartMob(int) const;

@@ -24,18 +24,6 @@
 
 class objIndexData;
 
-class objCost { 
-  public:
-    int total_cost;
-    int no_carried;
-    int lowrentobjs;
-    bool ok;
-    objCost();
-    ~objCost();
-};
-
-
-
 extern std::vector<objIndexData>obj_index;
 
 typedef std::list<TObj *> TObjList;
@@ -695,7 +683,6 @@ private:
     virtual void writeAffects(int, FILE *) const;
     virtual int addApply(TBeing *, applyTypeT);
     virtual void noteMe(TMonster *, TBeing*, TObj *, time_t, int) {}
-    virtual int noteMeForRent(sstring &, TBeing *, StuffList, int *);
     virtual sstring displayFourValues();
     virtual void changeObjValue1(TBeing *);
     virtual void changeObjValue2(TBeing *);
@@ -737,7 +724,6 @@ private:
     //virtual void changeBaseWeaponValue2(TBeing *, const char *, editorEnterTypeT) {}
     //virtual void changeBaseWeaponValue3(TBeing *, const char *, editorEnterTypeT) {}
     virtual void objMenu(const TBeing *) const;
-    virtual int rentCost() const;
     virtual int galvanizeMe(TBeing *, short);
     virtual int grenadeHit(TTrap *);
     int burnObject(TBeing *, int);

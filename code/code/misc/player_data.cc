@@ -526,8 +526,6 @@ void TPerson::storeToSt(charFile *st)
   for (j = 0; j < 16; j++)
     st->alias[j] = desc->alias[j];
 
-  st->best_rent_credit = desc->best_rent_credit;
-
   st->base_age = getBaseAge();
   st->age_mod = age_mod;
 
@@ -758,7 +756,6 @@ void TPerson::loadFromSt(charFile *st)
   setFactAct(st->f_actions);
 
   desc->autobits = st->autobits;
-  desc->best_rent_credit = st->best_rent_credit;
 
   setCaptive(NULL);
   setNextCaptive(NULL);

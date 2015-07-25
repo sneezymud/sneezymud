@@ -10,10 +10,6 @@ namespace po = boost::program_options;
 
 // static data member defs
 int Config::ITEM_DAMAGE_RATE;
-int Config::RENT_CREDIT_VAL;
-bool Config::RENT_SELL_TO_PAWN;
-bool Config::RENT_RESTRICT_INNS_BY_LEVEL;
-bool Config::PENALIZE_FOR_AUTO_RENTING;
 int Config::WEAPON_DAM_MIN_HARDNESS;
 int Config::WEAPON_DAM_MAX_HARDNESS;
 int Config::WEAPON_DAM_MAX_SHARP;
@@ -25,6 +21,7 @@ bool Config::SUPER_REPO_MOBS;
 bool Config::NO_DAMAGED_ITEMS_SHOP;
 bool Config::auto_deletion;
 bool Config::rent_only_deletion;
+bool Config::rent_tax;
 bool Config::nuke_inactive_mobs;
 bool Config::load_on_death;
 bool Config::throw_format_exceptions;
@@ -83,18 +80,6 @@ bool Config::doConfiguration(int argc, char *argv[])
     ("item_damage_rate", 
      po::value<int>(&ITEM_DAMAGE_RATE)->default_value(1),
      "see configuration.h")
-    ("rent_credit_val",
-     po::value<int>(&RENT_CREDIT_VAL)->default_value(75),
-     "see configuration.h")
-    ("rent_sell_to_pawn",
-     po::value<bool>(&RENT_SELL_TO_PAWN)->default_value(false),
-     "see configuration.h")
-    ("rent_restrict_inns_by_level",
-     po::value<bool>(&RENT_RESTRICT_INNS_BY_LEVEL)->default_value(false),
-     "see configuration.h")
-    ("penalize_for_auto_renting",
-     po::value<bool>(&PENALIZE_FOR_AUTO_RENTING)->default_value(true),
-     "see configuration.h")
     ("weapon_dam_min_hardness",
      po::value<int>(&WEAPON_DAM_MIN_HARDNESS)->default_value(20),
      "see configuration.h")
@@ -127,6 +112,9 @@ bool Config::doConfiguration(int argc, char *argv[])
      "see configuration.h")
     ("rent_only_deletion",
      po::value<bool>(&rent_only_deletion)->default_value(false),
+     "see configuration.h")
+    ("rent_tax",
+     po::value<bool>(&rent_tax)->default_value(true),
      "see configuration.h")
     ("nuke_inactive_mobs",
      po::value<bool>(&nuke_inactive_mobs)->default_value(false),

@@ -185,10 +185,6 @@ void TThing::addToWeight(const float w)
   weight += w;
 }
 
-void TThing::findComp(TComponent **, spellNumT)
-{
-}
-
 void TThing::nukeFood()
 {
   if (getMaterial() == MAT_FOODSTUFF)
