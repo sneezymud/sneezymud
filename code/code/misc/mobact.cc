@@ -3823,40 +3823,6 @@ int TMonster::mobileActivity(int pulse)
       vlogf(LOG_BUG, format("Warning... shop # for mobile %d (real nr) not found.") %  mob_index[number].virt);
       return FALSE;
     }
-    
-    if(shop_index[shop_nr].isOwned()){
-      TDatabase db(DB_SNEEZY);
-#if 0
-
-      int salary=1000;
-      TObj *o;
-      int value=0;
-      sstring tname="";
-      bool found=true;
-
-      if(!(pulse%1200)){
-	// basically we just toss items in the dump until we can afford our
-	// salary
-	while(getMoney() < salary && found){
-	  found=false;
-	  for(TThing *t=getStuff();t;t=t->nextThing){
-	    if((o=dynamic_cast<TObj *>(t))){
-	      tname=o->getName();
-	      o->thingDumped(this, &value);
-	      shoplog(shop_nr, this, this, tname, value, "dumped");
-	      setMoney(getMoney()+value);
-	      found=true;
-	      break;
-	    }
-	  }
-	}
-	
-	setMoney(getMoney()-salary);
-	shoplog(shop_nr, this, this, "talens", -salary, "salary");
-      }
-#endif
-
-    }
   }
 
   if (spec && !(pulse %(50*Pulse::MOBACT)) && !::number(0, 1) && 
