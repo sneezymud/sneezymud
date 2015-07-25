@@ -14,7 +14,6 @@
 //      return DELETE_VICT to kill ch
 
 
-#include <cmath>
 #include <cstdio>
 
 #include "extern.h"
@@ -23,39 +22,13 @@
 #include "low.h"
 #include "monster.h"
 #include "configuration.h"
-#include "statistics.h"
 #include "obj_food.h"
 #include "obj_note.h"
 #include "obj_portal.h"
 #include "spec_rooms.h"
 #include "person.h"
-#include "weather.h"
 #include "rent.h"
 
-int TRoom::checkSpec(TBeing *ch, cmdTypeT cmd, const char *arg, TThing *)
-
-{
-  int rc;
-
-  if(spec){
-    rc = (roomSpecials[GET_ROOM_SPE_INDEX(spec)].proc)
-      (ch, cmd, arg, this);
-    return rc;
-  }
-  return FALSE;
-}
-
-
-const int GET_ROOM_SPE_INDEX(int d)
-{
-  return ((d > NUM_ROOM_SPECIALS) ? 0 : d);
-}
-
-
-struct room_special_proc_entry {
-  int vnum;
-  int (*proc) (TBeing *, cmdTypeT, const char *, TRoom *);
-};
 
 int oft_frequented_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 {
@@ -74,7 +47,7 @@ int oft_frequented_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
         for (i = 1; i <= q; i++) {
           if (::number(0,10))
             continue;
-          int rmob = real_mobile(::number(0,1) ? Mob::MALE_HOPPER : Mob::FEMALE_HOPPER);  
+          int rmob = real_mobile(::number(0,1) ? Mob::MALE_HOPPER : Mob::FEMALE_HOPPER);
           int maxMob = (gamePort == Config::Port::BETA) ? 25 : mob_index[rmob].max_exist; // beta port sets max_exist to 9999
           if (mob_index[rmob].getNumber() >= maxMob)
              continue;
@@ -121,105 +94,13 @@ int oft_frequented_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
       }
       break;
     default:
-      vlogf(LOG_PROC, format("Room %d has an oft_frequented_room() with no code for it.") % 
+      vlogf(LOG_PROC, format("Room %d has an oft_frequented_room() with no code for it.") %
                rp->number);
       break;
   }
   return FALSE;
 }
 
-int isBelimusAlive(void)
-{
-  if (mob_index[real_mobile(Mob::BELIMUS)].getNumber() >= 1)
-    return TRUE;
-  return FALSE;
-}
-
-int lava_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
-{
-  if ((cmd != CMD_GENERIC_PULSE) || number(0, 9))
-    return FALSE;
-
-  rp->sendTo(format("A scorching burst of lava spits from a crevice in the %s!\n\r") % rp->describeGround());
-
-#if 0
-  for (k = rp->contents; k; k = next) {
-    next = k->next_content;
-    if (!number(0, 5)) {
-      strcpy(buf, k->shortDescr);
-      sendrpf(rp, "%s is splashed by the lava.", cap(buf));
-    }
-  }
-#endif
-  return FALSE;
-}
-
-void TObj::thingDumped(TBeing *ch, int *value)
-{
-  int val;
-
-  act("$p vanishes in a puff of smoke.", TRUE, ch, this, 0, TO_ROOM);
-  act("$p vanishes in a puff of smoke.", TRUE, ch, this, 0, TO_CHAR);
-
-  // this will take struct and current street value into account
-  if (!isObjStat(ITEM_NEWBIE)) {
-    val = adjPrice();
-
-    *value += min(1000, max(1, (int) (val *
-           ch->plotStat(STAT_CURRENT, STAT_KAR, 0.05, 0.25, 0.18))));
-  }
-
-  delete this;
-}
-
-void TNote::thingDumped(TBeing *ch, int *)
-{
-  act("$p vanishes in a puff of smoke.", TRUE, ch, this, 0, TO_ROOM);
-  act("$p vanishes in a puff of smoke.", TRUE, ch, this, 0, TO_CHAR);
-
-  delete this;
-}
-
-int grimhavenDump(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
-{
-  TThing *t;
-  TRoom *roomp;
-
-  if(cmd!=CMD_GENERIC_PULSE)
-    return FALSE;
-
-  if(!(roomp=real_roomp(18975))){
-    vlogf(LOG_BUG, "couldn't find sewage pipe in grimhavenDump!");
-    return FALSE;
-  }
-    
-
-  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
-    t=*(it++);
-    
-    // Only objs get nuked
-    TObj *obj = dynamic_cast<TObj *>(t);
-    if (!obj)
-      continue;
-    
-    // portals should not be nuked
-    if (dynamic_cast<TPortal *>(obj))
-      continue;
-    
-    if (obj->isObjStat(ITEM_NOJUNK_PLAYER))
-      continue;
-    
-    // nor should flares
-    if (obj->objVnum() == Obj::GENERIC_FLARE)
-      continue;
-    
-    sendrpf(rp, "A %s slides down the chute into the disposal pipe below.\n\r", fname(obj->name).c_str());
-    
-    --(*obj);
-    *roomp += *obj;
-  }
-  return FALSE;
-}
 
 int prisonDump(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 {
@@ -233,211 +114,35 @@ int prisonDump(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
     vlogf(LOG_BUG, "couldn't find sewage pipe in prisonDump!");
     return FALSE;
   }
-    
+
 
   for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
     t=*(it++);
-    
+
     // Only objs get nuked
     TObj *obj = dynamic_cast<TObj *>(t);
     if (!obj)
       continue;
-    
+
     // portals should not be nuked
     if (dynamic_cast<TPortal *>(obj))
       continue;
-    
+
     if (obj->isObjStat(ITEM_NOJUNK_PLAYER))
       continue;
-    
+
     // nor should flares
     if (obj->objVnum() == Obj::GENERIC_FLARE)
       continue;
-    
+
     sendrpf(rp, "A %s slides down the chute into the disposal pipe below.\n\r", fname(obj->name).c_str());
-    
+
     --(*obj);
     *roomp += *obj;
   }
   return FALSE;
 }
 
-int dump(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
-{
-  TThing *t;
-  int value = 0;
-  int rc;
-  bool wasProp = false;
-
-  if (cmd == CMD_GENERIC_PULSE) {
-    for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
-      t=*(it++);
-
-      // Only objs get nuked
-      TObj *obj = dynamic_cast<TObj *>(t);
-      if (!obj)
-        continue;
-
-      // portals should not be nuked
-      if (dynamic_cast<TPortal *>(obj))
-        continue;
-
-      if (obj->isObjStat(ITEM_NOJUNK_PLAYER))
-	continue;
-
-      // nor should flares
-      if (obj->objVnum() == Obj::GENERIC_FLARE)
-        continue;
-
-      // refuse haulers cart
-      if(obj->objVnum() == 33270)
-	continue;
-
-      sendrpf(rp, "A %s vanishes in a puff of smoke.\n\r", fname(obj->name).c_str());
-
-      obj->logMe(NULL, "Dump nuking");
-
-      delete obj;
-      obj = NULL;
-    }
-    return FALSE;
-  } else if (cmd != CMD_DROP)
-    return FALSE;
-
-  if (!ch)
-    return FALSE;
-
-  rc = ch->doDrop(arg, NULL);
-  if (IS_SET_DELETE(rc, DELETE_THIS))
-    return DELETE_VICT;
-
-  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
-    t=*(it++);
-
-    if (isname("[prop]", t->getName()))
-      wasProp = true;
-
-    TObj *obj = dynamic_cast<TObj *>(t);
-    if (!obj)
-      continue;
-
-
-    if (obj->isObjStat(ITEM_NOJUNK_PLAYER))
-      continue;
-
-    t->thingDumped(ch, &value);
-    // t may be invalid afterwards
-  }
-  if (value && !wasProp) {
-    ch->sendTo("You are rewarded for outstanding performance.\n\r");
-    act("$n has been rewarded for good citizenship.", TRUE, ch, 0, 0, TO_ROOM);
-
-    if (ch->GetMaxLevel() < 3)
-      gain_exp(ch, min(0.010, value/1000.0), -1);
-    else { 
-      // take the global income modifier into account, in times of drought, we
-      // don't want folks resorting to using the dump to get their money
-      value = (int) (value * gold_modifier[GOLD_INCOME].getVal());
-      ch->addToMoney(value, GOLD_DUMP);
-    }
-  }
-  return TRUE;
-}
-
-
-int pools_of_chaos_and_cleansing(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
-{
-  int rc;
-
-  if ((cmd != CMD_ENTER) || !ch->awake())
-    return FALSE;
-
-  for (; isspace(*arg); arg++);
-
-  if (is_abbrev(arg, "chaos")) {
-    ch->sendTo("You slowly dip yourself into the pool of chaos.\n\r");
-    act("$n slowly dips $mself into the pool of chaos.",
-              TRUE, ch, NULL, NULL, TO_ROOM);
-    if (ch->isImmortal())
-      return TRUE;
-
-    switch (number(0, 10)) {
-      case 0:
-	ch->sendTo("As you step into the pool, you suddenly feel much weaker.\n\r");
-	act("$n shivers as the water in the pool weakens $m.", TRUE, ch, NULL, NULL, TO_ROOM);
-	ch->setHit(1);
-	return TRUE;
-      case 1:
-	ch->sendTo("As you step into the pool, your mind becomes clouded.\n\r");
-	act("$n looks disorientated as $e steps into the pool.", TRUE, ch, NULL, NULL, TO_ROOM);
-	ch->setMana(0);
-	return TRUE;
-      case 2:
-	ch->sendTo("As you step into the pool, you feel your vision disappear.\n\r");
-	act("$n looks around blindly as $e steps into the pool.", TRUE, ch, NULL, NULL, TO_ROOM);
-
-        ch->rawBlind(50, 24 * Pulse::UPDATES_PER_MUDHOUR, SAVE_YES);
-	return TRUE;
-      case 3:
-	ch->sendTo("As you step into the pool, you feel yourself magically moved.\n\r");
-	act("$n magically disappears as soon as $e steps into the pool.", TRUE, ch, NULL, NULL, TO_ROOM);
-
-        rc = ch->genericTeleport(SILENT_NO);
-
-        if (IS_SET_DELETE(rc, DELETE_THIS))
-          return DELETE_THIS;
-	return TRUE;
-      case 4:
-	ch->sendTo("As you step into the pool, you feel totally refreshed!\n\r");
-	act("$n looks totally refreshed as $e steps into the pool.", TRUE, ch, NULL, NULL, TO_ROOM);
-	ch->setHit(ch->hitLimit());
-	return TRUE;
-      case 5:
-	ch->sendTo("As you step into the pool, many thoughts rush into your head.\n\r");
-	act("$n looks a little dizzy as $h steps into the pool.", TRUE, ch, NULL, NULL, TO_ROOM);
-	ch->setMana(ch->manaLimit());
-	return TRUE;
-      case 6:
-      case 7:
-      case 8:
-      case 9:
-      case 10:
-      default:
-	return TRUE;
-    }
-  } else if (is_abbrev(arg, "cleansing")) {
-    ch->sendTo("You slowly dip yourself into the pool of cleansing.\n\r");
-    act("$n slowly dips $mself into the pool of cleansing.", TRUE, ch, NULL, NULL, TO_ROOM);
-    return TRUE;
-  }
-  return FALSE;
-}
-
-int goblin_smoke_amber(TBeing *, cmdTypeT cmd, const char *, TRoom *)
-{
-  if ((cmd != CMD_GENERIC_PULSE) || ::number(0,9))
-    return FALSE;
-
-#if 0
-  for (vict = rp->people; vict; vict = temp) {
-    temp = vict->next_in_room;
-    if (vict->isImmortal())
-      continue;
-    if (!number(0, 6)) {
-      vict->sendTo("The smoke in the room denies you from breathing!\n\r");
-      vict->sendTo("You suddenly feel much weaker because of the lack or air.\n\r");
-      act("$n coughs and wheezes as the smoke cause $m to choke.", TRUE, vict, NULL, NULL, TO_ROOM);
-      vict->reconcileDamage(vict, 10,DAMAGE_SUFFOCATE);
-    }
-  }
-#endif
-  return FALSE;
-}
-
-int faerie_mound(TBeing *, cmdTypeT, const char *, TRoom *)
-{
-  return FALSE;
-}
 
 // this is a crappy proc but will work in a pinch
 int personalHouse(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
@@ -481,6 +186,7 @@ int personalHouse(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
   return DELETE_VICT;
 }
 
+
 int Whirlpool(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
 {
   TThing *t;
@@ -501,7 +207,7 @@ int Whirlpool(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
 
       for (new_room = ::number(12500, 13100);;
            new_room = ::number(12500, 13100)) {
-        if (!(rp2 = real_roomp(new_room)) || 
+        if (!(rp2 = real_roomp(new_room)) ||
             !(rp2->isWaterSector()))
           continue;
         break;
@@ -525,10 +231,10 @@ int Whirlpool(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
 
   // 50% chance of extra damage
   if ((ch->getRace() == RACE_DWARF) || (::number(1,100) <= 50)) {
-    act("The whirlpool tears $n limb from limb before spitting you out.", 
+    act("The whirlpool tears $n limb from limb before spitting you out.",
 	TRUE, ch, 0, 0, TO_ROOM);
     ch->sendTo("The whirlpool tears you limb from limb before spitting you out.\n\r");
-    
+
     // double damage, ie 0-05% max hp
     dam*=2;
   } else {
@@ -550,22 +256,28 @@ int Whirlpool(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
       t = NULL;
     }
   }
-  
+
   --(*ch);
-  
+
   for (new_room = ::number(12500, 13100);;new_room = ::number(12500, 13100)) {
-    if (!(rp2 = real_roomp(new_room)) || 
+    if (!(rp2 = real_roomp(new_room)) ||
 	!(rp2->isWaterSector()))
       continue;
     break;
   }
   *rp2 += *ch;
-  
+
   // do the damage
   if (ch->reconcileDamage(ch, dam, DAMAGE_WHIRLPOOL) == -1)
     return DELETE_THIS;
-  
+
   return TRUE;
+}
+
+
+bool isBelimusAlive(void)
+{
+  return mob_index[real_mobile(Mob::BELIMUS)].getNumber() >= 1;
 }
 
 int belimusThroat(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
@@ -816,21 +528,22 @@ int belimusBlowHole(TBeing *me, cmdTypeT cmd, const char *, TRoom *rp)
         for (int i = 0; i <= 9; i++)
           if ((exitp = rp2->dir_option[i]) && (room2 = exitp->to_room))
             break;
-        
+
         --(*me);
         thing_to_room(me, room2);
         act("$n is ejected from Belimus's blowhole.", 0, me, 0, 0, TO_ROOM);
         me->sendTo("You are ejected from the blowhole and land somewhere nearby.\n\r");
         return TRUE;
       }
-    } 
+    }
     return FALSE;
   }
 
   return TRUE;
 }
 
-int wierdCircle(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
+
+int weirdCircle(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 {
   char buf[256];
   TBeing *mob;
@@ -844,19 +557,19 @@ int wierdCircle(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
         return FALSE;   // already loaded
 
       if (!(mob = read_mobile(mobnum, REAL))) {
-        vlogf(LOG_PROC, "bad load of mob in wierdCircle");
+        vlogf(LOG_PROC, "bad load of mob in weirdCircle");
         return FALSE;
       }
       *rp += *mob;
       mob->doSay("Hi there!  It's been quite some time since anyone's come to visit me.");
       act("$n looks in your direction.", TRUE, mob, 0, ch, TO_VICT);
       act("$n looks in $N's direction.", TRUE, mob, 0, ch, TO_NOTVICT);
-      
+
       if (!(obj = findMostExpensiveItem(ch)))
         return TRUE;
       mob->doSay("And I see you've brought me a gift.");
       mob->doSay("Allow me to remove you of the burden.");
-      
+
       if (obj->parent)
         --(*obj);
       else if (obj->eq_pos > WEAR_NOWHERE)
@@ -864,14 +577,14 @@ int wierdCircle(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 
       *mob += *obj;
 
-      return TRUE; 
+      return TRUE;
     }
     return FALSE;
   }
   if (cmd == CMD_GENERIC_PULSE && !::number(0,29)) {
     int mobnum = real_mobile(17111);  // 17111
     if (mobnum < 0) {
-      vlogf(LOG_PROC, "Bogus mob specified in wierdCircle.");
+      vlogf(LOG_PROC, "Bogus mob specified in weirdCircle.");
       return FALSE;
     }
     if (mob_index[mobnum].getNumber()) {
@@ -892,108 +605,25 @@ int wierdCircle(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
   return FALSE;
 }
 
-#if 0
-// this was written for a quest, works but no reason to keep it permanently
-int elfForest(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
-{
-  TRoom *new_room;
-  TBeing *mob;
-  TObj *arrow, *bow;
-  char buf[256], capbuf[256];
-  TBeing *vict;
-  TThing *t;
-  int found = FALSE;
-  
-  if ((cmd != CMD_GENERIC_PULSE) || ::number(0,1))
-   return FALSE;
-
-  for (t = rp->getStuff(), vict = NULL; t; t = t->nextThing, vict = NULL) {
-    vict = dynamic_cast<TBeing *>(t);
-    if (!vict)
-      continue;
-    if (vict->isAnimal() || vict->getRace() == RACE_WOODELF ||
-        vict->isImmortal())
-      continue;
-    break;
-  }
-
-  if (!vict)
-    return FALSE;
-
-  if (!(mob = read_mobile(10113, VIRTUAL))) {
-    return FALSE;
-  }
-  thing_to_room(mob, Room::VOID);   // safety net to prevent nowhere extract
-  if (!(bow = read_object(10145, VIRTUAL))) {
-    delete mob;
-    return FALSE;
-  }
-  if (!(arrow = read_object(3412, VIRTUAL))) {
-    delete mob;
-    delete bow;
-    return FALSE;
-  }
-  arrow->obj_flags.decay_time = 3;
-  strcpy(capbuf, mob->getName());
-  
-  for (dirTypeT door = MIN_DIR; door < MAX_DIR; door++) {
-    if (rp->dir_option[door] && 
-            (new_room = real_roomp(rp->dir_option[door]->to_room))) {
-      if (new_room == rp || ::number(0,2)) 
-        continue;
-      found = FALSE;
-      for (t = new_room->getStuff(); t && !found; t = t->nextThing) {
-        TBeing *tbt = dynamic_cast<TBeing *>(t);
-        if (tbt && tbt->isPc() && !tbt->isImmortal())
-           found = TRUE;
-      }
-      if (!found) {
-        --(*mob);  // move out of void
-        thing_to_room(mob, rp->dir_option[door]->to_room);
-        *mob += *arrow;
-        *mob += *bow;
-        mob->doBload("bow arrow", 0);
-        mob->setSkillValue(SKILL_RANGED_SPEC, MAX_SKILL_LEARNEDNESS);
-         
-        sprintf(buf, "%s leaps from the trees to the %s and draws %s %s.\n\r",
-             cap(capbuf), dirs[door], mob->hshr(), fname(bow->name).c_str());
-        sendrpf(rp, buf);
-
-        sprintf(buf, "%s %s 1", fname(vict->name).c_str(), dirs[rev_dir[door]]);
-        mob->doShoot(buf, 0);
-        sprintf(buf, "%s scrambles back into the brush.\n\r", cap(capbuf));
-        sendrpf(rp, buf);
-        // vict is possibly invalid here.
-        delete bow;
-        delete mob;
-        return FALSE;
-      }
-    }
-  }
-  delete arrow;
-  delete bow;
-  delete mob;
-  return FALSE;
-}
-#endif
 
 int noiseBoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 {
   TRoom *new_room;
-  
+
   if ((cmd != CMD_GENERIC_PULSE) || ::number(0,99))
    return FALSE;
 
   sendrpf(rp, "BOOM!!\n\r");
 
   for (dirTypeT door = MIN_DIR; door < MAX_DIR; door++) {
-    if (rp->dir_option[door] && (new_room = 
+    if (rp->dir_option[door] && (new_room =
             real_roomp(rp->dir_option[door]->to_room)))
       if (new_room != rp)
         sendrpf(new_room, "An eerie moaning sound echoes through the tunnel.");
   }
   return FALSE;
 }
+
 
 // FALSE if didn't slide
 // DELETE_THIS on death
@@ -1006,7 +636,7 @@ int genericSlide(TThing *t, TRoom *rp)
     return FALSE;
 
   t->sendTo("You seem to be sliding down the incline!!!\n\r");
-  act("$n slides down the incline.", TRUE, t, 0, 0, TO_ROOM); 
+  act("$n slides down the incline.", TRUE, t, 0, 0, TO_ROOM);
 
   for (t2 = t->rider; t2; t2 = t3) {
     t3 = t2->nextRider;
@@ -1051,7 +681,7 @@ int genericSlide(TThing *t, TRoom *rp)
 
   act("$n slides into the room.",
       TRUE, t, 0, 0, TO_ROOM);
-  
+
   rc = t->genericMovedIntoRoom(t->roomp, -1);
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     return DELETE_THIS;
@@ -1106,6 +736,7 @@ int slide(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 
   return TRUE;
 }
+
 
 int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 {
@@ -1180,7 +811,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 
         if (obj_index[real_object(7214)].getNumber())
           return TRUE;
-  
+
         if (!(portal = read_object(7214, VIRTUAL))) {
           vlogf(LOG_PROC, format("Problem loading object in SecretPortal. (%d)") %  7214);
           return FALSE;
@@ -1207,7 +838,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
           act("The drawbridge is already lowered.", TRUE,ch,0,0,TO_CHAR);
           return TRUE;
         }
-  
+
         act("You lower the drawbridge.", false, ch, 0, 0, TO_CHAR);
         act("$n lowers the drawbridge.", false, ch, 0, 0, TO_ROOM);
 
@@ -1236,7 +867,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
           act("The drawbridge is already raised.", TRUE,ch,0,0,TO_CHAR);
           return TRUE;
         }
-  
+
         act("You raise the drawbridge.", false, ch, 0, 0, TO_CHAR);
         act("$n raises the drawbridge.", false, ch, 0, 0, TO_ROOM);
 
@@ -1314,7 +945,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
             sendToRoom("With a loud boom, the entry platform disappears.\n\r", 7228);
           }
         }
-      } 
+      }
 
       return TRUE;
     case 15277:
@@ -1388,7 +1019,8 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 }
 
 
-int getRandomRoom(){
+int getRandomRoom()
+{
   int to_room;
   TRoom *rp;
   int breakout=0;
@@ -1434,7 +1066,7 @@ int randomMobDistribution(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 
   // loop through all directions
   for(dirTypeT d=DIR_NORTH;d<MAX_DIR;d++){
-    if(d==DIR_NORTHEAST || d==DIR_NORTHWEST || 
+    if(d==DIR_NORTHEAST || d==DIR_NORTHWEST ||
        d==DIR_SOUTHEAST || d==DIR_SOUTHWEST)
       continue;
 
@@ -1444,11 +1076,11 @@ int randomMobDistribution(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     // choose a random location
     if(!(exitrnum=getRandomRoom()))
       continue;
-      
+
     // create the exit
     if(!(rp->dir_option[d] = new roomDirData()))
       continue;
-    
+
     // link the exit
     rp->dir_option[d]->to_room = exitrnum;
   }
@@ -1457,7 +1089,7 @@ int randomMobDistribution(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
   if(zone_table[rp->getZoneNum()].zone_value==1){
     for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
       TThing *t=*(it++);  // just for safety
-      
+
       if((tm=dynamic_cast<TMonster *>(t))){
 	rc = tm->mobileActivity(pulse);
 	if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -1487,15 +1119,15 @@ int theKnot(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 
   if(done[n] && ::number(0,9999))
     return FALSE;
-  
+
   // loop through all directions
   for(dirTypeT d=DIR_NORTH;d<MAX_DIR;d++){
-    if(d==DIR_NORTHEAST || d==DIR_NORTHWEST || 
+    if(d==DIR_NORTHEAST || d==DIR_NORTHWEST ||
        d==DIR_SOUTHEAST || d==DIR_SOUTHWEST)
       continue;
 
     // if we're redoing our exits and this is an out of zone exit, delete it
-    if(rp->dir_option[d] && 
+    if(rp->dir_option[d] &&
        rp->dir_option[d]->to_room<2375 &&
        rp->dir_option[d]->to_room>2399)
       delete rp->dir_option[d];
@@ -1504,7 +1136,7 @@ int theKnot(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     if(!rp->dir_option[d] && !::number(0,9)){
       if(!(exitrnum=getRandomRoom()))
 	continue;
-      
+
       if(!(rp->dir_option[d] = new roomDirData()))
 	continue;
 
@@ -1518,7 +1150,7 @@ int theKnot(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
   return TRUE;
 }
 
-// Peel
+
 int duergarWater(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 {
   if(cmd != CMD_GENERIC_PULSE || !rp)
@@ -1532,11 +1164,11 @@ int duergarWater(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 	  rp->setSectorType(SECT_TEMPERATE_RIVER_SURFACE);
 	}
 	break;
-      case 1: 
-      case 2: 
-      case 3: 
-      case 4: 
-      case 5: 
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+      case 5:
       case 6:
 	if(rp->getSectorType()!=SECT_TEMPERATE_UNDERWATER){
 	  // send message here
@@ -1549,9 +1181,9 @@ int duergarWater(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 	  rp->setSectorType(SECT_TEMPERATE_RIVER_SURFACE);
 	}
 	break;
-      case 8: 
-      case 9: 
-      case 10: 
+      case 8:
+      case 9:
+      case 10:
       case 11:
 	if(rp->getSectorType()!=SECT_TEMPERATE_CAVE){
 	  // send message here
@@ -1567,9 +1199,9 @@ int duergarWater(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 	  rp->setSectorType(SECT_TEMPERATE_RIVER_SURFACE);
 	}
 	break;
-      case 2: 
-      case 3: 
-      case 4: 
+      case 2:
+      case 3:
+      case 4:
       case 5:
 	if(rp->getSectorType()!=SECT_TEMPERATE_UNDERWATER){
 	  // send message here
@@ -1582,11 +1214,11 @@ int duergarWater(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 	  rp->setSectorType(SECT_TEMPERATE_RIVER_SURFACE);
 	}
 	break;
-      case 7: 
-      case 8: 
-      case 9: 
-      case 10: 
-      case 11: 
+      case 7:
+      case 8:
+      case 9:
+      case 10:
+      case 11:
       case 0:
 	if(rp->number<13740 &&
 	   rp->getSectorType()!=SECT_TEMPERATE_ATMOSPHERE){
@@ -1659,33 +1291,15 @@ int duergarWater(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
   return TRUE;
 }
 
+
 int monkQuestProcLand(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
 {
-#if 0
-  TMonster *tmon;
-  TThing *t=NULL;
-#endif
-
   if(cmd!=CMD_ROOM_ENTERED)
     return FALSE;
   if(!ch || !ch->hasQuestBit(TOG_MONK_GREEN_FALLING))
     return FALSE;
   if(ch->specials.last_direction != DIR_DOWN)
     return FALSE;
-
-  // We figure if they are riding an elephant when they started the fall
-  // and if there is an elephant in the room when they land, must be the
-  // same one.  And if not, no big deal, probably not abusable.
-#if 0
-  for(t=rp->getStuff();t;t=t->nextThing){
-    if((tmon=dynamic_cast<TMonster *>(t)) &&
-       tmon->mobVnum()==Mob::ELEPHANT){
-      break;
-    }
-  }
-  if(!t)
-    return FALSE;
-#endif 
 
   ch->remQuestBit(TOG_MONK_GREEN_FALLING);
   ch->setQuestBit(TOG_MONK_GREEN_FALLEN);
@@ -1712,6 +1326,7 @@ int monkQuestProcFall(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
   return TRUE;
 }
 
+
 int BankVault(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
 {
   TRoom *rp;
@@ -1736,7 +1351,7 @@ int BankVault(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
       SET_BIT(roomp->dir_option[DIR_WEST]->condition, EX_LOCKED);
       roomp->sendTo("The door to the west locks with an audible *click*.\n\r");
     }
-    
+
     rp=real_roomp(31779);
     if(!IS_SET(rp->dir_option[DIR_EAST]->condition, EX_CLOSED)){
       SET_BIT(rp->dir_option[DIR_EAST]->condition, EX_CLOSED);
@@ -1757,7 +1372,7 @@ int BankVault(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
       SET_BIT(roomp->dir_option[DIR_WEST]->condition, EX_LOCKED);
       roomp->sendTo("The door to the west locks with an audible *click*.\n\r");
     }
-    
+
     rp=real_roomp(31785);
     if(!IS_SET(rp->dir_option[DIR_EAST]->condition, EX_CLOSED)){
       SET_BIT(rp->dir_option[DIR_EAST]->condition, EX_CLOSED);
@@ -1768,7 +1383,7 @@ int BankVault(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
       rp->sendTo("The door to the east locks with an audible *click*.\n\r");
     }
   }
-  
+
 
   // check for player in this room and poison if so
   for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();++it){
@@ -1796,7 +1411,6 @@ int BankVault(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
 
   return TRUE;
 }
-
 
 int BankMainEntrance(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
 {
@@ -1896,6 +1510,7 @@ int BankMainEntrance(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
   return TRUE;
 }
 
+
 int dayGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 {
   TObj *to = NULL;
@@ -1906,7 +1521,7 @@ int dayGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
   if (cmd != CMD_GENERIC_PULSE)
     return FALSE;
 
-  
+
   //  vlogf(LOG_DASH, "daygate proc PULSE");
   for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
     t=*(it++);
@@ -1947,7 +1562,7 @@ int dayGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
       act("<Y>A shimmering portal as bright as the noonday sun suddenly bursts into existance.<1>",
 	  TRUE, to, 0, 0, TO_ROOM);
     }
-    
+
   }
 
   return TRUE;
@@ -1964,7 +1579,6 @@ int moonGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     return FALSE;
 
 
-  
   for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
     t=*(it++);
     if(!(to=dynamic_cast<TObj *>(t)))
@@ -1978,7 +1592,7 @@ int moonGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     // code to remove gate
     if (found && to) {
       //     vlogf(LOG_DASH, "moongate proc found moongate, removing");
-      
+
       act("<k>The dark portal silently disperses into nothingness.<1>",
 	  TRUE, to, 0, 0, TO_ROOM);
       --(*to);
@@ -2000,125 +1614,15 @@ int moonGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 	obj->setPortalType(10);
 	*rp += *to;
 	//vlogf(LOG_DASH, "moongate proc didn't find moongate, placing");
-	
+
 	act("<k>A portal of midnight darkness suddenly shimmers into reality.<1>",
 	    TRUE, to, 0, 0, TO_ROOM);
       }
     }
- 
-  return TRUE;
-}
-
-int waterfallRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
-{
-  TObj *to = NULL;
-  TThing *t = NULL;
-  bool found = false;
-
-  if (cmd != CMD_GENERIC_PULSE)
-    return FALSE;
-
-  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
-    t=*(it++);
-    if(!(to=dynamic_cast<TObj *>(t)))
-      continue;
-    if(obj_index[to->getItemIndex()].virt == Obj::RAINBOW_MIST) {
-      found = true;
-      break;
-    }
-  }
-  if (Weather::getSunlight() != Weather::SUN_LIGHT || 
-      Weather::getSky() != Weather::SKY_CLOUDLESS) {
-    // code to remove rainbow
-    if (!found || !to)
-      return FALSE;
-    act("<W>The sunlight no longer reaches the mist, and $p<W> fades from sight.<1>",
-        TRUE, to, 0, 0, TO_ROOM);
-    --(*to);
-    delete to;
-
-  } else {
-    // code to place rainbow
-    if (found || to)
-      return FALSE;
-    if (!(to = read_object(Obj::RAINBOW_MIST, VIRTUAL))) {
-      vlogf(LOG_LOW, "Error loading rainbow mist object");
-      return FALSE;
-    }
-    *rp += *to;
-    act("<W>Suddenly, light from the sun strikes the mist, and $p<W> is formed.<1>",
-	TRUE, to, 0, 0, TO_ROOM);
-  
-
-  }
 
   return TRUE;
 }
 
-int windGustRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
-{
-  TPerson *player;
-  int rc;
-  TThing *t;
-  static unsigned int pulse;
-
-  if(cmd != CMD_GENERIC_PULSE)
-    return FALSE;
-
-  // about 10 per second
-  ++pulse;
-  // we want to check every minute, but have a 90% of triggering over
-  // 5 minutes.  thus, 1-(1-x)^5 = 0.90
-  // x = .37
-  if(pulse%600 || (::number(0,99) >= 37))
-    return FALSE;
-
-  sendrpf(COLOR_BASIC, rp,
-	  "<c>A strong gust of wind swirls into the room kicking up <o>dust<1><c> and knocking the unwary off-guard.<1>\n\r");
-
-
-  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
-    t=*(it++);
-  
-    if(!(player=dynamic_cast<TPerson *>(t)))
-      continue;
-
-    if(player->isImmortal())
-      continue;
-
-    // pick random direction
-    for (int i = 0; i < 20; i++) {
-      dirTypeT dir = dirTypeT(::number(MIN_DIR, MAX_DIR-1));
-
-      if (player->canGo(dir)){
-	act("You are blown out of the room!",
-	    FALSE, player, 0, 0, TO_CHAR);
-	act("$n is blown out of the room!",
-	    FALSE, player, 0, 0, TO_ROOM);
-
-	--(*player);
-	thing_to_room(player, rp->dir_option[dir]->to_room);
-	
-	player->doLook("", CMD_LOOK);
-	player->addToWait(combatRound(1));
-	break;
-      }
-    }
-
-    act("You land flat on your back.",
-	FALSE, player, 0, 0, TO_CHAR);
-    act("$n lands flat on $s back!",
-	FALSE, player, 0, 0, TO_ROOM);
-    
-    rc = player->crashLanding(POSITION_SITTING);
-    if (IS_SET_DELETE(rc, DELETE_THIS)){
-      delete player;
-      player = NULL;
-    }
-  }
-
-  return TRUE;
-}
 
 int boulderRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
 {
@@ -2163,21 +1667,76 @@ int boulderRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
   }
 }
 
+
+extern int sleepTagControl(TBeing *, cmdTypeT, const char *, TRoom *);
+extern int sleepTagRoom(TBeing *, cmdTypeT, const char *, TRoom *);
+extern int bankRoom(TBeing *, cmdTypeT, const char *, TRoom *);
+extern int healing_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp);
+extern int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp);
+extern int SecretDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp);
+
+int bogusRoomProc(TBeing *, cmdTypeT, const char *, TRoom *rp)
+{
+  vlogf(LOG_PROC, format("WARNING: %s is running around with bogus spec proc #%d") %
+      rp->getName() % rp->spec);
+  return FALSE;
+}
+
+
+int TRoom::checkSpec(TBeing *ch, cmdTypeT cmd, const char *arg, TThing *)
+{
+  if (spec && spec <= NUM_ROOM_SPECIALS)
+    return (roomSpecials[spec].proc)(ch, cmd, arg, this);
+  return FALSE;
+}
+
+
+TRoomSpecs roomSpecials[NUM_ROOM_SPECIALS + 1] =
+{
+  {FALSE, "UNUSED", bogusRoomProc},
+  {FALSE, "UNUSED", bogusRoomProc},                            // 1
+  {FALSE, "Bank Main Entrance", BankMainEntrance},
+  {FALSE, "Bank Vault", BankVault},
+  {FALSE, "Secret Doors", SecretDoors},
+  {FALSE, "Secret Portal Doors", SecretPortalDoors},           // 5
+  {FALSE, "Whirlpool", Whirlpool},
+  {FALSE, "Bank Room", bankRoom},
+  {FALSE, "belimus Blow Hole", belimusBlowHole},
+  {FALSE, "belimus Lungs", belimusLungs},
+  {FALSE, "belimus Stomach", belimusStomach},                  // 10
+  {FALSE, "belimus Throat", belimusThroat},
+  {FALSE, "boulder Room", boulderRoom},
+  {FALSE, "UNUSED", bogusRoomProc},
+  {FALSE, "dayGate Room", dayGateRoom},
+  {FALSE, "duergar Water", duergarWater},                      // 15
+  {FALSE, "UNUSED", bogusRoomProc},
+  {FALSE, "emergency room", emergency_room},
+  {FALSE, "UNUSED", bogusRoomProc},
+  {FALSE, "healing room", healing_room},
+  {FALSE, "monk Quest Proc Fall", monkQuestProcFall},          // 20
+  {FALSE, "monk Quest Proc Land", monkQuestProcLand},
+  {FALSE, "moonGate Room", moonGateRoom},
+  {FALSE, "noise Boom", noiseBoom},
+  {FALSE, "oft frequented room", oft_frequented_room},
+  {FALSE, "UNUSED", bogusRoomProc},                             // 25
+  {FALSE, "prison Dump", prisonDump},
+  {FALSE, "random Mob Distribution", randomMobDistribution},
+  {FALSE, "sleep Tag Control", sleepTagControl},
+  {FALSE, "sleep Tag Room", sleepTagRoom},
+  {FALSE, "slide", slide},                                     // 30
+  {FALSE, "the Knot", theKnot},
+  {FALSE, "weird Circle", weirdCircle},
+  {FALSE, "last proc", bogusRoomProc}
+};
+
+
+// the following procs are unused but preserved here for future interest
+/*
 int collapsingTunnel(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
 {
 
   if(cmd!=CMD_ROOM_ENTERED)
     return FALSE;
-
-  TRoom *rp2 = NULL;
-  if(ch->in_room == 24643) {
-    rp2 = real_roomp(24674);
-  } else if(ch->in_room == 24674) {
-    rp2 = real_roomp(24643);
-  } else {
-    vlogf(LOG_PROC, format("collapsingTunnel unknown room %i") % ch->in_room);
-    return FALSE;
-  }
 
   act("<k>Rubble<1> collapses <k>behind you, blocking the way you came.<1>", FALSE, ch, NULL, NULL, TO_CHAR);
   int dam = ::number(21,40);
@@ -2187,7 +1746,21 @@ int collapsingTunnel(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
     act("<k>You manage to dodge most of the falling rocks!  Whew.<1>", FALSE, ch, NULL, NULL, TO_CHAR);
     dam -= 20;
   }
-  
+
+  TRoom *rp2 = NULL;
+
+
+
+  if(ch->in_room == 24643) {
+
+    rp2 = real_roomp(24674);
+
+  }
+  if(ch->in_room == 24674) {
+
+    rp2 = real_roomp(24643);
+
+  }
   --(*ch);
   *rp2 += *ch;
 
@@ -2200,56 +1773,421 @@ int collapsingTunnel(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
   return TRUE;
 }
 
-int bogusRoomProc(TBeing *, cmdTypeT, const char *, TRoom *rp)
+
+int elfForest(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 {
-  if (rp)
-    vlogf(LOG_PROC, format("WARNING:  %s is running around with a bogus spec_proc #%d") % 
-       rp->getName() % rp->spec);
-  else
-    vlogf(LOG_PROC, "WARNING: indeterminate room has bogus spec_proc");
+  TRoom *new_room;
+  TBeing *mob;
+  TObj *arrow, *bow;
+  char buf[256], capbuf[256];
+  TBeing *vict;
+  TThing *t;
+  int found = FALSE;
+
+  if ((cmd != CMD_GENERIC_PULSE) || ::number(0,1))
+   return FALSE;
+
+  for (t = rp->getStuff(), vict = NULL; t; t = t->nextThing, vict = NULL) {
+    vict = dynamic_cast<TBeing *>(t);
+    if (!vict)
+      continue;
+    if (vict->isAnimal() || vict->getRace() == RACE_WOODELF ||
+        vict->isImmortal())
+      continue;
+    break;
+  }
+
+  if (!vict)
+    return FALSE;
+
+  if (!(mob = read_mobile(10113, VIRTUAL))) {
+    return FALSE;
+  }
+  thing_to_room(mob, Room::VOID);   // safety net to prevent nowhere extract
+  if (!(bow = read_object(10145, VIRTUAL))) {
+    delete mob;
+    return FALSE;
+  }
+  if (!(arrow = read_object(3412, VIRTUAL))) {
+    delete mob;
+    delete bow;
+    return FALSE;
+  }
+  arrow->obj_flags.decay_time = 3;
+  strcpy(capbuf, mob->getName());
+
+  for (dirTypeT door = MIN_DIR; door < MAX_DIR; door++) {
+    if (rp->dir_option[door] &&
+            (new_room = real_roomp(rp->dir_option[door]->to_room))) {
+      if (new_room == rp || ::number(0,2))
+        continue;
+      found = FALSE;
+      for (t = new_room->getStuff(); t && !found; t = t->nextThing) {
+        TBeing *tbt = dynamic_cast<TBeing *>(t);
+        if (tbt && tbt->isPc() && !tbt->isImmortal())
+           found = TRUE;
+      }
+      if (!found) {
+        --(*mob);  // move out of void
+        thing_to_room(mob, rp->dir_option[door]->to_room);
+        *mob += *arrow;
+        *mob += *bow;
+        mob->doBload("bow arrow", 0);
+        mob->setSkillValue(SKILL_RANGED_SPEC, MAX_SKILL_LEARNEDNESS);
+
+        sprintf(buf, "%s leaps from the trees to the %s and draws %s %s.\n\r",
+             cap(capbuf), dirs[door], mob->hshr(), fname(bow->name).c_str());
+        sendrpf(rp, buf);
+
+        sprintf(buf, "%s %s 1", fname(vict->name).c_str(), dirs[rev_dir[door]]);
+        mob->doShoot(buf, 0);
+        sprintf(buf, "%s scrambles back into the brush.\n\r", cap(capbuf));
+        sendrpf(rp, buf);
+        // vict is possibly invalid here.
+        delete bow;
+        delete mob;
+        return FALSE;
+      }
+    }
+  }
+  delete arrow;
+  delete bow;
+  delete mob;
   return FALSE;
 }
 
 
-extern int healing_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp);
-extern int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp);
-extern int SecretDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp);
-
-
-TRoomSpecs roomSpecials[NUM_ROOM_SPECIALS + 1] =
+int windGustRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 {
-  {FALSE, "BOGUS", bogusRoomProc},
-  {TRUE,  "wind gust", windGustRoom},                          // 1
-  {FALSE, "Bank Main Entrance", BankMainEntrance},    
-  {FALSE, "Bank Vault", BankVault},
-  {FALSE, "Secret Doors", SecretDoors},
-  {FALSE, "Secret Portal Doors", SecretPortalDoors},           // 5
-  {FALSE, "Whirlpool", Whirlpool},
-  {FALSE, "Bank Room", bankRoom},
-  {FALSE, "belimus Blow Hole", belimusBlowHole},
-  {FALSE, "belimus Lungs", belimusLungs},
-  {FALSE, "belimus Stomach", belimusStomach},                  // 10
-  {FALSE, "belimus Throat", belimusThroat},
-  {FALSE, "boulder Room", boulderRoom},
-  {FALSE, "collapsing Tunnel", collapsingTunnel},
-  {FALSE, "dayGate Room", dayGateRoom},
-  {FALSE, "duergar Water", duergarWater},                      // 15
-  {FALSE, "dump", dump},
-  {FALSE, "emergency room", emergency_room},
-  {FALSE, "grimhaven Dump", grimhavenDump},
-  {FALSE, "healing room", healing_room},
-  {FALSE, "monk Quest Proc Fall", monkQuestProcFall},          // 20
-  {FALSE, "monk Quest Proc Land", monkQuestProcLand},
-  {FALSE, "moonGate Room", moonGateRoom},
-  {FALSE, "noise Boom", noiseBoom},
-  {FALSE, "oft frequented room", oft_frequented_room},
-  {FALSE, "BOGUS", bogusRoomProc},                             // 25
-  {FALSE, "prison Dump", prisonDump},
-  {FALSE, "random Mob Distribution", randomMobDistribution},
-  {FALSE, "sleep Tag Control", sleepTagControl},
-  {FALSE, "sleep Tag Room", sleepTagRoom},
-  {FALSE, "slide", slide},                                     // 30
-  {FALSE, "the Knot", theKnot},
-  {FALSE, "wierd Circle", wierdCircle},
-  {FALSE, "last proc", bogusRoomProc}
-};
+  TPerson *player;
+  int rc;
+  TThing *t;
+  static unsigned int pulse;
+
+  if(cmd != CMD_GENERIC_PULSE)
+    return FALSE;
+
+  // about 10 per second
+  ++pulse;
+  // we want to check every minute, but have a 90% of triggering over
+  // 5 minutes.  thus, 1-(1-x)^5 = 0.90
+  // x = .37
+  if(pulse%600 || (::number(0,99) >= 37))
+    return FALSE;
+
+  sendrpf(COLOR_BASIC, rp,
+	  "<c>A strong gust of wind swirls into the room kicking up <o>dust<1><c> and knocking the unwary off-guard.<1>\n\r");
+
+
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
+    t=*(it++);
+
+    if(!(player=dynamic_cast<TPerson *>(t)))
+      continue;
+
+    if(player->isImmortal())
+      continue;
+
+    // pick random direction
+    for (int i = 0; i < 20; i++) {
+      dirTypeT dir = dirTypeT(::number(MIN_DIR, MAX_DIR-1));
+
+      if (player->canGo(dir)){
+	act("You are blown out of the room!",
+	    FALSE, player, 0, 0, TO_CHAR);
+	act("$n is blown out of the room!",
+	    FALSE, player, 0, 0, TO_ROOM);
+
+	--(*player);
+	thing_to_room(player, rp->dir_option[dir]->to_room);
+
+	player->doLook("", CMD_LOOK);
+	player->addToWait(combatRound(1));
+	break;
+      }
+    }
+
+    act("You land flat on your back.",
+	FALSE, player, 0, 0, TO_CHAR);
+    act("$n lands flat on $s back!",
+	FALSE, player, 0, 0, TO_ROOM);
+
+    rc = player->crashLanding(POSITION_SITTING);
+    if (IS_SET_DELETE(rc, DELETE_THIS)){
+      delete player;
+      player = NULL;
+    }
+  }
+
+  return TRUE;
+}
+
+
+void TObj::thingDumped(TBeing *ch, int *value)
+{
+  int val;
+
+  act("$p vanishes in a puff of smoke.", TRUE, ch, this, 0, TO_ROOM);
+  act("$p vanishes in a puff of smoke.", TRUE, ch, this, 0, TO_CHAR);
+
+  // this will take struct and current street value into account
+  if (!isObjStat(ITEM_NEWBIE)) {
+    val = adjPrice();
+
+    *value += min(1000, max(1, (int) (val *
+           ch->plotStat(STAT_CURRENT, STAT_KAR, 0.05, 0.25, 0.18))));
+  }
+
+  delete this;
+}
+
+
+void TNote::thingDumped(TBeing *ch, int *)
+{
+  act("$p vanishes in a puff of smoke.", TRUE, ch, this, 0, TO_ROOM);
+  act("$p vanishes in a puff of smoke.", TRUE, ch, this, 0, TO_CHAR);
+
+  delete this;
+}
+
+
+int dump(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
+{
+  TThing *t;
+  int value = 0;
+  int rc;
+  bool wasProp = false;
+
+  if (cmd == CMD_GENERIC_PULSE) {
+    for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
+      t=*(it++);
+
+      // Only objs get nuked
+      TObj *obj = dynamic_cast<TObj *>(t);
+      if (!obj)
+        continue;
+
+      // portals should not be nuked
+      if (dynamic_cast<TPortal *>(obj))
+        continue;
+
+      if (obj->isObjStat(ITEM_NOJUNK_PLAYER))
+	continue;
+
+      // nor should flares
+      if (obj->objVnum() == Obj::GENERIC_FLARE)
+        continue;
+
+      // refuse haulers cart
+      if(obj->objVnum() == 33270)
+	continue;
+
+      sendrpf(rp, "A %s vanishes in a puff of smoke.\n\r", fname(obj->name).c_str());
+
+      obj->logMe(NULL, "Dump nuking");
+
+      delete obj;
+      obj = NULL;
+    }
+    return FALSE;
+  } else if (cmd != CMD_DROP)
+    return FALSE;
+
+  if (!ch)
+    return FALSE;
+
+  rc = ch->doDrop(arg, NULL);
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    return DELETE_VICT;
+
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
+    t=*(it++);
+
+    if (isname("[prop]", t->getName()))
+      wasProp = true;
+
+    TObj *obj = dynamic_cast<TObj *>(t);
+    if (!obj)
+      continue;
+
+
+    if (obj->isObjStat(ITEM_NOJUNK_PLAYER))
+      continue;
+
+    t->thingDumped(ch, &value);
+    // t may be invalid afterwards
+  }
+  if (value && !wasProp) {
+    ch->sendTo("You are rewarded for outstanding performance.\n\r");
+    act("$n has been rewarded for good citizenship.", TRUE, ch, 0, 0, TO_ROOM);
+
+    if (ch->GetMaxLevel() < 3)
+      gain_exp(ch, min(0.010, value/1000.0), -1);
+    else {
+      // take the global income modifier into account, in times of drought, we
+      // don't want folks resorting to using the dump to get their money
+      value = (int) (value * gold_modifier[GOLD_INCOME].getVal());
+      ch->addToMoney(value, GOLD_DUMP);
+    }
+  }
+  return TRUE;
+}
+
+
+int grimhavenDump(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
+{
+  TThing *t;
+  TRoom *roomp;
+
+  if(cmd!=CMD_GENERIC_PULSE)
+    return FALSE;
+
+  if(!(roomp=real_roomp(18975))){
+    vlogf(LOG_BUG, "couldn't find sewage pipe in grimhavenDump!");
+    return FALSE;
+  }
+
+
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
+    t=*(it++);
+
+    // Only objs get nuked
+    TObj *obj = dynamic_cast<TObj *>(t);
+    if (!obj)
+      continue;
+
+    // portals should not be nuked
+    if (dynamic_cast<TPortal *>(obj))
+      continue;
+
+    if (obj->isObjStat(ITEM_NOJUNK_PLAYER))
+      continue;
+
+    // nor should flares
+    if (obj->objVnum() == Obj::GENERIC_FLARE)
+      continue;
+
+    sendrpf(rp, "A %s slides down the chute into the disposal pipe below.\n\r", fname(obj->name).c_str());
+
+    --(*obj);
+    *roomp += *obj;
+  }
+  return FALSE;
+}
+
+
+int pools_of_chaos_and_cleansing(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
+{
+  int rc;
+
+  if ((cmd != CMD_ENTER) || !ch->awake())
+    return FALSE;
+
+  for (; isspace(*arg); arg++);
+
+  if (is_abbrev(arg, "chaos")) {
+    ch->sendTo("You slowly dip yourself into the pool of chaos.\n\r");
+    act("$n slowly dips $mself into the pool of chaos.",
+              TRUE, ch, NULL, NULL, TO_ROOM);
+    if (ch->isImmortal())
+      return TRUE;
+
+    switch (number(0, 10)) {
+      case 0:
+	ch->sendTo("As you step into the pool, you suddenly feel much weaker.\n\r");
+	act("$n shivers as the water in the pool weakens $m.", TRUE, ch, NULL, NULL, TO_ROOM);
+	ch->setHit(1);
+	return TRUE;
+      case 1:
+	ch->sendTo("As you step into the pool, your mind becomes clouded.\n\r");
+	act("$n looks disorientated as $e steps into the pool.", TRUE, ch, NULL, NULL, TO_ROOM);
+	ch->setMana(0);
+	return TRUE;
+      case 2:
+	ch->sendTo("As you step into the pool, you feel your vision disappear.\n\r");
+	act("$n looks around blindly as $e steps into the pool.", TRUE, ch, NULL, NULL, TO_ROOM);
+
+        ch->rawBlind(50, 24 * Pulse::UPDATES_PER_MUDHOUR, SAVE_YES);
+	return TRUE;
+      case 3:
+	ch->sendTo("As you step into the pool, you feel yourself magically moved.\n\r");
+	act("$n magically disappears as soon as $e steps into the pool.", TRUE, ch, NULL, NULL, TO_ROOM);
+
+        rc = ch->genericTeleport(SILENT_NO);
+
+        if (IS_SET_DELETE(rc, DELETE_THIS))
+          return DELETE_THIS;
+	return TRUE;
+      case 4:
+	ch->sendTo("As you step into the pool, you feel totally refreshed!\n\r");
+	act("$n looks totally refreshed as $e steps into the pool.", TRUE, ch, NULL, NULL, TO_ROOM);
+	ch->setHit(ch->hitLimit());
+	return TRUE;
+      case 5:
+	ch->sendTo("As you step into the pool, many thoughts rush into your head.\n\r");
+	act("$n looks a little dizzy as $h steps into the pool.", TRUE, ch, NULL, NULL, TO_ROOM);
+	ch->setMana(ch->manaLimit());
+	return TRUE;
+      case 6:
+      case 7:
+      case 8:
+      case 9:
+      case 10:
+      default:
+	return TRUE;
+    }
+  } else if (is_abbrev(arg, "cleansing")) {
+    ch->sendTo("You slowly dip yourself into the pool of cleansing.\n\r");
+    act("$n slowly dips $mself into the pool of cleansing.", TRUE, ch, NULL, NULL, TO_ROOM);
+    return TRUE;
+  }
+  return FALSE;
+}
+
+
+int waterfallRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
+{
+  TObj *to = NULL;
+  TThing *t = NULL;
+  bool found = false;
+
+  if (cmd != CMD_GENERIC_PULSE)
+    return FALSE;
+
+  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
+    t=*(it++);
+    if(!(to=dynamic_cast<TObj *>(t)))
+      continue;
+    if(obj_index[to->getItemIndex()].virt == Obj::RAINBOW_MIST) {
+      found = true;
+      break;
+    }
+  }
+  if (Weather::getSunlight() != Weather::SUN_LIGHT ||
+      Weather::getSky() != Weather::SKY_CLOUDLESS) {
+    // code to remove rainbow
+    if (!found || !to)
+      return FALSE;
+    act("<W>The sunlight no longer reaches the mist, and $p<W> fades from sight.<1>",
+        TRUE, to, 0, 0, TO_ROOM);
+    --(*to);
+    delete to;
+
+  } else {
+    // code to place rainbow
+    if (found || to)
+      return FALSE;
+    if (!(to = read_object(Obj::RAINBOW_MIST, VIRTUAL))) {
+      vlogf(LOG_LOW, "Error loading rainbow mist object");
+      return FALSE;
+    }
+    *rp += *to;
+    act("<W>Suddenly, light from the sun strikes the mist, and $p<W> is formed.<1>",
+	TRUE, to, 0, 0, TO_ROOM);
+
+
+  }
+
+  return TRUE;
+}
+*/
