@@ -223,9 +223,6 @@ wizPowerT wizPowerFromCmd(cmdTypeT cmd)
     case CMD_POWERS:
       return POWER_POWERS;
       break;
-    case CMD_SEDIT:
-      return POWER_SEDIT;
-      break;
     case CMD_SHUTDOWN:
     case CMD_SHUTDOW:
       return POWER_SHUTDOWN;
@@ -244,7 +241,6 @@ wizPowerT wizPowerFromCmd(cmdTypeT cmd)
       break;
     case CMD_RELEASE: // ???
     case CMD_CAPTURE: // ???
-    case CMD_CREATE:  // Lapsos
     case CMD_TASKS:
     case CMD_TEST_FIGHT:
     case CMD_PEELPK:

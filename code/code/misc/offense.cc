@@ -23,7 +23,6 @@
 #include "obj_gun.h"
 #include "obj_base_cup.h"
 #include "obj_pool.h"
-#include "obj_base_clothing.h"
 #include "obj_bag.h"
 #include "liquids.h"
 #include "weather.h"
@@ -2062,58 +2061,6 @@ void TBeing::chlorineRoom()
     (*it)->poisonObject();
   }
   return;
-}
-// if player has shield, destroy shield and "dodge"
-int TBeing::shieldAbsorbDamage(int dam)
-{
-  TThing *left, *right;
-  TBaseClothing *shield = NULL;
-  wearSlotT slot = WEAR_NOWHERE;
-
-  left = equipment[HOLD_LEFT];
-  right = equipment[HOLD_RIGHT];
-
-  TBaseClothing *tbc = NULL;
-  if (left && 
-      (tbc = dynamic_cast<TBaseClothing *>(left)) &&
-      tbc->isShield()) {
-    shield = tbc;
-    slot = HOLD_LEFT;
-  } else if (right &&
-      (tbc = dynamic_cast<TBaseClothing *>(right)) &&
-      tbc->isShield()) {
-    shield = tbc;
-    slot = HOLD_RIGHT;
-  }
-  if (!shield)
-    return dam;
-
-  // shield will absorb 10 to 20 percent of its structure
-  int shielddam=(int)((shield->getMaxStructPoints()/100.0) * ::number(10,20));
-  dam=max(0, dam-(shielddam*5)); // each structure point = 5 hp
-
-  act("You hold your $o up to block the blast.",TRUE,this,shield,0,TO_CHAR);
-  act("$n holds $s $o up to block the blast.",TRUE,this,shield,0,TO_ROOM);
-  
-  if (shielddam >= shield->getStructPoints()) {
-    act("$p partially blocks the blast but is utterly destroyed at the same time.",TRUE,
-         this,shield, 0,TO_CHAR);
-    act("$p partially blocks the blast but is utterly destroyed at the same time.",TRUE,
-         this,shield, 0,TO_ROOM);
-    unequip(slot);
-    if (!shield->makeScraps())
-      delete shield;
-    shield = NULL;
-  } else {
-    act("$p partially blocks the blast but is seriously damaged at the same time.",TRUE,
-         this,shield, 0,TO_CHAR);
-    act("$p partially blocks the blast but is seriously damaged at the same time.",TRUE,
-         this,shield, 0,TO_ROOM);
-
-    if (!roomp || !roomp->isRoomFlag(ROOM_ARENA))
-      shield->addToStructPoints(-shielddam);
-  }
-  return dam;
 }
 
 bool TBeing::noHarmCheck(TBeing *vict)

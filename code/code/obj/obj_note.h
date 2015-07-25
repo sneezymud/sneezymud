@@ -26,7 +26,6 @@ class TNote : public TObj {
     virtual int personalizedCheck(TBeing *) { return FALSE; }
     virtual void describeMe(TBeing *) const {}
     virtual void writeMeNote(TBeing *, TPen *);
-    virtual void thingDumped(TBeing *, int *);
     virtual int objectSell(TBeing *, TMonster *);
     virtual bool isPersonalized() { return FALSE; } // action_desc is not personalization
     virtual void giveToRepairNote(TMonster *, TBeing *ch, int *);

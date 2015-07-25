@@ -258,7 +258,6 @@ class TThing {
     virtual void refuelMeFuel(TBeing *, TLight *);
     virtual void refuelMeLight(TBeing *, TThing *);
     virtual void junkMe(TBeing *) {}
-    virtual void thingDumped(TBeing *, int *) {}
     virtual void writeMeNote(TBeing *, TPen *);
     virtual void writeMePen(TBeing *, TThing *);
     virtual void powerstoneCheck(TOpal **) {}

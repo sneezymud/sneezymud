@@ -480,9 +480,6 @@ void bootDb(void)
   bootPulse("Building dissection information.");
   readDissectionFile();
 
-  bootPulse("Building creation engine information.");
-  SetupCreateEngineData();
-
   bootPulse("Building whittle information.");
   initWhittle();
 

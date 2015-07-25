@@ -1376,9 +1376,6 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
       case CMD_MEDIT:
   doMedit(newarg.c_str());
   break;
-      case CMD_SEDIT:
-  doSEdit(newarg.c_str());
-  break;
       case CMD_LAYHANDS:
   rc = doLayHands(newarg.c_str());
   break;
@@ -1601,9 +1598,6 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
       case CMD_FORAGE:
   doForage();
   break;
-      case CMD_APPLY_HERBS:
-  rc = doApplyHerbs(newarg.c_str());
-  break;
       case CMD_BUTCHER:
   doButcher(newarg.c_str());
   break;
@@ -1709,10 +1703,6 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
   break;
       case CMD_ZONES:
   doZones(newarg.c_str());
-  addToLifeforce(1);
-  break;
-      case CMD_CREATE:
-  rc = doCreate(newarg.c_str());
   addToLifeforce(1);
   break;
       case CMD_POWERS:
@@ -2846,7 +2836,6 @@ void buildCommandArray(void)
   commandArray[CMD_SEEKWATER]=new commandInfo("seekwater",POSITION_CRAWLING, 0);
   commandArray[CMD_CRIT] = new commandInfo("crit", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_FORAGE] = new commandInfo("forage", POSITION_CRAWLING, 0);
-  commandArray[CMD_APPLY_HERBS] = new commandInfo("apply-herbs", POSITION_CRAWLING, 0);
   commandArray[CMD_RESET] = new commandInfo("reset", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_BOOT] = new commandInfo("boot", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_STOMP] = new commandInfo("stomp", POSITION_FIGHTING, 0);
@@ -2916,13 +2905,11 @@ void buildCommandArray(void)
   commandArray[CMD_DONATE] = new commandInfo("donate", POSITION_RESTING, 0);
   commandArray[CMD_ZONES] = new commandInfo("zones", POSITION_SLEEPING, 0);
   commandArray[CMD_FACTIONS] = new commandInfo("factions", POSITION_SLEEPING, 0);
-  commandArray[CMD_CREATE] = new commandInfo("create", POSITION_STANDING, GOD_LEVEL1);
   commandArray[CMD_POWERS] = new commandInfo("powers", POSITION_STANDING, GOD_LEVEL1);
   commandArray[CMD_WHITTLE] = new commandInfo("whittle", POSITION_STANDING, 0);
   commandArray[CMD_MESSAGE] = new commandInfo("message", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_SMOKE] = new commandInfo("smoke", POSITION_RESTING, 0);
   commandArray[CMD_CLIENTMESSAGE] = new commandInfo("clientmessage", POSITION_RESTING, 60);
-  commandArray[CMD_SEDIT] = new commandInfo("sedit", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_RETRAIN] = new commandInfo("retrain", POSITION_STANDING, 0);
   commandArray[CMD_VISIBLE] = new commandInfo("visible", POSITION_STANDING, 0);
   commandArray[CMD_TRIGGER] = new commandInfo("trigger", POSITION_STANDING, GOD_LEVEL1);

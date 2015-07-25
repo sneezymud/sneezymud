@@ -116,7 +116,6 @@ enum connectStateT {
        CON_MEDITING,
        CON_HELP,
        CON_WRITING,
-       CON_SEDITING,
 };
 
 class TAccount;

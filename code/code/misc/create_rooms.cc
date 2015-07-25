@@ -922,7 +922,7 @@ void TPerson::doEdit(const char *arg)
       break;
     case  9: // Name
       tStString = str;
-      stSpaceOut(tStString);
+      tStString = tStString.trim();
 
       if (!tStString.empty()) {
         sendTo(format("New Room Title: %s\n\r") % tStString);
@@ -1415,7 +1415,7 @@ void TPerson::doRload(const char *argument)
   if (!desc || !isImmortal())
     return;
 
-  stSpaceOut(tStArg);
+  tStArg = tStArg.trim();
   tStString=tStArg.word(0);
   tStBuffer=tStArg.word(1);
 
@@ -3701,7 +3701,7 @@ void TPerson::doRsave(const char *argument)
   if (!desc || !isImmortal())
     return;
 
-  stSpaceOut(tStArg);
+  tStArg = tStArg.trim();
   tStString=tStArg.word(0);
   tStBuffer=tStArg.word(1);
 
