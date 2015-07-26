@@ -555,8 +555,10 @@ int Fireballer(TBeing *ch, cmdTypeT cmd, const char *, TMonster *me, TObj *)
   if (me->getPosition() <= POSITION_SITTING)
     return FALSE;
 
-  rp = me->roomp;
-  if (rp && rp->isUnderwaterSector()) {
+  if (!(rp = me->roomp))
+    return FALSE;
+
+  if (rp->isUnderwaterSector()) {
     me->sendTo("The water completely dissolves your fireball!\n\r");
     return FALSE;
   }

@@ -92,12 +92,11 @@ void Craps::loseDice()
   }
   
 
-  crap_man = FindMobInRoomWithProcNum(m_ch->in_room, SPEC_CRAPSGUY);
-
-  if (crap_man && the_dice)
-    *crap_man += *(m_ch->unequip(the_dice->eq_pos));
-
-  crap_man->doSay("Next roller please?");
+  if ((crap_man = FindMobInRoomWithProcNum(m_ch->in_room, SPEC_CRAPSGUY))) {
+    if (the_dice)
+      *crap_man += *(m_ch->unequip(the_dice->eq_pos));
+    crap_man->doSay("Next roller please?");
+  }
 }
 
 void Craps::getDice()

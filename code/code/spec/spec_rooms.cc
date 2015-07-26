@@ -837,7 +837,6 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 
         if (!(portal = read_object(7214, VIRTUAL))) {
           vlogf(LOG_PROC, format("Problem loading object in SecretPortal. (%d)") %  7214);
-          ch->sendTo("Serious problem, contact a god.\n\r");
           return FALSE;
         }
         thing_to_room(portal, 7268);
@@ -846,7 +845,6 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
         // load into other room
         if (!(portal = read_object(7215, VIRTUAL))) {
           vlogf(LOG_PROC, format("Problem loading object in SecretPortal. (%d)") %  7215);
-          ch->sendTo("Serious problem, contact a god.\n\r");
           return FALSE;
         }
         thing_to_room(portal, 7265);
@@ -869,7 +867,6 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 
         if (!(portal = read_object(rob, REAL))) {
           vlogf(LOG_PROC, format("Problem loading object in SecretPortal. (%d)") %  7214);
-          ch->sendTo("Serious problem, contact a god.\n\r");
           return FALSE;
         }
         *ch->roomp += *portal;
@@ -877,7 +874,6 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
         // load into other room
         if (!(portal = read_object(7215, VIRTUAL))) {
           vlogf(LOG_PROC, format("Problem loading object in SecretPortal. (%d)") %  7215);
-          ch->sendTo("Serious problem, contact a god.\n\r");
           return FALSE;
         }
         thing_to_room(portal, 7265);
@@ -1701,7 +1697,6 @@ extern int bankRoom(TBeing *, cmdTypeT, const char *, TRoom *);
 extern int healing_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp);
 extern int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp);
 extern int SecretDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp);
-
 
 int bogusRoomProc(TBeing *, cmdTypeT, const char *, TRoom *rp)
 {

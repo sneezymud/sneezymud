@@ -159,7 +159,6 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
       // affects ability to make gestures
       // higher nums are more likely to cause restriction
       ///////////////////////////////////////////////////////////////
-      num = ::number(1,100);
       ///////////////////////////////////////////////////////////
       // sit, crawl use normal num.  raise it further for resting
       ///////////////////////////////////////////////////////////
@@ -191,7 +190,6 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
       // affects ability to make gestures
       // higher nums are more likely to cause restriction
       ///////////////////////////////////////////////////////////////
-      num = ::number(1,100);
       ///////////////////////////////////////////////////////////
       // sit, crawl use normal num.  raise it further for resting
       ///////////////////////////////////////////////////////////

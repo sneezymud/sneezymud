@@ -1813,7 +1813,7 @@ int teleportingObject(TBeing *, cmdTypeT cmd, const char *arg, TObj *o, TObj *){
     return FALSE;
 
   // don't teleport if it's a portal that is open
-  if((tp=dynamic_cast<TPortal *>(o)) && !tp->isPortalFlag(EX_CLOSED))
+  if(!(tp=dynamic_cast<TPortal *>(o)) || !tp->isPortalFlag(EX_CLOSED))
     return FALSE;
 
   if(!tp->roomp)
@@ -2310,14 +2310,13 @@ int teleportVial(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     act("$n throws $p to the ground.",TRUE,ch,o,NULL,TO_ROOM,NULL);
     act("The $o shatters, releasing a cloud of thick smoke all around $m.<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
     
-    
     act("You feel the world shift around you.<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
     act("When the smoke clears, $n is gone!<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
     --(*ch);
-    delete o;  
     *newRoom += *ch;
     vlogf(LOG_PROC, format("TELEPORT VIAL: %s transfered to room #%d") %  ch->getName() % targetroom);
     act("$n appears in the room with a puff of smoke.<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
+    delete o;  
     ch->doLook("", CMD_LOOK);
     ch->addToWait(combatRound(2));
     ch->cantHit += ch->loseRound(1);
