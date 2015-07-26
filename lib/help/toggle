@@ -40,7 +40,6 @@ brief:        on = will no longer see room descriptions
 terminal:     <ansi/vt100/none> = sets current terminal type.
 compact:      on = removes extra newline after output to your screen.
 boss:         on = does not display welcome screen ANSI art.
-ping:         on = allows the mud to ping you to determine network lag.
 showsaves:    on = shows player file save notifications.
 
 For more detailed information on these parameters, please consult the 

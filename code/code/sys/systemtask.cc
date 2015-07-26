@@ -24,7 +24,7 @@ extern "C" {
 extern pid_t vfork(void);
 #endif
 
-const char TMPFILE[] = "/mud/prod/lib/tmp/task.output";
+const char TMPFILE[] = "task.output";
 
 class _task {
   public: 
@@ -75,15 +75,6 @@ void SystemTask::AddTask(TBeing *own, char tsk, const char *opt)
   
   //  Create the command that is send to the shell.
   switch(tmp->tsk) {
-    case SYSTEM_MAIL_IMMORT_DIR:
-#if 0
-      if (opt && top->owner->GetMaxLevel()) 
-        *opt = toupper(*opt);
-      else
-        sprintf(lbuf, "bin/mid %s", top->owner->getName());
-#endif
-
-      break;
     case SYSTEM_TRACEROUTE:
       sscanf(opt, "%s", opt1);
       sprintf(lbuf, "bin/traceroute %s", opt1);
@@ -96,12 +87,6 @@ void SystemTask::AddTask(TBeing *own, char tsk, const char *opt)
       break;
     case SYSTEM_FIND_EMAIL:
       sprintf(lbuf, "bin/findemail %s", opt);
-      break;
-    case SYSTEM_STATISTICS:
-      sprintf(lbuf, "bin/statistics");
-      break;
-    case SYSTEM_SEARCH_HELP:
-      sprintf(lbuf, "bin/helpsearch %s", opt);
       break;
     default:
       vlogf(LOG_BUG, "SystemTask::AddTask(): Unknown task!");

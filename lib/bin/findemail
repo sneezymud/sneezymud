@@ -1,5 +1,3 @@
-#
-#  Grep stuff from the logs.
-#
-eval /bin/echo Seeking email address "$1"
-eval /usr/bin/grep -il "$1" account/*/*/account
+#! /bin/sh
+echo Seeking email address "$1"
+grep -il "$1" account/*/*/account

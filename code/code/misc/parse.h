@@ -408,7 +408,6 @@ enum cmdTypeT {
      CMD_HOSTLOG,
      CMD_PRESS,
      CMD_TWIST,
-     CMD_MID,
      CMD_TRACEROUTE,
      CMD_TASKS,
      CMD_VIEWOUTPUT,

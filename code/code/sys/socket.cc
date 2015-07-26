@@ -516,43 +516,6 @@ void pulseLog(sstring name, TTiming timer, int pulse)
 }
 
 
-
-
-
-// procPingData
-procPingData::procPingData(const int &p)
-{
-  trigger_pulse=p;
-  name="procPingData";
-}
-
-void procPingData::run(const TPulse &) const
-{
-  static FILE *p;
-  Descriptor *d;
-  
-  if(p) pclose(p);
-  
-  if(gamePort == Config::Port::PROD){
-    p=popen("/mud/prod/lib/bin/ping sneezy", "w");
-  } else if(gamePort == Config::Port::BUILDER){
-    p=popen("/mud/prod/lib/bin/ping sneezybuilder", "w");
-  } else {
-    p=popen("/mud/prod/lib/bin/ping sneezybeta", "w");
-  }
-  
-  
-  for (d = descriptor_list; d; d = d->next) {
-    if (!(d->host.empty()) && d->character && d->character->isPlayerAction(PLR_PING)){
-      fprintf(p, "%s\n", d->host.c_str());
-    }
-  }
-  fprintf(p, "EOM\n");
-  fflush(p);
-}
-
-
-// procSetZoneEmpty
 procSetZoneEmpty::procSetZoneEmpty(const int &p)
 {
   trigger_pulse=p;
@@ -1875,7 +1838,6 @@ int TMainSocket::gameLoop()
   scheduler.add(new procUpdateAvgPlayers(Pulse::MUDHOUR));
   scheduler.add(new procCheckGoldStats(Pulse::MUDHOUR));
   scheduler.add(new procAutoTips(Pulse::MUDHOUR));
-  scheduler.add(new procPingData(Pulse::MUDHOUR));
   scheduler.add(new procRecalcFactionPower(Pulse::MUDHOUR));
   scheduler.add(new procNukeInactiveMobs(Pulse::MUDHOUR));
   scheduler.add(new procUpdateTime(Pulse::MUDHOUR));

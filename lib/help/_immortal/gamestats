@@ -1,0 +1,11 @@
+This lists some curious trivia about the game.
+
+gamestats attributes    : shows how attribute numbers map to plot curves
+gamestats combat        : yields combat trivia
+gamestats equipment     : yields equipment trivia
+gamestats level <level>	: Lists mob/pc deaths for level <level>,
+                          Lists average time (by class) to obtain level <level>
+gamestats trivia        : yields trivial trivai
+
+See Also: WORLD, INFO
+Related Topics: GOD

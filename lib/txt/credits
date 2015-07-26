@@ -1,4 +1,4 @@
-                             SneezyMUD v5.2
+                             SneezyMUD v5.3
                           Founded: May 1, 1992
 
 -------------------------------------------------------------------------------
@@ -15,48 +15,52 @@ SneezyMUD 5.0:    August 25th, 1998
 Grimhaven 5.0:    February 12th, 1999
 Grimhaven 5.1:    May 8th, 1999
 SneezyMUD 5.2:    March 13th, 2001
+SneezyMUD 5.3:    June 6th, 2014
 ------------------------------------------------------------------------------
-SneezyMUD v5.2:
-Russ Russell  (Brutius)    : Founder, Coder, Partner      (retired)    
+SneezyMUD v5.3:
+
+Travis Nelson (Peel)       : Coder
+Andrew Evans (Erasmus)     : Sysadmin & Site Provider
+
+
+Past members of the MUD Admin:
+
+Russ Russell  (Brutius)    : Founder, Coder, Partner
 Travis Nelson (Peel)       : Coder, Partner
-Jeff Bennett (Batopr)      : Coder, Partner               (retired)
-Ben Sarnoff  (Cosmo)       : Coder, Partner               (retired)
+Jeff Bennett (Batopr)      : Coder, Partner
+Ben Sarnoff  (Cosmo)       : Coder, Partner
 
-Andrew Evans (Erasmus)     : Sysadmin & Site Provider    
-
-Retired members of the MUD Admin:
-(Vasco)                    : Lord of Worlds               (retired)
-(Metrohep)                 : Coder	                  (retired)
-(Deirdre)                  : Webmaster & Quest Manager 	  (retired)
-C. Roudebush (Magdalena)   : Lady of Worlds	          (retired)
-Dave Arthur (Bump)         : MUDAdmin's Monkey	          (retired)
-G. Messmer (Eliar)         : Systems Administrator	  (retired)
-Gabriel	Rotberg	(Dash) 	   : Coder     	       	       	  (retired)
-Katia Shnaptis (Coral) 	   : Lady of Worlds    	       	  (retired)
-Jeff Stout    (Trinity)    : 2.1 - 3.0 Coder              (retired)
-Ben Youngdahl (Stargazer)  : 2.1 - 3.0 Coder              (retired)
-Mark Larimer  (Quazi)      : 2.5 - 3.0 Coder              (retired)
-Todd Hauschildt (Bartruce) : 3.0 Coder and Lord of Worlds (retired)
-Greg Ota      (Dirk)       : 3.1 - 4.0 Coder              (retired) 
-Jon Driegert  (Phenohol)   : 4.0 Lord of Worlds           (retired)
-Sean Baumann  (Macross)    : 4.1 Coder                    (retired)
-Cory Tsang    (Speef)      : 4.5 Coder                    (retired)
-Christina Hicks (Rixanne)  : 4.5 Junior Coder             (retired)
-Eddie Perez   (Stonecold)  : 4.5 Junior LOW               (retired)
-Tim Nixon    (Dolgan)      : 4.5 - 5.0 Lord of Worlds     (retired)
-Dave Robel   (Gringar)     : 4.5 - 5.0 Junior LOW         (retired)
-Jason Carpenter (Mithros)  : 5.0 - 5.1 Lord of Worlds     (retired)
-William Perrotto (Lapsos)  : 5.0 - 5.1 Coder              (retired)
-Joe Fiorenza (Sidartha)    : 5.0 - 5.1 Junior LOW         (retired)
-Kane Spinato (Kriebly)     : ? - 5.2 Site Provider        (retired)
-John Hines (Jesus)         : 5.1 - 5.2 Coder              (retired)
-Deric Panet-Raymond(Glint) : 5.2 Jr. Coder                (retired)
-William Perrotto (Lapsos)  : 5.2 Coder                    (retired)
-Devin Phinney (Ekeron)     : 5.2 Coder                    (retired)
-Mark Engelhardt (Maror)    : 5.2 LOW and Coder            (retired)
-Alice Hines (Damescena)    : 5.2 Lady of Worlds           (retired)
-Rob Brunk (Angus)          : 5.2 Coder                    (retired)
-
+(Vasco)                    : Lord of Worlds
+(Metrohep)                 : Coder
+(Deirdre)                  : Webmaster & Quest Manager
+C. Roudebush (Magdalena)   : Lady of Worlds
+Dave Arthur (Bump)         : MUDAdmin's Monkey
+G. Messmer (Eliar)         : Systems Administrator
+Gabriel	Rotberg	(Dash) 	   : Coder
+Katia Shnaptis (Coral) 	   : Lady of Worlds
+Kane Spinato (Kriebly)     : ? - 5.2 Site Provider
+John Hines (Jesus)         : 5.1 - 5.2 Coder
+Deric Panet-Raymond(Glint) : 5.2 Jr. Coder
+William Perrotto (Lapsos)  : 5.2 Coder
+Devin Phinney (Ekeron)     : 5.2 Coder
+Mark Engelhardt (Maror)    : 5.2 LOW and Coder
+Alice Hines (Damescena)    : 5.2 Lady of Worlds
+Rob Brunk (Angus)          : 5.2 Coder
+Jason Carpenter (Mithros)  : 5.0 - 5.1 Lord of Worlds
+William Perrotto (Lapsos)  : 5.0 - 5.1 Coder
+Joe Fiorenza (Sidartha)    : 5.0 - 5.1 Junior LOW
+Cory Tsang    (Speef)      : 4.5 Coder
+Christina Hicks (Rixanne)  : 4.5 Junior Coder
+Eddie Perez   (Stonecold)  : 4.5 Junior LOW
+Tim Nixon    (Dolgan)      : 4.5 - 5.0 Lord of Worlds
+Dave Robel   (Gringar)     : 4.5 - 5.0 Junior LOW
+Sean Baumann  (Macross)    : 4.1 Coder
+Jon Driegert  (Phenohol)   : 4.0 Lord of Worlds
+Todd Hauschildt (Bartruce) : 3.0 Coder and Lord of Worlds
+Greg Ota      (Dirk)       : 3.1 - 4.0 Coder
+Mark Larimer  (Quazi)      : 2.5 - 3.0 Coder
+Jeff Stout    (Trinity)    : 2.1 - 3.0 Coder
+Ben Youngdahl (Stargazer)  : 2.1 - 3.0 Coder
 
 For complete and current credits on world areas, type "zones"
 
@@ -70,15 +74,3 @@ Past Webmaster Contributions:
                            : Mithros: v3.1 - v5.0
                            : Marsh: v4.5 - v5.0
                            : Dash: v5.1 - 5.2
-
-
-The present version of SneezyMUD represents completely original code.  The
-SneezyMUD development team reserves all rights to all aspects of SneezyMUD,
-including but not limited to the code, the libraries, the various databases,
-all documentation and any information provided on the website (SneezyMUD
-Properties).  The SneezyMUD development team is grateful to the DIKU genre
-of MUDs and emulates their general look and feel
-
-All aspects of all versions of SneezyMUD Properties are copyrighted.
-Copyright (c) 1992-2007, SneezyMUD development team
-All Rights Reserved.

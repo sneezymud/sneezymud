@@ -495,10 +495,9 @@ void TBeing::doToggle(const char *arg2)
     sendTo(COLOR_BASIC, format("Boss Mode         : %s\n\r") % on_or_off(IS_SET(desc->account->flags, TAccount::BOSS)));
     sendTo(COLOR_BASIC, format("MSP Sound         : %s  | ") % on_or_off(IS_SET(desc->account->flags, TAccount::MSP)));
     sendTo(COLOR_BASIC, format("Account Terminal  : <G>%-5s<1>| ") % termnames[desc->account->term]);
-    sendTo(COLOR_BASIC, format("Allow Pinging     : %s\n\r") % on_or_off(isPlayerAction(PLR_PING)));
-    sendTo(COLOR_BASIC, format("Brief             : %s  | ") % on_or_off(isPlayerAction(PLR_BRIEF)));
-    sendTo(COLOR_BASIC, format("Compact           : %s  | ") % on_or_off(isPlayerAction(PLR_COMPACT)));
     sendTo(COLOR_BASIC, format("Show Saves        : %s\n\r") % on_or_off(isPlayerAction(PLR_SHOW_SAVES)));
+    sendTo(COLOR_BASIC, format("Brief             : %s  | ") % on_or_off(isPlayerAction(PLR_BRIEF)));
+    sendTo(COLOR_BASIC, format("Compact           : %s\n\r") % on_or_off(isPlayerAction(PLR_COMPACT)));
 
     // immortal toggles
     if(isImmortal() || GetMaxLevel() >= GOD_LEVEL1){
@@ -588,16 +587,6 @@ void TBeing::doToggle(const char *arg2)
     } else {
       sendTo("Brief mode enabled.\n\r");
       addPlayerAction(PLR_BRIEF);
-    }
-  } else if(is_abbrev(arg, "ping")){
-    if (isPlayerAction(PLR_PING)){
-      remPlayerAction(PLR_PING);
-      act("You will no longer be pinged by the mud.",
-	  FALSE, this, 0, 0, TO_CHAR);
-    } else {
-      addPlayerAction(PLR_PING);
-      act("You will now be pinged by the mud.",
-	  FALSE, this, 0, 0, TO_CHAR);
     }
   } else if(is_abbrev(arg, "immortal") && GetMaxLevel() >= GOD_LEVEL1){
     if (GetMaxLevel() <= MAX_MORT)
