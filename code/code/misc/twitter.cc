@@ -1,3 +1,6 @@
+#include "sstring.h"
+
+#ifdef TWITTER
 #include "extern.h"
 #include "colorstring.h"
 #include "configuration.h"
@@ -53,3 +56,11 @@ bool twitterShout(sstring from, sstring msg)
   return true;
 }
 
+#else
+
+bool twitterShout(sstring from, sstring msg)
+{
+  return false;
+}
+
+#endif

@@ -17,7 +17,6 @@ CXXFLAGS = [
 #    '-Wconversion',           # bad conversions
     '-Woverloaded-virtual',   # virtual without a declaration in base class
     '-Werror',                # turns a warning into an error
-#    '-mtune=amdfam10'         # optimize for amd family 10 cpu
     ]
 
 CPPPATH = [
@@ -61,6 +60,9 @@ env=Environment(CXXFLAGS=CXXFLAGS,
                 SHLINKCOMSTR = "\033[31mLinking\033[0m $TARGET",
                 LINKCOMSTR = "\033[31mLinking\033[0m $TARGET",
                 INSTALLSTR = "\033[33mInstalling\033[0m '$SOURCE' as '$TARGET'",
+
+                # Configuration options
+                TWITTER=False
                 )
 
 Export('env')
