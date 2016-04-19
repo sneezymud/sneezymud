@@ -135,8 +135,6 @@ bool Config::doConfiguration(int argc, char *argv[])
      "host for sneezy database")
     ("immortal_host", po::value<string>(&db_hosts[DB_IMMORTAL]),
      "host for immortal database")
-    ("sneezyprod_host", po::value<string>(&db_hosts[DB_SNEEZYPROD]),
-     "host for sneezyprod database (unused)")
     ;
 
   // database options

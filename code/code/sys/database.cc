@@ -1,3 +1,4 @@
+#include <cassert>
 #include <stdarg.h>
 #include <mysql/mysql.h>
 
@@ -16,9 +17,8 @@ std::vector <std::string> db_users(DB_MAX);
 std::vector <std::string> db_passwords(DB_MAX);
 
 const char * db_connect[DB_MAX] = {
-  NULL, // depends on game port
+  "sneezy",
   "immortal",
-  "sneezy", 
   };
 
 
@@ -43,14 +43,11 @@ TDatabaseConnection::TDatabaseConnection()
 
 const char *TDatabaseConnection::getConnectParam(dbTypeT type)
 {
-  const char *ret = db_connect[type];
-  if (ret)
-    return ret;
+  assert(type >= 0);
+  assert(type < DB_MAX);
   if (db_names[type] != "")
     return db_names[type].c_str();
-  if (gamePort == Config::Port::PROD)
-    return db_connect[DB_SNEEZYPROD];
-  return db_connect[DB_SNEEZYBETA];
+  return db_connect[type];
 }
 
 

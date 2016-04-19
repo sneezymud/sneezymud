@@ -156,8 +156,6 @@ void TBeing::doWho(const char *argument)
   int which2 = 0;
 
   sstring stmp;
-  size_t pos;
-	 	 
   for (; isspace(*argument); argument++);
 
   sb += "Players: (Add -? for online help)\n\r--------\n\r";
@@ -233,7 +231,7 @@ void TBeing::doWho(const char *argument)
           sb += "[-] [d]linkdead [g]God [b]Builders [o]Mort [s]stats [f]action\n\r";
           sb += "[-] [1]Mage[2]Cleric[3]War[4]Thief[5]Deikhan[6]Monk[7]Ranger[8]Shaman\n\r";
           sb += "[-] [e]elf [t]hobbit [n]gnome [u]human [r]ogre [w]dwarven\n\r\n\r";
-	  sb += "[-] [x]Perma Death [!]Fae-touched [c]ports\n\r";
+          sb += "[-] [x]Perma Death [!]Fae-touched\n\r";
 
           if (hasWizPower(POWER_WIZARD))
             sb += "[-] [a]ccount\n\r";
@@ -250,41 +248,6 @@ void TBeing::doWho(const char *argument)
           desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
         return;
       }
-
-      if(strchr(arg, 'c') && isImmortal()){
-	
-	buf = format("%sList may not be accurate for ports that are not currently running.\n\r") % buf;
-	buf = format("%s------------------------------------------------------------------\n\r") % buf;
-        buf = format("%sProduction (Port 7900)\n\r") % buf;
-        buf = format("%s------------------------------------------------------------------\n\r") % buf;
-
-
-	TDatabase db(DB_SNEEZYPROD);
-        db.query("select title, port, name from wholist order by port");
-
-	while(db.fetchRow()){
-	  stmp=db["title"];
-	  
-	  if((pos=stmp.find("<n>")) != sstring::npos)
-	    stmp.replace(pos,3,db["name"]);
-
-	  if((pos=stmp.find("<N>")) != sstring::npos)
-	    stmp.replace(pos,3,db["name"]);
-
-	  
-	  buf = format("%s[%s] %s<1>\n\r") % buf %
-		   db["port"] % stmp;
-	}
-	
-
-	sb += buf;
-	
-        if (desc)
-          desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
-
-	return;
-      }
-      
 
       bool level, statsx, iPoints, quest, idle, align, group;
       for (p = character_list; p; p = p->next) {
