@@ -347,8 +347,8 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
   }
 
   unsigned long actions = mob->specials.act;
-  if (!actions & 1<<0)
-    actions = actions & ~1<<0;
+  if (!actions & 1)
+    actions = actions & ~1;
   
   ch->sendTo("Saving.\n\r");
   TDatabase db(DB_IMMORTAL);

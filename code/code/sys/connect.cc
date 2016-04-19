@@ -10,6 +10,7 @@
 #include <csignal>
 #include <cstdarg>
 #include <errno.h>
+#include <cassert>
 
 #include <boost/algorithm/string.hpp>
 
@@ -463,8 +464,8 @@ int Descriptor::outputProcessing()
 // seems silly, but we sometimes do descriptor_list->outputProcessing()
 // to send everyone their output.  We need to check for the no-one-connected
 // state just for sanity.
-if (!this)
-  return 1;
+// code/sys/connect.cc:466:6: error: 'this' pointer cannot be null in well-defined C++ code; pointer may be assumed to always convert to true [-Werror,-Wundefined-bool-conversion]
+assert(this);
 
 char i[MAX_STRING_LENGTH + MAX_STRING_LENGTH];
 int counter = 0;
