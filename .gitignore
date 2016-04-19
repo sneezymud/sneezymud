@@ -15,6 +15,7 @@
 /lib/rent/
 /lib/roomdata/
 /lib/txt/stats
+/lib/txt/stats.bak
 
 # local config file
 sneezy.cfg
