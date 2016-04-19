@@ -21,17 +21,21 @@ static int specificCode(TMonster *, TBeing *, int, const resp *);
 void TMonster::loadResponses(int virt, const sstring &immortal)
 {
   resp *tmp = NULL;
-  TDatabase db(DB_SNEEZY);
+
+  std::string response;
 
   if(immortal.empty()){
+    TDatabase db(DB_SNEEZY);
     db.query("select response from mobresponses where vnum=%i", virt);
     if(!db.fetchRow())
       return;  // no responses
+    response = db["response"];
   } else {
-    db.setDB(DB_IMMORTAL);
+    TDatabase db(DB_IMMORTAL);
     db.query("select response from mobresponses where vnum=%i and owner='%s'", virt, immortal.c_str());
     if(!db.fetchRow())
       return;  // no responses
+    response = db["response"];
   }
 
   mud_assert(resps == NULL, "Mob (%s) already had Responses.", getName().c_str());
@@ -42,7 +46,7 @@ void TMonster::loadResponses(int virt, const sstring &immortal)
   //
   //    Read the response.
   //
-  std::istringstream is(db["response"]);
+  std::istringstream is(response);
 
   while ((tmp = readCommand(is)) != 0) {
     tmp->next = resps->respList;

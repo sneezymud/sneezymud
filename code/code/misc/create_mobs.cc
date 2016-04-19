@@ -540,7 +540,7 @@ static void medit(TBeing *ch, char *arg)
 static void mlist(TPerson *ch, bool zone=false)
 {
   // list the mobs from a player's immortal file
-  TDatabase db = DB_IMMORTAL;
+  TDatabase db(DB_IMMORTAL);
   sstring longstr;
   
   if(zone){

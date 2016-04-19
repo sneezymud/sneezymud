@@ -112,7 +112,6 @@ class TDatabasePimpl;
 class TDatabase
 {
  public:
-  void setDB(dbTypeT);
   bool query(const char *,...);
   bool fetchRow();
   const sstring operator[] (const sstring &) const;
@@ -123,15 +122,11 @@ class TDatabase
   unsigned long escape_string(char *to, const char *from, unsigned long length);
   static unsigned long escape_string_ugly(char *to, const char *from, unsigned long length);
 
-  TDatabase();
   TDatabase(dbTypeT);
-  TDatabase(TDatabase const&);
-  TDatabase& operator=(TDatabase const&);
   ~TDatabase();
 
  private:
   TDatabasePimpl* pimpl;
-
 };
 
 #endif

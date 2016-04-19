@@ -121,30 +121,11 @@ MYSQL *TDatabaseConnection::getDB(dbTypeT type)
 }
 
 
-TDatabase::TDatabase()
-{
-  pimpl = new TDatabasePimpl();
-  pimpl->row_count = 0;
-}
-
 TDatabase::TDatabase(dbTypeT tdb)
 {
   pimpl = new TDatabasePimpl();
-  setDB(tdb);
+  pimpl->db = database_connection.getDB(tdb);
   pimpl->row_count = 0;
-}
-
-TDatabase::TDatabase(TDatabase const& other)
-{
-  pimpl = new TDatabasePimpl(*other.pimpl);
-}
-
-TDatabase& TDatabase::operator=(TDatabase const& other)
-{
-  mysql_free_result(pimpl->res);
-  delete pimpl;
-  pimpl = new TDatabasePimpl(*other.pimpl);
-  return *this;
 }
 
 TDatabase::~TDatabase(){
@@ -155,10 +136,6 @@ TDatabase::~TDatabase(){
 long TDatabase::lastInsertId()
 {
  return pimpl->db ? mysql_insert_id(pimpl->db) : 0;
-}
-
-void TDatabase::setDB(dbTypeT tdb){
-  pimpl->db = database_connection.getDB(tdb);
 }
 
 // advance to the next row of the current query

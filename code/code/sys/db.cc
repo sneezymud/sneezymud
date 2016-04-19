@@ -2009,7 +2009,6 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing *ch)
   // float att;
   int rc;
   char letter;
-  TDatabase db;
 
   int nr = real_mobile(virt);
 
@@ -2160,11 +2159,10 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing *ch)
 
 
   } else {
+    TDatabase db(ch && should_alloc ? DB_IMMORTAL : DB_SNEEZY);
     if (ch && should_alloc) {
-      db = DB_IMMORTAL;
       db.query("select * from mob where owner = '%s' and vnum = %i", ch->name.c_str(), virt);
     } else {
-      db = DB_SNEEZY;
       db.query("select * from mob where vnum = %i", virt);
     }
     if (!db.fetchRow()) {
