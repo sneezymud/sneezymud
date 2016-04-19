@@ -26,7 +26,7 @@ if twitter:
   libs.append('curl')
 
 # main binary
-sneezy=env.Program('sneezy', 'main.cc', LIBS=libs + ['cares', 'boost_program_options', 'mysqlclient', 'boost_regex'])
+sneezy=env.Program('sneezy', 'main.cc', LIBS=libs + ['boost_program_options', 'mysqlclient', 'boost_regex'])
 env.InstallAs('../sneezy', sneezy)
 
 # low tools
