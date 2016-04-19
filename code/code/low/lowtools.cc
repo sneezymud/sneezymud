@@ -1,7 +1,6 @@
 #include <map>
 #include <fstream>
 
-#include "database.h"
 #include "sstring.h"
 #include "parse.h"
 

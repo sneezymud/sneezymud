@@ -11,7 +11,6 @@
 #include "obj_potion.h"
 #include "shop.h"
 #include "extern.h"
-#include "database.h"
 #include "liquids.h"
 
 TPotion::TPotion() :

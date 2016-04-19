@@ -5,7 +5,6 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "socket.h"
-#include "database.h"
 #include "configuration.h"
 #include "extern.h"
 #include "enum.h"

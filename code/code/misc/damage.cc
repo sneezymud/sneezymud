@@ -17,7 +17,6 @@
 #include "combat.h"
 #include "statistics.h"
 #include "obj_base_corpse.h"
-#include "database.h"
 #include "person.h"
 #include "cmd_trophy.h"
 #include "configuration.h"

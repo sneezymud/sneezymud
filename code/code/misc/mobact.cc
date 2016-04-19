@@ -20,7 +20,6 @@
 #include "person.h"
 #include "being.h"
 #include "spec_mobs.h"
-#include "database.h"
 #include "obj_spellbag.h"
 #include "obj_base_corpse.h"
 #include "obj_player_corpse.h"
