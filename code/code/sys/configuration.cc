@@ -143,12 +143,6 @@ bool Config::doConfiguration(int argc, char *argv[])
      "host for sneezyprod database (unused)")
     ("sneezybuilder_host", po::value<string>(&db_hosts[DB_SNEEZYBUILDER]),
      "host for sneezybuilder database (unused)")
-    ("wiki_mortal_host", po::value<string>(&db_hosts[DB_WIKI_MORTAL]),
-     "host for mortal wiki database")
-    ("wiki_builder_host", po::value<string>(&db_hosts[DB_WIKI_BUILDER]),
-     "host for builder wiki database")
-    ("wiki_admin_host", po::value<string>(&db_hosts[DB_WIKI_ADMIN]),
-     "host for admin wiki database")
     ;
 
   // database options

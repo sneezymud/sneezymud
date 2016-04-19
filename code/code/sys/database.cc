@@ -21,9 +21,6 @@ const char * db_connect[DB_MAX] = {
   "immortal",
   "sneezy", 
   "sneezybuilder",
-  "wikidb",
-  "builder_wikidb",
-  "mudadmin_wikidb",
   };
 
 
