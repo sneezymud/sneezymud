@@ -4,6 +4,9 @@
 /code/config.log
 /code/objs/
 /code/sneezy
+/code/code/tags
+/code/tags
+/tags
 
 # dynamically changing mud files
 /lib/account/
