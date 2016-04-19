@@ -2,15 +2,18 @@
 
 Import('env');
 
+makelib = env.StaticLibrary if env.get('LIBTYPE', '') == 'static' else env.SharedLibrary
+
+
 # library targets
-libcmd=env.SharedLibrary(target='cmd', source=Glob('cmd/*.cc'))
-libdisc=env.SharedLibrary(target='disc', source=Glob('disc/*.cc'))
-libgame=env.SharedLibrary(target='game', source=Glob('game/*.cc'))
-libmisc=env.SharedLibrary(target='misc', source=Glob('misc/*.cc'), LIBS=['curl'])
-libobj=env.SharedLibrary(target='obj', source=Glob('obj/*.cc'))
-libspec=env.SharedLibrary(target='spec', source=Glob('spec/*.cc'))
-libsys=env.SharedLibrary(target='sys', source=Glob('sys/*.cc'), LIBS=['crypt'])
-libtask=env.SharedLibrary(target='task', source=Glob('task/*.cc'))
+libcmd=makelib(target='cmd', source=Glob('cmd/*.cc'))
+libdisc=makelib(target='disc', source=Glob('disc/*.cc'))
+libgame=makelib(target='game', source=Glob('game/*.cc'))
+libmisc=makelib(target='misc', source=Glob('misc/*.cc'), LIBS=['curl'])
+libobj=makelib(target='obj', source=Glob('obj/*.cc'))
+libspec=makelib(target='spec', source=Glob('spec/*.cc'))
+libsys=makelib(target='sys', source=Glob('sys/*.cc'), LIBS=['crypt'])
+libtask=makelib(target='task', source=Glob('task/*.cc'))
 
 libs=[libsys, libmisc, libcmd, libdisc, libgame,
       libobj, libspec, libtask]

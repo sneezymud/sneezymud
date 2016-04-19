@@ -51,6 +51,8 @@ env=Environment(CXXFLAGS=CXXFLAGS,
 #                SHCXX = 'g++44 -m32',
                 CXX = 'g++',
                 SHCXX = 'g++',
+                LIBTYPE = 'static',  # options: 'static', 'shared'. shared links faster, but doesn't work on Mac.
+                # options: "sqlite", "mysql"
 
                 #prettified output
                 SHCXXCOMSTR = "\033[35mCompiling\033[0m $SOURCE",
