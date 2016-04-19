@@ -15,9 +15,6 @@ void procCheckMail::run(const TPulse &) const
 {
   Descriptor *d;
 
-  if (gamePort == Config::Port::BUILDER)
-    return;
-  
   for (d = descriptor_list; d; d = d->next) {
     TBeing *ch = d->original ? d->original : d->character;
     if (!Config::NoMail() && !d->connected && ch) {

@@ -34,7 +34,6 @@ const int Config::Port::PROD=7900;
 const int Config::Port::PROD_XML=7901;
 const int Config::Port::BETA=5678;
 const int Config::Port::ALPHA=6969;
-const int Config::Port::BUILDER=8900;
 const int Config::Port::GAMMA=6961;
 
 extern std::vector <std::string> db_hosts;
@@ -141,8 +140,6 @@ bool Config::doConfiguration(int argc, char *argv[])
      "host for immortal database")
     ("sneezyprod_host", po::value<string>(&db_hosts[DB_SNEEZYPROD]),
      "host for sneezyprod database (unused)")
-    ("sneezybuilder_host", po::value<string>(&db_hosts[DB_SNEEZYBUILDER]),
-     "host for sneezybuilder database (unused)")
     ;
 
   // database options

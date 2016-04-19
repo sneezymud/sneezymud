@@ -1435,10 +1435,10 @@ void TPerson::doShutdown(const char *argument)
   argument = one_argument(argument, arg, cElements(arg));
 
   if (!*arg) {
-    if (gamePort == Config::Port::PROD || gamePort == Config::Port::BUILDER) {
+    if (gamePort == Config::Port::PROD) {
       // oops, did we type shutdown in the wrong window again???
-      sendTo(format("Running on game port (%d) or builder port (%d).\n\r") 
-          % Config::Port::PROD % Config::Port::BUILDER);
+      sendTo(format("Running on game port (%d).\n\r")
+          % Config::Port::PROD);
       sendTo("Please do a timed shutdown to avoid complaints.\n\r");
       return;
     }

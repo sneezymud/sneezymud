@@ -131,7 +131,6 @@ class Config {
     static const int BETA;
     static const int GAMMA;
     static const int ALPHA;
-    static const int BUILDER;
   };
 };
 

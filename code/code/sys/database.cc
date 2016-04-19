@@ -20,7 +20,6 @@ const char * db_connect[DB_MAX] = {
   "sneezybeta",
   "immortal",
   "sneezy", 
-  "sneezybuilder",
   };
 
 
@@ -52,8 +51,6 @@ const char *TDatabaseConnection::getConnectParam(dbTypeT type)
     return db_names[type].c_str();
   if (gamePort == Config::Port::PROD)
     return db_connect[DB_SNEEZYPROD];
-  if (gamePort == Config::Port::BUILDER)
-    return db_connect[DB_SNEEZYBUILDER];
   return db_connect[DB_SNEEZYBETA];
 }
 
