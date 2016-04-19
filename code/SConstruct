@@ -39,6 +39,7 @@ LDFLAGS = [
 
 LIBPATH = [
     '/usr/lib64/mysql',
+    '/usr/local/lib',
 ]
 
 # build environment
