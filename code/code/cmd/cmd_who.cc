@@ -276,28 +276,6 @@ void TBeing::doWho(const char *argument)
 		   db["port"] % stmp;
 	}
 	
-        buf = format("%s------------------------------------------------------------------\n\r") % buf;
-        buf = format("%sTesting (Other Ports)\n\r") % buf;
-        buf = format("%s------------------------------------------------------------------\n\r") % buf;
-
-
-        TDatabase db3(DB_SNEEZYBETA);
-        db3.query("select title, port, name from wholist order by port");
-
-        while(db3.fetchRow()){
-          stmp=db3["title"];
-
-          if((pos=stmp.find("<n>")) != sstring::npos)
-            stmp.replace(pos,3,db3["name"]);
-
-          if((pos=stmp.find("<N>")) != sstring::npos)
-            stmp.replace(pos,3,db3["name"]);
-
-
-          buf = format("%s[%s] %s<1>\n\r") % buf %
-                   db3["port"] % stmp;
-        }
-
 
 	sb += buf;
 	

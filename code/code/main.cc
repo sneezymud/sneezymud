@@ -49,11 +49,6 @@ int main(int argc, char *argv[])
 
   WizLock = false;
 
-  if (gamePort == Config::Port::BETA) {
-    vlogf(LOG_MISC, "Running on beta test site.  Wizlocking by default.");
-    WizLock = TRUE;
-  }
-
   vlogf(LOG_MISC, "Blanking denied hosts.");
   for (a = 0; a < MAX_BAN_HOSTS; a++) {
     strcpy(hostLogList[a], "");

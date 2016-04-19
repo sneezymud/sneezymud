@@ -128,7 +128,6 @@ class Config {
   public:
     static const int PROD;
     static const int PROD_XML;
-    static const int BETA;
     static const int GAMMA;
     static const int ALPHA;
   };

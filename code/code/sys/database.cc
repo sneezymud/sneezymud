@@ -17,7 +17,6 @@ std::vector <std::string> db_passwords(DB_MAX);
 
 const char * db_connect[DB_MAX] = {
   NULL, // depends on game port
-  "sneezybeta",
   "immortal",
   "sneezy", 
   };

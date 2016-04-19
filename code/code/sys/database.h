@@ -87,7 +87,6 @@ class sstring;
 
 enum dbTypeT {
   DB_SNEEZY,
-  DB_SNEEZYBETA,
   DB_IMMORTAL,
   DB_SNEEZYPROD,
 

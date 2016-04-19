@@ -2392,8 +2392,7 @@ TObj *read_object(int nr, readFileTypeT type)
     obj->obj_flags.decay_time=convertTo<int>(obj_cache[nr]->s["decay"]);
     obj->setVolume(convertTo<int>(obj_cache[nr]->s["volume"]));
     obj->setMaterial(convertTo<int>(obj_cache[nr]->s["material"]));
-    // beta is used to test LOW loads, so don't let max_exist be a factor
-    obj->max_exist = (gamePort == Config::Port::BETA ? 9999 : convertTo<int>(obj_cache[nr]->s["max_exist"]));
+    obj->max_exist = convertTo<int>(obj_cache[nr]->s["max_exist"]);
 
   } else {
     db.query("select type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist from obj where vnum=%i", obj_index[nr].virt);
@@ -2423,8 +2422,7 @@ TObj *read_object(int nr, readFileTypeT type)
     obj->obj_flags.decay_time=convertTo<int>(db["decay"]);
     obj->setVolume(convertTo<int>(db["volume"]));
     obj->setMaterial(convertTo<int>(db["material"]));
-    // beta is used to test LOW loads, so don't let max_exist be a factor
-    obj->max_exist = (gamePort == Config::Port::BETA ? 9999 : convertTo<int>(db["max_exist"]));
+    obj->max_exist = convertTo<int>(db["max_exist"]);
   }
   
 
@@ -2900,7 +2898,7 @@ void runResetCmdM(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
     return;
 
   // catch cases where builder used global max over zonefile max
-  if (rs.arg2 > mob_index[rs.arg1].max_exist && gamePort != Config::Port::BETA && rs.arg3 != zone.random_room)
+  if (rs.arg2 > mob_index[rs.arg1].max_exist && rs.arg3 != zone.random_room)
   {
     vlogf(LOG_LOW, format("Mob %s (%i) tried has improper load max (%i) compared to global (%i) in zonefile") %
       mob_index[rs.arg1].short_desc % mob_index[rs.arg1].virt % rs.arg2 % mob_index[rs.arg1].max_exist);
@@ -3084,7 +3082,7 @@ void runResetCmdQMark(zoneData &zone, resetCom &rs, resetFlag flags, bool &moblo
     bool useArgs = (objload && rs.character == 'P') || (mobload && rs.character == 'G');
     int my_chance = useArgs ? rs.arg1 : fixed_chance;
 
-    last_cmd = (rs.arg1 >= 98 || roll <= my_chance || gamePort == Config::Port::BETA);
+    last_cmd = (rs.arg1 >= 98 || roll <= my_chance);
     if (!last_cmd) {
       if (rs.character == 'M')
         mobload = 0; // cancel all operations after this 'M' which use the mob ptr by setting !mobload

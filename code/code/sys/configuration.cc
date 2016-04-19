@@ -32,7 +32,6 @@ bool Config::no_mail;
 
 const int Config::Port::PROD=7900;
 const int Config::Port::PROD_XML=7901;
-const int Config::Port::BETA=5678;
 const int Config::Port::ALPHA=6969;
 const int Config::Port::GAMMA=6961;
 
@@ -134,8 +133,6 @@ bool Config::doConfiguration(int argc, char *argv[])
   database_hosts.add_options()
     ("sneezy_host", po::value<string>(&db_hosts[DB_SNEEZY]),
      "host for sneezy database")
-    ("sneezybeta_host", po::value<string>(&db_hosts[DB_SNEEZYBETA]),
-     "host for sneezybeta database (unused)")
     ("immortal_host", po::value<string>(&db_hosts[DB_IMMORTAL]),
      "host for immortal database")
     ("sneezyprod_host", po::value<string>(&db_hosts[DB_SNEEZYPROD]),

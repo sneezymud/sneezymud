@@ -231,7 +231,7 @@ void generate_obj_index()
       tmpi->max_exist /= 100;
     }
     if (tmpi->max_exist)
-      tmpi->max_exist = max(tmpi->max_exist, (short int) (gamePort == Config::Port::BETA ? 9999 : 1));
+      tmpi->max_exist = max(tmpi->max_exist, (short int) 1);
     
 
     tmpi->spec=convertTo<int>(db["spec_proc"]);
@@ -353,7 +353,7 @@ void generate_mob_index()
         
     long maxe=convertTo<int>(db["max_exist"]);
     
-    tmpi->max_exist = (gamePort == Config::Port::BETA ? 9999 : maxe);
+    tmpi->max_exist = maxe;
     
     // handle some stat counters
     if (lev <= 5) {
