@@ -149,8 +149,6 @@ bool Config::doConfiguration(int argc, char *argv[])
      "host for builder wiki database")
     ("wiki_admin_host", po::value<string>(&db_hosts[DB_WIKI_ADMIN]),
      "host for admin wiki database")
-    ("forums_admin_host", po::value<string>(&db_hosts[DB_FORUMS_ADMIN]),
-     "host for admin forums database")
     ;
 
   // database options

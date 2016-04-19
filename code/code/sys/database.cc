@@ -24,7 +24,6 @@ const char * db_connect[DB_MAX] = {
   "wikidb",
   "builder_wikidb",
   "mudadmin_wikidb",
-  "smf",
   };
 
 

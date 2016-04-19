@@ -4164,79 +4164,13 @@ void Descriptor::add_comment(const char *who, const char *msg)
 
 }
 
-const char * g_smfPrefix = "smf_a_";
-const int g_smfboardId = 11;
-
-// send feedback directly to SMF forum
-// TODO move this into a single txn?
-void Descriptor::send_feedback(const char *subject, const char *msg)
-{
-  // params = prefix (str), boardid (int), subject (str), body (str), poster (str), email (str), time (int)
-  static const char * addPostQuery = "INSERT INTO %smessages (ID_BOARD, ID_TOPIC, subject, body, \
-                                     posterName, posterEmail, posterIP, posterTime, modifiedName) \
-                                     VALUES (%i, -1, '%s', '%s',  '%s', '%s', '', %i, '')";
-
-  // params = prefix (str), boardid (int), postId (int), postId (int)
-  static const char * addTopicQuery = "INSERT INTO %stopics (ID_BOARD, ID_FIRST_MSG, ID_LAST_MSG) VALUES (%i, %i, %i)";
-
-  TBeing *player = (dynamic_cast<TMonster *>(character) && original) ? original : character;
-  sstring message;
-  time_t now = time(0);
-  TDatabase db(DB_FORUMS_ADMIN);
-  int postId = 0, topicId = 0;
-
-  // standard info
-  message += format("Account Name: %s\n") % account->name;
-  message += format("Character Name: %s\n") % player->getName();
-  message += format("Account Email: %s\n") % account->email;
-  message += format("Time: %s") % ctime(&now); // ctime adds a \n
-  message += format("Room: %i\n") % (player->roomp ? player->roomp->number : -1);
-  message += format("%s\n") % subject;
-
-  // actual message from user to appear in the forum
-  message += format("\n[quote]%s[/quote]\n") % msg;
-
-  // clean up the message to remove any badness
-  message.ascify();
-  message.inlineReplaceString("\r\n", "\n");
- 
-  // add post
-  if (!db.query(addPostQuery, g_smfPrefix, g_smfboardId, subject, message.c_str(), player->getName().c_str(), account->email.c_str(), (int)now) ||
-      0 == (postId = db.lastInsertId()))
-  {
-    vlogf(LOG_BUG, format("Player feedback failed when posting message for %s.") % player->name);
-    player->sendTo("There was an error filing your feedback.  Please try agian using http://www.sneezymud.com/Contact_Us.html");
-    return;
-  }
-
-  // add topic
-  if (!db.query(addTopicQuery, g_smfPrefix, g_smfboardId, postId, postId) ||
-      0 == (topicId = db.lastInsertId()))
-  {
-    db.query("DELETE FROM %smessages WHERE ID_MSG = %i LIMIT 1", g_smfPrefix, postId);
-    vlogf(LOG_BUG, format("Player feedback failed when posting topic for %s.") % player->name);
-    player->sendTo("There was an error filing your feedback.  Please try agian using http://www.sneezymud.com/Contact_Us.html");
-    return;
-  }
-
-	// join msg to topic
-	db.query("UPDATE %smessages SET ID_TOPIC = %i, ID_MSG_MODIFIED = %i WHERE ID_MSG = %i LIMIT 1", g_smfPrefix, topicId, postId, postId);
-
-	// update post count for the board
-	db.query("UPDATE %sboards SET numPosts = numPosts + 1, numTopics = numTopics + 1 WHERE ID_BOARD = %i LIMIT 1", g_smfPrefix, g_smfboardId);
-
-  // message all gods that someone has submitted a feedback
-  vlogf(LOG_MISC, format("FEEDBACK from player %s has been submitted with the subject '%s'.") % player->getName() % subject);
-
-	return;
+namespace {
+  const char FEEDBACK_FROM_ADDRESS[] = "feedback@sneezymud.com";
+  const char FEEDBACK_SENDTO_ADDRESS[] = "mudadmin@sneezymud.com";
 }
 
-
-#ifdef UNUSED
-#define FEEDBACK_FROM_ADDRESS "feedback@sneezymud.com"
-#define FEEDBACK_SENDTO_ADDRESS "mudadmin@sneezymud.com"
 // sends appropriate feedback (help, bugs, typos) via email to a feedback forum
-void Descriptor::send_feedbackMail(const char *subject, const char *msg)
+void Descriptor::send_feedback(const char *subject, const char *msg)
 {
   static int tempInc = 0;
   TBeing *player = (dynamic_cast<TMonster *>(character) && original) ? original : character;
@@ -4244,8 +4178,8 @@ void Descriptor::send_feedbackMail(const char *subject, const char *msg)
   time_t now = time(0);
 
   // standard mail header:
-  message += "from: "FEEDBACK_FROM_ADDRESS"\n";
-  message += "to: "FEEDBACK_SENDTO_ADDRESS"\n";
+  message += sstring("from: ") + FEEDBACK_FROM_ADDRESS + "\n";
+  message += sstring("to: ") + FEEDBACK_SENDTO_ADDRESS + "\n";
   message += format("subject: %s (%s)\n") % subject % player->getName();
   message += "\n";
 
@@ -4268,17 +4202,16 @@ void Descriptor::send_feedbackMail(const char *subject, const char *msg)
   {
     FILE *fp;
     sstring tempfile = format("/usr/tmp/feedback%d.tmp") % tempInc++;
-    if (fp = fopen(tempfile.c_str(), "w"))
+    if ((fp = fopen(tempfile.c_str(), "w")))
     {
         fputs(message.c_str(), fp);
         fclose(fp);
-        system((format("/usr/sbin/sendmail -t < %s") % tempfile).c_str());
+        system((format("/usr/sbin/sendmail -t < %s") % tempfile).str().c_str());
         remove(tempfile.c_str());
     }
     exit(-1);
   }
 }
-#endif
 
 void TBeing::doAfk()
 {
