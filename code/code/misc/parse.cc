@@ -3391,10 +3391,6 @@ void TBeing::makeOutputPaged()
 
   sstring str;
 
-  // don't try to page xml
-  if (desc->socket->port==Config::Port::PROD_XML)
-    return;
-
   while (!desc->output.empty()) {
     CommPtr c = desc->output.front();
     desc->output.pop();

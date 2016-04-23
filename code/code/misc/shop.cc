@@ -2043,6 +2043,7 @@ static bool shopping_look(const char *arg, TBeing *ch, TMonster *keeper, int sho
     sstring arg_words=arg;
     arg_words=arg_words.replaceString("-"," ");
 
+	 // %s already gets espaced in 'query' method. Why the double escape?
     for(int i=0;!arg_words.word(i).empty();++i){
       db.escape_string(buf, arg_words.word(i).c_str(), arg_words.word(i).length());
 
@@ -2110,6 +2111,7 @@ static bool shopping_evaluate(const char *arg, TBeing *ch, TMonster *keeper, int
     sstring arg_words=arg;
     arg_words=arg_words.replaceString("-"," ");
 
+	 // %s already gets espaced in 'query' method. Why the double escape?
     for(int i=0;!arg_words.word(i).empty();++i){
       db.escape_string(buf, arg_words.word(i).c_str(), arg_words.word(i).length());
 
@@ -2416,7 +2418,7 @@ void shoplog(int shop_nr, TBeing *ch, TMonster *keeper, const sstring &name, int
 
   //  db.query("insert into shoplog values (%i, '%s', '%s', '%s', %i, %i, %i, now(), %i)", shop_nr, ch?ch->getName():"unknown", action.c_str(), name.c_str(), cost, keeper->getMoney(), value, count);
 
-  queryqueue.push(format("insert into shoplog values (%i, '%s', '%s', '%s', %i, %i, %i, now(), %i)") % shop_nr % ((sstring)(ch?ch->getName():"unknown")).escape(sstring::SQL) % action.escape(sstring::SQL) % name.escape(sstring::SQL) % cost % keeper->getMoney() % value % count);
+  queryqueue.push(format("insert into shoplog values (%i, '%s', '%s', '%s', %i, %i, %i, now(), %i)") % shop_nr % ((sstring)(ch?ch->getName():"unknown")).escape() % action.escape() % name.escape() % cost % keeper->getMoney() % value % count);
 
 
 }

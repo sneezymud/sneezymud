@@ -1270,27 +1270,6 @@ sstring WhoListComm::getClientText(){
   return buf;
 }
 
-sstring WhoListComm::getXML(){
-  sstring buf="";
-
-  buf+=format("<wholist>\n");
-  buf+=format("  <online>%s</online>\n") % (online ? "true" : "false");
-  
-  if(level!=-1)
-    buf+=format("  <level>%i</level>\n") % level;
-  if(idle!=-1)
-    buf+=format("  <idle>%i</idle>\n") % idle;
-  
-  buf+=format("  <linkdead>%s</linkdead>\n") % (linkdead ? "true" : "false");
-  buf+=format("  <name>%s</name>\n") % who.escape(sstring::XML);
-  buf+=format("  <prof>%s</prof>\n") % prof.escape(sstring::XML);
-  buf+=format("  <title>%s</title>\n") % title.escape(sstring::XML);
-  buf+=format("</wholist>\n");
-
-  return buf;
-}
-
-
 void TBeing::fixClientPlayerLists(bool lost)
 {
   Descriptor *d;

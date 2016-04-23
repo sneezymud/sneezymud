@@ -465,36 +465,6 @@ void TBeing::playsound(soundNumT sound, const sstring &type, int vol, int prior,
   }
 }
 
-sstring SoundComm::getXML(){
-  sstring buf="";
-
-  buf+=format("<sound type=\"%s\">\n") % soundtype;
-
-  buf+=format("  <file>%s</file>\n") % text;
-
-  if(type!="")
-    buf+=format("  <type>%s</type>\n") % type;
-
-  if(url!="")
-    buf+=format("  <url>%s</url>\n") % url;
-
-  if(volume!=-1)
-    buf+=format("  <volume>%i</volume>\n") % volume;
-
-  if(priority!=-1)
-    buf+=format("  <priority>%i</priority>\n") % priority;
-
-  if(cont!=-1)
-    buf+=format("  <continue>%i</continue>\n") % (cont?"true":"false");
-
-  if(repeats!=-1)
-    buf+=format("  <loop>%i</loop>\n") % repeats;
-
-  buf+=format("</sound>\n");
-
-  return buf;
-}
-
 sstring SoundComm::getText(){
   sstring buf="";
 

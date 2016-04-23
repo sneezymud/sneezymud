@@ -454,11 +454,6 @@ sstring SnoopComm::getClientText(){
 return getText();
 }
 
-sstring SnoopComm::getXML(){
-return format("<snoop victim=\"%s\">%s</snoop>") % 
-  vict.escape(sstring::XML) % text.escape(sstring::XML);
-}
-
 int Descriptor::outputProcessing()
 {
 // seems silly, but we sometimes do descriptor_list->outputProcessing()
@@ -484,8 +479,6 @@ while(!output.empty()){
   output.pop();
   if(m_bIsClient){
     commtype=Comm::CLIENT;
-  } else if(socket->port==Config::Port::PROD_XML){
-    commtype=Comm::XML;
   } else {
     commtype=Comm::TEXT;
   }
@@ -535,9 +528,6 @@ std::swap(output, empty);
 
   if (socket->writeToSocket(colorBuf.c_str()))
     return -1;
-
-  if(commtype == Comm::XML)
-    socket->writeNull();
 
   memset(i, '\0', sizeof(i));
 }
@@ -2320,13 +2310,6 @@ sstring PromptComm::getClientText(){
   return text;
 }
 
-sstring PromptComm::getXML(){
-  return format("<prompt time=\"%i\" hp=\"%i\" mana=\"%i\" piety=\"%f\" lifeforce=\"%i\" moves=\"%i\" money=\"%i\" room=\"%i\">%s</prompt>") %
-    time % hp % mana % piety % lifeforce % moves % money % room % 
-    text.escape(sstring::XML);
-}
-
-
 sstring RoomExitComm::getText(){
   return "";
 }
@@ -2334,30 +2317,6 @@ sstring RoomExitComm::getText(){
 sstring RoomExitComm::getClientText(){
   return "";
 }
-
-sstring RoomExitComm::getXML(){
-  sstring buf="";
-
-  buf+=format("<roomexits>\n");
-
-  for(dirTypeT dir=MIN_DIR;dir<MAX_DIR;dir++){
-    if(exits[dir].exit){
-      buf+=format("  <exit>\n");
-      buf+=format("    <direction>%s</direction>\n") % dirs[dir];
-      if(exits[dir].door){
-	buf+=format("    <door>\n");
-	buf+=format("      <open>%s</open>\n") % (exits[dir].open?"true":"false");
-	buf+=format("    </door>\n");
-      }
-      buf+=format("  </exit>\n");
-    }
-  }
-
-  buf+=format("</roomexits>\n");
-
-  return buf;
-}
-
 
 void setPrompts(fd_set out)
 {
@@ -3030,11 +2989,6 @@ sstring LoginComm::getText(){
 
 sstring LoginComm::getClientText(){
   return getText();
-}
-
-sstring LoginComm::getXML(){
-  return format("<login prompt=\"%s\">%s</login>") % 
-    prompt.escape(sstring::XML) % text.escape(sstring::XML);
 }
 
 // return DELETE_THIS

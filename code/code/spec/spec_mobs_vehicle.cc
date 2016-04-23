@@ -542,9 +542,9 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	  if (!argument.word(i).empty()) {
 	    // use %q here to escape input because query() won't check with %r
 	    if (buf.empty())
-	      buf = format("'%s'") % argument.word(i).escape(sstring::SQL);
+	      buf = format("'%s'") % argument.word(i).escape();
 	    else
-	      buf = format("%s, '%s'") % buf % argument.word(i).escape(sstring::SQL);
+	      buf = format("%s, '%s'") % buf % argument.word(i).escape();
 	  }
 	}
 	if (!buf.empty()) {

@@ -109,9 +109,6 @@ int run_the_game()
   gSocket = new TMainSocket();
   gSocket->initSocket(gamePort);
 
-  // if(gamePort == Config::Port::PROD)
-  //   gSocket->initSocket(Config::Port::PROD_XML);
-
   // doh this doesn't work because 23 is a privileged port
   //  if(gamePort == Config::Port::PROD)
   //    gSocket->initSocket(23); // listen on telnet port too
@@ -1700,9 +1697,6 @@ sstring Comm::getComm(commTypeT comm){
     case CLIENT:
       return getClientText();
       break;
-    case XML:
-      return getXML();
-      break;
   }
 
   return "";
@@ -1719,10 +1713,6 @@ sstring UncategorizedComm::getText(){
 
 sstring UncategorizedComm::getClientText(){
   return getText();
-}
-
-sstring UncategorizedComm::getXML(){
-  return format("<uncategorized>%s</uncategorized>") % text.escape(sstring::XML);
 }
 
 // RoomExitComm
@@ -1754,12 +1744,6 @@ sstring CmdMsgComm::getText(){
 sstring CmdMsgComm::getClientText(){
   return getText();
 }
-
-sstring CmdMsgComm::getXML(){
-  return format("<cmdmsg cmd=\"%s\">%s</cmdmsg>") % 
-    cmd.escape(sstring::XML) % text.escape(sstring::XML);
-}
-
 
 // TellComm
 TellFromComm::TellFromComm(const sstring &tt, const sstring &f, 

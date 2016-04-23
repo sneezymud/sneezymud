@@ -31,7 +31,6 @@ sstring Config::data_dir;
 bool Config::no_mail;
 
 const int Config::Port::PROD=7900;
-const int Config::Port::PROD_XML=7901;
 const int Config::Port::ALPHA=6969;
 const int Config::Port::GAMMA=6961;
 

@@ -705,39 +705,12 @@ sstring TellFromComm::getClientText(){
   return getText();
 }
 
-sstring TellFromComm::getXML(){
-  sstring buf="";
-  
-  buf+=format("<tellfrom>\n");
-  buf+=format("  <to>%s</to>\n") % to.escape(sstring::XML);
-  buf+=format("  <from>%s</from>\n") % from.escape(sstring::XML);
-  buf+=format("  <drunk>%s</drunk>\n") % (drunk ? "true" : "false");
-  buf+=format("  <mob>%s</mob>\n") % (mob ? "true" : "false");
-  buf+=format("  <tell>%s</tell>\n") % text.escape(sstring::XML);
-  buf+=format("</tellfrom>\n");
-
-  return buf;
-}
-
-
 sstring TellToComm::getText(){
   return format("<G>You tell %s<z>, \"%s\"\n\r") % to % text;
 }
 
 sstring TellToComm::getClientText(){
   return getText();
-}
-
-sstring TellToComm::getXML(){
-  sstring buf="";
-  
-  buf+=format("<tellto>\n");
-  buf+=format("  <to>%s</to>\n") % to.escape(sstring::XML);
-  buf+=format("  <from>%s</from>\n") % from.escape(sstring::XML);
-  buf+=format("  <tell>%s</tell>\n") % text.escape(sstring::XML);
-  buf+=format("</tellto>\n");
-
-  return buf;
 }
 
 TBeing *findTellTarget(TBeing *me, const sstring &name, bool visible, bool mobs){
@@ -929,7 +902,7 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
   d->output.push(cptr);
 
   TDatabase db(DB_SNEEZY);
-  queryqueue.push(format("insert into tellhistory (tellfrom, tellto, tell, telltime) values ('%s', '%s', '%s', now())") % capbuf.cap().escape(sstring::SQL) % ((sstring)vict->getName()).escape(sstring::SQL) % garbed.escape(sstring::SQL));
+  queryqueue.push(format("insert into tellhistory (tellfrom, tellto, tell, telltime) values ('%s', '%s', '%s', now())") % capbuf.cap().escape() % ((sstring)vict->getName()).escape() % garbed.escape());
 
 
   if ((d && d->m_bIsClient) || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {

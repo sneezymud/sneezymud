@@ -83,7 +83,7 @@ extern void signalSetup(void);
 class Comm
 {
  public:
-  enum commTypeT { TEXT, CLIENT, XML };
+  enum commTypeT { TEXT, CLIENT };
 
   sstring getComm(commTypeT);
 
@@ -96,7 +96,6 @@ class Comm
  private:
   virtual sstring getText() = 0;
   virtual sstring getClientText() = 0;
-  virtual sstring getXML() = 0;
 };
 
 typedef boost::shared_ptr<Comm> CommPtr;
@@ -109,7 +108,6 @@ class UncategorizedComm : public Comm {
  private:
   virtual sstring getText();
   virtual sstring getClientText();
-  virtual sstring getXML();
 };
 
 class SoundComm : public Comm {
@@ -127,7 +125,6 @@ class SoundComm : public Comm {
 
   virtual sstring getText();
   virtual sstring getClientText();
-  virtual sstring getXML();
 };
 
 
@@ -145,7 +142,6 @@ class WhoListComm : public Comm {
  private:
   virtual sstring getText();
   virtual sstring getClientText();
-  virtual sstring getXML();
 };
 
 class TellFromComm : public Comm {
@@ -160,7 +156,6 @@ class TellFromComm : public Comm {
 
   virtual sstring getText();
   virtual sstring getClientText();
-  virtual sstring getXML();
 };
 
 class TellToComm : public Comm {
@@ -173,7 +168,6 @@ class TellToComm : public Comm {
 
   virtual sstring getText();
   virtual sstring getClientText();
-  virtual sstring getXML();
 };
 
 class CmdMsgComm : public Comm {
@@ -185,7 +179,6 @@ class CmdMsgComm : public Comm {
 
   virtual sstring getText();
   virtual sstring getClientText();
-  virtual sstring getXML();
 };
 
 
@@ -199,7 +192,6 @@ class SnoopComm : public Comm {
 
   virtual sstring getText();
   virtual sstring getClientText();
-  virtual sstring getXML();
 };
 
 // for vlogf output
@@ -213,7 +205,6 @@ class SystemLogComm : public Comm {
 
   virtual sstring getText();
   virtual sstring getClientText();
-  virtual sstring getXML();
 };
 
 class LoginComm : public Comm {
@@ -225,7 +216,6 @@ class LoginComm : public Comm {
 
   virtual sstring getText();
   virtual sstring getClientText();
-  virtual sstring getXML();
 };
 
 struct RoomExitData {
@@ -242,7 +232,6 @@ class RoomExitComm : public Comm {
  private:
   virtual sstring getText();
   virtual sstring getClientText();
-  virtual sstring getXML();
 };
 
 class PromptComm : public Comm {
@@ -260,7 +249,6 @@ class PromptComm : public Comm {
  private:
   virtual sstring getText();
   virtual sstring getClientText();
-  virtual sstring getXML();
 };
 
 
