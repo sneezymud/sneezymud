@@ -450,10 +450,6 @@ sstring SnoopComm::getText(){
 return "<r>%<z> " + text;
 }
 
-sstring SnoopComm::getClientText(){
-return getText();
-}
-
 int Descriptor::outputProcessing()
 {
 // seems silly, but we sometimes do descriptor_list->outputProcessing()
@@ -465,7 +461,6 @@ assert(this);
 char i[MAX_STRING_LENGTH + MAX_STRING_LENGTH];
 int counter = 0;
 char buf[MAX_STRING_LENGTH + MAX_STRING_LENGTH];
-Comm::commTypeT commtype;
 TBeing *ch = original ? original : character;
 
 if (!prompt_mode && !connected && !m_bIsClient)
@@ -477,13 +472,8 @@ memset(i, '\0', sizeof(i));
 while(!output.empty()){
   CommPtr c(output.front());
   output.pop();
-  if(m_bIsClient){
-    commtype=Comm::CLIENT;
-  } else {
-    commtype=Comm::TEXT;
-  }
 
-  strncpy(i, c->getComm(commtype).c_str(), MAX_STRING_LENGTH + MAX_STRING_LENGTH);
+  strncpy(i, c->getComm().c_str(), MAX_STRING_LENGTH + MAX_STRING_LENGTH);
   counter++;
 
   // I bumped this from 500 to 1000 - Batopr
@@ -2306,15 +2296,7 @@ sstring PromptComm::getText(){
   return text;
 }
 
-sstring PromptComm::getClientText(){
-  return text;
-}
-
 sstring RoomExitComm::getText(){
-  return "";
-}
-
-sstring RoomExitComm::getClientText(){
   return "";
 }
 
@@ -2985,10 +2967,6 @@ int bogusAccountName(const char *arg)
 
 sstring LoginComm::getText(){
   return text;
-}
-
-sstring LoginComm::getClientText(){
-  return getText();
 }
 
 // return DELETE_THIS

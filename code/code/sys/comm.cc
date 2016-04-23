@@ -1689,17 +1689,8 @@ void Descriptor::updateScreenAnsi(unsigned int update)
 
 
 // base class
-sstring Comm::getComm(commTypeT comm){
-  switch(comm){
-    case TEXT:
-      return getText();
-      break;
-    case CLIENT:
-      return getClientText();
-      break;
-  }
-
-  return "";
+sstring Comm::getComm(){
+  return getText();
 }
 
 // UncategorizedComm
@@ -1709,10 +1700,6 @@ UncategorizedComm::UncategorizedComm(const sstring &t){
 
 sstring UncategorizedComm::getText(){
   return text;
-}
-
-sstring UncategorizedComm::getClientText(){
-  return getText();
 }
 
 // RoomExitComm
@@ -1739,10 +1726,6 @@ CmdMsgComm::CmdMsgComm(const sstring &c, const sstring &t){
 
 sstring CmdMsgComm::getText(){
   return text;
-}
-
-sstring CmdMsgComm::getClientText(){
-  return getText();
 }
 
 // TellComm

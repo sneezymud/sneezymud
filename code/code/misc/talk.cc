@@ -701,16 +701,8 @@ sstring TellFromComm::getText(){
     from % text;
 }
 
-sstring TellFromComm::getClientText(){
-  return getText();
-}
-
 sstring TellToComm::getText(){
   return format("<G>You tell %s<z>, \"%s\"\n\r") % to % text;
-}
-
-sstring TellToComm::getClientText(){
-  return getText();
 }
 
 TBeing *findTellTarget(TBeing *me, const sstring &name, bool visible, bool mobs){
@@ -895,7 +887,7 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
 	       : new TellFromComm(vict->getName(), capbuf.cap(), garbed, false, !isPc()));
 
   sstring gmcp = format("comm.channel { \"chan\": \"tell\", \"msg\": \"%s\", \"player\": \"%s\" }")
-    % cptr->getComm(Comm::CLIENT).ansiToAard().trim().escapeJson()
+    % cptr->getComm().ansiToAard().trim().escapeJson()
     % sstring(getName()).ansiToAard().trim().escapeJson();
   d->sendGmcp(gmcp);
 

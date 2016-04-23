@@ -1258,18 +1258,6 @@ sstring WhoListComm::getText(){
   return "";
 }
 
-sstring WhoListComm::getClientText(){
-  sstring buf;
-  if(online){
-    buf=format("\200%d|%s|%d|%d|1\n") % CLIENT_WHO % who % ADD % 
-      ((level==-1)?0:level);
-  } else {
-    buf=format("\200%d|%s|%d|0\n") % CLIENT_WHO % who % DELETE;
-    buf=format("\200%d|[%s]|%d|0\n") % CLIENT_WHO % who % DELETE;
-  }
-  return buf;
-}
-
 void TBeing::fixClientPlayerLists(bool lost)
 {
   Descriptor *d;

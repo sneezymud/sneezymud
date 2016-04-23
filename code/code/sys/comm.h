@@ -83,9 +83,7 @@ extern void signalSetup(void);
 class Comm
 {
  public:
-  enum commTypeT { TEXT, CLIENT };
-
-  sstring getComm(commTypeT);
+  sstring getComm();
 
   virtual ~Comm(){}
 
@@ -95,7 +93,6 @@ class Comm
 
  private:
   virtual sstring getText() = 0;
-  virtual sstring getClientText() = 0;
 };
 
 typedef boost::shared_ptr<Comm> CommPtr;
@@ -107,7 +104,6 @@ class UncategorizedComm : public Comm {
 
  private:
   virtual sstring getText();
-  virtual sstring getClientText();
 };
 
 class SoundComm : public Comm {
@@ -124,7 +120,6 @@ class SoundComm : public Comm {
   sstring url;
 
   virtual sstring getText();
-  virtual sstring getClientText();
 };
 
 
@@ -141,7 +136,6 @@ class WhoListComm : public Comm {
 
  private:
   virtual sstring getText();
-  virtual sstring getClientText();
 };
 
 class TellFromComm : public Comm {
@@ -155,7 +149,6 @@ class TellFromComm : public Comm {
   bool mob;
 
   virtual sstring getText();
-  virtual sstring getClientText();
 };
 
 class TellToComm : public Comm {
@@ -167,7 +160,6 @@ class TellToComm : public Comm {
   sstring from;
 
   virtual sstring getText();
-  virtual sstring getClientText();
 };
 
 class CmdMsgComm : public Comm {
@@ -178,7 +170,6 @@ class CmdMsgComm : public Comm {
   sstring cmd;
 
   virtual sstring getText();
-  virtual sstring getClientText();
 };
 
 
@@ -191,7 +182,6 @@ class SnoopComm : public Comm {
   sstring vict;
 
   virtual sstring getText();
-  virtual sstring getClientText();
 };
 
 // for vlogf output
@@ -204,7 +194,6 @@ class SystemLogComm : public Comm {
   logTypeT logtype;
 
   virtual sstring getText();
-  virtual sstring getClientText();
 };
 
 class LoginComm : public Comm {
@@ -215,7 +204,6 @@ class LoginComm : public Comm {
   sstring prompt;
 
   virtual sstring getText();
-  virtual sstring getClientText();
 };
 
 struct RoomExitData {
@@ -231,7 +219,6 @@ class RoomExitComm : public Comm {
   
  private:
   virtual sstring getText();
-  virtual sstring getClientText();
 };
 
 class PromptComm : public Comm {
@@ -248,7 +235,6 @@ class PromptComm : public Comm {
 
  private:
   virtual sstring getText();
-  virtual sstring getClientText();
 };
 
 

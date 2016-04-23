@@ -3394,7 +3394,7 @@ void TBeing::makeOutputPaged()
   while (!desc->output.empty()) {
     CommPtr c = desc->output.front();
     desc->output.pop();
-    str += c->getComm(Comm::TEXT);
+    str += c->getComm();
   }
 
   desc->page_string(str);

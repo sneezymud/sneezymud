@@ -782,11 +782,6 @@ sstring SystemLogComm::getText(){
   return format("// %s: %s\n\r") % getLogType(logtype) % text;
 }
 
-sstring SystemLogComm::getClientText(){
-  return format("\200%d|%d|%s: %s\n") % CLIENT_LOG % logtype % 
-    getLogType(logtype) % text;
-}
-
 void dirwalk(const sstring &dir, void (*fcn) (const char *))
 {
   struct dirent *dp;

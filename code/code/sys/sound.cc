@@ -493,8 +493,3 @@ sstring SoundComm::getText(){
 
   return buf;
 }
-
-sstring SoundComm::getClientText(){
-  return getText();
-}
-
