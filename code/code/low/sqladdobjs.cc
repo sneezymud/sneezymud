@@ -11,7 +11,7 @@ int main(int argc, char **argv)
 {
   Config::doConfiguration();
   TDatabase db_immo(DB_IMMORTAL);
-  TDatabase db_beta(DB_SNEEZYBETA);
+  TDatabase db_beta(DB_SNEEZY);
   sstring immortal;
   std::vector<int>vnums;
   int action_flag;

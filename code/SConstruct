@@ -110,10 +110,3 @@ check:          build and run unit tests
 '-c'            to clean objects and executables.
 '--no-progress' to mute the "Checking dependencies" output.
 """)
-
-
-
-
-
-        
-    

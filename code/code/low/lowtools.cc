@@ -9,7 +9,7 @@ bool parse_num_args(int argc, char **argv, std::vector<int> &vnums)
 {
   int s, e, n;
   sstring tmp;
-  unsigned int npos;
+  size_t npos;
 
 #if 0
   printf("argc=%i\n", argc);
@@ -63,7 +63,7 @@ std::map <sstring,sstring> parse_data_file(const sstring &file, int num)
   std::ifstream ifile(file.c_str());
   sstring buf, name, val, type;
   std::map <sstring,sstring> values;
-  unsigned int loc;
+  size_t loc;
 
   // this is a crappy kluge
   values["vnum"]="EOM";

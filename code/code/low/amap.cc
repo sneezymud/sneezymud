@@ -255,7 +255,12 @@ NODE *read_room(FILE *tiny){
 
   while((c=fgetc(tiny)) && !end){
     switch(c){
-      case 'E': while(fgetc(tiny)!='~'); while(fgetc(tiny)!='~'); break;
+      case 'E':
+			while(fgetc(tiny)!='~')
+				;
+			while(fgetc(tiny)!='~')
+				;
+			break;
       case 'S': end=1; break;
       case 'D':
 	fscanf(tiny, "%i", &dir);
@@ -497,7 +502,7 @@ void check_rooms(int MAXROOMS){
 
 std::map <int,int> makeroomcount(FILE *log, int &max){
   sstring buf;
-  unsigned int s, e;
+  size_t s, e;
   std::map <int,int> roomcount;
   char sbuf[1024];
 
@@ -790,7 +795,7 @@ int main(int argc, char **argv)
 
   Config::doConfiguration();
 
-  TDatabase db(DB_SNEEZYBETA), dbexits(DB_SNEEZYBETA);
+  TDatabase db(DB_SNEEZY), dbexits(DB_SNEEZY);
 
 
   toggleInfo.loadToggles();

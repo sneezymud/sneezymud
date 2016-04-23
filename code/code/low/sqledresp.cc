@@ -10,7 +10,7 @@
 int main(int argc, char **argv)
 {
   Config::doConfiguration();
-  TDatabase db(DB_SNEEZYBETA);
+  TDatabase db(DB_SNEEZY);
   std::vector<int>vnums;
   std::map<sstring,sstring>val;
   char file[]="/tmp/sqledrespXXXXXX";
