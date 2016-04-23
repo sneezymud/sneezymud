@@ -250,7 +250,7 @@ int TBeing::howManyClasses() const
 
 void TBeing::calcMaxLevel()
 {
-  register int riMax = 0;
+  int riMax = 0;
   classIndT i;
 
   for (i = MIN_CLASS_IND; i < MAX_CLASSES; i++) {

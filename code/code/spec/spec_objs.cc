@@ -536,8 +536,8 @@ int orbOfTeleportation(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj 
 
 void invert(const char *arg1, char *arg2)
 {
-  register int i = 0;
-  register int len = strlen(arg1) - 1;
+  int i = 0;
+  int len = strlen(arg1) - 1;
 
   while (i <= len) {
     *(arg2 + i) = *(arg1 + (len - i));

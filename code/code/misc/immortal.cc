@@ -2882,7 +2882,7 @@ void TPerson::doPurge(const char *argument)
     } else {
       if (!strcmp("room", name_buf)) {
         int range[2];
-        register int regi;
+        int regi;
         TRoom *rp;
         if (powerCheck(POWER_PURGE_ROOM))
           return;

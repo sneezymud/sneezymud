@@ -43,7 +43,7 @@ const sstring fname(sstring const& name)
 {
   const char *namelist = name.c_str();
   char holder[60];
-  register char *point;
+  char *point;
 
   for (point = holder; isalpha(*namelist) || (*namelist == '-') || (*namelist == '\''); namelist++, point++)
     *point = *namelist;

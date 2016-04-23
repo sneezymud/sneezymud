@@ -274,7 +274,7 @@ roomDirData * TObj::exitDir(dirTypeT door) const
 
 void room_iterate(TRoom *[], void (*func) (int, TRoom *, sstring &, struct show_room_zone_struct *), sstring &sbdata, void *srzdata)
 {
-  register int i;
+  int i;
   for (i = 0; i < WORLD_SIZE; i++) {
     TRoom *temp = real_roomp(i);
 

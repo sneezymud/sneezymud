@@ -30,7 +30,7 @@ bool WizLock;
 
 int search_block(const sstring &arg, const char * const *list, bool exact)
 {
-  register int i, l;
+  int i, l;
 
   l = arg.length();
 

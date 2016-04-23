@@ -598,9 +598,9 @@ void colorAct(colorTypeT colorLevel, const sstring &str, bool hide, const TThing
 
 void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, const TThing *t3, actToParmT type, const char *color, int tslevel)
 {
-  register const char *strp;
-  register char *point;
-  register const char *i = NULL;
+  const char *strp;
+  char *point;
+  const char *i = NULL;
   char ibuf[MAX_STRING_LENGTH];
   char buf[MAX_STRING_LENGTH];
   char namebuf[MAX_NAME_LENGTH];
