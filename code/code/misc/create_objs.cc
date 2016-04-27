@@ -313,8 +313,8 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
     j = 0;
     if (!exdes->description.empty()) {
       for (k = 0; k <= (int) exdes->description.length(); k++) {
-	if (exdes->description[k] != 13)
-	  temp[j++] = exdes->description[k];
+	if (exdes->description.c_str()[k] != 13)
+	  temp[j++] = exdes->description.c_str()[k];
       }
       temp[j] = '\0';
 
@@ -970,8 +970,8 @@ void raw_write_out_object(const TObj *o, FILE *fp, unsigned int vnum)
     j = 0;
     if (!exdes->description.empty()) {
       for (k = 0; k <= (int) exdes->description.length(); k++) {
-	if (exdes->description[k] != 13)
-	  temp[j++] = exdes->description[k];
+	if (exdes->description.c_str()[k] != 13)
+	  temp[j++] = exdes->description.c_str()[k];
       }
       temp[j] = '\0';
       fprintf(fp, "E\n%s~\n%s~\n", exdes->keyword.c_str(), temp);

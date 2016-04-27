@@ -1107,7 +1107,7 @@ sstring garble_drunk(const TBeing *from, TBeing *to, const sstring &arg, Garble:
       {
         match = true;
         for (int iScan = 0; match && iScan < cSub; iScan++)
-          match = word[iStart+iScan] == word[iStart+cSub+iScan];
+          match = word.c_str()[iStart+iScan] == word.c_str()[iStart+cSub+iScan];
       }
     if (match)
     {
