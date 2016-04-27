@@ -1246,7 +1246,7 @@ void fixup_players(void)
   wiz = new wizListInfo();
 
   TDatabase db(DB_SNEEZY);
-  db.query("truncate factionmembers");
+  db.query("delete from factionmembers");
 
  
   dirwalk("player/a", do_the_player_stuff);

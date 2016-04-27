@@ -235,7 +235,7 @@ void update_commod_index()
   for(int i=0;i<200;++i)
     commod_index[i]=0;
 
-  db.query("select r.material as material, sum(r.weight*10)/(select count(*) from shoptype st where st.type=%i) as units from rent r, obj o where o.vnum=r.vnum and r.owner_type='shop' and o.type=%i group by material", ITEM_RAW_MATERIAL, ITEM_RAW_MATERIAL);
+  db.query("select r.material as material, sum(r.weight*10)/(select count(*) from shoptype st where st.type=%i) as units from rent r, obj o where o.vnum=r.vnum and r.owner_type='shop' and o.type=%i group by r.material", ITEM_RAW_MATERIAL, ITEM_RAW_MATERIAL);
 
   while(db.fetchRow()){
     commod_index[convertTo<int>(db["material"])]+=convertTo<int>(db["units"]);
