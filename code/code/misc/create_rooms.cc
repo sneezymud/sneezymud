@@ -2939,8 +2939,8 @@ static void RoomSave(TBeing *ch, int start, int end, int useSecond)
       rp->setDescr("Empty\n");
     }
     for (k = 0; k <= (int) rp->getDescr().length(); k++) {
-      if (rp->getDescr()[k] != 13)
-	temp[x++] = rp->getDescr()[k];
+      if (rp->getDescr().c_str()[k] != 13)
+	temp[x++] = rp->getDescr().c_str()[k];
     }
     temp[x] = '\0';
 
@@ -2960,8 +2960,8 @@ static void RoomSave(TBeing *ch, int start, int end, int useSecond)
 	temp[0]='\0';
 	if (!rdd->description.empty()) {
 	  for (k = 0, x = 0; k <= (int) rdd->description.length(); k++) {
-	    if (rdd->description[k] != 13)
-	      temp[x++] = rdd->description[k];
+	    if (rdd->description.c_str()[k] != 13)
+	      temp[x++] = rdd->description.c_str()[k];
 	  }
 	  temp[x] = '\0';
 	}
@@ -2990,8 +2990,8 @@ static void RoomSave(TBeing *ch, int start, int end, int useSecond)
       x = 0;
       if (!exptr->description.empty()) {
 	for (k = 0; k <= (int) exptr->description.length(); k++) {
-	  if (exptr->description[k] != 13)
-	    temp[x++] = exptr->description[k];
+	  if (exptr->description.c_str()[k] != 13)
+	    temp[x++] = exptr->description.c_str()[k];
 	}
 	temp[x] = '\0';
 
