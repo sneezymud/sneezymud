@@ -75,11 +75,9 @@ TAccount::~TAccount()
 bool TAccount::read(const sstring &aname)
 {
   TDatabase db(DB_SNEEZY);
-  bool res;
-
-  res=db.query("select account_id, email, passwd, name, birth, term, time_adjust, flags, last_logon from account where name=lower('%s')", aname.c_str());
-
-  db.fetchRow();
+  db.query("select account_id, email, passwd, name, birth, term, time_adjust, flags, last_logon from account where name=lower('%s')", aname.c_str());
+  if (!db.fetchRow())
+    return false;
 
   account_id = convertTo<int>(db["account_id"]);
   email=db["email"];
@@ -94,7 +92,7 @@ bool TAccount::read(const sstring &aname)
   login = time(0);
   status = FALSE;
 
-  return res;
+  return true;
 }
 
 bool TAccount::write(const sstring &aname)

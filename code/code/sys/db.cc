@@ -1585,7 +1585,7 @@ void bootZones(void)
       db.query("update zone set zone_name = '%s', zone_enabled = %i, bottom = %i, top = %i, reset_mode = %i, lifespan = %i, util_flag = 1 where zone_nr = %i", zd.name.c_str(), (zd.enabled ? 1 : 0), zd.bottom, zd.top, zd.reset_mode, zd.lifespan, zd.zone_nr);
       if (db.rowCount() == 0) {
         // unsuccessful update, do an insert
-        db.query("insert zone (zone_nr, zone_name, zone_enabled, bottom, top, reset_mode, lifespan, util_flag) select %i, '%s', %i, %i, %i, %i, %i, 1", zd.zone_nr, zd.name.c_str(), (zd.enabled ? 1 : 0), zd.bottom, zd.top, zd.reset_mode, zd.lifespan);
+        db.query("insert into zone (zone_nr, zone_name, zone_enabled, bottom, top, reset_mode, lifespan, util_flag) values (%i, '%s', %i, %i, %i, %i, %i, 1)", zd.zone_nr, zd.name.c_str(), (zd.enabled ? 1 : 0), zd.bottom, zd.top, zd.reset_mode, zd.lifespan);
       }
       zone_table.push_back(zd);
     }
