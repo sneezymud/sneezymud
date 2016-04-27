@@ -3255,7 +3255,12 @@ void runResetCmdT(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
 
 void runResetCmdG(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
 {
-  mud_assert(rs.arg1 >= 0 && rs.arg1 < (signed int) obj_index.size(), "Range error (%d not in obj_index)  G command #%d in %s", rs.arg1, rs.cmd_no, zone.name.c_str());
+  if (rs.arg1 < 0 || rs.arg1 >= (signed int) obj_index.size())
+  {
+    vlogf(LOG_LOW, format("Range error (%d not in obj_index)  G command #%d in %s") % rs.arg1 % rs.cmd_no % zone.name.c_str());
+    return;
+  }
+
   if ((flags & resetFlagFindLoadPotential))
   {
     tallyObjLoadPotential(obj_index[rs.arg1].virt);
