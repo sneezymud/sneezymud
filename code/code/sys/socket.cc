@@ -675,39 +675,6 @@ void procCloseAccountingBooks::run(const TPulse &) const
   }
 }
 
-procRecordCommodPrices::procRecordCommodPrices(const int &p)
-{
-  trigger_pulse=p;
-  name="procRecordCommodPrices";
-}
-
-void procRecordCommodPrices::run(const TPulse &) const
-{
-#if 0
-  TDatabase db(DB_SNEEZY);
-
-  db.query("select shop_nr from shoptype where type=%i", 
-	   ITEM_RAW_MATERIAL);
-
-  while(db.fetchRow()){
-    unsigned int shop_nr=convertTo<int>(db["shop_nr"]);
-    TShopOwned tso(shop_nr, NULL);
-    TCommodity *commod;
-    
-    // REVIEW: getStuff() should be returning NULL, since all shop objs are in database
-    for(TThing *t=tso.getStuff();t;t=t->nextThing){
-      if((commod=dynamic_cast<TCommodity *>(t))){
-	db.query("insert into commodprices values (now(), %i, %i, %f)",
-		 shop_nr, commod->getMaterial(), 
-		 commod->shopPriceFloat(1, shop_nr, -1, NULL));
-      }
-    }
-  }
-#endif
-}
-
-
-
 procWeightVolumeFumble::procWeightVolumeFumble(const int &p)
 {
   trigger_pulse=p;
@@ -1855,7 +1822,6 @@ int TMainSocket::gameLoop()
   scheduler.add(new procUpdateAuction(Pulse::MUDDAY));
   scheduler.add(new procBankInterest(Pulse::MUDDAY));
   scheduler.add(new procCloseAccountingBooks(Pulse::MUDDAY));
-  scheduler.add(new procRecordCommodPrices(Pulse::MUDDAY));
   scheduler.add(new procFactoryProduction(Pulse::MUDDAY));
 
   // pulse realhour

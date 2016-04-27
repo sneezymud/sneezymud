@@ -397,12 +397,6 @@ class procFactoryProduction : public TProcess {
   procFactoryProduction(const int &);
 };
 
-class procRecordCommodPrices : public TProcess {
- public:
-  void run(const TPulse &) const;
-  procRecordCommodPrices(const int &);
-};
-
 class procCloseAccountingBooks : public TProcess {
  public:
   void run(const TPulse &) const;
