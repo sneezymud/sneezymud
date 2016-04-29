@@ -1,4 +1,29 @@
-=============================================================================
+3-27-16 : Shaman chrism items now working without crashing the mud. Kudos
+          to Jeren for helping identify the problem and providng a solution.
+
+	  -Changes to Load Rate. Fixed Rate was increased and SuitSet also
+	   saw a rise in their load rates. Please report any excessive 
+	   load rates. 
+	 - PoC have been reduced in frequency. 
+	 - As we now have the Sneezymud domain, the Grimhavenmud name will be 
+	   removed from the code base. 
+
+6-30-14  : Below are some of the changes that have been recently made. 
+          
+           -Portal usage for alts within the account has been fixed. 
+           -Chaos Plains Re-Enabled (other zones pending)
+	   -Wiki updated with updated content
+
+           <Y>Load rates<z>
+           -Rare Potions Drop Rates Enabled (<P>PoC<z>,<R>PoL<z>,<W>PoY<z>,<G>Mystery<z>)
+           -Complete Armor Sets drop rates reduced 
+           -Single Item Drops (Clothing,Armor,Weapons) Increased
+
+	   Load Rates were subjected to two weeks of testing. Please be
+           patient as we continue to review the code change.  
+
+           -GrimhavenMUD is now on the GoogleFiber Network
+
 07-23-15 : Ratmen as a race are now properly ratman-sized instead of
            accidentally defaulting to the human racial template.
 
@@ -13,7 +38,7 @@
 06-30-15 : Fixed a bug where renting with a persistent follower (pet)
            with a custom name would crash the mud.
 
-06-09-14 : Fixed item repair, any existing ticket from the prior mud will
+6-09-14  : Fixed item repair, any existing ticket from the prior mud will
            be invalid. Drop rates were also fixed at the same time. You
            should now see an increase in loads/drops off mobs.
 
