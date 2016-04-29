@@ -1335,8 +1335,7 @@ int goofersDust(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
       buf = format("$n trips and falls as $e moves in from a %sward direction.") % dirs[dir];
       act(buf, TRUE, ch, me, 0, TO_ROOM);
       ch->setPosition(POSITION_SITTING);
-      delete me;
-      return TRUE;
+      return DELETE_ITEM;
     } else {
       return FALSE;
     }
@@ -2678,17 +2677,17 @@ int healingNeckwear(TBeing *, cmdTypeT cmd, const char *, TObj *me, TObj *)
     act("The power of the loa ~enters your body through $p!", 0, tmp, me, 0, TO_CHAR);
     act("$p disappears in a puff of smoke!", 0, tmp, me, 0, TO_CHAR);
     act("In a puff of smoke, $p disappears from $n's throat!", 0, tmp, me, 0, TO_ROOM);
-    delete me;
+    return DELETE_ITEM;
   } else {
     int rc;
     rc = tmp->applyDamage(tmp, ::number(1,10), DAMAGE_SUFFOCATION);
     act("$p disappears in a puff of smoke!", 0, tmp, me, 0, TO_CHAR);
     act("In a puff of smoke, $p disappears from $n's throat!", 0, tmp, me, 0, TO_ROOM);
-    delete me;
     if (IS_SET_DELETE(rc, DELETE_VICT)) {
       delete tmp;
       tmp = NULL;
     }
+    return DELETE_ITEM;
   }
   return TRUE;
 }
@@ -2721,17 +2720,17 @@ int moveRestoreNeckwear(TBeing *, cmdTypeT cmd, const char *, TObj *me, TObj *)
     act("$p disappears in a puff of smoke!", 0, tmp, me, 0, TO_CHAR);
     act("$p's power refreshes you!", 0, tmp, me, 0, TO_CHAR);
     act("In a puff of smoke, $p disappears from $n's throat!", 0, tmp, me, 0, TO_ROOM);
-    delete me;
+    return DELETE_ITEM;
   } else {
     int rc;
     rc = tmp->applyDamage(tmp, ::number(1,10), DAMAGE_SUFFOCATION);
     act("$p disappears in a puff of smoke!", 0, tmp, me, 0, TO_CHAR);
     act("In a puff of smoke, $p disappears from $n's throat!", 0, tmp, me, 0, TO_ROOM);
-    delete me;
     if (IS_SET_DELETE(rc, DELETE_VICT)) {
       delete tmp;
       tmp = NULL;
     }
+    return DELETE_ITEM;
   }
   return TRUE;
 }
@@ -2757,17 +2756,17 @@ int blessingHoldItem(TBeing *, cmdTypeT cmd, const char *, TObj *me, TObj *)
     act("The power of the loa blesses you through $p!", 0, tmp, me, 0, TO_CHAR);
     act("$p disappears in a puff of smoke!", 0, tmp, me, 0, TO_CHAR);
     act("In a puff of smoke, $p disappears!", 0, tmp, me, 0, TO_ROOM);
-    delete me;
+    return DELETE_ITEM;
   } else {
     int rc;
     rc = tmp->applyDamage(tmp, ::number(1,10), DAMAGE_DRAIN);
     act("$p disappears in a puff of smoke!", 0, tmp, me, 0, TO_CHAR);
     act("In a puff of smoke, $p disappears! OW!", 0, tmp, me, 0, TO_ROOM);
-    delete me;
     if (IS_SET_DELETE(rc, DELETE_VICT)) {
       delete tmp;
       tmp = NULL;
     }
+    return DELETE_ITEM;
   }
   return TRUE;
 }
