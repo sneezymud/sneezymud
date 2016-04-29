@@ -61,7 +61,7 @@ std::map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
         IMMUNE_NONMAGIC,
         5);
   blessings[AFFECT_PEEL_BLESSING]=
-    ego_imm_blessing("Peel",
+    ego_imm_blessing("Erasmus",
         AFFECT_PEEL_BLESSING,
         APPLY_SPE, 
         "<r>speed<1>");
@@ -74,7 +74,7 @@ std::map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
         -40,
         0);
   blessings[AFFECT_DASH_BLESSING]=
-    ego_imm_blessing("Dash",
+    ego_imm_blessing("Omnius",
         AFFECT_DASH_BLESSING,
         APPLY_FOC,
         "<B>reflection<1>"); // Steal my blessing again, and I'll break you. -D
