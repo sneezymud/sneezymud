@@ -623,7 +623,7 @@ int TBeing::getPlayerID() const
     myname=getName();
   }
 
-  db.query("select id from player where lower(name) = lower('%s') and account_id is not null", myname.c_str());
+  db.query("select id from player where lower(name) = lower('%s')", myname.c_str());
 
   if(db.fetchRow()){
     playerID=convertTo<int>(db["id"]);
