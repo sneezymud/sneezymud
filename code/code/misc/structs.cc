@@ -430,8 +430,7 @@ TObj::~TObj()
     }
   }
 
-  TObjIter iter=find(object_list.begin(), object_list.end(), this);
-  object_list.erase(iter);
+  object_list.remove(this);
 
   //  object_list.erase(find(object_list.begin(), object_list.end(), this));
   //  object_list.remove(this);
