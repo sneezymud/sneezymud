@@ -893,8 +893,11 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
 
   d->output.push(cptr);
 
-  TDatabase db(DB_SNEEZY);
-  queryqueue.push(format("insert into tellhistory (tellfrom, tellto, tell, telltime) values ('%s', '%s', '%s', now())") % capbuf.cap().escape() % ((sstring)vict->getName()).escape() % garbed.escape());
+  if (dynamic_cast<TMonster *>(vict) && !(vict->desc)) {
+    // no mob spam in tell history
+  } else {
+    queryqueue.push(format("insert into tellhistory (tellfrom, tellto, tell) values ('%s', '%s', '%s')") % capbuf.cap().escape() % ((sstring)vict->getName()).escape() % garbed.escape());
+  }
 
 
   if ((d && d->m_bIsClient) || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
