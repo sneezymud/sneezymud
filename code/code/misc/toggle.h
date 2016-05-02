@@ -133,7 +133,7 @@ class togEntry {
 
 
 class togInfoT {
-  std::map<togTypeT, togEntry *>toggles;
+  std::vector<togEntry *> toggles;
   bool loaded;
 
  public:

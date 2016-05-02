@@ -60,12 +60,7 @@ extern "C" {
 
 togEntry *togInfoT::operator[] (const togTypeT i)
 {
-  if(toggles.find(i) == toggles.end()){
-    vlogf(LOG_BUG, format("invalid toggle detected: %i") % i);
-    return toggles[TOG_NONE];
-  } else {
-    return toggles[i];
-  }
+  return toggles.at(i);
 }
 
 togTypeT & operator++(togTypeT &c, int)
@@ -78,6 +73,8 @@ togInfoT::~togInfoT()
 }
 
 togInfoT::togInfoT()
+  : toggles(MAX_TOG_TYPES + 1, nullptr)
+  , loaded(false)
 {
   loaded=false;
 }
@@ -90,8 +87,7 @@ void togInfoT::loadToggles()
 
 
   db.query("select tog_id, toggle, testcode, name, descr from globaltoggles order by name");
-
-  toggles[TOG_NONE]     = new togEntry(false, false, "none", "none");
+  toggles[TOG_NONE] = new togEntry(false, false, "none", "none");
 
   while(db.fetchRow()){
     togTypeT tog_id=(togTypeT) convertTo<int>(db["tog_id"]);
@@ -101,8 +97,7 @@ void togInfoT::loadToggles()
     toggles[tog_id] = new togEntry(toggle, testcode, db["name"], db["descr"]);
   }
   loaded=true;
-}  
-
+}
 
 togEntry::togEntry(bool t, bool t2, const sstring n, const sstring d) :
   toggle(t),
