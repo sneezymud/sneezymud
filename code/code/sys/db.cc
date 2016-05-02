@@ -1776,7 +1776,7 @@ void log_object(TObj *obj)
     return;
   }
   TDatabase db(DB_SNEEZY);
-  db.query("insert into objlog values (%i, now(), %i)", obj_index[obj->getItemIndex()].virt, obj_index[obj->getItemIndex()].getNumber());
+  db.query("insert into objlog (vnum, objcount) values (%i, %i)", obj_index[obj->getItemIndex()].virt, obj_index[obj->getItemIndex()].getNumber());
 }
 
 void TObjectCache::preload()
