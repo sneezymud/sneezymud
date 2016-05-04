@@ -13,6 +13,7 @@
 #include "ansi.h"
 #include "faction.h"
 #include "obj.h"
+#include "being.h" // for pracData
 
 class charFile {
   public:
