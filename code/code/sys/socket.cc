@@ -505,17 +505,6 @@ struct timeval TMainSocket::handleTimeAndSockets()
   return timeout;
 }
 
-void pulseLog(sstring name, TTiming timer, int pulse)
-{
-  if(!toggleInfo[TOG_GAMELOOP]->toggle)
-    return;
-
-  vlogf(LOG_MISC, format("%i %i) %s: %i") % 
-	(pulse % 2400) % (pulse%12) % name % 
-	(int)(timer.getElapsedReset()*1000000));
-}
-
-
 procSetZoneEmpty::procSetZoneEmpty(const int &p)
 {
   trigger_pulse=p;

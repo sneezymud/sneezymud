@@ -88,7 +88,6 @@ class TProcess : public TBaseProcess {
 };
 
 class TObjProcess : public TBaseProcess {
-  double timing;
   
  public:
   friend class TScheduler;
@@ -98,7 +97,6 @@ class TObjProcess : public TBaseProcess {
 };
 
 class TCharProcess : public TBaseProcess {
-  double timing;
 
  public:
   friend class TScheduler;

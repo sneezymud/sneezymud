@@ -121,25 +121,18 @@ void TScheduler::runObj(int pulseNum)
 {
   int count;
   TObj *obj;
-  TTiming timer;
 
   // we want to go through 1/12th of the object list every pulse
   // obviously the object count will change, so this is approximate.
   count=(int)((float)objCount/11.5);
 
-  if(toggleInfo[TOG_GAMELOOP]->toggle){
-    for(std::vector<TObjProcess *>::iterator iter=obj_procs.begin();
-	iter!=obj_procs.end();++iter)
-      (*iter)->timing=0;
-  }
-
   while(count--){
     // remove placeholder from object list and increment iterator
     object_list.erase(objIter++);
-    
+
     // set object to be processed
     obj=(*objIter);
-    
+
     // move to front of list if we reach the end
     // otherwise just stick the placeholder in
     if(++objIter == object_list.end()){
@@ -151,34 +144,14 @@ void TScheduler::runObj(int pulseNum)
     }
 
     for(std::vector<TObjProcess *>::iterator iter=obj_procs.begin();
-	iter!=obj_procs.end();++iter){
+        iter!=obj_procs.end();++iter){
       if((*iter)->should_run(pulse.pulse)){
-	if(toggleInfo[TOG_GAMELOOP]->toggle)
-	  timer.start();
-      
-	if((*iter)->run(pulse, obj)){
-	  delete obj;
 
-	  if(toggleInfo[TOG_GAMELOOP]->toggle)
-	    (*iter)->timing+=timer.getElapsed();
+        if((*iter)->run(pulse, obj)){
+          delete obj;
 
-	  break;
-	}
-	
-	if(toggleInfo[TOG_GAMELOOP]->toggle)
-	  (*iter)->timing+=timer.getElapsed();
-      }
-    }
-  }
-
-  if(toggleInfo[TOG_GAMELOOP]->toggle){
-    for(std::vector<TObjProcess *>::iterator iter=obj_procs.begin();
-	iter!=obj_procs.end();++iter){
-      if((*iter)->should_run(pulse.pulse)){
-	vlogf(LOG_MISC, format("%i %i) %s: %i") % 
-	      (pulseNum % 2400) % (pulseNum%12) % (*iter)->name % 
-	      (int)((*iter)->timing*1000000));
-	(*iter)->timing=0;
+          break;
+        }
       }
     }
   }
@@ -188,17 +161,12 @@ void TScheduler::runChar(int pulseNum)
 {
   TBeing *temp;
   int count;
-  TTiming timer;
 
   // we've already finished going through the character list, so start over
   if(!tmp_ch)
     tmp_ch=character_list;
 
   count=max((int)((float)mobCount/11.5), 1);
-
-  if(toggleInfo[TOG_GAMELOOP]->toggle)
-    for(TCharProcess * char_proc : char_procs)
-      char_proc->timing=0;
 
   for (; tmp_ch; tmp_ch = temp) {
     temp = tmp_ch->next;  // just for safety
@@ -232,70 +200,31 @@ void TScheduler::runChar(int pulseNum)
 
     for(TCharProcess *char_proc : char_procs) {
       if(char_proc->should_run(pulse.pulse)){
-        if(toggleInfo[TOG_GAMELOOP]->toggle)
-          timer.start();
-
         if(char_proc->run(pulse, tmp_ch)){
           delete tmp_ch;
-
-          if(toggleInfo[TOG_GAMELOOP]->toggle)
-            char_proc->timing+=timer.getElapsed();
 
           break;
         }
 
-        if(toggleInfo[TOG_GAMELOOP]->toggle)
-          char_proc->timing+=timer.getElapsed();
       }
     }
     temp = tmp_ch->next;  // just for safety
-  }
-
-  if(toggleInfo[TOG_GAMELOOP]->toggle){
-    for(TCharProcess * char_proc : char_procs) {
-      if(char_proc->should_run(pulse.pulse)){
-        vlogf(LOG_MISC, format("%i %i) %s: %i") % 
-            (pulseNum % 2400) % (pulseNum%12) % char_proc->name % 
-            (int)(char_proc->timing*1000000));
-      }
-    }
   }
 
 }
 
 void TScheduler::run(int pulseNum)
 {
-  TTiming timer;
-
   pulse.init(pulseNum);
-
-  if(toggleInfo[TOG_GAMELOOP]->toggle)
-    vlogf(LOG_MISC, format("%i %i) pulses: %s") % 
-        pulse.pulse % (pulse.pulse%12) % pulse.showPulses());
-
 
   // run general processes
   for(TProcess* proc : procs) {
     if(proc->should_run(pulse.pulse)){
-      if(toggleInfo[TOG_GAMELOOP]->toggle)
-        timer.start();
-
       proc->run(pulse);
-
-      if(toggleInfo[TOG_GAMELOOP]->toggle){
-        timer.end();
-        vlogf(LOG_MISC, format("%i %i) %s: %i") % 
-            (pulseNum % 2400) % (pulseNum%12) % proc->name % 
-            (int)(timer.getElapsed()*1000000));
-      }
     }
   }
 
   pulse.init12(pulseNum);
-
-  if(toggleInfo[TOG_GAMELOOP]->toggle)
-    vlogf(LOG_MISC, format("%i %i) distributed pulses: %s") % 
-        pulse.pulse % (pulse.pulse%12) % pulse.showPulses());
 
   // run object processes
   runObj(pulseNum);
