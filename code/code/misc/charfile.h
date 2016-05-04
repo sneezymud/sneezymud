@@ -15,6 +15,9 @@
 #include "obj.h"
 #include "being.h" // for pracData
 
+// Do not remove any variables from this class, even if it is unused -- you'll
+// throw the savefile format out of alignment. Can't wait until we migrate to
+// SQL
 class charFile {
   public:
    byte sex;
@@ -51,6 +54,7 @@ class charFile {
    short age_mod;
    unsigned short wimpy;
    unsigned int autobits;
+   unsigned int unused;
 
    short stats[MAX_STATS];
    // pointData data
