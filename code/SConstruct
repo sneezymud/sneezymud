@@ -17,6 +17,7 @@ CXXFLAGS = [
 #    '-Wconversion',           # bad conversions
     '-Woverloaded-virtual',   # virtual without a declaration in base class
     '-Werror',                # turns a warning into an error
+    '-std=c++11',
     ]
 
 CPPPATH = [
