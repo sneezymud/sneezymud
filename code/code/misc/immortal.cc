@@ -3957,23 +3957,24 @@ void TPerson::doAccess(const sstring &arg)
 
     if(!account.read(st.aname)){
       buf+="Cannot open account for player! Tell a coder!\n\r";
-    } 
-    if ((account.flags & TAccount::IMMORTAL) &&
-          !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
-      buf+="Account name: ***, Account email address : ***\n\r";
-      buf+="Account flagged immortal.  Remaining Information Restricted.\n\r";
     } else {
-      tmpbuf = format("Account name: %s%s%s, Account email address : %s%s%s\n\r") % cyan() % account.name % norm() % cyan() % account.email % norm();
-      buf+=tmpbuf;
+      if ((account.flags & TAccount::IMMORTAL) &&
+            !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
+        buf+="Account name: ***, Account email address : ***\n\r";
+        buf+="Account flagged immortal.  Remaining Information Restricted.\n\r";
+      } else {
+        tmpbuf = format("Account name: %s%s%s, Account email address : %s%s%s\n\r") % cyan() % account.name % norm() % cyan() % account.email % norm();
+        buf+=tmpbuf;
 
-      sstring lStr = "";
-      if (IS_SET(account.flags, TAccount::BANISHED))
-        lStr += "<R><f>Account is banished<z>\n\r";
-      if (IS_SET(account.flags, TAccount::EMAIL))
-        lStr += "<R><f>Account is email-banished<z>\n\r";
+        sstring lStr = "";
+        if (IS_SET(account.flags, TAccount::BANISHED))
+          lStr += "<R><f>Account is banished<z>\n\r";
+        if (IS_SET(account.flags, TAccount::EMAIL))
+          lStr += "<R><f>Account is email-banished<z>\n\r";
 
-      listAccount(account.name, lStr);
-      buf+=lStr;
+        listAccount(account.name, lStr);
+        buf+=lStr;
+      }
     }
     desc->page_string(buf.toCRLF());
     return;
