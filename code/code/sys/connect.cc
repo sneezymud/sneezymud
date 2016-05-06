@@ -1980,27 +1980,25 @@ void Descriptor::writeToQ(const sstring &arg)
 }
 
 namespace {
-  sstring word_wrap(sstring s) {
-    sstring ret;
-    size_t pos;
-
-    while (s.length() > 80) {
-      // break lines at spaces
-      pos = s.rfind(' ');
-      if (pos == sstring::npos)
-        break;
-
-      ret += s.substr(0, pos);
-      ret = ret.trim();
-      ret += "\n\r";
-      s.erase(0, pos);
+  std::string word_wrap(std::string s) {
+    std::string ret;
+    while (s.size() > 80) {
+      // find last word which still fits
+      size_t pos = s.rfind(' ', 80);
+      if (pos == std::string::npos) {
+        // >80 characters word, take it all
+        pos = s.find(' ', 80);
+        // Meh, dump it all in
+        if (pos == std::string::npos) {
+          pos = s.size();
+        }
+      }
+      ret += s.substr(0, pos); // excluding the space
+      ret += "\r\n";
+      s.erase(0, pos+1); // including the space
     }
-
-    if (ret == "") {
-      ret = s;
-    }
-
-    return ret.trim();
+    ret += s;
+    return ret;
   }
 };
 
