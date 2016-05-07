@@ -108,15 +108,21 @@ void TBow::getFourValues(int *x1, int *x2, int *x3, int *x4) const
 
 sstring TBow::statObjInfo() const
 {
-  char    buf[256];
-  TArrow *tArrow;
+  std::string ret;
+  ret.append("Flags: ");
+  ret.append(std::to_string(getBowFlags()));
 
-  tArrow = dynamic_cast<TArrow *>(stuff.front());
+  if (stuff.empty()) {
+    ret.append(", Not loaded");
+  } else {
+    ret.append(", Arrow: ");
+    TArrow* tArrow = dynamic_cast<TArrow *>(stuff.front());
+    ret.append(std::to_string(tArrow ? tArrow->objVnum() : -1));
+    ret.append(" of type ");
+    ret.append(std::to_string(getArrowType()));
+  }
 
-  sprintf(buf, "Arrow: %d, flags: %d, type: %d", (tArrow ? tArrow->objVnum() : 0), getBowFlags(), getArrowType());
-
-  sstring a(buf);
-  return a;
+  return ret;
 }
 
 bool TBow::isBluntWeapon() const
