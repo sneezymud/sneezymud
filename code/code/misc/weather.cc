@@ -438,41 +438,41 @@ void Weather::AlterWeather(changeWeatherT *change)
   switch (getSky()) {
     case SKY_CLOUDLESS:
       if (getPressure() < 990)
-	*change = CHANGE_CLOUDS;
+        *change = CHANGE_CLOUDS;
       else if (getPressure() < 1010)
-	if (dice(1, 4) == 1)
-	  *change = CHANGE_CLOUDS;
+        if (dice(1, 4) == 1)
+          *change = CHANGE_CLOUDS;
       break;
     case SKY_CLOUDY:
       if (getPressure() < 970)
-	*change = CHANGE_RAIN;
+        *change = CHANGE_RAIN;
       else if (getPressure() < 990)
-	if (dice(1, 4) == 1)
-	  *change = CHANGE_RAIN;
-	else
-	  *change = CHANGE_NONE;
+        if (dice(1, 4) == 1)
+          *change = CHANGE_RAIN;
+        else
+          *change = CHANGE_NONE;
       else if (getPressure() > 1030)
-	if (dice(1, 4) == 1)
-	  *change = CHANGE_CLOUDS_AWAY;
+        if (dice(1, 4) == 1)
+          *change = CHANGE_CLOUDS_AWAY;
       break;
     case SKY_RAINING:
       if (getPressure() < 970)
-	if (dice(1, 4) == 1)
-	  *change = CHANGE_STORM;
-	else
-	  *change = CHANGE_NONE;
+        if (dice(1, 4) == 1)
+          *change = CHANGE_STORM;
+        else
+          *change = CHANGE_NONE;
       else if (getPressure() > 1030)
-	*change = CHANGE_RAIN_AWAY;
+        *change = CHANGE_RAIN_AWAY;
       else if (getPressure() > 1010)
-	if (dice(1, 4) == 1)
-	  *change = CHANGE_RAIN_AWAY;
+        if (dice(1, 4) == 1)
+          *change = CHANGE_RAIN_AWAY;
       break;
     case SKY_LIGHTNING:
       if (getPressure() > 1010)
-	*change = CHANGE_STORM_AWAY;
+        *change = CHANGE_STORM_AWAY;
       else if (getPressure() > 990)
-	if (dice(1, 4) == 1)
-	  *change = CHANGE_STORM_AWAY;
+        if (dice(1, 4) == 1)
+          *change = CHANGE_STORM_AWAY;
       break;
     default:
       *change = CHANGE_NONE;

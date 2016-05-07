@@ -120,10 +120,10 @@ findClutterAmber::findClutterAmber(TBeing *tb)
 bool findClutterAmber::isTarget(int room) const
 {
   if (room == 33281 || (room < 2750 || 
-			(room > 2849 && room < 8700) ||
-			(room > 8899 && room < 16200) ||
-			(room > 16249 && room < 33270) ||
-			room > 33299))
+        (room > 2849 && room < 8700) ||
+        (room > 8899 && room < 16200) ||
+        (room > 16249 && room < 33270) ||
+        room > 33299))
     return false;
 
   TRoom *rp = real_roomp(room);
@@ -202,7 +202,7 @@ findOutdoors::findOutdoors(){
 bool findOutdoors::isTarget(int room) const
 {
   TRoom *rp = real_roomp(room);
-  
+
   if(rp->isRoomFlag(ROOM_INDOORS))
     return FALSE;
 
@@ -223,7 +223,7 @@ bool findCorpse::isTarget(int room) const
   // don't track corpses in the morgue
   if (room == Room::MORGUE)
     return FALSE;
-  
+
   TRoom *rp = real_roomp(room);
 
   // don't leave gh
@@ -467,7 +467,7 @@ void TPathFinder::setRange(int d){
     vlogf(LOG_BUG, format("TPathFinder::setRange called with negative depth (%i)!") % d);
     d=-d;
   }
-  
+
   range=d; 
 }
 
@@ -486,10 +486,10 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
       // reached end of path, but let's re-calc it before we report that
       // the target was found - it may have moved
       if(i==path.size()-1)
-	break;
+        break;
 
       if(path[i]->room==here)
-	return path[i+1]->direct;
+        return path[i+1]->direct;
     }
   }
 
@@ -523,7 +523,7 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
         continue;
 
       if(pd->distance > distance)
-	continue;
+        continue;
 
       dirTypeT dir;
       TRoom *rp = real_roomp(CI->first);
@@ -533,54 +533,54 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
       }
 
       for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
-	roomDirData *exitp = rp->dir_option[dir];
-	TRoom *hp = NULL;
-	if (exitp && 
-	    (hp = real_roomp(exitp->to_room)) &&
-	    (!no_mob || !(hp->isRoomFlag(ROOM_NO_MOB))) &&
-	    (thru_doors ? go_ok_smarter(exitp) : go_ok(exitp))) {
-	  // check stay_zone criteria
-	  if (stay_zone && (hp->getZoneNum() != rp->getZoneNum()))
-	    continue;
+        roomDirData *exitp = rp->dir_option[dir];
+        TRoom *hp = NULL;
+        if (exitp && 
+            (hp = real_roomp(exitp->to_room)) &&
+            (!no_mob || !(hp->isRoomFlag(ROOM_NO_MOB))) &&
+            (thru_doors ? go_ok_smarter(exitp) : go_ok(exitp))) {
+          // check stay_zone criteria
+          if (stay_zone && (hp->getZoneNum() != rp->getZoneNum()))
+            continue;
 
-	  if(ship_only && (!hp->isWaterSector() && !rp->isWaterSector()))
-	    continue;
+          if(ship_only && (!hp->isWaterSector() && !rp->isWaterSector()))
+            continue;
 
-	  // do we have this room already?
-	  std::map<int, pathData *>::const_iterator CT;
-	  CT = path_map.find(exitp->to_room);
-	  if (CT != path_map.end())
-	    continue;
-	  
-	  // is this our target?
-	  if(pt.isTarget(exitp->to_room)){
-	    // found our target, walk our list backwards
-	    dest = exitp->to_room;
-	    dist = distance;
+          // do we have this room already?
+          std::map<int, pathData *>::const_iterator CT;
+          CT = path_map.find(exitp->to_room);
+          if (CT != path_map.end())
+            continue;
+
+          // is this our target?
+          if(pt.isTarget(exitp->to_room)){
+            // found our target, walk our list backwards
+            dest = exitp->to_room;
+            dist = distance;
 
 
-	    path.push_front(pathDataPtr(new pathData(exitp->to_room, dir,
-					 CI->first, false, distance+1)));
+            path.push_front(pathDataPtr(new pathData(exitp->to_room, dir,
+                    CI->first, false, distance+1)));
 
-	    pd = CI->second;
-	    for (;;) {
-	      path.push_front(pathDataPtr(new pathData(pd)));
+            pd = CI->second;
+            for (;;) {
+              path.push_front(pathDataPtr(new pathData(pd)));
 
-	      if (pd->source == -1) {
-		      // clean up allocated memory
-		      for (CI = path_map.begin(); CI != path_map.end(); ++CI)
-		        delete CI->second;
-		      return dir;
-	      }
-	      dir = pd->direct;
-	      pd = path_map[pd->source];
-	    }
-	  }
-	  // it's not our target, and we don't have this room yet
-	  path_map[exitp->to_room] = new pathData(exitp->to_room, dir, 
-						 CI->first, false, distance+1);
-	  found=true;
-	}
+              if (pd->source == -1) {
+                // clean up allocated memory
+                for (CI = path_map.begin(); CI != path_map.end(); ++CI)
+                  delete CI->second;
+                return dir;
+              }
+              dir = pd->direct;
+              pd = path_map[pd->source];
+            }
+          }
+          // it's not our target, and we don't have this room yet
+          path_map[exitp->to_room] = new pathData(exitp->to_room, dir, 
+              CI->first, false, distance+1);
+          found=true;
+        }
       }
 
       // check for portals that might lead to target
@@ -593,8 +593,8 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
           TPortal *tp = dynamic_cast<TPortal *>(t);
           if (!tp) 
             continue;
-	  // dirTypeT ++ wraps around - stupid
-	  dir = (dirTypeT) (dir + 1);
+          // dirTypeT ++ wraps around - stupid
+          dir = (dirTypeT) (dir + 1);
           if (tp->isPortalFlag(EX_LOCKED | EX_CLOSED))
             continue;
           int tmp_room = tp->getTarget();   // next room
@@ -615,18 +615,18 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
             continue;
 
           // is this our target?
-	  if(pt.isTarget(tmp_room)){
+          if(pt.isTarget(tmp_room)){
             // found our target, walk our list backwards
-	    dest = tmp_room;
-	    dist = distance;
+            dest = tmp_room;
+            dist = distance;
 
-	    path.push_front(pathDataPtr(new pathData(tmp_room, dir,
-					 CI->first, false, distance+1)));
+            path.push_front(pathDataPtr(new pathData(tmp_room, dir,
+                    CI->first, false, distance+1)));
 
             pd = CI->second;
-	    dirTypeT tmpdir=dir;
+            dirTypeT tmpdir=dir;
             for (;;) {
-	      path.push_front(pathDataPtr(new pathData(pd)));
+              path.push_front(pathDataPtr(new pathData(pd)));
               if (pd->source == -1) {
                 // clean up allocated memory
                 for (CI = path_map.begin(); CI != path_map.end(); ++CI)
@@ -641,9 +641,9 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
 
           // it's not our target, and we don't have this room yet
           path_map[tmp_room] = new pathData(tmp_room, dir, CI->first, 
-					    false, distance+1);
+              false, distance+1);
 
-	  found=true;
+          found=true;
         }  // stuff in room
       }
       // end portal check
@@ -654,15 +654,15 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
     }
   }
 
-  
+
   // if we failed to find any new rooms, abort, or be in an endless loop
   dest=Room::NOWHERE;
   dist=distance;
-  
+
   // clean up allocated memory
   for (CI = path_map.begin(); CI != path_map.end(); ++CI)
     delete CI->second;
-  
+
   return DIR_NONE;
 }
 

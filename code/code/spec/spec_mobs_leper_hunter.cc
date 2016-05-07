@@ -23,18 +23,18 @@ int leperHunter(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 
   path=static_cast<TPathFinder *>(myself->act_ptr);
   path->setUseCached(true);
-  
+
   dir=path->findPath(myself->inRoom(), findLeper());
 
   if(dir==DIR_NONE){
     for(StuffIter it=myself->roomp->stuff.begin();
-	it!=myself->roomp->stuff.end();++it){
+        it!=myself->roomp->stuff.end();++it){
       leper = dynamic_cast<TMonster *>(*it);
       if (!leper)
-	continue;
-      
+        continue;
+
       if (leper->spec==SPEC_LEPER || leper->hasDisease(DISEASE_LEPROSY))
-	break;
+        break;
 
       leper=NULL;
     }

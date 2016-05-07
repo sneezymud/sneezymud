@@ -14,7 +14,7 @@
 
   Created 7/20/99 - Lapsos(William A. Perrotto III)
 
-******************************************************************************/
+ ******************************************************************************/
 
 #include <stdio.h>
 
@@ -38,134 +38,138 @@ static const int STAVECHARGE_COMPMULTIPLIER = 5;
 static const char *tStaveChargeMessages[4][4][2] =
 {
   {{"$p flares with power as you slowly charge it.",
-    "$p flares with power as $n slowly charges it."},
-   {"$p draws forth power as you slowly charge it.",
+     "$p flares with power as $n slowly charges it."},
+  {"$p draws forth power as you slowly charge it.",
     "$p draws forth power as $n slowly charges it."},
-   {"$p vibrates madly as you slowly charge it.",
+  {"$p vibrates madly as you slowly charge it.",
     "$p vibrates madly as $n slowly charges it."},
-   {"$p shimmers with power as you slowly charge it.",
+  {"$p shimmers with power as you slowly charge it.",
     "$p shimmers with power as $n slowly charges it."}},
   {{"$p glows gently as you charge it.",
-    "$p glows gently as $n slowly charges it."},
-   {"$p dims gently as you charge it.",
+     "$p glows gently as $n slowly charges it."},
+  {"$p dims gently as you charge it.",
     "$p dims gently as $n charges it."},
-   {"$p hums gently as you charge it.",
+  {"$p hums gently as you charge it.",
     "$p hums gently as $n charges it."},
-   {"$p fluxuates gently as you charge it.",
+  {"$p fluxuates gently as you charge it.",
     "$p fluxuates gently as $n charges it."}},
   {{"$p quickly fades as you feel energy being sucked out of you.",
-    "$n utters a small wimper as life is sucked out of them."},
-   {"$p quickly shines as you feel energy being sucked out of you.",
+     "$n utters a small wimper as life is sucked out of them."},
+  {"$p quickly shines as you feel energy being sucked out of you.",
     "$n utters a quite scream as life is sucked out of them."},
-   {"$p slowly falls silent as you feel energy being sucked out of you.",
+  {"$p slowly falls silent as you feel energy being sucked out of you.",
     "$n utters a small plea as life is sucked out of them."},
-   {"$p slowly settles as you feel energy being sucked out of you.",
+  {"$p slowly settles as you feel energy being sucked out of you.",
     "$n utters a light moan as life is sucked out of them."}},
   {{"$p remains dark as mana is sucked from you.",
-    "$p lies dark as $n is quickly drained."},
-   {"$p remains shining as mana is sucked from you.",
+     "$p lies dark as $n is quickly drained."},
+  {"$p remains shining as mana is sucked from you.",
     "$p lies shining as $n is quickly drained."},
-   {"$p remains silent as mana is sucked from you.",
+  {"$p remains silent as mana is sucked from you.",
     "$p lies silent as $n is quickly drained."},
-   {"$p remains still as mana is sucked out of you.",
+  {"$p remains still as mana is sucked out of you.",
     "$p lies still as $n quickly drained."}}
 };
 
-void stop_stavecharging(TBeing *ch, TObj *tObj)
-{
-  if (ch->isLinkdead() || (ch->in_room < 0) ||
-      (ch->getPosition() < POSITION_RESTING)) {
-    act("You stop charging $p and stand up.",
-        FALSE, ch, tObj, NULL, TO_CHAR);
-    act("$n shops charging $p and stands up.",
-        FALSE, ch, tObj, NULL, TO_ROOM);
-  }
-
-  ch->stopTask();
-}
-
 extern TComponent *comp_from_object(TThing *, spellNumT);
 
-int task_staveChargingCompSkim(TBeing *ch, TThing *tThing, bool tDestroy,
-                               int tSpell, int & tCount, bool & tIteration)
-{
-  int tValue = 0;
+namespace {
+  void stop_stavecharging(TBeing *ch, TObj *tObj)
+  {
+    if (ch->isLinkdead() || (ch->in_room < 0) ||
+        (ch->getPosition() < POSITION_RESTING)) {
+      act("You stop charging $p and stand up.",
+          FALSE, ch, tObj, NULL, TO_CHAR);
+      act("$n shops charging $p and stands up.",
+          FALSE, ch, tObj, NULL, TO_ROOM);
+    }
 
-  TComponent *tComponent;
+    ch->stopTask();
+  }
 
-  while ((tThing = comp_from_object(tThing, spellNumT(tSpell)))) {
-    if ((tComponent = dynamic_cast<TComponent *>(tThing))){
-      if (tDestroy) {
-        if (!tIteration) {
-          act("$p shatters from the charge effect.",
-              FALSE, ch, tComponent, NULL, TO_CHAR);
-          tIteration = true;
+  int task_staveChargingCompSkim(TBeing *ch, TThing *tThing, bool tDestroy,
+      int tSpell, int & tCount, bool & tIteration)
+  {
+    int tValue = 0;
+
+    TComponent *tComponent;
+
+    while ((tThing = comp_from_object(tThing, spellNumT(tSpell)))) {
+      if ((tComponent = dynamic_cast<TComponent *>(tThing))){
+        if (tDestroy) {
+          if (!tIteration) {
+            act("$p shatters from the charge effect.",
+                FALSE, ch, tComponent, NULL, TO_CHAR);
+            tIteration = true;
+          }
+
+          int tCost = min(tComponent->getComponentCharges(), tCount);
+          tCount -= tCost;
+          tComponent->addToComponentCharges(-tCost);
+
+          if (tComponent->getComponentCharges() <= 0) {
+            --(*tComponent);
+            delete tComponent;
+          }
+
+          if (tCount <= 0)
+            return 0;
+        } else {
+          tValue += tComponent->getComponentCharges();
+          break;
         }
-
-        int tCost = min(tComponent->getComponentCharges(), tCount);
-        tCount -= tCost;
-        tComponent->addToComponentCharges(-tCost);
-
-        if (tComponent->getComponentCharges() <= 0) {
-          --(*tComponent);
-          delete tComponent;
-        }
-
-        if (tCount <= 0)
-          return 0;
-      } else {
-        tValue += tComponent->getComponentCharges();
       }
     }
+
+    return tValue;
   }
 
-  return tValue;
-}
+  // if tDestroy:
+  //   return == was doable
+  // else
+  //   return == total charges found on person.
+  int task_staveChargingCompLookup(TBeing *ch, bool tDestroy, int tSpell, int tCount)
+  {
+    TThing     *tThing;
+    int         tValue = 0,
+                tCost  = tCount;
+    bool        tIteration = false;
 
-// if tDestroy:
-//   return == was doable
-// else
-//   return == total charges found on person.
-int task_staveChargingCompLookup(TBeing *ch, bool tDestroy, int tSpell, int tCount)
-{
-  TThing     *tThing;
-  int         tValue = 0,
-              tCost  = tCount;
-  bool        tIteration = false;
+    if (tDestroy) {
+      tValue = task_staveChargingCompLookup(ch, false, tSpell, tCount);
 
-  if (tDestroy) {
-    tValue = task_staveChargingCompLookup(ch, false, tSpell, tCount);
+      if (tValue < tCount)
+        return FALSE;
+    }
 
-    if (tValue < tCount)
-      return FALSE;
+    if ((tThing = ch->heldInPrimHand()) && tCost > 0)
+      tValue += task_staveChargingCompSkim(ch, tThing, tDestroy, tSpell, tCost, tIteration);
+
+    if ((tThing = ch->heldInSecHand()) && tCost > 0)
+      tValue += task_staveChargingCompSkim(ch, tThing, tDestroy, tSpell, tCost, tIteration);
+
+    if ((tThing = ch->equipment[WEAR_WAIST]) && tCost > 0)
+      tValue += task_staveChargingCompSkim(ch, tThing, tDestroy, tSpell, tCost, tIteration);
+
+    if ((tThing = ch->stuff.front()) && tCost > 0)
+      tValue += task_staveChargingCompSkim(ch, tThing, tDestroy, tSpell, tCost, tIteration);
+
+    if (tDestroy)
+      return TRUE;
+
+    return tValue;
   }
 
-  if ((tThing = ch->heldInPrimHand()) && tCost > 0)
-    tValue += task_staveChargingCompSkim(ch, tThing, tDestroy, tSpell, tCost, tIteration);
-
-  if ((tThing = ch->heldInSecHand()) && tCost > 0)
-    tValue += task_staveChargingCompSkim(ch, tThing, tDestroy, tSpell, tCost, tIteration);
-
-  if ((tThing = ch->equipment[WEAR_WAIST]) && tCost > 0)
-    tValue += task_staveChargingCompSkim(ch, tThing, tDestroy, tSpell, tCost, tIteration);
-
-  if ((tThing = ch->stuff.front()) && tCost > 0)
-    tValue += task_staveChargingCompSkim(ch, tThing, tDestroy, tSpell, tCost, tIteration);
-
-  if (tDestroy)
-    return TRUE;
-
-  return tValue;
 }
 
 void TBeing::doChargeStave(sstring tStString)
 {
   /*
-  if (strcmp("Lapsos", getName()) != 0) {
-    sendTo("This command is still experimental.\n\r");
-    return;
-  }
-  */
+     if (strcmp("Lapsos", getName()) != 0) {
+     sendTo("This command is still experimental.\n\r");
+     return;
+     }
+     */
 
   TStaff     *tStaff;
   spellNumT   tSpell;
@@ -173,127 +177,127 @@ void TBeing::doChargeStave(sstring tStString)
               tCharge,
               tLearn[2],
               tCompCost = STAVECHARGE_COMPMULTIPLIER;
-  char        tString[256];
+              char        tString[256];
 
-  if (!isPc() || !desc)
-    return;
+              if (!isPc() || !desc)
+                return;
 
-  if (!hasClass(CLASS_MAGE)) {
-    sendTo("If you want to be a mage go be one somewhere else...\n\r");
-    return;
-  }
+              if (!hasClass(CLASS_MAGE)) {
+                sendTo("If you want to be a mage go be one somewhere else...\n\r");
+                return;
+              }
 
-  if (!(tLearn[0] = getSkillValue(SKILL_STAVECHARGE))) {
-    sendTo("I bet you wish you knew how to charge staves.\n\r");
-    return;
-  }
+              if (!(tLearn[0] = getSkillValue(SKILL_STAVECHARGE))) {
+                sendTo("I bet you wish you knew how to charge staves.\n\r");
+                return;
+              }
 
-  if (nomagic("A force prevents this from occuring here."))
-    return;
+              if (nomagic("A force prevents this from occuring here."))
+                return;
 
-  if (cantHit > 0) {
-    sendTo("You are too busy.\n\r");
-    return;
-  }
+              if (cantHit > 0) {
+                sendTo("You are too busy.\n\r");
+                return;
+              }
 
 
-  if (roomp->isWaterSector() || roomp->isUnderwaterSector()) {
-    sendTo("Treading water and charging staves don't mix well.\n\r");
-    return;
-  }
+              if (roomp->isWaterSector() || roomp->isUnderwaterSector()) {
+                sendTo("Treading water and charging staves don't mix well.\n\r");
+                return;
+              }
 
-  if (isCombatMode(ATTACK_BERSERK)) {
-    sendTo("See the red in those eyes?  You are a bit too fired up for this.\n\r");
-    return;
-  }
+              if (isCombatMode(ATTACK_BERSERK)) {
+                sendTo("See the red in those eyes?  You are a bit too fired up for this.\n\r");
+                return;
+              }
 
-  if (riding){
-    if (dynamic_cast<TBeing *>(riding)) {
-      sendTo("Dismounting first might help some.\n\r");
-      return;
-    } else if (dynamic_cast<TObj *>(riding)) {
-      sendTo("You stand up as you're current position is incorrect.\n\r");
-      doStand();
-    }
-  }
+              if (riding){
+                if (dynamic_cast<TBeing *>(riding)) {
+                  sendTo("Dismounting first might help some.\n\r");
+                  return;
+                } else if (dynamic_cast<TObj *>(riding)) {
+                  sendTo("You stand up as you're current position is incorrect.\n\r");
+                  doStand();
+                }
+              }
 
-  if (fight() || (task && getPosition() > POSITION_SITTING)) {
-    sendTo("Something tells me you are kind of busy at the moment.\n\r");
-    return;
-  }
+              if (fight() || (task && getPosition() > POSITION_SITTING)) {
+                sendTo("Something tells me you are kind of busy at the moment.\n\r");
+                return;
+              }
 
-  if (!(tStaff = dynamic_cast<TStaff *>(equipment[getPrimaryHold()]))) {
-    sendTo("You must be holding the staff you wish to charge to do this.\n\r");
-    return;
-  }
+              if (!(tStaff = dynamic_cast<TStaff *>(equipment[getPrimaryHold()]))) {
+                sendTo("You must be holding the staff you wish to charge to do this.\n\r");
+                return;
+              }
 
-  if (tStaff->getCurCharges() == tStaff->getMaxCharges()) {
-    sendTo("This staff is maxed out, it can not hold anymore power.\n\r");
-    return;
-  }
+              if (tStaff->getCurCharges() == tStaff->getMaxCharges()) {
+                sendTo("This staff is maxed out, it can not hold anymore power.\n\r");
+                return;
+              }
 
-  tStString = tStString.trim();
+              tStString = tStString.trim();
 
-  if (tStString.empty())
-    tSpell = tStaff->getSpell();
-  else
-    if (((tSpell = searchForSpellNum(tStString, EXACT_YES)) > TYPE_UNDEFINED) ||
-        ((tSpell = searchForSpellNum(tStString, EXACT_NO )) > TYPE_UNDEFINED))
-      if (discArray[tSpell]->typ != SPELL_MAGE) {
-        sendTo("That is not a mage spell.\n\r");
-        return;
-      }
+              if (tStString.empty())
+                tSpell = tStaff->getSpell();
+              else
+                if (((tSpell = searchForSpellNum(tStString, EXACT_YES)) > TYPE_UNDEFINED) ||
+                    ((tSpell = searchForSpellNum(tStString, EXACT_NO )) > TYPE_UNDEFINED))
+                  if (discArray[tSpell]->typ != SPELL_MAGE) {
+                    sendTo("That is not a mage spell.\n\r");
+                    return;
+                  }
 
-  if (tSpell <= TYPE_UNDEFINED || !discArray[tSpell]) {
-    sendTo("Try a mage spell.  It really does work better.\n\r");
-    return;
-  }
+              if (tSpell <= TYPE_UNDEFINED || !discArray[tSpell]) {
+                sendTo("Try a mage spell.  It really does work better.\n\r");
+                return;
+              }
 
-  if (tStaff->getSpell() != -1 && tStaff->getSpell() != tSpell) {
-    sendTo("That spell does not match what the staff has been attuned for.\n\r");
-    return;
-  }
+              if (tStaff->getSpell() != -1 && tStaff->getSpell() != tSpell) {
+                sendTo("That spell does not match what the staff has been attuned for.\n\r");
+                return;
+              }
 
-  if (!(tLearn[1] = getSkillValue(tSpell))) {
-    sendTo("You do not know that spell.\n\r");
-    return;
-  }
+              if (!(tLearn[1] = getSkillValue(tSpell))) {
+                sendTo("You do not know that spell.\n\r");
+                return;
+              }
 
-  if ((discArray[tSpell]->targets & TAR_CHAR_WORLD) ||
-      !discArray[tSpell]->minMana) {
-    sendTo("I am afraid this spell can not be charged.\n\r");
-    return;
-  }
+              if ((discArray[tSpell]->targets & TAR_CHAR_WORLD) ||
+                  !discArray[tSpell]->minMana) {
+                sendTo("I am afraid this spell can not be charged.\n\r");
+                return;
+              }
 
-  if (tLearn[1] < 90) {
-    sendTo("You are not proficient enough in that spell to charge a stave with it.\n\r");
-    return;
-  }
+              if (tLearn[1] < 90) {
+                sendTo("You are not proficient enough in that spell to charge a stave with it.\n\r");
+                return;
+              }
 
-  tCharge = (discArray[tSpell]->lag + 2) * 30;
-  tMana = ((discArray[tSpell]->minMana /
-            (discArray[tSpell]->lag + 2)) *
-           discArray[tSpell]->lag + 2) / 10;
-  tMana *= tCharge;
+              tCharge = (discArray[tSpell]->lag + 2) * 30;
+              tMana = ((discArray[tSpell]->minMana /
+                    (discArray[tSpell]->lag + 2)) *
+                  discArray[tSpell]->lag + 2) / 10;
+              tMana *= tCharge;
 
-  if ((tCompCost -= task_staveChargingCompLookup(this, false, tSpell, tCompCost)) > 0) {
-    sendTo("You do not have enough of the component to do this charging.\n\r");
-    return;
-  }
+              if ((tCompCost -= task_staveChargingCompLookup(this, false, tSpell, tCompCost)) > 0) {
+                sendTo("You do not have enough of the component to do this charging.\n\r");
+                return;
+              }
 
-  if (getMana() < tMana) {
-    sendTo("You do not have the mana to charge that spell.\n\r");
-    return;
-  }
+              if (getMana() < tMana) {
+                sendTo("You do not have the mana to charge that spell.\n\r");
+                return;
+              }
 
-  sprintf(tString, "You rest and begin to charge $p with the powers of %s.",
-          discArray[tSpell]->name);
-  act(tString, FALSE, this, tStaff, NULL, TO_CHAR);
-  act("$n begins to focus on $p.",
-      FALSE, this, tStaff, NULL, TO_ROOM);
-  setPosition(POSITION_SITTING);
+              sprintf(tString, "You rest and begin to charge $p with the powers of %s.",
+                  discArray[tSpell]->name);
+              act(tString, FALSE, this, tStaff, NULL, TO_CHAR);
+              act("$n begins to focus on $p.",
+                  FALSE, this, tStaff, NULL, TO_ROOM);
+              setPosition(POSITION_SITTING);
 
-  start_task(this, tStaff, NULL, TASK_STAVECHARGE, NULL, tCharge, in_room, 0, tSpell, 40);
+              start_task(this, tStaff, NULL, TASK_STAVECHARGE, NULL, tCharge, in_room, 0, tSpell, 40);
 }
 
 int TObj::taskChargeMe(TBeing *ch, spellNumT, int &)
@@ -324,7 +328,7 @@ void TStaff::taskChargeMeUpdate(TBeing *ch, spellNumT tSpell)
   }
 
   sprintf(tString, "$p glows with the powers of %s.",
-          discArray[tSpell]->name);
+      discArray[tSpell]->name);
   act(tString, FALSE, ch, this, NULL, TO_CHAR);
 
   tLevel = max(1, min( 70, (int) ((getMagicLevel()       + ch->GetMaxLevel())         / 2)));
@@ -366,13 +370,13 @@ int TStaff::taskChargeMe(TBeing *ch, spellNumT tSpell, int & tCharge)
 
   int tLearn   = ch->getSkillValue(SKILL_STAVECHARGE),
       tManaReq = ((discArray[tSpell]->minMana /
-                   (discArray[tSpell]->lag + 2)) *
-                  discArray[tSpell]->lag + 2) / 10;
+            (discArray[tSpell]->lag + 2)) *
+          discArray[tSpell]->lag + 2) / 10;
 
   int tMasterBlock = 0,
       tSlaveBlock  = (isObjStat(ITEM_GLOW) ? 0 :
-                      (isObjStat(ITEM_SHADOWY) ? 1 :
-                       (isObjStat(ITEM_HUM) ? 2 : 3)));
+          (isObjStat(ITEM_SHADOWY) ? 1 :
+           (isObjStat(ITEM_HUM) ? 2 : 3)));
 
   if (ch->bSuccess(tLearn, SKILL_STAVECHARGE)) {
     if (critSuccess(ch, tSpell)) {
