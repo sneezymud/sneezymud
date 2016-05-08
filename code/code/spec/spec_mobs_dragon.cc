@@ -248,7 +248,9 @@ int DragonBreath(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   myself->addToWait(combatRound(1) * dragon.lag);
 
   // have all the mobs in the room try to run for it!
-  for (StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end();++it){
+  // copy stuff to avoid modifying the list while iterating over it
+  auto stuff = myself->roomp->stuff;
+  for (StuffIter it=stuff.begin();it!=stuff.end();++it){
     TMonster *tm = dynamic_cast<TMonster *>(*it);
     if (tm && tm != myself && tm->canSee(myself) && ::number(0, 9))
       tm->doFlee("");
