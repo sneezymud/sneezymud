@@ -1577,7 +1577,7 @@ extern struct PolyType DisguiseList[];
 static const int MaxDisguiseType = 18; // Non-Race Specific Ones
 
 extern struct PolyType ShapeShiftList[];
-static const int MaxShapeShiftType = 18; // Non-Race Specific Ones
+static const int MaxShapeShiftType = 10; // Non-Race Specific Ones
 
 int TBeing::doTraining(TBeing *ch, TMonster *me, classIndT accclass, int offset, int pracs) const
 {
