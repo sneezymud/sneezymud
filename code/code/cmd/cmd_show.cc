@@ -782,7 +782,7 @@ void TPerson::doShow(const sstring &argument)
       // sscanf(zonenum, "%i", &zone);
       zone = convertTo<int>(zonenum);
 
-    if ((zone < 0 || zone >= (signed int) zone_table.size()) && zonenum.empty()) {
+    if ((zone < 0 || zone >= (signed int) zone_table.size()) || zonenum.empty()) {
       sb += "That is not a valid zone_number\n\r";
       if (desc)
         desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
