@@ -1267,7 +1267,7 @@ bool TBeing::isValidPkTarget(const TBeing *attacker) const
   if(inPkZone() || (roomp && roomp->isRoomFlag(ROOM_ARENA)))
     return true;
 
-    return false;
+  return false;
 }
 
 
@@ -1415,7 +1415,7 @@ void TBeing::setArmor(short armor)
 bool TBeing::isAffected(uint64_t bv) const
 {
   //code/misc/being.cc:1416:8: error: 'this' pointer cannot be null in well-defined C++ code; pointer may be assumed to always convert to true [-Werror,-Wundefined-bool-conversion]
-  assert(this);
+  // assert(this);
  
   return (specials.affectedBy & bv);
 }

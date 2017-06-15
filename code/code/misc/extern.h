@@ -17,6 +17,8 @@
 #include "race.h"
 #include "obj_drug.h"
 
+#include <sys/select.h> // for fd_set
+
 struct PolyType;
 class charFile;
 

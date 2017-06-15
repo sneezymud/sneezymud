@@ -234,9 +234,10 @@ bool loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstrin
         obj->addObjStat(ITEM_PROTOTYPE);
       return true;
 
-    } else if (chance > 100)
+    } else if (chance > 100) {
       ch->sendTo(format("The %s was listed but not found, not in db yet?\n\r") % slotname);
       return false;
+    }
   }
   return false;
 }
@@ -580,9 +581,10 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance, bool findLoadPote
           suitRaces[6]++;
       }
 
-      if ((tCount % 3) != 0)
+      if ((tCount % 3) != 0) {
         StString += "\n\r";
         StString += "\n\r";
+      }
       sprintf(tString, "Total Suits: Ogre[%d] Human[%d] Elf[%d] Dwarf[%d] Gnome[%d] Hobbit[%d]",
               suitRaces[5], suitRaces[0], suitRaces[1],
               suitRaces[2], suitRaces[4], suitRaces[3]);

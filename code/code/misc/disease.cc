@@ -1423,11 +1423,12 @@ int disease_gangrene(TBeing *victim, int message, affectedData *af)
     }
 
     // cause flu effect when a critical body part is gangrenous
-    if (isVitalPart(slot) && !number(0, 15))
+    if (isVitalPart(slot) && !number(0, 15)) {
       if (victim->isHumanoid())
         if (IS_SET_DELETE(victim->dummyFlu(), DELETE_THIS))
           return DELETE_THIS;
       break;
+    }
     case DISEASE_DONE:
       // infection duration will be shortened from permanent in the disease_infect pulse
       if (victim->isLimbFlags(slot, PART_GANGRENOUS))

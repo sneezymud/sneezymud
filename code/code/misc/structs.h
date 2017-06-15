@@ -70,6 +70,7 @@ const int MAX_BUF_LENGTH              = 240;
 
 typedef signed char sbyte;
 typedef unsigned char ubyte;
+typedef unsigned short ushort;
 typedef signed char byte;
 
 extern void vlogf(logTypeT, const sstring &);

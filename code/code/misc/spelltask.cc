@@ -46,6 +46,7 @@
 
 #include <stdio.h>
 
+#include "structs.h"
 #include "being.h"
 #include "discipline.h"
 #include "room.h"

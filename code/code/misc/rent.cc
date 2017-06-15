@@ -2342,9 +2342,10 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
     } else {
       autoHates = true;
 
-      if (SIKHates[tCounter].tRace == ch->getRace())
+      if (SIKHates[tCounter].tRace == ch->getRace()) {
         hatesMe[0] = true;
         hatesMe[1] = false;
+      }
     }
   }
 

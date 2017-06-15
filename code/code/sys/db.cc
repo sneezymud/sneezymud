@@ -1261,9 +1261,9 @@ void zoneData::renumCmd(void)
         rs->arg1 = mapFileToSlot(value = rs->arg1); 
         if (rs->arg1 < MIN_WEAR || rs->arg1 >= MAX_WEAR)
           logError('X', "bogus slot",comm, value);
-          argbuf = real_object(value = rs->arg2);
-          if (argbuf >= 0)
-            ++stat_objs[argbuf];
+        argbuf = real_object(value = rs->arg2);
+        if (argbuf >= 0)
+          ++stat_objs[argbuf];
         break;
       case 'Z': // Z <if flag> <set num> <perc chance>
         if (rs->arg1 < 0 || rs->arg1 > 15)
@@ -3649,9 +3649,9 @@ sstring fread_string(FILE *fp)
       // vlogf(LOG_MISC, "(int) (ptr - buf) == 0");
       // return NULL;
       //    }
-    if (*buf == 0)
-      return NULL;
-    return buf;
+  if (*buf == 0)
+    return NULL;
+  return buf;
 }
 
 // read contents of a text file, and place in buf 

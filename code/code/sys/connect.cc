@@ -456,7 +456,7 @@ int Descriptor::outputProcessing()
 // to send everyone their output.  We need to check for the no-one-connected
 // state just for sanity.
 // code/sys/connect.cc:466:6: error: 'this' pointer cannot be null in well-defined C++ code; pointer may be assumed to always convert to true [-Werror,-Wundefined-bool-conversion]
-assert(this);
+// assert(this);
 
 char i[MAX_STRING_LENGTH + MAX_STRING_LENGTH];
 int counter = 0;
@@ -554,9 +554,10 @@ if (snoop.snoop_by && snoop.snoop_by->desc) {
   snoop.snoop_by->desc->snoop.snooping = 0;
 }
 if (character) {
-  if (original)
+  if (original) {
     character->remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
     character->doReturn("", WEAR_NOWHERE, CMD_RETURN);
+  }
 
   if ((connected >= CON_REDITING) || !connected) {
     if ((connected == CON_OEDITING) && obj) {
