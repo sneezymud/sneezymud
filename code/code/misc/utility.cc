@@ -39,7 +39,6 @@ extern "C" {
 #include <dirent.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
-#include <execinfo.h>
 
 pid_t vfork(void);
 
@@ -511,12 +510,15 @@ void TPerson::logf(const char * tString, ...)
 
 void vlogf_trace(logTypeT tError, const sstring &errorMsg)
 {
+  /*
   void *trace[5];
   size_t cTrace;
   char **trace_symbols;
 
+  */
   vlogf(tError, errorMsg);
 
+  /*
   cTrace = backtrace(trace, cElements(trace));
   trace_symbols = backtrace_symbols(trace, cTrace);
 
@@ -524,6 +526,7 @@ void vlogf_trace(logTypeT tError, const sstring &errorMsg)
     vlogf(tError, format("\tat function: %s") % trace_symbols[iFrame]);
 
   free(trace_symbols);
+  */
 }
 
 sstring getLogType(logTypeT tError)
