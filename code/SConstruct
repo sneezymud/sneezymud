@@ -18,6 +18,7 @@ CXXFLAGS = [
     '-Woverloaded-virtual',   # virtual without a declaration in base class
     '-Werror',                # turns a warning into an error
     '-std=c++11',
+    '-fdiagnostics-color=always',
     ]
 
 CPPPATH = [
