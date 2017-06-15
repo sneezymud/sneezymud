@@ -312,29 +312,29 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
     if (!(ch->doShoot(buf.c_str())))
       vlogf(LOG_BUG, format("spec_mobs_archer.cc: archer: error shooting bow with arguments: %s") % buf);
         
-      t = ch->equipment[HOLD_LEFT];
-      rc = ch->doRemove("", t);   
-      if (IS_SET_DELETE(rc, DELETE_ITEM)) {
-        delete t;
-        t = NULL;
-      }
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-                  
-      t = ch->equipment[HOLD_RIGHT];
-      rc = ch->doRemove("", t);   
-      if (IS_SET_DELETE(rc, DELETE_ITEM)) {
-        delete t;
-        t = NULL;
-      }
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-        
+    t = ch->equipment[HOLD_LEFT];
+    rc = ch->doRemove("", t);   
+    if (IS_SET_DELETE(rc, DELETE_ITEM)) {
+      delete t;
+      t = NULL;
+    }
+    if (IS_SET_DELETE(rc, DELETE_THIS))
+      return DELETE_THIS;
+                
+    t = ch->equipment[HOLD_RIGHT];
+    rc = ch->doRemove("", t);   
+    if (IS_SET_DELETE(rc, DELETE_ITEM)) {
+      delete t;
+      t = NULL;
+    }
+    if (IS_SET_DELETE(rc, DELETE_THIS))
+      return DELETE_THIS;
+      
 #if 0
-        vlogf(LOG_MAROR, format("archer: %d->%d, temp/name: (%s)/(%s), tbt?: %s") % 
-            Hi % Hf % temp % (tbt->getName() ? tbt->getName() : "(NULL)") % (tbt ? "exists" : "(NULL)"));
+      vlogf(LOG_MAROR, format("archer: %d->%d, temp/name: (%s)/(%s), tbt?: %s") % 
+          Hi % Hf % temp % (tbt->getName() ? tbt->getName() : "(NULL)") % (tbt ? "exists" : "(NULL)"));
 #endif
-      return TRUE; 
+    return TRUE; 
     }
   }
   return FALSE;

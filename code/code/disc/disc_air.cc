@@ -680,60 +680,60 @@ int tornado(TBeing * caster, int level, short bKnown, int adv_learn)
       for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end();){
         t=*(it++);
       if(!(tb=dynamic_cast<TBeing *>(t)))
-	continue;
+        continue;
 
-        if (1) {
-          if (caster->inGroup(*tb)) {
-            caster->reconcileHurt(tb, discArray[SPELL_TORNADO]->alignMod);
-            act("$n chokes on the dust!", FALSE, tb, NULL, 0, TO_ROOM);
-            act("You choke on the dust!", FALSE, tb, NULL, NULL, TO_CHAR);
-            if (tb->riding) {
-              rc = tb->fallOffMount(tb->riding, POSITION_STANDING);
-              if (IS_SET_DELETE(rc, DELETE_THIS)) {
-                delete tb;
-                tb = NULL;
-                continue;
-              }
-            }
-            while ((ch = tb->rider)) {
-              rc = ch->fallOffMount(tb, POSITION_STANDING);
-              if (IS_SET_DELETE(rc, DELETE_THIS)) {
-                delete ch;
-                ch = NULL;
-              }
-            }
-            tb->setPosition(POSITION_SITTING);
-            if (caster->reconcileDamage((TBeing *)tb, dam, SPELL_TORNADO) == -1) {
+      if (1) {
+        if (caster->inGroup(*tb)) {
+          caster->reconcileHurt(tb, discArray[SPELL_TORNADO]->alignMod);
+          act("$n chokes on the dust!", FALSE, tb, NULL, 0, TO_ROOM);
+          act("You choke on the dust!", FALSE, tb, NULL, NULL, TO_CHAR);
+          if (tb->riding) {
+            rc = tb->fallOffMount(tb->riding, POSITION_STANDING);
+            if (IS_SET_DELETE(rc, DELETE_THIS)) {
               delete tb;
               tb = NULL;
               continue;
             }
-
-            if (caster->roomp->isRoomFlag(ROOM_HAVE_TO_WALK|ROOM_NO_FLEE|ROOM_NO_ESCAPE))
-              continue;
-
-            act("Uhoh, Toto...", FALSE, tb, NULL, NULL, TO_CHAR);
-            act("$n is swept away...", FALSE, tb, NULL, NULL, TO_ROOM);
-
-            rc = tb->genericTeleport(SILENT_YES);
-            tb->doLook("", CMD_LOOK);
-            act("A tiny vortex sweeps through the room, depositing $n.",
-                   FALSE, tb, NULL, NULL, TO_ROOM);
-            if (IS_SET_DELETE(rc, DELETE_THIS)) {
-              delete tb;
-              tb = NULL;
-            }
-
-            rc = tb->genericMovedIntoRoom(tb->roomp, -1);
-            if (IS_SET_DELETE(rc, DELETE_THIS)) {
-              delete tb;
-              tb = NULL;
-            }
-          } else {
-            //act("$n dodges the vortex!", FALSE, t, NULL, 0, TO_ROOM);
-            act("You dodge the vortex!", FALSE, tb, NULL, NULL, TO_CHAR);
           }
+          while ((ch = tb->rider)) {
+            rc = ch->fallOffMount(tb, POSITION_STANDING);
+            if (IS_SET_DELETE(rc, DELETE_THIS)) {
+              delete ch;
+              ch = NULL;
+            }
+          }
+          tb->setPosition(POSITION_SITTING);
+          if (caster->reconcileDamage((TBeing *)tb, dam, SPELL_TORNADO) == -1) {
+            delete tb;
+            tb = NULL;
+            continue;
+          }
+
+          if (caster->roomp->isRoomFlag(ROOM_HAVE_TO_WALK|ROOM_NO_FLEE|ROOM_NO_ESCAPE))
+            continue;
+
+          act("Uhoh, Toto...", FALSE, tb, NULL, NULL, TO_CHAR);
+          act("$n is swept away...", FALSE, tb, NULL, NULL, TO_ROOM);
+
+          rc = tb->genericTeleport(SILENT_YES);
+          tb->doLook("", CMD_LOOK);
+          act("A tiny vortex sweeps through the room, depositing $n.",
+                 FALSE, tb, NULL, NULL, TO_ROOM);
+          if (IS_SET_DELETE(rc, DELETE_THIS)) {
+            delete tb;
+            tb = NULL;
+          }
+
+          rc = tb->genericMovedIntoRoom(tb->roomp, -1);
+          if (IS_SET_DELETE(rc, DELETE_THIS)) {
+            delete tb;
+            tb = NULL;
+          }
+        } else {
+          //act("$n dodges the vortex!", FALSE, t, NULL, 0, TO_ROOM);
+          act("You dodge the vortex!", FALSE, tb, NULL, NULL, TO_CHAR);
         }
+      }
       }
       return SPELL_CRIT_FAIL;
     }
@@ -1076,9 +1076,9 @@ int castAntigravity(TBeing * caster)
   if ((ret=antigravity(caster,level,&aff,caster->getSkillValue(SPELL_ANTIGRAVITY))) == SPELL_SUCCESS) {
     act("$n makes a minor change to the laws of physics.", TRUE,caster,0,0,TO_ROOM);
     act("You alter the forces of space and time slightly.", TRUE,caster,0,0,TO_CHAR);
-  } else 
+  } else
     caster->nothingHappens();
-    return TRUE;
+  return TRUE;
 }
 
 int conjureElemAir(TBeing * caster, int level, short bKnown)

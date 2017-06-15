@@ -1630,16 +1630,16 @@ int moonGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
       }
       obj = dynamic_cast<TPortal *>(to);
       if(rp->number == 5895)
-	obj->setTarget(28800);
-	if(rp->number == 28800)
-	  obj->setTarget(5895);
-	obj->setPortalNumCharges(-1);
-	obj->setPortalType(10);
-	*rp += *to;
-	//vlogf(LOG_DASH, "moongate proc didn't find moongate, placing");
+        obj->setTarget(28800);
+      else if(rp->number == 28800)
+        obj->setTarget(5895);
+      obj->setPortalNumCharges(-1);
+      obj->setPortalType(10);
+      *rp += *to;
+      //vlogf(LOG_DASH, "moongate proc didn't find moongate, placing");
 
-	act("<k>A portal of midnight darkness suddenly shimmers into reality.<1>",
-	    TRUE, to, 0, 0, TO_ROOM);
+      act("<k>A portal of midnight darkness suddenly shimmers into reality.<1>",
+        TRUE, to, 0, 0, TO_ROOM);
       }
     }
 

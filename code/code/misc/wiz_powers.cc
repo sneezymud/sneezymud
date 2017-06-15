@@ -298,7 +298,7 @@ void setWizPowers(const TBeing *doer, TBeing *ch, const sstring &arg)
     wizPowerT wpt;
     for (wpt = MIN_POWER_INDEX; wpt < MAX_POWER_INDEX; wpt++)
       ch->setWizPower(wpt);
-      ch->remWizPower(POWER_IDLED);
+    ch->remWizPower(POWER_IDLED);
   } else if (is_abbrev(arg, "allpowers")) {
     doer->sendTo("This gives them *ALL* powers, don't do it unless you really really mean to.\n\r");
     doer->sendTo("You have to type the whole word 'allpowers' to do it too.\n\r");
@@ -307,7 +307,7 @@ void setWizPowers(const TBeing *doer, TBeing *ch, const sstring &arg)
     wizPowerT wpt;
     for (wpt = MIN_POWER_INDEX; wpt < MAX_POWER_INDEX; wpt++)
       ch->remWizPower(wpt);
-      ch->setWizPower(POWER_IDLED);
+    ch->setWizPower(POWER_IDLED);
   } else if (is_abbrev(arg, "remall")) {
     doer->sendTo("This removes *ALL* powers, don't do it unless you really really mean to.\n\r");
     doer->sendTo("You have to type the whole word 'remall' to do it too.\n\r");

@@ -1153,7 +1153,7 @@ int flamestrike(TBeing *caster, TBeing *victim, TMagicItem *obj)
   if (IS_SET(ret, CASTER_DEAD))
     ADD_DELETE(rc, DELETE_THIS);
 
-    return rc;
+  return rc;
 }
 
 

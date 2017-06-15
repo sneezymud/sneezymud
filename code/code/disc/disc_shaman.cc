@@ -1628,11 +1628,12 @@ int djallasProtection(TBeing *caster, TBeing *victim, int level, short bKnown)
         break;
     }
  
-    if (caster != victim) 
+    if (caster != victim) {
       aff.modifier2 /= 2;
       aff2.modifier2 /= 2;
       aff3.modifier2 /= 2;
       aff4.modifier2 /= 2;
+    }
  
     victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
     victim->affectJoin(caster, &aff2, AVG_DUR_NO, AVG_EFF_YES);
@@ -1734,11 +1735,12 @@ int legbasGuidance(TBeing *caster, TBeing *victim, int level, short bKnown)
         break;
     }
  
-    if (caster != victim) 
+    if (caster != victim) {
       aff.modifier2 /= 2;
       aff2.modifier2 /= 2;
       aff3.modifier2 /= 2;
       aff4.modifier2 /= 2;
+    }
  
     victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
     victim->affectJoin(caster, &aff2, AVG_DUR_NO, AVG_EFF_YES);
