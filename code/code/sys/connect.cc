@@ -556,7 +556,7 @@ if (snoop.snoop_by && snoop.snoop_by->desc) {
 if (character) {
   if (original) {
     character->remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
-    character->doReturn("", WEAR_NOWHERE, CMD_RETURN);
+    character->doReturn("", WEAR_NOWHERE, true);
   }
 
   if ((connected >= CON_REDITING) || !connected) {

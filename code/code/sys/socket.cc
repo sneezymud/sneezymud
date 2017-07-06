@@ -1488,7 +1488,7 @@ bool procCharLycanthropy::run(const TPulse &pl, TBeing *tmp_ch) const
     if(Weather::moonType() != "full" || 
        Weather::sunIsUp() || !Weather::moonIsUp()){
       tmp_ch->remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
-      tmp_ch->doReturn("", WEAR_NOWHERE, CMD_RETURN);
+      tmp_ch->doReturn("", WEAR_NOWHERE, true);
     } else if(!tmp_ch->fight() && tmp_ch->roomp && 
 	      !tmp_ch->roomp->isRoomFlag(ROOM_PEACEFUL) &&
 	      !::number(0,24)){

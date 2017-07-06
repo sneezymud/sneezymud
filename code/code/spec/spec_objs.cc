@@ -5506,7 +5506,7 @@ int lycanthropyCure(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   int returnVal = FALSE;
   if(ch->desc && ch->desc->original) {
     TBeing *per = ch->desc->original;
-    ch->doReturn("", WEAR_NOWHERE, CMD_RETURN);
+    ch->doReturn("", WEAR_NOWHERE, true);
     act("A whispy wolf-like form detaches itself from your body and then dissipates.", TRUE, per, NULL, NULL, TO_CHAR, NULL);
     act("A whispy wolf-like form detaches itself from $n's body and then dissipates.",
       TRUE, per, NULL, NULL, TO_ROOM, NULL);

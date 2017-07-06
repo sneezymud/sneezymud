@@ -889,7 +889,7 @@ int TBeing::updateAffects()
     }
   }
   if (shouldReturn) {
-    doReturn("", WEAR_NOWHERE, CMD_RETURN); 
+    doReturn("", WEAR_NOWHERE, true);
     return ALREADY_DELETED;
   }
   return 0;
@@ -1630,7 +1630,7 @@ int TBeing::updateHalfTickStuff()
       
       if(desc && desc->original && desc->original->polyed && !desc->original->isImmortal() && (desc->original->polyed == POLY_TYPE_SHAPESHIFT)) {
         sendTo("Your shape can not survive without a connection to nature.\n\r");
-        doReturn("", WEAR_NOWHERE, CMD_RETURN); 
+        doReturn("", WEAR_NOWHERE, true);
         return ALREADY_DELETED;
       }
     }

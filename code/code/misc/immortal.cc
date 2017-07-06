@@ -2779,7 +2779,7 @@ void TPerson::doPurge(const char *argument)
         (vict->desc || IS_SET(vict->specials.act, ACT_POLYSELF))) {
         sendTo("Sorry, you can't directly purge a poly'ed mob, you made them return.\n\r");
          vict->remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
-         vict->doReturn("", WEAR_NOWHERE, CMD_RETURN);
+         vict->doReturn("", WEAR_NOWHERE, true);
          return;
         // delete vict;
         // vict = NULL;
@@ -6348,7 +6348,7 @@ int TBeing::doAs(const char *arg)
             desc->original->getName() % arg);
     sendTo("Please don't do things that will cause your original character to be destroyed.\n\r");
     remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
-    doReturn("", WEAR_NOWHERE, CMD_RETURN);
+    doReturn("", WEAR_NOWHERE, true);
     return FALSE;
   }
 
