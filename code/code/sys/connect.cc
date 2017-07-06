@@ -3806,12 +3806,11 @@ void Descriptor::deleteAccount()
 {
   DIR *dfd;
   struct dirent *dp;
-  char buf[256];
 
   vlogf(LOG_PIO, format("Account %s self-deleted.") % account->name);
 
-  sprintf(buf, "account/%c/%s", LOWER(account->name[0]), sstring(account->name).lower().c_str());
-  if (!(dfd = opendir(buf))) {
+  sstring dir_path = ((sstring)(format("account/%c/%s") % account->name[0] % account->name)).lower();
+  if (!(dfd = opendir(dir_path.c_str()))) {
     vlogf(LOG_FILE, format("Unable to walk directory for delete account (%s account)") %  account->name);
     return;
   }
@@ -3819,9 +3818,9 @@ void Descriptor::deleteAccount()
     if (!strcmp(dp->d_name, ".") || !strcmp(dp->d_name, ".."))
       continue;
 
-    sprintf(buf, "account/%c/%s/%s", LOWER(account->name[0]), sstring(account->name).lower().c_str(), dp->d_name);
-    if (unlink(buf) != 0)
-      vlogf(LOG_FILE, format("error in unlink (4) (%s) %d") %  buf % errno);
+    sstring file_path = format("%s/%s") % dir_path % dp->d_name;
+    if (unlink(file_path.c_str()) != 0)
+      vlogf(LOG_FILE, format("error in unlink (4) (%s) %d") % file_path % errno);
 
     // these are in the dir, but are not "players"
     if (!strcmp(dp->d_name, "comment") ||
@@ -3837,8 +3836,7 @@ void Descriptor::deleteAccount()
   db.query("delete from account where name='%s'",
 	   sstring(account->name).lower().c_str());
 
-  sprintf(buf, "account/%c/%s", LOWER(account->name[0]), sstring(account->name).lower().c_str());
-  rmdir(buf);
+  rmdir(dir_path.c_str());
   AccountStats::account_number--;
   closedir(dfd);
 }

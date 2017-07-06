@@ -2511,12 +2511,10 @@ void countAccounts(const char *arg)
   DIR *dfd;
   struct dirent *dp;
   int count = 0;
-  char buf[128];
-  char buf2[256];
 
-  sprintf(buf, "account/%c/%s", LOWER(arg[0]), sstring(arg).lower().c_str());
-  if (!(dfd = opendir(buf))) {
-    vlogf(LOG_BUG, format("bad call to countAccount (%s)") %  buf);
+  sstring account_path = ((sstring)(format("account/%c/%s") % arg[0] % arg)).lower();
+  if (!(dfd = opendir(account_path.c_str()))) {
+    vlogf(LOG_BUG, format("bad path in countAccount (%s) from arg (%s)") % account_path % arg);
     return;
   }
 
@@ -2529,20 +2527,19 @@ void countAccounts(const char *arg)
       continue;
     
     // check for valid char
-    sprintf(buf2, "player/%c/%s", dp->d_name[0], dp->d_name);
+    sstring player_path = format("player/%c/%s") % dp->d_name[0] % dp->d_name;
 
     struct stat theStat;
-    int ret = stat(buf2, &theStat);
+    int ret = stat(player_path.c_str(), &theStat);
     if (ret != 0) {
       // some error occurred
       if (errno == ENOENT) {
-        vlogf(LOG_MISC, format("Deleting reference to %s in %s's account") %  buf2 % arg);
-        sprintf(buf2, "%s/%s", buf, dp->d_name);
-        vlogf(LOG_MISC, format("Deleting %s") %  buf2);
-        if (unlink(buf2) != 0)
-          vlogf(LOG_FILE, format("error in unlink (12) (%s) %d") %  buf2 % errno);
+        sstring ref_path = format("%s/%s") % account_path % dp->d_name;
+        vlogf(LOG_MISC, format("Deleting reference %s to nonexistent %s in %s's account") % ref_path % player_path % arg);
+        if (unlink(ref_path.c_str()) != 0)
+          vlogf(LOG_FILE, format("error in unlink (12) (%s) %d") % ref_path % errno);
       } else {
-        vlogf(LOG_FILE, format("ERROR: stat() failed for %s.  errno = %d") %  buf2 % errno);
+        vlogf(LOG_FILE, format("ERROR: stat() failed for %s.  errno = %d") % player_path % errno);
         perror("stat");
       }
       continue;
@@ -2569,19 +2566,17 @@ void countAccounts(const char *arg)
   if (!count) {
     // delete this empty account 
 
-    vlogf(LOG_MISC, format("Empty Account: %s, deleting it.") %  buf);
+    vlogf(LOG_MISC, format("Empty Account: %s, deleting it.") % account_path);
     
     TDatabase db(DB_SNEEZY);
     db.query("delete from account where name=lower('%s')", arg);
 
-    sprintf(buf2, "account/%c/%s/comment", LOWER(arg[0]), sstring(arg).lower().c_str());
-    unlink(buf2);  // probably doesn't exist, so no error...
+    // ignore unlink errors
+    unlink((account_path + "/comment").c_str());
+    unlink((account_path + "/acount").c_str());
 
-    sprintf(buf2, "account/%c/%s/account", LOWER(arg[0]), sstring(arg).lower().c_str());
-    unlink(buf2);
-
-    if (rmdir(buf) != 0)
-      vlogf(LOG_FILE, format("error in rmdir (%s) %d") %  buf % errno);
+    if (rmdir(account_path.c_str()) != 0)
+      vlogf(LOG_FILE, format("error in rmdir (%s) %d") % account_path % errno);
 
     return;
   }
