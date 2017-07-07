@@ -875,7 +875,7 @@ void Weather::calcNewSunSet()
 // true if we're getting wet from stepping on the ground
 bool isGroundWater(sectorTypeT sector)
 {
-  return TerrainInfo[sector] > 0 &&
+  return TerrainInfo[sector] &&
      (sector == SECT_ARCTIC_MARSH ||
       sector == SECT_ARCTIC_RIVER_SURFACE ||
       sector == SECT_ICEFLOW ||

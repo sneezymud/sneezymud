@@ -360,7 +360,7 @@ int TBeing::peelPkRespawn(TBeing *killer, spellNumT dmg_type)
   Descriptor *idesc;
   TBeing *b, *k;
 
-  if(peelPk.zones<=0 || peelPk.respawns<=0 || !isPc()){
+  if(peelPk.zones<=0 || !isPc()){
     return FALSE;
   }
   

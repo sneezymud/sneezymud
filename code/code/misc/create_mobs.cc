@@ -346,9 +346,8 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
     adjacent_sound[f] = '\0';
   }
 
-  unsigned long actions = mob->specials.act;
-  if (!actions & 1)
-    actions = actions & ~1;
+  // sqladdmob in turn clears STRINGS_CHANGED (some kind of maintenance?)
+  unsigned long actions = mob->specials.act | ACT_STRINGS_CHANGED;
   
   ch->sendTo("Saving.\n\r");
   TDatabase db(DB_IMMORTAL);
