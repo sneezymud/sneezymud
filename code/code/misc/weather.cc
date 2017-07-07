@@ -8,8 +8,8 @@
 
 #include <cmath>
 
-#include "weather.h"
 #include "room.h"
+#include "weather.h"
 #include "extern.h"
 #include "being.h"
 #include "person.h"
