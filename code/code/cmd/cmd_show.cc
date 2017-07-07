@@ -229,9 +229,8 @@ unsigned long int showFreeMobObj(int shFrZoneNumber, sstring *sb,
 // Scriptfile loads
 sstring showComponentTechnical(const int tValue)
 {
-  sstring         tStString(""),
-                 tStBuffer("");
-  char           tString[256],
+  sstring        tResult("");
+  char           tLine[256],
                  tBuffer[256];
   int            tMobNum;
   struct dirent *tDir;
@@ -249,8 +248,7 @@ sstring showComponentTechnical(const int tValue)
       else
         strcpy(tBuffer, mob_index[tMobNum].name);
 
-      sprintf(tString, "Dissect Load: %d %s\n\r", tDissectIndex, tBuffer);
-      tStString += tString;
+      tResult += format("Dissect Load: %d %s\n\r") % tDissectIndex % tBuffer;
     }
 
   // Check for natural loads.  Unfortunatly it's easy to do a double entry here
@@ -263,11 +261,7 @@ sstring showComponentTechnical(const int tValue)
       else
         sprintf(tBuffer, "-%d", component_placement[tCompIndex].room2);
 
-      sprintf(tString, "Natural Load: Room%s %d%s\n\r",
-              (!tBuffer[0] ? "" : "s"),
-              component_placement[tCompIndex].room1,
-              tBuffer);
-      tStString += tString;
+      tResult += format("Natural Load: Room%s %d%s\n\r") % (!tBuffer[0] ? "" : "s") % component_placement[tCompIndex].room1 % tBuffer;
     }
 
   // Check for script loads.  This will go through ALL of the scripts and check.
@@ -275,22 +269,21 @@ sstring showComponentTechnical(const int tValue)
   // LOT of lag it will make.
   if (gamePort != Config::Port::PROD) {
     if (!(tDirInfo = opendir("mobdata/responses"))) {
-      vlogf(LOG_FILE, "Unable to dirwalk directory mobdata/resposnes");
-      tStString += "ERROR.  Unable to open mobdata/responses for reading.";
-      return tStString;
+      vlogf(LOG_FILE, "Unable to dirwalk directory mobdata/responses");
+      tResult += "ERROR.  Unable to open mobdata/responses for reading.";
+      return tResult ;
     }
 
     while ((tDir = readdir(tDirInfo))) {
       if (!strcmp(tDir->d_name, ".") || !strcmp(tDir->d_name, ".."))
         continue;
 
-      sprintf(tBuffer, "mobdata/responses/%s", tDir->d_name);
-
-      if (!(tFile = fopen(tBuffer, "r")))
+      sstring resp_path = format("mobdata/responses/%s") % tDir->d_name;
+      if (!(tFile = fopen(resp_path.c_str(), "r")))
         continue;
 
-      while (fgets(tString, 256, tFile)) {
-        char *tChar = tString;
+      while (fgets(tLine, 256, tFile)) {
+        char *tChar = tLine;
 
         for (; isspace(*tChar) || *tChar == '\t'; tChar++);
 
@@ -300,13 +293,11 @@ sstring showComponentTechnical(const int tValue)
           tMobNum = real_mobile(convertTo<int>(tDir->d_name));
 
           if (tMobNum < 0 || tMobNum > (signed) mob_index.size())
-            strcpy(tString, "[Unknown]");
+            strcpy(tBuffer, "[Unknown]");
           else
-            strcpy(tString, mob_index[tMobNum].name);
+            strcpy(tBuffer, mob_index[tMobNum].name);
 
-          sprintf(tBuffer, "Script: %s %s\n\r",
-                  tDir->d_name, tString);
-          tStString += tBuffer;
+          tResult += format("Script: %s %s\n\r") % tDir->d_name % tBuffer;
 
           // Don't show the same entry twice.
           break;
@@ -319,7 +310,7 @@ sstring showComponentTechnical(const int tValue)
     closedir(tDirInfo);
   }
 
-  return tStString;
+  return tResult;
 }
 
 void TBeing::doShow(const sstring &argument)
@@ -1350,107 +1341,6 @@ unsigned long int showFreeMobObj(int shFrZoneNumber, sstring *sb,
 
   return 0;
 }
-
-// Does major searching and returns the following:
-// Dissection loads
-// 'Nature' loads
-// Scriptfile loads
-sstring showComponentTechnical(const int tValue)
-{
-  sstring         tStString(""),
-                 tStBuffer("");
-  char           tString[256],
-                 tBuffer[256];
-  int            tMobNum;
-  struct dirent *tDir;
-  DIR           *tDirInfo;
-  FILE          *tFile;
-
-  // Check for dissection loads.
-  // This doesn't check for hard-coded ones such as 'by race' and such.
-  for (unsigned int tDissectIndex = 0; tDissectIndex < dissect_array.size(); tDissectIndex++)
-    if ((dissect_array[tDissectIndex].loadItem == (unsigned) tValue)) {
-      tMobNum = real_mobile(tDissectIndex);
-
-      if (tMobNum < 0 || tMobNum > (signed) mob_index.size())
-        strcpy(tBuffer, "[Unknown]");
-      else
-        strcpy(tBuffer, mob_index[tMobNum].name);
-
-      sprintf(tString, "Dissect Load: %d %s\n\r", tDissectIndex, tBuffer);
-      tStString += tString;
-    }
-
-  // Check for natural loads.  Unfortunatly it's easy to do a double entry here
-  // so we have to be careful.
-  for (unsigned int tCompIndex = 0; tCompIndex < component_placement.size(); tCompIndex++)
-    if (component_placement[tCompIndex].number == tValue &&
-        (component_placement[tCompIndex].place_act & CACT_PLACE)) {
-      if (component_placement[tCompIndex].room2 == -1)
-        tBuffer[0] = '\0';
-      else
-        sprintf(tBuffer, "-%d", component_placement[tCompIndex].room2);
-
-      sprintf(tString, "Natural Load: Room%s %d%s\n\r",
-              (!tBuffer[0] ? "" : "s"),
-              component_placement[tCompIndex].room1,
-              tBuffer);
-      tStString += tString;
-    }
-
-  // Check for script loads.  This will go through ALL of the scripts and check.
-  // We only do this on !PROD because of the lag it will generate, and I do mean a
-  // LOT of lag it will make.
-  if (gamePort != Config::Port::PROD) {
-    if (!(tDirInfo = opendir("mobdata/responses"))) {
-      vlogf(LOG_FILE, "Unable to dirwalk directory mobdata/resposnes");
-      tStString += "ERROR.  Unable to open mobdata/responses for reading.";
-      return tStString;
-    }
-
-    while ((tDir = readdir(tDirInfo))) {
-      if (!strcmp(tDir->d_name, ".") || !strcmp(tDir->d_name, ".."))
-        continue;
-
-      sprintf(tBuffer, "mobdata/responses/%s", tDir->d_name);
-
-      if (!(tFile = fopen(tBuffer, "r")))
-        continue;
-
-      while (fgets(tString, 256, tFile)) {
-        char *tChar = tString;
-
-        for (; isspace(*tChar) || *tChar == '\t'; tChar++);
-
-        sprintf(tBuffer, "load %d;\n", tValue);
-
-        if (!strcmp(tChar, tBuffer)) {
-          tMobNum = real_mobile(convertTo<int>(tDir->d_name));
-
-          if (tMobNum < 0 || tMobNum > (signed) mob_index.size())
-            strcpy(tString, "[Unknown]");
-          else
-            strcpy(tString, mob_index[tMobNum].name);
-
-          sprintf(tBuffer, "Script: %s %s\n\r",
-                  tDir->d_name, tString);
-          tStString += tBuffer;
-
-          // Don't show the same entry twice.
-          break;
-        }
-      }
-
-      fclose(tFile);
-    }
-
-    closedir(tDirInfo);
-  }
-
-  return tStString;
-}
-
-
 
 
 const char SHOW_LIST[][15] =
