@@ -17,7 +17,7 @@ CXXFLAGS = [
 #    '-Wconversion',           # bad conversions
     '-Woverloaded-virtual',   # virtual without a declaration in base class
     '-Werror',                # turns a warning into an error
-    '-std=c++11',
+    '-std=c++14',
     '-fdiagnostics-color=always',
     ]
 
@@ -53,6 +53,10 @@ env=Environment(CXXFLAGS=CXXFLAGS,
 #                SHCXX = 'g++44 -m32',
                 CXX = 'g++',
                 SHCXX = 'g++',
+
+		# ld has trouble with libstdc++ when compiling with clang
+		LINK = 'g++',
+
                 # LIBTYPE = 'static',  # options: 'static', 'shared'. shared links faster, but doesn't work on Mac.
                 LIBTYPE = 'shared',  # options: 'static', 'shared'. shared links faster, but doesn't work on Mac.
                 # options: "sqlite", "mysql"
