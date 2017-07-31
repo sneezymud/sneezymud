@@ -1,6 +1,27 @@
 # hey emacs, this is -*- python -*-
 from SCons.Script.SConscript import SConsEnvironment
-import os.path;
+import os.path
+import subprocess
+
+CXX = 'g++'
+#CXX = 'clang'
+
+gcc_version = None
+clang_version = None
+if CXX.startswith('g++'):
+    # dumpversion has more reliable formatting than --version
+    gcc_version = subprocess.check_output([CXX, '-dumpversion'])
+    gcc_version = tuple(map(int, gcc_version.split('.')[:2]))
+elif CXX.startswith('clang'):
+    # clang dumpversion always reports 4.2.1...
+    clang_version = subprocess.check_output([CXX, '--version'])
+    clang_version = clang_version.partition('clang version ')[2]
+    clang_version = tuple(map(int, clang_version.split()[0].split('.')[:2]))
+else:
+    raise Exception('unrecognized compiler')
+
+if not (gcc_version >= (5, 4) or clang_version >= (3, 8)):
+    raise Exception('compiler is too old')
 
 CXXFLAGS = [
     '-g',             # debugger
@@ -49,10 +70,9 @@ env=Environment(CXXFLAGS=CXXFLAGS,
                 CPPPATH=CPPPATH,
                 LIBPATH=LIBPATH,
                 tools=['default', 'cxxtest'],
-#                CXX = 'g++44 -m32',
-#                SHCXX = 'g++44 -m32',
-                CXX = 'g++',
-                SHCXX = 'g++',
+
+		CXX = CXX,
+		SHCXX = CXX,
 
 		# ld has trouble with libstdc++ when compiling with clang
 		LINK = 'g++',
