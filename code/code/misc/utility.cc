@@ -40,6 +40,10 @@ extern "C" {
 #include <sys/stat.h>
 #include <sys/wait.h>
 
+#ifdef __GLIBC__
+#include <execinfo.h>
+#endif
+
 pid_t vfork(void);
 
 #ifdef SOLARIS
@@ -510,15 +514,15 @@ void TPerson::logf(const char * tString, ...)
 
 void vlogf_trace(logTypeT tError, const sstring &errorMsg)
 {
-  /*
+#ifdef __GLIBC__
   void *trace[5];
   size_t cTrace;
   char **trace_symbols;
+#endif
 
-  */
   vlogf(tError, errorMsg);
 
-  /*
+#ifdef __GLIBC__
   cTrace = backtrace(trace, cElements(trace));
   trace_symbols = backtrace_symbols(trace, cTrace);
 
@@ -526,7 +530,7 @@ void vlogf_trace(logTypeT tError, const sstring &errorMsg)
     vlogf(tError, format("\tat function: %s") % trace_symbols[iFrame]);
 
   free(trace_symbols);
-  */
+#endif
 }
 
 sstring getLogType(logTypeT tError)
