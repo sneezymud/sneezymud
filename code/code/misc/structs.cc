@@ -253,7 +253,7 @@ TBeing::~TBeing()
   if (desc) {
     if (desc->original) {
       remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
-      doReturn("", WEAR_NOWHERE, CMD_RETURN);
+      doReturn("", WEAR_NOWHERE, true);
     }
   }
 
@@ -988,7 +988,7 @@ TPerson::~TPerson()
     for (t_desc = descriptor_list; t_desc; t_desc = t_desc->next) {
       if (t_desc->original && t_desc->original == this) {
         t_desc->character->remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
-        t_desc->character->doReturn("", WEAR_NOWHERE, CMD_RETURN);
+        t_desc->character->doReturn("", WEAR_NOWHERE, true);
       }
     }
   }

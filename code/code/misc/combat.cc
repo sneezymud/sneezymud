@@ -483,11 +483,11 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost)
 
     if (per->polyed == POLY_TYPE_SWITCH) {  // switch
       remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
-      doReturn("", WEAR_NOWHERE, CMD_RETURN, FALSE);
+      doReturn("", WEAR_NOWHERE, true, false);
       return rawKill(dmg_type, tKiller);
     }
     remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
-    doReturn("", WEAR_NOWHERE, CMD_RETURN);
+    doReturn("", WEAR_NOWHERE, true);
     
     if ((per->rawKill(dmg_type, tKiller)) == DELETE_THIS) {
       per->reformGroup();
@@ -591,7 +591,7 @@ int TBeing::die(spellNumT dam_type, TBeing *tKiller)
     }
     per = desc->original;
     if (per->polyed == POLY_TYPE_SWITCH) {  // switch
-      doReturn("", WEAR_NOWHERE, CMD_RETURN, FALSE);
+      doReturn("", WEAR_NOWHERE, true, false);
       rawKill(dam_type, tKiller);
       return DELETE_THIS;
     } else if ((polymorph = dieReturn("", dam_type, 1)) == DELETE_THIS) {
@@ -657,7 +657,7 @@ int TBeing::dieReturn(const char *, spellNumT dam_type, int cmd)
     return FALSE;
   } else {
     remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
-    doReturn("", WEAR_NOWHERE, CMD_RETURN, FALSE);
+    doReturn("", WEAR_NOWHERE, true, false);
   }
   return DELETE_THIS;
 }

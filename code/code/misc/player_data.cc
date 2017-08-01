@@ -2271,7 +2271,6 @@ int numFifties(race_t race, bool perma, sstring account_name)
   sstring account_path = format("account/%c/%s") % LOWER(account_name[0]) %
           account_name.lower();
   sstring togfile_name;
-  char tog_file_name[128];
   bool char_is_perma;
 
   if (!(dfd = opendir(account_path.c_str()))) {
@@ -2290,9 +2289,8 @@ int numFifties(race_t race, bool perma, sstring account_name)
     byte max_level = 0;
 
     // perma death characters only get the bonus from perma 50's
-    sprintf(tog_file_name, "player/%c/%s.toggle", LOWER(dp->d_name[0]),
-      dp->d_name);
-    if(!(fp = fopen(tog_file_name, "r"))) {
+    sstring tog_file_name = format("player/%c/%s.toggle") % LOWER(dp->d_name[0]) % dp->d_name;
+    if(!(fp = fopen(tog_file_name.c_str(), "r"))) {
       vlogf(LOG_MAROR, format("Error loading toggles for player %s in numFifties.")
         % dp->d_name);
       continue;
