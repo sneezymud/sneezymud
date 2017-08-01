@@ -6,6 +6,7 @@
 #include "database.h"
 #include "lowtools.h"
 #include "parse.h"
+#include "defs.h"
 
 int main(int argc, char **argv)
 {
@@ -38,10 +39,8 @@ int main(int argc, char **argv)
     if(db_immo.fetchRow()){
       printf("Adding %i ('%s')\n", vnums[t], db_immo["short_desc"].c_str());
       
-      // fix strung bit
-      actions=convertTo<int>(db_immo["actions"]);
-      if (actions & 1)
-        actions = actions & ~1;
+      // clear this bit as set in create_mob.cc
+      actions = convertTo<int>(db_immo["actions"]) & ~ACT_STRINGS_CHANGED;
       
       db_beta.query("delete from mob where vnum=%i", vnums[t]);
       db_beta.query("insert into mob values(%s, '%s', '%s', '%s', '%s', %i, %s, %s, %s, '%s', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '%s', '%s')",

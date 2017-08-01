@@ -46,16 +46,15 @@ instance!
 
 * Modern Unix, probably Linux, typically Ubuntu
 * MySQL server or equivalent, two databases, and a user with table-level
-  table-level access. See below for the defaults for these.
+  write access. See below for the defaults for these.
 
 ## Build Dependencies
 
-* C++ compiler, probably g++ -- Tested with version 4.7
-* scons -- Tested with version 2.2.0 on Python 2.7
-* libmysqlclient -- Tested with libmysqlclient 5.5.28
-* libc-ares -- Tested with 1.9.0 and 1.10.0.
+* Modern C++ compiler with working C++14 support -- Tested with clang 3.8 and gcc 5
+* scons -- Tested with version 2.4.1 on Python 2.7
+* libmysqlclient -- Tested with libmysqlclient 5.7.19
 * Boost C++ library, with 'program-options', 'regex', and 'exception' modules
-  -- Tested with 1.40, 1.50
+  -- Tested with 1.58
 
 ## Recommended
 

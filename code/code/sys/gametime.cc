@@ -1,6 +1,6 @@
+#include "comm.h"
 #include "gametime.h"
 #include "weather.h"
-#include "comm.h"
 #include "person.h"
 
 // static defs
