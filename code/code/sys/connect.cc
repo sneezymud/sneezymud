@@ -29,7 +29,7 @@ extern "C" {
 #include <arpa/inet.h>
 #include <sys/stat.h>
 
-#if defined(LINUX) || defined(SOLARIS)
+#if defined(__linux__) || defined(SOLARIS)
 #include <sys/stat.h>
 #endif
 }

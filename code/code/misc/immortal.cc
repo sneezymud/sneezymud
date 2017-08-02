@@ -883,7 +883,7 @@ const char *getSockOptString(int s, int opt)
   size = sizeof(result);
 #if defined(SOLARIS) || defined(SUN)
   if (getsockopt(s, SOL_SOCKET, opt, (char *) &result, &size) == -1) {
-#elif defined(LINUX)
+#elif defined(__linux__)
   if (getsockopt(s, SOL_SOCKET, opt, (char *) &result, (unsigned *) &size) == -1) {
 #else
   if (getsockopt(s, SOL_SOCKET, opt, &result, &size) == -1) {
