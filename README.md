@@ -61,6 +61,13 @@ command line.
 
 # Installation
 
+For most people, the install script `install_server.sh` should be enough to
+get you going. Run with no arguments to get some help instructions. You
+must still currently create the needed databases, users, and permissions
+however. Refer to the section on database setup below.
+
+## Manual Installation
+
 When these instructions refer to 'Sneezy', they are mainly specifically
 referring to the sneezymud server daemon program.
 
