@@ -4206,7 +4206,9 @@ void Descriptor::send_feedback(const char *subject, const char *msg)
     {
         fputs(message.c_str(), fp);
         fclose(fp);
-        system((format("/usr/sbin/sendmail -t < %s") % tempfile).str().c_str());
+        int err = system((format("/usr/sbin/sendmail -t < %s") % tempfile).str().c_str());
+        if (err)
+            vlogf(LOG_MISC, format("Call to sendmail returned nonzero status %d") % err);
         remove(tempfile.c_str());
     }
     exit(-1);
