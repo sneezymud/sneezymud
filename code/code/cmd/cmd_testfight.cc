@@ -357,9 +357,6 @@ static void fastFight()
       last_time.tv_usec -= 1000000;
       last_time.tv_sec++;
     }
-#ifndef SOLARIS
-//    sigsetmask(mask);
-#endif
 #ifdef LINUX
     // linux uses a nonstandard style of "timedout" (the last parm of select)
     // it gets hosed each select() so must be reinited here

@@ -27,10 +27,6 @@ extern "C" {
 #include <sys/syscall.h>
 #include <sys/param.h>
 
-#ifdef SOLARIS
-#include <sys/file.h>
-#endif
-
 int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);   
 }
 

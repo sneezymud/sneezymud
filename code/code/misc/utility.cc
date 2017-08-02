@@ -45,11 +45,8 @@ extern "C" {
 #endif
 
 pid_t vfork(void);
-
-#ifdef SOLARIS
-extern long random(void);
-#endif
 }
+
 #include "disease.h"
 #include "shop.h"
 #include "combat.h"

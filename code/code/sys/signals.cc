@@ -36,7 +36,6 @@ void signalSetup(void)
 // Trapping PROF PREVENTS the timing signals from working correctly
 //   signal(SIGPROF, profsig);
 
-#ifndef SOLARIS
   struct itimerval itime;
   struct timeval interval;
 
@@ -49,7 +48,6 @@ void signalSetup(void)
   itime.it_value = interval;
   setitimer(ITIMER_VIRTUAL, &itime, 0);
   signal(SIGVTALRM, checkpointing);
-#endif
 }
 
 void checkpointing(int)
