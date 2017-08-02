@@ -10,6 +10,8 @@ Run sneezy, logging to stdout. Ctrl-C to exit.
     -p PORT     listen for Telnet connections on PORT
     -l LIBDIR   use LIBDIR as the lib flatfiles directory
     -c CONFIG   read configuration from CONFIG
+
+SIGHUP, SIGINT, SIGTERM also initiate shutdown.
 ```
 
 ## Defaults
@@ -72,15 +74,20 @@ substitute arbitrary choices are represented as shell **$VARIABLES**.
 
 ## Compiling
 
-If you need to change build flags, edit the file `code/SConstruct`.
+Running the `scons` command in the `code` dir will start the build process:
 
     $ cd code
-    # -j sets parallel compilation, nproc reports number of cpus available
     $ scons -j$(nproc)
 
 This will output a `code/sneezy` binary, along with some .so files in
 `code/objs/`. These .so files are **required**, and must be located in an
 `objs/` dir relative to the directory Sneezy is started in.
+
+If you need to change build flags, some can be specified on the commandline,
+and others by editing the file `code/SConstruct`.  For more information see
+the scons help message:
+
+    $ scons -h
 
 ## Installing The Binary
 
