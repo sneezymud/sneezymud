@@ -357,7 +357,7 @@ static void fastFight()
       last_time.tv_usec -= 1000000;
       last_time.tv_sec++;
     }
-#ifndef SOLARIS
+#ifndef __sun
 //    sigsetmask(mask);
 #endif
 #ifdef __linux__

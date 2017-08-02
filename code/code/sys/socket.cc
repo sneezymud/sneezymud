@@ -27,7 +27,7 @@ extern "C" {
 #include <sys/syscall.h>
 #include <sys/param.h>
 
-#ifdef SOLARIS
+#ifdef __sun
 #include <sys/file.h>
 #endif
 

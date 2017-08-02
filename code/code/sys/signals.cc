@@ -36,7 +36,7 @@ void signalSetup(void)
 // Trapping PROF PREVENTS the timing signals from working correctly
 //   signal(SIGPROF, profsig);
 
-#ifndef SOLARIS
+#ifndef __sun
   struct itimerval itime;
   struct timeval interval;
 

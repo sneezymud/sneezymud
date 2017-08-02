@@ -46,7 +46,7 @@ extern "C" {
 
 pid_t vfork(void);
 
-#ifdef SOLARIS
+#ifdef __sun
 extern long random(void);
 #endif
 }
