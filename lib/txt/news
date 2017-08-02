@@ -4,6 +4,9 @@
 07-04-17 : The world command now reports the correct number of distinct
            mobiles never killed.
 
+07-03-17 : Counterattack on deathstroke failure is now affected by armor
+           and stats.
+
 06-13-17 : Djalla's protection and Legba's guidance are now more powerful
            when cast on self.
 
