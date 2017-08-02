@@ -60,6 +60,24 @@ opt_olevel =         get_option('olevel',      '3' if flag_optimize else '1')
 opt_cxx =            get_option('CXX',         'g++')
 
 
+## detect compiler and version
+gcc_version = None
+clang_version = None
+if 'g++' in opt_cxx:
+    # dumpversion has more reliable formatting than --version
+    gcc_version = subprocess.check_output([opt_cxx, '-dumpversion'])
+    gcc_version = tuple(map(int, gcc_version.split('.')[:2]))
+elif 'clang' in opt_cxx:
+    # clang dumpversion always reports 4.2.1...
+    clang_version = subprocess.check_output([opt_cxx, '--version'])
+    clang_version = clang_version.partition('clang version ')[2]
+    clang_version = tuple(map(int, clang_version.split()[0].split('.')[:2]))
+else:
+    print >>sys.stderr, 'Unrecognized compiler', opt_cxx
+    raise SystemExit
+
+
+## setup scons environment
 if flag_ccache:
     opt_cxx = 'ccache ' + opt_cxx
 
@@ -75,23 +93,6 @@ env = Environment(
     LIBPATH = opt_libdirs,
 )
 Export('env')
-
-
-## detect compiler and version
-gcc_version = None
-clang_version = None
-if opt_cxx.startswith('g++'):
-    # dumpversion has more reliable formatting than --version
-    gcc_version = subprocess.check_output([opt_cxx, '-dumpversion'])
-    gcc_version = tuple(map(int, gcc_version.split('.')[:2]))
-elif opt_cxx.startswith('clang'):
-    # clang dumpversion always reports 4.2.1...
-    clang_version = subprocess.check_output([opt_cxx, '--version'])
-    clang_version = clang_version.partition('clang version ')[2]
-    clang_version = tuple(map(int, clang_version.split()[0].split('.')[:2]))
-else:
-    print >>sys.stderr, 'Unrecognized compiler'
-    raise SystemExit
 
 
 ## debug: runtime bug detection with high overhead

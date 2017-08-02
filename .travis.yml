@@ -1,0 +1,86 @@
+# Sneezymud travis-ci build file
+
+# TODO:
+# clang builds
+# more modern boost
+# postgres / sqlite
+
+dist: trusty
+sudo: false
+
+language: c
+
+compiler:
+    - g++-6
+    #- clang-4.0
+
+env:
+    global:
+        - ccache=1 gprof=0 pretty=0
+    matrix:
+        - lto=0 optimize=0 harden=0 shared=1 debug=1
+        - lto=1 optimize=1 harden=1 shared=0 debug=0
+
+cache:
+    directories:
+        - $HOME/venv
+        - $HOME/.ccache
+
+addons:
+    apt:
+        sources:
+            - ubuntu-toolchain-r-test
+            #- deadsnakes
+            #- llvm-toolchain-trusty-4.0
+        packages:
+            - g++-6
+            #- clang-4.0
+            - libboost-dev
+            - libboost-program-options-dev
+            - libboost-regex-dev
+            - libmysqlclient-dev
+
+#runs at end, just before cache archive is made
+before_cache:
+    - rm -f $HOME/.cache/pip/log/debug.log
+
+# runs at beginning, before cache is extracted
+before_install:
+    - export CXX=$CC
+    - mysql -u root
+            -e "create database sneezy;"
+            -e "grant all on sneezy.* to $USER@localhost;"
+            -e "create database immortal;"
+            -e "grant all on immortal.* to $USER@localhost;"
+
+# any failures here invalidate the cache - use only to prepare build
+# environment
+before_script:
+    - mkdir -p ~/.ccache
+    - echo $'max_size=512M\ncompression=yes\ncompresson_level=3' > $HOME/.ccache/ccache.conf
+    #- test -f $HOME/venv/bin/activate
+    #      || ( pip install -q --user virtualenv && virtualenv $HOME/venv )
+    #- source $HOME/venv/bin/activate
+    #- pip install -q --upgrade
+    #        mysqlclient
+    #        "django>=1.11,<2.0"
+
+# put all actual build activities here
+script:
+    # hilarious hack to get one char build update output
+    #- scons -C code -j4 -Q
+    #    | grep -Ev "Checking targets"
+    #    | while read l ; do echo $l | tr -Cd A-Z ; done
+    - scons -C code -j4
+    - echo
+    - ./install_server.sh ./test
+    - make test
+
+notifications:
+    email: false
+    irc:
+        channels: "chat.freenode.net#sneezydev"
+        on_success: change
+        on_failure: change
+        use_notice: true
+        skip_join: true
