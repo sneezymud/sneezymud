@@ -218,31 +218,6 @@ extern bool file_to_sstring(const char *name, sstring &buf, concatT concat = CON
 extern const char *skill_diff(byte);
 extern immuneTypeT getTypeImmunity(spellNumT type);
 extern TPCorpse *pc_corpse_list;
-#ifdef SUN
-extern void bzero(char *, int);
-extern int mkdir(const char *, short unsigned int);
-extern int strcasecmp(char *, char *);
-extern int setitimer(int, struct itimerval *, struct itimerval *);
-extern int gettimeofday(struct timeval *, struct timezone *);
-extern int sigsetmask(int);
-extern long lrand48(void);
-extern int strncasecmp(char *, char *, int);
-#endif
-
-#if defined(SUN)
-extern int bind(int, const struct sockaddr *, int namelen);
-extern int gethostname(char *, int);
-extern int accept(int, struct sockaddr *, int *);
-extern int getpeername(int, struct sockaddr *, int *);
-extern int getsockname(int, struct sockaddr *, int *);
-extern int listen(int, int);
-extern int socket(int, int, int);
-#endif
-
-#if defined(SUN)
-extern int setsockopt(int, int, int, const char *, int);
-extern int getsockopt(int, int, int, char *buf, int *);
-#endif
 
 extern const int spec_skill_array[50];
 unsigned int CountBits(unsigned int);
