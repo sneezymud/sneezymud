@@ -29,7 +29,7 @@ extern "C" {
 #include <arpa/inet.h>
 #include <sys/stat.h>
 
-#if defined(LINUX) || defined(SOLARIS)
+#if defined(__linux__) || defined(__sun)
 #include <sys/stat.h>
 #endif
 }
@@ -452,12 +452,6 @@ return "<r>%<z> " + text;
 
 int Descriptor::outputProcessing()
 {
-// seems silly, but we sometimes do descriptor_list->outputProcessing()
-// to send everyone their output.  We need to check for the no-one-connected
-// state just for sanity.
-// code/sys/connect.cc:466:6: error: 'this' pointer cannot be null in well-defined C++ code; pointer may be assumed to always convert to true [-Werror,-Wundefined-bool-conversion]
-// assert(this);
-
 char i[MAX_STRING_LENGTH + MAX_STRING_LENGTH];
 int counter = 0;
 char buf[MAX_STRING_LENGTH + MAX_STRING_LENGTH];

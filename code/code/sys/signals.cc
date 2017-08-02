@@ -1,4 +1,4 @@
-#if defined LINUX
+#if defined(__linux__)
 // Linux systems will reset the signal after it gets raised
 // According to the man page, we can get around this by using different include
 #include <stdio.h>
@@ -36,7 +36,7 @@ void signalSetup(void)
 // Trapping PROF PREVENTS the timing signals from working correctly
 //   signal(SIGPROF, profsig);
 
-#ifndef SOLARIS
+#if !defined(__sun)
   struct itimerval itime;
   struct timeval interval;
 

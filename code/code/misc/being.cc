@@ -1414,9 +1414,6 @@ void TBeing::setArmor(short armor)
 
 bool TBeing::isAffected(uint64_t bv) const
 {
-  //code/misc/being.cc:1416:8: error: 'this' pointer cannot be null in well-defined C++ code; pointer may be assumed to always convert to true [-Werror,-Wundefined-bool-conversion]
-  // assert(this);
- 
   return (specials.affectedBy & bv);
 }
 

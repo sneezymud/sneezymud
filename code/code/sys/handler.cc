@@ -2529,8 +2529,6 @@ void TBeing::remCaptive(TBeing *ch)
 {
   TBeing *t, *last;
 
-  // assert(this);
-
   if (!ch->getCaptiveOf()) {
     vlogf(LOG_BUG,format("remCaptive : trying to remove %s when not a captive.") %  ch->getName());
     return;
