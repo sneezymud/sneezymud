@@ -124,7 +124,7 @@ void SystemTask::CheckTask()
       //  Process the output.
       memset((char *) &fstatus, 0, sizeof(struct stat));
       if (stat(TMPFILE, &fstatus) < 0) 
-#ifdef __linux__
+#if defined(__linux__)
         vlogf(LOG_BUG, "WARNING: SystemTask::CheckTask(): stat()");
 #else
         vlogf(LOG_BUG, format("WARNING: SystemTask::CheckTask(): stat(): errno=%d") %  errno);
