@@ -53,7 +53,7 @@ instance!
 * Modern C++ compiler with working C++14 support -- Tested with clang 3.8 and gcc 5
 * scons -- Tested with version 2.4.1 on Python 2.7
 * libmysqlclient -- Tested with libmysqlclient 5.7.19
-* Boost C++ library, with 'program-options', 'regex', and 'exception' modules
+* Boost C++ library, with 'program-options', 'regex', and 'filesystem' modules
   -- Tested with 1.58
 
 ## Recommended

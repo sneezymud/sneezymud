@@ -8,6 +8,8 @@
 
 #include <stdio.h>
 
+#include <boost/filesystem.hpp>
+
 #include "room.h"
 #include "being.h"
 #include "low.h"
@@ -355,6 +357,29 @@ void assign_rooms()
 }
 
 
+static void verify_path(sstring sp)
+{
+  using namespace boost::filesystem;
+  path bpath(sp.c_str());
+
+  if (exists(bpath)) {
+    if (!is_directory(bpath)) {
+      sstring err = format("libdir '%s' exists but is not a directory!") % sp;
+      throw std::runtime_error(err);
+    }
+    return;
+  }
+
+  create_directories(bpath);
+}
+
+static void verify_path_azdir(const char *path)
+{
+  verify_path(format("%s/corrupt") % path);
+  for (char p: "abcdefghijklmnopqrstuvwxyz")
+    verify_path(format("%s/%c") % path % p);
+}
+
 void bootDb(void)
 {
   TTiming t;
@@ -364,6 +389,13 @@ void bootDb(void)
   bootPulse("Boot db -- BEGIN.");
 
   vlogf(LOG_MISC, "Boot timing: begin");
+
+  bootPulse("Verifying runtime lib dirs.");
+  verify_path("roomdata/saved");
+  verify_path("immmortals");
+  verify_path_azdir("rent");
+  verify_path_azdir("account");
+  verify_path_azdir("player");
 
   bootPulse("Resetting the game time.");
   GameTime::reset_time();

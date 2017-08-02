@@ -20,7 +20,7 @@ libsys=makelib(target='sys', source=Glob('sys/*.cc'), LIBS=['crypt'], CXXFLAGS=c
 libtask=makelib(target='task', source=Glob('task/*.cc'))
 
 libs=[libsys, libmisc, libcmd, libdisc, libgame,
-      libobj, libspec, libtask, 'boost_program_options', 'boost_regex', 'mysqlclient']
+      libobj, libspec, libtask, 'boost_program_options', 'boost_regex', 'boost_filesystem', 'mysqlclient']
 
 if twitter:
   libs.append('curl')
