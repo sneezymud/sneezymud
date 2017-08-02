@@ -281,8 +281,6 @@ def generate(env, **kwargs):
     ... and all others that Program() accepts, like CPPPATH etc.
     """
 
-    print "Loading CxxTest tool..."
-
     #
     # Expected behaviour: keyword arguments override environment variables;
     # environment variables override default settings.
