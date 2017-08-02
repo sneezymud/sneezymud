@@ -861,7 +861,7 @@ const char *getSockOptString(int s, int opt)
     }
   }
   size = sizeof(result);
-#if defined(LINUX)
+#if defined(__linux__)
   if (getsockopt(s, SOL_SOCKET, opt, (char *) &result, (unsigned *) &size) == -1) {
 #else
   if (getsockopt(s, SOL_SOCKET, opt, &result, &size) == -1) {

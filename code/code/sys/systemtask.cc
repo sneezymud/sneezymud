@@ -20,7 +20,7 @@ extern "C" {
 #include "obj_note.h"
 #include "extern.h"
 
-#if !defined(LINUX)
+#if !defined(__linux__)
 extern pid_t vfork(void);
 #endif
 
@@ -124,7 +124,7 @@ void SystemTask::CheckTask()
       //  Process the output.
       memset((char *) &fstatus, 0, sizeof(struct stat));
       if (stat(TMPFILE, &fstatus) < 0) 
-#if defined(LINUX)
+#if defined(__linux__)
         vlogf(LOG_BUG, "WARNING: SystemTask::CheckTask(): stat()");
 #else
         vlogf(LOG_BUG, format("WARNING: SystemTask::CheckTask(): stat(): errno=%d") %  errno);

@@ -357,7 +357,7 @@ static void fastFight()
       last_time.tv_usec -= 1000000;
       last_time.tv_sec++;
     }
-#ifdef LINUX
+#if defined(__linux__)
     // linux uses a nonstandard style of "timedout" (the last parm of select)
     // it gets hosed each select() so must be reinited here
     null_time.tv_sec = 0;
