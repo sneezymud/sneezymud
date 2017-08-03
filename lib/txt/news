@@ -4,6 +4,8 @@
 07-04-17 : The world command now reports the correct number of distinct
            mobiles never killed.
 
+07-03-17 : Shapeshift duration is now extended by critical success.
+
 07-03-17 : Bandaging legs uses up the correct number of bandages.
 
 07-03-17 : Counterattack on deathstroke failure is now affected by armor
