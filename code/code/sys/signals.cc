@@ -1,4 +1,4 @@
-#if defined LINUX
+#if defined(__linux__)
 // Linux systems will reset the signal after it gets raised
 // According to the man page, we can get around this by using different include
 #include <stdio.h>
@@ -36,7 +36,6 @@ void signalSetup(void)
 // Trapping PROF PREVENTS the timing signals from working correctly
 //   signal(SIGPROF, profsig);
 
-#ifndef SOLARIS
   struct itimerval itime;
   struct timeval interval;
 
@@ -49,7 +48,6 @@ void signalSetup(void)
   itime.it_value = interval;
   setitimer(ITIMER_VIRTUAL, &itime, 0);
   signal(SIGVTALRM, checkpointing);
-#endif
 }
 
 void checkpointing(int)

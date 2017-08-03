@@ -1,0 +1,96 @@
+# Sneezymud travis-ci build file
+
+# TODO:
+#   quick test of running the server
+#   run functional tests on debug build
+#   package prod build for download
+#   postgres / sqlite
+#   modern boost on linux
+#   OSX builds
+
+sudo: false
+dist: trusty
+
+language: c
+
+matrix:
+    include:
+        - os: linux
+          compiler: g++-6
+          env: TYPE=debug lto=0 shared=1 debug=1
+        - os: linux
+          compiler: g++-6
+          env: TYPE=prod lto=1 shared=0 debug=0
+        - os: osx
+          compiler: clang++
+          env: TYPE=prod lto=0 shared=1 debug=0
+#        - os: osx
+#          compiler: clang++
+#          env: TYPE=prod lto=1 shared=1 debug=0
+
+cache:
+    directories:
+        - $HOME/.ccache
+        - $HOME/venv
+
+addons:
+    apt:
+        sources:
+            - ubuntu-toolchain-r-test
+            #- deadsnakes
+        packages:
+            - g++-6
+            - libboost-dev
+            - libboost-program-options-dev
+            - libboost-regex-dev
+            - libboost-filesystem-dev
+            - libmysqlclient-dev
+
+# actual build activities go here - note that travis runs all commands
+# regardless of error status, so we wrap them in an and-chain
+script:
+    - scons -C code -j4 -Q ccache=1 pretty=0
+            && ./install_server.sh ./test
+            && make test
+
+# set up the build environment
+before_install:
+    - |
+      if [ $TRAVIS_OS_NAME == osx ] ; then
+            brew install mariadb ccache scons
+            mysql.server start
+            mysql -u root -e "create user $USER@localhost;"
+      fi
+    - export CXX="$CC"
+    - mysql -u root
+            -e "create database sneezy;"
+            -e "grant all on sneezy.* to $USER@localhost;"
+            -e "create database immortal;"
+            -e "grant all on immortal.* to $USER@localhost;"
+
+# runs at end, just before cache archive is made
+before_cache:
+    - rm -f $HOME/.cache/pip/log/debug.log
+
+# any failures here invalidate the cache - use only to prepare build environment
+before_script:
+    # defaults to 512M
+    - ccache -M4G
+    - ccache -s
+    #- test -f $HOME/venv/bin/activate
+    #      || ( pip install -q --user virtualenv && virtualenv $HOME/venv )
+    #- source $HOME/venv/bin/activate
+    #- pip install -q --upgrade
+    #        mysqlclient
+    #        "django>=1.11,<2.0"
+
+notifications:
+    email: false
+    irc: false
+# irc is really chatty, just don't use it
+#    irc:
+#        channels: "chat.freenode.net#sneezydev"
+#        on_success: change
+#        on_failure: change
+#        use_notice: false
+#        skip_join: false

@@ -12,7 +12,7 @@
 
 #include <cstdarg>
 
-#if defined(LINUX) || defined(SOLARIS)
+#if defined(__linux__)
 #include <sys/stat.h>
 #include <unistd.h>
 #endif

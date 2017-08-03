@@ -1,52 +1,59 @@
-# hey emacs, this is -*- python -*-
+# hey emacs, this is -*- python -*- vim: ft=python
+
+import sys
+
+external_libs = [
+    'boost_program_options',
+    'boost_regex',
+    'boost_filesystem',
+    'boost_system',
+    'mysqlclient',
+]
+
+if not sys.platform.startswith('darwin'):
+    external_libs.append('crypt')
+
+# ordered by dependencies
+libsneezy_dirs = 'sys misc cmd disc game obj spec task'.split()
 
 Import('env');
 
-twitter = env.get('TWITTER', True)
-cxxflags = env.get('CXXFLAGS', '')
-if twitter:
-  cxxflags.append('-DTWITTER')
-makelib = env.StaticLibrary if env.get('LIBTYPE', '') == 'static' else env.SharedLibrary
+env.Append(CPPPATH=[ '#/code/' + path for path in libsneezy_dirs ])
 
-
-# library targets
-libcmd=makelib(target='cmd', source=Glob('cmd/*.cc'))
-libdisc=makelib(target='disc', source=Glob('disc/*.cc'))
-libgame=makelib(target='game', source=Glob('game/*.cc'))
-libmisc=makelib(target='misc', source=Glob('misc/*.cc'))
-libobj=makelib(target='obj', source=Glob('obj/*.cc'))
-libspec=makelib(target='spec', source=Glob('spec/*.cc'))
-libsys=makelib(target='sys', source=Glob('sys/*.cc'), LIBS=['crypt'], CXXFLAGS=cxxflags)
-libtask=makelib(target='task', source=Glob('task/*.cc'))
-
-libs=[libsys, libmisc, libcmd, libdisc, libgame,
-      libobj, libspec, libtask, 'boost_program_options', 'boost_regex', 'mysqlclient']
-
-if twitter:
-  libs.append('curl')
+# libsneezy
+if env['shared']:
+    # one shared lib per dir to speed up linking in case of changes
+    libsneezy = [ env.SharedLibrary(target=path, source=Glob('%s/*.cc' % path))
+            for path in libsneezy_dirs ]
+else:
+    # single static library, included whole in every binary
+    libsneezy_files = [ Glob('%s/*.cc' % path) for path in libsneezy_dirs ]
+    libsneezy = [ env.StaticLibrary(target='sneezy', source=libsneezy_files) ]
+libs = libsneezy + external_libs + env.get('extra_libs', [])
 
 # main binary
-sneezy=env.Program('sneezy', 'main.cc', LIBS=libs)
+sneezy = env.Program('sneezy', 'main.cc', LIBS=libs)
 env.InstallAs('../sneezy', sneezy)
 
 # low tools
 lto=env.Object('low/lowtools.cc');
 
-amap=env.Program(['low/amap.cc', lto], LIBS=libs)
-sqladdmobs=env.Program(['low/sqladdmobs.cc', lto], LIBS=libs)
-sqladdobjs=env.Program(['low/sqladdobjs.cc', lto], LIBS=libs)
-sqladdresp=env.Program(['low/sqladdresp.cc', lto], LIBS=libs)
-sqladdwld=env.Program(['low/sqladdwld.cc', lto], LIBS=libs)
-sqledimmobj=env.Program(['low/sqledimmobj.cc', lto], LIBS=libs)
-sqledmob=env.Program(['low/sqledmob.cc', lto], LIBS=libs)
-sqledobj=env.Program(['low/sqledobj.cc', lto], LIBS=libs)
-sqledresp=env.Program(['low/sqledresp.cc', lto], LIBS=libs)
-sqledshop=env.Program(['low/sqledshop.cc', lto], LIBS=libs)
-sqledwld=env.Program(['low/sqledwld.cc', lto], LIBS=libs)
-
-env.Install('../lowtools', [amap, sqladdmobs, sqladdobjs, sqladdresp,
-                            sqladdwld, sqledimmobj, sqledmob, sqledobj,
-                            sqledresp, sqledshop, sqledwld])
+lowtools = [
+    'amap',
+    'sqladdmobs',
+    'sqladdobjs',
+    'sqladdresp',
+    'sqladdwld',
+    'sqledimmobj',
+    'sqledmob',
+    'sqledobj',
+    'sqledresp',
+    'sqledshop',
+    'sqledwld',
+]
+lowtools_progs = [ env.Program(['low/%s.cc' % tool, lto], LIBS=libs)
+        for tool in lowtools ]
+env.Install('../lowtools', lowtools)
 env.Alias('lowtools', '../lowtools')
 
 # cgi

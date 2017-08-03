@@ -27,10 +27,6 @@ extern "C" {
 #include <sys/syscall.h>
 #include <sys/param.h>
 
-#ifdef SOLARIS
-#include <sys/file.h>
-#endif
-
 int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);   
 }
 
@@ -137,7 +133,7 @@ void TMainSocket::addNewDescriptorsDuringBoot(sstring tStString)
 
   sigprocmask(SIG_SETMASK, &mask, NULL);
   
-#ifdef LINUX
+#if defined(__linux__)
   // linux uses a nonstandard style of "timedout" (the last parm of select)
   // it gets hosed each select() so must be reinited here
   null_time.tv_sec = 0;
