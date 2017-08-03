@@ -246,7 +246,6 @@ int lichTouch(TBeing *caster, TBeing *victim, int level, short bKnown, int adv_l
     act("$N groans in pain as life is drawn from $S body!", FALSE, caster, NULL, victim, TO_NOTVICT);
     act("$N groans in pain as life is drawn from $S body!", FALSE, caster, NULL, victim, TO_CHAR);
     act("You groan in pain as life is drawn from your body!", FALSE, caster, NULL, victim, TO_VICT);
-    caster->addToLifeforce(lfmod);
     caster->addToHit(hpgain);
     caster->updatePos();
     TPerson *pers;
@@ -276,6 +275,7 @@ int lichTouch(TBeing *caster, TBeing *victim, int level, short bKnown, int adv_l
       vit /= 2;
       lfmod /= 2;
     }
+    caster->addToLifeforce(lfmod);
     if (!victim->isImmortal())
       victim->addToMove(-vit);
     if (caster->reconcileDamage(victim, dam, SPELL_LICH_TOUCH) == -1)
