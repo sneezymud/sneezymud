@@ -1,139 +1,255 @@
-# hey emacs, this is -*- python -*-
-from SCons.Script.SConscript import SConsEnvironment
-import os.path
+# hey emacs, this is -*- python -*- vim: ft=python
+import sys
 import subprocess
 
-CXX = 'g++'
-#CXX = 'clang'
+# NOTE site_scons/site_init.py runs before this
 
-gcc_version = None
-clang_version = None
-if CXX.startswith('g++'):
-    # dumpversion has more reliable formatting than --version
-    gcc_version = subprocess.check_output([CXX, '-dumpversion'])
-    gcc_version = tuple(map(int, gcc_version.split('.')[:2]))
-elif CXX.startswith('clang'):
-    # clang dumpversion always reports 4.2.1...
-    clang_version = subprocess.check_output([CXX, '--version'])
-    clang_version = clang_version.partition('clang version ')[2]
-    clang_version = tuple(map(int, clang_version.split()[0].split('.')[:2]))
-else:
-    raise Exception('unrecognized compiler')
+# TODO:
+# - gch precompiled headers
+# - profile-guided-optimization rebuild mode
+# - shared library builds on OSX
+# - link to clang's libc++ on linux
+# - clang LTO on linux, probably needs the above
 
-if not (gcc_version >= (5, 4) or clang_version >= (3, 8)):
-    raise Exception('compiler is too old')
-
-CXXFLAGS = [
-    '-g',             # debugger
-    '-DLINUX',        # compiling on Linux
-    '-DFAST',         # compiling on a fast processor machine
-    '-O0',            # optimize code
-    '-march=native',
-    '-Wall',                  # all rec. warnings shown (includes all above)
-#    '-Wextra',                # include some extra warnings
-    '-Wpointer-arith',        # looks for things that depend on sizeof()
-    '-Wcast-qual',            # Warns about using casting to remove const
-    '-Wcast-align',           # a pointer cast changes alignment
-    '-Wwrite-strings',        # looks for formal const char* sent to char*
-#    '-Wconversion',           # bad conversions
-    '-Woverloaded-virtual',   # virtual without a declaration in base class
-    '-Werror',                # turns a warning into an error
-    '-std=c++14',
-    '-fdiagnostics-color=always',
-    ]
-
-CPPPATH = [
-    '/usr/local/include',
-    '/usr/include/boost141',
-    '#/code/cmd',
-    '#/code/disc',
-    '#/code/game',
-    '#/code/misc',
-    '#/code/obj',
-    '#/code/spec',
-    '#/code/sys',
-    '#/code/task'
-    ]
-
-LDFLAGS = [
-    '-g', # enable core debugging
-    ]
-
-LIBPATH = [
-    '/usr/lib64/mysql',
-    '/usr/local/lib',
-]
-
-# build environment
-env=Environment(CXXFLAGS=CXXFLAGS,
-                LINKFLAGS=LDFLAGS,
-                CPPPATH=CPPPATH,
-                LIBPATH=LIBPATH,
-                tools=['default', 'cxxtest'],
-
-		CXX = CXX,
-		SHCXX = CXX,
-
-		# ld has trouble with libstdc++ when compiling with clang
-		LINK = 'g++',
-
-                # LIBTYPE = 'static',  # options: 'static', 'shared'. shared links faster, but doesn't work on Mac.
-                LIBTYPE = 'shared',  # options: 'static', 'shared'. shared links faster, but doesn't work on Mac.
-                # options: "sqlite", "mysql"
-
-                #prettified output
-                SHCXXCOMSTR = "\033[35mCompiling\033[0m $SOURCE",
-                CXXCOMSTR = "\033[35mCompiling\033[0m $SOURCE",
-                SHLINKCOMSTR = "\033[31mLinking\033[0m $TARGET",
-                LINKCOMSTR = "\033[31mLinking\033[0m $TARGET",
-                INSTALLSTR = "\033[33mInstalling\033[0m '$SOURCE' as '$TARGET'",
-
-                # Configuration options
-                TWITTER=False
-                )
-
-Export('env')
-
-# getting some problems with this
-#CacheDir('/mud/build/cache-new')
-
-# build the sneezy exe by default, see the help below for other targets
 Default('sneezy')
 
-# go into code and start building
-env.SConscript('code/SConscript',
-               variant_dir='objs',
-               duplicate=0,
-               exports='env')
-
-
-# etags
-def PhonyTargets(env = None, **kw):
-    if not env: env = DefaultEnvironment()
-    for target,action in kw.items():
-        env.AlwaysBuild(env.Alias(target, [], action))
-
-PhonyTargets(env, tags='@etags code/*/*')
-
-
-# progress indicator
-AddOption('--no-progress', dest='no-progress',
-          action="store_true", default=False)
-
-if not GetOption('no-progress'):
-    Progress(['\033[32mChecking dependencies\033[0m -\r',
-              '\033[32mChecking dependencies\033[0m \\\r',
-              '\033[32mChecking dependencies\033[0m |\r',
-              '\033[32mChecking dependencies\033[0m /\r'], interval=5)
-
-# command line help
 Help("""
-Targets:
-sneezy:         build the main binary (output: sneezy.2).
-lowtools:       build the low tools (output: lowtools/).
-objs/*/*.os:    build a specific file (eg: objs/game/game_hilo.os).
-tags:           rebuild the emacs tag file. 
-check:          build and run unit tests
-'-c'            to clean objects and executables.
-'--no-progress' to mute the "Checking dependencies" output.
+Targets: (default is 'sneezy')
+    sneezy          Build the main binary - output: sneezy
+    lowtools        Build the LOW tools - output: lowtools/*
+    objs/*/*.os     Build a specific file - eg: objs/game/game_hilo.os
+    tags            Rebuild emacs etags
+    -c              Clean up objects and executables (all build output)
+
+Build options and defaults:
+    CXX=        g++     Specify C++ compiler to use
+    CPPPATH=            Add to the header include search path
+    LIBPATH=            Add to the library linker search path
+    olevel=             Compiler -O flag optimization level
+
+Build boolean options: (accept 1/0 y/n yes/no on/off)
+    shared=     on      Build MUD code as shared libraries
+                        (not available on OSX)
+    debug=      on      Enable high-overhead runtime bug detection
+                        (sets harden=off)
+    gprof=      off     Enable gprof profiling
+    harden=     off     Enable low-overhead runtime hardening
+                        (sets olevel=1)
+    lto=        off     Optimize entire sneezy program at once
+                        (sets shared=off and optimize=on)
+    optimize=   off     Set olevel=2, bad for debugging
+    ccache=     off     Use ccache to cache build object files
+    pretty=     on      Prettify scons output
+
+Sneezy boolean options:
+    twitter=    off     Enable support for posting shouts to Twitter
+
+Options can be specified on the commandline or via environment variables.
+
+Compiler optimization defaults to -Og except for Apple clang or clang < 4.0
+where it defaults to -O0.
+
+The defaults are optimized for developing with Sneezy rather than deploying
+it. Good production flags: debug=0 harden=1 shared=0 (and lto=1 if you don't
+need good crash debugging).
 """)
+
+
+flag_ccache =   get_bool_option('ccache',      False)
+flag_debug =    get_bool_option('debug',       True)
+flag_gprof =    get_bool_option('gprof',       False)
+flag_harden =   get_bool_option('harden',      False)
+flag_lto =      get_bool_option('lto',         False)
+flag_optimize = get_bool_option('optimize',    False)
+flag_shared =   get_bool_option('shared',      True)
+flag_pretty =   get_bool_option('pretty',      True)
+flag_twitter =  get_bool_option('twitter',     False)
+
+opt_includes =       get_option('CPPPATH',     '')
+opt_libdirs =        get_option('LIBPATH',     '')
+opt_olevel =         get_option('olevel',      '')
+opt_cxx =            get_option('CXX',         'g++')
+
+
+## detect compiler and version
+gcc_version = None
+clang_version = None
+cxx_version = subprocess.check_output([opt_cxx, '--version']).split('\n')[0]
+if 'g++' in cxx_version:
+    # -dumpversion has more reliable formatting than --version for gcc
+    gcc_version = subprocess.check_output([opt_cxx, '-dumpversion'])
+    gcc_version = tuple(map(int, gcc_version.split('.')[:2]))
+elif 'Apple LLVM' in cxx_version:
+    # Apple's clang runs behind wrt flag support
+    clang_version = (3, 8)
+elif 'clang' in cxx_version:
+    clang_version = cxx_version.partition('clang version ')[2]
+    clang_version = tuple(map(int, clang_version.split()[0].split('.')[:2]))
+else:
+    print >>sys.stderr, 'Unsupported compiler', opt_cxx, 'version', cxx_version
+    raise SystemExit
+
+
+## shared: build sneezy as a bundle of shared libraries
+if flag_shared:
+    if flag_lto:
+        print >>sys.stderr, 'WARNING: shared build incompatible with LTO, disabling'
+        flag_shared = False
+    elif sys.platform.startswith('darwin'):
+        print >>sys.stderr, 'WARNING: shared builds not available on OSX, disabling'
+        flag_shared = False
+
+
+## ccache: cache output of compiler builds
+if flag_ccache:
+    opt_cxx = 'ccache ' + opt_cxx
+
+
+## setup scons environment
+env = Environment(
+    tools = ['default', 'cxxtest'],
+    shared = flag_shared,
+    CXX = opt_cxx,
+    SHCXX = opt_cxx, # must have both of these, along with LINK and SHLINK
+    CPPPATH = opt_includes,
+    LIBPATH = opt_libdirs,
+)
+Export('env')
+
+
+## clang on linux hurdles
+if sys.platform.startswith('linux') and clang_version:
+    # clang builds need to link with g++ for libstdc++
+    env.Replace(LINK='g++')
+    #env.Append(CXXFLAGS='-stdlib=libstdc++')
+    #env.Append(extra_libs=['stdc++'])
+    #if not flag_shared:
+    #    env.Append(CXXFLAGS='-static')
+
+
+## olevel: determine the optimization level
+olevel_flag = '-O' + (
+    opt_olevel if opt_olevel
+    else '2' if flag_optimize or flag_lto
+    else '1' if flag_harden
+    else '0' if clang_version and clang_version < (4, 0)
+    else 'g' )[-1]
+env.Append(CXXFLAGS=olevel_flag)
+
+
+## debug: runtime bug detection with high overhead
+if flag_debug:
+    if flag_harden:
+        print >>sys.stderr, 'WARNING: setting harden=off because debug=on'
+        flag_harden = False
+    # allow asan to instrument globals
+    env.Append(CXXFLAGS='-fno-common')
+    # disable tail call elimination for better stack traces
+    env.Append(CXXFLAGS='-fno-optimize-sibling-calls')
+    # keep the frame pointer for better debugging
+    env.Append(CXXFLAGS='-fno-omit-frame-pointer')
+    # undefined behavior sanitizer, apple clang unsupported
+    if clang_version >= (3, 9):
+        env.Append(CXXFLAGS='-fsanitize=undefined')
+        env.Append(extra_libs=['ubsan'])
+    # memory error sanitizer
+    env.Append(CXXFLAGS='-fsanitize=address')
+    # native clang doesn't need explicit asan lib
+    if gcc_version or clang_version >= (3, 9):
+        env.Append(extra_libs=['asan'])
+    if clang_version >= (3, 9) or gcc_version >= (7, 0):
+        env.Append(CXXFLAGS='-fsanitize-address-use-after-scope')
+    # integer sanitizer, apple clang unsupported
+    if clang_version >= (3, 9):
+        env.Append(CXXFLAGS='-fsanitize=integer')
+
+
+## harden: security flags, slows runtime a bit
+if flag_harden:
+    if gcc_version:
+        # at startup, turn some elf sections RO, and prebind dynamic bindings
+        env.Append(CXXFLAGS=['-Wl,-z,now', '-Wl,-z,relro'])
+    if not flag_shared:
+        # position-independent executable (shared mode already has -fPIC)
+        env.Append(CXXFLAGS='-fPIE', LINKFLAGS=['-fPIE', '-pie'])
+    # buffer overflow checker, only works for -O1 or greater
+    env.Append(CXXFLAGS='-D_FORTIFY_SOURCE=2')
+    # stack overflow checker
+    env.Append(CXXFLAGS='-fstack-protector-strong')
+
+
+## lto: compiles even slower, wrecks debugging, great for CPU
+if flag_lto:
+    if gcc_version:
+        lto_flag = '-flto=%i' % GetOption('num_jobs')
+        env.Append(CXXFLAGS=[lto_flag],
+                   LINKFLAGS=[olevel_flag, lto_flag, '-fuse-linker-plugin'])
+        # needed for lto-linking static libsneezy
+        env.Replace(AR='gcc-ar', RANLIB='gcc-ranlib')
+    else: # clang
+        env.Append(CXXFLAGS=['-flto'], LINKFLAGS=[olevel_flag, '-flto'])
+
+
+## gprof: emit gprof-compatible profiling during runtime
+if flag_gprof:
+    env.Append(CXXFLAGS='-pg', LINKFLAGS='-pg')
+
+
+## shared: compile most of sneezymud as shared libraries
+if flag_shared:
+    env.Append(CXXFLAGS='-fPIC')
+
+
+## twitter: use curl to post shouts
+if flag_twitter:
+    env.Append(CXXFLAGS='-DTWITTER')
+    env.Append(extra_libs=['curl'])
+
+
+## universal flags
+env.Append(LINKFLAGS='-g')
+env.Append(CXXFLAGS=[
+    olevel_flag,
+    '-g',                       # include debugging symbols always
+    '--std=c++14',              # modern C++ features
+    '-Wall',                    # all reccomended warnings shown
+    '-Werror',                  # turn a warning into an error
+    '-Wformat-security',        # warn on bare nonliteral printf / scanf
+    '-Wpointer-arith',          # look for things that depend on sizeof()
+    '-Wcast-qual',              # warn about using casting to remove const
+    '-Wcast-align',             # a pointer cast changes alignment
+    '-Wwrite-strings',          # look for formal const char* sent to char*
+    '-Woverloaded-virtual',     # virtual without a declaration in base class
+# these are more trouble than they're worth currently
+#    '-Wextra',                  # include some extra warnings
+#    '-Wconversion',             # bad conversions
+#    '-Wsign-conversion',
+])
+
+
+## compiler-specific flags
+if gcc_version and gcc_version < (7, 0):
+    # false positives
+    env.Append(CXXFLAGS=['-Wno-maybe-uninitialized'])
+
+
+## pretty: concise build status messages
+if flag_pretty:
+    pretty_compile = "\033[35mCompiling\033[0m $SOURCE"
+    pretty_link = "\033[31mLinking\033[0m $TARGET"
+    pretty_index = "\033[31mIndexing\033[0m $TARGET"
+    pretty_install = "\033[33mInstalling\033[0m '$SOURCE' as '$TARGET'"
+    env.Append(CXXCOMSTR=pretty_compile, SHCXXCOMSTR=pretty_compile,
+               LINKCOMSTR=pretty_link, SHLINKCOMSTR=pretty_link,
+               ARCOMSTR=pretty_link, RANLIBCOMSTR=pretty_index)
+    Progress([ "\033[32mChecking targets\033[0m %s\r" % s for s in '-\\|/' ],
+             interval=5)
+
+
+## pull in C++ targets
+env.SConscript(
+        'code/SConscript', variant_dir='#/objs', duplicate=0, exports='env')
+
+
+## etags
+PhonyTargets(env, tags='@etags code/*/*')

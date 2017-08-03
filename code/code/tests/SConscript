@@ -1,18 +1,22 @@
-# hey emacs, this is -*- python -*-
+# hey emacs, this is -*- python -*- vim: ft=python
 
 Import(['env', 'libs'])
 
+cxx_tests = (
+    'Act',
+    'CommTest',
+    'ConfigFile',
+    'ConvertTo',
+    'DBTest',
+    'Exceptions',
+    'Fruit',
+    'GarbleTest',
+    'Pfile',
+    'SString',
+    'Stat',
+    'Tell',
+)
 
-env.CxxTest('Pfile.h', LIBS=libs, CXXTEST_SKIP_ERRORS=False)
-env.CxxTest('Fruit.h', LIBS=libs, CXXTEST_SKIP_ERRORS=False)
-env.CxxTest('DBTest.h', LIBS=libs, CXXTEST_SKIP_ERRORS=False)
-env.CxxTest('CommTest.h', LIBS=libs, CXXTEST_SKIP_ERRORS=False)
-env.CxxTest('SString.h', LIBS=libs, CXXTEST_SKIP_ERRORS=False)
-env.CxxTest('Exceptions.h', LIBS=libs, CXXTEST_SKIP_ERRORS=False)
-env.CxxTest('ConvertTo.h', LIBS=libs, CXXTEST_SKIP_ERRORS=False)
-env.CxxTest('GarbleTest.h', LIBS=libs, CXXTEST_SKIP_ERRORS=False)
-env.CxxTest('Act.h', LIBS=libs, CXXTEST_SKIP_ERRORS=False)
-env.CxxTest('Tell.h', LIBS=libs, CXXTEST_SKIP_ERRORS=False)
-env.CxxTest('Cast.h', LIBS=libs, CXXTEST_SKIP_ERRORS=False)
-env.CxxTest('Stat.h', LIBS=libs, CXXTEST_SKIP_ERRORS=False)
-env.CxxTest('ConfigFile.h', LIBS=libs, CXXTEST_SKIP_ERRORS=False)
+for test in cxx_tests:
+    env.CxxTest(test, CXXTEST_SUFFIX='.h', LIBS=libs,
+                CXXTEST_SKIP_ERRORS=False)

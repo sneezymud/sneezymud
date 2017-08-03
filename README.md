@@ -10,6 +10,8 @@ Run sneezy, logging to stdout. Ctrl-C to exit.
     -p PORT     listen for Telnet connections on PORT
     -l LIBDIR   use LIBDIR as the lib flatfiles directory
     -c CONFIG   read configuration from CONFIG
+
+SIGHUP, SIGINT, SIGTERM also initiate shutdown.
 ```
 
 ## Defaults
@@ -30,27 +32,24 @@ program.
 
 ## Configuration
 
-To change the database configuration from the defaults, you must create a
+To change the database and runtime configuration from the defaults, you must create a
 custom config file. Two example cfg files are located in `code/`. Copy one of
 them to `sneezy.cfg` and edit as needed. If you put it in Sneezy's starting
 directory, it will get loaded automatically, or you can specify it on the
 command line.
-
-**Note:** Port 5678 is special, and when Sneezy is run on this port it enables
-various developer and beta features. Do not use this port for a production MUD
-instance!
 
 # Requirements
 
 ## Server Environment
 
 * Modern Unix, probably Linux, typically Ubuntu
-* MySQL server or equivalent, two databases, and a user with table-level
+* MySQL-compatible database server, two databases, and a user with table-level
   write access. See below for the defaults for these.
 
 ## Build Dependencies
 
-* Modern C++ compiler with working C++14 support -- Tested with clang 3.8 and gcc 5
+* Modern C++ compiler with working C++14 support
+  -- Tested with clang 3.8 and gcc 5, but the newer the better generally
 * scons -- Tested with version 2.4.1 on Python 2.7
 * libmysqlclient -- Tested with libmysqlclient 5.7.19
 * Boost C++ library, with 'program-options', 'regex', and 'filesystem' modules
@@ -72,15 +71,28 @@ substitute arbitrary choices are represented as shell **$VARIABLES**.
 
 ## Compiling
 
-If you need to change build flags, edit the file `code/SConstruct`.
+Running the `scons` command in the `code` dir will start the build process:
 
     $ cd code
-    # -j sets parallel compilation, nproc reports number of cpus available
     $ scons -j$(nproc)
 
 This will output a `code/sneezy` binary, along with some .so files in
 `code/objs/`. These .so files are **required**, and must be located in an
 `objs/` dir relative to the directory Sneezy is started in.
+
+If you need to change build flags, some can be specified on the commandline,
+and others by editing the file `code/SConstruct`.  For more information see
+the scons help message:
+
+    $ scons -h
+
+### Debugging Builds
+
+Setting debug=1 during a build enables a variety of runtime misbehavior
+checkers. In particular, AddressSanitizer is configured mainly via the
+`ASAN_OPTIONS` and `LSAN_OPTIONS` environment variables. Documentation:
+
+https://github.com/google/sanitizers/wiki/AddressSanitizerFlags
 
 ## Installing The Binary
 
@@ -128,7 +140,7 @@ The names can be changed in the config file:
 
 ### Create User
 
-If you're using the defaults (no username/pw), set `[username]` below to the
+If you're using the defaults (no username/pw), set `$USERNAME` below to the
 Unix account sneezy will be running as, and create a no-password user:
 
     $ sudo mysql -e "CREATE USER '$USERNAME'@'localhost'"
@@ -149,7 +161,10 @@ initial database.
 
 ### Initial SQL Data
 
-The initial database contents are loaded from files containing valid SQL, one per file. They are in MySQL dialect (mostly originating from `mysqldump`) and can be loaded simply by piping them into the `mysql` command. The files are grouped by three main phases, which must be loaded in order:
+The initial database contents are loaded from files containing valid SQL, one
+per file. They are in MySQL dialect (mostly originating from `mysqldump`) and
+can be loaded simply by piping them into the `mysql` command. The files are
+grouped by three main phases, which must be loaded in order:
 
 1. Table creation (`sql_tables`)
 2. View creation (`sql_views`)
