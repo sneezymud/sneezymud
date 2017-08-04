@@ -4114,9 +4114,9 @@ int TBeing::weaponCheck(TBeing *vict, TThing *o, spellNumT type, int dam)
 
   if ((tobj=dynamic_cast<TObj *>(o))) {
     if(tobj->isObjStat(ITEM_MAGIC))
-      total=1;
+      total += 1;
 
-    total = tobj->itemHitroll();
+    total += tobj->itemHitroll();
   } else if(!o && doesKnowSkill(SKILL_VOPLAT))
     total=getSkillValue(SKILL_VOPLAT)/15;
 

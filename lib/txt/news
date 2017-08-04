@@ -1,3 +1,6 @@
+07-04-17 : Weapons' magical status is no longer ignored in damage immunity
+           calculations.
+
 07-04-17 : The world command now reports the correct number of distinct
            mobiles never killed.
 
