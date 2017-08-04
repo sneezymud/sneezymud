@@ -3567,8 +3567,8 @@ int TBeing::doExits(const char *argument, cmdTypeT cmd)
       darkhere = TRUE;
     }
   }
-  sstring slopedData="";
   for (door = MIN_DIR; door < MAX_DIR; door++) {
+    sstring slopedData="";
     if ((exitdata = exitDir(door)) != NULL) {
       if (!(rp = real_roomp(exitdata->to_room))) {
         if (isImmortal()) {
