@@ -436,7 +436,6 @@ inline void SET_BITS(int& a, int p, int n, const int y)
   s = (a & ~r);
   x = (y <<(p+1-n));
   a = (s | x);
-  return;
 }
 
 inline void SET_BITS_CORRECT(int& a, int p, int n, const int y)
@@ -449,7 +448,6 @@ inline void SET_BITS_CORRECT(int& a, int p, int n, const int y)
   x = (y <<(p+1-n));
 // x gets &'d with r to keep from clobbering higher-order bits with a y=-1
   a = (s | (x & r));
-  return;
 }
 
 #endif  // __STRUCTS_H inclusion sandwich

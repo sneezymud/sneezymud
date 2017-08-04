@@ -65,13 +65,11 @@ bool TCookware::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
 void TCookware::pourMeOut(TBeing *ch)
 {
   act("You can't pour from that!", FALSE, ch, 0, 0, TO_CHAR);
-  return;
 }
 
 void TCookware::pourMeIntoDrink1(TBeing *ch, TObj *)
 {
   act("You can't pour from $p!", FALSE, ch, this, 0, TO_CHAR);
-  return;
 }
 
 void TCookware::pourMeIntoDrink2(TBeing *ch, TBaseCup *from)

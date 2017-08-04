@@ -15,7 +15,6 @@ void TThing::pickPulse(TBeing *ch)
 {
   ch->sendTo("Hey, where'd your lockpick go?!?\n\r");
   ch->stopTask();
-  return;
 }
 
 void TTool::pickPulse(TBeing *ch)

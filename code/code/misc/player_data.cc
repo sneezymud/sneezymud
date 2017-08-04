@@ -1441,7 +1441,6 @@ void fixup_players(void)
 
   vlogf(LOG_FILE, format("7-Day:  There are %d active players in %d active accounts.") %  AccountStats::active_player7 % AccountStats::active_account7);
   vlogf(LOG_FILE, format("30-Day: There are %d active players in %d active accounts.") %  AccountStats::active_player30 % AccountStats::active_account30);
-  return;
 }
 
 void TBeing::checkForStr(silentTypeT silent)

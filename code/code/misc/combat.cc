@@ -229,7 +229,6 @@ void TBeing::goBerserk(TBeing *cur)
     act("$n's berserker rage is unleashed on you!",TRUE,this,0,tmp,TO_VICT);
     act("$n's berserker rage is unleashed on $N.",TRUE,this,0,tmp,TO_ROOM);
   }
-  return;
 }
 
 void TBeing::deathCry()
@@ -4986,7 +4985,6 @@ void TBeing::doAttack(const char *argument)
   setCombatMode(new_combat);
 
   sendTo(format("Switching attack mode to %s.\n\r") % attack_modes[getCombatMode()]);
-  return;
 }
 
 // my share of the exp in a group kill
@@ -5597,8 +5595,6 @@ void TBeing::reformGroup()
       SET_BIT(survivor->specials.affectedBy, AFF_GROUP);
     survivor->sendTo(COLOR_BASIC, format("<R>%s has died and %s has taken over leadership of the group.<z>\n\r") % getName() % new_master->getName());
   }
- 
-  return;
 }
 
 void TBeing::genericKillFix(void)

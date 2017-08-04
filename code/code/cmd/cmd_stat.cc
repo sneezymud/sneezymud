@@ -557,7 +557,6 @@ void TBeing::statRoom(TRoom *rmp)
     }
   }
   desc->page_string(str);
-  return;
 }
 
 void TBeing::statObj(const TObj *j)
@@ -726,7 +725,6 @@ void TBeing::statObj(const TObj *j)
     }
   }
   desc->page_string(str);
-  return;
 }
 
 void TBeing::statObjForDivman(const TObj *j)
@@ -822,7 +820,6 @@ void TBeing::statObjForDivman(const TObj *j)
   str += "\n\r";       
   str += "The cloud of smoke is quickly dispersed and the air is clear.\n\r";
   desc->page_string(str);
-  return;
 }
 
 void TBeing::statBeing(TBeing *k)
@@ -2342,7 +2339,6 @@ void TBeing::statBeing(TBeing *k)
     }
   }
   desc->page_string(str);
-  return;
 }
 
 void TBeing::doStat(const sstring &)

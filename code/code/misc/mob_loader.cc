@@ -385,8 +385,6 @@ void TMonster::createWealth(void)
 
   // restore held cash so it doesnt count as load cash for purposes of commod/tool loads
   setMoney(getMoney() + cashOnHand);
-
-  return;
 }
 
 bool isMobComponentSeller(int comp, int mvn)
@@ -604,7 +602,6 @@ void TMonster::mageComponentLoader(void)
   }
 
   setMoney(wealth);
-  return;
 }
 
 void TMonster::rangerComponentLoader(void)
@@ -709,7 +706,6 @@ void TMonster::rangerComponentLoader(void)
   }
 
   setMoney(wealth);
-  return;
 }
 
 void TMonster::shamanComponentLoader(void)
@@ -861,7 +857,6 @@ void TMonster::shamanComponentLoader(void)
   }
 
   setMoney(wealth);
-  return;
 }
 
 void TMonster::clericHolyWaterLoader(void)
@@ -904,7 +899,6 @@ void TMonster::clericHolyWaterLoader(void)
       obj = NULL;
     }
   }
-  return;
 }
 
 void TMonster::clericSymbolLoader(void)
@@ -934,8 +928,6 @@ void TMonster::clericSymbolLoader(void)
       return;
     }
   }
-
-  return;
 }
 
 void TMonster::buffMobLoader()
@@ -970,8 +962,6 @@ void TMonster::buffMobLoader()
   }
 
   *this += *obj;
-
-  return;
 }
 
 void TMonster::genericMobLoader(TOpenContainer **bag)
@@ -1077,7 +1067,4 @@ void TMonster::genericMobLoader(TOpenContainer **bag)
   *this += **bag;
   **bag += *create_money(amount, getFaction());
   setMoney(wealth-amount);
-
-  return;
 }
-

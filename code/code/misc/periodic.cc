@@ -1805,7 +1805,6 @@ void TPCorpse::decayMe()
 
 // valid corpse, see if we have a dead mud
   obj_flags.decay_time--;
-  return;
 }
 
 void TObj::decayMe()
@@ -2434,7 +2433,6 @@ void TBeing::checkCharmMana()
       }
     }
   }
-  return;
 }
 
 // procAutoTips

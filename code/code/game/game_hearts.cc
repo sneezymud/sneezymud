@@ -173,7 +173,6 @@ void HeartsGame::peek(const TBeing *ch)
       ch->sendTo(format("%2d) %-5s | %s\n\r") % (i+1) % card_names[CARD_NUM(hands[which][i])] %
 	    suit(ch, hands[which][i]));
   }
-  return;
 }
 
 int HeartsGame::move_card(TBeing *ch, const char *arg)
@@ -547,7 +546,6 @@ void HeartsGame::pass(TBeing *ch, const char *arg)
   act("$n places $s three card pass in front of $m.", FALSE, ch, NULL, NULL, TO_ROOM);
   ch->sendTo("You place your pass down in front of you.\n\r");
   canpass[which] = FALSE;
-  return;
 }
 
 // returns the index of the owner of the 2 of water

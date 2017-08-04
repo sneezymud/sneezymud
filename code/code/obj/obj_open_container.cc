@@ -184,7 +184,6 @@ void TOpenContainer::changeObjValue2(TBeing *ch)
 {
   ch->specials.edit = CHANGE_CHEST_VALUE2;
   change_chest_value2(ch, this, "", ENTER_CHECK);
-  return;
 }
 
 void TOpenContainer::describeContains(const TBeing *ch) const

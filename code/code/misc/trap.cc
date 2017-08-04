@@ -1900,7 +1900,6 @@ void TBeing::trapDisease(int amt)
   }
   affectJoin(NULL, &aff, AVG_DUR_NO, AVG_EFF_NO);
   disease_start(this, &aff);
-  return;
 }
 
 void TBeing::trapPoison(int amt)
@@ -3566,7 +3565,6 @@ void TBeing::sendTrapMessage(const char *type, trap_targ_t targ, int num)
 
   vlogf(LOG_BUG, format("Bad trap type (%s, %d, %d) with character %s") %  
              type % targ % num % getName());
-  return;
 }
 
 void TBeing::throwGrenade(TTrap *o, dirTypeT dir)
@@ -3611,8 +3609,6 @@ void TBeing::throwGrenade(TTrap *o, dirTypeT dir)
   *rp += *o;
   sprintf(buf, "$n bounces into the room from the %s.", dirs[rev_dir[dir]]);
   act(buf, TRUE, o, 0, 0, TO_ROOM);
-
-  return;
 }
 
 int TBeing::grenadeHit(TTrap *o)

@@ -2532,7 +2532,6 @@ void TBeing::doStand()
 void TThing::sitMe(TBeing *ch)
 {
   ch->sendTo("You can't sit in that.\n\r");
-  return;
 }
 
 static bool sitCasinoEnter(const TBeing *ch)
@@ -2696,7 +2695,6 @@ void TBeing::doSit(const sstring & argument)
 void TThing::restMe(TBeing *ch)
 {
   ch->sendTo("You can't rest in that.\n\r");
-  return;
 }
 
 void TBeing::doRest(const sstring & argument)
@@ -2791,7 +2789,6 @@ void TBeing::doRest(const sstring & argument)
 void TThing::sleepMe(TBeing *ch)
 {
   ch->sendTo("You can't go to sleep in that.\n\r");
-  return;
 }
 
 void TBeing::doSleep(const sstring & argument)
@@ -3292,7 +3289,6 @@ void TBeing::doFly()
   act("$n takes to the air and starts flying about.", TRUE, this, 0, 0, TO_ROOM);
 
   setPosition(POSITION_FLYING);
-  return;
 }
 
 void TBeing::doLand()
@@ -3325,7 +3321,6 @@ void TBeing::doLand()
   act("$n comes in for a landing and stops flying.", TRUE, this, 0, 0, TO_ROOM);
   
   setPosition(POSITION_STANDING);
-  return;
 }
 
 int TBeing::crashLanding(positionTypeT pos, bool force, bool dam, bool falling)

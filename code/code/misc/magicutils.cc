@@ -1272,7 +1272,6 @@ void TMonster::elementalFix(TBeing *caster, spellNumT spell, bool flags)
   setHitroll(0);
 
   genericCharmFix();
-  return;
 }
 
 void TMonster::genericPetFix()
@@ -1773,7 +1772,6 @@ void TBeing::spellMessUp(spellNumT spell)
       act("$n must have done something wrong.",
           FALSE, this, 0, 0, TO_ROOM); 
   }
-  return;
 }
 
 void TBeing::nothingHappens(silentTypeT silent_caster) const

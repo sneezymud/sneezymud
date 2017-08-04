@@ -380,8 +380,6 @@ void TBeing::doPShout(const char *msg){
 
 
   reconcileMana(SKILL_PSITELEPATHY, FALSE);
-
-  return;
 }
 
 void TBeing::doTelevision(const char *arg)

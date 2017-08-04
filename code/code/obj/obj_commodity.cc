@@ -521,7 +521,6 @@ void TCommodity::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
   keeper->doTell(ch->getName(), format("Hmm, I'd give you %d talens for your %i units of that.") % price % numUnits());
 
   //delete obj2;
-  return;
 }
 
 const sstring TCommodity::shopList(const TBeing *ch, const sstring &arg, int min_amt, int max_amt, int, int shop_nr, int k, unsigned long int) const

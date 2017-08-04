@@ -320,7 +320,6 @@ void TBaseCorpse::lookObj(TBeing *ch, int) const
 {
   act("$p contains:",TRUE, ch, this, 0, TO_CHAR);
   list_in_heap(stuff, ch, 0, 100);
-  return;
 }
 
 int TBaseCorpse::putSomethingInto(TBeing *ch, TThing *)

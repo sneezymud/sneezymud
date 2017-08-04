@@ -1793,7 +1793,6 @@ static void logSkillAttempts(const TBeing *caster, spellNumT spell, logSkillAtte
       discArray[spell]->engAttempts--;
       break;
   }
-  return;
 }
 
 enum skillSuccessT {
@@ -1846,7 +1845,6 @@ static void logSkillSuccess(const TBeing *caster, spellNumT spell, skillSuccessT
     caster->desc->session.skill_success_pass++;
     caster->desc->career.skill_success_pass++;
   }
-  return;
 }
 
 enum logSkillFailT {
@@ -1891,7 +1889,6 @@ static void logSkillFail(const TBeing *caster, spellNumT spell, logSkillFailT ty
       break;
   }
   discArray[spell]->fail++;
-  return;
 }
 
 static bool bSucCounter(TBeing *caster, skillUseClassT skillType, spellNumT spell, int roll, int ubCompetence)

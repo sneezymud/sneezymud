@@ -415,7 +415,6 @@ void TPerson::loadWizPowers()
 void TBeing::doPowers(const sstring &) const
 {
   sendTo("Mobs don't get powers, go away!");
-  return;
 }
 
 void TPerson::doPowers(const sstring &argument) const

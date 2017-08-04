@@ -232,7 +232,6 @@ void TBaseWeapon::sharpenMe(TBeing *ch, TTool *tool)
     addToCurSharp((itemType() == ITEM_ARROW) ? 2 : 1);
 
   // task can continue forever, so don't bother decrementing the timer
-  return;
 }
 
 void TBaseWeapon::dullMe(TBeing *ch, TTool *tool)
@@ -268,7 +267,6 @@ void TBaseWeapon::dullMe(TBeing *ch, TTool *tool)
     addToCurSharp(1);
 
   // task can continue forever, so don't bother decrementing the timer
-  return;
 }
 
 int TBaseWeapon::sharpenPrice() const
@@ -403,7 +401,6 @@ void TBaseWeapon::changeObjValue1(TBeing *ch)
   } else {
     ch->sendTo("You lack the power to edit weapon damage.\n\r");
   }
-  return;
 }
 
 void TBaseWeapon::changeObjValue2(TBeing *ch)

@@ -892,8 +892,6 @@ void hypnosis(TBeing *caster, TBeing *victim, TMagicItem * obj)
           FALSE, caster, obj, 0, TO_ROOM, ANSI_RED_BOLD);
   }
   hypnosis(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
-
-  return;
 }
 
 int hypnosis(TBeing *caster, TBeing *victim)

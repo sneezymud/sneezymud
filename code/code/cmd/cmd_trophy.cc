@@ -304,9 +304,6 @@ void TBeing::doTrophy(const sstring &arg)
 
   if (desc)
     desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
-    
-
-  return;
 }
 
 

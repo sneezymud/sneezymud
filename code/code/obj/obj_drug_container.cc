@@ -172,7 +172,6 @@ void TDrugContainer::extinguishMe(TBeing *ch)
 
   act("You extinguish $p, and it smolders slightly before going out.", FALSE, ch, this, 0, TO_CHAR);
   act("$n extinguishes $p, and it smolders slightly before going out.", FALSE, ch, this, 0, TO_ROOM);
-  return;
 }
 
 void TDrugContainer::refuelMeLight(TBeing *ch, TThing *fuel)
@@ -349,6 +348,5 @@ void TDrugContainer::lightMe(TBeing *ch, silentTypeT silent)
 	    drugTypes[getDrugType()].name);
     act(buf, TRUE, ch, this, 0, TO_ROOM);
   }
-  return;
 }
 

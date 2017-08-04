@@ -1232,8 +1232,6 @@ void ItemSave::objToStore(signed char slot, TObj *o,
     delete o;
     o = NULL;
   }
-
-  return;
 }
 
 void ItemSave::objsToStore(signed char slot, StuffList list, 
@@ -1282,7 +1280,6 @@ void ItemSaveDB::objToStore(signed char slot, TObj *o,
     delete o;
     o = NULL;
   }
-  return;
 }
 
 void ItemSaveDB::objsToStore(signed char slot, StuffList list, 
@@ -1940,7 +1937,6 @@ rp2->getName() % corpse->getRoomNum());
     }
     corpse->addCorpseToLists();
   }
-  return;
 }
 
 void TPCorpse::saveCorpseToFile()
@@ -3123,8 +3119,6 @@ void TBeing::removeFollowers()
     return;
 
   wipeFollowersFile(tmp->name.c_str());
-
-  return;
 }
 
 bool TBeing::isSaveMob(const TBeing *) const
@@ -3463,7 +3457,6 @@ void TBeing::reconnectEquipmentHandler(void)
       equipChar(obj_array[i], i, SILENT_YES);
   }
   doSave(SILENT_YES);
-  return;
 }
 
 void TPerson::loadToggles()
@@ -3745,8 +3738,4 @@ void TBeing::doClone(const sstring &arg)
   // this bit makes the mob TRUE for isPc, and prevents the look responses, etc
   
   sendTo("Your clone appears before you.\n\r");
-  return;
 }
-
-
-

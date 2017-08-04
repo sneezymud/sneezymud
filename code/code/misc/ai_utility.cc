@@ -461,8 +461,6 @@ void TMonster::mobAI()
   }
   // we should probably call some independant-reaction functions here 
   // like have the mob demand money if greedy, or leave if suspicious
-
-  return;
 }
 
 // DELETE_VICT delete doer
@@ -1033,8 +1031,6 @@ void TMonster::aiMobCreation()
   setMalice(defmalice());
   setAnger(defanger());
   setGreed(defgreed());
-
-  return;
 }
 
 void TMonster::aiMaintainCalm()

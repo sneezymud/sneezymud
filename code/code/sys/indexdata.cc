@@ -286,8 +286,6 @@ void generate_obj_index()
     obj_index.push_back(*tmpi);
     delete tmpi;
   }
-
-  return;
 }
 
 
@@ -389,8 +387,4 @@ void generate_mob_index()
     mob_index.push_back(*tmpi);
     delete tmpi;
   }
-  
-
-  return;
 }
-

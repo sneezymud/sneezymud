@@ -126,19 +126,4 @@ void TBeing::doBrew(const char *arg)
   }
 
   start_task(this, NULL, NULL, TASK_BREWING, "", 0, in_room, how_many, which_spell, 0);
-
-  return;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

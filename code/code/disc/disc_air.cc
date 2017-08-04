@@ -1273,8 +1273,6 @@ void levitate(TBeing * caster, TBeing * victim)
   }
 
   start_cast(caster, victim, NULL, caster->roomp, SPELL_LEVITATE, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 0);
-
-  return;
 }
 
 int falconWings(TBeing * caster, TBeing * victim, int level, short bKnown)

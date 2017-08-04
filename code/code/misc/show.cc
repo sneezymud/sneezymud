@@ -63,7 +63,6 @@ void TNote::showMe(TBeing *ch) const
     }
   } else
     ch->sendTo("It's blank.\n\r");
-  return;
 }
 
 //   Obviously, all this is really hokey for a procedure that gets used so

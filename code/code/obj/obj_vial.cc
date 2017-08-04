@@ -38,8 +38,6 @@ void TVial::getBestVial(TVial **best)
 
   if (getDrinkUnits() > (*best)->getDrinkUnits())
     *best = this;
-
-  return;
 }     
 
 int TVial::objectSell(TBeing *ch, TMonster *keeper)

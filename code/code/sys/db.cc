@@ -1134,7 +1134,6 @@ void TRoom::colorRoom(int title, int full)
     setDescr(buf);
   }
   full = 1;
-  return;
 }
 
 void allocate_room(int room_number)

@@ -764,7 +764,6 @@ void TPerson::autoDeath()
   autoMail(this, NULL, buf);
   gain_exp(this, -deathExp(), -1);
   genericKillFix();
-  return;
 }
 
 bool MakeTimeT(int tMon, int tDay, int tYear, time_t tLast)
@@ -2136,7 +2135,6 @@ void Descriptor::fdSocketClose(int desc)
       d = NULL;
     }
   }
-  return;
 }
 
 const char *StPrompts[] =

@@ -205,7 +205,6 @@ int TBoard::lookBoard(TBeing *ch, const char *arg)
 void TThing::postMe(TBeing *ch, const char *, TBoard *)
 {
   ch->sendTo("Only notes can be posted to the board.\n\r");
-  return;
 }
 
 void TNote::postMe(TBeing *ch, const char *arg2, TBoard *b)

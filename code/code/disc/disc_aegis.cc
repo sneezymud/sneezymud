@@ -546,7 +546,6 @@ void refresh(TBeing *c, TBeing * victim, TMagicItem * obj, spellNumT spell)
   } else if (ret==SPELL_FAIL) { 
     c->deityIgnore();
   }
-  return;
 }
 
 void refresh(TBeing *c, TBeing * victim)
@@ -592,7 +591,6 @@ void refresh(TBeing *c, TBeing * victim)
   } else if (ret == SPELL_FAIL) { 
     c->deityIgnore();
   }
-  return;
 }
 
 int secondWind(TBeing *c, TBeing *victim, int level, short learn)
@@ -1043,7 +1041,6 @@ void armor(TBeing *c, TBeing * victim, TMagicItem * obj, spellNumT spell)
            FALSE, c, obj, NULL, TO_CHAR);
     c->deityIgnore(SILENT_YES);
   }
-  return;
 }
 
 void armor(TBeing *c, TBeing * victim)

@@ -608,7 +608,6 @@ void TBeing::doCommune(const sstring &arg)
       }
     }
   }
-  return;
 }
 
 int TBeing::doSign(const sstring &arg)

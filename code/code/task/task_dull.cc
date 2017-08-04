@@ -41,7 +41,6 @@ void TThing::dullMe(TBeing *ch, TTool *)
   act("You can't figure out how to dull $p.", FALSE, ch, this, NULL, TO_CHAR);
   act("$n stops dulling.", FALSE, ch, this, NULL, TO_ROOM);
   ch->stopTask();
-  return;
 }
 
 int task_dulling(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *)

@@ -97,7 +97,6 @@ void TBeing::doJoin(const char * args) {
   sendTo(COLOR_BASIC, buf);
   removeOffers();
   saveGuildStats();
-  return;
 }
 
 
@@ -124,7 +123,6 @@ void TBeing::doDefect(const char * args) {
   } else {
     sendTo("In order to insure you really meant to defect, you have to type 'defect yes'.\n\r");
   }
-  return;
 }  
 
 void TBeing::doRecruit(const char * args) {
@@ -174,8 +172,6 @@ void TBeing::doRecruit(const char * args) {
   sprintf(buf, "You may accept this offer by typing 'join <guild>'. It will expire in one day.\n\r");
   targ->sendTo(buf);
   targ->addOffer(newguild());
-
-  return;
 }
 
 bool TBeing::hasOffer(TGuild * f) {
@@ -209,7 +205,6 @@ void TBeing::addOffer(TGuild * f) {
   aff.location = APPLY_NONE;
 
   affectTo(&aff);
-  return;
 }
 
 bool TBeing::recentlyDefected() {
@@ -229,7 +224,6 @@ void TBeing::setDefected() {
   aff.duration = Pulse::UPDATES_PER_MUDHOUR * 24;
 
   affectTo(&aff);
-  return;
 }
 
 
@@ -310,7 +304,6 @@ void TBeing::add_guild(const char * args) {
   }  
   vlogf(LOG_FACT, format("%s founded a new guild: [%s] (%d)") %  getName() % f->keywords % f->ID);
   save_guilds();
-  return;
 }
 
 
@@ -903,7 +896,6 @@ void TBeing::edit_guild(const char * args)
     return;
   }
   sendTo("Invalid option - HELP FEDIT for valid choices.\n\r");
-  return;
 }
 
 void TBeing::show_guild(const char * args)
@@ -1044,8 +1036,6 @@ void TBeing::show_guild(const char * args)
       sendTo(COLOR_BASIC,buf);
     }
   }
-
-  return;
 }
 
 TGuild * TBeing::newguild() const {
@@ -1097,7 +1087,6 @@ void TGuild::setRelation(int target, int state) {
   r->targ_fact = target;
   r->relation = state;
   relations.push_back(r);
-  return;
 }
 
 

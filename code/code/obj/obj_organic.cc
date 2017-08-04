@@ -450,8 +450,6 @@ void TOrganic::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
 
   keeper->doTell(ch->getName(), format("Hmm, I'd give you %d talen%s for that.") %
 		 price % (price > 1 ? "s" : ""));
-
-  return;
 }
 
 // Used by the list command

@@ -133,7 +133,6 @@ void TSymbol::attunePulse(TBeing *ch)
     }
     return;
   }
-  return;
 }
 
 int task_attuning(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *obj)

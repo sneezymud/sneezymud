@@ -2007,7 +2007,6 @@ void TRoom::flameRoom()
       obj = NULL;
     }
   }
-  return;
 }
 
 
@@ -2029,7 +2028,6 @@ void TBeing::freezeRoom()
       obj = NULL;
     }
   }
-  return;
 }
 
 void TBeing::acidRoom()
@@ -2051,7 +2049,6 @@ void TBeing::acidRoom()
       obj = NULL;
     }
   }
-  return;
 }
 
 void TBeing::chlorineRoom()
@@ -2060,7 +2057,6 @@ void TBeing::chlorineRoom()
   for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();++it) {
     (*it)->poisonObject();
   }
-  return;
 }
 
 bool TBeing::noHarmCheck(TBeing *vict)

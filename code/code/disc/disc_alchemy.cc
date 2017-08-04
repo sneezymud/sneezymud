@@ -2393,6 +2393,4 @@ void TBeing::doScribe(const char *arg)
   }
 
   start_task(this, NULL, NULL, TASK_SCRIBING, "", 0, in_room, how_many, which, 0);
-
-  return;
 }

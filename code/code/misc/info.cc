@@ -2463,7 +2463,6 @@ void TBeing::doInventory(const char *argument)
       sendTo("It's pretty hard to take inventory when you can't see.\n\r");
     }
   }
-  return;
 }
 
 void TBeing::doEquipment(const sstring &arg)
@@ -3238,7 +3237,6 @@ void TBeing::doLevels(const char *argument)
   sb += "\n\r";
   if (desc)
     desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
-  return;
 }
 
 void TBeing::doWorld()
@@ -5039,8 +5037,6 @@ void TWand::descMagicSpells(TBeing *ch) const
     else
       ch->sendTo(COLOR_OBJECTS, format("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap() %  discNames[das].properName);
   }
-
-  return;
 }
 
 void TStaff::descMagicSpells(TBeing *ch) const
@@ -5058,8 +5054,6 @@ void TStaff::descMagicSpells(TBeing *ch) const
     else
       ch->sendTo(COLOR_OBJECTS, format("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap() %  discNames[das].properName);
   }
-
-  return;
 }
 
 void TScroll::descMagicSpells(TBeing *ch) const
@@ -5098,8 +5092,6 @@ void TScroll::descMagicSpells(TBeing *ch) const
     else
        ch->sendTo(COLOR_OBJECTS, format("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap() % discNames[das].properName);
   }
-
-  return;
 }
 
 void TBeing::describeSymbolOunces(const TSymbol *obj, int learn) const
@@ -5120,8 +5112,6 @@ void TBeing::describeSymbolOunces(const TSymbol *obj, int learn) const
   strncpy(capbuf, objs(obj), cElements(capbuf));
 
   sendTo(COLOR_OBJECTS, format("%s requires about %d ounce%s of holy water to attune.\n\r") % sstring(capbuf).cap() % amt % (amt == 1 ? "" : "s"));
-
-  return;
 }
 
 void TBeing::describeComponentUseage(const TComponent *obj, int) const
@@ -5135,8 +5125,6 @@ void TBeing::describeComponentUseage(const TComponent *obj, int) const
     sendTo(COLOR_OBJECTS, format("%s is a component used to brew potions.\n\r") % sstring(capbuf).cap());
   else if (IS_SET(obj->getComponentType(), COMP_SCRIBE))
     sendTo(COLOR_OBJECTS, format("%s is a component used during scribing.\n\r") % sstring(capbuf).cap());
-
-  return;
 }
 
 void TBeing::describeComponentDecay(const TComponent *obj, int learn) const
@@ -5169,8 +5157,6 @@ void TBeing::describeComponentDecay(const TComponent *obj, int learn) const
     sendTo("only a couple of weeks.\n\r");
   else if (level < 800)
     sendTo("around a month.\n\r");
-
-  return;
 }
 
 void TBeing::describeComponentSpell(const TComponent *obj, int learn) const
@@ -5195,8 +5181,6 @@ void TBeing::describeComponentSpell(const TComponent *obj, int learn) const
     sendTo(COLOR_OBJECTS, format("%s is used for: %s.\n\r") % 
 	   sstring(objs(obj)).cap() %
           discArray[which]->name);
-
-  return;
 }
 
 sstring describeMaterial(const TThing *t)
@@ -5363,7 +5347,6 @@ void TBeing::sendRoomDesc(TRoom *rp) const
 void TBeing::describeTrapEffect(const TTrap *, int) const
 {
   // this tells things like the triggers, why let them know these?
-  return;
 }
 
 void TBeing::describeTrapLevel(const TTrap *obj, int learn) const
@@ -5621,7 +5604,6 @@ void TBeing::doSpells(const sstring &argument)
     } 
   }
   d->page_string(buffer);
-  return;
 }
 
 void TBeing::doRituals(const sstring &argument)
@@ -5844,7 +5826,6 @@ void TBeing::doRituals(const sstring &argument)
     } 
   }
   d->page_string(buffer);
-  return;
 }
 
 void TBeing::doPrayers(const sstring &argument)
@@ -6038,5 +6019,4 @@ void TBeing::doPrayers(const sstring &argument)
     } 
   }
   d->page_string(buffer);
-  return;
 }

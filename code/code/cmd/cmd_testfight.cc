@@ -309,7 +309,6 @@ void TBeing::doTestFight(const char *arg)
 
   // if they give extra args, have mob1 hit mob2, otherwise at same time
   test_fight_start(*arg ? false : true);
-  return;
 }
 
 static void fastFight()

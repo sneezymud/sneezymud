@@ -380,7 +380,6 @@ void TThing::eatMe(TBeing *ch)
   act("You eat the $o.", FALSE, ch, this, 0, TO_CHAR);
 
   delete this;
-  return;
 }
 
 
@@ -434,7 +433,6 @@ void TObj::eatMe(TBeing *ch)
   }
 
   delete this;
-  return;
 }
 
 
@@ -579,19 +577,16 @@ void TBeing::doEat(const char *argument)
 void TObj::pourMeOut(TBeing *ch)
 {
   act("You can't pour from that!", FALSE, ch, 0, 0, TO_CHAR);
-  return;
 }
 
 void TObj::pourMeIntoDrink1(TBeing *ch, TObj *)
 {
   act("You can't pour from $p!", FALSE, ch, this, 0, TO_CHAR);
-  return;
 }
 
 void TObj::pourMeIntoDrink2(TBeing *ch, TBaseCup *)
 {
   act("You can't pour anything into $p!", FALSE, ch, this, 0, TO_CHAR);
-  return;
 }
 
 void TBaseCup::pourMeIntoDrink2(TBeing *ch, TBaseCup *from_obj)
@@ -820,7 +815,6 @@ void TBeing::doSip(const char *argument)
     return;
   }
   temp->sipMe(this);
-  return;
 }
 
 void TObj::tasteMe(TBeing *ch)
@@ -892,7 +886,6 @@ void TFood::tasteMe(TBeing *ch)
     delete this;
     return;
   }
-  return;
 }
 
 void TBeing::doTaste(const char *argument)
@@ -935,8 +928,6 @@ void TBeing::foodNDrink(sectorTypeT sector, int modifier)
   
   if ((::number(0,9) < 6) && !::number(0,drunk)) 
     gainCondition(DRUNK, -1);
-  
-  return;
 }
 
 void TBeing::doFill(const char *arg)
@@ -981,8 +972,6 @@ void TBeing::doFill(const char *arg)
     obj1->fillMe(this, roomp->isRiverSector() ? LIQ_WATER : LIQ_SALTWATER);
   } else 
     doNotHere();
-  
-  return;
 }
 
 void TBeing::checkForSpills() const

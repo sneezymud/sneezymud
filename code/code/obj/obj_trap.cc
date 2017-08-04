@@ -220,14 +220,12 @@ void TTrap::changeObjValue2(TBeing *ch)
 {
   ch->specials.edit = CHANGE_TRAP_VALUE2;
   change_trap_value2(ch, this, "", ENTER_CHECK);
-  return;
 }
 
 void TTrap::changeObjValue3(TBeing *ch)
 {
   ch->specials.edit = CHANGE_TRAP_VALUE3;
   change_trap_value3(ch, this, "", ENTER_CHECK);
-  return;
 }
 
 int TTrap::getTrapLevel() const

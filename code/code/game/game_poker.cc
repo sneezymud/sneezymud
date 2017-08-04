@@ -350,9 +350,7 @@ void PokerGame::discard(TBeing *ch, sstring arg)
 
     card[i]=0;
   }
-  return;
 }
-
 
 
 void PokerGame::peek(const TBeing *ch)

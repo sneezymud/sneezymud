@@ -341,8 +341,6 @@ void TBeing::doPass(const char *arg)
 
   if (checkDrawPoker())
     gDrawPoker.pass(this);
-
-  return;
 }
 
 
@@ -505,7 +503,6 @@ void TBeing::doSort(const char *arg) const
     return;
   }
   sendTo("You must be playing a card game to use this command!\n\r");
-  return;
 }
   
 CardGame::CardGame() :
@@ -514,4 +511,3 @@ CardGame::CardGame() :
 {
   setup_deck();
 }
-

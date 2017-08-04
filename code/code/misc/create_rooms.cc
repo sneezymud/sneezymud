@@ -1522,7 +1522,6 @@ static void ChangeMaxCap(TRoom *rp, TBeing *ch, const char *arg, editorEnterType
   ch->sendTo(VT_HOMECLR);
   ch->sendTo(format("Current room maximum capacity: %d") % rp->getMoblim());
   ch->sendTo("\n\r\n\rNew maximum capacity: ");
-  return;
 }
 
 static void ChangeRoomHeight(TRoom *rp, TBeing *ch, const char *arg, editorEnterTypeT type)
@@ -1553,7 +1552,6 @@ static void ChangeRoomHeight(TRoom *rp, TBeing *ch, const char *arg, editorEnter
   ch->sendTo("A value of -1 implies an unlimited height.\n\r");
   ch->sendTo("Unlimited heights are for outdoor rooms ONLY.\n\r");
   ch->sendTo("\n\r\n\rNew Room Height: ");
-  return;
 }
 
 static void ChangeRoomFlags(TRoom *rp, TBeing *ch, const char *arg, editorEnterTypeT type)
@@ -1680,8 +1678,6 @@ static void ChangeRoomName(TRoom *rp, TBeing *ch, const char *arg, editorEnterTy
 
   ch->sendTo(format("Current Room Name: %s") % rp->name);
   ch->sendTo("\n\r\n\rNew Room Name: ");
-
-  return;
 }
 
 static void ChangeRoomDesc(TRoom *rp, TBeing *ch, const char *, editorEnterTypeT type)
@@ -1705,7 +1701,6 @@ static void ChangeRoomDesc(TRoom *rp, TBeing *ch, const char *, editorEnterTypeT
   rp->setDescr("");
   ch->desc->str = &rp->descr;
   ch->desc->max_str = MAX_STRING_LENGTH;
-  return;
 }
 
 static void ChangeRoomType(TRoom *rp, TBeing *ch, const char *arg, editorEnterTypeT type)
@@ -1849,7 +1844,6 @@ static void finishRoom(TRoom *rp, TBeing *ch, dirTypeT dir)
   }
   ch->specials.edit = MAIN_MENU;
   update_room_menu(ch);
-  return;
 }
 
 static void ChangeExitSlopedStatus(TRoom *rp, TBeing *ch, const char *arg, editorEnterTypeT type)
@@ -2084,7 +2078,6 @@ static void ChangeExitLockDiff(TRoom *rp, TBeing *ch, const char *arg, editorEnt
   ch->sendTo("\n\r\n\rEnter the difficulty of the lock.\n\r");
   ch->sendTo("A value of 100 implies that the lock is unpickable.\n\r");
   ch->sendTo("\n\r\n\rLock Difficulty: ");
-  return;
 }
 
 static void ChangeExitWeight(TRoom *rp, TBeing *ch, const char *arg, editorEnterTypeT type)
@@ -2186,7 +2179,6 @@ static void ChangeExitWeight(TRoom *rp, TBeing *ch, const char *arg, editorEnter
     ((!rp->dir_option[dir]->keyword.empty()) ? fname(rp->dir_option[dir]->keyword) :
       "BOGUS DOOR KEYWORD"));
   ch->sendTo("\n\rNew Weight: ");
-  return;
 }
 
 static void ChangeExitKeyword(TRoom *rp, TBeing *ch, const char *arg, editorEnterTypeT type)
@@ -2286,7 +2278,6 @@ static void ChangeExitKeyword(TRoom *rp, TBeing *ch, const char *arg, editorEnte
     ch->sendTo("    You will need to retype the Former Keyword if you want to keep it.\n\r");
   }
   ch->sendTo("New Keywords: ");
-  return;
 }
 
 static void ChangeExitCondition(TRoom *rp, TBeing *ch, const char *arg, editorEnterTypeT type)
@@ -2774,7 +2765,6 @@ static void ChangeExitDir(TRoom *rp, TBeing *ch, const char *arg, editorEnterTyp
   ch->sendTo(format(VT_CURSPOS) % 4 % 1);
   ch->sendTo(exit_menu);
   ch->sendTo("--> ");
-  return;
 }
 
 static void DeleteExit(TRoom *rp, TBeing *ch, const char *arg, editorEnterTypeT type)
@@ -2836,7 +2826,6 @@ static void DeleteExit(TRoom *rp, TBeing *ch, const char *arg, editorEnterTypeT 
 #endif
 
   ch->sendTo("Choose exit to delete.\n\r--> ");
-  return;
 }
 
 static void DeleteExtraDesc(TRoom *rp, TBeing *ch)
@@ -2896,7 +2885,6 @@ static void change_room_extra(TRoom *rp, TBeing *ch, const char *arg, editorEnte
   }
   ch->sendTo("\n\rEnter the keyword for the extra description.\n\r--> ");
   ch->specials.edit = CHANGE_ROOM_ROOM_EXDESC;
-  return;
 }
 
 static void RoomSave(TBeing *ch, int start, int end, int useSecond)

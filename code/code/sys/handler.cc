@@ -2521,8 +2521,6 @@ void TBeing::addCaptive(TBeing *ch)
   ch->setNextCaptive(getCaptive());
   setCaptive(ch);
   ch->setCaptiveOf(this);
-
-  return;
 }
 
 void TBeing::remCaptive(TBeing *ch)
@@ -2551,7 +2549,6 @@ void TBeing::remCaptive(TBeing *ch)
   }
   t->setCaptiveOf(NULL);
   t->setNextCaptive(NULL);
-  return;
 }
 
 // this duplicates functionality of the C assert() function

@@ -67,8 +67,6 @@ void TGun::dropSpentCasing(TRoom *roomp){
   obj->setDescr(buf);
 
   *roomp += *obj;
-
-  return;
 }
 
 
@@ -76,7 +74,6 @@ void TGun::dropSpentCasing(TRoom *roomp){
 void gload_usage(TBeing *tb){
   tb->sendTo("Syntax : (loading)   gload <gun> <ammo>\n\r");
   tb->sendTo("Syntax : (unloading) gload unload <gun>\n\r");
-  return;
 }
 
 void TGun::loadMe(TBeing *ch, TAmmo *ammo)

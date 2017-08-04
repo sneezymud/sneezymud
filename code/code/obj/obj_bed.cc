@@ -98,7 +98,6 @@ void TBed::changeObjValue1(TBeing *ch)
 {
   ch->specials.edit = CHANGE_BED_VALUE1;
   change_bed_value1(ch, this, "", ENTER_CHECK);
-  return;
 }
 
 int TBed::getAllFrom(TBeing *ch, const char *argument)

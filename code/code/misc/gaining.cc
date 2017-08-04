@@ -107,8 +107,6 @@ void TBeing::setSpellEligibleToggle(TMonster *trainer, spellNumT spell, silentTy
     default:
       return;
   }
-
-  return;
 }
 
 
@@ -2193,7 +2191,6 @@ void TBeing::pracPath(TMonster *gm, classIndT Class)
     return;
   }
   gm->doSay(buf);
-  return;
 }
 
 double getExpClassLevel(int level)
