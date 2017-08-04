@@ -1,3 +1,6 @@
+07-04-17 : The world command now reports the correct number of distinct
+           mobiles never killed.
+
 3-27-16 : Shaman chrism items now working without crashing the mud. Kudos
           to Jeren for helping identify the problem and providng a solution.
 

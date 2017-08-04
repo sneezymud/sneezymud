@@ -3363,8 +3363,11 @@ void TBeing::doWorld()
 
   int unkmobcount=0;
 
-  //  db.query("select count(distinct mobvnum) from trophy");
-  db.query("select count(*) as count from trophymob");
+  // trophymob requires a periodic background task to fill it
+  // db.query("select count(*) as count from trophymob");
+
+  // just use the inefficient query for now
+  db.query("select count(distinct mobvnum) from trophy");
   if(db.fetchRow())
     unkmobcount=convertTo<int>(db["count"]);
 
