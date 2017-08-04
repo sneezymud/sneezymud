@@ -4,6 +4,9 @@
 07-04-17 : The world command now reports the correct number of distinct
            mobiles never killed.
 
+07-04-17 : Handgonnes, if they exist anywhere in the World, are now
+           properly single-shot weapons.
+
 07-03-17 : Blindness duration is now affected by saves.
 
 07-03-17 : Crits and saves now affect life gain from lich touch.
