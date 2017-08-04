@@ -112,28 +112,6 @@ sstring describeDuration(const TBeing *ch, int dur)
   return ret;
 }
 
-void argument_split_2(const char *argument, char *first_arg, char *second_arg)
-{
-  int look_at, begin;
-  begin = 0;
-
-  for (; *(argument + begin) == ' '; begin++);
-
-  for (look_at = 0; *(argument + begin + look_at) > ' '; look_at++)
-    *(first_arg + look_at) = LOWER(*(argument + begin + look_at));
-
-  *(first_arg + look_at) = '\0';
-  begin += look_at;
-
-  for (; *(argument + begin) == ' '; begin++);
-
-  for (look_at = 0; *(argument + begin + look_at) > ' '; look_at++)
-    *(second_arg + look_at) = LOWER(*(argument + begin + look_at));
-
-  *(second_arg + look_at) = '\0';
-  begin += look_at;
-}
-
 static const sstring describe_part_wounds(const TBeing *ch, wearSlotT pos)
 {
   int i, flags;

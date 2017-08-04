@@ -176,7 +176,6 @@ extern int RecGetObjRoom(const TThing *);
 extern void dirwalk(const sstring &dir, void (*fcn) (const char *));
 extern void dirwalk_fullname(const char *dir, void (*fcn) (const char *));
 extern void dirwalk_subs_fullname(const char *dir, void (*fcn) (const char *));
-extern void argument_split_2(const char *, char *, char *);
 extern int RecCompObjNum(const TObj *o, int obj_num);
 extern TOpal *find_biggest_powerstone(const TBeing *);
 extern void wipeCorpseFile(const char *);
