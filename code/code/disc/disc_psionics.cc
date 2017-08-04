@@ -150,6 +150,7 @@ int TBeing::doPTell(const char *arg, bool visible){
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     delete vict;
     vict = NULL;
+    return DELETE_VICT;
   }
   if (IS_SET_DELETE(rc, DELETE_VICT)) 
     return DELETE_THIS;
