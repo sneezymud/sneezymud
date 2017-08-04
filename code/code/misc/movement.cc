@@ -1673,6 +1673,8 @@ int TBeing::genericMovedIntoRoom(TRoom *rp, int was_in,
     }
     if (IS_SET_DELETE(rc, DELETE_VICT)) 
       return DELETE_THIS;
+    if (rc)
+      continue;
 
     rc = tmons->fearCheck(this, false);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
