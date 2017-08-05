@@ -1,5 +1,7 @@
 SneezyMUD is opensource! See LICENSE.txt for details.
 
+[![Build Status](https://travis-ci.org/sneezymud/sneezymud.svg?branch=master)](https://travis-ci.org/sneezymud/sneezymud)
+
 # -h|--help)
 
 ```
