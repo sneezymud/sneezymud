@@ -125,8 +125,13 @@ bool TBeing::canUseEquipment(const TObj *o, silentTypeT silent, wearKeyT key) co
 {
   bool held=false;
 
-  if(key==WEAR_KEY_HOLD || key==WEAR_KEY_HOLD_R || key==WEAR_KEY_HOLD_L)
+  if (key==WEAR_KEY_HOLD || key==WEAR_KEY_HOLD_R || key==WEAR_KEY_HOLD_L) {
+    // let folks hold any cursed item so a cleric can get at it
+    if (obj->isObjStat(ITEM_NODROP)) {
+        return TRUE;
+    }
     held=true;
+  }
 
   if (!isImmortal()) {
     if(o->getStructPoints() <= 0){
