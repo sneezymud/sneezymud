@@ -1,10 +1,7 @@
 #ifndef __STRUCTS_H
 #define __STRUCTS_H
 
-#ifndef _TIME_H
 #include <time.h>
-#endif
-
 #include <string.h>
 #include <stdint.h>
 

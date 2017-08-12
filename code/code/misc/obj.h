@@ -8,13 +8,10 @@
 #ifndef __OBJ_H
 #define __OBJ_H
 
-#ifndef __SPEC_OBJS_H
-#include "spec_objs.h"
-#endif
-
 #include <vector>
 #include <list>
 
+#include "spec_objs.h"
 #include "trap.h"
 #include "create.h"
 #include "spells.h"

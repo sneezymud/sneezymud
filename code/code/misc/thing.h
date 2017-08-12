@@ -8,10 +8,7 @@
 #ifndef __THING_H
 #define __THING_H
 
-#ifndef _STRING_H
 #include <string.h>
-#endif
-
 #include <list>
 
 #include "limbs.h"
