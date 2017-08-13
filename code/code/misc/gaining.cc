@@ -1278,7 +1278,7 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
   if (ch->checkTrainDeny(ch, me, discipline, min(practices, pracs))) 
     return TRUE;
 
-  if (ch->checkForPreReqs(ch, me, discipline, accclass, doneBas, min(practices, pracs))) {
+  if (ch->checkForPreReqs(ch, me, discipline, accclass, doneBas)) {
     if (practices <= 0) {
       me->doTell(fname(ch->name), "I also would not be able to train you further in this discipline.");
     }
@@ -1430,7 +1430,7 @@ int TBeing::checkTrainDeny(const TBeing *ch, TMonster *me, discNumT discipline, 
   return FALSE;
 }
 
-int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline, classIndT accclass, int prereqs, int pracs) const
+int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline, classIndT accclass, int prereqs) const
 {
   char buf[256];
   sstring tmp_buf;
@@ -1438,7 +1438,6 @@ int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline,
   int combat = 0;
   bool combatLearn = FALSE;
   int WEAPON_GAIN_LEARNEDNESS = 92;
-  pracs = 1;
 
  if (discipline == DISC_BAREHAND) {
    if (ch->getRawNatSkillValue(SKILL_BAREHAND_PROF) < WEAPON_GAIN_LEARNEDNESS) {

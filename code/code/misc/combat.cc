@@ -5579,7 +5579,6 @@ void TBeing::reformGroup()
     if (!new_master) {
       new_master = tmp->follower;
       new_master->stopFollower(TRUE, STOP_FOLLOWER_CHAR_VICT);
-      found = TRUE;
       new_master->master = NULL;
       if (!new_master->isAffected(AFF_GROUP))
         SET_BIT(new_master->specials.affectedBy, AFF_GROUP);

@@ -498,7 +498,6 @@ sstring TBeing::autoFormatDesc(const sstring &regStr, bool indent) const
   // indent the first line, if needed
   if (indent) {
     line = "  "; // intial extra space
-    indent = false;
   }
 
   int i = 0;
@@ -2548,17 +2547,14 @@ void TBeing::doEquipment(const sstring &arg)
       }
 
       act("$N is using.", FALSE, this, 0, victim, TO_CHAR);
-      found = FALSE;
       for (j = MIN_WEAR; j < MAX_WEAR; j++) {
         if (victim->equipment[j] && !victim->equipment[j]->shouldntBeShown(j)) {
           buf=format("<%s>") % victim->describeEquipmentSlot(j);
           sendTo(format("%s%-26s%s") % cyan() % buf % norm());
           if (canSee(victim->equipment[j])) {
             showTo(victim->equipment[j], SHOW_MODE_SHORT_PLUS);
-            found = TRUE;
           } else {
             sendTo("Something.\n\r");
-            found = TRUE;
           }
         } else if(tattoos[j]!=""){
 	  sstring slot = describeEquipmentSlot(j);
@@ -5159,22 +5155,8 @@ void TBeing::describeComponentDecay(const TComponent *obj, int learn) const
     sendTo("around a month.\n\r");
 }
 
-void TBeing::describeComponentSpell(const TComponent *obj, int learn) const
+void TBeing::describeComponentSpell(const TComponent *obj, int) const
 {
-  if (!hasClass(CLASS_MAGE) && !hasClass(CLASS_CLERIC) &&
-      !hasClass(CLASS_RANGER)  && !hasClass(CLASS_DEIKHAN) && !hasClass(CLASS_SHAMAN))
-    learn /= 3;
-
-//  int level = GetApprox(getSkillLevel(SKILL_EVALUATE), learn);
-
-#if 0
-  if (obj->getMagicLevel() > level) {
-    sendTo(COLOR_OBJECTS, format("You can tell nothing about the spell %s is used for.\n\r") % 
-	   sstring(objs(obj)).uncap());
-    return;
-  }
-#endif
-
   int which = obj->getComponentSpell();
 
   if (which >= 0 && discArray[which])

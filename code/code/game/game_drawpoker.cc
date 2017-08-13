@@ -571,7 +571,6 @@ int DrawPokerGame::new_deal()
   if ((playerNum & (1 << 31))) {
     sendrpf(tChar[0]->roomp, "A tie occured.\n\r");
     totalWinners = playerNum &= ~(1 << 31);
-    playerNum = winnerList[0];
   } else {
     sendrpf(tChar[0]->roomp, "%s won the hand.\n\r", names[playerNum]);
 

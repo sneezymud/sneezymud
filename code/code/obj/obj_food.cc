@@ -39,7 +39,6 @@ void TBaseCup::weightChangeObject(float wgt_amt)
   float sweight = getWeight();
 #endif
   float max_amt;
-  float weightDiff = 0;
 
   // OED items ignore liquid weights
   if (number < 0)
@@ -61,10 +60,7 @@ void TBaseCup::weightChangeObject(float wgt_amt)
     addToWeight(wgt_amt);
   else if ((tmp = parent)) {
     if (dynamic_cast<TBeing *> (tmp)) {
-      weightDiff = getWeight();
       addToWeight(wgt_amt);
-      weightDiff -= getWeight();
-      //      tmp->addToCarriedWeight(-weightDiff);
     } else {
       --(*this);
       addToWeight(wgt_amt);
@@ -103,11 +99,8 @@ void TBaseCup::weightChangeObject(float wgt_amt)
 #endif
     if ((tmp = parent)) {
       if (dynamic_cast<TBeing *> (tmp)) {
-        weightDiff = getWeight();
         setWeight(obj_index[getItemIndex()].weight +
                      getDrinkUnits() * SIP_WEIGHT);
-        weightDiff -= getWeight();
-	//        tmp->addToCarriedWeight(-weightDiff);
       } else {
         (*this)--;
         setWeight(obj_index[getItemIndex()].weight +

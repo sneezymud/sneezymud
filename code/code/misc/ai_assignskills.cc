@@ -16,41 +16,33 @@ void TBeing::assignSkillsClass()
 
   mud_assert(discs != NULL, "Somehow got to assignSkillsClass without a discs %s", getName().c_str());
 
-  // first, lets assign some "free" discs
-  // keep track of how much free stuff we gave out though
-  unsigned int freebies = 0;
   if ((cd = getDiscipline(DISC_ADVENTURING))) {
     value = min((3*(GetMaxLevel())), 100);
     cd->setNatLearnedness(value);
     cd->setLearnedness(value);
-    freebies += value/3;
   }
   if (hasClass(CLASS_MAGE)) {
     if ((cd = getDiscipline(DISC_WIZARDRY))) {
       value = min((3*(GetMaxLevel())), 100);
       cd->setNatLearnedness(value);
       cd->setLearnedness(value);
-      freebies += value/3;
     }
     if ((cd = getDiscipline(DISC_LORE))) {
       value = min((3*(GetMaxLevel())), 100);
       cd->setNatLearnedness(value);
       cd->setLearnedness(value);
-      freebies += value/3;
     }
   } else if (hasClass(CLASS_SHAMAN)) {
     if ((cd = getDiscipline(DISC_RITUALISM))) {
       value = min((3*(GetMaxLevel())), 100);
       cd->setNatLearnedness(value);
       cd->setLearnedness(value);
-      freebies += value/3;
     }
   } else if (hasClass(CLASS_CLERIC) || hasClass(CLASS_DEIKHAN)) {
     if ((cd = getDiscipline(DISC_THEOLOGY))) {
       value = min((3*(GetMaxLevel())), 100);
       cd->setNatLearnedness(value);
       cd->setLearnedness(value);
-      freebies += value/3;
     }
   }
   for (Class = MIN_CLASS_IND; Class < MAX_CLASSES; Class++) {
@@ -65,10 +57,6 @@ void TBeing::assignSkillsClass()
       else 
         pracs += calcNewPracs(Class, false);
     }
-    // but discount for the freebies given above
-    // PCs get these for free at gain time, may as well not charge mobs
-    //    pracs -= freebies;
-
     setPracs(max((int) pracs, 0), Class);
   }
 

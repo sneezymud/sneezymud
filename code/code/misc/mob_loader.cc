@@ -571,12 +571,10 @@ void TMonster::mageComponentLoader(void)
     spell = CompIndex[num].spell_num;  
      
     if (tcom && tcom->isComponentType(COMP_SPELL) && spell == TYPE_UNDEFINED) {  
-      num = -1;  
       delete tcom;  
       continue;  
     }  
     if (tcom->isComponentType(COMP_POTION)) {  
-      num = -1;  
       delete tcom;
       continue;
     }
@@ -670,19 +668,16 @@ void TMonster::rangerComponentLoader(void)
     TComponent *tcom =dynamic_cast<TComponent *>(obj);
     spell = CompIndex[num].spell_num;
     if (tcom && tcom->isComponentType(COMP_SPELL) && spell == TYPE_UNDEFINED) {
-      num = -1;
       delete tcom;
       continue;
     }
     // skip scribe comps
     if (tcom->isComponentType(COMP_SCRIBE)) {
-      num = -1;
       delete tcom;
       continue;
     }
     // skip brew comps
     if (tcom->isComponentType(COMP_POTION)) {
-      num = -1;
       delete tcom;
       continue;
     }
@@ -825,13 +820,11 @@ void TMonster::shamanComponentLoader(void)
     spell = CompIndex[num].spell_num;
 
     if (tcom && tcom->isComponentType(COMP_SPELL) && spell == TYPE_UNDEFINED) {
-      num = -1;
       delete tcom;
       continue;
     }
     // skip scribe comps
     if (tcom->isComponentType(COMP_SCRIBE)) {
-      num = -1;
       delete tcom;
       continue;
     }

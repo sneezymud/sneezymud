@@ -149,8 +149,6 @@ int TBeing::doLayHands(const char *arg)
     return FALSE;
   }
   one_argument(arg, name_buf, cElements(name_buf));
-  if (!*name_buf)
-    vict = this;
 
   if (!(vict = get_char_room_vis(this, name_buf))) {
     sendTo("No one here by that name.\n\r");

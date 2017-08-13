@@ -1133,7 +1133,6 @@ void TRoom::colorRoom(int title, int full)
   } else if (title == 2) {
     setDescr(buf);
   }
-  full = 1;
 }
 
 void allocate_room(int room_number)
@@ -3618,31 +3617,6 @@ bool zoneData::isEmpty(void)
         return (false);
 
   return (true);
-}
-
-// I Could have give fread_string an additional argument to
-// tell it whether to allocate or not, but I'd rather just
-// do this instead - Russ
-void readStringNoAlloc(FILE *fp)
-{
-  char buf[MAX_STRING_LENGTH], *ptr, *marker = NULL;
-
-  *buf = 0;
-  ptr = buf;
-  while(fgets(ptr, MAX_STRING_LENGTH, fp)) {
-    //  Check if we've hit the end of sstring marker. 
-    if ((marker=strchr(ptr, '~')) != 0) 
-      break;
-    //  Set the pointer to the end of the sstring. NOTE: This is better then
-    // the strlen because we're not starting at the beggining every time. 
-    if ((ptr = strchr(ptr, '\000')) == 0) {
-      vlogf(LOG_FILE, "fread_string(): read error.");
-      return;
-    }
-    //  Add the return char. 
-    *ptr++ = '\r';
-  }
-  *marker = 0;   // Nuke the ~ 
 }
 
 // read and allocate space for a '~'-terminated sstring from a given file 

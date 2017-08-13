@@ -976,7 +976,6 @@ int TBeing::polyAffectJoin(TBeing * recipient)
 int TBeing::affectJoin(TBeing * caster, affectedData *af, avgDurT avg_dur, avgEffT avg_mod, bool text)
 {
   affectedData *hjp;
-  bool found = FALSE;
   int renew = 0;
 
   // Remove any 'bit' that the player may already have set.
@@ -986,7 +985,7 @@ int TBeing::affectJoin(TBeing * caster, affectedData *af, avgDurT avg_dur, avgEf
       !affectedBySpell(af->type))
     af->bitvector = 0;
 
-  for (hjp = affected; !found && hjp; hjp = hjp->next) {
+  for (hjp = affected; hjp; hjp = hjp->next) {
     if ((hjp->type == af->type) &&
         (hjp->location == af->location)) {
       if (af->location == APPLY_IMMUNITY ||
@@ -1028,13 +1027,8 @@ int TBeing::affectJoin(TBeing * caster, affectedData *af, avgDurT avg_dur, avgEf
       affectRemove(hjp, SILENT_YES);
       // hjp is invalid here
       affectTo(af, renew, SILENT_YES);
-      found = TRUE;
       return TRUE;
     }
-  }
-  if (!found) {
-    affectTo(af);
-    return TRUE;
   }
   return FALSE;
 }
