@@ -27,10 +27,10 @@
 TObj * findShopObjForCompare(TBeing *ch, sstring StObject)
 {
   TThing *tThing;
-  unsigned int shop_nr, tValue;
+  unsigned int shop_nr;
   char tString[256];
 
-  if (!(tValue = getabunch(StObject.c_str(), tString))) {
+  if (!getabunch(StObject.c_str(), tString)) {
     strcpy(tString, StObject.c_str());
   }
 
