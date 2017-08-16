@@ -834,6 +834,8 @@ void TBeing::doSeekwater()
   }
 
   // Let's determine the distance:
+  // Ranges: 21, ..., 120
+  // dist = (max(5, lev)/5) * (max(10, skill)/10) + 20;
   dist = lev * max(10, skill);
  
   switch (getRace()) {
