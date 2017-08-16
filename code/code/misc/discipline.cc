@@ -3426,7 +3426,7 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
 {
   CSkill *sk;
   CDiscipline *assDiscipline, *discipline;
-  int discLearn, chanceDisc, chanceAss;
+  int chanceDisc = 0, chanceAss = 0, discLearn = 0;
   char tString[256];
 
   if (isImmortal() || !desc || roomp->isRoomFlag(ROOM_ARENA)) {
