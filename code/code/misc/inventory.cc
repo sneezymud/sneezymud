@@ -121,7 +121,6 @@ void TBeing::logItem(const TThing *obj, cmdTypeT cmd) const
     sprintf(cmdbuf, "unknown command %d", cmd);
   
   obj->logMe(this, cmdbuf);
-  return;
 }
 
 // procedures related to open
@@ -244,7 +243,6 @@ void TPCorpse::dropMe(TBeing *ch, showMeT showme, showRoomT showroom)
     saveCorpseToFile();
   }
 #endif
-  return;
 }
 
 void TTrap::dropMe(TBeing *ch, showMeT, showRoomT showroom)

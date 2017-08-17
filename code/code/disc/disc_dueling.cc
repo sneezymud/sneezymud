@@ -436,11 +436,5 @@ void TBeing::doTranceOfBlades(const char *newarg) {
   act("Concentrating, you enter the trance, and you feel your defensive reactions quicken.",FALSE, this, obj, NULL, TO_CHAR);
   act("Concentrating, $n enters into a defensive trance.",FALSE, this, obj, NULL, TO_ROOM);
   
-  
   start_task(this, (TObj *) obj, NULL, TASK_TRANCE_OF_BLADES, NULL, 0, (ushort) this->in_room, 0, 0, 0);
-  return;
 }
-
-
-
-

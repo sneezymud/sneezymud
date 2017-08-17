@@ -1210,7 +1210,6 @@ void TPerson::doShow(const sstring &argument)
 
   if (desc)
     desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
-  return;
 }
 
 // ----- New Show Code Below Here:

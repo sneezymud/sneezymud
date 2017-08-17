@@ -458,7 +458,6 @@ static void showStatsTo(const Descriptor *d, const TBeing *ch, bool hidden_stuff
 
 
   ch->desc->page_string(str);
-  return;
 }
 
 const char *statBonusDescr(int percent)

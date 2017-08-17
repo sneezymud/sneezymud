@@ -1793,7 +1793,6 @@ static void logSkillAttempts(const TBeing *caster, spellNumT spell, logSkillAtte
       discArray[spell]->engAttempts--;
       break;
   }
-  return;
 }
 
 enum skillSuccessT {
@@ -1846,7 +1845,6 @@ static void logSkillSuccess(const TBeing *caster, spellNumT spell, skillSuccessT
     caster->desc->session.skill_success_pass++;
     caster->desc->career.skill_success_pass++;
   }
-  return;
 }
 
 enum logSkillFailT {
@@ -1891,7 +1889,6 @@ static void logSkillFail(const TBeing *caster, spellNumT spell, logSkillFailT ty
       break;
   }
   discArray[spell]->fail++;
-  return;
 }
 
 static bool bSucCounter(TBeing *caster, skillUseClassT skillType, spellNumT spell, int roll, int ubCompetence)
@@ -3429,10 +3426,9 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
 {
   CSkill *sk;
   CDiscipline *assDiscipline, *discipline;
-  int discLearn, chance, chanceDisc, chanceAss;
+  int chanceDisc = 0, chanceAss = 0, discLearn = 0;
   char tString[256];
 
-  discLearn = chance = chanceDisc = chanceAss = 0;
   if (isImmortal() || !desc || roomp->isRoomFlag(ROOM_ARENA)) {
     return FALSE;
   }
@@ -3571,7 +3567,7 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
   // solving for a linear formula, gave slope of (-1/60) and intersect of 4
     float power;
     power = 4.0 - ( plotStat(STAT_NATURAL, STAT_WIS, 0.5, 3.0, 1.75, 1.0));
-    chance = (int) (1000.0 * (pow(amount, power)));
+    int chance = (int) (1000.0 * (pow(amount, power)));
 
     // make a minimum chance of increase.
     if (amount > 0.0)

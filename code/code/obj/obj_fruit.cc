@@ -241,7 +241,6 @@ void TFruit::tasteMe(TBeing *ch){
     delete this;
     return;
   }
-  return;
 }
 
 int TFruit::objectDecay(){

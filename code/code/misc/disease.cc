@@ -1236,7 +1236,6 @@ void TBeing::bodySpread(int chance_to_spread, affectedData * af)
     sendTo(format("Lesions begin to form on your %s and it begins to feel numb!\n\r") % describeBodySlot(slot));
     disease_start(this, &vaf);
   }
-  return;
 }
 
 void TBeing::dummyLeprosy(wearSlotT part)

@@ -106,8 +106,6 @@ void TBeing::doGuard(const sstring &argument)
       }
     }
   }
-
-  return;
 }
 
 void TObj::junkMe(TBeing *ch)
@@ -653,7 +651,6 @@ void TBeing::doReport(const char *argument)
 void TBeing::doTitle(const char *)
 {
   sendTo("Mobs don't have titles.\n\r");
-  return;
 }
 
 void TPerson::doTitle(const char *argument)
@@ -1024,7 +1021,6 @@ void TBeing::doPractice(const char *argument)
   }
 // new function to send skills lists to pc's
   sendSkillsList(dnt);
-  return;
 }
 
 bool skillSorter::operator() (const skillSorter &x, const skillSorter &y) const
@@ -1460,8 +1456,6 @@ void TBeing::doPracSkill(const char *argument, spellNumT skNum)
     }
     sendTo(COLOR_BASIC, how_long);
   }
-
-  return;
 }
 
 void TBeing::doPracDisc(const char *arg, int classNum)
@@ -3469,7 +3463,6 @@ void TThing::extinguishMe(TBeing *ch)
     act("$n extinguishes $p, and it smolders slightly before going out.",
 	FALSE, ch, o, 0, TO_ROOM);
   }
-  return;
 }
 
 void TBeing::doExtinguish(const sstring & argument)
@@ -3535,13 +3528,11 @@ void TBeing::doExtinguish(const sstring & argument)
 void TThing::refuelMeLight(TBeing *ch, TThing *)
 {
   ch->sendTo("Refueling is for lights and lamps.\n\r");
-  return;
 }
 
 void TThing::refuelMeFuel(TBeing *ch, TLight *)
 {
   act("$p isn't a fuel!", FALSE, ch, this, NULL, TO_CHAR);
-  return;
 }
 
 void TThing::refuelMeDrug(TBeing *ch, TDrugContainer *tdc)
@@ -3549,7 +3540,6 @@ void TThing::refuelMeDrug(TBeing *ch, TDrugContainer *tdc)
   char buf[256];
   sprintf(buf, "$p isn't a drug and shouldn't be put into %s.", tdc->getName().c_str());
   act(buf, FALSE, ch, this, NULL, TO_CHAR);
-  return;
 }
 
 void TBeing::doRefuel(const sstring &argument)
@@ -4063,8 +4053,6 @@ void TBeing::doDrag(const sstring &arg)
     sendTo(syntax);
     return;
   }
-
-  return;
 }
 
 
@@ -4101,7 +4089,6 @@ void TBeing::doEmail(const char *arg)
 void TBeing::doList(const char *arg)
 {
   doNotHere();
-  return;
 }
 
 void Descriptor::add_comment(const char *who, const char *msg) 
@@ -4559,8 +4546,6 @@ void TBeing::doRoll(const sstring &arg)
     sendTo(syntax);
     return;
   }
-
-  return;
 }
 
 // adds to stats randomly, but in a weighted function that favours the first

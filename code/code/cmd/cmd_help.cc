@@ -381,8 +381,6 @@ void /*TBeing::*/displayHelpFile(TBeing *ch, char *helppath, char *namebuf){
   file_to_sstring(helppath, str, CONCAT_YES);
   str += "\n\r";
   ch->desc->page_string(str);
-  return;
-
 }
 
 void TBeing::doHelp(const char *arg)

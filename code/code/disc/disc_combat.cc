@@ -58,7 +58,6 @@ void TTool::sharpenMeStone(TBeing *caster, TThing *obj)
 void TThing::sharpenMeStoneWeap(TBeing *caster, TTool *)
 {
   caster->sendTo("Sorry.  You only know how to sharpen weapons.\n\r");
-  return;
 }
 
 void sharpen(TBeing * caster, TThing * obj)
@@ -121,7 +120,6 @@ void TTool::dullMeFile(TBeing *caster, TThing *obj)
 void TThing::dullMeFileWeap(TBeing *caster, TTool *)
 {
   caster->sendTo("Sorry.  You only know how to dull weapons.\n\r");
-  return;
 }
  
 void dull(TBeing * caster, TThing * obj)

@@ -3331,7 +3331,6 @@ void TSymbol::attunerGiven(TBeing *ch, TMonster *me)
     me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT);
     return;
   }
-  return;
 }
 int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 {

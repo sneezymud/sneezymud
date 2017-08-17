@@ -382,7 +382,6 @@ void poison(TBeing * caster, TBeing * victim)
   if (!victim->isPc()) {
     dynamic_cast<TMonster *>(victim)->addHated(caster);
   }
-  return;
 }
 
 int poison(TBeing * caster, TBeing * victim, TMagicItem * obj, spellNumT spell)
@@ -579,7 +578,6 @@ void blindness(TBeing * caster, TBeing * victim, TMagicItem * obj)
   if (!IS_SET(ret, SPELL_CRIT_FAIL) && !victim->isPc()) {
     dynamic_cast<TMonster *>(victim)->addHated(caster);
   }
-  return;
 }
 
 void blindness(TBeing * caster, TBeing * victim)
@@ -649,7 +647,6 @@ void blindness(TBeing * caster, TBeing * victim)
   if (!IS_SET(ret, SPELL_CRIT_FAIL) && !victim->isPc()) {
     dynamic_cast<TMonster *>(victim)->addHated(caster);
   }
-  return;
 }
 
 int harmLight(TBeing * caster, TBeing * victim, int level, short bKnown, spellNumT spell, int adv_learn)
@@ -1115,7 +1112,6 @@ void paralyze(TBeing * caster, TBeing * victim, TMagicItem * obj)
   if (!IS_SET(ret, SPELL_CRIT_FAIL) && !victim->isPc()) {
     dynamic_cast<TMonster *>(victim)->addHated(caster);
   }
-  return;
 }
 
 void paralyze(TBeing * caster, TBeing * victim)
@@ -1190,7 +1186,6 @@ void paralyze(TBeing * caster, TBeing * victim)
   if (!IS_SET(ret, SPELL_CRIT_FAIL) && !victim->isPc()) {
     dynamic_cast<TMonster *>(victim)->addHated(caster);
   }
-  return;
 }
 
 bool notBreakSlot(wearSlotT slot, bool avoid)
@@ -2169,7 +2164,6 @@ void disease(TBeing *caster, TBeing *victim, TMagicItem *obj)
       dynamic_cast<TMonster *>(victim)->addHated(caster);
     }
   }
-  return;
 }
 
 void disease(TBeing *caster, TBeing *victim)
@@ -2186,7 +2180,6 @@ void disease(TBeing *caster, TBeing *victim)
       dynamic_cast<TMonster *>(victim)->addHated(caster);
     }
   }
-  return;
 }
 
 int infect(TBeing * caster, TBeing * victim, int level, short bKnown, spellNumT spell)
@@ -2310,7 +2303,6 @@ void infect(TBeing *caster, TBeing *victim, TMagicItem *obj, spellNumT spell)
       dynamic_cast<TMonster *>(victim)->addHated(caster);
     }
   }
-  return;
 }
 
 void infect(TBeing * caster, TBeing * victim)

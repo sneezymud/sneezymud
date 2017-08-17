@@ -2295,7 +2295,6 @@ void TComponent::changeObjValue4(TBeing *ch)
 {
   ch->specials.edit = CHANGE_COMPONENT_VALUE4;
   change_component_value4(ch, this, "", ENTER_CHECK);
-  return;
 }
 
 bool TComponent::sellMeCheck(TBeing *ch, TMonster *keeper, int num, int defaultMax) const
@@ -3266,5 +3265,4 @@ void TComponent::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num)
     buf = format("Normally, I'd give you %d talens for %s!") % price % getName();
   }
   keeper->doTell(ch->getName(), buf);
-  return;
 }

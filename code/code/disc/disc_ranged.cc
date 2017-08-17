@@ -15,13 +15,11 @@
 void TThing::sstringMeBow(TBeing *ch, TThing *)
 {
   act("$p isn't a bow.", FALSE, ch, this, 0, TO_CHAR);
-  return;
 }
 
 void TThing::sstringMeString(TBeing *ch, TBow *)
 {
   act("$p isn't bowsstring.", FALSE, ch, this, 0, TO_CHAR);
-  return;
 }
 
 void TTool::sstringMeString(TBeing *ch, TBow *bow)
@@ -96,5 +94,4 @@ void TBeing::doRestring(const sstring &argument)
 #endif
   bow->sstringMeBow(this, bstr);
   // sstring may be invalid here
-  return;
 }

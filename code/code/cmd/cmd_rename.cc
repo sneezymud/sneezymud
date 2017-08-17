@@ -208,8 +208,6 @@ void TBeing::doNameChange(const char *argument)
   }
   // and again for inventory
   renamePersonalizeFix(vict->stuff, orig_name, tmp_name);
-
-  return;
 }
 
 void TBeing::doDescription()

@@ -1004,7 +1004,6 @@ static void change_obj_name(TBeing *ch, TObj *o, const char *arg, editorEnterTyp
   ch->sendTo(VT_HOMECLR);
   ch->sendTo(format("Current Object Name: %s") % o->name);
   ch->sendTo("\n\r\n\rNew Object Name: ");
-  return;
 }
 
 static void change_obj_long_desc(TBeing *ch, TObj *o, editorEnterTypeT type)
@@ -1023,7 +1022,6 @@ static void change_obj_long_desc(TBeing *ch, TObj *o, editorEnterTypeT type)
   o->setDescr("");
   ch->desc->str = &o->descr;
   ch->desc->max_str = MAX_STRING_LENGTH;
-  return;
 }
 
 static void change_obj_weight(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
@@ -1100,7 +1098,6 @@ static void change_obj_short_desc(TBeing *ch, TObj *o, editorEnterTypeT type)
   ch->desc->str = &o->shortDescr;
 //  ch->desc->max_str = MAX_STRING_LENGTH;
   ch->desc->max_str = MAX_NAME_LENGTH-1;
-  return;
 }
 
 static void change_obj_type(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
@@ -1907,7 +1904,6 @@ static void change_obj_extra(TBeing *ch, TObj *o, const char *arg, editorEnterTy
   }
   ch->sendTo("\n\rEnter the keyword for the extra description.\n\r--> ");
   ch->specials.edit = CHANGE_OBJ_EXDESC;
-  return;
 }
 
 static void change_obj_can_be_seen(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)

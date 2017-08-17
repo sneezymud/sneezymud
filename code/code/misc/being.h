@@ -1630,7 +1630,7 @@ class TBeing : public TThing {
     void doMessage(const char *);
     int getTrainerPracs(const TBeing *, const TMonster *, classIndT, discNumT, int) const;
     int checkTrainDeny(const TBeing *, TMonster *, discNumT, int) const;
-    int checkForPreReqs(const TBeing *, TMonster *, discNumT, classIndT, int, int) const;
+    int checkForPreReqs(const TBeing *, TMonster *, discNumT, classIndT, int) const;
     int initiateSkillsLearning(discNumT, int, int);
     void setSpellEligibleToggle(TMonster *, spellNumT, silentTypeT);
     int doTraining(TBeing *ch, TMonster *, classIndT, int, int) const;

@@ -23,7 +23,6 @@ void stop_sharpen(TBeing *ch)
 void TThing::sharpenPulse(TBeing *ch, TThing *)
 {
   stop_sharpen(ch);
-  return;
 }
 
 void TTool::sharpenPulse(TBeing *ch, TThing *o)
@@ -41,7 +40,6 @@ void TThing::sharpenMe(TBeing *ch, TTool *)
   act("You can't figure out how to sharpen $p.", FALSE, ch, this, NULL, TO_CHAR);
   act("$n stops sharpening.", FALSE, ch, this, NULL, TO_ROOM);
   ch->stopTask();
-  return;
 }
 
 int task_sharpening(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *)

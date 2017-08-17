@@ -1126,7 +1126,6 @@ void repoCheckForRent(TBeing *ch, TObj *obj, bool corpse) {
       }
     }
   }
-  return;
 }
 	  
       

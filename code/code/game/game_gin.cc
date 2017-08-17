@@ -96,7 +96,6 @@ void GinGame::peek(const TBeing *ch)
       ch->sendTo(format("%2d) %-5s | %s\n\r") % (i+1) %		 card_names[CARD_NUM(hands[which][i])] %
 		 suit(ch, hands[which][i]));
   }
-  return;
 }
 
 int GinGame::move_card(TBeing *ch, const char *arg)

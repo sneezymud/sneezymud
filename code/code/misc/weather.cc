@@ -1045,8 +1045,6 @@ void Weather::getWet(TBeing *ch, TRoom* room)
     wetShow += ".\n\r";
     act(wetShow, false, ch, NULL, NULL, TO_CHAR);
   }
-
-  return;
 }
 
 // describes wetness for a char

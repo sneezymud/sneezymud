@@ -227,7 +227,6 @@ extern bool thingsInRoomVis(TThing *, TRoom *);
 extern int get(TBeing *, TThing *, TThing *, getTypeT, bool);
 extern void portal_flag_change(TPortal *, unsigned int, const char *, setRemT); 
 extern const sstring numberAsString(int);
-extern void readStringNoAlloc(FILE *);
 extern void reset_zone(int, bool);
 extern bool loadsetCheck(TBeing *, int, int, wearSlotT, const sstring &, resetFlag flags = resetFlagNone);
 extern void room_iterate(TRoom *[], void (*func) (int, TRoom *, sstring &, struct show_room_zone_struct *), sstring &, void *);

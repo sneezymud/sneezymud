@@ -264,7 +264,6 @@ void TBeing::doThrow(const sstring &argument)
     delete t;
     t = NULL;
   }
-  return;
 }
 
 int get_range_actual_damage(TBeing *ch, TBeing *victim, TObj *o, int dam, spellNumT attacktype)
@@ -1421,11 +1420,9 @@ void TBeing::doBload(const char *arg)
 void TThing::bloadBowArrow(TBeing *ch, TThing *)
 {
   ch->sendTo("You can only load your bow with arrows!\n\r");
-  return;
 }
 
 void TThing::bloadArrowBow(TBeing *ch, TArrow *arrow)
 {
   ch->sendTo("Arrows are usually loaded into bows!\n\r");
-  return;
 }

@@ -108,6 +108,4 @@ void rewrite_obj_file()
   }
   fprintf(fp, "#99999\n$~\n");
   fclose(fp);
-
-  return;
 }

@@ -528,8 +528,6 @@ void ensorcer(TBeing *caster, TBeing *victim, TMagicItem * obj)
           FALSE, caster, obj, 0, TO_ROOM, ANSI_WHITE_BOLD);
   }
   ensorcer(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
-
-  return;
 }
 
 int ensorcer(TBeing *caster, TBeing *victim)

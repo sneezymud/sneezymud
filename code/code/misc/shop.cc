@@ -1423,8 +1423,6 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
     keeper->doTell(fname(ch->name), "Unfortunately, at the moment, I can not afford to buy that item from you.");
     return;
   }
-
-  return;
 }
 
 const sstring TObj::shopList(const TBeing *ch, const sstring &arg, int iMin, int iMax, int num, int shop_nr, int k, unsigned long int FitT) const
@@ -1987,8 +1985,6 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
   
   if(ch->desc)
     ch->desc->page_string(buf, SHOWNOW_NO, ALLOWREP_YES);
-
-  return;
 }
 
 void TMonster::autoCreateShop(int shop_nr)
@@ -2019,7 +2015,6 @@ void TMonster::autoCreateShop(int shop_nr)
       *this += *obj;
     }
   }
-  return;
 }
 
 // if we process the command, return TRUE.

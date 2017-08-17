@@ -495,7 +495,6 @@ void curse(TBeing * caster, TBeing * victim, TMagicItem * obj, spellNumT spell)
   if (!victim->isPc()) {
     dynamic_cast<TMonster *>(victim)->addHated(caster);
   }
-  return;
 }
 
 void curse(TBeing * caster, TObj * obj)
@@ -584,7 +583,6 @@ void curse(TBeing * caster, TBeing * victim)
   if (!victim->isPc()) {
     dynamic_cast<TMonster *>(victim)->addHated(caster);
   }
-  return;
 }
 
 int earthquake(TBeing *caster, int level, short bKnown, spellNumT spell, int adv_learn)

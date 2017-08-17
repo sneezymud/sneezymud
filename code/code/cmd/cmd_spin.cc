@@ -185,9 +185,6 @@ static int spinHit(TBeing *caster, TBeing *victim)
 
   victim->addToWait((int) wt);
 
-  // round up
-  wt += 0.5;
-
   int dam = caster->getSkillDam(victim, SKILL_SPIN, caster->getSkillLevel(SKILL_SPIN), caster->getAdvLearning(SKILL_SPIN));
 
   if (caster->reconcileDamage(victim, dam,SKILL_SPIN) == -1)
@@ -239,9 +236,6 @@ static int spin(TBeing *caster, TBeing *victim)
          (i = caster->specialAttack(victim,SKILL_SPIN)) && 
          i != GUARANTEED_FAILURE &&
          (percent < bKnown))  {
-    int modif = 1;
-    modif += (caster->getPrimaryHold() ? 0 : 2);
-    modif += (caster->getSecondaryHold() ? 0 : 1);
 
     if (victim->canCounterMove(bKnown/3)) {
       SV(SKILL_SPIN);

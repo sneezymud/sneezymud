@@ -629,7 +629,6 @@ void TBeing::doLook(const sstring &argument, cmdTypeT cmd, TThing *specific)
 		} else {
 		  // look at XX where XX is some random desc on the obj
 		  desc->page_string(tmp_desc_str.toCRLF());
-		  found = TRUE;
 		  return;
 		}
 	      }
@@ -677,7 +676,6 @@ void TBeing::doLook(const sstring &argument, cmdTypeT cmd, TThing *specific)
 		  } else {
 		    // look at XX where XX is some random desc on the obj
 		    desc->page_string(tmp_desc_str.toCRLF());
-		    found = TRUE;
 		    return;
 		  }
 		}
@@ -713,7 +711,6 @@ void TBeing::doLook(const sstring &argument, cmdTypeT cmd, TThing *specific)
 		  } else {
 		    desc->page_string(autoFormatDesc(tmp_desc_str, false));
 		  }
-		  found = TRUE;
 		  describeObject(t);
 		  return;
 		} else {
@@ -723,7 +720,6 @@ void TBeing::doLook(const sstring &argument, cmdTypeT cmd, TThing *specific)
 		  } else {
 		    desc->page_string(autoFormatDesc(tmp_desc_str, false));
 		  }
-		  found = TRUE;
 		  return;
 		}
 	      }
@@ -749,7 +745,6 @@ void TBeing::doLook(const sstring &argument, cmdTypeT cmd, TThing *specific)
 		  if (iNum != totalFound)
 		    continue;
 		  desc->page_string(tmp_desc);
-		  found = TRUE;
 		  describeObject(t2);
 		  sendTo(COLOR_OBJECTS, format("%s is on %s.") % t2->getName() % t->getName());
 		  return;

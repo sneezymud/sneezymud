@@ -801,7 +801,6 @@ void TObj::giveToRepair(TMonster *repair, TBeing *buyer, int *found)
   // o should always get deleted following return here
 
   *found = DELETE_THIS;
-  return;
 }
 
 void TNote::giveToRepair(TMonster *repair, TBeing *buyer, int *found)

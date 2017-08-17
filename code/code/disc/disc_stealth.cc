@@ -74,8 +74,6 @@ void TBeing::doConceal(sstring argument)
   rc = conceal(this, vict);
   if (rc)
     addSkillLag(SKILL_CONCEALMENT, rc);
-
-  return;
 }
  
 // return FALSE to cease tracking

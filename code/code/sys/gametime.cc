@@ -155,8 +155,6 @@ void GameTime::realTimePassed(time_t t2, time_t t1, time_info_data *now)
   now->month = -1;
   now->year = -1;
   now->seconds = secs;
-
-  return;
 }
 
 // Calculate the MUD time passed over the last t2-t1 centuries (secs) 
@@ -182,8 +180,6 @@ void GameTime::mudTimePassed(time_t t2, time_t t1, time_info_data *now)
   secs -= Pulse::SECS_PER_MUD_MONTH * now->month;
 
   now->year = (secs / Pulse::SECS_PER_MUD_YEAR);	
-
-  return;
 }
 
 void GameTime::reset_time(void)

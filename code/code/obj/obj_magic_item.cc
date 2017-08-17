@@ -36,7 +36,6 @@ void TMagicItem::changeObjValue1(TBeing *ch)
 {
   ch->specials.edit = CHANGE_MAGICITEM_VALUE1;
   change_magicitem_value1(ch, this, "", ENTER_CHECK);
-  return;
 }
 
 void TMagicItem::assignFourValues(int x1, int, int, int)

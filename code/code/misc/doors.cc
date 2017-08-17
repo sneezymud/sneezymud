@@ -806,7 +806,6 @@ void roomDirData::destroyDoor(dirTypeT dir, int room)
     back->condition = EX_DESTROYED;
     sendrpf(rp, "The %s is destroyed from the other side.\n\r", getName().c_str());
   }
-  return;
 }
 
 void roomDirData::caveinDoor(dirTypeT dir, int room)
@@ -829,7 +828,6 @@ void roomDirData::caveinDoor(dirTypeT dir, int room)
     back->door_type = DOOR_NONE;
     sendrpf(rp, "A massive cave in blocks the way %s.\n\r", dirs[rev_dir[dir]]);
   }
-  return;
 }
 
 void roomDirData::wardDoor(dirTypeT dir, int room)
@@ -848,7 +846,6 @@ void roomDirData::wardDoor(dirTypeT dir, int room)
     SET_BIT(back->condition, EX_WARDED);
     sendrpf(rp, "You hear a soft _woompf_ as a magical ward is placed across the %s exit.\n\r", dirs[rev_dir[dir]]);
   }
-  return;
 }
 
 // this is a room-special proc

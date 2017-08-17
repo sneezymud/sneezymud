@@ -517,7 +517,6 @@ void TBeing::doWho(const char *argument)
   sb += buf;
   if (desc)
     desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
-  return;
 }
 
 void TBeing::doWhozone()

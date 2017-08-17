@@ -190,7 +190,6 @@ void TEgg::tasteMe(TBeing *ch)
     delete this;
     return;
   }
-  return;
 }
 
 bool TEgg::getEggTouched() const
@@ -282,7 +281,6 @@ void TEgg::changeObjValue1(TBeing *ch)
 {
   ch->specials.edit = CHANGE_EGG_VALUE1;
   change_egg_value1(ch, this, "", ENTER_CHECK);
-  return;
 }
 
 int TEgg::chiMe(TBeing *tLunatic)

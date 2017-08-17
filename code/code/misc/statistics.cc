@@ -537,7 +537,6 @@ void TBeing::doGamestats(const sstring &arg)
     }
   }
   sendTo("Syntax: gamestats <attributes | combat | equipment | levels | trivia>\n\r");
-  return;
 }
 
 int getNetGold(moneyTypeT mtt)

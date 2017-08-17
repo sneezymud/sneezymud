@@ -558,7 +558,5 @@ void autoMail(TBeing *ch, const char *targ, const char *msg, int m, int r)
     store_mail(targ, SNEEZY_ADMIN, msg, m, r);
   else
     vlogf(LOG_BUG, "Error in autoMail");
-
-  return;
 }
 

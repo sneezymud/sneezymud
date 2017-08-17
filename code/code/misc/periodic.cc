@@ -746,11 +746,6 @@ void TMonster::makeNoise()
     } else if (getPosition() == default_pos)
       MakeRoomNoise(this, in_room, sounds.c_str(), distantSnds.c_str());
   }
-
-#if 0
-  checkResponses((opinion.random ? opinion.random : (targ() ? targ() : this)),
-                 NULL, NULL, CMD_RESP_PULSE);
-#endif
 }
 
 // return DELETE_THIS if this should die
@@ -1805,7 +1800,6 @@ void TPCorpse::decayMe()
 
 // valid corpse, see if we have a dead mud
   obj_flags.decay_time--;
-  return;
 }
 
 void TObj::decayMe()
@@ -2434,7 +2428,6 @@ void TBeing::checkCharmMana()
       }
     }
   }
-  return;
 }
 
 // procAutoTips

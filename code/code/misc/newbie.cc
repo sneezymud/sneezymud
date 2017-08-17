@@ -84,8 +84,6 @@ void TBeing::doNewbieEqLoad(race_t num, unsigned short num2, bool initNum)
     else
       *this += *newbieObj;
   }
-
-  return;
 }
 
 // ask a newbie question (or reply with answer)
@@ -149,5 +147,4 @@ void TBeing::doNewbie(const sstring &arg)
     if (!d->m_bIsClient && IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT))
       d->clientf(format("%d|%s|%s") % CLIENT_TELEPATHY % colorString(person, d, (format("%s %s") % title % getName()), NULL, COLOR_NONE, FALSE) % str);
   }
-  return;
 }

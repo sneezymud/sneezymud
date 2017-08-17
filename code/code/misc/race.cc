@@ -785,7 +785,6 @@ void Race::showTo(TBeing *caller)
   str += baseStats.showStats(caller);
 
   caller->desc->page_string(str);
-  return;
 }
 
 // initNoRace() just dumps in bogus information and zeros out racial

@@ -1911,7 +1911,6 @@ void TBeing::wearNTear(void)
       }
     }
   }
-  return;
 }
 
 bool TObj::monkRestrictedItem(const TBeing *ch) const
@@ -2445,7 +2444,6 @@ void TBeing::doOutfit(const sstring &arg)
 
   doSave(SILENT_YES);
   mob->doSave(SILENT_YES);
-  return;
 }
 
 wearKeyT TObj::getWearKey() const

@@ -140,7 +140,6 @@ void TVehicle::driveSpeed(TBeing *ch, int speed)
     
     setSpeed(speed);
   }
-  return;
 }
 
 void TVehicle::driveDir(TBeing *ch, dirTypeT dir)

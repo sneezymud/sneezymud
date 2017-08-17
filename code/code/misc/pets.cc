@@ -85,8 +85,6 @@ void TBeing::petSave()
   db.query("delete from pet where player_id=%i and vnum=%i and name='%s'",
 	   owner_id, mobVnum(), name.c_str());
   db.query("insert into pet (player_id, vnum, name, exp, level) values (%i, %i, '%s', %f, %i)", owner_id, mobVnum(), name.c_str(), getExp(), GetMaxLevel());
-
-  return;
 }
 
 // bv is one of: the PETTYPES constants

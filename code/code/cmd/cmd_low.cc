@@ -1582,9 +1582,6 @@ void TBeing::lowTasks(const sstring &oarg)
  
     return;
   }
-
-  return;
-
 }
 
 void TBeing::lowMobs(const char *arg)

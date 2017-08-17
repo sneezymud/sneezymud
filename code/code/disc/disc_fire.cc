@@ -1748,8 +1748,6 @@ void infravision(TBeing *caster, TBeing *victim)
 
   start_cast(caster, victim, NULL, caster->roomp, SPELL_INFRAVISION, diff, 1, 
         "", rounds, caster->in_room, 0, 0, TRUE, 0);
-
-  return;
 }
 
 int castInfravision(TBeing *caster, TBeing *victim)

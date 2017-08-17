@@ -3007,7 +3007,6 @@ void TMonster::aiLook(TBeing *doer)
       }
     }
   }
-  return;
 }
 
 int TMonster::aiSay(TBeing *doer, char *)

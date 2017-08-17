@@ -60,9 +60,6 @@ void endAuction(int ticket, int bidder, int seller)
     msg+="Your money will be deposited to your bank account as soon as the buyer pays.";
     store_mail(getPlayerName(seller).c_str(), auctioneer.c_str(), msg.c_str(), 0, 0);
   }
-
-
-  return;
 }
 
 
@@ -186,8 +183,6 @@ void auctionList(TBeing *ch, TMonster *myself)
 
   } else
     myself->doTell(ch->getName(), "I don't have anything up for auction right now");
-
-  return;
 }
 
 
@@ -266,8 +261,6 @@ void auctionSell(TBeing *ch, TMonster *myself, sstring arg)
   delete obj;
   
   myself->doTell(ch->getName(), "Your item has been placed on the auction block.");
-
-  return;
 }
 
 void auctionBuy(TBeing *ch, TMonster *myself, sstring arg)
@@ -324,8 +317,6 @@ void auctionBuy(TBeing *ch, TMonster *myself, sstring arg)
     
     db.query("delete from shopownedauction where ticket=%i", ticket);
   }
-
-  return;
 }
 
 
@@ -389,8 +380,6 @@ void auctionBid(TBeing *ch, TMonster *myself, sstring arg)
     db.query("update shopownedauction set current_bid=%i, bidder=%i, max_bid=%i where ticket=%i", (max_bid+1), ch->getPlayerID(), my_bid, ticket);
     shoplog(shop_nr, ch, myself, "made bid", 0, format("%i talens") % (max_bid+1));
   }
-
-  return;
 }
 
 

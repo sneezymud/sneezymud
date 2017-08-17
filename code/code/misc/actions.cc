@@ -741,8 +741,6 @@ void TBeing::doPoop(void)
   *this->roomp += *obj;
 
   setCond(POOP, 0);
-
-  return;
 }
 
 void TBeing::doPee(const sstring &argument)

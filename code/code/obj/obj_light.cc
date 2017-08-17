@@ -174,7 +174,6 @@ void TLight::extinguishMe(TBeing *ch)
 
   act("You extinguish $p, and it smolders slightly before going out.", FALSE, ch, this, 0, TO_CHAR);
   act("$n extinguishes $p, and it smolders slightly before going out.", FALSE, ch, this, 0, TO_ROOM);
-  return;
 }
 
 void TLight::assignFourValues(int x1, int x2, int x3, int x4)

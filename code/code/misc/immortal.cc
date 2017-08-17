@@ -126,7 +126,6 @@ int QuestVar4 = 0;
 void TBeing::doChange(const char *argument)
 {
   change_hands(this, argument);
-  return;
 }
 
 
@@ -544,7 +543,6 @@ void TBeing::doWizlock(const char *argument)
     sendTo(lockmess);
     return;
   }
-  return;
 }
 
 // returns DELETE_THIS if this should go
@@ -1525,7 +1523,6 @@ void TPerson::doSnoop(const char *argument)
 
   desc->snoop.snooping = victim;
   victim->desc->snoop.snoop_by = this;
-  return;
 }
 
 void TBeing::doSwitch(const char *)
@@ -2055,7 +2052,6 @@ void TBeing::transformLimbsBack(const char * buffer, wearSlotT limb, bool cmd)
     act("$n's magic limbs transform back into their true form.",
         TRUE, this, 0, 0, TO_ROOM);
   }
-  return;
 }
 
 void TBeing::doReturn(const char * buffer, wearSlotT limb, bool tell, bool deleteMob)

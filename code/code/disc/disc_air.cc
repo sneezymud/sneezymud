@@ -610,7 +610,6 @@ int tornado(TBeing * caster, int level, short bKnown, int adv_learn)
       if(!(tb=dynamic_cast<TBeing *>(t)))
 	continue;
 
-      if (1) {
         if (!caster->inGroup(*tb) && !tb->isImmortal()) {
           caster->reconcileHurt(tb, discArray[SPELL_TORNADO]->alignMod);
           act("$n is blasted by the force of the wind!", FALSE, t, NULL, 0, TO_ROOM);
@@ -668,7 +667,6 @@ int tornado(TBeing * caster, int level, short bKnown, int adv_learn)
           act("$n manages to duck the tornado!", FALSE, tb, NULL, 0, TO_ROOM);
           act("You duck the tornado!", FALSE, tb, NULL, NULL, TO_CHAR);
         }
-      }
     }
     return SPELL_SUCCESS;
   } else {
@@ -682,7 +680,6 @@ int tornado(TBeing * caster, int level, short bKnown, int adv_learn)
       if(!(tb=dynamic_cast<TBeing *>(t)))
         continue;
 
-      if (1) {
         if (caster->inGroup(*tb)) {
           caster->reconcileHurt(tb, discArray[SPELL_TORNADO]->alignMod);
           act("$n chokes on the dust!", FALSE, tb, NULL, 0, TO_ROOM);
@@ -733,7 +730,6 @@ int tornado(TBeing * caster, int level, short bKnown, int adv_learn)
           //act("$n dodges the vortex!", FALSE, t, NULL, 0, TO_ROOM);
           act("You dodge the vortex!", FALSE, tb, NULL, NULL, TO_CHAR);
         }
-      }
       }
       return SPELL_CRIT_FAIL;
     }
@@ -1273,8 +1269,6 @@ void levitate(TBeing * caster, TBeing * victim)
   }
 
   start_cast(caster, victim, NULL, caster->roomp, SPELL_LEVITATE, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 0);
-
-  return;
 }
 
 int falconWings(TBeing * caster, TBeing * victim, int level, short bKnown)

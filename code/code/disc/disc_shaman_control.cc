@@ -22,7 +22,6 @@ int resurrection(TBeing * caster, TObj * obj, int level, short bKnown)
   TThing *t;
   TMonster * victim;
   TBaseCorpse *corpse;
-  float shamLvl = caster->getLevel(SHAMAN_LEVEL_IND);
 
   if (!(corpse = dynamic_cast<TBaseCorpse *>(obj))) {
     caster->sendTo("You can't resurrect something that's not a corpse!\n\r");
@@ -50,9 +49,6 @@ int resurrection(TBeing * caster, TObj * obj, int level, short bKnown)
     return SPELL_FAIL;
   }
   caster->addToMoney(-2500, GOLD_HOSPITAL);
-
-  if (shamLvl < 1)
-    shamLvl = caster->getLevel(caster->bestClass()) / 2;
 
   if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_RESURRECTION) &&
     (victim = read_mobile(corpse->getCorpseVnum(), VIRTUAL))) {

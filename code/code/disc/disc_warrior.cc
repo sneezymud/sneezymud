@@ -153,7 +153,6 @@ void TThing::repairMeHammer(TBeing *caster, TObj *obj)
 {
   act("You need to hold a hammer in your primary hand in order to repair $p",
            TRUE, caster, obj, NULL, TO_CHAR);
-  return;
 }
 
 void TTool::repairMeHammer(TBeing *caster, TObj *obj)

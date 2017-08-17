@@ -601,8 +601,6 @@ static void change_mob_name(TBeing *ch, TMonster *mob, const char *arg, editorEn
 
   ch->sendTo(format("Current Mobile Name: %s") % mob->name);
   ch->sendTo("\n\r\n\rNew Mobile Name: ");
-
-  return;
 }
 
 static void change_mob_short_desc(TBeing *ch, TMonster *mob, editorEnterTypeT type)
@@ -624,7 +622,6 @@ static void change_mob_short_desc(TBeing *ch, TMonster *mob, editorEnterTypeT ty
   mob->shortDescr = "";
   ch->desc->str = &mob->shortDescr;
   ch->desc->max_str = MAX_NAME_LENGTH-1;
-  return;
 }
 
 static void change_mob_long_desc(TBeing *ch, TMonster *mob, editorEnterTypeT type)
@@ -642,7 +639,6 @@ static void change_mob_long_desc(TBeing *ch, TMonster *mob, editorEnterTypeT typ
   ch->sendTo("Terminate with a ~ ON A SEPERATE LINE. ` on a separate line erases the current long description. Press <ENTER> again to continue.\n\r");
   ch->desc->str = &mob->player.longDescr;
   ch->desc->max_str = MAX_STRING_LENGTH;
-  return;
 }
 
 static void change_mob_desc(TBeing *ch, TMonster *mob, editorEnterTypeT type)
@@ -660,7 +656,6 @@ static void change_mob_desc(TBeing *ch, TMonster *mob, editorEnterTypeT type)
   ch->sendTo("Terminate with a ~. ` on a separate line erases the current description. Press <ENTER> again to continue.\n\r");
   ch->desc->str = &mob->descr;
   ch->desc->max_str = MAX_STRING_LENGTH;
-  return;
 }
 
 static void change_mob_act_flags(TBeing *ch, TMonster *mob, const char *arg, editorEnterTypeT type)

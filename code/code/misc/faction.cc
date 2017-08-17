@@ -669,7 +669,6 @@ void TBeing::doRelease(const sstring & arg)
   act("$n releases $N.", TRUE, this, 0, targ, TO_NOTVICT);
   remCaptive(targ);  
   targ->stopFollower(FALSE);
-  return;
 }
 
 void TBeing::doCapture(const sstring & arg)
@@ -729,7 +728,6 @@ void TBeing::doCapture(const sstring & arg)
     targ->stopFollower(TRUE);
 
   addFollower(targ);
-  return;
 }
 
 void TBeing::doFactions(const sstring &arg)
@@ -880,8 +878,6 @@ void TBeing::doFactions(const sstring &arg)
     }
   }
   desc->page_string(sbuf);
-
-  return;
 }
 
 void TBeing::doAdjust(const char *arg)
@@ -1234,7 +1230,6 @@ void TBeing::doAdjust(const char *arg)
   }
   
   save_factions();
-  return;
 }
 
 bool TBeing::isOppositeFaction(const TBeing *v) const
@@ -1664,7 +1659,6 @@ void procLaunchCaravans::run(const TPulse &) const
         break;
     }
   }
-  return;
 }
 
 void TBeing::deityIgnore(silentTypeT silent_caster) const
