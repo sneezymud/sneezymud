@@ -608,65 +608,65 @@ int tornado(TBeing * caster, int level, short bKnown, int adv_learn)
     for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end();){
       t=*(it++);
       if(!(tb=dynamic_cast<TBeing *>(t)))
-	continue;
+        continue;
 
-        if (!caster->inGroup(*tb) && !tb->isImmortal()) {
-          caster->reconcileHurt(tb, discArray[SPELL_TORNADO]->alignMod);
-          act("$n is blasted by the force of the wind!", FALSE, t, NULL, 0, TO_ROOM);
-          act("You are blasted by the force of the wind!", FALSE, tb, NULL, NULL, TO_CHAR);
-          if (tb->riding) {
-            rc = tb->fallOffMount(t->riding, POSITION_STANDING);
-            if (IS_SET_DELETE(rc, DELETE_THIS)) {
-              delete tb;
-              tb = NULL;
-              continue;
-            }
-          }
-          while ((ch = tb->rider)) {
-            rc = ch->fallOffMount(tb, POSITION_STANDING);
-            if (IS_SET_DELETE(rc, DELETE_THIS)) {
-              delete ch;
-              ch = NULL;
-            }
-          }
-          tb->setPosition(POSITION_SITTING);
-          if (caster->reconcileDamage(tb, dam, SPELL_TORNADO) == -1) {
+      if (!caster->inGroup(*tb) && !tb->isImmortal()) {
+        caster->reconcileHurt(tb, discArray[SPELL_TORNADO]->alignMod);
+        act("$n is blasted by the force of the wind!", FALSE, t, NULL, 0, TO_ROOM);
+        act("You are blasted by the force of the wind!", FALSE, tb, NULL, NULL, TO_CHAR);
+        if (tb->riding) {
+          rc = tb->fallOffMount(t->riding, POSITION_STANDING);
+          if (IS_SET_DELETE(rc, DELETE_THIS)) {
             delete tb;
             tb = NULL;
             continue;
           }
-          caster->setCharFighting((TBeing *)tb);
-          caster->setVictFighting((TBeing *)tb);
-
-          // no teleport if the room doesnt allow it
-          if (caster->roomp->isRoomFlag(ROOM_HAVE_TO_WALK|ROOM_NO_FLEE|ROOM_NO_ESCAPE))
-            continue;
-
-          // teleport them away
-          if (!caster->isNotPowerful(tb, level, SPELL_TORNADO, SILENT_YES))
-          {
-            act("Uhoh, Toto...", FALSE, tb, NULL, NULL, TO_CHAR);
-            act("$n is swept away...", FALSE, tb, NULL, NULL, TO_ROOM);
-
-            rc = tb->genericTeleport(SILENT_YES);
-            tb->doLook("", CMD_LOOK);
-            act("A tiny vortex sweeps through the room, depositing $n.",
-                   FALSE, tb, NULL, NULL, TO_ROOM);
-            if (IS_SET_DELETE(rc, DELETE_THIS)) {
-              delete tb;
-              tb = NULL;
-            }
-
-            rc = tb->genericMovedIntoRoom(tb->roomp, -1);
-            if (IS_SET_DELETE(rc, DELETE_THIS)) {
-              delete tb;
-              tb = NULL;
-            }
-          }
-        } else {
-          act("$n manages to duck the tornado!", FALSE, tb, NULL, 0, TO_ROOM);
-          act("You duck the tornado!", FALSE, tb, NULL, NULL, TO_CHAR);
         }
+        while ((ch = tb->rider)) {
+          rc = ch->fallOffMount(tb, POSITION_STANDING);
+          if (IS_SET_DELETE(rc, DELETE_THIS)) {
+            delete ch;
+            ch = NULL;
+          }
+        }
+        tb->setPosition(POSITION_SITTING);
+        if (caster->reconcileDamage(tb, dam, SPELL_TORNADO) == -1) {
+          delete tb;
+          tb = NULL;
+          continue;
+        }
+        caster->setCharFighting((TBeing *)tb);
+        caster->setVictFighting((TBeing *)tb);
+
+        // no teleport if the room doesnt allow it
+        if (caster->roomp->isRoomFlag(ROOM_HAVE_TO_WALK|ROOM_NO_FLEE|ROOM_NO_ESCAPE))
+          continue;
+
+        // teleport them away
+        if (!caster->isNotPowerful(tb, level, SPELL_TORNADO, SILENT_YES))
+        {
+          act("Uhoh, Toto...", FALSE, tb, NULL, NULL, TO_CHAR);
+          act("$n is swept away...", FALSE, tb, NULL, NULL, TO_ROOM);
+
+          rc = tb->genericTeleport(SILENT_YES);
+          tb->doLook("", CMD_LOOK);
+          act("A tiny vortex sweeps through the room, depositing $n.",
+              FALSE, tb, NULL, NULL, TO_ROOM);
+          if (IS_SET_DELETE(rc, DELETE_THIS)) {
+            delete tb;
+            tb = NULL;
+          }
+
+          rc = tb->genericMovedIntoRoom(tb->roomp, -1);
+          if (IS_SET_DELETE(rc, DELETE_THIS)) {
+            delete tb;
+            tb = NULL;
+          }
+        }
+      } else {
+        act("$n manages to duck the tornado!", FALSE, tb, NULL, 0, TO_ROOM);
+        act("You duck the tornado!", FALSE, tb, NULL, NULL, TO_CHAR);
+      }
     }
     return SPELL_SUCCESS;
   } else {
@@ -677,8 +677,8 @@ int tornado(TBeing * caster, int level, short bKnown, int adv_learn)
       CF(SPELL_TORNADO);
       for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end();){
         t=*(it++);
-      if(!(tb=dynamic_cast<TBeing *>(t)))
-        continue;
+        if(!(tb=dynamic_cast<TBeing *>(t)))
+          continue;
 
         if (caster->inGroup(*tb)) {
           caster->reconcileHurt(tb, discArray[SPELL_TORNADO]->alignMod);
@@ -715,7 +715,7 @@ int tornado(TBeing * caster, int level, short bKnown, int adv_learn)
           rc = tb->genericTeleport(SILENT_YES);
           tb->doLook("", CMD_LOOK);
           act("A tiny vortex sweeps through the room, depositing $n.",
-                 FALSE, tb, NULL, NULL, TO_ROOM);
+              FALSE, tb, NULL, NULL, TO_ROOM);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             delete tb;
             tb = NULL;
