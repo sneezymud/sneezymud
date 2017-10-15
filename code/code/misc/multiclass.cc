@@ -7,6 +7,7 @@
 
 #include "extern.h"
 #include "being.h"
+#include "database.h"
 #include "person.h"
 
 int NumClasses(int Class)
@@ -276,11 +277,11 @@ void TPerson::startLevels()
       advanceLevel(i);
   }
 
-  // there really isn't much need to be hardcoding people here, as we don't
-  // do pwipes or setup new muds very often (or ever, really)
-  // it just ends up causing problems
-
-  if (name == "Peel"){
+  // The first player automatically gets admin powers
+  TDatabase db(DB_SNEEZY);
+  db.query("select count(1) as num from player");
+  assert(db.fetchRow());
+  if(db["num"] == "1") {
     setLevel(MAGE_LEVEL_IND, MAX_IMMORT);
     setLevel(CLERIC_LEVEL_IND, MAX_IMMORT);
     setLevel(THIEF_LEVEL_IND, MAX_IMMORT);
@@ -290,19 +291,6 @@ void TPerson::startLevels()
     remWizPower(POWER_IDLED);
     calcMaxLevel();
   }
-
-  // so i can be a god on my beta mud. -d
-  if (name == "Dash"){
-    setLevel(MAGE_LEVEL_IND, MAX_IMMORT);
-    setLevel(CLERIC_LEVEL_IND, MAX_IMMORT);
-    setLevel(THIEF_LEVEL_IND, MAX_IMMORT);
-    setLevel(WARRIOR_LEVEL_IND, MAX_IMMORT);
-    setExp(2000000000);
-    setWizPowers(this,this,"allpowers");
-    remWizPower(POWER_IDLED);
-    calcMaxLevel();
-  }
-
 
   if (GetMaxLevel() > MAX_MORT) {
     // basically, if we are an autoleveleded person
