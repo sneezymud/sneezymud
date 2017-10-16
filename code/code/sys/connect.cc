@@ -3960,10 +3960,10 @@ int Descriptor::inputProcessing()
   return TRUE;
 }
 
-void Descriptor::sendMotd(int wiz)
+sstring Descriptor::assembleMotd(int wiz)
 {
-  char wizmotd[MAX_STRING_LENGTH] = "\0\0\0";
-  char motd[MAX_STRING_LENGTH] = "\0\0\0";
+  char wizmotd[MAX_STRING_LENGTH] = {0};
+  char motd[MAX_STRING_LENGTH] = {0};
   sstring version;
   struct stat timestat;
 
@@ -3982,7 +3982,7 @@ void Descriptor::sendMotd(int wiz)
 
   if (stat(File::NEWS, &timestat)) {
     vlogf(LOG_BUG, "bad call to news file");
-    return;
+    return {};
   }
 
   sprintf(motd + strlen(motd), "\n\rREAD the NEWS LAST UPDATED       : %s\n\r",
@@ -3994,7 +3994,7 @@ void Descriptor::sendMotd(int wiz)
     strcat(motd, version.c_str());
     if (stat(File::WIZNEWS, &timestat)) {
       vlogf(LOG_BUG, "bad call to wiznews file");
-      return;
+      return {};
     }
     sprintf(wizmotd + strlen(wizmotd), 
                               "\n\rREAD the WIZNEWS LAST UPDATED    : %s\n\r",
@@ -4002,11 +4002,9 @@ void Descriptor::sendMotd(int wiz)
   }
 
   if (!m_bIsClient) {
-    writeToQ(motd);
     if (wiz)
-      writeToQ(wizmotd);
-   
-    return;
+      return sstring(motd) + wizmotd;
+    return motd;
   } else {
     sstring sb;
     if (!wiz) {
@@ -4016,7 +4014,13 @@ void Descriptor::sendMotd(int wiz)
     }
     processStringForClient(sb);
     clientf(format("%d|%s") % CLIENT_MOTD % sb);
+    return {};
   }
+}
+
+void Descriptor::sendMotd(int wiz)
+{
+  writeToQ(assembleMotd(wiz));
 }
 
 int TBeing::applyRentBenefits(int secs)

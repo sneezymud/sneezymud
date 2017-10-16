@@ -522,6 +522,7 @@ class Descriptor
     int nanny(sstring);
     int creation_nanny(sstring);
     void sendMotd(int);
+    sstring assembleMotd(int);
     void sendPermaDeathMessage();
     bool start_page_file(const char *, const char *);
     int client_nanny(char *);
