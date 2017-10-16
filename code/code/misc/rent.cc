@@ -2397,7 +2397,6 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
   }
 
   ch->cls();
-  ch->fullscreen();
   ch->desc->outputProcessing();
 
   return dynamic_cast<TPerson *>(ch)->saveRent(TRUE, 2);
@@ -3523,7 +3522,6 @@ int TPerson::doRent(const sstring &argument)
        TRUE, this, 0, 0, TO_ROOM);
 
   cls();
-  fullscreen();
   desc->outputProcessing();
 
   return dynamic_cast<TPerson *>(this)->saveRent(TRUE, 2);

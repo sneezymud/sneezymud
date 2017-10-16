@@ -791,7 +791,6 @@ void TBeing::doToggle(const char *arg2)
         sendTo("Setting term type to vt100...\n\r");
       } else if(is_abbrev(arg2, "none")){
         cls();
-        fullscreen();
         if (ansi())
           remPlayerAction(PLR_ANSI);
 

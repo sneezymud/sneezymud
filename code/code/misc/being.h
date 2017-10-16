@@ -500,7 +500,6 @@ class TBeing : public TThing {
     bool ansi() const;
     bool vt100() const;
     void cls() const;
-    void fullscreen() const;
     const sstring ansi_color_bold(const char *s) const;
     const sstring ansi_color_bold(const char *s, unsigned int) const;
     const sstring ansi_color(const char *s) const;
@@ -1320,7 +1319,6 @@ class TBeing : public TThing {
     bool hasPart(wearSlotT) const;
     wearSlotT getRandomPart(int = 0, bool = FALSE, bool = FALSE);
     wearSlotT getRandomHurtPart();
-    void doResetMargins();
     void doWeather(const char *);
     void doHeaven(const sstring &);
     void wearNTear(void);

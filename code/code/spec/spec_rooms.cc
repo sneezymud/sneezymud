@@ -171,7 +171,6 @@ int personalHouse(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
         TRUE, pers, 0, 0, TO_ROOM);
 
   pers->cls();
-  pers->fullscreen();
 
   return pers->saveRent(TRUE, 2);
 }
