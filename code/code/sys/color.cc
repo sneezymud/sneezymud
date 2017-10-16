@@ -528,8 +528,6 @@ void TBeing::doPrompt(const char *arg)
         if (IS_SET(desc->prompt_d.type, PROMPT_VTANSI_BAR)) {
           REMOVE_BIT(desc->prompt_d.type, PROMPT_VTANSI_BAR);
           cls();
-          fullscreen();
-          cls();
           sendTo("Shutting down the ansi/vt100 information bar.\n\r");
         } else {
           SET_BIT(desc->prompt_d.type, PROMPT_VTANSI_BAR);
