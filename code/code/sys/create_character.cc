@@ -1022,7 +1022,7 @@ void nannyDone_output(Descriptor * desc)
 // the last stage we go to motd to login
 connectStateT nannyDone_input(Descriptor * desc, sstring & output, const sstring input)
 {
-  desc->sendMotd(FALSE);
+  output = desc->assembleMotd(FALSE);
 
   return CON_RMOTD;
 }
