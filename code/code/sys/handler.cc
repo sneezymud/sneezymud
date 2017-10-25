@@ -1030,7 +1030,8 @@ int TBeing::affectJoin(TBeing * caster, affectedData *af, avgDurT avg_dur, avgEf
       return TRUE;
     }
   }
-  return FALSE;
+  affectTo(af);		//This line is responsible for actually applying effects like bless, faerie fire, etc.
+  return TRUE;
 }
 
 // Note from Pappy
