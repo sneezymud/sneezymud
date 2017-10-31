@@ -40,6 +40,7 @@ Build boolean options: (accept 1/0 y/n yes/no on/off)
     optimize=   off     Set olevel=2, bad for debugging
     ccache=     off     Use ccache to cache build object files
     pretty=     on      Prettify scons output
+    sanitize=   on      Sanitize addresses
 
 Sneezy boolean options:
     twitter=    off     Enable support for posting shouts to Twitter
@@ -55,6 +56,7 @@ need good crash debugging).
 """)
 
 
+flag_sanitize = get_bool_option('sanitize',      True)
 flag_ccache =   get_bool_option('ccache',      False)
 flag_debug =    get_bool_option('debug',       True)
 flag_gprof =    get_bool_option('gprof',       False)
@@ -153,11 +155,12 @@ if flag_debug:
         env.Append(CXXFLAGS='-fsanitize=undefined')
         env.Append(extra_libs=['ubsan'])
     # memory error sanitizer
-    env.Append(CXXFLAGS='-fsanitize=address')
+    if flag_sanitize:
+        env.Append(CXXFLAGS='-fsanitize=address')
     # native clang doesn't need explicit asan lib
-    if gcc_version or clang_version >= (3, 9):
+    if (gcc_version or clang_version >= (3, 9)) and flag_sanitize:
         env.Append(extra_libs=['asan'])
-    if clang_version >= (3, 9) or gcc_version >= (7, 0):
+    if (clang_version >= (3, 9) or gcc_version >= (7, 0)) and flag_sanitize:
         env.Append(CXXFLAGS='-fsanitize-address-use-after-scope')
     # integer sanitizer, apple clang unsupported
     if clang_version >= (3, 9):
