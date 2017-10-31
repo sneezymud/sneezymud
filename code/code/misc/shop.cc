@@ -1861,6 +1861,7 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
     slot = slot_from_bit(convertTo<int>(db["wear_flag"]));
     if(type==ITEM_ARMOR || type==ITEM_ARMOR_WAND || type==ITEM_WORN){
       // check size restriction      
+      // It's 0 for some slots, like hold, handle that below
       perc=(((double) ch->getHeight()) * 
 	    (double) race_vol_constants[mapSlotToFile(slot)]);
       if(extra_flags & ITEM_PAIRED)
@@ -1868,7 +1869,7 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
       
       
       if ((slot != WEAR_NECK) && (slot != WEAR_FINGER_R) && 
-	  (slot != WEAR_FINGER_L) && (slot != WEAR_NOWHERE)) {
+	  (slot != WEAR_FINGER_L) && (slot != WEAR_NOWHERE) && perc > 0) {
 	if (volume > (int) (perc/0.85) ||
 	    volume < (int) (perc/1.15))
 	  fit=false;
