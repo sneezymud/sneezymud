@@ -21,9 +21,9 @@ matrix:
         - os: linux
           compiler: g++-6
           env: TYPE=prod optimize=1 shared=0 debug=0
-        - os: osx
-          compiler: clang++
-          env: TYPE=prod optimize=0 shared=1 debug=0
+#        - os: osx
+#          compiler: clang++
+#          env: TYPE=prod optimize=0 shared=1 debug=0
 #        - os: osx
 #          compiler: clang++
 #          env: TYPE=prod lto=1 shared=1 debug=0
