@@ -1558,10 +1558,6 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
       case CMD_RENAME:
   doNameChange(newarg.c_str());
   break;
-      case CMD_MARGINS:
-  doResetMargins();
-  addToLifeforce(1);
-  break;
       case CMD_DISGUISE:
   rc = doDisguise(newarg.c_str());
   break;
@@ -2785,7 +2781,6 @@ void buildCommandArray(void)
   commandArray[CMD_BOUNCE] = new commandInfo("bounce",POSITION_STANDING,0);
   commandArray[CMD_DISGUISE] = new commandInfo("disguise", POSITION_STANDING, 0); 
   commandArray[CMD_RENAME] = new commandInfo("rename", POSITION_DEAD, 0);
-  commandArray[CMD_MARGINS] = new commandInfo("margins", POSITION_DEAD,0);
   commandArray[CMD_DESCRIPTION]=new commandInfo("description",POSITION_DEAD,0);
   commandArray[CMD_POISON_WEAPON] = new commandInfo("poison-weapon", POSITION_STANDING, 0); 
   commandArray[CMD_GARROTTE]=new commandInfo("garrotte", POSITION_STANDING, 0); 
