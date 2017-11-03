@@ -127,6 +127,7 @@ const sstring trap_types[] =
   "Bolt",
   "Disc",
   "Pebble",
+  "\n"
 };
 
 const char *user_trap_types[] =

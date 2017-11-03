@@ -281,12 +281,16 @@ static void save_repairman_file(TBeing *repair, TBeing *buyer, TObj *o, int iTim
   }
 
   // open the file we will write to
+  if (mkdir("mobdata/repairs", 0770) && errno != EEXIST) {
+    vlogf(LOG_BUG, "Unable to create the repairs directory mobdata/repairs");
+    return;
+  }
   sprintf(buf, "mobdata/repairs/%d/%d", repair->mobVnum(), repair_number);
   if (!(fp = fopen(buf, "w"))) {
     sprintf(buf2, "mobdata/repairs/%d", repair->mobVnum());
     if (mkdir(buf2, 0770)) {
-      vlogf(LOG_BUG, format("Unable to create a repair directory for %s.") % 
-	    repair->getName());
+      vlogf(LOG_BUG, format("Unable to create a repair directory %s for %s.") % 
+        buf2 % repair->getName());
       return;
     } else {
       vlogf(LOG_BUG, format("Created a repair directory for %s") %  repair->getName());

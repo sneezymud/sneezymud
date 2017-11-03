@@ -423,7 +423,6 @@ enum cmdTypeT {
      CMD_BOUNCE,
      CMD_DISGUISE,
      CMD_RENAME,
-     CMD_MARGINS,
      CMD_DESCRIPTION,
      CMD_POISON_WEAPON,
      CMD_GARROTTE,

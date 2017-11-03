@@ -22,7 +22,7 @@ class sstring;
 // char name[]="blade";
 // int vnum=10000;
 //
-// TDatabase db("sneezy");
+// TDatabase db(DB_SNEEZY);
 // db.query("select vnum, price, short_desc from obj where weight<%f and
 // name like '%%%s%%' and vnum>%i", weight, name, vnum);
 //

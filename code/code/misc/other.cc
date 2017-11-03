@@ -739,7 +739,6 @@ int TPerson::doQuit2()
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
   }
-  fullscreen();
   cls();
 
   act("Goodbye, friend.. Come back soon!", FALSE, this, 0, 0, TO_CHAR);
@@ -4054,15 +4053,6 @@ void TBeing::doDrag(const sstring &arg)
     return;
   }
 }
-
-
-void TBeing::doResetMargins()
-{
-  cls();
-  fullscreen();
-  sendTo("Margins reset.  Use CLS to restore old settings.\n\r");
-}
-
 
 void TBeing::doEmail(const char *arg)
 {

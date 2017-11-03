@@ -1022,7 +1022,7 @@ void nannyDone_output(Descriptor * desc)
 // the last stage we go to motd to login
 connectStateT nannyDone_input(Descriptor * desc, sstring & output, const sstring input)
 {
-  desc->sendMotd(FALSE);
+  output = desc->assembleMotd(FALSE);
 
   return CON_RMOTD;
 }
@@ -1220,7 +1220,6 @@ int Descriptor::creation_nanny(sstring arg)
     file_to_sstring(phelpFile->c_str(), output);
     output = colorString(character, this, output, NULL, COLOR_BASIC,  false);
     character->cls();
-    character->fullscreen();
     page_string(output, SHOWNOW_YES);
     return 0;
   }
@@ -1233,7 +1232,6 @@ int Descriptor::creation_nanny(sstring arg)
 
   // clear the screen for display, showing input results
   character->cls();
-  character->fullscreen();
   if (!output.empty())
     writeToQ(output);
   writeToQ("\n\r");
