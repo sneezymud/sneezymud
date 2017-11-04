@@ -23,6 +23,8 @@
 #include "spec_mobs.h"
 #include "weather.h"
 
+#include <boost/algorithm/string/replace.hpp>
+
 #include <csignal>
 #include <cstdarg>
 
@@ -226,12 +228,18 @@ void TBeing::sendRoomGmcp(bool changedZones) const
   if (desc == NULL)
     return;
 
+  auto escape = [](std::string in) {
+      boost::replace_all(in, "\\", "\\\\");
+      boost::replace_all(in, "\"", "\\\"");
+      return in;
+  };
+
   if (changedZones) {
     sstring area = format(
       "room.area { \"id\":\"%d\", \"name\": \"%s\", \"x\": 0, \"y\": 0, \"z\": 0, \"col\": \"\", \
 \"flags\": \"quiet\" }")
       % roomp->getZone()->zone_nr
-      % roomp->getZone()->name;
+      % escape(roomp->getZone()->name);
     desc->sendGmcp(area);
   }
 
@@ -276,9 +284,9 @@ void TBeing::sendRoomGmcp(bool changedZones) const
   sstring msg = format("room.info { \"num\": %d, \"name\": \"%s\", \"zone\": \"%d\", \"terrain\": \"%s\", \
 \"details\": \"\", \"exits\": { %s }, \"exit_kw\": { %s }, \"coord\": { \"id\": -1, \"x\": -1, \"y\": -1, \"cont\": 0 } }")
     % roomp->number
-    % roomp->name
+    % escape(roomp->name)
     % roomp->getZone()->zone_nr
-    % TerrainInfo[roomp->getSectorType()]->name
+    % escape(TerrainInfo[roomp->getSectorType()]->name)
     % exits.substr(2)
     % exit_kw.substr(2);
   desc->sendGmcp(msg);
