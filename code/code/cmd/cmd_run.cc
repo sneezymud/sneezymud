@@ -19,8 +19,10 @@ namespace {
   }
 
   void add_char(char const& c) {
-    collection.push_back(make_pair(n, c));
-    n = 1;
+    if (c != ' ') {
+      collection.push_back(make_pair(n, c));
+      n = 1;
+    }
   }
 };
 
@@ -33,7 +35,7 @@ bool parse(string path, deque<pair<int, char> >& res )
 
   boost::spirit::qi::parse(
     begin, end,
-    *(-int_[&add_int] >> char_("neswud")[&add_char]));
+    *(-int_[&add_int] >> char_("neswud ")[&add_char]));
 
   if (begin == end) {
     res.resize(collection.size());
