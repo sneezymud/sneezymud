@@ -143,16 +143,22 @@ void TScheduler::runObj(int pulseNum)
       --objIter;
     }
 
+    bool invalidated = false;
     for(std::vector<TObjProcess *>::iterator iter=obj_procs.begin();
         iter!=obj_procs.end();++iter){
       if((*iter)->should_run(pulse.pulse)){
 
         if((*iter)->run(pulse, obj)){
           delete obj;
-
+          invalidated = true;
           break;
         }
       }
+    }
+    if (invalidated) {
+      auto newObjIter = find(object_list.begin(), object_list.end(), placeholder);
+      if (objIter != newObjIter)
+        objIter = newObjIter;
     }
   }
 }
