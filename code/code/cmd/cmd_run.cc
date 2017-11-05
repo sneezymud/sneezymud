@@ -2,6 +2,7 @@
 
 #include <boost/spirit/include/qi.hpp>
 #include <boost/spirit/include/qi_char.hpp>
+#include <boost/algorithm/string/replace.hpp>
 
 #include "sstring.h"
 #include "being.h"
@@ -19,13 +20,27 @@ namespace {
   }
 
   void add_char(char const& c) {
-    collection.push_back(make_pair(n, c));
-    n = 1;
+    if (c != ' ') {
+      collection.push_back(make_pair(n, c));
+      n = 1;
+    }
   }
 };
 
 bool parse(string path, deque<pair<int, char> >& res )
 {
+  // validate a bit
+  if (path.find("A") != string::npos
+      || path.find("B") != string::npos
+      || path.find("C") != string::npos
+      || path.find("D") != string::npos)
+    return false;
+  // transform diagonals for straightforward parsing (much easier than proper stateful lookbehind)
+  boost::replace_all(path, "ne", "A");
+  boost::replace_all(path, "se", "B");
+  boost::replace_all(path, "sw", "C");
+  boost::replace_all(path, "nw", "D");
+
   string::const_iterator begin = path.begin();
   string::const_iterator end = path.end();
   using boost::spirit::qi::int_;
@@ -33,7 +48,7 @@ bool parse(string path, deque<pair<int, char> >& res )
 
   boost::spirit::qi::parse(
     begin, end,
-    *(-int_[&add_int] >> char_("neswud")[&add_char]));
+    *(-int_[&add_int] >> char_("neswud ABCD")[&add_char]));
 
   if (begin == end) {
     res.resize(collection.size());
@@ -65,9 +80,14 @@ void TBeing::doRun(sstring const& path) {
   if (parse(path, res)) {
     while (!res.empty()) {
       int steps = res.front().first;
-      char dir = res.front().second;
+      string dir(1, res.front().second);
+      if (dir == "A") dir = "ne";
+      if (dir == "B") dir = "se";
+      if (dir == "C") dir = "sw";
+      if (dir == "D") dir = "nw";
+
       for (int i = 0; i < steps; i++) {
-	doMove(getDirFromChar(sstring() + dir));
+        doMove(getDirFromChar(dir));
       }
       res.pop_front();
     }
