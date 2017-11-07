@@ -8,6 +8,7 @@
 #include "configuration.h"
 #include "extern.h"
 #include "enum.h"
+#include "version.h"
 
 #include <stdio.h>
 
@@ -22,6 +23,7 @@ extern int run_the_game();
 
 int main(int argc, char *argv[])
 {
+  vlogf(LOG_MISC, "Sneezy version " VERSION);
   int a;
 
   if(!Config::doConfiguration(argc, argv))

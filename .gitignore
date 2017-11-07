@@ -8,6 +8,7 @@
 /code/tags
 /code/lowtools
 /tags
+code/code/version.h
 cscope.out
 
 # dynamically changing mud files
