@@ -248,6 +248,10 @@ if flag_pretty:
     Progress([ "\033[32mChecking targets\033[0m %s\r" % s for s in '-\\|/' ],
              interval=5)
 
+git_hash = subprocess.check_output(['git', 'rev-parse', 'HEAD']).strip()
+git_dirty = "+" if subprocess.check_output(['git', 'status', '--short']) else ""
+with open('code/version.h', 'w') as f:
+    f.write('#pragma once\n#define VERSION "{}"\n'.format(git_hash + git_dirty))
 
 ## pull in C++ targets
 env.SConscript(

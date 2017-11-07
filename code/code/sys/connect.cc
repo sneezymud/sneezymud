@@ -55,13 +55,14 @@ extern "C" {
 #include "rent.h"
 #include "shop.h"
 #include "weather.h"
+#include "../version.h"
 
 const int DONT_SEND = -1;
 const int FORCE_LOW_INVSTE = 1;
 
 static const char * const WIZLOCK_PASSWORD           = "motelvi";
 const char * const MUD_NAME      = "SneezyMUD";
-const char * const MUD_NAME_VERS = "SneezyMUD v5.2";
+const char * const MUD_NAME_VERS = "SneezyMUD v5.2 " VERSION;
 static const char * const WELC_MESSG = "\n\rWelcome to SneezyMUD 5.2! May your journeys be bloody!\n\r\n\r";
 
 Descriptor::Descriptor() :
@@ -3002,7 +3003,7 @@ int Descriptor::sendLogin(const sstring &arg)
       // strip off the terminating newline char
       buf[strlen(buf) - 1] = '\0';
 
-      sprintf(buf2 + strlen(buf2), "\n\r\n\rWelcome to %s:\n\r%s:\n\r", 
+      sprintf(buf2 + strlen(buf2), "\n\r\n\rWelcome to %s\n\r%s:\n\r",
 	      MUD_NAME_VERS, buf);
       fclose(fp);
     }
