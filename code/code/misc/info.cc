@@ -3592,9 +3592,26 @@ void TBeing::doAlias(const char *argument)
   }
   i = 0;
   if (remOption) {
+    i = convertTo<int>(arg2);
+    if (i > 0 && i <= 16) {
+        sendTo(format("Clearing alias %d\n\r") % arg2);
+        desc->alias[i-1].word[0] = '\0';
+        desc->alias[i-1].command[0] = '\0';
+        return;
+    }
+    if (arg2 == sstring("all")) {
+        for (i = 0; i < 16; ++i) {
+            desc->alias[i].word[0] = '\0';
+            desc->alias[i].command[0] = '\0';
+        }
+        sendTo(format("Clearing all alias\n\r") % arg2);
+        return;
+    }
     while ((i < 16)) {
       if (*desc->alias[i].word && !strcmp(arg2, desc->alias[i].word)) {
         sendTo(format("Clearing alias %s\n\r") % arg2);
+        desc->alias[i].word[0] = '\0';
+        desc->alias[i].command[0] = '\0';
         return;
       }
       i++;
@@ -3606,9 +3623,7 @@ void TBeing::doAlias(const char *argument)
   i = -1;
   do {
     i++;
-  }
-
-  while ((i < 16) && *desc->alias[i].word && strcmp(arg1, desc->alias[i].word));
+  } while ((i < 16) && *desc->alias[i].word && strcmp(arg1, desc->alias[i].word));
   if (i == 16) {
     sendTo("You have no more space for aliases. You will have to clear an alias before adding another one.\n\r");
     return;
