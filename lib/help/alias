@@ -9,6 +9,12 @@ eg.:	alias cl cast cure light
 	After setting this alias up, you could type:
 	cl JoeBlow, and cure him instead of typing the whole spell out.
 
+You can stack commands with aliases, using ~ as separator, like this:
+	alias hme pray heal self~continue
+
+To add parameters to stacked commands, use %:
+	alias h pray heal %~cont~comf %
+
 To view your present aliases, type ALIAS with no parameters.
 Syntax: alias
 

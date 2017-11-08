@@ -973,7 +973,7 @@ class TBeing : public TThing {
     void acidRoom();
     void freezeRoom();
 
-    int parseCommand(const sstring &, bool);
+    int parseCommand(const sstring &, bool typedIn, bool doAlias=true);
     TComponent *findComponent(spellNumT) const;
     TSymbol *findHolySym(silentTypeT) const;
     int enforceVerbal();
