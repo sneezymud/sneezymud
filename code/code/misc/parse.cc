@@ -1895,7 +1895,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
 // call this if command should be executed right now (no lag)
 // otherwise use addToCommandQue()
 // return DELETE_THIS if tbeing has been killed
-int TBeing::parseCommand(const sstring &orig_arg, bool typedIn)
+int TBeing::parseCommand(const sstring &orig_arg, bool typedIn, bool doAlias)
 {
   int i;
   unsigned int pos;
@@ -1921,21 +1921,42 @@ int TBeing::parseCommand(const sstring &orig_arg, bool typedIn)
   }
 
   // handle aliases
-  if (desc) {
-    for(i=0;i<=16;++i){
-      if(arg1==desc->alias[i].word)
-  break;
-    }
+  if (desc && doAlias) {
+      for(i=0; i<16; ++i){
+          if(arg1==desc->alias[i].word)
+              break;
+      }
 
-    if (i < 16) {
-      if (!arg2.empty())
-  aliasbuf=format("%s %s") % desc->alias[i].command % arg2;
-      else
-        aliasbuf=desc->alias[i].command;
+      if (i < 16) {
+          size_t begin = 0;
+          sstring command = desc->alias[i].command;
+          bool found = false;
+          while (begin != std::string::npos)
+          {
+              found = true;
+              size_t nextSplit = command.find("~", begin);
+              sstring fragment = command.substr(begin, nextSplit - begin);
+              size_t param;
+              while ((param = fragment.find("%")) != sstring::npos)
+                  fragment.replace(param, 1, arg2);
+              int rc = parseCommand(fragment, typedIn, false);
+              if (IS_SET_DELETE(rc, DELETE_THIS))
+                  return DELETE_THIS;
+              if (IS_SET_DELETE(rc, DELETE_VICT))
+                  return DELETE_VICT;
+              begin = nextSplit == sstring::npos ? sstring::npos : nextSplit + 1;
+          }
+          if (found)
+              return FALSE;
 
-      argument=aliasbuf;
-      arg2=one_argument(aliasbuf, arg1);
-    }
+          if (!arg2.empty())
+              aliasbuf=format("%s %s") % desc->alias[i].command % arg2;
+          else
+              aliasbuf=desc->alias[i].command;
+
+          argument=aliasbuf;
+          arg2=one_argument(aliasbuf, arg1);
+      }
   }
 
 
