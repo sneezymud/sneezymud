@@ -2558,7 +2558,7 @@ void mud_assert(int parm, const char *errorMsg,...)
     return;
 
   va_start(ap, errorMsg);
-  vsprintf(message, errorMsg, ap);
+  vsnprintf(message, sizeof(message), errorMsg, ap);
   va_end(ap);
 
   vlogf(LOG_BUG, format("ASSERTION FAILED: %s") %  message);
