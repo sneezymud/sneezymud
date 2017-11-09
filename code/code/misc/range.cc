@@ -976,16 +976,16 @@ void TBeing::doScan(const char *argument)
     "on the horizon" 
   };
   char buf[256], buf2[256];
-  char arg1[MAX_INPUT_LENGTH], arg2[MAX_INPUT_LENGTH];
   int max_range = 15, range, new_rm, rm, nfnd;
   int hindered;
   bool found = FALSE;
   TThing *t=NULL;
   bool all = FALSE;
   sstring grepBy;
-
-  argument_split_2(argument, arg1, arg2);
   float swt;
+
+  sstring arg1;
+  one_argument(argument, arg1);
 
   dirTypeT sd = getDirFromChar(arg1);
   dirTypeT smin, smax;

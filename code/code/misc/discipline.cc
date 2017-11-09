@@ -1,8 +1,9 @@
 // discipline.cc
 
 #include <stdio.h>
-
+#include <vector>
 #include <cmath>
+
 #include "extern.h"
 #include "room.h"
 #include "being.h"
@@ -605,993 +606,228 @@ int CDiscipline::getLearnedness() const
     return(uLearnedness);
 }
 
-spellNumT TBeing::getSkillNum(spellNumT spell_num) const
+
+struct cplist_pair {
+    const unsigned short class_num;
+    const spellNumT skill_num;
+};
+typedef std::vector<cplist_pair> cplist;
+
+spellNumT pick_best_skill(const TBeing *caster, spellNumT skill_num, const cplist list) {
+    int best_value = 0;
+    for (auto pair : list) {
+        if (!caster->hasClass(pair.class_num))
+            continue;
+        int this_value = caster->getSkillValue(pair.skill_num);
+        if (this_value > best_value) {
+            best_value = this_value;
+            skill_num = pair.skill_num;
+        }
+    }
+    return skill_num;
+}
+
+spellNumT TBeing::getSkillNum(spellNumT skill_num) const
 {
-  bool has_class = FALSE; 
-  int num = 0;
-  int num2 = 0;
+    if ((skill_num < MIN_SPELL) || (skill_num >= MAX_SKILL)) {
+        vlogf(LOG_BUG, format("Something is passing a bad skill number (%d) to getSkillNum for %s") %  skill_num % getName());
+        return TYPE_UNDEFINED;
+    }
 
-  if ((spell_num < MIN_SPELL) || (spell_num >= MAX_SKILL)) {
-    vlogf(LOG_BUG, format("Something is passing a bad skill number (%d) to getSkillNum for %s") %  spell_num % getName());
-    return TYPE_UNDEFINED;
-  }
-
-  switch (spell_num) {
-    case SKILL_KICK: 
-      if (hasClass(CLASS_WARRIOR)) {
-        if (!has_class) {
-          spell_num = SKILL_KICK;
-        }
-        if ((num2 = getSkillValue(SKILL_KICK)) > num) {
-          spell_num = SKILL_KICK;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SKILL_KICK_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SKILL_KICK_DEIKHAN)) > num) {
-          spell_num = SKILL_KICK_DEIKHAN;    
-          num = num2;  
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_THIEF)) {
-        if (!has_class) {
-          spell_num = SKILL_KICK_THIEF;
-        }
-        if ((num2 = getSkillValue(SKILL_KICK_THIEF)) > num) {
-          spell_num = SKILL_KICK_THIEF;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_MONK)) {
-        if (!has_class) {
-          spell_num = SKILL_KICK_MONK;
-        }
-        if ((num2 = getSkillValue(SKILL_KICK_MONK)) > num) {
-          spell_num = SKILL_KICK_MONK;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num; 
-    case SKILL_BASH:
-      if (hasClass(CLASS_WARRIOR)) {
-        if (!has_class) {
-          spell_num = SKILL_BASH;
-        }
-        if ((num2 = getSkillValue(SKILL_BASH)) > num) {
-          spell_num = SKILL_BASH;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SKILL_BASH_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SKILL_BASH_DEIKHAN)) > num) {
-          spell_num = SKILL_BASH_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SKILL_TRIP:
-      if (hasClass(CLASS_WARRIOR)) {
-        if (!has_class) {
-          spell_num = SKILL_TRIP;
-        }
-        if ((num2 = getSkillValue(SKILL_TRIP)) > num) {
-          spell_num = SKILL_TRIP;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SKILL_RETREAT:
-      if (hasClass(CLASS_THIEF)) {
-        if (!has_class) {
-          spell_num = SKILL_RETREAT_THIEF;
-        }
-        if ((num2 = getSkillValue(SKILL_RETREAT_THIEF)) > num) {
-          spell_num = SKILL_RETREAT_THIEF;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_MONK)) {
-        if (!has_class) {
-          spell_num = SKILL_RETREAT_MONK;
-        }
-        if ((num2 = getSkillValue(SKILL_RETREAT_MONK)) > num) {
-          spell_num = SKILL_RETREAT_MONK;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_WARRIOR)) {
-        if (!has_class) {
-          spell_num = SKILL_RETREAT;
-        }
-        if ((num2 = getSkillValue(SKILL_RETREAT)) > num) {
-          spell_num = SKILL_RETREAT;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SKILL_RETREAT_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SKILL_RETREAT_DEIKHAN)) > num) {
-          spell_num = SKILL_RETREAT_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SKILL_SWITCH_OPP:
-      if (hasClass(CLASS_MONK)) {
-        if (!has_class) {
-          spell_num = SKILL_SWITCH_MONK;
-        }
-        if ((num2 = getSkillValue(SKILL_SWITCH_MONK)) > num) {
-          spell_num = SKILL_SWITCH_MONK;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_WARRIOR)) {
-        if (!has_class) {
-          spell_num = SKILL_SWITCH_OPP;
-        }
-        if ((num2 = getSkillValue(SKILL_SWITCH_OPP)) > num) {
-          spell_num = SKILL_SWITCH_OPP;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_THIEF)) {
-        if (!has_class) {
-          spell_num = SKILL_SWITCH_THIEF;
-        }
-        if ((num2 = getSkillValue(SKILL_SWITCH_THIEF)) > num) {
-          spell_num = SKILL_SWITCH_THIEF;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SKILL_SWITCH_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SKILL_SWITCH_DEIKHAN)) > num) {
-          spell_num = SKILL_SWITCH_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SKILL_RESCUE:
-      if (hasClass(CLASS_WARRIOR)) {
-        if (!has_class) {
-          spell_num = SKILL_RESCUE;
-        }
-        if ((num2 = getSkillValue(SKILL_RESCUE)) > num) {
-          spell_num = SKILL_RESCUE;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SKILL_RESCUE_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SKILL_RESCUE_DEIKHAN)) > num) {
-          spell_num = SKILL_RESCUE_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SKILL_DISARM:
-      if (hasClass(CLASS_MONK)) {
-        if (!has_class) {
-          spell_num = SKILL_DISARM_MONK;
-        }
-        if ((num2 = getSkillValue(SKILL_DISARM_MONK)) > num) {
-          spell_num = SKILL_DISARM_MONK;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_THIEF)) {
-        if (!has_class) {
-          spell_num = SKILL_DISARM_THIEF;
-        }
-        if ((num2 = getSkillValue(SKILL_DISARM_THIEF)) > num) {
-          spell_num = SKILL_DISARM_THIEF;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_WARRIOR)) {
-        if (!has_class) {
-          spell_num = SKILL_DISARM;
-        }
-        if ((num2 = getSkillValue(SKILL_DISARM)) > num) {
-          spell_num = SKILL_DISARM;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SKILL_DISARM_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SKILL_DISARM_DEIKHAN)) > num) {
-          spell_num = SKILL_DISARM_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SKILL_SHOVE:
-      if (hasClass(CLASS_WARRIOR)) {
-        if (!has_class) {
-          spell_num = SKILL_SHOVE;
-        }
-        if ((num2 = getSkillValue(SKILL_SHOVE)) > num) {
-          spell_num = SKILL_SHOVE;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SKILL_SHOVE_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SKILL_SHOVE_DEIKHAN)) > num) {
-          spell_num = SKILL_SHOVE_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SKILL_GRAPPLE:
-      if (hasClass(CLASS_WARRIOR)) {
-        if (!has_class) {
-          spell_num = SKILL_GRAPPLE;
-        }
-        if ((num2 = getSkillValue(SKILL_GRAPPLE)) > num) {
-          spell_num = SKILL_GRAPPLE;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SKILL_SNEAK:
-      if (hasClass(CLASS_THIEF)) {
-        if (!has_class) {
-          spell_num = SKILL_SNEAK;
-        }
-        if ((num2 = getSkillValue(SKILL_SNEAK)) > num) {
-          spell_num = SKILL_SNEAK;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SKILL_HIDE:
-      if (hasClass(CLASS_THIEF)) {
-        if (!has_class) {
-          spell_num = SKILL_HIDE;
-        }
-        if ((num2 = getSkillValue(SKILL_HIDE)) > num) {
-          spell_num = SKILL_HIDE;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SPELL_SALVE:
-      if (hasClass(CLASS_CLERIC)) {
-        if (!has_class) {
-          spell_num = SPELL_SALVE;
-        }
-        if ((num2 = getSkillValue(SPELL_SALVE)) > num) {
-          spell_num = SPELL_SALVE;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SPELL_SALVE_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SPELL_SALVE_DEIKHAN)) > num) {
-          spell_num = SPELL_SALVE_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SPELL_HEALING_GRASP:
-      if (hasClass(CLASS_SHAMAN)) {
-        if (!has_class) {
-          spell_num = SPELL_HEALING_GRASP;
-        }
-        if ((num2 = getSkillValue(SPELL_HEALING_GRASP)) > num) {
-          spell_num = SPELL_HEALING_GRASP;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-    case SPELL_HEAL_LIGHT:
-      if (hasClass(CLASS_CLERIC)) {
-        if (!has_class) {
-          spell_num = SPELL_HEAL_LIGHT;
-        }
-        if ((num2 = getSkillValue(SPELL_HEAL_LIGHT)) > num) {
-          spell_num = SPELL_HEAL_LIGHT;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SPELL_HEAL_LIGHT_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SPELL_HEAL_LIGHT_DEIKHAN)) > num) {
-          spell_num = SPELL_HEAL_LIGHT_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SPELL_HEAL_SERIOUS:
-      if (hasClass(CLASS_CLERIC)) {
-        if (!has_class) {
-          spell_num = SPELL_HEAL_SERIOUS;
-        }
-        if ((num2 = getSkillValue(SPELL_HEAL_SERIOUS)) > num) {
-          spell_num = SPELL_HEAL_SERIOUS;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SPELL_HEAL_SERIOUS_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SPELL_HEAL_SERIOUS_DEIKHAN)) > num) {
-          spell_num = SPELL_HEAL_SERIOUS_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SPELL_HEAL_CRITICAL:
-      if (hasClass(CLASS_CLERIC)) {
-        if (!has_class) {
-          spell_num = SPELL_HEAL_CRITICAL;
-        }
-        if ((num2 = getSkillValue(SPELL_HEAL_CRITICAL)) > num) {
-          spell_num = SPELL_HEAL_CRITICAL;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SPELL_HEAL_CRITICAL_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SPELL_HEAL_CRITICAL_DEIKHAN)) > num) {
-          spell_num = SPELL_HEAL_CRITICAL_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SPELL_NUMB:
-      if (hasClass(CLASS_CLERIC)) {
-        if (!has_class) {
-          spell_num = SPELL_NUMB;
-        }
-        if ((num2 = getSkillValue(SPELL_NUMB)) > num) {
-          spell_num = SPELL_NUMB;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SPELL_NUMB_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SPELL_NUMB_DEIKHAN)) > num) {
-          spell_num = SPELL_NUMB_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-
-    case SPELL_HARM_LIGHT:
-      if (hasClass(CLASS_CLERIC)) {
-        if (!has_class) {
-          spell_num = SPELL_HARM_LIGHT;
-        }
-        if ((num2 = getSkillValue(SPELL_HARM_LIGHT)) > num) {
-          spell_num = SPELL_HARM_LIGHT;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SPELL_HARM_LIGHT_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SPELL_HARM_LIGHT_DEIKHAN)) > num) {
-          spell_num = SPELL_HARM_LIGHT_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SPELL_HARM_SERIOUS:
-      if (hasClass(CLASS_CLERIC)) {
-        if (!has_class) {
-          spell_num = SPELL_HARM_SERIOUS;
-        }
-        if ((num2 = getSkillValue(SPELL_HARM_SERIOUS)) > num) {
-          spell_num = SPELL_HARM_SERIOUS;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SPELL_HARM_SERIOUS_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SPELL_HARM_SERIOUS_DEIKHAN)) > num) {
-          spell_num = SPELL_HARM_SERIOUS_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SPELL_HARM_CRITICAL:
-      if (hasClass(CLASS_CLERIC)) {
-        if (!has_class) {
-          spell_num = SPELL_HARM_CRITICAL;
-        }
-        if ((num2 = getSkillValue(SPELL_HARM_CRITICAL)) > num) {
-          spell_num = SPELL_HARM_CRITICAL;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SPELL_HARM_CRITICAL_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SPELL_HARM_CRITICAL_DEIKHAN)) > num) {
-          spell_num = SPELL_HARM_CRITICAL_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SPELL_HARM:
-      if (hasClass(CLASS_CLERIC)) {
-        if (!has_class) {
-          spell_num = SPELL_HARM;
-        }
-        if ((num2 = getSkillValue(SPELL_HARM)) > num) {
-          spell_num = SPELL_HARM;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SPELL_HARM_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SPELL_HARM_DEIKHAN)) > num) {
-          spell_num = SPELL_HARM_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SPELL_CLEANSE:
-      if (hasClass(CLASS_SHAMAN)) {
-        if (!has_class) {
-          spell_num = SPELL_CLEANSE;
-        }
-        if ((num2 = getSkillValue(SPELL_CLEANSE)) > num) {
-          spell_num = SPELL_CLEANSE;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SPELL_CURE_POISON:
-      if (hasClass(CLASS_CLERIC)) {
-        if (!has_class) {
-          spell_num = SPELL_CURE_POISON;
-        }
-        if ((num2 = getSkillValue(SPELL_CURE_POISON)) > num) {
-          spell_num = SPELL_CURE_POISON;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SPELL_CURE_POISON_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SPELL_CURE_POISON_DEIKHAN)) > num) {
-          spell_num = SPELL_CURE_POISON_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SPELL_POISON:
-      if (hasClass(CLASS_CLERIC)) {
-        if (!has_class) {
-          spell_num = SPELL_POISON;
-        }
-        if ((num2 = getSkillValue(SPELL_POISON)) > num) {
-          spell_num = SPELL_POISON;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SPELL_POISON_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SPELL_POISON_DEIKHAN)) > num) {
-          spell_num = SPELL_POISON_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SPELL_REFRESH:
-      if (hasClass(CLASS_CLERIC)) {
-        if (!has_class) {
-          spell_num = SPELL_REFRESH;
-        }
-        if ((num2 = getSkillValue(SPELL_REFRESH)) > num) {
-          spell_num = SPELL_REFRESH;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SPELL_REFRESH_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SPELL_REFRESH_DEIKHAN)) > num) {
-          spell_num = SPELL_REFRESH_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SPELL_HEROES_FEAST:
-      if (hasClass(CLASS_CLERIC)) {
-        if (!has_class) {
-          spell_num = SPELL_HEROES_FEAST;
-        }
-        if ((num2 = getSkillValue(SPELL_HEROES_FEAST)) > num) {
-          spell_num = SPELL_HEROES_FEAST;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SPELL_HEROES_FEAST_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SPELL_HEROES_FEAST_DEIKHAN)) > num) {
-          spell_num = SPELL_HEROES_FEAST_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SPELL_CREATE_FOOD:
-      if (hasClass(CLASS_CLERIC)) {
-        if (!has_class) {
-          spell_num = SPELL_CREATE_FOOD;
-        }
-        if ((num2 = getSkillValue(SPELL_CREATE_FOOD)) > num) {
-          spell_num = SPELL_CREATE_FOOD;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SPELL_CREATE_FOOD_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SPELL_CREATE_FOOD_DEIKHAN)) > num) {
-          spell_num = SPELL_CREATE_FOOD_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SKILL_BACKSTAB:
-      if (hasClass(CLASS_THIEF)) {
-        if (!has_class) {
-          spell_num = SKILL_BACKSTAB;
-        }
-        if ((num2 = getSkillValue(SKILL_BACKSTAB)) > num) {
-          spell_num = SKILL_BACKSTAB;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SKILL_THROATSLIT:
-      if (hasClass(CLASS_THIEF)) {
-        if (!has_class) {
-          spell_num = SKILL_THROATSLIT;
-        }
-        if ((num2 = getSkillValue(SKILL_THROATSLIT)) > num) {
-          spell_num = SKILL_THROATSLIT;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SPELL_CREATE_WATER:
-      if (hasClass(CLASS_CLERIC)) {
-        if (!has_class) 
-          spell_num = SPELL_CREATE_WATER;
+    switch (skill_num) {
+        case SKILL_KICK:
+            return pick_best_skill(this, skill_num, { 
+                {CLASS_WARRIOR, SKILL_KICK},
+                {CLASS_DEIKHAN, SKILL_KICK_DEIKHAN},
+                {CLASS_THIEF, SKILL_KICK_THIEF},
+                {CLASS_MONK, SKILL_KICK_MONK}});
+      
+        case SKILL_RETREAT:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_WARRIOR, SKILL_RETREAT},
+                {CLASS_DEIKHAN, SKILL_RETREAT_DEIKHAN},
+                {CLASS_THIEF, SKILL_RETREAT_THIEF},
+                {CLASS_MONK, SKILL_RETREAT_MONK}});
         
-        if ((num2 = getSkillValue(SPELL_CREATE_WATER)) > num) {
-          spell_num = SPELL_CREATE_WATER;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) 
-          spell_num = SPELL_CREATE_WATER_DEIKHAN;
+        case SKILL_SWITCH_OPP:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_WARRIOR, SKILL_SWITCH_OPP},
+                {CLASS_DEIKHAN, SKILL_SWITCH_DEIKHAN},
+                {CLASS_THIEF, SKILL_SWITCH_THIEF},
+                {CLASS_MONK, SKILL_SWITCH_MONK}});
         
-        if ((num2 = getSkillValue(SPELL_CREATE_WATER_DEIKHAN)) > num) {
-          spell_num = SPELL_CREATE_WATER_DEIKHAN;
-          num = num2; 
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SPELL_ARMOR:
-      if (hasClass(CLASS_CLERIC)) {
-        if (!has_class) 
-          spell_num = SPELL_ARMOR;
+        case SKILL_DISARM:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_WARRIOR, SKILL_DISARM},
+                {CLASS_DEIKHAN, SKILL_DISARM_DEIKHAN},
+                {CLASS_THIEF, SKILL_DISARM_THIEF},
+                {CLASS_MONK, SKILL_DISARM_MONK}});
         
-        if ((num2 = getSkillValue(SPELL_ARMOR)) > num) { 
-          spell_num = SPELL_ARMOR;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) 
-          spell_num = SPELL_ARMOR_DEIKHAN;
+        case SKILL_BASH:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_WARRIOR, SKILL_BASH},
+                {CLASS_DEIKHAN, SKILL_BASH_DEIKHAN}});
         
-        if ((num2 = getSkillValue(SPELL_ARMOR_DEIKHAN)) > num) {
-          spell_num = SPELL_ARMOR_DEIKHAN;
-          num = num2; 
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SPELL_BLESS:
-      if (hasClass(CLASS_CLERIC)) {
-        if (!has_class) {
-          spell_num = SPELL_BLESS;
-        }
-        if ((num2 = getSkillValue(SPELL_BLESS)) > num) { 
-          spell_num = SPELL_BLESS;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SPELL_BLESS_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SPELL_BLESS_DEIKHAN)) > num) {
-          spell_num = SPELL_BLESS_DEIKHAN;
-          num = num2; 
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
+        case SKILL_RESCUE:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_WARRIOR, SKILL_RESCUE},
+                {CLASS_DEIKHAN, SKILL_RESCUE_DEIKHAN}});
+        
+        case SKILL_DUAL_WIELD:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_WARRIOR, SKILL_DUAL_WIELD},
+                {CLASS_THIEF, SKILL_DUAL_WIELD_THIEF}});
+        
+        case SKILL_SHOVE:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_WARRIOR, SKILL_SHOVE},
+                {CLASS_DEIKHAN, SKILL_SHOVE_DEIKHAN}});
+        
+        case SPELL_SALVE:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_CLERIC, SPELL_SALVE},
+                {CLASS_DEIKHAN, SPELL_SALVE_DEIKHAN}});
+        
+        case SPELL_HEAL_LIGHT:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_CLERIC, SPELL_HEAL_LIGHT},
+                {CLASS_DEIKHAN, SPELL_HEAL_LIGHT_DEIKHAN}});
+        
+        case SPELL_HEAL_SERIOUS:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_CLERIC, SPELL_HEAL_SERIOUS},
+                {CLASS_DEIKHAN, SPELL_HEAL_SERIOUS_DEIKHAN}});
+        
+        case SPELL_HEAL_CRITICAL:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_CLERIC, SPELL_HEAL_CRITICAL},
+                {CLASS_DEIKHAN, SPELL_HEAL_CRITICAL_DEIKHAN}});
+        
+        case SPELL_NUMB:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_CLERIC, SPELL_NUMB},
+                {CLASS_DEIKHAN, SPELL_NUMB_DEIKHAN}});
+        
+        case SPELL_HARM_LIGHT:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_CLERIC, SPELL_HARM_LIGHT},
+                {CLASS_DEIKHAN, SPELL_HARM_LIGHT_DEIKHAN}});
+        
+        case SPELL_HARM_SERIOUS:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_CLERIC, SPELL_HARM_SERIOUS},
+                {CLASS_DEIKHAN, SPELL_HARM_SERIOUS_DEIKHAN}});
+        
+        case SPELL_HARM_CRITICAL:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_CLERIC, SPELL_HARM_CRITICAL},
+                {CLASS_DEIKHAN, SPELL_HARM_CRITICAL_DEIKHAN}});
+        
+        case SPELL_HARM:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_CLERIC, SPELL_HARM},
+                {CLASS_DEIKHAN, SPELL_HARM_DEIKHAN}});
+        
+        case SPELL_CURE_POISON:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_CLERIC, SPELL_CURE_POISON},
+                {CLASS_DEIKHAN, SPELL_CURE_POISON_DEIKHAN}});
+        
+        case SPELL_POISON:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_CLERIC, SPELL_POISON},
+                {CLASS_DEIKHAN, SPELL_POISON_DEIKHAN}});
+        
+        case SPELL_REFRESH:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_CLERIC, SPELL_REFRESH},
+                {CLASS_DEIKHAN, SPELL_REFRESH_DEIKHAN}});
+        
+        case SPELL_HEROES_FEAST:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_CLERIC, SPELL_HEROES_FEAST},
+                {CLASS_DEIKHAN, SPELL_HEROES_FEAST_DEIKHAN}});
+        
+        case SPELL_CREATE_FOOD:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_CLERIC, SPELL_CREATE_FOOD},
+                {CLASS_DEIKHAN, SPELL_CREATE_FOOD_DEIKHAN}});
+        
+        case SPELL_CREATE_WATER:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_CLERIC, SPELL_CREATE_WATER},
+                {CLASS_DEIKHAN, SPELL_CREATE_WATER_DEIKHAN}});
+        
+        case SPELL_ARMOR:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_CLERIC, SPELL_ARMOR},
+                {CLASS_DEIKHAN, SPELL_ARMOR_DEIKHAN}});
+        
+        case SPELL_BLESS:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_CLERIC, SPELL_BLESS},
+                {CLASS_DEIKHAN, SPELL_BLESS_DEIKHAN}});
+        
+        case SPELL_EXPEL:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_CLERIC, SPELL_EXPEL},
+                {CLASS_DEIKHAN, SPELL_EXPEL_DEIKHAN}});
+        
+        case SPELL_CLOT:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_CLERIC, SPELL_CLOT},
+                {CLASS_DEIKHAN, SPELL_CLOT_DEIKHAN}});
+        
+        case SPELL_RAIN_BRIMSTONE:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_CLERIC, SPELL_RAIN_BRIMSTONE},
+                {CLASS_DEIKHAN, SPELL_RAIN_BRIMSTONE_DEIKHAN}});
+        
+        case SPELL_STERILIZE:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_CLERIC, SPELL_STERILIZE},
+                {CLASS_DEIKHAN, SPELL_STERILIZE_DEIKHAN}});
+        
+        case SPELL_REMOVE_CURSE:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_CLERIC, SPELL_REMOVE_CURSE},
+                {CLASS_DEIKHAN, SPELL_REMOVE_CURSE_DEIKHAN}});
+        
+        case SPELL_CURSE:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_CLERIC, SPELL_CURSE},
+                {CLASS_DEIKHAN, SPELL_CURSE_DEIKHAN}});
+        
+        case SPELL_INFECT:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_CLERIC, SPELL_INFECT},
+                {CLASS_DEIKHAN, SPELL_INFECT_DEIKHAN}});
+        
+        case SPELL_CURE_DISEASE:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_CLERIC, SPELL_CURE_DISEASE},
+                {CLASS_DEIKHAN, SPELL_CURE_DISEASE_DEIKHAN}});
+        
+        case SPELL_EARTHQUAKE:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_CLERIC, SPELL_EARTHQUAKE},
+                {CLASS_DEIKHAN, SPELL_EARTHQUAKE_DEIKHAN}});
+        
+        case SPELL_CALL_LIGHTNING:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_CLERIC, SPELL_CALL_LIGHTNING},
+                {CLASS_DEIKHAN, SPELL_CALL_LIGHTNING_DEIKHAN}});
+        
 #if 0
-    case SPELL_DETECT_POISON:
-      if (hasClass(CLASS_CLERIC)) {
-        if (!has_class) {
-          spell_num = SPELL_DETECT_POISON;
-        }
-        if ((num2 = getSkillValue(SPELL_DETECT_POISON)) > num) {
-          spell_num = SPELL_DETECT_POISON;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SPELL_DETECT_POISON_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SPELL_DETECT_POISON_DEIKHAN)) > num) {
-          spell_num = SPELL_DETECT_POISON_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
+        // unimplemented
+        case SPELL_DETECT_POISON:
+            return pick_best_skill(this, skill_num, {
+                {CLASS_CLERIC, SPELL_DETECT_POISON},
+                {CLASS_DEIKHAN, SPELL_DETECT_POISON_DEIKHAN}});
 #endif
-    case SPELL_EXPEL:
-      if (hasClass(CLASS_CLERIC)) {
-        if (!has_class) {
-          spell_num = SPELL_EXPEL;
-        }
-        if ((num2 = getSkillValue(SPELL_EXPEL)) > num) {
-          spell_num = SPELL_EXPEL;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SPELL_EXPEL_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SPELL_EXPEL_DEIKHAN)) > num) {
-          spell_num = SPELL_EXPEL_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SPELL_CLOT:
-      if (hasClass(CLASS_CLERIC)) {
-        if (!has_class) {
-          spell_num = SPELL_CLOT;
-        }
-        if ((num2 = getSkillValue(SPELL_CLOT)) > num) {
-          spell_num = SPELL_CLOT;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SPELL_CLOT_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SPELL_CLOT_DEIKHAN)) > num) {
-          spell_num = SPELL_CLOT_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SPELL_RAIN_BRIMSTONE:
-      if (hasClass(CLASS_CLERIC)) {
-        if (!has_class) {
-          spell_num = SPELL_RAIN_BRIMSTONE;
-        }
-        if ((num2 = getSkillValue(SPELL_RAIN_BRIMSTONE)) > num) {
-          spell_num = SPELL_RAIN_BRIMSTONE;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SPELL_RAIN_BRIMSTONE_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SPELL_RAIN_BRIMSTONE_DEIKHAN)) > num) {
-          spell_num = SPELL_RAIN_BRIMSTONE_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SPELL_STERILIZE:
-      if (hasClass(CLASS_CLERIC)) {
-        if (!has_class) {
-          spell_num = SPELL_STERILIZE;
-        }
-        if ((num2 = getSkillValue(SPELL_STERILIZE)) > num) {
-          spell_num = SPELL_STERILIZE;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SPELL_STERILIZE_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SPELL_STERILIZE_DEIKHAN)) > num) {
-          spell_num = SPELL_STERILIZE_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SPELL_REMOVE_CURSE:
-      if (hasClass(CLASS_CLERIC)) {
-        if (!has_class) {
-          spell_num = SPELL_REMOVE_CURSE;
-        }
-        if ((num2 = getSkillValue(SPELL_REMOVE_CURSE)) > num) {
-          spell_num = SPELL_REMOVE_CURSE;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SPELL_REMOVE_CURSE_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SPELL_REMOVE_CURSE_DEIKHAN)) > num) {
-          spell_num = SPELL_REMOVE_CURSE_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-
-    case SPELL_CURSE:
-      if (hasClass(CLASS_CLERIC)) {
-        if (!has_class) {
-          spell_num = SPELL_CURSE;
-        }
-        if ((num2 = getSkillValue(SPELL_CURSE)) > num) {
-          spell_num = SPELL_CURSE;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SPELL_CURSE_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SPELL_CURSE_DEIKHAN)) > num) {
-          spell_num = SPELL_CURSE_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SPELL_INFECT:
-      if (hasClass(CLASS_CLERIC)) {
-        if (!has_class) {
-          spell_num = SPELL_INFECT;
-        }
-        if ((num2 = getSkillValue(SPELL_INFECT)) > num) {
-          spell_num = SPELL_INFECT;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SPELL_INFECT_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SPELL_INFECT_DEIKHAN)) > num) {
-          spell_num = SPELL_INFECT_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SPELL_CURE_DISEASE:
-      if (hasClass(CLASS_CLERIC)) {
-        if (!has_class) {
-          spell_num = SPELL_CURE_DISEASE;
-        }
-        if ((num2 = getSkillValue(SPELL_CURE_DISEASE)) > num) {
-          spell_num = SPELL_CURE_DISEASE;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SPELL_CURE_DISEASE_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SPELL_CURE_DISEASE_DEIKHAN)) > num) {
-          spell_num = SPELL_CURE_DISEASE_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    case SPELL_EARTHQUAKE:
-      if (hasClass(CLASS_CLERIC)) {
-        if (!has_class) {
-          spell_num = SPELL_EARTHQUAKE;
-        }
-        if ((num2 = getSkillValue(SPELL_EARTHQUAKE)) > num) {
-          spell_num = SPELL_EARTHQUAKE;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SPELL_EARTHQUAKE_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SPELL_EARTHQUAKE_DEIKHAN)) > num) {
-          spell_num = SPELL_EARTHQUAKE_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-   case SPELL_CALL_LIGHTNING:
-      if (hasClass(CLASS_CLERIC)) {
-        if (!has_class) {
-          spell_num = SPELL_CALL_LIGHTNING;
-        }
-        if ((num2 = getSkillValue(SPELL_CALL_LIGHTNING)) > num) {
-          spell_num = SPELL_CALL_LIGHTNING;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_DEIKHAN)) {
-        if (!has_class) {
-          spell_num = SPELL_CALL_LIGHTNING_DEIKHAN;
-        }
-        if ((num2 = getSkillValue(SPELL_CALL_LIGHTNING_DEIKHAN)) > num) {
-          spell_num = SPELL_CALL_LIGHTNING_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-   case SKILL_DUAL_WIELD:
-      if (hasClass(CLASS_WARRIOR)) {
-        if (!has_class) {
-          spell_num = SKILL_DUAL_WIELD;
-        }
-        if ((num2 = getSkillValue(SKILL_DUAL_WIELD)) > num) {
-          spell_num = SKILL_DUAL_WIELD;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_THIEF)) {
-        if (!has_class) {
-          spell_num = SKILL_DUAL_WIELD_THIEF;
-        }
-        if ((num2 = getSkillValue(SKILL_DUAL_WIELD_THIEF)) > num) {
-          spell_num = SKILL_DUAL_WIELD_THIEF;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      return spell_num;
-    default:
-      return spell_num;
-  }
-  return spell_num;
+        default:
+            return skill_num;
+    };
 }
 
 bool TBeing::isValidDiscClass(discNumT discNum, int classNum, int indNum) 

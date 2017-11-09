@@ -1151,43 +1151,27 @@ int chrism(TBeing *caster, TObj **obj, int, const char * name, short bKnown)
   }
 
   if (caster->bSuccess(bKnown, SPELL_CHRISM)) {
+    *obj = read_object(numberx, REAL);
+    (*obj)->remObjStat(ITEM_NEWBIE);
+    (*obj)->setEmpty();
 
-    int i, num;
-    if (obj_index[numberx].value)
-      num = CHRISM_PRICE / obj_index[numberx].value;
-    else
-      num = 250;
-    num = 1;
-    // only one at a time
-
-    bool grabbed = false;
-    for (i = 0; i < num; i++) {
-      *obj = read_object(numberx, REAL);
-
-      (*obj)->remObjStat(ITEM_NEWBIE);
-      (*obj)->setEmpty();
-
-      if (!caster->heldInPrimHand()) {
-        caster->equipChar(*obj, caster->getPrimaryHold(), SILENT_YES);
-        grabbed = true;
-      } else {
-        *caster->roomp += **obj;
-      }
-    }
-
-    act("Out of the sky $p gently falls into $n's hands.", TRUE, caster, *obj, NULL, 
-TO_ROOM);
     act("The loa have blessed you with $p to aid you.", TRUE, caster, *obj, NULL, TO_CHAR);
 
-    if (grabbed)
-      act("You catch $p as it was gently falling onto the ground.",
-          TRUE, caster, *obj, NULL, TO_CHAR);
+    if (!caster->heldInPrimHand()) {
+      caster->equipChar(*obj, caster->getPrimaryHold(), SILENT_YES);
+      act("Out of the sky $p gently falls into $n's hands.", TRUE, caster, *obj, NULL, TO_ROOM);
+      act("You catch $p as it gently falls from the sky.", TRUE, caster, *obj, NULL, TO_CHAR);
+    } else {
+      *caster->roomp += **obj;
+      act("Out of the sky $p gently falls to the ground.", TRUE, caster, *obj, NULL, TO_ROOM);
+      act("Out of the sky $p gently falls to the ground.", TRUE, caster, *obj, NULL, TO_CHAR);
+    }
 
     return SPELL_SUCCESS;
-  } else {
-    caster->nothingHappens();
-    return SPELL_FAIL;
   }
+
+  caster->nothingHappens();
+  return SPELL_FAIL;
 }
 
 int chrism(TBeing *caster, const char * name)

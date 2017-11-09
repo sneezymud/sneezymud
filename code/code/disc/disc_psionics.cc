@@ -150,6 +150,7 @@ int TBeing::doPTell(const char *arg, bool visible){
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     delete vict;
     vict = NULL;
+    return DELETE_VICT;
   }
   if (IS_SET_DELETE(rc, DELETE_VICT)) 
     return DELETE_THIS;
@@ -768,76 +769,61 @@ int TBeing::doPsycrush(const char *tString){
   return TRUE;
 }
 
+int kwaveDamage(TBeing *caster, TBeing *victim) {
+    int rc = victim->crashLanding(POSITION_SITTING);
+    if (IS_SET_ONLY(rc, DELETE_VICT))
+        return DELETE_VICT;
+
+    float wt = combatRound(discArray[SKILL_KINETIC_WAVE]->lag);
+    wt = (wt * 100.0 / getSkillDiffModifier(SKILL_KINETIC_WAVE));
+    wt += 1;
+    victim->addToWait((int) wt);
+
+    if (victim->spelltask)
+        victim->addToDistracted(1, FALSE);
+
+    int damage = caster->getSkillDam(victim, SKILL_KINETIC_WAVE,
+            caster->getSkillLevel(SKILL_KINETIC_WAVE),
+            caster->getAdvLearning(SKILL_KINETIC_WAVE));
+    return caster->reconcileDamage(victim, damage, SKILL_KINETIC_WAVE);
+}
+
 int TBeing::doKwave(const char *tString){
-  // bash
   TBeing *tVictim=NULL;
+  int rc = 0;
 
   if(!(tVictim=psiAttackChecks(this, SKILL_KINETIC_WAVE, tString)))
     return FALSE;
   
   int bKnown=getSkillValue(SKILL_KINETIC_WAVE);
-  int tDamage=0;
 
   if (bSuccess(bKnown, SKILL_KINETIC_WAVE)) {
     act("You set loose a wave of kinetic force at $N!",
-        FALSE, this, NULL, tVictim, TO_CHAR);
+      FALSE, this, NULL, tVictim, TO_CHAR);
 
-    if(1){
-      if (tVictim->riding) {
-	act("You knock $N off $p.", 
-	    FALSE, this, tVictim->riding, tVictim, TO_CHAR);
-	act("$n knocks $N off $p.", 
-	    FALSE, this, tVictim->riding, tVictim, TO_NOTVICT);
-	act("$n knocks you off $p.", 
-	    FALSE, this, tVictim->riding, tVictim, TO_VICT);
-	tVictim->dismount(POSITION_STANDING);
-      }
-
-
-      act("$n sends $N sprawling with a kinetic force wave!",
-	  FALSE, this, 0, tVictim, TO_NOTVICT);
-      act("You send $N sprawling.", FALSE, this, 0, tVictim, TO_CHAR);
-      act("You tumble as $n knocks you over with a kinetic wave.",
-	  FALSE, this, 0, tVictim, TO_VICT, ANSI_BLUE);
-
-      int rc = tVictim->crashLanding(POSITION_SITTING);
-      if (IS_SET_ONLY(rc, DELETE_VICT)) {
-	delete tVictim;
-	tVictim = NULL;
-	REM_DELETE(rc, DELETE_VICT);
-      }
-
-      float wt = combatRound(discArray[SKILL_KINETIC_WAVE]->lag);
-      wt = (wt * 100.0 / getSkillDiffModifier(SKILL_KINETIC_WAVE));
-      wt += 1;
-      tVictim->addToWait((int) wt);
-      
-      if (tVictim->spelltask) 
-	tVictim->addToDistracted(1, FALSE);
-    } else {
-      act("You pound $N with a kinetic wave.",
-	  TRUE, this, NULL, tVictim, TO_CHAR);
-      act("$n pounds you with a kinetic wave.",
-	  TRUE, this, NULL, tVictim, TO_VICT);
-      act("$N is pounded by a kinetic wave.",
-	  TRUE, this, NULL, tVictim, TO_NOTVICT);
+    if (tVictim->riding) {
+      act("You knock $N off $p.", FALSE, this, tVictim->riding, tVictim, TO_CHAR);
+      act("$n knocks $N off $p.", FALSE, this, tVictim->riding, tVictim, TO_NOTVICT);
+      act("$n knocks you off $p.", FALSE, this, tVictim->riding, tVictim, TO_VICT);
+      tVictim->dismount(POSITION_STANDING);
     }
 
-    tDamage = getSkillDam(tVictim, SKILL_KINETIC_WAVE,
-			  getSkillLevel(SKILL_KINETIC_WAVE),
-                          getAdvLearning(SKILL_KINETIC_WAVE));
-  } else {
+    act("$n sends $N sprawling with a kinetic force wave!", FALSE, this, 0, tVictim, TO_NOTVICT);
+    act("You send $N sprawling.", FALSE, this, 0, tVictim, TO_CHAR);
+    act("You tumble as $n knocks you over with a kinetic wave.", FALSE, this, 0, tVictim, TO_VICT, ANSI_BLUE);
+
+    rc = kwaveDamage(this, tVictim);
+    if (IS_SET_ONLY(rc, DELETE_VICT)) {
+        delete tVictim;
+        tVictim = NULL;
+    }
+  }
+  else {
     psiAttackFailMsg(this, tVictim);
+    rc = reconcileDamage(tVictim, 0, SKILL_KINETIC_WAVE);
   }
 
-  int rc = reconcileDamage(tVictim, tDamage, SKILL_KINETIC_WAVE);
   addSkillLag(SKILL_KINETIC_WAVE, rc);
-
-  if (IS_SET_ONLY(rc, DELETE_VICT)) {
-    delete tVictim;
-    tVictim = NULL;
-    REM_DELETE(rc, DELETE_VICT);
-  }
 
   return TRUE;
 }
@@ -886,7 +872,7 @@ int TBeing::doPsidrain(const char *tString){
     addToMana(addmana);
 
     colorAct(COLOR_SPELLS,
-	"<k>You wrap your tentacles around $N's head begin to devour $S energy.<1>",
+	"<k>You wrap your tentacles around $N's head and begin to devour $S energy.<1>",
 	TRUE, this, NULL, tVictim, TO_CHAR);
     colorAct(COLOR_SPELLS,
     "<k>$n wraps $s tentacles around your head and begins to devour your energy.<1>",
