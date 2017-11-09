@@ -599,8 +599,7 @@ void TMonster::setHunting(TBeing *tch)
 ------------------------------------------------------ */
 bool TMonster::isAttackerMultiplay(TBeing *aggressor)
 {
-  // Disabled. We like multiplay.
-  if (!Config::ForceMultiplayCompliance)
+  if (!Config::ForceMultiplayCompliance())
       return false;
 
   // check if an alt of this character is on my hate list.  If so -> multiplayer!
