@@ -1,0 +1,20 @@
+Syntax: run <directions>
+
+Walks you by the specified directions.
+
+<directions> should be a list of move commands:
+	run enu
+	go east, north, north, up
+
+The directions can be prefixed by <number>:
+	run 3n
+	go north, north, north
+
+Diagonals take precedece over cardinal directions:
+	run ne ne 2ne
+	go northeast 4 times (not north then east)
+
+To enforce cardinal directions, separate by spaces or specify count:
+	run n e
+	run n1e
+	go north, then east

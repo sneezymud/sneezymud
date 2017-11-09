@@ -91,5 +91,7 @@ void TBeing::doRun(sstring const& path) {
       }
       res.pop_front();
     }
+  } else {
+      sendTo("Bad run directions. See 'help run'.");
   }
 }
