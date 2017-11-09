@@ -1928,26 +1928,25 @@ int TBeing::parseCommand(const sstring &orig_arg, bool typedIn, bool doAlias)
       }
 
       if (i < 16) {
-          size_t begin = 0;
           sstring command = desc->alias[i].command;
-          bool found = false;
-          while (begin != std::string::npos)
-          {
-              found = true;
-              size_t nextSplit = command.find("~", begin);
-              sstring fragment = command.substr(begin, nextSplit - begin);
-              size_t param;
-              while ((param = fragment.find("%")) != sstring::npos)
-                  fragment.replace(param, 1, arg2);
-              int rc = parseCommand(fragment, typedIn, false);
-              if (IS_SET_DELETE(rc, DELETE_THIS))
-                  return DELETE_THIS;
-              if (IS_SET_DELETE(rc, DELETE_VICT))
-                  return DELETE_VICT;
-              begin = nextSplit == sstring::npos ? sstring::npos : nextSplit + 1;
-          }
-          if (found)
+          if (command.find("~") != sstring::npos) {
+              size_t begin = 0;
+              while (begin != sstring::npos) // iterate over lines in multiline
+              {
+                  size_t nextSplit = command.find("~", begin);
+                  sstring fragment = command.substr(begin, nextSplit - begin);
+                  size_t param;
+                  while ((param = fragment.find("%")) != sstring::npos)
+                      fragment.replace(param, 1, arg2);
+                  int rc = parseCommand(fragment, typedIn, false);
+                  if (IS_SET_DELETE(rc, DELETE_THIS))
+                      return DELETE_THIS;
+                  if (IS_SET_DELETE(rc, DELETE_VICT))
+                      return DELETE_VICT;
+                  begin = nextSplit == sstring::npos ? sstring::npos : nextSplit + 1;
+              }
               return FALSE;
+          }
 
           if (!arg2.empty())
               aliasbuf=format("%s %s") % desc->alias[i].command % arg2;
