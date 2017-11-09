@@ -6010,14 +6010,17 @@ void TBeing::doAccount(const sstring &arg)
       // account, so i'm adding myself. - dash
       sstring tmp_name = getName();
 
-      if ((tmp_name != "Batopr") &&
-          (tmp_name != "Lapsos") &&
-          (tmp_name != "Damescena") &&
-          (tmp_name != "Peel") &&
-          (tmp_name != "Jesus") &&
-          (tmp_name != "Dash") &&
-          (tmp_name != "Maror") &&
-          (tmp_name != "Angus")) {
+      if (//(tmp_name != "Batopr") &&
+          //(tmp_name != "Lapsos") &&
+          //(tmp_name != "Damescena") &&
+          //(tmp_name != "Peel") &&
+          //(tmp_name != "Jesus") &&
+            (tmp_name != "Dash") &&
+          //(tmp_name != "Maror") &&
+          //(tmp_name != "Angus")
+            (tmp_name != "Juno") &&
+            (tmp_name != "Aion")
+         ) {
         sendTo("Sorry you suck too much to do this.\n\r");
         return;
       }
