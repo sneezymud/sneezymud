@@ -1174,7 +1174,7 @@ char * display_permission(unsigned int perms) {
 }
 
 char * display_guild_flags(unsigned int flags) {
-  char buf[256];
+  char buf[512];
   sprintf(buf, "%s%s%s%s%s%s%s",
 	  (IS_SET(flags, GUILD_ACTIVE) ?  
 	   "\n\r This guild is activated." : "\n\r This guild is NOT activated."),
