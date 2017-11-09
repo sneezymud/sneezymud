@@ -1150,11 +1150,7 @@ void TBeing::fixLevels(int lev)
 
 bool should_be_logged(const TBeing *ch)
 {
-#if 1
-  if (ch->hasWizPower(POWER_WIZARD))
-    return false;
-#endif
-  // Pappy: ensure Builders and Gods are logged
+  // Everybody gets logged, admins most of all.
   return true;
 }
 
