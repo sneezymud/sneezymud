@@ -7,6 +7,7 @@
 
 #include "room.h"
 #include "being.h"
+#include "configuration.h"
 #include "extern.h"
 #include "monster.h"
 
@@ -599,9 +600,9 @@ void TMonster::setHunting(TBeing *tch)
 bool TMonster::isAttackerMultiplay(TBeing *aggressor)
 {
   // Disabled. We like multiplay.
-  return false;
+  if (!Config::ForceMultiplayCompliance)
+      return false;
 
-  /*
   // check if an alt of this character is on my hate list.  If so -> multiplayer!
   if (aggressor->isPc() && IS_SET(hatefield, HATE_CHAR) && hates.clist)
   {
@@ -627,7 +628,6 @@ bool TMonster::isAttackerMultiplay(TBeing *aggressor)
   }
 
   return false;
-  */
 }
 
 
