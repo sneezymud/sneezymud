@@ -1114,6 +1114,7 @@ int Descriptor::nanny(sstring arg)
           // upon reconnect - Russ 6/15/96
           flush();
           writeToQ("Reconnecting.\n\r");
+          tmp_ch->sendRoomGmcp(true);
           tmp_ch->initDescStuff(&st);
           if (tmp_ch->isPlayerAction(PLR_VT100 | PLR_ANSI))
             tmp_ch->doCls(false);
@@ -1251,6 +1252,7 @@ int Descriptor::nanny(sstring arg)
 
               flush();
               writeToQ("Reconnecting.\n\r");
+              tmp_ch->sendRoomGmcp(true);
               tmp_ch->initDescStuff(&st);
   
               if (tmp_ch->isPlayerAction(PLR_VT100 | PLR_ANSI))
