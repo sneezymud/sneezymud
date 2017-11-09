@@ -496,7 +496,7 @@ void TPerson::logf(const char * tString, ...)
   time_t      tCTime;
 
   va_start(tAp, tString);
-  vsprintf(tBuffer, tString, tAp);
+  vsnprintf(tBuffer, sizeof(tBuffer), tString, tAp);
   va_end(tAp);
 
   tCTime = time(0);
