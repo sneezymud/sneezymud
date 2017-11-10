@@ -185,13 +185,9 @@ bool loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstrin
       (::number(0,9999999) < (int) (10000000 * adj_obj_lp_ratio *stats.equip *.050))) { 
        // .03 lowers the possible chances, which are initally too high with a fixed values
 
-	vlogf(LOG_MISC, format("suitset: stats.equip= %d") % 
-	stats.equip);
-
-	vlogf(LOG_MISC, format("suitset: adj_obj_lp_ratio = %d") % 
-	adj_obj_lp_ratio);
-
-	vlogf(LOG_MISC, format("suitset: (10000000 * adj_obj_lp_ratio * stats.equip *.050) = %d") % (int) (10000000 * adj_obj_lp_ratio * stats.equip *.050));
+	// vlogf(LOG_MISC, format("suitset: stats.equip= %d") % stats.equip);
+	// vlogf(LOG_MISC, format("suitset: adj_obj_lp_ratio = %d") % adj_obj_lp_ratio);
+	// vlogf(LOG_MISC, format("suitset: (10000000 * adj_obj_lp_ratio * stats.equip *.050) = %d") % (int) (10000000 * adj_obj_lp_ratio * stats.equip *.050));
 
 
         // Erasmus 3-23-2016
