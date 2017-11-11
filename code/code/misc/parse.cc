@@ -13,6 +13,8 @@ extern "C" {
 #include <arpa/telnet.h>
 }
 
+#include <boost/regex.hpp>
+
 #include "extern.h"
 #include "room.h"
 #include "being.h"
@@ -2081,16 +2083,8 @@ void argument_interpreter(sstring argument, sstring &first_arg, sstring &second_
 
 bool is_number(const sstring &str)
 {
-  int look_at;
-
-  if (str.empty())
-    return (0);
-
-  for (look_at = 0; *(str.c_str() + look_at) != '\0'; look_at++) {
-    if ((*(str.c_str() + look_at) < '0') || (*(str.c_str() + look_at) > '9'))
-      return (0);
-  }
-  return (1);
+    boost::smatch what;  //Not really used here, since we're just doing go/no-go
+    return boost::regex_match(str, what, boost::regex("^[\\+-]?\\d+(\\.\\d+)?$"));
 }
 
 const char *one_argument(const char *argument, char *first_arg, unsigned int first_arg_size)

@@ -10,6 +10,7 @@
 
 #include <csignal>
 #include <cstdarg>
+#include <cmath>
 #include <errno.h>
 #include <stdio.h>
 
@@ -567,16 +568,35 @@ procTweakLoadRate::procTweakLoadRate(const int &p)
   name="procTweakLoadRate";
 }
 
+// The Target loadrate and rate of change should be set from within the mud,
+// not hard-coded
 void procTweakLoadRate::run(const TPulse &) const
 {
-  if(stats.equip <= 0.046){
-    vlogf(LOG_BUG, "procTweakLoadRate: desired load rate achieved.");
+
+  if ( stats.global_lp_target_changerate <= 0 ) return;     // If this is zero, the procedure won't change anything anyway.
+
+
+  // target_delta = (stats.global_lp_target - original_load)/(24hr/day*3600s/hr*delta_time_in_days)
+
+  // If the current loadrate is within one delta of the target, we will
+  // call it good. Clamp the load rate to target just to be safe and
+  // prevent hunting.
+  if( 
+        (stats.global_lp_target-stats.global_lp_target_changerate <= stats.equip) 
+        &&
+        (stats.equip <= stats.global_lp_target+stats.global_lp_target_changerate)
+    ){
+    stats.equip = stats.global_lp_target;
+    stats.global_lp_target_changerate = 0.0f;
+    save_game_stats();
+    vlogf(LOG_MISC, format("procTweakLoadRate: desired load potential of %f achieved.") % stats.equip);
     return;
   }
 
-  stats.equip -= 0.00019166666666666666;
+  // Determines if we need to go up or down to get closer to the target load potential.
+  (stats.equip > stats.global_lp_target) ? (stats.equip -= stats.global_lp_target_changerate) : (stats.equip += stats.global_lp_target_changerate);
   save_game_stats();
-  vlogf(LOG_LOW, format("procTweakLoadRate: adjusted load rate to %f") %
+  vlogf(LOG_MISC, format("procTweakLoadRate: adjusted load potential to %f") %
 	stats.equip);
 }
 
@@ -1810,7 +1830,7 @@ int TMainSocket::gameLoop()
   scheduler.add(new procFactoryProduction(Pulse::MUDDAY));
 
   // pulse realhour
-//  scheduler.add(new procTweakLoadRate(Pulse::REALHOUR)); // desired load rate achieved
+  scheduler.add(new procTweakLoadRate(Pulse::ONE_SECOND));
   scheduler.add(new procTrophyDecay(Pulse::REALHOUR));
   scheduler.add(new procSeedRandom(Pulse::REALHOUR));
 

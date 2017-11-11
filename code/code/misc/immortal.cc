@@ -7,6 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include <stdio.h>
+#include <cmath>
 
 #include "extern.h"
 #include "handler.h"
@@ -4344,22 +4345,73 @@ void TBeing::doInfo(const char *arg)
     else if (is_abbrev(arg1, "tweak")) {
       if (!hasWizPower(POWER_INFO_TRUSTED)) {
         sendTo("You should not attempt to change that.\n\r");
-	return;
+        return;
       }
       char arg2[80];
       arg = one_argument(arg,arg2, cElements(arg2));
-      if (is_abbrev(arg2, "loadrate")) {
+      if (is_abbrev(arg2, "loadrates")) {
         char opt[80];
-	arg = one_argument(arg,opt, cElements(opt));
-	if (is_abbrev(opt, "up"))
-	  stats.equip += .05;
-	else
-	  stats.equip -= .05;
-	save_game_stats();
-      } else {
-	sendTo(format("loadrate is %f\n\r") % stats.equip);
+	    arg = one_argument(arg,opt, cElements(opt));
+	    if (is_abbrev(opt, "up")) {
+	        stats.global_lp_target += .05;
+            stats.global_lp_target_changerate = fabs((stats.global_lp_target - stats.equip)/30);
+            save_game_stats();
+        }
+	    else if (is_abbrev(opt, "down")) {
+	        stats.global_lp_target -= .05;
+            stats.global_lp_target_changerate = fabs((stats.global_lp_target - stats.equip)/30);
+            save_game_stats();
+        }
+        else if ( is_abbrev(opt, "set" ) ){
+            sendTo(opt); sendTo("\n\r");
+
+            sstring usage = "Usage: info tweak loadrate set <target> [transition time in seconds]\n\r";
+
+            if (!*arg || !arg) {
+                sendTo(usage);
+                return;
+            } 
+            arg = one_argument(arg,opt, cElements(opt));
+            if (!is_number(opt) || convertTo<double>(opt)<0) {
+                sendTo("Invalid value given for global load potential. Must be a number >= 0.0.\n\r "+usage);
+                return;
+            }
+            stats.global_lp_target = convertTo<double>(opt);
+
+            if (!*arg || !arg)
+            {
+                // No change period given-just set it immediately. We're done.
+                stats.equip = stats.global_lp_target;
+                save_game_stats();
+                sendTo(format("Target Global Load Potential set to %f\n\r")%stats.global_lp_target);
+                return;
+            }
+
+            arg = one_argument(arg,opt, cElements(opt));
+            if (!is_number(opt) || convertTo<double>(opt)<=0) {
+                stats.global_lp_target = stats.equip;   //Restore the old target global load potential. This one was a wash.
+                sendTo("Invalid value given for transition time. Must be a positive number of seconds.\n\r "+usage);
+                return;
+            }
+            int change_period_seconds = convertTo<int>(opt);
+            stats.global_lp_target_changerate = fabs((stats.global_lp_target - stats.equip)/change_period_seconds);
+            sendTo(format("Target Global Load Potential set at %f")%stats.global_lp_target);
+            sendTo(format(" to change over %f seconds.\n\r")%convertTo<int>(opt));
+
+            save_game_stats();
+        }
+        else
+            sendTo(format("Global load probabiity is %f\n\r") % stats.equip);
       }
-    } 
+      else
+      {
+        sstring str = "Usage: Display or modifies the global load potential\n\r\n\r";
+        str += "\tinfo tweak loadrate\n\r";
+        str += "\tinfo tweak loadrate [up|down]\n\r";
+        str += "\tinfo tweak loadrate set <target global load potential> [transition time in seconds]\n\r";
+        sendTo(str);
+      }
+    }
     else if (is_abbrev(arg1, "deaths")) {
       if (!hasWizPower(POWER_INFO_TRUSTED)) {
         sendTo("You cannot access that information.\n\r");
