@@ -2084,7 +2084,19 @@ void argument_interpreter(sstring argument, sstring &first_arg, sstring &second_
 bool is_number(const sstring &str)
 {
     boost::smatch what;  //Not really used here, since we're just doing go/no-go
-    return boost::regex_match(str, what, boost::regex("^[\\+-]?\\d+(\\.\\d+)?$"));
+    return boost::regex_match(str, what, boost::regex( R"(^[\+-]?\d+(\.\d+)?$)" ));
+}
+
+bool is_integer(const sstring &str)
+{
+    boost::smatch what;  //Not really used here, since we're just doing go/no-go
+    return boost::regex_match(str, what, boost::regex( R"(^[\+-]?\d+$)" ));
+}
+
+bool is_float(const sstring &str)
+{
+    boost::smatch what;  //Not really used here, since we're just doing go/no-go
+    return boost::regex_match(str, what, boost::regex( R"(^[\+-]?\d+(\.\d+)$)" ));
 }
 
 const char *one_argument(const char *argument, char *first_arg, unsigned int first_arg_size)
