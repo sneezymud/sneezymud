@@ -64,7 +64,9 @@ int init_game_stats(void)
   stats.absorb_damage_divisor[MOB_STAT] = 2;
   stats.absorb_damage_divisor[PC_STAT] = 4;
 
-  stats.equip = 0.7;   // this affects the load rate of things
+  stats.equip = 0.7;   // this affects the global load potential of things
+  stats.global_lp_target_changerate = stats.equip;  // When we want to change the load potential, this is what we change.
+  stats.global_lp_target_changerate = 0.0;  // This is how fast the load potential changes.
   stats.max_exist = 1.2;  // this affects the MAX number of a thing allowed
 
   // 1.40 resulted in 16-20 days playtime to L50
