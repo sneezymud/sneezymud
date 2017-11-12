@@ -53,7 +53,10 @@ class GameStats {
     float piety_gained;
     unsigned int piety_gained_attempts;
 
-    float equip;
+    double equip;
+    double global_lp_target;
+    double global_lp_target_changerate;
+
     double max_exist;
     double xp_modif;
     double damage_modifier;
