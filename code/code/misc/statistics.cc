@@ -279,7 +279,7 @@ void save_game_stats(void)
          gold_modifier[GOLD_SHOP_RESPONSES].getVal(),
          gold_modifier[GOLD_DUMP].getVal());
 
-    fprintf(fp, "%f\n", stats.equip);
+    fprintf(fp, "%lf\n", stats.equip);
 
     for (i = 0; i < 50; i++) {
       for (j = 0; j < MAX_CLASSES; j++) {
@@ -290,7 +290,7 @@ void save_game_stats(void)
 
     fprintf(fp, "%ld\n", (long) stats.first_login);
 
-    fprintf(fp, "%f %f\n", stats.global_lp_target, stats.global_lp_target_changerate);
+    fprintf(fp, "%lf %lf\n", stats.global_lp_target, stats.global_lp_target_changerate);
  
     fclose(fp);
   } else {
