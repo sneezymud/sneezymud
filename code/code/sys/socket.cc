@@ -589,15 +589,14 @@ void procTweakLoadRate::run(const TPulse &) const
     stats.equip = stats.global_lp_target;
     stats.global_lp_target_changerate = 0.0f;
     save_game_stats();
-    vlogf(LOG_MISC, format("procTweakLoadRate: desired load potential of %f achieved.") % stats.equip);
+    vlogf(LOG_MISC, format("procTweakLoadRate: desired load potential of %lf achieved.") % stats.equip);
     return;
   }
 
   // Determines if we need to go up or down to get closer to the target load potential.
   (stats.equip > stats.global_lp_target) ? (stats.equip -= stats.global_lp_target_changerate) : (stats.equip += stats.global_lp_target_changerate);
   save_game_stats();
-  vlogf(LOG_MISC, format("procTweakLoadRate: adjusted load potential to %f") %
-	stats.equip);
+  vlogf(LOG_MISC, format("procTweakLoadRate: adjusted load potential to %lf") %	stats.equip);
 }
 
 procCheckTriggerUsers::procCheckTriggerUsers(const int &p)

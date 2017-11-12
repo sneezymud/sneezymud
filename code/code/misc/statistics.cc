@@ -181,14 +181,6 @@ int init_game_stats(void)
       vlogf(LOG_BUG, "bad value for equipment load potential");
     }
 
-    if (fscanf(fp, "%lf\n", &stats.global_lp_target) != 1) {
-      vlogf(LOG_BUG, "bad value for equipment load potemtial target value");
-    }
-
-    if (fscanf(fp, "%lf\n", &stats.global_lp_target_changerate) != 1) {
-      vlogf(LOG_BUG, "bad value for rate of change of equipment load potential");
-    }
-
     for (i = 0; i < 50; i++) {
       for (j = 0; j < MAX_CLASSES; j++) {
         if (fscanf(fp, "%d %ld ", 
@@ -206,6 +198,15 @@ int init_game_stats(void)
       stats.first_login = tnow;
       stats.logins = 0;
     }
+
+    if (fscanf(fp, "%lf\n", &stats.global_lp_target) != 1) {
+      vlogf(LOG_BUG, "bad value for equipment load potemtial target value");
+    }
+
+    if (fscanf(fp, "%lf\n", &stats.global_lp_target_changerate) != 1) {
+      vlogf(LOG_BUG, "bad value for rate of change of equipment load potential");
+    }
+
     fclose(fp);
 
     sprintf(buf, "cp %s %s", STATS_FILE, STATS_BAK);
@@ -278,7 +279,7 @@ void save_game_stats(void)
          gold_modifier[GOLD_SHOP_RESPONSES].getVal(),
          gold_modifier[GOLD_DUMP].getVal());
 
-    fprintf(fp, "%f %f %f\n", stats.equip, stats.global_lp_target, stats.global_lp_target_changerate);
+    fprintf(fp, "%f\n", stats.equip);
 
     for (i = 0; i < 50; i++) {
       for (j = 0; j < MAX_CLASSES; j++) {
@@ -288,6 +289,8 @@ void save_game_stats(void)
     }
 
     fprintf(fp, "%ld\n", (long) stats.first_login);
+
+    fprintf(fp, "%f %f\n", stats.global_lp_target, stats.global_lp_target_changerate);
  
     fclose(fp);
   } else {
