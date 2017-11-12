@@ -65,7 +65,7 @@ int init_game_stats(void)
   stats.absorb_damage_divisor[PC_STAT] = 4;
 
   stats.equip = 0.7;   // this affects the global load potential of things
-  stats.global_lp_target_changerate = stats.equip;  // When we want to change the load potential, this is what we change.
+  stats.global_lp_target = stats.equip;  // When we want to change the load potential, this is what we change.
   stats.global_lp_target_changerate = 0.0;  // This is how fast the load potential changes.
   stats.max_exist = 1.2;  // this affects the MAX number of a thing allowed
 
@@ -199,11 +199,11 @@ int init_game_stats(void)
       stats.logins = 0;
     }
 
-    if (fscanf(fp, "%lf\n", &stats.global_lp_target) != 1) {
+    if (fscanf(fp, "%lf", &stats.global_lp_target) != 1) {
       vlogf(LOG_BUG, "bad value for equipment load potemtial target value");
     }
 
-    if (fscanf(fp, "%lf\n", &stats.global_lp_target_changerate) != 1) {
+    if (fscanf(fp, "%lf", &stats.global_lp_target_changerate) != 1) {
       vlogf(LOG_BUG, "bad value for rate of change of equipment load potential");
     }
 
@@ -279,7 +279,7 @@ void save_game_stats(void)
          gold_modifier[GOLD_SHOP_RESPONSES].getVal(),
          gold_modifier[GOLD_DUMP].getVal());
 
-    fprintf(fp, "%lf\n", stats.equip);
+    fprintf(fp, "%.18lf\n", stats.equip);
 
     for (i = 0; i < 50; i++) {
       for (j = 0; j < MAX_CLASSES; j++) {
@@ -290,7 +290,7 @@ void save_game_stats(void)
 
     fprintf(fp, "%ld\n", (long) stats.first_login);
 
-    fprintf(fp, "%lf %lf\n", stats.global_lp_target, stats.global_lp_target_changerate);
+    fprintf(fp, "%.18lf %.18lf\n", stats.global_lp_target, stats.global_lp_target_changerate);
  
     fclose(fp);
   } else {
