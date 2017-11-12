@@ -203,7 +203,7 @@ int init_game_stats(void)
       vlogf(LOG_BUG, "bad value for equipment load potemtial target value");
     }
 
-    if (fscanf(fp, "%lf", &stats.global_lp_target_changerate) != 1) {
+    if (fscanf(fp, "%lf\n", &stats.global_lp_target_changerate) != 1) {
       vlogf(LOG_BUG, "bad value for rate of change of equipment load potential");
     }
 
