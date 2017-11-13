@@ -531,7 +531,8 @@ void TBeing::doCommune(const sstring &arg)
   }
 
   if (!levnum) {
-    sendTo(format("You tell the gods: %s") %
+    sendTo(format("%sYou tell the gods:%s %s") %
+         purple() % cyan() %
          colorString(this, desc, arg, NULL, COLOR_BASIC, TRUE, TRUE));
   } else {
     if (levnum <= MAX_MORT) {
