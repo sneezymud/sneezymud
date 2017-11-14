@@ -8,37 +8,49 @@
 #include "timing.h"
 #include "toggle.h"
 
-// we return this instead of null if they try to fetch an invalid column
-const sstring empty="";
+namespace {
+    struct ltstr
+    {
+        bool operator()(const char* s1, const char* s2) const
+        {
+            return strcmp(s1, s2) < 0;
+        }
+    };
+
+
+    // we return this instead of null if they try to fetch an invalid column
+    const sstring empty="";
+
+    const char * db_connect[DB_MAX] = {
+        "sneezy",
+        "immortal",
+    };
+
+    // maintain instances of sneezydb and immodb
+    class TDatabaseConnection
+    {
+        MYSQL *databases[DB_MAX];
+        public:
+        TDatabaseConnection();
+
+        const char *getConnectParam(dbTypeT type);
+        MYSQL *getDB(dbTypeT type);
+
+        void clearConnections(){ for(int i=0;i<DB_MAX;++i) databases[i]=NULL; }
+    };
+
+    TDatabaseConnection::TDatabaseConnection()
+    {
+        memset(databases, 0, sizeof(databases));
+    }
+
+    TDatabaseConnection database_connection;
+}
 
 std::vector <std::string> db_hosts(DB_MAX);
 std::vector <std::string> db_names(DB_MAX);
 std::vector <std::string> db_users(DB_MAX);
 std::vector <std::string> db_passwords(DB_MAX);
-
-const char * db_connect[DB_MAX] = {
-  "sneezy",
-  "immortal",
-  };
-
-
-// maintain instances of sneezydb and immodb
-class TDatabaseConnection
-{
-  MYSQL *databases[DB_MAX];
- public:
-  TDatabaseConnection();
-
-  const char *getConnectParam(dbTypeT type);
-  MYSQL *getDB(dbTypeT type);
-
-  void clearConnections(){ for(int i=0;i<DB_MAX;++i) databases[i]=NULL; }
-};
-
-TDatabaseConnection::TDatabaseConnection()
-{
-  memset(databases, 0, sizeof(databases));
-}
 
 
 const char *TDatabaseConnection::getConnectParam(dbTypeT type)
@@ -49,10 +61,6 @@ const char *TDatabaseConnection::getConnectParam(dbTypeT type)
     return db_names[type].c_str();
   return db_connect[type];
 }
-
-
-TDatabaseConnection database_connection;
-
 
 class TDatabasePimpl {
 public:
