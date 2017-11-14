@@ -13,6 +13,7 @@
 #include "ansi.h"
 #include "sstring.h"
 #include "enum.h"
+#include "log.h"
 
 class TThing;
 class TBeing;
