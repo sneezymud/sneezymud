@@ -4363,7 +4363,6 @@ void TBeing::doInfo(const char *arg)
             save_game_stats();
         }
         else if ( is_abbrev(opt, "set") ){
-            sendTo(opt); sendTo("\r\n");
 
             sstring usage = "Usage: info tweak loadrate set <target> [transition time in seconds]\r\n";
 
