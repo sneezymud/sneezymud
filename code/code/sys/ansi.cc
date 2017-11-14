@@ -8,6 +8,7 @@
 
 #include "being.h"
 #include "connect.h"
+#include "log.h"
 
 void TBeing::setColor(setColorFieldT num, setColorKolorT col)
 {

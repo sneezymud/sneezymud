@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 
+#include "log.h"
 #include "extern.h"
 #include "room.h"
 #include "being.h"

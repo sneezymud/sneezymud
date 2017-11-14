@@ -7,6 +7,7 @@
 
 #include "parse.h"
 #include "spells.h"
+#include "log.h"
 
 class sstring;
 
@@ -70,7 +71,6 @@ typedef unsigned char ubyte;
 typedef unsigned short ushort;
 typedef signed char byte;
 
-extern void vlogf(logTypeT, const sstring &);
 extern void vlogf_trace(logTypeT, const sstring &);
 extern char * mud_str_dup(const char *buf);
 extern char * mud_str_dup(const sstring &buf);
