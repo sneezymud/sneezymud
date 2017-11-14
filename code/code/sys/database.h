@@ -1,8 +1,6 @@
 #ifndef __DATABASE_H
 #define __DATABASE_H
 
-#include <cstring>
-
 class sstring;
 
 // TDatabase is a class for interacting with the sql database.
@@ -90,14 +88,6 @@ enum dbTypeT {
   DB_IMMORTAL,
 
   DB_MAX,
-};
-
-struct ltstr
-{
-  bool operator()(const char* s1, const char* s2) const
-  {
-    return strcmp(s1, s2) < 0;
-  }
 };
 
 class TDatabasePimpl;
