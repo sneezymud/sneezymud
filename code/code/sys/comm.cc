@@ -22,6 +22,7 @@
 #include "socket.h"
 #include "spec_mobs.h"
 #include "weather.h"
+#include "migrations.h"
 
 #include <boost/algorithm/string/replace.hpp>
 
@@ -106,6 +107,7 @@ int run_the_game()
 
   vlogf(LOG_MISC, "Signal trapping.");
   signalSetup();
+  runMigrations();
 
   vlogf(LOG_MISC, "Opening mother connection.");
   gSocket = new TMainSocket();
