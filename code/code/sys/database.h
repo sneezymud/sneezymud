@@ -105,7 +105,7 @@ class TDatabase
   unsigned long escape_string(char *to, const char *from, unsigned long length);
   static unsigned long escape_string_ugly(char *to, const char *from, unsigned long length);
 
-  TDatabase(dbTypeT);
+  TDatabase(dbTypeT, bool log=false);
   ~TDatabase();
 
  private:
