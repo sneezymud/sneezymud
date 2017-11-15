@@ -452,6 +452,7 @@ class TBeing : public TThing {
     virtual int pourWaterOnMe(TBeing *, TObj *);
     virtual int getSnum() const { return (snum > -1 ? snum : mobVnum()); };
     virtual sstring thirdPerson(const int);
+    void loadAliases();
     // END VIRTUAL FUNCTIONS
 
     // INLINE FUNCTIONS

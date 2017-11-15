@@ -1115,6 +1115,7 @@ int Descriptor::client_nanny(char *arg)
       return FALSE;
     }
   }
+  character->loadAliases();
 
 
   for (k = descriptor_list; k; k = k->next) {

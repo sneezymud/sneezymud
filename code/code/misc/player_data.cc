@@ -522,9 +522,6 @@ void TPerson::storeToSt(charFile *st)
   st->autobits = desc->autobits;
   st->bad_login = desc->bad_login;
 
-  for (j = 0; j < 16; j++)
-    st->alias[j] = desc->alias[j];
-
   st->base_age = getBaseAge();
   st->age_mod = age_mod;
 
@@ -587,9 +584,6 @@ void TPerson::loadFromSt(charFile *st)
 
   setBaseAge(st->base_age);
   age_mod = st->age_mod;
-
-  for (i = 0; i < 16; i++) 
-    desc->alias[i] = st->alias[i];
 
   desc->playerID=0;
   
@@ -827,6 +821,14 @@ void TPerson::loadFromSt(charFile *st)
 
   affectTotal();
 
+}
+
+void TBeing::loadAliases()
+{
+  TDatabase db(DB_SNEEZY);
+  db.query("select word, command from alias where player_id = %i", player.player_id);
+  while (db.fetchRow())
+      desc->alias[db["word"]] = db["command"];
 }
 
 void TPerson::rentAffectTo(saveAffectedData *af)

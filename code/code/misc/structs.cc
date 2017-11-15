@@ -1647,30 +1647,6 @@ snoopData::~snoopData()
 {
 }
 
-aliasData::aliasData()
-{
-  *word = '\0';
-  *command = '\0';
-}
-
-aliasData::aliasData(const aliasData &a)
-{
-  memcpy(word, a.word, sizeof(word));
-  memcpy(command, a.command, sizeof(command));
-}
-
-aliasData & aliasData::operator=(const aliasData &a)
-{
-  if (this == &a) return *this;
-  memcpy(word, a.word, sizeof(word));
-  memcpy(command, a.command, sizeof(command));
-  return *this;
-}
-
-aliasData::~aliasData()
-{
-}
-
 betData::betData()
   : come(0), crap(0), slot(0),
     eleven(0), twelve(0), two(0),

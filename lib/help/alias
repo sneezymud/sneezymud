@@ -2,8 +2,8 @@ Syntax: alias <alias> <thing for alias to do>
         clear <alias #> will clear the alias for you.
 
 Aliases allow you to carry out a complex command with few keystrokes.
-The <h> alias system can hold up to 16 aliases and commands of
-30 characters or less.
+The <h> alias system can hold an unlimited number of aliases, each up
+to 999 characters in length.
 
 eg.:	alias cl cast cure light
 	After setting this alias up, you could type:
