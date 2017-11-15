@@ -3507,31 +3507,32 @@ const char *ac_for_score(int a)
 
 void TBeing::doClear(const char *argument)
 {
-  int i;
-
   if (!desc)
     return;
 
+  TDatabase db(DB_SNEEZY);
   if (!*argument) {
     sendTo("Clear which alias?\n\r");
     return;
   } else if (is_abbrev(argument, "all")) {
-    for (i = 0; i < 16; i++) {
-      desc->alias[i].command[0] = '\0';
-      desc->alias[i].word[0] = '\0';
-    }
+    db.query("delete from alias where player_id = %i", player.player_id);
     sendTo("Ok. All Aliases cleared\n\r");
     return;
-  } else
-    i = convertTo<int>(argument) - 1;
+  }
 
-  if ((i > -1) && (i < 16)) {
-    desc->alias[i].command[0] = '\0';
-    desc->alias[i].word[0] = '\0';
-    sendTo(format("Ok. Alias %d now clear.\n\r") % (i + 1));
+  int idx = convertTo<int>(argument) - 1;
+
+  if (idx >= 0 && idx < static_cast<int>(desc->alias.size())) {
+    auto it = desc->alias.begin();
+    for (int i = 0; i < idx; ++i)
+      ++it;
+    sstring word = it->first;
+    desc->alias.erase(it);
+    db.query("delete from alias where player_id = %i and word = '%s'", player.player_id, word.c_str());
+    sendTo(format("Ok. Alias %d = %s has been removed.\n\r") % (idx + 1) % word);
     return;
   } else {
-    sendTo("Syntax :clear <alias number>\n\r");
+    sendTo("Syntax: clear <alias number>\n\r");
     return;
   }
 }
@@ -3540,9 +3541,6 @@ void TBeing::doAlias(const char *argument)
 {
   char arg1[MAX_STRING_LENGTH];
   char arg2[MAX_STRING_LENGTH];
-  char spaces[20];
-  int i;
-  int remOption = FALSE;
 
   if (!desc)
     return;
@@ -3552,17 +3550,21 @@ void TBeing::doAlias(const char *argument)
     return;
   }
 
-  for (i = 0; i < 19; i++)
-    spaces[i] = ' ';
+  size_t maxlen = 0;
+  std::for_each(desc->alias.begin(), desc->alias.end(), [&](auto it){
+      maxlen = std::max(maxlen, it.first.length());
+      });
 
-  spaces[19] = '\0';
   if (!*argument) {
     sendTo("Your list of aliases.....\n\r");
-    for (i = 0; i < 16; i++) {
-      sendTo(format("%2d) %s%s %s %s\n\r") % (i + 1) % desc->alias[i].word %
-          (spaces + strlen(desc->alias[i].word)) %
+    int i = 0;
+    for (const auto& alias : desc->alias) {
+      ++i;
+      assert(static_cast<int>(maxlen) - alias.first.length() >= 0);
+      std::string padding(maxlen - alias.first.length(), ' ');
+      sendTo(format("%2d) %s%s %s %s\n\r") % i % alias.first % padding %
           (ansi() ? ANSI_BLUE_BAR : "|") %
-          desc->alias[i].command);
+          alias.second);
     }
     return;
   }
@@ -3575,62 +3577,23 @@ void TBeing::doAlias(const char *argument)
     sendTo("You could get in a loop like that!\n\r");
     return;
   }
-  if (!strcmp(arg1, "clear")) 
-    remOption = TRUE;
+  if (!strcmp(arg1, "clear")) {
+    sendTo("Use the 'clear' command to clear aliases");
+    return;
+  }
 
   if (!strcmp(arg1, arg2)) {
     sendTo("You could get in a loop like that!\n\r");
     return;
   }
-  if (strlen(arg1) > 11) {
-    sendTo("First argument is too long. It must be shorter than 12 characters.\n\r");
-    return;
-  }
-  if (strlen(arg2) > 28) {
-    sendTo("Second argument is too long. It must be less than 30 characters.\n\r");
-    return;
-  }
-  i = 0;
-  if (remOption) {
-    i = convertTo<int>(arg2);
-    if (i > 0 && i <= 16) {
-      sendTo(format("Clearing alias %d\n\r") % arg2);
-      desc->alias[i-1].word[0] = '\0';
-      desc->alias[i-1].command[0] = '\0';
-      return;
-    }
-    if (arg2 == sstring("all")) {
-      for (i = 0; i < 16; ++i) {
-        desc->alias[i].word[0] = '\0';
-        desc->alias[i].command[0] = '\0';
-      }
-      sendTo(format("Clearing all alias\n\r") % arg2);
-      return;
-    }
-    while ((i < 16)) {
-      if (*desc->alias[i].word && !strcmp(arg2, desc->alias[i].word)) {
-        sendTo(format("Clearing alias %s\n\r") % arg2);
-        desc->alias[i].word[0] = '\0';
-        desc->alias[i].command[0] = '\0';
-        return;
-      }
-      i++;
-    }
-    sendTo(format("You have no alias for %s.\n\r") % arg2);
-    return;
-  }
 
-  i = -1;
-  do {
-    i++;
-  } while ((i < 16) && *desc->alias[i].word && strcmp(arg1, desc->alias[i].word));
-  if (i == 16) {
-    sendTo("You have no more space for aliases. You will have to clear an alias before adding another one.\n\r");
-    return;
+  TDatabase db(DB_SNEEZY);
+  if (db.query("insert into alias (player_id, word, command) values (%i, '%s', '%s') on duplicate key update command = '%s'", player.player_id, arg1, arg2, arg2)) {
+    desc->alias[arg1] = arg2;
+    sendTo(format("Setting alias %s to %s\n\r") % arg1 % arg2);
+  } else {
+    sendTo("There was an error. Please contact a coder.\r\n");
   }
-  strncpy(desc->alias[i].word, arg1, cElements(desc->alias[i].word));
-  strncpy(desc->alias[i].command, arg2, cElements(desc->alias[i].command));
-  sendTo(format("Setting alias %s to %s\n\r") % arg1 % arg2);
 }
 
 sstring TObj::equip_condition(int amt) const

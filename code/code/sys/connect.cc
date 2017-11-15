@@ -1056,6 +1056,7 @@ int Descriptor::nanny(sstring arg)
 	  return FALSE;
 	}
       }
+      character->loadAliases();
 
 
       for (k = descriptor_list; k; k = k->next) {

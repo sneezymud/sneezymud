@@ -463,7 +463,7 @@ class Descriptor
     int amount;                   // dummy field (mail uses it)
     TObj *obj;                    // for object editor
     TMonster *mob;                // for monster editor 
-    aliasData alias[16];          // aliases for players
+    std::map<sstring, sstring> alias; // aliases for players
     char history[HISTORY_SIZE][MAX_INPUT_LENGTH];
     betData bet;
     cBetData bet_opt;

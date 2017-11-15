@@ -157,13 +157,10 @@ class snoopData {
 };
 
 class aliasData {
+  // stored in player file, now migrated to DB. Retain here to import old characters.
   public:
-    char word[12];     // Word for new alias
-    char command[30];  // Command to be aliased
-    aliasData();
-    aliasData(const aliasData &a);
-    aliasData & operator=(const aliasData &a);
-    ~aliasData();
+    char word[12];
+    char command[30];
 };
 
 class betData {

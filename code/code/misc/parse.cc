@@ -1899,7 +1899,6 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
 // return DELETE_THIS if tbeing has been killed
 int TBeing::parseCommand(const sstring &orig_arg, bool typedIn, bool doAlias)
 {
-  int i;
   unsigned int pos;
   sstring argument, aliasbuf, arg1, arg2;
   sstring whitespace=" \f\n\r\t\v";
@@ -1924,13 +1923,9 @@ int TBeing::parseCommand(const sstring &orig_arg, bool typedIn, bool doAlias)
 
   // handle aliases
   if (desc && doAlias) {
-    for(i=0; i<16; ++i){
-      if(arg1==desc->alias[i].word)
-        break;
-    }
-
-    if (i < 16) {
-      sstring command = desc->alias[i].command;
+    auto it = desc->alias.find(arg1);
+    if (it != desc->alias.end()) {
+      const sstring& command = it->second;
       if (command.find("~") != sstring::npos) {
         size_t begin = 0;
         while (begin != sstring::npos) // iterate over lines in multiline
@@ -1951,9 +1946,9 @@ int TBeing::parseCommand(const sstring &orig_arg, bool typedIn, bool doAlias)
       }
 
       if (!arg2.empty())
-        aliasbuf=format("%s %s") % desc->alias[i].command % arg2;
+        aliasbuf=format("%s %s") % command % arg2;
       else
-        aliasbuf=desc->alias[i].command;
+        aliasbuf=command;
 
       argument=aliasbuf;
       arg2=one_argument(aliasbuf, arg1);
