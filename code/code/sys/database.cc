@@ -68,6 +68,7 @@ public:
   MYSQL_ROW row;
   MYSQL *db;
   long row_count;
+  bool log;
   std::map <const char *, int, ltstr> column_names;
 
   TDatabasePimpl() :
@@ -118,11 +119,12 @@ MYSQL *TDatabaseConnection::getDB(dbTypeT type)
 }
 
 
-TDatabase::TDatabase(dbTypeT tdb)
+TDatabase::TDatabase(dbTypeT tdb, bool log)
 {
   pimpl = new TDatabasePimpl();
   pimpl->db = database_connection.getDB(tdb);
   pimpl->row_count = 0;
+  pimpl->log = log;
 }
 
 TDatabase::~TDatabase(){
@@ -263,6 +265,9 @@ bool TDatabase::query(const char *query,...)
     }
   } while(*query++);
   va_end(ap);
+
+  if (pimpl->log)
+    vlogf(LOG_DB, buf);
 
   if(mysql_query(pimpl->db, buf.c_str())){
     vlogf(LOG_DB, format("query failed: %s") % mysql_error(pimpl->db));
