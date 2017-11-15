@@ -1924,40 +1924,40 @@ int TBeing::parseCommand(const sstring &orig_arg, bool typedIn, bool doAlias)
 
   // handle aliases
   if (desc && doAlias) {
-      for(i=0; i<16; ++i){
-          if(arg1==desc->alias[i].word)
-              break;
+    for(i=0; i<16; ++i){
+      if(arg1==desc->alias[i].word)
+        break;
+    }
+
+    if (i < 16) {
+      sstring command = desc->alias[i].command;
+      if (command.find("~") != sstring::npos) {
+        size_t begin = 0;
+        while (begin != sstring::npos) // iterate over lines in multiline
+        {
+          size_t nextSplit = command.find("~", begin);
+          sstring fragment = command.substr(begin, nextSplit - begin);
+          size_t param;
+          while ((param = fragment.find("%")) != sstring::npos)
+            fragment.replace(param, 1, arg2);
+          int rc = parseCommand(fragment, typedIn, false);
+          if (IS_SET_DELETE(rc, DELETE_THIS))
+            return DELETE_THIS;
+          if (IS_SET_DELETE(rc, DELETE_VICT))
+            return DELETE_VICT;
+          begin = nextSplit == sstring::npos ? sstring::npos : nextSplit + 1;
+        }
+        return FALSE;
       }
 
-      if (i < 16) {
-          sstring command = desc->alias[i].command;
-          if (command.find("~") != sstring::npos) {
-              size_t begin = 0;
-              while (begin != sstring::npos) // iterate over lines in multiline
-              {
-                  size_t nextSplit = command.find("~", begin);
-                  sstring fragment = command.substr(begin, nextSplit - begin);
-                  size_t param;
-                  while ((param = fragment.find("%")) != sstring::npos)
-                      fragment.replace(param, 1, arg2);
-                  int rc = parseCommand(fragment, typedIn, false);
-                  if (IS_SET_DELETE(rc, DELETE_THIS))
-                      return DELETE_THIS;
-                  if (IS_SET_DELETE(rc, DELETE_VICT))
-                      return DELETE_VICT;
-                  begin = nextSplit == sstring::npos ? sstring::npos : nextSplit + 1;
-              }
-              return FALSE;
-          }
+      if (!arg2.empty())
+        aliasbuf=format("%s %s") % desc->alias[i].command % arg2;
+      else
+        aliasbuf=desc->alias[i].command;
 
-          if (!arg2.empty())
-              aliasbuf=format("%s %s") % desc->alias[i].command % arg2;
-          else
-              aliasbuf=desc->alias[i].command;
-
-          argument=aliasbuf;
-          arg2=one_argument(aliasbuf, arg1);
-      }
+      argument=aliasbuf;
+      arg2=one_argument(aliasbuf, arg1);
+    }
   }
 
 
@@ -2023,7 +2023,7 @@ int TBeing::parseCommand(const sstring &orig_arg, bool typedIn, bool doAlias)
       setLifeforce(0);
       updatePos();
       if (GetMaxLevel() > 5) {
-  addToHit(-1);
+        addToHit(-1);
       }
     } else {
       addToLifeforce(-1);

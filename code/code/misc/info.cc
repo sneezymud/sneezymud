@@ -3560,9 +3560,9 @@ void TBeing::doAlias(const char *argument)
     sendTo("Your list of aliases.....\n\r");
     for (i = 0; i < 16; i++) {
       sendTo(format("%2d) %s%s %s %s\n\r") % (i + 1) % desc->alias[i].word %
-            (spaces + strlen(desc->alias[i].word)) %
-            (ansi() ? ANSI_BLUE_BAR : "|") %
-	     desc->alias[i].command);
+          (spaces + strlen(desc->alias[i].word)) %
+          (ansi() ? ANSI_BLUE_BAR : "|") %
+          desc->alias[i].command);
     }
     return;
   }
@@ -3577,7 +3577,7 @@ void TBeing::doAlias(const char *argument)
   }
   if (!strcmp(arg1, "clear")) 
     remOption = TRUE;
-  
+
   if (!strcmp(arg1, arg2)) {
     sendTo("You could get in a loop like that!\n\r");
     return;
@@ -3594,18 +3594,18 @@ void TBeing::doAlias(const char *argument)
   if (remOption) {
     i = convertTo<int>(arg2);
     if (i > 0 && i <= 16) {
-        sendTo(format("Clearing alias %d\n\r") % arg2);
-        desc->alias[i-1].word[0] = '\0';
-        desc->alias[i-1].command[0] = '\0';
-        return;
+      sendTo(format("Clearing alias %d\n\r") % arg2);
+      desc->alias[i-1].word[0] = '\0';
+      desc->alias[i-1].command[0] = '\0';
+      return;
     }
     if (arg2 == sstring("all")) {
-        for (i = 0; i < 16; ++i) {
-            desc->alias[i].word[0] = '\0';
-            desc->alias[i].command[0] = '\0';
-        }
-        sendTo(format("Clearing all alias\n\r") % arg2);
-        return;
+      for (i = 0; i < 16; ++i) {
+        desc->alias[i].word[0] = '\0';
+        desc->alias[i].command[0] = '\0';
+      }
+      sendTo(format("Clearing all alias\n\r") % arg2);
+      return;
     }
     while ((i < 16)) {
       if (*desc->alias[i].word && !strcmp(arg2, desc->alias[i].word)) {
