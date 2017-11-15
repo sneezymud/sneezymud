@@ -1925,7 +1925,7 @@ int TBeing::parseCommand(const sstring &orig_arg, bool typedIn, bool doAlias)
   if (desc && doAlias) {
     auto it = desc->alias.find(arg1);
     if (it != desc->alias.end()) {
-      const sstring& command = it->second;
+      sstring command = it->second;
       if (command.find("~") != sstring::npos) {
         size_t begin = 0;
         while (begin != sstring::npos) // iterate over lines in multiline
@@ -1945,7 +1945,14 @@ int TBeing::parseCommand(const sstring &orig_arg, bool typedIn, bool doAlias)
         return FALSE;
       }
 
-      if (!arg2.empty())
+      bool found = false;
+      size_t param;
+      while ((param = command.find("%")) != sstring::npos) {
+        found = true;
+        command.replace(param, 1, arg2);
+      }
+
+      if (!arg2.empty() && !found)
         aliasbuf=format("%s %s") % command % arg2;
       else
         aliasbuf=command;
