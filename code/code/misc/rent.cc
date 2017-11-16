@@ -3524,7 +3524,10 @@ int TPerson::doRent(const sstring &argument)
   cls();
   desc->outputProcessing();
 
-  return dynamic_cast<TPerson *>(this)->saveRent(TRUE, 2);
+  int rc = saveRent(TRUE, 2);
+  if (IS_SET_ONLY(rc, DELETE_VICT))
+      return DELETE_THIS;
+  return rc;
 }
 
 bool TObj::isRentable() const
