@@ -21,6 +21,8 @@
 #include "monster.h"
 #include "guild.h"
 
+#include <set>
+
 sstring TBeing::parseTitle(Descriptor *)
 {
   return getName();
@@ -161,6 +163,8 @@ void TBeing::doWho(const char *argument)
   sb += "Players: (Add -? for online help)\n\r--------\n\r";
   lcount = count = 0;
 
+  std::set<std::string> uniqueAccounts;
+
   if (!*argument || 
        ((sscanf(argument, "%d %d", &which1, &which2) == 2) && 
           which1 > 0 && which2 > 0) ||
@@ -173,6 +177,8 @@ void TBeing::doWho(const char *argument)
       if (p->isPc() && p->polyed == POLY_TYPE_NONE) {
         if (dynamic_cast<TPerson *>(p)) {
           if (canSeeWho(p) && (!*argument || ((!p->isPlayerAction(PLR_ANONYMOUS) || isImmortal()) && p->GetMaxLevel() >= which1 && p->GetMaxLevel() <= which2))){
+            if (p->desc && p->desc->account)
+              uniqueAccounts.insert(p->desc->account->name);
             count++;
 
             buf=p->parseTitle(desc);
@@ -200,6 +206,8 @@ void TBeing::doWho(const char *argument)
               (!*argument || 
                 (p->GetMaxLevel() >= which1 && p->GetMaxLevel() <= which2)) &&
               IS_SET(p->specials.act, ACT_POLYSELF)) {
+            if (p->desc && p->desc->account)
+              uniqueAccounts.insert(p->desc->account->name);
             count++;
             buf = format("%s (polymorphed)\n\r") % sstring(pers(p)).cap();
             sb += buf;
@@ -207,6 +215,8 @@ void TBeing::doWho(const char *argument)
                 (!*argument || 
                 (p->GetMaxLevel() >= which1 && p->GetMaxLevel() <= which2)) &&
                      IS_SET(p->specials.act, ACT_DISGUISED)) {
+            if (p->desc && p->desc->account)
+              uniqueAccounts.insert(p->desc->account->name);
             count++;
             buf = format("%s (disguised thief)\n\r") % sstring(pers(p)).cap();
             sb += buf;
@@ -215,7 +225,7 @@ void TBeing::doWho(const char *argument)
       }
     }
     AccountStats::max_player_since_reboot = max(AccountStats::max_player_since_reboot, count);
-    buf = format("\n\rTotal Players : [%d] Max since last reboot : [%d] Avg Players : [%.1f]\n\r") % count % AccountStats::max_player_since_reboot % (stats.useage_iters ? (float) stats.num_users / stats.useage_iters : 0);
+    buf = format("\n\rTotal Players : [%d] Max since last reboot : [%d] Avg Players : [%.1f] Unique Accounts : [%d]\n\r") % count % AccountStats::max_player_since_reboot % (stats.useage_iters ? (float) stats.num_users / stats.useage_iters : 0) % uniqueAccounts.size();
     sb += buf;
     if (desc)
       desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
