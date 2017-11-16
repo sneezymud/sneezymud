@@ -1389,7 +1389,7 @@ void TRoom::saveItems(const sstring &)
   }
 
   if(!is.openFile(filepath)){
-    vlogf(LOG_BUG, format("Error saving room [%d] items.") %  number);
+    vlogf(LOG_BUG, format("Error saving room [%d] items to %s") %  number % filepath);
     return;
   }
   is.writeVersion();
