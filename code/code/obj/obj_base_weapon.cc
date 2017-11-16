@@ -628,10 +628,10 @@ bool TBaseWeapon::isBluntWeapon() const
   if((tgw=dynamic_cast<const TGenWeapon *>(this))){
     for(int i=0;i<3;++i){
       if(bluntType(getWtype_kluge(tgw->getWeaponType(i)))){
-	if(!i && !tgw->getWeaponFreq(1) && !tgw->getWeaponFreq(2))
-	  count+=100;
-	else
-	  count+=tgw->getWeaponFreq(i);
+        if(!i && !tgw->getWeaponFreq(1) && !tgw->getWeaponFreq(2))
+          count+=100;
+        else
+          count+=tgw->getWeaponFreq(i);
       }
       total+=tgw->getWeaponFreq(i);
     }
@@ -639,7 +639,7 @@ bool TBaseWeapon::isBluntWeapon() const
 
     if(count > (total/3.0*2.0))
       return true;
-  }  
+  }
 
   // not a TGenWeapon
   return bluntType(getWtype());
