@@ -637,8 +637,7 @@ bool TBaseWeapon::isBluntWeapon() const
     }
     // need at least 2/3 blunt types, for TGenWeapons
 
-    if(count > (total/3.0*2.0))
-      return true;
+    return count > (total/3.0*2.0);
   }
 
   // not a TGenWeapon
