@@ -662,8 +662,7 @@ bool TBaseWeapon::isSlashWeapon() const
     }
     // need at least 2/3 type, for TGenWeapons
 
-    if(count > (total/3.0*2.0))
-      return true;
+    return count > (total/3.0*2.0);
   }  
 
   // not a TGenWeapon
@@ -688,8 +687,7 @@ bool TBaseWeapon::isPierceWeapon() const
     }
     // need at least 2/3 type, for TGenWeapons
 
-    if(count > (total/3.0*2.0))
-      return true;
+    return count > (total/3.0*2.0);
   }  
 
   // not a TGenWeapon
