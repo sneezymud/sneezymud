@@ -73,7 +73,7 @@ void TGenWeapon::getFourValues(int *x1, int *x2, int *x3, int *x4) const
 
 weaponT TGenWeapon::getWeaponType(int which) const
 {
-  if(which>=0 && which<=3){
+  if(which>=0 && which < static_cast<int>(cElements(weapon_type))){
     return weapon_type[which];
   } else {  // return a random type
     int c=::number(0,getWeaponFreq(0)+getWeaponFreq(1)+getWeaponFreq(2));
