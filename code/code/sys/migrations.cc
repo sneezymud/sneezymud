@@ -35,7 +35,7 @@ void runMigrations() {
                     "create table alias ("
                     "id int primary key auto_increment not null, "
                     "player_id bigint(20) unsigned not null, "
-                    "word varchar(50) unique not null, "
+                    "word varchar(50) not null, "
                     "command varchar(999) not null, "
                     "foreign key (player_id) references player (id) on delete cascade)");
 
