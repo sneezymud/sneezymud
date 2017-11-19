@@ -2662,12 +2662,12 @@ void Descriptor::worldSend(const sstring &text, TBeing *ch)
   }
 }
 
-void Descriptor::sendGmcp(const sstring& msg)
+void Descriptor::sendGmcp(const sstring& msg, bool strip)
 {
   if (msg.empty() || !gmcp)
     return;
 
-  sstring text = sstring("\xff\xfa\xc9") + stripColorCodes(msg) + sstring("\xff\xf0");
+  sstring text = sstring("\xff\xfa\xc9") + (strip ? stripColorCodes(msg) : msg) + sstring("\xff\xf0");
   output.push(CommPtr(new UncategorizedComm(text)));
 }
 
@@ -2699,7 +2699,7 @@ namespace {
 	  % TerrainInfo[i]->color;
       }
       str = sstring("room.sectors { \"sectors\" : [ ") + str.substr(2) + " ] }";
-      d->sendGmcp(str);
+      d->sendGmcp(str, true);
     }
     else if (s == "request area") {
       TRoom* roomp = d->character->roomp;
@@ -2708,7 +2708,7 @@ namespace {
 \"flags\": \"quiet\" }")
 	% roomp->getZone()->zone_nr
 	% roomp->getZone()->name;
-      d->sendGmcp(area);
+      d->sendGmcp(area, true);
     }
     else
       vlogf(LOG_MISC, format("Telnet: Unknown GMCP command '%s' ") % s);

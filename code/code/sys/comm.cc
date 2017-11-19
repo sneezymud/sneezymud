@@ -242,7 +242,7 @@ void TBeing::sendRoomGmcp(bool changedZones) const
 \"flags\": \"quiet\" }")
       % roomp->getZone()->zone_nr
       % escape(roomp->getZone()->name);
-    desc->sendGmcp(area);
+    desc->sendGmcp(area, true);
   }
 
   const char *exDirs[] =
@@ -291,7 +291,7 @@ void TBeing::sendRoomGmcp(bool changedZones) const
     % escape(TerrainInfo[roomp->getSectorType()]->name)
     % exits.substr(2)
     % exit_kw.substr(2);
-  desc->sendGmcp(msg);
+  desc->sendGmcp(msg, true);
 }
 
 void save_all()

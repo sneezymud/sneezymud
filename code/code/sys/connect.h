@@ -498,7 +498,7 @@ class Descriptor
     Descriptor & operator=(const Descriptor &a);
     ~Descriptor();
 
-    void sendGmcp(const sstring& msg);
+    void sendGmcp(const sstring& msg, bool strip); // we want stripping in room names, for simple searching, but no stripping in comm
     void startGmcp();
     int outputProcessing();
     int inputProcessing();
