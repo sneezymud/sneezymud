@@ -886,7 +886,8 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
 	       ? new TellFromComm(vict->getName(), capbuf.cap(), garbed, true, !isPc())
 	       : new TellFromComm(vict->getName(), capbuf.cap(), garbed, false, !isPc()));
 
-  sstring gmcp = format("comm.channel { \"chan\": \"tell\", \"msg\": \"%s\", \"player\": \"%s\" }")
+  sstring gmcp = format("comm.channel { \"chan\": \"%s\", \"msg\": \"%s\", \"player\": \"%s\" }")
+    % (isPc() ? "tell" : "mobtell")
     % cptr->getComm().ansiToAard().trim().escapeJson()
     % sstring(getName()).ansiToAard().trim().escapeJson();
   d->sendGmcp(gmcp);
