@@ -395,13 +395,19 @@ void TTrap::armGrenade(TBeing *ch)
   TThing *t=NULL;
   TMonster *tm;
 
+  std::queue<TMonster*> toFlee;
   if(::number(0,1)){
     for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (t=*it);++it){
       if((tm=dynamic_cast<TMonster *>(t))){
-	if(tm->canSee(this))
-	  tm->doFlee("");
+        if(tm->canSee(this))
+          toFlee.push(tm);
       }
     }
+  }
+  while (!toFlee.empty())
+  {
+    toFlee.front()->doFlee("");
+    toFlee.pop();
   }
 }
 
