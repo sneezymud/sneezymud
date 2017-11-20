@@ -7155,6 +7155,58 @@ int rationFactory(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj 
 }
 
 
+int lagomorph(TBeing * victim, cmdTypeT cmd, const char *, TMonster * monster, TObj *) {
+  // per monster map
+  static std::map<TBeing*, std::map<int, int>> howHard;
+  switch (cmd) {
+      case CMD_MOB_COMBAT:
+      case CMD_MOB_COMBAT2:
+      case CMD_MOB_MOVED_INTO_ROOM:
+      case CMD_MOB_COMBAT_ONATTACK:
+      case CMD_MOB_COMBAT_ONATTACKED:
+      case CMD_MOB_COMBAT_STOPPING:
+      case CMD_GENERIC_DESTROYED:
+          break;
+      default:
+          return FALSE;
+  }
+
+  assert(victim);
+  assert(monster);
+
+  if (cmd == CMD_GENERIC_DESTROYED) {
+      howHard.erase(monster);
+      return FALSE;
+  }
+
+  if (cmd == CMD_MOB_COMBAT_STOPPING) {
+      victim = monster->fight();
+      assert(victim);
+      victim->setWait(1);
+      act("$n mercifully releases $N from the deathly lag.", TRUE, monster, nullptr, victim, TO_NOTVICT);
+      act("$n mercifully releases you from the deathly lag.", TRUE, monster, nullptr, victim, TO_VICT);
+      return FALSE;
+  }
+
+  if (howHard.find(monster) == howHard.end())
+      howHard[monster] = {};
+
+  if (cmd == CMD_MOB_COMBAT || cmd == CMD_MOB_COMBAT2)
+      victim = monster->fight();
+
+  if (victim->isPc()) {
+    act("$n lags $N to death.", TRUE, monster, nullptr, victim, TO_NOTVICT);
+    act("$n lags you to death.", TRUE, monster, nullptr, victim, TO_VICT);
+    int player_id = victim->player.player_id;
+    if (howHard[monster].find(player_id) == howHard[monster].end())
+      howHard[monster][player_id] = 0;
+    vlogf(LOG_MOB_AI, format("%s lags %s to 2^%d") % monster->name % victim->name % howHard[monster][player_id]);
+    victim->addToWait(1 << howHard[monster][player_id]);
+    howHard[monster][player_id]++;
+  }
+
+  return FALSE;
+}
 
 // janitors and trash collectors etc, in spec_mobs_janitors.cc
 extern int janitor(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
@@ -7450,6 +7502,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "commodity trader", commodTrader},
   {FALSE, "ration factory", rationFactory},
   {FALSE, "pet veterinarian", petVeterinarian},
+  {TRUE, "lagomorph", lagomorph},
 // replace non-zero, bogus_mob_procs above before adding
 };
 
