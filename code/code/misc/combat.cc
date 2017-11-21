@@ -4924,26 +4924,26 @@ void perform_violence(int pulse)
         continue;
       }
       if (ch->awake() && ch->sameRoom(*vict)) {
-	vict = ch->fight();
-	if (vict) {
-	  rc = ch->hit(vict, pulse + tmp_pulse);
-	  if (IS_SET_DELETE(rc, DELETE_VICT)) {
-	    vict->reformGroup();
-	    delete vict;
-	    vict = NULL;
-	    continue;
-	  } else if (IS_SET_DELETE(rc, DELETE_THIS)) {
-	    ch->reformGroup();
-	    delete ch;
-	    ch = NULL;
-	    break;
-	  }
-	} else {
-	  vlogf(LOG_COMBAT, "do we ever get here");
-	}
-      } else { 
-	// Not in same room or not awake 
-	ch->stopFighting();
+        vict = ch->fight();
+        if (vict) {
+          rc = ch->hit(vict, pulse + tmp_pulse);
+          if (IS_SET_DELETE(rc, DELETE_VICT)) {
+            vict->reformGroup();
+            delete vict;
+            vict = NULL;
+            continue;
+          } else if (IS_SET_DELETE(rc, DELETE_THIS)) {
+            ch->reformGroup();
+            delete ch;
+            ch = NULL;
+            break;
+          }
+        } else {
+          vlogf(LOG_COMBAT, "do we ever get here");
+        }
+      } else {
+        // Not in same room or not awake
+        ch->stopFighting();
       }
     }
   }
