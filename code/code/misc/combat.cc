@@ -1677,6 +1677,8 @@ void TBeing::stopFighting()
   // store this for later
   tmp = fight();
 
+  checkSpec(fight(), CMD_MOB_COMBAT_STOPPING, NULL, NULL);
+
   next_fighting = NULL;
   specials.fighting = NULL;
 

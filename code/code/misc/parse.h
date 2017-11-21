@@ -585,8 +585,6 @@ enum cmdTypeT {
      CMD_IGNORE,
      CMD_RUN,
      MAX_CMD_LIST,  // Keep this as last command in regular list
-
-       // a variety of "fake" commands used for a variety of purpsoses follow
        CMD_RESP_TOGGLE,
        CMD_RESP_UNTOGGLE,
        CMD_RESP_CHECKTOG,
@@ -622,17 +620,14 @@ enum cmdTypeT {
        CMD_RESP_KILLED,
        CMD_RESP_STARTFIGHT,
        CMD_RESP_TRIGGER,
-
        CMD_GENERIC_PULSE,
        CMD_GENERIC_QUICK_PULSE,
        CMD_GENERIC_CREATED,
        CMD_GENERIC_RESET,
        CMD_GENERIC_INIT,
        CMD_GENERIC_DESTROYED,
-
        CMD_ROOM_ENTERED,
        CMD_ROOM_ATTEMPTED_EXIT,
-  
        CMD_OBJ_HITTING,
        CMD_OBJ_HIT,
        CMD_OBJ_MISS,
@@ -663,7 +658,6 @@ enum cmdTypeT {
        CMD_ARROW_HIT_OBJ,
        CMD_ARROW_INTO_ROOM,
        CMD_ARROW_SHOT,
-
        CMD_MOB_GIVEN_ITEM,
        CMD_MOB_GIVEN_COINS,
        CMD_MOB_ALIGN_PULSE,
@@ -671,13 +665,12 @@ enum cmdTypeT {
        CMD_MOB_MOVED_INTO_ROOM,
        CMD_MOB_VIOLENCE_PEACEFUL,
        CMD_MOB_COMBAT,
-
        CMD_TASK_FIGHTING,
        CMD_TASK_CONTINUE,
-
        CMD_MOB_COMBAT2, // called every round whenever CMD_MOB_COMBAT is not called
        CMD_MOB_COMBAT_ONATTACK, // called when you begin a fight
        CMD_MOB_COMBAT_ONATTACKED, // called when someone starts a fight with you
+       CMD_MOB_COMBAT_STOPPING,
 };
 extern cmdTypeT & operator++(cmdTypeT &c, int);
 const cmdTypeT MIN_CMD = cmdTypeT(0);
