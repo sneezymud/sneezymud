@@ -270,7 +270,7 @@ void TBeing::sendRoomGmcp(bool changedZones) const
 	  || (exitdata->door_type != DOOR_NONE && ((!secret || open) || (!secret && see_thru)))
 	  || (exitdata->door_type == DOOR_NONE)) {
 	exits += format(", \"%s\": %d") % exDirs[door] % exitp->number;
-	if (exitdata->door_type != DOOR_NONE) {
+	if (exitdata->door_type != DOOR_NONE && !open) {
 	  exit_kw += format(", \"%s\": \"%s\"") % exDirs[door] % sstring(exitdata->keyword).word(0);
 	}
       }
