@@ -256,15 +256,19 @@ int DragonBreath(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       tm->doFlee("");
   }
 
+  std::queue<TBeing*> killed;
   for (StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end();++it){
     TBeing *tmp = dynamic_cast<TBeing *>(*it);
     if (!tmp || tmp == myself)
       continue;
     int rc = dragon.breath.attack(myself, tmp, dragon.lag);
-    if (IS_SET_DELETE(rc, DELETE_VICT)) {
-      delete tmp;
-      tmp = NULL;
-    }
+    if (IS_SET_DELETE(rc, DELETE_VICT))
+      killed.push(tmp);
+  }
+
+  while (!killed.empty()) {
+    delete killed.front();
+    killed.pop();
   }
 
   dragon.breath.engulfRoom(myself);
