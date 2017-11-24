@@ -2685,7 +2685,7 @@ namespace {
   unsigned char wont = 252;            /* I won't use option */
   unsigned char will = 251;            /* I will use option */
   unsigned char sb = 250;              /* interpret as subnegotiation */
-  unsigned char se = 240;              /* end sub negotiation */
+  // unsigned char se = 240;              /* end sub negotiation */
 
 
   void handleGmcpCommand(sstring const& s, Descriptor* d)
@@ -2784,19 +2784,13 @@ namespace {
 
       unsigned char arg = s[iac_pos+2];
       size_t begin = iac_pos + 3;
-      size_t end = begin;
-      while (true) {
-        end = s.find(iac, end);
-        if (end == sstring::npos || end + 1 >= s.length()) {
-          vlogf(LOG_MISC, format("Telnet: Truncated IAC SB 0x%02x") % static_cast<int>(arg));
-          return "";
-        }
-        if (static_cast<unsigned char>(s[end + 1]) == se)
-          break;
-        // else retry again farther in string
+      size_t end = s.find("\xff\xf0"); // IAC SE
+      if (end == sstring::npos) {
+        vlogf(LOG_MISC, format("Telnet: Truncated IAC SB 0x%02x") % static_cast<int>(arg));
+        return "";
       }
       sstring client_gmcp_cmd = s.substr(begin, end-begin);
-      s.erase(iac_pos, end + 2 - iac_pos);
+      s.erase(iac_pos, end + 1 - iac_pos);
 
       if (arg == GMCP) {
         handleGmcpCommand(client_gmcp_cmd, d);
