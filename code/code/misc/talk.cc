@@ -564,18 +564,26 @@ void TBeing::doCommune(const sstring &arg)
         str.convertStringColor("<c>");
         if (critter->GetMaxLevel() >= GOD_LEVEL1 && 
       toggleInfo[TOG_WIZBUILD]->toggle) {
-          buf = format("%s$n: %s%s%s") %
-                 i->purple() % i->cyan() %
+          buf = format("%s%s: %s%s%s") %
+                 i->purple() % getName() % i->cyan() %
                  str % i->norm();
           act(buf, 0, this, 0, i->character, TO_VICT);
+          sstring gmcp = format("comm.channel { \"chan\": \"wiz\", \"msg\": \"%s\", \"player\": \"%s\" }")
+            % buf.trim().escapeJson()
+            % sstring(getName()).trim().escapeJson();
+          i->sendGmcp(gmcp, false);
 
     if (!i->m_bIsClient && IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
       i->clientf(format("%d|%d|%d|%s|%s") % CLIENT_WIZNET % levnum % gamePort % getName() % str);
         } else if (critter->hasWizPower(POWER_WIZNET_ALWAYS)) {
-          buf = format("[nobuilders] %s$n: %s%s%s") %
-                 i->purple() % i->cyan() %
+          buf = format("[nobuilders] %s%s: %s%s%s") %
+                 i->purple() % getName() % i->cyan() %
                  str % i->norm();
           act(buf, 0, this, 0, i->character, TO_VICT);
+          sstring gmcp = format("comm.channel { \"chan\": \"wiz\", \"msg\": \"%s\", \"player\": \"%s\" }")
+            % buf.trim().escapeJson()
+            % sstring(getName()).trim().escapeJson();
+          i->sendGmcp(gmcp, false);
 
     if (!i->m_bIsClient && IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
       i->clientf(format("%d|%d|%d|%s|%s") % CLIENT_WIZNET % levnum % gamePort % getName() % str);
@@ -589,19 +597,27 @@ void TBeing::doCommune(const sstring &arg)
         if (critter->GetMaxLevel() >= GOD_LEVEL1 && 
       toggleInfo[TOG_WIZBUILD]->toggle &&
             critter->GetMaxLevel() >= levnum) {
-          buf = format("%s[builders] (level: %d) $n: %s%s%s") %
-                 i->purple() % levnum % i->cyan() %
+          buf = format("%s[builders] (level: %d) %s: %s%s%s") %
+                 i->purple() % levnum % getName() % i->cyan() %
                  str % i->norm();
           act(buf, 0, this, 0, i->character, TO_VICT);
+          sstring gmcp = format("comm.channel { \"chan\": \"wiz\", \"msg\": \"%s\", \"player\": \"%s\" }")
+            % buf.trim().escapeJson()
+            % sstring(getName()).trim().escapeJson();
+          i->sendGmcp(gmcp, false);
 
     if (!i->m_bIsClient && IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
       i->clientf(format("%d|%d|%d|%s|%s") % CLIENT_WIZNET % levnum % gamePort % getName() % str);
         } else if (critter->hasWizPower(POWER_WIZNET_ALWAYS) &&
                    critter->GetMaxLevel() >= levnum) {
-          buf = format("%s(level: %d) $n: %s%s%s") % 
-                 i->purple() % levnum % i->cyan() %
+          buf = format("%s(level: %d) %s: %s%s%s") % 
+                 i->purple() % levnum % getName() % i->cyan() %
                  str % i->norm();
           act(buf, 0, this, 0, i->character, TO_VICT);
+          sstring gmcp = format("comm.channel { \"chan\": \"wiz\", \"msg\": \"%s\", \"player\": \"%s\" }")
+            % buf.trim().escapeJson()
+            % sstring(getName()).trim().escapeJson();
+          i->sendGmcp(gmcp, false);
 
     if (!i->m_bIsClient && IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
       i->clientf(format("%d|%d|%d|%s|%s") % CLIENT_WIZNET % levnum % gamePort % getName() % str);
