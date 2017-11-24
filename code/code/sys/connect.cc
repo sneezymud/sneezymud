@@ -2693,10 +2693,10 @@ namespace {
     if (s == "request sectors") {
       sstring str;
       for (int i = 0; i < MAX_SECTOR_TYPES; i++) {
-	str += format(", { \"id\" : %d, \"name\" : \"%s\", \"color\" : %d }")
-	  % i
-	  % TerrainInfo[i]->name
-	  % TerrainInfo[i]->color;
+        str += format(", { \"id\" : %d, \"name\" : \"%s\", \"color\" : %d }")
+          % i
+          % TerrainInfo[i]->name
+          % TerrainInfo[i]->color;
       }
       str = sstring("room.sectors { \"sectors\" : [ ") + str.substr(2) + " ] }";
       d->sendGmcp(str, true);
@@ -2704,10 +2704,10 @@ namespace {
     else if (s == "request area") {
       TRoom* roomp = d->character->roomp;
       sstring area = format(
-	"room.area { \"id\":\"%d\", \"name\": \"%s\", \"x\": 0, \"y\": 0, \"z\": 0, \"col\": \"\", \
-\"flags\": \"quiet\" }")
-	% roomp->getZone()->zone_nr
-	% roomp->getZone()->name;
+          "room.area { \"id\":\"%d\", \"name\": \"%s\", \"x\": 0, \"y\": 0, \"z\": 0, \"col\": \"\", \
+          \"flags\": \"quiet\" }")
+        % roomp->getZone()->zone_nr
+        % roomp->getZone()->name;
       d->sendGmcp(area, true);
     }
     else
@@ -2735,37 +2735,37 @@ namespace {
     if (cmd == will || cmd == do_ || cmd == wont || cmd == dont) {
       // I wonder if this ever happens
       if (iac_pos > s.length() - 3) {
-	vlogf(LOG_MISC, "Telnet: truncated Telnet IAC WILL/DO/WONT/DONT");
-	return "";
+        vlogf(LOG_MISC, "Telnet: truncated Telnet IAC WILL/DO/WONT/DONT");
+        return "";
       }
 
       unsigned char arg = s[iac_pos+2];
 
       if (cmd == will && arg == GMCP) { // let's have a lil' GMCP
-	// IAC DO GMCP
-	d->gmcp = true;
-	vlogf(LOG_MISC, "Telnet: Turning on GMCP");
-	result = "\xff\0xfc\xc9";
+        // IAC DO GMCP
+        d->gmcp = true;
+        vlogf(LOG_MISC, "Telnet: Turning on GMCP");
+        result = "\xff\0xfc\xc9";
       }
       else if (cmd == do_ && arg == GMCP) { // I can handle GMCP should you wish
-	// IAC WILL GMCP
-	d->gmcp = true;
-	vlogf(LOG_MISC, "Telnet: Turning on GMCP");
-	result = "\xff\0xfb\xc9";
+        // IAC WILL GMCP
+        d->gmcp = true;
+        vlogf(LOG_MISC, "Telnet: Turning on GMCP");
+        result = "\xff\0xfb\xc9";
       }
       else if (cmd == will) { // Anything else is unsupported
-	// IAC DONT ...
-	vlogf(LOG_MISC, format("Telnet: Unsupported protocol request: IAC WILL 0x%2x") % static_cast<int>(arg));
-	result = format("\xff\xfe%c") % arg;
+        // IAC DONT ...
+        vlogf(LOG_MISC, format("Telnet: Unsupported protocol request: IAC WILL 0x%2x") % static_cast<int>(arg));
+        result = format("\xff\xfe%c") % arg;
       }
       else if (cmd == do_) { // Anything else is unsupported
-	// IAC WONT ...
-	vlogf(LOG_MISC, format("Telnet: Unsupported protocol request: IAC DO 0x%02x") % static_cast<int>(arg));
-	result = format("\xff\xfd%c") % arg;
+        // IAC WONT ...
+        vlogf(LOG_MISC, format("Telnet: Unsupported protocol request: IAC DO 0x%02x") % static_cast<int>(arg));
+        result = format("\xff\xfd%c") % arg;
       }
       else {
-	if (arg == GMCP)
-	  d->gmcp = false;
+        if (arg == GMCP)
+          d->gmcp = false;
         // vlogf(LOG_MISC, format("Telnet: Unsupported IAC DONT/WONT: 0x%02x") % static_cast<int>(arg));
       }
 
@@ -2778,34 +2778,34 @@ namespace {
 
       // I wonder if this ever happens
       if (iac_pos > s.length() - 5) {
-	vlogf(LOG_MISC, "Telnet: truncated Telnet IAC SB");
-	return "";
+        vlogf(LOG_MISC, "Telnet: truncated Telnet IAC SB");
+        return "";
       }
 
       unsigned char arg = s[iac_pos+2];
       size_t begin = iac_pos + 3;
       size_t end = begin;
       while (true) {
-	end = s.find(iac, end);
-	if (end == sstring::npos || end + 1 >= s.length()) {
-	  vlogf(LOG_MISC, format("Telnet: Truncated IAC SB 0x%02x") % static_cast<int>(arg));
-	  return "";
-	}
-	if (static_cast<unsigned char>(s[end + 1]) == se)
-	  break;
-	// else retry again farther in string
+        end = s.find(iac, end);
+        if (end == sstring::npos || end + 1 >= s.length()) {
+          vlogf(LOG_MISC, format("Telnet: Truncated IAC SB 0x%02x") % static_cast<int>(arg));
+          return "";
+        }
+        if (static_cast<unsigned char>(s[end + 1]) == se)
+          break;
+        // else retry again farther in string
       }
       sstring client_gmcp_cmd = s.substr(begin, end-begin);
       s.erase(iac_pos, end + 2 - iac_pos);
 
       if (arg == GMCP) {
-	handleGmcpCommand(client_gmcp_cmd, d);
-	return handleTelnetOpts(s, d);
+        handleGmcpCommand(client_gmcp_cmd, d);
+        return handleTelnetOpts(s, d);
       }
       else {
-	// vlogf(LOG_MISC, format("Telnet: Got unhandled IAC SB 0x%02x: '%s'")
-	// % static_cast<int>(arg) % client_gmcp_cmd);
-	return handleTelnetOpts(s, d);
+        // vlogf(LOG_MISC, format("Telnet: Got unhandled IAC SB 0x%02x: '%s'")
+        // % static_cast<int>(arg) % client_gmcp_cmd);
+        return handleTelnetOpts(s, d);
       }
     }
     else
