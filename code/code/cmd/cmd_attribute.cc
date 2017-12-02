@@ -23,13 +23,13 @@ static void showStatsTo(const Descriptor *d, const TBeing *ch, bool hidden_stuff
   time_info_data playing_time;
   char time_buf[160];
   char buffer[256];
-  char buf3[12], buf4[12];
+  char buf3[120], buf4[120];
   sstring str;
 
   GameTime::realTimePassed((time(0) - d->session.connect),0, &playing_time);
   if (playing_time.day)
     playing_time.hours += playing_time.day * 24;
-  sprintf(time_buf, "%d hour%s, %d minute%s and %d second%s", 
+  snprintf(time_buf, sizeof(time_buf), "%d hour%s, %d minute%s and %d second%s", 
         playing_time.hours, 
         ((playing_time.hours == 1) ? "" : "s"),
         playing_time.minutes,
@@ -39,21 +39,21 @@ static void showStatsTo(const Descriptor *d, const TBeing *ch, bool hidden_stuff
 
   TBeing *victim = d->character;
 
-  sprintf(buffer, "In this session:\n\r");
+  snprintf(buffer, sizeof(buffer), "In this session:\n\r");
   str += buffer;
 
   if (d == ch->desc)
-    sprintf(buffer, "You have");
+    snprintf(buffer, sizeof(buffer), "You have");
   else
-    sprintf(buffer, "%s (L%d:%d) has", victim->getName().c_str(), victim->GetMaxLevel(), victim->GetMaxLevel() * 50 / 3);
+    snprintf(buffer, sizeof(buffer), "%s (L%d:%d) has", victim->getName().c_str(), victim->GetMaxLevel(), victim->GetMaxLevel() * 50 / 3);
   str += buffer;
 
-  sprintf(buffer, " been playing %s%s%s.\n\r", ch->green(), time_buf, ch->norm());
+  snprintf(buffer, sizeof(buffer), " been playing %s%s%s.\n\r", ch->green(), time_buf, ch->norm());
   str += buffer;
 
-  sprintf(buffer, "Contribution to deities' potency: %s%5.2f%s\n\r", ch->cyan(), d->session.perc, ch->norm());
+  snprintf(buffer, sizeof(buffer), "Contribution to deities' potency: %s%5.2f%s\n\r", ch->cyan(), d->session.perc, ch->norm());
   str += buffer;
-  sprintf(buffer, "Creatures killed : Alone  %s%d%s, Group %s%d%s. Exp Gained : %s%.2f%s\n\r",
+  snprintf(buffer, sizeof(buffer), "Creatures killed : Alone  %s%d%s, Group %s%d%s. Exp Gained : %s%.2f%s\n\r",
          ch->cyan(), d->session.kills, ch->norm(),
          ch->cyan(), d->session.groupKills, ch->norm(),
          ch->cyan(), d->session.xp, ch->norm());
@@ -61,16 +61,16 @@ static void showStatsTo(const Descriptor *d, const TBeing *ch, bool hidden_stuff
 
   int i;
   if (hidden_stuff) {
-    sprintf(buffer, "Offense: %d      Defense: %d    mode: %s\n\r",
+    snprintf(buffer, sizeof(buffer), "Offense: %d      Defense: %d    mode: %s\n\r",
         victim->attackRound(NULL), victim->defendRound(NULL),
           attack_modes[victim->getCombatMode()]);
     str += buffer;
-    sprintf(buffer, "Combat   :            hits swings   rnds   hit%%  ComDam SklDam  Mod  Pot\n\r");
+    snprintf(buffer, sizeof(buffer), "Combat   :            hits swings   rnds   hit%%  ComDam SklDam  Mod  Pot\n\r");
     str += buffer;
   
     for (i = 0; i < MAX_ATTACK_MODE_TYPE; i++) {
       // prevent them from using this to see specific damage of a weapon
-      sprintf(buffer, "%s%-9.9s%s: inflict: %s%6u%s %s%6u%s %s%6u%s (%s%4.1f%%%s) %s%6d%s %s%6d%s %s%4d%s %s%4.1f%s\n\r",
+      snprintf(buffer, sizeof(buffer), "%s%-9.9s%s: inflict: %s%6u%s %s%6u%s %s%6u%s (%s%4.1f%%%s) %s%6d%s %s%6d%s %s%4d%s %s%4.1f%s\n\r",
            ch->cyan(), attack_modes[i], ch->norm(),
            ch->cyan(), d->session.hits[i], ch->norm(),
            ch->cyan(), d->session.swings[i], ch->norm(),
@@ -82,7 +82,7 @@ static void showStatsTo(const Descriptor *d, const TBeing *ch, bool hidden_stuff
            ch->cyan(), (d->session.hits[i] ? (float) d->session.potential_dam_done[i] / d->session.hits[i] :0), ch->norm());
       str += buffer;
 
-      sprintf(buffer, "  %sL%6.2f%s: receive: %s%6u%s %s%6u%s %s%6u%s (%s%4.1f%%%s) %s%6d%s %s%6d%s %s%4d%s %s%4.1f%s\n\r",
+      snprintf(buffer, sizeof(buffer), "  %sL%6.2f%s: receive: %s%6u%s %s%6u%s %s%6u%s (%s%4.1f%%%s) %s%6d%s %s%6d%s %s%4d%s %s%4.1f%s\n\r",
            ch->cyan(), (d->session.swings_received[i] ? (float) d->session.level_attacked[i] / d->session.swings_received[i] : 0.0), ch->norm(),
            ch->cyan(), d->session.hits_received[i], ch->norm(),
            ch->cyan(), d->session.swings_received[i], ch->norm(),
@@ -94,19 +94,19 @@ static void showStatsTo(const Descriptor *d, const TBeing *ch, bool hidden_stuff
            ch->cyan(), (d->session.hits_received[i] ? (float) d->session.potential_dam_received[i] / d->session.hits_received[i] :0), ch->norm());
       str += buffer;
     }
-    sprintf(buffer, "Skill Success  : %5.3f%%   pass: %d, att: %d\n\r",
+    snprintf(buffer, sizeof(buffer), "Skill Success  : %5.3f%%   pass: %d, att: %d\n\r",
            100.0 * ((float) d->session.skill_success_pass/
             (float) max((unsigned int) 1, d->session.skill_success_attempts)),
            d->session.skill_success_pass,
            d->session.skill_success_attempts);
     str += buffer;
-    sprintf(buffer, "Spell Success  : %5.3f%%   pass: %d, att: %d\n\r",
+    snprintf(buffer, sizeof(buffer), "Spell Success  : %5.3f%%   pass: %d, att: %d\n\r",
            100.0 * ((float) d->session.spell_success_pass/
             (float) max((unsigned int) 1, d->session.spell_success_attempts)),
            d->session.spell_success_pass,
            d->session.spell_success_attempts);
     str += buffer;
-    sprintf(buffer, "Prayer Success : %5.3f%%   pass: %d, att: %d\n\r",
+    snprintf(buffer, sizeof(buffer), "Prayer Success : %5.3f%%   pass: %d, att: %d\n\r",
            100.0 * ((float) d->session.prayer_success_pass/
             (float) max((unsigned int) 1, d->session.prayer_success_attempts)),
            d->session.prayer_success_pass,
@@ -114,14 +114,14 @@ static void showStatsTo(const Descriptor *d, const TBeing *ch, bool hidden_stuff
     str += buffer;
   } else {
     // !hiddenstuff
-    sprintf(buffer, "Combat   : hit%%      damage ratio (inflicted:received)\n\r");
+    snprintf(buffer, sizeof(buffer), "Combat   : hit%%      damage ratio (inflicted:received)\n\r");
     str += buffer;
     for (i = 0; i < MAX_ATTACK_MODE_TYPE; i++) {
       if (d->session.combat_dam_received[i])
-        sprintf(buf3, "%5.3f:1.0", (float) (((float) d->session.combat_dam_done[i])/((float) d->session.combat_dam_received[i])));
+        snprintf(buf3, sizeof(buf3), "%5.3f:1.0", (float) (((float) d->session.combat_dam_done[i])/((float) d->session.combat_dam_received[i])));
       else
-        sprintf(buf3, "0.0:1.0");
-      sprintf(buffer, "%s%-9.9s%s: (%s%5.2f%%%s)     %s%-10s%s\n\r",
+        snprintf(buf3, sizeof(buf3), "0.0:1.0");
+      snprintf(buffer, sizeof(buffer), "%s%-9.9s%s: (%s%5.2f%%%s)     %s%-10s%s\n\r",
            ch->cyan(), attack_modes[i], ch->norm(),
            ch->cyan(), (d->session.swings[i] ? 100.0 * d->session.hits[i] / d->session.swings[i] : 0.0), ch->norm(),
            ch->cyan(), buf3, ch->norm());
@@ -130,49 +130,49 @@ static void showStatsTo(const Descriptor *d, const TBeing *ch, bool hidden_stuff
     spellNumT skill = victim->getSkillNum(SKILL_SNEAK);
     if (!ch->isImmortal() && 
          (victim->affectedBySpell(skill) || victim->checkForSkillAttempt(skill))) {
-      sprintf(buffer, "Skill Success  : info concealed at present time.\n\r");
+      snprintf(buffer, sizeof(buffer), "Skill Success  : info concealed at present time.\n\r");
     } else {
-      sprintf(buffer, "Skill Success  : %5.3f%%\n\r",
+      snprintf(buffer, sizeof(buffer), "Skill Success  : %5.3f%%\n\r",
              100.0 * ((float) d->session.skill_success_pass/
               (float) max((unsigned int) 1, d->session.skill_success_attempts)));
     }
     str += buffer;
-    sprintf(buffer, "Spell Success  : %5.3f%%\n\r",
+    snprintf(buffer, sizeof(buffer), "Spell Success  : %5.3f%%\n\r",
            100.0 * ((float) d->session.spell_success_pass/
             (float) max((unsigned int) 1, d->session.spell_success_attempts)));
     str += buffer;
-    sprintf(buffer, "Prayer Success : %5.3f%%\n\r",
+    snprintf(buffer, sizeof(buffer), "Prayer Success : %5.3f%%\n\r",
            100.0 * ((float) d->session.prayer_success_pass/
             (float) max((unsigned int) 1, d->session.prayer_success_attempts)));
     str += buffer;
   }
 
   if (ch->desc == d)
-    sprintf(buffer, "\n\rIn your career:\n\rYou have");
+    snprintf(buffer, sizeof(buffer), "\n\rIn your career:\n\rYou have");
   else
-    sprintf(buffer, "\n\rIn %s's career:\n\r%s has", victim->getName().c_str(), victim->getName().c_str());
+    snprintf(buffer, sizeof(buffer), "\n\rIn %s's career:\n\r%s has", victim->getName().c_str(), victim->getName().c_str());
   str += buffer;
   GameTime::realTimePassed((time(0) - victim->player.time->logon) +
                                 victim->player.time->played, 0, &playing_time);
 
-  sprintf(buffer, " been playing for %s%d%s days and %s%d%s hours.\n\r",
+  snprintf(buffer, sizeof(buffer), " been playing for %s%d%s days and %s%d%s hours.\n\r",
       ch->purple(), playing_time.day, ch->norm(),
       ch->purple(), playing_time.hours, ch->norm());
   str += buffer;
 
-  sprintf(buffer, "Creatures killed : Alone  %s%u%s, Group %s%u%s. Exp Gained : %s%.2f%s\n\r",
+  snprintf(buffer, sizeof(buffer), "Creatures killed : Alone  %s%u%s, Group %s%u%s. Exp Gained : %s%.2f%s\n\r",
          ch->cyan(), d->career.kills, ch->norm(),
          ch->cyan(), d->career.group_kills, ch->norm(),
          ch->cyan(), d->career.exp, ch->norm());
   str += buffer;
 
   if (hidden_stuff) {
-    sprintf(buffer, "Combat   : hits     swings           dam done dam received\n\r");
+    snprintf(buffer, sizeof(buffer), "Combat   : hits     swings           dam done dam received\n\r");
     for (i = 0; i < MAX_ATTACK_MODE_TYPE; i++) {
       // prevent them from using this to see specific damage of a weapon
-      sprintf(buf3, "%8d", d->career.dam_done[i]);
-      sprintf(buf4, "%8d", d->career.dam_received[i]);
-      sprintf(buffer, "%s%-9.9s%s: %s%8u%s %s%8u%s (%s%4.1f%%%s) %s%8s%s %s%8s%s\n\r",
+      snprintf(buf3, sizeof(buf3), "%8d", d->career.dam_done[i]);
+      snprintf(buf4, sizeof(buf4), "%8d", d->career.dam_received[i]);
+      snprintf(buffer, sizeof(buffer), "%s%-9.9s%s: %s%8u%s %s%8u%s (%s%4.1f%%%s) %s%8s%s %s%8s%s\n\r",
            ch->cyan(), attack_modes[i], ch->norm(),
            ch->cyan(), d->career.hits[i], ch->norm(),
            ch->cyan(), d->career.swings[i], ch->norm(),
@@ -183,40 +183,40 @@ static void showStatsTo(const Descriptor *d, const TBeing *ch, bool hidden_stuff
     }
   } else {
     // !hidden_stuff
-    sprintf(buffer, "Combat   : hit%%      damage ratio (inflicted:received)\n\r");
+    snprintf(buffer, sizeof(buffer), "Combat   : hit%%      damage ratio (inflicted:received)\n\r");
     str += buffer;
     for (i = 0; i < MAX_ATTACK_MODE_TYPE; i++) {
       if (d->career.dam_received[i])
-        sprintf(buf3, "%5.3f:1.0", (float) (((float) d->career.dam_done[i])/((float) d->career.dam_received[i])));
+        snprintf(buf3, sizeof(buf3), "%5.3f:1.0", (float) (((float) d->career.dam_done[i])/((float) d->career.dam_received[i])));
       else
-        sprintf(buf3, "0.0:1.0");
-      sprintf(buffer, "%s%-9.9s%s: (%s%5.2f%%%s)     %s%-10s%s\n\r",
+        snprintf(buf3, sizeof(buf3), "0.0:1.0");
+      snprintf(buffer, sizeof(buffer), "%s%-9.9s%s: (%s%5.2f%%%s)     %s%-10s%s\n\r",
            ch->cyan(), attack_modes[i], ch->norm(),
            ch->cyan(), (d->career.swings[i] ? 100.0 * d->career.hits[i] / d->career.swings[i] : 0.0), ch->norm(),
            ch->cyan(), buf3, ch->norm());
       str += buffer;
     }
   }
-  sprintf(buffer, "Total deaths: %s%u%s, Arena deaths: %s%u%s, Arena victories: %s%u%s\n\r",
+  snprintf(buffer, sizeof(buffer), "Total deaths: %s%u%s, Arena deaths: %s%u%s, Arena victories: %s%u%s\n\r",
          ch->cyan(), d->career.deaths, ch->norm(),
          ch->cyan(), d->career.arena_loss, ch->norm(),
          ch->cyan(), d->career.arena_victs, ch->norm());
   str += buffer;
 
   if (hidden_stuff) {
-    sprintf(buffer, "Skill Success  : %5.3f%%   pass: %d, att: %d\n\r",
+    snprintf(buffer, sizeof(buffer), "Skill Success  : %5.3f%%   pass: %d, att: %d\n\r",
            100.0 * ((float) d->career.skill_success_pass/
             (float) max((unsigned int) 1, d->career.skill_success_attempts)),
            d->career.skill_success_pass,
            d->career.skill_success_attempts);
     str += buffer;
-    sprintf(buffer, "Spell Success  : %5.3f%%   pass: %d, att: %d\n\r",
+    snprintf(buffer, sizeof(buffer), "Spell Success  : %5.3f%%   pass: %d, att: %d\n\r",
            100.0 * ((float) d->career.spell_success_pass/
             (float) max((unsigned int) 1, d->career.spell_success_attempts)),
            d->career.spell_success_pass,
            d->career.spell_success_attempts);
     str += buffer;
-    sprintf(buffer, "Prayer Success : %5.3f%%   pass: %d, att: %d\n\r",
+    snprintf(buffer, sizeof(buffer), "Prayer Success : %5.3f%%   pass: %d, att: %d\n\r",
            100.0 * ((float) d->career.prayer_success_pass/
             (float) max((unsigned int) 1, d->career.prayer_success_attempts)),
            d->career.prayer_success_pass,
@@ -227,23 +227,23 @@ static void showStatsTo(const Descriptor *d, const TBeing *ch, bool hidden_stuff
     spellNumT skill = victim->getSkillNum(SKILL_SNEAK);
     if (!ch->isImmortal() && 
          (victim->affectedBySpell(skill) || victim->checkForSkillAttempt(skill))) {
-      sprintf(buffer, "Skill Success  : info concealed at present time.\n\r");
+      snprintf(buffer, sizeof(buffer), "Skill Success  : info concealed at present time.\n\r");
     } else {
-      sprintf(buffer, "Skill Success  : %5.3f%%\n\r",
+      snprintf(buffer, sizeof(buffer), "Skill Success  : %5.3f%%\n\r",
              100.0 * ((float) d->career.skill_success_pass/
              (float) max((unsigned int) 1, d->career.skill_success_attempts)));
     }
     str += buffer;
-    sprintf(buffer, "Spell Success  : %5.3f%%\n\r",
+    snprintf(buffer, sizeof(buffer), "Spell Success  : %5.3f%%\n\r",
            100.0 * ((float) d->career.spell_success_pass/
             (float) max((unsigned int) 1, d->career.spell_success_attempts)));
     str += buffer;
-    sprintf(buffer, "Prayer Success : %5.3f%%\n\r",
+    snprintf(buffer, sizeof(buffer), "Prayer Success : %5.3f%%\n\r",
            100.0 * ((float) d->career.prayer_success_pass/
             (float) max((unsigned int) 1, d->career.prayer_success_attempts)));
     str += buffer;
   }
-  sprintf(buffer, "Pets owned: %d of an average level of %5.3f\n\r",
+  snprintf(buffer, sizeof(buffer), "Pets owned: %d of an average level of %5.3f\n\r",
          d->career.pets_bought,
          ((float) d->career.pet_levels_bought/
             (float) max((unsigned int) 1, d->career.pets_bought)));
@@ -254,203 +254,203 @@ static void showStatsTo(const Descriptor *d, const TBeing *ch, bool hidden_stuff
     if (d->career.hit_level40) {
       local_time = ctime(&d->career.hit_level40);
       local_time[strlen(local_time) -1] = '\0';
-      sprintf(buffer, "Hit level 40 on: %s\n\r", local_time);
+      snprintf(buffer, sizeof(buffer), "Hit level 40 on: %s\n\r", local_time);
       str += buffer;
     }
     if (d->career.hit_level50) {
       local_time = ctime(&d->career.hit_level50);
       local_time[strlen(local_time) -1] = '\0';
-      sprintf(buffer, "Hit level 50 on: %s\n\r", local_time);
+      snprintf(buffer, sizeof(buffer), "Hit level 50 on: %s\n\r", local_time);
       str += buffer;
     }
   }
 
-  sprintf(buffer, "Combat inflicted : crit-hits %s%u%s, crit-misses %s%u%s, crit-kills %s%u%s\n\r",
+  snprintf(buffer, sizeof(buffer), "Combat inflicted : crit-hits %s%u%s, crit-misses %s%u%s, crit-kills %s%u%s\n\r",
          ch->cyan(), d->career.crit_hits, ch->norm(),
          ch->cyan(), d->career.crit_misses, ch->norm(),
          ch->cyan(), d->career.crit_kills, ch->norm());
   str += buffer;
-  sprintf(buffer, "Combat suffered  : crit-hits %s%u%s, crit-kills %s%u%s\n\r",
+  snprintf(buffer, sizeof(buffer), "Combat suffered  : crit-hits %s%u%s, crit-kills %s%u%s\n\r",
          ch->cyan(), d->career.crit_hits_suff, ch->norm(),
          ch->cyan(), d->career.crit_kills_suff, ch->norm());
   str += buffer;
   if (d->career.ounces_of_blood) {
-    sprintf(buffer, "Ounces of blood lost                    : %s%u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "Ounces of blood lost                    : %s%u%s\n\r",
            ch->cyan(), d->career.ounces_of_blood, ch->norm());
     str += buffer;
   } 
   if (d->career.stuck_in_foot) {
-    sprintf(buffer, "COMBAT-CRIT: Weapons stuck in foot      : %s%u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Weapons stuck in foot      : %s%u%s\n\r",
            ch->cyan(), d->career.stuck_in_foot, ch->norm());
     str += buffer;
   } 
   if (d->career.crit_beheads) {
-    sprintf(buffer, "COMBAT-CRIT: Beheadings inflicted       : %s%u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Beheadings inflicted       : %s%u%s\n\r",
            ch->cyan(), d->career.crit_beheads, ch->norm());
     str += buffer;
   }
   if (d->career.crit_beheads_suff) {
-    sprintf(buffer, "COMBAT-CRIT: Beheadings suffered        : %s%u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Beheadings suffered        : %s%u%s\n\r",
            ch->cyan(), d->career.crit_beheads_suff, ch->norm());
     str += buffer;
   }
   if (d->career.crit_sev_limbs) {
-    sprintf(buffer, "COMBAT-CRIT: Severed limbs inflicted    : %s%u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Severed limbs inflicted    : %s%u%s\n\r",
            ch->cyan(), d->career.crit_sev_limbs, ch->norm());
     str += buffer;
   }
   if (d->career.crit_sev_limbs_suff) {
-    sprintf(buffer, "COMBAT-CRIT: Severed limbs suffered     : %s%u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Severed limbs suffered     : %s%u%s\n\r",
            ch->cyan(), d->career.crit_sev_limbs_suff, ch->norm());
     str += buffer;
   }
   if (d->career.crit_cranial_pierce) {
-    sprintf(buffer, "COMBAT-CRIT: Cranial piercings inflicted: %s%u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Cranial piercings inflicted: %s%u%s\n\r",
            ch->cyan(), d->career.crit_cranial_pierce, ch->norm());
     str += buffer;
   }
   if (d->career.crit_cranial_pierce_suff) {
-    sprintf(buffer, "COMBAT-CRIT: Cranial piercings suffered : %s%u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Cranial piercings suffered : %s%u%s\n\r",
            ch->cyan(), d->career.crit_cranial_pierce_suff, ch->norm());
     str += buffer;
   }
   if (d->career.crit_broken_bones) {
-    sprintf(buffer, "COMBAT-CRIT: Broken bones inflicted     : %s%u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Broken bones inflicted     : %s%u%s\n\r",
            ch->cyan(), d->career.crit_broken_bones, ch->norm());
     str += buffer;
   }
   if (d->career.crit_broken_bones_suff) {
-    sprintf(buffer, "COMBAT-CRIT: Broken bones suffered      : %s%u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Broken bones suffered      : %s%u%s\n\r",
            ch->cyan(), d->career.crit_broken_bones_suff, ch->norm());
     str += buffer;
   }
   if (d->career.crit_crushed_skull) {
-    sprintf(buffer, "COMBAT-CRIT: Crushed skulls inflicted   : %s%u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Crushed skulls inflicted   : %s%u%s\n\r",
            ch->cyan(), d->career.crit_crushed_skull, ch->norm());
     str += buffer;
   }
   if (d->career.crit_crushed_skull_suff) {
-    sprintf(buffer, "COMBAT-CRIT: Crushed skulls suffered    : %s%u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Crushed skulls suffered    : %s%u%s\n\r",
            ch->cyan(), d->career.crit_crushed_skull_suff, ch->norm());
     str += buffer;
   }
   if (d->career.crit_cleave_two) {
-    sprintf(buffer, "COMBAT-CRIT: Cleaved in two inflicted   : %s%u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Cleaved in two inflicted   : %s%u%s\n\r",
            ch->cyan(), d->career.crit_cleave_two, ch->norm());
     str += buffer;
   }
   if (d->career.crit_cleave_two_suff) {
-    sprintf(buffer, "COMBAT-CRIT: Cleaved in two suffered    : %s%u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Cleaved in two suffered    : %s%u%s\n\r",
            ch->cyan(), d->career.crit_cleave_two_suff, ch->norm());
     str += buffer;
   }
   if (d->career.crit_disembowel) {
-    sprintf(buffer, "COMBAT-CRIT: Disembowels inflicted      : %s%u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Disembowels inflicted      : %s%u%s\n\r",
            ch->cyan(), d->career.crit_disembowel, ch->norm());
     str += buffer;
   }
   if (d->career.crit_disembowel_suff) {
-    sprintf(buffer, "COMBAT-CRIT: Disembowels suffered       : %s%u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Disembowels suffered       : %s%u%s\n\r",
            ch->cyan(), d->career.crit_disembowel_suff, ch->norm());
     str += buffer;
   }
   if (d->career.crit_crushed_nerve) {
-    sprintf(buffer, "COMBAT-CRIT: Crushed Nerves/Muscles inflicted   : %s%u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Crushed Nerves/Muscles inflicted   : %s%u%s\n\r",
            ch->cyan(), d->career.crit_crushed_nerve, ch->norm());
     str += buffer;
   }
   if (d->career.crit_crushed_nerve_suff) {
-    sprintf(buffer, "COMBAT-CRIT: Crushed Nerves/Muscles suffered   : %s%u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Crushed Nerves/Muscles suffered   : %s%u%s\n\r",
            ch->cyan(), d->career.crit_crushed_nerve_suff, ch->norm());
     str += buffer;
   }
   if (d->career.crit_voice) {
-    sprintf(buffer, "COMBAT-CRIT: Punctured Voice Boxes inflicted   : %s%u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Punctured Voice Boxes inflicted   : %s%u%s\n\r",
            ch->cyan(), d->career.crit_voice, ch->norm());
     str += buffer;
   }
   if (d->career.crit_voice_suff) {
-    sprintf(buffer, "COMBAT-CRIT: Punctured Voice Boxes suffered   : %s%u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Punctured Voice Boxes suffered   : %s%u%s\n\r",
            ch->cyan(), d->career.crit_voice_suff, ch->norm());
     str += buffer;
   }
   if (d->career.crit_eye_pop) {
-    sprintf(buffer, "COMBAT-CRIT: Gouged Out Eyeballs inflicted   : %s%u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Gouged Out Eyeballs inflicted   : %s%u%s\n\r",
            ch->cyan(), d->career.crit_eye_pop, ch->norm());
     str += buffer;
   }
   if (d->career.crit_eye_pop_suff) {
-    sprintf(buffer, "COMBAT-CRIT: Gouged Out Eyeballs suffered   : %s%u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Gouged Out Eyeballs suffered   : %s%u%s\n\r",
            ch->cyan(), d->career.crit_eye_pop_suff, ch->norm());
     str += buffer;
   }
   if (d->career.crit_lung_punct) {
-    sprintf(buffer, "COMBAT-CRIT: Punctured Lungs inflicted   : %s%u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Punctured Lungs inflicted   : %s%u%s\n\r",
            ch->cyan(), d->career.crit_lung_punct, ch->norm());
     str += buffer;
   }
   if (d->career.crit_lung_punct_suff) {
-    sprintf(buffer, "COMBAT-CRIT: Punctured Lungs suffered   : %s%u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Punctured Lungs suffered   : %s%u%s\n\r",
            ch->cyan(), d->career.crit_lung_punct_suff, ch->norm());
     str += buffer;
   }
   if (d->career.crit_impale) {
-    sprintf(buffer, "COMBAT-CRIT: Weapon Impalings inflicted   : %s%u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Weapon Impalings inflicted   : %s%u%s\n\r",
            ch->cyan(), d->career.crit_impale, ch->norm());
     str += buffer;
   }
   if (d->career.crit_impale_suff) {
-    sprintf(buffer, "COMBAT-CRIT: Weapon Impalings suffered   : %s%u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Weapon Impalings suffered   : %s%u%s\n\r",
            ch->cyan(), d->career.crit_impale_suff, ch->norm());
     str += buffer;
   }
   if (d->career.crit_eviscerate) {
-    sprintf(buffer, "COMBAT-CRIT: Eviscerations inflicted   : %s%u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Eviscerations inflicted   : %s%u%s\n\r",
            ch->cyan(), d->career.crit_eviscerate, ch->norm());
     str += buffer;
   }
   if (d->career.crit_eviscerate_suff) {
-    sprintf(buffer, "COMBAT-CRIT: Eviscerations suffered   : %s%u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Eviscerations suffered   : %s%u%s\n\r",
            ch->cyan(), d->career.crit_eviscerate_suff, ch->norm());
     str += buffer;
   }
   if (d->career.crit_kidney) {
-    sprintf(buffer, "COMBAT-CRIT: Kidney Wounds inflicted   : %s%u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Kidney Wounds inflicted   : %s%u%s\n\r",
            ch->cyan(), d->career.crit_kidney, ch->norm());
     str += buffer;
   }
   if (d->career.crit_kidney_suff) {
-    sprintf(buffer, "COMBAT-CRIT: Kidney Wounds suffered   : %s%u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Kidney Wounds suffered   : %s%u%s\n\r",
            ch->cyan(), d->career.crit_kidney_suff, ch->norm());
     str += buffer;
   }
   if (d->career.crit_genitalia) {
-    sprintf(buffer, "COMBAT_CRIT: Genitalia Severings inflicted   : %s %u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT_CRIT: Genitalia Severings inflicted   : %s %u%s\n\r",
 	    ch->cyan(), d->career.crit_genitalia, ch->norm());
     str += buffer;
   }
   if (d->career.crit_genitalia_suff) {
-    sprintf(buffer, "COMBAT_CRIT: Genitalia Severings suffered   : %s %u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT_CRIT: Genitalia Severings suffered   : %s %u%s\n\r",
 	    ch->cyan(), d->career.crit_genitalia_suff, ch->norm());
     str += buffer;
   }
   if (d->career.crit_tooth){
-    sprintf(buffer, "COMBAT_CRIT: Teeth knocked out inflicted : %s %u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT_CRIT: Teeth knocked out inflicted : %s %u%s\n\r",
 	    ch->cyan(), d->career.crit_tooth, ch->norm());
     str += buffer;
   }
   if (d->career.crit_tooth_suff){
-    sprintf(buffer, "COMBAT_CRIT: Teeth knocked out suffered : %s %u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT_CRIT: Teeth knocked out suffered : %s %u%s\n\r",
 	    ch->cyan(), d->career.crit_tooth_suff, ch->norm());
     str += buffer;
   }
   if (d->career.crit_ripped_out_heart){
-    sprintf(buffer, "COMBAT_CRIT: Hearts ripped out inflicted : %s %u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT_CRIT: Hearts ripped out inflicted : %s %u%s\n\r",
 	    ch->cyan(), d->career.crit_ripped_out_heart, ch->norm());
     str += buffer;
   }
   if (d->career.crit_ripped_out_heart_suff){
-    sprintf(buffer, "COMBAT_CRIT: Hearts ripped out suffered : %s %u%s\n\r",
+    snprintf(buffer, sizeof(buffer), "COMBAT_CRIT: Hearts ripped out suffered : %s %u%s\n\r",
 	    ch->cyan(), d->career.crit_ripped_out_heart_suff, ch->norm());
     str += buffer;
   }
