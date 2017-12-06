@@ -1659,6 +1659,10 @@ void TBeing::doReset(sstring arg)
       return;
     }
     zone = convertTo<int>(buf);
+    if (zone < 0 || zone >= static_cast<int>(zone_table.size())) {
+      sendTo(format("Zone %d is out of range. Try 0-%d.\n\r") % zone % (zone_table.size() - 1));
+      return;
+    }
     zone_table[zone].resetZone(FALSE);
     sendTo(format("Zone %d reset.\n\r") % zone);
     return;
