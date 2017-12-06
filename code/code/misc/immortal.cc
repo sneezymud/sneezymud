@@ -4403,12 +4403,33 @@ void TBeing::doInfo(const char *arg)
         else
             sendTo(format("Global load probability is %f\r\n") % stats.equip);
       }
+        
+      else if (is_abbrev(arg2, "burnrate")) {
+        if (!arg || !*arg) {
+          sendTo(format("Global Burn Rate is %f\r\n") % stats.burnrate);
+          return;
+        }
+        char opt[80];
+        arg = one_argument(arg,opt, cElements(opt));
+        if (!is_number(opt) || convertTo<double>(opt)<0) {
+              sendTo("Invalid value given for global Burn Rate. Must be a number >= 0.0.\r\n");
+              return;
+        }
+        stats.burnrate = convertTo<double>(opt);
+        save_game_stats();
+        vlogf(LOG_MISC, format("%s set Burn Rate to %f") % getName() % stats.burnrate);
+        sendTo(format("Burn Rate set to %f\r\n") % stats.burnrate);
+        return;
+      }
+        
       else
       {
-        sstring str = "Usage: Display or modifies the global load potential\r\n\r\n";
+        sstring str = "Usage: Display or modifies the global potentials\r\n\r\n";
         str += "\tinfo tweak loadrate\r\n";
         str += "\tinfo tweak loadrate [up|down]\r\n";
         str += "\tinfo tweak loadrate set <target global load potential> [transition time in seconds]\r\n";
+        str += "\tinfo tweak burnrate\r\n";
+        str += "\tinfo tweak burnrate <value>\r\n";
         sendTo(str);
       }
     }
