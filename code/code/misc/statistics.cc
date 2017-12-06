@@ -69,7 +69,7 @@ int init_game_stats(void)
   stats.global_lp_target_changerate = 0.0;  // This is how fast the load potential changes.
   stats.max_exist = 1.2;  // this affects the MAX number of a thing allowed
 
-  stats.burnrate = 0.4;  // this affects the rate at which things burn
+  stats.burnrate = 1.0;  // this affects the rate at which things burn
 
   // 1.40 resulted in 16-20 days playtime to L50
   // 1.05 resulted in 25-30 day to L50 (4.1)

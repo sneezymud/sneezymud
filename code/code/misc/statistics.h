@@ -109,7 +109,7 @@ class GameStats {
       piety_gained(0.0),
       piety_gained_attempts(0),
       equip(0.0),
-      burnrate(0.0),
+      burnrate(1.0),
       max_exist(0.0),
       xp_modif(1.0),
       damage_modifier(1.0),
