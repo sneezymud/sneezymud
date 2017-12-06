@@ -57,6 +57,8 @@ class GameStats {
     double global_lp_target;
     double global_lp_target_changerate;
 
+    double burnrate;
+
     double max_exist;
     double xp_modif;
     double damage_modifier;
@@ -107,6 +109,7 @@ class GameStats {
       piety_gained(0.0),
       piety_gained_attempts(0),
       equip(0.0),
+      burnrate(0.0),
       max_exist(0.0),
       xp_modif(1.0),
       damage_modifier(1.0),

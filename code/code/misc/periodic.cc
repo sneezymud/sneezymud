@@ -35,6 +35,7 @@
 #include "obj_light.h"
 #include "timing.h"
 #include "shopaccounting.h"
+#include "statistics.h"
 #include "weather.h"
 
 // procGlobalRoomStuff
@@ -2051,6 +2052,7 @@ int TObj::updateBurning(void)
     // so it will burn for approx 8 rounds
     int burnamount = (int)((double)((double)getMaxStructPoints()/getVolume())*
 			       material_nums[getMaterial()].flammability);
+    burnamount *= stats.burnrate;
     burnamount=max(1, burnamount);
 
     if((t = equippedBy) || (t = parent) || (t = stuckIn)){
