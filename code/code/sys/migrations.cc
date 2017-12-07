@@ -61,6 +61,17 @@ void runMigrations() {
                 }
             }
         },
+        [&](){
+            vlogf(LOG_MISC, "Adding tweak table to DB");
+            sneezy.query(
+                    "create table tweaks ("
+                    "id int primary key auto_increment not null, "
+                    "value float(20) not null, "
+                    "name varchar(50) unique not null, "
+                    "desc varchar(999) not null)");
+                    
+            sneezy.query("insert into tweaks (id, value, name, desc) values ('1', 'BurnRate', 'Affects the amount of damage done to burning objects per burn round.')");
+        },
     };
 
     int oldVersion = getVersion(sneezy);

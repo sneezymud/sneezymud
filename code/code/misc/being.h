@@ -26,6 +26,7 @@
 #include "stats.h"
 #include "obj.h"
 #include "defs.h"
+#include "tweaks.h"
 
 class CSkill;
 class TGuild;
@@ -1690,6 +1691,7 @@ class TBeing : public TThing {
     void doEcho(const char *);
     void doHighfive(const sstring &);
     virtual void doToggle(const char *);
+    virtual void doTweak(const char *);
     virtual void doTrans(const char *);
     virtual void doSwitch(const char *);
     virtual void doCutlink(const char *);
