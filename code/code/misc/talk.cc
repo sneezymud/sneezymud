@@ -517,7 +517,7 @@ void TBeing::doCommune(const sstring &arg)
     return;
   }
 
-  if (arg.word(0)[0] == '@' && arg.word(0).length() >= 2) {
+  if (!arg.word(0).empty() && arg.word(0)[0] == '@' && arg.word(0).length() >= 2) {
     buf2 = arg.word(0).substr(1,arg.word(0).length() -1);
     levnum = convertTo<int>(buf2);
     if (levnum > 0) {
