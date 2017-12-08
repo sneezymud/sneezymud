@@ -20,13 +20,14 @@
 #include "cmd_message.h"
 #include "task.h"
 #include "toggle.h"
+#include "tweaks.h"
 #include "spell2.h"
 #include "disease.h"
 #include "trap.h"
 #include "stats.h"
 #include "obj.h"
 #include "defs.h"
-#include "tweaks.h"
+
 
 class CSkill;
 class TGuild;
