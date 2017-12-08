@@ -4347,6 +4347,9 @@ void TBeing::doInfo(const char *arg)
         sendTo("You should not attempt to change that.\r\n");
         return;
       }
+      doTweak(arg);
+    }
+       /*
       char arg2[80];
       arg = one_argument(arg,arg2, cElements(arg2));
       if (is_abbrev(arg2, "loadrates")) {
@@ -4431,8 +4434,7 @@ void TBeing::doInfo(const char *arg)
         str += "\tinfo tweak burnrate\r\n";
         str += "\tinfo tweak burnrate <value>\r\n";
         sendTo(str);
-      }
-    }
+        */
     else if (is_abbrev(arg1, "deaths")) {
       if (!hasWizPower(POWER_INFO_TRUSTED)) {
         sendTo("You cannot access that information.\n\r");

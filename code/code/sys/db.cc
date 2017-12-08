@@ -407,6 +407,7 @@ void bootDb(void)
   }
   bootPulse("Loading global toggles.");
   toggleInfo.loadToggles();
+  tweakInfo.loadTweaks();
 
   bootPulse("Loading Races.");
   for(race_t rindex=RACE_NORACE;rindex<MAX_RACIAL_TYPES;rindex++)
