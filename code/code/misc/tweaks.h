@@ -16,6 +16,7 @@
 
 enum tweakTypeT {
   TWEAK_NONE  = 0,
+  TWEAK_LOADRATE,
   TWEAK_BURNRATE,
   //TWEAK_BOSS,
   MAX_TWEAK_TYPES
@@ -23,31 +24,26 @@ enum tweakTypeT {
 
 class tweakEntry {
   public:
-  double value;
-  const sstring name;
-  const sstring descr;
+  double cvalue;
+  double tvalue;
+  double rate;
 
-  tweakEntry(double, const sstring, const sstring);
+  tweakEntry(double, double, double);
   ~tweakEntry();
 
   private:
   tweakEntry();
 };
 
-
 class tweakInfoT {
-  
-  
 
- public:
   std::vector<tweakEntry *> tweaks;
   bool loaded;
   
-  void loadTweaks();
-  
-  
-  
+ public:
+  int loadTweaks();
   bool isLoaded(){ return loaded; }
+  const sstring getTweakName(tweakTypeT);
 
   tweakEntry *operator[] (const tweakTypeT);
 
