@@ -61,19 +61,20 @@ void runMigrations() {
                 }
             }
         },
-        [&](){}, //burning testmigrations
         [&](){
             vlogf(LOG_MISC, "Adding tweak table to DB");
             sneezy.query(
-                    "create table gtweaks ("
-                    "id int primary key auto_increment not null, "
-                    "type int not null, "
-                    "value float(20) not null, "
-                    "name varchar(50) unique not null, "
-                    "desc varchar(999) not null), "
-                    "datecreated datetime not null default(GETDATE()");
+                    "create table globaltweaks ("
+                    "tweak_id int primary key auto_increment not null, "
+                    "tweak_type int not null, "
+                    "tweak_value float(20) not null, "
+                    "tweak_target float(20) not null, "
+                    "tweak_rate float(20) not null, "
+                    "datecreated datetime not null default CURRENT_TIMESTAMP)"
+                    );
                     
-            sneezy.query("insert into gtweaks (type, value, name, desc) values ('1', 'BurnRate', 'Affects the amount of damage done to burning objects per burn round.')");
+            sneezy.query("insert into globaltweaks (tweak_type, tweak_value, tweak_target, tweak_rate) values ('1','%f','%f','%f')", stats.equip, stats.global_lp_target, stats.global_lp_target_changerate);
+            sneezy.query("insert into globaltweaks (tweak_type, tweak_value, tweak_target, tweak_rate) values ('2','1','1','0')");
         },
     };
 
