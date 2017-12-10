@@ -1936,7 +1936,7 @@ int TBeing::parseCommand(const sstring &orig_arg, bool typedIn, bool doAlias)
           size_t param;
           while ((param = fragment.find("%")) != sstring::npos)
             fragment.replace(param, 1, arg2);
-          int rc = parseCommand(fragment, typedIn, false);
+          int rc = addCommandToQue(fragment);
           if (IS_SET_DELETE(rc, DELETE_THIS))
             return DELETE_THIS;
           if (IS_SET_DELETE(rc, DELETE_VICT))
