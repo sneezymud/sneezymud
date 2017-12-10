@@ -6,7 +6,6 @@
 #include "extern.h" // for load_char
 
 #include <boost/format.hpp>
-
 #include <map>
 
 namespace {
@@ -62,6 +61,7 @@ void runMigrations() {
             }
         },
         [&](){
+            //support tweaks db
             vlogf(LOG_MISC, "Adding tweak table to DB");
             sneezy.query(
                     "create table globaltweaks ("
@@ -72,9 +72,16 @@ void runMigrations() {
                     "tweak_rate float(20) not null, "
                     "datecreated datetime not null default CURRENT_TIMESTAMP)"
                     );
-                    
-            sneezy.query("insert into globaltweaks (tweak_type, tweak_value, tweak_target, tweak_rate) values ('1','%f','%f','%f')", stats.equip, stats.global_lp_target, stats.global_lp_target_changerate);
-            sneezy.query("insert into globaltweaks (tweak_type, tweak_value, tweak_target, tweak_rate) values ('2','1','1','0')");
+
+            //this doesn't work / migrations run before stats load      
+            //sneezy.query("insert into globaltweaks (tweak_type, tweak_value, tweak_target, tweak_rate) values ('1','%f','%f','%f')", stats.equip, stats.global_lp_target, stats.global_lp_target_changerate);
+            //another way would be to parse the stats file for current stats.equip value etc., but maybe an admin can just set the value after migration...
+            
+            sneezy.query("insert into globaltweaks (tweak_type, tweak_value, tweak_target, tweak_rate) values (1,0.7,0.7,0.0)");//loadrate
+
+            //burnrate and freezerate are 1.0 anyway.
+            //sneezy.query("insert into globaltweaks (tweak_type, tweak_value, tweak_target, tweak_rate) values (2,1.0,1.0,0.0)");//burnrate
+            //sneezy.query("insert into globaltweaks (tweak_type, tweak_value, tweak_target, tweak_rate) values (3,1.0,1.0,0.0)");//freezedamrate
         },
     };
 

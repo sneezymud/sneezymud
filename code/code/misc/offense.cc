@@ -1616,6 +1616,9 @@ int TPool::thawObject(TBeing *ch, int perc)
 // return DELETE_VICT if ch should be deleted
 int TObj::freezeObject(TBeing *ch, int perc)
 {
+  //roll in global modifier to damage chance
+  perc *= tweakInfo[TWEAK_FREEZEDAMRATE]->cvalue;
+  
   int rc = 0;
   TThing *t = NULL;
 

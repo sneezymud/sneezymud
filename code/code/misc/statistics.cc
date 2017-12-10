@@ -64,12 +64,11 @@ int init_game_stats(void)
   stats.absorb_damage_divisor[MOB_STAT] = 2;
   stats.absorb_damage_divisor[PC_STAT] = 4;
 
-  stats.equip = 0.7;   // this affects the global load potential of things
-  stats.global_lp_target = stats.equip;  // When we want to change the load potential, this is what we change.
-  stats.global_lp_target_changerate = 0.0;  // This is how fast the load potential changes.
+  //stats.equip = 0.7;   // this affects the global load potential of things
+  //stats.global_lp_target = stats.equip;  // When we want to change the load potential, this is what we change.
+  //stats.global_lp_target_changerate = 0.0;  // This is how fast the load potential changes.
   stats.max_exist = 1.2;  // this affects the MAX number of a thing allowed
 
-  stats.burnrate = 1.0;  // this affects the rate at which things burn
 
   // 1.40 resulted in 16-20 days playtime to L50
   // 1.05 resulted in 25-30 day to L50 (4.1)
@@ -201,17 +200,9 @@ int init_game_stats(void)
       stats.logins = 0;
     }
 
-    if (fscanf(fp, "%lf", &stats.global_lp_target) != 1) {
-      vlogf(LOG_BUG, "bad value for equipment load potemtial target value");
-    }
+  
 
-    if (fscanf(fp, "%lf\n", &stats.global_lp_target_changerate) != 1) {
-      vlogf(LOG_BUG, "bad value for rate of change of equipment load potential");
-    }
-
-    if (fscanf(fp, "%lf\n", &stats.burnrate) != 1) {
-      vlogf(LOG_BUG, "bad value for burn rate");
-    }
+    
 
     fclose(fp);
 
@@ -296,9 +287,8 @@ void save_game_stats(void)
 
     fprintf(fp, "%ld\n", (long) stats.first_login);
 
-    fprintf(fp, "%.18lf %.18lf\n", stats.global_lp_target, stats.global_lp_target_changerate);
+    
 
-    fprintf(fp, "%.18lf\n", stats.burnrate);
  
     fclose(fp);
   } else {
@@ -505,7 +495,7 @@ void TBeing::doGamestats(const sstring &arg)
       desc->page_string(str, SHOWNOW_NO, ALLOWREP_YES);
     return;
   } else if (is_abbrev(buf, "equipment")) {
-    sendTo(format("Current Equipment Load Modifier : %4.2f\n\r") % stats.equip);
+    sendTo(format("Current Equipment Load Modifier : %4.2f\n\r") % tweakInfo[TWEAK_LOADRATE]->cvalue);
     sendTo(format("Current Max-Exist Modifier      : %4.2f\n\r") % stats.max_exist);
     sendTo(format("Current Mob-Money Modifier      : %4.2f\n\r") % gold_modifier[GOLD_INCOME].getVal());
     sendTo(format("Current Mob-XP Modifier         : %4.2f\n\r") % stats.xp_modif);

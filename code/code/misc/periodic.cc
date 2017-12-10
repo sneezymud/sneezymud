@@ -2052,7 +2052,10 @@ int TObj::updateBurning(void)
     // so it will burn for approx 8 rounds
     int burnamount = (int)((double)((double)getMaxStructPoints()/getVolume())*
 			       material_nums[getMaterial()].flammability);
-    burnamount *= stats.burnrate;
+    
+    //roll in global modifier for burn damage
+    burnamount *= tweakInfo[TWEAK_BURNRATE]->cvalue;
+    
     burnamount=max(1, burnamount);
 
     if((t = equippedBy) || (t = parent) || (t = stuckIn)){

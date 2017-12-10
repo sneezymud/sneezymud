@@ -561,42 +561,50 @@ void procMobHate::run(const TPulse &) const
 // decrease it by 1% (0.0046) per real day. until we arrive at 0.0460
 // but we'll do it per hour (.00019166666666666666)
 
-// procTweakLoadRate
-procTweakLoadRate::procTweakLoadRate(const int &p)
+// procTweakRate
+procTweakRate::procTweakRate(const int &p)
 {
   trigger_pulse=p;
-  name="procTweakLoadRate";
+  name="procTweakRate";
 }
 
-// The Target loadrate and rate of change should be set from within the mud,
+// The Target tweak and rate of change should be set from within the mud,
 // not hard-coded
-void procTweakLoadRate::run(const TPulse &) const
+void procTweakRate::run(const TPulse &) const
 {
+  TDatabase db(DB_SNEEZY);
 
-  if ( stats.global_lp_target_changerate <= 0 ) return;     // If this is zero, the procedure won't change anything anyway.
 
+  for(tweakTypeT i=TWEAK_LOADRATE;i<MAX_TWEAK_TYPES;i++){
+    
+    tweakEntry* t = tweakInfo[i];
+    if (t->rate == 0.0) {
+      continue;
+    }
 
-  // target_delta = (stats.global_lp_target - original_load)/(24hr/day*3600s/hr*delta_time_in_days)
+    if ( t->tvalue <= 0 ) return;     // If this is zero, the procedure won't change anything anyway.
 
-  // If the current loadrate is within one delta of the target, we will
-  // call it good. Clamp the load rate to target just to be safe and
-  // prevent hunting.
-  if( 
-        (stats.global_lp_target-stats.global_lp_target_changerate <= stats.equip) 
+    // If the current value is within one delta of the target, we will
+    // call it good. Clamp the rate to target just to be safe and
+    // prevent hunting.
+    if( 
+        (t->tvalue-t->rate <= t->cvalue) 
         &&
-        (stats.equip <= stats.global_lp_target+stats.global_lp_target_changerate)
+        (t->cvalue <= t->tvalue+t->rate)
     ){
-    stats.equip = stats.global_lp_target;
-    stats.global_lp_target_changerate = 0.0f;
-    save_game_stats();
-    vlogf(LOG_MISC, format("procTweakLoadRate: desired load potential of %lf achieved.") % stats.equip);
-    return;
-  }
+      t->cvalue = t->tvalue;
+      t->rate = 0.0;
+      //save_game_stats();
+      db.query("update globaltweaks set tweak_value = %f, tweak_rate = 0.0 where tweak_id = %i", t->cvalue, t->id);
+      vlogf(LOG_MISC, format("procTweakRate: desired potential of %lf achieved for %s.") % t->cvalue % tweakInfo.getTweakName(i));
+      return;
+    }
 
-  // Determines if we need to go up or down to get closer to the target load potential.
-  (stats.equip > stats.global_lp_target) ? (stats.equip -= stats.global_lp_target_changerate) : (stats.equip += stats.global_lp_target_changerate);
-  save_game_stats();
-  //vlogf(LOG_MISC, format("procTweakLoadRate: adjusted load potential to %lf") % stats.equip);
+  // Determines if we need to go up or down to get closer to the target potential.
+  (t->cvalue > t->tvalue) ? (t->cvalue -= t->rate) : (t->cvalue += t->rate);
+  db.query("update globaltweaks set tweak_value = %f where tweak_id = %i", t->cvalue, t->id);
+  //vlogf(LOG_MISC, format("procTweakRate: adjusted rate potential to %lf for %s.") % t->cvalue % tweakInfo.getTweakName(i));
+  }
 }
 
 procCheckTriggerUsers::procCheckTriggerUsers(const int &p)
@@ -1829,7 +1837,7 @@ int TMainSocket::gameLoop()
   scheduler.add(new procFactoryProduction(Pulse::MUDDAY));
 
   // pulse realhour
-  scheduler.add(new procTweakLoadRate(Pulse::ONE_SECOND));
+  scheduler.add(new procTweakRate(Pulse::ONE_SECOND));
   scheduler.add(new procTrophyDecay(Pulse::REALHOUR));
   scheduler.add(new procSeedRandom(Pulse::REALHOUR));
 

@@ -419,10 +419,10 @@ class procSeedRandom : public TProcess {
   procSeedRandom(const int &);
 };
 
-class procTweakLoadRate : public TProcess {
+class procTweakRate : public TProcess {
  public:
   void run(const TPulse &) const;
-  procTweakLoadRate(const int &);
+  procTweakRate(const int &);
 };
 
 class procGlobalRoomStuff : public TProcess {
