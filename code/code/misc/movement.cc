@@ -1403,7 +1403,9 @@ int TBeing::displayMove(dirTypeT dir, int was_in, int total)
     vlogf(LOG_BUG, format("NULL rp in displayMove!  (%s)(%d)") %  getName() % was_in);
     return FALSE;
   }
+
   strcpy(how, movementType(FALSE).c_str());
+  std::queue<TBeing*> gmcpUpdates;
 
   if (total > 1)
     sprintf(tmp, "$n %s %s. [%d]", how, dirs[dir], total);
@@ -1453,9 +1455,10 @@ int TBeing::displayMove(dirTypeT dir, int was_in, int total)
 	}
 
       }
+      if (ch->desc)
+          gmcpUpdates.push(ch);
     }
   }
-
   // not totallys ure why this is needed, but had a core report of
   // still being in casino game and moving. 3/6/99
   removeAllCasinoGames();
@@ -1552,8 +1555,14 @@ int TBeing::displayMove(dirTypeT dir, int was_in, int total)
 	}
       }
     }
+    if (tbt->desc)
+        gmcpUpdates.push(tbt);
   }
 
+  while (!gmcpUpdates.empty()) {
+      gmcpUpdates.front()->sendMobsGmcp();
+      gmcpUpdates.pop();
+  }
 
   // everybody in room has now seen me come into room and leave old room
 

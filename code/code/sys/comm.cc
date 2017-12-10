@@ -225,34 +225,35 @@ void TBeing::sendTo(const sstring &msg) const
 }
 
 
-namespace {
-    void sendMobsGmcp(const TBeing* const player, Descriptor* const desc) {
-      sstring out = "room.mobs [";
-      bool first = true;
-      for (const auto thing : player->roomp->stuff) {
-        auto mob = dynamic_cast<TMonster*>(thing);
-        if (mob == nullptr)
-          continue;
+void TBeing::sendMobsGmcp() const {
+  if (desc == nullptr)
+    return;
 
-        if (first) {
-          first = false;
-        } else {
-          out += ",";
-        }
+  sstring out = "room.mobs [";
+  bool first = true;
+  for (const auto thing : roomp->stuff) {
+    auto mob = dynamic_cast<TMonster*>(thing);
+    if (mob == nullptr)
+      continue;
 
-        out += "{\"name\": \"";
-        std::string name = mob->name;
-        boost::replace_all(name, " ", "-");
-        out += name;
-        out += "\", \"sdesc\": \"";
-        out += mob->shortDescr;
-        out += "\", \"level\": ";
-        out += std::to_string(mob->getRealLevel());
-        out += "}";
-      }
-      out += "]";
-      desc->sendGmcp(out, false);
+    if (first) {
+      first = false;
+    } else {
+      out += ",";
     }
+
+    out += "{\"name\": \"";
+    std::string name = mob->name;
+    boost::replace_all(name, " ", "-");
+    out += name;
+    out += "\", \"sdesc\": \"";
+    out += mob->shortDescr;
+    out += "\", \"level\": ";
+    out += std::to_string(mob->getRealLevel());
+    out += "}";
+  }
+  out += "]";
+  desc->sendGmcp(out, false);
 }
 
 void TBeing::sendRoomGmcp(bool changedZones) const
@@ -260,7 +261,7 @@ void TBeing::sendRoomGmcp(bool changedZones) const
   if (desc == NULL)
     return;
 
-  sendMobsGmcp(this, desc);
+  sendMobsGmcp();
 
   if (changedZones) {
     sstring area = format(
