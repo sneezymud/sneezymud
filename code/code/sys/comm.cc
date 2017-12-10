@@ -227,7 +227,7 @@ void TBeing::sendTo(const sstring &msg) const
 
 namespace {
     void sendMobsGmcp(const TBeing* const player, Descriptor* const desc) {
-      sstring out = "";
+      sstring out = "room.mobs [";
       bool first = true;
       for (const auto thing : player->roomp->stuff) {
         auto mob = dynamic_cast<TMonster*>(thing);
@@ -235,7 +235,6 @@ namespace {
           continue;
 
         if (first) {
-          out += "room.mobs [";
           first = false;
         } else {
           out += ",";
@@ -251,10 +250,8 @@ namespace {
         out += std::to_string(mob->getRealLevel());
         out += "}";
       }
-      if (!out.empty()) {
-        out += "]";
-        desc->sendGmcp(out, false);
-      }
+      out += "]";
+      desc->sendGmcp(out, false);
     }
 }
 
