@@ -225,23 +225,52 @@ void TBeing::sendTo(const sstring &msg) const
 }
 
 
+namespace {
+    void sendMobsGmcp(const TBeing* const player, Descriptor* const desc) {
+      sstring out = "";
+      bool first = true;
+      for (const auto thing : player->roomp->stuff) {
+        auto mob = dynamic_cast<TMonster*>(thing);
+        if (mob == nullptr)
+          continue;
+
+        if (first) {
+          out += "room.mobs [";
+          first = false;
+        } else {
+          out += ",";
+        }
+
+        out += "{\"name\": \"";
+        std::string name = mob->name;
+        boost::replace_all(name, " ", "-");
+        out += name;
+        out += "\", \"sdesc\": \"";
+        out += mob->shortDescr;
+        out += "\", \"level\": ";
+        out += std::to_string(mob->getRealLevel());
+        out += "}";
+      }
+      if (!out.empty()) {
+        out += "]";
+        desc->sendGmcp(out, false);
+      }
+    }
+}
+
 void TBeing::sendRoomGmcp(bool changedZones) const
 {
   if (desc == NULL)
     return;
 
-  auto escape = [](std::string in) {
-      boost::replace_all(in, "\\", "\\\\");
-      boost::replace_all(in, "\"", "\\\"");
-      return in;
-  };
+  sendMobsGmcp(this, desc);
 
   if (changedZones) {
     sstring area = format(
       "room.area { \"id\":\"%d\", \"name\": \"%s\", \"x\": 0, \"y\": 0, \"z\": 0, \"col\": \"\", \
 \"flags\": \"quiet\" }")
       % roomp->getZone()->zone_nr
-      % escape(roomp->getZone()->name);
+      % roomp->getZone()->name.escapeJson();
     desc->sendGmcp(area, true);
   }
 
@@ -286,9 +315,9 @@ void TBeing::sendRoomGmcp(bool changedZones) const
   sstring msg = format("room.info { \"num\": %d, \"name\": \"%s\", \"zone\": \"%d\", \"terrain\": \"%s\", \
 \"details\": \"\", \"exits\": { %s }, \"exit_kw\": { %s }, \"coord\": { \"id\": -1, \"x\": -1, \"y\": -1, \"cont\": 0 } }")
     % roomp->number
-    % escape(roomp->name)
+    % roomp->name.escapeJson()
     % roomp->getZone()->zone_nr
-    % escape(TerrainInfo[roomp->getSectorType()]->name)
+    % sstring(TerrainInfo[roomp->getSectorType()]->name).escapeJson()
     % exits.substr(2)
     % exit_kw.substr(2);
   desc->sendGmcp(msg, true);
