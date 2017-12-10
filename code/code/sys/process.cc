@@ -208,15 +208,17 @@ void TScheduler::runChar(int pulseNum)
       if(char_proc->should_run(pulse.pulse)){
         if(char_proc->run(pulse, tmp_ch)){
           delete tmp_ch;
-
           break;
         }
-
+      }
+      if (tmp_ch->roomp == nullptr || tmp_ch->getName().empty()) {
+        vlogf(LOG_BUG, format("Error: char %s roomp %p in proc %s") %
+            tmp_ch->getName() % tmp_ch ->roomp % char_proc->name);
+        tmp_ch = temp;
+        temp = temp->next;
       }
     }
-    temp = tmp_ch->next;  // just for safety
   }
-
 }
 
 void TScheduler::run(int pulseNum)
