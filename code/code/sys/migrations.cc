@@ -77,7 +77,8 @@ void runMigrations() {
             //sneezy.query("insert into globaltweaks (tweak_type, tweak_value, tweak_target, tweak_rate) values ('1','%f','%f','%f')", stats.equip, stats.global_lp_target, stats.global_lp_target_changerate);
             //another way would be to parse the stats file for current stats.equip value etc., but maybe an admin can just set the value after migration...
             
-            sneezy.query("insert into globaltweaks (tweak_type, tweak_value, tweak_target, tweak_rate) values (1,0.7,0.7,0.0)");//loadrate
+            //imm says stats.equip is 112.5
+            sneezy.query("insert into globaltweaks (tweak_type, tweak_value, tweak_target, tweak_rate) values (1,112.5,0.7,0.0)");//loadrate
 
             //burnrate and freezerate are 1.0 anyway.
             //sneezy.query("insert into globaltweaks (tweak_type, tweak_value, tweak_target, tweak_rate) values (2,1.0,1.0,0.0)");//burnrate
