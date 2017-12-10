@@ -182,7 +182,7 @@ bool loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstrin
   double adj_obj_lp_ratio = 1 - pow((1 - 0.01*cbrt((double)obj_lp)), 1/(double)obj_lp);
   // vlogf(LOG_MISC, format("suitset: (10000000 * adj_obj_lp_ratio * stats.equip) = %d") % (int) (10000000 * adj_obj_lp_ratio * stats.equip));
   if ((chance >= 99) ||
-      (::number(0,9999999) < (int) (10000000 * adj_obj_lp_ratio *stats.equip *.050))) { 
+      (::number(0,9999999) < (int) (10000000 * adj_obj_lp_ratio * tweakInfo[TWEAK_LOADRATE]->cvalue *.050))) { 
        // .03 lowers the possible chances, which are initally too high with a fixed values
 
 	// vlogf(LOG_MISC, format("suitset: stats.equip= %d") % stats.equip);

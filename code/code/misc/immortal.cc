@@ -4347,94 +4347,9 @@ void TBeing::doInfo(const char *arg)
         sendTo("You should not attempt to change that.\r\n");
         return;
       }
-      doTweak(arg);
+      tweakInfo.doTweak(this, arg);
     }
-       /*
-      char arg2[80];
-      arg = one_argument(arg,arg2, cElements(arg2));
-      if (is_abbrev(arg2, "loadrates")) {
-        char opt[80];
-	    arg = one_argument(arg,opt, cElements(opt));
-	    if (is_abbrev(opt, "up")) {
-            stats.global_lp_target += .05;
-            stats.global_lp_target_changerate = fabs((stats.global_lp_target - stats.equip)/30);
-            save_game_stats();
-        }
-	    else if (is_abbrev(opt, "down")) {
-	        stats.global_lp_target -= .05;
-            stats.global_lp_target_changerate = fabs((stats.global_lp_target - stats.equip)/30);
-            save_game_stats();
-        }
-        else if ( is_abbrev(opt, "set") ){
-
-            sstring usage = "Usage: info tweak loadrate set <target> [transition time in seconds]\r\n";
-
-            if (!arg || !*arg) {
-                sendTo(usage);
-                return;
-            } 
-            arg = one_argument(arg,opt, cElements(opt));
-            if (!is_number(opt) || convertTo<double>(opt)<0) {
-                sendTo("Invalid value given for global load potential. Must be a number >= 0.0.\r\n "+usage);
-                return;
-            }
-            stats.global_lp_target = convertTo<double>(opt);
-
-            if (!arg || !*arg)
-            {
-                // No change period given-just set it immediately. We're done.
-                stats.equip = stats.global_lp_target;
-                save_game_stats();
-                vlogf(LOG_MISC, format("%s set load potential to %f") % getName() % stats.equip);
-                sendTo(format("Target Global Load Potential set to %f\r\n") % stats.global_lp_target);
-                return;
-            }
-
-            arg = one_argument(arg,opt, cElements(opt));
-            if (!is_number(opt) || convertTo<double>(opt)<=0) {
-                stats.global_lp_target = stats.equip;   //Restore the old target global load potential. This one was a wash.
-                sendTo("Invalid value given for transition time. Must be a positive number of seconds.\r\n "+usage);
-                return;
-            }
-            int change_period_seconds = convertTo<int>(opt);
-            stats.global_lp_target_changerate = fabs((stats.global_lp_target - stats.equip)/change_period_seconds);
-            sendTo(format("Target Global Load Potential set at %f to change over %f seconds.\r\n") % stats.global_lp_target % convertTo<int>(opt) );
-            vlogf(LOG_MISC, format("%s set the Target Global Load potential at %f to change over %f seconds.\r\n") % getName () % stats.global_lp_target % convertTo<int>(opt) );
-
-            save_game_stats();
-        }
-        else
-            sendTo(format("Global load probability is %f\r\n") % stats.equip);
-      }
-        
-      else if (is_abbrev(arg2, "burnrate")) {
-        if (!arg || !*arg) {
-          sendTo(format("Global Burn Rate is %f\r\n") % stats.burnrate);
-          return;
-        }
-        char opt[80];
-        arg = one_argument(arg,opt, cElements(opt));
-        if (!is_number(opt) || convertTo<double>(opt)<0) {
-              sendTo("Invalid value given for global Burn Rate. Must be a number >= 0.0.\r\n");
-              return;
-        }
-        stats.burnrate = convertTo<double>(opt);
-        save_game_stats();
-        vlogf(LOG_MISC, format("%s set Burn Rate to %f") % getName() % stats.burnrate);
-        sendTo(format("Burn Rate set to %f\r\n") % stats.burnrate);
-        return;
-      }
-        
-      else
-      {
-        sstring str = "Usage: Display or modifies the global potentials\r\n\r\n";
-        str += "\tinfo tweak loadrate\r\n";
-        str += "\tinfo tweak loadrate [up|down]\r\n";
-        str += "\tinfo tweak loadrate set <target global load potential> [transition time in seconds]\r\n";
-        str += "\tinfo tweak burnrate\r\n";
-        str += "\tinfo tweak burnrate <value>\r\n";
-        sendTo(str);
-        */
+     
     else if (is_abbrev(arg1, "deaths")) {
       if (!hasWizPower(POWER_INFO_TRUSTED)) {
         sendTo("You cannot access that information.\n\r");
@@ -4725,7 +4640,7 @@ void TBeing::doInfo(const char *arg)
                 100.0 * (tTotalRent - tNetRent) / gold_modifier[GOLD_RENT].getVal() / tTotalDrain);
         buf += buf2;
         sprintf(buf2, "Modifier: Equip : %2.2f (Factor: %6.2f%%)\n\r",
-                stats.equip,
+                tweakInfo[TWEAK_LOADRATE]->cvalue,
                 100.0 * (getPosGold(GOLD_SHOP_WEAPON) + getPosGold(GOLD_SHOP_ARMOR)) / tTotalGlobal);
         buf += buf2;
         buf += "\n\r";
