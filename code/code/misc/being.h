@@ -692,6 +692,7 @@ class TBeing : public TThing {
 
     void checkForStr(silentTypeT);
     void doAfk();
+    int prependCommandToQue(const sstring &);
     int addCommandToQue(const sstring &);
     int loseRoundWear(double, bool randomize = TRUE, bool check = FALSE);
     int loseRound(double, bool x = TRUE, bool check = FALSE);
@@ -1086,6 +1087,7 @@ class TBeing : public TThing {
     int objDamage(spellNumT, int, TThing *);
     virtual void sendTo(CommPtr) const;
     void sendRoomGmcp(bool) const;
+    void sendMobsGmcp() const;
     virtual void sendTo(colorTypeT, const sstring &) const;
     virtual void sendTo(const sstring &) const;
     void sendRoomName(TRoom *) const;
