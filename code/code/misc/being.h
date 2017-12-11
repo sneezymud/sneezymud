@@ -690,6 +690,7 @@ class TBeing : public TThing {
 
     void checkForStr(silentTypeT);
     void doAfk();
+    int prependCommandToQue(const sstring &);
     int addCommandToQue(const sstring &);
     int loseRoundWear(double, bool randomize = TRUE, bool check = FALSE);
     int loseRound(double, bool x = TRUE, bool check = FALSE);

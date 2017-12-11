@@ -13,6 +13,7 @@ extern "C" {
 #include <arpa/telnet.h>
 }
 
+#include <stack>
 #include <boost/regex.hpp>
 
 #include "extern.h"
@@ -1927,6 +1928,7 @@ int TBeing::parseCommand(const sstring &orig_arg, bool typedIn, bool doAlias)
     auto it = desc->alias.find(arg1);
     if (it != desc->alias.end()) {
       sstring command = it->second;
+      std::stack<sstring> send;
       if (command.find("~") != sstring::npos) {
         size_t begin = 0;
         while (begin != sstring::npos) // iterate over lines in multiline
@@ -1936,12 +1938,12 @@ int TBeing::parseCommand(const sstring &orig_arg, bool typedIn, bool doAlias)
           size_t param;
           while ((param = fragment.find("%")) != sstring::npos)
             fragment.replace(param, 1, arg2);
-          int rc = addCommandToQue(fragment);
-          if (IS_SET_DELETE(rc, DELETE_THIS))
-            return DELETE_THIS;
-          if (IS_SET_DELETE(rc, DELETE_VICT))
-            return DELETE_VICT;
+          send.push(fragment);
           begin = nextSplit == sstring::npos ? sstring::npos : nextSplit + 1;
+        }
+        while (!send.empty()) {
+            prependCommandToQue(send.top());
+            send.pop();
         }
         return FALSE;
       }
@@ -3171,6 +3173,32 @@ int max_stat(race_t race, statTypeT iStat)
   return (18);
 }
 #endif
+
+// for mobs, it causes instanteous execution (no que)
+// will return DELETE_THIS if this should be deleted
+int TBeing::prependCommandToQue(const sstring &msg)
+{
+  int rc;
+
+  if (isPc() && desc){
+    if (!isPlayerAction(PLR_MAILING) &&
+        desc->connected != CON_WRITING)
+    {
+        std::queue<sstring> tmp;
+        tmp.push(msg);
+        while (!desc->input.empty()) {
+            tmp.push(desc->input.front());
+            desc->input.pop();
+        }
+        desc->input.swap(tmp);
+    }
+  } else {
+    rc = parseCommand(msg, TRUE);
+    if (IS_SET_DELETE(rc, DELETE_THIS))
+      return DELETE_THIS;
+  }
+  return FALSE;
+}
 
 // This will put a command into player's command que.
 // for mobs, it causes instanteous execution (no que)
