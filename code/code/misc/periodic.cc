@@ -2054,7 +2054,7 @@ int TObj::updateBurning(void)
 			       material_nums[getMaterial()].flammability);
     
     //roll in global modifier for burn damage
-    burnamount *= tweakInfo[TWEAK_BURNRATE]->cvalue;
+    burnamount *= tweakInfo[TWEAK_BURNRATE]->current;
     
     burnamount=max(1, burnamount);
 

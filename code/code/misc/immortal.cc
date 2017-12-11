@@ -4347,7 +4347,7 @@ void TBeing::doInfo(const char *arg)
         sendTo("You should not attempt to change that.\r\n");
         return;
       }
-      tweakInfo.doTweak(this, arg);
+      tweakInfo.doTweak(this, sstring(arg));
     }
      
     else if (is_abbrev(arg1, "deaths")) {
@@ -4640,7 +4640,7 @@ void TBeing::doInfo(const char *arg)
                 100.0 * (tTotalRent - tNetRent) / gold_modifier[GOLD_RENT].getVal() / tTotalDrain);
         buf += buf2;
         sprintf(buf2, "Modifier: Equip : %2.2f (Factor: %6.2f%%)\n\r",
-                tweakInfo[TWEAK_LOADRATE]->cvalue,
+                tweakInfo[TWEAK_LOADRATE]->current,
                 100.0 * (getPosGold(GOLD_SHOP_WEAPON) + getPosGold(GOLD_SHOP_ARMOR)) / tTotalGlobal);
         buf += buf2;
         buf += "\n\r";

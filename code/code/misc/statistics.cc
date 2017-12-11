@@ -495,7 +495,7 @@ void TBeing::doGamestats(const sstring &arg)
       desc->page_string(str, SHOWNOW_NO, ALLOWREP_YES);
     return;
   } else if (is_abbrev(buf, "equipment")) {
-    sendTo(format("Current Equipment Load Modifier : %4.2f\n\r") % tweakInfo[TWEAK_LOADRATE]->cvalue);
+    sendTo(format("Current Equipment Load Modifier : %4.2f\n\r") % tweakInfo[TWEAK_LOADRATE]->current);
     sendTo(format("Current Max-Exist Modifier      : %4.2f\n\r") % stats.max_exist);
     sendTo(format("Current Mob-Money Modifier      : %4.2f\n\r") % gold_modifier[GOLD_INCOME].getVal());
     sendTo(format("Current Mob-XP Modifier         : %4.2f\n\r") % stats.xp_modif);
