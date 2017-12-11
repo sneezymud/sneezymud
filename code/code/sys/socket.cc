@@ -578,32 +578,28 @@ void procTweakRate::run(const TPulse &) const
   for(tweakTypeT i=TWEAK_LOADRATE;i<MAX_TWEAK_TYPES;i++){
     
     tweakEntry* t = tweakInfo[i];
-    if (t->rate == 0.0) {
-      continue;
-    }
-
-    if ( t->tvalue <= 0 ) return;     // If this is zero, the procedure won't change anything anyway.
+    if (t->rate == 0.0) continue;
+    if (t->target <= 0) return; // If this is zero, the procedure won't change anything anyway.
 
     // If the current value is within one delta of the target, we will
     // call it good. Clamp the rate to target just to be safe and
     // prevent hunting.
     if( 
-        (t->tvalue-t->rate <= t->cvalue) 
+        (t->target-t->rate <= t->current) 
         &&
-        (t->cvalue <= t->tvalue+t->rate)
+        (t->current <= t->target+t->rate)
     ){
-      t->cvalue = t->tvalue;
+      t->current = t->target;
       t->rate = 0.0;
-      //save_game_stats();
-      db.query("update globaltweaks set tweak_value = %f, tweak_rate = 0.0 where tweak_id = %i", t->cvalue, t->id);
-      vlogf(LOG_MISC, format("procTweakRate: desired potential of %lf achieved for %s.") % t->cvalue % tweakInfo.getTweakName(i));
+      db.query("update globaltweaks set tweak_value = %f, tweak_rate = 0.0 where tweak_id = %i", t->current, t->id);
+      vlogf(LOG_MISC, format("procTweakRate: desired potential of %lf achieved for %s.") % t->current % tweakInfo.getTweakName(i));
       return;
     }
 
   // Determines if we need to go up or down to get closer to the target potential.
-  (t->cvalue > t->tvalue) ? (t->cvalue -= t->rate) : (t->cvalue += t->rate);
-  db.query("update globaltweaks set tweak_value = %f where tweak_id = %i", t->cvalue, t->id);
-  //vlogf(LOG_MISC, format("procTweakRate: adjusted rate potential to %lf for %s.") % t->cvalue % tweakInfo.getTweakName(i));
+  (t->current > t->target) ? (t->current -= t->rate) : (t->current += t->rate);
+  db.query("update globaltweaks set tweak_value = %f where tweak_id = %i", t->current, t->id);
+  //vlogf(LOG_MISC, format("procTweakRate: adjusted rate potential to %lf for %s.") % t->current % tweakInfo.getTweakName(i));
   }
 }
 

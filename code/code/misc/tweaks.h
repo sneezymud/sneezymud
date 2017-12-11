@@ -1,7 +1,5 @@
 //////////////////////////////////////////////////////////////////////////
 //
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
 //  tweaks.h
 //
 //
@@ -9,7 +7,7 @@
 //  that can be modified in-game.  To add a new tweak 1) add the tweak 
 //  type to the enum tweakTypeT right above MAX_TWEAK_TYPES.  2)  Modify
 //  tweakInfoT::getTweakName to provide a name (no spaces).  3) Multiply 
-//  by tweaks[YOUR_TWEAK_TYPE]->cvalue somewhere in the code.  4)  The 
+//  by tweaks[YOUR_TWEAK_TYPE]->current somewhere in the code.  4)  The 
 //  tweak value defaults to 1.0.  Adjust the value with a trusted 
 //  immortal in game using info tweak.  If it is unnacceptable for the 
 //  value to start at 1.0, add a migration to migrations.cc inserting 
@@ -21,8 +19,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __TWEAK_H
-#define __TWEAK_H
+#pragma once
 
 #include <map>
 
@@ -32,8 +29,7 @@
 
 
 enum tweakTypeT {
-  TWEAK_NONE  = 0,
-  TWEAK_LOADRATE = 1, //must be 1 for iteration in showtweaks
+  TWEAK_LOADRATE = 0,
   TWEAK_BURNRATE,
   TWEAK_FREEZEDAMRATE,
   MAX_TWEAK_TYPES
@@ -41,23 +37,19 @@ enum tweakTypeT {
 
 class tweakEntry {
   public:
-  int id;
-  double cvalue;
-  double tvalue;
-  double rate;
+  int id = 0;
+  double current = 1.0;
+  double target = 1.0;
+  double rate = 0.0;
 
-  tweakEntry(int,double, double, double);
-  ~tweakEntry();
-
-  private:
   tweakEntry();
 };
 
 class tweakInfoT {
 
   std::vector<tweakEntry *> tweaks;
-  bool loaded;
-  void handleTweak(TBeing *, tweakTypeT, const char *);
+  bool loaded = false;
+  void handleTweak(TBeing *, tweakTypeT, sstring);
   void showTweaks(TBeing *, tweakTypeT = MAX_TWEAK_TYPES);
   void showTweakOptions(TBeing *);
   
@@ -65,14 +57,11 @@ class tweakInfoT {
   int loadTweaks();
   bool isLoaded(){ return loaded; }
   const sstring getTweakName(tweakTypeT);
-  void doTweak(TBeing *, const char *);
+  void doTweak(TBeing *, sstring);
   tweakEntry *operator[] (const tweakTypeT);
 
   tweakInfoT();
-  ~tweakInfoT();  
 };
 
 extern tweakInfoT tweakInfo;
 extern tweakTypeT & operator++(tweakTypeT &c, int);
-
-#endif

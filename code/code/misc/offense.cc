@@ -1617,7 +1617,7 @@ int TPool::thawObject(TBeing *ch, int perc)
 int TObj::freezeObject(TBeing *ch, int perc)
 {
   //roll in global modifier to damage chance
-  perc *= tweakInfo[TWEAK_FREEZEDAMRATE]->cvalue;
+  perc *= tweakInfo[TWEAK_FREEZEDAMRATE]->current;
   
   int rc = 0;
   TThing *t = NULL;
