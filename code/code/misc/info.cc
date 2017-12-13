@@ -3257,27 +3257,6 @@ void TBeing::doWorld()
     lag_info.high % lag_info.low % norm();
   str += buf;
 
-  TDatabase db(DB_SNEEZY);
-
-  db.query("select pingtime from pings where host='%s'", desc->host.c_str());
-
-  if(db.fetchRow()){
-    buf=format("%sNetwork Lag: Yours/Avg/High/Low      %s") %
-      blue() % db["pingtime"];
-    str += buf;
-
-    db.query("select avg(pingtime) as avg, max(pingtime) as max, min(pingtime) as min from pings");
-
-    if(db.fetchRow()){
-      buf=format("/%s/%s/%s%s\n\r") % db["avg"] % db["max"] %
-	db["min"] % norm();
-      str += buf;
-    } else {
-      buf=format("/??\?/??\?/???%s\n\r") % norm();
-      str += buf;
-    }
-  }
-  
   db.query("select count(*) as count from rent");
   db.fetchRow();
 
