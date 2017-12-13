@@ -55,6 +55,8 @@
 #include "obj_staff.h"
 #include "obj_wand.h"
 
+#include <boost/algorithm/string/replace.hpp>
+
 sstring describeDuration(const TBeing *ch, int dur)
 {
   char buf[160];
@@ -2269,7 +2271,7 @@ void TBeing::doUsers(const sstring &)
 
 void TPerson::doUsers(const sstring &argument)
 {
-  sstring line, buf2, buf3, buf4, sb, arg1, arg2;
+  sstring line, buf2, buf3, buf4, buf5, sb, arg1, arg2;
   Descriptor *d;
   int count = 0;
   TBeing *k = NULL;
@@ -2277,7 +2279,7 @@ void TPerson::doUsers(const sstring &argument)
   if (powerCheck(POWER_USERS))
     return;
 
-  const char USERS_HEADER[] = "\n\rName              Hostname                           Connected  Account Name\n\r--------------------------------------------------------------------------------\n\r";
+  const char USERS_HEADER[] = "\n\rName              Hostname                           Connected  Account Name   Client\n\r-------------------------------------------------------------------------------------\n\r";
 
   arg1=argument.word(0);
   arg2=argument.word(1);
@@ -2303,22 +2305,19 @@ void TPerson::doUsers(const sstring &argument)
             !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
         line += "*** Information Concealed ***\n\r";
       } else {
-	TDatabase db(DB_SNEEZY);
-
-	db.query("select pingtime from pings where host='%s'", d->host.c_str());
-
         sstring tmp_host = !(d->host.empty()) ? d->host : "????";
-	if(db.fetchRow()){
-	  buf2=format("[%s](%s)") % tmp_host % db["pingtime"];
-	} else {
-	  buf2=format("[%s](??\?)") % tmp_host;
-	}
+        boost::replace_all(tmp_host, "::ffff:", "");
+        buf2=format("[%s]") % tmp_host;
 
         buf3=format("[%s]") % ((d->connected < MAX_CON_STATUS && d->connected >= 0) ? connected_types[d->connected] : "Editing");
         buf4=format("[%s]") % ((d->account && !d->account->name.empty()) ? d->account->name : "UNDEFINED");
-        line += format("%s%-34.34s%s %s%-10.10s%s %s%s%s\n\r") %
+
+        if(!d->mudclient.empty())
+          buf5=format("%s %s") % d->mudclient % d->clientversion;
+
+        line += format("%s%-34.34s%s %s%-10.10s%s %s%-14.14s%s %s%s\n\r") %
 	  red() % buf2 % norm() % green() % buf3 %
-	  norm() % cyan() % buf4 % norm();
+	  norm() % cyan() % buf4 % norm() % buf5 % norm();
       }
       sb += line;
       count++;
@@ -3257,6 +3256,7 @@ void TBeing::doWorld()
     lag_info.high % lag_info.low % norm();
   str += buf;
 
+  TDatabase db(DB_SNEEZY);
   db.query("select count(*) as count from rent");
   db.fetchRow();
 
