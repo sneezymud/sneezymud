@@ -488,6 +488,8 @@ class Descriptor
     unsigned int plr_colorOff;
     ignoreList ignored;
     bool gmcp;
+    std::string mudclient;
+    std::string clientversion;
 
     // Functions
   private:

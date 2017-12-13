@@ -19,6 +19,7 @@ libsneezy_dirs = 'sys misc cmd disc game obj spec task'.split()
 Import('env');
 
 env.Append(CPPPATH=[ '#/code/' + path for path in libsneezy_dirs ])
+env.Append(CPPPATH=[ '#/libs/json/src' ])
 
 # libsneezy
 if env['shared']:
