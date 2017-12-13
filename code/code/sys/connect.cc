@@ -455,7 +455,7 @@ int Descriptor::outputProcessing()
 {
 char i[MAX_STRING_LENGTH + MAX_STRING_LENGTH];
 int counter = 0;
-char buf[MAX_STRING_LENGTH + MAX_STRING_LENGTH];
+sstring buf;
 TBeing *ch = original ? original : character;
 
 if (!prompt_mode && !connected && !m_bIsClient)
@@ -503,7 +503,7 @@ std::swap(output, empty);
     delete [] tmp;
     tb = tc+1;
   }
-  strcpy(buf, i);
+  buf += i;
   if (snoop.snoop_by && snoop.snoop_by->desc) {
     snoop.snoop_by->desc->output.push(CommPtr(new SnoopComm(ch->getName(), i)));
   }
