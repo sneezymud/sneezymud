@@ -2105,7 +2105,7 @@ void TPerson::loadRent()
     vlogf(LOG_BUG, format("Error while reading %s's objects. Prepare for reimb!") % getName());
     return;
   }
-  if (name == il.st.owner)
+  if (name != il.st.owner)
     vlogf(LOG_BUG, format("  %s just got %s's objects!") %
 	  getName() % il.st.owner);
 
