@@ -121,9 +121,9 @@ void tweakInfoT::handleTweak(TBeing *b, tweakTypeT t, sstring arg){
                                     % "Value" % "Target" % "Change Rate" % "Date");
       sneezy.query("select tweak_id, tweak_type, tweak_value, tweak_target, tweak_rate, datecreated from globaltweaks where tweak_type = %i", t);
       while(sneezy.fetchRow()){
-        double val=(double) convertTo<double>(sneezy["tweak_value"]);
-        double tar=(double) convertTo<double>(sneezy["tweak_target"]);
-        double rate=(double) convertTo<double>(sneezy["tweak_rate"]);
+        double val=convertTo<double>(sneezy["tweak_value"]);
+        double tar=convertTo<double>(sneezy["tweak_target"]);
+        double rate=convertTo<double>(sneezy["tweak_rate"]);
         b->sendTo(COLOR_BASIC, format("%-15f | %-12f | %-12f | %-24s\n\r")
                                     % val % tar % rate % sneezy["datecreated"]);
       }
@@ -145,7 +145,7 @@ void tweakInfoT::handleTweak(TBeing *b, tweakTypeT t, sstring arg){
       return;
     }
 
-    int targ = convertTo<double>(opt);
+    auto targ = convertTo<double>(opt);
     if (arg.empty()){
       // No change period given-just set it immediately. We're done.
       tweak->current = tweak->target = targ;
