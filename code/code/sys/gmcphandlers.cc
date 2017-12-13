@@ -3,6 +3,8 @@
 #include "connect.h"
 #include "room.h"
 
+#include "json.hpp"
+
 namespace {
   unsigned char GMCP = 201;
   unsigned char iac = 255;             /* interpret as command: */
@@ -13,6 +15,16 @@ namespace {
   unsigned char sb = 250;              /* interpret as subnegotiation */
   // unsigned char se = 240;              /* end sub negotiation */
 
+  void handleCoreHello(sstring const& s, Descriptor* d) {
+    auto hello = s.substr(sizeof("Core.Hello"));
+    auto js = nlohmann::json::parse(hello);
+    try {
+      d->mudclient = js.at("client");
+      d->clientversion = js.at("version");
+    } catch (const std::range_error&) {
+      vlogf(LOG_MISC, format("Client sent bad Core.Hello: %s") % hello);
+    }
+  }
 
   void handleGmcpCommand(sstring const& s, Descriptor* d)
   {
@@ -36,11 +48,11 @@ namespace {
         % roomp->getZone()->name;
       d->sendGmcp(area, true);
     }
-    else if (s.find("Core.Supports.Set") == 0) {
-        // squelch
+    else if (s.find("Core.Supports.Set ") == 0) {
+      // squelch
     }
-    else if (s.find("Core.Hello") == 0) {
-        // squelch
+    else if (s.find("Core.Hello ") == 0) {
+      handleCoreHello(s, d);
     }
     else
       vlogf(LOG_MISC, format("Telnet: Unknown GMCP command '%s' ") % s);
