@@ -2312,8 +2312,7 @@ void TPerson::doUsers(const sstring &argument)
         buf3=format("[%s]") % ((d->connected < MAX_CON_STATUS && d->connected >= 0) ? connected_types[d->connected] : "Editing");
         buf4=format("[%s]") % ((d->account && !d->account->name.empty()) ? d->account->name : "UNDEFINED");
 
-        if(!d->mudclient.empty())
-          buf5=format("%s %s") % d->mudclient % d->clientversion;
+        buf5=format("%s %s") % d->mudclient % d->clientversion;
 
         line += format("%s%-34.34s%s %s%-10.10s%s %s%-14.14s%s %s%s\n\r") %
 	  red() % buf2 % norm() % green() % buf3 %
