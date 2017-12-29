@@ -127,7 +127,7 @@ int noise(const TBeing *ch)
 
   // if in natural environs, reduce even further
   // traps areas that SHOULDN'T aid them
-  if (ch->getRace() == RACE_ELVEN) {
+  if (ch->roomp && ch->getRace() == RACE_ELVEN) {
     switch (ch->roomp->getSectorType()) {
       case SECT_ARCTIC_CITY:
       case SECT_ARCTIC_ROAD:
