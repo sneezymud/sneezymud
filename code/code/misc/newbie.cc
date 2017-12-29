@@ -119,7 +119,8 @@ void TBeing::doNewbie(const sstring &arg)
     message.resize(200);
   }
 
-  const char *header = isNewbie ? "You ask the experts: %s" : "You advise to newbies: %s";
+  sstring header = format(isNewbie ? "%sYou ask the experts: %s%%s%s" : "%sYou advise to newbies: %s%%s%s")
+    % desc->purple() % desc->cyan() % desc->norm();
   const char *title = isNewbie ? "Newbie" : "Expert";
   sendTo(format(header) % colorString(this, desc, message, NULL, COLOR_BASIC, TRUE, TRUE));
 
@@ -141,7 +142,12 @@ void TBeing::doNewbie(const sstring &arg)
 
     sstring str = colorString(this, d, message, NULL, COLOR_COMM, FALSE);
     str.convertStringColor("<c>");
-    act((format("%s%s $n: %s%s%s") % d->purple() % title % d->cyan() % str % d->norm()), 0, this, 0, person, TO_VICT);
+    sstring msg = (format("%s%s %s: %s%s%s") % d->purple() % title % name % d->cyan() % str % d->norm()).str();
+    act(msg, 0, this, 0, person, TO_VICT);
+    sstring gmcp = format("comm.channel { \"chan\": \"newbie\", \"msg\": \"%s\", \"player\": \"%s\" }")
+      % msg.trim().escapeJson()
+      % title;
+    d->sendGmcp(gmcp, false);
 
     // hack: newbie channel looks like a telepathy chat for sneezyclient
     if (!d->m_bIsClient && IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT))
