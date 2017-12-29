@@ -1254,15 +1254,9 @@ int cudgel(TBeing *thief, TBeing *victim)
     thief->sendTo("You cannot cudgel them while they are flying.\n\r");
     return FALSE;
   }
-  // Jesus's fix for cudgel...cheesy as hell but oh well
-  if (6*thief->GetMaxLevel() < 5*victim->GetMaxLevel()) {
-    act("You miss your attempt to knock $N unconscious.", FALSE, thief, obj, victim, TO_CHAR);
-    act("$n misses $s attempt to knock $N unconscious.", FALSE, thief, obj, victim, TO_NOTVICT);
-    act("$n misses $s attempt to knock you unconscious.", FALSE, thief, obj, victim, TO_VICT);
-    thief->reconcileDamage(victim, 0, SKILL_CUDGEL);
-    victim->addHated(thief);
-    return TRUE;
-  }
+  if (6*thief->GetMaxLevel() < 5*victim->GetMaxLevel())
+    bKnown /= 2;
+
   // Jesus's fix for cudgel...cheesy as hell but oh well
   if (3*thief->getHeight() < 2*victim->getHeight() && !(thief->isFlying())) {
     thief->sendTo("You don't stand a chance at cudgeling a creature that tall.\n\r");
