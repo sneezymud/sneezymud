@@ -120,7 +120,7 @@ void TBeing::doNewbie(const sstring &arg)
   }
 
   sstring header = format(isNewbie ? "%sYou ask the experts: %s%%s%s" : "%sYou advise to newbies: %s%%s%s")
-    % desc->purple() % desc->cyan() % desc->norm();
+    % desc->orangeBold() % desc->white() % desc->norm();
   const char *title = isNewbie ? "Newbie" : "Expert";
   sendTo(format(header) % colorString(this, desc, message, NULL, COLOR_BASIC, TRUE, TRUE));
 
@@ -142,7 +142,7 @@ void TBeing::doNewbie(const sstring &arg)
 
     sstring str = colorString(this, d, message, NULL, COLOR_COMM, FALSE);
     str.convertStringColor("<c>");
-    sstring msg = (format("%s%s %s: %s%s%s") % d->purple() % title % name % d->cyan() % str % d->norm()).str();
+    sstring msg = (format("%s%s %s: %s%s%s") % d->orangeBold() % title % name % d->white() % str % d->norm()).str();
     act(msg, 0, this, 0, person, TO_VICT);
     sstring gmcp = format("comm.channel { \"chan\": \"newbie\", \"msg\": \"%s\", \"player\": \"%s\" }")
       % msg.trim().escapeJson()
