@@ -249,7 +249,13 @@ if flag_pretty:
              interval=5)
 
 git_hash = subprocess.check_output(['git', 'rev-parse', 'HEAD']).strip()
-git_dirty = "+" if subprocess.check_output(['git', 'status', '--short']) else ""
+
+try:
+    git_dirty = "+" if subprocess.check_output(['git', 'status', '--short']) else ""
+except Exception:
+    # Nobody ever figured out why it fails on some systems
+    git_dirty = "?"
+
 with open('code/version.h', 'w') as f:
     f.write('#pragma once\n#define VERSION "{}"\n'.format(git_hash + git_dirty))
 
