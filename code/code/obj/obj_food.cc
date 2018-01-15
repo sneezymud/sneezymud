@@ -563,7 +563,7 @@ void TBeing::doEat(const char *argument)
     return;
   }
   temp->eatMe(this);
-  doSave(SILENT_YES);
+  doQueueSave();
   // temp may not be valid anymore
 }
 

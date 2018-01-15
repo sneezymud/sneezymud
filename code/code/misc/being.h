@@ -358,6 +358,7 @@ class TBeing : public TThing {
     double multAtt;
 
     int heroNum;
+    int nutrition = 0;
   public:
     Race *disguise_race; // for polymorph/disguise code
     bool toggles[MAX_TOG_INDEX];
@@ -460,10 +461,7 @@ class TBeing : public TThing {
     // INLINE FUNCTIONS
     // END INLINE FUNCTIONS
 
-    int getNutrition();
-    void setNutrition(int);
-    void addToNutrition(int);
-
+    void calcNutrition();
 
     // pets.cc
     int getAffectedDataFromType(spellNumT, double);
