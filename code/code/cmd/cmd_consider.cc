@@ -154,14 +154,15 @@ void TBeing::doConsider(const char *argument)
   else
     sendTo("There are better ways to suicide.\n\r");
 
-  if(trophy->getCount(tmon->mobVnum()) > 0){
+  auto count = trophy->getCount(tmon->mobVnum());
+  if(count > 0){
     sendTo(COLOR_BASIC, format("You will gain %s experience when fighting %s.\n\r") % 
-	   trophy->getExpModDescr(trophy->getCount(tmon->mobVnum()), tmon->mobVnum()) %
+	   trophy->getExpModDescr(count, tmon->mobVnum()) %
 	   namebuf);
   } else {
     sendTo(COLOR_BASIC, format("You have never fought %s and will gain %s experience.\n\r") %
 	   namebuf %
-	   trophy->getExpModDescr(trophy->getCount(tmon->mobVnum()), tmon->mobVnum()));
+	   trophy->getExpModDescr(count, tmon->mobVnum()));
   }
 
   if (getDiscipline(DISC_ADVENTURING)) {
