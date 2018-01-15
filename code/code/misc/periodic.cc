@@ -891,31 +891,51 @@ int TBeing::updateAffects()
   return 0;
 }
 
-int TBeing::getNutrition()
+void TBeing::calcNutrition()
 {
-  TDatabase db(DB_SNEEZY);
+  // nutrition is a measure of the amount of calories eaten subtracting
+  // the amount worked off
+  // if the balance gets out of wack far enough, you gain or lose
+  // a pound and the balance is reset
 
-  db.query("select nutrition from player where id=%i", getPlayerID());
-  db.fetchRow();
+  // threshold is the net balance required before weight gain or loss
+  int threshold=5000;
 
-  return convertTo<int>(db["nutrition"]);
+  int nutrDelta=0;
+  if(getCond(FULL) <= 5) // stomach growling
+    nutrDelta--;
+  if(getCond(FULL) >= 6) // little bite to eat
+    nutrDelta++;
+  if(getCond(FULL) >= 10) // slighly hungry
+    nutrDelta++;
+  if(getCond(FULL) >= 20) // full
+    nutrDelta++;
+
+  if(getMove() < (getMaxMove() * 0.25))
+    nutrDelta-=2;
+  if(getMove() < (getMaxMove() * 0.50))
+    nutrDelta-=2;
+  if(getMove() < (getMaxMove() * 0.75))
+    nutrDelta-=2;
+  if(getMove() > (getMaxMove() * 0.90))
+    nutrDelta-=2;
+
+  nutrition += nutrDelta;
+
+  if(nutrition > threshold){
+    if((getWeight()+1) <= getMyRace()->getMaxWeight(getSex())){
+      sendTo("You feel as though you've been putting on some weight.\n\r");
+      setWeight(getWeight()+1);
+    }
+    nutrition = 0;
+  } else if(nutrition < -threshold){
+    if((getWeight()-1) >= getMyRace()->getMinWeight(getSex())){
+      sendTo("You feel as though you've been losing some weight.\n\r");
+      setWeight(getWeight()-1);
+    }
+    nutrition = 0;
+  }
 }
-
-void TBeing::addToNutrition(int amt)
-{
-  TDatabase db(DB_SNEEZY);
-
-  db.query("update player set nutrition=nutrition+%i where id=%i", amt, getPlayerID());
-}
-
-void TBeing::setNutrition(int amt)
-{
-  TDatabase db(DB_SNEEZY);
-
-  db.query("update player set nutrition=%i where id=%i", amt, getPlayerID());
-}
-
-
 
 // this is called once per mud hour (about 144 real seconds)
 // returns DELETE_THIS
