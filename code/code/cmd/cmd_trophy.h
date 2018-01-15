@@ -1,6 +1,9 @@
 #ifndef __DISC_CMD_TROPHY_H
 #define __DISC_CMD_TROPHY_H
 
+#include <map>
+#include <set>
+
 // TTrophy is a class for interacting with the trophy data
 // for a particular player
 //
@@ -45,18 +48,22 @@ class TDatabase;
 
 class TTrophy {
   TDatabase *db;
-  const TBeing *parent;
+  TBeing *parent;
   sstring name;
 
   sstring getMyName();
 
   TTrophy(){}; // no blank initializations
+  std::map<int, double> counts; // memoized view of the DB
+  std::set<int> dirty; // which vnums need flushing
+  void write(int, double);
  public:
   void setName(sstring);
 
   float getExpModVal(float, int);
   const char *getExpModDescr(float, int);
   void addToCount(int, double);
+  void flush();
   float getCount(int);
   float getTotalCount(int);
 

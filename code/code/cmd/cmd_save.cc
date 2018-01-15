@@ -18,6 +18,7 @@
 #include "account.h"
 #include "person.h"
 #include "low.h"
+#include "cmd_trophy.h"
 
 void doSaveMOEdit(TBeing *ch, const char *tArg)
 {
@@ -204,5 +205,6 @@ void TBeing::doSave(silentTypeT silent, const char *tArg)
     dynamic_cast<TPerson *>(this)->saveRent();
 
     saveChar(Room::AUTO_RENT);
+    trophy->flush();
   }
 }

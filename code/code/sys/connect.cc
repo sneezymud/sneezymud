@@ -607,6 +607,7 @@ if (character) {
           character->getName() % character->getMoney() % character->getBank() %
           character->getExp() % num % character->age_mod);
     character->desc = NULL;
+    character->doQueueSave();
     if((!character->affectedBySpell(AFFECT_PLAYERKILL) &&
         !character->affectedBySpell(AFFECT_PLAYERLOOT)) ||
   character->isImmortal()) {

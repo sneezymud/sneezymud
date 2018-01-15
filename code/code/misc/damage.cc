@@ -576,9 +576,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
   }
   
 
-  // this save was moved from gain_exp()
-  doSave(SILENT_YES);
-
+  doQueueSave();
 
   if(v->isPc() && v->hasQuestBit(TOG_BITTEN_BY_VAMPIRE) && v->isHumanoid() &&
      v->getPosition() == POSITION_DEAD){
