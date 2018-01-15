@@ -123,23 +123,6 @@ float TTrophy::getCount(int vnum)
     return 0.0;
 }
 
-float TTrophy::getTotalCount(int vnum)
-{
-  db->query("select totalcount from trophy where player_id=%i and mobvnum=%i",
-	   parent->getPlayerID(), vnum);
-  if(db->fetchRow()) {
-    auto count = convertTo<float>((*db)["totalcount"]);
-    auto it = counts.find(vnum);
-    if (it != counts.end())
-      count += it->second;
-    return count;
-  }
-  else 
-    return 0.0;
-}
-
-
-
 float TTrophy::getExpModVal(float count, int mobvnum)
 {
   float min_mod=0.3;

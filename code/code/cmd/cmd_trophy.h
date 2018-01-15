@@ -65,7 +65,6 @@ class TTrophy {
   void addToCount(int, double);
   void flush();
   float getCount(int);
-  float getTotalCount(int);
 
   void wipe();
   
