@@ -66,26 +66,41 @@ void procTrophyDecay::run(const TPulse &) const
   }
 }
 
-void TTrophy::addToCount(int vnum, double add){
+void TTrophy::addToCount(int vnum, double add) {
+  if (counts.find(vnum) == counts.end())
+    counts[vnum] = getCount(vnum);
+  counts[vnum] += add;
+  dirty.insert(vnum);
+  parent->doQueueSave(); // calls flush soon
+}
+
+void TTrophy::flush() {
+  for (auto vnum : dirty) {
+    write(vnum, counts[vnum]);
+  }
+  dirty.clear();
+}
+
+void TTrophy::write(int vnum, double count){
   if(vnum==-1 || vnum==0 || getMyName()==""){ return; }
 
   int player_id=parent->getPlayerID();
 
   // in most cases we just want to do an update, so start with that
-  db->query("update trophy set count=count+%f, totalcount=totalcount+%f where player_id=%i and mobvnum=%i",
-      add, (add>0 ? add : 0), player_id, vnum);
+  db->query("update trophy set count=%f, totalcount=totalcount+%f where player_id=%i and mobvnum=%i",
+      count, (count>0 ? count : 0), player_id, vnum);
   if (db->rowCount() == 0) {
     // no row for this player & mob so do an insert instead
     db->query("insert into trophy values (%i, %i, %f, %f)",
-        player_id, vnum, add, (add>0 ? add : 0));
+        player_id, vnum, count, (count>0 ? count : 0));
   }
 
   db->query("update trophyplayer set count=(select count(0) from trophy where player_id = %i), total=total+%f where player_id=%i",
-	    player_id, add, player_id);
+	    player_id, count, player_id);
   if (db->rowCount() == 0) {
     // no row for this player so do an insert instead
     db->query("insert into trophyplayer values (%i, (select count(0) from trophy where player_id = %i), %f)",
-	      player_id, player_id, 1, add);
+	      player_id, player_id, 1, count);
   }
 
 }
@@ -93,11 +108,18 @@ void TTrophy::addToCount(int vnum, double add){
 
 float TTrophy::getCount(int vnum)
 {
+  auto it = counts.find(vnum);
+  if (it != counts.end())
+    return it->second;
+
   db->query("select count from trophy where player_id=%i and mobvnum=%i",
 	   parent->getPlayerID(), vnum);
-  if(db->fetchRow())
-    return convertTo<float>((*db)["count"]);
-  else 
+  if(db->fetchRow()) {
+    auto count = convertTo<float>((*db)["count"]);
+    counts[vnum] = count;
+    return count;
+  }
+  else
     return 0.0;
 }
 
@@ -105,8 +127,13 @@ float TTrophy::getTotalCount(int vnum)
 {
   db->query("select totalcount from trophy where player_id=%i and mobvnum=%i",
 	   parent->getPlayerID(), vnum);
-  if(db->fetchRow())
-    return convertTo<float>((*db)["totalcount"]);
+  if(db->fetchRow()) {
+    auto count = convertTo<float>((*db)["totalcount"]);
+    auto it = counts.find(vnum);
+    if (it != counts.end())
+      count += it->second;
+    return count;
+  }
   else 
     return 0.0;
 }
@@ -240,6 +267,7 @@ void TBeing::doTrophy(const sstring &arg)
 	header=1;
       }
 
+      // doesn't take into account unflushed t rophies.
       count=convertTo<float>(db["count"]);
 
       if(!summary){
@@ -314,4 +342,5 @@ void TTrophy::wipe(){
   if(db->fetchRow())
     db->query("delete from trophy where player_id=%i", convertTo<int>((*db)["id"]));
 
+  counts.clear();
 }
