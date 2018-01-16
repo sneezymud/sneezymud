@@ -1998,15 +1998,13 @@ int TBeing::doDonate(const char *argument)
           FALSE, this, o, NULL, TO_CHAR);
       doJunk("", o);
     } else {
-      act("You donate $p.", false, this, t_o, NULL, TO_CHAR);
-      act("$n donates $p.", false, this, t_o, NULL, TO_ROOM);
-
       logItem(t_o, CMD_DONATE);
       for(StuffIter it=t_o->stuff.begin();it!=t_o->stuff.end() && (t=*it);++it)
         logItem(t, CMD_DONATE);
 
       --(*t_o);
       thing_to_room(t_o, Room::DONATION);
+      descriptor_list->worldSend(format("<Y>%s<z> just donated %s.") % name % t_o->getName(), this);
       sprintf(buf,"A small portal appears for an instant, dropping %s in the room.\n\r",t_o->getName().c_str());
       sendToRoom(COLOR_OBJECTS,buf, Room::DONATION);
     }
