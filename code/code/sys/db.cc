@@ -390,6 +390,9 @@ void bootDb(void)
 
   vlogf(LOG_MISC, "Boot timing: begin");
 
+  TDatabase db(DB_SNEEZY);
+  db.query("begin");
+
   bootPulse("Verifying runtime lib dirs.");
   verify_path("roomdata/saved");
   verify_path("immortals");
@@ -606,6 +609,7 @@ void bootDb(void)
 
   vlogf(LOG_MISC, format("Boot timing: pfiles: %.2f seconds") % (t.getElapsedReset()));
 
+  db.query("commit");
   bootPulse("Boot -- DONE.");
   bootTime=false;
 }
