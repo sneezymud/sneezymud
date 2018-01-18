@@ -6301,7 +6301,7 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
 
     return TRUE;
   } else if(cmd == CMD_MOB_GIVEN_ITEM){
-    if(material_nums[o->getMaterial()].price <= 0){
+    if (o->isObjStat(ITEM_NEWBIE) || material_nums[o->getMaterial()].price <= 0){
       me->doTell(ch->getName(), "That isn't a valuable commodity - I can't convert that.");
       me->doGive(ch,o, GIVE_FLAG_DROP_ON_FAIL);
       return TRUE;
