@@ -552,13 +552,6 @@ void bootDb(void)
   }
   bootPulse(NULL, true);
 
-  vlogf(LOG_MISC, "Object load potentials:");
-  std::map<int, int>::iterator tIter = obj_load_potential.begin();
-  while (tIter != obj_load_potential.end()) {
-    vlogf(LOG_MISC, format("VNum[%d] = %d") % tIter->first % tIter->second);
-    ++tIter;
-  }
-
   vlogf(LOG_MISC, format("Boot timing: load potentials: %.2f seconds") % (t.getElapsedReset()));
 
   for (i = 0; i < zone_table.size(); i++) {
