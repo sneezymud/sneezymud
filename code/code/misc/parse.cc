@@ -908,10 +908,14 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
   doPeelPk(newarg.c_str());
   break;
       case CMD_SHUTDOW:
+      case CMD_REBOO:
   doShutdow();
   break;
       case CMD_SHUTDOWN:
-  doShutdown(newarg.c_str());
+  doShutdown(false, newarg.c_str());
+  break;
+      case CMD_REBOOT:
+  doShutdown(true, newarg.c_str());
   break;
       case CMD_LOAD:
   doLoad(newarg.c_str());
@@ -2488,6 +2492,7 @@ void buildCommandArray(void)
   commandArray[CMD_REMOVE] = new commandInfo("remove", POSITION_RESTING, 0);
   commandArray[CMD_PUT] = new commandInfo("put", POSITION_RESTING, 0);
   commandArray[CMD_SHUTDOW]=new commandInfo("shutdow",POSITION_DEAD,GOD_LEVEL1);
+  commandArray[CMD_REBOO]=new commandInfo("reboo",POSITION_DEAD,GOD_LEVEL1);
   commandArray[CMD_SAVE] = new commandInfo("save", POSITION_SLEEPING, 0);
   commandArray[CMD_HIT] = new commandInfo("hit", POSITION_SITTING, 0);
   commandArray[CMD_EXITS] = new commandInfo("exits", POSITION_RESTING, 0);
@@ -2499,6 +2504,7 @@ void buildCommandArray(void)
   commandArray[CMD_LOAD] = new commandInfo("load", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_PURGE] = new commandInfo("purge", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_SHUTDOWN] = new commandInfo("shutdown", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_REBOOT] = new commandInfo("reboot", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_IDEA] = new commandInfo("ideas", POSITION_DEAD, 0);
   commandArray[CMD_TYPO] = new commandInfo("typos", POSITION_DEAD, 0);
   commandArray[CMD_BUG] = new commandInfo("bugs", POSITION_DEAD, 0);

@@ -59,21 +59,11 @@ int main(int argc, char *argv[])
   numberhosts = 0;
   numberLogHosts = 0;
 
-#if 0
-  // graceful, but too bad its not informative about the exception
-  // (could try vlogf_trace here instead of assert?)
-  try {
-    run_the_game();
-  } catch (...) {
-    mud_assert(0, "Caught an exception");
-  }
-#else
-  run_the_game();
-#endif
+  int ret = run_the_game();
 
   generic_cleanup();
 
-  return (0);
+  return ret;
 }
 
 #endif

@@ -122,13 +122,13 @@ int run_the_game()
   vlogf(LOG_MISC, "Entering game loop.");
 
   systask = new SystemTask();
-  gSocket->gameLoop();
+  int ret = gSocket->gameLoop();
   gSocket->closeAllSockets();
 
   vlogf(LOG_MISC, "Normal termination of game.");
   delete gSocket;
 
-  return FALSE;
+  return ret;
 }
 
 void zoneData::nukeMobs()
