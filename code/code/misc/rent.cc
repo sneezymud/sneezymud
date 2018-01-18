@@ -2462,8 +2462,6 @@ bool noteLimitedItems(FILE * fp, const char *tag, unsigned char version, bool im
         continue;
       }
 
-      vlogf(LOG_MISC, format("     [%d] - %s%s") %  item.item_number % tag % 
-	    (immortal ? "  (immortal)" : ""));
       obj_index[robj].addToNumber(1);
     }
     delete [] ad;
