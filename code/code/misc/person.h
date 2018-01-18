@@ -95,7 +95,7 @@ class TPerson : public TBeing {
     virtual void doSet(const char *);
     virtual void doLow(const sstring &);
     virtual void doShutdow();
-    virtual void doShutdown(const char *);
+    virtual void doShutdown(bool, const char *);
     virtual void doSnoop(const char *);
     virtual void doSwitch(const char *);
     virtual void doForce(const char *);

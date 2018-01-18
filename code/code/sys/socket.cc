@@ -62,6 +62,7 @@ int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 
 int maxdesc, avail_descs;  
 bool Shutdown = 0;               // clean shutdown
+bool Reboot = false;
 int tics = 0;
 TMainSocket *gSocket;
 long timeTill = 0;
@@ -1813,7 +1814,7 @@ int TMainSocket::gameLoop()
     queryqueue.pop();
   }
 
-  return TRUE;
+  return Reboot;
 }
 
 

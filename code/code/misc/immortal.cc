@@ -59,6 +59,8 @@ extern "C" {
 #include "spec_mobs.h"
 #include "materials.h"
 
+extern bool Reboot;
+
 togEntry *togInfoT::operator[] (const togTypeT i)
 {
   return toggles.at(i);
@@ -1380,23 +1382,20 @@ void TPerson::doShutdow()
   sendTo("If you want to shut something down - say so!\n\r");
 }
 
-void TBeing::doShutdown(const char *)
+void TBeing::doShutdown(bool, const char *)
 {
   sendTo("Mobs shouldn't be shutting down.\n\r");
 }
 
 sstring shutdown_or_reboot()
 {
-  int rc = system("ps aux | grep reboot | grep -v grep");
- 
-  // if there is an entry, this will return 0
-  if (rc == 0)
+  if (Reboot)
     return "Reboot";
   else
     return "Shutdown";
 }
- 
-void TPerson::doShutdown(const char *argument)
+
+void TPerson::doShutdown(bool reboot, const char *argument)
 {
   char buf[1000] = {0}, arg[256] = {0};
   int num = 0;
@@ -1405,6 +1404,7 @@ void TPerson::doShutdown(const char *argument)
     return;
 
   argument = one_argument(argument, arg, cElements(arg));
+  Reboot = reboot;
 
   if (!*arg) {
     if (gamePort == Config::Port::PROD) {
