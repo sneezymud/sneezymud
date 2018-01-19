@@ -98,9 +98,6 @@ void TMainSocket::addNewDescriptorsDuringBoot(sstring tStString)
     null_time.tv_sec = 0;
     null_time.tv_usec = 0;
 
-    maxdesc=0;
-    for(unsigned int i=0;i<m_sock.size();++i)
-      maxdesc = max(maxdesc, m_sock[i]);
 
     avail_descs = 150;
 
@@ -122,10 +119,11 @@ void TMainSocket::addNewDescriptorsDuringBoot(sstring tStString)
   FD_ZERO(&output_set);
   FD_ZERO(&exc_set);
 
-  for(unsigned int i=0;i<m_sock.size();++i)
-    FD_SET(m_sock[i], &input_set);
+  FD_SET(m_mainSockFD, &input_set);
+  maxdesc = m_mainSockFD;
 
   for (point = descriptor_list; point; point = point->next) {
+    maxdesc = max(maxdesc, point->socket->m_sock);
     FD_SET(point->socket->m_sock, &input_set);
     FD_SET(point->socket->m_sock, &exc_set);
     FD_SET(point->socket->m_sock, &output_set);
@@ -150,16 +148,15 @@ void TMainSocket::addNewDescriptorsDuringBoot(sstring tStString)
 
 
   // establish any new connections 
-  for(unsigned int i=0;i<m_sock.size();++i){
-    if (FD_ISSET(m_sock[i], &input_set)) {
-      int tFd;
-      
-      if ((tFd = newDescriptor(m_sock[i], m_port[i])) < 0)
-	perror("New connection");
-      else if (!tStString.empty() && tFd)
-	descriptor_list->writeToQ(tStString);
-    }
+  if (FD_ISSET(m_mainSockFD, &input_set)) {
+    int tFd;
+
+    if ((tFd = newDescriptor(m_mainSockFD)) < 0)
+      perror("New connection");
+    else if (!tStString.empty() && tFd)
+      descriptor_list->writeToQ(tStString);
   }
+
   // close any connections with an exceptional condition pending 
   for (point = descriptor_list; point; point = next_to_process) {
     next_to_process = point->next;
@@ -400,10 +397,10 @@ struct timeval TMainSocket::handleTimeAndSockets()
   FD_ZERO(&output_set);
   FD_ZERO(&exc_set);
 
-  for(unsigned int i=0;i<m_sock.size();++i)
-    FD_SET(m_sock[i], &input_set);
+  FD_SET(m_mainSockFD, &input_set);
 
   for (point = descriptor_list; point; point = point->next) {
+    maxdesc = max(maxdesc, point->socket->m_sock);
     FD_SET(point->socket->m_sock, &input_set);
     FD_SET(point->socket->m_sock, &exc_set);
     FD_SET(point->socket->m_sock, &output_set);
@@ -446,26 +443,19 @@ struct timeval TMainSocket::handleTimeAndSockets()
   sigprocmask(SIG_UNBLOCK, &mask, NULL);
 
   ////////////////////////////////////////////
-  ////////////////////////////////////////////
-
-  ////////////////////////////////////////////
   // establish any new connections 
   ////////////////////////////////////////////
-  for(unsigned int i=0;i<m_sock.size();++i){
-    if (FD_ISSET(m_sock[i], &input_set)) {
-      int rc = newDescriptor(m_sock[i], m_port[i]);
-      if (rc < 0)
-	perror("New connection");
-      else if (rc) {
-	// we created a new descriptor
-	// so send the login to the first desc in list
-	if (!descriptor_list->m_bIsClient)
-	  descriptor_list->sendLogin("1");
-      }
+  if (FD_ISSET(m_mainSockFD, &input_set)) {
+    int rc = newDescriptor(m_mainSockFD);
+    if (rc < 0)
+      perror("New connection");
+    else if (rc) {
+      // we created a new descriptor
+      // so send the login to the first desc in list
+      if (!descriptor_list->m_bIsClient)
+        descriptor_list->sendLogin("1");
     }
   }
-  ////////////////////////////////////////////
-  ////////////////////////////////////////////
 
   ////////////////////////////////////////////
   // close any connections with an exceptional condition pending 
@@ -1817,7 +1807,7 @@ int TMainSocket::gameLoop()
 }
 
 
-TSocket *TMainSocket::newConnection(int v6_sock, int port)
+TSocket *TMainSocket::newConnection(int v6_sock)
 {
   struct sockaddr_in6 v6_isa;
   socklen_t i;
@@ -1834,7 +1824,7 @@ TSocket *TMainSocket::newConnection(int v6_sock, int port)
     return NULL;
   }
   s->nonBlock();
-  s->port=port;
+  maxdesc = max(maxdesc, s->m_sock);
   return (s);
 }
 
@@ -1852,14 +1842,14 @@ static const sstring IP_String(in6_addr &_a)
 }
 
 
-int TMainSocket::newDescriptor(int v6_sock, int port)
+int TMainSocket::newDescriptor(int v6_sock)
 {
   socklen_t size;
   Descriptor *newd;
   struct sockaddr_in6 v6_saiSock;
   TSocket *s = NULL;
 
-  if (!(s = newConnection(v6_sock, port)))
+  if (!(s = newConnection(v6_sock)))
     return 0;
 
   if ((maxdesc + 1) >= avail_descs) {
@@ -1869,8 +1859,7 @@ int TMainSocket::newDescriptor(int v6_sock, int port)
     close(s->m_sock);
     delete s;
     return 0;
-  } else if (s->m_sock > maxdesc)
-    maxdesc = s->m_sock;
+  }
 
   newd = new Descriptor(s);
   newd->startGmcp();
@@ -1944,8 +1933,7 @@ void TMainSocket::closeAllSockets()
   while (descriptor_list)
     delete descriptor_list;
 
-  for(unsigned int i=0;i<m_sock.size();++i)
-    close(m_sock[i]);
+  close(m_mainSockFD);
 }
 
 
@@ -1962,37 +1950,33 @@ void TMainSocket::initSocket(int t_port)
   int reuseaddr = 1;
   struct sockaddr_in6 v6_sa;
   struct linger ld;
-  int v6_sock;
 
   memset((char *) &v6_sa, 0, sizeof(v6_sa));
   v6_sa.sin6_family = AF_INET6;
   v6_sa.sin6_port = htons(t_port);
   v6_sa.sin6_addr = in6addr_any;
 
-  if ((v6_sock = socket(PF_INET6, SOCK_STREAM, IPPROTO_TCP)) < 0) {
+  if ((m_mainSockFD = socket(PF_INET6, SOCK_STREAM, IPPROTO_TCP)) < 0) {
     perror("Init-socket");
     exit(1);
   }
-  if (setsockopt(v6_sock, SOL_SOCKET, SO_REUSEADDR, &reuseaddr, sizeof(SO_REUSEADDR)) < 0) {
+  if (setsockopt(m_mainSockFD, SOL_SOCKET, SO_REUSEADDR, &reuseaddr, sizeof(SO_REUSEADDR)) < 0) {
     perror("setsockopt REUSEADDR");
     exit(1);
   }
   ld.l_linger = 1000;
   ld.l_onoff = 0;
-  if (setsockopt(v6_sock, SOL_SOCKET, SO_LINGER, (char *) &ld, sizeof(ld)) < 0) {
+  if (setsockopt(m_mainSockFD, SOL_SOCKET, SO_LINGER, (char *) &ld, sizeof(ld)) < 0) {
     perror("setsockopt LINGER");
     exit(1);
   }
-  if (bind(v6_sock, reinterpret_cast<struct sockaddr*>(&v6_sa), sizeof(v6_sa)) < 0) {
+  if (bind(m_mainSockFD, reinterpret_cast<struct sockaddr*>(&v6_sa), sizeof(v6_sa)) < 0) {
     perror("bind");
     vlogf(LOG_BUG, format("initSocket: bind: errno=%d") %  errno);
-    close(v6_sock);
+    close(m_mainSockFD);
     exit(0);
   }
-  listen(v6_sock, 10);
-
-  m_sock.push_back(v6_sock);
-  m_port.push_back(t_port);
+  listen(m_mainSockFD, 10);
 }
 
 TSocket::TSocket()
