@@ -65,12 +65,23 @@ void TOpenContainer::assignFourValues(int x1, int x2, int x3, int x4)
   setCarryVolumeLimit(x4);
 }
 
+int TOpenContainer::getDefaultContainerFlags() const {
+  TObj* prototypeRaw = read_object(objVnum(), VIRTUAL);
+  TOpenContainer* prototype = dynamic_cast<TOpenContainer*>(prototypeRaw);
+  int out = 0;
+  if (prototype)
+    out = prototype->getContainerFlags();
+  delete prototypeRaw;
+  return out;
+}
+
 void TOpenContainer::getFourValues(int *x1, int *x2, int *x3, int *x4) const
 {
   *x1 = (int) carryWeightLimit();
 
   int r = 0;
-  SET_BITS(r, 15, 16, getContainerFlags());
+  // during reboot, reset containers to locked state. Fixes newbs looting Masstrizial.
+  SET_BITS(r, 15, 16, getDefaultContainerFlags());
   SET_BITS(r, 23, 8, mapDoorTrapToFile(getContainerTrapType()));
   SET_BITS(r, 31, 8, getContainerTrapDam());
   *x2 = r;
