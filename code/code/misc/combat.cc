@@ -4019,7 +4019,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 	  act("The swirls of plasma surrounding you soak up energy, sending it back toward $N!", FALSE, vict, 0, this, TO_CHAR);
 	  act("The swirls of plasma surrounding $n soak up energy, sending it back toward you!", FALSE, vict, 0, this, TO_VICT);
 	  
-	  int rc = reconcileDamage(this, dam_blocked, SPELL_PLASMA_MIRROR);
+	  int rc = vict->reconcileDamage(this, dam_blocked, SPELL_PLASMA_MIRROR);
 	  if (rc == -1) 
 	    retCode |= DELETE_THIS;
 	}
@@ -4032,7 +4032,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 	  act("<o>The thorns on $n's body hurt $N!<1>", FALSE, vict, 0, this, TO_NOTVICT);
 	  act("<o>The thorns on your body hurt $N as $E hits you!<1>", FALSE, vict, 0, this, TO_CHAR);
 	  act("<o>The thorns on $n's damage you as you hit $m!<1>", FALSE, vict, 0, this, TO_VICT);
-	  int rc = reconcileDamage(this, dam_blocked, SPELL_THORNFLESH);
+	  int rc = vict->reconcileDamage(this, dam_blocked, SPELL_THORNFLESH);
 	  if (rc == -1) 
 	    retCode |= DELETE_THIS;
 	}
