@@ -23,13 +23,12 @@ extern char hostlist[MAX_BAN_HOSTS][40];
 
 class TMainSocket {
  private:
-  std::vector <int> m_sock;
-  std::vector <int> m_port;
+  int m_mainSockFD;
 
   struct timeval handleTimeAndSockets();
   bool handleShutdown();
-  TSocket *newConnection(int, int);
-  int newDescriptor(int, int);
+  TSocket *newConnection(int);
+  int newDescriptor(int);
   timeval sleeptime;
 
  public:
