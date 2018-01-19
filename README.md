@@ -46,7 +46,7 @@ command line.
 
 * Modern Unix, probably Linux, typically Ubuntu
 * MySQL-compatible database server, two databases, and a user with table-level
-  write access. See below for the defaults for these.
+  write access. See above for the defaults for these.
 
 ## Build Dependencies
 
