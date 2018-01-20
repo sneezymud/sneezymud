@@ -70,8 +70,3 @@ econ=env.Program(['shell/econ.cc'], LIBS=libs)
 
 env.Install('../shell', [econ])
 env.Alias('shell', '../shell')
-
-
-# unit tests
-env.SConscript('tests/SConscript',
-               exports='libs')
