@@ -226,14 +226,14 @@ void TBeing::sendTo(const sstring &msg) const
 
 
 void TBeing::sendMobsGmcp() const {
-  if (desc == nullptr)
+  if (!desc)
     return;
 
   sstring out = "room.mobs [";
   bool first = true;
   for (const auto thing : roomp->stuff) {
     auto mob = dynamic_cast<TMonster*>(thing);
-    if (mob == nullptr)
+    if (!mob)
       continue;
 
     if (first) {
