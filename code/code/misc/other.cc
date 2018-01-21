@@ -8,7 +8,6 @@
 
 extern "C" {
 #include <stdio.h>
-
 #include <unistd.h>
 }
 
@@ -4144,15 +4143,14 @@ namespace {
 // sends appropriate feedback (help, bugs, typos) via email to a feedback forum
 void Descriptor::send_feedback(const sstring &subject, const sstring &body)
 {
-  static int tempInc = 0;
   TBeing *player = (dynamic_cast<TMonster *>(character) && original) ? original : character;
   sstring message;
   time_t now = time(0);
 
   // standard mail header:
-  message += sstring("from: ") + FEEDBACK_FROM_ADDRESS + "\n";
-  message += sstring("to: ") + FEEDBACK_SENDTO_ADDRESS + "\n";
-  message += format("subject: %s (%s)\n") % subject % player->getName();
+  message += sstring("From: ") + FEEDBACK_FROM_ADDRESS + "\n";
+  message += sstring("To: ") + FEEDBACK_SENDTO_ADDRESS + "\n";
+  message += format("Subject: %s (%s)\n") % subject % player->getName();
   message += "\n";
 
   // standard feedback header
@@ -4170,20 +4168,27 @@ void Descriptor::send_feedback(const sstring &subject, const sstring &body)
   message += "\n";
 
   // could use vsystem, but we want the file i/o outside this thread as well
-  if (0 != vfork())
-  {
-    FILE *fp;
-    sstring tempfile = format("/usr/tmp/feedback%d.tmp") % tempInc++;
-    if ((fp = fopen(tempfile.c_str(), "w")))
-    {
-        fputs(message.c_str(), fp);
-        fclose(fp);
-        int err = system((format("/usr/sbin/sendmail -t < %s") % tempfile).str().c_str());
-        if (err)
-            vlogf(LOG_MISC, format("Call to sendmail returned nonzero status %d") % err);
-        remove(tempfile.c_str());
+  if (!vfork()) {
+    char tempfile[32];
+    strcpy(tempfile, "/tmp/sneezy_sendmail_XXXXXX.tmp");
+    int tmpfd = mkstemps(tempfile, 4);
+    if (tmpfd < 0) {
+      vlogf(LOG_MISC, format("mkstemps() failed on '%s': %s") % tempfile % strerror(errno));
+      exit(errno);
     }
-    exit(-1);
+
+    ssize_t out = write(tmpfd, message.c_str(), message.length());
+    if (out == (int)message.length()) {
+      int err = system((format("/usr/sbin/sendmail -t < %s") % tempfile).str().c_str());
+      if (err)
+        vlogf(LOG_MISC, format("Call to sendmail returned nonzero status %d") % err);
+    } else if (out == -1) {
+      vlogf(LOG_MISC, format("Writing sendmail tmpfile failed: %s") % strerror(errno));
+    } else {
+      vlogf(LOG_MISC, "Short write to sendmail tmpfile, full disk?");
+    }
+    unlink(tempfile);
+    exit(0);
   }
 }
 
