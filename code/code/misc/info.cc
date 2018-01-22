@@ -1902,6 +1902,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case LAST_ODDBALL_AFFECT:
       case LAST_TRANSFORMED_LIMB:
       case LAST_BREATH_WEAPON:
+      case DAMAGE_EXTREME_PAIN:
       case DAMAGE_GUST:
       case DAMAGE_TRAP_TNT:
       case DAMAGE_ELECTRIC:

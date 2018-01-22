@@ -11,6 +11,7 @@
 #define __SPELLS_H
 
 enum spellNumT {
+     DAMAGE_EXTREME_PAIN = -59,
      DAMAGE_RIPPED_OUT_HEART = -58,
      DAMAGE_DISEMBOWLED_VR = -57,
      DAMAGE_NORMAL = -56,

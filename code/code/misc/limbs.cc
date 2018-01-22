@@ -1103,6 +1103,33 @@ wearSlotT pickRandomLimb(bool)
   return wearSlotT(num);
 }
 
+void TBeing::stun(spellNumT affect)
+{
+  if (task) {
+    stopTask();
+  }
+  if (spelltask) {
+    stopCast(STOP_CAST_NONE);
+  }
+
+  affectedData aff;
+  aff.type = affect;
+  aff.duration = Pulse::UPDATES_PER_MUDHOUR / 3;
+  aff.bitvector = AFF_STUNNED;
+  affectTo(&aff, -1);
+}
+
+void TBeing::stunIfLimbsChoppedOff()
+{
+  if (bothArmsHurt()) {
+    act("The pain in your crushed limbs causes you to pass out.",
+        FALSE, this, nullptr, this, TO_CHAR);
+    act("The pain in $s crushed limbs causes $M to pass out.",
+        FALSE, this, nullptr, this, TO_NOTVICT);
+    stun(DAMAGE_EXTREME_PAIN);
+  }
+}
+
 int TBeing::hurtLimb(unsigned int dam, wearSlotT part_hit)
 {
   unsigned int limHlt = getCurLimbHealth(part_hit);
@@ -1121,6 +1148,7 @@ int TBeing::hurtLimb(unsigned int dam, wearSlotT part_hit)
       int rc = flightCheck();
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
+      stunIfLimbsChoppedOff();
     }
     return TRUE;
   }

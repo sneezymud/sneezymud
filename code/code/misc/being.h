@@ -1893,6 +1893,8 @@ class TBeing : public TThing {
     void makeWary();
     sstring displayExp() const;
     int hurtLimb(unsigned int, wearSlotT);
+    void stunIfLimbsChoppedOff();
+    void stun(spellNumT affect);
     int flightCheck();
     int hpGainForLevel(classIndT) const;
     int hpGainForClass(classIndT) const;
