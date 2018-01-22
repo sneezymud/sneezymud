@@ -436,7 +436,7 @@ int Descriptor::read_client(char *str2)
     case CLIENT_IDEA:
     case CLIENT_TYPO:
     case CLIENT_BUG:
-      // mail_recipient actually contains some other data
+      // mail_recipient actually contains subject type
       send_feedback(mail_recipient, sstring(str2).replaceString("^", "\r\n"));
       character->sendTo("Thanks for the report. It will be looked at soon!\n\r"
           "If necessary, a mudmail will be sent to you to inform you of any changes\n\r"

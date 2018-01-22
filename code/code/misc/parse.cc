@@ -453,6 +453,9 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
   doPeek();
   addToLifeforce(1);
   break;
+      case CMD_REQUEST:
+  doFeedback("HELP", CLIENT_STARTEDIT, argument);
+  break;
       case CMD_BUG:
   doFeedback("BUG", CLIENT_BUG, newarg);
   addToLifeforce(1);
@@ -1771,9 +1774,6 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
   break;
       case CMD_NEWBIE:
     doNewbie(argument.c_str());
-  break;
-      case CMD_REQUEST:
-    doFeedback("HELP", CLIENT_STARTEDIT, argument);
   break;
       case CMD_IGNORE:
     doIgnore(argument);

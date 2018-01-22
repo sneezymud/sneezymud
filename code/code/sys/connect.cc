@@ -1942,6 +1942,7 @@ void Descriptor::sstring_add(sstring s)
           if (mail_recipient ==  "Comment")
             add_comment(delname, t.c_str());
           else
+            // mail_recipient actually contains issue subject
             send_feedback(mail_recipient, t);
           writeToQ(mail_recipient);
           writeToQ(" sent!\n\r");
