@@ -424,6 +424,7 @@ void TBeing::postmasterCheckMail(TMonster *me)
     me->doTell(getName(), "Sorry, you don't have any mail waiting.");
 }
 
+
 void TBeing::postmasterReceiveMail(TMonster *me)
 {
   sstring recipient;
