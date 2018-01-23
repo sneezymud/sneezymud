@@ -15,7 +15,10 @@
 #include "spec_mobs.h"
 #include "combat.h"
 
-// may not exceed NAME_SIZE (15) chars
+const int MIN_MAIL_LEVEL = 2;
+const int STAMP_PRICE = 50;
+const float FACTION_STAMP_PRICE = 5000;
+
 static const char * const SNEEZY_ADMIN = "SneezyMUD Administration";
 
 
@@ -31,114 +34,107 @@ bool TObj::canBeMailed(sstring name) const
 
   if (canMail && !name.empty()) {
     sstring owner = monogramOwner();
-    canMail = owner.empty() || name.lower() == owner.lower();
+    return owner.empty() || owner.lower() == name.lower();
   }
 
   return canMail;
 }
 
+
 bool has_mail(const sstring recipient)
 {
   TDatabase db(DB_SNEEZY);
-
-  db.query("select count(*) as count from mail where port=%i and lower(mailto)=lower('%s')", gamePort, recipient.c_str());
-
-  if(db.fetchRow() && convertTo<int>(db["count"]) != 0)
-    return TRUE;
-
-  return FALSE;
+  db.query("select 1 from mail where port=%i and lower(mailto)=lower('%s')", gamePort, recipient);
+  return db.isResults();
 }
 
-void store_mail(const char *to, const char *from, const char *message_pointer, int talens, int rent_id)
+
+void store_mail(const sstring &to, const sstring &from, const sstring &message, int talens, int rent_id)
 {
   TDatabase db(DB_SNEEZY);
-  time_t mail_time;
-  char *tmstr;
+  time_t mail_time = time(0);
+  char *timestamp = asctime(localtime(&mail_time));
+  timestamp[strlen(timestamp) - 1] = '\0';
 
-  mail_time=time(0);
-  tmstr = asctime(localtime(&mail_time));
-  *(tmstr + strlen(tmstr) - 1) = '\0';
-
-
-  if(!strcmp(to, "faction")){
-    TDatabase fm(DB_SNEEZY);
-    fm.query("select name from factionmembers where faction=(select faction from factionmembers where name='%s')", from);
+  if (to == "faction") {
+    TDatabase members(DB_SNEEZY);
+    members.query("select name from factionmembers where faction=(select faction from factionmembers where name='%s')", from);
     
-    while(fm.fetchRow()){
-      db.query("insert into mail (port, mailfrom, mailto, timesent, content, talens, rent_id) values (%i, '%s', '%s', '%s', '%s', 0, 0)", gamePort, from, fm["name"].c_str(), tmstr, message_pointer);
+    while (members.fetchRow()) {
+      db.query("insert into mail (port, mailfrom, mailto, timesent, content, talens, rent_id)"
+               "values (%i, '%s', '%s', '%s', '%s', 0, 0)",
+               gamePort, from, members["name"], timestamp, message);
     }
   } else {
-    db.query("insert into mail (port, mailfrom, mailto, timesent, content, talens, rent_id) values (%i, '%s', '%s', '%s', '%s', %i, %i)", gamePort, from, to, tmstr, message_pointer, talens, rent_id);
+    db.query("insert into mail (port, mailfrom, mailto, timesent, content, talens, rent_id)"
+             "values (%i, '%s', '%s', '%s', '%s', %i, %i)",
+             gamePort, from, to, timestamp, message, talens, rent_id);
   }
-}                               /* store mail */
+}
 
-sstring read_delete(const sstring recipient, const char *recipient_formatted, sstring &from, int & talens, int & rent_id)
+
+sstring read_delete(const sstring &recipient, const sstring &recipient_formatted, sstring &from, int &talens, int &rent_id)
 {
   TDatabase db(DB_SNEEZY);
-  sstring buf;
+  sstring body;
 
   db.query("select mailfrom, timesent, content, mailid, talens, rent_id from mail where port=%i and lower(mailto)=lower('%s')", gamePort, recipient.c_str());
   if(!db.fetchRow())
     return "error!";
 
-  from=db["mailfrom"];
-  talens=convertTo<int>(db["talens"]);
-  rent_id=convertTo<int>(db["rent_id"]);
+  from = db["mailfrom"];
+  talens = convertTo<int>(db["talens"]);
+  rent_id = convertTo<int>(db["rent_id"]);
 
-  buf=format("The letter has a date stamped in the corner: %s\n\r\n\r%s,\n\r%s\n\rSigned, %s\n\r\n\r") %
-    db["timesent"] % recipient_formatted % db["content"] % db["mailfrom"];
+  body = format("The letter has a date stamped in the corner: %s\n\r\n\r%s,\n\r%s\n\rSigned, %s\n\r\n\r")
+      % db["timesent"] % recipient_formatted % db["content"] % db["mailfrom"];
 
-  db.query("delete from mail where mailid=%s", db["mailid"].c_str());
+  db.query("delete from mail where mailid=%s", db["mailid"]);
   
-  return sstring(buf);
+  return body;
 }
 
-void postmasterValue(TBeing *ch, TBeing *postmaster, const char *arg)
+
+void postmasterValue(TBeing *ch, TBeing *postmaster, sstring args)
 {
-  sstring args = arg, item, talen;
   int shop_nr = find_shop_nr(postmaster->number);
   float profit_buy = shop_index[shop_nr].getProfitBuy(NULL, ch);
 
+  sstring item, talen;
   args = one_argument(args, item);
   args = one_argument(args, talen);
 
-  if (is_abbrev(item, sstring("talens")) || is_abbrev(talen, sstring("talens")))
-  {
-    postmaster->doTell(ch, format("When sending talens, I charge an additional %d talens for handling fees.") % int((float)STAMP_PRICE * profit_buy * 2));
+  if (is_abbrev(item, "talens") || is_abbrev(talen, "talens")) {
+    postmaster->doTell(ch, format("When sending money, I charge %d talens in handling fees.") % int((float)STAMP_PRICE * profit_buy * 2));
     return;
   }
 
-  if(item == "faction")
-  {
+  if (item == "faction") {
     postmaster->doTell(ch, format("Bulk faction mail from me will cost about %d talens.") % int((float)FACTION_STAMP_PRICE * profit_buy));
     return;
   }
 
-  if (item.length() > 0)
-  {
-    TThing *thing = get_thing_on_list_vis(ch, item.c_str(), ch->stuff.front());
-    TObj *obj = thing ? dynamic_cast<TObj*>(thing) : NULL;
-    if (obj == NULL)
-    {
-      postmaster->doTell(ch, "I don't see that item on you.");
-      return;
-    }
-    int cost = int((float)STAMP_PRICE * profit_buy * (obj->getWeight() + 3));
-    if (obj->isMonogrammed())
-    {
-      postmaster->doTell(ch, "This item appears to be monogrammed.  You may only mail it to its owner.");
-      cost = STAMP_PRICE;
-    }
-    if (!obj->canBeMailed(""))
-    {
-      postmaster->doTell(ch, "Sorry, I can't ship that.");
-      return;
-    }
-    postmaster->doTell(ch, format("Shipping %s will cost you %d talens.") % obj->getName() % cost);
+  if (item.empty()) {
+    postmaster->doTell(ch, format("My price for a regular stamp is %d talens.") % int((float)STAMP_PRICE * profit_buy));
     return;
   }
 
-  postmaster->doTell(ch, format("My price for regular postage is %d talens.") % int((float)STAMP_PRICE * profit_buy));
+  TThing *thing = get_thing_on_list_vis(ch, item.c_str(), ch->stuff.front());
+  TObj *obj = thing ? dynamic_cast<TObj*>(thing) : NULL;
+  if (!obj) {
+    postmaster->doTell(ch, "I don't see that item on you.");
+    return;
+  }
+  int cost = int((float)STAMP_PRICE * profit_buy * (obj->getWeight() + 3));
+  if (obj->isMonogrammed()) {
+    postmaster->doTell(ch, "This item appears to be monogrammed.  You may only mail it to its owner.");
+    cost = STAMP_PRICE;
+  }
+  if (!obj->canBeMailed("")) {
+    postmaster->doTell(ch, "Sorry, I can't ship that.");
+    return;
+  }
+  postmaster->doTell(ch, format("Shipping %s will cost you %d talens.") % obj->getName() % cost);
 }
 
 
@@ -186,8 +182,8 @@ int postmasterGiven(TBeing *ch, TMonster *me, TObj *o)
     objName.replace(dueTag+1, endTag-dueTag-1, dueDate.c_str(), dueDate.length());
     o->name = objName;
 
-    me->doTell(ch, "It appears your belongings are arriving via magical transport in ten minutes.");
-    me->doTell(ch, "In the meantime, hold on to this token and give it to me when your package has arrived.");
+    me->doTell(ch, "Your belongings are arriving via magical transport in ten minutes.");
+    me->doTell(ch, "In the meantime, hold on to this token and give it to me when they arrive.");
     me->doGive(ch, o);
     ch->doQueueSave();
 
@@ -200,8 +196,8 @@ int postmasterGiven(TBeing *ch, TMonster *me, TObj *o)
     int minutes = ct / 60;
     int seconds = ct % 60;
 
-    me->doTell(ch, "Sorry, your object hasn't materialized from voidspace yet.");
-    me->doTell(ch, format("It looks like it won't be ready for another %i minutes and %i seconds.") % minutes % seconds);
+    me->doTell(ch, "Sorry, your belongings haven't arrived yet.");
+    me->doTell(ch, format("It looks like they won't be ready for another %i minutes and %i seconds.") % minutes % seconds);
     me->doGive(ch, o);
 
     return 0;
@@ -213,19 +209,21 @@ int postmasterGiven(TBeing *ch, TMonster *me, TObj *o)
     if (!rp)
       return 0;
     fullToken.inlineReplaceString(dueDate, "bag");
-    vlogf(LOG_BUG, "Looking for " + fullToken);
-    TObj *linkbag = NULL;
+    vlogf(LOG_MISC, "Linkbag retrieval: looking for " + fullToken);
+    TObj *linkbag = nullptr;
     for(StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && *it; it++) {
       TObj *stored = dynamic_cast<TObj*>(*it);
       if (!stored)
         continue;
-      vlogf(LOG_BUG, "Scanning " + sstring(stored->name)); 
+      vlogf(LOG_MISC, "Scanning " + sstring(stored->name)); 
       if (sstring(stored->name).find(fullToken) == sstring::npos)
         continue;
       linkbag = stored;
     }
     if (!linkbag) {
-      me->doTell(ch, "Well that's strange; you don't have a linkbag.  Use the 'report' command for help.");
+      vlogf(LOG_BUG, format("No linkbag found for %s!") % ch->getName());
+      me->doTell(ch, "Well, that's strange!  You don't have a linkbag.");
+      me->doAction("", CMD_SHRUG);
       me->doGive(ch, o); 
       ch->doQueueSave();
       return 0;
@@ -275,16 +273,17 @@ int postmaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj
   }
 }
 
-void TBeing::postmasterSendMail(const char *arg, TMonster *me)
+
+void TBeing::postmasterSendMail(sstring args, TMonster *me)
 {
-  sstring args = arg, item, recipient, talen;
+  sstring item, recipient, talen;
   charFile st;
   bool sendFaction;
-  int i, imm = FALSE, amt, shop_nr=find_shop_nr(me->number);
+  int i, amt, shop_nr = find_shop_nr(me->number);
   float profit_buy = 0;
 
-  if (!*arg) {
-    me->doTell(getName(), "You need to specify an addressee!");
+  if (args.empty()) {
+    me->doTell(this, "You need to specify an addressee!");
     return;
   }
   
@@ -293,56 +292,57 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
   args = one_argument(args, talen);
 
   if (parse_name_sstring(recipient, recipient)) {
-    sendTo("Illegal name, please try another.\n\r");
+    sendTo("That is not a valid recipient name.\n\r");
     return;
   }
+
   recipient = recipient.lower();
-  sendFaction = recipient == "faction";
 
-  if (recipient == "faction" && !load_char(recipient, &st)) {
-    sendTo("No such player to mail to!\n\r");
+  if (recipient == "faction") {
+    sendFaction = true;
+  } else if (!load_char(recipient, &st)) {
+    me->doTell(this, "Sorry, I don't have an address on file for that person!");
     return;
   }
-  imm = isImmortal();
 
+  bool imm = isImmortal();
   for (i = 0;!imm && i < 8; i++)
     if (st.level[i] > MAX_MORT)
       imm = TRUE;
 
-  // let anybody mail to immortals
   if (GetMaxLevel() < MIN_MAIL_LEVEL && !imm) {
-    me->doTell(getName(), format("Sorry, you have to be level %d to send mail!") % MIN_MAIL_LEVEL);
+    me->doTell(this, format("Sorry, you have to be level %d to send mail!") % MIN_MAIL_LEVEL);
     return;
   }
 
   profit_buy = shop_index[shop_nr].getProfitBuy(NULL, this);
 
-  if(sendFaction){
-    if(getFaction() == FACT_NONE){
-      me->doTell(fname(name), "You aren't in a faction!");
+  if (sendFaction) {
+    if (getFaction() == FACT_NONE) {
+      me->doTell(this, "You aren't in a faction!");
       return;
     }
 
     amt = (int)((float)FACTION_STAMP_PRICE * profit_buy);
-
-    if(getMoney() < amt && !imm){
-      me->doTell(fname(name), format("Bulk mailing costs %d talens.") % amt);
-      me->doTell(fname(name), "...which I see you can't afford.");
+    if (getMoney() < amt && !imm) {
+      me->doTell(this, format("Bulk mailing costs %d talens.") % amt);
+      me->doTell(this, "...which I see you can't afford.");
       return;
     }
+
   // sending talens
   } else if (is_abbrev(talen, sstring("talens"))) {
 
     amt = (int)((float)STAMP_PRICE * profit_buy * 2);
     int talen_amt = convertTo<int>(item);
 
-    if (talen_amt < 0) {
-      me->doTell(fname(name), "What?! That's not a monetary amount.");
+    if (talen_amt < 1) {
+      me->doTell(this, "What?! That's not a monetary amount.");
       return;
     }
     if (talen_amt + amt > getMoney()) {
-      me->doTell(fname(name), format("Mailing %d talens plus a stamp costs a total of %d talens.") % talen_amt % (talen_amt + amt));
-      me->doTell(fname(name), "...which I see you can't afford.");
+      me->doTell(this, format("Mailing %d talens plus a stamp costs a total of %d talens.") % talen_amt % (talen_amt + amt));
+      me->doTell(this, "...which I see you can't afford.");
       return;
     }
     desc->mail_talens = max(0, talen_amt);
@@ -353,13 +353,13 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
     TThing *thing = searchLinkedListVis(this, item.c_str(), stuff, NULL, TYPEOBJ);
     TObj *obj = thing ? dynamic_cast<TObj*>(thing) : NULL;
     if (obj == NULL) {
-      me->doTell(fname(name), "I don't see that item on you.");
+      me->doTell(this, "I don't see that item on you.");
       return;
     }
 
     // check for item flags that will stop the deal
     if (!obj->canBeMailed(recipient)) {
-      me->doTell(fname(name), "You can't mail that item!");
+      me->doTell(this, "You can't mail that item!");
       return;
     }
 
@@ -370,8 +370,8 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
 
     // verify they have the money
     if (amt > getMoney() && !imm) {
-      me->doTell(fname(name), format("Mailing this item plus a stamp costs a total of %d talens.") % amt);
-      me->doTell(fname(name), "...which I see you can't afford.");
+      me->doTell(this, format("Mailing this item plus a stamp costs a total of %d talens.") % amt);
+      me->doTell(this, "...which I see you can't afford.");
       return;
     }
 
@@ -381,72 +381,63 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
     amt = (int)((float)STAMP_PRICE * profit_buy);
 
     if (getMoney() < amt && !imm) {
-      me->doTell(fname(name), format("A stamp costs %d talens.") % amt);
-      me->doTell(fname(name), "...which I see you can't afford.");
+      me->doTell(this, format("A stamp costs %d talens.") % amt);
+      me->doTell(this, "...which I see you can't afford.");
       return;
     }
   }
 
   act("$n starts to write some mail.", TRUE, this, 0, 0, TO_ROOM);
   if (!imm) {
-    me->doTell(fname(name), format("I'll take %d talens for the stamp.") % amt);
+    me->doTell(this, format("I'll take %d talens for the stamp.") % amt);
     TShopOwned tso(shop_nr, me, this);
     tso.doBuyTransaction(amt, format("mailing %s") % recipient, TX_BUYING_SERVICE);
   } else if (isImmortal()) {
-    me->doTell(fname(name), "Since you're high and mighty, I'll waive the fee.");
+    me->doTell(this, "Since you're high and mighty, I'll waive the fee.");
   } else {
-    me->doTell(fname(name), "Since you're mailing an immortal, I'll waive the fee.");
+    me->doTell(this, "Since you're mailing an immortal, I'll waive the fee.");
   }
 
-  if (!desc->m_bIsClient) {
-    me->doTell(fname(name), "Write your message, use ~ when done, or ` to cancel.");
-    addPlayerAction(PLR_MAILING);
-    desc->connected = CON_WRITING;
-    strncpy(desc->name, recipient.c_str(), cElements(desc->name));
-
-    desc->edit_str = &desc->mail_edit_str;
-    desc->edit_str_maxlen = MAX_MAIL_SIZE;
-  } else
+  if (desc->m_bIsClient) {
     desc->clientf(format("%d|%s") % CLIENT_MAIL % recipient);
+    return;
+  }
+
+  addPlayerAction(PLR_MAILING);
+  desc->connected = CON_WRITING;
+  strncpy(desc->name, recipient.c_str(), cElements(desc->name));
+  desc->edit_str = &desc->mail_edit_str;
+  desc->edit_str_maxlen = MAX_MAIL_SIZE;
+
+  me->doTell(this, "Write your message, use ~ when done, or ` to cancel.");
 }
 
 
 void TBeing::postmasterCheckMail(TMonster *me)
 {
   sstring recipient;
-
   parse_name_sstring(getName(), recipient);
 
-  recipient = recipient.lower();
-
   if (has_mail(recipient))
-    me->doTell(getName(), "You have mail waiting.");
+    me->doTell(this, "You have mail waiting.");
   else
-    me->doTell(getName(), "Sorry, you don't have any mail waiting.");
-
+    me->doTell(this, "Sorry, you don't have any mail waiting.");
 }
+
 
 void TBeing::postmasterReceiveMail(TMonster *me)
 {
   sstring recipient;
-  TObj *note, *envelope;
-  sstring msg;
-  sstring from;
-
-  if (parse_name_sstring(sstring(getName()), recipient))
-    return;
-
-  recipient = recipient.lower();
+  parse_name_sstring(getName(), recipient);
 
   if (!has_mail(recipient)) {
-    me->doTell(fname(name), "Sorry, you don't have any mail waiting.");
+    me->doTell(this, "Sorry, you don't have any mail waiting.");
     return;
   }
-  while (has_mail(recipient)) {
-    int talens = 0;
-    int rent_id = 0;
-    int env_vnum = 124;
 
+  TObj *note, *envelope;
+
+  while (has_mail(recipient)) {
     // builder port uses stripped down database which was causing problems
     // hence this setup instead.
     int robj = real_object(Obj::GENERIC_NOTE);
@@ -461,21 +452,24 @@ void TBeing::postmasterReceiveMail(TMonster *me)
       return;
     }
 
+    int talens = 0;
+    int rent_id = 0;
+    int env_vnum = 124;
+    sstring from;
+    sstring msg = read_delete(recipient, getName(), from, talens, rent_id);
+
     note->swapToStrung();
     note->name = "letter mail";
     note->shortDescr = "<o>a handwritten <W>letter<1>"; 
     note->setDescr("A wrinkled <W>letter<1> lies here.");
-    msg = read_delete(recipient, getName().c_str(), from, talens, rent_id);
-    note->action_description = msg.c_str();
-    if (note->action_description.empty())
-      note->action_description = "Mail system buggy, please report!!  Error #8.\n\r";
+    note->action_description = msg;
 
     if (talens >= 1000 || rent_id > 0)
       env_vnum = 6600; // crate
 
     int env_robj = real_object(env_vnum);
     if (env_robj < 0 || env_robj >= (signed int) obj_index.size() ||
-      !(envelope = read_object(env_robj, REAL))) {
+        !(envelope = read_object(env_robj, REAL))) {
       vlogf(LOG_BUG, "Couldn't load envelope object!");
       return;
     }
@@ -485,15 +479,13 @@ void TBeing::postmasterReceiveMail(TMonster *me)
 
     *envelope += *note;
 
-    if (talens > 0)
-    {
+    if (talens > 0) {
       vlogf(LOG_OBJ, format("Mail: %s receiving %i talens from %s") %
           getName() % talens % from);
       *envelope += *create_money(talens);
     }
 
-    if (rent_id > 0)
-    {
+    if (rent_id > 0) {
       TObj *obj = NULL;
       int slot = -1;
       ItemLoadDB il("mail", GH_MAIL_SHOP);
@@ -504,14 +496,11 @@ void TBeing::postmasterReceiveMail(TMonster *me)
       db.query("delete from rent_obj_aff where rent_id=%i", rent_id);
       db.query("delete from rent_strung where rent_id=%i", rent_id);
 
-      if (obj)
-      {
+      if (obj) {
         vlogf(LOG_OBJ, format("Mail: retrieved object %s from rent_id:%i from mail for %s from %s") %
           obj->getName() % rent_id % getName() % from);
         *envelope += *obj;
-      }
-      else
-      {
+      } else {
         vlogf(LOG_BUG, format("Mail: error retrieving rent_id:%i from mail for %s from %s") %
           rent_id % getName() % from);
       }
@@ -524,15 +513,14 @@ void TBeing::postmasterReceiveMail(TMonster *me)
   }
 }
 
+
 void autoMail(TBeing *ch, const char *targ, const char *msg, int m, int r)
 {
-  // from field limited to 15 chars by mail structure
-
   if (ch)
-    store_mail(ch->getName().c_str(), SNEEZY_ADMIN, msg, m, r);
+    store_mail(ch->getName(), SNEEZY_ADMIN, msg, m, r);
   else if (targ)
     store_mail(targ, SNEEZY_ADMIN, msg, m, r);
   else
-    vlogf(LOG_BUG, "Error in autoMail");
+    vlogf(LOG_BUG, "No recipient given for autoMail!");
 }
 
