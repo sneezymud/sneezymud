@@ -14,6 +14,8 @@
 #include "obj_open_container.h"
 #include "spec_mobs.h"
 #include "combat.h"
+#include "person.h"
+#include "account.h"
 
 const int MIN_MAIL_LEVEL = 2;
 const int STAMP_PRICE = 50;
@@ -523,5 +525,101 @@ void autoMail(TBeing *ch, const char *targ, const char *msg, int m, int r)
     store_mail(targ, SNEEZY_ADMIN, msg, m, r);
   else
     vlogf(LOG_BUG, "No recipient given for autoMail!");
+}
+
+
+void TBeing::doFeedback(const sstring &type, int clientCmd, const sstring &arg)
+{
+  sendTo("This command is unavailable for you.\n\r");
+}
+
+
+// sends bugs, etc via mudmail using Descriptor::send_feedback
+void TPerson::doFeedback(const sstring &type, int clientCmd, const sstring &arg)
+{
+  sstring subject = arg;
+
+  if (fight()) {
+    sendTo("You cannot perform that action while fighting!\n\r");
+    return;
+  }
+
+  // if the subject is standard (they didnt pass an arg), add in something to identify it
+  if (subject.empty()) {
+    time_t now = time(0);
+    subject = format("%s at %s") % getName() % ctime(&now);
+  }
+
+  subject.inlineReplaceString("\n", "");
+  subject.inlineReplaceString("\r", "");
+  desc->mail_recipient = type + ": " + subject;
+
+  if (!desc->m_bIsClient) {
+    sendTo(format("Write your %s report. Use ~ when done, or ` to cancel.\n\r") % type.lower());
+    addPlayerAction(PLR_BUGGING);
+    desc->connected = CON_WRITING;
+    desc->edit_str = &desc->mail_edit_str;
+    desc->edit_str_maxlen = MAX_MAIL_SIZE;
+  } else {
+    desc->clientf(format("%d") % clientCmd);
+  }
+}
+
+
+namespace {
+  const char FEEDBACK_FROM_ADDRESS[] = "feedback@sneezymud.com";
+  const char FEEDBACK_SENDTO_ADDRESS[] = "mudadmin@sneezymud.com";
+}
+
+// sends appropriate feedback (help, bugs, typos) via email to a feedback forum
+void Descriptor::send_feedback(const sstring &subject, const sstring &body)
+{
+  TBeing *player = (dynamic_cast<TMonster *>(character) && original) ? original : character;
+  sstring message;
+  time_t now = time(0);
+
+  // standard mail header:
+  message += sstring("From: ") + FEEDBACK_FROM_ADDRESS + "\n";
+  message += sstring("To: ") + FEEDBACK_SENDTO_ADDRESS + "\n";
+  message += format("Subject: %s (%s)\n") % subject % player->getName();
+  message += "\n";
+
+  // standard feedback header
+  message += format("Account Name: %s\n") % account->name;
+  message += format("Character Name: %s\n") % player->getName();
+  message += format("Account Email: %s\n") % account->email;
+  message += format("Time: %s") % ctime(&now); // ctime adds a \n
+  message += format("Room: %d\n") % (player->roomp ? player->roomp->number : -1);
+
+  // actual message from user to appear in mail
+  message += "\n";
+  message += body;
+  message.ascify();
+  message.inlineReplaceString("\r\n", "\n");
+  message += "\n";
+
+  // could use vsystem, but we want the file i/o outside this thread as well
+  if (!vfork()) {
+    char tempfile[32];
+    strcpy(tempfile, "/tmp/sneezy_sendmail_XXXXXX.tmp");
+    int tmpfd = mkstemps(tempfile, 4);
+    if (tmpfd < 0) {
+      vlogf(LOG_MISC, format("mkstemps() failed on '%s': %s") % tempfile % strerror(errno));
+      exit(errno);
+    }
+
+    ssize_t out = write(tmpfd, message.c_str(), message.length());
+    if (out == (int)message.length()) {
+      int err = system((format("/usr/sbin/sendmail -t < %s") % tempfile).str().c_str());
+      if (err)
+        vlogf(LOG_MISC, format("Call to sendmail returned nonzero status %d") % err);
+    } else if (out == -1) {
+      vlogf(LOG_MISC, format("Writing sendmail tmpfile failed: %s") % strerror(errno));
+    } else {
+      vlogf(LOG_MISC, "Short write to sendmail tmpfile, full disk?");
+    }
+    unlink(tempfile);
+    exit(0);
+  }
 }
 
