@@ -439,7 +439,7 @@ class Descriptor
     int tot_pages;               // for tracking paged info
     int cur_page;                //       -
     sstring* str;                   // for the modify-str system. Points to the current string being modified.
-    int max_str;
+    int edit_str_maxlen;
     sstring mail_edit_str;
     int mail_talens;
     int prompt_mode;              // control of prompt-printing 

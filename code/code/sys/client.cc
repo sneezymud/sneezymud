@@ -517,7 +517,7 @@ int Descriptor::read_client(char *str2)
       break;
     case CLIENT_CANCELEDIT:
       str = NULL;
-      max_str = 0;
+      edit_str_maxlen = 0;
       connected = CON_PLYNG;
       if (character->isPlayerAction(PLR_MAILING)) 
         character->remPlayerAction(PLR_MAILING);
@@ -595,7 +595,7 @@ int Descriptor::read_client(char *str2)
           }
         }
       }
-      max_str = 0;
+      edit_str_maxlen = 0;
       for (ch = character_list; ch; ch = ch->next) {
         if ((boost::iequals(character->getName(), ch->getName()) &&
             !ch->desc && !dynamic_cast<TMonster *>(ch)) ||
