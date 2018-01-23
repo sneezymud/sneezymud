@@ -83,6 +83,7 @@ tot_pages(0),
 cur_page(0),
 str(NULL),
 max_str(0),
+mail_talens(0),
 prompt_mode(0),
 output(),
 session(),
@@ -95,7 +96,6 @@ original(NULL),
 snoop(),
 next(descriptor_list),
 pagedfile(NULL),
-amount(0),
 obj(NULL),
 mob(NULL),
 bet(),
@@ -140,6 +140,7 @@ wait(a.wait),
 tot_pages(a.tot_pages),
 cur_page(a.cur_page),
 max_str(a.max_str),
+mail_talens(a.mail_talens),
 prompt_mode(a.prompt_mode),
 output(a.output),
 input(a.input),
@@ -152,7 +153,6 @@ account(a.account),
 original(a.original),
 snoop(a.snoop),
 next(descriptor_list),
-amount(a.amount),
 obj(a.obj),
 mob(a.mob),
 bet(a.bet),
@@ -215,6 +215,7 @@ wait = a.wait;
 tot_pages = a.tot_pages;
 cur_page = a.cur_page;
 max_str = a.max_str;
+mail_talens = a.mail_talens;
 prompt_mode = a.prompt_mode;
 output = a.output;
 input = a.input;
@@ -248,7 +249,6 @@ plr_act = a.plr_act;
 plr_color = a.plr_color;
 plr_colorSub = a.plr_colorSub;
 plr_colorOff = a.plr_colorOff;
-amount = a.amount;
 gmcp = a.gmcp;
 
 delete [] showstr_head;
@@ -2066,22 +2066,22 @@ void Descriptor::sstring_add(sstring s)
               character->getName() % obj->getName() % obj->objVnum() % name % rent_id);
           delete obj;
         }
-        if (amount > 0)
+        if (mail_talens > 0)
         {
           vlogf(LOG_OBJ, format("Mail: %s mailing %i talens to %s") %
-              character->getName() % amount % name);
-          character->addToMoney(min(0, -amount), GOLD_XFER);
+              character->getName() % mail_talens % name);
+          character->addToMoney(min(0, -mail_talens), GOLD_XFER);
         }
-        store_mail(name, character->getName().c_str(), str->c_str(), amount, rent_id);
+        store_mail(name, character->getName().c_str(), str->c_str(), mail_talens, rent_id);
       }
 
       *str = "";
       str = NULL;
 
-      // clear amount, object, name
+      // reset buffer info
       obj = NULL;
       *(name) = '\0';
-      amount = 0;
+      mail_talens= 0;
 
       writeToQ(terminator ? "Message sent!\n\r" : "Message deleted!\n\r");
       character->remPlayerAction(PLR_MAILING);

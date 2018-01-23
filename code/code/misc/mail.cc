@@ -361,7 +361,7 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
       me->doTell(fname(name), "...which I see you can't afford.");
       return;
     }
-    desc->amount = max(0, talen_amt);
+    desc->mail_talens = max(0, talen_amt);
 
   // sending item
   } else if (item.length() > 0) {
