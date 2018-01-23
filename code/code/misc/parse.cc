@@ -901,9 +901,6 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
   doWho(newarg.c_str());
   addToLifeforce(1);
   break;
-      case CMD_BRUTTEST:
-  doBruttest(newarg.c_str());
-  break;
       case CMD_PEELPK:
   doPeelPk(newarg.c_str());
   break;
@@ -2800,7 +2797,6 @@ void buildCommandArray(void)
   commandArray[CMD_RAISE] = new commandInfo("raise", POSITION_RESTING,0);
   commandArray[CMD_ROLL] = new commandInfo("roll", POSITION_RESTING,0);
   commandArray[CMD_BLINK] = new commandInfo("blink", POSITION_RESTING,0);
-  commandArray[CMD_BRUTTEST]=new commandInfo("bruttest",POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_HOSTLOG]=new commandInfo("hostlog",POSITION_DEAD,GOD_LEVEL1);
   commandArray[CMD_PRESS] = new commandInfo("press",POSITION_SITTING,0);
   commandArray[CMD_TWIST] = new commandInfo("twist",POSITION_SITTING,0);
