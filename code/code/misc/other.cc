@@ -1501,15 +1501,13 @@ void TPerson::doFeedback(const sstring &type, int clientCmd, const sstring &arg)
 {
   sstring subject = arg;
 
-  if (fight())
-  {
+  if (fight()) {
     sendTo("You cannot perform that action while fighting!\n\r");
     return;
   }
 
   // if the subject is standard (they didnt pass an arg), add in something to identify it
-  if (subject.length() <= 0)
-  {
+  if (subject.empty()) {
     time_t now = time(0);
     subject = format("%s at %s") % getName() % ctime(&now);
   }
@@ -1518,16 +1516,13 @@ void TPerson::doFeedback(const sstring &type, int clientCmd, const sstring &arg)
   subject.inlineReplaceString("\r", "");
   strncpy(desc->name, ((sstring)(format("%s: %s") % type % subject)).c_str(), cElements(desc->name));
 
-  if (!desc->m_bIsClient)
-  {
+  if (!desc->m_bIsClient) {
     sendTo(format("Write your %s report. Use ~ when done, or ` to cancel.\n\r") % type.lower());
     addPlayerAction(PLR_BUGGING);
     desc->connected = CON_WRITING;
-    desc->str = &desc->mail_bug_str;
+    desc->str = &desc->mail_edit_str;
     desc->max_str = MAX_MAIL_SIZE;
-  }
-  else
-  {
+  } else {
     desc->clientf(format("%d") % clientCmd);
   }
 }
