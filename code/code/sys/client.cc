@@ -435,16 +435,12 @@ int Descriptor::read_client(char *str2)
     }
     case CLIENT_IDEA:
     case CLIENT_TYPO:
-    case CLIENT_BUG: {
-
-      sstring buffer = str2;
-      buffer.inlineReplaceString("^", "\r\n");
-      send_feedback(name, buffer.c_str());
-
-      character->sendTo("Thanks for the report. It will be looked at soon!\n\r");
-      character->sendTo("If necessary, a mudmail will be sent to you to inform you of any changes or possible explanations.\n\r");
+    case CLIENT_BUG:
+      send_feedback(name, sstring(str2).replaceString("^", "\r\n"));
+      character->sendTo("Thanks for the report. It will be looked at soon!\n\r"
+          "If necessary, a mudmail will be sent to you to inform you of any changes\n\r"
+          "or possible explanations.\n\r");
       break;
-    }
 
     case CLIENT_MAIL: {
       char buffer[10000];
