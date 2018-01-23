@@ -1893,7 +1893,7 @@ void Descriptor::sstring_add(sstring s)
 
         return;
       }
-      writeToQ(format("Write your %s, use ~ when done, or ` to cancel.\n\r") % sstring(name).uncap());
+      writeToQ(format("Write your %s, use ~ when done, or ` to cancel.\n\r") % mail_recipient.uncap());
       *edit_str += s;
     } else {
       // body of idea
@@ -1905,36 +1905,29 @@ void Descriptor::sstring_add(sstring s)
   }
   if (terminator || t2) {
     if (character->isPlayerAction(PLR_MAILING)) {
-      if (ignored.isMailIgnored(this, name))
-      {
-        vlogf(LOG_OBJ, format("Mail: mail sent by %s was ignored by %s.") % character->getName() % name);
-      }
-      else if (terminator)
-      {
+      if (ignored.isMailIgnored(this, mail_recipient)) {
+        vlogf(LOG_OBJ, format("Mail: mail sent by %s was ignored by %s.") % character->getName() % mail_recipient);
+      } else if (terminator) {
         int rent_id = 0;
-        if (obj && obj->canBeMailed(name))
-        {
+        if (obj && obj->canBeMailed(mail_recipient)) {
           ItemSaveDB is("mail", GH_MAIL_SHOP);
           rent_id = is.raw_write_item(obj, -1 , 0);
           vlogf(LOG_OBJ, format("Mail: %s mailing %s (vnum:%i) to %s rented as rent_id:%i") %
-              character->getName() % obj->getName() % obj->objVnum() % name % rent_id);
+              character->getName() % obj->getName() % obj->objVnum() % mail_recipient % rent_id);
           delete obj;
         }
-        if (mail_talens > 0)
-        {
+        if (mail_talens > 0) {
           vlogf(LOG_OBJ, format("Mail: %s mailing %i talens to %s") %
-              character->getName() % mail_talens % name);
+              character->getName() % mail_talens % mail_recipient);
           character->addToMoney(min(0, -mail_talens), GOLD_XFER);
         }
-        store_mail(name, character->getName().c_str(), edit_str->c_str(), mail_talens, rent_id);
+        store_mail(mail_recipient, character->getName(), *edit_str, mail_talens, rent_id);
       }
 
       *edit_str = "";
       edit_str = NULL;
-
-      // reset buffer info
       obj = NULL;
-      *(name) = '\0';
+      mail_recipient = "";
       mail_talens= 0;
 
       writeToQ(terminator ? "Message sent!\n\r" : "Message deleted!\n\r");
@@ -1946,19 +1939,19 @@ void Descriptor::sstring_add(sstring s)
         if (t == "")
           writeToQ("Blank message entered.  Ignoring!\n\r");
         else {
-          if (!strcmp(name, "Comment"))
+          if (mail_recipient ==  "Comment")
             add_comment(delname, t.c_str());
           else
-            send_feedback(name, t);
-          writeToQ(name);
+            send_feedback(mail_recipient, t);
+          writeToQ(mail_recipient);
           writeToQ(" sent!\n\r");
         }
       } else {
-        writeToQ(name);
+        writeToQ(mail_recipient);
         writeToQ(" deleted!\n\r");
       }
-      *(name) = '\0';
 
+      mail_recipient = "";
       *edit_str = "";
       edit_str = NULL;
 

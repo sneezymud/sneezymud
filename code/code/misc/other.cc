@@ -1514,7 +1514,7 @@ void TPerson::doFeedback(const sstring &type, int clientCmd, const sstring &arg)
 
   subject.inlineReplaceString("\n", "");
   subject.inlineReplaceString("\r", "");
-  strncpy(desc->name, ((sstring)(format("%s: %s") % type % subject)).c_str(), cElements(desc->name));
+  desc->mail_recipient = type + ": " + subject;
 
   if (!desc->m_bIsClient) {
     sendTo(format("Write your %s report. Use ~ when done, or ` to cancel.\n\r") % type.lower());

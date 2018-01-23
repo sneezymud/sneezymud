@@ -405,7 +405,7 @@ void TBeing::postmasterSendMail(sstring args, TMonster *me)
 
   addPlayerAction(PLR_MAILING);
   desc->connected = CON_WRITING;
-  strncpy(desc->name, recipient.c_str(), cElements(desc->name));
+  desc->mail_recipient = recipient;
   desc->edit_str = &desc->mail_edit_str;
   desc->edit_str_maxlen = MAX_MAIL_SIZE;
 
