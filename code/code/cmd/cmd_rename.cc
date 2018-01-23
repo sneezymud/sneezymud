@@ -236,7 +236,7 @@ void TBeing::doDescription()
   descr = "";
   desc->connected = CON_WRITING;
   desc->str = &descr;
-  desc->max_str = 500;
+  desc->edit_str_maxlen = 500;
 #if 0
   if (desc->m_bIsClient)
     desc->clientf(format("%d|%d") % CLIENT_STARTEDIT % 500);

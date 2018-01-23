@@ -297,7 +297,7 @@ void TPerson::doEdit(const char *arg)
   switch (field) {
     case  1: // Description
       desc->str = &roomp->descr;
-      desc->max_str = MAX_STRING_LENGTH;
+      desc->edit_str_maxlen = MAX_STRING_LENGTH;
 #if 0
 // as is, this will cause it to send the descr as a "bug"
       if (desc->m_bIsClient) {
@@ -629,7 +629,7 @@ void TPerson::doEdit(const char *arg)
           }
           return;
         }
-      desc->max_str = MAX_STRING_LENGTH;
+      desc->edit_str_maxlen = MAX_STRING_LENGTH;
       return;
     case  5: // Flags
       int j;
@@ -1387,7 +1387,7 @@ void TPerson::doEdit(const char *arg)
     sendTo(format("Enter str.  Terminate with '~' on %s.\n\r") %
            ((field == 1 || field == 2) ? "NEW LINE" : "SAME LINE"));
     *desc->str = 0;
-    desc->max_str = room_length[field - 1];
+    desc->edit_str_maxlen = room_length[field - 1];
   }
 }
 
@@ -1700,7 +1700,7 @@ static void ChangeRoomDesc(TRoom *rp, TBeing *ch, const char *, editorEnterTypeT
   ch->sendTo("(Terminate with a ~ on a NEW LINE. Press <C/R> again to continue)\n\r");
   rp->setDescr("");
   ch->desc->str = &rp->descr;
-  ch->desc->max_str = MAX_STRING_LENGTH;
+  ch->desc->edit_str_maxlen = MAX_STRING_LENGTH;
 }
 
 static void ChangeRoomType(TRoom *rp, TBeing *ch, const char *arg, editorEnterTypeT type)
@@ -2876,7 +2876,7 @@ static void change_room_extra(TRoom *rp, TBeing *ch, const char *arg, editorEnte
         return;
       }
     }
-    ch->desc->max_str = MAX_STRING_LENGTH;
+    ch->desc->edit_str_maxlen = MAX_STRING_LENGTH;
     return;
   }
   ch->sendTo("Existing keywords:\n\r");

@@ -802,7 +802,7 @@ void TPerson::doOEdit(const char *argument)
       if (desc->m_bIsClient)
         desc->clientf(format("%d") % CLIENT_STARTEDIT % 4000);
       *desc->str = NULL;
-      desc->max_str = MAX_INPUT_LENGTH;
+      desc->edit_str_maxlen = MAX_INPUT_LENGTH;
       return;
       break;
     case 17: // Can Be Seen
@@ -1021,7 +1021,7 @@ static void change_obj_long_desc(TBeing *ch, TObj *o, editorEnterTypeT type)
   ch->sendTo("(Terminate with a ~ on the SAME LINE. Press <ENTER> again to continue)\n\r");
   o->setDescr("");
   ch->desc->str = &o->descr;
-  ch->desc->max_str = MAX_STRING_LENGTH;
+  ch->desc->edit_str_maxlen = MAX_STRING_LENGTH;
 }
 
 static void change_obj_weight(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
@@ -1096,8 +1096,8 @@ static void change_obj_short_desc(TBeing *ch, TObj *o, editorEnterTypeT type)
   ch->sendTo("(Terminate with a ~ on the SAME LINE. Press <ENTER> again to continue)\n\r");
   o->shortDescr = "";
   ch->desc->str = &o->shortDescr;
-//  ch->desc->max_str = MAX_STRING_LENGTH;
-  ch->desc->max_str = MAX_NAME_LENGTH-1;
+//  ch->desc->edit_str_maxlen = MAX_STRING_LENGTH;
+  ch->desc->edit_str_maxlen = MAX_NAME_LENGTH-1;
 }
 
 static void change_obj_type(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
@@ -1895,7 +1895,7 @@ static void change_obj_extra(TBeing *ch, TObj *o, const char *arg, editorEnterTy
 	return;
       }
     }
-    ch->desc->max_str = MAX_STRING_LENGTH;
+    ch->desc->edit_str_maxlen = MAX_STRING_LENGTH;
     return;
   }
   ch->sendTo("Existing keywords:\n\r");

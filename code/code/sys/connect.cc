@@ -82,7 +82,7 @@ showstr_head(NULL),
 tot_pages(0),
 cur_page(0),
 str(NULL),
-max_str(0),
+edit_str_maxlen(0),
 mail_talens(0),
 prompt_mode(0),
 output(),
@@ -139,7 +139,7 @@ connected(a.connected),
 wait(a.wait),
 tot_pages(a.tot_pages),
 cur_page(a.cur_page),
-max_str(a.max_str),
+edit_str_maxlen(a.edit_str_maxlen),
 mail_talens(a.mail_talens),
 prompt_mode(a.prompt_mode),
 output(a.output),
@@ -214,7 +214,7 @@ connected = a.connected;
 wait = a.wait;
 tot_pages = a.tot_pages;
 cur_page = a.cur_page;
-max_str = a.max_str;
+edit_str_maxlen = a.edit_str_maxlen;
 mail_talens = a.mail_talens;
 prompt_mode = a.prompt_mode;
 output = a.output;
