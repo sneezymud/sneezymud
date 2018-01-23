@@ -14,19 +14,10 @@
 #include "obj_open_container.h"
 #include "spec_mobs.h"
 #include "combat.h"
-#include "configuration.h"
 
 // may not exceed NAME_SIZE (15) chars
 static const char * const SNEEZY_ADMIN = "SneezyMUD Administration";
 
-int mail_ok(TBeing *ch)
-{
-  if (Config::NoMail()){
-    ch->sendTo("Sorry, the mail system is having technical difficulties.\n\r");
-    return FALSE;
-  }
-  return TRUE;
-}
 
 bool TObj::canBeMailed(sstring name) const
 {
@@ -107,9 +98,6 @@ void postmasterValue(TBeing *ch, TBeing *postmaster, const char *arg)
   sstring args = arg, item, talen;
   int shop_nr = find_shop_nr(postmaster->number);
   float profit_buy = shop_index[shop_nr].getProfitBuy(NULL, ch);
-
-  if (!mail_ok(ch))
-    return;
 
   args = one_argument(args, item);
   args = one_argument(args, talen);
@@ -295,10 +283,6 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
   int i, imm = FALSE, amt, shop_nr=find_shop_nr(me->number);
   float profit_buy = 0;
 
-// added this check - bat
-  if (!mail_ok(this))
-    return;
-
   if (!*arg) {
     me->doTell(getName(), "You need to specify an addressee!");
     return;
@@ -433,10 +417,6 @@ void TBeing::postmasterCheckMail(TMonster *me)
 
   parse_name_sstring(getName(), recipient);
 
-// added this check - bat
-  if (!mail_ok(this))
-    return;
-
   recipient = recipient.lower();
 
   if (has_mail(recipient))
@@ -454,10 +434,6 @@ void TBeing::postmasterReceiveMail(TMonster *me)
   sstring from;
 
   if (parse_name_sstring(sstring(getName()), recipient))
-    return;
-
-  // added this check - bat
-  if (!mail_ok(this))
     return;
 
   recipient = recipient.lower();
