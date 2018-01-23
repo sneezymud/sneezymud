@@ -519,7 +519,7 @@ int Descriptor::read_client(char *str2)
       }
       break;
     case CLIENT_CANCELEDIT:
-      str = NULL;
+      edit_str = NULL;
       edit_str_maxlen = 0;
       connected = CON_PLYNG;
       if (character->isPlayerAction(PLR_MAILING)) 

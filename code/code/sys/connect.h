@@ -438,7 +438,7 @@ class Descriptor
     char *showstr_head;           // for paging through texts  
     int tot_pages;               // for tracking paged info
     int cur_page;                //       -
-    sstring* str;                   // for the modify-str system. Points to the current string being modified.
+    sstring* edit_str;                   // for the modify-str system. Points to the current string being modified.
     int edit_str_maxlen;
     sstring mail_edit_str;
     int mail_talens;
@@ -548,7 +548,7 @@ class Descriptor
     int move(int, int);
     void add_comment(const char *, const char *);
     void send_feedback(const char *subject, const char *msg);
-    void cleanUpStr();
+    void cleanUpEditStr();
     void beep() {
       writeToQ("");
     }
