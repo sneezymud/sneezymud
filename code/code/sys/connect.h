@@ -427,6 +427,7 @@ class Descriptor
     sstring* edit_str;                   // for the modify-str system. Points to the current string being modified.
     int edit_str_maxlen;
     sstring mail_edit_str;
+    sstring mail_recipient;
     int mail_talens;
     int prompt_mode;              // control of prompt-printing 
     char m_raw[4096];               // buffer for raw input    
@@ -446,7 +447,6 @@ class Descriptor
     snoopData snoop;              // to snoop people           
     Descriptor *next;             // link to next descriptor    
     char *pagedfile;              // what file is getting paged 
-    char name[80];                // dummy field (idea, bug, mail use it)
     TObj *obj;                    // for object editor
     TMonster *mob;                // for monster editor 
     std::map<sstring, sstring> alias; // aliases for players

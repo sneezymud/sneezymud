@@ -6353,7 +6353,7 @@ void TBeing::doComment(const char *argument)
 
   addPlayerAction(PLR_BUGGING);
   desc->connected = CON_WRITING;
-  strcpy(desc->name, "Comment");
+  desc->mail_recipient = "Comment";
   strcpy(desc->delname, st.aname);
 
   desc->edit_str = &desc->mail_edit_str;
