@@ -146,7 +146,7 @@ int TBeing::doPTell(const char *arg, bool visible){
 
   sstring garbed = garble(vict, message, Garble::SPEECH_TELL);
 
-  rc = vict->triggerSpecialOnPerson(this, CMD_OBJ_TOLD_TO_PLAYER, garbed.c_str());
+  rc = vict->triggerSpecialOnPerson(this, CMD_OBJ_TOLD_TO_PLAYER, garbed);
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     delete vict;
     vict = NULL;

@@ -586,7 +586,7 @@ class TBeing : public TThing {
     int numClasses() const;
 
     int triggerSpecial(TThing *, cmdTypeT cmd, const char *arg); 
-    int triggerSpecialOnPerson(TThing *, cmdTypeT cmd, const char *arg); 
+    int triggerSpecialOnPerson(TThing *, cmdTypeT cmd, const sstring &arg); 
     void sendCastingMessages(bool, bool, int, skillUseTypeT, int);
     void sendFinalCastingMessages(bool, bool, skillUseTypeT);
 
