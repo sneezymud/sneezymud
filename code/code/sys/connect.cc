@@ -81,7 +81,7 @@ wait(1),
 showstr_head(NULL),
 tot_pages(0),
 cur_page(0),
-str(NULL),
+edit_str(NULL),
 edit_str_maxlen(0),
 mail_talens(0),
 prompt_mode(0),
@@ -403,7 +403,7 @@ if (socket->m_sock == maxdesc)
   --maxdesc;
 
 // clear up any editing sstrings
-cleanUpStr();
+cleanUpEditStr();
 
 // Forget snoopers
 if (snoop.snooping)
@@ -564,22 +564,23 @@ character->setInvisLevel(GOD_LEVEL1);
   delete obj;
 }
 
-void Descriptor::cleanUpStr()
+void Descriptor::cleanUpEditStr()
 {
-  if (str) {
-    if (character && 
-          (character->isPlayerAction(PLR_MAILING) ||
-           character->isPlayerAction(PLR_BUGGING))) {
-      *str = "";
-      str = NULL;
-    } else if (character &&
-                  (connected == CON_WRITING ||
-                   connected == CON_REDITING ||
-                   connected == CON_OEDITING ||
-                   connected == CON_MEDITING)) {
-      // the str is attached to the mob/obj/room, so this is OK
-    } else
-      vlogf(LOG_BUG, "Descriptor::cleanUpStr(): Probable memory leak");
+  if (!edit_str)
+    return;
+
+  if (character && 
+        (character->isPlayerAction(PLR_MAILING) ||
+         character->isPlayerAction(PLR_BUGGING))) {
+    *edit_str = "";
+    edit_str = NULL;
+  } else if (!(character &&
+               (connected == CON_WRITING ||
+                connected == CON_REDITING ||
+                connected == CON_OEDITING ||
+                connected == CON_MEDITING))) {
+    // edit_str set but not editing??
+    vlogf(LOG_BUG, "Descriptor::cleanUpEditStr(): Probable memory leak");
   }
 }
 
@@ -1885,13 +1886,13 @@ void Descriptor::sstring_add(sstring s)
 
 
   if (character->isPlayerAction(PLR_BUGGING)) {
-    if (str->empty()) {
+    if (edit_str->empty()) {
       // we are on the first line
       s = s.trim();
 
       if (s.empty()) {
         writeToQ("Blank lines entered.  Ignoring!\n\r");
-        str = NULL;
+        edit_str = NULL;
 
         character->remPlayerAction(PLR_BUGGING);
 
@@ -1904,14 +1905,14 @@ void Descriptor::sstring_add(sstring s)
         return;
       }
       writeToQ(format("Write your %s, use ~ when done, or ` to cancel.\n\r") % sstring(name).uncap());
-      *str += s;
+      *edit_str += s;
     } else {
       // body of idea
-      *str += s;
+      *edit_str += s;
     }
   } else {
     // not a bug/idea
-    *str += word_wrap(s);
+    *edit_str += word_wrap(s);
   }
   if (terminator || t2) {
     if (character->isPlayerAction(PLR_MAILING)) {
@@ -1936,11 +1937,11 @@ void Descriptor::sstring_add(sstring s)
               character->getName() % mail_talens % name);
           character->addToMoney(min(0, -mail_talens), GOLD_XFER);
         }
-        store_mail(name, character->getName().c_str(), str->c_str(), mail_talens, rent_id);
+        store_mail(name, character->getName().c_str(), edit_str->c_str(), mail_talens, rent_id);
       }
 
-      *str = "";
-      str = NULL;
+      *edit_str = "";
+      edit_str = NULL;
 
       // reset buffer info
       obj = NULL;
@@ -1951,7 +1952,7 @@ void Descriptor::sstring_add(sstring s)
       character->remPlayerAction(PLR_MAILING);
     } else if (character->isPlayerAction(PLR_BUGGING)) {
       if (terminator) {
-        sstring t = str->trim();
+        sstring t = edit_str->trim();
 
         if (t == "")
           writeToQ("Blank message entered.  Ignoring!\n\r");
@@ -1969,28 +1970,28 @@ void Descriptor::sstring_add(sstring s)
       }
       *(name) = '\0';
 
-      *str = "";
-      str = NULL;
+      *edit_str = "";
+      edit_str = NULL;
 
       character->remPlayerAction(PLR_BUGGING);
     } else {
       if (t2) {
-        // Cancalation capability added by Russ 020997
-        *str = "";
+        // Cancellation capability added by Russ 020997
+        *edit_str = "";
       }
-      str = NULL;
+      edit_str = NULL;
 
     }
     if (connected == CON_WRITING) {
       connected = CON_PLYNG;
     }
     // set the sstring to NULL to insure we don't fall into sstring_add again
-    str = NULL;
+    edit_str = NULL;
 
     if (m_bIsClient)
       clientf(format("%d|%d") % CLIENT_ENABLEWINDOW % FALSE);
   } else {
-    *str += "\n\r";
+    *edit_str += "\n\r";
   }
 }
 
@@ -2229,7 +2230,7 @@ void setPrompts(fd_set out)
 	}
       }
 
-      if (d->str && (d->prompt_mode != DONT_SEND)) {
+      if (d->edit_str && (d->prompt_mode != DONT_SEND)) {
 	d->output.push(CommPtr(new UncategorizedComm("-> ")));
       } else if (d->pagedfile && (d->prompt_mode != DONT_SEND)) {
         sprintf(promptbuf, "\n\r[ %sReturn%s to continue, %s(r)%sefresh, %s(b)%sack, page %s(%d/%d)%s, or %sany other key%s to quit ]\n\r", 
@@ -2592,11 +2593,11 @@ void processAllInput()
           d->character = NULL;
           continue;
         }
-      } else if (d->str) 
+      } else if (d->edit_str) {
         d->sstring_add(comm);
-      else if (d->pagedfile) 
+      } else if (d->pagedfile)  {
         d->page_file(comm);
-      else if (!d->account) {            // NO ACCOUNT
+      } else if (!d->account) {            // NO ACCOUNT
         if (d->m_bIsClient) {
           rc = d->client_nanny(comm);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {

@@ -620,7 +620,7 @@ static void change_mob_short_desc(TBeing *ch, TMonster *mob, editorEnterTypeT ty
   ch->sendTo("This helps us keep the things sent to character formatted nicely.\n\r");
   ch->sendTo("Terminate with a ~ ON THE SAME LINE. Press <ENTER> again to continue.\n\r");
   mob->shortDescr = "";
-  ch->desc->str = &mob->shortDescr;
+  ch->desc->edit_str = &mob->shortDescr;
   ch->desc->edit_str_maxlen = MAX_NAME_LENGTH-1;
 }
 
@@ -637,7 +637,7 @@ static void change_mob_long_desc(TBeing *ch, TMonster *mob, editorEnterTypeT typ
   ch->sendTo(format("%s") % mob->getLongDesc());
   ch->sendTo("\n\r\n\rNew mob long description:\n\r");
   ch->sendTo("Terminate with a ~ ON A SEPERATE LINE. ` on a separate line erases the current long description. Press <ENTER> again to continue.\n\r");
-  ch->desc->str = &mob->player.longDescr;
+  ch->desc->edit_str = &mob->player.longDescr;
   ch->desc->edit_str_maxlen = MAX_STRING_LENGTH;
 }
 
@@ -654,7 +654,7 @@ static void change_mob_desc(TBeing *ch, TMonster *mob, editorEnterTypeT type)
   ch->sendTo(format("%s") % mob->getDescr());
   ch->sendTo("\n\r\n\rNew mob description:\n\r");
   ch->sendTo("Terminate with a ~. ` on a separate line erases the current description. Press <ENTER> again to continue.\n\r");
-  ch->desc->str = &mob->descr;
+  ch->desc->edit_str = &mob->descr;
   ch->desc->edit_str_maxlen = MAX_STRING_LENGTH;
 }
 
@@ -1940,7 +1940,7 @@ static void change_mob_sounds(TBeing *ch, TMonster *mob, const char *arg, editor
         ch->sendTo(format("%s") % mob->sounds);
         ch->sendTo("\n\r\n\rNew room sound:\n\r");
         ch->sendTo("Terminate with a ~ ON A NEW LINE. Press <ENTER> again to continue.\n\r");
-        ch->desc->str = &mob->sounds;
+        ch->desc->edit_str = &mob->sounds;
         ch->desc->edit_str_maxlen = MAX_STRING_LENGTH;
         return;
       case 2:
@@ -1950,7 +1950,7 @@ static void change_mob_sounds(TBeing *ch, TMonster *mob, const char *arg, editor
         ch->sendTo("\n\r\n\rNew distant sound:\n\r");
         ch->sendTo("Terminate with a ~ ON A NEW LINE. Press <ENTER> again to continue.\n\r");
         mob->distantSnds = "";
-        ch->desc->str = &mob->distantSnds;
+        ch->desc->edit_str = &mob->distantSnds;
         ch->desc->edit_str_maxlen = MAX_STRING_LENGTH;
         return;
     }
@@ -2244,7 +2244,7 @@ void TPerson::doMedit(const char *argument)
         cMob->descr = "";
       }
       sendTo("Enter new description, terminate with '~' on a new line.\n\r");
-      desc->str = &cMob->descr;
+      desc->edit_str = &cMob->descr;
       desc->edit_str_maxlen = MAX_STRING_LENGTH;
       return;
       break;
@@ -2476,7 +2476,7 @@ void TPerson::doMedit(const char *argument)
         cMob->sounds = "";
       }
       sendTo("Enter Room Sound, terminate with a '~' on a NEW line.\n\r");
-      desc->str = &cMob->sounds;
+      desc->edit_str = &cMob->sounds;
       desc->edit_str_maxlen = MAX_STRING_LENGTH;
       return;
       break;
@@ -2486,7 +2486,7 @@ void TPerson::doMedit(const char *argument)
         cMob->distantSnds = "";
       }
       sendTo("Enter Distant Room Sound, terminate with a '~' on a NEW line.\n\r");
-      desc->str = &cMob->distantSnds;
+      desc->edit_str = &cMob->distantSnds;
       desc->edit_str_maxlen = MAX_STRING_LENGTH;
       return;
       break;

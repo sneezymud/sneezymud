@@ -6356,7 +6356,7 @@ void TBeing::doComment(const char *argument)
   strcpy(desc->name, "Comment");
   strcpy(desc->delname, st.aname);
 
-  desc->str = &desc->mail_edit_str;
+  desc->edit_str = &desc->mail_edit_str;
 
   desc->edit_str_maxlen = MAX_MAIL_SIZE;
   if (desc->m_bIsClient)

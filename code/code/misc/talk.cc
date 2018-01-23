@@ -1128,7 +1128,7 @@ void TNote::writeMeNote(TBeing *ch, TPen *)
 #endif
 
     ch->desc->connected = CON_WRITING;
-    ch->desc->str = &action_description;
+    ch->desc->edit_str = &action_description;
     ch->desc->edit_str_maxlen = MAX_NOTE_LENGTH;
   }
 }
