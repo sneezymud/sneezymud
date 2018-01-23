@@ -1949,7 +1949,7 @@ void Descriptor::sstring_add(sstring s)
           if (!strcmp(name, "Comment"))
             add_comment(delname, t.c_str());
           else
-            send_feedback(name, t.c_str());
+            send_feedback(name, t);
           writeToQ(name);
           writeToQ(" sent!\n\r");
         }
