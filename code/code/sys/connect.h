@@ -440,7 +440,7 @@ class Descriptor
     int cur_page;                //       -
     sstring* str;                   // for the modify-str system. Points to the current string being modified.
     int max_str;
-    sstring mail_bug_str;
+    sstring mail_edit_str;
     int mail_talens;
     int prompt_mode;              // control of prompt-printing 
     char m_raw[4096];               // buffer for raw input    

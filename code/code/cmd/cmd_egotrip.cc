@@ -247,7 +247,7 @@ void TBeing::doEgoTrip(const char *arg)
 
   sstring argument, sarg = arg, restarg;
   restarg = one_argument(sarg, argument);
-  if (!argument.length()) {
+  if (argument.empty()) {
     sendTo(badsyn);
     return;
   }
