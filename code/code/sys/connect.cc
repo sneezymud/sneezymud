@@ -68,7 +68,6 @@ static const char * const WELC_MESSG = "\n\rWelcome to SneezyMUD 5.2! May your j
 
 Descriptor::Descriptor(TSocket *s) :
     socket(s),
-    edit(),
     connected(CON_CREATION_START),
     wait(1),
     showstr_head(NULL),
@@ -3889,23 +3888,6 @@ bool illegalEmail(char *buf, Descriptor *desc, silentTypeT silent)
   }
 
   return FALSE;
-}
-
-editStuff::editStuff()
-  : x(1), y(1),
-    bottom(0), end(0), lines(NULL)
-{
-}
-
-editStuff::editStuff(const editStuff &a)
-  : x(a.x), y(a.y),
-    bottom(a.bottom), end(a.end)
-{
-  lines = a.lines;  // not positive this is correct
-}
-
-editStuff::~editStuff()
-{
 }
 
 careerData::careerData()
