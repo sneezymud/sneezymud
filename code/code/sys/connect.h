@@ -75,7 +75,6 @@ enum connectStateT {
        CON_RETPWD,
        CON_DELCHAR,
        CON_ACTDELCNF,
-       CON_EDITTING,
        CON_TIME,
        CON_CHARDELCNF,
        CON_WIZLOCKNEW,
@@ -122,18 +121,6 @@ class TAccount;
 class TPerson;
 class TSocket;
 
-class editStuff
-{
-  public:
-    int x, y;        // Current x andy position on the screen for cursor
-    int bottom, end; // Bottom of text, and end of current line
-    char **lines;    // Keeps up with text typed in
-
-    editStuff();
-    editStuff(const editStuff &a);
-    ~editStuff();
-};
-    
 class careerData
 {
   public:
@@ -430,7 +417,6 @@ class Descriptor
 {
   public:
     TSocket *socket;
-    editStuff edit;
     sstring host;                 // hostname
     char pwd[12];                 // password                   
     connectStateT connected;                // mode of 'connectedness'    
@@ -509,8 +495,6 @@ class Descriptor
     int doAccountStuff(char *);
     int clientCreateAccount(char *);
     int clientCreateChar(char *);
-    bool isEditing();
-    void Edit(char *);
     void deleteAccount();
     void menuWho();
     void saveAccount();
@@ -542,7 +526,6 @@ class Descriptor
     void sendShout(TBeing *, const sstring &);
     void updateScreenAnsi(unsigned int update);
     void updateScreenVt100(unsigned int update);
-    int move(int, int);
     void add_comment(const char *, const char *);
     void send_feedback(const char *subject, const char *msg);
     void cleanUpEditStr();
