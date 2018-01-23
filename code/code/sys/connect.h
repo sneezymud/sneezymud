@@ -527,7 +527,7 @@ class Descriptor
     void updateScreenAnsi(unsigned int update);
     void updateScreenVt100(unsigned int update);
     void add_comment(const char *, const char *);
-    void send_feedback(const char *subject, const char *msg);
+    void send_feedback(const sstring &, const sstring &);
     void cleanUpEditStr();
     void beep() {
       writeToQ("");

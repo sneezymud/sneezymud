@@ -4142,7 +4142,7 @@ namespace {
 }
 
 // sends appropriate feedback (help, bugs, typos) via email to a feedback forum
-void Descriptor::send_feedback(const char *subject, const char *msg)
+void Descriptor::send_feedback(const sstring &subject, const sstring &body)
 {
   static int tempInc = 0;
   TBeing *player = (dynamic_cast<TMonster *>(character) && original) ? original : character;
@@ -4164,7 +4164,7 @@ void Descriptor::send_feedback(const char *subject, const char *msg)
 
   // actual message from user to appear in mail
   message += "\n";
-  message += msg;
+  message += body;
   message.ascify();
   message.inlineReplaceString("\r\n", "\n");
   message += "\n";
