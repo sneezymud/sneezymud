@@ -496,8 +496,6 @@ class Descriptor
     Descriptor();  // prevent default constructor from being used
   public:
     Descriptor(TSocket *);
-    Descriptor(const Descriptor &);
-    Descriptor & operator=(const Descriptor &a);
     ~Descriptor();
 
     void sendGmcp(const sstring& msg, bool strip); // we want stripping in room names, for simple searching, but no stripping in comm
