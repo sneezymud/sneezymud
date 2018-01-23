@@ -66,76 +66,67 @@ const char * const MUD_NAME      = "SneezyMUD";
 const char * const MUD_NAME_VERS = "SneezyMUD v5.2 " VERSION;
 static const char * const WELC_MESSG = "\n\rWelcome to SneezyMUD 5.2! May your journeys be bloody!\n\r\n\r";
 
-Descriptor::Descriptor() :
-ignored(this)
-{
-// this guy is private to prevent being called
-// just need to init member vars that are appropriate
-}
-
 Descriptor::Descriptor(TSocket *s) :
-socket(s),
-edit(),
-connected(CON_CREATION_START),
-wait(1),
-showstr_head(NULL),
-tot_pages(0),
-cur_page(0),
-edit_str(NULL),
-edit_str_maxlen(0),
-mail_talens(0),
-prompt_mode(0),
-output(),
-session(),
-career(),
-autobits(0),
-playerID(0),
-character(NULL),
-account(NULL),
-original(NULL),
-snoop(),
-next(descriptor_list),
-pagedfile(NULL),
-obj(NULL),
-mob(NULL),
-bet(),
-bet_opt(),
-screen_size(24),
-point_roll(0),
-talkCount(time(0)),
-m_bIsClient(FALSE),
-bad_login(0),
-severity(0),
-office(0),
-blockastart(0),
-blockaend(0),
-blockbstart(0),
-blockbend(0),
-last(),
-deckSize(0),
-prompt_d(),
-plr_act(0),
-plr_color(0),
-plr_colorSub(COLOR_SUB_NONE),
-plr_colorOff(0),
-ignored(this),
-gmcp(false)
+    socket(s),
+    edit(),
+    connected(CON_CREATION_START),
+    wait(1),
+    showstr_head(NULL),
+    tot_pages(0),
+    cur_page(0),
+    edit_str(NULL),
+    edit_str_maxlen(0),
+    mail_talens(0),
+    prompt_mode(0),
+    output(),
+    session(),
+    career(),
+    autobits(0),
+    playerID(0),
+    character(NULL),
+    account(NULL),
+    original(NULL),
+    snoop(),
+    next(descriptor_list),
+    pagedfile(NULL),
+    obj(NULL),
+    mob(NULL),
+    bet(),
+    bet_opt(),
+    screen_size(24),
+    point_roll(0),
+    talkCount(time(0)),
+    m_bIsClient(FALSE),
+    bad_login(0),
+    severity(0),
+    office(0),
+    blockastart(0),
+    blockaend(0),
+    blockbstart(0),
+    blockbend(0),
+    last(),
+    deckSize(0),
+    prompt_d(),
+    plr_act(0),
+    plr_color(0),
+    plr_colorSub(COLOR_SUB_NONE),
+    plr_colorOff(0),
+    ignored(this),
+    gmcp(false)
 {
-int i;
-
-*m_raw = '\0';
-*delname = '\0';
-
-for (i = 0; i < HISTORY_SIZE; i++)
-  *history[i] = '\0';
-
-descriptor_list = this;
+    *m_raw = '\0';
+    *delname = '\0';
+    descriptor_list = this;
+    for (auto entry : history)
+        *entry = '\0';
 }
 
 // returns TRUE if multiplay is detected
 bool Descriptor::checkForMultiplay()
 {
-if(Config::CheckMultiplay()){
+  if (!Config::CheckMultiplay())
+      return FALSE;
+
   TBeing *ch;
   unsigned int total = 1;
   Descriptor *d;
@@ -307,9 +298,8 @@ if (!(tChar = oChar))
   return FALSE;
     }
   }
-}
-
-return FALSE;
+  // actual end of checkForMultiplay
+  return FALSE;
 }
 
 sstring SnoopComm::getText(){

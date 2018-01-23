@@ -491,9 +491,6 @@ class Descriptor
     std::string mudclient;
     std::string clientversion;
 
-    // Functions
-  private:
-    Descriptor();  // prevent default constructor from being used
   public:
     Descriptor(TSocket *);
     ~Descriptor();
