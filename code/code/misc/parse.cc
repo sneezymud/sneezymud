@@ -454,18 +454,18 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
   addToLifeforce(1);
   break;
       case CMD_REQUEST:
-  doFeedback("REQUEST", CLIENT_STARTEDIT, argument);
+  doFeedback("requests", CLIENT_STARTEDIT, argument);
   break;
       case CMD_BUG:
-  doFeedback("BUG", CLIENT_BUG, newarg);
+  doFeedback("bugs", CLIENT_BUG, newarg);
   addToLifeforce(1);
   break;
       case CMD_IDEA:
-  doFeedback("IDEA", CLIENT_IDEA, newarg);
+  doFeedback("ideas", CLIENT_IDEA, newarg);
   addToLifeforce(1);
   break;
       case CMD_TYPO:
-  doFeedback("TYPO", CLIENT_TYPO, newarg);
+  doFeedback("typos", CLIENT_TYPO, newarg);
   addToLifeforce(1);
   break;
       case CMD_NORTH:

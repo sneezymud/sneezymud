@@ -46,9 +46,6 @@ class File {
   static const char * const MOTD;
   static const char * const WIZMOTD;
   static const char * const TIME;
-  static const char * const IDEA;
-  static const char * const TYPO;
-  static const char * const BUG;
   static const char * const SOCMESS;
   static const char * const HELP_PAGE;
   static const char * const WIZLIST;

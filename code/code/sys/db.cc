@@ -158,15 +158,12 @@ int faction_number = 0;
 int fixed_chance = 5;
 
 
-const char * const File::BUG       = "txt/bugs";      /*         'bug'      */
 const char * const File::CREDITS   = "txt/credits";   /* for the credits command */
 const char * const File::HELP_PAGE = "help/general";  /* for HELP <CR> */
-const char * const File::IDEA      = "txt/ideas"; /* for the 'idea'-command */
 const char * const File::MOTD      = "txt/motd";      /* messages of today */
 const char * const File::NEWS      = "txt/news";  /* for the 'news' command */
 const char * const File::SIGN_MESS = "txt/currentmess";
 const char * const File::SOCMESS   = "actions"; /* messgs for social acts     */
-const char * const File::TYPO      = "txt/typos";     /*         'typo'     */
 const char * const File::WIZLIST   = "txt/wizlist";   /* for WIZLIST   */
 const char * const File::WIZMOTD   = "txt/wizmotd";   /* MOTD for immorts */
 const char * const File::WIZNEWS   = "txt/wiznews";
