@@ -1521,7 +1521,7 @@ void TPerson::doFeedback(const sstring &type, int clientCmd, const sstring &arg)
     addPlayerAction(PLR_BUGGING);
     desc->connected = CON_WRITING;
     desc->str = &desc->mail_edit_str;
-    desc->max_str = MAX_MAIL_SIZE;
+    desc->edit_str_maxlen = MAX_MAIL_SIZE;
   } else {
     desc->clientf(format("%d") % clientCmd);
   }
