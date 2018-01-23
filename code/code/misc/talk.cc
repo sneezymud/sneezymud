@@ -712,16 +712,20 @@ int TBeing::doSign(const sstring &arg)
 }
 
 
-sstring TellFromComm::getText(){
-  return format("<p>%s<z> tells you, \"<c>%s<z>\"\n\r") %
-    from % text;
+sstring TellFromComm::getText()
+{
+  return format("<p>%s<z> tells you, \"<c>%s<z>\"\n\r") % from % text;
 }
 
-sstring TellToComm::getText(){
+
+sstring TellToComm::getText()
+{
   return format("<G>You tell %s<z>, \"%s\"\n\r") % to % text;
 }
 
-TBeing *findTellTarget(TBeing *me, const sstring &name, bool visible, bool mobs){
+
+TBeing *findTellTarget(TBeing *me, const sstring &name, bool visible, bool mobs)
+{
   TBeing *vict;
 
   if (!(vict = get_pc_world(me, name, EXACT_YES, INFRA_NO, visible)))
@@ -733,69 +737,78 @@ TBeing *findTellTarget(TBeing *me, const sstring &name, bool visible, bool mobs)
 }
 
 
-// returns DELETE_THIS on death of this
-// triggerSpecOnPerson prevents this from being constant
+TBeing *findAccountAlternate(TBeing *me, const sstring &name, bool visible)
+{
+    TBeing *vict;
+    TDatabase db(DB_SNEEZY);
+    db.query("select p1.name as name from player p1, player p2, account a where p2.name='%s' and a.account_id=p2.account_id and p1.account_id=a.account_id", name);
+    while (db.fetchRow())
+        if ((vict=findTellTarget(me, db["name"], visible, false)))
+            return vict;
+    return nullptr;
+}
+
+
 int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
 {
   TBeing *vict;
+
+  if (!(vict=findTellTarget(this, name, visible, true))) {
+    sendTo(CommPtr(new CmdMsgComm("tell", format("You fail to tell to '%s'\n\r") % name)));
+    if (isImmortal() && (vict=findAccountAlternate(this, name, visible)))
+      sendTo(CommPtr(new CmdMsgComm("tell", format("The player '%s' is logged in under the same account.\n\r") % vict->getName())));
+    return FALSE;
+  }
+
+  return doTell(vict, message, visible);
+}
+
+
+// returns DELETE_THIS on death of this
+// triggerSpecOnPerson prevents this from being constant
+int TBeing::doTell(TBeing *vict, const sstring &message, bool visible)
+{
   sstring capbuf;
   int rc;
+
+  if (visible && !canSee(vict, INFRA_NO)) {
+    sendTo(CommPtr(new CmdMsgComm("tell", format("You fail to tell to '%s'\n\r") % name)));
+    return FALSE;
+  }
 
   if (isAffected(AFF_SILENT)) {
     sendTo(CommPtr(new CmdMsgComm("tell", "You can't make a sound!\n\r")));
     act("$n waves $s hands and points silently toward $s mouth.", TRUE, this, 0, 0, TO_ROOM);
     return FALSE;
   }
+
   if (!isImmortal() && applySoundproof())
     return FALSE;
 
-
   if (isDumbAnimal()) {
-    if(desc)
+    if (desc)
       desc->output.push(CommPtr(new CmdMsgComm("tell", "You are a dumb animal; you can't talk!\n\r")));
     return FALSE;
   }
+
   if (isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL)) {
-    if(desc)
+    if (desc)
       desc->output.push(CommPtr(new CmdMsgComm("tell", "What a dumb master you have, charmed mobiles can't tell.\n\r")));
     return FALSE;
   }
 
-  if(name.empty() || message.empty()){
-    if(desc)
+  if (name.empty() || message.empty()) {
+    if (desc)
       desc->output.push(CommPtr(new CmdMsgComm("tell", "Whom do you wish to tell what??\n\r")));
     return FALSE;
-  } else {
-    if(!(vict=findTellTarget(this, name, visible, true))){
-      if(isImmortal()){
-	TDatabase db(DB_SNEEZY);
-	db.query("select p1.name as name from player p1, player p2, account a where p2.name='%s' and a.account_id=p2.account_id and p1.account_id=a.account_id", name.c_str());
-
-	while(db.fetchRow()){
-	  if((vict=findTellTarget(this, db["name"], visible, false))){
-	    break;
-	  }
-	}
-      }
-
-      sendTo(CommPtr(new CmdMsgComm("tell", 
-				    format("You fail to tell to '%s'\n\r") % name)));
-
-      // if vict isn't NULL here, it means we found another player logged in
-      // under the same account
-      if(vict){
-	sendTo(CommPtr(new CmdMsgComm("tell", format("The player '%s' is logged in under the same account.\n\r") % vict->getName())));
-      }
-
-      return FALSE;
-    }
   }
 
   if (isPlayerAction(PLR_GODNOSHOUT) && (vict->GetMaxLevel() <= MAX_MORT)) {
-    if(desc)
-      desc->output.push(CommPtr(new CmdMsgComm("tell", "You have been sanctioned by the gods and can't tell to them!!\n\r")));
+    if (desc)
+      desc->output.push(CommPtr(new CmdMsgComm("tell", "You have been sanctioned by the gods and they refuse to hear you!\n\r")));
     return FALSE;
   }
+
   if (this == vict) {
     sendTo(CommPtr(new CmdMsgComm("tell", "You try to tell yourself something.\n\r")));
     return FALSE;
@@ -806,68 +819,65 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
   if (!isImmortal() && vict->desc && 
       IS_SET(vict->desc->autobits, AUTO_NOTELL) && 
       strcmp(vict->desc->last_told, this->name.c_str()) != 0) {
-    if(desc)
+    if (desc)
       desc->output.push(CommPtr(new CmdMsgComm("tell", "That person is not receiving tells. Try again later.\n\r")));
     return FALSE;
   }
-
-  if(hasQuestBit(TOG_IS_MUTE) && (!vict->isImmortal() || !vict->isPc())){
-    if(desc)
+  if (hasQuestBit(TOG_IS_MUTE) && (!vict->isImmortal() || !vict->isPc())) {
+    if (desc)
       desc->output.push(CommPtr(new CmdMsgComm("tell", "You're mute, you can't talk.\n\r")));
     return FALSE;
   }
-  
   if ((vict->getPosition() == POSITION_SLEEPING) && !isImmortal()) {
-    if(desc)
+    if (desc)
       desc->output.push(CommPtr(new CmdMsgComm("tell", format("%s is asleep, shhh.") %
 					       ((sstring)(canSee(vict) ? vict->hssh() : "it")).cap())));
     return FALSE;
   }
   if (vict->getPosition() <= POSITION_STUNNED) { // Russ 01/06/95
-    if(desc)
+    if (desc)
       desc->output.push(CommPtr(new CmdMsgComm("tell", format("%s is stunned or wounded badly and can't hear your tells!.") %
 					       ((sstring)(canSee(vict) ? vict->hssh() : "it")).cap())));
     return FALSE;
   }
   if (dynamic_cast<TMonster *>(vict) && !(vict->desc)) {
-    if(desc)
+    if (desc)
       desc->output.push(CommPtr(new CmdMsgComm("tell", "No-one by that name here.\n\r")));
     return FALSE;
   }
   if (!vict->desc) {
-    if(desc)
+    if (desc)
       desc->output.push(CommPtr(new CmdMsgComm("tell", format("%s can't hear you.") %
 					       ((sstring)(canSee(vict) ? vict->hssh() : "it")).cap())));
     return FALSE;
   }
   if (vict->desc->connected) {
-    if(desc)
+    if (desc)
       desc->output.push(CommPtr(new CmdMsgComm("tell", format("%s is editing or writing. Try again later.") %
 					       ((sstring)(canSee(vict) ? vict->hssh() : "it")).cap())));
     return FALSE;
   }
   if (!vict->desc->connected && vict->isPlayerAction(PLR_MAILING)) {
-    if(desc)
+    if (desc)
       desc->output.push(CommPtr(new CmdMsgComm("tell", "They are mailing. Try again later.\n\r")));
     return FALSE;
   }
   if (!vict->desc->connected && vict->isPlayerAction(PLR_BUGGING)) {
-    if(desc)
+    if (desc)
       desc->output.push(CommPtr(new CmdMsgComm("tell", "They are critiquing the mud.  Try again later.\n\r")));
     return FALSE;
   }
   if (vict->checkSoundproof() && !isImmortal()) {
-    if(desc)
+    if (desc)
       desc->output.push(CommPtr(new CmdMsgComm("tell", "Your words don't reach them; must be in a silent zone.\n\r")));
     return FALSE;
   }
 
   int drunkNum = getCond(DRUNK);
-  sstring garbed;
-  garbed = garble(vict, message, Garble::SPEECH_TELL);
+  sstring garbed = garble(vict, message, Garble::SPEECH_TELL);
 
-  if(vict->isImmortal() && drunkNum>0)
-    garbed=message;
+  if (vict->isImmortal() && drunkNum > 0)
+    garbed = message;
 
   rc = vict->triggerSpecialOnPerson(this, CMD_OBJ_TOLD_TO_PLAYER, garbed);
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -897,7 +907,7 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
   // the stuff we send to the teller.
   garbed.convertStringColor("<c>");
 
-  CommPtr cptr((vict->isImmortal() && drunkNum>0)
+  CommPtr cptr((vict->isImmortal() && drunkNum > 0)
 	       ? new TellFromComm(vict->getName(), capbuf.cap(), garbed, true, !isPc())
 	       : new TellFromComm(vict->getName(), capbuf.cap(), garbed, false, !isPc()));
 
