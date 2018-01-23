@@ -439,8 +439,9 @@ class Descriptor
     int tot_pages;               // for tracking paged info
     int cur_page;                //       -
     sstring* str;                   // for the modify-str system. Points to the current string being modified.
-    sstring mail_bug_str;
     int max_str;
+    sstring mail_bug_str;
+    int mail_talens;
     int prompt_mode;              // control of prompt-printing 
     char m_raw[4096];               // buffer for raw input    
     std::queue<CommPtr> output;                 // q of sstrings to send
@@ -460,7 +461,6 @@ class Descriptor
     Descriptor *next;             // link to next descriptor    
     char *pagedfile;              // what file is getting paged 
     char name[80];                // dummy field (idea, bug, mail use it)
-    int amount;                   // dummy field (mail uses it)
     TObj *obj;                    // for object editor
     TMonster *mob;                // for monster editor 
     std::map<sstring, sstring> alias; // aliases for players
