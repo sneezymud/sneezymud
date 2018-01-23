@@ -1520,7 +1520,7 @@ void TPerson::doFeedback(const sstring &type, int clientCmd, const sstring &arg)
     sendTo(format("Write your %s report. Use ~ when done, or ` to cancel.\n\r") % type.lower());
     addPlayerAction(PLR_BUGGING);
     desc->connected = CON_WRITING;
-    desc->str = &desc->mail_edit_str;
+    desc->edit_str = &desc->mail_edit_str;
     desc->edit_str_maxlen = MAX_MAIL_SIZE;
   } else {
     desc->clientf(format("%d") % clientCmd);
