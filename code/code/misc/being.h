@@ -1792,7 +1792,6 @@ class TBeing : public TThing {
     bool isOrderAllowed(const char *);
     virtual int doQuit2() = 0;
     void doQuit();
-    void doBruttest(const char *);
     int doMove(cmdTypeT);
     int doMove(dirTypeT);
     int doSay(const char *fmt, ...);
