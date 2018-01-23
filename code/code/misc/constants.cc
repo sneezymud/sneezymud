@@ -1762,6 +1762,7 @@ const char * const illegalnames[] =
   "all",      // "group all"
   "unknown",   // Log messages use this sometimes
   "share",   // group needs this
+  "faction",  // alias to mail all faction members
 
   // MAJOR CHARACTERS
   "logrus",
