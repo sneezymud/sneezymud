@@ -2288,8 +2288,9 @@ sstring add_bars(const sstring &s){
 
 
 // returns DELETE_THIS, DELETE_VICT, TRUE or FALSE
-int TBeing::triggerSpecialOnPerson(TThing *ch, cmdTypeT cmd, const char *arg)
+int TBeing::triggerSpecialOnPerson(TThing *ch, cmdTypeT cmd, const sstring &argument)
 {
+  char *arg = argument.c_str()
   wearSlotT j;
   int rc;
   TThing *t;
