@@ -473,27 +473,26 @@ int Descriptor::read_client(char *str2)
       }
       buffer[j] = '\0';
 
-      if (obj && obj->canBeMailed(sstring(name)))
-      {
+      if (obj && obj->canBeMailed(sstring(name))) {
         ItemSaveDB is("mail", GH_MAIL_SHOP);
         rent_id = is.raw_write_item(obj, -1 /*NORMAL_SLOT*/, 0);
         vlogf(LOG_OBJ, format("Mail: %s mailing %s (vnum:%i) to %s rented as rent_id:%i") %
           character->getName() % obj->getName() % obj->objVnum() % name % rent_id);
         delete obj;
       }
-      if (amount > 0)
-      {
+
+      if (mail_talens > 0) {
         vlogf(LOG_OBJ, format("Mail: %s mailing %i talens to %s") %
-          character->getName() % amount % name);
-        character->addToMoney(min(0, -amount), GOLD_XFER);
+          character->getName() % mail_talens % name);
+        character->addToMoney(min(0, -mail_talens), GOLD_XFER);
       }
 
-      store_mail(name, character->getName().c_str(), buffer, amount, rent_id);
+      store_mail(name, character->getName().c_str(), buffer, mail_talens, rent_id);
 
       // clear amount, object, name
       obj = NULL;
       *(name) = '\0';
-      amount = 0;
+      mail_talens = 0;
 
       break;
     }
