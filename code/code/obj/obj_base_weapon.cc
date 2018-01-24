@@ -292,12 +292,12 @@ int TBaseWeapon::sharpenerValueMe(const TBeing *ch, TMonster *me) const
   int cost;
 
   if (getCurSharp() == getMaxSharp()) {
-    me->doTell(ch->getName(), "This weapon is perfectly ok!");
+    me->doTell(ch, "This weapon is perfectly ok!");
     return TRUE;
   }
   cost = sharpenPrice();
 
-  me->doTell(ch->getName(), format("It will cost %d talens to totally %s your %s.") %
+  me->doTell(ch, format("It will cost %d talens to totally %s your %s.") %
 	     cost % (isBluntWeapon() ? "dull" : "sharpen") %
 	     fname(name));
   return TRUE;
@@ -310,7 +310,7 @@ int TBaseWeapon::sharpenerGiveMe(TBeing *ch, TMonster *me)
   sharp_struct *job;
 
   if (getCurSharp() == getMaxSharp()) {
-    me->doTell(ch->getName(), "That item is perfectly ok!");
+    me->doTell(ch, "That item is perfectly ok!");
     strcpy(buf, name.c_str());
     strcpy(buf, add_bars(buf).c_str());
     sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
@@ -320,7 +320,7 @@ int TBaseWeapon::sharpenerGiveMe(TBeing *ch, TMonster *me)
   cost = sharpenPrice();
 
   if (ch->getMoney() < cost) {
-    me->doTell(ch->getName(), "I have to make a living! If you don't have the talens , I don't do the work!");
+    me->doTell(ch, "I have to make a living! If you don't have the talens , I don't do the work!");
     strcpy(buf, name.c_str());
     strcpy(buf, add_bars(buf).c_str());
     sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());

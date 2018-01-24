@@ -178,7 +178,7 @@ int TOrganic::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   }
   // Make sure it's an item we buy.
   if (!shop_index[shop_nr].willBuy(this)) {
-    keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
+    keeper->doTell(ch, shop_index[shop_nr].do_not_buy);
     return -1;
   }
   nocName = getNameNOC(ch);
@@ -186,14 +186,14 @@ int TOrganic::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   if (getUnits() > 0) {
     if (num > getUnits()) {
       num = getUnits();
-      keeper->doTell(ch->getName(), format("I don't have that much of %s.  Here's the %d that I do have.") % nocName % num);
+      keeper->doTell(ch, format("I don't have that much of %s.  Here's the %d that I do have.") % nocName % num);
     }
   }
   // cost_per = pricePerUnit();
   price = shopPrice(num, shop_nr, -1, ch);
   vnum = objVnum();
   if (ch->getMoney() < price) {
-    keeper->doTell(ch->name, shop_index[shop_nr].missing_cash2);
+    keeper->doTell(ch, shop_index[shop_nr].missing_cash2);
 
     switch (shop_index[shop_nr].temper1) {
       case 0:
@@ -237,12 +237,12 @@ int TOrganic::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
       obj2->setWeight(nWeight);
       obj2->obj_flags.cost = nCost;
       *ch += *obj2;
-      keeper->doTell(ch->getName(), format("Here ya go.  That's %d unit%s of %s for %d talen%s.") % num % (num > 1 ? "s" : "") % nocName % price % (price > 1 ? "s" : ""));
+      keeper->doTell(ch, format("Here ya go.  That's %d unit%s of %s for %d talen%s.") % num % (num > 1 ? "s" : "") % nocName % price % (price > 1 ? "s" : ""));
       act("$n buys $p.", TRUE, ch, obj2, keeper, TO_NOTVICT);
     } else {
       // Must not have been a unit item, just give them the item in question.
       *ch += *this;
-      keeper->doTell(ch->getName(), "Here ya go.  Thanks for shopping with us.");
+      keeper->doTell(ch, "Here ya go.  Thanks for shopping with us.");
       act("$n buys $p.", TRUE, ch, this, keeper, TO_NOTVICT);
     }
 
@@ -289,9 +289,9 @@ static void sellReducePrice(const TBeing *ch, TBeing *keeper, const TOrganic *ob
 {
   if (obj2 && obj2->getUnits() >= 100) {
     int bnCost = max(1, (int) (price/4));
-    keeper->doTell(ch->getName(), "Well it would seem I have a surplus of that hide...");
+    keeper->doTell(ch, "Well it would seem I have a surplus of that hide...");
     if (bnCost != price) {
-      keeper->doTell(ch->getName(), "Afraid I can not pay you full price for it.");
+      keeper->doTell(ch, "Afraid I can not pay you full price for it.");
       price = bnCost;
     }
   }
@@ -327,11 +327,11 @@ int TOrganic::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   if (will_not_buy(ch, keeper, this, shop_nr))
     return false;
   if (!shop_index[shop_nr].willBuy(this)) {
-    keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
+    keeper->doTell(ch, shop_index[shop_nr].do_not_buy);
     return false;
   }
   if (keeper->getMoney() < price) {
-    keeper->doTell(ch->getName(), shop_index[shop_nr].missing_cash1);
+    keeper->doTell(ch, shop_index[shop_nr].missing_cash1);
     return false;
   }
   // See if the shop keeper already has one of these items.
@@ -348,7 +348,7 @@ int TOrganic::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
     }
   }
   if (found >= 20) {
-    keeper->doTell(ch->getName(), "I'm afraid I already have too many of those, sorry.");
+    keeper->doTell(ch, "I'm afraid I already have too many of those, sorry.");
     return false;
   }
   if (getUnits() > 0) {
@@ -395,7 +395,7 @@ int TOrganic::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
 
     keeper->giveMoney(ch, price, GOLD_COMM);
 
-    keeper->doTell(ch->getName(), format("Thanks, here's your %d talen%s.") %
+    keeper->doTell(ch, format("Thanks, here's your %d talen%s.") %
 		   price % (price > 1 ? "s" : ""));
     act("$n sells $p.", TRUE, ch, this, 0, TO_ROOM);
     if (ch->isAffected(AFF_GROUP) && ch->desc &&
@@ -432,7 +432,7 @@ void TOrganic::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
     price = sellPrice(1, shop_nr, -1, ch);
 
   if (!shop_index[shop_nr].willBuy(this)) {
-    keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
+    keeper->doTell(ch, shop_index[shop_nr].do_not_buy);
     return;
   }
 
@@ -448,7 +448,7 @@ void TOrganic::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   sellReducePrice(ch, keeper, obj2, price);
 
 
-  keeper->doTell(ch->getName(), format("Hmm, I'd give you %d talen%s for that.") %
+  keeper->doTell(ch, format("Hmm, I'd give you %d talen%s for that.") %
 		 price % (price > 1 ? "s" : ""));
 }
 

@@ -116,7 +116,7 @@ sstring TNote::statObjInfo() const
 
 int TNote::objectSell(TBeing *ch, TMonster *keeper)
 {
-  keeper->doTell(ch->getName(), "I'm sorry, I don't buy back notes.");
+  keeper->doTell(ch, "I'm sorry, I don't buy back notes.");
   return TRUE;
 }
 

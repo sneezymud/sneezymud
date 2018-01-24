@@ -115,7 +115,7 @@ void auctionList(TBeing *ch, TMonster *myself)
   db.query("select ticket, current_bid, days, buyout from shopownedauction where shop_nr=%i and seller=%i", shop_nr, ch->getPlayerID());
   
   if(db.fetchRow()){
-    myself->doTell(ch->getName(), "These are your auctions:");
+    myself->doTell(ch, "These are your auctions:");
   
     do {
       ticket=convertTo<int>(db["ticket"]);
@@ -140,7 +140,7 @@ void auctionList(TBeing *ch, TMonster *myself)
   db.query("select ticket, current_bid from shopownedauction where shop_nr=%i and bidder=%i and days <= 0", shop_nr, ch->getPlayerID());
   
   if(db.fetchRow()){
-    myself->doTell(ch->getName(), "These are the items you've won:");
+    myself->doTell(ch, "These are the items you've won:");
   
     do {
       ticket=convertTo<int>(db["ticket"]);
@@ -163,7 +163,7 @@ void auctionList(TBeing *ch, TMonster *myself)
   db.query("select ticket, current_bid, days, buyout from shopownedauction where shop_nr=%i and days>0", shop_nr);
   
   if(db.fetchRow()){
-    myself->doTell(ch->getName(), "This is what I have up for auction:");
+    myself->doTell(ch, "This is what I have up for auction:");
 
     do {
       ticket=convertTo<int>(db["ticket"]);
@@ -182,7 +182,7 @@ void auctionList(TBeing *ch, TMonster *myself)
     } while(db.fetchRow());
 
   } else
-    myself->doTell(ch->getName(), "I don't have anything up for auction right now");
+    myself->doTell(ch, "I don't have anything up for auction right now");
 }
 
 
@@ -202,22 +202,22 @@ void auctionSell(TBeing *ch, TMonster *myself, sstring arg)
   int buyout=convertTo<int>(arg.word(3));
 
   if(min_bid <= 0 || days <= 0 || (buyout && buyout < min_bid)){
-    myself->doTell(ch->getName(), "Usage: sell <item> <minimum bid> <mud days to run auction> <buyout bid>");
-    myself->doTell(ch->getName(), "");
-    myself->doTell(ch->getName(), format("There is a listing fee of %i talens per mud day, as well as a fee of %f percent of the final sale price, if the item sells.") %
+    myself->doTell(ch, "Usage: sell <item> <minimum bid> <mud days to run auction> <buyout bid>");
+    myself->doTell(ch, "");
+    myself->doTell(ch, format("There is a listing fee of %i talens per mud day, as well as a fee of %f percent of the final sale price, if the item sells.") %
 		   (int)shop_index[shop_nr].getProfitBuy(NULL, ch) %
 		   (shop_index[shop_nr].getProfitSell(NULL, ch) * 100));
-    myself->doTell(ch->getName(), "The proceeds will be automatically deposited to your bank account when the buyer pays for the item.");
+    myself->doTell(ch, "The proceeds will be automatically deposited to your bank account when the buyer pays for the item.");
     return;
   }
 
   // find the object
   if(!(obj=generic_find_obj(name, FIND_OBJ_INV, ch))){
-    myself->doTell(ch->getName(), "You don't have that!");
+    myself->doTell(ch, "You don't have that!");
     return;
   }
   if (!(shop_index[shop_nr].willBuy(obj))) {
-    myself->doTell(ch->name, shop_index[shop_nr].do_not_buy);
+    myself->doTell(ch, shop_index[shop_nr].do_not_buy);
     return;
   }
   if (will_not_buy(ch, myself, obj, shop_nr)) 
@@ -230,7 +230,7 @@ void auctionSell(TBeing *ch, TMonster *myself, sstring arg)
 
   if(!db.fetchRow()){
     TRoom *tr=real_roomp(shop_index[corp.getBank()].in_room);
-    myself->doTell(ch->getName(), format("You need to have a bank account at %s in order to sell items here.") % tr->getName());
+    myself->doTell(ch, format("You need to have a bank account at %s in order to sell items here.") % tr->getName());
     return;
   }
 
@@ -260,7 +260,7 @@ void auctionSell(TBeing *ch, TMonster *myself, sstring arg)
 
   delete obj;
   
-  myself->doTell(ch->getName(), "Your item has been placed on the auction block.");
+  myself->doTell(ch, "Your item has been placed on the auction block.");
 }
 
 void auctionBuy(TBeing *ch, TMonster *myself, sstring arg)
@@ -273,14 +273,14 @@ void auctionBuy(TBeing *ch, TMonster *myself, sstring arg)
   TCorporation corp(tso.getCorpID());
 
   if(!ticket){
-    myself->doTell(ch->getName(), "That isn't a valid item number.");
+    myself->doTell(ch, "That isn't a valid item number.");
     return;
   }
 
   db.query("select current_bid, bidder, days from shopownedauction where shop_nr=%i and ticket=%i", shop_nr, ticket);
   
   if(!db.fetchRow()){
-    myself->doTell(ch->getName(), "That isn't a valid item number.");
+    myself->doTell(ch, "That isn't a valid item number.");
     return;
   }
   
@@ -290,11 +290,11 @@ void auctionBuy(TBeing *ch, TMonster *myself, sstring arg)
   fee=(int)((float)bid * shop_index[shop_nr].getProfitSell(NULL, ch));
 
   if(days > 0){
-    myself->doTell(ch->getName(), "That auction isn't over yet.");
+    myself->doTell(ch, "That auction isn't over yet.");
   } else if(bidder != ch->getPlayerID()){
-    myself->doTell(ch->getName(), "You didn't win that auction.");
+    myself->doTell(ch, "You didn't win that auction.");
   } else if(ch->getMoney() < bid){
-    myself->doTell(ch->getName(), "You can't afford to pay for that item.");
+    myself->doTell(ch, "You can't afford to pay for that item.");
   } else {
     ItemLoad il;
 
@@ -312,7 +312,7 @@ void auctionBuy(TBeing *ch, TMonster *myself, sstring arg)
     
 
     *ch += *obj;
-    myself->doTell(ch->getName(), format("That'll be %i talens.") % bid);
+    myself->doTell(ch, format("That'll be %i talens.") % bid);
     ch->sendTo(COLOR_BASIC, format("You now have %s.") % obj->getName());
     
     db.query("delete from shopownedauction where ticket=%i", ticket);
@@ -329,14 +329,14 @@ void auctionBid(TBeing *ch, TMonster *myself, sstring arg)
   int shop_nr=find_shop_nr(myself->number);
 
   if(!ticket){
-    myself->doTell(ch->getName(), "Make a bid on what item?");
+    myself->doTell(ch, "Make a bid on what item?");
     return;
   }
 
   db.query("select seller, bidder, current_bid, max_bid, buyout from shopownedauction where ticket=%i", ticket);
 
   if(!db.fetchRow()){
-    myself->doTell(ch->getName(), "I don't have that item.");
+    myself->doTell(ch, "I don't have that item.");
     return;
   }
 
@@ -347,36 +347,36 @@ void auctionBid(TBeing *ch, TMonster *myself, sstring arg)
   seller=convertTo<int>(db["seller"]);
 
   if(my_bid >= buyout){
-    myself->doTell(ch->getName(), "Congratulations, you've won the auction.");
+    myself->doTell(ch, "Congratulations, you've won the auction.");
     db.query("update shopownedauction set days=0, current_bid=%i, bidder=%i where ticket=%i",
 	     my_bid, ch->getPlayerID(), ticket);
     shoplog(shop_nr, ch, myself, format("ticket %i, bid %i") % ticket % my_bid, 
 	    0, "buyout");
     endAuction(ticket, ch->getPlayerID(), seller);
   } else  if((bidder == ch->getPlayerID()) && my_bid < max_bid){
-    myself->doTell(ch->getName(), "You're already the high bidder!");
-    myself->doTell(ch->getName(), "Your bid must be greater than your previous max bid if you want to increase it.");
+    myself->doTell(ch, "You're already the high bidder!");
+    myself->doTell(ch, "Your bid must be greater than your previous max bid if you want to increase it.");
   } else if(bidder == ch->getPlayerID()){
-    myself->doTell(ch->getName(), "You're already the high bidder!");
-    myself->doTell(ch->getName(), "Your max bid has been increased.");
+    myself->doTell(ch, "You're already the high bidder!");
+    myself->doTell(ch, "Your max bid has been increased.");
     db.query("update shopownedauction set max_bid=%i where ticket=%i",
 	     my_bid, ticket);
     shoplog(shop_nr, ch, myself, "max bid increased", 0, format("%i talens") % 
 	    my_bid);
   } else if(my_bid <= current_bid){
-    myself->doTell(ch->getName(), "That bid is less than the current bid!");
+    myself->doTell(ch, "That bid is less than the current bid!");
   } else if(my_bid == max_bid){
-    myself->doTell(ch->getName(), "You've been outbidded.");
+    myself->doTell(ch, "You've been outbidded.");
     db.query("update shopownedauction set current_bid=%i where ticket=%i", 
 	     my_bid, ticket);
     shoplog(shop_nr, ch,myself, "outbidded", 0, format("%i talens") % my_bid);
   } else if(my_bid < max_bid){
-    myself->doTell(ch->getName(), "You've been outbidded.");
+    myself->doTell(ch, "You've been outbidded.");
     db.query("update shopownedauction set current_bid=%i where ticket=%i", 
 	     my_bid+1, ticket);
     shoplog(shop_nr, ch,myself, "outbidded", 0, format("%i talens") % (my_bid+1));
   } else {
-    myself->doTell(ch->getName(), "Congratulations, you're the high bidder.");
+    myself->doTell(ch, "Congratulations, you're the high bidder.");
     db.query("update shopownedauction set current_bid=%i, bidder=%i, max_bid=%i where ticket=%i", (max_bid+1), ch->getPlayerID(), my_bid, ticket);
     shoplog(shop_nr, ch, myself, "made bid", 0, format("%i talens") % (max_bid+1));
   }

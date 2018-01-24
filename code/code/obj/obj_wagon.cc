@@ -50,7 +50,7 @@ sstring TWagon::statObjInfo() const
 bool TWagon::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
 {
   if (!silent) {
-    repair->doTell(fname(ch->name), "Does this look like a mechanics shop to you?");
+    repair->doTell(ch, "Does this look like a mechanics shop to you?");
   }
   return TRUE;
 }

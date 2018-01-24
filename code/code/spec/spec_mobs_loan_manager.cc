@@ -24,7 +24,7 @@ void loanBuy(TBeing *ch, TMonster *myself, sstring arg)
   TCorporation corp(tso.getCorpID());
   
   if(!loan_id){
-    myself->doTell(ch->getName(), "That isn't a valid loan number");
+    myself->doTell(ch, "That isn't a valid loan number");
     return;
   }
 
@@ -32,7 +32,7 @@ void loanBuy(TBeing *ch, TMonster *myself, sstring arg)
 	   loan_id);
   
   if(!db.fetchRow()){
-    myself->doTell(ch->getName(), "That isn't a valid loan number.");
+    myself->doTell(ch, "That isn't a valid loan number.");
     return;
   }
 
@@ -40,7 +40,7 @@ void loanBuy(TBeing *ch, TMonster *myself, sstring arg)
   int amt=convertTo<int>(db["amt"]);
   
   if(ch->getMoney() < amt){
-    myself->doTell(ch->getName(), "You don't have enough money.");
+    myself->doTell(ch, "You don't have enough money.");
     return;
   }
   
@@ -51,7 +51,7 @@ void loanBuy(TBeing *ch, TMonster *myself, sstring arg)
   if(!db.fetchRow()){
     TRoom *tr=real_roomp(shop_index[corp.getBank()].in_room);
 
-    myself->doTell(ch->getName(), format("You need to have a bank account at %s in order to finance loans.") % tr->getName());
+    myself->doTell(ch, format("You need to have a bank account at %s in order to finance loans.") % tr->getName());
     return;
   }
 

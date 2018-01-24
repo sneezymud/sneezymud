@@ -267,14 +267,14 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 
  /* Go thru and print out what ails the person. */
   if (cmd == CMD_LIST) {
-    me->doTell(ch->getName(), "I will list out what ails you, along with a price.");
+    me->doTell(ch, "I will list out what ails you, along with a price.");
     for (i = MIN_WEAR; i < MAX_WEAR; i++) {
       if (i == HOLD_RIGHT || i == HOLD_LEFT)
         continue;
       if (!ch->slotChance(i))
         continue;
       if (ch->isLimbFlags(i, PART_MISSING)) {
-        me->doTell(ch->getName(), format("%d) Your %s is missing! (%d talens)") %
+        me->doTell(ch, format("%d) Your %s is missing! (%d talens)") %
 		   ++count % ch->describeBodySlot(i) % limb_regen_price(ch, i, shop_nr));
         continue;
       } else {
@@ -282,19 +282,19 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
           if (1<<j == PART_BANDAGED)
             continue;
           if (ch->isLimbFlags(i, 1 << j)) {
-            me->doTell(ch->getName(), format("%d) Your %s is %s. (%d talens)") %
+            me->doTell(ch, format("%d) Your %s is %s. (%d talens)") %
 		       ++count % ch->describeBodySlot(i) % body_flags[j] %
 		       limb_wound_price(ch, i, 1 << j, shop_nr));
           }
         }
         if (ch->getCurLimbHealth(i) < ch->getMaxLimbHealth(i)) {
           double perc = (double) ch->getCurLimbHealth(i) / (double) ch->getMaxLimbHealth(i);
-          me->doTell(ch->getName(), format("%d) Your %s is %s. (%d talens)") %
+          me->doTell(ch, format("%d) Your %s is %s. (%d talens)") %
 		     ++count % ch->describeBodySlot(i) %
 		     LimbHealth(perc) % limb_heal_price(ch, i, shop_nr));
         }
         if ((stuck = ch->getStuckIn(i))) {
-          me->doTell(ch->getName(), format("%d) You have %s stuck in your %s. (%d talens)") % ++count % stuck->shortDescr % ch->describeBodySlot(i) % limb_expel_price(ch, i, shop_nr));
+          me->doTell(ch, format("%d) You have %s stuck in your %s. (%d talens)") % ++count % stuck->shortDescr % ch->describeBodySlot(i) % limb_expel_price(ch, i, shop_nr));
         }
       }
     }
@@ -303,23 +303,23 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
       for (aff = ch->affected; aff; aff = aff->next) {
         if (aff->type == AFFECT_DISEASE) {
 	  if (ch->GetMaxLevel() < 12) {
-	    me->doTell(ch->getName(), "Hmm, you are just a newbie, guess I will have to take you at reduced rates.\n\r");
+	    me->doTell(ch, "Hmm, you are just a newbie, guess I will have to take you at reduced rates.\n\r");
 	  }
 	  buf=format("%d) You have %s. (%d talens)") %
 	    ++count % DiseaseInfo[affToDisease(*aff)].name %
 	    doctorCost(shop_nr, ch, affToDisease(*aff));
-	  me->doTell(ch->getName(), buf);
+	  me->doTell(ch, buf);
         } else if (aff->type == SPELL_BLINDNESS) {
           if (!aff->shouldGenerateText())
             continue;
-          me->doTell(ch->getName(), format("%d) Affect: %s. (%d talens).\n\r") %
+          me->doTell(ch, format("%d) Affect: %s. (%d talens).\n\r") %
                     ++count % discArray[aff->type]->name %
                     spell_regen_price(ch, SPELL_BLINDNESS, shop_nr));
 	}
       }  // affects loop
     }
     if (!count) {
-      me->doTell(ch->getName(), "I see nothing at all wrong with you!");
+      me->doTell(ch, "I see nothing at all wrong with you!");
     }
     return TRUE;
    /* Allow them to buy cures for their ailments. */
@@ -327,7 +327,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
     for (; isspace(*arg); arg++);
 
     if (!*arg || !arg) {
-      me->doTell(ch->getName(), "What do you want to buy? Try listing to see what ails you!");
+      me->doTell(ch, "What do you want to buy? Try listing to see what ails you!");
       return TRUE;
     }
 
@@ -335,16 +335,16 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
     // fight right next to him (or get him to hate you and follow you)
     // would create a *NICE* situation for the player
     if (ch->fight()) {
-      me->doTell(ch->getName(), "Come back when you aren't fighting.");
+      me->doTell(ch, "Come back when you aren't fighting.");
       return TRUE;
     }
     if (me->master == ch) {
-      me->doTell(ch->getName(), "Your money is no good here.");
+      me->doTell(ch, "Your money is no good here.");
       return TRUE;
     }
 
     if(!sstring(arg).isNumber()){
-      me->doTell(ch->getName(), "To buy a cure, type \"buy <number>\". Try listing to see what ails you!");
+      me->doTell(ch, "To buy a cure, type \"buy <number>\". Try listing to see what ails you!");
       return TRUE;
     }
     bought = convertTo<int>(arg);
@@ -357,17 +357,17 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
       if (ch->isLimbFlags(i, PART_MISSING)) {
         if (++count == bought) {
           if ((ch->getMoney()) < (cost = limb_regen_price(ch, i, shop_nr))) {
-            me->doTell(ch->getName(), format("You don't have enough money to regenerate your %s!") % ch->describeBodySlot(i));
+            me->doTell(ch, format("You don't have enough money to regenerate your %s!") % ch->describeBodySlot(i));
             return TRUE;
           } else {
             if (!ch->limbConnections(i)) {
-              me->doTell(ch->getName(), format("You can't regenerate your %s until something else is regenerated first.") % ch->describeBodySlot(i));
+              me->doTell(ch, format("You can't regenerate your %s until something else is regenerated first.") % ch->describeBodySlot(i));
               return TRUE;
             }
             int cashCost = min(ch->getMoney(), cost);
 
 	    if(me->getMoney() < cashCost){
-	      me->doTell(ch->getName(), "I don't have enough money to cover my operating expenses!");
+	      me->doTell(ch, "I don't have enough money to cover my operating expenses!");
 	      return TRUE;
 	    }
 
@@ -401,13 +401,13 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
           if (ch->isLimbFlags(i, 1 << j)) {
             if (++count == bought) {
               if ((ch->getMoney()) < (cost = limb_wound_price(ch, i, 1 << j, shop_nr))) {
-                me->doTell(ch->getName(), "You don't have enough money to do that!");
+                me->doTell(ch, "You don't have enough money to do that!");
                 return TRUE;
               } else {
                 int cashCost = min(ch->getMoney(), cost);
 		
 		if(me->getMoney() < cashCost){
-		  me->doTell(ch->getName(), "I don't have enough money to cover my operating expenses!");
+		  me->doTell(ch, "I don't have enough money to cover my operating expenses!");
 		  return TRUE;
 		}
 
@@ -439,13 +439,13 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
       if (ch->getCurLimbHealth(i) < ch->getMaxLimbHealth(i)) {
         if (++count == bought) {
           if ((ch->getMoney()) < (cost = limb_heal_price(ch, i, shop_nr))) {
-            me->doTell(ch->getName(), format("You don't have enough money to heal your %s!") % ch->describeBodySlot(i));
+            me->doTell(ch, format("You don't have enough money to heal your %s!") % ch->describeBodySlot(i));
             return TRUE;
           } else {
             int cashCost = min(ch->getMoney(), cost);
 
 	    if(me->getMoney() < cashCost){
-	      me->doTell(ch->getName(), "I don't have enough money to cover my operating expenses!");
+	      me->doTell(ch, "I don't have enough money to cover my operating expenses!");
 	      return TRUE;
 	    }
 
@@ -473,13 +473,13 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
       if ((stuck = ch->getStuckIn(i))) {
         if (++count == bought) {
           if ((ch->getMoney()) < (cost = limb_expel_price(ch, i, shop_nr))) {
-            me->doTell(ch->getName(), format("You don't have enough money to expel %s from your %s!") % stuck->shortDescr % ch->describeBodySlot(i));
+            me->doTell(ch, format("You don't have enough money to expel %s from your %s!") % stuck->shortDescr % ch->describeBodySlot(i));
             return TRUE;
           } else {
             int cashCost = min(ch->getMoney(), cost);
 
 	    if(me->getMoney() < cashCost){
-	      me->doTell(ch->getName(), "I don't have enough money to cover my operating expenses!");
+	      me->doTell(ch, "I don't have enough money to cover my operating expenses!");
 	      return TRUE;
 	    }
 
@@ -515,13 +515,13 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	    cost = doctorCost(shop_nr, ch, affToDisease(*aff));
 
 	    if ((ch->getMoney()) < cost) {
-	      me->doTell(fname(ch->name), format("You don't have enough money to cure %s!") % DiseaseInfo[affToDisease(*aff)].name);
+	      me->doTell(ch, format("You don't have enough money to cure %s!") % DiseaseInfo[affToDisease(*aff)].name);
 	      return TRUE;
 	    } else {
 	      int cashCost = min(ch->getMoney(), cost);
 
 	      if(me->getMoney() < cashCost){
-		me->doTell(ch->getName(), "I don't have enough money to cover my operating expenses!");
+		me->doTell(ch, "I don't have enough money to cover my operating expenses!");
 		return TRUE;
 	      }
 
@@ -550,13 +550,13 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
             cost = spell_regen_price(ch, SPELL_BLINDNESS, shop_nr);
 
             if ((ch->getMoney()) < cost) {
-              me->doTell(fname(ch->name), format("You don't have enough money to cure %s!") % discArray[aff->type]->name);
+              me->doTell(ch, format("You don't have enough money to cure %s!") % discArray[aff->type]->name);
               return TRUE;
             } else {
               int cashCost = min(ch->getMoney(), cost);
 
 	      if(me->getMoney() < cashCost){
-		me->doTell(ch->getName(), "I don't have enough money to cover my operating expenses!");
+		me->doTell(ch, "I don't have enough money to cover my operating expenses!");
 		return TRUE;
 	      }
 
@@ -578,7 +578,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
       }
     }
     if (!count) {
-      me->doTell(ch->getName(), " I see nothing at all wrong with you!");
+      me->doTell(ch, " I see nothing at all wrong with you!");
     }
     ch->doSave(SILENT_YES);
     return TRUE;
@@ -671,7 +671,7 @@ int healing_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     }
 
     if(doctor->getMoney() < cost) {
-      doctor->doTell(healed->getName(), "I don't have enough money to cover my operating expenses!");
+      doctor->doTell(healed, "I don't have enough money to cover my operating expenses!");
       return TRUE;
     }
 
@@ -724,7 +724,7 @@ int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
     }
     
     if(doctor->getMoney() < cost){
-      doctor->doTell(ch->getName(), "I don't have enough money to cover my operating expenses!");
+      doctor->doTell(ch, "I don't have enough money to cover my operating expenses!");
       return TRUE;
     }
 

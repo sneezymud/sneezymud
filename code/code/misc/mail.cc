@@ -116,13 +116,13 @@ void postmasterValue(TBeing *ch, TBeing *postmaster, const char *arg)
 
   if (is_abbrev(item, sstring("talens")) || is_abbrev(talen, sstring("talens")))
   {
-    postmaster->doTell(fname(ch->name), format("When sending talens, I charge an additional %d talens for handling fees.") % int((float)STAMP_PRICE * profit_buy * 2));
+    postmaster->doTell(ch, format("When sending talens, I charge an additional %d talens for handling fees.") % int((float)STAMP_PRICE * profit_buy * 2));
     return;
   }
 
   if(item == "faction")
   {
-    postmaster->doTell(fname(ch->name), format("Bulk faction mail from me will cost about %d talens.") % int((float)FACTION_STAMP_PRICE * profit_buy));
+    postmaster->doTell(ch, format("Bulk faction mail from me will cost about %d talens.") % int((float)FACTION_STAMP_PRICE * profit_buy));
     return;
   }
 
@@ -132,32 +132,32 @@ void postmasterValue(TBeing *ch, TBeing *postmaster, const char *arg)
     TObj *obj = thing ? dynamic_cast<TObj*>(thing) : NULL;
     if (obj == NULL)
     {
-      postmaster->doTell(fname(ch->name), "I don't see that item on you.");
+      postmaster->doTell(ch, "I don't see that item on you.");
       return;
     }
     int cost = int((float)STAMP_PRICE * profit_buy * (obj->getWeight() + 3));
     if (obj->isMonogrammed())
     {
-      postmaster->doTell(fname(ch->name), "This item appears to be monogrammed.  You may only mail it to its owner.");
+      postmaster->doTell(ch, "This item appears to be monogrammed.  You may only mail it to its owner.");
       cost = STAMP_PRICE;
     }
     if (!obj->canBeMailed(""))
     {
-      postmaster->doTell(fname(ch->name), "Sorry, I can't ship that.");
+      postmaster->doTell(ch, "Sorry, I can't ship that.");
       return;
     }
-    postmaster->doTell(fname(ch->name), format("Shipping %s will cost you %d talens.") % obj->getName() % cost);
+    postmaster->doTell(ch, format("Shipping %s will cost you %d talens.") % obj->getName() % cost);
     return;
   }
 
-  postmaster->doTell(fname(ch->name), format("My price for regular postage is %d talens.") % int((float)STAMP_PRICE * profit_buy));
+  postmaster->doTell(ch, format("My price for regular postage is %d talens.") % int((float)STAMP_PRICE * profit_buy));
 }
 
 
 int postmasterGiven(TBeing *ch, TMonster *me, TObj *o)
 {
   if (!o || o->objVnum() != Obj::GENERIC_L_TOKEN) {
-    me->doTell(ch->getName(), "What in the hells is this?!");
+    me->doTell(ch, "What in the hells is this?!");
     me->doGive(ch, o);
     return 0;
   }
@@ -168,7 +168,7 @@ int postmasterGiven(TBeing *ch, TMonster *me, TObj *o)
   sstring playerTag = "[link$" + nameLower + "$";
   size_t startTag = objName.find(playerTag);
   if (startTag == sstring::npos) {
-    me->doTell(ch->getName(), "Are you sure this is your token? It doesn't look right...");
+    me->doTell(ch, "Are you sure this is your token? It doesn't look right...");
     me->doGive(ch, o);
     return 0;
   }
@@ -198,8 +198,8 @@ int postmasterGiven(TBeing *ch, TMonster *me, TObj *o)
     objName.replace(dueTag+1, endTag-dueTag-1, dueDate.c_str(), dueDate.length());
     o->name = objName;
 
-    me->doTell(ch->getName(), "It appears your belongings are arriving via magical transport in ten minutes.");
-    me->doTell(ch->getName(), "In the meantime, hold on to this token and give it to me when your package has arrived.");
+    me->doTell(ch, "It appears your belongings are arriving via magical transport in ten minutes.");
+    me->doTell(ch, "In the meantime, hold on to this token and give it to me when your package has arrived.");
     me->doGive(ch, o);
     ch->doQueueSave();
 
@@ -212,8 +212,8 @@ int postmasterGiven(TBeing *ch, TMonster *me, TObj *o)
     int minutes = ct / 60;
     int seconds = ct % 60;
 
-    me->doTell(ch->getName(), "Sorry, your object hasn't materialized from voidspace yet.");
-    me->doTell(ch->getName(), format("It looks like it won't be ready for another %i minutes and %i seconds.") % minutes % seconds);
+    me->doTell(ch, "Sorry, your object hasn't materialized from voidspace yet.");
+    me->doTell(ch, format("It looks like it won't be ready for another %i minutes and %i seconds.") % minutes % seconds);
     me->doGive(ch, o);
 
     return 0;
@@ -237,7 +237,7 @@ int postmasterGiven(TBeing *ch, TMonster *me, TObj *o)
       linkbag = stored;
     }
     if (!linkbag) {
-      me->doTell(ch->getName(), "Well that's strange; you don't have a linkbag.  Use the 'report' command for help.");
+      me->doTell(ch, "Well that's strange; you don't have a linkbag.  Use the 'report' command for help.");
       me->doGive(ch, o); 
       ch->doQueueSave();
       return 0;
@@ -249,8 +249,8 @@ int postmasterGiven(TBeing *ch, TMonster *me, TObj *o)
     linkbag->obj_flags.decay_time = MAX_PC_CORPSE_EQUIPPED_TIME;
     linkbag->obj_flags.wear_flags &= ~ITEM_WEAR_TAKE;
 
-    me->doTell(ch->getName(), "Great!  It looks like your things are ready.");
-    me->doTell(ch->getName(), "I'll just drop them here in the room.  Please take out your items and clean up.");
+    me->doTell(ch, "Great!  It looks like your things are ready.");
+    me->doTell(ch, "I'll just drop them here in the room.  Please take out your items and clean up.");
     ch->doQueueSave();
 
     return DELETE_ITEM;
