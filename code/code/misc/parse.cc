@@ -454,7 +454,8 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
   addToLifeforce(1);
   break;
       case CMD_REQUEST:
-  doFeedback("requests", CLIENT_STARTEDIT, argument);
+  doFeedback("requests", CLIENT_STARTEDIT, newarg);
+  addToLifeforce(1);
   break;
       case CMD_BUG:
   doFeedback("bugs", CLIENT_BUG, newarg);
