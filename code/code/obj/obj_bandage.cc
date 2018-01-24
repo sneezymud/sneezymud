@@ -5,9 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-// bandaid.cc
-
-#include "obj_bandaid.h"
+#include "obj_bandage.h"
 #include "being.h"
 
 TBandaid::TBandaid() :
