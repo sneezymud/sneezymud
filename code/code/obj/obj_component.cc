@@ -2314,7 +2314,7 @@ bool TComponent::sellMeCheck(TBeing *ch, TMonster *keeper, int num, int defaultM
   int max_num = tso.getMaxNum(ch, this, defaultMax);
 
   if(max_num == 0){
-    keeper->doTell(ch->name, "I don't wish to buy any of those right now.");
+    keeper->doTell(ch, "I don't wish to buy any of those right now.");
     return TRUE;
   }
 
@@ -2330,10 +2330,10 @@ bool TComponent::sellMeCheck(TBeing *ch, TMonster *keeper, int num, int defaultM
   }
 
   if (total >= max_num) {
-    keeper->doTell(ch->getName(), format("I already have plenty of %s.") % getName());
+    keeper->doTell(ch, format("I already have plenty of %s.") % getName());
     return TRUE;
   } else if (total + num > max_num) {
-    keeper->doTell(ch->getName(), format("I'll buy no more than %d charge%s of %s.") % (max_num - total) % (max_num - total > 1 ? "s" : "") % getName());
+    keeper->doTell(ch, format("I'll buy no more than %d charge%s of %s.") % (max_num - total) % (max_num - total > 1 ? "s" : "") % getName());
     return FALSE;
   }
 
@@ -2608,7 +2608,7 @@ sstring TComponent::statObjInfo() const
 bool TComponent::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
 {
   if (!silent) {
-    repair->doTell(fname(ch->getName()), "You might wanna take that to the magic shop!");
+    repair->doTell(ch, "You might wanna take that to the magic shop!");
   }
   return TRUE;
 }
@@ -3024,7 +3024,7 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
   tCost  = (int) shopPrice(tNum, tShop, tChr, ch);
 
   if ((ch->getMoney() < tCost) && !ch->hasWizPower(POWER_GOD)) {
-    tKeeper->doTell(ch->name, shop_index[tShop].missing_cash2);
+    tKeeper->doTell(ch, shop_index[tShop].missing_cash2);
 
     switch (shop_index[tShop].temper1) {
       case 0:
@@ -3042,7 +3042,7 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
   int charges = getComponentCharges();
   
   if (tNum > charges) {
-    tKeeper->doTell(ch->getName(), format("I don't have %d charges of %s.  Here %s the %d I do have.") % tNum % getName() % ((charges > 2) ? "are" : "is") % charges);
+    tKeeper->doTell(ch, format("I don't have %d charges of %s.  Here %s the %d I do have.") % tNum % getName() % ((charges > 2) ? "are" : "is") % charges);
     tNum  = charges;
     tCost = shopPrice(tNum, tShop, tChr, ch);
   }
@@ -3070,7 +3070,7 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
   }
   
   tObj->purchaseMe(ch, tKeeper, tCost, tShop);
-  tKeeper->doTell(ch->name, format(shop_index[tShop].message_buy) % tCost);
+  tKeeper->doTell(ch, format(shop_index[tShop].message_buy) % tCost);
   
   ch->sendTo(COLOR_OBJECTS, format("You now have %s (*%d charges).\n\r") %
 	     sstring(getName()).uncap() % tNum);
@@ -3104,12 +3104,12 @@ int TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num)
   TShopOwned tso(tShop, tKeeper, ch);
 
   if (!shop_index[tShop].profit_sell) {
-    tKeeper->doTell(ch->getName(), shop_index[tShop].do_not_buy);
+    tKeeper->doTell(ch, shop_index[tShop].do_not_buy);
     return false;
   }
 
   if (obj_flags.cost <= 1 || isObjStat(ITEM_NEWBIE)) {
-    tKeeper->doTell(ch->getName(), "I'm sorry, I don't buy valueless items.");
+    tKeeper->doTell(ch, "I'm sorry, I don't buy valueless items.");
     return false;
   }
 
@@ -3122,13 +3122,13 @@ int TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num)
   // bypass sellMeCheck, since we already have the val0 we can save a DB op
   int max_num = tso.getMaxNum(ch, this, 50);
   if (max_num == 0){
-    tKeeper->doTell(ch->name, "I don't wish to buy any of those right now.");
+    tKeeper->doTell(ch, "I don't wish to buy any of those right now.");
     return false;
   } else if (charges >= max_num) {
-    tKeeper->doTell(ch->getName(), format("I already have plenty of %s.") % getName());
+    tKeeper->doTell(ch, format("I already have plenty of %s.") % getName());
     return false;
   } else if (charges + num > max_num) {
-    tKeeper->doTell(ch->getName(), format("I'll buy no more than %d charge%s of %s.") % (max_num - charges) % (max_num - charges > 1 ? "s" : "") % getName());
+    tKeeper->doTell(ch, format("I'll buy no more than %d charge%s of %s.") % (max_num - charges) % (max_num - charges > 1 ? "s" : "") % getName());
     return false;
   }
 
@@ -3153,17 +3153,17 @@ int TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num)
   tCost  = max(1, sellPrice(num, tShop, tChr, ch));
 
   if (tKeeper->getMoney() < tCost) {
-    tKeeper->doTell(ch->name, shop_index[tShop].missing_cash1);
+    tKeeper->doTell(ch, shop_index[tShop].missing_cash1);
     return false;
   }
 
   if (obj_index[getItemIndex()].max_exist <= 10) {
-    tKeeper->doTell(ch->getName(), "Wow!  This is one of those limited items.");
-    tKeeper->doTell(ch->getName(), "You should really think about auctioning it.");
+    tKeeper->doTell(ch, "Wow!  This is one of those limited items.");
+    tKeeper->doTell(ch, "You should really think about auctioning it.");
   }
 
   act("$n sells $p.", FALSE, ch, this, 0, TO_ROOM);
-  tKeeper->doTell(ch->getName(), format(shop_index[tShop].message_sell) % tCost);
+  tKeeper->doTell(ch, format(shop_index[tShop].message_sell) % tCost);
   ch->sendTo(COLOR_OBJECTS, format("The shopkeeper now has %s.\n\r") % sstring(getName()).uncap());
   ch->logItem(this, CMD_SELL);
 
@@ -3255,7 +3255,7 @@ void TComponent::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num)
   price = sellPrice(num, shop_nr, -1, ch);
 
   if (!shop_index[shop_nr].willBuy(this)) {
-    keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
+    keeper->doTell(ch, shop_index[shop_nr].do_not_buy);
     return;
   }
 
@@ -3264,5 +3264,5 @@ void TComponent::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num)
   } else {
     buf = format("Normally, I'd give you %d talens for %s!") % price % getName();
   }
-  keeper->doTell(ch->getName(), buf);
+  keeper->doTell(ch, buf);
 }

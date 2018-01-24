@@ -2215,7 +2215,7 @@ void charge_rent_tax(TBeing *ch, TMonster *recep, int shop_nr)
     return;
 
   sstring msg = shop_index[shop_nr].message_buy;
-  recep->doTell(ch->getName(), format(msg) % tax);
+  recep->doTell(ch, format(msg) % tax);
 
   TShopOwned tso(shop_nr, recep, ch);
   tso.doBuyTransaction(tax, "rent tax", TX_BUYING_SERVICE);
@@ -2349,7 +2349,7 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
     recep->doAction(fname(ch->name), CMD_GROWL);
 
     if (!tStString.empty())
-      recep->doTell(ch->getNameNOC(ch), tStString);
+      recep->doTell(ch, tStString);
 
     for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
       if (exit_ok(exitp = recep->exitDir(dir), NULL)) {

@@ -172,7 +172,7 @@ int TDrug::objectSell(TBeing *ch, TMonster *keeper)
 {
   return false;
 
-  //  keeper->doTell(ch->getName(), "I'm sorry, I don't buy back drugs.");
+  //  keeper->doTell(ch, "I'm sorry, I don't buy back drugs.");
   //  return TRUE;
 }
 

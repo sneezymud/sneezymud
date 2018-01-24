@@ -664,7 +664,7 @@ void Craps::checkField(int diceroll, TBeing *ch)
 
   if ((diceroll >= 5) && (diceroll <= 8)) {
     if (crap_man) {
-      crap_man->doTell(ch->getName(), format("The roll is %d. You lose your bet on the field (%d).") % diceroll % d->bet.field_bet);
+      crap_man->doTell(ch, format("The roll is %d. You lose your bet on the field (%d).") % diceroll % d->bet.field_bet);
       observerReaction(ch, GAMBLER_LOST);
     }
   } else {
@@ -678,7 +678,7 @@ void Craps::checkField(int diceroll, TBeing *ch)
       observerReaction(ch, GAMBLER_WON);
     }
     if (crap_man) {
-      crap_man->doTell(ch->getName(), buf);
+      crap_man->doTell(ch, buf);
     }
 
   }
@@ -912,11 +912,11 @@ int Craps::rollDice()
 
   if ((table_man = FindMobInRoomWithProcNum(m_ch->in_room, SPEC_CRAPSGUY))) {
     if (!can_bet_craps(m_ch)) {
-      table_man->doTell(m_ch->getName(), "You can't roll until I say so!");
+      table_man->doTell(m_ch, "You can't roll until I say so!");
       return FALSE;
     }
     if (!m_ch->desc->bet.come) {
-      table_man->doTell(m_ch->getName(), "Sorry to keep the table, you need to place a come bet.");
+      table_man->doTell(m_ch, "Sorry to keep the table, you need to place a come bet.");
       return FALSE;
     }
   }
