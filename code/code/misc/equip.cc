@@ -1453,7 +1453,7 @@ int TThing::removeMe(TBeing *buyer, wearSlotT)
   return FALSE;
 }
 
-int TBandaid::removeMe(TBeing *buyer, wearSlotT pos)
+int TBandage::removeMe(TBeing *buyer, wearSlotT pos)
 {
   if (!buyer->isLimbFlags(pos, PART_BANDAGED))
     return TObj::removeMe(buyer, pos);

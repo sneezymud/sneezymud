@@ -3821,7 +3821,7 @@ TObj * makeNewObj(itemTypeT tmp)
     case ITEM_QUIVER:
       return new TQuiver();
     case ITEM_BANDAGE:
-      return new TBandaid();
+      return new TBandage();
     case ITEM_STATUE:
       return new TStatue();
     case ITEM_BED:
