@@ -10,7 +10,7 @@
 
 #include "obj.h"
 
-class TBandaid : public TObj {
+class TBandage : public TObj {
   public:
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
@@ -22,10 +22,10 @@ class TBandaid : public TObj {
     virtual void findBandage(int *);
     virtual void destroyBandage(int *);
 
-    TBandaid();
-    TBandaid(const TBandaid &a);
-    TBandaid & operator=(const TBandaid &a);
-    virtual ~TBandaid();
+    TBandage();
+    TBandage(const TBandage &a);
+    TBandage & operator=(const TBandage &a);
+    virtual ~TBandage();
 };
 
 
