@@ -62,7 +62,7 @@
 #include "obj_statue.h"
 #include "obj_trash.h"
 #include "obj_treasure.h"
-#include "obj_bandaid.h"
+#include "obj_bandage.h"
 #include "obj_bed.h"
 #include "obj_board.h"
 #include "obj_book.h"
