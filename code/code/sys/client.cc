@@ -435,16 +435,13 @@ int Descriptor::read_client(char *str2)
     }
     case CLIENT_IDEA:
     case CLIENT_TYPO:
-    case CLIENT_BUG: {
-
-      sstring buffer = str2;
-      buffer.inlineReplaceString("^", "\r\n");
-      send_feedback(name, buffer.c_str());
-
-      character->sendTo("Thanks for the report. It will be looked at soon!\n\r");
-      character->sendTo("If necessary, a mudmail will be sent to you to inform you of any changes or possible explanations.\n\r");
+    case CLIENT_BUG:
+      // mail_recipient actually contains some other data
+      send_feedback(mail_recipient, sstring(str2).replaceString("^", "\r\n"));
+      character->sendTo("Thanks for the report. It will be looked at soon!\n\r"
+          "If necessary, a mudmail will be sent to you to inform you of any changes\n\r"
+          "or possible explanations.\n\r");
       break;
-    }
 
     case CLIENT_MAIL: {
       char buffer[10000];
@@ -473,27 +470,26 @@ int Descriptor::read_client(char *str2)
       }
       buffer[j] = '\0';
 
-      if (obj && obj->canBeMailed(sstring(name)))
-      {
+      if (obj && obj->canBeMailed(sstring(name))) {
         ItemSaveDB is("mail", GH_MAIL_SHOP);
         rent_id = is.raw_write_item(obj, -1 /*NORMAL_SLOT*/, 0);
         vlogf(LOG_OBJ, format("Mail: %s mailing %s (vnum:%i) to %s rented as rent_id:%i") %
           character->getName() % obj->getName() % obj->objVnum() % name % rent_id);
         delete obj;
       }
-      if (amount > 0)
-      {
+
+      if (mail_talens > 0) {
         vlogf(LOG_OBJ, format("Mail: %s mailing %i talens to %s") %
-          character->getName() % amount % name);
-        character->addToMoney(min(0, -amount), GOLD_XFER);
+          character->getName() % mail_talens % name);
+        character->addToMoney(min(0, -mail_talens), GOLD_XFER);
       }
 
-      store_mail(name, character->getName().c_str(), buffer, amount, rent_id);
+      store_mail(name, character->getName().c_str(), buffer, mail_talens, rent_id);
 
       // clear amount, object, name
       obj = NULL;
       *(name) = '\0';
-      amount = 0;
+      mail_talens = 0;
 
       break;
     }
@@ -517,8 +513,8 @@ int Descriptor::read_client(char *str2)
       }
       break;
     case CLIENT_CANCELEDIT:
-      str = NULL;
-      max_str = 0;
+      edit_str = NULL;
+      edit_str_maxlen = 0;
       connected = CON_PLYNG;
       if (character->isPlayerAction(PLR_MAILING)) 
         character->remPlayerAction(PLR_MAILING);
@@ -596,7 +592,7 @@ int Descriptor::read_client(char *str2)
           }
         }
       }
-      max_str = 0;
+      edit_str_maxlen = 0;
       for (ch = character_list; ch; ch = ch->next) {
         if ((boost::iequals(character->getName(), ch->getName()) &&
             !ch->desc && !dynamic_cast<TMonster *>(ch)) ||

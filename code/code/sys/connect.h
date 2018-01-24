@@ -75,7 +75,6 @@ enum connectStateT {
        CON_RETPWD,
        CON_DELCHAR,
        CON_ACTDELCNF,
-       CON_EDITTING,
        CON_TIME,
        CON_CHARDELCNF,
        CON_WIZLOCKNEW,
@@ -122,18 +121,6 @@ class TAccount;
 class TPerson;
 class TSocket;
 
-class editStuff
-{
-  public:
-    int x, y;        // Current x andy position on the screen for cursor
-    int bottom, end; // Bottom of text, and end of current line
-    char **lines;    // Keeps up with text typed in
-
-    editStuff();
-    editStuff(const editStuff &a);
-    ~editStuff();
-};
-    
 class careerData
 {
   public:
@@ -430,7 +417,6 @@ class Descriptor
 {
   public:
     TSocket *socket;
-    editStuff edit;
     sstring host;                 // hostname
     char pwd[12];                 // password                   
     connectStateT connected;                // mode of 'connectedness'    
@@ -438,9 +424,11 @@ class Descriptor
     char *showstr_head;           // for paging through texts  
     int tot_pages;               // for tracking paged info
     int cur_page;                //       -
-    sstring* str;                   // for the modify-str system. Points to the current string being modified.
-    sstring mail_bug_str;
-    int max_str;
+    sstring* edit_str;                   // for the modify-str system. Points to the current string being modified.
+    int edit_str_maxlen;
+    sstring mail_edit_str;
+    sstring mail_recipient;
+    int mail_talens;
     int prompt_mode;              // control of prompt-printing 
     char m_raw[4096];               // buffer for raw input    
     std::queue<CommPtr> output;                 // q of sstrings to send
@@ -459,8 +447,6 @@ class Descriptor
     snoopData snoop;              // to snoop people           
     Descriptor *next;             // link to next descriptor    
     char *pagedfile;              // what file is getting paged 
-    char name[80];                // dummy field (idea, bug, mail use it)
-    int amount;                   // dummy field (mail uses it)
     TObj *obj;                    // for object editor
     TMonster *mob;                // for monster editor 
     std::map<sstring, sstring> alias; // aliases for players
@@ -491,13 +477,8 @@ class Descriptor
     std::string mudclient;
     std::string clientversion;
 
-    // Functions
-  private:
-    Descriptor();  // prevent default constructor from being used
   public:
     Descriptor(TSocket *);
-    Descriptor(const Descriptor &);
-    Descriptor & operator=(const Descriptor &a);
     ~Descriptor();
 
     void sendGmcp(const sstring& msg, bool strip); // we want stripping in room names, for simple searching, but no stripping in comm
@@ -514,8 +495,6 @@ class Descriptor
     int doAccountStuff(char *);
     int clientCreateAccount(char *);
     int clientCreateChar(char *);
-    bool isEditing();
-    void Edit(char *);
     void deleteAccount();
     void menuWho();
     void saveAccount();
@@ -547,10 +526,9 @@ class Descriptor
     void sendShout(TBeing *, const sstring &);
     void updateScreenAnsi(unsigned int update);
     void updateScreenVt100(unsigned int update);
-    int move(int, int);
     void add_comment(const char *, const char *);
-    void send_feedback(const char *subject, const char *msg);
-    void cleanUpStr();
+    void send_feedback(const sstring &, const sstring &);
+    void cleanUpEditStr();
     void beep() {
       writeToQ("");
     }

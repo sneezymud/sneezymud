@@ -19,88 +19,88 @@
 void TBeing::setSpellEligibleToggle(TMonster *trainer, spellNumT spell, silentTypeT silent) 
 {
   if (!silent && trainer) {
-    trainer->doTell(fname(name), format("You now have the training to learn %s!") % discArray[spell]->name);
+    trainer->doTell(getName(), format("You now have the training to learn %s!") % discArray[spell]->name);
   }
 
   switch (spell) {
     case SPELL_TORNADO:
       if (!silent && trainer) {
-        trainer->doTell(fname(name), "Alas, I do not have the knowledge to train you in tornado.");
-        trainer->doTell(fname(name), "Seek out the wise elf Salrik to see if you can learn it from him.  I will let him know that I have sent you.");
+        trainer->doTell(getName(), "Alas, I do not have the knowledge to train you in tornado.");
+        trainer->doTell(getName(), "Seek out the wise elf Salrik to see if you can learn it from him.  I will let him know that I have sent you.");
       }
       setQuestBit(TOG_TORNADO_ELIGIBLE);
       break;
 
     case SKILL_BARKSKIN:
       if (!silent && trainer) {
-        trainer->doTell(fname(name), "However, before I train you in barkskin, I must ask you  to perform a small task to prove your worth.");
-	trainer->doTell(fname(name), "In order to prove you are ready for such knowledge, bring me some barkskin.");
+        trainer->doTell(getName(), "However, before I train you in barkskin, I must ask you  to perform a small task to prove your worth.");
+	trainer->doTell(getName(), "In order to prove you are ready for such knowledge, bring me some barkskin.");
       }
       setQuestBit(TOG_ELIGIBLE_BARKSKIN);
       break;
       
     case SPELL_EARTHQUAKE:
       if (!silent && trainer) {
-        trainer->doTell(fname(name), "However, before I train you in earthquake, I must ask you to perform a small task to prove your worth.");
-        trainer->doTell(fname(name), "In order to prove you are ready for such knowledge, bring me a yellow boot.");
+        trainer->doTell(getName(), "However, before I train you in earthquake, I must ask you to perform a small task to prove your worth.");
+        trainer->doTell(getName(), "In order to prove you are ready for such knowledge, bring me a yellow boot.");
       }
       setQuestBit(TOG_ELIGIBLE_EARTHQUAKE);
       break;
       
     case SKILL_DUAL_WIELD:
       if (!silent && trainer) {
-        trainer->doTell(fname(name), "However, before I train you in dual wield, I must ask you to perform a small task to prove your worth.");
-        trainer->doTell(fname(name), "In order to prove you are ready for such knowledge, bring me some mandrake.");
+        trainer->doTell(getName(), "However, before I train you in dual wield, I must ask you to perform a small task to prove your worth.");
+        trainer->doTell(getName(), "In order to prove you are ready for such knowledge, bring me some mandrake.");
       }
       setQuestBit(TOG_ELIGIBLE_DUAL_WIELD);
       break;
       
     case SPELL_FIREBALL:
       if (!silent && trainer) {
-        trainer->doTell(fname(name), "Alas, I do not have the knowledge to train you in fireball.");
-        trainer->doTell(fname(name), "Seek out the mischevious mage Kallam to see if you can learn it from him.  I will let him know that I have sent you.");
+        trainer->doTell(getName(), "Alas, I do not have the knowledge to train you in fireball.");
+        trainer->doTell(getName(), "Seek out the mischevious mage Kallam to see if you can learn it from him.  I will let him know that I have sent you.");
       }
       setQuestBit(TOG_ELIGIBLE_FIREBALL);
       break;
 
     case SPELL_ICE_STORM:
       if (!silent && trainer) {
-        trainer->doTell(fname(name), "Alas, I do not have the knowledge to train you in ice storm.");
-        trainer->doTell(fname(name), "Seek out the water mage, Cardac, to see if you can learn it from him.  I will let him know that I have sent you.");
+        trainer->doTell(getName(), "Alas, I do not have the knowledge to train you in ice storm.");
+        trainer->doTell(getName(), "Seek out the water mage, Cardac, to see if you can learn it from him.  I will let him know that I have sent you.");
       }
       setQuestBit(TOG_ELIGIBLE_ICE_STORM);
       break;
 
     case SPELL_STONE_SKIN:
       if (!silent && trainer) {
-        trainer->doTell(fname(name), "Alas, I do not have the knowledge to train you in stone skin.");
-        trainer->doTell(fname(name), "However, I do remember a dwarf that perhaps has such knowledge of using defensive Earth Magic.");
-        trainer->doTell(fname(name), "I think the City in the Clouds has the dwarf you seek.  He is a very important abassador there.");
-        trainer->doTell(fname(name), "Seek him out, he may hold the secrets you desire.");
+        trainer->doTell(getName(), "Alas, I do not have the knowledge to train you in stone skin.");
+        trainer->doTell(getName(), "However, I do remember a dwarf that perhaps has such knowledge of using defensive Earth Magic.");
+        trainer->doTell(getName(), "I think the City in the Clouds has the dwarf you seek.  He is a very important abassador there.");
+        trainer->doTell(getName(), "Seek him out, he may hold the secrets you desire.");
       }
       setQuestBit(TOG_ELIGIBLE_STONESKIN);
       break;
 
     case SPELL_GALVANIZE:
       if (!silent && trainer) {
-        trainer->doTell(fname(name), "Alas, I do not have the knowledge to train you in galvanize.");
-        trainer->doTell(fname(name), "Seek out the wizened mage, Fabnir, to see if you can learn it from him.  I will let him know that I have sent you.");
+        trainer->doTell(getName(), "Alas, I do not have the knowledge to train you in galvanize.");
+        trainer->doTell(getName(), "Seek out the wizened mage, Fabnir, to see if you can learn it from him.  I will let him know that I have sent you.");
       }
       setQuestBit(TOG_ELIGIBLE_GALVANIZE);
       break;
 
     case SPELL_POWERSTONE:
       if (!silent && trainer) {
-        trainer->doTell(fname(name), "Alas, I do not have the knowledge to train you in powerstone.");
-        trainer->doTell(fname(name), "Seek out the wise alchemist, Fabnir, to see if you can learn it from him.  I will let him know that I have sent you.");
+        trainer->doTell(getName(), "Alas, I do not have the knowledge to train you in powerstone.");
+        trainer->doTell(getName(), "Seek out the wise alchemist, Fabnir, to see if you can learn it from him.  I will let him know that I have sent you.");
       }
       setQuestBit(TOG_ELIGIBLE_POWERSTONE);
       break;
 
     case SKILL_ADVANCED_KICKING:
       if(!silent && trainer){
-	trainer->doTell(fname(name), "Although you are eligible to learn advanced kicking, you must first master kick.");
-	trainer->doTell(fname(name), "When you have mastered kick, speak with your guildmaster and I will tell you how to learn advanced kicking.");
+	trainer->doTell(getName(), "Although you are eligible to learn advanced kicking, you must first master kick.");
+	trainer->doTell(getName(), "When you have mastered kick, speak with your guildmaster and I will tell you how to learn advanced kicking.");
       }
       break;
 

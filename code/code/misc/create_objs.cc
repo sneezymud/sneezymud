@@ -791,7 +791,7 @@ void TPerson::doOEdit(const char *argument)
           ed->next = cObj->ex_description;
           cObj->ex_description = ed;
           ed->keyword = sstring;
-          desc->str = &ed->description;
+          desc->edit_str = &ed->description;
           break;
         } else if (boost::iequals(ed->keyword, sstring)) {
           sendTo(format("Extra already exists, Currently is:\n\r%s\n\r") % ed->description);
@@ -801,8 +801,8 @@ void TPerson::doOEdit(const char *argument)
       sendTo("Enter extra description.  Terminate with a '~' on a NEW line.\n\r");
       if (desc->m_bIsClient)
         desc->clientf(format("%d") % CLIENT_STARTEDIT % 4000);
-      *desc->str = NULL;
-      desc->max_str = MAX_INPUT_LENGTH;
+      *desc->edit_str = NULL;
+      desc->edit_str_maxlen = MAX_INPUT_LENGTH;
       return;
       break;
     case 17: // Can Be Seen
@@ -1020,8 +1020,8 @@ static void change_obj_long_desc(TBeing *ch, TObj *o, editorEnterTypeT type)
   ch->sendTo("\n\r\n\rNew Object Description:\n\r");
   ch->sendTo("(Terminate with a ~ on the SAME LINE. Press <ENTER> again to continue)\n\r");
   o->setDescr("");
-  ch->desc->str = &o->descr;
-  ch->desc->max_str = MAX_STRING_LENGTH;
+  ch->desc->edit_str = &o->descr;
+  ch->desc->edit_str_maxlen = MAX_STRING_LENGTH;
 }
 
 static void change_obj_weight(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
@@ -1095,9 +1095,9 @@ static void change_obj_short_desc(TBeing *ch, TObj *o, editorEnterTypeT type)
   ch->sendTo("ALWAYS start the short description with a lowercase letter.\n\r");
   ch->sendTo("(Terminate with a ~ on the SAME LINE. Press <ENTER> again to continue)\n\r");
   o->shortDescr = "";
-  ch->desc->str = &o->shortDescr;
-//  ch->desc->max_str = MAX_STRING_LENGTH;
-  ch->desc->max_str = MAX_NAME_LENGTH-1;
+  ch->desc->edit_str = &o->shortDescr;
+//  ch->desc->edit_str_maxlen = MAX_STRING_LENGTH;
+  ch->desc->edit_str_maxlen = MAX_NAME_LENGTH-1;
 }
 
 static void change_obj_type(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
@@ -1878,7 +1878,7 @@ static void change_obj_extra(TBeing *ch, TObj *o, const char *arg, editorEnterTy
 	o->ex_description = ed;
         ed->keyword = arg;
 	ed->description = NULL;
-	ch->desc->str = &ed->description;
+	ch->desc->edit_str = &ed->description;
 	ch->sendTo("Enter the description. Terminate with a '~' on a NEW line.\n\r");
 	break;
       } else if (boost::iequals(ed->keyword, arg)) {
@@ -1895,7 +1895,7 @@ static void change_obj_extra(TBeing *ch, TObj *o, const char *arg, editorEnterTy
 	return;
       }
     }
-    ch->desc->max_str = MAX_STRING_LENGTH;
+    ch->desc->edit_str_maxlen = MAX_STRING_LENGTH;
     return;
   }
   ch->sendTo("Existing keywords:\n\r");

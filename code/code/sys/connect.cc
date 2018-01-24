@@ -66,212 +66,66 @@ const char * const MUD_NAME      = "SneezyMUD";
 const char * const MUD_NAME_VERS = "SneezyMUD v5.2 " VERSION;
 static const char * const WELC_MESSG = "\n\rWelcome to SneezyMUD 5.2! May your journeys be bloody!\n\r\n\r";
 
-Descriptor::Descriptor() :
-ignored(this)
-{
-// this guy is private to prevent being called
-// just need to init member vars that are appropriate
-}
-
 Descriptor::Descriptor(TSocket *s) :
-socket(s),
-edit(),
-connected(CON_CREATION_START),
-wait(1),
-showstr_head(NULL),
-tot_pages(0),
-cur_page(0),
-str(NULL),
-max_str(0),
-prompt_mode(0),
-output(),
-session(),
-career(),
-autobits(0),
-playerID(0),
-character(NULL),
-account(NULL),
-original(NULL),
-snoop(),
-next(descriptor_list),
-pagedfile(NULL),
-amount(0),
-obj(NULL),
-mob(NULL),
-bet(),
-bet_opt(),
-screen_size(24),
-point_roll(0),
-talkCount(time(0)),
-m_bIsClient(FALSE),
-bad_login(0),
-severity(0),
-office(0),
-blockastart(0),
-blockaend(0),
-blockbstart(0),
-blockbend(0),
-last(),
-deckSize(0),
-prompt_d(),
-plr_act(0),
-plr_color(0),
-plr_colorSub(COLOR_SUB_NONE),
-plr_colorOff(0),
-ignored(this),
-gmcp(false)
+    socket(s),
+    connected(CON_CREATION_START),
+    wait(1),
+    showstr_head(NULL),
+    tot_pages(0),
+    cur_page(0),
+    edit_str(NULL),
+    edit_str_maxlen(0),
+    mail_talens(0),
+    prompt_mode(0),
+    output(),
+    session(),
+    career(),
+    autobits(0),
+    playerID(0),
+    character(NULL),
+    account(NULL),
+    original(NULL),
+    snoop(),
+    next(descriptor_list),
+    pagedfile(NULL),
+    obj(NULL),
+    mob(NULL),
+    bet(),
+    bet_opt(),
+    screen_size(24),
+    point_roll(0),
+    talkCount(time(0)),
+    m_bIsClient(FALSE),
+    bad_login(0),
+    severity(0),
+    office(0),
+    blockastart(0),
+    blockaend(0),
+    blockbstart(0),
+    blockbend(0),
+    last(),
+    deckSize(0),
+    prompt_d(),
+    plr_act(0),
+    plr_color(0),
+    plr_colorSub(COLOR_SUB_NONE),
+    plr_colorOff(0),
+    ignored(this),
+    gmcp(false)
 {
-int i;
-
-*m_raw = '\0';
-*delname = '\0';
-
-for (i = 0; i < HISTORY_SIZE; i++)
-  *history[i] = '\0';
-
-descriptor_list = this;
-}
-
-Descriptor::Descriptor(const Descriptor &a) :
-socket(a.socket),
-edit(a.edit),
-connected(a.connected),
-wait(a.wait),
-tot_pages(a.tot_pages),
-cur_page(a.cur_page),
-max_str(a.max_str),
-prompt_mode(a.prompt_mode),
-output(a.output),
-input(a.input),
-session(a.session),
-career(a.career),
-autobits(a.autobits),
-playerID(a.playerID),
-character(a.character),
-account(a.account),
-original(a.original),
-snoop(a.snoop),
-next(descriptor_list),
-amount(a.amount),
-obj(a.obj),
-mob(a.mob),
-bet(a.bet),
-bet_opt(a.bet_opt),
-screen_size(a.screen_size),
-point_roll(a.point_roll),
-talkCount(a.talkCount),
-m_bIsClient(a.m_bIsClient),
-bad_login(a.bad_login),
-severity(a.severity),
-office(a.office),
-blockastart(a.blockastart),
-blockaend(a.blockaend),
-blockbstart(a.blockbstart),
-blockbend(a.blockbend),
-last(a.last),
-deckSize(a.deckSize),
-prompt_d(a.prompt_d),
-plr_act(a.plr_act),
-plr_color(a.plr_color),
-plr_colorSub(a.plr_colorSub),
-plr_colorOff(a.plr_colorOff),
-ignored(this),
-gmcp(a.gmcp)
-{
-int i;
-
-// not sure how this is being used, theoretically correct, but watch
-// for duplication stuff
-// str may also be prolematic
-vlogf(LOG_BUG, "Inform Batopr immediately that Descriptor copy constructor was called.");
-
-showstr_head = mud_str_dup(a.showstr_head);
-//  str = mud_str_dup(a.str);
-str = NULL;
-pagedfile = mud_str_dup(a.pagedfile);
-
-strcpy(m_raw, a.m_raw);
-strcpy(delname, a.delname);
-
-for (i = 0; i < HISTORY_SIZE; i++)
-  strcpy(history[i], a.history[i]);
-
-descriptor_list = this;
-}
-
-Descriptor & Descriptor::operator=(const Descriptor &a) 
-{
-if (this == &a) return *this;
-
-// not sure how this is being used, theoretically correct, but watch
-// for duplication stuff
-// str is most likely also screwy
-vlogf(LOG_BUG, "Inform Batopr immediately that Descriptor operator= was called.");
-
-socket = a.socket;
-edit = a.edit;
-connected = a.connected;
-wait = a.wait;
-tot_pages = a.tot_pages;
-cur_page = a.cur_page;
-max_str = a.max_str;
-prompt_mode = a.prompt_mode;
-output = a.output;
-input = a.input;
-session = a.session;
-career = a.career;
-autobits = a.autobits;
-playerID=a.playerID;
-character = a.character;
-account = a.account;
-original = a.original;
-snoop = a.snoop;
-obj = a.obj;
-mob = a.mob;
-bet = a.bet;
-bet_opt = a.bet_opt;
-screen_size = a.screen_size;
-point_roll = a.point_roll;
-talkCount = a.talkCount;
-m_bIsClient = a.m_bIsClient;
-bad_login = a.bad_login;
-severity = a.severity;
-office = a.office;
-blockastart = a.blockastart;
-blockaend = a.blockaend;
-blockbstart = a.blockbstart;
-blockbend = a.blockbend;
-last = a.last;
-deckSize = a.deckSize;
-prompt_d = a.prompt_d;
-plr_act = a.plr_act;
-plr_color = a.plr_color;
-plr_colorSub = a.plr_colorSub;
-plr_colorOff = a.plr_colorOff;
-amount = a.amount;
-gmcp = a.gmcp;
-
-delete [] showstr_head;
-showstr_head = mud_str_dup(a.showstr_head);
-
-str = NULL;
-
-delete [] pagedfile;
-pagedfile = mud_str_dup(a.pagedfile);
-
-strcpy(m_raw, a.m_raw);
-strcpy(delname, a.delname);
-
-for (int i = 0; i < HISTORY_SIZE; i++)
-  strcpy(history[i], a.history[i]);
-
-return *this;
+    *m_raw = '\0';
+    *delname = '\0';
+    descriptor_list = this;
+    for (auto entry : history)
+        *entry = '\0';
 }
 
 // returns TRUE if multiplay is detected
 bool Descriptor::checkForMultiplay()
 {
-if(Config::CheckMultiplay()){
+  if (!Config::CheckMultiplay())
+      return FALSE;
+
   TBeing *ch;
   unsigned int total = 1;
   Descriptor *d;
@@ -443,9 +297,8 @@ if (!(tChar = oChar))
   return FALSE;
     }
   }
-}
-
-return FALSE;
+  // actual end of checkForMultiplay
+  return FALSE;
 }
 
 sstring SnoopComm::getText(){
@@ -539,7 +392,7 @@ if (socket->m_sock == maxdesc)
   --maxdesc;
 
 // clear up any editing sstrings
-cleanUpStr();
+cleanUpEditStr();
 
 // Forget snoopers
 if (snoop.snooping)
@@ -700,22 +553,23 @@ character->setInvisLevel(GOD_LEVEL1);
   delete obj;
 }
 
-void Descriptor::cleanUpStr()
+void Descriptor::cleanUpEditStr()
 {
-  if (str) {
-    if (character && 
-          (character->isPlayerAction(PLR_MAILING) ||
-           character->isPlayerAction(PLR_BUGGING))) {
-      *str = "";
-      str = NULL;
-    } else if (character &&
-                  (connected == CON_WRITING ||
-                   connected == CON_REDITING ||
-                   connected == CON_OEDITING ||
-                   connected == CON_MEDITING)) {
-      // the str is attached to the mob/obj/room, so this is OK
-    } else
-      vlogf(LOG_BUG, "Descriptor::cleanUpStr(): Probable memory leak");
+  if (!edit_str)
+    return;
+
+  if (character && 
+        (character->isPlayerAction(PLR_MAILING) ||
+         character->isPlayerAction(PLR_BUGGING))) {
+    *edit_str = "";
+    edit_str = NULL;
+  } else if (!(character &&
+               (connected == CON_WRITING ||
+                connected == CON_REDITING ||
+                connected == CON_OEDITING ||
+                connected == CON_MEDITING))) {
+    // edit_str set but not editing??
+    vlogf(LOG_BUG, "Descriptor::cleanUpEditStr(): Probable memory leak");
   }
 }
 
@@ -2021,13 +1875,13 @@ void Descriptor::sstring_add(sstring s)
 
 
   if (character->isPlayerAction(PLR_BUGGING)) {
-    if (str->empty()) {
+    if (edit_str->empty()) {
       // we are on the first line
       s = s.trim();
 
       if (s.empty()) {
         writeToQ("Blank lines entered.  Ignoring!\n\r");
-        str = NULL;
+        edit_str = NULL;
 
         character->remPlayerAction(PLR_BUGGING);
 
@@ -2039,94 +1893,87 @@ void Descriptor::sstring_add(sstring s)
 
         return;
       }
-      writeToQ(format("Write your %s, use ~ when done, or ` to cancel.\n\r") % sstring(name).uncap());
-      *str += s;
+      writeToQ(format("Write your %s, use ~ when done, or ` to cancel.\n\r") % mail_recipient.uncap());
+      *edit_str += s;
     } else {
       // body of idea
-      *str += s;
+      *edit_str += s;
     }
   } else {
     // not a bug/idea
-    *str += word_wrap(s);
+    *edit_str += word_wrap(s);
   }
   if (terminator || t2) {
     if (character->isPlayerAction(PLR_MAILING)) {
-      if (ignored.isMailIgnored(this, name))
-      {
-        vlogf(LOG_OBJ, format("Mail: mail sent by %s was ignored by %s.") % character->getName() % name);
-      }
-      else if (terminator)
-      {
+      if (ignored.isMailIgnored(this, mail_recipient)) {
+        vlogf(LOG_OBJ, format("Mail: mail sent by %s was ignored by %s.") % character->getName() % mail_recipient);
+      } else if (terminator) {
         int rent_id = 0;
-        if (obj && obj->canBeMailed(name))
-        {
+        if (obj && obj->canBeMailed(mail_recipient)) {
           ItemSaveDB is("mail", GH_MAIL_SHOP);
           rent_id = is.raw_write_item(obj, -1 , 0);
           vlogf(LOG_OBJ, format("Mail: %s mailing %s (vnum:%i) to %s rented as rent_id:%i") %
-              character->getName() % obj->getName() % obj->objVnum() % name % rent_id);
+              character->getName() % obj->getName() % obj->objVnum() % mail_recipient % rent_id);
           delete obj;
         }
-        if (amount > 0)
-        {
+        if (mail_talens > 0) {
           vlogf(LOG_OBJ, format("Mail: %s mailing %i talens to %s") %
-              character->getName() % amount % name);
-          character->addToMoney(min(0, -amount), GOLD_XFER);
+              character->getName() % mail_talens % mail_recipient);
+          character->addToMoney(min(0, -mail_talens), GOLD_XFER);
         }
-        store_mail(name, character->getName().c_str(), str->c_str(), amount, rent_id);
+        store_mail(mail_recipient, character->getName(), *edit_str, mail_talens, rent_id);
       }
 
-      *str = "";
-      str = NULL;
-
-      // clear amount, object, name
+      *edit_str = "";
+      edit_str = NULL;
       obj = NULL;
-      *(name) = '\0';
-      amount = 0;
+      mail_recipient = "";
+      mail_talens= 0;
 
       writeToQ(terminator ? "Message sent!\n\r" : "Message deleted!\n\r");
       character->remPlayerAction(PLR_MAILING);
     } else if (character->isPlayerAction(PLR_BUGGING)) {
       if (terminator) {
-        sstring t = str->trim();
+        sstring t = edit_str->trim();
 
         if (t == "")
           writeToQ("Blank message entered.  Ignoring!\n\r");
         else {
-          if (!strcmp(name, "Comment"))
+          if (mail_recipient ==  "Comment")
             add_comment(delname, t.c_str());
           else
-            send_feedback(name, t.c_str());
-          writeToQ(name);
+            send_feedback(mail_recipient, t);
+          writeToQ(mail_recipient);
           writeToQ(" sent!\n\r");
         }
       } else {
-        writeToQ(name);
+        writeToQ(mail_recipient);
         writeToQ(" deleted!\n\r");
       }
-      *(name) = '\0';
 
-      *str = "";
-      str = NULL;
+      mail_recipient = "";
+      *edit_str = "";
+      edit_str = NULL;
 
       character->remPlayerAction(PLR_BUGGING);
     } else {
       if (t2) {
-        // Cancalation capability added by Russ 020997
-        *str = "";
+        // Cancellation capability added by Russ 020997
+        *edit_str = "";
       }
-      str = NULL;
+      edit_str = NULL;
 
     }
     if (connected == CON_WRITING) {
       connected = CON_PLYNG;
     }
     // set the sstring to NULL to insure we don't fall into sstring_add again
-    str = NULL;
+    edit_str = NULL;
 
     if (m_bIsClient)
       clientf(format("%d|%d") % CLIENT_ENABLEWINDOW % FALSE);
   } else {
-    *str += "\n\r";
+    *edit_str += "\n\r";
   }
 }
 
@@ -2365,7 +2212,7 @@ void setPrompts(fd_set out)
 	}
       }
 
-      if (d->str && (d->prompt_mode != DONT_SEND)) {
+      if (d->edit_str && (d->prompt_mode != DONT_SEND)) {
 	d->output.push(CommPtr(new UncategorizedComm("-> ")));
       } else if (d->pagedfile && (d->prompt_mode != DONT_SEND)) {
         sprintf(promptbuf, "\n\r[ %sReturn%s to continue, %s(r)%sefresh, %s(b)%sack, page %s(%d/%d)%s, or %sany other key%s to quit ]\n\r", 
@@ -2728,11 +2575,11 @@ void processAllInput()
           d->character = NULL;
           continue;
         }
-      } else if (d->str) 
+      } else if (d->edit_str) {
         d->sstring_add(comm);
-      else if (d->pagedfile) 
+      } else if (d->pagedfile)  {
         d->page_file(comm);
-      else if (!d->account) {            // NO ACCOUNT
+      } else if (!d->account) {            // NO ACCOUNT
         if (d->m_bIsClient) {
           rc = d->client_nanny(comm);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -4042,23 +3889,6 @@ bool illegalEmail(char *buf, Descriptor *desc, silentTypeT silent)
   }
 
   return FALSE;
-}
-
-editStuff::editStuff()
-  : x(1), y(1),
-    bottom(0), end(0), lines(NULL)
-{
-}
-
-editStuff::editStuff(const editStuff &a)
-  : x(a.x), y(a.y),
-    bottom(a.bottom), end(a.end)
-{
-  lines = a.lines;  // not positive this is correct
-}
-
-editStuff::~editStuff()
-{
 }
 
 careerData::careerData()

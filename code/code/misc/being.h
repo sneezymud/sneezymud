@@ -567,7 +567,7 @@ class TBeing : public TThing {
     int missVictim(TBeing *, TThing *, spellNumT);
 
     // Postmaster
-    void postmasterSendMail(const char *, TMonster *);
+    void postmasterSendMail(sstring, TMonster *);
     void postmasterReceiveMail(TMonster *);
     void postmasterCheckMail(TMonster *);
 
@@ -1793,7 +1793,6 @@ class TBeing : public TThing {
     bool isOrderAllowed(const char *);
     virtual int doQuit2() = 0;
     void doQuit();
-    void doBruttest(const char *);
     int doMove(cmdTypeT);
     int doMove(dirTypeT);
     int doSay(const char *fmt, ...);
