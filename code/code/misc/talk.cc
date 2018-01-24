@@ -495,7 +495,7 @@ void TBeing::doGrouptell(const sstring &arg)
   }
 }
 
-void TBeing::doCommune(const sstring &arg)
+void TBeing::doWiznet(const sstring &arg)
 {
   //sstring buf, buf2, wizbuf;
   sstring buf, buf2;
