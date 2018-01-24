@@ -31,17 +31,17 @@ int tattooArtist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TO
 
 
   if(cmd == CMD_LIST){
-    myself->doTell(ch->getName(), "I charge 10000 talens for a tattoo.  They are permanent.");
-    myself->doTell(ch->getName(), "You can buy the following tattoos from me:");
+    myself->doTell(ch, "I charge 10000 talens for a tattoo.  They are permanent.");
+    myself->doTell(ch, "You can buy the following tattoos from me:");
     for(i=0;i<ntattoos;++i)
-      myself->doTell(ch->getName(), format("%i) %s") % (i+1) % tattoos[i]);
+      myself->doTell(ch, format("%i) %s") % (i+1) % tattoos[i]);
 
     return TRUE;
   } else if(cmd==CMD_BUY){
     arg=one_argument(arg, buf, cElements(buf));
 
     if(!(i=convertTo<int>(buf)) || i>ntattoos){
-      myself->doTell(ch->getName(), "I don't understand, which tattoo do you want?");
+      myself->doTell(ch, "I don't understand, which tattoo do you want?");
       return FALSE;
     }
 
@@ -52,16 +52,16 @@ int tattooArtist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TO
     if ((slot_i = old_search_block(buf, 0, strlen(buf), bodyParts, 0)) > 0) {
       slot = wearSlotT(--slot_i);
       if (!ch->slotChance(slot)) {
-        myself->doTell(ch->getName(), "Where do you want the tattoo?");
+        myself->doTell(ch, "Where do you want the tattoo?");
         return FALSE;
       }
     } else {
-      myself->doTell(ch->getName(), "Where do you want the tattoo?");
+      myself->doTell(ch, "Where do you want the tattoo?");
       return FALSE;
     }
     if(slot==WEAR_LEG_R || slot==WEAR_LEG_L){
-      myself->doTell(ch->getName(), "Sorry, it is against my policy to tattoo legs.");
-      myself->doTell(ch->getName(), "It's not like you're gonna run around pantless to show it off anyway!");
+      myself->doTell(ch, "Sorry, it is against my policy to tattoo legs.");
+      myself->doTell(ch, "It's not like you're gonna run around pantless to show it off anyway!");
       return FALSE;
     }
     
@@ -70,13 +70,13 @@ int tattooArtist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TO
 	     ch->getName().c_str(), slot);
 
     if(db.fetchRow()){
-      myself->doTell(ch->getName(), "You already have a tattoo there.");
+      myself->doTell(ch, "You already have a tattoo there.");
       return FALSE;
     }
 
 
     if(ch->getMoney() < 10000){
-      myself->doTell(ch->getName(), "Hey buddy, you don't even have the money!  Get out of here!");
+      myself->doTell(ch, "Hey buddy, you don't even have the money!  Get out of here!");
       return FALSE;
     }
 

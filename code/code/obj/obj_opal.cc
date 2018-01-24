@@ -110,7 +110,7 @@ void TOpal::getFourValues(int *x1, int *x2, int *x3, int *x4) const
 
 int TOpal::objectSell(TBeing *ch, TMonster *keeper)
 {
-  keeper->doTell(ch->getName(), "I'm sorry, I don't buy back opal powerstones.");
+  keeper->doTell(ch, "I'm sorry, I don't buy back opal powerstones.");
   return TRUE;
 }
 

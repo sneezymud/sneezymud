@@ -132,7 +132,7 @@ sstring TToothNecklace::statObjInfo() const
 bool TToothNecklace::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
 {
   if (!silent) {
-    repair->doTell(fname(ch->name), "I can't repair that.");
+    repair->doTell(ch, "I can't repair that.");
   }
   return TRUE;
 }

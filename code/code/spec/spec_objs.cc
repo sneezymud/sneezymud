@@ -148,20 +148,6 @@ TBeing *genericWeaponProcCheck(TBeing *vict, cmdTypeT cmd, TObj *o, int chance)
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 int rainbowBridge(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 {
   int rc;
@@ -546,33 +532,6 @@ void invert(const char *arg1, char *arg2)
   *(arg2 + i) = '\0';
 }
 
-
-int jive_box(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *, TObj **)
-{
-  char buf[255], buf2[255], tmp[255];
-
-  switch (cmd) {
-    case CMD_SAY:
-    case CMD_SAY2:
-      invert(arg, buf);
-      ch->doSay(buf);
-      return TRUE;
-      break;
-    case CMD_TELL:
-      half_chop(arg, tmp, buf);
-      invert(buf, buf2);
-      ch->doTell(tmp, buf);
-      return TRUE;
-      break;
-    case CMD_SHOUT:
-      invert(arg, buf);
-      ch->doShout(buf);
-      return TRUE;
-      break;
-    default:
-      return FALSE;
-  }
-}
 
 int statue_of_feeding(TBeing *ch, cmdTypeT cmd, const char *argum, TObj *me, TObj *)
 {

@@ -224,7 +224,7 @@ void TBaseCup::lowCheck()
 bool TBaseCup::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
 {
   if (!silent) {
-    repair->doTell(fname(ch->name), "you might wanna take that to the diner!");
+    repair->doTell(ch, "you might wanna take that to the diner!");
   }
   return TRUE;
 }
@@ -252,7 +252,7 @@ void TBaseCup::getFourValues(int *x1, int *x2, int *x3, int *x4) const
 
 int TBaseCup::objectSell(TBeing *ch, TMonster *keeper)
 {
-  keeper->doTell(ch->getName(), "I'm sorry, I don't purchase drink containers.");
+  keeper->doTell(ch, "I'm sorry, I don't purchase drink containers.");
   return TRUE;
 }
 

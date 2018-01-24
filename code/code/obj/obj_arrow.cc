@@ -237,7 +237,7 @@ bool TArrow::engraveMe(TBeing *ch, TMonster *me, bool give)
 {
   char buf[256];
 
-  me->doTell(ch->getName(), "Engraving this would destroy its aerodynamics.");
+  me->doTell(ch, "Engraving this would destroy its aerodynamics.");
 
   if (give) {
     strcpy(buf, name.c_str());
