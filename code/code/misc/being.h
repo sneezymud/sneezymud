@@ -743,7 +743,6 @@ class TBeing : public TThing {
     double pietyGain(double);
     void goBerserk(TBeing *);
     void checkForQuestTog(TBeing *);
-    void sendCheatMessage(char *);
     void stopFighting();
     int canBeParalyzeLimbed();
     int checkIdling();
