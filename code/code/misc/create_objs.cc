@@ -1096,7 +1096,6 @@ static void change_obj_short_desc(TBeing *ch, TObj *o, editorEnterTypeT type)
   ch->sendTo("(Terminate with a ~ on the SAME LINE. Press <ENTER> again to continue)\n\r");
   o->shortDescr = "";
   ch->desc->edit_str = &o->shortDescr;
-//  ch->desc->edit_str_maxlen = MAX_STRING_LENGTH;
   ch->desc->edit_str_maxlen = MAX_NAME_LENGTH-1;
 }
 

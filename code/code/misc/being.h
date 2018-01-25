@@ -559,7 +559,7 @@ class TBeing : public TThing {
     int missVictim(TBeing *, TThing *, spellNumT);
 
     // Postmaster
-    void postmasterSendMail(sstring, TMonster *);
+    void postmasterSendMail(const sstring&, TMonster *);
     void postmasterReceiveMail(TMonster *);
     void postmasterCheckMail(TMonster *);
 
