@@ -41,7 +41,7 @@ bool TObj::canBeMailed(sstring name) const
 }
 
 
-bool has_mail(const sstring recipient)
+bool has_mail(const sstring &recipient)
 {
   TDatabase db(DB_SNEEZY);
   db.query("select 1 from mail where port=%i and lower(mailto)=lower('%s')", gamePort, recipient);
@@ -274,7 +274,7 @@ int postmaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj
 }
 
 
-void TBeing::postmasterSendMail(sstring args, TMonster *me)
+void TBeing::postmasterSendMail(const sstring &argument, TMonster *me)
 {
   sstring item, recipient, talen;
   charFile st;
@@ -282,11 +282,12 @@ void TBeing::postmasterSendMail(sstring args, TMonster *me)
   int i, amt, shop_nr = find_shop_nr(me->number);
   float profit_buy = 0;
 
-  if (args.empty()) {
+  if (argument.empty()) {
     me->doTell(this, "You need to specify an addressee!");
     return;
   }
-  
+
+  sstring args = argument;
   args = one_argument(args, recipient);
   args = one_argument(args, item);
   args = one_argument(args, talen);
