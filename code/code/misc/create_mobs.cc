@@ -64,7 +64,6 @@ static bool isBadForAffectFlags(uint64_t update)
     case AFF_STUNNED:
     case AFF_SHOCKED:
     case AFF_SYPHILIS:    
-      //    case AFF_UNDEF4:
     case AFF_ENGAGER:
     case AFF_SCRYING:
     case AFF_WEB:
