@@ -739,13 +739,13 @@ TBeing *findTellTarget(TBeing *me, const sstring &name, bool visible, bool mobs)
 
 TBeing *findAccountAlternate(TBeing *me, const sstring &name, bool visible)
 {
-    TBeing *vict;
-    TDatabase db(DB_SNEEZY);
-    db.query("select p1.name as name from player p1, player p2, account a where p2.name='%s' and a.account_id=p2.account_id and p1.account_id=a.account_id", name);
-    while (db.fetchRow())
-        if ((vict=findTellTarget(me, db["name"], visible, false)))
-            return vict;
-    return nullptr;
+  TBeing *vict;
+  TDatabase db(DB_SNEEZY);
+  db.query("select p.name as name from player p join player a on p.account_id = a.account_id and a.name = '%s' where p.name <> '%s'", name, name);
+  while (db.fetchRow())
+    if ((vict=findTellTarget(me, db["name"], visible, false)))
+      return vict;
+  return nullptr;
 }
 
 
