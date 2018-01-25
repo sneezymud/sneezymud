@@ -775,22 +775,15 @@ void TMonster::checkMobStats(tinyfileTypeT forReal)
   if (isAffected(AFF_CHARM) && !master) 
     vlogf(LOG_LOW, format("mob (%s:%d) with AFF_CHARM (%d) and no master set.") %
 	  getName() % mobVnum() % AFF_CHARM); 
-#if 0
   if (isAffected(AFF_STUNNED)) 
     vlogf(LOG_LOW, format("mob (%s:%d) with AFF_STUNNED set. make %d") %
 	  getName() % mobVnum() % (specials.affectedBy & ~AFF_STUNNED));
-#endif
   if (isAffected(AFF_SHOCKED)) 
     vlogf(LOG_LOW, format("mob (%s:%d) with AFF_SHOCKED set. make %d") %  
 	  getName() % mobVnum() % (specials.affectedBy & ~AFF_SHOCKED));
   if (isAffected(AFF_SYPHILIS)) 
     vlogf(LOG_LOW, format("mob (%s:%d) with AFF_SYPHILIS (%d) set.") %
 	  getName() % mobVnum() % AFF_SYPHILIS);
-#ifdef JEEZ
-  if (isAffected(AFF_UNDEF4)) 
-    vlogf(LOG_LOW, format("mob (%s:%d) with AFF_UNDEF4 (%d) set.") %
-	  getName() % mobVnum() % AFF_UNDEF4);
-#endif
   sumstat = getStat(STAT_CHOSEN, STAT_STR) +
             getStat(STAT_CHOSEN, STAT_BRA) +
             getStat(STAT_CHOSEN, STAT_AGI) +
