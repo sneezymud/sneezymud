@@ -77,7 +77,7 @@ sstring TMagicItem::displayFourValues()
 int TMagicItem::objectSell(TBeing *ch, TMonster *keeper)
 {
   if (getMagicLearnedness() < MAX_SKILL_LEARNEDNESS) {
-    keeper->doTell(ch->getName(), format("I'm sorry, that %s is of sub-standard quality.") % fname(name));
+    keeper->doTell(ch, format("I'm sorry, that %s is of sub-standard quality.") % fname(name));
     return TRUE;
   }
 

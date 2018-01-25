@@ -597,7 +597,7 @@ class TBeing : public TThing {
     int numClasses() const;
 
     int triggerSpecial(TThing *, cmdTypeT cmd, const char *arg); 
-    int triggerSpecialOnPerson(TThing *, cmdTypeT cmd, const char *arg); 
+    int triggerSpecialOnPerson(TThing *, cmdTypeT cmd, const sstring &arg); 
     void sendCastingMessages(bool, bool, int, skillUseTypeT, int);
     void sendFinalCastingMessages(bool, bool, skillUseTypeT);
 
@@ -743,7 +743,6 @@ class TBeing : public TThing {
     double pietyGain(double);
     void goBerserk(TBeing *);
     void checkForQuestTog(TBeing *);
-    void sendCheatMessage(char *);
     void stopFighting();
     int canBeParalyzeLimbed();
     int checkIdling();
@@ -1816,7 +1815,16 @@ class TBeing : public TThing {
     void lookingAtObj(TThing *);
     void doShout(const sstring &);
     int doWhisper(const sstring &);
+
+    int doTell(const TBeing *vict, const sstring &message, bool visible = TRUE) {
+        return doTell(const_cast<TBeing *>(vict), message, visible);
+    }
+    int doTell(TBeing &vict, const sstring &message, bool visible = TRUE) {
+        return doTell(&vict, message, visible);
+    }
     int doTell(const sstring &, const sstring &, bool visible = TRUE);
+    int doTell(TBeing *, const sstring &, bool visible = TRUE);
+
     int doClientMessage(const char *);
     int doAsk(const sstring &);
     int doSign(const sstring &);

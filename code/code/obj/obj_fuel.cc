@@ -146,7 +146,7 @@ void TFuel::lowCheck()
 
 int TFuel::objectSell(TBeing *ch, TMonster *keeper)
 {
-  keeper->doTell(ch->getName(), "I'm sorry, I don't buy back fuel.");
+  keeper->doTell(ch, "I'm sorry, I don't buy back fuel.");
   return TRUE;
 }
 

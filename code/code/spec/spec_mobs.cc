@@ -383,7 +383,7 @@ int rumorMonger(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *
       if (strlen(buf) >= 1)
         buf[strlen(buf) - 1] = '\0';
 
-      myself->doTell(fname(ch->name), buf);
+      myself->doTell(ch, buf);
       fclose(fp);
       return TRUE;
     }
@@ -437,7 +437,7 @@ int rumorMonger(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *
     if (strlen(buf) >= 1)
       buf[strlen(buf) - 1] = '\0';
 
-    myself->doTell(fname(ch->name), buf);
+    myself->doTell(ch, buf);
     fclose(fp);
     return TRUE;
   }
@@ -536,7 +536,7 @@ int newbieEquipper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
         ch->doWhisper(arg);
       else
         ch->doAsk(arg);
-      me->doTell(ch->getName(), "You are not a cleric or deikhan. I am not that charitable.");
+      me->doTell(ch, "You are not a cleric or deikhan. I am not that charitable.");
       return TRUE;
     } else {
       request = 2;
@@ -564,7 +564,7 @@ int newbieEquipper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
     return FALSE;
   
   if (ch->GetMaxLevel() >= 10) {
-    me->doTell(ch->getName(), "I can no longer help you!");
+    me->doTell(ch, "I can no longer help you!");
     return TRUE;
   }
 
@@ -594,13 +594,13 @@ int newbieEquipper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
         act("$n smiles and hands $N some equipment.", TRUE, me, NULL, ch,TO_NOTVICT);
         act("$n smiles and hands you some equipment.", TRUE, me, NULL, ch,TO_VICT);
         ch->doNewbieEqLoad(RACE_NORACE, 0, true);
-        me->doTell(ch->getName(), "May these items serve you well.  Be more careful next time!");
+        me->doTell(ch, "May these items serve you well.  Be more careful next time!");
         found = 2;
       }
       break;
     case 2:
       if (!ch->hasClass(CLASS_CLERIC) &&  !ch->hasClass(CLASS_DEIKHAN)) {
-        me->doTell(ch->getName(), "You are not a cleric or deikhan. I only give symbols to those who will use them.");
+        me->doTell(ch, "You are not a cleric or deikhan. I only give symbols to those who will use them.");
         return TRUE;
       }
       if (ch->affectedBySpell(AFFECT_NEWBIE)) {
@@ -616,7 +616,7 @@ int newbieEquipper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
           }
         }
         if (best) {
-          me->doTell(ch->getName(), "You already have a symbol.  I only help the the totally destitute.");
+          me->doTell(ch, "You already have a symbol.  I only help the the totally destitute.");
           return TRUE;
         }
         act("$n rummages through a bin and selects an item.", TRUE, me, NULL, NULL, TO_ROOM);
@@ -631,7 +631,7 @@ int newbieEquipper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
           act("$n smiles and hands a holy symbol to you.", TRUE, me, NULL, ch,TO_VICT);
         }
         personalize_object(NULL, ch, 500, -1);
-        me->doTell(ch->getName(), "May it serve you well. Be more careful next time!");
+        me->doTell(ch, "May it serve you well. Be more careful next time!");
         found = 2;
         if (ch->hasClass(CLASS_CLERIC))
           duration = max(1, (ch->GetMaxLevel() / 3)) * 48 * Pulse::UPDATES_PER_MUDHOUR;
@@ -639,12 +639,12 @@ int newbieEquipper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
       break;
     case 3:
       if (ch->hasClass(CLASS_MONK)) {
-        me->doTell(ch->getName(), "You are a monk.  I only help those who directly need the help.");
+        me->doTell(ch, "You are a monk.  I only help those who directly need the help.");
         return TRUE;
       }
       for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end() && (i=*it);++it) {
         if (dynamic_cast<TGenWeapon *>(i)) {
-          me->doTell(ch->getName(), "You already have a weapon.  I only help the the totally destitute.");
+          me->doTell(ch, "You already have a weapon.  I only help the the totally destitute.");
           return TRUE;
         }
       }
@@ -671,7 +671,7 @@ int newbieEquipper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
         }
         act("$n smiles and hands $p to $N.", TRUE, me, obj, ch,TO_NOTVICT);
         act("$n smiles and hands $p to you.", TRUE, me, obj, ch,TO_VICT);
-        me->doTell(ch->getName(), "May it serve you well. Be more careful next time!");
+        me->doTell(ch, "May it serve you well. Be more careful next time!");
         found = 2;
         duration = max(1, (ch->GetMaxLevel() / 3)) * 48 * Pulse::UPDATES_PER_MUDHOUR;
       }
@@ -696,7 +696,7 @@ int newbieEquipper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
       vlogf(LOG_MISC, format("Switched god used newbieEquip  %s by %s") %  ch->getName()  % me->getName());
     }
   } else if (found == 1) {
-    me->doTell(ch->getName(), "You just used my service.  Come back later and only if you haven't gotten other help.");
+    me->doTell(ch, "You just used my service.  Come back later and only if you haven't gotten other help.");
     return TRUE;
   } else {
     vlogf(LOG_BUG, format("Somehow something got through equipNewbie %s by %s") %  ch->getName() % me->getName());
@@ -1571,7 +1571,7 @@ int payToll(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
               return FALSE;
 
         if (ch->isPc())
-          myself->doTell(ch->getName(), "Hey! Your not authorized to be here!");
+          myself->doTell(ch, "Hey! Your not authorized to be here!");
 
         act("$n shoves you south out of the room!", FALSE, myself, 0, ch, TO_VICT);
         act("$n shoves $N south out of the room!", FALSE, myself, 0, ch, TO_NOTVICT);
@@ -2823,8 +2823,8 @@ int petVeterinarian(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TOb
   if(cmd == CMD_LIST){
     for(int i=1;db.fetchRow();++i){
       if(i==1){
-	me->doTell(ch->getName(), "Yeah, your pet dragged himself in here, half dead, and I fixed him up.");
-	me->doTell(ch->getName(), "You'll have to pay the bill if you want the cuddly little thing back.");
+	me->doTell(ch, "Yeah, your pet dragged himself in here, half dead, and I fixed him up.");
+	me->doTell(ch, "You'll have to pay the bill if you want the cuddly little thing back.");
       }
       
       vnum=convertTo<int>(db["vnum"]);
@@ -2837,10 +2837,10 @@ int petVeterinarian(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TOb
 	  short_desc=format("\"%s\", the %s") % db["name"].cap() % short_desc;
 	else
 	  short_desc=format("\"%s\", %s") % db["name"].cap() % short_desc;
-	me->doTell(ch->getName(), format("%i) %s - %i talens") %
+	me->doTell(ch, format("%i) %s - %i talens") %
 		   i % short_desc % petPriceL(level));
       } else {
-	me->doTell(ch->getName(), format("%i) %s - %i talens") %
+	me->doTell(ch, format("%i) %s - %i talens") %
 		   i % short_desc % petPriceL(level));
       }
     }
@@ -2884,7 +2884,7 @@ int petVeterinarian(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TOb
 	    }
 	    
 	    if(name == db["name"]){
-	      me->doTell(ch->getName(), "Hmm my mistake, I thought that guy wandered in here but looks like it wandered out again...");
+	      me->doTell(ch, "Hmm my mistake, I thought that guy wandered in here but looks like it wandered out again...");
 	      return TRUE;
 	    }
 	  }
@@ -2895,7 +2895,7 @@ int petVeterinarian(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TOb
     int price=petPriceL(level);
 
     if(ch->getMoney() < price){
-      me->doTell(ch->getName(), "You can't afford it!");
+      me->doTell(ch, "You can't afford it!");
       return TRUE;
     }
 
@@ -3012,9 +3012,9 @@ int pet_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
     sstring tellBuf = "Look through the ";
     tellBuf += tw ? fname(tw->name) : "window";
     tellBuf += " to see the pets!";
-    me->doTell(fname(ch->name), tellBuf);
+    me->doTell(ch, tellBuf);
 
-    me->doTell(ch->getName(), "If you see something you'd like, VALUE <mob> and I'll tell you the price.");
+    me->doTell(ch, "If you see something you'd like, VALUE <mob> and I'll tell you the price.");
     return TRUE;
   } else if (cmd == CMD_BUY) {
     arg = one_argument(arg, buf, cElements(buf));
@@ -3028,13 +3028,13 @@ int pet_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
       sstring tellBuf = "Look through the ";
       tellBuf += tw ? fname(tw->name) : "window";
       tellBuf += " again, there is no such pet!";
-      me->doTell(fname(ch->name), tellBuf);
+      me->doTell(ch, tellBuf);
 
       return TRUE;
     }
 
     if (pet->desc || pet->isPc() || pet->number < 0) {
-      me->doTell(fname(ch->name), format("%s is not for sale.") % pet->getName());
+      me->doTell(ch, format("%s is not for sale.") % pet->getName());
       return TRUE;
     }
     int petLevel = pet->GetMaxLevel();
@@ -3043,17 +3043,17 @@ int pet_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
     if (ch->isImmortal()) {
     } else if (!ch->hasClass(CLASS_RANGER)) {
       if ((4 * petLevel) > (3 * pcLevel)) {
-        me->doTell(fname(ch->name), "I think I would be negligent if I sold you so powerful a pet.");
+        me->doTell(ch, "I think I would be negligent if I sold you so powerful a pet.");
         return TRUE;
       }
     } else {
       if (petLevel > pcLevel) {
-        me->doTell(fname(ch->name), "I think I would be negligent if I sold you so powerful a pet.");
+        me->doTell(ch, "I think I would be negligent if I sold you so powerful a pet.");
         return TRUE;
       }
     }
     if (ch->tooManyFollowers(pet, FOL_PET)) {
-      me->doTell(fname(ch->name), "With your charisma, it would be animal abuse for me to sell you this pet.");
+      me->doTell(ch, "With your charisma, it would be animal abuse for me to sell you this pet.");
       return TRUE;
     }
 
@@ -3061,7 +3061,7 @@ int pet_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 		  shop_index[shop_nr].getProfitBuy(NULL, ch));
 
     if (ch->isPc() && ((ch->getMoney()) < price) && !ch->isImmortal()) {
-      me->doTell(ch->name, "You don't have enough money for that pet!");
+      me->doTell(ch, "You don't have enough money for that pet!");
       return TRUE;
     }
     if (!(pet = read_mobile(pet->number, REAL))) {
@@ -3120,7 +3120,7 @@ int pet_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
       sstring tellBuf = "Look through the ";
       tellBuf += tw ? fname(tw->name) : "window";
       tellBuf += " again, there is no such pet!";
-      me->doTell(fname(ch->name), tellBuf);
+      me->doTell(ch, tellBuf);
       return TRUE;
     }
     int petLevel = pet->GetMaxLevel();
@@ -3129,20 +3129,20 @@ int pet_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
     price = (int)((float) pet->petPrice() * 
 		  shop_index[shop_nr].getProfitBuy(NULL, ch));
 
-    me->doTell(ch->name, format("A pet %s will cost %d to purchase.") % fname(pet->name) % price);
-    //    me->doTell(ch->name, format("and %d to rent.") % (pet->petPrice() / 4));
+    me->doTell(ch, format("A pet %s will cost %d to purchase.") % fname(pet->name) % price);
+    //    me->doTell(ch, format("and %d to rent.") % (pet->petPrice() / 4));
     if (ch->isImmortal()) {
     } else if (!ch->hasClass(CLASS_RANGER)) {
       if ((4 * petLevel) > (3 * pcLevel)) {
-        me->doTell(fname(ch->name), "I think I would be negligent if I sold you so powerful a pet.");
+        me->doTell(ch, "I think I would be negligent if I sold you so powerful a pet.");
       }
     } else {
       if (petLevel > pcLevel) {
-        me->doTell(fname(ch->name), "I think I would be negligent if I sold you so powerful a pet.");
+        me->doTell(ch, "I think I would be negligent if I sold you so powerful a pet.");
       }
     }
     if (ch->tooManyFollowers(pet, FOL_PET)) {
-      me->doTell(fname(ch->name), "With your charisma, it would be animal abuse for me to sell you this pet.");
+      me->doTell(ch, "With your charisma, it would be animal abuse for me to sell you this pet.");
     }
     return TRUE;
   }
@@ -3161,7 +3161,7 @@ int stable_man(TBeing *ch, cmdTypeT cmd, const char *, TMonster *me, TObj *)
     sstring tellBuf = "Look through the ";
     tellBuf += tw ? fname(tw->name) : "window";
     tellBuf += " to see the mounts!";
-    me->doTell(fname(ch->name), tellBuf);
+    me->doTell(ch, tellBuf);
 
     return TRUE;
   }
@@ -3230,7 +3230,7 @@ static void attuneStructSanityCheck(attune_struct *job)
 
 void TThing::attunerValue(TBeing *ch, TMonster *me)
 {
-  me->doTell(ch->getName(), "I can only attune symbols.");
+  me->doTell(ch, "I can only attune symbols.");
 }
 
 void TSymbol::attunerValue(TBeing *ch, TMonster *me)
@@ -3238,19 +3238,19 @@ void TSymbol::attunerValue(TBeing *ch, TMonster *me)
   int cost;
 
   if (getSymbolFaction() != FACT_UNDEFINED) {
-    me->doTell(ch->getName(), format("%s has already been attuned!") % getName());
+    me->doTell(ch, format("%s has already been attuned!") % getName());
     return;
   }
   cost = attunePrice(this, ch, find_shop_nr(me->number));
 
-  me->doTell(ch->getName(), format("I will tithe you %d talens to attune your %s.") % cost % getName());
+  me->doTell(ch, format("I will tithe you %d talens to attune your %s.") % cost % getName());
 }
 
 void TThing::attunerGiven(TBeing *ch, TMonster *me)
 {
   sstring buf;
 
-  me->doTell(ch->getName(), "I can only attune symbols!");
+  me->doTell(ch, "I can only attune symbols!");
   buf=format("%s %s") % add_bars(name) % fname(ch->name);
   me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT);
 }
@@ -3262,7 +3262,7 @@ void TSymbol::attunerGiven(TBeing *ch, TMonster *me)
   attune_struct *job;
 
   if (getSymbolFaction() != FACT_UNDEFINED) {
-    me->doTell(ch->getName(), "That symbol has already been attuned!");
+    me->doTell(ch, "That symbol has already been attuned!");
     strcpy(buf, name.c_str());
     strcpy(buf, add_bars(buf).c_str());
     sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
@@ -3272,7 +3272,7 @@ void TSymbol::attunerGiven(TBeing *ch, TMonster *me)
   cost = attunePrice(this, ch, find_shop_nr(me->number));
 
   if (ch->getMoney() < cost) {
-    me->doTell(ch->getName(), "I only attune for a reasonable tithe. I am sorry, I do not make exceptions!");
+    me->doTell(ch, "I only attune for a reasonable tithe. I am sorry, I do not make exceptions!");
     strcpy(buf, name.c_str());
     strcpy(buf, add_bars(buf).c_str());
     sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
@@ -3542,27 +3542,27 @@ int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       break;
     case CMD_VALUE:
       if (!ch->hasClass(CLASS_CLERIC) && !ch->hasClass(CLASS_DEIKHAN)) {
-        me->doTell(ch->getName(), "You are not a cleric or Deikhan.  I can not help you.");
+        me->doTell(ch, "You are not a cleric or Deikhan.  I can not help you.");
         return TRUE;
       }
       for(; *arg && isspace(*arg);arg++);
 
       if (!(t = searchLinkedListVis(ch, arg, ch->stuff))) {
-        me->doTell(ch->getName(), "You don't have that symbol.");
+        me->doTell(ch, "You don't have that symbol.");
         return TRUE;
       }
       t->attunerValue(ch, me);
       return TRUE;
     case CMD_MOB_GIVEN_ITEM:
       if (!(t = o)) {
-        me->doTell(ch->getName(), "You don't have that item!");
+        me->doTell(ch, "You don't have that item!");
         return TRUE;
       }
       if (!ch->hasClass(CLASS_CLERIC) && !ch->hasClass(CLASS_DEIKHAN)) {
         act("You do not accept $N's offer to give you $p.", TRUE, me, t, ch, TO_CHAR);
         act("$n rejects your attempt to give $s $p.", TRUE, me, t, ch, TO_VICT);
         act("$n refuses to accept $p from $N.", TRUE, me, t, ch, TO_NOTVICT); 
-        me->doTell(ch->getName(), "You are not a cleric or Deikhan.  I can not help you.");
+        me->doTell(ch, "You are not a cleric or Deikhan.  I can not help you.");
         strcpy(buf, t->name.c_str());
         strcpy(buf, add_bars(buf).c_str());
         sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
@@ -3574,7 +3574,7 @@ int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         act("You do not accept $N's offer to give you $p.", TRUE, me, t, ch, TO_CHAR);
         act("$n rejects your attempt to give $s $p.", TRUE, me, t, ch, TO_VICT);
         act("$n refuses to accept $p from $N.", TRUE, me, t, ch, TO_NOTVICT);
-        me->doTell(ch->getName(), "I can not help you unless you take a position of rest.");
+        me->doTell(ch, "I can not help you unless you take a position of rest.");
         strcpy(buf, t->name.c_str());
         strcpy(buf, add_bars(buf).c_str());
         sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
@@ -3592,7 +3592,7 @@ int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 
 int TThing::sharpenerValueMe(const TBeing *ch, TMonster *me) const
 {
-  me->doTell(ch->getName(), "I can only value weapons.");
+  me->doTell(ch, "I can only value weapons.");
   return TRUE;
 }
 
@@ -3600,7 +3600,7 @@ int TThing::sharpenerGiveMe(TBeing *ch, TMonster *me)
 {
   char buf[256];
 
-  me->doTell(ch->getName(), "I can only sharpen weapons!");
+  me->doTell(ch, "I can only sharpen weapons!");
   strcpy(buf, name.c_str());
   strcpy(buf, add_bars(buf).c_str());
   sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
@@ -3761,13 +3761,13 @@ int sharpener(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       for(; *arg && isspace(*arg);arg++);
 
       if (!(valued = searchLinkedListVis(ch, arg, ch->stuff))) {
-        me->doTell(ch->getName(), "You don't have that item.");
+        me->doTell(ch, "You don't have that item.");
         return TRUE;
       }
       return valued->sharpenerValueMe(ch, me);
     case CMD_MOB_GIVEN_ITEM:
       if (!(weap = o)) {
-        me->doTell(ch->getName(), "You don't have that item!");
+        me->doTell(ch, "You don't have that item!");
         return TRUE;
       }
       me->logItem(weap, CMD_EAST);  // log the receipt of the item
@@ -4435,7 +4435,7 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       TObj *valued = NULL;
       if (!(ts = searchLinkedListVis(ch, arg, ch->stuff)) ||
           !(valued = dynamic_cast<TObj *>(ts))) {
-        me->doTell(ch->getName(), "You don't have that item.");
+        me->doTell(ch, "You don't have that item.");
         return TRUE;
       }
 
@@ -4443,35 +4443,35 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         return TRUE;
 
       if (valued->obj_flags.cost <=  500) {
-        me->doTell(ch->getName(), "This item is too cheap to be engraved.");
+        me->doTell(ch, "This item is too cheap to be engraved.");
         return TRUE;
       }
       if (!valued->action_description.empty()) {
-        me->doTell(ch->getName(), "This item has already been engraved!");
+        me->doTell(ch, "This item has already been engraved!");
         return TRUE;
       }
       if (obj_index[valued->getItemIndex()].max_exist <= 10) {
-        me->doTell(ch->getName(), "I refuse to engrave such an artifact of beauty!");
+        me->doTell(ch, "I refuse to engrave such an artifact of beauty!");
         return TRUE;
       }
       if (valued->obj_flags.decay_time >= 0) {
-        me->doTell(ch->getName(), "Sorry, but this item won't last long enough to bother with an engraving!");
+        me->doTell(ch, "Sorry, but this item won't last long enough to bother with an engraving!");
         return TRUE;
       }
 
       cost = engraveCost(valued, ch, find_shop_nr(me->number));
 
-      me->doTell(ch->getName(), format("It will cost %d talens to engrave your %s.") % cost % fname(valued->name));
+      me->doTell(ch, format("It will cost %d talens to engrave your %s.") % cost % fname(valued->name));
       return TRUE;
       }
     case CMD_MOB_GIVEN_ITEM:
       // prohibit polys and charms from engraving 
       if (dynamic_cast<TMonster *>(ch)) {
-        me->doTell(fname(ch->name), "I don't engrave for beasts.");
+        me->doTell(ch, "I don't engrave for beasts.");
         return TRUE;
       }
       if (!(item = o)) {
-        me->doTell(ch->getName(), "You don't have that item!");
+        me->doTell(ch, "You don't have that item!");
         return TRUE;
       }
       me->logItem(item, CMD_EAST);  // log the receipt of the item
@@ -4480,7 +4480,7 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         return TRUE;
 
       if (item->obj_flags.cost <= 500) {
-        me->doTell(ch->getName(), "That can't be engraved!");
+        me->doTell(ch, "That can't be engraved!");
         strcpy(buf, item->name.c_str());
         strcpy(buf, add_bars(buf).c_str());
         sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
@@ -4488,7 +4488,7 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         return TRUE;
       }
       if (!item->action_description.empty()) {
-        me->doTell(ch->getName(), "Sorry, but this item has already been engraved!");
+        me->doTell(ch, "Sorry, but this item has already been engraved!");
         strcpy(buf, item->name.c_str());
         strcpy(buf, add_bars(buf).c_str());
         sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
@@ -4496,7 +4496,7 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         return TRUE;
       }
       if (obj_index[item->getItemIndex()].max_exist <= 10) {
-        me->doTell(ch->getName(), "This artifact is too powerful to be engraved!");
+        me->doTell(ch, "This artifact is too powerful to be engraved!");
         strcpy(buf, item->name.c_str());
         strcpy(buf, add_bars(buf).c_str());
         sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
@@ -4504,7 +4504,7 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         return TRUE;
       }
       if (item->obj_flags.decay_time >= 0) {
-        me->doTell(ch->getName(), "This won't be around long enough to bother engraving it!");
+        me->doTell(ch, "This won't be around long enough to bother engraving it!");
         strcpy(buf, item->name.c_str());
         strcpy(buf, add_bars(buf).c_str());
         sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
@@ -4515,7 +4515,7 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       cost = engraveCost(item, ch, find_shop_nr(me->number));
 
       if (ch->getMoney() < cost) {
-        me->doTell(ch->getName(), "I have to make a living! If you don't have the money, I don't do the work!");
+        me->doTell(ch, "I have to make a living! If you don't have the money, I don't do the work!");
         strcpy(buf, item->name.c_str());
         strcpy(buf, add_bars(buf).c_str());
         sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
@@ -4592,23 +4592,23 @@ int TicketGuy(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
     return FALSE;
 
   if (ch->getPosition() > POSITION_STANDING) {
-    me->doTell(fname(ch->name), "I won't sell you a ticket unless you stand on your own feet.");
+    me->doTell(ch, "I won't sell you a ticket unless you stand on your own feet.");
     return TRUE;
   }
 
   arg = one_argument(arg, obj_name, cElements(obj_name));
 
   if (!*obj_name || strcmp(obj_name,"ticket")) {
-    me->doTell(fname(ch->name), "Buy what?!?");
+    me->doTell(ch, "Buy what?!?");
     return TRUE;
   }
   // prohibit polys and charms from engraving 
   if (dynamic_cast<TMonster *>(ch)) {
-    me->doTell(fname(ch->name), "I don't sell tickets to beasts.");
+    me->doTell(ch, "I don't sell tickets to beasts.");
     return TRUE;
   }
   if (ch->getMoney() < TICKET_PRICE) {
-    me->doTell(fname(ch->name), format("Tickets cost %d talens.") % TICKET_PRICE);
+    me->doTell(ch, format("Tickets cost %d talens.") % TICKET_PRICE);
     return TRUE;
   }
   ch->addToMoney(-TICKET_PRICE, GOLD_HOSPITAL);
@@ -5568,34 +5568,34 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       TObj *valued = NULL;
       if (!(ts = searchLinkedListVis(ch, arg, ch->stuff)) ||
           !(valued = dynamic_cast<TObj *>(ts))) {
-        me->doTell(ch->getName(), "You don't have that item.");
+        me->doTell(ch, "You don't have that item.");
         return TRUE;
       }
       if (valued->obj_flags.decay_time >= 0) {
-        me->doTell(ch->getName(), "Sorry, but this item won't last long and isn't worth the money spent.");
+        me->doTell(ch, "Sorry, but this item won't last long and isn't worth the money spent.");
         return TRUE;
       }
 
       cost = divCost(valued, ch, find_shop_nr(me->number));
 
-      me->doTell(ch->getName(), format("It will cost %d talens to identify your %s.") % cost % fname(valued->name));
+      me->doTell(ch, format("It will cost %d talens to identify your %s.") % cost % fname(valued->name));
       return TRUE;
       }
     case CMD_MOB_GIVEN_ITEM:
       if (!(item = o)) {
-        me->doTell(ch->getName(), "You don't have that item!");
+        me->doTell(ch, "You don't have that item!");
         return TRUE;
       }
       // prohibit polys and charms from engraving 
       if (dynamic_cast<TMonster *>(ch)) {
-        me->doTell(fname(ch->name), "I don't identify for beasts.");
+        me->doTell(ch, "I don't identify for beasts.");
         me->doGive(ch, item,GIVE_FLAG_IGN_DEX_TEXT);
         return TRUE;
       }
       me->logItem(item, CMD_EAST);  // log the receipt of the item
       cost = divCost(item, ch, find_shop_nr(me->number));
       if (ch->getMoney() < cost) {
-        me->doTell(ch->getName(), "I have to make a living! If you don't have the money, I don't do the work!");
+        me->doTell(ch, "I have to make a living! If you don't have the money, I don't do the work!");
         me->doGive(ch,item,GIVE_FLAG_IGN_DEX_TEXT);
         return TRUE;
       }
@@ -6280,35 +6280,35 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
   if(cmd == CMD_VALUE){
     if (!(ts = searchLinkedListVis(ch, arg, ch->stuff)) ||
 	!(o = dynamic_cast<TObj *>(ts))) {
-      me->doTell(ch->getName(), "You don't have that item.");
+      me->doTell(ch, "You don't have that item.");
       return TRUE;
     }
 
     if(!okForCommodMaker(o, buf)){
-      me->doTell(ch->getName(), buf);
+      me->doTell(ch, buf);
       return TRUE;
     }
 
     mat_list=commodMakerValue(o, value);
 
-    me->doTell(ch->getName(), "I can turn that into:");
+    me->doTell(ch, "I can turn that into:");
     for(iter=mat_list.begin();iter!=mat_list.end();++iter){
-       me->doTell(ch->getName(), format("%i units of %s.") %
+       me->doTell(ch, format("%i units of %s.") %
 		 (*iter).second % material_nums[(*iter).first].mat_name);
     }
-    me->doTell(ch->getName(), format("My fee for this is %i talens.") %
+    me->doTell(ch, format("My fee for this is %i talens.") %
 	       (int)(shop_index[shop_nr].getProfitBuy(o, ch) * value));
 
     return TRUE;
   } else if(cmd == CMD_MOB_GIVEN_ITEM){
     if (o->isObjStat(ITEM_NEWBIE) || material_nums[o->getMaterial()].price <= 0){
-      me->doTell(ch->getName(), "That isn't a valuable commodity - I can't convert that.");
+      me->doTell(ch, "That isn't a valuable commodity - I can't convert that.");
       me->doGive(ch,o, GIVE_FLAG_DROP_ON_FAIL);
       return TRUE;
     }
 
     if(!okForCommodMaker(o,buf)){
-      me->doTell(ch->getName(), buf);
+      me->doTell(ch, buf);
       me->doGive(ch,o, GIVE_FLAG_DROP_ON_FAIL);
       return TRUE;
     }
@@ -6317,7 +6317,7 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
     value = (int)(shop_index[shop_nr].getProfitBuy(o, ch) * value);
 
     if(ch->getMoney() < (int)value){
-      me->doTell(ch->getName(), "You can't afford it!");
+      me->doTell(ch, "You can't afford it!");
       me->doGive(ch,o, GIVE_FLAG_DROP_ON_FAIL);
       return TRUE;
     }
@@ -6335,7 +6335,7 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
       commod->setWeight((*iter).second/10.0);
       commod->setMaterial((*iter).first);
       
-      me->doTell(ch->getName(), "Alright, here you go!");
+      me->doTell(ch, "Alright, here you go!");
       
       *me += *commod;
       me->doGive(ch,commod, GIVE_FLAG_DROP_ON_FAIL);
@@ -6647,7 +6647,7 @@ int shopWhisper(TBeing *ch, TMonster *myself, int shop_nr, const char *arg)
   } else if(!strcmp(buf, "string")){
     tso.setString(arg);
   } else {
-    myself->doTell(ch->getName(), "Read 'help shop owner' for assistance.");
+    myself->doTell(ch, "Read 'help shop owner' for assistance.");
   }
 
   return TRUE;

@@ -363,22 +363,22 @@ int guildRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, 
       return FALSE;
     }
     if (count == 1) {
-      myself->doTell(fname(ch->name), "If you want me to help you, you have to use the right syntax.");
-      myself->doTell(fname(ch->name), "Try 'fedit create <keywords>'");
+      myself->doTell(ch, "If you want me to help you, you have to use the right syntax.");
+      myself->doTell(ch, "Try 'fedit create <keywords>'");
       return TRUE;
     }
-    myself->doTell(fname(ch->name), "Ah, so you wish to found a new guild?");
-    myself->doTell(fname(ch->name), "Let me just make sure your paperwork is in order.");
+    myself->doTell(ch, "Ah, so you wish to found a new guild?");
+    myself->doTell(ch, "Let me just make sure your paperwork is in order.");
     
     
     if(ch->isImmortal()) {
-      myself->doTell(fname(ch->name), "Actually... for an immortal I think I can skip the paperwork.");
+      myself->doTell(ch, "Actually... for an immortal I think I can skip the paperwork.");
       myself->doAction(fname(ch->name), CMD_SMILE);
     } else {
       if(ch->inRoom() != Room::GUILD_BUREAU) {
 	myself->doAction("", CMD_BLINK);
 	myself->doSay("Uh, it seem I've misplaced my office.");
-	myself->doTell(fname(ch->name), "Tell ya what, I'll meet you there, and then we'll go over your paperwork.");
+	myself->doTell(ch, "Tell ya what, I'll meet you there, and then we'll go over your paperwork.");
 	act("$n hurries off back to $s office.", 0, myself, 0, 0, TO_ROOM);
 	--(*myself);
 	*real_roomp(Room::GUILD_BUREAU) += *myself;
@@ -491,27 +491,27 @@ int guildRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, 
       // logic: guild doesn't exist, guild is hidden and hasn't extended an offer, or
       // guild is inactive - deny.
       
-      myself->doTell(fname(ch->name), "I'm sorry, it appears that guild does not show up in any of my records.");
+      myself->doTell(ch, "I'm sorry, it appears that guild does not show up in any of my records.");
       
       return TRUE;
     }
     if(ch->getGuildID()>=0) {
-      myself->doTell(fname(ch->name), "You are already a member of a guild... you'll have to disband before you join another.");
-      myself->doTell(fname(ch->name), "There is also a twenty four hour wait period before you may join another guild.");
+      myself->doTell(ch, "You are already a member of a guild... you'll have to disband before you join another.");
+      myself->doTell(ch, "There is also a twenty four hour wait period before you may join another guild.");
       
       return TRUE;
     }
     if(ch->recentlyDefected()) {
-      myself->doTell(fname(ch->name), "You recently defected from your guild, you'll have to wait to join another.");
+      myself->doTell(ch, "You recently defected from your guild, you'll have to wait to join another.");
       return TRUE;
     }
     
     if(!ch->hasOffer(f)) {
-      myself->doTell(fname(ch->name), format("%s has not extended a recruitment offer to you.") % f->getName());
+      myself->doTell(ch, format("%s has not extended a recruitment offer to you.") % f->getName());
       if(!IS_SET(f->flags, GUILD_OPEN_RECRUITMENT)) {
 	return TRUE;
       } else {
-	myself->doTell(fname(ch->name), "However, they offer open recruitment, so I can sign you up anyway.");
+	myself->doTell(ch, "However, they offer open recruitment, so I can sign you up anyway.");
       }
       
     }
@@ -535,7 +535,7 @@ int guildRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, 
     
   }
   if (cmd == CMD_LIST) {
-    myself->doTell(fname(ch->name), "I currently have these guilds registered as active.");
+    myself->doTell(ch, "I currently have these guilds registered as active.");
     act("$n gets a sheet of paper from $s desk and holds it out to you.\n\rIt reads as follows:\n\r",
         FALSE, myself, 0, ch, TO_VICT);
     act("$n says something to $N.\n\r$n gets a sheet of paper from $s desk and holds it out to $N.\n\r",
@@ -543,7 +543,7 @@ int guildRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, 
     
     ch->show_guild("showallguilds");
     ch->sendTo("\n\r");
-    myself->doTell(fname(ch->name), "I've marked the guilds that have open recruitment with an [<R>X<1>].");
+    myself->doTell(ch, "I've marked the guilds that have open recruitment with an [<R>X<1>].");
     return TRUE;
   }
   return FALSE;
