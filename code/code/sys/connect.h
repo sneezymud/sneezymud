@@ -1,5 +1,4 @@
-#ifndef __CONNECT_H
-#define __CONNECT_H
+#pragma once
 
 #include <deque>
 
@@ -481,6 +480,10 @@ class Descriptor
     Descriptor(TSocket *);
     ~Descriptor();
 
+    Descriptor() = delete;
+    Descriptor(const Descriptor &) = delete;
+    Descriptor & operator=(const Descriptor &a) = delete;
+
     void sendGmcp(const sstring& msg, bool strip); // we want stripping in room names, for simple searching, but no stripping in comm
     void startGmcp();
     int outputProcessing();
@@ -581,5 +584,3 @@ class Descriptor
     const char *WhiteOnPurple() const;
     const char *WhiteOnRed() const;
 };
-
-#endif
