@@ -158,8 +158,8 @@ bool TMonster::isPolice() const
   int num = mobVnum();
 
   return (!isPc() && ((spec == SPEC_CITYGUARD) || 
-                      (num == Mob::BOUNCER) || (num == Mob::Mob::BOUNCER2) ||
-                      (num == Mob::Mob::BOUNCER_HEAD)));
+                      (num == Mob::BOUNCER) || (num == Mob::BOUNCER2) ||
+                      (num == Mob::BOUNCER_HEAD)));
 }
   
 int TMonster::npcSteal(TPerson *victim)
@@ -922,13 +922,13 @@ int TMonster::findMyHorse()
       horse_num = Mob::APOC_PESTHORSE;
       break;
     case SPEC_HORSE_WAR:
-      horse_num = Mob::Mob::APOC_WARHORSE;
+      horse_num = Mob::APOC_WARHORSE;
       break;
     case SPEC_HORSE_FAMINE:
-      horse_num = Mob::Mob::APOC_FAMINEHORSE;
+      horse_num = Mob::APOC_FAMINEHORSE;
       break;
     case SPEC_HORSE_DEATH:
-      horse_num = Mob::Mob::APOC_DEATHHORSE;
+      horse_num = Mob::APOC_DEATHHORSE;
       break;
     default:
       return FALSE;
@@ -2264,7 +2264,7 @@ static int caravan_stuff(TBeing *car, caravan_struct *job, dirTypeT)
 
     TMonster * mon;
     if (wealth_per > cost_thief_large) {
-      mon = read_mobile(Mob::Mob::ROAD_THIEF_LARGE, VIRTUAL);
+      mon = read_mobile(Mob::ROAD_THIEF_LARGE, VIRTUAL);
     } else if (wealth_per > cost_robber) {
       mon = read_mobile(Mob::ROAD_ROBBER, VIRTUAL);
     } else if (wealth_per > cost_thief) {
@@ -3949,7 +3949,7 @@ int war(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
     // calls forth great warriors to protect him 
     for (t = character_list;t;t = next_tar) {
       next_tar = t->next;
-      if (t->mobVnum() == Mob::Mob::APOC_WARRIOR) {
+      if (t->mobVnum() == Mob::APOC_WARRIOR) {
         if (!t->sameRoom(*me)) {
           --(*t);
           *me->roomp += *t;
@@ -3964,11 +3964,11 @@ int war(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
         }
       }
     }
-    if (mob_index[real_mobile(Mob::Mob::APOC_WARRIOR)].getNumber() > 5)
+    if (mob_index[real_mobile(Mob::APOC_WARRIOR)].getNumber() > 5)
       return FALSE;
 
     act("$n calls forth a great warrior to bring war upon The World!",0, me, 0, 0, TO_ROOM, ANSI_RED);
-    t = read_mobile(Mob::Mob::APOC_WARRIOR,VIRTUAL);
+    t = read_mobile(Mob::APOC_WARRIOR,VIRTUAL);
     *me->roomp += *t;
     me->addFollower(t);
     t->reconcileDamage(me->fight(),0,DAMAGE_NORMAL);

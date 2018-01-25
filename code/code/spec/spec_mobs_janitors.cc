@@ -31,7 +31,7 @@ bool okForJanitor(TMonster *myself, TObj *obj)
 
   TBaseCorpse *corpse = dynamic_cast<TBaseCorpse *>(obj);
   // Don't let them try corpses in gh at all - there are other mobs for that
-  if ((myself->mobVnum() == Mob::SWEEPER || myself->mobVnum() == Mob::Mob::SWEEPER2)
+  if ((myself->mobVnum() == Mob::SWEEPER || myself->mobVnum() == Mob::SWEEPER2)
     && corpse)
     return false;
   // Don't let them try and get corpses that are being skinned.
@@ -281,7 +281,7 @@ int janitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 
   // we only get here if there is nothing in my room worth picking up
 
-  if (myself->mobVnum() == Mob::SWEEPER || myself->mobVnum() == Mob::Mob::SWEEPER2) {
+  if (myself->mobVnum() == Mob::SWEEPER || myself->mobVnum() == Mob::SWEEPER2) {
     if (!myself->stuff.empty()) {
       rc = myself->doDonate(Room::DONATION);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {

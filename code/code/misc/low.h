@@ -1,22 +1,8 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-//////////////////////////////////////////////////////////////////////////
+// IDs for various things in The World
 
+#pragma once
 
-#ifndef __LOW_H
-#define __LOW_H
-
-// I would prefer to decouple these definitions and assign them in low.cc
-// but we use these values at compile time sometimes (switch/case) so they
-// have to be in here.
-
-class Room {
-private:
-  Room();
-
-public:
+namespace Room {
   static const int AUTO_RENT         = -2; /* for auto-renting */
   static const int NOWHERE           = -1;
   static const int VOID              = 0;
@@ -63,11 +49,7 @@ public:
   static const int NEWBIE            = 584;
 };
 
-class Obj {
- private:
-  Obj();
-
- public:
+namespace Obj {
   static const int DEITY_TOKEN          = 2;
   static const int GENERIC_L_BAG        = 6;
   static const int BANDAGE          = 9;
@@ -195,11 +177,7 @@ class Obj {
   static const int GENERIC_L_TOKEN = 9995;
 };
 
-class Mob {
- private:
-  Mob();
-
- public:
+namespace Mob {
   static const int ANY            = -1;
   static const int NONE           = 0;
   static const int FIRE_ELEMENTAL     = 16;
@@ -432,10 +410,3 @@ class Mob {
   static const int FAT_ELF_3      =3907;
   static const int DEE            =7600;
 };
-#endif
-
-
-
-
-
-

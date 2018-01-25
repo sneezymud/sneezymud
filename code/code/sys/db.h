@@ -1,68 +1,39 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// db.h , Database module.
-// Usage: Loading/Saving chars booting world.
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-
-
-#ifndef __DB_H
-#define __DB_H
-
-#ifndef __STRUCTS_H
-#include "structs.h"
-#endif
-
-#include "sstring.h"
+#pragma once
 
 #include <map>
 #include <queue>
 
-// Strings for the mud name
-// also: WELC_MESSG needs to be updated if these change
-// also: SNEEZY_ADMIN
+#include "structs.h"
+#include "sstring.h"
+
 extern const char * const MUD_NAME;
 extern const char * const MUD_NAME_VERS;
 extern bool bootTime;
 
 const int MAX_OBJ_AFFECT = 5;
 
-class File {
-  private:
-  File();
-  
- public:
-  static const char * const SIGN_MESS;
-  static const char * const MOB;
-  static const char * const ZONE;
-  static const char * const CREDITS;
-  static const char * const NEWS;
-  static const char * const STORY;
-  static const char * const WIZNEWS;
-  static const char * const MOTD;
-  static const char * const WIZMOTD;
-  static const char * const TIME;
-  static const char * const SOCMESS;
-  static const char * const HELP_PAGE;
-  static const char * const WIZLIST;
-};
+namespace File
+{
+  const char * const CREDITS   = "txt/credits";   /* for the credits command */
+  const char * const HELP_PAGE = "help/general";  /* for HELP <CR> */
+  const char * const MOTD      = "txt/motd";      /* messages of today */
+  const char * const NEWS      = "txt/news";  /* for the 'news' command */
+  const char * const SIGN_MESS = "txt/currentmess";
+  const char * const SOCMESS   = "actions"; /* messgs for social acts     */
+  const char * const WIZLIST   = "txt/wizlist";   /* for WIZLIST   */
+  const char * const WIZMOTD   = "txt/wizmotd";   /* MOTD for immorts */
+  const char * const WIZNEWS   = "txt/wiznews";
+}
 
-class Path {
- private:
-  Path();
-
- public:
-  static const char * const HELP;
-  static const char * const DATA;
-  static const char * const IMMORTAL_HELP;
-  static const char * const BUILDER_HELP;
-  static const char * const SKILL_HELP;
-  static const char * const SPELL_HELP;
-};  
+namespace Path
+{
+  const char * const DATA          = "lib";  /* default data directory     */
+  const char * const HELP	       = "help/";   /* for HELP <keywrd>          */
+  const char * const IMMORTAL_HELP = "help/_immortal";
+  const char * const BUILDER_HELP  = "help/_builder";
+  const char * const SKILL_HELP    = "help/_skills";
+  const char * const SPELL_HELP    = "help/_spells";
+}
 
 const char * const MUDADMIN_EMAIL   ="support@sneezymud.com";
 const char * const CODERS_EMAIL     ="support@sneezymud.com";
@@ -315,5 +286,3 @@ class resetQElement
 };
 
 extern std::queue<sstring>queryqueue;
-
-#endif

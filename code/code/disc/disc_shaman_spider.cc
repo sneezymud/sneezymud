@@ -357,15 +357,15 @@ int sticksToSnakes(TBeing * caster, TBeing * victim, int level, short bKnown)
   followData *k, *n;
 
   if (level < 26) {
-     mobile = Mob::Mob::SNAKES25;
+     mobile = Mob::SNAKES25;
   } else if (level < 31) {
-     mobile = Mob::Mob::SNAKES30;
+     mobile = Mob::SNAKES30;
   } else if (level < 36) {
-     mobile = Mob::Mob::SNAKES35;
+     mobile = Mob::SNAKES35;
   } else if (level < 41) {
-     mobile = Mob::Mob::SNAKES40;
+     mobile = Mob::SNAKES40;
   } else {
-     mobile = Mob::Mob::SNAKES50;
+     mobile = Mob::SNAKES50;
   }
 
 
