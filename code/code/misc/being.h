@@ -1,12 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-#ifndef __BEING_H
-#define __BEING_H
+#pragma once
 
 #include "db.h"
 #include "thing.h"
@@ -1628,13 +1620,9 @@ class TBeing : public TThing {
     virtual void doTitle(const char *);
     int doTithe();
     void doMessage(const char *);
-    int getTrainerPracs(const TBeing *, const TMonster *, classIndT, discNumT, int) const;
-    int checkTrainDeny(const TBeing *, TMonster *, discNumT, int) const;
-    int checkForPreReqs(const TBeing *, TMonster *, discNumT, classIndT, int) const;
     int initiateSkillsLearning(discNumT, int, int);
     void setSpellEligibleToggle(TMonster *, spellNumT, silentTypeT);
     int doTraining(TBeing *ch, TMonster *, classIndT, int, int) const;
-    int getCombatPrereqNumber(classIndT) const;
 
     // this and ch can't be const due to setting doneBasic
     int checkDoneBasic(TBeing *, classIndT, int, int);
@@ -1921,5 +1909,3 @@ class TBeing : public TThing {
     bool resetPractices(classIndT resetClass, int &practices, bool reset = true);
 
 };
-
-#endif
