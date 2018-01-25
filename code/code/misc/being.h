@@ -1617,13 +1617,9 @@ class TBeing : public TThing {
     virtual void doTitle(const char *);
     int doTithe();
     void doMessage(const char *);
-    int getTrainerPracs(const TBeing *, const TMonster *, classIndT, discNumT, int) const;
-    int checkTrainDeny(const TBeing *, TMonster *, discNumT, int) const;
-    int checkForPreReqs(const TBeing *, TMonster *, discNumT, classIndT, int) const;
     int initiateSkillsLearning(discNumT, int, int);
     void setSpellEligibleToggle(TMonster *, spellNumT, silentTypeT);
     int doTraining(TBeing *ch, TMonster *, classIndT, int, int) const;
-    int getCombatPrereqNumber(classIndT) const;
 
     // this and ch can't be const due to setting doneBasic
     int checkDoneBasic(TBeing *, classIndT, int, int);
