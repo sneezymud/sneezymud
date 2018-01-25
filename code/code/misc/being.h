@@ -1900,9 +1900,9 @@ class TBeing : public TThing {
     void addToRandomStat(int);
 
     // Garble code, contained in garble.h and garble.cc
-    int getGarbles(TBeing *to) const;
+    int getGarbles(const TBeing *to) const;
     int toggleGarble(Garble::TYPE garble);
-    sstring garble(TBeing *to, const sstring &arg, Garble::SPEECHTYPE speechType, Garble::SCOPE garbleScope = Garble::SCOPE_ALL) const;
+    const sstring garble(TBeing *to, const sstring &arg, Garble::SPEECHTYPE speechType, Garble::SCOPE garbleScope = Garble::SCOPE_ALL) const;
 
     // used by doReset
     bool resetPractices(classIndT resetClass, int &practices, bool reset = true);
