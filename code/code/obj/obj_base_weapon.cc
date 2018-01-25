@@ -287,7 +287,7 @@ int TBaseWeapon::sharpenPrice() const
   return cost;
 }
 
-int TBaseWeapon::sharpenerValueMe(const TBeing *ch, TMonster *me) const
+int TBaseWeapon::sharpenerValueMe(TBeing *ch, TMonster *me)
 {
   int cost;
 

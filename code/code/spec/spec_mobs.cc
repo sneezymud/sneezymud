@@ -3590,7 +3590,7 @@ int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
   return FALSE;
 }
 
-int TThing::sharpenerValueMe(const TBeing *ch, TMonster *me) const
+int TThing::sharpenerValueMe(TBeing *ch, TMonster *me)
 {
   me->doTell(ch, "I can only value weapons.");
   return TRUE;
