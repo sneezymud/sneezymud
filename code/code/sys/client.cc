@@ -1313,7 +1313,7 @@ void processStringForClient(sstring &sb)
 {
   // Go thru and change all newlines to ^
 
-  sstring::size_type pos;
+  size_t pos;
   pos = sb.find("\n\r");
   while (pos != sstring::npos) {
     sb.replace(pos, 2, "^");

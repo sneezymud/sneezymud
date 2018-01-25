@@ -459,7 +459,7 @@ sstring garble_innuendo(const TBeing *from, TBeing *to, const sstring &arg, Garb
     lastChar = '.';
 
     // remove all trailing punctuation
-  sstring::size_type st = arg.find_last_not_of("?!,./;:'\"]}[{\\|=+-_`~@#$%^&*()");
+  size_t st = arg.find_last_not_of("?!,./;:'\"]}[{\\|=+-_`~@#$%^&*()");
   if (st != sstring::npos)
     buf.erase(st+1);
 
@@ -478,7 +478,7 @@ sstring garble_excited(const TBeing *from, TBeing *to, const sstring &arg, Garbl
     buf = buf.upper();
 
   // remove trailing punctuation
-  sstring::size_type st = arg.find_last_not_of(",./;:'\"]}[{\\|=+-_`~@#$%^&*()");
+  size_t st = arg.find_last_not_of(",./;:'\"]}[{\\|=+-_`~@#$%^&*()");
   if (buf[st] == '?')
     exclamations += 2;
   else if (st != sstring::npos)
@@ -750,7 +750,7 @@ sstring garble_pirate(const TBeing *from, TBeing *to, const sstring &arg, Garble
   garble += " ";
 
   // do all of the string replacements, yar!
-  sstring::size_type start = 0;
+  size_t start = 0;
   for(unsigned int iReplace = 0; iReplace < cElements(pirate_replace);)
   {
     start = garble.find(pirate_replace[iReplace][0], start);

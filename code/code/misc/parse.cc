@@ -2175,7 +2175,7 @@ bool is_abbrev(const sstring &arg1, const sstring &arg2, multipleTypeT multiple,
     // Do we wanna check for multi word stuff?
     sstring carg1 = arg1;
     trimString(carg1);
-    sstring::size_type pos = carg1.find_last_not_of(whitespace);
+    size_t pos = carg1.find_last_not_of(whitespace);
     if (pos != sstring::npos)
       carg1.erase(pos+1);
 
