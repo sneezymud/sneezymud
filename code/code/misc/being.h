@@ -1803,9 +1803,6 @@ class TBeing : public TThing {
     void doShout(const sstring &);
     int doWhisper(const sstring &);
 
-    int doTell(const TBeing *vict, const sstring &message, bool visible = TRUE) {
-        return doTell(const_cast<TBeing *>(vict), message, visible);
-    }
     int doTell(TBeing &vict, const sstring &message, bool visible = TRUE) {
         return doTell(&vict, message, visible);
     }
