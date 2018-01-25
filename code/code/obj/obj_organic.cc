@@ -285,7 +285,7 @@ int TOrganic::sellHidenSkin(TBeing *ch, TMonster *keeper, int shop_nr, TThing *o
   return FALSE;
 }
 
-static void sellReducePrice(const TBeing *ch, TBeing *keeper, const TOrganic *obj2, int &price)
+static void sellReducePrice(TBeing *ch, TBeing *keeper, const TOrganic *obj2, int &price)
 {
   if (obj2 && obj2->getUnits() >= 100) {
     int bnCost = max(1, (int) (price/4));
