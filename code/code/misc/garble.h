@@ -1,20 +1,6 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// Garble.h
-// Code for changing how players talk
-//////////////////////////////////////////////////////////////////////////
-
-#ifndef __GARBLE_H
-#define __GARBLE_H
+#pragma once
 
 #include "sstring.h"
-
-#ifndef cElements
-#define cElements(x) (sizeof(x)/sizeof(x[0]))
-#endif
-
 
 
 // flags for a garble's scope
@@ -153,9 +139,3 @@ extern Garble GarbleData[Garble::TYPE_MAX];
 // utility functions
 extern const sstring RandomWord();
 extern const sstring RandomVerb();
-
-
-// Make drunk people garble their words!
-extern sstring garble_olddrunk(const TBeing *, const TBeing *, const sstring &, Garble::SPEECHTYPE);
-
-#endif // __GARBLE_H
