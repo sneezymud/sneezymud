@@ -229,6 +229,7 @@ namespace Mob {
   static const int HUANG_LO        =385;
   static const int OLD_WOMAN       =404;
   static const int TROLL_GIANT     =405;
+  static const int GRIMHAVEN_POSTMASTER = 406;
   static const int FISTLAND        =407;
   static const int TREE_SPIRIT     =408;
   static const int BALCOR          =528;
