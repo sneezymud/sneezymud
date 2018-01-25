@@ -632,8 +632,6 @@ int TBeing::doSign(const sstring &arg)
   sstring word, buf;
   TThing *t;
   int rc;
-  sstring whitespace=" \f\n\r\t\v";
-  
 
   if (arg.empty()) {
     sendTo("Yes, but WHAT do you want to sign?\n\r");
@@ -922,7 +920,7 @@ int TBeing::doTell(TBeing *vict, const sstring &message, bool visible)
   if (dynamic_cast<TMonster *>(vict) && !(vict->desc)) {
     // no mob spam in tell history
   } else {
-    queryqueue.push(format("insert into tellhistory (tellfrom, tellto, tell) values ('%s', '%s', '%s')") % capbuf.cap().escape() % ((sstring)vict->getName()).escape() % garbed.escape());
+    queryqueue.push(format("insert into tellhistory (tellfrom, tellto, tell) values ('%s', '%s', '%s')") % capbuf.cap().escapeSql() % ((sstring)vict->getName()).escapeSql() % garbed.escapeSql());
   }
 
 

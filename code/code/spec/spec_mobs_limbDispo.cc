@@ -187,7 +187,7 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
       partinfo.erase(partinfo.end()-1);
       mob_part = partinfo.back();
     }
-    mob_part = mob_part.replaceString("-", " ");
+    mob_part = mob_part.replace("-", " ");
 
     if (chopper.length() > 80 || mob_part.length() > 80) {
       record_part = FALSE;

@@ -52,7 +52,7 @@ extern bool getall(const char *, char *);
 extern int getabunch(const char *, char *);
 
 extern bool is_number(const sstring &);
-extern bool isvowel(const char);
+extern bool isvowel(const char c);
 
 extern const float repair_mats_ratio;
 

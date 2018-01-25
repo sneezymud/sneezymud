@@ -13,8 +13,6 @@
 #include "materials.h"
 #include "being.h"
 
-const sstring whitespace=" \f\n\r\t\v";  // from isspace() man page
-
 const dirTypeT rev_dir[MAX_DIR] =
 {
   DIR_SOUTH,

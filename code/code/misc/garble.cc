@@ -422,7 +422,6 @@ sstring garble_olddrunk(const TBeing *from, TBeing *to, const sstring &arg, Garb
 sstring garble_sign(const TBeing *from, TBeing *to, const sstring &arg, Garble::SPEECHTYPE speechType)
 {
   sstring word, garble;
-  sstring whitespace = " \f\n\r\t\v";
   size_t pos = 0;
   TBeing * tFrom = const_cast<TBeing *>(from); // sorry, but we want to check skill in here
 
@@ -430,17 +429,17 @@ sstring garble_sign(const TBeing *from, TBeing *to, const sstring &arg, Garble::
   //  skill roll, the word comes out garbled
   while(pos!=sstring::npos)
   {
-    word = arg.substr(pos, arg.find_first_of(whitespace,pos) - pos);
+    word = arg.substr(pos, arg.find_first_of(WHITESPACE,pos) - pos);
     if (tFrom->bSuccess(tFrom->getSkillValue(SKILL_SIGN) - garble.length(), SKILL_SIGN))
       garble += word;
     else
       garble += RandomWord();
 
     // skip past the whitespace to the beginning of the next word
-    pos = arg.find_first_of(whitespace, pos);
+    pos = arg.find_first_of(WHITESPACE, pos);
     if (pos != sstring::npos)
-      garble += arg.substr(pos, arg.find_first_not_of(whitespace, pos) - pos);
-    pos = arg.find_first_not_of(whitespace, pos);
+      garble += arg.substr(pos, arg.find_first_not_of(WHITESPACE, pos) - pos);
+    pos = arg.find_first_not_of(WHITESPACE, pos);
   }
 
   return garble;
@@ -501,23 +500,22 @@ sstring garble_glubglub(const TBeing *from, TBeing *to, const sstring &arg, Garb
 sstring garble_ghost(const TBeing *from, TBeing *to, const sstring &arg, Garble::SPEECHTYPE speechType)
 {
   sstring buf, word;
-  static const sstring whitespace = " \f\n\r\t\v";
   size_t pos = 0;
 
   // work through the arg, word by word and make into ghosty sounds
   while(pos != sstring::npos)
   {
-    word = arg.substr(pos, arg.find_first_of(whitespace,pos) - pos);
+    word = arg.substr(pos, arg.find_first_of(WHITESPACE,pos) - pos);
     for(unsigned int iCh = 0;iCh < word.length();iCh++)
       word[iCh] = (iCh < word.length()/3) ? 'O' : 'o';
 
     buf += word;
 
     // skip past the whitespace to the beginning of the next word
-    pos = arg.find_first_of(whitespace, pos);
+    pos = arg.find_first_of(WHITESPACE, pos);
     if (pos != sstring::npos)
-      buf += arg.substr(pos, arg.find_first_not_of(whitespace, pos) - pos);
-    pos = arg.find_first_not_of(whitespace, pos);
+      buf += arg.substr(pos, arg.find_first_not_of(WHITESPACE, pos) - pos);
+    pos = arg.find_first_not_of(WHITESPACE, pos);
   }
   return buf;
 }
@@ -526,13 +524,12 @@ sstring garble_ghost(const TBeing *from, TBeing *to, const sstring &arg, Garble:
 sstring garble_wahwah(const TBeing *from, TBeing *to, const sstring &arg, Garble::SPEECHTYPE speechType)
 {
   sstring buf, word;
-  static const sstring whitespace = " \f\n\r\t\v";
   size_t pos = 0;
 
   // work through the arg, word by word.  Convert to Wa+h
   while(pos != sstring::npos)
   {
-    word = arg.substr(pos, arg.find_first_of(whitespace,pos) - pos);
+    word = arg.substr(pos, arg.find_first_of(WHITESPACE,pos) - pos);
     int iLast = word.length() - 1;
     if (word.length() > 1)
       word[0] = (word[0] == toupper(word[0])) ? 'W' : 'w';
@@ -548,10 +545,10 @@ sstring garble_wahwah(const TBeing *from, TBeing *to, const sstring &arg, Garble
     buf += word;
 
     // skip past the whitespace to the beginning of the next word
-    pos = arg.find_first_of(whitespace, pos);
+    pos = arg.find_first_of(WHITESPACE, pos);
     if (pos != sstring::npos)
-      buf += arg.substr(pos, arg.find_first_not_of(whitespace, pos) - pos);
-    pos = arg.find_first_not_of(whitespace, pos);
+      buf += arg.substr(pos, arg.find_first_not_of(WHITESPACE, pos) - pos);
+    pos = arg.find_first_not_of(WHITESPACE, pos);
   }
   return buf;
 }

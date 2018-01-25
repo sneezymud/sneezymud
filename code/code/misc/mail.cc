@@ -594,7 +594,7 @@ void Descriptor::send_feedback(const sstring &subject, const sstring &body)
   // actual message from user to appear in mail
   message += "\n";
   message += body;
-  message.ascify();
+  message.asciify();
   message.inlineReplaceString("\r\n", "\n");
   message += "\n";
 

@@ -2672,9 +2672,9 @@ void TBeing::doSit(const sstring & argument)
   } else {
     sstring str;
 
-    if (sstringncmp(arg, "on ", 3) == 0)
+    if (arg.startswith("on "))
       str = std::string(arg, 3);
-    else if (sstringncmp(arg, "in ", 3) == 0)
+    else if (arg.startswith("in "))
       str = std::string(arg, 3);
     else
       str = arg;
@@ -2768,14 +2768,9 @@ void TBeing::doRest(const sstring & argument)
         break;
     }
   } else {
-    sstring str;
-
-    if (sstringncmp(arg, "on ", 3) == 0)
+    sstring str = arg;
+    if (arg.startswith("on ") || arg.startswith("in "))
       str = std::string(arg, 3);
-    else if (sstringncmp(arg, "in ", 3) == 0)
-      str = std::string(arg, 3);
-    else
-      str = arg;
 
     TThing *t;
     if (!riding) {
@@ -2861,14 +2856,9 @@ void TBeing::doSleep(const sstring & argument)
         break;
     }
   } else {
-    sstring str;
-
-    if (sstringncmp(arg, "on ", 3) == 0)
+    sstring str = arg;
+    if (arg.startswith("on ") || arg.startswith("in "))
       str = std::string(arg, 3);
-    else if (sstringncmp(arg, "in ", 3) == 0)
-      str = std::string(arg, 3);
-    else
-      str = arg;
 
     if (!riding) {
       TBeing *dummy;

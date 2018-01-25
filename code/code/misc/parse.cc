@@ -2237,7 +2237,7 @@ bool is_abbrev(const sstring &arg1, const sstring &arg2, multipleTypeT multiple,
   if (carg1.empty())
     return false;
 
-  if (!sstringncmp(carg1, carg2, carg1.length()))
+  if (carg2.startswith(carg1))
     return true;
   return false;
 }
@@ -3382,15 +3382,6 @@ void trimString(sstring &arg)
   if (iter == sstring::npos)
     return;
   arg.erase(0, iter);  // erase the leading whitespace
-}
-
-int sstringncmp(const sstring str1, const sstring str2, unsigned int len)
-{
-  // ANSI doesn't provide a strncmp for sstrings
-  // I've hacked this together cuz I think it's needed
-
-  // trunc down to length and compare
-  return std::string(str1, 0, len).compare(std::string(str2, 0, len));
 }
 
 commandInfo::~commandInfo()

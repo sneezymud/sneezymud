@@ -750,7 +750,6 @@ void TBeing::doPee(const sstring &argument)
   sstring arg=argument;
   liqTypeT liquid=LIQ_URINE;
   int amt=::number(1,10);
-  sstring whitespace=" \f\n\r\t\v";
 
   if (in_room < 0)
     return;

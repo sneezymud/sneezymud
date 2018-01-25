@@ -4858,28 +4858,28 @@ void TBeing::doIgnore(const sstring &args)
   arg2.inlineReplaceString("~", "");
 
   // big ugly block of 'if's
-  if (arg2Len && sstringncmp("add", arg1, arg1Len) == 0)
+  if (arg2Len && arg1.startswith("add"))
   {
     if (desc->ignored.add(arg2))
       sendTo(format("Player '%s' is now ignored.\n\r") % arg2);
     else
       sendTo(format("Could not ignore player '%s'.  You may have reached the max of %d ignore entries.\n\r") % arg2 % desc->ignored.getMax());
   }
-  else if (arg2Len && sstringncmp("remove", arg1, arg1Len) == 0)
+  else if (arg2Len && arg1.startswith("remove"))
   {
     if (desc->ignored.remove(arg2))
       sendTo(format("Player '%s' is no longer ignored.\n\r") % arg2);
     else
       sendTo(format("Could not remove player '%s' from your ignore list.\n\r") % arg2);
   }
-  else if (arg2Len && canBlockAccounts && sstringncmp("addall", arg1, arg1Len) == 0)
+  else if (arg2Len && canBlockAccounts && arg1.startswith("addall"))
   {
     if (desc->ignored.addAccount(arg2))
       sendTo(format("Account '%s' is now ignored.\n\r") % arg2);
     else
       sendTo(format("Could not ignore account '%s'.  You may have reached the max of %d ignore entries.\n\r") % arg2 % desc->ignored.getMax());
   }
-  else if (arg2Len && canBlockAccounts && sstringncmp("removeall", arg1, arg1Len) == 0)
+  else if (arg2Len && canBlockAccounts && arg1.startswith("removeall"))
   {
     if (desc->ignored.removeAccount(arg2))
       sendTo(format("Account '%s' is no longer ignored.\n\r") % arg2);
