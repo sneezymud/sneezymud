@@ -817,7 +817,7 @@ TDrugInfo::~TDrugInfo()
 
 std::vector<TDrugInfo>drugTypes(0);
 
-void assign_drug_info(void)
+void assign_drug_info()
 {
   drugTypes.push_back(TDrugInfo("none", 0, 0));
   drugTypes.push_back(TDrugInfo("pipeweed", 10, 1));

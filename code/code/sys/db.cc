@@ -172,7 +172,7 @@ class TObjectCache {
 public:
   std::map<int, cached_object *>cache;
 
-  void preload(void);
+  void preload();
   cached_object *operator[](int);
 
 } obj_cache;
@@ -183,7 +183,7 @@ public:
   std::map<int, std::vector <cached_mob_extra *> >extra;
   std::map<int, std::vector <cached_mob_imm *> >imm;
 
-  void preload(void);
+  void preload();
   cached_object *operator[](int);
 } mob_cache;
 
@@ -196,11 +196,11 @@ class lag_data lag_info;
 std::map<int, int> obj_load_potential;
 
 // local procedures
-static void bootZones(void);
-static void bootWorld(void);
+static void bootZones();
+static void bootWorld();
 
 // fish init
-void initialize_fish_records(void);
+void initialize_fish_records();
 
 struct reset_q_type
 {
@@ -358,7 +358,7 @@ static void verify_path_azdir(const char *path)
     verify_path(format("%s/%c") % path % p);
 }
 
-void bootDb(void)
+void bootDb()
 {
   TTiming t;
   t.start();
@@ -413,7 +413,6 @@ void bootDb(void)
   buildSpellArray();
   buildTerrainDamMap();
   buildWeatherDamMap();
-//  buildSpellDamArray();
   bootPulse("Initializing Components.");
   buildComponentArray();
   bootPulse("Initializing Terrains.");
@@ -632,7 +631,7 @@ void procUpdateTime::run(const TPulse &) const
 #endif
 }
 
-void bootWorld(void)
+void bootWorld()
 {
   int virtual_nr, num=0, tmp;
   TRoom *rp=NULL;
@@ -1181,7 +1180,7 @@ void zoneData::logError(char ch, const char *type, int cmd, int value)
       name % cmd % ch % type % value);
 }
 
-void zoneData::renumCmd(void)
+void zoneData::renumCmd()
 {
   int comm;
   int value;
@@ -1549,7 +1548,7 @@ bool zoneData::bootZone(int zone_nr)
   return true;
 }
 
-void bootZones(void)
+void bootZones()
 {
   DIR *dfd;
   struct dirent *dp;
@@ -3527,7 +3526,7 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
 }
 
 
-bool zoneData::doGenericReset(void) 
+bool zoneData::doGenericReset() 
 {
   int top = 0;
   int bottom = 0;
@@ -3583,7 +3582,7 @@ void zoneData::sendTo(sstring s, int exclude_room)
 
 
 // for use in resetZone; return TRUE if zone 'nr' is free of PC's  
-bool zoneData::isEmpty(void)
+bool zoneData::isEmpty()
 {
   Descriptor *i;
 

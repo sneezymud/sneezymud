@@ -21,7 +21,7 @@ extern "C" {
 #include "extern.h"
 
 #if !defined(__linux__)
-extern pid_t vfork(void);
+extern pid_t vfork();
 #endif
 
 const char TMPFILE[] = "task.output";

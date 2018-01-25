@@ -25,9 +25,9 @@ class SignalHandler {
   public :
     SignalHandler();
     int startup();
-    void signalIgnore(void);
-    void deadlockCheck(void);
-    void signalShutdown(void);
+    void signalIgnore();
+    void deadlockCheck();
+    void signalShutdown();
     void sleep();
     void wake();
     void resetCheckpoint() {

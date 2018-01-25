@@ -75,7 +75,7 @@ class Pulse {
 };
 
 extern const char * const prompt_mesg[];
-extern void signalSetup(void);
+extern void signalSetup();
 
 ////
 

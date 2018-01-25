@@ -55,7 +55,7 @@ void SetupStaticGoldModifiers()
   gold_modifier[GOLD_SHOP_RESPONSES ].setMM(0.01, 100.0);
 }
 
-int init_game_stats(void)
+int init_game_stats()
 {
   int i, j;
   FILE *fp;
@@ -212,7 +212,7 @@ int init_game_stats(void)
   }
 }
 
-void save_game_stats(void)
+void save_game_stats()
 {
   FILE *fp;
   int i, j;

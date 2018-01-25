@@ -1826,7 +1826,7 @@ void change_hands(TBeing *ch, const char *)
   }
 }
 
-void TBeing::wearNTear(void)
+void TBeing::wearNTear()
 {
   int i = 0, j;
 

@@ -425,7 +425,7 @@ void sleepTagReport(int tZone, const char *tString, ...)
   tBuffer = new char[2 * MAX_STRING_LENGTH];
 
   va_start(tAp, tString);
-  (void) vsnprintf(tBuffer, (2 * MAX_STRING_LENGTH), tString, tAp);
+  vsnprintf(tBuffer, (2 * MAX_STRING_LENGTH), tString, tAp);
   va_end(tAp);
 
   for (tBeing = character_list; tBeing; tBeing = tBeing->next)

@@ -23,7 +23,7 @@ void hupsig(int);
 void profsig(int);
 extern void genericPurgeLdead(TBeing *ch);
 
-void signalSetup(void)
+void signalSetup()
 {
   signal(SIGUSR1, purgeRequest);
   signal(SIGUSR2, shutdownAndPurgeRequest);

@@ -47,7 +47,7 @@ class GameTime {
   static bool is_nighttime();
   static void realTimePassed(time_t, time_t, time_info_data *);
   static void mudTimePassed(time_t, time_t, time_info_data *);
-  static void reset_time(void);
+  static void reset_time();
 
   // accessors
   static int getSeconds(){ return time_info.seconds; }

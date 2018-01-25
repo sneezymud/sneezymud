@@ -45,7 +45,7 @@ extern "C" {
 #include <execinfo.h>
 #endif
 
-pid_t vfork(void);
+pid_t vfork();
 }
 
 #include "disease.h"
@@ -1047,12 +1047,6 @@ bool can_see_char_other_room(const TBeing *ch, TBeing *victim, TRoom *)
   return FALSE;
 }
 
-// disallow any bogus characters in automated system requests.
-//   this is intented to prevent 'hacking' 
-bool safe_to_be_in_system(const sstring &cp)
-{
-  return (cp.find_first_of("\"';`", 0) == sstring::npos);
-}
 
 bool TBeing::makesNoise() const
 {
@@ -1934,26 +1928,6 @@ int TBeing::getVolume() const
   vol = (int) ((race->corpse_const) * (race->corpse_const) * M_PI * getHeight() * getHeight() * getHeight());
 
   return vol;
-}
-
-char LOWER(char c)
-{
-  return ((c >= 'A' && c <= 'Z') ? (c+('a'-'A')) : c);
-}
-
-char UPPER(char c)
-{
-  return ((c >= 'a' && c <= 'z') ? (c+('A'-'a')) : c );
-}
-
-char ISNEWL(char ch) 
-{
-  return (ch == '\n' || ch == '\r');
-}
-
-int combatRound(double n)
-{
-  return (int) (n * Pulse::COMBAT);
 }
 
 bool TBeing::checkBusy(const sstring &buf)

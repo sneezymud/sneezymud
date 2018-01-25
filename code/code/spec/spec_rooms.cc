@@ -264,7 +264,7 @@ int Whirlpool(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
 }
 
 
-bool isBelimusAlive(void)
+bool isBelimusAlive()
 {
   return mob_index[real_mobile(Mob::BELIMUS)].getNumber() >= 1;
 }

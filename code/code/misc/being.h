@@ -648,7 +648,7 @@ class TBeing : public TThing {
     virtual int getRiderHeight() const;
     void updateCharObjects();
     void equipChar(TThing *, wearSlotT, silentTypeT = SILENT_NO);
-    void reconnectEquipmentHandler(void);
+    void reconnectEquipmentHandler();
     TThing *pulloutObj(wearSlotT, bool, int *);
     bool hasTransformedLimb() const;
     bool isSingleClass() const;
@@ -691,7 +691,7 @@ class TBeing : public TThing {
     float lagAdjust(lag_t);
     void addSkillLag(spellNumT, int rc);
     virtual void addToWait(int) { return; }
-    virtual int getWait(void) const { return 0; }
+    virtual int getWait() const { return 0; }
     virtual void setWait(int) { return; }
     wizardryLevelT getWizardryLevel() const;
     ritualismLevelT getRitualismLevel() const;
@@ -1182,7 +1182,7 @@ class TBeing : public TThing {
     virtual void doOEdit(const char *);
     void doScratch(const char *);
     void doPee(const sstring &);
-    void doPoop(void);
+    void doPoop();
     void doPoint(const sstring &);
     void doPoke(const sstring &);
     void doTip(const sstring &);
@@ -1315,7 +1315,7 @@ class TBeing : public TThing {
     wearSlotT getRandomHurtPart();
     void doWeather(const char *);
     void doHeaven(const sstring &);
-    void wearNTear(void);
+    void wearNTear();
     void doPrompt(const char *);
     virtual void doPurge(const char *);
     virtual void doSet(const char *);
@@ -1509,7 +1509,7 @@ class TBeing : public TThing {
     void addToHit(int add);
     void setHit(int newhit);
     virtual void setMaxHit(int);
-    double getPercHit(void);
+    double getPercHit();
     int getMove() const;
     void addToMove(int add);
     void setMove(int move);
@@ -1518,7 +1518,7 @@ class TBeing : public TThing {
     int getMana() const;
     void setMana(int mana);
     void addToMana(int mana);
-    double getPercMana(void);
+    double getPercMana();
     void setMaxMana(int mana);
     int getLifeforce() const;
     void setLifeforce(int lifeforce);

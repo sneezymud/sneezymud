@@ -454,7 +454,7 @@ int TMonster::addFears(zoneHateT parm_type, int parm)
 }
 
 
-TBeing * TMonster::findAHatee(void)
+TBeing * TMonster::findAHatee()
 {
   TBeing *tmp_ch = NULL;
   TThing *t=NULL;
@@ -472,7 +472,7 @@ TBeing * TMonster::findAHatee(void)
   return NULL;
 }
 
-TBeing * TMonster::findAFearee(void)
+TBeing * TMonster::findAFearee()
 {
   TBeing *tmp_ch = NULL;
   TThing *t=NULL;

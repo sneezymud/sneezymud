@@ -1237,7 +1237,7 @@ void do_the_player_stuff(const char *name)
   }
 }
 
-void fixup_players(void)
+void fixup_players()
 {
   FILE *fp;
 

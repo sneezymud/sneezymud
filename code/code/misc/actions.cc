@@ -139,7 +139,7 @@ char *fread_action(FILE *fl)
 
 static std::map<int, socialMessg>soc_mess_list;
 
-void bootSocialMessages(void)
+void bootSocialMessages()
 {
   FILE *fl;
   int hide, min_pos;
@@ -647,7 +647,7 @@ void TBeing::doCombine(const sstring &arg)
   sendTo("You don't even know where to begin with that.\n\r");
 }
 
-void TBeing::doPoop(void)
+void TBeing::doPoop()
 {
   TObj *obj=NULL;
 

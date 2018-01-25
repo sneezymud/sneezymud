@@ -118,7 +118,7 @@ int TCorporation::getAssets()
 }
 
 
-std::vector <corp_list_data> getCorpListingData(void)
+std::vector <corp_list_data> getCorpListingData()
 {
   TDatabase db(DB_SNEEZY);
   int corp_id=0, gold=0, bankowner=0, bankgold=0;

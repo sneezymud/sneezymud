@@ -2093,18 +2093,6 @@ bool is_number(const sstring &str)
     return boost::regex_match(str, what, boost::regex( R"(^[\+-]?\d+(\.\d+)?$)" ));
 }
 
-bool is_integer(const sstring &str)
-{
-    boost::smatch what;  //Not really used here, since we're just doing go/no-go
-    return boost::regex_match(str, what, boost::regex( R"(^[\+-]?\d+$)" ));
-}
-
-bool is_float(const sstring &str)
-{
-    boost::smatch what;  //Not really used here, since we're just doing go/no-go
-    return boost::regex_match(str, what, boost::regex( R"(^[\+-]?\d+(\.\d+)$)" ));
-}
-
 const char *one_argument(const char *argument, char *first_arg, unsigned int first_arg_size)
 {
  // char * temp;
@@ -2419,7 +2407,7 @@ int TBeing::triggerSpecial(TThing *ch, cmdTypeT cmd, const char *arg)
   return FALSE;
 }
 
-void buildCommandArray(void)
+void buildCommandArray()
 {
   commandArray[CMD_NORTH] = new commandInfo("north", POSITION_CRAWLING, 0);
   commandArray[CMD_EAST] = new commandInfo("east", POSITION_CRAWLING, 0);
@@ -3294,34 +3282,6 @@ void bisect_arg_safe(const char *arg, int *field, char *sstring, unsigned int ss
   for (;sstringLen-- > 0 && (*sstring = *arg); arg++, sstring++);
 }
 
-
-
-char *fold(char *line)
-{
-  const unsigned int FOLDAT = 78;
-
-  int i, j = 0, folded;
-
-  if (strlen(line) > FOLDAT)
-    for (i = FOLDAT; i < (int) strlen(line); i += FOLDAT) {
-      folded = FALSE;
-      for (j = i; !folded; j--)
-        if (line[j] == ' ') {
-          line[j] = '\n';
-          folded = TRUE;
-          i = j;
-        }
-    }
-  return line;
-}
-
-int ctoi(char c)
-{
-  char buf[5];
-
-  sprintf(buf, "%c", c);
-  return convertTo<int>(buf);
-}
 
 // essentially, strips out multiple ' ' truncating to a single space
 void cleanCharBuf(char *buf)

@@ -110,7 +110,7 @@ void procWeatherAndTime::run(const TPulse &) const
 }
 
 
-const sstring describeTime(void)
+const sstring describeTime()
 {
   if (GameTime::getHours() < 5) 
     return "evening";
@@ -574,7 +574,7 @@ void Weather::GetMonth(int month)
   descriptor_list->worldSend(buf, NULL);
 }
 
-int TRoom::outdoorLight(void)
+int TRoom::outdoorLight()
 {
   int num = 0;
 
@@ -623,7 +623,7 @@ int TRoom::outdoorLight(void)
 }
 
 
-int TRoom::outdoorLightWindow(void)
+int TRoom::outdoorLightWindow()
 {
   int num = 0;
   if (isRoomFlag(ROOM_INDOORS)) {
@@ -670,7 +670,7 @@ int TRoom::outdoorLightWindow(void)
 }
 
 
-void Weather::sunriseAndSunset(void)
+void Weather::sunriseAndSunset()
 {
   TRoom *rp;
   int i;

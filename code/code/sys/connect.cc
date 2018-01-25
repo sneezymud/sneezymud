@@ -66,6 +66,8 @@ const char * const MUD_NAME      = "SneezyMUD";
 const char * const MUD_NAME_VERS = "SneezyMUD v5.2 " VERSION;
 static const char * const WELC_MESSG = "\n\rWelcome to SneezyMUD 5.2! May your journeys be bloody!\n\r\n\r";
 
+#define ISNEWL(c) (c == '\n' || c == '\r')
+
 Descriptor::Descriptor(TSocket *s) :
     socket(s),
     connected(CON_CREATION_START),
@@ -3623,7 +3625,7 @@ int Descriptor::inputProcessing()
         if (!tmp[1] || (tmp[1] == '!'))
           strcpy(tmp, history[0]);
         else if ((tmp[1] >= '0') && (tmp[1] <= '9'))
-          strcpy(tmp, history[ctoi(tmp[1])]);
+          strcpy(tmp, history[tmp[1] - '0']);
         else {
           for (s = tmp + 1, k = 0; k <= HISTORY_SIZE-1; k++) {
             s2 = history[k];

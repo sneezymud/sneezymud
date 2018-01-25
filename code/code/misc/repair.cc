@@ -1117,7 +1117,7 @@ void processRepairFile(const char *name)
   fclose(fp);
 }
 
-void processRepairFiles(void)
+void processRepairFiles()
 {
   dirwalk_subs_fullname("mobdata/repairs", processRepairFile);
 }

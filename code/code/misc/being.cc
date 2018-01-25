@@ -809,7 +809,7 @@ void TBeing::setMaxHit(int newhit)
   points.maxHit = newhit;
 }
 
-double TBeing::getPercHit(void)
+double TBeing::getPercHit()
 {
   return (hitLimit() ? (100.0 * (double) getHit() / (double) hitLimit()) : 0.0);
 }
@@ -861,7 +861,7 @@ void TBeing::addToMana(int mana)
   points.mana = min(points.mana, manaLimit());
 }
 
-double TBeing::getPercMana(void)
+double TBeing::getPercMana()
 {
   return (manaLimit() ? (100.0 * (double) getMana() / (double) manaLimit()) : 0.0);
 }

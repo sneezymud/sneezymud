@@ -280,7 +280,7 @@ void TMonster::thiefLootLoader()
 }
 
 
-void TMonster::createWealth(void)
+void TMonster::createWealth()
 {
   TOpenContainer *bag;
 
@@ -428,7 +428,7 @@ bool isMobComponentSeller(int comp, int mvn)
 }
 
 
-void TMonster::mageComponentLoader(void)
+void TMonster::mageComponentLoader()
 {
   int wealth = getMoney();
   TObj *obj,
@@ -602,7 +602,7 @@ void TMonster::mageComponentLoader(void)
   setMoney(wealth);
 }
 
-void TMonster::rangerComponentLoader(void)
+void TMonster::rangerComponentLoader()
 {
   int wealth = getMoney();
   TObj *obj, *bag;
@@ -703,7 +703,7 @@ void TMonster::rangerComponentLoader(void)
   setMoney(wealth);
 }
 
-void TMonster::shamanComponentLoader(void)
+void TMonster::shamanComponentLoader()
 {
   int wealth = getMoney();
   TObj *obj,
@@ -852,7 +852,7 @@ void TMonster::shamanComponentLoader(void)
   setMoney(wealth);
 }
 
-void TMonster::clericHolyWaterLoader(void)
+void TMonster::clericHolyWaterLoader()
 {
   int wealth = getMoney();
   TObj *obj;
@@ -894,7 +894,7 @@ void TMonster::clericHolyWaterLoader(void)
   }
 }
 
-void TMonster::clericSymbolLoader(void)
+void TMonster::clericSymbolLoader()
 {
   int wealth = getMoney();
   TObj *obj;

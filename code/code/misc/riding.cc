@@ -841,7 +841,7 @@ int MountEgoCheck(TBeing *ch, TBeing *horse)
   }
 }
 
-TThing * TThing::horseMaster(void) const
+TThing * TThing::horseMaster() const
 {
   TThing *t;
 

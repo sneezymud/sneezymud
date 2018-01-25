@@ -182,7 +182,7 @@ void GameTime::mudTimePassed(time_t t2, time_t t1, time_info_data *now)
   now->year = (secs / Pulse::SECS_PER_MUD_YEAR);	
 }
 
-void GameTime::reset_time(void)
+void GameTime::reset_time()
 {
   mudTimePassed(time(0), getBeginningOfTime(), &time_info);
   time_info.year += getYearAdjust();

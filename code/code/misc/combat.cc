@@ -5582,7 +5582,7 @@ void TBeing::reformGroup()
   }
 }
 
-void TBeing::genericKillFix(void)
+void TBeing::genericKillFix()
 {
   reformGroup();
   DeleteHatreds(this, NULL);

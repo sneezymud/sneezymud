@@ -42,7 +42,6 @@ class sstring;
 //
 // bool setDB(dbTypeT) - This function sets the database that the instance 
 // will use, and is generally called from the constructor rather than directly.
-// Returns: nothing (void)
 // Ex: db.setDB(DB_SNEEZY);
 //
 // bool query(const char*,...) - This function sends a query to the database.

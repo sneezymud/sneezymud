@@ -555,7 +555,7 @@ private:
     bool deMonogram(bool erase_imm_monogram);
     
     int objectTickUpdate(int);
-    int updateBurning(void);
+    int updateBurning();
     bool isObjStat(unsigned int num) const;
     unsigned int getObjStat() const;
     void swapToStrung();

@@ -25,7 +25,7 @@
 #include "spec_mobs.h"
 
 // This function should be used if you want to see if the mob is "pissed" 
-int TMonster::pissed(void)
+int TMonster::pissed()
 {
   if (UtilMobProc(this)) 
     return FALSE;
@@ -39,7 +39,7 @@ int TMonster::pissed(void)
 // This function should be used if you want to see if ch is REALLY pissed 
 // aggro should be called for most things leading to fights 
 // the 4*anger+5*malice thing allows for "love/hate" fights 
-int TMonster::aggro(void)
+int TMonster::aggro()
 {
   if (UtilMobProc(this))
     return FALSE;

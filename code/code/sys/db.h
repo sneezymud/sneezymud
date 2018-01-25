@@ -43,9 +43,9 @@ const int ZONE_ROOM_RANDOM = -99;
 
 /* public procedures in db.c */
 
-void bootDb(void);
+void bootDb();
 int create_entry(char *name);
-void zone_update(void);
+void zone_update();
 int real_object(int);
 int real_mobile(int);
 
@@ -178,15 +178,15 @@ class zoneData
     
     armorSetLoad armorSets;
 
-    bool isEmpty(void);
+    bool isEmpty();
     void resetZone(bool bootTime, bool findLoadPotential=false);
-    void closeDoors(void);
+    void closeDoors();
     void logError(char, const char *, int, int);
-    void nukeMobs(void);
+    void nukeMobs();
     void sendTo(sstring, int exclude_room=-1);
-    bool doGenericReset(void);
+    bool doGenericReset();
     bool bootZone(int);
-    void renumCmd(void);
+    void renumCmd();
 
     std::vector<resetCom>cmd;          // command table for reset
   

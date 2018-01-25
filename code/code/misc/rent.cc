@@ -1703,7 +1703,7 @@ void updateSavedRoom(const char *tfname)
   fclose(fp);
 }
 
-void updateSavedRoomItems(void)
+void updateSavedRoomItems()
 {
   dirwalk(ROOM_SAVE_PATH, updateSavedRoom);
 }
@@ -2476,7 +2476,7 @@ bool noteLimitedItems(FILE * fp, const char *tag, unsigned char version, bool im
   return TRUE;
 }
 
-void printLimitedInRent(void)
+void printLimitedInRent()
 {
   unsigned int i;
   for (i = 0; i < obj_index.size(); i++) {
@@ -3041,7 +3041,7 @@ void updateRentFile(const char *who)
   }
 }
 
-void updateRentFiles(void)
+void updateRentFiles()
 {
   bootPulse(".", false);
   dirwalk("rent/a", updateRentFile);
@@ -3420,7 +3420,7 @@ bool TBeing::loadFollowers()
   return TRUE;
 }
 
-void TBeing::reconnectEquipmentHandler(void)
+void TBeing::reconnectEquipmentHandler()
 {
   // This is designed to be called ONLY when char is reconnecting
   // and fixes some problems with descriptor data due to way things get

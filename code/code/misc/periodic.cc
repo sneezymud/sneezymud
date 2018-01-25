@@ -2038,7 +2038,7 @@ int TObj::objectTickUpdate(int pulse)
 }
 
 
-int TObj::updateBurning(void)
+int TObj::updateBurning()
 {
   TBeing *ch;
   TThing *t;

@@ -2613,7 +2613,7 @@ bool safe_to_save_shop_stuff(TMonster *ch)
 }
 
 
-void processShopFiles(void)
+void processShopFiles()
 {
    dirwalk(SHOPFILE_PATH, processShopFile);
 }*/
