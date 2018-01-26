@@ -1,12 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-#ifndef __COMM_H
-#define __COMM_H
+#pragma once
 
 #include <boost/shared_ptr.hpp>
 
@@ -48,31 +40,41 @@ bool isEmpty(int);
 
 
 // see comm.cc
-class Pulse {
- public:
-  static const int COMMAND;
-  static const int TICK;
-  static const int ONE_SECOND;
-  static const int EVERY;
-  static const int MOBACT;
-  static const int TELEPORT;
-  static const int COMBAT;
-  static const int DROWNING;
-  static const int SPEC_PROCS;
-  static const int NOISES;
-  static const int WAYSLOW;
-  static const int REALHOUR;
-  static const int REALDAY;
-  static const int UPDATE;
-  static const int MUDHOUR;
-  static const int MUDDAY;
-  static const int SECS_PER_UPDATE;
-  static const int SECS_PER_MUDHOUR;
-  static const int SECS_PER_MUD_DAY;
-  static const int SECS_PER_MUD_MONTH;
-  static const int SECS_PER_MUD_YEAR;
-  static const int UPDATES_PER_MUDHOUR;
-};
+namespace Pulse {
+  const int COMMAND     = 0;
+  const int TICK        = 1;
+  const int ONE_SECOND  = 10;
+  const int EVERY       = 1;
+  const int MOBACT      = (int)((float)Pulse::ONE_SECOND * 1.2);
+  const int TELEPORT    = (int)((float)Pulse::ONE_SECOND * 1.2);
+  const int COMBAT      = (int)((float)Pulse::ONE_SECOND * 1.2);
+  const int DROWNING    = (int)((float)Pulse::ONE_SECOND * 3.6);
+  const int SPEC_PROCS  = (int)((float)Pulse::ONE_SECOND * 3.6);
+  const int NOISES      = (int)((float)Pulse::ONE_SECOND * 4.8);
+  const int WAYSLOW     = 2400;
+  const int REALHOUR    = ONE_SECOND * 60 * 60;
+  const int REALDAY     = ONE_SECOND * 60 * 60 * 24;
+
+  // Altering UPDATES will speed up ticks, but also causes "mud time"
+  // to totally recalculate (making it shorter will age people).
+  // use caution!
+  const int UPDATE      = ONE_SECOND * 36;
+  const int MUDHOUR     = UPDATE * 4;
+  const int MUDDAY      = MUDHOUR * 24;
+
+  const int SECS_PER_UPDATE    = UPDATE/Pulse::ONE_SECOND;
+  const int SECS_PER_MUDHOUR   = MUDHOUR/Pulse::ONE_SECOND;
+  const int SECS_PER_MUD_DAY   = (24*SECS_PER_MUDHOUR);
+  const int SECS_PER_MUD_MONTH = (28*SECS_PER_MUD_DAY);
+  const int SECS_PER_MUD_YEAR  = (12*SECS_PER_MUD_MONTH);
+
+  // updateAffects() is called on combat counter (socket.cc)
+  // this will tell us how many combat-calls needed to simulate a "tick"
+  // The reason for this is that we sometimes want to say "it takes a mud-hour"
+  // and the mud-hour must be represented as a number of combat-pulse calls
+  //const int UPDATES_PER_TICK = (UPDATE/Pulse::COMBAT);
+  const int UPDATES_PER_MUDHOUR = (MUDHOUR/Pulse::COMBAT);
+}
 
 extern const char * const prompt_mesg[];
 extern void signalSetup(void);
@@ -237,7 +239,3 @@ class PromptComm : public Comm {
  private:
   virtual sstring getText();
 };
-
-
-
-#endif

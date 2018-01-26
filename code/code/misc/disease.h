@@ -1,30 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-//      "disease.h" - interface to disease.c
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-/**************************************************************************
-
-      SneezyMUD - All rights reserved, SneezyMUD Coding Team
-
- A note on diseases in SneezyMUD ...  Diseases are simply periodically
- activated affects.  I.e., every so often, if a mob/player is affected by
- a disease then a special procedure related to that specific disease is
- called.   There may be other places where affects are checked for and
- called.  These will vary from disease to disease.  The important thing
- to remember when creating/thinking of diseases is that the goal is not
- to burden the player but to enrich playing.  That wount stop me from 
- writing disease_herpes, however.
-                                            - Stargazer   9/93
-
-**************************************************************************/
-
-#ifndef __DISEASE_H
-#define __DISEASE_H
+#pragma once
 
 /* tech note:  Mob_Affect fields for diseases are defined as follows ...
    short type;         <-- should always be AFFECT_DISEASE
@@ -107,4 +81,3 @@ const int DISEASE_PRICE_3       =1;
 const int DISEASE_PRICE_6       =50;
 const int DISEASE_PRICE_12      =150;
 
-#endif

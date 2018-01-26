@@ -173,12 +173,12 @@ int TBeing::dummyFlu()
     case 5:
     case 6:
       act("You sweat for no apparent reason.",FALSE,this,0,0,TO_CHAR);
-			if (isHumanoid()) {
-				// i suppose sweating is for humanoids
+      if (isHumanoid()) {
+        // i suppose sweating is for humanoids
       	act("$n is sweating and $e looks feverish.",TRUE,this,0,0,TO_ROOM);
-			} else {
+      } else {
       	act("$n looks feverish.",TRUE,this,0,0,TO_ROOM);
-			}
+      }
       break;
     case 7:
     case 8:
@@ -221,8 +221,8 @@ int TBeing::dummyFlu()
       break;
     case 24:
     case 25:
-      sendTo("You breath feverishly in short shallow gasps.\n\r");
-      act("$n's is breathing in short, shallow gasps.",FALSE,this,0,0,TO_ROOM);
+      sendTo("You breathe feverishly in short shallow gasps.\n\r");
+      act("$n breathes in short, shallow gasps.",FALSE,this,0,0,TO_ROOM);
       break;
     default:
       break;
@@ -578,7 +578,7 @@ int disease_syphilis(TBeing *ch, int message, affectedData *)
         case 3:
         case 4:
         case 5:
-          ch->sendTo("You feel a stinging in your waist area.\n\r");
+          ch->sendTo("You feel a stinging in your genitals.\n\r");
           break;
         default:
           break;
