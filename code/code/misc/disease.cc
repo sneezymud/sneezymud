@@ -1,12 +1,3 @@
-
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-//      "disease.cc" - functions handling disease affects
-//
-///////////////////////////////////////////////////////////////////////////
-
 #include <stdio.h>
 
 #include "room.h"
@@ -19,9 +10,13 @@
 #include "spec_mobs.h"
 #include "materials.h"
 
+
+// hard to dodge blows while you're writhing in pain
+#define EXTREME_PAIN_AGI_PENALTY 20
+
+
 //  use reconcileDamage to apply damage to victims.
 //  if victim dies, leave victim valid (do not delete) annd return a -1
-
 diseaseTypeT affToDisease(affectedData &af)
 {
   diseaseTypeT dtt = diseaseTypeT(af.modifier);
@@ -1723,6 +1718,68 @@ int disease_pneumonia(TBeing *victim, int message, affectedData *af)
   return FALSE;
 }
 
+
+// extreme pain makes use of AFF_STUNNED for its practical effects
+//
+// applies&removes an AGI penalty manually, as the affect code can't handle adding
+// that kind of stuff to a disease affect
+int disease_extreme_pain(TBeing *vict, int stage, affectedData *aff)
+{
+  switch (stage) {
+
+    case DISEASE_BEGUN:
+      if (vict->task)
+        vict->stopTask();
+      if (vict->spelltask)
+        vict->stopCast(STOP_CAST_NONE);
+      if (vict->riding && IS_SET_DELETE(vict->fallOffMount(vict->riding, POSITION_STUNNED), DELETE_THIS))
+        return DELETE_THIS;
+      act("$n screams horribly and falls to the $g!", false, vict, nullptr, nullptr, TO_ROOM);
+      act("Agony overcomes you and you scream and fall to the $g!", false, vict, nullptr, nullptr, TO_CHAR);
+      act("$n is rendered senseless by the pain of $s wounds.", false, vict, nullptr, nullptr, TO_ROOM);
+      act("You are rendered senseless by the pain of your wounds.", false, vict, nullptr, nullptr, TO_CHAR);
+      vict->setPosition(POSITION_STUNNED);
+      vict->addToStat(STAT_CURRENT, STAT_AGI, -EXTREME_PAIN_AGI_PENALTY);
+      break;
+
+    case DISEASE_PULSE:
+      // is this a good frequency?
+      switch(number(0, 30)) {
+        case 0:
+          act("$n writhes in extreme agony.", false, vict, nullptr, nullptr, TO_ROOM);
+          act("You cannot help but write wretchedly on the $g!", false, vict, nullptr, nullptr, TO_CHAR);
+          break;
+        case 1:
+          act("$n groans piteously.", false, vict, nullptr, nullptr, TO_ROOM);
+          act("A deep groan forces itself from your throat.", false, vict, nullptr, nullptr, TO_CHAR);
+          break;
+        case 2:
+          act("$n shrieks in raw torment!", false, vict, nullptr, nullptr, TO_ROOM);
+          act("You scream your throat raw from the torment!", false, vict, nullptr, nullptr, TO_CHAR);
+          break;
+        case 3:
+          act("$n twitches and jerks helplessly.", false, vict, nullptr, nullptr, TO_ROOM);
+          act("Your limbs dance uncontrollably!", false, vict, nullptr, nullptr, TO_CHAR);
+          break;
+        case 4:
+        default:
+          break;
+      }
+      break;
+
+    case DISEASE_DONE:
+      act("$n gasps in relief as the pain recedes.", false, vict, nullptr, nullptr, TO_ROOM);
+      act("The pain dissipates and you regain control of yourself.", false, vict, nullptr, nullptr, TO_CHAR);
+      vict->addToStat(STAT_CURRENT, STAT_AGI, EXTREME_PAIN_AGI_PENALTY);
+      break;
+    default:
+      break;
+  }
+
+  return 0;
+}
+
+
 DISEASEINFO DiseaseInfo[MAX_DISEASE] =
 {
   {disease_null,"bogus disease!",0},
@@ -1752,5 +1809,6 @@ DISEASEINFO DiseaseInfo[MAX_DISEASE] =
   {disease_dysentery,"dysentery",375},
   {disease_pneumonia,"pneumonia",650},
   {disease_gangrene,"gangrene",1250},
+  {disease_extreme_pain,"extreme_pain",100},
 };
 
