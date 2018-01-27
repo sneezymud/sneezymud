@@ -148,20 +148,6 @@ TBeing *genericWeaponProcCheck(TBeing *vict, cmdTypeT cmd, TObj *o, int chance)
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 int rainbowBridge(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 {
   int rc;
