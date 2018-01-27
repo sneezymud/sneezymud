@@ -1,20 +1,25 @@
 #include "being.h"
 #include "obj_general_weapon.h"
 
-void lightSaberExtend(TBeing *ch, TGenWeapon *weapon)
+// quest weapon for psionicists
+
+const sstring color_names[] = {"red", "yellow", "green", "blue", "purple", "white"};
+const sstring color_codes[] = {"<r>", "<Y>", "<g>", "<b>", "<p>", "<W>"};
+
+#define LIGHTSABER_MAX_COLORS   6
+
+
+int which_color(TBeing *ch)
 {
-  sstring buf;
-  sstring colornames[]={"red", "yellow", "green", "blue", "purple", "white"};
-  sstring colorcodes[]={"<r>", "<Y>", "<g>", "<b>", "<p>", "<W>"};
-  int which_color=0;
+  int color = 0;
+  for (auto &c: ch->getName())
+    color += c;
+  return color % LIGHTSABER_MAX_COLORS;
+}
 
-  // this is just a way to get a random but consistent color
-  buf=ch->getName();
-  for(unsigned int i=0;i<buf.length();++i){
-    which_color += (int) buf[i];
-  }
-  which_color=which_color % 6;
 
+void lightsaber_extend(TBeing *ch, TGenWeapon *weapon)
+{
   if(weapon->getWeaponType(0)==WEAPON_TYPE_SLICE)
     return;
 
@@ -23,29 +28,24 @@ void lightSaberExtend(TBeing *ch, TGenWeapon *weapon)
   weapon->setWeapDamDev(8);
   weapon->swapToStrung();
 
-  buf=format("A brilliant blade of %s%s<o> light springs forth from $p.") %
-    colorcodes[which_color] % colornames[which_color];
-  act(buf, false, ch, weapon, NULL, TO_CHAR, ANSI_ORANGE);
+  int color = which_color(ch);
+  sstring ccode = color_codes[color];
+  sstring cname = color_names[color];
 
-  buf=format("A brilliant blade of %s%s<o> light springs forth from $n's $o.") %
-    colorcodes[which_color] % colornames[which_color];
-  act(buf, false, ch, weapon, NULL, TO_ROOM, ANSI_ORANGE);
+  act(format("A brilliant blade of %s%s<o> light springs forth from $p.") % ccode % cname,
+      false, ch, weapon, NULL, TO_CHAR, ANSI_ORANGE);
 
+  act(format("A brilliant blade of %s%s<o> light springs forth from $n's $o.") % ccode % cname,
+      false, ch, weapon, NULL, TO_ROOM, ANSI_ORANGE);
 
-  buf = format("%s with a brilliant %s%s<1> blade of light") %
-    obj_index[weapon->getItemIndex()].short_desc %
-    colorcodes[which_color] % colornames[which_color];
-  weapon->shortDescr = buf;
+  weapon->shortDescr = format("%s with a brilliant blade of %s%s<1> light")
+    % obj_index[weapon->getItemIndex()].short_desc % ccode % cname;
 }
 
-void lightSaberRetract(TBeing *ch, TGenWeapon *weapon)
-{
-  sstring buf;
-  sstring colornames[]={"red", "yellow", "green", "blue", "purple", "white"};
-  sstring colorcodes[]={"<r>", "<Y>", "<g>", "<b>", "<p>", "<W>"};
-  int which_color=0;
 
-  if(weapon->getWeaponType(0)==WEAPON_TYPE_BLUDGEON)
+void lightsaber_retract(TBeing *ch, TGenWeapon *weapon)
+{
+  if (weapon->getWeaponType(0) == WEAPON_TYPE_BLUDGEON)
     return;
 
   weapon->setWeaponType(WEAPON_TYPE_BLUDGEON);
@@ -53,31 +53,22 @@ void lightSaberRetract(TBeing *ch, TGenWeapon *weapon)
   weapon->setWeapDamDev(1);
   weapon->swapToStrung();
 
-  // restore to original description
-  buf=obj_index[weapon->getItemIndex()].short_desc;
-  weapon->shortDescr = buf;
+  if (!ch)
+    return;
 
-  if(ch){
-    // this is just a way to get a random but consistent color
-    buf=ch->getName();
-    for(unsigned int i=0;i<buf.length();++i){
-      which_color += (int) buf[i];
-    }
-    which_color=which_color % 6;
-    
-    buf=format("A brilliant blade of %s%s<o> light retracts into $p.") %
-      colorcodes[which_color] % colornames[which_color];
-    act(buf, false, ch, weapon, NULL, TO_CHAR, ANSI_ORANGE);
-    
-    buf=format("A brilliant blade of %s%s<o> light retracts into $n's $o.") %
-      colorcodes[which_color] % colornames[which_color];
-    act(buf, false, ch, weapon, NULL, TO_ROOM, ANSI_ORANGE);
-  }
+  int color = which_color(ch);
+  sstring ccode = color_codes[color];
+  sstring cname = color_names[color];
 
-}  
+  act(format("A brilliant blade of %s%s<o> light retracts into $p.") % ccode % cname,
+      false, ch, weapon, NULL, TO_CHAR, ANSI_ORANGE);
+
+  act(format("A brilliant blade of %s%s<o> light retracts into $n's $o.") % ccode % cname,
+      false, ch, weapon, NULL, TO_ROOM, ANSI_ORANGE);
+}
 
 
-int lightSaber(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
+int lightsaber(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 {
   TGenWeapon *weapon;
   TBeing *ch;
@@ -93,28 +84,28 @@ int lightSaber(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
     return FALSE;
 
   if(!(ch = dynamic_cast<TBeing *>(o->equippedBy))){
-    lightSaberRetract(NULL, weapon);
+    lightsaber_retract(NULL, weapon);
     return FALSE;
   }
 
 
   if(cmd==CMD_OBJ_USED && ch && ch->hasQuestBit(TOG_PSIONICIST)){
     if(weapon->getWeaponType(0)==WEAPON_TYPE_SLICE){
-      lightSaberRetract(ch, weapon);
+      lightsaber_retract(ch, weapon);
     } else {
-      lightSaberExtend(ch, weapon);
+      lightsaber_extend(ch, weapon);
     }
 
     return TRUE;
   } else if(cmd==CMD_GENERIC_QUICK_PULSE && !ch){
-    lightSaberRetract(ch, weapon);
+    lightsaber_retract(ch, weapon);
     return TRUE;
   } else if(cmd==CMD_GENERIC_PULSE && ch && 
 	    (!ch->hasQuestBit(TOG_PSIONICIST) || !ch->fight())){
-    lightSaberRetract(ch, weapon);
+    lightsaber_retract(ch, weapon);
     return TRUE;
   } else if(cmd==CMD_OBJ_HITTING && ch && ch->hasQuestBit(TOG_PSIONICIST)){
-    lightSaberExtend(ch, weapon);
+    lightsaber_extend(ch, weapon);
     return FALSE;
   } else if(cmd==CMD_OBJ_HIT && ch && ch->hasQuestBit(TOG_PSIONICIST)){
     if(::number(0,1000))
@@ -145,5 +136,3 @@ int lightSaber(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 
   return FALSE;
 }
-
-
