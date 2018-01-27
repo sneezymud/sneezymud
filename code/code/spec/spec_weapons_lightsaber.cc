@@ -2,25 +2,34 @@
 #include "obj_general_weapon.h"
 
 // quest weapon for psionicists
+//
+// tracks whether it's extended by varying between WEAPON_TYPE_SLICE and _BLUNT
 
-const sstring color_names[] = {"red", "yellow", "green", "blue", "purple", "white"};
-const sstring color_codes[] = {"<r>", "<Y>", "<g>", "<b>", "<p>", "<W>"};
+// TODO: make crit freq just be a multiple of the attackers base frequency
+const int LIGHTSABER_CRITS_INFREQUENCY = 50;
+const int LIGHTSABER_NOISE_INFREQUENCY = 10;
 
-#define LIGHTSABER_MAX_COLORS   6
 
+const int LS_CRIT_LIST[] = {67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,91,92,98,99};
+const int LS_MAX_CRITS = sizeof(LS_CRIT_LIST) / sizeof(LS_CRIT_LIST[0]);
+
+
+const sstring LS_COLOR_NAMES[] = {"red", "yellow", "green", "blue", "purple", "white"};
+const sstring LS_COLOR_CODES[] = {"<r>", "<Y>", "<g>", "<b>", "<p>", "<W>"};
+const int LS_MAX_COLORS = sizeof(LS_COLOR_NAMES) / sizeof(LS_COLOR_NAMES[0]);
 
 int which_color(TBeing *ch)
 {
   int color = 0;
   for (auto &c: ch->getName())
     color += c;
-  return color % LIGHTSABER_MAX_COLORS;
+  return color % LS_MAX_COLORS;
 }
 
 
 void lightsaber_extend(TBeing *ch, TGenWeapon *weapon)
 {
-  if(weapon->getWeaponType(0)==WEAPON_TYPE_SLICE)
+  if (weapon->getWeaponType(0) == WEAPON_TYPE_SLICE)
     return;
 
   weapon->setWeaponType(WEAPON_TYPE_SLICE);
@@ -29,10 +38,10 @@ void lightsaber_extend(TBeing *ch, TGenWeapon *weapon)
   weapon->swapToStrung();
 
   int color = which_color(ch);
-  sstring ccode = color_codes[color];
-  sstring cname = color_names[color];
+  sstring cname = LS_COLOR_NAMES[color];
+  sstring ccode = LS_COLOR_CODES[color];
 
-  act(format("A brilliant blade of %s%s<o> light springs forth from $p.") % ccode % cname,
+  act(format("A brilliant blade of %s%s<o> light springs forth from your $o.") % ccode % cname,
       false, ch, weapon, NULL, TO_CHAR, ANSI_ORANGE);
 
   act(format("A brilliant blade of %s%s<o> light springs forth from $n's $o.") % ccode % cname,
@@ -57,82 +66,71 @@ void lightsaber_retract(TBeing *ch, TGenWeapon *weapon)
     return;
 
   int color = which_color(ch);
-  sstring ccode = color_codes[color];
-  sstring cname = color_names[color];
+  sstring cname = LS_COLOR_NAMES[color];
+  sstring ccode = LS_COLOR_CODES[color];
 
-  act(format("A brilliant blade of %s%s<o> light retracts into $p.") % ccode % cname,
+  act(format("A brilliant blade of %s%s<o> light retracts into your $o.") % ccode % cname,
       false, ch, weapon, NULL, TO_CHAR, ANSI_ORANGE);
-
   act(format("A brilliant blade of %s%s<o> light retracts into $n's $o.") % ccode % cname,
       false, ch, weapon, NULL, TO_ROOM, ANSI_ORANGE);
 }
 
 
-int lightsaber(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
+int lightsaber(TBeing *vict, cmdTypeT cmd, const char *, TObj *obj, TObj *)
 {
-  TGenWeapon *weapon;
-  TBeing *ch;
-  int crits[20]={67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,91,92,98,99};
-  wearSlotT part;
-  int dam, rc=0;
-  spellNumT wtype;
-
-  if(!o)
-    return FALSE;
-  
-  if(!(weapon = dynamic_cast<TGenWeapon *>(o)))
+  TGenWeapon *weapon = dynamic_cast<TGenWeapon *>(obj);
+  if (!weapon)
     return FALSE;
 
-  if(!(ch = dynamic_cast<TBeing *>(o->equippedBy))){
+  TBeing *ch = dynamic_cast<TBeing *>(obj->equippedBy);
+  if (!ch) {
     lightsaber_retract(NULL, weapon);
     return FALSE;
   }
 
-
-  if(cmd==CMD_OBJ_USED && ch && ch->hasQuestBit(TOG_PSIONICIST)){
-    if(weapon->getWeaponType(0)==WEAPON_TYPE_SLICE){
+  if (cmd == CMD_OBJ_USED && ch && ch->hasQuestBit(TOG_PSIONICIST)) {
+    if (weapon->getWeaponType(0) == WEAPON_TYPE_SLICE)
       lightsaber_retract(ch, weapon);
-    } else {
+    else
       lightsaber_extend(ch, weapon);
-    }
+    return TRUE;
 
-    return TRUE;
-  } else if(cmd==CMD_GENERIC_QUICK_PULSE && !ch){
+  } else if ( (cmd == CMD_GENERIC_QUICK_PULSE && !ch)
+           || (cmd == CMD_GENERIC_PULSE && ch && (!ch->hasQuestBit(TOG_PSIONICIST) || !ch->fight())) ) {
     lightsaber_retract(ch, weapon);
     return TRUE;
-  } else if(cmd==CMD_GENERIC_PULSE && ch && 
-	    (!ch->hasQuestBit(TOG_PSIONICIST) || !ch->fight())){
-    lightsaber_retract(ch, weapon);
-    return TRUE;
-  } else if(cmd==CMD_OBJ_HITTING && ch && ch->hasQuestBit(TOG_PSIONICIST)){
+
+  } else if (cmd == CMD_OBJ_HITTING && ch && ch->hasQuestBit(TOG_PSIONICIST)) {
     lightsaber_extend(ch, weapon);
     return FALSE;
-  } else if(cmd==CMD_OBJ_HIT && ch && ch->hasQuestBit(TOG_PSIONICIST)){
-    if(::number(0,1000))
-      return FALSE;
 
-    act("$p <W>flashes brightly!<1>", 0, vict, o, 0, TO_ROOM);
-
-    part = vict->getPartHit(ch, TRUE);
-    dam = ch->getWeaponDam(vict, weapon, HAND_PRIMARY);
-
-    if(!vict)
-      return FALSE;
-    
-    if (weapon)
-      wtype = ch->getAttackType(weapon, HAND_PRIMARY);
-    else
-      wtype = TYPE_HIT;
-    
-    rc = ch->critSuccessChance(vict, weapon, &part, wtype, &dam, crits[::number(0,20)]);
-    if (IS_SET_DELETE(rc, DELETE_VICT)) {
-      return DELETE_VICT;
-    }
-    rc = ch->applyDamage(vict, dam, wtype);
-    if (IS_SET_DELETE(rc, DELETE_VICT)) {
-      return DELETE_VICT;
-    }
+  } else if (cmd != CMD_OBJ_HIT || !ch || !ch->hasQuestBit(TOG_PSIONICIST)) {
+    return FALSE;
   }
 
+  if (::number(0, LIGHTSABER_CRITS_INFREQUENCY)) {
+    if (!::number(0, LIGHTSABER_NOISE_INFREQUENCY)) {
+      act("$p hums loudly as it swings.", false, ch, obj, nullptr, TO_CHAR);
+      act("$p hums loudly as it swings.", false, ch, obj, nullptr, TO_ROOM);
+    }
+    return FALSE;
+  }
+
+  sstring msg = format("$p %sflashes brightly<1> as it strikes!")
+      % LS_COLOR_CODES[which_color(ch)];
+  act(msg, false, ch, obj, nullptr, TO_CHAR);
+  act(msg, false, ch, obj, nullptr, TO_ROOM);
+
+  wearSlotT part = vict->getPartHit(ch, TRUE);
+  int damage = ch->getWeaponDam(vict, weapon, HAND_PRIMARY);
+  int crit = LS_CRIT_LIST[::number(0, LS_MAX_CRITS)];
+  spellNumT type = ch->getAttackType(weapon, HAND_PRIMARY);
+
+  int rc = ch->critSuccessChance(vict, weapon, &part, type, &damage, crit);
+  if (IS_SET_DELETE(rc, DELETE_VICT))
+    return DELETE_VICT;
+  rc = ch->applyDamage(vict, damage, type);
+  if (IS_SET_DELETE(rc, DELETE_VICT))
+    return DELETE_VICT;
   return FALSE;
 }
