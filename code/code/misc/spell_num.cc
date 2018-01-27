@@ -1115,7 +1115,7 @@ int mapSpellnumToFile(spellNumT stt)
     case DAMAGE_IMPALE:
     case DAMAGE_STARVATION:
     case DAMAGE_FALL:
-    case DAMAGE_HEMORRAGE:
+    case DAMAGE_HEMORRHAGE:
     case DAMAGE_DROWN:
     case DAMAGE_DRAIN:
     case DAMAGE_DISRUPTION:

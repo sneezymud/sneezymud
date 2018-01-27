@@ -22,7 +22,7 @@ enum spellNumT {
      DAMAGE_IMPALE = -50,
      DAMAGE_STARVATION = -49,
      DAMAGE_FALL = -48,
-     DAMAGE_HEMORRAGE = -47,
+     DAMAGE_HEMORRHAGE = -47,
      DAMAGE_DROWN = -46,
      DAMAGE_DRAIN = -45,
      DAMAGE_DISRUPTION = -44,

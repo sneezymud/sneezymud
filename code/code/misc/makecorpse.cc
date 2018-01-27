@@ -216,7 +216,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
         sprintf(buf, "The bloated, water-filled corpse of %s is here.",getName().c_str());
         break;
       case SPELL_CARDIAC_STRESS:
-      case DAMAGE_HEMORRAGE:
+      case DAMAGE_HEMORRHAGE:
         sprintf(buf, "The skin of %s's corpse is bright red, but no wound presents itself.",getName().c_str());
         break;
       case DAMAGE_IMPALE:
