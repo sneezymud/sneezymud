@@ -1051,7 +1051,7 @@ buf=format("$n's %s shatters one of $N's ribs!") %
 	  return 0;
 	if (v->race->hasNoBones())
 	  return 0;
-	if (v->hasDisease(DISEASE_HEMORRAGE))
+	if (v->hasDisease(DISEASE_HEMORRHAGE))
 	  return 0;
         if (v->isLimbFlags(WEAR_BODY, PART_BROKEN))
           return 0;
@@ -1073,7 +1073,7 @@ buf=format("$n's %s shatters one of $N's ribs!") %
 	af.type = AFFECT_DISEASE;
 	af.level = 0;   // has to be 0 for doctor to treat
 	af.duration = PERMANENT_DURATION;
-	af.modifier = DISEASE_HEMORRAGE;
+	af.modifier = DISEASE_HEMORRHAGE;
 	af.location = APPLY_NONE;
 	af.bitvector = 0;
 	v->affectTo(&af);

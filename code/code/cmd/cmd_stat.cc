@@ -2201,7 +2201,7 @@ void TBeing::statBeing(TBeing *k)
       case DAMAGE_FROST:
       case DAMAGE_DROWN:
       case DAMAGE_WHIRLPOOL:
-      case DAMAGE_HEMORRAGE:
+      case DAMAGE_HEMORRHAGE:
       case DAMAGE_IMPALE:
       case DAMAGE_TRAP_POISON:
       case DAMAGE_ACID:

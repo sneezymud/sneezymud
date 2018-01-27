@@ -2412,7 +2412,7 @@ int demonSlayer(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   act("$p rends your flesh, leaving a bloody gaping wound!", 
       0, vict, o, 0, TO_CHAR, ANSI_WHITE_BOLD);
 
-  rc = ch->reconcileDamage(vict, dam, DAMAGE_HEMORRAGE);
+  rc = ch->reconcileDamage(vict, dam, DAMAGE_HEMORRHAGE);
   if (IS_SET_DELETE(rc, DELETE_VICT))
     return DELETE_VICT;
   return TRUE;

@@ -402,7 +402,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
       bit = IMMUNE_BONE_COND;
       break;
     case SPELL_BLEED:
-    case DAMAGE_HEMORRAGE:
+    case DAMAGE_HEMORRHAGE:
       bit = IMMUNE_BLEED;
       break;
     case SPELL_TSUNAMI:

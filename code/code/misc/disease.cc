@@ -603,7 +603,7 @@ int disease_syphilis(TBeing *ch, int message, affectedData *)
   return FALSE;
 }
 
-int disease_hemorraging(TBeing *victim, int message, affectedData *)
+int disease_hemorrhaging(TBeing *victim, int message, affectedData *)
 {
   int dam;
 
@@ -618,7 +618,7 @@ int disease_hemorraging(TBeing *victim, int message, affectedData *)
       victim->sendTo("An immense pain in your chest causes you to grunt in agony!\n\r");
       act("$n groans in agony.",FALSE,victim,0,0,TO_ROOM);
       dam = ::number(1,3);
-      if (victim->reconcileDamage(victim, dam, DAMAGE_HEMORRAGE) == -1)
+      if (victim->reconcileDamage(victim, dam, DAMAGE_HEMORRHAGE) == -1)
         return DELETE_THIS;
       break;
     case DISEASE_BEGUN:
@@ -1738,7 +1738,7 @@ DISEASEINFO DiseaseInfo[MAX_DISEASE] =
   {disease_eyeball,"a missing eyeball", 4000},
   {disease_lung,"a punctured lung",2750},
   {disease_stomach,"a stomach wound",3300},
-  {disease_hemorraging,"internal bleeding",3500},
+  {disease_hemorrhaging,"internal bleeding",3500},
   {disease_leprosy,"leprosy",800},
   {disease_plague,"THE PLAGUE!", 10220},
   {disease_suffocate,"a breathing problem",10000},
