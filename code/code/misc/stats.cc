@@ -950,16 +950,18 @@ int TBeing::setStat(statSetT whichSet, statTypeT whichStat, int value)
 
 int TBeing::addToStat(statSetT whichSet, statTypeT whichStat, int modifier)
 {
-  switch(whichSet){
-  case(STAT_CHOSEN):
-    return chosenStats.add(whichStat,modifier);
-  case(STAT_NATURAL):
-    vlogf(LOG_BUG,"You should not attempt to modify Natural Stats.");
-    return 0;
-  case(STAT_CURRENT):
-    return curStats.add(whichStat,modifier);
-    case(STAT_RACE): case(STAT_AGE): case(STAT_TERRITORY):
-      vlogf(LOG_BUG, "something tried to add to STAT_RACE, STAT_AGE or STAT_TERRITORY");
+  switch (whichSet) {
+    case STAT_CHOSEN:
+      return chosenStats.add(whichStat,modifier);
+    case STAT_NATURAL:
+      vlogf(LOG_BUG, "Illegal attempt to modify Natural Stats.");
+      return 0;
+    case STAT_CURRENT:
+      return curStats.add(whichStat,modifier);
+    case STAT_RACE:
+    case STAT_AGE:
+    case STAT_TERRITORY:
+      vlogf(LOG_BUG, "Illegal attempt to modify STAT_RACE, STAT_AGE or STAT_TERRITORY");
       return 0;
   }
   return 0;
