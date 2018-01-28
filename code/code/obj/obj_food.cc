@@ -402,7 +402,7 @@ void TObj::eatMe(TBeing *ch)
     } else if (getStructPoints() > 20 || getVolume() > 1728) {
       ch->sendTo("There is simply too much of that to eat in one bite.\n\r");
       return;
-    } else if (!canWear(ITEM_TAKE)) {
+    } else if (!canWear(ITEM_WEAR_TAKE)) {
       ch->sendTo("How can you eat that?  You can't even pick it up!\n\r");
       return;
     } else if (dynamic_cast<const TPCorpse*>(this)) {

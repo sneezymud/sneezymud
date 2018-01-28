@@ -1134,7 +1134,7 @@ buf=format("$n's %s shatters one of $N's ribs!") %
 	buf = format("<W>A <1><r>bloody<1><W> tooth lies here, having been knocked out of %s's mouth.<1>") % v->getName();
 	corpse->setDescr(buf);
 	      
-	corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
+	corpse->obj_flags.wear_flags = ITEM_WEAR_TAKE | ITEM_WEAR_HOLD | ITEM_WEAR_THROW;
 	//	corpse->addCorpseFlag(CORPSE_NO_REGEN);
 	//	corpse->obj_flags.decay_time = 3 * (dynamic_cast<TMonster *>(this) ? MAX_NPC_CORPSE_TIME : MAX_PC_CORPSE_EMPTY_TIME);
 	corpse->obj_flags.decay_time=-1;
@@ -1204,7 +1204,7 @@ buf=format("$n's %s shatters one of $N's ribs!") %
         corpse->setDescr(buf);
       }
 
-	    corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
+	    corpse->obj_flags.wear_flags = ITEM_WEAR_TAKE | ITEM_WEAR_HOLD | ITEM_WEAR_THROW;
 	    //	    corpse->addCorpseFlag(CORPSE_NO_REGEN);
 	    corpse->obj_flags.decay_time = 3 * (dynamic_cast<TMonster *>(this) ? MAX_NPC_CORPSE_TIME : MAX_PC_CORPSE_EMPTY_TIME);
 	    corpse->setWeight(0.1);
@@ -1792,7 +1792,7 @@ buf=format("$n's %s slices into $N from gullet to groin, disembowling $M!") %
 	  }
 	  corpse->setDescr(buf);
 		
-	  corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
+	  corpse->obj_flags.wear_flags = ITEM_WEAR_TAKE | ITEM_WEAR_HOLD | ITEM_WEAR_THROW;
 	  corpse->addCorpseFlag(CORPSE_NO_REGEN);
 	  corpse->obj_flags.decay_time = 3 * (dynamic_cast<TMonster *>(this) ? MAX_NPC_CORPSE_TIME : MAX_PC_CORPSE_EMPTY_TIME);
 	  corpse->setWeight(v->getWeight() / 32.0);

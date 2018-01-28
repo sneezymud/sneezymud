@@ -438,7 +438,7 @@ int TThing::dropGas(int amt, gasTypeT type)
 
     gas->setType(type);
     gas->swapToStrung();
-    REMOVE_BIT(gas->obj_flags.wear_flags, ITEM_TAKE);
+    REMOVE_BIT(gas->obj_flags.wear_flags, ITEM_WEAR_TAKE);
     gas->canBeSeen = 1;
     gas->setMaterial(MAT_GHOSTLY);
     gas->setObjStat(ITEM_NORENT);

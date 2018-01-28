@@ -592,7 +592,7 @@ int TMonster::hunt()
 
 wearSlotT slot_from_bit(int wb)
 {
-  if (wb & ITEM_HOLD)
+  if (wb & ITEM_WEAR_HOLD)
     return HOLD_RIGHT;
   else if (wb & ITEM_WEAR_FINGERS)
     return WEAR_FINGER_R;
@@ -710,7 +710,7 @@ int TMonster::superScavenger()
         --(*best_o);
         *this += *best_o;
       }
-      if (best_o->canWear(ITEM_HOLD)) {
+      if (best_o->canWear(ITEM_WEAR_HOLD)) {
         strcpy(buf, best_o->name.c_str());
         strcpy(buf, add_bars(buf).c_str());
         doGrab(buf);
@@ -3400,7 +3400,7 @@ int TMonster::scavenge()
       if (corpse && !corpse->stuff.empty())
         continue;
       
-      if (obj->canWear(ITEM_TAKE) && canCarry(obj, SILENT_YES) &&
+      if (obj->canWear(ITEM_WEAR_TAKE) && canCarry(obj, SILENT_YES) &&
           canSee(obj) && 
           obj->action_description.empty() &&   // checks for personalized
           obj->stuff.empty()) {

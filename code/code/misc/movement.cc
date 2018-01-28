@@ -401,7 +401,7 @@ bool TBeing::rawMoveTied(dirTypeT dir, int new_r)
 
     // optimally I'd like to move the conditions in doDrag to a canDrag
     // function and use that here
-    if(!tied || !tied->canWear(ITEM_TAKE) || 
+    if(!tied || !tied->canWear(ITEM_WEAR_TAKE) || 
        dynamic_cast<TTrap *>(tied) ||
        compareWeights(tied->getTotalWeight(TRUE), weight_limit)==-1){
       if(rider)

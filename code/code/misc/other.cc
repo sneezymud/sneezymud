@@ -3890,7 +3890,7 @@ void TBeing::doDrag(TObj *o, dirTypeT tdir)
 
   if(!o) return;
   if (!isImmortal()) {
-    if(!o->canWear(ITEM_TAKE)) {
+    if(!o->canWear(ITEM_WEAR_TAKE)) {
       act("$N : You can't drag that.\n\r", TRUE, this, NULL, o, TO_CHAR);
       return;
     }
@@ -4376,7 +4376,7 @@ void TBeing::doRoll(TObj *o, dirTypeT tdir)
 
   if(!o) return;
   if (!isImmortal()) {
-    if(!o->canWear(ITEM_TAKE)) {
+    if(!o->canWear(ITEM_WEAR_TAKE)) {
       act("$N : You can't roll that.\n\r", TRUE, this, NULL, o, TO_CHAR);
       return;
     }

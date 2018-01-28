@@ -600,13 +600,13 @@ sstring TBed::statObjInfo() const
 
 void TBed::lowCheck()
 {
-  if (canWear(ITEM_TAKE) && getVolume() <= 3000 && getWeight() <= 10 &&
+  if (canWear(ITEM_WEAR_TAKE) && getVolume() <= 3000 && getWeight() <= 10 &&
       getRegen() >= 3)
     vlogf(LOG_LOW, format("Portable bed (%s) with excessive regen rates!") % 
              getName());
 
 #if 0
-  if (canWear(ITEM_TAKE)) {
+  if (canWear(ITEM_WEAR_TAKE)) {
     vlogf(LOG_LOW, format("Bed (%s) set to be portable.") % 
                 getName());
   }

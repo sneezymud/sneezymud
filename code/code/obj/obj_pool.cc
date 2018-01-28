@@ -248,7 +248,7 @@ void TPool::updateDesc()
     sprintf(buf, "A chunk of <C>frozen<1> %s is here.", liqname);
     setDescr(buf);
     
-    SET_BIT(obj_flags.wear_flags, ITEM_TAKE);
+    SET_BIT(obj_flags.wear_flags, ITEM_WEAR_TAKE);
   } else {
     buf2 = format("pool puddle %s %s") %
       stripColorCodes(liquidInfo[getDrinkType()]->name) %
@@ -261,7 +261,7 @@ void TPool::updateDesc()
     sprintf(buf, pooldesc[drinkindex], liqname);
     setDescr(buf);
 
-    REMOVE_BIT(obj_flags.wear_flags, ITEM_TAKE);
+    REMOVE_BIT(obj_flags.wear_flags, ITEM_WEAR_TAKE);
   }
 }
 
@@ -388,7 +388,7 @@ void TPool::decayMe()
 void TPool::initPool(int amt, liqTypeT liq)
 {
   swapToStrung();
-  REMOVE_BIT(obj_flags.wear_flags, ITEM_TAKE);
+  REMOVE_BIT(obj_flags.wear_flags, ITEM_WEAR_TAKE);
   setDrinkType(liq);
   canBeSeen = 1;
   setMaterial(MAT_WATER);

@@ -2470,7 +2470,7 @@ wearKeyT TObj::getWearKey() const
     return WEAR_KEY_HEAD;
   if (canWear(ITEM_WEAR_BODY))
     return WEAR_KEY_BODY;
-  if (canWear(ITEM_HOLD))
+  if (canWear(ITEM_WEAR_HOLD))
     return WEAR_KEY_HOLD;
   return WEAR_KEY_NONE;
 }

@@ -49,14 +49,14 @@ void TOtherObj::lowCheck()
   // Unlike other lowCheck functions, we do NOT recurse to TObj:: base
   // function.  We do however do modified versions of what that func does
 
-  if (!getVolume() && canWear(ITEM_TAKE))
+  if (!getVolume() && canWear(ITEM_WEAR_TAKE))
     vlogf(LOG_LOW,format("other item (%s:%d) had 0 volume.") % getName() % objVnum());
 
   // simulated light sources are allowed under following constraints:
   // non-takeable : can have as much light as want (lampposts, etc)
   // takeable : max_exist < 10 : weight = light
   // takeable : max_exist>= 10 : weight = 2*light
-  if (canWear(ITEM_TAKE)) {
+  if (canWear(ITEM_WEAR_TAKE)) {
     int i;
     int lgt = 0;
     for (i=0; i<MAX_OBJ_AFFECT;i++) {

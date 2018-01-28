@@ -66,7 +66,7 @@ void TBaseClothing::lowCheck()
       vlogf(LOG_LOW, format("shield %s has a bad weight.  should be (%.1f)") % 
            getName() % (amt/20.0+0.1));
   } else {
-    if (canWear(ITEM_HOLD)) {
+    if (canWear(ITEM_WEAR_HOLD)) {
       int amt = -itemAC();
       if (amt)
         vlogf(LOG_LOW, format("Holdable item (%s:%d) with AC that was not a shield.") % 
@@ -76,10 +76,10 @@ void TBaseClothing::lowCheck()
 
   // insure proper wearability
   unsigned int ui = obj_flags.wear_flags;
-  REMOVE_BIT(ui, ITEM_TAKE);
-  REMOVE_BIT(ui, ITEM_THROW);
+  REMOVE_BIT(ui, ITEM_WEAR_TAKE);
+  REMOVE_BIT(ui, ITEM_WEAR_THROW);
 
-  if (ui != ITEM_HOLD) {
+  if (ui != ITEM_WEAR_HOLD) {
     int num = CountBits(ui) - 1;
     if (num < 0) {
       vlogf(LOG_LOW, format("Base Clothing (%s:%d) with insufficient wearability.") % 
@@ -234,7 +234,7 @@ void TBaseClothing::armorPercs(double *ac_perc, double *str_perc) const
   } else if (canWear(ITEM_WEAR_FEET)) {
     *ac_perc  = 0.02;
     *str_perc = 0.02;
-  } else if (canWear(ITEM_HOLD)) {
+  } else if (canWear(ITEM_WEAR_HOLD)) {
     *ac_perc  = 0.25;
     *str_perc = 0.07;
   } else {
@@ -587,10 +587,10 @@ bool TBaseClothing::sellMeCheck(TBeing *ch, TMonster *keeper, int, int) const
 void TBaseClothing::describeObjectSpecifics(const TBeing *ch) const
 {
   unsigned int ui = obj_flags.wear_flags;
-  REMOVE_BIT(ui, ITEM_TAKE);
-  REMOVE_BIT(ui, ITEM_THROW);
+  REMOVE_BIT(ui, ITEM_WEAR_TAKE);
+  REMOVE_BIT(ui, ITEM_WEAR_THROW);
 
-  if (ui == ITEM_HOLD) {
+  if (ui == ITEM_WEAR_HOLD) {
     sstring buf = "$p looks like it is meant to be held in your hands.";
     act(buf, FALSE, ch, this, 0, TO_CHAR);
   } else {
