@@ -1,5 +1,4 @@
-#ifndef __STRUCTS_H
-#define __STRUCTS_H
+#pragma once
 
 #include <time.h>
 #include <string.h>
@@ -361,7 +360,6 @@ class saveAffectedData {
     saveAffectedData & operator=(const affectedData &a);
 };
 
-#if 1
 template<class T>
 inline bool IS_SET(T a, const T b) { return ((a & b) != 0); }
 
@@ -382,27 +380,6 @@ inline void ADD_DELETE(T& a, const T& b) { a |= b; }
 
 template<class T>
 inline void REM_DELETE(T& a, const T& b) { a &= ~b; }
-#else
-inline bool IS_SET(int a, const int b) { return ((a & b) != 0); }
-
-inline bool IS_SET_ONLY(int a, const int b) { return ((a & b) == b); }
-
-inline bool IS_SET_DELETE(int a, const int b) { return ((a & b) == b); }
-
-inline void SET_BIT(int& a, const int& b) { a |= b; }
-inline void SET_BIT(unsigned short& a, const unsigned short& b) { a |= b; }
-inline void SET_BIT(unsigned int& a, const unsigned int& b) { a |= b; }
-inline void SET_BIT(unsigned long& a, const unsigned long& b) { a |= b; }
-
-inline void REMOVE_BIT(int& a, const int& b) { a &= ~b; }
-inline void REMOVE_BIT(unsigned short& a, const unsigned short& b) { a &= ~b; }
-inline void REMOVE_BIT(unsigned int& a, const unsigned int& b) { a &= ~b; }
-inline void REMOVE_BIT(unsigned long& a, const unsigned long& b) { a &= ~b; }
-
-inline void ADD_DELETE(int& a, const int& b) { a |= b; }
-
-inline void REM_DELETE(int& a, const int& b) { a &= ~b; }
-#endif
 
 inline int GET_BITS(int a, int p, int n) 
 {
@@ -446,5 +423,3 @@ inline void SET_BITS_CORRECT(int& a, int p, int n, const int y)
 // x gets &'d with r to keep from clobbering higher-order bits with a y=-1
   a = (s | (x & r));
 }
-
-#endif  // __STRUCTS_H inclusion sandwich
