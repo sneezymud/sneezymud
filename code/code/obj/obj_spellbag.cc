@@ -66,9 +66,9 @@ bool TSpellBag::lowCheckSlots(silentTypeT silent)
   // wrist for wristpouches
 
   unsigned int value = obj_flags.wear_flags;
-  REMOVE_BIT(value, ITEM_THROW);
-  REMOVE_BIT(value, ITEM_TAKE);
-  REMOVE_BIT(value, ITEM_HOLD);
+  REMOVE_BIT(value, ITEM_WEAR_THROW);
+  REMOVE_BIT(value, ITEM_WEAR_TAKE);
+  REMOVE_BIT(value, ITEM_WEAR_HOLD);
   REMOVE_BIT(value, ITEM_WEAR_WAIST);
   REMOVE_BIT(value, ITEM_WEAR_NECK);
   REMOVE_BIT(value, ITEM_WEAR_WRISTS);

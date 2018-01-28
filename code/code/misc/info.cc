@@ -4290,7 +4290,7 @@ void TObj::describeMe(TBeing *ch) const
                  ItemInfo[itemType()]->common_name % 
 	     sstring(buf).uncap());
 
-  if (ch->isImmortal() || canWear(ITEM_TAKE)) {
+  if (ch->isImmortal() || canWear(ITEM_WEAR_TAKE)) {
     // weight >= 1.0
     float wgt = getTotalWeight(TRUE);
 
@@ -4818,7 +4818,7 @@ void TBeing::describeNoise(const TObj *obj, int learn) const
       !dynamic_cast<const TBow *>(obj))
     return;
 
-  if (obj->canWear(ITEM_HOLD) || obj->canWear(ITEM_WEAR_FINGERS))
+  if (obj->canWear(ITEM_WEAR_HOLD) || obj->canWear(ITEM_WEAR_FINGERS))
     return;
 
   int iNoise = GetApprox(material_nums[obj->getMaterial()].noise, learn);

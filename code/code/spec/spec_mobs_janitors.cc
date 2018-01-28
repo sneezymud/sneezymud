@@ -16,7 +16,7 @@
 bool okForJanitor(TMonster *myself, TObj *obj)
 {
   // only things that can be taken, and that are not pools
-  if (!obj->canWear(ITEM_TAKE) && !dynamic_cast<TPool *>(obj))
+  if (!obj->canWear(ITEM_WEAR_TAKE) && !dynamic_cast<TPool *>(obj))
     return false;
   if (!myself->canSee(obj) || (obj->in_room == Room::DONATION))
     return false;
@@ -60,7 +60,7 @@ bool okForJanitor(TMonster *myself, TObj *obj)
         TObj *obj2 = dynamic_cast<TObj *>(t3);
         if (!obj2)
           return false;
-        if (!obj2->canWear(ITEM_TAKE))
+        if (!obj2->canWear(ITEM_WEAR_TAKE))
           return false;
         if (!myself->canSee(corpse))
           return false;

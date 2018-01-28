@@ -154,12 +154,12 @@ void doSaveZoneFile(TBeing *ch, const sstring & tArg)
     for(StuffIter it=tRoom->stuff.begin();it!=tRoom->stuff.end() && (tThing=*it);++it) {
       if (!(tObj = dynamic_cast<TObj *>(tThing)) ||
           (tObj->getSnum() < 0) ||
-          tObj->canWear(ITEM_TAKE))
+          tObj->canWear(ITEM_WEAR_TAKE))
         continue;
 
       for(StuffIter it=tRoom->stuff.begin();it!=tRoom->stuff.end() && (tThing2=*it);++it) {
         if (!(tObj2 = dynamic_cast<TObj *>(tThing2)) ||
-            tObj2->canWear(ITEM_TAKE) ||
+            tObj2->canWear(ITEM_WEAR_TAKE) ||
             tObj2->getSnum() != tObj->getSnum())
           continue;
 
@@ -220,12 +220,12 @@ void doSaveZoneFile(TBeing *ch, const sstring & tArg)
     for(StuffIter it=tRoom->stuff.begin();it!=tRoom->stuff.end() && (tThing=*it);++it) {
       if (!(tObj = dynamic_cast<TObj *>(tThing)) ||
           (tObj->getSnum() < 0) ||
-          !tObj->canWear(ITEM_TAKE))
+          !tObj->canWear(ITEM_WEAR_TAKE))
         continue;
 
       for(StuffIter it=tRoom->stuff.begin();it!=tRoom->stuff.end() && (tThing2=*it);++it) {
         if (!(tObj2 = dynamic_cast<TObj *>(tThing2)) ||
-            !tObj2->canWear(ITEM_TAKE) ||
+            !tObj2->canWear(ITEM_WEAR_TAKE) ||
             tObj2->getSnum() != tObj->getSnum())
           continue;
 

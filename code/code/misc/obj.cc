@@ -470,14 +470,14 @@ void TObj::lowCheck()
 {
   int i;
 
-  if (!getVolume() && canWear(ITEM_TAKE))
+  if (!getVolume() && canWear(ITEM_WEAR_TAKE))
     vlogf(LOG_LOW,format("item (%s:%d) had 0 volume.") % getName() % objVnum());
 
-  // not sure logically, but would a canWear(ITEM_TAKE) check be appropriate here?
+  // not sure logically, but would a canWear(ITEM_WEAR_TAKE) check be appropriate here?
   // allow APPLY_LIGHT on untakeable things?
   // ^ yes... Maror 08/04
   for (i=0; i<MAX_OBJ_AFFECT;i++) {
-    if (affected[i].location == APPLY_LIGHT && canWear(ITEM_TAKE)) {
+    if (affected[i].location == APPLY_LIGHT && canWear(ITEM_WEAR_TAKE)) {
       vlogf(LOG_LOW,format("item %s was defined apply-light.") % getName());
     }
   }
@@ -489,8 +489,8 @@ bool TObj::lowCheckSlots(silentTypeT silent)
 
   // check for multiple wear slots
   unsigned int value = obj_flags.wear_flags;
-  REMOVE_BIT(value, ITEM_TAKE);
-  REMOVE_BIT(value, ITEM_THROW);
+  REMOVE_BIT(value, ITEM_WEAR_TAKE);
+  REMOVE_BIT(value, ITEM_WEAR_THROW);
 
   for (ui = 0; ui < MAX_ITEM_WEARS; ui++) {
     if (IS_SET(value, (unsigned) (1<<ui)))
@@ -524,7 +524,7 @@ void TObj::addGlowEffects()
       affected[i].location = APPLY_LIGHT;
       affected[i].modifier = (1 + getVolume()/6000);
       addToLight(affected[i].modifier);
-      if (affected[i].modifier > 5 && canWear(ITEM_TAKE))
+      if (affected[i].modifier > 5 && canWear(ITEM_WEAR_TAKE))
         vlogf(LOG_LOW,format("Mega light on %s") % getName());
       break;
     } else if (i==(MAX_OBJ_AFFECT-1))

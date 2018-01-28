@@ -496,7 +496,7 @@ int TBeing::riverFlow(int)
 bool TObj::isTrash()
 {
   if(isObjStat(ITEM_NOJUNK_PLAYER) || 
-     !canWear(ITEM_TAKE) || 
+     !canWear(ITEM_WEAR_TAKE) || 
      !roomp ||
      !stuff.empty() ||
      rider ||

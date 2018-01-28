@@ -126,7 +126,7 @@ int TThing::throwMe(TBeing *ch, dirTypeT tdir, const char *vict)
   max_distance /= 2;
 
   TObj *tobj = dynamic_cast<TObj *>(this);
-  if (tobj && !tobj->canWear(ITEM_THROW))
+  if (tobj && !tobj->canWear(ITEM_WEAR_THROW))
     max_distance /= 2;
 
   // allow it to go 1 room, people get pissy otherwise
@@ -1171,20 +1171,20 @@ TThing *has_range_object(TBeing *ch, int *pos)
   // Go thru possible places for throwing objects. 
   if ((hucked = ch->equipment[HOLD_RIGHT])) {
     tobj = dynamic_cast<TObj *>(hucked);
-    if (tobj && tobj->canWear(ITEM_THROW)) {
+    if (tobj && tobj->canWear(ITEM_WEAR_THROW)) {
       *pos = HOLD_RIGHT;
       return (tobj);
     }
   } else if ((hucked = ch->equipment[HOLD_LEFT])) {
     tobj = dynamic_cast<TObj *>(hucked);
-    if (tobj && tobj->canWear(ITEM_THROW)) {
+    if (tobj && tobj->canWear(ITEM_WEAR_THROW)) {
       *pos = HOLD_LEFT;
       return (tobj);
     }
   } else {
     for(StuffIter it= ch->stuff.begin();it!= ch->stuff.end();++it) {
       tobj = dynamic_cast<TObj *>(*it);
-      if (tobj && tobj->canWear(ITEM_THROW)) {
+      if (tobj && tobj->canWear(ITEM_WEAR_THROW)) {
         *pos = -1;
         return tobj;
       }

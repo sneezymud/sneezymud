@@ -1479,7 +1479,7 @@ int disease_scurvy(TBeing *victim, int message, affectedData *af)
           buf = format("A <k>rotten<1> tooth lies here, having fallen from %s's mouth.") % victim->getName();
           corpse->setDescr(buf);
 
-          corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
+          corpse->obj_flags.wear_flags = ITEM_WEAR_TAKE | ITEM_WEAR_HOLD | ITEM_WEAR_THROW;
           corpse->obj_flags.decay_time=-1;
           corpse->setWeight(0.1);
           corpse->canBeSeen = victim->canBeSeen;

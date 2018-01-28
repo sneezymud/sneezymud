@@ -246,7 +246,7 @@ TMoney *create_money(int amount, currencyTypeT currency)
   new_descr->next = NULL;
   money->ex_description = new_descr;
 
-  money->obj_flags.wear_flags = ITEM_TAKE;
+  money->obj_flags.wear_flags = ITEM_WEAR_TAKE;
   money->obj_flags.decay_time = -1;
   money->setMoney(amount);
   money->obj_flags.cost = amount;

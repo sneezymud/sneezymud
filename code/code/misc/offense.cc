@@ -2022,7 +2022,7 @@ void TBeing::freezeRoom()
   for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
     t=*(it++);
     obj = dynamic_cast<TObj *>(t);
-    if (!obj || !obj->canWear(ITEM_TAKE))
+    if (!obj || !obj->canWear(ITEM_WEAR_TAKE))
       continue;
 
     rc = obj->freezeObject(NULL, 100);
@@ -2044,7 +2044,7 @@ void TBeing::acidRoom()
     obj = dynamic_cast<TObj *>(t);
     if (!obj)
       continue;
-    if (!obj->canWear(ITEM_TAKE))
+    if (!obj->canWear(ITEM_WEAR_TAKE))
       continue;
     rc = obj->meltObject(NULL, 100);
     if (IS_SET_ONLY(rc, DELETE_THIS)) {

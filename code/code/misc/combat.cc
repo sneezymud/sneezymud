@@ -4608,7 +4608,7 @@ void TBeing::catchLostLink(TBeing *vict)
   note->swapToStrung();
   token->swapToStrung();
   bag->addObjStat(ITEM_NOPURGE);
-  bag->obj_flags.wear_flags &= ~ITEM_TAKE; // no picking this thing up
+  bag->obj_flags.wear_flags &= ~ITEM_WEAR_TAKE; // no picking this thing up
   token->canBeSeen = 0;
 
   sstring nameLower = sstring(vict->getName()).lower();

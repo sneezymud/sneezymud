@@ -1614,7 +1614,7 @@ void TBaseWeapon::lowCheck()
          getName() % obj_flags.cost % ap);
     obj_flags.cost = ap;
   }
-  if (canWear(ITEM_HOLD)) {
+  if (canWear(ITEM_WEAR_HOLD)) {
     int amt = -itemAC();
     if (amt)
       vlogf(LOG_LOW, format("Holdable weapon (%s:%d) with AC.  (bad!)") % 

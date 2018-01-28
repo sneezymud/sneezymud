@@ -93,7 +93,7 @@ int ObjectEvaluator::getStructPointsRaw()
           3.0, // weapon martial
         };
   static float slotValues[MAX_ITEM_WEARS] = {
-          0.00, // ITEM_TAKE
+          0.00, // ITEM_WEAR_TAKE
           0.01, // ITEM_WEAR_FINGERS
           0.04, // ITEM_WEAR_NECK
           0.26, // ITEM_WEAR_BODY
@@ -107,8 +107,8 @@ int ObjectEvaluator::getStructPointsRaw()
           0.05, // ITEM_WEAR_WAIST
           0.03, // ITEM_WEAR_WRISTS
           0.00, // ITEM_WEAR_UNUSED2
-          0.07, // ITEM_HOLD
-          0.00, // ITEM_THROW
+          0.07, // ITEM_WEAR_HOLD
+          0.00, // ITEM_WEAR_THROW
           };
 
   int rawStruct = m_obj->getMaxStructPoints();
@@ -144,7 +144,7 @@ int ObjectEvaluator::getStatPointsRaw()
     ((low_acPerLevel*(low_exchangeRate*0.75)) + (1.0/3.0))/10.0, // weapon martial
     };
   static float slotValues[MAX_ITEM_WEARS-1] = {
-      0.00, // ITEM_TAKE
+      0.00, // ITEM_WEAR_TAKE
       0.05, // ITEM_WEAR_FINGERS
       0.05, // ITEM_WEAR_NECK
       0.08, // ITEM_WEAR_BODY
@@ -158,8 +158,8 @@ int ObjectEvaluator::getStatPointsRaw()
       0.06, // ITEM_WEAR_WAIST
       0.05, // ITEM_WEAR_WRISTS
       0.00, // ITEM_WEAR_UNUSED2
-      0.09, // ITEM_HOLD
-      //0.00, // ITEM_THROW
+      0.09, // ITEM_WEAR_HOLD
+      //0.00, // ITEM_WEAR_THROW
       };
   static float affectsCost[AFF_MAX] = {
       0.0, //AFF_BLIND
@@ -360,7 +360,7 @@ int ObjectEvaluator::getStatPointsRaw()
   // adjust for tier
   positiveStats *= pointsPerStat[getTier()];
 
-  // calculate the stat weight for this object (skip ITEM_TAKE)
+  // calculate the stat weight for this object (skip ITEM_WEAR_TAKE)
   for(unsigned int iSlot = 1; iSlot < cElements(slotValues); iSlot++)
     if (m_obj->canWear((1 << iSlot)))
       slotWeight = slotValues[iSlot];
@@ -446,7 +446,7 @@ int ArmorEvaluator::getMainPointsRaw()
 
   // slot values for weighting armor class by place where its worn
   static float slotValues[MAX_ITEM_WEARS-1] = {
-      0.00, // ITEM_TAKE
+      0.00, // ITEM_WEAR_TAKE
       0.01, // ITEM_WEAR_FINGERS
       0.04, // ITEM_WEAR_NECK
       0.15, // ITEM_WEAR_BODY
@@ -460,8 +460,8 @@ int ArmorEvaluator::getMainPointsRaw()
       0.08, // ITEM_WEAR_WAIST
       0.02, // ITEM_WEAR_WRISTS
       0.00, // ITEM_WEAR_UNUSED2
-      0.25, // ITEM_HOLD
-      //0.00, // ITEM_THROW
+      0.25, // ITEM_WEAR_HOLD
+      //0.00, // ITEM_WEAR_THROW
   };
   static float pointsPerAC[Tier_Max] = {
       low_exchangeRate*0.85, // clothing
@@ -499,7 +499,7 @@ int ArmorEvaluator::getMainPointsRaw()
   // adjust for tier
   points *= pointsPerAC[getTier()];
 
-  // calculate what slot this is used for (skip ITEM_TAKE)
+  // calculate what slot this is used for (skip ITEM_WEAR_TAKE)
   for(unsigned int iSlot = 1; iSlot < cElements(slotValues); iSlot++)
     if (m_clothing->canWear((1 << iSlot)))
       slotWeight = slotValues[iSlot];

@@ -491,7 +491,7 @@ bool affectShouldApply(const TObj *obj, wearSlotT pos)
   // this second check is to see if they are holding an item normally worn
   // elsewhere.  While we want to allow them to hold it, its effects should
   // only kick in if its worn in the right manner.
-  if (obj && ((pos != HOLD_RIGHT && pos != HOLD_LEFT) || obj->canWear(ITEM_HOLD))) {
+  if (obj && ((pos != HOLD_RIGHT && pos != HOLD_LEFT) || obj->canWear(ITEM_WEAR_HOLD))) {
     return true;
   }
   return false;
@@ -1268,7 +1268,7 @@ TThing *TBeing::unequip(wearSlotT pos)
   uint64_t origamt = specials.affectedBy;
   TObj *to = dynamic_cast<TObj *>(o);
   if (to &&
-     ((pos != HOLD_RIGHT && pos != HOLD_LEFT) || to->canWear(ITEM_HOLD))) {
+     ((pos != HOLD_RIGHT && pos != HOLD_LEFT) || to->canWear(ITEM_WEAR_HOLD))) {
     for (j = 0; j < MAX_OBJ_AFFECT; j++) {
       affectModify(to->affected[j].location,
                    to->affected[j].modifier,
@@ -1318,7 +1318,7 @@ TThing *unequip_char_for_save(TBeing *ch, wearSlotT pos)
 //  int origamt = ch->specials.affectedBy;
   TObj *to = dynamic_cast<TObj *>(o);
   if (to &&
-     ((pos != HOLD_RIGHT && pos != HOLD_LEFT) || to->canWear(ITEM_HOLD))) {
+     ((pos != HOLD_RIGHT && pos != HOLD_LEFT) || to->canWear(ITEM_WEAR_HOLD))) {
     for (j = 0; j < MAX_OBJ_AFFECT; j++) {
       ch->affectModify(to->affected[j].location,
                    to->affected[j].modifier,
@@ -1994,7 +1994,7 @@ TThing *get_thing_in_list_getable(TBeing *ch, const char *name, StuffList list)
         TObj *tobj = dynamic_cast<TObj *>(o);
         if (tobj) {
           if (ch->isImmortal() || 
-               (tobj->canWear(ITEM_TAKE) && !tobj->isObjStat(ITEM_PROTOTYPE))) {
+               (tobj->canWear(ITEM_WEAR_TAKE) && !tobj->isObjStat(ITEM_PROTOTYPE))) {
             if (!*name || isname(name, tobj->name))
               return(tobj);
           }
@@ -2031,7 +2031,7 @@ TThing *get_thing_on_list_getable(TBeing *ch, const char *name, TThing *list)
           TObj *tobj = dynamic_cast<TObj *>(o);
           if (tobj) {
             if (ch->isImmortal() ||
-              (tobj->canWear(ITEM_TAKE) && !tobj->isObjStat(ITEM_PROTOTYPE))) {
+              (tobj->canWear(ITEM_WEAR_TAKE) && !tobj->isObjStat(ITEM_PROTOTYPE))) {
               if (!*name || isname(name, tobj->name))
                 return tobj;
             }
