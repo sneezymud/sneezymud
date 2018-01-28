@@ -220,7 +220,7 @@ class zoneData
     bool bootZone(int);
     void renumCmd(void);
 
-    std::vector<resetCom>cmd;          // command table for reset
+    std::vector<resetCom> cmd_table;          // command table for reset
   
     zoneData();
     zoneData(const zoneData &t);
