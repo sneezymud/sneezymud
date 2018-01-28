@@ -6730,7 +6730,7 @@ extern int poisonSap(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *);
 extern int daySword(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *);
 extern int nightBlade(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *);
 extern int scirenDrown(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *);
-extern int energyBeam(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *);
+extern int energyBlade(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *);
 extern int poisonViperBlade(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *);
 extern int weaponShadowSlayer(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *);
 extern int blazeOfGlory(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
@@ -6814,7 +6814,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {TRUE, "Lightning Rod", weaponLightningRod},
   {FALSE, "Jambiya", weaponJambiyaSpecial}, // 50
   {TRUE, "Sciren's Suffocation", scirenDrown},
-  {TRUE, "Energy Beam Weapon", energyBeam},
+  {TRUE, "energy blade", energyBlade},
   {TRUE, "Viper Weapon (poison)", poisonViperBlade},
   {FALSE, "trolley", trolley},
   {FALSE, "Stone Skin Amulet", stoneSkinAmulet}, // 55

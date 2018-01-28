@@ -1267,22 +1267,22 @@ int poisonViperBlade(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 } 
 
 
-int energyBeam(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
+int energyBlade(TBeing *vict, cmdTypeT cmd, const char *, TObj *obj, TObj *)
 {
-  TBeing *ch;
-  int rc, dam;
-
-  ch = genericWeaponProcCheck(vict, cmd, o, 8);
+  TBeing *ch = genericWeaponProcCheck(vict, cmd, obj, 8);
   if (!ch)
     return FALSE;
 
-  dam = ::number(4,10);
-  act("$p <1><W>glows in a sparkling, bright white light<1>.\n\r<W>You hear a deafening crackle as <1>$p <1><W>jolts $m!<1>",
-      0, vict, o, 0, TO_ROOM);
-  act("$p <1><W>glows in a sparkling, bright white light<1>.\n\r<W>You hear a deafening crackle as $n's <1>$p <1><W>jolts you!<1>",
-      0, vict, o, 0, TO_CHAR);
+  act("$p flashes and <W>s<1>p<W>a<1>r<W>k<1>l<W>e<1>s with a <W>blinding white light<1>.",
+      false, ch, obj, nullptr, TO_CHAR);
+  act("$p flashes and <W>s<1>p<W>a<1>r<W>k<1>l<W>e<1>s with a <W>blinding white light<1>.",
+      false, ch, obj, nullptr, TO_ROOM);
+  act("With a deafening crackle, a <W>bolt of energy<1> leaps from $p to $N!",
+      false, ch, obj, vict, TO_CHAR);
+  act("With a deafening crackle, a <W>bolt of energy<1> leaps from $p to $N!",
+      false, ch, obj, vict, TO_ROOM);
 
-  rc = ch->reconcileDamage(vict, dam, DAMAGE_ELECTRIC);
+  int rc = ch->reconcileDamage(vict, ::number(4, 10), DAMAGE_ELECTRIC);
   if (IS_SET_DELETE(rc, DELETE_VICT))
     return DELETE_VICT;
   return TRUE;
@@ -1973,7 +1973,7 @@ int weaponDisruption(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   else
     hardness = material_nums[obj->getMaterial()].hardness;
   spellNumT w_type = o->getWtype();
-  obj_act("hums softly which quickly becomes a high pitched whine.",
+  obj_act("hums softly which quickly rises to a high pitched whine.",
             ch,o,vict, ANSI_ORANGE);
   buf = format("$n's $p screams with power as $e swings it at your %s!") %
     vict->describeBodySlot(part);
