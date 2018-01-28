@@ -653,25 +653,20 @@ void act(const sstring &str, bool hide, const TThing *actor, const TThing *obj, 
     return;
 
   if (!actor) {
-    vlogf(LOG_MISC, "There is no char in act() TOCHAR.");
-    vlogf(LOG_MISC, format("%s") %  str);
-    return;
-  }
-  if (!actor->roomp){
-    //    vlogf(LOG_MISC, "There is no room in act() TOCHAR");
-    //    vlogf(LOG_MISC, format("%s") %  str);
+    vlogf(LOG_BUG, format("Fatal missing actor in act() for '%'") % str);
     return;
   }
 
+  if (!actor->roomp)
+    return;
+
   if (!victim) {
     if (type == TO_VICT) {
-      vlogf(LOG_MISC, format("There is no victim in act() TOVICT %s is char.") %  actor->getName());
-      vlogf(LOG_MISC, format("%s") %  str);
+      vlogf(LOG_BUG, format("Fatal missing victim in act() TO_VICT for '%s'.") % str);
       return;
     } else if (type == TO_NOTVICT) {
       type = TO_ROOM;
-      vlogf(LOG_MISC, format("There is no victim in act() TONOTVICT %s is char.") %  actor->getName());
-      vlogf(LOG_MISC, format("%s") %  str);
+      vlogf(LOG_MISC, format("Missing victim in act() TO_NOTVICT for '%s', doing TO_ROOM.") % str);
     }
   }
   
@@ -682,15 +677,8 @@ void act(const sstring &str, bool hide, const TThing *actor, const TThing *obj, 
   } else if (type == TO_CHAR) {
     list.push_front(actor);
   } else {
-    if (!actor->roomp){
-      //      vlogf(LOG_MISC, "There is no room in act() TOCHAR 2");
-      //      vlogf(LOG_MISC, format("%s") %  str);
-      return;
-    }
-
-    for(StuffIter it=actor->roomp->stuff.begin();it!=actor->roomp->stuff.end();++it){
-      list.push_front(*it);
-    }
+    for (auto *viewer: actor->roomp->stuff)
+      list.push_front(viewer);
   }
 
   memset(&buf, '\0', sizeof(buf));
