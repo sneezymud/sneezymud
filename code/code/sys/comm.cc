@@ -927,7 +927,7 @@ void act(const sstring &str, bool hide, const TThing *actor, const TThing *obj, 
                 vlogf(LOG_BUG, format("Bad act A. '%s'") %  str);
                 return;
               }
-	      i = victim->sana();
+	      i = victim->ana();
 	      break;
 	    case 'T':
               if (!victim) {
