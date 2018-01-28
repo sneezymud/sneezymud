@@ -1,34 +1,40 @@
+01-22-18 : Bandaging of head and arms now uses a more appropriate number of
+           bandages.
+
+01-21-18 : Donate command now junks newbie items instead of donating them.
+
 07-04-17 : Weapons' magical status is no longer ignored in damage immunity
            calculations.
 
 07-04-17 : The world command now reports the correct number of distinct
            mobiles never killed.
 
-3-27-16 : Shaman chrism items now working without crashing the mud. Kudos
-          to Jeren for helping identify the problem and providng a solution.
+07-04-17 : Handgonnes, if they exist anywhere in the World, are now
+           properly single-shot weapons.
 
-	  -Changes to Load Rate. Fixed Rate was increased and SuitSet also
-	   saw a rise in their load rates. Please report any excessive 
-	   load rates. 
-	 - PoC have been reduced in frequency. 
-	 - As we now have the Sneezymud domain, the Grimhavenmud name will be 
-	   removed from the code base. 
+07-03-17 : Blindness duration is now affected by saves.
 
-6-30-14  : Below are some of the changes that have been recently made. 
-          
-           -Portal usage for alts within the account has been fixed. 
-           -Chaos Plains Re-Enabled (other zones pending)
-	   -Wiki updated with updated content
+07-03-17 : Crits and saves now affect life gain from lich touch.
 
-           <Y>Load rates<z>
-           -Rare Potions Drop Rates Enabled (<P>PoC<z>,<R>PoL<z>,<W>PoY<z>,<G>Mystery<z>)
-           -Complete Armor Sets drop rates reduced 
-           -Single Item Drops (Clothing,Armor,Weapons) Increased
+07-03-17 : Crit success now extends shapeshift and polymorph duration.
 
-	   Load Rates were subjected to two weeks of testing. Please be
-           patient as we continue to review the code change.  
+07-03-17 : Bandaging legs uses up the correct number of bandages.
 
-           -GrimhavenMUD is now on the GoogleFiber Network
+07-03-17 : Counterattack on deathstroke failure is now affected by armor
+           and stats.
+
+06-13-17 : Djalla's protection and Legba's guidance are now more powerful
+           when cast on self.
+
+03-27-16 : Shaman chrism items now working without crashing the mud. Kudos
+           to Jeren for helping identify the problem and providng a solution.
+
+	   - Changes to Load Rate. Fixed Rate was increased and SuitSet also
+	     saw a rise in their load rates. Please report any excessive
+	     load rates.
+	   - PoC have been reduced in frequency.
+	   - As we now have the Sneezymud domain, the MUD is no longer
+             identified as Grimhavenmud.
 
 07-23-15 : Ratmen as a race are now properly ratman-sized instead of
            accidentally defaulting to the human racial template.
@@ -44,46 +50,62 @@
 06-30-15 : Fixed a bug where renting with a persistent follower (pet)
            with a custom name would crash the mud.
 
+06-30-14  : Below are some of the changes that have been recently made.
+
+           - Portal usage for alts within the account has been fixed.
+           - Chaos Plains Re-Enabled (other zones pending)
+	   - Wiki updated with updated content
+
+           <Y>Load rates<z>
+           - Rare Potions Drop Rates Enabled (<P>PoC<z>,<R>PoL<z>,<W>PoY<z>,<G>Mystery<z>)
+           - Complete Armor Sets drop rates reduced
+           - Single Item Drops (Clothing,Armor,Weapons) Increased
+
+	   Load Rates were subjected to two weeks of testing. Please be
+           patient as we continue to review the code change.
+
+           GrimhavenMUD is now on the GoogleFiber Network
+
 6-09-14  : Fixed item repair, any existing ticket from the prior mud will
            be invalid. Drop rates were also fixed at the same time. You
            should now see an increase in loads/drops off mobs.
 
-06-02-14 : We have merged the MUD instances. If you had a previous account 
-           (@UNDO.IT) simply create your account as you had it before, and 
-	   your alts will be present. When you log in your alt you will 
+06-02-14 : We have merged the MUD instances. If you had a previous account
+           (@UNDO.IT) simply create your account as you had it before, and
+	   your alts will be present. When you log in your alt you will
 	   default to an immortal room. To exit: simply enter the toilet,
-           and plop your in center square. Welcome back.           
+           and plop your in center square. Welcome back.
 
-           - The codebase has been stablized and bug fixes will start 
+           - The codebase has been stablized and bug fixes will start
              happening. If you find bugs that are crashing the mud please
              let us know.
-             
+
 	     Currently LD alts on the same account can cause a crash
-             If you plan on running more than two alts at a time on the 
+             If you plan on running more than two alts at a time on the
              same account contact Erasmus and get details on how to move
              your alts onto another account.
 
-             Shaman spell Chrism, the bead necklace when worn crashes the 
-             mud when it completes the affect cycle. This spell will be 
+             Shaman spell Chrism, the bead necklace when worn crashes the
+             mud when it completes the affect cycle. This spell will be
              disabled until a fix is found.
-           
 
-04-17-14 : Applied new updates to system courtesy of Cizra. 
+04-17-14 : Applied new updates to system courtesy of Cizra.
+
 	   -Multiplay cleaned up
            -Database fixes
            -Sprite Fixed
            -Boards Fixed
            -Various Bug Fixes
-            
+
            Some promosing other technical fixes that could be used in
            the future IPv6 and Sneezy Application monitoring. Needs some
-           tweaking to be used in this edition.	   
+           tweaking to be used in this edition.
 
 04-16-14 : Fixed a bug that was causing the game to crash. However, this
-           maybe a wider scale problem. Any mob description greater than 
-           10 lines is causing crashes. Either I will need to determine 
+           maybe a wider scale problem. Any mob description greater than
+           10 lines is causing crashes. Either I will need to determine
            the cause or shorten the descriptions for those exceeding 10
-           lines. 
+           lines.
 
 04-11-14 : Sneezy crashed last night. I've setup processes to auto restart
            when this occurs. If you are able to determine what the source
@@ -93,13 +115,12 @@
            give me a time you will be available (provide your time zone).
 
 04-05-14 : Sneezy restored
-          
-           Sneezy Restored Status: Previous player files are not available. 
-           We will however restore/load up to 5 items excluding artifacts 
-           and +50 level gear. Custom items obtain by quests/events/coins 
-           made for players will be returned. Players with homes will be 
-           provided keys to their homes.
 
+           Sneezy Restored Status: Previous player files are not available.
+           We will however restore/load up to 5 items excluding artifacts
+           and +50 level gear. Custom items obtain by quests/events/coins
+           made for players will be returned. Players with homes will be
+           provided keys to their homes.
 
 05-13-10 : Fixed up spell component loading so that it no longer attaches
            them to objects in a mob's inventory.

@@ -57,7 +57,7 @@ int destroy_bandages(StuffList list, int band)
 
 void TBeing::bandage(TBeing *victim,wearSlotT slot)
 {
-  TObj *bandaid;
+  TObj *bandage;
   char buf[256], limb[256];
   int r_num;
 
@@ -66,31 +66,31 @@ void TBeing::bandage(TBeing *victim,wearSlotT slot)
     return;
   }
   if ((r_num = real_object(Obj::BANDAGE)) >= 0) {
-    bandaid = read_object(r_num, REAL);
+    bandage = read_object(r_num, REAL);
   } else {
-    vlogf(LOG_BUG, "bogus bandaid!");
+    vlogf(LOG_BUG, "bogus bandage!");
     return;
   }
 #if 0
-  if (!(bandaid = read_object(Obj::BANDAGE, VIRTUAL))) {
-    vlogf(LOG_BUG, "bogus bandaid!");
+  if (!(bandage = read_object(Obj::BANDAGE, VIRTUAL))) {
+    vlogf(LOG_BUG, "bogus bandage!");
     return;
   }
 #endif
-  // we know the slot the bandaid is for is clear from doBandage 
+  // we know the slot the bandage is for is clear from doBandage
   if (!victim->validEquipSlot(slot)) {
     sendTo("They don't seem to have that body location.\n\r");
     return;
   } 
-  victim->equipChar(bandaid, slot);
+  victim->equipChar(bandage, slot);
   victim->addToLimbFlags(slot, PART_BANDAGED);
   if (this != victim) {
-    act("You bind $N's wounds and put a $o on $M.",TRUE,this,bandaid,victim,TO_CHAR);
-    act("$n binds your wounds and puts a $o on you.",TRUE,this,bandaid,victim,TO_VICT);
-    act("$n binds $N's wounds and puts a $o on $M.",TRUE,this,bandaid,victim,TO_NOTVICT);
+    act("You bind $N's wounds and put a $o on $M.",TRUE,this,bandage,victim,TO_CHAR);
+    act("$n binds your wounds and puts a $o on you.",TRUE,this,bandage,victim,TO_VICT);
+    act("$n binds $N's wounds and puts a $o on $M.",TRUE,this,bandage,victim,TO_NOTVICT);
   } else {
-    act("You bind your wounds with a $o.",TRUE,this,bandaid,0,TO_CHAR);
-    act("$n binds $s wounds with a $o.",TRUE,this,bandaid,0,TO_ROOM);
+    act("You bind your wounds with a $o.",TRUE,this,bandage,0,TO_CHAR);
+    act("$n binds $s wounds with a $o.",TRUE,this,bandage,0,TO_ROOM);
   } 
   if (victim->isLimbFlags(slot, PART_BLEEDING)) {
     sprintf(limb, "%s", victim->describeBodySlot(slot).c_str());
@@ -174,8 +174,6 @@ void TBeing::doBandage(const sstring &arg)
     case WEAR_WRIST_R:
       band_num = 1;
       break;
-    case WEAR_ARM_L:
-    case WEAR_ARM_R:
     case WEAR_FOOT_L:
     case WEAR_FOOT_R:
     case WEAR_EX_FOOT_L:
@@ -185,12 +183,17 @@ void TBeing::doBandage(const sstring &arg)
     case WEAR_HAND_L:
       band_num = 2;
       break;
+    case WEAR_ARM_L:
+    case WEAR_ARM_R:
+    case WEAR_HEAD:
+      band_num = 3;
+      break;
     case WEAR_LEG_L:
     case WEAR_LEG_R:
     case WEAR_EX_LEG_L:
     case WEAR_EX_LEG_R:
       band_num = 4;
-    case WEAR_HEAD:
+      break;
     case WEAR_WAIST:
       band_num = 5;
       break;

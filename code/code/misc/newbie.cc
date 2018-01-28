@@ -119,7 +119,7 @@ void TBeing::doNewbie(const sstring &arg)
     message.resize(200);
   }
 
-  sstring header = format(isNewbie ? "%sYou ask the experts: %s%%s%s" : "%sYou advise to newbies: %s%%s%s")
+  sstring header = format(isNewbie ? "%sYou ask the experts: %s%%s%s" : "%sYou advise the newbies: %s%%s%s")
     % desc->orangeBold() % desc->white() % desc->norm();
   const char *title = isNewbie ? "Newbie" : "Expert";
   sendTo(format(header) % colorString(this, desc, message, NULL, COLOR_BASIC, TRUE, TRUE));

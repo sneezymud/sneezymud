@@ -1006,9 +1006,6 @@ int TMonster::aiBow (TBeing *doer, TBeing *, aiTarg cond)
   if (!isHumanoid())
     return FALSE;
 
-  if (doer->getSex() == SEX_FEMALE)
-    doWhisper(format("%s Pssst, polite women curtsey...") % fname(doer->name));
-
   switch (cond) {
     case TARGET_NONE:
     case TARGET_OTHER:

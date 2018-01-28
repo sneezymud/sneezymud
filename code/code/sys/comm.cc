@@ -122,13 +122,13 @@ int run_the_game()
   vlogf(LOG_MISC, "Entering game loop.");
 
   systask = new SystemTask();
-  gSocket->gameLoop();
+  int ret = gSocket->gameLoop();
   gSocket->closeAllSockets();
 
   vlogf(LOG_MISC, "Normal termination of game.");
   delete gSocket;
 
-  return FALSE;
+  return ret;
 }
 
 void zoneData::nukeMobs()
@@ -226,14 +226,14 @@ void TBeing::sendTo(const sstring &msg) const
 
 
 void TBeing::sendMobsGmcp() const {
-  if (desc == nullptr)
+  if (!desc)
     return;
 
   sstring out = "room.mobs [";
   bool first = true;
   for (const auto thing : roomp->stuff) {
     auto mob = dynamic_cast<TMonster*>(thing);
-    if (mob == nullptr)
+    if (!mob)
       continue;
 
     if (first) {
@@ -633,7 +633,7 @@ void colorAct(colorTypeT colorLevel, const sstring &str, bool hide, const TThing
 }
 
 
-void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, const TThing *t3, actToParmT type, const char *color, int tslevel)
+void act(const sstring &str, bool hide, const TThing *actor, const TThing *obj, const TThing *victim, actToParmT type, const char *color, int tslevel)
 {
   const char *strp;
   char *point;
@@ -652,25 +652,25 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
   if(str.empty())
     return;
 
-  if (!t1) {
+  if (!actor) {
     vlogf(LOG_MISC, "There is no char in act() TOCHAR.");
     vlogf(LOG_MISC, format("%s") %  str);
     return;
   }
-  if (!t1->roomp){
+  if (!actor->roomp){
     //    vlogf(LOG_MISC, "There is no room in act() TOCHAR");
     //    vlogf(LOG_MISC, format("%s") %  str);
     return;
   }
 
-  if (!t3) {
+  if (!victim) {
     if (type == TO_VICT) {
-      vlogf(LOG_MISC, format("There is no victim in act() TOVICT %s is char.") %  t1->getName());
+      vlogf(LOG_MISC, format("There is no victim in act() TOVICT %s is char.") %  actor->getName());
       vlogf(LOG_MISC, format("%s") %  str);
       return;
     } else if (type == TO_NOTVICT) {
       type = TO_ROOM;
-      vlogf(LOG_MISC, format("There is no victim in act() TONOTVICT %s is char.") %  t1->getName());
+      vlogf(LOG_MISC, format("There is no victim in act() TONOTVICT %s is char.") %  actor->getName());
       vlogf(LOG_MISC, format("%s") %  str);
     }
   }
@@ -678,17 +678,17 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
   StuffListConst list;
 
   if (type == TO_VICT) {
-    list.push_front(t3);
+    list.push_front(victim);
   } else if (type == TO_CHAR) {
-    list.push_front(t1);
+    list.push_front(actor);
   } else {
-    if (!t1->roomp){
+    if (!actor->roomp){
       //      vlogf(LOG_MISC, "There is no room in act() TOCHAR 2");
       //      vlogf(LOG_MISC, format("%s") %  str);
       return;
     }
 
-    for(StuffIter it=t1->roomp->stuff.begin();it!=t1->roomp->stuff.end();++it){
+    for(StuffIter it=actor->roomp->stuff.begin();it!=actor->roomp->stuff.end();++it){
       list.push_front(*it);
     }
   }
@@ -699,10 +699,10 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
     const TBeing *to = dynamic_cast<const TBeing *>(*it);
 
     if (to && to->desc && to->GetMaxLevel() > tslevel &&
-          ((to != t1) || (type == TO_CHAR)) &&
-          ((to != t3 || (t1 == t3 && type == TO_CHAR)) ||
+          ((to != actor) || (type == TO_CHAR)) &&
+          ((to != victim || (actor == victim && type == TO_CHAR)) ||
                (type == TO_VICT) || (type == TO_ROOM)) &&
-        (to->canSee(t1) || !hide) &&
+        (to->canSee(actor) || !hide) &&
 	to->awake() && (to->desc->connected < MAX_CON_STATUS) && 
         !(to->isPlayerAction(PLR_MAILING | PLR_BUGGING))) {
       x = 0; // used to determine whether or not to capitalize the substitution at start of line
@@ -721,8 +721,8 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
           const TBeing * tbtt;
 	  switch (*(++strp)) {
 	    case 'n':
-              tbtt = dynamic_cast<const TBeing *>(t1);
-              i = tbtt ? to->pers(t1) : to->objs(t1);
+              tbtt = dynamic_cast<const TBeing *>(actor);
+              i = tbtt ? to->pers(actor) : to->objs(actor);
               if (x == 1 || (x == 4 && *lastColor)) {
                 strncpy(namebuf, i, cElements(namebuf));
                 strncpy(namebuf, sstring(namebuf).cap().c_str(), cElements(namebuf));
@@ -733,18 +733,18 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
 	      break;
 	    case 'P':
 	    case 'N':
-              if (!t3) {
+              if (!victim) {
                 vlogf(LOG_BUG, format("Bad act P or N. '%s'") %  str);
                 return;
               }
-              tbtt = dynamic_cast<const TBeing *>(t3);
-              i = tbtt ? to->pers(t3) : to->objs(t3);
+              tbtt = dynamic_cast<const TBeing *>(victim);
+              i = tbtt ? to->pers(victim) : to->objs(victim);
               if (x == 1 || (x == 4 && *lastColor)) {
                 strncpy(namebuf, i, cElements(namebuf));
                 strncpy(namebuf, sstring(namebuf).cap().c_str(), cElements(namebuf));
                 i = namebuf;
               }
-              if ((type == TO_CHAR) && (t1 == t3)) {
+              if ((type == TO_CHAR) && (actor == victim)) {
                 if (!strncmp(strp+1,"'s ",3)) {
                   i = "your";
                   strp += 2;
@@ -758,14 +758,14 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
                   else
                     i = "you";
                 }
-              } else if ((type == TO_NOTVICT) && (t1 == t3)) {
+              } else if ((type == TO_NOTVICT) && (actor == victim)) {
                 if (!strncmp(strp+1,"'s ",3)) {
-                  i = t1->hshr();
+                  i = actor->hshr();
                   strp += 2;
                 } else if (strp != (str.c_str() + 1)) {
                   // "himself" if it isn't the first word in the sstring
                   char tmp_buffer[20];
-                  snprintf(tmp_buffer, cElements(tmp_buffer), "%sself", t1->hmhr());
+                  snprintf(tmp_buffer, cElements(tmp_buffer), "%sself", actor->hmhr());
                   i = tmp_buffer;
                 }
               }
@@ -774,28 +774,28 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
               
 	      break;
 	    case 'g':
-              strncpy(ibuf, t1->roomp->describeGround().c_str(), cElements(ibuf));
+              strncpy(ibuf, actor->roomp->describeGround().c_str(), cElements(ibuf));
 	      i=ibuf;
               break;
 	    case 'G':
-              if (!t3) {
+              if (!victim) {
                 vlogf(LOG_BUG, format("Bad act G. '%s'") %  str);
                 return;
               }
-              strncpy(ibuf, t3->roomp->describeGround().c_str(), cElements(ibuf));
+              strncpy(ibuf, victim->roomp->describeGround().c_str(), cElements(ibuf));
 	      i=ibuf;
               break;
 	    case 'd': 
-              per = ((to == t1) ? FIRST_PERSON : (!strlen(buf) ? THIRD_PERSON : SECOND_PERSON));
-              strncpy(ibuf, t1->yourDeity(your_deity_val, per, (per == THIRD_PERSON) ? to : NULL).c_str(), cElements(ibuf));
+              per = ((to == actor) ? FIRST_PERSON : (!strlen(buf) ? THIRD_PERSON : SECOND_PERSON));
+              strncpy(ibuf, actor->yourDeity(your_deity_val, per, (per == THIRD_PERSON) ? to : NULL).c_str(), cElements(ibuf));
 	      i=ibuf;
               break;
 	    case 'D':
-              if (!t3) {
+              if (!victim) {
                 vlogf(LOG_BUG, format("Bad act D. '%s'") %  str);
                 return;
               }
-              strncpy(ibuf, t3->yourDeity(your_deity_val, ((to == t3) ? FIRST_PERSON : (strlen(buf) == 0 ? THIRD_PERSON : SECOND_PERSON))).c_str(), cElements(ibuf));
+              strncpy(ibuf, victim->yourDeity(your_deity_val, ((to == victim) ? FIRST_PERSON : (strlen(buf) == 0 ? THIRD_PERSON : SECOND_PERSON))).c_str(), cElements(ibuf));
 	      i=ibuf;
               break;
             case 'q':
@@ -824,11 +824,11 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
               break;
             case 'r':
               // is/are based on plurality of $n
-              if (!t1) {
+              if (!actor) {
                 vlogf(LOG_BUG, format("Bad act r. '%s'") %  str);
                 return;
               }
-              tobj = dynamic_cast<const TObj *>(t1);
+              tobj = dynamic_cast<const TObj *>(actor);
               if (tobj)
                 i = tobj->isPluralItem() ? "are" : "is";
               else
@@ -836,63 +836,63 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
               break;
             case 'R':
               // a verb modifier so can do "$n look$Q happy" for plurality
-              if (!t1) {
+              if (!actor) {
                 vlogf(LOG_BUG, format("Bad act R. '%s'") %  str);
                 return;
               }
-              tobj = dynamic_cast<const TObj *>(t1);
+              tobj = dynamic_cast<const TObj *>(actor);
               if (tobj)
                 i = tobj->isPluralItem() ? "" : "s";
               else
                 i = "s";
               break;
 	    case 'm':
-              if (to->canSee(t1))
-                i = t1->hmhr();
+              if (to->canSee(actor))
+                i = actor->hmhr();
               else
                 i = "someone";
 	      break;
 	    case 'M':
-              if (!t3) {
+              if (!victim) {
                 vlogf(LOG_BUG, format("Bad act M. '%s'") %  str);
                 return;
               }
-              if ((type == TO_CHAR) && (t1 == t3)) 
+              if ((type == TO_CHAR) && (actor == victim)) 
                 i = "yourself";
-              else if (to->canSee(t3))
-                i = t3->hmhr();
+              else if (to->canSee(victim))
+                i = victim->hmhr();
               else
                 i = "someone";
 	      break;
 	    case 's':
-              if (to->canSee(t1))
-                i = t1->hshr();
+              if (to->canSee(actor))
+                i = actor->hshr();
               else
                 i = "their";
 	      break;
 	    case 'S':
-              if (!t3) {
+              if (!victim) {
                 vlogf(LOG_BUG, format("Bad act S. '%s'") %  str);
                 return;
               }
-              if (to->canSee(t3))
-                i = t3->hshr();
+              if (to->canSee(victim))
+                i = victim->hshr();
               else
                 i = "their";
 	      break;
 	    case 'e':
-              if (to->canSee(t1))
-                i = t1->hssh();
+              if (to->canSee(actor))
+                i = actor->hssh();
               else
                 i = "it";
 	      break;
 	    case 'E':
-              if (!t3) {
+              if (!victim) {
                 vlogf(LOG_BUG, format("Bad act E. '%s'") %  str);
                 return;
               }
-              if (to->canSee(t3))
-                i = t3->hssh();
+              if (to->canSee(victim))
+                i = victim->hssh();
               else
                 i = "it";
 	      break;
@@ -905,11 +905,11 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
 	      i=ibuf;
 	      break;
 	    case 'O':
-              if (!t3) {
+              if (!victim) {
                 vlogf(LOG_BUG, format("Bad act O. '%s'") %  str);
                 return;
               }
-	      strncpy(ibuf, dynamic_cast<const TBeing *>(t3) ? to->persfname(t3).c_str() : to->objn(t3).c_str(), cElements(ibuf));
+	      strncpy(ibuf, dynamic_cast<const TBeing *>(victim) ? to->persfname(victim).c_str() : to->objn(victim).c_str(), cElements(ibuf));
 	      i=ibuf;
 	      break;
 	    case 'p':
@@ -935,25 +935,25 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
 	      i = obj->sana();
 	      break;
 	    case 'A':
-              if (!t3) {
+              if (!victim) {
                 vlogf(LOG_BUG, format("Bad act A. '%s'") %  str);
                 return;
               }
-	      i = t3->sana();
+	      i = victim->sana();
 	      break;
 	    case 'T':
-              if (!t3) {
+              if (!victim) {
                 vlogf(LOG_BUG, format("Bad act T. '%s'") %  str);
                 return;
               }
-	      i = (const char *) t3;
+	      i = (const char *) victim;
 	      break;
 	    case 'F':
-              if (!t3) {
+              if (!victim) {
                 vlogf(LOG_BUG, format("Bad act F. '%s'") %  str);
                 return;
               }
-	      i = fname((const char *) t3).c_str();
+	      i = fname((const char *) victim).c_str();
 	      break;
 	    case '$':
 	      i = "$";

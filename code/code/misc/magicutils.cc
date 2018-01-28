@@ -1328,7 +1328,7 @@ void TBeing::rawBlind(int level, int duration, saveTypeT save)
   aff.duration = duration;
 
   if (save)
-    duration /= 2;
+      aff.duration /= 2;
 
   if((knows_bf=doesKnowSkill(SKILL_BLINDFIGHTING)))
     bf_mod=(getSkillValue(SKILL_BLINDFIGHTING)+24)/25;

@@ -870,6 +870,7 @@ int polymorph(TBeing *caster, int level, short bKnown)
       case CRIT_S_DOUBLE:
         duration = (2 + level / 5) * Pulse::UPDATES_PER_MUDHOUR;
         CS(SPELL_POLYMORPH);
+        break;
       case CRIT_S_NONE:
       default:
         duration = (1 + level / 10) * Pulse::UPDATES_PER_MUDHOUR;

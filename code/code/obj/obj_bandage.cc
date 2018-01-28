@@ -5,37 +5,35 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-// bandaid.cc
-
-#include "obj_bandaid.h"
+#include "obj_bandage.h"
 #include "being.h"
 
-TBandaid::TBandaid() :
+TBandage::TBandage() :
   TObj()
 {
 }
 
-TBandaid::TBandaid(const TBandaid &a) : 
+TBandage::TBandage(const TBandage &a) :
  TObj(a)
 {
 }
 
-TBandaid & TBandaid::operator=(const TBandaid &a)
+TBandage & TBandage::operator=(const TBandage &a)
 {
   if (this == &a) return *this;
   TObj::operator=(a);
   return *this;
 }
 
-TBandaid::~TBandaid()
+TBandage::~TBandage()
 {
 }
 
-void TBandaid::assignFourValues(int, int, int, int)
+void TBandage::assignFourValues(int, int, int, int)
 {
 }
 
-void TBandaid::getFourValues(int *x1, int *x2, int *x3, int *x4) const
+void TBandage::getFourValues(int *x1, int *x2, int *x3, int *x4) const
 {
   *x1 = 0;
   *x2 = 0;
@@ -43,23 +41,23 @@ void TBandaid::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = 0;
 }
 
-sstring TBandaid::statObjInfo() const
+sstring TBandage::statObjInfo() const
 {
   sstring a("");
   return a;
 }
 
-void TBandaid::scrapMe(TBeing *ch)
+void TBandage::scrapMe(TBeing *ch)
 {
   ch->remLimbFlags(eq_pos, PART_BANDAGED);
 }
 
-void TBandaid::findBandage(int *count)
+void TBandage::findBandage(int *count)
 {
   (*count)++;
 }
 
-void TBandaid::destroyBandage(int *count)
+void TBandage::destroyBandage(int *count)
 {
   (*count)++;
   delete this;

@@ -98,19 +98,19 @@ static int deathstroke(TBeing *caster, TBeing *victim)
       if (caster->reconcileDamage(victim, 0,sktype) == -1)
         return DELETE_VICT;
     }
-    /* with great failure, comes great sorrow *grin* */
-    percent = ((10 - (caster->getArmor() / 50)) << 1);
-    percent += caster->getDexReaction() * 5;
-    percent -= victim->getAgiReaction() * 5;
+
+    // with great failure, comes great sorrow *grin*
     // what happens here is that the mob gets a shot at the players vitals
     // ... fair is fair right? 
+    percent = ((10 - (caster->getArmor() / 50)) << 1);
+    percent += victim->getDexReaction() * 5;
+    percent -= caster->getAgiReaction() * 5;
     int bKnown2 = victim->getSkillValue(SKILL_DEATHSTROKE);
     if (bKnown2 > 0 &&
-        victim->bSuccess(bKnown2 + 20, SKILL_DEATHSTROKE) &&
+        victim->bSuccess(bKnown2 + percent, SKILL_DEATHSTROKE) &&
          (i = victim->specialAttack(caster,SKILL_DEATHSTROKE)) &&
-         i != GUARANTEED_FAILURE) 
-    {
-      /* monster hits player vitals while player is exposed */
+         i != GUARANTEED_FAILURE) {
+      /* victim hits attacker vitals while attacker is exposed */
       CF(SKILL_DEATHSTROKE);
       if (victim->getPosition() > POSITION_STUNNED) {
         act("$N exploits $n's vulnerable state with a quick hit to the heart.",

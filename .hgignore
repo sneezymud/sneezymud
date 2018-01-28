@@ -1,4 +1,0 @@
-syntax: glob
-code/objs/main.o
-code/objs/*.so
-code/objs/*/*.os

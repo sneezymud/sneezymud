@@ -211,7 +211,7 @@ void TScheduler::runChar(int pulseNum)
           break;
         }
       }
-      if (tmp_ch->roomp == nullptr || tmp_ch->getName().empty()) {
+      if (!tmp_ch->roomp || tmp_ch->getName().empty()) {
         vlogf(LOG_BUG, format("Error: char %s roomp %p in proc %s") %
             tmp_ch->getName() % tmp_ch ->roomp % char_proc->name);
         tmp_ch = temp;

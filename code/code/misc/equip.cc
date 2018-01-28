@@ -15,7 +15,7 @@
 #include "low.h"
 #include "monster.h"
 #include "obj_base_container.h"
-#include "obj_bandaid.h"
+#include "obj_bandage.h"
 #include "person.h"
 #include "obj_base_weapon.h"
 #include "obj_armor.h"
@@ -1453,7 +1453,7 @@ int TThing::removeMe(TBeing *buyer, wearSlotT)
   return FALSE;
 }
 
-int TBandaid::removeMe(TBeing *buyer, wearSlotT pos)
+int TBandage::removeMe(TBeing *buyer, wearSlotT pos)
 {
   if (!buyer->isLimbFlags(pos, PART_BANDAGED))
     return TObj::removeMe(buyer, pos);

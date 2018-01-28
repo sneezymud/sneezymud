@@ -62,7 +62,7 @@
 #include "obj_statue.h"
 #include "obj_trash.h"
 #include "obj_treasure.h"
-#include "obj_bandaid.h"
+#include "obj_bandage.h"
 #include "obj_bed.h"
 #include "obj_board.h"
 #include "obj_book.h"
@@ -3821,7 +3821,7 @@ TObj * makeNewObj(itemTypeT tmp)
     case ITEM_QUIVER:
       return new TQuiver();
     case ITEM_BANDAGE:
-      return new TBandaid();
+      return new TBandage();
     case ITEM_STATUE:
       return new TStatue();
     case ITEM_BED:

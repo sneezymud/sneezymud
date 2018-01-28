@@ -4019,7 +4019,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 	  act("The swirls of plasma surrounding you soak up energy, sending it back toward $N!", FALSE, vict, 0, this, TO_CHAR);
 	  act("The swirls of plasma surrounding $n soak up energy, sending it back toward you!", FALSE, vict, 0, this, TO_VICT);
 	  
-	  int rc = reconcileDamage(this, dam_blocked, SPELL_PLASMA_MIRROR);
+	  int rc = vict->reconcileDamage(this, dam_blocked, SPELL_PLASMA_MIRROR);
 	  if (rc == -1) 
 	    retCode |= DELETE_THIS;
 	}
@@ -4032,7 +4032,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 	  act("<o>The thorns on $n's body hurt $N!<1>", FALSE, vict, 0, this, TO_NOTVICT);
 	  act("<o>The thorns on your body hurt $N as $E hits you!<1>", FALSE, vict, 0, this, TO_CHAR);
 	  act("<o>The thorns on $n's damage you as you hit $m!<1>", FALSE, vict, 0, this, TO_VICT);
-	  int rc = reconcileDamage(this, dam_blocked, SPELL_THORNFLESH);
+	  int rc = vict->reconcileDamage(this, dam_blocked, SPELL_THORNFLESH);
 	  if (rc == -1) 
 	    retCode |= DELETE_THIS;
 	}
@@ -4671,19 +4671,18 @@ void TBeing::catchLostLink(TBeing *vict)
   delete token;
 
   // gen mail
-  buf = MUD_NAME;
-  buf += " detected you lost link while fighting an apparently superior opponent\n\r(";
-  buf += getName();
-  buf += ").  Under such circumstances, the policy is to\n\r";
-  buf += "confiscate your items and gold for a short period of time.\n\r";
-  buf += "To get your items back, hand the linkbag token contained in this mail\n\r";
-  buf += "to any postmaster.  Then wait at least ten minutes.  Then\n\r";
-  buf += "hand the linkbag token back to the postmaster agian, who will retrieve\n\r";
-  buf += "the appropriate linkbag for you and place it in the mail room.  Be advised\n\r";
-  buf += "that if you lose link too often in a short period of time, your items\n\r";
-  buf += "may be confiscated permanently.  The rationale for this policy is\n\r";
-  buf += "to discourage people from dropping link in order to avoid death.\n\r\n\r";
-  buf += "\n\r\n\rThis message was automatically generated.\n\r";
+  buf = "\n\r";
+  buf += MUD_NAME;
+  buf += " detected you lost link while fighting an apparently superior\n\r"
+    "opponent (" + getName() + ").  Under such circumstances\n\r"
+    "the policy is to confiscate the player's items and money for a short period\n\n"
+    "of time, to discourage people from dropping link in order to avoid death.\n\r"
+    "\n\rTo retrieve your items, find the linkbag token contained in this mail and\n\r"
+    "hand it to any postmaster, wait at least ten minutes, and hand it to them\n\r"
+    "again. A linkbag containing your items will then be placed in the room.\n\r"
+    "\n\rBe advised that if you lose link too often in a short period of time,\n\r"
+    "your items may be confiscated permanently.\n\r"
+    "\n\r\n\r\n\r(This message was automatically generated.)\n\r";
 
   autoMail(vict, NULL, buf.c_str(), 0, tokenRent);
 }

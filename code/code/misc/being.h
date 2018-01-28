@@ -1802,7 +1802,7 @@ class TBeing : public TThing {
     virtual void doDistribute(const char *);
     void doCommune(const sstring &);
     virtual void doShutdow();
-    virtual void doShutdown(const char *);
+    virtual void doShutdown(bool, const char *);
     const sstring addColorRoom(TRoom *, int) const;
     sstring autoFormatDesc(const sstring &, bool) const;
     sstring dynColorRoom(TRoom *, int, bool) const;
