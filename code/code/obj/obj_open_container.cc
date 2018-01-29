@@ -725,7 +725,7 @@ void TOpenContainer::lockMe(TBeing *ch)
   else {
     addContainerFlag(CONT_LOCKED);
     ch->sendTo("*Click*\n\r");
-    act("$n locks $p - 'cluck', it says.", TRUE, ch, this, 0, TO_ROOM);
+    act("$n locks $p with a *click*.", TRUE, ch, this, 0, TO_ROOM);
   }
 }
 
