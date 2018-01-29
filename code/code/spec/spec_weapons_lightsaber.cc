@@ -109,17 +109,13 @@ int lightsaber(TBeing *vict, cmdTypeT cmd, const char *, TObj *obj, TObj *)
   }
 
   if (::number(0, LIGHTSABER_CRITS_INFREQUENCY)) {
-    if (!::number(0, LIGHTSABER_NOISE_INFREQUENCY)) {
-      act("$p hums loudly as it swings.", false, ch, obj, nullptr, TO_CHAR);
-      act("$p hums loudly as it swings.", false, ch, obj, nullptr, TO_ROOM);
-    }
+    if (!::number(0, LIGHTSABER_NOISE_INFREQUENCY))
+      act("$n hums loudly as it swings.", false, obj, nullptr, nullptr, TO_ROOM);
     return FALSE;
   }
 
-  sstring msg = format("$p %sflashes brightly<1> as it strikes!")
-      % LS_COLOR_CODES[which_color(ch)];
-  act(msg, false, ch, obj, nullptr, TO_CHAR);
-  act(msg, false, ch, obj, nullptr, TO_ROOM);
+  act(format("$p %sflashes brightly<1> as it strikes!") % LS_COLOR_CODES[which_color(ch)],
+      false, obj, nullptr, nullptr, TO_ROOM);
 
   wearSlotT part = vict->getPartHit(ch, TRUE);
   int damage = ch->getWeaponDam(vict, weapon, HAND_PRIMARY);
