@@ -1,12 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// obj_open_container.cc
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 #include <stdio.h>
 
 #include "extern.h"
@@ -716,8 +707,9 @@ void TOpenContainer::lockMe(TBeing *ch)
 {
   if (!isClosed())
     ch->sendTo("Maybe you should close it first...\n\r");
-  else if (getKeyNum() < 0)
+  else if (getKeyNum() < 1)
     ch->sendTo("That thing can't be locked.\n\r");
+  // TODO: those skilled in picklock can relock with lockpicks
   else if (!has_key(ch, getKeyNum()))
     ch->sendTo("You don't seem to have the proper key.\n\r");
   else if (isContainerFlag(CONT_LOCKED))
