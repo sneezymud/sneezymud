@@ -1237,6 +1237,12 @@ int poisonViperBlade(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
     return FALSE;
 
   if (!::number(0,36)) {
+    act("<G>A strange green mist emanates from<1> $p.", false, o, nullptr, nullptr, TO_ROOM);
+    act("<G>The green mist swiftly forms into the shape of a venomous viper.<1>",
+        false, o, nullptr, nullptr, TO_ROOM);
+    act("<G>The viper strikes $N in a flash and just as quickly disappears!<1>",
+        false, o, nullptr, vict, TO_ROOM);
+
     aff.type = SPELL_POISON;
     aff.level = 15;
     aff.duration = (25) * Pulse::UPDATES_PER_MUDHOUR;
@@ -1251,17 +1257,11 @@ int poisonViperBlade(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
     aff2.location = APPLY_NONE;
     aff2.bitvector = AFF_POISON;
 
-    act("<G>A strange green mist emanates from<1> $p.", 0, vict, o, 0, TO_CHAR);
-    act("<G>A strange green mist emanates from<1> $p.", 0, vict, o, 0, TO_ROOM);
-    act("<G>The green mist quickly forms into the shape of a venomous viper!<1>", 0, vict, o, 0, TO_CHAR);
-      act("<G>The green mist quickly forms into the shape of a venomous viper!<1>", 0, vict, o, 0, TO_ROOM);
-	act("<G>The viper quickly strikes $n, and just as quickly disappears!<1>", 0, vict, o, 0, TO_CHAR);
-	act("<G>The viper quickly strikes $n, and just as quickly disappears!<1>", 0, vict, o, 0, TO_ROOM);
-	vict->affectTo(&aff);
-	vict->affectTo(&aff2);
-	disease_start(vict, &aff2);
+    vict->affectTo(&aff);
+    vict->affectTo(&aff2);
+    disease_start(vict, &aff2);
 
-	return TRUE;
+    return TRUE;
   }
   return FALSE;
 } 
@@ -1273,14 +1273,10 @@ int energyBlade(TBeing *vict, cmdTypeT cmd, const char *, TObj *obj, TObj *)
   if (!ch)
     return FALSE;
 
-  act("$p flashes and <W>s<1>p<W>a<1>r<W>k<1>l<W>e<1>s with a <W>blinding white light<1>.",
-      false, ch, obj, nullptr, TO_CHAR);
-  act("$p flashes and <W>s<1>p<W>a<1>r<W>k<1>l<W>e<1>s with a <W>blinding white light<1>.",
-      false, ch, obj, nullptr, TO_ROOM);
-  act("With a deafening crackle, a <W>bolt of energy<1> leaps from $p to $N!",
-      false, ch, obj, vict, TO_CHAR);
-  act("With a deafening crackle, a <W>bolt of energy<1> leaps from $p to $N!",
-      false, ch, obj, vict, TO_ROOM);
+  act("$p <W>s<1>p<W>a<1>r<W>k<1>l<W>e<1>s and flashes with a <W>blinding white light<1>.",
+      false, obj, nullptr, nullptr, TO_ROOM);
+  act("With a deafening crackle, a <W>jagged energy bolt<1> leaps from $n to $N!",
+      false, obj, nullptr, vict, TO_ROOM);
 
   int rc = ch->reconcileDamage(vict, ::number(4, 10), DAMAGE_ELECTRIC);
   if (IS_SET_DELETE(rc, DELETE_VICT))
