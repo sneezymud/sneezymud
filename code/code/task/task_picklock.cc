@@ -70,7 +70,7 @@ void TTool::pickPulse(TBeing *ch)
     }
   }
   if ((exitp->lock_difficulty >= 100) || (difficulties > skill)) {
-    if ((difficulties > (skill + 100)) && !ch->isAgile(0)) {
+    if ((difficulties > (skill + 100)) && !ch->isDextrous()) {
       act("Uhoh, $n seems to have jammed the lock!",TRUE,ch,0,0,TO_ROOM);
       ch->sendTo("Uhoh.  You seemed to have jammed the lock!\n\r");
       exitp->lock_difficulty = min(100,exitp->lock_difficulty+10);
