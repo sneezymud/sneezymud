@@ -933,7 +933,7 @@ int clearpath(int room, dirTypeT dir)
     vlogf(LOG_BUG, format("Range function done in room with bad exit. (%d) Dir:[%d]") %  room % dir);
     return FALSE;
   }
-  if (IS_SET(rp->dir_option[dir]->condition, EX_CLOSED))
+  if (IS_SET(rp->dir_option[dir]->condition, EXIT_CLOSED))
     return FALSE;
 
   return (real_roomp(room)->dir_option[dir]->to_room);
@@ -1196,13 +1196,13 @@ TThing *has_range_object(TBeing *ch, int *pos)
 // ----------------------------------------------
 int go_ok(roomDirData *exitp)
 {
-  return (!IS_SET(exitp->condition, EX_CLOSED | EX_LOCKED | EX_SECRET) &&
+  return (!IS_SET(exitp->condition, EXIT_CLOSED | EXIT_LOCKED | EXIT_SECRET) &&
           (exitp->to_room != Room::NOWHERE));
 }
 
 int go_ok_smarter(roomDirData *exitp)
 {
-  return (!IS_SET(exitp->condition, EX_LOCKED | EX_SECRET) &&
+  return (!IS_SET(exitp->condition, EXIT_LOCKED | EXIT_SECRET) &&
           (exitp->to_room != Room::NOWHERE));
 }
 

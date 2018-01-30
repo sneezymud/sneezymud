@@ -785,9 +785,9 @@ void bootWorld(void)
 
       rp->dir_option[dir]->to_room = convertTo<int>(db_exits[9]);
 
-      if (IS_SET(rp->dir_option[dir]->condition, EX_SECRET) && 
+      if (IS_SET(rp->dir_option[dir]->condition, EXIT_SECRET) && 
           canSeeThruDoor(rp->dir_option[dir])) {
-        if (IS_SET(rp->dir_option[dir]->condition, EX_CLOSED)){
+        if (IS_SET(rp->dir_option[dir]->condition, EXIT_CLOSED)){
           //vlogf(LOG_LOW, format("See thru door set secret. (%d, %d)") %  room % dir);
         } else
           vlogf(LOG_LOW, format("Secret door saved as open. (%d, %d)") % 
@@ -1185,9 +1185,9 @@ void setup_dir(FILE * fl, int room, dirTypeT dir, TRoom *tRoom)
     vlogf(LOG_FILE, "Unexpected read error in bootZone");
   rp->dir_option[dir]->to_room = tmp;
 
-  if (IS_SET(rp->dir_option[dir]->condition, EX_SECRET) && 
+  if (IS_SET(rp->dir_option[dir]->condition, EXIT_SECRET) && 
       canSeeThruDoor(rp->dir_option[dir])) {
-    if (IS_SET(rp->dir_option[dir]->condition, EX_CLOSED)){
+    if (IS_SET(rp->dir_option[dir]->condition, EXIT_CLOSED)){
       //      vlogf(LOG_LOW, format("See thru door set secret. (%d, %d)") %  room % dir);
     } else
       vlogf(LOG_LOW, format("Secret door saved as open. (%d, %d)") %  room % dir);
@@ -2527,8 +2527,8 @@ void zoneData::closeDoors()
     for (x = 0; x <= 9; x++) {
       if ((rp = real_roomp(i)) && (ep = rp->dir_option[x]) && 
           (ep->door_type != DOOR_NONE) && 
-          (!IS_SET(ep->condition, EX_DESTROYED)))
-        SET_BIT(ep->condition, EX_CLOSED);
+          (!IS_SET(ep->condition, EXIT_DESTROYED)))
+        SET_BIT(ep->condition, EXIT_CLOSED);
     }
   }
 }
@@ -3263,7 +3263,7 @@ void runResetCmdT(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
     TRoom *rp = real_roomp(rs.arg1);
     if (rp && rp->dir_option[rs.arg2])
     {
-      SET_BIT(rp->dir_option[rs.arg2]->condition, EX_TRAPPED);
+      SET_BIT(rp->dir_option[rs.arg2]->condition, EXIT_TRAPPED);
       rp->dir_option[rs.arg2]->trap_info = rs.arg3;
       rp->dir_option[rs.arg2]->trap_dam = rs.arg4;
     }
@@ -3400,8 +3400,8 @@ void runResetCmdD(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
     return;
 
   roomDirData * exitp = rp->dir_option[rs.arg2];
-  if (!exitp || IS_SET(exitp->condition, EX_DESTROYED) ||
-      IS_SET(exitp->condition, EX_CAVED_IN) || exitp->door_type == DOOR_NONE)
+  if (!exitp || IS_SET(exitp->condition, EXIT_DESTROYED) ||
+      IS_SET(exitp->condition, EXIT_CAVED_IN) || exitp->door_type == DOOR_NONE)
   {
     vlogf(LOG_LOW, format("'D' command operating on DOOR_NONE in room %d") %  rp->number);
     return;
@@ -3410,24 +3410,24 @@ void runResetCmdD(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   switch (rs.arg3)
   {
     case 0:
-      if (IS_SET(exitp->condition, EX_CLOSED))
+      if (IS_SET(exitp->condition, EXIT_CLOSED))
         sendrpf(rp, "The %s opens.\n\r", exitp->getName().uncap().c_str());
-      REMOVE_BIT(exitp->condition, EX_LOCKED);
-      REMOVE_BIT(exitp->condition, EX_CLOSED);
+      REMOVE_BIT(exitp->condition, EXIT_LOCKED);
+      REMOVE_BIT(exitp->condition, EXIT_CLOSED);
       break;
     case 1:
-      if (!IS_SET(exitp->condition, EX_CLOSED))
+      if (!IS_SET(exitp->condition, EXIT_CLOSED))
         sendrpf(rp, "The %s closes.\n\r", exitp->getName().uncap().c_str());
-      SET_BIT(exitp->condition, EX_CLOSED);
-      REMOVE_BIT(exitp->condition, EX_LOCKED);
+      SET_BIT(exitp->condition, EXIT_CLOSED);
+      REMOVE_BIT(exitp->condition, EXIT_LOCKED);
       break;
     case 2:
       if (exitp->key < 0) 
         vlogf(LOG_LOW, format("Door with key < 0 set to lock in room %d.") % rp->number);
-      if (!IS_SET(exitp->condition, EX_CLOSED))
+      if (!IS_SET(exitp->condition, EXIT_CLOSED))
         sendrpf(rp, "The %s closes.\n\r", exitp->getName().uncap().c_str());
-      SET_BIT(exitp->condition, EX_LOCKED);
-      SET_BIT(exitp->condition, EX_CLOSED);
+      SET_BIT(exitp->condition, EXIT_LOCKED);
+      SET_BIT(exitp->condition, EXIT_CLOSED);
       break;
     default:
       vlogf(LOG_LOW, format("Error in 'D' command in room %d - bad arg3 parameter of %i.") % rp->number % rs.arg3);

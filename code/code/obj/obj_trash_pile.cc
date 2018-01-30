@@ -154,7 +154,7 @@ void TTrashPile::overFlow()
       dir = dirTypeT(::number(MIN_DIR, MAX_DIR-1));
 
       if(exitDir(dir) && real_roomp(exitDir(dir)->to_room) &&
-	 !(exitDir(dir)->condition & EX_CLOSED) &&
+	 !(exitDir(dir)->condition & EXIT_CLOSED) &&
 	 (rp = real_roomp(roomp->exitDir(dir)->to_room)))
 	break;
     }

@@ -120,9 +120,9 @@ void TBeing::lookDir(int keyword_no)
       }
 
       if (keyword_no != DIR_UP && keyword_no != DIR_DOWN){
-	if ((exitp->condition & EX_SLOPED_UP))
+	if ((exitp->condition & EXIT_SLOPED_UP))
 	  sendTo("The way seems sloped up in that direction.\n\r");
-	else if ((exitp->condition & EX_SLOPED_DOWN))
+	else if ((exitp->condition & EXIT_SLOPED_DOWN))
 	  sendTo("The way seems sloped down in that direction.\n\r");
       }
       if (!(rp = real_roomp(exitp->to_room))){
@@ -134,7 +134,7 @@ void TBeing::lookDir(int keyword_no)
         listExits(rp);
         list_thing_in_room(rp->stuff, this);
       }
-    } else if (!(exitp->condition & EX_SECRET))
+    } else if (!(exitp->condition & EXIT_SECRET))
       sendTo(format("The %s is closed.\n\r") % exitp->getName());
     else
       sendTo("You see nothing special.\n\r");

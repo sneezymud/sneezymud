@@ -965,7 +965,7 @@ int fruitScavenger(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj 
 	TRoom *rp;
 	dirTypeT use_dir;
 	for(use_dir = MIN_DIR; use_dir < MAX_DIR; use_dir++){
-		if (myself->roomp->exitDir(use_dir) && !IS_SET(myself->roomp->exitDir(use_dir)->condition, EX_CLOSED)) {
+		if (myself->roomp->exitDir(use_dir) && !IS_SET(myself->roomp->exitDir(use_dir)->condition, EXIT_CLOSED)) {
 			rp = real_roomp(myself->roomp->exitDir(use_dir)->to_room);
 			if (!rp)
 				continue;

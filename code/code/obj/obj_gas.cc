@@ -261,7 +261,7 @@ void TGas::doDrift()
 
   // move up if possible
   if((exitp=roomp->exitDir(DIR_UP)) &&
-     !IS_SET(exitp->condition, EX_CLOSED) &&
+     !IS_SET(exitp->condition, EXIT_CLOSED) &&
      (rp=real_roomp(exitp->to_room))){
     act("$n drifts upwards.",FALSE, this, 0, 0, TO_ROOM); 
     --(*this);

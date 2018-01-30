@@ -148,29 +148,29 @@ int TPortal::openMe(TBeing *ch)
     ch->sendTo("Open what?\n\r");
     return FALSE;
   }
-  if (!isPortalFlag(EX_CLOSED)) {
+  if (!isPortalFlag(EXIT_CLOSED)) {
     ch->sendTo("It's already open!\n\r");
     return FALSE;
-  } else if (isPortalFlag( EX_LOCKED)) {
+  } else if (isPortalFlag( EXIT_LOCKED)) {
     ch->sendTo("It seems to be locked.\n\r");
     return FALSE;
   }
-  if (isPortalFlag( EX_TRAPPED) && ch->doesKnowSkill(SKILL_DETECT_TRAP)) {
+  if (isPortalFlag( EXIT_TRAPPED) && ch->doesKnowSkill(SKILL_DETECT_TRAP)) {
     if (detectTrapObj(ch, this)) {
       sprintf(buf, "You start to open $p, but then notice an insidious %s trap...", sstring(trap_types[getPortalTrapType()]).uncap().c_str());
       act(buf, TRUE, ch, this, NULL, TO_CHAR);
       return FALSE;
     }
   }
-  if (isPortalFlag( EX_SECRET))
+  if (isPortalFlag( EXIT_SECRET))
     act("$n opens $p, revealing a secret passageway.", TRUE, ch, this, NULL, TO_ROOM);
   else
     act("$n opens $p.", TRUE, ch, this, NULL, TO_ROOM);
 
-  portal_flag_change(this, EX_CLOSED, "%s is opened from the other side.\n\r",  REMOVE_TYPE);
+  portal_flag_change(this, EXIT_CLOSED, "%s is opened from the other side.\n\r",  REMOVE_TYPE);
 
   act("You open $p.", TRUE, ch, this, NULL, TO_CHAR);
-  if (isPortalFlag( EX_TRAPPED)) {
+  if (isPortalFlag( EXIT_TRAPPED)) {
     int rc = ch->triggerPortalTrap(this);
     int res = 0;
     if (IS_SET_DELETE(rc, DELETE_ITEM)) {

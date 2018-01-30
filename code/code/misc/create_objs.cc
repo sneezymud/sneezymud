@@ -2342,10 +2342,10 @@ void change_portal_value3(TBeing *ch, TPortal *o, const char *arg, editorEnterTy
 	}
 	o->setPortalTrapDam(loc_update);
         if (loc_update == 0) {
-          o->remPortalFlag(EX_TRAPPED);
+          o->remPortalFlag(EXIT_TRAPPED);
           o->setPortalTrapType(DOOR_TRAP_NONE);
         } else {
-          o->addPortalFlag(EX_TRAPPED);
+          o->addPortalFlag(EXIT_TRAPPED);
         }
         ch->specials.edit = CHANGE_PORTAL_VALUE3;
         change_portal_value3(ch, o, "", ENTER_CHECK);
@@ -2366,10 +2366,10 @@ void change_portal_value3(TBeing *ch, TPortal *o, const char *arg, editorEnterTy
         }
         o->setPortalTrapType(loc_update);
         if (loc_update == DOOR_TRAP_NONE) {
-          o->remPortalFlag(EX_TRAPPED);
+          o->remPortalFlag(EXIT_TRAPPED);
           o->setPortalTrapDam(0);
         } else {
-          o->addPortalFlag(EX_TRAPPED);
+          o->addPortalFlag(EXIT_TRAPPED);
         }
         ch->specials.edit = CHANGE_PORTAL_VALUE3;
         change_portal_value3(ch, o, "", ENTER_CHECK);

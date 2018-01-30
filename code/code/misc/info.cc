@@ -200,12 +200,12 @@ void TBeing::listExits(const TRoom *rp) const
       exitdata = rp->exitDir(door);
 
       if (exitdata && (exitdata->to_room != Room::NOWHERE)) {
-	bool secret=IS_SET(exitdata->condition, EX_SECRET);
-	bool open=!IS_SET(exitdata->condition, EX_CLOSED);
+	bool secret=IS_SET(exitdata->condition, EXIT_SECRET);
+	bool open=!IS_SET(exitdata->condition, EXIT_CLOSED);
 	bool see_thru=canSeeThruDoor(exitdata);
 
         if (isImmortal()) {
-          if (IS_SET(exitdata->condition, EX_CLOSED)) 
+          if (IS_SET(exitdata->condition, EXIT_CLOSED)) 
             sendTo(format(" %s%s%s") % red() % exDirs[door] % norm());
           else if (exitdata->door_type != DOOR_NONE) 
             sendTo(format(" %s%s%s") % blue() % exDirs[door] % norm());
@@ -216,7 +216,7 @@ void TBeing::listExits(const TRoom *rp) const
 
           if (exitp) {
             if (exitdata->door_type != DOOR_NONE && ((!secret || open) || (!secret && see_thru))) {
-              if (IS_SET(exitdata->condition, EX_CLOSED))
+              if (IS_SET(exitdata->condition, EXIT_CLOSED))
                 sendTo(format(" %s*%s%s") %                       (exitp->getSectorType() == SECT_FIRE ? red() :
                         (exitp->isAirSector() ? cyan() :
                          (exitp->isWaterSector() ? blue() : purple()))) %
@@ -249,8 +249,8 @@ void TBeing::listExits(const TRoom *rp) const
     if(!(exitdata = rp->exitDir(door)))
       continue;
 
-    bool secret=IS_SET(exitdata->condition, EX_SECRET);
-    bool open=!IS_SET(exitdata->condition, EX_CLOSED);
+    bool secret=IS_SET(exitdata->condition, EXIT_SECRET);
+    bool open=!IS_SET(exitdata->condition, EXIT_CLOSED);
     bool see_thru=canSeeThruDoor(exitdata);
 
     if ((exitdata->to_room != Room::NOWHERE &&
@@ -260,7 +260,7 @@ void TBeing::listExits(const TRoom *rp) const
       count++;
     }
 
-    if (IS_SET(exitdata->condition, EX_DESTROYED)) {
+    if (IS_SET(exitdata->condition, EXIT_DESTROYED)) {
       if (exitdata->keyword.empty()) {
 	vlogf(LOG_LOW,format("Destroyed door with no name!  Room %d") %  in_room);
       } else if (door == 4) 
@@ -274,15 +274,15 @@ void TBeing::listExits(const TRoom *rp) const
 	       blue() % fname(exitdata->keyword) % dirs_to_leading[door] % norm());
     }
 
-    if (IS_SET(exitdata->condition, EX_CAVED_IN)) {
+    if (IS_SET(exitdata->condition, EXIT_CAVED_IN)) {
       sendTo(format("%sA cave in blocks the way %s.%s\n\r") %
 	     blue() % dirs[door] % norm());
     }
 
     // chance to detect secret - bat
     // the || case is a chance at a false-positive   :)
-    if ((IS_SET(exitdata->condition, EX_SECRET) &&
-	 IS_SET(exitdata->condition, EX_CLOSED)) ||
+    if ((IS_SET(exitdata->condition, EXIT_SECRET) &&
+	 IS_SET(exitdata->condition, EXIT_CLOSED)) ||
 	(!::number(0,100) && !isPerceptive())) {
       int chance = max(0, (int) getSkillValue(SKILL_SEARCH));
       
@@ -310,7 +310,7 @@ void TBeing::listExits(const TRoom *rp) const
 
     if (isImmortal()) {
       // Red if closed, Blue if an open exit has a type, purple if normal
-      if (IS_SET(exitdata->condition, EX_CLOSED)) {
+      if (IS_SET(exitdata->condition, EXIT_CLOSED)) {
 	if (count == 1)
 	  sprintf(buf + strlen(buf), "%s%s%s.\n\r", red(), dirs[door], norm());
 	else if (door != num)
@@ -336,13 +336,13 @@ void TBeing::listExits(const TRoom *rp) const
       TRoom *exitp = real_roomp(exitdata->to_room);
 
       if (exitp) {
-	bool secret=IS_SET(exitdata->condition, EX_SECRET);
-	bool open=!IS_SET(exitdata->condition, EX_CLOSED);
+	bool secret=IS_SET(exitdata->condition, EXIT_SECRET);
+	bool open=!IS_SET(exitdata->condition, EXIT_CLOSED);
 	bool see_thru=canSeeThruDoor(exitdata);
 
 	if (exitdata->door_type != DOOR_NONE &&
 	    ((!secret || open) || (!secret && see_thru))){
-	  if (IS_SET(exitdata->condition, EX_CLOSED)){
+	  if (IS_SET(exitdata->condition, EXIT_CLOSED)){
 	    sprintf(buf + strlen(buf), "%s%s*%s%s%s",
 		    ((count != 1 && door == num) ? "and " : ""),
 

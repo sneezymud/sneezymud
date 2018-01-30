@@ -310,19 +310,19 @@ int belimusThroat(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     exitp = rp->dir_option[DIR_NORTH];
     rp2 = real_roomp(exitp->to_room);
     back = rp2->dir_option[DIR_SOUTH];
-    if (IS_SET(exitp->condition, EX_CLOSED)) {
+    if (IS_SET(exitp->condition, EXIT_CLOSED)) {
       if (!::number(0,60)) {
         sendrpf(rp, "A rumbling is heard as the windpipe opens.\n\r");
         sendrpf(rp2, "A rumbling is heard as the windpipe opens.\n\r");
-        REMOVE_BIT(exitp->condition, EX_CLOSED);
-        REMOVE_BIT(back->condition, EX_CLOSED);
+        REMOVE_BIT(exitp->condition, EXIT_CLOSED);
+        REMOVE_BIT(back->condition, EXIT_CLOSED);
       }
     } else {
       if (!::number(0,20)) {
         sendrpf(rp, "A rumbling is heard as the windpipe closes.\n\r");
         sendrpf(rp2, "A rumbling is heard as the windpipe closes.\n\r");
-        SET_BIT(exitp->condition, EX_CLOSED);
-        SET_BIT(back->condition, EX_CLOSED);
+        SET_BIT(exitp->condition, EXIT_CLOSED);
+        SET_BIT(back->condition, EXIT_CLOSED);
       }
     }
   }
@@ -376,17 +376,17 @@ int belimusStomach(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     roomDirData *exitp;
     exitp = rp->dir_option[DIR_SOUTH];
     rp2 = real_roomp(exitp->to_room);
-    if (IS_SET(exitp->condition, EX_CLOSED)) {
+    if (IS_SET(exitp->condition, EXIT_CLOSED)) {
       if (!::number(0,60)) {
         sendrpf(rp, "A rumbling is heard as the intestines distend.\n\r");
         sendrpf(rp2, "A rumbling is heard as the intestines distend.\n\r");
-        REMOVE_BIT(exitp->condition, EX_CLOSED);
+        REMOVE_BIT(exitp->condition, EXIT_CLOSED);
       }
     } else {
       if (!::number(0,20)) {
         sendrpf(rp, "A rumbling is heard as the intestines contract.\n\r");
         sendrpf(rp2, "A rumbling is heard as the intestines contract.\n\r");
-        SET_BIT(exitp->condition, EX_CLOSED);
+        SET_BIT(exitp->condition, EXIT_CLOSED);
       }
     }
   }
@@ -433,19 +433,19 @@ int belimusLungs(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     exitp = rp->dir_option[DIR_WEST];
     rp2 = real_roomp(exitp->to_room);
     back = rp2->dir_option[DIR_EAST];
-    if (IS_SET(exitp->condition, EX_CLOSED)) {
+    if (IS_SET(exitp->condition, EXIT_CLOSED)) {
       if (!::number(0,60)) {
         sendrpf(rp, "A rumbling is heard as Belimus inhales.\n\r");
         sendrpf(rp2, "A rumbling is heard as Belimus inhales.\n\r");
-        REMOVE_BIT(exitp->condition, EX_CLOSED);
-        REMOVE_BIT(back->condition, EX_CLOSED);
+        REMOVE_BIT(exitp->condition, EXIT_CLOSED);
+        REMOVE_BIT(back->condition, EXIT_CLOSED);
       }
     } else {
       if (!::number(0,20)) {
         sendrpf(rp, "A rumbling is heard as Belimus exhales.\n\r");
         sendrpf(rp2, "A rumbling is heard as Belimus exhales.\n\r");
-        SET_BIT(exitp->condition, EX_CLOSED);
-        SET_BIT(back->condition, EX_CLOSED);
+        SET_BIT(exitp->condition, EXIT_CLOSED);
+        SET_BIT(back->condition, EXIT_CLOSED);
       }
     }
   }
@@ -455,19 +455,19 @@ int belimusLungs(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     exitp = rp->dir_option[DIR_EAST];
     rp2 = real_roomp(exitp->to_room);
     back = rp2->dir_option[DIR_WEST];
-    if (IS_SET(exitp->condition, EX_CLOSED)) {
+    if (IS_SET(exitp->condition, EXIT_CLOSED)) {
       if (!::number(0,60)) {
         sendrpf(rp, "A rumbling is heard as Belimus inhales.\n\r");
         sendrpf(rp2, "A rumbling is heard as Belimus inhales.\n\r");
-        REMOVE_BIT(exitp->condition, EX_CLOSED);
-        REMOVE_BIT(back->condition, EX_CLOSED);
+        REMOVE_BIT(exitp->condition, EXIT_CLOSED);
+        REMOVE_BIT(back->condition, EXIT_CLOSED);
       }
     } else {
       if (!::number(0,20)) {
         sendrpf(rp, "A rumbling is heard as Belimus exhales.\n\r");
         sendrpf(rp2, "A rumbling is heard as Belimus exhales.\n\r");
-        SET_BIT(exitp->condition, EX_CLOSED);
-        SET_BIT(back->condition, EX_CLOSED);
+        SET_BIT(exitp->condition, EXIT_CLOSED);
+        SET_BIT(back->condition, EXIT_CLOSED);
       }
     }
   }
@@ -507,7 +507,7 @@ int belimusBlowHole(TBeing *me, cmdTypeT cmd, const char *, TRoom *rp)
 
     if (!(exitp = rp->dir_option[DIR_UP]))
       return FALSE;
-    if (IS_SET(exitp->condition, EX_CLOSED))
+    if (IS_SET(exitp->condition, EXIT_CLOSED))
       return FALSE;
 
     for (mob = character_list;mob;mob = mob->next) {
@@ -1365,43 +1365,43 @@ int BankVault(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
   //  vlogf(LOG_PEEL, "Bank: closing/locking vault doors");
 
   if(roomp->number==31780){
-    if(!IS_SET(roomp->dir_option[DIR_WEST]->condition, EX_CLOSED)){
-      SET_BIT(roomp->dir_option[DIR_WEST]->condition, EX_CLOSED);
+    if(!IS_SET(roomp->dir_option[DIR_WEST]->condition, EXIT_CLOSED)){
+      SET_BIT(roomp->dir_option[DIR_WEST]->condition, EXIT_CLOSED);
       roomp->sendTo("The door to the west swings closed.\n\r");
     }
-    if(!IS_SET(roomp->dir_option[DIR_WEST]->condition, EX_LOCKED)){
-      SET_BIT(roomp->dir_option[DIR_WEST]->condition, EX_LOCKED);
+    if(!IS_SET(roomp->dir_option[DIR_WEST]->condition, EXIT_LOCKED)){
+      SET_BIT(roomp->dir_option[DIR_WEST]->condition, EXIT_LOCKED);
       roomp->sendTo("The door to the west locks with an audible *click*.\n\r");
     }
 
     rp=real_roomp(31779);
-    if(!IS_SET(rp->dir_option[DIR_EAST]->condition, EX_CLOSED)){
-      SET_BIT(rp->dir_option[DIR_EAST]->condition, EX_CLOSED);
+    if(!IS_SET(rp->dir_option[DIR_EAST]->condition, EXIT_CLOSED)){
+      SET_BIT(rp->dir_option[DIR_EAST]->condition, EXIT_CLOSED);
       rp->sendTo("The door to the east swings closed.\n\r");
     }
-    if(!IS_SET(rp->dir_option[DIR_EAST]->condition, EX_LOCKED)){
-      SET_BIT(rp->dir_option[DIR_EAST]->condition, EX_LOCKED);
+    if(!IS_SET(rp->dir_option[DIR_EAST]->condition, EXIT_LOCKED)){
+      SET_BIT(rp->dir_option[DIR_EAST]->condition, EXIT_LOCKED);
       rp->sendTo("The door to the east locks with an audible *click*.\n\r");
     }
   }
 
   if(roomp->number==31786){
-    if(!IS_SET(roomp->dir_option[DIR_WEST]->condition, EX_CLOSED)){
-      SET_BIT(roomp->dir_option[DIR_WEST]->condition, EX_CLOSED);
+    if(!IS_SET(roomp->dir_option[DIR_WEST]->condition, EXIT_CLOSED)){
+      SET_BIT(roomp->dir_option[DIR_WEST]->condition, EXIT_CLOSED);
       roomp->sendTo("The door to the west swings closed.\n\r");
     }
-    if(!IS_SET(roomp->dir_option[DIR_WEST]->condition, EX_LOCKED)){
-      SET_BIT(roomp->dir_option[DIR_WEST]->condition, EX_LOCKED);
+    if(!IS_SET(roomp->dir_option[DIR_WEST]->condition, EXIT_LOCKED)){
+      SET_BIT(roomp->dir_option[DIR_WEST]->condition, EXIT_LOCKED);
       roomp->sendTo("The door to the west locks with an audible *click*.\n\r");
     }
 
     rp=real_roomp(31785);
-    if(!IS_SET(rp->dir_option[DIR_EAST]->condition, EX_CLOSED)){
-      SET_BIT(rp->dir_option[DIR_EAST]->condition, EX_CLOSED);
+    if(!IS_SET(rp->dir_option[DIR_EAST]->condition, EXIT_CLOSED)){
+      SET_BIT(rp->dir_option[DIR_EAST]->condition, EXIT_CLOSED);
       rp->sendTo("The door to the east swings closed.\n\r");
     }
-    if(!IS_SET(rp->dir_option[DIR_EAST]->condition, EX_LOCKED)){
-      SET_BIT(rp->dir_option[DIR_EAST]->condition, EX_LOCKED);
+    if(!IS_SET(rp->dir_option[DIR_EAST]->condition, EXIT_LOCKED)){
+      SET_BIT(rp->dir_option[DIR_EAST]->condition, EXIT_LOCKED);
       rp->sendTo("The door to the east locks with an audible *click*.\n\r");
     }
   }
@@ -1461,33 +1461,33 @@ int BankMainEntrance(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
   // first, let's close entrance doors
   rp=real_roomp(31764);
 
-  if(!IS_SET(rp->dir_option[DIR_NORTH]->condition, EX_CLOSED)){
+  if(!IS_SET(rp->dir_option[DIR_NORTH]->condition, EXIT_CLOSED)){
     rp->sendTo("The door to the north swings closed.\n\r");
-    SET_BIT(rp->dir_option[DIR_NORTH]->condition, EX_CLOSED);
+    SET_BIT(rp->dir_option[DIR_NORTH]->condition, EXIT_CLOSED);
   }
-  if(!IS_SET(rp->dir_option[DIR_NORTH]->condition, EX_LOCKED)){
+  if(!IS_SET(rp->dir_option[DIR_NORTH]->condition, EXIT_LOCKED)){
     rp->sendTo("The door to the north locks with an audible *click*.\n\r");
-    SET_BIT(rp->dir_option[DIR_NORTH]->condition, EX_LOCKED);
+    SET_BIT(rp->dir_option[DIR_NORTH]->condition, EXIT_LOCKED);
   }
-  if(!IS_SET(rp->dir_option[DIR_SOUTH]->condition, EX_CLOSED)){
+  if(!IS_SET(rp->dir_option[DIR_SOUTH]->condition, EXIT_CLOSED)){
     rp->sendTo("The door to the south swings closed.\n\r");
-    SET_BIT(rp->dir_option[DIR_SOUTH]->condition, EX_CLOSED);
+    SET_BIT(rp->dir_option[DIR_SOUTH]->condition, EXIT_CLOSED);
   }
 
   rp=real_roomp(31767);
-  if(!IS_SET(rp->dir_option[DIR_SOUTH]->condition, EX_CLOSED)){
+  if(!IS_SET(rp->dir_option[DIR_SOUTH]->condition, EXIT_CLOSED)){
     rp->sendTo("The door to the south swings closed.\n\r");
-    SET_BIT(rp->dir_option[DIR_SOUTH]->condition, EX_CLOSED);
+    SET_BIT(rp->dir_option[DIR_SOUTH]->condition, EXIT_CLOSED);
   }
-  if(!IS_SET(rp->dir_option[DIR_SOUTH]->condition, EX_LOCKED)){
+  if(!IS_SET(rp->dir_option[DIR_SOUTH]->condition, EXIT_LOCKED)){
     rp->sendTo("The door to the south locks with an audible *click*.\n\r");
-    SET_BIT(rp->dir_option[DIR_SOUTH]->condition, EX_LOCKED);
+    SET_BIT(rp->dir_option[DIR_SOUTH]->condition, EXIT_LOCKED);
   }
 
   rp=real_roomp(31758);
-  if(!IS_SET(rp->dir_option[DIR_NORTH]->condition, EX_CLOSED)){
+  if(!IS_SET(rp->dir_option[DIR_NORTH]->condition, EXIT_CLOSED)){
     rp->sendTo("The door to the north swings closed.\n\r");
-    SET_BIT(rp->dir_option[DIR_NORTH]->condition, EX_CLOSED);
+    SET_BIT(rp->dir_option[DIR_NORTH]->condition, EXIT_CLOSED);
   }
 
   // now search for people in the zone and smite'em
@@ -1675,16 +1675,16 @@ int boulderRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
   if (found == 1) {
     //    vlogf(LOG_LAPSOS, format("!found so closing exit - found = %d") %  found);
     rp=real_roomp(4189);
-    SET_BIT(rp->dir_option[DIR_DOWN]->condition, EX_CLOSED);
+    SET_BIT(rp->dir_option[DIR_DOWN]->condition, EXIT_CLOSED);
     rp=real_roomp(4284);
-    REMOVE_BIT(rp->dir_option[DIR_UP]->condition, EX_CLOSED);
+    REMOVE_BIT(rp->dir_option[DIR_UP]->condition, EXIT_CLOSED);
     return TRUE;
   } else {
     //    vlogf(LOG_LAPSOS, format("found so opening exit - found = %d") %  found);
     rp=real_roomp(4189);
-    REMOVE_BIT(rp->dir_option[DIR_DOWN]->condition, EX_CLOSED);
+    REMOVE_BIT(rp->dir_option[DIR_DOWN]->condition, EXIT_CLOSED);
     rp=real_roomp(4284);
-    REMOVE_BIT(rp->dir_option[DIR_UP]->condition, EX_CLOSED);
+    REMOVE_BIT(rp->dir_option[DIR_UP]->condition, EXIT_CLOSED);
     return TRUE;
   }
 }

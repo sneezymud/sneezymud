@@ -87,7 +87,7 @@ bool TBeing::canClimb()
   else {
     if (!clearpath(in_room, DIR_DOWN)) {
       if (roomp->dir_option[DIR_DOWN] && 
-          IS_SET(roomp->dir_option[DIR_DOWN]->condition, EX_CLOSED)) {
+          IS_SET(roomp->dir_option[DIR_DOWN]->condition, EXIT_CLOSED)) {
         return TRUE;
       } else {
         vlogf(LOG_BUG,format("%s falling from room %d with no down dir.") % getName() % in_room);

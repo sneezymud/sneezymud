@@ -33,7 +33,7 @@ void TTool::pickPulse(TBeing *ch)
     ch->stopTask();
     return;
   }
-  if (!IS_SET(exitp->condition, EX_LOCKED)) {
+  if (!IS_SET(exitp->condition, EXIT_LOCKED)) {
     ch->sendTo("Some nice person seems to have unlocked it for you.\n\r");
     ch->stopTask();
     return;
@@ -85,7 +85,7 @@ void TTool::pickPulse(TBeing *ch)
     // but what the heck, this makes it a bit harder to pick
     // and helps make pick-lock a learn-by-doing too
 
-    REMOVE_BIT(exitp->condition, EX_LOCKED);
+    REMOVE_BIT(exitp->condition, EXIT_LOCKED);
     if (!exitp->keyword.empty()) {
       act(format("$n skillfully picks the lock of the %s.\n\r") % 
 	  fname(exitp->keyword),
@@ -100,7 +100,7 @@ void TTool::pickPulse(TBeing *ch)
 
         (back = temp_rp->dir_option[rev_dir[ch->task->status]]) &&
         back->to_room == ch->in_room)
-      REMOVE_BIT(back->condition, EX_LOCKED);
+      REMOVE_BIT(back->condition, EXIT_LOCKED);
     ch->stopTask();
   }
 }
