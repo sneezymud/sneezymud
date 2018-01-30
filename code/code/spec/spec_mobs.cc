@@ -1332,7 +1332,7 @@ void TBeing::throwChar(TBeing *v, dirTypeT dir, bool also, silentTypeT silent, b
   rp = v->roomp;
   if (rp && rp->dir_option[dir] &&
       rp->dir_option[dir]->to_room && 
-      !IS_SET(rp->dir_option[dir]->condition, EX_CLOSED) &&
+      !IS_SET(rp->dir_option[dir]->condition, EXIT_CLOSED) &&
       (rp->dir_option[dir]->to_room != Room::NOWHERE)) {
     if (v->fight() && !silent) {
       sendTo("Not while fighting!\n\r");

@@ -346,8 +346,8 @@ int TMonster::mobileWander(dirTypeT door)
     return 0;
 
   // let's not go through unrevealed secret doors
-  if (IS_SET(exitp->condition, EX_SECRET) &&
-      IS_SET(exitp->condition, EX_CLOSED))
+  if (IS_SET(exitp->condition, EXIT_SECRET) &&
+      IS_SET(exitp->condition, EXIT_CLOSED))
     return 0;
   
   if ((rp->isWaterSector() &&

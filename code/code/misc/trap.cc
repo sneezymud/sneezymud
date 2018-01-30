@@ -194,12 +194,12 @@ int TBeing::doSetTraps(const char *arg)
 	return FALSE;
       }
 
-      if (!IS_SET(exitp->condition, EX_CLOSED)) {
+      if (!IS_SET(exitp->condition, EXIT_CLOSED)) {
         sendTo(format("You need to close the %s first.\n\r") %
 	       exitp->getName().uncap());
         return FALSE;
       }
-      if (IS_SET(exitp->condition, EX_TRAPPED)) {
+      if (IS_SET(exitp->condition, EXIT_TRAPPED)) {
 	sendTo(format("When you try to trap the %s, you set off the trap that is already there!\n\r") % exitp->getName().uncap());
 	rc = triggerDoorTrap(door);
         if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -947,10 +947,10 @@ int TBeing::triggerDoorTrap(dirTypeT door)
   // eg trying to set another trap
   //  rawOpenDoor(door);
   
-  REMOVE_BIT(exitp->condition, EX_TRAPPED);
+  REMOVE_BIT(exitp->condition, EXIT_TRAPPED);
   if ((rp = real_roomp(exitp->to_room)) &&
       (back = rp->dir_option[rev_dir[door]])) {
-    REMOVE_BIT(back->condition, EX_TRAPPED);
+    REMOVE_BIT(back->condition, EXIT_TRAPPED);
   }
 
   act("You hear a strange noise...", TRUE, this, 0, 0, TO_ROOM);

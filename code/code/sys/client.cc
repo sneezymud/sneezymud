@@ -238,9 +238,9 @@ void Descriptor::send_client_exits()
 
   for (door = MIN_DIR; door < MAX_DIR; door++) {
     if ((exitdata = ch->exitDir(door))){
-      if ((exitdata->to_room != Room::NOWHERE) && (!(exitdata->condition & EX_CLOSED) || ch->isImmortal()))
+      if ((exitdata->to_room != Room::NOWHERE) && (!(exitdata->condition & EXIT_CLOSED) || ch->isImmortal()))
         SET_BIT(bits, (1 << door));
-      else if(!(exitdata->condition & EX_SECRET))
+      else if(!(exitdata->condition & EXIT_SECRET))
         SET_BIT(cbits, (1 << door));
 
       
@@ -250,7 +250,7 @@ void Descriptor::send_client_exits()
       else
 	comm->exits[door].door=false;
       
-      comm->exits[door].open=!IS_SET(exitdata->condition, EX_CLOSED);
+      comm->exits[door].open=!IS_SET(exitdata->condition, EXIT_CLOSED);
     } else {
       comm->exits[door].exit=false;
     }

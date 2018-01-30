@@ -245,7 +245,7 @@ void TPortal::setPortalTrapDam(unsigned short r)
 
 void TPortal::showMe(TBeing *ch) const
 {
-  if (isPortalFlag(EX_CLOSED))
+  if (isPortalFlag(EXIT_CLOSED))
     ch->sendTo("It is closed.\n\r");
   else
     ch->sendTo("It seems to lead somewhere...\n\r");
@@ -256,12 +256,12 @@ void TPortal::closeMe(TBeing *ch)
   if (!ch->canSee(this))
     ch->sendTo("Close what?\n\r");
   else {
-    if (isPortalFlag(EX_CLOSED))
+    if (isPortalFlag(EXIT_CLOSED))
       ch->sendTo("It's already closed!\n\r");
     else {
       act("$n closes $p.", TRUE, ch, this, NULL, TO_ROOM);
       act("You close $p.", TRUE, ch, this, NULL, TO_CHAR);
-      portal_flag_change(this, EX_CLOSED, "%s is closed from the other side.\n\r", SET_TYPE);
+      portal_flag_change(this, EXIT_CLOSED, "%s is closed from the other side.\n\r", SET_TYPE);
     }
   }
 }
@@ -271,15 +271,15 @@ void TPortal::lockMe(TBeing *ch)
   if (!ch->canSee(this))
     ch->sendTo("Lock what?\n\r");
   else {
-    if (!isPortalFlag(EX_CLOSED))
+    if (!isPortalFlag(EXIT_CLOSED))
       ch->sendTo("You have to close it first, I'm afraid.\n\r");
     else if (!has_key(ch, getPortalKey()))
       ch->sendTo("You don't have the proper key.\n\r");
-    else if (isPortalFlag(EX_LOCKED))
+    else if (isPortalFlag(EXIT_LOCKED))
       ch->sendTo("It's already locked!\n\r");
     else {
       act("$n locks $p.", TRUE, ch, this, NULL, TO_ROOM);
-      portal_flag_change(this, EX_LOCKED, "%s is locked from the other side.\n\r", SET_TYPE);
+      portal_flag_change(this, EXIT_LOCKED, "%s is locked from the other side.\n\r", SET_TYPE);
       ch->sendTo("*Click*\n\r");
     }
   }
@@ -290,15 +290,15 @@ void TPortal::unlockMe(TBeing *ch)
   if (!ch->canSee(this))
     ch->sendTo("Unlock what?\n\r");
   else {
-    if (!isPortalFlag(EX_CLOSED))
+    if (!isPortalFlag(EXIT_CLOSED))
       ch->sendTo("Heck!  It ain't even closed!\n\r");
     else if (!has_key(ch, getPortalKey()))
       ch->sendTo("You don't have the proper key.\n\r");
-    else if (!isPortalFlag(EX_LOCKED))
+    else if (!isPortalFlag(EXIT_LOCKED))
       ch->sendTo("That's funny... it wasn't even locked!\n\r");
     else {
       act("$n unlocks $p.", TRUE, ch, this, NULL, TO_ROOM);
-      portal_flag_change(this, EX_LOCKED, "%s is unlocked from the other side.\n\r", REMOVE_TYPE);
+      portal_flag_change(this, EXIT_LOCKED, "%s is unlocked from the other side.\n\r", REMOVE_TYPE);
       ch->sendTo("*Click*\n\r");
     }
   }
@@ -343,11 +343,11 @@ int TPortal::enterMe(TBeing *ch)
             isRandom = -1;
   TPerson *tPerson = dynamic_cast<TPerson *>(ch);
 
-  if (isPortalFlag(EX_CLOSED)) {
+  if (isPortalFlag(EXIT_CLOSED)) {
     ch->sendTo("You can't enter that!  It's closed!\n\r");
     return FALSE;
   }
-  if (isPortalFlag(EX_NOENTER)) {
+  if (isPortalFlag(EXIT_NOENTER)) {
     ch->sendTo("You can't seem to find a way to enter that.\n\r");
     return FALSE;
   }
@@ -384,7 +384,7 @@ int TPortal::enterMe(TBeing *ch)
   }
 
   ch->goThroughPortalMsg(this);
-  if (isPortalFlag(EX_TRAPPED)) {
+  if (isPortalFlag(EXIT_TRAPPED)) {
     rc = ch->triggerPortalTrap(this);
     if (IS_SET_DELETE(rc, DELETE_ITEM | DELETE_THIS)) {
       return DELETE_THIS | DELETE_VICT;

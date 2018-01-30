@@ -173,7 +173,7 @@ bool TBeing::validMove(dirTypeT cmd)
     notLegalMove();
     return FALSE;
   } 
-  if (IS_SET(exitp->condition, EX_CAVED_IN)) {
+  if (IS_SET(exitp->condition, EXIT_CAVED_IN)) {
     if (isImmortal() || IS_SET(specials.act, ACT_GHOST)) {
       act( "$n's body splits into a cloud of atoms before your eyes!", 
           TRUE, this, 0, NULL, TO_ROOM, NULL, (isPlayerAction(PLR_STEALTH) ? MAX_MORT : 0));
@@ -183,7 +183,7 @@ bool TBeing::validMove(dirTypeT cmd)
     sendTo("A cave in blocks the way.\n\r");
     return FALSE;
   } 
-  if (IS_SET(exitp->condition, EX_CLOSED)) {
+  if (IS_SET(exitp->condition, EXIT_CLOSED)) {
   // jesus
     if (isAffected(AFF_SHADOW_WALK) && !riding) {
       int perc = getSkillValue(SPELL_SHADOW_WALK);
@@ -206,7 +206,7 @@ bool TBeing::validMove(dirTypeT cmd)
       return TRUE;
     }
     if (!exitp->keyword.empty()) {
-      if (!IS_SET(exitp->condition, EX_SECRET)) {
+      if (!IS_SET(exitp->condition, EXIT_SECRET)) {
         char doorbuf[64];
         strcpy(doorbuf, fname(exitp->keyword).c_str());
         sendTo(format("The %s %s %s.\n\r") % 
@@ -225,7 +225,7 @@ bool TBeing::validMove(dirTypeT cmd)
       return FALSE;
     }
   } 
-  if (IS_SET(exitp->condition, EX_WARDED)) {
+  if (IS_SET(exitp->condition, EXIT_WARDED)) {
     if (isImmortal() || IS_SET(specials.act, ACT_GHOST)) {
       act( "$n's body splits into a cloud of atoms before your eyes!",
           TRUE, this, 0, NULL, TO_ROOM, NULL,
@@ -1882,19 +1882,19 @@ int TBeing::doOpen(const char *argument)
       act(buf, TRUE, this, 0, 0, TO_ROOM);
       return FALSE;
     }
-    if (IS_SET(exitp->condition, EX_DESTROYED)) {
+    if (IS_SET(exitp->condition, EXIT_DESTROYED)) {
       sendTo(format("The %s has been destroyed, it stands wide open.\n\r") %
          exitp->getName());
       return FALSE;
-    } else if (IS_SET(exitp->condition, EX_CAVED_IN)) {
+    } else if (IS_SET(exitp->condition, EXIT_CAVED_IN)) {
       sendTo("A cave-in blocks the way.  It would take hours to dig your way through.\n\r");
       return FALSE;
-    } else if (!IS_SET(exitp->condition, EX_CLOSED))
+    } else if (!IS_SET(exitp->condition, EXIT_CLOSED))
       sendTo("It's already open!\n\r");
-    else if (IS_SET(exitp->condition, EX_LOCKED))
+    else if (IS_SET(exitp->condition, EXIT_LOCKED))
       sendTo("It seems to be locked.\n\r");
     else {
-      if (IS_SET(exitp->condition, EX_TRAPPED)) {
+      if (IS_SET(exitp->condition, EXIT_TRAPPED)) {
 	if (doesKnowSkill(SKILL_DETECT_TRAP)) {
 	  if (detectTrapDoor(this, door)) {
 	    sendTo(format("You start to open the %s, but then notice an insidious %s trap...\n\r") %
@@ -1968,26 +1968,26 @@ int TBeing::doRaise(const char *argument, cmdTypeT cmd)
       act(buf, TRUE, this, 0, 0, TO_ROOM);
       return FALSE;
     }
-    if (IS_SET(exitp->condition, EX_DESTROYED)) {
+    if (IS_SET(exitp->condition, EXIT_DESTROYED)) {
       sendTo(format("The %s has been destroyed, it stands wide open.\n\r") %
          exitp->getName());
       return FALSE;
-    } else if (IS_SET(exitp->condition, EX_CAVED_IN)) {
+    } else if (IS_SET(exitp->condition, EXIT_CAVED_IN)) {
       sendTo("A cave-in blocks the way.  It would take hours to dig your way through.\n\r");
       return FALSE;
     } else if (exitp->door_type == DOOR_DRAWBRIDGE) {
       // raiseing drawbridge closes it
-      if (IS_SET(exitp->condition, EX_CLOSED))
+      if (IS_SET(exitp->condition, EXIT_CLOSED))
         sendTo("It's already raised!\n\r");
       else 
         rawCloseDoor(door);
     } else if (exitp->door_type == DOOR_PORTCULLIS) {
       // raiseing portcullis opens it
-      if (!IS_SET(exitp->condition, EX_CLOSED))
+      if (!IS_SET(exitp->condition, EXIT_CLOSED))
         sendTo("It's already raised!\n\r");
-      else if (IS_SET(exitp->condition, EX_LOCKED))
+      else if (IS_SET(exitp->condition, EXIT_LOCKED))
         sendTo("It seems to be locked.\n\r");
-      else if (IS_SET(exitp->condition, EX_TRAPPED)) {
+      else if (IS_SET(exitp->condition, EXIT_TRAPPED)) {
         if (doesKnowSkill(SKILL_DETECT_TRAP)) {
           if (detectTrapDoor(this, door)) {
             sendTo(format("You start to raise the %s, but then notice an insidious %s trap...\n\r") %                 exitp->getName() % sstring(trap_types[exitp->trap_info]).uncap());
@@ -2059,14 +2059,14 @@ void TBeing::doClose(const char *argument)
       act(buf, TRUE, this, 0, 0, TO_ROOM);
       return;
     }
-    if (IS_SET(exitp->condition, EX_DESTROYED)) {
+    if (IS_SET(exitp->condition, EXIT_DESTROYED)) {
       sendTo(format("The %s has been destroyed, it can't be closed anymore.\n\r") %
          exitp->getName());
       return;
-    } else if (IS_SET(exitp->condition, EX_CAVED_IN)) {
+    } else if (IS_SET(exitp->condition, EXIT_CAVED_IN)) {
       sendTo("It's been caved in.  You can't get much more closed than that...\n\r");
       return;
-    } else if (IS_SET(exitp->condition, EX_CLOSED))
+    } else if (IS_SET(exitp->condition, EXIT_CLOSED))
       sendTo("It's already closed!\n\r");
     else {
       rawCloseDoor(door);
@@ -2122,20 +2122,20 @@ int TBeing::doLower(const char *argument)
       act(buf, TRUE, this, 0, 0, TO_ROOM);
       return FALSE;
     }
-    if (IS_SET(exitp->condition, EX_DESTROYED)) {
+    if (IS_SET(exitp->condition, EXIT_DESTROYED)) {
       sendTo(format("The %s has been destroyed.\n\r") %
          exitp->getName());
       return FALSE;
-    } else if (IS_SET(exitp->condition, EX_CAVED_IN)) {
+    } else if (IS_SET(exitp->condition, EXIT_CAVED_IN)) {
       sendTo("It's been caved in.  You can't get much more lowered than that...\n\r");
       return FALSE;
     } else if (exitp->door_type == DOOR_DRAWBRIDGE) {
       // lowering drawbridge opens it
-      if (!IS_SET(exitp->condition, EX_CLOSED))
+      if (!IS_SET(exitp->condition, EXIT_CLOSED))
         sendTo("It's already lowered!\n\r");
-      else if (IS_SET(exitp->condition, EX_LOCKED))
+      else if (IS_SET(exitp->condition, EXIT_LOCKED))
         sendTo("It seems to be locked.\n\r");
-      else if (IS_SET(exitp->condition, EX_TRAPPED)) {
+      else if (IS_SET(exitp->condition, EXIT_TRAPPED)) {
         if (doesKnowSkill(SKILL_DETECT_TRAP)) {
           if (detectTrapDoor(this, door)) {
             sendTo(format("You start to lower the %s, but then notice an insidious %s trap...\n\r") %                 exitp->getName() %  sstring(trap_types[exitp->trap_info]).uncap());
@@ -2149,7 +2149,7 @@ int TBeing::doLower(const char *argument)
         rawOpenDoor(door);
     } else if (exitp->door_type == DOOR_PORTCULLIS) {
       // lowering portcullis closes it
-      if (IS_SET(exitp->condition, EX_CLOSED))
+      if (IS_SET(exitp->condition, EXIT_CLOSED))
         sendTo("It's already lowered!\n\r");
       else
         rawCloseDoor(door);
@@ -2259,31 +2259,31 @@ void TBeing::doLock(const char *argument)
       sendTo("That's impossible, I'm afraid.\n\r");
       return;
     }
-    if (IS_SET(exitp->condition, EX_DESTROYED)) {
+    if (IS_SET(exitp->condition, EXIT_DESTROYED)) {
       sendTo(format("The %s has been destroyed; locking it now is a bit silly.\n\r") %
 
          exitp->getName().c_str());
       return;
-    } else if (IS_SET(exitp->condition, EX_CAVED_IN)) {
+    } else if (IS_SET(exitp->condition, EXIT_CAVED_IN)) {
       sendTo("How do you expect to find the lock when it's buried under that cave in?\n\r");
       return;
-    } else if (!IS_SET(exitp->condition, EX_CLOSED))
+    } else if (!IS_SET(exitp->condition, EXIT_CLOSED))
       sendTo("You have to close it first, I'm afraid.\n\r");
     else if (exitp->key < 0)
       sendTo("There does not seem to be any keyholes.\n\r");
     else if (!has_key(this, exitp->key))
       sendTo("You don't have the proper key.\n\r");
-    else if (IS_SET(exitp->condition, EX_LOCKED))
+    else if (IS_SET(exitp->condition, EXIT_LOCKED))
       sendTo("It's already locked!\n\r");
     else {
-      SET_BIT(exitp->condition, EX_LOCKED);
+      SET_BIT(exitp->condition, EXIT_LOCKED);
       act("$n locks the $T.", TRUE, this, 0, reinterpret_cast<const TThing *>(exitp->getName().c_str()), TO_ROOM);
 
       sendTo("*Click*\n\r");
 
       rp = real_roomp(exitp->to_room);
       if (rp && (back = rp->dir_option[rev_dir[door]]) && back->to_room == in_room)
-        SET_BIT(back->condition, EX_LOCKED);
+        SET_BIT(back->condition, EXIT_LOCKED);
     }
   }
 }
@@ -2317,20 +2317,20 @@ void TBeing::doUnlock(const char *argument)
       sendTo("That's impossible, I'm afraid.\n\r");
       return;
     }
-    if (IS_SET(exitp->condition, EX_DESTROYED)) {
+    if (IS_SET(exitp->condition, EXIT_DESTROYED)) {
       sendTo(format("The %s has been destroyed and stands wide open.\n\rWhy do you need to unlock it?\n\r") %
          exitp->getName());
       return;
-    } else if (IS_SET(exitp->condition, EX_CAVED_IN)) {
+    } else if (IS_SET(exitp->condition, EXIT_CAVED_IN)) {
       sendTo("It's not locked....  it's caved in!\n\r");
       return;
-    } else if (!IS_SET(exitp->condition, EX_CLOSED))
+    } else if (!IS_SET(exitp->condition, EXIT_CLOSED))
       sendTo("Heck.. it ain't even closed!\n\r");
     else if (exitp->key < 0)
       sendTo("You can't seem to spot any keyholes.\n\r");
     else if (!has_key(this, exitp->key))
       sendTo("You do not have the proper key for that.\n\r");
-    else if (!IS_SET(exitp->condition, EX_LOCKED))
+    else if (!IS_SET(exitp->condition, EXIT_LOCKED))
       sendTo("It's already unlocked, it seems.\n\r");
     else {
       if (fight()) {
@@ -2347,12 +2347,12 @@ void TBeing::doUnlock(const char *argument)
       snprintf(buf, cElements(buf), "You unlock the $T with %s.", obj_index[realObj].short_desc);
       act(buf, TRUE, this, 0, reinterpret_cast<const TThing *>(exitp->getName().c_str()), TO_CHAR);
      
-      REMOVE_BIT(exitp->condition, EX_LOCKED);
+      REMOVE_BIT(exitp->condition, EXIT_LOCKED);
 
       sendTo("*Click*\n\r");
       rp = real_roomp(exitp->to_room);
       if (rp && (back = rp->dir_option[rev_dir[door]]) && back->to_room == in_room)
-        REMOVE_BIT(back->condition, EX_LOCKED);
+        REMOVE_BIT(back->condition, EXIT_LOCKED);
     }
   }
 }
@@ -2475,7 +2475,7 @@ int TBeing::doLeave(const char *argument)
     dirTypeT door;
     for (door = MIN_DIR; door < MAX_DIR; door++) {
       if (exit_ok(exitp = exitDir(door), &rp) &&
-          !IS_SET(exitp->condition, EX_CLOSED) &&
+          !IS_SET(exitp->condition, EXIT_CLOSED) &&
           !rp->isRoomFlag(ROOM_INDOORS)) {
         rc = doMove(door);
         if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -3167,7 +3167,7 @@ int TBeing::goDirection(dirTypeT dir)
     if (!(exitp = exitDir(dir)))
       return FALSE;
 
-    if (!IS_SET(exitp->condition, EX_CLOSED)) {
+    if (!IS_SET(exitp->condition, EXIT_CLOSED)) {
       if (!(rp = real_roomp(exitp->to_room))) {
         return FALSE;
       }
@@ -3188,8 +3188,8 @@ int TBeing::goDirection(dirTypeT dir)
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return TRUE;
-    } else if (isHumanoid() && !IS_SET(exitp->condition, EX_SECRET) &&
-        !IS_SET(exitp->condition, EX_LOCKED)) {
+    } else if (isHumanoid() && !IS_SET(exitp->condition, EXIT_SECRET) &&
+        !IS_SET(exitp->condition, EXIT_LOCKED)) {
 
       // Manipulation Examples:
       //    0 Ride: 1.50
@@ -3208,8 +3208,8 @@ int TBeing::goDirection(dirTypeT dir)
       }
       rawOpenDoor(dir);
       return 0;
-    } else if (!IS_SET(exitp->condition, EX_SECRET) &&
-               IS_SET(exitp->condition, EX_LOCKED)) {
+    } else if (!IS_SET(exitp->condition, EXIT_SECRET) &&
+               IS_SET(exitp->condition, EXIT_LOCKED)) {
       int origroom = in_room;
       if (doesKnowSkill(SKILL_DOORBASH))
         rc = doDoorbash(fname(exitp->keyword));
@@ -3219,7 +3219,7 @@ int TBeing::goDirection(dirTypeT dir)
     
       // doorbash might have taken them to new room
       return (origroom != in_room);
-    } else if (IS_SET(exitp->condition, EX_SECRET)) {
+    } else if (IS_SET(exitp->condition, EXIT_SECRET)) {
       // a secret door bars the way
       // morts abuse this by hiding on one side of secret, popping door,
       // shoot an arrow, close the door
@@ -3264,13 +3264,13 @@ int TBeing::goDirection(dirTypeT dir)
 bool TThing::canGoHuman(dirTypeT door) const
 {
   return (exitDir(door) && real_roomp(exitDir(door)->to_room) &&
-            !(exitDir(door)->condition & EX_LOCKED));
+            !(exitDir(door)->condition & EXIT_LOCKED));
 }
 
 bool TThing::canGo(dirTypeT door) const
 {
   return (exitDir(door) && real_roomp(exitDir(door)->to_room) &&
-            !(exitDir(door)->condition & EX_CLOSED));
+            !(exitDir(door)->condition & EXIT_CLOSED));
 }
 
 void TBeing::doFly()

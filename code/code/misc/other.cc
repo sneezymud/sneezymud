@@ -4034,7 +4034,7 @@ void TBeing::doDrag(const sstring &arg)
 
   exitp = exitDir(tdir);
 
-  if (!exit_ok(exitp, NULL) || IS_SET(exitp->condition, EX_CLOSED)) {
+  if (!exit_ok(exitp, NULL) || IS_SET(exitp->condition, EXIT_CLOSED)) {
     sendTo(format("You are blocked from dragging %s.\n\r") % dirs[tdir]);
     sendTo(syntax);
     return;
@@ -4518,7 +4518,7 @@ void TBeing::doRoll(const sstring &arg)
 
   exitp = exitDir(tdir);
 
-  if (!exit_ok(exitp, NULL) || IS_SET(exitp->condition, EX_CLOSED)) {
+  if (!exit_ok(exitp, NULL) || IS_SET(exitp->condition, EXIT_CLOSED)) {
     sendTo(format("You are blocked from rolling %s.\n\r") % dirs[tdir]);
     sendTo(syntax);
     return;

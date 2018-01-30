@@ -15,7 +15,7 @@ int TBeing::slamIntoWall(roomDirData * exitp)
 
   if (!exitp->keyword.empty()) {
     if(fname(exitp->keyword) == "secret" ||
-        IS_SET(exitp->condition, EX_SECRET)) {
+        IS_SET(exitp->condition, EXIT_SECRET)) {
       strcpy(doorname, "wall");
     } else
       strcpy(doorname, fname(exitp->keyword).c_str());
@@ -95,8 +95,8 @@ static int doorbash(TBeing * caster, dirTypeT dir)
     return FALSE;
   }        
 
-  if ((IS_SET(exitp->condition, EX_DESTROYED)) ||
-      !IS_SET(exitp->condition, EX_CLOSED)) {
+  if ((IS_SET(exitp->condition, EXIT_DESTROYED)) ||
+      !IS_SET(exitp->condition, EXIT_CLOSED)) {
     was_in = caster->in_room;
     --(*caster);
     thing_to_room(caster, exitp->to_room);
@@ -118,8 +118,8 @@ static int doorbash(TBeing * caster, dirTypeT dir)
       (2*exitp->lock_difficulty > bKnown) ||
       (exitp->door_type == DOOR_PORTCULLIS) ||
       (exitp->door_type == DOOR_DRAWBRIDGE) ||
-      IS_SET(exitp->condition, EX_CAVED_IN) ||
-      IS_SET(exitp->condition, EX_WARDED)) {
+      IS_SET(exitp->condition, EXIT_CAVED_IN) ||
+      IS_SET(exitp->condition, EXIT_WARDED)) {
     // doors too much for them regardless
     rc = caster->slamIntoWall(exitp);
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -155,7 +155,7 @@ static int doorbash(TBeing * caster, dirTypeT dir)
     caster->sendTo(format("You slam into the %s, and it bursts open!\n\r") % 
             fname(exitp->keyword));
     int room = caster->in_room;
-    if (IS_SET(exitp->condition, EX_TRAPPED))
+    if (IS_SET(exitp->condition, EXIT_TRAPPED))
     {
       rc = caster->triggerDoorTrap(dir);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
