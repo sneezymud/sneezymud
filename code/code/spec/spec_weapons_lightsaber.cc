@@ -21,7 +21,7 @@ const int LS_MAX_COLORS = sizeof(LS_COLOR_NAMES) / sizeof(LS_COLOR_NAMES[0]);
 int which_color(TBeing *ch)
 {
   int color = 0;
-  for (auto &c: ch->getName())
+  for (auto c: ch->getName())
     color += c;
   return color % LS_MAX_COLORS;
 }
@@ -38,8 +38,8 @@ void lightsaber_extend(TBeing *ch, TGenWeapon *weapon)
   weapon->swapToStrung();
 
   int color = which_color(ch);
-  sstring cname = LS_COLOR_NAMES[color];
-  sstring ccode = LS_COLOR_CODES[color];
+  const sstring cname = LS_COLOR_NAMES[color];
+  const sstring ccode = LS_COLOR_CODES[color];
 
   act(format("A brilliant blade of %s%s<o> light springs forth from your $o.") % ccode % cname,
       false, ch, weapon, NULL, TO_CHAR, ANSI_ORANGE);
@@ -66,8 +66,8 @@ void lightsaber_retract(TBeing *ch, TGenWeapon *weapon)
     return;
 
   int color = which_color(ch);
-  sstring cname = LS_COLOR_NAMES[color];
-  sstring ccode = LS_COLOR_CODES[color];
+  const sstring cname = LS_COLOR_NAMES[color];
+  const sstring ccode = LS_COLOR_CODES[color];
 
   act(format("A brilliant blade of %s%s<o> light retracts into your $o.") % ccode % cname,
       false, ch, weapon, NULL, TO_CHAR, ANSI_ORANGE);
