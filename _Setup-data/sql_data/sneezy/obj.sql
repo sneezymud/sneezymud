@@ -3453,7 +3453,7 @@ INSERT INTO `obj` VALUES (1,'hairball','<k>a hairball<1>','<k>A hairball is layi
 (9118,'palm coconut','a tall coconut palm','A tall coconut palm waves in a most friendly manner.','',34,10485760,0,0,0,0,0,0,1,0,0,9999,1,1,-1,0,5),
 (9127,'cutlass pirates','<d>a cutlass<1>','<d>A cutlass is lying here.<1>','',5,536576,16385,20560,2354,21,0,5,11787,3,0,9999,45,45,-1,2200,165),
 (9132,'beast-master sword','the Beast-master','Someone has dropped the Beast-master!','',5,782400,16385,20560,1124,168516117,0,9,23537,3,0,9999,50,50,-1,2200,165),
-(9133,'chest old wooden','an old wooden chest','An old wooden chest sits locked in the corner.','',15,0,0,100,14,9134,2500,100,2173,2,0,1,29,29,-1,3425,5),
+(9133,'chest old wooden','an old wooden chest','An old wooden chest sits locked in the corner.','',15,0,0,100,15,9134,2500,100,2173,2,0,1,29,29,-1,3425,5),
 (9134,'key','a key','A key has been left here.','',18,2097152,0,0,0,0,0,1,2173,2,0,1,29,29,-1,1,162),
 (9165,'bush hibiscus','a bush of hibiscus','A bush of hibiscus flourishes along the path.','',34,0,0,0,0,0,0,10,1,0,0,9999,1,1,-1,0,0),
 (9182,'coconut fruit','a coconut','A coconut has fallen from a palm.','',17,0,49153,10,10,10,0,2.75,67,6,0,9999,1,1,-1,900,7),
