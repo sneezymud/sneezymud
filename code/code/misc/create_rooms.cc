@@ -2378,7 +2378,7 @@ static void ChangeExitCondition(TRoom *rp, TBeing *ch, const char *arg, editorEn
       ch->sendTo("Door traps are set in the zone file.\n\r");
       return;
     }
-    if (i == EXIT_NOENTER) {
+    if (i == EXIT_NOENTER || i == EXIT_JAMMED) {
       ch->sendTo("Don't set this on doors.\n\r");
       return;
     }
