@@ -421,26 +421,27 @@ const int MAX_CORPSE_FLAGS     = 10;  // move and change
 
 /* for containers  - value[1] */
 
-const unsigned int CONT_CLOSEABLE      = (1 << 0);
-const unsigned int CONT_PICKPROOF      = (1 << 1);
-const unsigned int CONT_CLOSED         = (1 << 2);
-const unsigned int CONT_LOCKED         = (1 << 3);
-const unsigned int CONT_TRAPPED        = (1 << 4);
-const unsigned int CONT_SECRET         = (1 << 5); // Contianer cannot be seen(window)
-const unsigned int CONT_EMPTYTRAP      = (1 << 6); // Can not have a fake trap.
-const unsigned int CONT_GHOSTTRAP      = (1 << 7); // Thief *THOUGHT* they saw a trap.
-const unsigned int CONT_WEIGHTLESS     = (1 << 8);
+const unsigned int CONT_CLOSEABLE     = (1 << 0);
+const unsigned int CONT_PICKPROOF     = (1 << 1);
+const unsigned int CONT_CLOSED        = (1 << 2);
+const unsigned int CONT_LOCKED        = (1 << 3);
+const unsigned int CONT_TRAPPED       = (1 << 4);
+const unsigned int CONT_SECRET        = (1 << 5); // Contianer cannot be seen(window)
+const unsigned int CONT_EMPTYTRAP     = (1 << 6); // Can not have a fake trap.
+const unsigned int CONT_GHOSTTRAP     = (1 << 7); // Thief *THOUGHT* they saw a trap.
+const unsigned int CONT_WEIGHTLESS    = (1 << 8);
+const unsigned int CONT_JAMMED        = (1 << 9);
 const unsigned int MAX_CONTAINER_FLAG = 9;  // move and change
 
-const unsigned int BOW_STRING_BROKE    = (1 << 0);
-const unsigned int BOW_CARVED          = (1 << 1);
-const unsigned int BOW_SCRAPED         = (1 << 2);
-const unsigned int BOW_SMOOTHED        = (1 << 3);
+const unsigned int BOW_STRING_BROKE   = (1 << 0);
+const unsigned int BOW_CARVED         = (1 << 1);
+const unsigned int BOW_SCRAPED        = (1 << 2);
+const unsigned int BOW_SMOOTHED       = (1 << 3);
 
-const unsigned int ARROW_FEATHERED     = (1 << 0);
-const unsigned int ARROW_CARVED        = (1 << 1);
-const unsigned int ARROW_SCRAPED       = (1 << 2);
-const unsigned int ARROW_SMOOTHED      = (1 << 3);
+const unsigned int ARROW_FEATHERED    = (1 << 0);
+const unsigned int ARROW_CARVED       = (1 << 1);
+const unsigned int ARROW_SCRAPED      = (1 << 2);
+const unsigned int ARROW_SMOOTHED     = (1 << 3);
 
 
 // NOTE:::

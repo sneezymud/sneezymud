@@ -2035,7 +2035,8 @@ void change_chest_value2(TBeing *ch, TOpenContainer *o, const char *arg, editorE
 
         if (i == CONT_TRAPPED ||
             i == CONT_EMPTYTRAP ||
-            i == CONT_GHOSTTRAP) {
+            i == CONT_GHOSTTRAP ||
+            i == CONT_JAMMED) {
           ch->sendTo("This flag is set automatically and can not be changed.\n\r"); 
           return;
         }

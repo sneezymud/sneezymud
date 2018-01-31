@@ -614,7 +614,7 @@ int TOpenContainer::detectMe(TBeing *thief) const
 
 void TOpenContainer::pickMe(TBeing *thief)
 {
-  if (!isContainerFlag( CONT_CLOSED)) {
+  if (!isContainerFlag(CONT_CLOSED)) {
     act("$p: Silly - it ain't even closed!", false, thief, this, 0, TO_CHAR);
     return;
   }
@@ -622,11 +622,11 @@ void TOpenContainer::pickMe(TBeing *thief)
     thief->sendTo("Odd - you can't seem to find a keyhole.\n\r");
     return;
   }
-  if (!isContainerFlag( CONT_LOCKED)) {
+  if (!isContainerFlag(CONT_LOCKED)) {
     thief->sendTo("Oho! This thing is NOT locked!\n\r");
     return;
   }
-  if (isContainerFlag( CONT_PICKPROOF)) {
+  if (isContainerFlag(CONT_PICKPROOF) || isContainerFlag(CONT_JAMMED)) {
     thief->sendTo("It resists your attempts at picking it.\n\r");
     return;
   }
@@ -634,7 +634,7 @@ void TOpenContainer::pickMe(TBeing *thief)
   int bKnown = thief->getSkillValue(SKILL_PICK_LOCK);
 
   if (thief->bSuccess(bKnown, SKILL_PICK_LOCK)) {
-    remContainerFlag( CONT_LOCKED);
+    remContainerFlag(CONT_LOCKED);
     thief->sendTo("*Click*\n\r");
     act("$n fiddles with $p.", FALSE, thief, this, 0, TO_ROOM);
   } else {
@@ -642,7 +642,7 @@ void TOpenContainer::pickMe(TBeing *thief)
       act("Uhoh.  $n seems to have jammed the lock!", 
 	  TRUE, thief, 0, 0, TO_ROOM);
       thief->sendTo("Uhoh.  You seemed to have jammed the lock!\n\r");
-      addContainerFlag(CONT_PICKPROOF);
+      addContainerFlag(CONT_JAMMED);
     } else {
       thief->sendTo("You fail to pick the lock.\n\r");
     }
