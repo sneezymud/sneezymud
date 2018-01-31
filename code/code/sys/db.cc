@@ -1,12 +1,8 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-//    "db.cc" - All functions and routines  related to tinyworld databases
-//
-//////////////////////////////////////////////////////////////////////////
-
 #include <stdio.h>
+#include <sys/types.h>
+#include <dirent.h>
+#include <cmath>
+
 
 #include <boost/filesystem.hpp>
 
@@ -17,11 +13,6 @@
 #include "monster.h"
 #include "configuration.h"
 #include "guild.h"
-
-#include <sys/types.h>
-#include <dirent.h>
-#include <cmath>
-
 #include "socket.h"
 #include "colorstring.h"
 #include "statistics.h"
@@ -3193,8 +3184,21 @@ void runResetCmdO(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
 {
   objload = last_cmd = false;
 
-  if (!(flags & resetFlagBootTime))
-    return;
+  if (!IS_SET(flags, resetFlagBootTime)) {
+    // TODO make this a tweakable percent chance
+    // TODO move this into runresetcmdb
+    TRoom *room = real_roomp(rs.arg3);
+    if (!room) // don't need to log this, runresetcmdb already bitched about it
+      return;
+    for (auto thing: room->stuff) {
+      auto *container = dynamic_cast<TOpenContainer *>(thing);
+      if (!container || container->objVnum() != obj_index[rs.arg1].virt || container->getKeyNum() < 0)
+        continue;
+      container->addContainerFlag(CONT_CLOSED);
+      container->addContainerFlag(CONT_LOCKED);
+      container->remContainerFlag(CONT_JAMMED);
+    }
+  }
 
   return runResetCmdB(zone, rs, flags, mobload, mob, objload, obj, last_cmd);
 }
@@ -3405,6 +3409,13 @@ void runResetCmdD(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   {
     vlogf(LOG_LOW, format("'D' command operating on DOOR_NONE in room %d") %  rp->number);
     return;
+  }
+
+  if (1) {
+    // TODO make these tweakable percent chance(s)
+    REMOVE_BIT(exitp->condition, EXIT_JAMMED);
+    // TODO repair destroyed doors, this requires checking the db currently
+    // to see if the exit defaults to destroyed (ugh)
   }
 
   switch (rs.arg3)
@@ -4206,5 +4217,3 @@ extern void cleanUpMail();
   cleanUpMail();
 #endif
 }
-
-
