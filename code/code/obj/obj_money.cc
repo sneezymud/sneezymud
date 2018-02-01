@@ -178,14 +178,14 @@ TMoney *create_money(int amount, currencyTypeT currency)
   TObj *obj;
   TMoney *money;
 
-  if(amount<0){
-    vlogf(LOG_BUG, format("ERROR: Try to create negative money (%i).") %  amount);
-    amount=1;
+  if (amount < 0) {
+    vlogf(LOG_BUG, format("create_money(%i) < 1, clamping") %  amount);
+    amount = 1;
   }
 
   obj = read_object(Obj::GENERIC_TALEN, VIRTUAL);
   money = dynamic_cast<TMoney *>(obj);
-  mud_assert(money != NULL, "create_money created something that was not TMoney.  obj was: %s", obj ? obj->getName().c_str() : "NO OBJECT");
+  mud_assert(money != NULL, "Obj::GENERIC_TALEN is not TMoney type.  obj was: %s", obj ? obj->getName().c_str() : "NO OBJECT");
 
   extraDescription *new_descr;
   sstring buf;
@@ -279,7 +279,9 @@ int TMoney::getMoney() const
 
 void TMoney::setMoney(int n)
 {
-  money = n;
+  if (n < 1)
+    vlogf(LOG_BUG, format("TMoney::setMoney(%i) < 1, clamping") % n);
+  money = max(1, n);
 }
 
 void TMoney::setCurrency(currencyTypeT c)

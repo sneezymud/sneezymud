@@ -1212,11 +1212,12 @@ int TBeing::getMoney() const
 
 void TBeing::setMoney(int money)
 {
-  if((money - points.money) && !bootTime)
-    vlogf(LOG_SILENT, format("%s talens changed by %i.") %
-	  getName() % (money - points.money));
-	
-  points.money = money;
+  if ((money - points.money) && !bootTime)
+    vlogf(LOG_SILENT, format("%s talens changed by %i.") % getName() % (money - points.money));
+
+  if (money < 0)
+    vlogf(LOG_BUG, format("TBeing::setMoney(%i) < 0, clamping") % money);
+  points.money = max(0, money);
 }
 
 sexTypeT TBeing::getSex() const
