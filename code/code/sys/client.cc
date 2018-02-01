@@ -40,6 +40,9 @@
 const int  CURRENT_VERSION = 19990615;
 const int  BAD_VERSION = 19990614;
 
+// defined in connect.cc
+extern int bogusAccountName(const sstring arg);
+
 // clientf(...) will take a string, and tack on the CLIENT_CODE_CHAR at 
 // the beginning and end, and also put a newline at the end. - Russ     
 
