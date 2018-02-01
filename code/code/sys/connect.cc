@@ -2810,18 +2810,10 @@ void processAllInput()
   }
 }
 
-int bogusAccountName(const char *arg)
+int bogusAccountName(const sstring arg)
 {
-  char buf[256];
-  int i = 0;
-
-  strcpy(buf, arg);
-  for (i=0; i < (int) strlen(buf) && i <20; i++) {
-    if ((buf[i] < 'A') || ((buf[i] > 'Z') && (buf[i] < 'a')) ||
-        (buf[i] > 'z'))
-      return TRUE;
-  }
-  return FALSE;
+  const char *alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  return (arg == "NEW" || arg.find_first_not_of(alpha) != sstring::npos);
 }
 
 

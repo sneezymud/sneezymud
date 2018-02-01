@@ -349,7 +349,6 @@ extern int mapSpellnumToFile(spellNumT);
 extern spellNumT mapFileToSpellnum(int);
 extern bool applyTypeShouldBeSpellnum(applyTypeT);
 extern bool has_key(TBeing *ch, int key);
-extern int bogusAccountName(const char *arg);
 extern const char *LimbHealth(double a);
 extern int age_mod_for_stat(const TBeing *,int age_num, statTypeT whichStat);
 extern sstring describeDuration(const TBeing *, int);
