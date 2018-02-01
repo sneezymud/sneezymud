@@ -1,12 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-#ifndef __BEING_H
-#define __BEING_H
+#pragma once
 
 #include "db.h"
 #include "thing.h"
@@ -457,9 +449,6 @@ class TBeing : public TThing {
     virtual sstring thirdPerson(const int);
     void loadAliases();
     // END VIRTUAL FUNCTIONS
-
-    // INLINE FUNCTIONS
-    // END INLINE FUNCTIONS
 
     void calcNutrition();
 
@@ -1914,5 +1903,3 @@ class TBeing : public TThing {
     bool resetPractices(classIndT resetClass, int &practices, bool reset = true);
 
 };
-
-#endif

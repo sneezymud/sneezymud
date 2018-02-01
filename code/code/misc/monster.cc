@@ -369,7 +369,7 @@ int TMonster::calculateGoldFromConstant()
 {
   double the_gold = getLoadMoney();
 
-  if (isShopkeeper()){
+  if (isShopkeeper()) {
     unsigned int shop_nr;
 
     for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != this->number); shop_nr++);
@@ -382,8 +382,13 @@ int TMonster::calculateGoldFromConstant()
     TDatabase db(DB_SNEEZY);
     db.query("select gold from shopowned where shop_nr=%i", shop_nr);
     
-    if(db.fetchRow()){
+    if (db.fetchRow()) {
       the_gold = convertTo<int>(db["gold"]);
+      if (the_gold < 0) {
+        vlogf(LOG_BUG, format("TMonster::calculateGoldFromConstant %i < 0 for %i, clamping") %
+            the_gold % shop_nr);
+        the_gold = 0;
+      }
     } else {
       the_gold = 1000000;
     }

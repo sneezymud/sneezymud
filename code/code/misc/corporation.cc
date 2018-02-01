@@ -98,7 +98,10 @@ void TCorporation::setMoney(int g)
 {
   TDatabase db(DB_SNEEZY);
 
-  db.query("update shopownedcorpbank scb, corporation c set scb.talens=%i where scb.corp_id=c.corp_id and c.corp_id=%i and scb.shop_nr=c.bank", g, corp_id);
+  if (g < 0)
+    vlogf(LOG_BUG, format("TCorporation::setMoney(%i) < 0, clamping") % g);
+
+  db.query("update shopownedcorpbank scb, corporation c set scb.talens=%i where scb.corp_id=c.corp_id and c.corp_id=%i and scb.shop_nr=c.bank", max(0, g), corp_id);
 }
 
 int TCorporation::getCorpID()

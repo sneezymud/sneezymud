@@ -717,7 +717,9 @@ void TPerson::loadFromSt(charFile *st)
    points.maxHit = st->maxHit;
    points.move = st->move;
    points.maxMove = st->maxMove;
-   points.money = st->money;
+   if (st->money < 0)
+     vlogf(LOG_BUG, format("TPerson::loadFromSt st->money %i < 0, clamping") % st->money);
+   points.money = max(0, st->money);
    points.bankmoney = st->bankmoney;
    points.exp = st->exp;
    points.max_exp = st->max_exp;

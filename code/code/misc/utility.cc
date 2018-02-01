@@ -1677,29 +1677,25 @@ bool TRoom::roomIsEmpty(bool ignore_imms) const
 
 void TBeing::giveMoney(TBeing *ch, int money, moneyTypeT type)
 {
-  if(money < 0){
+  if (money < 0) {
     vlogf(LOG_BUG, format("%s just tried to give negative money (%i) to %s") %
 	  getName() % money % ch->getName());
     return;
   }
     
-
   addToMoney(-money, type);
   ch->addToMoney(money, type);
 }
 
-
 void TBeing::addToMoney(int money, moneyTypeT type, bool allowTithe)
 {
   int lev = 0;
-  int amount;
   TDatabase db(DB_SNEEZY);
 
-  if(money && !bootTime)
-    vlogf(LOG_SILENT, format("%s talens changed by %i.") %
-	  getName() % money);
+  if (money && !bootTime)
+    vlogf(LOG_SILENT, format("%s talens changed by %i.") % getName() % money);
 
-  points.money += money;
+  setMoney(getMoney() + money);
  
   // due to the way the stats are set up, don't try to change this 60 to
   // a #define value
@@ -1714,9 +1710,9 @@ void TBeing::addToMoney(int money, moneyTypeT type, bool allowTithe)
 
         // figure out tithe
         if (money > 0 && allowTithe) {
-          amount = (int) (money * FactionInfo[getFaction()].faction_tithe / 100.0);
+          int amount = money * FactionInfo[getFaction()].faction_tithe / 100.0;
           // subtract the tithe amount from me
-          points.money -= amount;
+          setMoney(getMoney() - amount);
           gold_statistics[GOLD_INCOME][(lev-1)] -= amount;
           gold_positive[GOLD_INCOME][(lev-1)] -= max(amount, 0);
 
