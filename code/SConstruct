@@ -1,6 +1,20 @@
 # hey emacs, this is -*- python -*- vim: ft=python
+from __future__ import print_function
+
 import sys
 import subprocess
+
+
+def info(*msg):
+    print('INFO:', *msg)
+
+def warning(*msg):
+    print('WARNING:', *msg, file=sys.stderr)
+
+def error_exit(*msg):
+    print('ERROR:', *msg, file=sys.stderr)
+    raise SystemExit(1)
+
 
 # NOTE site_scons/site_init.py runs before this
 
@@ -88,17 +102,16 @@ elif 'clang' in cxx_version:
     clang_version = cxx_version.partition('clang version ')[2]
     clang_version = tuple(map(int, clang_version.split()[0].split('.')[:2]))
 else:
-    print >>sys.stderr, 'Unsupported compiler', opt_cxx, 'version', cxx_version
-    raise SystemExit
+    error_exit('Unsupported compiler', opt_cxx, 'version', cxx_version)
 
 
 ## shared: build sneezy as a bundle of shared libraries
 if flag_shared:
     if flag_lto:
-        print >>sys.stderr, 'WARNING: shared build incompatible with LTO, disabling'
+        warning('shared build incompatible with LTO, disabling')
         flag_shared = False
     elif sys.platform.startswith('darwin'):
-        print >>sys.stderr, 'WARNING: shared builds not available on OSX, disabling'
+        warning('shared builds not available on OSX, disabling')
         flag_shared = False
 
 
@@ -142,7 +155,7 @@ env.Append(CXXFLAGS=olevel_flag)
 ## debug: runtime bug detection with high overhead
 if flag_debug:
     if flag_harden:
-        print >>sys.stderr, 'WARNING: setting harden=off because debug=on'
+        warning('setting harden=off because debug=on')
         flag_harden = False
     # allow asan to instrument globals
     env.Append(CXXFLAGS='-fno-common')
