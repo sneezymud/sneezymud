@@ -19,7 +19,7 @@ def error_exit(*msg):
 # NOTE site_scons/site_init.py runs before this
 
 # TODO:
-# - gch precompiled headers
+# - gch/pch precompiled headers
 # - profile-guided-optimization rebuild mode
 # - shared library builds on OSX
 # - link to clang's libc++ on linux
@@ -85,6 +85,16 @@ opt_includes =       get_option('CPPPATH',     '')
 opt_libdirs =        get_option('LIBPATH',     '')
 opt_olevel =         get_option('olevel',      '')
 opt_cxx =            get_option('CXX',         'g++')
+
+
+## ensure submodules are ready to go
+submodules = subprocess.check_output(['git', 'submodule', 'status']).split()
+if any(sub.startswith('-') for sub in submodules):
+    info('Initializing submodule dependencies, please wait...')
+    try:
+        subprocess.check_call(['git', 'submodule', 'update', '--init'])
+    except submodule.CalledProcessError:
+        error_exit('Submodule init failed, is your Internet connection working?')
 
 
 ## detect compiler and version
