@@ -32,6 +32,7 @@ class TTool : public TObj {
     virtual int  butcherPulse(TBeing *, TBaseCorpse *);
     virtual void sharpenPulse(TBeing *, TThing *);
     virtual void dullPulse(TBeing *, TThing *);
+    virtual bool isPluralItem() const;
 
     toolTypeT getToolType() const;
     void setToolType(toolTypeT r);

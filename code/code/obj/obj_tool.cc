@@ -117,3 +117,7 @@ int TTool::objectSell(TBeing *ch, TMonster *keeper)
   return FALSE;
 }
 
+bool TTool::isPluralItem() const
+{
+  return (fname(this->name).back() == 's');
+}
