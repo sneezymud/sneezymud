@@ -33,8 +33,8 @@ static void pick_pulse(TBeing *ch, TThing *pick)
       + ::number(-15,15);
 
   if (!tool->addToToolUses(-1)) {
-    act("Your $o snap in half!   Oops!", true, ch, tool, nullptr, TO_CHAR);
-    act("$n's $o snaps in half.", true, ch, tool, nullptr, TO_ROOM);
+    act("Your $o snap$Q in half!   Oops!", true, ch, tool, nullptr, TO_CHAR);
+    act("$n's $o snap$Q in half.", true, ch, tool, nullptr, TO_ROOM);
     ch->stopTask();
     ch->unequip(ch->getPrimaryHold());
     delete tool;
