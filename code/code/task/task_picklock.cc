@@ -108,9 +108,9 @@ int task_picklock(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TO
   }
 
   switch(cmd) {
-    case CMD_TASK_CONTINUE:
-      TThing *pick;
-      if (!(pick = ch->heldInPrimHand())) {
+    case CMD_TASK_CONTINUE: {
+      TThing *pick = ch->heldInPrimHand();
+      if (!pick) {
         ch->sendTo("Hey, where'd your lockpick go?!?\n\r");
         ch->stopTask();
         return FALSE;
@@ -118,6 +118,7 @@ int task_picklock(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TO
       ch->task->calcNextUpdate(pulse, Pulse::MOBACT);
       pick_pulse(ch, pick);
       return FALSE;
+    }
     case CMD_ABORT:
     case CMD_STOP:
       act("You stop trying to pick the lock.", FALSE, ch, 0, 0, TO_CHAR);
