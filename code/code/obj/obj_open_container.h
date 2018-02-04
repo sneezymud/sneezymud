@@ -52,6 +52,7 @@ class TOpenContainer : public TBaseContainer {
     virtual float carryWeightLimit() const;
     void setCarryWeightLimit(float);
     int getContainerFlags() const;
+    int getDefaultContainerFlags() const;
     void setContainerFlags(int r);
     void addContainerFlag(int r);
     void remContainerFlag(int r);
