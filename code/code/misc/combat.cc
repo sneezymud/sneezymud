@@ -5382,6 +5382,7 @@ void TBeing::makePartMissing(wearSlotT slot, bool diseased, TBeing *opp)
   // check for damage to both hands
   woundedHand(TRUE);
   woundedHand(FALSE);
+  stunIfLimbsChoppedOff();
 }
 
 bool bluntType(spellNumT wtype)

@@ -1227,6 +1227,7 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDCombat *) cd)->skBarehand;
     case TYPE_UNDEFINED:
     case MAX_SKILL:
+    case DAMAGE_EXTREME_PAIN:
     case DAMAGE_NORMAL:
     case DAMAGE_RIPPED_OUT_HEART:
     case DAMAGE_CAVED_SKULL:

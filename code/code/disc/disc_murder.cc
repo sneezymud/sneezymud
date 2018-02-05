@@ -1280,22 +1280,7 @@ int cudgel(TBeing *thief, TBeing *victim)
       act("$n knocks $N on the noggin, knocking $M unconscious.", FALSE, thief, obj, victim, TO_NOTVICT);
       act("WHAM!  Something smacks into your skull HARD!", FALSE, thief, obj, victim, TO_VICT, ANSI_RED);
       act("All you can see are stars.", FALSE, thief, obj, victim, TO_VICT);
-      victim->setPosition(POSITION_STUNNED);
-      if (victim->task) {
-        victim->stopTask();
-      }
-      if (victim->spelltask) {
-        victim->stopCast(STOP_CAST_NONE);
-      }
-
-      // erm, they snuck up on them, so no idea who did it
-      // victim->addHated(thief);
-
-      affectedData aff;
-      aff.type = SKILL_CUDGEL;
-      aff.duration = Pulse::UPDATES_PER_MUDHOUR / 3;
-      aff.bitvector = AFF_STUNNED;
-      victim->affectTo(&aff, -1);
+      victim->stun(SKILL_CUDGEL);
 
       // Add the restrict XP affect, so that you cannot twink newbies with this skill
       // this affect effectively 'marks' the mob as yours
