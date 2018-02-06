@@ -98,7 +98,7 @@ sstring TBaseContainer::showModifier(showModeT tMode, const TBeing *tBeing) cons
   // Take 1 higher than the current used and minus 1 from it to get All of the
   // bits set.  From there remove the hold/thrown/take items as we only care
   // about those worn containers.  Ex: Mage Belt
-  int    tCanWear = canWear((1 << MAX_ITEM_WEARS) - 1 - ITEM_HOLD - ITEM_THROW - ITEM_TAKE);
+  int    tCanWear = canWear((1 << MAX_ITEM_WEARS) - 1 - ITEM_WEAR_HOLD - ITEM_WEAR_THROW - ITEM_WEAR_TAKE);
 
   if ((tMode == SHOW_MODE_SHORT_PLUS ||
        tMode == SHOW_MODE_SHORT_PLUS_INV ||

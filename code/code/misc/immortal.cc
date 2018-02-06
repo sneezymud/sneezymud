@@ -3583,9 +3583,9 @@ int TBeing::doExits(const char *argument, cmdTypeT cmd)
           }
         } else {
 	  if (door != DIR_UP && door != DIR_DOWN){
-	    if ((exitdata->condition & EX_SLOPED_UP))
+	    if ((exitdata->condition & EXIT_SLOPED_UP))
 	      slopedData += " (ascending)";
-	    else if ((exitdata->condition & EX_SLOPED_DOWN))
+	    else if ((exitdata->condition & EXIT_SLOPED_DOWN))
 	      slopedData += " (descending)";
 	  }
 	  
@@ -3627,7 +3627,7 @@ int TBeing::doExits(const char *argument, cmdTypeT cmd)
           }
         }
       } else if (exitdata->to_room != Room::NOWHERE &&
-            !IS_SET(exitdata->condition, EX_SECRET)) {
+            !IS_SET(exitdata->condition, EXIT_SECRET)) {
         if (darkhere) {
         } else {
           sendTo(COLOR_ROOMS, format("%s - A closed '<b>%s<1>'\n\r") % exits[door] % fname(exitdata->keyword));
@@ -3650,7 +3650,7 @@ int TBeing::doExits(const char *argument, cmdTypeT cmd)
     TPortal *tp = dynamic_cast<TPortal *>(t);  
     if (!tp)
       continue;
-    if (tp->isPortalFlag(EX_CLOSED | EX_NOENTER))
+    if (tp->isPortalFlag(EXIT_CLOSED | EXIT_NOENTER))
       continue;
     act("There is $p you can enter here.", FALSE, this, tp, 0, TO_CHAR);
     continue;

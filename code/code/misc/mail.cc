@@ -247,7 +247,7 @@ int postmasterGiven(TBeing *ch, TMonster *me, TObj *o)
     *(ch->roomp) += *linkbag;
     linkbag->addObjStat(ITEM_NORENT | ITEM_NEWBIE);
     linkbag->obj_flags.decay_time = MAX_PC_CORPSE_EQUIPPED_TIME;
-    linkbag->obj_flags.wear_flags &= ~ITEM_TAKE;
+    linkbag->obj_flags.wear_flags &= ~ITEM_WEAR_TAKE;
 
     me->doTell(ch->getName(), "Great!  It looks like your things are ready.");
     me->doTell(ch->getName(), "I'll just drop them here in the room.  Please take out your items and clean up.");

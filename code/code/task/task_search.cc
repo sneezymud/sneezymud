@@ -60,9 +60,9 @@ int task_search(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
         } else
           return task_search(ch, cmd, "", pulse, NULL, NULL);
     } else if (eDirection == DIR_DOWN && (fdd = ch->roomp->dir_option[eDirection]) &&
-                 ((IS_SET(fdd->condition, EX_SECRET) &&
-                  !IS_SET(fdd->condition, EX_CLOSED)) ||
-                  !IS_SET(fdd->condition, EX_SECRET))) {
+                 ((IS_SET(fdd->condition, EXIT_SECRET) &&
+                  !IS_SET(fdd->condition, EXIT_CLOSED)) ||
+                  !IS_SET(fdd->condition, EXIT_SECRET))) {
         act("You decide to not search the $g.  Seeing there is an exit there.\n\r",
             TRUE, ch, 0, NULL, TO_CHAR);
         ch->task->flags++;
@@ -72,9 +72,9 @@ int task_search(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
         } else
           return task_search(ch, cmd, "", pulse, NULL, NULL);
     } else if ((fdd = ch->roomp->dir_option[eDirection]) &&
-                 ((IS_SET(fdd->condition, EX_SECRET) &&
-                  !IS_SET(fdd->condition, EX_CLOSED)) ||
-                  !IS_SET(fdd->condition, EX_SECRET))) {
+                 ((IS_SET(fdd->condition, EXIT_SECRET) &&
+                  !IS_SET(fdd->condition, EXIT_CLOSED)) ||
+                  !IS_SET(fdd->condition, EXIT_SECRET))) {
         ch->sendTo(format("You decide to skip searching %s.  Seeing there is an exit there.\n\r") %
                    dirs_to_blank[eDirection]);
         if (++ch->task->flags == 10) {
@@ -120,8 +120,8 @@ int task_search(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
       //   2. Is set Secret And Closed
       //   3. Is Not named '_unique_door_'
       if (tsSuccess && (fdd = ch->roomp->dir_option[eDirection]) &&
-          IS_SET(fdd->condition, EX_SECRET) &&
-          IS_SET(fdd->condition, EX_CLOSED) &&
+          IS_SET(fdd->condition, EXIT_SECRET) &&
+          IS_SET(fdd->condition, EXIT_CLOSED) &&
 		  !fdd->keyword.empty() &&
          fdd->keyword != "_unique_door_") {
 

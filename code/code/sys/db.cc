@@ -1,12 +1,8 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-//    "db.cc" - All functions and routines  related to tinyworld databases
-//
-//////////////////////////////////////////////////////////////////////////
-
 #include <stdio.h>
+#include <sys/types.h>
+#include <dirent.h>
+#include <cmath>
+
 
 #include <boost/filesystem.hpp>
 
@@ -17,11 +13,6 @@
 #include "monster.h"
 #include "configuration.h"
 #include "guild.h"
-
-#include <sys/types.h>
-#include <dirent.h>
-#include <cmath>
-
 #include "socket.h"
 #include "colorstring.h"
 #include "statistics.h"
@@ -785,9 +776,9 @@ void bootWorld(void)
 
       rp->dir_option[dir]->to_room = convertTo<int>(db_exits[9]);
 
-      if (IS_SET(rp->dir_option[dir]->condition, EX_SECRET) && 
+      if (IS_SET(rp->dir_option[dir]->condition, EXIT_SECRET) && 
           canSeeThruDoor(rp->dir_option[dir])) {
-        if (IS_SET(rp->dir_option[dir]->condition, EX_CLOSED)){
+        if (IS_SET(rp->dir_option[dir]->condition, EXIT_CLOSED)){
           //vlogf(LOG_LOW, format("See thru door set secret. (%d, %d)") %  room % dir);
         } else
           vlogf(LOG_LOW, format("Secret door saved as open. (%d, %d)") % 
@@ -1185,9 +1176,9 @@ void setup_dir(FILE * fl, int room, dirTypeT dir, TRoom *tRoom)
     vlogf(LOG_FILE, "Unexpected read error in bootZone");
   rp->dir_option[dir]->to_room = tmp;
 
-  if (IS_SET(rp->dir_option[dir]->condition, EX_SECRET) && 
+  if (IS_SET(rp->dir_option[dir]->condition, EXIT_SECRET) && 
       canSeeThruDoor(rp->dir_option[dir])) {
-    if (IS_SET(rp->dir_option[dir]->condition, EX_CLOSED)){
+    if (IS_SET(rp->dir_option[dir]->condition, EXIT_CLOSED)){
       //      vlogf(LOG_LOW, format("See thru door set secret. (%d, %d)") %  room % dir);
     } else
       vlogf(LOG_LOW, format("Secret door saved as open. (%d, %d)") %  room % dir);
@@ -1219,8 +1210,8 @@ void zoneData::renumCmd(void)
   stat_objs.clear();
   int argbuf;
   
-  for (comm = 0; cmd[comm].command != 'S'; comm++) {
-    resetCom *rs = &cmd[comm];
+  for (comm = 0; cmd_table[comm].command != 'S'; comm++) {
+    resetCom *rs = &cmd_table[comm];
     switch (rs->command) {
       case 'A':
         if (rs->arg1 < 0 || rs->arg1 >= WORLD_SIZE)
@@ -1477,7 +1468,7 @@ bool zoneData::bootZone(int zone_nr)
     return false;
   }
 
-  cmd.erase(cmd.begin(), cmd.end());
+  cmd_table.clear();
 
   for (;;) {
     resetCom rs;
@@ -1488,7 +1479,7 @@ bool zoneData::bootZone(int zone_nr)
       vlogf(LOG_FILE, "Unexpected read error in bootZone");
     
     if (rs.command == 'S') {
-      cmd.push_back(rs);
+      cmd_table.push_back(rs);
       break;
     }
 
@@ -1502,7 +1493,7 @@ bool zoneData::bootZone(int zone_nr)
     int numc = fscanf(fl, " %d %d %d", &tmp, &rs.arg1, &rs.arg2);
     if (numc != 3)
       vlogf(LOG_LOW,format("command %u ('%c') in %s missing some of first three args [%d : %d %d %d]") % 
-          cmd.size() %
+          cmd_table.size() %
           rs.command %
           name %
           numc %
@@ -1521,7 +1512,7 @@ bool zoneData::bootZone(int zone_nr)
       case 'E':
         if (!rs.if_flag) {
           vlogf(LOG_LOW,format("command %u in %s has bogus if_flag") % 
-          cmd.size() %name);
+          cmd_table.size() %name);
           continue;
         }
         break;
@@ -1542,25 +1533,25 @@ bool zoneData::bootZone(int zone_nr)
         rs.command == 'L')
       if ((rc = fscanf(fl, " %d", &rs.arg3)) != 1)
         vlogf(LOG_LOW,format("command %u ('%c') in %s missing arg3 (rc=%d)") % 
-            cmd.size() %
+            cmd_table.size() %
             rs.command %
             name % rc);
 
     if (rs.command == '?')
       if (fscanf(fl, " %c", &rs.character) != 1)
-        vlogf(LOG_LOW,format("command %u ('?') in %s missing character") % cmd.size() %name);
+        vlogf(LOG_LOW,format("command %u ('?') in %s missing character") % cmd_table.size() %name);
 
     if (rs.command == 'T' && !rs.if_flag) 
       if (fscanf(fl, " %d", &rs.arg4) != 1)
         vlogf(LOG_LOW,format("command %u ('T') in %s missing arg4") % 
-            cmd.size() % name);
+            cmd_table.size() % name);
 
     if (rs.command == 'L')
       if (fscanf(fl, " %d", &rs.arg4) != 1)
         vlogf(LOG_LOW, format("command %u ('L') in %s missing arg4") % 
-            cmd.size() % name);
+            cmd_table.size() % name);
     
-    cmd.push_back(rs);
+    cmd_table.push_back(rs);
 
     if(!fgets(buf, 255, fl))
       vlogf(LOG_FILE, "Unexpected read error in bootZone");
@@ -2527,8 +2518,8 @@ void zoneData::closeDoors()
     for (x = 0; x <= 9; x++) {
       if ((rp = real_roomp(i)) && (ep = rp->dir_option[x]) && 
           (ep->door_type != DOOR_NONE) && 
-          (!IS_SET(ep->condition, EX_DESTROYED)))
-        SET_BIT(ep->condition, EX_CLOSED);
+          (!IS_SET(ep->condition, EXIT_DESTROYED)))
+        SET_BIT(ep->condition, EXIT_CLOSED);
     }
   }
 }
@@ -3193,8 +3184,21 @@ void runResetCmdO(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
 {
   objload = last_cmd = false;
 
-  if (!(flags & resetFlagBootTime))
-    return;
+  if (!IS_SET(flags, resetFlagBootTime)) {
+    // TODO make this a tweakable percent chance
+    // TODO move this into runresetcmdb
+    TRoom *room = real_roomp(rs.arg3);
+    if (!room) // don't need to log this, runresetcmdb already bitched about it
+      return;
+    for (auto thing: room->stuff) {
+      auto *container = dynamic_cast<TOpenContainer *>(thing);
+      if (!container || container->objVnum() != obj_index[rs.arg1].virt || container->getKeyNum() < 0)
+        continue;
+      container->addContainerFlag(CONT_CLOSED);
+      container->addContainerFlag(CONT_LOCKED);
+      container->remContainerFlag(CONT_JAMMED);
+    }
+  }
 
   return runResetCmdB(zone, rs, flags, mobload, mob, objload, obj, last_cmd);
 }
@@ -3263,7 +3267,7 @@ void runResetCmdT(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
     TRoom *rp = real_roomp(rs.arg1);
     if (rp && rp->dir_option[rs.arg2])
     {
-      SET_BIT(rp->dir_option[rs.arg2]->condition, EX_TRAPPED);
+      SET_BIT(rp->dir_option[rs.arg2]->condition, EXIT_TRAPPED);
       rp->dir_option[rs.arg2]->trap_info = rs.arg3;
       rp->dir_option[rs.arg2]->trap_dam = rs.arg4;
     }
@@ -3400,34 +3404,41 @@ void runResetCmdD(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
     return;
 
   roomDirData * exitp = rp->dir_option[rs.arg2];
-  if (!exitp || IS_SET(exitp->condition, EX_DESTROYED) ||
-      IS_SET(exitp->condition, EX_CAVED_IN) || exitp->door_type == DOOR_NONE)
+  if (!exitp || IS_SET(exitp->condition, EXIT_DESTROYED) ||
+      IS_SET(exitp->condition, EXIT_CAVED_IN) || exitp->door_type == DOOR_NONE)
   {
     vlogf(LOG_LOW, format("'D' command operating on DOOR_NONE in room %d") %  rp->number);
     return;
   }
 
+  if (1) {
+    // TODO make these tweakable percent chance(s)
+    REMOVE_BIT(exitp->condition, EXIT_JAMMED);
+    // TODO repair destroyed doors, this requires checking the db currently
+    // to see if the exit defaults to destroyed (ugh)
+  }
+
   switch (rs.arg3)
   {
     case 0:
-      if (IS_SET(exitp->condition, EX_CLOSED))
+      if (IS_SET(exitp->condition, EXIT_CLOSED))
         sendrpf(rp, "The %s opens.\n\r", exitp->getName().uncap().c_str());
-      REMOVE_BIT(exitp->condition, EX_LOCKED);
-      REMOVE_BIT(exitp->condition, EX_CLOSED);
+      REMOVE_BIT(exitp->condition, EXIT_LOCKED);
+      REMOVE_BIT(exitp->condition, EXIT_CLOSED);
       break;
     case 1:
-      if (!IS_SET(exitp->condition, EX_CLOSED))
+      if (!IS_SET(exitp->condition, EXIT_CLOSED))
         sendrpf(rp, "The %s closes.\n\r", exitp->getName().uncap().c_str());
-      SET_BIT(exitp->condition, EX_CLOSED);
-      REMOVE_BIT(exitp->condition, EX_LOCKED);
+      SET_BIT(exitp->condition, EXIT_CLOSED);
+      REMOVE_BIT(exitp->condition, EXIT_LOCKED);
       break;
     case 2:
       if (exitp->key < 0) 
         vlogf(LOG_LOW, format("Door with key < 0 set to lock in room %d.") % rp->number);
-      if (!IS_SET(exitp->condition, EX_CLOSED))
+      if (!IS_SET(exitp->condition, EXIT_CLOSED))
         sendrpf(rp, "The %s closes.\n\r", exitp->getName().uncap().c_str());
-      SET_BIT(exitp->condition, EX_LOCKED);
-      SET_BIT(exitp->condition, EX_CLOSED);
+      SET_BIT(exitp->condition, EXIT_LOCKED);
+      SET_BIT(exitp->condition, EXIT_CLOSED);
       break;
     default:
       vlogf(LOG_LOW, format("Error in 'D' command in room %d - bad arg3 parameter of %i.") % rp->number % rs.arg3);
@@ -3508,8 +3519,8 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
     update_commod_index();
   }
 
-  for (int cmd_no = 0;cmd_no < (int)cmd.size(); cmd_no++) {
-    resetCom &rs = cmd[cmd_no];
+  for (int cmd_no = 0;cmd_no < (int)cmd_table.size(); cmd_no++) {
+    resetCom &rs = cmd_table[cmd_no];
     rs.cmd_no = cmd_no;
 
     // skip non-load commands when checking load potentials
@@ -4090,7 +4101,7 @@ zoneData::zoneData() :
   stat_mobs_total(0),
   stat_mobs_unique(0),
   stat_objs_unique(0),
-  cmd(0)
+  cmd_table(0)
 {
 }
 
@@ -4113,13 +4124,13 @@ zoneData::zoneData(const zoneData &t) :
   stat_mobs_total(t.stat_mobs_total),
   stat_mobs_unique(t.stat_mobs_unique),
   stat_objs_unique(t.stat_objs_unique),
-  cmd(t.cmd)
+  cmd_table(t.cmd_table)
 {
 }
 
 zoneData::~zoneData()
 {
-  cmd.erase(cmd.begin(), cmd.end());
+  cmd_table.clear();
   stat_mobs.clear();
   stat_objs.clear();
 }
@@ -4148,8 +4159,8 @@ zoneData & zoneData::operator= (const zoneData &t)
   stat_mobs_total = t.stat_mobs_total;
   stat_mobs_unique = t.stat_mobs_unique;
   stat_objs_unique = t.stat_objs_unique;
-  cmd.erase(cmd.begin(), cmd.end());
-  cmd = t.cmd;
+  cmd_table.clear();
+  cmd_table = t.cmd_table;
 
   return *this;
 }
@@ -4206,5 +4217,3 @@ extern void cleanUpMail();
   cleanUpMail();
 #endif
 }
-
-

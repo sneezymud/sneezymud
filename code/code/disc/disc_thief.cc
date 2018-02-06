@@ -296,11 +296,11 @@ int TTool::pickWithMe(TBeing *thief, const char *argument, const char *type, con
     if (exitp->door_type == DOOR_NONE)
       thief->sendTo("That's absurd.\n\r");
 
-    if (!IS_SET(exitp->condition, EX_CLOSED))
+    if (!IS_SET(exitp->condition, EXIT_CLOSED))
       thief->sendTo("You realize that the door is already open.\n\r");
     else if (exitp->key < 0)
       thief->sendTo("You can't seem to spot any lock to pick.\n\r");
-    else if (!IS_SET(exitp->condition , EX_LOCKED))
+    else if (!IS_SET(exitp->condition , EXIT_LOCKED))
       thief->sendTo("Oh.. it wasn't locked at all.\n\r");
     else {
       act("$n begins fiddling with a lock.", FALSE, thief, 0, 0, TO_ROOM);

@@ -244,8 +244,8 @@ void TBeing::sendRoomGmcp(bool changedZones) const
     roomDirData *exitdata = roomp->exitDir(door);
 
     if (exitdata && (exitdata->to_room != Room::NOWHERE)) {
-      bool secret=IS_SET(exitdata->condition, EX_SECRET);
-      bool open=!IS_SET(exitdata->condition, EX_CLOSED);
+      bool secret=IS_SET(exitdata->condition, EXIT_SECRET);
+      bool open=!IS_SET(exitdata->condition, EXIT_CLOSED);
       bool see_thru=canSeeThruDoor(exitdata);
       TRoom *exitp = real_roomp(exitdata->to_room);
       if (!exitp) {

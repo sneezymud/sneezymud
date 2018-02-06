@@ -970,7 +970,7 @@ const char *what_does_it_open(const TKey *o)
       for (x = 0; x < 10; x++) {
 
         if ((ex = rp->dir_option[x]) && (ex->key == vnum)) {
-          if (IS_SET(ex->condition, EX_SECRET))
+          if (IS_SET(ex->condition, EXIT_SECRET))
             return "a secret door";
           else
             return "a door";

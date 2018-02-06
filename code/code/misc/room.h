@@ -77,16 +77,17 @@ const unsigned int ROOM_FLOODED       = (1<<21);
 
 const int MAX_ROOM_BITS      = 22;          /* move and change */
 
-const unsigned int EX_CLOSED       = (1<<0);   // 1
-const unsigned int EX_LOCKED       = (1<<1);   // 2
-const unsigned int EX_SECRET       = (1<<2);   // 4
-const unsigned int EX_DESTROYED    = (1<<3);   // 8
-const unsigned int EX_NOENTER      = (1<<4);   // 16
-const unsigned int EX_TRAPPED      = (1<<5);   // 32
-const unsigned int EX_CAVED_IN     = (1<<6);   // 64
-const unsigned int EX_WARDED       = (1<<7);   // 128
-const unsigned int EX_SLOPED_UP    = (1<<8);   // 256
-const unsigned int EX_SLOPED_DOWN  = (1<<9);   // 512
+const unsigned int EXIT_CLOSED      = (1<<0);   // 1
+const unsigned int EXIT_LOCKED      = (1<<1);   // 2
+const unsigned int EXIT_SECRET      = (1<<2);   // 4
+const unsigned int EXIT_DESTROYED   = (1<<3);   // 8
+const unsigned int EXIT_NOENTER     = (1<<4);   // 16
+const unsigned int EXIT_TRAPPED     = (1<<5);   // 32
+const unsigned int EXIT_CAVED_IN    = (1<<6);   // 64
+const unsigned int EXIT_WARDED      = (1<<7);   // 128
+const unsigned int EXIT_SLOPED_UP   = (1<<8);   // 256
+const unsigned int EXIT_SLOPED_DOWN = (1<<9);   // 512
+const unsigned int EXIT_JAMMED      = (1<<10);  // 1024
 
 const int MAX_DOOR_CONDITIONS = 10;   // move and change
 

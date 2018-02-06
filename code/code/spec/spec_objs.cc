@@ -1798,7 +1798,7 @@ int teleportingObject(TBeing *, cmdTypeT cmd, const char *arg, TObj *o, TObj *){
     return FALSE;
 
   // don't teleport if it's a portal that is open
-  if(!(tp=dynamic_cast<TPortal *>(o)) || !tp->isPortalFlag(EX_CLOSED))
+  if(!(tp=dynamic_cast<TPortal *>(o)) || !tp->isPortalFlag(EXIT_CLOSED))
     return FALSE;
 
   if(!tp->roomp)
@@ -3027,8 +3027,8 @@ int minecart(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
 	  vlogf(LOG_PROC, "bad exit for minecart smash-wall code, bug Dash.");
 	  return FALSE;
 	}
-        if ((IS_SET(exitp->condition, EX_DESTROYED)) ||
-            !IS_SET(exitp->condition, EX_CLOSED)) {
+        if ((IS_SET(exitp->condition, EXIT_DESTROYED)) ||
+            !IS_SET(exitp->condition, EXIT_CLOSED)) {
 
         } else {	
 	  sprintf(buf, "$n slams into the wall to the east, and it collapses in a shower of rocks!");
@@ -5793,7 +5793,7 @@ int skittishObject (TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 			// find permissible exits - must be open
 			std::vector <dirTypeT> possible_exits;
 			for(use_dir = MIN_DIR; use_dir < MAX_DIR; use_dir++){
-				if (o->roomp->exitDir(use_dir) && !IS_SET(o->roomp->exitDir(use_dir)->condition, EX_CLOSED))
+				if (o->roomp->exitDir(use_dir) && !IS_SET(o->roomp->exitDir(use_dir)->condition, EXIT_CLOSED))
 					possible_exits.push_back(use_dir);
 			}
 			

@@ -75,7 +75,7 @@ void procGlobalRoomStuff::run(const TPulse &) const
     if(isbeach){
       for(dirTypeT dir=MIN_DIR;dir<MAX_DIR;dir++){
 	if(rp->exitDir(dir) && real_roomp(rp->exitDir(dir)->to_room) &&
-	   !(rp->exitDir(dir)->condition & EX_CLOSED) &&
+	   !(rp->exitDir(dir)->condition & EXIT_CLOSED) &&
 	   (real_roomp(rp->exitDir(dir)->to_room)->isOceanSector())){
 	  
 	  if(rp->isRoomFlag(ROOM_FLOODED)){
@@ -114,7 +114,7 @@ void procGlobalRoomStuff::run(const TPulse &) const
 	TRoom *spread_to;
 	if((rp->exitDir(dir) && 
 	    (spread_to=real_roomp(rp->exitDir(dir)->to_room)) &&
-	    !(rp->exitDir(dir)->condition & EX_CLOSED) && 
+	    !(rp->exitDir(dir)->condition & EXIT_CLOSED) && 
 	    !spread_to->isWaterSector())){
 	  spread_to->setRoomFlagBit(ROOM_ON_FIRE);
 	}
@@ -429,7 +429,7 @@ int TBeing::riverFlow(int)
   }
 
   if (!exitDir(rd) || (exitDir(rd)->to_room == Room::NOWHERE) ||
-      IS_SET(exitDir(rd)->condition, EX_CLOSED))
+      IS_SET(exitDir(rd)->condition, EXIT_CLOSED))
     return FALSE;
 
   if ((rc = canSwim(rd)) > 0) {
@@ -496,7 +496,7 @@ int TBeing::riverFlow(int)
 bool TObj::isTrash()
 {
   if(isObjStat(ITEM_NOJUNK_PLAYER) || 
-     !canWear(ITEM_TAKE) || 
+     !canWear(ITEM_WEAR_TAKE) || 
      !roomp ||
      !stuff.empty() ||
      rider ||
@@ -585,7 +585,7 @@ int TObj::riverFlow(int)
 
   if (!exitDir(rd) || !exitDir(rd)->to_room ||
       (exitDir(rd)->to_room == Room::NOWHERE) ||
-      IS_SET(exitDir(rd)->condition, EX_CLOSED))
+      IS_SET(exitDir(rd)->condition, EXIT_CLOSED))
     return FALSE;
 
   tmprp = roomp;

@@ -569,7 +569,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
   }
 
   gen_corpse->setWeight(specialCorpse ? 1.0 : getWeight());
-  gen_corpse->obj_flags.wear_flags = ITEM_TAKE;
+  gen_corpse->obj_flags.wear_flags = ITEM_WEAR_TAKE;
   gen_corpse->setVolume(getVolume());
   gen_corpse->setMaxStructPoints(50);
   gen_corpse->setStructPoints(50);

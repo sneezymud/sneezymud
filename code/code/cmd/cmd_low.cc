@@ -883,7 +883,7 @@ void TObj::checkObjStats()
   }
 
 
-  if(!canWear(ITEM_TAKE) && obj_flags.wear_flags>0){
+  if(!canWear(ITEM_WEAR_TAKE) && obj_flags.wear_flags>0){
     vlogf(LOG_LOW, format("Item '%s' (%i) is !take but has other wear flags.") %
 	  shortDescr % objVnum());
   }
@@ -945,7 +945,7 @@ void TObj::checkObjStats()
         affected[i].location = APPLY_LIGHT;
         affected[i].modifier = -(1 + getVolume()/3000);
         addToLight(affected[i].modifier);
-        if (affected[i].modifier < -6 && canWear(ITEM_TAKE))
+        if (affected[i].modifier < -6 && canWear(ITEM_WEAR_TAKE))
           vlogf(LOG_LOW,format("Mega shadow on %s") % getName());
         break;
       } else if (i==(MAX_OBJ_AFFECT-1))
@@ -954,7 +954,7 @@ void TObj::checkObjStats()
     }
 #endif
   }
-  if (canWear(ITEM_TAKE))
+  if (canWear(ITEM_WEAR_TAKE))
     if (isObjStat(ITEM_NOPURGE) && (objVnum() != Obj::CRAPS_DICE)) {
       TPCorpse *tmpcorpse = dynamic_cast<TPCorpse *>(this);
       if (!tmpcorpse)
@@ -1723,7 +1723,7 @@ void TBeing::lowObjs(const char *arg)
     worn = ITEM_WEAR_HANDS;
     slot = WEAR_HAND_R;
   } else if (is_abbrev(buf2, "hold") || is_abbrev(buf2, "held")) {
-    worn = ITEM_HOLD;
+    worn = ITEM_WEAR_HOLD;
     slot = HOLD_RIGHT;
   } else if (is_abbrev(buf2, "waist")) {
     worn = ITEM_WEAR_WAIST;

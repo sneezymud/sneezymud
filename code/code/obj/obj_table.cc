@@ -77,7 +77,7 @@ void TTable::getFourValues(int *x1, int *x2, int *x3, int *x4) const
 
 void TTable::lowCheck()
 {
-  if (canWear(ITEM_TAKE)) {
+  if (canWear(ITEM_WEAR_TAKE)) {
     vlogf(LOG_LOW, format("Table (%s) set to be takeable.") %  getName());
   }
 

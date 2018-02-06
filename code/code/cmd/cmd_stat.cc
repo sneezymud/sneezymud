@@ -534,7 +534,7 @@ void TBeing::statRoom(TRoom *rmp)
             cyan() % norm() %
             rmp->dir_option[dir]->lock_difficulty;
         }
-        if (IS_SET(rmp->dir_option[dir]->condition, EX_TRAPPED)) {
+        if (IS_SET(rmp->dir_option[dir]->condition, EXIT_TRAPPED)) {
           buf2 = sprinttype(rmp->dir_option[dir]->trap_info, trap_types);
           str += format("%sTrap type:%s %s,  %sTrap damage:%s %d (d8)\n\r") % 
             cyan() % norm() %
@@ -542,9 +542,9 @@ void TBeing::statRoom(TRoom *rmp)
             cyan() % norm() %
             rmp->dir_option[dir]->trap_dam;
         }
-      } else if (IS_SET(rmp->dir_option[dir]->condition, EX_SLOPED_UP)) {
+      } else if (IS_SET(rmp->dir_option[dir]->condition, EXIT_SLOPED_UP)) {
         str += format("%sSloped:%s Up\n\r") % cyan() % norm();
-      } else if (IS_SET(rmp->dir_option[dir]->condition, EX_SLOPED_DOWN)) {
+      } else if (IS_SET(rmp->dir_option[dir]->condition, EXIT_SLOPED_DOWN)) {
         str += format("%sSloped:%s Down\n\r") % cyan() % norm();
       }
       str += format("%sDescription:%s\n\r") % cyan() % norm();

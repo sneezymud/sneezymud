@@ -208,7 +208,7 @@ int createFood(TBeing *c, int level, short bKnown, spellNumT spell)
       o->setDescr("A large holy wafer lies here.");
       o->setWeight(.4);
     }
-    o->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD;
+    o->obj_flags.wear_flags = ITEM_WEAR_TAKE | ITEM_WEAR_HOLD;
     o->setFoodFill(fill_amt);
     o->obj_flags.cost = 0;
     o->obj_flags.decay_time = (int) (100 * 10 * o->getWeight() / 2);

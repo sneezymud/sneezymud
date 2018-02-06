@@ -336,7 +336,7 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
   }
   
   for (i = 0; i < MAX_OBJ_AFFECT; i++) {
-    if (o->affected[i].location == APPLY_LIGHT && o->canWear(ITEM_TAKE)) {
+    if (o->affected[i].location == APPLY_LIGHT && o->canWear(ITEM_WEAR_TAKE)) {
       ch->sendTo("Removing light affects on takeable item.\n\r");
       continue;
     }
@@ -420,7 +420,7 @@ static void ocreate(TBeing *ch)
   tmp_obj->shortDescr = "a dummy item";
   tmp_obj->setDescr("A dummy item lies here.");
 
-  tmp_obj->obj_flags.wear_flags = ITEM_TAKE;
+  tmp_obj->obj_flags.wear_flags = ITEM_WEAR_TAKE;
   tmp_obj->obj_flags.decay_time = -1;
   tmp_obj->setObjStat(ITEM_PROTOTYPE);
   tmp_obj->obj_flags.cost = 1;
@@ -929,7 +929,7 @@ void TPerson::doOEdit(const char *argument)
 
 void TObj::writeAffects(int i, FILE *fp) const
 {
-  if (affected[i].location == APPLY_LIGHT && canWear(ITEM_TAKE))
+  if (affected[i].location == APPLY_LIGHT && canWear(ITEM_WEAR_TAKE))
     return;
 
   if (affected[i].location != APPLY_NONE) {
@@ -2035,7 +2035,8 @@ void change_chest_value2(TBeing *ch, TOpenContainer *o, const char *arg, editorE
 
         if (i == CONT_TRAPPED ||
             i == CONT_EMPTYTRAP ||
-            i == CONT_GHOSTTRAP) {
+            i == CONT_GHOSTTRAP ||
+            i == CONT_JAMMED) {
           ch->sendTo("This flag is set automatically and can not be changed.\n\r"); 
           return;
         }
@@ -2342,10 +2343,10 @@ void change_portal_value3(TBeing *ch, TPortal *o, const char *arg, editorEnterTy
 	}
 	o->setPortalTrapDam(loc_update);
         if (loc_update == 0) {
-          o->remPortalFlag(EX_TRAPPED);
+          o->remPortalFlag(EXIT_TRAPPED);
           o->setPortalTrapType(DOOR_TRAP_NONE);
         } else {
-          o->addPortalFlag(EX_TRAPPED);
+          o->addPortalFlag(EXIT_TRAPPED);
         }
         ch->specials.edit = CHANGE_PORTAL_VALUE3;
         change_portal_value3(ch, o, "", ENTER_CHECK);
@@ -2366,10 +2367,10 @@ void change_portal_value3(TBeing *ch, TPortal *o, const char *arg, editorEnterTy
         }
         o->setPortalTrapType(loc_update);
         if (loc_update == DOOR_TRAP_NONE) {
-          o->remPortalFlag(EX_TRAPPED);
+          o->remPortalFlag(EXIT_TRAPPED);
           o->setPortalTrapDam(0);
         } else {
-          o->addPortalFlag(EX_TRAPPED);
+          o->addPortalFlag(EXIT_TRAPPED);
         }
         ch->specials.edit = CHANGE_PORTAL_VALUE3;
         change_portal_value3(ch, o, "", ENTER_CHECK);
@@ -3071,7 +3072,7 @@ void generic_dirlist(const char *buf, const TBeing *ch)
 
 int TObj::addApply(TBeing *ch, applyTypeT apply)
 {
-  if (apply == APPLY_LIGHT && !canWear(ITEM_TAKE)) {
+  if (apply == APPLY_LIGHT && !canWear(ITEM_WEAR_TAKE)) {
     ch->sendTo("If you want light on a takeable object, please do so by setting GLOW.\n\r");
     return TRUE;
   }

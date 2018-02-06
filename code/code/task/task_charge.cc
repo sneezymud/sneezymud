@@ -439,7 +439,7 @@ int ChargeHitDoor(TBeing *ch, roomDirData *rExit)
 
   tHorse = dynamic_cast<TBeing *>(ch->riding);
   ch->sendTo(format("You charge towards %s!\n\r") %
-             (IS_SET(rExit->condition, EX_CLOSED) ? "a door" : "the exit"));
+             (IS_SET(rExit->condition, EXIT_CLOSED) ? "a door" : "the exit"));
 
   if (!ch->isAgile(0) && tHorse && !tHorse->hasSaddle() && !::number(0, 3)) {
     Damage  = ::number(10, 20);
@@ -448,18 +448,18 @@ int ChargeHitDoor(TBeing *ch, roomDirData *rExit)
 
     Damage = max(10, (ch->getHit() > 0 ? Damage : 10));
 
-    if (IS_SET(rExit->condition, EX_CLOSED)) {
+    if (IS_SET(rExit->condition, EXIT_CLOSED)) {
       act("$N suddenly halts, sending you flying into the door.",
           TRUE, ch, 0, ch->riding, TO_CHAR);
       act("$N suddenly halts, sending $n flying into a door.",
           TRUE, ch, 0, ch->riding, TO_ROOM);
-    } else if (IS_SET(rExit->condition, EX_CAVED_IN)) {
+    } else if (IS_SET(rExit->condition, EXIT_CAVED_IN)) {
       act("$N suddenly halts, sending you flying into the cave in.",
           TRUE, ch, 0, ch->riding, TO_CHAR);
       act("$N suddenly halts, sending $n flying into a cave in.",
           TRUE, ch, 0, ch->riding, TO_ROOM);
-    } else if (IS_SET(rExit->condition, EX_NOENTER) ||
-             IS_SET(rExit->condition, EX_WARDED)) {
+    } else if (IS_SET(rExit->condition, EXIT_NOENTER) ||
+             IS_SET(rExit->condition, EXIT_WARDED)) {
       act("$N suddenly halts, sending you flying towards the exit.",
           TRUE, ch, 0, ch->riding, TO_CHAR);
       ch->sendTo("You suddenly hit something and fall to the ground.\n\r");
@@ -549,13 +549,13 @@ int TBeing::ChargePulse(TBeing *ch)
 
   if (ch->task->timeLeft > 0) {
     if (!(rExit = ch->roomp->dir_option[ch->task->flags]) ||
-        (IS_SET(rExit->condition, EX_CLOSED) && IS_SET(rExit->condition, EX_SECRET)))
+        (IS_SET(rExit->condition, EXIT_CLOSED) && IS_SET(rExit->condition, EXIT_SECRET)))
       return ChargeHitWall(ch);
 
-    if (IS_SET(rExit->condition, EX_CLOSED  ) ||
-        IS_SET(rExit->condition, EX_NOENTER ) ||
-        IS_SET(rExit->condition, EX_CAVED_IN) ||
-        IS_SET(rExit->condition, EX_WARDED  ) ||
+    if (IS_SET(rExit->condition, EXIT_CLOSED  ) ||
+        IS_SET(rExit->condition, EXIT_NOENTER ) ||
+        IS_SET(rExit->condition, EXIT_CAVED_IN) ||
+        IS_SET(rExit->condition, EXIT_WARDED  ) ||
         real_roomp(rExit->to_room)->isRoomFlag(ROOM_PEACEFUL)) {
       return ChargeHitDoor(ch, rExit);
     }
@@ -583,13 +583,13 @@ int TBeing::ChargePulse(TBeing *ch)
 
     if (ch->task->timeLeft < 0) {
       if (!(rExit = ch->roomp->dir_option[ch->task->flags]) ||
-          (IS_SET(rExit->condition, EX_CLOSED) && IS_SET(rExit->condition, EX_SECRET)))
+          (IS_SET(rExit->condition, EXIT_CLOSED) && IS_SET(rExit->condition, EXIT_SECRET)))
         return ChargeHitWall(ch);
 
-      if (IS_SET(rExit->condition, EX_CLOSED  ) ||
-          IS_SET(rExit->condition, EX_NOENTER ) ||
-          IS_SET(rExit->condition, EX_CAVED_IN) ||
-          IS_SET(rExit->condition, EX_WARDED  ) ||
+      if (IS_SET(rExit->condition, EXIT_CLOSED  ) ||
+          IS_SET(rExit->condition, EXIT_NOENTER ) ||
+          IS_SET(rExit->condition, EXIT_CAVED_IN) ||
+          IS_SET(rExit->condition, EXIT_WARDED  ) ||
           real_roomp(rExit->to_room)->isRoomFlag(ROOM_PEACEFUL)) {
         return ChargeHitDoor(ch, rExit);
       }

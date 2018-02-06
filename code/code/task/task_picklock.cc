@@ -1,145 +1,124 @@
-//////////////////////////////////////////////////////////////////////////
-//
-//      SneezyMUD 4.0 - All rights reserved, SneezyMUD Coding Team
-//      "task.cc" - All functions related to tasks that keep mobs/PCs busy
-//
-//////////////////////////////////////////////////////////////////////////
-
 #include "extern.h"
 #include "comm.h"
 #include "room.h"
 #include "obj_tool.h"
 #include "being.h"
 
-void TThing::pickPulse(TBeing *ch)
+static void pick_pulse(TBeing *ch, TThing *pick)
 {
-  ch->sendTo("Hey, where'd your lockpick go?!?\n\r");
-  ch->stopTask();
-}
-
-void TTool::pickPulse(TBeing *ch)
-{
-  int skill,difficulties;
-  TRoom *temp_rp;
-  roomDirData *exitp, *back;
-
-  if (getToolType() != TOOL_LOCKPICK) {
+  TTool *tool = dynamic_cast<TTool *>(pick);
+  if (!tool || tool->getToolType() != TOOL_LOCKPICK) {
     ch->sendTo("Hey, where'd your lockpick go?!?\n\r");
     ch->stopTask();
     return;
   }
-  if (!(exitp = ch->roomp->dir_option[ch->task->status])) {
+
+  roomDirData *exit;
+  if (!(exit = ch->roomp->dir_option[ch->task->status])) {
     ch->sendTo("Errr, what happened to the exit???\n\r");
     ch->stopTask();
     return;
   }
-  if (!IS_SET(exitp->condition, EX_LOCKED)) {
+
+  if (!IS_SET(exit->condition, EXIT_LOCKED)) {
     ch->sendTo("Some nice person seems to have unlocked it for you.\n\r");
     ch->stopTask();
     return;
   }
-  skill = 2 * ch->getSkillValue(SKILL_PICK_LOCK);
 
-  // longer they try, better chance
   ch->task->timeLeft++;
-  skill += 3 * ch->task->timeLeft;
+  int skill = 2 * ch->getSkillValue(SKILL_PICK_LOCK)
+      + 3 * ch->task->timeLeft // longer they try, better chance
+      + ch->plotStat(STAT_CURRENT, STAT_FOC, 3, 18, 13)
+      + ::number(-15,15);
 
-  skill += ch->plotStat(STAT_CURRENT, STAT_FOC, 3, 18, 13);
-  skill += ::number(-15,15);
-
-  addToToolUses(-1);
-  if (getToolUses() <= 0) {
-    act("Your $o snap in half!   Oops!",TRUE,ch,this,0,TO_CHAR);
-    act("$n's $o snaps in half.",TRUE,ch,this,0,TO_ROOM);
+  if (!tool->addToToolUses(-1)) {
+    act("Your $o snap$Q in half!   Oops!", true, ch, tool, nullptr, TO_CHAR);
+    act("$n's $o snap$Q in half.", true, ch, tool, nullptr, TO_ROOM);
     ch->stopTask();
-    if (this != ch->unequip(ch->getPrimaryHold())) {
-      vlogf(LOG_BUG, "whacked out unequip in task_picklock");
-      return;
-    }
-    delete this;
+    ch->unequip(ch->getPrimaryHold());
+    delete tool;
     return;
   }
-  difficulties = 3 * exitp->lock_difficulty;
-  if (exitp->lock_difficulty >= 100) {
-    // guaranteed unpickable, see if they recognize this fact 
-    if (ch->bSuccess(skill, SKILL_PICK_LOCK)) {
-      act("This lock is totally impossible to pick.  You give up.",
-          TRUE, ch, this, 0, TO_CHAR);
-      ch->stopTask();
-      return;
-    }
-  }
-  if ((exitp->lock_difficulty >= 100) || (difficulties > skill)) {
-    if ((difficulties > (skill + 100)) && !ch->isAgile(0)) {
-      act("Uhoh, $n seems to have jammed the lock!",TRUE,ch,0,0,TO_ROOM);
-      ch->sendTo("Uhoh.  You seemed to have jammed the lock!\n\r");
-      exitp->lock_difficulty = min(100,exitp->lock_difficulty+10);
-      ch->stopTask();
-      return;
-    } else if (!::number(0,2)) {
-      act("You wiggle $p in the lock, without luck. (yet...)",
-          TRUE,ch,this,0,TO_CHAR);
-    }
-  } else if (ch->bSuccess(skill, SKILL_PICK_LOCK)) {
-    // this used to just be an automatic for the else case
-    // but what the heck, this makes it a bit harder to pick
-    // and helps make pick-lock a learn-by-doing too
 
-    REMOVE_BIT(exitp->condition, EX_LOCKED);
-    if (!exitp->keyword.empty()) {
-      act(format("$n skillfully picks the lock of the %s.\n\r") % 
-	  fname(exitp->keyword),
-	  TRUE,ch,0,0,TO_ROOM);
-    } else
-      act("$n picks the lock.", TRUE, ch, 0, 0, TO_ROOM);
+  bool pickable = !IS_SET(exit->condition, EXIT_JAMMED) && exit->lock_difficulty < 100;
+
+  if (!pickable && ch->bSuccess(skill, SKILL_PICK_LOCK)) {
+    act("This lock is totally impossible to pick.  You give up.", true, ch, tool, nullptr, TO_CHAR);
+    ch->stopTask();
+    return;
+  }
+
+  int difficulty = 3 * exit->lock_difficulty;
+  if ((!pickable || difficulty > skill) &&
+      difficulty > (skill + 100) &&
+      !ch->isDextrous()) {
+    act("Uhoh, $n seems to have jammed the lock!", true, ch, nullptr, nullptr, TO_ROOM);
+    ch->sendTo("Uhoh.  You seemed to have jammed the lock!\n\r");
+    SET_BIT(exit->condition, EXIT_JAMMED);
+    ch->stopTask();
+    return;
+  }
+
+  if (pickable && ch->bSuccess(skill, SKILL_PICK_LOCK)) {
+    REMOVE_BIT(exit->condition, EXIT_LOCKED);
+    sstring msg = !exit->keyword.empty() ?
+        sstring(format("$n skillfully picks the lock of the %s.") % fname(exit->keyword)) :
+        sstring("$n picks the lock.");
+    act(msg, true, ch, nullptr, nullptr, TO_ROOM);
     ch->sendTo("The lock quickly yields to your skills.\n\r");
 
     // now for unlocking the other side, too
-    temp_rp = real_roomp(exitp->to_room);
-    if (temp_rp &&
-
-        (back = temp_rp->dir_option[rev_dir[ch->task->status]]) &&
+    TRoom *other = real_roomp(exit->to_room);
+    roomDirData *back;
+    if (other &&
+        (back=other->dir_option[rev_dir[ch->task->status]]) &&
         back->to_room == ch->in_room)
-      REMOVE_BIT(back->condition, EX_LOCKED);
+      REMOVE_BIT(back->condition, EXIT_LOCKED);
     ch->stopTask();
+    return;
   }
+
+  if (!::number(0,2))
+    act("You wiggle $p in the lock, without luck. (yet...)", true, ch, tool, nullptr, TO_CHAR);
 }
+
 
 int task_picklock(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *)
 {
-  TThing *pick;
-
   if (ch->isLinkdead() || (ch->getPosition() <= POSITION_SITTING)) {
     ch->stopTask();
     return FALSE;
   }
-  if (ch->utilityTaskCommand(cmd) ||
-      ch->nobrainerTaskCommand(cmd))
+
+  if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
     return FALSE;
 
   if (ch->in_room != ch->task->wasInRoom) {
     ch->sendTo("Hey, where'd the lock go?!?\n\r");
-    act("$n looks about confused and bewildered.",TRUE,ch,0,0,TO_ROOM);
+    act("$n looks about, confused and bewildered.",TRUE,ch,0,0,TO_ROOM);
     ch->stopTask();
     return FALSE;
   }
+
   if (!ch->doesKnowSkill(SKILL_PICK_LOCK)) {
     ch->sendTo("I bet you wish you knew how to pick locks.\n\r");
     ch->stopTask();
     return FALSE;
   }
-  int pulses_to_wait;
+
   switch(cmd) {
-    case CMD_TASK_CONTINUE:
-      if (!(pick = ch->heldInPrimHand())) {
+    case CMD_TASK_CONTINUE: {
+      TThing *pick = ch->heldInPrimHand();
+      if (!pick) {
         ch->sendTo("Hey, where'd your lockpick go?!?\n\r");
         ch->stopTask();
         return FALSE;
       }
-      pulses_to_wait = 1;
-      ch->task->calcNextUpdate(pulse, max(pulses_to_wait, 1) * Pulse::MOBACT);
-      pick->pickPulse(ch);
+      ch->task->calcNextUpdate(pulse, Pulse::MOBACT);
+      pick_pulse(ch, pick);
       return FALSE;
+    }
     case CMD_ABORT:
     case CMD_STOP:
       act("You stop trying to pick the lock.", FALSE, ch, 0, 0, TO_CHAR);

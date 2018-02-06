@@ -96,7 +96,7 @@ int get(TBeing *ch, TThing *ttt, TThing *sub, getTypeT tType, bool isFirst)
   }
   if (obj && obj->isObjStat(ITEM_ATTACHED)) {
     if (!ch->isImmortal()) {
-      if (obj->canWear(ITEM_TAKE)) {
+      if (obj->canWear(ITEM_WEAR_TAKE)) {
         if (obj->riding) { 
           ch->sendTo(COLOR_OBJECTS, format("%s is attached to %s and is not currently getable.\n\r") % obj->getName() % obj->riding->getName());
         } else 

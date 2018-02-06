@@ -2603,15 +2603,15 @@ void setPrompts(fd_set out)
 
 	    for (dirTypeT door = MIN_DIR; door < MAX_DIR; door++) {
 	      if((exitData = ch->roomp->exitDir(door)) &&
-		 (!IS_SET(exitData->condition, EX_SECRET) ||
-		  !IS_SET(exitData->condition, EX_CLOSED))){
+		 (!IS_SET(exitData->condition, EXIT_SECRET) ||
+		  !IS_SET(exitData->condition, EXIT_CLOSED))){
 		comm->exits[door].exit=true;
 		if(exitData->door_type != DOOR_NONE)
 		  comm->exits[door].door=true;
 		else
 		  comm->exits[door].door=false;
 
-		comm->exits[door].open=!IS_SET(exitData->condition, EX_CLOSED);
+		comm->exits[door].open=!IS_SET(exitData->condition, EXIT_CLOSED);
 	      } else {
 		comm->exits[door].exit=false;
 	      }

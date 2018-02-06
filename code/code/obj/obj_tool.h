@@ -1,12 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-#ifndef __OBJ_TOOL_H
-#define __OBJ_TOOL_H
+#pragma once
 
 #include "obj.h"
 
@@ -36,11 +28,11 @@ class TTool : public TObj {
     virtual void unequipMe(TBeing *);
     virtual void describeCondition(const TBeing *) const;
     virtual void describeObjectSpecifics(const TBeing *) const;
-    virtual void pickPulse(TBeing *);
     virtual int  skinPulse(TBeing *, TBaseCorpse *);
     virtual int  butcherPulse(TBeing *, TBaseCorpse *);
     virtual void sharpenPulse(TBeing *, TThing *);
     virtual void dullPulse(TBeing *, TThing *);
+    virtual bool isPluralItem() const;
 
     toolTypeT getToolType() const;
     void setToolType(toolTypeT r);
@@ -56,7 +48,3 @@ class TTool : public TObj {
     TTool & operator=(const TTool &a);
     virtual ~TTool();
 };
-
-
-
-#endif

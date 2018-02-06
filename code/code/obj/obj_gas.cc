@@ -261,7 +261,7 @@ void TGas::doDrift()
 
   // move up if possible
   if((exitp=roomp->exitDir(DIR_UP)) &&
-     !IS_SET(exitp->condition, EX_CLOSED) &&
+     !IS_SET(exitp->condition, EXIT_CLOSED) &&
      (rp=real_roomp(exitp->to_room))){
     act("$n drifts upwards.",FALSE, this, 0, 0, TO_ROOM); 
     --(*this);
@@ -438,7 +438,7 @@ int TThing::dropGas(int amt, gasTypeT type)
 
     gas->setType(type);
     gas->swapToStrung();
-    REMOVE_BIT(gas->obj_flags.wear_flags, ITEM_TAKE);
+    REMOVE_BIT(gas->obj_flags.wear_flags, ITEM_WEAR_TAKE);
     gas->canBeSeen = 1;
     gas->setMaterial(MAT_GHOSTLY);
     gas->setObjStat(ITEM_NORENT);

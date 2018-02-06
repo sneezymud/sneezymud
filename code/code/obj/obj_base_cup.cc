@@ -214,7 +214,7 @@ void TBaseCup::lowCheck()
   if (getMaxDrinkUnits() < getDrinkUnits())
     vlogf(LOG_LOW, format("drinkcon %s  maxdrinks < current drinks.") % 
          getName());
-  if (isDrinkConFlag(DRINK_PERM) && canWear(ITEM_TAKE))
+  if (isDrinkConFlag(DRINK_PERM) && canWear(ITEM_WEAR_TAKE))
     vlogf(LOG_LOW, format("drinkcon %s  takeable and permanent container.") % 
          getName());
 

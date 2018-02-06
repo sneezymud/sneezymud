@@ -16,13 +16,13 @@ void TBeing::rawUnlockDoor(roomDirData * exitp, dirTypeT door)
   TRoom *rp;
   roomDirData *back;
 
-  REMOVE_BIT(exitp->condition, EX_LOCKED);
+  REMOVE_BIT(exitp->condition, EXIT_LOCKED);
  /* now for unlocking the other side, too */
   rp = real_roomp(exitp->to_room);
   if (rp &&
       (back = rp->dir_option[rev_dir[door]]) &&
       back->to_room == in_room) {
-    REMOVE_BIT(back->condition, EX_LOCKED);
+    REMOVE_BIT(back->condition, EXIT_LOCKED);
   } else
     vlogf(LOG_LOW, format("Inconsistent door locks in rooms %d->%d") %  in_room % exitp->to_room);
 }
@@ -103,22 +103,22 @@ dirTypeT TBeing::findDoor(const char *type, const char *direct, doorIntentT mode
       if ((exitp = exitDir(door)) && exitp->keyword != "_unique_door_") {
 
         // secret doors can't be abbreviated
-        if ((!IS_SET(exitp->condition, EX_SECRET) &&
+        if ((!IS_SET(exitp->condition, EXIT_SECRET) &&
             isname(type, exitp->keyword)) ||
-           (IS_SET(exitp->condition, EX_SECRET) &&
+           (IS_SET(exitp->condition, EXIT_SECRET) &&
             is_exact_name(type, exitp->keyword))) {
           found = TRUE;
-          if ((mode == DOOR_INTENT_OPEN && IS_SET(exitp->condition, EX_CLOSED)) ||
-              (mode == DOOR_INTENT_CLOSE && !IS_SET(exitp->condition, EX_CLOSED)) ||
-              (mode == DOOR_INTENT_LOCK && !IS_SET(exitp->condition, EX_LOCKED)) ||
-              (mode == DOOR_INTENT_UNLOCK && IS_SET(exitp->condition, EX_LOCKED)) ||
-              (mode == DOOR_INTENT_LOWER && IS_SET(exitp->condition, EX_CLOSED) && 
+          if ((mode == DOOR_INTENT_OPEN && IS_SET(exitp->condition, EXIT_CLOSED)) ||
+              (mode == DOOR_INTENT_CLOSE && !IS_SET(exitp->condition, EXIT_CLOSED)) ||
+              (mode == DOOR_INTENT_LOCK && !IS_SET(exitp->condition, EXIT_LOCKED)) ||
+              (mode == DOOR_INTENT_UNLOCK && IS_SET(exitp->condition, EXIT_LOCKED)) ||
+              (mode == DOOR_INTENT_LOWER && IS_SET(exitp->condition, EXIT_CLOSED) && 
                     (exitp->door_type == DOOR_DRAWBRIDGE)) ||
-              (mode == DOOR_INTENT_LOWER && !IS_SET(exitp->condition, EX_CLOSED) && 
+              (mode == DOOR_INTENT_LOWER && !IS_SET(exitp->condition, EXIT_CLOSED) && 
                     (exitp->door_type == DOOR_PORTCULLIS)) ||
-              (mode == DOOR_INTENT_RAISE && !IS_SET(exitp->condition, EX_CLOSED) && 
+              (mode == DOOR_INTENT_RAISE && !IS_SET(exitp->condition, EXIT_CLOSED) && 
                     (exitp->door_type == DOOR_DRAWBRIDGE)) ||
-              (mode == DOOR_INTENT_RAISE && IS_SET(exitp->condition, EX_CLOSED) && 
+              (mode == DOOR_INTENT_RAISE && IS_SET(exitp->condition, EXIT_CLOSED) && 
                     (exitp->door_type == DOOR_PORTCULLIS))) {
             return (door);
           }
@@ -150,7 +150,7 @@ void TBeing::rawOpenDoor(dirTypeT dir)
 
 
   exitp = rp->dir_option[dir];
-  if (exitp->condition & EX_DESTROYED) {
+  if (exitp->condition & EXIT_DESTROYED) {
     sendTo(format("The %s has been destroyed, of course it's open.\n\r") %
        exitp->getName());
     return;
@@ -167,12 +167,12 @@ void TBeing::rawOpenDoor(dirTypeT dir)
     sendTo("Seeing that you are mounted, you can't quite reach that.\n\r");
     return;
   }
-  REMOVE_BIT(exitp->condition, EX_CLOSED);
+  REMOVE_BIT(exitp->condition, EXIT_CLOSED);
   // traps have already been checked for before getting here.
-  if (IS_SET(exitp->condition, EX_TRAPPED))
-    REMOVE_BIT(exitp->condition, EX_TRAPPED);
+  if (IS_SET(exitp->condition, EXIT_TRAPPED))
+    REMOVE_BIT(exitp->condition, EXIT_TRAPPED);
 
-  if (IS_SET(exitp->condition, EX_SECRET)) {
+  if (IS_SET(exitp->condition, EXIT_SECRET)) {
     act("$n reveals a hidden passage!", TRUE, this, 0, 0, TO_ROOM);
     act("You reveal a hidden passage!", TRUE, this, 0, 0, TO_CHAR);
     addToWait(combatRound(1));
@@ -301,9 +301,9 @@ void TBeing::rawOpenDoor(dirTypeT dir)
   if (exit_ok(exitp, &rp) &&
       (back = rp->dir_option[rev_dir[dir]]) &&
       (back->to_room == in_room)) {
-    REMOVE_BIT(back->condition, EX_CLOSED);
-    if (IS_SET(back->condition, EX_TRAPPED))
-      REMOVE_BIT(back->condition, EX_TRAPPED);
+    REMOVE_BIT(back->condition, EXIT_CLOSED);
+    if (IS_SET(back->condition, EXIT_TRAPPED))
+      REMOVE_BIT(back->condition, EXIT_TRAPPED);
     strcpy(buf, getName().c_str());
     rp2 = real_roomp(exitp->to_room);
     switch (back->door_type) {
@@ -397,7 +397,7 @@ void TBeing::rawCloseDoor(dirTypeT dir)
     vlogf(LOG_BUG, format("NULL rp in rawCloseDoor() for %s.") %  getName());
  
   exitp = rp->dir_option[dir];
-  if (IS_SET(exitp->condition, EX_DESTROYED)) {
+  if (IS_SET(exitp->condition, EXIT_DESTROYED)) {
     sendTo(format("The %s has been destroyed, it can't be closed.\n\r") %
        exitp->getName());
     return;
@@ -406,7 +406,7 @@ void TBeing::rawCloseDoor(dirTypeT dir)
     sendTo("Seeing that you are mounted, you can't quite reach that.\n\r");
     return;
   }
-  SET_BIT(exitp->condition, EX_CLOSED);
+  SET_BIT(exitp->condition, EXIT_CLOSED);
 
   switch (exitp->door_type) {
     case DOOR_DRAWBRIDGE:
@@ -517,7 +517,7 @@ void TBeing::rawCloseDoor(dirTypeT dir)
       snd = pickRandSound(SOUND_DOORCLOSE_01, SOUND_DOORCLOSE_04);
       roomp->playsound(snd, SOUND_TYPE_NOISE);
   }
-  if (IS_SET(exitp->condition, EX_SECRET)) {
+  if (IS_SET(exitp->condition, EXIT_SECRET)) {
     act("$n conceals a hidden passage!", TRUE, this, 0, 0, TO_ROOM);
     act("You conceal a hidden passage!", TRUE, this, 0, 0, TO_CHAR);
     addToWait(combatRound(1));
@@ -527,7 +527,7 @@ void TBeing::rawCloseDoor(dirTypeT dir)
   if (exit_ok(exitp, &rp) &&
       (back = rp->dir_option[rev_dir[dir]]) &&
       (back->to_room == in_room)) {
-    SET_BIT(back->condition, EX_CLOSED);
+    SET_BIT(back->condition, EXIT_CLOSED);
     strcpy(buf, getName().c_str());
     rp2 = real_roomp(exitp->to_room);
     switch (back->door_type) {
@@ -686,35 +686,35 @@ void TBeing::openUniqueDoor(dirTypeT dir, doorUniqueT intent,
 
   switch (intent) {
     case DOOR_UNIQUE_OPEN_ONLY:
-      if (IS_SET(exitp->condition, EX_CLOSED)) {
-        REMOVE_BIT(exitp->condition, EX_CLOSED);
+      if (IS_SET(exitp->condition, EXIT_CLOSED)) {
+        REMOVE_BIT(exitp->condition, EXIT_CLOSED);
         open = SUCCESS_OPEN;
       } else {
         open = SUCCESS_WAS_OPEN;
       }
       break;
     case DOOR_UNIQUE_CLOSE_ONLY:
-      if (!IS_SET(exitp->condition, EX_CLOSED)) {
-        SET_BIT(exitp->condition, EX_CLOSED);
+      if (!IS_SET(exitp->condition, EXIT_CLOSED)) {
+        SET_BIT(exitp->condition, EXIT_CLOSED);
         open = SUCCESS_CLOSE;
       } else {
         open = SUCCESS_WAS_CLOSE;
       }
       break;
     case DOOR_UNIQUE_DEF:
-      if (IS_SET(exitp->condition, EX_CLOSED)) {
-        REMOVE_BIT(exitp->condition, EX_CLOSED);
+      if (IS_SET(exitp->condition, EXIT_CLOSED)) {
+        REMOVE_BIT(exitp->condition, EXIT_CLOSED);
         open = SUCCESS_OPEN;
       } else {
-        SET_BIT(exitp->condition, EX_CLOSED);
+        SET_BIT(exitp->condition, EXIT_CLOSED);
         open = SUCCESS_CLOSE;
       }
       break;
     case DOOR_UNIQUE_CLOSE_ONLY_FORCE:
       // works like close-only, but if door is already closed, still returns
       // the "successful close" message.
-      if (!IS_SET(exitp->condition, EX_CLOSED)) {
-        SET_BIT(exitp->condition, EX_CLOSED);
+      if (!IS_SET(exitp->condition, EXIT_CLOSED)) {
+        SET_BIT(exitp->condition, EXIT_CLOSED);
         open = SUCCESS_CLOSE;
       } else {
         open = SUCCESS_CLOSE;
@@ -723,8 +723,8 @@ void TBeing::openUniqueDoor(dirTypeT dir, doorUniqueT intent,
     case DOOR_UNIQUE_OPEN_ONLY_FORCE:
       // works like open only, but if door already open, still returns
       // the successfully opened message
-      if (IS_SET(exitp->condition, EX_CLOSED)) {
-        REMOVE_BIT(exitp->condition, EX_CLOSED);
+      if (IS_SET(exitp->condition, EXIT_CLOSED)) {
+        REMOVE_BIT(exitp->condition, EXIT_CLOSED);
         open = SUCCESS_OPEN;
       } else {
         open = SUCCESS_OPEN;
@@ -752,9 +752,9 @@ void TBeing::openUniqueDoor(dirTypeT dir, doorUniqueT intent,
       (back = rp->dir_option[rev_dir[dir]]) &&
       (back->to_room == in_room)) {
     if (open == SUCCESS_OPEN)
-      REMOVE_BIT(back->condition, EX_CLOSED);
+      REMOVE_BIT(back->condition, EXIT_CLOSED);
     else if (open == SUCCESS_CLOSE)
-      SET_BIT(back->condition, EX_CLOSED);
+      SET_BIT(back->condition, EXIT_CLOSED);
 
     // rp is now the OTHER roomp
     if (open == SUCCESS_OPEN) {
@@ -770,12 +770,12 @@ void TBeing::openUniqueDoor(dirTypeT dir, doorUniqueT intent,
 
 bool canSeeThruDoor(const roomDirData *exitp)
 {
-  if (IS_SET(exitp->condition, EX_CAVED_IN))
+  if (IS_SET(exitp->condition, EXIT_CAVED_IN))
     return FALSE;
 
-  if (IS_SET(exitp->condition, EX_DESTROYED))
+  if (IS_SET(exitp->condition, EXIT_DESTROYED))
     return TRUE;
-  else if (!IS_SET(exitp->condition, EX_CLOSED))
+  else if (!IS_SET(exitp->condition, EXIT_CLOSED))
    return TRUE;
 
   switch (exitp->door_type) {
@@ -797,13 +797,13 @@ void roomDirData::destroyDoor(dirTypeT dir, int room)
   if (door_type == DOOR_NONE)
     return;
   
-  condition = EX_DESTROYED;   // removes closed/locked too
+  condition = EXIT_DESTROYED;   // removes closed/locked too
 
   rp = real_roomp(to_room);
   if (exit_ok(this, &rp) &&
       (back = rp->dir_option[rev_dir[dir]]) &&
       (back->to_room == room)) {
-    back->condition = EX_DESTROYED;
+    back->condition = EXIT_DESTROYED;
     sendrpf(rp, "The %s is destroyed from the other side.\n\r", getName().c_str());
   }
 }
@@ -815,16 +815,16 @@ void roomDirData::caveinDoor(dirTypeT dir, int room)
  
   // this should destroy any door, closing the way
 
-  SET_BIT(condition, EX_CAVED_IN);
-  SET_BIT(condition, EX_CLOSED);
+  SET_BIT(condition, EXIT_CAVED_IN);
+  SET_BIT(condition, EXIT_CLOSED);
   door_type = DOOR_NONE;
  
   rp = real_roomp(to_room);
   if (exit_ok(this, &rp) &&
       (back = rp->dir_option[rev_dir[dir]]) &&
       (back->to_room == room)) {
-    SET_BIT(back->condition, EX_CAVED_IN);
-    SET_BIT(back->condition, EX_CLOSED);
+    SET_BIT(back->condition, EXIT_CAVED_IN);
+    SET_BIT(back->condition, EXIT_CLOSED);
     back->door_type = DOOR_NONE;
     sendrpf(rp, "A massive cave in blocks the way %s.\n\r", dirs[rev_dir[dir]]);
   }
@@ -837,13 +837,13 @@ void roomDirData::wardDoor(dirTypeT dir, int room)
  
   // this should pop a ward onto the exit
  
-  SET_BIT(condition, EX_WARDED);
+  SET_BIT(condition, EXIT_WARDED);
  
   rp = real_roomp(to_room);
   if (exit_ok(this, &rp) &&
       (back = rp->dir_option[rev_dir[dir]]) &&
       (back->to_room == room)) {
-    SET_BIT(back->condition, EX_WARDED);
+    SET_BIT(back->condition, EXIT_WARDED);
     sendrpf(rp, "You hear a soft _woompf_ as a magical ward is placed across the %s exit.\n\r", dirs[rev_dir[dir]]);
   }
 }

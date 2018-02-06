@@ -1874,6 +1874,7 @@ class TBeing : public TThing {
     virtual void addToTimer(unsigned int) = 0;
     bool isStrong() const;
     bool isPerceptive() const;
+    bool isDextrous() const;
     bool isAgile(int num) const;
     bool isTough() const;
     bool isUgly() const;

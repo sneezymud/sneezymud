@@ -1222,6 +1222,11 @@ bool TBeing::isAgile(int num) const
   return ((plotStat(STAT_CURRENT, STAT_AGI, 30, 180, 105, 1.0) + num) >= ::number(30,200));
 }
 
+bool TBeing::isDextrous() const
+{
+  return (plotStat(STAT_CURRENT, STAT_DEX, 30, 180, 105, 1.0) >= ::number(30,200));
+}
+
 bool TBeing::isTough() const
 {
   return (plotStat(STAT_CURRENT, STAT_CON, 30, 180, 105, 1.0) >= ::number(30,200));

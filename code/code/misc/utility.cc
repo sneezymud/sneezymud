@@ -1212,7 +1212,7 @@ bool TObj::canGetMe(const TBeing *ch, silentTypeT silent) const
   }
 
   if (ch->isImmortal() || 
-      (canWear(ITEM_TAKE) && !isObjStat(ITEM_PROTOTYPE))) {
+      (canWear(ITEM_WEAR_TAKE) && !isObjStat(ITEM_PROTOTYPE))) {
     // flat out deny
     if (canGetMeDeny(ch, silent))
       return FALSE;
@@ -1226,7 +1226,7 @@ bool TObj::canGetMe(const TBeing *ch, silentTypeT silent) const
     // attached items 
     if (isObjStat(ITEM_ATTACHED)) {
       if (!ch->isImmortal()) {
-        if (canWear(ITEM_TAKE)) {
+        if (canWear(ITEM_WEAR_TAKE)) {
           if (riding) {
             ch->sendTo(COLOR_OBJECTS, format("%s is attached to %s and is not currently getable.\n\r") % getName() % riding->getName());
           } else {
@@ -1249,7 +1249,7 @@ bool TObj::canGetMe(const TBeing *ch, silentTypeT silent) const
   } else {
     // attached items
     if (isObjStat(ITEM_ATTACHED)) {
-      if (canWear(ITEM_TAKE))
+      if (canWear(ITEM_WEAR_TAKE))
         ch->sendTo(COLOR_OBJECTS, format("%s is attached and is not currently getable.\n\r") % getName());
       else
         ch->sendTo(COLOR_OBJECTS, format("%s : You can't take that.\n\r") % getName());

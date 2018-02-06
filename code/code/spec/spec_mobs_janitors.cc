@@ -16,7 +16,7 @@
 bool okForJanitor(TMonster *myself, TObj *obj)
 {
   // only things that can be taken, and that are not pools
-  if (!obj->canWear(ITEM_TAKE) && !dynamic_cast<TPool *>(obj))
+  if (!obj->canWear(ITEM_WEAR_TAKE) && !dynamic_cast<TPool *>(obj))
     return false;
   if (!myself->canSee(obj) || (obj->in_room == Room::DONATION))
     return false;
@@ -60,7 +60,7 @@ bool okForJanitor(TMonster *myself, TObj *obj)
         TObj *obj2 = dynamic_cast<TObj *>(t3);
         if (!obj2)
           return false;
-        if (!obj2->canWear(ITEM_TAKE))
+        if (!obj2->canWear(ITEM_WEAR_TAKE))
           return false;
         if (!myself->canSee(corpse))
           return false;
@@ -965,7 +965,7 @@ int fruitScavenger(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj 
 	TRoom *rp;
 	dirTypeT use_dir;
 	for(use_dir = MIN_DIR; use_dir < MAX_DIR; use_dir++){
-		if (myself->roomp->exitDir(use_dir) && !IS_SET(myself->roomp->exitDir(use_dir)->condition, EX_CLOSED)) {
+		if (myself->roomp->exitDir(use_dir) && !IS_SET(myself->roomp->exitDir(use_dir)->condition, EXIT_CLOSED)) {
 			rp = real_roomp(myself->roomp->exitDir(use_dir)->to_room);
 			if (!rp)
 				continue;

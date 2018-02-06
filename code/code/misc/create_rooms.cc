@@ -583,13 +583,13 @@ void TPerson::doEdit(const char *arg)
       newrp->dir_option[new_dir]->keyword = roomp->dir_option[rdir]->keyword;
       newrp->dir_option[new_dir]->door_type = doortype;
       newrp->dir_option[new_dir]->condition = dcond;
-      if (dcond & EX_SLOPED_UP) {
-        newrp->dir_option[new_dir]->condition &= ~EX_SLOPED_UP;
-        newrp->dir_option[new_dir]->condition |= EX_SLOPED_DOWN;
+      if (dcond & EXIT_SLOPED_UP) {
+        newrp->dir_option[new_dir]->condition &= ~EXIT_SLOPED_UP;
+        newrp->dir_option[new_dir]->condition |= EXIT_SLOPED_DOWN;
       }
-      if (dcond & EX_SLOPED_DOWN) {
-        newrp->dir_option[new_dir]->condition &= ~EX_SLOPED_DOWN;
-        newrp->dir_option[new_dir]->condition |= EX_SLOPED_UP;
+      if (dcond & EXIT_SLOPED_DOWN) {
+        newrp->dir_option[new_dir]->condition &= ~EXIT_SLOPED_DOWN;
+        newrp->dir_option[new_dir]->condition |= EXIT_SLOPED_UP;
       }
       newrp->dir_option[new_dir]->lock_difficulty = dldiff;
       newrp->dir_option[new_dir]->weight = dweight;
@@ -1807,13 +1807,13 @@ static void finishRoom(TRoom *rp, TBeing *ch, dirTypeT dir)
       ch->sendTo("Copying door information to other side.\n\r");
       newrp->dir_option[new_dir]->door_type = rp->dir_option[dir]->door_type;
       newrp->dir_option[new_dir]->condition = rp->dir_option[dir]->condition;
-      if (rp->dir_option[dir]->condition & EX_SLOPED_UP) {
-        newrp->dir_option[new_dir]->condition &= ~EX_SLOPED_UP;
-        newrp->dir_option[new_dir]->condition |= EX_SLOPED_DOWN;
+      if (rp->dir_option[dir]->condition & EXIT_SLOPED_UP) {
+        newrp->dir_option[new_dir]->condition &= ~EXIT_SLOPED_UP;
+        newrp->dir_option[new_dir]->condition |= EXIT_SLOPED_DOWN;
       }
-      if (rp->dir_option[dir]->condition & EX_SLOPED_DOWN) {
-        newrp->dir_option[new_dir]->condition &= ~EX_SLOPED_DOWN;
-        newrp->dir_option[new_dir]->condition |= EX_SLOPED_UP;
+      if (rp->dir_option[dir]->condition & EXIT_SLOPED_DOWN) {
+        newrp->dir_option[new_dir]->condition &= ~EXIT_SLOPED_DOWN;
+        newrp->dir_option[new_dir]->condition |= EXIT_SLOPED_UP;
       }
       newrp->dir_option[new_dir]->lock_difficulty = rp->dir_option[dir]->lock_difficulty;
       newrp->dir_option[new_dir]->weight = rp->dir_option[dir]->weight;
@@ -1829,13 +1829,13 @@ static void finishRoom(TRoom *rp, TBeing *ch, dirTypeT dir)
     ch->sendTo("Copying door information to back_exit.\n\r");
     newrp->dir_option[new_dir]->door_type = rp->dir_option[dir]->door_type;
     newrp->dir_option[new_dir]->condition = rp->dir_option[dir]->condition;
-    if (rp->dir_option[dir]->condition & EX_SLOPED_UP) {
-      newrp->dir_option[new_dir]->condition &= ~EX_SLOPED_UP;
-      newrp->dir_option[new_dir]->condition |= EX_SLOPED_DOWN;
+    if (rp->dir_option[dir]->condition & EXIT_SLOPED_UP) {
+      newrp->dir_option[new_dir]->condition &= ~EXIT_SLOPED_UP;
+      newrp->dir_option[new_dir]->condition |= EXIT_SLOPED_DOWN;
     }
-    if (rp->dir_option[dir]->condition & EX_SLOPED_DOWN) {
-      newrp->dir_option[new_dir]->condition &= ~EX_SLOPED_DOWN;
-      newrp->dir_option[new_dir]->condition |= EX_SLOPED_UP;
+    if (rp->dir_option[dir]->condition & EXIT_SLOPED_DOWN) {
+      newrp->dir_option[new_dir]->condition &= ~EXIT_SLOPED_DOWN;
+      newrp->dir_option[new_dir]->condition |= EXIT_SLOPED_UP;
     }
     newrp->dir_option[new_dir]->lock_difficulty = rp->dir_option[dir]->lock_difficulty;
     newrp->dir_option[new_dir]->weight = rp->dir_option[dir]->weight;
@@ -1906,12 +1906,12 @@ static void ChangeExitSlopedStatus(TRoom *rp, TBeing *ch, const char *arg, edito
     else
       SET_BIT(rp->dir_option[dir]->condition, newBit);
 
-    if (IS_SET(rp->dir_option[dir]->condition, EX_SLOPED_UP) &&
-        IS_SET(rp->dir_option[dir]->condition, EX_SLOPED_DOWN)){
-      if (newBit == EX_SLOPED_UP)
-        REMOVE_BIT(rp->dir_option[dir]->condition, EX_SLOPED_DOWN);
+    if (IS_SET(rp->dir_option[dir]->condition, EXIT_SLOPED_UP) &&
+        IS_SET(rp->dir_option[dir]->condition, EXIT_SLOPED_DOWN)){
+      if (newBit == EXIT_SLOPED_UP)
+        REMOVE_BIT(rp->dir_option[dir]->condition, EXIT_SLOPED_DOWN);
       else
-        REMOVE_BIT(rp->dir_option[dir]->condition, EX_SLOPED_UP);
+        REMOVE_BIT(rp->dir_option[dir]->condition, EXIT_SLOPED_UP);
     }
   } else if (!rp->dir_option[dir]) {
     rp->dir_option[dir] = new roomDirData();
@@ -1921,9 +1921,9 @@ static void ChangeExitSlopedStatus(TRoom *rp, TBeing *ch, const char *arg, edito
   ch->sendTo(VT_HOMECLR);
   ch->sendTo("Sloped Status:\n\r");
   ch->sendTo(format("\n\r9  [%c] Sloped Up") %
-             (IS_SET(rp->dir_option[dir]->condition, EX_SLOPED_UP) ? 'X' : ' '));
+             (IS_SET(rp->dir_option[dir]->condition, EXIT_SLOPED_UP) ? 'X' : ' '));
   ch->sendTo(format("\n\r10 [%c] Sloped Down") %
-             (IS_SET(rp->dir_option[dir]->condition, EX_SLOPED_DOWN) ? 'X' : ' '));
+             (IS_SET(rp->dir_option[dir]->condition, EXIT_SLOPED_DOWN) ? 'X' : ' '));
   ch->sendTo(format(VT_CURSPOS) % 20 % 1);
   ch->sendTo("Select the number to toggle, <C/R> to return to continue.\n\r--> ");
 }
@@ -2165,7 +2165,7 @@ static void ChangeExitWeight(TRoom *rp, TBeing *ch, const char *arg, editorEnter
         ChangeExitWeight(rp, ch, "", ENTER_CHECK);
         return;
     }
-    if (IS_SET(rp->dir_option[dir]->condition, EX_LOCKED)) {
+    if (IS_SET(rp->dir_option[dir]->condition, EXIT_LOCKED)) {
       ChangeExitLockDiff(rp, ch, "", ENTER_CHECK);
       return;
     } else {
@@ -2374,11 +2374,11 @@ static void ChangeExitCondition(TRoom *rp, TBeing *ch, const char *arg, editorEn
       return;
     i = 1 << (update-1);
 
-    if (i == EX_TRAPPED) {
+    if (i == EXIT_TRAPPED) {
       ch->sendTo("Door traps are set in the zone file.\n\r");
       return;
     }
-    if (i == EX_NOENTER) {
+    if (i == EXIT_NOENTER || i == EXIT_JAMMED) {
       ch->sendTo("Don't set this on doors.\n\r");
       return;
     }
@@ -2388,32 +2388,32 @@ static void ChangeExitCondition(TRoom *rp, TBeing *ch, const char *arg, editorEn
     else
       SET_BIT(rp->dir_option[dir]->condition, i);
 
-    if (IS_SET(rp->dir_option[dir]->condition, EX_DESTROYED)) {
-      if (IS_SET(rp->dir_option[dir]->condition, EX_CLOSED)) {
+    if (IS_SET(rp->dir_option[dir]->condition, EXIT_DESTROYED)) {
+      if (IS_SET(rp->dir_option[dir]->condition, EXIT_CLOSED)) {
         ch->sendTo("Destroyed doors can't be closed.\n\r");
-        REMOVE_BIT(rp->dir_option[dir]->condition, EX_CLOSED);
+        REMOVE_BIT(rp->dir_option[dir]->condition, EXIT_CLOSED);
       }
-      if (IS_SET(rp->dir_option[dir]->condition, EX_LOCKED)) {
+      if (IS_SET(rp->dir_option[dir]->condition, EXIT_LOCKED)) {
         ch->sendTo("Destroyed doors can't be locked.\n\r");
-        REMOVE_BIT(rp->dir_option[dir]->condition, EX_LOCKED);
+        REMOVE_BIT(rp->dir_option[dir]->condition, EXIT_LOCKED);
       }
-      if (IS_SET(rp->dir_option[dir]->condition, EX_SECRET)) {
+      if (IS_SET(rp->dir_option[dir]->condition, EXIT_SECRET)) {
         ch->sendTo("Destroyed doors can't be secret.\n\r");
-        REMOVE_BIT(rp->dir_option[dir]->condition, EX_SECRET);
+        REMOVE_BIT(rp->dir_option[dir]->condition, EXIT_SECRET);
       }
     }
-    if (IS_SET(rp->dir_option[dir]->condition, EX_CAVED_IN)) {
-      if (!IS_SET(rp->dir_option[dir]->condition, EX_CLOSED)) {
+    if (IS_SET(rp->dir_option[dir]->condition, EXIT_CAVED_IN)) {
+      if (!IS_SET(rp->dir_option[dir]->condition, EXIT_CLOSED)) {
         ch->sendTo("Caved-in exits must be closed.\n\r");
-        SET_BIT(rp->dir_option[dir]->condition, EX_CLOSED);
+        SET_BIT(rp->dir_option[dir]->condition, EXIT_CLOSED);
       }
-      if (IS_SET(rp->dir_option[dir]->condition, EX_LOCKED)) {
+      if (IS_SET(rp->dir_option[dir]->condition, EXIT_LOCKED)) {
         ch->sendTo("Caved-In exits can't be locked.\n\r");
-        REMOVE_BIT(rp->dir_option[dir]->condition, EX_LOCKED);
+        REMOVE_BIT(rp->dir_option[dir]->condition, EXIT_LOCKED);
       }
-      if (IS_SET(rp->dir_option[dir]->condition, EX_SECRET)) {
+      if (IS_SET(rp->dir_option[dir]->condition, EXIT_SECRET)) {
         ch->sendTo("Caved-In exits can't be secret.\n\r");
-        REMOVE_BIT(rp->dir_option[dir]->condition, EX_SECRET);
+        REMOVE_BIT(rp->dir_option[dir]->condition, EXIT_SECRET);
       }
     }
   } else if (!rp->dir_option[dir]) {
@@ -3139,9 +3139,9 @@ void RoomLoad(TBeing *ch, int start, int end, int useSecond)
 
 	rp2->dir_option[dir]->to_room = convertTo<int>(db_exits["destination"]);
 
-	if (IS_SET(rp2->dir_option[dir]->condition, EX_SECRET) && 
+	if (IS_SET(rp2->dir_option[dir]->condition, EXIT_SECRET) && 
 	    canSeeThruDoor(rp2->dir_option[dir])) {
-	  if (IS_SET(rp2->dir_option[dir]->condition, EX_CLOSED)){
+	  if (IS_SET(rp2->dir_option[dir]->condition, EXIT_CLOSED)){
 	    //vlogf(LOG_LOW, format("See thru door set secret. (%d, %d)") %  room % dir);
 	  } else
 	    vlogf(LOG_LOW, format("Secret door saved as open. (%d, %d)") % 

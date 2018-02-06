@@ -3890,7 +3890,7 @@ void TBeing::doDrag(TObj *o, dirTypeT tdir)
 
   if(!o) return;
   if (!isImmortal()) {
-    if(!o->canWear(ITEM_TAKE)) {
+    if(!o->canWear(ITEM_WEAR_TAKE)) {
       act("$N : You can't drag that.\n\r", TRUE, this, NULL, o, TO_CHAR);
       return;
     }
@@ -4034,7 +4034,7 @@ void TBeing::doDrag(const sstring &arg)
 
   exitp = exitDir(tdir);
 
-  if (!exit_ok(exitp, NULL) || IS_SET(exitp->condition, EX_CLOSED)) {
+  if (!exit_ok(exitp, NULL) || IS_SET(exitp->condition, EXIT_CLOSED)) {
     sendTo(format("You are blocked from dragging %s.\n\r") % dirs[tdir]);
     sendTo(syntax);
     return;
@@ -4376,7 +4376,7 @@ void TBeing::doRoll(TObj *o, dirTypeT tdir)
 
   if(!o) return;
   if (!isImmortal()) {
-    if(!o->canWear(ITEM_TAKE)) {
+    if(!o->canWear(ITEM_WEAR_TAKE)) {
       act("$N : You can't roll that.\n\r", TRUE, this, NULL, o, TO_CHAR);
       return;
     }
@@ -4518,7 +4518,7 @@ void TBeing::doRoll(const sstring &arg)
 
   exitp = exitDir(tdir);
 
-  if (!exit_ok(exitp, NULL) || IS_SET(exitp->condition, EX_CLOSED)) {
+  if (!exit_ok(exitp, NULL) || IS_SET(exitp->condition, EXIT_CLOSED)) {
     sendTo(format("You are blocked from rolling %s.\n\r") % dirs[tdir]);
     sendTo(syntax);
     return;

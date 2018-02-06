@@ -101,8 +101,8 @@ int detectSecret(TBeing * thief)
 	act("$n searches the $g for secret doors.",
                 FALSE, thief, 0, 0, TO_ROOM);
 
-      if (!IS_SET(fdd->condition, EX_SECRET) || 
-          !IS_SET(fdd->condition, EX_CLOSED) ||
+      if (!IS_SET(fdd->condition, EXIT_SECRET) || 
+          !IS_SET(fdd->condition, EXIT_CLOSED) ||
           fdd->keyword == "_unique_door_")
         continue;
 
@@ -225,7 +225,7 @@ int disarmTrapDoor(TBeing * thief, dirTypeT door)
   exitp = thief->exitDir(door);
   strcpy(doorbuf, fname(exitp->keyword).c_str());
 
-  if (!IS_SET(exitp->condition, EX_TRAPPED)) {
+  if (!IS_SET(exitp->condition, EXIT_TRAPPED)) {
     thief->sendTo(format("I don't think the %s is trapped.\n\r") % doorbuf);
     return FALSE;
   }
@@ -239,10 +239,10 @@ int disarmTrapDoor(TBeing * thief, dirTypeT door)
     thief->sendTo(format("Click.  You disarm the %s trap in the %s.\n\r") % trap_type % doorbuf);
     sprintf(buf, "$n disarms the %s trap in the %s.", trap_type, doorbuf);
     act(buf, FALSE, thief, 0, 0, TO_ROOM);
-    REMOVE_BIT(exitp->condition, EX_TRAPPED);
+    REMOVE_BIT(exitp->condition, EXIT_TRAPPED);
     if ((rp = real_roomp(exitp->to_room)) &&
         (back = rp->dir_option[rev_dir[door]])) {
-      REMOVE_BIT(back->condition, EX_TRAPPED);
+      REMOVE_BIT(back->condition, EXIT_TRAPPED);
     }
     return TRUE;
   } else {
@@ -266,7 +266,7 @@ int TPortal::detectMe(TBeing *thief) const
 {
   int bKnown =  thief->getSkillValue(SKILL_DETECT_TRAP);
 
-  if (!isPortalFlag(EX_TRAPPED))
+  if (!isPortalFlag(EXIT_TRAPPED))
     return FALSE;
 
   // opening a trapped portal

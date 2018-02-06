@@ -318,7 +318,6 @@ class TThing {
     virtual int ChargePulse(TBeing *);
     virtual void unequipMe(TBeing *) {}
     virtual void attunePulse(TBeing *);
-    virtual void pickPulse(TBeing *);
     virtual int  skinPulse(TBeing *, TBaseCorpse *);
     virtual int  butcherPulse(TBeing *, TBaseCorpse *);
     virtual void sharpenPulse(TBeing *, TThing *);

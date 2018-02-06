@@ -595,7 +595,7 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
             continue;
           // dirTypeT ++ wraps around - stupid
           dir = (dirTypeT) (dir + 1);
-          if (tp->isPortalFlag(EX_LOCKED | EX_CLOSED))
+          if (tp->isPortalFlag(EXIT_LOCKED | EXIT_CLOSED))
             continue;
           int tmp_room = tp->getTarget();   // next room
           TRoom *hp = real_roomp(tmp_room);

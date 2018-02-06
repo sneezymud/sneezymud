@@ -62,7 +62,7 @@ int task_trap_door(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
       (ch->getPosition() <= POSITION_SITTING) ||
       !(exitp = ch->roomp->dir_option[ch->task->flags]) ||
       !ch->getDiscipline(DISC_LOOTING) ||
-      !IS_SET(exitp->condition, EX_CLOSED)) {
+      !IS_SET(exitp->condition, EXIT_CLOSED)) {
     if (ch->getPosition() >= POSITION_RESTING) {
       act("You suddenly stop trapping the door for some reason.",
                  FALSE, ch, 0, 0, TO_CHAR);
@@ -86,7 +86,7 @@ int task_trap_door(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
 
   if (ch->task->timeLeft < 0)  {
     // Made it to end, set trap 
-    SET_BIT(exitp->condition, EX_TRAPPED);
+    SET_BIT(exitp->condition, EXIT_TRAPPED);
     exitp->trap_info = ch->task->status;
 
     // this is number of 8-sided die to use for damage
@@ -97,7 +97,7 @@ int task_trap_door(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
     if ((rp2 = real_roomp(exitp->to_room)) &&
            (back = rp2->dir_option[rev_dir[ch->task->flags]]) &&
            back->to_room == ch->in_room) {
-      SET_BIT(back->condition, EX_TRAPPED);
+      SET_BIT(back->condition, EXIT_TRAPPED);
       back->trap_info = ch->task->status;
       back->trap_dam = trapdamage;
     }
