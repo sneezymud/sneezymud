@@ -1106,15 +1106,15 @@ wearSlotT pickRandomLimb(bool)
 // if the mob loses all their fighting limbs, inflict extreme pain
 void TBeing::stunIfLimbsUseless()
 {
-  if (!bothArmsHurt())
+  if (hasDisease(DISEASE_EXTREME_PAIN) || !bothArmsHurt())
     return;
 
   affectedData aff;
   aff.type = AFFECT_DISEASE;
   aff.modifier = DISEASE_EXTREME_PAIN;
   aff.level = 0;
-  aff.duration = Pulse::UPDATES_PER_MUDHOUR / 4;
-  aff.bitvector = AFF_STUNNED;
+  aff.duration = Pulse::UPDATES_PER_MUDHOUR / 2;
+  aff.bitvector = AFF_PARALYSIS;
   aff.location = APPLY_NONE;
   affectTo(&aff);
 
