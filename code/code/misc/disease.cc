@@ -1743,11 +1743,10 @@ int disease_extreme_pain(TBeing *vict, int stage, affectedData *aff)
       break;
 
     case DISEASE_PULSE:
-      // is this a good frequency?
       switch(number(0, 30)) {
         case 0:
           act("$n writhes in extreme agony.", false, vict, nullptr, nullptr, TO_ROOM);
-          act("You cannot help but write wretchedly on the $g!", false, vict, nullptr, nullptr, TO_CHAR);
+          act("You cannot help but writhe wretchedly on the $g!", false, vict, nullptr, nullptr, TO_CHAR);
           break;
         case 1:
           act("$n groans piteously.", false, vict, nullptr, nullptr, TO_ROOM);
