@@ -138,7 +138,7 @@ sstring TWand::statObjInfo() const
 int TWand::objectSell(TBeing *ch, TMonster *keeper)
 {
   if (getCurCharges() != getMaxCharges()) {
-    keeper->doTell(ch->getName(), "I'm sorry, I don't buy back expended wands.");
+    keeper->doTell(ch, "I'm sorry, I don't buy back expended wands.");
     return TRUE;
   }
 
@@ -179,7 +179,7 @@ void TWand::lowCheck()
 bool TWand::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
 {
   if (!silent)
-    repair->doTell(fname(ch->name), "You might wanna take that to the magic shop!");
+    repair->doTell(ch, "You might wanna take that to the magic shop!");
 
   return TRUE;
 }

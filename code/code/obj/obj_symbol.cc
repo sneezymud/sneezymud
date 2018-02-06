@@ -93,12 +93,12 @@ int TSymbol::objectSell(TBeing *ch, TMonster *keeper)
   int attuneCode = 1;
 
   if ((getSymbolCurStrength() != getSymbolMaxStrength())) {
-    keeper->doTell(ch->getName(), "I'm sorry, I don't buy back used symbols.");
+    keeper->doTell(ch, "I'm sorry, I don't buy back used symbols.");
     return TRUE;
   }
 
   if ((getSymbolFaction() != FACT_UNDEFINED) && attuneCode) {
-    keeper->doTell(ch->getName(), "I'm sorry, I don't buy back attuned symbols.");
+    keeper->doTell(ch, "I'm sorry, I don't buy back attuned symbols.");
     return TRUE;
   }
 
@@ -178,7 +178,7 @@ void TSymbol::lowCheck()
 bool TSymbol::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
 {
   if (!silent) {
-    repair->doTell(fname(ch->name), "Hey, I don't get involved with religion!");
+    repair->doTell(ch, "Hey, I don't get involved with religion!");
   }
   return TRUE;
 }

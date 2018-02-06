@@ -42,10 +42,8 @@ void uniqueTrophyIntro(TBeing *faerie, TBeing *targ)
     vlogf(LOG_BUG, "uniqueTrophyIntro entered with null faerie");
     return;
   }
-  faerie->doTell(targ->getName(),
-    "You are greatly respected amongst my people for the breadth of your travels.");
-  faerie->doTell(targ->getName(),
-    "I have been sent to help you in your endeavors!");
+  faerie->doTell(targ, "You are greatly respected amongst my people for the breadth of your travels.");
+  faerie->doTell(targ, "I have been sent to help you in your endeavors!");
 }
 
 // feral wrath, but only the stat part (no AC penalty), stat part is halved
@@ -147,10 +145,8 @@ void permaDeathIntro(TBeing *faerie, TBeing *targ)
     vlogf(LOG_BUG, "permaDeathIntro entered with null targ");
     return;
   }
-  faerie->doTell(targ->getName(),
-    "You are greatly respected amongst my people for your great bravery.");
-  faerie->doTell(targ->getName(),
-    "I have been sent to help you in your endeavors!");
+  faerie->doTell(targ, "You are greatly respected amongst my people for your great bravery.");
+  faerie->doTell(targ, "I have been sent to help you in your endeavors!");
 }
 
 // barkskin

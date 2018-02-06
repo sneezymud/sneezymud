@@ -1532,8 +1532,8 @@ void TBeing::checkForQuestTog(TBeing *vict)
       af.be = this;
 
       vict->affectTo(&af, -1);
-      vict->doTell(getName(), "You have acted honorably in attacking me.");
-      vict->doTell(getName(), "Let this fight be to the death!");
+      vict->doTell(this, "You have acted honorably in attacking me.");
+      vict->doTell(this, "Let this fight be to the death!");
 //      vlogf(LOG_COMBAT, format("Setting quest bit for %d on %s vs %s") %  bitnum % vict->getName() % getName());
       // some specials stun the critter so it doesn't start fighting.
       // we need to set them fighting so that if char stuns and flees
@@ -1552,43 +1552,31 @@ void TBeing::checkForQuestTog(TBeing *vict)
         }
       }
       if (!found2 && awake()) {
-        vict->doTell(getName(), "You have acted dishonorably in attacking me while I was unprepared.");
-        vict->doTell(getName(), "This battle will avail you naught unless you fight me at my prime.");
+        vict->doTell(this, "You have acted dishonorably in attacking me while I was unprepared.");
+        vict->doTell(this, "This battle will avail you naught unless you fight me at my prime.");
       }
     }
   }
 }
 
-void TBeing::sendCheatMessage(char *cheater)
+void sendCheatMessage(TBeing &vict, TBeing &cheater)
 {
-  char nameBuf[MAX_NAME_LENGTH];
-
-  sprintf(nameBuf, "%s", cheater);
-  switch (mobVnum()) {
+  switch (vict.mobVnum()) {
     case Mob::TROLL_GIANT:
     case Mob::CAPTAIN_RYOKEN:
     case Mob::TREE_SPIRIT:
-      doTell(nameBuf, "You have failed to defeat me in single combat.");
-      doTell(nameBuf, "An honorable deikhan would allow me to heal completely before attacking again.");
+      vict.doTell(cheater, "You have failed to defeat me in single combat.");
+      vict.doTell(cheater, "An honorable deikhan would allow me to heal completely before attacking again.");
       break;
     case Mob::JOHN_RUSTLER:
-      doTell(nameBuf, "You have failed to defeat me in single combat.");
-      doTell(nameBuf, "An honorable ranger would allow me to heal completely before attacking again.");
-      break;      
     case Mob::ORC_MAGI:
-      sendTo("<c>You realize you did not follow the guidelines of your quest, so this fight will be for naught.<1>\n\r");
-      setQuestBit(TOG_FAILED_TO_KILL_MAGI);
-      break;
     case Mob::CLERIC_VOLCANO:
-      doTell(nameBuf, "You have failed to defeat me in single combat.");
-      doTell(nameBuf, "An honorable ranger would allow me to heal completely before attacking again.");
-      break;
     case Mob::CLERIC_ARDEN:
-      doTell(nameBuf, "You have failed to defeat me in single combat.");
-      doTell(nameBuf, "An honorable ranger would allow me to heal completely before attacking again.");
+      vict.doTell(cheater, "You have failed to defeat me in single combat.");
+      vict.doTell(cheater, "An honorable ranger would allow me to heal completely before attacking again.");
       break;
     default:
-      vlogf(LOG_COMBAT, format("Somehow got to getCheatMessage without a valid toggle bit %s.") %  getName());
+      vlogf(LOG_COMBAT, format("Somehow non-quest mob %s got to getCheatMessage.") %  vict.getName());
       break;
   }
 }
@@ -1598,7 +1586,6 @@ void TBeing::stopFighting()
 {
   TBeing *tmp;
   affectedData *af, *af2;
-  char nameBuf[MAX_NAME_LENGTH];
 
   stopmusic();
 
@@ -1631,12 +1618,10 @@ void TBeing::stopFighting()
     if (af->type == AFFECT_COMBAT && af->modifier == COMBAT_SOLO_KILL) {
       // stopFighting is called from a bunch of places, including mob death
       // we have trapped death, so anything else that gets here implies
-      // combat stopped for some other reason
-      // ie, mob fled, got paralyzed, teleported, etc.
+      // combat stopped for some other reason - mob fled, got paralyzed, teleported, etc.
       if (awake()) {
         vlogf(LOG_COMBAT, format("Removing Solo Combat Affect from: %s") %  getName());
-        sprintf(nameBuf, "%s", fname(af->be->name).c_str());
-        sendCheatMessage(nameBuf);
+        sendCheatMessage(*this, *(TBeing *)af->be);
         affectRemove(af);
       }
 #if 0

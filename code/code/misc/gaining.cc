@@ -19,88 +19,88 @@
 void TBeing::setSpellEligibleToggle(TMonster *trainer, spellNumT spell, silentTypeT silent) 
 {
   if (!silent && trainer) {
-    trainer->doTell(fname(name), format("You now have the training to learn %s!") % discArray[spell]->name);
+    trainer->doTell(this, format("You now have the training to learn %s!") % discArray[spell]->name);
   }
 
   switch (spell) {
     case SPELL_TORNADO:
       if (!silent && trainer) {
-        trainer->doTell(fname(name), "Alas, I do not have the knowledge to train you in tornado.");
-        trainer->doTell(fname(name), "Seek out the wise elf Salrik to see if you can learn it from him.  I will let him know that I have sent you.");
+        trainer->doTell(this, "Alas, I do not have the knowledge to train you in tornado.");
+        trainer->doTell(this, "Seek out the wise elf Salrik to see if you can learn it from him.  I will let him know that I have sent you.");
       }
       setQuestBit(TOG_TORNADO_ELIGIBLE);
       break;
 
     case SKILL_BARKSKIN:
       if (!silent && trainer) {
-        trainer->doTell(fname(name), "However, before I train you in barkskin, I must ask you  to perform a small task to prove your worth.");
-	trainer->doTell(fname(name), "In order to prove you are ready for such knowledge, bring me some barkskin.");
+        trainer->doTell(this, "However, before I train you in barkskin, I must ask you  to perform a small task to prove your worth.");
+	trainer->doTell(this, "In order to prove you are ready for such knowledge, bring me some barkskin.");
       }
       setQuestBit(TOG_ELIGIBLE_BARKSKIN);
       break;
       
     case SPELL_EARTHQUAKE:
       if (!silent && trainer) {
-        trainer->doTell(fname(name), "However, before I train you in earthquake, I must ask you to perform a small task to prove your worth.");
-        trainer->doTell(fname(name), "In order to prove you are ready for such knowledge, bring me a yellow boot.");
+        trainer->doTell(this, "However, before I train you in earthquake, I must ask you to perform a small task to prove your worth.");
+        trainer->doTell(this, "In order to prove you are ready for such knowledge, bring me a yellow boot.");
       }
       setQuestBit(TOG_ELIGIBLE_EARTHQUAKE);
       break;
       
     case SKILL_DUAL_WIELD:
       if (!silent && trainer) {
-        trainer->doTell(fname(name), "However, before I train you in dual wield, I must ask you to perform a small task to prove your worth.");
-        trainer->doTell(fname(name), "In order to prove you are ready for such knowledge, bring me some mandrake.");
+        trainer->doTell(this, "However, before I train you in dual wield, I must ask you to perform a small task to prove your worth.");
+        trainer->doTell(this, "In order to prove you are ready for such knowledge, bring me some mandrake.");
       }
       setQuestBit(TOG_ELIGIBLE_DUAL_WIELD);
       break;
       
     case SPELL_FIREBALL:
       if (!silent && trainer) {
-        trainer->doTell(fname(name), "Alas, I do not have the knowledge to train you in fireball.");
-        trainer->doTell(fname(name), "Seek out the mischevious mage Kallam to see if you can learn it from him.  I will let him know that I have sent you.");
+        trainer->doTell(this, "Alas, I do not have the knowledge to train you in fireball.");
+        trainer->doTell(this, "Seek out the mischevious mage Kallam to see if you can learn it from him.  I will let him know that I have sent you.");
       }
       setQuestBit(TOG_ELIGIBLE_FIREBALL);
       break;
 
     case SPELL_ICE_STORM:
       if (!silent && trainer) {
-        trainer->doTell(fname(name), "Alas, I do not have the knowledge to train you in ice storm.");
-        trainer->doTell(fname(name), "Seek out the water mage, Cardac, to see if you can learn it from him.  I will let him know that I have sent you.");
+        trainer->doTell(this, "Alas, I do not have the knowledge to train you in ice storm.");
+        trainer->doTell(this, "Seek out the water mage, Cardac, to see if you can learn it from him.  I will let him know that I have sent you.");
       }
       setQuestBit(TOG_ELIGIBLE_ICE_STORM);
       break;
 
     case SPELL_STONE_SKIN:
       if (!silent && trainer) {
-        trainer->doTell(fname(name), "Alas, I do not have the knowledge to train you in stone skin.");
-        trainer->doTell(fname(name), "However, I do remember a dwarf that perhaps has such knowledge of using defensive Earth Magic.");
-        trainer->doTell(fname(name), "I think the City in the Clouds has the dwarf you seek.  He is a very important abassador there.");
-        trainer->doTell(fname(name), "Seek him out, he may hold the secrets you desire.");
+        trainer->doTell(this, "Alas, I do not have the knowledge to train you in stone skin.");
+        trainer->doTell(this, "However, I do remember a dwarf that perhaps has such knowledge of using defensive Earth Magic.");
+        trainer->doTell(this, "I think the City in the Clouds has the dwarf you seek.  He is a very important abassador there.");
+        trainer->doTell(this, "Seek him out, he may hold the secrets you desire.");
       }
       setQuestBit(TOG_ELIGIBLE_STONESKIN);
       break;
 
     case SPELL_GALVANIZE:
       if (!silent && trainer) {
-        trainer->doTell(fname(name), "Alas, I do not have the knowledge to train you in galvanize.");
-        trainer->doTell(fname(name), "Seek out the wizened mage, Fabnir, to see if you can learn it from him.  I will let him know that I have sent you.");
+        trainer->doTell(this, "Alas, I do not have the knowledge to train you in galvanize.");
+        trainer->doTell(this, "Seek out the wizened mage, Fabnir, to see if you can learn it from him.  I will let him know that I have sent you.");
       }
       setQuestBit(TOG_ELIGIBLE_GALVANIZE);
       break;
 
     case SPELL_POWERSTONE:
       if (!silent && trainer) {
-        trainer->doTell(fname(name), "Alas, I do not have the knowledge to train you in powerstone.");
-        trainer->doTell(fname(name), "Seek out the wise alchemist, Fabnir, to see if you can learn it from him.  I will let him know that I have sent you.");
+        trainer->doTell(this, "Alas, I do not have the knowledge to train you in powerstone.");
+        trainer->doTell(this, "Seek out the wise alchemist, Fabnir, to see if you can learn it from him.  I will let him know that I have sent you.");
       }
       setQuestBit(TOG_ELIGIBLE_POWERSTONE);
       break;
 
     case SKILL_ADVANCED_KICKING:
       if(!silent && trainer){
-	trainer->doTell(fname(name), "Although you are eligible to learn advanced kicking, you must first master kick.");
-	trainer->doTell(fname(name), "When you have mastered kick, speak with your guildmaster and I will tell you how to learn advanced kicking.");
+	trainer->doTell(this, "Although you are eligible to learn advanced kicking, you must first master kick.");
+	trainer->doTell(this, "When you have mastered kick, speak with your guildmaster and I will tell you how to learn advanced kicking.");
       }
       break;
 
@@ -1144,6 +1144,161 @@ TRAININFO TrainerInfo[] =
 };
 
 
+int checkTrainDeny(TBeing *ch, TMonster *me, discNumT discipline, int pracs)
+{
+  if ((ch->getDiscipline(discipline))->getNatLearnedness() >= MAX_DISC_LEARNEDNESS) {
+    me->doTell(ch, "You are already fully learned in this discipline.");
+    return TRUE;
+  }
+  if ((ch->getDiscipline(discipline))->getNatLearnedness() + pracs > MAX_DISC_LEARNEDNESS) {
+    ch->sendTo("You cannot practice that many times!\n\r");
+    return TRUE;
+  }
+  return FALSE;
+}
+
+
+int checkForPreReqs(TBeing *ch, TMonster *me, discNumT discipline, classIndT accclass, int prereqs)
+{
+  char buf[256];
+  sstring tmp_buf;
+  int found = 0;
+  int combat = 0;
+  bool combatLearn = FALSE;
+  int WEAPON_GAIN_LEARNEDNESS = 92;
+
+ if (discipline == DISC_BAREHAND) {
+   if (ch->getRawNatSkillValue(SKILL_BAREHAND_PROF) < WEAPON_GAIN_LEARNEDNESS) {
+     me->doTell(ch, "You aren't proficient enough yet.");
+     return TRUE;
+   }
+ }
+ if (discipline == DISC_SLASH) {
+   if (ch->getRawNatSkillValue(SKILL_SLASH_PROF) < WEAPON_GAIN_LEARNEDNESS) {
+      me->doTell(ch, "You aren't proficient enough yet.");
+      return TRUE;
+    }
+  }
+  if (discipline == DISC_PIERCE) {
+    if (ch->getRawNatSkillValue(SKILL_PIERCE_PROF) < WEAPON_GAIN_LEARNEDNESS) {
+      me->doTell(ch, "You aren't proficient enough yet.");
+      return TRUE;
+    }
+  }
+  if (discipline == DISC_BLUNT) {
+    if (ch->getRawNatSkillValue(SKILL_BLUNT_PROF) < WEAPON_GAIN_LEARNEDNESS) {
+      me->doTell(ch, "You aren't proficient enough yet.");
+      return TRUE;
+    }
+  }
+  if (discipline == DISC_RANGED) {
+    if (ch->getRawNatSkillValue(SKILL_RANGED_PROF) < WEAPON_GAIN_LEARNEDNESS) {
+      me->doTell(ch, "You aren't proficient enough yet.");
+      return TRUE;
+    }
+  }
+  if (discipline == DISC_DEFENSE) {
+    if (ch->getRawNatSkillValue(SKILL_DEFENSE) < WEAPON_GAIN_LEARNEDNESS) {
+      me->doTell(ch, "You aren't proficient enough yet.");
+      return TRUE;
+    }
+  }
+  if (discipline == DISC_ADVANCED_ADVENTURING) {
+    if (ch->getDiscipline(DISC_ADVENTURING)->getNatLearnedness() < WEAPON_GAIN_LEARNEDNESS) {
+      me->doTell(ch, "You aren't proficient enough yet.");
+      return TRUE;
+    }
+  }
+  if (discipline == DISC_PSIONICS) {
+    if (!ch->hasQuestBit(TOG_PSIONICIST)){
+      me->doTell(ch, "You do not have the ability to learn psionics.");
+      return TRUE;
+    }
+
+  }
+
+  if (!prereqs)
+    return FALSE;
+
+  // all classes uses combat as a base requirement
+  combat = ch->getDiscipline(DISC_COMBAT)->getNatLearnedness();
+  tmp_buf = sstring(discNames[DISC_COMBAT].name).cap();
+
+  if(classInfo[accclass].sec_disc != DISC_NONE){
+    combat+=ch->getDiscipline(classInfo[accclass].sec_disc)->getNatLearnedness();
+    tmp_buf += " or ";
+    tmp_buf += sstring(discNames[classInfo[accclass].sec_disc].name).cap();
+  }
+
+
+  if ((combat >= 100) ||
+      (ch->getLevel(accclass) < 3) ||
+      (combat >= (((35*ch->getLevel(accclass)) /10) - 4))) {
+    combatLearn = TRUE;
+  }
+
+
+  if (discipline == DISC_COMBAT ||
+                  discipline == DISC_LORE ||
+                  discipline == DISC_THEOLOGY ||
+                  discipline == DISC_FAITH ||
+                  discipline == DISC_WIZARDRY ||
+                  discipline == DISC_RITUALISM ||
+  // No restrictions on DISC_COMBAT and EQUIVALENTs
+                  discipline == DISC_SLASH ||
+                  discipline == DISC_BLUNT ||
+                  discipline == DISC_PIERCE ||
+                  discipline == DISC_RANGED ||
+                  discipline == DISC_BAREHAND ||
+                  discipline == DISC_DEFENSE ||
+                  discipline == DISC_ADVENTURING ||
+                  discipline == DISC_ADVANCED_ADVENTURING){
+    // No restrictions on these disciplines if prof maxxed see first checks
+    return FALSE;
+  } else {  // needs basic skills for class
+    for(classIndT i=MIN_CLASS_IND;i<MAX_CLASSES;i++){
+      if(accclass == i){
+	if(discipline == classInfo[i].base_disc){
+	  if(combatLearn)
+	    return FALSE;
+	  else
+	    found = 1;
+	} else {
+	  found = 2;
+	}
+      }
+    }
+
+    if(!found){
+      vlogf(LOG_BUG, format("Bad case in gaining pre requisites (%d) (%s)") %  accclass % ch->getName());
+      ch->sendTo("Bug that you got this at the gain trainer.");
+      return TRUE;
+    }
+  }
+
+  switch (found) {
+    case 2:
+      if (combat >= MAX_DISC_LEARNEDNESS) {
+        me->doTell(ch, "Tsk! Tsk! You have not kept up with your basic training and you expect advanced learning.");
+        sprintf(buf, "Hmmm. I think you should learn more from your %s trainer.", me->getProfName().c_str());
+      } else if (!combatLearn) {
+        me->doTell(ch, "Tsk! Tsk! You have not kept up with your basic training and you expect advanced learning.");
+        sprintf(buf, "Hmmm. I think you should learn more from the %s trainer.", tmp_buf.c_str());
+      } else {
+        me->doTell(ch, "Tsk! Tsk! You have not finished any of your basic training and you expect advanced learning.");
+        sprintf(buf, "Hmmm. I think you should learn more from one of your basic trainers.");
+      }
+      me->doTell(ch, buf);
+      return TRUE;
+    case 1:
+      me->doTell(ch, "Tsk! Tsk! You have not kept up with your general training and you expect me to teach you more.");
+      me->doTell(ch, format("Go learn more about %s before you come back to me.") % tmp_buf);
+      return TRUE;
+  }
+  return FALSE;
+}
+
+
 int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 {
   int offset = 0;
@@ -1241,7 +1396,7 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
       accclass = SHAMAN_LEVEL_IND;
   else if (!*classbuf) {
     /* more than 1 class is appropriate, user needs to specify */
-    me->doTell(fname(ch->name), "You need to specify a class.");
+    me->doTell(ch, "You need to specify a class.");
     sprintf(buf,
          "Type \"practice %s <number>\" to learn this discipline.", 
          TrainerInfo[offset].abbrev);
@@ -1271,33 +1426,32 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
 // First set doneBasic and check for it
   doneBas = ch->checkDoneBasic(ch, accclass, FALSE, FALSE);
 
-// Get how many practices the trainer himself will allow
-  practices = ch->getTrainerPracs(ch, me, accclass, discipline, pracs);
+  practices = ch->pracsBetween(discipline, me->GetMaxLevel());
 
 // Make sure Im not maxxed, other small checks
-  if (ch->checkTrainDeny(ch, me, discipline, min(practices, pracs))) 
+  if (checkTrainDeny(ch, me, discipline, min(practices, pracs))) 
     return TRUE;
 
-  if (ch->checkForPreReqs(ch, me, discipline, accclass, doneBas)) {
+  if (checkForPreReqs(ch, me, discipline, accclass, doneBas)) {
     if (practices <= 0) {
-      me->doTell(fname(ch->name), "I also would not be able to train you further in this discipline.");
+      me->doTell(ch, "I also would not be able to train you further in this discipline.");
     }
     return TRUE;
   }
  
   if (practices <= 0) {
-    me->doTell(fname(ch->name), "You have come far.  I can train you no farther in this discipline.");
-    me->doTell(fname(ch->name), "You must find another master who can further your training.");
+    me->doTell(ch, "You have come far.  I can train you no farther in this discipline.");
+    me->doTell(ch, "You must find another master who can further your training.");
     return TRUE;
   }
 
   // set the number they actually have as another limiting factor
   practices = min((int) ch->getPracs(accclass), practices);
   if (practices <= 0) {
-    me->doTell(fname(ch->name), "You have no more practices you can use here.");
+    me->doTell(ch, "You have no more practices you can use here.");
     return TRUE;
   } else if (practices < pracs) {
-      me->doTell(fname(ch->name), format("I will only be able to use %d of your requested practices.") % practices);
+      me->doTell(ch, format("I will only be able to use %d of your requested practices.") % practices);
   }
   if (ch->doTraining(ch, me, accclass, offset, min(practices, pracs))) 
     return TRUE;
@@ -1305,14 +1459,6 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
   return TRUE;
 }
   
-int TBeing::getCombatPrereqNumber(classIndT accclass) const
-{
-  switch (accclass) {
-    default:
-      return MAX_DISC_LEARNEDNESS;
-  }
-  return MAX_DISC_LEARNEDNESS;
-}
 
 int TBeing::checkDoneBasic(TBeing *ch, classIndT accclass, int guild, int amountCheck)
 {
@@ -1360,12 +1506,12 @@ int TBeing::checkDoneBasic(TBeing *ch, classIndT accclass, int guild, int amount
   }
 
   if (amountCheck) {
-    return (min(combat, (int) getCombatPrereqNumber(accclass)) + min(bas, (int) MAX_DISC_LEARNEDNESS));
+    return (min(combat, (int) MAX_DISC_LEARNEDNESS) + min(bas, (int) MAX_DISC_LEARNEDNESS));
   }
   if (ch->player.doneBasic[accclass]) {
     return FALSE;
   }
-  if ((combat >= getCombatPrereqNumber(accclass)) && (bas >= MAX_DISC_LEARNEDNESS)) {
+  if ((combat >= MAX_DISC_LEARNEDNESS) && (bas >= MAX_DISC_LEARNEDNESS)) {
     if (!ch->player.doneBasic[accclass]) {
       ch->player.doneBasic[accclass] = ch->getLevel(accclass);
       if (guild) 
@@ -1374,7 +1520,7 @@ int TBeing::checkDoneBasic(TBeing *ch, classIndT accclass, int guild, int amount
     return FALSE;
   } else if (bas >= MAX_DISC_LEARNEDNESS) {
     return 1;
-  } else if (combat >= getCombatPrereqNumber(accclass)) {
+  } else if (combat >= MAX_DISC_LEARNEDNESS) {
     return 2;
   } else {
     return 3;
@@ -1382,194 +1528,6 @@ int TBeing::checkDoneBasic(TBeing *ch, classIndT accclass, int guild, int amount
   return 3;
 }
   
-int TBeing::getTrainerPracs(const TBeing *ch, const TMonster *me, classIndT accclass, discNumT discipline, int pracs) const
-{
-  return ch->pracsBetween(discipline, me->GetMaxLevel());
-
-  /*
-  int trainLevel = 0, discLearn = 0;
-
-  trainLevel = me->GetMaxLevel();
-  discLearn = ch->getDiscipline(discipline)->getNatLearnedness();
-
-  if ((discipline == DISC_COMBAT) || (discipline == DISC_LORE) ||
-      (discipline == DISC_THEOLOGY)) {
-    bakpracs = trainLevel - discLearn;
-  } else if (discipline == DISC_SHAMAN || discipline == DISC_MAGE || 
-             discipline == DISC_CLERIC || discipline == DISC_WARRIOR ||
-             discipline == DISC_RANGER || discipline == DISC_DEIKHAN ||
-             discipline == DISC_MONK || discipline == DISC_THIEF) {
-    bakpracs = trainLevel - discLearn;
-  } else if (((discipline == DISC_SLASH) || (discipline == DISC_PIERCE) ||
-              (discipline == DISC_BLUNT) || (discipline == DISC_RANGED) ||
-	      (discipline == DISC_BAREHAND)|| (discipline == DISC_DEFENSE) ||
-	      (discipline == DISC_PSIONICS) ||
-	      (discipline == DISC_ADVANCED_ADVENTURING)) &&
-              (ch->getDiscipline(DISC_COMBAT)->getNatLearnedness() < MAX_DISC_LEARNEDNESS)) {
-    if (trainLevel == discLearn) 
-      bakpracs = 0;
-    else 
-      bakpracs = max(1, ((trainLevel - discLearn) / 5));
-  } else {
-    bakpracs = ch->pracsBetween(discipline, me->GetMaxLevel());
-  }
-  return bakpracs;*/
-}
-
-int TBeing::checkTrainDeny(const TBeing *ch, TMonster *me, discNumT discipline, int pracs) const
-{
-
-  if ((ch->getDiscipline(discipline))->getNatLearnedness() >= MAX_DISC_LEARNEDNESS) {
-    me->doTell(fname(ch->name), "You are already fully learned in this discipline.");
-    return TRUE;
-  }
-  if ((ch->getDiscipline(discipline))->getNatLearnedness() + pracs > MAX_DISC_LEARNEDNESS) {
-    ch->sendTo("You cannot practice that many times!\n\r");
-    return TRUE;
-  }
-  return FALSE;
-}
-
-int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline, classIndT accclass, int prereqs) const
-{
-  char buf[256];
-  sstring tmp_buf;
-  int found = 0;
-  int combat = 0;
-  bool combatLearn = FALSE;
-  int WEAPON_GAIN_LEARNEDNESS = 92;
-
- if (discipline == DISC_BAREHAND) {
-   if (ch->getRawNatSkillValue(SKILL_BAREHAND_PROF) < WEAPON_GAIN_LEARNEDNESS) {
-     me->doTell(fname(ch->name), "You aren't proficient enough yet.");
-     return TRUE;
-   }
- }
- if (discipline == DISC_SLASH) {
-   if (ch->getRawNatSkillValue(SKILL_SLASH_PROF) < WEAPON_GAIN_LEARNEDNESS) {
-      me->doTell(fname(ch->name), "You aren't proficient enough yet.");
-      return TRUE;
-    }
-  }
-  if (discipline == DISC_PIERCE) {
-    if (ch->getRawNatSkillValue(SKILL_PIERCE_PROF) < WEAPON_GAIN_LEARNEDNESS) {
-      me->doTell(fname(ch->name), "You aren't proficient enough yet.");
-      return TRUE;
-    }
-  }
-  if (discipline == DISC_BLUNT) {
-    if (ch->getRawNatSkillValue(SKILL_BLUNT_PROF) < WEAPON_GAIN_LEARNEDNESS) {
-      me->doTell(fname(ch->name), "You aren't proficient enough yet.");
-      return TRUE;
-    }
-  }
-  if (discipline == DISC_RANGED) {
-    if (ch->getRawNatSkillValue(SKILL_RANGED_PROF) < WEAPON_GAIN_LEARNEDNESS) {
-      me->doTell(fname(ch->name), "You aren't proficient enough yet.");
-      return TRUE;
-    }
-  }
-  if (discipline == DISC_DEFENSE) {
-    if (ch->getRawNatSkillValue(SKILL_DEFENSE) < WEAPON_GAIN_LEARNEDNESS) {
-      me->doTell(fname(ch->name), "You aren't proficient enough yet.");
-      return TRUE;
-    }
-  }
-  if (discipline == DISC_ADVANCED_ADVENTURING) {
-    if (ch->getDiscipline(DISC_ADVENTURING)->getNatLearnedness() < WEAPON_GAIN_LEARNEDNESS) {
-      me->doTell(fname(ch->name), "You aren't proficient enough yet.");
-      return TRUE;
-    }
-  }
-  if (discipline == DISC_PSIONICS) {
-    if (!ch->hasQuestBit(TOG_PSIONICIST)){
-      me->doTell(fname(ch->name), "You do not have the ability to learn psionics.");
-      return TRUE;
-    }
-
-  }
-
-  if (!prereqs)
-    return FALSE;
-
-  // all classes uses combat as a base requirement
-  combat = ch->getDiscipline(DISC_COMBAT)->getNatLearnedness();
-  tmp_buf = sstring(discNames[DISC_COMBAT].name).cap();
-  
-  if(classInfo[accclass].sec_disc != DISC_NONE){
-    combat+=getDiscipline(classInfo[accclass].sec_disc)->getNatLearnedness();
-    tmp_buf += " or ";
-    tmp_buf += sstring(discNames[classInfo[accclass].sec_disc].name).cap();
-  }
-
-
-  if ((combat >= 100) ||
-      (ch->getLevel(accclass) < 3) ||
-      (combat >= (((35*ch->getLevel(accclass)) /10) - 4))) {
-    combatLearn = TRUE;
-  }
-
-
-  if (discipline == DISC_COMBAT || 
-                  discipline == DISC_LORE || 
-                  discipline == DISC_THEOLOGY ||
-                  discipline == DISC_FAITH ||
-                  discipline == DISC_WIZARDRY ||
-                  discipline == DISC_RITUALISM ||
-  // No restrictions on DISC_COMBAT and EQUIVALENTs
-                  discipline == DISC_SLASH || 
-                  discipline == DISC_BLUNT || 
-                  discipline == DISC_PIERCE || 
-                  discipline == DISC_RANGED ||
-                  discipline == DISC_BAREHAND ||
-                  discipline == DISC_DEFENSE ||
-                  discipline == DISC_ADVENTURING ||
-                  discipline == DISC_ADVANCED_ADVENTURING){
-    // No restrictions on these disciplines if prof maxxed see first checks
-    return FALSE;
-  } else {  // needs basic skills for class
-    for(classIndT i=MIN_CLASS_IND;i<MAX_CLASSES;i++){
-      if(accclass == i){
-	if(discipline == classInfo[i].base_disc){
-	  if(combatLearn)
-	    return FALSE;
-	  else
-	    found = 1;
-	} else {
-	  found = 2;
-	}
-      }
-    }
-    
-    if(!found){
-      vlogf(LOG_BUG, format("Bad case in gaining pre requisites (%d) (%s)") %  accclass % ch->getName());
-      ch->sendTo("Bug that you got this at the gain trainer.");
-      return TRUE;
-    }
-  }
-
-  switch (found) {
-    case 2:
-      if (combat >= MAX_DISC_LEARNEDNESS) {
-        me->doTell(fname(ch->name), "Tsk! Tsk! You have not kept up with your basic training and you expect advanced learning.");
-        sprintf(buf, "Hmmm. I think you should learn more from your %s trainer.", me->getProfName().c_str());
-      } else if (!combatLearn) {
-        me->doTell(fname(ch->name), "Tsk! Tsk! You have not kept up with your basic training and you expect advanced learning.");
-        sprintf(buf, "Hmmm. I think you should learn more from the %s trainer.", tmp_buf.c_str());
-      } else {
-        me->doTell(fname(ch->name), "Tsk! Tsk! You have not finished any of your basic training and you expect advanced learning.");
-        sprintf(buf, "Hmmm. I think you should learn more from one of your basic trainers.");
-      }
-      me->doTell(fname(ch->name), buf);
-      return TRUE;
-    case 1:
-      me->doTell(fname(ch->name), "Tsk! Tsk! You have not kept up with your general training and you expect me to teach you more.");
-      me->doTell(fname(ch->name), format("Go learn more about %s before you come back to me.") % tmp_buf);
-      return TRUE;
-  }
-  return FALSE;
-}
-
 extern struct PolyType DisguiseList[];
 static const int MaxDisguiseType = 18; // Non-Race Specific Ones
 
@@ -1602,15 +1560,15 @@ int TBeing::doTraining(TBeing *ch, TMonster *me, classIndT accclass, int offset,
     // basic level check
     if ((ch->getDiscipline(TrainerInfo[offset].disc))->getNatLearnedness() >=
          me->GetMaxLevel()) {
-       me->doTell(fname(ch->name), "I can train you no farther in this discipline.");
-       me->doTell(fname(ch->name), "You must find another master who can further your training.");
+       me->doTell(ch, "I can train you no farther in this discipline.");
+       me->doTell(ch, "You must find another master who can further your training.");
 
       break;
     }
     // basic maxed check
     if ((ch->getDiscipline(TrainerInfo[offset].disc))->getNatLearnedness() >=
          MAX_DISC_LEARNEDNESS) {
-      me->doTell(fname(ch->name), "You are now fully trained in this discipline.");
+      me->doTell(ch, "You are now fully trained in this discipline.");
       break;
     }
 
@@ -2148,9 +2106,9 @@ void TBeing::pracPath(TMonster *gm, classIndT Class)
   if (basic >= MAX_DISC_LEARNEDNESS) {
     basicLearn=TRUE;
   }
-  if (combat >= getCombatPrereqNumber(Class)) {
-    combatLearn = TRUE;
+  if (combat > MAX_DISC_LEARNEDNESS) {
     combatMax = 1;
+    combatLearn = TRUE;
   }
   if (combat == MAX_DISC_LEARNEDNESS) {
     combatMax = 2;
@@ -2159,7 +2117,6 @@ void TBeing::pracPath(TMonster *gm, classIndT Class)
   if (combat >= combatReq) {
     combatLearn = TRUE;
   }
-
 
   if (combatMax && basicLearn) {
     sprintf(buf, "Hmmm, looks like you are free to use these practices at any advanced %s trainer.", gm->getProfName().c_str());

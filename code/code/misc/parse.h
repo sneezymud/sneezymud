@@ -406,7 +406,6 @@ enum cmdTypeT {
      CMD_RAISE,
      CMD_ROLL,
      CMD_BLINK,
-     CMD_BRUTTEST,
      CMD_HOSTLOG,
      CMD_PRESS,
      CMD_TWIST,

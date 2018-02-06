@@ -556,7 +556,7 @@ class TBeing : public TThing {
     int missVictim(TBeing *, TThing *, spellNumT);
 
     // Postmaster
-    void postmasterSendMail(const char *, TMonster *);
+    void postmasterSendMail(const sstring&, TMonster *);
     void postmasterReceiveMail(TMonster *);
     void postmasterCheckMail(TMonster *);
 
@@ -586,7 +586,7 @@ class TBeing : public TThing {
     int numClasses() const;
 
     int triggerSpecial(TThing *, cmdTypeT cmd, const char *arg); 
-    int triggerSpecialOnPerson(TThing *, cmdTypeT cmd, const char *arg); 
+    int triggerSpecialOnPerson(TThing *, cmdTypeT cmd, const sstring &arg); 
     void sendCastingMessages(bool, bool, int, skillUseTypeT, int);
     void sendFinalCastingMessages(bool, bool, skillUseTypeT);
 
@@ -732,7 +732,6 @@ class TBeing : public TThing {
     double pietyGain(double);
     void goBerserk(TBeing *);
     void checkForQuestTog(TBeing *);
-    void sendCheatMessage(char *);
     void stopFighting();
     int canBeParalyzeLimbed();
     int checkIdling();
@@ -1618,13 +1617,9 @@ class TBeing : public TThing {
     virtual void doTitle(const char *);
     int doTithe();
     void doMessage(const char *);
-    int getTrainerPracs(const TBeing *, const TMonster *, classIndT, discNumT, int) const;
-    int checkTrainDeny(const TBeing *, TMonster *, discNumT, int) const;
-    int checkForPreReqs(const TBeing *, TMonster *, discNumT, classIndT, int) const;
     int initiateSkillsLearning(discNumT, int, int);
     void setSpellEligibleToggle(TMonster *, spellNumT, silentTypeT);
     int doTraining(TBeing *ch, TMonster *, classIndT, int, int) const;
-    int getCombatPrereqNumber(classIndT) const;
 
     // this and ch can't be const due to setting doneBasic
     int checkDoneBasic(TBeing *, classIndT, int, int);
@@ -1782,7 +1777,6 @@ class TBeing : public TThing {
     bool isOrderAllowed(const char *);
     virtual int doQuit2() = 0;
     void doQuit();
-    void doBruttest(const char *);
     int doMove(cmdTypeT);
     int doMove(dirTypeT);
     int doSay(const char *fmt, ...);
@@ -1805,7 +1799,13 @@ class TBeing : public TThing {
     void lookingAtObj(TThing *);
     void doShout(const sstring &);
     int doWhisper(const sstring &);
+
+    int doTell(TBeing &vict, const sstring &message, bool visible = TRUE) {
+        return doTell(&vict, message, visible);
+    }
     int doTell(const sstring &, const sstring &, bool visible = TRUE);
+    int doTell(TBeing *, const sstring &, bool visible = TRUE);
+
     int doClientMessage(const char *);
     int doAsk(const sstring &);
     int doSign(const sstring &);
@@ -1897,9 +1897,9 @@ class TBeing : public TThing {
     void addToRandomStat(int);
 
     // Garble code, contained in garble.h and garble.cc
-    int getGarbles(TBeing *to) const;
+    int getGarbles(const TBeing *to) const;
     int toggleGarble(Garble::TYPE garble);
-    sstring garble(TBeing *to, const sstring &arg, Garble::SPEECHTYPE speechType, Garble::SCOPE garbleScope = Garble::SCOPE_ALL) const;
+    const sstring garble(TBeing *to, const sstring &arg, Garble::SPEECHTYPE speechType, Garble::SCOPE garbleScope = Garble::SCOPE_ALL) const;
 
     // used by doReset
     bool resetPractices(classIndT resetClass, int &practices, bool reset = true);

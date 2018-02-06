@@ -52,7 +52,7 @@ sstring TTrash::statObjInfo() const
 bool TTrash::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
 {
   if (!silent)
-    repair->doTell(fname(ch->name), format("I'm not the trash man. Take %s to the dump!") % getName());
+    repair->doTell(ch, format("I'm not the trash man. Take %s to the dump!") % getName());
 
   return TRUE;
 }

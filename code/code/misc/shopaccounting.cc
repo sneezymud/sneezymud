@@ -338,7 +338,7 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
 void TShopOwned::giveStatements(sstring arg)
 {
   if(!hasAccess(SHOPACCESS_LOGS)){
-    keeper->doTell(ch->getName(), "Sorry, you don't have access to do that.");
+    keeper->doTell(ch, "Sorry, you don't have access to do that.");
     return;
   }
 

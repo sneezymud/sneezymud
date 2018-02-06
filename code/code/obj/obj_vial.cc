@@ -45,12 +45,12 @@ int TVial::objectSell(TBeing *ch, TMonster *keeper)
   sstring buf;
 
   if(getDrinkType()!=LIQ_HOLYWATER){
-    keeper->doTell(ch->getName(), "Hey, that's not holy water!");
+    keeper->doTell(ch, "Hey, that's not holy water!");
     return TRUE;
   }
 
   if(getDrinkUnits()!=getMaxDrinkUnits()){
-    keeper->doTell(ch->getName(), "I only purchase full vials.");
+    keeper->doTell(ch, "I only purchase full vials.");
     return TRUE;
   }
 
@@ -60,7 +60,7 @@ int TVial::objectSell(TBeing *ch, TMonster *keeper)
 bool TVial::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
 {
   if (!silent)
-    repair->doTell(fname(ch->name), "You might wanna take that somewhere else!");
+    repair->doTell(ch, "You might wanna take that somewhere else!");
 
   return TRUE;
 }

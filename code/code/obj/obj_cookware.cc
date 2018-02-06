@@ -55,7 +55,7 @@ sstring TCookware::statObjInfo() const
 bool TCookware::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
 {
   if (!silent) {
-    repair->doTell(fname(ch->name), "Does this look like a cookware repair shop to you?");
+    repair->doTell(ch, "Does this look like a cookware repair shop to you?");
   }
   return TRUE;
 }

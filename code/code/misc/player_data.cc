@@ -78,7 +78,6 @@ void TBeing::resetEffectsChar()
 void TPerson::resetChar()
 {
   char *tmstr;
-  sstring recipient;
   affectedData *af;
 
   roomp = NULL;
@@ -240,11 +239,9 @@ void TPerson::resetChar()
 #endif
   classSpecificStuff();
 
+  sstring recipient;
   parse_name_sstring(getName(), recipient);
-
-  recipient = recipient.lower();
-
-  if (!Config::NoMail() && has_mail(recipient))
+  if (has_mail(recipient))
     sendTo(format("\n\rYou have %sMAIL%s.\n\r") % bold() % norm());
 
   time_t ct = player.time->last_logon ? player.time->last_logon : time(0);

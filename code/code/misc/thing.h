@@ -333,7 +333,7 @@ class TThing {
     virtual void findVialAttune(TVial **, int *) {}
     virtual void getBestVial(TVial **) {}
     virtual int damageMe(TBeing *, TBeing *, wearSlotT) { return FALSE; }
-    virtual int sharpenerValueMe(const TBeing *, TMonster *) const;
+    virtual int sharpenerValueMe(TBeing *, TMonster *);
     virtual int sharpenerGiveMe(TBeing *, TMonster *);
     virtual void sharpenMe(TBeing *, TTool *);
     virtual void dullMe(TBeing *, TTool *);

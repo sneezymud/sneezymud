@@ -296,8 +296,8 @@ void TPerson::doEdit(const char *arg)
 
   switch (field) {
     case  1: // Description
-      desc->str = &roomp->descr;
-      desc->max_str = MAX_STRING_LENGTH;
+      desc->edit_str = &roomp->descr;
+      desc->edit_str_maxlen = MAX_STRING_LENGTH;
 #if 0
 // as is, this will cause it to send the descr as a "bug"
       if (desc->m_bIsClient) {
@@ -331,10 +331,10 @@ void TPerson::doEdit(const char *arg)
       }
       str[0] = 0;
       if (roomp->dir_option[rdir]) {
-        desc->str = &roomp->dir_option[rdir]->description;
+        desc->edit_str = &roomp->dir_option[rdir]->description;
       } else {
         roomp->dir_option[rdir] = new roomDirData();
-        desc->str = &roomp->dir_option[rdir]->description;
+        desc->edit_str = &roomp->dir_option[rdir]->description;
       }
       break;
     case  3: // Exit
@@ -563,7 +563,7 @@ void TPerson::doEdit(const char *arg)
         str[0] = 0;
         sendTo("Enter keywords, 1 line only. \n\r");
         sendTo("Terminate with a '~' on the SAME LINE.\n\r");
-        desc->str = &roomp->dir_option[rdir]->keyword;
+        desc->edit_str = &roomp->dir_option[rdir]->keyword;
         break;
       }
       newrp = real_roomp(exroom);
@@ -612,7 +612,7 @@ void TPerson::doEdit(const char *arg)
           roomp->ex_description = ed;
           ed->keyword = str;
           ed->description = NULL;
-          desc->str = &ed->description;
+          desc->edit_str = &ed->description;
           sendTo("New field.\n\r");
           sendTo("Terminate with a '~' on a NEW LINE.\n\r");
           break;
@@ -629,7 +629,7 @@ void TPerson::doEdit(const char *arg)
           }
           return;
         }
-      desc->max_str = MAX_STRING_LENGTH;
+      desc->edit_str_maxlen = MAX_STRING_LENGTH;
       return;
     case  5: // Flags
       int j;
@@ -931,7 +931,7 @@ void TPerson::doEdit(const char *arg)
         return;
       }
 
-      desc->str = &roomp->name;
+      desc->edit_str = &roomp->name;
       break;
     case 10: // River
       rspeed = 0;
@@ -1381,13 +1381,13 @@ void TPerson::doEdit(const char *arg)
       sendTo("String too long - truncated.\n\r");
       *(str + room_length[field - 1]) = '\0';
     }
-    *(desc->str) = str;
+    *(desc->edit_str) = str;
     sendTo("Ok.\n\r");
   } else {			// there was no str. enter str mode 
     sendTo(format("Enter str.  Terminate with '~' on %s.\n\r") %
            ((field == 1 || field == 2) ? "NEW LINE" : "SAME LINE"));
-    *desc->str = 0;
-    desc->max_str = room_length[field - 1];
+    *desc->edit_str = 0;
+    desc->edit_str_maxlen = room_length[field - 1];
   }
 }
 
@@ -1699,8 +1699,8 @@ static void ChangeRoomDesc(TRoom *rp, TBeing *ch, const char *, editorEnterTypeT
   ch->sendTo("\n\r\n\rNew Room Description:\n\r");
   ch->sendTo("(Terminate with a ~ on a NEW LINE. Press <C/R> again to continue)\n\r");
   rp->setDescr("");
-  ch->desc->str = &rp->descr;
-  ch->desc->max_str = MAX_STRING_LENGTH;
+  ch->desc->edit_str = &rp->descr;
+  ch->desc->edit_str_maxlen = MAX_STRING_LENGTH;
 }
 
 static void ChangeRoomType(TRoom *rp, TBeing *ch, const char *arg, editorEnterTypeT type)
@@ -2859,7 +2859,7 @@ static void change_room_extra(TRoom *rp, TBeing *ch, const char *arg, editorEnte
 	rp->ex_description = ed;
         ed->keyword = arg;
 	ed->description = NULL;
-	ch->desc->str = &ed->description;
+	ch->desc->edit_str = &ed->description;
 	ch->sendTo("Enter the description. Terminate with a '~' on a NEW LINE.\n\r");
 	break;
       } else if (boost::iequals(ed->keyword, arg)) {
@@ -2876,7 +2876,7 @@ static void change_room_extra(TRoom *rp, TBeing *ch, const char *arg, editorEnte
         return;
       }
     }
-    ch->desc->max_str = MAX_STRING_LENGTH;
+    ch->desc->edit_str_maxlen = MAX_STRING_LENGTH;
     return;
   }
   ch->sendTo("Existing keywords:\n\r");

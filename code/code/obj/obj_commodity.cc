@@ -288,18 +288,18 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     return -1;
   }
   if (!shop_index[shop_nr].willBuy(this)) {
-    keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
+    keeper->doTell(ch, shop_index[shop_nr].do_not_buy);
     return -1;
   }
   if (num > (int) (numUnits())) {
     num = (int) (numUnits());
-    keeper->doTell(ch->getName(), format("I don't have that much %s.  Here's the %d that I do have.") % fname(name) % num);
+    keeper->doTell(ch, format("I don't have that much %s.  Here's the %d that I do have.") % fname(name) % num);
   }
   price = shopPrice(num, shop_nr, -1, ch);
   vnum = objVnum();
 
   if (ch->getMoney() < price) {
-    keeper->doTell(ch->name, shop_index[shop_nr].missing_cash2);
+    keeper->doTell(ch, shop_index[shop_nr].missing_cash2);
 
     switch (shop_index[shop_nr].temper1) {
       case 0:
@@ -327,7 +327,7 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     obj2->setWeight(num/10.0);
     obj2->setMaterial(getMaterial());
     *ch += *obj2;
-    keeper->doTell(ch->getName(), format("That'll be %i.  Here's %d units of %s.") %
+    keeper->doTell(ch, format("That'll be %i.  Here's %d units of %s.") %
 		   price % num % material_nums[getMaterial()].mat_name);
     act("$n buys $p.", TRUE, ch, obj2, keeper, TO_NOTVICT);
 
@@ -357,7 +357,7 @@ bool TCommodity::sellMeCheck(TBeing *ch, TMonster *keeper, int num, int total_in
     max_num=tso.getMaxNum(ch, this, shop_capacity);
 
   if(max_num == 0){
-    keeper->doTell(ch->name, "I don't wish to buy any of those right now.");
+    keeper->doTell(ch, "I don't wish to buy any of those right now.");
     return TRUE;
   }
 
@@ -365,11 +365,11 @@ bool TCommodity::sellMeCheck(TBeing *ch, TMonster *keeper, int num, int total_in
     total_inventory = tso.getInventoryCount(this);
   
   if (total_inventory >= max_num) {
-    keeper->doTell(ch->getName(), format("I already have plenty of %s.") % 
+    keeper->doTell(ch, format("I already have plenty of %s.") % 
 		   getName());
     return TRUE;
   } else if (total_inventory + num > max_num) {
-    keeper->doTell(ch->getName(), format("I'll buy no more than %d unit%s of %s.") % (max_num - total_inventory) % (max_num - total_inventory > 1 ? "s" : "") % getName());
+    keeper->doTell(ch, format("I'll buy no more than %d unit%s of %s.") % (max_num - total_inventory) % (max_num - total_inventory > 1 ? "s" : "") % getName());
     return TRUE;
   }
   
@@ -407,11 +407,11 @@ int TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
     return false;
   }
   if (!shop_index[shop_nr].willBuy(this)) {
-    keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
+    keeper->doTell(ch, shop_index[shop_nr].do_not_buy);
     return false;
   }
   if (keeper->getMoney() < price) {
-    keeper->doTell(ch->getName(), shop_index[shop_nr].missing_cash1);
+    keeper->doTell(ch, shop_index[shop_nr].missing_cash1);
     return false;
   }
 
@@ -424,7 +424,7 @@ int TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
     TShopOwned tso(shop_nr, keeper, ch);
     tso.doSellTransaction(price, getName(), TX_SELLING);
 
-    keeper->doTell(ch->getName(), format("Thanks, here's your %d talens.") % price);
+    keeper->doTell(ch, format("Thanks, here's your %d talens.") % price);
     act("$n sells $p.", TRUE, ch, this, 0, TO_ROOM);
     if (ch->isAffected(AFF_GROUP) && ch->desc &&
             IS_SET(ch->desc->autobits, AUTO_SPLIT) &&
@@ -511,14 +511,14 @@ void TCommodity::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
   strcpy(buf2, fname(name).c_str());*/
 
   if (!shop_index[shop_nr].willBuy(this)) {
-    keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
+    keeper->doTell(ch, shop_index[shop_nr].do_not_buy);
     //delete obj2;
     return;
   }
 
   price = sellPrice(numUnits(), shop_nr, -1, ch);
 
-  keeper->doTell(ch->getName(), format("Hmm, I'd give you %d talens for your %i units of that.") % price % numUnits());
+  keeper->doTell(ch, format("Hmm, I'd give you %d talens for your %i units of that.") % price % numUnits());
 
   //delete obj2;
 }

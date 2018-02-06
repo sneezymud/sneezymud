@@ -23,7 +23,7 @@ void corpListing(TBeing *ch, TMonster *me)
 			       talenDisplay(corp_list[i].assets)));
   }
 
-  me->doTell(ch->getName(), "I know about the following corporations:");
+  me->doTell(ch, "I know about the following corporations:");
 
   sstring buf;
   for(it=m.begin();it!=m.end();++it)
@@ -49,12 +49,12 @@ void corpLogs(TBeing *ch, TMonster *me, sstring arg, sstring corp_arg)
 	corp_id=convertTo<int>(db["corp_id"]);
 
       if(db.fetchRow()){
-	me->doTell(ch->getName(), "You must specify the ID of the corporation you wish to deposit the money for.");
+	me->doTell(ch, "You must specify the ID of the corporation you wish to deposit the money for.");
 	return;
       }
     } else {
       if(convertTo<int>(corp_arg) == 0){
-	me->doTell(ch->getName(), "You must specify the ID of the corporation you wish look at the logs of.");
+	me->doTell(ch, "You must specify the ID of the corporation you wish look at the logs of.");
 	return;
       }
 
@@ -67,7 +67,7 @@ void corpLogs(TBeing *ch, TMonster *me, sstring arg, sstring corp_arg)
     }
 
     if(!corp_id){
-      me->doTell(ch->getName(), "You must specify the ID of the corporation you wish to deposit the money for.");
+      me->doTell(ch, "You must specify the ID of the corporation you wish to deposit the money for.");
       return;
     }
   }
@@ -121,7 +121,7 @@ void corpSummary(TBeing *ch, TMonster *me, int corp_id)
 
 
   if(!corp_id){
-    me->doTell(ch->getName(), "I don't have any information for that corporation.");
+    me->doTell(ch, "I don't have any information for that corporation.");
     return;
   }
   
@@ -142,12 +142,12 @@ void corpSummary(TBeing *ch, TMonster *me, int corp_id)
     db.query("select c.name, 0 as gold, b.talens as banktalens, 0 as shops, bank, sob.corp_id as bankowner from shopowned sob, corporation c left outer join shopownedcorpbank b on(c.corp_id=b.corp_id) where sob.shop_nr=c.bank and c.corp_id=%i group by c.corp_id, c.name, b.talens, c.bank, sob.corp_id order by c.corp_id", corp_id);
 
     if(!db.fetchRow()){
-      me->doTell(ch->getName(), "I don't have any information for that corporation.");
+      me->doTell(ch, "I don't have any information for that corporation.");
       return;
     }
   }
 
-  me->doTell(ch->getName(), "This is what I know about that corporation:");
+  me->doTell(ch, "This is what I know about that corporation:");
   
   ch->sendTo(COLOR_BASIC, format("%-3i| <r>%s<1>\n\r") % corp_id % db["name"]);
 
@@ -219,12 +219,12 @@ void corpDeposit(TBeing *ch, TMonster *me, int gold, sstring arg)
       corp_id=convertTo<int>(db["corp_id"]);
 
     if(db.fetchRow()){
-      me->doTell(ch->getName(), "You must specify the ID of the corporation you wish to deposit the money for.");
+      me->doTell(ch, "You must specify the ID of the corporation you wish to deposit the money for.");
       return;
     }
   } else {
     if(convertTo<int>(arg) == 0){
-      me->doTell(ch->getName(), "You must specify the ID of the corporation you wish to deposit the money for.");
+      me->doTell(ch, "You must specify the ID of the corporation you wish to deposit the money for.");
       return;
     }
 
@@ -237,14 +237,14 @@ void corpDeposit(TBeing *ch, TMonster *me, int gold, sstring arg)
   }
 
   if(!corp_id){
-      me->doTell(ch->getName(), "You must specify the ID of the corporation you wish to deposit the money for.");
+      me->doTell(ch, "You must specify the ID of the corporation you wish to deposit the money for.");
       return;
   }
   
   TCorporation corp(corp_id);
 
   if(ch->getMoney() < gold){
-    me->doTell(ch->getName(), "You don't have that many talens.");
+    me->doTell(ch, "You don't have that many talens.");
     return;
   }
 
@@ -257,17 +257,17 @@ void corpDeposit(TBeing *ch, TMonster *me, int gold, sstring arg)
 
   if(!banker){
     vlogf(LOG_BUG, format("couldn't find banker for shop %i!") % shop_nr);
-    me->doTell(ch->getName(), "I couldn't find the bank!  Tell a god!");
+    me->doTell(ch, "I couldn't find the bank!  Tell a god!");
     return;
   }
 
-  me->doTell(ch->getName(), format("Ok, you are depositing %i gold.") % gold);
+  me->doTell(ch, format("Ok, you are depositing %i gold.") % gold);
 
 
   corp.setMoney(corp.getMoney() + gold);
   corp.corpLog(ch->getName(), "deposit", gold);
   
-  me->doTell(ch->getName(), format("Your balance is %i.") % corp.getMoney());
+  me->doTell(ch, format("Your balance is %i.") % corp.getMoney());
 
   TShopOwned tso(shop_nr, dynamic_cast<TMonster *>(banker), ch);
   tso.doBuyTransaction(gold, "talens", TX_DEPOSIT);
@@ -289,12 +289,12 @@ void corpWithdraw(TBeing *ch, TMonster *me, int gold, sstring arg)
       corp_id=convertTo<int>(db["corp_id"]);
 
     if(db.fetchRow()){
-      me->doTell(ch->getName(), "You must specify the ID of the corporation you wish to withdraw the money from.");
+      me->doTell(ch, "You must specify the ID of the corporation you wish to withdraw the money from.");
       return;
     }
   } else {
     if(convertTo<int>(arg) == 0){
-      me->doTell(ch->getName(), "You must specify the ID of the corporation you wish to withdraw the money from.");
+      me->doTell(ch, "You must specify the ID of the corporation you wish to withdraw the money from.");
       return;
     }
 
@@ -307,7 +307,7 @@ void corpWithdraw(TBeing *ch, TMonster *me, int gold, sstring arg)
   }
 
   if(!corp_id){
-      me->doTell(ch->getName(), "You must specify the ID of the corporation you wish to withdraw the money from.");
+      me->doTell(ch, "You must specify the ID of the corporation you wish to withdraw the money from.");
       return;
   }
 
@@ -316,7 +316,7 @@ void corpWithdraw(TBeing *ch, TMonster *me, int gold, sstring arg)
   int tmp=corp.getMoney();
 
   if(tmp < gold){
-    me->doTell(ch->getName(), format("Your corporation only has %i talens.") % 
+    me->doTell(ch, format("Your corporation only has %i talens.") % 
 	       tmp);
     return;
   }
@@ -330,22 +330,22 @@ void corpWithdraw(TBeing *ch, TMonster *me, int gold, sstring arg)
   
   if(!banker){
     vlogf(LOG_BUG, format("couldn't find banker for shop_nr=%i!") % shop_nr);
-    me->doTell(ch->getName(), "I couldn't find the bank, tell a god!");
+    me->doTell(ch, "I couldn't find the bank, tell a god!");
     return;
   }
   
   bank_amt=banker->getMoney();
 
   if(bank_amt < gold){
-    me->doTell(ch->getName(), "I'm afraid your bank has overextended itself, and doesn't have your cash available right now.");
+    me->doTell(ch, "I'm afraid your bank has overextended itself, and doesn't have your cash available right now.");
     return;
   }
 
   corp.setMoney(corp.getMoney() - gold);
   corp.corpLog(ch->getName(), "withdrawal", -gold);
 
-  me->doTell(ch->getName(), format("Ok, here is %i talens.") % gold);
-  me->doTell(ch->getName(), format("Your balance is %i.") % (tmp-gold));
+  me->doTell(ch, format("Ok, here is %i talens.") % gold);
+  me->doTell(ch, format("Your balance is %i.") % (tmp-gold));
 
   TShopOwned tso(shop_nr, dynamic_cast<TMonster *>(banker), ch);
   tso.doSellTransaction(gold, "talens", TX_WITHDRAWAL);
@@ -365,12 +365,12 @@ void corpBalance(TBeing *ch, TMonster *me, sstring arg)
       corp_id=convertTo<int>(db["corp_id"]);
 
     if(db.fetchRow()){
-      me->doTell(ch->getName(), "You must specify the ID of the corporation you wish to withdraw the money from.");
+      me->doTell(ch, "You must specify the ID of the corporation you wish to withdraw the money from.");
       return;
     }
   } else {
     if(convertTo<int>(arg) == 0){
-      me->doTell(ch->getName(), "You must specify the ID of the corporation you wish to withdraw the money from.");
+      me->doTell(ch, "You must specify the ID of the corporation you wish to withdraw the money from.");
       return;
     }
 
@@ -383,13 +383,13 @@ void corpBalance(TBeing *ch, TMonster *me, sstring arg)
   }
 
   if(!corp_id){
-      me->doTell(ch->getName(), "You must specify the ID of the corporation you wish to withdraw the money from.");
+      me->doTell(ch, "You must specify the ID of the corporation you wish to withdraw the money from.");
       return;
   }
 
   TCorporation corp(corp_id);
 
-  me->doTell(ch->getName(), format("Your balance is %i.") % corp.getMoney());
+  me->doTell(ch, format("Your balance is %i.") % corp.getMoney());
 
 
 }

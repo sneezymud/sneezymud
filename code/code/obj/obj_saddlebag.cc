@@ -50,7 +50,7 @@ sstring TSaddlebag::statObjInfo() const
 bool TSaddlebag::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
 {
   if (!silent) {
-    repair->doTell(fname(ch->name), "I can't repair saddlebags.");
+    repair->doTell(ch, "I can't repair saddlebags.");
   }
   return TRUE;
 }

@@ -124,7 +124,7 @@ void TPerson::doSet(const char *argument)
      for (i = initial; i < parm; i++) {
        if (!tper->player.doneBasic[p2ci]) {
          value = amt + tper->getPracs(p2ci);
-         if (value > (MAX_DISC_LEARNEDNESS + tper->getCombatPrereqNumber(p2ci))) {
+         if (value > (2 * MAX_DISC_LEARNEDNESS)) {
            if (!tper->player.doneBasic[p2ci]) {
              tper->player.doneBasic[p2ci] = tper->getLevel(p2ci);
            }

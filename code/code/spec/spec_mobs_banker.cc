@@ -102,32 +102,32 @@ int bankWithdraw(TBeing *ch, TMonster *myself, TMonster *teller, int shop_nr, in
   int bankmoney;
 
   if (!ch->isPc() || dynamic_cast<TMonster *>(ch)) {
-    teller->doTell(ch->getName(), "Stupid monster can't bank here!");
+    teller->doTell(ch, "Stupid monster can't bank here!");
     return TRUE;
   }
 
   db.query("select talens from shopownedbank where shop_nr=%i and player_id=%i", shop_nr, ch->getPlayerID());
 
   if(!db.fetchRow()){
-    teller->doTell(ch->getName(), "You don't have an account here.");
-    teller->doTell(ch->getName(), "To open an account, type 'buy account'.");
-    teller->doTell(ch->getName(), "The new account fee is 100 talens.");
+    teller->doTell(ch, "You don't have an account here.");
+    teller->doTell(ch, "To open an account, type 'buy account'.");
+    teller->doTell(ch, "The new account fee is 100 talens.");
     return FALSE;
   } else
     bankmoney = convertTo<int>(db["talens"]);
   
   if (money > bankmoney) {
-    teller->doTell(ch->getName(), "You don't have enough in the bank for that!");
+    teller->doTell(ch, "You don't have enough in the bank for that!");
     return TRUE;
   } else if(myself->getMoney() < money){
-    teller->doTell(ch->getName(), "The bank doesn't have your funds available right now!");
+    teller->doTell(ch, "The bank doesn't have your funds available right now!");
     return TRUE;
   } else if (money <= 0) {
-    teller->doTell(ch->getName(), "Go away, you bother me.");
+    teller->doTell(ch, "Go away, you bother me.");
     return TRUE;
   }
 
-  teller->doTell(ch->getName(), "Thank you.");
+  teller->doTell(ch, "Thank you.");
 
   TShopOwned tso(shop_nr, myself, ch);
   tso.doSellTransaction(money, "talens", TX_WITHDRAWAL);
@@ -144,28 +144,28 @@ int bankDeposit(TBeing *ch, TMonster *myself, TMonster *teller, int shop_nr, int
   int bankmoney;
 
   if (!ch->isPc() || dynamic_cast<TMonster *>(ch)) {
-    teller->doTell(ch->getName(), "Stupid monster can't bank here!");
+    teller->doTell(ch, "Stupid monster can't bank here!");
     return TRUE;
   }
 
   db.query("select talens from shopownedbank where shop_nr=%i and player_id=%i", shop_nr, ch->getPlayerID());
 
   if(!db.fetchRow()){
-    teller->doTell(ch->getName(), "You don't have an account here.");
-    teller->doTell(ch->getName(), "To open an account, type 'buy account'.");
-    teller->doTell(ch->getName(), "The new account fee is 100 talens.");
+    teller->doTell(ch, "You don't have an account here.");
+    teller->doTell(ch, "To open an account, type 'buy account'.");
+    teller->doTell(ch, "The new account fee is 100 talens.");
     return TRUE;
   }
   
   if (money <= 0) {
-    teller->doTell(ch->getName(), "Go away, you bother me.");
+    teller->doTell(ch, "Go away, you bother me.");
     return TRUE;
   } else if (money > ch->getMoney()) {
-    teller->doTell(ch->getName(), "You don't have enough for that!");
+    teller->doTell(ch, "You don't have enough for that!");
     return TRUE;
   }
   
-  teller->doTell(ch->getName(), "Thank you.");
+  teller->doTell(ch, "Thank you.");
 
   TShopOwned tso(shop_nr, myself, ch);
   tso.doBuyTransaction(money, "talens", TX_DEPOSIT);
@@ -176,14 +176,14 @@ int bankDeposit(TBeing *ch, TMonster *myself, TMonster *teller, int shop_nr, int
   db.query("select talens from shopownedbank where shop_nr=%i and player_id=%i", shop_nr, ch->getPlayerID());
 
   if (!db.fetchRow()) {
-    teller->doTell(ch->getName(), "You really should not see me, this is an error...");
+    teller->doTell(ch, "You really should not see me, this is an error...");
     vlogf(LOG_BUG, format("Banking error, was unable to retrieve balance after a deposit: %s") % ch->getName());
 
     return TRUE;
   } else
     bankmoney = convertTo<int>(db["talens"]);
 
-  teller->doTell(ch->getName(), format("...Your new balance is %i") % bankmoney);
+  teller->doTell(ch, format("...Your new balance is %i") % bankmoney);
 
   return TRUE;
 }
@@ -197,14 +197,14 @@ int bankBalance(TBeing *ch, TMonster *myself, TMonster *teller, int shop_nr)
 
 
   if(!db.fetchRow()){
-    teller->doTell(ch->getName(), "You don't have an account here.");
-    teller->doTell(ch->getName(), "To open an account, type 'buy account'.");
-    teller->doTell(ch->getName(), "The new account fee is 100 talens.");
+    teller->doTell(ch, "You don't have an account here.");
+    teller->doTell(ch, "To open an account, type 'buy account'.");
+    teller->doTell(ch, "The new account fee is 100 talens.");
     return TRUE;
   } else
     bankmoney = convertTo<int>(db["talens"]);
 
-  teller->doTell(ch->getName(), format("Your balance is %i.") % bankmoney);
+  teller->doTell(ch, format("Your balance is %i.") % bankmoney);
 
   return TRUE;
 }
@@ -214,14 +214,14 @@ int bankBuyAccount(TBeing *ch, TMonster *myself, TMonster *teller, int shop_nr, 
   TDatabase db(DB_SNEEZY);
   
   if(ch->getMoney() < 100){
-    teller->doTell(ch->getName(), "You don't have enough money to open an account.");
+    teller->doTell(ch, "You don't have enough money to open an account.");
     return TRUE;
   }
   
   db.query("select talens from shopownedbank where player_id=%i and shop_nr=%i", ch->getPlayerID(), shop_nr);
   
   if(db.fetchRow()){
-    teller->doTell(ch->getName(), "You already have an account.");
+    teller->doTell(ch, "You already have an account.");
     return TRUE;
   }
   
@@ -230,7 +230,7 @@ int bankBuyAccount(TBeing *ch, TMonster *myself, TMonster *teller, int shop_nr, 
   shoplog(shop_nr, ch, myself, "talens", 100, "new account");
   myself->saveItems(shop_nr);
   
-  teller->doTell(ch->getName(), "Your account is now open and ready for use.");
+  teller->doTell(ch, "Your account is now open and ready for use.");
   
   return TRUE;
 }
@@ -297,7 +297,7 @@ int banker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
     TShopOwned tso(shop_nr, myself, ch);
 
     if(!tso.hasAccess(SHOPACCESS_LOGS)){
-      myself->doTell(ch->getName(), "Sorry, you don't have access to do that.");
+      myself->doTell(ch, "Sorry, you don't have access to do that.");
       return FALSE;
     }
 

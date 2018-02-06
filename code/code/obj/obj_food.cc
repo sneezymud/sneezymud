@@ -1136,14 +1136,14 @@ sstring TFood::statObjInfo() const
 
 int TFood::objectSell(TBeing *ch, TMonster *keeper)
 {
-  keeper->doTell(ch->getName(), "I'm sorry, I don't purchase food.");
+  keeper->doTell(ch, "I'm sorry, I don't purchase food.");
   return TRUE;
 }
 
 bool TFood::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
 {
   if (!silent) {
-    repair->doTell(fname(ch->name), "you might wanna take that to the diner!");
+    repair->doTell(ch, "you might wanna take that to the diner!");
   }
   return TRUE;
 }

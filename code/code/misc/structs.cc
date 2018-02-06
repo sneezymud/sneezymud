@@ -294,11 +294,11 @@ TBeing::~TBeing()
 
   // OK, technically, this is all Descriptor maintained stuff...
   // but, has to be here for this situation:
-  // PC editing (has desc->str) when gets killed, nanny will use
+  // PC editing (has desc->edit_str) when gets killed, nanny will use
   // presence of str to place person into proper routine
   // would be very bad to leave them with a str and return them to nanny
   if (desc) {
-    desc->cleanUpStr();
+    desc->cleanUpEditStr();
   }
 
   if (desc) {

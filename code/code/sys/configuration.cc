@@ -28,7 +28,6 @@ bool Config::throw_format_exceptions;
 bool Config::no_specials;
 bool Config::b_trimmed;
 sstring Config::data_dir;
-bool Config::no_mail;
 
 const int Config::Port::PROD=7900;
 const int Config::Port::ALPHA=6969;
@@ -121,9 +120,6 @@ bool Config::doConfiguration(int argc, char *argv[])
      "see configuration.h")
     ("throw_format_exceptions",
      po::value<bool>(&throw_format_exceptions)->default_value(true),
-     "see configuration.h")
-    ("no_mail",
-     po::value<bool>(&no_mail)->default_value(false),
      "see configuration.h")
     ;
 

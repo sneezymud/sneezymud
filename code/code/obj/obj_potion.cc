@@ -87,7 +87,7 @@ int TPotion::objectSell(TBeing *ch, TMonster *keeper)
   sstring buf;
 
   if(!liquidInfo[getDrinkType()]->potion){
-    keeper->doTell(ch->getName(), "Hey, that's not a potion!.");
+    keeper->doTell(ch, "Hey, that's not a potion!.");
     return TRUE;
   }
 

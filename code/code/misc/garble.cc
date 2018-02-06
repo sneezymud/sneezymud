@@ -115,7 +115,7 @@ Garble GarbleData[Garble::TYPE_MAX] = {
 };
 
 // gets the garbles that will apply to this character (adds automatic ones)
-int TBeing::getGarbles(TBeing *to) const
+int TBeing::getGarbles(const TBeing *to) const
 {
   int garbleFlags = my_garbleFlags;
 
@@ -183,7 +183,7 @@ int TBeing::toggleGarble(Garble::TYPE garble)
 }
 
 // applies all of the proper garbles
-sstring TBeing::garble(TBeing *to, const sstring &arg, Garble::SPEECHTYPE speechType, Garble::SCOPE garbleScope) const
+const sstring TBeing::garble(TBeing *to, const sstring &arg, Garble::SPEECHTYPE speechType, Garble::SCOPE garbleScope) const
 {
   if (arg.empty())
     return "";

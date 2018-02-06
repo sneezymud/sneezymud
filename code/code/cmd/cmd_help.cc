@@ -221,7 +221,6 @@ wizPowerT wizPowerFromCmd(cmdTypeT cmd)
     case CMD_TEST_FIGHT:
     case CMD_PEELPK:
     case CMD_TESTCODE:
-    case CMD_BRUTTEST:
       return POWER_WIZARD;
       break;
     break;

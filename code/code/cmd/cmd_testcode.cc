@@ -168,7 +168,7 @@ void TBeing::doTestCode(const char *arg)
         (i == CMD_SIT) || (i == CMD_REST) || (i == CMD_SLEEP) || 
         (i == CMD_CRAWL) || (i == CMD_WIZLIST) || (i == CMD_MEDITATE) ||
         (i == CMD_PENANCE) || (i == CMD_TRACEROUTE) ||
-        (i == CMD_MID) || (i == CMD_LOGLIST) || (i == CMD_BRUTTEST))
+        (i == CMD_MID) || (i == CMD_LOGLIST)
       continue;
     vlogf(LOG_MISC, format("%s : con %d") %  commandArray[i]->name % desc->connected);
     doCommand(i, "", NULL, FALSE);
@@ -213,26 +213,3 @@ void TBeing::doTestCode(const char *arg)
   calcNewPracs(i, FALSE);
 #endif
 }
-
-void TBeing::doBruttest(const char *)
-{
-  if (!hasWizPower(POWER_WIZARD)) {
-    sendTo("Prototype command.  You need to be a developer to use this.\n\r");
-    return;
-  }
-
-#if 0
-  char test[] = {IAC, WILL, '\x03', '\0'};
-  char test2[] = {IAC, DO, '\x18', '\0'};
-
-  desc->EchoOff();
-  write(desc->socket->sock, test, 4);
-  write(desc->socket->sock, test2, 4);
-
-  doCls(false);
-  sendTo(VT_CURSPOS, 1, 1);
-  desc->connected = CON_EDITTING;
-  desc->edit.x = desc->edit.y = 1;
-#endif
-}
-

@@ -524,7 +524,7 @@ void shopping_buy(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
 
   argm = sstring(arg).trim();
   if (argm.empty()) {
-    keeper->doTell(ch->name, "What do you want to buy??");
+    keeper->doTell(ch, "What do you want to buy??");
     return;
   }
   if ((num = getabunch(argm.c_str(), newarg)))
@@ -567,12 +567,12 @@ void shopping_buy(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
   }
 
   if(!temp1){
-    keeper->doTell(ch->name, shop_index[shop_nr].no_such_item1);
+    keeper->doTell(ch, shop_index[shop_nr].no_such_item1);
     return;
   }
 
   if (temp1->getValue() <= 0) {
-    keeper->doTell(ch->name, shop_index[shop_nr].no_such_item1);
+    keeper->doTell(ch, shop_index[shop_nr].no_such_item1);
     delete temp1;
     temp1 = NULL;
     return;
@@ -631,7 +631,7 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   
   tmp = number_objects_in_list(this, keeper->stuff);
   if (num > tmp) {
-    keeper->doTell(ch->name, format("I don't have %d of that item. Here %s the %d I do have.") %
+    keeper->doTell(ch, format("I don't have %d of that item. Here %s the %d I do have.") %
 		   num  % ((tmp > 1) ? "are" : "is") % tmp);
   } else
     tmp = num;
@@ -650,7 +650,7 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     TObj *temp1 = dynamic_cast<TObj *>(t_temp1);
       
     if ((ch->getMoney() < cost) && !ch->hasWizPower(POWER_GOD)) {
-      keeper->doTell(ch->name, shop_index[shop_nr].missing_cash2);
+      keeper->doTell(ch, shop_index[shop_nr].missing_cash2);
 	
       switch (shop_index[shop_nr].temper1) {
 	case 0:
@@ -679,12 +679,12 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   keeper->saveItems(shop_nr);
 
   if (!count) {
-    keeper->doTell(ch->name, "I can't seem to find any of those!");
+    keeper->doTell(ch, "I can't seem to find any of those!");
     return -1;
   }
 
   //  ch->sendTo(format("You manage to swindle the shopkeeper into a %i%s discount.\n\r") % (int)(swindle*100) % "%");
-  keeper->doTell(ch->name, format(shop_index[shop_nr].message_buy) %
+  keeper->doTell(ch, format(shop_index[shop_nr].message_buy) %
 		 (cost * count));
 
   ch->sendTo(COLOR_OBJECTS, format("You now have %s (*%d).\n\r") % 
@@ -706,37 +706,37 @@ bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int shop_nr)
 
   if(temp1->objectSell(ch, keeper)){
     if(ch->isImmortal())
-      keeper->doTell(ch->getName(), "Since you're immortal, I'll make an exception.");
+      keeper->doTell(ch, "Since you're immortal, I'll make an exception.");
     else 
       return TRUE;
   }
   if(Config::NoDamagedItemsShop()){
     if (temp1->getStructPoints() != temp1->getMaxStructPoints()) {
-      keeper->doTell(ch->getName(), "I don't buy damaged goods.");
+      keeper->doTell(ch, "I don't buy damaged goods.");
       return TRUE;
     }
   }
 
   if (!temp1->stuff.empty()) {
-    keeper->doTell(ch->getName(), "Sorry, I don't buy items that contain other items.");
+    keeper->doTell(ch, "Sorry, I don't buy items that contain other items.");
     return TRUE;
   }
   // Notes have been denied by objectSell() above
   if (!temp1->action_description.empty()) {
-    keeper->doTell(ch->getName(), "I'm sorry, I don't buy monogrammed goods.");
+    keeper->doTell(ch, "I'm sorry, I don't buy monogrammed goods.");
     return TRUE;
   }
   if(temp1->isObjStat(ITEM_BURNING) || temp1->isObjStat(ITEM_CHARRED)){
-    keeper->doTell(ch->getName(), "I'm sorry, I don't buy fire damaged goods.");
+    keeper->doTell(ch, "I'm sorry, I don't buy fire damaged goods.");
     return TRUE;
   }
   if(temp1->isObjStat(ITEM_RUSTY)){
-    keeper->doTell(ch->getName(), "I'm sorry, I don't buy rusty goods.");
+    keeper->doTell(ch, "I'm sorry, I don't buy rusty goods.");
     return TRUE;
   }
 
   if (shop_index[shop_nr].isOwned() && temp1->isObjStat(ITEM_NORENT)){
-    keeper->doTell(ch->getName(), "This shop is privately owned and we don't purchase non-rentable items.");
+    keeper->doTell(ch, "This shop is privately owned and we don't purchase non-rentable items.");
     return TRUE;
   }
 
@@ -744,12 +744,12 @@ bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int shop_nr)
     return FALSE;
 
   if(temp1->sellPrice(1, shop_nr, -1, ch) < 0){
-    keeper->doTell(ch->getName(), "You'd have to pay me to buy that!");
+    keeper->doTell(ch, "You'd have to pay me to buy that!");
     return TRUE;
   }
 
   if(shop_index[shop_nr].getInventoryCount() >= (int)MAX_SHOP_INVENTORY){
-    keeper->doTell(ch->getName(), "My inventory is full, I can't buy anything!");
+    keeper->doTell(ch, "My inventory is full, I can't buy anything!");
     return TRUE;
   }
 
@@ -774,14 +774,14 @@ bool TObj::sellMeCheck(TBeing *ch, TMonster *keeper, int, int defaultMax) const
   int max_num=tso.getMaxNum(ch, this, defaultMax);
 
   if(max_num == 0){
-    keeper->doTell(ch->name, "I don't wish to buy any of those right now.");
+    keeper->doTell(ch, "I don't wish to buy any of those right now.");
     return TRUE;
   }
 
   total=tso.getInventoryCount(this);
 
   if (total >= max_num && !shop_index[shop_nr].isProducing(this)) {
-    keeper->doTell(ch->name, "I already have plenty of those.");
+    keeper->doTell(ch, "I already have plenty of those.");
     return TRUE;
   }
 
@@ -801,7 +801,7 @@ void generic_num_sell(TBeing *ch, TMonster *keeper, TObj *obj, int shop_nr, int 
     return;
   }
   if (!shop_index[shop_nr].willBuy(obj)) {
-    keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
+    keeper->doTell(ch, shop_index[shop_nr].do_not_buy);
     return;
   }
   if (will_not_buy(ch, keeper, obj, shop_nr)) 
@@ -833,7 +833,7 @@ void generic_sell(TBeing *ch, TMonster *keeper, TObj *obj, int shop_nr)
     return;
   }
   if (!shop_index[shop_nr].willBuy(obj)) {
-    keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
+    keeper->doTell(ch, shop_index[shop_nr].do_not_buy);
     return;
   }
   if (will_not_buy(ch, keeper, obj, shop_nr)) 
@@ -860,13 +860,13 @@ int TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   float chr;
 
   if (!shop_index[shop_nr].profit_sell) {
-    keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
+    keeper->doTell(ch, shop_index[shop_nr].do_not_buy);
     return false;
   }
   
   
   if (getValue() <= 1 || isObjStat(ITEM_NEWBIE)) {
-    keeper->doTell(ch->getName(), "I'm sorry, I don't buy valueless items.");
+    keeper->doTell(ch, "I'm sorry, I don't buy valueless items.");
     return false;
   }
   if (sellMeCheck(ch, keeper, num, 9))
@@ -884,21 +884,21 @@ int TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
       cost /= getMaxStructPoints();
     }
     if(Config::NoDamagedItemsShop()){
-      keeper->doTell(fname(ch->name), "It's been damaged, but I guess I can buy it as scrap.");
+      keeper->doTell(ch, "It's been damaged, but I guess I can buy it as scrap.");
     }
   }
   max(cost, 1);   // at least 1 talen 
   if (keeper->getMoney() < cost) {
-    keeper->doTell(ch->getName(), shop_index[shop_nr].missing_cash1);
+    keeper->doTell(ch, shop_index[shop_nr].missing_cash1);
     return false;
   }
   if (obj_index[getItemIndex()].max_exist <= 10) {
-    keeper->doTell(ch->name, "Wow!  This is one of those limited items.");
-    keeper->doTell(ch->name, "You should really think about auctioning it.");
+    keeper->doTell(ch, "Wow!  This is one of those limited items.");
+    keeper->doTell(ch, "You should really think about auctioning it.");
   }
   act("$n sells $p.", FALSE, ch, this, 0, TO_ROOM);
 
-  keeper->doTell(ch->getName(), format(shop_index[shop_nr].message_sell)% cost);
+  keeper->doTell(ch, format(shop_index[shop_nr].message_sell)% cost);
 
   ch->sendTo(COLOR_OBJECTS, format("The shopkeeper now has %s.\n\r") % sstring(getName()).uncap());
   ch->logItem(this, CMD_SELL);
@@ -1102,7 +1102,7 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
   strcpy(argm, tString);
 
   if (!*argm) {
-    tKeeper->doTell(ch->getName(), "What do you want to sell??");
+    tKeeper->doTell(ch, "What do you want to sell??");
     return FALSE;
   }
 
@@ -1125,7 +1125,7 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
     tObjectManip = ObjectManipType(argm, tStString, tItemType);
 
     if (tObjectManip == OBJMAN_NULL) {
-        tKeeper->doTell(ch->getName(), "And what is it you want to sell??");
+        tKeeper->doTell(ch, "And what is it you want to sell??");
     }
 
     if (tObjectManip != OBJMAN_NONE)
@@ -1286,7 +1286,7 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
   TComponent *temp2 = dynamic_cast<TComponent *>(temp1);
 
   if (!temp1) {
-    tKeeper->doTell(ch->getName(), shop_index[shop_nr].no_such_item2);
+    tKeeper->doTell(ch, shop_index[shop_nr].no_such_item2);
     return FALSE;
   }
   if (temp2) {
@@ -1311,7 +1311,7 @@ void shopping_value(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
   strcpy(argm, arg);
 
   if (!*argm) {
-    keeper->doTell(ch->name, "What do you want me to evaluate??");
+    keeper->doTell(ch, "What do you want me to evaluate??");
     return;
   }
   
@@ -1355,11 +1355,11 @@ void shopping_value(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
   TThing *t_temp1 = searchLinkedListVis(ch, argm, ch->stuff);
   temp1 = dynamic_cast<TObj *>(t_temp1);
   if (!temp1) {
-    keeper->doTell(ch->name, shop_index[shop_nr].no_such_item2);
+    keeper->doTell(ch, shop_index[shop_nr].no_such_item2);
     return;
   }
   if (!(shop_index[shop_nr].willBuy(temp1))) {
-    keeper->doTell(ch->name, shop_index[shop_nr].do_not_buy);
+    keeper->doTell(ch, shop_index[shop_nr].do_not_buy);
     return;
   }
   if (will_not_buy(ch, keeper, temp1, shop_nr)) 
@@ -1384,7 +1384,7 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   willbuy=!sellMeCheck(ch, keeper, num, 9);
 
   if (!shop_index[shop_nr].willBuy(this)) {
-    keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
+    keeper->doTell(ch, shop_index[shop_nr].do_not_buy);
     return;
   }
 
@@ -1396,8 +1396,8 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   cost = sellPrice(1, shop_nr, chr, ch);
 
   if (obj_index[getItemIndex()].max_exist <= 10) {
-    keeper->doTell(ch->name, "Wow!  This is one of those limited items.");
-    keeper->doTell(ch->name, "You should really think about auctioning it.");
+    keeper->doTell(ch, "Wow!  This is one of those limited items.");
+    keeper->doTell(ch, "You should really think about auctioning it.");
   }
 
   if ((getStructPoints() != getMaxStructPoints()) &&
@@ -1407,7 +1407,7 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
     cost *= getStructPoints();
     cost /= getMaxStructPoints();
     if(Config::NoDamagedItemsShop()){
-      keeper->doTell(fname(ch->name), "It's been damaged, but I guess I can buy it as scrap.");
+      keeper->doTell(ch, "It's been damaged, but I guess I can buy it as scrap.");
     }
 
   }
@@ -1417,10 +1417,10 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   } else {
     buf = format("Normally, I'd give you %d talens for %s!") % cost % getName();
   }
-  keeper->doTell(ch->name, buf);
+  keeper->doTell(ch, buf);
 
   if (keeper->getMoney() < cost) {
-    keeper->doTell(fname(ch->name), "Unfortunately, at the moment, I can not afford to buy that item from you.");
+    keeper->doTell(ch, "Unfortunately, at the moment, I can not afford to buy that item from you.");
     return;
   }
 }
@@ -1803,7 +1803,7 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
 	   shop_nr,
 	   buf.c_str());
 
-  keeper->doTell(ch->getName(), "You can buy:");
+  keeper->doTell(ch, "You can buy:");
 
   buf="Item #     Item Name                                Info       Number     Price\n\r";
   buf+="-------------------------------------------------------------------------------\n\r";
@@ -2140,10 +2140,10 @@ void shopping_kill(const char *, TBeing *ch, TBeing *keeper, int shop_nr)
 
   switch (shop_index[shop_nr].temper2) {
     case 0:
-      keeper->doTell(ch->name, "Don't ever try that again!");
+      keeper->doTell(ch, "Don't ever try that again!");
       return;
     case 1:
-      keeper->doTell(ch->name, "Scram - midget!");
+      keeper->doTell(ch, "Scram - midget!");
       return;
 
     default:
@@ -2368,7 +2368,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
   if ((cmd == CMD_CAST) || (cmd == CMD_RECITE) || 
       (cmd == CMD_USE) || (cmd == CMD_PRAY)) {
     if (myself->canSee(ch)) {
-      myself->doTell(ch->getNameNOC(ch), "<r>No magic here - kid!<z>");
+      myself->doTell(ch, "<r>No magic here - kid!<z>");
     } else
       act("I may not be able to see you kid, but there is no magic in here.",
           FALSE, ch, 0, myself, TO_CHAR);

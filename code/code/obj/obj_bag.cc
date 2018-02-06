@@ -53,7 +53,7 @@ sstring TBag::statObjInfo() const
 bool TBag::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
 {
   if (!silent) {
-    repair->doTell(fname(ch->name), "I can't repair bags.");
+    repair->doTell(ch, "I can't repair bags.");
   }
   return TRUE;
 }

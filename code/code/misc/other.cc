@@ -1501,33 +1501,28 @@ void TPerson::doFeedback(const sstring &type, int clientCmd, const sstring &arg)
 {
   sstring subject = arg;
 
-  if (fight())
-  {
+  if (fight()) {
     sendTo("You cannot perform that action while fighting!\n\r");
     return;
   }
 
   // if the subject is standard (they didnt pass an arg), add in something to identify it
-  if (subject.length() <= 0)
-  {
+  if (subject.empty()) {
     time_t now = time(0);
     subject = format("%s at %s") % getName() % ctime(&now);
   }
 
   subject.inlineReplaceString("\n", "");
   subject.inlineReplaceString("\r", "");
-  strncpy(desc->name, ((sstring)(format("%s: %s") % type % subject)).c_str(), cElements(desc->name));
+  desc->mail_recipient = type + ": " + subject;
 
-  if (!desc->m_bIsClient)
-  {
+  if (!desc->m_bIsClient) {
     sendTo(format("Write your %s report. Use ~ when done, or ` to cancel.\n\r") % type.lower());
     addPlayerAction(PLR_BUGGING);
     desc->connected = CON_WRITING;
-    desc->str = &desc->mail_bug_str;
-    desc->max_str = MAX_MAIL_SIZE;
-  }
-  else
-  {
+    desc->edit_str = &desc->mail_edit_str;
+    desc->edit_str_maxlen = MAX_MAIL_SIZE;
+  } else {
     desc->clientf(format("%d") % clientCmd);
   }
 }
@@ -4147,7 +4142,7 @@ namespace {
 }
 
 // sends appropriate feedback (help, bugs, typos) via email to a feedback forum
-void Descriptor::send_feedback(const char *subject, const char *msg)
+void Descriptor::send_feedback(const sstring &subject, const sstring &body)
 {
   static int tempInc = 0;
   TBeing *player = (dynamic_cast<TMonster *>(character) && original) ? original : character;
@@ -4169,7 +4164,7 @@ void Descriptor::send_feedback(const char *subject, const char *msg)
 
   // actual message from user to appear in mail
   message += "\n";
-  message += msg;
+  message += body;
   message.ascify();
   message.inlineReplaceString("\r\n", "\n");
   message += "\n";
