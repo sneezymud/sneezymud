@@ -336,72 +336,6 @@ bool Descriptor::checkForMultiplay()
           return TRUE;
         }
       }
-
-#if 0
-      // beyond here, we start checking for cheaters using multiple accounts
-      // since this logic is imprecise, we should first slip around any known
-      // accounts that tend to trigger this.
-      FILE *fp;
-      fp = fopen("allowed_multiplay", "r");
-      if (fp) {
-        char acc1[256], acc2[256];
-        bool allowed = false;
-        while (fscanf(fp, "%s %s", acc1, acc2) == 2) {
-          if (!strcmp(account->name, acc1) && !strcmp(d->account->name, acc2))
-            allowed = true;
-          if (!strcmp(account->name, acc2) && !strcmp(d->account->name, acc1))
-            allowed = true;
-        }
-        fclose(fp);
-        if (allowed)
-          continue;
-      }
-
-      if (max_multiplay_chars == 1) {
-        // some diabolical logic to catch multiplay with separate accounts
-        // check to see if they are grouped, but haven't spoken recently
-        if (character->inGroup(*ch)) {
-          time_t now = time(0);
-          const int trigger_minutes = 1;
-          if (((now - talkCount) > ((trigger_minutes + character->getTimer()) * SECS_PER_REAL_MIN)) &&
-              ((now - ch->desc->talkCount) > ((trigger_minutes + ch->getTimer()) * SECS_PER_REAL_MIN))) {
-            vlogf(LOG_CHEAT, format("MULTIPLAY: Players %s and %s are possibly multiplaying.") %  character->getName() % ch->getName());
-
-            time_t ct = time(0);
-            struct tm * lt = localtime(&ct);
-            char *tmstr = asctime(lt);
-            *(tmstr + strlen(tmstr) - 1) = '\0';
-
-            sstring tmpstr;
-            tmpstr = "***** Auto-Comment on ";
-            tmpstr += tmstr;
-            tmpstr += ":\nPlayer ";
-            tmpstr += character->getName();
-            tmpstr += " was potentially multiplaying with ";
-            tmpstr += ch->getName();
-            tmpstr += " from account '";
-            tmpstr += d->account->name;
-            tmpstr += "'.\n";
-
-            sstring cmd_buf;
-            cmd_buf = "account/";
-            cmd_buf += LOWER(account->name[0]);
-            cmd_buf += "/";
-            cmd_buf += account->name.lower();
-            cmd_buf += "/comment";
-
-            FILE *fp;
-            if (!(fp = fopen(cmd_buf.c_str(), "a+"))) {
-              perror("doComment");
-              vlogf(LOG_FILE, format("Could not open the comment-file (%s).") %  cmd_buf);
-            } else {
-              fputs(tmpstr.c_str(), fp);
-              fclose(fp);
-            }
-          }
-        }
-      } // CHAR_LIMIT = 1
-#endif
     }
 
     if (character && account && !account->name.empty() && 
@@ -411,6 +345,7 @@ bool Descriptor::checkForMultiplay()
       char tAccount[256];
       FILE *tFile = NULL;
 
+      // Yay search ALL mob instances
       for (tChar = character_list; tChar;) {
         oChar = tChar->next;
 
