@@ -5891,7 +5891,7 @@ void TBeing::doAccount(const sstring &arg)
 
   if (name.empty())  {
     if (hasWizPower(POWER_ACCOUNT)) {
-      sendTo("Syntax: account <account name> [banished | email | double | triple | immortal]\n\r");
+      sendTo("Syntax: account <account name> [banished | email | double | triple | immortal | multi <n>]\n\r");
     } else {
       sendTo("Syntax: account <account name>\n\r");
     }
@@ -5981,6 +5981,30 @@ void TBeing::doAccount(const sstring &arg)
         sendTo(format("You grant the %s account the ability to triple-class.\n\r") % account.name);
       }
 
+      account.write(name);
+      return;
+    } else if (is_abbrev(cmd, "multi")) {
+      sstring limit;
+      one_argument(rest, limit);
+      if (limit.empty()) {
+        sendTo(format("The %s account has current multiplay limit of %i") % account.name % account.multiplay_limit);
+        return;
+      }
+
+      int new_limit = account.multiplay_limit;
+      try {
+        new_limit = std::stoi(limit);
+      } catch (std::invalid_argument) {
+        sendTo(format("Incorrect multiplay limit '%s', expected positive integer.\n\r") % limit);
+        return;
+      }
+      if (new_limit < 0) {
+        sendTo(format("Incorrect multiplay limit '%s', expected positive integer.\n\r") % limit);
+        return;
+      }
+      account.multiplay_limit = new_limit;
+
+      sendTo(format("You grant the %s account multiplay limit of %u.\n\r") % account.name % account.multiplay_limit);
       account.write(name);
       return;
     } else if (is_abbrev(cmd, "immortal")) {

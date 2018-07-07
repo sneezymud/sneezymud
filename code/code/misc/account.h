@@ -40,6 +40,7 @@ class TAccount
   static const unsigned int ALLOW_DOUBLECLASS;
   static const unsigned int ALLOW_TRIPLECLASS;
   
+  unsigned multiplay_limit = 3;
   int status = 0;
   sstring email;
   sstring passwd;

@@ -28,10 +28,11 @@ TAccount::TAccount()
 bool TAccount::read(const sstring &aname)
 {
   TDatabase db(DB_SNEEZY);
-  db.query("select account_id, email, passwd, name, birth, term, time_adjust, flags, last_logon from account where name=lower('%s')", aname.c_str());
+  db.query("select multiplay_limit, account_id, email, passwd, name, birth, term, time_adjust, flags, last_logon from account where name=lower('%s')", aname.c_str());
   if (!db.fetchRow())
     return false;
 
+  multiplay_limit = convertTo<int>(db["multiplay_limit"]);
   account_id = convertTo<int>(db["account_id"]);
   email=db["email"];
   passwd=db["passwd"];
@@ -56,12 +57,12 @@ bool TAccount::write(const sstring &aname)
   db.query("select 1 from account where name=lower('%s')", aname.c_str());
 
   if(!db.fetchRow()){
-    res=db.query("insert into account (email, passwd, name, birth, term, time_adjust, flags, last_logon) values ('%s', '%s', lower('%s'), %i, %i, %i, %i, %i)",
-	     email.c_str(), passwd.c_str(), name.c_str(), birth, term,
+    res=db.query("insert into account (multiplay_limit, email, passwd, name, birth, term, time_adjust, flags, last_logon) values (%i, '%s', '%s', lower('%s'), %i, %i, %i, %i, %i)",
+	     multiplay_limit, email.c_str(), passwd.c_str(), name.c_str(), birth, term,
 	     time_adjust, flags, last_logon);
   } else {
-    res=db.query("update account set email='%s', passwd='%s', birth=%i, term=%i, time_adjust=%i, flags=%i, last_logon=%i where name=lower('%s')",
-	     email.c_str(), passwd.c_str(), birth, term,
+    res=db.query("update account set multiplay_limit=%i, email='%s', passwd='%s', birth=%i, term=%i, time_adjust=%i, flags=%i, last_logon=%i where name=lower('%s')",
+	     multiplay_limit, email.c_str(), passwd.c_str(), birth, term,
 	     time_adjust, flags, last_logon, name.c_str());
   }
   return res;
