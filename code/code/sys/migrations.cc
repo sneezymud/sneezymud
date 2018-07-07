@@ -73,6 +73,22 @@ void runMigrations() {
                     "datecreated datetime not null default CURRENT_TIMESTAMP)"
                     );
         },
+        [&](){
+            // configurable multiplay limit per account
+            vlogf(LOG_MISC, "Adding multiplay column to account table");
+            sneezy.query(
+                    "alter table account "
+                    "add column multiplay_limit int null default 3"
+                    );
+            sneezy.query(
+                    "update account "
+                    "set multiplay_limit = 3"
+                    );
+            sneezy.query(
+                    "alter table account "
+                    "change column multiplay_limit int not null default 3"
+                    );
+        },
     };
 
     int oldVersion = getVersion(sneezy);
