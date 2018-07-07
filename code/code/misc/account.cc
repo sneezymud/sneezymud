@@ -21,56 +21,9 @@ const unsigned int TAccount::ALLOW_TRIPLECLASS      = (1<<6);
 
 
 
-TAccount::TAccount() :
-  status(FALSE),
-  birth(time(0)),
-  login(0),
-  term(TERM_NONE),
-  desc(NULL),
-  time_adjust(0),
-  flags(0),
-  account_id(0)
-{
-  name = "";
-  passwd = "";
-  email = "";
-}
-
-TAccount::TAccount(const TAccount &a) :
-  status(a.status),
-  birth(a.birth),
-  login(a.login),
-  term(a.term),
-  desc(a.desc),
-  time_adjust(a.time_adjust),
-  flags(a.flags),
-  account_id(a.account_id)
-{
-  name=a.name;
-  passwd=a.passwd;
-  email=a.email;
-}
-
-TAccount & TAccount::operator=(const TAccount &a)
-{
-  if (this == &a) return *this;
-  name=a.name;
-  passwd=a.passwd;
-  email=a.email;
-  birth = a.birth;
-  login = a.login;
-  desc = a.desc;
-  term = a.term;
-  status = a.status;
-  time_adjust = a.time_adjust;
-  flags = a.flags;
-  account_id = a.account_id;
-  return *this;
-}
-
-TAccount::~TAccount()
-{
-}
+TAccount::TAccount()
+  : birth(time(0))
+{}
 
 bool TAccount::read(const sstring &aname)
 {
