@@ -40,26 +40,23 @@ class TAccount
   static const unsigned int ALLOW_DOUBLECLASS;
   static const unsigned int ALLOW_TRIPLECLASS;
   
-  int status;
+  int status = 0;
   sstring email;
   sstring passwd;
   sstring name;
-  long birth;
-  long login;
-  termTypeT term;
-  Descriptor *desc;
-  int time_adjust;
-  unsigned int flags;
-  int account_id;
-  time_t last_logon;
+  long birth = 0;
+  long login = 0;
+  termTypeT term = TERM_NONE;
+  Descriptor *desc = nullptr;
+  int time_adjust = 0;
+  unsigned int flags = 0;
+  int account_id = 0;
+  time_t last_logon = 0;
   
   bool read(const sstring &);
   bool write(const sstring &);
   
   TAccount();
-  TAccount(const TAccount &a);
-  TAccount & operator=(const TAccount &a);
-  ~TAccount();
 };
 
 
