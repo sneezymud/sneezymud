@@ -301,10 +301,10 @@ bool Descriptor::checkForMultiplay()
     else
       max_multiplay_chars = 1;
 
-    // for first 5 mins after a reboot, limit to 1 multiplay
+    // for first 1 min after a reboot, limit to 1 multiplay
     // this prevents a "race to login" from occurring.
     time_t diff = time(0) - Uptime;
-    if (diff < (5 * SECS_PER_REAL_MIN))
+    if (diff < (1 * SECS_PER_REAL_MIN))
       max_multiplay_chars = 1;
 
     for (d = descriptor_list; d; d = d->next) {
@@ -317,18 +317,20 @@ bool Descriptor::checkForMultiplay()
         continue;
 
       // reconnect while still connected triggers otherwise
-      if (character->name != ch->name)
+      if (character->name == ch->name)
         continue;
+
+      unsigned multiplay_limit = std::min(max_multiplay_chars, account->multiplay_limit);
 
       if (d->account->name==account->name) {
         total += 1;
-        if (total > max_multiplay_chars &&
+        if (total > multiplay_limit &&
             gamePort == Config::Port::PROD){
           vlogf(LOG_CHEAT, format("MULTIPLAY: %s and %s from same account[%s]") % 
               character->name % ch->name % account->name);
           if(Config::ForceMultiplayCompliance()){
             character->sendTo(format("\n\rTake note: You have another character, %s, currently logged in.\n\r") % ch->name);
-            character->sendTo("Adding this character would cause you to be in violation of multiplay rules.\n\r");
+            character->sendTo("Adding this character would push you over the multiplay limit.\n\r");
             character->sendTo("Please log off your other character and then try again.\n\r");
             outputProcessing();  // gotta write this to them, before we sever  :)
           }
