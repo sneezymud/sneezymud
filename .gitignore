@@ -13,6 +13,7 @@ cscope.out
 
 # dynamically changing mud files
 /lib/account/
+/lib/corpses/
 /lib/immortals/
 /lib/player/
 /lib/rent/
