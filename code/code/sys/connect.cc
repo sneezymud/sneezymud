@@ -2882,7 +2882,7 @@ int Descriptor::sendLogin(const sstring &arg)
     output.push(CommPtr(new UncategorizedComm(buf2)));
 
     outputBuf="Please type NEW (case sensitive) for a new account, or ? for help.\n\r";
-    outputBuf+=format("If you need assistance you may email %s.\n\r\n\r") % MUDADMIN_EMAIL;
+    outputBuf+="If you need assistance, join our Discord @ https://discord.gg/pTcaQuk\n\r\n\r";
     outputBuf+="\n\rLogin: ";
     output.push(CommPtr(new LoginComm("user", outputBuf)));
     return FALSE;
@@ -3059,6 +3059,23 @@ int Descriptor::doAccountStuff(char *arg)
         return FALSE;
       } else {
         account->passwd=pwd;
+
+        // Less friction when creating an account:
+        // - skip email - we have a better support channel
+        // - skip timezone - it's only pointful if you add time to prompt, so it should settable later if needed
+        // - skip terminal type - can't imagine anyone playing Sneezy on a fax machine nowadays. If needed, it's easier to add ANSI code stripper frontend on a different port.
+        account->term = TERM_ANSI;
+        saveAccount();
+        AccountStats::account_number++;
+
+        vlogf(LOG_MISC, format("New Account: '%s' with email '%s'") %  account->name % account->email);
+
+        account->status = TRUE;
+        rc = doAccountMenu("");
+        if (IS_SET_DELETE(rc, DELETE_THIS))
+          return DELETE_THIS;
+        return FALSE;
+
         writeToQ("Enter your email address.\n\r");
         writeToQ("E-mail addresses are used strictly for administrative purposes, or for\n\r");
         writeToQ("contacting you in the event of a problem.  The information is never used for\n\r");
