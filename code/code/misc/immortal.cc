@@ -5879,9 +5879,7 @@ void TBeing::doHeaven(const sstring &arg)
 
 void TBeing::doAccount(const sstring &arg)
 {
-  sstring namebuf = "";
   DIR *dfd;
-  sstring my_arg, buf2;
   int count = 1;
   TAccount account;
   sstring str;
@@ -5889,11 +5887,11 @@ void TBeing::doAccount(const sstring &arg)
   if (!desc)
     return;
 
-  my_arg = one_argument(arg, namebuf);
+  sstring rest = one_argument(arg, name);
 
-  if (namebuf.empty())  {
+  if (name.empty())  {
     if (hasWizPower(POWER_ACCOUNT)) {
-      sendTo("Syntax: account <account name> [banished | email | double | triple | immortal]\n\r");
+      sendTo("Syntax: account <account name> [banished | email | double | triple | immortal | multi <n>]\n\r");
     } else {
       sendTo("Syntax: account <account name>\n\r");
     }
@@ -5903,7 +5901,7 @@ void TBeing::doAccount(const sstring &arg)
   if (!hasWizPower(POWER_ACCOUNT)) {
     // person isn't an imm, only let them check their own account
     if (!desc->account || desc->account->name.empty() ||
-        desc->account->name == namebuf) {
+        desc->account->name == name) {
       sendTo("You may only check your own account.\n\r");
       sendTo("Syntax: account <account name>\n\r");
       return;
@@ -5911,8 +5909,8 @@ void TBeing::doAccount(const sstring &arg)
   }
 
 
-  buf2 = format("account/%c/%s") % namebuf.lower()[0] % namebuf.lower();
-  if (!(dfd = opendir(buf2.c_str()))) {
+  sstring path = format("account/%c/%s") % name.lower()[0] % name.lower();
+  if (!(dfd = opendir(path.c_str()))) {
     sendTo("No account by that name exists.\n\r");
     sendTo("Syntax: account <account name>\n\r");
     sendTo("Please do not attempt to abbreviate the account name.\n\r");
@@ -5920,15 +5918,16 @@ void TBeing::doAccount(const sstring &arg)
   }
   closedir(dfd);
 
-  if(!account.read(namebuf)){
+  if(!account.read(name)){
     sendTo("Cannot open account for player! Tell a coder!\n\r");
     return;
   }
 
   // only let imms do this
   if (hasWizPower(POWER_ACCOUNT)) {
-    my_arg = one_argument(arg, buf2);
-    if (is_abbrev(my_arg, "banished")) {
+    sstring cmd;
+    rest = one_argument(rest, cmd);
+    if (is_abbrev(cmd, "banished")) {
       if (IS_SET(account.flags, TAccount::BANISHED)) {
         REMOVE_BIT(account.flags, TAccount::BANISHED);
         sendTo(format("You have unbanished the %s account.\n\r") % account.name);
@@ -5939,9 +5938,9 @@ void TBeing::doAccount(const sstring &arg)
         vlogf(LOG_MISC, format("%s banished account '%s'") % getName() % account.name);
       }
 
-      account.write(namebuf);
+      account.write(name);
       return;
-    } else if (is_abbrev(my_arg, "email")) {
+    } else if (is_abbrev(cmd, "email")) {
       if (IS_SET(account.flags, TAccount::EMAIL)) {
         REMOVE_BIT(account.flags, TAccount::EMAIL);
         sendTo(format("You have un-email-banished the %s account.\n\r") % account.name);
@@ -5952,9 +5951,9 @@ void TBeing::doAccount(const sstring &arg)
         vlogf(LOG_MISC, format("%s email-banished account '%s'") % getName() % account.name);
       }
       
-      account.write(namebuf);
+      account.write(name);
       return;
-    } else if (is_abbrev(my_arg, "double")) {
+    } else if (is_abbrev(cmd, "double")) {
       if (powerCheck(POWER_FLAG_IMP_POWER)) {
         return;
       }
@@ -5967,9 +5966,9 @@ void TBeing::doAccount(const sstring &arg)
         sendTo(format("You grant the %s account the ability to double-class.\n\r") % account.name);
       }
       
-      account.write(namebuf);
+      account.write(name);
       return;
-    } else if (is_abbrev(my_arg, "triple")) {
+    } else if (is_abbrev(cmd, "triple")) {
       if (powerCheck(POWER_FLAG_IMP_POWER)) {
         return;
       }
@@ -5982,9 +5981,33 @@ void TBeing::doAccount(const sstring &arg)
         sendTo(format("You grant the %s account the ability to triple-class.\n\r") % account.name);
       }
 
-      account.write(namebuf);
+      account.write(name);
       return;
-    } else if (is_abbrev(my_arg, "immortal")) {
+    } else if (is_abbrev(cmd, "multi")) {
+      sstring limit;
+      one_argument(rest, limit);
+      if (limit.empty()) {
+        sendTo(format("The %s account has current multiplay limit of %i") % account.name % account.multiplay_limit);
+        return;
+      }
+
+      int new_limit = account.multiplay_limit;
+      try {
+        new_limit = std::stoi(limit);
+      } catch (std::invalid_argument) {
+        sendTo(format("Incorrect multiplay limit '%s', expected positive integer.\n\r") % limit);
+        return;
+      }
+      if (new_limit < 0) {
+        sendTo(format("Incorrect multiplay limit '%s', expected positive integer.\n\r") % limit);
+        return;
+      }
+      account.multiplay_limit = new_limit;
+
+      sendTo(format("You grant the %s account multiplay limit of %u.\n\r") % account.name % account.multiplay_limit);
+      account.write(name);
+      return;
+    } else if (is_abbrev(cmd, "immortal")) {
       // this is not something that should be done (manually) unless a 
       // god has left immortality entirely
 
@@ -6021,14 +6044,13 @@ void TBeing::doAccount(const sstring &arg)
         sendTo(format("You flag the %s account as immortal.\n\r") % account.name);
         vlogf(LOG_MISC, format("%s making account='%s' immortal") %  getName() % account.name);
       }
-      account.write(namebuf);
+      account.write(name);
       return;
     }
   }
 
 
-  buf2 = format("Account email address : %s%s%s\n\r") % cyan() % account.email % norm();
-  str += buf2;
+  str += format("Account email address : %s%s%s\n\r") % cyan() % account.email % norm();
 
   char *tmstr = (char *) asctime(localtime(&account.last_logon));
   *(tmstr + strlen(tmstr) - 1) = '\0';
@@ -6057,8 +6079,8 @@ void TBeing::doAccount(const sstring &arg)
   // only let imms see comments
   if (hasWizPower(POWER_ACCOUNT)) {
     FILE *fp;
-    buf2 = format("account/%c/%s/comment") % namebuf.lower()[0] % namebuf.lower();
-    if ((fp = fopen(buf2.c_str(), "r"))) {
+    sstring path = format("account/%c/%s/comment") % name.lower()[0] % name.lower();
+    if ((fp = fopen(path.c_str(), "r"))) {
       char buf3[256];
       while (fgets(buf3, 255, fp))
         str += buf3;
