@@ -951,9 +951,10 @@ void gain_exp(TBeing *ch, double gain, int dam)
     ch->sendTo(format("%sYou would have gained XP here, but there is a problem with your account.  Please contact a creator.%s\n\r") % ch->redBold() % ch->norm());
     return;
   }
-  
-  gain /= ch->howManyClasses();
-  
+
+  gain /= ch->howManyClasses(); // exp gets later on applied separately for each class. Divide to avoid leveling faster than regular characters
+  gain /= ch->howManyClasses(); // to balance multiclass players, have them gain exp more slowly
+
   for (Class = MIN_CLASS_IND; Class < MAX_CLASSES; Class++) {
     if(!ch->getLevel(Class))
       continue;
