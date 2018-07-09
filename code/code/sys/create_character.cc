@@ -4,6 +4,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <sstream>
 #include "extern.h"
 #include "low.h"
 #include "account.h"
@@ -356,19 +357,37 @@ void nannyMultiplaywarn_output(Descriptor * desc)
 // lets a player choose a particular class
 // add multiclass support later
 // currently, no classes have any race/hometerrain restrictions so this makes it easy
-connectStateT nannyClass_input(Descriptor * desc, sstring & output, const sstring input)
+connectStateT nannyClass_input(Descriptor * desc, sstring & output, sstring const input)
 {
-  if (!input.empty())
-  {
-    int iChoice = convertTo<int>(input) - 1;
-    if (iChoice >= 0 && iChoice < MAX_CLASSES && classInfo[iChoice].enabled)
-    {
-      desc->character->setClass(classInfo[iChoice].class_num);
-      return CON_CREATION_LAUNCHPAD;
+  std::istringstream classesStr(input);
+  desc->character->player.Class = {};
+
+  int class_limit = 1;
+  if (desc->account->flags & TAccount::ALLOW_TRIPLECLASS)
+    class_limit = 3;
+  else if (desc->account->flags & TAccount::ALLOW_DOUBLECLASS)
+    class_limit = 2;
+
+  while (class_limit > 0) {
+    sstring classStr;
+    classesStr >> classStr;
+    if (!classesStr)
+      break;
+    int iChoice = convertTo<int>(classStr) - 1;
+    if (!(iChoice >= 0 && iChoice < MAX_CLASSES && classInfo[iChoice].enabled)) {
+      output = "Invalid Choice!";
+      return desc->connected;
     }
+    desc->character->player.Class |= classInfo[iChoice].class_num;
+    --class_limit;
   }
-  output = "Invalid Choice!";
-  return desc->connected;
+
+  if (desc->character->player.Class) {
+    return CON_CREATION_LAUNCHPAD;
+  } else {
+    output = "Invalid Choice!";
+    return desc->connected;
+  }
 }
 
 // shows all of the classes available
@@ -379,6 +398,10 @@ void nannyClass_output(Descriptor * desc)
   // display choices
   sbuf += "Please pick one of the following choices for your class.\n\r";
   sbuf += "Your current class is marked with an 'X'.\n\r\n\r";
+  if (desc->account->flags & TAccount::ALLOW_TRIPLECLASS)
+    sbuf += "Your account is tripleclass enabled!\n\rYou can choose one, two or three classes by entering two or three numbers, space separated.\n\r\n\r";
+  else if (desc->account->flags & TAccount::ALLOW_DOUBLECLASS)
+    sbuf += "Your account is doubleclass enabled!\n\rYou can choose one or two classes by entering two numbers, space separated.\n\r\n\r";
 
   for(int i=0; i < MAX_CLASSES; ++i)
   {
