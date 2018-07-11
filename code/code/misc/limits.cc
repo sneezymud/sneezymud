@@ -5,6 +5,7 @@ extern "C" {
 }
 #include <cmath>
 
+#include "account.h"
 #include "room.h"
 #include "being.h"
 #include "extern.h"
@@ -648,12 +649,12 @@ void TPerson::advanceLevel(classIndT Class)
     if (desc->career.hit_level50 == 0)
       desc->career.hit_level50 = time(0);
     if (isSingleClass()) {
-      SET_BIT(desc->account->flags, ACCOUNT_ALLOW_DOUBLECLASS);
+      SET_BIT(desc->account->flags, TAccount::ALLOW_DOUBLECLASS);
       sendTo(COLOR_BASIC, "<r>Congratulations on obtaining L50!<z>\n\rYou may now create <y>double-class characters<z>!\n\r");
       desc->saveAccount();
     }
     if (isDoubleClass()) {
-      SET_BIT(desc->account->flags, ACCOUNT_ALLOW_TRIPLECLASS);
+      SET_BIT(desc->account->flags, TAccount::ALLOW_TRIPLECLASS);
       sendTo(COLOR_BASIC, "<r>Congratulations on obtaining L50!<z>\n\rYou may now create <y>triple-class characters<z>!\n\r");
       desc->saveAccount();
     }
