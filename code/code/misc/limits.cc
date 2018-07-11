@@ -1143,11 +1143,14 @@ void gain_exp(TBeing *ch, double gain, int dam)
       //      % ch->getExp() % gain % peak % ch->getMaxExp());
       ch->addToExp(gain);
       if ((ch->getExp() >= peak) && (ch->getExp() >= ch->getMaxExp()) &&
-          (ch->GetMaxLevel() < MAX_MORT)) {
+          (ch->getLevel(Class) < MAX_MORT)) {
         TPerson * tPerson = dynamic_cast<TPerson *>(ch);
 
         ch->raiseLevel(Class);
-        ch->sendTo(COLOR_BASIC, "<W>You advance a level!<1>\n\r");
+        ch->sendTo(COLOR_BASIC,
+            ch->howManyClasses() == 1
+            ? format("<W>You advance a level!<1>\n\r").str()
+            : (format("<W>You advance a level in %s!<1>\n\r") % classInfo[Class].name).str());
 
         if (tPerson)
           tPerson->setSelectToggles(NULL, Class, SILENT_YES);
