@@ -647,7 +647,6 @@ void TPerson::advanceLevel(classIndT Class)
   if (desc && GetMaxLevel() >= 50) {
     if (desc->career.hit_level50 == 0)
       desc->career.hit_level50 = time(0);
-#if 0
     if (isSingleClass()) {
       SET_BIT(desc->account->flags, ACCOUNT_ALLOW_DOUBLECLASS);
       sendTo(COLOR_BASIC, "<r>Congratulations on obtaining L50!<z>\n\rYou may now create <y>double-class characters<z>!\n\r");
@@ -658,7 +657,6 @@ void TPerson::advanceLevel(classIndT Class)
       sendTo(COLOR_BASIC, "<r>Congratulations on obtaining L50!<z>\n\rYou may now create <y>triple-class characters<z>!\n\r");
       desc->saveAccount();
     }
-#endif
   }
 
   doHPGainForLev(Class);
@@ -1143,11 +1141,14 @@ void gain_exp(TBeing *ch, double gain, int dam)
       //      % ch->getExp() % gain % peak % ch->getMaxExp());
       ch->addToExp(gain);
       if ((ch->getExp() >= peak) && (ch->getExp() >= ch->getMaxExp()) &&
-          (ch->GetMaxLevel() < MAX_MORT)) {
+          (ch->getLevel(Class) < MAX_MORT)) {
         TPerson * tPerson = dynamic_cast<TPerson *>(ch);
 
         ch->raiseLevel(Class);
-        ch->sendTo(COLOR_BASIC, "<W>You advance a level!<1>\n\r");
+        ch->sendTo(COLOR_BASIC,
+            ch->howManyClasses() == 1
+            ? format("<W>You advance a level!<1>\n\r").str()
+            : (format("<W>You advance a level in %s!<1>\n\r") % classInfo[Class].name).str());
 
         if (tPerson)
           tPerson->setSelectToggles(NULL, Class, SILENT_YES);
