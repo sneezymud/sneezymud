@@ -368,9 +368,11 @@ connectStateT nannyClass_input(Descriptor * desc, sstring & output, sstring cons
   else if (desc->account->flags & TAccount::ALLOW_DOUBLECLASS)
     class_limit = 2;
 
-  do {
+  while (class_limit > 0) {
     sstring classStr;
     classesStr >> classStr;
+    if (!classesStr)
+      break;
     int iChoice = convertTo<int>(classStr) - 1;
     if (!(iChoice >= 0 && iChoice < MAX_CLASSES && classInfo[iChoice].enabled)) {
       output = "Invalid Choice!";
@@ -378,9 +380,14 @@ connectStateT nannyClass_input(Descriptor * desc, sstring & output, sstring cons
     }
     desc->character->player.Class |= classInfo[iChoice].class_num;
     --class_limit;
-  } while (classesStr && class_limit > 0);
+  }
 
-  return CON_CREATION_LAUNCHPAD;
+  if (desc->character->player.Class) {
+    return CON_CREATION_LAUNCHPAD;
+  } else {
+    output = "Invalid Choice!";
+    return desc->connected;
+  }
 }
 
 // shows all of the classes available
