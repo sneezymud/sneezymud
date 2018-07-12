@@ -5887,7 +5887,8 @@ void TBeing::doAccount(const sstring &arg)
   if (!desc)
     return;
 
-  sstring rest = one_argument(arg, name);
+  sstring name = arg.word(0);
+  sstring rest = arg.substr(arg.find(' ') + 1);
 
   if (name.empty())  {
     if (hasWizPower(POWER_ACCOUNT)) {
