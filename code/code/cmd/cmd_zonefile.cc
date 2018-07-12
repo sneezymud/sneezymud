@@ -10,19 +10,110 @@
  *****************************************************************************/
 
 #include <stdio.h>
+#include <fstream>
+#include <boost/filesystem.hpp>
 
 #include "extern.h"
 #include "room.h"
 #include "being.h"
 #include "monster.h"
+#include "db.h"
+#include "database.h"
 
 //#define MAIL_ZONEFILE
 
 
 namespace {
+  namespace fs = boost::filesystem;
 #ifdef MAIL_ZONEFILE
   const char SAVEZONEFILE_REPLYTO[] = "damescena@sneezy.saw.net";
 #endif
+
+  int findBeginningOfLastBlock(TBeing& ch)
+  {
+    auto dir = fs::directory_iterator("zonefiles");
+    int lastBlockVnum = 0;
+    for (const auto& dirent : dir) {
+      int current = 0;
+      try {
+        current = std::stoi(dirent.path().filename().string());
+      } catch (std::invalid_argument const& e) {
+        vlogf(LOG_BUG, format("Nonnumeric junk in zonefiles dir: %s") % dirent.path().filename().string());
+        ch.sendTo(format("Nonnumeric junk in zonefiles dir: %s\n\r") % dirent.path().filename().string());
+        return 0;
+      }
+      if (current > lastBlockVnum)
+        lastBlockVnum = current;
+    }
+    return lastBlockVnum;
+  }
+
+  bool shrinkZonefile(TBeing& ch, int begin, int size)
+  {
+    std::string path = (format("zonefiles/%d") % begin).str();
+    int newBegin = begin + size;
+
+    // read entire file into string
+    std::string contents;
+    if (std::ifstream is{path, std::ios::binary | std::ios::ate}) {
+      auto size = is.tellg();
+      contents = std::string(size, '\0'); // construct string to stream size
+      is.seekg(0);
+      is.read(&contents[0], size);
+    }
+
+    if (std::fstream file{path, std::ios::out}) {
+      file << "#" << std::to_string(newBegin) << std::endl;
+      file << contents.substr(contents.find('\n') + 1);
+    }
+    fs::rename(fs::path((format("zonefiles/%d") % begin).str()), fs::path((format("zonefiles/%d") % newBegin).str()));
+    return true;
+  }
+
+  void createNewZonefile(int begin, int size, std::string const& name)
+  {
+    std::string path = (format("zonefiles/%d") % begin).str();
+    std::fstream file(path, std::ios::out);
+    file << "#" << begin << std::endl;
+    file << name << "~" << std::endl;
+    file << begin + size - 1 << " 35 2 0" << std::endl;
+    file << "S" << std::endl;
+  }
+
+  void doNewZoneFile(TBeing& ch, const sstring& args)
+  {
+    int size = 0;
+    try {
+      size = std::stoi(args.word(0));
+    } catch (std::invalid_argument const&) {
+      ch.sendTo("Provide the number of rooms in the new zone");
+      return;
+    }
+
+    std::string name = args.substr(args.find(' ') + 1);
+    if (name.empty()) {
+      ch.sendTo("Provide a name for the new zone");
+      return;
+    }
+
+    int lastBlockBegin = findBeginningOfLastBlock(ch);
+    if (lastBlockBegin == 0)
+      return;
+
+    // I hope we won't crash midway
+    if (shrinkZonefile(ch, lastBlockBegin, size))
+      createNewZonefile(lastBlockBegin, size, name);
+
+    // temporarily remove last block from the list so that the ordering would be correct
+    zoneData lastBlock = zone_table.back();
+    zone_table.pop_back();
+    int seq = zone_table.size();
+    TDatabase db(DB_SNEEZY);
+    bootOneZone(db, lastBlockBegin, seq);
+    zone_table.push_back(lastBlock);
+
+    ch.sendTo(format("Success! new zone: %s with vnums from %d to %d") % name % lastBlockBegin % (lastBlockBegin + size - 1));
+  }
 
   void doSaveZoneFile(TBeing *ch, const sstring & tArg)
   {
@@ -428,18 +519,20 @@ void TBeing::doZonefile(const sstring & tStArg)
     sendTo("Syntax:\n\r");
     sendTo("zonefile save : Save current zonefile status.\n\r");
     sendTo("zonefile load : Load current zonefile status.\n\r");
+    sendTo("zonefile new <n> <builder - zone title>: Split <n> rooms off the last block, creating a new zone named <builder - zone title>.\n\r");
 #if 0
     sendTo("zonefile modify <field> SEE HELP FILE\n\r");
 #endif
   }
 
-  tStString=tStArg.word(0);
-  tStBuffer=tStArg.word(1);
+  std::string cmd = tStArg.word(0);
+  std::string rest = tStArg.substr(tStArg.find(' ') + 1);
 
-
-  if (is_abbrev(tStString, "save")) {
-    doSaveZoneFile(this, tStBuffer);
-  } else if (is_abbrev(tStString, "load") && getName() == "Lapsos") {
-    doLoadZoneFile(this, tStBuffer);
+  if (is_abbrev(cmd, "save")) {
+    doSaveZoneFile(this, rest);
+  } else if (is_abbrev(cmd, "load") && getName() == "Lapsos") {
+    doLoadZoneFile(this, rest);
+  } else if (is_abbrev(cmd, "new")) {
+    doNewZoneFile(*this, rest);
   }
 }
