@@ -76,6 +76,8 @@ const int ZONE_ROOM_RANDOM = -99;
 /* public procedures in db.c */
 
 void bootDb(void);
+class TDatabase;
+void bootOneZone(TDatabase&, int, int&);
 int create_entry(char *name);
 void zone_update(void);
 int real_object(int);

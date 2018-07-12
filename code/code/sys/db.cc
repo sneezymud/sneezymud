@@ -1562,6 +1562,24 @@ bool zoneData::bootZone(int zone_nr)
   return true;
 }
 
+void bootOneZone(TDatabase& db, int zoneStart, int& zon)
+{
+  zoneData zd;
+  if (zd.bootZone(zoneStart)) {
+    zd.renumCmd();
+    vlogf(LOG_MISC, format("booting zone %d") % zon);
+    zd.zone_nr=zon++;
+    // note that a zone's zone_nr may change over time if a new zone is inserted before it
+    // so update all records in the zone table
+    db.query("update zone set zone_name = '%s', zone_enabled = %i, bottom = %i, top = %i, reset_mode = %i, lifespan = %i, util_flag = 1 where zone_nr = %i", zd.name.c_str(), (zd.enabled ? 1 : 0), zd.bottom, zd.top, zd.reset_mode, zd.lifespan, zd.zone_nr);
+    if (db.rowCount() == 0) {
+      // unsuccessful update, do an insert
+      db.query("insert into zone (zone_nr, zone_name, zone_enabled, bottom, top, reset_mode, lifespan, util_flag) values (%i, '%s', %i, %i, %i, %i, %i, 1)", zd.zone_nr, zd.name.c_str(), (zd.enabled ? 1 : 0), zd.bottom, zd.top, zd.reset_mode, zd.lifespan);
+    }
+    zone_table.push_back(zd);
+  }
+}
+
 void bootZones(void)
 {
   DIR *dfd;
@@ -1594,20 +1612,7 @@ void bootZones(void)
   
   db.query("update zone set util_flag = 0");
   for(it=files.begin();it!=files.end();++it){
-    zoneData zd;
-    if(zd.bootZone((*it).first)){
-      zd.renumCmd();
-      vlogf(LOG_MISC, format("booting zone %d") % zon);
-      zd.zone_nr=zon++;
-      // note that a zone's zone_nr may change over time if a new zone is inserted before it
-      // so update all records in the zone table
-      db.query("update zone set zone_name = '%s', zone_enabled = %i, bottom = %i, top = %i, reset_mode = %i, lifespan = %i, util_flag = 1 where zone_nr = %i", zd.name.c_str(), (zd.enabled ? 1 : 0), zd.bottom, zd.top, zd.reset_mode, zd.lifespan, zd.zone_nr);
-      if (db.rowCount() == 0) {
-        // unsuccessful update, do an insert
-        db.query("insert into zone (zone_nr, zone_name, zone_enabled, bottom, top, reset_mode, lifespan, util_flag) values (%i, '%s', %i, %i, %i, %i, %i, 1)", zd.zone_nr, zd.name.c_str(), (zd.enabled ? 1 : 0), zd.bottom, zd.top, zd.reset_mode, zd.lifespan);
-      }
-      zone_table.push_back(zd);
-    }
+    bootOneZone(db, it->first, zon);
   }
   // trim off any extra entries (zones have been removed since last boot, presumably)
   db.query("delete from zone where util_flag = 0");
