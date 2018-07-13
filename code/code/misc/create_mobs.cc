@@ -351,8 +351,9 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
   ch->sendTo("Saving.\n\r");
   TDatabase db(DB_IMMORTAL);
   db.query("delete from mob where owner = '%s' and vnum = %i", ch->name.c_str(), vnum);
-  // (vnum, name, short_desc, long_desc, description, actions, affects, faction, fact_perc, letter, attacks, class, level, tohit, ac, hpbonus, damage_level, damage_precision, gold, race, weight, height, str, bra, con, dex, agi, intel, wis, foc, per, cha, kar, spe, pos, def_position, sex, spec_proc, skin, vision, can_be_seen, max_exist, local_sound, adjacent_sound)
-  db.query("insert into mob values (%i, '%s', '%s', '%s', '%s', %i, %i, %i, %i, '%s', %f, %i, %i, %i, %f, %f, %f, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, '%s', '%s', '%s')",
+  // (owner, vnum, name, short_desc, long_desc, description, actions, affects, faction, fact_perc, letter, attacks, class, level, tohit, ac, hpbonus, damage_level, damage_precision, gold, race, weight, height, str, bra, con, dex, agi, intel, wis, foc, per, cha, kar, spe, pos, def_position, sex, spec_proc, skin, vision, can_be_seen, max_exist, local_sound, adjacent_sound)
+  db.query("insert into mob values ('%s', %i, '%s', '%s', '%s', '%s', %i, %i, %i, %i, '%s', %f, %i, %i, %i, %f, %f, %f, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, '%s', '%s')",
+      ch->name.c_str(),
       vnum, 
       name, short_desc, long_desc, description, 
       actions, static_cast<unsigned long>(mob->specials.affectedBy),
@@ -375,7 +376,7 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
       mob->getStat(STAT_CHOSEN, STAT_SPE), 
       mapPosToFile(mob->getPosition()), mapPosToFile(mob->default_pos), mob->getSex(), mob->spec, 
       mob->getMaterial(WEAR_BODY), mob->canBeSeen, mob->visionBonus, mob->max_exist, 
-      (!mob->sounds.empty() ? local_sound : ""), (!mob->distantSnds.empty() ? adjacent_sound : ""), ch->name.c_str());
+      (!mob->sounds.empty() ? local_sound : ""), (!mob->distantSnds.empty() ? adjacent_sound : ""));
   
   // immunties
   db.query("delete from mob_imm where owner = '%s' and vnum = %i", ch->name.c_str(), vnum);
