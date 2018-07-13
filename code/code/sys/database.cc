@@ -266,7 +266,7 @@ bool TDatabase::query(const char *query,...)
   } while(*query++);
   va_end(ap);
 
-  if (pimpl->log)
+  if (pimpl->log || (toggleInfo.isLoaded() && toggleInfo[TOG_DBLOGGING]->toggle))
     vlogf(LOG_DB, buf);
 
   if(mysql_query(pimpl->db, buf.c_str())){

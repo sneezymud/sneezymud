@@ -90,6 +90,14 @@ void runMigrations() {
                     "change column multiplay_limit int not null default 3"
                     ));
         },
+        [&](){
+            vlogf(LOG_MISC, "Renaming Test Code 6 into DB Logging");
+            assert(sneezy.query(
+                    "update globaltoggles "
+                    "set name = 'DB Logging', descr = 'log all db queries', testcode = 0 "
+                    "where tog_id = 17"
+                    ));
+        },
     };
 
     int oldVersion = getVersion(sneezy);
