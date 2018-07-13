@@ -30,9 +30,14 @@ How to build
         show mob rabbit
         load mob 44784
         medit mod rabbit (change name to Lagomorph, describe appropriately)
-        medit save lagomorph 45664 <-- doesn't work
+        medit save lagomorph 45664
         ```
-        (TODO: how to edit again nad save mob again?)
+    - change mobs
+        ```
+        medit load 45664
+        medit mod lagomorph (do further changes)
+        medit save lagomorph 45664
+        ```
     - TODO: add items
 1. Save the state from live MUD to `immortal` database
     ```
