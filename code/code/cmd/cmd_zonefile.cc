@@ -83,6 +83,11 @@ namespace {
 
   void doNewZoneFile(TBeing& ch, const sstring& args)
   {
+    if (!hasWizPower(POWER_LOW)) {
+      ch.sendTo("You need LOW powers to create new zones.\n\r");
+      return;
+    }
+
     int size = 0;
     try {
       size = std::stoi(args.word(0));
