@@ -2077,11 +2077,6 @@ int TBeing::isNotPowerful(TBeing *vict, int lev, spellNumT skill, silentTypeT si
   if (isImmortal() && !vict->isImmortal())
     return FALSE;
 
-  // force fails for multiplayers
-  TMonster *tmons = dynamic_cast<TMonster *>(vict);
-  if (tmons && tmons->isAttackerMultiplay(this))
-    return TRUE;
-
   if (vict->isImmortal() && !isImmortal()) {
     if (!silent) {
       act("You can't do that to $N.", FALSE, this, 0, vict, TO_CHAR);
