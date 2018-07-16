@@ -130,11 +130,6 @@ int TBeing::reconcileDamage(TBeing *v, int dam, spellNumT how)
     }
   }
 
-  // Anti-Multiplay code, Pappy 11/7/2007
-  // We don't allow damage to mobs via multiplay attacks
-  if (tmons && tmons->isAttackerMultiplay(this))
-    return 0;
-
   rc = applyDamage(v, dam, how);
 
   if (IS_SET_DELETE(rc, DELETE_VICT)) {

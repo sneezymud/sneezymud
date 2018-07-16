@@ -543,7 +543,6 @@ class TMonster : public TBeing {
     int lookForHorse();
     void balanceMakeNPCLikePC();
     int lookForEngaged(const TBeing *);
-    bool isAttackerMultiplay(TBeing *aggressor);
     virtual sstring getStealLootNames() const;
     virtual bool getStolenFrom() const { return stolenFrom; }
     virtual void setStolenFrom(bool v) { stolenFrom = v; }

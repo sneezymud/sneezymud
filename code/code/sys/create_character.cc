@@ -338,17 +338,8 @@ void nannyMultiplaywarn_output(Descriptor * desc)
 {
   desc->writeToQ("\a\n\r");
   desc->writeToQ("*************************************************************************\n\r");
-  desc->writeToQ("*  The characters within an account MUST NOT interact with each other,  *\n\r");
-  desc->writeToQ("*  aside from sharing equipment and money.  It is prohibited to         *\n\r");
-  desc->writeToQ("*  use a character in your account to act as an agent in the retrieval  *\n\r");
-  desc->writeToQ("*  of the corpse of another of your characters, or to reduce or         *\n\r");
-  desc->writeToQ("*  eliminate a dangerous situation faced by another character in your   *\n\r");
-  desc->writeToQ("*  account.  Infractions of this rule WILL RESULT in the ELIMINATION    *\n\r");
-  desc->writeToQ("*  OF ALL CHARACTERS INVOLVED.                                          *\n\r");
-  desc->writeToQ("*                                                                       *\n\r");
-  desc->writeToQ("*  It is expected that you will familiarize yourself with the rules     *\n\r");
-  desc->writeToQ("*  detailed in the help files. Be sure to read HELP RULES and all       *\n\r");
-  desc->writeToQ("*  pertinent help files listed within.                                  *\n\r");
+  desc->writeToQ("*  Multiplay is now permitted, up to the allowable limit of characters  *\n\r");
+  desc->writeToQ("*  online (which can be raised through quests). Have fun.               *\n\r");
   desc->writeToQ("*************************************************************************\n\r");
   desc->writeToQ("\n\r\n\r");
   desc->writeToQ("Do you agree to the above terms and conditions regarding the rules? [Y/N]\n\r");

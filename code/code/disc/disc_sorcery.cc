@@ -1415,10 +1415,6 @@ int teleport(TBeing *caster, TBeing *victim, int, short bKnown)
         SV(SPELL_TELEPORT);
         caster->nothingHappens(SILENT_YES);
 	if (tmons) {
-	  if (tmons->isAttackerMultiplay(caster)) {
-	    caster->nothingHappens(SILENT_NO);
-	    return SPELL_FAIL;
-	  }
 	  caster->reconcileHurt(victim, discArray[SPELL_TELEPORT]->alignMod);
 	  if (!victim->isPc()) {
 	    // piss the mob off for shooting at it 
