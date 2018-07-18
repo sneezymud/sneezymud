@@ -459,6 +459,22 @@ const sstring sstring::word(int i) const
   return "";
 }
 
+sstring sstring::dropWord() const
+{
+  auto pos = find(' ');
+  if (pos == npos)
+    return "";
+  return substr(pos + 1);
+}
+
+sstring sstring::dropWords(size_t num) const
+{
+  sstring res = *this;
+  for (; num --> 0;)
+    res = res.dropWord();
+  return res;
+}
+
 // returns true if string has a digit in it
 const bool sstring::hasDigit() const
 {
