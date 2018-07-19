@@ -83,7 +83,7 @@ namespace {
 
   void doNewZoneFile(TBeing& ch, const sstring& args)
   {
-    if (!hasWizPower(POWER_LOW)) {
+    if (!ch.hasWizPower(POWER_LOW)) {
       ch.sendTo("You need LOW powers to create new zones.\n\r");
       return;
     }
