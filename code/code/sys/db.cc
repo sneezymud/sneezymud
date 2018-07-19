@@ -3231,6 +3231,17 @@ void runResetCmdP(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   if (!newobj)
     return;
 
+  // don't add up cash loot on resets -- with rare looting, it adds up to way too much
+  if (newobj->itemType() == ITEM_MONEY) {
+    for (const auto contents : obj->stuff) {
+      TObj* contentObj = dynamic_cast<TObj*>(contents);
+      if (contentObj && contentObj->itemType() == ITEM_MONEY) {
+        delete newobj;
+        return;
+      }
+    }
+  }
+
   if (isContainer)
     *obj += *newobj;
   else if (isTable)
