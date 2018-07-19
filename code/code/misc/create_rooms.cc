@@ -2907,6 +2907,7 @@ static void RoomSave(TBeing *ch, int start, int end, int useSecond)
   ch->sendTo("Saving.\n\r");
   strcpy(dots, "\0");
 
+  db.query("begin");
   db.query("delete from room where owner='%s' and block=%i", 
 	   ch->getName().c_str(), useSecond);
   db.query("delete from roomexit where owner='%s' and block=%i",
@@ -2988,6 +2989,7 @@ static void RoomSave(TBeing *ch, int start, int end, int useSecond)
     }
 
   }
+  db.query("commit");
   ch->sendTo(dots);
   ch->sendTo("\n\rDone.\n\r");
 }
