@@ -521,14 +521,14 @@ int TBeing::moveGain()
 
 
 // find out how many pracs ch needs to max all advanced discs
-int getAdvancedPracs(TBeing *ch){
+int getAdvancedPracs(TBeing *ch, classIndT Class){
   discNumT i;
   CDiscipline *cd;
   int totalpracs=0;
 
   for (i=MIN_DISC; i < MAX_DISCS; i++) {
     cd = ch->getDiscipline(i);
-    if(cd && cd->ok_for_class){
+    if(cd && cd->ok_for_class & classInfo[Class].class_num){
       if(cd->isBasic() || cd->isAutomatic())
         totalpracs+=0;
       else if(cd->isFast()){
@@ -563,7 +563,7 @@ double TBeing::pracsPerLevel(classIndT Class, bool forceBasic)
   double learnrate = getIntModForPracs() * class_tweak;
 
   // advancedpracs is the pracs per level you get after you finish basic
-  double advancedpracs = (getAdvancedPracs(this) * learnrate)/(50.0 - advancedlevel);
+  double advancedpracs = (getAdvancedPracs(this, Class) * learnrate)/(50.0 - advancedlevel);
 
   if (getLevel(Class) >= advancedlevel && !forceBasic && getLevel(Class)<=50)
     num = advancedpracs;
