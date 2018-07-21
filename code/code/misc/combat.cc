@@ -5145,7 +5145,7 @@ void TBeing::gainExpPerHit(TBeing *v, double percent, int dam)
   if (sameRoom(*real_master) && inGroup(*real_master)) {
     exp_received = (tmp_exp * real_master->getExpShare());
     exp_received *= (FRACT(real_master, v) / 100.0);
-    exp_received *= (isPc()?tweakInfo[TWEAK_GROUP_XP_BONUS_RATE]->current:1);
+    exp_received *= ( isPc() ? tweakInfo[TWEAK_GROUP_XP_BONUS_RATE]->current : 1 );
     gain_exp(real_master, exp_received, dam*10000/v->hitLimit());
     if(EXP_DEBUG){
       vlogf(LOG_COMBAT, format("gainExpPerHit: master %s gained %f exp") %
@@ -5157,7 +5157,7 @@ void TBeing::gainExpPerHit(TBeing *v, double percent, int dam)
     if (inGroup(*f->follower) && sameRoom(*f->follower)) {
       exp_received = (tmp_exp * f->follower->getExpShare());
       exp_received *= (FRACT(f->follower, v) / 100.0);
-      exp_received *= (isPc()?tweakInfo[TWEAK_GROUP_XP_BONUS_RATE]->current:1);
+      exp_received *= ( isPc() ? tweakInfo[TWEAK_GROUP_XP_BONUS_RATE]->current : 1 );
       gain_exp(f->follower, exp_received, dam*10000/v->hitLimit());
       if(EXP_DEBUG)
 	vlogf(LOG_COMBAT, format("gainExpPerHit: follower %s gained %f exp") %
