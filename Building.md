@@ -52,12 +52,10 @@ How to build
 1. Edit the zonefile -- it's in lib/zonefiles/45660
 1. Publish the zone to `sneezy` database
     ```
-    $ docker exec -it sneezy /bin/sh
-    (docker) ~/sneezymud-docker/sneezymud/code $ objs/sqladdwld Cizra 1 45660-45664
-    (docker) ~/sneezymud-docker/sneezymud/code $ objs/sqladdmobs Cizra 45664
-    (docker) ~/sneezymud-docker/sneezymud/code $ objs/sqladdobjs Cizra 45664
+    low mvroom Cizra 1 45660-45664
+    low mvmob Cizra 45664
+    low mvobj Cizra 45664
     ```
-    TODO: add in-game commands to do that
 1. Enable the zone in zonefile (change the 0 to 1) in header
 1. Reboot the MUD, watch the zone getting loaded without `rload`
 1. Repeat the steps of assigning zone, editing a room, saving to `immortal` and publishing to `sneezy` with an already existing zone to connect your zone to the rest of the world.
