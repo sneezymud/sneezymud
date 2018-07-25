@@ -6,6 +6,7 @@
 
 #include "handler.h"
 #include "room.h"
+#include "runonreturn.h"
 #include "monster.h"
 #include "extern.h"
 #include "configuration.h"
@@ -2182,6 +2183,9 @@ int shopping_produce(TMonster *keeper)
   unsigned int shop_nr = find_shop_nr(keeper->number);
   TMonster *sbaKeeper = NULL;
   std::vector<int>::iterator iter;
+  TDatabase db(DB_SNEEZY);
+  db.query("begin");
+  RunOnReturn r([&](){db.query("commit");});
 
   if (!keeper)
     return FALSE;
@@ -2208,7 +2212,6 @@ int shopping_produce(TMonster *keeper)
       return FALSE;
     }
 
-    TDatabase db(DB_SNEEZY);
     db.query("select count(*) as count from rent where owner_type='shop' and owner=%i and vnum=%i", shop_nr, o->objVnum());
     db.fetchRow();
     int count=convertTo<int>(db["count"]);
