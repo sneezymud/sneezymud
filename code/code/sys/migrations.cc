@@ -79,7 +79,7 @@ void runMigrations() {
             vlogf(LOG_MISC, "Adding multiplay column to account table");
             assert(sneezy.query(
                     "alter table account "
-                    "add column multiplay_limit int null default 3"
+                    "add column multiplay_limit int null default 2"
                     ));
             assert(sneezy.query(
                     "update account "
@@ -87,7 +87,7 @@ void runMigrations() {
                     ));
             assert(sneezy.query(
                     "alter table account "
-                    "change column multiplay_limit int not null default 3"
+                    "modify column multiplay_limit int not null default 2"
                     ));
         },
         [&](){
