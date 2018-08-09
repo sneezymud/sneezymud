@@ -828,9 +828,9 @@ void TPerson::loadFromSt(charFile *st)
 void TBeing::loadAliases()
 {
   TDatabase db(DB_SNEEZY);
-  db.query("select word, command from alias where player_id = %i", player.player_id);
+  db.query("select word, command from alias where player_id = %i", getPlayerID());
   while (db.fetchRow())
-      desc->alias[db["word"]] = db["command"];
+    desc->alias[db["word"]] = db["command"];
 }
 
 void TPerson::rentAffectTo(saveAffectedData *af)

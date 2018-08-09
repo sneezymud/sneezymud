@@ -608,22 +608,21 @@ charFile::~charFile()
 // this returns the ID in the database, or creates a new one if needed
 int TBeing::getPlayerID() const
 {
-  TDatabase db(DB_SNEEZY);
-  sstring myname;
-  int playerID=0;
-
   if(!isPc())
     return 0;
 
   if(desc && desc->playerID)
     return desc->playerID;
 
+  sstring myname;
   if (specials.act & ACT_POLYSELF) {
     myname=desc->original->getName();
   } else { 
     myname=getName();
   }
 
+  TDatabase db(DB_SNEEZY);
+  int playerID=0;
   db.query("select id from player where lower(name) = lower('%s')", myname.c_str());
 
   if(db.fetchRow()){

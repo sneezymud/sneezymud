@@ -3493,7 +3493,7 @@ void TBeing::doClear(const char *argument)
     sendTo("Clear which alias?\n\r");
     return;
   } else if (is_abbrev(argument, "all")) {
-    db.query("delete from alias where player_id = %i", player.player_id);
+    db.query("delete from alias where player_id = %i", getPlayerID());
     sendTo("Ok. All Aliases cleared\n\r");
     return;
   }
@@ -3506,7 +3506,7 @@ void TBeing::doClear(const char *argument)
       ++it;
     sstring word = it->first;
     desc->alias.erase(it);
-    db.query("delete from alias where player_id = %i and word = '%s'", player.player_id, word.c_str());
+    db.query("delete from alias where player_id = %i and word = '%s'", getPlayerID(), word.c_str());
     sendTo(format("Ok. Alias %d = %s has been removed.\n\r") % (idx + 1) % word);
     return;
   } else {
@@ -3566,7 +3566,7 @@ void TBeing::doAlias(const char *argument)
   }
 
   TDatabase db(DB_SNEEZY);
-  if (db.query("insert into alias (player_id, word, command) values (%i, '%s', '%s') on duplicate key update command = '%s'", player.player_id, arg1, arg2, arg2)) {
+  if (db.query("insert into alias (player_id, word, command) values (%i, '%s', '%s') on duplicate key update command = '%s'", getPlayerID(), arg1, arg2, arg2)) {
     desc->alias[arg1] = arg2;
     sendTo(format("Setting alias %s to %s\n\r") % arg1 % arg2);
   } else {
