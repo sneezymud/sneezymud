@@ -79,6 +79,7 @@ class TPerson : public TBeing {
     int saveRent(bool d=false, int msgStatus=0);
     void loadRent();
 
+    virtual std::pair<bool, int> doPersonCommand(cmdTypeT, const sstring &, TThing *, bool);
     virtual void raiseLevel(classIndT);
     virtual void doUsers(const sstring &);
     virtual void doInvis(const char *);

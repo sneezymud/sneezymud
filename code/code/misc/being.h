@@ -938,6 +938,7 @@ class TBeing : public TThing {
     void doEgoTrip(const char *);
     void doComment(const char *);
     int doCommand(cmdTypeT, const sstring &, TThing *, bool);
+    virtual std::pair<bool, int> doPersonCommand(cmdTypeT, const sstring &, TThing *, bool) {return {};}
     int doCharge(const char *, TBeing *);
     void doChargeStave(sstring);
     int doSmite(const char *, TBeing *);
