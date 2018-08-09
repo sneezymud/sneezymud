@@ -467,7 +467,7 @@ class TBeing : public TThing {
     unsigned short GetMaxLevel() const;
     void setMaxLevel(unsigned short num);
     sstring const getProfName() const;
-    const char * const getProfAbbrevName() const;
+    std::string getProfAbbrevName() const;
     void deityIgnore(silentTypeT = SILENT_NO) const;
     void nothingHappens(silentTypeT = SILENT_NO) const;
     float percModifier() const;
@@ -657,10 +657,10 @@ class TBeing : public TThing {
     int checkEngagementStatus();
     virtual sstring parseTitle(Descriptor *);
     int onlyClass(int) const;
-    int getClassNum(const char *, exactTypeT);
-    int getClassNum(classIndT);
-    classIndT getClassIndNum(const char *, exactTypeT);
-    classIndT getClassIndNum(unsigned short, exactTypeT);
+    int getClassNum(const char *, exactTypeT) const;
+    int getClassNum(classIndT) const;
+    classIndT getClassIndNum(const char *, exactTypeT) const;
+    classIndT getClassIndNum(unsigned short, exactTypeT) const;
     bool hasClass(const char *, exactTypeT) const;
     bool hasClass(unsigned short, exactTypeT = EXACT_NO) const;
     void setQuaffUse(bool tmp) { inQuaffUse = tmp; }
