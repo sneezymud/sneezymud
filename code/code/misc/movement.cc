@@ -3465,45 +3465,17 @@ int TBeing::doMortalGoto(const sstring & argument)
     }
   }
 
-  auto pathfind = [this](TPathTarget const& to, std::string const& hereMsg) -> boost::optional<TPathFinder const> {
-    TPathFinder path;
-    path.setNoMob(false);
-    auto dir = path.findPath(inRoom(), to);
-    if (path.getDest() == inRoom()) {
-      sendTo(hereMsg);
-      return {};
-    }
-    if (dir < DIR_NORTH || dir > DIR_SOUTHWEST) {
-      sendTo("Strangely, you can't quite figure out how to get there from here.\n\r");
-      return {};
-    }
-    return path;
-  };
-
-  auto printPath = [this](TPathFinder const& path) {
-    for(unsigned int i=1;i<path.path.size()-1;++i){
-      if(path.path[i]->direct >= 10)
-        sendTo(COLOR_MOBS, "enter portal, ");
-      else
-        sendTo(COLOR_MOBS, format("%s, ") % dirs[path.path[i]->direct]);
-    }
-    if(path.path[path.path.size()-1]->direct >= 10)
-      sendTo(COLOR_MOBS, "enter portal.\n\r");
-    else
-      sendTo(COLOR_MOBS, format("%s.\n\r") % dirs[path.path[path.path.size()-1]->direct]);
-  };
-
   if (in_room == 634){
     sendTo("The entrance to the Thieves Guild is secret.\n\r");
     sendTo("You must carefully examine this room to find it the entrance.\n\r");
     sendTo("Once you have entered the Guild, you may use goto to continue.\n\r");
     return FALSE;
   } else if (is_abbrev(arg, "fairfight")) {
-    auto path = pathfind(findFairFight(this), "There's already a fair fight here.\n\r");
+    auto path = pathfind(*this, findFairFight(this), "There's already a fair fight here.\n\r");
     if (!path)
       return FALSE;
     sendTo(COLOR_MOBS, "You can get to a fair fight by going ");
-    printPath(*path);
+    printPath(*this, *path);
     return TRUE;
   } else if (is_abbrev(arg, "air_trainer") ||
              is_abbrev(arg, "air-trainer") ||
@@ -3744,13 +3716,13 @@ int TBeing::doMortalGoto(const sstring & argument)
     return FALSE;
   }
 
-  auto path = pathfind(findRoom(targ_rm), "Uhm, not for nothing, but I think you are already there...\n\r");
+  auto path = pathfind(*this, findRoom(targ_rm), "Uhm, not for nothing, but I think you are already there...\n\r");
   if (!path)
     return FALSE;
 
   auto rp = real_roomp(targ_rm);
   sendTo(COLOR_MOBS, format("You can get to %s by going ") % rp->getName());
-  printPath(*path);
+  printPath(*this, *path);
 
   return FALSE;
 }

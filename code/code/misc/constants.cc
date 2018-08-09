@@ -221,6 +221,21 @@ const char * const dirs[] =
   "\n"
 };
 
+const char * const dirsS[] =
+{
+  "n",
+  "e",
+  "s",
+  "w",
+  "u",
+  "d",
+  "ne",
+  "nw",
+  "se",
+  "sw",
+  "\n"
+};
+
 const char * const scandirs[] =
 {
   "north",

@@ -76,6 +76,7 @@ extern const char * const immunity_names[MAX_IMMUNES];
 extern const char * const extra_bits[];
 extern const char * const affected_bits[];
 extern const char * const dirs[];
+extern const char * const dirsS[];
 extern const char * const dirs_to_leading[];
 extern const char * const dirs_to_blank[];
 extern const char * const connected_types[MAX_CON_STATUS];

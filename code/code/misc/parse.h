@@ -586,6 +586,7 @@ enum cmdTypeT {
      CMD_REQUEST,
      CMD_IGNORE,
      CMD_RUN,
+     CMD_MAP,
      MAX_CMD_LIST,  // Keep this as last command in regular list
        CMD_RESP_TOGGLE,
        CMD_RESP_UNTOGGLE,

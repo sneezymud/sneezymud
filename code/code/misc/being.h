@@ -448,6 +448,7 @@ class TBeing : public TThing {
     virtual int getSnum() const { return (snum > -1 ? snum : mobVnum()); };
     virtual sstring thirdPerson(const int);
     void loadAliases();
+    virtual void loadMapData() {}
     // END VIRTUAL FUNCTIONS
 
     void calcNutrition();

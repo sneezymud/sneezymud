@@ -996,6 +996,7 @@ int Descriptor::nanny(sstring arg)
         }
       }
       character->loadAliases();
+      character->loadMapData();
 
 
       for (k = descriptor_list; k; k = k->next) {

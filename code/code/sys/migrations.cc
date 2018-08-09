@@ -98,6 +98,17 @@ void runMigrations() {
                     "where tog_id = 17"
                     ));
         },
+        [&](){
+            vlogf(LOG_MISC, "Adding savedrooms table");
+            assert(sneezy.query(
+                    "create table savedrooms ("
+                    "id int primary key auto_increment not null, "
+                    "player_id bigint(20) unsigned not null, "
+                    "name varchar(50) not null, "
+                    "room int not null, "
+                    "foreign key (player_id) references player (id) on delete cascade)"));
+        },
+
     };
 
     int oldVersion = getVersion(sneezy);
