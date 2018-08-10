@@ -185,8 +185,6 @@ void TPerson::doMapRm(sstring const& arg)
 
 void TPerson::doMapGo(sstring const& arg)
 {
-  d->favoriteRooms["back"] = this->inRoom();
-
   auto it = d->favoriteRooms.find(arg);
   if (it == d->favoriteRooms.end()) {
     sendTo(format("You can't seem to locate '%s'.\n\r") % arg);
@@ -197,6 +195,8 @@ void TPerson::doMapGo(sstring const& arg)
   auto path = pathfind(*this, findRoom(dst), "Uhm, not for nothing, but I think you are already there...\n\r");
   if (!path)
     return;
+
+  d->favoriteRooms["back"] = this->inRoom();
 
   auto run = runify(*path);
   addCommandToQue(run);
