@@ -40,7 +40,8 @@ bool TComponent::willMerge(TMergeable *tm)
      tComp==this || 
      (tComp->objVnum() != objVnum()) ||
      tComp->obj_flags.cost <= 0 ||  // ignore "free" comps from GM
-     obj_flags.cost <= 0){
+     obj_flags.cost <= 0 ||
+     tComp->getComponentCharges() + getComponentCharges() > 100){
     return false;
   }
   return true;
