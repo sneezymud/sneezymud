@@ -3047,6 +3047,12 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
     tNum  = charges;
     tCost = shopPrice(tNum, tShop, tChr, ch);
   }
+
+  if (tNum > 100){
+    tKeeper->doTell(ch->getName(), format("I will sell no more than 100 charges of %s at a time.") % getName());
+    tNum  = 100;
+    tCost = shopPrice(tNum, tShop, tChr, ch);
+  }
   
   if (charges == tNum) {
     tObj = this;
