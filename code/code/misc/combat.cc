@@ -3907,11 +3907,11 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 	      if(vict->doesKnowSkill(SKILL_RIPOSTE) &&   // must know the skill
 	        (::number(0,99) < 50) &&                // only 50% of the time
 	        vict->bSuccess(SKILL_RIPOSTE)){
-	          act("$n uses $s parry to execute a riposte.",
+	          act("$N uses $S parry to execute a riposte.",
 	            FALSE, this, 0, vict, TO_CHAR, ANSI_PURPLE);
 	          act("You use your parry to execute a riposte.", 
 	            FALSE, this, 0, vict, TO_VICT, ANSI_PURPLE);
-	          act("$n uses $s parry to execute a riposte.",
+	          act("$N uses $S parry to execute a riposte.",
 	            FALSE, this, 0, vict, TO_NOTVICT);
 	        // actual ripose attack is added in hit().  Klugey, but
 	        // easier than trying to create a seperate attack here.
