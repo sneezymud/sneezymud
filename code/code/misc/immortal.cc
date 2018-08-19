@@ -412,7 +412,7 @@ void TBeing::doHighfive(const sstring &argument)
         name % tch->name;
             break;
         }
-        descriptor_list->worldSend(mess, this);
+        Descriptor::worldSend(mess, this);
       } else {
         act("$n gives you a high five.", TRUE, this, 0, tch, TO_VICT);
         act("You give a hearty high five to $N.", TRUE, this, 0, tch, TO_CHAR);
@@ -905,11 +905,11 @@ void TBeing::doSystem(const sstring &argument)
   } else if (!hasWizPower(POWER_WIZARD)) {
     buf=format("The following is an official message from %s:\n\r   %s\n\r") %
       getName() % argument;
-    descriptor_list->worldSend(buf, this);
+    Descriptor::worldSend(buf, this);
   } else {
     buf=format("%s\n\r") % argument;
-    descriptor_list->worldSend(buf, this);
-  } 
+    Descriptor::worldSend(buf, this);
+  }
 }
 
 void TBeing::doTrans(const char *)
@@ -1415,7 +1415,7 @@ void TPerson::doShutdown(bool reboot, const char *argument)
       return;
     }
     sprintf(buf, "<r>%s by %s.<z>\n\r", shutdown_or_reboot().c_str(), getName().c_str());
-    descriptor_list->worldSend(buf, this);
+    Descriptor::worldSend(buf, this);
     Shutdown = 1;
   } else {
     if (isdigit(*arg)) {
@@ -1437,14 +1437,14 @@ void TPerson::doShutdown(bool reboot, const char *argument)
       sprintf(buf, "<r>******* SYSTEM MESSAGE *******\n\r%s in %d minute%s by %s.<z>\n\r<c>Use the TIME command at any point to see time until %s.<z>\n\r", 
        shutdown_or_reboot().c_str(), num, (num == 1 ? "" : "s"),getName().c_str(),
        shutdown_or_reboot().c_str());
-      descriptor_list->worldSend(buf, this); 
+      Descriptor::worldSend(buf, this);
     } else if (is_abbrev(arg, "abort")) {
       if (!timeTill) {
         sendTo("No shutdown has been scheduled.\n\r");
         return;
       }
       sprintf(buf, "<r>System %s aborted by %s.<z>\n\r", shutdown_or_reboot().c_str(), getName().c_str());
-      descriptor_list->worldSend(buf, this);
+      Descriptor::worldSend(buf, this);
       timeTill = 0L;
     } else {
       sendTo("Syntax : shutdown <minutes until shutdown>\n\r");
@@ -3690,7 +3690,7 @@ void TBeing::doWipe(const char *argument)
     sendTo("Ok.\n\r");
     sprintf(buf, "You hear a cry of anguish as %s screams in agony.\n\r", victim->getName().c_str());
     sprintf(buf + strlen(buf), "%s cackles in triumph as he utterly annihilates %s.\n\r", getName().c_str(), victim->getName().c_str());
-    descriptor_list->worldSend(buf, this);
+    Descriptor::worldSend(buf, this);
     victim->sendTo("We're like closed or something.  Go away.\n\r");
   
     // this handles droping items to ground

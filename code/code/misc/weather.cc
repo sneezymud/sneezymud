@@ -571,7 +571,7 @@ void Weather::GetMonth(int month)
 
   sstring buf;
   buf = format("It is now the %s of %s.\n\r") % numberAsString(GameTime::getDay() + 1) % month_name[month];
-  descriptor_list->worldSend(buf, NULL);
+  Descriptor::worldSend(buf, NULL);
 }
 
 int TRoom::outdoorLight(void)

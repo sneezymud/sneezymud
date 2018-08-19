@@ -548,7 +548,7 @@ void TBeing::doEgoTrip(const char *arg)
     sstring worldBuf = "You smell burnt flesh as a bolt of lightning takes the hide off of ";
     worldBuf += ch->getName();
     worldBuf += "!\n\r";
-    descriptor_list->worldSend(worldBuf.c_str(), this);
+    Descriptor::worldSend(worldBuf.c_str(), this);
 
     soundNumT snd = pickRandSound(SOUND_EGOBLAST_1, SOUND_EGOBLAST_2);
     ch->roomp->playsound(snd, SOUND_TYPE_NOISE);
