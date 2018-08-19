@@ -351,13 +351,13 @@ bool Descriptor::checkForMultiplay()
       for (tChar = character_list; tChar;) {
         oChar = tChar->next;
 
-        if (tChar != character && tChar->isLinkdead()) {
+        if (tChar != character && tChar->isPc() && tChar->isLinkdead()) {
           sprintf(tAccount, "account/%c/%s/%s",
               LOWER(account->name[0]),
               sstring(account->name).lower().c_str(),
               tChar->getNameNOC(character).lower().c_str());
 
-          if (tChar->isPc() && (tFile = fopen(tAccount, "r"))) {
+          if ((tFile = fopen(tAccount, "r"))) {
             if (tChar->hasWizPower(POWER_MULTIPLAY))
               return FALSE;
 
