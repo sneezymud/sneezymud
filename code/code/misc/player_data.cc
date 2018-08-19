@@ -955,16 +955,32 @@ void TBeing::saveChar(int load_room)
     st.load_room=0;
   }
 
+  assert(player.player_id);
 
-  db.query("update playerprompt set p_type=%i, hp='%s', mana='%s', move='%s', money='%s', exp='%s', room='%s', opp='%s', tank='%s', piety='%s', lifeforce='%s', time='%s' where player_id=%i", 
-	   mydesc->prompt_d.type, mydesc->prompt_d.hpColor, 
-	   mydesc->prompt_d.manaColor, mydesc->prompt_d.moveColor,
-	   mydesc->prompt_d.moneyColor, mydesc->prompt_d.expColor,
-	   mydesc->prompt_d.roomColor, mydesc->prompt_d.oppColor,
-	   mydesc->prompt_d.tankColor, mydesc->prompt_d.pietyColor,
-	   mydesc->prompt_d.lifeforceColor, mydesc->prompt_d.timeColor,
-	   getPlayerID());
-	   
+  db.query("select 1 from playerprompt where player_id = %i", getPlayerID());
+  if (db.fetchRow()) {
+    db.query("update playerprompt "
+        "set p_type=%i, hp='%s', mana='%s', move='%s', money='%s', exp='%s', room='%s', "
+        "opp='%s', tank='%s', piety='%s', lifeforce='%s', time='%s' where player_id = %i",
+        mydesc->prompt_d.type, mydesc->prompt_d.hpColor,
+        mydesc->prompt_d.manaColor, mydesc->prompt_d.moveColor,
+        mydesc->prompt_d.moneyColor, mydesc->prompt_d.expColor,
+        mydesc->prompt_d.roomColor, mydesc->prompt_d.oppColor,
+        mydesc->prompt_d.tankColor, mydesc->prompt_d.pietyColor,
+        mydesc->prompt_d.lifeforceColor, mydesc->prompt_d.timeColor,
+        getPlayerID());
+  } else {
+    db.query("insert into playerprompt "
+        "(player_id, p_type, hp, mana, move, money, exp, room, opp, tank, piety, lifeforce, time) "
+        "values (%i, %i, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+        getPlayerID(),
+        mydesc->prompt_d.type, mydesc->prompt_d.hpColor,
+        mydesc->prompt_d.manaColor, mydesc->prompt_d.moveColor,
+        mydesc->prompt_d.moneyColor, mydesc->prompt_d.expColor,
+        mydesc->prompt_d.roomColor, mydesc->prompt_d.oppColor,
+        mydesc->prompt_d.tankColor, mydesc->prompt_d.pietyColor,
+        mydesc->prompt_d.lifeforceColor, mydesc->prompt_d.timeColor);
+  }
 
   fl = fopen(buf, "w");
   mud_assert(fl != NULL, "Failed fopen in save char: %s", buf);
