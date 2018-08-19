@@ -126,7 +126,7 @@ std::pair<bool, int> TPerson::doPersonCommand(cmdTypeT cmd, const sstring & argu
 void TPerson::loadMapData()
 {
   TDatabase db(DB_SNEEZY);
-  db.query("select name, room from savedrooms where player_id = %i", getPlayerID());
+  db.query("select name, room from savedroomsacct where account_id = %i", getAccountID());
   while (db.fetchRow())
     d->favoriteRooms[db["name"]] = convertTo<int>(db["room"]);
 }
@@ -159,10 +159,10 @@ void TPerson::doMapAdd(sstring const& arg)
 
   d->favoriteRooms[arg] = this->inRoom();
   TTransaction db(DB_SNEEZY);
-  db.query("delete from savedrooms where player_id = %i and name = '%s'",
-      getPlayerID(), arg.c_str());
-  db.query("insert into savedrooms (player_id, name, room) values (%i, '%s', %i)",
-      getPlayerID(), arg.c_str(), this->inRoom());
+  db.query("delete from savedroomsacct where account_id = %i and name = '%s'",
+      getAccountID(), arg.c_str());
+  db.query("insert into savedroomsacct (account_id, name, room) values (%i, '%s', %i)",
+      getAccountID(), arg.c_str(), this->inRoom());
   sendTo(format("Saved %s -> %i") % arg % this->inRoom());
 }
 
@@ -179,8 +179,8 @@ void TPerson::doMapRm(sstring const& arg)
     sendTo("Found and removed.\n");
 
   TDatabase db(DB_SNEEZY);
-  db.query("delete from savedrooms where player_id = %i and name = '%s'",
-      getPlayerID(), arg.c_str());
+  db.query("delete from savedroomsacct where account_id = %i and name = '%s'",
+      getAccountID(), arg.c_str());
 }
 
 void TPerson::doMapGo(sstring const& arg)
@@ -207,14 +207,14 @@ void TPerson::doMap(sstring const& arg)
   sstring cmd = arg.word(0);
   sstring rest = arg.dropWord();
 
-  if (cmd == "list")
+  if (is_abbrev(cmd, "list") || cmd == "ls")
     doMapList(rest);
-  else if (cmd == "add")
+  else if (is_abbrev(cmd, "add") || is_abbrev(cmd, "new"))
     doMapAdd(rest);
-  else if (cmd == "rm")
+  else if (is_abbrev(cmd, "remove") || cmd == "rm")
     doMapRm(rest);
-  else if (cmd == "go")
+  else if (is_abbrev(cmd, "go"))
     doMapGo(rest);
   else
-    sendTo("Syntax: map list|add|rm|go\n");
+    sendTo("Syntax: map list/ls | add/new | rm/remove | go\n");
 }

@@ -108,7 +108,24 @@ void runMigrations() {
                     "room int not null, "
                     "foreign key (player_id) references player (id) on delete cascade)"));
         },
-
+        [&](){
+            vlogf(LOG_MISC, "Tying saved rooms to accounts");
+            assert(sneezy.query("drop table if exists savedroomsacct"));
+            assert(sneezy.query(
+                    "create table savedroomsacct ("
+                    "id int primary key auto_increment not null, "
+                    "account_id bigint(20) unsigned not null, "
+                    "name varchar(50) not null, "
+                    "room int not null, "
+                    "foreign key (account_id) references account (account_id) on delete cascade)"));
+            assert(sneezy.query(
+                    "insert into savedroomsacct select "
+                    "s.id, a.account_id, s.name, s.room "
+                    "from savedrooms s join player p "
+                    "on s.player_id = p.id "
+                    "join account a on p.account_id = a.account_id "));
+            assert(sneezy.query("drop table savedrooms"));
+        },
     };
 
     int oldVersion = getVersion(sneezy);
