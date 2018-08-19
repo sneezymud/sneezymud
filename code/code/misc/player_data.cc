@@ -576,6 +576,17 @@ void TPerson::storeToSt(charFile *st)
   affectTotal();
 }				/* Char to store */
 
+void TPerson::loadFromDb(std::string const& name)
+{
+  player.account_id = desc->account->account_id;
+
+  TDatabase db(DB_SNEEZY);
+  db.query("select * from player where lower(name) = lower('%s')", name.c_str());
+  mud_assert(db.fetchRow(), "can't find player in DB");
+  desc->playerID = player.player_id = convertTo<int>(db["id"]);
+}
+
+// TODO: move the whole mess into DB
 void TPerson::loadFromSt(charFile *st)
 {
   int i;
@@ -779,6 +790,7 @@ void TPerson::loadFromSt(charFile *st)
     strcpy(desc->prompt_d.lifeforceColor, db["lifeforce"].c_str());
     strcpy(desc->prompt_d.timeColor, db["time"].c_str());
   } else {
+    assert(false);
     db.query("insert into playerprompt (player_id, p_type, hp, mana, move, money, exp, room, opp, tank, piety, lifeforce, time) values (%i, 267869, '', '', '', '', '', '', '', '', '', '', '')", getPlayerID());
   }
 
@@ -931,12 +943,15 @@ void TBeing::saveChar(int load_room)
     strcpy(buf2, sstring(tmp->name).lower().c_str());
     sprintf(buf, "account/%c/%s/%s", LOWER(tmp->desc->account->name[0]), sstring(tmp->desc->account->name).lower().c_str(), buf2);
   }
-  TDatabase db(DB_SNEEZY);
+
   Descriptor *mydesc=tmp?tmp->desc:desc;
-    
+  assert(mydesc->account->account_id);
+
+  TTransaction db(DB_SNEEZY);
+
   if(!isImmortal()){
-    db.query("update player set talens=%i, account_id=(select account_id from account where name = '%s'), load_room=%i, last_logon=%i, nutrition=%i where id=%i",
-        st.money, mydesc->account->name.c_str(), load_room, st.last_logon, nutrition, getPlayerID());
+    db.query("update player set talens=%i, account_id=%i, load_room=%i, last_logon=%i, nutrition=%i where id=%i",
+        st.money, mydesc->account->account_id, load_room, st.last_logon, nutrition, getPlayerID());
     st.load_room=0;
   }
 

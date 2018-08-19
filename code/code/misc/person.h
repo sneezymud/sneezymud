@@ -66,9 +66,11 @@ class TPerson : public TBeing {
     }
 
     void storeToSt(charFile *);
+    void storeToDb() const;
     void autoDeath();
     void resetChar();
     int genericLoadPC();
+    void loadFromDb(std::string const& name);
     void loadFromSt(charFile *);
     void fixPracs();
     void initChar();

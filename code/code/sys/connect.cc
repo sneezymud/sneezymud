@@ -945,6 +945,7 @@ int Descriptor::nanny(sstring arg)
       }
 
       if (load_char(tmp_name, &st)) {
+        dynamic_cast<TPerson *>(character)->loadFromDb(tmp_name);
         dynamic_cast<TPerson *>(character)->loadFromSt(&st);
       } else {
         writeToQ("No such character, please enter another name.\n\r");
