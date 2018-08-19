@@ -790,7 +790,6 @@ void TPerson::loadFromSt(charFile *st)
     strcpy(desc->prompt_d.lifeforceColor, db["lifeforce"].c_str());
     strcpy(desc->prompt_d.timeColor, db["time"].c_str());
   } else {
-    assert(false);
     db.query("insert into playerprompt (player_id, p_type, hp, mana, move, money, exp, room, opp, tank, piety, lifeforce, time) values (%i, 267869, '', '', '', '', '', '', '', '', '', '', '')", getPlayerID());
   }
 
