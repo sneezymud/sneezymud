@@ -1727,7 +1727,6 @@ int castTrueSight(TBeing *caster, TBeing *victim)
 
 int telepathy(TBeing *caster, int, short bKnown)
 {
-  Descriptor *i;
   const char *msg = caster->spelltask->orig_arg;
   sstring garbled, pgbuf;
 
@@ -1747,21 +1746,21 @@ int telepathy(TBeing *caster, int, short bKnown)
     } else {
       garbled = caster->garble(NULL, msg, Garble::SPEECH_SHOUT, Garble::SCOPE_EVERYONE);
       caster->sendTo(COLOR_SPELLS, format("You telepathically send the message, \"%s<z>\"\n\r") % msg);
-      for (i = descriptor_list; i; i = i->next) {
-        if (i->character && (i->character != caster) &&
-            !i->connected && !i->character->checkSoundproof() &&
-            (dynamic_cast<TMonster *>(i->character) ||
-              (!IS_SET(i->autobits, AUTO_NOSHOUT)) ||
-              !i->character->isPlayerAction(PLR_GODNOSHOUT))) {
+      Descriptor::forEach([&](Descriptor& d){ 
+        if (d.character && (d.character != caster) &&
+            !d.connected && !d.character->checkSoundproof() &&
+            (dynamic_cast<TMonster *>(d.character) ||
+              (!IS_SET(d.autobits, AUTO_NOSHOUT)) ||
+              !d.character->isPlayerAction(PLR_GODNOSHOUT))) {
 
-          i->character->sendTo(COLOR_SPELLS, format("Your mind is flooded with a telepathic message from %s.\n\r") % caster->getName());
-          pgbuf = caster->garble(i->character, garbled, Garble::SPEECH_SHOUT, Garble::SCOPE_INDIVIDUAL);
-          i->character->sendTo(COLOR_SPELLS, format("The message is, \"%s%s\"\n\r") % pgbuf % i->character->norm());
-          if (!i->m_bIsClient && IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
-          i->clientf(format("%d|%s|%s") % CLIENT_TELEPATHY % colorString(i->character, i, caster->getName(), NULL, COLOR_NONE, FALSE) % colorString(i->character, i, pgbuf, NULL, COLOR_NONE, FALSE));
+          d.character->sendTo(COLOR_SPELLS, format("Your mind is flooded with a telepathic message from %s.\n\r") % caster->getName());
+          pgbuf = caster->garble(d.character, garbled, Garble::SPEECH_SHOUT, Garble::SCOPE_INDIVIDUAL);
+          d.character->sendTo(COLOR_SPELLS, format("The message is, \"%s%s\"\n\r") % pgbuf % d.character->norm());
+          if (!d.m_bIsClient && IS_SET(d.prompt_d.type, PROMPT_CLIENT_PROMPT))
+          d.clientf(format("%d|%s|%s") % CLIENT_TELEPATHY % colorString(d.character, &d, caster->getName(), NULL, COLOR_NONE, FALSE) % colorString(d.character, &d, pgbuf, NULL, COLOR_NONE, FALSE));
 
         }
-      }
+      });
       caster->addToMove(-5);
     }
     return SPELL_SUCCESS;

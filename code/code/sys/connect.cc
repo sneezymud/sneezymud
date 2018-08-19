@@ -4141,3 +4141,10 @@ int Descriptor::doAccountStuff(char *arg)
   promptData::~promptData()
   {
   }
+
+void Descriptor::forEach(std::function<void(Descriptor&)> fn)
+{
+  for (Descriptor* d = descriptor_list; d; d = d->next) {
+    fn(*d);
+  }
+}

@@ -425,41 +425,36 @@ static void simple_deity_poof(TMonster *deity, short targ_rm)
 int alignment_deity(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 {
   TBeing *tmp_ch;
-  Descriptor *d, *d2;
   int room;
+  int ret = 0;
 
   if (cmd != CMD_MOB_ALIGN_PULSE)
     return FALSE;
 
-  switch (cmd) {
-    case CMD_MOB_ALIGN_PULSE:
-      room = me->in_room;
+  Descriptor::forEach([&](Descriptor& d) {
+    if ((tmp_ch = d.character) && !d.connected) {
+      if (!number(0, 30)) {
+        vlogf(LOG_FACT, format("%s in room %d reward/punishing %s") % 
+            me->getName() % room % tmp_ch->getName());
+        simple_deity_poof(me, tmp_ch->inRoom());
 
-      for (d = descriptor_list; d; d = d2) {
-        d2 = d->next;
-        if ((tmp_ch = d->character) && !d->connected) {
-          if (!number(0, 30)) {
-            vlogf(LOG_FACT, format("%s in room %d reward/punishing %s") % 
-                me->getName() % room % tmp_ch->getName());
-            simple_deity_poof(me, tmp_ch->inRoom());
-
-            int rc = reward_or_punish(me, tmp_ch);
-            if (IS_SET_DELETE(rc, DELETE_VICT)) {
-              delete tmp_ch;
-              tmp_ch = NULL;
-            }
-            if (IS_SET_DELETE(rc, DELETE_THIS)) {
-              vlogf(LOG_BUG, "Bad news in alignment_deity(). BUG BRUTIUS");
-              simple_deity_poof(me, room);
-              return DELETE_THIS;
-            }
-          }
+        int rc = reward_or_punish(me, tmp_ch);
+        if (IS_SET_DELETE(rc, DELETE_VICT)) {
+          delete tmp_ch;
+          tmp_ch = NULL;
+        }
+        if (IS_SET_DELETE(rc, DELETE_THIS)) {
+          vlogf(LOG_BUG, "Bad news in alignment_deity(). BUG BRUTIUS");
+          simple_deity_poof(me, room);
+          ret = DELETE_THIS;
+          return;
         }
       }
-      simple_deity_poof(me, room);
-      break;
-    default:
-      break;
-  }
+    }
+  });
+  if (ret)
+    return ret;
+  simple_deity_poof(me, room);
+
   return TRUE;
 }

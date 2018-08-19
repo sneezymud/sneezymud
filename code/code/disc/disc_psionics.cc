@@ -365,18 +365,18 @@ void TBeing::doPShout(const char *msg){
     mud_str_copy(garbed, garble(NULL, msg, Garble::SPEECH_SHOUT, Garble::SCOPE_EVERYONE), 256);
 
     sendTo(COLOR_SPELLS, format("You telepathically send the message, \"%s<z>\"\n\r") % garbed);
-    for (i = descriptor_list; i; i = i->next) {
-      if (i->character && (i->character != this) &&
-	  !i->connected && !i->character->checkSoundproof() &&
-	  (dynamic_cast<TMonster *>(i->character) ||
-	   (!IS_SET(i->autobits, AUTO_NOSHOUT)) ||
-	   !i->character->isPlayerAction(PLR_GODNOSHOUT))) {
-	     char garbed_individual[256];
-	     mud_str_copy(garbed_individual, garble(i->character, garbed, Garble::SPEECH_SHOUT, Garble::SCOPE_INDIVIDUAL), 256);
-	i->character->sendTo(COLOR_SPELLS, format("Your mind is flooded with a telepathic message from %s.\n\r") % getName());
-	i->character->sendTo(COLOR_SPELLS, format("The message is, \"%s%s\"\n\r") % garbed_individual % i->character->norm());
+    Descriptor::forEach([&](Descriptor& d) {
+      if (d.character && (d.character != this) &&
+          !d.connected && !d.character->checkSoundproof() &&
+          (dynamic_cast<TMonster *>(d.character) ||
+           (!IS_SET(d.autobits, AUTO_NOSHOUT)) ||
+           !d.character->isPlayerAction(PLR_GODNOSHOUT))) {
+        char garbed_individual[256];
+        mud_str_copy(garbed_individual, garble(d.character, garbed, Garble::SPEECH_SHOUT, Garble::SCOPE_INDIVIDUAL), 256);
+        d.character->sendTo(COLOR_SPELLS, format("Your mind is flooded with a telepathic message from %s.\n\r") % getName());
+        d.character->sendTo(COLOR_SPELLS, format("The message is, \"%s%s\"\n\r") % garbed_individual % i->character->norm());
       }
-    }
+    });
   }
 
 

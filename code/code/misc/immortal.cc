@@ -919,7 +919,6 @@ void TBeing::doTrans(const char *)
 
 void TPerson::doTrans(const char *argument)
 {
-  Descriptor *i;
   TBeing *victim;
   char buf[100];
   TThing *t;
@@ -979,18 +978,18 @@ void TPerson::doTrans(const char *argument)
       sendTo("Ok.\n\r");
     }
   } else {            // Trans All 
-    for (i = descriptor_list; i; i = i->next) {
-      if (i->character != this && !i->connected) {
-    victim = i->character;
-    act("$n disappears in a cloud of smoke.", FALSE, victim, 0, 0, TO_ROOM);
-    --(*victim);
+    Descriptor::forEach([&](Descriptor& d) {
+      if (d.character != this && !d.connected) {
+        victim = d.character;
+        act("$n disappears in a cloud of smoke.", FALSE, victim, 0, 0, TO_ROOM);
+        --(*victim);
         *rp += *victim;
-    act("$n arrives from a puff of smoke.", FALSE, victim, 0, 0, TO_ROOM);
-    act("$n has transferred you!", FALSE, this, 0, victim, TO_VICT);
-    victim->doLook("", CMD_LOOK);
+        act("$n arrives from a puff of smoke.", FALSE, victim, 0, 0, TO_ROOM);
+        act("$n has transferred you!", FALSE, this, 0, victim, TO_VICT);
+        victim->doLook("", CMD_LOOK);
       }
-    }
-    sendTo("Ok.\n\r");
+    });
+  sendTo("Ok.\n\r");
   }
 }
 
@@ -2149,7 +2148,6 @@ void TBeing::doForce(const char *)
 
 void TPerson::doForce(const char *argument)
 {
-  Descriptor *i;
   TBeing *vict;
   char name_buf[MAX_INPUT_LENGTH], to_force[MAX_INPUT_LENGTH], buf[MAX_INPUT_LENGTH];
   int rc;
@@ -2198,10 +2196,10 @@ void TPerson::doForce(const char *argument)
   } else if (!strcmp("all", name_buf)) {
     // force all 
     vlogf(LOG_MISC, format("%s just forced all to '%s'") %  getName() % to_force);
-    for (i = descriptor_list; i; i = i->next) {
-      if ((vict = i->character) && (i->character != this) && !i->connected) {
+    Descriptor::forEach([&](Descriptor& d) {
+      if ((vict = d.character) && (d.character != this) && !d.connected) {
         if ((GetMaxLevel() <= vict->GetMaxLevel()) && dynamic_cast<TPerson *>(vict))
-          continue;
+          return;
         else {
           sprintf(buf, "$n has forced you to '%s'.\n\r", to_force);
           act(buf, FALSE, this, 0, vict, TO_VICT);
@@ -2211,7 +2209,7 @@ void TPerson::doForce(const char *argument)
           }
         }
       }
-    }
+    });
     sendTo("Ok.\n\r");
   } else if (!strcmp(name_buf, "room")) {
     for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){

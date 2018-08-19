@@ -511,35 +511,33 @@ void TBeing::doDisband()
 
 void sendToFaction(factionTypeT fnum, const TBeing *who, const char *arg)
 {
-  Descriptor *d, *d_next;
   TBeing *tmpch;
   sstring garble;
 
-  for (d = descriptor_list; d; d = d_next) {
-    d_next = d->next;
-    if (d->connected)
-      continue;
-    if (d->ignored.isIgnored(who->desc))
-      continue;
+  Descriptor::forEach([&](Descriptor& d) {
+    if (d.connected)
+      return;
+    if (d.ignored.isIgnored(who->desc))
+      return;
 
-    tmpch = (d->original ? d->original : d->character);
+    tmpch = (d.original ? d.original : d.character);
 
     if ((tmpch->getFaction() != fnum) &&
         !tmpch->hasWizPower(POWER_SEE_FACTION_SENDS))
-      continue;
+      return;
 
     garble = who->garble(tmpch, arg, Garble::SPEECH_SHOUT, Garble::SCOPE_INDIVIDUAL);
 
-    d->character->sendTo(COLOR_SHOUTS, format("<g>%s <c>%s<1>: %s\n\r") %
+    d.character->sendTo(COLOR_SHOUTS, format("<g>%s <c>%s<1>: %s\n\r") %
 			 FactionInfo[fnum].faction_name % who->name % garble);
 
-    if (!d->m_bIsClient && IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)){
-      if (d->character->isImmortal())
-        d->clientf(format("%d|%d|%s|%s") % CLIENT_FTELL % fnum % who % arg);
+    if (!d.m_bIsClient && IS_SET(d.prompt_d.type, PROMPT_CLIENT_PROMPT)){
+      if (d.character->isImmortal())
+        d.clientf(format("%d|%d|%s|%s") % CLIENT_FTELL % fnum % who % arg);
       else
-        d->clientf(format("%d|%s|%s") % CLIENT_FTELL % who % arg);
+        d.clientf(format("%d|%s|%s") % CLIENT_FTELL % who % arg);
     }
-  }
+  });
 }
 
 
