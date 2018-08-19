@@ -2493,13 +2493,15 @@ void TPerson::doCutlink(const char *argument)
   argument = one_argument(argument, name_buf, cElements(name_buf));
 
   if (!*name_buf) {
-    for (d = descriptor_list; d; d = d->next) {
+    for (d = descriptor_list; d;) {
+      Descriptor* dn = d->next;
       if (!d->character || d->character->name.empty()) {
         sendTo(format("You cut a link from host %s\n\r") %
                (!(d->host.empty()) ? d->host : "Host Unknown"));
 
         delete d;
       }
+      d = dn;
     }
   } else {
     for (d = descriptor_list; d; d = d->next) {
@@ -2921,19 +2923,18 @@ static void welcomeNewPlayer(const TPerson *ch)
   closedir(dfd);
 
 
-  Descriptor *d;
-  for (d = descriptor_list; d; d = d->next) {
-    if (d->connected != CON_PLYNG)
-      continue;
-    TBeing *tbt = d->character;
+  Descriptor::forEach([&](Descriptor& d) {
+    if (d.connected != CON_PLYNG)
+      return;
+    TBeing *tbt = d.character;
     if (!tbt)
-      continue;
+      return;
     if (tbt->isPlayerAction(PLR_NEWBIEHELP)) {
       tbt->sendTo(COLOR_BASIC, format("<c>Attention Newbie-Helpers: Please welcome %s to <h>!!!<1>\n\r") % ch->getName());
       if (count == 1)
         tbt->sendTo(COLOR_BASIC, format("<c>%s is the first character in %s account!<1>\n\r") % ch->getName() % ch->hshr());
     }
-  }
+  });
 }
 
 // this function is ONLY called on first login
@@ -4194,7 +4195,6 @@ moneyTypeT & operator++(moneyTypeT &c, int)
 
 void TBeing::doInfo(const char *arg)
 {
-  Descriptor *i;
   TBeing *ch;
   char buf2[126];
   sstring buf;
@@ -4358,26 +4358,26 @@ void TBeing::doInfo(const char *arg)
       sendTo(format("  Total player kills  : %d.\n\r") % total_player_kills);
     } else if (is_abbrev(arg1, "piety")) {
       double total = 0.0;
-      for (i = descriptor_list; i; i = i->next) {
-        if (i->character && !i->character->name.empty())  {
-          sprintf(buf2, "%20.20s : %10.3f\n\r", i->character->getName().c_str(), i->session.perc);
-          total += i->session.perc;
+      Descriptor::forEach([&](Descriptor& d) {
+        if (d.character && !d.character->name.empty())  {
+          sprintf(buf2, "%20.20s : %10.3f\n\r", d.character->getName().c_str(), d.session.perc);
+          total += d.session.perc;
           sendTo(buf2);
         }
-      }
+      });
       sendTo("--------------------\n\r");
       sendTo(format("TOTAL: %10.3f\n\r") % total);
     } else if (is_abbrev(arg1, "descriptors")) {
-      for (i = descriptor_list; i; i = i->next) {
-        if (i->character)  {
-          sprintf(buf2,"[%d] ",i->socket->m_sock);
-          strcat(buf2,((!i->character->name.empty()) ? i->character->getName().c_str() : "unknown"));
-          if (!i->connected)
+      Descriptor::forEach([&](Descriptor& d) {
+        if (d.character)  {
+          sprintf(buf2,"[%d] ",d.socket->m_sock);
+          strcat(buf2,((!d.character->name.empty()) ? d.character->getName().c_str() : "unknown"));
+          if (!d.connected)
             strcat(buf2," Connected");
           strcat(buf2,"\n\r");
           sendTo(buf2);
         }
-      }
+      });
     } else if (is_abbrev(arg1, "numbers")) {
       sendTo("Player number info:\n\r");
       sendTo(format("  Current number of players: %u.\n\r") % AccountStats::player_num);
@@ -5336,7 +5336,6 @@ void TBeing::doLog(const char *argument)
 {
   TBeing *vict;
   char name_buf[100];
-  Descriptor *d;
   int found = FALSE;
 
   if (powerCheck(POWER_LOG))
@@ -5353,14 +5352,14 @@ void TBeing::doLog(const char *argument)
   }
   if (*name_buf == '-') {
     if (strchr(name_buf, 'w')) {
-      for (d = descriptor_list; d; d = d->next) {
-        if (!d->connected && d->character) {
-          if (d->character->isPlayerAction(PLR_LOGGED)) {
-            sendTo(COLOR_MOBS, format("%s\n\r") % d->character->getName());
+      Descriptor::forEach([&](Descriptor& d) {
+        if (!d.connected && d.character) {
+          if (d.character->isPlayerAction(PLR_LOGGED)) {
+            sendTo(COLOR_MOBS, format("%s\n\r") % d.character->getName());
             found = TRUE;
           }
         }
-      }
+      });
       if (!found) 
         sendTo("No one logged in is currently logged.\n\r");
     } else 
@@ -6098,13 +6097,14 @@ void TBeing::doClients()
 
   sstring tString("");
 
-  for (Descriptor *tDesc = descriptor_list; tDesc; tDesc = tDesc->next)
-    if (tDesc->m_bIsClient) {
+  Descriptor::forEach([&](Descriptor& d) {
+    if (d.m_bIsClient) {
       tString += format("%-16s %-34s\n\r") %
-              ((tDesc->character && !tDesc->character->name.empty()) ?
-               tDesc->character->name : "UNDEFINED") %
-              (!(tDesc->host.empty()) ? tDesc->host : "Host Unknown");
+              ((d.character && !d.character->name.empty()) ?
+               d.character->name : "UNDEFINED") %
+              (!(d.host.empty()) ? d.host : "Host Unknown");
     }
+  });
 
   if (tString.empty()) 
     sendTo("Noone currently logged in with a client.\n\r");

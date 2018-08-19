@@ -2287,40 +2287,40 @@ void TPerson::doUsers(const sstring &argument)
   if(arg1.empty()){
     sb += USERS_HEADER;
 
-    for (d = descriptor_list; d; d = d->next) {
-      if (d->character && !d->character->getName().empty()) {
-        if (!d->connected && !canSeeWho(d->character))
-          continue;
+    Descriptor::forEach([&](Descriptor& d) {
+      if (d.character && !d.character->getName().empty()) {
+        if (!d.connected && !canSeeWho(d.character))
+          return;
 
-        if (d->original)
-          line=format("%s%-16.16s%s: ") % purple() % d->original->name % norm();
+        if (d.original)
+          line=format("%s%-16.16s%s: ") % purple() % d.original->name % norm();
         else
-          line=format("%s%-16.16s%s: ") % purple() % d->character->getName() %
-	    norm();
+          line=format("%s%-16.16s%s: ") % purple() % d.character->getName() %
+            norm();
       } else
         line="UNDEFINED       : ";
 
       // don't let newbie gods blab who imm's mortals are
-      if (d->account && IS_SET(d->account->flags, TAccount::IMMORTAL) && 
-            !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
+      if (d.account && IS_SET(d.account->flags, TAccount::IMMORTAL) && 
+          !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
         line += "*** Information Concealed ***\n\r";
       } else {
-        sstring tmp_host = !(d->host.empty()) ? d->host : "????";
+        sstring tmp_host = !(d.host.empty()) ? d.host : "????";
         boost::replace_all(tmp_host, "::ffff:", "");
         buf2=format("[%s]") % tmp_host;
 
-        buf3=format("[%s]") % ((d->connected < MAX_CON_STATUS && d->connected >= 0) ? connected_types[d->connected] : "Editing");
-        buf4=format("[%s]") % ((d->account && !d->account->name.empty()) ? d->account->name : "UNDEFINED");
+        buf3=format("[%s]") % ((d.connected < MAX_CON_STATUS && d.connected >= 0) ? connected_types[d.connected] : "Editing");
+        buf4=format("[%s]") % ((d.account && !d.account->name.empty()) ? d.account->name : "UNDEFINED");
 
-        buf5=format("%s %s") % d->mudclient % d->clientversion;
+        buf5=format("%s %s") % d.mudclient % d.clientversion;
 
         line += format("%s%-34.34s%s %s%-10.10s%s %s%-14.14s%s %s%s\n\r") %
-	  red() % buf2 % norm() % green() % buf3 %
-	  norm() % cyan() % buf4 % norm() % buf5 % norm();
+          red() % buf2 % norm() % green() % buf3 %
+          norm() % cyan() % buf4 % norm() % buf5 % norm();
       }
       sb += line;
       count++;
-    }
+    });
     buf2=format("\n\rTotal Descriptors : %d\n\r") % count;
     sb += buf2;
     if (desc)
