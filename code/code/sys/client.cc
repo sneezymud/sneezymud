@@ -1029,6 +1029,7 @@ int Descriptor::client_nanny(char *arg)
     return FALSE;
   }
   if (load_char(tmp_name, &st))
+    dynamic_cast<TPerson *>(character)->loadFromDb(tmp_name);
     dynamic_cast<TPerson *>(character)->loadFromSt(&st);
   else {
     clientf(format("%d|No such character exists! Reenter character name or create a new character.|%d") % CLIENT_ERROR % ERR_BAD_NAME);
