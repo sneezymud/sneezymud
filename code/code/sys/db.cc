@@ -3189,7 +3189,9 @@ void runResetCmdO(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
 {
   objload = last_cmd = false;
 
-  if (!IS_SET(flags, resetFlagBootTime)) {
+  if (IS_SET(flags, resetFlagBootTime)) {
+    runResetCmdB(zone, rs, flags, mobload, mob, objload, obj, last_cmd);
+  } else {
     // TODO make this a tweakable percent chance
     // TODO move this into runresetcmdb
     TRoom *room = real_roomp(rs.arg3);
@@ -3204,8 +3206,6 @@ void runResetCmdO(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
       container->remContainerFlag(CONT_JAMMED);
     }
   }
-
-  return runResetCmdB(zone, rs, flags, mobload, mob, objload, obj, last_cmd);
 }
 
 // used to 'place' objects on tables, into containers, etc
