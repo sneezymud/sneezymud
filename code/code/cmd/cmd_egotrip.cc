@@ -61,7 +61,7 @@ std::map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
         IMMUNE_NONMAGIC,
         5);
   blessings[AFFECT_PEEL_BLESSING]=
-    ego_imm_blessing("Erasmus",
+    ego_imm_blessing("Aion",
         AFFECT_PEEL_BLESSING,
         APPLY_SPE, 
         "<r>speed<1>");
@@ -127,7 +127,7 @@ std::map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
         APPLY_BRA,
         "<b>the pigeon<1>");
   blessings[AFFECT_METROHEP_BLESSING]=
-    ego_imm_blessing("Metrohep",
+    ego_imm_blessing("Imm",
         AFFECT_METROHEP_BLESSING,
         APPLY_STR,
         "<k>the hippo<1>",
