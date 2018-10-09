@@ -429,7 +429,6 @@ public:
 class Descriptor
 {
   public:
-    static void forEach(std::function<void(Descriptor&)> fn);
     TSocket *socket;
     editStuff edit;
     sstring host;                 // hostname

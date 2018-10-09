@@ -454,6 +454,7 @@ static void update_mob_menu(TBeing *ch, TMonster *mob)
 static void medit(TBeing *ch, char *arg)
 {
   TBeing *mob, *k, *next_char;
+  Descriptor *d;
   TRoom *rp;
 
   if (!ch->isPc())
@@ -487,10 +488,9 @@ static void medit(TBeing *ch, char *arg)
 
   // return people poly'd into this mob 
   if (dynamic_cast<TPerson *>(mob) && !mob->desc) {
-    Descriptor::forEach([&](Descriptor& d) {
-      if (d.original == mob)
-        d.character->doReturn("", WEAR_NOWHERE, 0);
-    });
+    for (d = descriptor_list; d; d = d->next)
+      if (d->original == mob)
+        d->character->doReturn("", WEAR_NOWHERE, 0);
   }
   if (mob->in_room == Room::NOWHERE) {
     rp = real_roomp(Room::VOID);

@@ -531,15 +531,16 @@ void TBeing::doWho(const char *argument)
 
 void TBeing::doWhozone()
 {
+  Descriptor *d;
   TRoom *rp = NULL;
   sstring sbuf, buf;
   TBeing *person = NULL;
   int count = 0;
 
   sendTo("Players:\n\r--------\n\r");
-  Descriptor::forEach([&](Descriptor& d) {
-    if (!d.connected && canSee(d.character) &&
-        (rp = real_roomp((person = (d.original ? d.original : d.character))->in_room)) &&
+  for (d = descriptor_list; d; d = d->next) {
+    if (!d->connected && canSee(d->character) &&
+        (rp = real_roomp((person = (d->original ? d->original : d->character))->in_room)) &&
 
         (rp->getZoneNum() == roomp->getZoneNum())) {
       sbuf = format("%-25s - %s ") % person->getName() % rp->name;
@@ -551,6 +552,6 @@ void TBeing::doWhozone()
       sendTo(COLOR_BASIC, sbuf);
       count++;
     }
-  });
+  }
   sendTo(format("\n\rTotal visible players: %d\n\r") % count);
 }

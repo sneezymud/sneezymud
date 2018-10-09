@@ -1216,6 +1216,7 @@ TO_ROOM);
 
 int rombler(TBeing *caster, int, short bKnown)
 {
+  Descriptor *i;
   sstring msg = caster->spelltask->orig_arg;
   sstring pgbuff;
   //  for (; isspace(*msg); msg++);
@@ -1235,26 +1236,26 @@ int rombler(TBeing *caster, int, short bKnown)
       caster->nothingHappens(SILENT_YES);
     } else {
       caster->sendTo(COLOR_SPELLS, format("<g>You romble to the world, \"<z>%s<g>\"<z>\n\r") % msg);
-      Descriptor::forEach([&](Descriptor& d) {
-        if (d.character && (d.character != caster) &&
-            !d.connected && !d.character->checkSoundproof() &&
-            (dynamic_cast<TMonster *>(d.character) ||
-              (!IS_SET(d.autobits, AUTO_NOSHOUT)) ||
-              !d.character->isPlayerAction(PLR_GODNOSHOUT))) {
-        if (d.character->doesKnowSkill(SPELL_ROMBLER) || d.character->isImmortal()) {
+      for (i = descriptor_list; i; i = i->next) {
+        if (i->character && (i->character != caster) &&
+            !i->connected && !i->character->checkSoundproof() &&
+            (dynamic_cast<TMonster *>(i->character) ||
+              (!IS_SET(i->autobits, AUTO_NOSHOUT)) ||
+              !i->character->isPlayerAction(PLR_GODNOSHOUT))) {
+        if (i->character->doesKnowSkill(SPELL_ROMBLER) || i->character->isImmortal()) {
 
-          pgbuff = caster->garble(d.character, msg, Garble::SPEECH_SHOUT, Garble::SCOPE_INDIVIDUAL);
-          d.character->sendTo(COLOR_SPELLS, format("<Y>%s<z> rombles, \"<o>%s%s\"\n\r") % caster->getName() % pgbuff % d.character->norm());
-          if (!d.m_bIsClient && IS_SET(d.prompt_d.type, PROMPT_CLIENT_PROMPT))
-            d.clientf(format("%d|%s|%s") % CLIENT_ROMBLER % colorString(d.character, &d, caster->getName(), NULL, COLOR_NONE, FALSE) % colorString(d.character, &d, pgbuff, NULL, COLOR_NONE, FALSE));
+          pgbuff = caster->garble(i->character, msg, Garble::SPEECH_SHOUT, Garble::SCOPE_INDIVIDUAL);
+          i->character->sendTo(COLOR_SPELLS, format("<Y>%s<z> rombles, \"<o>%s%s\"\n\r") % caster->getName() % pgbuff % i->character->norm());
+          if (!i->m_bIsClient && IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
+            i->clientf(format("%d|%s|%s") % CLIENT_ROMBLER % colorString(i->character, i, caster->getName(), NULL, COLOR_NONE, FALSE) % colorString(i->character, i, pgbuff, NULL, COLOR_NONE, FALSE));
 
           } else {
 	    int num = ::number(0,3);
 	    if (num == 0) {
-            d.character->sendTo(COLOR_SPELLS, "<p>In the faint distance you hear savage drumming.<z>\n\r"); 
+            i->character->sendTo(COLOR_SPELLS, "<p>In the faint distance you hear savage drumming.<z>\n\r"); 
 	    }
 	    if (num == 1) {
-            d.character->sendTo(COLOR_SPELLS, "<o>Savage drumming can be heard in the distance.<z>\n\r"); 
+            i->character->sendTo(COLOR_SPELLS, "<o>Savage drumming can be heard in the distance.<z>\n\r"); 
 	    }
 	    if (num == 2) {
 	    }
@@ -1262,7 +1263,7 @@ int rombler(TBeing *caster, int, short bKnown)
 	    }
           } 
         }
-      });
+      }
       caster->addToMove(-5);
     }
     return SPELL_SUCCESS;

@@ -6,7 +6,6 @@
 //  
 //////////////////////////////////////////////////////////////////////////
 
-#include "connect.h"
 #include "extern.h"
 #include "handler.h"
 #include "room.h"
@@ -425,34 +424,36 @@ void TBeing::doEgoTrip(const char *arg)
     }
 
     vlogf(LOG_MISC, format("%s egotripped bless") %  getName());
+    Descriptor *d;
     std::map <spellNumT,ego_imm_blessing> blessings=init_ego_imm_blessing();
+    std::map <spellNumT,ego_imm_blessing>::iterator iter;
     bool found=false;
-    Descriptor::forEach([&](Descriptor& d) {
-      if (d.connected == CON_PLYNG)
-        return;
+    for (d = descriptor_list; d; d = d->next) {
+      if (d->connected != CON_PLYNG)
+        continue;
 
-      TBeing *ch = d.character;
+      TBeing *ch = d->character;
 
       // Try and ditch some of the un-needed spam/waste.
       if (!ch || ch->GetMaxLevel() > MAX_MORT)
-        return;
+        continue;
 
-      for (const auto& pair : blessings) {
-        if(getName() == pair.second.name.c_str()){
-          ch->sendTo(COLOR_SPELLS, format("%s has bestowed upon you %s blessing of %s.\n\r") %
-              sstring(ch->pers(this)).cap() % hshr() %
-              pair.second.msg);
-          egoAffect(this, ch, pair.first, 5);
-          found=true;
-        }
+      for(iter=blessings.begin();iter!=blessings.end();++iter){
+	if(getName() == (*iter).second.name.c_str()){
+	  ch->sendTo(COLOR_SPELLS, format("%s has bestowed upon you %s blessing of %s.\n\r") %
+		     sstring(ch->pers(this)).cap() % hshr() %
+		     (*iter).second.msg);
+	  egoAffect(this, ch, (*iter).first, 5);
+	  found=true;
+	}
       }
       if(!found){
-        // default blessing
-        ch->sendTo(COLOR_SPELLS,format("%s has graciously bestowed upon you %s blessing.\n\r") %
-            sstring(ch->pers(this)).cap() % hshr());
-        egoAffect(this, ch, AFFECT_IMMORTAL_BLESSING, 5);
+	// default blessing
+	ch->sendTo(COLOR_SPELLS,format("%s has graciously bestowed upon you %s blessing.\n\r") %
+		   sstring(ch->pers(this)).cap() % hshr());
+	egoAffect(this, ch, AFFECT_IMMORTAL_BLESSING, 5);
       }
-    });
+    }
     return;
   } else if (is_abbrev(argument, "stupidity")) {
     if (!isImmortal() || !desc || !IS_SET(desc->autobits, AUTO_SUCCESS)) {
@@ -461,19 +462,20 @@ void TBeing::doEgoTrip(const char *arg)
     }
 
     vlogf(LOG_MISC, format("%s is egotrippin and now everyone is stupid") %  getName());
-    Descriptor::forEach([&](Descriptor& d) {
-      if (d.connected != CON_PLYNG)
-        return;
+    Descriptor *d;
+    for (d = descriptor_list; d; d = d->next) {
+      if (d->connected != CON_PLYNG)
+        continue;
 
-      TBeing *ch = d.character;
+      TBeing *ch = d->character;
 
       // Try and ditch some of the un-needed spam/waste.
       if (!ch || ch->GetMaxLevel() > MAX_MORT)
-        return;
+        continue;
       ch->sendTo(format("%s has reconfirmed %s suspicions.\n\r") %
             sstring(ch->pers(this)).cap() % hshr());
       castStupidity(this, ch);
-    });
+    }
     return;
   } else if (is_abbrev(argument, "crit")) {
     sstring target;
