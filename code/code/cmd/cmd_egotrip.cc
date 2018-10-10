@@ -60,9 +60,9 @@ std::map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
         APPLY_IMMUNITY,
         IMMUNE_NONMAGIC,
         5);
-  blessings[AFFECT_PEEL_BLESSING]=
+  blessings[AFFECT_AION_BLESSING]=
     ego_imm_blessing("Aion",
-        AFFECT_PEEL_BLESSING,
+        AFFECT_AION_BLESSING,
         APPLY_SPE, 
         "<r>speed<1>");
   blessings[AFFECT_VASCO_BLESSING]=

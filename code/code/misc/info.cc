@@ -1782,9 +1782,9 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
             describeDuration(this, aff->duration);
         }
         break;
-      case AFFECT_PEEL_BLESSING:
+      case AFFECT_AION_BLESSING:
         if(show){
-          str+=format("Affected: Peel's Blessing.  Approx. duration : %s\n\r") %
+          str+=format("Affected: Aion's Blessing.  Approx. duration : %s\n\r") %
             describeDuration(this, aff->duration);
         }
         break;
