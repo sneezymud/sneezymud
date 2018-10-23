@@ -15,19 +15,26 @@ namespace {
   unsigned char sb = 250;              /* interpret as subnegotiation */
   // unsigned char se = 240;              /* end sub negotiation */
 
-  void handleCoreHello(sstring const& s, Descriptor* d) {
+  void handleCoreHello(sstring const& s, Descriptor& d) {
     auto hello = s.substr(sizeof("Core.Hello"));
     auto js = nlohmann::json::parse(hello);
     try {
-      d->mudclient = js.at("client");
-      d->clientversion = js.at("version");
+      d.mudclient = js.at("client");
+      d.clientversion = js.at("version");
     } catch (const std::range_error&) {
       vlogf(LOG_MISC, format("Client sent bad Core.Hello: %s") % hello);
     }
   }
+  std::map<std::string, std::function<void(std::string, Descriptor&)>> commandHandlers = {
+    {"Core.Supports.Set", [](std::string, Descriptor&){}}, // squelch
+    {"Core.Hello", handleCoreHello},
+  };
 
   void handleGmcpCommand(sstring const& s, Descriptor* d)
   {
+    assert(d);
+    decltype(commandHandlers)::iterator it;
+
     if (s == "request sectors") {
       sstring str;
       for (int i = 0; i < MAX_SECTOR_TYPES; i++) {
@@ -48,11 +55,8 @@ namespace {
         % roomp->getZone()->name;
       d->sendGmcp(area, true);
     }
-    else if (s.find("Core.Supports.Set ") == 0) {
-      // squelch
-    }
-    else if (s.find("Core.Hello ") == 0) {
-      handleCoreHello(s, d);
+    else if ((it = commandHandlers.find(s.word(0))) != commandHandlers.end()) {
+      it->second(s, *d);
     }
     else
       vlogf(LOG_MISC, format("Telnet: Unknown GMCP command '%s' ") % s);
