@@ -2,6 +2,7 @@
 #include "being.h"
 #include "connect.h"
 #include "room.h"
+#include "person.h"
 
 #include "json.hpp"
 
@@ -25,9 +26,41 @@ namespace {
       vlogf(LOG_MISC, format("Client sent bad Core.Hello: %s") % hello);
     }
   }
+
+
+  void handleRemember(sstring const& s, Descriptor& d)
+  {
+    sstring arg = s.dropWord();
+
+    auto player = dynamic_cast<TPerson*>(d.character);
+    if (player)
+      player->doRemember(false, arg);
+  }
+
+  void handleRememberPlayer(sstring const& s, Descriptor& d)
+  {
+    sstring arg = s.dropWord();
+
+    auto player = dynamic_cast<TPerson*>(d.character);
+    if (player)
+      player->doRememberPlayer(false, arg);
+  }
+
+  void handleRetrieve(sstring const& s, Descriptor& d)
+  {
+    sstring key = s.word(1);
+
+    auto player = dynamic_cast<TPerson*>(d.character);
+    if (player)
+      player->doRetrieve(false, key);
+  }
+
   std::map<std::string, std::function<void(std::string, Descriptor&)>> commandHandlers = {
     {"Core.Supports.Set", [](std::string, Descriptor&){}}, // squelch
     {"Core.Hello", handleCoreHello},
+    {"remember", handleRemember},
+    {"rememberplayer", handleRememberPlayer},
+    {"retrieve", handleRetrieve},
   };
 
   void handleGmcpCommand(sstring const& s, Descriptor* d)
