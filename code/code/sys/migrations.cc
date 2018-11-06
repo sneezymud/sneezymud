@@ -11,7 +11,7 @@
 
 namespace {
     int getVersion(TDatabase& sneezy) {
-        assert(sneezy.query("select value from configuration where config = 'version'"));
+        sneezy.query("select value from configuration where config = 'version'");
         if (sneezy.fetchRow())
             return stoi(sneezy["value"]);
         return 0;
