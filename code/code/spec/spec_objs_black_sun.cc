@@ -17,7 +17,7 @@ int blackSun(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     return FALSE;
 
   aff.type = SPELL_PLASMA_MIRROR;
-  aff.duration = Pulse::UPDATES_PER_MUDHOUR/4;
+  aff.duration = Pulse::UPDATES_PER_MUDHOUR*2;
   aff.modifier = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = 0;
