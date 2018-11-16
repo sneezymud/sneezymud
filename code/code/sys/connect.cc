@@ -307,6 +307,8 @@ bool Descriptor::checkForMultiplay()
     if (diff < (1 * SECS_PER_REAL_MIN))
       max_multiplay_chars = 1;
 
+    unsigned multiplay_limit = std::min(max_multiplay_chars, account->multiplay_limit);
+
     for (d = descriptor_list; d; d = d->next) {
       if (d == this)
         continue;
@@ -320,17 +322,14 @@ bool Descriptor::checkForMultiplay()
       if (character->name == ch->name)
         continue;
 
-      unsigned multiplay_limit = std::min(max_multiplay_chars, account->multiplay_limit);
-
       if (d->account->name==account->name) {
         total += 1;
-        if (total > multiplay_limit &&
-            gamePort == Config::Port::PROD){
+        if (total > multiplay_limit && gamePort == Config::Port::PROD) {
           vlogf(LOG_CHEAT, format("MULTIPLAY: %s and %s from same account[%s]") % 
               character->name % ch->name % account->name);
           if(Config::ForceMultiplayCompliance()){
             character->sendTo(format("\n\rTake note: You have another character, %s, currently logged in.\n\r") % ch->name);
-            character->sendTo("Adding this character would push you over the multiplay limit.\n\r");
+            character->sendTo(format("Adding this character would push you over the multiplay limit of %d.\n\r") % multiplay_limit);
             character->sendTo("Please log off your other character and then try again.\n\r");
             outputProcessing();  // gotta write this to them, before we sever  :)
           }
@@ -348,6 +347,7 @@ bool Descriptor::checkForMultiplay()
       FILE *tFile = NULL;
 
       // Yay search ALL mob instances
+      total = 1;
       for (tChar = character_list; tChar;) {
         oChar = tChar->next;
 
@@ -363,11 +363,14 @@ bool Descriptor::checkForMultiplay()
 
             fclose(tFile);
 #if 1
-            character->sendTo(format("\n\rTake note: You have a link-dead character, %s, currently logged in.\n\r") % tChar->name);
-            character->sendTo("Adding this character would cause you to be in violation of multiplay rules.\n\r");
-            character->sendTo("Please reconnect your other character to log them off and then try again.\n\r");
-            outputProcessing();  // gotta write this to them, before we sever  :)
-            return TRUE;
+            total += 1;
+            if (total > multiplay_limit && gamePort == Config::Port::PROD) {
+              character->sendTo(format("\n\rTake note: You have a link-dead character, %s, currently logged in.\n\r") % tChar->name);
+              character->sendTo(format("Adding this character would push you over the multiplay limit of %d .\n\r") % multiplay_limit);
+              character->sendTo("Please reconnect your other character to log them off and then try again.\n\r");
+              outputProcessing();  // gotta write this to them, before we sever  :)
+              return TRUE;
+            }
 #else
             nukeLdead(tChar);
             delete tChar;
@@ -1066,7 +1069,6 @@ int Descriptor::nanny(sstring arg)
             if (rc) {
               // disconnect, but don't cause character to be deleted
               // do this by disassociating character from descriptor
-              character = NULL;
 
               return DELETE_THIS;
             }

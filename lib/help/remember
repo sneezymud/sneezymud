@@ -1,0 +1,10 @@
+Syntax: remember <key> <value>
+        remember tanelorn spruce, then E, then SE, then d w w sw sw
+        rememberplayer <key> <value>
+        remember <key> (deletes the key)
+        retrieve (shows everything)
+        retrieve <key>
+
+Stores some data on server side. 
+`remember` with key but without a value will delete the item from database.
+`retrieve` with no key lists all keys.

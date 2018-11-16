@@ -91,6 +91,9 @@ class TPerson : public TBeing {
     void doMapAdd(sstring const&);
     void doMapRm(sstring const&);
     void doMapGo(sstring const&);
+    void doRemember(bool print, sstring const&);
+    void doRememberPlayer(bool print, sstring const&);
+    void doRetrieve(bool print, sstring const&);
 
     virtual std::pair<bool, int> doPersonCommand(cmdTypeT, const sstring &, TThing *, bool);
     virtual void raiseLevel(classIndT);

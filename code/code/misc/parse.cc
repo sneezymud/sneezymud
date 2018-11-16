@@ -1876,6 +1876,9 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
         case CMD_MOB_COMBAT_ONATTACKED:
         case CMD_MOB_COMBAT_STOPPING:
         case CMD_MAP:
+        case CMD_REMEMBER:
+        case CMD_REMEMBERPLAYER:
+        case CMD_RETRIEVE:
           sendTo(format("doCommand:incorrectCommand: [%d]\n\r") % cmd);
           incorrectCommand();
           return FALSE;
@@ -2978,6 +2981,9 @@ void buildCommandArray(void)
   commandArray[CMD_IGNORE] = new commandInfo("ignore", POSITION_DEAD, 0);
   commandArray[CMD_RUN] = new commandInfo("run", POSITION_CRAWLING, 0);
   commandArray[CMD_MAP] = new commandInfo("map", POSITION_STANDING, 0);
+  commandArray[CMD_REMEMBER] = new commandInfo("remember", POSITION_DEAD, 0);
+  commandArray[CMD_REMEMBERPLAYER] = new commandInfo("rememberplayer", POSITION_DEAD, 0);
+  commandArray[CMD_RETRIEVE] = new commandInfo("retrieve", POSITION_DEAD, 0);
 }
 
 bool _parse_name_safe(const char *arg, char *name, unsigned int nameLen)

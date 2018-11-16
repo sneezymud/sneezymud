@@ -117,10 +117,98 @@ std::pair<bool, int> TPerson::doPersonCommand(cmdTypeT cmd, const sstring & argu
     case CMD_MAP:
       doMap(argument);
       break;
+    case CMD_REMEMBER:
+      doRemember(true, argument);
+      break;
+    case CMD_REMEMBERPLAYER:
+      doRememberPlayer(true, argument);
+      break;
+    case CMD_RETRIEVE:
+      doRetrieve(true, argument);
+      break;
     default:
       return std::make_pair(false, 0);
   }
   return std::make_pair(true, 0);
+}
+
+namespace {
+  void doRememberCommon(TPerson& me, bool shouldPrint, sstring const& arg, sstring const& cmd, sstring const& table, sstring const& foreignKey, int foreignValue)
+  {
+    auto sendTo = [&me, shouldPrint](const sstring& s) {
+      if (shouldPrint)
+        me.sendTo(s);
+    };
+
+    sstring key = arg.word(0);
+    sstring value = arg.dropWord();
+
+    if (key.empty()) {
+      sendTo(format("Usage: %s key value\n") % cmd);
+      sendTo(format("Example: %s tanelorn from spruce e se d 2w sw sw\n") % cmd);
+      sendTo("Also check help remember\n");
+      return;
+    }
+
+    TDatabase db(DB_SNEEZY);
+    bool success = false;
+    success = db.query(("delete from " + table + " where " + foreignKey + " = %i and name = '%s'").c_str(),
+        foreignValue, key.c_str());
+
+    if (success && !value.empty()) {
+      success = db.query(("insert into " + table + " (" + foreignKey + ", name, value) values (%i, '%s', '%s')").c_str(),
+          foreignValue, key.c_str(), value.c_str());
+    }
+
+    if (success)
+      sendTo("Saved!\n");
+    else
+      sendTo("DB error, report a bug :(\n");
+  }
+}
+
+void TPerson::doRemember(bool print, sstring const& arg)
+{
+  doRememberCommon(*this, print, arg, "remember", "accountnotes", "account_id", getAccountID());
+}
+
+void TPerson::doRememberPlayer(bool print, sstring const& arg)
+{
+  doRememberCommon(*this, print, arg, "rememberplayer", "playernotes", "player_id", getPlayerID());
+}
+
+void TPerson::doRetrieve(bool shouldPrint, sstring const& arg)
+{
+  auto sendTo = [this, shouldPrint](const sstring& s) {
+    if (shouldPrint)
+      this->sendTo(s);
+  };
+
+  sstring key = arg.word(0);
+
+  TDatabase db(DB_SNEEZY);
+  bool success = db.query("select name, value from playernotes where player_id = %i and ('%s' = '' or name = '%s') "
+      "union "
+      "select name, value from accountnotes where account_id = %i and ('%s' = '' or name = '%s')",
+      getPlayerID(), key.c_str(), key.c_str(), getAccountID(), key.c_str(), key.c_str());
+
+  if (!success) {
+    sendTo("DB error, report a bug :(\n");
+    return;
+  }
+
+  if (!db.fetchRow()) {
+    sendTo(format("%s: not found") % arg);
+    return;
+  }
+
+  assert(desc);
+  do {
+    auto str = sstring("retrieve." + key + " " + db["value"]);
+    desc->sendGmcp(str, false);
+
+    sendTo(format("%s: %s\n") % db["name"] % db["value"]);
+  } while (arg.empty() && db.fetchRow()); // only print other matches if listing everything
 }
 
 void TPerson::loadMapData()
