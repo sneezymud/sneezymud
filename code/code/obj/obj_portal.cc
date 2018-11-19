@@ -37,10 +37,10 @@ TPortal::TPortal(const TRoom *rp) :
   buf = format("A portal going to %s is in the room.") % rp->name;
   setDescr(buf);
   obj_flags.wear_flags = 0;
-  obj_flags.decay_time = 5;
+  obj_flags.decay_time = 10;
   setWeight(0);
   obj_flags.cost = 1;
-  setPortalNumCharges(10);
+  setPortalNumCharges(20);
   setTarget(rp->number);
 }
 
