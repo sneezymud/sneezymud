@@ -1786,6 +1786,9 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
         case CMD_RUN:
           doRun(argument);
           break;
+        case CMD_RECHARGE:
+          doChargeStave(newarg.c_str());
+          break;
 
           break;
         case MAX_CMD_LIST:
@@ -2984,6 +2987,7 @@ void buildCommandArray(void)
   commandArray[CMD_REMEMBER] = new commandInfo("remember", POSITION_DEAD, 0);
   commandArray[CMD_REMEMBERPLAYER] = new commandInfo("rememberplayer", POSITION_DEAD, 0);
   commandArray[CMD_RETRIEVE] = new commandInfo("retrieve", POSITION_DEAD, 0);
+  commandArray[CMD_RECHARGE] = new commandInfo("recharge", POSITION_STANDING, 0);
 }
 
 bool _parse_name_safe(const char *arg, char *name, unsigned int nameLen)
