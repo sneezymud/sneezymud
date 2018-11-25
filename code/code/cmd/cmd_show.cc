@@ -1185,7 +1185,7 @@ void TPerson::doShow(const sstring &argument)
 	  i % (mob_specials[i].assignable?"X":" ") % mob_specials[i].name;
     }
   } else if (is_abbrev(buf, "boobies")) {
-    sb += "     (*)(*) <==== BOOBIES!!!\n\r";
+    sb += "     (. Y .) <==== BOOBIES!!!\n\r";
   } else {
     sb += "Usage:\n\r";
     sb += "  show zones (<zonename> | disabled)\n\r";
