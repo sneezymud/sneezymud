@@ -501,7 +501,7 @@ void blindness(TBeing * caster, TBeing * victim, TMagicItem * obj)
 
   ret = blindness(caster, victim, level, obj->getMagicLearnedness());
 
-  duration = (obj->getMagicLevel()/10 + 1) * Pulse::UPDATES_PER_MUDHOUR;
+  duration = (obj->getMagicLevel()/5 + 1) * Pulse::UPDATES_PER_MUDHOUR;
   saveTypeT save = SAVE_NO;
   if (IS_SET(ret, SPELL_SAVE)) 
     save = SAVE_YES;
