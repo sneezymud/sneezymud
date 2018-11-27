@@ -518,15 +518,6 @@ int summon(TBeing * caster, TBeing * victim, int level, short bKnown)
       }
     }
 
-  // Anti-Multiplay code, Pappy 11/7/2007
-  // We don't allow people to summon mobs they have tagged from alts
-  if (tmon && tmon->isAttackerMultiplay(caster))
-  {
-    caster->sendTo("Your prayer meets opposition and fails!\n\r");
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
-    return SPELL_FAIL;
-  }
-
     if (caster->inGrimhaven() &&
         (tmon->anger() >= 20 || IS_SET(tmon->specials.act, ACT_AGGRESSIVE))) {
       caster->sendTo("Your deity prohibits this mob being summoned here!\n\r");

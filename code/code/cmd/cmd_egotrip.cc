@@ -60,9 +60,9 @@ std::map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
         APPLY_IMMUNITY,
         IMMUNE_NONMAGIC,
         5);
-  blessings[AFFECT_PEEL_BLESSING]=
-    ego_imm_blessing("Erasmus",
-        AFFECT_PEEL_BLESSING,
+  blessings[AFFECT_AION_BLESSING]=
+    ego_imm_blessing("Aion",
+        AFFECT_AION_BLESSING,
         APPLY_SPE, 
         "<r>speed<1>");
   blessings[AFFECT_VASCO_BLESSING]=
@@ -127,7 +127,7 @@ std::map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
         APPLY_BRA,
         "<b>the pigeon<1>");
   blessings[AFFECT_METROHEP_BLESSING]=
-    ego_imm_blessing("Metrohep",
+    ego_imm_blessing("Imm",
         AFFECT_METROHEP_BLESSING,
         APPLY_STR,
         "<k>the hippo<1>",
@@ -548,7 +548,7 @@ void TBeing::doEgoTrip(const char *arg)
     sstring worldBuf = "You smell burnt flesh as a bolt of lightning takes the hide off of ";
     worldBuf += ch->getName();
     worldBuf += "!\n\r";
-    descriptor_list->worldSend(worldBuf.c_str(), this);
+    Descriptor::worldSend(worldBuf.c_str(), this);
 
     soundNumT snd = pickRandSound(SOUND_EGOBLAST_1, SOUND_EGOBLAST_2);
     ch->roomp->playsound(snd, SOUND_TYPE_NOISE);

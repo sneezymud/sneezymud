@@ -5,6 +5,7 @@
 #include "charfile.h"
 #include "extern.h" // for load_char
 
+#include <cassert>
 #include <boost/format.hpp>
 #include <map>
 
@@ -24,21 +25,21 @@ void runMigrations() {
     std::vector<std::function<void()>> migrations = {
         [&](){
             vlogf(LOG_MISC, "Adding configuration table");
-            sneezy.query("create table configuration (id int primary key auto_increment not null, config varchar(100) unique not null, value varchar(999) null)");
-            sneezy.query("create unique index idx_configuration_key on configuration (config)");
-            sneezy.query("insert into configuration (config, value) values ('version', '0')");
+            assert(sneezy.query("create table configuration (id int primary key auto_increment not null, config varchar(100) unique not null, value varchar(999) null)"));
+            assert(sneezy.query("create unique index idx_configuration_key on configuration (config)"));
+            assert(sneezy.query("insert into configuration (config, value) values ('version', '0')"));
         },
         [&](){
             vlogf(LOG_MISC, "Migrating aliases to DB");
-            sneezy.query(
+            assert(sneezy.query(
                     "create table alias ("
                     "id int primary key auto_increment not null, "
                     "player_id bigint(20) unsigned not null, "
                     "word varchar(50) not null, "
                     "command varchar(999) not null, "
-                    "foreign key (player_id) references player (id) on delete cascade)");
+                    "foreign key (player_id) references player (id) on delete cascade)"));
 
-            sneezy.query("select id, name from player");
+            assert(sneezy.query("select id, name from player"));
             std::map<int, std::string> idToName;
             while (sneezy.fetchRow())
                 idToName[convertTo<int>(sneezy["id"])] = sneezy["name"];
@@ -55,7 +56,7 @@ void runMigrations() {
                 for (auto alias : file.alias) {
                     if (alias.word[0]) {
                         vlogf(LOG_MISC, format("%d/%s: %s -> %s") % id % name % alias.word % alias.command);
-                        sneezy.query("insert into alias (player_id, word, command) values (%i, '%s', '%s')", id, alias.word, alias.command);
+                        assert(sneezy.query("insert into alias (player_id, word, command) values (%i, '%s', '%s')", id, alias.word, alias.command));
                     }
                 }
             }
@@ -63,7 +64,7 @@ void runMigrations() {
         [&](){
             //support tweaks db
             vlogf(LOG_MISC, "Adding tweak table to DB");
-            sneezy.query(
+            assert(sneezy.query(
                     "create table globaltweaks ("
                     "tweak_id int primary key auto_increment not null, "
                     "tweak_type int not null, "
@@ -71,7 +72,76 @@ void runMigrations() {
                     "tweak_target float(20) not null, "
                     "tweak_rate float(20) not null, "
                     "datecreated datetime not null default CURRENT_TIMESTAMP)"
-                    );
+                    ));
+        },
+        [&](){
+            // configurable multiplay limit per account
+            vlogf(LOG_MISC, "Adding multiplay column to account table");
+            assert(sneezy.query(
+                    "alter table account "
+                    "add column multiplay_limit int null default 2"
+                    ));
+            assert(sneezy.query(
+                    "update account "
+                    "set multiplay_limit = 3"
+                    ));
+            assert(sneezy.query(
+                    "alter table account "
+                    "modify column multiplay_limit int not null default 2"
+                    ));
+        },
+        [&](){
+            vlogf(LOG_MISC, "Renaming Test Code 6 into DB Logging");
+            assert(sneezy.query(
+                    "update globaltoggles "
+                    "set name = 'DB Logging', descr = 'log all db queries', testcode = 0 "
+                    "where tog_id = 17"
+                    ));
+        },
+        [&](){
+            vlogf(LOG_MISC, "Adding savedrooms table");
+            assert(sneezy.query(
+                    "create table savedrooms ("
+                    "id int primary key auto_increment not null, "
+                    "player_id bigint(20) unsigned not null, "
+                    "name varchar(50) not null, "
+                    "room int not null, "
+                    "foreign key (player_id) references player (id) on delete cascade)"));
+        },
+        [&](){
+            vlogf(LOG_MISC, "Tying saved rooms to accounts");
+            assert(sneezy.query("drop table if exists savedroomsacct"));
+            assert(sneezy.query(
+                    "create table savedroomsacct ("
+                    "id int primary key auto_increment not null, "
+                    "account_id bigint(20) unsigned not null, "
+                    "name varchar(50) not null, "
+                    "room int not null, "
+                    "foreign key (account_id) references account (account_id) on delete cascade)"));
+            assert(sneezy.query(
+                    "insert into savedroomsacct select "
+                    "s.id, a.account_id, s.name, s.room "
+                    "from savedrooms s join player p "
+                    "on s.player_id = p.id "
+                    "join account a on p.account_id = a.account_id "));
+            assert(sneezy.query("drop table savedrooms"));
+        },
+        [&](){
+            vlogf(LOG_MISC, "Adding generic per-account and per-player storage");
+            assert(sneezy.query(
+                    "create table if not exists accountnotes ("
+                    "id int primary key auto_increment not null, "
+                    "account_id bigint(20) unsigned not null, "
+                    "name varchar(64) not null, "
+                    "value text not null, "
+                    "foreign key (account_id) references account (account_id) on delete cascade)"));
+            assert(sneezy.query(
+                    "create table if not exists playernotes ("
+                    "id int primary key auto_increment not null, "
+                    "player_id bigint(20) unsigned not null, "
+                    "name varchar(64) not null, "
+                    "value text not null, "
+                    "foreign key (player_id) references player (id) on delete cascade)"));
         },
     };
 
@@ -82,6 +152,6 @@ void runMigrations() {
     for (int i = oldVersion; i < newVersion; ++i)
         migrations.at(i)();
 
-    sneezy.query("update configuration set value = '%i' where config = 'version'", newVersion);
+    assert(sneezy.query("update configuration set value = '%i' where config = 'version'", newVersion));
     vlogf(LOG_MISC, "Migrations done");
 }

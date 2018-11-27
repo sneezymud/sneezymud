@@ -1,0 +1,7 @@
+Syntax: map list <optional filter>
+        map add <name>
+        map rm <name>
+        map go <name>
+
+Bookmarks the current room. Allows pathfinding from anywhere back to bookmarked rooms.
+Pathfinding doesn't work through portals or through locked doors.

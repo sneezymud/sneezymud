@@ -336,10 +336,13 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
   }
   
   for (i = 0; i < MAX_OBJ_AFFECT; i++) {
+#if 0
+    // Dummy proofing against newb builders who'd confuse Shadowy/Glow with light.
     if (o->affected[i].location == APPLY_LIGHT && o->canWear(ITEM_WEAR_TAKE)) {
       ch->sendTo("Removing light affects on takeable item.\n\r");
       continue;
     }
+#endif
     
     if (o->affected[i].location != APPLY_NONE) {
       if(!db.query("insert into objaffect (type, mod1, mod2, owner, vnum) values (%i, %i, %i, '%s', %i)",

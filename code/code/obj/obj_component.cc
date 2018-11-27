@@ -40,7 +40,8 @@ bool TComponent::willMerge(TMergeable *tm)
      tComp==this || 
      (tComp->objVnum() != objVnum()) ||
      tComp->obj_flags.cost <= 0 ||  // ignore "free" comps from GM
-     obj_flags.cost <= 0){
+     obj_flags.cost <= 0 ||
+     tComp->getComponentCharges() + getComponentCharges() > 100){
     return false;
   }
   return true;
@@ -3044,6 +3045,12 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
   if (tNum > charges) {
     tKeeper->doTell(ch->getName(), format("I don't have %d charges of %s.  Here %s the %d I do have.") % tNum % getName() % ((charges > 2) ? "are" : "is") % charges);
     tNum  = charges;
+    tCost = shopPrice(tNum, tShop, tChr, ch);
+  }
+
+  if (tNum > 100){
+    tKeeper->doTell(ch->getName(), format("I will sell no more than 100 charges of %s at a time.") % getName());
+    tNum  = 100;
     tCost = shopPrice(tNum, tShop, tChr, ch);
   }
   

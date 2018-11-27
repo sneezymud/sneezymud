@@ -254,11 +254,6 @@ int TBeing::doCharge(const char *arg, TBeing *victim)
   int       rc        = 0;
   dirTypeT  Direction = DIR_NONE;
 
-  if (doesKnowSkill(SKILL_STAVECHARGE)) {
-    doChargeStave(arg);
-    return FALSE;
-  }
-
   if (checkBusy()) {
     return FALSE;
   }

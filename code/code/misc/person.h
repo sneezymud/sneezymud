@@ -15,10 +15,14 @@
 extern Descriptor *descriptor_list;
 extern Descriptor *next_to_process;
 
+class TPersonPimpl;
+
 class TPerson : public TBeing {
   private:
     unsigned short base_age;
     TPerson();  // made private to make it uncallable
+
+    TPersonPimpl* d = nullptr;
 
   public:
     FILE *tLogFile;
@@ -62,9 +66,11 @@ class TPerson : public TBeing {
     }
 
     void storeToSt(charFile *);
+    void storeToDb() const;
     void autoDeath();
     void resetChar();
     int genericLoadPC();
+    void loadFromDb(std::string const& name);
     void loadFromSt(charFile *);
     void fixPracs();
     void initChar();
@@ -78,7 +84,18 @@ class TPerson : public TBeing {
     void setBaseAge();   // sets new base-age
     int saveRent(bool d=false, int msgStatus=0);
     void loadRent();
+    void loadMapData();
+    void saveMapData() const;
+    void doMap(sstring const&);
+    void doMapList(sstring const&) const;
+    void doMapAdd(sstring const&);
+    void doMapRm(sstring const&);
+    void doMapGo(sstring const&);
+    void doRemember(bool print, sstring const&);
+    void doRememberPlayer(bool print, sstring const&);
+    void doRetrieve(bool print, sstring const&);
 
+    virtual std::pair<bool, int> doPersonCommand(cmdTypeT, const sstring &, TThing *, bool);
     virtual void raiseLevel(classIndT);
     virtual void doUsers(const sstring &);
     virtual void doInvis(const char *);

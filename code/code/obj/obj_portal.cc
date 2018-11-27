@@ -37,10 +37,10 @@ TPortal::TPortal(const TRoom *rp) :
   buf = format("A portal going to %s is in the room.") % rp->name;
   setDescr(buf);
   obj_flags.wear_flags = 0;
-  obj_flags.decay_time = 5;
+  obj_flags.decay_time = 10;
   setWeight(0);
   obj_flags.cost = 1;
-  setPortalNumCharges(10);
+  setPortalNumCharges(20);
   setTarget(rp->number);
 }
 
@@ -341,7 +341,6 @@ int TPortal::enterMe(TBeing *ch)
   TRoom    *rp;
   int       rc,
             isRandom = -1;
-  TPerson *tPerson = dynamic_cast<TPerson *>(ch);
 
   if (isPortalFlag(EXIT_CLOSED)) {
     ch->sendTo("You can't enter that!  It's closed!\n\r");
@@ -364,24 +363,6 @@ int TPortal::enterMe(TBeing *ch)
 
   if (isRandom == -1)
     ch->sendTo("You feel strangly pulled in many directions.\n\r");
-
-  if(Config::ForceMultiplayCompliance()){
-    if (tPerson && checkOwnersList(tPerson, true)) {
-      // This is done by clerics who create portals then logon lower
-      // level characters of theirs and use them.  So we are going
-      // to do something VERY crual to them for this.
-
-      ch->sendTo("Something goes wrong as you enter the portal and you feel torn through the astral plane!\n\r");
-      vlogf(LOG_CHEAT, format("Player using Portal created by other player in same account! (%s)") %
-	    ch->getName());
-      rc = ch->genericTeleport(SILENT_NO, true);
-
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-	return DELETE_VICT;
-
-      return FALSE;
-    }
-  }
 
   ch->goThroughPortalMsg(this);
   if (isPortalFlag(EXIT_TRAPPED)) {

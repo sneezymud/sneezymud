@@ -10,6 +10,8 @@
 #include "database.h"
 #include "person.h"
 
+#include <unordered_map>
+
 int NumClasses(int Class)
 {
   int tot = 0;
@@ -114,7 +116,7 @@ bool TBeing::isTripleClass() const
   return NumClasses(getClass()) >= 3;
 }
 
-int TBeing::getClassNum(const char *arg, exactTypeT exact)
+int TBeing::getClassNum(const char *arg, exactTypeT exact) const
 {
   int which = 0;
 
@@ -142,13 +144,13 @@ int TBeing::getClassNum(const char *arg, exactTypeT exact)
   return which;
 }
 
-int TBeing::getClassNum(classIndT arg)
+int TBeing::getClassNum(classIndT arg) const
 {
   return classInfo[arg].class_num;
 }
 
 
-classIndT TBeing::getClassIndNum(const char *arg, exactTypeT exact)
+classIndT TBeing::getClassIndNum(const char *arg, exactTypeT exact) const
 {
   int which = getClassNum(arg, exact);
   classIndT res = MIN_CLASS_IND;
@@ -168,7 +170,7 @@ classIndT TBeing::getClassIndNum(const char *arg, exactTypeT exact)
 }
 
 
-classIndT TBeing::getClassIndNum(unsigned short which, exactTypeT exact)
+classIndT TBeing::getClassIndNum(unsigned short which, exactTypeT exact) const
 {
   classIndT res = MIN_CLASS_IND;
 
@@ -345,43 +347,68 @@ sstring const TBeing::getProfName() const
   return buf;
 }
 
-const char * const TBeing::getProfAbbrevName() const
+std::string TBeing::getProfAbbrevName() const
 {
-  if (hasClass(CLASS_MAGE | CLASS_WARRIOR | CLASS_CLERIC | CLASS_MONK | CLASS_THIEF, EXACT_YES))
-    return "Thief";
+  // CLASS_MAGE
+  // CLASS_CLERIC
+  // CLASS_WARRIOR
+  // CLASS_THIEF
+  // CLASS_SHAMAN
+  // CLASS_DEIKHAN
+  // CLASS_MONK
+  // CLASS_RANGER
+  // CLASS_COMMONER
 
-  if (hasClass(CLASS_MAGE | CLASS_WARRIOR | CLASS_THIEF, EXACT_YES))
-    return "M/W/T";
-  else if (hasClass(CLASS_MAGE | CLASS_WARRIOR, EXACT_YES))
-    return "M/W";
-  else if (hasClass(CLASS_MAGE | CLASS_THIEF, EXACT_YES))
-    return "M/T";
-  else if (hasClass(CLASS_MAGE, EXACT_YES))
-    return "Mage";
-  else if (hasClass(CLASS_CLERIC | CLASS_WARRIOR | CLASS_THIEF, EXACT_YES))
-    return "C/W/T";
-  else if (hasClass(CLASS_CLERIC | CLASS_WARRIOR, EXACT_YES))
-    return "C/W";
-  else if (hasClass(CLASS_CLERIC | CLASS_THIEF, EXACT_YES))
-    return "C/T";
-  else if (hasClass(CLASS_CLERIC, EXACT_YES))
-    return "Cler";
-  else if (hasClass(CLASS_WARRIOR | CLASS_THIEF, EXACT_YES))
-    return "W/T";
-  else if (hasClass(CLASS_WARRIOR, EXACT_YES))
-    return "Warr";
-  else if (hasClass(CLASS_THIEF, EXACT_YES))
-    return "Thief";
-  else if (hasClass(CLASS_DEIKHAN, EXACT_YES))
-    return "Deik";
-  else if (hasClass(CLASS_MONK, EXACT_YES))
-    return "Monk";
-  else if (hasClass(CLASS_SHAMAN, EXACT_YES))
-    return "Sham";
-  else if (hasClass(CLASS_RANGER, EXACT_YES))
-    return "Rang";
-  else
-    return "";
+  std::unordered_map<classIndT, char> abbr = {
+    {MAGE_LEVEL_IND, 'M'},
+    {CLERIC_LEVEL_IND, 'C'},
+    {WARRIOR_LEVEL_IND, 'W'},
+    {THIEF_LEVEL_IND, 'T'},
+    {SHAMAN_LEVEL_IND, 'S'},
+    {DEIKHAN_LEVEL_IND, 'D'},
+    {MONK_LEVEL_IND, 'K'},
+    {RANGER_LEVEL_IND, 'R'},
+    {COMMONER_LEVEL_IND, '?'},
+    {UNUSED1_LEVEL_IND, '?'},
+    {UNUSED2_LEVEL_IND, '?'}};
+
+  int numCl = howManyClasses();
+  if (numCl > 3)
+    return "Multi";
+
+  if (numCl == 1) {
+    if (hasClass(CLASS_MAGE, EXACT_YES))
+      return "Mage";
+    else if (hasClass(CLASS_CLERIC, EXACT_YES))
+      return "Cler";
+    else if (hasClass(CLASS_WARRIOR, EXACT_YES))
+      return "Warr";
+    else if (hasClass(CLASS_THIEF, EXACT_YES))
+      return "Thief";
+    else if (hasClass(CLASS_DEIKHAN, EXACT_YES))
+      return "Deik";
+    else if (hasClass(CLASS_MONK, EXACT_YES))
+      return "Monk";
+    else if (hasClass(CLASS_SHAMAN, EXACT_YES))
+      return "Sham";
+    else if (hasClass(CLASS_RANGER, EXACT_YES))
+      return "Rang";
+    return "???";
+  } else {
+    bool first = true;
+    std::string res;
+
+    for (auto cl = MAGE_LEVEL_IND; cl <= RANGER_LEVEL_IND; cl++) {
+      if (hasClass(getClassNum(cl), EXACT_NO)) {
+        if (first)
+          first = false;
+        else
+          res += "/";
+        res += abbr[cl];
+      }
+    }
+    return res;
+  }
 }
 
 void TBeing::setClass(unsigned short num)

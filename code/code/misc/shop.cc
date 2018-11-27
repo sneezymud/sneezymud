@@ -3,9 +3,11 @@
 #include <cmath>
 #include <unistd.h>
 #include <algorithm>
+#include <set>
 
 #include "handler.h"
 #include "room.h"
+#include "runonreturn.h"
 #include "monster.h"
 #include "extern.h"
 #include "configuration.h"
@@ -1195,6 +1197,7 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
       ch->doQueueSave();
       return FALSE;
     } else if (is_abbrev(argm, "all.components")) {
+      std::set<int> soldComps; //hold vnums of sold comps
       for (i = MIN_WEAR; i < MAX_WEAR; i++) {
         if (!(t = ch->equipment[i]))
           continue;
@@ -1209,7 +1212,11 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
           if (num > 1) {
             rc = temp2->componentNumSell(ch, tKeeper, shop_nr, NULL, num);
           } else {
-            rc = temp2->componentSell(ch, tKeeper, shop_nr, NULL);
+            if (soldComps.find(temp2->objVnum()) == soldComps.end()){
+              //haven't sold this type of comp yet
+              soldComps.insert(temp2->objVnum());
+              rc = temp2->componentNumSell(ch, tKeeper, shop_nr, NULL, temp2->getComponentCharges());
+            } 
           }
         }
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -1232,7 +1239,11 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
           if (num > 1) {
             rc = temp2->componentNumSell(ch, tKeeper, shop_nr, NULL, num);
           } else {
-            rc = temp2->componentSell(ch, tKeeper, shop_nr, NULL);
+            if (soldComps.find(temp2->objVnum()) == soldComps.end()){
+              //haven't sold this type of comp yet
+              soldComps.insert(temp2->objVnum());
+              rc = temp2->componentNumSell(ch, tKeeper, shop_nr, NULL, temp2->getComponentCharges());
+            } 
           }
         }
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -2182,6 +2193,9 @@ int shopping_produce(TMonster *keeper)
   unsigned int shop_nr = find_shop_nr(keeper->number);
   TMonster *sbaKeeper = NULL;
   std::vector<int>::iterator iter;
+  TDatabase db(DB_SNEEZY);
+  db.query("begin");
+  RunOnReturn r([&](){db.query("commit");});
 
   if (!keeper)
     return FALSE;
@@ -2208,7 +2222,6 @@ int shopping_produce(TMonster *keeper)
       return FALSE;
     }
 
-    TDatabase db(DB_SNEEZY);
     db.query("select count(*) as count from rent where owner_type='shop' and owner=%i and vnum=%i", shop_nr, o->objVnum());
     db.fetchRow();
     int count=convertTo<int>(db["count"]);

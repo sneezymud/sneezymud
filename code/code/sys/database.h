@@ -106,10 +106,25 @@ class TDatabase
   static unsigned long escape_string_ugly(char *to, const char *from, unsigned long length);
 
   TDatabase(dbTypeT, bool log=false);
-  ~TDatabase();
+  virtual ~TDatabase();
 
  private:
   TDatabasePimpl* pimpl;
+};
+
+class TTransaction : public TDatabase
+{
+  public:
+    TTransaction(dbTypeT db, bool log=false)
+      : TDatabase(db, log)
+    {
+      query("begin");
+    }
+
+    virtual ~TTransaction()
+    {
+      query("commit");
+    }
 };
 
 #endif

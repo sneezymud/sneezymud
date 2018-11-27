@@ -177,9 +177,14 @@ void TScheduler::runChar(int pulseNum)
   for (; tmp_ch; tmp_ch = temp) {
     temp = tmp_ch->next;  // just for safety
 
-    if (tmp_ch->roomp == NULL || tmp_ch->getName().empty())
+    if (tmp_ch->roomp == NULL || tmp_ch->getName().empty() || (tmp_ch->desc && tmp_ch->desc->character != tmp_ch))
     {
-      vlogf(LOG_BUG, "Error: character_list contains a bogus item, removing.");
+      vlogf(LOG_BUG, format("Error: character_list contains a bogus item (%s), removing.") % (
+          tmp_ch->roomp == nullptr ? "no roomptr" :
+          tmp_ch->getName().empty() ? "no name" :
+          tmp_ch->desc && tmp_ch->desc->character != tmp_ch ? "bad char ptr in desc" :
+          "bug"
+          ));
       tmp_ch = temp;
       temp = temp->next;
     }
