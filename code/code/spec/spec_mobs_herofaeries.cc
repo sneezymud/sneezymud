@@ -311,7 +311,7 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
     if (d->connected != CON_PLYNG)
       continue;
     
-    TBeing *targ = d->character;
+    TPerson *targ = dynamic_cast<TPerson*>(d->character);
     
     if (!targ || targ->GetMaxLevel() > MAX_MORT)
       continue;
