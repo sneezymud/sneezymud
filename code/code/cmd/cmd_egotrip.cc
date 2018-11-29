@@ -64,7 +64,7 @@ std::map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
     ego_imm_blessing("Aion",
         AFFECT_AION_BLESSING,
         APPLY_DEX,
-        "<B>the hurricane<1>"),
+        "<B>the hurricane<1>",
         APPLY_CRIT_FREQUENCY,
         3,
         0);
