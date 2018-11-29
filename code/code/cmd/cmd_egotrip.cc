@@ -68,11 +68,13 @@ std::map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
         APPLY_CRIT_FREQUENCY,
         3,
         0);
-  blessings[AFFECT_PEEL_BLESSING]=
-    ego_imm_blessing("Peel",
-        AFFECT_PEEL_BLESSING,
-        APPLY_SPE, 
-        "<r>speed<1>");
+//  blessings[AFFECT_PEEL_BLESSING]=
+//  ego_imm_blessing("Peel",
+//      AFFECT_PEEL_BLESSING,
+//      APPLY_SPE, 
+//      "<r>speed<1>");
+// PEEL's abilities were replaced by Aion in all files and this blessing is null until someone re-adds him. Oops.
+// https://github.com/sneezymud/sneezymud/commit/5eff77d065e65421ab8d87ae785ce8e750dfee98
   blessings[AFFECT_VASCO_BLESSING]=
     ego_imm_blessing("Vasco",
         AFFECT_VASCO_BLESSING,
