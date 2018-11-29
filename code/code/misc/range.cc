@@ -923,7 +923,7 @@ int clearpath(int room, dirTypeT dir)
 
   rp = real_roomp(room);
 
-  if (!rp || !rp->dir_option[dir])
+  if (dir >= MAX_DIR || !rp || !rp->dir_option[dir])
     return FALSE;
 
   if (rp->dir_option[dir]->to_room < 1)

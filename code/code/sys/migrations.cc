@@ -11,7 +11,7 @@
 
 namespace {
     int getVersion(TDatabase& sneezy) {
-        assert(sneezy.query("select value from configuration where config = 'version'"));
+        sneezy.query("select value from configuration where config = 'version'");
         if (sneezy.fetchRow())
             return stoi(sneezy["value"]);
         return 0;
@@ -125,6 +125,23 @@ void runMigrations() {
                     "on s.player_id = p.id "
                     "join account a on p.account_id = a.account_id "));
             assert(sneezy.query("drop table savedrooms"));
+        },
+        [&](){
+            vlogf(LOG_MISC, "Adding generic per-account and per-player storage");
+            assert(sneezy.query(
+                    "create table if not exists accountnotes ("
+                    "id int primary key auto_increment not null, "
+                    "account_id bigint(20) unsigned not null, "
+                    "name varchar(64) not null, "
+                    "value text not null, "
+                    "foreign key (account_id) references account (account_id) on delete cascade)"));
+            assert(sneezy.query(
+                    "create table if not exists playernotes ("
+                    "id int primary key auto_increment not null, "
+                    "player_id bigint(20) unsigned not null, "
+                    "name varchar(64) not null, "
+                    "value text not null, "
+                    "foreign key (player_id) references player (id) on delete cascade)"));
         },
     };
 

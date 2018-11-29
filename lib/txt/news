@@ -1,3 +1,27 @@
+11-29-18 : Class Quest rewards have been updated.
+           Monk sashes, deikhan swords/shield, and Shaman masks are now much
+           more worthwhile.
+
+11-27-18 : The duration of the Blindness skill has been slightly increased,
+           scaling with level.
+	   
+11-27-18 : Demons now have 66% non-magic immunity, down from 100. Angels have
+           been buffed to match their demonic counterparts. Angels will no longer
+           trigger guard code.
+
+11-26-18 : Shout has been reduced in cost. 15mv down from 30.
+
+11-25-18 : Many existing objects have been updated and more will also improve.
+           The following have been affected: Dracolich Lair, The Light Demon,
+           Black Sun proc, shield of spores.
+	   
+11-24-18 : Charge Stave in the Mage Alchemy disc has had a syntax update.
+           Now recharge <object> instead of charge, to remove the conflict with
+           Deikhans charge ability.
+
+11-22-18 : Portal skill has been buffed. Now has 20 charges, up from 10. Its 
+           duration is now 10 minutes, up from 5. 
+   
 02-05-18 : Those who lose the use of both of their fighting limbs in combat
            will be rendered insensate by debilitating pain for a period.
 

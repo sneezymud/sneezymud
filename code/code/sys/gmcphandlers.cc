@@ -2,6 +2,7 @@
 #include "being.h"
 #include "connect.h"
 #include "room.h"
+#include "person.h"
 
 #include "json.hpp"
 
@@ -15,19 +16,58 @@ namespace {
   unsigned char sb = 250;              /* interpret as subnegotiation */
   // unsigned char se = 240;              /* end sub negotiation */
 
-  void handleCoreHello(sstring const& s, Descriptor* d) {
+  void handleCoreHello(sstring const& s, Descriptor& d) {
     auto hello = s.substr(sizeof("Core.Hello"));
     auto js = nlohmann::json::parse(hello);
     try {
-      d->mudclient = js.at("client");
-      d->clientversion = js.at("version");
+      d.mudclient = js.at("client");
+      d.clientversion = js.at("version");
     } catch (const std::range_error&) {
       vlogf(LOG_MISC, format("Client sent bad Core.Hello: %s") % hello);
     }
   }
 
+
+  void handleRemember(sstring const& s, Descriptor& d)
+  {
+    sstring arg = s.dropWord();
+
+    auto player = dynamic_cast<TPerson*>(d.character);
+    if (player)
+      player->doRemember(false, arg);
+  }
+
+  void handleRememberPlayer(sstring const& s, Descriptor& d)
+  {
+    sstring arg = s.dropWord();
+
+    auto player = dynamic_cast<TPerson*>(d.character);
+    if (player)
+      player->doRememberPlayer(false, arg);
+  }
+
+  void handleRetrieve(sstring const& s, Descriptor& d)
+  {
+    sstring key = s.word(1);
+
+    auto player = dynamic_cast<TPerson*>(d.character);
+    if (player)
+      player->doRetrieve(false, key);
+  }
+
+  std::map<std::string, std::function<void(std::string, Descriptor&)>> commandHandlers = {
+    {"Core.Supports.Set", [](std::string, Descriptor&){}}, // squelch
+    {"Core.Hello", handleCoreHello},
+    {"remember", handleRemember},
+    {"rememberplayer", handleRememberPlayer},
+    {"retrieve", handleRetrieve},
+  };
+
   void handleGmcpCommand(sstring const& s, Descriptor* d)
   {
+    assert(d);
+    decltype(commandHandlers)::iterator it;
+
     if (s == "request sectors") {
       sstring str;
       for (int i = 0; i < MAX_SECTOR_TYPES; i++) {
@@ -48,11 +88,8 @@ namespace {
         % roomp->getZone()->name;
       d->sendGmcp(area, true);
     }
-    else if (s.find("Core.Supports.Set ") == 0) {
-      // squelch
-    }
-    else if (s.find("Core.Hello ") == 0) {
-      handleCoreHello(s, d);
+    else if ((it = commandHandlers.find(s.word(0))) != commandHandlers.end()) {
+      it->second(s, *d);
     }
     else
       vlogf(LOG_MISC, format("Telnet: Unknown GMCP command '%s' ") % s);
