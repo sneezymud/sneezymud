@@ -148,48 +148,46 @@ void runMigrations() {
             assert(sneezy.query(
                     "create table if not exists wizdata ("
                     "setsev int not null,"
-                    "office int not null,"
-                    "blockastart int not null,"
-                    "blockaend int not null,"
-                    "blockbstart int not null,"
-                    "blockbend int not null,"
+                    "office int default 0,"
+                    "blockastart int,"
+                    "blockaend int,"
+                    "blockbstart int,"
+                    "blockbend int,"
                     "player_id bigint(20) unsigned not null, "
                     "primary key (player_id), "
                     "foreign key (player_id) references player (id) on delete cascade)"));
-            assert(sneezy.query("select id, name from player"));
-            std::map<int, std::string> idToName;
-            while (sneezy.fetchRow())
-                idToName[convertTo<int>(sneezy["id"])] = sneezy["name"];
+           
+
             class wizSaveData {
-            public:
-                int setsev,
-                    office,
-                    blockastart,
-                    blockaend,
-                    blockbstart,
-                    blockbend;
+                public:
+                    int setsev,
+                        office,
+                        blockastart,
+                        blockaend,
+                        blockbstart,
+                        blockbend;
             };
-            for (auto& player : idToName) {
-                const auto id = player.first;
-                const auto& name = player.second;
+
+            assert(sneezy.query("select id, name from player"));
+            while (sneezy.fetchRow()){
                 FILE *fp;
                 sstring buf, buf2;
                 wizSaveData saveData;
                 
-                buf = format("immortals/%s/wizdata") % name;
+                buf = format("immortals/%s/wizdata") % sneezy["name"];
                 fp = fopen(buf.c_str(), "r");
                 if (!fp) {
                     continue;
                 }
                 if (fread(&saveData, sizeof(saveData), 1, fp) != 1) {
-                    vlogf(LOG_BUG, format("Corrupt wiz save file for %s") % name);
+                    vlogf(LOG_BUG, format("Corrupt wiz save file for %s") % sneezy["name"]);
                     fclose(fp);
                     continue;
                 } 
                 fclose(fp);
                 assert(sneezy.query("insert into wizdata (setsev, office, blockastart, blockaend, blockbstart, blockbend, player_id) "
                                     "values (%i, %i, %i,%i, %i, %i, %i)", saveData.setsev, saveData.office, saveData.blockastart, 
-                                    saveData.blockaend, saveData.blockbstart, saveData.blockbend, id));
+                                    saveData.blockaend, saveData.blockbstart, saveData.blockbend, convertTo<int>(sneezy["id"])));
             }     
         },
     };
