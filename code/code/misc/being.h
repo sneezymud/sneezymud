@@ -413,7 +413,7 @@ class TBeing : public TThing {
 
     // VIRTUAL FUNCTIONS
     virtual int editAverageMe(TBeing *, const char *);
-    virtual sstring const& getLongDesc() const;
+    virtual sstring getLongDesc() const;
     virtual int chiMe(TBeing *);
     virtual sstring const& getName() const { return shortDescr; }
     virtual int getAccountID() const;

@@ -1504,13 +1504,12 @@ void TBeing::peeOnMe(const TBeing *ch)
   act("You relieve yourself on $N's foot.", TRUE, ch, 0, this, TO_CHAR);
 }
 
-sstring const& TBeing::getLongDesc() const
+sstring TBeing::getLongDesc() const
 {
   if (!player.longDescr.empty())
     return player.longDescr;
 
-  static sstring uglyhack = msgVariables.tMessages.msgLongDescr;
-  return uglyhack;
+  return msgVariables(MSG_LONGDESCR);
 }
 
 int TBeing::chiMe(TBeing *tLunatic)
