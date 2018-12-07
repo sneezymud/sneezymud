@@ -19,8 +19,8 @@ namespace {
 }
 
 void runMigrations() {
-    TDatabase sneezy(DB_SNEEZY);
-    TDatabase immortal(DB_IMMORTAL);
+    TDatabase sneezy(DB_SNEEZY, true);
+    TDatabase immortal(DB_IMMORTAL, true);
 
     std::vector<std::function<void()>> migrations = {
         [&](){
