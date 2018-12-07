@@ -1504,9 +1504,6 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
         case CMD_FORCE:
           doForce(newarg.c_str());
           break;
-        case CMD_DISTRIBUTE:
-          doDistribute(newarg.c_str());
-          break;
         case CMD_COLOR:
           doColor(newarg.c_str());
           addToLifeforce(1);
@@ -1882,6 +1879,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
         case CMD_REMEMBER:
         case CMD_REMEMBERPLAYER:
         case CMD_RETRIEVE:
+        case CMD_DISTRIBUTE:
           sendTo(format("doCommand:incorrectCommand: [%d]\n\r") % cmd);
           incorrectCommand();
           return FALSE;

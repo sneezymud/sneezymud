@@ -2250,56 +2250,43 @@ void TPerson::doForce(const char *argument)
   }
 }
 
-void TBeing::doDistribute(const char* argument)
+void TPerson::doDistribute(sstring const& argument)
 {
-  sendTo("Mobs can't distribute.\n\r");
-}
-
-void TPerson::doDistribute(const char* argument)
-{
-  char vnum_s[MAX_INPUT_LENGTH], chance_s[MAX_INPUT_LENGTH];
-
   if (powerCheck(POWER_DISTRIBUTE))
     return;
 
-  half_chop(argument, vnum_s, chance_s);
+  int vnum = convertTo<int>(argument.word(0));
+  int chance = convertTo<int>(argument.word(1));
 
-  if (!*vnum_s || !*chance_s)
-    sendTo("Syntax: distribute <vnum> <chance>.\n\r");
-  else {
-      int vnum;
-      int chance;
-      if (sscanf(vnum_s, "%d", &vnum) != 1 || sscanf(chance_s, "%d", &chance) != 1) {
-	  sendTo("Syntax: distribute <vnum> <chance>.\n\r");
-	  return;
+  if (vnum == 0 || chance == 0) {
+    sendTo("Syntax: distribute <vnum> <chance>\n\r");
+  } else {
+    if (vnum < 0 || vnum >= (signed int) obj_index.size()) {
+      sendTo(format("There is no such object %d.\n\r") % vnum);
+      return;
+    }
+
+    sendTo(format("Distributing %d with chance %d.\n\r") % vnum % chance);
+    vlogf(LOG_MISC, format("%s distributing vnum %d to mobs, with chance %d") % getName() % vnum % chance);
+
+    int count = 0;
+    TObj* obj;
+    for (TBeing* person = character_list; person; person = person->next) {
+      if (person->isPc())
+        continue;
+
+      if (rand() % 100 < chance) {
+        if (!(obj = read_object(vnum, VIRTUAL))) {
+          vlogf(LOG_BUG, "Error finding object.");
+          return;
+        }
+        *person += *obj;
+        count++;
       }
+    }
 
-      if (vnum < 0 || vnum >= (signed int) obj_index.size()) {
-	sendTo("There is no such object.\n\r");
-	return;
-      }
-
-      sendTo(format("Distributing %d with chance %d.\n\r") % vnum % chance);
-      vlogf(LOG_MISC, format("%s distributing vnum %d to mobs, with chance %d") % getName() % vnum % chance);
-
-      int count = 0;
-      TObj* obj;
-      for (TBeing* person = character_list; person; person = person->next) {
-	if (person->isPc())
-	  continue;
-
-	if (rand() % 100 < chance) {
-	  if (!(obj = read_object(vnum, VIRTUAL))) {
-	    vlogf(LOG_BUG, "Error finding object.");
-	    return;
-	  }
-	  *person += *obj;
-	  count++;
-	}
-      }
-
-      vlogf(LOG_MISC, format("%s distributed %d copies of item vnum %d to mobs, with chance %d") % getName() % count % vnum % chance);
-      sendTo(format("%s distributed %d copies of item vnum %d to mobs, with chance %d") % getName() % count % vnum % chance);
+    vlogf(LOG_MISC, format("%s distributed %d copies of item vnum %d to mobs, with chance %d") % getName() % count % vnum % chance);
+    sendTo(format("%s distributed %d copies of item vnum %d to mobs, with chance %d") % getName() % count % vnum % chance);
   }
 }
 

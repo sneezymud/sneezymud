@@ -126,6 +126,9 @@ std::pair<bool, int> TPerson::doPersonCommand(cmdTypeT cmd, const sstring & argu
     case CMD_RETRIEVE:
       doRetrieve(true, argument);
       break;
+    case CMD_DISTRIBUTE:
+      doDistribute(argument);
+      break;
     default:
       return std::make_pair(false, 0);
   }
