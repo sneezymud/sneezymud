@@ -33,12 +33,12 @@ void TBeing::wizFileRead()
 
   db.fetchRow();
 
-  d->severity     = convertTo<int>(db["setsev"]);
-  d->office       = convertTo<int>(db["office"]);
-  d->blockastart  = convertTo<int>(db["blockastart"]);
-  d->blockaend    = convertTo<int>(db["blockaend"]);
-  d->blockbstart  = convertTo<int>(db["blockbstart"]);
-  d->blockbend    = convertTo<int>(db["blockbend"]);
+  d->severity     = (int) convertTo<int>(db["setsev"]);
+  d->office       = (int) convertTo<int>(db["office"]);
+  d->blockastart  = (int) convertTo<int>(db["blockastart"]);
+  d->blockaend    = (int) convertTo<int>(db["blockaend"]);
+  d->blockbstart  = (int) convertTo<int>(db["blockbstart"]);
+  d->blockbend    = (int) convertTo<int>(db["blockbend"]);
 
   if (should_be_logged(this))
     vlogf(LOG_IIO, format("Loaded %s's wizard file.") %  getName());
@@ -76,6 +76,7 @@ void TPerson::wizFileSave()
   db.query("replace into wizdata (setsev, office, blockastart, blockaend, blockbstart, blockbend, player_id) "
             "values (%i, %i, %i,%i, %i, %i, %i)", d->severity, d->office, d->blockastart, 
             d->blockaend, d->blockbstart, d->blockbend, getPlayerID());
+
 }
 
 
@@ -93,15 +94,9 @@ void TBeing::doOffice(sstring arg)
 
   TDatabase db(DB_SNEEZY);
 
-  db.query("select id from player where name = '%s'", arg.c_str());
-  if (db.fetchRow()) {
-    db.query("select office from wizdata where player_id = '%i'", convertTo<int>(db["id"]));
-    if (db.fetchRow())
-      sendTo(format("The office of %s is %d.\n\r") % arg % convertTo<int>(db["office"]));
-    else 
-      sendTo(format("%s has no office.\n\r") % arg);
-  }
-  else 
-    sendTo(format("Unable to find player named %s.\n\r") % arg);
+  db.query("select office from wizdata where player_id = (select id from player where name = '%s')", arg.c_str());
+  db.fetchRow();
+  buf = format("The office of %s is %d.\n\r") % arg % (int)convertTo<int>(db["office"]);
+  sendTo(buf);
 }
 
