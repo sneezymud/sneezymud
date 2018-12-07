@@ -2261,10 +2261,12 @@ void TPerson::doDistribute(sstring const& argument)
   if (vnum == 0 || chance == 0) {
     sendTo("Syntax: distribute <vnum> <chance>\n\r");
   } else {
-    if (vnum < 0 || vnum >= (signed int) obj_index.size()) {
+    TObj* obj;
+    if (vnum < 0 || (obj = read_object(vnum, VIRTUAL)) == nullptr) {
       sendTo(format("There is no such object %d.\n\r") % vnum);
       return;
     }
+    delete obj;
 
     sendTo(format("Distributing %d with chance %d.\n\r") % vnum % chance);
     vlogf(LOG_MISC, format("%s distributing vnum %d to mobs, with chance %d") % getName() % vnum % chance);
