@@ -141,7 +141,64 @@ void runMigrations() {
                     "player_id bigint(20) unsigned not null, "
                     "name varchar(64) not null, "
                     "value text not null, "
+                    "foreign key (player_id) references player (id) on delete cascade)"));      
+        },
+        [&](){
+            vlogf(LOG_MISC, "Moving wiz data over to db");
+            assert(sneezy.query(
+                    "create table if not exists wizdata ("
+                    "setsev int not null,"
+                    "office int default 0,"
+                    "blockastart int,"
+                    "blockaend int,"
+                    "blockbstart int,"
+                    "blockbend int,"
+                    "player_id bigint(20) unsigned not null, "
+                    "primary key (player_id), "
                     "foreign key (player_id) references player (id) on delete cascade)"));
+           
+
+            class wizSaveData {
+                public:
+                    int setsev,
+                        office,
+                        blockastart,
+                        blockaend,
+                        blockbstart,
+                        blockbend;
+            };  
+
+            assert(sneezy.query("select id, name from player"));
+            while (sneezy.fetchRow()){
+                //The db contains lowercased names and /immortals uses CamelCase.  First we have to use the 
+                //lower case name from the db to open the charfile to extract the CamelCase name to get to 
+                //the immortals wizdata file
+                charFile file;
+                if (!load_char(sneezy["name"], &file)) {
+                    vlogf(LOG_MISC, format("WizData migration: Cannot open player file for %s") % sneezy["name"]);
+                    continue;
+                }
+
+                FILE *fp;
+                sstring buf;
+                wizSaveData saveData;
+                
+                buf = format("immortals/%s/wizdata") % file.name;
+                fp = fopen(buf.c_str(), "r");
+                if (!fp) {
+                    continue;
+                }
+                if (fread(&saveData, sizeof(saveData), 1, fp) != 1) {
+                    vlogf(LOG_BUG, format("Corrupt wiz save file for %s") % sneezy["name"]);
+                    fclose(fp);
+                    continue;
+                } 
+
+                fclose(fp);
+                assert(sneezy.query("insert into wizdata (setsev, office, blockastart, blockaend, blockbstart, blockbend, player_id) "
+                                    "values (%i, %i, %i,%i, %i, %i, %i)", saveData.setsev, saveData.office, saveData.blockastart, 
+                                    saveData.blockaend, saveData.blockbstart, saveData.blockbend, convertTo<int>(sneezy["id"])));
+            }    
         },
     };
 
