@@ -443,7 +443,6 @@ G 1 3961 9999             	candy cane
 G 1 3958 9999             	cheery holiday flask (potion of mystery)
 
 * Boss 1, with gifts and unique holiday items
-? 0 20 0 M
 M 0 29607 1 13700	Krampus
 G 1 29625 9999		stolen gift green
 G 1 29624 9999		stolen gift blue
@@ -454,7 +453,6 @@ G 1 29627 9999             	insignia krampus
 
 * Boss 2, with gifts and unique holiday items
 M 0 29608 1 13700	The White Witch
-? 0 20 0 M
 G 1 29625 9999		stolen gift green
 G 1 29624 9999		stolen gift blue
 G 1 29623 9999		stolen gift red
@@ -463,7 +461,6 @@ G 1 3958 9999             	cheery holiday flask (potion of mystery)
 G 1 29628 9999             	insignia white witch
 
 * Boss 3, with gifts and unique holiday items
-? 0 20 0 M
 M 0 29609 1 13700	The Abominable Snowman
 G 1 29625 9999		stolen gift green
 G 1 29624 9999		stolen gift blue
