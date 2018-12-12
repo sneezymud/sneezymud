@@ -87,7 +87,7 @@ void shutdownRequest(int)
   sprintf(buf, "<r>******* SYSTEM MESSAGE ******<z>\n\r<c>%s in %ld minute%s.<z>\n\r",
      shutdown_or_reboot().c_str(),
      ((timeTill - time(0)) / 60), (((timeTill - time(0)) / 60) == 1) ? "" : "s");
-  descriptor_list->worldSend(buf, NULL);
+  Descriptor::worldSend(buf, NULL);
 }
 
 void hupsig(int)

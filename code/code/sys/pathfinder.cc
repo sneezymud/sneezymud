@@ -666,3 +666,68 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
   return DIR_NONE;
 }
 
+boost::optional<TPathFinder const> pathfind(TBeing& ch, TPathTarget const& to, std::string const& hereMsg)
+{
+  TPathFinder path;
+  path.setNoMob(false);
+  auto dir = path.findPath(ch.inRoom(), to);
+  if (path.getDest() == ch.inRoom()) {
+    ch.sendTo(hereMsg);
+    return {};
+  }
+  if (dir < DIR_NORTH || dir > DIR_SOUTHWEST) {
+    ch.sendTo("Strangely, you can't quite figure out how to get there from here.\n\r");
+    return {};
+  }
+  return path;
+}
+
+void printPath(TBeing& ch, TPathFinder const& path) {
+  for(unsigned int i=1;i<path.path.size()-1;++i){
+    if(path.path[i]->direct >= 10)
+      ch.sendTo(COLOR_MOBS, "enter portal, ");
+    else
+      ch.sendTo(COLOR_MOBS, format("%s, ") % dirs[path.path[i]->direct]);
+  }
+  if(path.path[path.path.size()-1]->direct >= 10)
+    ch.sendTo(COLOR_MOBS, "enter portal.\n\r");
+  else
+    ch.sendTo(COLOR_MOBS, format("%s.\n\r") % dirs[path.path[path.path.size()-1]->direct]);
+}
+
+std::string runify(TPathFinder const& path) {
+  std::string out;
+  int count = 1;
+  bool first = true;
+  auto toStr = [](dirTypeT d) -> const char* {
+    if (d >= 10)
+      return "?";
+    return dirsS[d];
+  };
+
+  for (size_t i = 2; i < path.path.size(); ++i) {
+    if (path.path[i-1]->direct == path.path[i]->direct) {
+      ++count;
+    } else {
+      if (first)
+        first = false;
+      else
+        out += " ";
+
+      if (count != 1)
+        out += std::to_string(count);
+      out += toStr(path.path[i-1]->direct);
+      count = 1;
+    }
+  }
+  if (!first)
+    out += " ";
+  if (count != 1)
+    out += std::to_string(count);
+  out += toStr(path.path[path.path.size() - 1]->direct);
+
+  if (path.path.size() == 2)
+    return out;
+  else
+    return std::string("run ") + out;
+}

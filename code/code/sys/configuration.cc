@@ -93,7 +93,7 @@ bool Config::doConfiguration(int argc, char *argv[])
      po::value<bool>(&CHECK_MULTIPLAY)->default_value(true),
      "see configuration.h")
     ("force_multiplay_compliance",
-     po::value<bool>(&FORCE_MULTIPLAY_COMPLIANCE)->default_value(false),
+     po::value<bool>(&FORCE_MULTIPLAY_COMPLIANCE)->default_value(true),
      "see configuration.h")
     ("repo_mobs",
      po::value<bool>(&REPO_MOBS)->default_value(false),

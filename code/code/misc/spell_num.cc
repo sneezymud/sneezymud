@@ -1058,7 +1058,7 @@ int mapSpellnumToFile(spellNumT stt)
       return 2528;
     case AFFECT_IMMORTAL_BLESSING:
       return 2529;
-    case AFFECT_PEEL_BLESSING:
+    case AFFECT_AION_BLESSING:
       return 2530;
     case AFFECT_ANGUS_BLESSING:
       return 2531;
@@ -2134,7 +2134,7 @@ spellNumT mapFileToSpellnum(int stt)
     case 2529:
       return AFFECT_IMMORTAL_BLESSING;
     case 2530:
-      return AFFECT_PEEL_BLESSING;
+      return AFFECT_AION_BLESSING;
     case 2531:
       return AFFECT_ANGUS_BLESSING;
     case 2532:

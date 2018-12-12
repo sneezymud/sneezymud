@@ -52,7 +52,7 @@ lowtools = [
     'sqledshop',
     'sqledwld',
 ]
-lowtools_progs = [ env.Program(['low/%s.cc' % tool, lto], LIBS=libs)
+lowtools_progs = [ env.Program(tool, ['low/%s.cc' % tool, lto], LIBS=libs)
         for tool in lowtools ]
 env.Install('../lowtools', lowtools)
 env.Alias('lowtools', '../lowtools')

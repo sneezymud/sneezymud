@@ -32,6 +32,8 @@ public:
   const sstring cap() const;
   const sstring uncap() const;
   const sstring word(int) const;
+  sstring dropWord() const;
+  sstring dropWords(size_t num) const;
   const sstring comify() const;
   const sstring replaceString(sstring, sstring) const;
   const sstring trim() const;

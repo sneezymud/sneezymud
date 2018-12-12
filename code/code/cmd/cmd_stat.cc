@@ -2079,8 +2079,8 @@ void TBeing::statBeing(TBeing *k)
           apply_types[aff->location].name % aff->modifier;
 	str += format("     Expires in %6d updates.\n\r") % aff->duration;
 	break;
-      case AFFECT_PEEL_BLESSING:
-	str += "Peel's Blessing.\n\r";
+      case AFFECT_AION_BLESSING:
+	str += "Aion's Blessing.\n\r";
         str += format("     Modifies %s by %ld points\n\r") %
           apply_types[aff->location].name % aff->modifier;
 	str += format("     Expires in %6d updates.\n\r") % aff->duration;

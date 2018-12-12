@@ -1127,6 +1127,258 @@ void TBeing::doLow(const sstring &)
   sendTo("You are a monster now, forget about this command.");
 }
 
+// namespace {
+
+
+// parses args like "13700-13780 13791 13798"
+bool parse_num_args(TPerson& ch, sstring args, std::vector<int> &vnums)
+{
+  int s, e, n;
+  sstring tmp;
+  size_t npos;
+
+  while (!args.empty()) {
+    tmp=args.word(0);
+    args = args.dropWord();
+    npos=tmp.find("-");
+
+    if(npos != sstring::npos){
+      s=convertTo<int>(tmp.substr(0, npos));
+      e=convertTo<int>(tmp.substr(npos+1, tmp.size()));
+
+      if(s==0 || e==0){
+        ch.sendTo(format("Bad argument %s, aborting.\n") % tmp);
+        return false;
+      }
+
+      if(s>e){
+        int tmp;
+        tmp=s;
+        s=e;
+        e=tmp;
+      }
+
+      while(s<=e){
+        vnums.push_back(s++);
+      }
+    } else {
+      n=convertTo<int>(tmp);
+
+      if(n==0){
+        ch.sendTo(format("Bad argument %s, aborting.\n") % tmp);
+        return false;
+      }
+
+      vnums.push_back(n);
+    }
+  }
+  return true;
+}
+
+void mvRoom(TPerson& ch, const sstring& immortal, int block, const sstring& rooms)
+{
+  std::vector<int> vnums;
+  if (!parse_num_args(ch, rooms, vnums)) {
+    ch.sendTo("Cannot parse vnum list (should look like 13700-13780 13791 13798)");
+    return;
+  }
+
+  TDatabase db_immo(DB_IMMORTAL);
+  TDatabase db_beta(DB_SNEEZY);
+
+  db_beta.query("begin");
+
+  for (auto vnum : vnums) {
+    //// room
+    db_immo.query("select vnum, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height, spec from room where owner='%s' and vnum=%i and block=%i",
+        immortal.c_str(), vnum, block);
+
+    if(db_immo.fetchRow()){
+      ch.sendTo(format("Adding %i ('%s')\n") % vnum % db_immo["name"]);
+
+      db_beta.query("delete from room where vnum=%i", vnum);
+      db_beta.query("insert into room (vnum,x,y,z,name,description,room_flag,sector,teletime,teletarg,telelook,river_speed,river_dir,capacity,height,spec) values (%s,%s,%s,%s, '%s','%s',%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+          db_immo["vnum"].c_str(), db_immo["x"].c_str(),
+          db_immo["y"].c_str(), db_immo["z"].c_str(),
+          db_immo["name"].c_str(), db_immo["description"].c_str(),
+          db_immo["room_flag"].c_str(), db_immo["sector"].c_str(),
+          db_immo["teletime"].c_str(), db_immo["teletarg"].c_str(),
+          db_immo["telelook"].c_str(),db_immo["river_speed"].c_str(),
+          db_immo["river_dir"].c_str(), db_immo["capacity"].c_str(),
+          db_immo["height"].c_str(), db_immo["spec"].c_str());
+
+      //// roomextra
+      db_beta.query("delete from roomextra where vnum=%i", vnum);
+
+      db_immo.query("select vnum, name, description from roomextra where owner='%s' and vnum=%i and block=%i", immortal.c_str(), vnum, block);
+
+      while(db_immo.fetchRow()){
+        db_beta.query("insert into roomextra (vnum, name, description) values (%s, '%s', '%s')", db_immo["vnum"].c_str(), db_immo["name"].c_str(), db_immo["description"].c_str());
+      }
+
+      //// roomexit
+      db_beta.query("delete from roomexit where vnum=%i", vnum);
+
+      db_immo.query("select vnum, direction, name, description, type, condition_flag, lock_difficulty, weight, key_num, destination from roomexit where owner='%s' and vnum=%i and block=%i", immortal.c_str(), vnum, block);
+
+      while(db_immo.fetchRow()){
+        db_beta.query("insert into roomexit (vnum,direction,name,description,type,condition_flag,lock_difficulty,weight,key_num,destination) values (%s, %s,'%s','%s',%s,%s,%s,%s,%s,%s)",
+            db_immo["vnum"].c_str(), db_immo["direction"].c_str(),
+            db_immo["name"].c_str(), db_immo["description"].c_str(),
+            db_immo["type"].c_str(), db_immo["condition_flag"].c_str(),
+            db_immo["lock_difficulty"].c_str(), db_immo["weight"].c_str(),
+            db_immo["key_num"].c_str(), db_immo["destination"].c_str());
+      }
+    } else {
+      ch.sendTo(format("Not found: %i\n") % vnum);
+    }
+  }
+
+  db_beta.query("commit");
+}
+
+void mvObj(TPerson& ch, const sstring& immortal, const sstring& rooms)
+{
+  std::vector<int> vnums;
+  if (!parse_num_args(ch, rooms, vnums)) {
+    ch.sendTo("Cannot parse vnum list (should look like 13700-13780 13791 13798)");
+    return;
+  }
+
+  TDatabase db_immo(DB_IMMORTAL);
+  TDatabase db_beta(DB_SNEEZY);
+
+  int action_flag;
+  db_beta.query("begin");
+
+  for (auto vnum : vnums) {
+    //// obj
+    db_immo.query("select vnum,name,short_desc,long_desc,action_desc,type,action_flag,wear_flag,val0,val1,val2,val3,weight,price,can_be_seen,spec_proc,max_exist,max_struct,cur_struct,decay,volume,material from obj where owner='%s' and vnum=%i", immortal.c_str(), vnum);
+
+    if(db_immo.fetchRow()){
+      ch.sendTo(format("Adding %i ('%s')\n") % vnum % db_immo["short_desc"]);
+
+      // fix strung and prototype bits
+      action_flag=convertTo<int>(db_immo["action_flag"]);
+      if(action_flag & (1<<2)){
+	action_flag=action_flag - (1<<2);
+      }
+
+      if(action_flag & (1<<4)){
+	action_flag=action_flag - (1<<4);
+      }
+
+
+      db_beta.query("delete from obj where vnum=%i", vnum);
+      db_beta.query("insert into obj values(%s, '%s', '%s', '%s', '%s', %s, %i, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+		    db_immo["vnum"].c_str(), db_immo["name"].c_str(),
+		    db_immo["short_desc"].c_str(), db_immo["long_desc"].c_str(),
+		    db_immo["action_desc"].c_str(), db_immo["type"].c_str(),
+		    action_flag, db_immo["wear_flag"].c_str(),
+		    db_immo["val0"].c_str(), db_immo["val1"].c_str(),
+		    db_immo["val2"].c_str(), db_immo["val3"].c_str(),
+		    db_immo["weight"].c_str(), db_immo["price"].c_str(),
+		    db_immo["can_be_seen"].c_str(), db_immo["spec_proc"].c_str(),
+		    db_immo["max_exist"].c_str(), db_immo["max_struct"].c_str(),
+		    db_immo["cur_struct"].c_str(), db_immo["decay"].c_str(),
+		    db_immo["volume"].c_str(), db_immo["material"].c_str());
+
+
+      //// objaffect
+      db_beta.query("delete from objaffect where vnum=%i", vnum);
+
+      db_immo.query("select vnum, type, mod1, mod2 from objaffect where owner='%s' and vnum=%i", immortal.c_str(), vnum);
+
+      while(db_immo.fetchRow()){
+	db_beta.query("insert into objaffect values(%s, %s, %s, %s)", db_immo["vnum"].c_str(), db_immo["type"].c_str(), db_immo["mod1"].c_str(), db_immo["mod2"].c_str());
+      }
+
+      //// obj extra
+      db_beta.query("delete from objextra where vnum=%i", vnum);
+
+      db_immo.query("select vnum, name, description from objextra where owner='%s' and vnum=%i", immortal.c_str(), vnum);
+
+      while(db_immo.fetchRow()){
+	db_beta.query("insert into objextra values(%s, '%s', '%s')", db_immo["vnum"].c_str(), db_immo["name"].c_str(), db_immo["description"].c_str());
+      }
+
+    } else {
+      ch.sendTo(format("Not found: %i\n") % vnum);
+    }
+  }
+
+  db_beta.query("commit");
+}
+
+void mvMob(TPerson& ch, const sstring& immortal, const sstring& rooms)
+{
+  std::vector<int> vnums;
+  if (!parse_num_args(ch, rooms, vnums)) {
+    ch.sendTo("Cannot parse vnum list (should look like 13700-13780 13791 13798)");
+    return;
+  }
+
+  TDatabase db_immo(DB_IMMORTAL);
+  TDatabase db_beta(DB_SNEEZY);
+  int actions;
+
+  db_beta.query("begin");
+
+  // loop through item nums
+  for (auto vnum : vnums) {
+    //// mob
+    db_immo.query("select vnum, name, short_desc, long_desc, description, actions, affects, faction, fact_perc, letter, attacks, class, level, tohit, ac, hpbonus, damage_level, damage_precision, gold, race, weight, height, str, bra, con, dex, agi, intel, wis, foc, per, cha, kar, spe, pos, def_position, sex, spec_proc, skin, vision, can_be_seen, max_exist, local_sound, adjacent_sound from mob where owner='%s' and vnum=%i", immortal.c_str(), vnum);
+
+    if (db_immo.fetchRow()){
+      ch.sendTo(format("Adding %i ('%s')\n") % vnum % db_immo["short_desc"]);
+
+      // clear this bit as set in create_mob.cc
+      actions = convertTo<int>(db_immo["actions"]) & ~ACT_STRINGS_CHANGED;
+
+      db_beta.query("delete from mob where vnum=%i", vnum);
+      db_beta.query("insert into mob values(%s, '%s', '%s', '%s', '%s', %i, %s, %s, %s, '%s', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '%s', '%s')",
+          db_immo["vnum"].c_str(), db_immo["name"].c_str(), db_immo["short_desc"].c_str(),
+          db_immo["long_desc"].c_str(), db_immo["description"].c_str(), actions,
+          db_immo["affects"].c_str(), db_immo["faction"].c_str(), db_immo["fact_perc"].c_str(),
+          db_immo["letter"].c_str(), db_immo["attacks"].c_str(), db_immo["class"].c_str(),
+          db_immo["level"].c_str(), db_immo["tohit"].c_str(), db_immo["ac"].c_str(),
+          db_immo["hpbonus"].c_str(), db_immo["damage_level"].c_str(), db_immo["damage_precision"].c_str(),
+          db_immo["gold"].c_str(), db_immo["race"].c_str(), db_immo["weight"].c_str(),
+          db_immo["height"].c_str(),
+          db_immo["str"].c_str(), db_immo["bra"].c_str(), db_immo["con"].c_str(),
+          db_immo["dex"].c_str(), db_immo["agi"].c_str(), db_immo["intel"].c_str(),
+          db_immo["wis"].c_str(), db_immo["foc"].c_str(), db_immo["per"].c_str(),
+          db_immo["cha"].c_str(), db_immo["kar"].c_str(), db_immo["spe"].c_str(),
+          db_immo["pos"].c_str(), db_immo["def_position"].c_str(), db_immo["sex"].c_str(),
+          db_immo["spec_proc"].c_str(), db_immo["skin"].c_str(), db_immo["vision"].c_str(),
+          db_immo["can_be_seen"].c_str(), db_immo["max_exist"].c_str(),
+          db_immo["local_sound"].c_str(), db_immo["adjacent_sound"].c_str());
+
+      //// mob_imm
+      db_beta.query("delete from mob_imm where vnum=%i", vnum);
+
+      db_immo.query("select vnum, type, amt from mob_imm where owner='%s' and vnum=%i", immortal.c_str(), vnum);
+
+      while(db_immo.fetchRow()){
+        db_beta.query("insert into mob_imm values(%s, %s, %s)", db_immo["vnum"].c_str(), db_immo["type"].c_str(), db_immo["amt"].c_str());
+      }
+
+      //// mob_extra
+      db_beta.query("delete from mob_extra where vnum=%i", vnum);
+
+      db_immo.query("select vnum, keyword, description from mob_extra where owner='%s' and vnum=%i", immortal.c_str(), vnum);
+
+      while(db_immo.fetchRow()){
+        db_beta.query("insert into mob_extra values(%s, '%s', '%s')", db_immo["vnum"].c_str(), db_immo["keyword"].c_str(), db_immo["description"].c_str());
+      }
+    } else {
+      ch.sendTo(format("Not found: %i\n") % vnum);
+    }
+  }
+
+  db_beta.query("commit");
+}
+
 void TPerson::doLow(const sstring &argument)
 {
   sstring buf, arg=argument;
@@ -1138,10 +1390,21 @@ void TPerson::doLow(const sstring &argument)
 
   arg=one_argument(arg, buf);
 
-  sstring usage = "Syntax: low <mob | race | statbonus | statcharts | tasks | path room> ...\n\r";
+  sstring usage = "Syntax: low <mob | race | statbonus | statcharts | tasks | path room | mvroom <builder> <zone> <vnums> | mvobj <builder> <vnums> | mvmob <builder> <vnums> > ...\n\r";
   if (buf.empty()) {
     sendTo(usage);
     return;
+  } else if (is_abbrev(buf, "mvroom")) {
+    int block = convertTo<int>(argument.word(2));
+    if (!(block == 1 || block == 2)) {
+      sendTo("Block must be either 1 or 2\n");
+      return;
+    }
+    mvRoom(*this, argument.word(1), block, argument.dropWords(3));
+  } else if (is_abbrev(buf, "mvobj")) {
+    mvObj(*this, argument.word(1), argument.dropWords(2));
+  } else if (is_abbrev(buf, "mvmob")) {
+    mvMob(*this, argument.word(1), argument.dropWords(2));
   } else if (is_abbrev(buf, "objs") ||
 	     is_abbrev(buf, "weapons")) {
     sendTo("The low command does not currently work for objects or weapons.\n\r");

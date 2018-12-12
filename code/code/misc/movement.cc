@@ -18,6 +18,7 @@
 // forth in order to echo things properly.
 
 #include <stdio.h>
+#include <boost/optional.hpp>
 
 #include "handler.h"
 #include "extern.h"
@@ -3400,12 +3401,8 @@ int TBeing::crashLanding(positionTypeT pos, bool force, bool dam, bool falling)
 int TBeing::doMortalGoto(const sstring & argument)
 {
   int targ_rm = 0;
-  int targ_ch = 0;
-  dirTypeT dir;
-  TRoom *rp;
   TBeing *ch;
   sstring arg;
-  bool fair_fight=false;
 
   one_argument(argument, arg);
 
@@ -3468,159 +3465,18 @@ int TBeing::doMortalGoto(const sstring & argument)
     }
   }
 
-  if(is_abbrev(arg, "fairfight")){
-    fair_fight=true;
-  } else if (is_abbrev(arg, "cs") || is_abbrev(arg, "center")) {
-    targ_rm = Room::CS;
-  } else if (is_abbrev(arg, "mail") || is_abbrev(arg, "postoffice")) {
-    targ_rm = 406;
-  } else if (is_abbrev(arg, "sharpener") || is_abbrev(arg, "beavis")) {
-    targ_rm = 408;
-  } else if (is_abbrev(arg, "repair") || is_abbrev(arg, "piggot")) {
-    targ_rm = 409;
-  } else if (is_abbrev(arg, "bank")) {
-    targ_rm = 410;
-  } else if (is_abbrev(arg, "doctor") || is_abbrev(arg, "hospital")) {
-    targ_rm = 419;
-  } else if (is_abbrev(arg, "scribe") || is_abbrev(arg, "scrolls")) {
-    targ_rm = 501;
-  } else if (is_abbrev(arg, "alchemist") || is_abbrev(arg, "potions")) {
-    targ_rm = 503;
-  } else if (is_abbrev(arg, "light") || is_abbrev(arg, "lamp")) {
-    targ_rm = 550;
-  } else if (is_abbrev(arg, "symbols") || is_abbrev(arg, "pious")) {
-    targ_rm = 551;
-  } else if (is_abbrev(arg, "supply") || is_abbrev(arg, "taloc")) {
-    targ_rm = 552;
-  } else if (is_abbrev(arg, "drink")) {
-    targ_rm = 553;
-  } else if (is_abbrev(arg, "components") || is_abbrev(arg, "camron")) {
-    targ_rm = 554;
-  } else if (is_abbrev(arg, "armor")) {
-    targ_rm = 555;
-  } else if (is_abbrev(arg, "pub")) {
-    targ_rm = 556;
-  } else if (is_abbrev(arg, "innkeeper") || is_abbrev(arg, "rent") || is_abbrev(arg, "receptionist")) {
-    targ_rm = 557;
-  } else if (is_abbrev(arg, "commodity") || is_abbrev(arg, "prigon")) {
-    targ_rm = 558;
-  } else if (is_abbrev(arg, "weapon")) {
-    targ_rm = 559;
-  } else if (is_abbrev(arg, "food") || is_abbrev(arg, "froddors")) {
-    targ_rm = 560;
-  } else if (is_abbrev(arg, "magicitem") || is_abbrev(arg, "quazars")) {
-    targ_rm = 561;
-  } else if (is_abbrev(arg, "pawn") || is_abbrev(arg, "curio")) {
-    targ_rm = 562;
-  } else if (is_abbrev(arg, "petguy")) {
-    targ_rm = 564;
-  } else if (is_abbrev(arg, "board")) {
-    targ_rm = 567;
-  } else if (is_abbrev(arg, "tanner") || is_abbrev(arg, "clothing")) {
-    targ_rm = 568;
-  } else if (is_abbrev(arg, "monogramming") || is_abbrev(arg, "hornsby")) {
-    targ_rm = 569;
-  } else if (is_abbrev(arg, "donation") || is_abbrev(arg, "surplus")) {
-    targ_rm = Room::DONATION;
-  } else if (is_abbrev(arg, "dump") || is_abbrev(arg, "maurice")) {
-    targ_rm = 600;
-  } else if (is_abbrev(arg, "newbie") || is_abbrev(arg, "park")) {
-    targ_rm = 25400;  // entrance to the park
-  } else if (is_abbrev(arg, "attuner") || is_abbrev(arg, "karalina")) {
-    targ_ch = 343;
-  } else if (is_abbrev(arg, "dee") || is_abbrev(arg, "aunt-dee")){
-    targ_rm = 584;
-  } else if (is_abbrev(arg, "welfare") || is_abbrev(arg, "agent")){
-    targ_rm = 570;
-  } else if (is_abbrev(arg, "yun") || is_abbrev(arg, "grocer")) {
-    targ_rm = 579;
-  } else if (is_abbrev(arg, "tanni") || is_abbrev(arg, "jewelry")) {
-    targ_rm = 565;
-  } else if (is_abbrev(arg, "delayn")) {
-    targ_rm = 572;
-  } else if (is_abbrev(arg, "frobozz") || is_abbrev(arg, "lucre")) {
-    targ_rm = 583;
-  } else if (is_abbrev(arg, "felicia")) {
-    targ_rm = 628;
-  } else if (is_abbrev(arg, "torkyn")) {
-    targ_rm = 627;
-  } else if (is_abbrev(arg, "sian")) {
-    targ_rm = 633;
-  } else if (is_abbrev(arg, "kystin")) {
-    targ_rm = 648;
-  } else if (is_abbrev(arg, "koftic")) {
-    targ_rm = 630;
-  } else if (is_abbrev(arg, "buzz")) {
-    targ_rm = 607;
-  } else if (is_abbrev(arg, "nynaeve")) {
-    targ_rm = 610;
-  } else if (is_abbrev(arg, "otheym")) {
-    targ_rm = 613;
-  } else if (is_abbrev(arg, "sanford")) {
-    targ_rm = 608;
-  } else if (is_abbrev(arg, "jennica")) {
-    targ_rm = 634;
-  } else if (is_abbrev(arg, "milo")) {
-    targ_rm = 616;
-  } else if (is_abbrev(arg, "senzei")) {
-    targ_rm = 647;
-  } else if (is_abbrev(arg, "casino")) {
-    targ_rm = 624;
-  } else if (is_abbrev(arg, "mage")) {
-    targ_ch = 200;
-  } else if (is_abbrev(arg, "cleric")) {
-    targ_ch = 201;
-  } else if (is_abbrev(arg, "warrior") || is_abbrev(arg, "fighter")) {
-    targ_ch = 202;
-  } else if (is_abbrev(arg, "thief") || is_abbrev(arg, "thieving")) {
-    targ_ch = 203;
-  } else if (is_abbrev(arg, "ranger")) {
-    targ_ch = 204;
-  } else if (is_abbrev(arg, "deikhan")) {
-    targ_ch = 205;
-  } else if (is_abbrev(arg, "shaman")) {
-    targ_ch = 206;
-  } else if (is_abbrev(arg, "monk")) {
-    targ_ch = 207;
-  } else if (is_abbrev(arg, "lore_trainer") ||
-             is_abbrev(arg, "lore-trainer")) {
-    targ_ch = 333;
-  } else if (is_abbrev(arg, "theology_trainer") || 
-             is_abbrev(arg, "theology-trainer")) {
-    targ_ch = 335;
-  } else if (is_abbrev(arg, "mage_trainer") ||
-             is_abbrev(arg, "mage-trainer")) {
-    targ_ch = 502;
-  } else if (is_abbrev(arg, "cleric_trainer") ||
-             is_abbrev(arg, "cleric-trainer")) {
-    targ_ch = 259;
-  } else if (is_abbrev(arg, "thief_trainer") ||
-             is_abbrev(arg, "thief-trainer")) {
-    targ_ch = 262;
-  } else if (is_abbrev(arg, "warrior_trainer") ||
-             is_abbrev(arg, "warrior-trainer")) {
-    targ_ch = 355;
-  } else if (is_abbrev(arg, "shaman_trainer") ||
-             is_abbrev(arg, "shaman-trainer")) {
-    targ_ch = 247;
-  } else if (is_abbrev(arg, "deikhan_trainer") ||
-             is_abbrev(arg, "deikhan-trainer")) {
-    targ_ch = 278;
-  } else if (is_abbrev(arg, "ranger_trainer") ||
-             is_abbrev(arg, "ranger-trainer")) {
-    targ_ch = 261;
-  } else if (is_abbrev(arg, "monk_trainer") ||
-             is_abbrev(arg, "monk-trainer")) {
-    targ_ch = 285;
-  } else if (is_abbrev(arg, "adventuring_trainer") ||
-             is_abbrev(arg, "adventuring-trainer")) {
-    targ_ch = 290;
-  } else if (is_abbrev(arg, "combat_trainer") ||
-             is_abbrev(arg, "combat-trainer")) {
-    targ_ch = Mob::COMBAT_TRAINER;
-  } else if (is_abbrev(arg, "thief_entrance") ||
-	     is_abbrev(arg, "thief-entrance")) {
-    targ_rm = 634;
+  if (in_room == 634){
+    sendTo("The entrance to the Thieves Guild is secret.\n\r");
+    sendTo("You must carefully examine this room to find it the entrance.\n\r");
+    sendTo("Once you have entered the Guild, you may use goto to continue.\n\r");
+    return FALSE;
+  } else if (is_abbrev(arg, "fairfight")) {
+    auto path = pathfind(*this, findFairFight(this), "There's already a fair fight here.\n\r");
+    if (!path)
+      return FALSE;
+    sendTo(COLOR_MOBS, "You can get to a fair fight by going ");
+    printPath(*this, *path);
+    return TRUE;
   } else if (is_abbrev(arg, "air_trainer") ||
              is_abbrev(arg, "air-trainer") ||
              is_abbrev(arg, "alchemy_trainer") ||
@@ -3705,123 +3561,168 @@ int TBeing::doMortalGoto(const sstring & argument)
     sendTo("You will need to explore in order to locate the trainer for that discipline.\n\r");
     return FALSE;
   } else {
+    static std::map<const char*, int> locations = {
+      {"cs", Room::CS},
+      {"center", Room::CS},
+      {"mail", 406},
+      {"postoffice", 406},
+      {"sharpener", 408},
+      {"beavis", 408},
+      {"repair", 409},
+      {"piggot", 409},
+      {"bank", 410},
+      {"doctor", 419},
+      {"hospital", 419},
+      {"scribe", 501},
+      {"scrolls", 501},
+      {"alchemist", 503},
+      {"potions", 503},
+      {"light", 550},
+      {"lamp", 550},
+      {"symbols", 551},
+      {"pious", 551},
+      {"supply", 552},
+      {"taloc", 552},
+      {"drink", 553},
+      {"components", 554},
+      {"camron", 554},
+      {"armor", 555},
+      {"pub", 556},
+      {"innkeeper", 557},
+      {"rent", 557},
+      {"receptionist", 557},
+      {"commodity", 558},
+      {"prigon", 558},
+      {"weapon", 559},
+      {"food", 560},
+      {"froddors", 560},
+      {"magicitem", 561},
+      {"quazars", 561},
+      {"pawn", 562},
+      {"curio", 562},
+      {"petguy", 564},
+      {"board", 567},
+      {"tanner", 568},
+      {"clothing", 568},
+      {"monogramming", 569},
+      {"hornsby", 569},
+      {"donation", Room::DONATION},
+      {"surplus", Room::DONATION},
+      {"dump", 600},
+      {"maurice", 600},
+      {"newbie", 25400},
+      {"park", 25400},
+      {"attuner", 584},
+      {"dee", 584},
+      {"aunt-dee", 584},
+      {"welfare", 570},
+      {"agent", 570},
+      {"yun", 579},
+      {"grocer", 579},
+      {"tanni", 565},
+      {"jewelry", 565},
+      {"delayn", 572},
+      {"frobozz", 583},
+      {"lucre", 583},
+      {"felicia", 628},
+      {"torkyn", 627},
+      {"sian", 633},
+      {"kystin", 648},
+      {"koftic", 630},
+      {"buzz", 607},
+      {"nynaeve", 610},
+      {"otheym", 613},
+      {"sanford", 608},
+      {"jennica", 634},
+      {"milo", 616},
+      {"senzei", 647},
+      {"casino", 624},
+      {"thief_entrance", 634},
+      {"thief-entrance", 634},
+    };
+
+    for (auto pair : locations) { // no map lookup :( because of is_abbrev. The map is still good for schema.
+      if (is_abbrev(arg, pair.first)) {
+        targ_rm = pair.second;
+        break;
+      }
+    }
+
+    if (!targ_rm) {
+      static std::map<const char*, int> npcs = {
+        {"karalina", 343},
+        {"mage", 200},
+        {"cleric", 201},
+        {"warrior", 202},
+        {"fighter", 202},
+        {"thief", 203},
+        {"thieving", 203},
+        {"ranger", 204},
+        {"deikhan", 205},
+        {"shaman", 206},
+        {"monk", 207},
+        {"lore_trainer",  333},
+        {"lore-trainer",  333},
+        {"theology_trainer",  335},
+        {"theology-trainer", 335},
+        {"mage_trainer",  502},
+        {"mage-trainer", 502},
+        {"cleric_trainer",  259},
+        {"cleric-trainer", 259},
+        {"thief_trainer",  262},
+        {"thief-trainer", 262},
+        {"warrior_trainer",  355},
+        {"warrior-trainer", 355},
+        {"shaman_trainer",  247},
+        {"shaman-trainer", 247},
+        {"deikhan_trainer",  278},
+        {"deikhan-trainer", 278},
+        {"ranger_trainer",  261},
+        {"ranger-trainer", 261},
+        {"monk_trainer",  285},
+        {"monk-trainer", 285},
+        {"adventuring_trainer",  290},
+        {"adventuring-trainer", 290},
+        {"combat_trainer", Mob::COMBAT_TRAINER},
+        {"combat-trainer", Mob::COMBAT_TRAINER}
+      };
+
+      for (auto pair : npcs) { // no map lookup :( because of is_abbrev. The map is still good for schema.
+        if (is_abbrev(arg, pair.first)) {
+          int targ_ch = pair.second;
+
+          if(targ_ch == 262 || targ_ch == 203)
+            return doMortalGoto("thief-entrance");
+
+          int rn = real_mobile(targ_ch);
+          if (rn < 0) {
+            vlogf(LOG_BUG, format("Error in goto for mob %s") %  arg);
+            return FALSE;
+          }
+          ch = get_char_num(rn);
+          if (!ch) {
+            sendTo("You have no idea where they might be at present.\n\r");
+            return FALSE;
+          }
+          targ_rm = ch->inRoom();
+          break;
+        }
+      }
+    }
+  }
+
+  if (!targ_rm) {
     sendTo(format("You can't seem to locate '%s'.\n\r") % arg);
     return FALSE;
   }
 
-  if(fair_fight){
-    TPathFinder path;
-    path.setNoMob(false);
-    dir=path.findPath(in_room, findFairFight(this));
+  auto path = pathfind(*this, findRoom(targ_rm), "Uhm, not for nothing, but I think you are already there...\n\r");
+  if (!path)
+    return FALSE;
 
-    if(path.getDest()==inRoom()){
-      sendTo("There's already a fair fight here.\n\r");
-      return FALSE;
-    }
-
-    if (dir < DIR_NORTH || dir > DIR_SOUTHWEST) {
-      sendTo("Strangely, you can't quite figure out how to get there from here.\n\r");
-      return FALSE;
-    }
-    sendTo(COLOR_MOBS, "You can get to a fair fight by going ");
-
-    for(unsigned int i=1;i<path.path.size()-1;++i){
-      if(path.path[i]->direct >= 10)
-	sendTo(COLOR_MOBS, "enter portal, ");
-      else
-	sendTo(COLOR_MOBS, format("%s, ") % dirs[path.path[i]->direct]);
-    }
-    if(path.path[path.path.size()-1]->direct >= 10)
-      sendTo(COLOR_MOBS, "enter portal.\n\r");
-    else
-      sendTo(COLOR_MOBS, format("%s.\n\r") % dirs[path.path[path.path.size()-1]->direct]);
-
-  } else if (targ_rm) {
-    if (inRoom() == targ_rm) {
-      sendTo("Uhm, not for nothing, but I think you are already there...\n\r");
-      return FALSE;
-    }
-    rp = real_roomp(targ_rm);
-
-    TPathFinder path;
-    path.setNoMob(false);
-    dir=path.findPath(in_room, findRoom(targ_rm));
-
-    if (dir < DIR_NORTH || dir > DIR_SOUTHWEST) {
-      sendTo("Strangely, you can't quite figure out how to get there from here.\n\r");
-      return FALSE;
-    }
-    sendTo(COLOR_MOBS, format("You can get to %s by going ") % rp->getName());
-
-    for(unsigned int i=1;i<path.path.size()-1;++i){
-      if(path.path[i]->direct >= 10)
-	sendTo(COLOR_MOBS, "enter portal, ");
-      else
-	sendTo(COLOR_MOBS, format("%s, ") % dirs[path.path[i]->direct]);
-    }
-    if(path.path[path.path.size()-1]->direct >= 10)
-      sendTo(COLOR_MOBS, "enter portal.\n\r");
-    else
-      sendTo(COLOR_MOBS, format("%s.\n\r") % dirs[path.path[path.path.size()-1]->direct]);
-
-    //    sendTo(COLOR_ROOMS, format("You can get to %s by going %s.\n\r") % rp->getName() % dirs[dir]); 
-  } else {
-    int rn = real_mobile(targ_ch);
-    if (rn < 0) {
-      vlogf(LOG_BUG, format("Error in goto for mob %s") %  arg);
-      return FALSE;
-    }
-    ch = get_char_num(rn);
-    if (!ch) {
-      sendTo("You have no idea where they might be at present.\n\r");
-      return FALSE;
-    }
-    targ_rm = ch->inRoom();
-
-    if (inRoom() == targ_rm) {
-      sendTo("Uhm, not for nothing, but I think you are already there...\n\r");
-      return FALSE;
-    }
-
-    TPathFinder path;
-    path.setNoMob(false);
-    dir=path.findPath(in_room, findRoom(targ_rm));
-    
-
-    if (dir < DIR_NORTH || dir > DIR_SOUTHWEST) {
-      // thieves guild is behind a secret door
-      // if not with jennica track to jennica
-      // if with jennica, tell them to open the door
-      if(in_room == 634){
-	sendTo("The entrance to the Thieves Guild is secret.\n\r");
-	sendTo("You must carefully examine this room to find it the entrance.\n\r");
-	sendTo("Once you have entered the Guild, you may use goto to continue.\n\r");
-	return FALSE;
-      } else if(targ_ch == 262 || targ_ch == 203){
-	// this better not match the if above or we're in trouble
-	return doMortalGoto("thief-entrance");
-      }
-
-
-      sendTo("Strangely, you can't quite figure out how to get there from here.\n\r");
-      return FALSE;
-    }
-
-    sendTo(COLOR_MOBS, format("You can get to %s by going ") % ch->getName());
-
-    for(unsigned int i=1;i<path.path.size()-1;++i){
-      if(path.path[i]->direct >= 10)
-	sendTo(COLOR_MOBS, "enter portal, ");
-      else
-	sendTo(COLOR_MOBS, format("%s, ") % dirs[path.path[i]->direct]);
-    }
-    if(path.path[path.path.size()-1]->direct >= 10)
-      sendTo(COLOR_MOBS, "enter portal.\n\r");
-    else
-      sendTo(COLOR_MOBS, format("%s.\n\r") % dirs[path.path[path.path.size()-1]->direct]);
-
-    //    sendTo(COLOR_MOBS, format("You can get to %s by going %s.\n\r") % ch->getName() % dirs[dir]); 
-  }
+  auto rp = real_roomp(targ_rm);
+  sendTo(COLOR_MOBS, format("You can get to %s by going ") % rp->getName());
+  printPath(*this, *path);
 
   return FALSE;
 }

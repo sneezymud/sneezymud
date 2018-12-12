@@ -543,7 +543,7 @@ class Descriptor
     void sstring_add(sstring);
     void fdSocketClose(int);
     void saveAll();
-    void worldSend(const sstring &, TBeing *);
+    static void worldSend(const sstring &, TBeing *);
     void sendShout(TBeing *, const sstring &);
     void updateScreenAnsi(unsigned int update);
     void updateScreenVt100(unsigned int update);

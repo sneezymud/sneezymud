@@ -28,6 +28,7 @@
 
 #include <csignal>
 #include <cstdarg>
+#include <set>
 
 extern "C" {
 #include <unistd.h>
@@ -191,11 +192,20 @@ void TBeing::sendMobsGmcp() const {
 
   sstring out = "room.mobs [";
   bool first = true;
+
+  auto compare = [this](TMonster* a, TMonster* b) {
+    return abs(a->GetMaxLevel() - this->GetMaxLevel()) < abs(b->GetMaxLevel() - this->GetMaxLevel());
+  };
+
+  std::set<TMonster*, std::function<bool(TMonster*, TMonster*)>> mobs(compare);
   for (const auto thing : roomp->stuff) {
     auto mob = dynamic_cast<TMonster*>(thing);
     if (!mob)
       continue;
+    mobs.insert(mob);
+  }
 
+  for (TMonster* mob : mobs) {
     if (first) {
       first = false;
     } else {

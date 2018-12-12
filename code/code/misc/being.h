@@ -413,9 +413,10 @@ class TBeing : public TThing {
 
     // VIRTUAL FUNCTIONS
     virtual int editAverageMe(TBeing *, const char *);
-    virtual sstring const& getLongDesc() const;
+    virtual sstring getLongDesc() const;
     virtual int chiMe(TBeing *);
     virtual sstring const& getName() const { return shortDescr; }
+    virtual int getAccountID() const;
     virtual int getPlayerID() const;
     virtual void remCastingList(TThing *);
     virtual roomDirData *exitDir(dirTypeT door) const;
@@ -448,6 +449,7 @@ class TBeing : public TThing {
     virtual int getSnum() const { return (snum > -1 ? snum : mobVnum()); };
     virtual sstring thirdPerson(const int);
     void loadAliases();
+    virtual void loadMapData() {}
     // END VIRTUAL FUNCTIONS
 
     void calcNutrition();
@@ -467,7 +469,7 @@ class TBeing : public TThing {
     unsigned short GetMaxLevel() const;
     void setMaxLevel(unsigned short num);
     sstring const getProfName() const;
-    const char * const getProfAbbrevName() const;
+    std::string getProfAbbrevName() const;
     void deityIgnore(silentTypeT = SILENT_NO) const;
     void nothingHappens(silentTypeT = SILENT_NO) const;
     float percModifier() const;
@@ -657,10 +659,10 @@ class TBeing : public TThing {
     int checkEngagementStatus();
     virtual sstring parseTitle(Descriptor *);
     int onlyClass(int) const;
-    int getClassNum(const char *, exactTypeT);
-    int getClassNum(classIndT);
-    classIndT getClassIndNum(const char *, exactTypeT);
-    classIndT getClassIndNum(unsigned short, exactTypeT);
+    int getClassNum(const char *, exactTypeT) const;
+    int getClassNum(classIndT) const;
+    classIndT getClassIndNum(const char *, exactTypeT) const;
+    classIndT getClassIndNum(unsigned short, exactTypeT) const;
     bool hasClass(const char *, exactTypeT) const;
     bool hasClass(unsigned short, exactTypeT = EXACT_NO) const;
     void setQuaffUse(bool tmp) { inQuaffUse = tmp; }
@@ -938,6 +940,7 @@ class TBeing : public TThing {
     void doEgoTrip(const char *);
     void doComment(const char *);
     int doCommand(cmdTypeT, const sstring &, TThing *, bool);
+    virtual std::pair<bool, int> doPersonCommand(cmdTypeT, const sstring &, TThing *, bool) {return {};}
     int doCharge(const char *, TBeing *);
     void doChargeStave(sstring);
     int doSmite(const char *, TBeing *);
@@ -1788,7 +1791,6 @@ class TBeing : public TThing {
     int doSay(const char *fmt, ...);
     int doSay(const sstring &);
     virtual void doForce(const char *);
-    virtual void doDistribute(const char *);
     void doCommune(const sstring &);
     virtual void doShutdow();
     virtual void doShutdown(bool, const char *);

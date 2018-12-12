@@ -211,7 +211,9 @@ class TPathBuilder : public TPathFinder {
 
 };
 
-
+boost::optional<TPathFinder const> pathfind(TBeing& ch, TPathTarget const& to, std::string const& hereMsg);
+void printPath(TBeing& ch, TPathFinder const& path);
+std::string runify(TPathFinder const& path);
 
 extern int go_ok(roomDirData *exitp);
 extern int go_ok_smarter(roomDirData *exitp);

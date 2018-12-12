@@ -13,10 +13,12 @@ cscope.out
 
 # dynamically changing mud files
 /lib/account/
+/lib/corpses/
 /lib/immortals/
 /lib/player/
 /lib/rent/
 /lib/roomdata/
+/lib/mobdata/repairs/
 /lib/txt/stats
 /lib/txt/stats.bak
 
