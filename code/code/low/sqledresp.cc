@@ -10,7 +10,7 @@
 int main(int argc, char **argv)
 {
   Config::doConfiguration();
-  TDatabase db(DB_SNEEZY);
+  TDatabase db(DB_SNEEZY, true);
   std::vector<int>vnums;
   std::map<sstring,sstring>val;
   char file[]="/tmp/sqledrespXXXXXX";
@@ -51,7 +51,7 @@ int main(int argc, char **argv)
   system(buf.c_str());
 
 
-  printf("Insert response%s? [y/n] ", vnums.size()>1?"s":"");
+  printf("Insert response%s? [y/n] \n", vnums.size()>1?"s":"");
   while(1){
     answer=getc(stdin);
     if(answer=='n'){
@@ -61,7 +61,7 @@ int main(int argc, char **argv)
     } else if(answer=='y'){
       break;
     } else {
-      printf("Insert response%s? [y/n] ", vnums.size()>1?"s":"");
+      printf("Insert response%s? [y/n] \n", vnums.size()>1?"s":"");
     }
   }
 
@@ -73,6 +73,8 @@ int main(int argc, char **argv)
 
   while(++i){
     val=parse_data_file(file, i);
+    printf("val[vnum]= %s\n", val["vnum"].c_str());
+    printf("val[DATATYPE]= %s\n", val["DATATYPE"].c_str());
     if(val["vnum"]=="EOM")
       break;
     
