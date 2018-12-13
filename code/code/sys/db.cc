@@ -3324,6 +3324,12 @@ void runResetCmdG(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
     return;
   }
 
+  if (mob == nullptr)
+  {
+    vlogf(LOG_BUG, format("Nullptr mob in G command #%d (%d %d %d %d) in %s") % rs.cmd_no % rs.arg1 % rs.arg2 % rs.arg3 % rs.arg4 % zone.name);
+    return;
+  }
+
   *mob += *obj;
   obj->onObjLoad();
   mob->logItem(obj, CMD_LOAD);
