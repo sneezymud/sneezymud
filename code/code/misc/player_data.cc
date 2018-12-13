@@ -935,6 +935,11 @@ void TBeing::saveChar(int load_room)
     vlogf(LOG_BUG, format("Character %s has a NULL account name! Save aborted.") %  getName());
     return;
   }
+  if (getPlayerID() == 0) {
+      vlogf(LOG_BUG, format("Character %s's player ID = 0. Save aborted.") %  getName());
+      act("Your character was not saved. Please report the circumstances how it happened!.", FALSE, this, 0, 0, TO_CHAR);
+      return;
+  }
   if (!tmp) { 
     strcpy(buf2, sstring(name).lower().c_str());
     sprintf(buf, "account/%c/%s/%s", LOWER(desc->account->name[0]), sstring(desc->account->name).lower().c_str(), buf2);
