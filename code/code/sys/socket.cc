@@ -1441,6 +1441,7 @@ procCharLycanthropy::procCharLycanthropy(const int &p)
 
 bool procCharLycanthropy::run(const TPulse &pl, TBeing *tmp_ch) const
 {
+  return false;
     // lycanthrope transformation
   if(tmp_ch->hasQuestBit(TOG_LYCANTHROPE) &&
      !tmp_ch->hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE)
