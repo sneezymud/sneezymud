@@ -358,6 +358,8 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
     rc = ret.second;
     if (!ret.first) { // handled
       switch(cmd) {
+	case CMD_NOP:
+	  break;
         case CMD_UNHARNESS:
         case CMD_UNSADDLE:
           doUnsaddle(newarg);
@@ -2986,6 +2988,7 @@ void buildCommandArray(void)
   commandArray[CMD_REMEMBERPLAYER] = new commandInfo("rememberplayer", POSITION_DEAD, 0);
   commandArray[CMD_RETRIEVE] = new commandInfo("retrieve", POSITION_DEAD, 0);
   commandArray[CMD_RECHARGE] = new commandInfo("recharge", POSITION_STANDING, 0);
+  commandArray[CMD_NOP] = new commandInfo("noop", POSITION_DEAD, 0);
 }
 
 bool _parse_name_safe(const char *arg, char *name, unsigned int nameLen)
