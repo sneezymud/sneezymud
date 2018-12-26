@@ -1,0 +1,6 @@
+Syntax: noop
+
+No operation.
+
+This command literally does nothing. It is intended primarily for keep
+alive timers implemented in many mud clients.

@@ -36,6 +36,7 @@ class commandInfo {
 };
 
 enum cmdTypeT {
+     CMD_NOP,
      CMD_NORTH,
      CMD_EAST,
      CMD_SOUTH,
