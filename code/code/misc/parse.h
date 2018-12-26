@@ -36,7 +36,6 @@ class commandInfo {
 };
 
 enum cmdTypeT {
-     CMD_NOP,
      CMD_NORTH,
      CMD_EAST,
      CMD_SOUTH,
@@ -592,6 +591,7 @@ enum cmdTypeT {
      CMD_REMEMBERPLAYER,
      CMD_RETRIEVE,
      CMD_RECHARGE,
+     CMD_NOP,
      MAX_CMD_LIST,  // Keep this as last command in regular list
        CMD_RESP_TOGGLE,
        CMD_RESP_UNTOGGLE,
