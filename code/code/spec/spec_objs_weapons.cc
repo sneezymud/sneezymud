@@ -1505,6 +1505,41 @@ int brokenBottle(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 int boneStaff(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 {
   TBeing *ch;
+
+  // Add logic for if obj has been hit. Rather than creating a
+  // new proc this one can be used in different ways
+  if(cmd == CMD_OBJ_BEEN_HIT)
+  {
+    int rc, dam;
+    if (!vict || !o)
+      return FALSE;
+    
+    if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+      return FALSE;
+    
+    if (::number(0,2))
+      return FALSE;
+
+    act("$p draws your life force through it into $N.",
+       TRUE, vict, o, ch, TO_CHAR, ANSI_GREEN_BOLD);
+    act("$p draws the life force of $n through it into you.",
+       TRUE, vict, o, ch, TO_VICT, ANSI_GREEN_BOLD);
+    act("$p draws the life force of $n through it into $N.",
+       TRUE, vict, o, ch, TO_NOTVICT, ANSI_GREEN_BOLD);
+
+    dam = ::number(1, 2);
+
+    ch->addToHit(dam);
+    ch->addToLifeforce(dam);
+    rc = ch->reconcileDamage(vict, dam, DAMAGE_NORMAL);
+    if (IS_SET_DELETE(rc, DELETE_VICT))
+      return DELETE_VICT;
+    return TRUE;
+  }
+
+
+
+
   wearSlotT part_hit = wearSlotT((long int) arg);
 
   ch = genericWeaponProcCheck(vict, cmd, o, 0);
@@ -2446,4 +2481,46 @@ int holyCutlass(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *){
   return TRUE;
 }
 
+int shadowWeapon(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
+{
+  TBeing *ch;
+  int rc, dam;
+
+  ch = genericWeaponProcCheck(vict, cmd, o, 3);
+  if (!ch)
+    return FALSE;
+
+  dam = ::number(4,10);
+
+  act("$N screams as <p>tendrils<k> of shadow leap from your $o.", 0, ch, o, vict, TO_CHAR, ANSI_GRAY);
+  act("$N screams as <p>tendrils<k> of shadow leap from $n's $o.", 0, ch, o, vict, TO_NOTVICT, ANSI_GRAY);
+  act("You scream as <p>tendrils<k> of shadow leap from $n's $o.", 0, ch, o, vict, TO_VICT, ANSI_GRAY);
+
+  rc = ch->reconcileDamage(vict, dam, DAMAGE_DRAIN);
+  if (rc == -1)
+    return DELETE_VICT;
+  return TRUE;
+}
+
+int livingVines(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
+{
+  TBeing *ch;
+  int rc, dam;
+
+  ch = genericWeaponProcCheck(vict, cmd, o, 5);
+  if (!ch)
+    return FALSE;
+
+  dam = ::number(1,3);
+  act("$N stumbles as vines spring from the ground.", 0, ch, o, vict, TO_CHAR, ANSI_GREEN);
+  act("$N stumbles as vines spring from the ground.", 0, ch, o, vict, TO_NOTVICT, ANSI_GREEN);
+  act("You stumble as vines spring from the ground.", 0, ch, o, vict, TO_VICT, ANSI_GREEN);
+
+  rc = ch->reconcileDamage(vict, dam, DAMAGE_NORMAL);
+  if (rc == -1)
+    return DELETE_VICT;
+
+  vict->cantHit += vict->loseRound(0.50);
+  return TRUE;
+}
 
