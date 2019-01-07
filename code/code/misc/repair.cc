@@ -101,10 +101,10 @@ int findRepairMaterials(unsigned int shop_nr, TBeing *repair, TBeing *buyer, uby
     if(commod->numUnits() > mats_needed){
       mat_price += commod->shopPrice(mats_needed, commod_shop, 0, buyer);
       if(purchase){
-	tso.doBuyTransaction(mat_price, commod->getName(), TX_BUYING, commod);
-	shoplog(shop_nr, buyer, dynamic_cast<TMonster *>(repair), 
-		commod->getName(), -mat_price, "buying materials");
-	commod->setWeight(commod->getWeight() - mats_needed/10.0);
+        tso.doBuyTransaction(mat_price, commod->getName(), TX_BUYING, commod);
+        shoplog(shop_nr, buyer, dynamic_cast<TMonster *>(repair), 
+            commod->getName(), -mat_price, "buying materials");
+        commod->setWeight(commod->getWeight() - mats_needed/10.0);
       }
       mats_needed=0;      
       tso.getKeeper()->deleteItem(commod_shop, rent_id);
@@ -112,18 +112,19 @@ int findRepairMaterials(unsigned int shop_nr, TBeing *repair, TBeing *buyer, uby
       delete commod;
     } else {
       mat_price += commod->shopPrice(commod->numUnits(), commod_shop, 0, buyer);
+      bool del = false;
       if(purchase){
-	tso.doBuyTransaction(mat_price, commod->getName(), TX_BUYING, commod);
-	shoplog(shop_nr, buyer, dynamic_cast<TMonster *>(repair), 
-		commod->getName(), -mat_price, "buying materials");
-	tso.getKeeper()->deleteItem(commod_shop, rent_id);
-	delete commod;
+        tso.doBuyTransaction(mat_price, commod->getName(), TX_BUYING, commod);
+        shoplog(shop_nr, buyer, dynamic_cast<TMonster *>(repair), 
+            commod->getName(), -mat_price, "buying materials");
+        tso.getKeeper()->deleteItem(commod_shop, rent_id);
+        del = true;
       }
       mats_needed-=commod->numUnits();
+      if (del)
+        delete commod;
     }
   }
-
-
   return mat_price;
 }
 
