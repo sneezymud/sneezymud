@@ -5744,7 +5744,7 @@ int pietyRegen(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
   
     if (ch->doesKnowSkill(SKILL_PENANCE) && (!::number(0,17))) {
       float dam = ch->getSkillValue(SKILL_PENANCE) * 7.5 / 100;
-      act("<g>Your $o<g> lets you feel more in tune with Mezan, the father.<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("<g>Your $o<g> lets you feel more in tune with $d.<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
       ch->addToPiety(dam);
       return TRUE;
     }
