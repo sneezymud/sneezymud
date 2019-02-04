@@ -1509,7 +1509,7 @@ sstring TBeing::getLongDesc() const
   if (!player.longDescr.empty())
     return player.longDescr;
 
-  return msgVariables(MSG_LONGDESCR);
+  return msgVariables[MSG_LONGDESCR];
 }
 
 int TBeing::chiMe(TBeing *tLunatic)
