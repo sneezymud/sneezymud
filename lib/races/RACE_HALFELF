@@ -1,0 +1,31 @@
+filename RACE_HALFELF
+singName half-elf
+plurName half-elves
+propName Half-Elf
+lore PEOPLE
+age 100+5d6
+maleHt 60+1d15
+maleWt 110+7d10
+femaleHt 60+1d6
+femaleWt 90+2d10
+body Humanoid
+moveIn strides in
+moveOut strides
+moveMod 20
+manaMod 2
+visionBonus 5
+STR 100
+BRA 100
+CON 100
+DEX 120
+AGI 105
+INT 120
+WIS 100
+FOC 115
+PER 105
+CHA 125
+KAR 105
+SPE 115
+IMMUNE_SLEEP 65
+IMMUNE_PARALYSIS 50
+talent Jack of all Trades
