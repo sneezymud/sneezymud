@@ -14,6 +14,7 @@ moveOut strides
 moveMod 20
 manaMod 2
 visionBonus 5
+lineOfSightMod 3
 STR 100
 BRA 100
 CON 100
