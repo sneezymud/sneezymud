@@ -741,9 +741,6 @@ int TBaseWeapon::enhanceMe(TBeing *caster, int level, short bKnown)
       affected[1].modifier += 1;
 
     addObjStat(ITEM_MAGIC);
-    addObjStat(ITEM_GLOW);
-
-    addGlowEffects();
 
     switch (critSuccess(caster, SPELL_ENHANCE_WEAPON)) {
       case CRIT_S_KILL:

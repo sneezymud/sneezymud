@@ -1670,9 +1670,9 @@ int enhanceWeapon(TBeing *caster, TMagicItem *usedobj, TObj * toenhance)
 
   ret = enhanceWeapon(caster,toenhance,usedobj->getMagicLevel(),usedobj->getMagicLearnedness());
   if (IS_SET(ret, SPELL_SUCCESS)) {
-    act("$p begins to glow with a soft yellow light.", 
+    act("$p pulses with powerful magical energy.", 
           FALSE, caster, toenhance, NULL, TO_CHAR);
-    act("$p begins to glow with a soft yellow light.", 
+    act("$p pulses with powerful magical energy.", 
           FALSE, caster, toenhance, NULL, TO_ROOM);
   }
   if (IS_SET(ret, SPELL_CRIT_FAIL)) {
