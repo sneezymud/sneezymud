@@ -4100,38 +4100,27 @@ int TBeing::preProcDam(spellNumT type, int dam) const
   return (dam);
 }
 
+// weaponCheck handles immunity to non-magic when reconciling damage.
+// Since magic items and skills can avoid it's affects in ways that
+// don't apply to other immunity types
+// NOTE: slash/blunt/pierce immunity is handled in preProcDam
 int TBeing::weaponCheck(TBeing *vict, TThing *o, spellNumT type, int dam)
 {
-  immuneTypeT imm_type = getTypeImmunity(type);
-  int imm_num=0, total=0;
   TObj *tobj;
 
-  // this should only check weapon attacks, other imms handled in preProcDam
-  if (imm_type != IMMUNE_SLASH &&
-      imm_type != IMMUNE_BLUNT &&
-      imm_type != IMMUNE_PIERCE) {
+  // Get the object held and if it's magic we'll ignore immunity
+  if ((tobj=dynamic_cast<TObj *>(o))) {
+
+    if(tobj->isObjStat(ITEM_MAGIC))
+      return dam;
+
+  // else if there's nothing held check for voplat
+  } else if ((doesKnowSkill(SKILL_VOPLAT) && (getSkillValue(SKILL_VOPLAT) >= 15))) {
     return dam;
   }
 
-  if ((tobj=dynamic_cast<TObj *>(o))) {
-    if(tobj->isObjStat(ITEM_MAGIC))
-      total += 1;
-
-    total += tobj->itemHitroll();
-  } else if(!o && doesKnowSkill(SKILL_VOPLAT))
-    total=getSkillValue(SKILL_VOPLAT)/15;
-
-  if(total < 1){
-    imm_num=vict->getImmunity(IMMUNE_NONMAGIC);
-  } else if (total < 2) {
-    imm_num=vict->getImmunity(IMMUNE_PLUS1);
-  } else if (total < 3) {
-    imm_num=vict->getImmunity(IMMUNE_PLUS2);
-  } else {
-    imm_num=vict->getImmunity(IMMUNE_PLUS3);
-  }
-
-  dam *= (100 - (int) imm_num);
+  // otherwise we'll apply nonmagic immunity
+  dam *= (100 - (int) vict->getImmunity(IMMUNE_NONMAGIC));
   dam /= 100;
   return dam;
 }
