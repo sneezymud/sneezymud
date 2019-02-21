@@ -259,6 +259,7 @@ int ObjectEvaluator::getStatPointsRaw()
       0.0, // ITEM_BURNING
       0.0, // ITEM_CHARRED
       0.0, // ITEM_NOLOCATE
+      0.0, // ITEM_SILVERED
       };
   static float applyCost[MAX_APPLY_TYPES] = {
       0.0, //APPLY_NONE
