@@ -1721,13 +1721,13 @@ int TBeing::extraDam(const TBeing *vict, const TBaseWeapon *weap) const
 
   if (vict->isUndead() || vict->isLycanthrope()) {
     if (weap->isObjStat(ITEM_BLESS))
-      plus += 1;
-    if (weap->getMaterial() == MAT_SILVER) 
-      plus += 1;
+      plus += 10;
+    if(weap->getMaterial() == MAT_SILVER || weap->isObjStat(ITEM_SILVERED)) 
+      plus += 10;
   }
   if (vict->isDiabolic()) {
     if (weap->isObjStat(ITEM_BLESS))
-      plus += 1;
+      plus += 20;
   }
   return plus;
 }
