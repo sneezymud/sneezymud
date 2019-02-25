@@ -804,7 +804,7 @@ const char * const extra_bits[] =
   "No purge",
   "Newbie",
   "No-Junk (Player)", // now unused
-  "*Do Not Use*", // now unused
+  "Silvered",
   "*Do Not Use*", // now unused
   "Item Attached",
   "Burning",
