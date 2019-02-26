@@ -253,7 +253,7 @@ int ObjectEvaluator::getStatPointsRaw()
       0.0, // ITEM_NOPURGE 
       0.0, // ITEM_NEWBIE
       0.0, // ITEM_NOJUNK_PLAYER
-      0.0, // ITEM_NOT_USED2
+      0.0, // ITEM_SILVERED
       0.0, // ITEM_NOT_USED3
       0.0, // ITEM_ATTACHED
       0.0, // ITEM_BURNING

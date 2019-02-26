@@ -1721,13 +1721,13 @@ int TBeing::extraDam(const TBeing *vict, const TBaseWeapon *weap) const
 
   if (vict->isUndead() || vict->isLycanthrope()) {
     if (weap->isObjStat(ITEM_BLESS))
-      plus += 1;
-    if (weap->getMaterial() == MAT_SILVER) 
-      plus += 1;
+      plus += 10;
+    if(weap->getMaterial() == MAT_SILVER || weap->isObjStat(ITEM_SILVERED)) 
+      plus += 10;
   }
   if (vict->isDiabolic()) {
     if (weap->isObjStat(ITEM_BLESS))
-      plus += 1;
+      plus += 20;
   }
   return plus;
 }
@@ -3902,22 +3902,22 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
       if (monkDodge(vict, weapon, &dam, w_type, part_hit))
         mess_sent |= ONEHIT_MESS_DODGE;
       else if (thiefDodge(vict, weapon, &dam, w_type, part_hit))
-	mess_sent |= ONEHIT_MESS_DODGE;
+	      mess_sent |= ONEHIT_MESS_DODGE;
       else if (parryWarrior(vict, weapon, &dam, w_type, part_hit)){
-	if(doesKnowSkill(SKILL_RIPOSTE) &&   // must know the skill
-	 (::number(0,99) < 50) &&                // only 50% of the time
-	 bSuccess(SKILL_RIPOSTE)){
-	  act("$n uses $s parry to execute a riposte.",
-	      FALSE, this, 0, vict, TO_CHAR, ANSI_PURPLE);
-	  act("You use your parry to execute a riposte.", 
-	      FALSE, this, 0, vict, TO_VICT, ANSI_PURPLE);
-	  act("$n uses $s parry to execute a riposte.",
-	      FALSE, this, 0, vict, TO_NOTVICT);
-	  // actual ripose attack is added in hit().  Klugey, but
-	  // easier than trying to create a seperate attack here.
-	  SET_BIT(vict->specials.affectedBy, AFF_RIPOSTE);
-	}
-	mess_sent |= ONEHIT_MESS_DODGE;
+	      if(vict->doesKnowSkill(SKILL_RIPOSTE) &&   // must know the skill
+	        (::number(0,99) < 50) &&                // only 50% of the time
+	        vict->bSuccess(SKILL_RIPOSTE)){
+	          act("$N uses $S parry to execute a riposte.",
+	            FALSE, this, 0, vict, TO_CHAR, ANSI_PURPLE);
+	          act("You use your parry to execute a riposte.", 
+	            FALSE, this, 0, vict, TO_VICT, ANSI_PURPLE);
+	          act("$N uses $S parry to execute a riposte.",
+	            FALSE, this, 0, vict, TO_NOTVICT);
+	        // actual ripose attack is added in hit().  Klugey, but
+	        // easier than trying to create a seperate attack here.
+	        SET_BIT(vict->specials.affectedBy, AFF_RIPOSTE);
+	      }
+	      mess_sent |= ONEHIT_MESS_DODGE;
       }
     }
     loseSneak();
@@ -4100,38 +4100,27 @@ int TBeing::preProcDam(spellNumT type, int dam) const
   return (dam);
 }
 
+// weaponCheck handles immunity to non-magic when reconciling damage.
+// Since magic items and skills can avoid it's affects in ways that
+// don't apply to other immunity types
+// NOTE: slash/blunt/pierce immunity is handled in preProcDam
 int TBeing::weaponCheck(TBeing *vict, TThing *o, spellNumT type, int dam)
 {
-  immuneTypeT imm_type = getTypeImmunity(type);
-  int imm_num=0, total=0;
   TObj *tobj;
 
-  // this should only check weapon attacks, other imms handled in preProcDam
-  if (imm_type != IMMUNE_SLASH &&
-      imm_type != IMMUNE_BLUNT &&
-      imm_type != IMMUNE_PIERCE) {
+  // Get the object held and if it's magic we'll ignore immunity
+  if ((tobj=dynamic_cast<TObj *>(o))) {
+
+    if(tobj->isObjStat(ITEM_MAGIC))
+      return dam;
+
+  // else if there's nothing held check for voplat
+  } else if ((doesKnowSkill(SKILL_VOPLAT) && (getSkillValue(SKILL_VOPLAT) >= 15))) {
     return dam;
   }
 
-  if ((tobj=dynamic_cast<TObj *>(o))) {
-    if(tobj->isObjStat(ITEM_MAGIC))
-      total += 1;
-
-    total += tobj->itemHitroll();
-  } else if(!o && doesKnowSkill(SKILL_VOPLAT))
-    total=getSkillValue(SKILL_VOPLAT)/15;
-
-  if(total < 1){
-    imm_num=vict->getImmunity(IMMUNE_NONMAGIC);
-  } else if (total < 2) {
-    imm_num=vict->getImmunity(IMMUNE_PLUS1);
-  } else if (total < 3) {
-    imm_num=vict->getImmunity(IMMUNE_PLUS2);
-  } else {
-    imm_num=vict->getImmunity(IMMUNE_PLUS3);
-  }
-
-  dam *= (100 - (int) imm_num);
+  // otherwise we'll apply nonmagic immunity
+  dam *= (100 - (int) vict->getImmunity(IMMUNE_NONMAGIC));
   dam /= 100;
   return dam;
 }

@@ -608,48 +608,16 @@ charFile::~charFile()
 // this returns the ID in the database, or creates a new one if needed
 int TBeing::getPlayerID() const
 {
-  if(!isPc())
-    return 0;
-
-  if(desc && desc->playerID)
-    return desc->playerID;
-
-  sstring myname;
-  if (specials.act & ACT_POLYSELF) {
-    myname=desc->original->getName();
-  } else { 
-    myname=getName();
-  }
-
-  TDatabase db(DB_SNEEZY);
-  int playerID=0;
-  db.query("select id from player where lower(name) = lower('%s')", myname.c_str());
-
-  if(db.fetchRow()){
-    playerID=convertTo<int>(db["id"]);
-  } else {
-    // this might be where the null account_id's are coming from...
-    // This error occurs every character creation - not interesting
-    //vlogf(LOG_BUG, format("Couldn't find a player_id for '%s', creating a new one.") % myname);
-
-    db.query("insert into player (name) values (lower('%s'))", myname.c_str());
-    db.query("select id from player where lower(name)=('%s')", myname.c_str());
-    
-    if(db.fetchRow()){
-      playerID=convertTo<int>(db["id"]);
-    } else {
-      vlogf(LOG_BUG,format("Couldn't create an entry in player table for '%s'!") %
-	    myname);
-      return 0;
-    }
-  }
-  
-  if(desc)
-    desc->playerID=playerID;
-
-  return playerID;
+  mud_assert(player.player_id, (name + " has null player ID").c_str());
+  return player.player_id;
 }
 
+
+int TBeing::getAccountID() const
+{
+  mud_assert(desc->account->account_id, (name + " has null account_id").c_str());
+  return desc->account->account_id;
+}
 
 
 void TBeing::showMultTo(const TThing *t, showModeT i, unsigned int n)
@@ -1536,13 +1504,12 @@ void TBeing::peeOnMe(const TBeing *ch)
   act("You relieve yourself on $N's foot.", TRUE, ch, 0, this, TO_CHAR);
 }
 
-sstring const& TBeing::getLongDesc() const
+sstring TBeing::getLongDesc() const
 {
   if (!player.longDescr.empty())
     return player.longDescr;
 
-  static sstring uglyhack = msgVariables.tMessages.msgLongDescr;
-  return uglyhack;
+  return msgVariables[MSG_LONGDESCR];
 }
 
 int TBeing::chiMe(TBeing *tLunatic)

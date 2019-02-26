@@ -64,51 +64,45 @@ const int MSG_REQ_DIR    = (1 << 3); // Direction of travel
 
 struct messageBuffer
 {
-  char *msgImmTitle,
-       *msgPurge,
-       *msgPurgeTarg,
-       *msgRLoad,
-       *msgLoadObj,
-       *msgLoadMob,
-       *msgMEdit,
-       *msgOEdit,
-       *msgSwitchTarg,
-       *msgMoveIn,
-       *msgMoveOut,
-       *msgSlay,
-       *msgSlayTarg,
-       *msgForce,
-       *msgBamfin,
-       *msgBamfout,
-       *msgLongDescr,
-       *msgNote;
+  sstring msgImmTitle;
+  sstring msgPurge;
+  sstring msgPurgeTarg;
+  sstring msgRLoad;
+  sstring msgLoadObj;
+  sstring msgLoadMob;
+  sstring msgMEdit;
+  sstring msgOEdit;
+  sstring msgSwitchTarg;
+  sstring msgMoveIn;
+  sstring msgMoveOut;
+  sstring msgSlay;
+  sstring msgSlayTarg;
+  sstring msgForce;
+  sstring msgBamfin;
+  sstring msgBamfout;
+  sstring msgLongDescr;
+  sstring msgNote;
 };
 
 class TMessages
 {
   public:
-    messageBuffer  tMessages;
-    TBeing        *tPlayer;
+    messageBuffer tMessages;
+    TBeing *tPlayer = nullptr;
 
-    sstring getImmortalTitles(TBeing *);
+    static sstring getImmortalTitles(TBeing *);
     // Return the old default messages.
-    sstring getDefaultMessage(messageTypeT, TBeing *);
+    static sstring getDefaultMessage(messageTypeT, TBeing *);
     // ?(Has message type), also checks for appropriate power setting.
-    bool operator== (messageTypeT);
+    bool operator== (messageTypeT) const;
     // Set message type to message
     void operator() (messageTypeT, sstring);
-   // TMessages & operator() (messageTypeT, sstring);
     // Sets the fields in message  [Call this to actually Get the messages]
-    sstring operator() (messageTypeT, TThing * = NULL, const char * = NULL, bool = true);
+    sstring operator() (messageTypeT, TThing * = NULL, const char * = NULL, bool = true) const;
     // Used by  : Get message from type
-    sstring operator[] (messageTypeT) const;
+    sstring const& operator[] (messageTypeT) const;
     void initialize();
     void savedown();
-
-    TMessages();
-    TMessages(const TMessages &);
-    TMessages & operator == (const TMessages &);
-    ~TMessages();
 };
 
 #endif

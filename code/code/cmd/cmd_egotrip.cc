@@ -60,11 +60,21 @@ std::map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
         APPLY_IMMUNITY,
         IMMUNE_NONMAGIC,
         5);
-  blessings[AFFECT_PEEL_BLESSING]=
-    ego_imm_blessing("Erasmus",
-        AFFECT_PEEL_BLESSING,
-        APPLY_SPE, 
-        "<r>speed<1>");
+  blessings[AFFECT_AION_BLESSING]=
+    ego_imm_blessing("Aion",
+        AFFECT_AION_BLESSING,
+        APPLY_DEX,
+        "<B>the hurricane<1>",
+        APPLY_CRIT_FREQUENCY,
+        3,
+        0);
+//  blessings[AFFECT_PEEL_BLESSING]=
+//  ego_imm_blessing("Peel",
+//      AFFECT_PEEL_BLESSING,
+//      APPLY_SPE, 
+//      "<r>speed<1>");
+// PEEL's abilities were replaced by Aion in all files and this blessing is null until someone re-adds him. Oops.
+// https://github.com/sneezymud/sneezymud/commit/5eff77d065e65421ab8d87ae785ce8e750dfee98
   blessings[AFFECT_VASCO_BLESSING]=
     ego_imm_blessing("Vasco",
         AFFECT_VASCO_BLESSING,
@@ -127,7 +137,7 @@ std::map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
         APPLY_BRA,
         "<b>the pigeon<1>");
   blessings[AFFECT_METROHEP_BLESSING]=
-    ego_imm_blessing("Metrohep",
+    ego_imm_blessing("Imm",
         AFFECT_METROHEP_BLESSING,
         APPLY_STR,
         "<k>the hippo<1>",
@@ -154,7 +164,6 @@ std::map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
         AFFECT_STAFFA_BLESSING,
         APPLY_DEX,
         "<k>the bat<1>");
-
   return blessings;
 }
 
@@ -175,7 +184,7 @@ void egoAffect(TBeing *c, TBeing *v, spellNumT which, int level)
   // apply stat modifier first
   aff.type = which;
   aff.location = blessings[which].prim_apply;
-  aff.modifier = 19;
+  aff.modifier = 20;
   aff.modifier2 = 0;
   aff.bitvector = 0;
   success = v->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES);
@@ -548,7 +557,7 @@ void TBeing::doEgoTrip(const char *arg)
     sstring worldBuf = "You smell burnt flesh as a bolt of lightning takes the hide off of ";
     worldBuf += ch->getName();
     worldBuf += "!\n\r";
-    descriptor_list->worldSend(worldBuf.c_str(), this);
+    Descriptor::worldSend(worldBuf.c_str(), this);
 
     soundNumT snd = pickRandSound(SOUND_EGOBLAST_1, SOUND_EGOBLAST_2);
     ch->roomp->playsound(snd, SOUND_TYPE_NOISE);

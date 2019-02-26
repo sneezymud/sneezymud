@@ -2004,7 +2004,7 @@ int TBeing::doDonate(const char *argument)
 
       --(*t_o);
       thing_to_room(t_o, Room::DONATION);
-      descriptor_list->worldSend(format("<Y>%s<z> just donated %s.\n") % name % t_o->getName(), this);
+      Descriptor::worldSend(format("<Y>%s<z> just donated %s.\n") % name % t_o->getName(), this);
       sprintf(buf,"A small portal appears for an instant, dropping %s in the room.\n\r",t_o->getName().c_str());
       sendToRoom(COLOR_OBJECTS,buf, Room::DONATION);
     }

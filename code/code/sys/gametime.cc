@@ -83,7 +83,7 @@ void GameTime::anotherHour()
           time_info.month = 0;
           time_info.year++;
           buf = format("Happy New Year! It is now the Year %d P.S\n\r") % time_info.year;
-          descriptor_list->worldSend(buf, NULL);
+          Descriptor::worldSend(buf, NULL);
         }
       }
   

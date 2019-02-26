@@ -358,6 +358,8 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
     rc = ret.second;
     if (!ret.first) { // handled
       switch(cmd) {
+	case CMD_NOP:
+	  break;
         case CMD_UNHARNESS:
         case CMD_UNSADDLE:
           doUnsaddle(newarg);
@@ -1504,9 +1506,6 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
         case CMD_FORCE:
           doForce(newarg.c_str());
           break;
-        case CMD_DISTRIBUTE:
-          doDistribute(newarg.c_str());
-          break;
         case CMD_COLOR:
           doColor(newarg.c_str());
           addToLifeforce(1);
@@ -1786,6 +1785,9 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
         case CMD_RUN:
           doRun(argument);
           break;
+        case CMD_RECHARGE:
+          doChargeStave(newarg.c_str());
+          break;
 
           break;
         case MAX_CMD_LIST:
@@ -1876,6 +1878,10 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
         case CMD_MOB_COMBAT_ONATTACKED:
         case CMD_MOB_COMBAT_STOPPING:
         case CMD_MAP:
+        case CMD_REMEMBER:
+        case CMD_REMEMBERPLAYER:
+        case CMD_RETRIEVE:
+        case CMD_DISTRIBUTE:
           sendTo(format("doCommand:incorrectCommand: [%d]\n\r") % cmd);
           incorrectCommand();
           return FALSE;
@@ -2978,6 +2984,11 @@ void buildCommandArray(void)
   commandArray[CMD_IGNORE] = new commandInfo("ignore", POSITION_DEAD, 0);
   commandArray[CMD_RUN] = new commandInfo("run", POSITION_CRAWLING, 0);
   commandArray[CMD_MAP] = new commandInfo("map", POSITION_STANDING, 0);
+  commandArray[CMD_REMEMBER] = new commandInfo("remember", POSITION_DEAD, 0);
+  commandArray[CMD_REMEMBERPLAYER] = new commandInfo("rememberplayer", POSITION_DEAD, 0);
+  commandArray[CMD_RETRIEVE] = new commandInfo("retrieve", POSITION_DEAD, 0);
+  commandArray[CMD_RECHARGE] = new commandInfo("recharge", POSITION_STANDING, 0);
+  commandArray[CMD_NOP] = new commandInfo("noop", POSITION_DEAD, 0);
 }
 
 bool _parse_name_safe(const char *arg, char *name, unsigned int nameLen)

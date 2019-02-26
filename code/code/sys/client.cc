@@ -1028,9 +1028,10 @@ int Descriptor::client_nanny(char *arg)
     outputProcessing();
     return FALSE;
   }
-  if (load_char(tmp_name, &st))
+  if (load_char(tmp_name, &st)) {
+    dynamic_cast<TPerson *>(character)->loadFromDb(tmp_name);
     dynamic_cast<TPerson *>(character)->loadFromSt(&st);
-  else {
+  } else {
     clientf(format("%d|No such character exists! Reenter character name or create a new character.|%d") % CLIENT_ERROR % ERR_BAD_NAME);
 
     // deletion at this point is semi-problematic

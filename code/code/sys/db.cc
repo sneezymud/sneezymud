@@ -3189,7 +3189,9 @@ void runResetCmdO(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
 {
   objload = last_cmd = false;
 
-  if (!IS_SET(flags, resetFlagBootTime)) {
+  if (IS_SET(flags, resetFlagBootTime)) {
+    runResetCmdB(zone, rs, flags, mobload, mob, objload, obj, last_cmd);
+  } else {
     // TODO make this a tweakable percent chance
     // TODO move this into runresetcmdb
     TRoom *room = real_roomp(rs.arg3);
@@ -3204,8 +3206,6 @@ void runResetCmdO(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
       container->remContainerFlag(CONT_JAMMED);
     }
   }
-
-  return runResetCmdB(zone, rs, flags, mobload, mob, objload, obj, last_cmd);
 }
 
 // used to 'place' objects on tables, into containers, etc
@@ -3321,6 +3321,12 @@ void runResetCmdG(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
       (obj = read_object_buy_build(mob, rs.arg1, REAL))))
   {
     repoCheck(mob, rs.arg1);
+    return;
+  }
+
+  if (mob == nullptr)
+  {
+    vlogf(LOG_BUG, format("Nullptr mob in G command #%d (%d %d %d %d) in %s") % rs.cmd_no % rs.arg1 % rs.arg2 % rs.arg3 % rs.arg4 % zone.name);
     return;
   }
 

@@ -5729,6 +5729,29 @@ int regeneration(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
   return FALSE;
 }
 
+int pietyRegen(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
+{
+  if (!o)
+    return FALSE;
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;       // item not equipped (carried or on ground)
+
+  if(cmd == CMD_GENERIC_PULSE) {
+
+    // don't spam if we're already full
+    if (ch->getPiety() >= ch->pietyLimit())
+      return FALSE;
+  
+    if (ch->doesKnowSkill(SKILL_PENANCE) && (!::number(0,17))) {
+      float dam = ch->getSkillValue(SKILL_PENANCE) * 7.5 / 100;
+      act("<g>Your $o<g> lets you feel more in tune with $d.<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
+      ch->addToPiety(dam);
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
 int stickerBush(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
 {
   if (cmd != CMD_OBJ_MOVEMENT)
@@ -6757,6 +6780,11 @@ extern int objWornMinorAstralWalk(TBeing *targ, cmdTypeT cmd, const char *arg, T
 extern int objWornPortal(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 extern int comboEQCast(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 extern int ofManyPotions(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
+extern int shadowWeapon(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *);
+extern int livingVines(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *);
+extern int dkSword(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *);
+
+
 
 // assign special procedures to objects
 
@@ -6919,5 +6947,9 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Immortal Exchange Computer", ieComputer}, 
   {FALSE, "liquid source", liquidSource}, // 155
   {FALSE, "of many potions", ofManyPotions},
+  {TRUE, "Shadow Weapon", shadowWeapon},
+  {TRUE, "Living Vines", livingVines},
+  {TRUE, "Piety Regen", pietyRegen},
+  {TRUE, "DK Sword", dkSword},
   {FALSE, "last proc", bogusObjProc}
 };

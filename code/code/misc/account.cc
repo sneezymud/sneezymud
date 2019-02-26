@@ -60,11 +60,19 @@ bool TAccount::write(const sstring &aname)
     res=db.query("insert into account (multiplay_limit, email, passwd, name, birth, term, time_adjust, flags, last_logon) values (%i, '%s', '%s', lower('%s'), %i, %i, %i, %i, %i)",
 	     multiplay_limit, email.c_str(), passwd.c_str(), name.c_str(), birth, term,
 	     time_adjust, flags, last_logon);
+
+    if (account_id == 0) {
+      db.query("select account_id from account where lower(name) = lower('%s')", aname.c_str());
+      assert(db.fetchRow());
+      account_id = convertTo<int>(db["account_id"]);
+    }
+
   } else {
     res=db.query("update account set multiplay_limit=%i, email='%s', passwd='%s', birth=%i, term=%i, time_adjust=%i, flags=%i, last_logon=%i where name=lower('%s')",
 	     multiplay_limit, email.c_str(), passwd.c_str(), birth, term,
 	     time_adjust, flags, last_logon, name.c_str());
   }
+  assert(account_id);
   return res;
 }
 

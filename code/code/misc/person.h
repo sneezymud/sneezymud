@@ -66,9 +66,11 @@ class TPerson : public TBeing {
     }
 
     void storeToSt(charFile *);
+    void storeToDb() const;
     void autoDeath();
     void resetChar();
     int genericLoadPC();
+    void loadFromDb(std::string const& name);
     void loadFromSt(charFile *);
     void fixPracs();
     void initChar();
@@ -89,6 +91,9 @@ class TPerson : public TBeing {
     void doMapAdd(sstring const&);
     void doMapRm(sstring const&);
     void doMapGo(sstring const&);
+    void doRemember(bool print, sstring const&);
+    void doRememberPlayer(bool print, sstring const&);
+    void doRetrieve(bool print, sstring const&);
 
     virtual std::pair<bool, int> doPersonCommand(cmdTypeT, const sstring &, TThing *, bool);
     virtual void raiseLevel(classIndT);
@@ -111,7 +116,7 @@ class TPerson : public TBeing {
     virtual void doSnoop(const char *);
     virtual void doSwitch(const char *);
     virtual void doForce(const char *);
-    virtual void doDistribute(const char *);
+    virtual void doDistribute(const sstring&);
     virtual void doLoad(const char *);
     virtual int doRent(const sstring &);
     virtual void doCutlink(const char *);

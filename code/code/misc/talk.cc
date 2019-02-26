@@ -371,7 +371,7 @@ void TBeing::doShout(const sstring &arg)
     sendTo("Shouting has been banned.\n\r");
     return;
   }
-  if ((getMove() < 30) && isPc()) {
+  if ((getMove() < 15) && isPc()) {
     sendTo("You don't have the energy to shout!\n\r");
     return;
   }
@@ -401,7 +401,7 @@ void TBeing::doShout(const sstring &arg)
   loseSneak();
 
   if (isPc())
-    addToMove(-30);
+    addToMove(-15);
 
   addToWait(combatRound(0.5));
 

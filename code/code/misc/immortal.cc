@@ -412,7 +412,7 @@ void TBeing::doHighfive(const sstring &argument)
         name % tch->name;
             break;
         }
-        descriptor_list->worldSend(mess, this);
+        Descriptor::worldSend(mess, this);
       } else {
         act("$n gives you a high five.", TRUE, this, 0, tch, TO_VICT);
         act("You give a hearty high five to $N.", TRUE, this, 0, tch, TO_CHAR);
@@ -905,11 +905,11 @@ void TBeing::doSystem(const sstring &argument)
   } else if (!hasWizPower(POWER_WIZARD)) {
     buf=format("The following is an official message from %s:\n\r   %s\n\r") %
       getName() % argument;
-    descriptor_list->worldSend(buf, this);
+    Descriptor::worldSend(buf, this);
   } else {
     buf=format("%s\n\r") % argument;
-    descriptor_list->worldSend(buf, this);
-  } 
+    Descriptor::worldSend(buf, this);
+  }
 }
 
 void TBeing::doTrans(const char *)
@@ -1415,7 +1415,7 @@ void TPerson::doShutdown(bool reboot, const char *argument)
       return;
     }
     sprintf(buf, "<r>%s by %s.<z>\n\r", shutdown_or_reboot().c_str(), getName().c_str());
-    descriptor_list->worldSend(buf, this);
+    Descriptor::worldSend(buf, this);
     Shutdown = 1;
   } else {
     if (isdigit(*arg)) {
@@ -1437,14 +1437,14 @@ void TPerson::doShutdown(bool reboot, const char *argument)
       sprintf(buf, "<r>******* SYSTEM MESSAGE *******\n\r%s in %d minute%s by %s.<z>\n\r<c>Use the TIME command at any point to see time until %s.<z>\n\r", 
        shutdown_or_reboot().c_str(), num, (num == 1 ? "" : "s"),getName().c_str(),
        shutdown_or_reboot().c_str());
-      descriptor_list->worldSend(buf, this); 
+      Descriptor::worldSend(buf, this);
     } else if (is_abbrev(arg, "abort")) {
       if (!timeTill) {
         sendTo("No shutdown has been scheduled.\n\r");
         return;
       }
       sprintf(buf, "<r>System %s aborted by %s.<z>\n\r", shutdown_or_reboot().c_str(), getName().c_str());
-      descriptor_list->worldSend(buf, this);
+      Descriptor::worldSend(buf, this);
       timeTill = 0L;
     } else {
       sendTo("Syntax : shutdown <minutes until shutdown>\n\r");
@@ -2250,56 +2250,45 @@ void TPerson::doForce(const char *argument)
   }
 }
 
-void TBeing::doDistribute(const char* argument)
+void TPerson::doDistribute(sstring const& argument)
 {
-  sendTo("Mobs can't distribute.\n\r");
-}
-
-void TPerson::doDistribute(const char* argument)
-{
-  char vnum_s[MAX_INPUT_LENGTH], chance_s[MAX_INPUT_LENGTH];
-
   if (powerCheck(POWER_DISTRIBUTE))
     return;
 
-  half_chop(argument, vnum_s, chance_s);
+  int vnum = convertTo<int>(argument.word(0));
+  int chance = convertTo<int>(argument.word(1));
 
-  if (!*vnum_s || !*chance_s)
-    sendTo("Syntax: distribute <vnum> <chance>.\n\r");
-  else {
-      int vnum;
-      int chance;
-      if (sscanf(vnum_s, "%d", &vnum) != 1 || sscanf(chance_s, "%d", &chance) != 1) {
-	  sendTo("Syntax: distribute <vnum> <chance>.\n\r");
-	  return;
+  if (vnum == 0 || chance == 0) {
+    sendTo("Syntax: distribute <vnum> <chance>\n\r");
+  } else {
+    TObj* tmpObj;
+    if (vnum < 0 || (tmpObj = read_object(vnum, VIRTUAL)) == nullptr) {
+      sendTo(format("There is no such object %d.\n\r") % vnum);
+      return;
+    }
+    delete tmpObj;
+
+    sendTo(format("Distributing %d with chance %d.\n\r") % vnum % chance);
+    vlogf(LOG_MISC, format("%s distributing vnum %d to mobs, with chance %d") % getName() % vnum % chance);
+
+    int count = 0;
+    TObj* obj;
+    for (TBeing* person = character_list; person; person = person->next) {
+      if (person->isPc())
+        continue;
+
+      if (rand() % 100 < chance) {
+        if (!(obj = read_object(vnum, VIRTUAL))) {
+          vlogf(LOG_BUG, "Error finding object.");
+          return;
+        }
+        *person += *obj;
+        count++;
       }
+    }
 
-      if (vnum < 0 || vnum >= (signed int) obj_index.size()) {
-	sendTo("There is no such object.\n\r");
-	return;
-      }
-
-      sendTo(format("Distributing %d with chance %d.\n\r") % vnum % chance);
-      vlogf(LOG_MISC, format("%s distributing vnum %d to mobs, with chance %d") % getName() % vnum % chance);
-
-      int count = 0;
-      TObj* obj;
-      for (TBeing* person = character_list; person; person = person->next) {
-	if (person->isPc())
-	  continue;
-
-	if (rand() % 100 < chance) {
-	  if (!(obj = read_object(vnum, VIRTUAL))) {
-	    vlogf(LOG_BUG, "Error finding object.");
-	    return;
-	  }
-	  *person += *obj;
-	  count++;
-	}
-      }
-
-      vlogf(LOG_MISC, format("%s distributed %d copies of item vnum %d to mobs, with chance %d") % getName() % count % vnum % chance);
-      sendTo(format("%s distributed %d copies of item vnum %d to mobs, with chance %d") % getName() % count % vnum % chance);
+    vlogf(LOG_MISC, format("%s distributed %d copies of item vnum %d to mobs, with chance %d") % getName() % count % vnum % chance);
+    sendTo(format("%s distributed %d copies of item vnum %d to mobs, with chance %d") % getName() % count % vnum % chance);
   }
 }
 
@@ -3690,7 +3679,7 @@ void TBeing::doWipe(const char *argument)
     sendTo("Ok.\n\r");
     sprintf(buf, "You hear a cry of anguish as %s screams in agony.\n\r", victim->getName().c_str());
     sprintf(buf + strlen(buf), "%s cackles in triumph as he utterly annihilates %s.\n\r", getName().c_str(), victim->getName().c_str());
-    descriptor_list->worldSend(buf, this);
+    Descriptor::worldSend(buf, this);
     victim->sendTo("We're like closed or something.  Go away.\n\r");
   
     // this handles droping items to ground

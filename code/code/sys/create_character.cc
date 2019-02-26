@@ -712,7 +712,11 @@ connectStateT nannyLaunchpad_input(Descriptor * desc, sstring & output, const ss
 
     vlogf(LOG_PIO, format("%s [%s] new player.") %  desc->character->getName() % desc->host);
     desc->character->saveChar(Room::AUTO_RENT);
+    desc->character->loadMapData();
     db.query("insert into player (name) values (lower('%s'))", desc->character->getName().c_str());
+    db.query("select id from player where lower(name)=('%s')", desc->character->getName().c_str());
+    assert(db.fetchRow());
+    desc->playerID = desc->character->player.player_id = convertTo<int>(db["id"]);
     AccountStats::player_count++;
 
     return CON_CREATION_DONE;

@@ -576,6 +576,17 @@ void TPerson::storeToSt(charFile *st)
   affectTotal();
 }				/* Char to store */
 
+void TPerson::loadFromDb(std::string const& name)
+{
+  player.account_id = desc->account->account_id;
+
+  TDatabase db(DB_SNEEZY);
+  db.query("select * from player where lower(name) = lower('%s')", name.c_str());
+  mud_assert(db.fetchRow(), "can't find player in DB");
+  desc->playerID = player.player_id = convertTo<int>(db["id"]);
+}
+
+// TODO: move the whole mess into DB
 void TPerson::loadFromSt(charFile *st)
 {
   int i;
@@ -924,6 +935,11 @@ void TBeing::saveChar(int load_room)
     vlogf(LOG_BUG, format("Character %s has a NULL account name! Save aborted.") %  getName());
     return;
   }
+  if (getPlayerID() == 0) {
+      vlogf(LOG_BUG, format("Character %s's player ID = 0. Save aborted.") %  getName());
+      act("Your character was not saved. Please report the circumstances how it happened!.", FALSE, this, 0, 0, TO_CHAR);
+      return;
+  }
   if (!tmp) { 
     strcpy(buf2, sstring(name).lower().c_str());
     sprintf(buf, "account/%c/%s/%s", LOWER(desc->account->name[0]), sstring(desc->account->name).lower().c_str(), buf2);
@@ -931,25 +947,44 @@ void TBeing::saveChar(int load_room)
     strcpy(buf2, sstring(tmp->name).lower().c_str());
     sprintf(buf, "account/%c/%s/%s", LOWER(tmp->desc->account->name[0]), sstring(tmp->desc->account->name).lower().c_str(), buf2);
   }
-  TDatabase db(DB_SNEEZY);
+
   Descriptor *mydesc=tmp?tmp->desc:desc;
-    
+  assert(mydesc->account->account_id);
+
+  TTransaction db(DB_SNEEZY);
+
   if(!isImmortal()){
-    db.query("update player set talens=%i, account_id=(select account_id from account where name = '%s'), load_room=%i, last_logon=%i, nutrition=%i where id=%i",
-        st.money, mydesc->account->name.c_str(), load_room, st.last_logon, nutrition, getPlayerID());
+    db.query("update player set talens=%i, account_id=%i, load_room=%i, last_logon=%i, nutrition=%i where id=%i",
+        st.money, mydesc->account->account_id, load_room, st.last_logon, nutrition, getPlayerID());
     st.load_room=0;
   }
 
+  assert(player.player_id);
 
-  db.query("update playerprompt set p_type=%i, hp='%s', mana='%s', move='%s', money='%s', exp='%s', room='%s', opp='%s', tank='%s', piety='%s', lifeforce='%s', time='%s' where player_id=%i", 
-	   mydesc->prompt_d.type, mydesc->prompt_d.hpColor, 
-	   mydesc->prompt_d.manaColor, mydesc->prompt_d.moveColor,
-	   mydesc->prompt_d.moneyColor, mydesc->prompt_d.expColor,
-	   mydesc->prompt_d.roomColor, mydesc->prompt_d.oppColor,
-	   mydesc->prompt_d.tankColor, mydesc->prompt_d.pietyColor,
-	   mydesc->prompt_d.lifeforceColor, mydesc->prompt_d.timeColor,
-	   getPlayerID());
-	   
+  db.query("select 1 from playerprompt where player_id = %i", getPlayerID());
+  if (db.fetchRow()) {
+    db.query("update playerprompt "
+        "set p_type=%i, hp='%s', mana='%s', move='%s', money='%s', exp='%s', room='%s', "
+        "opp='%s', tank='%s', piety='%s', lifeforce='%s', time='%s' where player_id = %i",
+        mydesc->prompt_d.type, mydesc->prompt_d.hpColor,
+        mydesc->prompt_d.manaColor, mydesc->prompt_d.moveColor,
+        mydesc->prompt_d.moneyColor, mydesc->prompt_d.expColor,
+        mydesc->prompt_d.roomColor, mydesc->prompt_d.oppColor,
+        mydesc->prompt_d.tankColor, mydesc->prompt_d.pietyColor,
+        mydesc->prompt_d.lifeforceColor, mydesc->prompt_d.timeColor,
+        getPlayerID());
+  } else {
+    db.query("insert into playerprompt "
+        "(player_id, p_type, hp, mana, move, money, exp, room, opp, tank, piety, lifeforce, time) "
+        "values (%i, %i, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+        getPlayerID(),
+        mydesc->prompt_d.type, mydesc->prompt_d.hpColor,
+        mydesc->prompt_d.manaColor, mydesc->prompt_d.moveColor,
+        mydesc->prompt_d.moneyColor, mydesc->prompt_d.expColor,
+        mydesc->prompt_d.roomColor, mydesc->prompt_d.oppColor,
+        mydesc->prompt_d.tankColor, mydesc->prompt_d.pietyColor,
+        mydesc->prompt_d.lifeforceColor, mydesc->prompt_d.timeColor);
+  }
 
   fl = fopen(buf, "w");
   mud_assert(fl != NULL, "Failed fopen in save char: %s", buf);

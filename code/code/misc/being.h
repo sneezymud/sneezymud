@@ -413,9 +413,10 @@ class TBeing : public TThing {
 
     // VIRTUAL FUNCTIONS
     virtual int editAverageMe(TBeing *, const char *);
-    virtual sstring const& getLongDesc() const;
+    virtual sstring getLongDesc() const;
     virtual int chiMe(TBeing *);
     virtual sstring const& getName() const { return shortDescr; }
+    virtual int getAccountID() const;
     virtual int getPlayerID() const;
     virtual void remCastingList(TThing *);
     virtual roomDirData *exitDir(dirTypeT door) const;
@@ -1790,7 +1791,6 @@ class TBeing : public TThing {
     int doSay(const char *fmt, ...);
     int doSay(const sstring &);
     virtual void doForce(const char *);
-    virtual void doDistribute(const char *);
     void doCommune(const sstring &);
     virtual void doShutdow();
     virtual void doShutdown(bool, const char *);

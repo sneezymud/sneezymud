@@ -743,6 +743,8 @@ int slide(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
   for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
     t=*(it++);
 
+    if (t == nullptr)
+        vlogf(LOG_BUG, format("Null pointer in roomproc slide() in room %s") % rp->getName());
     if (t->riding)
       continue;
 

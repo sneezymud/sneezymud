@@ -1,5 +1,5 @@
-Syntax: charge
-Syntax: charge <spell>
+Syntax: recharge
+Syntax: recharge <spell>
 
   With a greater understanding of a spell, a lot of the component and an
 applicable staff it is possible for a mage to charge the various staves of The

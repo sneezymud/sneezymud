@@ -1360,7 +1360,7 @@ CSkill *TBeing::getSkill(spellNumT skill) const
     case LAST_ODDBALL_AFFECT:
     case AFFECT_BITTEN_BY_VAMPIRE:
     case AFFECT_IMMORTAL_BLESSING:
-    case AFFECT_PEEL_BLESSING:
+    case AFFECT_AION_BLESSING:
     case AFFECT_ANGUS_BLESSING:
     case AFFECT_DAMESCENA_BLESSING:
     case AFFECT_JESUS_BLESSING:
@@ -1377,6 +1377,7 @@ CSkill *TBeing::getSkill(spellNumT skill) const
     case AFFECT_MACROSS_BLESSING:
     case AFFECT_PAPPY_BLESSING:
     case AFFECT_STAFFA_BLESSING:
+    case AFFECT_UNHOLY_WRATH:
     case AFFECT_PREENED:
     case AFFECT_WET:
     case ABSOLUTE_MAX_SKILL:

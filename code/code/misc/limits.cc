@@ -653,7 +653,7 @@ void TPerson::advanceLevel(classIndT Class)
       sendTo(COLOR_BASIC, "<r>Congratulations on obtaining L50!<z>\n\rYou may now create <y>double-class characters<z>!\n\r");
       desc->saveAccount();
     }
-    if (isDoubleClass()) {
+    if (howManyClasses() >= 2) {
       SET_BIT(desc->account->flags, TAccount::ALLOW_TRIPLECLASS);
       sendTo(COLOR_BASIC, "<r>Congratulations on obtaining L50!<z>\n\rYou may now create <y>triple-class characters<z>!\n\r");
       desc->saveAccount();

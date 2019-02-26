@@ -311,7 +311,7 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
     if (d->connected != CON_PLYNG)
       continue;
     
-    TBeing *targ = d->character;
+    TPerson *targ = dynamic_cast<TPerson*>(d->character);
     
     if (!targ || targ->GetMaxLevel() > MAX_MORT)
       continue;
@@ -319,7 +319,7 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
     if (targ->getTimer() > MAX_TIME)
       continue;
 
-    if (targ->roomp == real_roomp(Room::VOID))
+    if (targ->roomp == real_roomp(Room::VOID) || targ->roomp->isRoomFlag(ROOM_PRIVATE))
       continue;
     
     if (targ->desc->autobits & AUTO_NOSPRITE) {
