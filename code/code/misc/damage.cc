@@ -410,7 +410,7 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
 // DELETE_VICT or FALSE
 int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 {
-  char buf[256], buf2[256];
+  char buf[512], buf2[256];
   sstring taunt_buf;
   int rc = 0, questmob;
   TBeing *k=NULL;

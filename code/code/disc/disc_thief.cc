@@ -467,7 +467,7 @@ void TBeing::doTrack(const char *argument)
   TBeing *scan;
   affectedData aff, *Vaff;
   TThing *t = NULL;
-  char buf[256]="\0\0\0", buf2[256]="\0\0\0";
+  char buf[256]="\0\0\0", buf2[512]="\0\0\0";
 
   strcpy(namebuf, argument);
  
@@ -680,7 +680,7 @@ int TBeing::track(TBeing *vict)
   int targetRm = -1;
   int isSW = affectedBySpell(SKILL_SEEKWATER);
   char buf[256];
-  char buf2[256];
+  char buf2[512];
   TPathFinder path(hunt_dist);
   path.setUsePortals(false);
 

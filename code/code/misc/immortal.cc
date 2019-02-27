@@ -2151,7 +2151,7 @@ void TPerson::doForce(const char *argument)
 {
   Descriptor *i;
   TBeing *vict;
-  char name_buf[MAX_INPUT_LENGTH], to_force[MAX_INPUT_LENGTH], buf[MAX_INPUT_LENGTH];
+  char name_buf[MAX_INPUT_LENGTH], to_force[MAX_INPUT_LENGTH], buf[MAX_INPUT_LENGTH*2];
   int rc;
   TThing *t;
 
@@ -3354,13 +3354,13 @@ void TBeing::doRestore(const char *argument)
       }
       if (name == victim->getName()) {
   found = TRUE;
-  strncpy(name2, name, sizeof(name));
+  strncpy(name2, name, sizeof(name2));
   pracs2 = pracs;
       } else {
 	fprintf(fp2,"%s", buf);
       }
     }
-    strncpy(name, name2, sizeof(name2));
+    strncpy(name, name2, sizeof(name));
     pracs = pracs2;
     fprintf(fp2,"%s", buf);
     fclose(fp);
@@ -3947,7 +3947,7 @@ void TPerson::doAccess(const sstring &arg)
 
 void TBeing::doReplace(const sstring &argument)
 {
-  char buf[256], dir[256], dir2[256];
+  char buf[1024], dir[256], dir2[256];
   sstring arg1, arg2, arg3;
   FILE *fp;
   charFile st;
@@ -5984,7 +5984,7 @@ void TBeing::doAccount(const sstring &arg)
       int new_limit = account.multiplay_limit;
       try {
         new_limit = std::stoi(limit);
-      } catch (std::invalid_argument) {
+      } catch (std::invalid_argument&) {
         sendTo(format("Incorrect multiplay limit '%s', expected positive integer.\n\r") % limit);
         return;
       }

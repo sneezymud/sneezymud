@@ -1439,7 +1439,7 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
 const sstring TObj::shopList(const TBeing *ch, const sstring &arg, int iMin, int iMax, int num, int shop_nr, int k, unsigned long int FitT) const
 {
   int cost, found = FALSE;
-  char buf[256];
+  char buf[1024];
   char buf3[256];
   char buf4[256];
   char capbuf[256];

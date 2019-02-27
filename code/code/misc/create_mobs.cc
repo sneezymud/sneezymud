@@ -403,6 +403,11 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
   }
 }
 
+static void msave(TBeing *ch, sstring const& argument)
+{
+    msave(ch, argument.c_str());
+}
+
 static void msave(TBeing *ch, char *argument)
 {
   char i, buf[80];
@@ -2051,7 +2056,6 @@ void TPerson::doMedit(const char *argument)
          tStArg("");
   char sstring[256],
        mobile[80],
-       Buf[256],
        tTextLns[3][256] = {"\0", "\0", "\0"};
 
   if (!hasWizPower(POWER_MEDIT)) {
@@ -2078,8 +2082,7 @@ void TPerson::doMedit(const char *argument)
 	sendTo("You are not allowed to edit that monster.\n\r");
 
       else {
-        sprintf(sstring, "%s %d", sstring, cMob->getSnum());
-        msave(this, sstring);
+        msave(this, sstring + std::to_string(cMob->getSnum()));
       }
       return;
       break;
@@ -2499,10 +2502,12 @@ void TPerson::doMedit(const char *argument)
       */
 
       strcpy(tTextLns[0], "[]A-Za-z0-9~`!@#$%&*()_+-={}[;\':,./<>? ]");
-      sprintf(Buf, "%%s \"%%%s\" \"%%%s\"", tTextLns[0], tTextLns[0]);
-      tTextLns[0][0] = '\0';
+      {
+          auto fmtstring = format("%%s \"%%%s\" \"%%%s\"") % tTextLns[0] % tTextLns[0];
+          tTextLns[0][0] = '\0';
 
-      vnum = sscanf(sstring, Buf, tTextLns[0], tTextLns[1], tTextLns[2]);
+          vnum = sscanf(sstring, fmtstring.str().c_str(), tTextLns[0], tTextLns[1], tTextLns[2]);
+      }
 
       if ((!is_abbrev(tTextLns[0], "long") &&
            !is_abbrev(tTextLns[0], "desc")) ||

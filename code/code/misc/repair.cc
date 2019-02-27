@@ -638,7 +638,7 @@ void repairman_value(const char *arg, TMonster *repair, TBeing *buyer)
 // returns DELETE_THIS if buyer goes poof
 int repairman_give(const char *arg, TMonster *repair, TBeing *buyer)
 {
-  char buf[256], obj_name[MAX_INPUT_LENGTH];
+  char obj_name[MAX_INPUT_LENGTH];
   char rep_name[MAX_INPUT_LENGTH];
   char obj_amt[MAX_INPUT_LENGTH];
   TThing *t;
@@ -660,10 +660,11 @@ int repairman_give(const char *arg, TMonster *repair, TBeing *buyer)
     return FALSE;
   }
   if ((get_char_room_vis(buyer, rep_name) != repair)) {
+    sstring buf;
     if (*obj_amt)
-      sprintf(buf, "%s %s %s", obj_amt, obj_name, rep_name);
+      buf = format("%s %s %s") % obj_amt % obj_name % rep_name;
     else
-      sprintf(buf, "%s %s", obj_name, rep_name);
+      buf = format("%s %s") % obj_name % rep_name;
 
     if (buyer->doGive(buf) == DELETE_THIS)
       return DELETE_THIS;

@@ -199,7 +199,7 @@ int plagueOfLocusts(TBeing * caster, TBeing * victim)
 int pillarOfSalt(TBeing * caster, TBeing * victim, int level, short bKnown, int adv_learn)
 {
   wearSlotT slot = WEAR_NOWHERE;
-  char buf[256], limb[256];
+  char buf[1024], limb[256];
 
   if (!caster->roomp || caster->roomp->isWaterSector() || caster->roomp->isUnderwaterSector()) {
     caster->sendTo("The water surrounding you dissolves all the spell's salt!\n\r");

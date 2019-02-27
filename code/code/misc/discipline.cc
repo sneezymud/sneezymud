@@ -135,7 +135,7 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
 {
   TThing *sec_obj, *prim_obj;
   int sec_okay, prim_okay, sec_usable, prim_usable;
-  char buf[256], buf2[40], msg[256];
+  char buf[256], buf2[40], msg[512];
   int num = ::number(1,100);
 
   if (ch->isImmortal())

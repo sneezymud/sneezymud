@@ -142,7 +142,7 @@ int TFFlame::pourWaterOnMe(TBeing *ch, TObj *sObj)
 {
   TDrinkCon *dContainer = NULL;
   TFuel *fContainer = NULL;
-  char Buf[2][256];
+  char Buf[2][1024];
   int drunk=0;
   liqTypeT type=LIQ_WATER;
 

@@ -22,7 +22,7 @@ static void showStatsTo(const Descriptor *d, const TBeing *ch, bool hidden_stuff
 {
   time_info_data playing_time;
   char time_buf[160];
-  char buffer[256];
+  char buffer[512];
   char buf3[120], buf4[120];
   sstring str;
 

@@ -870,7 +870,7 @@ void healFullSpray(TBeing * caster, TMagicItem * obj)
 
 int knitBone(TBeing * caster, TBeing * victim, int, short bKnown)
 {
-  char buf[256], limb[256];
+  char buf[1024], limb[256];
   wearSlotT slot;
 
   if (!victim) {
@@ -927,7 +927,7 @@ void knitBone(TBeing * caster, TBeing *victim)
 
 int clot(TBeing * caster, TBeing * victim, int, short bKnown, spellNumT spell)
 {
-  char buf[256], limb[256];
+  char buf[1024], limb[256];
   wearSlotT slot;
 
   // find a bleeding slot 
@@ -1003,7 +1003,7 @@ void clot(TBeing * caster, TBeing * victim, TMagicItem * obj, spellNumT spell)
 
 int restoreLimb(TBeing *caster, TBeing *victim, int, short bKnown)
 {
-  char buf[256], limb[256];
+  char buf[1024], limb[256];
   wearSlotT slot, num;
   wearSlotT j;
 
@@ -1097,7 +1097,7 @@ void restoreLimb(TBeing *caster, TBeing *victim)
 
 int sterilize(TBeing * caster, TBeing * victim, int, short bKnown, spellNumT spell)
 {
-  char buf[256], limb[256];
+  char buf[1024], limb[256];
   wearSlotT slot;
 
   // find an infected slot 
@@ -1159,7 +1159,7 @@ void sterilize(TBeing * caster, TBeing * victim, TMagicItem * obj, spellNumT spe
 --------------------------------------------------------- */
 bool salve_bruise(TBeing * caster, TBeing * victim, byte bKnown, spellNumT spell)
 {
-  char buf[256];
+  char buf[1024];
 
   wearSlotT slot = victim->getRandomPart(PART_BRUISED, FALSE, TRUE);
   if (slot == WEAR_NOWHERE)
@@ -1185,7 +1185,7 @@ int salve(TBeing * caster, TBeing * victim, int level, short bKnown, spellNumT s
 {
   int hurting = 0, soothing = 0, fixed = 0;
   wearSlotT slot;
-  char buf[256]; 
+  char buf[1024]; 
   int max_am = 1 + (level * number(1,6)/2);
 
   if (spell==SKILL_WOHLIN ||
@@ -1291,7 +1291,7 @@ void salve(TBeing * caster, TBeing * victim, TMagicItem * obj, spellNumT spell)
 
 int expel(TBeing * caster, TBeing * victim, int, short bKnown, spellNumT spell)
 {
-  char buf[256], limb[256];
+  char buf[1024], limb[256];
   wearSlotT slot;
   TThing *o = NULL;
   int res;

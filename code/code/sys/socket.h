@@ -53,6 +53,7 @@ class TSocket {
  public:
   int m_sock;
   int port;
+  int writeToSocket(sstring const&);
   int writeToSocket(const char *);
   int writeNull();
 

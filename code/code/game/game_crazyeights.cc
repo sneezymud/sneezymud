@@ -491,7 +491,7 @@ void CrazyEightsGame::play(const TBeing *ch, const char *tArg)
           cardPlayed,
           newSuit = 0;
   char    tString[256],
-          tBuffer[256];
+          tBuffer[1024];
   bool    isPlayable = false;
 
   if (!game) {

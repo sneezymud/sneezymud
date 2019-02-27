@@ -357,6 +357,11 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
 
 }
 
+static void osave(TBeing *ch, sstring const& argument)
+{
+    osave(ch, argument.c_str());
+}
+
 static void osave(TBeing *ch, const char *argument)
 {
   char i, buf[80];
@@ -510,7 +515,6 @@ void TPerson::doOEdit(const char *argument)
          tStArg("");
   char sstring[256],
        object[80],
-       Buf[256],
        tTextLns[4][256] = {"\0", "\0", "\0", "\0"};
 
   if (!hasWizPower(POWER_OEDIT)) {
@@ -533,10 +537,10 @@ void TPerson::doOEdit(const char *argument)
 	sendTo("You are not allowed to oedit that object, sorry.\n\r");
 
       else {
-        sprintf(sstring, "%s %d", sstring, cObj->getSnum());
-	sendTo(format("Resaving in slot %i.\n\r") % cObj->getSnum());
-	oremove(this, cObj->getSnum());
-        osave(this, sstring);
+        auto fmt = format("%s %d") % sstring % cObj->getSnum();
+        sendTo(format("Resaving in slot %i.\n\r") % cObj->getSnum());
+        oremove(this, cObj->getSnum());
+        osave(this, fmt);
       }
       return;
       break;
@@ -866,10 +870,12 @@ void TPerson::doOEdit(const char *argument)
       */
 
       strcpy(tTextLns[0], "[]A-Za-z0-9~`!@#$%&*()_+-={}[;\':,./<>? ]");
-      sprintf(Buf, "%%s \"%%%s\" \"%%%s\" \"%%%s\"", tTextLns[0], tTextLns[0], tTextLns[0]);
-      tTextLns[0][0] = '\0';
+      {
+          auto fmt = format("%%s \"%%%s\" \"%%%s\" \"%%%s\"") % tTextLns[0] % tTextLns[0] % tTextLns[0];
+          tTextLns[0][0] = '\0';
 
-      vnum = sscanf(sstring, Buf, tTextLns[0], tTextLns[1], tTextLns[2], tTextLns[3]);
+          vnum = sscanf(sstring, fmt.str().c_str(), tTextLns[0], tTextLns[1], tTextLns[2], tTextLns[3]);
+      }
 
       if (((!is_abbrev(tTextLns[0], "long" )                    || vnum < 2) &&
            (!is_abbrev(tTextLns[0], "extra") || !tTextLns[2][0] || vnum < 3)) ||

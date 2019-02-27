@@ -1136,10 +1136,12 @@ void TPerson::doEdit(const char *arg)
       */
 
       strcpy(tTextLns[0], "[]A-Za-z0-9~`!@#$%&*()_+-={}[;\':,./<>? ]");
-      sprintf(Buf, "%%s \"%%%s\" \"%%%s\" \"%%%s\"", tTextLns[0], tTextLns[0], tTextLns[0]);
-      tTextLns[0][0] = '\0';
+      {
+          auto fmt = format("%%s \"%%%s\" \"%%%s\" \"%%%s\"") % tTextLns[0] % tTextLns[0] % tTextLns[0];
+          tTextLns[0][0] = '\0';
 
-      dcond = sscanf(str, Buf, tTextLns[0], tTextLns[1], tTextLns[2], tTextLns[3]);
+          dcond = sscanf(str, fmt.str().c_str(), tTextLns[0], tTextLns[1], tTextLns[2], tTextLns[3]);
+      }
 
       if (((!is_abbrev(tTextLns[0], "description") ||                    dcond < 2) &&
            (!is_abbrev(tTextLns[0], "extra"      ) || !tTextLns[2][0] || dcond < 3)) ||

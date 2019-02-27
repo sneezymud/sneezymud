@@ -81,7 +81,7 @@ int bonebreakHit(TBeing *c, TBeing *victim)
 {
   wearSlotT slot;
   int dam=::number(1,c->GetMaxLevel()), rc;
-  char limb[256], buf[256];
+  char limb[256], buf[512];
 
   // find a suitable bone to break 
   for (slot = (wearSlotT) number(MIN_WEAR, MAX_WEAR - 1);; 

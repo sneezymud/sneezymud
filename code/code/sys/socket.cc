@@ -1903,6 +1903,11 @@ int TSocket::writeNull()
   return 0;
 }
 
+int TSocket::writeToSocket(sstring const& str)
+{
+    return writeToSocket(str.c_str());
+}
+
 int TSocket::writeToSocket(const char *txt)
 {
   int sofar, thisround, total;

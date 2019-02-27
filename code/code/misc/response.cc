@@ -20,7 +20,7 @@ command::command() :
 command::command(const command &a) :
   cmd(a.cmd)
 {
-  args = mud_str_dup(args);
+  args = mud_str_dup(a.args);
   if (a.next)
     next = new command(*a.next);
   else
@@ -154,19 +154,11 @@ RespMemory::RespMemory(cmdTypeT newCmd, TBeing *tBeing, const sstring &tArg)
 RespMemory::RespMemory(const RespMemory &a) :
   cmd(a.cmd)
 {
-  if (name) {
-    delete [] name;
-    name = NULL;
-  }
-
+  name = NULL;
   if (a.name)
     name = mud_str_dup(a.name);
 
-  if (args) {
-    delete [] args;
-    args = NULL;
-  }
-
+  args = NULL;
   if (a.args)
     args = mud_str_dup(a.args);
 

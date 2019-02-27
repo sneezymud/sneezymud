@@ -3656,7 +3656,7 @@ int Descriptor::doAccountStuff(char *arg)
   int Descriptor::inputProcessing()
   {
     int sofar, thisround, bgin, squelch, i, k, flag;
-    char tmp[20000], buffer[20000];
+    char tmp[20000];
     int which = -1, total = 0, count = 0;
     char *s, *s2;
     TBeing *ch = original ? original : character;
@@ -3756,8 +3756,8 @@ int Descriptor::doAccountStuff(char *arg)
           snoop.snoop_by->desc->output.push(CommPtr(new SnoopComm(ch->getName(), outputBuf)));
         }
         if (flag) {
-          sprintf(buffer, "Line too long. Truncated to:\n\r%s\n\r", tmp);
-          if (socket && socket->writeToSocket(buffer) < 0) {
+          sstring msg = format("Line too long. Truncated to:\n\r%s\n\r") % tmp;
+          if (socket && socket->writeToSocket(msg) < 0) {
             return (-1);
           }
 

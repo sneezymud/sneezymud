@@ -1343,7 +1343,7 @@ int bogusObjProc(TBeing *, cmdTypeT, const char *, TObj *me, TObj *)
 
 int bleedChair(TBeing *ch, cmdTypeT cmd, const char *, TObj *me, TObj *)
 {
-  char buf[256], limb[256];
+  char buf[1024], limb[256];
   int duration;
   wearSlotT slot;
 

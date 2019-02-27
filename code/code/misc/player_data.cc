@@ -881,7 +881,7 @@ void TBeing::saveChar(int load_room)
   charFile st;
   FILE *fl;
   TBeing *tmp = NULL;
-  char buf[256];
+  char buf[512];
   char buf2[256];
 
   if (dynamic_cast<TMonster *>(this)) {
