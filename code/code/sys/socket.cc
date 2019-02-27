@@ -38,7 +38,6 @@ int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 #include "statistics.h"
 #include "database.h"
 #include "spelltask.h"
-#include "systemtask.h"
 #include "socket.h"
 #include "person.h"
 #include "weather.h"
@@ -1574,17 +1573,6 @@ void procRoomPulse::run(const TPulse &pl) const
   //  return count;
 }
 
-procCheckTask::procCheckTask(const int &p)
-{
-  trigger_pulse=p;
-  name="procCheckTask";
-}
-
-void procCheckTask::run(const TPulse &pl) const
-{
-  systask->CheckTask();
-}
-
 procLagInfo::procLagInfo(const int &p)
 {
   trigger_pulse=p;
@@ -1690,7 +1678,6 @@ int TMainSocket::gameLoop()
   scheduler.add(new procSetZoneEmpty(Pulse::EVERY));
   scheduler.add(new procCallRoomSpec(Pulse::EVERY));
   scheduler.add(new procDoRoomSaves(Pulse::EVERY));
-  scheduler.add(new procCheckTask(Pulse::EVERY));
   scheduler.add(new procLagInfo(Pulse::EVERY));
   scheduler.add(new procCharScreenUpdate(Pulse::EVERY));
 

@@ -984,20 +984,12 @@ int mapWizPowerToFile(wizPowerT att)
       return 59;
     case POWER_COMMENT:
       return 60;
-    case POWER_FINDEMAIL:
-      return 61;
     case POWER_CLIENTS:
       return 62;
     case POWER_LOW:
       return 63;
-    case POWER_TRACEROUTE:
-      return 64;
-    case POWER_HOSTLOG:
-      return 65;
     case POWER_ACCESS:
       return 66;
-    case POWER_DEATHCHECK:
-      return 67;
     case POWER_SNOWBALL:
       return 68;
     case POWER_PEE:
@@ -1048,10 +1040,6 @@ int mapWizPowerToFile(wizPowerT att)
       return 91;
     case POWER_NOSHOUT:
       return 92;
-    case POWER_CHECKLOG:
-      return 93;
-    case POWER_LOGLIST:
-      return 94;
     case POWER_REPLACE:
       return 95;
     case POWER_RESIZE:
@@ -1088,6 +1076,12 @@ int mapWizPowerToFile(wizPowerT att)
       return 111;
     case POWER_DISTRIBUTE:
       return 112;
+    case POWER_unused1:
+    case POWER_unused2:
+    case POWER_unused3:
+    case POWER_unused4:
+    case POWER_unused5:
+    case POWER_unused6:
     case MAX_POWER_INDEX:
       break;
   }
@@ -1220,20 +1214,12 @@ wizPowerT mapFileToWizPower(int att)
       return POWER_LONGDESC;
     case 60:
       return POWER_COMMENT;
-    case 61:
-      return POWER_FINDEMAIL;
     case 62:
       return POWER_CLIENTS;
     case 63:
       return POWER_LOW;
-    case 64:
-      return POWER_TRACEROUTE;
-    case 65:
-      return POWER_HOSTLOG;
     case 66:
       return POWER_ACCESS;
-    case 67:
-      return POWER_DEATHCHECK;
     case 68:
       return POWER_SNOWBALL;
     case 69:
@@ -1284,10 +1270,6 @@ wizPowerT mapFileToWizPower(int att)
       return POWER_RESTORE_MORTAL;
     case 92:
       return POWER_NOSHOUT;
-    case 93:
-      return POWER_CHECKLOG;
-    case 94:
-      return POWER_LOGLIST;
     case 95:
       return POWER_REPLACE;
     case 96:

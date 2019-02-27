@@ -13,7 +13,6 @@ extern "C" {
 #include "help.h"
 #include "obj_component.h"
 #include "statistics.h"
-#include "systemtask.h"
 #include "database.h"
 
 #define ARTICLE_LIST_WIDTH 80
@@ -135,17 +134,8 @@ wizPowerT wizPowerFromCmd(cmdTypeT cmd)
     case CMD_CUTLINK:
       return POWER_CUTLINK;
       break;
-    case CMD_CHECKLOG:
-      return POWER_CHECKLOG;
-      break;
     case CMD_OFFICE:
       return POWER_GOTO;
-      break;
-    case CMD_LOGLIST:
-      return POWER_LOGLIST;
-      break;
-    case CMD_DEATHCHECK:
-      return POWER_DEATHCHECK;
       break;
     case CMD_REDIT:
       return POWER_REDIT;
@@ -166,12 +156,6 @@ wizPowerT wizPowerFromCmd(cmdTypeT cmd)
     case CMD_GAMESTATS:
       return POWER_GAMESTATS;
       break;
-    case CMD_HOSTLOG:
-      return POWER_HOSTLOG;
-      break;
-    case CMD_TRACEROUTE:
-      return POWER_TRACEROUTE;
-      break;
     case CMD_LOW:
       return POWER_LOW;
       break;
@@ -186,9 +170,6 @@ wizPowerT wizPowerFromCmd(cmdTypeT cmd)
       break;
     case CMD_CLIENTS:
       return POWER_CLIENTS;
-      break;
-    case CMD_FINDEMAIL:
-      return POWER_FINDEMAIL;
       break;
     case CMD_COMMENT:
       return POWER_COMMENT;
@@ -217,7 +198,6 @@ wizPowerT wizPowerFromCmd(cmdTypeT cmd)
       break;
     case CMD_RELEASE: // ???
     case CMD_CAPTURE: // ???
-    case CMD_TASKS:
     case CMD_TEST_FIGHT:
     case CMD_PEELPK:
     case CMD_TESTCODE:

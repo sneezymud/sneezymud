@@ -10,7 +10,6 @@
 
 #include "being.h"
 #include "statistics.h"
-#include "systemtask.h"
 #include "extern.h"
 #include "process.h"
 

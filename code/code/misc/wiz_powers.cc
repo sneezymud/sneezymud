@@ -200,11 +200,7 @@ void setWizPowers(const TBeing *doer, TBeing *ch, const sstring &arg)
     ch->setWizPower(POWER_COLOR_LOGS);
     ch->setWizPower(POWER_LONGDESC);
     ch->setWizPower(POWER_COMMENT);
-    ch->setWizPower(POWER_FINDEMAIL);
     ch->setWizPower(POWER_CLIENTS);
-    ch->setWizPower(POWER_TRACEROUTE);
-    ch->setWizPower(POWER_HOSTLOG);
-    ch->setWizPower(POWER_DEATHCHECK);
     ch->setWizPower(POWER_SNOWBALL);
     ch->setWizPower(POWER_PEE);
     ch->setWizPower(POWER_WIZLOCK);
@@ -221,11 +217,7 @@ void setWizPowers(const TBeing *doer, TBeing *ch, const sstring &arg)
     ch->remWizPower(POWER_COLOR_LOGS);
     ch->remWizPower(POWER_LONGDESC);
     ch->remWizPower(POWER_COMMENT);
-    ch->remWizPower(POWER_FINDEMAIL);
     ch->remWizPower(POWER_CLIENTS);
-    ch->remWizPower(POWER_TRACEROUTE);
-    ch->remWizPower(POWER_HOSTLOG);
-    ch->remWizPower(POWER_DEATHCHECK);
     ch->remWizPower(POWER_SNOWBALL);
     ch->remWizPower(POWER_PEE);
     ch->remWizPower(POWER_WIZLOCK);
@@ -270,8 +262,6 @@ void setWizPowers(const TBeing *doer, TBeing *ch, const sstring &arg)
     ch->setWizPower(POWER_PURGE_PC);
     ch->setWizPower(POWER_PURGE_ROOM);
     ch->setWizPower(POWER_EGOTRIP);
-    ch->setWizPower(POWER_CHECKLOG);
-    ch->setWizPower(POWER_LOGLIST);
     ch->setWizPower(POWER_REPLACE);
     ch->setWizPower(POWER_RESIZE);
     ch->setWizPower(POWER_NO_LIMITS);
@@ -289,8 +279,6 @@ void setWizPowers(const TBeing *doer, TBeing *ch, const sstring &arg)
     ch->remWizPower(POWER_PURGE_PC);
     ch->remWizPower(POWER_PURGE_ROOM);
     ch->remWizPower(POWER_EGOTRIP);
-    ch->remWizPower(POWER_CHECKLOG);
-    ch->remWizPower(POWER_LOGLIST);
     ch->remWizPower(POWER_REPLACE);
     ch->remWizPower(POWER_RESIZE);
     ch->remWizPower(POWER_NO_LIMITS);
@@ -553,20 +541,12 @@ const sstring getWizPowerName(wizPowerT wpt)
       return "Longdesc";
     case POWER_COMMENT:
       return "Comment";
-    case POWER_FINDEMAIL:
-      return "Findemail";
     case POWER_CLIENTS:
       return "Clients";
     case POWER_LOW:
       return "Low";
-    case POWER_TRACEROUTE:
-      return "Traceroute";
-    case POWER_HOSTLOG:
-      return "Hostlog";
     case POWER_ACCESS:
       return "Access";
-    case POWER_DEATHCHECK:
-      return "Deathcheck";
     case POWER_SNOWBALL:
       return "Snowball";
     case POWER_PEE:
@@ -693,10 +673,6 @@ const sstring getWizPowerName(wizPowerT wpt)
       return "Info-trusted";
     case POWER_NOSHOUT:
       return "Noshout";
-    case POWER_CHECKLOG:
-      return "Checklog";
-    case POWER_LOGLIST:
-      return "Loglist";
     case POWER_REPLACE:
       return "Replace";
     case POWER_REPLACE_PFILE:
@@ -730,6 +706,12 @@ const sstring getWizPowerName(wizPowerT wpt)
     case POWER_CLONE:
       return "Clone";
     case MAX_POWER_INDEX:
+    case POWER_unused1:
+    case POWER_unused2:
+    case POWER_unused3:
+    case POWER_unused4:
+    case POWER_unused5:
+    case POWER_unused6:
       break;
   }
   return "";

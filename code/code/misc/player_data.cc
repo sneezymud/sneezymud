@@ -878,7 +878,6 @@ void TBeing::convertAbilities()
 
 void TBeing::saveChar(int load_room)
 {
-  charFile st;
   FILE *fl;
   TBeing *tmp = NULL;
   char buf[512];
@@ -919,7 +918,7 @@ void TBeing::saveChar(int load_room)
     tmp = NULL;
   }
 
-  memset(&st, 0, sizeof(charFile));
+  charFile st;
   st.load_room = (short) load_room;
 
   if (!tmp)

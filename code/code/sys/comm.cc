@@ -18,7 +18,6 @@
 #include "account.h"
 #include "configuration.h"
 #include "colorstring.h"
-#include "systemtask.h"
 #include "socket.h"
 #include "spec_mobs.h"
 #include "weather.h"
@@ -45,8 +44,6 @@ extern "C" {
 }
 
 const int PROMPT_DONT_SEND = -1;
-
-SystemTask *systask;
 
 // local globals 
 
@@ -82,7 +79,6 @@ int run_the_game()
 
   vlogf(LOG_MISC, "Entering game loop.");
 
-  systask = new SystemTask();
   int ret = gSocket->gameLoop();
   gSocket->closeAllSockets();
 

@@ -1604,13 +1604,7 @@ class TBeing : public TThing {
     int legalDeckAddition(int);
 
     // User commands go here
-    void doFindEmail(const char *);
     void doNameChange(const char *);
-    void doSysTraceroute(const sstring &);
-    void doSysLoglist();
-    void doSysTasks(const sstring &);
-    void doSysChecklog(const sstring &);
-    void doSysViewoutput();
     int doSubterfuge(const char *);
     int doBackstab(const char *, TBeing *);
     int doThroatSlit(const char *, TBeing *);
@@ -1706,10 +1700,8 @@ class TBeing : public TThing {
     void doTimeshift(const char *);
     void doInfo(const char *);
     void doLog(const char *);
-    void doHostlog(const char *);
     virtual void doShow(const sstring &);
     void doChecklog(const char *, int);
-    void doDeathcheck(const sstring &);
     int doGive(TBeing *, TThing *, giveTypeT = GIVE_FLAG_DEF);
     int doGive(const sstring &, giveTypeT = GIVE_FLAG_DEF);
     int doMount(const char *, cmdTypeT, TBeing *, silentTypeT silent = SILENT_NO);

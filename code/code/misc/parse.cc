@@ -482,15 +482,6 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
         case CMD_NW:
           rc = doMove(cmd);
           break;
-        case CMD_TRACEROUTE:
-          doSysTraceroute(newarg);
-          break;
-        case CMD_VIEWOUTPUT:
-          doSysViewoutput();
-          break;
-        case CMD_TASKS:
-          doSysTasks(newarg);
-          break;
         case CMD_SAY:
         case CMD_SAY2:
           rc = doSay(newarg);
@@ -783,12 +774,6 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
           doSave(SILENT_NO, newarg.c_str());
           addToLifeforce(1);
           break;
-        case CMD_DEATHCHECK:
-          doDeathcheck(newarg);
-          break;
-        case CMD_CHECKLOG:
-          doSysChecklog(newarg);
-          break;
         case CMD_RECITE:
           rc = doRecite(newarg.c_str());
           break;
@@ -856,9 +841,6 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
           doLogging();
           addToLifeforce(1);
           break;
-        case CMD_LOGLIST:
-          doSysLoglist();
-          break;
         case CMD_LEAVE:
           rc = doLeave(newarg.c_str());
           addToLifeforce(1);
@@ -894,9 +876,6 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
           break;
         case CMD_LOG:
           doLog(newarg.c_str());
-          break;
-        case CMD_HOSTLOG:
-          doHostlog(newarg.c_str());
           break;
         case CMD_ASSIST:
           rc = doAssist(newarg.c_str(), dynamic_cast<TBeing *>(vict));
@@ -1627,9 +1606,6 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
         case CMD_MESSAGE:
           doMessage(newarg.c_str());
           addToLifeforce(1);
-          break;
-        case CMD_FINDEMAIL:
-          doFindEmail(newarg.c_str());
           break;
         case CMD_COMMENT:
           doComment(newarg.c_str());
@@ -2750,9 +2726,6 @@ void buildCommandArray(void)
   commandArray[CMD_SACRIFICE] = new commandInfo("sacrifice", POSITION_CRAWLING, 0);
   commandArray[CMD_PROMPT] = new commandInfo("prompt", POSITION_DEAD, 0);
   commandArray[CMD_GLANCE] = new commandInfo("glance", POSITION_RESTING, 0);
-  commandArray[CMD_CHECKLOG] = new commandInfo("checklog", POSITION_DEAD, GOD_LEVEL1);
-  commandArray[CMD_LOGLIST]=new commandInfo("loglist",POSITION_DEAD,GOD_LEVEL1);
-  commandArray[CMD_DEATHCHECK] = new commandInfo("deathcheck", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_SET_TRAP] = new commandInfo("trap", POSITION_RESTING, 0);
   commandArray[CMD_CHANGE] = new commandInfo("change", POSITION_RESTING, 0);
   commandArray[CMD_REDIT]=new commandInfo("redit", POSITION_DEAD, GOD_LEVEL1); 
@@ -2812,12 +2785,8 @@ void buildCommandArray(void)
   commandArray[CMD_ROLL] = new commandInfo("roll", POSITION_RESTING,0);
   commandArray[CMD_BLINK] = new commandInfo("blink", POSITION_RESTING,0);
   commandArray[CMD_BRUTTEST]=new commandInfo("bruttest",POSITION_DEAD, GOD_LEVEL1);
-  commandArray[CMD_HOSTLOG]=new commandInfo("hostlog",POSITION_DEAD,GOD_LEVEL1);
   commandArray[CMD_PRESS] = new commandInfo("press",POSITION_SITTING,0);
   commandArray[CMD_TWIST] = new commandInfo("twist",POSITION_SITTING,0);
-  commandArray[CMD_TRACEROUTE] = new commandInfo("traceroute", POSITION_DEAD, GOD_LEVEL1);
-  commandArray[CMD_TASKS] = new commandInfo("tasks", POSITION_DEAD, GOD_LEVEL1);
-  commandArray[CMD_VIEWOUTPUT] = new commandInfo("viewoutput", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_EVALUATE] = new commandInfo("evaluate", POSITION_RESTING, 0);
   commandArray[CMD_EXEC] = new commandInfo("exec", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_LOW] = new commandInfo("low", POSITION_DEAD, GOD_LEVEL1);
@@ -2910,7 +2879,6 @@ void buildCommandArray(void)
   commandArray[CMD_TAN] = new commandInfo("tan", POSITION_STANDING, 0);
   commandArray[CMD_TITHE] = new commandInfo("tithe", POSITION_STANDING, 0);
   commandArray[CMD_DISSECT] = new commandInfo("dissection",POSITION_SITTING, 0);
-  commandArray[CMD_FINDEMAIL] = new commandInfo("findemail", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_ENGAGE] = new commandInfo("engage", POSITION_FIGHTING, 0);
   commandArray[CMD_DISENGAGE]=new commandInfo("disengage",POSITION_FIGHTING, 0);
   commandArray[CMD_RESTRING]= new commandInfo("restring", POSITION_FIGHTING, 0);

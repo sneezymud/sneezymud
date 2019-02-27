@@ -371,12 +371,6 @@ class procLagInfo : public TProcess {
   procLagInfo(const int &);
 };
 
-class procCheckTask : public TProcess {
- public:
-  void run(const TPulse &) const;
-  procCheckTask(const int &);
-};
-
 class procRoomPulse : public TProcess {
  public:
   void run(const TPulse &) const;
