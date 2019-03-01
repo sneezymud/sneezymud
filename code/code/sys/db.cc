@@ -1210,125 +1210,182 @@ void zoneData::renumCmd(void)
   stat_objs.clear();
   int argbuf;
   
+  std::vector<resetCom> clean_cmd_table;
+  clean_cmd_table.reserve(cmd_table.size());
+
   for (comm = 0; cmd_table[comm].command != 'S'; comm++) {
     resetCom *rs = &cmd_table[comm];
     switch (rs->command) {
       case 'A':
-        if (rs->arg1 < 0 || rs->arg1 >= WORLD_SIZE)
+        if (rs->arg1 < 0 || rs->arg1 >= WORLD_SIZE) {
           logError('A', "room 1",comm, rs->arg1);
-        if (rs->arg2 < 0 || rs->arg2 >= WORLD_SIZE)
+          continue;
+        }
+        if (rs->arg2 < 0 || rs->arg2 >= WORLD_SIZE) {
           logError('A', "room 2",comm, rs->arg2);
-        if (rs->arg2 <= rs->arg1)
+          continue;
+        }
+        if (rs->arg2 <= rs->arg1) {
           logError('A', "no overlap",comm, rs->arg2);
+          continue;
+        }
         break;
       case 'C':
         rs->arg1 = real_mobile(value = rs->arg1);
-        if (rs->arg1 < 0)
+        if (rs->arg1 < 0) {
           logError('C', "mobile",comm, value);
-          else 
+          continue;
+        } else {
             ++stat_mobs[rs->arg1];
-        if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM)
+        }
+        if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM) {
           logError('C', "room",comm, rs->arg3);
-          
+          continue;
+        }
         break;
       case 'K':
         rs->arg1 = real_mobile(value = rs->arg1);
-        if (rs->arg1 < 0)
+        if (rs->arg1 < 0) {
           logError('K', "mobile",comm, value);
-          else 
-            ++stat_mobs[rs->arg1];
-        if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM)
+          continue;
+        } else {
+          ++stat_mobs[rs->arg1];
+        }
+        if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM) {
           logError('K', "room",comm, rs->arg3);
+          continue;
+        }
         break;
       case 'M':
         rs->arg1 = real_mobile(value = rs->arg1);
-        if (rs->arg1 < 0)
+        if (rs->arg1 < 0) {
           logError('M', "mobile",comm, value);
-          else 
-            ++stat_mobs[rs->arg1];
-        if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM)
+          continue;
+        } else {
+          ++stat_mobs[rs->arg1];
+        }
+        if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM) {
           logError('M', "room",comm, rs->arg3);
+          continue;
+        }
         break;
       case 'R':
         rs->arg1 = real_mobile(value = rs->arg1);
-        if (rs->arg1 < 0)
+        if (rs->arg1 < 0) {
           logError('R', "mobile",comm, value);
-          else 
-            ++stat_mobs[rs->arg1];
-        if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM)
+          continue;
+        } else {
+          ++stat_mobs[rs->arg1];
+        }
+        if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM) {
           logError('R', "room",comm, rs->arg3);
+          continue;
+        }
         break;
       case 'O':
         rs->arg1 = real_object(value = rs->arg1);
-        if (rs->arg1 < 0)
+        if (rs->arg1 < 0) {
           logError('O', "object",comm, value);
-          else 
-            ++stat_objs[rs->arg1];
-        if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM)
+          continue;
+        } else {
+          ++stat_objs[rs->arg1];
+        }
+        if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM) {
           logError('O', "room",comm, rs->arg3);
+          continue;
+        }
         break;
       case 'G':
         rs->arg1 = real_object(value = rs->arg1);
-        if (rs->arg1 < 0)
+        if (rs->arg1 < 0) {
           logError('G', "object",comm, value);
-          else 
-            ++stat_objs[rs->arg1];
+          continue;
+        } else {
+          ++stat_objs[rs->arg1];
+        }
         break;
       case 'X': // X <set num> <slot> <vnum>
-        if (rs->arg3 < 0 || rs->arg3 > 15)
+        if (rs->arg3 < 0 || rs->arg3 > 15) {
           logError('X', "macro",comm, rs->arg2);
-        rs->arg1 = mapFileToSlot(value = rs->arg1); 
-        if (rs->arg1 < MIN_WEAR || rs->arg1 >= MAX_WEAR)
+          continue;
+        }
+        rs->arg1 = mapFileToSlot(value = rs->arg1);
+        if (rs->arg1 < MIN_WEAR || rs->arg1 >= MAX_WEAR) {
           logError('X', "bogus slot",comm, value);
+          continue;
+        }
         argbuf = real_object(value = rs->arg2);
+        // why no check? Why no assigning it back to arg2?
         if (argbuf >= 0)
           ++stat_objs[argbuf];
         break;
       case 'Z': // Z <if flag> <set num> <perc chance>
-        if (rs->arg1 < 0 || rs->arg1 > 15)
+        if (rs->arg1 < 0 || rs->arg1 > 15) {
           logError('Z', "macro",comm, rs->arg3);
-        if (rs->arg2 <= 0 || rs->arg2 > 100)
+          continue;
+        }
+        if (rs->arg2 <= 0 || rs->arg2 > 100) {
           logError('Z', "percent",comm, rs->arg2);
+          continue;
+        }
         break;
         // Add one for each suit load ..loadset
       case 'Y':
-        if (rs->arg1 <= 0 || rs->arg1 > (signed) suitSets.suits.size())
+        if (rs->arg1 <= 0 || rs->arg1 > (signed) suitSets.suits.size()) {
           logError('Y', "macro",comm, rs->arg1);
-        if (rs->arg2 <= 0 || rs->arg2 > 100)
+          continue;
+        }
+        if (rs->arg2 <= 0 || rs->arg2 > 100) {
           logError('Y', "percent",comm, rs->arg2);
+          continue;
+        }
         break;
       case 'E':
         rs->arg1 = real_object(value = rs->arg1);
-        if (rs->arg1 < 0)
+        if (rs->arg1 < 0) {
           logError('E', "object",comm, value);
-          else 
-            ++stat_objs[rs->arg1];
+          continue;
+        } else {
+          ++stat_objs[rs->arg1];
+        }
         rs->arg3 = mapFileToSlot(value = rs->arg3); 
-        if (rs->arg3 < MIN_WEAR || rs->arg3 >= MAX_WEAR)
+        if (rs->arg3 < MIN_WEAR || rs->arg3 >= MAX_WEAR) {
           logError('E', "bogus slot",comm, value);
+          continue;
+        }
         break;
       case 'P':
         rs->arg1 = real_object(value = rs->arg1);
-        if (rs->arg1 < 0)
+        if (rs->arg1 < 0) {
           logError('P', "object",comm, value);
-          else 
-            ++stat_objs[rs->arg1];
+          continue;
+        } else {
+          ++stat_objs[rs->arg1];
+        }
         rs->arg3 = real_object(rs->arg3);
-        if (rs->arg3 < 0)
+        if (rs->arg3 < 0) {
           logError('P', "container",comm, rs->arg3);
+          continue;
+        }
         break;
       case 'D':
-        if (rs->arg1 < 0)
+        if (rs->arg1 < 0) {
           logError('D', "room",comm, rs->arg1);
+          continue;
+        }
         break;
       case 'B':
         rs->arg1 = real_object(value = rs->arg1);
-        if (rs->arg1 < 0)
+        if (rs->arg1 < 0) {
           logError('B', "object",comm, value);
-          else 
-            ++stat_objs[rs->arg1];
-        if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM)
+          continue;
+        } else {
+          ++stat_objs[rs->arg1];
+        }
+        if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM) {
           logError('B', "room",comm, rs->arg3);
+          continue;
+        }
         break;
       case 'H':
         if (rs->arg1 < MIN_HATE || rs->arg1 >= MAX_HATE) {
@@ -1343,7 +1400,9 @@ void zoneData::renumCmd(void)
         }
         break;
     }
+    clean_cmd_table.push_back(*rs);
   }
+  cmd_table.swap(clean_cmd_table);
   
   // set the object and mob tallies in zoneData
   std::map<int,int>::iterator iter;
