@@ -7,7 +7,7 @@ external_libs = [
     'boost_regex',
     'boost_filesystem',
     'boost_system',
-    'mysqlclient',
+    'mariadbclient',
 ]
 
 if not sys.platform.startswith('darwin'):
