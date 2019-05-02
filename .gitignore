@@ -33,3 +33,4 @@ sneezy.cfg
 # python byte cache files
 *.pyc
 *.pyo
+/lib/core
