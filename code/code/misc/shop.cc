@@ -2194,8 +2194,6 @@ int shopping_produce(TMonster *keeper)
   TMonster *sbaKeeper = NULL;
   std::vector<int>::iterator iter;
   TDatabase db(DB_SNEEZY);
-  db.query("begin");
-  RunOnReturn r([&](){db.query("commit");});
 
   if (!keeper)
     return FALSE;
@@ -2206,6 +2204,8 @@ int shopping_produce(TMonster *keeper)
   if(!sbaKeeper)
     return FALSE;
 
+  db.query("begin");
+  // RunOnReturn r([&](){db.query("commit");});
   TShopOwned tso(shop_nr, keeper, sbaKeeper);
 
   // loop through items to produce
@@ -2219,6 +2219,7 @@ int shopping_produce(TMonster *keeper)
     if (!(o = read_object(*iter, REAL))) {
       vlogf(LOG_BUG, format("Shopkeeper %d couldn't load produced item.") %  
       shop_nr);
+      db.query("commit");
       return FALSE;
     }
 
@@ -2256,6 +2257,7 @@ int shopping_produce(TMonster *keeper)
     delete o;
   }
 
+  db.query("commit");
   return FALSE;
 }
 
