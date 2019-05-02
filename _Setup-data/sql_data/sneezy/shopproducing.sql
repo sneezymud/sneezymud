@@ -1,8 +1,8 @@
--- MySQL dump 10.10
+-- MySQL dump 10.16  Distrib 10.1.28-MariaDB, for Linux (x86_64)
 --
--- Host: db.sneezymud.com    Database: sneezy
+-- Host: localhost    Database: sneezy
 -- ------------------------------------------------------
--- Server version	5.0.24a-standard
+-- Server version	10.1.28-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,718 +16,730 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `shopproducing`
+--
+
+DROP TABLE IF EXISTS `shopproducing`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shopproducing` (
+  `shop_nr` int(11) NOT NULL DEFAULT '0',
+  `producing` int(11) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `shopproducing`
 --
 
-
-/*!40000 ALTER TABLE `shopproducing` DISABLE KEYS */;
 LOCK TABLES `shopproducing` WRITE;
-INSERT INTO `shopproducing` VALUES (1,105),
-(1,106),
-(1,107),
-(1,108),
-(1,109),
-(1,110),
-(3,415),
-(3,416),
-(3,417),
-(3,403),
-(3,404),
-(5,816),
-(5,818),
-(5,819),
-(7,1303),
-(7,1306),
-(7,812),
-(7,824),
-(8,410),
-(8,411),
-(8,600),
-(8,602),
-(8,603),
-(8,6),
-(8,153),
-(8,9),
-(8,155),
-(8,156),
-(8,550),
-(8,157),
-(9,1455),
-(9,1458),
-(11,149),
-(15,518),
-(16,2854),
-(16,2855),
-(16,405),
-(16,406),
-(16,407),
-(16,408),
-(16,403),
-(16,404),
-(17,4301),
-(17,4303),
-(18,106),
-(18,107),
-(18,110),
-(18,9),
-(18,600),
-(18,602),
-(18,603),
-(18,6),
-(18,156),
-(18,157),
-(21,1303),
-(21,1306),
-(21,1400),
-(22,3405),
-(22,3406),
-(22,3411),
-(22,3412),
-(22,3413),
-(22,3414),
-(22,17),
-(22,162),
-(23,405),
-(23,406),
-(23,408),
-(23,403),
-(23,404),
-(23,409),
-(23,411),
-(23,412),
-(23,413),
-(23,414),
-(24,400),
-(24,401),
-(24,1345),
-(24,1346),
-(24,1347),
-(25,9767),
-(28,400),
-(28,401),
-(28,1345),
-(28,1346),
-(30,106),
-(30,107),
-(30,109),
-(30,110),
-(30,600),
-(30,602),
-(30,9),
-(30,6),
-(30,156),
-(30,157),
-(31,403),
-(31,404),
-(31,409),
-(31,411),
-(31,412),
-(31,413),
-(31,414),
-(37,400),
-(37,401),
-(37,402),
-(37,403),
-(37,404),
-(38,405),
-(38,406),
-(38,407),
-(38,408),
-(38,409),
-(38,411),
-(38,413),
-(38,414),
-(39,23652),
-(39,23653),
-(39,23654),
-(39,23655),
-(39,23656),
-(39,23657),
-(39,23658),
-(45,110),
-(45,6),
-(45,9),
-(45,153),
-(45,600),
-(45,150),
-(45,107),
-(46,110),
-(46,6),
-(46,9),
-(46,153),
-(46,600),
-(46,150),
-(46,107),
-(46,156),
-(47,409),
-(47,411),
-(47,412),
-(47,413),
-(47,5746),
-(47,5747),
-(48,409),
-(48,411),
-(48,412),
-(48,413),
-(48,5746),
-(48,5747),
-(49,14340),
-(49,14341),
-(49,14342),
-(49,14343),
-(49,400),
-(49,401),
-(50,14354),
-(50,14355),
-(50,14356),
-(50,14357),
-(50,14358),
-(50,14359),
-(50,14352),
-(50,403),
-(50,404),
-(51,14354),
-(51,14355),
-(51,14356),
-(52,402),
-(52,405),
-(52,11093),
-(52,11094),
-(52,14343),
-(53,409),
-(53,411),
-(53,412),
-(53,413),
-(53,414),
-(53,8425),
-(53,11095),
-(53,11096),
-(59,409),
-(59,410),
-(59,411),
-(59,412),
-(59,420),
-(59,7817),
-(59,8425),
-(60,6),
-(60,9),
-(60,156),
-(60,106),
-(60,107),
-(60,157),
-(60,153),
-(60,110),
-(60,600),
-(60,14395),
-(61,1455),
-(61,1458),
-(62,1368),
-(62,1369),
-(62,1370),
-(63,3404),
-(63,3405),
-(63,3406),
-(63,3411),
-(63,3412),
-(63,3413),
-(63,3414),
-(63,162),
-(63,17),
-(64,409),
-(64,410),
-(64,411),
-(64,412),
-(64,413),
-(64,414),
-(65,7042),
-(65,7043),
-(65,7049),
-(66,106),
-(66,403),
-(66,410),
-(66,9),
-(66,600),
-(66,604),
-(66,7046),
-(67,7036),
-(67,7037),
-(67,7038),
-(67,7039),
-(67,7040),
-(67,7041),
-(69,1368),
-(69,1369),
-(69,1370),
-(72,600),
-(72,602),
-(72,603),
-(72,6),
-(72,150),
-(72,107),
-(72,9),
-(72,109),
-(72,156),
-(72,157),
-(75,415),
-(75,416),
-(75,417),
-(75,403),
-(75,404),
-(76,405),
-(76,406),
-(76,408),
-(76,409),
-(76,411),
-(76,412),
-(76,413),
-(76,414),
-(76,407),
-(79,6),
-(79,9),
-(79,156),
-(79,157),
-(79,107),
-(79,110),
-(80,25548),
-(80,25549),
-(80,25550),
-(81,518),
-(104,7879),
-(104,7880),
-(104,7881),
-(104,7882),
-(104,7883),
-(104,7884),
-(104,7885),
-(104,7886),
-(106,24439),
-(106,24440),
-(106,24441),
-(106,400),
-(107,412),
-(107,413),
-(107,414),
-(107,417),
-(107,430),
-(107,435),
-(107,436),
-(107,437),
-(107,438),
-(108,27801),
-(108,27802),
-(108,27803),
-(109,13841),
-(109,13842),
-(109,13843),
-(109,13844),
-(109,13845),
-(109,13846),
-(109,13847),
-(109,13848),
-(109,13849),
-(109,13850),
-(109,13851),
-(109,13852),
-(109,13853),
-(109,13854),
-(109,13855),
-(109,13856),
-(109,13857),
-(109,13858),
-(109,13859),
-(109,13860),
-(109,13861),
-(109,13862),
-(109,13863),
-(109,13864),
-(109,13865),
-(109,13866),
-(109,13867),
-(109,13868),
-(109,13869),
-(8,148),
-(109,13870),
-(109,13871),
-(109,13872),
-(109,13873),
-(110,13880),
-(110,13881),
-(110,13882),
-(110,13883),
-(110,13884),
-(110,13885),
-(122,2372),
-(8,2377),
-(112,31766),
-(112,31767),
-(112,31768),
-(112,31770),
-(112,31771),
-(112,31769),
-(112,31772),
-(112,31780),
-(112,31781),
-(116,3500),
-(116,3501),
-(116,3502),
-(116,3503),
-(116,3504),
-(116,3505),
-(116,3506),
-(116,3507),
-(116,3520),
-(116,3521),
-(116,3522),
-(116,3523),
-(116,3524),
-(116,3525),
-(116,3526),
-(116,3527),
-(122,2350),
-(122,2351),
-(122,2352),
-(122,2353),
-(122,2354),
-(122,2355),
-(122,2356),
-(122,2357),
-(122,2358),
-(122,601),
-(122,7748),
-(122,7749),
-(122,7750),
-(122,7751),
-(122,7752),
-(122,7753),
-(122,7754),
-(122,7755),
-(122,7756),
-(122,7757),
-(122,7758),
-(122,7759),
-(122,7760),
-(122,7761),
-(122,7762),
-(122,7763),
-(122,7764),
-(122,7765),
-(122,7766),
-(122,7767),
-(122,7768),
-(122,7769),
-(122,7770),
-(122,7771),
-(122,7772),
-(122,7773),
-(122,7774),
-(122,7775),
-(122,7776),
-(122,7777),
-(122,7778),
-(122,7779),
-(122,7780),
-(122,7781),
-(122,7782),
-(122,7783),
-(122,7784),
-(122,7785),
-(122,7786),
-(122,7787),
-(122,7788),
-(122,7789),
-(122,7790),
-(122,7791),
-(122,7792),
-(122,7793),
-(122,7794),
-(122,7795),
-(122,7796),
-(122,7797),
-(122,7798),
-(122,7799),
-(218,36966),
-(218,36968),
-(218,36969),
-(218,36970),
-(218,36971),
-(218,37023),
-(218,37022),
-(218,37021),
-(218,37020),
-(218,37019),
-(218,37018),
-(218,36972),
-(218,36973),
-(218,36974),
-(218,36975),
-(218,36976),
-(218,36977),
-(218,36978),
-(219,36979),
-(219,36980),
-(219,36981),
-(219,36982),
-(219,36983),
-(219,36984),
-(219,36985),
-(219,36986),
-(219,36987),
-(219,36988),
-(219,36989),
-(219,36990),
-(219,36991),
-(219,36992),
-(219,36993),
-(219,36994),
-(219,36995),
-(219,36996),
-(219,36997),
-(220,36955),
-(220,36956),
-(220,36957),
-(220,36958),
-(220,36959),
-(220,36960),
-(220,36961),
-(220,36962),
-(220,36963),
-(220,36964),
-(220,36965),
-(221,36931),
-(221,36932),
-(221,36935),
-(221,36936),
-(221,36937),
-(221,36938),
-(221,36939),
-(221,36940),
-(221,36941),
-(221,36945),
-(221,36946),
-(221,36947),
-(221,36948),
-(221,36949),
-(221,36950),
-(221,36951),
-(221,36952),
-(221,36953),
-(224,36998),
-(224,37000),
-(224,37001),
-(224,37002),
-(224,37003),
-(224,37004),
-(224,37005),
-(224,37006),
-(224,37007),
-(224,37008),
-(224,37010),
-(224,37011),
-(224,37012),
-(224,37013),
-(224,37014),
-(224,37015),
-(224,37016),
-(224,37017),
-(221,36930),
-(221,36933),
-(221,36934),
-(221,36942),
-(221,36943),
-(221,36944),
-(221,36954),
-(221,36967),
-(221,36999),
-(221,37009),
-(218,37025),
-(218,37026),
-(218,37027),
-(218,37028),
-(218,37029),
-(218,37030),
-(218,37031),
-(218,37032),
-(218,37033),
-(218,37034),
-(218,37035),
-(237,410),
-(237,411),
-(237,603),
-(237,6),
-(237,153),
-(237,157),
-(237,155),
-(237,156),
-(237,148),
-(237,105),
-(237,106),
-(237,107),
-(237,108),
-(237,109),
-(237,110),
-(242,6400),
-(242,6401),
-(242,6402),
-(244,1303),
-(244,1306),
-(244,812),
-(244,824),
-(243,149),
-(8,571),
-(8,575),
-(8,579),
-(8,581),
-(8,583),
-(8,2346),
-(8,2348),
-(8,150),
-(8,559),
-(8,586),
-(8,588),
-(8,563),
-(8,565),
-(8,567),
-(8,569),
-(8,573),
-(8,590),
-(8,592),
-(71,571),
-(71,575),
-(71,579),
-(71,581),
-(71,583),
-(71,2346),
-(71,2348),
-(71,150),
-(71,153),
-(71,155),
-(71,559),
-(71,586),
-(71,588),
-(71,563),
-(71,565),
-(71,567),
-(71,569),
-(71,573),
-(71,590),
-(71,592),
-(11,571),
-(11,575),
-(11,579),
-(11,581),
-(11,583),
-(11,2346),
-(11,2348),
-(11,150),
-(11,153),
-(11,155),
-(11,559),
-(11,586),
-(11,588),
-(11,563),
-(11,565),
-(11,567),
-(11,569),
-(11,573),
-(11,590),
-(11,592),
-(30,571),
-(30,575),
-(30,579),
-(30,581),
-(30,583),
-(30,2346),
-(30,2348),
-(30,150),
-(30,153),
-(30,155),
-(30,559),
-(30,586),
-(30,588),
-(30,563),
-(30,565),
-(30,567),
-(30,569),
-(30,573),
-(30,590),
-(30,592),
-(30,572),
-(30,574),
-(30,2349),
-(30,587),
-(30,591),
-(30,576),
-(30,582),
-(30,593),
-(30,584),
-(30,589),
-(30,564),
-(30,566),
-(18,571),
-(18,575),
-(18,579),
-(18,581),
-(18,583),
-(18,2346),
-(18,2348),
-(18,150),
-(18,153),
-(18,155),
-(18,559),
-(18,586),
-(18,588),
-(18,563),
-(18,565),
-(18,567),
-(18,569),
-(18,573),
-(18,590),
-(18,592),
-(18,574),
-(18,568),
-(18,2347),
-(18,587),
-(18,560),
-(18,580),
-(18,576),
-(18,593),
-(18,570),
-(18,582),
-(18,589),
-(18,566),
-(72,571),
-(72,575),
-(72,579),
-(72,581),
-(72,583),
-(72,2346),
-(72,2348),
-(72,153),
-(72,155),
-(72,559),
-(72,586),
-(72,588),
-(72,563),
-(72,565),
-(72,567),
-(72,569),
-(72,573),
-(72,590),
-(72,592),
-(72,572),
-(72,568),
-(72,2349),
-(72,2347),
-(72,560),
-(72,591),
-(72,580),
-(72,582),
-(72,584),
-(72,570),
-(72,564),
-(72,566);
-UNLOCK TABLES;
+/*!40000 ALTER TABLE `shopproducing` DISABLE KEYS */;
+INSERT INTO `shopproducing` VALUES (1,105);
+INSERT INTO `shopproducing` VALUES (1,106);
+INSERT INTO `shopproducing` VALUES (1,107);
+INSERT INTO `shopproducing` VALUES (1,108);
+INSERT INTO `shopproducing` VALUES (1,109);
+INSERT INTO `shopproducing` VALUES (1,110);
+INSERT INTO `shopproducing` VALUES (3,415);
+INSERT INTO `shopproducing` VALUES (3,416);
+INSERT INTO `shopproducing` VALUES (3,417);
+INSERT INTO `shopproducing` VALUES (3,403);
+INSERT INTO `shopproducing` VALUES (3,404);
+INSERT INTO `shopproducing` VALUES (5,816);
+INSERT INTO `shopproducing` VALUES (5,818);
+INSERT INTO `shopproducing` VALUES (5,819);
+INSERT INTO `shopproducing` VALUES (7,1303);
+INSERT INTO `shopproducing` VALUES (7,1306);
+INSERT INTO `shopproducing` VALUES (7,812);
+INSERT INTO `shopproducing` VALUES (7,824);
+INSERT INTO `shopproducing` VALUES (8,410);
+INSERT INTO `shopproducing` VALUES (8,411);
+INSERT INTO `shopproducing` VALUES (8,600);
+INSERT INTO `shopproducing` VALUES (8,602);
+INSERT INTO `shopproducing` VALUES (8,603);
+INSERT INTO `shopproducing` VALUES (8,6);
+INSERT INTO `shopproducing` VALUES (8,153);
+INSERT INTO `shopproducing` VALUES (8,9);
+INSERT INTO `shopproducing` VALUES (8,155);
+INSERT INTO `shopproducing` VALUES (8,156);
+INSERT INTO `shopproducing` VALUES (8,550);
+INSERT INTO `shopproducing` VALUES (8,157);
+INSERT INTO `shopproducing` VALUES (9,1455);
+INSERT INTO `shopproducing` VALUES (9,1458);
+INSERT INTO `shopproducing` VALUES (11,149);
+INSERT INTO `shopproducing` VALUES (15,518);
+INSERT INTO `shopproducing` VALUES (16,2854);
+INSERT INTO `shopproducing` VALUES (16,2855);
+INSERT INTO `shopproducing` VALUES (16,405);
+INSERT INTO `shopproducing` VALUES (16,406);
+INSERT INTO `shopproducing` VALUES (16,407);
+INSERT INTO `shopproducing` VALUES (16,408);
+INSERT INTO `shopproducing` VALUES (16,403);
+INSERT INTO `shopproducing` VALUES (16,404);
+INSERT INTO `shopproducing` VALUES (17,4301);
+INSERT INTO `shopproducing` VALUES (17,4303);
+INSERT INTO `shopproducing` VALUES (18,106);
+INSERT INTO `shopproducing` VALUES (18,107);
+INSERT INTO `shopproducing` VALUES (18,110);
+INSERT INTO `shopproducing` VALUES (18,9);
+INSERT INTO `shopproducing` VALUES (18,600);
+INSERT INTO `shopproducing` VALUES (18,602);
+INSERT INTO `shopproducing` VALUES (18,603);
+INSERT INTO `shopproducing` VALUES (18,6);
+INSERT INTO `shopproducing` VALUES (18,156);
+INSERT INTO `shopproducing` VALUES (18,157);
+INSERT INTO `shopproducing` VALUES (21,1303);
+INSERT INTO `shopproducing` VALUES (21,1306);
+INSERT INTO `shopproducing` VALUES (21,1400);
+INSERT INTO `shopproducing` VALUES (22,3405);
+INSERT INTO `shopproducing` VALUES (22,3406);
+INSERT INTO `shopproducing` VALUES (22,3411);
+INSERT INTO `shopproducing` VALUES (22,3412);
+INSERT INTO `shopproducing` VALUES (22,3413);
+INSERT INTO `shopproducing` VALUES (22,3414);
+INSERT INTO `shopproducing` VALUES (22,17);
+INSERT INTO `shopproducing` VALUES (22,162);
+INSERT INTO `shopproducing` VALUES (23,405);
+INSERT INTO `shopproducing` VALUES (23,406);
+INSERT INTO `shopproducing` VALUES (23,408);
+INSERT INTO `shopproducing` VALUES (23,403);
+INSERT INTO `shopproducing` VALUES (23,404);
+INSERT INTO `shopproducing` VALUES (23,409);
+INSERT INTO `shopproducing` VALUES (23,411);
+INSERT INTO `shopproducing` VALUES (23,412);
+INSERT INTO `shopproducing` VALUES (23,413);
+INSERT INTO `shopproducing` VALUES (23,414);
+INSERT INTO `shopproducing` VALUES (24,400);
+INSERT INTO `shopproducing` VALUES (24,401);
+INSERT INTO `shopproducing` VALUES (24,1345);
+INSERT INTO `shopproducing` VALUES (24,1346);
+INSERT INTO `shopproducing` VALUES (24,1347);
+INSERT INTO `shopproducing` VALUES (25,9767);
+INSERT INTO `shopproducing` VALUES (28,400);
+INSERT INTO `shopproducing` VALUES (28,401);
+INSERT INTO `shopproducing` VALUES (28,1345);
+INSERT INTO `shopproducing` VALUES (28,1346);
+INSERT INTO `shopproducing` VALUES (30,106);
+INSERT INTO `shopproducing` VALUES (30,107);
+INSERT INTO `shopproducing` VALUES (30,109);
+INSERT INTO `shopproducing` VALUES (30,110);
+INSERT INTO `shopproducing` VALUES (30,600);
+INSERT INTO `shopproducing` VALUES (30,602);
+INSERT INTO `shopproducing` VALUES (30,9);
+INSERT INTO `shopproducing` VALUES (30,6);
+INSERT INTO `shopproducing` VALUES (30,156);
+INSERT INTO `shopproducing` VALUES (30,157);
+INSERT INTO `shopproducing` VALUES (31,403);
+INSERT INTO `shopproducing` VALUES (31,404);
+INSERT INTO `shopproducing` VALUES (31,409);
+INSERT INTO `shopproducing` VALUES (31,411);
+INSERT INTO `shopproducing` VALUES (31,412);
+INSERT INTO `shopproducing` VALUES (31,413);
+INSERT INTO `shopproducing` VALUES (31,414);
+INSERT INTO `shopproducing` VALUES (37,400);
+INSERT INTO `shopproducing` VALUES (37,401);
+INSERT INTO `shopproducing` VALUES (37,402);
+INSERT INTO `shopproducing` VALUES (37,403);
+INSERT INTO `shopproducing` VALUES (37,404);
+INSERT INTO `shopproducing` VALUES (38,405);
+INSERT INTO `shopproducing` VALUES (38,406);
+INSERT INTO `shopproducing` VALUES (38,407);
+INSERT INTO `shopproducing` VALUES (38,408);
+INSERT INTO `shopproducing` VALUES (38,409);
+INSERT INTO `shopproducing` VALUES (38,411);
+INSERT INTO `shopproducing` VALUES (38,413);
+INSERT INTO `shopproducing` VALUES (38,414);
+INSERT INTO `shopproducing` VALUES (39,23652);
+INSERT INTO `shopproducing` VALUES (39,23653);
+INSERT INTO `shopproducing` VALUES (39,23654);
+INSERT INTO `shopproducing` VALUES (39,23655);
+INSERT INTO `shopproducing` VALUES (39,23656);
+INSERT INTO `shopproducing` VALUES (39,23657);
+INSERT INTO `shopproducing` VALUES (39,23658);
+INSERT INTO `shopproducing` VALUES (45,110);
+INSERT INTO `shopproducing` VALUES (45,6);
+INSERT INTO `shopproducing` VALUES (45,9);
+INSERT INTO `shopproducing` VALUES (45,153);
+INSERT INTO `shopproducing` VALUES (45,600);
+INSERT INTO `shopproducing` VALUES (45,150);
+INSERT INTO `shopproducing` VALUES (45,107);
+INSERT INTO `shopproducing` VALUES (46,110);
+INSERT INTO `shopproducing` VALUES (46,6);
+INSERT INTO `shopproducing` VALUES (46,9);
+INSERT INTO `shopproducing` VALUES (46,153);
+INSERT INTO `shopproducing` VALUES (46,600);
+INSERT INTO `shopproducing` VALUES (46,150);
+INSERT INTO `shopproducing` VALUES (46,107);
+INSERT INTO `shopproducing` VALUES (46,156);
+INSERT INTO `shopproducing` VALUES (47,409);
+INSERT INTO `shopproducing` VALUES (47,411);
+INSERT INTO `shopproducing` VALUES (47,412);
+INSERT INTO `shopproducing` VALUES (47,413);
+INSERT INTO `shopproducing` VALUES (47,5746);
+INSERT INTO `shopproducing` VALUES (47,5747);
+INSERT INTO `shopproducing` VALUES (48,409);
+INSERT INTO `shopproducing` VALUES (48,411);
+INSERT INTO `shopproducing` VALUES (48,412);
+INSERT INTO `shopproducing` VALUES (48,413);
+INSERT INTO `shopproducing` VALUES (48,5746);
+INSERT INTO `shopproducing` VALUES (48,5747);
+INSERT INTO `shopproducing` VALUES (49,14340);
+INSERT INTO `shopproducing` VALUES (49,14341);
+INSERT INTO `shopproducing` VALUES (49,14342);
+INSERT INTO `shopproducing` VALUES (49,14343);
+INSERT INTO `shopproducing` VALUES (49,400);
+INSERT INTO `shopproducing` VALUES (49,401);
+INSERT INTO `shopproducing` VALUES (50,14354);
+INSERT INTO `shopproducing` VALUES (50,14355);
+INSERT INTO `shopproducing` VALUES (50,14356);
+INSERT INTO `shopproducing` VALUES (50,14357);
+INSERT INTO `shopproducing` VALUES (50,14358);
+INSERT INTO `shopproducing` VALUES (50,14359);
+INSERT INTO `shopproducing` VALUES (50,14352);
+INSERT INTO `shopproducing` VALUES (50,403);
+INSERT INTO `shopproducing` VALUES (50,404);
+INSERT INTO `shopproducing` VALUES (51,14354);
+INSERT INTO `shopproducing` VALUES (51,14355);
+INSERT INTO `shopproducing` VALUES (51,14356);
+INSERT INTO `shopproducing` VALUES (52,402);
+INSERT INTO `shopproducing` VALUES (52,405);
+INSERT INTO `shopproducing` VALUES (52,11093);
+INSERT INTO `shopproducing` VALUES (52,11094);
+INSERT INTO `shopproducing` VALUES (52,14343);
+INSERT INTO `shopproducing` VALUES (53,409);
+INSERT INTO `shopproducing` VALUES (53,411);
+INSERT INTO `shopproducing` VALUES (53,412);
+INSERT INTO `shopproducing` VALUES (53,413);
+INSERT INTO `shopproducing` VALUES (53,414);
+INSERT INTO `shopproducing` VALUES (53,8425);
+INSERT INTO `shopproducing` VALUES (53,11095);
+INSERT INTO `shopproducing` VALUES (53,11096);
+INSERT INTO `shopproducing` VALUES (59,409);
+INSERT INTO `shopproducing` VALUES (59,410);
+INSERT INTO `shopproducing` VALUES (59,411);
+INSERT INTO `shopproducing` VALUES (59,412);
+INSERT INTO `shopproducing` VALUES (59,420);
+INSERT INTO `shopproducing` VALUES (59,7817);
+INSERT INTO `shopproducing` VALUES (59,8425);
+INSERT INTO `shopproducing` VALUES (60,6);
+INSERT INTO `shopproducing` VALUES (60,9);
+INSERT INTO `shopproducing` VALUES (60,156);
+INSERT INTO `shopproducing` VALUES (60,106);
+INSERT INTO `shopproducing` VALUES (60,107);
+INSERT INTO `shopproducing` VALUES (60,157);
+INSERT INTO `shopproducing` VALUES (60,153);
+INSERT INTO `shopproducing` VALUES (60,110);
+INSERT INTO `shopproducing` VALUES (60,600);
+INSERT INTO `shopproducing` VALUES (60,14395);
+INSERT INTO `shopproducing` VALUES (61,1455);
+INSERT INTO `shopproducing` VALUES (61,1458);
+INSERT INTO `shopproducing` VALUES (62,1368);
+INSERT INTO `shopproducing` VALUES (62,1369);
+INSERT INTO `shopproducing` VALUES (62,1370);
+INSERT INTO `shopproducing` VALUES (63,3404);
+INSERT INTO `shopproducing` VALUES (63,3405);
+INSERT INTO `shopproducing` VALUES (63,3406);
+INSERT INTO `shopproducing` VALUES (63,3411);
+INSERT INTO `shopproducing` VALUES (63,3412);
+INSERT INTO `shopproducing` VALUES (63,3413);
+INSERT INTO `shopproducing` VALUES (63,3414);
+INSERT INTO `shopproducing` VALUES (63,162);
+INSERT INTO `shopproducing` VALUES (63,17);
+INSERT INTO `shopproducing` VALUES (64,409);
+INSERT INTO `shopproducing` VALUES (64,410);
+INSERT INTO `shopproducing` VALUES (64,411);
+INSERT INTO `shopproducing` VALUES (64,412);
+INSERT INTO `shopproducing` VALUES (64,413);
+INSERT INTO `shopproducing` VALUES (64,414);
+INSERT INTO `shopproducing` VALUES (65,7042);
+INSERT INTO `shopproducing` VALUES (65,7043);
+INSERT INTO `shopproducing` VALUES (65,7049);
+INSERT INTO `shopproducing` VALUES (66,106);
+INSERT INTO `shopproducing` VALUES (66,403);
+INSERT INTO `shopproducing` VALUES (66,410);
+INSERT INTO `shopproducing` VALUES (66,9);
+INSERT INTO `shopproducing` VALUES (66,600);
+INSERT INTO `shopproducing` VALUES (66,604);
+INSERT INTO `shopproducing` VALUES (66,7046);
+INSERT INTO `shopproducing` VALUES (67,7036);
+INSERT INTO `shopproducing` VALUES (67,7037);
+INSERT INTO `shopproducing` VALUES (67,7038);
+INSERT INTO `shopproducing` VALUES (67,7039);
+INSERT INTO `shopproducing` VALUES (67,7040);
+INSERT INTO `shopproducing` VALUES (67,7041);
+INSERT INTO `shopproducing` VALUES (69,1368);
+INSERT INTO `shopproducing` VALUES (69,1369);
+INSERT INTO `shopproducing` VALUES (69,1370);
+INSERT INTO `shopproducing` VALUES (72,600);
+INSERT INTO `shopproducing` VALUES (72,602);
+INSERT INTO `shopproducing` VALUES (72,603);
+INSERT INTO `shopproducing` VALUES (72,6);
+INSERT INTO `shopproducing` VALUES (72,150);
+INSERT INTO `shopproducing` VALUES (72,107);
+INSERT INTO `shopproducing` VALUES (72,9);
+INSERT INTO `shopproducing` VALUES (72,109);
+INSERT INTO `shopproducing` VALUES (72,156);
+INSERT INTO `shopproducing` VALUES (72,157);
+INSERT INTO `shopproducing` VALUES (75,415);
+INSERT INTO `shopproducing` VALUES (75,416);
+INSERT INTO `shopproducing` VALUES (75,417);
+INSERT INTO `shopproducing` VALUES (75,403);
+INSERT INTO `shopproducing` VALUES (75,404);
+INSERT INTO `shopproducing` VALUES (76,405);
+INSERT INTO `shopproducing` VALUES (76,406);
+INSERT INTO `shopproducing` VALUES (76,408);
+INSERT INTO `shopproducing` VALUES (76,409);
+INSERT INTO `shopproducing` VALUES (76,411);
+INSERT INTO `shopproducing` VALUES (76,412);
+INSERT INTO `shopproducing` VALUES (76,413);
+INSERT INTO `shopproducing` VALUES (76,414);
+INSERT INTO `shopproducing` VALUES (76,407);
+INSERT INTO `shopproducing` VALUES (79,6);
+INSERT INTO `shopproducing` VALUES (79,9);
+INSERT INTO `shopproducing` VALUES (79,156);
+INSERT INTO `shopproducing` VALUES (79,157);
+INSERT INTO `shopproducing` VALUES (79,107);
+INSERT INTO `shopproducing` VALUES (79,110);
+INSERT INTO `shopproducing` VALUES (80,25548);
+INSERT INTO `shopproducing` VALUES (80,25549);
+INSERT INTO `shopproducing` VALUES (80,25550);
+INSERT INTO `shopproducing` VALUES (81,518);
+INSERT INTO `shopproducing` VALUES (104,7879);
+INSERT INTO `shopproducing` VALUES (104,7880);
+INSERT INTO `shopproducing` VALUES (104,7881);
+INSERT INTO `shopproducing` VALUES (104,7882);
+INSERT INTO `shopproducing` VALUES (104,7883);
+INSERT INTO `shopproducing` VALUES (104,7884);
+INSERT INTO `shopproducing` VALUES (104,7885);
+INSERT INTO `shopproducing` VALUES (104,7886);
+INSERT INTO `shopproducing` VALUES (106,24439);
+INSERT INTO `shopproducing` VALUES (106,24440);
+INSERT INTO `shopproducing` VALUES (106,24441);
+INSERT INTO `shopproducing` VALUES (106,400);
+INSERT INTO `shopproducing` VALUES (107,412);
+INSERT INTO `shopproducing` VALUES (107,413);
+INSERT INTO `shopproducing` VALUES (107,414);
+INSERT INTO `shopproducing` VALUES (107,417);
+INSERT INTO `shopproducing` VALUES (107,430);
+INSERT INTO `shopproducing` VALUES (107,435);
+INSERT INTO `shopproducing` VALUES (107,436);
+INSERT INTO `shopproducing` VALUES (107,437);
+INSERT INTO `shopproducing` VALUES (107,438);
+INSERT INTO `shopproducing` VALUES (108,27801);
+INSERT INTO `shopproducing` VALUES (108,27802);
+INSERT INTO `shopproducing` VALUES (108,27803);
+INSERT INTO `shopproducing` VALUES (109,13841);
+INSERT INTO `shopproducing` VALUES (109,13842);
+INSERT INTO `shopproducing` VALUES (109,13843);
+INSERT INTO `shopproducing` VALUES (109,13844);
+INSERT INTO `shopproducing` VALUES (109,13845);
+INSERT INTO `shopproducing` VALUES (109,13846);
+INSERT INTO `shopproducing` VALUES (109,13847);
+INSERT INTO `shopproducing` VALUES (109,13848);
+INSERT INTO `shopproducing` VALUES (109,13849);
+INSERT INTO `shopproducing` VALUES (109,13850);
+INSERT INTO `shopproducing` VALUES (109,13851);
+INSERT INTO `shopproducing` VALUES (109,13852);
+INSERT INTO `shopproducing` VALUES (109,13853);
+INSERT INTO `shopproducing` VALUES (109,13854);
+INSERT INTO `shopproducing` VALUES (109,13855);
+INSERT INTO `shopproducing` VALUES (109,13856);
+INSERT INTO `shopproducing` VALUES (109,13857);
+INSERT INTO `shopproducing` VALUES (109,13858);
+INSERT INTO `shopproducing` VALUES (109,13859);
+INSERT INTO `shopproducing` VALUES (109,13860);
+INSERT INTO `shopproducing` VALUES (109,13861);
+INSERT INTO `shopproducing` VALUES (109,13862);
+INSERT INTO `shopproducing` VALUES (109,13863);
+INSERT INTO `shopproducing` VALUES (109,13864);
+INSERT INTO `shopproducing` VALUES (109,13865);
+INSERT INTO `shopproducing` VALUES (109,13866);
+INSERT INTO `shopproducing` VALUES (109,13867);
+INSERT INTO `shopproducing` VALUES (109,13868);
+INSERT INTO `shopproducing` VALUES (109,13869);
+INSERT INTO `shopproducing` VALUES (8,148);
+INSERT INTO `shopproducing` VALUES (109,13870);
+INSERT INTO `shopproducing` VALUES (109,13871);
+INSERT INTO `shopproducing` VALUES (109,13872);
+INSERT INTO `shopproducing` VALUES (109,13873);
+INSERT INTO `shopproducing` VALUES (110,13880);
+INSERT INTO `shopproducing` VALUES (110,13881);
+INSERT INTO `shopproducing` VALUES (110,13882);
+INSERT INTO `shopproducing` VALUES (110,13883);
+INSERT INTO `shopproducing` VALUES (110,13884);
+INSERT INTO `shopproducing` VALUES (110,13885);
+INSERT INTO `shopproducing` VALUES (122,2372);
+INSERT INTO `shopproducing` VALUES (8,2377);
+INSERT INTO `shopproducing` VALUES (112,31766);
+INSERT INTO `shopproducing` VALUES (112,31767);
+INSERT INTO `shopproducing` VALUES (112,31768);
+INSERT INTO `shopproducing` VALUES (112,31770);
+INSERT INTO `shopproducing` VALUES (112,31771);
+INSERT INTO `shopproducing` VALUES (112,31769);
+INSERT INTO `shopproducing` VALUES (112,31772);
+INSERT INTO `shopproducing` VALUES (112,31780);
+INSERT INTO `shopproducing` VALUES (112,31781);
+INSERT INTO `shopproducing` VALUES (116,3500);
+INSERT INTO `shopproducing` VALUES (116,3501);
+INSERT INTO `shopproducing` VALUES (116,3502);
+INSERT INTO `shopproducing` VALUES (116,3503);
+INSERT INTO `shopproducing` VALUES (116,3504);
+INSERT INTO `shopproducing` VALUES (116,3505);
+INSERT INTO `shopproducing` VALUES (116,3506);
+INSERT INTO `shopproducing` VALUES (116,3507);
+INSERT INTO `shopproducing` VALUES (116,3520);
+INSERT INTO `shopproducing` VALUES (116,3521);
+INSERT INTO `shopproducing` VALUES (116,3522);
+INSERT INTO `shopproducing` VALUES (116,3523);
+INSERT INTO `shopproducing` VALUES (116,3524);
+INSERT INTO `shopproducing` VALUES (116,3525);
+INSERT INTO `shopproducing` VALUES (116,3526);
+INSERT INTO `shopproducing` VALUES (116,3527);
+INSERT INTO `shopproducing` VALUES (122,2350);
+INSERT INTO `shopproducing` VALUES (122,2351);
+INSERT INTO `shopproducing` VALUES (122,2352);
+INSERT INTO `shopproducing` VALUES (122,2353);
+INSERT INTO `shopproducing` VALUES (122,2354);
+INSERT INTO `shopproducing` VALUES (122,2355);
+INSERT INTO `shopproducing` VALUES (122,2356);
+INSERT INTO `shopproducing` VALUES (122,2357);
+INSERT INTO `shopproducing` VALUES (122,2358);
+INSERT INTO `shopproducing` VALUES (122,601);
+INSERT INTO `shopproducing` VALUES (122,7748);
+INSERT INTO `shopproducing` VALUES (122,7749);
+INSERT INTO `shopproducing` VALUES (122,7750);
+INSERT INTO `shopproducing` VALUES (122,7751);
+INSERT INTO `shopproducing` VALUES (122,7752);
+INSERT INTO `shopproducing` VALUES (122,7753);
+INSERT INTO `shopproducing` VALUES (122,7754);
+INSERT INTO `shopproducing` VALUES (122,7755);
+INSERT INTO `shopproducing` VALUES (122,7756);
+INSERT INTO `shopproducing` VALUES (122,7757);
+INSERT INTO `shopproducing` VALUES (122,7758);
+INSERT INTO `shopproducing` VALUES (122,7759);
+INSERT INTO `shopproducing` VALUES (122,7760);
+INSERT INTO `shopproducing` VALUES (122,7761);
+INSERT INTO `shopproducing` VALUES (122,7762);
+INSERT INTO `shopproducing` VALUES (122,7763);
+INSERT INTO `shopproducing` VALUES (122,7764);
+INSERT INTO `shopproducing` VALUES (122,7765);
+INSERT INTO `shopproducing` VALUES (122,7766);
+INSERT INTO `shopproducing` VALUES (122,7767);
+INSERT INTO `shopproducing` VALUES (122,7768);
+INSERT INTO `shopproducing` VALUES (122,7769);
+INSERT INTO `shopproducing` VALUES (122,7770);
+INSERT INTO `shopproducing` VALUES (122,7771);
+INSERT INTO `shopproducing` VALUES (122,7772);
+INSERT INTO `shopproducing` VALUES (122,7773);
+INSERT INTO `shopproducing` VALUES (122,7774);
+INSERT INTO `shopproducing` VALUES (122,7775);
+INSERT INTO `shopproducing` VALUES (122,7776);
+INSERT INTO `shopproducing` VALUES (122,7777);
+INSERT INTO `shopproducing` VALUES (122,7778);
+INSERT INTO `shopproducing` VALUES (122,7779);
+INSERT INTO `shopproducing` VALUES (122,7780);
+INSERT INTO `shopproducing` VALUES (122,7781);
+INSERT INTO `shopproducing` VALUES (122,7782);
+INSERT INTO `shopproducing` VALUES (122,7783);
+INSERT INTO `shopproducing` VALUES (122,7784);
+INSERT INTO `shopproducing` VALUES (122,7785);
+INSERT INTO `shopproducing` VALUES (122,7786);
+INSERT INTO `shopproducing` VALUES (122,7787);
+INSERT INTO `shopproducing` VALUES (122,7788);
+INSERT INTO `shopproducing` VALUES (122,7789);
+INSERT INTO `shopproducing` VALUES (122,7790);
+INSERT INTO `shopproducing` VALUES (122,7791);
+INSERT INTO `shopproducing` VALUES (122,7792);
+INSERT INTO `shopproducing` VALUES (122,7793);
+INSERT INTO `shopproducing` VALUES (122,7794);
+INSERT INTO `shopproducing` VALUES (122,7795);
+INSERT INTO `shopproducing` VALUES (122,7796);
+INSERT INTO `shopproducing` VALUES (122,7797);
+INSERT INTO `shopproducing` VALUES (122,7798);
+INSERT INTO `shopproducing` VALUES (122,7799);
+INSERT INTO `shopproducing` VALUES (218,36966);
+INSERT INTO `shopproducing` VALUES (218,36968);
+INSERT INTO `shopproducing` VALUES (218,36969);
+INSERT INTO `shopproducing` VALUES (218,36970);
+INSERT INTO `shopproducing` VALUES (218,36971);
+INSERT INTO `shopproducing` VALUES (218,37023);
+INSERT INTO `shopproducing` VALUES (218,37022);
+INSERT INTO `shopproducing` VALUES (218,37021);
+INSERT INTO `shopproducing` VALUES (218,37020);
+INSERT INTO `shopproducing` VALUES (218,37019);
+INSERT INTO `shopproducing` VALUES (218,37018);
+INSERT INTO `shopproducing` VALUES (218,36972);
+INSERT INTO `shopproducing` VALUES (218,36973);
+INSERT INTO `shopproducing` VALUES (218,36974);
+INSERT INTO `shopproducing` VALUES (218,36975);
+INSERT INTO `shopproducing` VALUES (218,36976);
+INSERT INTO `shopproducing` VALUES (218,36977);
+INSERT INTO `shopproducing` VALUES (218,36978);
+INSERT INTO `shopproducing` VALUES (219,36979);
+INSERT INTO `shopproducing` VALUES (219,36980);
+INSERT INTO `shopproducing` VALUES (219,36981);
+INSERT INTO `shopproducing` VALUES (219,36982);
+INSERT INTO `shopproducing` VALUES (219,36983);
+INSERT INTO `shopproducing` VALUES (219,36984);
+INSERT INTO `shopproducing` VALUES (219,36985);
+INSERT INTO `shopproducing` VALUES (219,36986);
+INSERT INTO `shopproducing` VALUES (219,36987);
+INSERT INTO `shopproducing` VALUES (219,36988);
+INSERT INTO `shopproducing` VALUES (219,36989);
+INSERT INTO `shopproducing` VALUES (219,36990);
+INSERT INTO `shopproducing` VALUES (219,36991);
+INSERT INTO `shopproducing` VALUES (219,36992);
+INSERT INTO `shopproducing` VALUES (219,36993);
+INSERT INTO `shopproducing` VALUES (219,36994);
+INSERT INTO `shopproducing` VALUES (219,36995);
+INSERT INTO `shopproducing` VALUES (219,36996);
+INSERT INTO `shopproducing` VALUES (219,36997);
+INSERT INTO `shopproducing` VALUES (220,36955);
+INSERT INTO `shopproducing` VALUES (220,36956);
+INSERT INTO `shopproducing` VALUES (220,36957);
+INSERT INTO `shopproducing` VALUES (220,36958);
+INSERT INTO `shopproducing` VALUES (220,36959);
+INSERT INTO `shopproducing` VALUES (220,36960);
+INSERT INTO `shopproducing` VALUES (220,36961);
+INSERT INTO `shopproducing` VALUES (220,36962);
+INSERT INTO `shopproducing` VALUES (220,36963);
+INSERT INTO `shopproducing` VALUES (220,36964);
+INSERT INTO `shopproducing` VALUES (220,36965);
+INSERT INTO `shopproducing` VALUES (221,36931);
+INSERT INTO `shopproducing` VALUES (221,36932);
+INSERT INTO `shopproducing` VALUES (221,36935);
+INSERT INTO `shopproducing` VALUES (221,36936);
+INSERT INTO `shopproducing` VALUES (221,36937);
+INSERT INTO `shopproducing` VALUES (221,36938);
+INSERT INTO `shopproducing` VALUES (221,36939);
+INSERT INTO `shopproducing` VALUES (221,36940);
+INSERT INTO `shopproducing` VALUES (221,36941);
+INSERT INTO `shopproducing` VALUES (221,36945);
+INSERT INTO `shopproducing` VALUES (221,36946);
+INSERT INTO `shopproducing` VALUES (221,36947);
+INSERT INTO `shopproducing` VALUES (221,36948);
+INSERT INTO `shopproducing` VALUES (221,36949);
+INSERT INTO `shopproducing` VALUES (221,36950);
+INSERT INTO `shopproducing` VALUES (221,36951);
+INSERT INTO `shopproducing` VALUES (221,36952);
+INSERT INTO `shopproducing` VALUES (221,36953);
+INSERT INTO `shopproducing` VALUES (224,36998);
+INSERT INTO `shopproducing` VALUES (224,37000);
+INSERT INTO `shopproducing` VALUES (224,37001);
+INSERT INTO `shopproducing` VALUES (224,37002);
+INSERT INTO `shopproducing` VALUES (224,37003);
+INSERT INTO `shopproducing` VALUES (224,37004);
+INSERT INTO `shopproducing` VALUES (224,37005);
+INSERT INTO `shopproducing` VALUES (224,37006);
+INSERT INTO `shopproducing` VALUES (224,37007);
+INSERT INTO `shopproducing` VALUES (224,37008);
+INSERT INTO `shopproducing` VALUES (224,37010);
+INSERT INTO `shopproducing` VALUES (224,37011);
+INSERT INTO `shopproducing` VALUES (224,37012);
+INSERT INTO `shopproducing` VALUES (224,37013);
+INSERT INTO `shopproducing` VALUES (224,37014);
+INSERT INTO `shopproducing` VALUES (224,37015);
+INSERT INTO `shopproducing` VALUES (224,37016);
+INSERT INTO `shopproducing` VALUES (224,37017);
+INSERT INTO `shopproducing` VALUES (221,36930);
+INSERT INTO `shopproducing` VALUES (221,36933);
+INSERT INTO `shopproducing` VALUES (221,36934);
+INSERT INTO `shopproducing` VALUES (221,36942);
+INSERT INTO `shopproducing` VALUES (221,36943);
+INSERT INTO `shopproducing` VALUES (221,36944);
+INSERT INTO `shopproducing` VALUES (221,36954);
+INSERT INTO `shopproducing` VALUES (221,36967);
+INSERT INTO `shopproducing` VALUES (221,36999);
+INSERT INTO `shopproducing` VALUES (221,37009);
+INSERT INTO `shopproducing` VALUES (218,37025);
+INSERT INTO `shopproducing` VALUES (218,37026);
+INSERT INTO `shopproducing` VALUES (218,37027);
+INSERT INTO `shopproducing` VALUES (218,37028);
+INSERT INTO `shopproducing` VALUES (218,37029);
+INSERT INTO `shopproducing` VALUES (218,37030);
+INSERT INTO `shopproducing` VALUES (218,37031);
+INSERT INTO `shopproducing` VALUES (218,37032);
+INSERT INTO `shopproducing` VALUES (218,37033);
+INSERT INTO `shopproducing` VALUES (218,37034);
+INSERT INTO `shopproducing` VALUES (218,37035);
+INSERT INTO `shopproducing` VALUES (237,410);
+INSERT INTO `shopproducing` VALUES (237,411);
+INSERT INTO `shopproducing` VALUES (237,603);
+INSERT INTO `shopproducing` VALUES (237,6);
+INSERT INTO `shopproducing` VALUES (237,153);
+INSERT INTO `shopproducing` VALUES (237,157);
+INSERT INTO `shopproducing` VALUES (237,155);
+INSERT INTO `shopproducing` VALUES (237,156);
+INSERT INTO `shopproducing` VALUES (237,148);
+INSERT INTO `shopproducing` VALUES (237,105);
+INSERT INTO `shopproducing` VALUES (237,106);
+INSERT INTO `shopproducing` VALUES (237,107);
+INSERT INTO `shopproducing` VALUES (237,108);
+INSERT INTO `shopproducing` VALUES (237,109);
+INSERT INTO `shopproducing` VALUES (237,110);
+INSERT INTO `shopproducing` VALUES (242,6400);
+INSERT INTO `shopproducing` VALUES (242,6401);
+INSERT INTO `shopproducing` VALUES (242,6402);
+INSERT INTO `shopproducing` VALUES (244,1303);
+INSERT INTO `shopproducing` VALUES (244,1306);
+INSERT INTO `shopproducing` VALUES (244,812);
+INSERT INTO `shopproducing` VALUES (244,824);
+INSERT INTO `shopproducing` VALUES (243,149);
+INSERT INTO `shopproducing` VALUES (8,571);
+INSERT INTO `shopproducing` VALUES (8,575);
+INSERT INTO `shopproducing` VALUES (8,579);
+INSERT INTO `shopproducing` VALUES (8,581);
+INSERT INTO `shopproducing` VALUES (8,583);
+INSERT INTO `shopproducing` VALUES (8,2346);
+INSERT INTO `shopproducing` VALUES (8,2348);
+INSERT INTO `shopproducing` VALUES (8,150);
+INSERT INTO `shopproducing` VALUES (8,559);
+INSERT INTO `shopproducing` VALUES (8,586);
+INSERT INTO `shopproducing` VALUES (8,588);
+INSERT INTO `shopproducing` VALUES (8,563);
+INSERT INTO `shopproducing` VALUES (8,565);
+INSERT INTO `shopproducing` VALUES (8,567);
+INSERT INTO `shopproducing` VALUES (8,569);
+INSERT INTO `shopproducing` VALUES (8,573);
+INSERT INTO `shopproducing` VALUES (8,590);
+INSERT INTO `shopproducing` VALUES (8,592);
+INSERT INTO `shopproducing` VALUES (71,571);
+INSERT INTO `shopproducing` VALUES (71,575);
+INSERT INTO `shopproducing` VALUES (71,579);
+INSERT INTO `shopproducing` VALUES (71,581);
+INSERT INTO `shopproducing` VALUES (71,583);
+INSERT INTO `shopproducing` VALUES (71,2346);
+INSERT INTO `shopproducing` VALUES (71,2348);
+INSERT INTO `shopproducing` VALUES (71,150);
+INSERT INTO `shopproducing` VALUES (71,153);
+INSERT INTO `shopproducing` VALUES (71,155);
+INSERT INTO `shopproducing` VALUES (71,559);
+INSERT INTO `shopproducing` VALUES (71,586);
+INSERT INTO `shopproducing` VALUES (71,588);
+INSERT INTO `shopproducing` VALUES (71,563);
+INSERT INTO `shopproducing` VALUES (71,565);
+INSERT INTO `shopproducing` VALUES (71,567);
+INSERT INTO `shopproducing` VALUES (71,569);
+INSERT INTO `shopproducing` VALUES (71,573);
+INSERT INTO `shopproducing` VALUES (71,590);
+INSERT INTO `shopproducing` VALUES (71,592);
+INSERT INTO `shopproducing` VALUES (11,571);
+INSERT INTO `shopproducing` VALUES (11,575);
+INSERT INTO `shopproducing` VALUES (11,579);
+INSERT INTO `shopproducing` VALUES (11,581);
+INSERT INTO `shopproducing` VALUES (11,583);
+INSERT INTO `shopproducing` VALUES (11,2346);
+INSERT INTO `shopproducing` VALUES (11,2348);
+INSERT INTO `shopproducing` VALUES (11,150);
+INSERT INTO `shopproducing` VALUES (11,153);
+INSERT INTO `shopproducing` VALUES (11,155);
+INSERT INTO `shopproducing` VALUES (11,559);
+INSERT INTO `shopproducing` VALUES (11,586);
+INSERT INTO `shopproducing` VALUES (11,588);
+INSERT INTO `shopproducing` VALUES (11,563);
+INSERT INTO `shopproducing` VALUES (11,565);
+INSERT INTO `shopproducing` VALUES (11,567);
+INSERT INTO `shopproducing` VALUES (11,569);
+INSERT INTO `shopproducing` VALUES (11,573);
+INSERT INTO `shopproducing` VALUES (11,590);
+INSERT INTO `shopproducing` VALUES (11,592);
+INSERT INTO `shopproducing` VALUES (30,571);
+INSERT INTO `shopproducing` VALUES (30,575);
+INSERT INTO `shopproducing` VALUES (30,579);
+INSERT INTO `shopproducing` VALUES (30,581);
+INSERT INTO `shopproducing` VALUES (30,583);
+INSERT INTO `shopproducing` VALUES (30,2346);
+INSERT INTO `shopproducing` VALUES (30,2348);
+INSERT INTO `shopproducing` VALUES (30,150);
+INSERT INTO `shopproducing` VALUES (30,153);
+INSERT INTO `shopproducing` VALUES (30,155);
+INSERT INTO `shopproducing` VALUES (30,559);
+INSERT INTO `shopproducing` VALUES (30,586);
+INSERT INTO `shopproducing` VALUES (30,588);
+INSERT INTO `shopproducing` VALUES (30,563);
+INSERT INTO `shopproducing` VALUES (30,565);
+INSERT INTO `shopproducing` VALUES (30,567);
+INSERT INTO `shopproducing` VALUES (30,569);
+INSERT INTO `shopproducing` VALUES (30,573);
+INSERT INTO `shopproducing` VALUES (30,590);
+INSERT INTO `shopproducing` VALUES (30,592);
+INSERT INTO `shopproducing` VALUES (30,572);
+INSERT INTO `shopproducing` VALUES (30,574);
+INSERT INTO `shopproducing` VALUES (30,2349);
+INSERT INTO `shopproducing` VALUES (30,587);
+INSERT INTO `shopproducing` VALUES (30,591);
+INSERT INTO `shopproducing` VALUES (30,576);
+INSERT INTO `shopproducing` VALUES (30,582);
+INSERT INTO `shopproducing` VALUES (30,593);
+INSERT INTO `shopproducing` VALUES (30,584);
+INSERT INTO `shopproducing` VALUES (30,589);
+INSERT INTO `shopproducing` VALUES (30,564);
+INSERT INTO `shopproducing` VALUES (30,566);
+INSERT INTO `shopproducing` VALUES (18,571);
+INSERT INTO `shopproducing` VALUES (18,575);
+INSERT INTO `shopproducing` VALUES (18,579);
+INSERT INTO `shopproducing` VALUES (18,581);
+INSERT INTO `shopproducing` VALUES (18,583);
+INSERT INTO `shopproducing` VALUES (18,2346);
+INSERT INTO `shopproducing` VALUES (18,2348);
+INSERT INTO `shopproducing` VALUES (18,150);
+INSERT INTO `shopproducing` VALUES (18,153);
+INSERT INTO `shopproducing` VALUES (18,155);
+INSERT INTO `shopproducing` VALUES (18,559);
+INSERT INTO `shopproducing` VALUES (18,586);
+INSERT INTO `shopproducing` VALUES (18,588);
+INSERT INTO `shopproducing` VALUES (18,563);
+INSERT INTO `shopproducing` VALUES (18,565);
+INSERT INTO `shopproducing` VALUES (18,567);
+INSERT INTO `shopproducing` VALUES (18,569);
+INSERT INTO `shopproducing` VALUES (18,573);
+INSERT INTO `shopproducing` VALUES (18,590);
+INSERT INTO `shopproducing` VALUES (18,592);
+INSERT INTO `shopproducing` VALUES (18,574);
+INSERT INTO `shopproducing` VALUES (18,568);
+INSERT INTO `shopproducing` VALUES (18,2347);
+INSERT INTO `shopproducing` VALUES (18,587);
+INSERT INTO `shopproducing` VALUES (18,560);
+INSERT INTO `shopproducing` VALUES (18,580);
+INSERT INTO `shopproducing` VALUES (18,576);
+INSERT INTO `shopproducing` VALUES (18,593);
+INSERT INTO `shopproducing` VALUES (18,570);
+INSERT INTO `shopproducing` VALUES (18,582);
+INSERT INTO `shopproducing` VALUES (18,589);
+INSERT INTO `shopproducing` VALUES (18,566);
+INSERT INTO `shopproducing` VALUES (72,571);
+INSERT INTO `shopproducing` VALUES (72,575);
+INSERT INTO `shopproducing` VALUES (72,579);
+INSERT INTO `shopproducing` VALUES (72,581);
+INSERT INTO `shopproducing` VALUES (72,583);
+INSERT INTO `shopproducing` VALUES (72,2346);
+INSERT INTO `shopproducing` VALUES (72,2348);
+INSERT INTO `shopproducing` VALUES (72,153);
+INSERT INTO `shopproducing` VALUES (72,155);
+INSERT INTO `shopproducing` VALUES (72,559);
+INSERT INTO `shopproducing` VALUES (72,586);
+INSERT INTO `shopproducing` VALUES (72,588);
+INSERT INTO `shopproducing` VALUES (72,563);
+INSERT INTO `shopproducing` VALUES (72,565);
+INSERT INTO `shopproducing` VALUES (72,567);
+INSERT INTO `shopproducing` VALUES (72,569);
+INSERT INTO `shopproducing` VALUES (72,573);
+INSERT INTO `shopproducing` VALUES (72,590);
+INSERT INTO `shopproducing` VALUES (72,592);
+INSERT INTO `shopproducing` VALUES (72,572);
+INSERT INTO `shopproducing` VALUES (72,568);
+INSERT INTO `shopproducing` VALUES (72,2349);
+INSERT INTO `shopproducing` VALUES (72,2347);
+INSERT INTO `shopproducing` VALUES (72,560);
+INSERT INTO `shopproducing` VALUES (72,591);
+INSERT INTO `shopproducing` VALUES (72,580);
+INSERT INTO `shopproducing` VALUES (72,582);
+INSERT INTO `shopproducing` VALUES (72,584);
+INSERT INTO `shopproducing` VALUES (72,570);
+INSERT INTO `shopproducing` VALUES (72,564);
+INSERT INTO `shopproducing` VALUES (72,566);
 /*!40000 ALTER TABLE `shopproducing` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -738,3 +750,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+-- Dump completed on 2019-05-02 21:42:47

@@ -1,8 +1,8 @@
--- MySQL dump 10.10
+-- MySQL dump 10.16  Distrib 10.1.28-MariaDB, for Linux (x86_64)
 --
--- Host: db.sneezymud.com    Database: sneezy
+-- Host: localhost    Database: sneezy
 -- ------------------------------------------------------
--- Server version	5.0.24a-standard
+-- Server version	10.1.28-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,352 +16,364 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `shoptype`
+--
+
+DROP TABLE IF EXISTS `shoptype`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shoptype` (
+  `shop_nr` int(11) NOT NULL DEFAULT '0',
+  `type` int(11) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `shoptype`
 --
 
-
-/*!40000 ALTER TABLE `shoptype` DISABLE KEYS */;
 LOCK TABLES `shoptype` WRITE;
-INSERT INTO `shoptype` VALUES (0,5),
-(0,44),
-(1,1),
-(1,6),
-(2,9),
-(5,4),
-(5,3),
-(6,10),
-(7,2),
-(8,35),
-(8,15),
-(8,17),
-(8,27),
-(8,38),
-(8,49),
-(9,8),
-(9,31),
-(9,12),
-(9,16),
-(9,22),
-(9,20),
-(9,21),
-(9,37),
-(9,43),
-(10,36),
-(10,31),
-(10,46),
-(15,8),
-(15,20),
-(15,7),
-(15,42),
-(15,43),
-(16,19),
-(16,17),
-(17,19),
-(17,22),
-(17,11),
-(17,30),
-(17,31),
-(18,1),
-(18,6),
-(18,15),
-(18,27),
-(19,9),
-(20,5),
-(20,44),
-(21,2),
-(21,3),
-(21,4),
-(21,10),
-(21,30),
-(22,25),
-(22,26),
-(22,37),
-(23,17),
-(23,19),
-(24,17),
-(24,19),
-(25,9),
-(26,9),
-(27,5),
-(27,44),
-(28,17),
-(28,19),
-(29,2),
-(29,3),
-(29,4),
-(29,10),
-(29,30),
-(30,1),
-(30,6),
-(30,15),
-(30,27),
-(31,17),
-(31,19),
-(32,5),
-(32,44),
-(33,9),
-(33,11),
-(34,9),
-(35,5),
-(35,25),
-(35,26),
-(35,44),
-(79,6),
-(37,19),
-(37,17),
-(38,19),
-(38,17),
-(39,19),
-(39,17),
-(40,9),
-(41,5),
-(41,44),
-(42,31),
-(43,2),
-(43,3),
-(43,4),
-(43,10),
-(43,30),
-(44,20),
-(44,8),
-(44,7),
-(45,1),
-(45,6),
-(45,27),
-(45,38),
-(46,1),
-(46,6),
-(46,27),
-(46,38),
-(47,17),
-(47,19),
-(48,17),
-(48,19),
-(49,19),
-(49,17),
-(50,19),
-(50,17),
-(51,19),
-(51,17),
-(52,19),
-(53,17),
-(54,9),
-(54,11),
-(55,5),
-(55,44),
-(56,8),
-(56,20),
-(56,7),
-(56,42),
-(57,8),
-(57,20),
-(57,7),
-(57,42),
-(58,8),
-(58,20),
-(58,7),
-(58,42),
-(59,17),
-(60,1),
-(60,6),
-(60,27),
-(60,31),
-(60,38),
-(61,8),
-(61,31),
-(61,12),
-(61,16),
-(61,22),
-(61,20),
-(61,21),
-(61,37),
-(62,22),
-(63,25),
-(63,26),
-(63,37),
-(64,17),
-(64,19),
-(65,17),
-(65,19),
-(66,1),
-(66,17),
-(66,19),
-(66,38),
-(66,27),
-(67,19),
-(68,10),
-(69,22),
-(70,30),
-(70,29),
-(71,14),
-(71,18),
-(71,12),
-(71,35),
-(72,35),
-(72,15),
-(72,17),
-(72,27),
-(72,38),
-(72,1),
-(73,45),
-(74,11),
-(75,19),
-(76,17),
-(76,19),
-(77,5),
-(77,44),
-(78,14),
-(78,18),
-(78,12),
-(79,15),
-(79,17),
-(79,27),
-(79,38),
-(79,1),
-(80,19),
-(81,8),
-(81,20),
-(81,7),
-(81,42),
-(82,9),
-(83,5),
-(83,44),
-(84,17),
-(84,46),
-(88,2),
-(88,30),
-(89,19),
-(97,43),
-(104,50),
-(104,52),
-(105,50),
-(105,52),
-(106,19),
-(107,17),
-(107,19),
-(108,22),
-(111,36),
-(111,31),
-(111,46),
-(112,60),
-(112,19),
-(113,9),
-(113,45),
-(114,54),
-(114,8),
-(115,29),
-(115,30),
-(116,19),
-(116,17),
-(117,11),
-(122,62),
-(119,36),
-(119,31),
-(119,46),
-(119,8),
-(174,11),
-(118,5),
-(119,45),
-(71,63),
-(78,63),
-(8,67),
-(175,5),
-(121,46),
-(121,36),
-(125,9),
-(125,45),
-(135,14),
-(135,18),
-(135,12),
-(135,63),
-(137,9),
-(138,9),
-(139,11),
-(159,30),
-(159,29),
-(120,10),
-(120,2),
-(143,2),
-(143,10),
-(12,29),
-(12,30),
-(172,2),
-(172,4),
-(172,7),
-(172,10),
-(172,30),
-(173,11),
-(173,11),
-(176,19),
-(177,12),
-(177,17),
-(177,18),
-(177,27),
-(177,49),
-(178,12),
-(178,17),
-(178,18),
-(178,27),
-(178,49),
-(179,9),
-(180,11),
-(181,1),
-(183,55),
-(183,56),
-(11,14),
-(11,18),
-(11,12),
-(11,35),
-(11,63),
-(184,9),
-(216,9),
-(217,2),
-(217,3),
-(214,5),
-(215,11),
-(217,4),
-(217,10),
-(217,30),
-(36,11),
-(225,10),
-(226,2),
-(226,10),
-(232,36),
-(232,46),
-(233,11),
-(234,9),
-(235,5),
-(235,44),
-(236,45),
-(237,15),
-(237,27),
-(237,6),
-(237,1),
-(237,38),
-(237,17),
-(238,42),
-(238,43),
-(238,20),
-(238,8),
-(239,29),
-(239,30),
-(242,19),
-(243,14),
-(243,18),
-(243,12),
-(243,63),
-(244,2),
-(244,10),
-(251,19),
-(3,19),
-(256,11),
-(257,9),
-(258,29),
-(258,30),
-(30,35),
-(18,35);
-UNLOCK TABLES;
+/*!40000 ALTER TABLE `shoptype` DISABLE KEYS */;
+INSERT INTO `shoptype` VALUES (0,5);
+INSERT INTO `shoptype` VALUES (0,44);
+INSERT INTO `shoptype` VALUES (1,1);
+INSERT INTO `shoptype` VALUES (1,6);
+INSERT INTO `shoptype` VALUES (2,9);
+INSERT INTO `shoptype` VALUES (5,4);
+INSERT INTO `shoptype` VALUES (5,3);
+INSERT INTO `shoptype` VALUES (6,10);
+INSERT INTO `shoptype` VALUES (7,2);
+INSERT INTO `shoptype` VALUES (8,35);
+INSERT INTO `shoptype` VALUES (8,15);
+INSERT INTO `shoptype` VALUES (8,17);
+INSERT INTO `shoptype` VALUES (8,27);
+INSERT INTO `shoptype` VALUES (8,38);
+INSERT INTO `shoptype` VALUES (8,49);
+INSERT INTO `shoptype` VALUES (9,8);
+INSERT INTO `shoptype` VALUES (9,31);
+INSERT INTO `shoptype` VALUES (9,12);
+INSERT INTO `shoptype` VALUES (9,16);
+INSERT INTO `shoptype` VALUES (9,22);
+INSERT INTO `shoptype` VALUES (9,20);
+INSERT INTO `shoptype` VALUES (9,21);
+INSERT INTO `shoptype` VALUES (9,37);
+INSERT INTO `shoptype` VALUES (9,43);
+INSERT INTO `shoptype` VALUES (10,36);
+INSERT INTO `shoptype` VALUES (10,31);
+INSERT INTO `shoptype` VALUES (10,46);
+INSERT INTO `shoptype` VALUES (15,8);
+INSERT INTO `shoptype` VALUES (15,20);
+INSERT INTO `shoptype` VALUES (15,7);
+INSERT INTO `shoptype` VALUES (15,42);
+INSERT INTO `shoptype` VALUES (15,43);
+INSERT INTO `shoptype` VALUES (16,19);
+INSERT INTO `shoptype` VALUES (16,17);
+INSERT INTO `shoptype` VALUES (17,19);
+INSERT INTO `shoptype` VALUES (17,22);
+INSERT INTO `shoptype` VALUES (17,11);
+INSERT INTO `shoptype` VALUES (17,30);
+INSERT INTO `shoptype` VALUES (17,31);
+INSERT INTO `shoptype` VALUES (18,1);
+INSERT INTO `shoptype` VALUES (18,6);
+INSERT INTO `shoptype` VALUES (18,15);
+INSERT INTO `shoptype` VALUES (18,27);
+INSERT INTO `shoptype` VALUES (19,9);
+INSERT INTO `shoptype` VALUES (20,5);
+INSERT INTO `shoptype` VALUES (20,44);
+INSERT INTO `shoptype` VALUES (21,2);
+INSERT INTO `shoptype` VALUES (21,3);
+INSERT INTO `shoptype` VALUES (21,4);
+INSERT INTO `shoptype` VALUES (21,10);
+INSERT INTO `shoptype` VALUES (21,30);
+INSERT INTO `shoptype` VALUES (22,25);
+INSERT INTO `shoptype` VALUES (22,26);
+INSERT INTO `shoptype` VALUES (22,37);
+INSERT INTO `shoptype` VALUES (23,17);
+INSERT INTO `shoptype` VALUES (23,19);
+INSERT INTO `shoptype` VALUES (24,17);
+INSERT INTO `shoptype` VALUES (24,19);
+INSERT INTO `shoptype` VALUES (25,9);
+INSERT INTO `shoptype` VALUES (26,9);
+INSERT INTO `shoptype` VALUES (27,5);
+INSERT INTO `shoptype` VALUES (27,44);
+INSERT INTO `shoptype` VALUES (28,17);
+INSERT INTO `shoptype` VALUES (28,19);
+INSERT INTO `shoptype` VALUES (29,2);
+INSERT INTO `shoptype` VALUES (29,3);
+INSERT INTO `shoptype` VALUES (29,4);
+INSERT INTO `shoptype` VALUES (29,10);
+INSERT INTO `shoptype` VALUES (29,30);
+INSERT INTO `shoptype` VALUES (30,1);
+INSERT INTO `shoptype` VALUES (30,6);
+INSERT INTO `shoptype` VALUES (30,15);
+INSERT INTO `shoptype` VALUES (30,27);
+INSERT INTO `shoptype` VALUES (31,17);
+INSERT INTO `shoptype` VALUES (31,19);
+INSERT INTO `shoptype` VALUES (32,5);
+INSERT INTO `shoptype` VALUES (32,44);
+INSERT INTO `shoptype` VALUES (33,9);
+INSERT INTO `shoptype` VALUES (33,11);
+INSERT INTO `shoptype` VALUES (34,9);
+INSERT INTO `shoptype` VALUES (35,5);
+INSERT INTO `shoptype` VALUES (35,25);
+INSERT INTO `shoptype` VALUES (35,26);
+INSERT INTO `shoptype` VALUES (35,44);
+INSERT INTO `shoptype` VALUES (79,6);
+INSERT INTO `shoptype` VALUES (37,19);
+INSERT INTO `shoptype` VALUES (37,17);
+INSERT INTO `shoptype` VALUES (38,19);
+INSERT INTO `shoptype` VALUES (38,17);
+INSERT INTO `shoptype` VALUES (39,19);
+INSERT INTO `shoptype` VALUES (39,17);
+INSERT INTO `shoptype` VALUES (40,9);
+INSERT INTO `shoptype` VALUES (41,5);
+INSERT INTO `shoptype` VALUES (41,44);
+INSERT INTO `shoptype` VALUES (42,31);
+INSERT INTO `shoptype` VALUES (43,2);
+INSERT INTO `shoptype` VALUES (43,3);
+INSERT INTO `shoptype` VALUES (43,4);
+INSERT INTO `shoptype` VALUES (43,10);
+INSERT INTO `shoptype` VALUES (43,30);
+INSERT INTO `shoptype` VALUES (44,20);
+INSERT INTO `shoptype` VALUES (44,8);
+INSERT INTO `shoptype` VALUES (44,7);
+INSERT INTO `shoptype` VALUES (45,1);
+INSERT INTO `shoptype` VALUES (45,6);
+INSERT INTO `shoptype` VALUES (45,27);
+INSERT INTO `shoptype` VALUES (45,38);
+INSERT INTO `shoptype` VALUES (46,1);
+INSERT INTO `shoptype` VALUES (46,6);
+INSERT INTO `shoptype` VALUES (46,27);
+INSERT INTO `shoptype` VALUES (46,38);
+INSERT INTO `shoptype` VALUES (47,17);
+INSERT INTO `shoptype` VALUES (47,19);
+INSERT INTO `shoptype` VALUES (48,17);
+INSERT INTO `shoptype` VALUES (48,19);
+INSERT INTO `shoptype` VALUES (49,19);
+INSERT INTO `shoptype` VALUES (49,17);
+INSERT INTO `shoptype` VALUES (50,19);
+INSERT INTO `shoptype` VALUES (50,17);
+INSERT INTO `shoptype` VALUES (51,19);
+INSERT INTO `shoptype` VALUES (51,17);
+INSERT INTO `shoptype` VALUES (52,19);
+INSERT INTO `shoptype` VALUES (53,17);
+INSERT INTO `shoptype` VALUES (54,9);
+INSERT INTO `shoptype` VALUES (54,11);
+INSERT INTO `shoptype` VALUES (55,5);
+INSERT INTO `shoptype` VALUES (55,44);
+INSERT INTO `shoptype` VALUES (56,8);
+INSERT INTO `shoptype` VALUES (56,20);
+INSERT INTO `shoptype` VALUES (56,7);
+INSERT INTO `shoptype` VALUES (56,42);
+INSERT INTO `shoptype` VALUES (57,8);
+INSERT INTO `shoptype` VALUES (57,20);
+INSERT INTO `shoptype` VALUES (57,7);
+INSERT INTO `shoptype` VALUES (57,42);
+INSERT INTO `shoptype` VALUES (58,8);
+INSERT INTO `shoptype` VALUES (58,20);
+INSERT INTO `shoptype` VALUES (58,7);
+INSERT INTO `shoptype` VALUES (58,42);
+INSERT INTO `shoptype` VALUES (59,17);
+INSERT INTO `shoptype` VALUES (60,1);
+INSERT INTO `shoptype` VALUES (60,6);
+INSERT INTO `shoptype` VALUES (60,27);
+INSERT INTO `shoptype` VALUES (60,31);
+INSERT INTO `shoptype` VALUES (60,38);
+INSERT INTO `shoptype` VALUES (61,8);
+INSERT INTO `shoptype` VALUES (61,31);
+INSERT INTO `shoptype` VALUES (61,12);
+INSERT INTO `shoptype` VALUES (61,16);
+INSERT INTO `shoptype` VALUES (61,22);
+INSERT INTO `shoptype` VALUES (61,20);
+INSERT INTO `shoptype` VALUES (61,21);
+INSERT INTO `shoptype` VALUES (61,37);
+INSERT INTO `shoptype` VALUES (62,22);
+INSERT INTO `shoptype` VALUES (63,25);
+INSERT INTO `shoptype` VALUES (63,26);
+INSERT INTO `shoptype` VALUES (63,37);
+INSERT INTO `shoptype` VALUES (64,17);
+INSERT INTO `shoptype` VALUES (64,19);
+INSERT INTO `shoptype` VALUES (65,17);
+INSERT INTO `shoptype` VALUES (65,19);
+INSERT INTO `shoptype` VALUES (66,1);
+INSERT INTO `shoptype` VALUES (66,17);
+INSERT INTO `shoptype` VALUES (66,19);
+INSERT INTO `shoptype` VALUES (66,38);
+INSERT INTO `shoptype` VALUES (66,27);
+INSERT INTO `shoptype` VALUES (67,19);
+INSERT INTO `shoptype` VALUES (68,10);
+INSERT INTO `shoptype` VALUES (69,22);
+INSERT INTO `shoptype` VALUES (70,30);
+INSERT INTO `shoptype` VALUES (70,29);
+INSERT INTO `shoptype` VALUES (71,14);
+INSERT INTO `shoptype` VALUES (71,18);
+INSERT INTO `shoptype` VALUES (71,12);
+INSERT INTO `shoptype` VALUES (71,35);
+INSERT INTO `shoptype` VALUES (72,35);
+INSERT INTO `shoptype` VALUES (72,15);
+INSERT INTO `shoptype` VALUES (72,17);
+INSERT INTO `shoptype` VALUES (72,27);
+INSERT INTO `shoptype` VALUES (72,38);
+INSERT INTO `shoptype` VALUES (72,1);
+INSERT INTO `shoptype` VALUES (73,45);
+INSERT INTO `shoptype` VALUES (74,11);
+INSERT INTO `shoptype` VALUES (75,19);
+INSERT INTO `shoptype` VALUES (76,17);
+INSERT INTO `shoptype` VALUES (76,19);
+INSERT INTO `shoptype` VALUES (77,5);
+INSERT INTO `shoptype` VALUES (77,44);
+INSERT INTO `shoptype` VALUES (78,14);
+INSERT INTO `shoptype` VALUES (78,18);
+INSERT INTO `shoptype` VALUES (78,12);
+INSERT INTO `shoptype` VALUES (79,15);
+INSERT INTO `shoptype` VALUES (79,17);
+INSERT INTO `shoptype` VALUES (79,27);
+INSERT INTO `shoptype` VALUES (79,38);
+INSERT INTO `shoptype` VALUES (79,1);
+INSERT INTO `shoptype` VALUES (80,19);
+INSERT INTO `shoptype` VALUES (81,8);
+INSERT INTO `shoptype` VALUES (81,20);
+INSERT INTO `shoptype` VALUES (81,7);
+INSERT INTO `shoptype` VALUES (81,42);
+INSERT INTO `shoptype` VALUES (82,9);
+INSERT INTO `shoptype` VALUES (83,5);
+INSERT INTO `shoptype` VALUES (83,44);
+INSERT INTO `shoptype` VALUES (84,17);
+INSERT INTO `shoptype` VALUES (84,46);
+INSERT INTO `shoptype` VALUES (88,2);
+INSERT INTO `shoptype` VALUES (88,30);
+INSERT INTO `shoptype` VALUES (89,19);
+INSERT INTO `shoptype` VALUES (97,43);
+INSERT INTO `shoptype` VALUES (104,50);
+INSERT INTO `shoptype` VALUES (104,52);
+INSERT INTO `shoptype` VALUES (105,50);
+INSERT INTO `shoptype` VALUES (105,52);
+INSERT INTO `shoptype` VALUES (106,19);
+INSERT INTO `shoptype` VALUES (107,17);
+INSERT INTO `shoptype` VALUES (107,19);
+INSERT INTO `shoptype` VALUES (108,22);
+INSERT INTO `shoptype` VALUES (111,36);
+INSERT INTO `shoptype` VALUES (111,31);
+INSERT INTO `shoptype` VALUES (111,46);
+INSERT INTO `shoptype` VALUES (112,60);
+INSERT INTO `shoptype` VALUES (112,19);
+INSERT INTO `shoptype` VALUES (113,9);
+INSERT INTO `shoptype` VALUES (113,45);
+INSERT INTO `shoptype` VALUES (114,54);
+INSERT INTO `shoptype` VALUES (114,8);
+INSERT INTO `shoptype` VALUES (115,29);
+INSERT INTO `shoptype` VALUES (115,30);
+INSERT INTO `shoptype` VALUES (116,19);
+INSERT INTO `shoptype` VALUES (116,17);
+INSERT INTO `shoptype` VALUES (117,11);
+INSERT INTO `shoptype` VALUES (122,62);
+INSERT INTO `shoptype` VALUES (119,36);
+INSERT INTO `shoptype` VALUES (119,31);
+INSERT INTO `shoptype` VALUES (119,46);
+INSERT INTO `shoptype` VALUES (119,8);
+INSERT INTO `shoptype` VALUES (174,11);
+INSERT INTO `shoptype` VALUES (118,5);
+INSERT INTO `shoptype` VALUES (119,45);
+INSERT INTO `shoptype` VALUES (71,63);
+INSERT INTO `shoptype` VALUES (78,63);
+INSERT INTO `shoptype` VALUES (8,67);
+INSERT INTO `shoptype` VALUES (175,5);
+INSERT INTO `shoptype` VALUES (121,46);
+INSERT INTO `shoptype` VALUES (121,36);
+INSERT INTO `shoptype` VALUES (125,9);
+INSERT INTO `shoptype` VALUES (125,45);
+INSERT INTO `shoptype` VALUES (135,14);
+INSERT INTO `shoptype` VALUES (135,18);
+INSERT INTO `shoptype` VALUES (135,12);
+INSERT INTO `shoptype` VALUES (135,63);
+INSERT INTO `shoptype` VALUES (137,9);
+INSERT INTO `shoptype` VALUES (138,9);
+INSERT INTO `shoptype` VALUES (139,11);
+INSERT INTO `shoptype` VALUES (159,30);
+INSERT INTO `shoptype` VALUES (159,29);
+INSERT INTO `shoptype` VALUES (120,10);
+INSERT INTO `shoptype` VALUES (120,2);
+INSERT INTO `shoptype` VALUES (143,2);
+INSERT INTO `shoptype` VALUES (143,10);
+INSERT INTO `shoptype` VALUES (12,29);
+INSERT INTO `shoptype` VALUES (12,30);
+INSERT INTO `shoptype` VALUES (172,2);
+INSERT INTO `shoptype` VALUES (172,4);
+INSERT INTO `shoptype` VALUES (172,7);
+INSERT INTO `shoptype` VALUES (172,10);
+INSERT INTO `shoptype` VALUES (172,30);
+INSERT INTO `shoptype` VALUES (173,11);
+INSERT INTO `shoptype` VALUES (173,11);
+INSERT INTO `shoptype` VALUES (176,19);
+INSERT INTO `shoptype` VALUES (177,12);
+INSERT INTO `shoptype` VALUES (177,17);
+INSERT INTO `shoptype` VALUES (177,18);
+INSERT INTO `shoptype` VALUES (177,27);
+INSERT INTO `shoptype` VALUES (177,49);
+INSERT INTO `shoptype` VALUES (178,12);
+INSERT INTO `shoptype` VALUES (178,17);
+INSERT INTO `shoptype` VALUES (178,18);
+INSERT INTO `shoptype` VALUES (178,27);
+INSERT INTO `shoptype` VALUES (178,49);
+INSERT INTO `shoptype` VALUES (179,9);
+INSERT INTO `shoptype` VALUES (180,11);
+INSERT INTO `shoptype` VALUES (181,1);
+INSERT INTO `shoptype` VALUES (183,55);
+INSERT INTO `shoptype` VALUES (183,56);
+INSERT INTO `shoptype` VALUES (11,14);
+INSERT INTO `shoptype` VALUES (11,18);
+INSERT INTO `shoptype` VALUES (11,12);
+INSERT INTO `shoptype` VALUES (11,35);
+INSERT INTO `shoptype` VALUES (11,63);
+INSERT INTO `shoptype` VALUES (184,9);
+INSERT INTO `shoptype` VALUES (216,9);
+INSERT INTO `shoptype` VALUES (217,2);
+INSERT INTO `shoptype` VALUES (217,3);
+INSERT INTO `shoptype` VALUES (214,5);
+INSERT INTO `shoptype` VALUES (215,11);
+INSERT INTO `shoptype` VALUES (217,4);
+INSERT INTO `shoptype` VALUES (217,10);
+INSERT INTO `shoptype` VALUES (217,30);
+INSERT INTO `shoptype` VALUES (36,11);
+INSERT INTO `shoptype` VALUES (225,10);
+INSERT INTO `shoptype` VALUES (226,2);
+INSERT INTO `shoptype` VALUES (226,10);
+INSERT INTO `shoptype` VALUES (232,36);
+INSERT INTO `shoptype` VALUES (232,46);
+INSERT INTO `shoptype` VALUES (233,11);
+INSERT INTO `shoptype` VALUES (234,9);
+INSERT INTO `shoptype` VALUES (235,5);
+INSERT INTO `shoptype` VALUES (235,44);
+INSERT INTO `shoptype` VALUES (236,45);
+INSERT INTO `shoptype` VALUES (237,15);
+INSERT INTO `shoptype` VALUES (237,27);
+INSERT INTO `shoptype` VALUES (237,6);
+INSERT INTO `shoptype` VALUES (237,1);
+INSERT INTO `shoptype` VALUES (237,38);
+INSERT INTO `shoptype` VALUES (237,17);
+INSERT INTO `shoptype` VALUES (238,42);
+INSERT INTO `shoptype` VALUES (238,43);
+INSERT INTO `shoptype` VALUES (238,20);
+INSERT INTO `shoptype` VALUES (238,8);
+INSERT INTO `shoptype` VALUES (239,29);
+INSERT INTO `shoptype` VALUES (239,30);
+INSERT INTO `shoptype` VALUES (242,19);
+INSERT INTO `shoptype` VALUES (243,14);
+INSERT INTO `shoptype` VALUES (243,18);
+INSERT INTO `shoptype` VALUES (243,12);
+INSERT INTO `shoptype` VALUES (243,63);
+INSERT INTO `shoptype` VALUES (244,2);
+INSERT INTO `shoptype` VALUES (244,10);
+INSERT INTO `shoptype` VALUES (251,19);
+INSERT INTO `shoptype` VALUES (3,19);
+INSERT INTO `shoptype` VALUES (256,11);
+INSERT INTO `shoptype` VALUES (257,9);
+INSERT INTO `shoptype` VALUES (258,29);
+INSERT INTO `shoptype` VALUES (258,30);
+INSERT INTO `shoptype` VALUES (30,35);
+INSERT INTO `shoptype` VALUES (18,35);
 /*!40000 ALTER TABLE `shoptype` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -372,3 +384,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+-- Dump completed on 2019-05-02 21:42:48

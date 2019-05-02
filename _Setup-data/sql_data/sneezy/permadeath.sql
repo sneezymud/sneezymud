@@ -1,8 +1,8 @@
--- MySQL dump 10.10
+-- MySQL dump 10.16  Distrib 10.1.28-MariaDB, for Linux (x86_64)
 --
--- Host: db.sneezymud.com    Database: sneezy
+-- Host: localhost    Database: sneezy
 -- ------------------------------------------------------
--- Server version	5.0.24a-standard
+-- Server version	10.1.28-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,272 +16,285 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `permadeath`
+--
+
+DROP TABLE IF EXISTS `permadeath`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `permadeath` (
+  `name` varchar(80) NOT NULL DEFAULT '',
+  `level` int(11) DEFAULT NULL,
+  `died` int(11) DEFAULT NULL,
+  `killer` varchar(80) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `permadeath`
 --
 
-
-/*!40000 ALTER TABLE `permadeath` DISABLE KEYS */;
 LOCK TABLES `permadeath` WRITE;
-INSERT INTO `permadeath` VALUES ('Telaqui',5,1,'a robber'),
-('Fujisaowa',7,0,'no one'),
-('Anda',11,1,'fire'),
-('Yoritomo',2,1,'a strong man'),
-('Tonniji',3,0,'no one'),
-('Nastradamus',15,1,'a mud worker'),
-('Wheyisk',4,0,'no one'),
-('Greywulf',3,1,'a gypsy'),
-('Mickle',13,0,'no one'),
-('Reign',2,1,'a good-sized rat'),
-('Ashame',6,0,'no one'),
-('Wesp',6,1,'buggy shaman code'),
-('Grunter',5,0,'no one'),
-('Hermione',10,0,'no one'),
-('Anthoes',3,1,'a <B>cityguard<1>'),
-('Fink',10,0,'no one'),
-('Jacen',12,1,'a mud guard'),
-('Farina',16,1,'the woodelven wife'),
-('Vaedos',2,0,'no one'),
-('Julius',11,0,'no one'),
-('Frood',2,1,'a <B>city watchman<1>'),
-('Guffaw',6,1,'a robber'),
-('Trillea',12,0,'no one'),
-('Gichin',8,1,'Gichin'),
-('Keros',2,0,'no one'),
-('Khaleefa',16,0,'no one'),
-('Tendo',2,0,'no one'),
-('Durok',32,1,'the goblin cleric'),
-('Haze',8,1,'Haze'),
-('Erasamus',2,1,'a pirahna'),
-('Petrale',16,1,'a large brown bear'),
-('Gnervil',3,0,'no one'),
-('Seras',8,0,'no one'),
-('Mung',20,0,'no one'),
-('Gerard',19,1,'a dragon whelp'),
-('EeizeJr',8,1,'a <g>gnome chef\'s assistant<z>'),
-('Toranaga',3,0,'no one'),
-('Greyshoot',6,1,'Acidbear'),
-('Planhigion',3,1,'an aspiring young shaman'),
-('Tywydd',11,1,'<g>an archer<1>'),
-('Covad',2,0,'no one'),
-('Meddwl',5,1,'a male citizen'),
-('Slyder',13,0,'no one'),
-('StaggerLoo',3,0,'no one'),
-('Amihere',3,0,'no one'),
-('KittyKitty',4,0,'no one'),
-('Phoofur',21,1,'a <r>wild elf archer<z>'),
-('Thac',2,0,'no one'),
-('Pure',3,0,'no one'),
-('Slideth',18,1,'a pygmy bone-woman'),
-('Rynth',20,0,'no one'),
-('Balzaar',12,1,'<r>a battle-mage<1>'),
-('Ice',4,0,'no one'),
-('Darchri',3,0,'no one'),
-('Vacra',2,1,'Vacra'),
-('Ambpot',19,1,'Mr. McGnee'),
-('Rero',17,0,'no one'),
-('Ghovinda',4,1,'a <C>gnomish houngan<1>'),
-('Sindarin',2,0,'no one'),
-('Araxus',50,0,'no one'),
-('Triz',3,1,'a draft horse'),
-('Fondu',6,0,'no one'),
-('Hilech',14,0,'no one'),
-('GauchoX',3,0,'no one'),
-('TigerPosture',1,1,'a <B>city watchman<1>'),
-('Madeleine',3,0,'no one'),
-('Leer',6,0,'no one'),
-('Brandon',6,1,'Nicodemus the old fisherman'),
-('Nyr',3,0,'no one'),
-('Katrina',3,0,'no one'),
-('Mendos',2,0,'no one'),
-('Ranko',2,0,'no one'),
-('SexyBoy',4,0,'no one'),
-('Material',15,0,'no one'),
-('PermaSupernaut',4,1,'PermaSupernaut'),
-('Thingol',2,1,'Peel'),
-('Adlion',2,1,'a Grimhaven youth'),
-('Matilda',5,1,'a robber'),
-('Leafy',2,0,'no one'),
-('Tigerposture',11,1,'a young student'),
-('Level',2,0,'no one'),
-('TheMidasArray',16,1,'the <g>wardrobe mistress<z>'),
-('Crack',6,1,'Jelly'),
-('Kell',2,1,'an <R>obedient zombie<1>'),
-('Gmoney',2,0,'no one'),
-('Chohhey',2,0,'no one'),
-('Erige',5,1,'a gnome farmer'),
-('Shlade',2,1,'a cleric'),
-('MajinBoo',5,0,'no one'),
-('Kunundra',3,0,'no one'),
-('PilsburyDoughboy',3,1,'an <R>obedient zombie<1>'),
-('Doughboy',3,1,'a <r>lady-of-the-evening<1>'),
-('Kitado',21,1,'Kitado'),
-('Danish',3,0,'no one'),
-('Jin',3,1,'an <R>elite sentry<1>'),
-('Roothopper',7,1,'<o>a grimey janitor<z>'),
-('Anderdr',4,1,'an elderly woman'),
-('Salina',5,1,'<o>a homeless man<z>'),
-('Blaster',3,1,'Blaster'),
-('HuoLee',3,1,'an old broken down horse'),
-('Nilla',15,1,'Delgado'),
-('Baozhi',2,1,'a cleric'),
-('Nicholas',11,0,'no one'),
-('Cranestyle',2,0,'no one'),
-('SodaCroft',4,0,'no one'),
-('Smokums',2,0,'no one'),
-('Kytanial',5,1,'an <R>obedient zombie<1>'),
-('CaptainCum',2,1,'Bump'),
-('Sifting',3,0,'no one'),
-('Stampede',11,1,'Master Kretek'),
-('Garlic',11,0,'no one'),
-('Clashofthetitans',3,0,'no one'),
-('Artere',2,0,'no one'),
-('Multiplay',4,0,'no one'),
-('Jinx',10,0,'no one'),
-('Onion',12,1,'a hobgoblin cook'),
-('Beany',2,0,'no one'),
-('Sheisterhausen',5,0,'no one'),
-('Woob',3,0,'no one'),
-('Privet',9,1,'the head priest'),
-('Delusion',6,0,'no one'),
-('Frolic',9,1,'an actor'),
-('Delirium',15,0,'no one'),
-('Eclipse',2,0,'no one'),
-('Sammy',17,1,'a drow elite guard'),
-('Morkandar',4,0,'no one'),
-('Bick',4,0,'no one'),
-('MissFirer',5,0,'no one'),
-('Gunther',13,0,'no one'),
-('DuGneisse',2,0,'no one'),
-('DuGneiss',9,0,'no one'),
-('Ragnar',25,0,'no one'),
-('Ablut',2,0,'no one'),
-('Hammerhead',21,1,'a crazed gladiator'),
-('Elenore',6,0,'no one'),
-('Antrax',6,0,'no one'),
-('Alona',2,1,'a sparrow'),
-('Straep',7,1,'a trolloc'),
-('Possum',2,0,'no one'),
-('Deunan',2,0,'no one'),
-('Thoran',4,0,'no one'),
-('Ahoy',2,0,'no one'),
-('Beth',32,1,'Leroy, the King of Grimhaven'),
-('Quezlar',2,1,'a male citizen'),
-('Perma',50,0,'no one'),
-('Shylewryn',36,0,'no one'),
-('Sodium',2,1,'a female citizen'),
-('DarkRemains',35,0,'no one'),
-('Thuahthstle',24,1,'a sparrow'),
-('DarkDooDoo',2,1,'a <C>gnomish houngan<1>'),
-('Thief',3,0,'no one'),
-('Kryanna',3,1,'a <B>city watchman<1>'),
-('Dolore',4,0,'no one'),
-('ZagZig',3,1,'Nicodemus the old fisherman'),
-('Beesque',5,0,'no one'),
-('GoofusMcCan',3,0,'no one'),
-('Vurd',2,1,'an <R>obedient zombie<1>'),
-('Church',27,1,'Church'),
-('Rohind',2,0,'no one'),
-('Dumbledore',25,0,'no one'),
-('Xarqwa',3,1,'Nicodemus the old fisherman'),
-('PigNutz',8,1,'a gnome outpost sentry'),
-('Hiestand',4,0,'no one'),
-('Cali',5,0,'no one'),
-('Talsheim',3,1,'a hawk'),
-('Mudbutt',36,0,'no one'),
-('Losis',2,0,'no one'),
-('Crushiating',4,0,'no one'),
-('Drieso',2,0,'no one'),
-('Lokri',13,0,'no one'),
-('Fele',29,1,'Fele'),
-('String',41,1,'<o>a dirty refuse hauler<1>'),
-('Blaine',5,0,'no one'),
-('Antoine',5,0,'no one'),
-('Duenan',1,1,'a dungeon guard'),
-('Leromir',3,1,'a paladin leper hunter'),
-('Smackdown',3,0,'no one'),
-('Baradic',2,0,'no one'),
-('Barrian',25,1,'the siren'),
-('Freedom',2,0,'no one'),
-('Cake',36,0,'no one'),
-('Shrub',36,1,'<w>a giant slug<1>'),
-('Saell',33,1,'Kryvrkian'),
-('Fame',25,1,'a paladin lieutenant'),
-('Todsheim',3,1,'a hawk'),
-('Moroven',5,0,'no one'),
-('Meber',5,0,'no one'),
-('Mannix',24,0,'no one'),
-('Deathwind',37,1,'an arena guard'),
-('Tsetse',23,0,'no one'),
-('Rhomak',10,1,'Evain'),
-('Nikita',4,1,'a gnome housewife'),
-('Prostav',2,0,'no one'),
-('Forge',2,0,'no one'),
-('Calia',37,1,'a <r>wild elf<z>'),
-('Twinge',8,1,'a gnome scout'),
-('Dontdie',37,1,'a spotted lion'),
-('Swingline',3,1,'a robber'),
-('Tallericky',7,0,'no one'),
-('Cascade',7,1,'the hobbit embassy receptionist'),
-('Fiddeck',17,0,'no one'),
-('River',27,0,'no one'),
-('Logobola',31,1,'<o>a drifter<z>'),
-('Jaqen',2,0,'no one'),
-('Dinkleburg',11,0,'no one'),
-('Rhaego',10,0,'no one'),
-('Steve Irwin',60,1,'a stingray'),
-('Epithet',13,1,'Epithet'),
-('Aec',2,0,'no one'),
-('Aed',2,0,'no one'),
-('Thedarkone',20,1,'an <B>elite cityguard<1>'),
-('Feralas',10,0,'no one'),
-('Urizen',16,0,'no one'),
-('Ijaz',2,1,'a small crow'),
-('Bhutz',4,1,'a <y>gnome ant-rider<z>'),
-('Amadeus',5,0,'no one'),
-('Basshunter',5,0,'no one'),
-('Sog',5,0,'no one'),
-('Victor',6,1,'Nicodemus the old fisherman'),
-('Snax',5,0,'no one'),
-('Bloodrayne',5,0,'no one'),
-('Anklebiter',6,0,'no one'),
-('Vampyre',15,1,'Vampyre'),
-('Revan',7,0,'no one'),
-('Whole',17,1,'Whole'),
-('Bhut',3,0,'no one'),
-('Morpheus',14,1,'<o>Overlord Toreth<z>'),
-('Sihx',27,0,'no one'),
-('Kelranth',22,1,'Kelranth'),
-('Charles',12,0,'no one'),
-('Enzyme',5,1,'an apprentice shaman'),
-('Etanis',2,1,'a hawk'),
-('Emma',44,0,'no one'),
-('Dagoth',9,0,'no one'),
-('Tic',38,1,'the head mage technician'),
-('Yalp',10,0,'no one'),
-('Phalthar',24,1,'no one'),
-('Jaxom',2,1,'the head of the cityguard'),
-('Gadget',3,0,'no one'),
-('Mellancor',2,0,'no one'),
-('Brook',6,0,'no one'),
-('Lumpy',30,1,'a spotted lion'),
-('Clock',5,0,'no one'),
-('Precious',8,0,'no one'),
-('Timon',14,0,'no one'),
-('Pumba',14,0,'no one'),
-('Bender',10,1,'an elven traveler'),
-('Bromidrosis',17,1,'Gnarrelus, the gadget-maker'),
-('Zigma',28,1,'a caravan guard'),
-('ElfLord',8,1,'a <B>postman<1>'),
-('Ceirseldju',20,0,'no one'),
-('Beef',20,0,'no one'),
-('Edema',12,0,'no one'),
-('Snow',17,1,'Snow'),
-('Gruntle',12,0,'no one'),
-('Chaynal',31,0,'no one'),
-('Mortal',4,0,'no one'),
-('Colambo',7,0,'no one');
-UNLOCK TABLES;
+/*!40000 ALTER TABLE `permadeath` DISABLE KEYS */;
+INSERT INTO `permadeath` VALUES ('Telaqui',5,1,'a robber');
+INSERT INTO `permadeath` VALUES ('Fujisaowa',7,0,'no one');
+INSERT INTO `permadeath` VALUES ('Anda',11,1,'fire');
+INSERT INTO `permadeath` VALUES ('Yoritomo',2,1,'a strong man');
+INSERT INTO `permadeath` VALUES ('Tonniji',3,0,'no one');
+INSERT INTO `permadeath` VALUES ('Nastradamus',15,1,'a mud worker');
+INSERT INTO `permadeath` VALUES ('Wheyisk',4,0,'no one');
+INSERT INTO `permadeath` VALUES ('Greywulf',3,1,'a gypsy');
+INSERT INTO `permadeath` VALUES ('Mickle',13,0,'no one');
+INSERT INTO `permadeath` VALUES ('Reign',2,1,'a good-sized rat');
+INSERT INTO `permadeath` VALUES ('Ashame',6,0,'no one');
+INSERT INTO `permadeath` VALUES ('Wesp',6,1,'buggy shaman code');
+INSERT INTO `permadeath` VALUES ('Grunter',5,0,'no one');
+INSERT INTO `permadeath` VALUES ('Hermione',10,0,'no one');
+INSERT INTO `permadeath` VALUES ('Anthoes',3,1,'a <B>cityguard<1>');
+INSERT INTO `permadeath` VALUES ('Fink',10,0,'no one');
+INSERT INTO `permadeath` VALUES ('Jacen',12,1,'a mud guard');
+INSERT INTO `permadeath` VALUES ('Farina',16,1,'the woodelven wife');
+INSERT INTO `permadeath` VALUES ('Vaedos',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('Julius',11,0,'no one');
+INSERT INTO `permadeath` VALUES ('Frood',2,1,'a <B>city watchman<1>');
+INSERT INTO `permadeath` VALUES ('Guffaw',6,1,'a robber');
+INSERT INTO `permadeath` VALUES ('Trillea',12,0,'no one');
+INSERT INTO `permadeath` VALUES ('Gichin',8,1,'Gichin');
+INSERT INTO `permadeath` VALUES ('Keros',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('Khaleefa',16,0,'no one');
+INSERT INTO `permadeath` VALUES ('Tendo',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('Durok',32,1,'the goblin cleric');
+INSERT INTO `permadeath` VALUES ('Haze',8,1,'Haze');
+INSERT INTO `permadeath` VALUES ('Erasamus',2,1,'a pirahna');
+INSERT INTO `permadeath` VALUES ('Petrale',16,1,'a large brown bear');
+INSERT INTO `permadeath` VALUES ('Gnervil',3,0,'no one');
+INSERT INTO `permadeath` VALUES ('Seras',8,0,'no one');
+INSERT INTO `permadeath` VALUES ('Mung',20,0,'no one');
+INSERT INTO `permadeath` VALUES ('Gerard',19,1,'a dragon whelp');
+INSERT INTO `permadeath` VALUES ('EeizeJr',8,1,'a <g>gnome chef\'s assistant<z>');
+INSERT INTO `permadeath` VALUES ('Toranaga',3,0,'no one');
+INSERT INTO `permadeath` VALUES ('Greyshoot',6,1,'Acidbear');
+INSERT INTO `permadeath` VALUES ('Planhigion',3,1,'an aspiring young shaman');
+INSERT INTO `permadeath` VALUES ('Tywydd',11,1,'<g>an archer<1>');
+INSERT INTO `permadeath` VALUES ('Covad',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('Meddwl',5,1,'a male citizen');
+INSERT INTO `permadeath` VALUES ('Slyder',13,0,'no one');
+INSERT INTO `permadeath` VALUES ('StaggerLoo',3,0,'no one');
+INSERT INTO `permadeath` VALUES ('Amihere',3,0,'no one');
+INSERT INTO `permadeath` VALUES ('KittyKitty',4,0,'no one');
+INSERT INTO `permadeath` VALUES ('Phoofur',21,1,'a <r>wild elf archer<z>');
+INSERT INTO `permadeath` VALUES ('Thac',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('Pure',3,0,'no one');
+INSERT INTO `permadeath` VALUES ('Slideth',18,1,'a pygmy bone-woman');
+INSERT INTO `permadeath` VALUES ('Rynth',20,0,'no one');
+INSERT INTO `permadeath` VALUES ('Balzaar',12,1,'<r>a battle-mage<1>');
+INSERT INTO `permadeath` VALUES ('Ice',4,0,'no one');
+INSERT INTO `permadeath` VALUES ('Darchri',3,0,'no one');
+INSERT INTO `permadeath` VALUES ('Vacra',2,1,'Vacra');
+INSERT INTO `permadeath` VALUES ('Ambpot',19,1,'Mr. McGnee');
+INSERT INTO `permadeath` VALUES ('Rero',17,0,'no one');
+INSERT INTO `permadeath` VALUES ('Ghovinda',4,1,'a <C>gnomish houngan<1>');
+INSERT INTO `permadeath` VALUES ('Sindarin',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('Araxus',50,0,'no one');
+INSERT INTO `permadeath` VALUES ('Triz',3,1,'a draft horse');
+INSERT INTO `permadeath` VALUES ('Fondu',6,0,'no one');
+INSERT INTO `permadeath` VALUES ('Hilech',14,0,'no one');
+INSERT INTO `permadeath` VALUES ('GauchoX',3,0,'no one');
+INSERT INTO `permadeath` VALUES ('TigerPosture',1,1,'a <B>city watchman<1>');
+INSERT INTO `permadeath` VALUES ('Madeleine',3,0,'no one');
+INSERT INTO `permadeath` VALUES ('Leer',6,0,'no one');
+INSERT INTO `permadeath` VALUES ('Brandon',6,1,'Nicodemus the old fisherman');
+INSERT INTO `permadeath` VALUES ('Nyr',3,0,'no one');
+INSERT INTO `permadeath` VALUES ('Katrina',3,0,'no one');
+INSERT INTO `permadeath` VALUES ('Mendos',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('Ranko',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('SexyBoy',4,0,'no one');
+INSERT INTO `permadeath` VALUES ('Material',15,0,'no one');
+INSERT INTO `permadeath` VALUES ('PermaSupernaut',4,1,'PermaSupernaut');
+INSERT INTO `permadeath` VALUES ('Thingol',2,1,'Peel');
+INSERT INTO `permadeath` VALUES ('Adlion',2,1,'a Grimhaven youth');
+INSERT INTO `permadeath` VALUES ('Matilda',5,1,'a robber');
+INSERT INTO `permadeath` VALUES ('Leafy',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('Tigerposture',11,1,'a young student');
+INSERT INTO `permadeath` VALUES ('TheMidasArray',16,1,'the <g>wardrobe mistress<z>');
+INSERT INTO `permadeath` VALUES ('Crack',6,1,'Jelly');
+INSERT INTO `permadeath` VALUES ('Kell',2,1,'an <R>obedient zombie<1>');
+INSERT INTO `permadeath` VALUES ('Gmoney',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('Chohhey',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('Erige',5,1,'a gnome farmer');
+INSERT INTO `permadeath` VALUES ('Shlade',2,1,'a cleric');
+INSERT INTO `permadeath` VALUES ('MajinBoo',5,0,'no one');
+INSERT INTO `permadeath` VALUES ('Kunundra',3,0,'no one');
+INSERT INTO `permadeath` VALUES ('PilsburyDoughboy',3,1,'an <R>obedient zombie<1>');
+INSERT INTO `permadeath` VALUES ('Doughboy',3,1,'a <r>lady-of-the-evening<1>');
+INSERT INTO `permadeath` VALUES ('Kitado',21,1,'Kitado');
+INSERT INTO `permadeath` VALUES ('Danish',3,0,'no one');
+INSERT INTO `permadeath` VALUES ('Jin',3,1,'an <R>elite sentry<1>');
+INSERT INTO `permadeath` VALUES ('Roothopper',7,1,'<o>a grimey janitor<z>');
+INSERT INTO `permadeath` VALUES ('Anderdr',4,1,'an elderly woman');
+INSERT INTO `permadeath` VALUES ('Salina',5,1,'<o>a homeless man<z>');
+INSERT INTO `permadeath` VALUES ('Blaster',3,1,'Blaster');
+INSERT INTO `permadeath` VALUES ('HuoLee',3,1,'an old broken down horse');
+INSERT INTO `permadeath` VALUES ('Nilla',15,1,'Delgado');
+INSERT INTO `permadeath` VALUES ('Baozhi',2,1,'a cleric');
+INSERT INTO `permadeath` VALUES ('Nicholas',11,0,'no one');
+INSERT INTO `permadeath` VALUES ('Cranestyle',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('SodaCroft',4,0,'no one');
+INSERT INTO `permadeath` VALUES ('Smokums',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('Kytanial',5,1,'an <R>obedient zombie<1>');
+INSERT INTO `permadeath` VALUES ('CaptainCum',2,1,'Bump');
+INSERT INTO `permadeath` VALUES ('Sifting',3,0,'no one');
+INSERT INTO `permadeath` VALUES ('Stampede',11,1,'Master Kretek');
+INSERT INTO `permadeath` VALUES ('Garlic',11,0,'no one');
+INSERT INTO `permadeath` VALUES ('Clashofthetitans',3,0,'no one');
+INSERT INTO `permadeath` VALUES ('Artere',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('Multiplay',4,0,'no one');
+INSERT INTO `permadeath` VALUES ('Onion',12,1,'a hobgoblin cook');
+INSERT INTO `permadeath` VALUES ('Beany',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('Sheisterhausen',5,0,'no one');
+INSERT INTO `permadeath` VALUES ('Woob',3,0,'no one');
+INSERT INTO `permadeath` VALUES ('Privet',9,1,'the head priest');
+INSERT INTO `permadeath` VALUES ('Delusion',6,0,'no one');
+INSERT INTO `permadeath` VALUES ('Frolic',9,1,'an actor');
+INSERT INTO `permadeath` VALUES ('Delirium',15,0,'no one');
+INSERT INTO `permadeath` VALUES ('Eclipse',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('Sammy',17,1,'a drow elite guard');
+INSERT INTO `permadeath` VALUES ('Morkandar',4,0,'no one');
+INSERT INTO `permadeath` VALUES ('Bick',4,0,'no one');
+INSERT INTO `permadeath` VALUES ('MissFirer',5,0,'no one');
+INSERT INTO `permadeath` VALUES ('Gunther',13,0,'no one');
+INSERT INTO `permadeath` VALUES ('DuGneisse',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('DuGneiss',9,0,'no one');
+INSERT INTO `permadeath` VALUES ('Ragnar',25,0,'no one');
+INSERT INTO `permadeath` VALUES ('Ablut',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('Hammerhead',21,1,'a crazed gladiator');
+INSERT INTO `permadeath` VALUES ('Elenore',6,0,'no one');
+INSERT INTO `permadeath` VALUES ('Antrax',6,0,'no one');
+INSERT INTO `permadeath` VALUES ('Alona',2,1,'a sparrow');
+INSERT INTO `permadeath` VALUES ('Straep',7,1,'a trolloc');
+INSERT INTO `permadeath` VALUES ('Possum',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('Deunan',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('Thoran',4,0,'no one');
+INSERT INTO `permadeath` VALUES ('Ahoy',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('Beth',32,1,'Leroy, the King of Grimhaven');
+INSERT INTO `permadeath` VALUES ('Quezlar',2,1,'a male citizen');
+INSERT INTO `permadeath` VALUES ('Perma',50,0,'no one');
+INSERT INTO `permadeath` VALUES ('Shylewryn',36,0,'no one');
+INSERT INTO `permadeath` VALUES ('Sodium',2,1,'a female citizen');
+INSERT INTO `permadeath` VALUES ('DarkRemains',35,0,'no one');
+INSERT INTO `permadeath` VALUES ('Thuahthstle',24,1,'a sparrow');
+INSERT INTO `permadeath` VALUES ('DarkDooDoo',2,1,'a <C>gnomish houngan<1>');
+INSERT INTO `permadeath` VALUES ('Thief',3,0,'no one');
+INSERT INTO `permadeath` VALUES ('Kryanna',3,1,'a <B>city watchman<1>');
+INSERT INTO `permadeath` VALUES ('Dolore',4,0,'no one');
+INSERT INTO `permadeath` VALUES ('ZagZig',3,1,'Nicodemus the old fisherman');
+INSERT INTO `permadeath` VALUES ('Beesque',5,0,'no one');
+INSERT INTO `permadeath` VALUES ('GoofusMcCan',3,0,'no one');
+INSERT INTO `permadeath` VALUES ('Vurd',2,1,'an <R>obedient zombie<1>');
+INSERT INTO `permadeath` VALUES ('Church',27,1,'Church');
+INSERT INTO `permadeath` VALUES ('Rohind',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('Dumbledore',25,0,'no one');
+INSERT INTO `permadeath` VALUES ('Xarqwa',3,1,'Nicodemus the old fisherman');
+INSERT INTO `permadeath` VALUES ('PigNutz',8,1,'a gnome outpost sentry');
+INSERT INTO `permadeath` VALUES ('Hiestand',4,0,'no one');
+INSERT INTO `permadeath` VALUES ('Cali',5,0,'no one');
+INSERT INTO `permadeath` VALUES ('Talsheim',3,1,'a hawk');
+INSERT INTO `permadeath` VALUES ('Mudbutt',36,0,'no one');
+INSERT INTO `permadeath` VALUES ('Losis',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('Crushiating',4,0,'no one');
+INSERT INTO `permadeath` VALUES ('Drieso',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('Lokri',13,0,'no one');
+INSERT INTO `permadeath` VALUES ('Fele',29,1,'Fele');
+INSERT INTO `permadeath` VALUES ('String',41,1,'<o>a dirty refuse hauler<1>');
+INSERT INTO `permadeath` VALUES ('Blaine',5,0,'no one');
+INSERT INTO `permadeath` VALUES ('Antoine',5,0,'no one');
+INSERT INTO `permadeath` VALUES ('Duenan',1,1,'a dungeon guard');
+INSERT INTO `permadeath` VALUES ('Leromir',3,1,'a paladin leper hunter');
+INSERT INTO `permadeath` VALUES ('Smackdown',3,0,'no one');
+INSERT INTO `permadeath` VALUES ('Baradic',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('Barrian',25,1,'the siren');
+INSERT INTO `permadeath` VALUES ('Freedom',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('Cake',36,0,'no one');
+INSERT INTO `permadeath` VALUES ('Shrub',36,1,'<w>a giant slug<1>');
+INSERT INTO `permadeath` VALUES ('Saell',33,1,'Kryvrkian');
+INSERT INTO `permadeath` VALUES ('Fame',25,1,'a paladin lieutenant');
+INSERT INTO `permadeath` VALUES ('Todsheim',3,1,'a hawk');
+INSERT INTO `permadeath` VALUES ('Moroven',5,0,'no one');
+INSERT INTO `permadeath` VALUES ('Meber',5,0,'no one');
+INSERT INTO `permadeath` VALUES ('Mannix',24,0,'no one');
+INSERT INTO `permadeath` VALUES ('Deathwind',37,1,'an arena guard');
+INSERT INTO `permadeath` VALUES ('Tsetse',23,0,'no one');
+INSERT INTO `permadeath` VALUES ('Rhomak',10,1,'Evain');
+INSERT INTO `permadeath` VALUES ('Nikita',4,1,'a gnome housewife');
+INSERT INTO `permadeath` VALUES ('Prostav',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('Forge',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('Calia',37,1,'a <r>wild elf<z>');
+INSERT INTO `permadeath` VALUES ('Twinge',8,1,'a gnome scout');
+INSERT INTO `permadeath` VALUES ('Dontdie',37,1,'a spotted lion');
+INSERT INTO `permadeath` VALUES ('Swingline',3,1,'a robber');
+INSERT INTO `permadeath` VALUES ('Tallericky',7,0,'no one');
+INSERT INTO `permadeath` VALUES ('Cascade',7,1,'the hobbit embassy receptionist');
+INSERT INTO `permadeath` VALUES ('Fiddeck',17,0,'no one');
+INSERT INTO `permadeath` VALUES ('River',27,0,'no one');
+INSERT INTO `permadeath` VALUES ('Logobola',31,1,'<o>a drifter<z>');
+INSERT INTO `permadeath` VALUES ('Jaqen',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('Dinkleburg',11,0,'no one');
+INSERT INTO `permadeath` VALUES ('Rhaego',10,0,'no one');
+INSERT INTO `permadeath` VALUES ('Steve Irwin',60,1,'a stingray');
+INSERT INTO `permadeath` VALUES ('Epithet',13,1,'Epithet');
+INSERT INTO `permadeath` VALUES ('Aec',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('Aed',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('Thedarkone',20,1,'an <B>elite cityguard<1>');
+INSERT INTO `permadeath` VALUES ('Feralas',10,0,'no one');
+INSERT INTO `permadeath` VALUES ('Urizen',16,0,'no one');
+INSERT INTO `permadeath` VALUES ('Ijaz',2,1,'a small crow');
+INSERT INTO `permadeath` VALUES ('Bhutz',4,1,'a <y>gnome ant-rider<z>');
+INSERT INTO `permadeath` VALUES ('Amadeus',5,0,'no one');
+INSERT INTO `permadeath` VALUES ('Basshunter',5,0,'no one');
+INSERT INTO `permadeath` VALUES ('Sog',5,0,'no one');
+INSERT INTO `permadeath` VALUES ('Victor',6,1,'Nicodemus the old fisherman');
+INSERT INTO `permadeath` VALUES ('Snax',5,0,'no one');
+INSERT INTO `permadeath` VALUES ('Bloodrayne',5,0,'no one');
+INSERT INTO `permadeath` VALUES ('Anklebiter',6,0,'no one');
+INSERT INTO `permadeath` VALUES ('Vampyre',15,1,'Vampyre');
+INSERT INTO `permadeath` VALUES ('Whole',17,1,'Whole');
+INSERT INTO `permadeath` VALUES ('Bhut',3,0,'no one');
+INSERT INTO `permadeath` VALUES ('Morpheus',14,1,'<o>Overlord Toreth<z>');
+INSERT INTO `permadeath` VALUES ('Sihx',27,0,'no one');
+INSERT INTO `permadeath` VALUES ('Kelranth',22,1,'Kelranth');
+INSERT INTO `permadeath` VALUES ('Charles',12,0,'no one');
+INSERT INTO `permadeath` VALUES ('Enzyme',5,1,'an apprentice shaman');
+INSERT INTO `permadeath` VALUES ('Etanis',2,1,'a hawk');
+INSERT INTO `permadeath` VALUES ('Emma',44,0,'no one');
+INSERT INTO `permadeath` VALUES ('Dagoth',9,0,'no one');
+INSERT INTO `permadeath` VALUES ('Tic',38,1,'the head mage technician');
+INSERT INTO `permadeath` VALUES ('Yalp',10,0,'no one');
+INSERT INTO `permadeath` VALUES ('Phalthar',24,1,'no one');
+INSERT INTO `permadeath` VALUES ('Jaxom',2,1,'the head of the cityguard');
+INSERT INTO `permadeath` VALUES ('Gadget',3,0,'no one');
+INSERT INTO `permadeath` VALUES ('Mellancor',2,0,'no one');
+INSERT INTO `permadeath` VALUES ('Brook',6,0,'no one');
+INSERT INTO `permadeath` VALUES ('Lumpy',30,1,'a spotted lion');
+INSERT INTO `permadeath` VALUES ('Clock',5,0,'no one');
+INSERT INTO `permadeath` VALUES ('Precious',8,0,'no one');
+INSERT INTO `permadeath` VALUES ('Timon',14,0,'no one');
+INSERT INTO `permadeath` VALUES ('Pumba',14,0,'no one');
+INSERT INTO `permadeath` VALUES ('Bender',10,1,'an elven traveler');
+INSERT INTO `permadeath` VALUES ('Bromidrosis',17,1,'Gnarrelus, the gadget-maker');
+INSERT INTO `permadeath` VALUES ('Zigma',28,1,'a caravan guard');
+INSERT INTO `permadeath` VALUES ('ElfLord',8,1,'a <B>postman<1>');
+INSERT INTO `permadeath` VALUES ('Ceirseldju',20,0,'no one');
+INSERT INTO `permadeath` VALUES ('Beef',20,0,'no one');
+INSERT INTO `permadeath` VALUES ('Edema',12,0,'no one');
+INSERT INTO `permadeath` VALUES ('Snow',17,1,'Snow');
+INSERT INTO `permadeath` VALUES ('Gruntle',12,0,'no one');
+INSERT INTO `permadeath` VALUES ('Chaynal',31,0,'no one');
+INSERT INTO `permadeath` VALUES ('Mortal',4,0,'no one');
+INSERT INTO `permadeath` VALUES ('Colambo',7,0,'no one');
+INSERT INTO `permadeath` VALUES ('Stark',20,0,'no one');
+INSERT INTO `permadeath` VALUES ('Arya',21,0,'no one');
 /*!40000 ALTER TABLE `permadeath` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -292,3 +305,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+-- Dump completed on 2019-05-02 21:42:34
