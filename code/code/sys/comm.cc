@@ -281,13 +281,16 @@ void TBeing::sendRoomGmcp(bool changedZones) const
     exit_kw = "  "; // fix substr(2) for case of no exit keywords at all
 
   sstring msg = format("room.info { \"num\": %d, \"name\": \"%s\", \"zone\": \"%d\", \"terrain\": \"%s\", \
-\"details\": \"\", \"exits\": { %s }, \"exit_kw\": { %s }, \"coord\": { \"id\": -1, \"x\": -1, \"y\": -1, \"cont\": 0 } }")
+\"details\": \"\", \"exits\": { %s }, \"exit_kw\": { %s }, \"coord\": { \"id\": %d, \"x\": %d, \"y\": %d, \"cont\": 0 } }")
     % roomp->number
     % roomp->name.escapeJson()
     % roomp->getZone()->zone_nr
     % sstring(TerrainInfo[roomp->getSectorType()]->name).escapeJson()
     % exits.substr(2)
-    % exit_kw.substr(2);
+    % exit_kw.substr(2)
+    % roomp->getXCoord()
+    % roomp->getYCoord()
+    % roomp->getZCoord();
   desc->sendGmcp(msg, true);
 }
 
