@@ -4,6 +4,9 @@
 #include "pathfinder.h"
 
 #include <unordered_map>
+#include <queue>
+#include <set>
+#include <iostream>
 
 class TPersonPimpl
 {
@@ -307,5 +310,48 @@ void TPerson::doMap(sstring const& arg)
   else if (is_abbrev(cmd, "go"))
     doMapGo(rest);
   else
-    sendTo("Syntax: map list/ls | add/new | rm/remove | go\n");
+    drawMap(rest.empty() ? 2 : convertTo<int>(rest)); // TODO: read preferred map size from account prefs
+}
+
+// TODO: replace queue and set with fixed size array with advancing pointer
+// (fixed because the size of map is known in advance)
+void TPerson::drawMap(const int size) const
+{
+  struct Candidate
+  {
+    int vnum;
+    int distance;
+  };
+
+  std::queue<Candidate> candidates;
+  candidates.push({in_room, 0});
+
+  std::set<int> visited;
+
+  while (!candidates.empty()) {
+    Candidate c = candidates.front();
+    candidates.pop();
+
+    if (c.distance > size)
+      continue;
+
+    if (visited.count(c.vnum) == 1)
+      continue;
+    visited.insert(c.vnum);
+
+    TRoom* r = real_roomp(c.vnum);
+    std::cout << (boost::format("Visiting %d %s @ (%d,%d,%d) %d steps\n\r")
+        % c.vnum
+        % r->name % r->getXCoord() % r->getYCoord() % r->getZCoord()
+        % c.distance) << std::endl;
+
+    for (auto exitDir = MIN_DIR; exitDir < MAX_DIR; exitDir++) {
+      roomDirData* ex = r->exitDir(exitDir);
+      // Exclude: closed and locked doors, secret exits
+      if (ex != nullptr
+          && !(IS_SET(ex->condition, EXIT_CLOSED)
+            && (IS_SET(ex->condition, EXIT_SECRET) || IS_SET(ex->condition, EXIT_LOCKED))))
+      candidates.push({ex->to_room, c.distance + 1});
+    }
+  }
 }

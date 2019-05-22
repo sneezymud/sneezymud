@@ -91,6 +91,7 @@ class TPerson : public TBeing {
     void doMapAdd(sstring const&);
     void doMapRm(sstring const&);
     void doMapGo(sstring const&);
+    void drawMap(const int size) const;
     void doRemember(bool print, sstring const&);
     void doRememberPlayer(bool print, sstring const&);
     void doRetrieve(bool print, sstring const&);
