@@ -206,9 +206,6 @@ namespace {
     // Let's agree that negative values are sector types, positive values are exits.
     char symbol = -r.getSectorType();
 
-    if (dx == 0 && dy == 0)
-      symbol = '@';
-
     // 2 for the doors
     int hereY = -(2 * dy) + halfEdge;
     int hereX = 2 * dx + halfEdge;
@@ -226,6 +223,8 @@ namespace {
         grid.at(exitY).at(exitX) = exitSym(prevSym, dir);
       }
     }
+
+    grid.at(halfEdge).at(halfEdge) = '@';
   };
 
 }
