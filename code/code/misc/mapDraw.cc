@@ -285,6 +285,10 @@ void TPerson::drawMap(const int radius) const
     }
   }
 
+  if (IS_SET(desc->autobits, AUTO_MAPTAGS))
+    sendTo("{mapbegin}\n\r");
   for (const auto& row : colorize(grid))
     sendTo(row + "\n\r");
+  if (IS_SET(desc->autobits, AUTO_MAPTAGS))
+    sendTo("{mapend}\n\r");
 }
