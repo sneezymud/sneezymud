@@ -78,6 +78,13 @@ int main() {
 void TBeing::doRun(sstring const& path) {
   deque<pair<int, char> > res;
   if (parse(path, res)) {
+    // suppress automap when running to reduce load and spam
+    bool nomap = false;
+    if (desc) {
+      nomap = IS_SET(desc->autobits, AUTO_NOMAP);
+      SET_BIT(desc->autobits, AUTO_NOMAP);
+    }
+
     while (!res.empty()) {
       int steps = res.front().first;
       string dir(1, res.front().second);
@@ -91,6 +98,9 @@ void TBeing::doRun(sstring const& path) {
       }
       res.pop_front();
     }
+
+    if (desc && !nomap)
+      REMOVE_BIT(desc->autobits, AUTO_NOMAP);
   } else {
       sendTo("Bad run directions. See 'help run'.");
   }
