@@ -203,9 +203,6 @@ namespace {
     if (max(abs(dx), abs(dy)) > radius)
       return;
 
-    ch->sendTo(boost::format("Visiting %d %s @ (%d,%d) rel (%d,%d)\n\r")
-        % r.number % r.name % r.getXCoord() % r.getYCoord() % dx % dy);
-
     // Let's agree that negative values are sector types, positive values are exits.
     char symbol = -r.getSectorType();
 
