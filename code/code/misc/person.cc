@@ -329,5 +329,5 @@ void TPerson::doMap(sstring const& arg)
   else if (is_abbrev(cmd, "go"))
     doMapGo(rest);
   else
-    drawMap(cmd.empty() ? 5 : convertTo<int>(cmd)); // TODO: read preferred map size from account prefs
+    drawMap(cmd.empty() ? 5 : min(20, convertTo<int>(cmd))); // TODO: read preferred map size from account prefs
 }
