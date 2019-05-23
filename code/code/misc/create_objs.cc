@@ -510,7 +510,7 @@ void TPerson::doOEdit(const char *argument)
          tStArg("");
   char sstring[256],
        object[80],
-       Buf[256],
+       Buf[512],
        tTextLns[4][256] = {"\0", "\0", "\0", "\0"};
 
   if (!hasWizPower(POWER_OEDIT)) {
@@ -533,7 +533,8 @@ void TPerson::doOEdit(const char *argument)
 	sendTo("You are not allowed to oedit that object, sorry.\n\r");
 
       else {
-        sprintf(sstring, "%s %d", sstring, cObj->getSnum());
+        snprintf(Buf, sizeof(Buf), "%s %d", sstring, cObj->getSnum());
+        strncpy(sstring, Buf, sizeof(sstring));
 	sendTo(format("Resaving in slot %i.\n\r") % cObj->getSnum());
 	oremove(this, cObj->getSnum());
         osave(this, sstring);

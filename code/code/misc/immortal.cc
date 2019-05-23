@@ -3354,13 +3354,13 @@ void TBeing::doRestore(const char *argument)
       }
       if (name == victim->getName()) {
   found = TRUE;
-  strncpy(name2, name, sizeof(name));
+  strncpy(name2, name, sizeof(name2));
   pracs2 = pracs;
       } else {
 	fprintf(fp2,"%s", buf);
       }
     }
-    strncpy(name, name2, sizeof(name2));
+    strncpy(name, name2, sizeof(name));
     pracs = pracs2;
     fprintf(fp2,"%s", buf);
     fclose(fp);
@@ -5984,7 +5984,7 @@ void TBeing::doAccount(const sstring &arg)
       int new_limit = account.multiplay_limit;
       try {
         new_limit = std::stoi(limit);
-      } catch (std::invalid_argument) {
+      } catch (std::invalid_argument&) {
         sendTo(format("Incorrect multiplay limit '%s', expected positive integer.\n\r") % limit);
         return;
       }
