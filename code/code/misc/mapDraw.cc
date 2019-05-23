@@ -236,7 +236,7 @@ void TPerson::drawMap(const int radius) const
 {
   // 2n+1 rows/columns to accommodate radius of n
   // *2 to fit doors, +2 because we also want doors leading out
-  size_t edgeLen = (radius * 2 + 1) * 2 + 2;
+  size_t edgeLen = (radius * 2 + 1) * 2 + 1;
   size_t halfEdge = edgeLen / 2;
 
   std::vector<std::string> grid; // There's probably a clever way to initialize it in one line, maybe
