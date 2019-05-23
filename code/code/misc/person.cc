@@ -328,6 +328,51 @@ namespace {
 
     return true;
   }
+
+  // colors in TTerrainInfo
+  // TODO: bolds
+  const char* terrainToColor[16] = {
+    "<K>", // black 0
+    "<r>", // maroon 1
+    "<G>", // green 2
+    "<d><g>", // olive 3
+    "<B>", // navy 4
+    "<P>", // purple 5
+    "<c>", // teal 6
+    "<d><k>", // silver 7
+    "<k>", // gray 8
+    "<R>", // red 9
+    "<G>", // lime 10
+    "<y>", // yellow 11
+    "<b>", // blue 12
+    "<p>", // magenta 13
+    "<C>", // cyan 14
+    "<w>", // white 15
+  };
+
+  std::vector<std::string> colorize(std::vector<std::string> const& in)
+  {
+    std::vector<std::string> out;
+    out.reserve(in.size());
+
+    for (const auto& row : in) {
+      std::string outRow;
+      outRow.reserve(in.size() * 3);
+      for (char cell : row) {
+        if (cell < 0) {
+          // cf. TRoom::colorRoom, TerrainInfo
+          outRow.append(terrainToColor[TerrainInfo[-cell]->color]);
+          outRow.push_back('#');
+          outRow.append("<z>");
+        } else {
+          outRow.push_back(' ');
+        }
+      }
+      out.push_back(outRow);
+    }
+
+    return out;
+  }
 }
 
 // TODO: replace queue and set with fixed size array with advancing pointer
@@ -360,31 +405,14 @@ void TPerson::drawMap(const int radius) const
     sendTo(boost::format("Visiting %d %s @ (%d,%d) rel (%d,%d)\n\r")
         % r.number % r.name % r.getXCoord() % r.getYCoord() % dx % dy);
 
-    // TODO: color requires strings
-    std::string symbol = "#";
+    // Let's agree that negative values are sector types, positive values are exits.
+    char symbol = -r.getSectorType();
 
     if (dx == 0 && dy == 0)
-      symbol = "@";
-
-    if (dx < 0 && dy > 0)
-      symbol = "A";
-    else if (dx > 0 && dy > 0)
-      symbol = "B";
-    else if (dx > 0 && dy < 0)
-      symbol = "C";
-    else if (dx < 0 && dy < 0)
-      symbol = "D";
-    else if (dx < 0 && dy == 0)
-      symbol = "w";
-    else if (dx > 0 && dy == 0)
-      symbol = "e";
-    else if (dx == 0 && dy > 0)
-      symbol = "n";
-    else if (dx == 0 && dy < 0)
-      symbol = "s";
+      symbol = '@';
 
     // 2 for the doors
-    grid.at(-(2 * dy) + halfEdge).at(2 * dx + halfEdge) = symbol[0];
+    grid.at(-(2 * dy) + halfEdge).at(2 * dx + halfEdge) = symbol;
   };
 
   struct Candidate
@@ -410,7 +438,7 @@ void TPerson::drawMap(const int radius) const
     visited.insert(c.vnum);
 
     TRoom* r = real_roomp(c.vnum);
-    if (!r) // NOT sure why this would ever happen. Exits leading towards limbo?
+    if (!r)
     {
       sendTo("Error: null roomp\n\r");
       continue;
@@ -421,7 +449,7 @@ void TPerson::drawMap(const int radius) const
     for (auto exitDir = MIN_DIR; exitDir < MAX_DIR; exitDir++) {
       roomDirData* ex = r->exitDir(exitDir);
       if (canPathThroughDoor(ex)) {
-        // debug: why doth this happen?
+        // hm, doesn't happen anymore
         if (!real_roomp(ex->to_room))
           sendTo(boost::format("Error: room %d has weird exit towards %d\n\r") % c.vnum % exitDir);
         candidates.push({ex->to_room, c.distance + 1});
@@ -429,6 +457,6 @@ void TPerson::drawMap(const int radius) const
     }
   }
 
-  for (const auto& row : grid)
+  for (const auto& row : colorize(grid))
     sendTo(row + "\n\r");
 }
