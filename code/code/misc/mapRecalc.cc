@@ -1,5 +1,6 @@
 #include "person.h"
 #include "database.h"
+#include "low.h"
 
 #include <set>
 
@@ -8,6 +9,7 @@ namespace {
   {
     int vnum;
     int x, y, z;
+    std::string path;
   };
 
   int x(TRoom* r, dirTypeT dir)
@@ -38,6 +40,7 @@ namespace {
   }
 
   std::map<std::tuple<int, int, int>, int> visitedCoords;
+  std::map<TRoom*, std::string> paths;
 
   void visit(TPerson const* ch, Candidate const& c, TRoom* r, TDatabase& db)
   {
@@ -74,7 +77,7 @@ void TPerson::doMapRecalc(int startZ) const
 
   // it'd be polite to extract the BFS code
   std::queue<Candidate> candidates;
-  candidates.push({100, 0, 0, startZ});
+  candidates.push({100, 0, 0, startZ, ""});
 
   std::set<int> visited;
 
@@ -99,11 +102,37 @@ void TPerson::doMapRecalc(int startZ) const
       roomDirData* ex = r->exitDir(exitDir);
       if (ex)
       {
-        TRoom* exr = real_roomp(ex->to_room);
-        if (!exr)
-          sendTo(boost::format("Error: null exitp in %d towards %d\n\r") % r->number % exitDir);
+        if (IS_SET(ex->condition, EXIT_CAVED_IN)) // yay Peel's office
+          continue;
 
-        candidates.push({ex->to_room, x(r, exitDir), y(r, exitDir), z(r, exitDir)});
+        TRoom* exr = real_roomp(ex->to_room);
+        if (!exr) {
+          sendTo(boost::format("Error: null exitp in %d towards %d\n\r") % r->number % exitDir);
+          continue;
+        }
+
+        int nextX = x(r, exitDir);
+        int nextY = y(r, exitDir);
+        int nextZ = z(r, exitDir);
+        std::string nextPath = c.path + dirsS[exitDir] + " ";
+
+        if (exr->getXCoord() != 0 && exr->getYCoord() != 0 && exr->getZCoord() != 0
+            && exr->number != Room::CS
+            && exr->getXCoord() != nextX
+            && exr->getYCoord() != nextY
+            && exr->getZCoord() != nextZ) {
+          sendTo(boost::format("Bad room loop: room %d %s is either long %d,%d,%d or short %d,%d,%d\n\r")
+              % exr->number % exr->name
+              % nextX % nextY % nextZ
+              % exr->getXCoord() % exr->getYCoord() % exr->getZCoord());
+          sendTo(boost::format("Long path: %s\r\n") % nextPath);
+          sendTo(boost::format("Short path: %s\r\n") % paths[exr]);
+          continue;
+        }
+
+        paths[exr] = nextPath;
+
+        candidates.push({ex->to_room, nextX, nextY, nextZ, nextPath});
       }
     }
   }
