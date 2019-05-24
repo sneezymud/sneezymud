@@ -77,7 +77,7 @@ void TPerson::doMapRecalc(int startZ) const
 
   // it'd be polite to extract the BFS code
   std::queue<Candidate> candidates;
-  candidates.push({100, 0, 0, startZ, ""});
+  candidates.push({in_room, 0, 0, startZ, ""});
 
   std::set<int> visited;
 
