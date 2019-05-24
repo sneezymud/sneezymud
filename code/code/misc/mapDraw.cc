@@ -269,7 +269,7 @@ void TPerson::drawMap(const int radius) const
     TRoom* r = real_roomp(c.vnum);
     if (!r)
     {
-      sendTo("Error: null roomp\n\r");
+      // sendTo("Error: null roomp\n\r");
       continue;
     }
 
@@ -278,9 +278,10 @@ void TPerson::drawMap(const int radius) const
     for (auto exitDir = MIN_DIR; exitDir < MAX_DIR; exitDir++) {
       roomDirData* ex = r->exitDir(exitDir);
       if (canPathThroughDoor(ex)) {
-        // hm, doesn't happen anymore
+        /*
         if (!real_roomp(ex->to_room))
           sendTo(boost::format("Error: room %d has weird exit towards %d\n\r") % c.vnum % exitDir);
+          */
         candidates.push({ex->to_room, c.distance + 1});
       }
     }
