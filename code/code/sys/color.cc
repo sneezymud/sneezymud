@@ -77,6 +77,7 @@ void TBeing::doPrompt(const char *arg)
     "cr",
     "roomname",
     "zone",
+    "coordinates",
     "\n"
   };
 
@@ -109,7 +110,8 @@ void TBeing::doPrompt(const char *arg)
       IS_SET(desc->prompt_d.type, PROMPT_TIME),
       IS_SET(desc->prompt_d.type, PROMPT_CR),
       IS_SET(desc->prompt_d.type, PROMPT_ROOM_NAME),
-      IS_SET(desc->prompt_d.type, PROMPT_ZONE_NUM)
+      IS_SET(desc->prompt_d.type, PROMPT_ZONE_NUM),
+      IS_SET(desc->prompt_d.type, PROMPT_COORDS),
     };
 
     tStString += "Prompt Line Options:\n\r--------------------\n\r";
@@ -165,10 +167,11 @@ void TBeing::doPrompt(const char *arg)
         tStString += str;
       }
 
-    if (isImmortal()) {
-      sprintf(str, "Room       : (%s): R:%d\n\r", (tPrompts[9] ? "yes" : " no"), roomp->number);
-      tStString += str;
-    }
+    sprintf(str, "Room       : (%s): R:%d\n\r", (tPrompts[9] ? "yes" : " no"), roomp->number);
+    tStString += str;
+
+    sprintf(str, "Coordinate : (%s): (%d,%d,%d)\n\r", (tPrompts[9] ? "yes" : " no"), roomp->getXCoord(), roomp->getYCoord(), roomp->getZCoord());
+    tStString += str;
 
     tStString += "--------------------\n\r";
     sprintf(str, "Opponent  : (%s): Current target when in battle.\n\r",
@@ -308,6 +311,15 @@ void TBeing::doPrompt(const char *arg)
       } else {
 	sendTo("Adding zone number to prompt.\n\r");
 	SET_BIT(desc->prompt_d.type, PROMPT_ZONE_NUM);
+      }
+      break;
+    case 25:
+      if(IS_SET(desc->prompt_d.type, PROMPT_COORDS)){
+        sendTo("Taking coordinates out of prompt.\n\r");
+        REMOVE_BIT(desc->prompt_d.type, PROMPT_COORDS);
+      } else {
+        sendTo("Adding coordinates to prompt.\n\r");
+        SET_BIT(desc->prompt_d.type, PROMPT_COORDS);
       }
       break;
 
@@ -475,7 +487,7 @@ void TBeing::doPrompt(const char *arg)
                     PROMPT_TANK_OTHER | PROMPT_EXPTONEXT_LEVEL |
 	            PROMPT_PIETY | PROMPT_LIFEFORCE | PROMPT_TIME |
                     PROMPT_ROOM | PROMPT_ROOM_NAME | PROMPT_ZONE_NUM |
-	            PROMPT_CR;
+	            PROMPT_CR | PROMPT_COORDS;
       break;
     case 11:
       sendTo("Setting prompt to none.\n\r");

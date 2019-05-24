@@ -2101,7 +2101,8 @@ const char *StPrompts[] =
   "%sLF:%d%s ",          // Lifeforce
   "%s%02i:%02i:%02i%s ", // time
   "Rn: |%s|",                // 14 Room name
-  "Z: %d %s|"                 // 15 Zone ID
+  "Z: %d %s|",                 // 15 Zone ID
+  "(%d,%d,%d) ",          // 16 Coordinates
 };
 
 
@@ -2190,6 +2191,17 @@ sstring getZoneIdPrompt(TBeing *ch, Descriptor *d){
       % ch->roomp->getZone()->zone_nr
       % ch->roomp->getZone()->name;
 
+  }
+  return sstring();
+}
+
+sstring getCoordsPrompt(TBeing *ch, Descriptor *d)
+{
+  if (IS_SET(d->prompt_d.type, PROMPT_COORDS)) {
+    return format(StPrompts[16])
+      % ch->roomp->getXCoord()
+      % ch->roomp->getYCoord()
+      % ch->roomp->getZCoord();
   }
   return sstring();
 }
@@ -2453,6 +2465,8 @@ void setPrompts(fd_set out)
                 "%s", getZoneIdPrompt(ch, d).c_str());
             sprintf(promptbuf + strlen(promptbuf),
                 "%s", getRoomPrompt(ch, d, room).c_str());
+            sprintf(promptbuf + strlen(promptbuf),
+                "%s", getCoordsPrompt(ch, d).c_str());
 
             if (IS_SET(d->prompt_d.type, PROMPT_EXP)) {
               strcpy(tString, ch->displayExp().comify().c_str());
