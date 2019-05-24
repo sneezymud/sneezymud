@@ -52,6 +52,8 @@ namespace {
           outRow.append(terrainToColor[TerrainInfo[-cell]->color]);
           outRow.push_back('#'); // current value is terrain type
           outRow.append("<z>");
+        } else if (cell == '@') {
+          outRow.append("<R>@<z>");
         } else {
           outRow.push_back(cell);
         }
