@@ -1034,12 +1034,12 @@ void TBeing::doToggle(const char *arg2)
       SET_BIT(desc->autobits, AUTO_NOSPRITE);
     }
   } else if (is_abbrev(arg, "nomap") || is_abbrev(arg, "map")) {
-    if (IS_SET(desc->autobits, AUTO_NOMAP)) {
-      sendTo("Automap enabled.\n\r");
-      REMOVE_BIT(desc->autobits, AUTO_NOMAP);
-    } else {
+    if (IS_SET(desc->autobits, AUTO_MAP)) {
       sendTo("Automap disabled.\n\r");
-      SET_BIT(desc->autobits, AUTO_NOMAP);
+      REMOVE_BIT(desc->autobits, AUTO_MAP);
+    } else {
+      sendTo("Automap enabled.\n\r");
+      SET_BIT(desc->autobits, AUTO_MAP);
     }
   } else if (is_abbrev(arg, "nomaptags") || is_abbrev(arg, "maptags")) {
     if (IS_SET(desc->autobits, AUTO_MAPTAGS)) {

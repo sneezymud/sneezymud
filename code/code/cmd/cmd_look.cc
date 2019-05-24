@@ -206,7 +206,7 @@ void TBeing::lookRoom(bool changedZones)
 
   sendRoomGmcp(changedZones);
 
-  if (desc && !IS_SET(desc->autobits, AUTO_NOMAP)) {
+  if (desc && IS_SET(desc->autobits, AUTO_MAP)) {
     TPerson* me = dynamic_cast<TPerson*>(this);
     if (me) {
       me->drawMap(5);
