@@ -21,7 +21,7 @@ class Exceptions : public CxxTest::TestSuite
     testDesc=new Descriptor(testSocket);
     testPerson1=new TPerson(testDesc);
     testPerson2=new TPerson(testDesc);
-    gamePort=Config::Port::BETA;
+    gamePort=Config::Port::PROD;
   }
 
   // I added an exception throw to out of range access of sstrings,
@@ -37,6 +37,8 @@ class Exceptions : public CxxTest::TestSuite
   }
 
   void testRandomMessage(){
+    mobIndexData myMob;
+    mob_index.push_back(myMob);
     for(int i=0;i<100;++i)
       TS_ASSERT_THROWS_NOTHING(randommessage("Peel"));
   }
