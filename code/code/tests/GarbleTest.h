@@ -27,8 +27,8 @@ class GarbleTest : public CxxTest::TestSuite
     testString[3]="C-C-C-C-C-Combo breaker!";
 
     buildSpellArray();
-    chdir("lib");
-    Races[RACE_HUMAN] = new Race(RACE_HUMAN);    
+    chdir("../lib");
+    Races[RACE_HUMAN] = new Race(RACE_HUMAN);
 
     testSocket=new TSocket();
     testDesc=new Descriptor(testSocket);

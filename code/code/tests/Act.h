@@ -26,7 +26,7 @@ class Act : public CxxTest::TestSuite
     freopen("code/tests/output/Act.out", "w", stderr);
 
     buildSpellArray();
-    chdir("lib");
+    chdir("../lib");
     Races[RACE_HUMAN] = new Race(RACE_HUMAN);    
 
     testSocket=new TSocket();
