@@ -53,6 +53,9 @@ std::vector <std::string> db_users(DB_MAX);
 std::vector <std::string> db_passwords(DB_MAX);
 
 
+IDatabase::~IDatabase()
+{}
+
 const char *TDatabaseConnection::getConnectParam(dbTypeT type)
 {
   assert(type >= 0);
@@ -155,7 +158,7 @@ unsigned long TDatabase::escape_string(char *to, const char *from, unsigned long
   return mysql_real_escape_string(pimpl->db, to, from, length);
 }
 
-unsigned long TDatabase::escape_string_ugly(char *to, const char *from, unsigned long length)
+unsigned long IDatabase::escape_string_ugly(char *to, const char *from, unsigned long length)
 {
   TDatabase sn(DB_SNEEZY);
   return sn.escape_string(to, from, length);

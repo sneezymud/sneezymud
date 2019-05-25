@@ -92,18 +92,32 @@ enum dbTypeT {
 
 class TDatabasePimpl;
 
-class TDatabase
+class IDatabase {
+ public:
+  virtual bool query(const char *,...) = 0;
+  virtual bool fetchRow() = 0;
+  virtual const sstring operator[] (const sstring &) const = 0;
+  virtual const sstring operator[] (unsigned int) const = 0;
+  virtual bool isResults() = 0;
+  virtual long rowCount() = 0;
+  virtual long lastInsertId() = 0;
+  virtual unsigned long escape_string(char *to, const char *from, unsigned long length) = 0;
+  static unsigned long escape_string_ugly(char *to, const char *from, unsigned long length);
+
+  virtual ~IDatabase();
+};
+
+class TDatabase : public IDatabase
 {
  public:
-  bool query(const char *,...);
-  bool fetchRow();
-  const sstring operator[] (const sstring &) const;
-  const sstring operator[] (unsigned int) const;
-  bool isResults();
-  long rowCount();
-  long lastInsertId();
-  unsigned long escape_string(char *to, const char *from, unsigned long length);
-  static unsigned long escape_string_ugly(char *to, const char *from, unsigned long length);
+  virtual bool query(const char *,...);
+  virtual bool fetchRow();
+  virtual const sstring operator[] (const sstring &) const;
+  virtual const sstring operator[] (unsigned int) const;
+  virtual bool isResults();
+  virtual long rowCount();
+  virtual long lastInsertId();
+  virtual unsigned long escape_string(char *to, const char *from, unsigned long length);
 
   TDatabase(dbTypeT, bool log=false);
   virtual ~TDatabase();
