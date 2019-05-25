@@ -7,7 +7,7 @@ cxx_tests = (
         # 'Act',
         # 'CommTest',
         # 'Tell',
-        # 'Exceptions',
+        'Exceptions',
         'GarbleTest',
         'Pfile',
         'SString',
