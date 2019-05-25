@@ -44,7 +44,7 @@ TTraits traits[MAX_TRAITS+1] = {
    "You have necrophobia and are terrified at the sight of dead things.", 0,0},
   {TOG_IS_ALCOHOLIC, 5,     "alcoholism",
    "You are an alcoholic and feel a constant urge to drink booze.", 0,0},
-  {TOG_HAS_TOURETTES, 4,    "tourettes",
+  {TOG_HAS_TOURETTES, 1,    "tourettes",
    "You involuntarily insult other people.", 0,1},
   {TOG_PERMA_DEATH_CHAR, 0, "perma-death",
    "You only have one life to live and if you die your game is over.", 0,1},
