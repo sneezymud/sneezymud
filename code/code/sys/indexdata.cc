@@ -15,8 +15,8 @@
 extern FILE *obj_f;
 extern FILE *mob_f;
 
-std::vector<mobIndexData>mob_index(0);
-std::vector<objIndexData>obj_index(0);
+std::vector<mobIndexData> mob_index;
+std::vector<objIndexData> obj_index;
 
 indexData::indexData() :
   virt(0),
