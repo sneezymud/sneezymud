@@ -306,6 +306,10 @@ sstring guardShout(TBeing *ch){
 	break;
       }
     case 136:
+      if (targVis) {
+	s = format("That must be a new record. %s is even wimpier than Kagato!") % ch->pers(ch->fight());
+	break;
+      }    
     case 137:
     case 138:
     case 139:
