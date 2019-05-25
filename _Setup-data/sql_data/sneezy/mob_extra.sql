@@ -1,13 +1,13 @@
--- MySQL dump 10.10
+-- MySQL dump 10.16  Distrib 10.1.38-MariaDB, for debian-linux-gnu (x86_64)
 --
--- Host: db.sneezymud.com    Database: sneezy
+-- Host: db    Database: sneezy
 -- ------------------------------------------------------
--- Server version	5.0.24a-standard
+-- Server version	10.3.14-MariaDB-1:10.3.14+maria~bionic-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -16,12 +16,26 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `mob_extra`
+--
+
+DROP TABLE IF EXISTS `mob_extra`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mob_extra` (
+  `vnum` int(11) NOT NULL DEFAULT 0,
+  `keyword` char(32) NOT NULL DEFAULT '',
+  `description` char(255) DEFAULT NULL,
+  PRIMARY KEY (`vnum`,`keyword`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `mob_extra`
 --
 
-
-/*!40000 ALTER TABLE `mob_extra` DISABLE KEYS */;
 LOCK TABLES `mob_extra` WRITE;
+/*!40000 ALTER TABLE `mob_extra` DISABLE KEYS */;
 INSERT INTO `mob_extra` VALUES (10,'bamfin','This is a <r>test<z> of the <k><n> broad<z><g>cast<z> system.'),
 (4547,'repop','A young cannibal appears suddenly in a puff of smoke.'),
 (5018,'movein','A <W>white doe<z> steps tentatively into view.'),
@@ -54,11 +68,9 @@ INSERT INTO `mob_extra` VALUES (10,'bamfin','This is a <r>test<z> of the <k><n> 
 (19003,'repop','A scurvy sailor has arrived for duty.'),
 (19008,'repop','A vicious & bloodthirsty pirate arises with a belch.'),
 (19011,'repop','Hapke the cabinboy appears as if from nowhere.'),
-(24679,'bamfin','<n> wakes up.'),
 (24689,'repop','A grizzled old werewolf awakens from his slumber.'),
 (24695,'repop','An <g>imp<z> materializes from the shadows of the forest.'),
 (24696,'repop','An <b>imp<z> materializes from the shadows of the forest.'),
-(24699,'bamfin','<n> awakens from her slumber, and streches gracefully.'),
 (28913,'bamfin','A trolloc walks in from a night of killing to relax.'),
 (28914,'bamfin','A trolloc walks in from a night of killing to relax.'),
 (28918,'bamfin','A trolloc walks in from a night of killing to relax.'),
@@ -72,8 +84,8 @@ INSERT INTO `mob_extra` VALUES (10,'bamfin','This is a <r>test<z> of the <k><n> 
 (33300,'bamfin','A fallow deer prances out of the forest.'),
 (33779,'movein','A <W>white doe<z> steps tentatively into view.'),
 (37138,'repop','$n appears and licks its stinking teeth.');
-UNLOCK TABLES;
 /*!40000 ALTER TABLE `mob_extra` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -84,3 +96,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+-- Dump completed on 2019-05-25 15:55:00

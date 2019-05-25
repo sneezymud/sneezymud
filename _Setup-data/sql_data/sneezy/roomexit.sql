@@ -1,13 +1,13 @@
--- MySQL dump 10.10
+-- MySQL dump 10.16  Distrib 10.1.38-MariaDB, for debian-linux-gnu (x86_64)
 --
--- Host: db.sneezymud.com    Database: sneezy
+-- Host: db    Database: sneezy
 -- ------------------------------------------------------
--- Server version	5.0.24a-standard
+-- Server version	10.3.14-MariaDB-1:10.3.14+maria~bionic-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -16,12 +16,33 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `roomexit`
+--
+
+DROP TABLE IF EXISTS `roomexit`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `roomexit` (
+  `vnum` int(11) NOT NULL,
+  `direction` int(11) NOT NULL,
+  `name` varchar(127) NOT NULL,
+  `description` text NOT NULL,
+  `type` int(11) NOT NULL,
+  `condition_flag` int(11) NOT NULL,
+  `lock_difficulty` int(11) NOT NULL,
+  `weight` int(11) NOT NULL,
+  `key_num` int(11) NOT NULL,
+  `destination` int(11) NOT NULL,
+  KEY `roomexit_idx` (`vnum`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `roomexit`
 --
 
-
-/*!40000 ALTER TABLE `roomexit` DISABLE KEYS */;
 LOCK TABLES `roomexit` WRITE;
+/*!40000 ALTER TABLE `roomexit` DISABLE KEYS */;
 INSERT INTO `roomexit` VALUES (198,2,'','',0,0,-1,-1,-1,197),
 (199,0,'','',0,0,-1,-1,-1,111),
 (199,2,'','',0,0,-1,-1,-1,198),
@@ -21609,8 +21630,6 @@ INSERT INTO `roomexit` VALUES (198,2,'','',0,0,-1,-1,-1,197),
 (12347,8,'','',0,0,-1,-1,0,12346),
 (12348,1,'','',0,0,-1,-1,0,12349),
 (12348,9,'','',0,0,-1,-1,0,12347),
-(12349,1,'','',0,0,-1,-1,0,12350),
-(12349,3,'','',0,0,-1,-1,0,12348),
 (12350,0,'door','',1,1,-1,5,0,12351),
 (12350,3,'','',0,0,-1,-1,0,12349),
 (12351,2,'door','',1,1,-1,5,0,12350),
@@ -29267,8 +29286,8 @@ INSERT INTO `roomexit` VALUES (198,2,'','',0,0,-1,-1,-1,197),
 (13771,4,'','',0,0,-1,-1,-1,13739),
 (13772,4,'','',0,0,-1,-1,-1,13731),
 (13772,5,'','',0,0,-1,-1,-1,13738),
-(13773,0,'','',0,0,-1,-1,-1,13774),
-(13773,5,'','',0,0,-1,-1,-1,13739),
+(13773,0,'','',0,0,-1,-1,-1,13774);
+INSERT INTO `roomexit` VALUES (13773,5,'','',0,0,-1,-1,-1,13739),
 (13774,0,'','',0,0,-1,-1,-1,13775),
 (13774,2,'','',0,0,-1,-1,-1,13773),
 (13775,2,'','',0,0,-1,-1,-1,13774),
@@ -29293,8 +29312,8 @@ INSERT INTO `roomexit` VALUES (198,2,'','',0,0,-1,-1,-1,197),
 (13783,1,'','',0,0,-1,-1,-1,13780),
 (13784,0,'','',0,0,-1,-1,-1,13785),
 (13784,1,'','',0,0,-1,-1,-1,13781),
-(13784,2,'','',0,0,-1,-1,-1,13783);
-INSERT INTO `roomexit` VALUES (13785,0,'door','',1,1,-1,5,0,13786),
+(13784,2,'','',0,0,-1,-1,-1,13783),
+(13785,0,'door','',1,1,-1,5,0,13786),
 (13785,1,'','',0,0,-1,-1,-1,13782),
 (13785,2,'','',0,0,-1,-1,-1,13784),
 (13785,3,'','',0,0,-1,-1,-1,13787),
@@ -57743,8 +57762,8 @@ INSERT INTO `roomexit` VALUES (13785,0,'door','',1,1,-1,5,0,13786),
 (22599,8,'','',0,0,-1,-1,0,45411),
 (22599,9,'','',0,0,-1,-1,0,45415),
 (22598,2,'','',0,0,-1,-1,0,45411),
-(22598,3,'','',0,0,-1,-1,0,22599),
-(22598,4,'','',0,0,-1,-1,0,22597),
+(22598,3,'','',0,0,-1,-1,0,22599);
+INSERT INTO `roomexit` VALUES (22598,4,'','',0,0,-1,-1,0,22597),
 (22598,9,'','',0,0,-1,-1,0,45413),
 (45411,0,'','',0,0,-1,-1,0,22598),
 (45411,3,'','',0,0,-1,-1,-1,45413),
@@ -57798,8 +57817,8 @@ INSERT INTO `roomexit` VALUES (13785,0,'door','',1,1,-1,5,0,13786),
 (45499,9,'','',0,0,-1,-1,-1,45497),
 (45500,0,'','',0,0,-1,-1,-1,45499),
 (45500,3,'','',0,0,-1,-1,-1,45497),
-(45500,7,'','',0,0,-1,-1,-1,45498);
-INSERT INTO `roomexit` VALUES (45500,8,'','',0,0,-1,-1,-1,45501),
+(45500,7,'','',0,0,-1,-1,-1,45498),
+(45500,8,'','',0,0,-1,-1,-1,45501),
 (45501,0,'','',0,0,-1,-1,-1,45502),
 (45501,7,'','',0,0,-1,-1,-1,45500),
 (45502,0,'','',0,0,-1,-1,-1,45503),
@@ -57910,9 +57929,21 @@ INSERT INTO `roomexit` VALUES (45500,8,'','',0,0,-1,-1,-1,45501),
 (1298,2,'door shop','',1,1,-1,3,0,1297),
 (267,1,'','The barracks continue...\n',0,0,-1,-1,-1,268),
 (267,2,'','You can see a hallway, stretching southward.\n',0,0,-1,-1,-1,271),
-(267,3,'door small','Through the doorway, you can see a small storage room.\n',1,0,-1,3,-1,266);
-UNLOCK TABLES;
+(267,3,'door small','Through the doorway, you can see a small storage room.\n',1,0,-1,3,-1,266),
+(45661,0,'','',0,0,-1,-1,0,45664),
+(45661,2,'drawbridge','',6,0,-1,1,0,45660),
+(45661,8,'','',0,0,-1,-1,0,45663),
+(45661,9,'','',0,0,-1,-1,0,45662),
+(45662,6,'','',0,0,-1,-1,0,45661),
+(45663,7,'','',0,0,-1,-1,0,45661),
+(12349,0,'','',0,0,-1,-1,0,45660),
+(12349,1,'','',0,0,-1,-1,0,12350),
+(12349,3,'','',0,0,-1,-1,0,12348),
+(45660,0,'drawbridge','',6,0,-1,1,0,45661),
+(45660,2,'','',0,0,-1,-1,0,12349),
+(45664,2,'','',0,0,-1,-1,0,45661);
 /*!40000 ALTER TABLE `roomexit` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -57923,3 +57954,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+-- Dump completed on 2019-05-25 15:55:04

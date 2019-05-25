@@ -1,13 +1,13 @@
--- MySQL dump 10.10
+-- MySQL dump 10.16  Distrib 10.1.38-MariaDB, for debian-linux-gnu (x86_64)
 --
--- Host: db.sneezymud.com    Database: sneezy
+-- Host: db    Database: sneezy
 -- ------------------------------------------------------
--- Server version	5.0.24a-standard
+-- Server version	10.3.14-MariaDB-1:10.3.14+maria~bionic-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -16,14 +16,34 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `zone`
+--
+
+DROP TABLE IF EXISTS `zone`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `zone` (
+  `zone_nr` int(11) NOT NULL,
+  `zone_name` varchar(255) NOT NULL DEFAULT '',
+  `zone_enabled` int(11) DEFAULT NULL,
+  `bottom` int(11) DEFAULT NULL,
+  `top` int(11) DEFAULT NULL,
+  `reset_mode` int(11) DEFAULT NULL,
+  `lifespan` int(11) DEFAULT NULL,
+  `age` int(11) DEFAULT NULL,
+  `util_flag` int(11) DEFAULT NULL,
+  PRIMARY KEY (`zone_nr`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `zone`
 --
 
-
-/*!40000 ALTER TABLE `zone` DISABLE KEYS */;
 LOCK TABLES `zone` WRITE;
+/*!40000 ALTER TABLE `zone` DISABLE KEYS */;
 INSERT INTO `zone` VALUES (0,'Void',1,0,0,2,25,NULL,1),
-(1,'Immort Zone',1,1,99,2,10,NULL,1),
+(1,'Immort Zone',1,1,99,2,1,NULL,1),
 (2,'Grimhaven Roads',1,100,249,2,5,NULL,1),
 (3,'Royal Barracks',1,250,299,2,15,NULL,1),
 (4,'TB Sheldon Auditorium',1,300,349,2,25,NULL,1),
@@ -151,7 +171,7 @@ INSERT INTO `zone` VALUES (0,'Void',1,0,0,2,25,NULL,1),
 (126,'Meerlar - Troglodyte Cave',1,15350,15374,2,25,NULL,1),
 (127,'Magdalena/Coral - Viking Ship',1,15375,15399,2,20,NULL,1),
 (128,'Theodoric - Abanos\'s Farm',1,15400,15449,2,35,NULL,1),
-(129,'Coral\'s Area - Haon-Dor SW',1,15450,15499,2,25,NULL,1),
+(129,'Coral - Haon-Dor SW',1,15450,15499,2,25,NULL,1),
 (130,'Dame\'s Ocean extension (200 rooms)',0,15500,15699,2,25,NULL,1),
 (131,'Omen - Ice Cave',1,15700,15749,2,40,NULL,1),
 (132,'Therias\' Area - Ogre Magi Tower (150 rooms)',0,15750,15899,2,25,NULL,1),
@@ -190,14 +210,14 @@ INSERT INTO `zone` VALUES (0,'Void',1,0,0,2,25,NULL,1),
 (165,'Peel - Grimhaven Financial District (75 rooms)',0,19225,19299,2,25,NULL,1),
 (166,'Peel - Reserved (700 rooms)',0,19225,19999,2,25,NULL,1),
 (167,'Cosmo\'s Tournament zone (400 rooms)',0,20000,20399,2,25,NULL,1),
-(168,'Mithros - Chaos Plains-River/Caverns',0,20400,20599,2,40,NULL,1),
-(169,'Mithros - Chaos Plains-Simal Plainsmen',0,20600,20674,2,40,NULL,1),
+(168,'Mithros - Chaos Plains-River/Caverns',1,20400,20599,2,40,NULL,1),
+(169,'Mithros - Chaos Plains-Simal Plainsmen',1,20600,20674,2,40,NULL,1),
 (170,'Chaos Plains-Grotto Area (25 rooms)',0,20675,20699,2,25,NULL,1),
 (171,'Chaos Plains-Winds Area (50 rooms)',0,20700,20749,2,25,NULL,1),
-(172,'Mithros - Chaos Plains-Calthor Outpost',0,20750,20764,2,40,NULL,1),
+(172,'Mithros - Chaos Plains-Calthor Outpost',1,20750,20764,2,40,NULL,1),
 (173,'Chaos Plains-Calthor Ruins & Tomb Area (35 rooms)',0,20765,20799,2,25,NULL,1),
-(174,'Mithros - Chaos Plains-Calthor Empire',0,20800,20874,2,30,NULL,1),
-(175,'Mithros - Chaos Plains-Calcathian Mountains',0,20875,20899,2,30,NULL,1),
+(174,'Mithros - Chaos Plains-Calthor Empire',1,20800,20874,2,30,NULL,1),
+(175,'Mithros - Chaos Plains-Calcathian Mountains',1,20875,20899,2,30,NULL,1),
 (176,'Satan\'s City Area (1500 rooms)',0,20900,22399,2,25,NULL,1),
 (177,'Stargazer/Mithros - Gnome Outpost & Fields',1,22400,22499,2,25,NULL,1),
 (178,'Ashe - Troll Caves',1,22500,22649,2,40,NULL,1),
@@ -323,7 +343,7 @@ INSERT INTO `zone` VALUES (0,'Void',1,0,0,2,25,NULL,1),
 (298,'Weed - Palace Grimhaven Wall (200 rooms)',0,36730,36929,2,25,NULL,1),
 (299,'Peel/Laren - The Fashion Barn',1,36930,37129,2,25,NULL,1),
 (300,'Metrohep - Southern Coast',0,37130,40629,2,25,NULL,1),
-(301,'Metrohep - Agorian Sea',0,40630,44129,2,25,NULL,1),
+(301,'Metrohep - Argorian Sea',0,40630,44129,2,25,NULL,1),
 (302,'Deirdre/Vasco - Royal Grimhaven Guard',0,44130,44699,2,25,NULL,1),
 (303,'Legato - Sky above Grimhaven',0,44700,44749,2,25,NULL,1),
 (304,'Ravakahn - Grotto Temple',0,44750,44764,2,25,NULL,1),
@@ -346,9 +366,14 @@ INSERT INTO `zone` VALUES (0,'Void',1,0,0,2,25,NULL,1),
 (321,'Amberbock - Parnithian Tomb',1,45490,45519,2,30,NULL,1),
 (322,'Staffa - Battle of the Gates',0,45520,45619,2,25,NULL,1),
 (323,'Amberbock - The Dark Temple',0,45620,45659,2,25,NULL,1),
-(324,'Last Block',0,45660,99998,2,25,NULL,1);
-UNLOCK TABLES;
+(324,'Cizra - Temple of Stupidity',1,45660,45664,2,35,NULL,1),
+(325,'Aion - The Royal Academy',0,45665,45764,2,35,NULL,1),
+(326,'Ammanas - Random\'s Retreat',0,45765,45844,2,35,NULL,1),
+(327,'Aion - Royal Academy',0,45845,45894,2,35,NULL,1),
+(328,'Jimbus - Mount Apocryphia',0,45895,46344,2,35,NULL,1),
+(329,'Last Block',0,46345,99998,2,25,NULL,1);
 /*!40000 ALTER TABLE `zone` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -359,3 +384,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+-- Dump completed on 2019-05-25 15:55:07

@@ -1,13 +1,13 @@
--- MySQL dump 10.10
+-- MySQL dump 10.16  Distrib 10.1.38-MariaDB, for debian-linux-gnu (x86_64)
 --
--- Host: db.sneezymud.com    Database: sneezy
+-- Host: db    Database: sneezy
 -- ------------------------------------------------------
--- Server version	5.0.24a-standard
+-- Server version	10.3.14-MariaDB-1:10.3.14+maria~bionic-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -16,12 +16,26 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `roomextra`
+--
+
+DROP TABLE IF EXISTS `roomextra`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `roomextra` (
+  `vnum` int(11) NOT NULL,
+  `name` text NOT NULL,
+  `description` text NOT NULL,
+  KEY `roomextra_idx` (`vnum`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `roomextra`
 --
 
-
-/*!40000 ALTER TABLE `roomextra` DISABLE KEYS */;
 LOCK TABLES `roomextra` WRITE;
+/*!40000 ALTER TABLE `roomextra` DISABLE KEYS */;
 INSERT INTO `roomextra` VALUES (3,'calendar','<g>Grumble car payment due on the 25th :(\n'),
 (3,'donut','  <p>Homer says, \"MMMM, donuts!\"\n'),
 (3,'head','  <r>Bump would be busy working, but that bastard Gringar chopped his head\noff, and now he is waiting to re-pop.\n'),
@@ -5739,10 +5753,10 @@ INSERT INTO `roomextra` VALUES (3,'calendar','<g>Grumble car payment due on the 
 (20449,'canyon dirt walls','  Basically a vertical plane the lower walls while once ragged and rough are\nnow incredibly smooth as the water has polished them smooth.  Higher up on\nthe walls you see roots and hanging vines indicating dirt soil and possibly\nhand-holds you could use to climb upwards, unfortunately they are much to high\nto reach though.\n'),
 (20449,'minerals debris sand soil','  Just worthless pieces of sediment the fragments of debris and other small\nrocks and minerals have been left here as the river slowed enough for their\nweight to overcome the rivers powerful current.  Soon they will be crushed\nby passing predators and travelers into the sand and soil that you see\neverywhere, then used as food by the lush vegetation which surrounds you.\n'),
 (20449,'beaches shore','  Covered in a ordinary sand the beaches are scattered along the rivers\ncourse at random intervals.  A few are large enough to stop and take notice\nof but most are barely large enough for a single person to stand on.  They\nprobably don\'t hold anything of interest for anyone but tiny scavengers and\npredators looking for small crushed and drowned creatures among the rocks\nand plants to feed on.\n'),
-(20458,'canyon dirt walls','  Basically a vertical plane the lower walls while once ragged and rough are\nnow incredibly smooth as the water has polished them smooth.  Higher up on\nthe walls you see roots and hanging vines indicating dirt soil and possibly\nhand-holds you could use to climb upwards, unfortunately they are much to high\nto reach though.\n'),
-(20449,'vegetation','  Rich with the nutrients left by the river, the soil is the perfect growing\ngrounds for lush stands of vegetation.  Unfortunately the looseness of the\nsandy soil prevents any taller types of vegetation which you might be able\nclimb to the plains above.  You see several areas populated with thick\ngroupings of brightly colored flowers, tall slim plains grasses, and small\nhealthy bushes.\n'),
-(20450,'canyon dirt walls','  Basically a vertical plane the lower walls while once ragged and rough are\nnow incredibly smooth as the water has polished them smooth.  Higher up on\nthe walls you see roots and hanging vines indicating dirt soil and possibly\nhand-holds you could use to climb upwards, unfortunately they are much to high\nto reach though.\n');
-INSERT INTO `roomextra` VALUES (20450,'minerals debris sand soil','  Just worthless pieces of sediment the fragments of debris and other small\nrocks and minerals have been left here as the river slowed enough for their\nweight to overcome the rivers powerful current.  Soon they will be crushed\nby passing predators and travelers into the sand and soil that you see\neverywhere, then used as food by the lush vegetation which surrounds you.\n'),
+(20458,'canyon dirt walls','  Basically a vertical plane the lower walls while once ragged and rough are\nnow incredibly smooth as the water has polished them smooth.  Higher up on\nthe walls you see roots and hanging vines indicating dirt soil and possibly\nhand-holds you could use to climb upwards, unfortunately they are much to high\nto reach though.\n');
+INSERT INTO `roomextra` VALUES (20449,'vegetation','  Rich with the nutrients left by the river, the soil is the perfect growing\ngrounds for lush stands of vegetation.  Unfortunately the looseness of the\nsandy soil prevents any taller types of vegetation which you might be able\nclimb to the plains above.  You see several areas populated with thick\ngroupings of brightly colored flowers, tall slim plains grasses, and small\nhealthy bushes.\n'),
+(20450,'canyon dirt walls','  Basically a vertical plane the lower walls while once ragged and rough are\nnow incredibly smooth as the water has polished them smooth.  Higher up on\nthe walls you see roots and hanging vines indicating dirt soil and possibly\nhand-holds you could use to climb upwards, unfortunately they are much to high\nto reach though.\n'),
+(20450,'minerals debris sand soil','  Just worthless pieces of sediment the fragments of debris and other small\nrocks and minerals have been left here as the river slowed enough for their\nweight to overcome the rivers powerful current.  Soon they will be crushed\nby passing predators and travelers into the sand and soil that you see\neverywhere, then used as food by the lush vegetation which surrounds you.\n'),
 (20450,'beaches shore','  Covered in a ordinary sand the beaches are scattered along the rivers\ncourse at random intervals.  A few are large enough to stop and take notice\nof but most are barely large enough for a single person to stand on.  They\nprobably don\'t hold anything of interest for anyone but tiny scavengers and\npredators looking for small crushed and drowned creatures among the rocks\nand plants to feed on.\n'),
 (20450,'vegetation','  Rich with the nutrients left by the river, the soil is the perfect growing\ngrounds for lush stands of vegetation.  Unfortunately the looseness of the\nsandy soil prevents any taller types of vegetation which you might be able\nclimb to the plains above.  You see several areas populated with thick\ngroupings of brightly colored flowers, tall slim plains grasses, and small\nhealthy bushes.\n'),
 (20451,'canyon dirt walls','  Basically a vertical plane the lower walls while once ragged and rough are\nnow incredibly smooth as the water has polished them smooth.  Higher up on\nthe walls you see roots and hanging vines indicating dirt soil and possibly\nhand-holds you could use to climb upwards, unfortunately they are much to high\nto reach though.\n'),
@@ -8824,8 +8838,8 @@ INSERT INTO `roomextra` VALUES (20450,'minerals debris sand soil','  Just worthl
 (45463,'table bleached bone','<W>The table is actually a simple construct made of various dragon bones excavated from the dig site.  The table seems to slough off most of the <r>gory mess<z> <W>its owner likes to heap upon it.<z>'),
 (45464,'hook bloody meat','<k>A <r>bloody<z> <w>meat hook<z> <k>is attached to the southern wall.  Closer inspection of the hook reveals a grisly discovery.  A piece of spine from some unfortunate being still clings to the device.<z>'),
 (44794,'lily lilies magical','These lilies glow softly and a faint aura surrounds them.  They appear to be\nmagically grown and are perpetually blooming.  There are no dead petals anywhere\nto be found and always look fresh and hearty.\n');
-UNLOCK TABLES;
 /*!40000 ALTER TABLE `roomextra` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -8836,3 +8850,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+-- Dump completed on 2019-05-25 15:55:04
