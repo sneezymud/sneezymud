@@ -57,6 +57,7 @@ extern "C" {
 #include "shop.h"
 #include "weather.h"
 #include "../version.h"
+#include "player_data.h"
 
 const int DONT_SEND = -1;
 const int FORCE_LOW_INVSTE = 1;

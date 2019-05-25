@@ -58,6 +58,7 @@ extern "C" {
 #include "obj_commodity.h"
 #include "spec_mobs.h"
 #include "materials.h"
+#include "player_data.h"
 
 extern bool Reboot;
 

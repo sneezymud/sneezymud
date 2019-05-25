@@ -16,6 +16,7 @@
 #include "person.h"
 #include "monster.h"
 #include "guild.h"
+#include "player_data.h"
 
 void TBeing::doSet(const char *)
 {

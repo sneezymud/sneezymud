@@ -36,6 +36,7 @@
 #include "rent.h"
 #include "shop.h"
 #include "weather.h"
+#include "player_data.h"
 
 const int  CURRENT_VERSION = 19990615;
 const int  BAD_VERSION = 19990614;

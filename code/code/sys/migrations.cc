@@ -3,7 +3,7 @@
 #include "migrations.h"
 
 #include "charfile.h"
-#include "extern.h" // for load_char
+#include "player_data.h"
 
 #include <cassert>
 #include <boost/format.hpp>

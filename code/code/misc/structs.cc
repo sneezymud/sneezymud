@@ -35,6 +35,7 @@
 //#include "liquids.h"
 #include "socket.h"
 #include "timing.h"
+#include "player_data.h"
 
 TBeing::TBeing() :
   TThing(),
