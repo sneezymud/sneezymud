@@ -25,6 +25,7 @@ extern "C" {
 #include "database.h"
 #include "corporation.h"
 #include "process.h"
+#include "player_data.h"
 
 TFactionInfo FactionInfo[MAX_FACTIONS];
 

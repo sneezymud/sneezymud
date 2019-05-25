@@ -118,7 +118,6 @@ extern bool safe_to_save_shop_stuff(TMonster *);
 extern bool safe_to_be_in_system(const sstring &);
 sstring sprinttype(int type, const sstring names[]);
 extern int vsystem(const sstring &);
-extern bool load_char(const sstring &name, charFile *);
 extern int game_loop(int s);
 extern void RoomLoad(TBeing *, int, int, int);
 extern int noise(const TBeing *);

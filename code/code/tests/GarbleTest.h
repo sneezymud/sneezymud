@@ -2,9 +2,10 @@
 
 #include "configuration.h"
 #include "person.h"
-#include "extern.h"
+#include "player_data.h"
 #include "charfile.h"
 #include "code/tests/ValueTraits.h"
+#include "code/tests/MockDb.h"
 #include "socket.h"
 
 class GarbleTest : public CxxTest::TestSuite
@@ -33,7 +34,8 @@ class GarbleTest : public CxxTest::TestSuite
     testDesc=new Descriptor(testSocket);
     testPerson=new TPerson(testDesc);
 
-    load_char("killer", &st);
+    auto db = std::make_unique<MockDb>();
+    load_char("test", &st, std::move(db));
     testPerson->loadFromSt(&st);
     testRoom=new TRoom(100);
     *testRoom += *testPerson;

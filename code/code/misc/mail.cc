@@ -15,6 +15,7 @@
 #include "spec_mobs.h"
 #include "combat.h"
 #include "configuration.h"
+#include "player_data.h"
 
 // may not exceed NAME_SIZE (15) chars
 static const char * const SNEEZY_ADMIN = "SneezyMUD Administration";

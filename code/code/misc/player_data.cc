@@ -34,6 +34,7 @@ extern "C" {
 #include "combat.h"
 #include "database.h"
 #include "materials.h"
+#include "player_data.h"
 
 
 wizListInfo *wiz;
@@ -323,7 +324,7 @@ bool raw_save_char(const char *name, charFile *char_element)
 }
 
 // Load a char, TRUE if loaded, FALSE if not
-bool load_char(const sstring &name, charFile *char_element)
+bool load_char(const sstring &name, charFile *char_element, std::unique_ptr<IDatabase> dbase)
 {
   FILE *fl;
   char buf[256];
@@ -336,13 +337,13 @@ bool load_char(const sstring &name, charFile *char_element)
   int rc = fread(char_element, sizeof(charFile), 1, fl);
   fclose(fl);
 
-  TDatabase db(DB_SNEEZY);
-  db.query("select talens from player where lower(name)=lower('%s') and talens is not null",
+  std::unique_ptr<IDatabase> db(dbase ? std::move(dbase) : std::move(std::unique_ptr<IDatabase>(new TDatabase(DB_SNEEZY))));
+  db->query("select talens from player where lower(name)=lower('%s') and talens is not null",
 	   name.c_str());
-  if(db.fetchRow()){
-    char_element->money=convertTo<int>(db["talens"]);
+  if(db->fetchRow()){
+    char_element->money=convertTo<int>((*db)["talens"]);
   } else {
-    db.query("update player set talens=%i where lower(name)=lower('%s')",
+    db->query("update player set talens=%i where lower(name)=lower('%s')",
 	     char_element->money, name.c_str());
   }
 

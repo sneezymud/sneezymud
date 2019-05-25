@@ -43,6 +43,7 @@
 #include "materials.h"
 #include "combat.h"
 #include "timing.h"
+#include "player_data.h"
 
 static const char ROOM_SAVE_PATH[] = "roomdata/saved";
 static const int NORMAL_SLOT   = -1;
