@@ -10,12 +10,12 @@ cxx_tests = (
         # 'Exceptions',
         # 'GarbleTest',
         # 'Pfile',
-        # 'SString',
-    'ConfigFile',
-    'ConvertTo',
-    'DBTest',
-    'Fruit',
-    'Stat',
+        'SString',
+        'ConfigFile',
+        'ConvertTo',
+        'DBTest',
+        'Fruit',
+        'Stat',
 )
 
 for test in cxx_tests:
