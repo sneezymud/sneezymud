@@ -7,7 +7,7 @@ for database in *; do
 	pushd $database
 	for i in *; do
 		table=`echo $i | sed s/.sql//`
-		docker exec sneezy mysqldump --skip-extended-insert --password=password $database $table > $i
+		docker exec sneezy mysqldump -hdb -u sneezy --password=password $database $table | sed 's/),(/),\n(/g' > $i
 	done
 	popd
 done
