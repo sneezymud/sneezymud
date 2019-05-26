@@ -49,7 +49,7 @@ addons:
 # actual build activities go here - note that travis runs all commands
 # regardless of error status, so we wrap them in an and-chain
 script:
-    - scons -C code -j4 -Q ccache=1 pretty=0 LIBS=mysqlclient sneezy check
+    - scons -C code -j4 -Q ccache=1 pretty=0 LIBS=mysqlclient sanitize=0 sneezy check
             && ./install_server.sh ./test
 
 # set up the build environment
