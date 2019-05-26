@@ -9,7 +9,7 @@ env.Append(CXXFLAGS=[
 cxx_tests = (
         # these are broken:
         # 'Act',
-        # 'CommTest',
+        'CommTest',
         'Tell',
         'Exceptions',
         'GarbleTest',
