@@ -43,7 +43,7 @@ Build options and defaults:
     olevel=             Compiler -O flag optimization level
 
 Build boolean options: (accept 1/0 y/n yes/no on/off)
-    shared=     on      Build MUD code as shared libraries
+    shared=     off     Build MUD code as shared libraries
                         (not available on OSX)
     debug=      on      Enable high-overhead runtime bug detection
                         (sets harden=off)
@@ -78,7 +78,7 @@ flag_gprof =    get_bool_option('gprof',       False)
 flag_harden =   get_bool_option('harden',      False)
 flag_lto =      get_bool_option('lto',         False)
 flag_optimize = get_bool_option('optimize',    False)
-flag_shared =   get_bool_option('shared',      True)
+flag_shared =   get_bool_option('shared',      False)
 flag_pretty =   get_bool_option('pretty',      True)
 flag_twitter =  get_bool_option('twitter',     False)
 
