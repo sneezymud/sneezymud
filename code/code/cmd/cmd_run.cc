@@ -1,7 +1,5 @@
 #include "cmd_run.h"
 
-#include <boost/spirit/include/qi.hpp>
-#include <boost/spirit/include/qi_char.hpp>
 #include <boost/algorithm/string/replace.hpp>
 
 #include "sstring.h"
@@ -11,24 +9,21 @@
 
 using namespace std;
 
-namespace {
-  deque<pair<int, char> > collection;
-  int n = 1;
-
-  void add_int(int const& k) {
-    n = k;
-  }
-
-  void add_char(char const& c) {
-    if (c != ' ') {
-      collection.push_back(make_pair(n, c));
-      n = 1;
-    }
-  }
-};
-
 bool parse(string path, deque<pair<int, char> >& res )
 {
+  int n = 1;
+
+  auto add_int = [&n](int const& k) {
+    n = k;
+  };
+
+  auto add_char = [&n, &res](char const& c) {
+    if (c != ' ') {
+      res.push_back(make_pair(n, c));
+      n = 1;
+    }
+  };
+
   // validate a bit
   if (path.find("A") != string::npos
       || path.find("B") != string::npos
@@ -41,39 +36,23 @@ bool parse(string path, deque<pair<int, char> >& res )
   boost::replace_all(path, "sw", "C");
   boost::replace_all(path, "nw", "D");
 
-  string::const_iterator begin = path.begin();
-  string::const_iterator end = path.end();
-  using boost::spirit::qi::int_;
-  using boost::spirit::qi::char_;
-
-  boost::spirit::qi::parse(
-    begin, end,
-    *(-int_[&add_int] >> char_("neswud ABCD")[&add_char]));
-
-  if (begin == end) {
-    res.resize(collection.size());
-    copy(collection.begin(), collection.end(), res.begin());
-  }
-
-  collection.clear();
-
-  return begin == end;
-}
-
-/*
-int main() {
-  deque<pair<int, char> > res;
-
-  if (parse("neswud1n2e10s11w20u21d1000n", res)) {
-    cout << "Good parse:" << endl;
-    while (!res.empty()) {
-      cout << res.front().first << res.front().second << endl;
-      res.pop_front();
+  int acc = 0;
+  for (char c : path) {
+    if (std::string("neswud ABCD").find(c) != std::string::npos) {
+      if (acc != 0) {
+        add_int(acc);
+        acc = 0;
+      }
+      add_char(c);
+    } else if (isdigit(c)) {
+      acc *= 10;
+      acc += c - '0';
+    } else {
+      return false;
     }
-  } else {
-    cout << "Bad parse" << endl;
   }
-*/
+  return acc == 0;
+}
 
 void TBeing::doRun(sstring const& path) {
   deque<pair<int, char> > res;
