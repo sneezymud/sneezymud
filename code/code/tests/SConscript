@@ -7,8 +7,7 @@ env.Append(CXXFLAGS=[
     ])
 
 cxx_tests = (
-        # these are broken:
-        # 'Act',
+        'Act',
         'CommTest',
         'Tell',
         'Exceptions',

@@ -5,8 +5,10 @@
 #include "extern.h"
 #include "charfile.h"
 #include "code/tests/ValueTraits.h"
+#include "code/tests/MockDb.h"
 #include "connect.h"
 #include "socket.h"
+#include "player_data.h"
 
 class Act : public CxxTest::TestSuite
 {
@@ -27,7 +29,7 @@ class Act : public CxxTest::TestSuite
 
     buildSpellArray();
     chdir("../lib");
-    Races[RACE_HUMAN] = new Race(RACE_HUMAN);    
+    Races[RACE_HUMAN] = new Race(RACE_HUMAN);
 
     testSocket=new TSocket();
     testRoom=new TRoom(100);
@@ -35,47 +37,41 @@ class Act : public CxxTest::TestSuite
 
     testDesc=new Descriptor(testSocket);
     testPerson=new TPerson(testDesc);
-    load_char("dante", &st);
+    load_char("test", &st, std::unique_ptr<MockDb>());
     testPerson->loadFromSt(&st);
     testPerson->in_room=0;
     *testRoom += *testPerson;
 
     testDesc2=new Descriptor(testSocket);
     testPerson2=new TPerson(testDesc2);
-    load_char("milton", &st);
+    load_char("testone", &st, std::unique_ptr<MockDb>());
     testPerson2->loadFromSt(&st);
     testPerson2->in_room=0;
     *testRoom += *testPerson2;
 
     testHorseDesc=new Descriptor(testSocket);
     testHorse=new TPerson(testHorseDesc);
-    load_char("chaucer", &st);
+    load_char("testtwo", &st, std::unique_ptr<MockDb>());
     testHorse->loadFromSt(&st);
     testHorse->in_room=0;
     *testRoom += *testHorse;
   }
 
   void testSimple(){
-    Comm *c;
+    CommPtr c;
 
     act("You start riding $N.", FALSE, testPerson, 0, testHorse, TO_CHAR, NULL, -1);
     act("$n starts riding $N.", FALSE, testPerson, 0, testHorse, TO_NOTVICT, NULL, -1);
     act("$n hops on your back!", FALSE, testPerson, 0, testHorse, TO_VICT, NULL, -1);
 
-    if(!(c=testPerson->desc->output.takeFromQ()))
-      TS_FAIL("received NULL from output queue");
-    else
-      TS_ASSERT_EQUALS(c->getComm(Comm::TEXT), "You start riding Chaucer.\n\r");
+    TS_ASSERT(!testPerson->desc->output.empty());
+    TS_ASSERT_EQUALS(testPerson->desc->output.front()->getComm(), "You start riding Testone.\n\r");
 
-    if(!(c=testPerson2->desc->output.takeFromQ()))
-      TS_FAIL("received NULL from output queue");
-    else
-      TS_ASSERT_EQUALS(c->getComm(Comm::TEXT), "Dante starts riding Chaucer.\n\r");
+    TS_ASSERT(!testPerson2->desc->output.empty());
+    TS_ASSERT_EQUALS(testPerson2->desc->output.front()->getComm(), "Test starts riding Testone.\n\r");
 
-    if(!(c=testHorse->desc->output.takeFromQ()))
-      TS_FAIL("received NULL from output queue");
-    else
-      TS_ASSERT_EQUALS(c->getComm(Comm::TEXT), "Dante hops on your back!\n\r");
+    TS_ASSERT(!testHorse->desc->output.empty());
+    TS_ASSERT_EQUALS(testHorse->desc->output.front()->getComm(), "Test hops on your back!\n\r");
 
   }
 };
