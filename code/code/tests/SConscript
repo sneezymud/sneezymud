@@ -2,6 +2,10 @@
 
 Import(['env', 'libs'])
 
+env.Append(CXXFLAGS=[
+    '-Wno-unused-result',
+    ])
+
 cxx_tests = (
         # these are broken:
         # 'Act',
