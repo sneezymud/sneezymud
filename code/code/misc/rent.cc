@@ -307,7 +307,6 @@ bool ItemSave::writeVersion()
 
 ItemLoad::ItemLoad()
 {
-  memset(&st, 0, sizeof(rentHeader));
   fp=NULL;
 }
 
@@ -338,7 +337,6 @@ bool ItemLoad::readVersion()
 
 ItemSave::ItemSave()
 {
-  memset(&st, 0, sizeof(rentHeader));
   st.version = CURRENT_RENT_VERSION;
   fp=NULL;
 }
@@ -2978,7 +2976,6 @@ void updateRentFile(const char *who)
     vlogf(LOG_BUG, format("Error opening %s's rent file!") %  who);
     return;
   }
-  memset(&h, 0, sizeof(rentHeader));
   if ((fread(&h, sizeof(rentHeader), 1, fp)) != 1) {
     vlogf(LOG_BUG, format("  Cannot read rent file header for %s") %  who);
     fclose(fp);

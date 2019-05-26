@@ -919,7 +919,6 @@ void TBeing::saveChar(int load_room)
     tmp = NULL;
   }
 
-  memset(&st, 0, sizeof(charFile));
   st.load_room = (short) load_room;
 
   if (!tmp)

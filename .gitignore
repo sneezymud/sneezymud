@@ -9,7 +9,7 @@
 /code/lowtools
 /tags
 code/code/version.h
-cscope.out
+cscope.*out
 
 # dynamically changing mud files
 /lib/account/
@@ -33,3 +33,4 @@ sneezy.cfg
 # python byte cache files
 *.pyc
 *.pyo
+/lib/core

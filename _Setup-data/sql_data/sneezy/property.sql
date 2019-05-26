@@ -1,13 +1,13 @@
--- MySQL dump 10.10
+-- MySQL dump 10.16  Distrib 10.1.38-MariaDB, for debian-linux-gnu (x86_64)
 --
--- Host: db.sneezymud.com    Database: sneezy
+-- Host: db    Database: sneezy
 -- ------------------------------------------------------
--- Server version	5.0.24a-standard
+-- Server version	10.3.14-MariaDB-1:10.3.14+maria~bionic-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -16,12 +16,28 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `property`
+--
+
+DROP TABLE IF EXISTS `property`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `property` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(80) DEFAULT NULL,
+  `owner` int(11) DEFAULT NULL,
+  `key_vnum` int(11) DEFAULT NULL,
+  `entrance` int(11) DEFAULT NULL,
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `property`
 --
 
-
-/*!40000 ALTER TABLE `property` DISABLE KEYS */;
 LOCK TABLES `property` WRITE;
+/*!40000 ALTER TABLE `property` DISABLE KEYS */;
 INSERT INTO `property` VALUES (1,'NW Market Square Apartment',NULL,562,580),
 (2,'NE Twilight Square Apartment',NULL,636,618),
 (3,'5 Redlight Lane',NULL,4474,4626),
@@ -53,8 +69,8 @@ INSERT INTO `property` VALUES (1,'NW Market Square Apartment',NULL,562,580),
 (49,'The Great House',NULL,16765,10135),
 (50,'A Simple Apartment',NULL,16767,16711),
 (51,'Lord Deslok\'s Chamber',NULL,16768,16712);
-UNLOCK TABLES;
 /*!40000 ALTER TABLE `property` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -65,3 +81,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+-- Dump completed on 2019-05-25 15:55:02

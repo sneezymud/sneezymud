@@ -1,4 +1,9 @@
 #45660
-Last Block~
-99998 25 2 0
+Cizra - Temple of Stupidity~
+45664 35 2 1
+D 0 45660 0 0
+O 1 45661 1 45661        bonfire in temple
+O 1 9000 2 45660         torch before temple
+M 0 45664 1 45664        the Lagomorph
+E 1 45664 9999 18        golden carrot weapon
 S

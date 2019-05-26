@@ -2,8 +2,12 @@
 #include "database.h"
 #include "account.h"
 #include "pathfinder.h"
+#include "low.h"
 
 #include <unordered_map>
+#include <queue>
+#include <set>
+#include <string>
 
 class TPersonPimpl
 {
@@ -304,8 +308,26 @@ void TPerson::doMap(sstring const& arg)
     doMapAdd(rest);
   else if (is_abbrev(cmd, "remove") || cmd == "rm")
     doMapRm(rest);
+  else if (cmd == "recalc")
+  {
+    if (this->GetMaxLevel() < 60) {
+      sendTo("Nuh-uh.\n\r");
+      return;
+    }
+    doMapRecalc(convertTo<int>(rest));
+  }
+  else if (cmd == "reset")
+  {
+    TDatabase db(DB_SNEEZY);
+    db.query("update room set x = 0, y = 0, z = 0");
+    sendTo("Reset done. Forcing a reboot to flush the room cache.\n");
+    extern bool Reboot;
+    extern bool Shutdown;
+    Reboot = 1;
+    Shutdown = 1;
+  }
   else if (is_abbrev(cmd, "go"))
     doMapGo(rest);
   else
-    sendTo("Syntax: map list/ls | add/new | rm/remove | go\n");
+    drawMap(cmd.empty() ? 5 : max(0, min(20, convertTo<int>(cmd))));
 }

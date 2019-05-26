@@ -1869,7 +1869,9 @@ const char * const auto_name[MAX_AUTO] =
   "PG13",
   "No Hero Sprites",
   "No Tells",
-  "Auto Group"
+  "Auto Group",
+  "No Map",
+  "Map Tags",
 };
 
 // disc_num, class_nums, practice

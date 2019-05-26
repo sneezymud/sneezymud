@@ -608,7 +608,9 @@ charFile::~charFile()
 // this returns the ID in the database, or creates a new one if needed
 int TBeing::getPlayerID() const
 {
-  mud_assert(player.player_id, (name + " has null player ID").c_str());
+  // mud_assert(player.player_id, (name + " has null player ID").c_str());
+  if (player.player_id == 0)
+	  vlogf(LOG_BUG, format("%s has no player ID!") % getName());
   return player.player_id;
 }
 

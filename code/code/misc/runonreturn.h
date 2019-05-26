@@ -1,5 +1,6 @@
 #pragma once
 
+/*
 class RunOnReturn
 {
   private:
@@ -13,3 +14,4 @@ class RunOnReturn
       fn();
     }
 };
+*/
