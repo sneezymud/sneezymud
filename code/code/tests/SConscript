@@ -6,7 +6,7 @@ cxx_tests = (
         # these are broken:
         # 'Act',
         # 'CommTest',
-        # 'Tell',
+        'Tell',
         'Exceptions',
         'GarbleTest',
         'Pfile',
