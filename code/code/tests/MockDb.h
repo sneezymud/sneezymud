@@ -1,10 +1,12 @@
 #include "database.h"
+#include <iostream>
 
 class MockDb : public IDatabase
 {
  public:
-  virtual bool query(const char *,...)
+  virtual bool query(const char * q,...)
   {
+    std::cout << q << std::endl;
     return false;
   }
 
