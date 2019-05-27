@@ -18,8 +18,8 @@ cxx_tests = (
         'ConfigFile',
         'ConvertTo',
         # 'DBTest', disabled as the MySQL connection in TDatabase class is not comfily mockable
-        'Fruit',
-        'Stat',
+        # 'Fruit', needs DB
+        # 'Stat', needs DB
 )
 
 for test in cxx_tests:
