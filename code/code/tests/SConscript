@@ -17,7 +17,7 @@ cxx_tests = (
         'SString',
         'ConfigFile',
         'ConvertTo',
-        'DBTest',
+        # 'DBTest', disabled as the MySQL connection in TDatabase class is not comfily mockable
         'Fruit',
         'Stat',
 )
