@@ -10,7 +10,7 @@ cxx_tests = (
         'Run',
         'Act',
         'CommTest',
-        'Tell',
+        # 'Tell', disabled as it requires better mocking of DB than available now
         'Exceptions',
         'GarbleTest',
         'Pfile',
