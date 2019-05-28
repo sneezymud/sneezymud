@@ -763,19 +763,28 @@ int TBeing::getHit() const
 
 void TBeing::addToHit(int add)
 {
+  auto oldHit = points.hit;
   points.hit = min(points.hit + add, (int) hitLimit());
 // this prevents folks from dying
 //  points.hit = max((short int) 0, points.hit);
+  if (oldHit != points.hit)
+    sendVitalsGmcp();
 }
 
 void TBeing::setHit(int newhit)
 {
-  points.hit = newhit;
+  if (points.hit != newhit) {
+    points.hit = newhit;
+    sendVitalsGmcp();
+  }
 }
 
 void TBeing::setMaxHit(int newhit)
 {
-  points.maxHit = newhit;
+  if (points.maxHit != newhit) {
+    points.maxHit = newhit;
+    sendMaxStatsGmcp();
+  }
 }
 
 double TBeing::getPercHit(void)
@@ -790,17 +799,23 @@ int TBeing::getMove() const
 
 void TBeing::addToMove(int add)
 {
+  auto oldMove = points.move;
   points.move += add;
   points.move = max((short int) 0, points.move);
 // I don't think we need this check, since it is probably checked already
 // in any event, having it here is making this command take a big amt of
 // cpu% time - bat 12/23/98
 //  points.move = min(points.move, moveLimit());
+  if (oldMove != points.move)
+    sendVitalsGmcp();
 }
 
 void TBeing::setMove(int move)
 {
-  points.move = move;
+  if (points.move != move) {
+    points.move = move;
+    sendVitalsGmcp();
+  }
 }
 
 int TBeing::getMaxMove() const
@@ -810,7 +825,10 @@ int TBeing::getMaxMove() const
 
 void TBeing::setMaxMove(int move)
 {
-  points.maxMove = move;
+  if (points.maxMove != move) {
+    points.maxMove = move;
+    sendMaxStatsGmcp();
+  }
 }
 
 int TBeing::getMana() const
@@ -820,14 +838,20 @@ int TBeing::getMana() const
 
 void TBeing::setMana(int mana)
 {
-  points.mana = mana;
+  if (points.mana != mana) {
+    points.mana = mana;
+    sendVitalsGmcp();
+  }
 }
 
 void TBeing::addToMana(int mana)
 {
+  auto oldmana = points.mana;
   points.mana += mana;
   points.mana = max((short int) 0, points.mana);
   points.mana = min(points.mana, manaLimit());
+  if (oldmana != points.mana)
+    sendVitalsGmcp();
 }
 
 double TBeing::getPercMana(void)
@@ -837,7 +861,10 @@ double TBeing::getPercMana(void)
 
 void TBeing::setMaxMana(int mana)
 {
-  points.maxMana = mana;
+  if (points.maxMana != mana) {
+    points.maxMana = mana;
+    sendMaxStatsGmcp();
+  }
 }
 
 // LIFEFORCE 
@@ -849,15 +876,21 @@ int TBeing::getLifeforce() const
 
 void TBeing::setLifeforce(int lifeforce)
 {
-  points.lifeforce = lifeforce;
+  if (points.lifeforce != lifeforce) {
+    points.lifeforce = lifeforce;
+    sendVitalsGmcp();
+  }
 }
 
 void TBeing::addToLifeforce(int lifeforce)
 {
+  auto oldLF = points.lifeforce;
   int total = points.lifeforce + lifeforce;
   total = max(0,total);
   total = min(total, SHRT_MAX);
   points.lifeforce = (short) total;
+  if (points.lifeforce != oldLF)
+    sendVitalsGmcp();
 }
 
 bool TBeing::noLifeforce(int lifeforce) const
@@ -1111,16 +1144,22 @@ double TBeing::getPiety() const
 
 void TBeing::setPiety(double num)
 {
-  points.piety = num;
+  if (points.piety != num) {
+    points.piety = num;
+    sendVitalsGmcp();
+  }
 }
 
 void TBeing::addToPiety(double num)
 {
+  auto oldPiety = points.piety;
   points.piety += num;
   if (points.piety > pietyLimit())
     points.piety = pietyLimit();
   else if (points.piety < 0.0)
     points.piety = 0.0;
+  if (points.piety != oldPiety)
+    sendVitalsGmcp();
 }
 
 int TBeing::getSpellHitroll() const

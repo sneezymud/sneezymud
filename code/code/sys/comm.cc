@@ -226,6 +226,36 @@ void TBeing::sendMobsGmcp() const {
   desc->sendGmcp(out, false);
 }
 
+void TBeing::sendVitalsGmcp() const
+{
+  sstring vitals = format(
+      "char.vitals {"
+      "\"hp\": %d, "
+      "\"mana\": %d, "
+      "\"moves\": %d, "
+      "\"piety\": %lf, "
+      "\"lifeforce\": %lf }")
+    % points.hit
+    % points.mana
+    % points.move
+    % points.piety
+    % points.lifeforce;
+  desc->sendGmcp(vitals, false);
+}
+
+void TBeing::sendMaxStatsGmcp() const
+{
+  sstring maxStats = format(
+      "char.maxstats {"
+      "\"maxhp\": %d, "
+      "\"maxmana\": %d, "
+      "\"maxmoves\": %d }")
+    % points.maxHit
+    % points.maxMana
+    % points.maxMove;
+  desc->sendGmcp(maxStats, false);
+}
+
 void TBeing::sendRoomGmcp(bool changedZones) const
 {
   if (desc == NULL)
