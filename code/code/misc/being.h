@@ -57,19 +57,19 @@ class playerData
   public:
    sstring longDescr;
 
-   sexTypeT sex;         
-   ubyte level[MAX_SAVED_CLASSES];   
+   sexTypeT sex;
+   ubyte level[MAX_SAVED_CLASSES];
    ubyte max_level;
 
    unsigned short Class;
    byte doneBasic[MAX_SAVED_CLASSES];
-   unsigned short hometown;  
+   unsigned short hometown;
    territoryT hometerrain;
    time_data * const time;
-   
+
    int player_id;
    int account_id;
-   
+
    playerData();
    playerData(const playerData &a);
    playerData & operator=(const playerData &a);
@@ -80,24 +80,24 @@ class Craps;
 class charFile;    // defined below
 
 class pointData { // NOTE: pointdata is saved directly into charfile SO YOU CAN NOT CHANGE THIS SHIT
- public:// without charfile conversion or wipe or whatnot. 
-   short mana;         
+ public:// without charfile conversion or wipe or whatnot.
+   short mana;
    short maxMana;
    double piety;
    short lifeforce;
-   short hit;   
-   short maxHit;      
-   short move;  
-   short maxMove;     
+   short hit;
+   short maxHit;
+   short move;
+   short maxMove;
 
-   int money;        
-   int bankmoney;        
-   double exp;             
+   int money;
+   int bankmoney;
+   double exp;
    double max_exp;
 
    short spellHitroll;
-   short hitroll;     
-   sbyte damroll;  
+   short hitroll;
+   sbyte damroll;
    short armor;   // technically, in range -1000 to 1000
 
    pointData();
@@ -108,19 +108,19 @@ class pointData { // NOTE: pointdata is saved directly into charfile SO YOU CAN 
 };
 
 class specialData {
-  
+
   friend class TBeing;
 
   private:
-    sbyte conditions[MAX_COND_TYPE];        
+    sbyte conditions[MAX_COND_TYPE];
   public:
-    TBeing *fighting; 
-    TBeing *hunting;  
-    
-    uint64_t affectedBy;  
-  
-    positionTypeT position;              
-    dirTypeT last_direction;       
+    TBeing *fighting;
+    TBeing *hunting;
+
+    uint64_t affectedBy;
+
+    positionTypeT position;
+    dirTypeT last_direction;
     editorChangeTypeT edit;
     byte editFriend;
     unsigned long act;
@@ -136,7 +136,7 @@ class specialData {
 class immunityData {
   public:
     byte immune_arr[MAX_IMMUNES];
- 
+
     immunityData();
     immunityData(const immunityData &a);
     immunityData & operator=(const immunityData &a);
@@ -168,7 +168,7 @@ class factionData {
 class pracData {
   public:
   short prac[MAX_SAVED_CLASSES];
-  
+
   pracData();
   pracData(const pracData &a);
   pracData & operator=(const pracData &a);
@@ -282,7 +282,7 @@ class equipmentData {
 
  public:
   TThing *operator[] (int slot) const {
-    return this->equipment[slot]; 
+    return this->equipment[slot];
   }
 
   float getWeight(){
@@ -300,8 +300,8 @@ class equipmentData {
 
     TObj *tobj = dynamic_cast<TObj *>(t);
     if (tobj && tobj->usedAsPaired()) {
-      if (slot == WEAR_LEG_R || 
-	  slot == HOLD_RIGHT || 
+      if (slot == WEAR_LEG_R ||
+	  slot == HOLD_RIGHT ||
 	  slot == WEAR_EX_LEG_R)
 	equipment[slot + 1] = NULL;
       else
@@ -316,7 +316,7 @@ class equipmentData {
     TObj *tobj = dynamic_cast<TObj *>(t);
     if (tobj && tobj->usedAsPaired()) {
       if (slot == WEAR_LEG_R ||
-	  slot == HOLD_RIGHT || 
+	  slot == HOLD_RIGHT ||
 	  slot == WEAR_EX_LEG_R)
 	equipment[slot + 1] = t;
       else
@@ -359,7 +359,7 @@ class TBeing : public TThing {
     short invisLevel;
     short my_protection;       // % reduction for sanct
     bodyPartsDamage body_parts[MAX_WEAR];
-    attack_mode_t combatMode;      
+    attack_mode_t combatMode;
     int my_garbleFlags;
 
   public:
@@ -370,33 +370,33 @@ class TBeing : public TThing {
     short attackers;
     short visionBonus;
     short age_mod;
-    short cantHit; 
+    short cantHit;
     short wait;   // this goes up in multiples of COMBAT_ROUND (=20)
-    polyTypeT polyed;         
+    polyTypeT polyed;
     short hunt_dist;    // used by track, mob-hunting, etc
-    short wimpy;        
-    bool delaySave; // used as a hack to get around saving a char multiple times when doing things like sell all.commod 
-    
+    short wimpy;
+    bool delaySave; // used as a hack to get around saving a char multiple times when doing things like sell all.commod
+
     immunityData immunities;
-    playerData player;      
-    specialData specials;  
-    pracData practices; 
-    affectedData *affected;    
+    playerData player;
+    specialData specials;
+    pracData practices;
+    affectedData *affected;
     equipmentData equipment;
 
 
 
-    TBeing *master;            
+    TBeing *master;
     TPerson *orig;    // a pointer to who I really am (if poly'd)
-    TBeing *next;           
-    TBeing *next_fighting; 
+    TBeing *next;
+    TBeing *next_fighting;
     TBeing *next_caster;
- 
+
     followData *followers;
-     
+
     spellTaskData *spelltask;
     spellStoreData spellstore;
-    taskData *task;      
+    taskData *task;
     skillApplyData *skillApplys;
     TTrophy *trophy;
 
@@ -463,7 +463,7 @@ class TBeing : public TThing {
     virtual void petSave();
 
     sstring getInsult(TBeing *);
-    
+
     unsigned short getMaterial(wearSlotT) const;
 
     unsigned short GetMaxLevel() const;
@@ -587,8 +587,8 @@ class TBeing : public TThing {
     bool tooManyFollowers(const TBeing *, newFolTypeT) const;
     int numClasses() const;
 
-    int triggerSpecial(TThing *, cmdTypeT cmd, const char *arg); 
-    int triggerSpecialOnPerson(TThing *, cmdTypeT cmd, const char *arg); 
+    int triggerSpecial(TThing *, cmdTypeT cmd, const char *arg);
+    int triggerSpecialOnPerson(TThing *, cmdTypeT cmd, const char *arg);
     void sendCastingMessages(bool, bool, int, skillUseTypeT, int);
     void sendFinalCastingMessages(bool, bool, skillUseTypeT);
 
@@ -671,9 +671,9 @@ class TBeing : public TThing {
     int setStat(statSetT whichSet, statTypeT whichStat, int value);
     int addToStat(statSetT whichSet, statTypeT whichStat, int modifier);
     int getStat(statSetT fromSet,statTypeT whichStat) const;
-    
+
     bool applyTattoo(wearSlotT, const sstring &, silentTypeT);
-    
+
     double plotStat(statSetT, statTypeT, double, double, double, double n = 1.4) const;
     int plotStat(statSetT, statTypeT, int a, int b, int c, double n = 1.4) const;
     float plotStat(statSetT, statTypeT, float a, float b, float c, double n = 1.4) const;
@@ -1531,13 +1531,13 @@ class TBeing : public TThing {
     TBeing *fight() const;
 
     virtual TThing *heldInPrimHand() const {
-      return (isRightHanded() ? 
-	      equipment[HOLD_RIGHT] : 
+      return (isRightHanded() ?
+	      equipment[HOLD_RIGHT] :
 	      equipment[HOLD_LEFT]);
     }
     virtual TThing *heldInSecHand() const {
-      return (isRightHanded() ? 
-	      equipment[HOLD_LEFT] : 
+      return (isRightHanded() ?
+	      equipment[HOLD_LEFT] :
 	      equipment[HOLD_RIGHT]);
     }
     bool isAffected(uint64_t bv) const;
