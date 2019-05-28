@@ -228,6 +228,8 @@ void TBeing::sendMobsGmcp() const {
 
 void TBeing::sendVitalsGmcp() const
 {
+  if (!desc)
+    return;
   sstring vitals = format(
       "char.vitals {"
       "\"hp\": %d, "
@@ -245,6 +247,8 @@ void TBeing::sendVitalsGmcp() const
 
 void TBeing::sendMaxStatsGmcp() const
 {
+  if (!desc)
+    return;
   sstring maxStats = format(
       "char.maxstats {"
       "\"maxhp\": %d, "
