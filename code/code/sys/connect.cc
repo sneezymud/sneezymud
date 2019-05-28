@@ -1061,6 +1061,8 @@ int Descriptor::nanny(sstring arg)
           flush();
           writeToQ("Reconnecting.\n\r");
           tmp_ch->sendRoomGmcp(true);
+          tmp_ch->sendMaxStatsGmcp();
+          tmp_ch->sendVitalsGmcp();
           tmp_ch->initDescStuff(&st);
           if (tmp_ch->isPlayerAction(PLR_VT100 | PLR_ANSI))
             tmp_ch->doCls(false);
@@ -1198,6 +1200,8 @@ int Descriptor::nanny(sstring arg)
               flush();
               writeToQ("Reconnecting.\n\r");
               tmp_ch->sendRoomGmcp(true);
+              tmp_ch->sendMaxStatsGmcp();
+              tmp_ch->sendVitalsGmcp();
               tmp_ch->initDescStuff(&st);
 
               if (tmp_ch->isPlayerAction(PLR_VT100 | PLR_ANSI))
@@ -1268,6 +1272,8 @@ int Descriptor::nanny(sstring arg)
 
       ShowNewNews(character);
 
+      character->sendMaxStatsGmcp();
+      character->sendVitalsGmcp();
       character->doLook("", CMD_LOOK);
 
       prompt_mode = 1;
