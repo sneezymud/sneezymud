@@ -121,6 +121,9 @@ pointData::pointData() :
   maxHit(0),
   move(0),
   maxMove(0),
+  prevMaxHit(0),
+  prevMaxMana(0),
+  prevMaxMove(0),
   money(0),
   bankmoney(0),
   exp(0), 
@@ -141,6 +144,9 @@ pointData::pointData(const pointData &a) :
   maxHit(a.maxHit),
   move(a.move),
   maxMove(a.maxMove),
+  prevMaxHit(a.prevMaxHit),
+  prevMaxMana(a.prevMaxMana),
+  prevMaxMove(a.prevMaxMove),
   money(a.money),
   bankmoney(a.bankmoney),
   exp(a.exp), 
@@ -166,6 +172,9 @@ pointData & pointData::operator=(const pointData &a)
   maxHit = a.maxHit;
   move = a.move;
   maxMove = a.maxMove; 
+  prevMaxHit = a.prevMaxHit;
+  prevMaxMana = a.prevMaxMana;
+  prevMaxMove = a.prevMaxMove;
   spellHitroll = a.spellHitroll;
   hitroll = a.hitroll;
   damroll = a.damroll;
@@ -781,8 +790,29 @@ void TBeing::setHit(int newhit)
 
 void TBeing::setMaxHit(int newhit)
 {
-  if (points.maxHit != newhit) {
-    points.maxHit = newhit;
+  points.maxHit = newhit;
+}
+
+void TBeing::updateMaxHit(int newValue) const
+{
+  if (points.prevMaxHit != newValue) {
+    points.prevMaxHit = newValue;
+    sendMaxStatsGmcp();
+  }
+}
+
+void TBeing::updateMaxMana(int newValue) const
+{
+  if (points.prevMaxMana != newValue) {
+    points.prevMaxMana = newValue;
+    sendMaxStatsGmcp();
+  }
+}
+
+void TBeing::updateMaxMove(int newValue) const
+{
+  if (points.prevMaxMove != newValue) {
+    points.prevMaxMove = newValue;
     sendMaxStatsGmcp();
   }
 }
@@ -825,10 +855,7 @@ int TBeing::getMaxMove() const
 
 void TBeing::setMaxMove(int move)
 {
-  if (points.maxMove != move) {
-    points.maxMove = move;
-    sendMaxStatsGmcp();
-  }
+  points.maxMove = move;
 }
 
 int TBeing::getMana() const
@@ -861,10 +888,7 @@ double TBeing::getPercMana(void)
 
 void TBeing::setMaxMana(int mana)
 {
-  if (points.maxMana != mana) {
-    points.maxMana = mana;
-    sendMaxStatsGmcp();
-  }
+  points.maxMana = mana;
 }
 
 // LIFEFORCE 

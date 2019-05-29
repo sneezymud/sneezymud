@@ -90,6 +90,12 @@ class pointData { // NOTE: pointdata is saved directly into charfile SO YOU CAN 
     short move;
     short maxMove;
 
+    // updates are sent only when this changes
+    // mutable because they're just a cache that gets updated in const methods
+    mutable short prevMaxHit;
+    mutable short prevMaxMana;
+    mutable short prevMaxMove;
+
     int money;
     int bankmoney;
     double exp;
@@ -1523,6 +1529,9 @@ class TBeing : public TThing {
   void addToMana(int mana);
   double getPercMana(void);
   void setMaxMana(int mana);
+  void updateMaxHit(int newValue) const;
+  void updateMaxMana(int newValue) const;
+  void updateMaxMove(int newValue) const;
   int getLifeforce() const;
   void setLifeforce(int lifeforce);
   void addToLifeforce(int lifeforce);
