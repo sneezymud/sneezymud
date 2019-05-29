@@ -203,5 +203,8 @@ private:
 
     int smite(TBeing *, TBeing *);
 
+    int martialMight(TBeing *caster, int level, short bKnown);
+    void martialMight(TBeing *caster);
+
 #endif
 

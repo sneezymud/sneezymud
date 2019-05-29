@@ -322,6 +322,7 @@ enum spellNumT {
      SPELL_NUMB_DEIKHAN,
      SPELL_EARTHQUAKE_DEIKHAN,
      SPELL_CALL_LIGHTNING_DEIKHAN,
+     SPELL_MARTIAL_MIGHT,
      // end of deikhan
      
 

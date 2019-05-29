@@ -13,10 +13,72 @@
 
 extern void startChargeTask(TBeing *, const char *);
 
+// Martial Might
+
+void martialMight(TBeing *caster)
+{
+  // called Martial Might
+  int ret,level;
+
+  if (!bPassClericChecks(caster,SPELL_MARTIAL_MIGHT))
+    return;
+
+  level = caster->getSkillLevel(SPELL_MARTIAL_MIGHT);
+
+  ret = martialMight(caster,level, caster->getSkillValue(SPELL_MARTIAL_MIGHT));
+
+  if (ret==SPELL_SUCCESS) {
+    act("$n glows with a gold aura of martial power!", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("You glow with a gold aura of martial power!", FALSE, caster, NULL, NULL, TO_CHAR);
+  } else if (ret == SPELL_CRIT_SUCCESS) {
+    act("$n glows with an especially bright gold aura of martial power!", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("You glow with an especially bright gold aura of martial power!", FALSE, caster, NULL, NULL, TO_CHAR);
+  } else if (ret == SPELL_FAIL) {
+    act("You are unable to convince $d to aid you.", FALSE, caster, NULL, NULL, TO_CHAR);
+    caster->deityIgnore(SILENT_YES);
+  }
+}
+
+int martialMight(TBeing *caster, int level, short bKnown)
+{
+  affectedData aff;
+
+  aff.type = SPELL_MARTIAL_MIGHT;
+  aff.level = level;
+  aff.duration = max(min(level/10, 5), 1) * Pulse::UPDATES_PER_MUDHOUR;
+  aff.location = APPLY_FOC;
+  aff.modifier = 20;
+  aff.bitvector = 0;
+
+
+  if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_MARTIAL_MIGHT)) {
+
+    switch  (critSuccess(caster, SPELL_MARTIAL_MIGHT)) {
+      case CRIT_S_KILL:
+      case CRIT_S_TRIPLE:
+      case CRIT_S_DOUBLE:
+        CS(SPELL_MARTIAL_MIGHT);
+        aff.duration *= 2;
+        if (!caster->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES))
+          return SPELL_FAIL; 
+        return SPELL_CRIT_SUCCESS;
+      default:
+        if (!caster->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES))
+          return SPELL_FAIL;
+    }
+    return SPELL_SUCCESS;
+  } else 
+    return SPELL_FAIL;
+}
+
+
+
 int synostodweomer(TBeing *caster, TBeing *v, int level, short bKnown)
 {
   int hitp = 0;
   affectedData aff;
+
+  int casterlevel = caster->GetMaxLevel();
 
   if (!caster->isImmortal() && caster->checkForSkillAttempt(SPELL_SYNOSTODWEOMER)) {
     act("You are not prepared to try to Snyostodweomer again so soon.",
@@ -37,7 +99,7 @@ int synostodweomer(TBeing *caster, TBeing *v, int level, short bKnown)
     if (!caster->isImmortal()) {
       aff.type = AFFECT_SKILL_ATTEMPT;
       aff.location = APPLY_NONE;
-      aff.duration = max(min(level/12, 5), 1) * Pulse::UPDATES_PER_MUDHOUR;
+      aff.duration = max(min(casterlevel/12, 5), 1) * Pulse::UPDATES_PER_MUDHOUR;
       aff.bitvector = 0;
       aff.modifier = SPELL_SYNOSTODWEOMER;
       caster->affectTo(&aff, -1);
@@ -55,7 +117,7 @@ int synostodweomer(TBeing *caster, TBeing *v, int level, short bKnown)
 
     aff.type = SPELL_SYNOSTODWEOMER;
     aff.level = level;
-    aff.duration  = max(min(level/12, 5), 1) * Pulse::UPDATES_PER_MUDHOUR;
+    aff.duration  = max(min(casterlevel/12, 5), 1) * Pulse::UPDATES_PER_MUDHOUR;
     aff.modifier = hitp;
     aff.location = APPLY_HIT;
     aff.bitvector = 0;

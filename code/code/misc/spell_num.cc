@@ -593,6 +593,8 @@ int mapSpellnumToFile(spellNumT stt)
       return 381;
     case SPELL_CALL_LIGHTNING_DEIKHAN:
       return 382;
+    case SPELL_MARTIAL_MIGHT:
+      return 383;
     case SKILL_YOGINSA:
       return 397;
     case SKILL_CINTAI:
@@ -1214,6 +1216,7 @@ spellNumT mapFileToSpellnum(int stt)
   switch (stt) {
     case -1:
       return TYPE_UNDEFINED;
+    // Start Mage skills
     case 0:
       return SPELL_GUST;
     case 1:
@@ -1398,6 +1401,7 @@ spellNumT mapFileToSpellnum(int stt)
       return SPELL_PLASMA_MIRROR;
     case 114:
       return SPELL_GARMULS_TAIL;
+    // Start Cleric
     case 126:
       return SPELL_HEAL_LIGHT;
     case 127:
@@ -1506,6 +1510,7 @@ spellNumT mapFileToSpellnum(int stt)
       return SPELL_KNIT_BONE;
     case 204:
       return SPELL_RELIVE;
+    // Start Warrior
     case 217:
       return SKILL_KICK;
     case 218:
@@ -1594,6 +1599,7 @@ spellNumT mapFileToSpellnum(int stt)
       return SKILL_ENCAMP;
     case 311:
       return SKILL_FISHLORE;
+    // Start Deikhan
     case 325:
       return SKILL_KICK_DEIKHAN;
     case 326:
@@ -1688,6 +1694,9 @@ spellNumT mapFileToSpellnum(int stt)
       return SPELL_EARTHQUAKE_DEIKHAN;
     case 382:
       return SPELL_CALL_LIGHTNING_DEIKHAN;
+    case 383:
+      return SPELL_MARTIAL_MIGHT;
+    // Start Monk
     case 397:
       return SKILL_YOGINSA;
     case 398:
@@ -1752,6 +1761,7 @@ spellNumT mapFileToSpellnum(int stt)
       return SKILL_CHAIN_ATTACK;
     case 474:
       return SKILL_BAREHAND_SPEC;
+    // Start Thief
     case 482:
       return SKILL_SWINDLE;
     case 483:
@@ -1806,6 +1816,7 @@ spellNumT mapFileToSpellnum(int stt)
       return SKILL_SET_TRAP_MINE;
     case 508:
       return SKILL_SET_TRAP_GREN;
+    // Start Shaman
     case 523:
       return SKILL_RITUALISM;
     case 524:
@@ -1902,6 +1913,7 @@ spellNumT mapFileToSpellnum(int stt)
       return SPELL_CLEANSE;
     case 570:
       return SPELL_EMBALM;
+    // Start adventuring
     case 576:
       return SKILL_SIGN;
     case 577:

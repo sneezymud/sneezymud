@@ -709,6 +709,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDDeikhanWrath *) cd)->skEarthquakeDeikhan;
     case SPELL_CALL_LIGHTNING_DEIKHAN:  //    494
       return &((CDDeikhanWrath *) cd)->skCallLightningDeikhan;
+    case SPELL_MARTIAL_MIGHT:
+      return &((CDDeikhanWrath *) cd)->skMartialMight;
 
 // MONK CLASS
 

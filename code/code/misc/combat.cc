@@ -3957,6 +3957,22 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 	*f += 1; // one extra attack
 	reconcileMana(TYPE_UNDEFINED, 0, 10);
       }
+
+    // Deikhan martial might
+    // This should basically work the same as chain attack adding
+    // a percent damage at the expense of piety
+    if (affectedBySpell(SPELL_MARTIAL_MIGHT) && (::number(0,99) < 10) && getPiety()>=2.0) {
+      act("The gold aura around you flashes as $d empowers you to attack again.",
+	      FALSE, this, 0, vict, TO_CHAR, ANSI_YELLOW_BOLD);
+	    act("The gold aura around $n flashes and $e launches another attack.", 
+	      FALSE, this, 0, vict, TO_VICT, ANSI_YELLOW_BOLD);
+	    act("The gold aura around $n flashes and $e launches another attack.", 
+	      FALSE, this, 0, vict, TO_NOTVICT, ANSI_YELLOW_BOLD);
+	
+	    *f += 1; // one extra attack
+      addToPiety(-2.0);
+    }
+
       
       // we've now hit, so do some post hit stuff
       // handle a weapon's spec_proc 

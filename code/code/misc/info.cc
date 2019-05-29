@@ -1443,6 +1443,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SPELL_SALVE_DEIKHAN:
       case SKILL_LAY_HANDS:
       case SPELL_NUMB_DEIKHAN:
+      case SPELL_MARTIAL_MIGHT:
       case SKILL_YOGINSA:
       case SKILL_CINTAI:
       case SKILL_OOMLAT:

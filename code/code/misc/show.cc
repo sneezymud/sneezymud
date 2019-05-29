@@ -685,6 +685,13 @@ static void describeSpellEffects(const TBeing *me, const TBeing *ch, bool verbos
     ++totpray;
   }
 
+  if (me->affectedBySpell(SPELL_MARTIAL_MIGHT)) {
+    sprintf(bufpray, ".....$n is surrounded by a powerful golden aura.\n\r");
+    tStPray += bufpray;
+    tStPray += displayShowApprox(me, ch, SPELL_MARTIAL_MIGHT, .2);
+    ++totpray;
+  }
+
   if (me->affectedBySpell(SPELL_CURSE)) {
     sprintf(bufpray, ".....$n is surrounded by a dark, forboding red aura!\n\r");
     tStPray += bufpray;

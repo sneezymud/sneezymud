@@ -31,6 +31,7 @@ public:
     CSkill skNumbDeikhan;
     CSkill skEarthquakeDeikhan;
     CSkill skCallLightningDeikhan;
+    CSkill skMartialMight;
     CSkill skHolyLight;    // not coded
 
     CDDeikhanWrath()
@@ -39,6 +40,7 @@ public:
       skNumbDeikhan(),
       skEarthquakeDeikhan(),
       skCallLightningDeikhan(),
+      skMartialMight(),
       skHolyLight() {
     }
     CDDeikhanWrath(const CDDeikhanWrath &a)
@@ -47,6 +49,7 @@ public:
       skNumbDeikhan(a.skNumbDeikhan),
       skEarthquakeDeikhan(a.skEarthquakeDeikhan),
       skCallLightningDeikhan(a.skCallLightningDeikhan),
+      skMartialMight(a.skMartialMight),
       skHolyLight(a.skHolyLight) {
     }
     CDDeikhanWrath & operator=(const CDDeikhanWrath &a) {
@@ -56,6 +59,7 @@ public:
       skNumbDeikhan = a.skNumbDeikhan;
       skEarthquakeDeikhan = a.skEarthquakeDeikhan;
       skCallLightningDeikhan = a.skCallLightningDeikhan;
+      skMartialMight = a.skMartialMight;
       skHolyLight = a.skHolyLight;
       return *this;
     }

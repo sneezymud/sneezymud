@@ -1855,6 +1855,9 @@ int TBeing::doDiscipline(spellNumT which, sstring const& n1)
     case SPELL_CALL_LIGHTNING_DEIKHAN:
       rc = callLightning(this, ch);
       break;
+    case SPELL_MARTIAL_MIGHT:
+      martialMight(this);
+      break;
     case SPELL_PILLAR_SALT:
       rc = pillarOfSalt(this, ch);
       break;

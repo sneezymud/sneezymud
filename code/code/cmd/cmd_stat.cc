@@ -1721,6 +1721,7 @@ void TBeing::statBeing(TBeing *k)
       case SPELL_CURE_POISON_DEIKHAN:
       case SKILL_DISARM_DEIKHAN:
       case SPELL_HEAL_CRITICAL_DEIKHAN:
+      case SPELL_MARTIAL_MIGHT:
       case SKILL_SWITCH_DEIKHAN:
       case SKILL_RETREAT_DEIKHAN:
       case SKILL_SHOVE_DEIKHAN:
