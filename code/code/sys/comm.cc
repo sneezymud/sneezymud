@@ -254,9 +254,9 @@ void TBeing::sendMaxStatsGmcp() const
       "\"maxhp\": %d, "
       "\"maxmana\": %d, "
       "\"maxmoves\": %d }")
-    % points.maxHit
-    % points.maxMana
-    % points.maxMove;
+    % points.prevMaxHit
+    % points.prevMaxMana
+    % points.prevMaxMove;
   desc->sendGmcp(maxStats, false);
 }
 
