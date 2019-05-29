@@ -867,7 +867,8 @@ void TBeing::setMana(int mana)
 {
   if (points.mana != mana) {
     points.mana = mana;
-    sendVitalsGmcp();
+    if (hasClass(MAGE_LEVEL_IND, EXACT_NO) || hasClass(MONK_LEVEL_IND, EXACT_NO))
+      sendVitalsGmcp();
   }
 }
 
@@ -877,7 +878,11 @@ void TBeing::addToMana(int mana)
   points.mana += mana;
   points.mana = max((short int) 0, points.mana);
   points.mana = min(points.mana, manaLimit());
-  if (oldmana != points.mana)
+  if (oldmana != points.mana && (
+        hasClass(MAGE_LEVEL_IND, EXACT_NO)
+        || hasClass(MONK_LEVEL_IND, EXACT_NO)
+        || hasQuestBit(TOG_PSIONICIST)
+        ))
     sendVitalsGmcp();
 }
 
@@ -902,7 +907,8 @@ void TBeing::setLifeforce(int lifeforce)
 {
   if (points.lifeforce != lifeforce) {
     points.lifeforce = lifeforce;
-    sendVitalsGmcp();
+    if (hasClass(SHAMAN_LEVEL_IND, EXACT_NO))
+      sendVitalsGmcp();
   }
 }
 
@@ -913,7 +919,7 @@ void TBeing::addToLifeforce(int lifeforce)
   total = max(0,total);
   total = min(total, SHRT_MAX);
   points.lifeforce = (short) total;
-  if (points.lifeforce != oldLF)
+  if (points.lifeforce != oldLF && hasClass(SHAMAN_LEVEL_IND, EXACT_NO))
     sendVitalsGmcp();
 }
 
@@ -1170,7 +1176,8 @@ void TBeing::setPiety(double num)
 {
   if (points.piety != num) {
     points.piety = num;
-    sendVitalsGmcp();
+    if (hasClass(CLERIC_LEVEL_IND, EXACT_NO) || hasClass(DEIKHAN_LEVEL_IND, EXACT_NO))
+      sendVitalsGmcp();
   }
 }
 
@@ -1182,7 +1189,8 @@ void TBeing::addToPiety(double num)
     points.piety = pietyLimit();
   else if (points.piety < 0.0)
     points.piety = 0.0;
-  if (points.piety != oldPiety)
+  if (points.piety != oldPiety
+      && (hasClass(CLERIC_LEVEL_IND, EXACT_NO) || hasClass(DEIKHAN_LEVEL_IND, EXACT_NO)))
     sendVitalsGmcp();
 }
 
