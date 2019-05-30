@@ -233,15 +233,18 @@ void TBeing::sendVitalsGmcp() const
   sstring vitals = format(
       "char.vitals {"
       "\"hp\": %d, "
-      "\"mana\": %d, "
-      "\"moves\": %d, "
-      "\"piety\": %lf, "
-      "\"lifeforce\": %lf }")
+      "\"moves\": %d")
     % points.hit
-    % points.mana
-    % points.move
-    % points.piety
-    % points.lifeforce;
+    % points.move;
+
+  if (hasClass(CLASS_DEIKHAN) || hasClass(CLASS_CLERIC))
+    vitals += format(", \"piety\": %lf ") % points.piety;
+  if (hasClass(CLASS_SHAMAN))
+    vitals += format(", \"lifeforce\": %lf ") % points.lifeforce;
+  if (hasClass(CLASS_MONK) || hasClass(CLASS_MAGE) || hasQuestBit(TOG_PSIONICIST))
+    vitals += format(", \"mana\": %lf ") % points.mana;
+  vitals += "}";
+
   desc->sendGmcp(vitals, false);
 }
 
