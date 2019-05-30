@@ -183,18 +183,14 @@ short int TPerson::manaLimit() const
 
 int TPerson::getMaxMove() const
 {
-  int ret = 0;
   // age disabled
   if(!hasQuestBit(TOG_REAL_AGING)){
-    ret = 100 + 15 + GetTotLevel() +
+    return 100 + 15 + GetTotLevel() +
       plotStat(STAT_CURRENT, STAT_CON, 3, 18, 13);
   } else {
-    ret = 100 + age()->year - getBaseAge() + 15 + GetTotLevel() +
+    return 100 + age()->year - getBaseAge() + 15 + GetTotLevel() +
       plotStat(STAT_CURRENT, STAT_CON, 3, 18, 13);
   }
-
-  updateMaxMove(ret);
-  return ret;
 }
 
 short int TBeing::moveLimit() const
@@ -210,6 +206,7 @@ short int TBeing::moveLimit() const
   if(hasQuestBit(TOG_IS_ASTHMATIC))
     iMax /= 2;
 
+  updateMaxMove(iMax);
   return (iMax);
 }
 
