@@ -79,9 +79,6 @@ int synostodweomer(TBeing *caster, TBeing *v)
   int level, ret;
   int rc = 0;
 
-  // caster->sendTo("The synostodweomer prayer has been disabled due to a crash bug.\n\r");
-  // return FALSE;
-
   if (!bPassClericChecks(caster,SPELL_SYNOSTODWEOMER))
      return FALSE;
 
