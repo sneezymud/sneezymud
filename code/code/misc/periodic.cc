@@ -1305,7 +1305,7 @@ int TBeing::updateHalfTickStuff()
   }
 
   // player is scared of flame (exempt or lessen for mobs?)
-  if(hasQuestBit(TOG_HAS_PYROPHOBIA) && (getPosition() > POSITION_SLEEPING) && !::number(0,1)){
+  if(hasQuestBit(TOG_HAS_PYROPHOBIA) && (getPosition() > POSITION_SLEEPING) && !::number(0,1) && (::number(0,100)-GetMaxLevel()*2>0)){
     TThing *fleeing = NULL;
     TBeing *tBeing = NULL;
     bool flee = roomp->getSectorType() == SECT_VOLCANO_LAVA ||
