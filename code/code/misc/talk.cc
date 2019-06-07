@@ -460,7 +460,7 @@ void TBeing::doGrouptell(const sstring &arg)
     }
     // a crash bug lies here....cut and paste from windows notepad
     // plays with the next few lines for some reason
-    if (!k->desc || !k->desc->ignored.isIgnored(desc)) {
+    if (k->desc && !k->desc->ignored.isIgnored(desc)) {
       garbledTo = garble(k, garbled, Garble::SPEECH_GROUPTELL, Garble::SCOPE_INDIVIDUAL);
       buf = format("%s: %s%s%s") % getName() % k->red() % colorString(this, k->desc, garbledTo, NULL, COLOR_COMM, FALSE) % k->norm();
       sstring gmcp = format("comm.channel { \"chan\": \"gtell\", \"msg\": \"%s\", \"player\": \"%s\" }")
