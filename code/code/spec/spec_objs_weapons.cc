@@ -2524,3 +2524,464 @@ int livingVines(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   return TRUE;
 }
 
+int possessedSpear(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+  TBeing *ch;
+  int dam, hardness, rc, chance;
+  wearSlotT part;
+  wearSlotT slot;
+  TThing *obj;
+  spellNumT w_type;
+  sstring buf;  // First string buffer
+  char buf2[256]; // Second string buffer for spear tip proc
+
+
+  if (cmd != CMD_OBJ_HITTING) 
+    return FALSE;
+  if (!o || !vict)
+    return FALSE;
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;       // weapon not equipped (carried or on ground)
+  if (::number(0,10))
+    return FALSE;
+
+
+  
+  chance = ::number(1,7);
+
+
+  if(chance >= 1 && chance <= 3)
+  {
+    part = vict->getPartHit(ch, TRUE);
+    if (!(obj = vict->equipment[part]))
+      hardness = material_nums[vict->getMaterial(part)].hardness;
+    else
+      hardness = material_nums[obj->getMaterial()].hardness;
+
+    w_type = o->getWtype();
+
+  
+    buf = format("A phantom spirit appears before $n, as $o glows brightly.  The phantasm's spear quickly becomes a blur, striking your %s with an ethereal attack!") %
+      vict->describeBodySlot(part);
+    act(buf,TRUE,ch,o,vict,TO_VICT,ANSI_CYAN);
+    buf = format("$n's $o glows as a phantom spirit appears before him.  The phantasm's spear quickly becomes a blur, striking at $N's %s with an ethereal attack!") %
+      vict->describeBodySlot(part);
+    act(buf,TRUE,ch,o,vict,TO_NOTVICT,ANSI_CYAN);
+    buf = format("Your $o glows, and a phantom warrior appears before you.  The phantasm quickly strikes at $N's %s with its ethereal attack!") %
+      vict->describeBodySlot(part);
+    act(buf,TRUE,ch,o,vict,TO_CHAR,ANSI_CYAN);
+
+    if(::number(1,5)==5 &&  !vict->isImmune(IMMUNE_BLEED, slot))
+    {
+      sprintf(buf2, "The wound has started to <R>bleed<1>!<1>");
+      act(buf2, 0, vict, o, 0, TO_ROOM);
+      sprintf(buf2, "The wound has started to <R>bleed<1>!<1>");
+      act(buf2, 0, vict, o, 0, TO_CHAR);
+
+      vict->rawBleed(part, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+      vict->rawInfect(part, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+    }
+  
+    if (obj)
+      vict->damageItem(ch,part,w_type,o,hardness);
+    else {
+      dam = ::number(3,10);
+      rc = ch->damageLimb(vict,part,o,&dam);
+      rc = ch->reconcileDamage(vict, dam, DAMAGE_DISRUPTION);
+      if (IS_SET_DELETE(rc, DELETE_VICT))
+        return DELETE_VICT;
+    }
+    if (ch->reconcileDamage(vict,hardness,DAMAGE_DISRUPTION) == -1)
+      return DELETE_VICT;
+  }
+  else if(chance >= 4 && chance <= 5)
+  {
+    if (!(obj = vict->equipment[WEAR_HEAD]))
+      hardness = material_nums[vict->getMaterial(WEAR_HEAD)].hardness;
+    else
+      hardness = material_nums[obj->getMaterial()].hardness;
+
+    w_type = o->getWtype();
+  
+    buf = format("A phantom spirit appears before $n and strikes you with its phantasmal spear! Your %s is ringing!") %
+      vict->describeBodySlot(WEAR_HEAD);
+    act(buf,TRUE,ch,o,vict,TO_VICT,ANSI_BLUE);
+    buf = format("A phantom spirit appears before $n, striking $N's %s with its phantasmal spear!") %
+      vict->describeBodySlot(WEAR_HEAD);
+    act(buf,TRUE,ch,o,vict,TO_NOTVICT,ANSI_BLUE);
+    buf = format("A phantom spirit appears before you and strikes $N's %s with its phantasmal spear!") %
+      vict->describeBodySlot(WEAR_HEAD);
+    act(buf,TRUE,ch,o,vict,TO_CHAR,ANSI_BLUE);
+
+    if (obj)
+      vict->damageItem(ch,WEAR_HEAD,w_type,o,hardness);
+    else {
+      dam = ::number(10,20);
+      rc = ch->reconcileDamage(vict, dam, DAMAGE_DISRUPTION);
+      if (IS_SET_DELETE(rc, DELETE_VICT))
+        return DELETE_VICT;
+    }
+    if (ch->reconcileDamage(vict,hardness,DAMAGE_DISRUPTION) == -1)
+      return DELETE_VICT;
+  }
+  else if(chance == 6)
+  {
+    part = vict->getPartHit(ch, TRUE);
+    if (!(obj = vict->equipment[part]))
+      hardness = material_nums[vict->getMaterial(part)].hardness;
+    else
+      hardness = material_nums[obj->getMaterial()].hardness;
+
+    w_type = o->getWtype();
+
+    buf = format("A phantom spirit appears and executes a flurry, striking you with a barrage of attacks!");
+    act(buf,TRUE,ch,o,vict,TO_VICT,ANSI_RED);
+    buf = format("A phantom spirit appears and executes a flurry, striking $N with a barrage of attacks!");
+    act(buf,TRUE,ch,o,vict,TO_NOTVICT,ANSI_RED);
+    buf = format("A phantom spirit appears and execute a flurry, striking $N with a barrage of attacks!");
+    act(buf,TRUE,ch,o,vict,TO_CHAR,ANSI_RED);
+
+    
+    for(int i=0; i<::number(4,7); i++)
+    {
+      bool x = true;
+      while(x)
+      {
+        slot=pickRandomLimb();
+
+        if (!vict->slotChance(wearSlotT(slot)) || 
+            vict->getStuckIn(wearSlotT(slot)) ||
+            notBleedSlot(slot))
+        x = true;
+	else
+	  x = false;
+        //return FALSE;
+      }
+
+      buf = format("In a blur, the spirit's spear strikes your %s with a follow-up attack!") %
+        vict->describeBodySlot(slot);
+      act(buf,TRUE,ch,o,vict,TO_VICT,ANSI_ORANGE);
+      buf = format("In a blur, the spirit's spear quickly strikes at $N's %s with a follow-up attack!") %
+        vict->describeBodySlot(slot);
+      act(buf,TRUE,ch,o,vict,TO_NOTVICT,ANSI_GREEN);
+      buf = format("In a blur, the spirit's spear quickly strikes at $N's %s with a follow-up attack!") %
+        vict->describeBodySlot(slot);
+      act(buf,TRUE,ch,o,vict,TO_CHAR,ANSI_GREEN);
+
+    if(::number(0,8)==8 &&  !vict->isImmune(IMMUNE_BLEED, slot))
+    {
+      sprintf(buf2, "The wound has started to <R>bleed<1>!<1>");
+      act(buf2, 0, vict, o, 0, TO_ROOM);
+      sprintf(buf2, "The wound has started to <R>bleed<1>!<1>");
+      act(buf2, 0, vict, o, 0, TO_CHAR);
+
+      vict->rawBleed(slot, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+      vict->rawInfect(part, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+    }
+
+    if (obj)
+      vict->damageItem(ch,slot,w_type,o,hardness);
+    else {
+      dam = ::number(5,10);
+      rc = ch->damageLimb(vict,slot,o,&dam);
+      rc = ch->reconcileDamage(vict, dam, DAMAGE_DISRUPTION);
+      if (IS_SET_DELETE(rc, DELETE_VICT))
+        return DELETE_VICT;
+    }
+    if (ch->reconcileDamage(vict,hardness,DAMAGE_DISRUPTION) == -1)
+      return DELETE_VICT;
+
+    }
+
+  }
+  else if(chance == 7)
+  {
+
+    slot=pickRandomLimb();
+
+    if (!vict->slotChance(wearSlotT(slot)) || 
+        vict->getStuckIn(wearSlotT(slot)) ||
+        notBleedSlot(slot))
+      return FALSE;
+
+    obj = read_object(13713, VIRTUAL);
+
+    // TO VICTIM
+    buf=format("Seemingly possessed, $n LEAPS into the air, raising $o high in the air!");
+    act(buf, TRUE, ch, o, vict, TO_VICT, ANSI_RED);
+    buf=format("$n comes crashing down, slamming the point of $o into your %s!  $n twists $o and the tip breaks off, embedding itself in your flesh!") %
+      vict->describeBodySlot(slot);
+    act(buf, TRUE, ch, o, vict, TO_VICT, ANSI_ORANGE);
+    buf=format("$n's $o magically reforms!");
+    act(buf, TRUE, ch, o, vict, TO_VICT, ANSI_ORANGE);
+
+    // TO ROOM
+    buf=format("Seemingly possessed, $n LEAPS into the air, raising $o high in the air!");
+    act(buf, TRUE, ch, o, vict, TO_NOTVICT, ANSI_RED);
+    buf=format("$n comes crashing down, slamming the point of $o into $N's %s!  $n twists $o and the tip breaks off, embedding itself in $N!") %
+      vict->describeBodySlot(slot);
+    act(buf, TRUE, ch, o, vict, TO_NOTVICT, ANSI_ORANGE);
+    buf=format("$n's $o magically reforms!");
+    act(buf, TRUE, ch, o, vict, TO_NOTVICT, ANSI_ORANGE);
+
+
+    // TO CHAR
+    buf=format("The phantasm within your $o takes control of your body!  Before you can think, you LEAP high into the air, raising $o above your head!");
+    act(buf, TRUE, ch, o, vict, TO_CHAR, ANSI_RED);
+    buf=format("You come crashing down, slamming the point of your $o into $N's %s!  You twist your $o and the tip breaks off, embedding itself in $N.  $N screams in pain!") %
+      vict->describeBodySlot(slot);
+    act(buf, TRUE, ch, o, vict, TO_CHAR, ANSI_ORANGE);
+    buf=format("Your $o magically reforms, and your mind is once again your own!");
+    act(buf, TRUE, ch, o, vict, TO_CHAR, ANSI_ORANGE);
+
+
+    dam = ::number(1, 100); //Rarest proc so damage is a bit higher but highly variable
+    vict->stickIn(obj, wearSlotT(slot));
+
+
+    if(!vict->isImmune(IMMUNE_BLEED, slot)){
+      vict->rawBleed(part, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+      vict->rawInfect(part, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+    }    
+
+    rc = ch->damageLimb(vict,slot,o,&dam);
+    rc = ch->reconcileDamage(vict, dam, TYPE_STAB);
+    if (IS_SET_DELETE(rc, DELETE_VICT))
+      return DELETE_VICT;
+  }
+  else
+  {
+	return false;
+  }
+
+  return TRUE;
+}
+
+int weaponMolten(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+  char limb[80];
+  int rc, dam = 0, chance;
+  TBeing *ch;
+  sstring buf;
+  wearSlotT slot;
+
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;       // weapon not equipped (carried or on ground)
+
+
+
+  if (cmd == CMD_SAY || cmd == CMD_SAY2) {
+    if(!strcmp(arg, "sacrifice")) {
+      if(ch->checkObjUsed(o)) {
+        act("The powers of $o cannot be used again yet.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+        return FALSE;
+      }
+      affectedData aff1;
+ 
+      act("$n draws a dagger across the palm of $e hand and coats $o with blood, whispering, '<p>sacrifice<1>'.",TRUE,ch,o,NULL,TO_ROOM,NULL);
+      act("<o>$p<o> becomes covered in searing flames, <R>completely engulfing<1><o> $n!<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
+    
+      act("You slide a dagger across the palm of your hand, coating $o in your blood, and whipser, '<p>sacrifice<1>'.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("<o>$p<o> becomes covered in searing flames, <R>completely engulfing<1><o> you!<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
+
+      ch->dropPool(1, LIQ_BLOOD);
+    
+      // ARMOR APPLY
+      aff1.type = SPELL_FLAMING_FLESH;
+      aff1.level = 30;
+      aff1.duration = 12 * Pulse::UPDATES_PER_MUDHOUR;
+      aff1.location = APPLY_ARMOR;
+      aff1.modifier = -75;
+    
+      ch->affectTo(&aff1);
+      ch->addObjUsed(o, 2 * Pulse::UPDATES_PER_MUDHOUR);
+      return TRUE;
+    }
+  }
+  else if(cmd == CMD_OBJ_HITTING && o->isPaired())
+  {
+  chance = ::number(1,44);
+
+  if (!o || !vict)
+    return FALSE;
+
+  if (chance == 1)
+  {
+     if(!ch->canWither(vict, SILENT_YES))
+       return false;
+     
+     bool ok = false;
+     bool found = false;
+
+
+     // Initial checks to prevent issues and for balancee reasons
+     for (slot = MIN_WEAR; slot < MAX_WEAR; slot++) {
+       if (notBreakSlot(slot, false))  // same ones, right?
+         continue;
+       if (!vict->slotChance(slot))
+         continue;
+       found |= (vict->isLimbFlags(slot, PART_MISSING));
+       ok = true;
+     }
+
+    if (found || !ok) 
+      return false;
+
+    if (vict->isImmune(IMMUNE_HEAT, slot) )
+      return false;
+
+
+    // Borrowed from unmaker
+
+    for (slot = pickRandomLimb();; slot = pickRandomLimb()) {
+      if (notBreakSlot(slot, true))
+        continue;
+      if (!vict->slotChance(slot))
+        continue;
+      break;
+    }
+    sprintf(limb, "%s", vict->describeBodySlot(slot).c_str());
+
+    TThing *t;
+  
+    if (!vict->hasPart(slot)) {
+       vlogf(LOG_COMBAT, format("BOGUS SLOT trying to be made PART_MISSING: %d on %s") % 
+       	  slot % vict->getName());
+      	      return FALSE;
+    }
+
+    if (!vict->roomp) {
+    // bat 8-16-96, mob could be dead, this is a bug
+       vlogf(LOG_COMBAT, format("!roomp for target (%s) of makePartMissing().") %  vict->getName());
+              return FALSE;
+    }
+
+
+    vict->setLimbFlags(slot, PART_USELESS);
+
+
+    if ((t = vict->unequip(slot)))
+      *(vict->roomp) += *t;
+
+    // Neat code taken from unmaker, but needs to be tweaked to work with withered - removed for now
+    /*
+    for (wearSlotT j=MIN_WEAR; j < MAX_WEAR; j++) {
+      if (vict->isLimbFlags(j, PART_USELESS))
+        continue;
+      if (!vict->limbConnections(j)) {
+        vict->setLimbFlags(j, PART_USELESS);
+        TThing *tmp = vict->unequip(j);
+     if (tmp)
+        *(vict->roomp) += *tmp;
+      }
+    }*/
+
+  // check for damage to both hands
+    vict->woundedHand(TRUE);
+    vict->woundedHand(FALSE);
+
+
+    buf = format("Your $p glows molten red and begins emitting an incredible amount of heat!");
+    act(buf, FALSE, ch, o, vict, TO_CHAR, ANSI_RED);
+    buf = format("$n's $p glows molten red and begins emitting an incredible amount of heat!");
+    act(buf, FALSE, ch, o, vict, TO_NOTVICT, ANSI_RED);
+    buf = format("$n's $p glows molten red and begins emitting an incredible amount of heat!");
+    act(buf, FALSE, ch, o, vict, TO_VICT, ANSI_RED);
+
+    buf = format("You look down in horror and disbelief, as $n's $p burns into your %s with molten heat!") % limb;
+    act(buf, FALSE, ch, o, vict, TO_VICT, ANSI_ORANGE);
+    buf = format("The pain overloads your senses, as your %s is burned away entirely!") % limb % limb;
+    act(buf, FALSE, vict, NULL, NULL, TO_CHAR, ANSI_ORANGE);
+
+    buf = format("Your $p burns into $N's %s with all the heat of the sun.  Your $p glows brightly, and your own wounds begin to magically heal!") % limb;
+    act(buf, FALSE, ch, o, vict, TO_CHAR, ANSI_ORANGE);
+    buf = format("$n makes contact and burns into $N's %s with all the heat of the sun.") % limb;
+    act(buf, FALSE, ch, o, vict, TO_NOTVICT, ANSI_ORANGE);
+
+    buf = format("When the smoke clears, you're horrified to notice that $n's %s is a withered husk!") % limb;
+    act(buf, FALSE, vict, NULL, NULL, TO_ROOM, ANSI_ORANGE);
+
+    vict->dropWeapon(slot);
+
+    dam = ::number(50,80);
+    ch->addToHit(2*dam);
+    rc = vict->reconcileDamage(vict, dam, DAMAGE_FIRE);
+
+    if (IS_SET_DELETE(rc, DELETE_VICT) || (vict->getHit() < -10))
+      delete vict;
+
+    return true; 
+  }
+  else if(chance >= 2 && chance <= 23)
+  {
+    slot = vict->getPartHit(vict, TRUE);
+    sprintf(limb, "%s", vict->describeBodySlot(slot).c_str());
+
+    if(vict->isLimbFlags(slot, PART_BLEEDING))
+    {
+      dam = ::number(18,34);
+
+      buf = format("The flames of your $p ERUPT as they make contact with $N's bloody %s, as if the $p is hungry for blood!") % limb;
+      act(buf, FALSE, ch, o, vict, TO_CHAR, ANSI_RED);
+      buf = format("The heat scorches $N, cauterizing $N's wound in a cloud of smoke!  You feel your own wounds lessen as your $p absorbs $N's lifeforce.");
+      act(buf, FALSE, ch, o, vict, TO_CHAR, ANSI_ORANGE);
+
+      buf = format("The flames of $n's $p burns into your wounded %s with molten heat!") % limb;
+      act(buf, FALSE, ch, o, vict, TO_VICT, ANSI_RED);
+      buf = format("The heat scorches you, cauterizing your wound in a cloud of smoke!");
+      act(buf, FALSE, vict, NULL, NULL, TO_CHAR, ANSI_ORANGE);
+
+      buf = format("The flames of $n's $p burns into $N's wounded %s with molten heat!") % limb;
+      act(buf, FALSE, ch, o, vict, TO_NOTVICT, ANSI_ORANGE);
+      buf = format("The heat cauterizes the wound in a cloud of smoke!");
+      act(buf, FALSE, ch, o, vict, TO_NOTVICT, ANSI_ORANGE);
+
+      vict->remLimbFlags(slot, PART_BLEEDING);
+      ch->addToHit(1.6*dam);
+
+      rc = vict->reconcileDamage(vict, dam, DAMAGE_FIRE);
+      if (IS_SET_DELETE(rc, DELETE_VICT) || (vict->getHit() < -10))
+        delete vict;
+
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+  else if(chance >= 24 && chance <= 29)
+  {
+    dam = ::number(6,10);
+    if(!vict->isUndead())
+    {
+      act("The flames from your $p burn $N.", 
+                    0, ch, o, vict, TO_CHAR, ANSI_ORANGE);
+      act("The flames from $n's $p burn $N.", 
+                    0, ch, o, vict, TO_ROOM, ANSI_ORANGE);
+      act("The flames from $p burn your flesh.", 
+                    0, vict, o, 0, TO_CHAR, ANSI_ORANGE);
+    ch->addToHit(dam);
+    }
+    else
+    {
+      act("The flames from your $p burn $N.  The fire is incredibly effective against undead!", 
+                    0, ch, o, vict, TO_CHAR, ANSI_ORANGE);
+      act("The flames from your $p burn $N.  The fire is incredibly effective against undead!", 
+                    0, ch, o, vict, TO_ROOM, ANSI_ORANGE);
+      act("The flames from $p burn your flesh.  The fire scorches your undead skin!", 
+                    0, vict, o, 0, TO_CHAR, ANSI_ORANGE);
+    ch->addToHit(dam*2);
+      dam *= 6;
+    }
+
+    rc = vict->reconcileDamage(vict, dam, DAMAGE_FIRE);
+    if (IS_SET_DELETE(rc, DELETE_VICT) || (vict->getHit() < -10))
+      delete vict;
+
+    return true;
+  }
+ }
+    return false;
+}
+
