@@ -217,7 +217,7 @@ private:
 
     void doProjectAuraOfRegeneration(TBeing * caster);
     int procAuraOfRegeneration(TBeing * caster);
-    int RegenAuraPulse(TBeing * caster);
+    int regenAuraPulse(TBeing * caster);
 
     void removeAllAuras(TBeing * vict);
 
