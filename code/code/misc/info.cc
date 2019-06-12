@@ -1890,6 +1890,27 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
             describeDuration(this, aff->duration);
         }
         break;
+      // We want this to show "projecting" to be clear so we handle it different
+      case SKILL_AURA_MIGHT:
+      case SKILL_AURA_REGENERATION:
+        if(show){
+          str += format("Projecting: '%s'\t: Approx. Duration : %s\n\r") %
+		        discArray[aff->type]->name % describeDuration(this, aff->duration);
+        }
+        break;
+      // Not in discarray since it's not a skill
+      case SPELL_AURA_MIGHT:
+        if(show && !aff->shouldGenerateText()){
+          str+=format("Affected: Aura of Might.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
+      case SPELL_AURA_REGENERATION:
+        if(show){
+          str+=format("Affected: Aura of Regeneration.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
 
       case AFFECT_BITTEN_BY_VAMPIRE:
         // secret!

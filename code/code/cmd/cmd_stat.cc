@@ -1741,6 +1741,10 @@ void TBeing::statBeing(TBeing *k)
       case SPELL_SALVE_DEIKHAN:
       case SKILL_LAY_HANDS:
       case SPELL_NUMB_DEIKHAN:
+      case SKILL_AURA_MIGHT:
+      case SPELL_AURA_MIGHT:
+      case SKILL_AURA_REGENERATION:
+      case SPELL_AURA_REGENERATION:
       case SKILL_YOGINSA:
       case SKILL_CINTAI:
       case SKILL_OOMLAT:

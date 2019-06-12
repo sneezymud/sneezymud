@@ -3982,6 +3982,24 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 	}
       }
 
+      // handle Deikhan Aura procs
+      // TODO: Check the retcode logic and make sure it's right
+      
+      // check aura for been hit
+      rc = vict->checkAura(CMD_BEING_BEEN_HIT, this);
+      if (IS_SET_ONLY(rc, DELETE_VICT)) 
+        retCode |= DELETE_THIS;
+      if (IS_SET_ONLY(rc, DELETE_THIS)){
+        retCode |= DELETE_VICT;
+        return retCode;
+      }
+      // check aura for hit
+      rc = checkAura(CMD_BEING_HIT, vict);
+      if (IS_SET_ONLY(rc, DELETE_VICT)) {
+        retCode |= DELETE_VICT;
+        return retCode;
+      }
+
 	// handle proc on glove/gauntlet of unarmed hitters hitting hand. Dash - 10/17/00
       wearSlotT which_hand;
 

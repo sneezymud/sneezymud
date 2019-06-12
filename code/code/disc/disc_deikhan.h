@@ -88,6 +88,8 @@ public:
     CSkill skHarmCriticalDeikhan;
 
     CSkill skRepairDeikhan;
+    CSkill skAuraMight;
+    CSkill skAuraRegeneration;
     
     CDDeikhan()
       : CDiscipline(),
@@ -120,7 +122,9 @@ public:
       skLayHands(),
       skHealCriticalDeikhan(),
       skHarmCriticalDeikhan(),
-      skRepairDeikhan() {
+      skRepairDeikhan(),
+      skAuraMight(),
+      skAuraRegeneration() {
     }
     CDDeikhan(const CDDeikhan &a)
       : CDiscipline(a),
@@ -153,7 +157,9 @@ public:
         skLayHands(a.skLayHands),
         skHealCriticalDeikhan(a.skHealCriticalDeikhan),
         skHarmCriticalDeikhan(a.skHarmCriticalDeikhan),
-      skRepairDeikhan(a.skRepairDeikhan) {
+        skRepairDeikhan(a.skRepairDeikhan),
+        skAuraMight(a.skAuraMight),
+        skAuraRegeneration(a.skAuraRegeneration) {
     }
     CDDeikhan & operator=(const CDDeikhan &a) {
       if (this == &a) return *this;
@@ -188,6 +194,8 @@ public:
       skHealCriticalDeikhan = a.skHealCriticalDeikhan;
       skHarmCriticalDeikhan = a.skHarmCriticalDeikhan;
       skRepairDeikhan = a.skRepairDeikhan;
+      skAuraMight = a.skAuraMight;
+      skAuraRegeneration = a.skAuraRegeneration;
       return *this;
     }
     virtual ~CDDeikhan() {}
@@ -202,6 +210,19 @@ private:
     int synostodweomer(TBeing * caster, TBeing * victim, int, short);
 
     int smite(TBeing *, TBeing *);
+
+    void doProjectAuraOfMight(TBeing * caster);
+    int procAuraOfMight(TBeing * caster);
+    int auraOfMightOnHit(TBeing * caster, TBeing * vict);
+
+    void doProjectAuraOfRegeneration(TBeing * caster);
+    int procAuraOfRegeneration(TBeing * caster);
+    int RegenAuraPulse(TBeing * caster);
+
+    void removeAllAuras(TBeing * vict);
+
+
+
 
 #endif
 

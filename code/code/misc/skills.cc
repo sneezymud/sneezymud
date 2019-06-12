@@ -650,6 +650,14 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDDeikhan *) cd)->skHarmCriticalDeikhan;
     case SKILL_REPAIR_DEIKHAN:
       return &((CDDeikhan *) cd)->skRepairDeikhan;
+    case SKILL_AURA_MIGHT:
+      return &((CDDeikhan *) cd)->skAuraMight;
+    case SPELL_AURA_MIGHT:
+      return &((CDDeikhan *) cd)->skAuraMight;
+    case SKILL_AURA_REGENERATION:
+      return &((CDDeikhan *) cd)->skAuraRegeneration;
+    case SPELL_AURA_REGENERATION:
+      return &((CDDeikhan *) cd)->skAuraRegeneration;
 
 
 // disc_deikhan_fight

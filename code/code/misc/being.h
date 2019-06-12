@@ -1906,4 +1906,8 @@ class TBeing : public TThing {
     // used by doReset
     bool resetPractices(classIndT resetClass, int &practices, bool reset = true);
 
+    // paladin auras
+    virtual int checkAura(cmdTypeT cmd, TBeing *t);
+    void doAura(sstring const& arg);
+
 };
