@@ -6783,6 +6783,8 @@ extern int ofManyPotions(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, T
 extern int shadowWeapon(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *);
 extern int livingVines(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *);
 extern int dkSword(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *);
+extern int possessedSpear(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
+extern int weaponMolten(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 
 
 
@@ -6951,5 +6953,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {TRUE, "Living Vines", livingVines},
   {TRUE, "Piety Regen", pietyRegen},
   {TRUE, "DK Sword", dkSword},
+  {TRUE, "Possessed Spear", possessedSpear},
+  {TRUE, "Molten Weapon", weaponMolten},
   {FALSE, "last proc", bogusObjProc}
 };
