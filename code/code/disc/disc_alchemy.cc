@@ -1327,17 +1327,9 @@ int dispelMagic(TBeing *caster, TObj * obj, int, short bKnown)
 
   if (caster->bSuccess(bKnown, SPELL_DISPEL_MAGIC)) {
 
-    // assumes item not being used so don't have to affectFrom()
-    // this is the same list in checkObjStat for affects requiring MAGIC be set
+    // No point affecting objects already set to none, but legacy checks removed.
     for (i = 0; i < MAX_OBJ_AFFECT; i++) { 
-      if ((obj->affected[i].location != APPLY_NONE) &&
-          (obj->affected[i].location != APPLY_LIGHT) &&
-          (obj->affected[i].location != APPLY_NOISE) &&
-          (obj->affected[i].location != APPLY_HIT) &&
-          (obj->affected[i].location != APPLY_CHAR_WEIGHT) &&
-          (obj->affected[i].location != APPLY_CHAR_HEIGHT) &&
-          (obj->affected[i].location != APPLY_MOVE) &&
-          (obj->affected[i].location != APPLY_ARMOR)) {
+      if ((obj->affected[i].location != APPLY_NONE)) {
         obj->affected[i].location = APPLY_NONE;
         obj->affected[i].modifier = 0;
         obj->affected[i].modifier2 = 0;
