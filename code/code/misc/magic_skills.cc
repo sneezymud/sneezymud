@@ -180,7 +180,7 @@ void TBeing::doPenance()
     sendTo("You really don't know anything about repenting.\n\r");
     return;
   }
-  if (riding && dynamic_cast<TBeing *>(riding)) {
+  if ((riding && dynamic_cast<TBeing *>(riding))  && !(doesKnowSkill(SKILL_ADVANCED_RIDING) && (getSkillValue(SKILL_ADVANCED_RIDING) >= 50))){
     sendTo("It is impossible to be repentive while mounted!\n\r");
     return;
   }
@@ -197,9 +197,11 @@ void TBeing::doPenance()
   if (task && getPosition() <= POSITION_SITTING)
     stopTask();
 
-  sendTo("You rest and begin to chant.\n\r");
-  act("$n sits down in a position of penance.", TRUE, this, 0, 0, TO_ROOM);
-  setPosition(POSITION_RESTING);
+  if (!riding) {
+    sendTo("You rest and begin to chant.\n\r");
+    act("$n sits down in a position of penance.", TRUE, this, 0, 0, TO_ROOM);
+    setPosition(POSITION_RESTING);
+  }
   start_task(this, NULL, NULL, TASK_PENANCE, "", 0, in_room, 1, 0, 40);
 }
 
