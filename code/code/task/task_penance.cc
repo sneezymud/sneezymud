@@ -17,8 +17,7 @@ int task_penance(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
   double amt = 0.0;
   double randomizer = 0.0;
 
-  if (ch->isLinkdead() || (ch->getPosition() < POSITION_RESTING) ||
-      (ch->getPosition() > POSITION_STANDING)) {
+  if (!ch->canMeditate()) {
     ch->stopTask();
     return FALSE;
   }
@@ -96,7 +95,17 @@ int task_penance(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
       break;
   case CMD_ABORT:
   case CMD_STOP:
+      act("You stop repenting.", FALSE, ch, 0, 0, TO_CHAR);
+      act("$n stops repenting.", FALSE, ch, 0, 0, TO_ROOM);
+      ch->stopTask();
+      break;
   case CMD_STAND:
+      if (ch->getPosition() == POSITION_MOUNTED) {
+        act("Not while riding you don't!", FALSE, ch, 0, 0, TO_CHAR);
+        // sendTo("Not while riding you don't!\n\r");
+        ch->stopTask();
+        break;
+      }
       act("You stop repenting and stand up.", FALSE, ch, 0, 0, TO_CHAR);
       act("$n stops repenting and stands up.", FALSE, ch, 0, 0, TO_ROOM);
       ch->setPosition(POSITION_STANDING);

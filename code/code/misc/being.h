@@ -1917,4 +1917,6 @@ class TBeing : public TThing {
   // used by doReset
   bool resetPractices(classIndT resetClass, int &practices, bool reset = true);
 
+  bool canMeditate();
+
 };
