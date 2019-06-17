@@ -201,6 +201,9 @@ void TBeing::doPenance()
     sendTo("You rest and begin to chant.\n\r");
     act("$n sits down in a position of penance.", TRUE, this, 0, 0, TO_ROOM);
     setPosition(POSITION_RESTING);
+  } else {
+    sendTo("You begin to chant.\n\r");
+    act("$n begins penance.", TRUE, this, 0, 0, TO_ROOM);
   }
   start_task(this, NULL, NULL, TASK_PENANCE, "", 0, in_room, 1, 0, 40);
 }
