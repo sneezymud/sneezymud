@@ -236,7 +236,7 @@ void TBeing::doMeditate()
     sendTo("You really don't know anything about meditating.\n\r");
     return;
   }
-  if (riding && dynamic_cast<TBeing *>(riding)) {
+  if ((riding && dynamic_cast<TBeing *>(riding))  && !(doesKnowSkill(SKILL_ADVANCED_RIDING) && (getSkillValue(SKILL_ADVANCED_RIDING) >= 50))){
     sendTo("It is impossible to meditate while mounted!\n\r");
     return;
   }
@@ -257,10 +257,14 @@ void TBeing::doMeditate()
     } else if (getPosition() <= POSITION_SITTING) 
       stopTask();
   }
-  sendTo("You rest and begin to meditate.\n\r");
-  act("$n sits down in a position of meditation.", TRUE, this, 0, 0, TO_ROOM);
-  setPosition(POSITION_SITTING);
-
+  if (!riding) {
+    sendTo("You rest and begin to meditate.\n\r");
+    act("$n sits down in a position of meditation.", TRUE, this, 0, 0, TO_ROOM);
+    setPosition(POSITION_RESTING);
+  } else {
+    sendTo("You begin to meditate.\n\r");
+    act("$n begins to meditate.", TRUE, this, 0, 0, TO_ROOM);
+  }
   start_task(this, NULL, NULL, TASK_MEDITATE, "", 0, in_room, 1, 0, 40);
 }
 
@@ -285,7 +289,7 @@ void TBeing::doYoginsa()
     sendTo("You really don't know anything about meditating.\n\r");
     return;
   }
-  if (riding && dynamic_cast<TBeing *>(riding)) {
+  if ((riding && dynamic_cast<TBeing *>(riding))  && !(doesKnowSkill(SKILL_ADVANCED_RIDING) && (getSkillValue(SKILL_ADVANCED_RIDING) >= 50))){
     sendTo("It is impossible to meditate while mounted!\n\r");
     return;
   }
@@ -306,10 +310,14 @@ void TBeing::doYoginsa()
     } else if (getPosition() <= POSITION_SITTING) 
       stopTask();
   }
-  sendTo("You relax and begin meditating.\n\r");
-  act("$n sits down and begins meditating.", TRUE, this, 0, 0, TO_ROOM);
-  setPosition(POSITION_SITTING);
-
+  if (!riding) {
+    sendTo("You rest and begin to meditate.\n\r");
+    act("$n sits down in a position of meditation.", TRUE, this, 0, 0, TO_ROOM);
+    setPosition(POSITION_RESTING);
+  } else {
+    sendTo("You begin to meditate.\n\r");
+    act("$n begins to meditate.", TRUE, this, 0, 0, TO_ROOM);
+  }
   start_task(this, NULL, NULL, TASK_YOGINSA, "", 0, in_room, 1, 0, 40);
 }
 

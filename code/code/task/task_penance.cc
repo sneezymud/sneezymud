@@ -102,7 +102,6 @@ int task_penance(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
   case CMD_STAND:
       if (ch->getPosition() == POSITION_MOUNTED) {
         act("Not while riding you don't!", FALSE, ch, 0, 0, TO_CHAR);
-        // sendTo("Not while riding you don't!\n\r");
         ch->stopTask();
         break;
       }
