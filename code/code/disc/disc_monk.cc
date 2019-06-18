@@ -87,8 +87,7 @@ int task_yoginsa(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
   int learn, wohlin_learn;
   int monk_level;
 
-  if (ch->isLinkdead() || (ch->getPosition() < POSITION_RESTING) ||
-      (ch->getPosition() > POSITION_STANDING)) {
+  if (!ch->canMeditate()) {
     ch->stopTask();
     return FALSE;
   }
@@ -187,6 +186,10 @@ int task_yoginsa(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
       break;
     case CMD_ABORT:
     case CMD_STOP:
+      act("You stop meditating.", FALSE, ch, 0, 0, TO_CHAR);
+      act("$n stops meditating.", FALSE, ch, 0, 0, TO_ROOM);
+      ch->stopTask();
+      break;
     case CMD_STAND:
       act("You stop meditating and stand up.", FALSE, ch, 0, 0, TO_CHAR);
       act("$n stops meditating and stands up.", FALSE, ch, 0, 0, TO_ROOM);
