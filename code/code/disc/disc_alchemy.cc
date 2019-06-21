@@ -1330,7 +1330,7 @@ int dispelMagic(TBeing *caster, TObj * obj, int, short bKnown)
     // No point affecting objects already set to none, but legacy checks removed.
     for (i = 0; i < MAX_OBJ_AFFECT; i++) { 
       if ((obj->affected[i].location != APPLY_NONE) &&
-	  (obj->affected[i].location != APPLY_ARMOR))) {
+	  (obj->affected[i].location != APPLY_ARMOR)) {
         obj->affected[i].location = APPLY_NONE;
         obj->affected[i].modifier = 0;
         obj->affected[i].modifier2 = 0;
