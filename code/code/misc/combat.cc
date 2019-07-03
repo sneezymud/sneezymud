@@ -5311,7 +5311,11 @@ int TBeing::dislodgeWeapon(TBeing *v, TThing *weapon, wearSlotT part)
 {           
   char buf[160];
   int rc;
-
+  
+  // Quality of life tweak - there's no sense in weapons getting stuck in opponents that can't even move
+  if (v->isAffected(AFF_STUNNED))
+    return FALSE;
+	
   mud_assert(v->slotChance(part), "No slotChance in dislodgeWeapon");
 
   if (weapon && !v->getStuckIn(part)) {

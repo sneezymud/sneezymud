@@ -585,8 +585,7 @@ void TBeing::doReport(const char *argument)
     sendTo("You can't make a sound!\n\r");
     return;
   }
-  memset(target, '\0', sizeof(target));
-  strcpy(target, argument);
+  strncpy(target, argument, sizeof(target));
   if (hasClass(CLASS_CLERIC) || hasClass(CLASS_DEIKHAN))
     sprintf(info, "$n reports '%s%.1f%% H, %.2f%% P. I am %s%s'",
            red(), getPercHit(), getPiety(),
