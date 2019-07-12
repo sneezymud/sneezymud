@@ -18,10 +18,12 @@ namespace {
 
   void handleCoreHello(sstring const& s, Descriptor& d) {
     auto hello = s.substr(sizeof("Core.Hello"));
-    auto js = nlohmann::json::parse(hello);
     try {
+      auto js = nlohmann::json::parse(hello);
       d.mudclient = js.at("client");
       d.clientversion = js.at("version");
+    } catch(nlohmann::json::parse_error) {
+      vlogf(LOG_MISC, format("Client sent bad Core.Hello: %s") % hello);
     } catch (const std::range_error&) {
       vlogf(LOG_MISC, format("Client sent bad Core.Hello: %s") % hello);
     }
