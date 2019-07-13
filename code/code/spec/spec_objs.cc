@@ -6951,5 +6951,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {TRUE, "Living Vines", livingVines},
   {TRUE, "Piety Regen", pietyRegen},
   {TRUE, "DK Sword", dkSword},
+  {TRUE, "Molten Weapon", moltenWeapon},
+  {TRUE, "Glacial Weapon", glacialWeapon},
   {FALSE, "last proc", bogusObjProc}
 };
