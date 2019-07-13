@@ -5312,11 +5312,6 @@ int TBeing::dislodgeWeapon(TBeing *v, TThing *weapon, wearSlotT part)
   char buf[160];
   int rc;
 
-  // There's no reason your weapon should get stuck in a disabled victim
-  if (v->isAffected(AFF_STUNNED))
-    return FALSE;
-
-	
   mud_assert(v->slotChance(part), "No slotChance in dislodgeWeapon");
 
   if (weapon && !v->getStuckIn(part)) {
