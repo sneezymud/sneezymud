@@ -6783,6 +6783,8 @@ extern int ofManyPotions(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, T
 extern int shadowWeapon(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *);
 extern int livingVines(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *);
 extern int dkSword(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *);
+extern int moltenWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
+extern int glacialWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 
 
 
