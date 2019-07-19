@@ -2536,10 +2536,8 @@ int moltenWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   sstring buf;
   wearSlotT slot;
 
-
   if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
     return FALSE;       // weapon not equipped (carried or on ground)
-
 
   // Flavor text pulse
   if (cmd == CMD_GENERIC_PULSE)
@@ -2552,15 +2550,13 @@ int moltenWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     }
   }
 
-
+  // Combat procs
   if(cmd == CMD_OBJ_HITTING)
   {
     chance = ::number(1,50);
 
-
     if (!o || !vict)
       return FALSE;
-
 
     // Bonebreak proc + 10-20 damage if successful (max once/fight)
     if (chance == 1)
@@ -2568,12 +2564,8 @@ int moltenWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
        if(!ch->canWither(vict, SILENT_YES))
          return false;
 
-
        bool ok = false;
        bool found = false;
-
-
-
 
        // Initial checks to prevent issues and for balancee reasons
        for (slot = MIN_WEAR; slot < MAX_WEAR; slot++) 
@@ -2586,21 +2578,14 @@ int moltenWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
          ok = true;
         }
 
-
-
-
        if (found || !ok) 
 	 return false;
 
-
-       if (vict->isImmune(IMMUNE_HEAT, slot) )
+       // Accounting for fire immunity since this is heat-based wither limb
+       if (vict->isImmune(IMMUNE_HEAT, slot))
          return false;
 
-
-
-
-
-
+       // Get a random limb slot and make sure it's valid
        for (slot = pickRandomLimb();; slot = pickRandomLimb())  
        {
          if (notBreakSlot(slot, true))
@@ -2609,11 +2594,6 @@ int moltenWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
            continue;
          break;
        }
-       sprintf(limb, "%s", vict->describeBodySlot(slot).c_str());
-
-
-       TThing *t;
-
 
        if (!vict->hasPart(slot)) {
          vlogf(LOG_COMBAT, format("BOGUS SLOT trying to be made PART_USELESS: %d on %s") % 
@@ -2621,24 +2601,21 @@ int moltenWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
       	      return FALSE;
        }
 
-
        if (!vict->roomp) {
          vlogf(LOG_COMBAT, format("!roomp for target (%s) when trying to make PART_USELESS.") %  vict->getName());
 	 return FALSE;
        }
 
-
+       TThing *t;
        if ((t = vict->unequip(slot)))
          *(vict->roomp) += *t;
-
 
        // check for damage to both hands
        vict->woundedHand(TRUE);
        vict->woundedHand(FALSE);
-
-
-
-
+       
+       sprintf(limb, "%s", vict->describeBodySlot(slot).c_str());\
+	       
        buf = format("Your $p glows molten red and begins emitting an incredible amount of heat!");
        act(buf, FALSE, ch, o, vict, TO_CHAR, ANSI_RED);
        buf = format("$n's $p glows molten red and begins emitting an incredible amount of heat!");
@@ -2646,33 +2623,26 @@ int moltenWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
        buf = format("$n's $p glows molten red and begins emitting an incredible amount of heat!");
        act(buf, FALSE, ch, o, vict, TO_VICT, ANSI_RED);
 
-
        buf = format("You look down in horror and disbelief, as $n's $p burns into your %s with molten heat!") % limb;
        act(buf, FALSE, ch, o, vict, TO_VICT, ANSI_ORANGE);
        buf = format("The pain overloads your senses, as your %s is burned away entirely!") % limb % limb;
        act(buf, FALSE, vict, NULL, NULL, TO_CHAR, ANSI_ORANGE);
-
 
        buf = format("Your $p glows brightly as it burns into $N's %s with all the heat of the sun!") % limb;
        act(buf, FALSE, ch, o, vict, TO_CHAR, ANSI_ORANGE);
        buf = format("$n makes contact and burns into $N's %s with all the heat of the sun.") % limb;
        act(buf, FALSE, ch, o, vict, TO_NOTVICT, ANSI_ORANGE);
 
-
        buf = format("When the smoke clears, you're horrified to notice that $n's %s is a withered husk!") % limb;
        act(buf, FALSE, vict, NULL, NULL, TO_ROOM, ANSI_ORANGE);
 
-
        vict->dropWeapon(slot);
-
 
        dam = ::number(10,20);
        rc = vict->reconcileDamage(vict, dam, DAMAGE_FIRE);
 
-
        if (IS_SET_DELETE(rc, DELETE_VICT) || (vict->getHit() < -10))
          delete vict;
-
 
        return true; 
      }
@@ -2681,7 +2651,6 @@ int moltenWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
      {
        dam = ::number(1,8);
 
-
        act("The flames from your $p burn $N.", 
              0, ch, o, vict, TO_CHAR, ANSI_ORANGE);
        act("The flames from $n's $p burn $N.", 
@@ -2689,11 +2658,9 @@ int moltenWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
        act("The flames from $p burn your flesh.", 
              0, vict, o, 0, TO_CHAR, ANSI_ORANGE);
 
-
        rc = vict->reconcileDamage(vict, dam, DAMAGE_FIRE);
        if (IS_SET_DELETE(rc, DELETE_VICT) || (vict->getHit() < -10))
          delete vict;
-
 
        return true;
      }
@@ -2706,17 +2673,13 @@ int moltenWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 //    - 1d8 frost  damage proc
 //    - 0.4% chance of freezing the opponent (stun for 1 second)
 //    - Flavor text proc that's ice-themed
-
-
 int glacialWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 {
   TBeing *ch;
   int rc, dam, roll;
 
-
   if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
     return FALSE;       // weapon not equipped (carried or on ground)
-
 
   if(cmd == CMD_GENERIC_PULSE){
     if(!::number(0,75)){
@@ -2734,7 +2697,6 @@ int glacialWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
       // damage proc
       dam = ::number(1,8);
 
-
       act("The extreme cold from your $p chills $N.", 
              0, ch, o, vict, TO_CHAR, ANSI_BLUE);
       act("The extreme cold from $n's $p chills $N.", 
@@ -2747,9 +2709,8 @@ int glacialWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     if (IS_SET_DELETE(rc, DELETE_VICT) || (vict->getHit() < -10))
       delete vict;
 
-
     return true;
-    }
+  }
   else if (roll == 0)
   {
       // stun proc
@@ -2767,33 +2728,31 @@ int glacialWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
           act("<o>The blast of <c>fro<b>zen <c>air<1> knocks you from your mount!<1>",
               TRUE,ch,o,vict,TO_VICT,NULL);
           vict->dismount(POSITION_RESTING);
-        }
-        act("The blast of <c>fro<b>zen <c>air<1> from your $o slams $N into the $g, stunning $M!",
+       }
+       act("The blast of <c>fro<b>zen <c>air<1> from your $o slams $N into the $g, stunning $M!",
             TRUE,ch,o,vict,TO_CHAR,NULL);
-        act("The blast of <c>fro<b>zen <c>air<1> from $n's $o slams $N into the $g, stunning $M!",
+       act("The blast of <c>fro<b>zen <c>air<1> from $n's $o slams $N into the $g, stunning $M!",
             TRUE,ch,o,vict,TO_NOTVICT,NULL);
-        act("The blast of <c>fro<b>zen <c>air<1> from $n's $o slams you into the $g, stunning you!",
+       act("The blast of <c>fro<b>zen <c>air<1> from $n's $o slams you into the $g, stunning you!",
             TRUE,ch,o,vict,TO_VICT,NULL);
 
-
-	dam = ::number(10,60);
-	rc = vict->reconcileDamage(vict, dam, DAMAGE_FROST);
+       dam = ::number(10,60);
+       rc = vict->reconcileDamage(vict, dam, DAMAGE_FROST);
 	
-	if (IS_SET_DELETE(rc, DELETE_VICT)) {
-	     vict->reformGroup();
-	     delete vict;
-	     vict = NULL;
-	}
+       if (IS_SET_DELETE(rc, DELETE_VICT)) {
+         vict->reformGroup();
+	 delete vict;
+	 vict = NULL;
+       }
 
-        affectedData aff;
-
-        aff.type = SKILL_DOORBASH;
-        aff.duration = Pulse::ONE_SECOND;
-        aff.bitvector = AFF_STUNNED;
-        vict->affectTo(&aff, -1);
-        if (vict->fight())
+       affectedData aff;
+       aff.type = SKILL_DOORBASH;
+       aff.duration = Pulse::ONE_SECOND;
+       aff.bitvector = AFF_STUNNED;
+       vict->affectTo(&aff, -1);
+       if (vict->fight())
           vict->stopFighting();
-        return TRUE;
+       return TRUE;
     }
   }
   return FALSE;
