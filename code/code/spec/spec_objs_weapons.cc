@@ -2704,7 +2704,6 @@ int glacialWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
       act("The extreme cold from $p chills your flesh.", 
              0, vict, o, 0, TO_CHAR, ANSI_BLUE);
 
-
     rc = vict->reconcileDamage(vict, dam, DAMAGE_FROST);
     if (IS_SET_DELETE(rc, DELETE_VICT) || (vict->getHit() < -10))
       delete vict;
@@ -2750,8 +2749,10 @@ int glacialWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
        aff.duration = Pulse::ONE_SECOND;
        aff.bitvector = AFF_STUNNED;
        vict->affectTo(&aff, -1);
+	  
        if (vict->fight())
           vict->stopFighting();
+	  
        return TRUE;
     }
   }
