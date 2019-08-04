@@ -2743,15 +2743,16 @@ int glacialWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 	 delete vict;
 	 vict = NULL;
        }
-
-       affectedData aff;
-       aff.type = SKILL_DOORBASH;
-       aff.duration = Pulse::ONE_SECOND;
-       aff.bitvector = AFF_STUNNED;
-       vict->affectTo(&aff, -1);
+       else {
+         affectedData aff;
+         aff.type = SKILL_DOORBASH;
+         aff.duration = Pulse::ONE_SECOND;
+         aff.bitvector = AFF_STUNNED;
+         vict->affectTo(&aff, -1);
 	  
-       if (vict->fight())
-          vict->stopFighting();
+         if (vict->fight())
+           vict->stopFighting();
+       }
 	  
        return TRUE;
     }
