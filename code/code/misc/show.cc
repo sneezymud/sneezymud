@@ -1111,17 +1111,17 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
 	  Weather::describeWet(this), FALSE, this, NULL, ch, TO_VICT);
 
     if (curStats.get(STAT_STR) > 190)
-      strcpy(buffer,"$e is unhumanly muscular, ");
+      strcpy(buffer,"$e is immeasureably powerful, ");
     else if (curStats.get(STAT_STR) > 170)
-      strcpy(buffer,"$e is extremely brawny, ");
+      strcpy(buffer,"$e is incredibly built, ");
     else if (curStats.get(STAT_STR) > 150)
-      strcpy(buffer,"$e is brawny, ");
+      strcpy(buffer,"$e is powerfully built, ");
     else if (curStats.get(STAT_STR) > 130)
       strcpy(buffer,"$e is muscular, ");
     else if (curStats.get(STAT_STR) > 110)
-      strcpy(buffer,"$e is fairly muscular, ");
+      strcpy(buffer,"$e is somewhat muscular, ");
     else if (curStats.get(STAT_STR) > 90)
-      strcpy(buffer,"$e has an average build, ");
+      strcpy(buffer,"$e is of an average build, ");
     else if (curStats.get(STAT_STR) > 70)
       strcpy(buffer,"$e is somewhat frail, ");
     else if (curStats.get(STAT_STR) > 50)
@@ -1149,19 +1149,19 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
       strcat(buffer,"a bumbling clutz, and ");
    
     if (curStats.get(STAT_CHA) > 190)
-      strcat(buffer,"has godlike grace.");
+      strcat(buffer,"has a divine countenance.");
     else if (curStats.get(STAT_CHA) > 160)
-      strcat(buffer, "is exceptionally well-favored.");
+      strcat(buffer, "has a commanding presence.");
     else if (curStats.get(STAT_CHA) > 140)
-      strcat(buffer, "is well-favored.");
+      strcat(buffer, "is strikingly attractive.");
     else if (curStats.get(STAT_CHA) > 120)
       strcat(buffer, "is attractive.");
     else if (curStats.get(STAT_CHA) > 100)
-      strcat(buffer, "is comely.");
+      strcat(buffer, "is charming.");
     else if (curStats.get(STAT_CHA) > 80)
       strcat(buffer, "is average looking.");
     else if (curStats.get(STAT_CHA) > 60)
-      strcat(buffer, "is dumpy.");
+      strcat(buffer, "is without charm.");
     else if (curStats.get(STAT_CHA) > 40)
       strcat(buffer, "is ill-favored.");
     else
