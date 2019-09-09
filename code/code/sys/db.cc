@@ -657,8 +657,8 @@ void bootWorld(void)
 
   db.query("select * from room order by vnum asc");
   db_exits.query("select vnum, direction, name, description, type, condition_flag, lock_difficulty, weight, key_num, destination from roomexit order by vnum asc");
-  db_exits.fetchRow();
-  db_extras.query("select * from roomextra order by vnum asc");  
+  bool hasExits = db_exits.fetchRow();
+  bool hasExtras = db_extras.query("select * from roomextra order by vnum asc");
   db_extras.fetchRow();
 
   while(db.fetchRow()){
@@ -711,12 +711,10 @@ void bootWorld(void)
     rp->ex_description = NULL;
 
     // in case there are extras with no associated room, we need this
-    while(convertTo<int>(db_extras["vnum"]) < rp->number)
-      if(!db_extras.fetchRow())
-        break;
+    while (hasExtras && convertTo<int>(db_extras["vnum"]) < rp->number)
+      hasExtras = db_extras.fetchRow();
 
-
-    while(convertTo<int>(db_extras["vnum"]) == rp->number){
+    while(hasExtras && convertTo<int>(db_extras["vnum"]) == rp->number){
       new_descr = new extraDescription();
       new_descr->keyword = db_extras["name"];
       if (new_descr->keyword.empty())
@@ -729,8 +727,7 @@ void bootWorld(void)
       new_descr->next = rp->ex_description;
       rp->ex_description = new_descr;
 
-      if(!db_extras.fetchRow())
-        break;
+      hasExtras = db_extras.fetchRow();
     }
 
     dirTypeT dir;
@@ -738,12 +735,11 @@ void bootWorld(void)
       rp->dir_option[dir] = 0;
 
     // in case there are exits with no associated room, we need this
-    while(convertTo<int>(db_exits[0]) < rp->number)
-      if(!db_exits.fetchRow())
-        break;
+    while (hasExits && convertTo<int>(db_exits[0]) < rp->number)
+      hasExits = db_exits.fetchRow();
 
 
-    while(convertTo<int>(db_exits[0]) == rp->number){
+    while (hasExits && convertTo<int>(db_exits[0]) == rp->number){
       dir=mapFileToDir(convertTo<int>(db_exits[1]));
 
       rp->dir_option[dir] = new roomDirData();
@@ -784,8 +780,7 @@ void bootWorld(void)
           vlogf(LOG_LOW, format("Secret door saved as open. (%d, %d)") % 
               rp->number % dir);
       }
-      if(!db_exits.fetchRow())
-        break;
+      hasExits = db_exits.fetchRow();
     }
     
     roomCount++;
