@@ -1762,6 +1762,12 @@ void TBeing::loadTitle()
     delete [] tp->title;
     tp->title = mud_str_dup(db["title"]);
   }
+  // weird spot but what the hell
+  // send the level as a gmcp message
+  sstring playerGmcp = format(
+  	"player.info {"
+	"\"level\": %d}") % std::to_string(GetMaxLevel());
+  desc->sendGmcp(playerGmcp,false);
 }
 
 
