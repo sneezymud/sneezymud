@@ -376,32 +376,32 @@ O 0 1865 1 28860         Petrified in Undead Graveyard
 **************************
 
 * * Boss mobs
-M 0 29600 1 24687       Headless Horseman - Dead Forest
-? 0 3 0 E 
-E 1 29600 9999 5             helm headless (quest)
-? 0 3 0 E 
-E 1 29618 9999 14            cloak of the dark rider (quest)
-? 0 3 0 E 
-E 1 29619 9999 1             ring, jack o lantern (quest)
-? 0 3 0 E
-E 1 29619 9999 19            black velvet bag (quest)
+* M 0 29600 1 24687       Headless Horseman - Dead Forest
+* ? 0 3 0 E 
+* E 1 29600 9999 5             helm headless (quest)
+* ? 0 3 0 E 
+* E 1 29618 9999 14            cloak of the dark rider (quest)
+* ? 0 3 0 E 
+* E 1 29619 9999 1             ring, jack o lantern (quest)
+* ? 0 3 0 E
+* E 1 29619 9999 19            black velvet bag (quest)
 
-M 0 29602 5 13700      	mother plant of the pumpkin seedlings
-? 0 3 0 E 
-E 1 29619 9999 1             ring, jack o lantern (quest)
-? 0 3 0 E 
-E 1 29617 9999 14            egg sac blood flower (quest)
-G 1 24699 9999               shiny silver potion
+* M 0 29602 5 13700      	mother plant of the pumpkin seedlings
+* ? 0 3 0 E 
+* E 1 29619 9999 1             ring, jack o lantern (quest)
+* ? 0 3 0 E 
+* E 1 29617 9999 14            egg sac blood flower (quest)
+* G 1 24699 9999               shiny silver potion
 
 * * Low level pumpkin seedlings
-M 0 29601 9999 13700	pumpkin plant monster (level 14)
-G 1 31367 9999		        faerie fire scroll
-G 1 803 9999             	blue potion
+* M 0 29601 9999 13700	pumpkin plant monster (level 14)
+* G 1 31367 9999		        faerie fire scroll
+* G 1 803 9999             	blue potion
 
 * * Mid level pumpkin squashlings
-M 0 29611 9999 13700	pumpkin plant monster (level 25)
-G 1 14148 9999		ghostly wand
-G 1 823 9999      vermillion potion
+* M 0 29611 9999 13700	pumpkin plant monster (level 25)
+* G 1 14148 9999		ghostly wand
+* G 1 823 9999      vermillion potion
 
 **********************************
 * END OF October holiday quest *
