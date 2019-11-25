@@ -2933,14 +2933,14 @@ static void RoomSave(TBeing *ch, int start, int end, int useSecond)
     }
     temp[x] = '\0';
 
-    db.query("insert into room (owner, block, vnum,x,y,z,name,description,room_flag,sector,teletime,teletarg,telelook,river_speed,river_dir,capacity,height) values ('%s',%i,%i,%i,%i,%i, '%s','%s',%i,%i,%i,%i,%i,%i,%i,%i,%i)",
+    db.query("insert into room (owner, block, vnum,x,y,z,name,description,room_flag,sector,teletime,teletarg,telelook,river_speed,river_dir,capacity,height,zone) values ('%s',%i,%i,%i,%i,%i, '%s','%s',%i,%i,%i,%i,%i,%i,%i,%i,%i,%i)",
 	     ch->getName().c_str(), useSecond,
 	     rp->number, rp->getXCoord(), rp->getYCoord(), rp->getZCoord(), rp->name.c_str(), temp,
 	     rp->getRoomFlags(),
 	     mapSectorToFile(rp->getSectorType()),
 	     rp->getTeleTime(), rp->getTeleTarg(),
 	     rp->getTeleLook(), rp->getRiverSpeed(), rp->getRiverDir(),
-	     rp->getMoblim(), rp->getRoomHeight());
+	     rp->getMoblim(), rp->getRoomHeight(), rp->getZoneNum());
 
     dirTypeT j;
     for (j = MIN_DIR; j < MAX_DIR; j++) {
