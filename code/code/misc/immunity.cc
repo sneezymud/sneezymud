@@ -178,7 +178,7 @@ void TBeing::setImmunity(immuneTypeT type, short amt)
 
 void TBeing::addToImmunity(immuneTypeT type, short amt)
 {
-  immunities.immune_arr[type] = min(max(immunities.immune_arr[type] + amt, -100), 100);
+  immunities.immune_arr[type] = immunities.immune_arr[type] + amt;
 }
 
 bool TBeing::isImmune(immuneTypeT bit, wearSlotT pos, int modifier) const
