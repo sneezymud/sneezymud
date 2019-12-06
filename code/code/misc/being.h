@@ -141,7 +141,7 @@ class specialData {
 
 class immunityData {
   public:
-    byte immune_arr[MAX_IMMUNES];
+    short immune_arr[MAX_IMMUNES];
 
     immunityData();
     immunityData(const immunityData &a);
