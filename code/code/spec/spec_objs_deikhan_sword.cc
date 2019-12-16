@@ -5,6 +5,8 @@
 const int AVENGER=319;
 const int VINDICATOR=326;
 const int DEVASTATOR=320;
+const int SHAYLAMAYNE=29675;
+
 
 
 // heal ser for avenger, heal crit for vindicator, heal for devastator
@@ -104,12 +106,15 @@ int doHarm(TBeing *ch, TBeing *vict, TObj *o)
   int dam=0, rc=0;
 
   switch(o->objVnum()){
-    case AVENGER:
-      dam+=::number(1,3);
     case VINDICATOR:
       dam+=::number(2,4);
     case DEVASTATOR:
       dam+=::number(3,5);
+    case SHAYLAMAYNE:
+      dam+=::number(4,6);
+    case AVENGER:
+    default:
+      dam+=::number(1,3);
   }
 
 
@@ -140,7 +145,7 @@ int deikhanSword(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     return FALSE;
 
   if(cmd == CMD_GENERIC_PULSE){
-    if(!::number(0,99) && o->objVnum()==DEVASTATOR){
+    if(!::number(0,99) && (o->objVnum()==DEVASTATOR || o->objVnum()==SHAYLAMAYNE)){
       doSanc(ch, o);
       return TRUE;
     }
