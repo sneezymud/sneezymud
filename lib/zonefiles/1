@@ -412,102 +412,102 @@ O 0 1865 1 28860         Petrified in Undead Graveyard
 **************************
 * 
 * * Trader elves
-M 0 3905 1 238       	a fat helper elf (1 - candy cane trader) 
-M 0 3906 1 240      	a fat helper elf (2 - stolen gift trader)
-M 0 3907 1 239       	a fat helper elf (3 - boss insignia trader)
+* M 0 3905 1 238       	a fat helper elf (1 - candy cane trader) 
+* M 0 3906 1 240      	a fat helper elf (2 - stolen gift trader)
+* M 0 3907 1 239       	a fat helper elf (3 - boss insignia trader)
 * 
 * * Low level holiday minions, empty handed
-M 0 29603 9999 13700	a holiday minion (level 10)
+* M 0 29603 9999 13700	a holiday minion (level 10)
 * 
 * * Low level holiday minions, with a candy cane + green gift
-M 0 29603  9999 13700	a holiday minion (level 10)
-G 1 29625 9999		stolen gift green
-G 1 3961 9999             	candy cane
+* M 0 29603  9999 13700	a holiday minion (level 10)
+* G 1 29625 9999		stolen gift green
+* G 1 3961 9999             	candy cane
 * 
 * * * Low level holiday minions, with a candy cane and champagne + green gift
-M 0 29603 9999 13700	a holiday minion (level 10)
-G 1 3961 9999             	candy cane
-G 1 3959 9999             	a cheery holiday flask (champagne)
-G 1 29625 9999		stolen gift green
+* M 0 29603 9999 13700	a holiday minion (level 10)
+* G 1 3961 9999             	candy cane
+* G 1 3959 9999             	a cheery holiday flask (champagne)
+* G 1 29625 9999		stolen gift green
 * 
 * * Mid level holiday minions, with green gift
-M 0 29604 9999 13700	a holiday minion (level 25)
-G 1 29625 9999		stolen gift green
+* M 0 29604 9999 13700	a holiday minion (level 25)
+* G 1 29625 9999		stolen gift green
 * 
 * * Mid level holiday minions, with a candy cane + blue gift
-M 0 29604 9999 13700	a holiday minion (level 25)
-G 1 29624 9999		stolen gift blue
-G 1 3961 9999             	candy cane
+* M 0 29604 9999 13700	a holiday minion (level 25)
+* G 1 29624 9999		stolen gift blue
+* G 1 3961 9999             	candy cane
 * 
 * * Mid level holiday minions, with a candy cane and champagne + blue gift
-M 0 29604 9999 13700	a holiday minion (level 25)
-G 1 29624 9999		stolen gift blue
-G 1 3961 9999             	candy cane
-G 1 3959 9999             	a cheery holiday flask (champagne)
+* M 0 29604 9999 13700	a holiday minion (level 25)
+* G 1 29624 9999		stolen gift blue
+* G 1 3961 9999             	candy cane
+* G 1 3959 9999             	a cheery holiday flask (champagne)
 * 
 * * Mid-high level holiday minions with candy cane + blue gift
-M 0 29605 9999 13700	a holiday minion (level 40)
-G 1 29624 9999		stolen gift blue
-G 1 3961 9999             	candy cane
+* M 0 29605 9999 13700	a holiday minion (level 40)
+* G 1 29624 9999		stolen gift blue
+* G 1 3961 9999             	candy cane
 * 
 * * Mid-high level holiday minions, with blue/green gift
-M 0 29605 9999 13700	a holiday minion (level 40)
-G 1 29624 9999		stolen gift blue
-G 1 29625 9999		stolen gift green
+* M 0 29605 9999 13700	a holiday minion (level 40)
+* G 1 29624 9999		stolen gift blue
+* G 1 29625 9999		stolen gift green
 * 
 * * Mid-high level holiday minions, with a candy cane and potion of mystery + blue gift
-M 0 29605 9999 13700	a holiday minion (level 40)
-G 1 29624 9999		stolen gift blue
-G 1 3961 9999             	candy cane
-G 1 3958 9999             	cheery holiday flask (potion of mystery)
+* M 0 29605 9999 13700	a holiday minion (level 40)
+* G 1 29624 9999		stolen gift blue
+* G 1 3961 9999             	candy cane
+* G 1 3958 9999             	cheery holiday flask (potion of mystery)
 * 
 * * High level holiday minions with blue gift
-M 0 29606 9999 13700	a holiday minion (level 60)
-G 1 29624 9999		stolen gift blue
-G 1 3958 9999             	cheery holiday flask (potion of mystery)
+* M 0 29606 9999 13700	a holiday minion (level 60)
+* G 1 29624 9999		stolen gift blue
+* G 1 3958 9999             	cheery holiday flask (potion of mystery)
 * 
 * * High level holiday minions, with a candy cane + red/blue gift
-M 0 29606 10 13700	a holiday minion (level 60)
-G 1 29624 9999		stolen gift blue
-G 1 29623 9999		stolen gift red
-G 1 3961 9999             	candy cane
+* M 0 29606 10 13700	a holiday minion (level 60)
+* G 1 29624 9999		stolen gift blue
+* G 1 29623 9999		stolen gift red
+* G 1 3961 9999             	candy cane
 * 
 * * High level holiday minions, with a candy cane and potion of mystery + red gift
-M 0 29606 9999 13700	a holiday minion (level 60)
-G 1 29623 9999		stolen gift red
-G 1 3961 9999             	candy cane
-G 1 3958 9999             	cheery holiday flask (potion of mystery)
+* M 0 29606 9999 13700	a holiday minion (level 60)
+* G 1 29623 9999		stolen gift red
+* G 1 3961 9999             	candy cane
+* G 1 3958 9999             	cheery holiday flask (potion of mystery)
 * 
 * * Boss 1, with gifts and unique holiday items
-M 0 29607 1 13700	Krampus
-G 1 29625 9999		stolen gift green
-G 1 29624 9999		stolen gift blue
-G 1 29623 9999		stolen gift red
-G 1 3961 9999             	candy cane
-G 1 3958 9999             	cheery holiday flask (potion of mystery)
-G 1 29627 9999             	insignia krampus
+* M 0 29607 1 13700	Krampus
+* G 1 29625 9999		stolen gift green
+* G 1 29624 9999		stolen gift blue
+* G 1 29623 9999		stolen gift red
+* G 1 3961 9999             	candy cane
+* G 1 3958 9999             	cheery holiday flask (potion of mystery)
+* G 1 29627 9999             	insignia krampus
 * 
 * * Boss 2, with gifts and unique holiday items
-M 0 29608 1 13700	The White Witch
-G 1 29625 9999		stolen gift green
-G 1 29624 9999		stolen gift blue
-G 1 29623 9999		stolen gift red
-G 1 3961 9999             	candy cane
-G 1 3958 9999             	cheery holiday flask (potion of mystery)
-G 1 29628 9999             	insignia white witch
+* M 0 29608 1 13700	The White Witch
+* G 1 29625 9999		stolen gift green
+* G 1 29624 9999		stolen gift blue
+* G 1 29623 9999		stolen gift red
+* G 1 3961 9999             	candy cane
+* G 1 3958 9999             	cheery holiday flask (potion of mystery)
+* G 1 29628 9999             	insignia white witch
 * 
 * * Boss 3, with gifts and unique holiday items
-M 0 29609 1 13700	The Abominable Snowman
-G 1 29625 9999		stolen gift green
-G 1 29624 9999		stolen gift blue
-G 1 29623 9999		stolen gift red
-G 1 3961 9999             	candy cane
-G 1 3958 9999             	cheery holiday flask (potion of mystery)
-G 1 29629 9999             	insignia abominable snowman
+* M 0 29609 1 13700	The Abominable Snowman
+* G 1 29625 9999		stolen gift green
+* G 1 29624 9999		stolen gift blue
+* G 1 29623 9999		stolen gift red
+* G 1 3961 9999             	candy cane
+* G 1 3958 9999             	cheery holiday flask (potion of mystery)
+* G 1 29629 9999             	insignia abominable snowman
 * 
 * * Reindeer - Santa Hat
-M 0 3908 9999 13700     a reindeer
-G 1 29634 9999              red santa hat
+* M 0 3908 9999 13700     a reindeer
+* G 1 29634 9999              red santa hat
 * 
 **********************************
 * END OF  December holiday quest *
