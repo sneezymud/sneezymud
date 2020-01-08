@@ -6827,9 +6827,9 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {TRUE, "Dragon Slayer", dragonSlayer},
   {TRUE, "Blood Drainer", bloodDrain},
   {FALSE, "Stone Altar", stoneAltar},
-  {FALSE, "Bone Staff", boneStaff},   // 35
+  {TRUE, "Bone Staff", boneStaff},   // 35
   {FALSE, "Bloodspike", bloodspike}, 
-  {FALSE, "behir horn item", behirHornItem},
+  {TRUE, "behir horn item", behirHornItem},
   {FALSE, "Newbie Helper", newbieHelperWProc},
   {FALSE, "pirate hat dispenser", pirateHatDispenser},
   {FALSE, "Blood Bowl", bowl_of_blood},  // 40
@@ -6837,7 +6837,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "wicked dagger", wickedDagger},  
   {TRUE, "poison sap dagger", poisonSap},  
   {FALSE, "blinder weapon", weaponBlinder},
-  {FALSE, "mana drain weapon", weaponManaDrainer}, // 45
+  {TRUE, "mana drain weapon", weaponManaDrainer}, // 45
   {FALSE, "tequila cutlass", tequilaCutlass},
   {FALSE, "daySword", daySword},  
   {FALSE, "nightBlade", nightBlade},  
@@ -6848,7 +6848,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {TRUE, "Viper Weapon (poison)", poisonViperBlade},
   {FALSE, "trolley", trolley},
   {FALSE, "Stone Skin Amulet", stoneSkinAmulet}, // 55
-  {FALSE, "Razor Glove", razorGlove},
+  {TRUE, "Razor Glove", razorGlove},
   {FALSE, "ShadowSlayer", weaponShadowSlayer},
   {FALSE, "Squirt Gun", squirtGun},
   {FALSE, "Glory Weapon", blazeOfGlory},
@@ -6875,36 +6875,36 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Chipped Tooth Food Item", chippedTooth}, // 80
   {FALSE, "Goofers Dust", goofersDust},
   {FALSE, "teleport ring", teleportRing},
-  {FALSE, "self repairing", selfRepairing},
+  {TRUE, "self repairing", selfRepairing},
   {FALSE, "undead spewing portal", USPortal},
   {FALSE, "Amulet of Aeth Koralm", AKAmulet}, // 85
-  {FALSE, "fire glove", fireGlove},
+  {TRUE, "fire glove", fireGlove},
   {FALSE, "Shaman's Totem Mask", totemMask},
   {FALSE, "perma death monument", permaDeathMonument},
   {FALSE, "fishing boat", fishingBoat},
-  {FALSE, "Splintered Club", splinteredClub}, // 90 
+  {TRUE, "Splintered Club", splinteredClub}, // 90 
   {FALSE, "Suffocation Glove", suffGlove},
   {FALSE, "Force", force},
   {FALSE, "trophy board", trophyBoard},
   {FALSE, "shopinfo board", shopinfoBoard},
-  {FALSE, "Sonic Blast", sonicBlast},  // 95
+  {TRUE, "Sonic Blast", sonicBlast},  // 95
   {FALSE, "highrollers board", highrollersBoard},
   {FALSE, "faction score board", factionScoreBoard},
   {FALSE, "fragile arrow", fragileArrow},
   {FALSE, "Weapon: Starfire", starfire},
   {FALSE, "Sheath: Starfire", starfiresheath}, // 100
   {FALSE, "Teleport Rescue Item", teleportRescue},
-  {FALSE, "Deikhan Sword", deikhanSword},
-  {FALSE, "black sun", blackSun},
-  {FALSE, "poison cutlass", poisonCutlass},
-  {FALSE, "unholy cutlass", unholyCutlass},
+  {TRUE, "Deikhan Sword", deikhanSword},
+  {TRUE, "black sun", blackSun},
+  {TRUE, "poison cutlass", poisonCutlass},
+  {TRUE, "unholy cutlass", unholyCutlass},
   {FALSE, "ghostly shiv", ghostlyShiv},
   {FALSE, "hammer set: peke", HSPeke},
   {FALSE, "hammer set: copsi", HSCopsi},
   {FALSE, "hammer set: pendant", HSPendant}, 
   {FALSE, "blizzard ring", blizzardRing}, //110
-  {FALSE, "frost spear", frostSpear},
-  {FALSE, "ice staff", iceStaff},
+  {TRUE, "frost spear", frostSpear},
+  {TRUE, "ice staff", iceStaff},
   {FALSE, "heart of the arctic", arcticHeart},
   {FALSE, "frost armor", frostArmor}, 
   {FALSE, "telekinesis glove", telekinesisGlove}, //115
