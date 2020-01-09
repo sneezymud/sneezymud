@@ -180,7 +180,7 @@ void TBeing::doPenance()
     sendTo("You really don't know anything about repenting.\n\r");
     return;
   }
-  if ((riding && dynamic_cast<TBeing *>(riding))  && !(doesKnowSkill(SKILL_ADVANCED_RIDING) && (getSkillValue(SKILL_ADVANCED_RIDING) >= 50))){
+  if ((riding && dynamic_cast<TBeing *>(riding))  && !(getSkillValue(SKILL_ADVANCED_RIDING) >= 50)){
     sendTo("It is impossible to be repentive while mounted!\n\r");
     return;
   }
@@ -236,7 +236,7 @@ void TBeing::doMeditate()
     sendTo("You really don't know anything about meditating.\n\r");
     return;
   }
-  if ((riding && dynamic_cast<TBeing *>(riding))  && !(doesKnowSkill(SKILL_ADVANCED_RIDING) && (getSkillValue(SKILL_ADVANCED_RIDING) >= 50))){
+  if ((riding && dynamic_cast<TBeing *>(riding))  && !(getSkillValue(SKILL_ADVANCED_RIDING) >= 50)){
     sendTo("It is impossible to meditate while mounted!\n\r");
     return;
   }
@@ -289,7 +289,7 @@ void TBeing::doYoginsa()
     sendTo("You really don't know anything about meditating.\n\r");
     return;
   }
-  if ((riding && dynamic_cast<TBeing *>(riding))  && !(doesKnowSkill(SKILL_ADVANCED_RIDING) && (getSkillValue(SKILL_ADVANCED_RIDING) >= 50))){
+  if ((riding && dynamic_cast<TBeing *>(riding))  && !(getSkillValue(SKILL_ADVANCED_RIDING) >= 50)){
     sendTo("It is impossible to meditate while mounted!\n\r");
     return;
   }
