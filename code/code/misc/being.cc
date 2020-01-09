@@ -1781,8 +1781,7 @@ bool TBeing::canMeditate()
     return FALSE;
   
   if (getPosition() > POSITION_STANDING && 
-    !(getPosition() == POSITION_MOUNTED && 
-    doesKnowSkill(SKILL_ADVANCED_RIDING) && (getSkillValue(SKILL_ADVANCED_RIDING) >= 50))) {
+    !(getPosition() == POSITION_MOUNTED && (getSkillValue(SKILL_ADVANCED_RIDING) >= 50))) {
       return FALSE;
     }
   return TRUE;
