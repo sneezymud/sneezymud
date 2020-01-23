@@ -356,7 +356,7 @@ int TBeing::doGet(const char *a)
           if (fight())
             return FALSE;  // don't fall through
         }
-        if (dynamic_cast<TBeing *>(riding)) {
+        if (riding && dynamic_cast<TBeing *>(riding) && getSkillValue(SKILL_ADVANCED_RIDING) < 50){
           sendTo("You can't get things from the room while mounted!\n\r");
           return FALSE;
         }
@@ -385,7 +385,7 @@ int TBeing::doGet(const char *a)
           if (fight())
             return FALSE;  // don't fall through
         }
-        if (dynamic_cast<TBeing *>(riding)) {
+        if (riding && dynamic_cast<TBeing *>(riding) && getSkillValue(SKILL_ADVANCED_RIDING) < 50){
           sendTo("You can't get things from the room while mounted!\n\r");
           return FALSE;
         }
@@ -433,8 +433,7 @@ int TBeing::doGet(const char *a)
       if (is_abbrev(arg2, "all.corpse") && strlen(arg2) > 6) {
         if (getAllObjChecks(this))
           return FALSE;
-
-        if (dynamic_cast<TBeing *>(riding)) {
+        if (riding && dynamic_cast<TBeing *>(riding) && getSkillValue(SKILL_ADVANCED_RIDING) < 50){
           act("You can't get things from corpses while mounted!", 
                FALSE, this, NULL, 0, TO_CHAR);
           return FALSE;
@@ -493,8 +492,9 @@ int TBeing::doGet(const char *a)
         if (getAllObjChecks(this))
           return FALSE;
 
-        if (dynamic_cast<TBeing *>(riding) &&
-             (sub->inRoom() != Room::NOWHERE)) {
+        if (riding && dynamic_cast<TBeing *>(riding) 
+            && (getSkillValue(SKILL_ADVANCED_RIDING) < 50) 
+            && (sub->inRoom() != Room::NOWHERE)) {
           act("You can't get things from $p while mounted!", 
                FALSE, this, sub, 0, TO_CHAR);
           return FALSE;

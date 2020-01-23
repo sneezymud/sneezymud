@@ -14,8 +14,7 @@ int task_meditate(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TO
 {
   int learn, gainAmt = 0;
 
-  if (ch->isLinkdead() || (ch->getPosition() < POSITION_RESTING) ||
-      (ch->getPosition() > POSITION_STANDING)) {
+  if (!ch->canMeditate()) {
     ch->stopTask();
     return FALSE;
   }
@@ -77,7 +76,16 @@ int task_meditate(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TO
       break;
   case CMD_ABORT:
   case CMD_STOP:
+      act("You stop meditating.", FALSE, ch, 0, 0, TO_CHAR);
+      act("$n stops meditating.", FALSE, ch, 0, 0, TO_ROOM);
+      ch->stopTask();
+      break;
   case CMD_STAND:
+      if (ch->getPosition() == POSITION_MOUNTED) {
+        act("Not while riding you don't!", FALSE, ch, 0, 0, TO_CHAR);
+        ch->stopTask();
+        break;
+      }
       act("You stop meditating and stand up.", FALSE, ch, 0, 0, TO_CHAR);
       act("$n stops meditating and stands up.", FALSE, ch, 0, 0, TO_ROOM);
       ch->setPosition(POSITION_STANDING);
