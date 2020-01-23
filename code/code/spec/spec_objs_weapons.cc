@@ -2525,8 +2525,8 @@ int livingVines(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 }
 
 // Summary of this weapon proc
-//    - 1d8 fire damage proc
-//    - 2% chance of bonebreak, with a fire theme (withers the limb due to burn damage)
+//    - fire damage proc
+//    - 1.75% chance of bonebreak, with a fire theme (withers the limb due to burn damage)
 //    - Flavor text proc of dripping lava from the weapon
 int moltenWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 {
@@ -2553,119 +2553,130 @@ int moltenWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   // Combat procs
   if(cmd == CMD_OBJ_HITTING)
   {
-    chance = ::number(1,50);
+    // Slightly lowering chance to proc to balance with bone break/unmaker
+    // Since this has extra damage components
+    chance = ::number(1,57);
 
     if (!o || !vict)
       return FALSE;
 
     // Bonebreak proc + 10-20 damage if successful (max once/fight)
-    if (chance == 1)
-    {
-       if(!ch->canWither(vict, SILENT_YES))
-         return false;
+    if (chance == 1) {
+      if(!ch->canWither(vict, SILENT_YES))
+        return false;
 
-       bool ok = false;
-       bool found = false;
+      bool ok = false;
+      bool found = false;
 
-       // Initial checks to prevent issues and for balancee reasons
-       for (slot = MIN_WEAR; slot < MAX_WEAR; slot++) 
-       {
-         if (notBreakSlot(slot, false))  // same ones, right?
-           continue;
-         if (!vict->slotChance(slot))
-           continue;
-         found |= (vict->isLimbFlags(slot, PART_MISSING));
-         ok = true;
+      // Initial checks to prevent issues and for balancee reasons
+      for (slot = MIN_WEAR; slot < MAX_WEAR; slot++) {
+        if (notBreakSlot(slot, false))  // same ones, right?
+          continue;
+        if (!vict->slotChance(slot))
+          continue;
+        found |= (vict->isLimbFlags(slot, PART_MISSING));
+        ok = true;
+      }
+
+      if (found || !ok) 
+	      return false;
+
+      // Accounting for fire immunity since this is heat-based wither limb
+      if (vict->isImmune(IMMUNE_HEAT, slot))
+        return false;
+
+      // Get a random limb slot and make sure it's valid
+      for (slot = pickRandomLimb();; slot = pickRandomLimb()) {
+        if (notBreakSlot(slot, true))
+          continue;
+        if (!vict->slotChance(slot))
+          continue;
+        break;
+      }
+
+      if (!vict->hasPart(slot)) {
+        vlogf(LOG_COMBAT, format("BOGUS SLOT trying to be made PART_USELESS: %d on %s") % 
+       	slot % vict->getName());
+      	return FALSE;
+      }
+
+      if (!vict->roomp) {
+        vlogf(LOG_COMBAT, format("!roomp for target (%s) when trying to make PART_USELESS.") %  vict->getName());
+	      return FALSE;
+      }
+
+      vict->setLimbFlags(slot, PART_MISSING);
+
+      TThing *t;
+      if ((t = vict->unequip(slot)))
+        *(vict->roomp) += *t;
+
+      for (wearSlotT j=MIN_WEAR; j < MAX_WEAR; j++) {
+        if (!vict->hasPart(j))
+          continue;
+        if (!vict->limbConnections(j)) {
+          vict->setLimbFlags(j, PART_MISSING);
+          TThing *tmp = vict->unequip(j);
+          if (tmp)
+            *(vict->roomp) += *tmp;
         }
+      }
 
-       if (found || !ok) 
-	 return false;
+      // check for damage to both hands
+      vict->woundedHand(TRUE);
+      vict->woundedHand(FALSE);
+      
+      sprintf(limb, "%s", vict->describeBodySlot(slot).c_str());\
+        
+      buf = format("Your $p glows molten red and begins emitting an incredible amount of heat!");
+      act(buf, FALSE, ch, o, vict, TO_CHAR, ANSI_RED);
+      buf = format("$n's $p glows molten red and begins emitting an incredible amount of heat!");
+      act(buf, FALSE, ch, o, vict, TO_NOTVICT, ANSI_RED);
+      buf = format("$n's $p glows molten red and begins emitting an incredible amount of heat!");
+      act(buf, FALSE, ch, o, vict, TO_VICT, ANSI_RED);
 
-       // Accounting for fire immunity since this is heat-based wither limb
-       if (vict->isImmune(IMMUNE_HEAT, slot))
-         return false;
+      buf = format("You look down in horror and disbelief, as $n's $p burns into your %s with molten heat!") % limb;
+      act(buf, FALSE, ch, o, vict, TO_VICT, ANSI_ORANGE);
+      buf = format("The pain overloads your senses, as your %s is burned away entirely!") % limb % limb;
+      act(buf, FALSE, vict, NULL, NULL, TO_CHAR, ANSI_ORANGE);
 
-       // Get a random limb slot and make sure it's valid
-       for (slot = pickRandomLimb();; slot = pickRandomLimb())  
-       {
-         if (notBreakSlot(slot, true))
-           continue;
-         if (!vict->slotChance(slot))
-           continue;
-         break;
-       }
+      buf = format("Your $p glows brightly as it burns into $N's %s with all the heat of the sun!") % limb;
+      act(buf, FALSE, ch, o, vict, TO_CHAR, ANSI_ORANGE);
+      buf = format("$n makes contact and burns into $N's %s with all the heat of the sun.") % limb;
+      act(buf, FALSE, ch, o, vict, TO_NOTVICT, ANSI_ORANGE);
 
-       if (!vict->hasPart(slot)) {
-         vlogf(LOG_COMBAT, format("BOGUS SLOT trying to be made PART_USELESS: %d on %s") % 
-       	   slot % vict->getName());
-      	      return FALSE;
-       }
+      buf = format("When the smoke clears, you're horrified to notice that $n's %s is a withered husk!") % limb;
+      act(buf, FALSE, vict, NULL, NULL, TO_ROOM, ANSI_ORANGE);
 
-       if (!vict->roomp) {
-         vlogf(LOG_COMBAT, format("!roomp for target (%s) when trying to make PART_USELESS.") %  vict->getName());
-	 return FALSE;
-       }
+      vict->dropWeapon(slot);
 
-       TThing *t;
-       if ((t = vict->unequip(slot)))
-         *(vict->roomp) += *t;
+      dam = ::number(10,20);
 
-       // check for damage to both hands
-       vict->woundedHand(TRUE);
-       vict->woundedHand(FALSE);
-       
-       sprintf(limb, "%s", vict->describeBodySlot(slot).c_str());\
-	       
-       buf = format("Your $p glows molten red and begins emitting an incredible amount of heat!");
-       act(buf, FALSE, ch, o, vict, TO_CHAR, ANSI_RED);
-       buf = format("$n's $p glows molten red and begins emitting an incredible amount of heat!");
-       act(buf, FALSE, ch, o, vict, TO_NOTVICT, ANSI_RED);
-       buf = format("$n's $p glows molten red and begins emitting an incredible amount of heat!");
-       act(buf, FALSE, ch, o, vict, TO_VICT, ANSI_RED);
+      rc = vict->reconcileDamage(vict, dam, DAMAGE_FIRE);
 
-       buf = format("You look down in horror and disbelief, as $n's $p burns into your %s with molten heat!") % limb;
-       act(buf, FALSE, ch, o, vict, TO_VICT, ANSI_ORANGE);
-       buf = format("The pain overloads your senses, as your %s is burned away entirely!") % limb % limb;
-       act(buf, FALSE, vict, NULL, NULL, TO_CHAR, ANSI_ORANGE);
+      if (IS_SET_DELETE(rc, DELETE_VICT))
+        return DELETE_VICT;
 
-       buf = format("Your $p glows brightly as it burns into $N's %s with all the heat of the sun!") % limb;
-       act(buf, FALSE, ch, o, vict, TO_CHAR, ANSI_ORANGE);
-       buf = format("$n makes contact and burns into $N's %s with all the heat of the sun.") % limb;
-       act(buf, FALSE, ch, o, vict, TO_NOTVICT, ANSI_ORANGE);
+      return true;
+    // Damage Proc 
+    } else if (chance >= 2 && chance <= 10) {
+      dam = ::number(4,10);
 
-       buf = format("When the smoke clears, you're horrified to notice that $n's %s is a withered husk!") % limb;
-       act(buf, FALSE, vict, NULL, NULL, TO_ROOM, ANSI_ORANGE);
+      act("The flames from your $p burn $N.", 
+          0, ch, o, vict, TO_CHAR, ANSI_ORANGE);
+      act("The flames from $n's $p burn $N.", 
+          0, ch, o, vict, TO_ROOM, ANSI_ORANGE);
+      act("The flames from $p burn your flesh.", 
+          0, vict, o, 0, TO_CHAR, ANSI_ORANGE);
 
-       vict->dropWeapon(slot);
+      rc = vict->reconcileDamage(vict, dam, DAMAGE_FIRE);
+      if (IS_SET_DELETE(rc, DELETE_VICT))
+        return DELETE_VICT;
 
-       dam = ::number(10,20);
-       rc = vict->reconcileDamage(vict, dam, DAMAGE_FIRE);
-
-       if (IS_SET_DELETE(rc, DELETE_VICT) || (vict->getHit() < -10))
-         delete vict;
-
-       return true; 
-     }
-     // Damage proc - 1d8 fire damage
-     else if(chance >= 2 && chance <= 10)
-     {
-       dam = ::number(1,8);
-
-       act("The flames from your $p burn $N.", 
-             0, ch, o, vict, TO_CHAR, ANSI_ORANGE);
-       act("The flames from $n's $p burn $N.", 
-             0, ch, o, vict, TO_ROOM, ANSI_ORANGE);
-       act("The flames from $p burn your flesh.", 
-             0, vict, o, 0, TO_CHAR, ANSI_ORANGE);
-
-       rc = vict->reconcileDamage(vict, dam, DAMAGE_FIRE);
-       if (IS_SET_DELETE(rc, DELETE_VICT) || (vict->getHit() < -10))
-         delete vict;
-
-       return true;
-     }
-   }
-   return false;
+      return true;
+    }
+  }
+  return false;
 }
 
 

@@ -1774,3 +1774,15 @@ bool TBeing::applyTattoo(wearSlotT slot, const sstring & tat, silentTypeT silent
   }
   return FALSE;
 }
+
+bool TBeing::canMeditate()
+{
+  if (isLinkdead() || (getPosition() < POSITION_RESTING))
+    return FALSE;
+  
+  if (getPosition() > POSITION_STANDING && 
+    !(getPosition() == POSITION_MOUNTED && (getSkillValue(SKILL_ADVANCED_RIDING) >= 50))) {
+      return FALSE;
+    }
+  return TRUE;
+}
