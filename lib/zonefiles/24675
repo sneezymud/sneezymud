@@ -17,9 +17,9 @@ M 0 24685 1 24676       an old withered shaman
 M 0 24688 1 24675       a fuzzy bunny
 
 M 0 24675 1 24677       a wilder elf
-Y 0 139   4
-? 0 7 0 E
+? 0 4 0 E
 E 1 24687 9999 19
+Y 0 139   4
 *G 1 6 9999
 *P 1 24688 1 6
 
@@ -37,8 +37,8 @@ M 0 24679 1 24686       a spirit wraith
 M 0 24679 1 24682       a spirit wraith
 M 0 24679 1 24687       a spirit wraith
 M 0 24696 1 24688       a forest imp
-E 1 24695 9999 18
-
+? 0 2 0 E
+E 1 24695 9999 18       bone knife
 M 0 24695 2 24688       a forest imp
 M 0 24695 1 24687       a forest imp
 M 0 24695 2 24686       a forest imp
