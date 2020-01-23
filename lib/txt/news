@@ -1,4 +1,8 @@
-01-07-20 : Fix molten proc, Fix blind on deikhan swords.
+01-22-20 : Some Deikhan work here.
+           - Lay Hands cooldown has been shortened and now heals more
+           - Synostodweomer enabled and reimagined as a small hit point buff.
+             It has a cooldown matching it's duration so can be maintained
+             on one person.01-07-20 : Fix molten proc, Fix blind on deikhan swords.
 
 02-16-19 : Immunity to +1/+2/+3 no longer have any effect in the game. 
            Immunity to non-magic is still circumvented by magic weapons. Also,

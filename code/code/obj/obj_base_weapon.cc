@@ -942,7 +942,9 @@ int TGenWeapon::smiteWithMe(TBeing *ch, TBeing *v)
 
   if ((objVnum() != Obj::WEAPON_AVENGER1) &&
       (objVnum() != Obj::WEAPON_AVENGER2) &&
-      (objVnum() != Obj::WEAPON_AVENGER3)) {
+      (objVnum() != Obj::WEAPON_AVENGER3) &&
+      // Desecrator
+      (objVnum() != 29652)) {
     ch->sendTo(COLOR_OBJECTS, format("%s has no respect for someone using %s.\n\r") %
         sstring(ch->yourDeity(SKILL_SMITE, FIRST_PERSON)).cap() % getName());
     return FALSE;
@@ -965,7 +967,7 @@ int TGenWeapon::smiteWithMe(TBeing *ch, TBeing *v)
   }
 
   aff.type = AFFECT_SKILL_ATTEMPT;
-  aff.duration = 2 * Pulse::UPDATES_PER_MUDHOUR;
+  aff.duration = 1 * Pulse::UPDATES_PER_MUDHOUR;
   aff.modifier = SKILL_SMITE;
   aff.location = APPLY_NONE;
   aff.bitvector = 0;
@@ -990,7 +992,8 @@ int TGenWeapon::smiteWithMe(TBeing *ch, TBeing *v)
   }
 
   aff.type = SKILL_SMITE;
-  aff.duration = 30 * Pulse::UPDATES_PER_MUDHOUR;
+  // More times per day as level increases (about 4 times a day at 50)
+  aff.duration = (21 - (ch->GetMaxLevel() / 3)) * Pulse::UPDATES_PER_MUDHOUR;
   aff.modifier = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = 0;
