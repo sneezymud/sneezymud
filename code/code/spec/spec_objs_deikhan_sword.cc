@@ -118,13 +118,11 @@ int deikhanSword(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
   TBeing *ch;
 
   TBaseWeapon *tWeap;
-  if (!(tWeap = dynamic_cast<TBaseWeapon *>(o)) || !vict)
+  if (!(tWeap = dynamic_cast<TBaseWeapon *>(o)))
     return FALSE;
   // damageLevel of the weapon (devastator is 52)
   int weaponLevel=tWeap->damageLevel();
 
-  if (!o)
-    return FALSE;
   if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
     return FALSE;       // weapon not equipped (carried or on ground)
 
