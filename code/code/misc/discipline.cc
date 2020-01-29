@@ -16,7 +16,7 @@
 #include "disc_cleric.h"
 #include "disc_soldiering.h"
 #include "disc_blacksmithing.h"
-#include "disc_deikhan_fight.h"
+#include "disc_deikhan_martial.h"
 #include "disc_deikhan_aegis.h"
 #include "disc_deikhan_cures.h"
 #include "disc_deikhan_wrath.h"
@@ -1773,7 +1773,7 @@ void TBeing::assignDisciplinesClass()
     discs->disc[DISC_NATURE] = new CDNature();
 
     discs->disc[DISC_DEIKHAN] = new CDDeikhan();
-    discs->disc[DISC_DEIKHAN_FIGHT] = new CDDeikhanFight();
+    discs->disc[DISC_DEIKHAN_MARTIAL] = new CDDeikhanMartial();
     discs->disc[DISC_MOUNTED] = new CDMounted();
     discs->disc[DISC_DEIKHAN_AEGIS] = new CDDeikhanAegis();
     discs->disc[DISC_DEIKHAN_CURES] = new CDDeikhanCures();
@@ -1899,7 +1899,7 @@ void TBeing::assignDisciplinesClass()
   if (hasClass(CLASS_DEIKHAN)) {
     if (!isPc()) {
       discs->disc[DISC_DEIKHAN] = new CDDeikhan();
-      discs->disc[DISC_DEIKHAN_FIGHT] = new CDDeikhanFight();
+      discs->disc[DISC_DEIKHAN_MARTIAL] = new CDDeikhanMartial();
       discs->disc[DISC_MOUNTED] = new CDMounted();
       discs->disc[DISC_DEIKHAN_AEGIS] = new CDDeikhanAegis();
       discs->disc[DISC_DEIKHAN_CURES] = new CDDeikhanCures();
@@ -2266,7 +2266,7 @@ int TBeing::getSkillLevel(spellNumT skill) const
       lev = getClassLevel(CLASS_WARRIOR);
       break;
     case DISC_DEIKHAN:
-    case DISC_DEIKHAN_FIGHT:
+    case DISC_DEIKHAN_MARTIAL:
     case DISC_MOUNTED:
     case DISC_DEIKHAN_AEGIS:
     case DISC_DEIKHAN_CURES:

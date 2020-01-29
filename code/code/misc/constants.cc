@@ -1930,8 +1930,8 @@ const struct disc_names_data discNames[MAX_DISCS] =
    "unused"}, 
   {DISC_DEIKHAN, CLASS_DEIKHAN, "deikhan abilities", 
    "Deikhan Abilities"},   // 25
-  {DISC_DEIKHAN_FIGHT, CLASS_DEIKHAN, "fighting skills", 
-   "Fighting Skills"},
+  {DISC_DEIKHAN_MARTIAL, CLASS_DEIKHAN, "martial abilities", 
+   "Martial Abilities"},
   {DISC_MOUNTED, CLASS_DEIKHAN, "mounted skills", 
    "Mounted Skills"},
   {DISC_DEIKHAN_AEGIS, CLASS_DEIKHAN, "aegis", 

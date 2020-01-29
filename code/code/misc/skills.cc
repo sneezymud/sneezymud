@@ -20,7 +20,7 @@
 #include "extern.h"
 #include "disc_soldiering.h"
 #include "disc_blacksmithing.h"
-#include "disc_deikhan_fight.h"
+#include "disc_deikhan_martial.h"
 #include "disc_deikhan_aegis.h"
 #include "disc_deikhan_cures.h"
 #include "disc_deikhan_wrath.h"
@@ -121,7 +121,7 @@ CSkill *TBeing::getSkill(spellNumT skill) const
     case SKILL_TAN:  //                       394
       return &((CDSurvival *) cd)->skTan;
     case SKILL_HOLY_WEAPONS:  //              454             // not coded
-      return &((CDDeikhanFight *) cd)->skHolyWeapons;
+      return &((CDDeikhanMartial *) cd)->skHolyWeapons;
     case SPELL_HOLY_LIGHT:  //                495         // not coded
       return &((CDDeikhanWrath *) cd)->skHolyLight;
     case SKILL_BUTCHER:  //                    342  // not coded
@@ -656,11 +656,11 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 // disc_deikhan_fight
 
     case SKILL_SWITCH_DEIKHAN:  //            451
-      return &((CDDeikhanFight *) cd)->skSwitchDeikhan;
+      return &((CDDeikhanMartial *) cd)->skSwitchDeikhan;
     case SKILL_RETREAT_DEIKHAN:  //           452
-      return &((CDDeikhanFight *) cd)->skRetreatDeikhan;
+      return &((CDDeikhanMartial *) cd)->skRetreatDeikhan;
     case SKILL_SHOVE_DEIKHAN:  //             453
-      return &((CDDeikhanFight *) cd)->skShoveDeikhan;
+      return &((CDDeikhanMartial *) cd)->skShoveDeikhan;
 
 // disc_mount
 

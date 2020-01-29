@@ -105,7 +105,7 @@ void TBeing::assignSkillsClass()
     Class=DEIKHAN_LEVEL_IND;
     prim=DISC_DEIKHAN;
     favorites.clear();
-    favorites.push_back(DISC_DEIKHAN_FIGHT);
+    favorites.push_back(DISC_DEIKHAN_MARTIAL);
     favorites.push_back(DISC_MOUNTED);
     favorites.push_back(DISC_DEIKHAN_WRATH);
     assignSkills(Class, prim, favorites);

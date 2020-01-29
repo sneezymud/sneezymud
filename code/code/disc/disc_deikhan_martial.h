@@ -2,7 +2,7 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: disc_deikhan_fight.h,v $
+// $Log: disc_deikhan_martial.h,v $
 // Revision 5.1.1.1  1999/10/16 04:32:20  batopr
 // new branch
 //
@@ -16,36 +16,36 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_DEIKHAN_FIGHT_H
-#define __DISC_DEIKHAN_FIGHT_H
+#ifndef __DISC_DEIKHAN_MARTIAL_H
+#define __DISC_DEIKHAN_MARTIAL_H
 
 // This is the DEIKHAN FIGHTING skills discipline.
 
 #include "discipline.h"
 #include "skills.h"
 
-class CDDeikhanFight : public CDiscipline
+class CDDeikhanMartial : public CDiscipline
 {
   public:
     CSkill skSwitchDeikhan;
     CSkill skRetreatDeikhan;
     CSkill skShoveDeikhan;
 
-    CDDeikhanFight()
+    CDDeikhanMartial()
       : CDiscipline(),
       skSwitchDeikhan(),
       skRetreatDeikhan(),
       skShoveDeikhan()
     {
     }
-    CDDeikhanFight(const CDDeikhanFight &a)
+    CDDeikhanMartial(const CDDeikhanMartial &a)
       : CDiscipline(a),
       skSwitchDeikhan(a.skSwitchDeikhan),
       skRetreatDeikhan(a.skRetreatDeikhan),
       skShoveDeikhan(a.skShoveDeikhan)
     {
     }
-    CDDeikhanFight & operator=(const CDDeikhanFight &a) {
+    CDDeikhanMartial & operator=(const CDDeikhanMartial &a) {
       if (this == &a) return *this;
       CDiscipline::operator=(a);
       skSwitchDeikhan = a.skSwitchDeikhan;
@@ -53,8 +53,8 @@ class CDDeikhanFight : public CDiscipline
       skShoveDeikhan = a.skShoveDeikhan;
       return *this;
     }
-    virtual ~CDDeikhanFight() {}
-    virtual CDDeikhanFight * cloneMe() { return new CDDeikhanFight(*this); }
+    virtual ~CDDeikhanMartial() {}
+    virtual CDDeikhanMartial * cloneMe() { return new CDDeikhanMartial(*this); }
 
 private:
 };

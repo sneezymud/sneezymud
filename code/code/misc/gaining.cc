@@ -1110,7 +1110,7 @@ TRAININFO TrainerInfo[] =
   {SPEC_TRAINER_PLANTS, "plants", "about Plants and Herbs", DISC_PLANTS, CLASS_RANGER},
   {SPEC_TRAINER_SOLDIERING, "soldiering", "Soldiering Skills", DISC_SOLDIERING, CLASS_WARRIOR},
   {SPEC_TRAINER_BLACKSMITHING, "blacksmithing", "Blacksmithing Skills", DISC_BLACKSMITHING, CLASS_WARRIOR},
-  {SPEC_TRAINER_DEIKHAN_FIGHT, "fighting", "Fighting Skills for Deikhans", DISC_DEIKHAN_FIGHT, CLASS_DEIKHAN},
+  {SPEC_TRAINER_DEIKHAN_MARTIAL, "martial", "Martial Abilites for Deikhans", DISC_DEIKHAN_MARTIAL, CLASS_DEIKHAN},
   {SPEC_TRAINER_MOUNTED, "mounted", "about Mounted Abilities", DISC_MOUNTED, CLASS_DEIKHAN},
   {SPEC_TRAINER_DEIKHAN_AEGIS, "aegis", "Aegis Spells for Deikhans", DISC_DEIKHAN_AEGIS, CLASS_DEIKHAN},
   {SPEC_TRAINER_DEIKHAN_CURES, "cures", "Cure Spells for Deikhans", DISC_DEIKHAN_CURES, CLASS_DEIKHAN},
