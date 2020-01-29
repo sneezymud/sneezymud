@@ -30,19 +30,22 @@ class CDDeikhanMartial : public CDiscipline
     CSkill skSwitchDeikhan;
     CSkill skRetreatDeikhan;
     CSkill skShoveDeikhan;
+    CSkill sk2hSpecDeikhan;
 
     CDDeikhanMartial()
       : CDiscipline(),
       skSwitchDeikhan(),
       skRetreatDeikhan(),
-      skShoveDeikhan()
+      skShoveDeikhan(),
+      sk2hSpecDeikhan()
     {
     }
     CDDeikhanMartial(const CDDeikhanMartial &a)
       : CDiscipline(a),
       skSwitchDeikhan(a.skSwitchDeikhan),
       skRetreatDeikhan(a.skRetreatDeikhan),
-      skShoveDeikhan(a.skShoveDeikhan)
+      skShoveDeikhan(a.skShoveDeikhan),
+      sk2hSpecDeikhan(a.sk2hSpecDeikhan)
     {
     }
     CDDeikhanMartial & operator=(const CDDeikhanMartial &a) {
@@ -51,6 +54,7 @@ class CDDeikhanMartial : public CDiscipline
       skSwitchDeikhan = a.skSwitchDeikhan;
       skRetreatDeikhan = a.skRetreatDeikhan;
       skShoveDeikhan = a.skShoveDeikhan;
+      sk2hSpecDeikhan = a.sk2hSpecDeikhan;
       return *this;
     }
     virtual ~CDDeikhanMartial() {}

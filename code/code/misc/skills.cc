@@ -661,6 +661,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDDeikhanMartial *) cd)->skRetreatDeikhan;
     case SKILL_SHOVE_DEIKHAN:  //             453
       return &((CDDeikhanMartial *) cd)->skShoveDeikhan;
+    case SKILL_2H_SPEC_DEIKHAN:
+      return &((CDDeikhanMartial *) cd)->sk2hSpecDeikhan;
 
 // disc_mount
 
