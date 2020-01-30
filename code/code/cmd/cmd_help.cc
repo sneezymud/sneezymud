@@ -407,7 +407,7 @@ void TBeing::doHelp(const char *arg)
   // this prevents "help ../../being.h" and "help _skills"
   const char *c;
   for (c = arg; *c; c++) {
-    if (!isalpha(*c) && !isspace(*c)) {
+    if (!isalnum(*c) && !isspace(*c)) {
       sendTo("Illegal argument.\n\r");
       return;
     }
