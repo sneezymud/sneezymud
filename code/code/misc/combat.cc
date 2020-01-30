@@ -1834,6 +1834,14 @@ static int getMonkWeaponDam(const TBeing *ch, const TBeing *v, primaryTypeT ispr
 // Please note that these numbers are NOT arbitrary, but are part of the
 // balance discussion, so do not change them lightly !!!!
 // -Batopr 12/12/98
+//
+// NOTE on Dual vs 2h
+// 1h and shield = 100% dam
+// Dual wield (unlearned) = 110% dam
+// Dual wield maxed spec = 170% dam
+// 2h (unlearned) = 110% dam
+// 2h maxed spec = 165% dam
+//
 int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT isprimary) const
 {
   int bonusDam = 0;
@@ -1981,6 +1989,16 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
       dam = (int) (dam * amt / 100);
     }
 
+    // 2h Specialization: should be no additional dam for anyone without specialization
+    // extra 10% for 2h is part of the object
+    TObj *obj = dynamic_cast<TObj *>(heldInPrimHand());
+    if (obj && obj->isPaired() && doesKnowSkill(SKILL_2H_SPEC_DEIKHAN)) {
+      // Take half the skill value and normalize between 10 and 50
+      int amt = (int) getSkillValue(SKILL_2H_SPEC_DEIKHAN);
+      amt = 100 + min(50, max(10, (int) (amt / 2)));
+      dam = (int) (dam * amt / 100);
+    }
+    
     dam = max(1, dam);
 
 #if DAMAGE_DEBUG
@@ -2024,6 +2042,13 @@ static void checkLearnFromHit(TBeing * ch, int tarLevel, TThing * o, bool isPrim
             dynamic_cast<TBaseWeapon *>(o) && 
             !isPrimary)
 	  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, skill, max(0, (100 - (2* myLevel))));
+
+        // Learn 2h on hit
+        TBaseWeapon *obj = dynamic_cast<TBaseWeapon *>(o);
+        if (ch->doesKnowSkill(SKILL_2H_SPEC_DEIKHAN) && obj->isPaired()) {
+          ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_2H_SPEC_DEIKHAN, max(0, (100 - (2* myLevel))));
+        }
+
 
         if (ch->hasClass(CLASS_WARRIOR))
 	  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_OFFENSE, (170 - (2* myLevel)));
