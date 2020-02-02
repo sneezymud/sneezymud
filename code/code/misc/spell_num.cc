@@ -583,6 +583,8 @@ int mapSpellnumToFile(spellNumT stt)
       return 368;
     case SPELL_SYNOSTODWEOMER:
       return 369;
+    case SKILL_DIVINE_GRACE:
+      return 370;
     case SPELL_SALVE_DEIKHAN:
       return 374;
     case SKILL_LAY_HANDS:
@@ -1688,6 +1690,8 @@ spellNumT mapFileToSpellnum(int stt)
       return SPELL_REFRESH_DEIKHAN;
     case 369:
       return SPELL_SYNOSTODWEOMER;
+    case 370:
+      return SKILL_DIVINE_GRACE;
     case 374:
       return SPELL_SALVE_DEIKHAN;
     case 375:

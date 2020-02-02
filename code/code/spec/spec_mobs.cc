@@ -7407,7 +7407,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE,"Trainer: blacksmithing", CDGenericTrainer}, 
   {FALSE,"Trainer: deikhan fight", CDGenericTrainer},
   {FALSE,"Trainer: mounted", CDGenericTrainer},
-  {FALSE,"Trainer: deikhan aegis", CDGenericTrainer},
+  {FALSE,"Trainer: deikhan guardian", CDGenericTrainer},
   {FALSE,"Trainer: deikhan cures", CDGenericTrainer},    // 125 
   {FALSE,"Trainer: deikhan wrath", CDGenericTrainer},
   {FALSE,"Trainer: leverage", CDGenericTrainer},

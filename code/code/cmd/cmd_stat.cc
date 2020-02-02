@@ -1497,6 +1497,7 @@ void TBeing::statBeing(TBeing *k)
       case SPELL_ENERGY_DRAIN:
       case SPELL_LICH_TOUCH: // shaman
       case SPELL_SYNOSTODWEOMER:
+      case SKILL_DIVINE_GRACE:
       case SPELL_HARM_DEIKHAN:
       case SPELL_HARM:
       case SPELL_HARM_LIGHT_DEIKHAN:

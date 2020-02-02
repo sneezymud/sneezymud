@@ -100,6 +100,35 @@ short TBeing::getImmunity(immuneTypeT type) const
 
   imm = immunities.immune_arr[type];
 
+  if(doesKnowSkill(SKILL_DIVINE_GRACE)) {
+    amount = max((int)getSkillValue(SKILL_DIVINE_GRACE), 0);
+    switch(type){
+      case IMMUNE_FEAR:
+        imm += amount;
+        break;
+      case IMMUNE_PARALYSIS:
+        imm += (amount/2);
+        break;
+      case IMMUNE_DISEASE:
+        imm += (amount/3);
+        break;
+      case IMMUNE_BLEED:
+        imm += (amount/4);
+        break;
+      case IMMUNE_CHARM:
+        imm += max(0, (amount - 25));
+        break;
+      case IMMUNE_SUMMON:
+        imm += max(0, (amount - 33));
+        break;
+      case IMMUNE_HEAT:
+        imm += max(0, (amount - 85));
+        break;
+      default:
+        break;
+    }
+  }
+
   if(doesKnowSkill(SKILL_DUFALI)) {
     amount = max((int)getSkillValue(SKILL_DUFALI), 0);
     switch(type){

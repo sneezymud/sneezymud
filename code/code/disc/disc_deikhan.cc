@@ -45,7 +45,7 @@ int synostodweomer(TBeing *caster, TBeing *v, int level, short bKnown)
     }
 
     // hps to add to the vict
-    int learnedness = caster->getDiscipline(DISC_DEIKHAN_AEGIS)->getLearnedness();
+    int learnedness = caster->getDiscipline(DISC_DEIKHAN_GUARDIAN)->getLearnedness();
     // max of 60
     hitp = 10 + (caster->GetMaxLevel() * learnedness / 100);
 

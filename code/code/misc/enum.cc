@@ -281,7 +281,7 @@ int mapDiscToFile(discNumT dn)
       return 26;
     case DISC_MOUNTED:
       return 27;
-    case DISC_DEIKHAN_AEGIS:
+    case DISC_DEIKHAN_GUARDIAN:
       return 28;
     case DISC_DEIKHAN_CURES:
       return 29;
@@ -432,7 +432,7 @@ discNumT mapFileToDisc(int num)
     case 27:
       return DISC_MOUNTED;
     case 28:
-      return DISC_DEIKHAN_AEGIS;
+      return DISC_DEIKHAN_GUARDIAN;
     case 29:
       return DISC_DEIKHAN_CURES;
     case 30:

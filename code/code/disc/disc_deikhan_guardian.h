@@ -2,57 +2,50 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: disc_deikhan_aegis.h,v $
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_DEIKHAN_AEGIS_H
-#define __DISC_DEIKHAN_AEGIS_H
+#ifndef __DISC_DEIKHAN_GUARDIAN_H
+#define __DISC_DEIKHAN_GUARDIAN_H
 
-// This is the DEIKHAN AEGIS discipline.
+// This is the DEIKHAN guardian discipline.
 
 #include "discipline.h"
 #include "skills.h"
 
-class CDDeikhanAegis : public CDiscipline
+class CDDeikhanGuardian : public CDiscipline
 {
 public:
     CSkill skHeroesFeastDeikhan;
     CSkill skRefreshDeikhan;
     CSkill skSynostodweomer;
+    CSkill skDivineGrace;
 
-    CDDeikhanAegis()
+    CDDeikhanGuardian()
       : CDiscipline(),
       skHeroesFeastDeikhan(),
       skRefreshDeikhan(),
-      skSynostodweomer() {
+      skSynostodweomer(),
+      skDivineGrace() {
     }
-    CDDeikhanAegis(const CDDeikhanAegis &a)
+    CDDeikhanGuardian(const CDDeikhanGuardian &a)
       : CDiscipline(a),
       skHeroesFeastDeikhan(a.skHeroesFeastDeikhan),
       skRefreshDeikhan(a.skRefreshDeikhan),
-      skSynostodweomer(a.skSynostodweomer) {
+      skSynostodweomer(a.skSynostodweomer),
+      skDivineGrace(a.skDivineGrace) {
     }
-    CDDeikhanAegis & operator=(const CDDeikhanAegis &a) {
+    CDDeikhanGuardian & operator=(const CDDeikhanGuardian &a) {
       if (this == &a) return *this;
       CDiscipline::operator=(a);
       skHeroesFeastDeikhan = a.skHeroesFeastDeikhan;
       skRefreshDeikhan = a.skRefreshDeikhan;
       skSynostodweomer = a.skSynostodweomer;
+      skDivineGrace = a.skDivineGrace;
       return *this;
     }
-    virtual ~CDDeikhanAegis() {}
-    virtual CDDeikhanAegis * cloneMe() { return new CDDeikhanAegis(*this); }
+    virtual ~CDDeikhanGuardian() {}
+    virtual CDDeikhanGuardian * cloneMe() { return new CDDeikhanGuardian(*this); }
 
 private:
 };

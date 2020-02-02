@@ -21,7 +21,7 @@
 #include "disc_soldiering.h"
 #include "disc_blacksmithing.h"
 #include "disc_deikhan_martial.h"
-#include "disc_deikhan_aegis.h"
+#include "disc_deikhan_guardian.h"
 #include "disc_deikhan_cures.h"
 #include "disc_deikhan_wrath.h"
 #include "disc_defense.h"
@@ -681,17 +681,16 @@ CSkill *TBeing::getSkill(spellNumT skill) const
     case SKILL_RIDE_EXOTIC:
       return &((CDMounted *) cd)->skRideExotic;
 
-// disc_deikhan_aegis
+// disc_deikhan_guardian
 
     case SPELL_HEROES_FEAST_DEIKHAN:  //      471
-      return &((CDDeikhanAegis *) cd)->skHeroesFeastDeikhan;
-
+      return &((CDDeikhanGuardian *) cd)->skHeroesFeastDeikhan;
     case SPELL_REFRESH_DEIKHAN:  //           472
-      return &((CDDeikhanAegis *) cd)->skRefreshDeikhan;
-
+      return &((CDDeikhanGuardian *) cd)->skRefreshDeikhan;
     case SPELL_SYNOSTODWEOMER:  //            473
-      return &((CDDeikhanAegis *) cd)->skSynostodweomer;
-
+      return &((CDDeikhanGuardian *) cd)->skSynostodweomer;
+    case SKILL_DIVINE_GRACE:
+      return &((CDDeikhanGuardian *) cd)->skDivineGrace;
 
 
 // disc_deikhan_cures
