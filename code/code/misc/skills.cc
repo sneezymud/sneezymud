@@ -23,7 +23,7 @@
 #include "disc_deikhan_martial.h"
 #include "disc_deikhan_guardian.h"
 #include "disc_deikhan_cures.h"
-#include "disc_deikhan_wrath.h"
+#include "disc_deikhan_vengeance.h"
 #include "disc_defense.h"
 #include "disc_offense.h"
 #include "disc_mounted.h"
@@ -123,7 +123,7 @@ CSkill *TBeing::getSkill(spellNumT skill) const
     case SKILL_HOLY_WEAPONS:  //              454             // not coded
       return &((CDDeikhanMartial *) cd)->skHolyWeapons;
     case SPELL_HOLY_LIGHT:  //                495         // not coded
-      return &((CDDeikhanWrath *) cd)->skHolyLight;
+      return &((CDDeikhanVengeance *) cd)->skHolyLight;
     case SKILL_BUTCHER:  //                    342  // not coded
       return &((CDRanger *) cd)->skButcher;
     case SPELL_FIND_FAMILIAR: // 35
@@ -701,16 +701,16 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDDeikhanCures *) cd)->skLayHands;
 
 
-// disc_deikhan_wrath
+// disc_deikhan_vengeance
 
     case SPELL_HARM_DEIKHAN:  //              491
-      return &((CDDeikhanWrath *) cd)->skHarmDeikhan;
+      return &((CDDeikhanVengeance *) cd)->skHarmDeikhan;
     case SPELL_NUMB_DEIKHAN:  //              492
-      return &((CDDeikhanWrath *) cd)->skNumbDeikhan;
+      return &((CDDeikhanVengeance *) cd)->skNumbDeikhan;
     case SPELL_EARTHQUAKE_DEIKHAN:  //        493
-      return &((CDDeikhanWrath *) cd)->skEarthquakeDeikhan;
+      return &((CDDeikhanVengeance *) cd)->skEarthquakeDeikhan;
     case SPELL_CALL_LIGHTNING_DEIKHAN:  //    494
-      return &((CDDeikhanWrath *) cd)->skCallLightningDeikhan;
+      return &((CDDeikhanVengeance *) cd)->skCallLightningDeikhan;
 
 // MONK CLASS
 

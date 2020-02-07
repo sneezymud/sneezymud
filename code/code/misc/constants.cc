@@ -1938,8 +1938,8 @@ const struct disc_names_data discNames[MAX_DISCS] =
    "Guardian Abilities"},
   {DISC_DEIKHAN_CURES, CLASS_DEIKHAN, "cures", 
    "Cures"},
-  {DISC_DEIKHAN_WRATH, CLASS_DEIKHAN, "wrath of the deities", 
-   "Wrath of the Deities"},  // 30
+  {DISC_DEIKHAN_VENGEANCE, CLASS_DEIKHAN, "vengeance abilities", 
+   "Vengeance Abilities"},  // 30
   {DISC_MONK, CLASS_MONK, "monk abilities", 
    "Monk Abilities"},
   {DISC_MEDITATION_MONK, CLASS_MONK, "meditation/internal abilities", 

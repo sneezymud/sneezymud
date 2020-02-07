@@ -2,29 +2,18 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: disc_deikhan_wrath.h,v $
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_DEIKHAN_WRATH_H
-#define __DISC_DEIKHAN_WRATH_H
+#ifndef __DISC_DEIKHAN_VENGEANCE_H
+#define __DISC_DEIKHAN_VENGEANCE_H
 
-// This is the DEIKHAN WRATH discipline.
+// This is the DEIKHAN VENGEANCE discipline.
 
 #include "discipline.h"
 #include "skills.h"
 
-class CDDeikhanWrath : public CDiscipline
+class CDDeikhanVengeance : public CDiscipline
 {
 public:
     CSkill skHarmDeikhan;
@@ -33,7 +22,7 @@ public:
     CSkill skCallLightningDeikhan;
     CSkill skHolyLight;    // not coded
 
-    CDDeikhanWrath()
+    CDDeikhanVengeance()
       : CDiscipline(),
       skHarmDeikhan(),
       skNumbDeikhan(),
@@ -41,7 +30,7 @@ public:
       skCallLightningDeikhan(),
       skHolyLight() {
     }
-    CDDeikhanWrath(const CDDeikhanWrath &a)
+    CDDeikhanVengeance(const CDDeikhanVengeance &a)
       : CDiscipline(a),
       skHarmDeikhan(a.skHarmDeikhan),
       skNumbDeikhan(a.skNumbDeikhan),
@@ -49,7 +38,7 @@ public:
       skCallLightningDeikhan(a.skCallLightningDeikhan),
       skHolyLight(a.skHolyLight) {
     }
-    CDDeikhanWrath & operator=(const CDDeikhanWrath &a) {
+    CDDeikhanVengeance & operator=(const CDDeikhanVengeance &a) {
       if (this == &a) return *this;
       CDiscipline::operator=(a);
       skHarmDeikhan = a.skHarmDeikhan;
@@ -59,8 +48,8 @@ public:
       skHolyLight = a.skHolyLight;
       return *this;
     }
-    virtual ~CDDeikhanWrath() {}
-    virtual CDDeikhanWrath * cloneMe() { return new CDDeikhanWrath(*this); }
+    virtual ~CDDeikhanVengeance() {}
+    virtual CDDeikhanVengeance * cloneMe() { return new CDDeikhanVengeance(*this); }
 
 private:
 };

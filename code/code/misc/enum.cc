@@ -285,7 +285,7 @@ int mapDiscToFile(discNumT dn)
       return 28;
     case DISC_DEIKHAN_CURES:
       return 29;
-    case DISC_DEIKHAN_WRATH:
+    case DISC_DEIKHAN_VENGEANCE:
       return 30;
     case DISC_MONK:
       return 31;
@@ -436,7 +436,7 @@ discNumT mapFileToDisc(int num)
     case 29:
       return DISC_DEIKHAN_CURES;
     case 30:
-      return DISC_DEIKHAN_WRATH;
+      return DISC_DEIKHAN_VENGEANCE;
     case 31:
       return DISC_MONK;
     case 32:
