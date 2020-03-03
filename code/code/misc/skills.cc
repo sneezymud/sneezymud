@@ -691,7 +691,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDDeikhanGuardian *) cd)->skSynostodweomer;
     case SKILL_DIVINE_GRACE:
       return &((CDDeikhanGuardian *) cd)->skDivineGrace;
-
+    case SKILL_DIVINE_RESCUE:
+      return &((CDDeikhanGuardian *) cd)->skDivineRescue;
 
 // disc_deikhan_cures
 

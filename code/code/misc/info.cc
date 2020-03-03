@@ -1197,6 +1197,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SPELL_CARDIAC_STRESS: // shaman
       case SPELL_SYNOSTODWEOMER:
       case SKILL_DIVINE_GRACE:
+      case SKILL_DIVINE_RESCUE:
       case SPELL_HARM_DEIKHAN:
       case SPELL_HARM:
       case SPELL_HARM_LIGHT_DEIKHAN:

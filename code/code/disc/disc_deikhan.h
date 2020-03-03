@@ -198,6 +198,8 @@ public:
 private:
 };
 
+    void divineRescue(TBeing * caster, TBeing * victim);
+
     int synostodweomer(TBeing * caster, TBeing * victim);
     int synostodweomer(TBeing * caster, TBeing * victim, int, short);
 
