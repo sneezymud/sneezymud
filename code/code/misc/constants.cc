@@ -1932,12 +1932,12 @@ const struct disc_names_data discNames[MAX_DISCS] =
    "Deikhan Abilities"},   // 25
   {DISC_DEIKHAN_MARTIAL, CLASS_DEIKHAN, "martial abilities", 
    "Martial Abilities"},
-  {DISC_MOUNTED, CLASS_DEIKHAN, "mounted skills", 
-   "Mounted Skills"},
+  {DISC_MOUNTED, CLASS_DEIKHAN, "mounted abilities", 
+   "Mounted Abilities"},
   {DISC_DEIKHAN_GUARDIAN, CLASS_DEIKHAN, "guardian", 
    "Guardian Abilities"},
-  {DISC_DEIKHAN_CURES, CLASS_DEIKHAN, "cures", 
-   "Cures"},
+  {DISC_DEIKHAN_ABSOLUTION, CLASS_DEIKHAN, "absolution", 
+   "Absolution Abilities"},
   {DISC_DEIKHAN_VENGEANCE, CLASS_DEIKHAN, "vengeance abilities", 
    "Vengeance Abilities"},  // 30
   {DISC_MONK, CLASS_MONK, "monk abilities", 

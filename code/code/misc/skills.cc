@@ -22,7 +22,7 @@
 #include "disc_blacksmithing.h"
 #include "disc_deikhan_martial.h"
 #include "disc_deikhan_guardian.h"
-#include "disc_deikhan_cures.h"
+#include "disc_deikhan_absolution.h"
 #include "disc_deikhan_vengeance.h"
 #include "disc_defense.h"
 #include "disc_offense.h"
@@ -694,12 +694,12 @@ CSkill *TBeing::getSkill(spellNumT skill) const
     case SKILL_DIVINE_RESCUE:
       return &((CDDeikhanGuardian *) cd)->skDivineRescue;
 
-// disc_deikhan_cures
+// disc_deikhan_absolution
 
     case SPELL_SALVE_DEIKHAN:  //             481
-      return &((CDDeikhanCures *) cd)->skSalveDeikhan;
+      return &((CDDeikhanAbsolution *) cd)->skSalveDeikhan;
     case SKILL_LAY_HANDS:  //                 482
-      return &((CDDeikhanCures *) cd)->skLayHands;
+      return &((CDDeikhanAbsolution *) cd)->skLayHands;
 
 
 // disc_deikhan_vengeance

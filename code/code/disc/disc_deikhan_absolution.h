@@ -16,39 +16,39 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_DEIKHAN_CURES_H
-#define __DISC_DEIKHAN_CURES_H
+#ifndef __DISC_DEIKHAN_ABSOLUTION_H
+#define __DISC_DEIKHAN_ABSOLUTION_H
 
 // This is the DEIKHAN CURES discipline.
 
 #include "discipline.h"
 #include "skills.h"
 
-class CDDeikhanCures : public CDiscipline
+class CDDeikhanAbsolution : public CDiscipline
 {
 public:
     CSkill skSalveDeikhan;
     CSkill skLayHands;
 
-    CDDeikhanCures()
+    CDDeikhanAbsolution()
       : CDiscipline(),
       skSalveDeikhan(),
       skLayHands() {
     }
-    CDDeikhanCures(const CDDeikhanCures &a)
+    CDDeikhanAbsolution(const CDDeikhanAbsolution &a)
       : CDiscipline(a),
       skSalveDeikhan(a.skSalveDeikhan),
       skLayHands(a.skLayHands) {
     }
-    CDDeikhanCures & operator=(const CDDeikhanCures &a) {
+    CDDeikhanAbsolution & operator=(const CDDeikhanAbsolution &a) {
       if (this == &a) return *this;
       CDiscipline::operator=(a);
       skSalveDeikhan = a.skSalveDeikhan;
       skLayHands = a.skLayHands;
       return *this;
     }
-    virtual ~CDDeikhanCures() {}
-    virtual CDDeikhanCures * cloneMe() { return new CDDeikhanCures(*this); }
+    virtual ~CDDeikhanAbsolution() {}
+    virtual CDDeikhanAbsolution * cloneMe() { return new CDDeikhanAbsolution(*this); }
 
 private:
 };

@@ -1113,7 +1113,7 @@ TRAININFO TrainerInfo[] =
   {SPEC_TRAINER_DEIKHAN_MARTIAL, "martial", "Martial Abilites for Deikhans", DISC_DEIKHAN_MARTIAL, CLASS_DEIKHAN},
   {SPEC_TRAINER_MOUNTED, "mounted", "about Mounted Abilities", DISC_MOUNTED, CLASS_DEIKHAN},
   {SPEC_TRAINER_DEIKHAN_GUARDIAN, "guardian", "Guardian Abilites for Deikhans", DISC_DEIKHAN_GUARDIAN, CLASS_DEIKHAN},
-  {SPEC_TRAINER_DEIKHAN_CURES, "cures", "Cure Spells for Deikhans", DISC_DEIKHAN_CURES, CLASS_DEIKHAN},
+  {SPEC_TRAINER_DEIKHAN_ABSOLUTION, "absolution", "Absolution Abilities for Deikhans", DISC_DEIKHAN_ABSOLUTION, CLASS_DEIKHAN},
   {SPEC_TRAINER_DEIKHAN_VENGEANCE, "vengeance", "Vengeance for Deikhans", DISC_DEIKHAN_VENGEANCE, CLASS_DEIKHAN},
   {SPEC_TRAINER_LEVERAGE, "leverage", "about Balance and Leverage", DISC_LEVERAGE, CLASS_MONK},
   {SPEC_TRAINER_MINDBODY, "mindbody", "about Mind and Body Control", DISC_MINDBODY, CLASS_MONK},

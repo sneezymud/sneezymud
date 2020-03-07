@@ -18,7 +18,7 @@
 #include "disc_blacksmithing.h"
 #include "disc_deikhan_martial.h"
 #include "disc_deikhan_guardian.h"
-#include "disc_deikhan_cures.h"
+#include "disc_deikhan_absolution.h"
 #include "disc_deikhan_vengeance.h"
 #include "disc_defense.h"
 #include "disc_offense.h"
@@ -1776,7 +1776,7 @@ void TBeing::assignDisciplinesClass()
     discs->disc[DISC_DEIKHAN_MARTIAL] = new CDDeikhanMartial();
     discs->disc[DISC_MOUNTED] = new CDMounted();
     discs->disc[DISC_DEIKHAN_GUARDIAN] = new CDDeikhanGuardian();
-    discs->disc[DISC_DEIKHAN_CURES] = new CDDeikhanCures();
+    discs->disc[DISC_DEIKHAN_ABSOLUTION] = new CDDeikhanAbsolution();
     discs->disc[DISC_DEIKHAN_VENGEANCE] = new CDDeikhanVengeance();
 
     discs->disc[DISC_MONK] = new CDMonk();
@@ -1902,7 +1902,7 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_DEIKHAN_MARTIAL] = new CDDeikhanMartial();
       discs->disc[DISC_MOUNTED] = new CDMounted();
       discs->disc[DISC_DEIKHAN_GUARDIAN] = new CDDeikhanGuardian();
-      discs->disc[DISC_DEIKHAN_CURES] = new CDDeikhanCures();
+      discs->disc[DISC_DEIKHAN_ABSOLUTION] = new CDDeikhanAbsolution();
       discs->disc[DISC_DEIKHAN_VENGEANCE] = new CDDeikhanVengeance();
       discs->disc[DISC_FAITH] = new CDFaith();
       discs->disc[DISC_THEOLOGY] = new CDTheology();
@@ -2137,7 +2137,7 @@ int TBeing::isNotPowerful(TBeing *vict, int lev, spellNumT skill, silentTypeT si
     case DISC_CLERIC:
     case DISC_DEIKHAN:
     case DISC_DEIKHAN_VENGEANCE:
-    case DISC_DEIKHAN_CURES:
+    case DISC_DEIKHAN_ABSOLUTION:
     case DISC_DEIKHAN_GUARDIAN:
       cd = getDiscipline(DISC_FAITH);
       if (cd && cd->getLearnedness() > 0)
@@ -2269,7 +2269,7 @@ int TBeing::getSkillLevel(spellNumT skill) const
     case DISC_DEIKHAN_MARTIAL:
     case DISC_MOUNTED:
     case DISC_DEIKHAN_GUARDIAN:
-    case DISC_DEIKHAN_CURES:
+    case DISC_DEIKHAN_ABSOLUTION:
     case DISC_DEIKHAN_VENGEANCE:
       lev = getClassLevel(CLASS_DEIKHAN);
       break;
