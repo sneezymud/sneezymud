@@ -2908,12 +2908,12 @@ static void RoomSave(TBeing *ch, int start, int end, int useSecond)
   strcpy(dots, "\0");
 
   db.query("begin");
-  db.query("delete from room where owner='%s' and block=%i", 
-	   ch->getName().c_str(), useSecond);
-  db.query("delete from roomexit where owner='%s' and block=%i",
-	   ch->getName().c_str(), useSecond);
-  db.query("delete from roomextra where owner='%s' and block=%i", 
-	   ch->getName().c_str(), useSecond);
+  db.query("delete from room where owner='%s' and (block=%i or vnum between %i and %i)",
+	   ch->getName().c_str(), useSecond, start, end);
+  db.query("delete from roomexit where owner='%s' and block=%i and (block=%i or vnum between %i and %i)",
+	   ch->getName().c_str(), useSecond, start, end);
+  db.query("delete from roomextra where owner='%s' and block=%i and (block=%i or vnum between %i and %i)",
+	   ch->getName().c_str(), useSecond, start, end);
 
   for (i = rstart; i <= rend; i++) {
     rp = real_roomp(i);
