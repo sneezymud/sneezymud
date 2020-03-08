@@ -642,7 +642,6 @@ spellNumT TBeing::getSkillNum(spellNumT skill_num) const
           else
             return pick_best_skill(this, skill_num, {
                 {CLASS_WARRIOR, SKILL_KICK},
-                {CLASS_DEIKHAN, SKILL_KICK_DEIKHAN},
                 {CLASS_THIEF, SKILL_KICK_THIEF}});
       
         case SKILL_RETREAT:
@@ -781,11 +780,6 @@ spellNumT TBeing::getSkillNum(spellNumT skill_num) const
                 {CLASS_CLERIC, SPELL_CLOT},
                 {CLASS_DEIKHAN, SPELL_CLOT_DEIKHAN}});
         
-        case SPELL_RAIN_BRIMSTONE:
-            return pick_best_skill(this, skill_num, {
-                {CLASS_CLERIC, SPELL_RAIN_BRIMSTONE},
-                {CLASS_DEIKHAN, SPELL_RAIN_BRIMSTONE_DEIKHAN}});
-        
         case SPELL_STERILIZE:
             return pick_best_skill(this, skill_num, {
                 {CLASS_CLERIC, SPELL_STERILIZE},
@@ -810,16 +804,6 @@ spellNumT TBeing::getSkillNum(spellNumT skill_num) const
             return pick_best_skill(this, skill_num, {
                 {CLASS_CLERIC, SPELL_CURE_DISEASE},
                 {CLASS_DEIKHAN, SPELL_CURE_DISEASE_DEIKHAN}});
-        
-        case SPELL_EARTHQUAKE:
-            return pick_best_skill(this, skill_num, {
-                {CLASS_CLERIC, SPELL_EARTHQUAKE},
-                {CLASS_DEIKHAN, SPELL_EARTHQUAKE_DEIKHAN}});
-        
-        case SPELL_CALL_LIGHTNING:
-            return pick_best_skill(this, skill_num, {
-                {CLASS_CLERIC, SPELL_CALL_LIGHTNING},
-                {CLASS_DEIKHAN, SPELL_CALL_LIGHTNING_DEIKHAN}});
         
 #if 0
         // unimplemented

@@ -595,8 +595,6 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 
 // disc_deikhan
 
-    case SKILL_KICK_DEIKHAN:  //              411
-      return &((CDDeikhan *) cd)->skKickDeikhan;
     case SPELL_HEAL_LIGHT_DEIKHAN:  //        412
       return &((CDDeikhan *) cd)->skHealLightDeikhan;
     case SPELL_HARM_LIGHT_DEIKHAN:  //        412
@@ -613,8 +611,6 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDDeikhan *) cd)->skExpelDeikhan;
     case SPELL_CLOT_DEIKHAN:  //              419
       return &((CDDeikhan *) cd)->skClotDeikhan;
-    case SPELL_RAIN_BRIMSTONE_DEIKHAN:  //    420
-      return &((CDDeikhan *) cd)->skRainBrimstoneDeikhan;
     case SPELL_STERILIZE_DEIKHAN:  //         421
       return &((CDDeikhan *) cd)->skSterilizeDeikhan;
     case SPELL_REMOVE_CURSE_DEIKHAN:  //      422
@@ -708,10 +704,6 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDDeikhanVengeance *) cd)->skHarmDeikhan;
     case SPELL_NUMB_DEIKHAN:  //              492
       return &((CDDeikhanVengeance *) cd)->skNumbDeikhan;
-    case SPELL_EARTHQUAKE_DEIKHAN:  //        493
-      return &((CDDeikhanVengeance *) cd)->skEarthquakeDeikhan;
-    case SPELL_CALL_LIGHTNING_DEIKHAN:  //    494
-      return &((CDDeikhanVengeance *) cd)->skCallLightningDeikhan;
 
 // MONK CLASS
 

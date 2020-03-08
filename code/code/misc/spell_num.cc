@@ -499,8 +499,6 @@ int mapSpellnumToFile(spellNumT stt)
       return 310;
     case SKILL_FISHLORE:
       return 311;
-    case SKILL_KICK_DEIKHAN:
-      return 325;
     case SPELL_HEAL_LIGHT_DEIKHAN:
       return 326;
     case SKILL_CHIVALRY:
@@ -515,8 +513,6 @@ int mapSpellnumToFile(spellNumT stt)
       return 332;
     case SPELL_CLOT_DEIKHAN:
       return 333;
-    case SPELL_RAIN_BRIMSTONE_DEIKHAN:
-      return 334;
     case SPELL_STERILIZE_DEIKHAN:
       return 335;
     case SPELL_REMOVE_CURSE_DEIKHAN:
@@ -595,10 +591,6 @@ int mapSpellnumToFile(spellNumT stt)
       return 379;
     case SPELL_NUMB_DEIKHAN:
       return 380;
-    case SPELL_EARTHQUAKE_DEIKHAN:
-      return 381;
-    case SPELL_CALL_LIGHTNING_DEIKHAN:
-      return 382;
     case SKILL_FOCUSED_AVOIDANCE:
       return 390;
     case SKILL_YOGINSA:
@@ -1608,8 +1600,6 @@ spellNumT mapFileToSpellnum(int stt)
       return SKILL_ENCAMP;
     case 311:
       return SKILL_FISHLORE;
-    case 325:
-      return SKILL_KICK_DEIKHAN;
     case 326:
       return SPELL_HEAL_LIGHT_DEIKHAN;
     case 327:
@@ -1624,8 +1614,6 @@ spellNumT mapFileToSpellnum(int stt)
       return SPELL_EXPEL_DEIKHAN;
     case 333:
       return SPELL_CLOT_DEIKHAN;
-    case 334:
-      return SPELL_RAIN_BRIMSTONE_DEIKHAN;
     case 335:
       return SPELL_STERILIZE_DEIKHAN;
     case 336:
@@ -1704,10 +1692,6 @@ spellNumT mapFileToSpellnum(int stt)
       return SPELL_HARM_DEIKHAN;
     case 380:
       return SPELL_NUMB_DEIKHAN;
-    case 381:
-      return SPELL_EARTHQUAKE_DEIKHAN;
-    case 382:
-      return SPELL_CALL_LIGHTNING_DEIKHAN;
     case 390:
       return SKILL_FOCUSED_AVOIDANCE;
     case 397:

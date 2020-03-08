@@ -239,7 +239,6 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SPELL_FLAMESTRIKE:
     case SPELL_FIRE_BREATH:
     case SPELL_RAIN_BRIMSTONE:
-    case SPELL_RAIN_BRIMSTONE_DEIKHAN:
     case SPELL_INFERNO:
     case SPELL_HELLFIRE:
     case SPELL_FLAMING_SWORD:
@@ -250,7 +249,6 @@ immuneTypeT getTypeImmunity(spellNumT type)
       bit = IMMUNE_HEAT;
       break;
 //    case SPELL_LIGHTNING_BOLT:
-    case SPELL_CALL_LIGHTNING_DEIKHAN:
     case SPELL_CALL_LIGHTNING:
     case SPELL_LIGHTNING_BREATH:
     case DAMAGE_ELECTRIC:
@@ -278,7 +276,6 @@ immuneTypeT getTypeImmunity(spellNumT type)
       bit = IMMUNE_ENERGY;
       break;
     case SPELL_METEOR_SWARM:
-    case SPELL_EARTHQUAKE_DEIKHAN:
     case SPELL_EARTHQUAKE:
     case SPELL_PEBBLE_SPRAY:
     case SPELL_SAND_BLAST:
@@ -356,7 +353,6 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case DAMAGE_KICK_SIDE:
     case DAMAGE_KICK_SHIN:
     case DAMAGE_KICK_SOLAR:
-    case SKILL_KICK_DEIKHAN:
     case SKILL_KICK_THIEF:
     case SKILL_KICK_MONK:
     case SKILL_KICK:

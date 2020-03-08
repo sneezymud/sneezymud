@@ -442,14 +442,13 @@ int TFFlame::igniteMessage(TBeing *ch) const
       ePower = 2;
       mana = 2;
     } else sFound = false;
-  } else if (ch->hasClass(CLASS_CLERIC) || ch->hasClass(CLASS_DEIKHAN)) {
+  } else if (ch->hasClass(CLASS_CLERIC)) {
     if (ch->doesKnowSkill(SPELL_FLAMESTRIKE) && ch->getPiety() > 13) {
       sprintf(Buf[0], "You call a minor flamestrike down onto the fire wood.\n\r");
       sprintf(Buf[1], "$n calls a minor flamestrike down onto the fire wood.");
       ePower = 3;
       mana = 13;
-    } else if ((ch->doesKnowSkill(SPELL_RAIN_BRIMSTONE) ||
-               ch->doesKnowSkill(SPELL_RAIN_BRIMSTONE_DEIKHAN)) && ch->getPiety() > 2) {
+    } else if (ch->doesKnowSkill(SPELL_RAIN_BRIMSTONE) && ch->getPiety() > 2) {
       sprintf(Buf[0], "You call down some brimstone upon some fire wood.\n\r");
       sprintf(Buf[1], "$n calles down some brimstone upon some fire wood.");
       ePower = 2;

@@ -299,7 +299,6 @@ enum spellNumT {
      SPELL_BLESS_DEIKHAN,
      SPELL_EXPEL_DEIKHAN,
      SPELL_CLOT_DEIKHAN,
-     SPELL_RAIN_BRIMSTONE_DEIKHAN,
      SPELL_STERILIZE_DEIKHAN,
      SPELL_REMOVE_CURSE_DEIKHAN,
      SPELL_CURSE_DEIKHAN,
@@ -320,8 +319,6 @@ enum spellNumT {
      SPELL_SALVE_DEIKHAN,
      SPELL_HARM_DEIKHAN,
      SPELL_NUMB_DEIKHAN,
-     SPELL_EARTHQUAKE_DEIKHAN,
-     SPELL_CALL_LIGHTNING_DEIKHAN,
      // end of deikhan
      
 
@@ -384,7 +381,6 @@ enum spellNumT {
      // end of ranger
      // start of deikhan
 
-     SKILL_KICK_DEIKHAN,
      SKILL_CHIVALRY,
      SKILL_BASH_DEIKHAN,
      SKILL_RESCUE_DEIKHAN,

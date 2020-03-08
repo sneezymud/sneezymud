@@ -1441,7 +1441,6 @@ void TBeing::statBeing(TBeing *k)
       case SPELL_TORNADO:
       case SKILL_QUIV_PALM:
       case SKILL_SHOULDER_THROW:
-      case SPELL_CALL_LIGHTNING_DEIKHAN:
       case SPELL_CALL_LIGHTNING:
       case SPELL_LIGHTNING_BREATH:
       case SPELL_GUSHER:
@@ -1465,14 +1464,12 @@ void TBeing::statBeing(TBeing *k)
       case SKILL_CHARGE:
       case SKILL_SMITE:
       case SPELL_METEOR_SWARM:
-      case SPELL_EARTHQUAKE_DEIKHAN:
       case SPELL_EARTHQUAKE:
       case SPELL_PILLAR_SALT:
       case SPELL_FIREBALL:
       case SPELL_HANDS_OF_FLAME:
       case SPELL_INFERNO:
       case SPELL_HELLFIRE:
-      case SPELL_RAIN_BRIMSTONE_DEIKHAN:
       case SPELL_RAIN_BRIMSTONE:
       case SPELL_FLAMESTRIKE:
       case SPELL_FIRE_BREATH:
@@ -1509,7 +1506,6 @@ void TBeing::statBeing(TBeing *k)
       case SPELL_HARM_CRITICAL:
       case SPELL_WITHER_LIMB:
       case SPELL_BLEED:
-      case SKILL_KICK_DEIKHAN:
       case SKILL_KICK_THIEF:
       case SKILL_KICK_MONK:
       case SKILL_KICK:

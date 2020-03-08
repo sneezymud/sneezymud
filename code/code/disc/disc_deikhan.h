@@ -37,7 +37,6 @@ class CDDeikhan : public CDiscipline
 public:
 // Level 1
 // Level 2
-    CSkill skKickDeikhan;
 // Level 4
     CSkill skHealLightDeikhan;
 // Level 4
@@ -56,7 +55,6 @@ public:
 
 // Level 12
     CSkill skClotDeikhan;
-    CSkill skRainBrimstoneDeikhan;
 // Level 14
     CSkill skSterilizeDeikhan;
     CSkill skRemoveCurseDeikhan;
@@ -91,7 +89,6 @@ public:
     
     CDDeikhan()
       : CDiscipline(),
-      skKickDeikhan(),
       skHealLightDeikhan(),
       skHarmLightDeikhan(),
       skChivalry(),
@@ -101,7 +98,6 @@ public:
       skRescueDeikhan(),
       skExpelDeikhan(),
       skClotDeikhan(),
-      skRainBrimstoneDeikhan(),
       skSterilizeDeikhan(),
       skRemoveCurseDeikhan(),
       skCurseDeikhan(),
@@ -124,7 +120,6 @@ public:
     }
     CDDeikhan(const CDDeikhan &a)
       : CDiscipline(a),
-        skKickDeikhan(a.skKickDeikhan),
         skHealLightDeikhan(a.skHealLightDeikhan),
         skHarmLightDeikhan(a.skHarmLightDeikhan),
         skChivalry(a.skChivalry),
@@ -134,7 +129,6 @@ public:
         skRescueDeikhan(a.skRescueDeikhan),
         skExpelDeikhan(a.skExpelDeikhan),
         skClotDeikhan(a.skClotDeikhan),
-        skRainBrimstoneDeikhan(a.skRainBrimstoneDeikhan),
         skSterilizeDeikhan(a.skSterilizeDeikhan),
         skRemoveCurseDeikhan(a.skRemoveCurseDeikhan),
         skCurseDeikhan(a.skCurseDeikhan),
@@ -158,7 +152,6 @@ public:
     CDDeikhan & operator=(const CDDeikhan &a) {
       if (this == &a) return *this;
       CDiscipline::operator=(a);
-      skKickDeikhan = a.skKickDeikhan;
       skHealLightDeikhan = a.skHealLightDeikhan;
       skHarmLightDeikhan = a.skHarmLightDeikhan;
       skChivalry = a.skChivalry;
@@ -168,7 +161,6 @@ public:
       skRescueDeikhan = a.skRescueDeikhan;
       skExpelDeikhan = a.skExpelDeikhan;
       skClotDeikhan = a.skClotDeikhan;
-      skRainBrimstoneDeikhan = a.skRainBrimstoneDeikhan;
       skSterilizeDeikhan = a.skSterilizeDeikhan;
       skRemoveCurseDeikhan = a.skRemoveCurseDeikhan;
       skCurseDeikhan = a.skCurseDeikhan;
