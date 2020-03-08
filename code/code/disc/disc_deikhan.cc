@@ -60,7 +60,7 @@ void divineRescue(TBeing * caster, TBeing * victim) {
   aff.type = SKILL_DIVINE_RESCUE;
   aff.level = level;
   aff.duration = Pulse::UPDATES_PER_MUDHOUR / 4;
-  aff.modifier = 50;
+  aff.modifier = -50;
   aff.location = APPLY_ARMOR;
   aff.bitvector = 0;
   victim->affectTo(&aff, -1);

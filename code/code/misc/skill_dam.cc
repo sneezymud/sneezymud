@@ -420,8 +420,8 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
       break;
     case SKILL_SMITE:
       // this is limited to once a day, and has limits from weapon-use to
-      // so lets let it do a LOT of damage (20*normal skill)
-      dam =  genericDam(victim, skill, DISC_DEIKHAN, level, adv_learn, 0.9*20, REDUCE_YES, !isPc(), TRIM_NO);
+      // so lets let it do a LOT of damage
+      dam =  genericDam(victim, skill, DISC_DEIKHAN, level, adv_learn, 0.639*18, REDUCE_YES, !isPc(), TRIM_NO);
       // additionally, do faction percent modification for deikhan
       dam = (int) (dam * percModifier());
       break;

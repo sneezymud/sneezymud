@@ -935,16 +935,17 @@ void TBaseWeapon::changeBaseWeaponValue1(TBeing *ch, const char *arg, editorEnte
   ch->sendTo("Enter your choice to modify.\n\r--> ");
 }
 
+// smite - Intending this to be usable more often but will require a 2-hander
+// Also will have a big defensive debuff to ensure it's mostly
+// a situational ability when not tanking.
 int TGenWeapon::smiteWithMe(TBeing *ch, TBeing *v)
 {
-  affectedData aff;
+  affectedData aff, aff2, aff3, aff4, aff5, aff6;
   byte bKnown = ch->getSkillValue(SKILL_SMITE);
+  int char_level = ch->GetMaxLevel();
 
-  if ((objVnum() != Obj::WEAPON_AVENGER1) &&
-      (objVnum() != Obj::WEAPON_AVENGER2) &&
-      (objVnum() != Obj::WEAPON_AVENGER3) &&
-      // Desecrator
-      (objVnum() != 29652)) {
+  // Must be a 2-handed weapon
+  if (!isPaired()) {
     ch->sendTo(COLOR_OBJECTS, format("%s has no respect for someone using %s.\n\r") %
         sstring(ch->yourDeity(SKILL_SMITE, FIRST_PERSON)).cap() % getName());
     return FALSE;
@@ -966,14 +967,20 @@ int TGenWeapon::smiteWithMe(TBeing *ch, TBeing *v)
     dam /= 2;
   }
 
+  // Skill attmpt regulates how often you can use smite.
+  // If we fail we'll make the duration much less
   aff.type = AFFECT_SKILL_ATTEMPT;
-  aff.duration = 1 * Pulse::UPDATES_PER_MUDHOUR;
+  // More times per day as level increases
+  aff.duration = max(1, (20 - (char_level / 3))) * Pulse::UPDATES_PER_MUDHOUR;
   aff.modifier = SKILL_SMITE;
   aff.location = APPLY_NONE;
   aff.bitvector = 0;
-  ch->affectTo(&aff, -1);
 
   if (!ch->bSuccess(bKnown, SKILL_SMITE)) {
+    // change skill attempt duration and apply before we return
+    aff.duration = 1 * Pulse::UPDATES_PER_MUDHOUR;
+    ch->affectTo(&aff, -1);
+
     act("You call upon $d to smite $N, but $d does not heed your plea!",
              FALSE, ch, 0, v, TO_CHAR);
     act("$n calls upon $d to smite $N, but $d does not heed $m.",
@@ -990,14 +997,61 @@ int TGenWeapon::smiteWithMe(TBeing *ch, TBeing *v)
 
     return TRUE;
   }
+  // Apply the skill attempt
+  ch->affectTo(&aff, -1);
+
+  int modifier = 25;
+
+  // Now the affect for the skill itself
 
   aff.type = SKILL_SMITE;
-  // More times per day as level increases (about 4 times a day at 50)
-  aff.duration = (21 - (ch->GetMaxLevel() / 3)) * Pulse::UPDATES_PER_MUDHOUR;
+  aff.duration = Pulse::UPDATES_PER_MUDHOUR / 3;
   aff.modifier = 0;
-  aff.location = APPLY_NONE;
+  aff.location = APPLY_STR;
+  aff.modifier = modifier;
   aff.bitvector = 0;
+
+  aff2.type = SKILL_SMITE;
+  aff2.duration = Pulse::UPDATES_PER_MUDHOUR / 3;
+  aff2.modifier = 0;
+  aff2.location = APPLY_SPE;
+  aff2.modifier = modifier;
+  aff2.bitvector = 0;
+
+  aff3.type = SKILL_SMITE;
+  aff3.duration = Pulse::UPDATES_PER_MUDHOUR / 3;
+  aff3.modifier = 0;
+  aff3.location = APPLY_HITROLL;
+  aff3.modifier = 1;
+  aff3.bitvector = 0;
+
+  aff4.type = SKILL_SMITE;
+  aff4.duration = Pulse::UPDATES_PER_MUDHOUR / 3;
+  aff4.modifier = 0;
+  aff4.location = APPLY_CON;
+  aff4.modifier = -2 * modifier;
+  aff4.bitvector = 0;
+
+  aff5.type = SKILL_SMITE;
+  aff5.duration = Pulse::UPDATES_PER_MUDHOUR / 3;
+  aff5.modifier = 0;
+  aff5.location = APPLY_AGI;
+  aff5.modifier = -2 * modifier;
+  aff5.bitvector = 0;
+
+  aff6.type = SKILL_SMITE;
+  aff6.duration = Pulse::UPDATES_PER_MUDHOUR / 3;
+  aff6.modifier = 0;
+  aff6.location = APPLY_ARMOR;
+  aff6.modifier = 8 * modifier;
+  aff6.bitvector = 0;
+
   ch->affectTo(&aff, -1);
+  ch->affectTo(&aff2, -1);
+  ch->affectTo(&aff3, -1);
+  ch->affectTo(&aff4, -1);
+  ch->affectTo(&aff5, -1);
+  ch->affectTo(&aff6, -1);
 
   act("You call upon $d to smite $N!",
              FALSE, ch, 0, v, TO_CHAR);
@@ -1011,6 +1065,8 @@ int TGenWeapon::smiteWithMe(TBeing *ch, TBeing *v)
              FALSE, ch, this, v, TO_NOTVICT);
   act("A bolt of fierce blue-white energy courses from $p into you!!!",
              FALSE, ch, this, v, TO_VICT);
+  act("Your skin tingles as some of the energy remains in your body.",
+             FALSE, ch, this, v, TO_CHAR);
 
   if (ch->reconcileDamage(v, dam, SKILL_SMITE) == -1)
     return DELETE_VICT;
