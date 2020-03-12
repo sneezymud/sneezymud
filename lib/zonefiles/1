@@ -337,35 +337,35 @@ O 0 1865 1 28860         Petrified in Undead Graveyard
 ******************
 
 ** Trader mobs
-M 0 29405 1 238        romantic gypsy - trade candy hearts
-M 0 29406 1 4616          busy florist - trade box of chocolates
-M 0 29416 1 8928         farmer wife - trade delicate tulip
-M 0 29407 1 36949         scary clown - trade bouquet of tulip
-M 0 29408 1 11016        animated mime - trade balloon
-M 0 29409 1 13106         lazy guy - trade teddy bear
-M 0 29410 1 3177         drunk trader - trade bottle of port
+* M 0 29405 1 238        romantic gypsy - trade candy hearts
+* M 0 29406 1 4616          busy florist - trade box of chocolates
+* M 0 29416 1 8928         farmer wife - trade delicate tulip
+* M 0 29407 1 36949         scary clown - trade bouquet of tulip
+* M 0 29408 1 11016        animated mime - trade balloon
+* M 0 29409 1 13106         lazy guy - trade teddy bear
+* M 0 29410 1 3177         drunk trader - trade bottle of port
  
 * ** Sugar toothed weasels **
-M 0 37138 500 13700    a sugar toothed weasel
+* M 0 37138 500 13700    a sugar toothed weasel
  
 * ** Candy heart loading mobs in astral pocket
-M 0 29415 500 13700        thieving squirrel
-G 1 29405 9999                 candy heart
+* M 0 29415 500 13700        thieving squirrel
+* G 1 29405 9999                 candy heart
  
-M 0 29412 500 13700        sticky child
-G 1 29405 9999          candy heart
-G 1 29405 9999
+* M 0 29412 500 13700        sticky child
+* G 1 29405 9999          candy heart
+* G 1 29405 9999
  
-M 0 29411 500 13700    lovestruck teen
-G 1 29405 9999          candy heart
-G 1 29405 9999
-G 1 29405 9999          
+* M 0 29411 500 13700    lovestruck teen
+* G 1 29405 9999          candy heart
+* G 1 29405 9999
+* G 1 29405 9999          
  
-M 0 29413 500 13700        depressed lovelorn
-G 1 29405 9999          candy heart
-G 1 29405 9999
-G 1 29405 9999
-G 1 29405 9999
+* M 0 29413 500 13700        depressed lovelorn
+* G 1 29405 9999          candy heart
+* G 1 29405 9999
+* G 1 29405 9999
+* G 1 29405 9999
 
 **********************
 * END February quest *
