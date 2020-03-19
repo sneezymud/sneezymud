@@ -3884,11 +3884,11 @@ int Descriptor::doAccountStuff(char *arg)
     // LIFEFORCE
     /////////////////
     int X = getLifeforce();
-    if (X < 50) {
+    if (X < 5000) {
       setLifeforce(X);
     } else {
-      X = getLifeforce() - (secs * lfmod);
-      setLifeforce(max(50,X));
+      X = getLifeforce() - (local_tics * lfmod);
+      setLifeforce(max(5000,X));
     }
 
     /////////////////////////
