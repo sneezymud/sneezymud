@@ -40,7 +40,7 @@
 #include "obj_base_cup.h"
 #include "rent.h"
 
-#define DAMAGE_DEBUG 0
+#define DAMAGE_DEBUG 1
 
 extern class TPeelPk peelPk;
 

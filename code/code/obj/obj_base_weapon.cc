@@ -940,9 +940,9 @@ void TBaseWeapon::changeBaseWeaponValue1(TBeing *ch, const char *arg, editorEnte
 // a situational ability when not tanking.
 int TGenWeapon::smiteWithMe(TBeing *ch, TBeing *v)
 {
-  affectedData aff, aff2, aff3, aff4, aff5, aff6;
+  affectedData aff, aff2, aff3, aff4;
   byte bKnown = ch->getSkillValue(SKILL_SMITE);
-  int char_level = ch->GetMaxLevel();
+  // int char_level = ch->GetMaxLevel();
 
   // Must be a 2-handed weapon
   if (!isPaired()) {
@@ -971,7 +971,9 @@ int TGenWeapon::smiteWithMe(TBeing *ch, TBeing *v)
   // If we fail we'll make the duration much less
   aff.type = AFFECT_SKILL_ATTEMPT;
   // More times per day as level increases
-  aff.duration = max(1, (20 - (char_level / 3))) * Pulse::UPDATES_PER_MUDHOUR;
+  // aff.duration = max(1, (20 - (char_level / 3))) * Pulse::UPDATES_PER_MUDHOUR;
+  aff.duration = Pulse::UPDATES_PER_MUDHOUR;
+
   aff.modifier = SKILL_SMITE;
   aff.location = APPLY_NONE;
   aff.bitvector = 0;
@@ -1014,44 +1016,28 @@ int TGenWeapon::smiteWithMe(TBeing *ch, TBeing *v)
   aff2.type = SKILL_SMITE;
   aff2.duration = Pulse::UPDATES_PER_MUDHOUR / 3;
   aff2.modifier = 0;
-  aff2.location = APPLY_SPE;
-  aff2.modifier = modifier;
+  aff2.location = APPLY_HITROLL;
+  aff2.modifier = 1;
   aff2.bitvector = 0;
 
   aff3.type = SKILL_SMITE;
   aff3.duration = Pulse::UPDATES_PER_MUDHOUR / 3;
   aff3.modifier = 0;
-  aff3.location = APPLY_HITROLL;
-  aff3.modifier = 1;
+  aff3.location = APPLY_AGI;
+  aff3.modifier = -2 * modifier;
   aff3.bitvector = 0;
 
   aff4.type = SKILL_SMITE;
   aff4.duration = Pulse::UPDATES_PER_MUDHOUR / 3;
   aff4.modifier = 0;
-  aff4.location = APPLY_CON;
-  aff4.modifier = -2 * modifier;
+  aff4.location = APPLY_ARMOR;
+  aff4.modifier = 10 * modifier;
   aff4.bitvector = 0;
-
-  aff5.type = SKILL_SMITE;
-  aff5.duration = Pulse::UPDATES_PER_MUDHOUR / 3;
-  aff5.modifier = 0;
-  aff5.location = APPLY_AGI;
-  aff5.modifier = -2 * modifier;
-  aff5.bitvector = 0;
-
-  aff6.type = SKILL_SMITE;
-  aff6.duration = Pulse::UPDATES_PER_MUDHOUR / 3;
-  aff6.modifier = 0;
-  aff6.location = APPLY_ARMOR;
-  aff6.modifier = 8 * modifier;
-  aff6.bitvector = 0;
 
   ch->affectTo(&aff, -1);
   ch->affectTo(&aff2, -1);
   ch->affectTo(&aff3, -1);
   ch->affectTo(&aff4, -1);
-  ch->affectTo(&aff5, -1);
-  ch->affectTo(&aff6, -1);
 
   act("You call upon $d to smite $N!",
              FALSE, ch, 0, v, TO_CHAR);

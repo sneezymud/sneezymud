@@ -61,7 +61,6 @@ public:
 // level 15
     CSkill skCurseDeikhan;
 // Level 17
-    CSkill skSmite;
 // Level 18
     CSkill skInfectDeikhan;
     CSkill skCureDiseaseDeikhan;
@@ -101,7 +100,6 @@ public:
       skSterilizeDeikhan(),
       skRemoveCurseDeikhan(),
       skCurseDeikhan(),
-      skSmite(),
       skInfectDeikhan(),
       skCureDiseaseDeikhan(),
       skCreateFoodDeikhan(),
@@ -132,7 +130,6 @@ public:
         skSterilizeDeikhan(a.skSterilizeDeikhan),
         skRemoveCurseDeikhan(a.skRemoveCurseDeikhan),
         skCurseDeikhan(a.skCurseDeikhan),
-        skSmite(a.skSmite),
         skInfectDeikhan(a.skInfectDeikhan),
         skCureDiseaseDeikhan(a.skCureDiseaseDeikhan),
         skCreateFoodDeikhan(a.skCreateFoodDeikhan),
@@ -164,7 +161,6 @@ public:
       skSterilizeDeikhan = a.skSterilizeDeikhan;
       skRemoveCurseDeikhan = a.skRemoveCurseDeikhan;
       skCurseDeikhan = a.skCurseDeikhan;
-      skSmite = a.skSmite;
       skInfectDeikhan = a.skInfectDeikhan;
       skCureDiseaseDeikhan = a.skCureDiseaseDeikhan;
       skCreateFoodDeikhan = a.skCreateFoodDeikhan;

@@ -18,18 +18,21 @@ class CDDeikhanVengeance : public CDiscipline
 public:
     CSkill skHarmDeikhan;
     CSkill skNumbDeikhan;
+    CSkill skSmite;
     CSkill skHolyLight;    // not coded
 
     CDDeikhanVengeance()
       : CDiscipline(),
       skHarmDeikhan(),
       skNumbDeikhan(),
+      skSmite(),
       skHolyLight() {
     }
     CDDeikhanVengeance(const CDDeikhanVengeance &a)
       : CDiscipline(a),
       skHarmDeikhan(a.skHarmDeikhan),
       skNumbDeikhan(a.skNumbDeikhan),
+      skSmite(a.skSmite),
       skHolyLight(a.skHolyLight) {
     }
     CDDeikhanVengeance & operator=(const CDDeikhanVengeance &a) {
@@ -37,6 +40,7 @@ public:
       CDiscipline::operator=(a);
       skHarmDeikhan = a.skHarmDeikhan;
       skNumbDeikhan = a.skNumbDeikhan;
+      skSmite = a.skSmite;
       skHolyLight = a.skHolyLight;
       return *this;
     }

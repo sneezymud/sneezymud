@@ -22,10 +22,7 @@
 #include "configuration.h"
 
 // there is another one of these defines in combat.cc
-<<<<<<< HEAD
-=======
 #define DAMAGE_DEFINE 0
->>>>>>> rework smite to be usable more often and have some other affects
 #define DAMAGE_DEBUG 0
 
 // -1 = v is dead, needs to go bye-bye

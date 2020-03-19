@@ -29,22 +29,30 @@ class CDDeikhanAbsolution : public CDiscipline
 public:
     CSkill skSalveDeikhan;
     CSkill skLayHands;
+    CSkill skHeroesFeastDeikhan;
+    CSkill skRefreshDeikhan;
 
     CDDeikhanAbsolution()
       : CDiscipline(),
       skSalveDeikhan(),
-      skLayHands() {
+      skLayHands(),
+      skHeroesFeastDeikhan(),
+      skRefreshDeikhan() {
     }
     CDDeikhanAbsolution(const CDDeikhanAbsolution &a)
       : CDiscipline(a),
       skSalveDeikhan(a.skSalveDeikhan),
-      skLayHands(a.skLayHands) {
+      skLayHands(a.skLayHands),
+      skHeroesFeastDeikhan(a.skHeroesFeastDeikhan),
+      skRefreshDeikhan(a.skRefreshDeikhan) {
     }
     CDDeikhanAbsolution & operator=(const CDDeikhanAbsolution &a) {
       if (this == &a) return *this;
       CDiscipline::operator=(a);
       skSalveDeikhan = a.skSalveDeikhan;
       skLayHands = a.skLayHands;
+      skHeroesFeastDeikhan = a.skHeroesFeastDeikhan;
+      skRefreshDeikhan = a.skRefreshDeikhan;
       return *this;
     }
     virtual ~CDDeikhanAbsolution() {}

@@ -16,24 +16,18 @@
 class CDDeikhanGuardian : public CDiscipline
 {
 public:
-    CSkill skHeroesFeastDeikhan;
-    CSkill skRefreshDeikhan;
     CSkill skSynostodweomer;
     CSkill skDivineGrace;
     CSkill skDivineRescue;
 
     CDDeikhanGuardian()
       : CDiscipline(),
-      skHeroesFeastDeikhan(),
-      skRefreshDeikhan(),
       skSynostodweomer(),
       skDivineGrace(),
       skDivineRescue() {
     }
     CDDeikhanGuardian(const CDDeikhanGuardian &a)
       : CDiscipline(a),
-      skHeroesFeastDeikhan(a.skHeroesFeastDeikhan),
-      skRefreshDeikhan(a.skRefreshDeikhan),
       skSynostodweomer(a.skSynostodweomer),
       skDivineGrace(a.skDivineGrace),
       skDivineRescue(a.skDivineRescue) {
@@ -41,8 +35,6 @@ public:
     CDDeikhanGuardian & operator=(const CDDeikhanGuardian &a) {
       if (this == &a) return *this;
       CDiscipline::operator=(a);
-      skHeroesFeastDeikhan = a.skHeroesFeastDeikhan;
-      skRefreshDeikhan = a.skRefreshDeikhan;
       skSynostodweomer = a.skSynostodweomer;
       skDivineGrace = a.skDivineGrace;
       skDivineRescue = a.skDivineRescue;

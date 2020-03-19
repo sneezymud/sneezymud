@@ -619,8 +619,6 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDDeikhan *) cd)->skCurseDeikhan;
     case SKILL_RESCUE_DEIKHAN:  //            424
       return &((CDDeikhan *) cd)->skRescueDeikhan;
-    case SKILL_SMITE:  //                    425
-      return &((CDDeikhan *) cd)->skSmite;
     case SPELL_INFECT_DEIKHAN:  //            426
       return &((CDDeikhan *) cd)->skInfectDeikhan;
     case SPELL_CURE_DISEASE_DEIKHAN:  //      427
@@ -679,10 +677,6 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 
 // disc_deikhan_guardian
 
-    case SPELL_HEROES_FEAST_DEIKHAN:  //      471
-      return &((CDDeikhanGuardian *) cd)->skHeroesFeastDeikhan;
-    case SPELL_REFRESH_DEIKHAN:  //           472
-      return &((CDDeikhanGuardian *) cd)->skRefreshDeikhan;
     case SPELL_SYNOSTODWEOMER:  //            473
       return &((CDDeikhanGuardian *) cd)->skSynostodweomer;
     case SKILL_DIVINE_GRACE:
@@ -692,10 +686,14 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 
 // disc_deikhan_absolution
 
+    case SPELL_REFRESH_DEIKHAN:  //           472
+      return &((CDDeikhanAbsolution *) cd)->skRefreshDeikhan;
     case SPELL_SALVE_DEIKHAN:  //             481
       return &((CDDeikhanAbsolution *) cd)->skSalveDeikhan;
     case SKILL_LAY_HANDS:  //                 482
       return &((CDDeikhanAbsolution *) cd)->skLayHands;
+    case SPELL_HEROES_FEAST_DEIKHAN:  //      471
+      return &((CDDeikhanAbsolution *) cd)->skHeroesFeastDeikhan;
 
 
 // disc_deikhan_vengeance
@@ -704,6 +702,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDDeikhanVengeance *) cd)->skHarmDeikhan;
     case SPELL_NUMB_DEIKHAN:  //              492
       return &((CDDeikhanVengeance *) cd)->skNumbDeikhan;
+    case SKILL_SMITE:  //                    425
+      return &((CDDeikhanVengeance *) cd)->skSmite;
 
 // MONK CLASS
 
