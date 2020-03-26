@@ -110,9 +110,7 @@ float classHpPerLevel(const TPerson *tp){
     hpgain=7.0;
   } 
 
-  hpgain = hpgain / num_classes;
-  
-  return hpgain;
+  return hpgain / num_classes;
 }
 
 int ageHpMod(const TPerson *tp){
