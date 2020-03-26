@@ -1913,7 +1913,6 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_MINDBODY] = new CDMindBody();
       discs->disc[DISC_FOCUSED_ATTACKS] = new CDFAttacks();
       discs->disc[DISC_BAREHAND] = new CDBarehand();
-      discs->disc[DISC_DEFENSE] = new CDDefense();
       discs->disc[DISC_IRON_BODY] = new CDIronBody();
     }
   }
