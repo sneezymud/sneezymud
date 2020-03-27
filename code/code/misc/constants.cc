@@ -982,7 +982,7 @@ const struct class_info classInfo[MAX_CLASSES] =
    DISC_DEIKHAN, DISC_THEOLOGY, 0.44, 7.5, "D"},
 
   {true, MONK_LEVEL_IND, CLASS_MONK, "monk",
-   DISC_MONK, DISC_NONE, 0.44, 5.5, "K"},
+   DISC_MONK, DISC_NONE, 0.44, 7.5, "K"},
 
   {false, RANGER_LEVEL_IND, CLASS_RANGER, "ranger",
    DISC_RANGER, DISC_NONE, 0.46, 7, "R"},
@@ -2002,7 +2002,7 @@ const struct disc_names_data discNames[MAX_DISCS] =
    "Magic Lore"},
   {DISC_NATURE, CLASS_RANGER, "nature",
    "Nature"},
-  {DISC_DEFENSE, CLASS_WARRIOR | CLASS_DEIKHAN | CLASS_RANGER | CLASS_MONK, "defense",
+  {DISC_DEFENSE, CLASS_WARRIOR | CLASS_DEIKHAN | CLASS_RANGER, "defense",
    "Defensive Abilities"},
   {DISC_PSIONICS, 0, "psionics",
    "Psionic Abilities"},
