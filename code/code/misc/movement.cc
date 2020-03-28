@@ -3426,6 +3426,7 @@ int TBeing::doMortalGoto(const sstring & argument)
     return FALSE;
   }
 
+  // Not multiclass safe but probably not a problem for anyone
   if (is_abbrev(arg, "trainer")) {
     if (hasClass(CLASS_WARRIOR)) {
       arg = "warrior_trainer";

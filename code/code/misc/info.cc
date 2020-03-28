@@ -3855,6 +3855,8 @@ void TThing::evaluateMe(TBeing *ch) const
 void TMagicItem::evaluateMe(TBeing *ch) const
 {
   int learn = ch->getSkillValue(SKILL_EVALUATE);
+  int learn2 = learn;
+  int learn3 = learn;
 
   ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_EVALUATE, 10);
 
@@ -3862,13 +3864,19 @@ void TMagicItem::evaluateMe(TBeing *ch) const
   if (ch->hasClass(CLASS_RANGER)) {
     learn *= ch->getClassLevel(CLASS_RANGER);
     learn /= 200;
-  } else if (ch->hasClass(CLASS_SHAMAN)) {
-    learn *= ch->getClassLevel(CLASS_SHAMAN);
-    learn /= 50;
-  } else {
-    learn *= ch->getSkillValue(SPELL_IDENTIFY);
-    learn /= 100;
-  }
+  } 
+  if (ch->hasClass(CLASS_SHAMAN)) {
+    learn2 *= ch->getClassLevel(CLASS_SHAMAN);
+    learn2 /= 50;
+  } 
+  learn3 *= ch->getSkillValue(SPELL_IDENTIFY);
+  learn3 /= 100;
+
+  // take the largest value 
+  learn2 = max(learn2, learn3);
+  learn = max(learn, learn2);
+
+  
 
   if (learn > 10) 
     ch->describeMagicLevel(this, learn);
@@ -5339,8 +5347,11 @@ void TBeing::doSpells(const sstring &argument)
   };
 
 
-  if (hasClass(CLASS_SHAMAN) && !isImmortal()) {
-    sendTo("Perhaps looking at rituals is what you need to do?\n\r");
+  if (!hasClass(CLASS_MAGE) && !isImmortal()) {
+    sendTo("You know nothing of casting spells.\n\r");
+    if (hasClass(CLASS_SHAMAN)) {
+      sendTo("Perhaps looking at rituals is what you need to do?\n\r");
+    }
     return;
   }
 

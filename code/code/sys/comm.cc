@@ -1028,7 +1028,7 @@ void Descriptor::updateScreenVt100(unsigned int update)
   if (IS_SET(prompt_d.type, PROMPT_CLASSIC_ANSIBAR)) {
 
     // Line 1:
-
+    // This should be fixed for multiclass but I don't think anyone uses vt100
     if (update & CHANGED_HP) {
       snprintf(buf + strlen(buf), cElements(buf) - strlen(buf), VT_CURSPOS, ch->getScreen() - 2, 7);
       snprintf(buf + strlen(buf), cElements(buf) - strlen(buf), "%d", ch->getHit());
