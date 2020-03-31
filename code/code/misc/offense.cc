@@ -2187,9 +2187,27 @@ void TBeing::blowCount(bool check, float &fx, float &fy)
   } else if (hasClass(CLASS_MONK)) {
     // Monk PCS
 
+    // TODO: this is such a clusterfuck
+    // end result here is monks who use weapons currently don't have a speed mod
+    // Multiclass monks don't get extra attacks when berserking
+
+    // Adding notes now and will fix in a single commit so we can revert if needed
+
+    // blowCountSplitter returns 1.0 if it's a weapon and 0.0 if it's not
+    // Why that is used in the monk section and non-monks use
+    //if (tobj && !tobj->isPaired() && !dynamic_cast<TBaseWeapon *>(tobj) && !check)
+    // 
+    // number of attacks for barehand monks is retrieved with getMult() and calculated in
+    // TBeing::classSpecificStuff() - Why the fuck it's not just done here I don't understand
+    // 
+
+
+    // getmult() should be 1.0 for war and a bunch for monk. unsure for others
     num = getMult();
     fx=fy=0;
 
+    // can probably just do if !prim && hasClass(CLASS_MONK)
+    // Then move speedmod into the else so it doesn't affect barehand monks
     if (!prim)
       fx += (0.60 * num);
     else {
@@ -2199,18 +2217,16 @@ void TBeing::blowCount(bool check, float &fx, float &fy)
       }
 
       if((gun=dynamic_cast<TGun *>(prim))){
-	fx = gun->getROF();
+        fx = gun->getROF();
       }
     }
-
-
 
     if (!sec)
       fy += (0.40 * num);
     else if (sec != prim) {
       fy = sec->blowCountSplitter(this, false);
       if((gun=dynamic_cast<TGun *>(sec)) && !gun->isPaired()){
-	fy = gun->getROF();
+        fy = gun->getROF();
       }
     } else
       // don't give paired weapons extra hits
@@ -2309,6 +2325,9 @@ void TBeing::blowCount(bool check, float &fx, float &fy)
 
     // non-monk PCs
   }
+
+
+
 
 
   // haste
