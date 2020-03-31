@@ -1,9 +1,17 @@
+03-28-20 : Some multiclass fixes:
+           - Evaluating magic items should use the best skill
+           - Shaman/Mage combinations can now use the spells command
+           - Report should now show all relevant resources for multiclass
+           - "list fit" at shops should now work correctly
+           - Fixed a typo in a previous news entry!
+           - Fixed score output to show all relevant resources
+
 03-25-20 : Multiclass hitpoint fixes:
            - Monks base hitpoints have been increased but they no longer 
              have access to advanced defense. Overall this should even out. If
              you have a single class monk that put points into advanced defense
              you can get that fixed up by an admin. This change paves the way 
-             for future improvements to to the skill for War/Deik.
+             for future improvements to the skill for War/Deik.
            - Fixed a bug with multiclass hitpoints where previously it chose
              the base hitpoints of the first class now it takes the average.
 
