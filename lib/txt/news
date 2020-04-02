@@ -5,6 +5,9 @@
            - "list fit" at shops should now work correctly
            - Fixed a typo in a previous news entry!
            - Fixed score output to show all relevant resources
+           - Monks who wield weapons now have a speed modifier to number of 
+             attacks like all other classes
+           - Monk/Warrior multiclass now gets extra attacks when berserking 
 
 03-25-20 : Multiclass hitpoint fixes:
            - Monks base hitpoints have been increased but they no longer 
