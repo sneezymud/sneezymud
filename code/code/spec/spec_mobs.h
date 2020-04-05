@@ -214,7 +214,9 @@ const int SPEC_COMMOD_TRADER      =216;
 const int SPEC_RATION_FACTORY     =217;
 const int SPEC_PET_VETERINARIAN   =218;
 const int SPEC_LAGOMORPH          =219;
-const int NUM_MOB_SPECIALS        =219;
+const int SPEC_TAILOR             =220;
+const int SPEC_BLACKSMITH         =221;
+const int NUM_MOB_SPECIALS        =221;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 
