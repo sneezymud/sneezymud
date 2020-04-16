@@ -1182,6 +1182,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 // disc_defense
     case SKILL_ADVANCED_DEFENSE: // 674
       return &((CDDefense *) cd)->skAdvancedDefense;
+    case SKILL_FOCUSED_AVOIDANCE:
+      return &((CDDefense *) cd)->skFocusedAvoidance;
 
 // disc_psionics
     case SKILL_PSITELEPATHY:

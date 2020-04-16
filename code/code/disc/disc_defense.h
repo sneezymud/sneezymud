@@ -15,6 +15,7 @@ class CDDefense : public CDiscipline
 {
 public:
     CSkill skAdvancedDefense;
+    CSkill skFocusedAvoidance;
 
     CDDefense();
     CDDefense(const CDDefense &a);
