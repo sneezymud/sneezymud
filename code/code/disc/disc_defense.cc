@@ -9,13 +9,15 @@
 
 CDDefense::CDDefense() :
   CDiscipline(),
-  skAdvancedDefense()
+  skAdvancedDefense(),
+  skFocusedAvoidance()
 {
 }
 
 CDDefense::CDDefense(const CDDefense &a) :
   CDiscipline(a),
-  skAdvancedDefense(a.skAdvancedDefense)
+  skAdvancedDefense(a.skAdvancedDefense),
+  skFocusedAvoidance(a.skFocusedAvoidance)
 {
 }
 
@@ -24,6 +26,7 @@ CDDefense & CDDefense::operator=(const CDDefense &a)
   if (this == &a) return *this;
   CDiscipline::operator=(a);
   skAdvancedDefense = a.skAdvancedDefense;
+  skFocusedAvoidance = a.skFocusedAvoidance;
   return *this;
 }
 

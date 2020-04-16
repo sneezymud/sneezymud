@@ -593,6 +593,8 @@ int mapSpellnumToFile(spellNumT stt)
       return 381;
     case SPELL_CALL_LIGHTNING_DEIKHAN:
       return 382;
+    case SKILL_FOCUSED_AVOIDANCE:
+      return 390;
     case SKILL_YOGINSA:
       return 397;
     case SKILL_CINTAI:
@@ -1688,6 +1690,8 @@ spellNumT mapFileToSpellnum(int stt)
       return SPELL_EARTHQUAKE_DEIKHAN;
     case 382:
       return SPELL_CALL_LIGHTNING_DEIKHAN;
+    case 390:
+      return SKILL_FOCUSED_AVOIDANCE;
     case 397:
       return SKILL_YOGINSA;
     case 398:
