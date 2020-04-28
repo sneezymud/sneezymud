@@ -568,9 +568,10 @@ void TBeing::doSplit(const char *argument, bool tell)
 
 void TBeing::doReport(const char *argument)
 {
-  char info[256];
-  char inter[256];
   char target[80];
+
+  sstring Buf, final;
+
   TThing *t;
   int found = 0;
   TBeing *targ = NULL;
@@ -588,21 +589,19 @@ void TBeing::doReport(const char *argument)
   }
   strncpy(target, argument, sizeof(target));
 
-  sprintf(info, "%.1f%% H, ", getPercHit());
+  Buf = format("%.1f%% H, ") % getPercHit();
+
   if (hasClass(CLASS_CLERIC) || hasClass(CLASS_DEIKHAN)) {
-    sprintf(inter, "%.2f%% P, ", getPiety());
-    strcat(info, inter);
+    Buf += format("%.2f%% P, ") % getPiety();
   }
   if (hasClass(CLASS_SHAMAN)) {
-    sprintf(inter, "%-4d LF, ", getLifeforce());
-    strcat(info, inter);
+    Buf += format("%d LF, ") % getLifeforce();
   }
   if (hasClass(CLASS_MAGE) || hasClass(CLASS_MONK) || hasQuestBit(TOG_PSIONICIST)) {
-    sprintf(inter, "%.1f%% M, ", getPercMana());
-    strcat(info, inter);
+    Buf += format("%.1f%% M, ") % getPercMana();
   }
-  sprintf(inter, "I am %s", DescMoves((((double) getMove()) / ((double) moveLimit()))));
-  strcat(info, inter);
+
+  Buf += format("I am %s") % DescMoves((((double) getMove()) / ((double) moveLimit())));
 
   for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
     t=*(it++);
@@ -624,12 +623,12 @@ void TBeing::doReport(const char *argument)
     }
     sendTo(COLOR_MOBS, format("You report your status to %s.\n\r") % targ->getName());
 
-    sprintf(inter, "<G>$n directly reports to you '%s%s%s'<1>", red(), info, norm());
-    colorAct(COLOR_COMM, inter, FALSE, this, 0, targ, TO_VICT);
+    final = format("<G>$n directly reports to you '%s%s%s'<1>") % red() % Buf % norm();
+    colorAct(COLOR_COMM, final, FALSE, this, 0, targ, TO_VICT);
     disturbMeditation(targ);
   } else {
-    sprintf(inter, "$n reports '%s%s%s'", red(), info, norm());
-    act(inter, FALSE, this, 0, 0, TO_ROOM);
+    final = format("$n reports '%s%s%s'") % red() % Buf % norm();
+    act(final, FALSE, this, 0, 0, TO_ROOM);
     sendTo("You report your status to the room.\n\r");
   }
 }
