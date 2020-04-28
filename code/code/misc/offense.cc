@@ -2187,7 +2187,7 @@ void TBeing::blowCount(bool check, float &fx, float &fy)
   } else {
     // PCS
 
-    // Get getMult returns the number of moonk barehand attacks
+    // Get getMult returns the number of monk barehand attacks
     num = getMult();
     fx=fy=0;
 
