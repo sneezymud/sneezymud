@@ -528,6 +528,11 @@ TComponent *comp_from_object(TThing *item, spellNumT spell)
 }
 
 // This only returns components that are for spell-casting
+//
+// TODO: this is a mess and doesn't work for multiclass but
+// probably no one will notice because ritualism and wizardry
+// rise at the same rate.
+//
 TComponent *TBeing::findComponent(spellNumT spell) const
 {
   TThing *primary, *secondary, *belt, *juju, *wristpouchL, *wristpouchR;

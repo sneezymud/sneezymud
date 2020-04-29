@@ -1104,9 +1104,6 @@ int TBeing::preCastCheck()
     } else if (hasClass(CLASS_THIEF)) {
       sendTo("Thieves can't cast spells!\n\r");
       return FALSE;
-    } else if (hasClass(CLASS_RANGER)) {
-      sendTo("Rangers can't cast spells!\n\r");
-      return FALSE;
     } else if (hasClass(CLASS_MONK)) {
       sendTo("Monks can't cast spells!\n\r");
       return FALSE;

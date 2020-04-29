@@ -16,23 +16,24 @@ void TBeing::doScore()
   time_info_data playing_time;
   sstring Buf, tString;
 
-  sendTo(format("You have %s%d%s/%s%d%s hit points, %s%d%s/%s%d%s moves and ") %	 red() % getHit() % norm() %
-	 green() % hitLimit() % norm() %
-	 purple() % getMove() % norm() %
-	 green() % moveLimit() % norm());
+  Buf = format("You have %s%d%s/%s%d%s hit points, ") % red() % getHit() % norm() % green() % hitLimit() % norm();
 
-  if (hasClass(CLASS_DEIKHAN) || hasClass(CLASS_CLERIC))
-    Buf = format("%s%.2f%c %spiety.\n\r") % cyan() % getPiety() % '%' % norm();
-  else if (hasClass(CLASS_SHAMAN))
-    Buf = format("%s%d %slifeforce.\n\r") % red() % getLifeforce() % norm();
-  else
-    Buf = format("%s%d%s/%s%d%s mana.\n\r") %
-      orange() % getMana() % norm() %
-      green() % manaLimit() % norm();
+  if (hasClass(CLASS_DEIKHAN) || hasClass(CLASS_CLERIC)) {
+    Buf+=format("%s%.2f%s %spiety, ") % cyan() % getPiety() % "%" % norm();
+  }
 
+  if (hasClass(CLASS_SHAMAN)) {
+    Buf+=format("%s%d %slifeforce, ") % red() % getLifeforce() % norm();
+  }
+
+  if (hasClass(CLASS_MAGE) || hasClass(CLASS_MONK) || hasQuestBit(TOG_PSIONICIST)) {
+    Buf+=format("%s%d%s/%s%d%s mana, ") % orange() %  getMana() % norm() % green() % manaLimit() % norm();
+  }
+
+  Buf+=format("and %s%d%s/%s%d%s moves.\n\r") % purple() % getMove() % norm() % green() % moveLimit()% norm();
   sendTo(Buf);
 
-  sendTo(format("You are %s.\n\r") % DescMoves((((double) getMove()) / ((double)         moveLimit()))));
+  sendTo(format("You are %s.\n\r") % DescMoves((((double) getMove()) / ((double) moveLimit()))));
 
   tString = displayExp().comify();
 

@@ -2184,132 +2184,66 @@ void TBeing::blowCount(bool check, float &fx, float &fy)
     
 
     // MOBS
-  } else if (hasClass(CLASS_MONK)) {
-    // Monk PCS
+  } else {
+    // PCS
 
+    // Get getMult returns the number of monk barehand attacks
     num = getMult();
     fx=fy=0;
 
-    if (!prim)
+    // Primary hand
+    if (!prim && hasClass(CLASS_MONK))
       fx += (0.60 * num);
     else {
+      // blowCountSplitter will return 0 if it is not a weapon and 1 if it is a weapon
       fx = prim->blowCountSplitter(this, true);
+      
+      // Guns
+      if((gun=dynamic_cast<TGun *>(prim))){
+        fx = gun->getROF();
+      }
+
+      // Check specialization after guns
       if (getPosition() >= POSITION_STANDING) {
         prim->specializationCheck(this, &fx);
       }
 
-      if((gun=dynamic_cast<TGun *>(prim))){
-	fx = gun->getROF();
-      }
+      // Now we can do the speed mod in here it won't affect monks barehand
+      if (fx > 0.0)
+        fx *= getSpeMod();
     }
 
-
-
-    if (!sec)
+    // Now do Secondary hand
+    if (!sec && hasClass(CLASS_MONK))
       fy += (0.40 * num);
     else if (sec != prim) {
       fy = sec->blowCountSplitter(this, false);
+
+      // Guns
       if((gun=dynamic_cast<TGun *>(sec)) && !gun->isPaired()){
-	fy = gun->getROF();
+        fy = gun->getROF();
       }
-    } else
+
+      // Speed mod
+      if (fy > 0.0)
+        fy *= getSpeMod();
+
+    } else {
       // don't give paired weapons extra hits
       fy = 0.00;
-
-#if 0
-    // kluge for barehand specialization check
-    // can't use TWeapon::SpecializationCheck for obvious reasons
-    if(!prim &&
-       getPosition() >= POSITION_STANDING &&
-       getDiscipline(DISC_BAREHAND)) {
-      num = ::number(0,99);
-      if (num < getSkillValue(SKILL_BAREHAND_SPEC) - 20 * drunkMinus())
-	fx += (float) 1.0;
-    }
-    // specialization check
-    if (prim && getPosition() >= POSITION_STANDING) {
-      prim->specializationCheck(this, &fx);
-    }
-#endif
-
-#if 0
-// speed adjusted when we setMult
-    // speed
-    // from balance note, want high speed to hit 5/4 more, and low to hit 4/5
-    // as much
-    if (fx > 0.0)
-      fx *= getSpeMod();
-    //  this is the same - note we DIVIDE instead of multiply since we want a lower number as the bonus
-    //  fx = fx * plotStat(STAT_CURRENT, STAT_SPE, 0.8, 1.25, 1.0);
-    if (fy > 0.0)
-      fy *= getSpeMod();
-    //  ditto above - dash
-    //  fy = fy * plotStat(STAT_CURRENT, STAT_SPE, 0.8, 1.25, 1.0);
-#endif
-
-    // Monk PCS
-  } else {
-    // NON-monk PCS
-
-    TObj *tobj = dynamic_cast<TObj *>(prim);
-    if (tobj && !tobj->isPaired() && !dynamic_cast<TBaseWeapon *>(tobj) && !check) 
-      // no attacks for non-weapons
-      fx = (float) 0.0;
-    else {
-      // generic 1 attack
-      fx = (float) 1.0;
     }
 
-    if((gun=dynamic_cast<TGun *>(prim))){
-      fx = gun->getROF();
-    }
 
-    tobj = dynamic_cast<TObj *>(sec);
-    if (tobj && !tobj->isPaired() && !dynamic_cast<TBaseWeapon *>(tobj) && !check) 
-      fy = (float) 0.0;
-    else if (sec && (sec == prim)) {
-     // Don't give two handed weapons two hits - Russ 122797
-      fy = (float) 0.0;
-    } else {
-      // generic 1 attack
-      fy = (float) 1.0;
-    }
-
-    if((gun=dynamic_cast<TGun *>(sec)) && !gun->isPaired()){
-      fy = gun->getROF();
-    }
-
-    // specialization check
-    if (prim && getPosition() >= POSITION_STANDING) {
-      prim->specializationCheck(this, &fx);
-    }
-
-    // berzerk
-    if (isCombatMode(ATTACK_BERSERK) && 
-        getPosition() >= POSITION_STANDING) {
+    // berzerk affects any combo
+    if (isCombatMode(ATTACK_BERSERK) && getPosition() >= POSITION_STANDING) {
       if (bSuccess(SKILL_BERSERK)) {
         if (fx > 0.0)
           fx += 0.5;
         if (fy > 0.0)
-	  fy += 0.5;
+	        fy += 0.5;
       }
     }
-
-    // speed
-    // from balance note, want high speed to hit 5/4 more, and low to hit 4/5
-    // as much
-    if (fx > 0.0)
-      fx *= getSpeMod();
-    //  this is the same - note we DIVIDE instead of multiply since we want a lower number as the bonus
-    //  fx = fx * plotStat(STAT_CURRENT, STAT_SPE, 0.8, 1.25, 1.0);
-    if (fy > 0.0)
-      fy *= getSpeMod();
-    //  ditto above - dash
-    //  fy = fy * plotStat(STAT_CURRENT, STAT_SPE, 0.8, 1.25, 1.0);
-
-    // non-monk PCs
   }
-
 
   // haste
   if (affectedBySpell(SPELL_HASTE) && getPosition() >= POSITION_STANDING) {
