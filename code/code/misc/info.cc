@@ -1564,10 +1564,11 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
 		discArray[aff->type]->name %
 		describeDuration(this, aff->duration);
             } else {
-              str += format("Affected : '%s'\t: Time Left : %s %s\n\r") %
-		discArray[aff->type]->name %
-		describeDuration(this, aff->duration) %
-		(aff->canBeRenewed() ? "(Renewable)" : "(Not Yet Renewable)");
+              if (aff->canBeRenewed()) {
+                str += format("Affected : '%s'\t: Time Left : %s %s%s%s\n\r") % discArray[aff->type]->name % describeDuration(this, aff->duration) % red() % "(Renewable)" % norm();
+              } else {
+                str += format("Affected : '%s'\t: Time Left : %s %s%s%s\n\r") % discArray[aff->type]->name % describeDuration(this, aff->duration) % green() % "(Not Yet Renewable)" % norm();
+              }
             }
           }
         } else {
@@ -1584,10 +1585,11 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
         break;
       case AFFECT_DUMMY:
         if (show) {
-          str+=format("Affected : '%s'\t: Time Left : %s %s\n\r") %
-	    "DUMMY" %
-	    describeDuration(this, aff->duration) %
-	    (aff->canBeRenewed() ? "(Renewable)" : "(Not Yet Renewable)");
+          if (aff->canBeRenewed()) {
+            str += format("Affected : '%s'\t: Time Left : %s %s%s%s\n\r") % "DUMMY" % describeDuration(this, aff->duration) % red() % "(Renewable)" % norm();
+          } else {
+            str += format("Affected : '%s'\t: Time Left : %s %s%s%s\n\r") % "DUMMY" % describeDuration(this, aff->duration) % green() % "(Not Yet Renewable)" % norm();
+          }
         }
         break;
       case AFFECT_WAS_INDOORS:
