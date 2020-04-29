@@ -512,8 +512,8 @@ void assign_item_info()
      "Max Strength", 100, 0,
      "", 0, 0);
   ItemInfo[ITEM_HOLY_SYM] = new itemInfo("Holy Symbol","a holy symbol",
-     "Strength of the holy symbol", 1250000, 0,
-     "Max Strength of the symbol", 1250000, 0,
+     "Strength of the holy symbol", 1800000, 0,
+     "Max Strength of the symbol", 1800000, 0,
      "Faction of the Symbol", MAX_FACTIONS, 0,
      "", 0, 0);
   ItemInfo[ITEM_QUIVER] = new itemInfo("Quiver","a quiver",
