@@ -223,7 +223,7 @@ static int bash(TBeing *c, TBeing *victim, spellNumT skill)
       (bKnown > 0) &&
       (i != GUARANTEED_FAILURE) &&
       (!victim->canCounterMove(bKnown)) &&
-      (!victim->canFocusedAvoidance(bKnown)) &&
+      (!victim->canFocusedAvoidance(bKnown/2)) &&
       c->bSuccess(bKnown + percent, skill)) {
     rc = c->bashSuccess(victim, skill);
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))

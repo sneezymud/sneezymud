@@ -279,7 +279,8 @@ static int headbutt(TBeing *caster, TBeing *victim)
          (i = caster->specialAttack(victim,SKILL_HEADBUTT)) &&
          i != GUARANTEED_FAILURE &&
          percent < bKnown&&
-         !victim->canCounterMove(bKnown*2/5)) {
+         !victim->canCounterMove(bKnown*2/5) &&
+         !victim->canFocusedAvoidance(bKnown*2/5)) {
     return (headbuttHit(caster, victim));
   } else {
     rc = headbuttMiss(caster, victim);

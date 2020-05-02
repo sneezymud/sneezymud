@@ -182,6 +182,7 @@ static int trip(TBeing *c, TBeing *victim, spellNumT skill)
       (bKnown > 0) &&
       (i != GUARANTEED_FAILURE) &&
       (!victim->canCounterMove(bKnown)) &&
+      (!victim->canFocusedAvoidance(bKnown)) &&
       c->bSuccess(bKnown + percent, skill)) {
     rc = c->tripSuccess(victim, skill);
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
