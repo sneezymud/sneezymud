@@ -148,7 +148,7 @@ int TBeing::doLayHands(const char *arg)
     act("$n attempts to lay hands on you.", FALSE, this, NULL, vict, TO_VICT);
     act("$n attempts to lay hands on $N.", FALSE, this, NULL, vict, TO_NOTVICT);
   }
-  amt = ::number(1,100) + (4 * getClassLevel(CLASS_DEIKHAN));
+  amt = ::number(20,200) + (5 * getClassLevel(CLASS_DEIKHAN));
 
   if (bSuccess(getSkillValue(SKILL_LAY_HANDS), getPerc(), SKILL_LAY_HANDS)) {
     LogDam(this, SKILL_LAY_HANDS, amt);
@@ -171,7 +171,7 @@ int TBeing::doLayHands(const char *arg)
 
     // success prevents from working for longer
     aff.type = SKILL_LAY_HANDS;
-    aff.duration = 10 * Pulse::UPDATES_PER_MUDHOUR;
+    aff.duration = 4 * Pulse::UPDATES_PER_MUDHOUR;
     aff.location = APPLY_NONE;
     aff.modifier = 0;
     aff.bitvector = 0;
