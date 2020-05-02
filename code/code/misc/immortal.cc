@@ -1419,13 +1419,18 @@ void TPerson::doShutdown(bool reboot, const char *argument)
     Descriptor::worldSend(buf, this);
     Shutdown = 1;
   } else {
-    if (isdigit(*arg)) {
+    bool force = false;
+    if (std::string(arg) == "now!")
+      force = true;
+
+    if (force || isdigit(*arg)) {
       num = convertTo<int>(arg);
-      if (num <= 0) {
+      if (!force && num <= 0) {
         sendTo("Illegal number of minutes.\n\r");
         sendTo("Syntax : shutdown <minutes until shutdown>\n\r");
         return;
-      } 
+      }
+
       if (!timeTill)
         timeTill = time(0) + (num * SECS_PER_REAL_MIN);
       else if (timeTill < (time(0) + (num * SECS_PER_REAL_MIN))) {
@@ -1451,7 +1456,7 @@ void TPerson::doShutdown(bool reboot, const char *argument)
       sendTo("Syntax : shutdown <minutes until shutdown>\n\r");
       return;
     }
-  } 
+  }
 }
 
 void TBeing::doSnoop(const char *)
