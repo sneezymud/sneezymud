@@ -1,4 +1,4 @@
-                             SneezyMUD v5.3
+                             SneezyMUD v5.4
                           Founded: May 1, 1992
 
 -------------------------------------------------------------------------------
@@ -16,34 +16,37 @@ Grimhaven 5.0:    February 12th, 1999
 Grimhaven 5.1:    May 8th, 1999
 SneezyMUD 5.2:    March 13th, 2001
 SneezyMUD 5.3:    June 6th, 2014
+SneezyMUD 5.4:    August 3rd, 2017
 ------------------------------------------------------------------------------
-SneezyMUD v5.3:
+SneezyMUD v5.4:
 
-Travis Nelson (Peel)       : Coder
-Andrew Evans (Erasmus)     : Sysadmin & Site Provider
+Elmo Todurov  (Imm)        : Sysadmin, Coder, Site Provider
+Aaron Nebeker (Aion)       : MUDAdmin, LOW, Master of Coin
+JD Fenech    (Juno)        : Sysadmin, Coder
 
+Jeff Wolak  (Warluk)       : Coder
 
 Past members of the MUD Admin:
 
 Russ Russell  (Brutius)    : Founder, Coder, Partner
-Travis Nelson (Peel)       : Coder, Partner
 Jeff Bennett (Batopr)      : Coder, Partner
 Ben Sarnoff  (Cosmo)       : Coder, Partner
+Travis Nelson (Peel)       : Coder, Partner
 
+Andrew Evans (Erasmus)     : 5.3 Sysadmin, Coder, Site Provider
 (Vasco)                    : Lord of Worlds
 (Metrohep)                 : Coder
-(Deirdre)                  : Webmaster & Quest Manager
 C. Roudebush (Magdalena)   : Lady of Worlds
 Dave Arthur (Bump)         : MUDAdmin's Monkey
 G. Messmer (Eliar)         : Systems Administrator
 Gabriel	Rotberg	(Dash) 	   : Coder
 Katia Shnaptis (Coral) 	   : Lady of Worlds
-Kane Spinato (Kriebly)     : ? - 5.2 Site Provider
+Kane Spinato (Kriebly)     : 5.2 Site Provider
 John Hines (Jesus)         : 5.1 - 5.2 Coder
 Deric Panet-Raymond(Glint) : 5.2 Jr. Coder
 William Perrotto (Lapsos)  : 5.2 Coder
 Devin Phinney (Ekeron)     : 5.2 Coder
-Mark Engelhardt (Maror)    : 5.2 LOW and Coder
+Mark Engelhardt (Maror)    : 5.2 Lord of Worlds, Coder
 Alice Hines (Damescena)    : 5.2 Lady of Worlds
 Rob Brunk (Angus)          : 5.2 Coder
 Jason Carpenter (Mithros)  : 5.0 - 5.1 Lord of Worlds
@@ -56,7 +59,7 @@ Tim Nixon    (Dolgan)      : 4.5 - 5.0 Lord of Worlds
 Dave Robel   (Gringar)     : 4.5 - 5.0 Junior LOW
 Sean Baumann  (Macross)    : 4.1 Coder
 Jon Driegert  (Phenohol)   : 4.0 Lord of Worlds
-Todd Hauschildt (Bartruce) : 3.0 Coder and Lord of Worlds
+Todd Hauschildt (Bartruce) : 3.0 Lord of Worlds, Coder
 Greg Ota      (Dirk)       : 3.1 - 4.0 Coder
 Mark Larimer  (Quazi)      : 2.5 - 3.0 Coder
 Jeff Stout    (Trinity)    : 2.1 - 3.0 Coder
@@ -74,3 +77,4 @@ Past Webmaster Contributions:
                            : Mithros: v3.1 - v5.0
                            : Marsh: v4.5 - v5.0
                            : Dash: v5.1 - 5.2
+                           : Deirdre v5.2

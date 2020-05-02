@@ -568,8 +568,10 @@ void TBeing::doSplit(const char *argument, bool tell)
 
 void TBeing::doReport(const char *argument)
 {
-  char info[256];
   char target[80];
+
+  sstring Buf, final;
+
   TThing *t;
   int found = 0;
   TBeing *targ = NULL;
@@ -586,22 +588,20 @@ void TBeing::doReport(const char *argument)
     return;
   }
   strncpy(target, argument, sizeof(target));
-  if (hasClass(CLASS_CLERIC) || hasClass(CLASS_DEIKHAN))
-    sprintf(info, "$n reports '%s%.1f%% H, %.2f%% P. I am %s%s'",
-           red(), getPercHit(), getPiety(),
-           DescMoves((((double) getMove()) / ((double) moveLimit()))),
-           norm());
-  else if (hasClass(CLASS_SHAMAN))
-    sprintf(info, "$n reports '%s%.1f%% H, %-4d LF. I am %s%s'",
-           red(), getPercHit(), getLifeforce(),
-           DescMoves((((double) getMove()) / ((double) moveLimit()))),
-           norm());
-  else
-    sprintf(info, "$n reports '%s%.1f%% H, %.1f%% M. I am %s%s'", 
-           red(), getPercHit(), getPercMana(), 
-           DescMoves((((double) getMove()) / ((double) moveLimit()))), 
-           norm());
 
+  Buf = format("%.1f%% H, ") % getPercHit();
+
+  if (hasClass(CLASS_CLERIC) || hasClass(CLASS_DEIKHAN)) {
+    Buf += format("%.2f%% P, ") % getPiety();
+  }
+  if (hasClass(CLASS_SHAMAN)) {
+    Buf += format("%d LF, ") % getLifeforce();
+  }
+  if (hasClass(CLASS_MAGE) || hasClass(CLASS_MONK) || hasQuestBit(TOG_PSIONICIST)) {
+    Buf += format("%.1f%% M, ") % getPercMana();
+  }
+
+  Buf += format("I am %s") % DescMoves((((double) getMove()) / ((double) moveLimit())));
 
   for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
     t=*(it++);
@@ -622,26 +622,13 @@ void TBeing::doReport(const char *argument)
       return;
     }
     sendTo(COLOR_MOBS, format("You report your status to %s.\n\r") % targ->getName());
-    if (hasClass(CLASS_CLERIC) || hasClass(CLASS_DEIKHAN))
-      sprintf(info, "<G>$n directly reports to you  '%s%.1f%% H, %.2f%% P. I am %s%s'<1>",
-           red(), getPercHit(), getPiety(),
-           DescMoves((((double) getMove()) / ((double) moveLimit()))),
-           norm());
-    else if (hasClass(CLASS_SHAMAN))
-      sprintf(info, "<G>$n directly reports to you  '%s%.1f%% H, %-4d LF. I am %s%s'<1>",
-           red(), getPercHit(), getLifeforce(),
-           DescMoves((((double) getMove()) / ((double) moveLimit()))),
-           norm());
-    else
-      sprintf(info, "<G>$n directly reports to you '%s%.1f%% H, %.1f%% M. I am %s%s'<1>",
-           red(), getPercHit(), getPercMana(),
-           DescMoves((((double) getMove()) / ((double) moveLimit()))),
-           norm());
 
-    colorAct(COLOR_COMM, info, FALSE, this, 0, targ, TO_VICT);
+    final = format("<G>$n directly reports to you '%s%s%s'<1>") % red() % Buf % norm();
+    colorAct(COLOR_COMM, final, FALSE, this, 0, targ, TO_VICT);
     disturbMeditation(targ);
   } else {
-    act(info, FALSE, this, 0, 0, TO_ROOM);
+    final = format("$n reports '%s%s%s'") % red() % Buf % norm();
+    act(final, FALSE, this, 0, 0, TO_ROOM);
     sendTo("You report your status to the room.\n\r");
   }
 }
@@ -1531,6 +1518,7 @@ void TPerson::doFeedback(const sstring &type, int clientCmd, const sstring &arg)
   }
 }
 
+// TODO: this needs fixing for multiclass
 void TBeing::doGroup(const char *argument, bool silent)
 {
   char namebuf[256];

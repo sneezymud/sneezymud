@@ -2542,7 +2542,7 @@ int moltenWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   // Flavor text pulse
   if (cmd == CMD_GENERIC_PULSE)
   { 
-    if (!::number(0,75)){
+    if (!::number(0,150)){
       act("<r>Drops of molten hot lava fall from $n's $o onto the $g.<1>",
           0, ch, o, 0, TO_ROOM);
       act("<r>Your $o drips molten hot lava onto the $g.<1>",
@@ -2551,7 +2551,7 @@ int moltenWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   }
 
   // Combat procs
-  if(cmd == CMD_OBJ_HITTING)
+  if(cmd == CMD_OBJ_HIT)
   {
     // Slightly lowering chance to proc to balance with bone break/unmaker
     // Since this has extra damage components
@@ -2693,14 +2693,14 @@ int glacialWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     return FALSE;       // weapon not equipped (carried or on ground)
 
   if(cmd == CMD_GENERIC_PULSE){
-    if(!::number(0,75)){
+    if(!::number(0,150)){
       act("<b>Small pieces of ice break off from $n's $o and fall to the $g.<1>",
           0, ch, o, 0, TO_ROOM);
       act("<b>A few pieces of ice break off from your $o and fall to the $g.<1>",
           0, ch, o, 0, TO_CHAR);
     }
   }
-  else if(cmd == CMD_OBJ_HITTING)
+  else if(cmd == CMD_OBJ_HIT)
   {
     roll = ::number(0,250);
     if (roll > 0 && roll < 25)
@@ -2746,7 +2746,7 @@ int glacialWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
        act("The blast of <c>fro<b>zen <c>air<1> from $n's $o slams you into the $g, stunning you!",
             TRUE,ch,o,vict,TO_VICT,NULL);
 
-       dam = ::number(10,60);
+       dam = ::number(10,20);
        rc = vict->reconcileDamage(vict, dam, DAMAGE_FROST);
 	
        if (IS_SET_DELETE(rc, DELETE_VICT)) {
@@ -2757,7 +2757,7 @@ int glacialWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
        else {
          affectedData aff;
          aff.type = SKILL_DOORBASH;
-         aff.duration = Pulse::ONE_SECOND;
+         aff.duration = Pulse::TICK*4;
          aff.bitvector = AFF_STUNNED;
          vict->affectTo(&aff, -1);
 	  
