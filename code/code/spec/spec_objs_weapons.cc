@@ -2757,7 +2757,7 @@ int glacialWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
        else {
          affectedData aff;
          aff.type = SKILL_DOORBASH;
-         aff.duration = Pulse::ONE_SECOND;
+         aff.duration = Pulse::TICK*4;
          aff.bitvector = AFF_STUNNED;
          vict->affectTo(&aff, -1);
 	  
