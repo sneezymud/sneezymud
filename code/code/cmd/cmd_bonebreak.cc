@@ -70,6 +70,11 @@ int bonebreakMiss(TBeing *c, TBeing *v, int type)
 	act("$n tries grapple you into a bone breaking hold but you avoid it.", 
 	    FALSE, c, 0, v, TO_VICT);    
       } break;
+      case 2:{
+        act("$n attempts to get $N into a bone breaking hold, but fails.", FALSE, c, 0, v, TO_NOTVICT);
+        act("$N's focus is too great for your bone breaking hold.", FALSE, c, 0, v, TO_CHAR);
+        act("$n tries get you into a bone breaking hold, but your focus is too great.", FALSE, c, 0, v, TO_VICT);
+      } break;
     }
 
   c->reconcileDamage(v, 0,SKILL_BONEBREAK);
@@ -239,7 +244,15 @@ int bonebreak(TBeing *caster, TBeing *victim)
       SV(SKILL_BONEBREAK);
       rc = bonebreakMiss(caster, victim, 1);
       if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
-	return rc;
+        return rc;
+      return TRUE;
+    }
+
+    if (victim->canFocusedAvoidance(bKnown/2)) {
+      SV(SKILL_BONEBREAK);
+      rc = bonebreakMiss(caster, victim, 2);
+      if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+        return rc;
       return TRUE;
     }
 

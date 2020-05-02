@@ -91,6 +91,11 @@ static int grapple(TBeing *c, TBeing *victim, spellNumT skill)
       rc = c->trySpringleap(victim);
       if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
         return rc;
+    } else if (victim->canFocusedAvoidance(bKnown/2)) {
+      SV(skill);
+      act("$N avoids your grapple attempt.", TRUE, c, 0, victim, TO_CHAR, ANSI_RED);
+      act("$N avoids $n's attempt to grapple.", TRUE, c, 0, victim, TO_NOTVICT);
+      act("You evade $n's attempt to grapple.", TRUE, c, 0, victim, TO_VICT);
     } else {
       if (victim->riding) {
         act("You pull $N off $p.", FALSE, c, victim->riding, victim, TO_CHAR);
