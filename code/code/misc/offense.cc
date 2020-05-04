@@ -2194,7 +2194,7 @@ void TBeing::blowCount(bool check, float &fx, float &fy)
     // Primary hand
     if (!prim && hasClass(CLASS_MONK))
       fx += (0.60 * num);
-    else {
+    else if (prim) {
       // blowCountSplitter will return 0 if it is not a weapon and 1 if it is a weapon
       fx = prim->blowCountSplitter(this, true);
       
@@ -2216,7 +2216,7 @@ void TBeing::blowCount(bool check, float &fx, float &fy)
     // Now do Secondary hand
     if (!sec && hasClass(CLASS_MONK))
       fy += (0.40 * num);
-    else if (sec != prim) {
+    else if (sec && sec != prim) {
       fy = sec->blowCountSplitter(this, false);
 
       // Guns
