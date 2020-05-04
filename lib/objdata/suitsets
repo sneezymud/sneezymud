@@ -33,18 +33,18 @@
 // Paste below this line.
 // ----------------------
 :Set #158
-:#Flowing Black
-:$Human
-:head     = 2500
-:neck     = 2501
-:back     = 2503
-:arm      = 2504
-:hand     = 2505
-:finger   = 2506
-:waist    = 2507
-:leg      = 2508
-:foot     = 2509
-:shield   = 2511
+#flowing black
+$human
+head     = 2500
+neck     = 2501
+back     = 2503
+arm      = 2504
+hand     = 2505
+finger   = 2506
+waist    = 2507
+leg      = 2508
+foot     = 2509
+shield   = 2511
 :Set #157
 #elite leather
 $human
