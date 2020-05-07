@@ -1161,22 +1161,6 @@ int TBeing::doGive(const sstring &oarg, giveTypeT flags)
         if (vict)
           vict->doQueueSave();
       }
-      if (!isImmortal() && isPc() && 
-          !vict->isImmortal() && vict->isPc()) {
-        if (obj->obj_flags.cost >= 100) {
-          switch (CheckStorageChar(this, vict)) {
-            case 1:
-              vlogf(LOG_CHEAT, format("Storage Character %s giving %s to %s") % getName() %obj->getName() %vict->getName());
-              break;
-            case 2:
-              vlogf(LOG_CHEAT, format("Storage Character %s w/low KAR giving %s to %s w/high KAR") % getName() % obj->getName() %vict->getName());
-              break;
-            case 0:
-            default:
-              break;
-          }
-        }
-      }
 
       if (num > 0)
         num--;
