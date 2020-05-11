@@ -2192,8 +2192,10 @@ void TBeing::blowCount(bool check, float &fx, float &fy)
     fx=fy=0;
 
     // Primary hand
+    // If nothing in the hand and a monk
     if (!prim && hasClass(CLASS_MONK))
       fx += (0.60 * num);
+    // else we are holding something
     else if (prim) {
       // blowCountSplitter will return 0 if it is not a weapon and 1 if it is a weapon
       fx = prim->blowCountSplitter(this, true);
@@ -2211,11 +2213,15 @@ void TBeing::blowCount(bool check, float &fx, float &fy)
       // Now we can do the speed mod in here it won't affect monks barehand
       if (fx > 0.0)
         fx *= getSpeMod();
+    // finally if we are holding nothing and not a monk
+    } else {
+      fx = 1.0;
     }
 
     // Now do Secondary hand
     if (!sec && hasClass(CLASS_MONK))
       fy += (0.40 * num);
+    // if holding something and it's not paired
     else if (sec && sec != prim) {
       fy = sec->blowCountSplitter(this, false);
 
@@ -2227,10 +2233,9 @@ void TBeing::blowCount(bool check, float &fx, float &fy)
       // Speed mod
       if (fy > 0.0)
         fy *= getSpeMod();
-
-    } else {
-      // don't give paired weapons extra hits
-      fy = 0.00;
+    // finally if barehand secondary and not a monk
+    } else if (!sec) {
+      fy = 1.0;
     }
 
 
