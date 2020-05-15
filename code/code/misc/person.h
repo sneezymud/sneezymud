@@ -25,6 +25,7 @@ class TPerson : public TBeing {
     TPersonPimpl* d = nullptr;
 
   public:
+    virtual TThingKind getKind() const;
     FILE *tLogFile;
     char lastHost[40];
     char *title; 

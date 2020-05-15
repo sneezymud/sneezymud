@@ -210,6 +210,10 @@ TMonster::TMonster(const TMonster &a) :
   distantSnds = a.distantSnds;
 }
 
+TThing::TThingKind TMonster::getKind() const {
+  return TThing::TThingKind::TMonster;
+}
+
 TMonster & TMonster::operator=(const TMonster &a)
 {
   if (this == &a) return *this;

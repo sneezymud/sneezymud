@@ -42,6 +42,10 @@ TBaseContainer::~TBaseContainer()
 {
 }
 
+TThing::TThingKind TBaseContainer::getKind() const {
+  return TThing::TThingKind::TBaseContainer;
+}
+
 bool TBaseContainer::engraveMe(TBeing *ch, TMonster *me, bool give)
 {
   char buf[256];
@@ -81,7 +85,7 @@ int TBaseContainer::getCarriedVolume() const
   // to worry about subcontainers (unsupported on sneezy), so we don't
   // need to use getTotalVolume() here
   for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it){
-    if(dynamic_cast<TComponent *>(t))
+    if(t->getKind() == TThing::TThingKind::TComponent)
       total+=(int)(t->getReducedVolume(this)*0.10);
     else {
       total+=t->getReducedVolume(this);

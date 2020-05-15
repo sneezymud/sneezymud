@@ -347,6 +347,7 @@ class TComponent : public TMergeable {
     bool isComponentType(unsigned int num) const;
     int pricePerUnit() const;
 
+    virtual TThingKind getKind() const;
     TComponent();
     TComponent(const TComponent &a);
     TComponent & operator=(const TComponent &a);

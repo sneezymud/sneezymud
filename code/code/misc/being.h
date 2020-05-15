@@ -408,6 +408,7 @@ class TBeing : public TThing {
 
   TMessages msgVariables;
   // Constructor and Destructor
+  virtual TThingKind getKind() const;
   protected:
   TBeing();
   public:
