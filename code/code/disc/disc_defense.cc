@@ -51,7 +51,7 @@ bool TBeing::canFocusedAvoidance(int perc) {
   skill *= getAgiMod();
 
   if (eitherLegHurt())
-    skill = (int) (skill * 0.75);
+    skill = (skill * 0.75);
 
   skill -= perc;
 
