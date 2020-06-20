@@ -11,7 +11,6 @@
 
 double getSkillDiffModifier(spellNumT skill)
 {
-#if 0
   int amt = 0;
   switch (discArray[skill]->task) {
     case TASK_TRIVIAL:
@@ -37,12 +36,6 @@ double getSkillDiffModifier(spellNumT skill)
       break;
   }
   return amt;
-
-#else
-  // for time being, make everything "easy".
-  // too much complaining about skill failure, so screw it  - bat 2/3/00
-  return 100;
-#endif
 }
 
 void getSkillLevelRange(spellNumT skill, int &min_lev, int &max_lev, int adv_learn)
@@ -146,17 +139,11 @@ if (discArray[skill]->disc == discArray[skill]->assDisc) {
     fixed_amt *= 0.9091 / 1.75;
 
   // Obviously, we should tweak dam up/down based on how successful the
-  // skill is. 
-  fixed_amt *= (100.0 / getSkillDiffModifier(skill));
-#if 0
-// lower chance of CS/CF makes this less necessary
-  // intentionally factored in twice
+  // skill is. We increase damage for skills as the failure rate increases 
+  // to ensure those skills are worth using.
   // factoring in once evenly weights easy vs hard skills in terms of
   // resulting damage.
-  // hard skills have lower CS and more CF, so the damage ought to be raised
-  // even more to account for this.
   fixed_amt *= (100.0 / getSkillDiffModifier(skill));
-#endif
 
   // cut area effects in half
   if (IS_SET(discArray[skill]->targets, TAR_AREA)) 

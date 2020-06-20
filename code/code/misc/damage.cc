@@ -22,7 +22,7 @@
 #include "configuration.h"
 
 // there is another one of these defines in combat.cc
-#define DAMAGE_DEFINE 0
+#define DAMAGE_DEBUG 0
 
 // -1 = v is dead, needs to go bye-bye
 int TBeing::reconcileDamage(TBeing *v, int dam, spellNumT how)

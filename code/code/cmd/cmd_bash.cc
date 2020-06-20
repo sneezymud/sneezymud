@@ -324,7 +324,7 @@ int TBeing::bashSuccess(TBeing *victim, spellNumT skill)
   // it should NOT cause loss of attacks, or do damage
   float wt = combatRound(discArray[SKILL_BASH]->lag);
   // adjust based on bash difficulty
-  wt = (wt * 100.0 / getSkillDiffModifier(SKILL_BASH));
+  // wt = (wt * 100.0 / getSkillDiffModifier(SKILL_BASH));
 
   // Take a few moves from basher
   // since we cost some moves to perform, allow an extra 1/2 round of lag
