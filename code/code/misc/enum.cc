@@ -361,6 +361,8 @@ int mapDiscToFile(discNumT dn)
       return 69;
     case DISC_COMMONER:
       return 70;
+    case DISC_OFFENSE:
+      return 71;
     case MAX_DISCS:
     case MAX_SAVED_DISCS:
     case DISC_NONE:
@@ -507,6 +509,8 @@ discNumT mapFileToDisc(int num)
       return DISC_IRON_BODY;
     case 69:
       return DISC_ADVANCED_ADVENTURING;
+    case 71:
+      return DISC_OFFENSE;
   }
   vlogf(LOG_BUG, "Bad value to mapFileToDisc");
   return DISC_NONE;

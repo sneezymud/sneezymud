@@ -1521,6 +1521,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_ADVANCED_DEFENSE:
       case SKILL_FOCUSED_AVOIDANCE:
       case SKILL_OFFENSE:
+      case SKILL_ADVANCED_OFFENSE:
       case SKILL_WHITTLE:
       case SKILL_WIZARDRY:
       case SKILL_RITUALISM:
