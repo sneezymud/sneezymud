@@ -214,7 +214,8 @@ const int SPEC_COMMOD_TRADER      =216;
 const int SPEC_RATION_FACTORY     =217;
 const int SPEC_PET_VETERINARIAN   =218;
 const int SPEC_LAGOMORPH          =219;
-const int NUM_MOB_SPECIALS        =219;
+const int SPEC_TRAINER_OFFENSE    =220;
+const int NUM_MOB_SPECIALS        =220;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 

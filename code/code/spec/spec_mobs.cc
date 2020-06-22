@@ -7503,6 +7503,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "ration factory", rationFactory},
   {FALSE, "pet veterinarian", petVeterinarian},
   {TRUE, "lagomorph", lagomorph},
+  {TRUE, "Trainer: Offense", CDGenericTrainer},
 // replace non-zero, bogus_mob_procs above before adding
 };
 

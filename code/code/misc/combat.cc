@@ -2030,6 +2030,8 @@ static void checkLearnFromHit(TBeing * ch, int tarLevel, TThing * o, bool isPrim
 	else
 	  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_OFFENSE, (225 - (2* myLevel)));
       }
+      // Learn advanced offense
+      ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_OFFENSE, (170 - (2* myLevel)));
     }
   }
 
@@ -2451,7 +2453,12 @@ int TBeing::attackRound(const TBeing * target) const
       bonus += amt;
     }
   }
-  
+
+  // Advanced Offense
+  // For Monks and Thieves. This will be about the same as chivalry
+  if (doesKnowSkill(SKILL_ADVANCED_OFFENSE))
+    bonus += (int)((getSkillValue(SKILL_ADVANCED_OFFENSE) / 4.0) * 3.0);
+
   // treat DEX here as a modifier for +hitroll
   // From BALANCE: we want high DEX to yield 5/4 more hits
   // and low dex to yield 4/5 the hits
@@ -2465,7 +2472,7 @@ int TBeing::attackRound(const TBeing * target) const
   // this does the same thing - just uses the standardized function - dash
   bonus += (int)(335 * getDexMod() - 335);
 
-  // thaco adjustment
+  // thaco adjustmentSKILL_
   // +10 hitroll should let me fight evenly with L+1 mob
   // a 1 lev diff is 1000/60 = 50/3 points
   // so each point of thaco should grant 5/3 to bonus
