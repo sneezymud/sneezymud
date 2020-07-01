@@ -1185,6 +1185,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDDefense *) cd)->skAdvancedDefense;
     case SKILL_FOCUSED_AVOIDANCE:
       return &((CDDefense *) cd)->skFocusedAvoidance;
+    case SKILL_TOUGHNESS:
+      return &((CDDefense *) cd)->skToughness;
 
 // disc_offense
     case SKILL_ADVANCED_OFFENSE:

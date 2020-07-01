@@ -16,6 +16,7 @@ class CDDefense : public CDiscipline
 public:
     CSkill skAdvancedDefense;
     CSkill skFocusedAvoidance;
+    CSkill skToughness;
 
     CDDefense();
     CDDefense(const CDDefense &a);
@@ -27,6 +28,7 @@ public:
 
 private:
 };
+    void doToughness(TBeing *ch);
 
 #endif
 

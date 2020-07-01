@@ -1818,6 +1818,7 @@ void TBeing::statBeing(TBeing *k)
       case SKILL_DEFENSE:
       case SKILL_ADVANCED_DEFENSE:
       case SKILL_FOCUSED_AVOIDANCE:
+      case SKILL_TOUGHNESS:
       case SKILL_OFFENSE:
       case SKILL_ADVANCED_OFFENSE:
       case SKILL_WHITTLE:
