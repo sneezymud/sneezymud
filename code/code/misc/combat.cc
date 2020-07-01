@@ -3989,6 +3989,9 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 	}
       }
 
+  // Add toughness 
+  doToughness(vict);
+
 	// handle proc on glove/gauntlet of unarmed hitters hitting hand. Dash - 10/17/00
       wearSlotT which_hand;
 
@@ -5779,3 +5782,54 @@ bool restrict_xp(const TBeing *caster, TBeing *victim, int duration)
   return true;
 }
 
+// called when the ch is hit and it should proc a "stack" of toughness
+void doToughness(TBeing *ch)
+{
+  int MAX_TOUGHNESS = 12;
+  affectedData *hjp;
+
+  if (!ch->doesKnowSkill(SKILL_TOUGHNESS))
+    return;
+  
+  if (!ch->awake() || ch->getPosition() < POSITION_CRAWLING)
+    return;
+
+  if (!ch->bSuccess(SKILL_TOUGHNESS))
+    return;
+
+  // 50% shot 
+  if (!::number(0,1))
+    return;
+
+  int mod = 1;
+
+  if (ch->affectedBySpell(SKILL_TOUGHNESS))
+  {
+    for (hjp = ch->affected; hjp; hjp = hjp->next) {
+      if (hjp->type == SKILL_TOUGHNESS) {
+        // set the mod and remove the affect so we can add it fresh
+        mod += hjp->modifier2;
+        ch->affectRemove(hjp, SILENT_YES);
+        break;
+      }
+    }
+  }
+
+  if (mod <= 12)
+    act("<r>You grit your teeth and think tough thoughts.<1>", 0, ch, 0, 0, TO_CHAR);
+
+  mod = max(min(mod, MAX_TOUGHNESS), 1);
+
+  affectedData aff;
+  int dur = 11 + 2 * mod;
+
+  aff.type = SKILL_TOUGHNESS;
+  aff.duration = Pulse::TICK * dur;
+  aff.location = APPLY_IMMUNITY;
+  aff.renew = -1;
+  aff.modifier = IMMUNE_NONMAGIC;
+  aff.modifier2 = mod;
+  aff.bitvector = 0;
+
+  ch->affectTo(&aff, -1);
+}

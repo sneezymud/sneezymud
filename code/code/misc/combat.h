@@ -31,5 +31,7 @@ const int MAX_COMBAT_ATTACKERS   = 9999;
 extern TBeing *gCombatList;
 
 bool restrict_xp(const TBeing *caster, TBeing *victim, int duration);
+void doToughness(TBeing *ch);
+
 
 #endif

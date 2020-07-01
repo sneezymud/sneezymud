@@ -1894,6 +1894,14 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
             describeDuration(this, aff->duration);
         }
         break;
+      case SKILL_TOUGHNESS:
+        if(show){
+          sstring noun = "stack";
+          if (aff->modifier2 > 1)
+            noun = "stacks";
+          str+=format("Affected: Toughness - %s %s. Approx. duration : %s\n\r") % aff->modifier2 % noun % describeDuration(this, aff->duration);
+        }
+
 
       case AFFECT_BITTEN_BY_VAMPIRE:
         // secret!
