@@ -1,5 +1,4 @@
-#ifndef __DISC_OFFENSE_H
-#define __DISC_OFFENSE_H
+#pragma once
 
 #include "discipline.h"
 #include "skills.h"
@@ -17,8 +16,6 @@ public:
 
     bool isFast(){ return true; }
 
-private:
 };
 
-#endif
 

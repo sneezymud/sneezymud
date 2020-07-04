@@ -2457,7 +2457,7 @@ int TBeing::attackRound(const TBeing * target) const
   // Advanced Offense
   // For Monks and Thieves. This will be about the same as chivalry
   if (doesKnowSkill(SKILL_ADVANCED_OFFENSE))
-    bonus += (int)((getSkillValue(SKILL_ADVANCED_OFFENSE) / 4.0) * 3.0);
+    bonus += ((getSkillValue(SKILL_ADVANCED_OFFENSE) / 4.0) * 3.0);
 
   // treat DEX here as a modifier for +hitroll
   // From BALANCE: we want high DEX to yield 5/4 more hits
@@ -2472,7 +2472,7 @@ int TBeing::attackRound(const TBeing * target) const
   // this does the same thing - just uses the standardized function - dash
   bonus += (int)(335 * getDexMod() - 335);
 
-  // thaco adjustmentSKILL_
+  // thaco adjustment
   // +10 hitroll should let me fight evenly with L+1 mob
   // a 1 lev diff is 1000/60 = 50/3 points
   // so each point of thaco should grant 5/3 to bonus
