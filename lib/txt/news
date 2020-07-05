@@ -13,8 +13,8 @@
             - normal        80%    125%
             - difficult     70%    143%
             - dangerous     60%    167%
-            Focus is the primary stat to increase success. I added Karma as
-            a smaller secondary modifier.
+            Focus is the primary stat to increase the above success percentage. 
+            I added Karma as a smaller secondary modifier.
 
 07-07-20 : Synostodweomer tweak
             This prayer fading could potentially result in death so it's been
