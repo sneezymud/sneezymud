@@ -5785,7 +5785,7 @@ bool restrict_xp(const TBeing *caster, TBeing *victim, int duration)
 // called when the ch is hit and it should proc a "stack" of toughness
 void doToughness(TBeing *ch)
 {
-  int MAX_TOUGHNESS = 12;
+  int MAX_TOUGHNESS = 10;
   affectedData *hjp;
 
   if (!ch->doesKnowSkill(SKILL_TOUGHNESS))
@@ -5815,13 +5815,14 @@ void doToughness(TBeing *ch)
     }
   }
 
-  if (mod <= 12)
+  // stop giving feedback if we aren't increasing the affect
+  if (mod <= MAX_TOUGHNESS)
     act("<r>You grit your teeth and think tough thoughts.<1>", 0, ch, 0, 0, TO_CHAR);
 
   mod = max(min(mod, MAX_TOUGHNESS), 1);
 
   affectedData aff;
-  int dur = 11 + 2 * mod;
+  int dur = 10 + 2 * mod;
 
   aff.type = SKILL_TOUGHNESS;
   aff.duration = Pulse::TICK * dur;
