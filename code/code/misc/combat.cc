@@ -3989,8 +3989,8 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 	}
       }
 
-  // Add toughness 
-  doToughness(vict);
+      // Add toughness 
+      doToughness(vict);
 
 	// handle proc on glove/gauntlet of unarmed hitters hitting hand. Dash - 10/17/00
       wearSlotT which_hand;
@@ -5786,7 +5786,7 @@ bool restrict_xp(const TBeing *caster, TBeing *victim, int duration)
 void doToughness(TBeing *ch)
 {
   int MAX_TOUGHNESS = 10;
-  affectedData *hjp;
+  affectedData *ch_affected;
 
   if (!ch->doesKnowSkill(SKILL_TOUGHNESS))
     return;
@@ -5805,11 +5805,11 @@ void doToughness(TBeing *ch)
 
   if (ch->affectedBySpell(SKILL_TOUGHNESS))
   {
-    for (hjp = ch->affected; hjp; hjp = hjp->next) {
-      if (hjp->type == SKILL_TOUGHNESS) {
+    for (ch_affected = ch->affected; ch_affected; ch_affected = ch_affected->next) {
+      if (ch_affected->type == SKILL_TOUGHNESS) {
         // set the mod and remove the affect so we can add it fresh
-        mod += hjp->modifier2;
-        ch->affectRemove(hjp, SILENT_YES);
+        mod += ch_affected->modifier2;
+        ch->affectRemove(ch_affected, SILENT_YES);
         break;
       }
     }
