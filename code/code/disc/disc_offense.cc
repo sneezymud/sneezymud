@@ -3,13 +3,15 @@
 
 CDOffense::CDOffense() :
   CDiscipline(),
-  skAdvancedOffense()
+  skAdvancedOffense(),
+  skInevitability()
 {
 }
 
 CDOffense::CDOffense(const CDOffense &a) :
   CDiscipline(a),
-  skAdvancedOffense(a.skAdvancedOffense)
+  skAdvancedOffense(a.skAdvancedOffense),
+  skInevitability(a.skInevitability)
 {
 }
 
@@ -18,6 +20,7 @@ CDOffense & CDOffense::operator=(const CDOffense &a)
   if (this == &a) return *this;
   CDiscipline::operator=(a);
   skAdvancedOffense = a.skAdvancedOffense;
+  skInevitability = a.skInevitability;
   return *this;
 }
 

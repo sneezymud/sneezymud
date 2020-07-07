@@ -563,6 +563,7 @@ class TBeing : public TThing {
 
   int hits(TBeing *, int);
   int missVictim(TBeing *, TThing *, spellNumT);
+  void doInevitability();
 
   // Postmaster
   void postmasterSendMail(const char *, TMonster *);

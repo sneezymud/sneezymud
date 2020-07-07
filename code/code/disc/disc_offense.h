@@ -7,6 +7,7 @@ class CDOffense : public CDiscipline
 {
 public:
     CSkill skAdvancedOffense;
+    CSkill skInevitability;
 
     CDOffense();
     CDOffense(const CDOffense &a);

@@ -1191,6 +1191,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 // disc_offense
     case SKILL_ADVANCED_OFFENSE:
       return &((CDOffense *) cd)->skAdvancedOffense;
+    case SKILL_INEVITABILITY:
+      return &((CDOffense *) cd)->skInevitability;
       
 // disc_psionics
     case SKILL_PSITELEPATHY:
