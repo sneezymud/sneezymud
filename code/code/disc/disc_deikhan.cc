@@ -61,8 +61,6 @@ int synostodweomer(TBeing *caster, TBeing *v, int level, short bKnown)
     aff.location = APPLY_HIT;
     aff.bitvector = 0;
     v->affectTo(&aff, -1);
-    aff.location = APPLY_CURRENT_HIT;
-    v->affectTo(&aff, -1);
 
     v->updatePos();
     caster->updatePos();
