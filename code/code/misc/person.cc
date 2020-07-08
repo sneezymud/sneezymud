@@ -15,6 +15,10 @@ class TPersonPimpl
     std::unordered_map<std::string, int> favoriteRooms;
 };
 
+TThing::TThingKind TPerson::getKind() const {
+  return TThing::TThingKind::TPerson;
+}
+
 TPerson::TPerson(Descriptor *thedesc) :
   TBeing(),
   base_age(0),

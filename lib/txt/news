@@ -1,3 +1,14 @@
+07-01-20 : New skill in defensive abilities called Toughness. A stacking buff
+            that procs when getting hit and provides some immunity to
+            non-magic.
+            
+06-21-20 : New Discipline for Thieves and Monks called Offensive ABilities 
+            and a Advanced Offense skill.
+
+05-01-20 : New Skill! Focused Avoidance is available in the advanced defense 
+            disc. This should help reduce the amount of time warriors and
+            deikhans spend on their butts.
+
 03-28-20 : Some multiclass fixes:
            - Evaluating magic items should use the best skill
            - Shaman/Mage combinations can now use the spells command

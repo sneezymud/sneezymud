@@ -51,26 +51,30 @@ int TBeing::doBoneBreak(const char *argument, TBeing *vict)
 
 }
 
-int bonebreakMiss(TBeing *c, TBeing *v, int type)
+enum bbMissType {
+    TYPE_DEFAULT,
+    TYPE_MONK,
+    TYPE_DEFENSE
+};
+
+int bonebreakMiss(TBeing *c, TBeing *v, bbMissType type)
 {
-    switch(type){
-      case 0:{ // normal
-	act("$n attempts to get $N into a bone breaking hold, but fails.", 
-	    FALSE, c, 0, v, TO_NOTVICT);
-	act("$N avoids your puny attempt to get $M into a bone breaking hold.", 
-	    FALSE, c, 0, v, TO_CHAR);
-	act("$n tries get you into a bone breaking hold, but you avoid it.", 
-	    FALSE, c, 0, v, TO_VICT);
-      } break;
-      case 1:{ // monk counter move
-	act("$n tries to grapple $N, but $E cleverly avoids $s moves.", 
-	    FALSE, c, 0, v, TO_NOTVICT);
-	act("$N cleverly avoids your attempt to get $M into a bone breaking hold.",
-	    FALSE, c, 0, v, TO_CHAR);
-	act("$n tries grapple you into a bone breaking hold but you avoid it.", 
-	    FALSE, c, 0, v, TO_VICT);    
-      } break;
-    }
+  switch(type) {
+    case TYPE_MONK :
+      act("$n tries to grapple $N, but $E cleverly avoids $s moves.", FALSE, c, 0, v, TO_NOTVICT);
+      act("$N cleverly avoids your attempt to get $M into a bone breaking hold.", FALSE, c, 0, v, TO_CHAR);
+      act("$n tries grapple you into a bone breaking hold but you avoid it.", FALSE, c, 0, v, TO_VICT);
+      break;
+    case TYPE_DEFENSE :
+      act("$n attempts to get $N into a bone breaking hold, but fails.", FALSE, c, 0, v, TO_NOTVICT);
+      act("$N's focus is too great for your bone breaking hold.", FALSE, c, 0, v, TO_CHAR);
+      act("$n tries get you into a bone breaking hold, but your focus is too great.", FALSE, c, 0, v, TO_VICT);
+      break;
+    default : // TYPE_DEFAULT
+      act("$n attempts to get $N into a bone breaking hold, but fails.", FALSE, c, 0, v, TO_NOTVICT);
+      act("$N avoids your puny attempt to get $M into a bone breaking hold.", FALSE, c, 0, v, TO_CHAR);
+      act("$n tries get you into a bone breaking hold, but you avoid it.", FALSE, c, 0, v, TO_VICT);
+  }
 
   c->reconcileDamage(v, 0,SKILL_BONEBREAK);
   return TRUE;
@@ -237,15 +241,23 @@ int bonebreak(TBeing *caster, TBeing *victim)
 
     if (victim->canCounterMove(bKnown/3)) {
       SV(SKILL_BONEBREAK);
-      rc = bonebreakMiss(caster, victim, 1);
+      rc = bonebreakMiss(caster, victim, TYPE_MONK);
       if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
-	return rc;
+        return rc;
+      return TRUE;
+    }
+
+    if (victim->canFocusedAvoidance(bKnown/2)) {
+      SV(SKILL_BONEBREAK);
+      rc = bonebreakMiss(caster, victim, TYPE_DEFENSE);
+      if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+        return rc;
       return TRUE;
     }
 
     return (bonebreakHit(caster, victim));
   } else {
-    rc = bonebreakMiss(caster, victim, 0);
+    rc = bonebreakMiss(caster, victim, TYPE_DEFAULT);
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
   }

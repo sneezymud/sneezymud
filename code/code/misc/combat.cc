@@ -2030,6 +2030,8 @@ static void checkLearnFromHit(TBeing * ch, int tarLevel, TThing * o, bool isPrim
 	else
 	  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_OFFENSE, (225 - (2* myLevel)));
       }
+      // Learn advanced offense
+      ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_OFFENSE, (170 - (2* myLevel)));
     }
   }
 
@@ -2451,7 +2453,12 @@ int TBeing::attackRound(const TBeing * target) const
       bonus += amt;
     }
   }
-  
+
+  // Advanced Offense
+  // For Monks and Thieves. This will be about the same as chivalry
+  if (doesKnowSkill(SKILL_ADVANCED_OFFENSE))
+    bonus += ((getSkillValue(SKILL_ADVANCED_OFFENSE) / 4.0) * 3.0);
+
   // treat DEX here as a modifier for +hitroll
   // From BALANCE: we want high DEX to yield 5/4 more hits
   // and low dex to yield 4/5 the hits
@@ -3981,6 +3988,9 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 	  return retCode;
 	}
       }
+
+      // Add toughness 
+      doToughness(vict);
 
 	// handle proc on glove/gauntlet of unarmed hitters hitting hand. Dash - 10/17/00
       wearSlotT which_hand;
@@ -5772,3 +5782,55 @@ bool restrict_xp(const TBeing *caster, TBeing *victim, int duration)
   return true;
 }
 
+// called when the ch is hit and it should proc a "stack" of toughness
+void doToughness(TBeing *ch)
+{
+  int MAX_TOUGHNESS = 10;
+  affectedData *ch_affected;
+
+  if (!ch->doesKnowSkill(SKILL_TOUGHNESS))
+    return;
+  
+  if (!ch->awake() || ch->getPosition() < POSITION_CRAWLING)
+    return;
+
+  if (!ch->bSuccess(SKILL_TOUGHNESS))
+    return;
+
+  // 50% shot 
+  if (!::number(0,1))
+    return;
+
+  int mod = 1;
+
+  if (ch->affectedBySpell(SKILL_TOUGHNESS))
+  {
+    for (ch_affected = ch->affected; ch_affected; ch_affected = ch_affected->next) {
+      if (ch_affected->type == SKILL_TOUGHNESS) {
+        // set the mod and remove the affect so we can add it fresh
+        mod += ch_affected->modifier2;
+        ch->affectRemove(ch_affected, SILENT_YES);
+        break;
+      }
+    }
+  }
+
+  // stop giving feedback if we aren't increasing the affect
+  if (mod <= MAX_TOUGHNESS)
+    act("<r>You grit your teeth and think tough thoughts.<1>", 0, ch, 0, 0, TO_CHAR);
+
+  mod = max(min(mod, MAX_TOUGHNESS), 1);
+
+  affectedData aff;
+  int dur = 10 + 2 * mod;
+
+  aff.type = SKILL_TOUGHNESS;
+  aff.duration = Pulse::TICK * dur;
+  aff.location = APPLY_IMMUNITY;
+  aff.renew = -1;
+  aff.modifier = IMMUNE_NONMAGIC;
+  aff.modifier2 = mod;
+  aff.bitvector = 0;
+
+  ch->affectTo(&aff, -1);
+}

@@ -1519,7 +1519,9 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_DISSECT:
       case SKILL_DEFENSE:
       case SKILL_ADVANCED_DEFENSE:
+      case SKILL_FOCUSED_AVOIDANCE:
       case SKILL_OFFENSE:
+      case SKILL_ADVANCED_OFFENSE:
       case SKILL_WHITTLE:
       case SKILL_WIZARDRY:
       case SKILL_RITUALISM:
@@ -1892,6 +1894,12 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
             describeDuration(this, aff->duration);
         }
         break;
+      case SKILL_TOUGHNESS:
+        if(show){
+          sstring noun = (aff->modifier2 > 1) ? "stacks" : "stack";
+          str+=format("Affected: Toughness : %s %s. Approx. duration : %s\n\r") % aff->modifier2 % noun % describeDuration(this, aff->duration);
+        }
+
 
       case AFFECT_BITTEN_BY_VAMPIRE:
         // secret!

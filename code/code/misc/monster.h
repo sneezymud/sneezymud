@@ -106,6 +106,7 @@ class TMonster : public TBeing {
 
     std::vector<resetCom> loadCom;
 
+    virtual TThingKind getKind() const;
     TMonster();
     TMonster(const TMonster &);
     TMonster & operator=(const TMonster &);

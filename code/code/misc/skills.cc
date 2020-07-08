@@ -25,6 +25,7 @@
 #include "disc_deikhan_cures.h"
 #include "disc_deikhan_wrath.h"
 #include "disc_defense.h"
+#include "disc_offense.h"
 #include "disc_mounted.h"
 #include "disc_monk.h"
 #include "disc_iron_body.h"
@@ -1182,7 +1183,15 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 // disc_defense
     case SKILL_ADVANCED_DEFENSE: // 674
       return &((CDDefense *) cd)->skAdvancedDefense;
+    case SKILL_FOCUSED_AVOIDANCE:
+      return &((CDDefense *) cd)->skFocusedAvoidance;
+    case SKILL_TOUGHNESS:
+      return &((CDDefense *) cd)->skToughness;
 
+// disc_offense
+    case SKILL_ADVANCED_OFFENSE:
+      return &((CDOffense *) cd)->skAdvancedOffense;
+      
 // disc_psionics
     case SKILL_PSITELEPATHY:
       return &((CDPsionics *) cd)->skTelepathy;

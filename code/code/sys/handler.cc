@@ -549,11 +549,6 @@ void TBeing::affectTotal()
 
   if (!discs) {
 // if no discs goto end of this section--do not do disc/skills 
-#if 0
-    // this appears to happen.  I think during polymorphing
-    if (isPc() && (GetMaxLevel() > 1)) 
-      vlogf(LOG_BUG,format("PC in affectTotal without discs %s") %  getName());
-#endif
   } else {
 
 // FIRST DISCIPLINE LEARNING
@@ -704,36 +699,6 @@ void TBeing::affectTotal()
           }
         }
       }
-#if 0
-      if (skillAdd) {
-        for (i = MIN_WEAR; i < MAX_WEAR; i++) {
-          if ((t = equipment[i]) && (o = dynamic_cast<TObj *>(t))) {
-            if (o->usedAsPaired())
-              continue;
-            for (j = 0; j < MAX_OBJ_AFFECT; j++) {
-              if (!(o->affected[j].location == APPLY_SPELL))
-                continue;
-              if (!(o->affected[j].modifier == num))
-                continue;
-              affectModify(o->affected[j].location,
-                           o->affected[j].modifier,
-                           o->affected[j].modifier2,
-                           o->obj_flags.bitvector, TRUE, SILENT_YES);
-            }
-          }
-        }
-      }
-
-      if (skillAfAdd) {
-        for (af = affected; af; af = af->next) {
-          if (!(af->location == APPLY_SPELL))
-            continue;
-          if (!(af->modifier == num))
-            continue;
-          affectModify(af->location, af->modifier, af->modifier2, af->bitvector, TRUE, SILENT_YES);
-        }
-      }
-#endif
     }
   }
 
@@ -746,17 +711,10 @@ void TBeing::affectTotal()
       if (!affectShouldApply(o, i))
         continue;
       for (j = 0; j < MAX_OBJ_AFFECT; j++) {
-#if 1
 // take out discipline since done above
         if (o->affected[j].location == APPLY_DISCIPLINE)
           continue;
 
-#else
-// take out skills/disc since done above
-        if ((o->affected[j].location == APPLY_SPELL) ||
-                 (o->affected[j].location == APPLY_DISCIPLINE))
-          continue;
-#endif
         affectModify(o->affected[j].location,
                      o->affected[j].modifier,
                      o->affected[j].modifier2,
@@ -766,28 +724,13 @@ void TBeing::affectTotal()
   }
 
   for (af = affected; af; af = af->next) {
-#if 1
     if (af->location == APPLY_DISCIPLINE)
       continue;
-#else
-    if ((af->location == APPLY_SPELL) || (af->location == APPLY_DISCIPLINE))
-      continue;
-#endif
     affectModify(af->location, af->modifier, af->modifier2, af->bitvector, TRUE, SILENT_YES);
   }
 
   /* Make certain values are between 5..250, not < 5 and not > 30! */
   int minrange, maxrange;
-//Speef - limits Everyone including mobs to 190.  Removing.
-#if 0 
-  if (isImmortal() && isPc()) {
-    minrange=0;
-    maxrange=250;
-  } else {
-    minrange=30;
-    maxrange=190;
-  }
-#endif
   minrange = 30;
   maxrange = 250;
   setStat(STAT_CURRENT, STAT_STR, 
@@ -1139,15 +1082,6 @@ void TBeing::equipChar(TThing *obj, wearSlotT pos, silentTypeT silent)
     }
 
   }
-
-#if 0
-  if (!canUseLimb(pos)) {
-    sendTo(format("Your limb is busted and %s drops off.\n\r") %obj->shortDescr);
-    act("$n drops $s $o.", TRUE, this, obj, 0, TO_ROOM);
-    *roomp += *obj;
-    return;
-  }
-#endif
 
   if (pos == HOLD_RIGHT) {
     if (!canUseLimb(WEAR_HAND_R)) {
@@ -1999,14 +1933,6 @@ TThing *get_thing_in_list_getable(TBeing *ch, const char *name, StuffList list)
               return(tobj);
           }
         }
-#if 0
-        } else {
-          if (!*name || isname(name, o->name)) {
-            if (ch->canGet(o, SILENT_NO));
-              return(o);
-          }
-        }
-#endif
       }
     }
   }
@@ -2037,11 +1963,6 @@ TThing *get_thing_on_list_getable(TBeing *ch, const char *name, TThing *list)
             }
           } else {
           }
-#if 0
-            if (!*name || isname(name, o->name))
-              return(o);
-          }
-#endif
         }
       }
     }

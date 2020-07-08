@@ -556,6 +556,8 @@ enum spellNumT {
      SKILL_FISHING,
      SKILL_LOGGING,
      SKILL_ADVANCED_DEFENSE,
+     SKILL_FOCUSED_AVOIDANCE,
+     SKILL_TOUGHNESS,
      SKILL_MANA,
      SKILL_MEND,
      SKILL_FORAGE,
@@ -572,6 +574,7 @@ enum spellNumT {
      SKILL_BULLYWUGCROAK,
      SKILL_AVIAN,
      SKILL_FISHBURBLE,
+     SKILL_ADVANCED_OFFENSE,
 
      // end of generic
 

@@ -408,6 +408,7 @@ class TBeing : public TThing {
 
   TMessages msgVariables;
   // Constructor and Destructor
+  virtual TThingKind getKind() const;
   protected:
   TBeing();
   public:
@@ -1404,6 +1405,7 @@ class TBeing : public TThing {
   bool checkSmashed(TBeing *, wearSlotT, spellNumT, TThing *, int, const char * = NULL);
   int hit(TBeing *, int pulse = -1);
   bool canCounterMove(int);
+  bool canFocusedAvoidance(int);
   int trySpringleap(TBeing *);
   int damageLimb(TBeing *, wearSlotT, TThing *, int *);
   int damageHand(TBeing *, wearSlotT);

@@ -2014,6 +2014,8 @@ const struct disc_names_data discNames[MAX_DISCS] =
    "Advanced Adventuring"},
   {DISC_COMMONER, CLASS_COMMONER, "commoner abilities",
    "Commoner Abilities"},
+  {DISC_OFFENSE, CLASS_THIEF | CLASS_MONK, "offense",
+   "Offensive Abilities"},
 };
 
 const char* const home_terrains[MAX_HOME_TERS] =

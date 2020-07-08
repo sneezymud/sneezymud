@@ -21,6 +21,7 @@
 #include "disc_deikhan_cures.h"
 #include "disc_deikhan_wrath.h"
 #include "disc_defense.h"
+#include "disc_offense.h"
 #include "disc_mounted.h"
 #include "disc_monk.h"
 #include "disc_iron_body.h"
@@ -1815,6 +1816,7 @@ void TBeing::assignDisciplinesClass()
     discs->disc[DISC_ADVENTURING] = new CDAdventuring();
     discs->disc[DISC_ADVANCED_ADVENTURING] = new CDAdvAdventuring();
     discs->disc[DISC_DEFENSE] = new CDDefense();
+    discs->disc[DISC_OFFENSE] = new CDOffense();
  
     discs->disc[DISC_PSIONICS] = new CDPsionics();
 
@@ -1914,6 +1916,7 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_FOCUSED_ATTACKS] = new CDFAttacks();
       discs->disc[DISC_BAREHAND] = new CDBarehand();
       discs->disc[DISC_IRON_BODY] = new CDIronBody();
+      discs->disc[DISC_OFFENSE] = new CDOffense();
     }
   }
 
@@ -1926,6 +1929,7 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_POISONS] = new CDPoisons();
       discs->disc[DISC_STEALTH] = new CDStealth();
       discs->disc[DISC_TRAPS] = new CDTraps();
+      discs->disc[DISC_OFFENSE] = new CDOffense();
     }
   }
 
@@ -2318,6 +2322,7 @@ int TBeing::getSkillLevel(spellNumT skill) const
     case DISC_RANGED:
     case DISC_BAREHAND:
     case DISC_DEFENSE:
+    case DISC_OFFENSE:
     case DISC_PSIONICS:
     case DISC_BOGUS1:
     case DISC_BOGUS2:

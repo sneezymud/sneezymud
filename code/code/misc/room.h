@@ -157,6 +157,7 @@ class TRoom : public TThing {
     roomDirData *dir_option[MAX_DIR]; // Exits
 
     TRoom(int);
+    virtual TThingKind getKind() const;
     virtual TThing& operator+= (TThing& t);
     virtual ~TRoom();
 

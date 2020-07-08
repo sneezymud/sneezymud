@@ -525,6 +525,7 @@ private:
   protected:
     TObj();
   public:
+    virtual TThingKind getKind() const;
     TObj(const TObj &);
     TObj & operator=(const TObj &);
     virtual TThing& operator+= (TThing& t);

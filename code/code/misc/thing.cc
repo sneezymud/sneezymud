@@ -151,7 +151,7 @@ int TThing::getCarriedVolume() const
   }
 
   for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it){
-    if(dynamic_cast<TComponent *>(t))
+    if(t->getKind() == TThing::TThingKind::TComponent)
       total+=(int)(t->getTotalVolume()*0.10);
     else
       total+=t->getTotalVolume();
@@ -235,8 +235,8 @@ int TThing::getReducedVolume(const TThing *o) const
 
   int num = getTotalVolume();
 
-  if ((o && dynamic_cast<const TBaseContainer *>(o)) ||
-      (parent && dynamic_cast<const TBaseContainer *>(parent))) {
+  if ((o && o->getKind() == TThing::TThingKind::TBaseContainer) ||
+      (parent && parent->getKind() == TThing::TThingKind::TBaseContainer)) {
     // do material type reduction
     num /= material_nums[getMaterial()].vol_mult;
 
