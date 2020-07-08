@@ -1,25 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: disc_deikhan_martial.h,v $
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-#ifndef __DISC_DEIKHAN_MARTIAL_H
-#define __DISC_DEIKHAN_MARTIAL_H
-
-// This is the DEIKHAN FIGHTING skills discipline.
+#pragma once
 
 #include "discipline.h"
 #include "skills.h"
@@ -60,9 +39,4 @@ class CDDeikhanMartial : public CDiscipline
     virtual ~CDDeikhanMartial() {}
     virtual CDDeikhanMartial * cloneMe() { return new CDDeikhanMartial(*this); }
 
-private:
 };
-
-
-#endif
-

@@ -1,14 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-#ifndef __DISC_DEIKHAN_VENGEANCE_H
-#define __DISC_DEIKHAN_VENGEANCE_H
-
-// This is the DEIKHAN VENGEANCE discipline.
+#pragma once
 
 #include "discipline.h"
 #include "skills.h"
@@ -47,8 +37,4 @@ public:
     virtual ~CDDeikhanVengeance() {}
     virtual CDDeikhanVengeance * cloneMe() { return new CDDeikhanVengeance(*this); }
 
-private:
 };
-
-#endif
-

@@ -1,14 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-#ifndef __DISC_DEIKHAN_GUARDIAN_H
-#define __DISC_DEIKHAN_GUARDIAN_H
-
-// This is the DEIKHAN guardian discipline.
+#pragma once
 
 #include "discipline.h"
 #include "skills.h"
@@ -43,8 +33,4 @@ public:
     virtual ~CDDeikhanGuardian() {}
     virtual CDDeikhanGuardian * cloneMe() { return new CDDeikhanGuardian(*this); }
 
-private:
 };
-
-#endif
-

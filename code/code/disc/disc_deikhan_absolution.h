@@ -3,23 +3,8 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_deikhan_cures.h,v $
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
+#pragma once
 
-
-#ifndef __DISC_DEIKHAN_ABSOLUTION_H
-#define __DISC_DEIKHAN_ABSOLUTION_H
-
-// This is the DEIKHAN CURES discipline.
 
 #include "discipline.h"
 #include "skills.h"
@@ -58,9 +43,4 @@ public:
     virtual ~CDDeikhanAbsolution() {}
     virtual CDDeikhanAbsolution * cloneMe() { return new CDDeikhanAbsolution(*this); }
 
-private:
 };
-
-
-#endif
-
