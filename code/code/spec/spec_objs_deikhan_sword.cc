@@ -76,11 +76,11 @@ void doBlind(TBeing *ch, TBeing *vict, TObj *o) {
 
 void doSanc(TBeing *ch, TObj *o) {
   affectedData aff;
-  int level=30;
+  int level=50;
 
   aff.type = SPELL_SANCTUARY;
   aff.level = level;
-  aff.duration = Pulse::UPDATES_PER_MUDHOUR/4;
+  aff.duration = Pulse::ONE_SECOND * 60 * 8;
   aff.location = APPLY_PROTECTION;
   aff.modifier = level;
   aff.bitvector = AFF_SANCTUARY;
