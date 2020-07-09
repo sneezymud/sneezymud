@@ -2045,7 +2045,7 @@ static void checkLearnFromHit(TBeing * ch, int tarLevel, TThing * o, bool isPrim
 
         // Learn 2h on hit
         TBaseWeapon *obj = dynamic_cast<TBaseWeapon *>(o);
-        if (ch->doesKnowSkill(SKILL_2H_SPEC_DEIKHAN) && obj->isPaired()) {
+        if (obj && ch->doesKnowSkill(SKILL_2H_SPEC_DEIKHAN) && obj->isPaired()) {
           ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_2H_SPEC_DEIKHAN, max(0, (100 - (2* myLevel))));
         }
 
