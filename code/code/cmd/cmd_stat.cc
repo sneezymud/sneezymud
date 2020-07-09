@@ -1821,6 +1821,7 @@ void TBeing::statBeing(TBeing *k)
       case SKILL_TOUGHNESS:
       case SKILL_OFFENSE:
       case SKILL_ADVANCED_OFFENSE:
+      case SKILL_INEVITABILITY:
       case SKILL_WHITTLE:
       case SKILL_WIZARDRY:
       case SKILL_RITUALISM:

@@ -575,6 +575,7 @@ enum spellNumT {
      SKILL_AVIAN,
      SKILL_FISHBURBLE,
      SKILL_ADVANCED_OFFENSE,
+     SKILL_INEVITABILITY,
 
      // end of generic
 

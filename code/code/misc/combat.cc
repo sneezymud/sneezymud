@@ -3084,6 +3084,10 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
     }
   }
 
+
+  // inevitability procs when we miss. Check here
+  doInevitability();
+  
   // handle a weapon's spec_proc 
   if (weapon && weapon->spec) {
     rc = weapon->checkSpec(v, CMD_OBJ_MISS, "", this);
@@ -3965,6 +3969,18 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 	reconcileMana(TYPE_UNDEFINED, 0, 10);
       }
       
+      affectedData *ch_affected;
+      // Remove inevitability if we hit.
+      if (affectedBySpell(SKILL_INEVITABILITY))
+      {
+        for (ch_affected = affected; ch_affected; ch_affected = ch_affected->next) {
+          if (ch_affected->type == SKILL_INEVITABILITY) {
+            affectRemove(ch_affected, SILENT_YES);
+            break;
+          }
+        }
+      }
+
       // we've now hit, so do some post hit stuff
       // handle a weapon's spec_proc 
       if (weapon && weapon->spec) {
@@ -5833,4 +5849,50 @@ void doToughness(TBeing *ch)
   aff.bitvector = 0;
 
   ch->affectTo(&aff, -1);
+}
+
+void TBeing::doInevitability()
+{
+  int MAX_INEVITABILITY = 50;
+  affectedData *ch_affected;
+
+  if (!doesKnowSkill(SKILL_INEVITABILITY))
+    return;
+  
+  if (!awake() || getPosition() < POSITION_CRAWLING)
+    return;
+
+  if (!bSuccess(SKILL_INEVITABILITY))
+    return;
+
+  int mod = 1;
+
+  if (affectedBySpell(SKILL_INEVITABILITY))
+  {
+    for (ch_affected = affected; ch_affected; ch_affected = ch_affected->next) {
+      if (ch_affected->type == SKILL_INEVITABILITY) {
+        // set the mod and remove the affect so we can add it fresh
+        mod += ch_affected->modifier;
+        affectRemove(ch_affected, SILENT_YES);
+        break;
+      }
+    }
+  }
+
+  // Too damn spammy
+  if (mod <= 1)
+    act("<b>You grit your teeth and try to concentrate on hitting.<1>", 0, this, 0, 0, TO_CHAR);
+
+  mod = max(min(mod, MAX_INEVITABILITY), 1);
+
+  affectedData aff;
+  aff.type = SKILL_INEVITABILITY;
+  aff.duration = Pulse::UPDATES_PER_MUDHOUR;
+  aff.location = APPLY_HITROLL;
+  aff.renew = -1;
+  aff.modifier = mod;
+  aff.bitvector = 0;
+
+  affectTo(&aff, -1);
+
 }
