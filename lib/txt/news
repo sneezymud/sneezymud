@@ -1,3 +1,8 @@
+07-07-20 : Synostodweomer tweak
+            This prayer fading could potentially result in death so it's been
+            tweaked to no longer give current hitpoints only max hitpoints.
+            - It also provides enhanced regen now.
+
 07-06-20 : New skill in offensive abilities called Inevitability.
            - Stacking buff that procs on misses and improves hit chance
 
