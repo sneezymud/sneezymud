@@ -1258,8 +1258,8 @@ bool procCharRegen::run(const TPulse &pl, TBeing *tmp_ch) const
   if (tmp_ch->roomp && !tmp_ch->roomp->isRoomFlag(ROOM_NO_HEAL) && 
       tmp_ch->getHit() < tmp_ch->hitLimit() &&
       tmp_ch->getCond(FULL) && tmp_ch->getCond(THIRST) &&
-      !::number(0, 10) && (tmp_ch->getMyRace()->hasTalent(TALENT_FAST_REGEN) || tmp_ch->affectedBySpell(SPELL_SYNOSTODWEOMER)))
-  {
+      !::number(0, 10) &&
+      (tmp_ch->getMyRace()->hasTalent(TALENT_FAST_REGEN) || tmp_ch->affectedBySpell(SPELL_SYNOSTODWEOMER))) {
     // mostly for trolls
     int addAmt = (int)(tmp_ch->hitGain() / 10.0);
     if (addAmt > 0) {
