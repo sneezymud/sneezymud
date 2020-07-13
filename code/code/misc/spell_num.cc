@@ -583,6 +583,8 @@ int mapSpellnumToFile(spellNumT stt)
       return 370;
     case SKILL_DIVINE_RESCUE:
       return 371;
+    case SKILL_GUARDIANS_LIGHT:
+      return 372;
     case SPELL_SALVE_DEIKHAN:
       return 374;
     case SKILL_LAY_HANDS:
@@ -1104,6 +1106,8 @@ int mapSpellnumToFile(spellNumT stt)
       return 2548;
     case AFFECT_UNHOLY_WRATH:
       return 2549;
+    case AFFECT_GUARDIANS_LIGHT:
+      return 2550;
     case SPELL_FIRE_BREATH:
     case SPELL_CHLORINE_BREATH:
     case SPELL_FROST_BREATH:
@@ -1684,6 +1688,8 @@ spellNumT mapFileToSpellnum(int stt)
       return SKILL_DIVINE_GRACE;
     case 371:
       return SKILL_DIVINE_RESCUE;
+    case 372:
+      return SKILL_GUARDIANS_LIGHT;
     case 374:
       return SPELL_SALVE_DEIKHAN;
     case 375:
@@ -2187,6 +2193,8 @@ spellNumT mapFileToSpellnum(int stt)
       return AFFECT_STAFFA_BLESSING;
     case 2549:
       return AFFECT_UNHOLY_WRATH;
+    case 2550:
+      return AFFECT_GUARDIANS_LIGHT;
     default:
       break;
   }

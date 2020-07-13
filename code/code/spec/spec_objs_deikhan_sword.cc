@@ -127,8 +127,8 @@ int deikhanSword(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
     return FALSE;       // weapon not equipped (carried or on ground)
 
   if(cmd == CMD_GENERIC_PULSE){
-    if(!::number(0,99) && weaponLevel >= 45){
-      doSanc(ch, o);
+    if(!::number(0,19) && weaponLevel >= 45){
+      ch->doGuardiansLight(1, 12);
       return TRUE;
     }
     

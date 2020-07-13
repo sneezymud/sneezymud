@@ -3449,6 +3449,8 @@ int TBeing::checkShield(TBeing *v, TThing *weapon, wearSlotT part_hit, spellNumT
 		    namebuf % equipBuf); 
   }
 
+  v->checkGuardiansLight();
+
   if (shield->spec){
     rc = shield->checkSpec(this, CMD_OBJ_BEEN_HIT, NULL, weapon);
     if (IS_SET_ONLY(rc, DELETE_VICT))
@@ -5920,4 +5922,52 @@ void TBeing::doInevitability()
 
   affectTo(&aff, -1);
 
+}
+
+// checkGuardiansLight includes checks for the skill
+void TBeing::checkGuardiansLight() {
+  if (!doesKnowSkill(SKILL_GUARDIANS_LIGHT))
+    return;
+
+  if (!bSuccess(SKILL_GUARDIANS_LIGHT))
+    return;
+
+  if (::number(0,4))
+    return;
+
+  doGuardiansLight(3, 7);
+}
+
+// doGuardiansLight proc
+void TBeing::doGuardiansLight(int mod, int duration = 10) {
+
+  int MAX_GUARDIANSLIGHT = 12;
+  // int mod = 3;
+  affectedData aff, *ch_affected;
+
+  if (affectedBySpell(AFFECT_GUARDIANS_LIGHT))
+  {
+    for (ch_affected = affected; ch_affected; ch_affected = ch_affected->next) {
+      if (ch_affected->type == AFFECT_GUARDIANS_LIGHT) {
+        // set the mod and remove the affect so we can add it fresh
+        mod += ch_affected->modifier;
+        affectRemove(ch_affected, SILENT_YES);
+        break;
+      }
+    }
+  }
+
+if (mod <= MAX_GUARDIANSLIGHT)
+    act("<b>You glow in<1> <w>Guardian's<1> <y>Light<1>", 0, this, 0, 0, TO_CHAR);
+
+  mod = max(min(mod, MAX_GUARDIANSLIGHT), 1);
+
+  aff.type = AFFECT_GUARDIANS_LIGHT;
+  aff.duration = Pulse::TICK * duration + mod;
+  aff.location = APPLY_PROTECTION;
+  aff.renew = -1;
+  aff.modifier = mod;
+  aff.bitvector = 0;
+
+  affectTo(&aff, -1);
 }

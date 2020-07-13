@@ -1195,6 +1195,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SPELL_SYNOSTODWEOMER:
       case SKILL_DIVINE_GRACE:
       case SKILL_DIVINE_RESCUE:
+      case SKILL_GUARDIANS_LIGHT:
       case SPELL_HARM_DEIKHAN:
       case SPELL_HARM:
       case SPELL_HARM_LIGHT_DEIKHAN:
@@ -1905,6 +1906,11 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
           str+=format("Affected: Inevitablity : %s %s. Approx. duration : %s\n\r") % aff->modifier % noun % describeDuration(this, aff->duration);
         }
         break;
+      case AFFECT_GUARDIANS_LIGHT:
+        if(show){
+          str+=format("Affected: Guardians Light : %s percent protection.  Approx. duration : %s\n\r") % aff->modifier %
+            describeDuration(this, aff->duration);
+        }
 
       case AFFECT_BITTEN_BY_VAMPIRE:
         // secret!

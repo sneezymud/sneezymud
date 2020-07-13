@@ -9,18 +9,21 @@ public:
     CSkill skSynostodweomer;
     CSkill skDivineGrace;
     CSkill skDivineRescue;
+    CSkill skGuardiansLight;
 
     CDDeikhanGuardian()
       : CDiscipline(),
       skSynostodweomer(),
       skDivineGrace(),
-      skDivineRescue() {
+      skDivineRescue(),
+      skGuardiansLight() {
     }
     CDDeikhanGuardian(const CDDeikhanGuardian &a)
       : CDiscipline(a),
       skSynostodweomer(a.skSynostodweomer),
       skDivineGrace(a.skDivineGrace),
-      skDivineRescue(a.skDivineRescue) {
+      skDivineRescue(a.skDivineRescue),
+      skGuardiansLight(a.skGuardiansLight) {
     }
     CDDeikhanGuardian & operator=(const CDDeikhanGuardian &a) {
       if (this == &a) return *this;
@@ -28,6 +31,7 @@ public:
       skSynostodweomer = a.skSynostodweomer;
       skDivineGrace = a.skDivineGrace;
       skDivineRescue = a.skDivineRescue;
+      skGuardiansLight = a.skGuardiansLight;
       return *this;
     }
     virtual ~CDDeikhanGuardian() {}
