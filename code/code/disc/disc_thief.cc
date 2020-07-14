@@ -409,9 +409,8 @@ int TBeing::thiefDodge(TBeing *v, TThing *weapon, int *dam, int w_type, wearSlot
 
   w_type -= TYPE_HIT;
 
-  // base amount, modified for difficulty
-  // the higher amt is, the more things get blocked
-  int amt = (int) (45 * 100 / getSkillDiffModifier(SKILL_DODGE_THIEF));
+  // the higher amt is, the more things get dodged
+  int amt = 45;
 
   if (::number(0, 999) >= amt)
     return FALSE;

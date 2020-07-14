@@ -392,11 +392,8 @@ int TBeing::monkDodge(TBeing *v, TThing *weapon, int *dam, int w_type, wearSlotT
   // So technically, we should be blocking 12/90 = 13.3% of damage
   w_type -= TYPE_HIT;
 
-  // monks becoming better tanks than warriors, so lowering this to 10% (3-14-01)
-  // base amount, modified for difficulty
   // the higher amt is, the more things get blocked
-  //  :: Modifer was SKILL_DODGE.  Jirin was created to replace it.
-  int amt = (int) (100 * 100 / getSkillDiffModifier(SKILL_JIRIN));
+  int amt = 100;
 
   if (::number(0, 999) >= amt)
     return FALSE;

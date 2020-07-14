@@ -1,3 +1,21 @@
+07-09-20 : Important change to skill/spell difficulty and damage.
+            At some point all skills and spells were short-circuited
+            to act like they were all trvial difficulty. This affected
+            failure rate and damage. Currently it's impossible to fail
+            a skill/spell that is maxed unless you have very low focus.
+            We're going to restore this system so that it acts as documented
+            in the help files. Take some time to adjust and provide feedback
+            on failure rates.
+            Here's how this will be working now:
+            difficulty | Success | Damage
+            - trivial      100%    100%  
+            - easy          90%    111%
+            - normal        80%    125%
+            - difficult     70%    143%
+            - dangerous     60%    167%
+            Focus is the primary stat to increase the above success percentage. 
+            I added Karma as a smaller secondary modifier.
+
 07-07-20 : Synostodweomer tweak
             This prayer fading could potentially result in death so it's been
             tweaked to no longer give current hitpoints only max hitpoints.

@@ -775,7 +775,6 @@ int kwaveDamage(TBeing *caster, TBeing *victim) {
         return DELETE_VICT;
 
     float wt = combatRound(discArray[SKILL_KINETIC_WAVE]->lag);
-    wt = (wt * 100.0 / getSkillDiffModifier(SKILL_KINETIC_WAVE));
     wt += 1;
     victim->addToWait((int) wt);
 

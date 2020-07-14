@@ -196,8 +196,7 @@ int immobilize(TBeing * caster, TBeing * victim, int level, short bKnown)
   // some command lock-out.
   // since spell is tasked, add one to the lag
   float rounds = 0.2233 * (discArray[SPELL_IMMOBILIZE]->lag + 1);
-  // adjust for difficulty
-  rounds = (rounds * 100.0 / getSkillDiffModifier(SPELL_IMMOBILIZE));
+
   // adjust for saving-throw penalty
   rounds = (rounds * 4 / 3);
 

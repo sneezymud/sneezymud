@@ -250,7 +250,6 @@ int TBeing::tripSuccess(TBeing *victim, spellNumT skill)
     return DELETE_THIS;
 
   float wait = combatRound(discArray[SKILL_TRIP]->lag);
-  wait = (wait * 100.0 / getSkillDiffModifier(SKILL_TRIP));
   addToMove(-5);
   wait += 0.5;
   // round up
