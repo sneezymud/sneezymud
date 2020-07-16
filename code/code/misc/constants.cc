@@ -725,6 +725,11 @@ void assign_item_info()
      "Seed vnum", 2147483647, 0,
      "Unused", 0, 0,
      "1 = Poisoned, 2 = Spoiled, 4 = Fished, 8 = Butchered. (can be added)", 3, 0);
+  ItemInfo[ITEM_ENCHANTING_MATERIAL] = new itemInfo("Enchanting Material","an enchanting component",
+     "Unused", 0, 0,
+     "Unused", 0, 0,
+     "Unused", 0, 0,
+     "Unused", 0, 0);
 };
 
 const char * const wear_bits[MAX_ITEM_WEARS] =
