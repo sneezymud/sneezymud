@@ -14,25 +14,25 @@ double getSkillDiffModifier(spellNumT skill)
   int amt = 0;
   switch (discArray[skill]->task) {
     case TASK_TRIVIAL:
-      amt = 100;
+      amt = 110;
       break;
     case TASK_EASY:
-      amt = 90;
+      amt = 100;
       break;
     case TASK_NORMAL:
-      amt = 80;
+      amt = 90;
       break;
     case TASK_DIFFICULT:
-      amt = 70;
+      amt = 80;
       break;
     case TASK_DANGEROUS:
-      amt = 60;
+      amt = 70;
       break;
     case TASK_HOPELESS:
-      amt = 40;
+      amt = 50;
       break;
     case TASK_IMPOSSIBLE:
-      amt = 25;
+      amt = 35;
       break;
   }
   return amt;
@@ -143,7 +143,8 @@ if (discArray[skill]->disc == discArray[skill]->assDisc) {
   // to ensure those skills are worth using.
   // factoring in once evenly weights easy vs hard skills in terms of
   // resulting damage.
-  fixed_amt *= (100.0 / getSkillDiffModifier(skill));
+  // -- Adjusting to increase damage to difficulty ration
+  fixed_amt *= (100.0 / (getSkillDiffModifier(skill) - 15));
 
   // cut area effects in half
   if (IS_SET(discArray[skill]->targets, TAR_AREA)) 
