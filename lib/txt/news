@@ -1,3 +1,13 @@
+07-09-20 : Tweaks to skill/spell difficulty.
+            difficulty | Success | Damage
+            - trivial      110%    105%
+            - easy         100%    118%
+            - normal        90%    133%
+            - difficult     80%    154%
+            - dangerous     70%    182%
+            Additionally updated the difficulty of a lot of individual spells
+            Mostly buffs, debuffs and utility spells. See helpfiles
+
 07-09-20 : Important change to skill/spell difficulty and damage.
             At some point all skills and spells were short-circuited
             to act like they were all trvial difficulty. This affected
