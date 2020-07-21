@@ -1178,7 +1178,7 @@ void TPerson::doShow(const sstring &argument)
     sb += "Mobile Specials\n\r";
     sb += "No.) Assignable  Name\n\r";
     sb += "------------------------------------\n\r";
-    for (int i = 1; i< NUM_MOB_SPECIALS; i++) {
+    for (int i = 1; i <= NUM_MOB_SPECIALS; i++) {
       if(!is_abbrev(my_arg, "assignable") ||
 	 mob_specials[i].assignable)
 	sb += format("%i) [%s] %s\n\r") % 
