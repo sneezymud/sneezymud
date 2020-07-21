@@ -5932,17 +5932,16 @@ void TBeing::checkGuardiansLight() {
   if (!bSuccess(SKILL_GUARDIANS_LIGHT))
     return;
 
-  if (::number(0,4))
+  if (::number(0,6))
     return;
 
-  doGuardiansLight(3, 7);
+  doGuardiansLight(6, 18);
 }
 
 // doGuardiansLight proc
 void TBeing::doGuardiansLight(int mod, int duration = 10) {
 
-  int MAX_GUARDIANSLIGHT = 12;
-  // int mod = 3;
+  int MAX_GUARDIANSLIGHT = 6;
   affectedData aff, *ch_affected;
 
   if (affectedBySpell(AFFECT_GUARDIANS_LIGHT))

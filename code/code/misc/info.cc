@@ -1894,6 +1894,12 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
             describeDuration(this, aff->duration);
         }
         break;
+      case AFFECT_HOLY_WRATH:
+        if(show){
+          str+=format("Affected: Holy Wrath.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
       case SKILL_TOUGHNESS:
         if(show){
           sstring noun = (aff->modifier2 > 1) ? "stacks" : "stack";

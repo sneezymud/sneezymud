@@ -74,24 +74,28 @@ void doBlind(TBeing *ch, TBeing *vict, TObj *o) {
   vict->rawBlind((int)tWeap->weaponLevel(), tDuration, tSave);
 }
 
-void doSanc(TBeing *ch, TObj *o) {
-  affectedData aff;
-  int level=50;
+void doHolyWrath(TBeing *ch, TObj *o)
+{
+  affectedData aff, aff2;
 
-  aff.type = SPELL_SANCTUARY;
-  aff.level = level;
-  aff.duration = Pulse::ONE_SECOND * 60 * 8;
-  aff.location = APPLY_PROTECTION;
-  aff.modifier = level;
-  aff.bitvector = AFF_SANCTUARY;
+  // normalize bonus between 1 and 3
+  int modifier = max(1, (int) (ch->GetMaxLevel() / 15));
+  modifier = min(3, modifier);
 
+  aff.type = AFFECT_HOLY_WRATH;
+  aff.duration = Pulse::UPDATES_PER_MUDHOUR/40 * ch->GetMaxLevel();
+  aff.location = APPLY_HITROLL;
+  aff.modifier = modifier;
+  aff.bitvector = 0;
 
-  act("$n's $o <W>flashes brightly<1>!", 
-      0, ch, o, 0, TO_ROOM);
-  act("Your $o <W>flashes brightly<1>!", 
-      0, ch, o, 0, TO_CHAR);
+  if (!ch->affectedBySpell(AFFECT_HOLY_WRATH)) {
+    act("$n's $o glows with <y>Holy Wrath<1>!", 
+        0, ch, o, 0, TO_ROOM);
+    act("Your $o glows with <y>Holy Wrath<1>!", 
+        0, ch, o, 0, TO_CHAR);
+  }
   
-  ch->affectJoin(ch, &aff, AVG_DUR_NO, AVG_EFF_YES);
+  ch->affectJoin(ch, &aff, AVG_DUR_NO, AVG_EFF_YES, FALSE);
 }
 
 int doHarm(TBeing *ch, TBeing *vict, TObj *o) {
@@ -127,10 +131,11 @@ int deikhanSword(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
     return FALSE;       // weapon not equipped (carried or on ground)
 
   if(cmd == CMD_GENERIC_PULSE){
-    if(!::number(0,19) && weaponLevel >= 45){
-      ch->doGuardiansLight(1, 12);
-      return TRUE;
+    if(!::number(0,29)){
+        doHolyWrath(ch, o);
+        return TRUE;
     }
+
     
     if(!::number(0,49)){
       doHeal(ch, o);

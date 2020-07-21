@@ -2192,6 +2192,13 @@ void TBeing::statBeing(TBeing *k)
         str += format("     Expires in %6d updates.\n\r") % aff->duration;
       break;
 
+      case AFFECT_HOLY_WRATH:
+        str += "Holy Wrath.\n\r";
+        str += format("     Modifies %s by %ld points\n\r") %
+          apply_types[aff->location].name % aff->modifier;
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+      break;
+
       case AFFECT_GUARDIANS_LIGHT:
         str += "Guardians Light.\n\r";
         str += format("     Modifies %s by %ld points\n\r") %

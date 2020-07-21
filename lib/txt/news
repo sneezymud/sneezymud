@@ -1,13 +1,17 @@
 07-22-20 : Next phase of Deikhan Changes
             - Renamed all advanced discs so they don't conflict with cleric
             - Removed cleric wrath spells (rain brimstone etc.)
-            - Divine Rescue: Advanced rescue that heals the target
+            - Moved around some skills to match up with the new discs
+            - Divine Rescue: Advanced form of rescue that heals the target
             - 2h specialization: Additional damage with 2h weapons
-            - Divine Grace: Resistence to some affilictions
+            - Divine Grace: Resistence to some afflictions
+            - Guardian's light: Protection proc while using a shield
             - Removed kick
             - Smite is reworked: less damage but usable more often
               Includes a +hit buff -protection debuff so it isn't advised
               to use it while tanking
+            - Changed deikhan sword sanc proc to Holy Wrath (+hit buff)
+              This makes it not conflict with superior spell sanc
             Up next for deikhans is auras
 
 07-09-20 : Tweaks to skill/spell difficulty.
