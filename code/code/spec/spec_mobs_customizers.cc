@@ -42,8 +42,6 @@ static int engraveCost(TObj *obj, TBeing *ch, unsigned int shop_nr)
   if(shop_nr)
     cost *= shop_index[shop_nr].getProfitBuy(obj, ch);
 
-  // lets make customizing cost more now
-  cost *= 2;
   return (int) cost;
 }
 
@@ -66,7 +64,7 @@ int blacksmith(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 // Generic customization
 int customizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o, customizerType custtype)
 {
-  char buf[256];
+  sstring buf;
   TObj *item;
   TBeing *final_pers;
   int cost;
@@ -146,7 +144,7 @@ int customizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o,
       if (job->wait > 0) {
         job->wait--;
         if (!job->wait) {
-          sprintf(buf, "That should do it %s!", job->char_name);
+          buf = format("That should do it %s!") % job->char_name;
           me->doSay(buf);
           TThing *ts = NULL;
           TObj *final = NULL;
@@ -168,10 +166,10 @@ int customizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o,
 
 
           //  Remake the obj name.  
-          sprintf(buf, "%s %s", final->name.c_str(), job->char_name);
+          buf = format("%s %s") % final->name.c_str() % job->char_name;
           final->name = buf;
 
-          sprintf(buf, "This is the personalized object of %s", job->char_name);
+          buf = format("This is the personalized object of %s") % job->char_name;
           final->action_description = buf;
 
           if (!(final_pers = get_char_room(job->char_name, me->in_room))) {
@@ -208,7 +206,7 @@ int customizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o,
             job->cost = 0;
             return FALSE;
           }
-          sprintf(buf, "%s %s", job->obj_name, job->char_name);
+          buf = format("%s %s") % job->obj_name % job->char_name;
           if (me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT) == DELETE_THIS)
             return DELETE_THIS;
           delete [] job->char_name;
@@ -219,7 +217,7 @@ int customizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o,
           job->cost = 0;
           return FALSE;
         } else {
-          sprintf(buf, "$n works furiously to customize %s's %s.", job->char_name, job->obj_name);
+          buf = format("$n works furiously to customize %s's %s.") % job->char_name % job->obj_name;
           act(buf, FALSE, me, NULL, ch, TO_ROOM);
           return FALSE;
         }
@@ -242,7 +240,7 @@ int customizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o,
         return FALSE;
       }
       if (job->char_name == ch->getName()) {
-        sprintf(buf, "%s! Don't leave until I finish with this %s!", ch->getName().c_str(), job->obj_name);
+        buf = format("%s! Don't leave until I finish with this %s!") % ch->getName().c_str() % job->obj_name;
         me->doSay(buf);
         return TRUE;
       } else
@@ -289,6 +287,8 @@ int customizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o,
       }
 
       cost = engraveCost(valued, ch, find_shop_nr(me->number));
+      if (custtype == TYPE_TAILOR || custtype == TYPE_BLACKSMITH)
+        cost *= 2;
 
       me->doTell(ch->getName(), format("It will cost %d talens to customize your %s.") % cost % fname(valued->name));
       return TRUE;
@@ -307,18 +307,14 @@ int customizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o,
 
       if (custtype == TYPE_TAILOR && item->itemType() != ITEM_WORN) {
         me->doTell(ch->getName(), "I only customize clothing.");
-        strcpy(buf, item->name.c_str());
-        strcpy(buf, add_bars(buf).c_str());
-        sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
+        buf = format("%s %s") % add_bars(item->name) % fname(ch->name);
         me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
         return TRUE;
       }
 
       if (custtype == TYPE_BLACKSMITH && item->itemType() != ITEM_ARMOR) {
         me->doTell(ch->getName(), "I only customize armor.");
-        strcpy(buf, item->name.c_str());
-        strcpy(buf, add_bars(buf).c_str());
-        sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
+        buf = format("%s %s") % add_bars(item->name) % fname(ch->name);
         me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
         return TRUE;
       }
@@ -328,51 +324,43 @@ int customizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o,
 
       if (item->obj_flags.cost <= 500) {
         me->doTell(ch->getName(), "That can't be customized!");
-        strcpy(buf, item->name.c_str());
-        strcpy(buf, add_bars(buf).c_str());
-        sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
+        buf = format("%s %s") % add_bars(item->name) % fname(ch->name);
         me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
         return TRUE;
       }
       if (!item->action_description.empty()) {
         me->doTell(ch->getName(), "Sorry, but this item has already been customized!");
-        strcpy(buf, item->name.c_str());
-        strcpy(buf, add_bars(buf).c_str());
-        sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
+        buf = format("%s %s") % add_bars(item->name) % fname(ch->name);
         me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
         return TRUE;
       }
       if (obj_index[item->getItemIndex()].max_exist <= 10) {
         me->doTell(ch->getName(), "This artifact is too powerful to be customized!");
-        strcpy(buf, item->name.c_str());
-        strcpy(buf, add_bars(buf).c_str());
-        sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
+        buf = format("%s %s") % add_bars(item->name) % fname(ch->name);
         me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
         return TRUE;
       }
       if (item->obj_flags.decay_time >= 0) {
         me->doTell(ch->getName(), "This won't be around long enough to bother customizing it!");
-        strcpy(buf, item->name.c_str());
-        strcpy(buf, add_bars(buf).c_str());
-        sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
+        buf = format("%s %s") % add_bars(item->name) % fname(ch->name);
         me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
         return TRUE;
       }
 
       cost = engraveCost(item, ch, find_shop_nr(me->number));
+      if (custtype == TYPE_TAILOR || custtype == TYPE_BLACKSMITH)
+        cost *= 2;
 
       if (ch->getMoney() < cost) {
         me->doTell(ch->getName(), "I have to make a living! If you don't have the money, I don't do the work!");
-        strcpy(buf, item->name.c_str());
-        strcpy(buf, add_bars(buf).c_str());
-        sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
+        buf = format("%s %s") % add_bars(item->name) % fname(ch->name);
         me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
         return TRUE;
       }
       job = (reg_struct *) me->act_ptr;
       if (!job->wait || !job->char_name) {
         job->wait = max(1, (int) (item->obj_flags.max_struct_points)/7);
-        sprintf(buf, "Thanks for your business, I'll take your %d talens payment in advance!", cost);
+        buf = format("Thanks for your business, I'll take your %d talens payment in advance!") % cost;
         me->doSay(buf);
         
         TShopOwned tso(find_shop_nr(me->number), me, ch);
@@ -391,11 +379,9 @@ int customizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o,
 
         return TRUE;
       } else {
-        sprintf(buf, "Sorry, %s, but you'll have to wait while I work on %s's item.", ch->getName().c_str(), job->char_name);
+        buf = format("Sorry, %s, but you'll have to wait while I work on %s's item.") % ch->getName().c_str() % job->char_name;
         me->doSay(buf);
-        strcpy(buf, item->name.c_str());
-        strcpy(buf, add_bars(buf).c_str());
-        sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
+        buf = format("%s %s") % add_bars(item->name) % fname(ch->name);
         me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
         return TRUE;
       }
