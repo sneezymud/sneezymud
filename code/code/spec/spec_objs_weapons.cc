@@ -2637,7 +2637,7 @@ int moltenWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
       buf = format("You look down in horror and disbelief, as $n's $p burns into your %s with molten heat!") % limb;
       act(buf, FALSE, ch, o, vict, TO_VICT, ANSI_ORANGE);
-      buf = format("The pain overloads your senses, as your %s is burned away entirely!") % limb % limb;
+      buf = format("The pain overloads your senses, as your %s is burned away entirely!") % limb;
       act(buf, FALSE, vict, NULL, NULL, TO_CHAR, ANSI_ORANGE);
 
       buf = format("Your $p glows brightly as it burns into $N's %s with all the heat of the sun!") % limb;
