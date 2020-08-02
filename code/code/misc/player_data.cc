@@ -1122,33 +1122,6 @@ void do_the_player_stuff(const char *name)
 
       charFile tChar;
 
-#if 0
-      //disabled this stupid thing - dash
-      if (!tPowers[POWER_WIZARD] && load_char(longbuf, &tChar)) {
-        double tMIdle = (SECS_PER_REAL_DAY * 30.0);
-        int tCount = 0;
-        wizPowerT tWiz = MIN_POWER_INDEX;
-
-        if (difftime(time(0), tChar.last_logon) >= tMIdle) {
-          tPowers[POWER_IDLED] = true;
-          isGagged = true;
-          tLevel = 0;
-
-
-          if ((fp = fopen(tString, "w"))) {
-            for (; tWiz < MAX_POWER_INDEX; tWiz++)
-              if (tPowers[tWiz]) {
-                tCount++;
-                fprintf(fp, "%u ", mapWizPowerToFile(tWiz));
-              }
-
-            fclose(fp);
-          } else
-            vlogf(LOG_FILE, format("Unable to re-open [%s] for wizlist.") %  name);
-        }
-      }
-#endif
-
       if (tLevel == 1) {
         // vlogf(LOG_MISC, format("Adding Creator: %s") %  longbuf);
         tmp = new char[strlen(wiz->buf1) + strlen(longbuf) + 3];

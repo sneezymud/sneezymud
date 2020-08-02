@@ -232,42 +232,6 @@ double mob_exp(float real_lev)
       int newlev = (int) (lev/RESOLUTION);
       mob_xp_table[newlev] = exp;
     }
-#if 0
-    // for logging...
-    for (lev = 0.0; lev < 50.0; lev += RESOLUTION) {
-      int newlev = (int) (lev/RESOLUTION);
-      double mob_xp;
-
-      do {
-        std::map<int, double>::const_iterator CT = mob_xp_table.find(newlev);
-        if (CT == mob_xp_table.end()) {
-          // if we aren'tan exact match, back up a bit and try again
-          mob_xp = 0.0;
-          newlev -= 1;
-        } else
-          mob_xp = CT->second;
-      } while (mob_xp == 0);
-
-      int newlev2 = (int) ((lev+get_doubling_level(lev))/RESOLUTION);
-      double mob_xp2;
-
-      do {
-        std::map<int, double>::const_iterator CT = mob_xp_table.find(newlev2);
-        if (CT == mob_xp_table.end()) {
-          // if we aren'tan exact match, back up a bit and try again
-          mob_xp2 = 0.0;
-          newlev2 -= 1;
-        } else
-          mob_xp2 = CT->second;
-      } while (mob_xp2 == 0);
-
-      FILE *fp = fopen("xp_table.log", "a+");
-      if (fp) {
-        fprintf(fp, "%d : xp: %f, l2:%d, xp2: %f, fact: %f\n", newlev, mob_xp, newlev2, mob_xp2, mob_xp2/mob_xp);
-        fclose(fp);
-      }
-    }
-#endif
     loaded = true;
   }
 
