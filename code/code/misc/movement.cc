@@ -1078,16 +1078,6 @@ int TBeing::rawMove(dirTypeT dir)
   if (to_here->isUnderwaterSector())
     putOutLightsInWater();
 
-#if 0
-  // useful for creating paths
-  if (!strcmp(name, "Batopr")) {
-    FILE *fp;
-    fp = fopen("/tmp/paths", "a+");
-    fprintf(fp, "{%d, %d},\n", dir, in_room);
-    fclose(fp);
-  }
-#endif
-
   return TRUE;
 }
 
