@@ -569,12 +569,6 @@ class procNukeInactiveMobs : public TProcess {
   procNukeInactiveMobs(const int &);
 };
 
-class procUpdateTime : public TProcess {
- public:
-  void run(const TPulse &) const;
-  procUpdateTime(const int &);
-};
-
 class procSetZoneEmpty : public TProcess {
  public:
   void run(const TPulse &) const;

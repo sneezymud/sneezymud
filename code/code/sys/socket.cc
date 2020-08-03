@@ -1762,7 +1762,6 @@ int TMainSocket::gameLoop()
   scheduler.add(new procAutoTips(Pulse::MUDHOUR));
   scheduler.add(new procRecalcFactionPower(Pulse::MUDHOUR));
   scheduler.add(new procNukeInactiveMobs(Pulse::MUDHOUR));
-  scheduler.add(new procUpdateTime(Pulse::MUDHOUR));
   scheduler.add(new procMobHate(Pulse::MUDHOUR));
   scheduler.add(new procDoComponents(Pulse::MUDHOUR));
   scheduler.add(new procObjTickUpdate(Pulse::MUDHOUR));
