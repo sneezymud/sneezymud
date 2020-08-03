@@ -423,92 +423,6 @@ namespace {
     tStString += "A copy of your zonefile is in your output.  Use 'viewoutput' to see it.\n\r";
     ch->sendTo(tStString);
   }
-
-  void doLoadZoneFile(TBeing * tBeing, const sstring & tArg)
-  {
-#if 0
-    unsigned int  zValue,
-                  roomIndex,
-                  roomStart;
-    FILE         *tFile;
-    char          tString[256],
-    tBuffer[256];
-    TRoom        *tRoom;
-    sstring        tStString("");
-
-    if (!tBeing->isImmortal() || !tBeing->desc || !tBeing->isPc())
-      return;
-
-    if ((zValue = ch->roomp->getZoneNum()) > zone_table.size()) {
-      vlogf(LOG_BUG, format("Immortal in invalid zone [%s]") %  tBeing->getName());
-      tBeing->sendTo("You are in an invalid zone, how did you get there?!?\n\r");
-      return;
-    }
-
-    if (zone_table[zValue].enabled) {
-      tBeing->sendTo("I'm sorry, this zone is enabled so you cannot do this for it.\n\r");
-      return;
-    }
-
-    if (((zValue > 0) ? (zone_table[zValue - 1].top + 1) : 0)
-        != ch->desc->blockastart &&
-        ((zValue > 0) ? (zone_table[zValue - 1].top + 1) : 0)
-        != ch->desc->blockbstart) {
-      tBeing->sendTo("I'm sorry, this zone doesn't belong to you...\n\r");
-      return;
-    }
-
-    sprintf(tString, "immortals/%s/zonefile", ch->getName());
-
-    if (!(tFile = fopen(tString, "r"))) {
-      tBeing->sendTo("Either you have no zonefile or something is horribly wrong.\n\r");
-      return;
-    }
-
-    roomStart = (zValue <= 0 ? 0 : (zone_table[zValue - 1].top + 1));
-
-    tStString += "Puring Zone\n";
-
-    for (roomIndex = roomSrart; roomIndex < (unsigned) (zone_table[zValue].top + 1); roomIndex++) {
-      if (!(tRoom = real_roomp(roomIndex)))
-        continue;
-
-      TThing * tThing = NULL;
-
-      while ((tThing = tRoom->getStuff())) {
-        --(*tThing);
-        delete tThing;
-        tThing = NULL;
-      }
-
-      tStString += ".";
-    }
-
-    tStString += "\n\rLoading zonefile";
-
-    char tChar,
-         *tString = NULL;
-
-    fscanf(tFile, " #%*d\n");
-
-    if (*(tString = fread_string(tFile)) != '$') {
-      while (!feof(tFile)) {
-        tChar = fgetc(tFile);
-
-      }
-    }
-
-    tStString += "\n\rDone.\n\r";
-
-    delete tString;
-    tString = NULL;
-    tStString += "A copy of your zonefile is in your output.  Use 'viewoutput' to see it.\n\r";
-
-    tBeing->sendTo(tStString);
-
-
-#endif
-  }
 }
 
 void TBeing::doZonefile(const sstring & tStArg)
@@ -524,11 +438,7 @@ void TBeing::doZonefile(const sstring & tStArg)
   if (tStArg.empty()) {
     sendTo("Syntax:\n\r");
     sendTo("zonefile save : Save current zonefile status.\n\r");
-    sendTo("zonefile load : Load current zonefile status.\n\r");
     sendTo("zonefile new <n> <builder - zone title>: Split <n> rooms off the last block, creating a new zone named <builder - zone title>.\n\r");
-#if 0
-    sendTo("zonefile modify <field> SEE HELP FILE\n\r");
-#endif
   }
 
   std::string cmd = tStArg.word(0);
@@ -536,8 +446,6 @@ void TBeing::doZonefile(const sstring & tStArg)
 
   if (is_abbrev(cmd, "save")) {
     doSaveZoneFile(this, rest);
-  } else if (is_abbrev(cmd, "load") && getName() == "Lapsos") {
-    doLoadZoneFile(this, rest);
   } else if (is_abbrev(cmd, "new")) {
     doNewZoneFile(*this, rest);
   }
