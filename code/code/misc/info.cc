@@ -2961,7 +2961,7 @@ void TBeing::doWhere(const char *argument)
       unsigned char version;
       TObj *k;
       
-      if((dfd=opendir(((sstring)(format("mobdata/repairs/%d") % i->mobVnum())).c_str()))){
+      if((dfd=opendir(((sstring)(format("../mutable/mobdata/repairs/%d") % i->mobVnum())).c_str()))){
 	while ((dp = readdir(dfd))) {
 	  if (!strcmp(dp->d_name, ".") || !strcmp(dp->d_name, ".."))
 	    continue;

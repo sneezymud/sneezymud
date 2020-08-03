@@ -102,8 +102,8 @@ class TGuild {
   }
 };
 
-const char * const GUILD_FILE      = "faction/newfactions";
-const char * const GUILD_BAK       = "faction/newfactions.bak";
+const char * const GUILD_FILE      = "../mutable/faction/newfactions";
+const char * const GUILD_BAK       = "../mutable/faction/newfactions.bak";
 
 
 extern int load_guilds();

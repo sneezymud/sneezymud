@@ -2904,7 +2904,7 @@ static void welcomeNewPlayer(const TPerson *ch)
   struct dirent *dp;
   unsigned int count = 0;
 
-  sprintf(buf, "account/%c/%s", LOWER(ch->name[0]), sstring(ch->name).lower().c_str());
+  sprintf(buf, "../mutable/account/%c/%s", LOWER(ch->name[0]), sstring(ch->name).lower().c_str());
   if (!(dfd = opendir(buf))) {
     return;
   }
@@ -3330,11 +3330,11 @@ void TBeing::doRestore(const char *argument)
     
     FILE *fp, *fp2;
     
-    if (!(fp = fopen("reimburse.list","r"))) {
+    if (!(fp = fopen("../mutable/reimburse.list","r"))) {
       vlogf(LOG_FILE, "Couldn't open reimbursement list for restore pracs.");
       return;
     }
-    if (!(fp2 = fopen("reimburse.new","w+"))) {
+    if (!(fp2 = fopen("../mutable/reimburse.new","w+"))) {
       vlogf(LOG_FILE, "Couldn't open reimbursement list for restore pracs.");
       return;
     }
@@ -3372,7 +3372,7 @@ void TBeing::doRestore(const char *argument)
     fclose(fp);
     fclose(fp2);
     char buf2[256];
-    strcpy(buf2,"cp reimburse.new reimburse.list");
+    strcpy(buf2,"cp ../mutable/reimburse.new ../mutable/reimburse.list");
     vsystem(buf2);
     if (!found) {// not in list
       sendTo("They are not currently supposed to be reimbursed.\n\r");
@@ -3718,7 +3718,7 @@ void TBeing::doWipe(const char *argument)
 
   db.query("delete from player where lower(name)=lower('%s')", namebuf);
 
-  sprintf(buf, "account/%c/%s/%s",
+  sprintf(buf, "../mutable/account/%c/%s/%s",
          LOWER(st.aname[0]), sstring(st.aname).lower().c_str(), sstring(namebuf).lower().c_str());
 
   if (unlink(buf) != 0)
@@ -3917,7 +3917,7 @@ void TPerson::doAccess(const sstring &arg)
           st.height % st.weight;
     buf+=tmpbuf;
 
-    arg1 = format("account/%c/%s") % LOWER(st.aname[0]) % sstring(st.aname).lower();
+    arg1 = format("../mutable/account/%c/%s") % LOWER(st.aname[0]) % sstring(st.aname).lower();
     arg2 = format("%s/comment") % arg1;
     if ((fp = fopen(arg2.c_str(), "r"))) {
       while (fgets(filebuf, 255, fp))
@@ -4028,10 +4028,10 @@ void TBeing::doReplace(const sstring &argument)
       // Check for account directory here maybe. This won't work
       // if account directory isn't there.
 
-      sprintf(buf, "rm player/%c/%s", arg1[0], arg1.c_str());
+      sprintf(buf, "rm ../mutable/player/%c/%s", arg1[0], arg1.c_str());
       vsystem(buf);
-      sprintf(buf, "account/%c/%s/%s", LOWER(st.aname[0]),sstring(st.aname).lower().c_str(),arg1.c_str());
-      sprintf(dir2, "player/%c/%s",  arg1[0], arg1.c_str());
+      sprintf(buf, "../mutable/account/%c/%s/%s", LOWER(st.aname[0]),sstring(st.aname).lower().c_str(),arg1.c_str());
+      sprintf(dir2, "../mutable/player/%c/%s",  arg1[0], arg1.c_str());
       if(link(buf, dir2))
 	vlogf(LOG_BUG, format("link failed in doReplace() for %s") % arg1);
       sendTo("Done.\n\r");
@@ -5200,7 +5200,7 @@ static void TimeTravel(const char *ch)
   if (!ch)
     return;
 
-  sprintf(fileName, "rent/%c/%s", ch[0], ch);
+  sprintf(fileName, "../mutable/rent/%c/%s", ch[0], ch);
 
   // skip followers data
   if (strlen(fileName) > 4 && !strcmp(&fileName[strlen(fileName) - 4], ".fol"))
@@ -5244,86 +5244,34 @@ void TBeing::doTimeshift(const char *arg)
     sendTo("Syntax: timeshift <minutes>\n\r");
     return;
   } else {
-#if 0
-    if (deltatime < 0) {
-      sendTo("Don't be stupid.  Only positive number of minutes.\n\r");
-      return;
-    }
-#endif
     vlogf(LOG_MISC,format("%s moving time back %d minutes.") % getName() %deltatime);
-    dirwalk("rent/a",TimeTravel);
-    dirwalk("rent/b",TimeTravel);
-    dirwalk("rent/c",TimeTravel);
-    dirwalk("rent/d",TimeTravel);
-    dirwalk("rent/e",TimeTravel);
-    dirwalk("rent/f",TimeTravel);
-    dirwalk("rent/g",TimeTravel);
-    dirwalk("rent/h",TimeTravel);
-    dirwalk("rent/i",TimeTravel);
-    dirwalk("rent/j",TimeTravel);
-    dirwalk("rent/k",TimeTravel);
-    dirwalk("rent/l",TimeTravel);
-    dirwalk("rent/m",TimeTravel);
-    dirwalk("rent/n",TimeTravel);
-    dirwalk("rent/o",TimeTravel);
-    dirwalk("rent/p",TimeTravel);
-    dirwalk("rent/q",TimeTravel);
-    dirwalk("rent/r",TimeTravel);
-    dirwalk("rent/s",TimeTravel);
-    dirwalk("rent/t",TimeTravel);
-    dirwalk("rent/u",TimeTravel);
-    dirwalk("rent/v",TimeTravel);
-    dirwalk("rent/w",TimeTravel);
-    dirwalk("rent/x",TimeTravel);
-    dirwalk("rent/y",TimeTravel);
-    dirwalk("rent/z",TimeTravel);
+    dirwalk("../mutable/rent/a",TimeTravel);
+    dirwalk("../mutable/rent/b",TimeTravel);
+    dirwalk("../mutable/rent/c",TimeTravel);
+    dirwalk("../mutable/rent/d",TimeTravel);
+    dirwalk("../mutable/rent/e",TimeTravel);
+    dirwalk("../mutable/rent/f",TimeTravel);
+    dirwalk("../mutable/rent/g",TimeTravel);
+    dirwalk("../mutable/rent/h",TimeTravel);
+    dirwalk("../mutable/rent/i",TimeTravel);
+    dirwalk("../mutable/rent/j",TimeTravel);
+    dirwalk("../mutable/rent/k",TimeTravel);
+    dirwalk("../mutable/rent/l",TimeTravel);
+    dirwalk("../mutable/rent/m",TimeTravel);
+    dirwalk("../mutable/rent/n",TimeTravel);
+    dirwalk("../mutable/rent/o",TimeTravel);
+    dirwalk("../mutable/rent/p",TimeTravel);
+    dirwalk("../mutable/rent/q",TimeTravel);
+    dirwalk("../mutable/rent/r",TimeTravel);
+    dirwalk("../mutable/rent/s",TimeTravel);
+    dirwalk("../mutable/rent/t",TimeTravel);
+    dirwalk("../mutable/rent/u",TimeTravel);
+    dirwalk("../mutable/rent/v",TimeTravel);
+    dirwalk("../mutable/rent/w",TimeTravel);
+    dirwalk("../mutable/rent/x",TimeTravel);
+    dirwalk("../mutable/rent/y",TimeTravel);
+    dirwalk("../mutable/rent/z",TimeTravel);
 
-#if 0
-// there's no good reason to do this
-// time_info gets recalculated based on real time since a given date at bootup
-// so this is semi-pointless
-// I'll leave it in the hopes that in the future, mud-time will actually
-// be preserved from reboot to reboot and not based on the real world at all
-    if (tmp/Pulse::SECS_PER_MUD_YEAR) {
-      time_info.year -= tmp/Pulse::SECS_PER_MUD_YEAR;
-      tmp %= Pulse::SECS_PER_MUD_YEAR;
-    }
-    if (tmp/Pulse::SECS_PER_MUD_MONTH) {
-      time_info.month -= tmp/Pulse::SECS_PER_MUD_MONTH;
-      if (time_info.month < 0) {
-        time_info.year -= 1;
-        time_info.month += 12;
-      }
-      tmp %= Pulse::SECS_PER_MUD_MONTH;
-    }
-    if (tmp/Pulse::SECS_PER_MUD_DAY) {
-      time_info.day -= tmp/Pulse::SECS_PER_MUD_DAY;
-      if (time_info.day < 0) {
-        time_info.month -= 1;
-        time_info.day += 28;
-      }
-      if (time_info.month < 0) {
-        time_info.year -= 1;
-        time_info.month += 12;
-      }
-      tmp %= Pulse::SECS_PER_MUD_DAY;
-    }
-    if (tmp/Pulse::SECS_PER_MUD_HOUR) {
-      time_info.hours -= tmp/Pulse::SECS_PER_MUD_HOUR;
-      if (time_info.hours < 0) {
-        time_info.day -= 1;
-        time_info.hours += 48;
-      }
-      if (time_info.day < 0) {
-        time_info.month -= 1;
-        time_info.day += 28;
-      }
-      if (time_info.month < 0) {
-        time_info.year -= 1;
-        time_info.month += 12;
-      }
-    }
-#endif
     sprintf(buf,"%s has shifted game time back %d real minutes.",getName().c_str(),deltatime);
     doSystem(buf);
   }
@@ -5905,7 +5853,7 @@ void TBeing::doAccount(const sstring &arg)
   }
 
 
-  sstring path = format("account/%c/%s") % name.lower()[0] % name.lower();
+  sstring path = format("../mutable/account/%c/%s") % name.lower()[0] % name.lower();
   if (!(dfd = opendir(path.c_str()))) {
     sendTo("No account by that name exists.\n\r");
     sendTo("Syntax: account <account name>\n\r");
@@ -6075,7 +6023,7 @@ void TBeing::doAccount(const sstring &arg)
   // only let imms see comments
   if (hasWizPower(POWER_ACCOUNT)) {
     FILE *fp;
-    sstring path = format("account/%c/%s/comment") % name.lower()[0] % name.lower();
+    sstring path = format("../mutable/account/%c/%s/comment") % name.lower()[0] % name.lower();
     if ((fp = fopen(path.c_str(), "r"))) {
       char buf3[256];
       while (fgets(buf3, 255, fp))
@@ -6206,7 +6154,7 @@ static bool verifyName(const sstring tStString)
   bool  isNotCreator = true;
 
   // Knocks it to lower case then ups the first letter.
-  sprintf(tString, "immortals/%s/wizdata",
+  sprintf(tString, "../mutable/immortals/%s/wizdata",
           tStString.lower().cap().c_str());
 
   // Wizfile doesn't exist, not an immortal or something else.

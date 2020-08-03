@@ -146,7 +146,7 @@ static void repTheStats()
         perc2 % iter2);
 
   FILE *fp;
-  fp = fopen("testfight.log", "a+");
+  fp = fopen("../mutable/testfight.log", "a+");
   if (fp) {
     fprintf(fp, "m1(%d): %lu/%lu (%.4f%%)(%d) : m2(%d): %lu/%lu (%.4f%%)(%d)\n",
         mob1_num, left1, tot1,

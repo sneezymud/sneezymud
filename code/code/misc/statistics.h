@@ -21,8 +21,8 @@ using std::max;
 const int PC_STAT  = 0;
 const int MOB_STAT = 1;
 
-const char * const STATS_FILE     = "txt/stats";
-const char * const STATS_BAK      = "txt/stats.bak";
+const char * const STATS_FILE     = "../mutable/txt/stats";
+const char * const STATS_BAK      = "../mutable/txt/stats.bak";
 
 class GameStats {
   public:

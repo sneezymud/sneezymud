@@ -45,7 +45,7 @@
 #include "timing.h"
 #include "player_data.h"
 
-static const char ROOM_SAVE_PATH[] = "roomdata/saved";
+static const char ROOM_SAVE_PATH[] = "../mutable/roomdata/saved";
 static const int NORMAL_SLOT   = -1;
 static const int CONTENTS_END  = -2;
 
@@ -78,46 +78,46 @@ void handleCorrupted(const char *name, char *account)
 {
   char buf[200];
 
-  sprintf(buf, "mv player/%c/%s player/corrupt/.", 
+  sprintf(buf, "mv ../mutable/player/%c/%s ../mutable/player/corrupt/.", 
          LOWER(name[0]), sstring(name).lower().c_str());
   vsystem(buf);
 
   // strings
-  sprintf(buf, "mv player/%c/%s.strings player/corrupt/.",
+  sprintf(buf, "mv ../mutable/player/%c/%s.strings ../mutable/player/corrupt/.",
           LOWER(name[0]), sstring(name).lower().c_str());
   vsystem(buf);
 
   // toggles
-  sprintf(buf, "mv player/%c/%s.toggle player/corrupt/.", 
+  sprintf(buf, "mv ../mutable/player/%c/%s.toggle ../mutable/player/corrupt/.", 
          LOWER(name[0]), sstring(name).lower().c_str());
   vsystem(buf);
 
   // career
-  sprintf(buf, "mv player/%c/%s.career player/corrupt/.", 
+  sprintf(buf, "mv ../mutable/player/%c/%s.career ../mutable/player/corrupt/.", 
          LOWER(name[0]), sstring(name).lower().c_str());
   vsystem(buf);
 
   // rent
-  sprintf(buf, "mv rent/%c/%s rent/corrupt/.", 
+  sprintf(buf, "mv ../mutable/rent/%c/%s ../mutable/rent/corrupt/.", 
          LOWER(name[0]), sstring(name).lower().c_str());
   vsystem(buf);
 
   // followers
-  sprintf(buf, "mv rent/%c/%s.fol rent/corrupt/.", 
+  sprintf(buf, "mv ../mutable/rent/%c/%s.fol ../mutable/rent/corrupt/.", 
          LOWER(name[0]), sstring(name).lower().c_str());
   vsystem(buf);
-  sprintf(buf, "mv rent/%c/%s.fr rent/corrupt/.", 
+  sprintf(buf, "mv ../mutable/rent/%c/%s.fr ../mutable/rent/corrupt/.", 
          LOWER(name[0]), sstring(name).lower().c_str());
   vsystem(buf);
 
   // corpses
-  sprintf(buf, "mv corpses/%s corpses/corrupt/.",
+  sprintf(buf, "mv ../mutable/corpses/%s ../mutable/corpses/corrupt/.",
          sstring(name).lower().c_str());
   vsystem(buf);
 
 
   // nuke account
-  sprintf(buf, "rm account/%c/%s/%s",
+  sprintf(buf, "rm ../mutable/account/%c/%s/%s",
          LOWER(account[0]), sstring(account).lower().c_str(), sstring(name).lower().c_str());
   vsystem(buf);
 }
@@ -129,17 +129,17 @@ void wipePlayerFile(const char *name)
     vlogf(LOG_BUG, "error in wipePlayerFile - no name (0)");
     return;
   }
-  sprintf(buf, "player/%c/%s", LOWER(name[0]), sstring(name).lower().c_str());
+  sprintf(buf, "../mutable/player/%c/%s", LOWER(name[0]), sstring(name).lower().c_str());
   if (unlink(buf) != 0) {
     vlogf(LOG_FILE, format("error in unlink (0) (%s) %d") %  buf % errno);
   }
 
   // nuke sstrings, ignore errors
-  sprintf(buf, "player/%c/%s.strings", LOWER(name[0]), sstring(name).lower().c_str());
+  sprintf(buf, "../mutable/player/%c/%s.strings", LOWER(name[0]), sstring(name).lower().c_str());
   unlink(buf);
 
   // nuke toggles, ignore errors
-  sprintf(buf, "player/%c/%s.toggle", LOWER(name[0]), sstring(name).lower().c_str());
+  sprintf(buf, "../mutable/player/%c/%s.toggle", LOWER(name[0]), sstring(name).lower().c_str());
   unlink(buf);
 
   // nuke corpse, ignore errors
@@ -148,7 +148,7 @@ void wipePlayerFile(const char *name)
 //  unlink(buf);
 
   // nuke career stats, ignore errors
-  sprintf(buf, "player/%c/%s.career", LOWER(name[0]), sstring(name).lower().c_str());
+  sprintf(buf, "../mutable/player/%c/%s.career", LOWER(name[0]), sstring(name).lower().c_str());
   unlink(buf);
 }
 
@@ -174,7 +174,7 @@ void wipeCorpseFile(const char *name)
     corpse = corpse->getGlobalNext();
     tmp->removeCorpseFromList(FALSE);
   }
-  sprintf(buf, "corpses/%s", sstring(name).lower().c_str());
+  sprintf(buf, "../mutable/corpses/%s", sstring(name).lower().c_str());
   unlink(buf);
 }
 
@@ -186,7 +186,7 @@ void wipeRentFile(const char *name)
     return;
   }
 
-  sprintf(buf, "rent/%c/%s", LOWER(name[0]), sstring(name).lower().c_str());
+  sprintf(buf, "../mutable/rent/%c/%s", LOWER(name[0]), sstring(name).lower().c_str());
   unlink(buf);
 }
 
@@ -198,9 +198,9 @@ void wipeFollowersFile(const char *name)
     vlogf(LOG_BUG, "error in wipeFollowerFile - no name (0)");
     return;
   }
-  sprintf(buf, "rent/%c/%s.fol", LOWER(name[0]), sstring(name).lower().c_str());
+  sprintf(buf, "../mutable/rent/%c/%s.fol", LOWER(name[0]), sstring(name).lower().c_str());
   unlink(buf);
-  sprintf(buf, "rent/%c/%s.fr", LOWER(name[0]), sstring(name).lower().c_str());
+  sprintf(buf, "../mutable/rent/%c/%s.fr", LOWER(name[0]), sstring(name).lower().c_str());
   unlink(buf);
 }
 
@@ -1406,7 +1406,7 @@ void emailStorageBag(sstring tStMessage, sstring tStSender, TThing * tStuff)
   if (gamePort != Config::Port::PROD)
     return;
 
-  if (!(tFile = fopen("storage.temp", "w")))
+  if (!(tFile = fopen("../mutable/storage.temp", "w")))
     return;
 
   tStMail += "Subject: [Storage] " + tStSender + " " + tStMessage + "\n\r";
@@ -1850,7 +1850,7 @@ void TBeing::assignCorpsesToRooms()
   memset(buf, '\0', sizeof(buf));
   ItemLoad il;
 
-  sprintf(buf, "corpses/%s", sstring(name).lower().c_str());
+  sprintf(buf, "../mutable/corpses/%s", sstring(name).lower().c_str());
   rp = real_roomp(Room::CORPSE_STORAGE);
 
 // HAVE A BEING CALL THIS WHEN LOGGING IN
@@ -1864,7 +1864,7 @@ void TBeing::assignCorpsesToRooms()
     return;
   }
 
-  sprintf(buf, "player/%c/%s", LOWER(name[0]), sstring(name).lower().c_str());
+  sprintf(buf, "../mutable/player/%c/%s", LOWER(name[0]), sstring(name).lower().c_str());
   if (!(playerFile = fopen(buf, "r"))) {
     wipeCorpseFile(sstring(name).lower().c_str());
   } 
@@ -1953,7 +1953,7 @@ void TPCorpse::saveCorpseToFile()
 
   memset(buf, '\0', sizeof(buf));
 
-  sprintf(buf, "corpses/%s", fileName.c_str());
+  sprintf(buf, "../mutable/corpses/%s", fileName.c_str());
 
   if(!is.openFile(buf)){
     vlogf(LOG_FILE, format("Failed to open file '%s' in saveCorpseToFile() call.") % buf);
@@ -2004,7 +2004,7 @@ int TPerson::saveRent(bool d /*=false*/, int msgStatus /*=0*/)
   else
     tmp = dynamic_cast<TPerson *>(this);
 
-  sprintf(buf, "rent/%c/%s", LOWER(tmp->name[0]), sstring(tmp->name).lower().c_str());
+  sprintf(buf, "../mutable/rent/%c/%s", LOWER(tmp->name[0]), sstring(tmp->name).lower().c_str());
   if(!is.openFile(buf)){
     vlogf(LOG_BUG, format("Error opening file for saving %s's objects") %
 	  getName());
@@ -2082,7 +2082,7 @@ void TPerson::loadRent()
   if (time(0) - tmp->player.time->birth <= 3)
     return;
 
-  sprintf(buf, "rent/%c/%s", LOWER(tmp->name[0]), sstring(tmp->name).lower().c_str());
+  sprintf(buf, "../mutable/rent/%c/%s", LOWER(tmp->name[0]), sstring(tmp->name).lower().c_str());
 
   if(!il.openFile(buf)){
     if (should_be_logged(this)) {
@@ -2504,7 +2504,7 @@ void countAccounts(const char *arg)
   struct dirent *dp;
   int count = 0;
 
-  sstring account_path = ((sstring)(format("account/%c/%s") % arg[0] % arg)).lower();
+  sstring account_path = ((sstring)(format("../mutable/account/%c/%s") % arg[0] % arg)).lower();
   if (!(dfd = opendir(account_path.c_str()))) {
     vlogf(LOG_BUG, format("bad path in countAccount (%s) from arg (%s)") % account_path % arg);
     return;
@@ -2519,7 +2519,7 @@ void countAccounts(const char *arg)
       continue;
     
     // check for valid char
-    sstring player_path = format("player/%c/%s") % dp->d_name[0] % dp->d_name;
+    sstring player_path = format("../mutable/player/%c/%s") % dp->d_name[0] % dp->d_name;
 
     struct stat theStat;
     int ret = stat(player_path.c_str(), &theStat);
@@ -2817,7 +2817,7 @@ static bool parseFollowerRentEntry(FILE *fp, TBeing *ch, const char *arg, int nu
       version = tmp;
       if (tmp != -1 && fp2_open == false) {
         char buf[256];
-        sprintf(buf, "rent/%c/%s.fr", LOWER(arg[0]), sstring(arg).lower().c_str());
+        sprintf(buf, "../mutable/rent/%c/%s.fr", LOWER(arg[0]), sstring(arg).lower().c_str());
         if (!(fp2 = fopen(buf, "r+b"))) 
           break;
         fp2_open = true;
@@ -2851,7 +2851,7 @@ static bool parseFollowerRentEntry(FILE *fp, TBeing *ch, const char *arg, int nu
       version = tmp;
       if (fp2_open == false) {
         char buf[256];
-        sprintf(buf, "rent/%c/%s.fr", LOWER(arg[0]), sstring(arg).lower().c_str());
+        sprintf(buf, "../mutable/rent/%c/%s.fr", LOWER(arg[0]), sstring(arg).lower().c_str());
         if (!(fp2 = fopen(buf, "r+b"))) 
           break;
         fp2_open = true;
@@ -2965,7 +2965,7 @@ void updateRentFile(const char *who)
 
   mud_assert(who != NULL, "updateRentFile called with NULL player name!");
 
-  sprintf(fileName, "rent/%c/%s", who[0], who);
+  sprintf(fileName, "../mutable/rent/%c/%s", who[0], who);
 
   // skip followers data
   if (strlen(fileName) > 4 && !strcmp(&fileName[strlen(fileName) - 4], ".fol"))
@@ -3032,7 +3032,7 @@ void updateRentFile(const char *who)
     fclose(fp);
   }
 
-  sprintf(fileName, "rent/%c/%s.fol", who[0], who);
+  sprintf(fileName, "../mutable/rent/%c/%s.fol", who[0], who);
   if ((fp = fopen(fileName, "r"))) {
     parseFollowerRent(fp, NULL, who);
     fclose(fp);
@@ -3042,57 +3042,57 @@ void updateRentFile(const char *who)
 void updateRentFiles(void)
 {
   bootPulse(".", false);
-  dirwalk("rent/a", updateRentFile);
+  dirwalk("../mutable/rent/a", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/b", updateRentFile);
+  dirwalk("../mutable/rent/b", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/c", updateRentFile);
+  dirwalk("../mutable/rent/c", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/d", updateRentFile);
+  dirwalk("../mutable/rent/d", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/e", updateRentFile);
+  dirwalk("../mutable/rent/e", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/f", updateRentFile);
+  dirwalk("../mutable/rent/f", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/g", updateRentFile);
+  dirwalk("../mutable/rent/g", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/h", updateRentFile);
+  dirwalk("../mutable/rent/h", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/i", updateRentFile);
+  dirwalk("../mutable/rent/i", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/j", updateRentFile);
+  dirwalk("../mutable/rent/j", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/k", updateRentFile);
+  dirwalk("../mutable/rent/k", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/l", updateRentFile);
+  dirwalk("../mutable/rent/l", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/m", updateRentFile);
+  dirwalk("../mutable/rent/m", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/n", updateRentFile);
+  dirwalk("../mutable/rent/n", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/o", updateRentFile);
+  dirwalk("../mutable/rent/o", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/p", updateRentFile);
+  dirwalk("../mutable/rent/p", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/q", updateRentFile);
+  dirwalk("../mutable/rent/q", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/r", updateRentFile);
+  dirwalk("../mutable/rent/r", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/s", updateRentFile);
+  dirwalk("../mutable/rent/s", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/t", updateRentFile);
+  dirwalk("../mutable/rent/t", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/u", updateRentFile);
+  dirwalk("../mutable/rent/u", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/v", updateRentFile);
+  dirwalk("../mutable/rent/v", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/w", updateRentFile);
+  dirwalk("../mutable/rent/w", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/x", updateRentFile);
+  dirwalk("../mutable/rent/x", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/y", updateRentFile);
+  dirwalk("../mutable/rent/y", updateRentFile);
   bootPulse(".", false);
-  dirwalk("rent/z", updateRentFile);
+  dirwalk("../mutable/rent/z", updateRentFile);
   bootPulse(NULL, true);
 }
 
@@ -3162,7 +3162,7 @@ bool TBeing::saveFollowers(bool rent_time)
   else
     tmp = dynamic_cast<TPerson *>(this);
 
-  sprintf(buf, "rent/%c/%s.fol", LOWER(tmp->name[0]), sstring(tmp->name).lower().c_str());
+  sprintf(buf, "../mutable/rent/%c/%s.fol", LOWER(tmp->name[0]), sstring(tmp->name).lower().c_str());
 
   if (!followers) {
     wipeFollowersFile(tmp->name.c_str());
@@ -3299,7 +3299,7 @@ bool TBeing::saveFollowers(bool rent_time)
       else {
         fprintf(fp, " %d\n", version);
         if (!fp2_open) {
-          sprintf(buf, "rent/%c/%s.fr", LOWER(tmp->name[0]), sstring(tmp->name).lower().c_str());
+          sprintf(buf, "../mutable/rent/%c/%s.fr", LOWER(tmp->name[0]), sstring(tmp->name).lower().c_str());
           if (!(fp2 = fopen(buf, "w+b"))) {
             vlogf(LOG_BUG, format("Error opening %'s follower rent file for write.") %  tmp->name);
           } else 
@@ -3329,7 +3329,7 @@ bool TBeing::saveFollowers(bool rent_time)
       fprintf(fp, " %d\n", version);
 
       if (!fp2_open) {
-        sprintf(buf, "rent/%c/%s.fr", LOWER(tmp->name[0]), sstring(tmp->name).lower().c_str());
+        sprintf(buf, "../mutable/rent/%c/%s.fr", LOWER(tmp->name[0]), sstring(tmp->name).lower().c_str());
         if (!(fp2 = fopen(buf, "w+b"))) {
           vlogf(LOG_BUG, format("Error opening %'s follower rent file for write.") %  tmp->name);
         } else
@@ -3408,7 +3408,7 @@ bool TBeing::loadFollowers()
   else
     tmpPer = dynamic_cast<TPerson *>(this);
 
-  sprintf(buf, "rent/%c/%s.fol", LOWER(tmpPer->name[0]), sstring(tmpPer->name).lower().c_str());
+  sprintf(buf, "../mutable/rent/%c/%s.fol", LOWER(tmpPer->name[0]), sstring(tmpPer->name).lower().c_str());
   if (!(fp = fopen(buf, "r"))) 
     return FALSE;
   
@@ -3460,7 +3460,7 @@ void TPerson::loadToggles()
   FILE *fp;
   int num;
 
-  sprintf(caFilebuf, "player/%c/%s.toggle", LOWER(name[0]), sstring(name).lower().c_str());
+  sprintf(caFilebuf, "../mutable/player/%c/%s.toggle", LOWER(name[0]), sstring(name).lower().c_str());
 
   if (!(fp = fopen(caFilebuf, "r")))
     return;
@@ -3478,7 +3478,7 @@ void TPerson::saveToggles()
   int num;
   unsigned int total;
 
-  sprintf(caFilebuf, "player/%c/%s.toggle", LOWER(name[0]), sstring(name).lower().c_str());
+  sprintf(caFilebuf, "../mutable/player/%c/%s.toggle", LOWER(name[0]), sstring(name).lower().c_str());
 
   if (!(fp = fopen(caFilebuf, "w")))
     return;
@@ -3577,7 +3577,7 @@ void processCorpseFile(const char * cfName)
     vlogf(LOG_BUG, "  processCorpseFile called with NULL filename!");
     return;
   }
-  sprintf(fileName, "corpses/%s", cfName);
+  sprintf(fileName, "../mutable/corpses/%s", cfName);
   if (!(fp = fopen(fileName, "r+b"))) {
     vlogf(LOG_FILE, format("  Error opening the corpse file for corpse %s") %  cfName);
     return;
@@ -3596,7 +3596,7 @@ void processCorpseFile(const char * cfName)
 
 void processCorpseFiles()
 {
-  dirwalk("corpses", processCorpseFile);
+  dirwalk("../mutable/corpses", processCorpseFile);
 }
 
 rentObjAffData::rentObjAffData() :
@@ -3672,7 +3672,7 @@ void TBeing::doClone(const sstring &arg)
   
   
   // open player rent file
-  sstring buf = format("rent/%c/%s") % LOWER(ch_name[0]) % ch_name.lower();
+  sstring buf = format("../mutable/rent/%c/%s") % LOWER(ch_name[0]) % ch_name.lower();
   if (!il.openFile(buf)){
     sendTo("Rent file could not be opened.  Your clone stands naked before you.\n\r");
     return;

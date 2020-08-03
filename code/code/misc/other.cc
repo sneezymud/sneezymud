@@ -4094,7 +4094,7 @@ void Descriptor::add_comment(const char *who, const char *msg)
   }
   buf[j] = '\0';
 
-  sprintf(cmd_buf, "account/%c/%s/comment", LOWER(who[0]), sstring(who).lower().c_str());
+  sprintf(cmd_buf, "../mutable/account/%c/%s/comment", LOWER(who[0]), sstring(who).lower().c_str());
 
   if (!(fp = fopen(cmd_buf, "a+"))) {
     perror("doComment");
