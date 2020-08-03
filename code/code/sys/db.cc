@@ -606,45 +606,6 @@ void bootDb(void)
 }
 
 
-
-// procUpdateTime
-procUpdateTime::procUpdateTime(const int &p)
-{
-  trigger_pulse=p;
-  name="procUpdateTime";
-}
-
-void procUpdateTime::run(const TPulse &) const
-{
-  return;
-#if 0
-  FILE *f1;
-  long current_time;
-
-  if (GameTime::getHours() != 1)
-    return;
-
-  f1 = fopen(TIME_FILE, "w");
-  if (!f1) {
-    perror("update time");
-    exit(0);
-  }
-  current_time = time(0);
-  vlogf(LOG_MISC, "Time update.");
-
-  fprintf(f1, "#\n");
-
-  fprintf(f1, "%ld\n", current_time);
-  fprintf(f1, "%d\n", GameTime::getMinutes());
-  fprintf(f1, "%d\n", GameTime::getHours());
-  fprintf(f1, "%d\n", GameTime::getDay());
-  fprintf(f1, "%d\n", GameTime::getMonth());
-  fprintf(f1, "%d\n", time_info.year);
-
-  fclose(f1);
-#endif
-}
-
 void bootWorld(void)
 {
   int virtual_nr, num=0, tmp;
