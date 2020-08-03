@@ -541,7 +541,7 @@ void createmap(int MINLEVEL, int MAXLEVEL, int SCALEBY, sstring outputfile, bool
   int newloc, cellx, celly;
   char *mapdata, buff[256], *newmap;
   int i=0, j, k, l, tmp;
-  FILE *out=fopen("imageout", "wb");
+  FILE *out=fopen("../mutable/imageout", "wb");
   const int CELLSIZE=3;
   std::map <int,int> roomcount;
   int max=0;

@@ -538,7 +538,7 @@ void TMessages::initialize()
         tChar;
   FILE *tFile = NULL;
 
-  sprintf(tString, "player/%c/%s.strings",
+  sprintf(tString, "../mutable/player/%c/%s.strings",
           LOWER(tPlayer->name[0]),
           sstring(tPlayer->name).lower().c_str());
 
@@ -581,7 +581,7 @@ void TMessages::savedown()
   sstring  tStString("");
   bool    didWrite = false;
 
-  sprintf(tString, "player/%c/%s.strings",
+  sprintf(tString, "../mutable/player/%c/%s.strings",
           LOWER(tPlayer->name[0]),
           sstring(tPlayer->name).lower().c_str());
 

@@ -155,7 +155,7 @@ namespace {
       return;
     }
 
-    sprintf(tString, "immortals/%s/zonefile", ch->getName().c_str());
+    sprintf(tString, "../mutable/immortals/%s/zonefile", ch->getName().c_str());
 
     if (!(tFile = fopen(tString, "w"))) {
       ch->sendTo("Something went wrong, tell a coder what you did.\n\r");
@@ -410,14 +410,14 @@ namespace {
         == ch->desc->blockastart ||
         ((zValue > 0) ? (zone_table[zValue - 1].top + 1) : 0)
         == ch->desc->blockbstart) {
-      sprintf(tString, "/usr/sbin/sendmail -f%s %s < immortals/%s/zonefile",
+      sprintf(tString, "/usr/sbin/sendmail -f%s %s < ../mutable/immortals/%s/zonefile",
           SAVEZONEFILE_REPLYTO,
           ch->desc->account->email, ch->getNameNOC(ch).c_str());
       vsystem(tString);
     }
 #endif
 
-    sprintf(tString, "cp -f immortals/%s/zonefile tmp/%s.output",
+    sprintf(tString, "cp -f ../mutable/immortals/%s/zonefile tmp/%s.output",
         ch->getNameNOC(ch).c_str(), ch->getNameNOC(ch).c_str());
     vsystem(tString);
     tStString += "A copy of your zonefile is in your output.  Use 'viewoutput' to see it.\n\r";

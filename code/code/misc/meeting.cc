@@ -191,7 +191,7 @@ static bool checkForSay(TBeing *ch, TMonster *myself, cmdTypeT cmd, const char *
            (!job->speech_list.empty() &&
 	    job->speech_list[0] == ch->name))){
       FILE *fp;
-      fp = fopen("meeting.log", "a+");
+      fp = fopen("../mutable/meeting.log", "a+");
       if (fp) {
         fprintf(fp, "%s : %s\n", ch->getName().c_str(), arg);
         fclose(fp);
@@ -300,7 +300,7 @@ int meeting_organizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mysel
       for (; *arg == ' '; arg++);
 
       FILE *fp;
-      fp = fopen("meeting.log", "a+");
+      fp = fopen("../mutable/meeting.log", "a+");
       if (fp) {
         fprintf(fp, "%s : %s\n", ch->getName().c_str(), arg);
         fclose(fp);

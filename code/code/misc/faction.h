@@ -115,8 +115,8 @@ extern TFactionInfo FactionInfo[MAX_FACTIONS];
 extern double avg_faction_power;
 extern const char * CaravanDestination(int);
 
-const char * const FACTION_FILE      = "faction/faction_info";
-const char * const FACTION_BAK       = "faction/faction_info.bak";
+const char * const FACTION_FILE      = "../mutable/faction/faction_info";
+const char * const FACTION_BAK       = "../mutable/faction/faction_info.bak";
 
 const int FACT_BOARD_BROTHER=1387;
 const int FACT_BOARD_SERPENT=8878;

@@ -1192,7 +1192,7 @@ void TPerson::doEdit(const char *arg)
       return;
       break;
     case 15: // edit list <2>
-      sprintf(tString, "immortals/%s/rooms%s",
+      sprintf(tString, "../mutable/immortals/%s/rooms%s",
               getNameNOC(this).cap().c_str(),
               (*str ? "_2" : ""));
 

@@ -130,7 +130,7 @@ void TNote::junkMe(TBeing *ch)
     if (sscanf(buf, "a small ticket marked number %d", &tmpnum) != 1) {
       // some bizarre descript.  possibly mail or a board-note
     } else {
-      sprintf(buf, "mobdata/repairs/%d/%d", getRepairman(), tmpnum);
+      sprintf(buf, "../mutable/mobdata/repairs/%d/%d", getRepairman(), tmpnum);
       int rc = unlink(buf);
       if (rc != 0) {
         vlogf(LOG_BUG, format("%s junking apparent ticket (#%d) [%s] that failed to unlink: err=%d, rc=%d") % 

@@ -305,7 +305,7 @@ bool raw_save_char(const char *name, charFile *char_element)
   FILE *fl;
   char buf[256];
 
-  sprintf(buf, "player/%c/%s", LOWER(name[0]), sstring(name).lower().c_str());
+  sprintf(buf, "../mutable/player/%c/%s", LOWER(name[0]), sstring(name).lower().c_str());
 
   if (!(fl = fopen(buf, "w")))
     return FALSE;
@@ -329,7 +329,7 @@ bool load_char(const sstring &name, charFile *char_element, std::unique_ptr<IDat
   FILE *fl;
   char buf[256];
 
-  sprintf(buf, "player/%c/%s", LOWER(name[0]), name.lower().c_str());
+  sprintf(buf, "../mutable/player/%c/%s", LOWER(name[0]), name.lower().c_str());
 
   if (!(fl = fopen(buf, "r")))
     return FALSE;
@@ -942,10 +942,10 @@ void TBeing::saveChar(int load_room)
   }
   if (!tmp) { 
     strcpy(buf2, sstring(name).lower().c_str());
-    sprintf(buf, "account/%c/%s/%s", LOWER(desc->account->name[0]), sstring(desc->account->name).lower().c_str(), buf2);
+    sprintf(buf, "../mutable/account/%c/%s/%s", LOWER(desc->account->name[0]), sstring(desc->account->name).lower().c_str(), buf2);
   } else {
     strcpy(buf2, sstring(tmp->name).lower().c_str());
-    sprintf(buf, "account/%c/%s/%s", LOWER(tmp->desc->account->name[0]), sstring(tmp->desc->account->name).lower().c_str(), buf2);
+    sprintf(buf, "../mutable/account/%c/%s/%s", LOWER(tmp->desc->account->name[0]), sstring(tmp->desc->account->name).lower().c_str(), buf2);
   }
 
   Descriptor *mydesc=tmp?tmp->desc:desc;
@@ -997,9 +997,9 @@ void TBeing::saveChar(int load_room)
   // commands without needing to know account name.
 
   if (!tmp)
-    sprintf(buf2, "player/%c/%s", LOWER(name[0]), sstring(name).lower().c_str());
+    sprintf(buf2, "../mutable/player/%c/%s", LOWER(name[0]), sstring(name).lower().c_str());
   else
-    sprintf(buf2, "player/%c/%s", LOWER(tmp->name[0]), sstring(tmp->name).lower().c_str());
+    sprintf(buf2, "../mutable/player/%c/%s", LOWER(tmp->name[0]), sstring(tmp->name).lower().c_str());
 
   if (unlink(buf2))
     vlogf(LOG_BUG, format("unlink failed in saveChar for %s") % name);
@@ -1027,7 +1027,7 @@ void TBeing::wipeChar(int)
   char abuf[80];
 
   if (desc) {
-    sprintf(abuf, "account/%c/%s/%s",
+    sprintf(abuf, "../mutable/account/%c/%s/%s",
        LOWER(desc->account->name[0]), sstring(desc->account->name).lower().c_str(), sstring(name).lower().c_str());
 
     if (unlink(abuf) != 0)
@@ -1093,7 +1093,7 @@ void do_the_player_stuff(const char *name)
   if (strlen(name) > 9 && !strcmp(&name[strlen(name) - 9], ".wizpower")) {
     char tString[256];
 
-    sprintf(tString, "player/%c/%s", LOWER(name[0]), sstring(name).lower().c_str());
+    sprintf(tString, "../mutable/player/%c/%s", LOWER(name[0]), sstring(name).lower().c_str());
 
     strcpy(longbuf, sstring(name).cap().c_str());
     longbuf[(strlen(longbuf) - 9)] = '\0';
@@ -1215,14 +1215,14 @@ void do_the_player_stuff(const char *name)
 		name %
 		max_level % elapsed_time);
 	  wipePlayerFile(name);
-	  sprintf(buf, "rm account/%c/%s/%s",
+	  sprintf(buf, "rm ../mutable/account/%c/%s/%s",
 		  LOWER(st.aname[0]), sstring(st.aname).lower().c_str(), sstring(name).lower().c_str());
 	  vsystem(buf);
 	  wipeRentFile(name);
 	  wipeCorpseFile(sstring(name).lower().c_str());
 	  return;
 	} else {
-	  sprintf(buf, "rent/%c/%s", LOWER(name[0]), sstring(name).lower().c_str());
+	  sprintf(buf, "../mutable/rent/%c/%s", LOWER(name[0]), sstring(name).lower().c_str());
 	  if ((fp = fopen(buf, "r"))) {
 	    fclose(fp);
 	    vlogf(LOG_MISC, format("%s (level %d) did not log in for %d days. Deleting rent.") % 
@@ -1260,57 +1260,57 @@ void fixup_players(void)
   db.query("delete from factionmembers");
 
  
-  dirwalk("player/a", do_the_player_stuff);
+  dirwalk("../mutable/player/a", do_the_player_stuff);
   bootPulse(".", false);
-  dirwalk("player/b", do_the_player_stuff);
+  dirwalk("../mutable/player/b", do_the_player_stuff);
   bootPulse(".", false);
-  dirwalk("player/c", do_the_player_stuff);
+  dirwalk("../mutable/player/c", do_the_player_stuff);
   bootPulse(".", false);
-  dirwalk("player/d", do_the_player_stuff);
+  dirwalk("../mutable/player/d", do_the_player_stuff);
   bootPulse(".", false);
-  dirwalk("player/e", do_the_player_stuff);
+  dirwalk("../mutable/player/e", do_the_player_stuff);
   bootPulse(".", false);
-  dirwalk("player/f", do_the_player_stuff);
+  dirwalk("../mutable/player/f", do_the_player_stuff);
   bootPulse(".", false);
-  dirwalk("player/g", do_the_player_stuff);
+  dirwalk("../mutable/player/g", do_the_player_stuff);
   bootPulse(".", false);
-  dirwalk("player/h", do_the_player_stuff);
+  dirwalk("../mutable/player/h", do_the_player_stuff);
   bootPulse(".", false);
-  dirwalk("player/i", do_the_player_stuff);
+  dirwalk("../mutable/player/i", do_the_player_stuff);
   bootPulse(".", false);
-  dirwalk("player/j", do_the_player_stuff);
+  dirwalk("../mutable/player/j", do_the_player_stuff);
   bootPulse(".", false);
-  dirwalk("player/k", do_the_player_stuff);
+  dirwalk("../mutable/player/k", do_the_player_stuff);
   bootPulse(".", false);
-  dirwalk("player/l", do_the_player_stuff);
+  dirwalk("../mutable/player/l", do_the_player_stuff);
   bootPulse(".", false);
-  dirwalk("player/m", do_the_player_stuff);
+  dirwalk("../mutable/player/m", do_the_player_stuff);
   bootPulse(".", false);
-  dirwalk("player/n", do_the_player_stuff);
+  dirwalk("../mutable/player/n", do_the_player_stuff);
   bootPulse(".", false);
-  dirwalk("player/o", do_the_player_stuff);
+  dirwalk("../mutable/player/o", do_the_player_stuff);
   bootPulse(".", false);
-  dirwalk("player/p", do_the_player_stuff);
+  dirwalk("../mutable/player/p", do_the_player_stuff);
   bootPulse(".", false);
-  dirwalk("player/q", do_the_player_stuff);
+  dirwalk("../mutable/player/q", do_the_player_stuff);
   bootPulse(".", false);
-  dirwalk("player/r", do_the_player_stuff);
+  dirwalk("../mutable/player/r", do_the_player_stuff);
   bootPulse(".", false);
-  dirwalk("player/s", do_the_player_stuff);
+  dirwalk("../mutable/player/s", do_the_player_stuff);
   bootPulse(".", false);
-  dirwalk("player/t", do_the_player_stuff);
+  dirwalk("../mutable/player/t", do_the_player_stuff);
   bootPulse(".", false);
-  dirwalk("player/u", do_the_player_stuff);
+  dirwalk("../mutable/player/u", do_the_player_stuff);
   bootPulse(".", false);
-  dirwalk("player/v", do_the_player_stuff);
+  dirwalk("../mutable/player/v", do_the_player_stuff);
   bootPulse(".", false);
-  dirwalk("player/w", do_the_player_stuff);
+  dirwalk("../mutable/player/w", do_the_player_stuff);
   bootPulse(".", false);
-  dirwalk("player/x", do_the_player_stuff);
+  dirwalk("../mutable/player/x", do_the_player_stuff);
   bootPulse(".", false);
-  dirwalk("player/y", do_the_player_stuff);
+  dirwalk("../mutable/player/y", do_the_player_stuff);
   bootPulse(".", false);
-  dirwalk("player/z", do_the_player_stuff);
+  dirwalk("../mutable/player/z", do_the_player_stuff);
   bootPulse(".", false);
 
   // make the wizlist
@@ -1396,57 +1396,57 @@ void fixup_players(void)
   wiz = NULL;
   bootPulse(".", false);
 
-  dirwalk("account/a", countAccounts);
+  dirwalk("../mutable/account/a", countAccounts);
   bootPulse(".", false);
-  dirwalk("account/b", countAccounts);
+  dirwalk("../mutable/account/b", countAccounts);
   bootPulse(".", false);
-  dirwalk("account/c", countAccounts);
+  dirwalk("../mutable/account/c", countAccounts);
   bootPulse(".", false);
-  dirwalk("account/d", countAccounts);
+  dirwalk("../mutable/account/d", countAccounts);
   bootPulse(".", false);
-  dirwalk("account/e", countAccounts);
+  dirwalk("../mutable/account/e", countAccounts);
   bootPulse(".", false);
-  dirwalk("account/f", countAccounts);
+  dirwalk("../mutable/account/f", countAccounts);
   bootPulse(".", false);
-  dirwalk("account/g", countAccounts);
+  dirwalk("../mutable/account/g", countAccounts);
   bootPulse(".", false);
-  dirwalk("account/h", countAccounts);
+  dirwalk("../mutable/account/h", countAccounts);
   bootPulse(".", false);
-  dirwalk("account/i", countAccounts);
+  dirwalk("../mutable/account/i", countAccounts);
   bootPulse(".", false);
-  dirwalk("account/j", countAccounts);
+  dirwalk("../mutable/account/j", countAccounts);
   bootPulse(".", false);
-  dirwalk("account/k", countAccounts);
+  dirwalk("../mutable/account/k", countAccounts);
   bootPulse(".", false);
-  dirwalk("account/l", countAccounts);
+  dirwalk("../mutable/account/l", countAccounts);
   bootPulse(".", false);
-  dirwalk("account/m", countAccounts);
+  dirwalk("../mutable/account/m", countAccounts);
   bootPulse(".", false);
-  dirwalk("account/n", countAccounts);
+  dirwalk("../mutable/account/n", countAccounts);
   bootPulse(".", false);
-  dirwalk("account/o", countAccounts);
+  dirwalk("../mutable/account/o", countAccounts);
   bootPulse(".", false);
-  dirwalk("account/p", countAccounts);
+  dirwalk("../mutable/account/p", countAccounts);
   bootPulse(".", false);
-  dirwalk("account/q", countAccounts);
+  dirwalk("../mutable/account/q", countAccounts);
   bootPulse(".", false);
-  dirwalk("account/r", countAccounts);
+  dirwalk("../mutable/account/r", countAccounts);
   bootPulse(".", false);
-  dirwalk("account/s", countAccounts);
+  dirwalk("../mutable/account/s", countAccounts);
   bootPulse(".", false);
-  dirwalk("account/t", countAccounts);
+  dirwalk("../mutable/account/t", countAccounts);
   bootPulse(".", false);
-  dirwalk("account/u", countAccounts);
+  dirwalk("../mutable/account/u", countAccounts);
   bootPulse(".", false);
-  dirwalk("account/v", countAccounts);
+  dirwalk("../mutable/account/v", countAccounts);
   bootPulse(".", false);
-  dirwalk("account/w", countAccounts);
+  dirwalk("../mutable/account/w", countAccounts);
   bootPulse(".", false);
-  dirwalk("account/x", countAccounts);
+  dirwalk("../mutable/account/x", countAccounts);
   bootPulse(".", false);
-  dirwalk("account/y", countAccounts);
+  dirwalk("../mutable/account/y", countAccounts);
   bootPulse(".", false);
-  dirwalk("account/z", countAccounts);
+  dirwalk("../mutable/account/z", countAccounts);
   bootPulse(".", false);
 
   bootPulse(NULL, true);
@@ -1834,7 +1834,7 @@ void TBeing::saveCareerStats()
   if (!isPc() || !desc)
     return;
 
-  sprintf(buf, "player/%c/%s.career", LOWER(name[0]), sstring(name).lower().c_str());
+  sprintf(buf, "../mutable/player/%c/%s.career", LOWER(name[0]), sstring(name).lower().c_str());
 
   if (!(fp = fopen(buf, "w"))) {
     vlogf(LOG_BUG, format("Unable to open file (%s) for saving career stats. (%d)") %  buf % errno);
@@ -1947,7 +1947,7 @@ void TBeing::loadCareerStats()
   if (!isPc() || !desc)
     return;
 
-  sprintf(buf, "player/%c/%s.career", LOWER(name[0]), sstring(name).lower().c_str());
+  sprintf(buf, "../mutable/player/%c/%s.career", LOWER(name[0]), sstring(name).lower().c_str());
 
   // lets just set some common values first
   desc->career.setToZero();
@@ -2227,7 +2227,7 @@ std::vector<sstring> listAccountCharacters(sstring name)
 {
   std::vector<sstring> list;
 
-  sstring fileName = "account/";
+  sstring fileName = "../mutable/account/";
   fileName += LOWER(name[0]);
   fileName += "/";
   fileName +=  name.lower();
@@ -2283,7 +2283,7 @@ int numFifties(race_t race, bool perma, sstring account_name)
   FILE *fp;
   DIR *dfd;
   struct dirent *dp;
-  sstring account_path = format("account/%c/%s") % LOWER(account_name[0]) %
+  sstring account_path = format("../mutable/account/%c/%s") % LOWER(account_name[0]) %
           account_name.lower();
   sstring togfile_name;
   bool char_is_perma;
@@ -2304,7 +2304,7 @@ int numFifties(race_t race, bool perma, sstring account_name)
     byte max_level = 0;
 
     // perma death characters only get the bonus from perma 50's
-    sstring tog_file_name = format("player/%c/%s.toggle") % LOWER(dp->d_name[0]) % dp->d_name;
+    sstring tog_file_name = format("../mutable/player/%c/%s.toggle") % LOWER(dp->d_name[0]) % dp->d_name;
     if(!(fp = fopen(tog_file_name.c_str(), "r"))) {
       vlogf(LOG_MAROR, format("Error loading toggles for player %s in numFifties.")
         % dp->d_name);
