@@ -2263,8 +2263,8 @@ void setPrompts(fd_set out)
   TBeing *tank = NULL;
   TBeing *ch;
   TThing *obj;
-  char promptbuf[256*2] = "\0\0\0",
-       tString[256*2];
+  char promptbuf[256*2] = "\0\0\0";
+  char tString[256*2];
   unsigned int update;
 
   for (d = descriptor_list; d; d = nextd) {
