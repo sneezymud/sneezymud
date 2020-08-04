@@ -1,6 +1,7 @@
 # hey emacs, this is -*- python -*- vim: ft=python
 from __future__ import print_function
 
+import os
 import sys
 import subprocess
 
@@ -140,6 +141,7 @@ env = Environment(
     SHCXX = opt_cxx, # must have both of these, along with LINK and SHLINK
     CPPPATH = opt_includes,
     LIBPATH = opt_libdirs,
+    ENV = os.environ,
 )
 Export('env')
 env.Append(extra_libs=[opt_libs])
