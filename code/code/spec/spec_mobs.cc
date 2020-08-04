@@ -5759,7 +5759,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
     return TRUE;
   }
 
-  char buf[256], buf2[256];
+  char buf[512], buf2[256];
   int count, numsimilar;
   int which;
   int Hi = 0, Hf = 0; //hp initial, hp final

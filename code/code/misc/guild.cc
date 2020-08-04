@@ -349,7 +349,7 @@ int guildRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, 
   TDatabase db(DB_SNEEZY);
   char field[80], values[80];
   char buf[256];
-  char tell[256];
+  char tell[512];
 
   strcpy(values, "");
   

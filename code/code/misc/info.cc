@@ -3098,7 +3098,7 @@ void TBeing::doLevels(const char *argument)
   classIndT Class;
 // int RaceMax;
   sstring sb;
-  char buf[256],
+  char buf[512],
        tString[256];
 
   for (; isspace(*argument); argument++);

@@ -870,7 +870,7 @@ void healFullSpray(TBeing * caster, TMagicItem * obj)
 
 int knitBone(TBeing * caster, TBeing * victim, int, short bKnown)
 {
-  char buf[256], limb[256];
+  char buf[512], limb[256];
   wearSlotT slot;
 
   if (!victim) {
@@ -927,7 +927,7 @@ void knitBone(TBeing * caster, TBeing *victim)
 
 int clot(TBeing * caster, TBeing * victim, int, short bKnown, spellNumT spell)
 {
-  char buf[256], limb[256];
+  char buf[512], limb[256];
   wearSlotT slot;
 
   // find a bleeding slot 
@@ -1003,7 +1003,7 @@ void clot(TBeing * caster, TBeing * victim, TMagicItem * obj, spellNumT spell)
 
 int restoreLimb(TBeing *caster, TBeing *victim, int, short bKnown)
 {
-  char buf[256], limb[256];
+  char buf[512], limb[256];
   wearSlotT slot, num;
   wearSlotT j;
 
@@ -1097,7 +1097,7 @@ void restoreLimb(TBeing *caster, TBeing *victim)
 
 int sterilize(TBeing * caster, TBeing * victim, int, short bKnown, spellNumT spell)
 {
-  char buf[256], limb[256];
+  char buf[512], limb[256];
   wearSlotT slot;
 
   // find an infected slot 
@@ -1291,7 +1291,7 @@ void salve(TBeing * caster, TBeing * victim, TMagicItem * obj, spellNumT spell)
 
 int expel(TBeing * caster, TBeing * victim, int, short bKnown, spellNumT spell)
 {
-  char buf[256], limb[256];
+  char buf[512], limb[256];
   wearSlotT slot;
   TThing *o = NULL;
   int res;

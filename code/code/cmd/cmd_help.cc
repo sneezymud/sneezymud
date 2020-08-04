@@ -348,7 +348,7 @@ void replaceWikiTable(sstring &data)
 void /*TBeing::*/displayHelpFile(TBeing *ch, char *helppath, char *namebuf){
   int j;
   struct stat timestat;
-  char timebuf[1024], buf2[1024];
+  char timebuf[1024], buf2[2048];
   sstring str;
 
   // make the topic name upper case
@@ -390,7 +390,7 @@ void TBeing::doHelp(const char *arg)
   bool found = FALSE;
   int helpnum = 0;
   unsigned int i;
-  char helppath[256], ansipath[256];
+  char helppath[256], ansipath[512];
   struct stat timestat;
   char namebuf[1024], timebuf[1024];
   char buf2[MAX_STRING_LENGTH];

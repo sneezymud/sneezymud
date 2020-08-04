@@ -48,7 +48,7 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
   bool isTR = ch->affectedBySpell(SKILL_TRACK);
   bool isTS = ch->affectedBySpell(SPELL_TRAIL_SEEK);
   bool worked;
-  char buf[256], buf2[256];
+  char buf[256], buf2[512];
 
   if (ch->isLinkdead() || (ch->in_room < 0) ||
       (ch->getPosition() < POSITION_RESTING)) {

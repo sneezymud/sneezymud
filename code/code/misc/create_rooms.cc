@@ -220,7 +220,7 @@ void TPerson::doEdit(const char *arg)
   long r_flags;
   sstring tStString("");
   char str[512],
-       Buf[256],
+       Buf[1024],
        tString[256],
        tTextLns[4][256] = {"\0", "\0", "\0", "\0"};
   const char *tBuf;

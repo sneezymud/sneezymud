@@ -58,7 +58,7 @@ int destroy_bandages(StuffList list, int band)
 void TBeing::bandage(TBeing *victim,wearSlotT slot)
 {
   TObj *bandage;
-  char buf[256], limb[256];
+  char buf[512], limb[256];
   int r_num;
 
   if (!victim) {

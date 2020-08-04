@@ -632,8 +632,8 @@ void TBeing::doWhittle(const char *tArg)
       return;
     }
 
-    TArrow *tArrow;
-    TBow   *tBow;
+    TArrow *tArrow = nullptr;
+    TBow   *tBow = nullptr;
 
     if (!(tArrow = dynamic_cast<TArrow *>(tObj)) &&
         !(tBow   = dynamic_cast<TBow   *>(tObj))) {
