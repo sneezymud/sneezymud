@@ -811,7 +811,7 @@ void TBeing::doSeekwater()
   int targrm;
   TThing *t = NULL;
   affectedData aff;
-  char buf[256], buf2[256];
+  char buf[256], buf2[512];
 
   if (affectedBySpell(SKILL_TRACK) || specials.hunting) {
     sendTo("You can't search for water while tracking something else as well.\n\r");

@@ -2051,7 +2051,7 @@ void TPerson::doMedit(const char *argument)
          tStArg("");
   char sstring[256],
        mobile[80],
-       Buf[512],
+       Buf[1024],
        tTextLns[3][256] = {"\0", "\0", "\0"};
 
   if (!hasWizPower(POWER_MEDIT)) {

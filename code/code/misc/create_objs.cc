@@ -510,7 +510,7 @@ void TPerson::doOEdit(const char *argument)
          tStArg("");
   char sstring[256],
        object[80],
-       Buf[512],
+       Buf[1024],
        tTextLns[4][256] = {"\0", "\0", "\0", "\0"};
 
   if (!hasWizPower(POWER_OEDIT)) {

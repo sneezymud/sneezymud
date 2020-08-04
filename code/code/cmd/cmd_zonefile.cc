@@ -128,7 +128,7 @@ namespace {
                   roomStart;
     FILE         *tFile;
     char          tString[256],
-    tBuffer[256];
+    tBuffer[512];
     TRoom        *tRoom;
     sstring       tStString("");
 

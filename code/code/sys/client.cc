@@ -348,12 +348,9 @@ int Descriptor::read_client(char *str2)
           sprintf(tmpBuf2 + strlen(tmpBuf2), "|%s|%s", exptr->keyword.c_str(), exptr->description.c_str()); 
         }      
       }
-      char tmpbuf[25000];
-      sprintf(tmpbuf, "%d|%s|%s|%d|%d|%d%s%s", CLIENT_CURRENTROOM, rp->name.c_str(), rp->getDescr().c_str(),
-              rp->getSectorType(),
-              rp->getMoblim(), rp->getRoomHeight(), tmpBuf, tmpBuf2);
-
-      sstring sb = tmpbuf;
+      sstring sb = format("%d|%s|%s|%d|%d|%d%s%s") % CLIENT_CURRENTROOM % rp->name.c_str() % rp->getDescr().c_str() %
+              rp->getSectorType() %
+              rp->getMoblim() % rp->getRoomHeight() % tmpBuf % tmpBuf2;
       processStringForClient(sb);
 
       clientf(sb);

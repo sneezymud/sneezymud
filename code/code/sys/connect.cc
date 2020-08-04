@@ -3777,7 +3777,7 @@ int Descriptor::doAccountStuff(char *arg)
           snoop.snoop_by->desc->output.push(CommPtr(new SnoopComm(ch->getName(), outputBuf)));
         }
         if (flag) {
-          sprintf(buffer, "Line too long. Truncated to:\n\r%s\n\r", tmp);
+          snprintf(buffer, sizeof(buffer), "Line too long. Truncated to:\n\r%.19967s\n\r", tmp);
           if (socket && socket->writeToSocket(buffer) < 0) {
             return (-1);
           }

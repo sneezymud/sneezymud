@@ -638,7 +638,7 @@ void repairman_value(const char *arg, TMonster *repair, TBeing *buyer)
 // returns DELETE_THIS if buyer goes poof
 int repairman_give(const char *arg, TMonster *repair, TBeing *buyer)
 {
-  char buf[256], obj_name[MAX_INPUT_LENGTH];
+  char buf[MAX_INPUT_LENGTH*4], obj_name[MAX_INPUT_LENGTH];
   char rep_name[MAX_INPUT_LENGTH];
   char obj_amt[MAX_INPUT_LENGTH];
   TThing *t;
