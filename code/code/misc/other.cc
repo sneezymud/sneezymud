@@ -4129,8 +4129,8 @@ void Descriptor::add_comment(const char *who, const char *msg)
 }
 
 namespace {
-  const char FEEDBACK_FROM_ADDRESS[] = "feedback@sneezymud.com";
-  const char FEEDBACK_SENDTO_ADDRESS[] = "mudadmin@sneezymud.com";
+  const char FEEDBACK_FROM_ADDRESS[] = "feedback@sneezymud.org";
+  const char FEEDBACK_SENDTO_ADDRESS[] = "mudadmin@sneezymud.org";
 }
 
 // sends appropriate feedback (help, bugs, typos) via email to a feedback forum

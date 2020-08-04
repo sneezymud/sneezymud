@@ -135,12 +135,12 @@ class CommTest : public CxxTest::TestSuite
 
       TS_ASSERT_EQUALS(c->getComm(), "!!SOUND(cackle.wav T=socials)\n\r");
 
-      auto sound2 = CommPtr(new SoundComm("sound", "http://sneezymud.com/sounds/", "Off", "", -1,-1,-1, -1));
+      auto sound2 = CommPtr(new SoundComm("sound", "http://sneezymud.org/sounds/", "Off", "", -1,-1,-1, -1));
       testPerson->sendTo(sound2);
       c=testPerson->desc->output.front();
       testPerson->desc->output.pop();
 
-      TS_ASSERT_EQUALS(c->getComm(), "!!SOUND(Off U=http://sneezymud.com/sounds/)\n\r");
+      TS_ASSERT_EQUALS(c->getComm(), "!!SOUND(Off U=http://sneezymud.org/sounds/)\n\r");
     }
 
 
