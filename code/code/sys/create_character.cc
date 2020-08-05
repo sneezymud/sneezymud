@@ -1026,7 +1026,7 @@ void nannyDone_output(Descriptor * desc)
   output += format("You should also %sread the newbie guide%s and %swear your equipment%s.\n\r") % desc->orange() % desc->norm() %desc-> orange() % desc->norm();
 
   output += "For further orientation, use the help system, newbie helpers and immortal staff.\n\r";
-  output += "Check the SneezyMUD website's Help section for more: http://www.sneezymud.com\n\r";
+  output += "Check the SneezyMUD website's Help section for more: http://www.sneezymud.org\n\r";
   output += "In contacting immortals, be aware that our immortal staff is not\n\r";
   output += "allowed to help you discover The World.  However, they are allowed\n\r";
   output += "and encouraged to help you with command problems and general orientation.\n\r\n\r";

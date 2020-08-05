@@ -22,7 +22,7 @@ namespace {
       auto js = nlohmann::json::parse(hello);
       d.mudclient = js.at("client");
       d.clientversion = js.at("version");
-    } catch(nlohmann::json::parse_error) {
+    } catch (nlohmann::json::parse_error const&) {
       vlogf(LOG_MISC, format("Client sent bad Core.Hello: %s") % hello);
     } catch (const std::range_error&) {
       vlogf(LOG_MISC, format("Client sent bad Core.Hello: %s") % hello);

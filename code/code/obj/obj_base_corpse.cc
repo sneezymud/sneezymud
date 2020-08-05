@@ -335,7 +335,7 @@ int TBaseCorpse::scavengeMe(TBeing *ch, TObj **)
   TThing *t=NULL;
   TObj *obj;
   wearSlotT sl;
-  char buf[256], buf2[256], buf3[256];
+  char buf[1024], buf2[256], buf3[256];
   int rc;
 
   if (!::number(0, 5) && !stuff.empty()) {

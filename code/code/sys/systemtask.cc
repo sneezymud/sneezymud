@@ -44,7 +44,7 @@ class _task {
 //
 void SystemTask::AddTask(TBeing *own, char tsk, const char *opt)
 {
-  char	lbuf[128], opt1[128];
+  char	lbuf[256], opt1[128];
   _task	*tmp;
 
   //  Check if the task system is enabled.

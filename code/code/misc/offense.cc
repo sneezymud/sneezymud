@@ -586,7 +586,7 @@ static bool orderDenyCheck(const char * cmd_buf)
 int TBeing::doOrder(const char *argument)
 {
   char caName[100], message[256];
-  char buf[256];
+  char buf[512];
   int found = FALSE;
   int org_room, i;
   char cmd_buf[40];

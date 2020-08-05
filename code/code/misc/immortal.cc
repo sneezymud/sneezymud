@@ -2157,7 +2157,7 @@ void TPerson::doForce(const char *argument)
 {
   Descriptor *i;
   TBeing *vict;
-  char name_buf[MAX_INPUT_LENGTH], to_force[MAX_INPUT_LENGTH], buf[MAX_INPUT_LENGTH];
+  char name_buf[MAX_INPUT_LENGTH], to_force[MAX_INPUT_LENGTH], buf[MAX_INPUT_LENGTH*2];
   int rc;
   TThing *t;
 
@@ -3496,7 +3496,7 @@ void TBeing::doNoshout(const sstring &argument)
 
 void TBeing::doDeathcheck(const sstring &arg)
 {
-  char file[256], playerx[256], buf[256];
+  char file[256], playerx[256], buf[1024];
   char *p;
 
   if (powerCheck(POWER_DEATHCHECK))
@@ -3953,7 +3953,7 @@ void TPerson::doAccess(const sstring &arg)
 
 void TBeing::doReplace(const sstring &argument)
 {
-  char buf[256], dir[256], dir2[256];
+  char buf[1024], dir[256], dir2[256];
   sstring arg1, arg2, arg3;
   FILE *fp;
   charFile st;
@@ -5572,7 +5572,7 @@ void TBeing::doSysChecklog(const sstring &arg)
 {
   char *tMarkerS, // Start
        *tMarkerE, // End
-        tString[256],
+        tString[1024],
         tSearch[256],
         tLog[256];
   unsigned int tIndex;

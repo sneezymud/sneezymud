@@ -217,7 +217,7 @@ int TBeing::doPSay(const char *arg){
   TBeing *mob = NULL;
   int rc;
   char capbuf[256];
-  char tmpbuf[256], nameBuf[256], garbedBuf[256];
+  char tmpbuf[256], nameBuf[512], garbedBuf[256];
   Descriptor *d;
 
   if(!doesKnowSkill(SKILL_PSITELEPATHY)){

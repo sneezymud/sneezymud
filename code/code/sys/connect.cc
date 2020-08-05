@@ -64,8 +64,8 @@ const int FORCE_LOW_INVSTE = 1;
 
 static const char * const WIZLOCK_PASSWORD           = "motelvi";
 const char * const MUD_NAME      = "SneezyMUD";
-const char * const MUD_NAME_VERS = "SneezyMUD v5.2 " VERSION;
-static const char * const WELC_MESSG = "\n\rWelcome to SneezyMUD 5.2! May your journeys be bloody!\n\r\n\r";
+const char * const MUD_NAME_VERS = "SneezyMUD v5.4 " VERSION;
+static const char * const WELC_MESSG = "\n\rWelcome to SneezyMUD 5.4! May your journeys be bloody!\n\r\n\r";
 
 Descriptor::Descriptor() :
   ignored(this)
@@ -2263,8 +2263,8 @@ void setPrompts(fd_set out)
   TBeing *tank = NULL;
   TBeing *ch;
   TThing *obj;
-  char promptbuf[256] = "\0\0\0",
-       tString[256];
+  char promptbuf[256*2] = "\0\0\0";
+  char tString[256*2];
   unsigned int update;
 
   for (d = descriptor_list; d; d = nextd) {
@@ -3777,7 +3777,7 @@ int Descriptor::doAccountStuff(char *arg)
           snoop.snoop_by->desc->output.push(CommPtr(new SnoopComm(ch->getName(), outputBuf)));
         }
         if (flag) {
-          sprintf(buffer, "Line too long. Truncated to:\n\r%s\n\r", tmp);
+          snprintf(buffer, sizeof(buffer), "Line too long. Truncated to:\n\r%.19967s\n\r", tmp);
           if (socket && socket->writeToSocket(buffer) < 0) {
             return (-1);
           }
