@@ -155,13 +155,25 @@ int customizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o,
                 (final ? final->name : ""));
             return FALSE;
           }
+
+          if (!(final_pers = get_char_room(job->char_name, me->in_room))) {
+            me->doSay("Hmm, I seem to have lost the person I was customizing for.");
+            me->doSay("Well I can't customize this now.");
+            me->doSay("Hopefully they come back for this.");
+            rc = me->doDrop(job->obj_name, NULL);
+            if (IS_SET_DELETE(rc, DELETE_THIS))
+              return DELETE_THIS;
+            return FALSE;
+          }
+
           final->swapToStrung();
 
           // resize if required
           if (custtype == TYPE_TAILOR || custtype == TYPE_BLACKSMITH) {
             wearSlotT slot = slot_from_bit(final->obj_flags.wear_flags);
-            if(race_vol_constants[mapSlotToFile(slot)])
-              final->setVolume((int)((double)ch->getHeight() * race_vol_constants[mapSlotToFile(slot)]));
+            if(race_vol_constants[mapSlotToFile(slot)]) {
+              final->setVolume((int)((double)final_pers->getHeight() * race_vol_constants[mapSlotToFile(slot)]));
+            }
           }
 
 
@@ -172,13 +184,7 @@ int customizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o,
           buf = format("This is the personalized object of %s") % job->char_name;
           final->action_description = buf;
 
-          if (!(final_pers = get_char_room(job->char_name, me->in_room))) {
-            me->doSay("Hmm, I seem to have lost the person I was customizing for.");
-            rc = me->doDrop(job->obj_name, NULL);
-            if (IS_SET_DELETE(rc, DELETE_THIS))
-              return DELETE_THIS;
-            return FALSE;
-          }
+          
           if ((final_pers->getCarriedVolume() + final->getTotalVolume())  > final_pers->carryVolumeLimit()) {
             me->doSay("You can't carry it! I'll just drop it here for you!");
             rc = me->doDrop(job->obj_name, NULL);
