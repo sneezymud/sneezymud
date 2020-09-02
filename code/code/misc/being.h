@@ -564,6 +564,8 @@ class TBeing : public TThing {
   int hits(TBeing *, int);
   int missVictim(TBeing *, TThing *, spellNumT);
   void doInevitability();
+  void doGuardiansLight(int, int);
+  void checkGuardiansLight();
 
   // Postmaster
   void postmasterSendMail(const char *, TMonster *);
@@ -1921,5 +1923,9 @@ class TBeing : public TThing {
   bool resetPractices(classIndT resetClass, int &practices, bool reset = true);
 
   bool canMeditate();
+  
+  // paladin auras
+  virtual int checkAura(cmdTypeT cmd, TBeing *t);
+  void doAura(sstring const& arg);
 
 };

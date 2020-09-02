@@ -1057,7 +1057,19 @@ bool procObjBurning::run(const TPulse &pl, TObj *obj) const
   return false;
 }
 
+procPaladinAura::procPaladinAura(const int &p)
+{
+  trigger_pulse=p;
+  name="procPaladinAura";
+}
 
+bool procPaladinAura::run(const TPulse &pl, TBeing *tmp_ch) const
+{
+  int rc = tmp_ch->checkAura(CMD_GENERIC_PULSE, NULL);
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    return true;
+  return false;
+}
 
 procCharSpecProcs::procCharSpecProcs(const int &p)
 {
@@ -1733,6 +1745,7 @@ int TMainSocket::gameLoop()
   scheduler.add(new procCharSpecProcs(Pulse::SPEC_PROCS));
   scheduler.add(new procCharDrowning(Pulse::SPEC_PROCS));
   scheduler.add(new procCharResponses(Pulse::SPEC_PROCS));
+  scheduler.add(new procPaladinAura(Pulse::SPEC_PROCS));
 
   // pulse noises (4.8 seconds)
   scheduler.add(new procCharNoise(Pulse::NOISES));

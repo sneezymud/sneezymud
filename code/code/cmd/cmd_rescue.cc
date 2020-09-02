@@ -11,6 +11,8 @@
 #include "extern.h"
 #include "room.h"
 #include "being.h"
+#include "disc_deikhan.h"
+
 
 static int rescue(TBeing * caster, TBeing * victim, spellNumT skill)
 {
@@ -90,6 +92,12 @@ static int rescue(TBeing * caster, TBeing * victim, spellNumT skill)
     caster->setVictFighting(tmp_ch);
 
     victim->addToWait(combatRound(1));
+
+    // We've succeeded the rescue and done all the important shit
+    // Now check for divine rescue
+    if (caster->doesKnowSkill(SKILL_DIVINE_RESCUE)) {
+      divineRescue(caster, victim);
+    }
 
     if (tmp_ch->GetMaxLevel() >= victim->GetMaxLevel()) {
       if (caster->getFactionTarget() != victim) {

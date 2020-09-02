@@ -2887,7 +2887,6 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
     case SPELL_PILLAR_SALT:
       pillarOfSalt(caster,victim,obj);
       break;
-    case SPELL_RAIN_BRIMSTONE_DEIKHAN:
     case SPELL_RAIN_BRIMSTONE:
       rainBrimstone(caster,victim,obj, spell);
       break;
@@ -2914,11 +2913,9 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
         curse(caster,victim,obj, spell);
       }
       break;
-    case SPELL_EARTHQUAKE_DEIKHAN:
     case SPELL_EARTHQUAKE:
       rc = earthquake(caster,obj, spell);
       break;
-    case SPELL_CALL_LIGHTNING_DEIKHAN:
     case SPELL_CALL_LIGHTNING:
       rc = callLightning(caster,victim,obj, spell);
       break;

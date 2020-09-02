@@ -1834,6 +1834,14 @@ static int getMonkWeaponDam(const TBeing *ch, const TBeing *v, primaryTypeT ispr
 // Please note that these numbers are NOT arbitrary, but are part of the
 // balance discussion, so do not change them lightly !!!!
 // -Batopr 12/12/98
+//
+// NOTE on Dual vs 2h
+// 1h and shield = 100% dam
+// Dual wield (unlearned) = 110% dam
+// Dual wield maxed spec = 170% dam
+// 2h (unlearned) = 110% dam
+// 2h maxed spec = 165% dam
+//
 int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT isprimary) const
 {
   int bonusDam = 0;
@@ -1981,6 +1989,16 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
       dam = (int) (dam * amt / 100);
     }
 
+    // 2h Specialization: should be no additional dam for anyone without specialization
+    // extra 10% for 2h is part of the object
+    TObj *obj = dynamic_cast<TObj *>(heldInPrimHand());
+    if (obj && obj->isPaired() && doesKnowSkill(SKILL_2H_SPEC_DEIKHAN)) {
+      // Take half the skill value and normalize between 10 and 50
+      int amt = (int) getSkillValue(SKILL_2H_SPEC_DEIKHAN);
+      amt = 100 + min(50, max(10, (int) (amt / 2)));
+      dam = (int) (dam * amt / 100);
+    }
+    
     dam = max(1, dam);
 
 #if DAMAGE_DEBUG
@@ -2024,6 +2042,13 @@ static void checkLearnFromHit(TBeing * ch, int tarLevel, TThing * o, bool isPrim
             dynamic_cast<TBaseWeapon *>(o) && 
             !isPrimary)
 	  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, skill, max(0, (100 - (2* myLevel))));
+
+        // Learn 2h on hit
+        TBaseWeapon *obj = dynamic_cast<TBaseWeapon *>(o);
+        if (obj && ch->doesKnowSkill(SKILL_2H_SPEC_DEIKHAN) && obj->isPaired()) {
+          ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_2H_SPEC_DEIKHAN, max(0, (100 - (2* myLevel))));
+        }
+
 
         if (ch->hasClass(CLASS_WARRIOR))
 	  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_OFFENSE, (170 - (2* myLevel)));
@@ -2628,6 +2653,11 @@ int TBeing::defendRound(const TBeing * attacker) const
       bonus -= amt;
     }
   } 
+
+  // NOTE: the Armor spell works out to 66 but this works beyond max armor
+  if (affectedBySpell(SPELL_AURA_GUARDIAN)) {
+    bonus += 40;
+  }
 
   // add some positional affects here
   if (doesKnowSkill(SKILL_CHIVALRY) && getPosition() == POSITION_MOUNTED) {
@@ -3424,6 +3454,8 @@ int TBeing::checkShield(TBeing *v, TThing *weapon, wearSlotT part_hit, spellNumT
 		    namebuf % equipBuf); 
   }
 
+  v->checkGuardiansLight();
+
   if (shield->spec){
     rc = shield->checkSpec(this, CMD_OBJ_BEEN_HIT, NULL, weapon);
     if (IS_SET_ONLY(rc, DELETE_VICT))
@@ -3882,8 +3914,11 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
       vict->desc->session.potential_dam_received[amt] += dam;
     }
 
-
-    if (result == GUARANTEED_SUCCESS)
+    // We check for a crit only on GUARANTEED_SUCCESS
+    // So max 5% crit rate unless they are sleeping or paralyzed
+    // now we add another possible 5% max for aura of vengeance
+    if (result == GUARANTEED_SUCCESS ||
+          (affectedBySpell(SPELL_AURA_VENGEANCE) && !::number(0,19)))
       mess_sent = critSuccessChance(vict, weapon, &part_hit, w_type, &dam);
 
     if (IS_SET_DELETE(mess_sent, DELETE_VICT)) {
@@ -3969,6 +4004,18 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 	reconcileMana(TYPE_UNDEFINED, 0, 10);
       }
       
+      if(affectedBySpell(SPELL_AURA_VENGEANCE) &&
+          hasClass(CLASS_DEIKHAN) &&
+          affectedBySpell(SKILL_SMITE) &&
+          (::number(0,99) < 10)){
+
+        act("Your vengeance aura flairs as you launch another strike.", FALSE, this, 0, vict, TO_CHAR, ANSI_PURPLE);
+        act("$n's vengeance aura flairs as $e launches another strike.", FALSE, this, 0, vict, TO_VICT, ANSI_PURPLE);
+        act("$n's vengeance aura flairs as $e launches another strike.", FALSE, this, 0, vict, TO_NOTVICT);
+        
+        *f += 1; // one extra attack
+      }
+
       affectedData *ch_affected;
       // Remove inevitability if we hit.
       if (affectedBySpell(SKILL_INEVITABILITY))
@@ -4005,6 +4052,21 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 	}
       }
 
+      // handle Deikhan Aura procs      
+      // check aura for been hit
+      rc = vict->checkAura(CMD_BEING_BEEN_HIT, this);
+      if (IS_SET_ONLY(rc, DELETE_VICT)) 
+        retCode |= DELETE_THIS;
+      if (IS_SET_ONLY(rc, DELETE_THIS)){
+        retCode |= DELETE_VICT;
+        return retCode;
+      }
+      // check aura for hit
+      rc = checkAura(CMD_BEING_HIT, vict);
+      if (IS_SET_ONLY(rc, DELETE_VICT)) {
+        retCode |= DELETE_VICT;
+        return retCode;
+      }
       // Add toughness 
       doToughness(vict);
 
@@ -5895,4 +5957,51 @@ void TBeing::doInevitability()
 
   affectTo(&aff, -1);
 
+}
+
+// checkGuardiansLight includes checks for the skill
+void TBeing::checkGuardiansLight() {
+  if (!doesKnowSkill(SKILL_GUARDIANS_LIGHT))
+    return;
+
+  if (!bSuccess(SKILL_GUARDIANS_LIGHT))
+    return;
+
+  if (::number(0,6))
+    return;
+
+  doGuardiansLight(6, 18);
+}
+
+// doGuardiansLight proc
+void TBeing::doGuardiansLight(int mod, int duration = 10) {
+
+  int MAX_GUARDIANSLIGHT = 6;
+  affectedData aff, *ch_affected;
+
+  if (affectedBySpell(AFFECT_GUARDIANS_LIGHT))
+  {
+    for (ch_affected = affected; ch_affected; ch_affected = ch_affected->next) {
+      if (ch_affected->type == AFFECT_GUARDIANS_LIGHT) {
+        // set the mod and remove the affect so we can add it fresh
+        mod += ch_affected->modifier;
+        affectRemove(ch_affected, SILENT_YES);
+        break;
+      }
+    }
+  }
+
+if (mod <= MAX_GUARDIANSLIGHT)
+    act("<b>You glow in<1> <w>Guardian's<1> <y>Light<1>", 0, this, 0, 0, TO_CHAR);
+
+  mod = max(min(mod, MAX_GUARDIANSLIGHT), 1);
+
+  aff.type = AFFECT_GUARDIANS_LIGHT;
+  aff.duration = Pulse::TICK * duration + mod;
+  aff.location = APPLY_PROTECTION;
+  aff.renew = -1;
+  aff.modifier = mod;
+  aff.bitvector = 0;
+
+  affectTo(&aff, -1);
 }

@@ -189,7 +189,6 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
          sprintf(buf, "%s's corpse lies shattered here, having been thrown hard to the ground.", namebuf); 
         break;
       case DAMAGE_ELECTRIC:
-      case SPELL_CALL_LIGHTNING_DEIKHAN:
       case SPELL_CALL_LIGHTNING:
       case SPELL_LIGHTNING_BREATH:
         sprintf(buf, "The charred and burnt corpse of %s smolders here.",getName().c_str());
@@ -259,7 +258,6 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
         sprintf(buf, "Some powerful deity has smitten %s and %s shattered corpse lies here.", getName().c_str(), hshr());
         break;
       case SPELL_METEOR_SWARM:
-      case SPELL_EARTHQUAKE_DEIKHAN:
       case SPELL_EARTHQUAKE:
       case DAMAGE_TRAP_BLUNT:
       case TYPE_EARTH:
@@ -272,7 +270,6 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
       case SPELL_HANDS_OF_FLAME:
       case SPELL_INFERNO:
       case SPELL_HELLFIRE:
-      case SPELL_RAIN_BRIMSTONE_DEIKHAN:
       case SPELL_RAIN_BRIMSTONE:
       case SPELL_FLAMESTRIKE:
       case SPELL_FIRE_BREATH:
@@ -345,7 +342,6 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
         sprintf(buf, "The body of %s has a footprint in its side.",getName().c_str());
         break;
       case DAMAGE_KICK_SOLAR:
-      case SKILL_KICK_DEIKHAN:
       case SKILL_KICK_THIEF:
       case SKILL_KICK_MONK:
       case SKILL_KICK:

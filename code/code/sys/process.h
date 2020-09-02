@@ -118,6 +118,12 @@ class procCharDrowning : public TCharProcess {
   procCharDrowning(const int &);
 };
 
+class procPaladinAura : public TCharProcess {
+  public:
+  bool run(const TPulse &, TBeing *) const;
+  procPaladinAura(const int &);
+};
+
 class procCharResponses : public TCharProcess {
  public:
   bool run(const TPulse &, TBeing *) const;
