@@ -16,10 +16,10 @@
 #include "disc_cleric.h"
 #include "disc_soldiering.h"
 #include "disc_blacksmithing.h"
-#include "disc_deikhan_fight.h"
-#include "disc_deikhan_aegis.h"
-#include "disc_deikhan_cures.h"
-#include "disc_deikhan_wrath.h"
+#include "disc_deikhan_martial.h"
+#include "disc_deikhan_guardian.h"
+#include "disc_deikhan_absolution.h"
+#include "disc_deikhan_vengeance.h"
 #include "disc_defense.h"
 #include "disc_offense.h"
 #include "disc_mounted.h"
@@ -642,7 +642,6 @@ spellNumT TBeing::getSkillNum(spellNumT skill_num) const
           else
             return pick_best_skill(this, skill_num, {
                 {CLASS_WARRIOR, SKILL_KICK},
-                {CLASS_DEIKHAN, SKILL_KICK_DEIKHAN},
                 {CLASS_THIEF, SKILL_KICK_THIEF}});
       
         case SKILL_RETREAT:
@@ -781,11 +780,6 @@ spellNumT TBeing::getSkillNum(spellNumT skill_num) const
                 {CLASS_CLERIC, SPELL_CLOT},
                 {CLASS_DEIKHAN, SPELL_CLOT_DEIKHAN}});
         
-        case SPELL_RAIN_BRIMSTONE:
-            return pick_best_skill(this, skill_num, {
-                {CLASS_CLERIC, SPELL_RAIN_BRIMSTONE},
-                {CLASS_DEIKHAN, SPELL_RAIN_BRIMSTONE_DEIKHAN}});
-        
         case SPELL_STERILIZE:
             return pick_best_skill(this, skill_num, {
                 {CLASS_CLERIC, SPELL_STERILIZE},
@@ -810,16 +804,6 @@ spellNumT TBeing::getSkillNum(spellNumT skill_num) const
             return pick_best_skill(this, skill_num, {
                 {CLASS_CLERIC, SPELL_CURE_DISEASE},
                 {CLASS_DEIKHAN, SPELL_CURE_DISEASE_DEIKHAN}});
-        
-        case SPELL_EARTHQUAKE:
-            return pick_best_skill(this, skill_num, {
-                {CLASS_CLERIC, SPELL_EARTHQUAKE},
-                {CLASS_DEIKHAN, SPELL_EARTHQUAKE_DEIKHAN}});
-        
-        case SPELL_CALL_LIGHTNING:
-            return pick_best_skill(this, skill_num, {
-                {CLASS_CLERIC, SPELL_CALL_LIGHTNING},
-                {CLASS_DEIKHAN, SPELL_CALL_LIGHTNING_DEIKHAN}});
         
 #if 0
         // unimplemented
@@ -1773,11 +1757,11 @@ void TBeing::assignDisciplinesClass()
     discs->disc[DISC_NATURE] = new CDNature();
 
     discs->disc[DISC_DEIKHAN] = new CDDeikhan();
-    discs->disc[DISC_DEIKHAN_FIGHT] = new CDDeikhanFight();
+    discs->disc[DISC_DEIKHAN_MARTIAL] = new CDDeikhanMartial();
     discs->disc[DISC_MOUNTED] = new CDMounted();
-    discs->disc[DISC_DEIKHAN_AEGIS] = new CDDeikhanAegis();
-    discs->disc[DISC_DEIKHAN_CURES] = new CDDeikhanCures();
-    discs->disc[DISC_DEIKHAN_WRATH] = new CDDeikhanWrath();
+    discs->disc[DISC_DEIKHAN_GUARDIAN] = new CDDeikhanGuardian();
+    discs->disc[DISC_DEIKHAN_ABSOLUTION] = new CDDeikhanAbsolution();
+    discs->disc[DISC_DEIKHAN_VENGEANCE] = new CDDeikhanVengeance();
 
     discs->disc[DISC_MONK] = new CDMonk();
     discs->disc[DISC_MEDITATION_MONK] = new CDMeditationMonk();
@@ -1899,11 +1883,11 @@ void TBeing::assignDisciplinesClass()
   if (hasClass(CLASS_DEIKHAN)) {
     if (!isPc()) {
       discs->disc[DISC_DEIKHAN] = new CDDeikhan();
-      discs->disc[DISC_DEIKHAN_FIGHT] = new CDDeikhanFight();
+      discs->disc[DISC_DEIKHAN_MARTIAL] = new CDDeikhanMartial();
       discs->disc[DISC_MOUNTED] = new CDMounted();
-      discs->disc[DISC_DEIKHAN_AEGIS] = new CDDeikhanAegis();
-      discs->disc[DISC_DEIKHAN_CURES] = new CDDeikhanCures();
-      discs->disc[DISC_DEIKHAN_WRATH] = new CDDeikhanWrath();
+      discs->disc[DISC_DEIKHAN_GUARDIAN] = new CDDeikhanGuardian();
+      discs->disc[DISC_DEIKHAN_ABSOLUTION] = new CDDeikhanAbsolution();
+      discs->disc[DISC_DEIKHAN_VENGEANCE] = new CDDeikhanVengeance();
       discs->disc[DISC_FAITH] = new CDFaith();
       discs->disc[DISC_THEOLOGY] = new CDTheology();
       discs->disc[DISC_DEFENSE] = new CDDefense();
@@ -2136,9 +2120,9 @@ int TBeing::isNotPowerful(TBeing *vict, int lev, spellNumT skill, silentTypeT si
     case DISC_HAND_OF_GOD:
     case DISC_CLERIC:
     case DISC_DEIKHAN:
-    case DISC_DEIKHAN_WRATH:
-    case DISC_DEIKHAN_CURES:
-    case DISC_DEIKHAN_AEGIS:
+    case DISC_DEIKHAN_VENGEANCE:
+    case DISC_DEIKHAN_ABSOLUTION:
+    case DISC_DEIKHAN_GUARDIAN:
       cd = getDiscipline(DISC_FAITH);
       if (cd && cd->getLearnedness() > 0)
         lev += 2 + (cd->getLearnedness() / 34);
@@ -2266,11 +2250,11 @@ int TBeing::getSkillLevel(spellNumT skill) const
       lev = getClassLevel(CLASS_WARRIOR);
       break;
     case DISC_DEIKHAN:
-    case DISC_DEIKHAN_FIGHT:
+    case DISC_DEIKHAN_MARTIAL:
     case DISC_MOUNTED:
-    case DISC_DEIKHAN_AEGIS:
-    case DISC_DEIKHAN_CURES:
-    case DISC_DEIKHAN_WRATH:
+    case DISC_DEIKHAN_GUARDIAN:
+    case DISC_DEIKHAN_ABSOLUTION:
+    case DISC_DEIKHAN_VENGEANCE:
       lev = getClassLevel(CLASS_DEIKHAN);
       break;
     case DISC_THIEF:

@@ -1141,7 +1141,6 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SPELL_TORNADO:
       case SKILL_QUIV_PALM:
       case SKILL_SHOULDER_THROW:
-      case SPELL_CALL_LIGHTNING_DEIKHAN:
       case SPELL_CALL_LIGHTNING:
       case SPELL_LIGHTNING_BREATH:
       case SPELL_GUSHER:
@@ -1164,14 +1163,12 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_CHARGE:
       case SKILL_SMITE:
       case SPELL_METEOR_SWARM:
-      case SPELL_EARTHQUAKE_DEIKHAN:
       case SPELL_EARTHQUAKE:
       case SPELL_PILLAR_SALT:
       case SPELL_FIREBALL:
       case SPELL_HANDS_OF_FLAME:
       case SPELL_INFERNO:
       case SPELL_HELLFIRE:
-      case SPELL_RAIN_BRIMSTONE_DEIKHAN:
       case SPELL_RAIN_BRIMSTONE:
       case SPELL_FLAMESTRIKE:
       case SPELL_FIRE_BREATH:
@@ -1196,6 +1193,9 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SPELL_LICH_TOUCH: // shaman
       case SPELL_CARDIAC_STRESS: // shaman
       case SPELL_SYNOSTODWEOMER:
+      case SKILL_DIVINE_GRACE:
+      case SKILL_DIVINE_RESCUE:
+      case SKILL_GUARDIANS_LIGHT:
       case SPELL_HARM_DEIKHAN:
       case SPELL_HARM:
       case SPELL_HARM_LIGHT_DEIKHAN:
@@ -1206,7 +1206,6 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SPELL_HARM_CRITICAL:
       case SPELL_WITHER_LIMB:
       case SPELL_BLEED:
-      case SKILL_KICK_DEIKHAN:
       case SKILL_KICK_THIEF:
       case SKILL_KICK_MONK:
       case SKILL_KICK:
@@ -1429,6 +1428,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_SWITCH_DEIKHAN:
       case SKILL_RETREAT_DEIKHAN:
       case SKILL_SHOVE_DEIKHAN:
+      case SKILL_2H_SPEC_DEIKHAN:
       case SKILL_RIDE:
       case SKILL_CALM_MOUNT:
       case SKILL_TRAIN_MOUNT:
@@ -1894,6 +1894,54 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
             describeDuration(this, aff->duration);
         }
         break;
+      // We want this to show "projecting" to be clear so we handle it different
+      case SKILL_AURA_MIGHT:
+      case SKILL_AURA_REGENERATION:
+      case SKILL_AURA_GUARDIAN:
+      case SKILL_AURA_VENGEANCE:
+      case SKILL_AURA_ABSOLUTION:
+        if(show){
+          str += format("Projecting: '%s'\t: Approx. Duration : %s\n\r") %
+		        discArray[aff->type]->name % describeDuration(this, aff->duration);
+        }
+        break;
+      // Not in discarray since it's not a skill
+      case SPELL_AURA_MIGHT:
+        if(show && aff->shouldGenerateText()){
+          str+=format("Affected: Aura of Might.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
+      case SPELL_AURA_REGENERATION:
+        if(show){
+          str+=format("Affected: Aura of Regeneration.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
+      case SPELL_AURA_GUARDIAN:
+        if(show && aff->shouldGenerateText()){
+          str+=format("Affected: Guardian Aura.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
+      case SPELL_AURA_VENGEANCE:
+        if(show && aff->shouldGenerateText()){
+          str+=format("Affected: Aura of Vengeance.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
+      case SPELL_AURA_ABSOLUTION:
+        if(show && aff->shouldGenerateText()){
+          str+=format("Affected: Aura of Absolution.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
+      case AFFECT_HOLY_WRATH:
+        if(show){
+          str+=format("Affected: Holy Wrath.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
       case SKILL_TOUGHNESS:
         if(show){
           sstring noun = (aff->modifier2 > 1) ? "stacks" : "stack";
@@ -1906,6 +1954,11 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
           str+=format("Affected: Inevitablity : %s %s. Approx. duration : %s\n\r") % aff->modifier % noun % describeDuration(this, aff->duration);
         }
         break;
+      case AFFECT_GUARDIANS_LIGHT:
+        if(show){
+          str+=format("Affected: Guardians Light : %s percent protection.  Approx. duration : %s\n\r") % aff->modifier %
+            describeDuration(this, aff->duration);
+        }
 
       case AFFECT_BITTEN_BY_VAMPIRE:
         // secret!

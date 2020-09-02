@@ -935,20 +935,14 @@ void TBaseWeapon::changeBaseWeaponValue1(TBeing *ch, const char *arg, editorEnte
   ch->sendTo("Enter your choice to modify.\n\r--> ");
 }
 
+// smite - Intending this to be usable more often but will require a 2-hander
+// Also will have a big defensive debuff to ensure it's mostly
+// a situational ability when not tanking.
 int TGenWeapon::smiteWithMe(TBeing *ch, TBeing *v)
 {
-  affectedData aff;
+  affectedData aff, aff2;
   byte bKnown = ch->getSkillValue(SKILL_SMITE);
-
-  if ((objVnum() != Obj::WEAPON_AVENGER1) &&
-      (objVnum() != Obj::WEAPON_AVENGER2) &&
-      (objVnum() != Obj::WEAPON_AVENGER3) &&
-      // Desecrator
-      (objVnum() != 29652)) {
-    ch->sendTo(COLOR_OBJECTS, format("%s has no respect for someone using %s.\n\r") %
-        sstring(ch->yourDeity(SKILL_SMITE, FIRST_PERSON)).cap() % getName());
-    return FALSE;
-  }
+  // int char_level = ch->GetMaxLevel();
 
   if (ch->checkForSkillAttempt(SKILL_SMITE)) {
     ch->sendTo("You are not yet prepared to smite.\n\r");
@@ -966,14 +960,22 @@ int TGenWeapon::smiteWithMe(TBeing *ch, TBeing *v)
     dam /= 2;
   }
 
+  // Skill attmpt regulates how often you can use smite.
+  // If we fail we'll make the duration much less
   aff.type = AFFECT_SKILL_ATTEMPT;
-  aff.duration = 1 * Pulse::UPDATES_PER_MUDHOUR;
+  // More times per day as level increases
+  // aff.duration = max(1, (20 - (char_level / 3))) * Pulse::UPDATES_PER_MUDHOUR;
+  aff.duration = Pulse::UPDATES_PER_MUDHOUR / 2;
+
   aff.modifier = SKILL_SMITE;
   aff.location = APPLY_NONE;
   aff.bitvector = 0;
-  ch->affectTo(&aff, -1);
 
   if (!ch->bSuccess(bKnown, SKILL_SMITE)) {
+    // change skill attempt duration and apply before we return
+    aff.duration = 1 * Pulse::UPDATES_PER_MUDHOUR;
+    ch->affectTo(&aff, -1);
+
     act("You call upon $d to smite $N, but $d does not heed your plea!",
              FALSE, ch, 0, v, TO_CHAR);
     act("$n calls upon $d to smite $N, but $d does not heed $m.",
@@ -990,14 +992,29 @@ int TGenWeapon::smiteWithMe(TBeing *ch, TBeing *v)
 
     return TRUE;
   }
-
-  aff.type = SKILL_SMITE;
-  // More times per day as level increases (about 4 times a day at 50)
-  aff.duration = (21 - (ch->GetMaxLevel() / 3)) * Pulse::UPDATES_PER_MUDHOUR;
-  aff.modifier = 0;
-  aff.location = APPLY_NONE;
-  aff.bitvector = 0;
+  // Apply the skill attempt
   ch->affectTo(&aff, -1);
+
+  // Now the affect for the skill itself
+
+  // Should be greater detriment than bonus
+  aff.type = SKILL_SMITE;
+  aff.duration = Pulse::UPDATES_PER_MUDHOUR;
+  aff.modifier = 0;
+  aff.location = APPLY_PROTECTION;
+  aff.modifier = -50;
+  aff.bitvector = 0;
+
+  // Smaller offensive bonus
+  aff2.type = SKILL_SMITE;
+  aff2.duration = Pulse::UPDATES_PER_MUDHOUR;
+  aff2.modifier = 0;
+  aff2.location = APPLY_HITROLL;
+  aff2.modifier = 3;
+  aff2.bitvector = 0;
+
+  ch->affectTo(&aff, -1);
+  ch->affectTo(&aff2, -1);
 
   act("You call upon $d to smite $N!",
              FALSE, ch, 0, v, TO_CHAR);
@@ -1011,6 +1028,8 @@ int TGenWeapon::smiteWithMe(TBeing *ch, TBeing *v)
              FALSE, ch, this, v, TO_NOTVICT);
   act("A bolt of fierce blue-white energy courses from $p into you!!!",
              FALSE, ch, this, v, TO_VICT);
+  act("Your skin tingles as some of the energy remains in your body.",
+             FALSE, ch, this, v, TO_CHAR);
 
   if (ch->reconcileDamage(v, dam, SKILL_SMITE) == -1)
     return DELETE_VICT;

@@ -1845,11 +1845,9 @@ int TBeing::doDiscipline(spellNumT which, sstring const& n1)
         curse(this, o);
       break;
     case SPELL_EARTHQUAKE:
-    case SPELL_EARTHQUAKE_DEIKHAN:
       rc = earthquake(this);
       break;
     case SPELL_CALL_LIGHTNING:
-    case SPELL_CALL_LIGHTNING_DEIKHAN:
       rc = callLightning(this, ch);
       break;
     case SPELL_PILLAR_SALT:
@@ -1862,7 +1860,6 @@ int TBeing::doDiscipline(spellNumT which, sstring const& n1)
       rc = plagueOfLocusts(this, ch);
       break;
     case SPELL_RAIN_BRIMSTONE:
-    case SPELL_RAIN_BRIMSTONE_DEIKHAN:
       rc = rainBrimstone(this, ch);
       break;
 

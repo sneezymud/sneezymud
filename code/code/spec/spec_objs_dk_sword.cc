@@ -55,8 +55,8 @@ void doWrath(TBeing *ch, TObj *o)
   affectedData aff;
 
   // normalize bonus between 1 and 5
-  int modifier = max(1, (int) (ch->GetMaxLevel() / 10));
-  modifier = min(5, modifier);
+  int modifier = max(1, (int) (ch->GetMaxLevel() / 15));
+  modifier = min(3, modifier);
 
   aff.type = AFFECT_UNHOLY_WRATH;
   aff.duration = Pulse::UPDATES_PER_MUDHOUR/40 * ch->GetMaxLevel();
@@ -64,11 +64,13 @@ void doWrath(TBeing *ch, TObj *o)
   aff.modifier = modifier;
   aff.bitvector = 0;
 
-  act("<k>$n's $o glows <z><r>blood red<k> with <R>Rage<1>!", 
-      0, ch, o, 0, TO_ROOM);
-  act("<k>Your $o glows <z><r>blood red<k> with <R>Rage<1>!", 
-      0, ch, o, 0, TO_CHAR);
-  
+  if (!ch->affectedBySpell(AFFECT_UNHOLY_WRATH)) {
+    act("<k>$n's $o glows <z><r>blood red<k> with <R>Rage<1>!", 
+        0, ch, o, 0, TO_ROOM);
+    act("<k>Your $o glows <z><r>blood red<k> with <R>Rage<1>!", 
+        0, ch, o, 0, TO_CHAR);
+  }
+
   ch->affectJoin(ch, &aff, AVG_DUR_NO, AVG_EFF_YES, FALSE);
 }
 
@@ -131,7 +133,7 @@ int dkSword(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     return FALSE;       // weapon not equipped (carried or on ground)
 
   if(cmd == CMD_GENERIC_PULSE){
-    if(!::number(0,24)){
+    if(!::number(0,29)){
         doWrath(ch, o);
         return TRUE;
     }
