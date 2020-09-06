@@ -16,6 +16,8 @@
 
 extern "C" {
 #include <unistd.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -1825,6 +1827,7 @@ TSocket *TMainSocket::newConnection(int v6_sock)
     perror("Accept");
     return NULL;
   }
+  s->setKeepalive(true);
   s->nonBlock();
   maxdesc = max(maxdesc, s->m_sock);
   return (s);
@@ -1995,4 +1998,23 @@ TMainSocket::TMainSocket()
 
 TMainSocket::~TMainSocket()
 {
+}
+
+void TSocket::setKeepalive(bool enabled)
+{
+  // https://tldp.org/HOWTO/TCP-Keepalive-HOWTO/programming.html
+  // Before running, shorten the intervals to something saner than 2h by
+  // https://tldp.org/HOWTO/TCP-Keepalive-HOWTO/usingkeepalive.html
+
+  auto set = [this](int level, int option, int value) {
+    if (setsockopt(m_sock, level, option, &value, sizeof(value)) < 0) {
+      perror("setsockopt()");
+      close(m_sock);
+      exit(EXIT_FAILURE);
+    }
+  };
+
+  set(SOL_SOCKET, SO_KEEPALIVE, 1);
+  set(SOL_TCP, TCP_KEEPIDLE, 180);
+  set(SOL_TCP, TCP_KEEPINTVL, 180);
 }
