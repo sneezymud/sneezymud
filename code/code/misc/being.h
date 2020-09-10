@@ -782,6 +782,7 @@ class TBeing : public TThing {
   short getMaxSkillValue(spellNumT) const;
   short getNatSkillValue(spellNumT) const;
   void setNatSkillValue(spellNumT, int);
+  int durationModify(spellNumT, int);
   short getSkillValue(spellNumT) const;
   void setSkillValue(spellNumT, int);
   short getRawNatSkillValue(spellNumT) const;

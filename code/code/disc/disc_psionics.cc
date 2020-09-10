@@ -489,7 +489,7 @@ void TBeing::doMindfocus(const char *){
 
     aff.type      = SKILL_MIND_FOCUS;
     aff.level     = bKnown;
-    aff.duration  = 4 * Pulse::UPDATES_PER_MUDHOUR;
+    aff.duration  = durationModify(SKILL_MIND_FOCUS, 4 * Pulse::UPDATES_PER_MUDHOUR);
     aff.location  = APPLY_NONE;
     affectTo(&aff, -1);
   } else {
@@ -586,7 +586,7 @@ int TBeing::doPsiblast(const char *tString){
       if (bSuccess(bKnown, SKILL_PSI_BLAST)) {
 	aff.type      = SKILL_PSI_BLAST;
 	aff.level     = bKnown;
-	aff.duration  = (bKnown / 10) * Pulse::UPDATES_PER_MUDHOUR;
+	aff.duration  = durationModify(SKILL_PSI_BLAST, (bKnown / 10) * Pulse::UPDATES_PER_MUDHOUR);
 	aff.location  = APPLY_INT;
 	aff.modifier   = -(::number(bKnown/3, bKnown/2));
 	tVictim->affectTo(&aff, -1);
@@ -596,7 +596,7 @@ int TBeing::doPsiblast(const char *tString){
       if (bSuccess(bKnown, SKILL_PSI_BLAST)) {
 	aff.type      = SKILL_PSI_BLAST;
 	aff.level     = bKnown;
-	aff.duration  = (bKnown / 10) * Pulse::UPDATES_PER_MUDHOUR;
+	aff.duration  = durationModify(SKILL_PSI_BLAST, (bKnown / 10) * Pulse::UPDATES_PER_MUDHOUR);
 	aff.location  = APPLY_WIS;
 	aff.modifier   = -(::number(bKnown/3, bKnown/2));
 	tVictim->affectTo(&aff, -1);
@@ -606,7 +606,7 @@ int TBeing::doPsiblast(const char *tString){
       if (bSuccess(bKnown, SKILL_PSI_BLAST)) {
 	aff.type      = SKILL_PSI_BLAST;
 	aff.level     = bKnown;
-	aff.duration  = (bKnown / 10) * Pulse::UPDATES_PER_MUDHOUR;
+	aff.duration  = durationModify(SKILL_PSI_BLAST, (bKnown / 10) * Pulse::UPDATES_PER_MUDHOUR);
 	aff.location  = APPLY_FOC;
 	aff.modifier   = -(::number(bKnown/3, bKnown/2));
 	tVictim->affectTo(&aff, -1);
@@ -723,7 +723,7 @@ int TBeing::doPsycrush(const char *tString){
 	  TRUE, this, NULL, tVictim, TO_NOTVICT);
 
       // very short duration
-      int duration = Pulse::COMBAT * 2;
+      int duration = durationModify(SKILL_PSYCHIC_CRUSH, Pulse::COMBAT * 2);
 
       tVictim->rawBlind(level, duration, SAVE_NO);
 

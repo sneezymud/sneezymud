@@ -96,7 +96,7 @@ int synostodweomer(TBeing *caster, TBeing *v, int level, short bKnown)
     if (!caster->isImmortal()) {
       aff.type = AFFECT_SKILL_ATTEMPT;
       aff.location = APPLY_NONE;
-      aff.duration = max(min(casterlevel/12, 5), 1) * Pulse::UPDATES_PER_MUDHOUR;
+      aff.duration = caster->durationModify(SPELL_SYNOSTODWEOMER, max(min(casterlevel/12, 5), 1) * Pulse::UPDATES_PER_MUDHOUR);
       aff.bitvector = 0;
       aff.modifier = SPELL_SYNOSTODWEOMER;
       caster->affectTo(&aff, -1);
@@ -114,7 +114,7 @@ int synostodweomer(TBeing *caster, TBeing *v, int level, short bKnown)
 
     aff.type = SPELL_SYNOSTODWEOMER;
     aff.level = level;
-    aff.duration = max(min(casterlevel/12, 5), 1) * Pulse::UPDATES_PER_MUDHOUR;
+    // aff.duration = max(min(casterlevel/12, 5), 1) * Pulse::UPDATES_PER_MUDHOUR;
     aff.modifier = hitp;
     aff.location = APPLY_HIT;
     aff.bitvector = 0;

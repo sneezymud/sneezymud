@@ -961,7 +961,7 @@ int armor(TBeing *c, TBeing * victim, int level, short learn, spellNumT spell)
 
   aff.type = SPELL_ARMOR;
   aff.level = level;
-  aff.duration = (3 + (aff.level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
+  aff.duration = c->durationModify(SPELL_ARMOR, (3 + (aff.level / 2)) * Pulse::UPDATES_PER_MUDHOUR);
   aff.location = APPLY_ARMOR;
   aff.bitvector = 0;
 
@@ -1099,7 +1099,7 @@ int sanctuary(TBeing *c, TBeing *victim, int level, short learn)
 
   aff.type = SPELL_SANCTUARY;
   aff.level = level;
-  aff.duration = ((level <= MAX_MORT) ? 3 : level) * Pulse::UPDATES_PER_MUDHOUR;
+  aff.duration = c->durationModify(SPELL_SANCTUARY, ((level <= MAX_MORT) ? 3 : level) * Pulse::UPDATES_PER_MUDHOUR);
   aff.location = APPLY_PROTECTION;
   aff.modifier = min(level, 50);
   aff.bitvector = AFF_SANCTUARY;
@@ -1115,7 +1115,7 @@ int sanctuary(TBeing *c, TBeing *victim, int level, short learn)
       case CRIT_S_TRIPLE:
       case CRIT_S_DOUBLE:
         CS(SPELL_SANCTUARY);
-        aff.duration = ((level <= MAX_MORT) ? 5 : level) * Pulse::UPDATES_PER_MUDHOUR;
+        aff.duration = c->durationModify(SPELL_SANCTUARY, ((level <= MAX_MORT) ? 5 : level) * Pulse::UPDATES_PER_MUDHOUR);
         if (!victim->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES))
           return SPELL_FAIL;
         return SPELL_CRIT_SUCCESS;

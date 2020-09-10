@@ -34,7 +34,8 @@ const statTypeT MAX_STATS_USED=	statTypeT(STAT_SPE+1);
 extern statTypeT & operator++(statTypeT &c, int);
 
 extern int territory_adjustment(territoryT, statTypeT);
-	
+extern sstring statToString(statTypeT whichStat);
+
 const int MAX_STAT_COMBAT=	5;
 const int MAX_STAT_LEARN=	3;
 const int MAX_STAT_UTIL	=4;

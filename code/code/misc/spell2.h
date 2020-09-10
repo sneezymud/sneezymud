@@ -9,6 +9,7 @@
 #define __SPELLS2_H
 
 #include <map>
+#include "stats.h"
 
 enum skillUseTypeT {
      SPELL_UNDEFINED,
@@ -380,6 +381,7 @@ enum discLearnDoT {
 class spellInfo {
   public:
     const char *name;
+    statTypeT modifierStat;
     int start;
     int learn;
     unsigned int uses;
@@ -465,6 +467,7 @@ class spellInfo {
     spellInfo(skillUseClassT styp, 
          discNumT discipline, 
          discNumT assDiscipline, 
+         statTypeT modifierStat,
          const char *n,
          taskDiffT cast_diff,
          lag_t l,

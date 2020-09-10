@@ -879,6 +879,40 @@ int territory_adjustment(territoryT ter, statTypeT whichStat)
   }
 }
 
+sstring statToString(statTypeT whichStat)
+{
+  switch(whichStat){
+    case(STAT_STR):
+      return "strength";
+    case(STAT_BRA):
+      return "brawn";
+    case(STAT_CON):
+      return "constitution";
+    case(STAT_DEX):
+      return "dexterity";
+    case(STAT_AGI):
+      return "agility";
+    case(STAT_SPE):
+      return "speed";
+    case(STAT_INT):
+      return "intelligence";
+    case(STAT_WIS):
+      return "wisdom";
+    case(STAT_FOC):
+      return "focus";
+    case(STAT_PER):
+      return "perception";
+    case(STAT_CHA):
+      return "charisma";
+    case(STAT_KAR):
+      return "karma";
+    case(STAT_LUC):
+      return "luck";
+    default:
+      return "none";
+  }
+}
+
 int TBeing::getStat(statSetT fromSet, statTypeT whichStat) const
 {
   int amount;

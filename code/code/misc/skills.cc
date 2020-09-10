@@ -1642,3 +1642,12 @@ bool hideThisSpell(spellNumT spell)
 
   return false;
 }
+
+
+int TBeing::durationModify(spellNumT skill, int duration) {
+  //
+  if (discArray[skill]->modifierStat <= MAX_STATS_USED){
+    duration *= plotStat(STAT_CURRENT, discArray[skill]->modifierStat, 0.8, 1.25, 1.0);
+  }
+  return duration;
+}
