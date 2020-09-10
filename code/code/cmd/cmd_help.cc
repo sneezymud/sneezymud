@@ -2,6 +2,7 @@
 
 #include "extern.h"
 #include "being.h"
+#include "stats.h"
 
 extern "C" {
 #include <unistd.h>
@@ -678,6 +679,12 @@ void TBeing::doHelp(const char *arg)
 
     str += "\n\r";
 
+    str += purple();
+    str += "Modifier Stat    : ";
+    str += norm();
+    str += statToString(discArray[skill]->modifierStat);
+    str += "\n\r\n\r";
+
     if (discArray[skill]->holyStrength) {
 #if 0
   // this is calculated differently now, so lets not mislead folks
@@ -687,21 +694,21 @@ void TBeing::doHelp(const char *arg)
 #endif
     } else if (skill == SPELL_MATERIALIZE ||
                skill == SPELL_SPONTANEOUS_GENERATION) {
-      sprintf(buf2, "\n\r%sSpell Component  :%s SPECIAL (see below)\n\r", purple(), norm());
+      sprintf(buf2, "%sSpell Component  :%s SPECIAL (see below)\n\r", purple(), norm());
       str += buf2;
     } else if (IS_SET(discArray[skill]->comp_types, COMP_MATERIAL)) {
       unsigned int comp;
       for (comp = 0; (comp < CompInfo.size()) &&
                 (skill != CompInfo[comp].spell_num);comp++);
       if (comp != CompInfo.size() && CompInfo[comp].comp_num >= 0) {
-        sprintf(buf2, "\n\r%sSpell Component  :%s %s\n\r",
+        sprintf(buf2, "%sSpell Component  :%s %s\n\r",
 		purple(), norm(), 
 		sstring(obj_index[real_object(CompInfo[comp].comp_num)].short_desc).cap().c_str());
         str += buf2;
       } else
         vlogf(LOG_BUG, format("Problem in help file for skill=%d, comp=%d.  (component definition)") %  skill % comp);
     } else {
-      sprintf(buf2, "\n\r%sSpell Component  :%s NONE\n\r", purple(), norm());
+      sprintf(buf2, "%sSpell Component  :%s NONE\n\r", purple(), norm());
       str += buf2;
     }
     sprintf(buf2, "%sDifficulty       :%s %s\n\r",
@@ -964,7 +971,12 @@ void TBeing::doHelp(const char *arg)
          purple(), discArray[skill]->startLearnDo, discArray[skill]->amtLearnDo, norm());
       str += buf2;
     }
-    str += "\n\r";
+
+    str += purple();
+    str += "\n\rModifier Stat    : ";
+    str += norm();
+    str += statToString(discArray[skill]->modifierStat);
+    str += "\n\r\n\r";
 
     sprintf(buf2, "%sDifficulty       :%s %s\n\r",
          purple(), norm(), displayDifficulty(skill).c_str());

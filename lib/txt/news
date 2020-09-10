@@ -1,3 +1,7 @@
+09-15-20 : Stat updates
+            - Spells and skills now have a modification stat that affects 
+              damage and duration of buffs/debuffs. See helpfiles
+
 08-22-20 : Deikhan Changes
             - Renamed all advanced discs so they don't conflict with cleric
             - Removed cleric wrath spells (rain brimstone etc.)
