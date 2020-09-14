@@ -2692,80 +2692,57 @@ int glacialWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
     return FALSE;       // weapon not equipped (carried or on ground)
 
-  if(cmd == CMD_GENERIC_PULSE){
-    if(!::number(0,150)){
-      act("<b>Small pieces of ice break off from $n's $o and fall to the $g.<1>",
-          0, ch, o, 0, TO_ROOM);
-      act("<b>A few pieces of ice break off from your $o and fall to the $g.<1>",
-          0, ch, o, 0, TO_CHAR);
+  if(cmd == CMD_GENERIC_PULSE) {
+    if(!::number(0,150)) {
+      act("<b>Small pieces of ice break off from $n's $o and fall to the $g.<1>", 0, ch, o, 0, TO_ROOM);
+      act("<b>A few pieces of ice break off from your $o and fall to the $g.<1>", 0, ch, o, 0, TO_CHAR);
     }
-  }
-  else if(cmd == CMD_OBJ_HIT)
-  {
+  } else if(cmd == CMD_OBJ_HIT) {
     roll = ::number(0,250);
-    if (roll > 0 && roll < 25)
-    {
+    if (roll > 0 && roll < 25) {
       // damage proc
       dam = ::number(1,8);
 
-      act("The extreme cold from your $p chills $N.", 
-             0, ch, o, vict, TO_CHAR, ANSI_BLUE);
-      act("The extreme cold from $n's $p chills $N.", 
-             0, ch, o, vict, TO_ROOM, ANSI_BLUE);
-      act("The extreme cold from $p chills your flesh.", 
-             0, vict, o, 0, TO_CHAR, ANSI_BLUE);
+      act("The extreme cold from your $p chills $N.", 0, ch, o, vict, TO_CHAR, ANSI_BLUE);
+      act("The extreme cold from $n's $p chills $N.", 0, ch, o, vict, TO_ROOM, ANSI_BLUE);
+      act("The extreme cold from $p chills your flesh.", 0, vict, o, 0, TO_CHAR, ANSI_BLUE);
 
-    rc = vict->reconcileDamage(vict, dam, DAMAGE_FROST);
-    if (IS_SET_DELETE(rc, DELETE_VICT) || (vict->getHit() < -10))
-      delete vict;
-
-    return true;
-  }
-  else if (roll == 0)
-  {
+      rc = vict->reconcileDamage(vict, dam, DAMAGE_FROST);
+      if (IS_SET_DELETE(rc, DELETE_VICT))
+        return DELETE_VICT;
+      return true;
+    } else if (roll == 0) {
       // stun proc
-      act("<c>The air around <1>$n<c> seems to waver, then becomes <B>extremely cold<1><c>!<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
-      act("<c>A blast of frigid air radiates from <1>$n<c>!<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
-
-      act("<c>The air around you seems to waver, then becomes <B>extremely cold<1><c>!<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
-      act("<c>A blast of frigid air radiates from you<c>!<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("<c>The air around <1>$n<c> seems to waver, then becomes <B>extremely cold<1><c>!<1>", TRUE, ch, o, NULL, TO_ROOM, NULL);
+      act("<c>A blast of frigid air radiates from <1>$n<c>!<1>", TRUE, ch, o, NULL, TO_ROOM, NULL);
+      act("<c>The air around you seems to waver, then becomes <B>extremely cold<1><c>!<1>",TRUE, ch, o, NULL, TO_CHAR, NULL);
+      act("<c>A blast of frigid air radiates from you<c>!<1>", TRUE, ch, o, NULL, TO_CHAR, NULL);
 
       if (vict->riding) {
-          act("The blast of <c>fro<b>zen <c>air<1> knocks $N from $S mount!",
-              TRUE,ch,o,vict,TO_CHAR,NULL);
-          act("The blast of <c>fro<b>zen <c>air<1> knocks $N from $S mount!",
-              TRUE,ch,o,vict,TO_NOTVICT,NULL);
-          act("<o>The blast of <c>fro<b>zen <c>air<1> knocks you from your mount!<1>",
-              TRUE,ch,o,vict,TO_VICT,NULL);
-          vict->dismount(POSITION_RESTING);
-       }
-       act("The blast of <c>fro<b>zen <c>air<1> from your $o slams $N into the $g, stunning $M!",
-            TRUE,ch,o,vict,TO_CHAR,NULL);
-       act("The blast of <c>fro<b>zen <c>air<1> from $n's $o slams $N into the $g, stunning $M!",
-            TRUE,ch,o,vict,TO_NOTVICT,NULL);
-       act("The blast of <c>fro<b>zen <c>air<1> from $n's $o slams you into the $g, stunning you!",
-            TRUE,ch,o,vict,TO_VICT,NULL);
+        act("The blast of <c>fro<b>zen <c>air<1> knocks $N from $S mount!", TRUE, ch, o, vict, TO_CHAR, NULL);
+        act("The blast of <c>fro<b>zen <c>air<1> knocks $N from $S mount!", TRUE, ch, o, vict, TO_NOTVICT, NULL);
+        act("<o>The blast of <c>fro<b>zen <c>air<1> knocks you from your mount!<1>", TRUE, ch, o, vict, TO_VICT, NULL);
+        vict->dismount(POSITION_RESTING);
+      }
+      act("The blast of <c>fro<b>zen <c>air<1> from your $o slams $N into the $g, stunning $M!", TRUE, ch, o, vict, TO_CHAR, NULL);
+      act("The blast of <c>fro<b>zen <c>air<1> from $n's $o slams $N into the $g, stunning $M!", TRUE, ch, o, vict, TO_NOTVICT, NULL);
+      act("The blast of <c>fro<b>zen <c>air<1> from $n's $o slams you into the $g, stunning you!", TRUE, ch, o, vict, TO_VICT, NULL);
 
-       dam = ::number(10,20);
-       rc = vict->reconcileDamage(vict, dam, DAMAGE_FROST);
-	
-       if (IS_SET_DELETE(rc, DELETE_VICT)) {
-         vict->reformGroup();
-	 delete vict;
-	 vict = NULL;
-       }
-       else {
-         affectedData aff;
-         aff.type = SKILL_DOORBASH;
-         aff.duration = Pulse::TICK*4;
-         aff.bitvector = AFF_STUNNED;
-         vict->affectTo(&aff, -1);
-	  
-         if (vict->fight())
-           vict->stopFighting();
-       }
-	  
-       return TRUE;
+      dam = ::number(10, 20);
+      rc = vict->reconcileDamage(vict, dam, DAMAGE_FROST);
+
+      if (IS_SET_DELETE(rc, DELETE_VICT))
+        return DELETE_VICT;
+
+      affectedData aff;
+      aff.type = SKILL_DOORBASH;
+      aff.duration = Pulse::TICK*4;
+      aff.bitvector = AFF_STUNNED;
+      vict->affectTo(&aff, -1);
+
+      if (vict->fight())
+        vict->stopFighting();
+      return TRUE;
     }
   }
   return FALSE;
