@@ -9,7 +9,7 @@
 #include "being.h"
 #include "statistics.h"
 
-#define SKILL_DAMAGE_DEBUG 1
+#define SKILL_DAMAGE_DEBUG 0
 
 double getSkillDiffModifier(spellNumT skill)
 {
