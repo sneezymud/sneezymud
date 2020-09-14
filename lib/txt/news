@@ -1,3 +1,5 @@
+09-15-20 : Fixed a crash bug in the Glacial Proc
+
 09-15-20 : Stat updates
             - Spells and skills now have a modification stat that affects 
               damage and duration of buffs/debuffs. See helpfiles
