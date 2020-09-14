@@ -2042,18 +2042,13 @@ static void checkLearnFromHit(TBeing * ch, int tarLevel, TThing * o, bool isPrim
             dynamic_cast<TBaseWeapon *>(o) && 
             !isPrimary)
 	  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, skill, max(0, (100 - (2* myLevel))));
-
         // Learn 2h on hit
         TBaseWeapon *obj = dynamic_cast<TBaseWeapon *>(o);
         if (obj && ch->doesKnowSkill(SKILL_2H_SPEC_DEIKHAN) && obj->isPaired()) {
           ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_2H_SPEC_DEIKHAN, max(0, (100 - (2* myLevel))));
         }
-
-
-        if (ch->hasClass(CLASS_WARRIOR))
-	  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_OFFENSE, (170 - (2* myLevel)));
-	else
-	  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_OFFENSE, (225 - (2* myLevel)));
+        // Offense hones
+        ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_OFFENSE, (170 - (2* myLevel)));
       }
       // Learn advanced offense
       ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_OFFENSE, (170 - (2* myLevel)));
@@ -3749,13 +3744,9 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 
     if (victimCanAttack) {
       if (canAttack(isprimary)) {
-        if (vict->hasClass(CLASS_WARRIOR)) {
-          vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_DEFENSE, (120 - (2 * myLevel)));
-          vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_DEFENSE, (120 - (2 * myLevel)));
-        } else {
-          vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_DEFENSE, (170 - (2 * myLevel)));
-          vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_DEFENSE, (170 - (2 * myLevel)));
-	}
+        // defense hones
+        vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_DEFENSE, (120 - (2 * myLevel)));
+        vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_DEFENSE, (120 - (2 * myLevel)));
       }
     }
   }
@@ -3866,13 +3857,8 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
           vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_DEFENSE, (200 - (2 * myLevel)));
           vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_DEFENSE, (200 - (2 * myLevel)));
         } else {
-          if (vict->hasClass(CLASS_WARRIOR)) {
-            vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_DEFENSE, (300 - (2 * myLevel)));
-            vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_DEFENSE, (300 - (2 * myLevel)));
-          } else { 
-            vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_DEFENSE, (450 - (2 * myLevel)));
-            vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_DEFENSE, (450 - (2 * myLevel)));
-          }
+          vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_DEFENSE, (300 - (2 * myLevel)));
+          vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_DEFENSE, (300 - (2 * myLevel)));
         }
       }
     }
