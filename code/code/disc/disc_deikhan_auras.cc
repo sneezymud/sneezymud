@@ -59,7 +59,7 @@ spellNumT auraArray[MAX_AURA] = {SKILL_AURA_MIGHT,
     SKILL_AURA_VENGEANCE,
     SKILL_AURA_ABSOLUTION};
 
-const int AURA_DURATION = 7;
+const int AURA_DURATION = 9;
 const int PROJECTION_DURATION = 4850;
 
 // checkAura is called by various hooks in the code
