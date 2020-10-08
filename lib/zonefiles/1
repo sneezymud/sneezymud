@@ -377,6 +377,8 @@ O 0 1865 1 28860         Petrified in Undead Graveyard
 
 * * Boss mobs
 M 0 29600 1 24687       Headless Horseman - Dead Forest
+G 1 24699 9999               shiny silver potion
+G 1 31333 9999               foxglove leaf component
 ? 0 2 0 E 
 E 1 29600 9999 5             helm headless (quest)
 ? 0 2 0 E 
@@ -385,16 +387,14 @@ E 1 29618 9999 14            cloak of the dark rider (quest)
 E 1 29619 9999 1             ring, jack o lantern (quest)
 ? 0 2 0 E
 E 1 29619 9999 19            black velvet bag (quest)
-G 1 24699 9999               shiny silver potion
-G 1 31333 9999               foxglove leaf component
 
 M 0 29602 5 13700      	mother plant of the pumpkin seedlings
+G 1 24699 9999               shiny silver potion
+G 1 203 9999               vial dragon bone component
 ? 0 3 0 E 
 E 1 29619 9999 1             ring, jack o lantern (quest)
 ? 0 3 0 E 
 E 1 29617 9999 14            egg sac blood flower (quest)
-G 1 24699 9999               shiny silver potion
-G 1 203 9999               vial dragon bone component
 
 * * Low level pumpkin seedlings
 M 0 29601 9999 13700	pumpkin plant monster (level 14)
