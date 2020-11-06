@@ -81,6 +81,7 @@
 #include "spelltask.h"
 #include "obj_symbol.h"
 #include "disc_commoner.h"
+#include "stats.h"
 
 #define DISC_DEBUG  0
 
@@ -1359,8 +1360,93 @@ byte defaultProficiency(byte uLearned, byte uStart, byte uLearn)
   return((uLearned-uStart)*uLearn);
 }
 
+// CritSuccess for spells only
+// The goal here is a crit rate between
+// min - 0.1% -   10 out of 10000
+// max - 10%  - 1000 out of 10000
+// avg - 1%   -  100 out of 10000
+//
+// Factors should be
+// Wisdom:      Primary
+// Karma:       Secondary
+// Learnedness: Modifier
+// Position:    Modifier
+//
+critSuccT spellCritSuccess(TBeing *caster, spellNumT spell)
+{
+  // Base chance is 100
+  // If we are totally average then this will hold up
+  double chance = 100.00;
+
+  // WIS is the primary so we'll plot to 10x down to 1/10th
+  // We'll adjust all the way to the min/max
+  chance *= caster->plotStat(STAT_CURRENT, STAT_WIS, 0.1, 10.0, 1.0);
+
+  // Next we'll have KAR modify the chance to a lesser degree
+  // And we will min/max after this so it doesn't affect the range
+  chance *= caster->plotStat(STAT_CURRENT, STAT_KAR, 0.80, 1.25, 1.00);
+
+  // Adjust downward for non-maxed spells
+  chance *= caster->getSkillValue(spell) / 100;
+
+  // Decrease chance if limited position
+  if (caster->getPosition() == POSITION_RESTING || caster->getPosition() == POSITION_SITTING)
+    chance *= 0.75;
+  else if (caster->getPosition() == POSITION_CRAWLING)
+    chance *= 0.50;
+
+  // Min/Max here to keep the chance within bounds based on stats, skillValue and position
+  chance = max(10.00, min(1000.00, chance));
+
+  // If there were spellcrit eq or other skills/buff to modify crit
+  // -- it would go here --
+
+  int roll = ::number(1, 10000);
+
+  if (roll <= chance) {
+    // roll determined Crit success 
+    // but we need to roll again to figure out what kind of crit
+    int crit_roll = ::number(1, 10);
+
+    // 10% crit kill
+    // 20% triple crit
+    // 70% double crit
+    switch (crit_roll) {
+      case 1:
+        CS(caster, spell);
+        return(CRIT_S_KILL);
+        break;
+      case 2:
+      case 3:
+        CS(caster, spell);
+        return(CRIT_S_TRIPLE);
+        break;
+      default:
+        CS(caster, spell);
+        return(CRIT_S_DOUBLE);
+    }
+  }
+
+  return(CRIT_S_NONE);
+}
+
+
+// Original critSuccess
+//
+// Min crit chance is:
+// 8 out of 400 * 0.1 (for arbitrary return) = 0.002 or 0.2%
+//
+// Max is:
+// 8 out of 40 * 0.1 (for arbitrary return) = 0.02 or 2%
 critSuccT critSuccess(TBeing *caster, spellNumT spell)
 {
+  if (!caster->isPc())
+    return CRIT_S_NONE;
+  
+  // use the new spell function for spells
+  if (spell >= MIN_SPELL && spell < MAX_SPELL)
+    return spellCritSuccess(caster, spell);
+
   // arbitrary to control overall rate of these
   if (::number(0,9))
     return CRIT_S_NONE;
