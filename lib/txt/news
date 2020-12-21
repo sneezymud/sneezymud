@@ -1,3 +1,10 @@
+12-21-20 : Garble tweaks
+           - Non-frogs now have a chance to understand bullycroak if
+             they know the skill
+           - Perception now gives you a bonus to understand garbled
+             Speaking
+           - It is overall easier to understand garbled speech
+
 11-05-20 : Reworked spell crit
            - Increased crit range to between .1% and 10%
            - Wisdom and to a smaller extent Karma determine the rate
