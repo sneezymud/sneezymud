@@ -218,15 +218,26 @@ sstring TBeing::garble(TBeing *to, const sstring &arg, Garble::SPEECHTYPE speech
   return garbled;
 }
 
-// adjust the chance of a language garble to activate
-// in the range of 0 to 100, higher being worse at the language
-int getLanguageChance(const TBeing *from, TBeing *to, int length, spellNumT language)
+// getLanguageChance returns an int from 0 to 100
+// This can be thought of as your chance of failure for each round of garbling
+// There's two components here the listeners ability to understand and
+// The speakers ability to "talk good". Since this is an accent and not a language per se this makes sense.
+int getLanguageChance(const TBeing *from, TBeing *to, spellNumT language)
 {
+  // The Learning value of the language skill
   int learning = to ? to->getSkillValue(language) : 0;
-  int difficulty = max(0, length-learning);
-  int bonus = to && to->bSuccess(difficulty, language) ? learning/2 : 0;
-  int chance = from ? 100 - from->plotStat(STAT_CURRENT, STAT_INT, 0, 100, 50) : 25;
-  return min(100, max(0, chance - bonus));
+
+  // 0-80 base chance if you pass your skill success check
+  int chance = to && to->bSuccess(language) ? learning * 4/5 : 0;
+
+  // Let's add a bonus to perception representing 
+  // A natural talent for how good your ear for accents is
+  chance += to ? to->plotStat(STAT_CURRENT, STAT_PER, 0, 20, 10) : 0;
+
+  // -15-115 with bonus based on how smart the speaker is
+  chance += from ? from->plotStat(STAT_CURRENT, STAT_INT, -15, 15, 0) : 0;
+
+  return min(100, max(0, 100 - chance));
 }
 
 
@@ -843,7 +854,7 @@ sstring garble_fishtalk(const TBeing *from, TBeing *to, const sstring &arg, Garb
   };
   sstring out;
   int iWord = 0;
-  int chance = getLanguageChance(from, to, arg.length(), SKILL_FISHBURBLE);
+  int chance = getLanguageChance(from, to, SKILL_FISHBURBLE);
 
   for(sstring word = arg.word(iWord); !word.empty(); word = arg.word(++iWord))
   {
@@ -943,7 +954,7 @@ sstring garble_lolcats(const TBeing *from, TBeing *to, const sstring &arg, Garbl
 
   sstring out;
   int iWord = 0;
-  int chance = getLanguageChance(from, to, arg.length(), SKILL_GNOLL_JARGON);
+  int chance = getLanguageChance(from, to, SKILL_GNOLL_JARGON);
 
   for(sstring word = arg.word(iWord); !word.empty(); word = arg.word(++iWord))
   {
@@ -1291,7 +1302,7 @@ sstring garble_trolltalk(const TBeing *from, TBeing *to, const sstring &arg, Gar
   sstring out = " ";
   out += arg.lower();
   out += " ";
-  int chance = getLanguageChance(from, to, arg.length(), SKILL_TROLLISH);
+  int chance = getLanguageChance(from, to, SKILL_TROLLISH);
 
   for(int i=0;i < (int)cElements(replace);i++)
   {
@@ -1326,11 +1337,7 @@ sstring garble_frogtalk(const TBeing *from, TBeing *to, const sstring &arg, Garb
   sstring out = " ";
   out += arg.lower();
   out += " ";
-  int chance = getLanguageChance(from, to, arg.length(), SKILL_BULLYWUGCROAK);
-
-  // non-native frogtalkers must have gotten this via some drug or enchantment.  100% messup chance
-  if (from && !(from->getMyRace()->getGarbles() & Garble::TYPE_FLAG_FROGTALK))
-    chance = 100;
+  int chance = getLanguageChance(from, to, SKILL_BULLYWUGCROAK);
 
   for(int i=0;i < (int)cElements(replace);i++)
   {
@@ -1371,7 +1378,7 @@ sstring garble_birdtalk(const TBeing *from, TBeing *to, const sstring &arg, Garb
 
   sstring out;
   int iWord = 0;
-  int chance = getLanguageChance(from, to, arg.length(), SKILL_AVIAN);
+  int chance = getLanguageChance(from, to, SKILL_AVIAN);
 
   for(sstring word = arg.word(iWord); !word.empty(); word = arg.word(++iWord))
   {
@@ -1454,7 +1461,7 @@ sstring garble_gutter(const TBeing *from, TBeing *to, const sstring &arg, Garble
   sstring out = " ";
   out += arg.lower();
   out += " ";
-  int chance = getLanguageChance(from, to, arg.length(), SKILL_GUTTER_CANT);
+  int chance = getLanguageChance(from, to, SKILL_GUTTER_CANT);
 
   for(int i=0;i < (int)cElements(replace);i++)
   {
@@ -1473,7 +1480,7 @@ sstring garble_trogtalk(const TBeing *from, TBeing *to, const sstring &arg, Garb
   int iWord = 0;
   sstring out = arg;
   sstring word = out.word(iWord);
-  int chance = getLanguageChance(from, to, arg.length(), SKILL_TROGLODYTE_PIDGIN);
+  int chance = getLanguageChance(from, to, SKILL_TROGLODYTE_PIDGIN);
   unsigned int iReplace = 0;
 
   for(; !word.empty(); word = out.word(++iWord))
