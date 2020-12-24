@@ -3,16 +3,16 @@ up to properly interpret them.  This is done by entering a replacement string
 that will be changed to the equivalent color string.  To do this, surround the
 color character with < and >.   
 
-  <<r>)  <r>RED<z>       <<R>)<R> BOLD RED<z>       <<b>) <b>BLUE<z>      <<B>) <B>BOLD BLUE<z> 
-  <<g>)  <g>GREEN<z>     <<G>)<G> BOLD GREEN<z>     <<c>) <c>CYAN<z>      <<C>) <C>BOLD CYAN<z>
-  <<p>)  <p>PURPLE<z>    <<P>) <P>BOLD PURPLE<z>    <O/o>) <o>ORANGE<z>  <Y/y>) <y>YELLOW<z>
-  <<k>)   <k>GRAY<z>     <<K>) <K>BLACK<z>          <<w>) <w>WHITE<1>     <<W>) <W>BOLD WHITE<z>
+  <<<r>)  <r>RED<z>       <<<R>)<R> BOLD RED<z>       <<<b>) <b>BLUE<z>      <<<B>) <B>BOLD BLUE<z> 
+  <<<g>)  <g>GREEN<z>     <<<G>)<G> BOLD GREEN<z>     <<<c>) <c>CYAN<z>      <<<C>) <C>BOLD CYAN<z>
+  <<<p>)  <p>PURPLE<z>    <<<P>) <P>BOLD PURPLE<z>    <O/o>) <o>ORANGE<z>  <Y/y>) <y>YELLOW<z>
+  <<<k>)   <k>GRAY<z>     <<<K>) <K>BLACK<z>          <<<w>) <w>WHITE<1>     <<<W>) <W>BOLD WHITE<z>
   <D/d>) <d>BOLD<z>     <I/i>) <i>INVERT<z>       <Z/z/1>) TERMINATE/NORMAL
 
   n/N) your name
     * - for notes/mail/etc., this will be the name of the reader.
 
-  Note: to actually show a < character, type it twice.  e.g. <<<1> for <<1>
+  Note: to actually show a < character, type it three times.  e.g. <<<<<1> for <<<1>
 
 IMMORTAL ONLY:
 
@@ -22,8 +22,8 @@ IMMORTAL ONLY:
 
 
 For example :
-    say I am a <<r>killer!!<<z>
-    would cause you to say "I am a <r>killer!!<z>"
+    say I am a <<<b>fuzzy<<<z> <<<W>bunny!<<<1>
+    would cause you to say "I am a <b>fuzzy<z> <W>bunny!<1>"
 
 Abuse of color codes to annoy or harass others will probably lead to
 limitations being put into effect.  Let's all play nice and not try to 
