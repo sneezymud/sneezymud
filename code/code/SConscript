@@ -29,7 +29,7 @@ else:
     # single static library, included whole in every binary
     libsneezy_files = [ Glob('%s/*.cc' % path) for path in libsneezy_dirs ]
     libsneezy = [ env.StaticLibrary(target='sneezy', source=libsneezy_files) ]
-libs = libsneezy + external_libs + env.get('extra_libs', [])
+libs = libsneezy  + env.get('extra_libs', []) + external_libs
 
 # main binary
 sneezy = env.Program('sneezy', 'main.cc', LIBS=libs)

@@ -144,7 +144,6 @@ env = Environment(
     ENV = os.environ,
 )
 Export('env')
-env.Append(extra_libs=[opt_libs])
 
 
 ## clang on linux hurdles
@@ -194,6 +193,7 @@ if flag_debug:
     if clang_version and clang_version >= (3, 9):
         env.Append(CXXFLAGS='-fsanitize=integer')
 
+env.Append(extra_libs=[opt_libs])
 
 ## harden: security flags, slows runtime a bit
 if flag_harden:
