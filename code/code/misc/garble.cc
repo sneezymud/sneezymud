@@ -25,9 +25,9 @@ const unsigned int Garble::SPEECH_FLAG_WIZNET=(1<<Garble::SPEECH_WIZNET);
 const unsigned int Garble::SPEECH_FLAG_ROOMDESC=(1<<Garble::SPEECH_ROOMDESC);
 const unsigned int Garble::SPEECH_FLAG_EMOTE=(1<<Garble::SPEECH_EMOTE);
 
-const unsigned int Garble::SPEECH_FLAG_VERBAL=(SPEECH_FLAG_SAY|SPEECH_FLAG_ASK|SPEECH_FLAG_WHISPER|SPEECH_FLAG_TELL|SPEECH_FLAG_GROUPTELL|SPEECH_FLAG_SHOUT);
+const unsigned int Garble::SPEECH_FLAG_VERBAL=(SPEECH_FLAG_SAY|SPEECH_FLAG_ASK|SPEECH_FLAG_WHISPER|SPEECH_FLAG_TELL|SPEECH_FLAG_SHOUT);
 const unsigned int Garble::SPEECH_FLAG_VERBALEM=(SPEECH_FLAG_VERBAL|SPEECH_FLAG_EMOTE);
-const unsigned int Garble::SPEECH_FLAG_NONVERBAL=(SPEECH_FLAG_COMMUNE|SPEECH_FLAG_SIGN|SPEECH_FLAG_WRITE|SPEECH_FLAG_WIZNET|SPEECH_FLAG_EMOTE);
+const unsigned int Garble::SPEECH_FLAG_NONVERBAL=(SPEECH_FLAG_COMMUNE|SPEECH_FLAG_SIGN|SPEECH_FLAG_WRITE|SPEECH_FLAG_WIZNET|SPEECH_FLAG_GROUPTELL|SPEECH_FLAG_EMOTE);
 const unsigned int Garble::SPEECH_FLAG_LOCAL=(SPEECH_FLAG_SAY|SPEECH_FLAG_ASK|SPEECH_FLAG_WHISPER|SPEECH_FLAG_SIGN|SPEECH_FLAG_EMOTE);
 const unsigned int Garble::SPEECH_FLAG_DIRECTED=(SPEECH_FLAG_TELL|SPEECH_FLAG_ASK|SPEECH_FLAG_WHISPER);
 const unsigned int Garble::SPEECH_FLAG_NONWRITE=(SPEECH_FLAG_SAY|SPEECH_FLAG_ASK|SPEECH_FLAG_WHISPER|SPEECH_FLAG_TELL|SPEECH_FLAG_GROUPTELL|SPEECH_FLAG_COMMUNE|SPEECH_FLAG_SIGN|SPEECH_FLAG_SHOUT|SPEECH_FLAG_WIZNET|SPEECH_FLAG_EMOTE);
@@ -227,15 +227,15 @@ int getLanguageChance(const TBeing *from, TBeing *to, spellNumT language)
   // The Learning value of the language skill
   int learning = to ? to->getSkillValue(language) : 0;
 
-  // 0-80 base chance if you pass your skill success check
-  int chance = to && to->bSuccess(language) ? learning * 4/5 : 0;
+  // 0-90 base chance if you pass your skill success check
+  int chance = to && to->bSuccess(language) ? learning * 9/10 : 0;
 
   // Let's add a bonus to perception representing 
   // A natural talent for how good your ear for accents is
-  chance += to ? to->plotStat(STAT_CURRENT, STAT_PER, 0, 20, 10) : 0;
+  chance += to ? to->plotStat(STAT_CURRENT, STAT_PER, 0, 16, 8) : 0;
 
-  // -15-115 with bonus based on how smart the speaker is
-  chance += from ? from->plotStat(STAT_CURRENT, STAT_INT, -15, 15, 0) : 0;
+  // -10-116 with bonus based on how smart the speaker is
+  chance += from ? from->plotStat(STAT_CURRENT, STAT_INT, -10, 10, 0) : 0;
 
   return min(100, max(0, 100 - chance));
 }
