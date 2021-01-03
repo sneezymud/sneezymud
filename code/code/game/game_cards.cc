@@ -16,6 +16,8 @@
 #include "game_drawpoker.h"
 #include "game_crazyeights.h"
 
+#include <deque>
+
 cardSuitT & operator++(cardSuitT &c, int)
 {
   return c = (c == MAX_SUIT) ? MIN_SUIT : cardSuitT(c+1);
@@ -58,8 +60,15 @@ Card::Card(cardSuitT suit, int value)
 }
 
 
+class CardDeckPimpl
+{
+  public:
+  std::deque<Card*> deck;
+};
+
 const Card *CardDeck::draw()
 {
+  auto& deck = pimpl->deck;
   Card *tmp;
   tmp=deck.front();
   deck.pop_front();
@@ -70,6 +79,7 @@ const Card *CardDeck::draw()
 
 const Card *CardDeck::undraw()
 {
+  auto& deck = pimpl->deck;
   Card *tmp;
   tmp=deck.back();
   deck.pop_back();
@@ -81,21 +91,31 @@ const Card *CardDeck::undraw()
 
 void CardDeck::shuffle()
 {
+  auto& deck = pimpl->deck;
   std::random_shuffle( deck.begin( ), deck.end( ) );
 }
 
 
 CardDeck::CardDeck()
 {
+  pimpl = new CardDeckPimpl();
+  auto& deck = pimpl->deck;
+
   for(cardSuitT suit=MIN_SUIT;suit<MAX_SUIT;suit++){
     for(int card=1;card<=13;++card){
       deck.push_back(new Card(suit, card));
     }
   }
-  
+
   shuffle();
 }
 
+CardDeck::~CardDeck()
+{
+  for (auto& card : pimpl->deck)
+    delete card;
+  delete pimpl;
+}
 
 
 

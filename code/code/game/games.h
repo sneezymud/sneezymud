@@ -10,7 +10,6 @@
 #define __GAMES_H
 
 #include <algorithm>
-#include <deque>
 
 #include "sstring.h"
 
@@ -133,12 +132,13 @@ class Card {
   }
 };
 
+class CardDeckPimpl;
 class CardDeck {
  private:
-  std::deque <Card *> deck;
+   CardDeckPimpl* pimpl;
  public:
   CardDeck();
-  virtual ~CardDeck(){};
+  virtual ~CardDeck();
 
   void shuffle();
   const Card *draw();
