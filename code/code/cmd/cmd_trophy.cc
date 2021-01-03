@@ -13,37 +13,58 @@
 #include "person.h"
 #include "connect.h"
 
-TTrophy::TTrophy(sstring n) :
-  db(new TDatabase(DB_SNEEZY)),
-  parent(NULL),
-  name(n)
+#include <map>
+#include <set>
+
+class TTrophyPimpl {
+  public:
+  TDatabase&& db;
+  TBeing *parent = nullptr;
+  sstring name;
+
+  std::map<int, double> counts; // memoized view of the DB
+  std::set<int> dirty; // which vnums need flushing
+
+  TTrophyPimpl(TDatabase&& db, TBeing* parent, sstring const& name)
+    : db(std::move(db))
+    , parent(parent)
+    , name(name)
+  {}
+  TTrophyPimpl() = delete;
+};
+
+TTrophy::TTrophy(sstring n)
+  : pimpl(new TTrophyPimpl(TDatabase(DB_SNEEZY), nullptr, n))
+{}
+
+TTrophy::TTrophy(TBeing *p)
+  : pimpl(new TTrophyPimpl(TDatabase(DB_SNEEZY), p, {}))
+{}
+
+TTrophy::~TTrophy()
 {
+  delete pimpl;
 }
 
-TTrophy::TTrophy(TBeing *p) :
-  db(new TDatabase(DB_SNEEZY)),
-  parent(p),
-  name("")
+sstring TTrophy::getMyName() const
 {
-}
-
-sstring TTrophy::getMyName(){
+  auto& parent = pimpl->parent;
   if(parent){
-  
+
     if (parent->specials.act & ACT_POLYSELF) {
       return parent->desc->original->getName();
-    } else { 
+    } else {
       return parent->getName();
     }
   } else {
     // name should be "" if we're uninitialized, so just return it either way
-    return name;
+    return pimpl->name;
   }
 }
 
 void TTrophy::setName(sstring n){
-  parent=NULL;
-  name=n;
+  pimpl->parent = nullptr;
+  pimpl->name = n;
 }
 
 // procTrophyDecay
@@ -67,14 +88,17 @@ void procTrophyDecay::run(const TPulse &) const
 }
 
 void TTrophy::addToCount(int vnum, double add) {
+  auto& counts = pimpl->counts;
   if (counts.find(vnum) == counts.end())
     counts[vnum] = getCount(vnum);
   counts[vnum] += add;
-  dirty.insert(vnum);
-  parent->doQueueSave(); // calls flush soon
+  pimpl->dirty.insert(vnum);
+  pimpl->parent->doQueueSave(); // calls flush soon
 }
 
 void TTrophy::flush() {
+  auto& dirty = pimpl->dirty;
+  auto& counts = pimpl->counts;
   for (auto vnum : dirty) {
     write(vnum, counts[vnum]);
   }
@@ -82,24 +106,25 @@ void TTrophy::flush() {
 }
 
 void TTrophy::write(int vnum, double count){
+  auto& parent = pimpl->parent;
   if(vnum==-1 || vnum==0 || getMyName()==""){ return; }
 
   int player_id=parent->getPlayerID();
 
   // in most cases we just want to do an update, so start with that
-  db->query("update trophy set count=%f, totalcount=totalcount+%f where player_id=%i and mobvnum=%i",
+  pimpl->db.query("update trophy set count=%f, totalcount=totalcount+%f where player_id=%i and mobvnum=%i",
       count, (count>0 ? count : 0), player_id, vnum);
-  if (db->rowCount() == 0) {
+  if (pimpl->db.rowCount() == 0) {
     // no row for this player & mob so do an insert instead
-    db->query("insert into trophy values (%i, %i, %f, %f)",
+    pimpl->db.query("insert into trophy values (%i, %i, %f, %f)",
         player_id, vnum, count, (count>0 ? count : 0));
   }
 
-  db->query("update trophyplayer set count=(select count(0) from trophy where player_id = %i), total=total+%f where player_id=%i",
+  pimpl->db.query("update trophyplayer set count=(select count(0) from trophy where player_id = %i), total=total+%f where player_id=%i",
 	    player_id, count, player_id);
-  if (db->rowCount() == 0) {
+  if (pimpl->db.rowCount() == 0) {
     // no row for this player so do an insert instead
-    db->query("insert into trophyplayer values (%i, (select count(0) from trophy where player_id = %i), %f)",
+    pimpl->db.query("insert into trophyplayer values (%i, (select count(0) from trophy where player_id = %i), %f)",
 	      player_id, player_id, 1, count);
   }
 
@@ -108,14 +133,15 @@ void TTrophy::write(int vnum, double count){
 
 float TTrophy::getCount(int vnum)
 {
+  auto& counts = pimpl->counts;
   auto it = counts.find(vnum);
   if (it != counts.end())
     return it->second;
 
-  db->query("select count from trophy where player_id=%i and mobvnum=%i",
-	   parent->getPlayerID(), vnum);
-  if(db->fetchRow()) {
-    auto count = convertTo<float>((*db)["count"]);
+  pimpl->db.query("select count from trophy where player_id=%i and mobvnum=%i",
+	   pimpl->parent->getPlayerID(), vnum);
+  if(pimpl->db.fetchRow()) {
+    auto count = convertTo<float>(pimpl->db["count"]);
     counts[vnum] = count;
     return count;
   }
@@ -320,10 +346,10 @@ void TBeing::doTrophy(const sstring &arg)
 
 
 void TTrophy::wipe(){
-  db->query("select id from player where name='%s'", getMyName().c_str());
+  pimpl->db.query("select id from player where name='%s'", getMyName().c_str());
   
-  if(db->fetchRow())
-    db->query("delete from trophy where player_id=%i", convertTo<int>((*db)["id"]));
+  if(pimpl->db.fetchRow())
+    pimpl->db.query("delete from trophy where player_id=%i", convertTo<int>(pimpl->db["id"]));
 
-  counts.clear();
+  pimpl->counts.clear();
 }
