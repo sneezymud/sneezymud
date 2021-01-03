@@ -8,8 +8,6 @@
 #ifndef __OBJ_MONEY_H
 #define __OBJ_MONEY_H
 
-#include <map>
-
 #include "obj.h"
 #include "obj_mergeable.h"
 
@@ -65,9 +63,9 @@ class currencyEntry {
   sstring affiliation;  // eg, "Grimhaven"
 
  public:  
-  sstring getName(){return name;}
-  sstring getAffiliation(){return affiliation;}
-  float getExchangeRate(currencyTypeT);
+  sstring getName() const {return name;}
+  sstring getAffiliation() const {return affiliation;}
+  float getExchangeRate(currencyTypeT) const;
 
 
   currencyEntry(sstring, sstring);
@@ -79,14 +77,15 @@ class currencyEntry {
 };
 
 
+class currencyInfoTPimpl;
 class currencyInfoT {
-  std::map<currencyTypeT, currencyEntry *>currencies;
+  currencyInfoTPimpl* pimpl;
 
  public:
-  currencyEntry *operator[] (const currencyTypeT);
+  const currencyEntry* operator[] (const currencyTypeT) const;
 
   currencyInfoT();
-  ~currencyInfoT();  
+  ~currencyInfoT();
 };
 
 extern currencyTypeT & operator++(currencyTypeT &c, int);

@@ -16,30 +16,43 @@
 #include "obj_money.h"
 #include "spec_mobs.h"
 
-currencyEntry *currencyInfoT::operator[] (const currencyTypeT i)
+#include <map>
+
+class currencyInfoTPimpl
 {
-  if(currencies.find(i) == currencies.end()){
+  public:
+  std::map<currencyTypeT, currencyEntry>currencies;
+};
+
+const currencyEntry* currencyInfoT::operator[] (const currencyTypeT i) const
+{
+  auto& currencies = pimpl->currencies;
+  auto it = currencies.find(i);
+  if(it == currencies.end()){
     vlogf(LOG_BUG, format("invalid currency detected: %i") % i);
-    return currencies[CURRENCY_GRIMHAVEN];
+    return &(*currencies.find(CURRENCY_GRIMHAVEN)).second;
   } else {
-    return currencies[i];
+    return &(*it).second;
   }
 }
 
 currencyInfoT::~currencyInfoT()
 {
+  delete pimpl;
 }
 
 currencyInfoT::currencyInfoT()
 {
-  currencies[CURRENCY_GRIMHAVEN] = new currencyEntry("talen", "Grimhaven");
-  currencies[CURRENCY_LOGRUS] = new currencyEntry("dinar", "Logrus");
-  currencies[CURRENCY_BRIGHTMOON] = new currencyEntry("kroner", "Brightmoon");
-  currencies[CURRENCY_AMBER] = new currencyEntry("guilder", "Amber");
+  pimpl = new currencyInfoTPimpl();
+  auto& currencies = pimpl->currencies;
+  currencies.emplace_hint(currencies.end(), CURRENCY_GRIMHAVEN, currencyEntry("talen", "Grimhaven"));
+  currencies.emplace_hint(currencies.end(), CURRENCY_LOGRUS, currencyEntry("dinar", "Logrus"));
+  currencies.emplace_hint(currencies.end(), CURRENCY_BRIGHTMOON, currencyEntry("kroner", "Brightmoon"));
+  currencies.emplace_hint(currencies.end(), CURRENCY_AMBER, currencyEntry("guilder", "Amber"));
 }
 
 
-float currencyEntry::getExchangeRate(currencyTypeT c)
+float currencyEntry::getExchangeRate(currencyTypeT c) const
 {
   return 1.0; // no exchange rates... yet
 }
