@@ -7,10 +7,6 @@ class SString : public CxxTest::TestSuite
 {
 
  public:
-  void setUp(){
-    freopen("code/tests/output/SString.out", "w", stderr);
-  }
-
   void testLowerUpper(){
     sstring foo="LOREM IpSum dolor SIT aMeT";
     
