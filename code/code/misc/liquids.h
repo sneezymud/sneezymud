@@ -1,8 +1,6 @@
 #ifndef __LIQUIDS_H
 #define __LIQUIDS_H
 
-#include <map>
-
 #include "obj.h"
 
 // this contains data for a single liquid type
@@ -26,13 +24,15 @@ class liqEntry {
 
 
 // this is a container class for a list of liquid types
+class liqInfoT_pimpl;
 class liqInfoT {
-  std::map<liqTypeT, liqEntry> liquids;
+  liqInfoT_pimpl* pimpl;
 
  public:
   const liqEntry* operator[](const liqTypeT) const;
 
   liqInfoT();
+  ~liqInfoT();
 };
 
 
