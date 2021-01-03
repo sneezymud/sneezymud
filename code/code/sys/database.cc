@@ -35,8 +35,6 @@ namespace {
 
         const char *getConnectParam(dbTypeT type);
         MYSQL *getDB(dbTypeT type);
-
-        void clearConnections(){ for(int i=0;i<DB_MAX;++i) databases[i]=NULL; }
     };
 
     TDatabaseConnection::TDatabaseConnection()
