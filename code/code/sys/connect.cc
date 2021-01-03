@@ -3572,7 +3572,7 @@ int Descriptor::doAccountStuff(char *arg)
         break;
       default:
         count = ::number(1,3);
-        if (!IS_SET(account->flags, TAccount::BOSS)) {
+        if (account && !IS_SET(account->flags, TAccount::BOSS)) {
           if (account->term == TERM_ANSI) {
             screen_size = 40;  // adjust for the size of the menu bar temporarily
 
