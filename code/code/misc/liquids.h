@@ -19,8 +19,6 @@ class liqEntry {
   int price;
 
   liqEntry(int, int, int, bool, bool, const char *, const char *, int);
-  liqEntry & operator=(const liqEntry &a);
-  ~liqEntry();
 
   private:
   liqEntry();  // deny usage in this format
@@ -29,13 +27,12 @@ class liqEntry {
 
 // this is a container class for a list of liquid types
 class liqInfoT {
-  std::map<liqTypeT, liqEntry>liquids;
+  std::map<liqTypeT, liqEntry> liquids;
 
  public:
-  liqEntry *operator[] (const liqTypeT);
+  const liqEntry* operator[](const liqTypeT) const;
 
   liqInfoT();
-  ~liqInfoT();  
 };
 
 
