@@ -32,6 +32,7 @@ namespace {
         MYSQL *databases[DB_MAX];
         public:
         TDatabaseConnection();
+        ~TDatabaseConnection();
 
         const char *getConnectParam(dbTypeT type);
         MYSQL *getDB(dbTypeT type);
@@ -40,6 +41,14 @@ namespace {
     TDatabaseConnection::TDatabaseConnection()
     {
         memset(databases, 0, sizeof(databases));
+    }
+
+    TDatabaseConnection::~TDatabaseConnection()
+    {
+        for (MYSQL* db : databases)
+          mysql_close(db);
+        mysql_thread_end();
+        mysql_library_end();
     }
 
     TDatabaseConnection database_connection;
@@ -65,19 +74,12 @@ const char *TDatabaseConnection::getConnectParam(dbTypeT type)
 
 class TDatabasePimpl {
 public:
-  MYSQL_RES *res;
-  MYSQL_ROW row;
-  MYSQL *db;
-  long row_count;
-  bool log;
+  MYSQL_RES *res = nullptr;
+  MYSQL_ROW row = 0;
+  MYSQL *db = nullptr;
+  long row_count = 0;
+  bool log = false;
   std::map <const char *, int, ltstr> column_names;
-
-  TDatabasePimpl() :
-    res(NULL),
-    row(NULL),
-    db(NULL)
-  {
-  }
 };
 
 static const char* getUser(dbTypeT type)
@@ -106,8 +108,9 @@ MYSQL *TDatabaseConnection::getDB(dbTypeT type)
   if (!databases[type] || mysql_ping(databases[type]))
   {
     vlogf(LOG_DB, format("Initializing database '%s'.") % getConnectParam(type));
-    databases[type] = mysql_init(NULL);
-    
+    if (!databases[type])
+      databases[type] = mysql_init(NULL);
+
     vlogf(LOG_DB, "Connecting to database.");
     if(!mysql_real_connect(databases[type], db_hosts[type].c_str(), getUser(type), getPass(type), getConnectParam(type), 0, NULL, 0))
     {
