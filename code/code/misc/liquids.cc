@@ -1,20 +1,33 @@
 #include "liquids.h"
-#include "enum.h"
-#include "structs.h"
+
+#include <map>
+
+class liqInfoT_pimpl {
+  public:
+  std::map<liqTypeT, liqEntry> liquids;
+};
 
 const liqEntry* liqInfoT::operator[] (const liqTypeT i) const
 {
-  auto it = liquids.find(i);
-  if(it == liquids.end()){
+  auto it = pimpl->liquids.find(i);
+  if(it == pimpl->liquids.end()){
     vlogf(LOG_BUG, format("invalid liquid detected: %i") % i);
-    return &(*liquids.find(LIQ_WATER)).second;
+    return &(*pimpl->liquids.find(LIQ_WATER)).second;
   } else {
     return &(*it).second;
   }
 }
 
+liqInfoT::~liqInfoT()
+{
+  delete pimpl;
+}
+
 liqInfoT::liqInfoT()
 {
+  pimpl = new liqInfoT_pimpl();
+  auto& liquids = pimpl->liquids;
+
   liquids.emplace_hint(liquids.end(), LIQ_WATER, liqEntry{0,  0, 10, false, false, "clear", "<c>water<1>", 0});
   liquids.emplace_hint(liquids.end(), LIQ_BEER, liqEntry{5, -2,  7, false, false, "<o>brown<1>", "<o>beer<1>", 0});
   liquids.emplace_hint(liquids.end(), LIQ_WINE, liqEntry{4, -1,  6, false, false, "clear", "<W>white wine<1>", 0});
