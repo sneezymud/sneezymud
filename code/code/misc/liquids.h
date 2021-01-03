@@ -29,7 +29,7 @@ class liqEntry {
 
 // this is a container class for a list of liquid types
 class liqInfoT {
-  std::map<liqTypeT, liqEntry *>liquids;
+  std::map<liqTypeT, liqEntry>liquids;
 
  public:
   liqEntry *operator[] (const liqTypeT);
