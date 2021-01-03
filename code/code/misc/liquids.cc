@@ -2,7 +2,7 @@
 #include "enum.h"
 #include "structs.h"
 
-liqEntry *liqInfoT::operator[] (const liqTypeT i)
+const liqEntry* liqInfoT::operator[] (const liqTypeT i) const
 {
   auto it = liquids.find(i);
   if(it == liquids.end()){
@@ -11,10 +11,6 @@ liqEntry *liqInfoT::operator[] (const liqTypeT i)
   } else {
     return &(*it).second;
   }
-}
-
-liqInfoT::~liqInfoT()
-{
 }
 
 liqInfoT::liqInfoT()
@@ -170,25 +166,5 @@ liqEntry::liqEntry(int d, int h, int t, bool p, bool x, const char *col, const c
   color(col),
   name(n),
   price(pr)
-{
-}
-
-liqEntry & liqEntry::operator = (const liqEntry &a) 
-{
-  if (this == &a) return *this;
-
-  drunk = a.drunk;
-  hunger = a.hunger;
-  thirst = a.thirst;
-  potion = a.potion;
-  poison = a.poison;
-  color = a.color;
-  name = a.name;
-  price = a.price;
-
-  return *this;
-}
-
-liqEntry::~liqEntry()
 {
 }
