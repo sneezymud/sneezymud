@@ -9,11 +9,7 @@
 
 class Exceptions : public CxxTest::TestSuite
 {
-  TSocket *testSocket;
-  Descriptor *testDesc;
-  TPerson *testPerson1;
-  TPerson *testPerson2;
-
+  /*
   void setUp(){
     Config::doConfiguration();
     freopen("code/tests/output/Exceptions.out", "w", stderr);
