@@ -9,25 +9,24 @@ class CommTest : public CxxTest::TestSuite
 {
   public:
     sstring testString[4];
-    TSocket *testSocket;
     Descriptor *testDesc;
     TPerson *testPerson;
 
     void setUp(){
       Config::doConfiguration();
-      freopen("code/tests/output/CommTest.out", "w", stderr);
 
       testString[0]="holding up my";
       testString[1]="purring cat to the moon";
       testString[2]="I sighed.";
       testString[3]="C-C-C-C-C-Combo breaker!";
 
-      testSocket=new TSocket();
-      testDesc=new Descriptor(testSocket);
+      testDesc=new Descriptor(new TSocket());
       testPerson=new TPerson(testDesc);
     }
 
     void tearDown(){
+      delete testPerson;
+      delete testDesc;
     }
 
     void testUncategorizedComm(){
@@ -116,7 +115,6 @@ class CommTest : public CxxTest::TestSuite
       testPerson->desc->output.push(CommPtr(new UncategorizedComm(testString[1])));
       testPerson->desc->output.push(CommPtr(new UncategorizedComm(testString[2])));
 
-      testSocket->port=Config::Port::PROD; // makeOutputPaged checks this
       testPerson->makeOutputPaged();
 
       TS_ASSERT_EQUALS(testPerson->desc->output.front()->getComm(), (format("%s%s%s") %
