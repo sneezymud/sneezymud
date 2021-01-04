@@ -850,8 +850,6 @@ void TPerson::rentAffectTo(saveAffectedData *af)
   if (af->type == TYPE_UNDEFINED)
     return;
 
-  affectedData *a;
-
   applyTypeT att = mapFileToApply(af->location);
   spellNumT snt = mapFileToSpellnum(af->type);
 
@@ -860,15 +858,15 @@ void TPerson::rentAffectTo(saveAffectedData *af)
     return;
   } else if ((att == APPLY_CURRENT_HIT) || (att == APPLY_HIT)) {
     //mud_assert(af->duration != 0, "affectTo() with 0 duration affect");
-    a = new affectedData(*af);
+    affectedData* a = new affectedData(*af);
     a->next = affected;
     affected = a;
   } else {
-    a = new affectedData(*af);
+    auto a = affectedData(*af);
 
     // when assigning, lets not lose track of the renew value we saved off
     // pass it through in the affectTo call
-    affectTo(a, af->renew);
+    affectTo(&a, af->renew);
     return;
   } 
 }
