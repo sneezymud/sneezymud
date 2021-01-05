@@ -2277,6 +2277,39 @@ std::vector<sstring> listAccountCharacters(sstring name)
   return list;
 }
 
+int count_set_bit(int n) {
+   int count = 0;
+   while(n != 0) {
+      if((n & 1) == 1) {
+         count++;
+      }
+      n = n >> 1; //right shift 1 bit
+   }
+   return count;
+}
+
+sstring parseClass(unsigned short code){
+  sstring buf = "";
+  bool multiclass = false;
+
+  if (count_set_bit(code) > 1)
+    multiclass = true;
+
+  for (classIndT iClass = MIN_CLASS_IND; iClass < MAX_CLASSES; iClass++){
+    if (code & (1<<iClass)) {
+      if (!multiclass) {
+        return classInfo[iClass].name;
+      } else {
+        buf += classInfo[iClass].abbr;
+        buf += "/";
+      }
+    }
+  }
+  if (multiclass)
+    buf = buf.substr(0, buf.size() - 1);
+  return buf;
+}
+
 int listAccount(sstring name, sstring &buf)
 {
   std::vector<sstring> chars = listAccountCharacters(name);
@@ -2298,7 +2331,7 @@ int listAccount(sstring name, sstring &buf)
     char * tmstr = (char *) asctime(localtime(&ct));
     *(tmstr + strlen(tmstr) - 1) = '\0';
     
-    buf += format("%d) %s (L%d) %s\n\r") % ++count % chars[iChar].c_str() % int(max_level) % tmstr;
+    buf += format("%d) %s [ %s Lev %d ] %s\n\r") % ++count % chars[iChar].c_str() % parseClass(st.Class) % int(max_level) % tmstr;
   }
   return count;
 }
