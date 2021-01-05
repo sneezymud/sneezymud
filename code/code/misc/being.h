@@ -476,7 +476,7 @@ class TBeing : public TThing {
   unsigned short GetMaxLevel() const;
   void setMaxLevel(unsigned short num);
   sstring const getProfName() const;
-  std::string getProfAbbrevName() const;
+  static sstring getProfAbbrevName(unsigned short code);
   void deityIgnore(silentTypeT = SILENT_NO) const;
   void nothingHappens(silentTypeT = SILENT_NO) const;
   float percModifier() const;

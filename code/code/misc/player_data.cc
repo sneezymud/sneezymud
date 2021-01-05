@@ -2298,7 +2298,7 @@ int listAccount(sstring name, sstring &buf)
     char * tmstr = (char *) asctime(localtime(&ct));
     *(tmstr + strlen(tmstr) - 1) = '\0';
     
-    buf += format("%d) %s (L%d) %s\n\r") % ++count % chars[iChar].c_str() % int(max_level) % tmstr;
+    buf += format("%2d) %-16s %-10s [ %-5s Lev %2d ] %s\n\r") % ++count % chars[iChar].c_str() % Races[int(st.race)]->getSingularName() % TBeing::getProfAbbrevName(st.Class) % int(max_level) % tmstr;
   }
   return count;
 }
