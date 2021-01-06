@@ -625,7 +625,7 @@ int castMeteorSwarm(TBeing * caster, TBeing * victim)
 
 int stoneSkin(TBeing * caster, TBeing * victim, int level, short bKnown)
 {
-  affectedData aff1, aff2;
+  affectedData aff1, aff2, aff3;
 
   if (victim->affectedBySpell(SPELL_FLAMING_FLESH)) {
     act("$N's skin is already defended by elementals of fire.", FALSE, caster, NULL, victim, TO_CHAR);
@@ -635,38 +635,47 @@ int stoneSkin(TBeing * caster, TBeing * victim, int level, short bKnown)
   if (caster->bSuccess(bKnown, SPELL_STONE_SKIN)) {
     caster->reconcileHelp(caster,discArray[SPELL_STONE_SKIN]->alignMod);
 
-    // ARMOR APPLY
+    // BLUNT IMMUNITY
     aff1.type = SPELL_STONE_SKIN;
     aff1.level = level;
     aff1.duration = caster->durationModify(SPELL_STONE_SKIN, aff1.level * Pulse::UPDATES_PER_MUDHOUR);
-    aff1.location = APPLY_ARMOR;
-    aff1.modifier = -75;
+    aff1.location = APPLY_IMMUNITY;
+    aff1.modifier = IMMUNE_BLUNT;
+    aff1.modifier2 = 8;
 
-    // PIERCE IMMUNITY
+    // SLASH IMMUNITY
     aff2.type = SPELL_STONE_SKIN;
     aff2.level = level;
     aff2.duration = aff1.duration;
     aff2.location = APPLY_IMMUNITY;
-    aff2.modifier = IMMUNE_PIERCE;
-    aff2.modifier2 = 15;
+    aff2.modifier = IMMUNE_SLASH;
+    aff2.modifier2 = 12;
+
+    // PIERCE IMMUNITY
+    aff3.type = SPELL_STONE_SKIN;
+    aff3.level = level;
+    aff3.duration = aff1.duration;
+    aff3.location = APPLY_IMMUNITY;
+    aff3.modifier = IMMUNE_PIERCE;
+    aff3.modifier2 = 16;
 
     switch (critSuccess(caster, SPELL_STONE_SKIN)) {
       case CRIT_S_KILL:
       case CRIT_S_TRIPLE:
       case CRIT_S_DOUBLE:
         CS(SPELL_STONE_SKIN);
-        aff1.duration = aff1.duration * 3 / 2;
-        aff1.modifier = aff1.modifier * 3 / 2;
-        aff2.duration = aff2.duration * 3 / 2;
+        aff1.duration *= 2;
+        aff2.duration *= 2;
+        aff3.duration *= 2;
         break;
       default:
         break;
-    } 
-    if (caster != victim)
-      aff1.modifier /= 5;
+    }
 
     victim->affectJoin(caster, &aff1, AVG_DUR_NO, AVG_EFF_YES);
     victim->affectJoin(caster, &aff2, AVG_DUR_NO, AVG_EFF_YES);
+    victim->affectJoin(caster, &aff3, AVG_DUR_NO, AVG_EFF_YES);
+
 
     act("$n's skin turns to hard granite.", FALSE, victim, NULL, NULL, TO_ROOM);
     act("Your skin turns to hard granite.", FALSE, victim, NULL, NULL, TO_CHAR);
@@ -954,14 +963,9 @@ int protectionFromEarth(TBeing *caster, TBeing *victim, int level, short bKnown)
       case CRIT_S_KILL:
         CS(SPELL_PROTECTION_FROM_EARTH);
         aff.duration *= 2;
-        aff.modifier2 = (level * 2);
         break;
       case CRIT_S_NONE:
         break;
-    }
- 
-    if (caster != victim) {
-      aff.modifier2 /= 2;
     }
  
     victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);

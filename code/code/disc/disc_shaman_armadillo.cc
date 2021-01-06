@@ -186,6 +186,8 @@ int thornflesh(TBeing *caster, int level, short bKnown)
 
   if (caster->bSuccess(bKnown, SPELL_THORNFLESH)) {
     switch (critSuccess(caster, SPELL_THORNFLESH)) {
+      case CRIT_S_DOUBLE:
+      case CRIT_S_TRIPLE:
       case CRIT_S_KILL:
         CS(SPELL_THORNFLESH);
         aff.duration *= 2;
@@ -308,7 +310,7 @@ int castAqualung(TBeing * caster, TBeing * victim)
 // SHADOW WALK
 int shadowWalk(TBeing *caster, TBeing *victim, int level, short bKnown)
 {
-  affectedData aff;
+  affectedData aff, aff2;
 
 #if 0
   if (victim->affectedBySpell(SPELL_SHADOW_WALK)) {
@@ -330,23 +332,31 @@ TO_CHAR);
     aff.location = APPLY_ARMOR;
     aff.bitvector = AFF_SHADOW_WALK;
 
+    aff2.type = SPELL_SHADOW_WALK;
+    aff2.level = level;
+    aff2.duration = aff.duration;
+    aff2.location = APPLY_IMMUNITY;
+    aff2.modifier = IMMUNE_NONMAGIC;
+    aff2.modifier = 10;
+    aff2.bitvector = AFF_SHADOW_WALK;
+
     switch (critSuccess(caster, SPELL_SHADOW_WALK)) {
       case CRIT_S_DOUBLE:
       case CRIT_S_TRIPLE:
       case CRIT_S_KILL:
         CS(SPELL_SHADOW_WALK);
         aff.duration *= 2;
-        aff.modifier = -60;
+        aff2.duration *=2;
         break;
       case CRIT_S_NONE:
         break;
     }
-    if (!victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES)) {
-      caster->nothingHappens();
-      return SPELL_FALSE;
-    }
+
+    victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
+    victim->affectJoin(caster, &aff2, AVG_DUR_NO, AVG_EFF_YES);
     return SPELL_SUCCESS;
   } else {
+    caster->nothingHappens();
     return SPELL_FAIL;
   }
 }
@@ -421,8 +431,7 @@ int celerite(TBeing *caster, TBeing *victim, int level, short bKnown)
     aff.type = SPELL_CELERITE;
     aff.level = level;
     aff.duration = caster->durationModify(SPELL_CELERITE, (aff.level / 3) * Pulse::UPDATES_PER_MUDHOUR);
-    aff.modifier = -100;
-    aff.location = APPLY_ARMOR;
+    aff.location = APPLY_NONE;
     aff.bitvector = 0;
     switch (critSuccess(caster, SPELL_CELERITE)) {
       case CRIT_S_DOUBLE:

@@ -964,16 +964,7 @@ int armor(TBeing *c, TBeing * victim, int level, short learn, spellNumT spell)
   aff.duration = c->durationModify(SPELL_ARMOR, (3 + (aff.level / 2)) * Pulse::UPDATES_PER_MUDHOUR);
   aff.location = APPLY_ARMOR;
   aff.bitvector = 0;
-
-  // deikhan armor does less (c.f. balance notes)
-  if (spell == SPELL_ARMOR)
-    aff.modifier = -100;
-  else if (spell == SPELL_ARMOR_DEIKHAN)
-    aff.modifier = -75;
-  else {
-    vlogf(LOG_BUG, format("Unknown spell %d in armor()") %  spell);
-    aff.modifier = 0;
-  }
+  aff.modifier = -60;
   
   if (c->bSuccess(learn, c->getPerc(), spell)) {
     c->reconcileHelp(victim, discArray[spell]->alignMod);
@@ -985,12 +976,10 @@ int armor(TBeing *c, TBeing * victim, int level, short learn, spellNumT spell)
 
     switch (critSuccess(c, spell)) {
       case CRIT_S_KILL:
+      case CRIT_S_TRIPLE:
       case CRIT_S_DOUBLE:
         CS(spell);
         aff.duration *= 2;
-        if (c != victim)
-          aff.modifier *= 2;
-
         if (!victim->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES))
           return SPELL_FAIL;
         return SPELL_CRIT_SUCCESS;

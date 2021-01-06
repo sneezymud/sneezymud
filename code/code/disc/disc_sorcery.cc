@@ -1204,7 +1204,7 @@ int sorcerersGlobe(TBeing *caster, TBeing *victim, int level, short bKnown)
   aff.level = level;
   aff.duration = caster->durationModify(SPELL_SORCERERS_GLOBE, (3 + (aff.level / 2)) * Pulse::UPDATES_PER_MUDHOUR);
   aff.location = APPLY_ARMOR;
-  aff.modifier = -100;
+  aff.modifier = -60;
   aff.bitvector = 0;
 
   if (caster->bSuccess(bKnown,SPELL_SORCERERS_GLOBE)) {
@@ -1214,19 +1214,10 @@ int sorcerersGlobe(TBeing *caster, TBeing *victim, int level, short bKnown)
       case CRIT_S_DOUBLE:
         CS(SPELL_SORCERERS_GLOBE);
         aff.duration *= 2;
-        if (caster != victim)
-          aff.modifier *= 2;
         break;
       case CRIT_S_NONE:
         break;
     }
-    if (caster != victim) 
-      aff.modifier /= 5;
-
-    // I changed this to use affectJoin, it was just adding
-    // new affs every cast - Russ 12/18/97
-    //Second argument FALSE causes it to add new duration to old
-    //Third argument TRUE causes it to average the old and newmodifier
 
     if (!victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES)) {
       caster->nothingHappens();

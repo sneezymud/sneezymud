@@ -1,3 +1,19 @@
+01-06-21 : Defensive Buff Spells
+           - Lowering the armor or changing the affects of some of these
+             since multiclass and potion glut means everyone has more buffs.
+             All buffs should have the same affects on others as they do on
+             the caster so spellups should be easier.
+           - Cler/Deik: armor now 60AC
+           - Deikhan: Aura of might now 40AC
+           - Shaman: shield of mists now 60AC
+           - Shaman: Celerite no longer has any AC benefit
+           - Shaman: Cheval no longer has any AC benefit
+           - Shaman: Shadow walk now provides 10% immune to non-magic
+           - Mage: Sorcerer's Globe now 60AC
+           - Mage: Stoneskin no longer has any AC benefit
+           - Mage: Stoneskin now has 8% blunt/12% slash/16% pierce immunity
+           - Mage: PFE 
+
 01-01-21 : More Garble tweaks
            - Even easier to understand with maxed language skills
            - Group tells are now considered non-verbal communication

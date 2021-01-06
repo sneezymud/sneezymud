@@ -1083,14 +1083,10 @@ int protectionFromWater(TBeing *caster, TBeing *victim, int level, short bKnown)
       case CRIT_S_KILL:
         CS(SPELL_PROTECTION_FROM_WATER);
         aff.duration = (10 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
-        aff.modifier2 = (level * 2);
         break;
       case CRIT_S_NONE:
         break;
     }
- 
-    if (caster != victim) 
-      aff.modifier2 /= 2;
  
     victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
     caster->reconcileHelp(victim, discArray[SPELL_PROTECTION_FROM_WATER]->alignMod);
