@@ -18,15 +18,15 @@
 
 class TTrophyPimpl {
   public:
-  TDatabase&& db;
+  TDatabase db;
   TBeing *parent = nullptr;
   sstring name;
 
   std::map<int, double> counts; // memoized view of the DB
   std::set<int> dirty; // which vnums need flushing
 
-  TTrophyPimpl(TDatabase&& db, TBeing* parent, sstring const& name)
-    : db(std::move(db))
+  TTrophyPimpl(TBeing* parent, sstring const& name)
+    : db(TDatabase(DB_SNEEZY))
     , parent(parent)
     , name(name)
   {}
@@ -34,11 +34,11 @@ class TTrophyPimpl {
 };
 
 TTrophy::TTrophy(sstring n)
-  : pimpl(new TTrophyPimpl(TDatabase(DB_SNEEZY), nullptr, n))
+  : pimpl(new TTrophyPimpl(nullptr, n))
 {}
 
 TTrophy::TTrophy(TBeing *p)
-  : pimpl(new TTrophyPimpl(TDatabase(DB_SNEEZY), p, {}))
+  : pimpl(new TTrophyPimpl(p, {}))
 {}
 
 TTrophy::~TTrophy()
