@@ -212,7 +212,10 @@ void TScheduler::runChar(int pulseNum)
     for(TCharProcess *char_proc : char_procs) {
       if(char_proc->should_run(pulse.pulse)){
         if(char_proc->run(pulse, tmp_ch)){
+          vlogf(LOG_MISC, format("Deleting char %s in room %i due to proc %s") %
+              tmp_ch->getName() % tmp_ch ->roomp->number % char_proc->name);
           delete tmp_ch;
+          tmp_ch = temp;
           break;
         }
       }
