@@ -4661,7 +4661,7 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
   sstring hookername, johnname, tmp;
   TPathFinder path;
 
-   enum hookerStateT {
+  enum hookerStateT {
     STATE_NONE,
     STATE_OFFER,      // 1
     STATE_REJECT1,    // 2
@@ -4688,7 +4688,7 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
     }
     return FALSE;
   } else  if ((cmd != CMD_GENERIC_PULSE) ||
-	      !myself->awake() || myself->fight())
+      !myself->awake() || myself->fight())
     return FALSE;
 
   if (!myself->act_ptr) {
@@ -4698,15 +4698,15 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
     // find a john
     for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (t=*it);++it){
       if((tmons=dynamic_cast<TMonster *>(t))){
-	if(tmons!=myself && tmons->isHumanoid() && !tmons->isShopkeeper() &&
-      !IS_SET(tmons->specials.act, ACT_SENTINEL) &&
-	   (tmons->getSex()!=SEX_NEUTER && tmons->getSex()!=myself->getSex())){
-	  found=1;
-	  break;
-	}
+        if(tmons!=myself && tmons->isHumanoid() && !tmons->isShopkeeper() &&
+            !IS_SET(tmons->specials.act, ACT_SENTINEL) &&
+            (tmons->getSex()!=SEX_NEUTER && tmons->getSex()!=myself->getSex())){
+          found=1;
+          break;
+        }
       }
     }
-    
+
     // didn't find one
     if(!found)
       return FALSE;
@@ -4724,12 +4724,12 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
     if(::number(0,4))
       return FALSE;
   }
-  
+
   if (!(job = static_cast<hunt_struct *>(myself->act_ptr))) {
     vlogf(LOG_PROC, "grimhavenHooker: error, static_cast");
     return FALSE;
   }
-  
+
   if(job->state==STATE_NONE){
     //    vlogf(LOG_PROC, "STATE_NONE, deleting act_ptr");
     delete static_cast<hunt_struct *>(myself->act_ptr);
@@ -4751,7 +4751,7 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
     job->state=STATE_NONE;
     return FALSE;
   }
-    	  
+
   hookername=myself->name;
   hookername=add_bars(hookername);
   johnname=job->john->name;
@@ -4763,173 +4763,173 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
     case STATE_OFFER:
       myself->doAction(johnname, CMD_PEER);
       switch(::number(0,3)){
-	case 0: 
-	  myself->doSay("You want to party, honey?"); 
-	  myself->doAction("", CMD_LICK);
-	  break;
-	case 1:
-	  myself->doSay("How about some action baby?"); 
-	  myself->doAction(johnname, CMD_NUZZLE);
-	  break;
-	case 2:
-	  if(job->john->getSex() == SEX_MALE)
-	    myself->doSay("Is that a training dagger in your pants, or do you need some hot lovin'?"); 
-	  else 
-	    myself->doSay("Did you just come from a sushi bar, or do you need some hot lovin'?");
-	  myself->doAction(johnname, CMD_GRIN);
-	  break;
-	case 3:
-	  myself->doAction("", CMD_WIGGLE);
-	  myself->doSay("Me so horny, me love you long time!");
-	  myself->doAction("", CMD_LICK);
-	  break;
+        case 0: 
+          myself->doSay("You want to party, honey?"); 
+          myself->doAction("", CMD_LICK);
+          break;
+        case 1:
+          myself->doSay("How about some action baby?"); 
+          myself->doAction(johnname, CMD_NUZZLE);
+          break;
+        case 2:
+          if(job->john->getSex() == SEX_MALE)
+            myself->doSay("Is that a training dagger in your pants, or do you need some hot lovin'?"); 
+          else 
+            myself->doSay("Did you just come from a sushi bar, or do you need some hot lovin'?");
+          myself->doAction(johnname, CMD_GRIN);
+          break;
+        case 3:
+          myself->doAction("", CMD_WIGGLE);
+          myself->doSay("Me so horny, me love you long time!");
+          myself->doAction("", CMD_LICK);
+          break;
       }
 
       if(::number(0,2))
-	job->state=STATE_REJECT1;
+        job->state=STATE_REJECT1;
       else
-	job->state=STATE_ASKPRICE;
+        job->state=STATE_ASKPRICE;
       break;
     case STATE_REJECT1:
       switch(::number(0,4)){
-	case 0:
-	  job->john->doAction("", CMD_SNICKER);
-	  job->john->doSay("Yeah, right.  As if.");
-	  break;
-	case 1:
-	  job->john->doAction("", CMD_SNEER);
-	  job->john->doSay("Get the hell away from me you skank ghetto whore!");
-	  break;
-	case 2:
-	  job->john->doAction("", CMD_BLUSH);
-	  job->john->doSay("Um, no thanks.");
-	  break;
-	case 3:
-	  job->john->doSay("Not me sexy, why pay when I get it for free in the pasture?");
-	  job->john->doAction("", CMD_CHUCKLE);
-	  break;
-	case 4:
-	  job->john->doSay("Wait, is that my wife I see down the street?!?");
-	  job->john->doSay("I'm out of here!");
-	  job->john->doFlee("");
-	  break;
+        case 0:
+          job->john->doAction("", CMD_SNICKER);
+          job->john->doSay("Yeah, right.  As if.");
+          break;
+        case 1:
+          job->john->doAction("", CMD_SNEER);
+          job->john->doSay("Get the hell away from me you skank ghetto whore!");
+          break;
+        case 2:
+          job->john->doAction("", CMD_BLUSH);
+          job->john->doSay("Um, no thanks.");
+          break;
+        case 3:
+          job->john->doSay("Not me sexy, why pay when I get it for free in the pasture?");
+          job->john->doAction("", CMD_CHUCKLE);
+          break;
+        case 4:
+          job->john->doSay("Wait, is that my wife I see down the street?!?");
+          job->john->doSay("I'm out of here!");
+          job->john->doFlee("");
+          break;
       }
       job->john=NULL;
       job->state=STATE_NONE;
       break;
     case STATE_ASKPRICE:
       switch(::number(0,4)){
-	case 0:
-	  job->john->doSay("Yeah baby, I want some real rough love.");
-	  job->john->doAction(hookername, CMD_TAUNT);
-	  job->john->doSay("What's it gonna cost me to tie that little bad ass up?");
-	  job->john->doAction(hookername, CMD_GRIN);
-	  break;
-	case 1:
-	  job->john->doScan("");
-	  job->john->doSay("Well... Ok, but it has to be secret.  How much?");
-	  break;
-	case 2:
-	  job->john->doAction("", CMD_MOAN);
-	  job->john->doSay("Oh god, I want you so bad, I'll pay anything you want!");
-	  job->john->doAction(johnname, CMD_GROPE); 
-	  break;
-	case 3:
-	  job->john->doSay("I've had a rough day, I could certainly use a little winding down.");
-	  job->john->doSay("Let's get it on!");
-	  job->john->doAction("", CMD_CLAP);
-	  job->john->doAction("", CMD_GIGGLE);	  
-	  break;
-	case 4:
-	  tmp = format("%s Do you swallow?") % hookername;
-	  job->john->doWhisper(tmp);
-	  myself->doEmote("looks startled and almost chokes.");
-	  myself->doAction(johnname, CMD_SLAP);
-	  job->john->doAction(hookername, CMD_GRIN);
-	  myself->doAction("", CMD_GIGGLE);
-	  break;
+        case 0:
+          job->john->doSay("Yeah baby, I want some real rough love.");
+          job->john->doAction(hookername, CMD_TAUNT);
+          job->john->doSay("What's it gonna cost me to tie that little bad ass up?");
+          job->john->doAction(hookername, CMD_GRIN);
+          break;
+        case 1:
+          job->john->doScan("");
+          job->john->doSay("Well... Ok, but it has to be secret.  How much?");
+          break;
+        case 2:
+          job->john->doAction("", CMD_MOAN);
+          job->john->doSay("Oh god, I want you so bad, I'll pay anything you want!");
+          job->john->doAction(johnname, CMD_GROPE); 
+          break;
+        case 3:
+          job->john->doSay("I've had a rough day, I could certainly use a little winding down.");
+          job->john->doSay("Let's get it on!");
+          job->john->doAction("", CMD_CLAP);
+          job->john->doAction("", CMD_GIGGLE);	  
+          break;
+        case 4:
+          tmp = format("%s Do you swallow?") % hookername;
+          job->john->doWhisper(tmp);
+          myself->doEmote("looks startled and almost chokes.");
+          myself->doAction(johnname, CMD_SLAP);
+          job->john->doAction(hookername, CMD_GRIN);
+          myself->doAction("", CMD_GIGGLE);
+          break;
       }
       job->state=STATE_TELLPRICE;
       break;
     case STATE_TELLPRICE:
       switch(::number(0,2)){
-	case 0:
-	  myself->doSay("It will cost you...");
-	  myself->doEmote("grins evilly revealing pointed teeth and her eyes turn <r>red<1>!");
-	  myself->doSay("...YOUR SOUL!");
-	  myself->doEmote("suddenly returns to normal.");
-	  myself->doAction("", CMD_GIGGLE);
-	  myself->doSay("Just joking.");
-	  myself->doAction(johnname, CMD_BECKON);
-	  break;
-	case 1:
-	  myself->doAction(johnname, CMD_PONDER);
-	  myself->doSay("Maybe we can work out a payment plan or something.");
-	  break;
-	case 2:
-	  myself->doSay("Don't worry sailor, I'm sure you can afford it.");
-	  myself->doAction(johnname, CMD_PET);
-	  break;
-	case 3:
-	  myself->doSay("For the service I provide, the cost is quite reasonable, I assure you.");
-	  myself->doAction(johnname, CMD_MASSAGE);
-	  break;
+        case 0:
+          myself->doSay("It will cost you...");
+          myself->doEmote("grins evilly revealing pointed teeth and her eyes turn <r>red<1>!");
+          myself->doSay("...YOUR SOUL!");
+          myself->doEmote("suddenly returns to normal.");
+          myself->doAction("", CMD_GIGGLE);
+          myself->doSay("Just joking.");
+          myself->doAction(johnname, CMD_BECKON);
+          break;
+        case 1:
+          myself->doAction(johnname, CMD_PONDER);
+          myself->doSay("Maybe we can work out a payment plan or something.");
+          break;
+        case 2:
+          myself->doSay("Don't worry sailor, I'm sure you can afford it.");
+          myself->doAction(johnname, CMD_PET);
+          break;
+        case 3:
+          myself->doSay("For the service I provide, the cost is quite reasonable, I assure you.");
+          myself->doAction(johnname, CMD_MASSAGE);
+          break;
       }
-      
+
       if(job && job->john && IS_SET(job->john->specials.act, ACT_SENTINEL)){
-	job->state=STATE_REJECT2;
+        job->state=STATE_REJECT2;
       } else {
-	if(::number(0,1))
-	  job->state=STATE_REJECT2;
-	else
-	  job->state=STATE_ACCEPT;
+        if(::number(0,1))
+          job->state=STATE_REJECT2;
+        else
+          job->state=STATE_ACCEPT;
       }
       break;
     case STATE_REJECT2:
       switch(::number(0,3)){
-	case 0:
-	  job->john->doSay("Hell, for that price I could just get married.");
-	  job->john->doAction("", CMD_CACKLE);
-	  break;
-	case 1:
-	  job->john->doAction("", CMD_SMIRK);
-	  job->john->doSay("The pet store has cheaper prices.");
-	  job->john->doSay("Er, I mean, um.");
-	  job->john->doEmote("turns away quickly.");
-	  break;
-	case 2:
-	  job->john->doSay("How about I mail you a check?  No?  Damn.");
-	  job->john->doAction("", CMD_SULK);
-	  break;
-	case 3:
-	  job->john->doSay("Wait, is that my wife I see down the street?!?");
-	  job->john->doSay("I'm out of here!");
-	  job->john->doFlee("");
-	  break;
+        case 0:
+          job->john->doSay("Hell, for that price I could just get married.");
+          job->john->doAction("", CMD_CACKLE);
+          break;
+        case 1:
+          job->john->doAction("", CMD_SMIRK);
+          job->john->doSay("The pet store has cheaper prices.");
+          job->john->doSay("Er, I mean, um.");
+          job->john->doEmote("turns away quickly.");
+          break;
+        case 2:
+          job->john->doSay("How about I mail you a check?  No?  Damn.");
+          job->john->doAction("", CMD_SULK);
+          break;
+        case 3:
+          job->john->doSay("Wait, is that my wife I see down the street?!?");
+          job->john->doSay("I'm out of here!");
+          job->john->doFlee("");
+          break;
       }
       job->john=NULL;
       job->state=STATE_NONE;
       break;
     case STATE_ACCEPT:
       switch(::number(0,3)){
-	case 0:
-	  job->john->doSay("Excellent.  You take Grimhaven Express right?");
-	  break;
-	case 1:
-	  job->john->doSay("Hm, that's almost a week's pay.");
-	  job->john->doAction("head", CMD_SCRATCH);
-	  job->john->doSay("Deal!");
-	  break;
-	case 2:
-	  job->john->doAction("", CMD_DROOL);
-	  job->john->doSay("Me Tarzan, you cheap whore.");
-	  break;
-	case 3:
-	  job->john->doSay("Alright, but you better not have crabs or anything.");
-	  break;
+        case 0:
+          job->john->doSay("Excellent.  You take Grimhaven Express right?");
+          break;
+        case 1:
+          job->john->doSay("Hm, that's almost a week's pay.");
+          job->john->doAction("head", CMD_SCRATCH);
+          job->john->doSay("Deal!");
+          break;
+        case 2:
+          job->john->doAction("", CMD_DROOL);
+          job->john->doSay("Me Tarzan, you cheap whore.");
+          break;
+        case 3:
+          job->john->doSay("Alright, but you better not have crabs or anything.");
+          break;
       }
       if(!IS_SET(job->john->specials.act, ACT_SENTINEL))
-	job->john->doFollow(hookername.c_str());
+        job->john->doFollow(hookername.c_str());
       job->state=STATE_WALKING;
       break;
     case STATE_WALKING:
@@ -4937,60 +4937,60 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
       //	break;
 
       if(myself->in_room != homes[job->cur_path]){
-	switch((dir=path.findPath(myself->in_room, 
-				  findRoom(homes[job->cur_path])))){
+        switch((dir=path.findPath(myself->in_room, 
+                findRoom(homes[job->cur_path])))){
           case 0: case 1: case 2: case 3: case 4: 
           case 5: case 6: case 7: case 8: case 9:
-	    myself->goDirection(dir);
-	    break;
+            myself->goDirection(dir);
+            break;
           case -1: // lost
-  	  default: // portal
-	    myself->doSay("Damn, I think I'm lost.");
-	    delete job->john;
-	    if(myself->act_ptr){
-	      delete static_cast<hunt_struct *>(myself->act_ptr);
-	      myself->act_ptr = NULL;
-	    }
-	    break;
+          default: // portal
+            myself->doSay("Damn, I think I'm lost.");
+            delete job->john;
+            if(myself->act_ptr){
+              delete static_cast<hunt_struct *>(myself->act_ptr);
+              myself->act_ptr = NULL;
+            }
+            break;
         }
-// returns -1 indicating a problem or can't find a path
-// returns 0-9 indicating a direction to travel
-// returns 10+ indicating a portal to enter (10 = first in room, 11 = 2nd,...)
+        // returns -1 indicating a problem or can't find a path
+        // returns 0-9 indicating a direction to travel
+        // returns 10+ indicating a portal to enter (10 = first in room, 11 = 2nd,...)
 
       } else {
-	// if arrived at destination
-	job->state=STATE_WAITFORCLEAR;
-	myself->doSay("Let's get to work.");
-	myself->doAction("", CMD_GRIN);
+        // if arrived at destination
+        job->state=STATE_WAITFORCLEAR;
+        myself->doSay("Let's get to work.");
+        myself->doAction("", CMD_GRIN);
       }
       break;
     case STATE_WAITFORCLEAR:
       found=0;
       for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (t=*it);++it){
-	if(dynamic_cast<TPerson *>(t)){
-	  switch(::number(0,1)){
-	    case 0:
-	      myself->doSay("Um, a little privacy please.");
-	      myself->doAction("", CMD_COUGH);
-	      break;
-	    case 1:
-	      job->john->doEmote("tries to hide his face from you.");
-	      break;
-	  }
-	  found=1;
-	}
+        if(dynamic_cast<TPerson *>(t)){
+          switch(::number(0,1)){
+            case 0:
+              myself->doSay("Um, a little privacy please.");
+              myself->doAction("", CMD_COUGH);
+              break;
+            case 1:
+              job->john->doEmote("tries to hide his face from you.");
+              break;
+          }
+          found=1;
+        }
       }
       if(!found){
-	delete job->john;
-	if(myself->act_ptr){
-	  delete static_cast<hunt_struct *>(myself->act_ptr);
-	  myself->act_ptr = NULL;
-	  return DELETE_THIS;
-	}
+        delete job->john;
+        if(myself->act_ptr){
+          delete static_cast<hunt_struct *>(myself->act_ptr);
+          myself->act_ptr = NULL;
+          return DELETE_THIS;
+        }
       }
       break;
   }
-  
+
   return FALSE;
 }
 
