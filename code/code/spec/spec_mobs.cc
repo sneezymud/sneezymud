@@ -4982,6 +4982,7 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
       }
       if(!found){
         delete job->john;
+        job->john = nullptr;
         if(myself->act_ptr){
           delete static_cast<hunt_struct *>(myself->act_ptr);
           myself->act_ptr = NULL;
