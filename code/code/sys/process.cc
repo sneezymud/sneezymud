@@ -198,6 +198,7 @@ void TScheduler::runChar(int pulseNum)
       vlogf(LOG_BUG, format("Error: dead creature (%s at %d) in character_list, removing.") % 
           tmp_ch->getName() % tmp_ch->in_room);
       delete tmp_ch;
+      tmp_ch = temp;
       continue;
     }
     if ((tmp_ch->getPosition() < POSITION_STUNNED) &&

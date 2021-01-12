@@ -4741,7 +4741,14 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
   // Make sure our john is still alive and in the same room
   found=0;
   if(job->john){
-    if(!myself->sameRoom(*job->john)){
+    bool mobStillExists = false;
+    for (TBeing* i = character_list; i; i = i->next) {
+      if (i == job->john) {
+        mobStillExists = true;
+        break;
+      }
+    }
+    if (!mobStillExists || !myself->sameRoom(*job->john)){
       myself->doAction("", CMD_FROWN);
       job->john=NULL;
       job->state=STATE_NONE;
@@ -4947,6 +4954,7 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
           default: // portal
             myself->doSay("Damn, I think I'm lost.");
             delete job->john;
+            job->john = nullptr;
             if(myself->act_ptr){
               delete static_cast<hunt_struct *>(myself->act_ptr);
               myself->act_ptr = NULL;
