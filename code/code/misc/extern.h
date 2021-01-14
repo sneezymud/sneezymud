@@ -141,7 +141,7 @@ extern void help_edit(TBeing *, char *arg);
 extern void call_room_specials(void);
 extern int DetermineExp(TBeing *mob);
 extern void load_one_room(FILE * fl, TRoom *rp);
-extern const dirTypeT rev_dir[];
+extern dirTypeT rev_dir(dirTypeT dir);
 extern void allocate_room(int);
 extern void buildCommandArray();
 extern void assign_objects(void);
