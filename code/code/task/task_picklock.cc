@@ -72,7 +72,7 @@ static void pick_pulse(TBeing *ch, TThing *pick)
     TRoom *other = real_roomp(exit->to_room);
     roomDirData *back;
     if (other &&
-        (back=other->dir_option[rev_dir[ch->task->status]]) &&
+        (back=other->dir_option[rev_dir(static_cast<dirTypeT>(ch->task->status))]) &&
         back->to_room == ch->in_room)
       REMOVE_BIT(back->condition, EXIT_LOCKED);
     ch->stopTask();

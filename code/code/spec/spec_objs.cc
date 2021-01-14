@@ -1269,7 +1269,7 @@ int caravan_wagon(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
     (*me)--;
     *rp2 += *me;
 
-    buf = format("$n rolls in from the %s.") % dirs[rev_dir[dir]];
+    buf = format("$n rolls in from the %s.") % dirs[rev_dir(dir)];
     act(buf, TRUE, me, 0, 0, TO_ROOM);
 
     return TRUE;
@@ -5854,9 +5854,9 @@ int skittishObject (TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 			
 			// movement into room
 			if (o->roomp->isWaterSector() || o->roomp->isUnderwaterSector()){
-				msg = format("$p swims in from the %s.") % dirs[rev_dir[use_dir]];
+				msg = format("$p swims in from the %s.") % dirs[rev_dir(use_dir)];
 			} else {
-				msg = format("$p skitters in from the %s.") % dirs[rev_dir[use_dir]];
+				msg = format("$p skitters in from the %s.") % dirs[rev_dir(use_dir)];
 			}
 			act(msg, FALSE, o, o, 0, TO_ROOM);
 			

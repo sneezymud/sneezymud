@@ -179,7 +179,7 @@ void TTrashPile::overFlow()
 	    sstring(getName()).cap().c_str(), dirs_to_blank[dir]);
 
     sendrpf(COLOR_BASIC, rp, "An avalanch of trash cascades in from the %s.\n\r",
-	    dirs[rev_dir[dir]]);
+	    dirs[rev_dir(dir)]);
 
 
 

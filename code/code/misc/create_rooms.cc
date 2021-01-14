@@ -444,7 +444,7 @@ void TPerson::doEdit(const char *arg)
             newrp->setRoomHeight(roomp->getRoomHeight());
           }
 
-          int rvs_dir = rev_dir[new_dir];
+          dirTypeT rvs_dir = rev_dir(static_cast<dirTypeT>(new_dir));
 
           if (!newrpTo->dir_option[new_dir]) {
             newrpTo->dir_option[new_dir] = new roomDirData();
@@ -568,7 +568,7 @@ void TPerson::doEdit(const char *arg)
       }
       newrp = real_roomp(exroom);
       sendTo("Fixing opposite directions.\n\r");
-      new_dir = rev_dir[rdir];
+      new_dir = rev_dir(static_cast<dirTypeT>(rdir));
       if (newrp->dir_option[new_dir]) {
         sendTo("Exit back into room already exists...");
         if (newrp->dir_option[new_dir]->to_room == in_room)
@@ -851,8 +851,8 @@ void TPerson::doEdit(const char *arg)
                 sendTo("Error.  Exit exists but exit room Doesn't!\n\r");
                 return;
               } else {
-                delete zRoom->dir_option[rev_dir[dir]];
-                zRoom->dir_option[rev_dir[dir]] = NULL;
+                delete zRoom->dir_option[rev_dir(dir)];
+                zRoom->dir_option[rev_dir(dir)] = NULL;
               }
             }
             newrp->dir_option[dir]->door_type       = DOOR_NONE;
@@ -866,7 +866,7 @@ void TPerson::doEdit(const char *arg)
             newrp->dir_option[dir]->keyword         = NULL;
 
             // Create exit back.
-            dir = rev_dir[dir];
+            dir = rev_dir(dir);
             if (!newrpTo->dir_option[dir])
               newrpTo->dir_option[dir] = new roomDirData();
             else {
@@ -875,8 +875,8 @@ void TPerson::doEdit(const char *arg)
                 sendTo("Error.  Exit exists but exit room Doesn't!\n\r");
                 return;
               } else {
-                delete zRoom->dir_option[rev_dir[dir]];
-                zRoom->dir_option[rev_dir[dir]] = 0;
+                delete zRoom->dir_option[rev_dir(dir)];
+                zRoom->dir_option[rev_dir(dir)] = 0;
               }
             }
             newrpTo->dir_option[dir]->door_type       = DOOR_NONE;
@@ -1799,7 +1799,7 @@ static void finishRoom(TRoom *rp, TBeing *ch, dirTypeT dir)
     ch->sendTo("Done.\n\r");
   }
   ch->sendTo("Fixing opposite directions.\n\r");
-  dirTypeT new_dir = rev_dir[dir];
+  dirTypeT new_dir = rev_dir(dir);
   if (newrp->dir_option[new_dir]) {
     ch->sendTo("Exit back into room already exists...");
     if (newrp->dir_option[new_dir]->to_room == ch->in_room) {

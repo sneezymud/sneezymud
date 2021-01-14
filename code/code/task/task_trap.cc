@@ -95,7 +95,7 @@ int task_trap_door(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
 
     // and now for other side 
     if ((rp2 = real_roomp(exitp->to_room)) &&
-           (back = rp2->dir_option[rev_dir[ch->task->flags]]) &&
+           (back = rp2->dir_option[rev_dir(static_cast<dirTypeT>(ch->task->flags))]) &&
            back->to_room == ch->in_room) {
       SET_BIT(back->condition, EXIT_TRAPPED);
       back->trap_info = ch->task->status;

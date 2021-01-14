@@ -1758,7 +1758,7 @@ int daggerOfHunting(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
     *rp += *me;
 
     buf = format("With blinding speed, $n streaks into the room from the %s.") %
-             dirs[rev_dir[dir]];
+             dirs[rev_dir(dir)];
     act(buf, TRUE, me, 0, 0, TO_ROOM);
   }
 

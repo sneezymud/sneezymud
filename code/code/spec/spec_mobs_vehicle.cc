@@ -91,7 +91,7 @@ int trolleyBoatCaptain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, T
   }
 
   if(*job==100){
-    i=rev_dir[trolley_path[j].direction];
+    i=rev_dir(trolley_path[j].direction);
   } else {
     i=trolley_path[j+1].direction;
   }

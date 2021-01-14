@@ -1029,7 +1029,7 @@ int siren(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       continue;
     if (!(rp2 = real_roomp(exitp->to_room)))
       continue;
-    if (!(back = rp2->dir_option[rev_dir[door]]))
+    if (!(back = rp2->dir_option[rev_dir(door)]))
       continue;
     if (rp != real_roomp(back->to_room))
       continue;
@@ -1054,7 +1054,7 @@ int siren(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
         continue;
       }
       vict->sendTo("You hear a siren song and feel compelled to follow its allure...\n\r");
-      rc = vict->moveOne(rev_dir[door]);
+      rc = vict->moveOne(rev_dir(door));
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete vict;
         vict = NULL;
@@ -1530,7 +1530,7 @@ int payToll(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
       if(!myself->canSee(ch) || myself==ch || ch->isAnimal() || 
          !myself->awake() || myself->fight() || (cmd == CMD_OPEN)) {
 	return FALSE;
-      } else if(rev_dir[dir]==ch->specials.last_direction){
+      } else if(rev_dir(dir)==ch->specials.last_direction){
 	act("$n growls but lets you return the way you came.",
 	    FALSE, myself, 0, ch, TO_VICT);
 	act("$n growls but lets $N return the way $e came.",
@@ -1590,7 +1590,7 @@ int payToll(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
         return FALSE;
       break;
     case 22713:
-      if((rev_dir[dir]==ch->specials.last_direction) || (cmd == CMD_OPEN)){
+      if((rev_dir(dir)==ch->specials.last_direction) || (cmd == CMD_OPEN)){
 	return FALSE;
       } else if(ch->hasQuestBit(TOG_PAID_TOLL) || 
                 dynamic_cast<TMonster *>(ch)){
@@ -1616,7 +1616,7 @@ int payToll(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
       if(((!myself->canSee(ch) || myself==ch)) || ch->isAnimal() ||
          myself->fight() || (cmd == CMD_OPEN)){
 	return FALSE;
-      } else if(rev_dir[dir]==ch->specials.last_direction){
+      } else if(rev_dir(dir)==ch->specials.last_direction){
 	return FALSE;
       } else if((ch->hasQuestBit(TOG_PAID_TOLL) || 
                 dynamic_cast<TMonster *>(ch))){
