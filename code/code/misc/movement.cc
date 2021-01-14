@@ -1472,15 +1472,15 @@ int TBeing::displayMove(dirTypeT dir, int was_in, int total)
   if ((dir < 4) || (dir > 5)) {
     if (total == 1) {
       if (riding) {
-        sprintf(tmp, "$n has arrived from the %s, riding on $p.", dirs[rev_dir[dir]]);
+        sprintf(tmp, "$n has arrived from the %s, riding on $p.", dirs[rev_dir(dir)]);
       } else if (eitherLegHurt()) {
         sprintf(tmp, "$n has arrived from the %s, hobbling on one leg.",
-                     dirs[rev_dir[dir]]);
+                     dirs[rev_dir(dir)]);
       } else {
-        sprintf(tmp, "$n %s from the %s.", how, dirs[rev_dir[dir]]);
+        sprintf(tmp, "$n %s from the %s.", how, dirs[rev_dir(dir)]);
       }
     } else
-      sprintf(tmp, "$n %s from the %s.", how, dirs[rev_dir[dir]]);
+      sprintf(tmp, "$n %s from the %s.", how, dirs[rev_dir(dir)]);
   } else if (dir == 4) {
     if (total == 1) {
       if (riding) {
@@ -1528,7 +1528,7 @@ int TBeing::displayMove(dirTypeT dir, int was_in, int total)
         char dirText[256];
 
         if ((dir < 4) || (dir > 5))
-          sprintf(dirText, "the %s", dirs[rev_dir[dir]]);
+          sprintf(dirText, "the %s", dirs[rev_dir(dir)]);
         else if (dir == 4)
           strcpy(dirText, "below");
         else
@@ -2283,7 +2283,7 @@ void TBeing::doLock(const char *argument)
       sendTo("*Click*\n\r");
 
       rp = real_roomp(exitp->to_room);
-      if (rp && (back = rp->dir_option[rev_dir[door]]) && back->to_room == in_room)
+      if (rp && (back = rp->dir_option[rev_dir(door)]) && back->to_room == in_room)
         SET_BIT(back->condition, EXIT_LOCKED);
     }
   }
@@ -2352,7 +2352,7 @@ void TBeing::doUnlock(const char *argument)
 
       sendTo("*Click*\n\r");
       rp = real_roomp(exitp->to_room);
-      if (rp && (back = rp->dir_option[rev_dir[door]]) && back->to_room == in_room)
+      if (rp && (back = rp->dir_option[rev_dir(door)]) && back->to_room == in_room)
         REMOVE_BIT(back->condition, EXIT_LOCKED);
     }
   }

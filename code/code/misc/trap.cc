@@ -949,7 +949,7 @@ int TBeing::triggerDoorTrap(dirTypeT door)
   
   REMOVE_BIT(exitp->condition, EXIT_TRAPPED);
   if ((rp = real_roomp(exitp->to_room)) &&
-      (back = rp->dir_option[rev_dir[door]])) {
+      (back = rp->dir_option[rev_dir(door)])) {
     REMOVE_BIT(back->condition, EXIT_TRAPPED);
   }
 
@@ -3608,7 +3608,7 @@ void TBeing::throwGrenade(TTrap *o, dirTypeT dir)
   }
 
   *rp += *o;
-  sprintf(buf, "$n bounces into the room from the %s.", dirs[rev_dir[dir]]);
+  sprintf(buf, "$n bounces into the room from the %s.", dirs[rev_dir(dir)]);
   act(buf, TRUE, o, 0, 0, TO_ROOM);
 }
 

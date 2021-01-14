@@ -458,9 +458,9 @@ int TBeing::riverFlow(int)
     }
 
     if (t == rider) 
-      sprintf(buf, "$n drifts in from the %s riding $N.", dirs[rev_dir[rd]]);
+      sprintf(buf, "$n drifts in from the %s riding $N.", dirs[rev_dir(rd)]);
     else
-      sprintf(buf, "$n also drifts in from the %s riding $N.", dirs[rev_dir[rd]]);
+      sprintf(buf, "$n also drifts in from the %s riding $N.", dirs[rev_dir(rd)]);
     act(buf, FALSE, t, 0, this, TO_NOTVICT);
 
   }
@@ -471,7 +471,7 @@ int TBeing::riverFlow(int)
   doLook("", CMD_LOOK);
 
   if (!rider) {
-    sprintf(buf, "$n drifts in from the %s.", dirs[rev_dir[rd]]);
+    sprintf(buf, "$n drifts in from the %s.", dirs[rev_dir(rd)]);
     act(buf, FALSE, this, 0, 0, TO_ROOM);
   }
 
@@ -602,7 +602,7 @@ int TObj::riverFlow(int)
     --(*t);
     *to_room += *t;
 
-    sprintf(buf, "$n drifts in from the %s on $p.", dirs[rev_dir[rd]]);
+    sprintf(buf, "$n drifts in from the %s on $p.", dirs[rev_dir(rd)]);
     act(buf, TRUE, t, this, 0, TO_ROOM);
     TBeing *tbt = dynamic_cast<TBeing *>(t);
     if (tbt)
@@ -617,7 +617,7 @@ int TObj::riverFlow(int)
   *to_room += *this;
 
   if (!rider) {
-    sprintf(buf, "$n drifts in from the %s...", dirs[rev_dir[rd]]);
+    sprintf(buf, "$n drifts in from the %s...", dirs[rev_dir(rd)]);
     act(buf, TRUE, this, 0, 0, TO_ROOM);
   }
   if (riding) {
