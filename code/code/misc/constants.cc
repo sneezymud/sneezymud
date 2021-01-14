@@ -15,19 +15,31 @@
 
 const sstring whitespace=" \f\n\r\t\v";  // from isspace() man page
 
-const dirTypeT rev_dir[MAX_DIR] =
+namespace {
+  const dirTypeT rev_dirs[MAX_DIR] =
+  {
+    DIR_SOUTH,
+    DIR_WEST,
+    DIR_NORTH,
+    DIR_EAST,
+    DIR_DOWN,
+    DIR_UP,
+    DIR_SOUTHWEST,
+    DIR_SOUTHEAST,
+    DIR_NORTHWEST,
+    DIR_NORTHEAST
+  };
+}
+
+dirTypeT rev_dir(dirTypeT dir)
 {
-  DIR_SOUTH,
-  DIR_WEST,
-  DIR_NORTH,
-  DIR_EAST,
-  DIR_DOWN,
-  DIR_UP,
-  DIR_SOUTHWEST,
-  DIR_SOUTHEAST,
-  DIR_NORTHWEST,
-  DIR_NORTHEAST
-};
+  if (dir < DIR_NORTH || dir >= MAX_DIR) {
+    vlogf(LOG_BUG, format("bad rev_dir(%d)") % dir);
+    return DIR_NONE;
+  } else {
+    return rev_dirs[dir];
+  }
+}
 
 // all references to this need to go through the mapping function
 // since the slot order has changed.  -- bat 06-27-97
