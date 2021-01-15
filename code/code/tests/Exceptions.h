@@ -32,7 +32,7 @@ class Exceptions : public CxxTest::TestSuite
   void testProdVSBeta(){
     sstring foo;
 
-    TS_ASSERT_THROWS(foo[0], std::out_of_range);
+    TS_ASSERT_THROWS(foo[0], std::out_of_range const&);
 
   }
 

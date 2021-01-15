@@ -1,6 +1,6 @@
 #include <cassert>
 #include <stdarg.h>
-#include <mysql/mysql.h>
+#include <mariadb/mysql.h>
 
 #include "configuration.h"
 #include "extern.h"
