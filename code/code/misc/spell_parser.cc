@@ -602,15 +602,7 @@ static void badCastSyntax(const TBeing *ch, spellNumT which)
 // returns DELETE_THIS
 int TBeing::doPray(const char *argument)
 {
-  char kludge[256];
-  char arg[256];
-  char *n;
-  int spaces = 0;
-  char buf[256], buf2[256], buf3[256], argbak[256];
-
-// why can't mobs call this command?
-//  if (!isPc() && !desc)
-//       return FALSE;
+  sstring args = sstring(argument).trim();
 
   if (isPc() && GetMaxLevel() > MAX_MORT && !hasWizPower(POWER_NO_LIMITS)) {
     sendTo("You are currently not permitted to cast prayers, sorry.\n\r");
@@ -623,48 +615,34 @@ int TBeing::doPray(const char *argument)
     return FALSE;
   }
 
-  if(!doesKnowSkill(SKILL_DEVOTION) && 
+  if(!doesKnowSkill(SKILL_DEVOTION) &&
      !hasClass(CLASS_CLERIC) && !hasClass(CLASS_DEIKHAN)){
     sendTo("You do not have the faith required to pray.\n\r");
     return FALSE;
   }
 
-
   if (nomagic("Sorry, your deity refuses to contact you here."))
     return FALSE;
-  
-  // Eat spaces off the end and off the beginning
-  strncpy(arg, argument, cElements(arg));
-  while (isspace(*arg))
-    strcpy(arg, &arg[1]);
 
   if (cantHit > 0) {
     sendTo("You're too busy.\n\r");
     return FALSE;
   }
 
-  if (!*arg) {
+  if (args.empty()) {
     badCastSyntax(this, TYPE_UNDEFINED);
     sendTo("You do NOT need to include ''s around the <prayer name>.\n\r");
     return FALSE;
   }
-  for (n = arg; *n; n++) {
-    if (isspace(*n))
-      spaces++;
-  }
-  n--;
-  while (isspace(*n)) {
-    *n = '\0';
-    spaces--;
-    n--;
-  }
-  one_argument(arg, kludge, cElements(kludge));
-  if (is_abbrev(kludge, "paralyze")) {
-    strcpy(argbak, arg);
-    strcpy(arg, one_argument(arg, buf, cElements(buf)));   // buf == paralyze
-    strcpy(arg, one_argument(arg, buf2, cElements(buf2)));  // buf2 == NULL, target, "limb"
 
-    if (!*buf2) {
+  sstring firstArg = args.word(0);
+  sstring secondArg = args.word(1);
+  sstring thirdArg = args.word(2);
+
+  // beginning of special cases: multi-word-named prayers, with optional targets
+  // (regular generic prayers are after this)
+  if (is_abbrev(firstArg, "paralyze")) {
+    if (secondArg.empty()) {
       // pray paralyze - target on fight()
       if (!doesKnowSkill(getSkillNum(SPELL_PARALYZE))) {
         sendTo("You don't know that prayer!\n\r");
@@ -675,14 +653,13 @@ int TBeing::doPray(const char *argument)
         return FALSE;
       }
       return doDiscipline(SPELL_PARALYZE, "");
-    } else if (is_abbrev(buf2, "limb")) {
+    } else if (is_abbrev(secondArg, "limb")) {
       if (!doesKnowSkill(getSkillNum(SPELL_PARALYZE_LIMB))) {
         sendTo("You don't know that prayer!\n\r");
         return FALSE;
       }
 
-      strcpy(arg,  one_argument(arg, buf3, cElements(buf3)));  // buf3 = NULL, or targ
-      if (!*buf3) {
+      if (thirdArg.empty()) {
         // pray paralyze limb - target on fight()
         if (!fight()) {
           badCastSyntax(this, SPELL_PARALYZE_LIMB);
@@ -690,33 +667,29 @@ int TBeing::doPray(const char *argument)
         }
         return doDiscipline(SPELL_PARALYZE_LIMB,"");
       }
-      return doDiscipline(SPELL_PARALYZE_LIMB, buf3);
+      return doDiscipline(SPELL_PARALYZE_LIMB, thirdArg);
     } else {
       if (!doesKnowSkill(getSkillNum(SPELL_PARALYZE))) {
         sendTo("You don't know that prayer!\n\r");
         return FALSE;
       }
-      return doDiscipline(SPELL_PARALYZE, buf2);
+      return doDiscipline(SPELL_PARALYZE, secondArg);
     }
-  } if (is_abbrev(kludge, "heal")) {
-    strcpy(argbak, arg);
-    strcpy(arg, one_argument(arg, buf, cElements(buf)));  // buf == heal
-    strcpy(arg, one_argument(arg, buf2, cElements(buf2)));
+  } else if (is_abbrev(firstArg, "heal")) {
     // pray heal <targ>
     // pray heal spray
     // pray heal light <targ>
     // pray heal light spray
 
-    if (!*buf2) {
+    if (secondArg.empty()) {
       // pray heal - target on self
       if (!doesKnowSkill(getSkillNum(SPELL_HEAL))) {
         sendTo("You don't know that prayer!\n\r");
         return FALSE;
       }
       return doDiscipline(SPELL_HEAL, "");
-    } else if (!strcmp(buf2, "spray") || !strcmp(buf2, "spra") || !strcmp(buf2, "spr"
-)) {
-      // old style was to parse for if abbrev of spray but that would capture 
+    } else if (secondArg == "spray" || secondArg == "spra" || secondArg == "spr") {
+      // old style was to parse for if abbrev of spray but that would capture
       //   any "s" like pray heal sp for pray heal spowder would goto spray
       // pray heal spray - no targs
       if (!doesKnowSkill(getSkillNum(SPELL_HEAL_SPRAY))) {
@@ -724,35 +697,35 @@ int TBeing::doPray(const char *argument)
         return FALSE;
       }
       return doDiscipline(SPELL_HEAL_SPRAY, "");
-    } else if (!*arg) {
+    } else if (!secondArg.empty()) {
       // pray heal <target>
       // pray heal light - autotarget on self
       // pray heal serious - autotarget on self
       // pray heal critical - autotarget on self
       // pray heal full - autotarget on self
 
-      if (is_abbrev(buf2, "light")) {
+      if (is_abbrev(secondArg, "light")) {
         // pray heal light - autotarget
         if (!doesKnowSkill(getSkillNum(SPELL_HEAL_LIGHT))) {
           sendTo("You don't know that prayer!\n\r");
           return FALSE;
         }
         return doDiscipline(SPELL_HEAL_LIGHT, "");
-      } else if (is_abbrev(buf2, "serious")) {
+      } else if (is_abbrev(secondArg, "serious")) {
         // pray heal serious - autotarget
         if (!doesKnowSkill(getSkillNum(SPELL_HEAL_SERIOUS))) {
           sendTo("You don't know that prayer!\n\r");
           return FALSE;
         }
         return doDiscipline(SPELL_HEAL_SERIOUS, "");
-      } else if (is_abbrev(buf2, "critical")) {
+      } else if (is_abbrev(secondArg, "critical")) {
         // pray heal critical - autotarget
         if (!doesKnowSkill(getSkillNum(SPELL_HEAL_CRITICAL))) {
           sendTo("You don't know that prayer!\n\r");
           return FALSE;
         }
         return doDiscipline(SPELL_HEAL_CRITICAL, "");
-      } else if (is_abbrev(buf2, "full")) {
+      } else if (is_abbrev(secondArg, "full")) {
         // pray heal full - autotarget
         if (!doesKnowSkill(getSkillNum(SPELL_HEAL_FULL))) {
           sendTo("You don't know that prayer!\n\r");
@@ -765,20 +738,17 @@ int TBeing::doPray(const char *argument)
           sendTo("You don't know that prayer!\n\r");
           return FALSE;
         }
-        return doDiscipline(SPELL_HEAL, buf2);
+        return doDiscipline(SPELL_HEAL, secondArg);
       }
     } else {
-      // buf2 = serious/crit
-      one_argument(arg, buf3, cElements(buf3));
-      // buf3 = spray or targets-name
-      if (!strcmp(buf3, "spray") || !strcmp(buf3, "spra") || !strcmp(buf3, "spr")) {
-        if (is_abbrev(buf2, "critical")) {
+      if (thirdArg == "spray" || thirdArg == "spra" || thirdArg == "spr") {
+        if (secondArg == "critical") {
           if (!doesKnowSkill(getSkillNum(SPELL_HEAL_CRITICAL_SPRAY))) {
             sendTo("You don't know that prayer!\n\r");
             return FALSE;
           }
           return doDiscipline(SPELL_HEAL_CRITICAL_SPRAY, "");
-        } else if (is_abbrev(buf2, "full")) {
+        } else if (is_abbrev(secondArg, "full")) {
           if (!doesKnowSkill(getSkillNum(SPELL_HEAL_FULL_SPRAY))) {
             sendTo("You don't know that prayer!\n\r");
             return FALSE;
@@ -787,44 +757,41 @@ int TBeing::doPray(const char *argument)
         }
         // gets here on something dumb like "pray heal light spray"
       }
-      if (is_abbrev(buf2, "light")) {
+      if (is_abbrev(secondArg, "light")) {
         if (!doesKnowSkill(getSkillNum(SPELL_HEAL_LIGHT))) {
           sendTo("You don't know that prayer!\n\r");
           return FALSE;
         }
-        return doDiscipline(SPELL_HEAL_LIGHT, buf3);
-      } else if (is_abbrev(buf2, "critical")) {
+        return doDiscipline(SPELL_HEAL_LIGHT, thirdArg);
+      } else if (is_abbrev(secondArg, "critical")) {
         if (!doesKnowSkill(getSkillNum(SPELL_HEAL_CRITICAL))) {
           sendTo("You don't know that prayer!\n\r");
           return FALSE;
         }
-        return doDiscipline(SPELL_HEAL_CRITICAL, buf3);
-      } else if (is_abbrev(buf2, "serious")) {
+        return doDiscipline(SPELL_HEAL_CRITICAL, thirdArg);
+      } else if (is_abbrev(secondArg, "serious")) {
         if (!doesKnowSkill(getSkillNum(SPELL_HEAL_SERIOUS))) {
           sendTo("You don't know that prayer!\n\r");
           return FALSE;
         }
-        return doDiscipline(SPELL_HEAL_SERIOUS, buf3);
-      } else if (is_abbrev(buf2, "full")) {
+        return doDiscipline(SPELL_HEAL_SERIOUS, thirdArg);
+      } else if (is_abbrev(secondArg, "full")) {
         if (!doesKnowSkill(getSkillNum(SPELL_HEAL_FULL))) {
           sendTo("You don't know that prayer!\n\r");
           return FALSE;
         }
-        return doDiscipline(SPELL_HEAL_FULL, buf3);
+        return doDiscipline(SPELL_HEAL_FULL, thirdArg);
       }
     }
     // this can happen: heal llight batopr
     sendTo("That's not a prayer request!\n\r");
     return FALSE;
-  } if (is_abbrev(kludge, "harm")) {
-    strcpy(argbak, arg);
-    strcpy(arg, one_argument(arg, buf, cElements(buf)));  // buf == harm
-    strcpy(arg, one_argument(arg, buf2, cElements(buf2)));
+  } else if (is_abbrev(firstArg, "harm")) {
 
     // pray harm <targ>
     // pray harm light <targ>
 
-    if (!*buf2) {
+    if (secondArg.empty()) {
     // pray harm - target on self
       if (!doesKnowSkill(getSkillNum(SPELL_HARM))) {
         sendTo("You don't know that prayer!\n\r");
@@ -836,25 +803,13 @@ int TBeing::doPray(const char *argument)
         return FALSE;
       }
       return doDiscipline(SPELL_HARM, "");
-#if 0
-    } else if (!strcmp(buf2, "spray") || !strcmp(buf2, "spra") || !strcmp(buf2,
-"spr")) { 
-      // old style was to parse for if abbrev of spray but that would capture
-       //any"s"likepray heal sp for pray heal spowder would goto spray
-      if (!doesKnowSkill(getSkillNum(SPELL_HARM_SPRAY))) {
-        sendTo("You don't know that prayer!\n\r");
-        return FALSE;
-      }
-      return doDiscipline(SPELL_HARM_SPRAY, "");
-#endif
-
-    } else if (!*arg) {
-      // !*arg means buf=harm, buf2=targ
+    } else if (thirdArg.empty()) {
+      // thirdArg.empty() means firstArg=harm, secondArg=targ
       // OR
-      // buf=harm, buf2="serious, light, critical, full"
+      // firstArg=harm, secondArg="serious, light, critical, full"
       // if fighting, autotarget
 
-      if (is_abbrev(buf2, "light")) {
+      if (is_abbrev(secondArg, "light")) {
         if (!doesKnowSkill(getSkillNum(SPELL_HARM_LIGHT))) {
           sendTo("You don't know that prayer!\n\r");
           return FALSE;
@@ -864,7 +819,7 @@ int TBeing::doPray(const char *argument)
           return FALSE;
         }
         return doDiscipline(SPELL_HARM_LIGHT, "");
-      } else if (is_abbrev(buf2, "serious")) {
+      } else if (is_abbrev(secondArg, "serious")) {
         if (!doesKnowSkill(getSkillNum(SPELL_HARM_SERIOUS))) {
           sendTo("You don't know that prayer!\n\r");
           return FALSE;
@@ -874,7 +829,7 @@ int TBeing::doPray(const char *argument)
           return FALSE;
         }
         return doDiscipline(SPELL_HARM_SERIOUS, "");
-      } else if (is_abbrev(buf2, "critical")) {
+      } else if (is_abbrev(secondArg, "critical")) {
         if (!doesKnowSkill(getSkillNum(SPELL_HARM_CRITICAL))) {
           sendTo("You don't know that prayer!\n\r");
           return FALSE;
@@ -884,112 +839,66 @@ int TBeing::doPray(const char *argument)
           return FALSE;
         }
         return doDiscipline(SPELL_HARM_CRITICAL, "");
-#if 0
-      } else if (is_abbrev(buf2, "full")) {
-        if (!doesKnowSkill(getSkillNum(SPELL_HARM_FULL))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        if (!fight()) {
-          badCastSyntax(this, SPELL_HARM_FULL);
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HARM_FULL, "");
-      } else if (is_abbrev(buf2, "spray")) {
-        if (!doesKnowSkill(getSkillNum(SPELL_HARM_SPRAY))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HARM_SPRAY, "");
-#endif
       } else {
         if (!doesKnowSkill(getSkillNum(SPELL_HARM))) {
           sendTo("You don't know that prayer!\n\r");
           return FALSE;
         }
-        return doDiscipline(SPELL_HARM, buf2);
+        return doDiscipline(SPELL_HARM, secondArg);
       }
     } else {
-      // buf2 = serious/crit
-      one_argument(arg, buf3, cElements(buf3));
-      // buf3 = spray or targets-name
-#if 0
-      if (!strcmp(buf3, "spray") || !strcmp(buf3, "spra") || !strcmp(buf3, "spr")) {
-        if (is_abbrev(buf2, "critical")) {
-          if (!doesKnowSkill(getSkillNum(SPELL_HARM_CRITICAL_SPRAY))) {
-            sendTo("You don't know that prayer!\n\r");
-            return FALSE;
-          }
-          return doDiscipline(SPELL_HARM_CRITICAL_SPRAY, "");
-        } else if (is_abbrev(buf2, "full")) {
-          if (!doesKnowSkill(getSkillNum(SPELL_HARM_FULL_SPRAY))) {
-            sendTo("You don't know that prayer!\n\r");
-            return FALSE;
-          }
-          return doDiscipline(SPELL_HARM_FULL_SPRAY, "");
-        }
-        // gets here on something dumb like "pray heal light spray"
-      }
-#endif
-      if (is_abbrev(buf2, "light")) {
+      // secondArg = serious/crit
+      // thirdArg = spray or targets-name
+      if (is_abbrev(secondArg, "light")) {
         if (!doesKnowSkill(getSkillNum(SPELL_HARM_LIGHT))) {
           sendTo("You don't know that prayer!\n\r");
           return FALSE;
         }
-        return doDiscipline(SPELL_HARM_LIGHT, buf3);
-      } else if (is_abbrev(buf2, "critical")) {
+        return doDiscipline(SPELL_HARM_LIGHT, thirdArg);
+      } else if (is_abbrev(secondArg, "critical")) {
         if (!doesKnowSkill(getSkillNum(SPELL_HARM_CRITICAL))) {
           sendTo("You don't know that prayer!\n\r");
           return FALSE;
         }
-        return doDiscipline(SPELL_HARM_CRITICAL, buf3);
-      } else if (is_abbrev(buf2, "serious")) {
+        return doDiscipline(SPELL_HARM_CRITICAL, thirdArg);
+      } else if (is_abbrev(secondArg, "serious")) {
         if (!doesKnowSkill(getSkillNum(SPELL_HARM_SERIOUS))) {
           sendTo("You don't know that prayer!\n\r");
           return FALSE;
         }
-        return doDiscipline(SPELL_HARM_SERIOUS, buf3);
+        return doDiscipline(SPELL_HARM_SERIOUS, thirdArg);
       }
     }
     // this can happen: heal llight batopr
     sendTo("That's not a prayer request!\n\r");
     return FALSE;
   }
-  spellNumT which;
-  if (((which = searchForSpellNum(arg, EXACT_YES)) > TYPE_UNDEFINED) || 
-      ((which = searchForSpellNum(arg, EXACT_NO)) > TYPE_UNDEFINED)) {
-    if (discArray[which]->typ != SPELL_CLERIC && discArray[which]->typ != SPELL_DEIKHAN) {
-      sendTo("That's not a prayer request!\n\r");
-      return FALSE;
+  // end of multi-word cases.
+
+  auto findPrayerByName = [this](sstring const& name) {
+    spellNumT which = TYPE_UNDEFINED;
+    if (((which = searchForSpellNum(name, EXACT_YES)) > TYPE_UNDEFINED) ||
+        ((which = searchForSpellNum(name, EXACT_NO)) > TYPE_UNDEFINED)) {
+      if (discArray[which]->typ != SPELL_CLERIC && discArray[which]->typ != SPELL_DEIKHAN) {
+        sendTo("That's not a prayer request!\n\r");
+        return TYPE_UNDEFINED;
+      }
+      if (!doesKnowSkill(getSkillNum(which))) {
+        sendTo("You don't know that prayer!\n\r");
+        return TYPE_UNDEFINED;
+      }
+      return which;
     }
-    if (!doesKnowSkill(getSkillNum(which))) {
-      sendTo("You don't know that prayer!\n\r");
-      return FALSE;
-    }
+    return TYPE_UNDEFINED;
+  };
+  spellNumT which = findPrayerByName(args);
+  if (which != TYPE_UNDEFINED)
+  {
     return doDiscipline(which, "");
   } else {
-    if (!spaces) 
-      n = arg;
-    else {
-      // Parse back until we hit our space
-      for (; !isspace(*n); n--);
-      *n = '\0';
-      n++;
-    }
-    if (((which = searchForSpellNum(arg, EXACT_YES)) <= TYPE_UNDEFINED) && 
-        ((which = searchForSpellNum(arg, EXACT_NO)) <= TYPE_UNDEFINED)) {
-      sendTo("No such prayer exists.\n\r");
-      return FALSE;
-    }
-    if (discArray[which]->typ != SPELL_CLERIC && discArray[which]->typ != SPELL_DEIKHAN) {
-      sendTo("That's not a prayer request!\n\r");
-      return FALSE;
-    }
-    if (!doesKnowSkill(getSkillNum(which))) {
-      sendTo("You don't know that prayer!\n\r");
-      return FALSE;
-    }
-    return doDiscipline(which, n);
+    which = findPrayerByName(firstArg);
+    if (which != TYPE_UNDEFINED)
+      return doDiscipline(which, args.dropWord());
   }
   return FALSE;
 }
