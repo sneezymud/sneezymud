@@ -15,6 +15,19 @@ class SString : public CxxTest::TestSuite
 
   }
 
+  void testWord(){
+    sstring foo="LOREM IpSum dolor SIT aMeT";
+    TS_ASSERT_EQUALS(foo.word(-1), "");
+    TS_ASSERT_EQUALS(foo.word(0), "LOREM");
+    TS_ASSERT_EQUALS(foo.word(1), "IpSum");
+    TS_ASSERT_EQUALS(foo.word(2), "dolor");
+    TS_ASSERT_EQUALS(foo.word(3), "SIT");
+    TS_ASSERT_EQUALS(foo.word(4), "aMeT");
+    TS_ASSERT_EQUALS(foo.word(5), "");
+    TS_ASSERT_EQUALS(foo.word(6), "");
+
+  }
+
   void testRange(){
     sstring foo;
     // unfortunately, this hangs
