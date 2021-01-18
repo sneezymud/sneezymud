@@ -962,7 +962,7 @@ class TBeing : public TThing {
   int preCastCheck();
   int preDiscCheck(spellNumT);
   int doCast(const char *);
-  spellNumT parseSpellNum(char *);
+  spellNumT parseSpellNum(sstring const&) const;
   int parseTarget(spellNumT, char *, TThing **ret);
   int doTrigger(const char *);
   int doStore(const char *);

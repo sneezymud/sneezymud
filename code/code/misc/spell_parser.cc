@@ -903,85 +903,51 @@ int TBeing::doPray(const char *argument)
   return FALSE;
 }
 
-spellNumT TBeing::parseSpellNum(char *arg)
+spellNumT TBeing::parseSpellNum(sstring const& args) const
 {
-  char *n;
-  int spaces = 0;
-  char kludge[256];
+  sstring arg1 = args.word(0);
 
-  while (isspace(*arg))
-    strcpy(arg, &arg[1]);
-
-  if (!*arg) {
+  if (args.empty()) {
     badCastSyntax(this, TYPE_UNDEFINED);
     sendTo("You do NOT need to include ''s around <spell name>.\n\r");
     return TYPE_UNDEFINED;
   }
-  for (n = arg; *n; n++) {
-    if (isspace(*n))
-      spaces++;
-  }
-  n--;
-  while (isspace(*n)) {
-    *n = '\0';
-    spaces--;
-    n--;
-  }
-  one_argument(arg, kludge, cElements(kludge));
-  if (isname(kludge, "telepathy")) {
-    strcpy(arg, one_argument(arg, kludge, cElements(kludge)));
+  if (isname(arg1, "telepathy")) {
     if (!doesKnowSkill(SPELL_TELEPATHY)) {
       sendTo("You don't know that spell!\n\r");
       return TYPE_UNDEFINED;
     }
     return SPELL_TELEPATHY;
   }
-  if (isname(kludge, "romble")) {
-    strcpy(arg, one_argument(arg, kludge, cElements(kludge)));
+  if (isname(arg1, "romble")) {
     if (!doesKnowSkill(SPELL_ROMBLER)) {
       sendTo("You don't know that spell!\n\r");
       return TYPE_UNDEFINED;
     }
     return SPELL_ROMBLER;
   }
-  spellNumT which;
-  if (((which = searchForSpellNum(arg, EXACT_YES)) > TYPE_UNDEFINED) ||
-      ((which = searchForSpellNum(arg, EXACT_NO)) > TYPE_UNDEFINED)) {
-    if (discArray[which]->typ != SPELL_MAGE && discArray[which]->typ != SPELL_SHAMAN) {
-      sendTo("That's not a magic spell!\n\r");
-      return TYPE_UNDEFINED;
+
+  auto findSpellByName = [this](sstring const& name) {
+    spellNumT which = TYPE_UNDEFINED;
+    if (((which = searchForSpellNum(name, EXACT_YES)) > TYPE_UNDEFINED) ||
+        ((which = searchForSpellNum(name, EXACT_NO)) > TYPE_UNDEFINED)) {
+      if (discArray[which]->typ != SPELL_MAGE && discArray[which]->typ != SPELL_SHAMAN) {
+        sendTo("That's not a magic spell!\n\r");
+        return TYPE_UNDEFINED;
+      }
+      if (!doesKnowSkill(getSkillNum(which))) {
+        sendTo("You don't know that spell!\n\r");
+        return TYPE_UNDEFINED;
+      }
+      return which;
     }
-    if (!doesKnowSkill(getSkillNum(which))) {
-      sendTo("You don't know that spell!\n\r");
-      return TYPE_UNDEFINED;
-    }
-    *arg = '\0';
+    return TYPE_UNDEFINED;
+  };
+  spellNumT which = findSpellByName(args);
+  if (which != TYPE_UNDEFINED)
     return which;
-  } else {
-    if (!spaces) 
-      n = arg;
-    else {
-      // Parse back until we hit our space
-      for (; !isspace(*n); n--);
-      *n = '\0';
-      n++;
-    }
-    if (((which = searchForSpellNum(arg, EXACT_YES)) <= TYPE_UNDEFINED) && 
-        ((which = searchForSpellNum(arg, EXACT_NO)) <= TYPE_UNDEFINED)) {
-      sendTo("No such spell exists.\n\r");
-      return TYPE_UNDEFINED;
-    }
-    if (discArray[which]->typ != SPELL_MAGE && discArray[which]->typ != SPELL_SHAMAN) {
-      sendTo("That's not a magic spell!\n\r");
-      return TYPE_UNDEFINED;
-    }
-    if (!doesKnowSkill(getSkillNum(which))) {
-      sendTo("You don't know that spell!\n\r");
-      return TYPE_UNDEFINED;
-    }
-    strcpy(arg,n);
-    return which;
-  }
+  else
+    return findSpellByName(arg1);
 }
 
 int TBeing::preCastCheck()
@@ -1031,20 +997,17 @@ int TBeing::preCastCheck()
 // returns DELETE_THIS
 int TBeing::doCast(const char *argument)
 {
-  char arg[256];
+  sstring arg = sstring(argument).trim();
   spellNumT which;
 
   if(!preCastCheck())
     return FALSE;
-  
-  strncpy(arg, argument, cElements(arg));
-  arg[cElements(arg)-1] = '\0';
 
   if((which=parseSpellNum(arg))==TYPE_UNDEFINED)
     return FALSE;
 
 
-  return doDiscipline(which, arg);
+  return doDiscipline(which, arg.dropWord());
 }
 
 // finds the target indicated in n, for spell which and sets ret to it
