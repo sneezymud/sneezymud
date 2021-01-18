@@ -188,6 +188,12 @@ public:
   void preload(void);
   cached_object *operator[](int);
 
+  ~TObjectCache()
+  {
+    for (auto& it : cache)
+      delete it.second;
+    cache.clear();
+  }
 } obj_cache;
 
 class TMobileCache {
@@ -198,6 +204,13 @@ public:
 
   void preload(void);
   cached_object *operator[](int);
+
+  ~TMobileCache()
+  {
+    for (auto& it : cache)
+      delete it.second;
+    cache.clear();
+  }
 } mob_cache;
 
 
