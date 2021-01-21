@@ -9,6 +9,9 @@
 #include "configuration.h"
 #include "database.h"
 
+namespace {
+  const char whitespace[] = " \f\n\r\t\v";
+}
 
 void br()
 {
@@ -434,19 +437,18 @@ const size_t sstring::lengthNoColor() const
 const sstring sstring::word(int i) const
 {
   size_t copy_begin=0, copy_end=0;
-  sstring whitespace=" \f\n\r\t\v"; // taken from isspace() man page
-  
+
   while(1){
     // find first non-whitespace past our last working point
     copy_begin=find_first_not_of(whitespace, copy_end);
-    
+
     // if nothing found, no more words, return
     if(copy_begin == sstring::npos)
       return "";
-    
+
     // find our first whitespace past last non-whitespace
     copy_end=find_first_of(whitespace, copy_begin);
-    
+
     if(!i--){
       // if nothing found, we're on the last word, no trailing whitespace
       if(copy_end == sstring::npos)
@@ -457,6 +459,14 @@ const sstring sstring::word(int i) const
   }
 
   return "";
+}
+
+sstring sstring::dropLastWord() const
+{
+  auto pos = find_last_of(" \f\n\r\t\v");
+  if (pos == npos)
+    return "";
+  return sstring(substr(0, pos)).trim();
 }
 
 sstring sstring::dropWord() const
@@ -574,27 +584,27 @@ char & sstring::operator[](unsigned int i)
   return this->at(i);
 }
 
+const sstring sstring::trimRight() const
+{
+  size_t iEnd = find_last_not_of(whitespace);
+  if (iEnd == npos)
+    return "";
+  return substr(0, iEnd + 1);
+}
+
+const sstring sstring::trimLeft() const
+{
+  size_t iStart = find_first_not_of(whitespace);
+  if (iStart == npos)
+    return "";
+  return substr(iStart);
+}
+
 // removes leading and trailing whitespace
 const sstring sstring::trim() const
 {
-  size_t iStart, iEnd;
-  sstring whitespace = " \f\n\r\t\v"; // same as word whitespace
-
-  iStart = find_first_not_of(whitespace);
-  iEnd = find_last_not_of(whitespace);
-
-  if (iStart == sstring::npos && iEnd == sstring::npos)
-    return *this;
-  if (iStart == sstring::npos)
-    iStart = 0;
-  if (iEnd == sstring::npos)
-    iEnd = length();
-  else
-    iEnd++;
-
-  return substr(iStart, iEnd-iStart);
+  return trimLeft().trimRight();
 }
-
 
 // converts each beginning char of each sentence to uppercase
 const sstring sstring::capitalizeSentences() const
