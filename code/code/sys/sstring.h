@@ -32,6 +32,9 @@ public:
   const sstring cap() const;
   const sstring uncap() const;
   const sstring word(int) const;
+  std::vector<sstring> words() const;
+  static sstring join(const std::vector<sstring>& words, const sstring& delimiter);
+  sstring lastWord() const;
   sstring dropWord() const;
   sstring dropLastWord() const;
   sstring dropWords(size_t num) const;

@@ -7,6 +7,8 @@ env.Append(CXXFLAGS=[
     ])
 
 cxx_tests = (
+        'SString',
+        'SpellParser',
         'AllocateDeallocateTPersonDescriptorAndDb',
         'Run',
         'Act',
@@ -15,7 +17,6 @@ cxx_tests = (
         'Exceptions',
         'GarbleTest',
         'Pfile',
-        'SString',
         'ConfigFile',
         'ConvertTo',
         # 'DBTest', disabled as the MySQL connection in TDatabase class is not comfily mockable

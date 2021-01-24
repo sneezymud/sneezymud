@@ -50,6 +50,36 @@ class SString : public CxxTest::TestSuite
     TS_ASSERT_EQUALS(sstring("").dropLastWord(), "");
   }
 
+  void testLastWord(){
+    TS_ASSERT_EQUALS(sstring("LOREM IpSum dolor SIT aMeT").lastWord(), "aMeT");
+    TS_ASSERT_EQUALS(sstring("two\t  --!/\\words").lastWord(), "--!/\\words");
+    TS_ASSERT_EQUALS(sstring("oneWord").lastWord(), "oneWord");
+    TS_ASSERT_EQUALS(sstring(" oneWord").lastWord(), "oneWord");
+    TS_ASSERT_EQUALS(sstring("").lastWord(), "");
+  }
+
+  void testWords(){
+    sstring foo="   LOREM IpSum   \n    dolor SIT aMeT ";
+    auto words = foo.words();
+    TS_ASSERT_EQUALS(words.size(), 5);
+    TS_ASSERT_EQUALS(foo.words()[0], "LOREM");
+    TS_ASSERT_EQUALS(foo.words()[1], "IpSum");
+    TS_ASSERT_EQUALS(foo.words()[2], "dolor");
+    TS_ASSERT_EQUALS(foo.words()[3], "SIT");
+    TS_ASSERT_EQUALS(foo.words()[4], "aMeT");
+
+    auto empty = sstring().words();
+    TS_ASSERT(empty.empty());
+
+    auto oneword = sstring("bla").words();
+    TS_ASSERT_EQUALS(oneword.size(), 1);
+    TS_ASSERT_EQUALS(oneword[0], "bla");
+
+    auto onewordWs = sstring(" bla ").words();
+    TS_ASSERT_EQUALS(onewordWs.size(), 1);
+    TS_ASSERT_EQUALS(onewordWs[0], "bla");
+  }
+
   void testWord(){
     sstring foo="LOREM IpSum dolor SIT aMeT";
     TS_ASSERT_EQUALS(foo.word(-1), "");
@@ -60,7 +90,6 @@ class SString : public CxxTest::TestSuite
     TS_ASSERT_EQUALS(foo.word(4), "aMeT");
     TS_ASSERT_EQUALS(foo.word(5), "");
     TS_ASSERT_EQUALS(foo.word(6), "");
-
   }
 
   void testRange(){
