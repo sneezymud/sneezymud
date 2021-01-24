@@ -7,7 +7,6 @@
 //
 /////////////////////////////////////////////////////////////////
 
-#include <boost/algorithm/string.hpp>
 #include "handler.h"
 #include "extern.h"
 #include "room.h"
@@ -40,6 +39,8 @@
 #include "disc_shaman_control.h"
 #include "obj_opal.h"
 #include "weather.h"
+
+#include <boost/algorithm/string.hpp>
 
 int TBeing::useMana(spellNumT spl)
 {
@@ -609,7 +610,6 @@ int TBeing::doPray(const char *argument)
     return FALSE;
   }
 
-
   if (!hasHands()) {
     sendTo("Sorry, you don't have the right form for that.\n\r");
     return FALSE;
@@ -635,245 +635,45 @@ int TBeing::doPray(const char *argument)
     return FALSE;
   }
 
-  sstring firstArg = args.word(0);
-  sstring secondArg = args.word(1);
-  sstring thirdArg = args.word(2);
+  auto findSpecialCaseByName = [this](sstring const& name) {
+    // vector, not map, because we need ordered lookup
+    const std::vector<std::pair<sstring, spellNumT>> specialCases {
+      { "paralyze limb", SPELL_PARALYZE_LIMB },
+      { "paralyze", SPELL_PARALYZE },
+      { "heal spray", SPELL_HEAL_SPRAY },
+      { "heal light", SPELL_HEAL_LIGHT },
+      { "heal serious", SPELL_HEAL_SERIOUS },
+      { "heal critical spray", SPELL_HEAL_FULL },
+      { "heal critical", SPELL_HEAL_CRITICAL },
+      { "heal full spray", SPELL_HEAL_FULL },
+      { "heal full", SPELL_HEAL_FULL },
+      { "heal", SPELL_HEAL },
+      { "harm light", SPELL_HARM_LIGHT },
+      { "harm serious", SPELL_HARM_SERIOUS },
+      { "harm critical", SPELL_HARM_CRITICAL },
+      { "harm", SPELL_HARM },
+    };
 
-  // beginning of special cases: multi-word-named prayers, with optional targets
-  // (regular generic prayers are after this)
-  if (is_abbrev(firstArg, "paralyze")) {
-    if (secondArg.empty()) {
-      // pray paralyze - target on fight()
-      if (!doesKnowSkill(getSkillNum(SPELL_PARALYZE))) {
-        sendTo("You don't know that prayer!\n\r");
-        return FALSE;
-      }
-      if (!fight()) {
-        badCastSyntax(this, SPELL_PARALYZE);
-        return FALSE;
-      }
-      return doDiscipline(SPELL_PARALYZE, "");
-    } else if (is_abbrev(secondArg, "limb")) {
-      if (!doesKnowSkill(getSkillNum(SPELL_PARALYZE_LIMB))) {
-        sendTo("You don't know that prayer!\n\r");
-        return FALSE;
-      }
+    for (auto pair : specialCases) {
+      if (name == pair.first)
+        return pair.second;
 
-      if (thirdArg.empty()) {
-        // pray paralyze limb - target on fight()
-        if (!fight()) {
-          badCastSyntax(this, SPELL_PARALYZE_LIMB);
-          return FALSE;
-        }
-        return doDiscipline(SPELL_PARALYZE_LIMB,"");
-      }
-      return doDiscipline(SPELL_PARALYZE_LIMB, thirdArg);
-    } else {
-      if (!doesKnowSkill(getSkillNum(SPELL_PARALYZE))) {
-        sendTo("You don't know that prayer!\n\r");
-        return FALSE;
-      }
-      return doDiscipline(SPELL_PARALYZE, secondArg);
-    }
-  } else if (is_abbrev(firstArg, "heal")) {
-    // pray heal <targ>
-    // pray heal spray
-    // pray heal light <targ>
-    // pray heal light spray
-
-    if (secondArg.empty()) {
-      // pray heal - target on self
-      if (!doesKnowSkill(getSkillNum(SPELL_HEAL))) {
-        sendTo("You don't know that prayer!\n\r");
-        return FALSE;
-      }
-      return doDiscipline(SPELL_HEAL, "");
-    } else if (secondArg == "spray" || secondArg == "spra" || secondArg == "spr") {
-      // old style was to parse for if abbrev of spray but that would capture
-      //   any "s" like pray heal sp for pray heal spowder would goto spray
-      // pray heal spray - no targs
-      if (!doesKnowSkill(getSkillNum(SPELL_HEAL_SPRAY))) {
-        sendTo("You don't know that prayer!\n\r");
-        return FALSE;
-      }
-      return doDiscipline(SPELL_HEAL_SPRAY, "");
-    } else if (!secondArg.empty()) {
-      // pray heal <target>
-      // pray heal light - autotarget on self
-      // pray heal serious - autotarget on self
-      // pray heal critical - autotarget on self
-      // pray heal full - autotarget on self
-
-      if (is_abbrev(secondArg, "light")) {
-        // pray heal light - autotarget
-        if (!doesKnowSkill(getSkillNum(SPELL_HEAL_LIGHT))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HEAL_LIGHT, "");
-      } else if (is_abbrev(secondArg, "serious")) {
-        // pray heal serious - autotarget
-        if (!doesKnowSkill(getSkillNum(SPELL_HEAL_SERIOUS))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HEAL_SERIOUS, "");
-      } else if (is_abbrev(secondArg, "critical")) {
-        // pray heal critical - autotarget
-        if (!doesKnowSkill(getSkillNum(SPELL_HEAL_CRITICAL))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HEAL_CRITICAL, "");
-      } else if (is_abbrev(secondArg, "full")) {
-        // pray heal full - autotarget
-        if (!doesKnowSkill(getSkillNum(SPELL_HEAL_FULL))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HEAL_FULL, "");
-      } else {
-        // pray heal <target>
-        if (!doesKnowSkill(getSkillNum(SPELL_HEAL))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HEAL, secondArg);
-      }
-    } else {
-      if (thirdArg == "spray" || thirdArg == "spra" || thirdArg == "spr") {
-        if (secondArg == "critical") {
-          if (!doesKnowSkill(getSkillNum(SPELL_HEAL_CRITICAL_SPRAY))) {
-            sendTo("You don't know that prayer!\n\r");
-            return FALSE;
+      auto nw = name.words();
+      auto sw = pair.first.words();
+      if (nw.size() == sw.size()) {
+        bool allWordsAreAbbrev = true;
+        for (size_t i = 0; i < nw.size(); ++i) {
+          if (!is_abbrev(nw[i], sw[i], MULTIPLE_NO, EXACT_YES)) {
+            allWordsAreAbbrev = false;
+            break;
           }
-          return doDiscipline(SPELL_HEAL_CRITICAL_SPRAY, "");
-        } else if (is_abbrev(secondArg, "full")) {
-          if (!doesKnowSkill(getSkillNum(SPELL_HEAL_FULL_SPRAY))) {
-            sendTo("You don't know that prayer!\n\r");
-            return FALSE;
-          }
-          return doDiscipline(SPELL_HEAL_FULL_SPRAY, "");
         }
-        // gets here on something dumb like "pray heal light spray"
-      }
-      if (is_abbrev(secondArg, "light")) {
-        if (!doesKnowSkill(getSkillNum(SPELL_HEAL_LIGHT))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HEAL_LIGHT, thirdArg);
-      } else if (is_abbrev(secondArg, "critical")) {
-        if (!doesKnowSkill(getSkillNum(SPELL_HEAL_CRITICAL))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HEAL_CRITICAL, thirdArg);
-      } else if (is_abbrev(secondArg, "serious")) {
-        if (!doesKnowSkill(getSkillNum(SPELL_HEAL_SERIOUS))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HEAL_SERIOUS, thirdArg);
-      } else if (is_abbrev(secondArg, "full")) {
-        if (!doesKnowSkill(getSkillNum(SPELL_HEAL_FULL))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HEAL_FULL, thirdArg);
+        if (allWordsAreAbbrev)
+          return pair.second;
       }
     }
-    // this can happen: heal llight batopr
-    sendTo("That's not a prayer request!\n\r");
-    return FALSE;
-  } else if (is_abbrev(firstArg, "harm")) {
-
-    // pray harm <targ>
-    // pray harm light <targ>
-
-    if (secondArg.empty()) {
-    // pray harm - target on self
-      if (!doesKnowSkill(getSkillNum(SPELL_HARM))) {
-        sendTo("You don't know that prayer!\n\r");
-        return FALSE;
-      }
-
-      if (!fight()) {
-        badCastSyntax(this, SPELL_HARM);
-        return FALSE;
-      }
-      return doDiscipline(SPELL_HARM, "");
-    } else if (thirdArg.empty()) {
-      // thirdArg.empty() means firstArg=harm, secondArg=targ
-      // OR
-      // firstArg=harm, secondArg="serious, light, critical, full"
-      // if fighting, autotarget
-
-      if (is_abbrev(secondArg, "light")) {
-        if (!doesKnowSkill(getSkillNum(SPELL_HARM_LIGHT))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        if (!fight()) {
-          badCastSyntax(this, SPELL_HARM_LIGHT);
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HARM_LIGHT, "");
-      } else if (is_abbrev(secondArg, "serious")) {
-        if (!doesKnowSkill(getSkillNum(SPELL_HARM_SERIOUS))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        if (!fight()) {
-          badCastSyntax(this, SPELL_HARM_SERIOUS);
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HARM_SERIOUS, "");
-      } else if (is_abbrev(secondArg, "critical")) {
-        if (!doesKnowSkill(getSkillNum(SPELL_HARM_CRITICAL))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        if (!fight()) {
-          badCastSyntax(this, SPELL_HARM_CRITICAL);
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HARM_CRITICAL, "");
-      } else {
-        if (!doesKnowSkill(getSkillNum(SPELL_HARM))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HARM, secondArg);
-      }
-    } else {
-      // secondArg = serious/crit
-      // thirdArg = spray or targets-name
-      if (is_abbrev(secondArg, "light")) {
-        if (!doesKnowSkill(getSkillNum(SPELL_HARM_LIGHT))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HARM_LIGHT, thirdArg);
-      } else if (is_abbrev(secondArg, "critical")) {
-        if (!doesKnowSkill(getSkillNum(SPELL_HARM_CRITICAL))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HARM_CRITICAL, thirdArg);
-      } else if (is_abbrev(secondArg, "serious")) {
-        if (!doesKnowSkill(getSkillNum(SPELL_HARM_SERIOUS))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HARM_SERIOUS, thirdArg);
-      }
-    }
-    // this can happen: heal llight batopr
-    sendTo("That's not a prayer request!\n\r");
-    return FALSE;
-  }
-  // end of multi-word cases.
+    return TYPE_UNDEFINED;
+  };
 
   auto findPrayerByName = [this](sstring const& name) {
     spellNumT which = TYPE_UNDEFINED;
@@ -891,15 +691,28 @@ int TBeing::doPray(const char *argument)
     }
     return TYPE_UNDEFINED;
   };
-  spellNumT which = findPrayerByName(args);
+
+  spellNumT which = findSpecialCaseByName(args);
   if (which != TYPE_UNDEFINED)
-  {
     return doDiscipline(which, "");
-  } else {
-    which = findPrayerByName(firstArg);
+
+  if (args.words().size() > 1) {
+    which = findSpecialCaseByName(args.dropLastWord());
     if (which != TYPE_UNDEFINED)
-      return doDiscipline(which, args.dropWord());
+      return doDiscipline(which, args.lastWord());
   }
+
+  which = findPrayerByName(args);
+  if (which != TYPE_UNDEFINED)
+    return doDiscipline(which, "");
+
+  if (args.words().size() > 1) {
+    which = findPrayerByName(args.dropLastWord());
+    if (which != TYPE_UNDEFINED)
+      return doDiscipline(which, args.lastWord());
+  }
+
+  sendTo("No such prayer exists.\n\r");
   return FALSE;
 }
 

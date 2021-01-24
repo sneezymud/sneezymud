@@ -9,6 +9,8 @@
 #include "configuration.h"
 #include "database.h"
 
+#include <boost/algorithm/string.hpp>
+
 namespace {
   const char whitespace[] = " \f\n\r\t\v";
 }
@@ -433,6 +435,40 @@ const size_t sstring::lengthNoColor() const
 }
 
 
+std::vector<sstring> sstring::words() const
+{
+  std::vector<sstring> out;
+  out.reserve(size());
+  size_t copy_begin=0, copy_end=0;
+
+  while (true) {
+    // find first non-whitespace past our last working point
+    copy_begin=find_first_not_of(whitespace, copy_end);
+
+    // if nothing found, no more words, return
+    if(copy_begin == sstring::npos)
+      return out;
+
+    // find our first whitespace past last non-whitespace
+    copy_end=find_first_of(whitespace, copy_begin);
+
+    // if nothing found, we're on the last word, no trailing whitespace
+    if(copy_end == sstring::npos)
+      out.emplace_back(substr(copy_begin));
+    else
+      out.emplace_back(substr(copy_begin, copy_end-copy_begin));
+  }
+
+  out.shrink_to_fit();
+  return out;
+}
+
+sstring sstring::join(const std::vector<sstring>& words, const sstring& delimiter)
+{
+  // implemented here to avoid #including Boost elsewhere
+  return boost::algorithm::join(words, delimiter);
+}
+
 // splits the string up by whitespace and returns the i'th "word"
 const sstring sstring::word(int i) const
 {
@@ -459,6 +495,14 @@ const sstring sstring::word(int i) const
   }
 
   return "";
+}
+
+sstring sstring::lastWord() const
+{
+  auto pos = find_last_of(" \f\n\r\t\v");
+  if (pos == npos)
+    return *this;
+  return sstring(substr(pos + 1)).trim();
 }
 
 sstring sstring::dropLastWord() const
