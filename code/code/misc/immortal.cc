@@ -74,6 +74,8 @@ togTypeT & operator++(togTypeT &c, int)
 
 togInfoT::~togInfoT()
 {
+  for (auto t : toggles)
+    delete t;
 }
 
 togInfoT::togInfoT()
