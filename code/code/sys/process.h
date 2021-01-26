@@ -633,6 +633,7 @@ class TScheduler {
   void run(int);
 
   TScheduler();
+  ~TScheduler();
 };
 
 
