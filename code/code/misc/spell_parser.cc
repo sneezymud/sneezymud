@@ -716,15 +716,16 @@ int TBeing::doPray(const char *argument)
   return FALSE;
 }
 
-spellNumT TBeing::parseSpellNum(sstring const& args) const
+spellNumT TBeing::parseSpellNum(std::vector<sstring> const& args) const
 {
-  sstring arg1 = args.word(0);
-
   if (args.empty()) {
     badCastSyntax(this, TYPE_UNDEFINED);
     sendTo("You do NOT need to include ''s around <spell name>.\n\r");
     return TYPE_UNDEFINED;
   }
+
+  const sstring& arg1 = args[0];
+
   if (isname(arg1, "telepathy")) {
     if (!doesKnowSkill(SPELL_TELEPATHY)) {
       sendTo("You don't know that spell!\n\r");
@@ -756,11 +757,12 @@ spellNumT TBeing::parseSpellNum(sstring const& args) const
     }
     return TYPE_UNDEFINED;
   };
-  spellNumT which = findSpellByName(args);
-  if (which != TYPE_UNDEFINED)
+
+  spellNumT which = findSpellByName(sstring::join(args, " "));
+  if (which != TYPE_UNDEFINED || args.size() == 1)
     return which;
-  else
-    return findSpellByName(arg1);
+
+  return findSpellByName(sstring::join(std::vector<sstring>(args.begin(), args.end() - 1), " "));
 }
 
 int TBeing::preCastCheck()
@@ -810,17 +812,19 @@ int TBeing::preCastCheck()
 // returns DELETE_THIS
 int TBeing::doCast(const char *argument)
 {
-  sstring arg = sstring(argument).trim();
+  auto words = sstring(argument).words();
   spellNumT which;
 
   if(!preCastCheck())
     return FALSE;
 
-  if((which=parseSpellNum(arg))==TYPE_UNDEFINED)
+  if((which=parseSpellNum(words))==TYPE_UNDEFINED)
+  {
+    sendTo("No such spell exists.\n\r");
     return FALSE;
+  }
 
-
-  return doDiscipline(which, arg.dropWord());
+  return doDiscipline(which, words.size() == 1 ? "" : words.back());
 }
 
 // finds the target indicated in n, for spell which and sets ret to it

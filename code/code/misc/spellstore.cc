@@ -48,7 +48,7 @@ int TBeing::doTrigger(const char *argument){
   
   strcpy(arg, argument);
 
-  if((which=parseSpellNum(arg))==TYPE_UNDEFINED)
+  if((which=parseSpellNum(sstring(argument).words()))==TYPE_UNDEFINED)
     return FALSE;
 
   if (!discArray[which]) {
