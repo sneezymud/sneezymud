@@ -23,6 +23,12 @@ tweakInfoT::tweakInfoT():
 {
 }
 
+tweakInfoT::~tweakInfoT()
+{
+  for (auto t : tweaks)
+    delete t;
+}
+
 int tweakInfoT::loadTweaks()
 {
   TDatabase db(DB_SNEEZY);
