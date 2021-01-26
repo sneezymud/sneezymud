@@ -11,8 +11,27 @@
 #include "room.h"
 #include "extern.h"
 
+
 // start new guild stuff
-std::vector<TGuild *>guild_table(0);
+namespace {
+  class Guilds
+  {
+    public:
+      std::vector<TGuild *>guild_table;
+
+      void deallocate()
+      {
+        for (auto g : guild_table)
+          delete g;
+        guild_table.clear();
+      }
+
+      ~Guilds()
+      {
+        deallocate();
+      }
+  } guilds;
+}
 
 void TBeing::setGuildID(int id)
 {
@@ -285,7 +304,7 @@ void TBeing::add_guild(const char * args) {
   f->power = 0.0;
   f->patron = deityTypeT(0);
   f->faction_affiliation = FACT_NONE;
-  guild_table.push_back(f);
+  guilds.guild_table.push_back(f);
 
   TDatabase db(DB_SNEEZY);
   db.query("insert into corporation (name, bank) values ('<None>', 4)");
@@ -955,7 +974,7 @@ void TBeing::show_guild(const char * args)
     sendTo(COLOR_BASIC, "<1><c>Relations:<1>\n\r");
     std::vector<TGuild *>::iterator i;
     TGuild *f2 = NULL;
-    for( i = guild_table.begin(); i != guild_table.end(); ++i) {
+    for( i = guilds.guild_table.begin(); i != guilds.guild_table.end(); ++i) {
       f2 = (*i);
       if (f->getRelation(f2->ID) == RELATION_NONE && f2->getRelation(f->ID) == RELATION_NONE)
 	continue; // no relations, so don't display
@@ -1019,7 +1038,7 @@ void TBeing::show_guild(const char * args)
   sprintf(buf, "<c>ID          Name\n\r");
   sendTo(COLOR_BASIC, buf);
   std::vector<TGuild *>::iterator i;
-  for(i = guild_table.begin();i != guild_table.end(); ++i) {
+  for(i = guilds.guild_table.begin();i != guilds.guild_table.end(); ++i) {
     if (isImmortal() || (*i) == newguild() ||
 	!(IS_SET((*i)->flags, GUILD_HIDDEN) || (*i)->ID == 0 || !IS_SET((*i)->flags, GUILD_ACTIVE))) {
       sprintf(buf, "<1>%-4d%s%s<1>%s%s<1>%s%s<1> [<R>%s<1>] <1>%s%s<k>%s%s%s<1>\n\r", (*i)->ID, 
@@ -1105,9 +1124,9 @@ bool remove_guild(const char *args)
 bool remove_guild_by_ID(int idnum) {
   std::vector<TGuild *>::iterator i;
   TDatabase db(DB_SNEEZY);
-  for (i = guild_table.begin();i != guild_table.end();++i) {
+  for (i = guilds.guild_table.begin();i != guilds.guild_table.end();++i) {
     if ((*i)->ID == idnum) {
-      guild_table.erase(i);
+      guilds.guild_table.erase(i);
       return true;
     }
   }
@@ -1116,9 +1135,9 @@ bool remove_guild_by_ID(int idnum) {
 
 bool remove_guild_by_keywords(const char * args) {
   std::vector<TGuild *>::iterator i;
-  for (i = guild_table.begin(); i != guild_table.end();++i) {
+  for (i = guilds.guild_table.begin(); i != guilds.guild_table.end();++i) {
     if (isname(args, (*i)->keywords)) {
-      guild_table.erase(i);
+      guilds.guild_table.erase(i);
       return true;
     }
   }
@@ -1139,7 +1158,7 @@ TGuild * get_guild(const char *args) {
 
 TGuild * get_guild_by_ID(int idnum) {
   std::vector<TGuild *>::iterator i;
-  for (i = guild_table.begin();i != guild_table.end();++i) {
+  for (i = guilds.guild_table.begin();i != guilds.guild_table.end();++i) {
     if ((*i)->ID == idnum) {
       return (*i);
     }
@@ -1149,7 +1168,7 @@ TGuild * get_guild_by_ID(int idnum) {
 
 TGuild * get_guild_by_keywords(const char * args) {
   std::vector<TGuild *>::iterator i;
-  for (i = guild_table.begin(); i != guild_table.end();++i) {
+  for (i = guilds.guild_table.begin(); i != guilds.guild_table.end();++i) {
     if (isname(args, (*i)->keywords)) {
       return (*i);
     }
@@ -1200,9 +1219,9 @@ int get_unused_ID() {
   int i, j;
   bool found = FALSE;
   for (i = 0; i <= MAX_GUILD_ID; i++) {
-    for (j = 0;(int)j < (int)guild_table.size(); j++) {
+    for (j = 0;(int)j < (int)guilds.guild_table.size(); j++) {
       found = FALSE;
-      if(guild_table[j]->ID == i) {
+      if(guilds.guild_table[j]->ID == i) {
 	found = TRUE;
 	break;
       }
@@ -1319,24 +1338,29 @@ int load_guilds() {
     return FALSE;
   }
 
-  guild_table.clear();
+  guilds.deallocate();
 
   while(fp) {
     TGuild *f = new TGuild;
     if(fgets(buf, 256, fp) == NULL) {
       vlogf(LOG_FILE,format("ERROR: bogus line in GUILD_FILE: %d") %  line);
       fclose(fp);
+      delete f;
       return FALSE;
     }
     line++;
     if(strchr(buf,'$')) // eof
+    {
+      delete f;
       break;
+    }
     sscanf(buf, "#%d\n\r", &i1);
     f->ID = i1;
     if(fgets(buf, 256, fp) == NULL) {
       vlogf(LOG_FILE,format("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
       fclose(fp);
+      delete f;
       return FALSE;
     }
 
@@ -1349,6 +1373,7 @@ int load_guilds() {
       vlogf(LOG_FILE,format("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
       fclose(fp);
+      delete f;
       return FALSE;
     }
 
@@ -1360,11 +1385,12 @@ int load_guilds() {
       vlogf(LOG_FILE,format("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
       fclose(fp);
+      delete f;
       return FALSE;
 
     }
     line++;
-    
+
     strcpy(c1, ""); // just to make sure
     sscanf(buf, "shortname: %[a-zA-Z '<>]\n\r", c1);
     f->slang_name = mud_str_dup(c1);
@@ -1372,6 +1398,7 @@ int load_guilds() {
       vlogf(LOG_FILE,format("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
       fclose(fp);
+      delete f;
       return FALSE;
     }
     strcpy(c1, ""); // just to make sure
@@ -1381,6 +1408,7 @@ int load_guilds() {
       vlogf(LOG_FILE,format("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
       fclose(fp);
+      delete f;
       return FALSE;
     }
 
@@ -1393,6 +1421,7 @@ int load_guilds() {
       vlogf(LOG_FILE,format("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
       fclose(fp);
+      delete f;
       return FALSE;
     }
 
@@ -1407,6 +1436,7 @@ int load_guilds() {
       vlogf(LOG_FILE,format("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
       fclose(fp);
+      delete f;
       return FALSE;
     }
 
@@ -1420,6 +1450,7 @@ int load_guilds() {
       vlogf(LOG_FILE,format("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
       fclose(fp);
+      delete f;
       return FALSE;
     }
 
@@ -1431,6 +1462,7 @@ int load_guilds() {
       vlogf(LOG_FILE,format("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
       fclose(fp);
+      delete f;
       return FALSE;
     }
 
@@ -1442,10 +1474,11 @@ int load_guilds() {
 
     for(int j = 0; j < NUM_MAX_RANK; j++) {
       if(fgets(buf, 256, fp) == NULL) {
-	vlogf(LOG_FILE,format("ERROR: bogus line in GUILD_FILE: %d") %  line);
+        vlogf(LOG_FILE,format("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
-	fclose(fp);
-	return FALSE;
+        fclose(fp);
+        delete f;
+        return FALSE;
       }
 
       line++;
@@ -1459,6 +1492,7 @@ int load_guilds() {
       vlogf(LOG_FILE,format("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
       fclose(fp);
+      delete f;
       return FALSE;
     }
 
@@ -1471,15 +1505,16 @@ int load_guilds() {
       r->relation = i2;
       f->relations.push_back(r);
       if(fgets(buf, 256, fp) == NULL) {
-	vlogf(LOG_FILE,format("ERROR: bogus line in GUILD_FILE: %d") %  line);
+        vlogf(LOG_FILE,format("ERROR: bogus line in GUILD_FILE: %d") %  line);
 
         fclose(fp);
+        delete f;
         return FALSE;
       }
 
       line++;
     }
-    guild_table.push_back(f);
+    guilds.guild_table.push_back(f);
   }
   fclose(fp);
 
@@ -1499,7 +1534,7 @@ void save_guilds()
   }
   std::vector<TGuild *>::iterator i;
   TGuild *f = NULL;
-  for(i = guild_table.begin(); i != guild_table.end(); ++i) {
+  for(i = guilds.guild_table.begin(); i != guilds.guild_table.end(); ++i) {
     f = (*i);
     fprintf(fp, "#%d\n", f->ID);
     fprintf(fp, "keywords: %s\n", f->keywords);
