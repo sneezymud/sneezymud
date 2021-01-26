@@ -106,6 +106,16 @@ void TScheduler::add(TCharProcess *p)
   char_procs.push_back(p);
 }
 
+TScheduler::~TScheduler()
+{
+  for (auto i : procs)
+    delete i;
+  for (auto i : obj_procs)
+    delete i;
+  for (auto i : char_procs)
+    delete i;
+}
+
 TScheduler::TScheduler(){
   pulse.init(0);
   placeholder=read_object(42, VIRTUAL);
