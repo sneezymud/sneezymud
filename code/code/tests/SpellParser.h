@@ -22,19 +22,21 @@ class SpellParser : public CxxTest::TestSuite
 
   void testParseSpellNum()
   {
-    TS_ASSERT_EQUALS(TYPE_UNDEFINED, testPerson->parseSpellNum(sstring("blarg").words())); // TODO: something's broken, it should return "no such spell"
+    TS_ASSERT_EQUALS(SPELL_DETECT_INVISIBLE, std::get<0>(testPerson->parseSpellNum(sstring("d i")))); // 2 words, abbreviated
+    TS_ASSERT_EQUALS(SPELL_DETECT_INVISIBLE, std::get<0>(testPerson->parseSpellNum(sstring("detect invis")))); // 2 words, 1 of them abbreviated
+    TS_ASSERT_EQUALS(TYPE_UNDEFINED, std::get<0>(testPerson->parseSpellNum(sstring("blarg")))); // TODO: something's broken, it should return "no such spell"
 
-    TS_ASSERT_EQUALS(TYPE_UNDEFINED, testPerson->parseSpellNum(sstring("yada blarg").words())); // TODO: something's broken, it should return "no such spell"
+    TS_ASSERT_EQUALS(TYPE_UNDEFINED, std::get<0>(testPerson->parseSpellNum(sstring("yada blarg")))); // TODO: something's broken, it should return "no such spell"
 
     // without target
-    TS_ASSERT_EQUALS(SPELL_FLY, testPerson->parseSpellNum(sstring("flight").words())); // 1 word
-    TS_ASSERT_EQUALS(SPELL_TRUE_SIGHT, testPerson->parseSpellNum(sstring("  true sight  ").words())); // 2 words
-    TS_ASSERT_EQUALS(SPELL_PROTECTION_FROM_FIRE, testPerson->parseSpellNum(sstring("protection from fire   ").words())); // 3 words
+    TS_ASSERT_EQUALS(SPELL_FLY, std::get<0>(testPerson->parseSpellNum(sstring("flight")))); // 1 word
+    TS_ASSERT_EQUALS( SPELL_TRUE_SIGHT, std::get<0>(testPerson->parseSpellNum(sstring("  true sight  ")))); // 2 words
+    TS_ASSERT_EQUALS(SPELL_PROTECTION_FROM_FIRE, std::get<0>(testPerson->parseSpellNum(sstring("protection from fire   ")))); // 3 words
 
     // with target
-    TS_ASSERT_EQUALS(SPELL_FLY, testPerson->parseSpellNum(sstring("flight victim").words())); // 1 word
-    TS_ASSERT_EQUALS(SPELL_TRUE_SIGHT, testPerson->parseSpellNum(sstring("  true sight   victim").words())); // 2 words
-    TS_ASSERT_EQUALS(SPELL_PROTECTION_FROM_FIRE, testPerson->parseSpellNum(sstring("protection from fire    victim").words())); // 3 words
+    TS_ASSERT_EQUALS(SPELL_FLY, std::get<0>(testPerson->parseSpellNum(sstring("flight victim")))); // 1 word
+    TS_ASSERT_EQUALS(SPELL_TRUE_SIGHT, std::get<0>(testPerson->parseSpellNum(sstring("  true sight   victim")))); // 2 words
+    TS_ASSERT_EQUALS(SPELL_PROTECTION_FROM_FIRE, std::get<0>(testPerson->parseSpellNum(sstring("protection from fire    victim")))); // 3 words
   }
 
   void setUp()
