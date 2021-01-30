@@ -962,7 +962,7 @@ class TBeing : public TThing {
   int preCastCheck();
   int preDiscCheck(spellNumT);
   int doCast(const char *);
-  spellNumT parseSpellNum(std::vector<sstring> const&) const;
+  std::tuple<spellNumT, sstring> parseSpellNum(sstring const&) const; // returns spell and target
   int parseTarget(spellNumT, char *, TThing **ret);
   int doTrigger(const char *);
   int doStore(const char *);

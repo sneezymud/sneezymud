@@ -37,7 +37,6 @@ public:
 
 int TBeing::doTrigger(const char *argument){
   char arg[256];
-  spellNumT which;
   TBeing *ch=NULL;
   TObj *o=NULL;
   TThing *t=NULL;
@@ -48,7 +47,8 @@ int TBeing::doTrigger(const char *argument){
   
   strcpy(arg, argument);
 
-  if((which=parseSpellNum(sstring(argument).words()))==TYPE_UNDEFINED)
+  auto [which, target] = parseSpellNum(argument);
+  if(which == TYPE_UNDEFINED)
     return FALSE;
 
   if (!discArray[which]) {
