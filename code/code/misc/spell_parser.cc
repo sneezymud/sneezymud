@@ -822,6 +822,10 @@ int TBeing::doCast(const char *argument)
   if(!preCastCheck())
     return FALSE;
 
+  auto [spell, target] = parseSpellNum(argument);
+  if (spell != TYPE_UNDEFINED)
+    return doDiscipline(spell, target);
+
   return FALSE;
 }
 
