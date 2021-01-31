@@ -1709,15 +1709,15 @@ int TBeing::doDiscipline(spellNumT which, sstring const& n1)
   }
 
   if (n1.empty())
-    vlogf(LOG_SILENT, format("doDiscipline: %s") % spellNumToName[which]);
+    vlogf(LOG_SILENT, format("doDiscipline: %s (%s): %s") % name % number % spellNumToName[which]);
   else
-    vlogf(LOG_SILENT, format("doDiscipline: %s on %s") % spellNumToName[which] % n1);
+    vlogf(LOG_SILENT, format("doDiscipline: %s (%s): %s on %s") % name % number % spellNumToName[which] % n1);
 
   if (!discArray[which]) {
     vlogf(LOG_BUG, format("doDiscipline called with null discArray[] (%d) (%s)") %  which % getName());
     return FALSE;
   }
-  if (which <= TYPE_UNDEFINED) 
+  if (which <= TYPE_UNDEFINED)
     return FALSE;
 
   if(!preDiscCheck(which))
