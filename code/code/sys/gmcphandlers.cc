@@ -29,6 +29,11 @@ namespace {
     }
   }
 
+  void handleDiscord(sstring const& s, Descriptor& d)
+  {
+    sstring discordInfoCmd("External.Discord.Info { inviteurl: \"https://discord.gg/pTcaQuk\", applicationid: \"SneezyMUD\" }");
+    d.sendGmcp(discordInfoCmd, true);
+  }
 
   void handleRemember(sstring const& s, Descriptor& d)
   {
@@ -63,6 +68,7 @@ namespace {
     {"remember", handleRemember},
     {"rememberplayer", handleRememberPlayer},
     {"retrieve", handleRetrieve},
+    {"External.Discord.Hello", handleDiscord},
   };
 
   void handleGmcpCommand(sstring const& s, Descriptor* d)
