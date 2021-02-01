@@ -400,15 +400,20 @@ int Descriptor::outputProcessing()
   sstring buf;
   TBeing *ch = original ? original : character;
 
-  if (!prompt_mode && !connected && !m_bIsClient)
-    if (socket->writeToSocket("\n\r") < 0)
-      return -1;
+  bool sentNewline = false;
 
   memset(i, '\0', sizeof(i));
   // Take everything from queued output
   while(!output.empty()){
     CommPtr c(output.front());
     output.pop();
+
+    if (!sentNewline) {
+      sentNewline = true;
+      if (!prompt_mode && !connected && !m_bIsClient && dynamic_cast<GmcpComm*>(&*c) == nullptr)
+        if (socket->writeToSocket("\n\r") < 0)
+          return -1;
+    }
 
     strncpy(i, c->getComm().c_str(), MAX_STRING_LENGTH + MAX_STRING_LENGTH);
     counter++;
