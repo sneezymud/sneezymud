@@ -410,7 +410,7 @@ int Descriptor::outputProcessing()
     CommPtr c(output.front());
     output.pop();
 
-    strncpy(i, c->getComm().c_str(), MAX_STRING_LENGTH + MAX_STRING_LENGTH);
+    strncpy(i, c->getComm().c_str(), sizeof(i)-1);
     counter++;
 
     // I bumped this from 500 to 1000 - Batopr
@@ -2652,7 +2652,7 @@ void processAllInput()
     next_to_process = d->next;
 
     if ((--(d->wait) <= 0) && !d->input.empty()) {
-      strncpy(comm, d->input.front().c_str(), sizeof(comm));
+      strncpy(comm, d->input.front().c_str(), sizeof(comm)-1);
       d->input.pop();
 
       if (d->character && !d->connected && 
@@ -3714,7 +3714,7 @@ int Descriptor::doAccountStuff(char *arg)
 
     sstring in(m_raw);
     sstring reply = handleTelnetOpts(in, this);
-    strncpy(m_raw, in.c_str(), 4096); // write the telnet-stripped string back
+    strncpy(m_raw, in.c_str(), sizeof(m_raw)-1); // write the telnet-stripped string back
     if (!reply.empty())
       output.push(CommPtr(new UncategorizedComm(reply)));
 

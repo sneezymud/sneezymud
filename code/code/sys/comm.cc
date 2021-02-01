@@ -723,7 +723,7 @@ void act(const sstring &str, bool hide, const TThing *actor, const TThing *obj, 
               if (x == 1 || (x == 4 && *lastColor)) {
                 i = i.cap();
               }
-              strncpy(ibuf, colorString(to, to->desc, i, NULL, tbtt ? COLOR_MOBS : COLOR_OBJECTS, FALSE).c_str(), cElements(ibuf));
+              strncpy(ibuf, colorString(to, to->desc, i, NULL, tbtt ? COLOR_MOBS : COLOR_OBJECTS, FALSE).c_str(), cElements(ibuf)-1);
               i=ibuf;
               break;
             case 'P':
@@ -762,12 +762,12 @@ void act(const sstring &str, bool hide, const TThing *actor, const TThing *obj, 
                   i = tmp_buffer;
                 }
               }
-              strncpy(ibuf,colorString(to, to->desc, i, NULL, tbtt ? COLOR_MOBS : COLOR_OBJECTS, FALSE).c_str(), cElements(ibuf));
+              strncpy(ibuf,colorString(to, to->desc, i, NULL, tbtt ? COLOR_MOBS : COLOR_OBJECTS, FALSE).c_str(), cElements(ibuf)-1);
               i=ibuf;
 
               break;
             case 'g':
-              strncpy(ibuf, actor->roomp->describeGround().c_str(), cElements(ibuf));
+              strncpy(ibuf, actor->roomp->describeGround().c_str(), cElements(ibuf)-1);
               i=ibuf;
               break;
             case 'G':
@@ -775,12 +775,12 @@ void act(const sstring &str, bool hide, const TThing *actor, const TThing *obj, 
                 vlogf(LOG_BUG, format("Bad act G. '%s'") %  str);
                 return;
               }
-              strncpy(ibuf, victim->roomp->describeGround().c_str(), cElements(ibuf));
+              strncpy(ibuf, victim->roomp->describeGround().c_str(), cElements(ibuf)-1);
               i=ibuf;
               break;
             case 'd': 
               per = ((to == actor) ? FIRST_PERSON : (!strlen(buf) ? THIRD_PERSON : SECOND_PERSON));
-              strncpy(ibuf, actor->yourDeity(your_deity_val, per, (per == THIRD_PERSON) ? to : NULL).c_str(), cElements(ibuf));
+              strncpy(ibuf, actor->yourDeity(your_deity_val, per, (per == THIRD_PERSON) ? to : NULL).c_str(), cElements(ibuf)-1);
               i=ibuf;
               break;
             case 'D':
@@ -788,7 +788,7 @@ void act(const sstring &str, bool hide, const TThing *actor, const TThing *obj, 
                 vlogf(LOG_BUG, format("Bad act D. '%s'") %  str);
                 return;
               }
-              strncpy(ibuf, victim->yourDeity(your_deity_val, ((to == victim) ? FIRST_PERSON : (strlen(buf) == 0 ? THIRD_PERSON : SECOND_PERSON))).c_str(), cElements(ibuf));
+              strncpy(ibuf, victim->yourDeity(your_deity_val, ((to == victim) ? FIRST_PERSON : (strlen(buf) == 0 ? THIRD_PERSON : SECOND_PERSON))).c_str(), cElements(ibuf)-1);
               i=ibuf;
               break;
             case 'q':
@@ -894,7 +894,7 @@ void act(const sstring &str, bool hide, const TThing *actor, const TThing *obj, 
                 vlogf(LOG_BUG, format("Bad act o. '%s'") %  str);
                 return;
               }
-              strncpy(ibuf, dynamic_cast<const TBeing *>(obj) ? to->persfname(obj).c_str() : to->objn(obj).c_str(), cElements(ibuf));
+              strncpy(ibuf, dynamic_cast<const TBeing *>(obj) ? to->persfname(obj).c_str() : to->objn(obj).c_str(), cElements(ibuf)-1);
               i=ibuf;
               break;
             case 'O':
@@ -902,7 +902,7 @@ void act(const sstring &str, bool hide, const TThing *actor, const TThing *obj, 
                 vlogf(LOG_BUG, format("Bad act O. '%s'") %  str);
                 return;
               }
-              strncpy(ibuf, dynamic_cast<const TBeing *>(victim) ? to->persfname(victim).c_str() : to->objn(victim).c_str(), cElements(ibuf));
+              strncpy(ibuf, dynamic_cast<const TBeing *>(victim) ? to->persfname(victim).c_str() : to->objn(victim).c_str(), cElements(ibuf)-1);
               i=ibuf;
               break;
             case 'p':
@@ -915,7 +915,7 @@ void act(const sstring &str, bool hide, const TThing *actor, const TThing *obj, 
               if (x == 1 || (x == 4 && *lastColor)) {
                 i = i.cap();
               }
-              strncpy(ibuf, colorString(to, to->desc, i, NULL, tbtt ? COLOR_MOBS : COLOR_OBJECTS, FALSE).c_str(), cElements(ibuf));
+              strncpy(ibuf, colorString(to, to->desc, i, NULL, tbtt ? COLOR_MOBS : COLOR_OBJECTS, FALSE).c_str(), cElements(ibuf)-1);
               i=ibuf;
               break;
             case 'a':
@@ -958,7 +958,7 @@ void act(const sstring &str, bool hide, const TThing *actor, const TThing *obj, 
           if (color) {
             catstr = i;
             catstr += to->ansi_color(color);
-            strncpy(ibuf, catstr.c_str(), cElements(ibuf));
+            strncpy(ibuf, catstr.c_str(), cElements(ibuf)-1);
             i=ibuf;
           }
           const char* tmp = i.c_str();
