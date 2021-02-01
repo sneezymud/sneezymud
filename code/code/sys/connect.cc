@@ -2257,6 +2257,28 @@ sstring RoomExitComm::getText(){
   return "";
 }
 
+namespace {
+  bool hasStuffToSend(Descriptor& d)
+  {
+    if (d.output.empty())
+      return false;
+
+    // GMCP doesn't count, only plaintext counts. Actually, sounds and stuff also shouldn't count...
+
+    // unfortunately, we can't check the whole mess here, can't loop over a queue.
+    auto firstCommPtr = &*d.output.front();
+
+    if (dynamic_cast<GmcpComm*>(firstCommPtr) == nullptr)
+      return true;
+
+    auto lastCommPtr = &*d.output.back();
+    if (dynamic_cast<GmcpComm*>(lastCommPtr) == nullptr)
+      return true;
+
+    return false;
+  }
+}
+
 void setPrompts(fd_set out)
 {
   Descriptor *d, *nextd;
@@ -2269,7 +2291,7 @@ void setPrompts(fd_set out)
 
   for (d = descriptor_list; d; d = nextd) {
     nextd = d->next;
-    if ((FD_ISSET(d->socket->m_sock, &out) && !(d->output.empty())) || d->prompt_mode) {
+    if ((FD_ISSET(d->socket->m_sock, &out) && hasStuffToSend(*d)) || d->prompt_mode) {
       update = 0;
       ch = d->character;
 
@@ -2632,13 +2654,13 @@ void Descriptor::sendGmcp(const sstring& msg, bool strip)
     return;
 
   sstring text = sstring("\xff\xfa\xc9") + (strip ? stripColorCodes(msg) : msg) + sstring("\xff\xf0");
-  output.push(CommPtr(new UncategorizedComm(text)));
+  output.push(CommPtr(new GmcpComm(text)));
 }
 
 void Descriptor::startGmcp()
 {
   sstring text = sstring("\xff\xfb\xc9");
-  output.push(CommPtr(new UncategorizedComm(text)));
+  output.push(CommPtr(new GmcpComm(text)));
 }
 
 void processAllInput()

@@ -109,6 +109,14 @@ class UncategorizedComm : public Comm {
   virtual sstring getText();
 };
 
+class GmcpComm : public Comm {
+ public:
+  GmcpComm(const sstring &);
+
+ private:
+  virtual sstring getText();
+};
+
 class SoundComm : public Comm {
  public:
   SoundComm(const sstring &, const sstring &, const sstring &, const sstring &, int, int, int, int);
