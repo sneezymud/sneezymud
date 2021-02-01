@@ -449,6 +449,12 @@ class procDoPlayerSaves : public TProcess {
   procDoPlayerSaves(const int &);
 };
 
+class procSendGmcpTick : public TProcess {
+ public:
+  void run(const TPulse &) const;
+  procSendGmcpTick(const int &);
+};
+
 class procDoRoomSaves : public TProcess {
  public:
   void run(const TPulse &) const;
