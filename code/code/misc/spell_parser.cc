@@ -1723,7 +1723,7 @@ int TBeing::doDiscipline(spellNumT which, sstring const& n1)
   if(!preDiscCheck(which))
     return FALSE;
 
-  strncpy(arg, n, cElements(arg));
+  strncpy(arg, n, cElements(arg)-1);
   arg[cElements(arg)-1] = '\0';
   if(!parseTarget(which, arg, &t))
     return FALSE;

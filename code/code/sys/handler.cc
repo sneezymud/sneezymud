@@ -1279,7 +1279,7 @@ int get_number(char **name)
 
   if ((ppos = (char *) strchr(*name, '.')) && ppos[1]) {
     *ppos++ = '\0';
-    strncpy(numx, *name, cElements(numx));
+    strncpy(numx, *name, cElements(numx)-1);
     memmove(*name, ppos, strlen(ppos)+1);
 
     for (i = 0; *(numx + i); i++) {
@@ -1673,7 +1673,7 @@ TBeing *get_char_room_vis(const TBeing *ch, const sstring &name, int *count, exa
   if (name.empty() || !ch->roomp)
     return NULL;
 
-  strncpy(tmpname, name.c_str(), cElements(tmpname));
+  strncpy(tmpname, name.c_str(), cElements(tmpname)-1);
   tmp = tmpname;
 
   if (!(numx = get_number(&tmp)))
@@ -2119,7 +2119,7 @@ TObj *get_obj_vis_accessible(TBeing *ch, const sstring &name)
   if (name.empty())
     return NULL;
 
-  strncpy(tmpname, name.c_str(), cElements(tmpname));
+  strncpy(tmpname, name.c_str(), cElements(tmpname)-1);
   tmp = tmpname;
   if (!(numx = get_number(&tmp)))
     return NULL;
@@ -2224,7 +2224,7 @@ int generic_find(const char *arg, int bv, TBeing *ch, TBeing **tar_ch, TObj **ob
 
 
 //  strcpy(tmpname, name);
-  strncpy(tmpname, arg, cElements(tmpname));
+  strncpy(tmpname, arg, cElements(tmpname)-1);
   tmp = tmpname;
   if (!(numx = get_number(&tmp)))
     return (0);

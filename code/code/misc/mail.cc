@@ -419,7 +419,7 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
     me->doTell(fname(name), "Write your message, use ~ when done, or ` to cancel.");
     addPlayerAction(PLR_MAILING);
     desc->connected = CON_WRITING;
-    strncpy(desc->name, recipient.c_str(), cElements(desc->name));
+    strncpy(desc->name, recipient.c_str(), cElements(desc->name)-1);
 
     desc->str = &desc->mail_bug_str;
     desc->max_str = MAX_MAIL_SIZE;

@@ -534,10 +534,9 @@ void TPerson::doOEdit(const char *argument)
 
       else {
         snprintf(Buf, sizeof(Buf), "%s %d", sstring, cObj->getSnum());
-        strncpy(sstring, Buf, sizeof(sstring));
-	sendTo(format("Resaving in slot %i.\n\r") % cObj->getSnum());
-	oremove(this, cObj->getSnum());
-        osave(this, sstring);
+        sendTo(format("Resaving in slot %i.\n\r") % cObj->getSnum());
+        oremove(this, cObj->getSnum());
+        osave(this, Buf);
       }
       return;
       break;

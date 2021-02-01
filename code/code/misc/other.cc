@@ -587,7 +587,7 @@ void TBeing::doReport(const char *argument)
     sendTo("You can't make a sound!\n\r");
     return;
   }
-  strncpy(target, argument, sizeof(target));
+  strncpy(target, argument, sizeof(target)-1);
 
   Buf = format("%.1f%% H, ") % getPercHit();
 
@@ -1502,7 +1502,7 @@ void TPerson::doFeedback(const sstring &type, int clientCmd, const sstring &arg)
 
   subject.inlineReplaceString("\n", "");
   subject.inlineReplaceString("\r", "");
-  strncpy(desc->name, ((sstring)(format("%s: %s") % type % subject)).c_str(), cElements(desc->name));
+  strncpy(desc->name, ((sstring)(format("%s: %s") % type % subject)).c_str(), cElements(desc->name)-1);
 
   if (!desc->m_bIsClient)
   {

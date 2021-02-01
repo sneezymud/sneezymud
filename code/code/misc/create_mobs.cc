@@ -2079,8 +2079,7 @@ void TPerson::doMedit(const char *argument)
 
       else {
         snprintf(Buf, sizeof(Buf), "%s %d", sstring, cMob->getSnum());
-        strncpy(sstring, Buf, sizeof(sstring));
-        msave(this, sstring);
+        msave(this, Buf);
       }
       return;
       break;
