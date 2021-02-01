@@ -6027,7 +6027,7 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
       me->doGive(ch,commod, GIVE_FLAG_DROP_ON_FAIL);
     }
   
-    delete o;
+    return DELETE_ITEM;
   }
 
   return FALSE;
