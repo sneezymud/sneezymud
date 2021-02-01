@@ -327,7 +327,17 @@ void procDoPlayerSaves::run(const TPulse &) const
   }
 }
 
+procSendGmcpTick::procSendGmcpTick(const int &p)
+{
+  trigger_pulse=p;
+  name="procSendGmcpTick";
+}
 
+void procSendGmcpTick::run(const TPulse &) const
+{
+  for (Descriptor* d = descriptor_list; d ; d = d->next)
+    d->sendGmcp("comm.tick { }", false);
+}
 
 // procQueryQueue
 procQueryQueue::procQueryQueue(const int &p)

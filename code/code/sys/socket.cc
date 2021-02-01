@@ -1766,6 +1766,7 @@ int TMainSocket::gameLoop()
   scheduler.add(new procCharThaw(Pulse::UPDATE));
   scheduler.add(new procDoubleXP(Pulse::UPDATE));
   scheduler.add(new procDoPlayerSaves(Pulse::UPDATE));
+  scheduler.add(new procSendGmcpTick(Pulse::UPDATE));
 
   // pulse mudhour  (144 seconds (2.4 mins))
   scheduler.add(new procFishRespawning(Pulse::MUDHOUR));
