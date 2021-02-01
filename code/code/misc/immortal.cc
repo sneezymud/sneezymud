@@ -4660,7 +4660,7 @@ void TBeing::doInfo(const char *arg)
           tTotalGold[tMoney] = getPosGold(tMoney);
           tNetGold[tMoney]   = getNetGold(tMoney);
 
-          sprintf(buf2, "Ecomony-%s:\n\r\tpos = %9u   net gold = %9d (drain: %9d : %6.2f%%)\n\r",
+          sprintf(buf2, "Ecomony-%.30s:\n\r\tpos = %9u   net gold = %9d (drain: %9d : %6.2f%%)\n\r",
                   tNames[tMoney], tTotalGold[tMoney], tNetGold[tMoney],
                   tTotalGold[tMoney] - tNetGold[tMoney],
                   100.0 * (tTotalGold[tMoney] - tNetGold[tMoney]) / tTotalDrain);

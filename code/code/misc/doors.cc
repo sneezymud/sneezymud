@@ -37,7 +37,7 @@ dirTypeT TBeing::findDoor(const char *type, const char *direct, doorIntentT mode
   char action[20];
   char action2[20];
   char dir[64];
-  strncpy(dir, direct, cElements(dir));
+  strncpy(dir, direct, cElements(dir)-1);
 
   if (!strcasecmp(dir, "ne"))
     strcpy(dir, "northeast");

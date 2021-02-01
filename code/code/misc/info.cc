@@ -2870,7 +2870,7 @@ void TBeing::doWhere(const char *argument)
   if (powerCheck(POWER_WHERE))
     return;
 
-  strncpy(namebuf, argument, cElements(namebuf));
+  strncpy(namebuf, argument, cElements(namebuf)-1);
   tStArg=tStString.word(0);
   tStName=tStString.word(1);
 
@@ -3232,7 +3232,7 @@ void TBeing::doLevels(const char *argument)
       else color = green();
 
       sprintf(tString, "%.0f", getExpClassLevel(i));
-      strncpy(tString, sstring(tString).comify().c_str(), cElements(tString));
+      strncpy(tString, sstring(tString).comify().c_str(), cElements(tString)-1);
       sprintf(buf, "%s[%2d]%s %s%13s%s%s", 
             cyan(), i, norm(),
             color.c_str(), tString, norm(),
@@ -3245,7 +3245,7 @@ void TBeing::doLevels(const char *argument)
       else color = green();
 
       sprintf(tString, "%.0f", getExpClassLevel(j));
-      strncpy(tString, sstring(tString).comify().c_str(), cElements(tString));
+      strncpy(tString, sstring(tString).comify().c_str(), cElements(tString)-1);
       sprintf(buf, "%s[%2d]%s %s%13s%s%s",
             cyan(), j, norm(),
             color.c_str(), tString, norm(),
@@ -3258,7 +3258,7 @@ void TBeing::doLevels(const char *argument)
       else color = green();
 
       sprintf(tString, "%.0f", getExpClassLevel(k));
-      strncpy(tString, sstring(tString).comify().c_str(), cElements(tString));
+      strncpy(tString, sstring(tString).comify().c_str(), cElements(tString)-1);
       sprintf(buf, "%s[%2d]%s %s%13s%s%s",
             cyan(), k, norm(),
             color.c_str(), tString, norm(),
@@ -3271,7 +3271,7 @@ void TBeing::doLevels(const char *argument)
       else color = green();
 
       sprintf(tString, "%.0f", getExpClassLevel(m));
-      strncpy(tString, sstring(tString).comify().c_str(), cElements(tString));
+      strncpy(tString, sstring(tString).comify().c_str(), cElements(tString)-1);
       sprintf(buf, "%s[%2d]%s %s%13s%s%s",
             cyan(), m, norm(),
             color.c_str(), tString, norm(),
@@ -3362,7 +3362,7 @@ void TBeing::doWorld()
 
   char timebuf[256];
 
-  strncpy(timebuf, ctime(&stats.first_login), cElements(timebuf));
+  strncpy(timebuf, ctime(&stats.first_login), cElements(timebuf)-1);
   timebuf[strlen(timebuf) - 1] = '\0';
   strcat(timebuf, ":");
   buf=format("Logins since %-32.32s %s%ld  (%ld per day)%s\n\r") %
@@ -3966,7 +3966,7 @@ void TBeing::doEvaluate(const char *argument)
   int count = 0,
       rNatureCount = 0;
 
-  strncpy(arg, argument, cElements(arg));
+  strncpy(arg, argument, cElements(arg)-1);
   if (!*arg) {
     sendTo("Evaluate what?\n\r");
     return;
@@ -4367,8 +4367,8 @@ void TObj::describeMe(TBeing *ch) const
   char name_buf[80];
   TThing *t2;
 
-  strncpy(buf, material_nums[getMaterial()].mat_name, cElements(buf));
-  strncpy(buf2, ch->objs(this), cElements(buf2));
+  strncpy(buf, material_nums[getMaterial()].mat_name, cElements(buf)-1);
+  strncpy(buf2, ch->objs(this), cElements(buf2)-1);
   ch->sendTo(COLOR_OBJECTS,format("%s is %s made of %s.\n\r") % sstring(buf2).cap() %
                  ItemInfo[itemType()]->common_name % 
 	     sstring(buf).uncap());
@@ -4408,7 +4408,7 @@ void TObj::describeMe(TBeing *ch) const
     }
   }
   if (!action_description.empty()) {
-    strncpy(capbuf, action_description.c_str(), cElements(capbuf));
+    strncpy(capbuf, action_description.c_str(), cElements(capbuf)-1);
     if ((sscanf(capbuf, "This is the personalized object of %s.", name_buf)) == 1)
       sendTo(format("A monogram on it indicates it belongs to %s.\n\r") % name_buf);
   }
@@ -4520,7 +4520,7 @@ void TBeing::describeMaxSharpness(const TBaseWeapon *obj, int learn) const
   int maxsharp = GetApprox(obj->getMaxSharp(), learn);
 
   char capbuf[80], sharpbuf[80];
-  strncpy(capbuf, objs(obj), cElements(capbuf));
+  strncpy(capbuf, objs(obj), cElements(capbuf)-1);
 
   if (maxsharp >= 99)
     strcpy(sharpbuf, "being unhumanly sharp");
@@ -4554,7 +4554,7 @@ void TBeing::describeMaxSharpness(const TBaseWeapon *obj, int learn) const
 void TBeing::describeMaxPointiness(const TBaseWeapon *obj, int learn) const
 {
   char capbuf[80], sharpbuf[80];
-  strncpy(capbuf, objs(obj), cElements(capbuf));
+  strncpy(capbuf, objs(obj), cElements(capbuf)-1);
 
   if (!hasClass(CLASS_THIEF) && !hasClass(CLASS_WARRIOR) && 
       !hasClass(CLASS_DEIKHAN) && !hasClass(CLASS_RANGER) &&
@@ -4595,7 +4595,7 @@ void TBeing::describeMaxPointiness(const TBaseWeapon *obj, int learn) const
 void TBeing::describeOtherFeatures(const TGenWeapon *obj, int learn) const
 {
   char capbuf[80];
-  strncpy(capbuf, objs(obj), cElements(capbuf));
+  strncpy(capbuf, objs(obj), cElements(capbuf)-1);
 
   if (!obj) {
     sendTo("Something went wrong, tell a god what you did.\n\r");
@@ -4618,7 +4618,7 @@ void TBeing::describeOtherFeatures(const TGenWeapon *obj, int learn) const
 void TBeing::describeMaxBluntness(const TBaseWeapon *obj, int learn) const
 {
   char capbuf[80], sharpbuf[80];
-  strncpy(capbuf, objs(obj), cElements(capbuf));
+  strncpy(capbuf, objs(obj), cElements(capbuf)-1);
 
   if (!hasClass(CLASS_CLERIC) && !hasClass(CLASS_WARRIOR) && 
       !hasClass(CLASS_SHAMAN) && !hasClass(CLASS_DEIKHAN))
@@ -4863,7 +4863,7 @@ void TBeing::describeArrowSharpness(const TArrow *obj, int learn)
   int maxsharp = GetApprox(obj->getCurSharp(), learn);
  
   char capbuf[80], sharpbuf[80];
-  strncpy(capbuf, objs(obj), cElements(capbuf));
+  strncpy(capbuf, objs(obj), cElements(capbuf)-1);
  
   if (maxsharp >= 99)
     strcpy(sharpbuf, "unhumanly sharp");
@@ -4907,7 +4907,7 @@ void TBeing::describeNoise(const TObj *obj, int learn) const
   int iNoise = GetApprox(material_nums[obj->getMaterial()].noise, learn);
 
   char capbuf[160];
-  strncpy(capbuf, objs(obj), cElements(capbuf));
+  strncpy(capbuf, objs(obj), cElements(capbuf)-1);
 
   sendTo(COLOR_OBJECTS, format("%s is %s.\n\r") % sstring(capbuf).cap() %
           ((iNoise < -9) ? "beyond silent" :
@@ -4958,7 +4958,7 @@ void TBeing::describeBowRange(const TBow *obj, int learn)
   int range = GetApprox((int) obj->getMaxRange(), learn);
 
   char capbuf[160];
-  strncpy(capbuf, objs(obj), cElements(capbuf));
+  strncpy(capbuf, objs(obj), cElements(capbuf)-1);
 
   sendTo(COLOR_OBJECTS, format("%s can %s.\n\r") % sstring(capbuf).cap() %
           ((range < 1) ? "not shoot out of the immediate area" :
@@ -5040,7 +5040,7 @@ void TWand::descMagicSpells(TBeing *ch) const
   discNumT das = DISC_NONE;
   spellNumT iSpell;
   char capbuf[160];
-  strncpy(capbuf, ch->objs(this), cElements(capbuf));
+  strncpy(capbuf, ch->objs(this), cElements(capbuf)-1);
 
   if ((iSpell = getSpell()) >= MIN_SPELL && discArray[iSpell] &&
       ((das = getDisciplineNumber(iSpell, FALSE)) != DISC_NONE)) {
@@ -5057,7 +5057,7 @@ void TStaff::descMagicSpells(TBeing *ch) const
   discNumT das = DISC_NONE;
   spellNumT iSpell;
   char capbuf[160];
-  strncpy(capbuf, ch->objs(this), cElements(capbuf));
+  strncpy(capbuf, ch->objs(this), cElements(capbuf)-1);
 
   if ((iSpell = getSpell()) >= MIN_SPELL && discArray[iSpell] &&
       ((das = getDisciplineNumber(iSpell, FALSE)) != DISC_NONE)) {
@@ -5074,7 +5074,7 @@ void TScroll::descMagicSpells(TBeing *ch) const
   discNumT das = DISC_NONE;
   spellNumT spell;
   char capbuf[160];
-  strncpy(capbuf, ch->objs(this), cElements(capbuf));
+  strncpy(capbuf, ch->objs(this), cElements(capbuf)-1);
 
   spell = getSpell(0);
   if (spell > TYPE_UNDEFINED && discArray[spell] &&
@@ -5122,7 +5122,7 @@ void TBeing::describeSymbolOunces(const TSymbol *obj, int learn) const
   amt = GetApprox(amt, learn);
 
   char capbuf[160];
-  strncpy(capbuf, objs(obj), cElements(capbuf));
+  strncpy(capbuf, objs(obj), cElements(capbuf)-1);
 
   sendTo(COLOR_OBJECTS, format("%s requires about %d ounce%s of holy water to attune.\n\r") % sstring(capbuf).cap() % amt % (amt == 1 ? "" : "s"));
 }
@@ -5130,7 +5130,7 @@ void TBeing::describeSymbolOunces(const TSymbol *obj, int learn) const
 void TBeing::describeComponentUseage(const TComponent *obj, int) const
 {
   char capbuf[160];
-  strncpy(capbuf, objs(obj), cElements(capbuf));
+  strncpy(capbuf, objs(obj), cElements(capbuf)-1);
 
   if (IS_SET(obj->getComponentType(), COMP_SPELL))
     sendTo(COLOR_OBJECTS, format("%s is a component used in creating magic.\n\r") % sstring(capbuf).cap());
@@ -5149,7 +5149,7 @@ void TBeing::describeComponentDecay(const TComponent *obj, int learn) const
   int level = GetApprox(obj->obj_flags.decay_time, learn);
 
   char capbuf[160];
-  strncpy(capbuf, objs(obj), cElements(capbuf));
+  strncpy(capbuf, objs(obj), cElements(capbuf)-1);
 
   sendTo(COLOR_OBJECTS, format("%s will last ") % sstring(capbuf).cap());
 
@@ -5190,7 +5190,7 @@ sstring describeMaterial(const TThing *t)
   int mat = t->getMaterial();
   char mat_name[40];
 
-  strncpy(mat_name, sstring(material_nums[mat].mat_name).uncap().c_str(), cElements(mat_name));
+  strncpy(mat_name, sstring(material_nums[mat].mat_name).uncap().c_str(), cElements(mat_name)-1);
 
   if (dynamic_cast<const TBeing *>(t))
     sprintf(buf, "%s has a skin type of %s.\n\r", sstring(t->getName()).cap().c_str(), mat_name);
