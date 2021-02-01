@@ -1731,6 +1731,14 @@ sstring UncategorizedComm::getText(){
   return text;
 }
 
+GmcpComm::GmcpComm(const sstring &t){
+  text=t;
+}
+
+sstring GmcpComm::getText(){
+  return text;
+}
+
 // RoomExitComm
 RoomExitComm::RoomExitComm(){
 }
