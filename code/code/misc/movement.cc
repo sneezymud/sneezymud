@@ -1848,8 +1848,8 @@ int TBeing::doOpen(const char *argument)
   // fix things up here, but since findDoor doesn't know "1.stee" syntax
   // anyway, let's just truncate it here
   char * citer = strchr(type, '.');
-  if (citer && *(citer+1))
-    strcpy(type, ++citer);
+  if (citer && *(citer+++1))
+    memmove(type, citer, strlen(citer)+1);
 
   door = findDoor(type, dir, DOOR_INTENT_OPEN, SILENT_NO);
   if (door >= MIN_DIR) {
