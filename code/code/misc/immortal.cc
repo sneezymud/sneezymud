@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <cmath>
 
+#include "DescriptorList.h"
 #include "extern.h"
 #include "handler.h"
 #include "room.h"
@@ -2483,7 +2484,6 @@ void TBeing::doCutlink(const char *)
 
 void TPerson::doCutlink(const char *argument)
 {
-  Descriptor *d;
   char name_buf[100];
 
   if (powerCheck(POWER_CUTLINK))
@@ -2492,40 +2492,39 @@ void TPerson::doCutlink(const char *argument)
   argument = one_argument(argument, name_buf, cElements(name_buf));
 
   if (!*name_buf) {
-    for (d = descriptor_list; d; d = d->next) {
+    std::vector<Descriptor*> toDelete;
+    for (auto d : DescriptorList) {
       if (!d->character || d->character->name.empty()) {
-        sendTo(format("You cut a link from host %s\n\r") %
-               (!(d->host.empty()) ? d->host : "Host Unknown"));
-
-        delete d;
+        sendTo(format("You cut a link from host %s\n\r") % (!(d->host.empty()) ? d->host : "Host Unknown"));
+        toDelete.push_back(d);
       }
     }
+    for (Descriptor* d : toDelete)
+      delete d;
   } else {
-    for (d = descriptor_list; d; d = d->next) {
-      if (d->character) {
-        if (!d->character->name.empty() && !(d->character->name.lower()).compare(name_buf)) {
-          if (d->character == this) {
-            sendTo("You can't cut your own link, sorry.\n\r");
-            return;
-          }
-          if (d->character->GetMaxLevel() >= GetMaxLevel()) {
-            sendTo("You can only cut the link of players lower level than you.\n\r");
-            return;
-          }
-          if (d->character->roomp)  // necessary check due to canSeeMe
-            act("You cut $S link.", TRUE, this, 0, d->character, TO_CHAR);
-          else 
-            act("You cut someone's link.", TRUE, this, 0, 0, TO_CHAR);
-
-          TPerson *p = dynamic_cast<TPerson *>(d->character);
-          if (p)
-            p->fixClientPlayerLists(TRUE);
-          delete d;
-          return;
-        }
-      }
+    auto it = DescriptorList.findByCharName(name_buf);
+    if (it == DescriptorList.end()) {
+      sendTo("No one by that name logged in!\n\r");
+      return;
     }
-    sendTo("No one by that name logged in!\n\r");
+    Descriptor* d = *it;
+    if (d->character == this) {
+      sendTo("You can't cut your own link, sorry.\n\r");
+      return;
+    }
+    if (d->character->GetMaxLevel() >= GetMaxLevel()) {
+      sendTo("You can only cut the link of players lower level than you.\n\r");
+      return;
+    }
+    if (d->character->roomp)  // necessary check due to canSeeMe
+      act("You cut $S link.", TRUE, this, 0, d->character, TO_CHAR);
+    else
+      act("You cut someone's link.", TRUE, this, 0, 0, TO_CHAR);
+
+    TPerson *p = dynamic_cast<TPerson *>(d->character);
+    if (p)
+      p->fixClientPlayerLists(TRUE);
+    delete d;
     return;
   }
 }

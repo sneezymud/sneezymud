@@ -33,6 +33,7 @@ extern "C" {
 int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);   
 }
 
+#include "DescriptorList.h"
 #include "room.h"
 #include "monster.h"
 #include "configuration.h"
@@ -68,6 +69,7 @@ bool Reboot = false;
 int tics = 0;
 TMainSocket *gSocket;
 long timeTill = 0;
+TDescriptorList DescriptorList;
 Descriptor *descriptor_list = NULL, *next_to_process; 
 
 struct timeval timediff(struct timeval *a, struct timeval *b)
