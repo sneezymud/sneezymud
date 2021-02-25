@@ -175,7 +175,6 @@ void TScheduler::runObj(int pulseNum)
 
 void TScheduler::runChar(int pulseNum)
 {
-  TBeing *temp;
   int count;
 
   // we've already finished going through the character list, so start over
@@ -184,9 +183,7 @@ void TScheduler::runChar(int pulseNum)
 
   count=max((int)((float)mobCount/11.5), 1);
 
-  for (; tmp_ch; tmp_ch = temp) {
-    temp = tmp_ch->next;  // just for safety
-
+  while (tmp_ch) {
     if (tmp_ch->roomp == NULL || tmp_ch->getName().empty() || (tmp_ch->desc && tmp_ch->desc->character != tmp_ch))
     {
       vlogf(LOG_BUG, format("Error: character_list contains a bogus item (%s), removing.") % (
@@ -195,22 +192,23 @@ void TScheduler::runChar(int pulseNum)
           tmp_ch->desc && tmp_ch->desc->character != tmp_ch ? "bad char ptr in desc" :
           "bug"
           ));
-      tmp_ch = temp;
-      temp = temp->next;
+      tmp_ch = tmp_ch->next;
+      continue;
     }
 
     if(!count--)
       break;
 
     if (tmp_ch->getPosition() == POSITION_DEAD) {
-      assert(tmp_ch); // I suppose this guy exists if we have already dereferenced it
       // even if shortDescr is NULL.
       vlogf(LOG_BUG, format("Error: dead creature (%s at %d) in character_list, removing.") % 
           tmp_ch->getName() % tmp_ch->in_room);
-      delete tmp_ch;
-      tmp_ch = temp;
+      TBeing* dead = tmp_ch;
+      tmp_ch = tmp_ch->next;
+      delete dead; // possibly skip, hopefully not lose a character here, because the destructor manages character_list
       continue;
     }
+
     if ((tmp_ch->getPosition() < POSITION_STUNNED) &&
         (tmp_ch->getHit() > 0)) {
       vlogf(LOG_BUG, format("Error: creature (%s) with hit > 0 found with position < stunned") % 
@@ -219,22 +217,23 @@ void TScheduler::runChar(int pulseNum)
       tmp_ch->setPosition(POSITION_STANDING);
     }
 
-
     for(TCharProcess *char_proc : char_procs) {
       if(char_proc->should_run(pulse.pulse)){
         if(char_proc->run(pulse, tmp_ch)){
-          delete tmp_ch;
-          tmp_ch = temp;
+          TBeing* dead = tmp_ch;
+          tmp_ch = tmp_ch->next;
+          delete dead; // possibly skip, hopefully not lose a character here, because the destructor manages character_list
           break;
         }
       }
       if (!tmp_ch->roomp || tmp_ch->getName().empty()) {
         vlogf(LOG_BUG, format("Error: char %s roomp %p in proc %s") %
             tmp_ch->getName() % tmp_ch ->roomp % char_proc->name);
-        tmp_ch = temp;
-        temp = temp->next;
+        tmp_ch = tmp_ch->next;
       }
     }
+
+    tmp_ch = tmp_ch -> next;
   }
 }
 
