@@ -2190,7 +2190,7 @@ int TBeing::hit(TBeing *target, int pulse)
      !heldInPrimHand() && !heldInSecHand() &&
      doesKnowSkill(SKILL_BLUR) && 
      ::number(0, 99) < 20 &&  // this makes it happen 20% of the time
-     !isAffected(AFF_ENGAGER) && getMana()>=25 &&
+     !isAffected(AFF_ENGAGER) && getMana()>=15 &&
      bSuccess(SKILL_BLUR)) {
     // the number of extra swings use to be skill dependant too, but
     // this was getting too complex and is not how the balance document
@@ -3976,7 +3976,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
      if(doesKnowSkill(SKILL_CHAIN_ATTACK) &&   // must know the skill
 	 !weapon &&                             // must be barehanded
 	 (::number(0,99) < 10) &&                // only 10% of the time
-	 getMana()>=10 &&                       // requires 10 mana
+	 getMana()>=5 &&                       // requires 5 mana
 	 bSuccess(SKILL_CHAIN_ATTACK)){
 	// successfully chain this attack
 	act("Lightning fast, you shift your balance and launch another strike.",
