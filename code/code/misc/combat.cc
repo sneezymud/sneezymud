@@ -2208,7 +2208,7 @@ int TBeing::hit(TBeing *target, int pulse)
     fy += fy2;
 
     sendTo(COLOR_BASIC, "<b>You focus your mind and body and execute a <C>blur<1><b> of attacks!<1>\n\r");
-    reconcileMana(TYPE_UNDEFINED, 0, 25);
+    reconcileMana(TYPE_UNDEFINED, 0, 15);
   }
     
 
@@ -3987,7 +3987,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 	    FALSE, this, 0, vict, TO_NOTVICT);
 	
 	*f += 1; // one extra attack
-	reconcileMana(TYPE_UNDEFINED, 0, 10);
+	reconcileMana(TYPE_UNDEFINED, 0, 5);
       }
       
       if(affectedBySpell(SPELL_AURA_VENGEANCE) &&
