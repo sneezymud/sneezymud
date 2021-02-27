@@ -661,7 +661,7 @@ int TBeing::teleportRoomFlow(int pulse)
     return FALSE;
 
   if (isImmortal()) {
-    if((tmp_desc=roomp->ex_description->findExtraDesc("_tele_")) && 
+    if(roomp && roomp->ex_description && (tmp_desc=roomp->ex_description->findExtraDesc("_tele_")) &&
        inRoom() == roomp->getTeleTarg()){
       act(tmp_desc, TRUE, this, NULL, NULL, TO_CHAR);
     } else {

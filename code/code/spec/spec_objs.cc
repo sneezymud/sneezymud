@@ -6221,7 +6221,7 @@ int mobSpawnGrab(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *cont
     }
     *ch->roomp += *mob;
     colorAct(COLOR_MOBS, 
-            ((mob->ex_description && mob->ex_description->findExtraDesc("repop")) ?
+            (mob && mob->ex_description && (mob->ex_description && mob->ex_description->findExtraDesc("repop")) ?
             mob->ex_description->findExtraDesc("repop") :
             "$n appears suddenly in the room."), TRUE, mob, 0, 0, TO_ROOM);
   }

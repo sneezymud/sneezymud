@@ -2078,7 +2078,7 @@ static bool shopping_look(const char *arg, TBeing *ch, TMonster *keeper, int sho
   act(str, FALSE, ch, temp1, keeper, TO_CHAR);
 
   tmp_desc = NULL;
-  if ((tmp_desc = temp1->ex_description->findExtraDesc(fname(temp1->name).c_str()))) {
+  if (temp1 && temp1->ex_description && (tmp_desc = temp1->ex_description->findExtraDesc(fname(temp1->name).c_str()))) {
     ch->desc->page_string(tmp_desc);
   } else {
     ch->sendTo("You see nothing special.\n\r");
