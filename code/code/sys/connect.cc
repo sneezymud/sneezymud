@@ -421,7 +421,7 @@ int Descriptor::outputProcessing()
     // I bumped this from 500 to 1000 - Batopr
     // It happens sporadically if a lagged person is dragged on a long
     // speed walk
-    if (counter >= 5000) {
+    if (counter >= 10000) {
       char buf2[MAX_STRING_LENGTH + MAX_STRING_LENGTH];
       strcpy(buf2, i);
       vlogf(LOG_BUG, format("Tell a coder, bad loop in outputProcessing, please investigate %s") %  (character ? character->getName() : "'No char for desc'"));
