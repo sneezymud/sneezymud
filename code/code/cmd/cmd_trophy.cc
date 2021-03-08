@@ -157,8 +157,9 @@ float TTrophy::getExpModVal(float count, int mobvnum)
   float step_mod=0.5; // mod per step
   float num_steps=14.0; // number of steps
 
-  if(mob_index[real_mobile(mobvnum)].numberLoad>0)
-    count/=mob_index[real_mobile(mobvnum)].numberLoad;
+  int rnum = real_mobile(mobvnum);
+  if(rnum != -1 && mob_index[rnum].numberLoad>0)
+    count/=mob_index[rnum].numberLoad;
 
   float t1, t2, t3, t4, t5;
 
