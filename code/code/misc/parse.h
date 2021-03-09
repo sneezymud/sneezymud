@@ -555,6 +555,7 @@ enum cmdTypeT {
      CMD_MINDTHRUST,
      CMD_PSYCRUSH,
      CMD_KWAVE,
+     CMD_DFOLD,
      CMD_TELEVISION,
      CMD_PLANT,
      CMD_COOK,

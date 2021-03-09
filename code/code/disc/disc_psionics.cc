@@ -14,6 +14,7 @@
 #include "person.h"
 #include "low.h"
 #include "colorstring.h"
+#include "obj_portal.h"
 #include "monster.h"
 #include "disc_psionics.h"
 #include "garble.h"
@@ -30,7 +31,8 @@ CDPsionics::CDPsionics() :
   skKineticWave(),
   skMindPreservation(),
   skTelekinesis(),
-  skPsiDrain()
+  skPsiDrain(),
+  skDimensionalFold()
 {
 }
 
@@ -46,7 +48,8 @@ CDPsionics::CDPsionics(const CDPsionics &a) :
   skKineticWave(a.skKineticWave),
   skMindPreservation(a.skMindPreservation),
   skTelekinesis(a.skTelekinesis),
-  skPsiDrain(a.skPsiDrain)
+  skPsiDrain(a.skPsiDrain),
+  skDimensionalFold(a.skDimensionalFold)
 {
 }
 
@@ -66,6 +69,7 @@ CDPsionics & CDPsionics::operator=(const CDPsionics &a)
   skMindPreservation = a.skMindPreservation;
   skTelekinesis = a.skTelekinesis;
   skPsiDrain = a.skPsiDrain;
+  skDimensionalFold = a.skDimensionalFold;
 
   return *this;
 }
@@ -896,6 +900,55 @@ int TBeing::doPsidrain(const char *tString){
 }
 
 
+int TBeing::doDfold(const char *){
+  int location=0;
+  char buf[256];
 
+  if(!doesKnowSkill(SKILL_DIMENSIONAL_FOLD)){
+    sendTo("You are not telepathic!\n\r");
+    return FALSE;
+  }
+
+  if(getMana() < discArray[SKILL_DIMENSIONAL_FOLD]->minMana){
+    sendTo("You don't have enough mana.\n\r");
+    return FALSE;
+  }
+
+  if(affectedBySpell(SKILL_MIND_FOCUS)){
+    sendTo("You can't use psionic powers until you are done focusing your mind.\n\r");
+    return FALSE;
+  }
+
+  location=15346;
+  TRoom * rp = real_roomp(location);
+
+  int bKnown=getSkillValue(SKILL_DIMENSIONAL_FOLD);
+
+  if (bSuccess(bKnown, SKILL_DIMENSIONAL_FOLD)) {
+    TPortal * tmp_obj = new TPortal(rp);
+    tmp_obj->setPortalNumCharges(1);
+    tmp_obj->obj_flags.decay_time = 1;
+
+    *roomp += *tmp_obj;
+
+    TPortal * next_tmp_obj = new TPortal(roomp);
+    next_tmp_obj->setPortalNumCharges(1);
+    next_tmp_obj->obj_flags.decay_time = 1;
+
+    *rp += *next_tmp_obj;
+
+    act("$p suddenly appears out of a swirling mist.", TRUE, this, tmp_obj, NULL, TO_ROOM);
+    act("$p suddenly appears out of a swirling mist.", TRUE, this, tmp_obj, NULL, TO_CHAR);
+
+    sprintf(buf, "%s suddenly appears out of a swirling mist.\n\r", (sstring(next_tmp_obj->shortDescr).cap()).c_str());
+    sendToRoom(buf, location);
+
+    return TRUE;
+  }
+
+  sendTo("That didn't work.\n\r");
+  return FALSE;
+
+}
 
 

@@ -1768,6 +1768,9 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
         case CMD_PSIDRAIN:
           rc = doPsidrain(newarg.c_str());
           break;
+        case CMD_DFOLD:
+          rc = doDfold(newarg.c_str());
+          break;
         case CMD_PREEN:
           doPreen(newarg);
           break;
@@ -2972,6 +2975,7 @@ void buildCommandArray(void)
   commandArray[CMD_PSYCRUSH] = new commandInfo("psycrush", POSITION_RESTING, 0);
   commandArray[CMD_KWAVE] = new commandInfo("kwave", POSITION_RESTING, 0);
   commandArray[CMD_PSIDRAIN] = new commandInfo("psidrain", POSITION_RESTING, 0);
+  commandArray[CMD_DFOLD] = new commandInfo("dfold", POSITION_RESTING, 0);
   commandArray[CMD_TRIP] = new commandInfo("trip", POSITION_FIGHTING, 0);
   commandArray[CMD_POOP] = new commandInfo("poop", POSITION_STANDING, 0);
   commandArray[CMD_COMBINE] = new commandInfo("combine", POSITION_RESTING, 0);
