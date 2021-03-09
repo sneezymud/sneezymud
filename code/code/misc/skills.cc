@@ -1232,6 +1232,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDPsionics *) cd)->skTelekinesis;
     case SKILL_PSIDRAIN:
       return &((CDPsionics *) cd)->skPsiDrain;
+    case SKILL_DIMENSIONAL_FOLD:
+      return &((CDPsionics *) cd)->skDimensionalFold;
 
 
 
