@@ -866,7 +866,7 @@ int portal(TBeing * caster, const char * portalroom, int level, short bKnown)
   char buf[256];
   TPerson *tPerson = dynamic_cast<TPerson *>(caster);
   int i, location=0;
-
+  int num_charges = 1 + level / 5;
 
   for(i=0;i<NUM_PORTAL_ROOMS;++i){
     if(is_abbrev(portalroom, portalRooms[i].name)){
@@ -891,27 +891,26 @@ int portal(TBeing * caster, const char * portalroom, int level, short bKnown)
 
 
   if (caster->bSuccess(bKnown,caster->getPerc(),SPELL_PORTAL)) {
-    TPortal * tmp_obj = new TPortal(rp);
-    tmp_obj->setPortalNumCharges(1*((level/5)+1));
-
     if (critSuccess(caster, SPELL_PORTAL)) {
       CS(SPELL_PORTAL);
-      tmp_obj->obj_flags.decay_time *= 2;
-      tmp_obj->setPortalNumCharges(2*((level/5)+1));
+      num_charges *= 2;
     }
+
+    TPortal * tmp_obj = new TPortal(rp);
+    tmp_obj->setPortalNumCharges(num_charges);
     *caster->roomp += *tmp_obj;
 
     if (tPerson)
       tmp_obj->checkOwnersList(tPerson);
 
-    caster->roomp->playsound(SOUND_SPELL_PORTAL, SOUND_TYPE_MAGIC);
-
     TPortal * next_tmp_obj = new TPortal(caster->roomp);
+    next_tmp_obj->setPortalNumCharges(num_charges);
     *rp += *next_tmp_obj;
 
     if (tPerson)
       next_tmp_obj->checkOwnersList(tPerson);
 
+    caster->roomp->playsound(SOUND_SPELL_PORTAL, SOUND_TYPE_MAGIC);
     rp->playsound(SOUND_SPELL_PORTAL, SOUND_TYPE_MAGIC);
 
     act("$p suddenly appears out of a swirling mist.", TRUE, caster, tmp_obj, NULL, TO_ROOM);
