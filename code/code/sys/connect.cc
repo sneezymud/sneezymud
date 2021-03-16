@@ -64,8 +64,8 @@ const int FORCE_LOW_INVSTE = 1;
 
 static const char * const WIZLOCK_PASSWORD           = "motelvi";
 const char * const MUD_NAME      = "SneezyMUD";
-const char * const MUD_NAME_VERS = "SneezyMUD v5.2 " VERSION;
-static const char * const WELC_MESSG = "\n\rWelcome to SneezyMUD 5.2! May your journeys be bloody!\n\r\n\r";
+const char * const MUD_NAME_VERS = "SneezyMUD v5.4 " VERSION;
+static const char * const WELC_MESSG = "\n\rWelcome to SneezyMUD 5.4! May your journeys be bloody!\n\r\n\r";
 
 Descriptor::Descriptor() :
   ignored(this)
@@ -400,9 +400,7 @@ int Descriptor::outputProcessing()
   sstring buf;
   TBeing *ch = original ? original : character;
 
-  if (!prompt_mode && !connected && !m_bIsClient)
-    if (socket->writeToSocket("\n\r") < 0)
-      return -1;
+  bool sentNewline = false;
 
   memset(i, '\0', sizeof(i));
   // Take everything from queued output
@@ -410,13 +408,20 @@ int Descriptor::outputProcessing()
     CommPtr c(output.front());
     output.pop();
 
-    strncpy(i, c->getComm().c_str(), MAX_STRING_LENGTH + MAX_STRING_LENGTH);
+    if (!sentNewline) {
+      sentNewline = true;
+      if (!prompt_mode && !connected && !m_bIsClient && dynamic_cast<GmcpComm*>(&*c) == nullptr)
+        if (socket->writeToSocket("\n\r") < 0)
+          return -1;
+    }
+
+    strncpy(i, c->getComm().c_str(), sizeof(i)-1);
     counter++;
 
     // I bumped this from 500 to 1000 - Batopr
     // It happens sporadically if a lagged person is dragged on a long
     // speed walk
-    if (counter >= 5000) {
+    if (counter >= 10000) {
       char buf2[MAX_STRING_LENGTH + MAX_STRING_LENGTH];
       strcpy(buf2, i);
       vlogf(LOG_BUG, format("Tell a coder, bad loop in outputProcessing, please investigate %s") %  (character ? character->getName() : "'No char for desc'"));
@@ -2257,19 +2262,41 @@ sstring RoomExitComm::getText(){
   return "";
 }
 
+namespace {
+  bool hasStuffToSend(Descriptor& d)
+  {
+    if (d.output.empty())
+      return false;
+
+    // GMCP doesn't count, only plaintext counts. Actually, sounds and stuff also shouldn't count...
+
+    // unfortunately, we can't check the whole mess here, can't loop over a queue.
+    auto firstCommPtr = &*d.output.front();
+
+    if (dynamic_cast<GmcpComm*>(firstCommPtr) == nullptr)
+      return true;
+
+    auto lastCommPtr = &*d.output.back();
+    if (dynamic_cast<GmcpComm*>(lastCommPtr) == nullptr)
+      return true;
+
+    return false;
+  }
+}
+
 void setPrompts(fd_set out)
 {
   Descriptor *d, *nextd;
   TBeing *tank = NULL;
   TBeing *ch;
   TThing *obj;
-  char promptbuf[256] = "\0\0\0",
-       tString[256];
+  char promptbuf[256*2] = "\0\0\0";
+  char tString[256*2];
   unsigned int update;
 
   for (d = descriptor_list; d; d = nextd) {
     nextd = d->next;
-    if ((FD_ISSET(d->socket->m_sock, &out) && !(d->output.empty())) || d->prompt_mode) {
+    if ((FD_ISSET(d->socket->m_sock, &out) && hasStuffToSend(*d)) || d->prompt_mode) {
       update = 0;
       ch = d->character;
 
@@ -2632,13 +2659,13 @@ void Descriptor::sendGmcp(const sstring& msg, bool strip)
     return;
 
   sstring text = sstring("\xff\xfa\xc9") + (strip ? stripColorCodes(msg) : msg) + sstring("\xff\xf0");
-  output.push(CommPtr(new UncategorizedComm(text)));
+  output.push(CommPtr(new GmcpComm(text)));
 }
 
 void Descriptor::startGmcp()
 {
   sstring text = sstring("\xff\xfb\xc9");
-  output.push(CommPtr(new UncategorizedComm(text)));
+  output.push(CommPtr(new GmcpComm(text)));
 }
 
 void processAllInput()
@@ -2652,7 +2679,7 @@ void processAllInput()
     next_to_process = d->next;
 
     if ((--(d->wait) <= 0) && !d->input.empty()) {
-      strncpy(comm, d->input.front().c_str(), sizeof(comm));
+      strncpy(comm, d->input.front().c_str(), sizeof(comm)-1);
       d->input.pop();
 
       if (d->character && !d->connected && 
@@ -3572,7 +3599,7 @@ int Descriptor::doAccountStuff(char *arg)
         break;
       default:
         count = ::number(1,3);
-        if (!IS_SET(account->flags, TAccount::BOSS)) {
+        if (account && !IS_SET(account->flags, TAccount::BOSS)) {
           if (account->term == TERM_ANSI) {
             screen_size = 40;  // adjust for the size of the menu bar temporarily
 
@@ -3714,7 +3741,7 @@ int Descriptor::doAccountStuff(char *arg)
 
     sstring in(m_raw);
     sstring reply = handleTelnetOpts(in, this);
-    strncpy(m_raw, in.c_str(), 4096); // write the telnet-stripped string back
+    strncpy(m_raw, in.c_str(), sizeof(m_raw)-1); // write the telnet-stripped string back
     if (!reply.empty())
       output.push(CommPtr(new UncategorizedComm(reply)));
 
@@ -3777,7 +3804,7 @@ int Descriptor::doAccountStuff(char *arg)
           snoop.snoop_by->desc->output.push(CommPtr(new SnoopComm(ch->getName(), outputBuf)));
         }
         if (flag) {
-          sprintf(buffer, "Line too long. Truncated to:\n\r%s\n\r", tmp);
+          snprintf(buffer, sizeof(buffer), "Line too long. Truncated to:\n\r%.19967s\n\r", tmp);
           if (socket && socket->writeToSocket(buffer) < 0) {
             return (-1);
           }
@@ -3884,11 +3911,11 @@ int Descriptor::doAccountStuff(char *arg)
     // LIFEFORCE
     /////////////////
     int X = getLifeforce();
-    if (X < 50) {
+    if (X < 5000) {
       setLifeforce(X);
     } else {
-      X = getLifeforce() - (secs * lfmod);
-      setLifeforce(max(50,X));
+      X = getLifeforce() - (local_tics * lfmod);
+      setLifeforce(max(5000,X));
     }
 
     /////////////////////////

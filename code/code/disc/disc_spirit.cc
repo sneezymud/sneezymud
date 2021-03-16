@@ -135,7 +135,7 @@ int silence(TBeing *caster, TBeing *victim, int level, short bKnown)
 
   aff.type = SPELL_SILENCE;
   aff.level = level;
-  aff.duration =  aff.level * Pulse::UPDATES_PER_MUDHOUR;
+  aff.duration = caster->durationModify(SPELL_SILENCE, aff.level * Pulse::UPDATES_PER_MUDHOUR);
   aff.modifier = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = AFF_SILENT;
@@ -453,7 +453,7 @@ int ensorcer(TBeing *caster, TBeing *victim, int level, short bKnown)
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = AFF_CHARM;
-    aff.duration  =  3 * level * Pulse::UPDATES_PER_MUDHOUR;
+    aff.duration = caster->durationModify(SPELL_ENSORCER, 3 * level * Pulse::UPDATES_PER_MUDHOUR);
 
     // we've made raw immunity check, but allow it to reduce effects too
     aff.duration *= (100 - victim->getImmunity(IMMUNE_CHARM));
@@ -610,7 +610,7 @@ int cloudOfConcealment(TBeing *caster, int level, short bKnown)
 
     aff.type = SPELL_INVISIBILITY;
     aff.level = level;
-    aff.duration = 24 * Pulse::UPDATES_PER_MUDHOUR;
+    aff.duration = caster->durationModify(SPELL_CLOUD_OF_CONCEALMENT, 24 * Pulse::UPDATES_PER_MUDHOUR);
     aff.modifier = -40;
     aff.location = APPLY_ARMOR;
     aff.bitvector = AFF_INVISIBLE;
@@ -868,12 +868,12 @@ int polymorph(TBeing *caster, int level, short bKnown)
       case CRIT_S_KILL:
       case CRIT_S_TRIPLE:
       case CRIT_S_DOUBLE:
-        duration = (2 + level / 5) * Pulse::UPDATES_PER_MUDHOUR;
+        duration = caster->durationModify(SPELL_POLYMORPH, (2 + level / 5) * Pulse::UPDATES_PER_MUDHOUR);
         CS(SPELL_POLYMORPH);
         break;
       case CRIT_S_NONE:
       default:
-        duration = (1 + level / 10) * Pulse::UPDATES_PER_MUDHOUR;
+        duration = caster->durationModify(SPELL_POLYMORPH, (1 + level / 10) * Pulse::UPDATES_PER_MUDHOUR);
         break;
    }
 
@@ -1007,7 +1007,7 @@ int stealth(TBeing *caster, TBeing *victim, int level, short bKnown)
   if (caster->bSuccess(bKnown, SPELL_STEALTH)) {
     aff.type = SPELL_STEALTH;
     aff.level = level;
-    aff.duration = (aff.level / 3) * Pulse::UPDATES_PER_MUDHOUR;
+    aff.duration = caster->durationModify(SPELL_STEALTH, (aff.level / 3) * Pulse::UPDATES_PER_MUDHOUR);
     aff.modifier = - aff.level;
     aff.location = APPLY_NOISE;
     aff.bitvector = 0;
@@ -1091,7 +1091,7 @@ int accelerate(TBeing *caster, TBeing *victim, int level, short bKnown)
   if (caster->bSuccess(bKnown, SPELL_ACCELERATE)) {
     aff.type = SPELL_ACCELERATE;
     aff.level = level;
-    aff.duration = (aff.level / 3) * Pulse::UPDATES_PER_MUDHOUR;
+    aff.duration = caster->durationModify(SPELL_ACCELERATE, (aff.level / 3) * Pulse::UPDATES_PER_MUDHOUR);
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = 0;
@@ -1169,7 +1169,7 @@ int haste(TBeing *caster, TBeing *victim, int level, short bKnown)
   if (caster->bSuccess(bKnown, SPELL_HASTE)) {
     aff.type = SPELL_HASTE;
     aff.level = level;
-    aff.duration = (aff.level / 3) * Pulse::UPDATES_PER_MUDHOUR;
+    aff.duration = caster->durationModify(SPELL_HASTE, (aff.level / 3) * Pulse::UPDATES_PER_MUDHOUR);
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = 0;
@@ -1263,7 +1263,7 @@ int calm(TBeing *caster, TBeing *victim, int, short bKnown)
 
     aff.type = SPELL_CALM;
     aff.level = caster->getSkillLevel(SPELL_CALM);
-    aff.duration =  aff.level * Pulse::UPDATES_PER_MUDHOUR / 3;
+    aff.duration = caster->durationModify(SPELL_CALM, aff.level * Pulse::UPDATES_PER_MUDHOUR / 3);
     aff.modifier = 0;
     aff.location = APPLY_NONE;
 
@@ -1428,7 +1428,7 @@ int invisibility(TBeing *caster, TBeing *victim, int level, short bKnown)
   if (caster->bSuccess(bKnown, SPELL_INVISIBILITY)) {
     aff.type = SPELL_INVISIBILITY;
     aff.level = level;
-    aff.duration = 24 * Pulse::UPDATES_PER_MUDHOUR;
+    aff.duration = caster->durationModify(SPELL_INVISIBILITY, 24 * Pulse::UPDATES_PER_MUDHOUR);
     aff.modifier = -40;
     aff.location = APPLY_ARMOR;
     aff.bitvector = AFF_INVISIBLE;
@@ -1438,7 +1438,7 @@ int invisibility(TBeing *caster, TBeing *victim, int level, short bKnown)
       case CRIT_S_TRIPLE:
       case CRIT_S_KILL:
         CS(SPELL_INVISIBILITY);
-        aff.duration = 36 * Pulse::UPDATES_PER_MUDHOUR;
+        aff.duration *= 2;
         aff.modifier = -60;
         break;
       case CRIT_S_NONE:
@@ -1518,7 +1518,7 @@ int senseLife(TBeing *caster, TBeing *victim, int level, short bKnown)
 
   if (caster->bSuccess(bKnown, SPELL_SENSE_LIFE)) {
     aff.type = SPELL_SENSE_LIFE;
-    aff.duration = level * Pulse::UPDATES_PER_MUDHOUR;
+    aff.duration = caster->durationModify(SPELL_SENSE_LIFE, level * Pulse::UPDATES_PER_MUDHOUR);
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = AFF_SENSE_LIFE;
@@ -1595,7 +1595,7 @@ int detectInvisibility(TBeing *caster, TBeing *victim, int level, short bKnown)
 
   if (caster->bSuccess(bKnown, SPELL_DETECT_INVISIBLE)) {
     aff.type = SPELL_DETECT_INVISIBLE;
-    aff.duration = ((level * 3 * Pulse::UPDATES_PER_MUDHOUR) / 2);
+    aff.duration = caster->durationModify(SPELL_DETECT_INVISIBLE, (level * 3 * Pulse::UPDATES_PER_MUDHOUR) / 2);
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = AFF_DETECT_INVISIBLE;
@@ -1664,7 +1664,7 @@ int trueSight(TBeing *caster, TBeing *victim, int level, short bKnown)
 
   if (caster->bSuccess(bKnown, SPELL_TRUE_SIGHT)) {
     aff.type = SPELL_TRUE_SIGHT;
-    aff.duration = level / 2 * Pulse::UPDATES_PER_MUDHOUR;
+    aff.duration = caster->durationModify(SPELL_TRUE_SIGHT, level / 2 * Pulse::UPDATES_PER_MUDHOUR);
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = AFF_TRUE_SIGHT;
@@ -1832,7 +1832,7 @@ int fear(TBeing *caster, TBeing *victim, int level, short bKnown)
       // we need a way to make the fear last a little while....
       affectedData aff;
       aff.type = SPELL_FEAR;
-      aff.duration = level * Pulse::UPDATES_PER_MUDHOUR / 2;
+      aff.duration = caster->durationModify(SPELL_FEAR, level * Pulse::UPDATES_PER_MUDHOUR / 2);
       aff.renew = aff.duration;  // renewable immediately
 
     // we've made raw immunity check, but allow it to reduce effects too
@@ -1912,15 +1912,12 @@ int fumble(TBeing *caster, TBeing *victim, int level, short bKnown)
   // bonus attribute: skill level
   bonus += bKnown / 33;
 
-  // bonus attribute: wis
-  bonus += caster->plotStat(STAT_CURRENT, STAT_WIS, 0, 2, 0);
-
   // apply 'fumbling' affect, which is -1 level's worth of tohit, bonus goes to duration
   af.type = SPELL_FUMBLE;
   af.level = level;
   af.location = APPLY_HITROLL;
   af.modifier = -1;
-  af.duration = (5 + bonus);
+  af.duration = caster->durationModify(SPELL_FUMBLE, (5 + bonus));
 
   caster->reconcileHurt(victim, discArray[SPELL_FUMBLE]->alignMod);
 

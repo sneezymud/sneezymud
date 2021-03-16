@@ -252,7 +252,7 @@ bool is_floatVal(const char *str)
 
 void TBeing::loadSetEquipment(int num, char *arg, int tChance, bool findLoadPotential)
 {
-  char          tString[256] = "\0",
+  char          tString[1024] = "\0",
                 suitClasses[256];
   const char   *tArg         = NULL;
   loadSetTypeT  tPiece       = LST_ALL;

@@ -16,6 +16,8 @@
 
 extern "C" {
 #include <unistd.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -31,6 +33,7 @@ extern "C" {
 int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);   
 }
 
+#include "DescriptorList.h"
 #include "room.h"
 #include "monster.h"
 #include "configuration.h"
@@ -66,6 +69,7 @@ bool Reboot = false;
 int tics = 0;
 TMainSocket *gSocket;
 long timeTill = 0;
+TDescriptorList DescriptorList;
 Descriptor *descriptor_list = NULL, *next_to_process; 
 
 struct timeval timediff(struct timeval *a, struct timeval *b)
@@ -1055,7 +1059,19 @@ bool procObjBurning::run(const TPulse &pl, TObj *obj) const
   return false;
 }
 
+procPaladinAura::procPaladinAura(const int &p)
+{
+  trigger_pulse=p;
+  name="procPaladinAura";
+}
 
+bool procPaladinAura::run(const TPulse &pl, TBeing *tmp_ch) const
+{
+  int rc = tmp_ch->checkAura(CMD_GENERIC_PULSE, NULL);
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    return true;
+  return false;
+}
 
 procCharSpecProcs::procCharSpecProcs(const int &p)
 {
@@ -1256,10 +1272,10 @@ bool procCharRegen::run(const TPulse &pl, TBeing *tmp_ch) const
 {
   // this was in hit(), makes more sense here I think
   if (tmp_ch->roomp && !tmp_ch->roomp->isRoomFlag(ROOM_NO_HEAL) && 
-      tmp_ch->getMyRace()->hasTalent(TALENT_FAST_REGEN) &&
       tmp_ch->getHit() < tmp_ch->hitLimit() &&
       tmp_ch->getCond(FULL) && tmp_ch->getCond(THIRST) &&
-      !::number(0, 10)){
+      !::number(0, 10) &&
+      (tmp_ch->getMyRace()->hasTalent(TALENT_FAST_REGEN) || tmp_ch->affectedBySpell(SPELL_SYNOSTODWEOMER))) {
     // mostly for trolls
     int addAmt = (int)(tmp_ch->hitGain() / 10.0);
     if (addAmt > 0) {
@@ -1731,6 +1747,7 @@ int TMainSocket::gameLoop()
   scheduler.add(new procCharSpecProcs(Pulse::SPEC_PROCS));
   scheduler.add(new procCharDrowning(Pulse::SPEC_PROCS));
   scheduler.add(new procCharResponses(Pulse::SPEC_PROCS));
+  scheduler.add(new procPaladinAura(Pulse::SPEC_PROCS));
 
   // pulse noises (4.8 seconds)
   scheduler.add(new procCharNoise(Pulse::NOISES));
@@ -1751,6 +1768,7 @@ int TMainSocket::gameLoop()
   scheduler.add(new procCharThaw(Pulse::UPDATE));
   scheduler.add(new procDoubleXP(Pulse::UPDATE));
   scheduler.add(new procDoPlayerSaves(Pulse::UPDATE));
+  scheduler.add(new procSendGmcpTick(Pulse::UPDATE));
 
   // pulse mudhour  (144 seconds (2.4 mins))
   scheduler.add(new procFishRespawning(Pulse::MUDHOUR));
@@ -1825,6 +1843,7 @@ TSocket *TMainSocket::newConnection(int v6_sock)
     perror("Accept");
     return NULL;
   }
+  s->setKeepalive(true);
   s->nonBlock();
   maxdesc = max(maxdesc, s->m_sock);
   return (s);
@@ -1995,4 +2014,23 @@ TMainSocket::TMainSocket()
 
 TMainSocket::~TMainSocket()
 {
+}
+
+void TSocket::setKeepalive(bool enabled)
+{
+  // https://tldp.org/HOWTO/TCP-Keepalive-HOWTO/programming.html
+  // Before running, shorten the intervals to something saner than 2h by
+  // https://tldp.org/HOWTO/TCP-Keepalive-HOWTO/usingkeepalive.html
+
+  auto set = [this](int level, int option, int value) {
+    if (setsockopt(m_sock, level, option, &value, sizeof(value)) < 0) {
+      perror("setsockopt()");
+      close(m_sock);
+      exit(EXIT_FAILURE);
+    }
+  };
+
+  set(SOL_SOCKET, SO_KEEPALIVE, 1);
+  set(SOL_TCP, TCP_KEEPIDLE, 180);
+  set(SOL_TCP, TCP_KEEPINTVL, 180);
 }

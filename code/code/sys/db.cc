@@ -188,6 +188,12 @@ public:
   void preload(void);
   cached_object *operator[](int);
 
+  ~TObjectCache()
+  {
+    for (auto& it : cache)
+      delete it.second;
+    cache.clear();
+  }
 } obj_cache;
 
 class TMobileCache {
@@ -198,6 +204,13 @@ public:
 
   void preload(void);
   cached_object *operator[](int);
+
+  ~TMobileCache()
+  {
+    for (auto& it : cache)
+      delete it.second;
+    cache.clear();
+  }
 } mob_cache;
 
 
@@ -2783,14 +2796,10 @@ static void mobRepop(TMonster *mob, int zone, int tRPNum = 0)
     zone_table[zone].max_mob_level = max(grl, zone_table[zone].max_mob_level);
   }
 
-#if 1
   colorAct(COLOR_MOBS, ((mob->ex_description && mob->ex_description->findExtraDesc("repop")) ?
                         mob->ex_description->findExtraDesc("repop") :
                         "$n appears suddenly in the room."),
            TRUE, mob, 0, 0, TO_ROOM);
-#else
-  act("$n appears suddenly in the room.", TRUE, mob, 0, 0, TO_ROOM);
-#endif
 
   if (mob->spec && zone && UtilProcs(mob->spec))
     vlogf(LOG_LOW, format("Mob (%s:%d) has a utility proc (%s:%d) and is not in zone #0") % 

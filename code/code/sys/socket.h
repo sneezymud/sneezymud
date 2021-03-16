@@ -49,6 +49,7 @@ class TSocket {
 
  private:
   void nonBlock();
+  void setKeepalive(bool enabled);
 
  public:
   int m_sock;

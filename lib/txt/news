@@ -1,3 +1,120 @@
+01-05-21 : List characters in the account menu now shows the race and 
+             classes of each of the characters.
+
+01-01-21 : More Garble tweaks
+           - Even easier to understand with maxed language skills
+           - Group tells are now considered non-verbal communication
+             The same as newbie or wiznet channels.
+
+12-21-20 : Garble tweaks
+           - Non-frogs now have a chance to understand bullycroak if
+             they know the skill
+           - Perception now gives you a bonus to understand garbled
+             Speaking
+           - It is overall easier to understand garbled speech
+
+11-05-20 : Reworked spell crit
+           - Increased crit range to between .1% and 10%
+           - Wisdom and to a smaller extent Karma determine the rate
+           Mobs can no longer crit skills and spells
+
+09-24-20 : Fixed a crash bug <3
+
+09-15-20 : Non-warriors should find honing defense and advanced defense
+            a little easier now. This puts them on par with warriors.
+
+09-15-20 : Fixed a crash bug in the Glacial Proc
+
+09-15-20 : Stat updates
+            - Spells and skills now have a modification stat that affects 
+              damage and duration of buffs/debuffs. See helpfiles
+
+08-22-20 : Deikhan Changes
+            - Renamed all advanced discs so they don't conflict with cleric
+            - Removed cleric wrath spells (rain brimstone etc.)
+            - Moved around some skills to match up with the new discs
+            - Divine Rescue: Advanced form of rescue that heals the target
+            - 2h specialization: Additional damage with 2h weapons
+            - Divine Grace: Resistence to some afflictions
+            - Guardian's light: Protection proc while using a shield
+            - Removed kick
+            - Smite is reworked: less damage but usable more often
+              Includes a +hit buff -protection debuff so it isn't advised
+              to use it while tanking
+            - Changed deikhan sword sanc proc to Holy Wrath (+hit buff)
+              This makes it no longer conflict with spell sanctuary
+            - Deikhan Auras : Buffs that affect a deikhans entire group when in
+              the same room. See help aura
+
+08-21-20 : Slightly increased lifeforce gains from sacrifice.
+
+07-09-20 : Tweaks to skill/spell difficulty.
+            difficulty | Success | Damage
+            - trivial      110%    105%
+            - easy         100%    118%
+            - normal        90%    133%
+            - difficult     80%    154%
+            - dangerous     70%    182%
+            Additionally updated the difficulty of a lot of individual spells
+            Mostly buffs, debuffs and utility spells. See helpfiles
+
+07-09-20 : Important change to skill/spell difficulty and damage.
+            At some point all skills and spells were short-circuited
+            to act like they were all trvial difficulty. This affected
+            failure rate and damage. Currently it's impossible to fail
+            a skill/spell that is maxed unless you have very low focus.
+            We're going to restore this system so that it acts as documented
+            in the help files. Take some time to adjust and provide feedback
+            on failure rates.
+            Here's how this will be working now:
+            difficulty | Success | Damage
+            - trivial      100%    100%  
+            - easy          90%    111%
+            - normal        80%    125%
+            - difficult     70%    143%
+            - dangerous     60%    167%
+            Focus is the primary stat to increase the above success percentage. 
+            I added Karma as a smaller secondary modifier.
+
+07-07-20 : Synostodweomer tweak
+            This prayer fading could potentially result in death so it's been
+            tweaked to no longer give current hitpoints only max hitpoints.
+            - It also provides enhanced regen now.
+
+07-06-20 : New skill in offensive abilities called Inevitability.
+           - Stacking buff that procs on misses and improves hit chance
+
+07-01-20 : New skill in defensive abilities called Toughness. A stacking buff
+            that procs when getting hit and provides some immunity to
+            non-magic.
+            
+06-21-20 : New Discipline for Thieves and Monks called Offensive ABilities 
+            and a Advanced Offense skill.
+
+05-01-20 : New Skill! Focused Avoidance is available in the advanced defense 
+            disc. This should help reduce the amount of time warriors and
+            deikhans spend on their butts.
+
+03-28-20 : Some multiclass fixes:
+           - Evaluating magic items should use the best skill
+           - Shaman/Mage combinations can now use the spells command
+           - Report should now show all relevant resources for multiclass
+           - "list fit" at shops should now work correctly
+           - Fixed a typo in a previous news entry!
+           - Fixed score output to show all relevant resources
+           - Monks who wield weapons now have a speed modifier to number of 
+             attacks like all other classes
+           - Monk/Warrior multiclass now gets extra attacks when berserking 
+
+03-25-20 : Multiclass hitpoint fixes:
+           - Monks base hitpoints have been increased but they no longer 
+             have access to advanced defense. Overall this should even out. If
+             you have a single class monk that put points into advanced defense
+             you can get that fixed up by an admin. This change paves the way 
+             for future improvements to the skill for War/Deik.
+           - Fixed a bug with multiclass hitpoints where previously it chose
+             the base hitpoints of the first class now it takes the average.
+
 01-22-20 : Some Deikhan work here.
            - Lay Hands cooldown has been shortened and now heals more
            - Synostodweomer enabled and reimagined as a small hit point buff.

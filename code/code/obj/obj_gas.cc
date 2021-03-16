@@ -303,7 +303,7 @@ void TGas::doDrift()
       act(format("$n drifts %s.") % dirs_to_blank[dir], FALSE, this, 0, 0, TO_ROOM);
       --(*this);
       *rp += *this;
-      act(format("$n drifts in from the %s.") % dirs[rev_dir[dir]], FALSE, this, 0, 0, TO_ROOM); 
+      act(format("$n drifts in from the %s.") % dirs[rev_dir(dir)], FALSE, this, 0, 0, TO_ROOM); 
     }
   }
 }

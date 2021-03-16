@@ -731,7 +731,7 @@ int throatSlit(TBeing *thief, TBeing * victim)
 
 int TBeing::doPoisonWeapon(sstring arg)
 {
-  TObj *obj, *poison;
+  TObj *obj = nullptr, *poison = nullptr;
   sstring namebuf;
   int rc;
 

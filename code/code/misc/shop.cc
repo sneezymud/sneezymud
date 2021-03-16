@@ -1439,7 +1439,7 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
 const sstring TObj::shopList(const TBeing *ch, const sstring &arg, int iMin, int iMax, int num, int shop_nr, int k, unsigned long int FitT) const
 {
   int cost, found = FALSE;
-  char buf[256];
+  char buf[1024];
   char buf3[256];
   char buf4[256];
   char capbuf[256];
@@ -1852,21 +1852,21 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
     // check class restriction
     extra_flags = convertTo<int>(db["extra_flags"]);
       
-    fit=true;
-    if(ch->hasClass(CLASS_MAGE) && (extra_flags & ITEM_ANTI_MAGE))
-      fit=false;
-    if(ch->hasClass(CLASS_CLERIC) && (extra_flags & ITEM_ANTI_CLERIC))
-      fit=false;
-    if(ch->hasClass(CLASS_WARRIOR) && (extra_flags & ITEM_ANTI_WARRIOR))
-      fit=false;
-    if(ch->hasClass(CLASS_THIEF) && (extra_flags & ITEM_ANTI_THIEF))
-      fit=false;
-    if(ch->hasClass(CLASS_SHAMAN) && (extra_flags & ITEM_ANTI_SHAMAN))
-      fit=false;
-    if(ch->hasClass(CLASS_DEIKHAN) && (extra_flags & ITEM_ANTI_DEIKHAN))
-      fit=false;
-    if(ch->hasClass(CLASS_MONK) && (extra_flags & ITEM_ANTI_MONK))
-      fit=false;
+    fit=false;
+    if(ch->hasClass(CLASS_MAGE) && !(extra_flags & ITEM_ANTI_MAGE))
+      fit=true;
+    if(ch->hasClass(CLASS_CLERIC) && !(extra_flags & ITEM_ANTI_CLERIC))
+      fit=true;
+    if(ch->hasClass(CLASS_WARRIOR) && !(extra_flags & ITEM_ANTI_WARRIOR))
+      fit=true;
+    if(ch->hasClass(CLASS_THIEF) && !(extra_flags & ITEM_ANTI_THIEF))
+      fit=true;
+    if(ch->hasClass(CLASS_SHAMAN) && !(extra_flags & ITEM_ANTI_SHAMAN))
+      fit=true;
+    if(ch->hasClass(CLASS_DEIKHAN) && !(extra_flags & ITEM_ANTI_DEIKHAN))
+      fit=true;
+    if(ch->hasClass(CLASS_MONK) && !(extra_flags & ITEM_ANTI_MONK))
+      fit=true;
 
     volume=convertTo<int>(db["volume"]);
     slot = slot_from_bit(convertTo<int>(db["wear_flag"]));
@@ -2078,7 +2078,7 @@ static bool shopping_look(const char *arg, TBeing *ch, TMonster *keeper, int sho
   act(str, FALSE, ch, temp1, keeper, TO_CHAR);
 
   tmp_desc = NULL;
-  if ((tmp_desc = temp1->ex_description->findExtraDesc(fname(temp1->name).c_str()))) {
+  if (temp1 && temp1->ex_description && (tmp_desc = temp1->ex_description->findExtraDesc(fname(temp1->name).c_str()))) {
     ch->desc->page_string(tmp_desc);
   } else {
     ch->sendTo("You see nothing special.\n\r");

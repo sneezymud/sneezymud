@@ -15,19 +15,31 @@
 
 const sstring whitespace=" \f\n\r\t\v";  // from isspace() man page
 
-const dirTypeT rev_dir[MAX_DIR] =
+namespace {
+  const dirTypeT rev_dirs[MAX_DIR] =
+  {
+    DIR_SOUTH,
+    DIR_WEST,
+    DIR_NORTH,
+    DIR_EAST,
+    DIR_DOWN,
+    DIR_UP,
+    DIR_SOUTHWEST,
+    DIR_SOUTHEAST,
+    DIR_NORTHWEST,
+    DIR_NORTHEAST
+  };
+}
+
+dirTypeT rev_dir(dirTypeT dir)
 {
-  DIR_SOUTH,
-  DIR_WEST,
-  DIR_NORTH,
-  DIR_EAST,
-  DIR_DOWN,
-  DIR_UP,
-  DIR_SOUTHWEST,
-  DIR_SOUTHEAST,
-  DIR_NORTHWEST,
-  DIR_NORTHEAST
-};
+  if (dir < DIR_NORTH || dir >= MAX_DIR) {
+    vlogf(LOG_BUG, format("bad rev_dir(%d)") % dir);
+    return DIR_NONE;
+  } else {
+    return rev_dirs[dir];
+  }
+}
 
 // all references to this need to go through the mapping function
 // since the slot order has changed.  -- bat 06-27-97
@@ -512,8 +524,8 @@ void assign_item_info()
      "Max Strength", 100, 0,
      "", 0, 0);
   ItemInfo[ITEM_HOLY_SYM] = new itemInfo("Holy Symbol","a holy symbol",
-     "Strength of the holy symbol", 1250000, 0,
-     "Max Strength of the symbol", 1250000, 0,
+     "Strength of the holy symbol", 1800000, 0,
+     "Max Strength of the symbol", 1800000, 0,
      "Faction of the Symbol", MAX_FACTIONS, 0,
      "", 0, 0);
   ItemInfo[ITEM_QUIVER] = new itemInfo("Quiver","a quiver",
@@ -982,7 +994,7 @@ const struct class_info classInfo[MAX_CLASSES] =
    DISC_DEIKHAN, DISC_THEOLOGY, 0.44, 7.5, "D"},
 
   {true, MONK_LEVEL_IND, CLASS_MONK, "monk",
-   DISC_MONK, DISC_NONE, 0.44, 5.5, "K"},
+   DISC_MONK, DISC_NONE, 0.44, 7.5, "K"},
 
   {false, RANGER_LEVEL_IND, CLASS_RANGER, "ranger",
    DISC_RANGER, DISC_NONE, 0.46, 7, "R"},
@@ -1930,16 +1942,16 @@ const struct disc_names_data discNames[MAX_DISCS] =
    "unused"}, 
   {DISC_DEIKHAN, CLASS_DEIKHAN, "deikhan abilities", 
    "Deikhan Abilities"},   // 25
-  {DISC_DEIKHAN_FIGHT, CLASS_DEIKHAN, "fighting skills", 
-   "Fighting Skills"},
-  {DISC_MOUNTED, CLASS_DEIKHAN, "mounted skills", 
-   "Mounted Skills"},
-  {DISC_DEIKHAN_AEGIS, CLASS_DEIKHAN, "aegis", 
-   "Aegis of the Deities"},
-  {DISC_DEIKHAN_CURES, CLASS_DEIKHAN, "cures", 
-   "Cures"},
-  {DISC_DEIKHAN_WRATH, CLASS_DEIKHAN, "wrath of the deities", 
-   "Wrath of the Deities"},  // 30
+  {DISC_DEIKHAN_MARTIAL, CLASS_DEIKHAN, "martial abilities", 
+   "Martial Abilities"},
+  {DISC_MOUNTED, CLASS_DEIKHAN, "mounted abilities", 
+   "Mounted Abilities"},
+  {DISC_DEIKHAN_GUARDIAN, CLASS_DEIKHAN, "guardian", 
+   "Guardian Abilities"},
+  {DISC_DEIKHAN_ABSOLUTION, CLASS_DEIKHAN, "absolution", 
+   "Absolution Abilities"},
+  {DISC_DEIKHAN_VENGEANCE, CLASS_DEIKHAN, "vengeance abilities", 
+   "Vengeance Abilities"},  // 30
   {DISC_MONK, CLASS_MONK, "monk abilities", 
    "Monk Abilities"},
   {DISC_MEDITATION_MONK, CLASS_MONK, "meditation/internal abilities", 
@@ -2002,7 +2014,7 @@ const struct disc_names_data discNames[MAX_DISCS] =
    "Magic Lore"},
   {DISC_NATURE, CLASS_RANGER, "nature",
    "Nature"},
-  {DISC_DEFENSE, CLASS_WARRIOR | CLASS_DEIKHAN | CLASS_RANGER | CLASS_MONK, "defense",
+  {DISC_DEFENSE, CLASS_WARRIOR | CLASS_DEIKHAN | CLASS_RANGER, "defense",
    "Defensive Abilities"},
   {DISC_PSIONICS, 0, "psionics",
    "Psionic Abilities"},
@@ -2014,6 +2026,8 @@ const struct disc_names_data discNames[MAX_DISCS] =
    "Advanced Adventuring"},
   {DISC_COMMONER, CLASS_COMMONER, "commoner abilities",
    "Commoner Abilities"},
+  {DISC_OFFENSE, CLASS_THIEF | CLASS_MONK, "offense",
+   "Offensive Abilities"},
 };
 
 const char* const home_terrains[MAX_HOME_TERS] =

@@ -41,7 +41,7 @@ int main(int argc, char **argv)
        << "</style>\n"
        << endl;
   if (!team.empty())
-    cout << "<script src=\"http://www.sneezymud.com/Metrohep/sorttable.js\"></script>\n" << endl;
+    cout << "<script src=\"http://www.sneezymud.org/Metrohep/sorttable.js\"></script>\n" << endl;
   cout << "</head>\n" << endl;
   cout << body() << endl;
 
@@ -49,7 +49,7 @@ int main(int argc, char **argv)
     // show list of available teams
     std::vector <sstring> teams; // for the team summaries
     cout << "<table align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td valign=\"top\" colspan=\"4\" align=\"center\"><h3><a href=\"limb_quest.cgi\">Welcome to SneezyMUD: Quest for Limbs III</a></h3></td></tr>" << endl;
-    cout << "<tr><td colspan=\"2\" align=\"right\"><img src=\"http://www.sneezymud.com/Metrohep/handy.jpg\"></td><td colspan=\"2\" align=\"left\">" << endl;
+    cout << "<tr><td colspan=\"2\" align=\"right\"><img src=\"http://www.sneezymud.org/Metrohep/handy.jpg\"></td><td colspan=\"2\" align=\"left\">" << endl;
     db.query("select distinct team from quest_limbs_team order by team");
     if(!db.isResults()){
       cout << "There are no teams designated right now." << endl;

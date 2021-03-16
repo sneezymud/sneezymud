@@ -31,7 +31,6 @@ int TMonster::remHated(const TBeing *hatee, const char *n)
         for (t2 = hates.clist; t2->next != list; t2 = t2->next);
         t2->next = list->next;
       }
-      delete list;
     }
   }
   if (!hates.clist) {

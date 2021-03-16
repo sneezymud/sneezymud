@@ -1141,7 +1141,6 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SPELL_TORNADO:
       case SKILL_QUIV_PALM:
       case SKILL_SHOULDER_THROW:
-      case SPELL_CALL_LIGHTNING_DEIKHAN:
       case SPELL_CALL_LIGHTNING:
       case SPELL_LIGHTNING_BREATH:
       case SPELL_GUSHER:
@@ -1164,14 +1163,12 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_CHARGE:
       case SKILL_SMITE:
       case SPELL_METEOR_SWARM:
-      case SPELL_EARTHQUAKE_DEIKHAN:
       case SPELL_EARTHQUAKE:
       case SPELL_PILLAR_SALT:
       case SPELL_FIREBALL:
       case SPELL_HANDS_OF_FLAME:
       case SPELL_INFERNO:
       case SPELL_HELLFIRE:
-      case SPELL_RAIN_BRIMSTONE_DEIKHAN:
       case SPELL_RAIN_BRIMSTONE:
       case SPELL_FLAMESTRIKE:
       case SPELL_FIRE_BREATH:
@@ -1196,6 +1193,9 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SPELL_LICH_TOUCH: // shaman
       case SPELL_CARDIAC_STRESS: // shaman
       case SPELL_SYNOSTODWEOMER:
+      case SKILL_DIVINE_GRACE:
+      case SKILL_DIVINE_RESCUE:
+      case SKILL_GUARDIANS_LIGHT:
       case SPELL_HARM_DEIKHAN:
       case SPELL_HARM:
       case SPELL_HARM_LIGHT_DEIKHAN:
@@ -1206,7 +1206,6 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SPELL_HARM_CRITICAL:
       case SPELL_WITHER_LIMB:
       case SPELL_BLEED:
-      case SKILL_KICK_DEIKHAN:
       case SKILL_KICK_THIEF:
       case SKILL_KICK_MONK:
       case SKILL_KICK:
@@ -1429,6 +1428,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_SWITCH_DEIKHAN:
       case SKILL_RETREAT_DEIKHAN:
       case SKILL_SHOVE_DEIKHAN:
+      case SKILL_2H_SPEC_DEIKHAN:
       case SKILL_RIDE:
       case SKILL_CALM_MOUNT:
       case SKILL_TRAIN_MOUNT:
@@ -1519,7 +1519,9 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_DISSECT:
       case SKILL_DEFENSE:
       case SKILL_ADVANCED_DEFENSE:
+      case SKILL_FOCUSED_AVOIDANCE:
       case SKILL_OFFENSE:
+      case SKILL_ADVANCED_OFFENSE:
       case SKILL_WHITTLE:
       case SKILL_WIZARDRY:
       case SKILL_RITUALISM:
@@ -1564,10 +1566,11 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
 		discArray[aff->type]->name %
 		describeDuration(this, aff->duration);
             } else {
-              str += format("Affected : '%s'\t: Time Left : %s %s\n\r") %
-		discArray[aff->type]->name %
-		describeDuration(this, aff->duration) %
-		(aff->canBeRenewed() ? "(Renewable)" : "(Not Yet Renewable)");
+              if (aff->canBeRenewed()) {
+                str += format("Affected : '%s'\t: Time Left : %s %s%s%s\n\r") % discArray[aff->type]->name % describeDuration(this, aff->duration) % red() % "(Renewable)" % norm();
+              } else {
+                str += format("Affected : '%s'\t: Time Left : %s %s%s%s\n\r") % discArray[aff->type]->name % describeDuration(this, aff->duration) % green() % "(Not Yet Renewable)" % norm();
+              }
             }
           }
         } else {
@@ -1584,10 +1587,11 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
         break;
       case AFFECT_DUMMY:
         if (show) {
-          str+=format("Affected : '%s'\t: Time Left : %s %s\n\r") %
-	    "DUMMY" %
-	    describeDuration(this, aff->duration) %
-	    (aff->canBeRenewed() ? "(Renewable)" : "(Not Yet Renewable)");
+          if (aff->canBeRenewed()) {
+            str += format("Affected : '%s'\t: Time Left : %s %s%s%s\n\r") % "DUMMY" % describeDuration(this, aff->duration) % red() % "(Renewable)" % norm();
+          } else {
+            str += format("Affected : '%s'\t: Time Left : %s %s%s%s\n\r") % "DUMMY" % describeDuration(this, aff->duration) % green() % "(Not Yet Renewable)" % norm();
+          }
         }
         break;
       case AFFECT_WAS_INDOORS:
@@ -1890,6 +1894,71 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
             describeDuration(this, aff->duration);
         }
         break;
+      // We want this to show "projecting" to be clear so we handle it different
+      case SKILL_AURA_MIGHT:
+      case SKILL_AURA_REGENERATION:
+      case SKILL_AURA_GUARDIAN:
+      case SKILL_AURA_VENGEANCE:
+      case SKILL_AURA_ABSOLUTION:
+        if(show){
+          str += format("Projecting: '%s'\t: Approx. Duration : %s\n\r") %
+		        discArray[aff->type]->name % describeDuration(this, aff->duration);
+        }
+        break;
+      // Not in discarray since it's not a skill
+      case SPELL_AURA_MIGHT:
+        if(show && aff->shouldGenerateText()){
+          str+=format("Affected: Aura of Might.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
+      case SPELL_AURA_REGENERATION:
+        if(show){
+          str+=format("Affected: Aura of Regeneration.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
+      case SPELL_AURA_GUARDIAN:
+        if(show && aff->shouldGenerateText()){
+          str+=format("Affected: Guardian Aura.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
+      case SPELL_AURA_VENGEANCE:
+        if(show && aff->shouldGenerateText()){
+          str+=format("Affected: Aura of Vengeance.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
+      case SPELL_AURA_ABSOLUTION:
+        if(show && aff->shouldGenerateText()){
+          str+=format("Affected: Aura of Absolution.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
+      case AFFECT_HOLY_WRATH:
+        if(show){
+          str+=format("Affected: Holy Wrath.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
+      case SKILL_TOUGHNESS:
+        if(show){
+          sstring noun = (aff->modifier2 > 1) ? "stacks" : "stack";
+          str+=format("Affected: Toughness : %s %s. Approx. duration : %s\n\r") % aff->modifier2 % noun % describeDuration(this, aff->duration);
+        }
+        break;
+      case SKILL_INEVITABILITY:
+        if(show){
+          sstring noun = (aff->modifier > 1) ? "stacks" : "stack";
+          str+=format("Affected: Inevitablity : %s %s. Approx. duration : %s\n\r") % aff->modifier % noun % describeDuration(this, aff->duration);
+        }
+        break;
+      case AFFECT_GUARDIANS_LIGHT:
+        if(show){
+          str+=format("Affected: Guardians Light : %s percent protection.  Approx. duration : %s\n\r") % aff->modifier %
+            describeDuration(this, aff->duration);
+        }
 
       case AFFECT_BITTEN_BY_VAMPIRE:
         // secret!
@@ -2801,7 +2870,7 @@ void TBeing::doWhere(const char *argument)
   if (powerCheck(POWER_WHERE))
     return;
 
-  strncpy(namebuf, argument, cElements(namebuf));
+  strncpy(namebuf, argument, cElements(namebuf)-1);
   tStArg=tStString.word(0);
   tStName=tStString.word(1);
 
@@ -3082,7 +3151,7 @@ void TBeing::doLevels(const char *argument)
   classIndT Class;
 // int RaceMax;
   sstring sb;
-  char buf[256],
+  char buf[512],
        tString[256];
 
   for (; isspace(*argument); argument++);
@@ -3163,7 +3232,7 @@ void TBeing::doLevels(const char *argument)
       else color = green();
 
       sprintf(tString, "%.0f", getExpClassLevel(i));
-      strncpy(tString, sstring(tString).comify().c_str(), cElements(tString));
+      strncpy(tString, sstring(tString).comify().c_str(), cElements(tString)-1);
       sprintf(buf, "%s[%2d]%s %s%13s%s%s", 
             cyan(), i, norm(),
             color.c_str(), tString, norm(),
@@ -3176,7 +3245,7 @@ void TBeing::doLevels(const char *argument)
       else color = green();
 
       sprintf(tString, "%.0f", getExpClassLevel(j));
-      strncpy(tString, sstring(tString).comify().c_str(), cElements(tString));
+      strncpy(tString, sstring(tString).comify().c_str(), cElements(tString)-1);
       sprintf(buf, "%s[%2d]%s %s%13s%s%s",
             cyan(), j, norm(),
             color.c_str(), tString, norm(),
@@ -3189,7 +3258,7 @@ void TBeing::doLevels(const char *argument)
       else color = green();
 
       sprintf(tString, "%.0f", getExpClassLevel(k));
-      strncpy(tString, sstring(tString).comify().c_str(), cElements(tString));
+      strncpy(tString, sstring(tString).comify().c_str(), cElements(tString)-1);
       sprintf(buf, "%s[%2d]%s %s%13s%s%s",
             cyan(), k, norm(),
             color.c_str(), tString, norm(),
@@ -3202,7 +3271,7 @@ void TBeing::doLevels(const char *argument)
       else color = green();
 
       sprintf(tString, "%.0f", getExpClassLevel(m));
-      strncpy(tString, sstring(tString).comify().c_str(), cElements(tString));
+      strncpy(tString, sstring(tString).comify().c_str(), cElements(tString)-1);
       sprintf(buf, "%s[%2d]%s %s%13s%s%s",
             cyan(), m, norm(),
             color.c_str(), tString, norm(),
@@ -3293,7 +3362,7 @@ void TBeing::doWorld()
 
   char timebuf[256];
 
-  strncpy(timebuf, ctime(&stats.first_login), cElements(timebuf));
+  strncpy(timebuf, ctime(&stats.first_login), cElements(timebuf)-1);
   timebuf[strlen(timebuf) - 1] = '\0';
   strcat(timebuf, ":");
   buf=format("Logins since %-32.32s %s%ld  (%ld per day)%s\n\r") %
@@ -3855,6 +3924,8 @@ void TThing::evaluateMe(TBeing *ch) const
 void TMagicItem::evaluateMe(TBeing *ch) const
 {
   int learn = ch->getSkillValue(SKILL_EVALUATE);
+  int learn2 = learn;
+  int learn3 = learn;
 
   ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_EVALUATE, 10);
 
@@ -3862,13 +3933,19 @@ void TMagicItem::evaluateMe(TBeing *ch) const
   if (ch->hasClass(CLASS_RANGER)) {
     learn *= ch->getClassLevel(CLASS_RANGER);
     learn /= 200;
-  } else if (ch->hasClass(CLASS_SHAMAN)) {
-    learn *= ch->getClassLevel(CLASS_SHAMAN);
-    learn /= 50;
-  } else {
-    learn *= ch->getSkillValue(SPELL_IDENTIFY);
-    learn /= 100;
-  }
+  } 
+  if (ch->hasClass(CLASS_SHAMAN)) {
+    learn2 *= ch->getClassLevel(CLASS_SHAMAN);
+    learn2 /= 50;
+  } 
+  learn3 *= ch->getSkillValue(SPELL_IDENTIFY);
+  learn3 /= 100;
+
+  // take the largest value 
+  learn2 = max(learn2, learn3);
+  learn = max(learn, learn2);
+
+  
 
   if (learn > 10) 
     ch->describeMagicLevel(this, learn);
@@ -3889,7 +3966,7 @@ void TBeing::doEvaluate(const char *argument)
   int count = 0,
       rNatureCount = 0;
 
-  strncpy(arg, argument, cElements(arg));
+  strncpy(arg, argument, cElements(arg)-1);
   if (!*arg) {
     sendTo("Evaluate what?\n\r");
     return;
@@ -4290,8 +4367,8 @@ void TObj::describeMe(TBeing *ch) const
   char name_buf[80];
   TThing *t2;
 
-  strncpy(buf, material_nums[getMaterial()].mat_name, cElements(buf));
-  strncpy(buf2, ch->objs(this), cElements(buf2));
+  strncpy(buf, material_nums[getMaterial()].mat_name, cElements(buf)-1);
+  strncpy(buf2, ch->objs(this), cElements(buf2)-1);
   ch->sendTo(COLOR_OBJECTS,format("%s is %s made of %s.\n\r") % sstring(buf2).cap() %
                  ItemInfo[itemType()]->common_name % 
 	     sstring(buf).uncap());
@@ -4331,7 +4408,7 @@ void TObj::describeMe(TBeing *ch) const
     }
   }
   if (!action_description.empty()) {
-    strncpy(capbuf, action_description.c_str(), cElements(capbuf));
+    strncpy(capbuf, action_description.c_str(), cElements(capbuf)-1);
     if ((sscanf(capbuf, "This is the personalized object of %s.", name_buf)) == 1)
       sendTo(format("A monogram on it indicates it belongs to %s.\n\r") % name_buf);
   }
@@ -4443,7 +4520,7 @@ void TBeing::describeMaxSharpness(const TBaseWeapon *obj, int learn) const
   int maxsharp = GetApprox(obj->getMaxSharp(), learn);
 
   char capbuf[80], sharpbuf[80];
-  strncpy(capbuf, objs(obj), cElements(capbuf));
+  strncpy(capbuf, objs(obj), cElements(capbuf)-1);
 
   if (maxsharp >= 99)
     strcpy(sharpbuf, "being unhumanly sharp");
@@ -4477,7 +4554,7 @@ void TBeing::describeMaxSharpness(const TBaseWeapon *obj, int learn) const
 void TBeing::describeMaxPointiness(const TBaseWeapon *obj, int learn) const
 {
   char capbuf[80], sharpbuf[80];
-  strncpy(capbuf, objs(obj), cElements(capbuf));
+  strncpy(capbuf, objs(obj), cElements(capbuf)-1);
 
   if (!hasClass(CLASS_THIEF) && !hasClass(CLASS_WARRIOR) && 
       !hasClass(CLASS_DEIKHAN) && !hasClass(CLASS_RANGER) &&
@@ -4518,7 +4595,7 @@ void TBeing::describeMaxPointiness(const TBaseWeapon *obj, int learn) const
 void TBeing::describeOtherFeatures(const TGenWeapon *obj, int learn) const
 {
   char capbuf[80];
-  strncpy(capbuf, objs(obj), cElements(capbuf));
+  strncpy(capbuf, objs(obj), cElements(capbuf)-1);
 
   if (!obj) {
     sendTo("Something went wrong, tell a god what you did.\n\r");
@@ -4541,7 +4618,7 @@ void TBeing::describeOtherFeatures(const TGenWeapon *obj, int learn) const
 void TBeing::describeMaxBluntness(const TBaseWeapon *obj, int learn) const
 {
   char capbuf[80], sharpbuf[80];
-  strncpy(capbuf, objs(obj), cElements(capbuf));
+  strncpy(capbuf, objs(obj), cElements(capbuf)-1);
 
   if (!hasClass(CLASS_CLERIC) && !hasClass(CLASS_WARRIOR) && 
       !hasClass(CLASS_SHAMAN) && !hasClass(CLASS_DEIKHAN))
@@ -4786,7 +4863,7 @@ void TBeing::describeArrowSharpness(const TArrow *obj, int learn)
   int maxsharp = GetApprox(obj->getCurSharp(), learn);
  
   char capbuf[80], sharpbuf[80];
-  strncpy(capbuf, objs(obj), cElements(capbuf));
+  strncpy(capbuf, objs(obj), cElements(capbuf)-1);
  
   if (maxsharp >= 99)
     strcpy(sharpbuf, "unhumanly sharp");
@@ -4830,7 +4907,7 @@ void TBeing::describeNoise(const TObj *obj, int learn) const
   int iNoise = GetApprox(material_nums[obj->getMaterial()].noise, learn);
 
   char capbuf[160];
-  strncpy(capbuf, objs(obj), cElements(capbuf));
+  strncpy(capbuf, objs(obj), cElements(capbuf)-1);
 
   sendTo(COLOR_OBJECTS, format("%s is %s.\n\r") % sstring(capbuf).cap() %
           ((iNoise < -9) ? "beyond silent" :
@@ -4881,7 +4958,7 @@ void TBeing::describeBowRange(const TBow *obj, int learn)
   int range = GetApprox((int) obj->getMaxRange(), learn);
 
   char capbuf[160];
-  strncpy(capbuf, objs(obj), cElements(capbuf));
+  strncpy(capbuf, objs(obj), cElements(capbuf)-1);
 
   sendTo(COLOR_OBJECTS, format("%s can %s.\n\r") % sstring(capbuf).cap() %
           ((range < 1) ? "not shoot out of the immediate area" :
@@ -4963,7 +5040,7 @@ void TWand::descMagicSpells(TBeing *ch) const
   discNumT das = DISC_NONE;
   spellNumT iSpell;
   char capbuf[160];
-  strncpy(capbuf, ch->objs(this), cElements(capbuf));
+  strncpy(capbuf, ch->objs(this), cElements(capbuf)-1);
 
   if ((iSpell = getSpell()) >= MIN_SPELL && discArray[iSpell] &&
       ((das = getDisciplineNumber(iSpell, FALSE)) != DISC_NONE)) {
@@ -4980,7 +5057,7 @@ void TStaff::descMagicSpells(TBeing *ch) const
   discNumT das = DISC_NONE;
   spellNumT iSpell;
   char capbuf[160];
-  strncpy(capbuf, ch->objs(this), cElements(capbuf));
+  strncpy(capbuf, ch->objs(this), cElements(capbuf)-1);
 
   if ((iSpell = getSpell()) >= MIN_SPELL && discArray[iSpell] &&
       ((das = getDisciplineNumber(iSpell, FALSE)) != DISC_NONE)) {
@@ -4997,7 +5074,7 @@ void TScroll::descMagicSpells(TBeing *ch) const
   discNumT das = DISC_NONE;
   spellNumT spell;
   char capbuf[160];
-  strncpy(capbuf, ch->objs(this), cElements(capbuf));
+  strncpy(capbuf, ch->objs(this), cElements(capbuf)-1);
 
   spell = getSpell(0);
   if (spell > TYPE_UNDEFINED && discArray[spell] &&
@@ -5045,7 +5122,7 @@ void TBeing::describeSymbolOunces(const TSymbol *obj, int learn) const
   amt = GetApprox(amt, learn);
 
   char capbuf[160];
-  strncpy(capbuf, objs(obj), cElements(capbuf));
+  strncpy(capbuf, objs(obj), cElements(capbuf)-1);
 
   sendTo(COLOR_OBJECTS, format("%s requires about %d ounce%s of holy water to attune.\n\r") % sstring(capbuf).cap() % amt % (amt == 1 ? "" : "s"));
 }
@@ -5053,7 +5130,7 @@ void TBeing::describeSymbolOunces(const TSymbol *obj, int learn) const
 void TBeing::describeComponentUseage(const TComponent *obj, int) const
 {
   char capbuf[160];
-  strncpy(capbuf, objs(obj), cElements(capbuf));
+  strncpy(capbuf, objs(obj), cElements(capbuf)-1);
 
   if (IS_SET(obj->getComponentType(), COMP_SPELL))
     sendTo(COLOR_OBJECTS, format("%s is a component used in creating magic.\n\r") % sstring(capbuf).cap());
@@ -5072,7 +5149,7 @@ void TBeing::describeComponentDecay(const TComponent *obj, int learn) const
   int level = GetApprox(obj->obj_flags.decay_time, learn);
 
   char capbuf[160];
-  strncpy(capbuf, objs(obj), cElements(capbuf));
+  strncpy(capbuf, objs(obj), cElements(capbuf)-1);
 
   sendTo(COLOR_OBJECTS, format("%s will last ") % sstring(capbuf).cap());
 
@@ -5113,7 +5190,7 @@ sstring describeMaterial(const TThing *t)
   int mat = t->getMaterial();
   char mat_name[40];
 
-  strncpy(mat_name, sstring(material_nums[mat].mat_name).uncap().c_str(), cElements(mat_name));
+  strncpy(mat_name, sstring(material_nums[mat].mat_name).uncap().c_str(), cElements(mat_name)-1);
 
   if (dynamic_cast<const TBeing *>(t))
     sprintf(buf, "%s has a skin type of %s.\n\r", sstring(t->getName()).cap().c_str(), mat_name);
@@ -5339,8 +5416,11 @@ void TBeing::doSpells(const sstring &argument)
   };
 
 
-  if (hasClass(CLASS_SHAMAN) && !isImmortal()) {
-    sendTo("Perhaps looking at rituals is what you need to do?\n\r");
+  if (!hasClass(CLASS_MAGE) && !isImmortal()) {
+    sendTo("You know nothing of casting spells.\n\r");
+    if (hasClass(CLASS_SHAMAN)) {
+      sendTo("Perhaps looking at rituals is what you need to do?\n\r");
+    }
     return;
   }
 

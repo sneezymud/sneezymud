@@ -150,7 +150,7 @@ int enliven(TBeing *caster, TBeing *victim, int level, short bKnown)
   if (caster->bSuccess(bKnown, SPELL_ENLIVEN)) {
     aff.type = SPELL_ENLIVEN;
     aff.level = level;
-    aff.duration = (aff.level / 3) * Pulse::UPDATES_PER_MUDHOUR;
+    aff.duration = caster->durationModify(SPELL_ENLIVEN, (aff.level / 3) * Pulse::UPDATES_PER_MUDHOUR);
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = 0;

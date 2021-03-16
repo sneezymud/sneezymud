@@ -117,11 +117,11 @@ const int SPEC_TRAINER_THIEF          =118;
 const int SPEC_TRAINER_PLANTS         =119;
 const int SPEC_TRAINER_SOLDIERING     =120;
 const int SPEC_TRAINER_BLACKSMITHING  =121;
-const int SPEC_TRAINER_DEIKHAN_FIGHT  =122;
+const int SPEC_TRAINER_DEIKHAN_MARTIAL  =122;
 const int SPEC_TRAINER_MOUNTED        =123;
-const int SPEC_TRAINER_DEIKHAN_AEGIS  =124;
-const int SPEC_TRAINER_DEIKHAN_CURES  =125;
-const int SPEC_TRAINER_DEIKHAN_WRATH  =126;
+const int SPEC_TRAINER_DEIKHAN_GUARDIAN  =124;
+const int SPEC_TRAINER_DEIKHAN_ABSOLUTION  =125;
+const int SPEC_TRAINER_DEIKHAN_VENGEANCE  =126;
 const int SPEC_TRAINER_LEVERAGE       =127;
 const int SPEC_TRAINER_MINDBODY       =128;
 const int SPEC_TRAINER_UNUSED6        =129;
@@ -214,7 +214,10 @@ const int SPEC_COMMOD_TRADER      =216;
 const int SPEC_RATION_FACTORY     =217;
 const int SPEC_PET_VETERINARIAN   =218;
 const int SPEC_LAGOMORPH          =219;
-const int NUM_MOB_SPECIALS        =219;
+const int SPEC_TRAINER_OFFENSE    =220;
+const int SPEC_TAILOR             =221;
+const int SPEC_BLACKSMITH         =222;
+const int NUM_MOB_SPECIALS        =222;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 
@@ -222,6 +225,13 @@ struct TMobSpecs {
   bool assignable;
   const char *name;
   int (*proc) (TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
+};
+
+// Type for customization
+enum customizerType {
+    TYPE_ENGRAVER,
+    TYPE_TAILOR,
+    TYPE_BLACKSMITH
 };
 
 extern TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1];
@@ -268,6 +278,10 @@ extern int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mysel
 extern int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *);
 extern int brickCollector(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int targetDummy(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
+extern int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o);
+extern int tailor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o);
+extern int blacksmith(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o);
+extern int customizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o, customizerType custtype);
 
 class attune_struct {
   public:

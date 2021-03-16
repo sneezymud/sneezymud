@@ -9,17 +9,17 @@
 #   OSX builds
 
 sudo: false
-dist: trusty
+dist: focal
 
 language: c
 
 matrix:
     include:
         - os: linux
-          compiler: g++-6
-          env: TYPE=debug optimize=0 shared=1 debug=1
+          compiler: g++-9
+          env: TYPE=debug optimize=0 shared=1 debug=1 sanitize=1
         - os: linux
-          compiler: g++-6
+          compiler: g++-9
           env: TYPE=prod optimize=1 shared=0 debug=0
 #        - os: osx
 #          compiler: clang++
@@ -39,33 +39,24 @@ addons:
             - ubuntu-toolchain-r-test
             #- deadsnakes
         packages:
-            - g++-6
+            - scons
+            - g++-9
             - libboost-dev
             - libboost-program-options-dev
             - libboost-regex-dev
             - libboost-filesystem-dev
-            - libmysqlclient-dev
+            - libmariadbclient-dev
+            - libmariadb3
+              # libboost-program-options1.71.0 libboost-regex1.71.0 libboost-filesystem1.71.0 libboost-system1.71.0 libmariadb3 libcurl4 libasan5 gdb
 
 # actual build activities go here - note that travis runs all commands
 # regardless of error status, so we wrap them in an and-chain
 script:
-    - scons -C code -j4 -Q ccache=1 pretty=0 LIBS=mysqlclient sanitize=0 shared=0 sneezy check
-            && ./install_server.sh ./test
+    - scons -C code -j4 -Q ccache=1 pretty=0 sanitize=1 shared=0 check sneezy
 
 # set up the build environment
 before_install:
-    - |
-      if [ $TRAVIS_OS_NAME == osx ] ; then
-            brew install mariadb ccache scons
-            mysql.server start
-            mysql -u root -e "create user $USER@localhost;"
-      fi
     - export CXX="$CC"
-    - mysql -u root
-            -e "create database sneezy;"
-            -e "grant all on sneezy.* to $USER@localhost;"
-            -e "create database immortal;"
-            -e "grant all on immortal.* to $USER@localhost;"
 
 # runs at end, just before cache archive is made
 before_cache:

@@ -1115,7 +1115,7 @@ int TMonster::aiShoveReact(TBeing *doer, bool worked, dirTypeT dir)
     }
   }
   if (isSmartMob(40) && worked && !sameRoom(*doer)) {
-    rc = goDirection(rev_dir[dir]);
+    rc = goDirection(rev_dir(dir));
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       // we're not checking for death, log an error
       vlogf(LOG_MOB_AI, format("error in shove react (%s shoving %d)") %   

@@ -16,11 +16,12 @@
 #include "disc_cleric.h"
 #include "disc_soldiering.h"
 #include "disc_blacksmithing.h"
-#include "disc_deikhan_fight.h"
-#include "disc_deikhan_aegis.h"
-#include "disc_deikhan_cures.h"
-#include "disc_deikhan_wrath.h"
+#include "disc_deikhan_martial.h"
+#include "disc_deikhan_guardian.h"
+#include "disc_deikhan_absolution.h"
+#include "disc_deikhan_vengeance.h"
 #include "disc_defense.h"
+#include "disc_offense.h"
 #include "disc_mounted.h"
 #include "disc_monk.h"
 #include "disc_iron_body.h"
@@ -80,6 +81,7 @@
 #include "spelltask.h"
 #include "obj_symbol.h"
 #include "disc_commoner.h"
+#include "stats.h"
 
 #define DISC_DEBUG  0
 
@@ -135,7 +137,7 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
 {
   TThing *sec_obj, *prim_obj;
   int sec_okay, prim_okay, sec_usable, prim_usable;
-  char buf[256], buf2[40], msg[256];
+  char buf[256], buf2[40], msg[512];
   int num = ::number(1,100);
 
   if (ch->isImmortal())
@@ -641,8 +643,7 @@ spellNumT TBeing::getSkillNum(spellNumT skill_num) const
           else
             return pick_best_skill(this, skill_num, {
                 {CLASS_WARRIOR, SKILL_KICK},
-                {CLASS_DEIKHAN, SKILL_KICK_DEIKHAN},
-                {CLASS_MONK, SKILL_KICK_THIEF}});
+                {CLASS_THIEF, SKILL_KICK_THIEF}});
       
         case SKILL_RETREAT:
             return pick_best_skill(this, skill_num, {
@@ -780,11 +781,6 @@ spellNumT TBeing::getSkillNum(spellNumT skill_num) const
                 {CLASS_CLERIC, SPELL_CLOT},
                 {CLASS_DEIKHAN, SPELL_CLOT_DEIKHAN}});
         
-        case SPELL_RAIN_BRIMSTONE:
-            return pick_best_skill(this, skill_num, {
-                {CLASS_CLERIC, SPELL_RAIN_BRIMSTONE},
-                {CLASS_DEIKHAN, SPELL_RAIN_BRIMSTONE_DEIKHAN}});
-        
         case SPELL_STERILIZE:
             return pick_best_skill(this, skill_num, {
                 {CLASS_CLERIC, SPELL_STERILIZE},
@@ -809,16 +805,6 @@ spellNumT TBeing::getSkillNum(spellNumT skill_num) const
             return pick_best_skill(this, skill_num, {
                 {CLASS_CLERIC, SPELL_CURE_DISEASE},
                 {CLASS_DEIKHAN, SPELL_CURE_DISEASE_DEIKHAN}});
-        
-        case SPELL_EARTHQUAKE:
-            return pick_best_skill(this, skill_num, {
-                {CLASS_CLERIC, SPELL_EARTHQUAKE},
-                {CLASS_DEIKHAN, SPELL_EARTHQUAKE_DEIKHAN}});
-        
-        case SPELL_CALL_LIGHTNING:
-            return pick_best_skill(this, skill_num, {
-                {CLASS_CLERIC, SPELL_CALL_LIGHTNING},
-                {CLASS_DEIKHAN, SPELL_CALL_LIGHTNING_DEIKHAN}});
         
 #if 0
         // unimplemented
@@ -1348,6 +1334,9 @@ bool TBeing::bSuccess(int ubCompetence, spellNumT spell)
   //limit *= plotStat(STAT_CURRENT, STAT_FOC, 0.80, 1.25, 1.00);
   limit *= getFocMod(); // does the same thing, just uses standard formula
 
+  // Adding in Karma (luck) as a smaller component than focus
+  limit *= plotStat(STAT_CURRENT, STAT_KAR, 0.9, 1.125, 1.0);
+
   // make other adjustments here
   // possibly have some for things like position, etc
 
@@ -1371,8 +1360,93 @@ byte defaultProficiency(byte uLearned, byte uStart, byte uLearn)
   return((uLearned-uStart)*uLearn);
 }
 
+// CritSuccess for spells only
+// The goal here is a crit rate between
+// min - 0.1% -   10 out of 10000
+// max - 10%  - 1000 out of 10000
+// avg - 1%   -  100 out of 10000
+//
+// Factors should be
+// Wisdom:      Primary
+// Karma:       Secondary
+// Learnedness: Modifier
+// Position:    Modifier
+//
+critSuccT spellCritSuccess(TBeing *caster, spellNumT spell)
+{
+  // Base chance is 100
+  // If we are totally average then this will hold up
+  double chance = 100.00;
+
+  // WIS is the primary so we'll plot to 10x down to 1/10th
+  // We'll adjust all the way to the min/max
+  chance *= caster->plotStat(STAT_CURRENT, STAT_WIS, 0.1, 10.0, 1.0);
+
+  // Next we'll have KAR modify the chance to a lesser degree
+  // And we will min/max after this so it doesn't affect the range
+  chance *= caster->plotStat(STAT_CURRENT, STAT_KAR, 0.80, 1.25, 1.00);
+
+  // Adjust downward for non-maxed spells
+  chance *= caster->getSkillValue(spell) / 100;
+
+  // Decrease chance if limited position
+  if (caster->getPosition() == POSITION_RESTING || caster->getPosition() == POSITION_SITTING)
+    chance *= 0.75;
+  else if (caster->getPosition() == POSITION_CRAWLING)
+    chance *= 0.50;
+
+  // Min/Max here to keep the chance within bounds based on stats, skillValue and position
+  chance = max(10.00, min(1000.00, chance));
+
+  // If there were spellcrit eq or other skills/buff to modify crit
+  // -- it would go here --
+
+  int roll = ::number(1, 10000);
+
+  if (roll <= chance) {
+    // roll determined Crit success 
+    // but we need to roll again to figure out what kind of crit
+    int crit_roll = ::number(1, 10);
+
+    // 10% crit kill
+    // 20% triple crit
+    // 70% double crit
+    switch (crit_roll) {
+      case 1:
+        CS(caster, spell);
+        return(CRIT_S_KILL);
+        break;
+      case 2:
+      case 3:
+        CS(caster, spell);
+        return(CRIT_S_TRIPLE);
+        break;
+      default:
+        CS(caster, spell);
+        return(CRIT_S_DOUBLE);
+    }
+  }
+
+  return(CRIT_S_NONE);
+}
+
+
+// Original critSuccess
+//
+// Min crit chance is:
+// 8 out of 400 * 0.1 (for arbitrary return) = 0.002 or 0.2%
+//
+// Max is:
+// 8 out of 40 * 0.1 (for arbitrary return) = 0.02 or 2%
 critSuccT critSuccess(TBeing *caster, spellNumT spell)
 {
+  if (!caster->isPc())
+    return CRIT_S_NONE;
+  
+  // use the new spell function for spells
+  if (spell >= MIN_SPELL && spell < MAX_SPELL)
+    return spellCritSuccess(caster, spell);
+
   // arbitrary to control overall rate of these
   if (::number(0,9))
     return CRIT_S_NONE;
@@ -1769,11 +1843,11 @@ void TBeing::assignDisciplinesClass()
     discs->disc[DISC_NATURE] = new CDNature();
 
     discs->disc[DISC_DEIKHAN] = new CDDeikhan();
-    discs->disc[DISC_DEIKHAN_FIGHT] = new CDDeikhanFight();
+    discs->disc[DISC_DEIKHAN_MARTIAL] = new CDDeikhanMartial();
     discs->disc[DISC_MOUNTED] = new CDMounted();
-    discs->disc[DISC_DEIKHAN_AEGIS] = new CDDeikhanAegis();
-    discs->disc[DISC_DEIKHAN_CURES] = new CDDeikhanCures();
-    discs->disc[DISC_DEIKHAN_WRATH] = new CDDeikhanWrath();
+    discs->disc[DISC_DEIKHAN_GUARDIAN] = new CDDeikhanGuardian();
+    discs->disc[DISC_DEIKHAN_ABSOLUTION] = new CDDeikhanAbsolution();
+    discs->disc[DISC_DEIKHAN_VENGEANCE] = new CDDeikhanVengeance();
 
     discs->disc[DISC_MONK] = new CDMonk();
     discs->disc[DISC_MEDITATION_MONK] = new CDMeditationMonk();
@@ -1815,6 +1889,7 @@ void TBeing::assignDisciplinesClass()
     discs->disc[DISC_ADVENTURING] = new CDAdventuring();
     discs->disc[DISC_ADVANCED_ADVENTURING] = new CDAdvAdventuring();
     discs->disc[DISC_DEFENSE] = new CDDefense();
+    discs->disc[DISC_OFFENSE] = new CDOffense();
  
     discs->disc[DISC_PSIONICS] = new CDPsionics();
 
@@ -1894,11 +1969,11 @@ void TBeing::assignDisciplinesClass()
   if (hasClass(CLASS_DEIKHAN)) {
     if (!isPc()) {
       discs->disc[DISC_DEIKHAN] = new CDDeikhan();
-      discs->disc[DISC_DEIKHAN_FIGHT] = new CDDeikhanFight();
+      discs->disc[DISC_DEIKHAN_MARTIAL] = new CDDeikhanMartial();
       discs->disc[DISC_MOUNTED] = new CDMounted();
-      discs->disc[DISC_DEIKHAN_AEGIS] = new CDDeikhanAegis();
-      discs->disc[DISC_DEIKHAN_CURES] = new CDDeikhanCures();
-      discs->disc[DISC_DEIKHAN_WRATH] = new CDDeikhanWrath();
+      discs->disc[DISC_DEIKHAN_GUARDIAN] = new CDDeikhanGuardian();
+      discs->disc[DISC_DEIKHAN_ABSOLUTION] = new CDDeikhanAbsolution();
+      discs->disc[DISC_DEIKHAN_VENGEANCE] = new CDDeikhanVengeance();
       discs->disc[DISC_FAITH] = new CDFaith();
       discs->disc[DISC_THEOLOGY] = new CDTheology();
       discs->disc[DISC_DEFENSE] = new CDDefense();
@@ -1913,8 +1988,8 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_MINDBODY] = new CDMindBody();
       discs->disc[DISC_FOCUSED_ATTACKS] = new CDFAttacks();
       discs->disc[DISC_BAREHAND] = new CDBarehand();
-      discs->disc[DISC_DEFENSE] = new CDDefense();
       discs->disc[DISC_IRON_BODY] = new CDIronBody();
+      discs->disc[DISC_OFFENSE] = new CDOffense();
     }
   }
 
@@ -1927,6 +2002,7 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_POISONS] = new CDPoisons();
       discs->disc[DISC_STEALTH] = new CDStealth();
       discs->disc[DISC_TRAPS] = new CDTraps();
+      discs->disc[DISC_OFFENSE] = new CDOffense();
     }
   }
 
@@ -2130,9 +2206,9 @@ int TBeing::isNotPowerful(TBeing *vict, int lev, spellNumT skill, silentTypeT si
     case DISC_HAND_OF_GOD:
     case DISC_CLERIC:
     case DISC_DEIKHAN:
-    case DISC_DEIKHAN_WRATH:
-    case DISC_DEIKHAN_CURES:
-    case DISC_DEIKHAN_AEGIS:
+    case DISC_DEIKHAN_VENGEANCE:
+    case DISC_DEIKHAN_ABSOLUTION:
+    case DISC_DEIKHAN_GUARDIAN:
       cd = getDiscipline(DISC_FAITH);
       if (cd && cd->getLearnedness() > 0)
         lev += 2 + (cd->getLearnedness() / 34);
@@ -2260,11 +2336,11 @@ int TBeing::getSkillLevel(spellNumT skill) const
       lev = getClassLevel(CLASS_WARRIOR);
       break;
     case DISC_DEIKHAN:
-    case DISC_DEIKHAN_FIGHT:
+    case DISC_DEIKHAN_MARTIAL:
     case DISC_MOUNTED:
-    case DISC_DEIKHAN_AEGIS:
-    case DISC_DEIKHAN_CURES:
-    case DISC_DEIKHAN_WRATH:
+    case DISC_DEIKHAN_GUARDIAN:
+    case DISC_DEIKHAN_ABSOLUTION:
+    case DISC_DEIKHAN_VENGEANCE:
       lev = getClassLevel(CLASS_DEIKHAN);
       break;
     case DISC_THIEF:
@@ -2319,6 +2395,7 @@ int TBeing::getSkillLevel(spellNumT skill) const
     case DISC_RANGED:
     case DISC_BAREHAND:
     case DISC_DEFENSE:
+    case DISC_OFFENSE:
     case DISC_PSIONICS:
     case DISC_BOGUS1:
     case DISC_BOGUS2:

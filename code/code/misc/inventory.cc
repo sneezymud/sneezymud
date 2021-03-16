@@ -1161,22 +1161,6 @@ int TBeing::doGive(const sstring &oarg, giveTypeT flags)
         if (vict)
           vict->doQueueSave();
       }
-      if (!isImmortal() && isPc() && 
-          !vict->isImmortal() && vict->isPc()) {
-        if (obj->obj_flags.cost >= 100) {
-          switch (CheckStorageChar(this, vict)) {
-            case 1:
-              vlogf(LOG_CHEAT, format("Storage Character %s giving %s to %s") % getName() %obj->getName() %vict->getName());
-              break;
-            case 2:
-              vlogf(LOG_CHEAT, format("Storage Character %s w/low KAR giving %s to %s w/high KAR") % getName() % obj->getName() %vict->getName());
-              break;
-            case 0:
-            default:
-              break;
-          }
-        }
-      }
 
       if (num > 0)
         num--;
@@ -1440,7 +1424,9 @@ int TTable::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
       if (ch->fight())
         return TRUE;  // don't fall through
     }
-    if (dynamic_cast<TBeing *>(ch->riding) && (in_room != Room::NOWHERE)) {
+    if (dynamic_cast<TBeing *>(ch->riding) 
+        && (ch->getSkillValue(SKILL_ADVANCED_RIDING) < 50) 
+        && (in_room != Room::NOWHERE)) {
       act("You can't get things from $p while mounted!", 
            FALSE, ch, this, 0, TO_CHAR);
       return TRUE;

@@ -120,7 +120,7 @@ int icyGrip(TBeing * caster, TBeing * victim, int level, short bKnown, int adv_l
 
   if (caster->bSuccess(bKnown, SPELL_ICY_GRIP)) {
     aff.type = SPELL_ICY_GRIP;
-    aff.duration = 12 * Pulse::UPDATES_PER_MUDHOUR;
+    aff.duration = caster->durationModify(SPELL_ICY_GRIP, 12 * Pulse::UPDATES_PER_MUDHOUR);
     aff.location = APPLY_STR;
     aff.modifier = -20;
     aff.bitvector = 0;
@@ -265,7 +265,7 @@ int wateryGrave(TBeing * caster, TBeing * victim, int level, short bKnown, int)
 
   aff.type = AFFECT_DISEASE;
   aff.level = level/2;
-  aff.duration = aff.level/2;
+  aff.duration = caster->durationModify(SPELL_WATERY_GRAVE, aff.level/2);
   aff.modifier = DISEASE_DROWNING;
   aff.location = APPLY_NONE;
   aff.bitvector = 0;
@@ -925,7 +925,7 @@ int gillsOfFlesh(TBeing * caster, TBeing * victim, int level, short bKnown)
     caster->reconcileHelp(victim,discArray[SPELL_GILLS_OF_FLESH]->alignMod);
     aff.type = SPELL_GILLS_OF_FLESH;
     aff.level = level;
-    aff.duration = 6 * Pulse::UPDATES_PER_MUDHOUR;
+    aff.duration = caster->durationModify(SPELL_GILLS_OF_FLESH, 6 * Pulse::UPDATES_PER_MUDHOUR);
     aff.modifier = 0;
     aff.renew = aff.duration;
     aff.location = APPLY_NONE;

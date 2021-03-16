@@ -20,11 +20,12 @@
 #include "extern.h"
 #include "disc_soldiering.h"
 #include "disc_blacksmithing.h"
-#include "disc_deikhan_fight.h"
-#include "disc_deikhan_aegis.h"
-#include "disc_deikhan_cures.h"
-#include "disc_deikhan_wrath.h"
+#include "disc_deikhan_martial.h"
+#include "disc_deikhan_guardian.h"
+#include "disc_deikhan_absolution.h"
+#include "disc_deikhan_vengeance.h"
 #include "disc_defense.h"
+#include "disc_offense.h"
 #include "disc_mounted.h"
 #include "disc_monk.h"
 #include "disc_iron_body.h"
@@ -120,9 +121,9 @@ CSkill *TBeing::getSkill(spellNumT skill) const
     case SKILL_TAN:  //                       394
       return &((CDSurvival *) cd)->skTan;
     case SKILL_HOLY_WEAPONS:  //              454             // not coded
-      return &((CDDeikhanFight *) cd)->skHolyWeapons;
+      return &((CDDeikhanMartial *) cd)->skHolyWeapons;
     case SPELL_HOLY_LIGHT:  //                495         // not coded
-      return &((CDDeikhanWrath *) cd)->skHolyLight;
+      return &((CDDeikhanVengeance *) cd)->skHolyLight;
     case SKILL_BUTCHER:  //                    342  // not coded
       return &((CDRanger *) cd)->skButcher;
     case SPELL_FIND_FAMILIAR: // 35
@@ -594,8 +595,6 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 
 // disc_deikhan
 
-    case SKILL_KICK_DEIKHAN:  //              411
-      return &((CDDeikhan *) cd)->skKickDeikhan;
     case SPELL_HEAL_LIGHT_DEIKHAN:  //        412
       return &((CDDeikhan *) cd)->skHealLightDeikhan;
     case SPELL_HARM_LIGHT_DEIKHAN:  //        412
@@ -612,8 +611,6 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDDeikhan *) cd)->skExpelDeikhan;
     case SPELL_CLOT_DEIKHAN:  //              419
       return &((CDDeikhan *) cd)->skClotDeikhan;
-    case SPELL_RAIN_BRIMSTONE_DEIKHAN:  //    420
-      return &((CDDeikhan *) cd)->skRainBrimstoneDeikhan;
     case SPELL_STERILIZE_DEIKHAN:  //         421
       return &((CDDeikhan *) cd)->skSterilizeDeikhan;
     case SPELL_REMOVE_CURSE_DEIKHAN:  //      422
@@ -622,8 +619,6 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDDeikhan *) cd)->skCurseDeikhan;
     case SKILL_RESCUE_DEIKHAN:  //            424
       return &((CDDeikhan *) cd)->skRescueDeikhan;
-    case SKILL_SMITE:  //                    425
-      return &((CDDeikhan *) cd)->skSmite;
     case SPELL_INFECT_DEIKHAN:  //            426
       return &((CDDeikhan *) cd)->skInfectDeikhan;
     case SPELL_CURE_DISEASE_DEIKHAN:  //      427
@@ -650,16 +645,26 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDDeikhan *) cd)->skHarmCriticalDeikhan;
     case SKILL_REPAIR_DEIKHAN:
       return &((CDDeikhan *) cd)->skRepairDeikhan;
+    case SKILL_AURA_MIGHT:
+      return &((CDDeikhan *) cd)->skAuraMight;
+    case SPELL_AURA_MIGHT:
+      return &((CDDeikhan *) cd)->skAuraMight;
+    case SKILL_AURA_REGENERATION:
+      return &((CDDeikhan *) cd)->skAuraRegeneration;
+    case SPELL_AURA_REGENERATION:
+      return &((CDDeikhan *) cd)->skAuraRegeneration;
 
 
 // disc_deikhan_fight
 
     case SKILL_SWITCH_DEIKHAN:  //            451
-      return &((CDDeikhanFight *) cd)->skSwitchDeikhan;
+      return &((CDDeikhanMartial *) cd)->skSwitchDeikhan;
     case SKILL_RETREAT_DEIKHAN:  //           452
-      return &((CDDeikhanFight *) cd)->skRetreatDeikhan;
+      return &((CDDeikhanMartial *) cd)->skRetreatDeikhan;
     case SKILL_SHOVE_DEIKHAN:  //             453
-      return &((CDDeikhanFight *) cd)->skShoveDeikhan;
+      return &((CDDeikhanMartial *) cd)->skShoveDeikhan;
+    case SKILL_2H_SPEC_DEIKHAN:
+      return &((CDDeikhanMartial *) cd)->sk2hSpecDeikhan;
 
 // disc_mount
 
@@ -678,37 +683,48 @@ CSkill *TBeing::getSkill(spellNumT skill) const
     case SKILL_RIDE_EXOTIC:
       return &((CDMounted *) cd)->skRideExotic;
 
-// disc_deikhan_aegis
-
-    case SPELL_HEROES_FEAST_DEIKHAN:  //      471
-      return &((CDDeikhanAegis *) cd)->skHeroesFeastDeikhan;
-
-    case SPELL_REFRESH_DEIKHAN:  //           472
-      return &((CDDeikhanAegis *) cd)->skRefreshDeikhan;
+// disc_deikhan_guardian
 
     case SPELL_SYNOSTODWEOMER:  //            473
-      return &((CDDeikhanAegis *) cd)->skSynostodweomer;
+      return &((CDDeikhanGuardian *) cd)->skSynostodweomer;
+    case SKILL_DIVINE_GRACE:
+      return &((CDDeikhanGuardian *) cd)->skDivineGrace;
+    case SKILL_DIVINE_RESCUE:
+      return &((CDDeikhanGuardian *) cd)->skDivineRescue;
+    case SKILL_GUARDIANS_LIGHT:
+      return &((CDDeikhanGuardian *) cd)->skGuardiansLight;
+    case SKILL_AURA_GUARDIAN:
+      return &((CDDeikhanGuardian *) cd)->skAuraGuardian;
+    case SPELL_AURA_GUARDIAN:
+      return &((CDDeikhanGuardian *) cd)->skAuraGuardian;
 
+// disc_deikhan_absolution
 
-
-// disc_deikhan_cures
-
+    case SPELL_REFRESH_DEIKHAN:  //           472
+      return &((CDDeikhanAbsolution *) cd)->skRefreshDeikhan;
     case SPELL_SALVE_DEIKHAN:  //             481
-      return &((CDDeikhanCures *) cd)->skSalveDeikhan;
+      return &((CDDeikhanAbsolution *) cd)->skSalveDeikhan;
     case SKILL_LAY_HANDS:  //                 482
-      return &((CDDeikhanCures *) cd)->skLayHands;
+      return &((CDDeikhanAbsolution *) cd)->skLayHands;
+    case SPELL_HEROES_FEAST_DEIKHAN:  //      471
+      return &((CDDeikhanAbsolution *) cd)->skHeroesFeastDeikhan;
+    case SKILL_AURA_ABSOLUTION:
+      return &((CDDeikhanAbsolution *) cd)->skAuraAbsolution;
+    case SPELL_AURA_ABSOLUTION:
+      return &((CDDeikhanAbsolution *) cd)->skAuraAbsolution;
 
-
-// disc_deikhan_wrath
+// disc_deikhan_vengeance
 
     case SPELL_HARM_DEIKHAN:  //              491
-      return &((CDDeikhanWrath *) cd)->skHarmDeikhan;
+      return &((CDDeikhanVengeance *) cd)->skHarmDeikhan;
     case SPELL_NUMB_DEIKHAN:  //              492
-      return &((CDDeikhanWrath *) cd)->skNumbDeikhan;
-    case SPELL_EARTHQUAKE_DEIKHAN:  //        493
-      return &((CDDeikhanWrath *) cd)->skEarthquakeDeikhan;
-    case SPELL_CALL_LIGHTNING_DEIKHAN:  //    494
-      return &((CDDeikhanWrath *) cd)->skCallLightningDeikhan;
+      return &((CDDeikhanVengeance *) cd)->skNumbDeikhan;
+    case SKILL_SMITE:  //                    425
+      return &((CDDeikhanVengeance *) cd)->skSmite;
+    case SKILL_AURA_VENGEANCE:
+      return &((CDDeikhanVengeance *) cd)->skAuraVengeance;
+    case SPELL_AURA_VENGEANCE:
+      return &((CDDeikhanVengeance *) cd)->skAuraVengeance;
 
 // MONK CLASS
 
@@ -1182,7 +1198,17 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 // disc_defense
     case SKILL_ADVANCED_DEFENSE: // 674
       return &((CDDefense *) cd)->skAdvancedDefense;
+    case SKILL_FOCUSED_AVOIDANCE:
+      return &((CDDefense *) cd)->skFocusedAvoidance;
+    case SKILL_TOUGHNESS:
+      return &((CDDefense *) cd)->skToughness;
 
+// disc_offense
+    case SKILL_ADVANCED_OFFENSE:
+      return &((CDOffense *) cd)->skAdvancedOffense;
+    case SKILL_INEVITABILITY:
+      return &((CDOffense *) cd)->skInevitability;
+      
 // disc_psionics
     case SKILL_PSITELEPATHY:
       return &((CDPsionics *) cd)->skTelepathy;
@@ -1378,6 +1404,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
     case AFFECT_PAPPY_BLESSING:
     case AFFECT_STAFFA_BLESSING:
     case AFFECT_UNHOLY_WRATH:
+    case AFFECT_GUARDIANS_LIGHT:
+    case AFFECT_HOLY_WRATH:
     case AFFECT_PREENED:
     case AFFECT_WET:
     case ABSOLUTE_MAX_SKILL:
@@ -1613,4 +1641,13 @@ bool hideThisSpell(spellNumT spell)
     return true;
 
   return false;
+}
+
+
+int TBeing::durationModify(spellNumT skill, int duration) {
+  //
+  if (discArray[skill]->modifierStat <= MAX_STATS_USED){
+    duration *= plotStat(STAT_CURRENT, discArray[skill]->modifierStat, 0.8, 1.25, 1.0);
+  }
+  return duration;
 }

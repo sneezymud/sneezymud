@@ -303,11 +303,11 @@ void remove_one_way_exits(bool quiet=false, bool checkrooms_p=false)
 	  printf("couldn't find room %i\n", t->idirs[i]);
       }
 
-      if(room && room->idirs[rev_dir[i]] != t->num){
+      if(room && room->idirs[rev_dir(i)] != t->num){
 	removed++;
 	if(checkrooms_p)
 	  printf("Found one-way exit - %i %i\n", room->num, t->num);
-	room->idirs[rev_dir[i]]=-1;
+	room->idirs[rev_dir(i)]=-1;
 	t->idirs[i]=-1;
       }
     }
@@ -465,12 +465,12 @@ void check_rooms(int MAXROOMS){
     if(nodes[i]){
       for(int j=0;j<10;++j){
 	if(nodes[i]->pdirs[j]){
-	  if((!nodes[i]->pdirs[j]->pdirs[rev_dir[j]] ||
-	     (nodes[i]->pdirs[j]->pdirs[rev_dir[j]]->num !=
+	  if((!nodes[i]->pdirs[j]->pdirs[rev_dir(j)] ||
+	     (nodes[i]->pdirs[j]->pdirs[rev_dir(j)]->num !=
 	     nodes[i]->num)) && !done[i]){
 	    
 	    printf("Room %i has a one way exit %i (%i) to room %i\n",
-		   nodes[i]->num, j, rev_dir[j], nodes[i]->pdirs[j]->num);
+		   nodes[i]->num, j, rev_dir(j), nodes[i]->pdirs[j]->num);
 
 	    done[i]=true;
 	  }

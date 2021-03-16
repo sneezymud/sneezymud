@@ -850,8 +850,6 @@ void TPerson::rentAffectTo(saveAffectedData *af)
   if (af->type == TYPE_UNDEFINED)
     return;
 
-  affectedData *a;
-
   applyTypeT att = mapFileToApply(af->location);
   spellNumT snt = mapFileToSpellnum(af->type);
 
@@ -860,15 +858,15 @@ void TPerson::rentAffectTo(saveAffectedData *af)
     return;
   } else if ((att == APPLY_CURRENT_HIT) || (att == APPLY_HIT)) {
     //mud_assert(af->duration != 0, "affectTo() with 0 duration affect");
-    a = new affectedData(*af);
+    affectedData* a = new affectedData(*af);
     a->next = affected;
     affected = a;
   } else {
-    a = new affectedData(*af);
+    auto a = affectedData(*af);
 
     // when assigning, lets not lose track of the renew value we saved off
     // pass it through in the affectTo call
-    affectTo(a, af->renew);
+    affectTo(&a, af->renew);
     return;
   } 
 }
@@ -882,7 +880,7 @@ void TBeing::saveChar(int load_room)
   charFile st;
   FILE *fl;
   TBeing *tmp = NULL;
-  char buf[256];
+  char buf[512];
   char buf2[256];
 
   if (dynamic_cast<TMonster *>(this)) {
@@ -2304,7 +2302,7 @@ int listAccount(sstring name, sstring &buf)
     char * tmstr = (char *) asctime(localtime(&ct));
     *(tmstr + strlen(tmstr) - 1) = '\0';
     
-    buf += format("%d) %s (L%d) %s\n\r") % ++count % chars[iChar].c_str() % int(max_level) % tmstr;
+    buf += format("%2d) %-16s %-10s [ %-5s Lev %2d ] %s\n\r") % ++count % chars[iChar].c_str() % Races[int(st.race)]->getSingularName() % TBeing::getProfAbbrevName(st.Class) % int(max_level) % tmstr;
   }
   return count;
 }

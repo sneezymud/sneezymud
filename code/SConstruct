@@ -1,6 +1,7 @@
 # hey emacs, this is -*- python -*- vim: ft=python
 from __future__ import print_function
 
+import os
 import sys
 import subprocess
 
@@ -90,7 +91,7 @@ opt_cxx =            get_option('CXX',         'g++')
 
 
 ## ensure submodules are ready to go
-submodules = subprocess.check_output(['git', 'submodule', 'status']).split()
+submodules = subprocess.check_output(['git', 'submodule', 'status']).decode('utf-8').split()
 if any(sub.startswith('-') for sub in submodules):
     info('Initializing submodule dependencies, please wait...')
     try:
@@ -102,10 +103,10 @@ if any(sub.startswith('-') for sub in submodules):
 ## detect compiler and version
 gcc_version = None
 clang_version = None
-cxx_version = subprocess.check_output([opt_cxx, '--version']).split('\n')[0]
+cxx_version = subprocess.check_output([opt_cxx, '--version']).decode('utf-8').split('\n')[0]
 if 'g++' in cxx_version:
     # -dumpversion has more reliable formatting than --version for gcc
-    gcc_version = subprocess.check_output([opt_cxx, '-dumpversion'])
+    gcc_version = subprocess.check_output([opt_cxx, '-dumpversion']).decode('utf-8')
     gcc_version = tuple(map(int, gcc_version.split('.')[:2]))
 elif 'Apple LLVM' in cxx_version:
     # Apple's clang runs behind wrt flag support
@@ -140,9 +141,9 @@ env = Environment(
     SHCXX = opt_cxx, # must have both of these, along with LINK and SHLINK
     CPPPATH = opt_includes,
     LIBPATH = opt_libdirs,
+    ENV = os.environ,
 )
 Export('env')
-env.Append(extra_libs=[opt_libs])
 
 
 ## clang on linux hurdles
@@ -177,7 +178,7 @@ if flag_debug:
     # keep the frame pointer for better debugging
     env.Append(CXXFLAGS='-fno-omit-frame-pointer')
     # undefined behavior sanitizer, apple clang unsupported
-    if clang_version >= (3, 9):
+    if clang_version and clang_version >= (3, 9):
         env.Append(CXXFLAGS='-fsanitize=undefined')
         env.Append(extra_libs=['ubsan'])
     # memory error sanitizer
@@ -186,12 +187,13 @@ if flag_debug:
     # native clang doesn't need explicit asan lib
     if (gcc_version or clang_version >= (3, 9)) and flag_sanitize:
         env.Append(extra_libs=['asan'])
-    if (clang_version >= (3, 9) or gcc_version >= (7, 0)) and flag_sanitize:
+    if (clang_version and clang_version >= (3, 9) or gcc_version >= (7, 0)) and flag_sanitize:
         env.Append(CXXFLAGS='-fsanitize-address-use-after-scope')
     # integer sanitizer, apple clang unsupported
-    if clang_version >= (3, 9):
+    if clang_version and clang_version >= (3, 9):
         env.Append(CXXFLAGS='-fsanitize=integer')
 
+env.Append(extra_libs=[opt_libs])
 
 ## harden: security flags, slows runtime a bit
 if flag_harden:
@@ -240,7 +242,7 @@ env.Append(LINKFLAGS='-g')
 env.Append(CXXFLAGS=[
     olevel_flag,
     '-g',                       # include debugging symbols always
-    '--std=c++14',              # modern C++ features
+    '--std=c++17',              # modern C++ features. We use structured bindings from C++17.
     '-Wall',                    # all reccomended warnings shown
     '-Werror',                  # turn a warning into an error
     '-Wformat-security',        # warn on bare nonliteral printf / scanf
@@ -274,10 +276,10 @@ if flag_pretty:
     Progress([ "\033[32mChecking targets\033[0m %s\r" % s for s in '-\\|/' ],
              interval=5)
 
-git_hash = subprocess.check_output(['git', 'rev-parse', 'HEAD']).strip()
+git_hash = subprocess.check_output(['git', 'rev-parse', 'HEAD']).decode('utf-8').strip()
 
 try:
-    git_dirty = "+" if subprocess.check_output(['git', 'status', '--short']) else ""
+    git_dirty = "+" if subprocess.check_output(['git', 'status', '--short']).decode('uft-8') else ""
 except Exception:
     # Nobody ever figured out why it fails on some systems
     git_dirty = "?"

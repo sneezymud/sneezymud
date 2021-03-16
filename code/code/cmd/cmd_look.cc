@@ -771,7 +771,7 @@ void TBeing::doLook(const sstring &argument, cmdTypeT cmd, TThing *specific)
 	}
 	// room extras
 	if (!found) {
-	  if ((tmp_desc = roomp->ex_description->findExtraDesc(tmp))) {
+	  if (roomp && roomp->ex_description && (tmp_desc = roomp->ex_description->findExtraDesc(tmp))) {
 	    totalFound++;
 	    if (totalFound == iNum) {
 	      sstring tmp_desc_str = tmp_desc;

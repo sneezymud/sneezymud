@@ -96,21 +96,21 @@ int baseHp()
 
 float classHpPerLevel(const TPerson *tp){
   float hpgain=0;
-
+  int num_classes=0;
 
   for(int i=0;i<MAX_CLASSES;++i){
     if(tp->hasClass(classInfo[i].class_num)){
-      hpgain = classInfo[i].hp_per_level;
-      break;
+      hpgain += classInfo[i].hp_per_level;
+      num_classes++;
     }
   }
 
-  if(!hpgain){
+  if(!hpgain || num_classes == 0){
     vlogf(LOG_BUG, format("No class in classHpPerLevel() for %s") %  tp->getName());
     hpgain=7.0;
   } 
 
-  return hpgain;
+  return hpgain / num_classes;
 }
 
 int ageHpMod(const TPerson *tp){

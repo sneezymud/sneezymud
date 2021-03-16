@@ -647,10 +647,9 @@ void act(const sstring &str, bool hide, const TThing *actor, const TThing *obj, 
 {
   const char *strp;
   char *point;
-  const char *i = NULL;
+  sstring i;
   char ibuf[MAX_STRING_LENGTH];
   char buf[MAX_STRING_LENGTH];
-  char namebuf[MAX_NAME_LENGTH];
   char lastColor[3];
   const char *codes = NULL;
   const char *codes2 = NULL;
@@ -679,7 +678,7 @@ void act(const sstring &str, bool hide, const TThing *actor, const TThing *obj, 
       vlogf(LOG_MISC, format("Missing victim in act() TO_NOTVICT for '%s', doing TO_ROOM.") % str);
     }
   }
-  
+
   StuffListConst list;
 
   if (type == TO_VICT) {
@@ -697,11 +696,11 @@ void act(const sstring &str, bool hide, const TThing *actor, const TThing *obj, 
     const TBeing *to = dynamic_cast<const TBeing *>(*it);
 
     if (to && to->desc && to->GetMaxLevel() > tslevel &&
-          ((to != actor) || (type == TO_CHAR)) &&
-          ((to != victim || (actor == victim && type == TO_CHAR)) ||
-               (type == TO_VICT) || (type == TO_ROOM)) &&
+        ((to != actor) || (type == TO_CHAR)) &&
+        ((to != victim || (actor == victim && type == TO_CHAR)) ||
+         (type == TO_VICT) || (type == TO_ROOM)) &&
         (to->canSee(actor) || !hide) &&
-	to->awake() && (to->desc->connected < MAX_CON_STATUS) && 
+        to->awake() && (to->desc->connected < MAX_CON_STATUS) && 
         !(to->isPlayerAction(PLR_MAILING | PLR_BUGGING))) {
       x = 0; // used to determine whether or not to capitalize the substitution at start of line
       for (strp = str.c_str(), point = buf;;) {
@@ -710,27 +709,25 @@ void act(const sstring &str, bool hide, const TThing *actor, const TThing *obj, 
         if ((*codes == '<') && (*(++codes) != '<')) {
           codes2 = codes;
           if (*(++codes) == '>') {
-              lastColor[0] = '<';
-              lastColor[1] = *codes2;
-              lastColor[2] = '>';
+            lastColor[0] = '<';
+            lastColor[1] = *codes2;
+            lastColor[2] = '>';
           }
         }
-	if (*strp == '$') {
+        if (*strp == '$') {
           const TBeing * tbtt;
-	  switch (*(++strp)) {
-	    case 'n':
+          switch (*(++strp)) {
+            case 'n':
               tbtt = dynamic_cast<const TBeing *>(actor);
               i = tbtt ? to->pers(actor) : to->objs(actor);
               if (x == 1 || (x == 4 && *lastColor)) {
-                strncpy(namebuf, i, cElements(namebuf));
-                strncpy(namebuf, sstring(namebuf).cap().c_str(), cElements(namebuf));
-                i = namebuf;
+                i = i.cap();
               }
-	      strncpy(ibuf, colorString(to, to->desc, i, NULL, tbtt ? COLOR_MOBS : COLOR_OBJECTS, FALSE).c_str(), cElements(ibuf));
-	      i=ibuf;
-	      break;
-	    case 'P':
-	    case 'N':
+              strncpy(ibuf, colorString(to, to->desc, i, NULL, tbtt ? COLOR_MOBS : COLOR_OBJECTS, FALSE).c_str(), cElements(ibuf)-1);
+              i=ibuf;
+              break;
+            case 'P':
+            case 'N':
               if (!victim) {
                 vlogf(LOG_BUG, format("Bad act P or N. '%s'") %  str);
                 return;
@@ -738,9 +735,7 @@ void act(const sstring &str, bool hide, const TThing *actor, const TThing *obj, 
               tbtt = dynamic_cast<const TBeing *>(victim);
               i = tbtt ? to->pers(victim) : to->objs(victim);
               if (x == 1 || (x == 4 && *lastColor)) {
-                strncpy(namebuf, i, cElements(namebuf));
-                strncpy(namebuf, sstring(namebuf).cap().c_str(), cElements(namebuf));
-                i = namebuf;
+                i = i.cap();
               }
               if ((type == TO_CHAR) && (actor == victim)) {
                 if (!strncmp(strp+1,"'s ",3)) {
@@ -767,34 +762,34 @@ void act(const sstring &str, bool hide, const TThing *actor, const TThing *obj, 
                   i = tmp_buffer;
                 }
               }
-              strncpy(ibuf,colorString(to, to->desc, i, NULL, tbtt ? COLOR_MOBS : COLOR_OBJECTS, FALSE).c_str(), cElements(ibuf));
-	      i=ibuf;
-              
-	      break;
-	    case 'g':
-              strncpy(ibuf, actor->roomp->describeGround().c_str(), cElements(ibuf));
-	      i=ibuf;
+              strncpy(ibuf,colorString(to, to->desc, i, NULL, tbtt ? COLOR_MOBS : COLOR_OBJECTS, FALSE).c_str(), cElements(ibuf)-1);
+              i=ibuf;
+
               break;
-	    case 'G':
+            case 'g':
+              strncpy(ibuf, actor->roomp->describeGround().c_str(), cElements(ibuf)-1);
+              i=ibuf;
+              break;
+            case 'G':
               if (!victim) {
                 vlogf(LOG_BUG, format("Bad act G. '%s'") %  str);
                 return;
               }
-              strncpy(ibuf, victim->roomp->describeGround().c_str(), cElements(ibuf));
-	      i=ibuf;
+              strncpy(ibuf, victim->roomp->describeGround().c_str(), cElements(ibuf)-1);
+              i=ibuf;
               break;
-	    case 'd': 
+            case 'd': 
               per = ((to == actor) ? FIRST_PERSON : (!strlen(buf) ? THIRD_PERSON : SECOND_PERSON));
-              strncpy(ibuf, actor->yourDeity(your_deity_val, per, (per == THIRD_PERSON) ? to : NULL).c_str(), cElements(ibuf));
-	      i=ibuf;
+              strncpy(ibuf, actor->yourDeity(your_deity_val, per, (per == THIRD_PERSON) ? to : NULL).c_str(), cElements(ibuf)-1);
+              i=ibuf;
               break;
-	    case 'D':
+            case 'D':
               if (!victim) {
                 vlogf(LOG_BUG, format("Bad act D. '%s'") %  str);
                 return;
               }
-              strncpy(ibuf, victim->yourDeity(your_deity_val, ((to == victim) ? FIRST_PERSON : (strlen(buf) == 0 ? THIRD_PERSON : SECOND_PERSON))).c_str(), cElements(ibuf));
-	      i=ibuf;
+              strncpy(ibuf, victim->yourDeity(your_deity_val, ((to == victim) ? FIRST_PERSON : (strlen(buf) == 0 ? THIRD_PERSON : SECOND_PERSON))).c_str(), cElements(ibuf)-1);
+              i=ibuf;
               break;
             case 'q':
               // is/are based on plurality of $o, $p
@@ -844,13 +839,13 @@ void act(const sstring &str, bool hide, const TThing *actor, const TThing *obj, 
               else
                 i = "s";
               break;
-	    case 'm':
+            case 'm':
               if (to->canSee(actor))
                 i = actor->hmhr();
               else
                 i = "someone";
-	      break;
-	    case 'M':
+              break;
+            case 'M':
               if (!victim) {
                 vlogf(LOG_BUG, format("Bad act M. '%s'") %  str);
                 return;
@@ -861,14 +856,14 @@ void act(const sstring &str, bool hide, const TThing *actor, const TThing *obj, 
                 i = victim->hmhr();
               else
                 i = "someone";
-	      break;
-	    case 's':
+              break;
+            case 's':
               if (to->canSee(actor))
                 i = actor->hshr();
               else
                 i = "their";
-	      break;
-	    case 'S':
+              break;
+            case 'S':
               if (!victim) {
                 vlogf(LOG_BUG, format("Bad act S. '%s'") %  str);
                 return;
@@ -877,14 +872,14 @@ void act(const sstring &str, bool hide, const TThing *actor, const TThing *obj, 
                 i = victim->hshr();
               else
                 i = "their";
-	      break;
-	    case 'e':
+              break;
+            case 'e':
               if (to->canSee(actor))
                 i = actor->hssh();
               else
                 i = "it";
-	      break;
-	    case 'E':
+              break;
+            case 'E':
               if (!victim) {
                 vlogf(LOG_BUG, format("Bad act E. '%s'") %  str);
                 return;
@@ -893,24 +888,24 @@ void act(const sstring &str, bool hide, const TThing *actor, const TThing *obj, 
                 i = victim->hssh();
               else
                 i = "it";
-	      break;
-	    case 'o':
+              break;
+            case 'o':
               if (!obj) {
                 vlogf(LOG_BUG, format("Bad act o. '%s'") %  str);
                 return;
               }
-	      strncpy(ibuf, dynamic_cast<const TBeing *>(obj) ? to->persfname(obj).c_str() : to->objn(obj).c_str(), cElements(ibuf));
-	      i=ibuf;
-	      break;
-	    case 'O':
+              strncpy(ibuf, dynamic_cast<const TBeing *>(obj) ? to->persfname(obj).c_str() : to->objn(obj).c_str(), cElements(ibuf)-1);
+              i=ibuf;
+              break;
+            case 'O':
               if (!victim) {
                 vlogf(LOG_BUG, format("Bad act O. '%s'") %  str);
                 return;
               }
-	      strncpy(ibuf, dynamic_cast<const TBeing *>(victim) ? to->persfname(victim).c_str() : to->objn(victim).c_str(), cElements(ibuf));
-	      i=ibuf;
-	      break;
-	    case 'p':
+              strncpy(ibuf, dynamic_cast<const TBeing *>(victim) ? to->persfname(victim).c_str() : to->objn(victim).c_str(), cElements(ibuf)-1);
+              i=ibuf;
+              break;
+            case 'p':
               if (!obj) {
                 vlogf(LOG_BUG, format("Bad act p. '%s'") %  str);
                 return;
@@ -918,62 +913,61 @@ void act(const sstring &str, bool hide, const TThing *actor, const TThing *obj, 
               tbtt = dynamic_cast<const TBeing *>(obj);
               i = tbtt ? to->pers(obj) : to->objs(obj);
               if (x == 1 || (x == 4 && *lastColor)) {
-                strncpy(namebuf, i, cElements(namebuf));
-                strncpy(namebuf, sstring(namebuf).cap().c_str(), cElements(namebuf));
-                i = namebuf;
+                i = i.cap();
               }
-              strncpy(ibuf, colorString(to, to->desc, i, NULL, tbtt ? COLOR_MOBS : COLOR_OBJECTS, FALSE).c_str(), cElements(ibuf));
-	      i=ibuf;
-	      break;
-	    case 'a':
+              strncpy(ibuf, colorString(to, to->desc, i, NULL, tbtt ? COLOR_MOBS : COLOR_OBJECTS, FALSE).c_str(), cElements(ibuf)-1);
+              i=ibuf;
+              break;
+            case 'a':
               if (!obj) {
                 vlogf(LOG_BUG, format("Bad act a. '%s'") %  str);
                 return;
               }
-	      i = obj->sana();
-	      break;
-	    case 'A':
+              i = obj->sana();
+              break;
+            case 'A':
               if (!victim) {
                 vlogf(LOG_BUG, format("Bad act A. '%s'") %  str);
                 return;
               }
-	      i = victim->ana();
-	      break;
-	    case 'T':
+              i = victim->ana();
+              break;
+            case 'T':
               if (!victim) {
                 vlogf(LOG_BUG, format("Bad act T. '%s'") %  str);
                 return;
               }
-	      i = (const char *) victim;
-	      break;
-	    case 'F':
+              i = (const char *) victim;
+              break;
+            case 'F':
               if (!victim) {
                 vlogf(LOG_BUG, format("Bad act F. '%s'") %  str);
                 return;
               }
-	      i = fname((const char *) victim).c_str();
-	      break;
-	    case '$':
-	      i = "$";
-	      break;
-	    default:
+              i = fname((const char *) victim).c_str();
+              break;
+            case '$':
               i = "$";
-	      break;
+              break;
+            default:
+              i = "$";
+              break;
           }
           // color in the replacement sstring may reset existing color
           // to get around this, lets tack on any existing color
           if (color) {
             catstr = i;
             catstr += to->ansi_color(color);
-            strncpy(ibuf, catstr.c_str(), cElements(ibuf));
-	    i=ibuf;
+            strncpy(ibuf, catstr.c_str(), cElements(ibuf)-1);
+            i=ibuf;
           }
-	  while ((*point = *(i++)) != 0)
-	    ++point;
-	  ++strp;
+          const char* tmp = i.c_str();
+          while ((*point = *(tmp++)) != 0)
+            ++point;
+          ++strp;
 
         } else if (!(*(point++) = *(strp++)))
-	  break;
+          break;
       }
 
       // we used to put the \n\r pad on here, but this causes the optional
@@ -982,7 +976,7 @@ void act(const sstring &str, bool hide, const TThing *actor, const TThing *obj, 
       *(--point) = '\0';
 
       if (!((to->GetMaxLevel() > MAX_MORT) && 
-          (IS_SET(to->desc->plr_color, PLR_COLOR_CODES)))) {
+            (IS_SET(to->desc->plr_color, PLR_COLOR_CODES)))) {
         snprintf(buf, cElements(buf), "%s", colorString(to, to->desc, buf, NULL, COLOR_BASIC, FALSE).c_str());
       }
 
@@ -995,9 +989,9 @@ void act(const sstring &str, bool hide, const TThing *actor, const TThing *obj, 
         if (str.empty())
           to->desc->output.push(CommPtr(new UncategorizedComm(format("%s\n\r") %s.cap())));
         else {
-	  to->desc->output.push(CommPtr(new UncategorizedComm(format("%s%s%s\n\r") %
-									     str % s.cap() % 
-									     to->norm())));
+          to->desc->output.push(CommPtr(new UncategorizedComm(format("%s%s%s\n\r") %
+                  str % s.cap() % 
+                  to->norm())));
         } 
       }
     }
@@ -1028,7 +1022,7 @@ void Descriptor::updateScreenVt100(unsigned int update)
   if (IS_SET(prompt_d.type, PROMPT_CLASSIC_ANSIBAR)) {
 
     // Line 1:
-
+    // This should be fixed for multiclass but I don't think anyone uses vt100
     if (update & CHANGED_HP) {
       snprintf(buf + strlen(buf), cElements(buf) - strlen(buf), VT_CURSPOS, ch->getScreen() - 2, 7);
       snprintf(buf + strlen(buf), cElements(buf) - strlen(buf), "%d", ch->getHit());
@@ -1734,6 +1728,14 @@ UncategorizedComm::UncategorizedComm(const sstring &t){
 }
 
 sstring UncategorizedComm::getText(){
+  return text;
+}
+
+GmcpComm::GmcpComm(const sstring &t){
+  text=t;
+}
+
+sstring GmcpComm::getText(){
   return text;
 }
 

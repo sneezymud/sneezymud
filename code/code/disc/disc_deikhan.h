@@ -37,7 +37,6 @@ class CDDeikhan : public CDiscipline
 public:
 // Level 1
 // Level 2
-    CSkill skKickDeikhan;
 // Level 4
     CSkill skHealLightDeikhan;
 // Level 4
@@ -56,14 +55,12 @@ public:
 
 // Level 12
     CSkill skClotDeikhan;
-    CSkill skRainBrimstoneDeikhan;
 // Level 14
     CSkill skSterilizeDeikhan;
     CSkill skRemoveCurseDeikhan;
 // level 15
     CSkill skCurseDeikhan;
 // Level 17
-    CSkill skSmite;
 // Level 18
     CSkill skInfectDeikhan;
     CSkill skCureDiseaseDeikhan;
@@ -88,10 +85,11 @@ public:
     CSkill skHarmCriticalDeikhan;
 
     CSkill skRepairDeikhan;
+    CSkill skAuraMight;
+    CSkill skAuraRegeneration;
     
     CDDeikhan()
       : CDiscipline(),
-      skKickDeikhan(),
       skHealLightDeikhan(),
       skHarmLightDeikhan(),
       skChivalry(),
@@ -101,11 +99,9 @@ public:
       skRescueDeikhan(),
       skExpelDeikhan(),
       skClotDeikhan(),
-      skRainBrimstoneDeikhan(),
       skSterilizeDeikhan(),
       skRemoveCurseDeikhan(),
       skCurseDeikhan(),
-      skSmite(),
       skInfectDeikhan(),
       skCureDiseaseDeikhan(),
       skCreateFoodDeikhan(),
@@ -120,11 +116,12 @@ public:
       skLayHands(),
       skHealCriticalDeikhan(),
       skHarmCriticalDeikhan(),
-      skRepairDeikhan() {
+      skRepairDeikhan(),
+      skAuraMight(),
+      skAuraRegeneration() {
     }
     CDDeikhan(const CDDeikhan &a)
       : CDiscipline(a),
-        skKickDeikhan(a.skKickDeikhan),
         skHealLightDeikhan(a.skHealLightDeikhan),
         skHarmLightDeikhan(a.skHarmLightDeikhan),
         skChivalry(a.skChivalry),
@@ -134,11 +131,9 @@ public:
         skRescueDeikhan(a.skRescueDeikhan),
         skExpelDeikhan(a.skExpelDeikhan),
         skClotDeikhan(a.skClotDeikhan),
-        skRainBrimstoneDeikhan(a.skRainBrimstoneDeikhan),
         skSterilizeDeikhan(a.skSterilizeDeikhan),
         skRemoveCurseDeikhan(a.skRemoveCurseDeikhan),
         skCurseDeikhan(a.skCurseDeikhan),
-        skSmite(a.skSmite),
         skInfectDeikhan(a.skInfectDeikhan),
         skCureDiseaseDeikhan(a.skCureDiseaseDeikhan),
         skCreateFoodDeikhan(a.skCreateFoodDeikhan),
@@ -153,12 +148,13 @@ public:
         skLayHands(a.skLayHands),
         skHealCriticalDeikhan(a.skHealCriticalDeikhan),
         skHarmCriticalDeikhan(a.skHarmCriticalDeikhan),
-      skRepairDeikhan(a.skRepairDeikhan) {
+        skRepairDeikhan(a.skRepairDeikhan),
+        skAuraMight(a.skAuraMight),
+        skAuraRegeneration(a.skAuraRegeneration) {
     }
     CDDeikhan & operator=(const CDDeikhan &a) {
       if (this == &a) return *this;
       CDiscipline::operator=(a);
-      skKickDeikhan = a.skKickDeikhan;
       skHealLightDeikhan = a.skHealLightDeikhan;
       skHarmLightDeikhan = a.skHarmLightDeikhan;
       skChivalry = a.skChivalry;
@@ -168,11 +164,9 @@ public:
       skRescueDeikhan = a.skRescueDeikhan;
       skExpelDeikhan = a.skExpelDeikhan;
       skClotDeikhan = a.skClotDeikhan;
-      skRainBrimstoneDeikhan = a.skRainBrimstoneDeikhan;
       skSterilizeDeikhan = a.skSterilizeDeikhan;
       skRemoveCurseDeikhan = a.skRemoveCurseDeikhan;
       skCurseDeikhan = a.skCurseDeikhan;
-      skSmite = a.skSmite;
       skInfectDeikhan = a.skInfectDeikhan;
       skCureDiseaseDeikhan = a.skCureDiseaseDeikhan;
       skCreateFoodDeikhan = a.skCreateFoodDeikhan;
@@ -188,6 +182,8 @@ public:
       skHealCriticalDeikhan = a.skHealCriticalDeikhan;
       skHarmCriticalDeikhan = a.skHarmCriticalDeikhan;
       skRepairDeikhan = a.skRepairDeikhan;
+      skAuraMight = a.skAuraMight;
+      skAuraRegeneration = a.skAuraRegeneration;
       return *this;
     }
     virtual ~CDDeikhan() {}
@@ -198,10 +194,23 @@ public:
 private:
 };
 
+    void divineRescue(TBeing * caster, TBeing * victim);
+
     int synostodweomer(TBeing * caster, TBeing * victim);
     int synostodweomer(TBeing * caster, TBeing * victim, int, short);
 
     int smite(TBeing *, TBeing *);
+
+    int procAuraOfMight(TBeing * caster);
+    int auraOfMightOnHit(TBeing * caster, TBeing * vict);
+    int procAuraOfRegeneration(TBeing * caster);
+    int regenAuraPulse(TBeing * caster);
+    int procAuraGuardian(TBeing * caster);
+    int procAuraOfVengeance(TBeing * caster);
+    int procAuraOfAbsolution(TBeing * caster);
+    void doAbsolutionAuraAffects(TBeing * caster, TBeing * target, bool &done_warmth);
+    void doWarmth(TBeing * caster);
+
 
 #endif
 

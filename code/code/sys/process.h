@@ -118,6 +118,12 @@ class procCharDrowning : public TCharProcess {
   procCharDrowning(const int &);
 };
 
+class procPaladinAura : public TCharProcess {
+  public:
+  bool run(const TPulse &, TBeing *) const;
+  procPaladinAura(const int &);
+};
+
 class procCharResponses : public TCharProcess {
  public:
   bool run(const TPulse &, TBeing *) const;
@@ -443,6 +449,12 @@ class procDoPlayerSaves : public TProcess {
   procDoPlayerSaves(const int &);
 };
 
+class procSendGmcpTick : public TProcess {
+ public:
+  void run(const TPulse &) const;
+  procSendGmcpTick(const int &);
+};
+
 class procDoRoomSaves : public TProcess {
  public:
   void run(const TPulse &) const;
@@ -627,6 +639,7 @@ class TScheduler {
   void run(int);
 
   TScheduler();
+  ~TScheduler();
 };
 
 

@@ -13,7 +13,6 @@
 class Act : public CxxTest::TestSuite
 {
  public:
-  TSocket *testSocket;
   Descriptor *testDesc;
   Descriptor *testDesc2;
   Descriptor *testHorseDesc;
@@ -25,31 +24,29 @@ class Act : public CxxTest::TestSuite
 
   void setUp(){
     Config::doConfiguration();
-    freopen("code/tests/output/Act.out", "w", stderr);
 
     buildSpellArray();
     chdir("../lib");
     Races[RACE_HUMAN] = new Race(RACE_HUMAN);
 
-    testSocket=new TSocket();
     testRoom=new TRoom(100);
     testRoom->setRoomFlagBit(ROOM_ALWAYS_LIT);
 
-    testDesc=new Descriptor(testSocket);
+    testDesc=new Descriptor(new TSocket());
     testPerson=new TPerson(testDesc);
     load_char("test", &st, std::unique_ptr<MockDb>());
     testPerson->loadFromSt(&st);
     testPerson->in_room=0;
     *testRoom += *testPerson;
 
-    testDesc2=new Descriptor(testSocket);
+    testDesc2=new Descriptor(new TSocket());
     testPerson2=new TPerson(testDesc2);
     load_char("testone", &st, std::unique_ptr<MockDb>());
     testPerson2->loadFromSt(&st);
     testPerson2->in_room=0;
     *testRoom += *testPerson2;
 
-    testHorseDesc=new Descriptor(testSocket);
+    testHorseDesc=new Descriptor(new TSocket());
     testHorse=new TPerson(testHorseDesc);
     load_char("testtwo", &st, std::unique_ptr<MockDb>());
     testHorse->loadFromSt(&st);
@@ -72,6 +69,16 @@ class Act : public CxxTest::TestSuite
 
     TS_ASSERT(!testHorse->desc->output.empty());
     TS_ASSERT_EQUALS(testHorse->desc->output.front()->getComm(), "Test hops on your back!\n\r");
+  }
 
+  void tearDown() {
+    delete testHorse;
+    delete testPerson2;
+    delete testPerson;
+    delete testDesc2;
+    delete testDesc;
+    delete testHorseDesc;
+    delete testRoom;
+    delete Races[RACE_HUMAN];
   }
 };

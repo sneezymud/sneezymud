@@ -2208,6 +2208,10 @@ void buildComponentArray()
   }
 }
 
+TThing::TThingKind TComponent::getKind() const {
+  return TThing::TThingKind::TComponent;
+}
+
 TComponent::TComponent() :
   TMergeable(),
   charges(0),

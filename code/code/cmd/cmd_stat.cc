@@ -1441,7 +1441,6 @@ void TBeing::statBeing(TBeing *k)
       case SPELL_TORNADO:
       case SKILL_QUIV_PALM:
       case SKILL_SHOULDER_THROW:
-      case SPELL_CALL_LIGHTNING_DEIKHAN:
       case SPELL_CALL_LIGHTNING:
       case SPELL_LIGHTNING_BREATH:
       case SPELL_GUSHER:
@@ -1465,14 +1464,12 @@ void TBeing::statBeing(TBeing *k)
       case SKILL_CHARGE:
       case SKILL_SMITE:
       case SPELL_METEOR_SWARM:
-      case SPELL_EARTHQUAKE_DEIKHAN:
       case SPELL_EARTHQUAKE:
       case SPELL_PILLAR_SALT:
       case SPELL_FIREBALL:
       case SPELL_HANDS_OF_FLAME:
       case SPELL_INFERNO:
       case SPELL_HELLFIRE:
-      case SPELL_RAIN_BRIMSTONE_DEIKHAN:
       case SPELL_RAIN_BRIMSTONE:
       case SPELL_FLAMESTRIKE:
       case SPELL_FIRE_BREATH:
@@ -1497,6 +1494,9 @@ void TBeing::statBeing(TBeing *k)
       case SPELL_ENERGY_DRAIN:
       case SPELL_LICH_TOUCH: // shaman
       case SPELL_SYNOSTODWEOMER:
+      case SKILL_DIVINE_GRACE:
+      case SKILL_DIVINE_RESCUE:
+      case SKILL_GUARDIANS_LIGHT:
       case SPELL_HARM_DEIKHAN:
       case SPELL_HARM:
       case SPELL_HARM_LIGHT_DEIKHAN:
@@ -1507,7 +1507,6 @@ void TBeing::statBeing(TBeing *k)
       case SPELL_HARM_CRITICAL:
       case SPELL_WITHER_LIMB:
       case SPELL_BLEED:
-      case SKILL_KICK_DEIKHAN:
       case SKILL_KICK_THIEF:
       case SKILL_KICK_MONK:
       case SKILL_KICK:
@@ -1724,6 +1723,7 @@ void TBeing::statBeing(TBeing *k)
       case SKILL_SWITCH_DEIKHAN:
       case SKILL_RETREAT_DEIKHAN:
       case SKILL_SHOVE_DEIKHAN:
+      case SKILL_2H_SPEC_DEIKHAN:
       case SKILL_RIDE:
       case SKILL_ALCOHOLISM:
       case SKILL_FISHING:
@@ -1817,7 +1817,11 @@ void TBeing::statBeing(TBeing *k)
       case SKILL_DISSECT:
       case SKILL_DEFENSE:
       case SKILL_ADVANCED_DEFENSE:
+      case SKILL_FOCUSED_AVOIDANCE:
+      case SKILL_TOUGHNESS:
       case SKILL_OFFENSE:
+      case SKILL_ADVANCED_OFFENSE:
+      case SKILL_INEVITABILITY:
       case SKILL_WHITTLE:
       case SKILL_WIZARDRY:
       case SKILL_RITUALISM:
@@ -2183,6 +2187,80 @@ void TBeing::statBeing(TBeing *k)
 
       case AFFECT_UNHOLY_WRATH:
         str += "Unholy Wrath.\n\r";
+        str += format("     Modifies %s by %ld points\n\r") %
+          apply_types[aff->location].name % aff->modifier;
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+      break;
+
+      case AFFECT_HOLY_WRATH:
+        str += "Holy Wrath.\n\r";
+        str += format("     Modifies %s by %ld points\n\r") %
+          apply_types[aff->location].name % aff->modifier;
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+      break;
+
+      case AFFECT_GUARDIANS_LIGHT:
+        str += "Guardians Light.\n\r";
+        str += format("     Modifies %s by %ld points\n\r") %
+          apply_types[aff->location].name % aff->modifier;
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+      break;
+
+      case SKILL_AURA_MIGHT:
+        str += "Projecting : Aura of Might\n\r";
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+      break;
+
+      case SKILL_AURA_REGENERATION:
+        str += "Projecting : Aura of Regeneration\n\r";
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+      break;
+
+      case SKILL_AURA_GUARDIAN:
+        str += "Projecting : Aura of the Guardian\n\r";
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+      break;
+
+      case SKILL_AURA_VENGEANCE:
+        str += "Projecting : Aura of Vengeance\n\r";
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+      break;
+
+      case SKILL_AURA_ABSOLUTION:
+        str += "Projecting : Aura of Absolution\n\r";
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+      break;
+
+      case SPELL_AURA_GUARDIAN:
+        str += "Aura of the Guardian.\n\r";
+        str += format("     Modifies %s by %ld points\n\r") %
+          apply_types[aff->location].name % aff->modifier;
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+      break;
+
+      case SPELL_AURA_REGENERATION:
+        str += "Aura of Regeneration.\n\r";
+        str += format("     Modifies %s by %ld points\n\r") %
+          apply_types[aff->location].name % aff->modifier;
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+      break;
+
+      case SPELL_AURA_MIGHT:
+        str += "Aura of Might.\n\r";
+        str += format("     Modifies %s by %ld points\n\r") %
+          apply_types[aff->location].name % aff->modifier;
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+      break;
+
+      case SPELL_AURA_VENGEANCE:
+        str += "Aura of Vengeance.\n\r";
+        str += format("     Modifies %s by %ld points\n\r") %
+          apply_types[aff->location].name % aff->modifier;
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+      break;
+
+      case SPELL_AURA_ABSOLUTION:
+        str += "Aura of Absolution.\n\r";
         str += format("     Modifies %s by %ld points\n\r") %
           apply_types[aff->location].name % aff->modifier;
         str += format("     Expires in %6d updates.\n\r") % aff->duration;

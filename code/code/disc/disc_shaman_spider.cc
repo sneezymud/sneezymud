@@ -59,7 +59,7 @@ int transfix(TBeing * caster, TBeing * victim, int level, short bKnown)
     aff.level = level;
     aff.location = APPLY_NONE;
     aff.modifier = 0;
-    aff.duration = (level/10)* Pulse::UPDATES_PER_MUDHOUR;
+    aff.duration = caster->durationModify(SKILL_TRANSFIX, (level/10)* Pulse::UPDATES_PER_MUDHOUR);
     aff.bitvector = 0;
 
     if (critSuccess(caster, SKILL_TRANSFIX)) {
@@ -118,14 +118,14 @@ int livingVines(TBeing *caster, TBeing *victim,int level, short bKnown)
   aff1.bitvector = AFF_WEB;
   aff1.location = APPLY_ARMOR;
   aff1.modifier = (level / 2) + 5;
-  aff1.duration = level * Pulse::UPDATES_PER_MUDHOUR;
+  aff1.duration = caster->durationModify(SPELL_LIVING_VINES, level * Pulse::UPDATES_PER_MUDHOUR);
  
   aff2.type = SPELL_LIVING_VINES;
   aff2.level = level;
   aff2.bitvector = AFF_WEB;
   aff2.location = APPLY_SPELL_HITROLL;
   aff2.modifier = (-level*2);
-  aff2.duration = level * Pulse::UPDATES_PER_MUDHOUR;
+  aff2.duration = aff1.duration;
    
   if (caster->bSuccess(bKnown, SPELL_LIVING_VINES)) {
     act("$n summons the vines to hold $N!", FALSE, caster, NULL, victim, TO_NOTVICT);
@@ -675,7 +675,7 @@ int clarity(TBeing *caster, TBeing *victim, int level, short bKnown)
 
   if (caster->bSuccess(bKnown, SPELL_CLARITY)) {
     aff.type = SPELL_CLARITY;
-    aff.duration = 6+level / 3 * Pulse::UPDATES_PER_MUDHOUR;
+    aff.duration = caster->durationModify(SPELL_CLARITY, 6+level / 3 * Pulse::UPDATES_PER_MUDHOUR);
     aff.modifier = 10;
     aff.location = APPLY_VISION;
     aff.bitvector = AFF_CLARITY;
@@ -816,7 +816,7 @@ ANSI_RED_BOLD);
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = AFF_CHARM;
-    aff.duration  =  2 * level * Pulse::UPDATES_PER_MUDHOUR;
+    aff.duration = caster->durationModify(SPELL_HYPNOSIS, 2 * level * Pulse::UPDATES_PER_MUDHOUR);
 
     // we've made raw immunity check, but allow it to reduce effects too
     aff.duration *= (100 - victim->getImmunity(IMMUNE_CHARM));

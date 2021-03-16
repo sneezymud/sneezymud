@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <cmath>
 
+#include "DescriptorList.h"
 #include "extern.h"
 #include "handler.h"
 #include "room.h"
@@ -74,6 +75,8 @@ togTypeT & operator++(togTypeT &c, int)
 
 togInfoT::~togInfoT()
 {
+  for (auto t : toggles)
+    delete t;
 }
 
 togInfoT::togInfoT()
@@ -1419,13 +1422,18 @@ void TPerson::doShutdown(bool reboot, const char *argument)
     Descriptor::worldSend(buf, this);
     Shutdown = 1;
   } else {
-    if (isdigit(*arg)) {
+    bool force = false;
+    if (std::string(arg) == "now!")
+      force = true;
+
+    if (force || isdigit(*arg)) {
       num = convertTo<int>(arg);
-      if (num <= 0) {
+      if (!force && num <= 0) {
         sendTo("Illegal number of minutes.\n\r");
         sendTo("Syntax : shutdown <minutes until shutdown>\n\r");
         return;
-      } 
+      }
+
       if (!timeTill)
         timeTill = time(0) + (num * SECS_PER_REAL_MIN);
       else if (timeTill < (time(0) + (num * SECS_PER_REAL_MIN))) {
@@ -1451,7 +1459,7 @@ void TPerson::doShutdown(bool reboot, const char *argument)
       sendTo("Syntax : shutdown <minutes until shutdown>\n\r");
       return;
     }
-  } 
+  }
 }
 
 void TBeing::doSnoop(const char *)
@@ -2152,7 +2160,7 @@ void TPerson::doForce(const char *argument)
 {
   Descriptor *i;
   TBeing *vict;
-  char name_buf[MAX_INPUT_LENGTH], to_force[MAX_INPUT_LENGTH], buf[MAX_INPUT_LENGTH];
+  char name_buf[MAX_INPUT_LENGTH], to_force[MAX_INPUT_LENGTH], buf[MAX_INPUT_LENGTH*2];
   int rc;
   TThing *t;
 
@@ -2476,7 +2484,6 @@ void TBeing::doCutlink(const char *)
 
 void TPerson::doCutlink(const char *argument)
 {
-  Descriptor *d;
   char name_buf[100];
 
   if (powerCheck(POWER_CUTLINK))
@@ -2485,40 +2492,39 @@ void TPerson::doCutlink(const char *argument)
   argument = one_argument(argument, name_buf, cElements(name_buf));
 
   if (!*name_buf) {
-    for (d = descriptor_list; d; d = d->next) {
+    std::vector<Descriptor*> toDelete;
+    for (auto d : DescriptorList) {
       if (!d->character || d->character->name.empty()) {
-        sendTo(format("You cut a link from host %s\n\r") %
-               (!(d->host.empty()) ? d->host : "Host Unknown"));
-
-        delete d;
+        sendTo(format("You cut a link from host %s\n\r") % (!(d->host.empty()) ? d->host : "Host Unknown"));
+        toDelete.push_back(d);
       }
     }
+    for (Descriptor* d : toDelete)
+      delete d;
   } else {
-    for (d = descriptor_list; d; d = d->next) {
-      if (d->character) {
-        if (!d->character->name.empty() && !(d->character->name.lower()).compare(name_buf)) {
-          if (d->character == this) {
-            sendTo("You can't cut your own link, sorry.\n\r");
-            return;
-          }
-          if (d->character->GetMaxLevel() >= GetMaxLevel()) {
-            sendTo("You can only cut the link of players lower level than you.\n\r");
-            return;
-          }
-          if (d->character->roomp)  // necessary check due to canSeeMe
-            act("You cut $S link.", TRUE, this, 0, d->character, TO_CHAR);
-          else 
-            act("You cut someone's link.", TRUE, this, 0, 0, TO_CHAR);
-
-          TPerson *p = dynamic_cast<TPerson *>(d->character);
-          if (p)
-            p->fixClientPlayerLists(TRUE);
-          delete d;
-          return;
-        }
-      }
+    auto it = DescriptorList.findByCharName(name_buf);
+    if (it == DescriptorList.end()) {
+      sendTo("No one by that name logged in!\n\r");
+      return;
     }
-    sendTo("No one by that name logged in!\n\r");
+    Descriptor* d = *it;
+    if (d->character == this) {
+      sendTo("You can't cut your own link, sorry.\n\r");
+      return;
+    }
+    if (d->character->GetMaxLevel() >= GetMaxLevel()) {
+      sendTo("You can only cut the link of players lower level than you.\n\r");
+      return;
+    }
+    if (d->character->roomp)  // necessary check due to canSeeMe
+      act("You cut $S link.", TRUE, this, 0, d->character, TO_CHAR);
+    else
+      act("You cut someone's link.", TRUE, this, 0, 0, TO_CHAR);
+
+    TPerson *p = dynamic_cast<TPerson *>(d->character);
+    if (p)
+      p->fixClientPlayerLists(TRUE);
+    delete d;
     return;
   }
 }
@@ -3491,7 +3497,7 @@ void TBeing::doNoshout(const sstring &argument)
 
 void TBeing::doDeathcheck(const sstring &arg)
 {
-  char file[256], playerx[256], buf[256];
+  char file[256], playerx[256], buf[1024];
   char *p;
 
   if (powerCheck(POWER_DEATHCHECK))
@@ -3948,7 +3954,7 @@ void TPerson::doAccess(const sstring &arg)
 
 void TBeing::doReplace(const sstring &argument)
 {
-  char buf[256], dir[256], dir2[256];
+  char buf[1024], dir[256], dir2[256];
   sstring arg1, arg2, arg3;
   FILE *fp;
   charFile st;
@@ -4653,7 +4659,7 @@ void TBeing::doInfo(const char *arg)
           tTotalGold[tMoney] = getPosGold(tMoney);
           tNetGold[tMoney]   = getNetGold(tMoney);
 
-          sprintf(buf2, "Ecomony-%s:\n\r\tpos = %9u   net gold = %9d (drain: %9d : %6.2f%%)\n\r",
+          sprintf(buf2, "Ecomony-%.30s:\n\r\tpos = %9u   net gold = %9d (drain: %9d : %6.2f%%)\n\r",
                   tNames[tMoney], tTotalGold[tMoney], tNetGold[tMoney],
                   tTotalGold[tMoney] - tNetGold[tMoney],
                   100.0 * (tTotalGold[tMoney] - tNetGold[tMoney]) / tTotalDrain);
@@ -5567,7 +5573,7 @@ void TBeing::doSysChecklog(const sstring &arg)
 {
   char *tMarkerS, // Start
        *tMarkerE, // End
-        tString[256],
+        tString[1024],
         tSearch[256],
         tLog[256];
   unsigned int tIndex;

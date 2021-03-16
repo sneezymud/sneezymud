@@ -187,11 +187,14 @@ bool TBeing::canSwim(dirTypeT dir)
   // adjust for swimming with/against current
 
   if (rp->getRiverSpeed()) {
+    dirTypeT riverDir = rp->getRiverDir();
+    if (riverDir == DIR_NONE)
+      vlogf(LOG_BUG, format("bad river direction in room %d") % rp->number);
     if (dir == DIR_NONE)  // floating in place
       mass += 5 * GRAMS_PER_POUND;  // tough to stay where I am
     else if (dir == rp->getRiverDir())
       mass += -30 * GRAMS_PER_POUND;  // easy to go with flow
-    else if (dir == rev_dir[rp->getRiverDir()])
+    else if (dir == rev_dir(rp->getRiverDir()))
       mass += 30 * GRAMS_PER_POUND;  // tough to go against the flow
   }
   

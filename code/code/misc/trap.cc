@@ -949,7 +949,7 @@ int TBeing::triggerDoorTrap(dirTypeT door)
   
   REMOVE_BIT(exitp->condition, EXIT_TRAPPED);
   if ((rp = real_roomp(exitp->to_room)) &&
-      (back = rp->dir_option[rev_dir[door]])) {
+      (back = rp->dir_option[rev_dir(door)])) {
     REMOVE_BIT(back->condition, EXIT_TRAPPED);
   }
 
@@ -1022,7 +1022,7 @@ int TTrap::moveTrapCheck(TBeing *ch, dirTypeT dir)
       return FALSE;
 
     // if the person who set it is in my group, bypass
-    if ((tmp_desc = ex_description->findExtraDesc(TRAP_EX_DESC))) {
+    if (ex_description && (tmp_desc = ex_description->findExtraDesc(TRAP_EX_DESC))) {
       if ((c = get_char(tmp_desc, EXACT_YES)))
         if (ch->inGroup(*c))
           return FALSE;
@@ -3608,7 +3608,7 @@ void TBeing::throwGrenade(TTrap *o, dirTypeT dir)
   }
 
   *rp += *o;
-  sprintf(buf, "$n bounces into the room from the %s.", dirs[rev_dir[dir]]);
+  sprintf(buf, "$n bounces into the room from the %s.", dirs[rev_dir(dir)]);
   act(buf, TRUE, o, 0, 0, TO_ROOM);
 }
 
@@ -3768,7 +3768,7 @@ int TMonster::grenadeHit(TTrap *o)
 
   const char * tmp_desc;
   TBeing *ch = NULL;
-  if ((tmp_desc = o->ex_description->findExtraDesc(GRENADE_EX_DESC))) {
+  if (o && o->ex_description && (tmp_desc = o->ex_description->findExtraDesc(GRENADE_EX_DESC))) {
     if ((ch = get_char(tmp_desc, EXACT_YES)))
       pissOff(this,ch);
   }

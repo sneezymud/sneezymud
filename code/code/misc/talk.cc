@@ -927,11 +927,11 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
   // set up last teller for reply's use
   // If it becomes a "someone tells you", ignore
   if (vict->desc && vict->canSee(this, INFRA_YES) && isPc())
-    strncpy(vict->desc->last_teller, this->name.c_str(), cElements(vict->desc->last_teller));
+    strncpy(vict->desc->last_teller, this->name.c_str(), cElements(vict->desc->last_teller)-1);
 
   // if you told to someone, remember who you last told to for use later
   if (desc && vict->desc && isPc() && vict->isPc())
-    strncpy(desc->last_told, vict->name.c_str(), cElements(desc->last_told));
+    strncpy(desc->last_told, vict->name.c_str(), cElements(desc->last_told)-1);
 
   if (desc && inGroup(*vict))
     desc->talkCount = time(0);

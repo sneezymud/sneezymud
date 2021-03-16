@@ -7,7 +7,6 @@
 //
 /////////////////////////////////////////////////////////////////
 
-#include <boost/algorithm/string.hpp>
 #include "handler.h"
 #include "extern.h"
 #include "room.h"
@@ -40,6 +39,8 @@
 #include "disc_shaman_control.h"
 #include "obj_opal.h"
 #include "weather.h"
+
+#include <boost/algorithm/string.hpp>
 
 int TBeing::useMana(spellNumT spl)
 {
@@ -602,477 +603,173 @@ static void badCastSyntax(const TBeing *ch, spellNumT which)
 // returns DELETE_THIS
 int TBeing::doPray(const char *argument)
 {
-  char kludge[256];
-  char arg[256];
-  char *n;
-  int spaces = 0;
-  char buf[256], buf2[256], buf3[256], argbak[256];
-
-// why can't mobs call this command?
-//  if (!isPc() && !desc)
-//       return FALSE;
+  sstring args = sstring(argument).trim();
 
   if (isPc() && GetMaxLevel() > MAX_MORT && !hasWizPower(POWER_NO_LIMITS)) {
     sendTo("You are currently not permitted to cast prayers, sorry.\n\r");
     return FALSE;
   }
 
-
   if (!hasHands()) {
     sendTo("Sorry, you don't have the right form for that.\n\r");
     return FALSE;
   }
 
-  if(!doesKnowSkill(SKILL_DEVOTION) && 
+  if(!doesKnowSkill(SKILL_DEVOTION) &&
      !hasClass(CLASS_CLERIC) && !hasClass(CLASS_DEIKHAN)){
     sendTo("You do not have the faith required to pray.\n\r");
     return FALSE;
   }
 
-
   if (nomagic("Sorry, your deity refuses to contact you here."))
     return FALSE;
-  
-  // Eat spaces off the end and off the beginning
-  strncpy(arg, argument, cElements(arg));
-  while (isspace(*arg))
-    strcpy(arg, &arg[1]);
 
   if (cantHit > 0) {
     sendTo("You're too busy.\n\r");
     return FALSE;
   }
 
-  if (!*arg) {
+  if (args.empty()) {
     badCastSyntax(this, TYPE_UNDEFINED);
     sendTo("You do NOT need to include ''s around the <prayer name>.\n\r");
     return FALSE;
   }
-  for (n = arg; *n; n++) {
-    if (isspace(*n))
-      spaces++;
-  }
-  n--;
-  while (isspace(*n)) {
-    *n = '\0';
-    spaces--;
-    n--;
-  }
-  one_argument(arg, kludge, cElements(kludge));
-  if (is_abbrev(kludge, "paralyze")) {
-    strcpy(argbak, arg);
-    strcpy(arg, one_argument(arg, buf, cElements(buf)));   // buf == paralyze
-    strcpy(arg, one_argument(arg, buf2, cElements(buf2)));  // buf2 == NULL, target, "limb"
 
-    if (!*buf2) {
-      // pray paralyze - target on fight()
-      if (!doesKnowSkill(getSkillNum(SPELL_PARALYZE))) {
-        sendTo("You don't know that prayer!\n\r");
-        return FALSE;
-      }
-      if (!fight()) {
-        badCastSyntax(this, SPELL_PARALYZE);
-        return FALSE;
-      }
-      return doDiscipline(SPELL_PARALYZE, "");
-    } else if (is_abbrev(buf2, "limb")) {
-      if (!doesKnowSkill(getSkillNum(SPELL_PARALYZE_LIMB))) {
-        sendTo("You don't know that prayer!\n\r");
-        return FALSE;
-      }
+  auto findSpecialCaseByName = [this](sstring const& name) {
+    // vector, not map, because we need ordered lookup
+    const std::vector<std::pair<sstring, spellNumT>> specialCases {
+      { "paralyze limb", SPELL_PARALYZE_LIMB },
+      { "paralyze", SPELL_PARALYZE },
+      { "heal spray", SPELL_HEAL_SPRAY },
+      { "heal light", SPELL_HEAL_LIGHT },
+      { "heal serious", SPELL_HEAL_SERIOUS },
+      { "heal critical spray", SPELL_HEAL_CRITICAL_SPRAY },
+      { "heal critical", SPELL_HEAL_CRITICAL },
+      { "heal full spray", SPELL_HEAL_FULL_SPRAY },
+      { "heal full", SPELL_HEAL_FULL },
+      { "heal", SPELL_HEAL },
+      { "harm light", SPELL_HARM_LIGHT },
+      { "harm serious", SPELL_HARM_SERIOUS },
+      { "harm critical", SPELL_HARM_CRITICAL },
+      { "harm", SPELL_HARM },
+    };
 
-      strcpy(arg,  one_argument(arg, buf3, cElements(buf3)));  // buf3 = NULL, or targ
-      if (!*buf3) {
-        // pray paralyze limb - target on fight()
-        if (!fight()) {
-          badCastSyntax(this, SPELL_PARALYZE_LIMB);
-          return FALSE;
-        }
-        return doDiscipline(SPELL_PARALYZE_LIMB,"");
-      }
-      return doDiscipline(SPELL_PARALYZE_LIMB, buf3);
-    } else {
-      if (!doesKnowSkill(getSkillNum(SPELL_PARALYZE))) {
-        sendTo("You don't know that prayer!\n\r");
-        return FALSE;
-      }
-      return doDiscipline(SPELL_PARALYZE, buf2);
-    }
-  } if (is_abbrev(kludge, "heal")) {
-    strcpy(argbak, arg);
-    strcpy(arg, one_argument(arg, buf, cElements(buf)));  // buf == heal
-    strcpy(arg, one_argument(arg, buf2, cElements(buf2)));
-    // pray heal <targ>
-    // pray heal spray
-    // pray heal light <targ>
-    // pray heal light spray
+    for (auto pair : specialCases) {
+      if (name == pair.first)
+        return pair.second;
 
-    if (!*buf2) {
-      // pray heal - target on self
-      if (!doesKnowSkill(getSkillNum(SPELL_HEAL))) {
-        sendTo("You don't know that prayer!\n\r");
-        return FALSE;
-      }
-      return doDiscipline(SPELL_HEAL, "");
-    } else if (!strcmp(buf2, "spray") || !strcmp(buf2, "spra") || !strcmp(buf2, "spr"
-)) {
-      // old style was to parse for if abbrev of spray but that would capture 
-      //   any "s" like pray heal sp for pray heal spowder would goto spray
-      // pray heal spray - no targs
-      if (!doesKnowSkill(getSkillNum(SPELL_HEAL_SPRAY))) {
-        sendTo("You don't know that prayer!\n\r");
-        return FALSE;
-      }
-      return doDiscipline(SPELL_HEAL_SPRAY, "");
-    } else if (!*arg) {
-      // pray heal <target>
-      // pray heal light - autotarget on self
-      // pray heal serious - autotarget on self
-      // pray heal critical - autotarget on self
-      // pray heal full - autotarget on self
-
-      if (is_abbrev(buf2, "light")) {
-        // pray heal light - autotarget
-        if (!doesKnowSkill(getSkillNum(SPELL_HEAL_LIGHT))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HEAL_LIGHT, "");
-      } else if (is_abbrev(buf2, "serious")) {
-        // pray heal serious - autotarget
-        if (!doesKnowSkill(getSkillNum(SPELL_HEAL_SERIOUS))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HEAL_SERIOUS, "");
-      } else if (is_abbrev(buf2, "critical")) {
-        // pray heal critical - autotarget
-        if (!doesKnowSkill(getSkillNum(SPELL_HEAL_CRITICAL))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HEAL_CRITICAL, "");
-      } else if (is_abbrev(buf2, "full")) {
-        // pray heal full - autotarget
-        if (!doesKnowSkill(getSkillNum(SPELL_HEAL_FULL))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HEAL_FULL, "");
-      } else {
-        // pray heal <target>
-        if (!doesKnowSkill(getSkillNum(SPELL_HEAL))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HEAL, buf2);
-      }
-    } else {
-      // buf2 = serious/crit
-      one_argument(arg, buf3, cElements(buf3));
-      // buf3 = spray or targets-name
-      if (!strcmp(buf3, "spray") || !strcmp(buf3, "spra") || !strcmp(buf3, "spr")) {
-        if (is_abbrev(buf2, "critical")) {
-          if (!doesKnowSkill(getSkillNum(SPELL_HEAL_CRITICAL_SPRAY))) {
-            sendTo("You don't know that prayer!\n\r");
-            return FALSE;
+      auto nw = name.words();
+      auto sw = pair.first.words();
+      if (nw.size() == sw.size()) {
+        bool allWordsAreAbbrev = true;
+        for (size_t i = 0; i < nw.size(); ++i) {
+          if (!is_abbrev(nw[i], sw[i], MULTIPLE_NO, EXACT_YES)) {
+            allWordsAreAbbrev = false;
+            break;
           }
-          return doDiscipline(SPELL_HEAL_CRITICAL_SPRAY, "");
-        } else if (is_abbrev(buf2, "full")) {
-          if (!doesKnowSkill(getSkillNum(SPELL_HEAL_FULL_SPRAY))) {
-            sendTo("You don't know that prayer!\n\r");
-            return FALSE;
-          }
-          return doDiscipline(SPELL_HEAL_FULL_SPRAY, "");
         }
-        // gets here on something dumb like "pray heal light spray"
-      }
-      if (is_abbrev(buf2, "light")) {
-        if (!doesKnowSkill(getSkillNum(SPELL_HEAL_LIGHT))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HEAL_LIGHT, buf3);
-      } else if (is_abbrev(buf2, "critical")) {
-        if (!doesKnowSkill(getSkillNum(SPELL_HEAL_CRITICAL))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HEAL_CRITICAL, buf3);
-      } else if (is_abbrev(buf2, "serious")) {
-        if (!doesKnowSkill(getSkillNum(SPELL_HEAL_SERIOUS))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HEAL_SERIOUS, buf3);
-      } else if (is_abbrev(buf2, "full")) {
-        if (!doesKnowSkill(getSkillNum(SPELL_HEAL_FULL))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HEAL_FULL, buf3);
+        if (allWordsAreAbbrev)
+          return pair.second;
       }
     }
-    // this can happen: heal llight batopr
-    sendTo("That's not a prayer request!\n\r");
-    return FALSE;
-  } if (is_abbrev(kludge, "harm")) {
-    strcpy(argbak, arg);
-    strcpy(arg, one_argument(arg, buf, cElements(buf)));  // buf == harm
-    strcpy(arg, one_argument(arg, buf2, cElements(buf2)));
+    return TYPE_UNDEFINED;
+  };
 
-    // pray harm <targ>
-    // pray harm light <targ>
-
-    if (!*buf2) {
-    // pray harm - target on self
-      if (!doesKnowSkill(getSkillNum(SPELL_HARM))) {
+  auto findPrayerByName = [this](sstring const& name) {
+    spellNumT which = TYPE_UNDEFINED;
+    if (((which = searchForSpellNum(name, EXACT_YES)) > TYPE_UNDEFINED) ||
+        ((which = searchForSpellNum(name, EXACT_NO)) > TYPE_UNDEFINED)) {
+      if (discArray[which]->typ != SPELL_CLERIC && discArray[which]->typ != SPELL_DEIKHAN) {
+        sendTo("That's not a prayer request!\n\r");
+        return TYPE_UNDEFINED;
+      }
+      if (!doesKnowSkill(getSkillNum(which))) {
         sendTo("You don't know that prayer!\n\r");
-        return FALSE;
+        return TYPE_UNDEFINED;
       }
-
-      if (!fight()) {
-        badCastSyntax(this, SPELL_HARM);
-        return FALSE;
-      }
-      return doDiscipline(SPELL_HARM, "");
-#if 0
-    } else if (!strcmp(buf2, "spray") || !strcmp(buf2, "spra") || !strcmp(buf2,
-"spr")) { 
-      // old style was to parse for if abbrev of spray but that would capture
-       //any"s"likepray heal sp for pray heal spowder would goto spray
-      if (!doesKnowSkill(getSkillNum(SPELL_HARM_SPRAY))) {
-        sendTo("You don't know that prayer!\n\r");
-        return FALSE;
-      }
-      return doDiscipline(SPELL_HARM_SPRAY, "");
-#endif
-
-    } else if (!*arg) {
-      // !*arg means buf=harm, buf2=targ
-      // OR
-      // buf=harm, buf2="serious, light, critical, full"
-      // if fighting, autotarget
-
-      if (is_abbrev(buf2, "light")) {
-        if (!doesKnowSkill(getSkillNum(SPELL_HARM_LIGHT))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        if (!fight()) {
-          badCastSyntax(this, SPELL_HARM_LIGHT);
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HARM_LIGHT, "");
-      } else if (is_abbrev(buf2, "serious")) {
-        if (!doesKnowSkill(getSkillNum(SPELL_HARM_SERIOUS))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        if (!fight()) {
-          badCastSyntax(this, SPELL_HARM_SERIOUS);
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HARM_SERIOUS, "");
-      } else if (is_abbrev(buf2, "critical")) {
-        if (!doesKnowSkill(getSkillNum(SPELL_HARM_CRITICAL))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        if (!fight()) {
-          badCastSyntax(this, SPELL_HARM_CRITICAL);
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HARM_CRITICAL, "");
-#if 0
-      } else if (is_abbrev(buf2, "full")) {
-        if (!doesKnowSkill(getSkillNum(SPELL_HARM_FULL))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        if (!fight()) {
-          badCastSyntax(this, SPELL_HARM_FULL);
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HARM_FULL, "");
-      } else if (is_abbrev(buf2, "spray")) {
-        if (!doesKnowSkill(getSkillNum(SPELL_HARM_SPRAY))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HARM_SPRAY, "");
-#endif
-      } else {
-        if (!doesKnowSkill(getSkillNum(SPELL_HARM))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HARM, buf2);
-      }
-    } else {
-      // buf2 = serious/crit
-      one_argument(arg, buf3, cElements(buf3));
-      // buf3 = spray or targets-name
-#if 0
-      if (!strcmp(buf3, "spray") || !strcmp(buf3, "spra") || !strcmp(buf3, "spr")) {
-        if (is_abbrev(buf2, "critical")) {
-          if (!doesKnowSkill(getSkillNum(SPELL_HARM_CRITICAL_SPRAY))) {
-            sendTo("You don't know that prayer!\n\r");
-            return FALSE;
-          }
-          return doDiscipline(SPELL_HARM_CRITICAL_SPRAY, "");
-        } else if (is_abbrev(buf2, "full")) {
-          if (!doesKnowSkill(getSkillNum(SPELL_HARM_FULL_SPRAY))) {
-            sendTo("You don't know that prayer!\n\r");
-            return FALSE;
-          }
-          return doDiscipline(SPELL_HARM_FULL_SPRAY, "");
-        }
-        // gets here on something dumb like "pray heal light spray"
-      }
-#endif
-      if (is_abbrev(buf2, "light")) {
-        if (!doesKnowSkill(getSkillNum(SPELL_HARM_LIGHT))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HARM_LIGHT, buf3);
-      } else if (is_abbrev(buf2, "critical")) {
-        if (!doesKnowSkill(getSkillNum(SPELL_HARM_CRITICAL))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HARM_CRITICAL, buf3);
-      } else if (is_abbrev(buf2, "serious")) {
-        if (!doesKnowSkill(getSkillNum(SPELL_HARM_SERIOUS))) {
-          sendTo("You don't know that prayer!\n\r");
-          return FALSE;
-        }
-        return doDiscipline(SPELL_HARM_SERIOUS, buf3);
-      }
+      return which;
     }
-    // this can happen: heal llight batopr
-    sendTo("That's not a prayer request!\n\r");
-    return FALSE;
-  }
-  spellNumT which;
-  if (((which = searchForSpellNum(arg, EXACT_YES)) > TYPE_UNDEFINED) || 
-      ((which = searchForSpellNum(arg, EXACT_NO)) > TYPE_UNDEFINED)) {
-    if (discArray[which]->typ != SPELL_CLERIC && discArray[which]->typ != SPELL_DEIKHAN) {
-      sendTo("That's not a prayer request!\n\r");
-      return FALSE;
-    }
-    if (!doesKnowSkill(getSkillNum(which))) {
-      sendTo("You don't know that prayer!\n\r");
-      return FALSE;
-    }
+    return TYPE_UNDEFINED;
+  };
+
+  spellNumT which = findSpecialCaseByName(args);
+  if (which != TYPE_UNDEFINED)
     return doDiscipline(which, "");
-  } else {
-    if (!spaces) 
-      n = arg;
-    else {
-      // Parse back until we hit our space
-      for (; !isspace(*n); n--);
-      *n = '\0';
-      n++;
-    }
-    if (((which = searchForSpellNum(arg, EXACT_YES)) <= TYPE_UNDEFINED) && 
-        ((which = searchForSpellNum(arg, EXACT_NO)) <= TYPE_UNDEFINED)) {
-      sendTo("No such prayer exists.\n\r");
-      return FALSE;
-    }
-    if (discArray[which]->typ != SPELL_CLERIC && discArray[which]->typ != SPELL_DEIKHAN) {
-      sendTo("That's not a prayer request!\n\r");
-      return FALSE;
-    }
-    if (!doesKnowSkill(getSkillNum(which))) {
-      sendTo("You don't know that prayer!\n\r");
-      return FALSE;
-    }
-    return doDiscipline(which, n);
+
+  if (args.words().size() > 1) {
+    which = findSpecialCaseByName(args.dropLastWord());
+    if (which != TYPE_UNDEFINED)
+      return doDiscipline(which, args.lastWord());
   }
+
+  which = findPrayerByName(args);
+  if (which != TYPE_UNDEFINED)
+    return doDiscipline(which, "");
+
+  if (args.words().size() > 1) {
+    which = findPrayerByName(args.dropLastWord());
+    if (which != TYPE_UNDEFINED)
+      return doDiscipline(which, args.lastWord());
+  }
+
+  sendTo("No such prayer exists.\n\r");
   return FALSE;
 }
 
-spellNumT TBeing::parseSpellNum(char *arg)
+std::tuple<spellNumT, sstring> TBeing::parseSpellNum(sstring const& args) const
 {
-  char *n;
-  int spaces = 0;
-  char kludge[256];
-
-  while (isspace(*arg))
-    strcpy(arg, &arg[1]);
-
-  if (!*arg) {
+  if (args.trim().empty()) {
     badCastSyntax(this, TYPE_UNDEFINED);
     sendTo("You do NOT need to include ''s around <spell name>.\n\r");
-    return TYPE_UNDEFINED;
+    return std::make_tuple(TYPE_UNDEFINED, "");
   }
-  for (n = arg; *n; n++) {
-    if (isspace(*n))
-      spaces++;
-  }
-  n--;
-  while (isspace(*n)) {
-    *n = '\0';
-    spaces--;
-    n--;
-  }
-  one_argument(arg, kludge, cElements(kludge));
-  if (isname(kludge, "telepathy")) {
-    strcpy(arg, one_argument(arg, kludge, cElements(kludge)));
+
+  const sstring& arg1 = args.word(0);
+
+  if (isname(arg1, "telepathy")) {
     if (!doesKnowSkill(SPELL_TELEPATHY)) {
       sendTo("You don't know that spell!\n\r");
-      return TYPE_UNDEFINED;
+      return std::make_tuple(TYPE_UNDEFINED, "");
     }
-    return SPELL_TELEPATHY;
+    return std::make_tuple(SPELL_TELEPATHY, args.dropWord());
   }
-  if (isname(kludge, "romble")) {
-    strcpy(arg, one_argument(arg, kludge, cElements(kludge)));
+  if (isname(arg1, "romble")) {
     if (!doesKnowSkill(SPELL_ROMBLER)) {
       sendTo("You don't know that spell!\n\r");
-      return TYPE_UNDEFINED;
+      return std::make_tuple(TYPE_UNDEFINED, "");
     }
-    return SPELL_ROMBLER;
+    return std::make_tuple(SPELL_ROMBLER, args.dropWord());
   }
-  spellNumT which;
-  if (((which = searchForSpellNum(arg, EXACT_YES)) > TYPE_UNDEFINED) ||
-      ((which = searchForSpellNum(arg, EXACT_NO)) > TYPE_UNDEFINED)) {
-    if (discArray[which]->typ != SPELL_MAGE && discArray[which]->typ != SPELL_SHAMAN) {
-      sendTo("That's not a magic spell!\n\r");
-      return TYPE_UNDEFINED;
+
+  auto findSpellByName = [this](sstring const& name) {
+    spellNumT which = TYPE_UNDEFINED;
+    if (((which = searchForSpellNum(name, EXACT_YES)) > TYPE_UNDEFINED) ||
+        ((which = searchForSpellNum(name, EXACT_NO)) > TYPE_UNDEFINED)) {
+      if (discArray[which]->typ != SPELL_MAGE && discArray[which]->typ != SPELL_SHAMAN) {
+        sendTo("That's not a magic spell!\n\r");
+        return TYPE_UNDEFINED;
+      }
+      if (!doesKnowSkill(getSkillNum(which))) {
+        sendTo("You don't know that spell!\n\r");
+        return TYPE_UNDEFINED;
+      }
+      return which;
     }
-    if (!doesKnowSkill(getSkillNum(which))) {
-      sendTo("You don't know that spell!\n\r");
-      return TYPE_UNDEFINED;
-    }
-    *arg = '\0';
-    return which;
-  } else {
-    if (!spaces) 
-      n = arg;
-    else {
-      // Parse back until we hit our space
-      for (; !isspace(*n); n--);
-      *n = '\0';
-      n++;
-    }
-    if (((which = searchForSpellNum(arg, EXACT_YES)) <= TYPE_UNDEFINED) && 
-        ((which = searchForSpellNum(arg, EXACT_NO)) <= TYPE_UNDEFINED)) {
-      sendTo("No such spell exists.\n\r");
-      return TYPE_UNDEFINED;
-    }
-    if (discArray[which]->typ != SPELL_MAGE && discArray[which]->typ != SPELL_SHAMAN) {
-      sendTo("That's not a magic spell!\n\r");
-      return TYPE_UNDEFINED;
-    }
-    if (!doesKnowSkill(getSkillNum(which))) {
-      sendTo("You don't know that spell!\n\r");
-      return TYPE_UNDEFINED;
-    }
-    strcpy(arg,n);
-    return which;
+    return TYPE_UNDEFINED;
+  };
+
+  spellNumT which = findSpellByName(args);
+  if (which != TYPE_UNDEFINED)
+    return std::make_tuple(which, "");
+
+  if (args.words().size() > 1) {
+    which = findSpellByName(args.dropLastWord());
+    if (which != TYPE_UNDEFINED)
+      return std::make_tuple(which, args.lastWord());
   }
+
+  sendTo("No such spell exists.\n\r");
+  return std::make_tuple(TYPE_UNDEFINED, "");
 }
 
 int TBeing::preCastCheck()
@@ -1104,9 +801,6 @@ int TBeing::preCastCheck()
     } else if (hasClass(CLASS_THIEF)) {
       sendTo("Thieves can't cast spells!\n\r");
       return FALSE;
-    } else if (hasClass(CLASS_RANGER)) {
-      sendTo("Rangers can't cast spells!\n\r");
-      return FALSE;
     } else if (hasClass(CLASS_MONK)) {
       sendTo("Monks can't cast spells!\n\r");
       return FALSE;
@@ -1125,20 +819,14 @@ int TBeing::preCastCheck()
 // returns DELETE_THIS
 int TBeing::doCast(const char *argument)
 {
-  char arg[256];
-  spellNumT which;
-
   if(!preCastCheck())
     return FALSE;
-  
-  strncpy(arg, argument, cElements(arg));
-  arg[cElements(arg)-1] = '\0';
 
-  if((which=parseSpellNum(arg))==TYPE_UNDEFINED)
-    return FALSE;
+  auto [spell, target] = parseSpellNum(argument);
+  if (spell != TYPE_UNDEFINED)
+    return doDiscipline(spell, target);
 
-
-  return doDiscipline(which, arg);
+  return FALSE;
 }
 
 // finds the target indicated in n, for spell which and sets ret to it
@@ -1391,6 +1079,618 @@ int TBeing::preDiscCheck(spellNumT which)
   return TRUE;
 }
 
+namespace {
+  std::map<spellNumT, sstring> spellNumToName = {
+    { DAMAGE_RIPPED_OUT_HEART, "DAMAGE_RIPPED_OUT_HEART" },
+    { DAMAGE_DISEMBOWLED_VR, "DAMAGE_DISEMBOWLED_VR" },
+    { DAMAGE_NORMAL, "DAMAGE_NORMAL" },
+    { DAMAGE_CAVED_SKULL, "DAMAGE_CAVED_SKULL" },
+    { DAMAGE_BEHEADED, "DAMAGE_BEHEADED" },
+    { DAMAGE_DISEMBOWLED_HR, "DAMAGE_DISEMBOWLED_HR" },
+    { DAMAGE_STOMACH_WOUND, "DAMAGE_STOMACH_WOUND" },
+    { DAMAGE_HACKED, "DAMAGE_HACKED" },
+    { DAMAGE_IMPALE, "DAMAGE_IMPALE" },
+    { DAMAGE_STARVATION, "DAMAGE_STARVATION" },
+    { DAMAGE_FALL, "DAMAGE_FALL" },
+    { DAMAGE_HEMORRHAGE, "DAMAGE_HEMORRHAGE" },
+    { DAMAGE_DROWN, "DAMAGE_DROWN" },
+    { DAMAGE_DRAIN, "DAMAGE_DRAIN" },
+    { DAMAGE_DISRUPTION, "DAMAGE_DISRUPTION" },
+    { DAMAGE_SUFFOCATION, "DAMAGE_SUFFOCATION" },
+    { DAMAGE_RAMMED, "DAMAGE_RAMMED" },
+    { DAMAGE_WHIRLPOOL, "DAMAGE_WHIRLPOOL" },
+    { DAMAGE_ELECTRIC, "DAMAGE_ELECTRIC" },
+    { DAMAGE_ACID, "DAMAGE_ACID" },
+    { DAMAGE_GUST, "DAMAGE_GUST" },
+    { DAMAGE_EATTEN, "DAMAGE_EATTEN" },
+    { DAMAGE_KICK_HEAD, "DAMAGE_KICK_HEAD" },
+    { DAMAGE_KICK_SOLAR, "DAMAGE_KICK_SOLAR" },
+    { DAMAGE_HEADBUTT_THROAT, "DAMAGE_HEADBUTT_THROAT" },
+    { DAMAGE_HEADBUTT_BODY, "DAMAGE_HEADBUTT_BODY" },
+    { DAMAGE_HEADBUTT_CROTCH, "DAMAGE_HEADBUTT_CROTCH" },
+    { DAMAGE_HEADBUTT_LEG, "DAMAGE_HEADBUTT_LEG" },
+    { DAMAGE_HEADBUTT_FOOT, "DAMAGE_HEADBUTT_FOOT" },
+    { DAMAGE_HEADBUTT_JAW, "DAMAGE_HEADBUTT_JAW" },
+    { DAMAGE_TRAP_SLEEP, "DAMAGE_TRAP_SLEEP" },
+    { DAMAGE_TRAP_TELEPORT, "DAMAGE_TRAP_TELEPORT" },
+    { DAMAGE_TRAP_FIRE, "DAMAGE_TRAP_FIRE" },
+    { DAMAGE_TRAP_POISON, "DAMAGE_TRAP_POISON" },
+    { DAMAGE_TRAP_ACID, "DAMAGE_TRAP_ACID" },
+    { DAMAGE_TRAP_TNT, "DAMAGE_TRAP_TNT" },
+    { DAMAGE_TRAP_ENERGY, "DAMAGE_TRAP_ENERGY" },
+    { DAMAGE_TRAP_BLUNT, "DAMAGE_TRAP_BLUNT" },
+    { DAMAGE_TRAP_PIERCE, "DAMAGE_TRAP_PIERCE" },
+    { DAMAGE_TRAP_SLASH, "DAMAGE_TRAP_SLASH" },
+    { DAMAGE_TRAP_FROST, "DAMAGE_TRAP_FROST" },
+    { DAMAGE_TRAP_DISEASE, "DAMAGE_TRAP_DISEASE" },
+    { DAMAGE_ARROWS, "DAMAGE_ARROWS" },
+    { DAMAGE_FIRE, "DAMAGE_FIRE" },
+    { DAMAGE_FROST, "DAMAGE_FROST" },
+    { DAMAGE_HEADBUTT_SKULL, "DAMAGE_HEADBUTT_SKULL" },
+    { DAMAGE_COLLISION, "DAMAGE_COLLISION" },
+    { DAMAGE_KICK_SHIN, "DAMAGE_KICK_SHIN" },
+    { DAMAGE_KNEESTRIKE_FOOT, "DAMAGE_KNEESTRIKE_FOOT" },
+    { DAMAGE_KNEESTRIKE_SHIN, "DAMAGE_KNEESTRIKE_SHIN" },
+    { DAMAGE_KNEESTRIKE_KNEE, "DAMAGE_KNEESTRIKE_KNEE" },
+    { DAMAGE_KNEESTRIKE_THIGH, "DAMAGE_KNEESTRIKE_THIGH" },
+    { DAMAGE_KNEESTRIKE_CROTCH, "DAMAGE_KNEESTRIKE_CROTCH" },
+    { DAMAGE_KNEESTRIKE_SOLAR, "DAMAGE_KNEESTRIKE_SOLAR" },
+    { DAMAGE_KNEESTRIKE_CHIN, "DAMAGE_KNEESTRIKE_CHIN" },
+    { DAMAGE_KNEESTRIKE_FACE, "DAMAGE_KNEESTRIKE_FACE" },
+    { DAMAGE_KICK_SIDE, "DAMAGE_KICK_SIDE" },
+    { TYPE_UNDEFINED, "TYPE_UNDEFINED" },
+    { SPELL_GUST, "SPELL_GUST" },
+    { SPELL_SLING_SHOT, "SPELL_SLING_SHOT" },
+    { SPELL_GUSHER, "SPELL_GUSHER" },
+    { SPELL_HANDS_OF_FLAME, "SPELL_HANDS_OF_FLAME" },
+    { SPELL_MYSTIC_DARTS, "SPELL_MYSTIC_DARTS" },
+    { SPELL_FLARE, "SPELL_FLARE" },
+    { SPELL_SORCERERS_GLOBE, "SPELL_SORCERERS_GLOBE" },
+    { SPELL_FAERIE_FIRE, "SPELL_FAERIE_FIRE" },
+    { SPELL_ILLUMINATE, "SPELL_ILLUMINATE" },
+    { SPELL_DETECT_MAGIC, "SPELL_DETECT_MAGIC" },
+    { SPELL_STUNNING_ARROW, "SPELL_STUNNING_ARROW" },
+    { SPELL_MATERIALIZE, "SPELL_MATERIALIZE" },
+    { SPELL_PROTECTION_FROM_EARTH, "SPELL_PROTECTION_FROM_EARTH" },
+    { SPELL_PROTECTION_FROM_AIR, "SPELL_PROTECTION_FROM_AIR" },
+    { SPELL_PROTECTION_FROM_FIRE, "SPELL_PROTECTION_FROM_FIRE" },
+    { SPELL_PROTECTION_FROM_WATER, "SPELL_PROTECTION_FROM_WATER" },
+    { SPELL_PROTECTION_FROM_ELEMENTS, "SPELL_PROTECTION_FROM_ELEMENTS" },
+    { SPELL_PEBBLE_SPRAY, "SPELL_PEBBLE_SPRAY" },
+    { SPELL_ARCTIC_BLAST, "SPELL_ARCTIC_BLAST" },
+    { SPELL_COLOR_SPRAY, "SPELL_COLOR_SPRAY" },
+    { SPELL_INFRAVISION, "SPELL_INFRAVISION" },
+    { SPELL_IDENTIFY, "SPELL_IDENTIFY" },
+    { SPELL_POWERSTONE, "SPELL_POWERSTONE" },
+    { SPELL_FAERIE_FOG, "SPELL_FAERIE_FOG" },
+    { SPELL_TELEPORT, "SPELL_TELEPORT" },
+    { SPELL_SENSE_LIFE, "SPELL_SENSE_LIFE" },
+    { SPELL_CALM, "SPELL_CALM" },
+    { SPELL_ACCELERATE, "SPELL_ACCELERATE" },
+    { SPELL_DUST_STORM, "SPELL_DUST_STORM" },
+    { SPELL_LEVITATE, "SPELL_LEVITATE" },
+    { SPELL_FEATHERY_DESCENT, "SPELL_FEATHERY_DESCENT" },
+    { SPELL_STEALTH, "SPELL_STEALTH" },
+    { SPELL_GRANITE_FISTS, "SPELL_GRANITE_FISTS" },
+    { SPELL_ICY_GRIP, "SPELL_ICY_GRIP" },
+    { SPELL_GILLS_OF_FLESH, "SPELL_GILLS_OF_FLESH" },
+    { SPELL_TELEPATHY, "SPELL_TELEPATHY" },
+    { SPELL_FEAR, "SPELL_FEAR" },
+    { SPELL_SLUMBER, "SPELL_SLUMBER" },
+    { SPELL_CONJURE_EARTH, "SPELL_CONJURE_EARTH" },
+    { SPELL_CONJURE_AIR, "SPELL_CONJURE_AIR" },
+    { SPELL_CONJURE_FIRE, "SPELL_CONJURE_FIRE" },
+    { SPELL_CONJURE_WATER, "SPELL_CONJURE_WATER" },
+    { SPELL_DISPEL_MAGIC, "SPELL_DISPEL_MAGIC" },
+    { SPELL_ENHANCE_WEAPON, "SPELL_ENHANCE_WEAPON" },
+    { SPELL_GALVANIZE, "SPELL_GALVANIZE" },
+    { SPELL_DETECT_INVISIBLE, "SPELL_DETECT_INVISIBLE" },
+    { SPELL_DISPEL_INVISIBLE, "SPELL_DISPEL_INVISIBLE" },
+    { SPELL_TORNADO, "SPELL_TORNADO" },
+    { SPELL_SAND_BLAST, "SPELL_SAND_BLAST" },
+    { SPELL_ICE_STORM, "SPELL_ICE_STORM" },
+    { SPELL_BLAST_OF_FURY, "SPELL_BLAST_OF_FURY" },
+    { SPELL_ACID_BLAST, "SPELL_ACID_BLAST" },
+    { SPELL_FIREBALL, "SPELL_FIREBALL" },
+    { SPELL_FARLOOK, "SPELL_FARLOOK" },
+    { SPELL_FALCON_WINGS, "SPELL_FALCON_WINGS" },
+    { SPELL_INVISIBILITY, "SPELL_INVISIBILITY" },
+    { SPELL_ENSORCER, "SPELL_ENSORCER" },
+    { SPELL_EYES_OF_FERTUMAN, "SPELL_EYES_OF_FERTUMAN" },
+    { SPELL_COPY, "SPELL_COPY" },
+    { SPELL_HASTE, "SPELL_HASTE" },
+    { SPELL_IMMOBILIZE, "SPELL_IMMOBILIZE" },
+    { SPELL_SUFFOCATE, "SPELL_SUFFOCATE" },
+    { SPELL_FLY, "SPELL_FLY" },
+    { SPELL_ANTIGRAVITY, "SPELL_ANTIGRAVITY" },
+    { SPELL_DIVINATION, "SPELL_DIVINATION" },
+    { SPELL_SHATTER, "SPELL_SHATTER" },
+    { SPELL_SPONTANEOUS_GENERATION, "SPELL_SPONTANEOUS_GENERATION" },
+    { SPELL_METEOR_SWARM, "SPELL_METEOR_SWARM" },
+    { SPELL_LAVA_STREAM, "SPELL_LAVA_STREAM" },
+    { SPELL_DEATH_MIST, "SPELL_DEATH_MIST" },
+    { SPELL_STONE_SKIN, "SPELL_STONE_SKIN" },
+    { SPELL_TRAIL_SEEK, "SPELL_TRAIL_SEEK" },
+    { SPELL_INFERNO, "SPELL_INFERNO" },
+    { SPELL_HELLFIRE, "SPELL_HELLFIRE" },
+    { SPELL_FLAMING_FLESH, "SPELL_FLAMING_FLESH" },
+    { SPELL_FLAMING_SWORD, "SPELL_FLAMING_SWORD" },
+    { SPELL_ENERGY_DRAIN, "SPELL_ENERGY_DRAIN" },
+    { SPELL_ATOMIZE, "SPELL_ATOMIZE" },
+    { SPELL_ANIMATE, "SPELL_ANIMATE" },
+    { SPELL_BIND, "SPELL_BIND" },
+    { SPELL_FUMBLE, "SPELL_FUMBLE" },
+    { SPELL_TRUE_SIGHT, "SPELL_TRUE_SIGHT" },
+    { SPELL_CLOUD_OF_CONCEALMENT, "SPELL_CLOUD_OF_CONCEALMENT" },
+    { SPELL_POLYMORPH, "SPELL_POLYMORPH" },
+    { SPELL_SILENCE, "SPELL_SILENCE" },
+    { SPELL_WATERY_GRAVE, "SPELL_WATERY_GRAVE" },
+    { SPELL_TSUNAMI, "SPELL_TSUNAMI" },
+    { SPELL_BREATH_OF_SARAHAGE, "SPELL_BREATH_OF_SARAHAGE" },
+    { SPELL_PLASMA_MIRROR, "SPELL_PLASMA_MIRROR" },
+    { SPELL_GARMULS_TAIL, "SPELL_GARMULS_TAIL" },
+    { SPELL_ETHER_GATE, "SPELL_ETHER_GATE" },
+    { SPELL_KNOT, "SPELL_KNOT" },
+    { SPELL_HEAL_LIGHT, "SPELL_HEAL_LIGHT" },
+    { SPELL_HARM_LIGHT, "SPELL_HARM_LIGHT" },
+    { SPELL_CREATE_FOOD, "SPELL_CREATE_FOOD" },
+    { SPELL_CREATE_WATER, "SPELL_CREATE_WATER" },
+    { SPELL_ARMOR, "SPELL_ARMOR" },
+    { SPELL_BLESS, "SPELL_BLESS" },
+    { SPELL_CLOT, "SPELL_CLOT" },
+    { SPELL_RAIN_BRIMSTONE, "SPELL_RAIN_BRIMSTONE" },
+    { SPELL_HEAL_SERIOUS, "SPELL_HEAL_SERIOUS" },
+    { SPELL_HARM_SERIOUS, "SPELL_HARM_SERIOUS" },
+    { SPELL_STERILIZE, "SPELL_STERILIZE" },
+    { SPELL_EXPEL, "SPELL_EXPEL" },
+    { SPELL_CURE_DISEASE, "SPELL_CURE_DISEASE" },
+    { SPELL_CURSE, "SPELL_CURSE" },
+    { SPELL_REMOVE_CURSE, "SPELL_REMOVE_CURSE" },
+    { SPELL_CURE_POISON, "SPELL_CURE_POISON" },
+    { SPELL_HEAL_CRITICAL, "SPELL_HEAL_CRITICAL" },
+    { SPELL_SALVE, "SPELL_SALVE" },
+    { SPELL_POISON, "SPELL_POISON" },
+    { SPELL_HARM_CRITICAL, "SPELL_HARM_CRITICAL" },
+    { SPELL_INFECT, "SPELL_INFECT" },
+    { SPELL_REFRESH, "SPELL_REFRESH" },
+    { SPELL_NUMB, "SPELL_NUMB" },
+    { SPELL_DISEASE, "SPELL_DISEASE" },
+    { SPELL_FLAMESTRIKE, "SPELL_FLAMESTRIKE" },
+    { SPELL_PLAGUE_LOCUSTS, "SPELL_PLAGUE_LOCUSTS" },
+    { SPELL_CURE_BLINDNESS, "SPELL_CURE_BLINDNESS" },
+    { SPELL_SUMMON, "SPELL_SUMMON" },
+    { SPELL_HEAL, "SPELL_HEAL" },
+    { SPELL_PARALYZE_LIMB, "SPELL_PARALYZE_LIMB" },
+    { SPELL_WORD_OF_RECALL, "SPELL_WORD_OF_RECALL" },
+    { SPELL_HARM, "SPELL_HARM" },
+    { SPELL_BLINDNESS, "SPELL_BLINDNESS" },
+    { SPELL_PILLAR_SALT, "SPELL_PILLAR_SALT" },
+    { SPELL_EARTHQUAKE, "SPELL_EARTHQUAKE" },
+    { SPELL_CALL_LIGHTNING, "SPELL_CALL_LIGHTNING" },
+    { SPELL_SPONTANEOUS_COMBUST, "SPELL_SPONTANEOUS_COMBUST" },
+    { SPELL_BLEED, "SPELL_BLEED" },
+    { SPELL_PARALYZE, "SPELL_PARALYZE" },
+    { SPELL_BONE_BREAKER, "SPELL_BONE_BREAKER" },
+    { SPELL_WITHER_LIMB, "SPELL_WITHER_LIMB" },
+    { SPELL_SANCTUARY, "SPELL_SANCTUARY" },
+    { SPELL_CURE_PARALYSIS, "SPELL_CURE_PARALYSIS" },
+    { SPELL_SECOND_WIND, "SPELL_SECOND_WIND" },
+    { SPELL_HEROES_FEAST, "SPELL_HEROES_FEAST" },
+    { SPELL_ASTRAL_WALK, "SPELL_ASTRAL_WALK" },
+    { SPELL_PORTAL, "SPELL_PORTAL" },
+    { SPELL_HEAL_FULL, "SPELL_HEAL_FULL" },
+    { SPELL_HEAL_CRITICAL_SPRAY, "SPELL_HEAL_CRITICAL_SPRAY" },
+    { SPELL_HEAL_SPRAY, "SPELL_HEAL_SPRAY" },
+    { SPELL_HEAL_FULL_SPRAY, "SPELL_HEAL_FULL_SPRAY" },
+    { SPELL_RESTORE_LIMB, "SPELL_RESTORE_LIMB" },
+    { SPELL_KNIT_BONE, "SPELL_KNIT_BONE" },
+    { SPELL_RELIVE, "SPELL_RELIVE" },
+    { SPELL_FLATULENCE, "SPELL_FLATULENCE" },
+    { SPELL_ENLIVEN, "SPELL_ENLIVEN" },
+    { SPELL_BLOOD_BOIL, "SPELL_BLOOD_BOIL" },
+    { SPELL_STUPIDITY, "SPELL_STUPIDITY" },
+    { SPELL_CELERITE, "SPELL_CELERITE" },
+    { SPELL_CREATE_WOOD_GOLEM, "SPELL_CREATE_WOOD_GOLEM" },
+    { SPELL_CREATE_ROCK_GOLEM, "SPELL_CREATE_ROCK_GOLEM" },
+    { SPELL_CREATE_IRON_GOLEM, "SPELL_CREATE_IRON_GOLEM" },
+    { SPELL_CREATE_DIAMOND_GOLEM, "SPELL_CREATE_DIAMOND_GOLEM" },
+    { SPELL_ENTHRALL_SPECTRE, "SPELL_ENTHRALL_SPECTRE" },
+    { SPELL_ENTHRALL_GHAST, "SPELL_ENTHRALL_GHAST" },
+    { SPELL_ENTHRALL_GHOUL, "SPELL_ENTHRALL_GHOUL" },
+    { SPELL_ENTHRALL_DEMON, "SPELL_ENTHRALL_DEMON" },
+    { SPELL_DEATHWAVE, "SPELL_DEATHWAVE" },
+    { SPELL_DISTORT, "SPELL_DISTORT" },
+    { SPELL_SOUL_TWIST, "SPELL_SOUL_TWIST" },
+    { SPELL_SQUISH, "SPELL_SQUISH" },
+    { SPELL_CARDIAC_STRESS, "SPELL_CARDIAC_STRESS" },
+    { SPELL_LEGBA, "SPELL_LEGBA" },
+    { SPELL_DJALLA, "SPELL_DJALLA" },
+    { SPELL_SENSE_LIFE_SHAMAN, "SPELL_SENSE_LIFE_SHAMAN" },
+    { SPELL_DETECT_SHADOW, "SPELL_DETECT_SHADOW" },
+    { SPELL_RAZE, "SPELL_RAZE" },
+    { SPELL_INTIMIDATE, "SPELL_INTIMIDATE" },
+    { SPELL_ROMBLER, "SPELL_ROMBLER" },
+    { SPELL_CHRISM, "SPELL_CHRISM" },
+    { SPELL_CHEVAL, "SPELL_CHEVAL" },
+    { SPELL_HYPNOSIS, "SPELL_HYPNOSIS" },
+    { SPELL_LICH_TOUCH, "SPELL_LICH_TOUCH" },
+    { SPELL_SHADOW_WALK, "SPELL_SHADOW_WALK" },
+    { SPELL_CLARITY, "SPELL_CLARITY" },
+    { SPELL_AQUALUNG, "SPELL_AQUALUNG" },
+    { SPELL_AQUATIC_BLAST, "SPELL_AQUATIC_BLAST" },
+    { SPELL_THORNFLESH, "SPELL_THORNFLESH" },
+    { SPELL_SHIELD_OF_MISTS, "SPELL_SHIELD_OF_MISTS" },
+    { SPELL_DANCING_BONES, "SPELL_DANCING_BONES" },
+    { SPELL_CONTROL_UNDEAD, "SPELL_CONTROL_UNDEAD" },
+    { SPELL_RESURRECTION, "SPELL_RESURRECTION" },
+    { SPELL_VOODOO, "SPELL_VOODOO" },
+    { SPELL_VAMPIRIC_TOUCH, "SPELL_VAMPIRIC_TOUCH" },
+    { SPELL_LIFE_LEECH, "SPELL_LIFE_LEECH" },
+    { SPELL_CHASE_SPIRIT, "SPELL_CHASE_SPIRIT" },
+    { SPELL_CLEANSE, "SPELL_CLEANSE" },
+    { SPELL_HEALING_GRASP, "SPELL_HEALING_GRASP" },
+    { SPELL_EMBALM, "SPELL_EMBALM" },
+    { SPELL_ROOT_CONTROL, "SPELL_ROOT_CONTROL" },
+    { SPELL_LIVING_VINES, "SPELL_LIVING_VINES" },
+    { SPELL_STICKS_TO_SNAKES, "SPELL_STICKS_TO_SNAKES" },
+    { SPELL_STORMY_SKIES, "SPELL_STORMY_SKIES" },
+    { SPELL_TREE_WALK, "SPELL_TREE_WALK" },
+    { SPELL_SHAPESHIFT, "SPELL_SHAPESHIFT" },
+    { SPELL_EARTHMAW, "SPELL_EARTHMAW" },
+    { SPELL_CREEPING_DOOM, "SPELL_CREEPING_DOOM" },
+    { SPELL_FERAL_WRATH, "SPELL_FERAL_WRATH" },
+    { SPELL_SKY_SPIRIT, "SPELL_SKY_SPIRIT" },
+    { SPELL_HEAL_LIGHT_DEIKHAN, "SPELL_HEAL_LIGHT_DEIKHAN" },
+    { SPELL_ARMOR_DEIKHAN, "SPELL_ARMOR_DEIKHAN" },
+    { SPELL_BLESS_DEIKHAN, "SPELL_BLESS_DEIKHAN" },
+    { SPELL_EXPEL_DEIKHAN, "SPELL_EXPEL_DEIKHAN" },
+    { SPELL_CLOT_DEIKHAN, "SPELL_CLOT_DEIKHAN" },
+    { SPELL_STERILIZE_DEIKHAN, "SPELL_STERILIZE_DEIKHAN" },
+    { SPELL_REMOVE_CURSE_DEIKHAN, "SPELL_REMOVE_CURSE_DEIKHAN" },
+    { SPELL_CURSE_DEIKHAN, "SPELL_CURSE_DEIKHAN" },
+    { SPELL_INFECT_DEIKHAN, "SPELL_INFECT_DEIKHAN" },
+    { SPELL_CURE_DISEASE_DEIKHAN, "SPELL_CURE_DISEASE_DEIKHAN" },
+    { SPELL_CREATE_FOOD_DEIKHAN, "SPELL_CREATE_FOOD_DEIKHAN" },
+    { SPELL_CREATE_WATER_DEIKHAN, "SPELL_CREATE_WATER_DEIKHAN" },
+    { SPELL_HEAL_SERIOUS_DEIKHAN, "SPELL_HEAL_SERIOUS_DEIKHAN" },
+    { SPELL_CURE_POISON_DEIKHAN, "SPELL_CURE_POISON_DEIKHAN" },
+    { SPELL_POISON_DEIKHAN, "SPELL_POISON_DEIKHAN" },
+    { SPELL_HARM_SERIOUS_DEIKHAN, "SPELL_HARM_SERIOUS_DEIKHAN" },
+    { SPELL_HEAL_CRITICAL_DEIKHAN, "SPELL_HEAL_CRITICAL_DEIKHAN" },
+    { SPELL_HARM_CRITICAL_DEIKHAN, "SPELL_HARM_CRITICAL_DEIKHAN" },
+    { SPELL_HARM_LIGHT_DEIKHAN, "SPELL_HARM_LIGHT_DEIKHAN" },
+    { SPELL_HEROES_FEAST_DEIKHAN, "SPELL_HEROES_FEAST_DEIKHAN" },
+    { SPELL_REFRESH_DEIKHAN, "SPELL_REFRESH_DEIKHAN" },
+    { SPELL_SYNOSTODWEOMER, "SPELL_SYNOSTODWEOMER" },
+    { SPELL_SALVE_DEIKHAN, "SPELL_SALVE_DEIKHAN" },
+    { SPELL_HARM_DEIKHAN, "SPELL_HARM_DEIKHAN" },
+    { SPELL_NUMB_DEIKHAN, "SPELL_NUMB_DEIKHAN" },
+    { SKILL_KICK, "SKILL_KICK" },
+    { SKILL_BASH, "SKILL_BASH" },
+    { SKILL_TRIP, "SKILL_TRIP" },
+    { SKILL_HEADBUTT, "SKILL_HEADBUTT" },
+    { SKILL_RESCUE, "SKILL_RESCUE" },
+    { SKILL_BLACKSMITHING, "SKILL_BLACKSMITHING" },
+    { SKILL_DISARM, "SKILL_DISARM" },
+    { SKILL_PARRY_WARRIOR, "SKILL_PARRY_WARRIOR" },
+    { SKILL_BERSERK, "SKILL_BERSERK" },
+    { SKILL_SWITCH_OPP, "SKILL_SWITCH_OPP" },
+    { SKILL_BODYSLAM, "SKILL_BODYSLAM" },
+    { SKILL_SPIN, "SKILL_SPIN" },
+    { SKILL_KNEESTRIKE, "SKILL_KNEESTRIKE" },
+    { SKILL_SHOVE, "SKILL_SHOVE" },
+    { SKILL_RETREAT, "SKILL_RETREAT" },
+    { SKILL_GRAPPLE, "SKILL_GRAPPLE" },
+    { SKILL_STOMP, "SKILL_STOMP" },
+    { SKILL_BRAWL_AVOIDANCE, "SKILL_BRAWL_AVOIDANCE" },
+    { SKILL_DOORBASH, "SKILL_DOORBASH" },
+    { SKILL_DEATHSTROKE, "SKILL_DEATHSTROKE" },
+    { SKILL_DUAL_WIELD, "SKILL_DUAL_WIELD" },
+    { SKILL_POWERMOVE, "SKILL_POWERMOVE" },
+    { SKILL_TRANCE_OF_BLADES, "SKILL_TRANCE_OF_BLADES" },
+    { SKILL_WEAPON_RETENTION, "SKILL_WEAPON_RETENTION" },
+    { SKILL_BLACKSMITHING_ADVANCED, "SKILL_BLACKSMITHING_ADVANCED" },
+    { SKILL_CLOSE_QUARTERS_FIGHTING, "SKILL_CLOSE_QUARTERS_FIGHTING" },
+    { SKILL_RIPOSTE, "SKILL_RIPOSTE" },
+    { SKILL_TAUNT, "SKILL_TAUNT" },
+    { SKILL_SCRIBE, "SKILL_SCRIBE" },
+    { SKILL_REPAIR_MAGE, "SKILL_REPAIR_MAGE" },
+    { SKILL_REPAIR_CLERIC, "SKILL_REPAIR_CLERIC" },
+    { SKILL_TRANSFORM_LIMB, "SKILL_TRANSFORM_LIMB" },
+    { SKILL_BEAST_SOOTHER, "SKILL_BEAST_SOOTHER" },
+    { SKILL_BEFRIEND_BEAST, "SKILL_BEFRIEND_BEAST" },
+    { SKILL_TRANSFIX, "SKILL_TRANSFIX" },
+    { SKILL_BUTCHER, "SKILL_BUTCHER" },
+    { SKILL_BEAST_SUMMON, "SKILL_BEAST_SUMMON" },
+    { SKILL_BARKSKIN, "SKILL_BARKSKIN" },
+    { SKILL_BEAST_CHARM, "SKILL_BEAST_CHARM" },
+    { SKILL_APPLY_HERBS, "SKILL_APPLY_HERBS" },
+    { SKILL_CHIVALRY, "SKILL_CHIVALRY" },
+    { SKILL_BASH_DEIKHAN, "SKILL_BASH_DEIKHAN" },
+    { SKILL_RESCUE_DEIKHAN, "SKILL_RESCUE_DEIKHAN" },
+    { SKILL_DIVINE_GRACE, "SKILL_DIVINE_GRACE" },
+    { SKILL_DIVINE_RESCUE, "SKILL_DIVINE_RESCUE" },
+    { SKILL_GUARDIANS_LIGHT, "SKILL_GUARDIANS_LIGHT" },
+    { SKILL_SMITE, "SKILL_SMITE" },
+    { SKILL_CHARGE, "SKILL_CHARGE" },
+    { SKILL_DISARM_DEIKHAN, "SKILL_DISARM_DEIKHAN" },
+    { SKILL_SWITCH_DEIKHAN, "SKILL_SWITCH_DEIKHAN" },
+    { SKILL_RETREAT_DEIKHAN, "SKILL_RETREAT_DEIKHAN" },
+    { SKILL_SHOVE_DEIKHAN, "SKILL_SHOVE_DEIKHAN" },
+    { SKILL_2H_SPEC_DEIKHAN, "SKILL_2H_SPEC_DEIKHAN" },
+    { SKILL_RIDE, "SKILL_RIDE" },
+    { SKILL_CALM_MOUNT, "SKILL_CALM_MOUNT" },
+    { SKILL_TRAIN_MOUNT, "SKILL_TRAIN_MOUNT" },
+    { SKILL_ADVANCED_RIDING, "SKILL_ADVANCED_RIDING" },
+    { SKILL_RIDE_DOMESTIC, "SKILL_RIDE_DOMESTIC" },
+    { SKILL_RIDE_NONDOMESTIC, "SKILL_RIDE_NONDOMESTIC" },
+    { SKILL_RIDE_WINGED, "SKILL_RIDE_WINGED" },
+    { SKILL_RIDE_EXOTIC, "SKILL_RIDE_EXOTIC" },
+    { SKILL_LAY_HANDS, "SKILL_LAY_HANDS" },
+    { SKILL_REPAIR_DEIKHAN, "SKILL_REPAIR_DEIKHAN" },
+    { SKILL_AURA_MIGHT, "SKILL_AURA_MIGHT" },
+    { SPELL_AURA_MIGHT, "SPELL_AURA_MIGHT" },
+    { SKILL_AURA_REGENERATION, "SKILL_AURA_REGENERATION" },
+    { SPELL_AURA_REGENERATION, "SPELL_AURA_REGENERATION" },
+    { SKILL_AURA_GUARDIAN, "SKILL_AURA_GUARDIAN" },
+    { SPELL_AURA_GUARDIAN, "SPELL_AURA_GUARDIAN" },
+    { SKILL_AURA_VENGEANCE, "SKILL_AURA_VENGEANCE" },
+    { SPELL_AURA_VENGEANCE, "SPELL_AURA_VENGEANCE" },
+    { SKILL_AURA_ABSOLUTION, "SKILL_AURA_ABSOLUTION" },
+    { SPELL_AURA_ABSOLUTION, "SPELL_AURA_ABSOLUTION" },
+    { SKILL_YOGINSA, "SKILL_YOGINSA" },
+    { SKILL_CINTAI, "SKILL_CINTAI" },
+    { SKILL_OOMLAT, "SKILL_OOMLAT" },
+    { SKILL_KICK_MONK, "SKILL_KICK_MONK" },
+    { SKILL_ADVANCED_KICKING, "SKILL_ADVANCED_KICKING" },
+    { SKILL_DISARM_MONK, "SKILL_DISARM_MONK" },
+    { SKILL_GROUNDFIGHTING, "SKILL_GROUNDFIGHTING" },
+    { SKILL_CHOP, "SKILL_CHOP" },
+    { SKILL_SPRINGLEAP, "SKILL_SPRINGLEAP" },
+    { SKILL_DUFALI, "SKILL_DUFALI" },
+    { SKILL_RETREAT_MONK, "SKILL_RETREAT_MONK" },
+    { SKILL_SNOFALTE, "SKILL_SNOFALTE" },
+    { SKILL_COUNTER_MOVE, "SKILL_COUNTER_MOVE" },
+    { SKILL_SWITCH_MONK, "SKILL_SWITCH_MONK" },
+    { SKILL_JIRIN, "SKILL_JIRIN" },
+    { SKILL_KUBO, "SKILL_KUBO" },
+    { SKILL_CATFALL, "SKILL_CATFALL" },
+    { SKILL_WOHLIN, "SKILL_WOHLIN" },
+    { SKILL_VOPLAT, "SKILL_VOPLAT" },
+    { SKILL_BLINDFIGHTING, "SKILL_BLINDFIGHTING" },
+    { SKILL_CHI, "SKILL_CHI" },
+    { SKILL_QUIV_PALM, "SKILL_QUIV_PALM" },
+    { SKILL_CRIT_HIT, "SKILL_CRIT_HIT" },
+    { SKILL_FEIGN_DEATH, "SKILL_FEIGN_DEATH" },
+    { SKILL_BLUR, "SKILL_BLUR" },
+    { SKILL_HURL, "SKILL_HURL" },
+    { SKILL_SHOULDER_THROW, "SKILL_SHOULDER_THROW" },
+    { SKILL_IRON_FIST, "SKILL_IRON_FIST" },
+    { SKILL_IRON_FLESH, "SKILL_IRON_FLESH" },
+    { SKILL_IRON_SKIN, "SKILL_IRON_SKIN" },
+    { SKILL_IRON_BONES, "SKILL_IRON_BONES" },
+    { SKILL_IRON_MUSCLES, "SKILL_IRON_MUSCLES" },
+    { SKILL_IRON_LEGS, "SKILL_IRON_LEGS" },
+    { SKILL_IRON_WILL, "SKILL_IRON_WILL" },
+    { SKILL_REPAIR_MONK, "SKILL_REPAIR_MONK" },
+    { SKILL_CHAIN_ATTACK, "SKILL_CHAIN_ATTACK" },
+    { SKILL_CATLEAP, "SKILL_CATLEAP" },
+    { SKILL_DEFENESTRATE, "SKILL_DEFENESTRATE" },
+    { SKILL_BONEBREAK, "SKILL_BONEBREAK" },
+    { SKILL_SWINDLE, "SKILL_SWINDLE" },
+    { SKILL_SNEAK, "SKILL_SNEAK" },
+    { SKILL_STABBING, "SKILL_STABBING" },
+    { SKILL_RETREAT_THIEF, "SKILL_RETREAT_THIEF" },
+    { SKILL_KICK_THIEF, "SKILL_KICK_THIEF" },
+    { SKILL_PICK_LOCK, "SKILL_PICK_LOCK" },
+    { SKILL_BACKSTAB, "SKILL_BACKSTAB" },
+    { SKILL_THROATSLIT, "SKILL_THROATSLIT" },
+    { SKILL_SEARCH, "SKILL_SEARCH" },
+    { SKILL_SPY, "SKILL_SPY" },
+    { SKILL_SWITCH_THIEF, "SKILL_SWITCH_THIEF" },
+    { SKILL_STEAL, "SKILL_STEAL" },
+    { SKILL_DETECT_TRAP, "SKILL_DETECT_TRAP" },
+    { SKILL_SUBTERFUGE, "SKILL_SUBTERFUGE" },
+    { SKILL_DISARM_TRAP, "SKILL_DISARM_TRAP" },
+    { SKILL_CUDGEL, "SKILL_CUDGEL" },
+    { SKILL_HIDE, "SKILL_HIDE" },
+    { SKILL_POISON_WEAPON, "SKILL_POISON_WEAPON" },
+    { SKILL_DISGUISE, "SKILL_DISGUISE" },
+    { SKILL_DODGE_THIEF, "SKILL_DODGE_THIEF" },
+    { SKILL_GARROTTE, "SKILL_GARROTTE" },
+    { SKILL_SET_TRAP_CONT, "SKILL_SET_TRAP_CONT" },
+    { SKILL_SET_TRAP_DOOR, "SKILL_SET_TRAP_DOOR" },
+    { SKILL_SET_TRAP_MINE, "SKILL_SET_TRAP_MINE" },
+    { SKILL_SET_TRAP_GREN, "SKILL_SET_TRAP_GREN" },
+    { SKILL_SET_TRAP_ARROW, "SKILL_SET_TRAP_ARROW" },
+    { SKILL_DUAL_WIELD_THIEF, "SKILL_DUAL_WIELD_THIEF" },
+    { SKILL_DISARM_THIEF, "SKILL_DISARM_THIEF" },
+    { SKILL_COUNTER_STEAL, "SKILL_COUNTER_STEAL" },
+    { SKILL_REPAIR_THIEF, "SKILL_REPAIR_THIEF" },
+    { SKILL_PLANT, "SKILL_PLANT" },
+    { SKILL_CONCEALMENT, "SKILL_CONCEALMENT" },
+    { SKILL_TRACK, "SKILL_TRACK" },
+    { SKILL_RITUALISM, "SKILL_RITUALISM" },
+    { SKILL_SACRIFICE, "SKILL_SACRIFICE" },
+    { SKILL_BREW, "SKILL_BREW" },
+    { SKILL_TURN, "SKILL_TURN" },
+    { SKILL_REPAIR_SHAMAN, "SKILL_REPAIR_SHAMAN" },
+    { SKILL_PSITELEPATHY, "SKILL_PSITELEPATHY" },
+    { SKILL_TELE_SIGHT, "SKILL_TELE_SIGHT" },
+    { SKILL_TELE_VISION, "SKILL_TELE_VISION" },
+    { SKILL_MIND_FOCUS, "SKILL_MIND_FOCUS" },
+    { SKILL_PSI_BLAST, "SKILL_PSI_BLAST" },
+    { SKILL_MIND_THRUST, "SKILL_MIND_THRUST" },
+    { SKILL_PSYCHIC_CRUSH, "SKILL_PSYCHIC_CRUSH" },
+    { SKILL_KINETIC_WAVE, "SKILL_KINETIC_WAVE" },
+    { SKILL_MIND_PRESERVATION, "SKILL_MIND_PRESERVATION" },
+    { SKILL_TELEKINESIS, "SKILL_TELEKINESIS" },
+    { SKILL_PSIDRAIN, "SKILL_PSIDRAIN" },
+    { SKILL_SIGN, "SKILL_SIGN" },
+    { SKILL_SWIM, "SKILL_SWIM" },
+    { SKILL_CONS_UNDEAD, "SKILL_CONS_UNDEAD" },
+    { SKILL_CONS_VEGGIE, "SKILL_CONS_VEGGIE" },
+    { SKILL_CONS_DEMON, "SKILL_CONS_DEMON" },
+    { SKILL_CONS_ANIMAL, "SKILL_CONS_ANIMAL" },
+    { SKILL_CONS_REPTILE, "SKILL_CONS_REPTILE" },
+    { SKILL_CONS_PEOPLE, "SKILL_CONS_PEOPLE" },
+    { SKILL_CONS_GIANT, "SKILL_CONS_GIANT" },
+    { SKILL_CONS_OTHER, "SKILL_CONS_OTHER" },
+    { SKILL_READ_MAGIC, "SKILL_READ_MAGIC" },
+    { SKILL_BANDAGE, "SKILL_BANDAGE" },
+    { SKILL_CLIMB, "SKILL_CLIMB" },
+    { SKILL_FAST_HEAL, "SKILL_FAST_HEAL" },
+    { SKILL_EVALUATE, "SKILL_EVALUATE" },
+    { SKILL_TACTICS, "SKILL_TACTICS" },
+    { SKILL_DISSECT, "SKILL_DISSECT" },
+    { SKILL_DEFENSE, "SKILL_DEFENSE" },
+    { SKILL_OFFENSE, "SKILL_OFFENSE" },
+    { SKILL_WHITTLE, "SKILL_WHITTLE" },
+    { SKILL_WIZARDRY, "SKILL_WIZARDRY" },
+    { SKILL_MEDITATE, "SKILL_MEDITATE" },
+    { SKILL_DEVOTION, "SKILL_DEVOTION" },
+    { SKILL_PENANCE, "SKILL_PENANCE" },
+    { SKILL_SLASH_PROF, "SKILL_SLASH_PROF" },
+    { SKILL_PIERCE_PROF, "SKILL_PIERCE_PROF" },
+    { SKILL_BLUNT_PROF, "SKILL_BLUNT_PROF" },
+    { SKILL_BAREHAND_PROF, "SKILL_BAREHAND_PROF" },
+    { SKILL_SLASH_SPEC, "SKILL_SLASH_SPEC" },
+    { SKILL_BLUNT_SPEC, "SKILL_BLUNT_SPEC" },
+    { SKILL_PIERCE_SPEC, "SKILL_PIERCE_SPEC" },
+    { SKILL_BAREHAND_SPEC, "SKILL_BAREHAND_SPEC" },
+    { SKILL_RANGED_SPEC, "SKILL_RANGED_SPEC" },
+    { SKILL_RANGED_PROF, "SKILL_RANGED_PROF" },
+    { SKILL_FAST_LOAD, "SKILL_FAST_LOAD" },
+    { SKILL_SHARPEN, "SKILL_SHARPEN" },
+    { SKILL_DULL, "SKILL_DULL" },
+    { SKILL_ATTUNE, "SKILL_ATTUNE" },
+    { SKILL_STAVECHARGE, "SKILL_STAVECHARGE" },
+    { SKILL_ALCOHOLISM, "SKILL_ALCOHOLISM" },
+    { SKILL_FISHING, "SKILL_FISHING" },
+    { SKILL_LOGGING, "SKILL_LOGGING" },
+    { SKILL_ADVANCED_DEFENSE, "SKILL_ADVANCED_DEFENSE" },
+    { SKILL_FOCUSED_AVOIDANCE, "SKILL_FOCUSED_AVOIDANCE" },
+    { SKILL_TOUGHNESS, "SKILL_TOUGHNESS" },
+    { SKILL_MANA, "SKILL_MANA" },
+    { SKILL_MEND, "SKILL_MEND" },
+    { SKILL_FORAGE, "SKILL_FORAGE" },
+    { SKILL_SEEKWATER, "SKILL_SEEKWATER" },
+    { SKILL_SKIN, "SKILL_SKIN" },
+    { SKILL_DIVINATION, "SKILL_DIVINATION" },
+    { SKILL_ENCAMP, "SKILL_ENCAMP" },
+    { SKILL_HIKING, "SKILL_HIKING" },
+    { SKILL_FISHLORE, "SKILL_FISHLORE" },
+    { SKILL_GUTTER_CANT, "SKILL_GUTTER_CANT" },
+    { SKILL_GNOLL_JARGON, "SKILL_GNOLL_JARGON" },
+    { SKILL_TROGLODYTE_PIDGIN, "SKILL_TROGLODYTE_PIDGIN" },
+    { SKILL_TROLLISH, "SKILL_TROLLISH" },
+    { SKILL_BULLYWUGCROAK, "SKILL_BULLYWUGCROAK" },
+    { SKILL_AVIAN, "SKILL_AVIAN" },
+    { SKILL_FISHBURBLE, "SKILL_FISHBURBLE" },
+    { SKILL_ADVANCED_OFFENSE, "SKILL_ADVANCED_OFFENSE" },
+    { SKILL_INEVITABILITY, "SKILL_INEVITABILITY" },
+    { MAX_SKILL, "MAX_SKILL" },
+    { TYPE_HIT, "TYPE_HIT" },
+    { TYPE_BLUDGEON, "TYPE_BLUDGEON" },
+    { TYPE_WHIP, "TYPE_WHIP" },
+    { TYPE_CRUSH, "TYPE_CRUSH" },
+    { TYPE_SMASH, "TYPE_SMASH" },
+    { TYPE_SMITE, "TYPE_SMITE" },
+    { TYPE_PUMMEL, "TYPE_PUMMEL" },
+    { TYPE_FLAIL, "TYPE_FLAIL" },
+    { TYPE_BEAT, "TYPE_BEAT" },
+    { TYPE_THRASH, "TYPE_THRASH" },
+    { TYPE_THUMP, "TYPE_THUMP" },
+    { TYPE_WALLOP, "TYPE_WALLOP" },
+    { TYPE_BATTER, "TYPE_BATTER" },
+    { TYPE_STRIKE, "TYPE_STRIKE" },
+    { TYPE_CLUB, "TYPE_CLUB" },
+    { TYPE_POUND, "TYPE_POUND" },
+    { TYPE_PIERCE, "TYPE_PIERCE" },
+    { TYPE_BITE, "TYPE_BITE" },
+    { TYPE_STING, "TYPE_STING" },
+    { TYPE_STAB, "TYPE_STAB" },
+    { TYPE_THRUST, "TYPE_THRUST" },
+    { TYPE_SPEAR, "TYPE_SPEAR" },
+    { TYPE_BEAK, "TYPE_BEAK" },
+    { TYPE_SLASH, "TYPE_SLASH" },
+    { TYPE_CLAW, "TYPE_CLAW" },
+    { TYPE_CLEAVE, "TYPE_CLEAVE" },
+    { TYPE_SLICE, "TYPE_SLICE" },
+    { TYPE_AIR, "TYPE_AIR" },
+    { TYPE_EARTH, "TYPE_EARTH" },
+    { TYPE_FIRE, "TYPE_FIRE" },
+    { TYPE_WATER, "TYPE_WATER" },
+    { TYPE_BEAR_CLAW, "TYPE_BEAR_CLAW" },
+    { TYPE_KICK, "TYPE_KICK" },
+    { TYPE_MAUL, "TYPE_MAUL" },
+    { TYPE_SHOOT, "TYPE_SHOOT" },
+    { TYPE_CANNON, "TYPE_CANNON" },
+    { TYPE_SHRED, "TYPE_SHRED" },
+    { TYPE_MAX_HIT, "TYPE_MAX_HIT" },
+    { AFFECT_TRANSFORMED_HANDS, "AFFECT_TRANSFORMED_HANDS" },
+    { AFFECT_TRANSFORMED_ARMS, "AFFECT_TRANSFORMED_ARMS" },
+    { AFFECT_TRANSFORMED_LEGS, "AFFECT_TRANSFORMED_LEGS" },
+    { AFFECT_TRANSFORMED_HEAD, "AFFECT_TRANSFORMED_HEAD" },
+    { AFFECT_TRANSFORMED_NECK, "AFFECT_TRANSFORMED_NECK" },
+    { LAST_TRANSFORMED_LIMB, "LAST_TRANSFORMED_LIMB" },
+    { SPELL_FIRE_BREATH, "SPELL_FIRE_BREATH" },
+    { SPELL_CHLORINE_BREATH, "SPELL_CHLORINE_BREATH" },
+    { SPELL_FROST_BREATH, "SPELL_FROST_BREATH" },
+    { SPELL_ACID_BREATH, "SPELL_ACID_BREATH" },
+    { SPELL_LIGHTNING_BREATH, "SPELL_LIGHTNING_BREATH" },
+    { SPELL_DUST_BREATH, "SPELL_DUST_BREATH" },
+    { LAST_BREATH_WEAPON, "LAST_BREATH_WEAPON" },
+    { AFFECT_DUMMY, "AFFECT_DUMMY" },
+    { AFFECT_DRUNK, "AFFECT_DRUNK" },
+    { AFFECT_NEWBIE, "AFFECT_NEWBIE" },
+    { AFFECT_SKILL_ATTEMPT, "AFFECT_SKILL_ATTEMPT" },
+    { AFFECT_FREE_DEATHS, "AFFECT_FREE_DEATHS" },
+    { AFFECT_TEST_FIGHT_MOB, "AFFECT_TEST_FIGHT_MOB" },
+    { AFFECT_DRUG, "AFFECT_DRUG" },
+    { AFFECT_PET, "AFFECT_PET" },
+    { AFFECT_CHARM, "AFFECT_CHARM" },
+    { AFFECT_THRALL, "AFFECT_THRALL" },
+    { AFFECT_ORPHAN_PET, "AFFECT_ORPHAN_PET" },
+    { AFFECT_DISEASE, "AFFECT_DISEASE" },
+    { AFFECT_COMBAT, "AFFECT_COMBAT" },
+    { AFFECT_PLAYERKILL, "AFFECT_PLAYERKILL" },
+    { AFFECT_PLAYERLOOT, "AFFECT_PLAYERLOOT" },
+    { AFFECT_HORSEOWNED, "AFFECT_HORSEOWNED" },
+    { AFFECT_GROWTH_POTION, "AFFECT_GROWTH_POTION" },
+    { AFFECT_WARY, "AFFECT_WARY" },
+    { AFFECT_DEFECTED, "AFFECT_DEFECTED" },
+    { AFFECT_OFFER, "AFFECT_OFFER" },
+    { AFFECT_OBJECT_USED, "AFFECT_OBJECT_USED" },
+    { AFFECT_WAS_INDOORS, "AFFECT_WAS_INDOORS" },
+    { AFFECT_BITTEN_BY_VAMPIRE, "AFFECT_BITTEN_BY_VAMPIRE" },
+    { AFFECT_IMMORTAL_BLESSING, "AFFECT_IMMORTAL_BLESSING" },
+    { AFFECT_AION_BLESSING, "AFFECT_AION_BLESSING" },
+    { AFFECT_ANGUS_BLESSING, "AFFECT_ANGUS_BLESSING" },
+    { AFFECT_DAMESCENA_BLESSING, "AFFECT_DAMESCENA_BLESSING" },
+    { AFFECT_JESUS_BLESSING, "AFFECT_JESUS_BLESSING" },
+    { AFFECT_VASCO_BLESSING, "AFFECT_VASCO_BLESSING" },
+    { AFFECT_CORAL_BLESSING, "AFFECT_CORAL_BLESSING" },
+    { AFFECT_BUMP_BLESSING, "AFFECT_BUMP_BLESSING" },
+    { AFFECT_MAROR_BLESSING, "AFFECT_MAROR_BLESSING" },
+    { AFFECT_DASH_BLESSING, "AFFECT_DASH_BLESSING" },
+    { AFFECT_DEIRDRE_BLESSING, "AFFECT_DEIRDRE_BLESSING" },
+    { AFFECT_GARTHAGK_BLESSING, "AFFECT_GARTHAGK_BLESSING" },
+    { AFFECT_MERCURY_BLESSING, "AFFECT_MERCURY_BLESSING" },
+    { AFFECT_METROHEP_BLESSING, "AFFECT_METROHEP_BLESSING" },
+    { AFFECT_MAGDALENA_BLESSING, "AFFECT_MAGDALENA_BLESSING" },
+    { AFFECT_MACROSS_BLESSING, "AFFECT_MACROSS_BLESSING" },
+    { AFFECT_PAPPY_BLESSING, "AFFECT_PAPPY_BLESSING" },
+    { AFFECT_STAFFA_BLESSING, "AFFECT_STAFFA_BLESSING" },
+    { AFFECT_UNHOLY_WRATH, "AFFECT_UNHOLY_WRATH" },
+    { AFFECT_HOLY_WRATH, "AFFECT_HOLY_WRATH" },
+    { AFFECT_GUARDIANS_LIGHT, "AFFECT_GUARDIANS_LIGHT" },
+    { AFFECT_PREENED, "AFFECT_PREENED" },
+    { AFFECT_WET, "AFFECT_WET" },
+    { LAST_ODDBALL_AFFECT, "LAST_ODDBALL_AFFECT" },
+    { ABSOLUTE_MAX_SKILL, "ABSOLUTE_MAX_SKILL" },
+  };
+}
 
 // returns DELETE_THIS
 int TBeing::doDiscipline(spellNumT which, sstring const& n1)
@@ -1402,17 +1702,28 @@ int TBeing::doDiscipline(spellNumT which, sstring const& n1)
   char arg[256];
   const char* n = n1.c_str();
 
+  auto it = spellNumToName.find(which);
+  if (it == spellNumToName.end()) {
+    vlogf(LOG_BUG, format("doDiscipline called with bad spellNumT %d") % which);
+    return FALSE;
+  }
+
+  if (n1.empty())
+    vlogf(LOG_SILENT, format("doDiscipline: %s (%s): %s") % name % number % spellNumToName[which]);
+  else
+    vlogf(LOG_SILENT, format("doDiscipline: %s (%s): %s on %s") % name % number % spellNumToName[which] % n1);
+
   if (!discArray[which]) {
     vlogf(LOG_BUG, format("doDiscipline called with null discArray[] (%d) (%s)") %  which % getName());
     return FALSE;
   }
-  if (which <= TYPE_UNDEFINED) 
+  if (which <= TYPE_UNDEFINED)
     return FALSE;
 
   if(!preDiscCheck(which))
     return FALSE;
 
-  strncpy(arg, n, cElements(arg));
+  strncpy(arg, n, cElements(arg)-1);
   arg[cElements(arg)-1] = '\0';
   if(!parseTarget(which, arg, &t))
     return FALSE;
@@ -1848,11 +2159,9 @@ int TBeing::doDiscipline(spellNumT which, sstring const& n1)
         curse(this, o);
       break;
     case SPELL_EARTHQUAKE:
-    case SPELL_EARTHQUAKE_DEIKHAN:
       rc = earthquake(this);
       break;
     case SPELL_CALL_LIGHTNING:
-    case SPELL_CALL_LIGHTNING_DEIKHAN:
       rc = callLightning(this, ch);
       break;
     case SPELL_PILLAR_SALT:
@@ -1865,7 +2174,6 @@ int TBeing::doDiscipline(spellNumT which, sstring const& n1)
       rc = plagueOfLocusts(this, ch);
       break;
     case SPELL_RAIN_BRIMSTONE:
-    case SPELL_RAIN_BRIMSTONE_DEIKHAN:
       rc = rainBrimstone(this, ch);
       break;
 

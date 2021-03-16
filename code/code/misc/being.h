@@ -408,6 +408,7 @@ class TBeing : public TThing {
 
   TMessages msgVariables;
   // Constructor and Destructor
+  virtual TThingKind getKind() const;
   protected:
   TBeing();
   public:
@@ -475,7 +476,7 @@ class TBeing : public TThing {
   unsigned short GetMaxLevel() const;
   void setMaxLevel(unsigned short num);
   sstring const getProfName() const;
-  std::string getProfAbbrevName() const;
+  static sstring getProfAbbrevName(unsigned short code);
   void deityIgnore(silentTypeT = SILENT_NO) const;
   void nothingHappens(silentTypeT = SILENT_NO) const;
   float percModifier() const;
@@ -562,6 +563,9 @@ class TBeing : public TThing {
 
   int hits(TBeing *, int);
   int missVictim(TBeing *, TThing *, spellNumT);
+  void doInevitability();
+  void doGuardiansLight(int, int);
+  void checkGuardiansLight();
 
   // Postmaster
   void postmasterSendMail(const char *, TMonster *);
@@ -778,6 +782,7 @@ class TBeing : public TThing {
   short getMaxSkillValue(spellNumT) const;
   short getNatSkillValue(spellNumT) const;
   void setNatSkillValue(spellNumT, int);
+  int durationModify(spellNumT, int);
   short getSkillValue(spellNumT) const;
   void setSkillValue(spellNumT, int);
   short getRawNatSkillValue(spellNumT) const;
@@ -957,7 +962,7 @@ class TBeing : public TThing {
   int preCastCheck();
   int preDiscCheck(spellNumT);
   int doCast(const char *);
-  spellNumT parseSpellNum(char *);
+  std::tuple<spellNumT, sstring> parseSpellNum(sstring const&) const; // returns spell and target
   int parseTarget(spellNumT, char *, TThing **ret);
   int doTrigger(const char *);
   int doStore(const char *);
@@ -1404,6 +1409,7 @@ class TBeing : public TThing {
   bool checkSmashed(TBeing *, wearSlotT, spellNumT, TThing *, int, const char * = NULL);
   int hit(TBeing *, int pulse = -1);
   bool canCounterMove(int);
+  bool canFocusedAvoidance(int);
   int trySpringleap(TBeing *);
   int damageLimb(TBeing *, wearSlotT, TThing *, int *);
   int damageHand(TBeing *, wearSlotT);
@@ -1918,5 +1924,9 @@ class TBeing : public TThing {
   bool resetPractices(classIndT resetClass, int &practices, bool reset = true);
 
   bool canMeditate();
+  
+  // paladin auras
+  virtual int checkAura(cmdTypeT cmd, TBeing *t);
+  void doAura(sstring const& arg);
 
 };
