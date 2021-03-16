@@ -1887,7 +1887,7 @@ int TBeing::doDiscipline(spellNumT which, sstring const& n1)
       spontaneousGeneration(this, n);
       break;
     case SPELL_ETHER_GATE:
-      ethrealGate(this, o);
+      etherealGate(this, n);
       break;
     case SPELL_GALVANIZE:
       rc = galvanize(this, o);   

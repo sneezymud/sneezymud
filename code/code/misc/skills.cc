@@ -1639,9 +1639,6 @@ bool hideThisSpell(spellNumT spell)
   if (spell == SPELL_GARMULS_TAIL)
     return true;
 
-  if (spell == SPELL_ETHER_GATE)
-    return true;
-
   return false;
 }
 

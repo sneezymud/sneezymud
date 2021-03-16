@@ -2113,7 +2113,7 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
         rc = castSpontaneousGeneration(this, orgArg);
         break;
      case SPELL_ETHER_GATE:
-        castEthrealGate(this, o);
+        castEtherealGate(this, orgArg);
         break;
       case SPELL_COPY:
         rc = castCopy(this, o);
