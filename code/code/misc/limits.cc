@@ -1156,6 +1156,12 @@ void gain_exp(TBeing *ch, double gain, int dam)
             ? format("<W>You advance a level!<1>\n\r").str()
             : (format("<W>You advance a level in %s!<1>\n\r") % classInfo[Class].name).str());
 
+  		// send the level as a gmcp message
+		sstring playerGmcp = format(
+    		"player.info {"
+    		"\"level\": %d}") % std::to_string(ch->GetMaxLevel());
+  		ch->desc->sendGmcp(playerGmcp,false);
+
         if (tPerson)
           tPerson->setSelectToggles(NULL, Class, SILENT_YES);
 
