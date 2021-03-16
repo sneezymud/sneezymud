@@ -1820,7 +1820,7 @@ int TBeing::doOpen(const char *argument)
   } 
 
   if ((findDoor(type, dir, DOOR_INTENT_OPEN, SILENT_YES) == DIR_NONE) &&
-             (tmpdesc = roomp->ex_description->findExtraDesc(argument))) {
+             roomp && roomp->ex_description && (tmpdesc = roomp->ex_description->findExtraDesc(argument))) {
     sendTo(format("%s: Your attempt to open it seems to have no effect.\n\r") % type);
     return FALSE;
   } 
@@ -1939,7 +1939,7 @@ int TBeing::doRaise(const char *argument, cmdTypeT cmd)
       else
         sendTo("Raise what?\n\r");
   } else if ((findDoor(type, dir, DOOR_INTENT_RAISE, SILENT_YES) == DIR_NONE) &&
-             (tmpdesc = roomp->ex_description->findExtraDesc(argument))) {
+             roomp && roomp->ex_description && (tmpdesc = roomp->ex_description->findExtraDesc(argument))) {
     sendTo(format("%s: Your attempt to raise it seems to have no effect.\n\r") % type);
     return FALSE;
   } else if ((door = findDoor(type, dir, DOOR_INTENT_RAISE, SILENT_NO)) >= MIN_DIR) {
@@ -2027,7 +2027,7 @@ void TBeing::doClose(const char *argument)
     // this is an object */
     obj->closeMe(this);
   } else if ((findDoor(type, dir, DOOR_INTENT_CLOSE, SILENT_YES) == DIR_NONE) &&
-             (tmpdesc = roomp->ex_description->findExtraDesc(argument))) {
+             roomp && roomp->ex_description && (tmpdesc = roomp->ex_description->findExtraDesc(argument))) {
     sendTo(format("%s: Your attempt to close it seems to have no effect.\n\r") % type);
     return;
   } else if ((door = findDoor(type, dir, DOOR_INTENT_CLOSE, SILENT_NO)) >= MIN_DIR) {
@@ -2094,7 +2094,7 @@ int TBeing::doLower(const char *argument)
   if (!*type) {
     sendTo("Lower what?\n\r");
   } else if ((findDoor(type, dir, DOOR_INTENT_LOWER, SILENT_YES) == DIR_NONE) &&
-             (tmpdesc = roomp->ex_description->findExtraDesc(argument))) {
+             roomp && roomp->ex_description && (tmpdesc = roomp->ex_description->findExtraDesc(argument))) {
     sendTo(format("%s: Your attempt to lower it seems to have no effect.\n\r") % type);
     return FALSE;
   } else if ((door = findDoor(type, dir, DOOR_INTENT_LOWER, SILENT_NO)) >= MIN_DIR) {
@@ -2250,7 +2250,7 @@ void TBeing::doLock(const char *argument)
     // this is an object */
     obj->lockMe(this);
   } else if ((findDoor(type, dir, DOOR_INTENT_LOCK, SILENT_YES) == DIR_NONE) &&
-             (tmpdesc = roomp->ex_description->findExtraDesc(argument))) {
+             roomp && roomp->ex_description && (tmpdesc = roomp->ex_description->findExtraDesc(argument))) {
     sendTo(format("%s: Your attempt to lock it seems to have no effect.\n\r") % type);
     return;
   } else if ((door = findDoor(type, dir, DOOR_INTENT_LOCK, SILENT_NO)) >= MIN_DIR) {
@@ -2308,7 +2308,7 @@ void TBeing::doUnlock(const char *argument)
     // this is an object */
     obj->unlockMe(this);
   } else if ((findDoor(type, dir, DOOR_INTENT_UNLOCK, SILENT_YES) == DIR_NONE) &&
-             (tmpdesc = roomp->ex_description->findExtraDesc(argument))) {
+             roomp && roomp->ex_description && (tmpdesc = roomp->ex_description->findExtraDesc(argument))) {
     sendTo(format("%s: Your attempt to unlock it seems to have no effect.\n\r") % type);
     return;
   } else if ((door = findDoor(type, dir, DOOR_INTENT_UNLOCK, SILENT_NO)) >= MIN_DIR) {

@@ -419,7 +419,7 @@ int TBeing::doGet(const char *a)
           found = TRUE;
         }
       } else {
-        if ((tmp_desc = roomp->ex_description->findExtraDesc(arg1)))
+        if (roomp && roomp->ex_description && (tmp_desc = roomp->ex_description->findExtraDesc(arg1)))
           sendTo(format("You can't get a %s.\n\r") % arg1);
         else
           sendTo(format("You don't see a %s here.\n\r") % arg1);
